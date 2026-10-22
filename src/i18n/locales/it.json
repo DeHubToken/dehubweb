@@ -704,6 +704,7 @@
     "price": "Prezzo",
     "ppvDhbInfo": "I pagamenti sono in token DeHub sulla catena Base",
     "ppvUsdInfo": "I pagamenti sono in USD",
+    "ppvStableInfo": "Gli acquirenti pagano in {{symbol}}, inviato direttamente a te",
     "setupBounty": "Configura ricompensa",
     "viewersToReward": "Spettatori da premiare",
     "numberOfViewers": "Numero di spettatori",

@@ -704,6 +704,7 @@
     "price": "Cena",
     "ppvDhbInfo": "Płatności są w tokenach DeHub w sieci Base",
     "ppvUsdInfo": "Płatności w USD",
+    "ppvStableInfo": "Kupujący płacą w {{symbol}}, prosto do ciebie",
     "setupBounty": "Ustaw nagrodę",
     "viewersToReward": "Widzowie do nagrodzenia",
     "numberOfViewers": "Liczba widzów",

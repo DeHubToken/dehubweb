@@ -936,6 +936,7 @@
     "price": "السعر",
     "ppvDhbInfo": "المدفوعات برموز DeHub على سلسلة Base",
     "ppvUsdInfo": "المدفوعات بالدولار الأمريكي",
+    "ppvStableInfo": "يدفع المشترون بعملة {{symbol}} وتصلك مباشرة",
     "setupBounty": "إعداد المكافأة",
     "viewersToReward": "المشاهدون للمكافأة",
     "numberOfViewers": "عدد المشاهدين",

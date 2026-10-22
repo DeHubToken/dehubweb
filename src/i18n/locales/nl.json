@@ -1129,6 +1129,7 @@
     "price": "Prijs",
     "ppvDhbInfo": "Betalingen zijn in DeHub tokens op de Base chain",
     "ppvUsdInfo": "Betalingen zijn in USD",
+    "ppvStableInfo": "Kopers betalen in {{symbol}}, direct naar jou",
     "setupBounty": "Beloning instellen",
     "viewersToReward": "Kijkers om te belonen",
     "numberOfViewers": "Aantal kijkers",

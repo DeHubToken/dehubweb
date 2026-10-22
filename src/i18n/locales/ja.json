@@ -703,6 +703,7 @@
     "price": "価格",
     "ppvDhbInfo": "Baseチェーン上のDeHubトークンでの支払い",
     "ppvUsdInfo": "支払いはUSDで行われます",
+    "ppvStableInfo": "購入者は{{symbol}}で支払い、あなたに直接届きます",
     "setupBounty": "報酬を設定",
     "viewersToReward": "報酬対象の視聴者",
     "numberOfViewers": "視聴者数",

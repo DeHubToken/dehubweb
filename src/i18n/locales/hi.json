@@ -704,6 +704,7 @@
     "price": "कीमत",
     "ppvDhbInfo": "भुगतान बेस पर DeHub टोकन में हैं",
     "ppvUsdInfo": "भुगतान USD में होता है",
+    "ppvStableInfo": "खरीदार {{symbol}} में भुगतान करते हैं, सीधे आपको मिलता है",
     "setupBounty": "पुरस्कार सेट करें",
     "viewersToReward": "पुरस्कार के लिए दर्शक",
     "numberOfViewers": "दर्शकों की संख्या",
