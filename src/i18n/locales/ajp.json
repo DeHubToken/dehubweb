@@ -4571,6 +4571,15 @@
       }
     },
     "moderation": {
+      "moderators": "المشرف",
+      "usernamePlaceholder": "اسم المستخدم",
+      "moderatorAdded": "تمت إضافة المشرف.",
+      "removeModerator": "إزالة المشرف",
+      "banned": "محظور من تدفقاتك",
+      "unban": "إلغاء الحظر",
+      "noBans": "لا أحد محظور.",
+      "log": "الإجراءات الأخيرة",
+      "noLog": "لا شيء حتى الآن.",
       "title": "مديره الدردشه",
       "intro": "قواعد الدردشه تحت كل استريماتك. ما بتصلش لدردشه ديهوب الرئيسية: لو تحظر شخص هنا، ممكن يتكلم في كل مكان تاني.",
       "loadFailed": "ما شلتت الإعدادات دي من المديره. تحديث الصفحة و حاول تاني.",
@@ -4595,6 +4604,8 @@
       "moderatorNotFound": "ما فية حساب باسم ده.",
       "noModerators": "ما عندنا مشرفين لسه",
       "actions": {
+        "moderator-added": "أصبح {{target}} مشرفًا",
+        "word-timeout_one": "انتهت مهلة {{target}} لمدة {{count}} ثانية لـ \"{{word}}\"",
         "timeout_one": "{{actor}} بقت مشغولة {{target}} ل{{count}} ثانية",
         "timeout_other": "{{actor}} بقت مشغولة {{target}} ل{{count}} ثواني",
         "ban": "{{actor}} حَظِرَ {{target}}",

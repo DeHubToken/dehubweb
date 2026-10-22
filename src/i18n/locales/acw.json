@@ -4545,6 +4545,16 @@
       }
     },
     "moderation": {
+      "moderators": "المشرف",
+      "addModerator": "إضافة",
+      "usernamePlaceholder": "اسم المستخدم",
+      "moderatorAdded": "تمت إضافة المشرف.",
+      "removeModerator": "إزالة المشرف",
+      "noModerators": "لا يوجد مشرفون حتى الآن.",
+      "banned": "محظور من تدفقاتك",
+      "unban": "إلغاء الحظر",
+      "log": "الإجراءات الأخيرة",
+      "noLog": "لا شيء حتى الآن.",
       "title": "مراقبة الدردشة",
       "intro": "قوانين الدردشة تحت كل بثاتك. ما يوصلوا للدردشة الرئيسية في DeHub: الشخص اللي تحظر هنا يقدر يتكلم في كل مكان ثاني.",
       "loadFailed": "إعدادات المراقبة ما قدرت تحمل. رفرش الصفحة وجرب مرة ثانية.",
@@ -4568,6 +4578,11 @@
       "moderatorNotFound": "ما فية حساب باسم ده.",
       "noBans": "لاشخص مشمنعش",
       "actions": {
+        "ban": "{{actor}} محظور {{target}}",
+        "moderator-added": "أصبح {{target}} مشرفًا",
+        "moderator-removed": "لم يعد {{target}} مشرفًا",
+        "word-timeout_one": "انتهت مهلة {{target}} لمدة {{count}} ثانية لـ \"{{word}}\"",
+        "word-timeout_other": "انتهت مهلة {{target}} لمدة {{count}} ثانية لـ \"{{word}}\"",
         "timeout_one": "{{actor}} مَشَى الوقت {{target}} ل{{count}} دَقِيقَة",
         "timeout_other": "{{actor}} مَشَى الوقتَ {{target}} ل{{count}} ثَانِيَة",
         "unban": "{{actor}} مَغْفُول عنه {{target}}",

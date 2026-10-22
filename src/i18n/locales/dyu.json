@@ -4882,6 +4882,10 @@
       }
     },
     "moderation": {
+      "title": "Modération de la salle de chat",
+      "intro": "Règles pour le chat sous tous vos streams. Elles ne s'appliquent jamais au chat principal de DeHub : quelqu'un que vous bannissez ici peut toujours parler ailleurs.",
+      "seconds_one": "{{count}} seconde",
+      "subscribersOnly": "Abonnés uniquement (souscripteurs).",
       "loadFailed": "I nin ka sɛbɛn tɛ se ka dɔn. Fɔ̀li jɔ̀ kɔ̀nɔ̀ ka ɲɛ̀nɛ̀.",
       "save": "Ka kumaɲɔgɔnya kɛ ni mɔgɔ dɔ ye",
       "saved": "O kama, an ka kan ka baro kɛ ni ɲɔgɔn ye.",
@@ -4911,6 +4915,10 @@
       "log": "Sanni dɔɔni, u ye koo dɔw kɛ.",
       "noLog": "O tɛ foyi ye tugun.",
       "actions": {
+        "timeout_one": "{{actor}} a été mis en pause {{target}} pendant {{count}} seconde",
+        "word-blocked": "A stoppé un message de {{target}} pour \"{{word}}\"",
+        "word-timeout_one": "{{target}} a été mis en pause {{count}} seconde pour \"{{word}}\"",
+        "word-timeout_other": "{{target}} a été mis en pause {{count}} secondes pour \"{{word}}\"",
         "timeout_other": "{{actor}} timed out{{target}} for {{count}} segindi",
         "ban": "{{actor}} banned {{target}}",
         "unban": "{{actor}} unbanned {{target}}",

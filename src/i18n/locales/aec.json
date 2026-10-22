@@ -4412,6 +4412,16 @@
       }
     },
     "moderation": {
+      "moderators": "المشرف",
+      "moderatorsHint": "يمكنهم إنهاء المهلة وحظر المشاهدين في مقاطع الفيديو الخاصة بك. لا يمكنهم التصرف عليك أو على بعضهم البعض.",
+      "addModerator": "إضافة",
+      "usernamePlaceholder": "اسم المستخدم",
+      "moderatorAdded": "تمت إضافة المشرف.",
+      "removeModerator": "إزالة المشرف",
+      "noModerators": "لا يوجد مشرفون حتى الآن.",
+      "banned": "محظور من تدفقاتك",
+      "unban": "إلغاء الحظر",
+      "noBans": "لا أحد محظور.",
       "title": "تعديل المحادثة",
       "intro": "قوانين المحادثة تحت كل البث بتاعك. ما بتوصلش للـ DeHub chat الرئيسي: حد تحظره هنا يقدر يتكلم في كل مكان تاني.",
       "loadFailed": "إعدادات المراقبة مش قدرت تحملها. رِفريش الصفحة وجرب تاني.",
@@ -4435,6 +4445,10 @@
       "log": "الإجراءات الأخيرة",
       "noLog": "شوفنا بعدين",
       "actions": {
+        "ban": "{{actor}} محظور {{target}}",
+        "moderator-added": "أصبح {{target}} مشرفًا",
+        "moderator-removed": "لم يعد {{target}} مشرفًا",
+        "word-timeout_one": "انتهت مهلة {{target}} لمدة {{count}} ثانية لـ \"{{word}}\"",
         "timeout_one": "{{actor}} بقت مشغولة {{target}} ل{{count}} ثانية",
         "timeout_other": "{{actor}} مَشَغَلَ{{target}} ل{{count}} دَقَائِقْ",
         "unban": "{{actor}} مَش مَغْبَنَ {{target}}",

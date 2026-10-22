@@ -4950,6 +4950,13 @@
       "log": "Latest संग्राहलय",
       "noLog": "लेकिन अभी तक न मिल रहल हई ।",
       "actions": {
+        "timeout_other": "{{actor}} समय समाप्त {{count}} सेकंड के लिए {{target}}",
+        "ban": "{{actor}} प्रतिबंधित {{target}}",
+        "unban": "{{actor}} प्रतिबंधित {{target}}",
+        "moderator-added": "{{target}} मॉडरेटर बन गए",
+        "moderator-removed": "{{target}} अब मॉडरेटर नहीं है",
+        "word-timeout_one": "\"{{word}}\" के लिए {{count}} सेकंड के लिए {{target}} समय समाप्त हो गया",
+        "word-timeout_other": "\"{{word}}\" के लिए {{count}} सेकंड के लिए {{target}} समय समाप्त हो गया",
         "timeout_one": "{{actor}} २० सेकंड मा टाइम आउट होई {{target}} {{count}}",
         "word-blocked": "\"{{word}} \"के लिए {{target}} से एक संदेश रोकें"
       }

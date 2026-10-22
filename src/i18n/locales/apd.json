@@ -4488,6 +4488,16 @@
       }
     },
     "moderation": {
+      "moderators": "المشرف",
+      "addModerator": "إضافة",
+      "usernamePlaceholder": "اسم المستخدم",
+      "moderatorAdded": "تمت إضافة المشرف.",
+      "removeModerator": "إزالة المشرف",
+      "noModerators": "لا يوجد مشرفون حتى الآن.",
+      "banned": "محظور من تدفقاتك",
+      "unban": "إلغاء الحظر",
+      "log": "الإجراءات الأخيرة",
+      "noLog": "لا شيء حتى الآن.",
       "title": "تعديل المحادثة",
       "intro": "قواعد المحادثة تحت كل البث بتاعك. ما بتوصل للدردشة الرئيسية في DeHub: الشخص اللي تحظره هنا ممكن يتكلم في كل مكان تاني.",
       "loadFailed": "إعدادات المراقبة ما قدرت تحملها. ردد الصفحة وجرب تاني.",
@@ -4511,6 +4521,8 @@
       "moderatorNotFound": "لا يوجد حساب باسم المستخدم ده.",
       "noBans": "لشين احد مسدود.",
       "actions": {
+        "ban": "{{actor}} محظور {{target}}",
+        "moderator-added": "أصبح {{target}} مشرفًا",
         "timeout_one": "{{actor}} مَشْغَلَ{{target}} ل{{count}} دَقِيقَة",
         "timeout_other": "{{actor}} خَرقَ الوَقتِ {{target}} ل{{count}} دَقَائِقْ",
         "unban": "{{actor}} مَصْفُوفَاتْ {{target}}",
