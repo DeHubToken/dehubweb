@@ -89,6 +89,26 @@ function chunkBytes(chunk: EncodedVideoChunk): Uint8Array | null {
 }
 
 /**
+ * Drop empty fields so a partial config a browser sends later can't wipe what
+ * the muxer already holds (mp4-muxer merges configs with Object.assign), and
+ * complete a colour space with missing fields so the colr box is valid.
+ */
+export function cleanDecoderConfig<T extends { description?: AllowSharedBufferSource; colorSpace?: VideoColorSpaceInit }>(config: T): T {
+  const out = Object.fromEntries(Object.entries(config).filter(([, value]) => value != null)) as T;
+  if (out.description && !out.description.byteLength) delete out.description;
+  const colorSpace = out.colorSpace;
+  if (colorSpace && (colorSpace.primaries == null || colorSpace.transfer == null || colorSpace.matrix == null)) {
+    out.colorSpace = {
+      primaries: colorSpace.primaries ?? DEFAULT_COLOR_SPACE.primaries,
+      transfer: colorSpace.transfer ?? DEFAULT_COLOR_SPACE.transfer,
+      matrix: colorSpace.matrix ?? DEFAULT_COLOR_SPACE.matrix,
+      fullRange: colorSpace.fullRange ?? false,
+    };
+  }
+  return out;
+}
+
+/**
  * Wraps a muxer's addVideoChunk so every chunk reaches it with a usable
  * decoder config. `makeChunk` is injectable for tests.
  */
@@ -97,27 +117,32 @@ export function videoDecoderConfigFixer(
   makeChunk: (init: ChunkInit) => EncodedVideoChunk = (init) => new EncodedVideoChunk(init),
 ) {
   let haveConfig = false;
+  let haveDescription = false;
   let annexB = false;
-  return (chunk: EncodedVideoChunk, meta?: EncodedVideoChunkMetadata): Output => {
-    let config = meta?.decoderConfig;
-    if (options.muxerCodec === "avc" && (annexB || !haveConfig || (config && !config.description))) {
-      const bytes = chunkBytes(chunk);
-      if (bytes && (annexB || isAnnexB(bytes))) {
-        annexB = true;
-        const nals = splitAnnexB(bytes);
-        if ((!haveConfig || (config && !config.description)) && chunk.type === "key") {
-          config = avcDecoderConfig(nals, options.width, options.height) ?? config;
+  const fix = (chunk: EncodedVideoChunk, meta?: EncodedVideoChunkMetadata): Output => {
+    let config = meta?.decoderConfig ? cleanDecoderConfig(meta.decoderConfig) : undefined;
+    if (options.muxerCodec === "avc") {
+      const needDescription = !haveDescription && !config?.description;
+      if (annexB || needDescription) {
+        const bytes = chunkBytes(chunk);
+        if (bytes && (annexB || isAnnexB(bytes))) {
+          annexB = true;
+          const nals = splitAnnexB(bytes);
+          if (needDescription && chunk.type === "key") config = avcDecoderConfig(nals, options.width, options.height) ?? config;
+          chunk = makeChunk({ type: chunk.type, timestamp: chunk.timestamp, duration: chunk.duration ?? undefined, data: toLengthPrefixed(nals) });
+        } else if (bytes && needDescription && chunk.type === "key") {
+          config = avcDecoderConfig(splitLengthPrefixed(bytes) ?? [], options.width, options.height) ?? config;
         }
-        chunk = makeChunk({ type: chunk.type, timestamp: chunk.timestamp, duration: chunk.duration ?? undefined, data: toLengthPrefixed(nals) });
-      } else if (bytes && !config && chunk.type === "key") {
-        config = avcDecoderConfig(splitLengthPrefixed(bytes) ?? [], options.width, options.height) ?? undefined;
       }
-    }
-    if (!config && !haveConfig && options.muxerCodec !== "avc" && options.muxerCodec !== "hevc") {
+      // A config without avcC would leave the MP4 unplayable; wait for one that has it.
+      if (config && !config.description) config = undefined;
+    } else if (!config && !haveConfig && options.muxerCodec !== "hevc") {
       config = { codec: options.codec, codedWidth: options.width, codedHeight: options.height };
     }
     if (config && options.muxerCodec === "vp9" && !config.colorSpace) config = { ...config, colorSpace: DEFAULT_COLOR_SPACE };
     if (config) haveConfig = true;
-    return { chunk, meta: config ? { ...meta, decoderConfig: config } : meta };
+    if (config?.description) haveDescription = true;
+    return { chunk, meta: config ? { ...meta, decoderConfig: config } : meta && { ...meta, decoderConfig: undefined } };
   };
+  return Object.assign(fix, { hasConfig: () => haveConfig });
 }
