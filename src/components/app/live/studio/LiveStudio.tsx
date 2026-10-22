@@ -10,6 +10,8 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import { useSearchParams } from 'react-router-dom';
+import { useAuth } from '@/contexts/AuthContext';
 import { Loader2, Plus, Trash2 } from 'lucide-react';
 import { toast } from 'sonner';
 import { Button } from '@/components/ui/button';
@@ -30,6 +32,7 @@ import { createOverlayEventBus, OverlayEventContext } from '../overlay/overlay-e
 import { createRuleBus, RuleAudio, RuleBusContext } from '../overlay/rule-bus';
 import { RulesPanel } from './RulesPanel';
 import { PollPanel } from './PollPanel';
+import { RecapPanel } from './RecapPanel';
 import { PollContext } from '../overlay/poll';
 import { getMyPoll } from '@/lib/api/dehub/live-polls';
 import { samplePoll, type LivePoll } from '@/lib/live-overlay/polls';
@@ -44,6 +47,10 @@ const PREVIEW_STATS = { totalTips: 0, followers: 0 };
 export function LiveStudio() {
   const { t } = useTranslation();
   const queryClient = useQueryClient();
+  const { walletAddress } = useAuth();
+  // Go Live sends a creator here with ?recap=<streamId> when they end a stream.
+  const [params] = useSearchParams();
+  const justEnded = params.get('recap');
   const { data, isLoading, isError } = useQuery<CreatorOverlay>({
     queryKey: myOverlayKey,
     queryFn: getMyOverlay,
@@ -190,6 +197,8 @@ export function LiveStudio() {
     <div className="space-y-4 pb-24">
       <p className="text-sm text-zinc-400">{t('liveStudio.intro')}</p>
 
+      {justEnded && <RecapPanel address={walletAddress} streamId={justEnded} />}
+
       <div className="grid gap-4 lg:grid-cols-[minmax(0,1fr)_340px]">
         <div className="space-y-4">
           <PageSection
@@ -323,6 +332,8 @@ export function LiveStudio() {
       </div>
 
       <PollPanel poll={poll} onPoll={setPoll} />
+
+      {!justEnded && <RecapPanel address={walletAddress} />}
 
       <RulesPanel hasAlertWidget={widgets.some((w) => w.kind === 'rule_alert' && w.enabled)} />
 
