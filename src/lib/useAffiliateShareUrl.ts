@@ -1,72 +1,46 @@
 import { useEffect, useState } from "react";
 import { findAffiliateCode, getOrCreateAffiliateCode } from "@/lib/affiliate";
 import { getPersistedViewerAddress } from "@/lib/affiliateRef";
+import { setViewerAffiliateCode, viewerCodeEpoch, withAffiliateRef } from "@/lib/share-url";
+
+export { withAffiliateRef, viewerShareUrl } from "@/lib/share-url";
+
+let loaded: { address: string; promise: Promise<string | null> } | null = null;
 
 /**
- * Append `ref=CODE` to a URL, keeping its path, query and hash intact. A
- * root-relative path (`/app/post/1`) stays relative.
+ * Look up (never create) the signed-in viewer's affiliate code and hand it to
+ * viewerShareUrl. App calls this at sign-in through a dynamic import, so the
+ * lookup and the affiliate module stay off the boot path.
  */
-export const withAffiliateRef = (url: string, code: string | null | undefined): string => {
-  if (!code) return url;
-  try {
-    const relative = url.startsWith("/") && !url.startsWith("//");
-    const u = relative ? new URL(url, "https://dehub.io") : new URL(url);
-    u.searchParams.set("ref", code);
-    return relative ? u.pathname + u.search + u.hash : u.toString();
-  } catch {
-    return url;
+export function loadViewerAffiliateCode(address: string | null): Promise<string | null> {
+  if (!address) {
+    loaded = null;
+    setViewerAffiliateCode(null);
+    return Promise.resolve(null);
   }
-};
-
-// The signed-in viewer's code, looked up once per address and shared by every
-// share action. Share handlers read it synchronously, so the clipboard write
-// or the OS share sheet still runs inside the tap that asked for it.
-let viewerCode: { address: string; code: string | null } | null = null;
-let pending: { address: string; promise: Promise<string | null> } | null = null;
-
-/**
- * Look up (never create) the affiliate code for `address`, defaulting to the
- * signed-in viewer. App warms this at sign-in so the first share has it.
- */
-export function loadViewerAffiliateCode(address = getPersistedViewerAddress()): Promise<string | null> {
-  if (!address) return Promise.resolve(null);
   const addr = address.toLowerCase();
-  if (viewerCode?.address === addr) return Promise.resolve(viewerCode.code);
-  if (pending?.address === addr) return pending.promise;
-  const promise: Promise<string | null> = findAffiliateCode(addr)
+  // Signing out clears the code in share-url directly; signing back in as
+  // the same wallet re-applies the cached lookup.
+  if (loaded?.address === addr) {
+    const at = viewerCodeEpoch();
+    return loaded.promise.then((code) => {
+      if (loaded?.address === addr && viewerCodeEpoch() === at) setViewerAffiliateCode(code);
+      return code;
+    });
+  }
+  setViewerAffiliateCode(null);
+  const at = viewerCodeEpoch();
+  const promise = findAffiliateCode(addr)
     .then((row) => {
-      viewerCode = { address: addr, code: row?.code ?? null };
-      return viewerCode.code;
+      if (loaded?.address === addr && viewerCodeEpoch() === at) setViewerAffiliateCode(row?.code ?? null);
+      return row?.code ?? null;
     })
-    .catch(() => null)
-    .finally(() => { if (pending?.promise === promise) pending = null; });
-  pending = { address: addr, promise };
+    .catch(() => {
+      if (loaded?.address === addr) loaded = null;
+      return null;
+    });
+  loaded = { address: addr, promise };
   return promise;
-}
-
-const isDehubUrl = (url: string): boolean => {
-  if (url.startsWith("/") && !url.startsWith("//")) return true;
-  try {
-    const host = new URL(url).hostname;
-    return host === "dehub.io" || host.endsWith(".dehub.io") || host === window.location.hostname;
-  } catch {
-    return false;
-  }
-};
-
-/**
- * `url` carrying the signed-in viewer's `?ref=CODE`, so whoever opens the link
- * and signs up is credited to the person who shared it. Unchanged for a
- * signed-out viewer, a viewer with no code, or a link off DeHub.
- */
-export function viewerShareUrl(url: string): string {
-  const address = getPersistedViewerAddress();
-  if (!address || !isDehubUrl(url)) return url;
-  if (viewerCode?.address !== address) {
-    void loadViewerAffiliateCode(address);
-    return url;
-  }
-  return withAffiliateRef(url, viewerCode.code);
 }
 
 /**
@@ -83,11 +57,7 @@ export function useAffiliateShareUrl(url: string): string {
     if (!address) return;
     let cancelled = false;
     getOrCreateAffiliateCode(address)
-      .then((row) => {
-        if (!row?.code) return;
-        viewerCode = { address, code: row.code };
-        if (!cancelled) setCode(row.code);
-      })
+      .then((row) => { if (!cancelled && row?.code) setCode(row.code); })
       .catch(() => { /* fall back to the plain link */ });
     return () => { cancelled = true; };
   }, []);

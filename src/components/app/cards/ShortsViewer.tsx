@@ -99,7 +99,7 @@ import { createWheelGesture } from '@/lib/wheel-gesture';
 import { lockBodyScroll } from '@/lib/body-scroll-lock';
 import { UserMentionDropdown } from '@/components/app/mentions';
 import { usePostLinkCopyCount, useLinkCopyFloor, useTrackPostLinkCopy } from '@/hooks/use-link-copy-count';
-import { viewerShareUrl } from '@/lib/useAffiliateShareUrl';
+import { viewerShareUrl } from '@/lib/share-url';
 import {
   DOUBLE_TAP_LIKE_EVENT,
   OPEN_REACTIONS_EVENT,

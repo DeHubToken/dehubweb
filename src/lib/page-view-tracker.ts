@@ -21,7 +21,6 @@
 
 import { supabase } from '@/integrations/supabase/client';
 import { getAnonViewerId } from '@/lib/anon-view-id';
-import { readUtm } from '@/lib/first-touch';
 import { normalisePath, referrerHost } from '@/lib/page-path';
 
 // The generated Supabase types are regenerated from the dashboard and do not
@@ -34,9 +33,9 @@ interface QueuedView {
   path: string;
   prevPath?: string;
   referrerHost?: string;
-  utmSource?: string;
-  utmMedium?: string;
-  utmCampaign?: string;
+  utmSource?: string | null;
+  utmMedium?: string | null;
+  utmCampaign?: string | null;
 }
 
 // Matches the `ord <= 50` cap the RPC applies to a batch.
@@ -121,17 +120,15 @@ export function recordPageView(pathname: string): void {
 
   const prevPath = lastPath;
   const host = prevPath ? null : referrerHost(document.referrer, window.location.host);
-  // Campaign tags belong to the landing, so only the first view carries them.
-  const utm = prevPath ? {} : readUtm(window.location.search);
+  // Campaign tags belong to the landing; the RPC caps their length.
+  const q = prevPath ? null : new URLSearchParams(window.location.search);
   lastPath = path;
 
   QUEUE.push({
     path,
     ...(prevPath ? { prevPath } : {}),
     ...(host ? { referrerHost: host } : {}),
-    ...(utm.utm_source ? { utmSource: utm.utm_source } : {}),
-    ...(utm.utm_medium ? { utmMedium: utm.utm_medium } : {}),
-    ...(utm.utm_campaign ? { utmCampaign: utm.utm_campaign } : {}),
+    ...(q?.has('utm_source') ? { utmSource: q.get('utm_source'), utmMedium: q.get('utm_medium'), utmCampaign: q.get('utm_campaign') } : {}),
   });
 
   ensureTimer();

@@ -8,7 +8,6 @@ import { installScrollFreezeWatchdog } from "./lib/scroll-freeze-watchdog";
 import { installSupabaseInterceptor } from "./lib/supabase-interceptor";
 import { installImageOriginFallback } from "./lib/image-origin-fallback";
 import { installWalletSessionFetch } from "./lib/wallet-session";
-import { captureFirstTouch } from "./lib/first-touch";
 import { installTranslatorDomGuard } from "./i18n/translator-dom-guard";
 import "./lib/toast-i18n-interceptor";
 // NOTE: auth-toast translations are no longer imported here — English lives in
@@ -38,9 +37,10 @@ import "./styles/pinned-community-stage.css";
 installSupabaseInterceptor();
 // Serve original images on networks that cannot reach the dehub.io transforms.
 installImageOriginFallback();
-// Before the first render, so a redirect such as /r/CODE -> /app?ref=CODE
-// cannot replace the landing URL first. See src/lib/first-touch.ts.
-captureFirstTouch();
+// First-touch attribution. The URL is read now, before a redirect such as
+// /r/CODE -> /app?ref=CODE can replace it; the module itself loads lazily.
+const landing = { path: location.pathname, search: location.search, referrer: document.referrer };
+void import("./lib/first-touch").then((m) => m.captureFirstTouch(landing)).catch(() => undefined);
 // Signs wallet-scoped REST and storage requests; see src/lib/wallet-session.ts.
 installWalletSessionFetch();
 

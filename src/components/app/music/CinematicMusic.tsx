@@ -30,7 +30,7 @@ import { searchNFTs, type DeHubNFT } from '@/lib/api/dehub';
 import { formatViews } from '@/lib/feed-utils';
 import { isBlockedCreator, mapNFTToVideoItem } from '@/lib/music-feed-items';
 import type { VideoItem } from '@/types/feed.types';
-import { viewerShareUrl } from '@/lib/useAffiliateShareUrl';
+import { viewerShareUrl } from '@/lib/share-url';
 import { trackShare } from '@/lib/analytics';
 
 type Chip = 'top' | 'radio' | 'stages' | 'new';

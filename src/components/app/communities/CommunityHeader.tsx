@@ -30,7 +30,7 @@ import { toast } from 'sonner';
 import { useTranslation } from 'react-i18next';
 import { DescriptionWithLinks } from './DescriptionWithLinks';
 import { storageImage, deviceWidth, isMdUp } from '@/lib/media-url';
-import { viewerShareUrl } from '@/lib/useAffiliateShareUrl';
+import { viewerShareUrl } from '@/lib/share-url';
 import { trackShare } from '@/lib/analytics';
 
 interface CommunityHeaderProps {

@@ -10,7 +10,7 @@ import Share2 from "@/components/ui/cut-icons/feedshare";
 
 import { articleHeadings, articleReadingMinutes } from '@/lib/article';
 import { ArticleBody } from './ArticleBody';
-import { viewerShareUrl } from '@/lib/useAffiliateShareUrl';
+import { viewerShareUrl } from '@/lib/share-url';
 import { trackShare } from '@/lib/analytics';
 
 type TextSize = 's' | 'm' | 'l';

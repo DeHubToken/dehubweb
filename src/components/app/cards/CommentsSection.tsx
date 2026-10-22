@@ -133,7 +133,7 @@ import { useConversationCoach, COACH_MIN_CHARS } from '@/hooks/use-conversation-
 import { useCoachEnabled } from '@/hooks/use-coach-enabled';
 import { CoachSuggestions } from './CoachSuggestions';
 import { CommonGroundSheet } from './CommonGroundSheet';
-import { viewerShareUrl } from '@/lib/useAffiliateShareUrl';
+import { viewerShareUrl } from '@/lib/share-url';
 import { trackShare } from '@/lib/analytics';
 
 // The comment data shape and its API mapper live in @/lib/comment-mapper so

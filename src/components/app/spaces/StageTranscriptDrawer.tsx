@@ -66,7 +66,7 @@ import { PLAYBACK_RATES } from '@/lib/video-preferences';
 import { getStagePlaybackState } from '@/lib/stage-playback';
 import { formatStageRate } from '@/components/app/stages/StageRateButton';
 import { usePendingAction } from '@/hooks/use-pending-action';
-import { viewerShareUrl } from '@/lib/useAffiliateShareUrl';
+import { viewerShareUrl } from '@/lib/share-url';
 import { trackShare } from '@/lib/analytics';
 
 interface Segment { speaker: string; text: string; start: number; end: number }

@@ -196,7 +196,7 @@ import { cancelVideoPlayback, requestVideoPlayback } from '@/lib/video-start';
 import { usePlaybackRecovery } from '@/hooks/use-playback-recovery';
 import { usePostStage } from '@/components/app/post-stage/post-stage-context';
 import { StageCreatorRow } from '@/components/app/post-stage/StageCreatorRow';
-import { viewerShareUrl } from '@/lib/useAffiliateShareUrl';
+import { viewerShareUrl } from '@/lib/share-url';
 
 /**
  * How far a touch may travel and still count as a tap on the player. Matches the

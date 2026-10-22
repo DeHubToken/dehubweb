@@ -46,7 +46,7 @@ import type { ProfileData } from '@/hooks/use-dehub-profile';
 import { useNavigate } from 'react-router-dom';
 import { openDmDock } from '@/hooks/use-dm-dock';
 import { LiveRipple } from '@/components/app/LiveRipple';
-import { viewerShareUrl } from '@/lib/useAffiliateShareUrl';
+import { viewerShareUrl } from '@/lib/share-url';
 import { trackShare } from '@/lib/analytics';
 
 export interface ProfileHeaderProps {

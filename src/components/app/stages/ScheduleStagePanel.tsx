@@ -37,7 +37,7 @@ import { supabase } from '@/integrations/supabase/client';
 import { dehubLinkFor } from '@/lib/dehub-links';
 import { toast } from 'sonner';
 import type { AudioSpace } from '@/types/audio-spaces.types';
-import { viewerShareUrl } from '@/lib/useAffiliateShareUrl';
+import { viewerShareUrl } from '@/lib/share-url';
 import { trackShare } from '@/lib/analytics';
 
 /** 8 MB — a cover is decoration, not an upload feature. */
