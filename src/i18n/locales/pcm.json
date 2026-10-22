@@ -6996,14 +6996,17 @@
   },
   "accountDeletion": {
     "title": "Delete account",
+    "description": "Delete your account and your personal data forever",
+    "warning": "Dis one go delete your DeHub profile, posts, comments, messages and di wallet backup wey we keep, forever. Save your wallet recovery details and move all your assets comot first. Public blockchain transactions and payment records wey law say make we keep no fit delete. We go hide your profile sharp sharp; di deletion go finish inside 30 days. You no fit undo am.",
     "cancel": "Cancel",
-    "confirm": "Permanently delete my account",
-    "busy": "Submitting deletion request…",
-    "accepted": "Account deletion requested",
+    "confirm": "Delete my account forever",
+    "busy": "We dey send your delete request…",
+    "accepted": "We don collect your delete request",
     "receipt": "Yousey deletion request go save. Yousey profile go hide, and yousey account go delete permanently after 30 days. Sign in no go cancel dis request.",
     "done": "Done",
     "error": "Wahala! You no dey submit your delete request. Your account no confirm for delete yet. Try again, o!",
-    "back": "Back to Settings",
+    "back": "Go back to Settings",
+    "signIn": "Sign in make you fit delete your account",
     "acknowledge": "I save my wallet recovery details for me, and I know dat deletion go be permanent."
   },
   "miniApps": {
