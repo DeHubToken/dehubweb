@@ -26,12 +26,7 @@ export function isKnownKind(kind: string): kind is OverlayKind {
   return (OVERLAY_KINDS as readonly string[]).includes(kind);
 }
 
-/**
- * Kinds that take over something the app already draws on its own. A stream
- * whose overlay has a tip alert must not also play the built-in corner
- * celebration, or every gift lands twice.
- */
-export const REPLACES_BUILT_IN_CELEBRATION: readonly OverlayKind[] = ['tip_alert'];
+export { REPLACES_BUILT_IN_CELEBRATION, overlayOwnsCelebration } from './built-in';
 
 /**
  * Read a setting, falling back when it is missing or the wrong type.
