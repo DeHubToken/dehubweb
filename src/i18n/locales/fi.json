@@ -4722,7 +4722,9 @@
     "joined": "{{name}} liittyi",
     "goalReached": "Tavoite saavutettu!",
     "followersUnit": "seuraajat",
-    "topSupporters": "Parhaat kannattajat"
+    "topSupporters": "Parhaat kannattajat",
+    "tipped": "{{name}} tippiä",
+    "chatPreview": "Chat-viestit näkyvät tässä"
   },
   "liveStudio": {
     "title": "Live-studio",
@@ -4776,7 +4778,12 @@
       "top_supporters": "Parhaat kannattajat",
       "viewer_count": "Katsojien määrä",
       "text": "Teksti",
-      "frame": "Runko"
+      "frame": "Runko",
+      "stream_timer": "Virta-ajastin",
+      "reaction_counter": "Reaktiolaskuri",
+      "event_feed": "Viimeaikainen toiminta",
+      "chat_box": "Keskusteluruutu",
+      "ticker": "Ticker"
     },
     "hints": {
       "tip_alert": "Juhlii jokaista tippiä sen tason mukaan",
@@ -4788,7 +4795,12 @@
       "top_supporters": "Suurimmat tippaajasi tässä suoratoistossa",
       "viewer_count": "Kuinka monta ihmistä katselee",
       "text": "Tekstirivi tai alempi kolmasosa",
-      "frame": "Raja virran ympärillä"
+      "frame": "Raja virran ympärillä",
+      "stream_timer": "Kuinka kauan olet elänyt",
+      "reaction_counter": "Laskee jokaisen reaktion virrassa",
+      "event_feed": "Uusimmat vinkit, seuraa, merkinnät JA osakkeet",
+      "chat_box": "Suoratoistosi keskustelu näytöllä",
+      "ticker": "Rivi omaa tekstiäsi vierittämässä"
     },
     "fields": {
       "style": "Tyyli",
@@ -4813,7 +4825,14 @@
       "glow": "Hehku",
       "thickness": "Paksuus",
       "radius": "Kulman pyöristys",
-      "accent": "Väri"
+      "accent": "Väri",
+      "label": "Tunniste",
+      "lines": "Näytetyt rivit",
+      "showAvatars": "Näytä profiilikuvat",
+      "speed": "Nopeus",
+      "slow": "Hidas",
+      "normal": "Normaali",
+      "fast": "Nopea"
     }
   },
   "live": {

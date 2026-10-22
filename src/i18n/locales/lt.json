@@ -4783,7 +4783,9 @@
     "joined": "{{name}} prisijungė",
     "goalReached": "Tikslas pasiektas!",
     "followersUnit": "sekėjai",
-    "topSupporters": "Geriausi rėmėjai"
+    "topSupporters": "Geriausi rėmėjai",
+    "tipped": "{{name}} arbatpinigių",
+    "chatPreview": "Pokalbio žinutės rodomos čia"
   },
   "liveStudio": {
     "title": "Live Studio",
@@ -4837,7 +4839,12 @@
       "top_supporters": "Geriausi rėmėjai",
       "viewer_count": "Žiūrinčiųjų skaičius",
       "text": "Tekstas",
-      "frame": "Rėmas"
+      "frame": "Rėmas",
+      "stream_timer": "Srauto laikmatis",
+      "reaction_counter": "Reakcijų skaitiklis",
+      "event_feed": "Naujausia veikla",
+      "chat_box": "Pokalbio laukelis",
+      "ticker": "Žymeklis"
     },
     "hints": {
       "tip_alert": "Pagerbia kiekvieną patarimą, prilygstantį jo lygiui",
@@ -4849,7 +4856,12 @@
       "top_supporters": "Didžiausi šio srauto arbatpinigiai",
       "viewer_count": "Kiek žmonių žiūri",
       "text": "Teksto eilutė arba apatinis trečdalis",
-      "frame": "Riba aplink jūsų srautą"
+      "frame": "Riba aplink jūsų srautą",
+      "stream_timer": "Kiek laiko gyvenate",
+      "reaction_counter": "Skaičiuoja kiekvieną reakciją sraute",
+      "event_feed": "Naujausi patarimai, prenumeratos ir akcijos",
+      "chat_box": "Jūsų srautinis pokalbis ekrane",
+      "ticker": "Slenkanti jūsų teksto eilutė"
     },
     "fields": {
       "style": "Stilius",
@@ -4874,7 +4886,14 @@
       "glow": "Švytėjimas",
       "thickness": "Storis",
       "radius": "Kampų apvalinimas",
-      "accent": "Spalva"
+      "accent": "Spalva",
+      "label": "Etiketė",
+      "lines": "Rodomos eilutės",
+      "showAvatars": "Rodyti profilio nuotraukas",
+      "speed": "Greitis",
+      "slow": "Lėtai",
+      "normal": "Įprastas",
+      "fast": "Greitas"
     }
   },
   "live": {

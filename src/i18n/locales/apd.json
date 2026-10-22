@@ -4267,7 +4267,8 @@
     "newSubscriber": "مشترك جديد: {{name}}",
     "subscribedTo": "{{name}} اشترك في {{plan}}",
     "joined": "الانضمام إلى {{name}}",
-    "followersUnit": "المتابعين"
+    "followersUnit": "المتابعين",
+    "chatPreview": "رسائل الشات بتظهر هنا"
   },
   "liveStudio": {
     "title": "ستوديو لايف",
@@ -4311,7 +4312,12 @@
       "follow_alert": "تابع التحذير",
       "share_alert": "تنبيه المشاركة",
       "viewer_count": "عدد المشاهدين",
-      "frame": "فريم"
+      "frame": "فريم",
+      "stream_timer": "مؤقت البث",
+      "reaction_counter": "عداد التفاعل",
+      "event_feed": "النشاط الأخير",
+      "chat_box": "صندوق الشات",
+      "ticker": "شريط التمرير"
     },
     "hints": {
       "tip_alert": "بيحتفل بكل إكرامية، بحجمها حسب الفئة",
@@ -4323,7 +4329,12 @@
       "top_supporters": "أكبر المتبرعين في البث دا",
       "viewer_count": "كم شخص بيتفرج",
       "text": "سطر نص أو لواية سفلى",
-      "frame": "حاجز حول تيارك"
+      "frame": "حاجز حول تيارك",
+      "stream_timer": "كم مدة البث بتاعك",
+      "reaction_counter": "بيعد كل تفاعل في البث",
+      "event_feed": "أحدث التبرعات، المتابعين، الاشتراكات والمشاركات",
+      "chat_box": "شات البث بتاعك، على الشاشة",
+      "ticker": "سطر نصك الخاص بيتحرك عبر الشاشة"
     },
     "fields": {
       "celebration": "احتفال",
@@ -4342,7 +4353,14 @@
       "solid": "صلب",
       "thickness": "سُمك",
       "radius": "تدوير الزوايا",
-      "accent": "لون"
+      "accent": "لون",
+      "label": "العنوان",
+      "lines": "عدد السطور المعروضة",
+      "showAvatars": "عرض صور البروفايل",
+      "speed": "السرعة",
+      "slow": "بطيء",
+      "normal": "عادي",
+      "fast": "سريع"
     }
   },
   "live": {

@@ -4792,7 +4792,9 @@
     "joined": "{{name}} nandray anjara",
     "goalReached": "Tratra ny tanjona!",
     "followersUnit": "mpanara-dia",
-    "topSupporters": "TOP mpanohana"
+    "topSupporters": "TOP mpanohana",
+    "tipped": "{{name}} tipped",
+    "chatPreview": "Ny hafatra amin'ny Chat dia hita eto."
   },
   "liveStudio": {
     "title": "Live Studio",
@@ -4846,7 +4848,12 @@
       "top_supporters": "Mpankasitraka ambony",
       "viewer_count": "Isan'ny mpijery",
       "text": "Soratra",
-      "frame": "Rafitra"
+      "frame": "Rafitra",
+      "stream_timer": "Fotoam-piroboroboana",
+      "reaction_counter": "Fanehoan-kevitra manohitra",
+      "event_feed": "Hetsika vao haingana",
+      "chat_box": "Efitrano firesahana",
+      "ticker": "Ticker"
     },
     "hints": {
       "tip_alert": "Mankalaza ny tip rehetra, arakaraka ny haavon'izy ireo",
@@ -4858,7 +4865,12 @@
       "top_supporters": "Ireo mpanome tip lehibe indrindra amin'ity streaming ity",
       "viewer_count": "Firy ny olona mijery",
       "text": "Andalana soratra na ambany fahatelo",
-      "frame": "Sisin-tany manodidina ny streaming-nao"
+      "frame": "Sisin-tany manodidina ny streaming-nao",
+      "stream_timer": "Hafiriana ianao no niaina",
+      "reaction_counter": "Manisa ny fanehoan-kevitra rehetra ao amin'ny renirano",
+      "event_feed": "Ireto torohevitra farany, manaraka, famandrihana ary fizarana",
+      "chat_box": "Ny renirano amin'ny chat, eo amin'ny efijery",
+      "ticker": "Tsipika iray amin'ny horonan-tsarinao manokana"
     },
     "fields": {
       "style": "Endrika",
@@ -4883,7 +4895,14 @@
       "glow": "Sazin",
       "thickness": "Hateviny",
       "radius": "Boribory manodidina",
-      "accent": "Loko"
+      "accent": "Loko",
+      "label": "Mari-tsoratra",
+      "lines": "Andalana aseho",
+      "showAvatars": "Asehoy ny sarin'ny profil",
+      "speed": "Hafaingana",
+      "slow": "Meda",
+      "normal": "Tokony ho izy",
+      "fast": "Faingana"
     }
   },
   "live": {

@@ -4724,7 +4724,9 @@
     "joined": "Připojil se uživatel {{name}}",
     "goalReached": "Cíl dosažen!",
     "followersUnit": "následovníci",
-    "topSupporters": "Nejlepší podporovatelé"
+    "topSupporters": "Nejlepší podporovatelé",
+    "tipped": "Spropitné {{name}}",
+    "chatPreview": "Zde se zobrazují zprávy z chatu"
   },
   "liveStudio": {
     "title": "Live Studio",
@@ -4777,7 +4779,12 @@
       "top_supporters": "Nejlepší podporovatelé",
       "viewer_count": "Počet diváků",
       "text": "Text",
-      "frame": "Rám"
+      "frame": "Rám",
+      "stream_timer": "Časovač streamu",
+      "reaction_counter": "Počítadlo reakcí",
+      "event_feed": "Nedávná aktivita",
+      "chat_box": "Chat box",
+      "ticker": "Ticker"
     },
     "hints": {
       "tip_alert": "Oslavuje každé spropitné, dimenzované podle úrovně",
@@ -4789,7 +4796,12 @@
       "top_supporters": "Vaše největší spropitné v tomto streamu",
       "viewer_count": "Kolik lidí se dívá",
       "text": "Řádek textu nebo dolní třetina",
-      "frame": "Hranice kolem vašeho streamu"
+      "frame": "Hranice kolem vašeho streamu",
+      "stream_timer": "Jak dlouho žijete",
+      "reaction_counter": "Počítá každou reakci na streamu",
+      "event_feed": "Nejnovější tipy, následující, upisování a sdílení",
+      "chat_box": "Chat vašeho streamu na obrazovce",
+      "ticker": "Řádek vlastního textu, který se posouvá"
     },
     "fields": {
       "style": "Styl",
@@ -4814,7 +4826,14 @@
       "glow": "Záře",
       "thickness": "Tloušťka",
       "radius": "Zaoblení rohů",
-      "accent": "Barva"
+      "accent": "Barva",
+      "label": "Štítek",
+      "lines": "Zobrazené řádky",
+      "showAvatars": "Zobrazit profilové obrázky",
+      "speed": "Rychlost",
+      "slow": "Pomalý",
+      "normal": "Normální",
+      "fast": "Rychle"
     }
   },
   "live": {

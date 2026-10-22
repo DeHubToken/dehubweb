@@ -4595,7 +4595,9 @@
     "joined": "{{name}} melu",
     "goalReached": "Tujuan wis kasil!",
     "followersUnit": "pengikut",
-    "topSupporters": "Pangrojong paling dhuwur"
+    "topSupporters": "Pangrojong paling dhuwur",
+    "tipped": "{{name}} ditip",
+    "chatPreview": "Pesan obrolan katon kene"
   },
   "liveStudio": {
     "title": "Live Studio",
@@ -4645,7 +4647,12 @@
       "goal_bar": "Bar gol",
       "top_supporters": "Pendukung paling dhuwur",
       "viewer_count": "Jumlah penonton",
-      "frame": "Kerangka"
+      "frame": "Kerangka",
+      "stream_timer": "Jam streaming",
+      "reaction_counter": "Penghitung reaksi",
+      "event_feed": "Aktivitas anyar",
+      "chat_box": "Kotak obrolan",
+      "ticker": "Ticker"
     },
     "hints": {
       "tip_alert": "Ngrayakake saben tip, disesuaikan karo tingkaté",
@@ -4657,7 +4664,12 @@
       "top_supporters": "Pemberi tip paling gedhé ing stream iki",
       "viewer_count": "Pira wong sing nonton",
       "text": "Salah siji baris teks utawa lower third",
-      "frame": "Keliling di aliranmu"
+      "frame": "Keliling di aliranmu",
+      "stream_timer": "Pira suwene sampeyan wis live",
+      "reaction_counter": "Ngetung saben reaksi ing streaming",
+      "event_feed": "Tips paling anyar, pengikut, langganan lan bagikan",
+      "chat_box": "Obrolan streaming sampeyan, ing layar",
+      "ticker": "Saka teks sampeyan dhewe sing ngliwati"
     },
     "fields": {
       "celebration": "Ngabdulakehan",
@@ -4676,7 +4688,14 @@
       "solid": "Padhet",
       "glow": "cahya",
       "radius": "Kelurusan sisi sudut",
-      "accent": "Warna"
+      "accent": "Warna",
+      "label": "Label",
+      "lines": "Baris sing ditampilake",
+      "showAvatars": "Tampilake gambar profil",
+      "speed": "Kecepatan",
+      "slow": "Alon",
+      "normal": "Normal",
+      "fast": "Cepet"
     }
   },
   "live": {

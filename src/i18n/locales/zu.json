@@ -4790,7 +4790,9 @@
     "joined": "{{name}} ujoyine",
     "goalReached": "Umgomo ufinyelelwe!",
     "followersUnit": "abalandeli",
-    "topSupporters": "Abasekeli abahamba phambili"
+    "topSupporters": "Abasekeli abahamba phambili",
+    "tipped": "{{name}} ithiphu",
+    "chatPreview": "Imiyalezo yokuxoxa iyavela lapha"
   },
   "liveStudio": {
     "title": "I-Live Studio",
@@ -4844,7 +4846,12 @@
       "top_supporters": "Abaxhasi abakhulunyayo",
       "viewer_count": "Inombolo yabakhangeli",
       "text": "Umbhalo",
-      "frame": "Ifreyimu"
+      "frame": "Ifreyimu",
+      "stream_timer": "I-timer yokusakaza",
+      "reaction_counter": "Ikhawunta yokusabela",
+      "event_feed": "Okwenziwayo kwakamuva",
+      "chat_box": "Ibhokisi lengxoxo",
+      "ticker": "Umthumeli wamathikithi"
     },
     "hints": {
       "tip_alert": "Kusebenzisa umuntu ngamunye otiphu, osayizi ngokwesigaba sakhe",
@@ -4856,7 +4863,12 @@
       "top_supporters": "Abatiphu bakho abakhulu kakhulu kule stream",
       "viewer_count": "Bangaki abantu abukeka",
       "text": "Umugqa wombhalo noma isigaba esiphansi",
-      "frame": "Umngcele ozungeze i-stream yakho"
+      "frame": "Umngcele ozungeze i-stream yakho",
+      "stream_timer": "Uhlale isikhathi esingakanani",
+      "reaction_counter": "Ibala konke ukusabela ekusakazweni",
+      "event_feed": "Amacebiso akamuva, alandelayo, okubhaliselwe nokwabelana",
+      "chat_box": "Ingxoxo yokusakaza kwakho, esikrinini",
+      "ticker": "Umugqa wombhalo wakho uskrola ngaphesheya"
     },
     "fields": {
       "style": "Isitayela",
@@ -4881,7 +4893,14 @@
       "glow": "Ukucwebezela",
       "thickness": "Ukuqina",
       "radius": "Ukuzungeza ekhoneni",
-      "accent": "Umbala"
+      "accent": "Umbala",
+      "label": "Ilebula",
+      "lines": "Imigqa ibonisiwe",
+      "showAvatars": "Bonisa izithombe zephrofayili",
+      "speed": "Ijubane",
+      "slow": "Kancane",
+      "normal": "Okuvamile",
+      "fast": "Kuyashesha"
     }
   },
   "live": {

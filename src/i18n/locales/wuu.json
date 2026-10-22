@@ -4380,7 +4380,12 @@
       "top_supporters": "最高支持者",
       "viewer_count": "观看人数",
       "text": "文字",
-      "frame": "框架"
+      "frame": "框架",
+      "stream_timer": "直播計時器",
+      "reaction_counter": "反應計數器",
+      "event_feed": "最近活動",
+      "chat_box": "聊天框",
+      "ticker": "快訊"
     },
     "hints": {
       "tip_alert": "为每笔打赏庆祝，按等级大小显示",
@@ -4392,7 +4397,12 @@
       "top_supporters": "本场直播的最大打赏者",
       "viewer_count": "有多少人在观看",
       "text": "一行文字或下三分之一的字幕",
-      "frame": "围绕直播的边框"
+      "frame": "围绕直播的边框",
+      "stream_timer": "你直播的時間",
+      "reaction_counter": "計算直播中的每個反應",
+      "event_feed": "最新的打賞、追蹤、訂閱和分享",
+      "chat_box": "你的直播聊天室，顯示在螢幕上",
+      "ticker": "一行你自己的文字滾動"
     },
     "fields": {
       "style": "样式",
@@ -4417,7 +4427,14 @@
       "glow": "发光",
       "thickness": "厚度",
       "radius": "圆角",
-      "accent": "颜色"
+      "accent": "颜色",
+      "label": "標籤",
+      "lines": "顯示行數",
+      "showAvatars": "顯示個人頭像",
+      "speed": "速度",
+      "slow": "慢",
+      "normal": "普通",
+      "fast": "快"
     }
   },
   "live": {

@@ -4723,7 +4723,9 @@
     "joined": "{{name}} csatlakozott",
     "goalReached": "Cél elérve!",
     "followersUnit": "követők",
-    "topSupporters": "Kiemelt támogatók"
+    "topSupporters": "Kiemelt támogatók",
+    "tipped": "{{name}} tipped",
+    "chatPreview": "Chat messages appear here"
   },
   "liveStudio": {
     "title": "Live Studio",
@@ -4777,7 +4779,12 @@
       "top_supporters": "Legfőbb támogatók",
       "viewer_count": "Nézőszám",
       "text": "Szöveg",
-      "frame": "Keret"
+      "frame": "Keret",
+      "stream_timer": "Stream timer",
+      "reaction_counter": "Reaction counter",
+      "event_feed": "Recent activity",
+      "chat_box": "Chat box",
+      "ticker": "Ticker"
     },
     "hints": {
       "tip_alert": "Üdvözöl minden tippeket, méretük a szintjükhöz igazodva",
@@ -4789,7 +4796,12 @@
       "top_supporters": "Legnagyszerűbb adózói ebben a streamben",
       "viewer_count": "Hány ember nézi",
       "text": "Egy szöveg sor vagy alsó harmad",
-      "frame": "Egy keret a streamedjének körül"
+      "frame": "Egy keret a streamedjének körül",
+      "stream_timer": "Mióta élsz?",
+      "reaction_counter": "Minden reakciót megszámol a folyamon",
+      "event_feed": "A legújabb tippek, követések, előfizetések és megosztások",
+      "chat_box": "Adatfolyamod csevegése a képernyőn",
+      "ticker": "A saját szöveged egy sora végiggörgetve"
     },
     "fields": {
       "style": "Stílus",
@@ -4814,7 +4826,14 @@
       "glow": "Ragyogás",
       "thickness": "Vastagság",
       "radius": "Sarok lekerekítése",
-      "accent": "Szín"
+      "accent": "Szín",
+      "label": "Label",
+      "lines": "Lines shown",
+      "showAvatars": "Show profile pictures",
+      "speed": "Speed",
+      "slow": "Slow",
+      "normal": "Normal",
+      "fast": "Fast"
     }
   },
   "live": {

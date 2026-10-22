@@ -4786,7 +4786,9 @@
     "joined": "{{name}} dołączył",
     "goalReached": "Osiągnięto cel!",
     "followersUnit": "obserwujący",
-    "topSupporters": "Najlepsi kibice"
+    "topSupporters": "Najlepsi kibice",
+    "tipped": "{{name}} napiwek",
+    "chatPreview": "Tutaj pojawiają się wiadomości na czacie"
   },
   "liveStudio": {
     "title": "Live Studio",
@@ -4840,7 +4842,12 @@
       "top_supporters": "Top supporters",
       "viewer_count": "Viewer count",
       "text": "Text",
-      "frame": "Frame"
+      "frame": "Frame",
+      "stream_timer": "Timer strumieniowy",
+      "reaction_counter": "Licznik reakcji",
+      "event_feed": "Ostatnia aktywność",
+      "chat_box": "Pole czatu",
+      "ticker": "Pasek informacyjny"
     },
     "hints": {
       "tip_alert": "Świętuje każdą wskazówkę, dostosowaną do jej progu",
@@ -4852,7 +4859,12 @@
       "top_supporters": "Twoje największe napiwki w tym strumieniu",
       "viewer_count": "Ile osób obserwuje",
       "text": "Wiersz tekstu lub dolna jedna trzecia",
-      "frame": "Obramowanie wokół Twojego strumienia"
+      "frame": "Obramowanie wokół Twojego strumienia",
+      "stream_timer": "Jak długo jesteś na żywo",
+      "reaction_counter": "Liczy każdą reakcję w strumieniu",
+      "event_feed": "Najnowsze wskazówki, obserwacje, subskrypcje i udostępnienia",
+      "chat_box": "Czat Twojej transmisji strumieniowej na ekranie",
+      "ticker": "Linia własnego tekstu przewijająca się przez"
     },
     "fields": {
       "style": "Style",
@@ -4877,7 +4889,14 @@
       "glow": "Blask",
       "thickness": "Grubość",
       "radius": "Zaokrąglanie narożników",
-      "accent": "Kolor"
+      "accent": "Kolor",
+      "label": "Etykieta",
+      "lines": "Pokazane linie",
+      "showAvatars": "Pokaż zdjęcia profilowe",
+      "speed": "Prędkość",
+      "slow": "Wolno",
+      "normal": "Normalny",
+      "fast": "Szybko"
     }
   },
   "live": {

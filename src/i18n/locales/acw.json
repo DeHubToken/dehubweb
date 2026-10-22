@@ -4295,7 +4295,9 @@
     "joined": "المنضم {{name}}",
     "goalReached": "وصلنا الهدف!",
     "followersUnit": "متابعين",
-    "topSupporters": "أقوى الداعمين"
+    "topSupporters": "أقوى الداعمين",
+    "tipped": "{{name}} مِسْكَر",
+    "chatPreview": "رسائل الشات تظهر هنا"
   },
   "liveStudio": {
     "title": "ستوديو لايف",
@@ -4349,7 +4351,12 @@
       "top_supporters": "أكبر المدعمين",
       "viewer_count": "عدد المشاهدين",
       "text": "نص",
-      "frame": "كادر"
+      "frame": "كادر",
+      "stream_timer": "مُؤَقِّت البث",
+      "reaction_counter": "عداد التفاعل",
+      "event_feed": "النشاط الأخير",
+      "chat_box": "صندوق الشات",
+      "ticker": "شريط التمرير"
     },
     "hints": {
       "tip_alert": "يحتفل بكل تيب حسب درجته",
@@ -4361,7 +4368,12 @@
       "top_supporters": "أكبر المدعمين في هذا الاستريم",
       "viewer_count": "كم عدد الناس الذين يشاهدون",
       "text": "خط نص أو لOWER THIRD",
-      "frame": "حافة حول استريمك"
+      "frame": "حافة حول استريمك",
+      "stream_timer": "كم مدة بثك",
+      "reaction_counter": "يحسّب كل تفاعل على البث",
+      "event_feed": "أحدث الإكراميات، المتابعين، الاشتراكات والمشاركات",
+      "chat_box": "شات البث حقك، على الشاشة",
+      "ticker": "سطر نصك الخاص يمرّ"
     },
     "fields": {
       "style": "أسلوب",
@@ -4386,7 +4398,14 @@
       "glow": "توهج",
       "thickness": "سمك",
       "radius": "تدوير الزوايا",
-      "accent": "اللون"
+      "accent": "اللون",
+      "label": "العنوان",
+      "lines": "السطور المعروضة",
+      "showAvatars": "إظهار صور البروفايل",
+      "speed": "السرعة",
+      "slow": "بطيء",
+      "normal": "عادي",
+      "fast": "سريع"
     }
   },
   "live": {

@@ -4763,7 +4763,9 @@
     "joined": "{{name}} pievienojās",
     "goalReached": "Mērķis sasniegts!",
     "followersUnit": "sekotāji",
-    "topSupporters": "Populārākie atbalstītāji"
+    "topSupporters": "Populārākie atbalstītāji",
+    "tipped": "{{name}} dzeramnauda",
+    "chatPreview": "Tērzēšanas ziņojumi tiek parādīti šeit"
   },
   "liveStudio": {
     "title": "Live Studio",
@@ -4817,7 +4819,12 @@
       "top_supporters": "Populārākie atbalstītāji",
       "viewer_count": "Skatītāju skaits",
       "text": "Teksts",
-      "frame": "Rāmis"
+      "frame": "Rāmis",
+      "stream_timer": "Straumes taimeris",
+      "reaction_counter": "Reakciju skaitītājs",
+      "event_feed": "Jaunākās aktivitātes",
+      "chat_box": "Tērzēšanas lodziņš",
+      "ticker": "Atzīme"
     },
     "hints": {
       "tip_alert": "Godina ikvienu dzeramnaudu, kuras lielums atbilst tās līmenim",
@@ -4829,7 +4836,12 @@
       "top_supporters": "Jūsu lielākie padomdevēji šajā straumē",
       "viewer_count": "Cik daudz cilvēku skatās",
       "text": "Teksta rindiņa vai apakšējā trešdaļa",
-      "frame": "Apmale ap jūsu straumi"
+      "frame": "Apmale ap jūsu straumi",
+      "stream_timer": "Cik ilgi jūs dzīvojat",
+      "reaction_counter": "Skaita katru reakciju straumē",
+      "event_feed": "Jaunākie padomi, sekojumi, parakstīšanās un akcijas",
+      "chat_box": "Straumes tērzēšana ekrānā",
+      "ticker": "Jūsu teksta rindiņa, kas ritina pāri"
     },
     "fields": {
       "style": "Stils",
@@ -4854,7 +4866,14 @@
       "glow": "Mirdzums",
       "thickness": "Biezums",
       "radius": "Stūru noapaļošana",
-      "accent": "Krāsa"
+      "accent": "Krāsa",
+      "label": "Etiķete",
+      "lines": "Parādītās rindas",
+      "showAvatars": "Rādīt profila bildes",
+      "speed": "Ātrums",
+      "slow": "Lēns",
+      "normal": "Normāls",
+      "fast": "Ātrs"
     }
   },
   "live": {

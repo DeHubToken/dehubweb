@@ -4725,7 +4725,9 @@
     "joined": "{{name}} gick med",
     "goalReached": "Målet har uppnåtts!",
     "followersUnit": "följare",
-    "topSupporters": "Toppanhängare"
+    "topSupporters": "Toppanhängare",
+    "tipped": "{{name}} tippade",
+    "chatPreview": "Chattmeddelanden visas här"
   },
   "liveStudio": {
     "title": "Live Studio",
@@ -4779,7 +4781,12 @@
       "top_supporters": "Toppanhängare",
       "viewer_count": "Antal tittare",
       "text": "Text",
-      "frame": "Ram"
+      "frame": "Ram",
+      "stream_timer": "Strömtimer",
+      "reaction_counter": "Reaktionsräknare",
+      "event_feed": "Senaste aktivitet",
+      "chat_box": "Chattruta",
+      "ticker": "Ticker"
     },
     "hints": {
       "tip_alert": "Firar varje dricks, storleksanpassad till sin nivå",
@@ -4791,7 +4798,12 @@
       "top_supporters": "Dina största dricks den här strömmen",
       "viewer_count": "Hur många personer tittar",
       "text": "En textrad eller en lägre tredjedel",
-      "frame": "En kant runt din ström"
+      "frame": "En kant runt din ström",
+      "stream_timer": "Hur länge du har levt",
+      "reaction_counter": "Räknar varje reaktion på flödet",
+      "event_feed": "De senaste tipsen, följarna, teckningarna och aktierna",
+      "chat_box": "Din ströms chatt, på skärmen",
+      "ticker": "En rad med din egen text som rullar över"
     },
     "fields": {
       "style": "Stil",
@@ -4816,7 +4828,14 @@
       "glow": "Glöd",
       "thickness": "Tjocklek",
       "radius": "Hörnavrundning",
-      "accent": "Färg"
+      "accent": "Färg",
+      "label": "Etikett",
+      "lines": "Linjer som visas",
+      "showAvatars": "Visa profilbilder",
+      "speed": "Hastighet",
+      "slow": "Långsam",
+      "normal": "Normal",
+      "fast": "Snabb"
     }
   },
   "live": {

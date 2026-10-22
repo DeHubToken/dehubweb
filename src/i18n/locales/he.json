@@ -4781,7 +4781,9 @@
     "joined": "{{name}} הצטרפו",
     "goalReached": "הגעת ליעד!",
     "followersUnit": "עוקבים",
-    "topSupporters": "תומכים מובילים"
+    "topSupporters": "תומכים מובילים",
+    "tipped": "טיפ של {{name}}",
+    "chatPreview": "כאן מופיעות הודעות צ'אט"
   },
   "liveStudio": {
     "title": "סטודיו לייב",
@@ -4835,7 +4837,12 @@
       "top_supporters": "תומכי העליון",
       "viewer_count": "מספר הצופים",
       "text": "טקסט",
-      "frame": "כרמית"
+      "frame": "כרמית",
+      "stream_timer": "טיימר סטרימינג",
+      "reaction_counter": "מונה תגובות",
+      "event_feed": "פעילות אחרונה",
+      "chat_box": "תיבת צ'אט",
+      "ticker": "טיקר"
     },
     "hints": {
       "tip_alert": "מחגג כל טיפ לפי רמתו",
@@ -4847,7 +4854,12 @@
       "top_supporters": "הטיפים הגדולים ביותר בזרם זה",
       "viewer_count": "כמה אנשים צופים",
       "text": "שורה של טקסט או לOWER THIRD",
-      "frame": "גבול סביב הזרם שלך"
+      "frame": "גבול סביב הזרם שלך",
+      "stream_timer": "כמה זמן אתה חי?",
+      "reaction_counter": "סופר כל תגובה בזרם",
+      "event_feed": "הטיפים האחרונים, להלן, מנויים ושיתופים",
+      "chat_box": "הצ'אט של הזרם שלכם, על המסך",
+      "ticker": "שורה מהטקסט שלכם גוללת לרוחב"
     },
     "fields": {
       "style": "סגנון",
@@ -4872,7 +4884,14 @@
       "glow": "זוהר",
       "thickness": "עובי",
       "radius": "עיגול פינות",
-      "accent": "צבע"
+      "accent": "צבע",
+      "label": "תווית",
+      "lines": "שורות מוצגות",
+      "showAvatars": "להצגת תמונות הפרופיל",
+      "speed": "מהירות",
+      "slow": "לאט",
+      "normal": "רגיל",
+      "fast": "מהיר"
     }
   },
   "live": {

@@ -4026,7 +4026,9 @@
     "joined": "{{name}} شامل ہوا",
     "goalReached": "ہدف حاصل ہوا!",
     "followersUnit": "فالوورز",
-    "topSupporters": "ٹاپ سپورٹرز"
+    "topSupporters": "ٹاپ سپورٹرز",
+    "tipped": "{{name}} ٹِپ کیا گیا",
+    "chatPreview": "چیٹ کے پیغامات یہاں ظاہر ہوں گے"
   },
   "liveStudio": {
     "title": "لائیو سٹوڈیو",
@@ -4062,13 +4064,23 @@
     "kinds": {
       "follow_alert": "فالو الیرٹ",
       "share_alert": "شیئر الرٹ",
-      "frame": "فریم"
+      "frame": "فریم",
+      "stream_timer": "اسٹریم ٹائمر",
+      "reaction_counter": "ری ایکشن کاؤنٹر",
+      "event_feed": "حالیہ سرگرمی",
+      "chat_box": "چیٹ باکس",
+      "ticker": "ٹِکر"
     },
     "hints": {
       "share_alert": "جب کوئی آپ کے سٹریم کو شیئر کرے تو دکھاتا ہے",
       "join_alert": "ہر ناظر کو جب وہ آتے ہیں تو خوش آمدید کہتے ہیں",
       "top_supporters": "آپ کے اس سٹریم کے سب سے بڑے ٹِپرز",
-      "viewer_count": "کتنہ لوگ دیکھ رہے ہیں؟"
+      "viewer_count": "کتنہ لوگ دیکھ رہے ہیں؟",
+      "stream_timer": "آپ کتنے دن سے لائیو ہیں",
+      "reaction_counter": "ہر ری ایکشن کو گنیں",
+      "event_feed": "تازہ ترین ٹِپس، فالو، سبسکرپشنز اور شیئرز",
+      "chat_box": "آپ کے اسٹریم کا چیٹ، اسکرین پر",
+      "ticker": "آپ کے اپنے ٹیکسٹ کی ایک لائن جو گزر رہی ہے"
     },
     "fields": {
       "style": "اسٹائل",
@@ -4093,7 +4105,14 @@
       "glow": "چمک",
       "thickness": "موٹائی",
       "radius": "کونے کا گولائی",
-      "accent": "رنگ"
+      "accent": "رنگ",
+      "label": "لیبل",
+      "lines": "دکھائی گئی لائنیں",
+      "showAvatars": "پروفائل تصاویر دکھائیں",
+      "speed": "رفتار",
+      "slow": "سست",
+      "normal": "عام",
+      "fast": "تیز"
     }
   },
   "live": {

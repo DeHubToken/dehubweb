@@ -4770,7 +4770,9 @@
     "joined": "{{name}} liitus",
     "goalReached": "Eesmärk on saavutatud!",
     "followersUnit": "jälgijad",
-    "topSupporters": "Parimad toetajad"
+    "topSupporters": "Parimad toetajad",
+    "tipped": "{{name}} jootraha",
+    "chatPreview": "Vestlussõnumid kuvatakse siin"
   },
   "liveStudio": {
     "title": "Live Studio",
@@ -4824,7 +4826,12 @@
       "top_supporters": "Parimad toetajad",
       "viewer_count": "Vaatajate arv",
       "text": "Tekst",
-      "frame": "Raam"
+      "frame": "Raam",
+      "stream_timer": "Voo taimer",
+      "reaction_counter": "Reaktsiooniloendur",
+      "event_feed": "Hiljutine tegevus",
+      "chat_box": "Vestluskast",
+      "ticker": "Tiksuja"
     },
     "hints": {
       "tip_alert": "Tähistab igat oma tasemele vastavat jootraha",
@@ -4836,7 +4843,12 @@
       "top_supporters": "Sinu suurimad jootraha andjad selles voos",
       "viewer_count": "Mitu inimest vaatab",
       "text": "Tekstirea või alumine kolmandik",
-      "frame": "Sinu oja ümber olev ääris"
+      "frame": "Sinu oja ümber olev ääris",
+      "stream_timer": "Kui kaua sa oled elanud",
+      "reaction_counter": "Loendab iga reaktsiooni voos",
+      "event_feed": "Viimased nõuanded, järgnevad, märkimised ja aktsiad",
+      "chat_box": "Sinu voo vestlus ekraanil",
+      "ticker": "Sinu enda teksti rida, mis kerib üle"
     },
     "fields": {
       "style": "Stiil",
@@ -4861,7 +4873,14 @@
       "glow": "Sära",
       "thickness": "Paksus",
       "radius": "Nurga ümardamine",
-      "accent": "Värv"
+      "accent": "Värv",
+      "label": "Silt",
+      "lines": "Näidatud read",
+      "showAvatars": "Näita profiilipilte",
+      "speed": "Kiirus",
+      "slow": "Aeglane",
+      "normal": "Normaalne",
+      "fast": "Kiire"
     }
   },
   "live": {

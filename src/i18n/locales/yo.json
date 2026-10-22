@@ -4696,7 +4696,9 @@
     "joined": "{{name}} darapọ mọ",
     "goalReached": "Àfojúsùn ti dé!",
     "followersUnit": "àwọn ọmọ-ẹ̀yìn",
-    "topSupporters": "Awọn alatilẹyin ti o ga julọ"
+    "topSupporters": "Awọn alatilẹyin ti o ga julọ",
+    "tipped": "{{name}} tipped",
+    "chatPreview": "Awọn ifiranṣẹ iwiregbe han nibi"
   },
   "liveStudio": {
     "title": "Live Studio",
@@ -4748,7 +4750,12 @@
       "join_alert": "Darapọ mọ itaniji",
       "goal_bar": "Bárà ìlépa",
       "viewer_count": "Ka iye àwọn tó ń wò ó",
-      "text": "Ọrọ"
+      "text": "Ọrọ",
+      "stream_timer": "Akoko ṣiṣan",
+      "reaction_counter": "Àdììtú ìfèsì",
+      "event_feed": "Iṣẹ́ àìpẹ́ yìí",
+      "chat_box": "Apoti Iwiregbe",
+      "ticker": "Ticker"
     },
     "hints": {
       "tip_alert": "Ṣe ayẹyẹ gbogbo awọn imọran, iwọn si ipele rẹ.",
@@ -4760,7 +4767,12 @@
       "top_supporters": "Tippers rẹ ti o tobi julo ni ṣiṣan yii",
       "viewer_count": "Àwọn ènìyàn mélòó ni wọ́n ń wò",
       "text": "Òpó ọ̀rọ̀ tàbí ìkẹta tó wà nísàlẹ̀",
-      "frame": "Aala ti o wa ni ayika ṣiṣan rẹ"
+      "frame": "Aala ti o wa ni ayika ṣiṣan rẹ",
+      "stream_timer": "Báwo ni o ti wà láyé",
+      "reaction_counter": "Ka gbogbo èsì lórí odò náà.",
+      "event_feed": "Ìmọ̀ràn tuntun, tó tẹ̀lé e, ìforúkọsílẹ̀ àti ìpín",
+      "chat_box": "Iwiregbe ṣiṣan rẹ, loju iboju",
+      "ticker": "Àlà kan nínú àyọkà tìrẹ tí ó ń rìn káàkiri"
     },
     "fields": {
       "style": "Àṣà",
@@ -4785,7 +4797,14 @@
       "glow": "Glow",
       "thickness": "Sisanra",
       "radius": "Ìyípo igun",
-      "accent": "Awọ"
+      "accent": "Awọ",
+      "label": "Àmì",
+      "lines": "Àwọn ìlà tí a fi hàn",
+      "showAvatars": "Fi àwọn àwòrán àwòkẹ́kọ̀ọ́ hàn",
+      "speed": "Iyara",
+      "slow": "Díẹ̀díẹ̀",
+      "normal": "Ó ṣe déédéé",
+      "fast": "Yara"
     }
   },
   "live": {

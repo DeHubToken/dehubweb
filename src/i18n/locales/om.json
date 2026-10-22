@@ -4744,7 +4744,9 @@
     "joined": "{{name}} itti makame",
     "goalReached": "Galma gahe!",
     "followersUnit": "hordoftoota",
-    "topSupporters": "Deeggartoota olaanoo"
+    "topSupporters": "Deeggartoota olaanoo",
+    "tipped": "{{name}} jechuun gorsa kenne",
+    "chatPreview": "Ergaawwan chaatii asitti mul&#39;atu"
   },
   "liveStudio": {
     "title": "Live Studio",
@@ -4797,7 +4799,12 @@
       "goal_bar": "Goolii bar",
       "top_supporters": "Deeggartoota olaanoo",
       "viewer_count": "Lakkoofsa daawwattootaa",
-      "text": "Barreeffama"
+      "text": "Barreeffama",
+      "stream_timer": "Sa&#39;aatii yaa&#39;aa",
+      "reaction_counter": "Lakkaawwii deebii kennuu",
+      "event_feed": "Sochii dhiheenya kanaa",
+      "chat_box": "Sanduuqa marii",
+      "ticker": "Ticker"
     },
     "hints": {
       "tip_alert": "Gorsa hunda kabaja, hamma sadarkaa isaatti",
@@ -4809,7 +4816,12 @@
       "top_supporters": "Tippers keessan gurguddoon sulula kana",
       "viewer_count": "Namoonni meeqa ilaalaa jiru",
       "text": "Sarara barruu ykn sadaffaa gadii",
-      "frame": "Daangaa naannoo sulula keetii"
+      "frame": "Daangaa naannoo sulula keetii",
+      "stream_timer": "Yeroo hammamii jiraatte live",
+      "reaction_counter": "Deebiin hunda sulula irratti lakkaa&#39;a",
+      "event_feed": "Gorsa haaraa, hordoftoota, maallaqa galchuu fi qooda",
+      "chat_box": "Chaat stream keessanii, iskiriinii irratti",
+      "ticker": "Sarara barruu mataa keetii kan qaxxaamuree jiru"
     },
     "fields": {
       "style": "Akkaataa",
@@ -4833,7 +4845,14 @@
       "glow": "Ifa kennuu",
       "thickness": "Fulbaana",
       "radius": "Golee naannessuu",
-      "accent": "Halluu"
+      "accent": "Halluu",
+      "label": "Mallattoo itti gochuu",
+      "lines": "Sararoota agarsiifaman",
+      "showAvatars": "Suuraa piroofaayilii agarsiisi",
+      "speed": "Saffisa",
+      "slow": "Suuta",
+      "normal": "Baratamaa",
+      "fast": "Ariifataa"
     }
   },
   "live": {

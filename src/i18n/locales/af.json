@@ -4820,7 +4820,9 @@
     "joined": "{{name}} aangesluit",
     "goalReached": "Doel bereik!",
     "followersUnit": "volgers",
-    "topSupporters": "Top ondersteuners"
+    "topSupporters": "Top ondersteuners",
+    "tipped": "{{name}} tippie",
+    "chatPreview": "Geselsboodskappe verskyn hier"
   },
   "liveStudio": {
     "title": "Live Studio",
@@ -4874,7 +4876,12 @@
       "top_supporters": "Top ondersteuners",
       "viewer_count": "Kyker telling",
       "text": "Teks",
-      "frame": "Raam"
+      "frame": "Raam",
+      "stream_timer": "Stroom timer",
+      "reaction_counter": "Reaksie toonbank",
+      "event_feed": "Onlangse aktiwiteite",
+      "chat_box": "Geselsdoos",
+      "ticker": "Ticker"
     },
     "hints": {
       "tip_alert": "Vier elke punt, grootte tot sy vlak",
@@ -4886,7 +4893,12 @@
       "top_supporters": "Jou grootste tippers hierdie stroom",
       "viewer_count": "Hoeveel mense kyk",
       "text": "'n reël van teks of 'n laer derde",
-      "frame": "'n Grens rondom jou stroom"
+      "frame": "'n Grens rondom jou stroom",
+      "stream_timer": "Hoe lank leef jy al",
+      "reaction_counter": "Tel elke reaksie op die stroom",
+      "event_feed": "Die nuutste wenke, volg, intekeninge en aandele",
+      "chat_box": "Jou stroom se geselsie, op die skerm",
+      "ticker": "'n Reël van jou eie teks wat oorrol"
     },
     "fields": {
       "celebration": "Viering",
@@ -4910,7 +4922,14 @@
       "glow": "Gloei",
       "thickness": "Dikte",
       "radius": "Hoek afronding",
-      "accent": "Kleur"
+      "accent": "Kleur",
+      "label": "Etiket",
+      "lines": "Lyne vertoon",
+      "showAvatars": "Wys profielfoto's",
+      "speed": "Spoed",
+      "slow": "Stadig",
+      "normal": "Normaal",
+      "fast": "Vinnig"
     }
   },
   "live": {

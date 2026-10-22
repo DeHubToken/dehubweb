@@ -4792,7 +4792,9 @@
     "joined": "{{name}}已加入",
     "goalReached": "已达到目标！",
     "followersUnit": "关注者",
-    "topSupporters": "顶级支持者"
+    "topSupporters": "顶级支持者",
+    "tipped": "已支付{{name}}小费",
+    "chatPreview": "此处显示聊天消息"
   },
   "liveStudio": {
     "title": "现场演播室",
@@ -4846,7 +4848,12 @@
       "top_supporters": "顶级支持者",
       "viewer_count": "查看者计数",
       "text": "文本",
-      "frame": "框架"
+      "frame": "框架",
+      "stream_timer": "流式计时器",
+      "reaction_counter": "反应计数器",
+      "event_feed": "近期活动",
+      "chat_box": "聊天框",
+      "ticker": "股票代码"
     },
     "hints": {
       "tip_alert": "庆祝每笔小费，按会员等级计算",
@@ -4858,7 +4865,12 @@
       "top_supporters": "您在这条直播中最大的小费支付者",
       "viewer_count": "有多少人正在观看",
       "text": "一行文字或下三分之一",
-      "frame": "流周围的边框"
+      "frame": "流周围的边框",
+      "stream_timer": "您上线多久了",
+      "reaction_counter": "计算流中的每个反应",
+      "event_feed": "最新提示、关注、订阅和分享",
+      "chat_box": "您的视频流聊天记录，显示在屏幕上",
+      "ticker": "滚动一行您自己的文本"
     },
     "fields": {
       "style": "样式",
@@ -4883,7 +4895,14 @@
       "glow": "发光",
       "thickness": "厚度",
       "radius": "圆角",
-      "accent": "颜色"
+      "accent": "颜色",
+      "label": "标签",
+      "lines": "显示的线条",
+      "showAvatars": "显示个人资料图片",
+      "speed": "速度",
+      "slow": "慢",
+      "normal": "正常",
+      "fast": "快"
     }
   },
   "live": {
