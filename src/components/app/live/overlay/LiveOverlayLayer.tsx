@@ -18,7 +18,7 @@ import { useOverlayChat } from '@/hooks/use-overlay-chat';
 import { streamOverlayKey } from '@/hooks/use-stream-overlay';
 import { useVideoPictureRect } from '@/hooks/use-video-picture-rect';
 import { drawOrder, placeWidget, rectFor } from '@/lib/live-overlay/layout';
-import { isKnownKind, newWidget, type OverlayKind } from '@/lib/live-overlay/registry';
+import { isAlertKind, isKnownKind, newWidget, type OverlayKind } from '@/lib/live-overlay/registry';
 import type { OverlayWidget, PublicOverlay } from '@/lib/live-overlay/types';
 import { createOverlayEventBus, OverlayEventContext } from './overlay-events';
 import { OverlayWidgetView } from './overlay-widgets';
@@ -44,7 +44,11 @@ export default function LiveOverlayLayer({ streamId, tokenId, overlay, videoRef,
   const visible = useMemo(
     () =>
       overlay.renderIn === 'app'
-        ? drawOrder(overlay.widgets.filter((w) => w.enabled && w.kind !== 'poll' && isKnownKind(w.kind)))
+        ? drawOrder(
+            overlay.widgets.filter(
+              (w) => w.enabled && w.kind !== 'poll' && isKnownKind(w.kind) && !(overlay.controls?.alertsPaused && isAlertKind(w.kind)),
+            ),
+          )
         : [],
     [overlay],
   );

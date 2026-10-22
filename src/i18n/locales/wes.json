@@ -4381,6 +4381,7 @@
     "creatorEarnsDirect": "Subscribers di pay with DeHub tokens. Your share go land for your wallet di moment dem subscribe, minus di platform fee for your badge level."
   },
   "liveOverlay": {
+    "wheelLanded": "{{name}} spun: {{result}}",
     "someone": "Wetin dem say?",
     "joined": "{{name}} join",
     "followersUnit": "foloas",
@@ -4423,6 +4424,17 @@
     "pollWinner": "{{option}} won"
   },
   "liveStudio": {
+    "controls": {
+      "title": "Quick controls",
+      "alertsPaused": "Pause alerts",
+      "soundsMuted": "Mute alert sounds",
+      "readAloudMuted": "Stop read-aloud",
+      "intro": "\"Mid-stream\" no. Each switch wey you flip, dem stay for everybody wey see you, both in app and in OBS, until you flip back again.",
+      "alertsPausedHint": "No gift, no follow, no rule alert wey come o screen. Counter, goal, an chat box still dey move.",
+      "soundsMutedHint": "Yous rules no dey play sound wey.",
+      "readAloudMutedHint": "\"Gift message\" na \"rule line\" no go dey read out a di radio anymore.",
+      "failed": "Na di switch dat no change. Try again."
+    },
     "moderation": {
       "save": "Save chat rules",
       "saved": "Chat rules saved.",
@@ -4546,6 +4558,7 @@
       "join": "Join"
     },
     "kinds": {
+      "spin_wheel": "Spin wheel",
       "tip_alert": "Tip alert",
       "follow_alert": "Follow alert",
       "subscribe_alert": "Subscriber alert",
@@ -4565,6 +4578,7 @@
       "poll": "Poll"
     },
     "hints": {
+      "spin_wheel": "Where the wheels in your rules spin",
       "tip_alert": "Celebrate ebi tip, fit for ebi level.",
       "subscribe_alert": "Show every new subscriber",
       "share_alert": "Shɔ wen sɔmbɔdi shɛr yɔ strim",
@@ -4607,6 +4621,8 @@
       "fast": "Fast"
     },
     "rules": {
+      "wheelSegments": "Wheel segments, one per line",
+      "wheelHint": "Befo 2 na 12. DeHub go pick whey de wheel stop, so everybody dat watch go see same result. Use {result} in a alert, read-out loud or chat action fo name it.",
       "title": "Rules",
       "intro": "Wen something happen on your stream, DeHub go do what you say: show alert, play sound, read something out loud, post in your chat, or tell your Discord.",
       "add": "Add a rule",
@@ -4661,6 +4677,7 @@
         "subscribers": "Subscribers"
       },
       "actionTypes": {
+        "wheel": "Spin a wheel",
         "alert": "Show an alert",
         "sound": "Play a sound",
         "say": "Read aloud",

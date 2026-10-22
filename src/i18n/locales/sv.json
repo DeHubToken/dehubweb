@@ -4741,6 +4741,7 @@
     "creatorEarnsDirect": "Prenumeranter betalar i DeHub-tokens. Din andel hamnar i din plånbok så fort de prenumererar, minus plattformsavgiften för din märkesnivå."
   },
   "liveOverlay": {
+    "wheelLanded": "{{name}} spinnade: {{result}}",
     "someone": "Någon",
     "newFollower": "Ny följare: {{name}}",
     "newSubscriber": "Ny prenumerant: {{name}}",
@@ -4779,6 +4780,17 @@
     "youAreTimedOut": "Du är tidsutgång för en stund"
   },
   "liveStudio": {
+    "controls": {
+      "title": "Snabbkontroller",
+      "intro": "För mitten av strömmen. Varje strömbrytare håller för alla som tittar, i appen och i OBS, tills du vänder tillbaka den.",
+      "alertsPaused": "Pausa varningar",
+      "alertsPausedHint": "Inga gåvo-, följ- eller regelvarningar på skärmen. Räknare, mål och chattrutan fortsätter.",
+      "soundsMuted": "Stäng av varningsljud",
+      "soundsMutedHint": "Dina regler slutar spela ljud.",
+      "readAloudMuted": "Stoppa uppläsning",
+      "readAloudMutedHint": "Presentmeddelanden och regelrader läses inte längre upp.",
+      "failed": "Den omkopplaren ändrades inte. Försök igen."
+    },
     "polls": {
       "title": "Omröstningar",
       "intro": "Ställ en fråga till de som tittar på din sändning. De svarar med en knapp i DeHub-appen, eller genom att skriva {{command}} och alternativets nummer i chatt.",
@@ -4885,6 +4897,7 @@
       "join": "Gå med"
     },
     "kinds": {
+      "spin_wheel": "Spinnhjul",
       "tip_alert": "Dricksvarning",
       "follow_alert": "Följ varning",
       "subscribe_alert": "Prenumerantvarning",
@@ -4904,6 +4917,7 @@
       "poll": "Omröstning"
     },
     "hints": {
+      "spin_wheel": "Där hjulen i dina regler snurrar",
       "tip_alert": "Firar varje dricks, storleksanpassad till sin nivå",
       "follow_alert": "Visar varje ny följare",
       "subscribe_alert": "Visar varje ny prenumerant",
@@ -4955,6 +4969,8 @@
       "fast": "Snabb"
     },
     "rules": {
+      "wheelSegments": "Hjulsegment, en per linje",
+      "wheelHint": "Mellan 2 och 12. DeHub väljer var hjulet stannar, så att alla som tittar ser samma resultat. Använd {result} i en varning, högläsning eller chattåtgärd för att namnge den.",
       "title": "Regler",
       "intro": "När något händer i din ström gör DeHub vad du väljer: visar en varning, spelar upp ett ljud, läser något högt, lägger upp inlägg i din chatt eller berättar för din Discord.",
       "add": "Lägg till en regel",
@@ -5009,6 +5025,7 @@
         "subscribers": "Prenumeranter"
       },
       "actionTypes": {
+        "wheel": "Snurra ett hjul",
         "alert": "Visa en varning",
         "sound": "Spela upp ett ljud",
         "say": "Läs högt",

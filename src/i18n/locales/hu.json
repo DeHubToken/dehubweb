@@ -4739,6 +4739,7 @@
     "creatorEarnsDirect": "Az előfizetők DeHub tokenekben fizetnek. A részvényed az előfizetés pillanatában a pénztárcádba kerül, levonva belőle a jelvényszinted platformdíját."
   },
   "liveOverlay": {
+    "wheelLanded": "{{name}} fordította: {{result}}",
     "someone": "Valaki",
     "newFollower": "Új követő: {{name}}",
     "newSubscriber": "Új előfizető: {{name}}",
@@ -4777,6 +4778,17 @@
     "youAreTimedOut": "Egy pillanatra lejárt az időd"
   },
   "liveStudio": {
+    "controls": {
+      "title": "Gyorsvezérlés",
+      "intro": "Az adatfolyam közepére. Minden kapcsoló mindenki számára elérhető, aki nézi, az alkalmazásban és az OBS-ben, amíg vissza nem fordítja.",
+      "alertsPaused": "Riasztások szüneteltetése",
+      "alertsPausedHint": "Nincsenek ajándék-, követési vagy szabályértesítések a képernyőn. Folytassa a számlálókat, a célokat és a csevegődobozt.",
+      "soundsMuted": "Figyelmeztető hangok elnémítása",
+      "soundsMutedHint": "A szabályaid nem játszanak le hangokat.",
+      "readAloudMuted": "Olvasás leállítása hangosan",
+      "readAloudMutedHint": "Az ajándéküzenetek és a szabálysorok már nem olvashatók fel.",
+      "failed": "Ez a kapcsoló nem változott. Próbálkozz újra."
+    },
     "polls": {
       "title": "Szavazások",
       "intro": "Tegyél fel egy kérdést azoknak, akik nézik az adást. Egy gombbal válaszolnak a DeHub alkalmazásban, vagy beírják {{command}} és az opció számát a csevegésbe.",
@@ -4883,6 +4895,7 @@
       "join": "Adományozás"
     },
     "kinds": {
+      "spin_wheel": "Centrifugáló kerék",
       "tip_alert": "Tanács-alert",
       "follow_alert": "Követés-alert",
       "subscribe_alert": "Feliratkozó-alert",
@@ -4902,6 +4915,7 @@
       "poll": "Szavazás"
     },
     "hints": {
+      "spin_wheel": "Ahol a szabályaid kerekei forognak",
       "tip_alert": "Üdvözöl minden tippeket, méretük a szintjükhöz igazodva",
       "follow_alert": "Mutatja meg minden új követőt",
       "subscribe_alert": "Mutatja meg minden új feliratkozót",
@@ -4953,6 +4967,8 @@
       "fast": "Gyors"
     },
     "rules": {
+      "wheelSegments": "Kerékszegmensek, soronként egy",
+      "wheelHint": "2 és 12 között. A DeHub kiválasztja, hol álljon meg a kerék, így mindenki ugyanazt az eredményt látja. Használd a (z){result} karaktert értesítésben, olvasási hangon vagy csevegési műveletben a megnevezéséhez.",
       "title": "Szabályok",
       "intro": "Amikor valami történik az adatfolyamodban, a DeHub azt teszi, amit te választasz: figyelmeztetést jelenít meg, hangot játszik le, hangosan felolvas valamit, bejegyzéseket tesz közzé a csevegésedben, vagy elmondja a Discordnak.",
       "add": "Szabály hozzáadása",
@@ -5007,6 +5023,7 @@
         "subscribers": "Feliratkozók"
       },
       "actionTypes": {
+        "wheel": "Pörgess meg egy kereket",
         "alert": "Értesítés megjelenítése",
         "sound": "Hang lejátszása",
         "say": "Olvasd fel hangosan",

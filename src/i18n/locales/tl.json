@@ -4852,6 +4852,7 @@
     "creatorEarnsDirect": "Nagbabayad ang mga subscriber sa mga token ng DeHub. Ang iyong share ay nasa iyong wallet sa sandaling mag - subscribe sila, mas mababa ang bayarin sa platform para sa iyong badge tier."
   },
   "liveOverlay": {
+    "wheelLanded": "{{name}}spun:{{result}}",
     "someone": "Isang tao",
     "newFollower": "Bagong tagasunod:{{name}}",
     "newSubscriber": "Bagong subscriber:{{name}}",
@@ -4890,6 +4891,17 @@
     "youAreTimedOut": "Naka - time out ka nang ilang sandali"
   },
   "liveStudio": {
+    "controls": {
+      "title": "Mga mabilisang kontrol",
+      "intro": "Para sa mid - stream. Ang bawat switch ay humahawak para sa lahat ng nanonood, sa app at sa OBS, hanggang sa i - flip mo ito pabalik.",
+      "alertsPaused": "I - pause ang mga alerto",
+      "alertsPausedHint": "Walang regalo, sundin o panuntunan ang mga alerto sa screen. Ang mga counter, mga layunin at ang chat box ay patuloy na nagpapatuloy.",
+      "soundsMuted": "I - mute ang mga tunog ng alerto",
+      "soundsMutedHint": "Tumigil sa pagtugtog ng mga tunog ang iyong mga alituntunin.",
+      "readAloudMuted": "Itigil ang read - loud",
+      "readAloudMutedHint": "Hindi na nababasa ang mga mensahe ng regalo at mga linya ng panuntunan.",
+      "failed": "Hindi nagbago ang switch na iyon. Subukan muli."
+    },
     "polls": {
       "title": "Pagboto",
       "intro": "Tanungin ang mga tao na nakatingin sa iyong broadcast. Sagot sila sa pamamagitan ng isang button sa DeHub app, o sa pamamagitan ng pag-type ng {{command}} at ang numero ng opsyon sa chat.",
@@ -4995,6 +5007,7 @@
       "join": "Sumali"
     },
     "kinds": {
+      "spin_wheel": "Paikutin ang gulong",
       "poll": "Botohan",
       "tip_alert": "Alerto sa tip",
       "follow_alert": "Subaybayan ang alerto",
@@ -5014,6 +5027,7 @@
       "rule_alert": "Mga alerto sa panuntunan"
     },
     "hints": {
+      "spin_wheel": "Kung saan ang mga gulong sa iyong mga panuntunan ay umiikot",
       "tip_alert": "Ipinagdiriwang ang bawat tip, laki hanggang sa tier nito",
       "follow_alert": "Ipinapakita ang bawat bagong tagasunod",
       "subscribe_alert": "Ipinapakita ang bawat bagong subscriber",
@@ -5065,6 +5079,8 @@
       "fast": "Mabilis"
     },
     "rules": {
+      "wheelSegments": "Mga segment ng gulong, isa bawat linya",
+      "wheelHint": "Sa pagitan ng 2 at 12. Pinipili ng DeHub kung saan humihinto ang gulong, kaya nakikita ng lahat ng nanonood ang parehong resulta. Gamitin ang {result} sa isang alerto, read - loud o chat action para pangalanan ito.",
       "title": "Mga Panuntunan",
       "intro": "Kapag may nangyari sa iyong stream, ginagawa ng DeHub ang iyong pinili: nagpapakita ng alerto, nagpe - play ng tunog, nagbabasa ng isang bagay nang malakas, mga post sa iyong chat o nagsasabi sa iyong Discord.",
       "add": "Magdagdag ng alituntunin",
@@ -5119,6 +5135,7 @@
         "subscribers": "Mga Subscriber"
       },
       "actionTypes": {
+        "wheel": "Paikutin ang isang wheel",
         "alert": "Magpakita ng alerto",
         "sound": "Magpatugtog ng tunog",
         "say": "Magbasa nang malakas",

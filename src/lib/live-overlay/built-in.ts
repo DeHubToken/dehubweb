@@ -5,6 +5,7 @@ import type { PublicOverlay } from './types';
 /** Kinds that replace the built-in corner celebration, so a gift never lands twice. */
 export const REPLACES_BUILT_IN_CELEBRATION: readonly string[] = ['tip_alert'];
 
-export function overlayOwnsCelebration(overlay: Pick<PublicOverlay, 'widgets'> | undefined | null): boolean {
-  return !!overlay?.widgets.some((w) => w.enabled && REPLACES_BUILT_IN_CELEBRATION.includes(w.kind));
+/** True when the creator's overlay plays gifts itself, or has paused alerts for everyone. */
+export function overlayOwnsCelebration(overlay: Pick<PublicOverlay, 'widgets' | 'controls'> | undefined | null): boolean {
+  return !!overlay?.controls?.alertsPaused || !!overlay?.widgets.some((w) => w.enabled && REPLACES_BUILT_IN_CELEBRATION.includes(w.kind));
 }

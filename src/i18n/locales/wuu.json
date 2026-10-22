@@ -4351,6 +4351,7 @@
     "creatorEarnsDirect": "订户用DeHub代币支付。一旦他们订阅，您的份额就会立即进入您的钱包，减去您徽章级别的平台费用。"
   },
   "liveOverlay": {
+    "wheelLanded": "{{name}} 吾𠀀{{result}}",
     "someone": "有人",
     "newFollower": "新关注者：{{name}}",
     "newSubscriber": "新订阅者：{{name}}",
@@ -4399,6 +4400,17 @@
     "reactions": "反应"
   },
   "liveStudio": {
+    "controls": {
+      "title": "快速控制",
+      "intro": "对于中间流。在应用程序和OBS中，每个开关都适用于所有观看者，直到您将其翻转回来。",
+      "alertsPaused": "暂停提醒",
+      "alertsPausedHint": "屏幕上没有礼品、关注或规则警报。计数器、目标和聊天框仍在继续。",
+      "soundsMuted": "将警报声音设为静音",
+      "soundsMutedHint": "您的规则停止播放声音。",
+      "readAloudMuted": "停止朗读",
+      "readAloudMutedHint": "礼品消息和规则行不再被读出。",
+      "failed": "该开关未更改。请重试。"
+    },
     "moderation": {
       "title": "聊天审核",
       "intro": "所有直播下的聊天规则。他们永远无法联系到DeHub的主聊天：您在这里禁止的人仍然可以在其他任何地方交谈。",
@@ -4520,6 +4532,7 @@
       "join": "加入"
     },
     "kinds": {
+      "spin_wheel": "旋转转盘",
       "tip_alert": "打赏提醒",
       "follow_alert": "关注提醒",
       "subscribe_alert": "订阅提醒",
@@ -4539,6 +4552,7 @@
       "poll": "投票"
     },
     "hints": {
+      "spin_wheel": "规则中的车轮在哪里旋转",
       "tip_alert": "为每笔打赏庆祝，按等级大小显示",
       "follow_alert": "显示每位新关注者",
       "subscribe_alert": "显示每位新订阅者",
@@ -4590,6 +4604,8 @@
       "fast": "快"
     },
     "rules": {
+      "wheelSegments": "车轮段，每行一个",
+      "wheelHint": "2至12人。DeHub选择车轮停止的位置，因此每个观看者都会看到相同的结果。在提醒、朗读或聊天操作中使用{result}来命名它。",
       "title": "规则",
       "intro": "当您的视频流出现问题时， DeHub会执行您选择的操作：显示提醒、播放声音、大声朗读、在聊天中发布帖子或告诉您的Discord。",
       "add": "添加规则",
@@ -4644,6 +4660,7 @@
         "subscribers": "订阅者"
       },
       "actionTypes": {
+        "wheel": "旋转转盘",
         "alert": "显示提醒",
         "sound": "播放声音",
         "say": "朗读",

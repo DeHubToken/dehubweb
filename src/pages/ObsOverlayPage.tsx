@@ -22,7 +22,7 @@ import '@/styles/live-overlay.css';
 import { SEOHead } from '@/components/SEOHead';
 import { getOverlayByToken, OverlayNotFoundError, type TokenOverlay } from '@/lib/api/dehub/live-overlay';
 import { drawOrder, placeWidget, rectFor } from '@/lib/live-overlay/layout';
-import { isKnownKind, newWidget, type OverlayKind } from '@/lib/live-overlay/registry';
+import { isAlertKind, isKnownKind, newWidget, type OverlayKind } from '@/lib/live-overlay/registry';
 import { createOverlayEventBus, OverlayEventContext } from '@/components/app/live/overlay/overlay-events';
 import { OverlayWidgetView } from '@/components/app/live/overlay/overlay-widgets';
 import { useOverlayChat } from '@/hooks/use-overlay-chat';
@@ -158,7 +158,13 @@ export default function ObsOverlayPage() {
   const placed =
     data && !notFound
       ? drawOrder(
-          data.widgets.filter((w) => w.enabled && isKnownKind(w.kind) && (!onlyWidget || w.id === onlyWidget)),
+          data.widgets.filter(
+            (w) =>
+              w.enabled &&
+              isKnownKind(w.kind) &&
+              (!onlyWidget || w.id === onlyWidget) &&
+              !(data.controls?.alertsPaused && isAlertKind(w.kind)),
+          ),
         )
       : [];
   // A poll shows in the whole scene even if the creator never placed one: they started it to be seen.

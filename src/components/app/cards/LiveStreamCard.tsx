@@ -456,7 +456,7 @@ export function LiveStreamCard({ stream, chatSlot, immersive = false }: LiveStre
     // Read aloud only once PAID: the unpaid broadcast carries whatever any
     // client posted. The sender's own copy is spoken at submit time below.
     (paid) => {
-      if (isOwnGift(paid)) return;
+      if (isOwnGift(paid) || streamOverlay?.controls?.readAloudMuted) return;
       speakTipMessage(paid.message);
     },
   );

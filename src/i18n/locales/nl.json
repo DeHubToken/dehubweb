@@ -6027,6 +6027,7 @@
     "creatorEarnsDirect": "Abonnees betalen in DeHub-tokens. Je aandeel komt in je portemonnee terecht op het moment dat ze zich abonneren, minus de platformkosten voor je badge-niveau."
   },
   "liveOverlay": {
+    "wheelLanded": "{{name}} gesponnen: {{result}}",
     "someone": "Iemand",
     "newFollower": "Nieuwe volger: {{name}}",
     "newSubscriber": "Nieuwe abonnee: {{name}}",
@@ -6065,6 +6066,17 @@
     "youAreTimedOut": "Je bent even tijd uit."
   },
   "liveStudio": {
+    "controls": {
+      "title": "Snelle bediening",
+      "intro": "Voor mid-stream. Elke schakelaar houdt vast voor iedereen die kijkt, in de app en in OBS, totdat je hem terugdraait.",
+      "alertsPaused": "Waarschuwingen pauzeren",
+      "alertsPausedHint": "Geen cadeau-, volg- of regelwaarschuwingen op het scherm. Tellers, doelen en de chatbox gaan door.",
+      "soundsMuted": "Waarschuwingsgeluiden dempen",
+      "soundsMutedHint": "Je regels stoppen met het spelen van geluiden.",
+      "readAloudMuted": "Voorlezen stoppen",
+      "readAloudMutedHint": "Geschenkberichten en regelregels worden niet meer voorgelezen.",
+      "failed": "Die schakelaar is niet veranderd. Probeer het opnieuw."
+    },
     "polls": {
       "title": "Enquêtes",
       "intro": "Stel de kijkers die uw uitzending volgen een vraag. Zij antwoorden met een knop in de DeHub-app, of door {{command}} en het nummer van de optie in de chat te typen.",
@@ -6171,6 +6183,7 @@
       "join": "Deelnemen"
     },
     "kinds": {
+      "spin_wheel": "Draaischijf",
       "tip_alert": "Tipmelding",
       "follow_alert": "Volgmelding",
       "subscribe_alert": "Abonneemelding",
@@ -6190,6 +6203,7 @@
       "poll": "Poll"
     },
     "hints": {
+      "spin_wheel": "Waar de wielen in je regels draaien",
       "tip_alert": "Viirt elke tip, aangepast aan zijn niveau",
       "follow_alert": "Toont elke nieuwe volger",
       "subscribe_alert": "Toont elke nieuwe abonnee",
@@ -6241,6 +6255,8 @@
       "fast": "Snel"
     },
     "rules": {
+      "wheelSegments": "Wielsegmenten, één per lijn",
+      "wheelHint": "Tussen 2 en 12. DeHub kiest waar het wiel stopt, zodat iedereen hetzelfde resultaat ziet. Gebruik {result} in een waarschuwing, voorlees- of chatactie om het een naam te geven.",
       "title": "Regels",
       "intro": "Wanneer er iets gebeurt tijdens je stream, doet DeHub wat jij kiest: toont een alert, speelt een geluid af, leest iets hardop voor, post in je chat of vertelt het aan je Discord.",
       "add": "Een regel toevoegen",
@@ -6295,6 +6311,7 @@
         "subscribers": "Abonnees"
       },
       "actionTypes": {
+        "wheel": "Draai aan een wiel",
         "alert": "Toon een melding",
         "sound": "Een geluid afspelen",
         "say": "Voorlezen",

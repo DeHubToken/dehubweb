@@ -4806,6 +4806,7 @@
     "creatorEarnsDirect": "Ababhalisile bakhokha ngamathokheni e-DeHub. Izabelo zakho zihlala esikhwameni sakho semali lapho zibhalisa, nciphisa inani lepulatifomu lebanga lakho lebheji."
   },
   "liveOverlay": {
+    "wheelLanded": "U-{{name}} uphendule: {{result}}",
     "someone": "Othile",
     "newFollower": "Umlandeli omusha: {{name}}",
     "newSubscriber": "Umbhalisi omusha: {{name}}",
@@ -4844,6 +4845,17 @@
     "youAreTimedOut": "Uphelelwe isikhathi okwesikhashana"
   },
   "liveStudio": {
+    "controls": {
+      "title": "Izilawuli ezisheshayo",
+      "intro": "Phakathi nokusakaza. Inkinobho ngayinye ibamba wonke umuntu obukayo, ku-app naku-OBS, uze uyibuyisele emuva.",
+      "alertsPaused": "Misa imiyalezo okwesikhashana",
+      "alertsPausedHint": "Asikho isipho, landela noma ulawule imiyalezo esikrinini. Amakhawunta, imigomo nebhokisi lengxoxo kuyaqhubeka.",
+      "soundsMuted": "Thulisa imisindo yemiyalezo",
+      "soundsMutedHint": "Imithetho yakho iyeka ukudlala imisindo.",
+      "readAloudMuted": "Misa ukufunda ngokuzwakalayo",
+      "readAloudMutedHint": "Imiyalezo yezipho nemigqa yemithetho ayisafundiwe.",
+      "failed": "Lolo shintsho alushintshanga. Zama futhi."
+    },
     "polls": {
       "closeFailed": "Ukuvota akuphelanga. Zama futhi.",
       "title": "Amavoti",
@@ -4950,6 +4962,7 @@
       "join": "Joyina"
     },
     "kinds": {
+      "spin_wheel": "Isondo lokuphotha",
       "tip_alert": "Isexwayiso sokutiphu",
       "follow_alert": "Isexwayiso sokulandela",
       "subscribe_alert": "Isexwayiso somhlanganiseli",
@@ -4969,6 +4982,7 @@
       "poll": "Inhlolovo"
     },
     "hints": {
+      "spin_wheel": "Lapho amasondo emithethweni yakho ephotha khona",
       "tip_alert": "Kusebenzisa umuntu ngamunye otiphu, osayizi ngokwesigaba sakhe",
       "follow_alert": "Ikhonza umlandeli omusha ngamunye",
       "subscribe_alert": "Ikhonza umhlanganiseli omusha ngamunye",
@@ -5020,6 +5034,8 @@
       "fast": "Kuyashesha"
     },
     "rules": {
+      "wheelSegments": "Izingxenye zamasondo, eyodwa ngomugqa ngamunye",
+      "wheelHint": "Phakathi kuka-2 no-12. I-DeHub ikhetha lapho isondo limile khona, ukuze wonke umuntu obukayo abone umphumela ofanayo. Sebenzisa i-{result} kumyalezo, ukufunda ngokuzwakalayo noma isenzo sokuxoxa ukuze uyiqambe.",
       "title": "Imithetho",
       "intro": "Lapho kwenzeka okuthile ku-stream yakho, i-DeHub yenza lokho okukhethe: ikhombisa isikhazo, idlale umsindo, ifunde okuthile ngaphakathi, ifake ekusulwaneni kwakho noma itshele i-Discord yakho.",
       "add": "Engeza umthetho",
@@ -5074,6 +5090,7 @@
         "subscribers": "Ababhalisile"
       },
       "actionTypes": {
+        "wheel": "Zungeza umjikelezo",
         "alert": "Bonisa umyalezo",
         "sound": "Dlala umsindo",
         "say": "Funda ngokuzwakalayo",

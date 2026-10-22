@@ -4789,6 +4789,7 @@
     "creatorEarnsDirect": "Abonnenter betaler med DeHub-tokens. Andelen din havner i lommeboken din i det øyeblikket de abonnerer, minus plattformavgiften for badge-nivået ditt."
   },
   "liveOverlay": {
+    "wheelLanded": "{{name}} spunnet: {{result}}",
     "someone": "Noen",
     "newFollower": "Ny følger: {{name}}",
     "newSubscriber": "Ny abonnent: {{name}}",
@@ -4827,6 +4828,17 @@
     "youAreTimedOut": "Du er tidsutløpt i et øyeblikk"
   },
   "liveStudio": {
+    "controls": {
+      "title": "Hurtigkontroller",
+      "intro": "For midtstrømming. Hver bryter holder for alle som ser på, i appen og i OBS, helt til du slår den tilbake.",
+      "alertsPaused": "Sett varsler på pause",
+      "alertsPausedHint": "Ingen gave-, følge- eller regelvarsler på skjermen. Tellere, mål og chatteboksen fortsetter å gå.",
+      "soundsMuted": "Demp varsellyder",
+      "soundsMutedHint": "Reglene dine stopper avspilling av lyder.",
+      "readAloudMuted": "Stopp høytlesningen",
+      "readAloudMutedHint": "Gavemeldinger og regellinjer leses ikke lenger opp.",
+      "failed": "Den bryteren endret seg ikke. Prøv på nytt."
+    },
     "polls": {
       "title": "Avstemninger",
       "intro": "Spør publikum som ser på din sending om et spørsmål. De svarer med en knapp i DeHub-appen, eller ved å skrive {{command}} og alternativets nummer i chat.",
@@ -4933,6 +4945,7 @@
       "join": "Bli med"
     },
     "kinds": {
+      "spin_wheel": "Spinnhjul",
       "tip_alert": "Tipsvarsel",
       "follow_alert": "Følgervarsel",
       "subscribe_alert": "Abonnementsvarsel",
@@ -4952,6 +4965,7 @@
       "poll": "Avstemning"
     },
     "hints": {
+      "spin_wheel": "Der hjulene i reglene dine snurrer",
       "tip_alert": "Feirer hvert tips, tilpasset nivået",
       "follow_alert": "Viser hver ny følger",
       "subscribe_alert": "Viser hver ny abonnent",
@@ -5002,6 +5016,8 @@
       "fast": "Rask"
     },
     "rules": {
+      "wheelSegments": "Hjulsegmenter, ett per linje",
+      "wheelHint": "Mellom 2 og 12. DeHub velger hvor hjulet stopper, slik at alle som ser på ser det samme resultatet. Bruk {result} i en varsling, høytlesning eller chat-handling for å navngi den.",
       "title": "Regler",
       "intro": "Når noe skjer på strømmen din, gjør DeHub det du velger: viser et varsel, spiller av en lyd, leser noe høyt, legger ut innlegg i chatten din eller forteller det til Discord-brukeren din.",
       "add": "Legg til en regel",
@@ -5056,6 +5072,7 @@
         "subscribers": "Abonnenter"
       },
       "actionTypes": {
+        "wheel": "Snurr et hjul",
         "alert": "Vis et varsel",
         "sound": "Spill av en lyd",
         "say": "Les høyt",

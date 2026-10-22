@@ -5060,6 +5060,7 @@
     "creatorEarnsDirect": "Pelanggan membayar dalam token DeHub. Bahagian anda masuk ke dalam dompet anda sebaik sahaja mereka melanggan, tolak yuran platform untuk peringkat lencana anda."
   },
   "liveOverlay": {
+    "wheelLanded": "{{name}} spun: {{result}}",
     "someone": "Seseorang",
     "newFollower": "Pengikut baharu: {{name}}",
     "newSubscriber": "Pelanggan baharu: {{name}}",
@@ -5098,6 +5099,17 @@
     "youAreTimedOut": "Anda sedang waktu habis untuk seketika"
   },
   "liveStudio": {
+    "controls": {
+      "title": "Kawalan pantas",
+      "intro": "Untuk aliran pertengahan. Setiap suis tahan untuk semua orang menonton, dalam aplikasi dan dalam OBS, sehingga anda membaliknya kembali.",
+      "alertsPaused": "Jeda makluman",
+      "alertsPausedHint": "Tiada peringatan hadiah, ikut atau peraturan pada skrin. Kaunter, matlamat dan kotak sembang terus berjalan.",
+      "soundsMuted": "Bunyi amaran bisu",
+      "soundsMutedHint": "Peraturan anda berhenti memainkan bunyi.",
+      "readAloudMuted": "Berhenti membaca dengan kuat",
+      "readAloudMutedHint": "Mesej hadiah dan garis peraturan tidak lagi dibaca.",
+      "failed": "Suis itu tidak berubah. Cuba lagi."
+    },
     "polls": {
       "title": "Pemungutan suara",
       "intro": "Tanya orang yang menonton siaran langsung anda soalan. Mereka menjawab dengan tombol dalam aplikasi DeHub, atau dengan mengetik {{command}} dan nombor pilihan dalam chat.",
@@ -5204,6 +5216,7 @@
       "join": "Sertai"
     },
     "kinds": {
+      "spin_wheel": "Roda berputar",
       "tip_alert": "Makluman tip",
       "follow_alert": "Ikuti makluman",
       "subscribe_alert": "Makluman pelanggan",
@@ -5223,6 +5236,7 @@
       "poll": "Pengundian"
     },
     "hints": {
+      "spin_wheel": "Tempat roda dalam peraturan anda berputar",
       "tip_alert": "Meraikan setiap tip, bersaiz mengikut peringkatnya",
       "follow_alert": "Menunjukkan setiap pengikut baharu",
       "subscribe_alert": "Menunjukkan setiap pelanggan baharu",
@@ -5274,6 +5288,8 @@
       "fast": "Pantas"
     },
     "rules": {
+      "wheelSegments": "Segmen roda, satu setiap baris",
+      "wheelHint": "Antara 2 dan 12. DeHub memilih di mana roda berhenti, jadi semua orang yang menonton melihat hasil yang sama. Gunakan {result} dalam makluman, baca dengan kuat atau tindakan sembang untuk menamakannya.",
       "title": "Peraturan",
       "intro": "Apabila sesuatu berlaku pada strim anda, DeHub melakukan apa yang anda pilih: menunjukkan amaran, memainkan bunyi, membaca sesuatu dengan kuat, menyiarkan dalam sembang anda atau memberitahu Discord anda.",
       "add": "Tambah peraturan",
@@ -5328,6 +5344,7 @@
         "subscribers": "Pelanggan"
       },
       "actionTypes": {
+        "wheel": "Putar roda",
         "alert": "Tunjukkan makluman",
         "sound": "Mainkan bunyi",
         "say": "Baca dengan kuat",

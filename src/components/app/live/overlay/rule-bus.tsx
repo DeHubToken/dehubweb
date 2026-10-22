@@ -6,7 +6,7 @@
  * sounds, these lines read aloud — already filled in by the server.
  */
 import { createContext, useContext, useEffect, useRef } from 'react';
-import { RULE_SOUND_FILES, type RuleFired } from '@/lib/live-overlay/rules';
+import { RULE_SOUND_FILES, WHEEL_SPIN_MS, type RuleFired } from '@/lib/live-overlay/rules';
 import { isTipTtsEnabled, speakTipMessage } from '@/lib/live/tip-tts';
 
 export type RuleBus = {
@@ -58,7 +58,10 @@ export function RuleAudio({ playLive }: { playLive: boolean }) {
       audio.volume = 0.8;
       void audio.play().catch(() => undefined);
     }
-    for (const line of fired.say) speakTipMessage(line);
+    // A line about where a wheel stopped is read once it has stopped.
+    const say = () => fired.say.forEach((line) => speakTipMessage(line));
+    if (fired.wheels.length) window.setTimeout(say, WHEEL_SPIN_MS);
+    else say();
   });
   return null;
 }
