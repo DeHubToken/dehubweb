@@ -4715,7 +4715,6 @@
     "topSupporters": "Ýolbaşçylyk maslahaty",
     "chatPreview": "Çat habarlary bu ýerde görünýär",
     "poll": {
-      "votes_other": "{{count}} ses",
       "closed": "Saýlama ýapyldy",
       "voteFor": "{{option}} üçin seslen",
       "signIn": "Saýlan",
@@ -4723,9 +4722,33 @@
       "voted_one": "Sen seslendin {{count}} seslendin",
       "voted_other": "Sen seslendin {{count}} votes",
       "votes_one": "{{count}} ses",
+      "votes_other": "{{count}} ses",
       "howToVote_one": "{{command}} we seslenmek üçin gürrüňdeşlik sany {{count}} seslenmek",
       "howToVote_other": "{{command}} we seslenmek üçin çatda bir sany ýazyň {{count}} votes"
     }
+  },
+  "liveRecap": {
+    "pollWinner": "{{option}} ýeňdi",
+    "title": "Stream Recap",
+    "justEnded": "Seniň gaýdyp gelmegiň",
+    "lastStream": "Seniň soňky akyşyň",
+    "share": "Paylaş",
+    "shareText": "Men \"{{title}}\" diýen ýazgylary DeHub-da ýaýratdym: {{duration}} live, {{peak}} seretmek we {{followers}} täze şägirtler.",
+    "untitled": "Adsyz akma",
+    "copied": "Ýene kopyalan. Ony her ýere goý.",
+    "loadFailed": "Garawul diňi we Garawul diňi. Gaýtalaň",
+    "duration": "Wagtyň geçmegi bilen",
+    "peakViewers": "Birdenkä seredýänleriň köpüsi",
+    "gifts_one": "{{count}} sowgat",
+    "gifts_other": "{{count}} sowgatlar",
+    "newFollowers": "Täze şägirtler",
+    "chatMessages": "Çat habarlary",
+    "chatters": "Adamlar gürrüňdeşlik edýärler",
+    "reactions": "Reaksiýalar",
+    "shares": "Adamlar paýlaşýar",
+    "topSupporters": "Ýolbaşçylyk maslahaty",
+    "polls": "Saýlamalar",
+    "stillCounting": "Hany, henizem: sowgatlar bir minutlap tassyklanýar."
   },
   "liveStudio": {
     "moderation": {
@@ -4944,7 +4967,6 @@
       "fast": "Tiz"
     },
     "rules": {
-      "placeholdersLive": "Tekstiňizde {name}, {title} we {link} ulanyň: adyňyz, ýaýlymyň ady we tomaşa etmek üçin baglanyşyk.",
       "title": "Kanunlar",
       "intro": "Eger siz akmaňyzda bir zat bolanda, DeHub saýlan zadyňyzy edýär: duýduryş görkezip, ses çalýar, sesli bir zat okaýar, gürrüňdeşligiňizi goýýar ýa-da Discord-a habar berýär.",
       "add": "Ol bir düzgüni goýdy",
@@ -4974,6 +4996,7 @@
       "addAction": "Bir hereket goş",
       "removeAction": "Ähliňi Ewez Et",
       "placeholders": "{name}, {amount} we {message} öz metinde ulan. Meselem, habar beriş baglaýyşlary aýrylypdyr.",
+      "placeholdersLive": "Tekstiňizde {name}, {title} we {link} ulanyň: adyňyz, ýaýlymyň ady we tomaşa etmek üçin baglanyşyk.",
       "alertText": "Alarm metni",
       "sound": "Ses",
       "sayText": "Sesli okamak üçin metin",

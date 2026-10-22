@@ -1,4 +1,27 @@
 {
+  "liveRecap": {
+    "title": "Adatfolyam-összefoglaló",
+    "justEnded": "Adatfolyam-összefoglalód",
+    "lastStream": "Az utolsó adatfolyamod",
+    "share": "Megosztás",
+    "shareText": "„{{title}}” -t közvetítettem a DeHubon: {{duration}} live, {{peak}} nézés a csúcson és {{followers}} új követők.",
+    "untitled": "Névtelen adatfolyam",
+    "copied": "Ismétlés másolva. Illessze be bárhová.",
+    "loadFailed": "Az újraelosztás nem töltődött be. Próbálkozz újra egy pillanat múlva.",
+    "duration": "Élő idő",
+    "peakViewers": "Legtöbbször egyszerre nézik",
+    "gifts_one": "{{count}} ajándéktól",
+    "gifts_other": "{{count}} ajándéktól",
+    "newFollowers": "Új követők",
+    "chatMessages": "Csevegési üzenetek",
+    "chatters": "Csevegő emberek",
+    "reactions": "Reakciók",
+    "shares": "Megosztott személyek",
+    "topSupporters": "Kiemelt támogatók",
+    "polls": "Szavazások",
+    "pollWinner": "{{option}} won",
+    "stillCounting": "Még mindig számít: az ajándékok megerősítése eltarthat egy percig."
+  },
   "errors": {
     "sponsorshipUnavailable": "Az ingyenes tranzakciók a mi oldalunkon szünetelnek, nem a tárcádban. Próbáld újra hamarosan.",
     "gasSponsorshipFailed": "Ezt a tranzakciót nem sikerült átvállalni. Próbáld újra egy pillanat múlva."

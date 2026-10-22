@@ -1,4 +1,27 @@
 {
+  "liveRecap": {
+    "title": "ストリームのまとめ",
+    "justEnded": "ストリームのまとめ",
+    "lastStream": "最後のストリーム",
+    "share": "共有",
+    "shareText": "DeHubで「{{title}}」をストリーミングしました：{{duration}}ライブ、{{peak}}ピーク時に視聴、{{followers}}新しいフォロワー。",
+    "untitled": "無題のストリーム",
+    "copied": "まとめをコピーしました。任意の場所に貼り付けます。",
+    "loadFailed": "要約が読み込まれませんでした。 しばらくしてからもう一度お試しください。",
+    "duration": "ライブ中です",
+    "peakViewers": "一度に最も視聴している",
+    "gifts_one": "{{count}}からの贈り物",
+    "gifts_other": "{{count}}からのギフト",
+    "newFollowers": "新しいフォロワー",
+    "chatMessages": "チャットメッセージ",
+    "chatters": "チャットしている人",
+    "reactions": "リアクション",
+    "shares": "共有しているユーザー",
+    "topSupporters": "トップサポーター",
+    "polls": "投票",
+    "pollWinner": "{{option}}ウォン",
+    "stillCounting": "まだまだ続きます。ギフトの確認には少し時間がかかる場合があります。"
+  },
   "errors": {
     "sponsorshipUnavailable": "無料取引はこちら側で一時停止しています。お客様のウォレットの問題ではありません。しばらくしてからお試しください。",
     "gasSponsorshipFailed": "この取引の手数料を負担できませんでした。しばらくしてからお試しください。"

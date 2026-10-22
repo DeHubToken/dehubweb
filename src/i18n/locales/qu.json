@@ -4828,6 +4828,29 @@
       "howToVote_other": "Qillqay {{command}} hinaspa huk yupayta chat nisqapi votanaykipaq · {{count}} votokuna"
     }
   },
+  "liveRecap": {
+    "title": "Stream recap nisqa",
+    "justEnded": "Qampa mayu recap",
+    "lastStream": "Qhipa mayuyki",
+    "share": "Qunakuy",
+    "shareText": "Chayraqmi &quot;{{title}}&quot; nisqa DeHub nisqapi purichirqani: {{duration}} kawsaq, {{peak}} pico nisqapi qawaspa hinaspa {{followers}} musuq qatiqninkuna.",
+    "untitled": "Mana tituluyuq mayu",
+    "copied": "Recap copiasqa. Maypipas k’askachiy.",
+    "loadFailed": "Chay recap nisqa mana cargakurqachu. Huk ratullapi hukmanta kallpachakuy.",
+    "duration": "Tiempo kawsan",
+    "peakViewers": "Yaqa llapanku huk kutillapi qhawaspa",
+    "gifts_one": "{{count}} regalomanta",
+    "gifts_other": "{{count}} regalokunamanta",
+    "newFollowers": "Musuq qatiqninkuna",
+    "chatMessages": "Chat nisqa willakuykunata",
+    "chatters": "Runakuna rimaspa",
+    "reactions": "Reacciones nisqakuna",
+    "shares": "Runakuna rakinakuy",
+    "topSupporters": "Hatun yanapaqkuna",
+    "polls": "Encuestas nisqamanta",
+    "pollWinner": "{{option}} atiparqan",
+    "stillCounting": "Yupachkanraqmi: regalokunaqa huk minutollapim takyachinman."
+  },
   "liveStudio": {
     "moderation": {
       "subscribersOnly": "Suscriptorkunallapaq",
@@ -4875,9 +4898,9 @@
       }
     },
     "polls": {
-      "question": "Tapuy",
       "title": "Encuestas nisqamanta",
       "intro": "Difusión nisqayki qhawaq runakunata tapuy. DeHub app kaqpi huk botón kaqwan kutichinku, utaq {{command}} chaymanta akllana yupayta rimanakuypi qillqaspa.",
+      "question": "Tapuy",
       "questionPlaceholder": "¿Imatataq qatiqninpi pukllanay?",
       "option": "Akllana {{n}} .",
       "addOption": "Huk akllanata yapay",

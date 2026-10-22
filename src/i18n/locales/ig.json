@@ -1,4 +1,27 @@
 {
+  "liveRecap": {
+    "gifts_other": "Site na onyinye {{count}}",
+    "untitled": "Mgbasa ozi enweghị aha",
+    "title": "Stream recap",
+    "justEnded": "Gị iyi recap",
+    "lastStream": "Ikpeazụ gị iyi",
+    "share": "Ekekọrịta",
+    "shareText": "M nnọọ streamed \"{{title}}\" na DeHub: {{duration}} ndụ, {{peak}} ekiri na elu na {{followers}} ọhụrụ na-eso ụzọ.",
+    "copied": "Edepụtagharị. Tapawa ya ebe ọbụla.",
+    "loadFailed": "Ntughari ahụ ebughị ibu. Gbalịa ọzọ n 'otu ntabi anya.",
+    "duration": "Oge LIVE",
+    "peakViewers": "Ọtụtụ na-ekiri n 'otu oge",
+    "gifts_one": "Site na {{count}} onyinye",
+    "newFollowers": "New na-eso ụzọ",
+    "chatMessages": "Ozi nkata",
+    "chatters": "Ndị mmadụ na-akparịta ụka",
+    "reactions": "Mmetụta",
+    "shares": "Ndị mmadụ na-ekere òkè",
+    "topSupporters": "Top akwado",
+    "polls": "Ntuli aka",
+    "pollWinner": "{{option}} won",
+    "stillCounting": "Ka na-agụta: onyinye nwere ike iwe otu nkeji iji gosi."
+  },
   "errors": {
     "sponsorshipUnavailable": "Azụmahịa n'efu kwụsịtụrụ n'akụkụ anyị, ọ bụghị n'obere akpa gị. Biko nwaa ọzọ n'oge na-adịghị anya.",
     "gasSponsorshipFailed": "Enweghị ike ịkwụ ụgwọ azụmahịa a. Biko nwaa ọzọ obere oge."

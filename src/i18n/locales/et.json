@@ -1,4 +1,27 @@
 {
+  "liveRecap": {
+    "title": "Voo kokkuvõte",
+    "justEnded": "Sinu voo kokkuvõte",
+    "lastStream": "Sinu viimane voog",
+    "share": "Jaga",
+    "shareText": "Voogesitasin just \"{{title}}\" DeHubis: {{duration}} Live, {{peak}} tipphetkel vaatamine ja {{followers}} uut jälgijat.",
+    "untitled": "Pealkirjata voog",
+    "copied": "Kokkuvõte on kopeeritud. Kleebi see kõikjale.",
+    "loadFailed": "Kokkuvõtet ei laaditud. Proovi mõne hetke pärast uuesti.",
+    "duration": "Otseülekande aeg",
+    "peakViewers": "Enamik vaatab korraga",
+    "gifts_one": "Alates {{count}} kingitusest",
+    "gifts_other": "Alates {{count}} kingitusest",
+    "newFollowers": "Uued jälgijad",
+    "chatMessages": "Vestlussõnumid",
+    "chatters": "Inimesed vestlevad",
+    "reactions": "Reaktsioonid",
+    "shares": "Inimeste jagamine",
+    "topSupporters": "Parimad toetajad",
+    "polls": "Küsitlused",
+    "pollWinner": "{{option}} võitis",
+    "stillCounting": "Ikka veel loeb: kingituste kinnitamine võib võtta minuti."
+  },
   "errors": {
     "sponsorshipUnavailable": "Tasuta tehingud on meie poolel peatatud, mitte teie rahakotis. Proovige varsti uuesti.",
     "gasSponsorshipFailed": "Seda tehingut ei õnnestunud katta. Proovige hetke pärast uuesti."

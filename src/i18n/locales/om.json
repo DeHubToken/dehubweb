@@ -4774,6 +4774,29 @@
       "howToVote_other": "{{command}} fi lakkoofsa chat keessatti barreessuudhaan sagalee kennuu · {{count}} sagalee kennuu"
     }
   },
+  "liveRecap": {
+    "title": "Cuunfaa tamsaasaa",
+    "justEnded": "Irra deebiin yaa&#39;aa keessan",
+    "lastStream": "Dhangala&#39;aa kee isa dhumaa",
+    "share": "Qooduu",
+    "shareText": "Reefu &quot;{{title}}&quot; DeHub irratti tamsaaseera: {{duration}} kallattiin, {{peak}} yeroo olka&#39;iinsaatti ilaalaa fi {{followers}} hordoftoota haaraa.",
+    "untitled": "Dhangala&#39;aa mata duree hin qabne",
+    "copied": "Irra deebiin kan waraabame. Bakka barbaadetti maxxansi.",
+    "loadFailed": "Irra deebiin hin fe&#39;amne. Yeroo muraasa booda irra deebi&#39;ii yaali.",
+    "duration": "Yeroon jiraadhu",
+    "peakViewers": "Irra caalaan isaanii yeroo tokkotti ilaaluu",
+    "gifts_one": "Kennaa {{count}} irraa",
+    "gifts_other": "{{count}} kennaa irraa",
+    "newFollowers": "Hordoftoota haaraa",
+    "chatMessages": "Ergaawwan chat",
+    "chatters": "Namoonni chatting",
+    "reactions": "Deebiin kennamu",
+    "shares": "Namoonni qooddachaa jiran",
+    "topSupporters": "Deeggartoota olaanoo",
+    "polls": "Filannoo",
+    "pollWinner": "{{option}} injifate",
+    "stillCounting": "Ammas lakkaa&#39;aa jira: kennaawwan mirkaneessuuf daqiiqaa tokko fudhachuu danda&#39;u."
+  },
   "liveStudio": {
     "moderation": {
       "unban": "Dhorkaa kaasi",
@@ -4821,7 +4844,6 @@
       }
     },
     "polls": {
-      "ended": "Sagalee kennuun cufameera",
       "title": "Filannoo",
       "intro": "Namoota tamsaasa kee ilaalaa jiran gaaffii gaafadhu. Isaanis appii DeHub keessatti button tokkoon, ykn chat keessatti {{command}} fi lakkoofsa filannoo sanaa barreessuudhaan deebii kennu.",
       "question": "Gaaffii",
@@ -4841,6 +4863,7 @@
       "startFailed": "Filannoon hin jalqabne. Ammas yaalaa.",
       "closeFailed": "Sagalee kennuunis hin xumuramne. Ammas yaalaa.",
       "live": "Sagalee kennuu banaadha · {{time}} hafe",
+      "ended": "Sagalee kennuun cufameera",
       "votes_one": "{{count}} sagalee kennuu",
       "votes_other": "{{count}} sagalee kenna",
       "replaceHint": "Filannoo haaraa jalqabuun isa banaa ta&#39;e cufa.",
@@ -4926,7 +4949,6 @@
       "join": "Itti makamuu"
     },
     "kinds": {
-      "poll": "Sagalee",
       "tip_alert": "Gorsa akeekkachiisa",
       "follow_alert": "Akeekkachiisa hordofaa",
       "subscribe_alert": "Akeekkachiisa maamilootaa",
@@ -4941,7 +4963,8 @@
       "event_feed": "Sochii dhiheenya kanaa",
       "chat_box": "Sanduuqa marii",
       "ticker": "Ticker",
-      "rule_alert": "Ogeeyyii Seera"
+      "rule_alert": "Ogeeyyii Seera",
+      "poll": "Sagalee"
     },
     "hints": {
       "tip_alert": "Gorsa hunda kabaja, hamma sadarkaa isaatti",

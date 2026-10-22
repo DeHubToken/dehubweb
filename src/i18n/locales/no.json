@@ -1,4 +1,27 @@
 {
+  "liveRecap": {
+    "title": "Strømmeoppsummering",
+    "justEnded": "Oppsummeringen av strømmen din",
+    "lastStream": "Din siste strømming",
+    "share": "Dele",
+    "shareText": "Jeg strømmet nettopp «{{title}}» på DeHub: {{duration}} direkte, {{peak}} så på på det meste og {{followers}} nye følgere.",
+    "untitled": "Unavngitt strøm",
+    "copied": "Sammendrag kopiert. Lim det inn hvor som helst.",
+    "loadFailed": "Sammendraget lastet ikke inn. Prøv igjen om et øyeblikk.",
+    "duration": "Tid live",
+    "peakViewers": "De fleste ser på samtidig",
+    "gifts_one": "Fra en {{count}}-gave",
+    "gifts_other": "Fra {{count}} gaver",
+    "newFollowers": "Nye følgere",
+    "chatMessages": "Chatmeldinger",
+    "chatters": "Folk som chatter",
+    "reactions": "Reaksjoner",
+    "shares": "Folk som deler",
+    "topSupporters": "Toppstøttespillere",
+    "polls": "Meningsmålinger",
+    "pollWinner": "{{option}} vant",
+    "stillCounting": "Fortsatt telling: det kan ta et minutt å bekrefte gaver."
+  },
   "errors": {
     "sponsorshipUnavailable": "Gratis transaksjoner er satt på pause hos oss, ikke i lommeboken din. Prøv igjen om litt.",
     "gasSponsorshipFailed": "Denne transaksjonen kunne ikke dekkes. Prøv igjen om et øyeblikk."

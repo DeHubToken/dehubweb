@@ -1,4 +1,27 @@
 {
+  "liveRecap": {
+    "title": "Rekap streaming",
+    "justEnded": "Rekap streaming Anda",
+    "lastStream": "Streaming terakhir Anda",
+    "share": "Bagikan",
+    "shareText": "Saya baru saja streaming \"{{title}}\" di DeHub: {{duration}} live, {{peak}} menonton di puncak dan {{followers}} pengikut baru.",
+    "untitled": "Streaming tanpa judul",
+    "copied": "Rekap disalin. Tempel di mana saja.",
+    "loadFailed": "Rekap tidak dimuat. Coba lagi sebentar lagi.",
+    "duration": "Waktu langsung",
+    "peakViewers": "Paling banyak menonton sekaligus",
+    "gifts_one": "Dari {{count}} hadiah",
+    "gifts_other": "Dari {{count}} hadiah",
+    "newFollowers": "Pengikut baru",
+    "chatMessages": "Pesan obrolan",
+    "chatters": "Orang mengobrol",
+    "reactions": "Reaksi",
+    "shares": "Orang yang berbagi",
+    "topSupporters": "Pendukung teratas",
+    "polls": "Jajak Pendapat",
+    "pollWinner": "{{option}} won",
+    "stillCounting": "Masih terus bertambah: hadiah bisa membutuhkan waktu satu menit untuk mengonfirmasi."
+  },
   "errors": {
     "sponsorshipUnavailable": "Transaksi gratis sedang dijeda di pihak kami, bukan di dompet Anda. Silakan coba lagi sebentar lagi.",
     "gasSponsorshipFailed": "Transaksi ini tidak dapat disponsori. Silakan coba lagi sebentar."

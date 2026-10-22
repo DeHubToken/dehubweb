@@ -1,4 +1,27 @@
 {
+  "liveRecap": {
+    "title": "Барқарор кардани ҷараён",
+    "justEnded": "Аз нав бор кардани ҷараён",
+    "lastStream": "Ҷараёни охирин",
+    "share": "Ibahagi",
+    "shareText": "Ман фақат \"{{title}}\" дар DeHub ҷараён гирифтам: {{duration}} LIVE, {{peak}} тамошо дар қулла ва {{followers}} пайравони нав.",
+    "untitled": "Ҷараёни бе сарлавҳа",
+    "copied": "Нусхабардорӣ. Онро дар ягон ҷо часпонед.",
+    "loadFailed": "Бозборкунӣ ба итмом нарасид. Subukan muli sa isang minuto.",
+    "duration": "Time LIVE",
+    "peakViewers": "Бештари тамошобинон дар як вақт",
+    "gifts_one": "Аз {{count}} gift",
+    "gifts_other": "{{count}} gift",
+    "newFollowers": "Пайравони нав",
+    "chatMessages": "Паёмҳои чат",
+    "chatters": "Mga tao na chat",
+    "reactions": "Вокунишҳо",
+    "shares": "Mga ibahagi ng",
+    "topSupporters": "Пуштибони боло",
+    "polls": "Интихоботҳо",
+    "pollWinner": "{{option}} WIND",
+    "stillCounting": "Huling bilang: ang mga gift ay maaaring magtatagal ng isang minuto upang"
+  },
   "errors": {
     "sponsorshipUnavailable": "Муомилоти ройгон аз ҷониби мо боздошта шудааст, на дар ҳамёни шумо. Лутфан пас аз чанде боз кӯшиш кунед.",
     "gasSponsorshipFailed": "Хароҷоти ин муомиларо пардохт карда натавонистем. Лутфан пас аз чанде кӯшиш кунед."

@@ -1,4 +1,27 @@
 {
+  "liveRecap": {
+    "title": "Stream recap",
+    "justEnded": "Riepilogo del tuo stream",
+    "lastStream": "Il tuo ultimo streaming",
+    "share": "Condividi",
+    "shareText": "Ho appena trasmesso in streaming \"{{title}}\" su DeHub: {{duration}} live, {{peak}} watching at the peak e {{followers}} nuovi follower.",
+    "untitled": "Streaming senza titolo",
+    "copied": "Riepilogo copiato. Incollalo ovunque.",
+    "loadFailed": "Il recap non è stato caricato. Riprova tra un momento.",
+    "duration": "Time Live",
+    "peakViewers": "La maggior parte guarda contemporaneamente",
+    "gifts_one": "Da {{count}} regalo",
+    "gifts_other": "Da {{count}} regali",
+    "newFollowers": "Nuovi follower",
+    "chatMessages": "Messaggi di chat",
+    "chatters": "Persone che chattano",
+    "reactions": "Reazioni",
+    "shares": "Persone che condividono",
+    "topSupporters": "I migliori sostenitori",
+    "polls": "Sondaggi",
+    "pollWinner": "{{option}} vinto",
+    "stillCounting": "Sto ancora contando: la conferma dei regali può richiedere un minuto."
+  },
   "errors": {
     "sponsorshipUnavailable": "Le transazioni gratuite sono in pausa dalla nostra parte, non sul tuo portafoglio. Riprova a breve.",
     "gasSponsorshipFailed": "Non è stato possibile coprire questa transazione. Riprova tra un momento."
