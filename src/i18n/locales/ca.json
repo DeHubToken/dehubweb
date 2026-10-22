@@ -4724,9 +4724,52 @@
     "followersUnit": "seguidors",
     "topSupporters": "Els millors seguidors",
     "tipped": "{{name}}ha enviat un regal",
-    "chatPreview": "Els missatges de xat apareixen aquí"
+    "chatPreview": "Els missatges de xat apareixen aquí",
+    "poll": {
+      "closed": "Votació tancada",
+      "voteFor": "Vota per {{option}}",
+      "signIn": "Inicia sessió per votar",
+      "failed": "El teu vot no va comptar. Torna a intentar-ho.",
+      "voted_one": "Has votat · {{count}} vot",
+      "voted_other": "Has votat · {{count}} vots",
+      "votes_one": "{{count}} vot",
+      "votes_other": "{{count}} vots",
+      "howToVote_one": "Escriu {{command}} i un nombre al xat per votar · {{count}} vot",
+      "howToVote_other": "Escriu {{command}} i un nombre al xat per votar · {{count}} vots"
+    }
   },
   "liveStudio": {
+    "polls": {
+      "title": "Enquestes",
+      "intro": "Pregunta a les persones que veuen el teu directe una pregunta. Responen amb un botó a l'aplicació DeHub, o escrivint {{command}} i el número de l'opció al xat.",
+      "question": "Pregunta",
+      "questionPlaceholder": "Què hauria de jugar després?",
+      "option": "Opció {{n}}",
+      "addOption": "Afegeix una opció",
+      "removeOption": "Elimina l'opció {{n}}",
+      "duration": "Quants segons dura la votació",
+      "seconds_one": "{{count}} segon",
+      "seconds_other": "{{count}} segons",
+      "minutes_one": "{{count}} minut",
+      "minutes_other": "{{count}} minuts",
+      "start": "Inicia l'enquesta",
+      "end": "Tanca la votació ara",
+      "started": "La teva enquesta està oberta. Els espectadors poden votar ara.",
+      "notLive": "Va en directe primer. Una enquesta es realitza en el directe que estàs emetent ara mateix.",
+      "startFailed": "L'enquesta no ha començat. Torna a intentar-ho.",
+      "closeFailed": "La votació no ha acabat. Torna a intentar-ho.",
+      "live": "Votació oberta · {{time}} queden",
+      "ended": "Votació tancada",
+      "votes_one": "{{count}} vota",
+      "votes_other": "{{count}} vots",
+      "replaceHint": "Començar una nova enquesta tanca la que està oberta.",
+      "widgetHint": "Mostra la teva enquesta en directe. En els visualitzadors de l'aplicació DeHub, toca una opció per votar; en OBS, diu a les persones que escriguin {{command}} i un número al xat.",
+      "sample": {
+        "a": "Alguna cosa nova",
+        "b": "Un vell favorit",
+        "c": "Tu decideixes"
+      }
+    },
     "title": "Estudi en directe",
     "subtitle": "Avisos i ginys per als teus streams",
     "h1": "Live Studio: transmet alertes, objectius i superposicions per als creadors de DeHub",
@@ -4817,7 +4860,8 @@
       "event_feed": "Activitat recent",
       "chat_box": "Quadre de xat",
       "ticker": "Ticker",
-      "rule_alert": "Alertes de regles"
+      "rule_alert": "Alertes de regles",
+      "poll": "Enquesta"
     },
     "hints": {
       "tip_alert": "Celebra cada consell, dimensionat segons el seu nivell",
@@ -4835,7 +4879,8 @@
       "event_feed": "Els últims regals, seguidors, subscriptors i persones que comparteixen la teva retransmissió",
       "chat_box": "Mostra els missatges de xat de la teva emissió a la pantalla",
       "ticker": "Una línia del teu propi text que es desplaça per la pantalla",
-      "rule_alert": "On apareixen les alertes de les teves normes"
+      "rule_alert": "On apareixen les alertes de les teves normes",
+      "poll": "La teva enquesta en directe, amb un botó de vot per a cada opció"
     },
     "fields": {
       "style": "Estil",
@@ -4872,6 +4917,7 @@
     "rules": {
       "title": "Normes",
       "intro": "Quan passa alguna cosa al teu flux, DeHub fa el que tu triïs: mostra una alerta, reprodueix un so, llegeix alguna cosa en veu alta, publica al teu xat o diu al teu Discord.",
+      "add": "Afegeix una regla",
       "limit": "Has arribat al límit de {{count}} normes.",
       "loadFailed": "No s'han pogut carregar les normes. Actualitza la pàgina per tornar-ho a provar.",
       "empty": "Encara no hi ha cap regla. Afegeix-ne una per respondre a suggeriments, seguiments o ordres de xat.",
@@ -4898,6 +4944,7 @@
       "addAction": "Afegeix una acció",
       "removeAction": "Elimina l'acció",
       "placeholders": "Fes servir {name}, {amount} i {message} al text. S'han eliminat els enllaços dels missatges.",
+      "placeholdersLive": "Utilitza {name}, {title} i {link} al text: el teu nom, el títol de l'emissió i un enllaç per veure-la.",
       "alertText": "Text d'alerta",
       "sound": "So",
       "sayText": "Text per llegir en veu alta",
@@ -4911,6 +4958,7 @@
         "follow": "Algú segueix",
         "subscribe": "Algú s'hi subscriu",
         "share": "Algú comparteix el flux",
+        "live": "Comences a emetre",
         "command": "S'utilitza una ordre de xat",
         "keyword": "Un missatge de xat conté una paraula",
         "chat": "Qualsevol missatge de xat"

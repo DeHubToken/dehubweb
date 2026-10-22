@@ -4786,9 +4786,52 @@
     "followersUnit": "sekėjai",
     "topSupporters": "Geriausi rėmėjai",
     "tipped": "{{name}} išsiuntė dovaną",
-    "chatPreview": "Pokalbio žinutės rodomos čia"
+    "chatPreview": "Pokalbio žinutės rodomos čia",
+    "poll": {
+      "closed": "Balsavimas uždarytas",
+      "voteFor": "Balsuokite už {{option}}",
+      "signIn": "Prisijungti, kad balsuotumėte",
+      "failed": "Jūsų balsas nebuvo priimtas. Bandykite dar kartą.",
+      "voted_one": "Jūs balsavote · {{count}} balsas",
+      "voted_other": "Jūs balsavote · {{count}} balsai",
+      "votes_one": "{{count}} balsas",
+      "votes_other": "{{count}} balsai",
+      "howToVote_one": "Rašykite {{command}} ir skaičių chat'e, kad balsuotumėte · {{count}} balsas",
+      "howToVote_other": "Rašykite {{command}} ir skaičių chat'e, kad balsuotumėte · {{count}} balsai"
+    }
   },
   "liveStudio": {
+    "polls": {
+      "title": "Apskaičiuojamosios",
+      "intro": "Klauskite žiūrovus, stebintys jūsų transliaciją, klausimą. Jie atsakys mygtuku DeHub aplikacijoje, arba rašydami {{command}} ir pasirinkimo numerį chat'e.",
+      "question": "Klausimas",
+      "questionPlaceholder": "Ką aš turėčiau žaidžioti toliau?",
+      "option": "Pasirinkimas {{n}}",
+      "addOption": "Pridėti pasirinkimą",
+      "removeOption": "Ištrinti pasirinkimą {{n}}",
+      "duration": "Kiek laiko balsavimas bus atidarytas",
+      "seconds_one": "{{count}} sekundė",
+      "seconds_other": "{{count}} sekundės",
+      "minutes_one": "{{count}} minuta",
+      "minutes_other": "{{count}} minutės",
+      "start": "Pradėti apskaičiuojamąją",
+      "end": "Baigti balsavimą dabar",
+      "started": "Jūsų apskaičiuojamoji yra atidaryta. Žiūrovai gali balsuoti dabar.",
+      "notLive": "Įjungkite transliaciją pirmiausia. Apskaičiuojamoji vyks esamoje transliacijoje, kurią jūs dabar vedate.",
+      "startFailed": "Apskaičiuojamoji nepradėjo. Bandykite dar kartą.",
+      "closeFailed": "Balsavimas nebaigtas. Bandykite dar kartą.",
+      "live": "Balsavimas atidarytas · {{time}} liko",
+      "ended": "Balsavimas uždarytas",
+      "votes_one": "{{count}} vote",
+      "votes_other": "{{count}} balsai",
+      "replaceHint": "Pradėjus naują apklausą uždaroma atidaryta apklausa.",
+      "widgetHint": "Parodo jūsų tiesioginę apklausą. „DeHub“ programėlės peržiūrėtojai palieskite parinktį balsuoti; OBS ji nurodo žmonėms įvesti {{command}} ir numerį pokalbyje.",
+      "sample": {
+        "a": "Kažkas naujo",
+        "b": "Senas mėgstamiausias",
+        "c": "Jūs pasirenkate"
+      }
+    },
     "title": "Live Studio",
     "subtitle": "Žinutės ir viduriai tavo streamams",
     "h1": "Live Studio — streamo žinutės, tiksmai ir viršūnės DeHub kūrėjams",
@@ -4879,7 +4922,8 @@
       "event_feed": "Naujausia veikla",
       "chat_box": "Pokalbio laukelis",
       "ticker": "Žymeklis",
-      "rule_alert": "Pranešimai apie taisyklę"
+      "rule_alert": "Pranešimai apie taisyklę",
+      "poll": "Apklausa"
     },
     "hints": {
       "tip_alert": "Pagerbia kiekvieną patarimą, prilygstantį jo lygiui",
@@ -4897,7 +4941,8 @@
       "event_feed": "Naujausios dovanos, sekėjai, prenumeratoriai ir žmonės, kurie dalijasi jūsų transliacija",
       "chat_box": "Rodo transliacijos pokalbių žinutes ekrane",
       "ticker": "Jūsų teksto eilutė, slenkanti per ekraną",
-      "rule_alert": "Kur rodomi jūsų taisyklių pranešimai"
+      "rule_alert": "Kur rodomi jūsų taisyklių pranešimai",
+      "poll": "Jūsų tiesioginė apklausa su balsavimo mygtuku kiekvienai parinkčiai"
     },
     "fields": {
       "style": "Stilius",
@@ -4961,6 +5006,7 @@
       "addAction": "Pridėti veiksmą",
       "removeAction": "Pašalinti veiksmą",
       "placeholders": "Tekste naudokite {name}, {amount} ir {message}. Žinutėse esančios nuorodos pašalintos.",
+      "placeholdersLive": "Tekste naudokite {name}, {title} ir {link}: savo vardą, transliacijos pavadinimą ir nuorodą, kad jį peržiūrėtumėte.",
       "alertText": "Įspėjimo tekstas",
       "sound": "Garsas",
       "sayText": "Garsiai skaitomas tekstas",
@@ -4974,6 +5020,7 @@
         "follow": "Kažkas seka",
         "subscribe": "Kažkas užsiprenumeruoja",
         "share": "Kažkas dalijasi srautu",
+        "live": "Pradedate transliuoti",
         "command": "Naudojama pokalbio komanda",
         "keyword": "Pokalbio žinutėje yra žodis",
         "chat": "Bet kokia pokalbio žinutė"

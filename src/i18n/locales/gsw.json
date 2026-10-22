@@ -4778,9 +4778,52 @@
     "followersUnit": "Folligend",
     "topSupporters": "Top‑Unterstützer",
     "tipped": "{{name}} hätt a Geschenk gschickt",
-    "chatPreview": "Chatnachrichten erscheinen hier"
+    "chatPreview": "Chatnachrichten erscheinen hier",
+    "poll": {
+      "closed": "Voting abgeschlossen",
+      "voteFor": "Stimm ab für {{option}}",
+      "signIn": "Anmelden, um abzustimmen",
+      "failed": "Deine Stimme zählte nicht. Versuche es nochmals.",
+      "voted_one": "Du hast abgestimmt · {{count}} Stimme",
+      "voted_other": "Du hast abgestimmt · {{count}} Stimmen",
+      "votes_one": "{{count}} Stimme",
+      "votes_other": "{{count}} Stimmen",
+      "howToVote_one": "Tippe {{command}} und eine Zahl in den Chat, um abzustimmen · {{count}} Stimme",
+      "howToVote_other": "Tippe {{command}} und eine Zahl in den Chat, um abzustimmen · {{count}} Stimmen"
+    }
   },
   "liveStudio": {
+    "polls": {
+      "title": "Umfragen",
+      "intro": "Frage die Leute, die deinem Stream folgen, eine Frage. Sie antworten mit einem Button in der DeHub-App oder indem sie {{command}} und die Nummer der Option in den Chat schreiben.",
+      "question": "Frage",
+      "questionPlaceholder": "Was soll ich als Nächstes spielen?",
+      "option": "Option {{n}}",
+      "addOption": "Option hinzufügen",
+      "removeOption": "Option {{n}} entfernen",
+      "duration": "Wie lange die Abstimmung offen bleibt",
+      "seconds_one": "{{count}} Sekunde",
+      "seconds_other": "{{count}} Sekunden",
+      "minutes_one": "{{count}} Minute",
+      "minutes_other": "{{count}} Minuten",
+      "start": "Umfrage starten",
+      "end": "Jetzt Abstimmung beenden",
+      "started": "Deine Umfrage ist offen. Zuschauer können jetzt abstimmen.",
+      "notLive": "Gehe zuerst live. Eine Umfrage läuft während des aktuellen Streams.",
+      "startFailed": "Die Umfrage ist nicht gestartet. Versuche es nochmals.",
+      "closeFailed": "Die Abstimmung ist noch nicht beendet. Versuche es nochmals.",
+      "live": "Abstimmung offen · {{time}} übrig",
+      "ended": "Abstimmung abgeschlossen",
+      "votes_one": "{{count}} stimmen",
+      "votes_other": "{{count}} Stimmen",
+      "replaceHint": "Einen neuen Umfrage startet, schliesst aber die offene ab.",
+      "widgetHint": "Zeigt deine Live-Umfrage. In der DeHub-App tippen die Zuschauer eine Option, um abzustimmen; in OBS sagt man den Leuten, sie sollen in den Chat {{command}} und eine Nummer eintippen.",
+      "sample": {
+        "a": "Etwas Neues",
+        "b": "Ein alter Favorit",
+        "c": "Du entscheidest"
+      }
+    },
     "title": "Live Studio",
     "subtitle": "Alarm und Widgets für dini Streams",
     "h1": "Live Studio — Stream-Alarm, Tore und Overlays für DeHub-Kreatoren",
@@ -4866,7 +4909,8 @@
       "event_feed": "Aktuelle Aktivität",
       "chat_box": "Chatbox",
       "ticker": "Ticker",
-      "rule_alert": "Regel-Warnungen"
+      "rule_alert": "Regel-Warnungen",
+      "poll": "Umfrage"
     },
     "hints": {
       "tip_alert": "Feiert jede Tipp, passend zu sim Level",
@@ -4884,7 +4928,8 @@
       "event_feed": "Die neuesten Geschenke, Follower, Abonnenten und Leute, die deinen Stream teilen",
       "chat_box": "Zeigt die Chatnachrichten deines Streams auf dem Bildschirm",
       "ticker": "Eine Zeile mit deinem eigenen Text, die über den Bildschirm scrollt",
-      "rule_alert": "Wo deine Regel-Warnungen erscheinen"
+      "rule_alert": "Wo deine Regel-Warnungen erscheinen",
+      "poll": "Deine Live-Umfrage, mit einem Abstimmknopf für jede Option"
     },
     "fields": {
       "style": "Stil",
@@ -4946,32 +4991,52 @@
       "userCooldown": "Wartezeit pro Zuschauer (Sekunden)",
       "addAction": "Aktion hinzufügen",
       "removeAction": "Aktion entfernen",
+      "placeholders": "Verwenden Sie {name}, {amount} und {message} in Ihrem Text. Links in Nachrichten werden entfernt.",
+      "placeholdersLive": "Benutze {name}, {title} und {link} in deinem Text: deinen Namen, den Titel der Sendung und einen Link, um sie zu schauen.",
+      "alertText": "Benachrichtigungstext",
+      "sound": "Ton",
+      "sayText": "Vorzulesender Text",
+      "chatText": "Nachricht an Post",
       "chatHint": "Geschrieben von deinem Konto in den Chat deiner Stream-Liveübertragung. Es darf nicht die Nachricht des Zuschauers wiederholen.",
       "webhookUrl": "Webhook-Adresse",
       "webhookHint": "Einer Discord- oder Slack-Webhook, oder ei Webadress (HTTPS) wo ei POST-Aufruf funktioniert.",
+      "webhookText": "Zu sendende Nachricht",
       "triggers": {
         "tip": "Eini Tipp kommt an.",
         "follow": "Jemänd follows dir.",
         "subscribe": "Jemand abonniert.",
         "share": "Jemand teilt den Stream.",
+        "live": "Du startest mit dem Streamen",
         "command": "E chattbefehl wird gnutzt.",
         "keyword": "A Chatnachricht enthält ein Wort.",
         "chat": "Any Chatnachricht"
       },
       "audiences": {
-        "followers": "Follower"
+        "everyone": "Alle",
+        "followers": "Follower",
+        "subscribers": "Abonnenten"
       },
       "actionTypes": {
         "alert": "Zeig a Alert.",
+        "sound": "Einen Ton abspielen",
+        "say": "Vorlesen",
+        "chat": "Im Chat posten",
         "webhook": "Send zu einem Webhook."
+      },
+      "summary": {
+        "tip": "Tipp von {{amount}} DHB oder mehr"
       },
       "presets": {
         "blank": "Blank rule",
-        "bigTip": "Lufthorn für grosse Trinkgeldbeträge"
+        "readChat": "Chat vorlesen",
+        "bigTip": "Lufthorn für grosse Trinkgeldbeträge",
+        "thankFollowers": "Vielen Dank an neue Follower",
+        "command": "Chat-Befehl"
       },
       "presetHints": {
         "blank": "Start mit nix.",
         "readChat": "Liest die Nachrichten deiner Follower laut vor, je eine pro Zuschauer alle 30 Sekunden.",
+        "bigTip": "Spielt eine Lufthupe und zeigt eine Warnung für Trinkgelder von 100.000 DHB oder mehr an",
         "thankFollowers": "Gschiib a Dankeschön in de Chat, wenn mer wer folgt.",
         "command": "Antworte auf ein `!command` in unserem Chat."
       },
@@ -4984,11 +5049,14 @@
       "sounds": {
         "airhorn": "Airhorn",
         "applause": "Applaus",
+        "cricket": "Grillen",
+        "drumroll": "Trommelrolle",
         "lol": "Lachen",
         "ooh-ahh": "Ooh äh",
         "ooh-man": "Ooh (Mensch)",
         "ohh-girl": "Ohh (Frau)",
         "ba-dum-tish": "Ba dum tish",
+        "spooky": "Gruselig",
         "magic-spell": "Mägi Zauberformel",
         "shhh": "Shhh"
       }

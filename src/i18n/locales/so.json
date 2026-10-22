@@ -4705,9 +4705,52 @@
     "followersUnit": "kuwa raacsan",
     "topSupporters": "Taageerayaasha ugu sareeya",
     "tipped": "{{name}} soo diray hadiyad",
-    "chatPreview": "Fariimaha sheekaysiga ayaa halkan ka muuqda"
+    "chatPreview": "Fariimaha sheekaysiga ayaa halkan ka muuqda",
+    "poll": {
+      "closed": "Codka xidhan",
+      "voteFor": "Cod siis {{option}}",
+      "signIn": "Soo gal si aad codka siiso",
+      "failed": "Codkaagu ma uu tiriyeen. Isku day mar kale.",
+      "voted_one": "Waxaad codka siisay · {{count}} cod",
+      "voted_other": "Waxaad codka siisay · {{count}} cod",
+      "votes_one": "{{count}} cod",
+      "votes_other": "{{count}} cod",
+      "howToVote_one": "Nooca {{command}} iyo lambar ku jira sheekaysiga si aad u codeyso · {{count}} codka",
+      "howToVote_other": "Qor {{command}} iyo tiro buug ku yidh si aad codka siiso · {{count}} cod"
+    }
   },
   "liveStudio": {
+    "polls": {
+      "title": "Codinta",
+      "intro": "Weydiiso dadka daawanaya siidaada su'aal. Iyagu jawaab siiyaan buuton ku yaal DeHub app-ka, ama qor {{command}} iyo tiro xaasida buug ku yidh.",
+      "question": "Su'aal",
+      "questionPlaceholder": "Maxaan ciyaari lahaaa xiga?",
+      "option": "Xaasida {{n}}",
+      "addOption": "Ku dar xaasida",
+      "removeOption": "Tirtir xaasida {{n}}",
+      "duration": "Mudada codka iska jira",
+      "seconds_one": "{{count}} ilbiriqsi",
+      "seconds_other": "{{count}} ilbiriqsi",
+      "minutes_one": "{{count}} daqiiqad",
+      "minutes_other": "{{count}} daqiiqad",
+      "start": "Bilow codinta",
+      "end": "Jooji codka hadda",
+      "started": "Codintaadu waa furan. Daawayaashu waxay codka siisaan hadda.",
+      "notLive": "Halkaa oo live ah. Codinta waxay ku socdaan siidaada aad hadda daawanayso.",
+      "startFailed": "Codinta ma ay bilaabmin. Isku day mar kale.",
+      "closeFailed": "Codka ma uu joojin. Isku day mar kale.",
+      "live": "Codka furan · {{time}} iska hadhow",
+      "ended": "Codka xidhan",
+      "votes_one": "{{count}} codka",
+      "votes_other": "{{count}} codadka",
+      "replaceHint": "Bilaabida codbixinta cusub waxay xirtaa midka furan.",
+      "widgetHint": "Muuji codbixintaada tooska ah. Daawadayaasha barnaamijka DeHub waxay taabanayaan ikhtiyaar ay ku codeeyaan; OBS waxay dadka u sheegtaa inay ku qoraan {{command}} iyo tiro wada sheekeysi ah.",
+      "sample": {
+        "a": "Wax cusub",
+        "b": "Jacaylkii hore",
+        "c": "Waxaad doorataa"
+      }
+    },
     "title": "Live Studio",
     "subtitle": "Ogeysiisyo iyo widgets-ka iyaga oo loogu talagalay live streams-kaaga",
     "h1": "Live Studio — digniinta qulqulka, yoolalka iyo overlays loogu talagalay abuurayaasha DeHub",
@@ -4797,7 +4840,8 @@
       "event_feed": "Dhawaan waxqabadka",
       "chat_box": "Sanduuqa sheekaysiga",
       "ticker": "Ticker",
-      "rule_alert": "Digniinta xeerka"
+      "rule_alert": "Digniinta xeerka",
+      "poll": "Codbixinta"
     },
     "hints": {
       "tip_alert": "Waxay u dabaaldegtaa talooyin kasta, oo si weyn loo cabbiray heerarkeeda",
@@ -4815,7 +4859,8 @@
       "event_feed": "Hadiyadihii ugu dambeeyay, kuwa raacsan, macaamiisha iyo dadka la wadaagaya baahintaada",
       "chat_box": "Muuji farriimaha sheekaysiga ee baahintaada shaashadda",
       "ticker": "Khadka qoraalkaaga oo ku xardhan shaashadda oo dhan",
-      "rule_alert": "Halka digniinta sharciyadaada ay ka muuqato"
+      "rule_alert": "Halka digniinta sharciyadaada ay ka muuqato",
+      "poll": "Codbixintaada tooska ah, oo leh badhanka codbixinta ikhtiyaar kasta"
     },
     "fields": {
       "style": "Style",
@@ -4874,9 +4919,12 @@
       "audience": "Yaa ka saari kara",
       "blockedWords": "Ereyada la xannibay",
       "blockedWordsHint": "Kala sooc komas. farriimo ay ku jiraan waa la iska indho tirayaa marna si qayaxan loo akhriyo.",
+      "cooldown": "Sug inta u dhaxaysa isticmaalka (seconds)",
       "userCooldown": "Sug qof kasta oo daawadayaal ah (seconds)",
       "addAction": "Ku dar ficil",
       "removeAction": "Ka saar ficil",
+      "placeholders": "Isticmaal {name}, {amount} iyo {message} qoraalkaaga. Xiriirada farriimaha waa laga saaraa.",
+      "placeholdersLive": "Isticmaal {name}, {title} iyo {link} qoraalkaaga: magacaaga, cinwaanka baahinta iyo isku xirka si aad u daawato.",
       "alertText": "Qoraalka digniinta",
       "sound": "Cod",
       "sayText": "Qoraalka si aad u akhrido cod dheer",
@@ -4890,6 +4938,7 @@
         "follow": "Qof baa raaca",
         "subscribe": "Qof isdiiwaangeliya",
         "share": "Qof ayaa la wadaagaya qulqulka",
+        "live": "Waxaad bilaabeysaa baahinta",
         "command": "Amarka wada sheekaysiga ayaa loo adeegsadaa",
         "keyword": "Farriinta sheekada waxaa ku jira erayga",
         "chat": "Fariin kasta oo sheeko ah"
@@ -4901,7 +4950,9 @@
       },
       "actionTypes": {
         "alert": "Muuji digniin",
+        "sound": "Shid cod",
         "say": "Si weyn u akhri",
+        "chat": "Ku dhaji sheekaysiga",
         "webhook": "U dir websaydhka"
       },
       "summary": {
@@ -4935,6 +4986,7 @@
         "lol": "Qosol",
         "ooh-ahh": "Ooh ahh",
         "ooh-man": "Ooh (man)",
+        "ohh-girl": "Ohh (naag)",
         "ba-dum-tish": "Ba dum tish",
         "spooky": "Spooky",
         "magic-spell": "Magic spell",

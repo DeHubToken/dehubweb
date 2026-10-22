@@ -4372,9 +4372,52 @@
     "joined": "{{name}} join",
     "followersUnit": "foloas",
     "tipped": "{{name}} send gift",
-    "chatPreview": "Chat message dey show wey"
+    "chatPreview": "Chat message dey show wey",
+    "poll": {
+      "howToVote_one": "Type {{command}} and a number in chat to vote · {{count}} vote",
+      "howToVote_other": "Type {{command}} and a number in chat to vote · {{count}} votes",
+      "closed": "Voting closed",
+      "voteFor": "Vot fo {{option}}",
+      "signIn": "Sign in to vote",
+      "failed": "Yot vote no count a go. Try again.",
+      "voted_one": "You don vote · {{count}} vote",
+      "voted_other": "You vote am · {{count}} votes",
+      "votes_one": "{{count}} vote",
+      "votes_other": "{{count}} votes"
+    }
   },
   "liveStudio": {
+    "polls": {
+      "questionPlaceholder": "What should I play next?",
+      "duration": "How long voting stays open",
+      "start": "Start the poll",
+      "end": "End voting now",
+      "started": "Your poll is open. Viewers can vote now.",
+      "notLive": "Go live first. A poll runs on the broadcast you are streaming right now.",
+      "title": "Polls",
+      "intro": "Ask dem people watchin’ yu broadcast one question. Dem answer wit’ button in DeHub app, or by type \"{{command}}\" and number of option in chat.",
+      "question": "Question",
+      "option": "Option {{n}}",
+      "addOption": "Add an option",
+      "removeOption": "Remove option {{n}}",
+      "seconds_one": "{{count}} second",
+      "seconds_other": "{{count}} seconds",
+      "minutes_one": "{{count}} minute",
+      "minutes_other": "{{count}} minutes",
+      "startFailed": "Poll no dey start yet. Try again.",
+      "closeFailed": "Vote no finish yet. Try again.",
+      "live": "Voting open · {{time}} left",
+      "ended": "Voting closed",
+      "votes_one": "{{count}} vote",
+      "votes_other": "{{count}} votes",
+      "replaceHint": "Fo start new poll go close di one wey don open.",
+      "widgetHint": "Yuz show live poll. In DeHub app, pipo dey tap option to vote; in OBS, e tell pipo type {{command}} and number for chat.",
+      "sample": {
+        "a": "Something new",
+        "b": "An old favourite",
+        "c": "You choose"
+      }
+    },
     "signIn": "Sign in wey you go set up alert and widget for your stream.",
     "settingsLinkBody": "Tip alerts, goals, an' more fit go come on yu stream, set up in Live Studio.",
     "landscape": "Landscape",
@@ -4437,7 +4480,8 @@
       "event_feed": "Activity wey recent dey",
       "chat_box": "Box wey chat dey",
       "ticker": "Ticker",
-      "rule_alert": "Rule alerts"
+      "rule_alert": "Rule alerts",
+      "poll": "Poll"
     },
     "hints": {
       "tip_alert": "Celebrate ebi tip, fit for ebi level.",
@@ -4448,7 +4492,9 @@
       "reaction_counter": "Count every reaction broadcast get",
       "event_feed": "Latest gift, follower, subscriber, person share broadcast wey",
       "chat_box": "Show broadcast chat message on screen",
-      "ticker": "Line wey own text wey dey scroll cross screen"
+      "ticker": "Line wey own text wey dey scroll cross screen",
+      "rule_alert": "Where your rules' alerts appear",
+      "poll": "Youse live poll, wey go come wit button fo vote fo every option."
     },
     "fields": {
       "style": "Style",
@@ -4480,14 +4526,17 @@
       "fast": "Fast"
     },
     "rules": {
+      "placeholdersLive": "Use {name}, {title} and {link} in your text: your name, the broadcast's title and a link to watch it.",
       "title": "Rules",
       "intro": "Wen something happen on your stream, DeHub go do what you say: show alert, play sound, read something out loud, post in your chat, or tell your Discord.",
       "add": "Add a rule",
+      "limit": "You have reached the limit of {{count}} rules.",
       "loadFailed": "Yas rules wey you no fit load. Come back page wey you fit try again.",
       "empty": "No rule yet. Add one fo react fo tip, follow, or chat command.",
       "saved": "Wetin you say go dey save. Dem go run for your next tip, follow, or message.",
       "saveFailed": "Wetin you dey try save no go save wey. Try again or check if you have permission.",
       "testFailed": "Na test dis no go well. Try again after a while.",
+      "saveToTest": "Save your rules to test them",
       "test": "Test",
       "enabled": "Rule on",
       "remove": "Delete rule",
@@ -4501,20 +4550,28 @@
       "keyword": "Word or phrase",
       "audience": "Won man a go set dis off?",
       "blockedWords": "Blocked words",
+      "blockedWordsHint": "Separate with commas. Messages containing them are ignored and never read aloud.",
       "cooldown": "Wait between uses (seconds)",
       "userCooldown": "Wait per viewer (seconds)",
       "addAction": "Add an action",
       "removeAction": "Remove action",
+      "placeholders": "Use {name}, {amount} and {message} in your text. Links in messages are removed.",
       "alertText": "Alert text",
       "sound": "Sound",
+      "sayText": "Text to read aloud",
       "chatText": "Message to post",
+      "chatHint": "Posted from your account into your stream's chat. It cannot repeat the viewer's message.",
       "webhookUrl": "Webhook address",
+      "webhookHint": "A Discord or Slack webhook, or any https address that accepts a POST.",
       "webhookText": "Message to send",
       "triggers": {
+        "live": "You start broadcasting",
         "tip": "A tip arrives",
         "follow": "Someone follows",
         "subscribe": "Someone subscribes",
+        "share": "Someone shares the stream",
         "command": "E chat command na use wey a go dey use fo chat",
+        "keyword": "A chat message contains a word",
         "chat": "Any chat message"
       },
       "audiences": {
@@ -4529,17 +4586,28 @@
         "chat": "Post in chat",
         "webhook": "Send to a webhook"
       },
+      "summary": {
+        "tip": "Tip of {{amount}} DHB or more"
+      },
       "presets": {
         "blank": "Blank rule",
         "readChat": "Read chat aloud",
+        "bigTip": "Air horn for big tips",
+        "thankFollowers": "Thank new followers",
         "command": "Chat command"
       },
       "presetHints": {
-        "readChat": "Reads yu followers messages out loud, one for each person, every 30 seconds."
+        "blank": "Start from nothing",
+        "readChat": "Reads yu followers messages out loud, one for each person, every 30 seconds.",
+        "bigTip": "Plays an air horn and shows an alert for tips of 100,000 DHB or more",
+        "thankFollowers": "Posts a thank-you in your chat when someone follows",
+        "command": "Answers a !command in your chat"
       },
       "presetText": {
         "readChat": "{name} says {message}",
-        "bigTip": "{name} sent {amount} DHB!"
+        "bigTip": "{name} sent {amount} DHB!",
+        "thankFollowers": "Thanks for the follow, {name}!",
+        "command": "Hello {name}, welcome to the stream!"
       },
       "sounds": {
         "airhorn": "Air horn",

@@ -4630,9 +4630,52 @@
     "followersUnit": "uwuwuwuwuwuuw",
     "topSupporters": "Mɔgɔ minw be dɛmɛ don",
     "tipped": "{{name}}Add a gift",
-    "chatPreview": "I be se ka kuma minw fɔ, u be sɔrɔ yan"
+    "chatPreview": "I be se ka kuma minw fɔ, u be sɔrɔ yan",
+    "poll": {
+      "closed": "Jula ni a kɛnɛ",
+      "voteFor": "Jula fɛ {{option}}",
+      "signIn": "Sira cɛ jula fɛ",
+      "failed": "A jula ni a kɛnɛ. Sɛbɛn kɔ.",
+      "voted_one": "I jula · {{count}} jula",
+      "voted_other": "I jula · {{count}} jula",
+      "votes_one": "{{count}} jula",
+      "votes_other": "{{count}} jula",
+      "howToVote_one": "Tɔ {{command}} ni nɔma kɔ chat la jula fɛ · {{count}} jula",
+      "howToVote_other": "Tɔ {{command}} ni nɔma kɔ chat la jula fɛ · {{count}} jula"
+    }
   },
   "liveStudio": {
+    "polls": {
+      "title": "Jula",
+      "intro": "Mɔgɔ minw be i ka kalan lamɛnna, i ka ɲiningali dɔ kɛ u ye. U be se k'o jaabi ni tuguni ye DeHub ka porogramu kɔnɔ, walima ka {{command}} sɛbɛn ani ka kumaɲɔgɔnya kɛ n'o ye.",
+      "question": "Ɲɔgɔn",
+      "questionPlaceholder": "Nini na n'a sira kɔ?",
+      "option": "Sɔrɔ {{n}}",
+      "addOption": "Sɔrɔ kɔ sɛbɛn",
+      "removeOption": "Sɔrɔ {{n}} kɛ",
+      "duration": "Jula ni a kɛnɛ kɔfɛ",
+      "seconds_one": "{{count}} sekondi",
+      "seconds_other": "{{count}} sekondi",
+      "minutes_one": "{{count}} miniti",
+      "minutes_other": "{{count}} miniti",
+      "start": "Jula faara",
+      "end": "Jula kɛnɛ sisan",
+      "started": "A jula ni a fɛ. Ɲɔgɔn ka jula sisan.",
+      "notLive": "Kɔ live kɔ jɔn. Jula kɛ a broadcast la i ka stream kɔ sisan.",
+      "startFailed": "Jula ni a faara tɛ. Sɛbɛn kɔ.",
+      "closeFailed": "Jula ni a kɛnɛ tɛ. Sɛbɛn kɔ.",
+      "live": "Jula ni a fɛ · {{time}} kɛ",
+      "ended": "Jula ni a kɛnɛ",
+      "votes_one": "{{count}} vote",
+      "votes_other": "{{count}}vousêtes ici: Barakɛ",
+      "replaceHint": "N'u ye vote kelen kɛ, o bena kɛ sababu ye u be se ka koo bɛɛ faamu.",
+      "widgetHint": "I ka ɲɛnamaya kɛcogo yira. DeHub ka app kɔnɔ, mɔgɔ minw be filɛli kɛ, olu be se ka vote kɛ. OBS kɔnɔ, u b'a fɔ mɔgɔw ye k'u ka {{command}} sɛbɛn ani k'u ka nimɔrɔ dɔ sɛbɛ.",
+      "sample": {
+        "a": "Fɛɛn kura dɔ",
+        "b": "2. ka kɛ mɔgɔ ɲɛnagwɛlenw ye",
+        "c": "I ka koo latigɛ"
+      }
+    },
     "title": "Live Studio",
     "subtitle": "Aw ka lasɔmini kumaw ni aw ka fɔrɔmasɔnw",
     "h1": "LIVE Studio — kunnafoniw, laɲinitaw ani kunnafoniw di DeHub danbaga ma",
@@ -4720,7 +4763,8 @@
       "event_feed": "Sanni dɔɔni, u ye baara kɛ",
       "chat_box": "Kala Lagaw Ya",
       "ticker": "Fɛɛn minw be sɔrɔ o la",
-      "rule_alert": "Kɔrɔbɔli sariya"
+      "rule_alert": "Kɔrɔbɔli sariya",
+      "poll": "Fanga be mɔgɔ minw na,"
     },
     "hints": {
       "tip_alert": "O la, a tun be se ka kɛ ko a tun ye mɔgɔ min ye, a tun b'o tigi le ye.",
@@ -4737,7 +4781,8 @@
       "event_feed": "I ka kalan labanw, i ka kalandenw, i ka sɛbɛw ani i ka kalanw jɛnsɛnbagaw",
       "chat_box": "- I ka videokalanw yira i ka filɛli la",
       "ticker": "O kɔ, a ye fɛɛn dɔ yira a la min be se k'a bali ka fɛɛn dɔ ye.",
-      "rule_alert": "I ka sariyaw be yɔrɔ min na"
+      "rule_alert": "I ka sariyaw be yɔrɔ min na",
+      "poll": "I ka ɲɛnamaya kɛcogo ka di i ye, i ka vote tuguni kelen kelen bɛɛ la"
     },
     "fields": {
       "style": "Style",
@@ -4793,24 +4838,29 @@
       "minAmount": "Fanga min be mɔgɔ la, o ye ka mɔgɔ lafili.",
       "command": "Kɛlɛkɛyɔrɔ",
       "keyword": "Kuma wala kumaden",
+      "audience": "Jɔn tun be se k'a miiri ko a bena bɔ?",
       "blockedWords": "Kuma minw be se ka mɔgɔ bali ka kuma",
       "blockedWordsHint": "Minw b'a fɔ u ma ko u bena koo minw kɛ, olu be miiri u la.",
+      "cooldown": "Attendre entre les utilisations (secondes)",
       "userCooldown": "Mɔgɔ min be filɛli kɛ, o tigi ka kan ka kɔnɔni kɛ.",
       "addAction": "Ka kɛ dɔ ye",
       "removeAction": "K'a to a ka baara la",
       "placeholders": "I ka barokun kɔnɔ, i ka {name}, {amount} ani {message} kɛ. O la, mɔgɔ si tun tɛ se ka kuma n'a ye.",
+      "placeholdersLive": "I ka barokun kɔnɔ, i ka {name}, {title} ani {link}: i tɔgɔ, i ka kunnafoni tɔgɔ ani i ka link dɔ kɛ k'a filɛ.",
       "alertText": "Alert text",
       "sound": "Sound",
       "sayText": "Ka to ka kalan kɛ",
       "chatText": "Message to post",
       "chatHint": "I ka site web ka kunnafoniw bila ka bɔ i ka site web kan. A tɛ se ka mɔgɔ filɛbaga ka kumaw fɔ tugun.",
       "webhookUrl": "Webhook address",
+      "webhookHint": "Webhook min be weele ko Discord wala Slack, walima https ka ladɛrɛsi min be sɔn ka baara dɔ kɛ.",
       "webhookText": "Message to send",
       "triggers": {
         "tip": "A tip arrives",
         "follow": "Someone follows",
         "subscribe": "Someone subscribes",
         "share": "Mɔgɔ dɔ be se ka na ni a ye",
+        "live": "Ka baara daminɛ",
         "command": "O kama, an ka kan ka baro kɛ ni mɔgɔ wɛrɛw ye.",
         "keyword": "Kuma kelen dɔrɔn lo be sɔrɔ a kɔnɔ.",
         "chat": "Any chat message"
@@ -4846,7 +4896,9 @@
       },
       "presetText": {
         "readChat": "{name} says {message}",
-        "bigTip": "{name} sent {amount} DHB!"
+        "bigTip": "{name} sent {amount} DHB!",
+        "thankFollowers": "Merci de nous avoir suivis, {name} !",
+        "command": "Bonjour {name}, bienvenue sur la chaîne !"
       },
       "sounds": {
         "airhorn": "Fanga min be fɔɲɔ kan",
@@ -4858,6 +4910,7 @@
         "ooh-man": "Cɛ (cɛ)",
         "ohh-girl": "Muso (muso)",
         "ba-dum-tish": "O ye ne ka koo ye.",
+        "spooky": "Effrayant",
         "magic-spell": "O ye kabako ye.",
         "shhh": "O ye n ka miiriya ye."
       }

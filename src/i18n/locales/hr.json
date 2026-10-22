@@ -4729,9 +4729,52 @@
     "followersUnit": "pratitelji",
     "topSupporters": "Najpopularniji podržavatelji",
     "tipped": "{{name}} šalje dar",
-    "chatPreview": "Ovdje se prikazuju poruke putem chata"
+    "chatPreview": "Ovdje se prikazuju poruke putem chata",
+    "poll": {
+      "closed": "Glasanje je završeno",
+      "voteFor": "Glasaj za {{option}}",
+      "signIn": "Prijavi se da biste glasali",
+      "failed": "Vaš glas nije bio uziman. Pokusajte ponovo.",
+      "voted_one": "Glasali ste · {{count}} glas",
+      "voted_other": "Glasali ste · {{count}} glasa",
+      "votes_one": "{{count}} glas",
+      "votes_other": "{{count}} glasa",
+      "howToVote_one": "Upišite {{command}} i broj u chat da biste glasali · {{count}} glas",
+      "howToVote_other": "Upišite {{command}} i broj u chat da biste glasali · {{count}} glasa"
+    }
   },
   "liveStudio": {
+    "polls": {
+      "title": "Anketi",
+      "intro": "Pitajte gledatelje koji prate vašu emitaciju pitanje. Odgovaraju klikom na dugme u DeHub aplikaciji ili upisujući {{command}} i broj opcije u chat.",
+      "question": "Pitanje",
+      "questionPlaceholder": "Što trebam igrati sljedeći put?",
+      "option": "Opcija {{n}}",
+      "addOption": "Dodaj opciju",
+      "removeOption": "Ukloni opciju {{n}}",
+      "duration": "Koliko dugo glasanje ostaje otvoreno",
+      "seconds_one": "{{count}} sekunda",
+      "seconds_other": "{{count}} sekunde",
+      "minutes_one": "{{count}} minuta",
+      "minutes_other": "{{count}} minuta",
+      "start": "Počnite anketu",
+      "end": "Završite glasanje sada",
+      "started": "Vaša anketa je otvorena. Gledatelji mogu glasati sada.",
+      "notLive": "Idite live prvo. Anketa se izvodi na trenutnoj emitaciji koju ste u živu.",
+      "startFailed": "Anketa nije počela. Pokusajte ponovo.",
+      "closeFailed": "Glasanje nije završeno. Pokusajte ponovo.",
+      "live": "Glasanje otvoreno · {{time}} ostalo",
+      "ended": "Glasanje završeno",
+      "votes_one": "{{count}} glas",
+      "votes_other": "{{count}} glasova",
+      "replaceHint": "Pokretanjem nove ankete zatvara se otvorena anketa.",
+      "widgetHint": "Prikazuje vašu anketu uživo. U aplikaciji DeHub gledatelji dodiruju opciju za glasovanje; u opsu se ljudima govori da upišu {{command}} i broj u razgovoru.",
+      "sample": {
+        "a": "Nešto novo",
+        "b": "Stari favorit",
+        "c": "Vi birate"
+      }
+    },
     "title": "Live Studio",
     "subtitle": "Obavestaji i widgetovi za vaše streamove",
     "h1": "Live Studio — obavestaji, ciljevi i preklade za streamere na DeHub-u",
@@ -4822,7 +4865,8 @@
       "event_feed": "Nedavna aktivnost",
       "chat_box": "Okvir za razgovor",
       "ticker": "Ticker",
-      "rule_alert": "Obavijesti o pravilima"
+      "rule_alert": "Obavijesti o pravilima",
+      "poll": "Anketa"
     },
     "hints": {
       "tip_alert": "Slavi svaku napojnicu u skladu s njezinom veličinom",
@@ -4840,7 +4884,8 @@
       "event_feed": "Najnoviji darovi, pratitelji, pretplatnici i osobe koje dijele vašu emisiju",
       "chat_box": "Prikazuje poruke chata vašeg emitiranja na zaslonu",
       "ticker": "Redak vlastitog teksta koji se pomiče po zaslonu",
-      "rule_alert": "Gdje se prikazuju obavijesti o pravilima"
+      "rule_alert": "Gdje se prikazuju obavijesti o pravilima",
+      "poll": "Vaša anketa uživo, s gumbom za glasanje za svaku opciju"
     },
     "fields": {
       "style": "Stil",
@@ -4885,6 +4930,7 @@
       "saveFailed": "Vaše pravila nisu uspjela biti sačuvana.",
       "testFailed": "Taj test nije prošao. Pokušajte ponovno za nekoliko trenutaka.",
       "saveToTest": "Spremite pravila kako biste ih testirali",
+      "test": "Testiraj",
       "enabled": "Pravilo o",
       "remove": "Izbriši pravilo",
       "save": "Spremi pravila",
@@ -4903,6 +4949,7 @@
       "addAction": "Dodajte radnju",
       "removeAction": "Ukloni radnju",
       "placeholders": "Upotrijebite {name}, {amount} i {message} u svom tekstu. Uklanjaju se poveznice u porukama.",
+      "placeholdersLive": "Upotrijebite {name}, {title} i {link} u svom tekstu: svoje ime, naslov emisije i poveznicu za gledanje.",
       "alertText": "Tekst upozorenja",
       "sound": "Zvuk",
       "sayText": "Tekst za čitanje naglas",
@@ -4916,6 +4963,7 @@
         "follow": "Netko prati",
         "subscribe": "Netko se pretplatio",
         "share": "Netko dijeli stream",
+        "live": "Počinjete emitirati",
         "command": "Koristi se naredba za chat",
         "keyword": "Poruka u chatu sadrži riječ",
         "chat": "Svaka poruka u čatu"

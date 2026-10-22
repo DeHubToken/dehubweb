@@ -4747,9 +4747,52 @@
     "followersUnit": "hordoftoota",
     "topSupporters": "Deeggartoota olaanoo",
     "tipped": "{{name}} kennaa ergeera",
-    "chatPreview": "Ergaawwan chaatii asitti mul&#39;atu"
+    "chatPreview": "Ergaawwan chaatii asitti mul&#39;atu",
+    "poll": {
+      "closed": "Sagalee kennuun cufameera",
+      "voteFor": "Sagalee kennaa {{option}}",
+      "signIn": "Filachuuf galmaa&#39;aa",
+      "failed": "Sagaleen keessan hin lakkaa&#39;amne. Ammas yaalaa.",
+      "voted_one": "Sagalee kennite · {{count}} sagalee kenni",
+      "voted_other": "Sagalee kennite · {{count}} sagalee",
+      "votes_one": "{{count}} sagalee kennuu",
+      "votes_other": "{{count}} sagalee kenna",
+      "howToVote_one": "{{command}} fi lakkoofsa chat keessatti barreessi sagalee kennuu · {{count}} sagalee kennuu",
+      "howToVote_other": "{{command}} fi lakkoofsa chat keessatti barreessuudhaan sagalee kennuu · {{count}} sagalee kennuu"
+    }
   },
   "liveStudio": {
+    "polls": {
+      "ended": "Sagalee kennuun cufameera",
+      "title": "Filannoo",
+      "intro": "Namoota tamsaasa kee ilaalaa jiran gaaffii gaafadhu. Isaanis appii DeHub keessatti button tokkoon, ykn chat keessatti {{command}} fi lakkoofsa filannoo sanaa barreessuudhaan deebii kennu.",
+      "question": "Gaaffii",
+      "questionPlaceholder": "Itti aansee maal taphachuu qaba?",
+      "option": "Filannoo {{n}}",
+      "addOption": "Filannoo itti dabali",
+      "removeOption": "Filannoo {{n}} haqi.",
+      "duration": "Sagalee kennuu hanga yoomiitti banaa ta&#39;a",
+      "seconds_one": "{{count}} lammaffaa",
+      "seconds_other": "{{count}} sekondii",
+      "minutes_one": "{{count}} daqiiqaa",
+      "minutes_other": "{{count}} daqiiqaa",
+      "start": "Filannoo jalqabaa",
+      "end": "Sagalee kennuu amma xumuri",
+      "started": "Filannoon keessan banaadha. Daawwattoonni amma sagalee kennuu danda&#39;u.",
+      "notLive": "Dursa live deemi. Tamsaasa yeroo ammaa kana tamsaasaa jirtan irratti filannoo ni gaggeeffama.",
+      "startFailed": "Filannoon hin jalqabne. Ammas yaalaa.",
+      "closeFailed": "Sagalee kennuunis hin xumuramne. Ammas yaalaa.",
+      "live": "Sagalee kennuu banaadha · {{time}} hafe",
+      "votes_one": "{{count}} sagalee kennuu",
+      "votes_other": "{{count}} sagalee kenna",
+      "replaceHint": "Filannoo haaraa jalqabuun isa banaa ta&#39;e cufa.",
+      "widgetHint": "Filannoo kallattiin keessan agarsiisa. Appii DeHub keessatti daawwattoonni filannoo sagalee kennuu tokko tuqaa; OBS keessatti namoonni {{command}} fi lakkoofsa tokko chat keessatti akka barreessan itti hima.",
+      "sample": {
+        "a": "Waan haaraa",
+        "b": "Jaallatamaa durii",
+        "c": "Ati filatta"
+      }
+    },
     "title": "Live Studio",
     "subtitle": "Akeekkachiisa fi wiijetoota yaa&#39;a keessaniif",
     "h1": "Live Studio — akeekkachiisa yaa&#39;aa, galmootaa fi uwwisa uumamtoota DeHub",
@@ -4825,6 +4868,7 @@
       "join": "Itti makamuu"
     },
     "kinds": {
+      "poll": "Sagalee",
       "tip_alert": "Gorsa akeekkachiisa",
       "follow_alert": "Akeekkachiisa hordofaa",
       "subscribe_alert": "Akeekkachiisa maamilootaa",
@@ -4857,7 +4901,8 @@
       "event_feed": "Kennaawwan haaraa, hordoftoota, subscribers fi namoota tamsaasa keessan qooddatan",
       "chat_box": "Ergaawwan marii tamsaasa keessanii iskiriinii irratti agarsiisa",
       "ticker": "Sarara barruu mataa keetii kan iskiriinii irratti qaxxaamuru",
-      "rule_alert": "Bakka ogeeyyii seera keessan mul'atu"
+      "rule_alert": "Bakka ogeeyyii seera keessan mul'atu",
+      "poll": "Filannoo kallattiin keessan, filannoo hundaaf button sagalee kan qabu"
     },
     "fields": {
       "style": "Akkaataa",
@@ -4919,6 +4964,8 @@
       "userCooldown": "Eeguu mul'ata tokko tokkoon (sekondii)",
       "addAction": "Hojii dabalaa",
       "removeAction": "Hojii balleessaa",
+      "placeholders": "Barreeffama kee keessatti {name}, {amount} fi {message} fayyadami. Liinkiiwwan ergaa keessaa ni haqamu.",
+      "placeholdersLive": "Barreeffama keessan keessatti {name}, {title} fi {link} fayyadamaa: maqaa keessan, mata duree tamsaasaa fi linkii ilaaluuf.",
       "alertText": "Barreeffama akeekkachiisaa",
       "sound": "Sagalee",
       "sayText": "Barreeffama sagalee ol kaastee dubbisuuf",
@@ -4932,6 +4979,7 @@
         "follow": "Namni tokko hordofa",
         "subscribe": "Namni tokko subscribe godha",
         "share": "Namni tokko sulula sana qooddata",
+        "live": "Tamsaasa ni jalqabda",
         "command": "Ajajni chaatii fayyadama",
         "keyword": "Ergaan chat jecha tokko of keessaa qaba",
         "chat": "Ergaa chat kamiyyuu"
@@ -4975,11 +5023,15 @@
         "airhorn": "Gaanfa qilleensaa",
         "applause": "Harka rukutuu",
         "cricket": "Kirikeeti",
+        "drumroll": "Rukutaa dibbee",
         "lol": "Kolfa",
         "ooh-ahh": "Ooh ahh",
         "ooh-man": "Ooh (nama) .",
         "ohh-girl": "Ohh (dubartii) .",
-        "spooky": "Spooky jechuun ni danda&#39;ama"
+        "ba-dum-tish": "Ba dum tis",
+        "spooky": "Spooky jechuun ni danda&#39;ama",
+        "magic-spell": "Falfala",
+        "shhh": "Ssss"
       }
     }
   },

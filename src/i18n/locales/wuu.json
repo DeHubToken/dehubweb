@@ -4348,9 +4348,52 @@
     "followersUnit": "粉丝",
     "topSupporters": "最高支持者",
     "tipped": "{{name}} 送咱个礼物",
-    "chatPreview": "聊天訊息會出現喔"
+    "chatPreview": "聊天訊息會出現喔",
+    "poll": {
+      "closed": "投票已关闭",
+      "voteFor": "投票给{{option}}",
+      "failed": "您的投票未计入。请重试。",
+      "voted_one": "您投了· {{count}}票",
+      "voted_other": "您投了· {{count}}票",
+      "votes_one": "{{count}}票",
+      "howToVote_one": "在聊天中输入{{command}}和一个数字进行投票· {{count}}投票",
+      "howToVote_other": "在聊天中输入{{command}}和一个数字进行投票· {{count}}票",
+      "signIn": "登入投票",
+      "votes_other": "{{count}} 票"
+    }
   },
   "liveStudio": {
+    "polls": {
+      "title": "投票",
+      "intro": "向观看您直播的人询问一个问题。他们可以在DeHub应用程序中使用按钮回答问题，也可以在聊天中输入{{command}}和选项的编号。",
+      "question": "问题",
+      "questionPlaceholder": "接下来我应该玩什么？",
+      "option": "选项{{n}}",
+      "addOption": "添加选项",
+      "removeOption": "删除选项{{n}}",
+      "duration": "投票时间持续多久？",
+      "seconds_one": "{{count}}秒",
+      "start": "开始投票",
+      "end": "立即停止投票",
+      "started": "您的投票已开放。观众现在可以投票了。",
+      "notLive": "先上线。民意调查将在您目前正在流式传输的广播上运行。",
+      "startFailed": "投票未开始。请重试。",
+      "closeFailed": "投票未结束。请重试。",
+      "ended": "投票已关闭",
+      "votes_one": "{{count}}票",
+      "replaceHint": "开始新的投票将关闭打开的投票。",
+      "widgetHint": "显示您的实时投票。 在DeHub应用程序中，查看者点击一个投票选项；在OBS中，它告诉人们在聊天中输入{{command}}和一个数字。",
+      "sample": {
+        "a": "新事物",
+        "b": "古老的最爱",
+        "c": "您选择"
+      },
+      "seconds_other": "{{count}} 秒鐘",
+      "minutes_one": "{{count}} 分錶",
+      "minutes_other": "{{count}} 分錶",
+      "live": "投票开啓 · {{time}} 个剩下",
+      "votes_other": "{{count}} 票"
+    },
     "seoTitle": "Live Studio — 直播通知、目标与叠图 | DeHub",
     "signIn": "登入以設定你直播的通知及小組件。",
     "landscape": "风景",
@@ -4396,6 +4439,7 @@
       "join": "加入"
     },
     "kinds": {
+      "poll": "投票",
       "tip_alert": "打赏提醒",
       "follow_alert": "关注提醒",
       "subscribe_alert": "订阅提醒",
@@ -4410,9 +4454,11 @@
       "reaction_counter": "反應計數器",
       "event_feed": "最近活動",
       "chat_box": "聊天框",
-      "ticker": "滾動字幕"
+      "ticker": "滾動字幕",
+      "rule_alert": "规则警报"
     },
     "hints": {
+      "poll": "您的实时投票，每个选项都有投票按钮",
       "tip_alert": "为每笔打赏庆祝，按等级大小显示",
       "follow_alert": "显示每位新关注者",
       "subscribe_alert": "显示每位新订阅者",
@@ -4427,7 +4473,8 @@
       "reaction_counter": "每次你廣播得到的反應數",
       "event_feed": "最新的禮物、追蹤者、訂閱者跟分享你廣播的人",
       "chat_box": "在螢幕上顯示你廣播的聊天訊息",
-      "ticker": "一行你自訂的文字，在螢幕上滾動"
+      "ticker": "一行你自訂的文字，在螢幕上滾動",
+      "rule_alert": "规则提醒的显示位置"
     },
     "fields": {
       "style": "样式",
@@ -4462,29 +4509,102 @@
       "fast": "快"
     },
     "rules": {
+      "placeholdersLive": "在文本中使用{name}、{title}和{link} ：您的姓名、广播标题和观看链接。",
+      "title": "规则",
+      "intro": "当您的视频流出现问题时， DeHub会执行您选择的操作：显示提醒、播放声音、大声朗读、在聊天中发布帖子或告诉您的Discord。",
+      "add": "添加规则",
+      "limit": "您已达到{{count}}规则的限制。",
+      "loadFailed": "无法加载您的规则。请刷新页面以重试。",
+      "empty": "还没有规则。添加一个以响应提示、关注或聊天命令。",
+      "saved": "规则已保存。它们会在您的下一次小费、关注或消息中运行。",
+      "saveFailed": "无法保存您的规则。",
+      "testFailed": "该测试未通过。请稍后重试。",
+      "saveToTest": "保存规则并进行测试",
+      "test": "测试",
       "enabled": "规则关于",
       "remove": "删脱规则",
+      "save": "保存规则",
+      "needsAlertWidget": "有些规则会显示警报。添加规则提醒小部件，以便它在某处显示。",
+      "name": "名称",
+      "when": "时间",
+      "then": "然后",
+      "minAmount": "最小尖端（ DHB ）",
+      "command": "指令",
+      "keyword": "单词或短语",
+      "audience": "谁可以引爆它",
+      "blockedWords": "已屏蔽的字词",
+      "blockedWordsHint": "用逗号分隔。包含它们的消息将被忽略，并且永远不会大声朗读。",
       "cooldown": "等一下用 (秒)",
       "userCooldown": "等人頭 (秒)",
+      "addAction": "添加操作",
+      "removeAction": "删除操作",
+      "placeholders": "在文本中使用{name}、{amount}和{message}。消息中的链接将被删除。",
+      "alertText": "警报文本",
+      "sound": "声音",
       "sayText": "要读出来的文本",
+      "chatText": "要发布的消息",
+      "chatHint": "从您的帐户发布到您的信息流聊天中。它不能重复查看者的消息。",
+      "webhookUrl": "Webhook地址",
+      "webhookHint": "Discord或Slack网络钩子，或接受帖子的任何https地址。",
+      "webhookText": "要发送的消息",
       "triggers": {
-        "command": "一个聊天指令被用"
+        "live": "您开始广播",
+        "tip": "小费已到账",
+        "follow": "有人关注",
+        "subscribe": "有人订阅",
+        "share": "有人分享了信息流",
+        "command": "一个聊天指令被用",
+        "keyword": "聊天消息包含一个单词",
+        "chat": "任何聊天消息"
+      },
+      "audiences": {
+        "everyone": "所有人",
+        "followers": "关注者",
+        "subscribers": "订阅者"
+      },
+      "actionTypes": {
+        "alert": "显示提醒",
+        "sound": "播放声音",
+        "say": "朗读",
+        "chat": "在聊天中发布",
+        "webhook": "发送到Webhook"
+      },
+      "summary": {
+        "tip": "小费{{amount}} DHB或以上"
       },
       "presets": {
-        "thankFollowers": "歡迎新粉絲！"
+        "blank": "空白规则",
+        "readChat": "大声朗读聊天记录",
+        "bigTip": "大尖头气喇叭",
+        "thankFollowers": "歡迎新粉絲！",
+        "command": "聊天命令"
       },
       "presetHints": {
         "blank": "啥都無，從零開始",
         "readChat": "朗读你粉丝的消息，每30秒对每位观众朗读一条",
-        "thankFollowers": "有人关注时，在你个聊天里发个感谢。"
+        "bigTip": "播放气喇叭并显示100,000 DHB或以上小费的警报",
+        "thankFollowers": "有人关注时，在你个聊天里发个感谢。",
+        "command": "在聊天中回答a!命令"
       },
       "presetText": {
         "readChat": "{name} 吾𠀀{message}",
-        "bigTip": "{name} 送 {amount} DHB!"
+        "bigTip": "{name} 送 {amount} DHB!",
+        "thankFollowers": "{name} ，感谢您的关注！",
+        "command": "您好{name} ，欢迎来到直播！"
       },
       "sounds": {
+        "airhorn": "气喇叭",
+        "applause": "掌声",
+        "cricket": "蟋蟀",
+        "drumroll": "滚筒",
+        "lol": "笑声",
+        "ooh-ahh": "哦哦啊啊",
         "ooh-man": "Ooh (阿𠀀)",
-        "ohh-girl": "Ohh (女仔)"
+        "ohh-girl": "Ohh (女仔)",
+        "ba-dum-tish": "嘭！",
+        "spooky": "诡异",
+        "magic-spell": "魔法咒语",
+        "shhh": "嘘"
       }
     }
   },

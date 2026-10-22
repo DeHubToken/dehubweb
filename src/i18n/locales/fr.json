@@ -830,6 +830,8 @@
     "stagePay": "Paiement de DeHub Pay avec {{symbol}}…",
     "stageDelivering": "DeHub Pay envoie vos jetons…",
     "payViaDpay": "Payé à DeHub Pay, les jetons arrivent dans environ 30s",
+    "payDirect": "Envoyé directement à {{name}} en {{symbol}} sur {{chain}}. Sans swap.",
+    "payDirectNoName": "Envoyé directement au créateur en {{symbol}} sur {{chain}}. Sans swap.",
     "payViaBridgeDpay": "Déplacé vers Base et payé à DeHub Pay, les jetons arrivent dans environ une minute",
     "dmSent": "{{amount}} jetons envoyés à {{name}} !"
   },
@@ -934,6 +936,7 @@
     "price": "Prix",
     "ppvDhbInfo": "Les paiements sont en jetons DeHub sur la chaîne Base",
     "ppvUsdInfo": "Les paiements sont en USD",
+    "ppvStableInfo": "Les acheteurs paient en {{symbol}}, envoyé directement à vous",
     "setupBounty": "Configurer la récompense",
     "viewersToReward": "Spectateurs à récompenser",
     "numberOfViewers": "Nombre de spectateurs",
@@ -5822,9 +5825,52 @@
     "followersUnit": "abonnés",
     "topSupporters": "Meilleurs supporters",
     "tipped": "{{name}} a envoyé un cadeau",
-    "chatPreview": "Les messages de chat apparaissent ici"
+    "chatPreview": "Les messages de chat apparaissent ici",
+    "poll": {
+      "closed": "Voting fermé",
+      "voteFor": "Voter pour {{option}}",
+      "signIn": "Se connecter pour voter",
+      "failed": "Votre vote n'a pas été compté. Essayez à nouveau.",
+      "voted_one": "Vous avez voté · {{count}} vote",
+      "voted_other": "Vous avez voté · {{count}} votes",
+      "votes_one": "{{count}} vote",
+      "votes_other": "{{count}} votes",
+      "howToVote_one": "Tapez {{command}} et un nombre en chat pour voter · {{count}} vote",
+      "howToVote_other": "Tapez {{command}} et un nombre en chat pour voter · {{count}} votes"
+    }
   },
   "liveStudio": {
+    "polls": {
+      "title": "Sondages",
+      "intro": "Posez une question aux personnes regardant votre diffusion. Ils répondent avec un bouton dans l'application DeHub, ou en tapant {{command}} et le numéro de l'option dans le chat.",
+      "question": "Question",
+      "questionPlaceholder": "Que dois-je jouer ensuite ?",
+      "option": "Option {{n}}",
+      "addOption": "Ajouter une option",
+      "removeOption": "Supprimer l'option {{n}}",
+      "duration": "Durée pendant laquelle le vote reste ouvert",
+      "seconds_one": "{{count}} seconde",
+      "seconds_other": "{{count}} secondes",
+      "minutes_one": "{{count}} minute",
+      "minutes_other": "{{count}} minutes",
+      "start": "Lancer le sondage",
+      "end": "Terminer le vote maintenant",
+      "started": "Votre sondage est ouvert. Les spectateurs peuvent voter maintenant.",
+      "notLive": "Allez en direct d'abord. Un sondage fonctionne sur la diffusion que vous diffusez actuellement.",
+      "startFailed": "Le sondage n'a pas commencé. Essayez à nouveau.",
+      "closeFailed": "Le vote n'a pas pris fin. Essayez à nouveau.",
+      "live": "Vote en cours · {{time}} restant(e)s",
+      "ended": "Vote fermé",
+      "votes_one": "{{count}} vote",
+      "votes_other": "{{count}} votes",
+      "replaceHint": "Lancer un nouveau sondage ferme celui qui est ouvert.",
+      "widgetHint": "Affiche votre sondage en direct. Dans l'application DeHub, les téléspectateurs tapent sur une option pour voter ; dans OBS, il indique aux gens de taper {{command}} et un numéro dans le chat.",
+      "sample": {
+        "a": "Quelque chose de nouveau",
+        "b": "Un ancien favori",
+        "c": "Vous choisissez"
+      }
+    },
     "title": "Studio en direct",
     "subtitle": "Alertes et widgets pour vos flux",
     "h1": "Live Studio — diffusez des alertes, des objectifs et des superpositions pour les créateurs DeHub",
@@ -5915,7 +5961,8 @@
       "event_feed": "Activité récente",
       "chat_box": "Boîte de discussion",
       "ticker": "Bandeau défilant",
-      "rule_alert": "Alertes de règle"
+      "rule_alert": "Alertes de règle",
+      "poll": "Sondage"
     },
     "hints": {
       "tip_alert": "Célèbre chaque pourboire, dimensionné à son niveau",
@@ -5933,7 +5980,8 @@
       "event_feed": "Les derniers cadeaux, followers, abonnés et personnes partageant votre émission",
       "chat_box": "Affiche les messages de chat de votre diffusion à l'écran",
       "ticker": "Une ligne de votre propre texte qui défile sur l'écran",
-      "rule_alert": "Où les alertes de vos règles apparaissent"
+      "rule_alert": "Où les alertes de vos règles apparaissent",
+      "poll": "Votre sondage en direct, avec un bouton de vote pour chaque option"
     },
     "fields": {
       "style": "Style",
@@ -5968,7 +6016,6 @@
       "fast": "Rapide"
     },
     "rules": {
-      "test": "Tester",
       "title": "Règles",
       "intro": "Lorsque quelque chose se passe sur votre flux, DeHub fait ce que vous choisissez : affiche une alerte, émet un son, lit quelque chose à haute voix, publie dans votre chat ou le dit à votre Discord.",
       "add": "Ajouter une règle",
@@ -5979,6 +6026,7 @@
       "saveFailed": "Vos règles n'ont pas pu être enregistrées.",
       "testFailed": "Ce test n'est pas passé. Réessayez dans un instant.",
       "saveToTest": "Enregistrez vos règles pour les tester",
+      "test": "Tester",
       "enabled": "Statuer sur",
       "remove": "Supprimer la règle",
       "save": "Enregistrer les règles",
@@ -5997,6 +6045,7 @@
       "addAction": "Ajouter une action",
       "removeAction": "Supprimer l'action",
       "placeholders": "Utilisez {name}, {amount} et {message} dans votre texte. Les liens dans les messages sont supprimés.",
+      "placeholdersLive": "Utilisez {name}, {title} et {link} dans votre texte : votre nom, le titre de l'émission et un lien pour la regarder.",
       "alertText": "Texte d'alerte",
       "sound": "Son",
       "sayText": "Texte à lire à haute voix",
@@ -6010,6 +6059,7 @@
         "follow": "Quelqu'un suit",
         "subscribe": "Quelqu'un s'abonne",
         "share": "Quelqu'un partage le flux",
+        "live": "Vous commencez à diffuser",
         "command": "Une commande de chat est utilisée",
         "keyword": "Un message de chat contient un mot",
         "chat": "Tout message de chat"
@@ -7297,6 +7347,7 @@
     "weeksShort": "{{count}} sem"
   },
   "liveGift": {
+    "notEnoughToken": "Pas assez de {{symbol}} pour ce cadeau",
     "pickTier": "Choisissez une célébration",
     "plays": "Joue {{tier}} sur le stream",
     "you": "Vous",
