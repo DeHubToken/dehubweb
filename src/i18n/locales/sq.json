@@ -4794,7 +4794,6 @@
     "creatorEarnsDirect": "Abonentët paguajnë në tokenët DeHub. Pjesa jote vendoset në portofolin tënd në momentin që ata regjistrohen, minus tarifën e platformës për nivelin e distinktivit tënd."
   },
   "liveOverlay": {
-    "wheelLanded": "{{name}} spun: {{result}}",
     "someone": "Dikush",
     "newFollower": "Ndjekës i ri: {{name}}",
     "newSubscriber": "Abonent i ri: {{name}}",
@@ -4806,6 +4805,12 @@
     "topSupporters": "Mbështetësit më të mirë",
     "tipped": "{{name}} dërgoi një dhuratë",
     "chatPreview": "Mesazhet e bisedës shfaqen këtu",
+    "wheelLanded": "{{name}} spun: {{result}}",
+    "subathon": "Subathon",
+    "subathonOver": "Koha ka mbaruar",
+    "pointsTitle": "Shikuesit më të besnikë",
+    "points_one": "{{formatted}} pikë",
+    "points_other": "{{formatted}} pikë",
     "poll": {
       "closed": "Voting u mbyll",
       "voteFor": "Votoni për {{option}}",
@@ -4833,6 +4838,29 @@
     "youAreTimedOut": "Ju jeni kohëzuar për një moment."
   },
   "liveStudio": {
+    "subathon": {
+      "title": "Subathon",
+      "intro": "Një countdown në streamin tuaj. Çdo donacion, follow dhe abonimi i paguar shton kohë, kështu që dhomëja të mbajë jetë të vërtetë.",
+      "secondsPerThousand": "Sekonda të shtuara për 1,000 DHB të donacionuar",
+      "secondsPerFollow": "Sekonda të shtuara për një follow",
+      "secondsPerSubscribe": "Sekonda të shtuara për një abonim",
+      "capHours": "Koha më e gjatë që mund të zgjasë (ora)",
+      "save": "Ruaj mbetjet",
+      "saved": "Mbetjet e ruajtura të Subathon-it.",
+      "startMinutes": "Nisi me (minuta)",
+      "start": "Nisi countdown-in",
+      "stop": "Përcakto",
+      "addFive": "Shto 5 minuta",
+      "removeFive": "Hiq 5 minuta",
+      "failed": "Kjo nuk punoi. Provoni përsëri.",
+      "widgetHint": "Tregon countdown-in e Subathon-it. Nisi atë nga paneli Subathon në Live Studio."
+    },
+    "points": {
+      "title": "Shikuesit të besnikë",
+      "intro": "Shikuesit fitojnë një pikë për çdo minutë që shikojnë të dhe një për çdo 100 DHB që donacionojnë. Chat dhe reaksionet nuk fitojnë asnjë pikë, kështu që pikët nuk mund të shfrytëzohen.",
+      "empty": "Asnjë pikë ende. Ata rriten kur njerëzit shikojnë dhe donacionojnë.",
+      "widgetHint": "Shto widget-in e shikuesve të besnikë për të treguar këtë listë në stream."
+    },
     "controls": {
       "title": "Kontrolle të shpejta",
       "intro": "Për rrjedhën e mesme. Çdo ndërprerës mban për të gjithë që shikojnë, në aplikacion dhe në OBS, derisa ta ktheni mbrapsht.",
@@ -4950,7 +4978,6 @@
       "join": "Bashkohu"
     },
     "kinds": {
-      "spin_wheel": "Rrota e centrifugimit",
       "tip_alert": "Lajmërim sugjerimi",
       "follow_alert": "Ndiq alarmin",
       "subscribe_alert": "Lajmërim i pajtimtarit",
@@ -4967,10 +4994,12 @@
       "chat_box": "Kutia e bisedës",
       "ticker": "Ticker",
       "rule_alert": "Lajmërime për rregullat",
-      "poll": "Sondazh"
+      "poll": "Sondazh",
+      "spin_wheel": "Rrota e centrifugimit",
+      "subathon_timer": "Subathon timer",
+      "points_board": "Shikuesit të besnikë"
     },
     "hints": {
-      "spin_wheel": "Ku rrotullohen rrotat në rregullat e tua",
       "tip_alert": "Feston çdo bakshish, të madhësisë sipas nivelit të tij",
       "follow_alert": "Shfaq çdo ndjekës të ri",
       "subscribe_alert": "Shfaq çdo pajtimtar të ri",
@@ -4987,7 +5016,10 @@
       "chat_box": "Shfaq mesazhet e bisedës së transmetimit tënd në ekran",
       "ticker": "Një rresht i tekstit tënd që lëviz nëpër ekran",
       "rule_alert": "Këtu ku shfaqen alerte të regujave tuaja",
-      "poll": "Sondazhi yt i drejtpërdrejtë, me një buton votimi për çdo opsion"
+      "poll": "Sondazhi yt i drejtpërdrejtë, me një buton votimi për çdo opsion",
+      "spin_wheel": "Ku rrotullohen rrotat në rregullat e tua",
+      "subathon_timer": "Një countdown që donacionet, followet dhe abonimet e shtojnë kohën",
+      "points_board": "Shikuesit më të mëdhenj sipas pikëve nga shikimi dhe donacionimi"
     },
     "fields": {
       "style": "Stili",
@@ -5022,8 +5054,6 @@
       "fast": "Shpejt"
     },
     "rules": {
-      "wheelSegments": "Segmentet e rrotave, një për rresht",
-      "wheelHint": "Midis 2 dhe 12. DeHub zgjedh vendin ku ndalet rrota, kështu që të gjithë që shikojnë shohin të njëjtin rezultat. Përdor {result} në një lajmërim, lexim me zë ose bisedë për ta emëruar atë.",
       "title": "Rregullat",
       "intro": "Kur ndodh një gjë në stream-in tuaj, DeHub bëhet çfarë e keni zgjedhur: shfaqet një alert, luhet një zëri, lexohet një gjë në shpremë, postohet në chat-in tuaj ose i thotë Discord-it.",
       "add": "Shto një rregull",
@@ -5054,6 +5084,8 @@
       "removeAction": "Fshi një veprim",
       "placeholders": "Përdor {name}, {amount} dhe {message} në tekstin tënd. Lidhjet në mesazhe janë hequr.",
       "placeholdersLive": "Përdor {name}, {title} dhe {link} në tekstin tënd: emrin tënd, titullin e transmetimit dhe një link për ta parë atë.",
+      "wheelSegments": "Segmentet e rrotave, një për rresht",
+      "wheelHint": "Midis 2 dhe 12. DeHub zgjedh vendin ku ndalet rrota, kështu që të gjithë që shikojnë shohin të njëjtin rezultat. Përdor {result} në një lajmërim, lexim me zë ose bisedë për ta emëruar atë.",
       "alertText": "Teksti i paralajmërimit",
       "sound": "Tingull",
       "sayText": "Tekst për t 'u lexuar me zë të lartë",
@@ -5078,12 +5110,12 @@
         "subscribers": "Abonentët"
       },
       "actionTypes": {
-        "wheel": "Rrotullo një rrotë",
         "alert": "Shfaq një lajmërim",
         "sound": "Lësho një tingull",
         "say": "Lexo me zë të lartë",
         "chat": "Posto në chat",
-        "webhook": "Dërgoja një webhook-u"
+        "webhook": "Dërgoja një webhook-u",
+        "wheel": "Rrotullo një rrotë"
       },
       "summary": {
         "tip": "Sugjerim nga {{amount}} DHB ose më shumë"

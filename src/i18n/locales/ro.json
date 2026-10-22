@@ -4800,7 +4800,6 @@
     "creatorEarnsDirect": "Abonații plătesc în jetoane DeHub. Cota ta ajunge în portofel în momentul în care se abonează, mai puțin taxa de platformă pentru nivelul insignei."
   },
   "liveOverlay": {
-    "wheelLanded": "{{name}} spin: {{result}}",
     "someone": "Cineva",
     "newFollower": "Urmăritor nou: {{name}}",
     "newSubscriber": "Abonat nou: {{name}}",
@@ -4812,16 +4811,22 @@
     "topSupporters": "Susținători de top",
     "tipped": "{{name}} a trimis un cadou",
     "chatPreview": "Mesajele de chat apar aici",
+    "wheelLanded": "{{name}} spin: {{result}}",
+    "subathon": "Subathon",
+    "subathonOver": "S-a terminat timpul",
+    "pointsTitle": "Cele mai loiale vizionare",
+    "points_one": "{{formatted}} punct",
+    "points_other": "{{formatted}} puncte",
     "poll": {
-      "howToVote_one": "Scrie {{command}} și un număr în chat ca să votezi · {{count}} vot",
-      "voted_one": "Ai votat · {{count}} vot",
-      "voted_other": "Ai votat · {{count}} voturi",
       "closed": "Votare închisă",
       "voteFor": "Vote pentru {{option}}",
       "signIn": "Conectează-te pentru a vota",
       "failed": "Votul dvs. nu a fost luat în considerare. Încercați din nou.",
+      "voted_one": "Ai votat · {{count}} vot",
+      "voted_other": "Ai votat · {{count}} voturi",
       "votes_one": "{{count}} vot",
       "votes_other": "{{count}} voturi",
+      "howToVote_one": "Scrie {{command}} și un număr în chat ca să votezi · {{count}} vot",
       "howToVote_other": "Tastați {{command}} și un număr în chat pentru a vota · {{count}} voturi"
     }
   },
@@ -4839,6 +4844,29 @@
     "youAreTimedOut": "Ați fost timelined pentru un moment"
   },
   "liveStudio": {
+    "subathon": {
+      "title": "Subathon",
+      "intro": "O countdown în timpul difuzării tale. Fiecare dar monetar, urmărire și abonament adaugă timp, astfel încât camera să te țină în direct.",
+      "secondsPerThousand": "Secunde adăugate pentru fiecare 1.000 DHB dăruite",
+      "secondsPerFollow": "Secunde adăugate pentru urmărire",
+      "secondsPerSubscribe": "Secunde adăugate pentru abonament",
+      "capHours": "Cel mai lung timp de funcționare (ore)",
+      "save": "Cantități salvate",
+      "saved": "Cantități salvate pentru Subathon.",
+      "startMinutes": "Pentru a începe cu (minute)",
+      "start": "Pornește countdown-ul",
+      "stop": "Oprește",
+      "addFive": "Adaugă 5 minute",
+      "removeFive": "Scot 5 minute",
+      "failed": "Nu a funcționat. Încercă din nou.",
+      "widgetHint": "Arată countdown-ul Subathon. Pornește-l din panoul Subathon în Live Studio."
+    },
+    "points": {
+      "title": "Vizionari loiali",
+      "intro": "Vizionarii câștigă un punct pentru fiecare minut petrecut privind difuzarea și unul pentru fiecare 100 DHB dăruite. Mesajele din chat și reacțiile nu dau puncte, așa că punctele nu pot fi obținute prin exploatare.",
+      "empty": "Nu există puncte încă. Acestea se acumulează pe măsură ce oamenii privesc și dăruiesc.",
+      "widgetHint": "Adaugă widget-ul \"Vizionari loiali\" pentru a afișa această listă în timpul difuzării."
+    },
     "controls": {
       "title": "Comenzi rapide",
       "intro": "Pentru mijlocul fluxului. Fiecare comutator este valabil pentru toată lumea care urmărește, în aplicație și în OBS, până când îl întoarceți.",
@@ -4956,7 +4984,6 @@
       "join": "Alătură-te"
     },
     "kinds": {
-      "spin_wheel": "Roată de rotire",
       "tip_alert": "Alertă de sugestie",
       "follow_alert": "Alertă de urmărire",
       "subscribe_alert": "Alertă de abonat",
@@ -4973,10 +5000,12 @@
       "chat_box": "Casetă de chat",
       "ticker": "Indicativ",
       "rule_alert": "Alerte privind regulile",
-      "poll": "Sondaj"
+      "poll": "Sondaj",
+      "spin_wheel": "Roată de rotire",
+      "subathon_timer": "Timer Subathon",
+      "points_board": "Vizionari loiali"
     },
     "hints": {
-      "spin_wheel": "Unde se învârt roțile din regulile tale",
       "tip_alert": "Celebrează fiecare sugestie, dimensionată în funcție de nivelul său",
       "follow_alert": "Afișează fiecare nou urmăritor",
       "subscribe_alert": "Afișează fiecare nou abonat",
@@ -4993,7 +5022,10 @@
       "chat_box": "Afișează mesajele de chat ale difuzării pe ecran",
       "ticker": "Un rând din propriul text care se derulează pe ecran",
       "rule_alert": "Unde apar alertele regulilor tale",
-      "poll": "Sondajul dvs. live, cu un buton de vot pentru fiecare opțiune"
+      "poll": "Sondajul dvs. live, cu un buton de vot pentru fiecare opțiune",
+      "spin_wheel": "Unde se învârt roțile din regulile tale",
+      "subathon_timer": "O countdown pe care darurile, urmăririle și abonamentele le respinge",
+      "points_board": "Topul vizionarilor tăi după puncte obținute prin privire și dăruire"
     },
     "fields": {
       "style": "Stil",
@@ -5028,8 +5060,6 @@
       "fast": "Rapid"
     },
     "rules": {
-      "wheelSegments": "Segmente de roți, câte una pe linie",
-      "wheelHint": "Între 2 și 12. DeHub alege unde se oprește roata, astfel încât toți cei care urmăresc să vadă același rezultat. Utilizați {result} într-o alertă, citire cu voce tare sau acțiune de chat pentru a o numi.",
       "title": "Reguli",
       "intro": "Când se întâmplă ceva în fluxul dvs., DeHub face ceea ce alegeți: afișează o alertă, redă un sunet, citește ceva cu voce tare, postează în chat sau vă spune Discord.",
       "add": "Adaugă o regulă",
@@ -5060,6 +5090,8 @@
       "removeAction": "Elimină acțiunea",
       "placeholders": "Folosește {name}, {amount} și {message} în textul tău. Linkurile din mesaje sunt eliminate.",
       "placeholdersLive": "Folosește {name}, {title} și {link} în textul tău: numele tău, titlul emisiunii și un link pentru a o viziona.",
+      "wheelSegments": "Segmente de roți, câte una pe linie",
+      "wheelHint": "Între 2 și 12. DeHub alege unde se oprește roata, astfel încât toți cei care urmăresc să vadă același rezultat. Utilizați {result} într-o alertă, citire cu voce tare sau acțiune de chat pentru a o numi.",
       "alertText": "Text alertă",
       "sound": "Sunet",
       "sayText": "Text de citit cu voce tare",
@@ -5084,12 +5116,12 @@
         "subscribers": "Abonați"
       },
       "actionTypes": {
-        "wheel": "Învârtiți o roată",
         "alert": "Afișează o alertă",
         "sound": "Redă un sunet",
         "say": "Citește cu voce tare",
         "chat": "Postează în chat",
-        "webhook": "Trimiteți către un webhook"
+        "webhook": "Trimiteți către un webhook",
+        "wheel": "Învârtiți o roată"
       },
       "summary": {
         "tip": "Sugestie de {{amount}} DHB sau mai mult"

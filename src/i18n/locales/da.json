@@ -4784,7 +4784,6 @@
     "creatorEarnsDirect": "Abonnenter betaler i DeHub-tokens. Din andel lander i din tegnebog, så snart vedkommende abonnerer, minus platformsgebyret for dit badgeniveau."
   },
   "liveOverlay": {
-    "wheelLanded": "{{name}} spundet:{{result}}",
     "someone": "Nogen",
     "newFollower": "Ny følger:{{name}}",
     "newSubscriber": "Ny abonnent:{{name}}",
@@ -4796,6 +4795,12 @@
     "topSupporters": "Toptilhængere",
     "tipped": "{{name}} har sendt en gave",
     "chatPreview": "Chatbeskeder vises her",
+    "wheelLanded": "{{name}} spundet:{{result}}",
+    "subathon": "Subathon",
+    "subathonOver": "Tiden er omme",
+    "pointsTitle": "De mest lojale seere",
+    "points_one": "{{formatted}} point",
+    "points_other": "{{formatted}} point",
     "poll": {
       "closed": "Afstemningen er lukket",
       "voteFor": "Stem på {{option}}",
@@ -4823,6 +4828,29 @@
     "youAreTimedOut": "Du er tidsudløbet i et øjeblik"
   },
   "liveStudio": {
+    "subathon": {
+      "title": "Subathon",
+      "intro": "En nedtælling på din stream. Hvert betalte gave, følg og abonnement tilføjer tid, så rummet holder dig live.",
+      "secondsPerThousand": "Sekunder tilføjet pr. 1.000 DHB givet",
+      "secondsPerFollow": "Sekunder tilføjet pr. følg",
+      "secondsPerSubscribe": "Sekunder tilføjet pr. abonnement",
+      "capHours": "Længst det kan køre (timer)",
+      "save": "Gemte beløb",
+      "saved": "Gemte Subathon-beløb.",
+      "startMinutes": "Start med (minutter)",
+      "start": "Start nedtællingen",
+      "stop": "Stop",
+      "addFive": "Tilføj 5 minutter",
+      "removeFive": "Fjern 5 minutter",
+      "failed": "Det fungerede ikke. Prøv igen.",
+      "widgetHint": "Viser din Subathon-nedtælling. Start den fra Subathon-panelet i Live Studio."
+    },
+    "points": {
+      "title": "Lojale seere",
+      "intro": "Seere tjener et point for hvert minut de ser dig og et for hvert 100 DHB de giver. Chat og reaktioner giver intet, så point kan ikke høstes.",
+      "empty": "Ingen point endnu. De bygges op, når folk ser og giver.",
+      "widgetHint": "Tilføj widget'en \"Lojale seere\" for at vise denne liste på stream."
+    },
     "controls": {
       "title": "Hurtige kontroller",
       "intro": "Til midtstrøm. Hver knap holder for alle, der ser på, i appen og i OBS, indtil du vender den tilbage.",
@@ -4940,7 +4968,6 @@
       "join": "Tilføj"
     },
     "kinds": {
-      "spin_wheel": "Spinhjul",
       "tip_alert": "Tip-alert",
       "follow_alert": "Følg-alert",
       "subscribe_alert": "Abonnent-alert",
@@ -4957,10 +4984,12 @@
       "chat_box": "Chatboks",
       "ticker": "Ticker",
       "rule_alert": "Regeladvarsler",
-      "poll": "Afstemning"
+      "poll": "Afstemning",
+      "spin_wheel": "Spinhjul",
+      "subathon_timer": "Subathon-timer",
+      "points_board": "Lojale seere"
     },
     "hints": {
-      "spin_wheel": "Hvor hjulene i dine regler drejer",
       "tip_alert": "Festiger hvert tip, tilpasset dets niveau",
       "follow_alert": "Viser hver nye følger",
       "subscribe_alert": "Viser hver nye abonnent",
@@ -4977,7 +5006,10 @@
       "chat_box": "Viser din udsendelses chatbeskeder på skærmen",
       "ticker": "En linje med din egen tekst, der ruller hen over skærmen",
       "rule_alert": "Hvor dine reglers påmindelser vises",
-      "poll": "Din live-afstemning med en stemmeknap for hver mulighed"
+      "poll": "Din live-afstemning med en stemmeknap for hver mulighed",
+      "spin_wheel": "Hvor hjulene i dine regler drejer",
+      "subathon_timer": "En nedtælling, som gives, følg og abonnements gør tilbage",
+      "points_board": "Dine top-seere efter point fra at se og give"
     },
     "fields": {
       "style": "Stil",
@@ -5012,8 +5044,6 @@
       "fast": "Hurtig"
     },
     "rules": {
-      "wheelSegments": "Hjulsegmenter, en pr. linje",
-      "wheelHint": "Mellem 2 og 12. DeHub vælger, hvor hjulet stopper, så alle, der ser på, ser det samme resultat. Brug {result} i en advarsel, højtlæsning eller chathandling for at navngive den.",
       "title": "Regler",
       "intro": "Når der sker noget på din stream, gør DeHub det, du vælger: viser en advarsel, afspiller en lyd, læser noget højt, slår noget op i din chat eller fortæller din Discord.",
       "add": "Tilføj en regel",
@@ -5044,6 +5074,8 @@
       "removeAction": "Fjern handling",
       "placeholders": "Brug {name}, {amount} og {message} i din tekst. Links i meddelelser fjernes.",
       "placeholdersLive": "Brug {name}, {title} og {link} i din tekst: dit navn, udsendelsens titel og et link til at se den.",
+      "wheelSegments": "Hjulsegmenter, en pr. linje",
+      "wheelHint": "Mellem 2 og 12. DeHub vælger, hvor hjulet stopper, så alle, der ser på, ser det samme resultat. Brug {result} i en advarsel, højtlæsning eller chathandling for at navngive den.",
       "alertText": "Advarselstekst",
       "sound": "Lyd",
       "sayText": "Tekst, der skal læses højt",
@@ -5068,12 +5100,12 @@
         "subscribers": "Abonnenter"
       },
       "actionTypes": {
-        "wheel": "Drej et hjul",
         "alert": "Vis en advarsel",
         "sound": "Afspil en lyd",
         "say": "Læs højt",
         "chat": "Slå op i chatten",
-        "webhook": "Send til en webhook"
+        "webhook": "Send til en webhook",
+        "wheel": "Drej et hjul"
       },
       "summary": {
         "tip": "Tip på{{amount}} DHB eller mere"

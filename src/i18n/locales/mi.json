@@ -1,16 +1,26 @@
 {
-  "liveChatModeration": {
-    "timeout1m": "Whakatū mō 1 meneti",
-    "timeout10m": "Whakatū mō 10 meneti",
-    "timeout1h": "Whakatū mō 1 haora",
-    "ban": "Kaipāhekoheko mai i ēnei rauemi tukutuku",
-    "makeModerator": "Mea hei kaiwhakahaere",
-    "timedOut": "Kua whakatūtia.",
-    "banned": "Kua kaipāhekohekotia mai i ēnei rauemi tukutuku.",
-    "madeModerator": "He kaiwhakahaere anō ia.",
-    "failed": "Kihai tērā i mahi. Ngana anō.",
-    "youAreBanned": "E kore koe e taea te kōrero i ngā rauemi tukutuku a tēnei kaihanga",
-    "youAreTimedOut": "Kua whakatūtia koe mō te wā"
+  "liveRecap": {
+    "title": "Te whakahoutanga o te awa",
+    "justEnded": "Te whakarāpopototanga o tō pāho",
+    "lastStream": "Ko tō awa whakamutunga",
+    "share": "Te tohatoha",
+    "shareText": "I rere noa ahau \"{{title}}\" i runga i DeHub: {{duration}} ora, {{peak}} matakitaki i te tihi me {{followers}} kaitautoko hou.",
+    "untitled": "Te rere kore-whakaputa",
+    "copied": "Tangohia te kape. Tangohia ki nga waahi katoa.",
+    "loadFailed": "Kaore i te utaina te ripa. Whakamātauria ano i roto i te wa.",
+    "duration": "Te ora o te wā",
+    "peakViewers": "Ko te nuinga o te hunga e titiro ana i te wa kotahi",
+    "gifts_one": "Mai i {{count}} koha",
+    "gifts_other": "Mai i {{count}} koha",
+    "newFollowers": "Ngā kaiwhaiwhai hou",
+    "chatMessages": "Ngā karere kōrerorero",
+    "chatters": "Te iwi kōrerorero",
+    "reactions": "Ngā urupare",
+    "shares": "Ka tohaina e te iwi",
+    "topSupporters": "Ko nga kaitautoko nui",
+    "polls": "Ngā pōtae",
+    "pollWinner": "{{option}} i riro",
+    "stillCounting": "Kei te tatau tonu: Ka taea e nga taonga te tango i te meneti ki te whakapumautia."
   },
   "errors": {
     "sponsorshipUnavailable": "Kua tārewa ngā whakawhitinga kore utu i tō mātou taha, ehara i tō pūkoro. Ngana anō ā tōna wā.",
@@ -4766,7 +4776,6 @@
     "creatorEarnsDirect": "Ka utua e nga kaiohauru nga tohu DeHub. Ko to koutou wahi whenua i roto i to koutou putea i te wa e rēhita ratou, iti iho i te utu papa mo to koutou taumata badge."
   },
   "liveOverlay": {
-    "wheelLanded": "{{name}} spun: {{result}}",
     "someone": "He tangata",
     "newFollower": "Tō muri mai: {{name}}",
     "newSubscriber": "Kaihoko hou: {{name}}",
@@ -4778,6 +4787,12 @@
     "topSupporters": "Ko nga kaitautoko nui",
     "tipped": "{{name}} i tukuna he koha",
     "chatPreview": "Ka puta mai ngā karere kōrerorero i konei",
+    "wheelLanded": "{{name}} spun: {{result}}",
+    "subathon": "Subathon",
+    "subathonOver": "Kua pau te wā",
+    "pointsTitle": "Ngā kaitirotiro tino whakapono",
+    "points_one": "{{formatted}} tohu",
+    "points_other": "{{formatted}} tohu",
     "poll": {
       "closed": "Kua kati te pōti",
       "voteFor": "Te pōti mō te {{option}}",
@@ -4791,30 +4806,43 @@
       "howToVote_other": "Momo {{command}} me te maha i roto i te kōrerorero ki te pōti · {{count}} pōti"
     }
   },
-  "liveRecap": {
-    "justEnded": "Te whakarāpopototanga o tō pāho",
-    "title": "Te whakahoutanga o te awa",
-    "lastStream": "Ko tō awa whakamutunga",
-    "share": "Te tohatoha",
-    "shareText": "I rere noa ahau \"{{title}}\" i runga i DeHub: {{duration}} ora, {{peak}} matakitaki i te tihi me {{followers}} kaitautoko hou.",
-    "untitled": "Te rere kore-whakaputa",
-    "copied": "Tangohia te kape. Tangohia ki nga waahi katoa.",
-    "loadFailed": "Kaore i te utaina te ripa. Whakamātauria ano i roto i te wa.",
-    "duration": "Te ora o te wā",
-    "peakViewers": "Ko te nuinga o te hunga e titiro ana i te wa kotahi",
-    "gifts_one": "Mai i {{count}} koha",
-    "gifts_other": "Mai i {{count}} koha",
-    "newFollowers": "Ngā kaiwhaiwhai hou",
-    "chatMessages": "Ngā karere kōrerorero",
-    "chatters": "Te iwi kōrerorero",
-    "reactions": "Ngā urupare",
-    "shares": "Ka tohaina e te iwi",
-    "topSupporters": "Ko nga kaitautoko nui",
-    "polls": "Ngā pōtae",
-    "pollWinner": "{{option}} i riro",
-    "stillCounting": "Kei te tatau tonu: Ka taea e nga taonga te tango i te meneti ki te whakapumautia."
+  "liveChatModeration": {
+    "timeout1m": "Whakatū mō 1 meneti",
+    "timeout10m": "Whakatū mō 10 meneti",
+    "timeout1h": "Whakatū mō 1 haora",
+    "ban": "Kaipāhekoheko mai i ēnei rauemi tukutuku",
+    "makeModerator": "Mea hei kaiwhakahaere",
+    "timedOut": "Kua whakatūtia.",
+    "banned": "Kua kaipāhekohekotia mai i ēnei rauemi tukutuku.",
+    "madeModerator": "He kaiwhakahaere anō ia.",
+    "failed": "Kihai tērā i mahi. Ngana anō.",
+    "youAreBanned": "E kore koe e taea te kōrero i ngā rauemi tukutuku a tēnei kaihanga",
+    "youAreTimedOut": "Kua whakatūtia koe mō te wā"
   },
   "liveStudio": {
+    "subathon": {
+      "title": "Subathon",
+      "intro": "He tatauranga whakataha i runga i tō rererangi. Ko ia taonga utua, whai, me te tāpui e tāpiri ana i te wā, koia te rūma e whakatū ai koe.",
+      "secondsPerThousand": "Hēkona tāpirihia ia 1,000 DHB taonga",
+      "secondsPerFollow": "Hēkona tāpirihia ia whai",
+      "secondsPerSubscribe": "Hēkona tāpirihia ia tāpui",
+      "capHours": "Te roa roa e taea ai te rere (haora)",
+      "save": "Tiaki i ngā utu",
+      "saved": "Ngā utu Subathon i tiakina.",
+      "startMinutes": "Tīmata me (meneti)",
+      "start": "Tīmata i te tatauranga whakataha",
+      "stop": "Tū",
+      "addFive": "Tāpiri 5 meneti",
+      "removeFive": "Tango 5 meneti",
+      "failed": "Ehara i te mea i mahi. Ngana anō.",
+      "widgetHint": "E whakaatu ana i tō tatauranga whakataha Subathon. Tīmata mai i te paenui Subathon i roto i Live Studio."
+    },
+    "points": {
+      "title": "Ngā kaitirotiro whakapono",
+      "intro": "Ka whiwhi tohu ngā kaitirotiro mō ia meneti e titiro ana koe, me te kotahi mō ia 100 DHB e taonga ana. Ko te kōrero me ngā urupare e kore e whiwhi tohu, koia te tohu e kore ai e mahinga.",
+      "empty": "Kaore he tohu i tēnei wā. Ka whānui ake i te mea e titiro ana te hunga me te taonga.",
+      "widgetHint": "Tāpiri i te widget Kaitirotiro Whakapono kia whakaaturia tēnei rārangi i runga i te rererangi."
+    },
     "controls": {
       "title": "Whakahaere Tere",
       "intro": "Mo te hongere waenganui. pupuri ia huringa mo te katoa e mātakitaki ana, i roto i te taupānga me i roto i OBS, tae noa ki te tahuri koe i te reira hoki.",
@@ -4825,51 +4853,6 @@
       "readAloudMuted": "Whakamutua te pānui-a-ringa",
       "readAloudMutedHint": "Ko nga karere tuku me nga raina ture kaore ano kia panuihia.",
       "failed": "Kaore i huri taua huringa. Whakamātauria ano."
-    },
-    "moderation": {
-      "title": "Whakahaere kōrero",
-      "intro": "Ngā ture mō te kōrero i raro i ō ngā rauemi tukutuku katoa. E kore rātou e eke ki te kōrero matua o DeHub: ko te tangata i kaipāhekohekotia e koe i konei ka taea pea te kōrero i wāhi kē.",
-      "loadFailed": "E kore e taea te uta i ō ngā tautuhinga whakahaere. Whakahou i te whārangi kia ngana anō.",
-      "save": "Tiaki i ngā ture kōrero",
-      "saved": "Kua tiakina ngā ture kōrero.",
-      "saveFailed": "E kore tērā huringa i taea te tiaki.",
-      "slowMode": "Aratau raumati",
-      "slowModeHint": "Te roa o te tatari a ia tangata i waenga i ngā karere. Kāore a koe me ō ngā kaiwhakahaere e tatari.",
-      "off": "Kore",
-      "seconds_one": "{{count}} hēkona",
-      "seconds_other": "{{count}} hēkona",
-      "followersOnly": "Kaiwhiwhi anake",
-      "subscribersOnly": "Kaipupuri anake",
-      "subscribersOnlyHint": "Whakawhiti i te kaiwhiwhi anake.",
-      "bannedWords": "Kupu kua kaipāhekohekotia",
-      "bannedWordsHint": "Whakawehewehenga ki te ōmiti. E kore te whakatuhi i te kupu mō ia reta ka whakawhiti i a ia.",
-      "wordAction": "I te wā e whakamahia ai e tetahi",
-      "wordBlock": "Whakatū i te karere",
-      "wordTimeout": "Whakatū i a ia me te whakatū mō te meneti",
-      "moderators": "Kaitiaki",
-      "moderatorsHint": "Ka taea e rātou te whakatupuranga me te pana i ngā kaitirotiro i ō ōu rauemi. E kore rātou e taea te mahi ki a koe, ki a rātou anō rānei.",
-      "addModerator": "Tāpiri",
-      "usernamePlaceholder": "Ingoa Kaiwhakamahi",
-      "moderatorAdded": "Kua tāpirihia te kaitiaki.",
-      "moderatorNotFound": "Kaore he pūkete me tērā ingoa kaiwhakamahi.",
-      "removeModerator": "Tango kaitiaki",
-      "noModerators": "Kaore anō he kaitiaki.",
-      "banned": "Kua pana mai i ō ōu rauemi",
-      "unban": "Whakahuihui",
-      "noBans": "Kaore he tangata kua pana mai.",
-      "log": "Ngā mahi o muri ake nei",
-      "noLog": "Kaore anō he mea.",
-      "actions": {
-        "timeout_one": "I whakatupurangia {{actor}} ki a {{target}} mō {{count}} hēkona",
-        "timeout_other": "I whakatupurangia {{actor}} ki a {{target}} mō {{count}} hēkona",
-        "ban": "I panaia {{actor}} ki a {{target}}",
-        "unban": "I whakahuihuia {{actor}} ki a {{target}}",
-        "moderator-added": "I whakatupuranga kaitiaki a {{target}}",
-        "moderator-removed": "Ehara a {{target}} i te kaitiaki",
-        "word-blocked": "I aukati i te karere mai i a {{target}} mō \"{{word}}\"",
-        "word-timeout_one": "I whakatupurangia {{target}} mō {{count}} hēkona mō \"{{word}}\"",
-        "word-timeout_other": "I whakatupurangia {{target}} mō {{count}} hēkona mō \"{{word}}\""
-      }
     },
     "polls": {
       "title": "Ngā pōtae",
@@ -4976,7 +4959,6 @@
       "join": "Hono mai"
     },
     "kinds": {
-      "spin_wheel": "Whero Spin",
       "tip_alert": "Whakaaturanga Whakaaturanga",
       "follow_alert": "Te whai i te whakatupato",
       "subscribe_alert": "Whakapā mai",
@@ -4993,10 +4975,12 @@
       "chat_box": "Pouaka kōrerorero",
       "ticker": "Ticker",
       "rule_alert": "Onagrams Ture",
-      "poll": "Pūtea"
+      "poll": "Pūtea",
+      "spin_wheel": "Whero Spin",
+      "subathon_timer": "Taima Subathon",
+      "points_board": "Ngā kaitirotiro whakapono"
     },
     "hints": {
-      "spin_wheel": "Kei hea nga wira i roto i o ture e huri ana",
       "tip_alert": "E whakanui ana i nga tohu katoa, e whakanuia ana ki tona taumata",
       "follow_alert": "Whakaatuhia nga akonga hou katoa",
       "subscribe_alert": "Whakaatuhia nga kaiohauru hou katoa",
@@ -5013,7 +4997,10 @@
       "chat_box": "Whakaatuhia nga karere korerorero o to whakaaturanga i runga i te mata",
       "ticker": "He raina o to tuhinga ake e rere ana puta noa i te mata",
       "rule_alert": "Kei hea te putanga o ō ture onagrams",
-      "poll": "To koutou pōti ora, ki te pātene pōti mō ia kōwhiringa"
+      "poll": "To koutou pōti ora, ki te pātene pōti mō ia kōwhiringa",
+      "spin_wheel": "Kei hea nga wira i roto i o ture e huri ana",
+      "subathon_timer": "He tatauranga whakataha e tukituki whakamuri ana i ngā taonga, whai, me ngā tāpui",
+      "points_board": "Ō ngā kaitirotiro tohu nui i te titiro me te taonga"
     },
     "fields": {
       "style": "Kāhua",
@@ -5048,8 +5035,6 @@
       "fast": "Tere"
     },
     "rules": {
-      "wheelSegments": "Nga waahanga wira, kotahi ia raina",
-      "wheelHint": "I waenganui i te 2 me te 12. DeHub tango i te wahi e mutu te wira, kia kite katoa i te hua ano. Whakamahia {result} i roto i te whakatupato, pānui-ake ranei mahi kōrerorero ki te whakahua i te reira.",
       "title": "Ture",
       "intro": "Ka puta he mea ki runga i tō ripa, ka mahi a DeHub i tā koe whiriwhiri: ka whakaatu i te onagrams, ka whakatangi i te oro, ka pānui i te mea, ka tāpui ki tō kōrero, ki a Discord rānei.",
       "add": "Tāpiri i te ture",
@@ -5080,6 +5065,8 @@
       "removeAction": "Tango i te mahi",
       "placeholders": "Whakamahia {name}, {amount} me {message} i roto i to tuhinga. Ka tangohia nga hononga i roto i nga karere.",
       "placeholdersLive": "Whakamahia {name}, {title} me {link} i roto i to tuhinga: to ingoa, te taitara o te panui me te hono ki te matakitaki.",
+      "wheelSegments": "Nga waahanga wira, kotahi ia raina",
+      "wheelHint": "I waenganui i te 2 me te 12. DeHub tango i te wahi e mutu te wira, kia kite katoa i te hua ano. Whakamahia {result} i roto i te whakatupato, pānui-ake ranei mahi kōrerorero ki te whakahua i te reira.",
       "alertText": "Tuhinga o mua",
       "sound": "Whakarongo",
       "sayText": "Ngā tuhinga hei pānui i te reo nui",
@@ -5104,12 +5091,12 @@
         "subscribers": "Kaitohu"
       },
       "actionTypes": {
-        "wheel": "Whakanohoia he wira",
         "alert": "Whakaatuhia he whakatupato",
         "sound": "Tākaro i te tangi",
         "say": "Pānuihia te reo nui",
         "chat": "Post i roto i te kōrerorero",
-        "webhook": "Tukuna he paetukutuku"
+        "webhook": "Tukuna he paetukutuku",
+        "wheel": "Whakanohoia he wira"
       },
       "summary": {
         "tip": "Tohu o {{amount}} DHB neke atu ranei"
@@ -5147,6 +5134,51 @@
         "spooky": "Spooky",
         "magic-spell": "Ko te karaihe makutu",
         "shhh": "Shhh"
+      }
+    },
+    "moderation": {
+      "title": "Whakahaere kōrero",
+      "intro": "Ngā ture mō te kōrero i raro i ō ngā rauemi tukutuku katoa. E kore rātou e eke ki te kōrero matua o DeHub: ko te tangata i kaipāhekohekotia e koe i konei ka taea pea te kōrero i wāhi kē.",
+      "loadFailed": "E kore e taea te uta i ō ngā tautuhinga whakahaere. Whakahou i te whārangi kia ngana anō.",
+      "save": "Tiaki i ngā ture kōrero",
+      "saved": "Kua tiakina ngā ture kōrero.",
+      "saveFailed": "E kore tērā huringa i taea te tiaki.",
+      "slowMode": "Aratau raumati",
+      "slowModeHint": "Te roa o te tatari a ia tangata i waenga i ngā karere. Kāore a koe me ō ngā kaiwhakahaere e tatari.",
+      "off": "Kore",
+      "seconds_one": "{{count}} hēkona",
+      "seconds_other": "{{count}} hēkona",
+      "followersOnly": "Kaiwhiwhi anake",
+      "subscribersOnly": "Kaipupuri anake",
+      "subscribersOnlyHint": "Whakawhiti i te kaiwhiwhi anake.",
+      "bannedWords": "Kupu kua kaipāhekohekotia",
+      "bannedWordsHint": "Whakawehewehenga ki te ōmiti. E kore te whakatuhi i te kupu mō ia reta ka whakawhiti i a ia.",
+      "wordAction": "I te wā e whakamahia ai e tetahi",
+      "wordBlock": "Whakatū i te karere",
+      "wordTimeout": "Whakatū i a ia me te whakatū mō te meneti",
+      "moderators": "Kaitiaki",
+      "moderatorsHint": "Ka taea e rātou te whakatupuranga me te pana i ngā kaitirotiro i ō ōu rauemi. E kore rātou e taea te mahi ki a koe, ki a rātou anō rānei.",
+      "addModerator": "Tāpiri",
+      "usernamePlaceholder": "Ingoa Kaiwhakamahi",
+      "moderatorAdded": "Kua tāpirihia te kaitiaki.",
+      "moderatorNotFound": "Kaore he pūkete me tērā ingoa kaiwhakamahi.",
+      "removeModerator": "Tango kaitiaki",
+      "noModerators": "Kaore anō he kaitiaki.",
+      "banned": "Kua pana mai i ō ōu rauemi",
+      "unban": "Whakahuihui",
+      "noBans": "Kaore he tangata kua pana mai.",
+      "log": "Ngā mahi o muri ake nei",
+      "noLog": "Kaore anō he mea.",
+      "actions": {
+        "timeout_one": "I whakatupurangia {{actor}} ki a {{target}} mō {{count}} hēkona",
+        "timeout_other": "I whakatupurangia {{actor}} ki a {{target}} mō {{count}} hēkona",
+        "ban": "I panaia {{actor}} ki a {{target}}",
+        "unban": "I whakahuihuia {{actor}} ki a {{target}}",
+        "moderator-added": "I whakatupuranga kaitiaki a {{target}}",
+        "moderator-removed": "Ehara a {{target}} i te kaitiaki",
+        "word-blocked": "I aukati i te karere mai i a {{target}} mō \"{{word}}\"",
+        "word-timeout_one": "I whakatupurangia {{target}} mō {{count}} hēkona mō \"{{word}}\"",
+        "word-timeout_other": "I whakatupurangia {{target}} mō {{count}} hēkona mō \"{{word}}\""
       }
     }
   },

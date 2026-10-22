@@ -4800,7 +4800,6 @@
     "creatorEarnsDirect": "Wasajili hulipa kwa ishara za DeHub. Gawio lako linatua kwenye mkoba wako pindi wanapojisajili, punguza ada ya tovuti ya kiwango cha beji yako."
   },
   "liveOverlay": {
-    "wheelLanded": "{{name}} spun: {{result}}",
     "someone": "Mtu",
     "newFollower": "Mfuasi mpya: {{name}}",
     "newSubscriber": "Mteja mpya: {{name}}",
@@ -4812,6 +4811,12 @@
     "topSupporters": "Wafuasi wakuu",
     "tipped": "{{name}} alituma zawadi",
     "chatPreview": "Ujumbe wa gumzo unaonekana hapa",
+    "wheelLanded": "{{name}} spun: {{result}}",
+    "subathon": "Mashindano ya mbio ndogo",
+    "subathonOver": "Muda imeishia",
+    "pointsTitle": "Wakusudi wa watazamaji wakuu",
+    "points_one": "{{formatted}} pointi",
+    "points_other": "{{formatted}} pointi",
     "poll": {
       "closed": "Kura imefungwa",
       "voteFor": "Piga kura kwa {{option}}",
@@ -4839,6 +4844,29 @@
     "youAreTimedOut": "Umepitwa na wakati kwa muda"
   },
   "liveStudio": {
+    "subathon": {
+      "title": "Mashindano ya mbio ndogo",
+      "intro": "Kutaja kwenye michezo yako. Kila hiba, kufuata na usajili wa msaada unaozaliwa unozidisha muda, hivyo mchezo huwa naweza kuendelea kuwa live.",
+      "secondsPerThousand": "Dhahabu za sekunde zinazozidi kwa 1,000 DHB zilizohiba",
+      "secondsPerFollow": "Sekunde zinazozidi kwa kufuata",
+      "secondsPerSubscribe": "Sekunde zinazozidi kwa usajili wa msaada",
+      "capHours": "Muda mrefu kuliko alizopatikana (mwaka)",
+      "save": "Kusimamisha miongozo",
+      "saved": "Miongozo ya Subathon zilizosimamishwa.",
+      "startMinutes": "Kuanza na (dakika)",
+      "start": "Kuanza kutaja",
+      "stop": "Kusawisha",
+      "addFive": "Zidisha dakika 5",
+      "removeFive": "Kutua dakika 5",
+      "failed": "Hayakuwa na faida. Subaha naweza kusaidia tena.",
+      "widgetHint": "Inashirikisha kutaja miongozo ya Subathon. Kuanza kutaja kutoka kwa panel ya Subathon katika Live Studio."
+    },
+    "points": {
+      "title": "Wakusudi wa watazamaji",
+      "intro": "Watazamaji wanapata nafasi kwa dakika moja ya kuwatazama na moja kwa 100 DHB zilizohiba. Habari na majaribio hayasipunguzi, hivyo nafasi hayasipatikani kwa kufanya kazi ya kilimo.",
+      "empty": "Hainapata nafasi bado. Wanazidi wakati wa watu kuwatazama na kuhiba.",
+      "widgetHint": "Pata widget ya wakusudi wa watazamaji ili kuzipata orodha hii katika michezo."
+    },
     "controls": {
       "title": "Vidhibiti vya haraka",
       "intro": "Kwa mkondo wa katikati. Kila swichi hushikilia kila mtu anayetazama, kwenye programu na katika OBS, hadi uirudishe nyuma.",
@@ -4956,7 +4984,6 @@
       "join": "Jiunge"
     },
     "kinds": {
-      "spin_wheel": "Gurudumu la mzunguko",
       "tip_alert": "Arifa ya kidokezi",
       "follow_alert": "Fuata arifa",
       "subscribe_alert": "Arifa ya msajili",
@@ -4973,10 +5000,12 @@
       "chat_box": "Sanduku la gumzo",
       "ticker": "Kileta tiketi",
       "rule_alert": "Arifa za sheria",
-      "poll": "Kura"
+      "poll": "Kura",
+      "spin_wheel": "Gurudumu la mzunguko",
+      "subathon_timer": "Miongozo ya Subathon",
+      "points_board": "Wakusudi wa watazamaji"
     },
     "hints": {
-      "spin_wheel": "Ambapo magurudumu katika sheria zako huzunguka",
       "tip_alert": "Husherehekea kila kiinua mgongo, kulingana na kiwango chake",
       "follow_alert": "Inaonyesha kila mfuasi mpya",
       "subscribe_alert": "Inaonyesha kila msajili mpya",
@@ -4992,7 +5021,10 @@
       "chat_box": "Inaonyesha ujumbe wa gumzo wa matangazo yako kwenye skrini",
       "ticker": "Mstari wa maandishi yako mwenyewe ambayo yanasonga kwenye skrini",
       "rule_alert": "Hapa ni jina la matatizo ya kawaida yako",
-      "poll": "Kura yako ya moja kwa moja, ikiwa na kitufe cha kupiga kura kwa kila chaguo"
+      "poll": "Kura yako ya moja kwa moja, ikiwa na kitufe cha kupiga kura kwa kila chaguo",
+      "spin_wheel": "Ambapo magurudumu katika sheria zako huzunguka",
+      "subathon_timer": "Kutaja ambayo hiba, kufuata na usajili wa msaada unazidi muda",
+      "points_board": "Watazamaji wenu bora kwa nafasi kutokana na kuwatazama na kuhiba"
     },
     "fields": {
       "style": "Mtindo",
@@ -5027,8 +5059,6 @@
       "fast": "Haraka"
     },
     "rules": {
-      "wheelSegments": "Sehemu za magurudumu, moja kwa kila mstari",
-      "wheelHint": "Kati ya 2 na 12. DeHub huchagua mahali ambapo gurudumu linasimama, kwa hivyo kila mtu anayetazama anaona matokeo sawa. Tumia {result} katika arifa, soma kwa sauti au gumzo ili uitaje.",
       "title": "Kawaida",
       "intro": "Kwa kuwa kitu kinachofanyika katika stream yako, DeHub inafanya kitu kinachojitokeza: inashona matatizo, inatoa sauti, inafanya kitu kama kurejea, inapostia katika chat yako au inafundisha katika Discord yako.",
       "add": "Pata kawaida mpya",
@@ -5059,6 +5089,8 @@
       "removeAction": "Kufuta kazi",
       "placeholders": "Tumia {name}, {amount} na {message} katika maandishi yako. Viunganishi katika ujumbe vinaondolewa.",
       "placeholdersLive": "Tumia {name}, {title} na {link} katika maandishi yako: jina lako, kichwa cha matangazo na kiunganishi cha kuitazama.",
+      "wheelSegments": "Sehemu za magurudumu, moja kwa kila mstari",
+      "wheelHint": "Kati ya 2 na 12. DeHub huchagua mahali ambapo gurudumu linasimama, kwa hivyo kila mtu anayetazama anaona matokeo sawa. Tumia {result} katika arifa, soma kwa sauti au gumzo ili uitaje.",
       "alertText": "Maandishi ya arifa",
       "sound": "Sauti",
       "sayText": "Maandishi ya kusoma kwa sauti",
@@ -5083,12 +5115,12 @@
         "subscribers": "Wasajili"
       },
       "actionTypes": {
-        "wheel": "Zungusha gurudumu",
         "alert": "Onyesha arifa",
         "sound": "Piga sauti",
         "say": "Soma kwa sauti",
         "chat": "Chapisha kwenye gumzo",
-        "webhook": "Tuma kwenye tovuti"
+        "webhook": "Tuma kwenye tovuti",
+        "wheel": "Zungusha gurudumu"
       },
       "summary": {
         "tip": "Kidokezi cha {{amount}} DHB au zaidi"

@@ -4799,7 +4799,6 @@
     "creatorEarnsDirect": "Prenumeratoriai moka DeHub žetonais. Kai tik užsiprenumeruosi, tavo dalis atsidurs tavo piniginėje, atėmus platformos mokestį už tavo ženklelio lygį."
   },
   "liveOverlay": {
-    "wheelLanded": "{{name}} pasukė: {{result}}",
     "someone": "Kažkas",
     "newFollower": "Naujas sekėjas: {{name}}",
     "newSubscriber": "Naujas prenumeratorius: {{name}}",
@@ -4811,6 +4810,12 @@
     "topSupporters": "Geriausi rėmėjai",
     "tipped": "{{name}} išsiuntė dovaną",
     "chatPreview": "Pokalbio žinutės rodomos čia",
+    "wheelLanded": "{{name}} pasukė: {{result}}",
+    "subathon": "Subathon",
+    "subathonOver": "Laikas pasibaigė",
+    "pointsTitle": "Sveriausių žiūrovų",
+    "points_one": "{{formatted}} taškas",
+    "points_other": "{{formatted}} taškai",
     "poll": {
       "closed": "Balsavimas uždarytas",
       "voteFor": "Balsuokite už {{option}}",
@@ -4838,6 +4843,29 @@
     "youAreTimedOut": "Jūs laiką užfiksuota akimirką"
   },
   "liveStudio": {
+    "subathon": {
+      "title": "Subathon",
+      "intro": "Skaitiklis tavo stream'e. Kiekvienas mokamas dovanas, seka ir abonementas prideda laiko, kad salė laikytų tave gyvą.",
+      "secondsPerThousand": "Pridedami sekundės už 1 000 DHB dovanų",
+      "secondsPerFollow": "Pridedami sekundės už seką",
+      "secondsPerSubscribe": "Pridedami sekundės už abonementą",
+      "capHours": "Ilgiausias galimas trukmė (valandų)",
+      "save": "Išsaugoti sumos",
+      "saved": "Subathon sumos išsaugotos.",
+      "startMinutes": "Pradėti su (minutės)",
+      "start": "Pradėti skaitiklį",
+      "stop": "Stabdyti",
+      "addFive": "Pridėti 5 minutės",
+      "removeFive": "Atimti 5 minutės",
+      "failed": "Tai nepavyko. Bandykite dar kartą.",
+      "widgetHint": "Rodo tavo Subathon skaitiklį. Pradėk iš Subathon panelės Live Studio."
+    },
+    "points": {
+      "title": "Sveriausi žiūrovai",
+      "intro": "Žiūrovai gauna tašką už kiekvieną minutę, kurią žiūri tave, ir vieną už kiekvienus 100 DHB dovanus. Chat ir reakcijos nieko negauna, todėl taškai negali būti „auginami“.",
+      "empty": "Nėra taškų dar. Jie kauptis, kai žmonės žiūri ir dovanuoja.",
+      "widgetHint": "Pridėk „Sveriausių žiūrovų“ videtą, kad rodytų šį sąrašą stream'e."
+    },
     "controls": {
       "title": "Spartieji valdikliai",
       "intro": "Skirta viduriniajam srautui. Kiekvienas jungiklis skirtas visiems žiūrintiesiems programėlėje ir OBS, kol jį apversite.",
@@ -4955,7 +4983,6 @@
       "join": "Prisijungti"
     },
     "kinds": {
-      "spin_wheel": "Sukimo ratas",
       "tip_alert": "Įspėjimas apie arbatpinig",
       "follow_alert": "Sekti įspėjimą",
       "subscribe_alert": "Prenumeratoriaus įspėjimas",
@@ -4972,10 +4999,12 @@
       "chat_box": "Pokalbio laukelis",
       "ticker": "Žymeklis",
       "rule_alert": "Pranešimai apie taisyklę",
-      "poll": "Apklausa"
+      "poll": "Apklausa",
+      "spin_wheel": "Sukimo ratas",
+      "subathon_timer": "Subathon laikrodis",
+      "points_board": "Sveriausi žiūrovai"
     },
     "hints": {
-      "spin_wheel": "Kur sukasi jūsų taisyklių ratai",
       "tip_alert": "Pagerbia kiekvieną patarimą, prilygstantį jo lygiui",
       "follow_alert": "Rodo kiekvieną naują sekėją",
       "subscribe_alert": "Rodykimas kiekvienam naujam abonentui.",
@@ -4992,7 +5021,10 @@
       "chat_box": "Rodo transliacijos pokalbių žinutes ekrane",
       "ticker": "Jūsų teksto eilutė, slenkanti per ekraną",
       "rule_alert": "Kur rodomi jūsų taisyklių pranešimai",
-      "poll": "Jūsų tiesioginė apklausa su balsavimo mygtuku kiekvienai parinkčiai"
+      "poll": "Jūsų tiesioginė apklausa su balsavimo mygtuku kiekvienai parinkčiai",
+      "spin_wheel": "Kur sukasi jūsų taisyklių ratai",
+      "subathon_timer": "Skaitiklis, kurį dovanos, sekos ir abonementai atidaro atgal",
+      "points_board": "Tavo aukščiausiai taškų už žiūrimą ir dovanavimą žiūrovai"
     },
     "fields": {
       "style": "Stilius",
@@ -5027,8 +5059,6 @@
       "fast": "Greitas"
     },
     "rules": {
-      "wheelSegments": "Ratų segmentai, po vieną eilutėje",
-      "wheelHint": "Nuo 2 iki 12. „DeHub“ renkasi, kur sustoja ratas, todėl visi žiūrintys mato tą patį rezultatą. Naudokite {result} įspėjime, garso skaitymo ar pokalbio veiksme, kad jį pavadintumėte.",
       "title": "Taisyklės",
       "intro": "Kai kas nors nutinka jūsų sraute, „DeHub“ daro tai, ką pasirenkate: rodo įspėjimą, leidžia garsą, skaito kažką garsiai, skelbia pokalbyje arba pasako „Discord“.",
       "add": "Pridėti taisyklę",
@@ -5059,6 +5089,8 @@
       "removeAction": "Pašalinti veiksmą",
       "placeholders": "Tekste naudokite {name}, {amount} ir {message}. Žinutėse esančios nuorodos pašalintos.",
       "placeholdersLive": "Tekste naudokite {name}, {title} ir {link}: savo vardą, transliacijos pavadinimą ir nuorodą, kad jį peržiūrėtumėte.",
+      "wheelSegments": "Ratų segmentai, po vieną eilutėje",
+      "wheelHint": "Nuo 2 iki 12. „DeHub“ renkasi, kur sustoja ratas, todėl visi žiūrintys mato tą patį rezultatą. Naudokite {result} įspėjime, garso skaitymo ar pokalbio veiksme, kad jį pavadintumėte.",
       "alertText": "Įspėjimo tekstas",
       "sound": "Garsas",
       "sayText": "Garsiai skaitomas tekstas",
@@ -5083,12 +5115,12 @@
         "subscribers": "Prenumeratoriai"
       },
       "actionTypes": {
-        "wheel": "Pasukite ratą",
         "alert": "Rodyti pranešimą",
         "sound": "Paleisti garsą",
         "say": "Skaityti garsiai",
         "chat": "Paskelbti pokalbyje",
-        "webhook": "Siųsti į žiniatinklio kablį"
+        "webhook": "Siųsti į žiniatinklio kablį",
+        "wheel": "Pasukite ratą"
       },
       "summary": {
         "tip": "{{amount}} DHB ar daugiau patarimų"

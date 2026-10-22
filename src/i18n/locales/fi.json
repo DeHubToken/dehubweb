@@ -4738,7 +4738,6 @@
     "creatorEarnsDirect": "Tilaajat maksavat DeHub-poletteina. Osuutesi siirtyy lompakkoosi heti, kun he tilaavat sen, vähennettynä erikoismerkkitasostasi perittävällä alustamaksulla."
   },
   "liveOverlay": {
-    "wheelLanded": "{{name}} pyöritti: {{result}}",
     "someone": "Joku",
     "newFollower": "Uusi seuraaja: {{name}}",
     "newSubscriber": "Uusi tilaaja: {{name}}",
@@ -4750,6 +4749,12 @@
     "topSupporters": "Parhaat kannattajat",
     "tipped": "{{name}} lähetti lahjan",
     "chatPreview": "Chat-viestit näkyvät tässä",
+    "wheelLanded": "{{name}} pyöritti: {{result}}",
+    "subathon": "Subathon",
+    "subathonOver": "Aika on lopussa",
+    "pointsTitle": "Arvostetuimmat katsojat",
+    "points_one": "{{formatted}} pistettä",
+    "points_other": "{{formatted}} pistettä",
     "poll": {
       "closed": "Äänestys päättynyt",
       "voteFor": "Äänestä {{option}}",
@@ -4777,6 +4782,29 @@
     "youAreTimedOut": "Olet aikakarsinnassa hetkellisesti"
   },
   "liveStudio": {
+    "subathon": {
+      "title": "Subathon",
+      "intro": "Kello laskee suorassa. Jokainen maksullinen lahja, seuraaminen ja tilaus lisää aikaa, jotta huone pitää sinut elossa.",
+      "secondsPerThousand": "Lisättyja sekunteja 1 000 DHB lahjana",
+      "secondsPerFollow": "Lisättyja sekunteja seuraamisesta",
+      "secondsPerSubscribe": "Lisättyja sekunteja tilauksesta",
+      "capHours": "Pitkäaikaisin mahdollinen kesto (tunteina)",
+      "save": "Tallennetut summat",
+      "saved": "Subathonissa tallennetut summat.",
+      "startMinutes": "Alkaa (minuutteina)",
+      "start": "Aloita laskenta",
+      "stop": "Pysäytä",
+      "addFive": "Lisää 5 minuuttia",
+      "removeFive": "Vähennä 5 minuuttia",
+      "failed": "Se ei toiminut. Yritä uudelleen.",
+      "widgetHint": "Näyttää subathon-laskennan. Aloita se Subathon-paneelista Live Studiossa."
+    },
+    "points": {
+      "title": "Arvostetuimmat katsojat",
+      "intro": "Katsojat ansaitsevat yhden pisteen jokaisesta minuutista, jonka he katsovat sinua, ja yhden pisteen jokaista 100 DHB lahjaa kohden. Chat ja reaktiot eivät tuota pisteitä, joten pisteitä ei voi viljellä.",
+      "empty": "Ei vielä pisteitä. Ne kertyvät, kun ihmiset katsovat ja lahjoittavat.",
+      "widgetHint": "Lisää Arvostetuimmat katsojat -widgetti näyttämään tämän listan suorassa."
+    },
     "controls": {
       "title": "Pikaohjaimet",
       "intro": "Keskilähetykseen. Jokainen kytkin pitää kaikille katsojille, sovelluksessa ja OBS: ssä, kunnes käännät sen takaisin.",
@@ -4894,7 +4922,6 @@
       "join": "Liity"
     },
     "kinds": {
-      "spin_wheel": "Pyöräytyspyörä",
       "tip_alert": "Vinkkihälytys",
       "follow_alert": "Seuraa hälytystä",
       "subscribe_alert": "Tilaajan hälytys",
@@ -4911,10 +4938,12 @@
       "chat_box": "Keskusteluruutu",
       "ticker": "Ticker",
       "rule_alert": "Sääntöhälytykset",
-      "poll": "Kysely"
+      "poll": "Kysely",
+      "spin_wheel": "Pyöräytyspyörä",
+      "subathon_timer": "Subathon-kello",
+      "points_board": "Arvostetuimmat katsojat"
     },
     "hints": {
-      "spin_wheel": "Sääntöjesi pyörät pyörivät",
       "tip_alert": "Juhlii jokaista tippiä sen tason mukaan",
       "follow_alert": "Näyttää jokaisen uuden seuraajan",
       "subscribe_alert": "Näyttää jokaisen uuden tilaajan",
@@ -4931,7 +4960,10 @@
       "chat_box": "Näyttää lähetyksesi chat-viestit näytöllä",
       "ticker": "Rivi omaa tekstiäsi, joka vierittää näytön poikki",
       "rule_alert": "Missä sääntöjesi hälytykset näkyvät",
-      "poll": "Livekyselysi, jossa on äänestyspainike jokaiselle vaihtoehdolle"
+      "poll": "Livekyselysi, jossa on äänestyspainike jokaiselle vaihtoehdolle",
+      "spin_wheel": "Sääntöjesi pyörät pyörivät",
+      "subathon_timer": "Laskuri, jonka lahjat, seuraamiset ja tilaukset työntävät takaisin",
+      "points_board": "Parhaat katsojasi pisteistä katselusta ja lahjoituksista"
     },
     "fields": {
       "style": "Tyyli",
@@ -4966,8 +4998,6 @@
       "fast": "Nopea"
     },
     "rules": {
-      "wheelSegments": "Pyörän segmentit, yksi per rivi",
-      "wheelHint": "2 ja 12 välillä. DeHub valitsee, mihin pyörä pysähtyy, joten kaikki katsojat näkevät saman tuloksen. Käytä {result} -toimintoa hälytyksessä, ääneenluku- tai keskustelutoiminnossa sen nimeämiseen.",
       "title": "Säännöt",
       "intro": "Kun suoratoistossasi tapahtuu jotain, DeHub tekee mitä haluat: näyttää hälytyksen, soittaa äänen, lukee jotain ääneen, julkaisee viestejä chatissa tai kertoo Discordistasi.",
       "add": "Lisää sääntö",
@@ -4998,6 +5028,8 @@
       "removeAction": "Poista toiminto",
       "placeholders": "Käytä tekstissäsi {name}, {amount} ja {message}. Viesteissä olevat linkit poistetaan.",
       "placeholdersLive": "Käytä {name}, {title} ja {link} tekstissäsi: nimesi, lähetyksen otsikko ja linkki sen katseluun.",
+      "wheelSegments": "Pyörän segmentit, yksi per rivi",
+      "wheelHint": "2 ja 12 välillä. DeHub valitsee, mihin pyörä pysähtyy, joten kaikki katsojat näkevät saman tuloksen. Käytä {result} -toimintoa hälytyksessä, ääneenluku- tai keskustelutoiminnossa sen nimeämiseen.",
       "alertText": "Hälytyksen teksti",
       "sound": "Ääni",
       "sayText": "Äänellä luettava teksti",
@@ -5022,12 +5054,12 @@
         "subscribers": "Tilaajat"
       },
       "actionTypes": {
-        "wheel": "Pyöräytä pyörää",
         "alert": "Näytä hälytys",
         "sound": "Toista ääni",
         "say": "Lue ääneen",
         "chat": "Julkaise chatissa",
-        "webhook": "Lähetä webhookiin"
+        "webhook": "Lähetä webhookiin",
+        "wheel": "Pyöräytä pyörää"
       },
       "summary": {
         "tip": "Vihje: {{amount}} DHB tai enemmän"

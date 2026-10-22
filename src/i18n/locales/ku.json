@@ -22,19 +22,6 @@
     "pollWinner": "{{option}} bi ser ket",
     "stillCounting": "Hîn tê hejmartin: diyarî dikarin deqîqeyekê bigrin heta ku bên pejirandin."
   },
-  "liveChatModeration": {
-    "timeout1m": "Ji bo 1 deqîqeyê bêdeng bike",
-    "timeout10m": "Ji bo 10 deqîqeyan bêdeng bike",
-    "timeout1h": "Ji bo 1 saetê bêdeng bike",
-    "ban": "Ji van weşanan qedexe bike",
-    "makeModerator": "Bike moderator",
-    "timedOut": "Hate bêdengkirin.",
-    "banned": "Ji van weşanan hate qedexekirin.",
-    "madeModerator": "Ew êdî moderator e.",
-    "failed": "Ev nebû. Dîsa biceribîne.",
-    "youAreBanned": "Tu nikarî di weşanên vê afirînerê de binivîsî",
-    "youAreTimedOut": "Tu ji bo demekê hatî bêdengkirin"
-  },
   "errors": {
     "sponsorshipUnavailable": "Danûstandinên belaş li aliyê me rawestiyane, ne li berîka we. Ji kerema xwe piştî demekê dîsa biceribîne.",
     "gasSponsorshipFailed": "Nekarî lêçûna vê danûstandinê were dayîn. Ji kerema xwe piştî demekê dîsa biceribîne."
@@ -4055,6 +4042,17 @@
     "creatorEarnsDirect": "بەشداربووان بە تۆکنی DeHub پارە دەدەن. کاتێک بەشداری دەکەن، بەشەکەت دەگاتە جزدانەکەت، دوای کرێی پلاتفۆرم بەپێی ئاستی باجەکەت."
   },
   "liveOverlay": {
+    "someone": "Kesek",
+    "newFollower": "Şopînerê nû: {{name}}",
+    "newSubscriber": "Abonetiya nû: {{name}}",
+    "subscribedTo": "{{name}} aboneyê {{plan}} bû",
+    "shared": "{{name}} weşanê parve kir",
+    "joined": "{{name}} tevlî bû",
+    "goalReached": "Armanc gihîşt!",
+    "followersUnit": "şopîner",
+    "topSupporters": "Piştgirên herî jor",
+    "tipped": "{{name}} diyariyek şand",
+    "chatPreview": "Peyamên chatê li vir xuya dibin",
     "wheelLanded": "{{name}} zivirand: {{result}}",
     "poll": {
       "closed": "Dengdan girtî ye",
@@ -4067,18 +4065,20 @@
       "votes_other": "{{count}} deng",
       "howToVote_one": "Ji bo dengdanê di sohbetê de {{command}} û hejmarekê binivîse · {{count}} deng",
       "howToVote_other": "Ji bo dengdanê di sohbetê de {{command}} û hejmarekê binivîse · {{count}} deng"
-    },
-    "someone": "Kesek",
-    "newFollower": "Şopînerê nû: {{name}}",
-    "newSubscriber": "Abonetiya nû: {{name}}",
-    "subscribedTo": "{{name}} aboneyê {{plan}} bû",
-    "shared": "{{name}} weşanê parve kir",
-    "joined": "{{name}} tevlî bû",
-    "goalReached": "Armanc gihîşt!",
-    "followersUnit": "şopîner",
-    "topSupporters": "Piştgirên herî jor",
-    "tipped": "{{name}} diyariyek şand",
-    "chatPreview": "Peyamên chatê li vir xuya dibin"
+    }
+  },
+  "liveChatModeration": {
+    "timeout1m": "Ji bo 1 deqîqeyê bêdeng bike",
+    "timeout10m": "Ji bo 10 deqîqeyan bêdeng bike",
+    "timeout1h": "Ji bo 1 saetê bêdeng bike",
+    "ban": "Ji van weşanan qedexe bike",
+    "makeModerator": "Bike moderator",
+    "timedOut": "Hate bêdengkirin.",
+    "banned": "Ji van weşanan hate qedexekirin.",
+    "madeModerator": "Ew êdî moderator e.",
+    "failed": "Ev nebû. Dîsa biceribîne.",
+    "youAreBanned": "Tu nikarî di weşanên vê afirînerê de binivîsî",
+    "youAreTimedOut": "Tu ji bo demekê hatî bêdengkirin"
   },
   "liveStudio": {
     "controls": {
@@ -4091,51 +4091,6 @@
       "readAloudMuted": "Xwendina bi deng rawestîne",
       "readAloudMutedHint": "Peyamên diyariyan û rêzên qaîdeyan êdî nayên xwendin.",
       "failed": "Ev guhêrbar neguherî. Dîsa biceribîne."
-    },
-    "moderation": {
-      "title": "Rêveberiya sohbetê",
-      "intro": "Qaîdeyên sohbeta di bin hemû weşanên te de. Ew qet nagihîjin sohbeta sereke ya DeHubê: kesê ku tu li vir qedexe bikî dikare li her derê din biaxive.",
-      "loadFailed": "Mîhengên rêveberiyê nehatin barkirin. Ji bo dîsa ceribandinê rûpelê nû bike.",
-      "save": "Qaîdeyên sohbetê tomar bike",
-      "saved": "Qaîdeyên sohbetê hatin tomarkirin.",
-      "saveFailed": "Ev guhertin nehat tomarkirin.",
-      "slowMode": "Moda hêdî",
-      "slowModeHint": "Her temaşevan çiqas di navbera peyaman de li bendê dimîne. Tu û moderatorên te qet li bendê namînin.",
-      "off": "Girtî",
-      "seconds_one": "{{count}} çirke",
-      "seconds_other": "{{count}} çirke",
-      "followersOnly": "Tenê şopîner",
-      "subscribersOnly": "Tenê abone",
-      "subscribersOnlyHint": "Li şûna \"tenê şopîner\" derbas dibe.",
-      "bannedWords": "Peyvên qedexe",
-      "bannedWordsHint": "Bi vergulan ji hev veqetîne. Nivîsandina peyvekê tîp bi tîp jî jê xilas nabe.",
-      "wordAction": "Dema ku kesek yekê bi kar tîne",
-      "wordBlock": "Peyamê rawestîne",
-      "wordTimeout": "Rawestîne û ji bo deqîqeyekê wî bêdeng bike",
-      "moderators": "Moderator",
-      "moderatorsHint": "Ew dikarin temaşevanan di weşanên te de bêdeng û qedexe bikin. Ew nikarin li ser te an li ser hevdu tevbigerin.",
-      "addModerator": "Lê zêde bike",
-      "usernamePlaceholder": "Navê bikarhêner",
-      "moderatorAdded": "Moderator hate zêdekirin.",
-      "moderatorNotFound": "Bi wî navî hesabek tune.",
-      "removeModerator": "Moderatorê rake",
-      "noModerators": "Hîn moderator tune.",
-      "banned": "Ji weşanên te hatine qedexekirin",
-      "unban": "Qedexeyê rake",
-      "noBans": "Kes nehatiye qedexekirin.",
-      "log": "Kirinên dawî",
-      "noLog": "Hîn tiştek tune.",
-      "actions": {
-        "timeout_one": "{{actor}} {{target}} ji bo {{count}} çirkeyê bêdeng kir",
-        "timeout_other": "{{actor}} {{target}} ji bo {{count}} çirkeyan bêdeng kir",
-        "ban": "{{actor}} {{target}} qedexe kir",
-        "unban": "{{actor}} qedexeya {{target}} rakir",
-        "moderator-added": "{{target}} bû moderator",
-        "moderator-removed": "{{target}} êdî ne moderator e",
-        "word-blocked": "Peyameke {{target}} ji ber \"{{word}}\" hate rawestandin",
-        "word-timeout_one": "{{target}} ji ber \"{{word}}\" ji bo {{count}} çirkeyê hate bêdengkirin",
-        "word-timeout_other": "{{target}} ji ber \"{{word}}\" ji bo {{count}} çirkeyan hate bêdengkirin"
-      }
     },
     "polls": {
       "title": "Rapirsî",
@@ -4243,8 +4198,6 @@
       "join": "بەشداریکردن"
     },
     "kinds": {
-      "spin_wheel": "Çerxa bextê",
-      "poll": "Rapirsî",
       "tip_alert": "ئاگاداریی بەخشش",
       "follow_alert": "ئاگاداریی فۆڵۆو",
       "subscribe_alert": "ئاگاداریی سەبسکرایب",
@@ -4260,11 +4213,11 @@
       "event_feed": "Çalakiyên dawî",
       "chat_box": "Qutiya chatê",
       "ticker": "Nivîsa diherike",
-      "rule_alert": "Hişyariyên qaîdeyan"
+      "rule_alert": "Hişyariyên qaîdeyan",
+      "poll": "Rapirsî",
+      "spin_wheel": "Çerxa bextê"
     },
     "hints": {
-      "spin_wheel": "Cihê ku çerxên di qaîdeyên te de dizivirin",
-      "poll": "Rapirsiya te ya zindî, bi bişkokeke dengdanê ji bo her vebijarkê",
       "tip_alert": "هەموو بەخششێک بەپێی ئاستەکەی دیاری دەکات",
       "follow_alert": "هەموو فۆڵۆوەرێکی نوێ نیشان دەدات",
       "subscribe_alert": "هەموو سەبسکرایبەرێکی نوێ نیشان دەدات",
@@ -4280,7 +4233,9 @@
       "event_feed": "Diyariyên dawî, şopîner, abone û kesên ku weşana te parve dikin",
       "chat_box": "Peyamên chatê yên weşana te li ser ekranê nîşan dide",
       "ticker": "Rêzek ji nivîsa te ya ku li ser ekranê diherike",
-      "rule_alert": "Cihê ku hişyariyên qaîdeyên te lê xuya dibin"
+      "rule_alert": "Cihê ku hişyariyên qaîdeyên te lê xuya dibin",
+      "poll": "Rapirsiya te ya zindî, bi bişkokeke dengdanê ji bo her vebijarkê",
+      "spin_wheel": "Cihê ku çerxên di qaîdeyên te de dizivirin"
     },
     "fields": {
       "style": "شێواز",
@@ -4315,9 +4270,6 @@
       "fast": "Bilez"
     },
     "rules": {
-      "wheelSegments": "Beşên çerxê, her yek li rêzekê",
-      "wheelHint": "Di navbera 2 û 12an de. DeHub hildibijêre ku çerx li ku raweste, ji ber vê yekê her kesê ku temaşe dike heman encamê dibîne. Ji bo navkirina wê {result} di hişyariyek, xwendina bi deng an kiryareke sohbetê de bi kar bîne.",
-      "placeholdersLive": "Di nivîsa xwe de {name}, {title} û {link} bi kar bîne: navê te, sernavê weşanê û girêdanek ji bo temaşekirinê.",
       "title": "Rêgez",
       "intro": "Paşî ku li ser strîmê te karekî bêt kirin, DeHub dikare bêje ku te bêje: pêşengê bide pêşeng, zêdekeke bide pêşeng, peyva ku te bêje, li ser çatê te bêje an jî li ser Discordê te bêje.",
       "add": "Qaydeyek lê zêde bike",
@@ -4347,6 +4299,9 @@
       "addAction": "Çalakiyekê lê zêde bike",
       "removeAction": "Çalakiyê rake",
       "placeholders": "Di nivîsa xwe de {name}, {amount} û {message} bi kar bîne. Girêdanên di peyaman de tên rakirin.",
+      "placeholdersLive": "Di nivîsa xwe de {name}, {title} û {link} bi kar bîne: navê te, sernavê weşanê û girêdanek ji bo temaşekirinê.",
+      "wheelSegments": "Beşên çerxê, her yek li rêzekê",
+      "wheelHint": "Di navbera 2 û 12an de. DeHub hildibijêre ku çerx li ku raweste, ji ber vê yekê her kesê ku temaşe dike heman encamê dibîne. Ji bo navkirina wê {result} di hişyariyek, xwendina bi deng an kiryareke sohbetê de bi kar bîne.",
       "alertText": "Nivîsa hişyariyê",
       "sound": "Rengdan",
       "sayText": "Nivîsa ku bi dengekî bilind were xwendin",
@@ -4356,11 +4311,11 @@
       "webhookHint": "Webhookek Discord an Slack, an jî her navnîşana https-ê ku POST-ek qebûl dike.",
       "webhookText": "Peyama ji bo şandinê",
       "triggers": {
-        "live": "Tu dest bi weşanê dikî",
         "tip": "Serişteyek tê",
         "follow": "Kesek li pey digere",
         "subscribe": "Kesek abone dibe",
         "share": "Kesek weşanê parve dike",
+        "live": "Tu dest bi weşanê dikî",
         "command": "Fermana sohbetê tê bikaranîn",
         "keyword": "Peyama sohbetê peyvekê dihewîne",
         "chat": "Her peyama sohbetê"
@@ -4371,12 +4326,12 @@
         "subscribers": "Abone"
       },
       "actionTypes": {
-        "wheel": "Çerxekê bizivirîne",
         "alert": "Hişyariyekê nîşan bide",
         "sound": "Dengekî lê bide",
         "say": "Bi dengekî bilind bixwîne",
         "chat": "Di sohbetê de biweşîne",
-        "webhook": "Bişîne bo webhookekê"
+        "webhook": "Bişîne bo webhookekê",
+        "wheel": "Çerxekê bizivirîne"
       },
       "summary": {
         "tip": "Serişteya {{amount}} DHB an jî zêdetir"
@@ -4414,6 +4369,51 @@
         "spooky": "Tirsnak",
         "magic-spell": "Sêrbaziya efsûnî",
         "shhh": "Şşş"
+      }
+    },
+    "moderation": {
+      "title": "Rêveberiya sohbetê",
+      "intro": "Qaîdeyên sohbeta di bin hemû weşanên te de. Ew qet nagihîjin sohbeta sereke ya DeHubê: kesê ku tu li vir qedexe bikî dikare li her derê din biaxive.",
+      "loadFailed": "Mîhengên rêveberiyê nehatin barkirin. Ji bo dîsa ceribandinê rûpelê nû bike.",
+      "save": "Qaîdeyên sohbetê tomar bike",
+      "saved": "Qaîdeyên sohbetê hatin tomarkirin.",
+      "saveFailed": "Ev guhertin nehat tomarkirin.",
+      "slowMode": "Moda hêdî",
+      "slowModeHint": "Her temaşevan çiqas di navbera peyaman de li bendê dimîne. Tu û moderatorên te qet li bendê namînin.",
+      "off": "Girtî",
+      "seconds_one": "{{count}} çirke",
+      "seconds_other": "{{count}} çirke",
+      "followersOnly": "Tenê şopîner",
+      "subscribersOnly": "Tenê abone",
+      "subscribersOnlyHint": "Li şûna \"tenê şopîner\" derbas dibe.",
+      "bannedWords": "Peyvên qedexe",
+      "bannedWordsHint": "Bi vergulan ji hev veqetîne. Nivîsandina peyvekê tîp bi tîp jî jê xilas nabe.",
+      "wordAction": "Dema ku kesek yekê bi kar tîne",
+      "wordBlock": "Peyamê rawestîne",
+      "wordTimeout": "Rawestîne û ji bo deqîqeyekê wî bêdeng bike",
+      "moderators": "Moderator",
+      "moderatorsHint": "Ew dikarin temaşevanan di weşanên te de bêdeng û qedexe bikin. Ew nikarin li ser te an li ser hevdu tevbigerin.",
+      "addModerator": "Lê zêde bike",
+      "usernamePlaceholder": "Navê bikarhêner",
+      "moderatorAdded": "Moderator hate zêdekirin.",
+      "moderatorNotFound": "Bi wî navî hesabek tune.",
+      "removeModerator": "Moderatorê rake",
+      "noModerators": "Hîn moderator tune.",
+      "banned": "Ji weşanên te hatine qedexekirin",
+      "unban": "Qedexeyê rake",
+      "noBans": "Kes nehatiye qedexekirin.",
+      "log": "Kirinên dawî",
+      "noLog": "Hîn tiştek tune.",
+      "actions": {
+        "timeout_one": "{{actor}} {{target}} ji bo {{count}} çirkeyê bêdeng kir",
+        "timeout_other": "{{actor}} {{target}} ji bo {{count}} çirkeyan bêdeng kir",
+        "ban": "{{actor}} {{target}} qedexe kir",
+        "unban": "{{actor}} qedexeya {{target}} rakir",
+        "moderator-added": "{{target}} bû moderator",
+        "moderator-removed": "{{target}} êdî ne moderator e",
+        "word-blocked": "Peyameke {{target}} ji ber \"{{word}}\" hate rawestandin",
+        "word-timeout_one": "{{target}} ji ber \"{{word}}\" ji bo {{count}} çirkeyê hate bêdengkirin",
+        "word-timeout_other": "{{target}} ji ber \"{{word}}\" ji bo {{count}} çirkeyan hate bêdengkirin"
       }
     }
   },

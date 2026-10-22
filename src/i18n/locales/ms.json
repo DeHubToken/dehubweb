@@ -5060,7 +5060,6 @@
     "creatorEarnsDirect": "Pelanggan membayar dalam token DeHub. Bahagian anda masuk ke dalam dompet anda sebaik sahaja mereka melanggan, tolak yuran platform untuk peringkat lencana anda."
   },
   "liveOverlay": {
-    "wheelLanded": "{{name}} spun: {{result}}",
     "someone": "Seseorang",
     "newFollower": "Pengikut baharu: {{name}}",
     "newSubscriber": "Pelanggan baharu: {{name}}",
@@ -5072,6 +5071,11 @@
     "topSupporters": "Penyokong utama",
     "tipped": "{{name}} menghantar hadiah",
     "chatPreview": "Mesej sembang muncul di sini",
+    "wheelLanded": "{{name}} spun: {{result}}",
+    "subathonOver": "Waktu habis",
+    "pointsTitle": "Pengikut yang paling setia",
+    "points_one": "{{formatted}} poin",
+    "points_other": "{{formatted}} poin",
     "poll": {
       "closed": "Voting telah ditutup",
       "voteFor": "Undi untuk {{option}}",
@@ -5099,6 +5103,28 @@
     "youAreTimedOut": "Anda sedang waktu habis untuk seketika"
   },
   "liveStudio": {
+    "subathon": {
+      "intro": "Penghitung mundur di siaran anda. Setiap hadiah bayaran, pengikut dan langganan menambah masa, jadi bilik akan mempertahankan anda tetap siaran.",
+      "secondsPerThousand": "Saat ditambah per 1,000 DHB yang dihadiahkan",
+      "secondsPerFollow": "Saat ditambah per pengikut",
+      "secondsPerSubscribe": "Saat ditambah per langganan",
+      "capHours": "Masa paling lama yang boleh berlangsung (jam)",
+      "save": "Simpan jumlah",
+      "saved": "Jumlah Subathon yang disimpan.",
+      "startMinutes": "Mulakan dengan (minit)",
+      "start": "Mulakan penghitung mundur",
+      "stop": "Hentikan",
+      "addFive": "Tambah 5 minit",
+      "removeFive": "Kurangkan 5 minit",
+      "failed": "Tidak berfungsi. Cuba lagi.",
+      "widgetHint": "Menunjukkan penghitung mundur Subathon. Mulakan dari papan Subathon di Live Studio."
+    },
+    "points": {
+      "title": "Penonton setia",
+      "intro": "Pengikut mendapat satu poin untuk setiap minit mereka menonton anda dan satu lagi untuk setiap 100 DHB yang mereka hadiahkan. Chat dan tindak balas tidak memberikan poin, jadi poin tidak boleh ditanam.",
+      "empty": "Belum ada poin. Mereka bertambah apabila orang menonton dan menghadiahkan.",
+      "widgetHint": "Tambah widget Penonton setia untuk menunjukkan senarai ini pada strim."
+    },
     "controls": {
       "title": "Kawalan pantas",
       "intro": "Untuk aliran pertengahan. Setiap suis tahan untuk semua orang menonton, dalam aplikasi dan dalam OBS, sehingga anda membaliknya kembali.",
@@ -5216,7 +5242,6 @@
       "join": "Sertai"
     },
     "kinds": {
-      "spin_wheel": "Roda berputar",
       "tip_alert": "Makluman tip",
       "follow_alert": "Ikuti makluman",
       "subscribe_alert": "Makluman pelanggan",
@@ -5233,10 +5258,12 @@
       "chat_box": "Kotak sembang",
       "ticker": "Ticker",
       "rule_alert": "Makluman peraturan",
-      "poll": "Pengundian"
+      "poll": "Pengundian",
+      "spin_wheel": "Roda berputar",
+      "subathon_timer": "Pemasa subathon",
+      "points_board": "Penonton setia"
     },
     "hints": {
-      "spin_wheel": "Tempat roda dalam peraturan anda berputar",
       "tip_alert": "Meraikan setiap tip, bersaiz mengikut peringkatnya",
       "follow_alert": "Menunjukkan setiap pengikut baharu",
       "subscribe_alert": "Menunjukkan setiap pelanggan baharu",
@@ -5253,7 +5280,10 @@
       "chat_box": "Menunjukkan mesej sembang siaran anda pada skrin",
       "ticker": "Baris teks anda sendiri yang menatal merentasi skrin",
       "rule_alert": "Di mana makluman peraturan anda dipaparkan",
-      "poll": "Pengundian langsung anda, dengan butang undi untuk setiap pilihan"
+      "poll": "Pengundian langsung anda, dengan butang undi untuk setiap pilihan",
+      "spin_wheel": "Tempat roda dalam peraturan anda berputar",
+      "subathon_timer": "Penghitung mundur yang hadiah, pengikut dan langganan menolak kembali",
+      "points_board": "Pengikut teratas anda berdasarkan poin dari menonton dan menghadiahkan"
     },
     "fields": {
       "style": "Gaya",
@@ -5288,8 +5318,6 @@
       "fast": "Pantas"
     },
     "rules": {
-      "wheelSegments": "Segmen roda, satu setiap baris",
-      "wheelHint": "Antara 2 dan 12. DeHub memilih di mana roda berhenti, jadi semua orang yang menonton melihat hasil yang sama. Gunakan {result} dalam makluman, baca dengan kuat atau tindakan sembang untuk menamakannya.",
       "title": "Peraturan",
       "intro": "Apabila sesuatu berlaku pada strim anda, DeHub melakukan apa yang anda pilih: menunjukkan amaran, memainkan bunyi, membaca sesuatu dengan kuat, menyiarkan dalam sembang anda atau memberitahu Discord anda.",
       "add": "Tambah peraturan",
@@ -5320,6 +5348,8 @@
       "removeAction": "Buang tindakan",
       "placeholders": "Gunakan {name}, {amount} dan {message} dalam teks anda. Pautan dalam mesej dibuang.",
       "placeholdersLive": "Gunakan {name}, {title} dan {link} dalam teks anda: nama anda, tajuk siaran dan pautan untuk menontonnya.",
+      "wheelSegments": "Segmen roda, satu setiap baris",
+      "wheelHint": "Antara 2 dan 12. DeHub memilih di mana roda berhenti, jadi semua orang yang menonton melihat hasil yang sama. Gunakan {result} dalam makluman, baca dengan kuat atau tindakan sembang untuk menamakannya.",
       "alertText": "Teks amaran",
       "sound": "Bunyi",
       "sayText": "Teks untuk dibaca dengan kuat",
@@ -5344,12 +5374,12 @@
         "subscribers": "Pelanggan"
       },
       "actionTypes": {
-        "wheel": "Putar roda",
         "alert": "Tunjukkan makluman",
         "sound": "Mainkan bunyi",
         "say": "Baca dengan kuat",
         "chat": "Siarkan dalam sembang",
-        "webhook": "Hantar ke webhook"
+        "webhook": "Hantar ke webhook",
+        "wheel": "Putar roda"
       },
       "summary": {
         "tip": "Tip {{amount}} DHB atau lebih"

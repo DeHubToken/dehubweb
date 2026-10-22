@@ -1,16 +1,26 @@
 {
-  "liveChatModeration": {
-    "timeout1m": "وقت توقف دقيقة",
-    "timeout10m": "وقت توقف عشر دقائق",
-    "timeout1h": "وقت توقف ساعة",
-    "ban": "حظر من هذي البثات",
-    "makeModerator": "خلّيهم مشرف",
-    "timedOut": "تم توقيفه مؤقتاً.",
-    "banned": "محظور من هذي البثات.",
-    "madeModerator": "صارت مشرف الآن.",
-    "failed": "ما نفعت. جرّب مرة ثانية.",
-    "youAreBanned": "ما تقدر تكتب في بثات هذي القناة",
-    "youAreTimedOut": "أنت متوقف مؤقتاً لحظة"
+  "liveRecap": {
+    "title": "ملخص البث",
+    "justEnded": "ملخص بثك",
+    "lastStream": "بثك الأخير",
+    "share": "شارك",
+    "shareText": "أنا لَسّة بثت \"{{title}}\" على DeHub: {{duration}} مباشر، {{peak}} مشاهدين في القمة و{{followers}} متابعين جدد.",
+    "untitled": "بث بدون عنوان",
+    "copied": "تم نسخ الملخص. الصقه في أي مكان.",
+    "loadFailed": "الملخص ما انحملش. جرّب مرة ثانية بعد شوية.",
+    "duration": "وقت البث",
+    "peakViewers": "أكثر عدد مشاهدين في نفس الوقت",
+    "gifts_one": "من هدية {{count}}",
+    "gifts_other": "من هدايا {{count}}",
+    "newFollowers": "متابعين جدد",
+    "chatMessages": "رسائل الدردشة",
+    "chatters": "ناس تتكلم",
+    "reactions": "تفاعلات",
+    "shares": "ناس تشارك",
+    "topSupporters": "أقوى داعمين",
+    "polls": "استطلاعات",
+    "pollWinner": "{{option}} فاز",
+    "stillCounting": "لسه بنعد: الهدايا ممكن تاخذ دقيقة لتأكيدها."
   },
   "errors": {
     "sponsorshipUnavailable": "المعاملات المجانية متوقفة من عندنا، ليست من محفظتك. حاول مرة أخرى قريبًا.",
@@ -4282,7 +4292,6 @@
     "creatorEarnsDirect": "المشتركين يدفعوا بتوكنات دي هاب. حصتك توصل لمحفظتك لحظة اشتراكهم، ناقص رسوم المنصة لفئة شارتك."
   },
   "liveOverlay": {
-    "wheelLanded": "{{name}} دَخَلَ: {{result}}",
     "someone": "شخص",
     "newFollower": "متابع جديد: {{name}}",
     "newSubscriber": "مشترك جديد: {{name}}",
@@ -4290,6 +4299,11 @@
     "joined": "{{name}} انضم",
     "followersUnit": "متابعين",
     "topSupporters": "أقوى الداعمين",
+    "wheelLanded": "{{name}} دَخَلَ: {{result}}",
+    "subathon": "سوباثون",
+    "subathonOver": "زمنك خت",
+    "points_one": "{{formatted}} نقطة",
+    "points_other": "{{formatted}} نقاط",
     "poll": {
       "closed": "التصويت قد انتهى",
       "voteFor": "صوت ل{{option}}",
@@ -4303,85 +4317,46 @@
       "howToVote_other": "اكتب {{command}} ورقمًا في الدردشة للتصويت ·{{count}} أصوات"
     }
   },
-  "liveRecap": {
-    "title": "ملخص البث",
-    "justEnded": "ملخص بثك",
-    "lastStream": "بثك الأخير",
-    "share": "شارك",
-    "shareText": "أنا لَسّة بثت \"{{title}}\" على DeHub: {{duration}} مباشر، {{peak}} مشاهدين في القمة و{{followers}} متابعين جدد.",
-    "untitled": "بث بدون عنوان",
-    "copied": "تم نسخ الملخص. الصقه في أي مكان.",
-    "loadFailed": "الملخص ما انحملش. جرّب مرة ثانية بعد شوية.",
-    "duration": "وقت البث",
-    "peakViewers": "أكثر عدد مشاهدين في نفس الوقت",
-    "gifts_one": "من هدية {{count}}",
-    "gifts_other": "من هدايا {{count}}",
-    "newFollowers": "متابعين جدد",
-    "chatMessages": "رسائل الدردشة",
-    "chatters": "ناس تتكلم",
-    "reactions": "تفاعلات",
-    "shares": "ناس تشارك",
-    "topSupporters": "أقوى داعمين",
-    "polls": "استطلاعات",
-    "pollWinner": "{{option}} فاز",
-    "stillCounting": "لسه بنعد: الهدايا ممكن تاخذ دقيقة لتأكيدها."
+  "liveChatModeration": {
+    "timeout1m": "وقت توقف دقيقة",
+    "timeout10m": "وقت توقف عشر دقائق",
+    "timeout1h": "وقت توقف ساعة",
+    "ban": "حظر من هذي البثات",
+    "makeModerator": "خلّيهم مشرف",
+    "timedOut": "تم توقيفه مؤقتاً.",
+    "banned": "محظور من هذي البثات.",
+    "madeModerator": "صارت مشرف الآن.",
+    "failed": "ما نفعت. جرّب مرة ثانية.",
+    "youAreBanned": "ما تقدر تكتب في بثات هذي القناة",
+    "youAreTimedOut": "أنت متوقف مؤقتاً لحظة"
   },
   "liveStudio": {
+    "subathon": {
+      "title": "سوباثون",
+      "secondsPerThousand": "ثواني تضاف لكل 1,000 دينار هديّة",
+      "secondsPerFollow": "ثواني تضاف لكل متابعة",
+      "secondsPerSubscribe": "ثواني تضاف لكل اشتراك",
+      "capHours": "الأطول ممكنه (ساعات)",
+      "startMinutes": "بداية مع (دقائق)",
+      "start": "بدء التعداد العكسي",
+      "stop": "وقف",
+      "addFive": "إضافة 5 دقائق",
+      "removeFive": "إزالة 5 دقائق",
+      "failed": "لما عملش. حاول تاني."
+    },
+    "points": {
+      "empty": "ما عندي نقاط بعد. بتتجمع مع ما يشوف الناس و بيهدو."
+    },
     "controls": {
       "title": "عناصر تحكم سريعة",
-      "alertsPaused": "تنبيهات الإيقاف المؤقت",
-      "readAloudMuted": "توقف عن القراءة بصوت عالٍ",
       "intro": "للمستوى التاني. كل مفتاح يبقى على حاله لكل من يشوفه في التطبيق وفي OBS، حتى ما تروحشه من جديد.",
+      "alertsPaused": "تنبيهات الإيقاف المؤقت",
       "alertsPausedHint": "لا حاجه من هدايا أو إشعارات تلي أو قواعد على الشاشة. البوردات (العداد) و الأهداف و صندوق التحدث (التشات) مايزالوا بيستمروا.",
       "soundsMuted": "مُطْبُقِ الصَّوْتِ دُبَّارِ الصَّوْتِ",
       "soundsMutedHint": "لما بتتوقف عن تشغيل الصوتيات؟",
+      "readAloudMuted": "توقف عن القراءة بصوت عالٍ",
       "readAloudMutedHint": "الرسائل والخطوط القاعدية ما بتقرأش كمان.",
       "failed": "لما تغيّر هذا المفتاح. حاول مرة تانية."
-    },
-    "moderation": {
-      "title": "إدارة الدردشة",
-      "intro": "قوانين الدردشة تحت كل بثوك. ما توصلش للدردشة الرئيسية لـ DeHub: أي شخص تحظره هنا يقدر يكتب في أي مكان ثاني.",
-      "loadFailed": "ما قدرنا نحمل إعدادات الإدارة. عاود تحديث الصفحة وجرب مرة ثانية.",
-      "save": "احفظ قوانين الدردشة",
-      "saved": "تم حفظ قوانين الدردشة.",
-      "saveFailed": "ما قدرنا نحفظ التغيير.",
-      "slowMode": "وضع بطيء",
-      "slowModeHint": "كم الوقت اللي ينتظره المشاهد بين الرسائل. إنت ومشرفيك ما تنتظروا أبداً.",
-      "off": "إيقاف",
-      "seconds_one": "{{count}} ثانية",
-      "seconds_other": "{{count}} ثواني",
-      "followersOnly": "المتابعين فقط",
-      "subscribersOnly": "المشتركين فقط",
-      "subscribersOnlyHint": "يتجاوز المتابعين فقط.",
-      "bannedWords": "كلمات محظورة",
-      "bannedWordsHint": "افصلهم بفواصل. كتابة كلمة حرف بحرف ما يخلّصك منها.",
-      "wordAction": "لما أحد يستخدم وحدة",
-      "wordBlock": "أوقف الرسالة",
-      "wordTimeout": "أوقفها وحط له توقيف دقيقة",
-      "moderators": "المشرفون",
-      "moderatorsHint": "يقدرون يوقفون ويمنعون المشاهدين في البثوث حقك. ما يقدرون يتصرفون عليك أو مع بعضهم.",
-      "addModerator": "أضف",
-      "usernamePlaceholder": "اسم المستخدم",
-      "moderatorAdded": "المشرف مضاف.",
-      "moderatorNotFound": "ما في حساب بهذا الاسم.",
-      "removeModerator": "أزل المشرف",
-      "noModerators": "ما في مشرفين بعد.",
-      "banned": "منع من البثوث حقك",
-      "unban": "ألغِ الحظر",
-      "noBans": "ما حد ممنوع.",
-      "log": "الإجراءات الأخيرة",
-      "noLog": "ما في شيء بعد.",
-      "actions": {
-        "timeout_one": "{{actor}} مَشَى زَمَانُهَا {{target}} لِسَانِيَةَ {{count}}",
-        "timeout_other": "{{actor}} مَشَى الوقتِ {{target}} ل{{count}} دَقَائِقْ",
-        "ban": "{{actor}} تم حظره {{target}}",
-        "unban": "{{actor}} تم إلغاء حظره {{target}}",
-        "moderator-added": "{{target}} صار مشرف",
-        "moderator-removed": "{{target}} ما عاد مشرف",
-        "word-blocked": "وقف رسالة من {{target}} لـ \"{{word}}\"",
-        "word-timeout_one": "تم توقيف {{target}} لمدة {{count}} ثانية لـ \"{{word}}\"",
-        "word-timeout_other": "تم توقيف {{target}} لمدة {{count}} ثواني لـ \"{{word}}\""
-      }
     },
     "polls": {
       "title": "استطلاعات الرأي",
@@ -4483,7 +4458,6 @@
       "join": "انضم"
     },
     "kinds": {
-      "spin_wheel": "عجلة الدوران",
       "tip_alert": "تنبيه تيب",
       "follow_alert": "تنبيه اتباع",
       "subscribe_alert": "تنبيه اشتراك",
@@ -4496,10 +4470,10 @@
       "frame": "كادر",
       "stream_timer": "برودكاست تايمر",
       "rule_alert": "تنبيهات القواعد",
-      "poll": "الاستطلاع"
+      "poll": "الاستطلاع",
+      "spin_wheel": "عجلة الدوران"
     },
     "hints": {
-      "spin_wheel": "أين تدور العجلات في قواعدك",
       "tip_alert": "يحتفل بكل تيب حسب درجته",
       "follow_alert": "يظهر كل متابع جديد",
       "subscribe_alert": "يظهر كل مشترك جديد",
@@ -4512,7 +4486,8 @@
       "frame": "حافة حول استريمك",
       "reaction_counter": "تعد كل ردود الفعل على بثك",
       "rule_alert": "أين تظهر تنبيهات قواعدك",
-      "poll": "استطلاعك المباشر، مع زر تصويت لكل خيار"
+      "poll": "استطلاعك المباشر، مع زر تصويت لكل خيار",
+      "spin_wheel": "أين تدور العجلات في قواعدك"
     },
     "fields": {
       "style": "أسلوب",
@@ -4535,8 +4510,6 @@
       "fast": "سريع"
     },
     "rules": {
-      "wheelSegments": "مقاطع العجلات، واحدة لكل سطر",
-      "wheelHint": "بين 2 و 12. ديهوب بتختار مكان توقف العجلة، فكل من يشوف يراى نفس النتيجة. استعمل {result} في إشعار أو عمل صوت أو رسالة لاسمها.",
       "title": "القواعد",
       "intro": "إذا ما يحدث شي على ستريمك، ديهاوب بتعمل ما بتختاره: بتظهر تنبيه، بتشغل صوت، بتقرأ شي بصوت عال، بتكتب في تشاتك أو بتخبرك على ديسكوردك.",
       "add": "إضافة قاعدة",
@@ -4567,6 +4540,8 @@
       "removeAction": "إزالة الإجراء",
       "placeholders": "استخدم {name} و {amount} و {message} في النص. تتم إزالة الروابط الموجودة في الرسائل.",
       "placeholdersLive": "استخدم {name} و {title} و {link} في نصك: اسمك وعنوان البث ورابط لمشاهدته.",
+      "wheelSegments": "مقاطع العجلات، واحدة لكل سطر",
+      "wheelHint": "بين 2 و 12. ديهوب بتختار مكان توقف العجلة، فكل من يشوف يراى نفس النتيجة. استعمل {result} في إشعار أو عمل صوت أو رسالة لاسمها.",
       "alertText": "نص التنبيه",
       "sound": "صوت",
       "sayText": "نص للقراءة بصوت عالٍ",
@@ -4591,12 +4566,12 @@
         "subscribers": "المشتركون"
       },
       "actionTypes": {
-        "wheel": "قم بتدوير عجلة",
         "alert": "عرض تنبيه",
         "sound": "تشغيل صوت",
         "say": "اقرأ بصوت عالٍ",
         "chat": "النشر في الدردشة",
-        "webhook": "إرسال إلى خطاف ويب"
+        "webhook": "إرسال إلى خطاف ويب",
+        "wheel": "قم بتدوير عجلة"
       },
       "summary": {
         "tip": "إكرامية بقيمة{{amount}} DHB أو أكثر"
@@ -4634,6 +4609,51 @@
         "spooky": "مخيف",
         "magic-spell": "سحر",
         "shhh": "ششش"
+      }
+    },
+    "moderation": {
+      "title": "إدارة الدردشة",
+      "intro": "قوانين الدردشة تحت كل بثوك. ما توصلش للدردشة الرئيسية لـ DeHub: أي شخص تحظره هنا يقدر يكتب في أي مكان ثاني.",
+      "loadFailed": "ما قدرنا نحمل إعدادات الإدارة. عاود تحديث الصفحة وجرب مرة ثانية.",
+      "save": "احفظ قوانين الدردشة",
+      "saved": "تم حفظ قوانين الدردشة.",
+      "saveFailed": "ما قدرنا نحفظ التغيير.",
+      "slowMode": "وضع بطيء",
+      "slowModeHint": "كم الوقت اللي ينتظره المشاهد بين الرسائل. إنت ومشرفيك ما تنتظروا أبداً.",
+      "off": "إيقاف",
+      "seconds_one": "{{count}} ثانية",
+      "seconds_other": "{{count}} ثواني",
+      "followersOnly": "المتابعين فقط",
+      "subscribersOnly": "المشتركين فقط",
+      "subscribersOnlyHint": "يتجاوز المتابعين فقط.",
+      "bannedWords": "كلمات محظورة",
+      "bannedWordsHint": "افصلهم بفواصل. كتابة كلمة حرف بحرف ما يخلّصك منها.",
+      "wordAction": "لما أحد يستخدم وحدة",
+      "wordBlock": "أوقف الرسالة",
+      "wordTimeout": "أوقفها وحط له توقيف دقيقة",
+      "moderators": "المشرفون",
+      "moderatorsHint": "يقدرون يوقفون ويمنعون المشاهدين في البثوث حقك. ما يقدرون يتصرفون عليك أو مع بعضهم.",
+      "addModerator": "أضف",
+      "usernamePlaceholder": "اسم المستخدم",
+      "moderatorAdded": "المشرف مضاف.",
+      "moderatorNotFound": "ما في حساب بهذا الاسم.",
+      "removeModerator": "أزل المشرف",
+      "noModerators": "ما في مشرفين بعد.",
+      "banned": "منع من البثوث حقك",
+      "unban": "ألغِ الحظر",
+      "noBans": "ما حد ممنوع.",
+      "log": "الإجراءات الأخيرة",
+      "noLog": "ما في شيء بعد.",
+      "actions": {
+        "timeout_one": "{{actor}} مَشَى زَمَانُهَا {{target}} لِسَانِيَةَ {{count}}",
+        "timeout_other": "{{actor}} مَشَى الوقتِ {{target}} ل{{count}} دَقَائِقْ",
+        "ban": "{{actor}} تم حظره {{target}}",
+        "unban": "{{actor}} تم إلغاء حظره {{target}}",
+        "moderator-added": "{{target}} صار مشرف",
+        "moderator-removed": "{{target}} ما عاد مشرف",
+        "word-blocked": "وقف رسالة من {{target}} لـ \"{{word}}\"",
+        "word-timeout_one": "تم توقيف {{target}} لمدة {{count}} ثانية لـ \"{{word}}\"",
+        "word-timeout_other": "تم توقيف {{target}} لمدة {{count}} ثواني لـ \"{{word}}\""
       }
     }
   },
