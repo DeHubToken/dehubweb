@@ -4753,7 +4753,6 @@
     "creatorEarnsDirect": "Муштариён дар нишонаҳои DeHub пардохт мекунанд. Заминҳои саҳми шумо дар ҳамёни шумо лаҳзае, ки онҳо обуна мешаванд, камтар ҳаққи платформа барои дараҷаи нишони шумо."
   },
   "liveOverlay": {
-    "wheelLanded": "{{name}} spun: {{result}}",
     "someone": "Касе",
     "newFollower": "Пайравони нав: {{name}}",
     "newSubscriber": "Муштарии нав: {{name}}",
@@ -4765,6 +4764,11 @@
     "topSupporters": "Пуштибони боло",
     "tipped": "{{name}}info: whatsthis",
     "chatPreview": "Иттилооти чат дар ин ҷо пайдо мешавад",
+    "wheelLanded": "{{name}} spun: {{result}}",
+    "level": "Ҳамвор {{level}}",
+    "streak_one": "{{count}} - ҳафта сатр",
+    "streak_other": "{{count}} - ҳафта сатр",
+    "tipJar": "Кӯзаи атои",
     "poll": {
       "closed": "Саркар кардан баст",
       "voteFor": "Барайи {{option}} бара кардан",
@@ -4804,7 +4808,6 @@
       "failed": "Ин коммутатор дигаргун нашуд. Бори дигар кӯшиш кунед."
     },
     "polls": {
-      "widgetHint": "Пурсиши зиндаи шуморо нишон медиҳад. Дар барномаи DeHub тамошобинон барои овоз додан ба вариант ангушт мезананд; дар OBS ба одамон мегӯяд, ки дар чат {{command}} ва рақамро нависанд.",
       "title": "Саркарҳо",
       "intro": "Назармандаҳои тасвиртанҳоро савол кардан. Унҳо барои ҷавоб ба тасвирҳои DeHub даст кардан мекунанд, вабо барои интиҳоҳи саволҳои тасвирҳо ба чат {{command}} ва рақамҳои интиҷоҳи саволҳо даст кардан мекунанд.",
       "question": "Савол",
@@ -4828,6 +4831,7 @@
       "votes_one": "{{count}} info: whatsthis",
       "votes_other": "{{count}} info: whatsthis",
       "replaceHint": "Открыть новое пользовательство открытого откры",
+      "widgetHint": "Пурсиши зиндаи шуморо нишон медиҳад. Дар барномаи DeHub тамошобинон барои овоз додан ба вариант ангушт мезананд; дар OBS ба одамон мегӯяд, ки дар чат {{command}} ва рақамро нависанд.",
       "sample": {
         "a": "Чизе нав",
         "b": "Name",
@@ -4906,7 +4910,6 @@
       "join": "Ба ҳамроҳ шудан"
     },
     "kinds": {
-      "spin_wheel": "Чархи чархиш",
       "tip_alert": "Пораи огоҳӣ",
       "follow_alert": "Огоҳии пайгирӣ",
       "subscribe_alert": "Огоҳии абони",
@@ -4923,10 +4926,12 @@
       "chat_box": "Қуттии чат",
       "ticker": "Ticker",
       "rule_alert": "Огӣҳои қоида",
-      "poll": "Назарпурсӣ"
+      "poll": "Назарпурсӣ",
+      "spin_wheel": "Чархи чархиш",
+      "streamer_level": "Сатҳи стример",
+      "tip_jar": "Кӯзаи атои"
     },
     "hints": {
-      "spin_wheel": "Дар куҷо чархҳо дар қоидаҳои шумо чарх мезананд",
       "tip_alert": "Ҳар порсаро, ки ба сатҳи худ мувофиқ аст, нишон медиҳад",
       "follow_alert": "Ҳар пайгирии навро нишон медиҳад",
       "subscribe_alert": "Ҳар абони навро нишон медиҳад",
@@ -4943,13 +4948,17 @@
       "chat_box": "Name",
       "ticker": "Хати матни худ, ки дар экран ҳаракат мекунад",
       "rule_alert": "Ҷойе ки огӣҳои қоидаҳои шумо пайдо мешаванд",
-      "poll": "Интихоби зиндаи шумо, бо тугмаи овоздиҳӣ барои ҳар як вариант"
+      "poll": "Интихоби зиндаи шумо, бо тугмаи овоздиҳӣ барои ҳар як вариант",
+      "spin_wheel": "Дар куҷо чархҳо дар қоидаҳои шумо чарх мезананд",
+      "streamer_level": "Сатҳи ҷараён ва сатри ҳафтаинаи шумо, аз профили шумо",
+      "tip_jar": "Name"
     },
     "fields": {
       "style": "Стил",
       "celebration": "Ҷашнвораҳо",
       "banner": "Паннер",
       "minAmount": "Маслиҳати хурдтарин барои нишон додан (DHB)",
+      "showStreak": "Намоиши сатри ҳарҳафтаина",
       "showMessage": "Ipakita ang tip na mensahe",
       "confirmedOnly": "Танҳо пас аз тасдиқи пардохт",
       "confirmedOnlyHint": "Naghintay ang ilang segundo para sa zincîra, kaya ang tip na hindi paalagay ay hindi lilitaw.",
@@ -4978,8 +4987,6 @@
       "fast": "Тез"
     },
     "rules": {
-      "wheelSegments": "Сегментҳои чарх, як сатр",
-      "wheelHint": "Байни 2 ва 12. DeHub дар куҷое, ки чарх қатъ мешавад, интихоб мекунад, аз ин рӯ ҳама тамошо мекунанд, ки ҳамон натиҷаро мебинанд. {result} in a alert, read-aloud or chat action to name it.",
       "title": "Қоидаҳо",
       "intro": "Вақте ки чизе дар ҷараёни шумо рух медиҳад, DeHub он чизеро, ки шумо интихоб кардаед, анҷом медиҳад: огӣ нишон медиҳад, овоз пахш мекунад, чизеро баланд мехонад, дар чати шумо нашр мекунад ё ба Discord шумо хабар медиҳад.",
       "add": "Қоида илова кунед",
@@ -5010,6 +5017,8 @@
       "removeAction": "Амалро ҳазф кунед",
       "placeholders": "{name}, {amount} ва {message} дар матни худ истифода баред. Ang mga link sa mga mensahe ay tinanggal.",
       "placeholdersLive": "{name}, {title} ва {link} дар матни худ истифода баред: номи шумо, унвони пахш ва истинод барои тамошои он.",
+      "wheelSegments": "Сегментҳои чарх, як сатр",
+      "wheelHint": "Байни 2 ва 12. DeHub дар куҷое, ки чарх қатъ мешавад, интихоб мекунад, аз ин рӯ ҳама тамошо мекунанд, ки ҳамон натиҷаро мебинанд. {result} in a alert, read-aloud or chat action to name it.",
       "alertText": "Матни хотиррасонӣ",
       "sound": "Садо",
       "sayText": "Матн барои хондан бо овози баланд",
@@ -5034,12 +5043,12 @@
         "subscribers": "Муштариён"
       },
       "actionTypes": {
-        "wheel": "Чарх задани чарх",
         "alert": "Намоиши хотиррасонӣ",
         "sound": "Пахш кардани садо",
         "say": "Бо овози баланд хонед",
         "chat": "Садо дар чат",
-        "webhook": "Magpadala sa webhook"
+        "webhook": "Magpadala sa webhook",
+        "wheel": "Чарх задани чарх"
       },
       "summary": {
         "tip": "{{amount}} DHB o higit pa"
@@ -5080,10 +5089,6 @@
       }
     },
     "moderation": {
-      "moderatorAdded": "Модератор илова шуд.",
-      "seconds_one": "{{count}} сония",
-      "seconds_other": "{{count}} сония",
-      "slowModeHint": "Ҳар тамошобин байни паёмҳо чӣ қадар интизор мешавад. Шумо ва модераторонатон ҳеҷ гоҳ интизор намешавед.",
       "title": "Мудирияти чат",
       "intro": "Mga patakaran para sa chat sa ilalim ng lahat ng iyong mga stream. Онҳо ҳеҷ гоҳ ба сӯҳбати асосии DeHub намерасанд: касе, ки шумо дар ин ҷо манъ мекунед, метавонад дар ҳама ҷо гап занад.",
       "loadFailed": "Hindi mai-load ang iyong mga setting ng moderasyon. I-refresh ang pahina upang subukan muli.",
@@ -5091,7 +5096,10 @@
       "saved": "Қоидаҳои чат нигоҳ дошта шуд.",
       "saveFailed": "Ин тағирот захира карда нашуд.",
       "slowMode": "Ҳолати суст",
+      "slowModeHint": "Ҳар тамошобин байни паёмҳо чӣ қадар интизор мешавад. Шумо ва модераторонатон ҳеҷ гоҳ интизор намешавед.",
       "off": "Хомӯш",
+      "seconds_one": "{{count}} сония",
+      "seconds_other": "{{count}} сония",
       "followersOnly": "Танҳо пайравон",
       "subscribersOnly": "Mga Subscribe lamang",
       "subscribersOnlyHint": "Танҳо пайравонро бозпас мегардонад.",
@@ -5104,6 +5112,7 @@
       "moderatorsHint": "Ang mga ito ay maaaring mag-abiso at magbahintulutan ng mga tao sa Наметавонанд бо шумо ё бо якдигар рафтор кунанд.",
       "addModerator": "Илова кардан",
       "usernamePlaceholder": "Номи корбар",
+      "moderatorAdded": "Модератор илова шуд.",
       "moderatorNotFound": "Walang account na may gumagamit na pangalan.",
       "removeModerator": "Удалить модератор",
       "noModerators": "Ҳанӯз модераторҳо вуҷуд надоранд.",
@@ -5113,15 +5122,15 @@
       "log": "Амалҳои охирин",
       "noLog": "Чизе ҳанӯз нест.",
       "actions": {
-        "ban": "{{actor}} {{target}}-ро манъ кард",
-        "moderator-added": "{{target}} модератор шуд",
-        "timeout_other": "{{actor}} {{target}}-ро барои {{count}} сония хомӯш кард",
-        "word-timeout_one": "{{target}} барои \"{{word}}\" ба {{count}} сония хомӯш карда шуд",
-        "word-timeout_other": "{{target}} барои \"{{word}}\" ба {{count}} сония хомӯш карда шуд",
         "timeout_one": "{{actor}} timed out {{target}} {{count}} second",
+        "timeout_other": "{{actor}} {{target}}-ро барои {{count}} сония хомӯш кард",
+        "ban": "{{actor}} {{target}}-ро манъ кард",
         "unban": "{{actor}} unbanned{{target}}",
+        "moderator-added": "{{target}} модератор шуд",
         "moderator-removed": "{{target}}info: whatsthis",
-        "word-blocked": "Иттилоотро аз {{target}} барои \"{{word}}\" боздошта шуд"
+        "word-blocked": "Иттилоотро аз {{target}} барои \"{{word}}\" боздошта шуд",
+        "word-timeout_one": "{{target}} барои \"{{word}}\" ба {{count}} сония хомӯш карда шуд",
+        "word-timeout_other": "{{target}} барои \"{{word}}\" ба {{count}} сония хомӯш карда шуд"
       }
     }
   },

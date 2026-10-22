@@ -5060,7 +5060,6 @@
     "creatorEarnsDirect": "Pelanggan membayar dalam token DeHub. Bahagian anda masuk ke dalam dompet anda sebaik sahaja mereka melanggan, tolak yuran platform untuk peringkat lencana anda."
   },
   "liveOverlay": {
-    "wheelLanded": "{{name}} spun: {{result}}",
     "someone": "Seseorang",
     "newFollower": "Pengikut baharu: {{name}}",
     "newSubscriber": "Pelanggan baharu: {{name}}",
@@ -5072,6 +5071,11 @@
     "topSupporters": "Penyokong utama",
     "tipped": "{{name}} menghantar hadiah",
     "chatPreview": "Mesej sembang muncul di sini",
+    "wheelLanded": "{{name}} spun: {{result}}",
+    "level": "Level {{level}}",
+    "streak_one": "{{count}}minggu berturut-turut",
+    "streak_other": "{{count}}minggu berturut-turut",
+    "tipJar": "Balang hadiah",
     "poll": {
       "closed": "Voting telah ditutup",
       "voteFor": "Undi untuk {{option}}",
@@ -5216,7 +5220,6 @@
       "join": "Sertai"
     },
     "kinds": {
-      "spin_wheel": "Roda berputar",
       "tip_alert": "Makluman tip",
       "follow_alert": "Ikuti makluman",
       "subscribe_alert": "Makluman pelanggan",
@@ -5233,10 +5236,12 @@
       "chat_box": "Kotak sembang",
       "ticker": "Ticker",
       "rule_alert": "Makluman peraturan",
-      "poll": "Pengundian"
+      "poll": "Pengundian",
+      "spin_wheel": "Roda berputar",
+      "streamer_level": "Tahap penstrim",
+      "tip_jar": "Balang hadiah"
     },
     "hints": {
-      "spin_wheel": "Tempat roda dalam peraturan anda berputar",
       "tip_alert": "Meraikan setiap tip, bersaiz mengikut peringkatnya",
       "follow_alert": "Menunjukkan setiap pengikut baharu",
       "subscribe_alert": "Menunjukkan setiap pelanggan baharu",
@@ -5253,13 +5258,17 @@
       "chat_box": "Menunjukkan mesej sembang siaran anda pada skrin",
       "ticker": "Baris teks anda sendiri yang menatal merentasi skrin",
       "rule_alert": "Di mana makluman peraturan anda dipaparkan",
-      "poll": "Pengundian langsung anda, dengan butang undi untuk setiap pilihan"
+      "poll": "Pengundian langsung anda, dengan butang undi untuk setiap pilihan",
+      "spin_wheel": "Tempat roda dalam peraturan anda berputar",
+      "streamer_level": "Tahap penstrim dan rentetan mingguan anda, daripada profil anda",
+      "tip_jar": "Balang yang terisi apabila hadiah berbayar masuk"
     },
     "fields": {
       "style": "Gaya",
       "celebration": "Perayaan",
       "banner": "Sepanduk",
       "minAmount": "Petua terkecil untuk ditunjukkan (DHB)",
+      "showStreak": "Tunjukkan rentetan mingguan",
       "showMessage": "Tunjukkan mesej tip",
       "confirmedOnly": "Hanya selepas bayaran disahkan",
       "confirmedOnlyHint": "Menunggu beberapa saat untuk rantaian, jadi tip yang tidak pernah dibayar tidak akan muncul.",
@@ -5288,8 +5297,6 @@
       "fast": "Pantas"
     },
     "rules": {
-      "wheelSegments": "Segmen roda, satu setiap baris",
-      "wheelHint": "Antara 2 dan 12. DeHub memilih di mana roda berhenti, jadi semua orang yang menonton melihat hasil yang sama. Gunakan {result} dalam makluman, baca dengan kuat atau tindakan sembang untuk menamakannya.",
       "title": "Peraturan",
       "intro": "Apabila sesuatu berlaku pada strim anda, DeHub melakukan apa yang anda pilih: menunjukkan amaran, memainkan bunyi, membaca sesuatu dengan kuat, menyiarkan dalam sembang anda atau memberitahu Discord anda.",
       "add": "Tambah peraturan",
@@ -5320,6 +5327,8 @@
       "removeAction": "Buang tindakan",
       "placeholders": "Gunakan {name}, {amount} dan {message} dalam teks anda. Pautan dalam mesej dibuang.",
       "placeholdersLive": "Gunakan {name}, {title} dan {link} dalam teks anda: nama anda, tajuk siaran dan pautan untuk menontonnya.",
+      "wheelSegments": "Segmen roda, satu setiap baris",
+      "wheelHint": "Antara 2 dan 12. DeHub memilih di mana roda berhenti, jadi semua orang yang menonton melihat hasil yang sama. Gunakan {result} dalam makluman, baca dengan kuat atau tindakan sembang untuk menamakannya.",
       "alertText": "Teks amaran",
       "sound": "Bunyi",
       "sayText": "Teks untuk dibaca dengan kuat",
@@ -5344,12 +5353,12 @@
         "subscribers": "Pelanggan"
       },
       "actionTypes": {
-        "wheel": "Putar roda",
         "alert": "Tunjukkan makluman",
         "sound": "Mainkan bunyi",
         "say": "Baca dengan kuat",
         "chat": "Siarkan dalam sembang",
-        "webhook": "Hantar ke webhook"
+        "webhook": "Hantar ke webhook",
+        "wheel": "Putar roda"
       },
       "summary": {
         "tip": "Tip {{amount}} DHB atau lebih"

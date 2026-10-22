@@ -4786,7 +4786,6 @@
     "creatorEarnsDirect": "Tellijad maksavad DeHubi žetoonides. Sinu osa jõuab Sinu rahakotti kohe, kui nad tellimuse tellivad, millest on maha arvatud platvormi tasu Sinu erimärgi taseme eest."
   },
   "liveOverlay": {
-    "wheelLanded": "{{name}} pööras: {{result}}",
     "someone": "Keegi",
     "newFollower": "Uus jälgija: {{name}}",
     "newSubscriber": "Uus abonent: {{name}}",
@@ -4798,6 +4797,11 @@
     "topSupporters": "Parimad toetajad",
     "tipped": "{{name}} saatis kingituse",
     "chatPreview": "Vestlussõnumid kuvatakse siin",
+    "wheelLanded": "{{name}} pööras: {{result}}",
+    "level": "Tase {{level}}",
+    "streak_one": "{{count}}nädala triip",
+    "streak_other": "{{count}}nädala triip",
+    "tipJar": "Kinkepurk",
     "poll": {
       "closed": "Hääletus lõppes",
       "voteFor": "Hääleta {{option}}",
@@ -4942,7 +4946,6 @@
       "join": "Liitu"
     },
     "kinds": {
-      "spin_wheel": "Tsentrifuugiratas",
       "tip_alert": "Jootraha hoiatus",
       "follow_alert": "Jälgi teadet",
       "subscribe_alert": "Abonendi hoiatus",
@@ -4959,10 +4962,12 @@
       "chat_box": "Vestluskast",
       "ticker": "Tiksuja",
       "rule_alert": "Reeglite märguanded",
-      "poll": "Küsitlus"
+      "poll": "Küsitlus",
+      "spin_wheel": "Tsentrifuugiratas",
+      "streamer_level": "Voogedastaja tase",
+      "tip_jar": "Kinkepurk"
     },
     "hints": {
-      "spin_wheel": "Kus sinu reeglite rattad pöörlevad",
       "tip_alert": "Tähistab igat oma tasemele vastavat jootraha",
       "follow_alert": "Kuvab iga uue jälgija",
       "subscribe_alert": "Kuvab iga uue tellija",
@@ -4979,13 +4984,17 @@
       "chat_box": "Kuvab sinu ringhäälingu vestlussõnumid ekraanil",
       "ticker": "Sinu enda teksti rida, mis kerib üle ekraani",
       "rule_alert": "Kus kuvatakse sinu reeglite märguanded",
-      "poll": "Sinu reaalajas küsitlus, hääletusnupp iga valiku jaoks"
+      "poll": "Sinu reaalajas küsitlus, hääletusnupp iga valiku jaoks",
+      "spin_wheel": "Kus sinu reeglite rattad pöörlevad",
+      "streamer_level": "Sinu voogedastaja tase ja iganädalane triip sinu profiililt",
+      "tip_jar": "Purk, mis täidetakse, kui saabuvad tasulised kingitused"
     },
     "fields": {
       "style": "Stiil",
       "celebration": "Tähistamine",
       "banner": "Bänner",
       "minAmount": "Väikseim näpunäide (DHB)",
+      "showStreak": "Kuva iganädalane triip",
       "showMessage": "Näita jootraha sõnumit",
       "confirmedOnly": "Alles pärast makse kinnitamist",
       "confirmedOnlyHint": "Ootab paar sekundit keti jaoks, nii et jootraha, mida kunagi ei maksta, ei ilmu kunagi.",
@@ -5014,8 +5023,6 @@
       "fast": "Kiire"
     },
     "rules": {
-      "wheelSegments": "Ratta segmendid, üks rea kohta",
-      "wheelHint": "2 ja 12 vahel. DeHub valib, kus ratas peatub, nii et kõik vaatajad näevad sama tulemust. Kasuta märguandes, valjuhäälses lugemises või vestlustoimingus märguannet {result}.",
       "title": "Reeglid",
       "intro": "Kui teie voos juhtub midagi, teeb DeHub seda, mida soovite: kuvab märguande, esitab heli, loeb midagi valjusti, postitab teie vestlusesse või räägib teie ebakõlast.",
       "add": "Lisa reegel",
@@ -5046,6 +5053,8 @@
       "removeAction": "Eemalda toiming",
       "placeholders": "Kasuta tekstis {name}, {amount} ja {message}. Sõnumites olevad lingid eemaldatakse.",
       "placeholdersLive": "Kasuta tekstis {name}, {title} ja {link}: oma nime, saate pealkirja ja linki selle vaatamiseks.",
+      "wheelSegments": "Ratta segmendid, üks rea kohta",
+      "wheelHint": "2 ja 12 vahel. DeHub valib, kus ratas peatub, nii et kõik vaatajad näevad sama tulemust. Kasuta märguandes, valjuhäälses lugemises või vestlustoimingus märguannet {result}.",
       "alertText": "Teatise tekst",
       "sound": "Heli",
       "sayText": "Tekst valjusti lugemiseks",
@@ -5070,12 +5079,12 @@
         "subscribers": "Tellijad"
       },
       "actionTypes": {
-        "wheel": "Keeruta ratast",
         "alert": "Kuva teade",
         "sound": "Esita heli",
         "say": "Loe valjusti",
         "chat": "Postita vestlusesse",
-        "webhook": "Saada veebihaakile"
+        "webhook": "Saada veebihaakile",
+        "wheel": "Keeruta ratast"
       },
       "summary": {
         "tip": "Jootraha vähemalt {{amount}} DHB"

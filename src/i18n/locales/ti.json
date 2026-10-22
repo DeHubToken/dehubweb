@@ -1,16 +1,26 @@
 {
-  "liveChatModeration": {
-    "timeout1m": "ቅድሚ ምኻድኩም ክልተ ደቒቕ ተቐመጥዎ ።",
-    "timeout10m": "10 ደቓይቕ ሓሊፉ",
-    "timeout1h": "ኣብ ውሽጢ ሓደ ሰዓት ጥራይ እዩ እቲ ጽርግያ ተኸፊቱ ።",
-    "ban": "ካብ'ዚ ዥረት'ዚ ተኣጊዱ",
-    "makeModerator": "ኣስተማቕራ ግበር",
-    "timedOut": "ግዜ ኣኺሉ እዩ ።",
-    "banned": "ካብዞም ሩባታት እዚኣቶም ተፈልዮም እዮም ።",
-    "madeModerator": "ሕጂ ድማ ኣማሓዳሪ እዩ ።",
-    "failed": "በጃኻ ኣይትጨነቕ ፡ ከም'ዚ... እንደገና ይዞር ኣሎ ።",
-    "youAreBanned": "ኣብዚ ፈጣሪ ዥረት ክትዘራረብ ኣይትኽእልን ኢኻ",
-    "youAreTimedOut": "ንነዊሕ እዋን ተጸሚድካ"
+  "liveRecap": {
+    "title": "ናይ ዥረት ዳግመ-ምግቢ",
+    "justEnded": "እቲ ዥረትካ እንደገና ይዕምብብብ",
+    "lastStream": "ናይ መወዳእታ ዥረትካ",
+    "share": "ምዝርጋሕ",
+    "shareText": "ኣብ DeHub \"{{title}}\" ፈኒወ: {{duration}} ብቐጥታ፣ ብዝበዝሐ {{peak}} ተዓዘብቲ ከምኡውን {{followers}} ሓደሽቲ ሰዓብቲ።",
+    "untitled": "ዘይፍለጥ ዥረት",
+    "copied": "ኣብ ዝኾነ ቦታ ክትስሕቦ ትኽእል ኢኻ ።",
+    "loadFailed": "እቲ ክሲ ኣብ ጽሑፍካ ኣይተቐመጠን ። ኣብ ሓደ እዋን እንደገና ፈትኖ ።",
+    "duration": "ግዜ ህያው",
+    "peakViewers": "መብዛሕትኦም ሰባት ብሓንሳብ ይርእዩ",
+    "gifts_one": "ካብ {{count}} ህያብ",
+    "gifts_other": "ካብ {{count}} ህያባት",
+    "newFollowers": "ሓድሽ ተኸታተልቲ",
+    "chatMessages": "መልእኽቲ ቻት",
+    "chatters": "ሰባት ይዛረቡ",
+    "reactions": "ግብረ መልሲ",
+    "shares": "ሰባት ይካፈሉ",
+    "topSupporters": "ላዕለዎት ደገፍቲ",
+    "polls": "ድምጺ",
+    "pollWinner": "{{option}} ተዓዊቱ",
+    "stillCounting": "ሕጂ እውን እንተ ዀነ ፡ ህያባት ንምእማን ፡ ሓደ ደቒቕ ኪወስድ ይኽእል እዩ ።"
   },
   "errors": {
     "sponsorshipUnavailable": "ናጻ ልውውጣት ብወገንና ጠጠው ኢሎም ኣለዉ፣ ኣብ ዋሌትካ ኣይኮነን። በጃኻ ድሕሪ ቁሩብ እንደገና ፈትን።",
@@ -4679,7 +4689,6 @@
     "creatorEarnsDirect": "እቶም ተመዝጋቢታት ኣብ DeHub ምልክታት ይኽፈሉ እዮም ። እቲ ናይ ባጅ ደረጃኻ ናይ መድረኽ ክፍሊት ዝሕተተሉ እዋን ፡ ኣብ ቦርሳኻ ዘሎ መሬትካ ።"
   },
   "liveOverlay": {
-    "wheelLanded": "{{name}} ኣዝዩሩ፦ {{result}}",
     "someone": "ሓደ ሰብ",
     "newFollower": "ሓድሽ ተኸታሊ ፦ {{name}}",
     "newSubscriber": "ሓድሽ ኣባል ፦ {{name}}",
@@ -4689,6 +4698,11 @@
     "topSupporters": "ላዕለዎት ደገፍቲ",
     "tipped": "{{name}} ህያብ ልኢኹ",
     "chatPreview": "ናይ ቻት መልእኽትታት ኣብዚ ይረኣዩ",
+    "wheelLanded": "{{name}} ኣዝዩሩ፦ {{result}}",
+    "level": "ደረጃ {{level}}",
+    "streak_one": "{{count}}-ሰሙን ተከታታይ",
+    "streak_other": "{{count}}-ሰሙን ተከታታይ",
+    "tipJar": "ህያብ ዕንጨይቲ",
     "poll": {
       "closed": "ድምጺ ተዓጽዩ",
       "voteFor": "ንዓ {{option}} ድምጺ ሃብ",
@@ -4702,28 +4716,18 @@
       "howToVote_other": "ዓይነት {{command}} ን ቁጽሪ ኣብ ቻት ንድምጺ ንምውሳድ · {{count}} ድምጺ"
     }
   },
-  "liveRecap": {
-    "shareText": "ኣብ DeHub \"{{title}}\" ፈኒወ: {{duration}} ብቐጥታ፣ ብዝበዝሐ {{peak}} ተዓዘብቲ ከምኡውን {{followers}} ሓደሽቲ ሰዓብቲ።",
-    "title": "ናይ ዥረት ዳግመ-ምግቢ",
-    "justEnded": "እቲ ዥረትካ እንደገና ይዕምብብብ",
-    "lastStream": "ናይ መወዳእታ ዥረትካ",
-    "share": "ምዝርጋሕ",
-    "untitled": "ዘይፍለጥ ዥረት",
-    "copied": "ኣብ ዝኾነ ቦታ ክትስሕቦ ትኽእል ኢኻ ።",
-    "loadFailed": "እቲ ክሲ ኣብ ጽሑፍካ ኣይተቐመጠን ። ኣብ ሓደ እዋን እንደገና ፈትኖ ።",
-    "duration": "ግዜ ህያው",
-    "peakViewers": "መብዛሕትኦም ሰባት ብሓንሳብ ይርእዩ",
-    "gifts_one": "ካብ {{count}} ህያብ",
-    "gifts_other": "ካብ {{count}} ህያባት",
-    "newFollowers": "ሓድሽ ተኸታተልቲ",
-    "chatMessages": "መልእኽቲ ቻት",
-    "chatters": "ሰባት ይዛረቡ",
-    "reactions": "ግብረ መልሲ",
-    "shares": "ሰባት ይካፈሉ",
-    "topSupporters": "ላዕለዎት ደገፍቲ",
-    "polls": "ድምጺ",
-    "pollWinner": "{{option}} ተዓዊቱ",
-    "stillCounting": "ሕጂ እውን እንተ ዀነ ፡ ህያባት ንምእማን ፡ ሓደ ደቒቕ ኪወስድ ይኽእል እዩ ።"
+  "liveChatModeration": {
+    "timeout1m": "ቅድሚ ምኻድኩም ክልተ ደቒቕ ተቐመጥዎ ።",
+    "timeout10m": "10 ደቓይቕ ሓሊፉ",
+    "timeout1h": "ኣብ ውሽጢ ሓደ ሰዓት ጥራይ እዩ እቲ ጽርግያ ተኸፊቱ ።",
+    "ban": "ካብ'ዚ ዥረት'ዚ ተኣጊዱ",
+    "makeModerator": "ኣስተማቕራ ግበር",
+    "timedOut": "ግዜ ኣኺሉ እዩ ።",
+    "banned": "ካብዞም ሩባታት እዚኣቶም ተፈልዮም እዮም ።",
+    "madeModerator": "ሕጂ ድማ ኣማሓዳሪ እዩ ።",
+    "failed": "በጃኻ ኣይትጨነቕ ፡ ከም'ዚ... እንደገና ይዞር ኣሎ ።",
+    "youAreBanned": "ኣብዚ ፈጣሪ ዥረት ክትዘራረብ ኣይትኽእልን ኢኻ",
+    "youAreTimedOut": "ንነዊሕ እዋን ተጸሚድካ"
   },
   "liveStudio": {
     "controls": {
@@ -4736,51 +4740,6 @@
       "readAloudMuted": "ኣቋሪጽካ ኣንብብ",
       "readAloudMutedHint": "ናይ ህያብ መልእኽትን ናይ ሕጊ መስመርን ሕጂ ኣይነበብን እዩ ።",
       "failed": "እዚ ለውጢ እዚ ኣይተለወጠን ። ደጊምካ ፈትኖ ።"
-    },
-    "moderation": {
-      "title": "ናይ ቻት ሚዛናዊነት",
-      "intro": "ኣብ ትሕቲ ኩሉ ጅረታትካ ናይ ቻት ሕግታት ። ናብ ቀንዲ ቻት DeHub ኣይበጽሑን እዮም ፦ ኣብዚ እትእግድ ሰብ ፡ ኣብ ካልእ ቦታታት ኪዛረብ ይኽእል እዩ ።",
-      "loadFailed": "እቲ ናይ ምትዕርራይ ኣቀማምጣኻ ክስረዝ ኣይከኣለን ። ነቲ ገጽ ደጊምካ ፈትኖ ።",
-      "save": "ናይ ቻት ሕግታት ኣድሕን",
-      "saved": "ናይ ቻት ሕግታት ተድሕን ።",
-      "saveFailed": "ኣብዚ ጉዳይ'ዚ ፡ መፍትሒታት ክዝርዝሩ ኣይከኣሉን ።",
-      "slowMode": "ቀስ ብቐስ ኣገባብ",
-      "slowModeHint": "ነፍሲ ወከፍ ተመልካች ኣብ መንጎ መልእኽትታት ክሳዕ ክንደይ እዩ ዚጽበ ፧ ንስኻን መምህራንካን ፈጺምኩም ኣይትጸበዩ ።",
-      "off": "ወጺእካ",
-      "seconds_one": "{{count}} ካልኣይቲ",
-      "seconds_other": "{{count}} ሰከንድ",
-      "followersOnly": "ተኸታተልቲ ጥራይ",
-      "subscribersOnly": "ተመዝጋቢታት ጥራይ",
-      "subscribersOnlyHint": "ሰዓብቲ ጥራይ እዮም ዚሓልፉ ።",
-      "bannedWords": "እተኸልከለ ቓላት",
-      "bannedWordsHint": "ምስ ኮምፓስ ተፈልዩ ፡ ደብዳበ ብጽሑፍ ምጽሓፍ ፡ ኣብ ዙርያኡ ኣይርከብን እዩ ።",
-      "wordAction": "ሓደ ሰብ ምስ ዚጥቀመሉ",
-      "wordBlock": "መልእኽቲ ደው በል",
-      "wordTimeout": "ንነዊሕ እዋን ተጸበዩ",
-      "moderators": "ሞዴራተራት",
-      "moderatorsHint": "ኣብ ገማግም ባሕሪኻ ንተዓዘብቲ ግዜ ክገድፉ ይኽእሉ እዮም ። ኣብ ልዕሊኻ ወይ ኣብ ልዕሊኻ ኺንቀሳቐሱ ኣይክእሉን እዮም ።",
-      "addModerator": "ኣክሊል",
-      "usernamePlaceholder": "ስም ተጠቃሚ",
-      "moderatorAdded": "እቲ ኣሰናዳኢ ወሲኹ ።",
-      "moderatorNotFound": "ብዛዕባ እቲ ናይ ተጠቃሚ ስም ዝኾነ ሕሳብ የለን ።",
-      "removeModerator": "መለለዪ ኣወግድ",
-      "noModerators": "እቲ ዝተዋሃበ ቁጽሪ ገና ኣይተገለጸን ።",
-      "banned": "ካብ ፈሳሲኻ ተፈልዩ",
-      "unban": "ዘይተፈልጠ",
-      "noBans": "ሓደ እኳ ኣይእገድን እዩ ።",
-      "log": "ናይ ቀረባ ስጉምቲታት",
-      "noLog": "ገና ገለ ነገር የለን ።",
-      "actions": {
-        "timeout_one": "{{actor}} ንዓ {{target}} ን{{count}} ካልኢት ኣህደኦ",
-        "timeout_other": "{{actor}} ንዓ {{target}} ን{{count}} ካልኢታት ኣህደኦ",
-        "unban": "{{actor}} እገዳ {{target}} ኣልዒሉ",
-        "word-blocked": "ብሰንኪ \"{{word}}\" መልእኽቲ {{target}} ተዓጊቱ",
-        "word-timeout_one": "ብሰንኪ \"{{word}}\" {{target}} ን{{count}} ካልኢት ተሃዲኡ",
-        "word-timeout_other": "ብሰንኪ \"{{word}}\" {{target}} ን{{count}} ካልኢታት ተሃዲኡ",
-        "ban": "{{actor}} ክልኩል {{target}}",
-        "moderator-added": "{{target}} መማህረሪ ኮይኑ",
-        "moderator-removed": "{{target}} ሕጂ ኣማሓዳሪ ኣይኮነን"
-      }
     },
     "polls": {
       "title": "ድምጺ",
@@ -4887,7 +4846,6 @@
       "join": "ተቐሊል"
     },
     "kinds": {
-      "spin_wheel": "መንኰራኵር ስፒን",
       "tip_alert": "ምልክት ማሕበር",
       "follow_alert": "ተኸተል ማሕበር",
       "subscribe_alert": "ተመዝገብ ማሕበር",
@@ -4904,10 +4862,12 @@
       "chat_box": "ናይ ቻት ሳጹን",
       "ticker": "ቲከር",
       "rule_alert": "ደንብ ማንቂያዎች",
-      "poll": "ድምጺ"
+      "poll": "ድምጺ",
+      "spin_wheel": "መንኰራኵር ስፒን",
+      "streamer_level": "ደረጃ ዥረት",
+      "tip_jar": "ህያብ ዕንጨይቲ"
     },
     "hints": {
-      "spin_wheel": "እቲ ኣብ ሕግታትካ ዘሎ መንኰራኵር",
       "tip_alert": "ንኹሉ ምልክት ዝተሓለወ ብዝተለወጠ ደረጃ ይኽእል",
       "follow_alert": "ንሓደ ሓደሽ ተኸተል ይርከብ",
       "subscribe_alert": "ንሓደ ሓደሽ ተመዝገብ ይርከብ",
@@ -4924,13 +4884,17 @@
       "chat_box": "ኣብ ገጽካ ናይ ዝርርብ መልእኽትታት ኣርኢ",
       "ticker": "ሓደ መስመር ናይ ገዛእ ርእስኻ ጽሑፍ ኣብ ልዕሊ እቲ ስክሪን ዝዞር",
       "rule_alert": "ደንብ ማንቂያዎችህ የሚታዩበት ቦታ",
-      "poll": "ብቀጥታ ምርጫኻ ፡ ንነፍሲ ወከፍ ኣማራጺ ናይ ድምጺ ጠውቑ"
+      "poll": "ብቀጥታ ምርጫኻ ፡ ንነፍሲ ወከፍ ኣማራጺ ናይ ድምጺ ጠውቑ",
+      "spin_wheel": "እቲ ኣብ ሕግታትካ ዘሎ መንኰራኵር",
+      "streamer_level": "ደረጃ ዥረትካን ሳምንታዊ ስክሪፕትካን ፡ ካብ መገለጺኻ",
+      "tip_jar": "ከም እተኸፍለ ህያባት ዚመልእ ዕንጨይቲ"
     },
     "fields": {
       "style": "ስታይል",
       "celebration": "በዓል",
       "banner": "ባንዴራ",
       "minAmount": "ንእሽቶ ምኽሪ (DHB)",
+      "showStreak": "ሳምንታዊ ስክሪፕት ኣርኢ",
       "showMessage": "ነቲ መልእኽቲ ኣርኢ",
       "confirmedOnly": "እቲ ክፍሊት ድሕሪ ምርግጋጽ ጥራይ",
       "confirmedOnlyHint": "እቲ ሰንሰለት ንገለ ካልኢት ይጽበ ፣ ስለዚ እቲ ዘይኽፈለሉ ነጥቢ ፈጺሙ ኣይርአን ።",
@@ -4959,8 +4923,6 @@
       "fast": "ቀልጢፍካ"
     },
     "rules": {
-      "wheelSegments": "ኣብ ሓደ መስመር ፡ ኣብ ሓደ መስመር ፡",
-      "wheelHint": "ኣብ መንጎ 12ን 12ን DeHub ነቲ መንኰራኵር ዚዓግቶ ቦታ ይመርጽ ፣ ስለዚ ፡ ኵሎም እቶም ዚርእዩ ሰባት ሓደ ዓይነት ውጽኢት ይርእዩ እዮም ። {result} ኣብ መጠንቀቕታ ፡ ኣብ ኣንብብ ወይ ኣብ ናይ ቻት ስጉምቲ ተጠቒምካ ስምካ ተጠቐመሉ ።",
       "title": "ደንቦች",
       "intro": "በእንደገና ላይ ምንም ነገር ሲከሰት፣ DeHub ምን እንደምትመርጠው ያደርጋል፡ ማንቂያ ያሳያል፣ ድምጽ ይጫወታል፣ ምንዳ ይነግራል፣ በቻትህ ውስጥ ይልጥ ወይም ዲስኮርድህን ይነግራል።",
       "add": "ደንብ ጨምር",
@@ -4991,6 +4953,8 @@
       "removeAction": "ተግባር ወግድ",
       "placeholders": "ኣብ ጽሑፍካ {name}፣ {amount}ን {message}ን ተጠቐም። ኣብ መልእኽቲ ዘለዉ ሊንክታት ይእለዩ።",
       "placeholdersLive": "ኣብ ጽሑፍካ {name}፣ {title}ን {link}ን ተጠቐም፡ ስምካ፣ ኣርእስቲ ፈነወን ንምርኣይ ሊንክን።",
+      "wheelSegments": "ኣብ ሓደ መስመር ፡ ኣብ ሓደ መስመር ፡",
+      "wheelHint": "ኣብ መንጎ 12ን 12ን DeHub ነቲ መንኰራኵር ዚዓግቶ ቦታ ይመርጽ ፣ ስለዚ ፡ ኵሎም እቶም ዚርእዩ ሰባት ሓደ ዓይነት ውጽኢት ይርእዩ እዮም ። {result} ኣብ መጠንቀቕታ ፡ ኣብ ኣንብብ ወይ ኣብ ናይ ቻት ስጉምቲ ተጠቒምካ ስምካ ተጠቐመሉ ።",
       "alertText": "ጽሑፍ ኣጠንቂቕካ",
       "sound": "ድምጺ",
       "sayText": "ብድምጺ ዝንበብ ጽሑፍ",
@@ -5015,12 +4979,12 @@
         "subscribers": "ኣባል"
       },
       "actionTypes": {
-        "wheel": "መንኰራኵር ኣሽከርከር",
         "alert": "መጠንቀቕታ ኣርኢ",
         "sound": "ድምጺ ኣማዕብል",
         "say": "ብድምጺ ኣንብብ",
         "chat": "ኣብ ቻት እተጻሕፈ",
-        "webhook": "ናብ መርበብ ሓበሬታ ልኣኽ"
+        "webhook": "ናብ መርበብ ሓበሬታ ልኣኽ",
+        "wheel": "መንኰራኵር ኣሽከርከር"
       },
       "summary": {
         "tip": "ምኽሪ {{amount}} DHB ወይ ካብኡ ንላዕሊ"
@@ -5058,6 +5022,51 @@
         "spooky": "ስፖኪ",
         "magic-spell": "ናይ ማግኛ ፊደል",
         "shhh": "ኣብራህ"
+      }
+    },
+    "moderation": {
+      "title": "ናይ ቻት ሚዛናዊነት",
+      "intro": "ኣብ ትሕቲ ኩሉ ጅረታትካ ናይ ቻት ሕግታት ። ናብ ቀንዲ ቻት DeHub ኣይበጽሑን እዮም ፦ ኣብዚ እትእግድ ሰብ ፡ ኣብ ካልእ ቦታታት ኪዛረብ ይኽእል እዩ ።",
+      "loadFailed": "እቲ ናይ ምትዕርራይ ኣቀማምጣኻ ክስረዝ ኣይከኣለን ። ነቲ ገጽ ደጊምካ ፈትኖ ።",
+      "save": "ናይ ቻት ሕግታት ኣድሕን",
+      "saved": "ናይ ቻት ሕግታት ተድሕን ።",
+      "saveFailed": "ኣብዚ ጉዳይ'ዚ ፡ መፍትሒታት ክዝርዝሩ ኣይከኣሉን ።",
+      "slowMode": "ቀስ ብቐስ ኣገባብ",
+      "slowModeHint": "ነፍሲ ወከፍ ተመልካች ኣብ መንጎ መልእኽትታት ክሳዕ ክንደይ እዩ ዚጽበ ፧ ንስኻን መምህራንካን ፈጺምኩም ኣይትጸበዩ ።",
+      "off": "ወጺእካ",
+      "seconds_one": "{{count}} ካልኣይቲ",
+      "seconds_other": "{{count}} ሰከንድ",
+      "followersOnly": "ተኸታተልቲ ጥራይ",
+      "subscribersOnly": "ተመዝጋቢታት ጥራይ",
+      "subscribersOnlyHint": "ሰዓብቲ ጥራይ እዮም ዚሓልፉ ።",
+      "bannedWords": "እተኸልከለ ቓላት",
+      "bannedWordsHint": "ምስ ኮምፓስ ተፈልዩ ፡ ደብዳበ ብጽሑፍ ምጽሓፍ ፡ ኣብ ዙርያኡ ኣይርከብን እዩ ።",
+      "wordAction": "ሓደ ሰብ ምስ ዚጥቀመሉ",
+      "wordBlock": "መልእኽቲ ደው በል",
+      "wordTimeout": "ንነዊሕ እዋን ተጸበዩ",
+      "moderators": "ሞዴራተራት",
+      "moderatorsHint": "ኣብ ገማግም ባሕሪኻ ንተዓዘብቲ ግዜ ክገድፉ ይኽእሉ እዮም ። ኣብ ልዕሊኻ ወይ ኣብ ልዕሊኻ ኺንቀሳቐሱ ኣይክእሉን እዮም ።",
+      "addModerator": "ኣክሊል",
+      "usernamePlaceholder": "ስም ተጠቃሚ",
+      "moderatorAdded": "እቲ ኣሰናዳኢ ወሲኹ ።",
+      "moderatorNotFound": "ብዛዕባ እቲ ናይ ተጠቃሚ ስም ዝኾነ ሕሳብ የለን ።",
+      "removeModerator": "መለለዪ ኣወግድ",
+      "noModerators": "እቲ ዝተዋሃበ ቁጽሪ ገና ኣይተገለጸን ።",
+      "banned": "ካብ ፈሳሲኻ ተፈልዩ",
+      "unban": "ዘይተፈልጠ",
+      "noBans": "ሓደ እኳ ኣይእገድን እዩ ።",
+      "log": "ናይ ቀረባ ስጉምቲታት",
+      "noLog": "ገና ገለ ነገር የለን ።",
+      "actions": {
+        "timeout_one": "{{actor}} ንዓ {{target}} ን{{count}} ካልኢት ኣህደኦ",
+        "timeout_other": "{{actor}} ንዓ {{target}} ን{{count}} ካልኢታት ኣህደኦ",
+        "ban": "{{actor}} ክልኩል {{target}}",
+        "unban": "{{actor}} እገዳ {{target}} ኣልዒሉ",
+        "moderator-added": "{{target}} መማህረሪ ኮይኑ",
+        "moderator-removed": "{{target}} ሕጂ ኣማሓዳሪ ኣይኮነን",
+        "word-blocked": "ብሰንኪ \"{{word}}\" መልእኽቲ {{target}} ተዓጊቱ",
+        "word-timeout_one": "ብሰንኪ \"{{word}}\" {{target}} ን{{count}} ካልኢት ተሃዲኡ",
+        "word-timeout_other": "ብሰንኪ \"{{word}}\" {{target}} ን{{count}} ካልኢታት ተሃዲኡ"
       }
     }
   },

@@ -4739,7 +4739,6 @@
     "creatorEarnsDirect": "Az előfizetők DeHub tokenekben fizetnek. A részvényed az előfizetés pillanatában a pénztárcádba kerül, levonva belőle a jelvényszinted platformdíját."
   },
   "liveOverlay": {
-    "wheelLanded": "{{name}} fordította: {{result}}",
     "someone": "Valaki",
     "newFollower": "Új követő: {{name}}",
     "newSubscriber": "Új előfizető: {{name}}",
@@ -4751,6 +4750,11 @@
     "topSupporters": "Kiemelt támogatók",
     "tipped": "{{name}} ajándékot küldött",
     "chatPreview": "Itt jelennek meg a csevegési üzenetek",
+    "wheelLanded": "{{name}} fordította: {{result}}",
+    "level": "Szint {{level}}",
+    "streak_one": "{{count}}hetes sorozat",
+    "streak_other": "{{count}}hetes sorozat",
+    "tipJar": "Ajándékdoboz",
     "poll": {
       "closed": "A szavazás lezárult",
       "voteFor": "Szavazz erre: {{option}}",
@@ -4895,7 +4899,6 @@
       "join": "Adományozás"
     },
     "kinds": {
-      "spin_wheel": "Centrifugáló kerék",
       "tip_alert": "Tanács-alert",
       "follow_alert": "Követés-alert",
       "subscribe_alert": "Feliratkozó-alert",
@@ -4912,10 +4915,12 @@
       "chat_box": "Csevegőmező",
       "ticker": "Ticker",
       "rule_alert": "Szabályriasztások",
-      "poll": "Szavazás"
+      "poll": "Szavazás",
+      "spin_wheel": "Centrifugáló kerék",
+      "streamer_level": "Streamer szint",
+      "tip_jar": "Ajándékdoboz"
     },
     "hints": {
-      "spin_wheel": "Ahol a szabályaid kerekei forognak",
       "tip_alert": "Üdvözöl minden tippeket, méretük a szintjükhöz igazodva",
       "follow_alert": "Mutatja meg minden új követőt",
       "subscribe_alert": "Mutatja meg minden új feliratkozót",
@@ -4932,13 +4937,17 @@
       "chat_box": "Megjeleníti az adás csevegési üzeneteit a képernyőn",
       "ticker": "A saját szöveged egy sora, amely végiggörgeti a képernyőt",
       "rule_alert": "Itt jelennek meg a szabályaidra vonatkozó értesítések",
-      "poll": "Élő szavazásod, szavazógombbal minden opcióhoz"
+      "poll": "Élő szavazásod, szavazógombbal minden opcióhoz",
+      "spin_wheel": "Ahol a szabályaid kerekei forognak",
+      "streamer_level": "A streamer szinted és a heti csíkszámod a profilodból",
+      "tip_jar": "Egy befőttesüveg, ami megtelik, ahogy a fizetett ajándékok beérkeznek"
     },
     "fields": {
       "style": "Stílus",
       "celebration": "Ünnepség",
       "banner": "Banner",
       "minAmount": "Legkisebb megjeleníthető tipp (DHB)",
+      "showStreak": "Heti sorozat megjelenítése",
       "showMessage": "Borravaló üzenetének megjelenítése",
       "confirmedOnly": "Csak a fizetés visszaigazolását követően",
       "confirmedOnlyHint": "Vár néhány másodpercet a láncra, így a soha ki nem fizetett borravaló soha nem jelenik meg.",
@@ -4967,8 +4976,6 @@
       "fast": "Gyors"
     },
     "rules": {
-      "wheelSegments": "Kerékszegmensek, soronként egy",
-      "wheelHint": "2 és 12 között. A DeHub kiválasztja, hol álljon meg a kerék, így mindenki ugyanazt az eredményt látja. Használd a (z){result} karaktert értesítésben, olvasási hangon vagy csevegési műveletben a megnevezéséhez.",
       "title": "Szabályok",
       "intro": "Amikor valami történik az adatfolyamodban, a DeHub azt teszi, amit te választasz: figyelmeztetést jelenít meg, hangot játszik le, hangosan felolvas valamit, bejegyzéseket tesz közzé a csevegésedben, vagy elmondja a Discordnak.",
       "add": "Szabály hozzáadása",
@@ -4999,6 +5006,8 @@
       "removeAction": "Művelet eltávolítása",
       "placeholders": "{name}, {amount} és {message} használata a szövegben. Az üzenetekben lévő hivatkozások eltávolításra kerülnek.",
       "placeholdersLive": "Használd {name}, {title} és {link} karaktereket a szövegedben: a nevedet, a közvetítés címét és egy linket a megtekintéséhez.",
+      "wheelSegments": "Kerékszegmensek, soronként egy",
+      "wheelHint": "2 és 12 között. A DeHub kiválasztja, hol álljon meg a kerék, így mindenki ugyanazt az eredményt látja. Használd a (z){result} karaktert értesítésben, olvasási hangon vagy csevegési műveletben a megnevezéséhez.",
       "alertText": "Figyelmeztető szöveg",
       "sound": "Hang",
       "sayText": "Hangosan felolvasandó szöveg",
@@ -5023,12 +5032,12 @@
         "subscribers": "Feliratkozók"
       },
       "actionTypes": {
-        "wheel": "Pörgess meg egy kereket",
         "alert": "Értesítés megjelenítése",
         "sound": "Hang lejátszása",
         "say": "Olvasd fel hangosan",
         "chat": "Közzététel csevegésben",
-        "webhook": "Küldés webhookba"
+        "webhook": "Küldés webhookba",
+        "wheel": "Pörgess meg egy kereket"
       },
       "summary": {
         "tip": "Legalább {{amount}} DHB borravaló"

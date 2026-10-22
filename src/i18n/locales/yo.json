@@ -4712,7 +4712,6 @@
     "creatorPaidDirectNote": "Ìpín olùṣẹ̀dá náà lọ tààrà sí àpamọ́ wọn ní àsìkò tí o bá ṣe ìforúkọsílẹ̀. DeHub máa ń san owó orí pẹpẹ kékeré."
   },
   "liveOverlay": {
-    "wheelLanded": "{{name}} spun: {{result}}",
     "someone": "Ẹnikan",
     "newFollower": "Àwọn ọmọlẹ́yìn tuntun: {{name}}",
     "newSubscriber": "Olùpèsè tuntun: {{name}}",
@@ -4724,6 +4723,11 @@
     "topSupporters": "Awọn alatilẹyin ti o ga julọ",
     "tipped": "{{name}} fi ẹ̀bùn ránṣẹ́",
     "chatPreview": "Awọn ifiranṣẹ iwiregbe han nibi",
+    "wheelLanded": "{{name}} spun: {{result}}",
+    "level": "Ipele {{level}}",
+    "streak_one": "{{count}}-week streak",
+    "streak_other": "{{count}}-week streak",
+    "tipJar": "Ìkòkò ẹ̀bùn",
     "poll": {
       "closed": "Voting closed",
       "voteFor": "Dibo fun {{option}}",
@@ -4868,7 +4872,6 @@
       "join": "Darapọ mọ"
     },
     "kinds": {
-      "spin_wheel": "Yí kẹ̀kẹ́ yípo",
       "tip_alert": "Ìkìlọ̀ Ìmọ̀ràn",
       "follow_alert": "Tẹle itaniji",
       "subscribe_alert": "Ikilọ ti awọn alabapin",
@@ -4883,10 +4886,12 @@
       "chat_box": "Apoti Iwiregbe",
       "ticker": "Ticker",
       "rule_alert": "Àwọn ìkìlọ̀ ìlànà",
-      "poll": "Ìbò"
+      "poll": "Ìbò",
+      "spin_wheel": "Yí kẹ̀kẹ́ yípo",
+      "streamer_level": "Ipele Streamer",
+      "tip_jar": "Ìkòkò ẹ̀bùn"
     },
     "hints": {
-      "spin_wheel": "Níbo ni àwọn kẹ̀kẹ́ tí ó wà nínú òfin rẹ ti ń yípo",
       "tip_alert": "Ṣe ayẹyẹ gbogbo awọn imọran, iwọn si ipele rẹ.",
       "follow_alert": "Ṣàfihàn ọmọlẹ́yìn tuntun kọ̀ọ̀kan",
       "subscribe_alert": "Ṣe afihan alabapin tuntun kọọkan",
@@ -4903,13 +4908,17 @@
       "chat_box": "Ṣe afihan awọn ifiranṣẹ iwiregbe igbohunsafefe rẹ loju iboju",
       "ticker": "Òpó ọ̀rọ̀ tìrẹ tí ó ń lọ káàkiri mànàárà.",
       "rule_alert": "Níbi tí àwọn ìkìlọ̀ àwọn òfin rẹ ti fara hàn",
-      "poll": "Ìbò ìgbé ayé rẹ, pẹ̀lú bọ́tìnì ìbò fún gbogbo àṣàyàn"
+      "poll": "Ìbò ìgbé ayé rẹ, pẹ̀lú bọ́tìnì ìbò fún gbogbo àṣàyàn",
+      "spin_wheel": "Níbo ni àwọn kẹ̀kẹ́ tí ó wà nínú òfin rẹ ti ń yípo",
+      "streamer_level": "Ipele ṣiṣan rẹ àti ìlà ọ̀sọ̀ọ̀sẹ̀ rẹ, láti inú àkójọpọ̀ rẹ",
+      "tip_jar": "Igo ti o kun bi awọn ẹbun ti o sanwo ti n wọle"
     },
     "fields": {
       "style": "Àṣà",
       "celebration": "Ayẹyẹ",
       "banner": "Àsìá ilẹ̀",
       "minAmount": "Ìmọ̀ràn kéékèèké jù láti fi hàn (DHB)",
+      "showStreak": "Fi ìlà ọ̀sọ̀ọ̀sẹ̀ hàn",
       "showMessage": "Fi àtẹ̀jísẹ́ àtẹ̀jíṣẹ́ náà hàn",
       "confirmedOnly": "Nikan lẹhin ti isanwo naa jẹrisi",
       "confirmedOnlyHint": "Dúró fún ìṣẹ́jú díẹ̀ fún ẹ̀wọ̀n náà, nítorí náà ìmọ̀ràn tí a kò san kò ní fara hàn.",
@@ -4938,8 +4947,6 @@
       "fast": "Yara"
     },
     "rules": {
-      "wheelSegments": "Awọn apa kẹkẹ, ọkan fun ila",
-      "wheelHint": "Láàárín 2 sí 12. DeHub máa ń yan ibi tí kẹ̀kẹ́ náà ti dúró, kí gbogbo ènìyàn tó ń wò ó lè rí èsì kan náà. Lo {result} nínú ìkìlọ̀, ìró ìkàwé tàbí ìgbésẹ̀ ìjíròrò láti dárúkọ rẹ̀.",
       "title": "Àwọn ìlànà",
       "intro": "Nígbà tí nǹkan bá ṣẹlẹ̀ lórí ẹ̀rọ rẹ, DeHub máa ń ṣe ohun tí o yàn: ó máa ń fi ìkìlọ̀ hàn, ó máa ń gbọ́ ohùn, ó máa ń ka ohun kan lókè, ó máa ń fi àwọn ohun kan sínú ìjíròrò rẹ tàbí ó máa ń sọ fún Discord rẹ.",
       "add": "Ṣafikun ofin kan",
@@ -4970,6 +4977,8 @@
       "removeAction": "Yọ igbese kuro",
       "placeholders": "Lo {name}, {amount} àti {message} nínú ọ̀rọ̀ rẹ. Wọ́n yọ àwọn ìjápọ inú àwọn àtẹ̀jíṣẹ́ kúrò.",
       "placeholdersLive": "Lo {name}, {title} àti {link} nínú ọ̀rọ̀ rẹ: orúkọ rẹ, àkọlé ìtàgé àti ìjápọ láti wò ó.",
+      "wheelSegments": "Awọn apa kẹkẹ, ọkan fun ila",
+      "wheelHint": "Láàárín 2 sí 12. DeHub máa ń yan ibi tí kẹ̀kẹ́ náà ti dúró, kí gbogbo ènìyàn tó ń wò ó lè rí èsì kan náà. Lo {result} nínú ìkìlọ̀, ìró ìkàwé tàbí ìgbésẹ̀ ìjíròrò láti dárúkọ rẹ̀.",
       "alertText": "Alert text",
       "sound": "Sound",
       "sayText": "Ọ̀rọ̀ tí a ó kà sókè",
@@ -4994,12 +5003,12 @@
         "subscribers": "Subscribers"
       },
       "actionTypes": {
-        "wheel": "Yipada kẹkẹ kan",
         "alert": "Show an alert",
         "sound": "Play a sound",
         "say": "Read aloud",
         "chat": "Post in chat",
-        "webhook": "Send to a webhook"
+        "webhook": "Send to a webhook",
+        "wheel": "Yipada kẹkẹ kan"
       },
       "summary": {
         "tip": "Ìmọ̀ràn {{amount}} DHB tàbí jù bẹ́ẹ̀ lọ"

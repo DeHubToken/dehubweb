@@ -6027,7 +6027,6 @@
     "creatorEarnsDirect": "Abonnees betalen in DeHub-tokens. Je aandeel komt in je portemonnee terecht op het moment dat ze zich abonneren, minus de platformkosten voor je badge-niveau."
   },
   "liveOverlay": {
-    "wheelLanded": "{{name}} gesponnen: {{result}}",
     "someone": "Iemand",
     "newFollower": "Nieuwe volger: {{name}}",
     "newSubscriber": "Nieuwe abonnee: {{name}}",
@@ -6039,6 +6038,11 @@
     "topSupporters": "Topsupporters",
     "tipped": "{{name}} heeft een cadeau gestuurd",
     "chatPreview": "Chatberichten worden hier weergegeven",
+    "wheelLanded": "{{name}} gesponnen: {{result}}",
+    "level": "Niveau {{level}}",
+    "streak_one": "{{count}}-week streak",
+    "streak_other": "{{count}}-week streak",
+    "tipJar": "Geschenkpot",
     "poll": {
       "closed": "Stemming gesloten",
       "voteFor": "Stem op {{option}}",
@@ -6183,7 +6187,6 @@
       "join": "Deelnemen"
     },
     "kinds": {
-      "spin_wheel": "Draaischijf",
       "tip_alert": "Tipmelding",
       "follow_alert": "Volgmelding",
       "subscribe_alert": "Abonneemelding",
@@ -6200,10 +6203,12 @@
       "chat_box": "Chatbox",
       "ticker": "Lichtkrant",
       "rule_alert": "Regelwaarschuwingen",
-      "poll": "Poll"
+      "poll": "Poll",
+      "spin_wheel": "Draaischijf",
+      "streamer_level": "Streamer-niveau",
+      "tip_jar": "Geschenkpot"
     },
     "hints": {
-      "spin_wheel": "Waar de wielen in je regels draaien",
       "tip_alert": "Viirt elke tip, aangepast aan zijn niveau",
       "follow_alert": "Toont elke nieuwe volger",
       "subscribe_alert": "Toont elke nieuwe abonnee",
@@ -6220,13 +6225,17 @@
       "chat_box": "Toont de chatberichten van uw uitzending op het scherm",
       "ticker": "Een regel van je eigen tekst die over het scherm scrolt",
       "rule_alert": "Waar de waarschuwingen van je regels verschijnen",
-      "poll": "Uw live poll, met een stemknop voor elke optie"
+      "poll": "Uw live poll, met een stemknop voor elke optie",
+      "spin_wheel": "Waar de wielen in je regels draaien",
+      "streamer_level": "Je streamer-niveau en wekelijkse reeks, vanuit je profiel",
+      "tip_jar": "Een pot die volloopt als betaalde geschenken binnenkomen"
     },
     "fields": {
       "style": "Stijl",
       "celebration": "Viering",
       "banner": "Banner",
       "minAmount": "Kleinste tip om te laten zien (DHB)",
+      "showStreak": "Toon de wekelijkse reeks",
       "showMessage": "Het bericht met de fooi weergeven",
       "confirmedOnly": "Pas nadat de betaling is bevestigd",
       "confirmedOnlyHint": "Wacht een paar seconden op de ketting, dus een tip die nooit wordt betaald, verschijnt nooit.",
@@ -6255,8 +6264,6 @@
       "fast": "Snel"
     },
     "rules": {
-      "wheelSegments": "Wielsegmenten, één per lijn",
-      "wheelHint": "Tussen 2 en 12. DeHub kiest waar het wiel stopt, zodat iedereen hetzelfde resultaat ziet. Gebruik {result} in een waarschuwing, voorlees- of chatactie om het een naam te geven.",
       "title": "Regels",
       "intro": "Wanneer er iets gebeurt tijdens je stream, doet DeHub wat jij kiest: toont een alert, speelt een geluid af, leest iets hardop voor, post in je chat of vertelt het aan je Discord.",
       "add": "Een regel toevoegen",
@@ -6287,6 +6294,8 @@
       "removeAction": "Actie verwijderen",
       "placeholders": "Gebruik {name}, {amount} en {message} in je sms. Links in berichten worden verwijderd.",
       "placeholdersLive": "Gebruik {name}, {title} en {link} in je tekst: je naam, de titel van de uitzending en een link om deze te bekijken.",
+      "wheelSegments": "Wielsegmenten, één per lijn",
+      "wheelHint": "Tussen 2 en 12. DeHub kiest waar het wiel stopt, zodat iedereen hetzelfde resultaat ziet. Gebruik {result} in een waarschuwing, voorlees- of chatactie om het een naam te geven.",
       "alertText": "Alert tekst",
       "sound": "Geluid",
       "sayText": "Tekst om voor te lezen",
@@ -6311,12 +6320,12 @@
         "subscribers": "Abonnees"
       },
       "actionTypes": {
-        "wheel": "Draai aan een wiel",
         "alert": "Toon een melding",
         "sound": "Een geluid afspelen",
         "say": "Voorlezen",
         "chat": "Bericht in de chat plaatsen.",
-        "webhook": "Naar een webhook sturen"
+        "webhook": "Naar een webhook sturen",
+        "wheel": "Draai aan een wiel"
       },
       "summary": {
         "tip": "Tip van {{amount}} DHB of meer"

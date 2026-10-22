@@ -1,16 +1,26 @@
 {
-  "liveChatModeration": {
-    "timeout1m": "Zeitlimit für 1 Minute",
-    "timeout10m": "Zeitlimit für 10 Minuten",
-    "timeout1h": "Zeitlimit für 1 Stunde",
-    "ban": "Gesperrt von diesen Streams",
-    "makeModerator": "Macher:in zum Moderator:in machen",
-    "timedOut": "Zeitlimit gesetzt.",
-    "banned": "Von diesen Streams gesperrt.",
-    "madeModerator": "Sie sind jetzt Moderator:in.",
-    "failed": "Das hat nicht funktioniert. Nochmal versuchen.",
-    "youAreBanned": "Du kannst in diesen Streams von der Creator:in nicht chatten.",
-    "youAreTimedOut": "Du bist für einen Moment zeitlimitiert."
+  "liveRecap": {
+    "title": "Stream-Rückblick",
+    "justEnded": "De Stream-Zusammenfassung.",
+    "lastStream": "Dei letze Stream",
+    "share": "Teilen",
+    "shareText": "Ich habe gerade \"{{title}}\" auf DeHub gestreamt: {{duration}} live, {{peak}} auf dem Gipfel und {{followers}} neue Follower.",
+    "untitled": "Untitled Stream",
+    "copied": "Recap kopiert. Irgendwo einfügen.",
+    "loadFailed": "Der Recap hat sich nicht geladen. Versuchs nochmal in einer Weile.",
+    "duration": "Zeit live",
+    "peakViewers": "Meist gsiht amol zamm.",
+    "gifts_one": "Von {{count}} Geschenk",
+    "gifts_other": "Von {{count}} Geschenke",
+    "newFollowers": "Neue Follower",
+    "chatMessages": "Chat-Nachrichten",
+    "chatters": "Menschli chätta",
+    "reactions": "Reaktionen",
+    "shares": "Personen teilen",
+    "topSupporters": "Top-Unterstützer",
+    "polls": "Umfragen",
+    "pollWinner": "{{option}} gewonnen",
+    "stillCounting": "Zäme noch am Zählä: Geschenke brauchä et Wile, bis se bestäät sünd."
   },
   "errors": {
     "sponsorshipUnavailable": "Gratis Transaktione sind bi üs pausiert, nid bi dinere Wallet. Probier s glii nomol.",
@@ -4782,7 +4792,6 @@
     "creatorEarnsDirect": "Abonnente zahled mit DeHub Tokens. Din Anteil landet i dim Wallet, grad wenn sie abonniered, abzüglich de Plattformgebühr für din Badge-Tier."
   },
   "liveOverlay": {
-    "wheelLanded": "{{name}} hüt: {{result}}",
     "someone": "Irgendwer",
     "newFollower": "Neuer Follower: {{name}}",
     "newSubscriber": "Neue Abonnentin: {{name}}",
@@ -4793,6 +4802,11 @@
     "topSupporters": "Top‑Unterstützer",
     "tipped": "{{name}} hätt a Geschenk gschickt",
     "chatPreview": "Chatnachrichten erscheinen hier",
+    "wheelLanded": "{{name}} hüt: {{result}}",
+    "level": "Level {{level}}",
+    "streak_one": "{{count}}-Woche Streak",
+    "streak_other": "{{count}}-Woche Streak",
+    "tipJar": "Geschenkschrank",
     "poll": {
       "closed": "Voting abgeschlossen",
       "voteFor": "Stimm ab für {{option}}",
@@ -4806,85 +4820,30 @@
       "howToVote_other": "Tippe {{command}} und eine Zahl in den Chat, um abzustimmen · {{count}} Stimmen"
     }
   },
-  "liveRecap": {
-    "share": "Teilen",
-    "shareText": "Ich habe gerade \"{{title}}\" auf DeHub gestreamt: {{duration}} live, {{peak}} auf dem Gipfel und {{followers}} neue Follower.",
-    "newFollowers": "Neue Follower",
-    "chatMessages": "Chat-Nachrichten",
-    "reactions": "Reaktionen",
-    "shares": "Personen teilen",
-    "polls": "Umfragen",
-    "pollWinner": "{{option}} gewonnen",
-    "title": "Stream-Rückblick",
-    "justEnded": "De Stream-Zusammenfassung.",
-    "lastStream": "Dei letze Stream",
-    "untitled": "Untitled Stream",
-    "copied": "Recap kopiert. Irgendwo einfügen.",
-    "loadFailed": "Der Recap hat sich nicht geladen. Versuchs nochmal in einer Weile.",
-    "duration": "Zeit live",
-    "peakViewers": "Meist gsiht amol zamm.",
-    "gifts_one": "Von {{count}} Geschenk",
-    "gifts_other": "Von {{count}} Geschenke",
-    "chatters": "Menschli chätta",
-    "topSupporters": "Top-Unterstützer",
-    "stillCounting": "Zäme noch am Zählä: Geschenke brauchä et Wile, bis se bestäät sünd."
+  "liveChatModeration": {
+    "timeout1m": "Zeitlimit für 1 Minute",
+    "timeout10m": "Zeitlimit für 10 Minuten",
+    "timeout1h": "Zeitlimit für 1 Stunde",
+    "ban": "Gesperrt von diesen Streams",
+    "makeModerator": "Macher:in zum Moderator:in machen",
+    "timedOut": "Zeitlimit gesetzt.",
+    "banned": "Von diesen Streams gesperrt.",
+    "madeModerator": "Sie sind jetzt Moderator:in.",
+    "failed": "Das hat nicht funktioniert. Nochmal versuchen.",
+    "youAreBanned": "Du kannst in diesen Streams von der Creator:in nicht chatten.",
+    "youAreTimedOut": "Du bist für einen Moment zeitlimitiert."
   },
   "liveStudio": {
     "controls": {
-      "alertsPaused": "Warnungen pausieren",
-      "readAloudMuted": "Vorlesen stoppen",
       "title": "Schnellsteuerung",
       "intro": "Fürs Live-Streaming. Jeder Schalter gilt für alle Zuschauer, sowohl in der App als auch in OBS, bis du ihn wieder umlegst.",
+      "alertsPaused": "Warnungen pausieren",
       "alertsPausedHint": "Keini Geschenk-, Follow- oder Regel-Benachrichtigungen auf dem Bildschirm. Die Zähler, Tore und die Chatbox laufen weiter.",
       "soundsMuted": "Stille Benachrichtigungsgeräusche",
       "soundsMutedHint": "Dei Regeln stoppe mit dem Abspielen vo Klänge.",
+      "readAloudMuted": "Vorlesen stoppen",
       "readAloudMutedHint": "Giftnachrichten und Regeln werden nicht mehr vorgelesen.",
       "failed": "Dä Schalter isch net umgeschaltet worde. Versuche’s nochma."
-    },
-    "moderation": {
-      "title": "Chat-Moderation",
-      "intro": "Regeln für den Chat unter allen deinen Streams. Sie kommen nie in den Hauptchat von DeHub – jemanden, den du hier sperrst, kann trotzdem überall sonst reden.",
-      "loadFailed": "Deine Moderations-Einstellungen konnten nicht geladen werden. Aktualisiere die Seite und versuche es erneut.",
-      "save": "Chat-Regeln speichern",
-      "saved": "Chat-Regeln gespeichert.",
-      "saveFailed": "Diese Änderung konnte nicht gespeichert werden.",
-      "slowMode": "Langsam-Modus",
-      "slowModeHint": "Wie lange Zuschauer:innen zwischen Nachrichten warten müssen. Du und deine Moderator:innen wartet nie.",
-      "off": "Aus",
-      "seconds_one": "{{count}} Sekunde",
-      "seconds_other": "{{count}} Sekunden",
-      "followersOnly": "Nur Follower:innen",
-      "subscribersOnly": "Nur Abonnent:innen",
-      "subscribersOnlyHint": "Überschreibt «Nur Follower:innen».",
-      "bannedWords": "Gesperrte Wörter",
-      "bannedWordsHint": "Mit Kommas trennen. Ein Wort buchstabieren geht nicht drumherum.",
-      "wordAction": "Wenn jemand eines verwendet",
-      "wordBlock": "Nachricht stoppen",
-      "wordTimeout": "Stoppe sie und setze sie für eine Minute zeitlimitiert.",
-      "moderators": "Moderator",
-      "moderatorsHint": "Sie können Zuschauer in deinen Streams zeitlich begrenzen und sperren. Sie können aber niht auf dich oder auf sich selbst handeln.",
-      "addModerator": "Hinzufügen",
-      "usernamePlaceholder": "Benutzername",
-      "moderatorAdded": "Moderator hinzugefügt.",
-      "moderatorNotFound": "Kein Konto mit diesem Benutzernamen.",
-      "removeModerator": "Moderator entfernen",
-      "noModerators": "Noch keine Moderatoren.",
-      "banned": "Von deinen Streams gesperrt",
-      "unban": "Entsperren",
-      "noBans": "Niemand ist gesperrt.",
-      "log": "Letzte Aktionen",
-      "noLog": "Noch nichts.",
-      "actions": {
-        "timeout_one": "{{actor}} isch abgelaufen {{target}} für {{count}} Sekundä",
-        "timeout_other": "{{actor}} isch abgelaufen {{target}} für {{count}} Sekundä.",
-        "ban": "{{actor}} hat {{target}} gesperrt",
-        "unban": "{{actor}} hat {{target}} entsperrt",
-        "moderator-added": "{{target}} wurde Moderator",
-        "moderator-removed": "{{target}} ist nicht mehr Moderator",
-        "word-blocked": "Hat eine Nachricht von {{target}} für \"{{word}}\" gestoppt",
-        "word-timeout_one": "{{target}} wurde für {{count}} Sekunde zeitlich begrenzt für \"{{word}}\"",
-        "word-timeout_other": "{{target}} wurde für {{count}} Sekunden zeitlich begrenzt für \"{{word}}\""
-      }
     },
     "polls": {
       "title": "Umfragen",
@@ -4987,7 +4946,6 @@
       "join": "Mitmache"
     },
     "kinds": {
-      "spin_wheel": "Schleuderrad",
       "tip_alert": "Tipp-Alarm",
       "follow_alert": "Folge-Alarm",
       "subscribe_alert": "Abonnent-Alarm",
@@ -5004,10 +4962,12 @@
       "chat_box": "Chatbox",
       "ticker": "Ticker",
       "rule_alert": "Regel-Warnungen",
-      "poll": "Umfrage"
+      "poll": "Umfrage",
+      "spin_wheel": "Schleuderrad",
+      "streamer_level": "Streamer-Level",
+      "tip_jar": "Geschenkschrank"
     },
     "hints": {
-      "spin_wheel": "Wo die Räder in deinen Regeln dreh’n",
       "tip_alert": "Feiert jede Tipp, passend zu sim Level",
       "follow_alert": "Zeigt jede neue Follower",
       "subscribe_alert": "Zeigt jede neue Abonnent",
@@ -5024,13 +4984,17 @@
       "chat_box": "Zeigt die Chatnachrichten deines Streams auf dem Bildschirm",
       "ticker": "Eine Zeile mit deinem eigenen Text, die über den Bildschirm scrollt",
       "rule_alert": "Wo deine Regel-Warnungen erscheinen",
-      "poll": "Deine Live-Umfrage, mit einem Abstimmknopf für jede Option"
+      "poll": "Deine Live-Umfrage, mit einem Abstimmknopf für jede Option",
+      "spin_wheel": "Wo die Räder in deinen Regeln dreh’n",
+      "streamer_level": "Dein Streamer-Level und die wöchentliche Streak, von deinem Profil",
+      "tip_jar": "Ein Schrank, der sich mit bezahlten Geschenken füllt"
     },
     "fields": {
       "style": "Stil",
       "celebration": "Feier",
       "banner": "Banner",
       "minAmount": "Kleinste Spende für (DHB)",
+      "showStreak": "Zeigt die wöchentliche Streak",
       "showMessage": "Zeig d'Tipp-Nachricht",
       "confirmedOnly": "Erst wenn d'Zahlig bestätigt isch",
       "confirmedOnlyHint": "Wärt a paar Sekundli auf die Kette, so a Trinkgeld, das nie bezahlt wird, taucht nie auf.",
@@ -5058,8 +5022,6 @@
       "fast": "Schnell"
     },
     "rules": {
-      "wheelSegments": "Radsegment, eis pro Zeile",
-      "wheelHint": "Zwiisch 2 un 12. DeHub bestiimm, wo’s Rad stoppt, so sieht’s alle gleich. Nutzi {result} in eim Alert, eim Vorlesen oder eim Chat-Aktiön, um’s zu benämmi.",
       "title": "Regeln",
       "intro": "Wenn etwas auf deinem Stream passiert, macht DeHub, was du möchtest: zeigt eine Warnung, spielt ein Geräusch, liest etwas vor, postet in deinem Chat oder sagt etwas in deinem Discord.",
       "add": "Regel hinzufügen",
@@ -5090,6 +5052,8 @@
       "removeAction": "Aktion entfernen",
       "placeholders": "Verwenden Sie {name}, {amount} und {message} in Ihrem Text. Links in Nachrichten werden entfernt.",
       "placeholdersLive": "Benutze {name}, {title} und {link} in deinem Text: deinen Namen, den Titel der Sendung und einen Link, um sie zu schauen.",
+      "wheelSegments": "Radsegment, eis pro Zeile",
+      "wheelHint": "Zwiisch 2 un 12. DeHub bestiimm, wo’s Rad stoppt, so sieht’s alle gleich. Nutzi {result} in eim Alert, eim Vorlesen oder eim Chat-Aktiön, um’s zu benämmi.",
       "alertText": "Benachrichtigungstext",
       "sound": "Ton",
       "sayText": "Vorzulesender Text",
@@ -5114,12 +5078,12 @@
         "subscribers": "Abonnenten"
       },
       "actionTypes": {
-        "wheel": "Dreh das Rad!",
         "alert": "Zeig a Alert.",
         "sound": "Einen Ton abspielen",
         "say": "Vorlesen",
         "chat": "Im Chat posten",
-        "webhook": "Send zu einem Webhook."
+        "webhook": "Send zu einem Webhook.",
+        "wheel": "Dreh das Rad!"
       },
       "summary": {
         "tip": "Tipp von {{amount}} DHB oder mehr"
@@ -5157,6 +5121,51 @@
         "spooky": "Gruselig",
         "magic-spell": "Mägi Zauberformel",
         "shhh": "Shhh"
+      }
+    },
+    "moderation": {
+      "title": "Chat-Moderation",
+      "intro": "Regeln für den Chat unter allen deinen Streams. Sie kommen nie in den Hauptchat von DeHub – jemanden, den du hier sperrst, kann trotzdem überall sonst reden.",
+      "loadFailed": "Deine Moderations-Einstellungen konnten nicht geladen werden. Aktualisiere die Seite und versuche es erneut.",
+      "save": "Chat-Regeln speichern",
+      "saved": "Chat-Regeln gespeichert.",
+      "saveFailed": "Diese Änderung konnte nicht gespeichert werden.",
+      "slowMode": "Langsam-Modus",
+      "slowModeHint": "Wie lange Zuschauer:innen zwischen Nachrichten warten müssen. Du und deine Moderator:innen wartet nie.",
+      "off": "Aus",
+      "seconds_one": "{{count}} Sekunde",
+      "seconds_other": "{{count}} Sekunden",
+      "followersOnly": "Nur Follower:innen",
+      "subscribersOnly": "Nur Abonnent:innen",
+      "subscribersOnlyHint": "Überschreibt «Nur Follower:innen».",
+      "bannedWords": "Gesperrte Wörter",
+      "bannedWordsHint": "Mit Kommas trennen. Ein Wort buchstabieren geht nicht drumherum.",
+      "wordAction": "Wenn jemand eines verwendet",
+      "wordBlock": "Nachricht stoppen",
+      "wordTimeout": "Stoppe sie und setze sie für eine Minute zeitlimitiert.",
+      "moderators": "Moderator",
+      "moderatorsHint": "Sie können Zuschauer in deinen Streams zeitlich begrenzen und sperren. Sie können aber niht auf dich oder auf sich selbst handeln.",
+      "addModerator": "Hinzufügen",
+      "usernamePlaceholder": "Benutzername",
+      "moderatorAdded": "Moderator hinzugefügt.",
+      "moderatorNotFound": "Kein Konto mit diesem Benutzernamen.",
+      "removeModerator": "Moderator entfernen",
+      "noModerators": "Noch keine Moderatoren.",
+      "banned": "Von deinen Streams gesperrt",
+      "unban": "Entsperren",
+      "noBans": "Niemand ist gesperrt.",
+      "log": "Letzte Aktionen",
+      "noLog": "Noch nichts.",
+      "actions": {
+        "timeout_one": "{{actor}} isch abgelaufen {{target}} für {{count}} Sekundä",
+        "timeout_other": "{{actor}} isch abgelaufen {{target}} für {{count}} Sekundä.",
+        "ban": "{{actor}} hat {{target}} gesperrt",
+        "unban": "{{actor}} hat {{target}} entsperrt",
+        "moderator-added": "{{target}} wurde Moderator",
+        "moderator-removed": "{{target}} ist nicht mehr Moderator",
+        "word-blocked": "Hat eine Nachricht von {{target}} für \"{{word}}\" gestoppt",
+        "word-timeout_one": "{{target}} wurde für {{count}} Sekunde zeitlich begrenzt für \"{{word}}\"",
+        "word-timeout_other": "{{target}} wurde für {{count}} Sekunden zeitlich begrenzt für \"{{word}}\""
       }
     }
   },

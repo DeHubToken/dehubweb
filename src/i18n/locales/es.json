@@ -5834,7 +5834,6 @@
     "creatorEarnsDirect": "Los suscriptores pagan en tokens DeHub. Tu acción llega a tu billetera en el momento en que se suscriben, menos la tarifa de la plataforma para tu nivel de insignia."
   },
   "liveOverlay": {
-    "wheelLanded": "{{name}} giró: {{result}}",
     "someone": "Alguien",
     "newFollower": "Nuevo seguidor: {{name}}",
     "newSubscriber": "Nuevo suscriptor: {{name}}",
@@ -5846,6 +5845,11 @@
     "topSupporters": "Principales simpatizantes",
     "tipped": "{{name}} ha enviado un regalo",
     "chatPreview": "Los mensajes de chat aparecen aquí",
+    "wheelLanded": "{{name}} giró: {{result}}",
+    "level": "Nivel {{level}}",
+    "streak_one": "Racha de {{count}}semanas",
+    "streak_other": "Racha de {{count}}semanas",
+    "tipJar": "Tarro de regalo",
     "poll": {
       "closed": "Votación cerrada",
       "voteFor": "Vota por {{option}}",
@@ -5990,7 +5994,6 @@
       "join": "Unirse"
     },
     "kinds": {
-      "spin_wheel": "Rueda giratoria",
       "tip_alert": "Alerta de propina",
       "follow_alert": "Seguir alerta",
       "subscribe_alert": "Alerta de suscriptor",
@@ -6007,10 +6010,12 @@
       "chat_box": "Cuadro de chat",
       "ticker": "Marquesina",
       "rule_alert": "Alertas de reglas",
-      "poll": "Encuesta"
+      "poll": "Encuesta",
+      "spin_wheel": "Rueda giratoria",
+      "streamer_level": "Nivel de streamer",
+      "tip_jar": "Tarro de regalo"
     },
     "hints": {
-      "spin_wheel": "Donde las ruedas de tus reglas giran",
       "tip_alert": "Celebra cada propina, ajustada a su nivel",
       "follow_alert": "Muestra a cada nuevo seguidor",
       "subscribe_alert": "Muestra cada nuevo suscriptor",
@@ -6027,13 +6032,17 @@
       "chat_box": "Muestra los mensajes de chat de tu transmisión en la pantalla",
       "ticker": "Una línea de tu propio texto que se desplaza por la pantalla",
       "rule_alert": "¿Dónde aparecen las alertas de tus reglas?",
-      "poll": "Tu encuesta en vivo, con un botón de voto para cada opción"
+      "poll": "Tu encuesta en vivo, con un botón de voto para cada opción",
+      "spin_wheel": "Donde las ruedas de tus reglas giran",
+      "streamer_level": "Tu nivel de streamer y racha semanal, desde tu perfil",
+      "tip_jar": "Un frasco que se llena a medida que llegan los regalos pagados"
     },
     "fields": {
       "style": "Estilo",
       "celebration": "Celebración",
       "banner": "Banner",
       "minAmount": "Consejo más pequeño para mostrar (DHB)",
+      "showStreak": "Mostrar la racha semanal",
       "showMessage": "Mostrar el mensaje de propina",
       "confirmedOnly": "Solo después de que el pago se confirme",
       "confirmedOnlyHint": "Espera unos segundos a la cadena, por lo que nunca aparece una propina que nunca se paga.",
@@ -6062,8 +6071,6 @@
       "fast": "Rápido"
     },
     "rules": {
-      "wheelSegments": "Segmentos de rueda, uno por línea",
-      "wheelHint": "Entre 2 y 12. DeHub elige dónde se detiene la rueda, para que todos los espectadores vean el mismo resultado. Usa {result} en una acción de alerta, lectura en voz alta o chat para nombrarla.",
       "title": "Normas",
       "intro": "Cuando sucede algo en su transmisión, DeHub hace lo que usted elige: muestra una alerta, reproduce un sonido, lee algo en voz alta, publica en su chat o le dice a su Discord.",
       "add": "Añade una regla",
@@ -6094,6 +6101,8 @@
       "removeAction": "Eliminar acción",
       "placeholders": "Utiliza {name}, {amount} y {message} en tu texto. Los enlaces en los mensajes se eliminan.",
       "placeholdersLive": "Utiliza {name}, {title} y {link} en tu texto: tu nombre, el título de la retransmisión y un enlace para verla.",
+      "wheelSegments": "Segmentos de rueda, uno por línea",
+      "wheelHint": "Entre 2 y 12. DeHub elige dónde se detiene la rueda, para que todos los espectadores vean el mismo resultado. Usa {result} en una acción de alerta, lectura en voz alta o chat para nombrarla.",
       "alertText": "Texto de alerta",
       "sound": "Sonido",
       "sayText": "Texto para leer en voz alta",
@@ -6118,12 +6127,12 @@
         "subscribers": "Suscriptores"
       },
       "actionTypes": {
-        "wheel": "Gira una ruleta",
         "alert": "Mostrar una alerta",
         "sound": "Reproducir un sonido",
         "say": "Leer en voz alta",
         "chat": "Publicar en el chat",
-        "webhook": "Enviar a un webhook"
+        "webhook": "Enviar a un webhook",
+        "wheel": "Gira una ruleta"
       },
       "summary": {
         "tip": "Propina de {{amount}} DHB o más"

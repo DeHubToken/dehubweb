@@ -5834,7 +5834,6 @@
     "creatorEarnsDirect": "Aboneler DeHub tokenleri ile ödeme yapar. Payınız, abone oldukları anda cüzdanınıza düşer ve rozet seviyenizin platform ücreti düşülür."
   },
   "liveOverlay": {
-    "wheelLanded": "{{name}} spun :{{result}}",
     "someone": "Birisi",
     "newFollower": "Yeni takipçi: {{name}}",
     "newSubscriber": "Yeni abone: {{name}}",
@@ -5846,6 +5845,11 @@
     "topSupporters": "En iyi destekçiler",
     "tipped": "{{name}} bir hediye gönderdi",
     "chatPreview": "Sohbet mesajları burada görünür",
+    "wheelLanded": "{{name}} spun :{{result}}",
+    "level": "Seviye {{level}}",
+    "streak_one": "{{count}}haftalık seri",
+    "streak_other": "{{count}}haftalık seri",
+    "tipJar": "Hediye kavanozu",
     "poll": {
       "closed": "Oylama kapandı",
       "voteFor": "{{option}} için oy ver",
@@ -5990,7 +5994,6 @@
       "join": "Katıl"
     },
     "kinds": {
-      "spin_wheel": "Döner çark",
       "tip_alert": "Bahşiş uyarısı",
       "follow_alert": "Takip uyarısı",
       "subscribe_alert": "Abone uyarısı",
@@ -6007,10 +6010,12 @@
       "chat_box": "Sohbet kutusu",
       "ticker": "Kayan yazı",
       "rule_alert": "Kural uyarıları",
-      "poll": "Anket"
+      "poll": "Anket",
+      "spin_wheel": "Döner çark",
+      "streamer_level": "Yayıncı seviyesi",
+      "tip_jar": "Hediye kavanozu"
     },
     "hints": {
-      "spin_wheel": "Kurallarınızdaki çarkların döndüğü yer",
       "tip_alert": "Seviyesine göre boyutlandırılmış her bahşişi kutlar",
       "follow_alert": "Her yeni takipçiyi gösterir",
       "subscribe_alert": "Her yeni aboneyi gösterir",
@@ -6027,13 +6032,17 @@
       "chat_box": "Yayınınızın sohbet mesajlarını ekranda gösterir",
       "ticker": "Ekranda kayan kendi metninizin bir satırı",
       "rule_alert": "Kurallarınızın uyarılarının göründüğü yer",
-      "poll": "Her seçenek için bir oy düğmesiyle canlı anketiniz"
+      "poll": "Her seçenek için bir oy düğmesiyle canlı anketiniz",
+      "spin_wheel": "Kurallarınızdaki çarkların döndüğü yer",
+      "streamer_level": "Profilinizden yayıncı seviyeniz ve haftalık seriniz",
+      "tip_jar": "Ücretli hediyeler geldikçe dolan bir kavanoz"
     },
     "fields": {
       "style": "Stil",
       "celebration": "Celebration",
       "banner": "Banner",
       "minAmount": "Gösterilecek en küçük bahşiş (DHB)",
+      "showStreak": "Haftalık seriyi göster",
       "showMessage": "Bahşiş mesajını göster",
       "confirmedOnly": "Yalnızca ödeme onaylandıktan sonra",
       "confirmedOnlyHint": "Zincir için birkaç saniye bekler, böylece asla ödenmeyen bir bahşiş asla görünmez.",
@@ -6062,8 +6071,6 @@
       "fast": "Hızlı"
     },
     "rules": {
-      "wheelSegments": "Tekerlek segmentleri, hat başına bir adet",
-      "wheelHint": "2 ile 12 arasında. DeHub tekerleğin durduğu yeri seçer, böylece izleyen herkes aynı sonucu görür. Bir uyarı, sesli okuma veya sohbet eyleminde {result} kullanın.",
       "title": "Kurallar",
       "intro": "Akışınızda bir şey olduğunda, DeHub seçtiğiniz şeyi yapar: bir uyarı gösterir, bir ses çalar, yüksek sesle bir şeyler okur, sohbetinizde yayınlar veya Discord'unuza söyler.",
       "add": "Kural ekle",
@@ -6094,6 +6101,8 @@
       "removeAction": "Eylemi kaldır",
       "placeholders": "Mesajınızda {name}, {amount} ve {message} kullanın. Mesajlardaki bağlantılar kaldırılır.",
       "placeholdersLive": "Metninizde {name}, {title} ve {link} kullanın: adınız, yayının başlığı ve izlemek için bir bağlantı.",
+      "wheelSegments": "Tekerlek segmentleri, hat başına bir adet",
+      "wheelHint": "2 ile 12 arasında. DeHub tekerleğin durduğu yeri seçer, böylece izleyen herkes aynı sonucu görür. Bir uyarı, sesli okuma veya sohbet eyleminde {result} kullanın.",
       "alertText": "Uyarı metni",
       "sound": "Ses",
       "sayText": "Yüksek sesle okunacak metin",
@@ -6118,12 +6127,12 @@
         "subscribers": "Aboneler"
       },
       "actionTypes": {
-        "wheel": "Tekerleği döndür",
         "alert": "Uyarı göster",
         "sound": "Ses çal",
         "say": "Yüksek sesle oku",
         "chat": "Sohbete gönder",
-        "webhook": "Bir web kancasına gönder"
+        "webhook": "Bir web kancasına gönder",
+        "wheel": "Tekerleği döndür"
       },
       "summary": {
         "tip": "{{amount}} DHB veya daha fazlasının bahşişi"

@@ -4718,7 +4718,6 @@
     "creatorEarnsDirect": "Macaamiisha waxay bixiyaan calaamadaha DeHub. Dhulalka saamigaaga ee boorsadaada marka ay isdiiwaangeliyaan, ka yar qiimaha boosteejada ee heerka calaamaddaada."
   },
   "liveOverlay": {
-    "wheelLanded": "{{name}} spun: {{result}}",
     "someone": "Qof",
     "newFollower": "Raacaha Cusub: {{name}}",
     "newSubscriber": "Isticmaale cusub: {{name}}",
@@ -4730,6 +4729,11 @@
     "topSupporters": "Taageerayaasha ugu sareeya",
     "tipped": "{{name}} soo diray hadiyad",
     "chatPreview": "Fariimaha sheekaysiga ayaa halkan ka muuqda",
+    "wheelLanded": "{{name}} spun: {{result}}",
+    "level": "Heerka {{level}}",
+    "streak_one": "{{count}}-week streak",
+    "streak_other": "{{count}}-week streak",
+    "tipJar": "Jar hadiyad ah",
     "poll": {
       "closed": "Codka xidhan",
       "voteFor": "Cod siis {{option}}",
@@ -4873,7 +4877,6 @@
       "join": "Join"
     },
     "kinds": {
-      "spin_wheel": "Giraangiraha wareejinaya",
       "tip_alert": "Tip alert",
       "follow_alert": "Follow alert",
       "subscribe_alert": "Subscriber alert",
@@ -4890,10 +4893,12 @@
       "chat_box": "Sanduuqa sheekaysiga",
       "ticker": "Ticker",
       "rule_alert": "Digniinta xeerka",
-      "poll": "Codbixinta"
+      "poll": "Codbixinta",
+      "spin_wheel": "Giraangiraha wareejinaya",
+      "streamer_level": "Heerka Streamer",
+      "tip_jar": "Jar hadiyad ah"
     },
     "hints": {
-      "spin_wheel": "Halka giraangiraha ku jira xeerarkaaga ay wareegaan",
       "tip_alert": "Waxay u dabaaldegtaa talooyin kasta, oo si weyn loo cabbiray heerarkeeda",
       "follow_alert": "Muuji raac kasta oo cusub",
       "subscribe_alert": "Muuji isticmaale kasta oo cusub",
@@ -4910,13 +4915,17 @@
       "chat_box": "Muuji farriimaha sheekaysiga ee baahintaada shaashadda",
       "ticker": "Khadka qoraalkaaga oo ku xardhan shaashadda oo dhan",
       "rule_alert": "Halka digniinta sharciyadaada ay ka muuqato",
-      "poll": "Codbixintaada tooska ah, oo leh badhanka codbixinta ikhtiyaar kasta"
+      "poll": "Codbixintaada tooska ah, oo leh badhanka codbixinta ikhtiyaar kasta",
+      "spin_wheel": "Halka giraangiraha ku jira xeerarkaaga ay wareegaan",
+      "streamer_level": "Heerkaaga qulqulka iyo isbuuclaha, laga soo bilaabo astaantaada",
+      "tip_jar": "Dheriga oo buuxiya sida hadiyadaha la bixiyo ay u soo galaan"
     },
     "fields": {
       "style": "Style",
       "celebration": "Dabaaldegga",
       "banner": "Banner",
       "minAmount": "Tilmaanta ugu yar ee lagu muujiyo (DHB)",
+      "showStreak": "Muuji streak-ka toddobaadlaha ah",
       "showMessage": "Muuji fariinta tip",
       "confirmedOnly": "Kaliya ka dib marka lacag bixinta la xaqiijiyo",
       "confirmedOnlyHint": "Waxay sugeysaa dhowr ilbiriqsi silsiladda, sidaa darteed talooyin aan waligood la bixin waligood ma muuqdaan.",
@@ -4945,8 +4954,6 @@
       "fast": "Si dhakhso ah"
     },
     "rules": {
-      "wheelSegments": "Qaybaha Wheel, hal xariiq",
-      "wheelHint": "Inta u dhaxaysa 2 iyo 12. DeHub wuxuu doortaa meesha giraangiraha uu istaago, sidaa darteed qof kasta oo daawanaya wuxuu arkaa natiijo isku mid ah. Isticmaal {result} in digniin ah, akhri-aloud ama ficil wada sheekaysi si aad u magacawdo.",
       "title": "Xeerarka",
       "intro": "Marka wax dhacdo stream-kaaga, DeHub waxay sameeysaa waxaad doortay: muujinaysaa ogeysiis, ciyaarsataa codka, akhriso wax iska yimid, ku qor chat-kaaga ama uu DeHub-ku Discord-kaaga u sheego.",
       "add": "Ku dar xeer",
@@ -4977,6 +4984,8 @@
       "removeAction": "Ka saar ficil",
       "placeholders": "Isticmaal {name}, {amount} iyo {message} qoraalkaaga. Xiriirada farriimaha waa laga saaraa.",
       "placeholdersLive": "Isticmaal {name}, {title} iyo {link} qoraalkaaga: magacaaga, cinwaanka baahinta iyo isku xirka si aad u daawato.",
+      "wheelSegments": "Qaybaha Wheel, hal xariiq",
+      "wheelHint": "Inta u dhaxaysa 2 iyo 12. DeHub wuxuu doortaa meesha giraangiraha uu istaago, sidaa darteed qof kasta oo daawanaya wuxuu arkaa natiijo isku mid ah. Isticmaal {result} in digniin ah, akhri-aloud ama ficil wada sheekaysi si aad u magacawdo.",
       "alertText": "Qoraalka digniinta",
       "sound": "Cod",
       "sayText": "Qoraalka si aad u akhrido cod dheer",
@@ -5001,12 +5010,12 @@
         "subscribers": "Macaamiisha"
       },
       "actionTypes": {
-        "wheel": "Ku wareeji giraangiraha",
         "alert": "Muuji digniin",
         "sound": "Shid cod",
         "say": "Si weyn u akhri",
         "chat": "Ku dhaji sheekaysiga",
-        "webhook": "U dir websaydhka"
+        "webhook": "U dir websaydhka",
+        "wheel": "Ku wareeji giraangiraha"
       },
       "summary": {
         "tip": "Tip ee {{amount}} DHB ama ka badan"
@@ -5080,8 +5089,8 @@
       "log": "Tallaabooyinkii ugu dambeeyay",
       "noLog": "Waxba weli.",
       "actions": {
-        "timeout_other": "{{actor}} wuxuu {{target}} aamusiyay {{count}} ilbiriqsi",
         "timeout_one": "{{actor}} timed out {{target}} for {{count}} labaad",
+        "timeout_other": "{{actor}} wuxuu {{target}} aamusiyay {{count}} ilbiriqsi",
         "ban": "{{actor}} mamnuuca {{target}}",
         "unban": "{{actor}} unbanned {{target}}",
         "moderator-added": "{{target}} wuxuu noqday moderator",

@@ -5838,7 +5838,6 @@
     "creatorEarnsDirect": "Les abonnés paient en jetons DeHub. Votre part atterrit dans votre portefeuille au moment où ils s'abonnent, moins les frais de plateforme pour votre niveau de badge."
   },
   "liveOverlay": {
-    "wheelLanded": "{{name}} spun : {{result}}",
     "someone": "Quelqu'un",
     "newFollower": "Nouveau follower : {{name}}",
     "newSubscriber": "Nouvel abonné : {{name}}",
@@ -5850,6 +5849,11 @@
     "topSupporters": "Meilleurs supporters",
     "tipped": "{{name}} a envoyé un cadeau",
     "chatPreview": "Les messages de chat apparaissent ici",
+    "wheelLanded": "{{name}} spun : {{result}}",
+    "level": "Niveau {{level}}",
+    "streak_one": "{{count}}-week streak",
+    "streak_other": "{{count}}-week streak",
+    "tipJar": "Pot cadeau",
     "poll": {
       "closed": "Voting fermé",
       "voteFor": "Voter pour {{option}}",
@@ -5994,7 +5998,6 @@
       "join": "Rejoindre"
     },
     "kinds": {
-      "spin_wheel": "Roue rotative",
       "tip_alert": "Alerte de pourboire",
       "follow_alert": "Suivre l'alerte",
       "subscribe_alert": "Alerte abonné",
@@ -6011,10 +6014,12 @@
       "chat_box": "Boîte de discussion",
       "ticker": "Bandeau défilant",
       "rule_alert": "Alertes de règle",
-      "poll": "Sondage"
+      "poll": "Sondage",
+      "spin_wheel": "Roue rotative",
+      "streamer_level": "Niveau du streamer",
+      "tip_jar": "Pot cadeau"
     },
     "hints": {
-      "spin_wheel": "Où tournent les roues de vos règles",
       "tip_alert": "Célèbre chaque pourboire, dimensionné à son niveau",
       "follow_alert": "Affiche chaque nouvel abonné",
       "subscribe_alert": "Affiche chaque nouvel abonné",
@@ -6031,13 +6036,17 @@
       "chat_box": "Affiche les messages de chat de votre diffusion à l'écran",
       "ticker": "Une ligne de votre propre texte qui défile sur l'écran",
       "rule_alert": "Où les alertes de vos règles apparaissent",
-      "poll": "Votre sondage en direct, avec un bouton de vote pour chaque option"
+      "poll": "Votre sondage en direct, avec un bouton de vote pour chaque option",
+      "spin_wheel": "Où tournent les roues de vos règles",
+      "streamer_level": "Votre niveau de streamer et votre séquence hebdomadaire, à partir de votre profil",
+      "tip_jar": "Un pot qui se remplit au fur et à mesure que les cadeaux payants arrivent"
     },
     "fields": {
       "style": "Style",
       "celebration": "Célébration",
       "banner": "Bannière",
       "minAmount": "Le plus petit pourboire à afficher (DHB)",
+      "showStreak": "Afficher la série hebdomadaire",
       "showMessage": "Afficher le message de pourboire",
       "confirmedOnly": "Seulement après que le paiement confirme",
       "confirmedOnlyHint": "Attend quelques secondes pour la chaîne, donc un pourboire qui n'est jamais payé n'apparaît jamais.",
@@ -6066,8 +6075,6 @@
       "fast": "Rapide"
     },
     "rules": {
-      "wheelSegments": "Segments de roue, un par ligne",
-      "wheelHint": "Entre 2 et 12. DeHub choisit l'endroit où la roue s'arrête, de sorte que tous ceux qui regardent voient le même résultat. Utilisez {result} dans une action d'alerte, de lecture à voix haute ou de clavardage pour le nommer.",
       "title": "Règles",
       "intro": "Lorsque quelque chose se passe sur votre flux, DeHub fait ce que vous choisissez : affiche une alerte, émet un son, lit quelque chose à haute voix, publie dans votre chat ou le dit à votre Discord.",
       "add": "Ajouter une règle",
@@ -6098,6 +6105,8 @@
       "removeAction": "Supprimer l'action",
       "placeholders": "Utilisez {name}, {amount} et {message} dans votre texte. Les liens dans les messages sont supprimés.",
       "placeholdersLive": "Utilisez {name}, {title} et {link} dans votre texte : votre nom, le titre de l'émission et un lien pour la regarder.",
+      "wheelSegments": "Segments de roue, un par ligne",
+      "wheelHint": "Entre 2 et 12. DeHub choisit l'endroit où la roue s'arrête, de sorte que tous ceux qui regardent voient le même résultat. Utilisez {result} dans une action d'alerte, de lecture à voix haute ou de clavardage pour le nommer.",
       "alertText": "Texte d'alerte",
       "sound": "Son",
       "sayText": "Texte à lire à haute voix",
@@ -6122,12 +6131,12 @@
         "subscribers": "Abonnés"
       },
       "actionTypes": {
-        "wheel": "Faire tourner une roue",
         "alert": "Afficher une alerte",
         "sound": "Jouer un son",
         "say": "Lire à haute voix",
         "chat": "Publier dans le chat",
-        "webhook": "Envoyer à un webhook"
+        "webhook": "Envoyer à un webhook",
+        "wheel": "Faire tourner une roue"
       },
       "summary": {
         "tip": "Conseil de {{amount}} DHB ou plus"

@@ -4818,7 +4818,6 @@
     "creatorEarnsDirect": "Người đăng ký thanh toán bằng mã thông báo DeHub. Cổ phần của bạn nằm trong ví của bạn ngay khi họ đăng ký, trừ đi phí nền tảng cho cấp độ huy hiệu của bạn."
   },
   "liveOverlay": {
-    "wheelLanded": "{{name}} đã spin: {{result}}",
     "someone": "Ai đó",
     "newFollower": "Người theo dõi mới: {{name}}",
     "newSubscriber": "Người đăng ký mới: {{name}}",
@@ -4830,6 +4829,11 @@
     "topSupporters": "Những người ủng hộ hàng đầu",
     "tipped": "{{name}} đã gửi một món quà",
     "chatPreview": "Tin nhắn trò chuyện xuất hiện ở đây",
+    "wheelLanded": "{{name}} đã spin: {{result}}",
+    "level": "Cấp {{level}}",
+    "streak_one": "Chuỗi {{count}}tuần",
+    "streak_other": "Chuỗi {{count}}tuần",
+    "tipJar": "Lọ quà tặng",
     "poll": {
       "closed": "Đã kết thúc bỏ phiếu",
       "voteFor": "Bỏ phiếu cho {{option}}",
@@ -4974,7 +4978,6 @@
       "join": "Tham gia"
     },
     "kinds": {
-      "spin_wheel": "Bánh xe quay",
       "tip_alert": "Cảnh báo gợi ý",
       "follow_alert": "Cảnh báo theo dõi",
       "subscribe_alert": "Cảnh báo người đăng ký",
@@ -4991,10 +4994,12 @@
       "chat_box": "Hộp trò chuyện",
       "ticker": "Ticker",
       "rule_alert": "Cảnh báo quy tắc",
-      "poll": "Thăm dò ý kiến"
+      "poll": "Thăm dò ý kiến",
+      "spin_wheel": "Bánh xe quay",
+      "streamer_level": "Cấp độ streamer",
+      "tip_jar": "Lọ quà tặng"
     },
     "hints": {
-      "spin_wheel": "Khi các bánh xe trong quy tắc của bạn quay",
       "tip_alert": "Tưởng thưởng cho mỗi gợi ý, kích thước theo cấp bậc",
       "follow_alert": "Hiển thị từng người theo dõi mới",
       "subscribe_alert": "Hiển thị từng người đăng ký mới",
@@ -5011,13 +5016,17 @@
       "chat_box": "Hiển thị tin nhắn trò chuyện của chương trình phát sóng của bạn trên màn hình",
       "ticker": "Một dòng văn bản của riêng bạn cuộn trên màn hình",
       "rule_alert": "Đây là nơi hiển thị cảnh báo của quy tắc của bạn",
-      "poll": "Cuộc thăm dò trực tiếp của bạn, với nút bỏ phiếu cho mọi lựa chọn"
+      "poll": "Cuộc thăm dò trực tiếp của bạn, với nút bỏ phiếu cho mọi lựa chọn",
+      "spin_wheel": "Khi các bánh xe trong quy tắc của bạn quay",
+      "streamer_level": "Cấp độ streamer và streak hàng tuần của bạn, từ hồ sơ của bạn",
+      "tip_jar": "Một cái lọ được đổ đầy khi quà tặng trả tiền được gửi đến"
     },
     "fields": {
       "style": "Phong cách",
       "celebration": "Lễ kỷ niệm",
       "banner": "Biểu ngữ",
       "minAmount": "Mẹo nhỏ nhất để hiển thị (DHB)",
+      "showStreak": "Hiển thị chuỗi hàng tuần",
       "showMessage": "Hiển thị tin nhắn mẹo",
       "confirmedOnly": "Chỉ sau khi khoản thanh toán được xác nhận",
       "confirmedOnlyHint": "Chờ vài giây cho chuỗi, vì vậy tiền boa không bao giờ được trả sẽ không bao giờ xuất hiện.",
@@ -5046,8 +5055,6 @@
       "fast": "Nhanh"
     },
     "rules": {
-      "wheelSegments": "Phân khúc bánh xe, một trên mỗi dòng",
-      "wheelHint": "Từ 2 đến 12 tuổi. DeHub chọn nơi bánh xe dừng lại, vì vậy mọi người xem đều thấy kết quả tương tự. Sử dụng {result} trong cảnh báo, đọc to hoặc trò chuyện để đặt tên cho nó.",
       "title": "Quy tắc",
       "intro": "Khi có điều gì xảy ra trên luồng trực tiếp của bạn, DeHub sẽ thực hiện theo yêu cầu của bạn: hiển thị cảnh báo, phát âm thanh, đọc aloud, đăng lên chat của bạn hoặc thông báo cho Discord của bạn.",
       "add": "Thêm quy tắc",
@@ -5078,6 +5085,8 @@
       "removeAction": "Xóa hành động",
       "placeholders": "Sử dụng {name}, {amount} và {message} trong tin nhắn. Các liên kết trong tin nhắn sẽ bị xóa.",
       "placeholdersLive": "Sử dụng {name}, {title} và {link} trong tin nhắn: tên của bạn, tiêu đề chương trình phát sóng và liên kết để xem.",
+      "wheelSegments": "Phân khúc bánh xe, một trên mỗi dòng",
+      "wheelHint": "Từ 2 đến 12 tuổi. DeHub chọn nơi bánh xe dừng lại, vì vậy mọi người xem đều thấy kết quả tương tự. Sử dụng {result} trong cảnh báo, đọc to hoặc trò chuyện để đặt tên cho nó.",
       "alertText": "Văn bản cảnh báo",
       "sound": "Âm thanh",
       "sayText": "Văn bản để đọc to",
@@ -5102,12 +5111,12 @@
         "subscribers": "Người đăng ký"
       },
       "actionTypes": {
-        "wheel": "Quay bánh xe",
         "alert": "Hiển thị cảnh báo",
         "sound": "Phát âm thanh",
         "say": "Đọc to",
         "chat": "Đăng trong trò chuyện",
-        "webhook": "Gửi đến một webhook"
+        "webhook": "Gửi đến một webhook",
+        "wheel": "Quay bánh xe"
       },
       "summary": {
         "tip": "Tiền boa từ {{amount}} DHB trở lên"
