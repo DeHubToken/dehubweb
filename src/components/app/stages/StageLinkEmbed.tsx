@@ -193,6 +193,7 @@ export function StageLinkEmbed({ stageId, stageShortId, fallback = null }: Stage
               post about a stage that already happened is to hear it. */}
           {!(isEnded && stage.recording_url) && (
             <span
+              data-glass-playback-control
               className={cn(
                 'inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-xs font-medium shrink-0',
                 'transition-colors',
