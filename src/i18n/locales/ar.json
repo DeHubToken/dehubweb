@@ -7201,6 +7201,7 @@
     "weeksShort": "{{count}} أسبوع"
   },
   "liveGift": {
+    "notEnoughToken": "لا يوجد {{symbol}} كافٍ لهذه الهدية",
     "pickTier": "اختر احتفالاً",
     "plays": "يعرض {{tier}} على البث",
     "you": "أنت",
