@@ -48,7 +48,8 @@ describe('apple-app-site-association', () => {
       expect(res.status, path).toBe(200);
       expect(res.headers.get('Content-Type'), path).toBe('application/json');
       const aasa = JSON.parse(await res.text());
-      expect(aasa.applinks.details[0].appIDs).toEqual(['FU4BL8RC2L.io.dehub.mobile']);
+      expect(aasa.applinks.details[0].appIDs).toEqual(['J8BTYL3PDK.io.dehub.mobile', 'FU4BL8RC2L.io.dehub.mobile']);
+      expect(aasa.webcredentials.apps).toEqual(['J8BTYL3PDK.io.dehub.mobile', 'FU4BL8RC2L.io.dehub.mobile']);
       components = aasa.applinks.details[0].components;
     }
   });

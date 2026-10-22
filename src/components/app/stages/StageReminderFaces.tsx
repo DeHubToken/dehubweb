@@ -11,6 +11,11 @@
  * on its way. Pass `state="live"` there for the wording; the live room's own
  * crowd shows these people as seats instead (see useStagePreAudience).
  *
+ * Each face opens that person's profile (username first, wallet-id fallback,
+ * the same resolution StageHostLink uses). The faces sit inside the live card,
+ * which is itself one big <button>, so they are <span role="link"> and stop
+ * the click from also opening the stage.
+ *
  * Renders nothing when nobody has reminded, so an empty announcement stays
  * clean rather than advertising that no one is interested. The same silence
  * covers the reminders table being unreachable — the hook resolves to zero
@@ -19,9 +24,10 @@
 
 import Bell from "@/components/ui/cut-icons/alerts";
 
+import { useNavigate } from 'react-router-dom';
 import { cn } from '@/lib/utils';
 import { useStageReminderFaces } from '@/hooks/use-stage-reminders';
-import { buildAvatarUrl, buildAvatarCdnFallbackUrl } from '@/lib/media-url';
+import { StageAvatar } from './StageAvatar';
 
 export function StageReminderFaces({
   spaceId,
@@ -33,6 +39,7 @@ export function StageReminderFaces({
   /** Wording only — "set a reminder" before the stage starts, "coming" after. */
   state?: 'upcoming' | 'live';
 }) {
+  const navigate = useNavigate();
   const { faces, total } = useStageReminderFaces(spaceId);
 
   if (total === 0) return null;
@@ -49,37 +56,39 @@ export function StageReminderFaces({
   return (
     <div className={cn('flex items-center gap-2', className)} title={tooltip}>
       {faces.length > 0 && (
-        <div className="flex -space-x-2">
+        <div className="flex -space-x-1.5">
           {faces.map((face) => {
-            const src =
-              buildAvatarUrl(face.address, face.avatarUrl) ||
-              buildAvatarCdnFallbackUrl(face.address);
+            const handle = face.username?.replace(/^@+/, '');
+            const openProfile = (e: { stopPropagation: () => void; preventDefault: () => void }) => {
+              e.stopPropagation();
+              e.preventDefault();
+              if (handle) navigate(`/${handle}`);
+              else navigate(`/app/profile?id=${face.address}`);
+            };
             return (
-              <div
+              <span
                 key={face.address}
-                className="w-5 h-5 rounded-md overflow-hidden ring-1 ring-black/40 bg-zinc-700 shrink-0"
+                role="link"
+                tabIndex={0}
+                aria-label={`View @${handle || face.address.slice(0, 6)}'s profile`}
+                title={handle ? `@${handle}` : undefined}
+                onClick={openProfile}
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter') openProfile(e);
+                }}
+                className="relative block w-6 h-6 rounded-md ring-1 ring-black/40 shrink-0 cursor-pointer transition-transform hover:z-10 hover:scale-110 focus-visible:z-10 focus-visible:outline-none focus-visible:ring-white/70"
               >
-                {src ? (
-                  <img
-                    src={src}
-                    alt=""
-                    loading="lazy"
-                    className="w-full h-full object-cover"
-                    onError={(e) => {
-                      // Same CDN retry the friends bar uses — a stale avatar
-                      // path should degrade to the initial, not a broken icon.
-                      const img = e.currentTarget;
-                      const fallback = buildAvatarCdnFallbackUrl(face.address);
-                      if (fallback && img.src !== fallback) img.src = fallback;
-                      else img.style.display = 'none';
-                    }}
-                  />
-                ) : (
-                  <span className="w-full h-full flex items-center justify-center text-[8px] font-medium text-white">
-                    {(face.username || face.address).charAt(0).toUpperCase()}
-                  </span>
-                )}
-              </div>
+                {/* Falls through the same ladder as every stage picture and
+                    lands on the initial; a face whose picture 404d used to be
+                    an empty grey square in the row. */}
+                <StageAvatar
+                  address={face.address}
+                  avatar={face.avatarUrl}
+                  name={face.username}
+                  size={24}
+                  className="w-full h-full rounded-md text-[8px]"
+                />
+              </span>
             );
           })}
         </div>

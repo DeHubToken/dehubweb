@@ -23,6 +23,7 @@ import { BRAND_OUTRO_DURATION, drawBrandOutro, outroSoundSample, outroUsername }
 import { GIF_CONTENT_LIMIT, gifPlan, gifFrameDelay, gifWorkerSession } from "./gif";
 import { GIF_WORKER } from "./gifRuntime";
 import { exportTimeRange, exportAudioSegment, type ExportRange } from "./exportRanges";
+import { cleanDecoderConfig, videoDecoderConfigFixer } from "./videoDecoderConfig";
 
 
 export type ExportFormat = "mp4" | "webm" | "gif";
@@ -51,6 +52,9 @@ export interface ExportOptions {
 export interface ExportResult {
   blob: Blob;
   filename: string;
+  /** WebCodecs codec strings actually used, for the export journal. */
+  videoCodec?: string;
+  audioCodec?: string | null;
 }
 
 export function isExportSupported(): boolean {
@@ -84,23 +88,58 @@ function pickAvcLevel(width: number, height: number, fps: number): string {
   return "34";
 }
 
-function pickVideoCodec(
+type VideoCodecChoice = { codec: string; muxerCodec: "avc" | "vp9" | "av1" };
+type AudioCodecChoice = { codec: string; muxerCodec: "aac" | "opus" };
+
+/**
+ * Pick the first video codec this browser can actually encode. MP4 prefers
+ * H.264 (most compatible), then VP9 or AV1 inside MP4 for browsers without an
+ * H.264 encoder (Firefox and Chromium on many Linux machines).
+ */
+async function pickVideoCodec(
   format: ExportFormat,
   width: number,
   height: number,
   fps: number,
-): { codec: string; muxerCodec: "avc" | "vp9" } {
-  if (format === "mp4") {
-    const level = pickAvcLevel(width, height, fps);
-    return { codec: `avc1.42E0${level}`, muxerCodec: "avc" };
+  bitrate: number,
+): Promise<VideoCodecChoice> {
+  const level = pickAvcLevel(width, height, fps);
+  const candidates: VideoCodecChoice[] = format === "mp4"
+    ? [
+        { codec: `avc1.42E0${level}`, muxerCodec: "avc" },
+        { codec: `avc1.4D00${level}`, muxerCodec: "avc" },
+        { codec: `avc1.6400${level}`, muxerCodec: "avc" },
+        { codec: "vp09.00.10.08", muxerCodec: "vp9" },
+        { codec: "av01.0.08M.08", muxerCodec: "av1" },
+      ]
+    : [
+        { codec: "vp09.00.10.08", muxerCodec: "vp9" },
+        { codec: "av01.0.08M.08", muxerCodec: "av1" },
+      ];
+  for (const candidate of candidates) {
+    const support = await VideoEncoder.isConfigSupported({ codec: candidate.codec, width, height, bitrate, framerate: fps })
+      .catch(() => null);
+    if (support?.supported) return candidate;
   }
-  return { codec: "vp09.00.10.08", muxerCodec: "vp9" };
+  throw new Error("This browser can't encode video at this size. Try a smaller export size, or Chrome or Edge.");
 }
 
-function pickAudioCodec(format: ExportFormat): { codec: string; muxerCodec: "aac" | "opus" } {
-  return format === "mp4"
-    ? { codec: "mp4a.40.2", muxerCodec: "aac" }
-    : { codec: "opus", muxerCodec: "opus" };
+/**
+ * Pick the first audio codec this browser can encode. AAC has no encoder in
+ * Chromium on Linux or in Firefox, so MP4 falls back to Opus, which MP4 also
+ * carries. Returns null when no audio encoder exists, so the video still exports.
+ */
+async function pickAudioCodec(format: ExportFormat, bitrate: number): Promise<AudioCodecChoice | null> {
+  if (typeof AudioEncoder !== "function") return null;
+  const candidates: AudioCodecChoice[] = format === "mp4"
+    ? [{ codec: "mp4a.40.2", muxerCodec: "aac" }, { codec: "opus", muxerCodec: "opus" }]
+    : [{ codec: "opus", muxerCodec: "opus" }];
+  for (const candidate of candidates) {
+    const support = await AudioEncoder.isConfigSupported({ codec: candidate.codec, sampleRate: 48000, numberOfChannels: 2, bitrate })
+      .catch(() => null);
+    if (support?.supported) return candidate;
+  }
+  return null;
 }
 
 function checkAbort(signal?: AbortSignal) {
@@ -248,7 +287,7 @@ function audioBufferSliceToInterleaved(
 export async function exportProject(opts: ExportOptions): Promise<ExportResult> {
   if (opts.format === "gif") return exportGif(opts);
   if (!isExportSupported()) {
-    throw new Error("Your browser doesn't support video export. Use a Chromium-based browser (Chrome, Edge, Brave, Arc).");
+    throw new Error("Your browser doesn't support video export. Use an up-to-date Chrome, Edge, Firefox or Safari.");
   }
 
   const { snapshot, media, format, scale, videoBitrate, audioBitrate = 192_000, cutEndAt, onProgress, signal } = opts;
@@ -289,11 +328,14 @@ export async function exportProject(opts: ExportOptions): Promise<ExportResult> 
 
   // Lazy-load the appropriate muxer.
   const trackZ = (trackId: string) => tracks.findIndex((t) => t.id === trackId);
-  const { codec: videoCodec, muxerCodec: videoMuxerCodec } = pickVideoCodec(format, width, height, fps);
-  const { codec: audioCodec, muxerCodec: audioMuxerCodec } = pickAudioCodec(format);
+  const { codec: videoCodec, muxerCodec: videoMuxerCodec } = await pickVideoCodec(format, width, height, fps, videoBitrate);
+  const audioChoice = await pickAudioCodec(format, audioBitrate);
+  if (!audioChoice) console.warn("[export] no audio encoder in this browser; exporting without sound");
 
   const mixed = await audioBufferPromise;
-  const haveAudio = !!mixed;
+  const haveAudio = !!mixed && !!audioChoice;
+  const audioCodec = audioChoice?.codec ?? "";
+  const audioMuxerCodec = audioChoice?.muxerCodec ?? "opus";
 
   let muxer: {
     addVideoChunk: (chunk: EncodedVideoChunk, meta?: EncodedVideoChunkMetadata) => void;
@@ -309,14 +351,22 @@ export async function exportProject(opts: ExportOptions): Promise<ExportResult> 
       target,
       video: { codec: videoMuxerCodec, width, height, frameRate: fps },
       ...(haveAudio
-        ? { audio: { codec: audioMuxerCodec as "aac", numberOfChannels: 2, sampleRate: 48000 } }
+        ? { audio: { codec: audioMuxerCodec, numberOfChannels: 2, sampleRate: 48000 } }
         : {}),
       fastStart: "in-memory",
     });
+    const fixVideoChunk = videoDecoderConfigFixer({ codec: videoCodec, muxerCodec: videoMuxerCodec, width, height });
     muxer = {
-      addVideoChunk: (c, meta) => m.addVideoChunk(c, meta),
-      addAudioChunk: haveAudio ? (c, meta) => m.addAudioChunk(c, meta) : undefined,
-      finalize: () => m.finalize(),
+      addVideoChunk: (c, meta) => {
+        const fixed = fixVideoChunk(c, meta);
+        m.addVideoChunk(fixed.chunk, fixed.meta);
+      },
+      // A partial audio config (no description) would wipe the AAC config the muxer prefills.
+      addAudioChunk: haveAudio ? (c, meta) => m.addAudioChunk(c, meta?.decoderConfig ? { ...meta, decoderConfig: cleanDecoderConfig(meta.decoderConfig) } : meta) : undefined,
+      finalize: () => {
+        if (!fixVideoChunk.hasConfig()) throw new Error("This browser's video encoder didn't produce a playable MP4. Try WebM, or Chrome.");
+        m.finalize();
+      },
       target,
     };
   } else {
@@ -324,7 +374,7 @@ export async function exportProject(opts: ExportOptions): Promise<ExportResult> 
     const target = new ArrayBufferTarget();
     const m = new Muxer({
       target,
-      video: { codec: "V_VP9", width, height, frameRate: fps },
+      video: { codec: videoMuxerCodec === "av1" ? "V_AV1" : "V_VP9", width, height, frameRate: fps },
       ...(haveAudio
         ? { audio: { codec: "A_OPUS", numberOfChannels: 2, sampleRate: 48000 } }
         : {}),
@@ -470,7 +520,7 @@ export async function exportProject(opts: ExportOptions): Promise<ExportResult> 
   const blob = stampEnding(new Blob([muxer.target.buffer], { type: mime }), contentDuration, format === "mp4" ? "mp4" : "webm");
   const filename = exportFilename(snapshot.title, format);
   onProgress?.(1, "Done");
-  return { blob, filename };
+  return { blob, filename, videoCodec, audioCodec: haveAudio ? audioCodec : null };
   } finally {
     if (videoEncoder && videoEncoder.state !== "closed") videoEncoder.close();
     if (audioEncoder && audioEncoder.state !== "closed") audioEncoder.close();

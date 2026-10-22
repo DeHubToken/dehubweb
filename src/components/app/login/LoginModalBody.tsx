@@ -1039,6 +1039,26 @@ function LoginModalBodyInner({ open, step, setStep }: LoginModalBodyProps) {
           />
         </React.Suspense>
       )}
+      {step === 'wallet-secure' && supabaseUserId && (
+        <React.Suspense fallback={<DeHubPageLoader size={56} minHeight="180px" />}>
+          <WalletCreateStep
+            userId={supabaseUserId}
+            securing
+            onComplete={async () => {
+              const [{ clearDeviceSeed }, { finishWalletSecure }] = await Promise.all([
+                import('@/lib/wallet-core/device-seed'),
+                import('@/lib/wallet-secure-flow'),
+              ]);
+              await clearDeviceSeed(supabaseUserId);
+              finishWalletSecure(true);
+              // Let the waiting action resume first: closing the sheet cancels
+              // whatever is still waiting on it.
+              await new Promise((resolve) => setTimeout(resolve, 0));
+              closeLoginModal();
+            }}
+          />
+        </React.Suspense>
+      )}
       {step === 'wallet-unlock' && supabaseUserId && (
         <React.Suspense fallback={<DeHubPageLoader size={56} minHeight="180px" />}>
           <WalletUnlockStep userId={supabaseUserId} onComplete={completeSmartWalletLogin} onLogout={handleWalletLogout} />

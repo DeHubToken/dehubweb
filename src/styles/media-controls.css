@@ -6,7 +6,7 @@
   }
 }
 /* Keep style selection pills round even in themes with square surface rules. */
-html[data-theme][data-theme] [data-audio-player] :is([data-audio-style], [data-audio-style-active]) {
+html[data-theme][data-theme] [data-audio-player] [data-audio-style] {
   border-radius: 9999px !important;
 }
 
@@ -202,3 +202,14 @@ html:is([data-theme="light"], [data-system-tone="light"]) body [data-video-card]
    .bg-black as paper, which turned the letterbox beside a narrow video white
    and hid the white back arrow drawn there. */
 html:is([data-theme="light"], [data-system-tone="light"]):not(#_):not(#_):not(#_):not(#_) body [data-video-card] :is([data-video-split-controls], [data-feed-video-frame]).bg-black { background-color: #000 !important; }
+
+/* System Light paints the audio card as paper (the painters switch to dark
+   ink), so the white style chips, play button and timer vanished there. */
+html[data-theme="system"][data-system-tone="light"]:not(#_):not(#_):not(#_):not(#_):not(#_) [data-audio-player] :is([data-audio-style], [data-audio-style] *, [data-audio-bare], [data-audio-bare] *) {
+  color: #0b0b0d !important;
+  -webkit-text-stroke: 0 !important;
+  text-shadow: none !important;
+}
+html[data-theme="system"][data-system-tone="light"]:not(#_):not(#_):not(#_):not(#_):not(#_) [data-audio-player] [data-audio-style] {
+  background-color: rgba(11, 11, 13, 0.06) !important;
+}

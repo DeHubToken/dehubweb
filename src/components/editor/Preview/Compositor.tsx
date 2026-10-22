@@ -914,7 +914,7 @@ export function Compositor() {
     : null;
 
   return (
-    <section className="flex h-full min-h-0 min-w-0 flex-1 flex-col bg-black">
+    <section data-glass-editor-canvas className="flex h-full min-h-0 min-w-0 flex-1 flex-col bg-black">
       <div {...draftFocus.props}
         ref={wrapRef}
         onDragOver={onSurfaceDragOver}

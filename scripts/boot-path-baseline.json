@@ -1,6 +1,6 @@
 {
-  "modules": 616,
-  "sourceBytes": 3817400,
+  "modules": 617,
+  "sourceBytes": 3818137,
   "files": [
     "server/public-page-locales.js",
     "src/App.tsx",
@@ -165,6 +165,7 @@
     "src/components/ui/cut-icons/bridge.tsx",
     "src/components/ui/cut-icons/captions.tsx",
     "src/components/ui/cut-icons/check.tsx",
+    "src/components/ui/cut-icons/clock.tsx",
     "src/components/ui/cut-icons/close.tsx",
     "src/components/ui/cut-icons/coins.tsx",
     "src/components/ui/cut-icons/command.tsx",

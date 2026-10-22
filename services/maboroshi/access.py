@@ -17,7 +17,7 @@ DATA = Path(os.environ.get('MABOROSHI_DATA', '/var/lib/dehub-maboroshi'))
 PUBLIC = os.environ.get('MABOROSHI_PUBLIC_URL', 'https://live.dehub.io/maboroshi').rstrip('/')
 MODES = ('depth', 'face_mesh', 'depth_mesh')
 FILES = ('upload.mp4', 'original.mp4', 'depth.mp4', 'mask.mp4', 'composite-silent.mp4',
-         'seedance-input.mp4', 'final-preview.mp4', 'hd/final-preview.mp4',
+         'seedance-input.mp4', 'final-preview.mp4', 'hd/final-preview.mp4', 'remake-result.mp4',
          'vocals.wav', 'vocals-plus3.wav', 'music.wav')
 
 
