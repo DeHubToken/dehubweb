@@ -4027,7 +4027,9 @@
     "joined": "{{name}} tevlî bû",
     "goalReached": "Armanc gihîşt!",
     "followersUnit": "şopîner",
-    "topSupporters": "Piştgirên herî jor"
+    "topSupporters": "Piştgirên herî jor",
+    "tipped": "{{name}} diyariyek şand",
+    "chatPreview": "Peyamên chatê li vir xuya dibin"
   },
   "liveStudio": {
     "title": "Live Studio",
@@ -4105,6 +4107,11 @@
       "join": "بەشداریکردن"
     },
     "kinds": {
+      "stream_timer": "Demjimêra weşanê",
+      "reaction_counter": "Jimara reaksiyonan",
+      "event_feed": "Çalakiyên dawî",
+      "chat_box": "Qutiya chatê",
+      "ticker": "Nivîsa diherike",
       "tip_alert": "ئاگاداریی بەخشش",
       "follow_alert": "ئاگاداریی فۆڵۆو",
       "subscribe_alert": "ئاگاداریی سەبسکرایب",
@@ -4117,6 +4124,11 @@
       "frame": "چوارچێوە"
     },
     "hints": {
+      "stream_timer": "Nîşan dide ku tu çiqas dem e weşanê dikî",
+      "reaction_counter": "Her reaksiyona ku weşana te distîne dijmêre",
+      "event_feed": "Diyariyên dawî, şopîner, abone û kesên ku weşana te parve dikin",
+      "chat_box": "Peyamên chatê yên weşana te li ser ekranê nîşan dide",
+      "ticker": "Rêzek ji nivîsa te ya ku li ser ekranê diherike",
       "tip_alert": "هەموو بەخششێک بەپێی ئاستەکەی دیاری دەکات",
       "follow_alert": "هەموو فۆڵۆوەرێکی نوێ نیشان دەدات",
       "subscribe_alert": "هەموو سەبسکرایبەرێکی نوێ نیشان دەدات",
@@ -4129,6 +4141,13 @@
       "frame": "سنوورێک لە دەوری ستریمەکەت"
     },
     "fields": {
+      "label": "Etîket",
+      "lines": "Rêzên tên nîşandan",
+      "showAvatars": "Wêneyên profîlê nîşan bide",
+      "speed": "Lez",
+      "slow": "Hêdî",
+      "normal": "Asayî",
+      "fast": "Bilez",
       "celebration": "Kêfî",
       "banner": "Banner",
       "minAmount": "Serê herî biçûk ê ku were nîşandan (DHB)",

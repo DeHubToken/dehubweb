@@ -23,6 +23,8 @@ function publicOverlay(raw: Partial<PublicOverlay> | undefined): PublicOverlay {
     stats: {
       totalTips: Number(raw?.stats?.totalTips) || 0,
       followers: Number(raw?.stats?.followers) || 0,
+      startedAt: typeof raw?.stats?.startedAt === 'string' ? raw.stats.startedAt : null,
+      reactions: Number(raw?.stats?.reactions) || 0,
     },
   };
 }

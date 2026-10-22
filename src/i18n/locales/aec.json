@@ -4203,7 +4203,8 @@
     "joined": "{{name}} انضم",
     "goalReached": "الهدف اتحقق!",
     "followersUnit": "المتابعين",
-    "topSupporters": "أعلى الداعمين"
+    "topSupporters": "أعلى الداعمين",
+    "tipped": "{{name}} بعت هدية"
   },
   "liveStudio": {
     "title": "ستوديو لايف",
@@ -4295,7 +4296,8 @@
       "glow": "توهّج",
       "thickness": "سُمك",
       "radius": "تقويس الزوايا",
-      "accent": "لون"
+      "accent": "لون",
+      "lines": "لينيات مظهورة"
     }
   },
   "live": {

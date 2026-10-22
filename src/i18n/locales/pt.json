@@ -4792,7 +4792,9 @@
     "joined": "{{name}} entrou",
     "goalReached": "Meta alcançada!",
     "followersUnit": "seguidores",
-    "topSupporters": "Principais apoiadores"
+    "topSupporters": "Principais apoiadores",
+    "tipped": "{{name}} enviou um presente",
+    "chatPreview": "As mensagens de chat aparecem aqui"
   },
   "liveStudio": {
     "title": "Estúdio ao Vivo",
@@ -4879,7 +4881,12 @@
       "top_supporters": "Principais apoiadores",
       "viewer_count": "Contagem de espectadores",
       "text": "Texto",
-      "frame": "Quadro"
+      "frame": "Quadro",
+      "stream_timer": "Temporizador de transmissão",
+      "reaction_counter": "Contador de reacções",
+      "event_feed": "Atividade recente",
+      "chat_box": "Caixa de chat",
+      "ticker": "Faixa de texto"
     },
     "hints": {
       "tip_alert": "Celebra cada dica, dimensionada ao seu nível",
@@ -4891,7 +4898,12 @@
       "top_supporters": "Seus maiores doadores neste stream",
       "viewer_count": "Quantas pessoas estão assistindo",
       "text": "Uma linha de texto ou um lower third",
-      "frame": "Uma borda ao redor do seu stream"
+      "frame": "Uma borda ao redor do seu stream",
+      "stream_timer": "Mostra há quanto tempo está a transmitir",
+      "reaction_counter": "Conta todas as reações que a sua transmissão recebe",
+      "event_feed": "Os últimos presentes, seguidores, subscritores e pessoas que partilham a sua transmissão",
+      "chat_box": "Mostra as mensagens de chat da sua transmissão no ecrã",
+      "ticker": "Uma linha do seu próprio texto que percorre a tela"
     },
     "fields": {
       "style": "Estilo",
@@ -4916,7 +4928,14 @@
       "glow": "Brilho",
       "thickness": "Espessura",
       "radius": "Arredondamento de cantos",
-      "accent": "Cor"
+      "accent": "Cor",
+      "label": "Etiqueta",
+      "lines": "Linhas mostradas",
+      "showAvatars": "Mostrar imagens de perfil",
+      "speed": "Velocidade",
+      "slow": "Lento",
+      "normal": "Normal",
+      "fast": "Rápido"
     }
   },
   "live": {

@@ -25,6 +25,7 @@ import { drawOrder, placeWidget, rectFor } from '@/lib/live-overlay/layout';
 import { isKnownKind, type OverlayKind } from '@/lib/live-overlay/registry';
 import { createOverlayEventBus, OverlayEventContext } from '@/components/app/live/overlay/overlay-events';
 import { OverlayWidgetView } from '@/components/app/live/overlay/overlay-widgets';
+import { useOverlayChat } from '@/hooks/use-overlay-chat';
 
 /** How often to look for the creator going live, and for a stream ending. */
 const IDLE_POLL_MS = 10_000;
@@ -130,6 +131,8 @@ export default function ObsOverlayPage() {
           data.widgets.filter((w) => w.enabled && isKnownKind(w.kind) && (!onlyWidget || w.id === onlyWidget)),
         )
       : [];
+  // A chat box hears the stream's chat room, which is keyed by the post's token id.
+  useOverlayChat(data?.live?.tokenId ?? null, widgets.some((w) => w.kind === 'chat_box'), bus.publish);
 
   return (
     <OverlayEventContext.Provider value={bus}>

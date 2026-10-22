@@ -6009,7 +6009,9 @@
     "joined": "{{name}} is lid geworden",
     "goalReached": "Doel bereikt!",
     "followersUnit": "volgers",
-    "topSupporters": "Topsupporters"
+    "topSupporters": "Topsupporters",
+    "tipped": "{{name}} heeft een cadeau gestuurd",
+    "chatPreview": "Chatberichten worden hier weergegeven"
   },
   "liveStudio": {
     "title": "Live Studio",
@@ -6096,7 +6098,12 @@
       "top_supporters": "Top supporters",
       "viewer_count": "Kijkersaantal",
       "text": "Tekst",
-      "frame": "Kader"
+      "frame": "Kader",
+      "stream_timer": "Uitzendtimer",
+      "reaction_counter": "Reactieteller",
+      "event_feed": "Recente activiteit",
+      "chat_box": "Chatbox",
+      "ticker": "Lichtkrant"
     },
     "hints": {
       "tip_alert": "Viirt elke tip, aangepast aan zijn niveau",
@@ -6108,7 +6115,12 @@
       "top_supporters": "Je grootste tippers in deze stream",
       "viewer_count": "Hoeveel mensen er kijken",
       "text": "Een regel tekst of een lower third",
-      "frame": "Een rand rond je stream"
+      "frame": "Een rand rond je stream",
+      "stream_timer": "Laat zien hoe lang je al uitzendt",
+      "reaction_counter": "Telt elke reactie die je uitzending krijgt",
+      "event_feed": "De nieuwste cadeaus, volgers, abonnees en mensen die je uitzending delen",
+      "chat_box": "Toont de chatberichten van uw uitzending op het scherm",
+      "ticker": "Een regel van je eigen tekst die over het scherm scrolt"
     },
     "fields": {
       "style": "Stijl",
@@ -6133,7 +6145,14 @@
       "glow": "Gloed",
       "thickness": "Dikte",
       "radius": "Hoekafronding",
-      "accent": "Kleur"
+      "accent": "Kleur",
+      "label": "Label",
+      "lines": "Getoonde regels",
+      "showAvatars": "Profielfoto's weergeven",
+      "speed": "Snelheid",
+      "slow": "Langzaam",
+      "normal": "Normaal",
+      "fast": "Snel"
     }
   },
   "live": {

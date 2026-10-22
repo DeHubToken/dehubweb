@@ -4785,7 +4785,9 @@
     "joined": "{{name}} s-au alăturat",
     "goalReached": "Obiectiv atins!",
     "followersUnit": "urmăritori",
-    "topSupporters": "Susținători de top"
+    "topSupporters": "Susținători de top",
+    "tipped": "{{name}} a trimis un cadou",
+    "chatPreview": "Mesajele de chat apar aici"
   },
   "liveStudio": {
     "title": "Studio live",
@@ -4872,7 +4874,12 @@
       "top_supporters": "Susținători de top",
       "viewer_count": "Număr de spectatori",
       "text": "Text",
-      "frame": "Cadru"
+      "frame": "Cadru",
+      "stream_timer": "Temporizator de difuzare",
+      "reaction_counter": "Contor de reacție",
+      "event_feed": "Activitate recentă",
+      "chat_box": "Casetă de chat",
+      "ticker": "Indicativ"
     },
     "hints": {
       "tip_alert": "Celebrează fiecare sugestie, dimensionată în funcție de nivelul său",
@@ -4884,7 +4891,12 @@
       "top_supporters": "Cei mai mari susținători ai acestui flux",
       "viewer_count": "Câți oameni se uită",
       "text": "O linie de text sau un lower third",
-      "frame": "O bordură în jurul fluxului tău"
+      "frame": "O bordură în jurul fluxului tău",
+      "stream_timer": "Afișează de cât timp transmiteți",
+      "reaction_counter": "Contorizează fiecare reacție pe care o primește difuzarea dvs.",
+      "event_feed": "Cele mai recente cadouri, adepți, abonați și persoane care vă împărtășesc difuzarea",
+      "chat_box": "Afișează mesajele de chat ale difuzării pe ecran",
+      "ticker": "Un rând din propriul text care se derulează pe ecran"
     },
     "fields": {
       "style": "Stil",
@@ -4909,7 +4921,14 @@
       "glow": "Lumină",
       "thickness": "Grosime",
       "radius": "Rundire colțuri",
-      "accent": "Culoare"
+      "accent": "Culoare",
+      "label": "Etichetă",
+      "lines": "Linii afișate",
+      "showAvatars": "Afișează fotografiile de profil",
+      "speed": "Viteză",
+      "slow": "Încet",
+      "normal": "Normal",
+      "fast": "Rapid"
     }
   },
   "live": {
