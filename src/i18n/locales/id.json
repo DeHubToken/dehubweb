@@ -123,6 +123,7 @@
     "clickCameraUpload": "Klik ikon kamera untuk mengunggah",
     "displayName": "Nama Tampilan",
     "enterDisplayName": "Masukkan nama tampilan Anda",
+    "displayNameOptionalHint": "Nama publik di profilmu. Opsional — kosongkan saja untuk memakai nama penggunamu.",
     "username": "Nama Pengguna",
     "usernamePlaceholder": "namapengguna",
     "usernameHint": "3-30 karakter, huruf, angka, garis bawah",

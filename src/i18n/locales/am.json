@@ -123,6 +123,7 @@
     "clickCameraUpload": "ለመስቀል የካሜራ አዶውን ጠቅ አድርግ",
     "displayName": "የማሳያ ስም",
     "enterDisplayName": "የማሳያ ስምህን አስገባ",
+    "displayNameOptionalHint": "በመገለጫዎ ላይ የሚታየው ይፋዊ ስምዎ። አማራጭ ነው — የተጠቃሚ ስምዎን ለመጠቀም ባዶ ይተዉት።",
     "username": "የተጠቃሚ ስም",
     "usernamePlaceholder": "የተጠቃሚ ስም",
     "usernameHint": "3-30 ቁምፊዎች፣ ፊደሎች፣ ቁጥሮችና _ ብቻ",

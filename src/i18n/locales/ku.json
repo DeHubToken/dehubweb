@@ -122,6 +122,7 @@
     "clickCameraUpload": "Li ser îkona kamerayê bikirtînin ku bar bikin",
     "displayName": "Navê Nîşandanê",
     "enterDisplayName": "Navê xwe yê nîşandanê binivîsin",
+    "displayNameOptionalHint": "Navê te yê giştî li ser profîla te. Ne mecbûrî ye — vala bihêle da ku navê te yê bikarhêner were bikaranîn.",
     "username": "Navê bikarhêner",
     "usernamePlaceholder": "navêbikarhêner",
     "usernameHint": "3-30 tîp, herf, hejmar, tenê binxêz",

@@ -123,6 +123,7 @@
     "clickCameraUpload": "Chofoza isithonjana sekhamera ukulayisha",
     "displayName": "Igama Lokubonisa",
     "enterDisplayName": "Faka igama lakho lokubonisa",
+    "displayNameOptionalHint": "Igama lakho lomphakathi kuphrofayela yakho. Akuphoqelekile — lishiye lingenalutho ukuze kusetshenziswe igama lakho lomsebenzisi.",
     "username": "Igama Lomsebenzisi",
     "usernamePlaceholder": "igamalomsebenzisi",
     "usernameHint": "Izinhlamvu 3-30, izinhlamvu, izinombolo, ama-underscore kuphela",

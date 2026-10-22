@@ -123,6 +123,7 @@
     "clickCameraUpload": "ກົດໄອຄອນກ້ອງເພື່ອອັບໂຫຼດ",
     "displayName": "ຊື່ສະແດງ",
     "enterDisplayName": "ໃສ່ຊື່ສະແດງຂອງທ່ານ",
+    "displayNameOptionalHint": "ຊື່ສາທາລະນະຂອງທ່ານໃນໂປຣໄຟລ໌. ບໍ່ບັງຄັບ — ປະໃຫ້ຫວ່າງໄວ້ເພື່ອໃຊ້ຊື່ຜູ້ໃຊ້ຂອງທ່ານ.",
     "username": "ຊື່ຜູ້ໃຊ້",
     "usernamePlaceholder": "ຊື່ຜູ້ໃຊ້",
     "usernameHint": "3-30 ຕົວອັກສອນ, ຕົວເລກ, ຂີດລ່າງເທົ່ານັ້ນ",
