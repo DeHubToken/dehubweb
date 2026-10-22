@@ -9,6 +9,7 @@ import { Drawer, DrawerContent, DrawerHeader, DrawerTitle } from '@/components/u
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { NearIntentBuy } from '@/components/app/NearIntentBuy';
+import { DHB_SALES_PAUSED } from '@/lib/dhb-sales';
 import { createCheckoutSession, getDPayPrice, getDPaySessionStatus } from '@/lib/api/dpay';
 import { getStripe, isPaymentsConfigured } from '@/lib/stripe';
 import { useAuth } from '@/contexts/AuthContext';
@@ -79,6 +80,7 @@ export function LiveGiftBuyDrawer({ open, onOpenChange, neededDhb, onFunded, ret
   }, [open, sessionId, delivered]);
 
   const buyWithCard = async () => {
+    if (DHB_SALES_PAUSED) return;
     if (!isPaymentsConfigured()) {
       setError('Card payments are temporarily unavailable. Please try again later.');
       return;
@@ -140,8 +142,8 @@ export function LiveGiftBuyDrawer({ open, onOpenChange, neededDhb, onFunded, ret
               <label className="text-sm text-zinc-400 block">{_copy("copy.24f52bfeb8a8", { defaultValue: "Amount (USD)" })}</label>
               <Input type="number" min="0.5" step="0.01" value={amountUsd} onChange={(e) => setAmountUsd(e.target.value)} className="bg-zinc-800 border-zinc-700 text-white" />
               {tokenPrice > 0 && <p className="text-xs text-zinc-400">{t('liveGift.buy.estimate', { amount: estimatedDhb.toLocaleString(undefined, { maximumFractionDigits: 2 }) })}</p>}
-              <Button className="w-full" onClick={buyWithCard} disabled={busy || Number(amountUsd) < 0.5 || tokenPrice <= 0}>
-                {busy && <Loader2 className="w-4 h-4 mr-2 animate-spin" />}{t('ppvTopUp.buyCard')}
+              <Button className="w-full" onClick={buyWithCard} disabled={DHB_SALES_PAUSED || busy || Number(amountUsd) < 0.5 || tokenPrice <= 0}>
+                {busy && <Loader2 className="w-4 h-4 mr-2 animate-spin" />}{DHB_SALES_PAUSED ? t('stores.soldOutButton') : t('ppvTopUp.buyCard')}
               </Button>
             </div>
           )}
