@@ -4741,7 +4741,6 @@
     "creatorEarnsDirect": "Prenumeranter betalar i DeHub-tokens. Din andel hamnar i din plånbok så fort de prenumererar, minus plattformsavgiften för din märkesnivå."
   },
   "liveOverlay": {
-    "wheelLanded": "{{name}} spinnade: {{result}}",
     "someone": "Någon",
     "newFollower": "Ny följare: {{name}}",
     "newSubscriber": "Ny prenumerant: {{name}}",
@@ -4753,6 +4752,12 @@
     "topSupporters": "Toppanhängare",
     "tipped": "{{name}} skickade en gåva",
     "chatPreview": "Chattmeddelanden visas här",
+    "wheelLanded": "{{name}} spinnade: {{result}}",
+    "subathon": "Subathon",
+    "subathonOver": "Tiden är slut",
+    "pointsTitle": "De mest lojala tittarna",
+    "points_one": "{{formatted}} poäng",
+    "points_other": "{{formatted}} poäng",
     "poll": {
       "closed": "Röstningen är avslutad",
       "voteFor": "Rösta på {{option}}",
@@ -4780,6 +4785,29 @@
     "youAreTimedOut": "Du är tidsutgång för en stund"
   },
   "liveStudio": {
+    "subathon": {
+      "title": "Subathon",
+      "intro": "En nedräkning på din stream. Varje betald gåva, följare och prenumeration lägger till tid, så att rummet håller dig live.",
+      "secondsPerThousand": "Sekunder tillagd per 1 000 DHB som ges",
+      "secondsPerFollow": "Sekunder tillagd per följare",
+      "secondsPerSubscribe": "Sekunder tillagd per prenumeration",
+      "capHours": "Längsta tid den kan pågå (timmar)",
+      "save": "Spara belopp",
+      "saved": "Sparade Subathon-belopp.",
+      "startMinutes": "Starta med (minuter)",
+      "start": "Starta nedräkningen",
+      "stop": "Stopp",
+      "addFive": "Lägg till 5 minuter",
+      "removeFive": "Ta bort 5 minuter",
+      "failed": "Det fungerade inte. Försök igen.",
+      "widgetHint": "Visar din Subathon-nedräkning. Starta den från Subathon-panelen i Live Studio."
+    },
+    "points": {
+      "title": "Lojala tittare",
+      "intro": "Tittare tjänar en poäng för varje minut de tittar på dig och en för varje 100 DHB de ger. Chatt och reaktioner ger inget, så poäng kan inte plockas på det här sättet.",
+      "empty": "Inga poäng än. De byggs upp när människor tittar och ger.",
+      "widgetHint": "Lägg till widgeten för lojala tittare för att visa denna lista på stream."
+    },
     "controls": {
       "title": "Snabbkontroller",
       "intro": "För mitten av strömmen. Varje strömbrytare håller för alla som tittar, i appen och i OBS, tills du vänder tillbaka den.",
@@ -4897,7 +4925,6 @@
       "join": "Gå med"
     },
     "kinds": {
-      "spin_wheel": "Spinnhjul",
       "tip_alert": "Dricksvarning",
       "follow_alert": "Följ varning",
       "subscribe_alert": "Prenumerantvarning",
@@ -4914,10 +4941,12 @@
       "chat_box": "Chattruta",
       "ticker": "Ticker",
       "rule_alert": "Regelvarningar",
-      "poll": "Omröstning"
+      "poll": "Omröstning",
+      "spin_wheel": "Spinnhjul",
+      "subathon_timer": "Subathon-timer",
+      "points_board": "Lojala tittare"
     },
     "hints": {
-      "spin_wheel": "Där hjulen i dina regler snurrar",
       "tip_alert": "Firar varje dricks, storleksanpassad till sin nivå",
       "follow_alert": "Visar varje ny följare",
       "subscribe_alert": "Visar varje ny prenumerant",
@@ -4934,7 +4963,10 @@
       "chat_box": "Visar din sändnings chattmeddelanden på skärmen",
       "ticker": "En rad med din egen text som rullar över skärmen",
       "rule_alert": "Där dina regler visas",
-      "poll": "Din live-omröstning, med en röstknapp för varje alternativ"
+      "poll": "Din live-omröstning, med en röstknapp för varje alternativ",
+      "spin_wheel": "Där hjulen i dina regler snurrar",
+      "subathon_timer": "En nedräkning som gåvor, följare och prenumerationer skjuter tillbaka",
+      "points_board": "Dina främsta tittare baserat på poäng från tittande och givande"
     },
     "fields": {
       "style": "Stil",
@@ -4969,8 +5001,6 @@
       "fast": "Snabb"
     },
     "rules": {
-      "wheelSegments": "Hjulsegment, en per linje",
-      "wheelHint": "Mellan 2 och 12. DeHub väljer var hjulet stannar, så att alla som tittar ser samma resultat. Använd {result} i en varning, högläsning eller chattåtgärd för att namnge den.",
       "title": "Regler",
       "intro": "När något händer i din ström gör DeHub vad du väljer: visar en varning, spelar upp ett ljud, läser något högt, lägger upp inlägg i din chatt eller berättar för din Discord.",
       "add": "Lägg till en regel",
@@ -5001,6 +5031,8 @@
       "removeAction": "Ta bort åtgärd",
       "placeholders": "Använd {name}, {amount} och {message} i din text. Länkar i meddelanden tas bort.",
       "placeholdersLive": "Använd {name}, {title} och {link} i din text: ditt namn, sändningens titel och en länk för att titta på den.",
+      "wheelSegments": "Hjulsegment, en per linje",
+      "wheelHint": "Mellan 2 och 12. DeHub väljer var hjulet stannar, så att alla som tittar ser samma resultat. Använd {result} i en varning, högläsning eller chattåtgärd för att namnge den.",
       "alertText": "Varningstext",
       "sound": "Ljud",
       "sayText": "Text att läsa högt",
@@ -5025,12 +5057,12 @@
         "subscribers": "Prenumeranter"
       },
       "actionTypes": {
-        "wheel": "Snurra ett hjul",
         "alert": "Visa en varning",
         "sound": "Spela upp ett ljud",
         "say": "Läs högt",
         "chat": "Publicera i chatten",
-        "webhook": "Skicka till en webhook"
+        "webhook": "Skicka till en webhook",
+        "wheel": "Snurra ett hjul"
       },
       "summary": {
         "tip": "Tips på {{amount}} DHB eller mer"

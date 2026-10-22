@@ -1,16 +1,26 @@
 {
-  "liveChatModeration": {
-    "makeModerator": "设为版主",
-    "timedOut": "超时。",
-    "banned": "禁止使用这些流媒体。",
-    "madeModerator": "他们现在是版主。",
-    "youAreBanned": "您无法在此创作者的视频流中聊天",
-    "timeout1m": "超时1分钟",
-    "timeout10m": "10分錶停下來。",
-    "timeout1h": "1個鐘頭超時囉",
-    "ban": "禁止这些流媒体",
-    "failed": "那个没有工作。再试一次。",
-    "youAreTimedOut": "你剛剛超時一陣子"
+  "liveRecap": {
+    "title": "流式摘要",
+    "justEnded": "您的信息流总结",
+    "lastStream": "您的最后一个流",
+    "share": "分享",
+    "shareText": "我剛剛在DeHub直播{{title}}：{{duration}}線上，{{peak}}人同時觀看，{{followers}}新粉絲。",
+    "untitled": "未命名的流",
+    "copied": "已复制摘要。将其粘贴到任意位置。",
+    "loadFailed": "摘要未加载。 请稍后重试。",
+    "duration": "時間直播",
+    "peakViewers": "一次观看次数最多",
+    "gifts_one": "{{count}} 送啥？",
+    "gifts_other": "{{count}} 送啥？",
+    "newFollowers": "新关注者",
+    "chatMessages": "聊天消息",
+    "chatters": "人们在聊天",
+    "reactions": "反应",
+    "shares": "人员共享",
+    "topSupporters": "顶级支持者",
+    "polls": "投票",
+    "pollWinner": "{{option}}韩元",
+    "stillCounting": "还在计数：礼品可能需要一分钟才能确认。"
   },
   "errors": {
     "sponsorshipUnavailable": "免費交易佇阮這爿暫停矣，毋是汝个錢包个問題。請小等閣試。",
@@ -4399,7 +4409,7 @@
     "creatorEarnsDirect": "订阅者用DeHub代币支付。一旦他们订阅，你的份额就会立即进入你的钱包，减去你徽章等级的平台费用。"
   },
   "liveOverlay": {
-    "wheelLanded": "{{name}} 吾𠀀{{result}}",
+    "subathon": "苏巴吞",
     "someone": "𠮷人",
     "newFollower": "新粉絲：{{name}}",
     "newSubscriber": "新訂閱：{{name}}",
@@ -4411,6 +4421,11 @@
     "topSupporters": "贊助排行",
     "tipped": "{{name}} 送了個禮物",
     "chatPreview": "聊天訊息會出現",
+    "wheelLanded": "{{name}} 吾𠀀{{result}}",
+    "subathonOver": "時間到囉",
+    "pointsTitle": "最忠誠的觀眾",
+    "points_one": "{{formatted}} 分",
+    "points_other": "{{formatted}} 分",
     "poll": {
       "closed": "投票已關閉",
       "voteFor": "為{{option}}投票",
@@ -4424,30 +4439,43 @@
       "howToVote_other": "在聊天中輸入{{command}}和一個數字以投票 · {{count}}張票"
     }
   },
-  "liveRecap": {
-    "title": "流式摘要",
-    "justEnded": "您的信息流总结",
-    "lastStream": "您的最后一个流",
-    "copied": "已复制摘要。将其粘贴到任意位置。",
-    "loadFailed": "摘要未加载。 请稍后重试。",
-    "peakViewers": "一次观看次数最多",
-    "newFollowers": "新关注者",
-    "chatMessages": "聊天消息",
-    "chatters": "人们在聊天",
-    "reactions": "反应",
-    "shares": "人员共享",
-    "polls": "投票",
-    "pollWinner": "{{option}}韩元",
-    "stillCounting": "还在计数：礼品可能需要一分钟才能确认。",
-    "share": "分享",
-    "shareText": "我剛剛在DeHub直播{{title}}：{{duration}}線上，{{peak}}人同時觀看，{{followers}}新粉絲。",
-    "untitled": "未命名的流",
-    "duration": "時間直播",
-    "gifts_one": "{{count}} 送啥？",
-    "gifts_other": "{{count}} 送啥？",
-    "topSupporters": "顶级支持者"
+  "liveChatModeration": {
+    "timeout1m": "超时1分钟",
+    "timeout10m": "10分錶停下來。",
+    "timeout1h": "1個鐘頭超時囉",
+    "ban": "禁止这些流媒体",
+    "makeModerator": "设为版主",
+    "timedOut": "超时。",
+    "banned": "禁止使用这些流媒体。",
+    "madeModerator": "他们现在是版主。",
+    "failed": "那个没有工作。再试一次。",
+    "youAreBanned": "您无法在此创作者的视频流中聊天",
+    "youAreTimedOut": "你剛剛超時一陣子"
   },
   "liveStudio": {
+    "subathon": {
+      "title": "苏巴吞",
+      "intro": "你直播間的倒數計時器。每送出一份付費禮物、追蹤或訂閱都會加時間，讓直播間保持直播狀態。",
+      "secondsPerThousand": "每送出1,000 DHB 加的秒數",
+      "secondsPerFollow": "每追蹤加的秒數",
+      "secondsPerSubscribe": "每訂閱加的秒數",
+      "capHours": "最長可以持續（小時）",
+      "save": "儲存金額",
+      "saved": "儲存的Subathon金額。",
+      "startMinutes": "開始時間（分鐘）",
+      "start": "開始倒數",
+      "stop": "停止",
+      "addFive": "加5分鐘",
+      "removeFive": "減5分鐘",
+      "failed": "那沒有效。再試一次。",
+      "widgetHint": "顯示你的Subathon倒數計時器。從Live Studio的Subathon面板開始。"
+    },
+    "points": {
+      "title": "忠诚观众",
+      "intro": "觀眾每看你直播一分鐘得一分，每送出100 DHB得一分。聊天和反應不算，所以分數不能靠這些東西來賺。",
+      "empty": "目前沒有分數。隨著人們觀看和送禮，分數會累積。",
+      "widgetHint": "把「忠誠觀眾」小工具加到直播中，顯示這個名單。"
+    },
     "controls": {
       "title": "快速控制",
       "intro": "对于中间流。在应用程序和OBS中，每个开关都适用于所有观看者，直到您将其翻转回来。",
@@ -4458,51 +4486,6 @@
       "readAloudMuted": "停止朗读",
       "readAloudMutedHint": "礼品消息和规则行不再被读出。",
       "failed": "该开关未更改。请重试。"
-    },
-    "moderation": {
-      "title": "聊天审核",
-      "intro": "所有直播下的聊天规则。他们永远无法联系到DeHub的主聊天：您在这里禁止的人仍然可以在其他任何地方交谈。",
-      "loadFailed": "无法加载您的审核设置。请刷新页面以重试。",
-      "save": "保存聊天规则",
-      "saved": "聊天规则已保存。",
-      "slowMode": "慢速模式",
-      "slowModeHint": "每个查看者在消息之间等待的时间。您和您的版主永远不会等待。",
-      "off": "关",
-      "seconds_one": "{{count}}秒",
-      "followersOnly": "仅关注者",
-      "subscribersOnly": "仅限订阅者",
-      "bannedWords": "禁止使用的词语",
-      "bannedWordsHint": "用逗号分隔。逐个字母拼写单词不会绕过它。",
-      "wordAction": "当有人使用一个",
-      "wordBlock": "停止消息",
-      "moderators": "版主",
-      "moderatorsHint": "他们可以超时并禁止观众观看您的视频流。他们不能对你或对彼此采取行动。",
-      "addModerator": "视需要增加填充棉。",
-      "usernamePlaceholder": "用户名",
-      "removeModerator": "删除负责人",
-      "banned": "已从您的直播中禁用",
-      "unban": "不再屏蔽",
-      "noBans": "没有人被禁止。",
-      "saveFailed": "𠮷𠮷，你的改動無法儲存喔。",
-      "seconds_other": "{{count}} 秒",
-      "subscribersOnlyHint": "過濾追蹤者喔。",
-      "wordTimeout": "停下來，先罰他們一分鐘。",
-      "moderatorAdded": "監察員被添加。",
-      "moderatorNotFound": "没有这个用户名的账户。",
-      "noModerators": "還無版主",
-      "log": "最近的行动",
-      "noLog": "啥都沒有喔。",
-      "actions": {
-        "ban": "{{actor}}已禁用{{target}}",
-        "word-blocked": "已为“{{word}}”停止一条来自{{target}}的消息",
-        "word-timeout_one": "\"{{word}}\"在{{count}}秒内超时{{target}}",
-        "timeout_one": "{{actor}} 過時{{target}} 了{{count}} 秒",
-        "timeout_other": "{{actor}} 過時{{target}} 了{{count}} 秒",
-        "unban": "{{actor}} 禁言前 {{target}}",
-        "moderator-added": "{{target}} 成了个管理员。",
-        "moderator-removed": "{{target}} 毋再是管理员",
-        "word-timeout_other": "Timed out {{target}} 經過 {{count}} 秒鐘，{{word}}"
-      }
     },
     "polls": {
       "title": "民調",
@@ -4595,7 +4578,8 @@
       "share": "分享"
     },
     "kinds": {
-      "spin_wheel": "旋转转盘",
+      "subathon_timer": "Subathon计时器",
+      "points_board": "忠诚观众",
       "tip_alert": "提示警报",
       "share_alert": "分享提醒",
       "join_alert": "加入警报",
@@ -4608,10 +4592,10 @@
       "chat_box": "聊天框",
       "ticker": "快訊",
       "rule_alert": "规则警报",
-      "poll": "投票"
+      "poll": "投票",
+      "spin_wheel": "旋转转盘"
     },
     "hints": {
-      "spin_wheel": "规则中的车轮在哪里旋转",
       "follow_alert": "显示每个新关注者",
       "subscribe_alert": "显示每个新订阅者",
       "join_alert": "欢迎每位观众的到来",
@@ -4623,7 +4607,10 @@
       "chat_box": "在螢幕上顯示你的廣播聊天訊息",
       "ticker": "一行你自己的文字在螢幕上滾動",
       "rule_alert": "规则提醒的显示位置",
-      "poll": "您的直播投票，带有每个选项的投票按钮"
+      "poll": "您的直播投票，带有每个选项的投票按钮",
+      "spin_wheel": "规则中的车轮在哪里旋转",
+      "subathon_timer": "一個倒數計時器，送禮、追蹤和訂閱會讓它倒數延後",
+      "points_board": "你觀看和送禮得分最高的觀眾"
     },
     "fields": {
       "style": "风格",
@@ -4658,8 +4645,6 @@
       "fast": "快"
     },
     "rules": {
-      "wheelSegments": "车轮段，每行一个",
-      "wheelHint": "2到12之間。DeHub會決定轉盤停在哪裡，所以所有看的人都會看到同樣的結果。在警告、朗讀或聊天動作裡用{result}來命名它。",
       "title": "规则",
       "intro": "当您的视频流出现问题时， DeHub会执行您选择的操作：显示提醒、播放声音、大声朗读、在聊天中发布帖子或告诉您的Discord。",
       "add": "添加规则",
@@ -4690,6 +4675,8 @@
       "removeAction": "删除操作",
       "placeholders": "在文本中使用{name}、{amount}和{message}。消息中的链接将被删除。",
       "placeholdersLive": "在您的文本中使用{name}，{title}和{link}：您的名字、广播的标题和观看它的链接。",
+      "wheelSegments": "车轮段，每行一个",
+      "wheelHint": "2到12之間。DeHub會決定轉盤停在哪裡，所以所有看的人都會看到同樣的結果。在警告、朗讀或聊天動作裡用{result}來命名它。",
       "alertText": "警报文本",
       "sound": "声音",
       "sayText": "要朗读的文字",
@@ -4714,12 +4701,12 @@
         "subscribers": "訂閱者"
       },
       "actionTypes": {
-        "wheel": "旋转转盘",
         "alert": "显示提醒",
         "sound": "播放声音",
         "say": "朗读",
         "chat": "在聊天中发布",
-        "webhook": "发送到Webhook"
+        "webhook": "发送到Webhook",
+        "wheel": "旋转转盘"
       },
       "summary": {
         "tip": "小费{{amount}} DHB或以上"
@@ -4757,6 +4744,51 @@
         "spooky": "恐怖",
         "magic-spell": "魔法咒语",
         "shhh": "嘘"
+      }
+    },
+    "moderation": {
+      "title": "聊天审核",
+      "intro": "所有直播下的聊天规则。他们永远无法联系到DeHub的主聊天：您在这里禁止的人仍然可以在其他任何地方交谈。",
+      "loadFailed": "无法加载您的审核设置。请刷新页面以重试。",
+      "save": "保存聊天规则",
+      "saved": "聊天规则已保存。",
+      "saveFailed": "𠮷𠮷，你的改動無法儲存喔。",
+      "slowMode": "慢速模式",
+      "slowModeHint": "每个查看者在消息之间等待的时间。您和您的版主永远不会等待。",
+      "off": "关",
+      "seconds_one": "{{count}}秒",
+      "seconds_other": "{{count}} 秒",
+      "followersOnly": "仅关注者",
+      "subscribersOnly": "仅限订阅者",
+      "subscribersOnlyHint": "過濾追蹤者喔。",
+      "bannedWords": "禁止使用的词语",
+      "bannedWordsHint": "用逗号分隔。逐个字母拼写单词不会绕过它。",
+      "wordAction": "当有人使用一个",
+      "wordBlock": "停止消息",
+      "wordTimeout": "停下來，先罰他們一分鐘。",
+      "moderators": "版主",
+      "moderatorsHint": "他们可以超时并禁止观众观看您的视频流。他们不能对你或对彼此采取行动。",
+      "addModerator": "视需要增加填充棉。",
+      "usernamePlaceholder": "用户名",
+      "moderatorAdded": "監察員被添加。",
+      "moderatorNotFound": "没有这个用户名的账户。",
+      "removeModerator": "删除负责人",
+      "noModerators": "還無版主",
+      "banned": "已从您的直播中禁用",
+      "unban": "不再屏蔽",
+      "noBans": "没有人被禁止。",
+      "log": "最近的行动",
+      "noLog": "啥都沒有喔。",
+      "actions": {
+        "timeout_one": "{{actor}} 過時{{target}} 了{{count}} 秒",
+        "timeout_other": "{{actor}} 過時{{target}} 了{{count}} 秒",
+        "ban": "{{actor}}已禁用{{target}}",
+        "unban": "{{actor}} 禁言前 {{target}}",
+        "moderator-added": "{{target}} 成了个管理员。",
+        "moderator-removed": "{{target}} 毋再是管理员",
+        "word-blocked": "已为“{{word}}”停止一条来自{{target}}的消息",
+        "word-timeout_one": "\"{{word}}\"在{{count}}秒内超时{{target}}",
+        "word-timeout_other": "Timed out {{target}} 經過 {{count}} 秒鐘，{{word}}"
       }
     }
   },

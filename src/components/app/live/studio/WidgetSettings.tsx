@@ -268,6 +268,60 @@ export function WidgetSettings({ widget, onChange }: Props) {
       );
       break;
 
+    case 'subathon_timer':
+      body = (
+        <>
+          <p className="text-xs text-zinc-500">{t('liveStudio.subathon.widgetHint')}</p>
+          <Field label={t('liveStudio.fields.label')}>
+            {(id) => (
+              <Input
+                id={id}
+                maxLength={30}
+                placeholder={t('liveOverlay.subathon')}
+                value={setting(s, 'label', '')}
+                onChange={(e) => set('label', e.target.value)}
+                className={SETTINGS_FIELD_CLASS}
+              />
+            )}
+          </Field>
+          {accentField}
+        </>
+      );
+      break;
+
+    case 'points_board':
+      body = (
+        <>
+          <Field label={t('liveStudio.fields.count')}>
+            {(id) => (
+              <Input
+                id={id}
+                type="number"
+                inputMode="numeric"
+                min={1}
+                max={10}
+                value={setting(s, 'count', 5)}
+                onChange={(e) => num('count', e.target.value, 1, 10)}
+                className={SETTINGS_FIELD_CLASS}
+              />
+            )}
+          </Field>
+          <Field label={t('liveStudio.fields.title')}>
+            {(id) => (
+              <Input
+                id={id}
+                maxLength={40}
+                placeholder={t('liveOverlay.pointsTitle')}
+                value={setting(s, 'title', '')}
+                onChange={(e) => set('title', e.target.value)}
+                className={SETTINGS_FIELD_CLASS}
+              />
+            )}
+          </Field>
+        </>
+      );
+      break;
+
     case 'stream_timer':
       body = (
         <>

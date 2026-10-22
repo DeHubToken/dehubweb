@@ -4836,7 +4836,6 @@
     "creatorEarnsDirect": "Intekenare betaal in DeHub-tokens. Jou aandeel land in jou beursie die oomblik dat hulle inteken, minder die platformfooi vir jou wapenvlak."
   },
   "liveOverlay": {
-    "wheelLanded": "{{name}} spun: {{result}}",
     "someone": "Iemand",
     "newFollower": "Nuwe volgeling: {{name}}",
     "newSubscriber": "Nuwe intekenaar: {{name}}",
@@ -4848,6 +4847,12 @@
     "topSupporters": "Top ondersteuners",
     "tipped": "{{name}} stuur 'n geskenk",
     "chatPreview": "Geselsboodskappe verskyn hier",
+    "wheelLanded": "{{name}} spun: {{result}}",
+    "subathon": "Subathon",
+    "subathonOver": "Tyd is verby",
+    "pointsTitle": "Mees lojale kykers",
+    "points_one": "{{formatted}} punt",
+    "points_other": "{{formatted}} punte",
     "poll": {
       "closed": "Stemming gesluit",
       "voteFor": "Stem vir {{option}}",
@@ -4875,6 +4880,29 @@
     "youAreTimedOut": "Jy is vir ’n oomblik tyd uit"
   },
   "liveStudio": {
+    "subathon": {
+      "title": "Subathon",
+      "intro": "'n Aftelling op jou stroom. Elke betaalde geskenk, volg en intekening voeg tyd by, sodat die kamer jou lewendig hou.",
+      "secondsPerThousand": "Sekondes bygevoeg per 1,000 DHB geskenk",
+      "secondsPerFollow": "Sekondes bygevoeg per volg",
+      "secondsPerSubscribe": "Sekondes bygevoeg per intekening",
+      "capHours": "Langste dit kan loop (ure)",
+      "save": "Spaarbedrae",
+      "saved": "Subathon-bedrae gespaar.",
+      "startMinutes": "Begin met (minute)",
+      "start": "Begin die aftelling",
+      "stop": "Stop",
+      "addFive": "Voeg 5 minute by",
+      "removeFive": "Verwyder 5 minute",
+      "failed": "Dit het nie gewerk nie. Probeer weer.",
+      "widgetHint": "Wys jou subathon-aftelling. Begin dit vanaf die Subathon-paneel in Live Studio."
+    },
+    "points": {
+      "title": "Lojale kykers",
+      "intro": "Kykers verdien 'n punt vir elke minuut wat hulle jou kyk en een vir elke 100 DHB wat hulle geskenk. Klets en reaksies verdien niks, so punte kan nie gekweek word nie.",
+      "empty": "Nog geen punte nie. Hulle bou op soos mense kyk en geskenk.",
+      "widgetHint": "Voeg die Lojale kykers-widget by om hierdie lys op die stroom te wys."
+    },
     "controls": {
       "title": "Vinnige kontroles",
       "intro": "Vir middelstroom. Elke skakelaar hou vir almal wat kyk, in die app en in OBS, totdat jy dit terugdraai.",
@@ -4992,7 +5020,6 @@
       "join": "Sluit aan"
     },
     "kinds": {
-      "spin_wheel": "Spin wiel",
       "tip_alert": "Wenk waarskuwing",
       "follow_alert": "Volg waarskuwing",
       "subscribe_alert": "Intekenaarwaarskuwing",
@@ -5009,10 +5036,12 @@
       "chat_box": "Geselsdoos",
       "ticker": "Ticker",
       "rule_alert": "Reël waarskuwings",
-      "poll": "Peiling"
+      "poll": "Peiling",
+      "spin_wheel": "Spin wiel",
+      "subathon_timer": "Subathon-timer",
+      "points_board": "Lojale kykers"
     },
     "hints": {
-      "spin_wheel": "Waar die wiele in jou reëls draai",
       "tip_alert": "Vier elke punt, grootte tot sy vlak",
       "follow_alert": "Wys elke nuwe volgeling",
       "subscribe_alert": "Vertoon elke nuwe intekenaar",
@@ -5029,7 +5058,10 @@
       "chat_box": "Wys jou uitsending se kletsboodskappe op die skerm",
       "ticker": "'n Reël van jou eie teks wat oor die skerm blaai",
       "rule_alert": "Waar jou reëls se waarskuwings verskyn",
-      "poll": "Jou regstreekse peiling, met 'n stemknoppie vir elke opsie"
+      "poll": "Jou regstreekse peiling, met 'n stemknoppie vir elke opsie",
+      "spin_wheel": "Waar die wiele in jou reëls draai",
+      "subathon_timer": "'n Aftelling wat geskenke, volgs en intekeninge terugstoot",
+      "points_board": "Jou top kykers volgens punte van kyk en geskenk"
     },
     "fields": {
       "celebration": "Viering",
@@ -5063,8 +5095,6 @@
       "fast": "Vinnig"
     },
     "rules": {
-      "wheelSegments": "Wielsegmente, een per lyn",
-      "wheelHint": "Tussen twee en twaalf. DeHub kies waar die wiel stop, sodat almal wat kyk dieselfde resultaat sien. Gebruik {result} in 'n waarskuwing, lees hardop of gesels aksie om dit te noem.",
       "title": "Reëls",
       "intro": "Wanneer iets op jou stroom gebeur, doen DeHub wat jy kies: wys 'n waarskuwing, speel 'n geluid, lees iets hardop, plaas in jou klets of vertel jou Discord.",
       "add": "Voeg 'n reël by",
@@ -5095,6 +5125,8 @@
       "removeAction": "Verwyder aksie",
       "placeholders": "Gebruik {name}, {amount} en {message} in jou teks. Links in messages delete.",
       "placeholdersLive": "Gebruik {name}, {title} en {link} in jou teks: jou naam, die titel van die uitsending en 'n skakel om dit te kyk.",
+      "wheelSegments": "Wielsegmente, een per lyn",
+      "wheelHint": "Tussen twee en twaalf. DeHub kies waar die wiel stop, sodat almal wat kyk dieselfde resultaat sien. Gebruik {result} in 'n waarskuwing, lees hardop of gesels aksie om dit te noem.",
       "alertText": "Waarskuwing teks",
       "sound": "Klank",
       "sayText": "Teks om hardop te lees",
@@ -5119,12 +5151,12 @@
         "subscribers": "Intekenaars"
       },
       "actionTypes": {
-        "wheel": "Draai 'n wiel",
         "alert": "Wys 'n waarskuwing",
         "sound": "Speel 'n klank",
         "say": "Lees hardop",
         "chat": "Skryf berig in die gespreksvenster.",
-        "webhook": "Stuur na 'n webhaak"
+        "webhook": "Stuur na 'n webhaak",
+        "wheel": "Draai 'n wiel"
       },
       "summary": {
         "tip": "Wenk van {{amount}} DHB of meer"

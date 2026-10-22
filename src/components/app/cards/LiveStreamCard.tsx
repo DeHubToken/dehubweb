@@ -1488,6 +1488,7 @@ export function LiveStreamCard({ stream, chatSlot, immersive = false }: LiveStre
               overlay={streamOverlay}
               videoRef={videoRef}
               initialViewers={Number(livePresence) || 0}
+              creator={stream.creatorId}
             />
           </Suspense>
         )}
