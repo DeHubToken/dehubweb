@@ -424,7 +424,7 @@ export async function getMyStreamModeration(): Promise<MyStreamModeration> {
 }
 
 export async function saveMyStreamModeration(settings: StreamModerationSettings): Promise<MyStreamModeration> {
-  return unwrapModeration(await apiCall('/api/livechat/moderation/mine', { method: 'PUT', body: settings, requiresAuth: true }));
+  return unwrapModeration(await apiCall('/api/livechat/moderation/mine', { method: 'PUT', body: { ...settings }, requiresAuth: true }));
 }
 
 export async function addStreamModerator(userAddress: string): Promise<MyStreamModeration> {
