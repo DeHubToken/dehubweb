@@ -102,7 +102,7 @@ html[data-theme='glass'] [data-glass-embed] > [data-link-preview-layout='image']
   width: 34%; max-width: 180px; height: 112px; min-height: 112px; flex-shrink: 0; aspect-ratio: auto;
 }
 html[data-theme='glass'] [data-glass-embed] [data-link-preview-layout] h4 { white-space: normal; -webkit-line-clamp: 2; }
-html[data-theme='glass'] [data-video-card] > [data-feed-video-frame]:not([data-video-fullscreen]) { margin-inline: auto; }
+html[data-theme='glass'] [data-video-card] > [data-feed-video-frame]:not([data-video-fullscreen]) { margin-inline: auto !important; }
 html[data-theme='glass'] :is([data-kit-chip], [data-kit-square])[data-active='true'] { box-shadow: var(--glass-edge-flat), 0 0 18px -8px var(--tint-accent); }
 html[data-theme='glass'] :is([data-poll-card], [data-kit-empty], [data-app-state][data-app-state-size='page']) {
   border-radius: 24px; border-color: transparent;
@@ -221,6 +221,7 @@ html[data-theme='glass'] #app-root :is(button,a).bg-white:not([data-on-media]):n
 }
 
 /* A tinted transport deck, shared by uploaded tracks in feeds and post pages. */
+html[data-theme='glass'] [data-glass-audio-tile] { padding: 0; border: 0; background: transparent; box-shadow: none; }
 html[data-theme='glass'] [data-audio-preview-item] { flex: 0 0 100%; width: 100%; min-width: 0; }
 html[data-theme='glass'] [data-glass-audio-preview] { width: 100%; background: transparent; overflow: visible; }
 html[data-theme='glass'] [data-glass-audio-preview] [data-audio-preview-label] { display: none; }
