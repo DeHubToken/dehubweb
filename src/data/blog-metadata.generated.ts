@@ -2834,7 +2834,7 @@ export const newPostsMetadata: BlogPost[] = [
   {
     "id": "dehub-next-chapter-riftn-bnb-recovery-relaunch",
     "slug": "dehub-next-chapter-riftn-bnb-recovery-relaunch",
-    "title": "DeHub’s next chapter: Riftn, our BNB recovery push, and the road to relaunch",
+    "title": "DeHub’s next chapter: Riftn, BNB recovery and the road to relaunch",
     "excerpt": "Our proposed move to Riftn, the push for a proper assessment of our stuck BNB, and the plan to get DeHub relaunched and trading.",
     "content": "",
     "bannerImage": "/media/bnb-pool-update-banner-new.png",
@@ -3470,7 +3470,7 @@ export const newPostsMetadata: BlogPost[] = [
 export const latestPostMetadata: BlogPost | undefined = {
   "id": "dehub-next-chapter-riftn-bnb-recovery-relaunch",
   "slug": "dehub-next-chapter-riftn-bnb-recovery-relaunch",
-  "title": "DeHub’s next chapter: Riftn, our BNB recovery push, and the road to relaunch",
+  "title": "DeHub’s next chapter: Riftn, BNB recovery and the road to relaunch",
   "excerpt": "Our proposed move to Riftn, the push for a proper assessment of our stuck BNB, and the plan to get DeHub relaunched and trading.",
   "content": "",
   "bannerImage": "/media/bnb-pool-update-banner-new.png",
