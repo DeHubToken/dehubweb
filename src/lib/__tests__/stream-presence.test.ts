@@ -295,6 +295,38 @@ describe('live room events for the overlay', () => {
     ]);
   });
 
+  it('names the sender of a paid tip when the confirmation carries them', async () => {
+    const { events, socket } = await watch();
+    socket.deliver('streamer.tip.confirmed', {
+      streamId: 'stream-1',
+      paidAmount: 250,
+      address: '0xFAN',
+      transactionHash: '0xHASH',
+      selectedTier: 'Crown',
+      message: 'gm',
+      user: { address: '0xFAN', username: 'fan' },
+    });
+    expect(events).toEqual([
+      {
+        type: 'tipConfirmed',
+        paidAmount: 250,
+        address: '0xfan',
+        transactionHash: '0xhash',
+        selectedTier: 'Crown',
+        message: 'gm',
+        user: { address: '0xfan', username: 'fan', displayName: undefined, avatarImageUrl: undefined },
+      },
+    ]);
+  });
+
+  it('passes reactions on with who sent them', async () => {
+    const { events, socket } = await watch();
+    socket.deliver('stream.reaction', { streamId: 'stream-1', reactionType: 'HEART', user: { address: '0xA' } });
+    socket.deliver('stream.reaction', { streamId: 'stream-2', reactionType: 'HEART', user: { address: '0xB' } });
+    socket.deliver('stream.reaction', { streamId: 'stream-1' });
+    expect(events).toEqual([{ type: 'reaction', reactionType: 'HEART', user: expect.objectContaining({ address: '0xa' }) }]);
+  });
+
   it('turns follows, subscriptions and shares into people', async () => {
     const { events, socket } = await watch();
     const user = { address: '0xA', username: 'ann' };

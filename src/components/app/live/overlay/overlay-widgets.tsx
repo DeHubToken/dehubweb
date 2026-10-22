@@ -12,7 +12,7 @@
 import { memo, useEffect, useMemo, useRef, useState, type CSSProperties } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useQueryClient } from '@tanstack/react-query';
-import { Eye } from 'lucide-react';
+import { Clock, Eye, Heart } from 'lucide-react';
 import { DhbCoin } from '@/components/app/DhbAmount';
 import { GiftAnimationOverlay } from '@/components/app/live/GiftAnimationOverlay';
 import { useGiftAnimations } from '@/hooks/use-gift-animations';
@@ -320,6 +320,191 @@ function Frame({ settings }: WidgetProps) {
   return <div data-ow-frame data-style={style} style={vars} />;
 }
 
+// ─── Stream timer ─────────────────────────────────────────────────────────────
+
+function formatElapsed(ms: number): string {
+  const total = Math.max(0, Math.floor(ms / 1000));
+  const h = Math.floor(total / 3600);
+  const m = Math.floor((total % 3600) / 60);
+  const s = String(total % 60).padStart(2, '0');
+  return h ? `${h}:${String(m).padStart(2, '0')}:${s}` : `${m}:${s}`;
+}
+
+function StreamTimer({ settings, stats }: WidgetProps) {
+  const label = setting(settings, 'label', '');
+  // The stream's own start, so a refresh does not restart the clock. A
+  // preview has none and counts from when it was drawn.
+  const [drawnAt] = useState(() => Date.now());
+  const startedAt = stats.startedAt ? Date.parse(stats.startedAt) : NaN;
+  const from = Number.isFinite(startedAt) ? startedAt : drawnAt;
+  const [now, setNow] = useState(() => Date.now());
+  useEffect(() => {
+    const id = window.setInterval(() => setNow(Date.now()), 1000);
+    return () => window.clearInterval(id);
+  }, []);
+  return (
+    <div data-ow-counter style={{ '--ow-accent': accent(settings) } as CSSProperties}>
+      <Clock aria-hidden />
+      {label && <span data-ow-counter-label>{label}</span>}
+      <span data-ow-tabular>{formatElapsed(now - from)}</span>
+    </div>
+  );
+}
+
+// ─── Reaction counter ─────────────────────────────────────────────────────────
+
+function ReactionCounter({ settings, stats }: WidgetProps) {
+  const base = Number(stats.reactions) || 0;
+  // Counted on top of the server's figure until a fresh one replaces it.
+  const [delta, setDelta] = useState(0);
+  useEffect(() => setDelta(0), [base]);
+  useOverlayEvent((event: LiveRoomEvent) => {
+    if (event.type === 'reaction') setDelta((d) => d + 1);
+  });
+  return (
+    <div data-ow-counter style={{ '--ow-accent': accent(settings) } as CSSProperties}>
+      <Heart aria-hidden />
+      <span data-ow-tabular>{(base + delta).toLocaleString()}</span>
+    </div>
+  );
+}
+
+// ─── Event feed ───────────────────────────────────────────────────────────────
+
+interface FeedItem {
+  id: number;
+  kind: 'tip' | 'follow' | 'subscribe' | 'share';
+  user: StreamJoinUser;
+  amount?: number;
+  planName?: string;
+}
+
+function EventFeed({ settings }: WidgetProps) {
+  const count = Math.min(8, Math.max(1, setting(settings, 'count', 4)));
+  const title = setting(settings, 'title', '');
+  const [items, setItems] = useState<FeedItem[]>([]);
+  const seq = useRef(0);
+  // Tips are listed once PAID. The paid event names its sender on a current
+  // API; the claim that came first is the fallback for the name.
+  const tippers = useRef(new Map<string, StreamJoinUser>());
+
+  useOverlayEvent((event: LiveRoomEvent) => {
+    let item: Omit<FeedItem, 'id'> | null = null;
+    if (event.type === 'tip' && event.transactionHash) {
+      tippers.current.set(event.transactionHash, event.user);
+      if (tippers.current.size > 50) tippers.current.delete(tippers.current.keys().next().value as string);
+    } else if (event.type === 'tipConfirmed') {
+      const user = event.user ?? tippers.current.get(event.transactionHash) ?? { address: event.address };
+      item = { kind: 'tip', user, amount: event.paidAmount };
+    } else if (event.type === 'follow' || event.type === 'share') {
+      item = { kind: event.type, user: event.user };
+    } else if (event.type === 'subscribe') {
+      item = { kind: 'subscribe', user: event.user, planName: event.planName };
+    }
+    if (!item) return;
+    seq.current += 1;
+    const next = { ...item, id: seq.current };
+    setItems((prev) => [next, ...prev].slice(0, count));
+  });
+
+  return (
+    <div data-ow-list style={{ '--ow-row': `calc(var(--ow-h) / ${count + (title ? 1 : 0)})` } as CSSProperties}>
+      {title && <div data-ow-list-title>{title}</div>}
+      {items.map((item) => (
+        <FeedRow key={item.id} item={item} />
+      ))}
+    </div>
+  );
+}
+
+function FeedRow({ item }: { item: FeedItem }) {
+  const { t } = useTranslation();
+  const name = useName(item.user);
+  const line =
+    item.kind === 'tip'
+      ? t('liveOverlay.tipped', { name })
+      : item.kind === 'follow'
+        ? t('liveOverlay.newFollower', { name })
+        : item.kind === 'subscribe'
+          ? item.planName
+            ? t('liveOverlay.subscribedTo', { name, plan: item.planName })
+            : t('liveOverlay.newSubscriber', { name })
+          : t('liveOverlay.shared', { name });
+  return (
+    <div data-ow-list-row data-ow-enter>
+      <span data-ow-name>{line}</span>
+      {item.kind === 'tip' && (
+        <span data-ow-amount>
+          {Math.floor(item.amount ?? 0).toLocaleString()} <DhbCoin />
+        </span>
+      )}
+    </div>
+  );
+}
+
+// ─── Chat box ─────────────────────────────────────────────────────────────────
+
+interface ChatItem {
+  id: string;
+  text: string;
+  user: StreamJoinUser;
+}
+
+function ChatBox({ settings, streamId }: WidgetProps) {
+  const { t } = useTranslation();
+  const count = Math.min(12, Math.max(1, setting(settings, 'count', 6)));
+  const showAvatars = setting(settings, 'showAvatars', true);
+  const [lines, setLines] = useState<ChatItem[]>([]);
+
+  useOverlayEvent((event: LiveRoomEvent) => {
+    if (event.type === 'chat') {
+      setLines((prev) => (prev.some((l) => l.id === event.id) ? prev : [...prev, event].slice(-count)));
+    } else if (event.type === 'chatDeleted') {
+      setLines((prev) => prev.filter((l) => l.id !== event.id));
+    }
+  });
+
+  return (
+    <div data-ow-chat style={{ '--ow-row': `calc(var(--ow-h) / ${count})` } as CSSProperties}>
+      {lines.length === 0 && !streamId && <div data-ow-chat-line data-preview>{t('liveOverlay.chatPreview')}</div>}
+      {lines.map((line) => (
+        <ChatLine key={line.id} line={line} showAvatar={showAvatars} />
+      ))}
+    </div>
+  );
+}
+
+function ChatLine({ line, showAvatar }: { line: ChatItem; showAvatar: boolean }) {
+  const name = useName(line.user);
+  return (
+    <div data-ow-chat-line data-ow-enter>
+      {showAvatar && <Avatar user={line.user} />}
+      <span data-ow-chat-name>{name}</span>
+      <span data-ow-chat-text>{line.text}</span>
+    </div>
+  );
+}
+
+// ─── Ticker ───────────────────────────────────────────────────────────────────
+
+const TICKER_SECONDS: Record<string, number> = { slow: 30, normal: 18, fast: 10 };
+
+function Ticker({ settings }: WidgetProps) {
+  const text = setting(settings, 'text', '');
+  const seconds = TICKER_SECONDS[setting(settings, 'speed', 'normal')] ?? TICKER_SECONDS.normal;
+  if (!text) return null;
+  // Two copies side by side, moved by half the track: the second copy is
+  // exactly where the first began when the loop restarts, so it never jumps.
+  return (
+    <div data-ow-ticker style={{ '--ow-accent': accent(settings), '--ow-ticker-s': `${seconds}s` } as CSSProperties}>
+      <div data-ow-ticker-track>
+        <span>{text}</span>
+        <span aria-hidden>{text}</span>
+      </div>
+    </div>
+  );
+}
+
 // ─── Registry ─────────────────────────────────────────────────────────────────
 
 export function OverlayWidgetView({ kind, ...props }: WidgetProps & { kind: OverlayKind }) {
@@ -341,6 +526,16 @@ export function OverlayWidgetView({ kind, ...props }: WidgetProps & { kind: Over
       return <TextWidget {...props} />;
     case 'frame':
       return <Frame {...props} />;
+    case 'stream_timer':
+      return <StreamTimer {...props} />;
+    case 'reaction_counter':
+      return <ReactionCounter {...props} />;
+    case 'event_feed':
+      return <EventFeed {...props} />;
+    case 'chat_box':
+      return <ChatBox {...props} />;
+    case 'ticker':
+      return <Ticker {...props} />;
     default:
       return null;
   }

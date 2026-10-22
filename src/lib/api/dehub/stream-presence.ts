@@ -135,20 +135,9 @@ export interface StreamConnection {
 let active: StreamConnection | null = null;
 
 /**
- * Take a share of the root-namespace socket, shared by every stream this tab
- * has open.
- *
- * A new session needs a new socket — the gateway reads the viewer's address off
- * the handshake, and a stale token would keep counting the previous account.
- * What it must NOT do is disconnect the old one: this used to, and every
- * presence opened before the token rotated kept a reference to a socket that
- * had just been closed under it. Those viewers stopped being counted, their
- * number froze at whatever it last was, and their `leave` became a no-op —
- * silently, on the very screens these counts exist for. A manual `disconnect()`
- * also cancels reconnection, so the socket never came back.
- *
- * So a rotated token retires the connection instead: it stops being handed out,
- * and closes itself once its last holder leaves.
+ * Take a share of the root-namespace socket every stream in this tab uses. A
+ * rotated token gets a new socket and RETIRES the old one — closed once its
+ * last holder leaves, never disconnected under presences still holding it.
  */
 export function acquireStreamSocket(): StreamConnection {
   const token = getAuthToken();
@@ -257,22 +246,8 @@ export function watchStreamJoins(
 
 /**
  * Join a stream as a viewer and report the count back as it changes.
- *
- * `streamId` is the Mongo ObjectId every `/api/live/{id}/*` route takes, never
- * the NFT tokenId — the gateway looks the stream up by it and a tokenId simply
- * matches nothing.
- *
- * Signed in or not, this tab is counted. Which pair of events it uses is the
- * only difference: `stream.join` is auth-guarded and keys the viewer by wallet
- * address, so a logged-out tab used to bail out here and be counted as nobody —
- * a creator whose audience was not signed in read "0 watching" over a stream
- * people were watching. `stream.join.anon` counts by socket id instead.
- *
- * The choice is made once, at join, from whether a token is on disk. It is not
- * re-evaluated if the viewer signs in mid-stream: they keep the anonymous seat
- * until the socket closes, which counts them exactly once either way. Claiming
- * the second seat is the failure worth avoiding, and the gateway refuses it
- * anyway.
+ * `streamId` is the Mongo ObjectId, never the NFT tokenId. Signed-out tabs are
+ * counted too, through `stream.join.anon`; the choice is made once, at join.
  */
 export function joinStreamPresence(
   streamId: string,
@@ -506,11 +481,23 @@ export type LiveRoomEvent =
       message?: string;
       transactionHash?: string;
     }
-  | { type: 'tipConfirmed'; paidAmount: number; address: string; transactionHash: string }
+  | {
+      type: 'tipConfirmed';
+      paidAmount: number;
+      address: string;
+      transactionHash: string;
+      user?: StreamJoinUser;
+      selectedTier?: string;
+      message?: string;
+    }
   | { type: 'follow' | 'share' | 'join'; user: StreamJoinUser }
   | { type: 'subscribe'; user: StreamJoinUser; planName?: string }
   | { type: 'viewers'; count: number }
-  | { type: 'overlayUpdated'; version: number };
+  | { type: 'overlayUpdated'; version: number }
+  | { type: 'reaction'; reactionType: string; user: StreamJoinUser }
+  // From the stream's chat room, which is a different connection (use-overlay-chat).
+  | { type: 'chat'; id: string; text: string; user: StreamJoinUser }
+  | { type: 'chatDeleted'; id: string };
 
 export function roomUser(raw: any): StreamJoinUser {
   const user = raw && typeof raw === 'object' ? raw : {};
@@ -567,7 +554,15 @@ export function watchLiveRoomEvents(streamId: string, onEvent: (event: LiveRoomE
       paidAmount,
       address: String(data?.address || '').toLowerCase(),
       transactionHash: String(data?.transactionHash || '').toLowerCase(),
+      user: data?.user ? roomUser(data.user) : undefined,
+      selectedTier: data?.selectedTier || undefined,
+      message: data?.message || undefined,
     });
+  };
+
+  const onReaction = (data: any) => {
+    if (!isForStream(data, streamId) || typeof data?.reactionType !== 'string') return;
+    onEvent({ type: 'reaction', reactionType: data.reactionType, user: roomUser(data.user) });
   };
 
   const person = (type: 'follow' | 'share') => (data: any) => {
@@ -610,6 +605,7 @@ export function watchLiveRoomEvents(streamId: string, onEvent: (event: LiveRoomE
     [EVENT.viewCountUpdate, onCount],
     [EVENT.leaveStream, onCount],
     [EVENT.overlayUpdated, onOverlay],
+    [EVENT.reaction, onReaction],
   ];
 
   s.on('connect', join);
