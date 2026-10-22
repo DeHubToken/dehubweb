@@ -28,6 +28,7 @@ import { OverlayWidgetView } from '@/components/app/live/overlay/overlay-widgets
 import { useOverlayChat } from '@/hooks/use-overlay-chat';
 import { createRuleBus, RuleAudio, RuleBusContext } from '@/components/app/live/overlay/rule-bus';
 import { PollContext, useStreamPoll } from '@/components/app/live/overlay/poll';
+import { OverlayCreatorContext, SubathonContext, useStreamSubathon } from '@/components/app/live/overlay/subathon';
 
 /** How often to look for the creator going live, and for a stream ending. */
 const IDLE_POLL_MS = 10_000;
@@ -155,6 +156,7 @@ export default function ObsOverlayPage() {
   // The poll is burned in for people watching the video somewhere the app's
   // buttons are not: they vote with `!vote 2` in chat.
   const polls = useStreamPoll(streamId, false);
+  const subathon = useStreamSubathon(streamId, data?.subathon);
   const placed =
     data && !notFound
       ? drawOrder(
@@ -179,6 +181,8 @@ export default function ObsOverlayPage() {
     <OverlayEventContext.Provider value={bus}>
       <RuleBusContext.Provider value={rules}>
         <PollContext.Provider value={{ ...polls, interactive: false }}>
+        <SubathonContext.Provider value={subathon}>
+        <OverlayCreatorContext.Provider value={data?.creator?.address ?? ''}>
           {/* One source plays the audio: the whole scene. Live rules only when OBS is
               where the overlay is shown, or viewers' apps would play them too. */}
           {!onlyWidget && <RuleAudio playLive={data?.renderIn === 'video'} />}
@@ -233,6 +237,8 @@ export default function ObsOverlayPage() {
               ].join('\n')}
             </pre>
           )}
+        </OverlayCreatorContext.Provider>
+        </SubathonContext.Provider>
         </PollContext.Provider>
       </RuleBusContext.Provider>
     </OverlayEventContext.Provider>

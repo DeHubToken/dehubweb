@@ -28,6 +28,7 @@ import { useOverlayEvent } from './overlay-events';
 import { useAlertQueue } from './use-alert-queue';
 import { useRuleFired } from './rule-bus';
 import { PollWidget } from './poll';
+import { PointsBoard, SubathonTimer } from './subathon';
 
 export interface WidgetProps {
   settings: Record<string, unknown>;
@@ -647,6 +648,10 @@ export function OverlayWidgetView({ kind, ...props }: WidgetProps & { kind: Over
       return <PollWidget settings={props.settings} />;
     case 'spin_wheel':
       return <SpinWheel {...props} />;
+    case 'subathon_timer':
+      return <SubathonTimer settings={props.settings} />;
+    case 'points_board':
+      return <PointsBoard settings={props.settings} />;
     default:
       return null;
   }

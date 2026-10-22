@@ -24,6 +24,7 @@ import { createOverlayEventBus, OverlayEventContext } from './overlay-events';
 import { OverlayWidgetView } from './overlay-widgets';
 import { createRuleBus, RuleAudio, RuleBusContext } from './rule-bus';
 import { PollContext, PollWidget, useStreamPoll } from './poll';
+import { OverlayCreatorContext, SubathonContext, useStreamSubathon } from './subathon';
 
 interface Props {
   streamId: string;
@@ -31,11 +32,13 @@ interface Props {
   videoRef: RefObject<HTMLVideoElement | null>;
   /** The post's token id: the stream's chat room is keyed on it, not on streamId. */
   tokenId?: string | number | null;
+  /** The creator's address, for widgets that read the creator's own data (points). */
+  creator?: string | null;
   /** The audience figure the card already shows, until the room sends one. */
   initialViewers: number;
 }
 
-export default function LiveOverlayLayer({ streamId, tokenId, overlay, videoRef, initialViewers }: Props) {
+export default function LiveOverlayLayer({ streamId, tokenId, overlay, videoRef, initialViewers, creator }: Props) {
   const layerRef = useRef<HTMLDivElement>(null);
   const picture = useVideoPictureRect(layerRef, videoRef);
   const queryClient = useQueryClient();
@@ -57,6 +60,7 @@ export default function LiveOverlayLayer({ streamId, tokenId, overlay, videoRef,
   // says: over an OBS stream it lands on the same spot as the burned-in copy
   // and covers it with buttons. Where the creator placed it, or the default spot.
   const polls = useStreamPoll(streamId, true);
+  const subathon = useStreamSubathon(streamId, overlay.subathon);
   const pollWidget = useMemo(
     () => overlay.widgets.find((w) => w.enabled && w.kind === 'poll') ?? newWidget('poll', []),
     [overlay],
@@ -94,6 +98,8 @@ export default function LiveOverlayLayer({ streamId, tokenId, overlay, videoRef,
 
   return (
     <OverlayEventContext.Provider value={bus}>
+    <SubathonContext.Provider value={subathon}>
+    <OverlayCreatorContext.Provider value={creator ?? ''}>
       <RuleBusContext.Provider value={rules}>
         {inApp && <RuleAudio playLive />}
         <div ref={layerRef} data-live-overlay aria-hidden>
@@ -120,6 +126,8 @@ export default function LiveOverlayLayer({ streamId, tokenId, overlay, videoRef,
           </div>
         )}
       </RuleBusContext.Provider>
+    </OverlayCreatorContext.Provider>
+    </SubathonContext.Provider>
     </OverlayEventContext.Provider>
   );
 }
