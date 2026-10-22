@@ -34,6 +34,7 @@ export { EditorPresenceRoom } from './server/editor-presence.ts';
 import { ROUTE_SEGMENTS, WORKER_ASSET_ROUTES } from './src/lib/reserved-usernames.js';
 import { edgeMaintenanceResponse } from './server/edge-maintenance.mjs';
 import { CONSOLIDATED_GUIDES, MILESTONE_REDIRECTS, RETIRED_GUIDES } from './src/lib/blog-redirects.js';
+import { DEHUB_APP_LINKS, DEHUB_APP_PAGE, dehubAppFaqLd, dehubAppSoftwareLd } from './src/lib/dehub-app-page.js';
 
 /**
  * `/mal.eth` — a verified ENS handle standing in for a username.
@@ -708,6 +709,43 @@ function blogAuthorLd(author) {
     : { '@type': 'Person', name };
 }
 
+/**
+ * FAQPage node for a post whose body ends in a "Frequently asked questions"
+ * section — 22 of the guides do, each written as `### question` + answer under
+ * a `## Frequently asked questions` heading, which the manifest renders as
+ * <h3>/<p> under an <h2>. The Q&A was in the HTML and nowhere in the markup.
+ *
+ * Google limits FAQ rich results to authoritative government and health sites,
+ * so this wins no snippet; it is here because structured Q&A is what Bing and
+ * the AI answer engines quote from. Each answer is everything between its
+ * question and the next one, so a list inside an answer is kept. Null unless
+ * there are at least two pairs, so a stray heading can never emit a stub.
+ */
+function postFaqLd(contentHtml) {
+  if (!contentHtml) return null;
+  const head = /<h2>\s*(?:frequently asked questions|faqs?)\s*<\/h2>/i.exec(contentHtml);
+  if (!head) return null;
+  let section = contentHtml.slice(head.index + head[0].length);
+  const next = section.indexOf('<h2>');
+  if (next !== -1) section = section.slice(0, next);
+  const text = (html) => html
+    .replace(/<\/(?:p|li)>/g, ' ')
+    .replace(/<[^>]+>/g, '')
+    .replace(/&(?:amp|quot|lt|gt|#39);/g, (e) => HTML_ENTITIES[e])
+    .replace(/\s+/g, ' ')
+    .trim();
+  const mainEntity = [];
+  const parts = section.split(/<h3>/).slice(1);
+  for (const part of parts) {
+    const end = part.indexOf('</h3>');
+    if (end === -1) continue;
+    const name = text(part.slice(0, end));
+    const answer = text(part.slice(end + 5));
+    if (name && answer) mainEntity.push({ '@type': 'Question', name, acceptedAnswer: { '@type': 'Answer', text: answer } });
+  }
+  return mainEntity.length >= 2 ? { '@type': 'FAQPage', mainEntity } : null;
+}
+
 function buildBlogHtml(post, canonicalUrl, contentHtml, manifest) {
   const image = buildBlogShareImage(post);
   const title = post.seoTitle || `${post.title} — DeHub Blog`;
@@ -734,6 +772,8 @@ function buildBlogHtml(post, canonicalUrl, contentHtml, manifest) {
       breadcrumbLd([HOME_CRUMB, { name: 'Blog', url: `${APP_URL}/docs/blog` }, { name: post.title, url: canonicalUrl }]),
     ],
   };
+  const faq = postFaqLd(contentHtml);
+  if (faq) jsonLd['@graph'].push({ ...faq, '@id': `${canonicalUrl}#faq` });
   return `<!DOCTYPE html>
 <html lang="en">
 <head>
@@ -842,6 +882,29 @@ const PRIMARY_NAV = [
   { path: '/music', label: 'Music' },
   { path: '/tv', label: 'DeHub TV' },
 ];
+
+// The keyword-targeted guides, linked from the homepage. Before this the
+// homepage's bot HTML carried ~44 internal links and none reached a money page:
+// the only route in was the unpaginated /docs/blog index, so each guide got a
+// sliver of an already second-hand signal. Sits beside the section nav rather
+// than inside HOME_INTRO_HTML, which mirrors the SPA panel word for word.
+const HOME_GUIDE_LINKS = [
+  ['/guides/what-is-watch-to-earn', 'What is watch-to-earn?'],
+  ['/guides/best-watch-to-earn-platforms-2026', 'Best watch-to-earn platforms 2026'],
+  ['/guides/is-watch-to-earn-legit', 'Is watch-to-earn legit?'],
+  ['/guides/dehub-vs-cheelee-theta-xcad-watch-to-earn', 'Cheelee alternative: DeHub vs Cheelee, Theta.tv and XCAD'],
+  ['/guides/web3-live-streaming-decentralised-twitch-alternative', 'Web3 live streaming: a decentralised Twitch alternative'],
+  ['/guides/best-decentralised-social-media-platforms-2026', 'Best decentralised social media platforms 2026'],
+  ['/guides/dehub-vs-depaul-dehub-vs-rowan-dehub', 'DeHub vs DePaul DeHUB vs Rowan DEHub'],
+  ['/dehub-app', 'Get the DeHub app'],
+];
+
+function homeGuidesHtml() {
+  const items = HOME_GUIDE_LINKS.map(([href, label]) =>
+    `<li style="margin:6px 0"><a href="${APP_URL}${href}">${escHtml(label)}</a></li>`
+  ).join('');
+  return `<nav aria-label="DeHub guides"><h2 style="font-size:16px">Guides</h2><ul style="list-style:none;padding:0;margin:0">${items}</ul></nav>`;
+}
 
 function primaryNavHtml(currentPath = '') {
   const items = PRIMARY_NAV.map((n) =>
@@ -1210,6 +1273,35 @@ const MARKETING_PAGES = {
 <p><a href="https://github.com/DeHubToken/dehub-mobile/releases/latest/download/dehub.apk">Download the DeHub APK</a> — Android 8 and up. Allow installs from your browser when Android asks.</p>
 <p>Prefer the store? DeHub is also <a href="https://play.google.com/store/apps/details?id=io.dehub.mobile">on Google Play</a>.</p>`,
   },
+  // The "DeHub app" brand query. Copy and structured data come from
+  // src/lib/dehub-app-page.js, which DehubAppPage.tsx renders too. The one
+  // page that does describe itself as a SoftwareApplication: it is the app's
+  // own landing page, free on every platform, with no rating to give — Search
+  // Console may list the Software App item as ineligible for a rich result,
+  // which costs nothing, while the entity itself is what this page is for.
+  // No card of its own in public/og: it shares the brand card (SHARE_IMAGE).
+  'dehub-app': {
+    title: DEHUB_APP_PAGE.title,
+    description: DEHUB_APP_PAGE.description,
+    heading: DEHUB_APP_PAGE.heading,
+    og: 'brand',
+    jsonLdExtra: {
+      about: { '@type': 'SoftwareApplication', name: 'DeHub', url: `${APP_URL}${DEHUB_APP_PAGE.path}` },
+    },
+    extraJsonLd: [dehubAppSoftwareLd(), dehubAppFaqLd()],
+    // The copy is fixed text from the shared module, so it goes in unescaped
+    // like every other bodyHtml here; build-public-locales.mjs evaluates this
+    // table to build the translated variants.
+    bodyHtml: `${DEHUB_APP_PAGE.intro.map((p) => `<p>${p}</p>`).join('\n')}
+<h2>Download DeHub</h2>
+<ul><li><a href="${DEHUB_APP_LINKS.googlePlay}">DeHub on Google Play</a> for Android</li>
+<li><a href="${DEHUB_APP_LINKS.appStore}">DeHub on the App Store</a> for iPhone</li>
+<li><a href="${DEHUB_APP_LINKS.web}">Open DeHub in your browser</a>, no install needed</li>
+<li><a href="${DEHUB_APP_LINKS.apk}">Download the DeHub APK</a> for Android without Google Play</li></ul>
+<h2>Frequently asked questions</h2>
+${DEHUB_APP_PAGE.faq.map(({ q, a }) => `<h3>${q}</h3>\n<p>${a}</p>`).join('\n')}
+<p>Still not sure which DeHub you need? <a href="${DEHUB_APP_LINKS.disambiguation}">DeHub vs DePaul DeHUB vs Rowan DEHub</a> sorts it out, and <a href="${DEHUB_APP_LINKS.whatIsDehub}">What is DeHub?</a> covers the platform in depth.</p>`,
+  },
 
   // The moderation handbook, published. The page itself is an iframe around a
   // static document, so a crawler running no JS sees an empty shell — the copy
@@ -1568,7 +1660,9 @@ function buildMarketingHtml(key, meta) {
   // the two UA variants describe the same URL as two different entities.
   // Never a SoftwareApplication/WebApplication/MobileApplication: Google
   // reports those as invalid without a rating or review, and none of these
-  // pages has one to give (see arcadeGameLd for VideoGame).
+  // pages has one to give (see arcadeGameLd for VideoGame). /dehub-app is the
+  // single deliberate exception, and carries it as a separate node in
+  // `extraJsonLd` rather than as the page's own type.
   const jsonLd = {
     '@context': 'https://schema.org',
     '@type': meta.jsonLdType || 'WebPage',
@@ -1604,11 +1698,11 @@ ${ogLocaleTag()}
 <meta property="og:title" content="${escHtml(meta.title)}">
 <meta property="og:description" content="${escHtml(meta.description)}">
 ${twitterTextTags(meta.title, meta.description)}
-${shareMetaTags(key, meta.title)}
+${shareMetaTags(meta.og || key, meta.title)}
 <meta name="twitter:site" content="@dehub_official">
 <script type="application/ld+json">${jsonLdScript(jsonLd)}</script>
 ${breadcrumbScript(trail)}
-</head>
+${(meta.extraJsonLd || []).map((node) => `<script type="application/ld+json">${jsonLdScript({ '@context': 'https://schema.org', ...node })}</script>\n`).join('')}</head>
 <body>
 <p><a href="${APP_URL}/">DeHub</a> › ${escHtml(meta.heading)}</p>
 <h1>${escHtml(meta.heading)}</h1>
@@ -7003,6 +7097,8 @@ async function handleRequest(request, env, ctx) {
       // A consistent nav here makes these sections the strongest sitelink
       // candidates. Injected first so it sits above the blog link + post list.
       html = html.replace('</body>', `<section style="max-width:600px;margin:24px auto;text-align:left">${primaryNavHtml('/')}</section></body>`);
+      // The money guides, right under the section nav (see HOME_GUIDE_LINKS).
+      html = html.replace('</body>', `<section style="max-width:600px;margin:24px auto;text-align:left">${homeGuidesHtml()}</section></body>`);
       // Blog was linked from nowhere in bot HTML — give crawlers a path in.
       html = html.replace('</body>', `<p style="max-width:600px;margin:16px auto"><a href="${APP_URL}/docs/blog">DeHub Blog — news, guides &amp; product updates</a></p></body>`);
       try {
