@@ -256,6 +256,8 @@ html[data-theme='glass'] [data-glass-audio-crown] {
 html[data-theme='glass'] [data-glass-audio-shoulder] { position: absolute; inset: 0; width: 100%; height: calc(100% + 24px); color: #d7ffff; pointer-events: none; }
 html[data-theme='glass'] [data-glass-audio-crown] > canvas { position: relative; width: 84%; margin-inline: 8%; height: 44px !important; min-height: 32px; background: transparent !important; }
 html[data-theme='glass'] :is([data-audio-frame], [data-audio-backdrop]):not(#_):not(#_) { background: transparent !important; border: 0; border-radius: 32px 32px 48px 48px; }
+html[data-theme='glass'] [data-audio-backdrop] { backdrop-filter: none !important; }
+html[data-theme='glass'] [data-glass-audio-deck] { backdrop-filter: var(--glass-blur); }
 html[data-theme='glass'] [data-audio-frame]:not([data-video-fullscreen]) { height: 220px !important; min-height: 210px; aspect-ratio: auto !important; width: 100% !important; }
 [data-glass-audio-title] { position: relative; display: grid; text-align: center; gap: 3px; margin: 0 16% 6px; }
 [data-glass-audio-title] strong { font-size: 17px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
