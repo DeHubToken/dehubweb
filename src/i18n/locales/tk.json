@@ -297,8 +297,8 @@
     "compactMode": "Ykjam tertip",
     "compactModeDesc": "Has köp mazmun üçin aralygy azaltmak",
     "autoPlay": "Awtomatik oýnamak",
-    "autoplayPausePrompt": "Awtomatik oýnatmak sazlamasy",
     "autoPlayDesc": "Wideolary awtomatik oýnamak",
+    "autoplayPausePrompt": "Awtomatik oýnatmak sazlamasy",
     "autoPlayMuted": "Awtomatik oýnatmany sessiz başla",
     "autoPlayMutedDesc": "Özbaşdak oýnaýan wideolar hemişe sessiz başlaýar",
     "showAnimations": "Animasiýalary görkezmek",
@@ -4690,6 +4690,15 @@
     "paidToCreatorWallet": "Ýaradyjynyň çuwalyna baryň",
     "creatorPaidDirectNote": "Ýaradyjynyň paýy siz ýazylan pursadyňyzda, olaryň pulçusyna geçýär. DeHub kiçijik platforma tölegini saklaýar.",
     "creatorEarnsDirect": "Abonentler DeHub tokensinde töleýärler. Siziň paýyňyz olaryň ýazylan pursadyna çenli pul çuwalyňyzda ýerleşýär, bu bolsa pul çuwalyňyz üçin platformyň tölegini azaltýar."
+  },
+  "liveOverlay": {
+    "someone": "Biriniň",
+    "newFollower": "Täze şägirdi: {{name}}",
+    "newSubscriber": "Täze abonent: {{name}}",
+    "joined": "{{name}} goşuldy",
+    "goalReached": "Goý, maksat amala aşsyn!",
+    "followersUnit": "şägirtler",
+    "topSupporters": "Ýolbaşçylyk maslahaty"
   },
   "live": {
     "chatJoined": "goşuldy",

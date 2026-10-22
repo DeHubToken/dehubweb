@@ -4773,6 +4773,17 @@
     "creatorPaidDirectNote": "구독하는 순간 크리에이터의 몫이 지갑으로 바로 이동합니다. DeHub는 소정의 플랫폼 수수료를 부과합니다.",
     "creatorEarnsDirect": "구독자는 DeHub 토큰으로 결제합니다. 구독하는 순간 지갑에 공유가 들어오므로 배지 등급에 대한 플랫폼 수수료가 줄어듭니다."
   },
+  "liveOverlay": {
+    "someone": "누군가",
+    "newFollower": "새 팔로워: {{name}}",
+    "newSubscriber": "신규 구독자: {{name}}",
+    "subscribedTo": "{{name}} 님이 {{plan}} 에 구독했습니다",
+    "shared": "{{name}} 님이 스트림을 공유했습니다",
+    "joined": "{{name}} 님이 합류했습니다",
+    "goalReached": "목표에 도달했습니다!",
+    "followersUnit": "팔로워",
+    "topSupporters": "최고의 서포터"
+  },
   "live": {
     "chatJoined": "님이 참여했습니다",
     "chatSentGift": "님이 보냈습니다",

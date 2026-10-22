@@ -297,8 +297,8 @@
     "compactMode": "ਸੰਖੇਪ ਮੋਡ",
     "compactModeDesc": "ਵੱਧ ਸਮੱਗਰੀ ਦਿਖਾਉਣ ਲਈ ਫ਼ਾਸਲਾ ਘਟਾਓ",
     "autoPlay": "ਆਪਣੇ ਆਪ ਵੀਡੀਓ ਚਲਾਓ",
-    "autoplayPausePrompt": "ਆਟੋ ਪਲੇ ਸੈਟਿੰਗ",
     "autoPlayDesc": "ਵੀਡੀਓ ਆਪਣੇ ਆਪ ਚੱਲਣ",
+    "autoplayPausePrompt": "ਆਟੋ ਪਲੇ ਸੈਟਿੰਗ",
     "autoPlayMuted": "ਆਟੋਪਲੇ ਮਿਊਟ ਕਰਕੇ ਸ਼ੁਰੂ ਕਰੋ",
     "autoPlayMutedDesc": "ਆਪਣੇ ਆਪ ਚੱਲਣ ਵਾਲੀਆਂ ਵੀਡੀਓ ਹਮੇਸ਼ਾ ਆਵਾਜ਼ ਬੰਦ ਕਰਕੇ ਸ਼ੁਰੂ ਹੋਣਗੀਆਂ",
     "showAnimations": "ਐਨੀਮੇਸ਼ਨ ਦਿਖਾਓ",
@@ -4771,6 +4771,17 @@
     "paidToCreatorWallet": "ਸਿੱਧਾ ਸਿਰਜਣਹਾਰ ਦੇ ਵਾਲਿਟ ਤੇ ਜਾਂਦਾ ਹੈ",
     "creatorPaidDirectNote": "ਸਿਰਜਣਹਾਰ ਦਾ ਹਿੱਸਾ ਸਿੱਧਾ ਉਨ੍ਹਾਂ ਦੇ ਬਟੂਏ ਵਿੱਚ ਜਾਂਦਾ ਹੈ ਜਦੋਂ ਤੁਸੀਂ ਸਬਸਕ੍ਰਾਈਬ ਕਰਦੇ ਹੋ. DeHub ਇੱਕ ਛੋਟੀ ਪਲੇਟਫਾਰਮ ਫੀਸ ਰੱਖਦਾ ਹੈ.",
     "creatorEarnsDirect": "ਗਾਹਕ ਡੀਹਬ ਟੋਕਨ ਵਿੱਚ ਭੁਗਤਾਨ ਕਰਦੇ ਹਨ. ਤੁਹਾਡੇ ਬਟੂਏ ਵਿੱਚ ਤੁਹਾਡੇ ਹਿੱਸੇ ਦੀਆਂ ਜ਼ਮੀਨਾਂ ਹਨ ਜਦੋਂ ਉਹ ਗਾਹਕੀ ਲੈਂਦੇ ਹਨ, ਤੁਹਾਡੇ ਬੈਜ ਪੱਧਰ ਲਈ ਪਲੇਟਫਾਰਮ ਫੀਸ ਘੱਟ ਹੁੰਦੀ ਹੈ ।"
+  },
+  "liveOverlay": {
+    "someone": "ਕੋਈ",
+    "newFollower": "ਨਵਾਂ ਅਨੁਯਾਈਃ {{name}}",
+    "newSubscriber": "ਨਵਾਂ ਗਾਹਕਃ {{name}}",
+    "subscribedTo": "{{name}} ਨੂੰ ਸਬਸਕ੍ਰਾਈਬ ਕੀਤਾ {{plan}}",
+    "shared": "{{name}} ਨੇ ਸਟ੍ਰੀਮ ਨੂੰ ਸਾਂਝਾ ਕੀਤਾ",
+    "joined": "{{name}} ਸ਼ਾਮਲ ਹੋਏ",
+    "goalReached": "ਟੀਚਾ ਪੂਰਾ ਹੋ ਗਿਆ!",
+    "followersUnit": "ਫਾਲੋਅਰਜ਼",
+    "topSupporters": "ਪ੍ਰਮੁੱਖ ਸਮਰਥਕ"
   },
   "live": {
     "chatJoined": "ਸ਼ਾਮਲ ਹੋਏ",

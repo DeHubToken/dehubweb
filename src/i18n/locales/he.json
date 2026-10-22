@@ -297,8 +297,8 @@
     "compactMode": "מצב קומפקטי",
     "compactModeDesc": "הקטן ריווח להצגת יותר תוכן",
     "autoPlay": "הפעלה אוטומטית של סרטונים",
-    "autoplayPausePrompt": "הגדרת הפעלה אוטומטית",
     "autoPlayDesc": "סרטונים מתחילים לפעול אוטומטית",
+    "autoplayPausePrompt": "הגדרת הפעלה אוטומטית",
     "autoPlayMuted": "הפעלה אוטומטית ללא קול",
     "autoPlayMutedDesc": "סרטונים שמתנגנים מעצמם תמיד מתחילים עם הקול כבוי",
     "showAnimations": "הצג אנימציות",
@@ -4771,6 +4771,17 @@
     "paidToCreatorWallet": "הולך ישר לארנק של היוצר",
     "creatorPaidDirectNote": "החלק של היוצר הולך ישר לארנק שלו ברגע שאתם נרשמים. DeHub שומר עמלה קטנה על הפלטפורמה.",
     "creatorEarnsDirect": "מנויים משלמים באסימוני DeHub. החלק שלכם מגיע לארנק ברגע שהם נרשמים, בניכוי עמלת הפלטפורמה עבור רמת התג שלכם."
+  },
+  "liveOverlay": {
+    "someone": "מישהו",
+    "newFollower": "עוקב חדש: {{name}}",
+    "newSubscriber": "מנוי חדש: {{name}}",
+    "subscribedTo": "{{name}} נרשמו ל -{{plan}}",
+    "shared": "{{name}} שיתפו את הזרם",
+    "joined": "{{name}} הצטרפו",
+    "goalReached": "הגעת ליעד!",
+    "followersUnit": "עוקבים",
+    "topSupporters": "תומכים מובילים"
   },
   "live": {
     "chatJoined": "הצטרף/ה",
