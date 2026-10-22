@@ -936,6 +936,7 @@
     "price": "Prix",
     "ppvDhbInfo": "Les paiements sont en jetons DeHub sur la chaîne Base",
     "ppvUsdInfo": "Les paiements sont en USD",
+    "ppvStableInfo": "Les acheteurs paient en {{symbol}}, envoyé directement à vous",
     "setupBounty": "Configurer la récompense",
     "viewersToReward": "Spectateurs à récompenser",
     "numberOfViewers": "Nombre de spectateurs",

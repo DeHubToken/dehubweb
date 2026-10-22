@@ -703,6 +703,7 @@
     "price": "Цена",
     "ppvDhbInfo": "Платежи осуществляются в токенах DeHub в сети Base",
     "ppvUsdInfo": "Оплата в USD",
+    "ppvStableInfo": "Покупатели платят в {{symbol}}, деньги приходят сразу вам",
     "setupBounty": "Настроить награду",
     "viewersToReward": "Зрителей для награждения",
     "numberOfViewers": "Количество зрителей",

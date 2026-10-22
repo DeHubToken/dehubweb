@@ -704,6 +704,7 @@
     "price": "Harga",
     "ppvDhbInfo": "Pembayaran dalam token DeHub di rantai Base",
     "ppvUsdInfo": "Pembayaran dalam USD",
+    "ppvStableInfo": "Pembeli membayar dengan {{symbol}}, langsung dikirim ke kamu",
     "setupBounty": "Atur hadiah",
     "viewersToReward": "Penonton untuk diberi hadiah",
     "numberOfViewers": "Jumlah penonton",
