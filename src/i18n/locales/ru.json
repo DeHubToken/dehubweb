@@ -602,6 +602,8 @@
     "stagePay": "Оплата DeHub Pay в {{symbol}}…",
     "stageDelivering": "DeHub Pay отправляет ваши токены…",
     "payViaDpay": "Оплачено DeHub Pay, токены прибудут примерно через 30с",
+    "payDirect": "Отправляется напрямую {{name}} в {{symbol}} в сети {{chain}}. Без обмена.",
+    "payDirectNoName": "Отправляется напрямую автору в {{symbol}} в сети {{chain}}. Без обмена.",
     "payViaBridgeDpay": "Переведено на Base и оплачено DeHub Pay, токены прибудут примерно через минуту",
     "dmSent": "Отправлено {{amount}} токенов пользователю {{name}}!"
   },

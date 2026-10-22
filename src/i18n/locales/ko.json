@@ -603,6 +603,8 @@
     "stagePay": "{{symbol}}(으)로 DeHub Pay에 결제 중…",
     "stageDelivering": "DeHub Pay에서 토큰을 전송 중입니다…",
     "payViaDpay": "DeHub Pay로 결제됨, 토큰은 약 30초 후에 도착",
+    "payDirect": "{{chain}}의 {{symbol}}(으)로 {{name}}님에게 바로 전송됩니다. 스왑 없음.",
+    "payDirectNoName": "{{chain}}의 {{symbol}}(으)로 크리에이터에게 바로 전송됩니다. 스왑 없음.",
     "payViaBridgeDpay": "Base로 이동하여 DeHub Pay로 결제됨, 토큰은 약 1분 후에 도착",
     "dmSent": "{{name}}님에게 {{amount}} DHB를 보냈어요!"
   },

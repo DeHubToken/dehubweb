@@ -30,6 +30,7 @@ import {
   type TipFundingPlan,
   type TipFundingSource,
 } from '@/lib/tip-funding';
+import { directTipToken } from '@/lib/direct-tip-tokens';
 import dehubCoin from '@/assets/dehub-coin.png';
 import ethLogo from '@/assets/eth-logo.png';
 import bnbLogo from '@/assets/bnb-logo.png';
@@ -82,9 +83,18 @@ interface TipPayWithProps {
   onChange: (source: TipFundingSource | null) => void;
   /** Only other tokens: for a surface that already knows the DHB is short. */
   requireSource?: boolean;
+  /**
+   * Tips: offer only tokens the tip contract takes as they are (USDC/USDT on
+   * Base and BNB), paid straight to the creator with no swap. The amount is
+   * then in that token, so nothing is picked for the tipper — switching the
+   * unit under an amount they typed would turn 5,000 DHB into 5,000 USDC.
+   */
+  direct?: boolean;
+  /** Who receives a direct tip, for the line under the picker. */
+  recipientName?: string;
 }
 
-export default function TipPayWith({ amountDhb, value, onChange, requireSource = false }: TipPayWithProps) {
+export default function TipPayWith({ amountDhb, value, onChange, requireSource = false, direct = false, recipientName }: TipPayWithProps) {
   const { t, i18n } = useTranslation();
   const { walletAddress } = useAuth();
   const { allTokens, isLoading: tokensLoading } = useAllChainsTokens();
@@ -115,8 +125,8 @@ export default function TipPayWith({ amountDhb, value, onChange, requireSource =
         usd: Number(formatUnits(tk.balance, tk.decimals)) * price,
       };
     })
-    .filter(r => r.usd >= MIN_SOURCE_USD)
-    .sort((a, b) => b.usd - a.usd), [allTokens, prices, dhbAddresses]);
+    .filter(r => r.usd >= MIN_SOURCE_USD && (!direct || !!directTipToken(r)))
+    .sort((a, b) => b.usd - a.usd), [allTokens, prices, dhbAddresses, direct]);
 
   // Short of DHB → switch to the richest balance, once, unless the tipper chose.
   // Back to DHB when the amount drops within what they hold. The pick waits for
@@ -125,7 +135,7 @@ export default function TipPayWith({ amountDhb, value, onChange, requireSource =
   const short = requireSource || (amountDhb > 0 && amountDhb > dhbHeld);
   const listReady = !tokensLoading && pricesReady;
   useEffect(() => {
-    if (userPicked.current) return;
+    if (userPicked.current || direct) return;
     if (short && !value && rows.length && listReady) onChange(rows[0]);
     if (!short && value) onChange(null);
   }, [short, rows, value, onChange, listReady]);
@@ -137,7 +147,7 @@ export default function TipPayWith({ amountDhb, value, onChange, requireSource =
   useEffect(() => {
     setPlan(null);
     setPlanError(null);
-    if (!value || !walletAddress || !(debouncedAmount > 0)) return;
+    if (direct || !value || !walletAddress || !(debouncedAmount > 0)) return;
     let cancelled = false;
     setQuoting(true);
     planTipFunding({ source: value, amountDhb: debouncedAmount, dhbOnBase, walletAddress })
@@ -181,7 +191,19 @@ export default function TipPayWith({ amountDhb, value, onChange, requireSource =
         </span>
       </button>
 
-      {value && (
+      {value && direct && (
+        <div className="border-t border-white/10 px-3 py-2 text-[11px] leading-relaxed text-white/60">
+          {recipientName
+            ? t('tip.payDirect', 'Sent straight to {{name}} in {{symbol}} on {{chain}}. No swap.', {
+              name: recipientName, symbol: value.symbol, chain: TIP_CHAIN_NAMES[value.chainId] ?? '',
+            })
+            : t('tip.payDirectNoName', 'Sent straight to the creator in {{symbol}} on {{chain}}. No swap.', {
+              symbol: value.symbol, chain: TIP_CHAIN_NAMES[value.chainId] ?? '',
+            })}
+        </div>
+      )}
+
+      {value && !direct && (
         <div className="border-t border-white/10 px-3 py-2 text-[11px] leading-relaxed">
           {quoting ? (
             <span className="inline-flex items-center gap-1.5 text-white/50">
