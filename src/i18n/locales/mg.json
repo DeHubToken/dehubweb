@@ -4809,6 +4809,28 @@
       "howToVote_other": "Mitendry {{command}} sy ny isa ao amin'ny karajia mba hifidy · {{count}} votes"
     }
   },
+  "liveRecap": {
+    "title": "Avereno alefa",
+    "justEnded": "Famerenana ny tosakao",
+    "lastStream": "Ny tosaka farany nataonao",
+    "share": "MIZARA",
+    "untitled": "Tsy misy anarana ilay tosaka",
+    "copied": "Recap kopia. Apetaho na aiza na aiza.",
+    "loadFailed": "Tsy naherisetra ny fakana an-tsokosoko. Miverena ao anatin'ny iray minitra.",
+    "duration": "Time velona",
+    "peakViewers": "Ny tena mijery avy hatrany",
+    "gifts_one": "Avy amin'i{{count}} gift",
+    "gifts_other": "Avy {{count}} gift",
+    "newFollowers": "Mpanara-dia vaovao",
+    "chatMessages": "Karajia hafatra",
+    "chatters": "Olona mifampiresaka",
+    "reactions": "Fanehoan-kevitra",
+    "shares": "Olona mizara",
+    "topSupporters": "TOP mpanohana",
+    "polls": "Fitsapan-kevitra",
+    "pollWinner": "{{option}} Won",
+    "stillCounting": "Mbola manisa: Afaka maka minitra iray ny fanomezam-pahasoavana mba hanamarinana."
+  },
   "liveStudio": {
     "polls": {
       "title": "Polls",
@@ -4916,7 +4938,6 @@
       "join": "Midira"
     },
     "kinds": {
-      "poll": "Fitsapan-kevitra",
       "tip_alert": "Fampandrenesana tip",
       "follow_alert": "Fampandrenesana arahana",
       "subscribe_alert": "Fampandrenesana mpisoratra",
@@ -4932,7 +4953,8 @@
       "event_feed": "Hetsika vao haingana",
       "chat_box": "Efitrano firesahana",
       "ticker": "Ticker",
-      "rule_alert": "Fampitandremana momba ny fitsipika"
+      "rule_alert": "Fampitandremana momba ny fitsipika",
+      "poll": "Fitsapan-kevitra"
     },
     "hints": {
       "tip_alert": "Mankalaza ny tip rehetra, arakaraka ny haavon'izy ireo",

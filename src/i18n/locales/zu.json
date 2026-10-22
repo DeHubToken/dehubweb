@@ -4807,9 +4807,31 @@
       "howToVote_other": "Thayipha {{command}} nenombolo engxoxweni ukuze uvote · {{count}} amavoti"
     }
   },
+  "liveRecap": {
+    "title": "Ukudlala kabusha kokusakaza",
+    "justEnded": "Ukubuyekezwa kokusakaza kwakho",
+    "lastStream": "Ukusakaza kwakho kokugcina",
+    "share": "Yabelana",
+    "shareText": "Ngisanda kusakaza i- \"{{title}}\" ku-DeHub: {{duration}} live, {{peak}} ebuka inani eliphakeme futhi {{followers}} abalandeli abasha.",
+    "untitled": "Ukusakaza okungenasihloko",
+    "copied": "Phinda ukopishe. Namathisela noma kuphi.",
+    "loadFailed": "Ukubuyekezwa akuzange kulayishwe. Zama futhi ngomzuzwana.",
+    "duration": "Isikhathi sisebenza bukhoma",
+    "peakViewers": "Okuningi ukubuka ngasikhathi sinye",
+    "gifts_one": "Kusuka ku- {{count}} gift",
+    "gifts_other": "Kusuka ku-{{count}} izipho",
+    "newFollowers": "Abalandeli abasha",
+    "chatMessages": "Imiyalezo yokuxoxa",
+    "chatters": "Abantu abaxoxayo",
+    "reactions": "Ukusabela",
+    "shares": "Abantu abahlanganyela nabanye",
+    "topSupporters": "Abasekeli abahamba phambili",
+    "polls": "Amavoti",
+    "pollWinner": "{{option}} won",
+    "stillCounting": "Kusabalwa: izipho zingathatha umzuzu ukuqinisekisa."
+  },
   "liveStudio": {
     "polls": {
-      "closeFailed": "Ukuvota akuphelanga. Zama futhi.",
       "title": "Amavoti",
       "intro": "Buza abantu ababukela ukusakaza kwakho umbuzo. Baphendula ngenkinobho ku-app ye-DeHub, noma ngokuthayipha okuthi {{command}} nenombolo yenketho engxoxweni.",
       "question": "Umbuzo",
@@ -4827,6 +4849,7 @@
       "started": "Ukuvota kwakho kuvuliwe. Ababukeli bangavota manje.",
       "notLive": "Iya bukhoma kuqala. Ukuvota kuyaqhubeka ekusakazeni okusakazayo njengamanje.",
       "startFailed": "Ukuvota akuqalanga. Zama futhi.",
+      "closeFailed": "Ukuvota akuphelanga. Zama futhi.",
       "live": "Ukuvota kuvuliwe · {{time}} kwesobunxele",
       "ended": "Ukuvota kuvaliwe",
       "votes_one": "{{count}} vote",

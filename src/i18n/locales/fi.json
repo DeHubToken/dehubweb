@@ -4739,6 +4739,29 @@
       "howToVote_other": "Syötä {{command}} ja numero chatissa äänestääksesi · {{count}} ääntä"
     }
   },
+  "liveRecap": {
+    "title": "Virran yhteenveto",
+    "justEnded": "Suoratoistosi yhteenveto",
+    "lastStream": "Viimeinen suoratoistosi",
+    "share": "Jaa",
+    "shareText": "Striimasin juuri \"{{title}}\" DeHubissa: {{duration}} live, {{peak}} katselu huipulla ja {{followers}} uutta seuraajaa.",
+    "untitled": "Nimetön stream",
+    "copied": "Kertaus kopioitu. Liitä se mihin tahansa.",
+    "loadFailed": "Yhteenveto ei latautunut. Yritä hetken kuluttua uudelleen.",
+    "duration": "Live-aika",
+    "peakViewers": "Useimmat katsovat kerralla",
+    "gifts_one": "Lähettäjä:{{count}} Gift",
+    "gifts_other": "Lahjoista {{count}}",
+    "newFollowers": "Uudet seuraajat",
+    "chatMessages": "Chat-viestit",
+    "chatters": "Ihmiset juttelevat",
+    "reactions": "Reaktiot",
+    "shares": "Henkilöiden jakaminen",
+    "topSupporters": "Parhaat kannattajat",
+    "polls": "Kyselyt",
+    "pollWinner": "{{option}} voitti",
+    "stillCounting": "Vielä lasketaan: lahjojen vahvistaminen voi kestää hetken."
+  },
   "liveStudio": {
     "polls": {
       "title": "Kyselyt",

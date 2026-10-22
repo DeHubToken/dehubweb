@@ -5839,9 +5839,31 @@
       "howToVote_other": "اكتب {{command}} ورقمًا في الدردشة للتصويت ·{{count}} أصوات"
     }
   },
+  "liveRecap": {
+    "title": "ملخص الدفق",
+    "justEnded": "ملخص البث الخاص بك",
+    "lastStream": "آخر بث لك",
+    "share": "مشاركة",
+    "shareText": "لقد بثت للتو \"{{title}}\" على DeHub: {{duration}} مباشر، {{peak}} يشاهد في الذروة و {{followers}} متابعين جدد.",
+    "untitled": "دفق بدون عنوان",
+    "copied": "تم نسخ الملخص. الصقه في أي مكان.",
+    "loadFailed": "لم يتم تحميل الملخص. حاول مرة أخرى خلال لحظات.",
+    "duration": "وقت البث المباشر",
+    "peakViewers": "الأكثر مشاهدة في وقت واحد",
+    "gifts_one": "من هدية {{count}}",
+    "gifts_other": "من {{count}} هدايا",
+    "newFollowers": "متابعون جدد",
+    "chatMessages": "رسائل الدردشة",
+    "chatters": "الأشخاص الذين يدردشون",
+    "reactions": "ردود الفعل",
+    "shares": "مشاركة الأشخاص",
+    "topSupporters": "أفضل المؤيدين",
+    "polls": "استطلاعات الرأي",
+    "pollWinner": "{{option}} فاز",
+    "stillCounting": "لا يزال العد مستمراً: قد تستغرق الهدايا دقيقة للتأكيد."
+  },
   "liveStudio": {
     "polls": {
-      "minutes_one": "{{count}} دقيقة",
       "title": "استطلاعات الرأي",
       "intro": "اسأل الأشخاص الذين يشاهدون بثك سؤالًا. يجيبون بزر في تطبيق DeHub، أو عن طريق كتابة {{command}} ورقم الخيار في الدردشة.",
       "question": "السؤال",
@@ -5852,6 +5874,7 @@
       "duration": "المدة التي يبقى فيها التصويت مفتوحًا",
       "seconds_one": "{{count}} ثانية",
       "seconds_other": "{{count}} ثانية",
+      "minutes_one": "{{count}} دقيقة",
       "minutes_other": "{{count}} دقيقة",
       "start": "ابدأ الاستطلاع",
       "end": "إنهاء التصويت الآن",

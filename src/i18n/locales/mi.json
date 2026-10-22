@@ -4777,6 +4777,28 @@
       "howToVote_other": "Momo {{command}} me te maha i roto i te kōrerorero ki te pōti · {{count}} pōti"
     }
   },
+  "liveRecap": {
+    "title": "Te whakahoutanga o te awa",
+    "lastStream": "Ko tō awa whakamutunga",
+    "share": "Te tohatoha",
+    "shareText": "I rere noa ahau \"{{title}}\" i runga i DeHub: {{duration}} ora, {{peak}} matakitaki i te tihi me {{followers}} kaitautoko hou.",
+    "untitled": "Te rere kore-whakaputa",
+    "copied": "Tangohia te kape. Tangohia ki nga waahi katoa.",
+    "loadFailed": "Kaore i te utaina te ripa. Whakamātauria ano i roto i te wa.",
+    "duration": "Te ora o te wā",
+    "peakViewers": "Ko te nuinga o te hunga e titiro ana i te wa kotahi",
+    "gifts_one": "Mai i {{count}} koha",
+    "gifts_other": "Mai i {{count}} koha",
+    "newFollowers": "Ngā kaiwhaiwhai hou",
+    "chatMessages": "Ngā karere kōrerorero",
+    "chatters": "Te iwi kōrerorero",
+    "reactions": "Ngā urupare",
+    "shares": "Ka tohaina e te iwi",
+    "topSupporters": "Ko nga kaitautoko nui",
+    "polls": "Ngā pōtae",
+    "pollWinner": "{{option}} i riro",
+    "stillCounting": "Kei te tatau tonu: Ka taea e nga taonga te tango i te meneti ki te whakapumautia."
+  },
   "liveStudio": {
     "polls": {
       "title": "Ngā pōtae",

@@ -4748,6 +4748,28 @@
       "howToVote_other": "ٽائپ ڪريو {{command}} ۽ هڪ نمبر چيٽ ۾ ووٽ ڏيڻ لاءِ · {{count}} ووٽ"
     }
   },
+  "liveRecap": {
+    "title": "وهڪرو ريڪپ",
+    "justEnded": "توھان جو وهڪرو ريڪپ",
+    "lastStream": "توھان جو آخري وهڪرو",
+    "share": "حصيداري ڪريو",
+    "shareText": "مون صرف ڊي هب تي \"{{title}}\" اسٽريم ڪيو: {{duration}} لائيو، {{peak}} چوٽي تي ڏسي رهيو آهي ۽ {{followers}} نئين پيروڪار.",
+    "copied": "Recap ڪاپي. ڪٿي به پيسٽ ڪريو.",
+    "loadFailed": "ريڪپ لوڊ نه ڪيو. ٿوري دير کان پوء ٻيهر ڪوشش ڪريو.",
+    "duration": "ٽائيم لائيو",
+    "peakViewers": "سڀ کان هڪ ئي وقت تي ڏسي رهيا آهن",
+    "gifts_one": "مان {{count}} تحفه",
+    "gifts_other": "مان {{count}} تحفن",
+    "newFollowers": "نوان پيروڪار",
+    "chatMessages": "چيٽ پيغام",
+    "chatters": "ماڻهن کي چيٽ",
+    "reactions": "رد عمل",
+    "shares": "ماڻهن کي حصيداري ڪريو",
+    "topSupporters": "مٿيون حامي",
+    "polls": "پولرز",
+    "pollWinner": "{{option}} ونس ههههه",
+    "stillCounting": "اڃا تائين ڳڻپ: تحفا تصديق ڪرڻ ۾ هڪ منٽ وٺي سگهن ٿا."
+  },
   "liveStudio": {
     "polls": {
       "title": "پولرز",

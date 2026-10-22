@@ -4802,6 +4802,28 @@
       "howToVote_other": "채팅에서 {{command}}와 숫자를 입력하여 투표하세요 · {{count}} 투표들"
     }
   },
+  "liveRecap": {
+    "title": "스트림 요약",
+    "justEnded": "스트림 요약",
+    "lastStream": "마지막 스트림",
+    "share": "공유",
+    "shareText": "방금 DeHub에서 \"{{title}}\" 을 스트리밍했습니다: {{duration}} 라이브, {{peak}} 피크에서 시청 중, {{followers}} 명의 새로운 팔로워.",
+    "untitled": "제목 없는 스트림",
+    "copied": "요약이 복사되었습니다. 아무 곳에나 붙여넣으세요.",
+    "loadFailed": "요약이 로드되지 않았습니다. 잠시 후 다시 시도하세요.",
+    "peakViewers": "한 번에 가장 많이 시청",
+    "gifts_one": "{{count}} 선물부터",
+    "gifts_other": "{{count}} 개의 선물에서",
+    "newFollowers": "새 팔로워",
+    "chatMessages": "채팅 메시지",
+    "chatters": "채팅하는 사람들",
+    "reactions": "반응",
+    "shares": "공유하는 사람들",
+    "topSupporters": "최고의 서포터",
+    "polls": "투표",
+    "pollWinner": "{{option}} 원",
+    "stillCounting": "아직 유효합니다. 선물은 확인하는 데 1분 정도 걸릴 수 있습니다."
+  },
   "liveStudio": {
     "polls": {
       "title": "투표",

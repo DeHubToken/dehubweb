@@ -6028,6 +6028,29 @@
       "howToVote_other": "Typ {{command}} en een nummer in de chat om te stemmen · {{count}} stemmen"
     }
   },
+  "liveRecap": {
+    "title": "Stream recap",
+    "justEnded": "Je streamoverzicht",
+    "lastStream": "Je laatste stream",
+    "share": "Delen",
+    "shareText": "Ik heb zojuist \"{{title}}\" gestreamd op DeHub: {{duration}} live, {{peak}} kijken op de piek en {{followers}} nieuwe volgers.",
+    "untitled": "Stream zonder titel",
+    "copied": "Samenvatting gekopieerd. Plak het overal.",
+    "loadFailed": "De samenvatting is niet geladen. Probeer het zo opnieuw.",
+    "duration": "Tijd live",
+    "peakViewers": "De meeste kijken tegelijk",
+    "gifts_one": "Vanaf {{count}} cadeau",
+    "gifts_other": "Vanaf {{count}} geschenken",
+    "newFollowers": "Nieuwe volgers",
+    "chatMessages": "Chatberichten",
+    "chatters": "Mensen die chatten",
+    "reactions": "Reacties",
+    "shares": "Mensen die delen",
+    "topSupporters": "Topsupporters",
+    "polls": "Peilingen",
+    "pollWinner": "{{option}} won",
+    "stillCounting": "Nog steeds aan het tellen: het kan even duren voordat geschenken zijn bevestigd."
+  },
   "liveStudio": {
     "polls": {
       "title": "Enquêtes",

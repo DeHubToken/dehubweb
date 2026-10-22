@@ -4780,6 +4780,29 @@
       "howToVote_other": "Ierakstiet {{command}} un skaitli chatā, lai balsotu · {{count}} balsis"
     }
   },
+  "liveRecap": {
+    "title": "Straumes kopsavilkums",
+    "justEnded": "Jūsu straumes kopsavilkums",
+    "lastStream": "Jūsu pēdējā straume",
+    "share": "Kopīgot",
+    "shareText": "Es tikko straumēju \"{{title}}\" DeHub: {{duration}} tiešraidē, {{peak}} skatoties virsotnē un {{followers}} jaunus sekotājus.",
+    "untitled": "Straume bez nosaukuma",
+    "copied": "Kopsavilkums nokopēts. Ielīmējiet to jebkurā vietā.",
+    "loadFailed": "Kopsavilkums netika ielādēts. Pēc brīža mēģiniet vēlreiz.",
+    "duration": "Tiešraides laiks",
+    "peakViewers": "Visvairāk skatīšanās reizē",
+    "gifts_one": "No {{count}} dāvana",
+    "gifts_other": "No {{count}} dāvanas",
+    "newFollowers": "Jauni sekotāji",
+    "chatMessages": "Tērzēšanas ziņojumi",
+    "chatters": "Personas tērzē",
+    "reactions": "Reakcijas",
+    "shares": "Personas, kas dalās pieredzē",
+    "topSupporters": "Populārākie atbalstītāji",
+    "polls": "Aptaujas",
+    "pollWinner": "{{option}} uzvarēja",
+    "stillCounting": "Joprojām tiek skaitīts: dāvanu apstiprināšana var aizņemt kādu brīdi."
+  },
   "liveStudio": {
     "polls": {
       "title": "Apzināšanās",

@@ -5061,6 +5061,29 @@
       "howToVote_other": "Ketik {{command}} dan nombor dalam chat untuk mengundi · {{count}} undi"
     }
   },
+  "liveRecap": {
+    "title": "Ringkasan strim",
+    "justEnded": "Ringkasan strim anda",
+    "lastStream": "Strim terakhir anda",
+    "share": "Kongsi",
+    "shareText": "Saya baru strim \"{{title}}\" di DeHub: {{duration}} secara langsung, {{peak}} menonton di puncak dan {{followers}} pengikut baharu.",
+    "untitled": "Strim tanpa tajuk",
+    "copied": "Ringkasan disalin. Tampalkannya di mana sahaja.",
+    "loadFailed": "Rekap tidak dimuatkan. Cuba lagi sebentar lagi.",
+    "duration": "Masa siaran langsung",
+    "peakViewers": "Paling banyak menonton sekaligus",
+    "gifts_one": "Daripada {{count}} hadiah",
+    "gifts_other": "Daripada {{count}} hadiah",
+    "newFollowers": "Pengikut baharu",
+    "chatMessages": "Mesej sembang",
+    "chatters": "Orang berbual",
+    "reactions": "Tindak balas",
+    "shares": "Perkongsian orang",
+    "topSupporters": "Penyokong utama",
+    "polls": "Pengundian",
+    "pollWinner": "{{option}} won",
+    "stillCounting": "Masih dikira: hadiah boleh mengambil masa seminit untuk disahkan."
+  },
   "liveStudio": {
     "polls": {
       "title": "Pemungutan suara",

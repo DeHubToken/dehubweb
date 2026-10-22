@@ -4600,8 +4600,6 @@
     "tipped": "{{name}} nganti hadiah",
     "chatPreview": "Pesanan chat ditampilin gini",
     "poll": {
-      "howToVote_one": "Ketik {{command}} dan angka di chat untuk memilih · {{count}} pilihan",
-      "howToVote_other": "Ketik {{command}} dan angka di chat untuk memilih · {{count}} pilihan",
       "closed": "Voting ditutup",
       "voteFor": "Milih {{option}}",
       "signIn": "Mlebu kanggo milih",
@@ -4609,8 +4607,29 @@
       "voted_one": "Sampeyan milih · {{count}} suara",
       "voted_other": "Sampeyan milih · {{count}} suara",
       "votes_one": "{{count}} suara",
-      "votes_other": "{{count}} suara"
+      "votes_other": "{{count}} suara",
+      "howToVote_one": "Ketik {{command}} dan angka di chat untuk memilih · {{count}} pilihan",
+      "howToVote_other": "Ketik {{command}} dan angka di chat untuk memilih · {{count}} pilihan"
     }
+  },
+  "liveRecap": {
+    "justEnded": "Ringkesan aliran mu",
+    "lastStream": "Kulon streammu kanggo ngahapal.",
+    "share": "Bareng",
+    "untitled": "Kuliyaran streaming ngarso",
+    "copied": "Kopi ngaripin. Tulis di mana-mana.",
+    "loadFailed": "Gak bisa nge-load recapnya. Coba lagi nggih nganti-anti.",
+    "duration": "Waktu nyata",
+    "peakViewers": "Kanggo ngaweni ngisorake pike pisan.",
+    "gifts_one": "Kanggo {{count}} nganti",
+    "gifts_other": "Kanggo {{count}} hadiah",
+    "chatMessages": "Chat messages",
+    "chatters": "Nggih orawe pikeun ngobrol-ngobrol",
+    "shares": "Nggih orawe pikeun ngarani",
+    "topSupporters": "Pendukung paling dhuwur",
+    "polls": "Pilihan-pilihan",
+    "pollWinner": "{{option}} ngoko won",
+    "stillCounting": "Kudu ngarani: nganggo wonggo kudu wonggo menunggu kanggo konfirmasi, nganggo wonggo kudu wonggo menunggu kanggo ngarani."
   },
   "liveStudio": {
     "polls": {

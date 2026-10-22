@@ -4801,6 +4801,29 @@
       "howToVote_other": "ووٹ دینے کے لیے {{command}} اور چیٹ میں ایک نمبر ٹائپ کریں ·{{count}} ووٹ"
     }
   },
+  "liveRecap": {
+    "title": "اسٹریم ری کیپ",
+    "justEnded": "آپ کا اسٹریم ری کیپ",
+    "lastStream": "آپ کا آخری سلسلہ",
+    "share": "اشتراک کریں",
+    "shareText": "میں نے ابھی DeHub پر \"{{title}}\" اسٹریم کیا ہے: {{duration}} لائیو، {{peak}} چوٹی پر دیکھ رہا ہوں اور {{followers}} نئے فالوورز ۔",
+    "untitled": "بلاعنوان ندی",
+    "copied": "ری کیپ کاپی ہو گیا ۔ اسے کہیں بھی پیسٹ کریں ۔",
+    "loadFailed": "ری کیپ لوڈ نہیں ہوا ۔ کچھ دیر بعد دوبارہ کوشش کریں ۔",
+    "duration": "لائیو وقت",
+    "peakViewers": "سب سے زیادہ ایک ساتھ دیکھ رہے ہیں",
+    "gifts_one": "منجانب {{count}} تحفہ",
+    "gifts_other": "منجانب {{count}} تحائف",
+    "newFollowers": "نئے پیروکار",
+    "chatMessages": "چیٹ کے پیغامات",
+    "chatters": "لوگ چیٹ کر رہے ہیں",
+    "reactions": "رد عمل",
+    "shares": "لوگ اشتراک کر رہے ہیں",
+    "topSupporters": "سرکردہ حامی",
+    "polls": "پولز",
+    "pollWinner": "{{option}} جیت گئے",
+    "stillCounting": "ابھی بھی گنتی جاری ہے: تحائف کی تصدیق میں ایک منٹ لگ سکتا ہے ۔"
+  },
   "liveStudio": {
     "polls": {
       "title": "پولز",

@@ -4742,6 +4742,29 @@
       "howToVote_other": "Skriv {{command}} och ett nummer i chatt för att rösta · {{count}} röster"
     }
   },
+  "liveRecap": {
+    "title": "Stream recap",
+    "justEnded": "Sammanfattning av ditt flöde",
+    "lastStream": "Din senaste ström",
+    "share": "Dela",
+    "shareText": "Jag strömmade precis \"{{title}}\" på DeHub: {{duration}} live, {{peak}} tittar på toppen och {{followers}} nya följare.",
+    "untitled": "Namnlös ström",
+    "copied": "Sammanfattning kopierad. Klistra in den var som helst.",
+    "loadFailed": "Sammanfattningen laddades inte. Försök igen om en stund.",
+    "duration": "Tid live",
+    "peakViewers": "Mest tittande på en gång",
+    "gifts_one": "Från {{count}} gåva",
+    "gifts_other": "Från {{count}} gåvor",
+    "newFollowers": "Nya följare",
+    "chatMessages": "Chattmeddelanden",
+    "chatters": "Folk chattar",
+    "reactions": "Reaktioner",
+    "shares": "Personer som delar",
+    "topSupporters": "Toppanhängare",
+    "polls": "Omröstningar",
+    "pollWinner": "{{option}} vann",
+    "stillCounting": "Räknar fortfarande: gåvor kan ta en minut att bekräfta."
+  },
   "liveStudio": {
     "polls": {
       "title": "Omröstningar",

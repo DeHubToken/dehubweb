@@ -4853,6 +4853,29 @@
       "howToVote_other": "I-type ang {{command}} at isang numero sa chat para bumoto: {{count}} boto"
     }
   },
+  "liveRecap": {
+    "title": "I - recap ang stream",
+    "justEnded": "I - recap ang iyong stream",
+    "lastStream": "Huling stream mo",
+    "share": "Ibahagi",
+    "shareText": "Nag - stream ako ng \"{{title}}\" sa DeHub: {{duration}} live, {{peak}} nanonood sa rurok at {{followers}} mga bagong tagasunod.",
+    "untitled": "Walang pamagat na stream",
+    "copied": "Kinopya ang recap. I - paste ito kahit saan.",
+    "loadFailed": "Hindi nag - load ang recap. Subukan muli sa ilang sandali.",
+    "duration": "Live ang oras",
+    "peakViewers": "Karamihan sa mga nanonood nang sabay - sabay",
+    "gifts_one": "Mula {{count}}regalo",
+    "gifts_other": "Mula {{count}} mga regalo",
+    "newFollowers": "Mga bagong tagasunod",
+    "chatMessages": "Mga mensahe sa chat",
+    "chatters": "Mga taong nakikipag - chat",
+    "reactions": "Mga Reaksyon",
+    "shares": "Mga taong nagbabahagi",
+    "topSupporters": "Mga nangungunang tagasuporta",
+    "polls": "Mga botohan",
+    "pollWinner": "{{option}} won",
+    "stillCounting": "Nagbibilang pa rin: ang mga regalo ay maaaring tumagal ng isang minuto upang kumpirmahin."
+  },
   "liveStudio": {
     "polls": {
       "title": "Pagboto",
@@ -4959,7 +4982,6 @@
       "join": "Sumali"
     },
     "kinds": {
-      "poll": "Botohan",
       "tip_alert": "Alerto sa tip",
       "follow_alert": "Subaybayan ang alerto",
       "subscribe_alert": "Alerto sa subscriber",
@@ -4975,7 +4997,8 @@
       "event_feed": "Kamakailang aktibidad",
       "chat_box": "Chat box",
       "ticker": "Ticker",
-      "rule_alert": "Mga alerto sa panuntunan"
+      "rule_alert": "Mga alerto sa panuntunan",
+      "poll": "Botohan"
     },
     "hints": {
       "tip_alert": "Ipinagdiriwang ang bawat tip, laki hanggang sa tier nito",

@@ -4837,6 +4837,29 @@
       "howToVote_other": "Tik {{command}} en 'n nommer in die klets om te stem · {{count}} stemme"
     }
   },
+  "liveRecap": {
+    "title": "Stroom oorskakeling",
+    "justEnded": "Jou stroomherhaling",
+    "lastStream": "Jou laaste stroom",
+    "share": "Deel",
+    "shareText": "Ek het net gestroom \"{{title}}\" op DeHub: {{duration}} LIVE, {{peak}} kyk op die piek en {{followers}} nuwe volgelinge.",
+    "untitled": "Ongetiteld stroom",
+    "copied": "Herskryf gekopieer. Plak dit op enige plek.",
+    "loadFailed": "Die terugslag het nie gelaai nie. Probeer weer in 'n oomblik.",
+    "duration": "Tyd leef",
+    "peakViewers": "Die meeste kyk dadelik",
+    "gifts_one": "Van {{count}} cadeau",
+    "gifts_other": "Van {{count}} geskenke",
+    "newFollowers": "Nuwe volgelinge",
+    "chatMessages": "Geselsboodskappe",
+    "chatters": "Mense gesels",
+    "reactions": "Reaksies",
+    "shares": "Mense deel",
+    "topSupporters": "Top ondersteuners",
+    "polls": "Stembusse",
+    "pollWinner": "{{option}} wen",
+    "stillCounting": "Nog steeds tel: geskenke kan 'n minuut neem om te bevestig."
+  },
   "liveStudio": {
     "polls": {
       "title": "Stembusse",

@@ -4019,6 +4019,17 @@
     "creatorEarnsDirect": "بەشداربووان بە تۆکنی DeHub پارە دەدەن. کاتێک بەشداری دەکەن، بەشەکەت دەگاتە جزدانەکەت، دوای کرێی پلاتفۆرم بەپێی ئاستی باجەکەت."
   },
   "liveOverlay": {
+    "someone": "Kesek",
+    "newFollower": "Şopînerê nû: {{name}}",
+    "newSubscriber": "Abonetiya nû: {{name}}",
+    "subscribedTo": "{{name}} aboneyê {{plan}} bû",
+    "shared": "{{name}} weşanê parve kir",
+    "joined": "{{name}} tevlî bû",
+    "goalReached": "Armanc gihîşt!",
+    "followersUnit": "şopîner",
+    "topSupporters": "Piştgirên herî jor",
+    "tipped": "{{name}} diyariyek şand",
+    "chatPreview": "Peyamên chatê li vir xuya dibin",
     "poll": {
       "closed": "Dengdan girtî ye",
       "voteFor": "Dengê xwe bide {{option}}",
@@ -4030,18 +4041,7 @@
       "votes_other": "{{count}} deng",
       "howToVote_one": "Ji bo dengdanê di sohbetê de {{command}} û hejmarekê binivîse · {{count}} deng",
       "howToVote_other": "Ji bo dengdanê di sohbetê de {{command}} û hejmarekê binivîse · {{count}} deng"
-    },
-    "someone": "Kesek",
-    "newFollower": "Şopînerê nû: {{name}}",
-    "newSubscriber": "Abonetiya nû: {{name}}",
-    "subscribedTo": "{{name}} aboneyê {{plan}} bû",
-    "shared": "{{name}} weşanê parve kir",
-    "joined": "{{name}} tevlî bû",
-    "goalReached": "Armanc gihîşt!",
-    "followersUnit": "şopîner",
-    "topSupporters": "Piştgirên herî jor",
-    "tipped": "{{name}} diyariyek şand",
-    "chatPreview": "Peyamên chatê li vir xuya dibin"
+    }
   },
   "liveStudio": {
     "polls": {
@@ -4150,7 +4150,6 @@
       "join": "بەشداریکردن"
     },
     "kinds": {
-      "poll": "Rapirsî",
       "tip_alert": "ئاگاداریی بەخشش",
       "follow_alert": "ئاگاداریی فۆڵۆو",
       "subscribe_alert": "ئاگاداریی سەبسکرایب",
@@ -4166,10 +4165,10 @@
       "event_feed": "Çalakiyên dawî",
       "chat_box": "Qutiya chatê",
       "ticker": "Nivîsa diherike",
-      "rule_alert": "Hişyariyên qaîdeyan"
+      "rule_alert": "Hişyariyên qaîdeyan",
+      "poll": "Rapirsî"
     },
     "hints": {
-      "poll": "Rapirsiya te ya zindî, bi bişkokeke dengdanê ji bo her vebijarkê",
       "tip_alert": "هەموو بەخششێک بەپێی ئاستەکەی دیاری دەکات",
       "follow_alert": "هەموو فۆڵۆوەرێکی نوێ نیشان دەدات",
       "subscribe_alert": "هەموو سەبسکرایبەرێکی نوێ نیشان دەدات",
@@ -4185,7 +4184,8 @@
       "event_feed": "Diyariyên dawî, şopîner, abone û kesên ku weşana te parve dikin",
       "chat_box": "Peyamên chatê yên weşana te li ser ekranê nîşan dide",
       "ticker": "Rêzek ji nivîsa te ya ku li ser ekranê diherike",
-      "rule_alert": "Cihê ku hişyariyên qaîdeyên te lê xuya dibin"
+      "rule_alert": "Cihê ku hişyariyên qaîdeyên te lê xuya dibin",
+      "poll": "Rapirsiya te ya zindî, bi bişkokeke dengdanê ji bo her vebijarkê"
     },
     "fields": {
       "style": "شێواز",
@@ -4220,7 +4220,6 @@
       "fast": "Bilez"
     },
     "rules": {
-      "placeholdersLive": "Di nivîsa xwe de {name}, {title} û {link} bi kar bîne: navê te, sernavê weşanê û girêdanek ji bo temaşekirinê.",
       "title": "Rêgez",
       "intro": "Paşî ku li ser strîmê te karekî bêt kirin, DeHub dikare bêje ku te bêje: pêşengê bide pêşeng, zêdekeke bide pêşeng, peyva ku te bêje, li ser çatê te bêje an jî li ser Discordê te bêje.",
       "add": "Qaydeyek lê zêde bike",
@@ -4250,6 +4249,7 @@
       "addAction": "Çalakiyekê lê zêde bike",
       "removeAction": "Çalakiyê rake",
       "placeholders": "Di nivîsa xwe de {name}, {amount} û {message} bi kar bîne. Girêdanên di peyaman de tên rakirin.",
+      "placeholdersLive": "Di nivîsa xwe de {name}, {title} û {link} bi kar bîne: navê te, sernavê weşanê û girêdanek ji bo temaşekirinê.",
       "alertText": "Nivîsa hişyariyê",
       "sound": "Rengdan",
       "sayText": "Nivîsa ku bi dengekî bilind were xwendin",
@@ -4259,11 +4259,11 @@
       "webhookHint": "Webhookek Discord an Slack, an jî her navnîşana https-ê ku POST-ek qebûl dike.",
       "webhookText": "Peyama ji bo şandinê",
       "triggers": {
-        "live": "Tu dest bi weşanê dikî",
         "tip": "Serişteyek tê",
         "follow": "Kesek li pey digere",
         "subscribe": "Kesek abone dibe",
         "share": "Kesek weşanê parve dike",
+        "live": "Tu dest bi weşanê dikî",
         "command": "Fermana sohbetê tê bikaranîn",
         "keyword": "Peyama sohbetê peyvekê dihewîne",
         "chat": "Her peyama sohbetê"

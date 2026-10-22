@@ -4798,6 +4798,29 @@
       "howToVote_other": "הכנסו את {{command}} ואת המספר בחדר השיחה כדי להצביע · {{count}} הצבעות"
     }
   },
+  "liveRecap": {
+    "title": "סיכום זרם",
+    "justEnded": "סיכום הזרם שלכם",
+    "lastStream": "הזרם האחרון שלכם",
+    "share": "שיתוף",
+    "shareText": "הרגע שידרתי \"{{title}}\" ב - DeHub: {{duration}} בשידור חי, {{peak}} בצפייה בשיא ו -{{followers}} עוקבים חדשים.",
+    "untitled": "זרם ללא שם",
+    "copied": "הסיכום הועתק. הדבק אותו בכל מקום.",
+    "loadFailed": "הסיכום לא נטען. כדאי לנסות שוב בעוד כמה דקות.",
+    "duration": "זמן שידור חי",
+    "peakViewers": "רוב הצפיות בבת אחת",
+    "gifts_one": "ממתנה של {{count}}",
+    "gifts_other": "החל מ -{{count}} מתנות",
+    "newFollowers": "עוקבים חדשים",
+    "chatMessages": "הודעות צ'אט",
+    "chatters": "אנשים משוחחים",
+    "reactions": "תגובות",
+    "shares": "אנשים משתפים",
+    "topSupporters": "תומכים מובילים",
+    "polls": "סקרים",
+    "pollWinner": "{{option}} וון",
+    "stillCounting": "עדיין סופרים: המתנה יכולה לקחת דקה לאישור."
+  },
   "liveStudio": {
     "polls": {
       "title": "סקרים",
