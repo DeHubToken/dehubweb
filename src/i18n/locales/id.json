@@ -6163,6 +6163,7 @@
     "weeksShort": "{{count}} minggu"
   },
   "liveGift": {
+    "notEnoughToken": "{{symbol}} tidak cukup untuk hadiah ini",
     "pickTier": "Pilih perayaan",
     "plays": "Memutar {{tier}} di stream",
     "you": "Anda",

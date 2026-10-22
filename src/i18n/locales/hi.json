@@ -6170,6 +6170,7 @@
     "weeksShort": "{{count}} सप्ताह"
   },
   "liveGift": {
+    "notEnoughToken": "इस उपहार के लिए पर्याप्त {{symbol}} नहीं है",
     "pickTier": "एक उत्सव चुनें",
     "plays": "स्ट्रीम पर {{tier}} चलाता है",
     "you": "आप",

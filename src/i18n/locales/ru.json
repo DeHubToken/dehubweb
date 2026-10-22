@@ -6109,6 +6109,7 @@
     "weeksShort": "{{count}} нед."
   },
   "liveGift": {
+    "notEnoughToken": "Недостаточно {{symbol}} для этого подарка",
     "pickTier": "Выберите празднование",
     "plays": "Воспроизводит {{tier}} в трансляции",
     "you": "Вы",

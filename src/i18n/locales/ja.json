@@ -6150,6 +6150,7 @@
     "weeksShort": "{{count}}週"
   },
   "liveGift": {
+    "notEnoughToken": "このギフトには{{symbol}}が足りません",
     "pickTier": "お祝いを選択",
     "plays": "配信で{{tier}}を再生",
     "you": "あなた",
