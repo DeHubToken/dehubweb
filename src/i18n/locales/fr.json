@@ -5838,6 +5838,10 @@
     "creatorEarnsDirect": "Les abonnés paient en jetons DeHub. Votre part atterrit dans votre portefeuille au moment où ils s'abonnent, moins les frais de plateforme pour votre niveau de badge."
   },
   "liveOverlay": {
+    "level": "Niveau {{level}}",
+    "streak_one": "{{count}}-week streak",
+    "streak_other": "{{count}}-week streak",
+    "tipJar": "Pot cadeau",
     "someone": "Quelqu'un",
     "newFollower": "Nouveau follower : {{name}}",
     "newSubscriber": "Nouvel abonné : {{name}}",
@@ -5850,10 +5854,11 @@
     "tipped": "{{name}} a envoyé un cadeau",
     "chatPreview": "Les messages de chat apparaissent ici",
     "wheelLanded": "{{name}} spun : {{result}}",
-    "level": "Niveau {{level}}",
-    "streak_one": "{{count}}-week streak",
-    "streak_other": "{{count}}-week streak",
-    "tipJar": "Pot cadeau",
+    "subathon": "Subathon",
+    "subathonOver": "Temps écoulé",
+    "pointsTitle": "Les spectateurs les plus fidèles",
+    "points_one": "{{formatted}} point",
+    "points_other": "{{formatted}} points",
     "poll": {
       "closed": "Voting fermé",
       "voteFor": "Voter pour {{option}}",
@@ -5881,6 +5886,29 @@
     "youAreTimedOut": "Vous êtes en temps d'attente pour un moment"
   },
   "liveStudio": {
+    "subathon": {
+      "title": "Subathon",
+      "intro": "Un compte à rebours sur votre stream. Chaque cadeau payant, abonnement et suivi ajoute du temps, afin que la salle vous maintienne en direct.",
+      "secondsPerThousand": "Secondes ajoutées par 1 000 DHB offerts",
+      "secondsPerFollow": "Secondes ajoutées par suivi",
+      "secondsPerSubscribe": "Secondes ajoutées par abonnement",
+      "capHours": "Durée maximale possible (heures)",
+      "save": "Montants enregistrés",
+      "saved": "Montants du Subathon enregistrés.",
+      "startMinutes": "Commencer avec (minutes)",
+      "start": "Lancer le compte à rebours",
+      "stop": "Arrêter",
+      "addFive": "Ajouter 5 minutes",
+      "removeFive": "Retirer 5 minutes",
+      "failed": "Ça n’a pas marché. Essayez à nouveau.",
+      "widgetHint": "Affiche le compte à rebours du Subathon. Lancez-le depuis le panneau Subathon dans Live Studio."
+    },
+    "points": {
+      "title": "Spectateurs fidèles",
+      "intro": "Les spectateurs gagnent un point pour chaque minute qu’ils passent à vous regarder et un autre pour chaque 100 DHB qu’ils offrent. Les messages et réactions ne rapportent rien, donc les points ne peuvent pas être \"farmés\".",
+      "empty": "Aucun point pour l’instant. Ils s’accumulent au fur et à mesure que les gens regardent et offrent.",
+      "widgetHint": "Ajoutez le widget \"Spectateurs fidèles\" pour afficher cette liste en direct."
+    },
     "controls": {
       "title": "Contrôles rapides",
       "intro": "Pour le milieu du flux. Chaque commutateur tient pour tous ceux qui regardent, dans l'application et dans OBS, jusqu'à ce que vous le retourniez.",
@@ -5998,6 +6026,8 @@
       "join": "Rejoindre"
     },
     "kinds": {
+      "streamer_level": "Niveau du streamer",
+      "tip_jar": "Pot cadeau",
       "tip_alert": "Alerte de pourboire",
       "follow_alert": "Suivre l'alerte",
       "subscribe_alert": "Alerte abonné",
@@ -6016,10 +6046,12 @@
       "rule_alert": "Alertes de règle",
       "poll": "Sondage",
       "spin_wheel": "Roue rotative",
-      "streamer_level": "Niveau du streamer",
-      "tip_jar": "Pot cadeau"
+      "subathon_timer": "Minuteur Subathon",
+      "points_board": "Spectateurs fidèles"
     },
     "hints": {
+      "streamer_level": "Votre niveau de streamer et votre séquence hebdomadaire, à partir de votre profil",
+      "tip_jar": "Un pot qui se remplit au fur et à mesure que les cadeaux payants arrivent",
       "tip_alert": "Célèbre chaque pourboire, dimensionné à son niveau",
       "follow_alert": "Affiche chaque nouvel abonné",
       "subscribe_alert": "Affiche chaque nouvel abonné",
@@ -6038,15 +6070,15 @@
       "rule_alert": "Où les alertes de vos règles apparaissent",
       "poll": "Votre sondage en direct, avec un bouton de vote pour chaque option",
       "spin_wheel": "Où tournent les roues de vos règles",
-      "streamer_level": "Votre niveau de streamer et votre séquence hebdomadaire, à partir de votre profil",
-      "tip_jar": "Un pot qui se remplit au fur et à mesure que les cadeaux payants arrivent"
+      "subathon_timer": "Un compte à rebours que les cadeaux, les suivis et les abonnements repoussent",
+      "points_board": "Vos meilleurs spectateurs par points grâce à la visionnage et aux dons"
     },
     "fields": {
+      "showStreak": "Afficher la série hebdomadaire",
       "style": "Style",
       "celebration": "Célébration",
       "banner": "Bannière",
       "minAmount": "Le plus petit pourboire à afficher (DHB)",
-      "showStreak": "Afficher la série hebdomadaire",
       "showMessage": "Afficher le message de pourboire",
       "confirmedOnly": "Seulement après que le paiement confirme",
       "confirmedOnlyHint": "Attend quelques secondes pour la chaîne, donc un pourboire qui n'est jamais payé n'apparaît jamais.",

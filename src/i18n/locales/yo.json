@@ -4712,6 +4712,10 @@
     "creatorPaidDirectNote": "Ìpín olùṣẹ̀dá náà lọ tààrà sí àpamọ́ wọn ní àsìkò tí o bá ṣe ìforúkọsílẹ̀. DeHub máa ń san owó orí pẹpẹ kékeré."
   },
   "liveOverlay": {
+    "level": "Ipele {{level}}",
+    "streak_one": "{{count}}-week streak",
+    "streak_other": "{{count}}-week streak",
+    "tipJar": "Ìkòkò ẹ̀bùn",
     "someone": "Ẹnikan",
     "newFollower": "Àwọn ọmọlẹ́yìn tuntun: {{name}}",
     "newSubscriber": "Olùpèsè tuntun: {{name}}",
@@ -4724,10 +4728,11 @@
     "tipped": "{{name}} fi ẹ̀bùn ránṣẹ́",
     "chatPreview": "Awọn ifiranṣẹ iwiregbe han nibi",
     "wheelLanded": "{{name}} spun: {{result}}",
-    "level": "Ipele {{level}}",
-    "streak_one": "{{count}}-week streak",
-    "streak_other": "{{count}}-week streak",
-    "tipJar": "Ìkòkò ẹ̀bùn",
+    "subathon": "Subathon",
+    "subathonOver": "Akoko ti pari",
+    "pointsTitle": "Ọpọlọpọ awọn oluwo oloootitọ",
+    "points_one": "{{formatted}} ojuami",
+    "points_other": "{{formatted}} awọn aaye",
     "poll": {
       "closed": "Voting closed",
       "voteFor": "Dibo fun {{option}}",
@@ -4755,6 +4760,29 @@
     "youAreTimedOut": "O ti duro fun akoko kan"
   },
   "liveStudio": {
+    "subathon": {
+      "stop": "Dúró",
+      "title": "Subathon",
+      "intro": "Ìkàwé lórí ìgbìsí rẹ. Gbogbo ẹ̀bùn tí wọ́n sanwó fún, ìlépa àti ìforúkọsílẹ̀ máa ń fi àkókò kún un, nítorí náà yàrá náà máa ń jẹ́ kí o wà láàyè.",
+      "secondsPerThousand": "Èkejì tí a fi kún un ní gbogbo ẹ̀bùn 1,000 DHB",
+      "secondsPerFollow": "Ẹ̀ẹ̀kejì ni wọ́n fi kún un ní ìlépa",
+      "secondsPerSubscribe": "Èkejì tí a fi kún ìforúkọsílẹ̀",
+      "capHours": "Ó pẹ́ jù tí ó lè sáré (wákàtí)",
+      "save": "Fi iye pamọ́",
+      "saved": "Owó tí a fi pamọ́ ní abẹ́ eré-ìdárayá.",
+      "startMinutes": "Bẹ̀rẹ̀ pẹ̀lú (ìṣẹ́jú)",
+      "start": "Bẹrẹ àkójọpọ̀ náà",
+      "addFive": "Ṣafikun iṣẹju 5",
+      "removeFive": "Yọ iṣẹju 5 kuro",
+      "failed": "Ìyẹn kò ṣiṣẹ́. Gbìyànjú lẹ́ẹ̀kan síi.",
+      "widgetHint": "Ṣàfihàn ìṣirò abẹ́ eré-ìdárayá rẹ. Bẹ̀rẹ̀ láti inú pánẹ́ẹ̀lì Subathon ní Live Studio."
+    },
+    "points": {
+      "title": "Àwọn olùwò olóòótọ́",
+      "intro": "Àwọn olùwò máa ń gba kókó kan fún ìṣẹ́jú kọ̀ọ̀kan tí wọ́n bá ń wò ọ́ àti ìkan fún 100 DHB tí wọ́n bá fún wọn. Ìtàkurọ̀sọ àti èsì kò ní èrè kankan, nítorí náà àwọn kókó kò lè ṣe àgbẹ̀.",
+      "empty": "Kò sí kókó kankan síbẹ̀. Wọ́n ń kọ́ bí àwọn ènìyàn ṣe ń wò ó tí wọ́n sì ń fúnni ní ẹ̀bùn.",
+      "widgetHint": "Ṣàfikún ohun-èlò àwọn olùwò olóòótọ́ láti fi àtòjọ yìí hàn lórí ẹ̀rọ ayélujára."
+    },
     "controls": {
       "title": "Àwọn ìṣàkóso kíákíá",
       "intro": "Fún àtẹ̀jísẹ́ àárín. Ìyípadà kọ̀ọ̀kan dúró fún gbogbo ènìyàn tí ó ń wo, nínú ohun èlò àti nínú OBS, títí tí o ó fi yí i padà.",
@@ -4872,6 +4900,8 @@
       "join": "Darapọ mọ"
     },
     "kinds": {
+      "streamer_level": "Ipele Streamer",
+      "tip_jar": "Ìkòkò ẹ̀bùn",
       "tip_alert": "Ìkìlọ̀ Ìmọ̀ràn",
       "follow_alert": "Tẹle itaniji",
       "subscribe_alert": "Ikilọ ti awọn alabapin",
@@ -4888,10 +4918,12 @@
       "rule_alert": "Àwọn ìkìlọ̀ ìlànà",
       "poll": "Ìbò",
       "spin_wheel": "Yí kẹ̀kẹ́ yípo",
-      "streamer_level": "Ipele Streamer",
-      "tip_jar": "Ìkòkò ẹ̀bùn"
+      "subathon_timer": "Àsìkò Subathon",
+      "points_board": "Àwọn olùwò olóòótọ́"
     },
     "hints": {
+      "streamer_level": "Ipele ṣiṣan rẹ àti ìlà ọ̀sọ̀ọ̀sẹ̀ rẹ, láti inú àkójọpọ̀ rẹ",
+      "tip_jar": "Igo ti o kun bi awọn ẹbun ti o sanwo ti n wọle",
       "tip_alert": "Ṣe ayẹyẹ gbogbo awọn imọran, iwọn si ipele rẹ.",
       "follow_alert": "Ṣàfihàn ọmọlẹ́yìn tuntun kọ̀ọ̀kan",
       "subscribe_alert": "Ṣe afihan alabapin tuntun kọọkan",
@@ -4910,15 +4942,15 @@
       "rule_alert": "Níbi tí àwọn ìkìlọ̀ àwọn òfin rẹ ti fara hàn",
       "poll": "Ìbò ìgbé ayé rẹ, pẹ̀lú bọ́tìnì ìbò fún gbogbo àṣàyàn",
       "spin_wheel": "Níbo ni àwọn kẹ̀kẹ́ tí ó wà nínú òfin rẹ ti ń yípo",
-      "streamer_level": "Ipele ṣiṣan rẹ àti ìlà ọ̀sọ̀ọ̀sẹ̀ rẹ, láti inú àkójọpọ̀ rẹ",
-      "tip_jar": "Igo ti o kun bi awọn ẹbun ti o sanwo ti n wọle"
+      "subathon_timer": "Ìkàwé tí ó ń fúnni ní ẹ̀bùn, tí ó ń tẹ̀lé àti tí ó ń tẹ àwọn ìforúkọsílẹ̀ padà.",
+      "points_board": "Àwọn olùwoye tó ga jùlọ rẹ nípa àwọn kókó láti wíwo àti fífún wọn ní ẹ̀bùn."
     },
     "fields": {
+      "showStreak": "Fi ìlà ọ̀sọ̀ọ̀sẹ̀ hàn",
       "style": "Àṣà",
       "celebration": "Ayẹyẹ",
       "banner": "Àsìá ilẹ̀",
       "minAmount": "Ìmọ̀ràn kéékèèké jù láti fi hàn (DHB)",
-      "showStreak": "Fi ìlà ọ̀sọ̀ọ̀sẹ̀ hàn",
       "showMessage": "Fi àtẹ̀jísẹ́ àtẹ̀jíṣẹ́ náà hàn",
       "confirmedOnly": "Nikan lẹhin ti isanwo naa jẹrisi",
       "confirmedOnlyHint": "Dúró fún ìṣẹ́jú díẹ̀ fún ẹ̀wọ̀n náà, nítorí náà ìmọ̀ràn tí a kò san kò ní fara hàn.",

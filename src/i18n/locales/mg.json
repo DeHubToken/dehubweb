@@ -4809,6 +4809,9 @@
   },
   "liveOverlay": {
     "level": "Ambaratonga {{level}}",
+    "streak_one": "{{count}}-week voasakana",
+    "streak_other": "{{count}}-week voasakana",
+    "tipJar": "Fanomezana siny",
     "someone": "Olona iray",
     "newFollower": "Mpanara-baovao: {{name}}",
     "newSubscriber": "Mpamandrika vaovao: {{name}}",
@@ -4821,9 +4824,11 @@
     "tipped": "{{name}} nandefa fanomezana",
     "chatPreview": "Ny hafatra amin'ny Chat dia hita eto.",
     "wheelLanded": "{{name}} Spun: {{result}}",
-    "streak_one": "{{count}}-week voasakana",
-    "streak_other": "{{count}}-week voasakana",
-    "tipJar": "Fanomezana siny",
+    "subathon": "Subathon",
+    "subathonOver": "Tapitra ny ora",
+    "pointsTitle": "Mpandinika mahatoky indrindra",
+    "points_one": "{{formatted}} toetra",
+    "points_other": "{{formatted}} toetra",
     "poll": {
       "closed": "Voting closed",
       "voteFor": "Mifidiana ny {{option}}",
@@ -4851,6 +4856,29 @@
     "youAreTimedOut": "Ianao no tapa-kevitra ny hanao ny fotoana."
   },
   "liveStudio": {
+    "subathon": {
+      "title": "Subathon",
+      "intro": "Fandaniana amin'ny iyong stream. Ny fanomezana karama, ny fanarahana ary ny subscription dia manampy ny ora, noho izany ny efitrano dia mitazona anao mielona.",
+      "secondsPerThousand": "Segondra ampiana isaky ny 1,000 DHB fanomezana",
+      "secondsPerFollow": "Segondra ampiana isaky ny fanarahana",
+      "secondsPerSubscribe": "Segondra ampiana isaky ny subscription",
+      "capHours": "Ny fotoana lava indrindra azo atao (ora)",
+      "save": "Sanda voatahiry",
+      "saved": "Sanda Subathon voatahiry.",
+      "startMinutes": "Manomboka amin'ny (minitra)",
+      "start": "Manomboka ny fandaniana",
+      "stop": "Hajanona",
+      "addFive": "Ampiana 5 minitra",
+      "removeFive": "Esorina 5 minitra",
+      "failed": "Tsy nahomby izany. Andao indray.",
+      "widgetHint": "Mampakita ny iyong fandaniana subathon. Manomboka amin'ny panela Subathon ao amin'ny Live Studio."
+    },
+    "points": {
+      "title": "Mpandinika mahatoky",
+      "intro": "Ny mpandinika dia mahazo toetra iray isaky ny minitra iray izay mijery anao ary iray isaky ny 100 DHB fanomezana. Ny resaka sy ny valim-pitsarana dia tsy mahazo na inona na inona, noho izany ny toetra dia tsy azo amboarina.",
+      "empty": "Tsy misy toetra pa. Miangona izy ireo rehefa mijery sy manomeza ny olona.",
+      "widgetHint": "Ampidiro ny widget Loyal viewers mba hampisehoana ity lisitra ity amin'ny iyong stream."
+    },
     "controls": {
       "title": "Fifehezana haingana",
       "intro": "Ho an'ny onjam-peo. Ny jiro tsirairay dia mitazona ny rehetra mijery, ao amin'ny app sy ao amin'ny OBS, mandra-piverinao azy.",
@@ -4968,6 +4996,8 @@
       "join": "Midira"
     },
     "kinds": {
+      "streamer_level": "Dingana mirohotra",
+      "tip_jar": "Fanomezana siny",
       "tip_alert": "Fampandrenesana tip",
       "follow_alert": "Fampandrenesana arahana",
       "subscribe_alert": "Fampandrenesana mpisoratra",
@@ -4986,10 +5016,12 @@
       "rule_alert": "Fampitandremana momba ny fitsipika",
       "poll": "Fitsapan-kevitra",
       "spin_wheel": "Kofehy ireny kodia",
-      "streamer_level": "Dingana mirohotra",
-      "tip_jar": "Fanomezana siny"
+      "subathon_timer": "Famantarana fandaniana Subathon",
+      "points_board": "Mpandinika mahatoky"
     },
     "hints": {
+      "streamer_level": "Ny haavon'ny renirano sy ny isan-kerinandro streak, avy amin'ny mombamomba azy",
+      "tip_jar": "Ny siny izay mameno ny toy ny fanomezana karama tonga ao",
       "tip_alert": "Mankalaza ny tip rehetra, arakaraka ny haavon'izy ireo",
       "follow_alert": "Maneho ny mpanaraka vaovao tsirairay",
       "subscribe_alert": "Maneho ny mpisoratra vaovao tsirairay",
@@ -5008,15 +5040,15 @@
       "rule_alert": "Toerana hita ny fampitandremana momba ny fitsipika",
       "poll": "Ny fifidianana mivantana, amin'ny bokotra fifidianana ho an'ny safidy tsirairay",
       "spin_wheel": "Aiza ny kodiarana ao amin'ny fitsipika mihodina",
-      "streamer_level": "Ny haavon'ny renirano sy ny isan-kerinandro streak, avy amin'ny mombamomba azy",
-      "tip_jar": "Ny siny izay mameno ny toy ny fanomezana karama tonga ao"
+      "subathon_timer": "Fandaniana izay itazonin'ny fanomezana karama, fanarahana ary subscription",
+      "points_board": "Ny mpandinika ambony indrindra amin'ny toetra avy amin'ny fijery ary fanomezana"
     },
     "fields": {
+      "showStreak": "Asehoy ny faran'ny herinandro streak",
       "style": "Endrika",
       "celebration": "Fankalazana",
       "banner": "Sora-baventy",
       "minAmount": "Torohevitra kely indrindra hanehoana (DHB)",
-      "showStreak": "Asehoy ny faran'ny herinandro streak",
       "showMessage": "Maneho ny hafatra filazana",
       "confirmedOnly": "Rehefa avy manamafy ny fandoavana",
       "confirmedOnlyHint": "Miandry segondra vitsy ho an'ny rojo, ka ny tendrony izay tsy azo aloa mihitsy dia tsy hita mihitsy.",

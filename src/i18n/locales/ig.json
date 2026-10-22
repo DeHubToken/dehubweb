@@ -4744,6 +4744,11 @@
     "creatorEarnsDirect": "Ndị debanyere aha na-akwụ ụgwọ na akara ngosi DeHub. Gị òkè ala gị obere akpa mgbe ha debanyere aha, obere n 'elu ikpo okwu ego maka gị baajị tier."
   },
   "liveOverlay": {
+    "level": "Ọkwa {{level}}",
+    "streak_one": "{{count}}-Week streak",
+    "streak_other": "{{count}}-Week streak",
+    "tipJar": "Onyinye ite",
+    "subathon": "Subathon",
     "someone": "Mmadụ",
     "newFollower": "Ọhụrụ na-eso ụzọ: {{name}}",
     "newSubscriber": "Onye debanyere aha ọhụrụ: {{name}}",
@@ -4756,10 +4761,10 @@
     "tipped": "{{name}} zitere onyinye",
     "chatPreview": "Chat ozi egosi ebe a",
     "wheelLanded": "{{name}}spun: {{result}}",
-    "level": "Ọkwa {{level}}",
-    "streak_one": "{{count}}-Week streak",
-    "streak_other": "{{count}}-Week streak",
-    "tipJar": "Onyinye ite",
+    "subathonOver": "Oge agwụla",
+    "pointsTitle": "Kasị eguzosi ike n 'ihe na-ekiri",
+    "points_one": "{{formatted}} isi",
+    "points_other": "{{formatted}} ihe",
     "poll": {
       "closed": "Votu mechiri emechi",
       "voteFor": "Vote maka {{option}}",
@@ -4787,6 +4792,29 @@
     "youAreTimedOut": "A chụpụla gị n 'oge obere oge."
   },
   "liveStudio": {
+    "subathon": {
+      "title": "Subathon",
+      "intro": "Ngụkọ ọnụ na iyi gị. Onyinye ọ bụla a kwụrụ ụgwọ, soro na ndenye aha na-agbakwụnye oge, ya mere ime ụlọ ahụ na-eme ka ị dị ndụ.",
+      "secondsPerThousand": "Sekọnd kwukwara kwa 1,000 DHB onyinye",
+      "secondsPerFollow": "Nke abụọ agbakwunyere kwa na-eso",
+      "secondsPerSubscribe": "Nke abụọ agbakwunyere kwa ndenye aha",
+      "capHours": "Ogologo oge ọ nwere ike ịgba ọsọ (awa)",
+      "save": "Chekwaa ego",
+      "saved": "Subathon ego zọpụta.",
+      "startMinutes": "Malite na (nkeji)",
+      "start": "Bido ngụkọ ahụ",
+      "stop": "Kwụsị",
+      "addFive": "Tinye nkeji 5",
+      "removeFive": "Wepụ 5 nkeji",
+      "failed": "Nke ahụ arụghị ọrụ. Gbalịa ọzọ.",
+      "widgetHint": "Na-egosi gị subathon ngụkọta oge. Malite ya site na Subathon panel na Live Studio."
+    },
+    "points": {
+      "title": "Ndị na-ekiri na-eguzosi ike n 'ihe",
+      "intro": "Ndị na-ekiri ihe na-enweta otu isi maka nkeji ọ bụla ha na-ele gị na otu maka 100 DHB ọ bụla ha nyere. Mkparịta ụka na mmeghachi omume anaghị enweta ihe ọ bụla, yabụ enweghị ike ịkọ ihe.",
+      "empty": "Enweghị isi okwu. Ha na-ewuli elu ka ndị mmadụ na-ekiri ma na-enye onyinye.",
+      "widgetHint": "Tinye wijetị ndị nlegharị anya na-eguzosi ike n 'ihe iji gosi ndepụta a na iyi."
+    },
     "controls": {
       "title": "Njikwa ngwa ngwa",
       "intro": "Maka n'etiti mgbasa ozi. Mgbanwe ọ bụla na-adịgide maka onye ọ bụla na-ekiri, na ngwa na na OBS, ruo mgbe ị gbanwere ya.",
@@ -4904,6 +4932,8 @@
       "join": "Jikọọ"
     },
     "kinds": {
+      "streamer_level": "Streamer larịị",
+      "tip_jar": "Onyinye ite",
       "tip_alert": "NDỤMỌDỤ",
       "follow_alert": "Soro ọkwa",
       "subscribe_alert": "Ịdọ aka ná ntị ndị debanyere aha",
@@ -4922,10 +4952,12 @@
       "rule_alert": "Ọkwa iwu",
       "poll": "Pọtụfoliyo",
       "spin_wheel": "Atụ ogho wheel",
-      "streamer_level": "Streamer larịị",
-      "tip_jar": "Onyinye ite"
+      "subathon_timer": "Subathon ngụ oge",
+      "points_board": "Ndị na-ekiri na-eguzosi ike n 'ihe"
     },
     "hints": {
+      "streamer_level": "Gị streamer larịị na kwa izu streak, si gị profaịlụ",
+      "tip_jar": "A ite na-ejuputa dị ka ugwo onyinye na-abata",
       "tip_alert": "Na-eme ememe ọ bụla n 'ọnụ, size ya tier",
       "follow_alert": "Na-egosi ọ bụla ọhụrụ na-eso ụzọ",
       "subscribe_alert": "Na-egosi ọ bụla ọhụrụ ụtụ magazin",
@@ -4944,15 +4976,15 @@
       "rule_alert": "Ebe ọkwa iwu gị na-apụta",
       "poll": "Gị ndụ ntuli aka, na a votu button maka ọ bụla nhọrọ",
       "spin_wheel": "Ebe wiil gị iwu atụ ogho",
-      "streamer_level": "Gị streamer larịị na kwa izu streak, si gị profaịlụ",
-      "tip_jar": "A ite na-ejuputa dị ka ugwo onyinye na-abata"
+      "subathon_timer": "A countdown na onyinye, na-eso na ndenye aha push azụ",
+      "points_board": "Ndị na-ekiri gị n 'elu site na isi site na ikiri na onyinye"
     },
     "fields": {
+      "showStreak": "Gosi usoro nke izuụka",
       "style": "Ụdị",
       "celebration": "Ememe",
       "banner": "Banner",
       "minAmount": "Kasị nta n 'ọnụ na-egosi (DHB)",
-      "showStreak": "Gosi usoro nke izuụka",
       "showMessage": "Gosi ozi n 'ọnụ",
       "confirmedOnly": "Naanị mgbe ịkwụ ụgwọ ahụ kwadoro",
       "confirmedOnlyHint": "Na-echere sekọnd ole na ole maka agbụ ahụ, ya mere, ọnụ nke a na-akwụghị ụgwọ apụtaghị ma ọlị.",

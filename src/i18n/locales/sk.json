@@ -4919,6 +4919,10 @@
     "creatorEarnsDirect": "Predplatitelia platia v žetónoch DeHub. Váš podiel sa dostane do peňaženky v okamihu, keď sa prihlásia na odber, po odpočítaní poplatku za platformu pre vašu úroveň odznaku."
   },
   "liveOverlay": {
+    "level": "Úroveň {{level}}",
+    "streak_one": "{{count}}-týždňová séria",
+    "streak_other": "{{count}}-týždňová séria",
+    "tipJar": "Darčeková nádoba",
     "someone": "Niekto",
     "newFollower": "Nový sledovateľ: {{name}}",
     "newSubscriber": "Nový odberateľ: {{name}}",
@@ -4931,10 +4935,11 @@
     "tipped": "{{name}} odoslal/a darček",
     "chatPreview": "Správy z chatu sa zobrazujú tu",
     "wheelLanded": "{{name}} spôsobil: {{result}}",
-    "level": "Úroveň {{level}}",
-    "streak_one": "{{count}}-týždňová séria",
-    "streak_other": "{{count}}-týždňová séria",
-    "tipJar": "Darčeková nádoba",
+    "subathon": "Subathon",
+    "subathonOver": "Čas je vypršaný",
+    "pointsTitle": "Najloajálnejší diváci",
+    "points_one": "{{formatted}} bod",
+    "points_other": "{{formatted}} body",
     "poll": {
       "closed": "Hlasovanie skončilo",
       "voteFor": "Hlasuj pre {{option}}",
@@ -4962,6 +4967,29 @@
     "youAreTimedOut": "Momentálne ste časovo omezení"
   },
   "liveStudio": {
+    "subathon": {
+      "title": "Subathon",
+      "intro": "Počítadlo na tvojom streami. Každá zaplatená darček, sledovanie a predplatné pridáva čas, takže si v priestore udržíš živý.",
+      "secondsPerThousand": "Sekundy pridané za 1 000 DHB darovaných",
+      "secondsPerFollow": "Sekundy pridané za sledovanie",
+      "secondsPerSubscribe": "Sekundy pridané za predplatné",
+      "capHours": "Najdlhšie, čo môže bežať (hodiny)",
+      "save": "Uložiť sumy",
+      "saved": "Uložené sumy Subathonu.",
+      "startMinutes": "Začiatočná hodnota (minúty)",
+      "start": "Spustiť počítadlo",
+      "stop": "Stop",
+      "addFive": "Pridať 5 minút",
+      "removeFive": "Odstrániť 5 minút",
+      "failed": "To nefungovalo. Skúšaj znovu.",
+      "widgetHint": "Zobrazuje tvoj Subathon počítadlo. Spusti ho z panelu Subathon v Live Studio."
+    },
+    "points": {
+      "title": "Lojálni diváci",
+      "intro": "Diváci získajú bod za každú minútu, ktorú ti sledujú, a jeden za každých 100 DHB, ktoré darujú. Chat a reakcie nepridávajú body, takže body sa nedajú farmať.",
+      "empty": "Ešte žiadne body. Budú sa hromadit, keď ľudia sledujú a darujú.",
+      "widgetHint": "Pridať widget Lojálni diváci na zobrazenie tohto zoznamu na streami."
+    },
     "controls": {
       "title": "Rýchle ovládacie prvky",
       "intro": "Pre stredný prúd. Každý prepínač drží pre každého, kto sa pozerá, v aplikácii a v OBS, kým ho nevrátite späť.",
@@ -5079,6 +5107,8 @@
       "join": "Pripojiť sa"
     },
     "kinds": {
+      "streamer_level": "Úroveň streamera",
+      "tip_jar": "Darčeková nádoba",
       "tip_alert": "Upozornenie NA prepitné",
       "follow_alert": "Sledovať upozornenie",
       "subscribe_alert": "Upozornenie účastníka",
@@ -5097,10 +5127,12 @@
       "rule_alert": "Upozornenia na pravidlá",
       "poll": "Anketa",
       "spin_wheel": "Rotačné koleso",
-      "streamer_level": "Úroveň streamera",
-      "tip_jar": "Darčeková nádoba"
+      "subathon_timer": "Subathon časovač",
+      "points_board": "Lojálni diváci"
     },
     "hints": {
+      "streamer_level": "Vaša úroveň streamera a týždenná séria vo vašom profile",
+      "tip_jar": "Pohár, ktorý sa naplní pri príchode zaplatených darčekov",
       "tip_alert": "Oslavuje každé prepitné vo veľkosti podľa jeho úrovne",
       "follow_alert": "Zobrazí každého nového sledovateľa",
       "subscribe_alert": "Zobrazí každého nového odberateľa",
@@ -5119,15 +5151,15 @@
       "rule_alert": "Kde sa zobrazujú upozornenia na vaše pravidlá",
       "poll": "Vaša živá anketa s hlasovacím tlačidlom pre každú možnosť",
       "spin_wheel": "Kde sa točia kolesá vo vašich pravidlách",
-      "streamer_level": "Vaša úroveň streamera a týždenná séria vo vašom profile",
-      "tip_jar": "Pohár, ktorý sa naplní pri príchode zaplatených darčekov"
+      "subathon_timer": "Počítadlo, ktoré odkladá čas darčekmi, sledovaním a predplatnými",
+      "points_board": "Tvoj top diváci podľa bodov z sledovania a darovania"
     },
     "fields": {
+      "showStreak": "Zobraziť týždennú sériu",
       "style": "Štýl",
       "celebration": "Oslava",
       "banner": "Banner",
       "minAmount": "Najmenší tip na zobrazenie (DHB)",
-      "showStreak": "Zobraziť týždennú sériu",
       "showMessage": "Zobraziť správu s prepitným",
       "confirmedOnly": "Až po potvrdení platby",
       "confirmedOnlyHint": "Čaká niekoľko sekúnd na reťaz, takže sa nikdy nezobrazí tip, ktorý nie je zaplatený.",

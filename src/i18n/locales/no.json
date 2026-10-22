@@ -4789,6 +4789,10 @@
     "creatorEarnsDirect": "Abonnenter betaler med DeHub-tokens. Andelen din havner i lommeboken din i det øyeblikket de abonnerer, minus plattformavgiften for badge-nivået ditt."
   },
   "liveOverlay": {
+    "level": "Nivå {{level}}",
+    "streak_one": "{{count}}-ukers rekke",
+    "streak_other": "{{count}}-ukers rekke",
+    "tipJar": "Gavekrukke",
     "someone": "Noen",
     "newFollower": "Ny følger: {{name}}",
     "newSubscriber": "Ny abonnent: {{name}}",
@@ -4801,10 +4805,11 @@
     "tipped": "{{name}} sendte en gave",
     "chatPreview": "Chatmeldinger vises her",
     "wheelLanded": "{{name}} spunnet: {{result}}",
-    "level": "Nivå {{level}}",
-    "streak_one": "{{count}}-ukers rekke",
-    "streak_other": "{{count}}-ukers rekke",
-    "tipJar": "Gavekrukke",
+    "subathon": "Subathon",
+    "subathonOver": "Tiden er ut",
+    "pointsTitle": "De mest lojale tilskuere",
+    "points_one": "{{formatted}} poeng",
+    "points_other": "{{formatted}} poeng",
     "poll": {
       "closed": "Stemming lukket",
       "voteFor": "Stem på {{option}}",
@@ -4832,6 +4837,29 @@
     "youAreTimedOut": "Du er tidsutløpt i et øyeblikk"
   },
   "liveStudio": {
+    "subathon": {
+      "title": "Subathon",
+      "intro": "En nedtelling på din stream. Hvert betalt gaver, følg og abonnement tilføyer tid, slik at rommet holder deg live.",
+      "secondsPerThousand": "Sekunder tilføyd per 1 000 DHB gitt",
+      "secondsPerFollow": "Sekunder tilføyd per følg",
+      "secondsPerSubscribe": "Sekunder tilføyd per abonnement",
+      "capHours": "Lengst det kan pågå (timer)",
+      "save": "Spar beløp",
+      "saved": "Subathon-beløp spart.",
+      "startMinutes": "Start med (minutter)",
+      "start": "Start nedtellingen",
+      "stop": "Stopp",
+      "addFive": "Legg til 5 minutter",
+      "removeFive": "Fjern 5 minutter",
+      "failed": "Det fungerte ikke. Prøv på nytt.",
+      "widgetHint": "Viser din Subathon-nedtelling. Start den fra Subathon-panelen i Live Studio."
+    },
+    "points": {
+      "title": "Lojale tilskuere",
+      "intro": "Tilskuere tjener ett poeng for hvert minutt de ser deg og ett for hvert 100 DHB de gir. Chat og reaksjoner gir ingenting, så poeng kan ikke plukkes opp.",
+      "empty": "Ingen poeng ennå. De bygges opp når folk ser og gir.",
+      "widgetHint": "Legg til widgeten for lojale tilskuere for å vise denne listen på stream."
+    },
     "controls": {
       "title": "Hurtigkontroller",
       "intro": "For midtstrømming. Hver bryter holder for alle som ser på, i appen og i OBS, helt til du slår den tilbake.",
@@ -4949,6 +4977,8 @@
       "join": "Bli med"
     },
     "kinds": {
+      "streamer_level": "Streamer-nivå",
+      "tip_jar": "Gavekrukke",
       "tip_alert": "Tipsvarsel",
       "follow_alert": "Følgervarsel",
       "subscribe_alert": "Abonnementsvarsel",
@@ -4967,10 +4997,12 @@
       "rule_alert": "Regelvarsler",
       "poll": "Avstemning",
       "spin_wheel": "Spinnhjul",
-      "streamer_level": "Streamer-nivå",
-      "tip_jar": "Gavekrukke"
+      "subathon_timer": "Subathon-timer",
+      "points_board": "Lojale tilskuere"
     },
     "hints": {
+      "streamer_level": "Ditt streamernivå og din ukentlige strømmerekke, fra profilen din",
+      "tip_jar": "En krukke som fylles opp etter hvert som betalte gaver kommer inn",
       "tip_alert": "Feirer hvert tips, tilpasset nivået",
       "follow_alert": "Viser hver ny følger",
       "subscribe_alert": "Viser hver ny abonnent",
@@ -4989,15 +5021,15 @@
       "rule_alert": "Hvor varslene fra reglene dine vises",
       "poll": "Din direkteavstemning, med en stemmeknapp for hvert alternativ",
       "spin_wheel": "Der hjulene i reglene dine snurrer",
-      "streamer_level": "Ditt streamernivå og din ukentlige strømmerekke, fra profilen din",
-      "tip_jar": "En krukke som fylles opp etter hvert som betalte gaver kommer inn"
+      "subathon_timer": "En nedtelling som gaver, følg og abonnements tilføyer tid",
+      "points_board": "Dine topp-tilskuere etter poeng fra å se og gi"
     },
     "fields": {
+      "showStreak": "Vis den ukentlige rekken",
       "style": "Stil",
       "celebration": "Feiring",
       "banner": "Banner",
       "minAmount": "Minste spiss å vise (DHB)",
-      "showStreak": "Vis den ukentlige rekken",
       "showMessage": "Vis tipsmeldingen",
       "confirmedOnly": "Først etter at betalingen er bekreftet",
       "confirmedOnlyHint": "Venter noen sekunder på kjeden, så et tips som aldri blir utbetalt dukker aldri opp.",

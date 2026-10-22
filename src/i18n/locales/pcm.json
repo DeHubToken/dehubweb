@@ -4137,15 +4137,20 @@
     "creatorEarnsDirect": "Subscribers dey pay with DeHub tokens. Your share go land for your wallet di moment dem subscribe, minus di platform fee for your badge level."
   },
   "liveOverlay": {
+    "level": "Level {{level}}",
+    "streak_one": "{{count}}-week streak",
+    "streak_other": "{{count}}-week streak",
+    "tipJar": "Gift jar",
     "joined": "{{name}} joined",
     "goalReached": "Goal reached!",
     "followersUnit": "followers",
     "chatPreview": "Chat messages appear here",
     "wheelLanded": "{{name}} spun: {{result}}",
-    "level": "Level {{level}}",
-    "streak_one": "{{count}}-week streak",
-    "streak_other": "{{count}}-week streak",
-    "tipJar": "Gift jar",
+    "subathon": "Subathon",
+    "subathonOver": "Time's up",
+    "pointsTitle": "Most loyal viewers",
+    "points_one": "{{formatted}} point",
+    "points_other": "{{formatted}} points",
     "poll": {
       "closed": "Voting closed",
       "voteFor": "Vote for {{option}}",
@@ -4173,6 +4178,29 @@
     "youAreTimedOut": "You are timed out for a moment"
   },
   "liveStudio": {
+    "subathon": {
+      "intro": "A countdown on your stream. Every paid gift, follow and subscription adds time, so the room keeps you live.",
+      "capHours": "Longest it can run (hours)",
+      "startMinutes": "Start with (minutes)",
+      "start": "Start the countdown",
+      "removeFive": "Take off 5 minutes",
+      "widgetHint": "Shows your subathon countdown. Start it from the Subathon panel in Live Studio.",
+      "title": "Subathon",
+      "secondsPerThousand": "Seconds added per 1,000 DHB gifted",
+      "secondsPerFollow": "Seconds added per follow",
+      "secondsPerSubscribe": "Seconds added per subscription",
+      "save": "Save amounts",
+      "saved": "Subathon amounts saved.",
+      "stop": "Stop",
+      "addFive": "Add 5 minutes",
+      "failed": "Na dey go wrong. Try again."
+    },
+    "points": {
+      "widgetHint": "Add the Loyal viewers widget to show this list on stream.",
+      "title": "Loyal viewers",
+      "intro": "Viewers get one point for every minute dey watch you, and one point for every 100 DHB dey gift you. Chat and reactions no give point, so you can't just farm points.",
+      "empty": "No point yet. Dem dey increase when people watch and give gift."
+    },
     "controls": {
       "title": "Quick controls",
       "intro": "For mid-stream. Each switch holds for everyone watching, in the app and in OBS, until you flip it back.",
@@ -4262,6 +4290,8 @@
       "join": "Join"
     },
     "kinds": {
+      "streamer_level": "Streamer level",
+      "tip_jar": "Gift jar",
       "tip_alert": "Tip alert",
       "follow_alert": "Follow alert",
       "subscribe_alert": "Subscriber alert",
@@ -4280,12 +4310,14 @@
       "rule_alert": "Rule alerts",
       "poll": "Poll",
       "spin_wheel": "Spin wheel",
-      "streamer_level": "Streamer level",
-      "tip_jar": "Gift jar"
+      "subathon_timer": "Subathon timer",
+      "points_board": "Loyal viewers"
     },
     "hints": {
       "streamer_level": "Your streamer level and weekly streak, from your profile",
       "tip_jar": "A jar that fills up as paid gifts come in",
+      "subathon_timer": "A countdown that gifts, follows and subscriptions push back",
+      "points_board": "Your top viewers by points from watching and gifting",
       "tip_alert": "Celebrate every tip, e size according to e tier",
       "join_alert": "Welcomes each viewer as they arrive",
       "rule_alert": "Where your rules' alerts appear",

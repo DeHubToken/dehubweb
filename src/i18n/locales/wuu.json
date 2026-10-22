@@ -4365,6 +4365,7 @@
     "streak_one": "{{count}}周连胜",
     "streak_other": "{{count}}周连胜",
     "tipJar": "礼品罐",
+    "subathon": "苏巴吞",
     "someone": "有人",
     "newFollower": "新关注者：{{name}}",
     "newSubscriber": "新订阅者：{{name}}",
@@ -4377,6 +4378,10 @@
     "tipped": "{{name}} 送咱个礼物",
     "chatPreview": "聊天訊息會出現喔",
     "wheelLanded": "{{name}} 吾𠀀{{result}}",
+    "subathonOver": "時間到囉",
+    "pointsTitle": "最忠心的觀眾",
+    "points_one": "{{formatted}}點",
+    "points_other": "{{formatted}}點數",
     "poll": {
       "closed": "投票已关闭",
       "voteFor": "投票给{{option}}",
@@ -4404,6 +4409,29 @@
     "youAreTimedOut": "您暂时超时了"
   },
   "liveStudio": {
+    "subathon": {
+      "title": "苏巴吞",
+      "intro": "你直播間的倒數計時器。每個付費贈禮、追蹤和訂閱都會加上時間，讓直播間保持直播。",
+      "secondsPerThousand": "每贈送1,000 DHB加的秒數",
+      "secondsPerFollow": "每追蹤加的秒數",
+      "secondsPerSubscribe": "每訂閱加的秒數",
+      "capHours": "最長可以持續（小時）",
+      "save": "儲存金額",
+      "saved": "Subathon儲存的金額。",
+      "startMinutes": "開始時（分鐘）",
+      "start": "開始倒數計時",
+      "stop": "停止",
+      "addFive": "加5分鐘",
+      "removeFive": "減5分鐘",
+      "failed": "那不成功。再試一次。",
+      "widgetHint": "顯示你的Subathon倒數計時器。從Live Studio的Subathon面板開始。"
+    },
+    "points": {
+      "title": "忠心的觀眾",
+      "intro": "觀眾每看你一分鐘得一點，每贈送100 DHB得一點。聊天和反應不算，所以點數不能靠這些東西來賺。",
+      "empty": "目前沒有點數。隨著人們觀看和贈送，點數會累積。",
+      "widgetHint": "在直播中加入「忠心觀眾」小工具，顯示這個名單。"
+    },
     "controls": {
       "title": "快速控制",
       "intro": "对于中间流。在应用程序和OBS中，每个开关都适用于所有观看者，直到您将其翻转回来。",
@@ -4510,7 +4538,9 @@
       "ticker": "滾動字幕",
       "rule_alert": "规则警报",
       "poll": "投票",
-      "spin_wheel": "旋转转盘"
+      "spin_wheel": "旋转转盘",
+      "subathon_timer": "Subathon計時器",
+      "points_board": "忠心觀眾"
     },
     "hints": {
       "streamer_level": "您的个人资料中的流媒体播放器级别和每周连续播放次数",
@@ -4532,7 +4562,9 @@
       "ticker": "一行你自訂的文字，在螢幕上滾動",
       "rule_alert": "规则提醒的显示位置",
       "poll": "您的实时投票，每个选项都有投票按钮",
-      "spin_wheel": "规则中的车轮在哪里旋转"
+      "spin_wheel": "规则中的车轮在哪里旋转",
+      "subathon_timer": "一個倒數計時器，讓贈送、追蹤和訂閱推遲倒數",
+      "points_board": "你觀看和贈送中最高的觀眾點數"
     },
     "fields": {
       "showStreak": "显示每周连胜记录",

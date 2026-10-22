@@ -4811,6 +4811,10 @@
     "creatorEarnsDirect": "订阅者以DeHub代币支付。订阅会员订阅后，您的份额即会显示在您的钱包中，减去徽章等级的平台费。"
   },
   "liveOverlay": {
+    "level": "等级{{level}}",
+    "streak_one": "{{count}}周连胜",
+    "streak_other": "{{count}}周连胜",
+    "tipJar": "礼品罐",
     "someone": "某人",
     "newFollower": "新关注者： {{name}}",
     "newSubscriber": "新订阅者： {{name}}",
@@ -4823,10 +4827,11 @@
     "tipped": "{{name}}送了礼物",
     "chatPreview": "此处显示聊天消息",
     "wheelLanded": "{{name}}旋转： {{result}}",
-    "level": "等级{{level}}",
-    "streak_one": "{{count}}周连胜",
-    "streak_other": "{{count}}周连胜",
-    "tipJar": "礼品罐",
+    "subathon": "苏巴吞",
+    "subathonOver": "时间到",
+    "pointsTitle": "最忠诚的观众",
+    "points_one": "{{formatted}} 分",
+    "points_other": "{{formatted}} 分",
     "poll": {
       "closed": "投票已关闭",
       "voteFor": "投票给{{option}}",
@@ -4854,6 +4859,29 @@
     "youAreTimedOut": "您暂时超时了"
   },
   "liveStudio": {
+    "subathon": {
+      "title": "苏巴吞",
+      "intro": "直播间的倒计时。每个付费礼物、关注和订阅都会增加时间，让直播间保持直播。",
+      "secondsPerThousand": "每赠送1,000 DHB增加的秒数",
+      "secondsPerFollow": "每关注增加的秒数",
+      "secondsPerSubscribe": "每订阅增加的秒数",
+      "capHours": "最长可持续（小时）",
+      "save": "保存金额",
+      "saved": "Subathon保存的金额。",
+      "startMinutes": "开始计时（分钟）",
+      "start": "开始倒计时",
+      "stop": "停止",
+      "addFive": "增加5分钟",
+      "removeFive": "减少5分钟",
+      "failed": "操作失败。请重试。",
+      "widgetHint": "显示Subathon倒计时。从Live Studio中的Subathon面板开始。"
+    },
+    "points": {
+      "title": "忠诚观众",
+      "intro": "观众每观看你一分钟获得一分，每赠送100 DHB获得一分。聊天和反应不计入分数，因此分数无法通过作弊获得。",
+      "empty": "目前没有分数。随着观众观看和赠送礼物，分数会累积。",
+      "widgetHint": "将“忠诚观众”小部件添加到直播中显示此列表。"
+    },
     "controls": {
       "title": "快速控制",
       "intro": "对于中间流。在应用程序和OBS中，每个开关都适用于所有观看者，直到您将其翻转回来。",
@@ -4971,6 +4999,8 @@
       "join": "加入"
     },
     "kinds": {
+      "streamer_level": "主播级别",
+      "tip_jar": "礼品罐",
       "tip_alert": "小费提醒",
       "follow_alert": "关注提醒",
       "subscribe_alert": "订阅者警报",
@@ -4989,10 +5019,12 @@
       "rule_alert": "规则警报",
       "poll": "投票",
       "spin_wheel": "旋转转盘",
-      "streamer_level": "主播级别",
-      "tip_jar": "礼品罐"
+      "subathon_timer": "Subathon计时器",
+      "points_board": "忠诚观众"
     },
     "hints": {
+      "streamer_level": "您的个人资料中的流媒体播放器级别和每周连续播放次数",
+      "tip_jar": "当有偿礼物进来时，一个罐子会装满",
       "tip_alert": "庆祝每笔小费，按会员等级计算",
       "follow_alert": "显示每个新关注者",
       "subscribe_alert": "显示每个新订阅者",
@@ -5011,15 +5043,15 @@
       "rule_alert": "规则提醒的显示位置",
       "poll": "您的实时投票，每个选项都有投票按钮",
       "spin_wheel": "规则中的车轮在哪里旋转",
-      "streamer_level": "您的个人资料中的流媒体播放器级别和每周连续播放次数",
-      "tip_jar": "当有偿礼物进来时，一个罐子会装满"
+      "subathon_timer": "一个倒计时，礼物、关注和订阅会推迟倒计时",
+      "points_board": "你的前排观众（通过观看和赠送获得的分数排行）"
     },
     "fields": {
+      "showStreak": "显示每周连胜记录",
       "style": "样式",
       "celebration": "庆祝活动",
       "banner": "横幅",
       "minAmount": "要显示的最小提示（ DHB ）",
-      "showStreak": "显示每周连胜记录",
       "showMessage": "显示小费消息",
       "confirmedOnly": "仅在付款确认后",
       "confirmedOnlyHint": "等待链条几秒钟，因此永远不会出现从未支付的小费。",

@@ -4760,6 +4760,10 @@
     "creatorEarnsDirect": "Maamiltoonni mallattoo DeHub tiin kaffalu. Aksiyooniin keessan yeroo isaan subscribe godhanitti boorsaa keessan keessa bu&#39;a, kaffaltii waltajjii sadarkaa baajii keessanii hir&#39;isuun."
   },
   "liveOverlay": {
+    "level": "Sadarkaa {{level}}",
+    "streak_one": "{{count}}-torban walitti aansuun",
+    "streak_other": "{{count}}-torban walitti aansuun",
+    "tipJar": "Jaarsa kennaa",
     "someone": "namni tokko",
     "newFollower": "Hordofaa haaraa: {{name}}",
     "newSubscriber": "Maamiltoonni haaraan: {{name}}",
@@ -4772,10 +4776,11 @@
     "tipped": "{{name}} kennaa ergeera",
     "chatPreview": "Ergaawwan chaatii asitti mul&#39;atu",
     "wheelLanded": "{{name}} kan naanna&#39;e: {{result}}",
-    "level": "Sadarkaa {{level}}",
-    "streak_one": "{{count}}-torban walitti aansuun",
-    "streak_other": "{{count}}-torban walitti aansuun",
-    "tipJar": "Jaarsa kennaa",
+    "subathon": "Subathon",
+    "subathonOver": "Yeroo dhamaate",
+    "pointsTitle": "Ilaaltoota itti gaafatamtuu",
+    "points_one": "{{formatted}} qabxii",
+    "points_other": "{{formatted}} qabxii",
     "poll": {
       "closed": "Sagalee kennuun cufameera",
       "voteFor": "Sagalee kennaa {{option}}",
@@ -4803,6 +4808,29 @@
     "youAreTimedOut": "Yeroo muraasaaf yeroon siif darbe"
   },
   "liveStudio": {
+    "subathon": {
+      "title": "Subathon",
+      "intro": "Yeroo hir'isu sirna kee irratti. Handeessii kaffaltii hunda, hordofuu fi subscription yeroo dabalata, kanaafuu oduu kee jira.",
+      "secondsPerThousand": "Sekondii dabalaman DHB 1,000 handeessii tokkoon",
+      "secondsPerFollow": "Sekondii dabalaman hordofuu tokkoon",
+      "secondsPerSubscribe": "Sekondii dabalaman subscription tokkoon",
+      "capHours": "Yeroo dheeraa inni deddeebuu danda'u (saatii)",
+      "save": "Hamma kuusuu",
+      "saved": "Hamma subathon kuusame.",
+      "startMinutes": "Jalqaba (minutes)",
+      "start": "Yeroo hir'isu jalqaba",
+      "stop": "Seexuu",
+      "addFive": "Minuutii 5 dabalaa",
+      "removeFive": "Minuutii 5 fudhaa",
+      "failed": "Kun hin hojjene. Irra deebi'ii yaali.",
+      "widgetHint": "Yeroo hir'isu subathon kee agarsiisa. Jalqaba Subathon panel irraa Live Studio keessatti."
+    },
+    "points": {
+      "title": "Ilaaltoota itti gaafatamtuu",
+      "intro": "Ilaaltooni qabxii tokkoon minuutii tokkoon ilaaluu isaaniif fi tokkoon DHB 100 tokkoon handeessuu isaaniif argatu. Haasaa fi deebii qabxii waan hin argatin, kanaafuu qabxiin hin miidhaagamu.",
+      "empty": "Qabxii hin jiru. Isaan yeroo namoonni ilaaluu fi handeessuu jalqabduu irratti ijaarama.",
+      "widgetHint": "Widget ilaaltoota itti gaafatamtuu dabalaa sirna kee irratti agarsiisuu kanaaf."
+    },
     "controls": {
       "title": "To&#39;annoo saffisaa",
       "intro": "Walakkaa sululaaf. Tokkoon tokkoon switch nama ilaalu hundaaf, appii keessatti fi OBS keessatti, hanga duubatti garagalchitanitti qabata.",
@@ -4920,6 +4948,8 @@
       "join": "Itti makamuu"
     },
     "kinds": {
+      "streamer_level": "Sadarkaa Streamer",
+      "tip_jar": "Jaarsa kennaa",
       "tip_alert": "Gorsa akeekkachiisa",
       "follow_alert": "Akeekkachiisa hordofaa",
       "subscribe_alert": "Akeekkachiisa maamilootaa",
@@ -4937,10 +4967,12 @@
       "rule_alert": "Ogeeyyii Seera",
       "poll": "Sagalee",
       "spin_wheel": "Wiil naanna&#39;uu",
-      "streamer_level": "Sadarkaa Streamer",
-      "tip_jar": "Jaarsa kennaa"
+      "subathon_timer": "Yeroo hir'isu subathon",
+      "points_board": "Ilaaltoota itti gaafatamtuu"
     },
     "hints": {
+      "streamer_level": "Sadarkaa streamer keessanii fi streak torban torbaniin, profile keessan irraa",
+      "tip_jar": "Jaarsi akka kennaa kaffaltii qabuutti guutu ni seena",
       "tip_alert": "Gorsa hunda kabaja, hamma sadarkaa isaatti",
       "follow_alert": "Tokkoon tokkoon hordoftoota haaraa agarsiisa",
       "subscribe_alert": "Tokkoon tokkoon maamiloota haaraa agarsiisa",
@@ -4959,14 +4991,14 @@
       "rule_alert": "Bakka ogeeyyii seera keessan mul'atu",
       "poll": "Filannoo kallattiin keessan, filannoo hundaaf button sagalee kan qabu",
       "spin_wheel": "Bakka girgiddaan seera kee keessa jiru itti naanna&#39;u",
-      "streamer_level": "Sadarkaa streamer keessanii fi streak torban torbaniin, profile keessan irraa",
-      "tip_jar": "Jaarsi akka kennaa kaffaltii qabuutti guutu ni seena"
+      "subathon_timer": "Yeroo hir'isu handeessii, hordofuu fi subscription duubatti kaata",
+      "points_board": "Ilaaltoota kee guddaa qabxii irraa ilaaluu fi handeessuu"
     },
     "fields": {
+      "showStreak": "Tartiiba torbanitti agarsiisi",
       "style": "Akkaataa",
       "celebration": "Kabaja",
       "minAmount": "Gorsa xiqqaa agarsiisuuf (DHB) .",
-      "showStreak": "Tartiiba torbanitti agarsiisi",
       "showMessage": "Ergaa gorsaa agarsiisi",
       "confirmedOnly": "Kaffaltiin erga mirkanaa&#39;ee booda qofa",
       "confirmedOnlyHint": "Sansalataaf sekondii muraasa eega, kanaaf tippiin gonkumaa hin kaffalamiin gonkumaa hin mul&#39;atu.",

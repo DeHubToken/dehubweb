@@ -5060,6 +5060,11 @@
     "creatorEarnsDirect": "Pelanggan membayar dalam token DeHub. Bahagian anda masuk ke dalam dompet anda sebaik sahaja mereka melanggan, tolak yuran platform untuk peringkat lencana anda."
   },
   "liveOverlay": {
+    "level": "Level {{level}}",
+    "streak_one": "{{count}}minggu berturut-turut",
+    "streak_other": "{{count}}minggu berturut-turut",
+    "tipJar": "Balang hadiah",
+    "subathon": "Subathon",
     "someone": "Seseorang",
     "newFollower": "Pengikut baharu: {{name}}",
     "newSubscriber": "Pelanggan baharu: {{name}}",
@@ -5072,10 +5077,10 @@
     "tipped": "{{name}} menghantar hadiah",
     "chatPreview": "Mesej sembang muncul di sini",
     "wheelLanded": "{{name}} spun: {{result}}",
-    "level": "Level {{level}}",
-    "streak_one": "{{count}}minggu berturut-turut",
-    "streak_other": "{{count}}minggu berturut-turut",
-    "tipJar": "Balang hadiah",
+    "subathonOver": "Waktu habis",
+    "pointsTitle": "Pengikut yang paling setia",
+    "points_one": "{{formatted}} poin",
+    "points_other": "{{formatted}} poin",
     "poll": {
       "closed": "Voting telah ditutup",
       "voteFor": "Undi untuk {{option}}",
@@ -5103,6 +5108,29 @@
     "youAreTimedOut": "Anda sedang waktu habis untuk seketika"
   },
   "liveStudio": {
+    "subathon": {
+      "title": "Subathon",
+      "intro": "Penghitung mundur di siaran anda. Setiap hadiah bayaran, pengikut dan langganan menambah masa, jadi bilik akan mempertahankan anda tetap siaran.",
+      "secondsPerThousand": "Saat ditambah per 1,000 DHB yang dihadiahkan",
+      "secondsPerFollow": "Saat ditambah per pengikut",
+      "secondsPerSubscribe": "Saat ditambah per langganan",
+      "capHours": "Masa paling lama yang boleh berlangsung (jam)",
+      "save": "Simpan jumlah",
+      "saved": "Jumlah Subathon yang disimpan.",
+      "startMinutes": "Mulakan dengan (minit)",
+      "start": "Mulakan penghitung mundur",
+      "stop": "Hentikan",
+      "addFive": "Tambah 5 minit",
+      "removeFive": "Kurangkan 5 minit",
+      "failed": "Tidak berfungsi. Cuba lagi.",
+      "widgetHint": "Menunjukkan penghitung mundur Subathon. Mulakan dari papan Subathon di Live Studio."
+    },
+    "points": {
+      "title": "Penonton setia",
+      "intro": "Pengikut mendapat satu poin untuk setiap minit mereka menonton anda dan satu lagi untuk setiap 100 DHB yang mereka hadiahkan. Chat dan tindak balas tidak memberikan poin, jadi poin tidak boleh ditanam.",
+      "empty": "Belum ada poin. Mereka bertambah apabila orang menonton dan menghadiahkan.",
+      "widgetHint": "Tambah widget Penonton setia untuk menunjukkan senarai ini pada strim."
+    },
     "controls": {
       "title": "Kawalan pantas",
       "intro": "Untuk aliran pertengahan. Setiap suis tahan untuk semua orang menonton, dalam aplikasi dan dalam OBS, sehingga anda membaliknya kembali.",
@@ -5220,6 +5248,8 @@
       "join": "Sertai"
     },
     "kinds": {
+      "streamer_level": "Tahap penstrim",
+      "tip_jar": "Balang hadiah",
       "tip_alert": "Makluman tip",
       "follow_alert": "Ikuti makluman",
       "subscribe_alert": "Makluman pelanggan",
@@ -5238,10 +5268,12 @@
       "rule_alert": "Makluman peraturan",
       "poll": "Pengundian",
       "spin_wheel": "Roda berputar",
-      "streamer_level": "Tahap penstrim",
-      "tip_jar": "Balang hadiah"
+      "subathon_timer": "Pemasa subathon",
+      "points_board": "Penonton setia"
     },
     "hints": {
+      "streamer_level": "Tahap penstrim dan rentetan mingguan anda, daripada profil anda",
+      "tip_jar": "Balang yang terisi apabila hadiah berbayar masuk",
       "tip_alert": "Meraikan setiap tip, bersaiz mengikut peringkatnya",
       "follow_alert": "Menunjukkan setiap pengikut baharu",
       "subscribe_alert": "Menunjukkan setiap pelanggan baharu",
@@ -5260,15 +5292,15 @@
       "rule_alert": "Di mana makluman peraturan anda dipaparkan",
       "poll": "Pengundian langsung anda, dengan butang undi untuk setiap pilihan",
       "spin_wheel": "Tempat roda dalam peraturan anda berputar",
-      "streamer_level": "Tahap penstrim dan rentetan mingguan anda, daripada profil anda",
-      "tip_jar": "Balang yang terisi apabila hadiah berbayar masuk"
+      "subathon_timer": "Penghitung mundur yang hadiah, pengikut dan langganan menolak kembali",
+      "points_board": "Pengikut teratas anda berdasarkan poin dari menonton dan menghadiahkan"
     },
     "fields": {
+      "showStreak": "Tunjukkan rentetan mingguan",
       "style": "Gaya",
       "celebration": "Perayaan",
       "banner": "Sepanduk",
       "minAmount": "Petua terkecil untuk ditunjukkan (DHB)",
-      "showStreak": "Tunjukkan rentetan mingguan",
       "showMessage": "Tunjukkan mesej tip",
       "confirmedOnly": "Hanya selepas bayaran disahkan",
       "confirmedOnlyHint": "Menunggu beberapa saat untuk rantaian, jadi tip yang tidak pernah dibayar tidak akan muncul.",

@@ -4738,6 +4738,10 @@
     "creatorEarnsDirect": "Tilaajat maksavat DeHub-poletteina. Osuutesi siirtyy lompakkoosi heti, kun he tilaavat sen, vähennettynä erikoismerkkitasostasi perittävällä alustamaksulla."
   },
   "liveOverlay": {
+    "level": "Taso {{level}}",
+    "streak_one": "{{count}}viikon putki",
+    "streak_other": "{{count}}viikon putki",
+    "tipJar": "Lahjapurkki",
     "someone": "Joku",
     "newFollower": "Uusi seuraaja: {{name}}",
     "newSubscriber": "Uusi tilaaja: {{name}}",
@@ -4750,10 +4754,11 @@
     "tipped": "{{name}} lähetti lahjan",
     "chatPreview": "Chat-viestit näkyvät tässä",
     "wheelLanded": "{{name}} pyöritti: {{result}}",
-    "level": "Taso {{level}}",
-    "streak_one": "{{count}}viikon putki",
-    "streak_other": "{{count}}viikon putki",
-    "tipJar": "Lahjapurkki",
+    "subathon": "Subathon",
+    "subathonOver": "Aika on lopussa",
+    "pointsTitle": "Arvostetuimmat katsojat",
+    "points_one": "{{formatted}} pistettä",
+    "points_other": "{{formatted}} pistettä",
     "poll": {
       "closed": "Äänestys päättynyt",
       "voteFor": "Äänestä {{option}}",
@@ -4781,6 +4786,29 @@
     "youAreTimedOut": "Olet aikakarsinnassa hetkellisesti"
   },
   "liveStudio": {
+    "subathon": {
+      "title": "Subathon",
+      "intro": "Kello laskee suorassa. Jokainen maksullinen lahja, seuraaminen ja tilaus lisää aikaa, jotta huone pitää sinut elossa.",
+      "secondsPerThousand": "Lisättyja sekunteja 1 000 DHB lahjana",
+      "secondsPerFollow": "Lisättyja sekunteja seuraamisesta",
+      "secondsPerSubscribe": "Lisättyja sekunteja tilauksesta",
+      "capHours": "Pitkäaikaisin mahdollinen kesto (tunteina)",
+      "save": "Tallennetut summat",
+      "saved": "Subathonissa tallennetut summat.",
+      "startMinutes": "Alkaa (minuutteina)",
+      "start": "Aloita laskenta",
+      "stop": "Pysäytä",
+      "addFive": "Lisää 5 minuuttia",
+      "removeFive": "Vähennä 5 minuuttia",
+      "failed": "Se ei toiminut. Yritä uudelleen.",
+      "widgetHint": "Näyttää subathon-laskennan. Aloita se Subathon-paneelista Live Studiossa."
+    },
+    "points": {
+      "title": "Arvostetuimmat katsojat",
+      "intro": "Katsojat ansaitsevat yhden pisteen jokaisesta minuutista, jonka he katsovat sinua, ja yhden pisteen jokaista 100 DHB lahjaa kohden. Chat ja reaktiot eivät tuota pisteitä, joten pisteitä ei voi viljellä.",
+      "empty": "Ei vielä pisteitä. Ne kertyvät, kun ihmiset katsovat ja lahjoittavat.",
+      "widgetHint": "Lisää Arvostetuimmat katsojat -widgetti näyttämään tämän listan suorassa."
+    },
     "controls": {
       "title": "Pikaohjaimet",
       "intro": "Keskilähetykseen. Jokainen kytkin pitää kaikille katsojille, sovelluksessa ja OBS: ssä, kunnes käännät sen takaisin.",
@@ -4898,6 +4926,8 @@
       "join": "Liity"
     },
     "kinds": {
+      "streamer_level": "Suoratoistotaso",
+      "tip_jar": "Lahjapurkki",
       "tip_alert": "Vinkkihälytys",
       "follow_alert": "Seuraa hälytystä",
       "subscribe_alert": "Tilaajan hälytys",
@@ -4916,10 +4946,12 @@
       "rule_alert": "Sääntöhälytykset",
       "poll": "Kysely",
       "spin_wheel": "Pyöräytyspyörä",
-      "streamer_level": "Suoratoistotaso",
-      "tip_jar": "Lahjapurkki"
+      "subathon_timer": "Subathon-kello",
+      "points_board": "Arvostetuimmat katsojat"
     },
     "hints": {
+      "streamer_level": "Suoratoistotasosi ja viikoittainen putkesi profiilistasi",
+      "tip_jar": "Purkki, joka täyttyy maksettujen lahjojen tullessa",
       "tip_alert": "Juhlii jokaista tippiä sen tason mukaan",
       "follow_alert": "Näyttää jokaisen uuden seuraajan",
       "subscribe_alert": "Näyttää jokaisen uuden tilaajan",
@@ -4938,15 +4970,15 @@
       "rule_alert": "Missä sääntöjesi hälytykset näkyvät",
       "poll": "Livekyselysi, jossa on äänestyspainike jokaiselle vaihtoehdolle",
       "spin_wheel": "Sääntöjesi pyörät pyörivät",
-      "streamer_level": "Suoratoistotasosi ja viikoittainen putkesi profiilistasi",
-      "tip_jar": "Purkki, joka täyttyy maksettujen lahjojen tullessa"
+      "subathon_timer": "Laskuri, jonka lahjat, seuraamiset ja tilaukset työntävät takaisin",
+      "points_board": "Parhaat katsojasi pisteistä katselusta ja lahjoituksista"
     },
     "fields": {
+      "showStreak": "Näytä viikoittainen putki",
       "style": "Tyyli",
       "celebration": "Juhla",
       "banner": "Banneri",
       "minAmount": "Pienin näytettävä vihje (DHB)",
-      "showStreak": "Näytä viikoittainen putki",
       "showMessage": "Näytä vihjeviesti",
       "confirmedOnly": "Vasta kun maksu on vahvistettu",
       "confirmedOnlyHint": "Odottaa muutaman sekunnin ketjulle, joten tippiä, jota ei koskaan makseta, ei koskaan näy.",

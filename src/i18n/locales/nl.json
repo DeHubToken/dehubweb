@@ -6027,6 +6027,10 @@
     "creatorEarnsDirect": "Abonnees betalen in DeHub-tokens. Je aandeel komt in je portemonnee terecht op het moment dat ze zich abonneren, minus de platformkosten voor je badge-niveau."
   },
   "liveOverlay": {
+    "level": "Niveau {{level}}",
+    "streak_one": "{{count}}-week streak",
+    "streak_other": "{{count}}-week streak",
+    "tipJar": "Geschenkpot",
     "someone": "Iemand",
     "newFollower": "Nieuwe volger: {{name}}",
     "newSubscriber": "Nieuwe abonnee: {{name}}",
@@ -6039,10 +6043,11 @@
     "tipped": "{{name}} heeft een cadeau gestuurd",
     "chatPreview": "Chatberichten worden hier weergegeven",
     "wheelLanded": "{{name}} gesponnen: {{result}}",
-    "level": "Niveau {{level}}",
-    "streak_one": "{{count}}-week streak",
-    "streak_other": "{{count}}-week streak",
-    "tipJar": "Geschenkpot",
+    "subathon": "Subathon",
+    "subathonOver": "Tijd is om",
+    "pointsTitle": "De meest loyale kijkers",
+    "points_one": "{{formatted}} punt",
+    "points_other": "{{formatted}} punten",
     "poll": {
       "closed": "Stemming gesloten",
       "voteFor": "Stem op {{option}}",
@@ -6070,6 +6075,29 @@
     "youAreTimedOut": "Je bent even tijd uit."
   },
   "liveStudio": {
+    "subathon": {
+      "title": "Subathon",
+      "intro": "Een afteller op je stream. Elke betaalde gift, follow en abonnement voegt tijd toe, zodat de kamer je live houdt.",
+      "secondsPerThousand": "Seconden toegevoegd per 1.000 DHB gegeven",
+      "secondsPerFollow": "Seconden toegevoegd per follow",
+      "secondsPerSubscribe": "Seconden toegevoegd per abonnement",
+      "capHours": "Langst dat het kan duren (uren)",
+      "save": "Opslaan bedragen",
+      "saved": "Subathon-bedragen opgeslagen.",
+      "startMinutes": "Start met (minuten)",
+      "start": "Start de afteller",
+      "stop": "Stoppen",
+      "addFive": "Voeg 5 minuten toe",
+      "removeFive": "Haal 5 minuten af",
+      "failed": "Dat heeft niet gewerkt. Probeer het opnieuw.",
+      "widgetHint": "Toont je Subathon-afteller. Start deze vanaf het Subathon-paneel in Live Studio."
+    },
+    "points": {
+      "title": "Loyale kijkers",
+      "intro": "Kijkers verdienen een punt voor elke minuut dat ze je kijken en één voor elke 100 DHB die ze geven. Chat en reacties leveren niets op, dus punten kunnen niet gefarmit worden.",
+      "empty": "Nog geen punten. Ze bouwen op naarmate mensen kijken en geven.",
+      "widgetHint": "Voeg het widget \"Loyale kijkers\" toe om deze lijst tijdens de stream te tonen."
+    },
     "controls": {
       "title": "Snelle bediening",
       "intro": "Voor mid-stream. Elke schakelaar houdt vast voor iedereen die kijkt, in de app en in OBS, totdat je hem terugdraait.",
@@ -6187,6 +6215,8 @@
       "join": "Deelnemen"
     },
     "kinds": {
+      "streamer_level": "Streamer-niveau",
+      "tip_jar": "Geschenkpot",
       "tip_alert": "Tipmelding",
       "follow_alert": "Volgmelding",
       "subscribe_alert": "Abonneemelding",
@@ -6205,10 +6235,12 @@
       "rule_alert": "Regelwaarschuwingen",
       "poll": "Poll",
       "spin_wheel": "Draaischijf",
-      "streamer_level": "Streamer-niveau",
-      "tip_jar": "Geschenkpot"
+      "subathon_timer": "Subathon-timer",
+      "points_board": "Loyale kijkers"
     },
     "hints": {
+      "streamer_level": "Je streamer-niveau en wekelijkse reeks, vanuit je profiel",
+      "tip_jar": "Een pot die volloopt als betaalde geschenken binnenkomen",
       "tip_alert": "Viirt elke tip, aangepast aan zijn niveau",
       "follow_alert": "Toont elke nieuwe volger",
       "subscribe_alert": "Toont elke nieuwe abonnee",
@@ -6227,15 +6259,15 @@
       "rule_alert": "Waar de waarschuwingen van je regels verschijnen",
       "poll": "Uw live poll, met een stemknop voor elke optie",
       "spin_wheel": "Waar de wielen in je regels draaien",
-      "streamer_level": "Je streamer-niveau en wekelijkse reeks, vanuit je profiel",
-      "tip_jar": "Een pot die volloopt als betaalde geschenken binnenkomen"
+      "subathon_timer": "Een afteller die gifts, follows en abonnementen terugzet",
+      "points_board": "Je topkijkers op basis van punten van kijken en geven"
     },
     "fields": {
+      "showStreak": "Toon de wekelijkse reeks",
       "style": "Stijl",
       "celebration": "Viering",
       "banner": "Banner",
       "minAmount": "Kleinste tip om te laten zien (DHB)",
-      "showStreak": "Toon de wekelijkse reeks",
       "showMessage": "Het bericht met de fooi weergeven",
       "confirmedOnly": "Pas nadat de betaling is bevestigd",
       "confirmedOnlyHint": "Wacht een paar seconden op de ketting, dus een tip die nooit wordt betaald, verschijnt nooit.",

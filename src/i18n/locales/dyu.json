@@ -4645,6 +4645,10 @@
     "creatorEarnsDirect": "Abonnew bɛ sara DeHub token na. U mana don tuma min na, i ka tila bɛ se i ka wariboro la, i ka badge hakɛ ka sara bɔlen a la."
   },
   "liveOverlay": {
+    "level": "O ye {{level}}",
+    "streak_one": "{{count}}-week streak",
+    "streak_other": "{{count}}-week streak",
+    "tipJar": "A ye min fɔ, o ye tiɲɛ ye",
     "someone": "Mɔgɔ dɔ",
     "newFollower": "Mɔgɔ min be tugu a kɔ: {{name}}",
     "newSubscriber": "Mɔgɔ min be sɛbɛri kɛ: {{name}}",
@@ -4655,10 +4659,11 @@
     "tipped": "{{name}}Add a gift",
     "chatPreview": "I be se ka kuma minw fɔ, u be sɔrɔ yan",
     "wheelLanded": "{{name}} spun: {{result}}",
-    "level": "O ye {{level}}",
-    "streak_one": "{{count}}-week streak",
-    "streak_other": "{{count}}-week streak",
-    "tipJar": "A ye min fɔ, o ye tiɲɛ ye",
+    "subathon": "O kɔ, a ye mɔgɔ dɔ weele ka",
+    "subathonOver": "Wagati ka baara",
+    "pointsTitle": "I ka mɔgɔ kantigiw",
+    "points_one": "{{formatted}} point",
+    "points_other": "{{formatted}} points",
     "poll": {
       "closed": "Jula ni a kɛnɛ",
       "voteFor": "Jula fɛ {{option}}",
@@ -4686,6 +4691,29 @@
     "youAreTimedOut": "I be bɔ waati dɔ la"
   },
   "liveStudio": {
+    "subathon": {
+      "title": "O kɔ, a ye mɔgɔ dɔ weele ka",
+      "intro": "O kɔ, a ye dɔ fara a ka fanga kan. N'i ye fɛɛn dɔ di, i ka tugu a kɔ ani i ka sɛbɛri kɛ, o be dɔ fara i ka wagati kan walisa i ka to i ka soo.",
+      "secondsPerThousand": "O kɔ, a ye dɔ fara a ka wari kan.",
+      "secondsPerFollow": "O kɔ, a ye dɔ fara a kan",
+      "secondsPerSubscribe": "Siginiden kelen kelen bɛɛ ka kan ka kɛ siginiden ye",
+      "capHours": "A be se ka boli fɔɔ ka se a daan na.",
+      "save": "Ka wari mara",
+      "saved": "O kama, a tun be se ka kɛ ko a tun ye mɔgɔ dɔ ye",
+      "startMinutes": "Ka daminɛ (miniti)",
+      "start": "Aw ka jatiminɛ daminɛ",
+      "stop": "Aw kana aw yɛrɛ minɛ",
+      "addFive": "Dakun duuru tɛmɛna.",
+      "removeFive": "Aw ka miniti fila kɛ sani aw ka taga.",
+      "failed": "N'i ma siran, o be yɛlɛma ka kɛ ten.",
+      "widgetHint": "I ka jatiminɛ kɛcogo yira. I ka kan ka bɔ o yɔrɔ la ka bɔ o yɔrɔ la."
+    },
+    "points": {
+      "title": "Mɔgɔ minw be kantigiya kɛ",
+      "intro": "Mɔgɔ minw be filɛli kɛ, olu be pikiri kɛ miniti o miniti ani u be pikiri kɛ DHB 100 o miniti. O kama, u tɛ se ka pikiri kɛ.",
+      "empty": "O tɛ foyi ye halibi. U be lɔ i n'a fɔ mɔgɔw be filɛli kɛ cogo min na ani ka nilifɛn dɔ di u ma.",
+      "widgetHint": "I ka kan ka mɔgɔ kantigiw ka widget dɔ fara a kan walisa k'a yira ko i ye mɔgɔ kantigiw ye."
+    },
     "controls": {
       "title": "Kɔrɔbɔli minw be se ka kɛ joona joona",
       "intro": "O cogo kelen na, mɔgɔ o mɔgɔ be se k'a filɛ, a be se k'a filɛ, a be se k'a filɛ ani a be se k'a filɛ OBS kɔnɔ, fɔɔ i k'a yɛlɛma.",
@@ -4800,6 +4828,8 @@
       "join": "Join"
     },
     "kinds": {
+      "streamer_level": "Fɛɛn minw be se ka kɛ",
+      "tip_jar": "A ye min fɔ, o ye tiɲɛ ye",
       "tip_alert": "Tip alert",
       "follow_alert": "Follow alert",
       "subscribe_alert": "Subscriber alert",
@@ -4818,10 +4848,12 @@
       "rule_alert": "Kɔrɔbɔli sariya",
       "poll": "Fanga be mɔgɔ minw na,",
       "spin_wheel": "O ye nɛgɛso ye",
-      "streamer_level": "Fɛɛn minw be se ka kɛ",
-      "tip_jar": "A ye min fɔ, o ye tiɲɛ ye"
+      "subathon_timer": "O ye wagati ta ye",
+      "points_board": "Mɔgɔ minw be kantigiya kɛ"
     },
     "hints": {
+      "streamer_level": "I ka kunnafoniw hakɛ ani i ka dɔgɔkun o dɔgɔkun kunnafoniw, i ka kunnafoniw kɔnɔ",
+      "tip_jar": "O kɔ, a ye fɛɛn dɔ di a ma min tun ka kan ka kɛ a yɛrɛ ta ye.",
       "tip_alert": "O la, a tun be se ka kɛ ko a tun ye mɔgɔ min ye, a tun b'o tigi le ye.",
       "follow_alert": "Ka tugu mɔgɔ kuraw kɔ",
       "subscribe_alert": "A ka kan ka kɛ i ka mɔgɔ kuraw bɛɛ ka kan ka kɛ i ka mɔgɔ kuraw ye",
@@ -4839,15 +4871,15 @@
       "rule_alert": "I ka sariyaw be yɔrɔ min na",
       "poll": "I ka ɲɛnamaya kɛcogo ka di i ye, i ka vote tuguni kelen kelen bɛɛ la",
       "spin_wheel": "I ka sariya kɔnɔ, i ka kan ka min fɔ, o ye tiɲɛ ye.",
-      "streamer_level": "I ka kunnafoniw hakɛ ani i ka dɔgɔkun o dɔgɔkun kunnafoniw, i ka kunnafoniw kɔnɔ",
-      "tip_jar": "O kɔ, a ye fɛɛn dɔ di a ma min tun ka kan ka kɛ a yɛrɛ ta ye."
+      "subathon_timer": "O la, mɔgɔ minw be sɔn ka fɛɛn dɔ di, olu be sɔn ka fɛɛn dɔ di.",
+      "points_board": "I ka mɔgɔ minw ye mɔgɔbabaw ye, i ka olu filɛ ani k'u ka nilifɛnw di u ma"
     },
     "fields": {
+      "showStreak": "Dɔgɔkun hakilila-nyuma",
       "style": "Style",
       "celebration": "Ɲanagwɛ",
       "banner": "Fanga be mɔgɔ minw na, olu ka kan",
       "minAmount": "O la, a ka ɲi ka kɛ ni mɔgɔ dɔ ye min be se k'a yɛrɛ tanga a ka baara ma.",
-      "showStreak": "Dɔgɔkun hakilila-nyuma",
       "showMessage": "Ka kumaɲɔgɔnya kɛ ni mɔgɔ dɔ ye",
       "confirmedOnly": "O kɔ, u y'a fɔ ko:",
       "confirmedOnlyHint": "O kama, a tun man kan ka wari caaman sara.",

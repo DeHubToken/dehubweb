@@ -4689,6 +4689,11 @@
     "creatorEarnsDirect": "እቶም ተመዝጋቢታት ኣብ DeHub ምልክታት ይኽፈሉ እዮም ። እቲ ናይ ባጅ ደረጃኻ ናይ መድረኽ ክፍሊት ዝሕተተሉ እዋን ፡ ኣብ ቦርሳኻ ዘሎ መሬትካ ።"
   },
   "liveOverlay": {
+    "level": "ደረጃ {{level}}",
+    "streak_one": "{{count}}-ሰሙን ተከታታይ",
+    "streak_other": "{{count}}-ሰሙን ተከታታይ",
+    "tipJar": "ህያብ ዕንጨይቲ",
+    "subathon": "ሳባቶን",
     "someone": "ሓደ ሰብ",
     "newFollower": "ሓድሽ ተኸታሊ ፦ {{name}}",
     "newSubscriber": "ሓድሽ ኣባል ፦ {{name}}",
@@ -4699,10 +4704,10 @@
     "tipped": "{{name}} ህያብ ልኢኹ",
     "chatPreview": "ናይ ቻት መልእኽትታት ኣብዚ ይረኣዩ",
     "wheelLanded": "{{name}} ኣዝዩሩ፦ {{result}}",
-    "level": "ደረጃ {{level}}",
-    "streak_one": "{{count}}-ሰሙን ተከታታይ",
-    "streak_other": "{{count}}-ሰሙን ተከታታይ",
-    "tipJar": "ህያብ ዕንጨይቲ",
+    "subathonOver": "ግዜኡ ይድህስስስ",
+    "pointsTitle": "ዝያዳ እሙናት ተመልካቾች",
+    "points_one": "{{formatted}} ነጥቢ",
+    "points_other": "{{formatted}} ነጥቢ",
     "poll": {
       "closed": "ድምጺ ተዓጽዩ",
       "voteFor": "ንዓ {{option}} ድምጺ ሃብ",
@@ -4730,6 +4735,29 @@
     "youAreTimedOut": "ንነዊሕ እዋን ተጸሚድካ"
   },
   "liveStudio": {
+    "subathon": {
+      "title": "ሳባቶን",
+      "intro": "ኣብ ገማግም ባሕሪኻ ድማ ቆጸራ ግበር ። ነፍሲ ወከፍ እተኸፍለ ውህበት ፡ ሰዓብን ኣባልነትን ግዜ ይውስኽ ፡ ስለዚ ፡ እቲ ክፍሊ ንህይወትካ ይሕልወካ እዩ ።",
+      "secondsPerThousand": "ኣብ ነፍሲ ወከፍ 1,000 DHB እተዋህበ",
+      "secondsPerFollow": "ኣብ ነፍሲ ወከፍ ተኸታታሊ እተወሰኸ ካልኢት",
+      "secondsPerSubscribe": "ኣብ ነፍሲ ወከፍ ኣባልነት እተወሰኸ ካልኢት",
+      "capHours": "ንነዊሕ እዋን ክጐዪ ዝኽእል (ሰዓታት)",
+      "save": "መጠን ኣድሕን",
+      "saved": "ናይ ሱባተን መጠን ተድሕን ።",
+      "startMinutes": "ብ (ደቓይቕ) ተጀሚሩ",
+      "start": "ነቲ ቆጸራ ምጅማር",
+      "stop": "ደው በል",
+      "addFive": "5 ደቓይቕ ወሲድካ",
+      "removeFive": "ሓሙሽተ ደቓይቕ ርሒቕካ",
+      "failed": "በጃኻ ኣይትጨነቕ ፡ ከም'ዚ... እንደገና ይዞር ኣሎ ።",
+      "widgetHint": "ንኡስ ኣቑሑትካ ኣርኢ ። ካብ ሱባቶን ፓነል ኣብ Live Studio ተጀሚሩ ።"
+    },
+    "points": {
+      "title": "እሙናት ተዓዘብቲ",
+      "intro": "ተመልካቾች ንነፍሲ ወከፍ ደቒቕ ነጥቢ ይረኽቡኻ ፣ ንነፍሲ ወከፍ 100 DHB ድማ ሓደ ነጥቢ ይረኽቡ እዮም ። ቻትታትን ግብረመልስን ዋላ ሓንቲ ኣይረኽቡን እዮም ፣ ስለዚ ነጥቢታት ክዕረፉ ኣይክእሉን እዮም ።",
+      "empty": "ገና ነጥቢ ኣይረኸበን ። ሰባት ከም ዚርእዩን ከም ዚህቡን እዮም ዚሃንጹ ።",
+      "widgetHint": "ነዚ ዝርዝር እዚ ኣብ ዥረት ንምግላጽ ፡ ነቲ እሙን ተመልካቾች ዊጅት ኣክሎ ።"
+    },
     "controls": {
       "title": "ቅልጡፍ መቆጣጠሪታት",
       "intro": "ንማእከላይ ፍሰት ፡ ነፍሲ ወከፍ ስዊች ንኹሉ ዝጥምቶ ፡ ኣብ ኣፕሊኬሽንን ኣብ OBSን ክሳብ እትመልሶ ይዕቅቦ ።",
@@ -4846,6 +4874,9 @@
       "join": "ተቐሊል"
     },
     "kinds": {
+      "streamer_level": "ደረጃ ዥረት",
+      "tip_jar": "ህያብ ዕንጨይቲ",
+      "subathon_timer": "ሰዓት ሳባቶን",
       "tip_alert": "ምልክት ማሕበር",
       "follow_alert": "ተኸተል ማሕበር",
       "subscribe_alert": "ተመዝገብ ማሕበር",
@@ -4864,10 +4895,11 @@
       "rule_alert": "ደንብ ማንቂያዎች",
       "poll": "ድምጺ",
       "spin_wheel": "መንኰራኵር ስፒን",
-      "streamer_level": "ደረጃ ዥረት",
-      "tip_jar": "ህያብ ዕንጨይቲ"
+      "points_board": "እሙናት ተዓዘብቲ"
     },
     "hints": {
+      "streamer_level": "ደረጃ ዥረትካን ሳምንታዊ ስክሪፕትካን ፡ ካብ መገለጺኻ",
+      "tip_jar": "ከም እተኸፍለ ህያባት ዚመልእ ዕንጨይቲ",
       "tip_alert": "ንኹሉ ምልክት ዝተሓለወ ብዝተለወጠ ደረጃ ይኽእል",
       "follow_alert": "ንሓደ ሓደሽ ተኸተል ይርከብ",
       "subscribe_alert": "ንሓደ ሓደሽ ተመዝገብ ይርከብ",
@@ -4886,15 +4918,15 @@
       "rule_alert": "ደንብ ማንቂያዎችህ የሚታዩበት ቦታ",
       "poll": "ብቀጥታ ምርጫኻ ፡ ንነፍሲ ወከፍ ኣማራጺ ናይ ድምጺ ጠውቑ",
       "spin_wheel": "እቲ ኣብ ሕግታትካ ዘሎ መንኰራኵር",
-      "streamer_level": "ደረጃ ዥረትካን ሳምንታዊ ስክሪፕትካን ፡ ካብ መገለጺኻ",
-      "tip_jar": "ከም እተኸፍለ ህያባት ዚመልእ ዕንጨይቲ"
+      "subathon_timer": "ህያባት ፡ ተኸታተልቲ ፡ ምዝገባታት ንድሕሪት ዝምለሱ",
+      "points_board": "ናይ ምርኣይን ህያብን ነጥቢ ዘለዎም ላዕለዎት ተዓዘብቲ"
     },
     "fields": {
+      "showStreak": "ሳምንታዊ ስክሪፕት ኣርኢ",
       "style": "ስታይል",
       "celebration": "በዓል",
       "banner": "ባንዴራ",
       "minAmount": "ንእሽቶ ምኽሪ (DHB)",
-      "showStreak": "ሳምንታዊ ስክሪፕት ኣርኢ",
       "showMessage": "ነቲ መልእኽቲ ኣርኢ",
       "confirmedOnly": "እቲ ክፍሊት ድሕሪ ምርግጋጽ ጥራይ",
       "confirmedOnlyHint": "እቲ ሰንሰለት ንገለ ካልኢት ይጽበ ፣ ስለዚ እቲ ዘይኽፈለሉ ነጥቢ ፈጺሙ ኣይርአን ።",

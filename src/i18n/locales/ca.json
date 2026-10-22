@@ -4737,6 +4737,10 @@
     "creatorEarnsDirect": "Els subscriptors paguen amb fitxes DeHub. La teva participació arribarà a la teva cartera en el moment en què es subscriguin, menys la tarifa de la plataforma per al teu nivell d'distintiu."
   },
   "liveOverlay": {
+    "level": "Nivell {{level}}",
+    "streak_one": "Racha de {{count}}setmanes",
+    "streak_other": "Racha de {{count}}setmanes",
+    "tipJar": "Pot de regals",
     "someone": "Algú",
     "newFollower": "Nou seguidor: {{name}}",
     "newSubscriber": "Subscriptor nou: {{name}}",
@@ -4749,10 +4753,11 @@
     "tipped": "{{name}}ha enviat un regal",
     "chatPreview": "Els missatges de xat apareixen aquí",
     "wheelLanded": "{{name}} girat: {{result}}",
-    "level": "Nivell {{level}}",
-    "streak_one": "Racha de {{count}}setmanes",
-    "streak_other": "Racha de {{count}}setmanes",
-    "tipJar": "Pot de regals",
+    "subathon": "Subathon",
+    "subathonOver": "S'ha acabat el temps",
+    "pointsTitle": "Els espectadors més lleials",
+    "points_one": "{{formatted}} punt",
+    "points_other": "{{formatted}} punts",
     "poll": {
       "closed": "Votació tancada",
       "voteFor": "Vota per {{option}}",
@@ -4780,6 +4785,29 @@
     "youAreTimedOut": "Tens temps límit per un moment"
   },
   "liveStudio": {
+    "subathon": {
+      "title": "Subathon",
+      "intro": "Un comptador enrere en el teu stream. Cada regal pagat, seguiment i subscripció afegix temps, així que la sala et manté en directe.",
+      "secondsPerThousand": "Segons afegits per cada 1.000 DHB regalats",
+      "secondsPerFollow": "Segons afegits per seguiment",
+      "secondsPerSubscribe": "Segons afegits per subscripció",
+      "capHours": "Màxim que pot durar (hores)",
+      "save": "Guardar quantitats",
+      "saved": "Quantitats de Subathon guardades.",
+      "startMinutes": "Començar amb (minuts)",
+      "start": "Iniciar el comptador enrere",
+      "stop": "Aturar",
+      "addFive": "Afegir 5 minuts",
+      "removeFive": "Treure 5 minuts",
+      "failed": "Això no ha funcionat. Torna a provar-ho.",
+      "widgetHint": "Mostra el comptador enrere del Subathon. Inicia'l des del panell Subathon a Live Studio."
+    },
+    "points": {
+      "title": "Espectadors lleials",
+      "intro": "Els espectadors guanyen un punt per cada minut que et veuen i un altre per cada 100 DHB que regalen. Els missatges i reaccions no valen, així que els punts no es poden \"fer\" artificialment.",
+      "empty": "Encara no hi ha punts. Es van acumulant mentre la gent et mira i regala.",
+      "widgetHint": "Afegeix el widget d’Espectadors lleials per mostrar aquesta llista en stream."
+    },
     "controls": {
       "title": "Controls ràpids",
       "intro": "Per a mid-stream. Cada interruptor es manté per a tothom que ho vegi, a l'aplicació i a OBS, fins que el tornis a girar.",
@@ -4897,6 +4925,8 @@
       "join": "Unir-se"
     },
     "kinds": {
+      "streamer_level": "Nivell del streamer",
+      "tip_jar": "Pot de regals",
       "tip_alert": "Alerta de consell",
       "follow_alert": "Alerta de seguiment",
       "subscribe_alert": "Alerta de subscriptor",
@@ -4915,10 +4945,12 @@
       "rule_alert": "Alertes de regles",
       "poll": "Enquesta",
       "spin_wheel": "Roda giratòria",
-      "streamer_level": "Nivell del streamer",
-      "tip_jar": "Pot de regals"
+      "subathon_timer": "Comptador enrere del Subathon",
+      "points_board": "Espectadors lleials"
     },
     "hints": {
+      "streamer_level": "El teu nivell de streamer i la racha setmanal, des del teu perfil",
+      "tip_jar": "Un pot que s'omple a mesura que arriben els regals pagats",
       "tip_alert": "Celebra cada consell, dimensionat segons el seu nivell",
       "follow_alert": "Mostra cada nou seguidor",
       "subscribe_alert": "Mostra cada nou subscriptor",
@@ -4937,15 +4969,15 @@
       "rule_alert": "On apareixen les alertes de les teves normes",
       "poll": "La teva enquesta en directe, amb un botó de vot per a cada opció",
       "spin_wheel": "On giren les rodes de les teves regles",
-      "streamer_level": "El teu nivell de streamer i la racha setmanal, des del teu perfil",
-      "tip_jar": "Un pot que s'omple a mesura que arriben els regals pagats"
+      "subathon_timer": "Un comptador enrere que els regals, seguiments i subscripcions empenten enrere",
+      "points_board": "Els teus espectadors més destacats per punts de visionat i regal"
     },
     "fields": {
+      "showStreak": "Mostra la racha setmanal",
       "style": "Estil",
       "celebration": "Celebració",
       "banner": "Banner",
       "minAmount": "Suggeriment més petit per mostrar (DHB)",
-      "showStreak": "Mostra la racha setmanal",
       "showMessage": "Mostra el missatge de suggeriment",
       "confirmedOnly": "Només després de confirmar el pagament",
       "confirmedOnlyHint": "Espera uns segons la cadena, per la qual cosa no apareix mai una propina que mai es paga.",

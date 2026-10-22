@@ -4797,6 +4797,10 @@
     "creatorEarnsDirect": "加入者はDeHubトークンで支払います。購読した瞬間にシェアがウォレットに表示されますが、バッジランクのプラットフォーム手数料は差し引かれます。"
   },
   "liveOverlay": {
+    "level": "レベル{{level}}",
+    "streak_one": "{{count}}週連続",
+    "streak_other": "{{count}}週連続",
+    "tipJar": "ギフトジャー",
     "someone": "誰か",
     "newFollower": "新規フォロワー：{{name}}",
     "newSubscriber": "新規購読者: {{name}}",
@@ -4809,10 +4813,11 @@
     "tipped": "{{name}}さんがギフトを贈りました",
     "chatPreview": "チャットメッセージがここに表示されます",
     "wheelLanded": "{{name}}回転：{{result}}",
-    "level": "レベル{{level}}",
-    "streak_one": "{{count}}週連続",
-    "streak_other": "{{count}}週連続",
-    "tipJar": "ギフトジャー",
+    "subathon": "サバソン",
+    "subathonOver": "時間切れ",
+    "pointsTitle": "最も忠実な視聴者",
+    "points_one": "{{formatted}} ポイント",
+    "points_other": "{{formatted}} ポイント",
     "poll": {
       "closed": "投票は終了しました",
       "voteFor": "{{option}}に投票する",
@@ -4840,6 +4845,29 @@
     "youAreTimedOut": "しばらくタイムアウトしました"
   },
   "liveStudio": {
+    "subathon": {
+      "title": "サバソン",
+      "intro": "ストリーム上のカウントダウン。すべての有料ギフト、フォロー、および購読が時間を追加するため、部屋はあなたを生放送で維持します。",
+      "secondsPerThousand": "1,000 DHB ギフトあたり追加される秒数",
+      "secondsPerFollow": "フォローあたり追加される秒数",
+      "secondsPerSubscribe": "購読あたり追加される秒数",
+      "capHours": "最長で走ることができる時間（時間）",
+      "save": "保存額",
+      "saved": "サバソンで保存された額。",
+      "startMinutes": "開始時間（分）",
+      "start": "カウントダウンを開始",
+      "stop": "停止",
+      "addFive": "5分追加",
+      "removeFive": "5分引く",
+      "failed": "それはうまくいきませんでした。もう一度試してください。",
+      "widgetHint": "ストリーム上でサバソンのカウントダウンを表示します。Live Studioのサバソンパネルから開始してください。"
+    },
+    "points": {
+      "title": "忠実な視聴者",
+      "intro": "視聴者は、あなたを見ている毎分1ポイントと、100 DHBのギフトごとに1ポイントを獲得します。チャットやリアクションはポイントを得られないため、ポイントは農場化できません。",
+      "empty": "まだポイントはありません。視聴者やギフトが増えるにつれて蓄積されます。",
+      "widgetHint": "「忠実な視聴者」ウィジェットを追加して、このリストをストリーム上で表示します。"
+    },
     "controls": {
       "title": "クイックコントロール",
       "intro": "ミッドストリーム用。各スイッチは、アプリやOBSで視聴しているすべての人が元に戻すまで保持されます。",
@@ -4957,6 +4985,8 @@
       "join": "参加"
     },
     "kinds": {
+      "streamer_level": "ストリーマーレベル",
+      "tip_jar": "ギフトジャー",
       "tip_alert": "ヒントアラート",
       "follow_alert": "フォローアラート",
       "subscribe_alert": "購読者アラート",
@@ -4975,10 +5005,12 @@
       "rule_alert": "ルールアラート",
       "poll": "投票",
       "spin_wheel": "ルーレットを回す",
-      "streamer_level": "ストリーマーレベル",
-      "tip_jar": "ギフトジャー"
+      "subathon_timer": "サバソンタイマー",
+      "points_board": "忠実な視聴者"
     },
     "hints": {
+      "streamer_level": "プロフィールからのストリーマーのレベルと週連続記録",
+      "tip_jar": "有料ギフトが入るといっぱいになる瓶",
       "tip_alert": "各ティップをそのティアに合わせて祝う",
       "follow_alert": "新しいフォロワーを表示",
       "subscribe_alert": "新しい購読者を表示",
@@ -4997,15 +5029,15 @@
       "rule_alert": "ルールのアラートが表示される場所",
       "poll": "すべてのオプションに投票ボタンが付いたライブ投票",
       "spin_wheel": "ルール内のホイールが回転する場所",
-      "streamer_level": "プロフィールからのストリーマーのレベルと週連続記録",
-      "tip_jar": "有料ギフトが入るといっぱいになる瓶"
+      "subathon_timer": "ギフト、フォロー、購読によって後退するカウントダウン",
+      "points_board": "視聴とギフトによるポイントで上位視聴者"
     },
     "fields": {
+      "showStreak": "週単位の連続記録を表示",
       "style": "スタイル",
       "celebration": "お祝い",
       "banner": "バナー",
       "minAmount": "表示する最小のヒント（ DHB ）",
-      "showStreak": "週単位の連続記録を表示",
       "showMessage": "チップのメッセージを表示する",
       "confirmedOnly": "支払いが確認された後のみ",
       "confirmedOnlyHint": "チェーンのために数秒待つので、決して支払われないチップは表示されません。",

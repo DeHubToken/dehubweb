@@ -5834,6 +5834,10 @@
     "creatorEarnsDirect": "Los suscriptores pagan en tokens DeHub. Tu acción llega a tu billetera en el momento en que se suscriben, menos la tarifa de la plataforma para tu nivel de insignia."
   },
   "liveOverlay": {
+    "level": "Nivel {{level}}",
+    "streak_one": "Racha de {{count}}semanas",
+    "streak_other": "Racha de {{count}}semanas",
+    "tipJar": "Tarro de regalo",
     "someone": "Alguien",
     "newFollower": "Nuevo seguidor: {{name}}",
     "newSubscriber": "Nuevo suscriptor: {{name}}",
@@ -5846,10 +5850,11 @@
     "tipped": "{{name}} ha enviado un regalo",
     "chatPreview": "Los mensajes de chat aparecen aquí",
     "wheelLanded": "{{name}} giró: {{result}}",
-    "level": "Nivel {{level}}",
-    "streak_one": "Racha de {{count}}semanas",
-    "streak_other": "Racha de {{count}}semanas",
-    "tipJar": "Tarro de regalo",
+    "subathon": "Subathon",
+    "subathonOver": "Se acabó el tiempo",
+    "pointsTitle": "Los espectadores más leales",
+    "points_one": "{{formatted}} punto",
+    "points_other": "{{formatted}} puntos",
     "poll": {
       "closed": "Votación cerrada",
       "voteFor": "Vota por {{option}}",
@@ -5877,6 +5882,29 @@
     "youAreTimedOut": "Estás en tiempo de espera por un momento"
   },
   "liveStudio": {
+    "subathon": {
+      "title": "Subathon",
+      "intro": "Un conteo regresivo en tu transmisión. Cada regalo pagado, seguimiento y suscripción añade tiempo, así que la sala te mantiene en vivo.",
+      "secondsPerThousand": "Segundos añadidos por cada 1,000 DHB regalados",
+      "secondsPerFollow": "Segundos añadidos por seguimiento",
+      "secondsPerSubscribe": "Segundos añadidos por suscripción",
+      "capHours": "Duración máxima (horas)",
+      "save": "Guardar cantidades",
+      "saved": "Cantidad guardada en Subathon.",
+      "startMinutes": "Comenzar con (minutos)",
+      "start": "Iniciar el conteo regresivo",
+      "stop": "Detener",
+      "addFive": "Añadir 5 minutos",
+      "removeFive": "Restar 5 minutos",
+      "failed": "Eso no funcionó. Inténtalo de nuevo.",
+      "widgetHint": "Muestra el conteo regresivo de Subathon. Inicia desde el panel Subathon en Live Studio."
+    },
+    "points": {
+      "title": "Espectadores leales",
+      "intro": "Los espectadores ganan un punto por cada minuto que te ven y uno por cada 100 DHB que regalan. El chat y las reacciones no suman puntos, así que no se pueden \"cosechar\" puntos.",
+      "empty": "Aún no hay puntos. Se acumulan mientras la gente te ve y regala.",
+      "widgetHint": "Añade el widget de Espectadores leales para mostrar esta lista en tu transmisión."
+    },
     "controls": {
       "title": "Controles rápidos",
       "intro": "Para mid-stream. Cada interruptor se mantiene para que todos lo vean, en la aplicación y en OBS, hasta que lo voltees hacia atrás.",
@@ -5994,6 +6022,8 @@
       "join": "Unirse"
     },
     "kinds": {
+      "streamer_level": "Nivel de streamer",
+      "tip_jar": "Tarro de regalo",
       "tip_alert": "Alerta de propina",
       "follow_alert": "Seguir alerta",
       "subscribe_alert": "Alerta de suscriptor",
@@ -6012,10 +6042,12 @@
       "rule_alert": "Alertas de reglas",
       "poll": "Encuesta",
       "spin_wheel": "Rueda giratoria",
-      "streamer_level": "Nivel de streamer",
-      "tip_jar": "Tarro de regalo"
+      "subathon_timer": "Cronómetro Subathon",
+      "points_board": "Espectadores leales"
     },
     "hints": {
+      "streamer_level": "Tu nivel de streamer y racha semanal, desde tu perfil",
+      "tip_jar": "Un frasco que se llena a medida que llegan los regalos pagados",
       "tip_alert": "Celebra cada propina, ajustada a su nivel",
       "follow_alert": "Muestra a cada nuevo seguidor",
       "subscribe_alert": "Muestra cada nuevo suscriptor",
@@ -6034,15 +6066,15 @@
       "rule_alert": "¿Dónde aparecen las alertas de tus reglas?",
       "poll": "Tu encuesta en vivo, con un botón de voto para cada opción",
       "spin_wheel": "Donde las ruedas de tus reglas giran",
-      "streamer_level": "Tu nivel de streamer y racha semanal, desde tu perfil",
-      "tip_jar": "Un frasco que se llena a medida que llegan los regalos pagados"
+      "subathon_timer": "Un conteo regresivo que los regalos, seguimientos y suscripciones hacen retroceder",
+      "points_board": "Tus espectadores más destacados por puntos de ver y regalar"
     },
     "fields": {
+      "showStreak": "Mostrar la racha semanal",
       "style": "Estilo",
       "celebration": "Celebración",
       "banner": "Banner",
       "minAmount": "Consejo más pequeño para mostrar (DHB)",
-      "showStreak": "Mostrar la racha semanal",
       "showMessage": "Mostrar el mensaje de propina",
       "confirmedOnly": "Solo después de que el pago se confirme",
       "confirmedOnlyHint": "Espera unos segundos a la cadena, por lo que nunca aparece una propina que nunca se paga.",

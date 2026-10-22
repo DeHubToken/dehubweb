@@ -4753,6 +4753,10 @@
     "creatorEarnsDirect": "Муштариён дар нишонаҳои DeHub пардохт мекунанд. Заминҳои саҳми шумо дар ҳамёни шумо лаҳзае, ки онҳо обуна мешаванд, камтар ҳаққи платформа барои дараҷаи нишони шумо."
   },
   "liveOverlay": {
+    "level": "Ҳамвор {{level}}",
+    "streak_one": "{{count}} - ҳафта сатр",
+    "streak_other": "{{count}} - ҳафта сатр",
+    "tipJar": "Кӯзаи атои",
     "someone": "Касе",
     "newFollower": "Пайравони нав: {{name}}",
     "newSubscriber": "Муштарии нав: {{name}}",
@@ -4765,10 +4769,11 @@
     "tipped": "{{name}}info: whatsthis",
     "chatPreview": "Иттилооти чат дар ин ҷо пайдо мешавад",
     "wheelLanded": "{{name}} spun: {{result}}",
-    "level": "Ҳамвор {{level}}",
-    "streak_one": "{{count}} - ҳафта сатр",
-    "streak_other": "{{count}} - ҳафта сатр",
-    "tipJar": "Кӯзаи атои",
+    "subathon": "СубатонCity name (optional, probably",
+    "subathonOver": "Vaqt tugadi",
+    "pointsTitle": "Engastor bozorgtar bozorgdodon",
+    "points_one": "{{formatted}} nuqtasi",
+    "points_other": "{{formatted}} nuqtalar",
     "poll": {
       "closed": "Саркар кардан баст",
       "voteFor": "Барайи {{option}} бара кардан",
@@ -4796,6 +4801,29 @@
     "youAreTimedOut": "Шумо барои лаҳзае мӯҳлат дода шудаед"
   },
   "liveStudio": {
+    "subathon": {
+      "title": "Subathon",
+      "intro": "Sizning streamingizda bir saniyegar shomardor. Har bir puli taqdim, takid va abonentlik vaqtni uzaytir, shuning uchun xona sizni live qoldiradi.",
+      "secondsPerThousand": "Saniyelar qoshiladigan har 1000 DHB taqdim etilganda",
+      "secondsPerFollow": "Saniyelar qoshiladigan har bir takid",
+      "secondsPerSubscribe": "Saniyelar qoshiladigan har bir abonentlik",
+      "capHours": "Uzunroq bo'lishi mumkin (soat)",
+      "save": "Saqlash miqdorlari",
+      "saved": "Subathon saqlangan miqdorlari.",
+      "startMinutes": "Boshlag'ich (daqiqa)",
+      "start": "Saniyegarni boshlang",
+      "stop": "Toxtatish",
+      "addFive": "5 daqiqani qo'shish",
+      "removeFive": "5 daqiqani olib tashlash",
+      "failed": "Bu ishlamadi. Qayta urinib ko'ring.",
+      "widgetHint": "Sizning streamingizda subathon saniyegarini ko'rsatadi. Live Studio da Subathon paneli orqali uni boshlang."
+    },
+    "points": {
+      "title": "Engastor bozorgodon",
+      "intro": "Ko'rib chiquvchilar har bir minutda sizni ko'rgan har bir nuqtani va har 100 DHB taqdim etgan har bir nuqtani oladilar. Chat va reaksiyalar nuqtani olmaydi, shuning uchun nuqtalarni yetishtirish mumkin emas.",
+      "empty": "Hali nuqtalar yo'q. Odamlar ko'rib chiqish va taqdim etganda ular yig'iladi.",
+      "widgetHint": "Engastor bozorgodon vijdetini qo'shish uchun bu ro'yxatni streamda ko'rsatish mumkin."
+    },
     "controls": {
       "title": "Kontrola mabilis",
       "intro": "Барои ҷараёни миёна. Ҳар як гузариш барои ҳамаи тамошобинон, дар барнома ва дар OBS, то он даме, ки шумо онро баргардонед.",
@@ -4910,6 +4938,8 @@
       "join": "Ба ҳамроҳ шудан"
     },
     "kinds": {
+      "streamer_level": "Сатҳи стример",
+      "tip_jar": "Кӯзаи атои",
       "tip_alert": "Пораи огоҳӣ",
       "follow_alert": "Огоҳии пайгирӣ",
       "subscribe_alert": "Огоҳии абони",
@@ -4928,10 +4958,12 @@
       "rule_alert": "Огӣҳои қоида",
       "poll": "Назарпурсӣ",
       "spin_wheel": "Чархи чархиш",
-      "streamer_level": "Сатҳи стример",
-      "tip_jar": "Кӯзаи атои"
+      "subathon_timer": "Subathon saniyegar",
+      "points_board": "Engastor bozorgodon"
     },
     "hints": {
+      "streamer_level": "Сатҳи ҷараён ва сатри ҳафтаинаи шумо, аз профили шумо",
+      "tip_jar": "Name",
       "tip_alert": "Ҳар порсаро, ки ба сатҳи худ мувофиқ аст, нишон медиҳад",
       "follow_alert": "Ҳар пайгирии навро нишон медиҳад",
       "subscribe_alert": "Ҳар абони навро нишон медиҳад",
@@ -4950,15 +4982,15 @@
       "rule_alert": "Ҷойе ки огӣҳои қоидаҳои шумо пайдо мешаванд",
       "poll": "Интихоби зиндаи шумо, бо тугмаи овоздиҳӣ барои ҳар як вариант",
       "spin_wheel": "Дар куҷо чархҳо дар қоидаҳои шумо чарх мезананд",
-      "streamer_level": "Сатҳи ҷараён ва сатри ҳафтаинаи шумо, аз профили шумо",
-      "tip_jar": "Name"
+      "subathon_timer": "Ko'rib chiquvchilar, taqdim etish va abonentliklar saniyegarni orqaga suradigan saniyegar",
+      "points_board": "Ko'rib chiquvchilar nuqtalariga ko'ra sizning eng yuqori ko'rib chiquvchilaringizni ko'rsatadi."
     },
     "fields": {
+      "showStreak": "Намоиши сатри ҳарҳафтаина",
       "style": "Стил",
       "celebration": "Ҷашнвораҳо",
       "banner": "Паннер",
       "minAmount": "Маслиҳати хурдтарин барои нишон додан (DHB)",
-      "showStreak": "Намоиши сатри ҳарҳафтаина",
       "showMessage": "Ipakita ang tip na mensahe",
       "confirmedOnly": "Танҳо пас аз тасдиқи пардохт",
       "confirmedOnlyHint": "Naghintay ang ilang segundo para sa zincîra, kaya ang tip na hindi paalagay ay hindi lilitaw.",

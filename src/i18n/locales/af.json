@@ -4836,6 +4836,10 @@
     "creatorEarnsDirect": "Intekenare betaal in DeHub-tokens. Jou aandeel land in jou beursie die oomblik dat hulle inteken, minder die platformfooi vir jou wapenvlak."
   },
   "liveOverlay": {
+    "level": "Vlak {{level}}",
+    "streak_one": "{{count}}-week streak",
+    "streak_other": "{{count}}-week streak",
+    "tipJar": "Geskenkpot",
     "someone": "Iemand",
     "newFollower": "Nuwe volgeling: {{name}}",
     "newSubscriber": "Nuwe intekenaar: {{name}}",
@@ -4848,10 +4852,11 @@
     "tipped": "{{name}} stuur 'n geskenk",
     "chatPreview": "Geselsboodskappe verskyn hier",
     "wheelLanded": "{{name}} spun: {{result}}",
-    "level": "Vlak {{level}}",
-    "streak_one": "{{count}}-week streak",
-    "streak_other": "{{count}}-week streak",
-    "tipJar": "Geskenkpot",
+    "subathon": "Subathon",
+    "subathonOver": "Tyd is verby",
+    "pointsTitle": "Mees lojale kykers",
+    "points_one": "{{formatted}} punt",
+    "points_other": "{{formatted}} punte",
     "poll": {
       "closed": "Stemming gesluit",
       "voteFor": "Stem vir {{option}}",
@@ -4879,6 +4884,29 @@
     "youAreTimedOut": "Jy is vir ’n oomblik tyd uit"
   },
   "liveStudio": {
+    "subathon": {
+      "title": "Subathon",
+      "intro": "'n Aftelling op jou stroom. Elke betaalde geskenk, volg en intekening voeg tyd by, sodat die kamer jou lewendig hou.",
+      "secondsPerThousand": "Sekondes bygevoeg per 1,000 DHB geskenk",
+      "secondsPerFollow": "Sekondes bygevoeg per volg",
+      "secondsPerSubscribe": "Sekondes bygevoeg per intekening",
+      "capHours": "Langste dit kan loop (ure)",
+      "save": "Spaarbedrae",
+      "saved": "Subathon-bedrae gespaar.",
+      "startMinutes": "Begin met (minute)",
+      "start": "Begin die aftelling",
+      "stop": "Stop",
+      "addFive": "Voeg 5 minute by",
+      "removeFive": "Verwyder 5 minute",
+      "failed": "Dit het nie gewerk nie. Probeer weer.",
+      "widgetHint": "Wys jou subathon-aftelling. Begin dit vanaf die Subathon-paneel in Live Studio."
+    },
+    "points": {
+      "title": "Lojale kykers",
+      "intro": "Kykers verdien 'n punt vir elke minuut wat hulle jou kyk en een vir elke 100 DHB wat hulle geskenk. Klets en reaksies verdien niks, so punte kan nie gekweek word nie.",
+      "empty": "Nog geen punte nie. Hulle bou op soos mense kyk en geskenk.",
+      "widgetHint": "Voeg die Lojale kykers-widget by om hierdie lys op die stroom te wys."
+    },
     "controls": {
       "title": "Vinnige kontroles",
       "intro": "Vir middelstroom. Elke skakelaar hou vir almal wat kyk, in die app en in OBS, totdat jy dit terugdraai.",
@@ -4996,6 +5024,8 @@
       "join": "Sluit aan"
     },
     "kinds": {
+      "streamer_level": "Stroomvlak",
+      "tip_jar": "Geskenkpot",
       "tip_alert": "Wenk waarskuwing",
       "follow_alert": "Volg waarskuwing",
       "subscribe_alert": "Intekenaarwaarskuwing",
@@ -5014,10 +5044,12 @@
       "rule_alert": "Reël waarskuwings",
       "poll": "Peiling",
       "spin_wheel": "Spin wiel",
-      "streamer_level": "Stroomvlak",
-      "tip_jar": "Geskenkpot"
+      "subathon_timer": "Subathon-timer",
+      "points_board": "Lojale kykers"
     },
     "hints": {
+      "streamer_level": "Jou streamer vlak en weeklikse streep, van jou profiel",
+      "tip_jar": "'N pot wat vul as betaalde geskenke kom in",
       "tip_alert": "Vier elke punt, grootte tot sy vlak",
       "follow_alert": "Wys elke nuwe volgeling",
       "subscribe_alert": "Vertoon elke nuwe intekenaar",
@@ -5036,14 +5068,14 @@
       "rule_alert": "Waar jou reëls se waarskuwings verskyn",
       "poll": "Jou regstreekse peiling, met 'n stemknoppie vir elke opsie",
       "spin_wheel": "Waar die wiele in jou reëls draai",
-      "streamer_level": "Jou streamer vlak en weeklikse streep, van jou profiel",
-      "tip_jar": "'N pot wat vul as betaalde geskenke kom in"
+      "subathon_timer": "'n Aftelling wat geskenke, volgs en intekeninge terugstoot",
+      "points_board": "Jou top kykers volgens punte van kyk en geskenk"
     },
     "fields": {
+      "showStreak": "Wys die weeklikse streep",
       "celebration": "Viering",
       "banner": "Banier",
       "minAmount": "Kleinste punt om te wys (DHB)",
-      "showStreak": "Wys die weeklikse streep",
       "showMessage": "Wys die wenkboodskap",
       "confirmedOnly": "Eers nadat die betaling bevestig is",
       "confirmedOnlyHint": "Wag 'n paar sekondes vir die ketting, sodat 'n punt wat nooit betaal word nie, nooit verskyn nie.",

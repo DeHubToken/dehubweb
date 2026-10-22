@@ -4797,6 +4797,10 @@
     "creatorEarnsDirect": "訂閱者用 DeHub 代幣付款。當佢哋訂閱嗰陣，你嘅份額就會喺你嘅銀包入面，減去你嘅徽章層嘅平台費用。"
   },
   "liveOverlay": {
+    "level": "等級 {{level}}",
+    "streak_one": "{{count}}- 連續一星期",
+    "streak_other": "{{count}}- 連續一星期",
+    "tipJar": "禮物罐",
     "someone": "有人",
     "newFollower": "新追隨者： {{name}}",
     "newSubscriber": "新訂閱者： {{name}}",
@@ -4809,10 +4813,11 @@
     "tipped": "{{name}} 送出一份禮物",
     "chatPreview": "即時通訊訊息會喺呢度出現",
     "wheelLanded": "{{name}} 旋轉： {{result}}",
-    "level": "等級 {{level}}",
-    "streak_one": "{{count}}- 連續一星期",
-    "streak_other": "{{count}}- 連續一星期",
-    "tipJar": "禮物罐",
+    "subathon": "副馬拉松",
+    "subathonOver": "時間到咗",
+    "pointsTitle": "最忠誠嘅觀眾",
+    "points_one": "{{formatted}} 分",
+    "points_other": "{{formatted}} 分",
     "poll": {
       "closed": "投票已經結束",
       "voteFor": "投 {{option}}",
@@ -4840,6 +4845,29 @@
     "youAreTimedOut": "你暫時被時間限制。"
   },
   "liveStudio": {
+    "subathon": {
+      "title": "副馬拉松",
+      "intro": "你直播間嘅倒數。每個付費禮物、追蹤及訂閱都會加時間，令直播間保持直播。",
+      "secondsPerThousand": "每1,000 DHB 禮物加嘅秒數",
+      "secondsPerFollow": "每追蹤加嘅秒數",
+      "secondsPerSubscribe": "每訂閱加嘅秒數",
+      "capHours": "最長可以持續嘅時間（小時）",
+      "save": "儲存金額",
+      "saved": "儲存嘅 Subathon 金額。",
+      "startMinutes": "開始時（分鐘）",
+      "start": "開始倒數",
+      "stop": "停止",
+      "addFive": "加5分鐘",
+      "removeFive": "減5分鐘",
+      "failed": "咁做唔成。再試一次。",
+      "widgetHint": "顯示你嘅 Subathon 倒數。從 Live Studio 嘅 Subathon 面板開始。"
+    },
+    "points": {
+      "title": "忠實嘅觀眾",
+      "intro": "觀眾每看你一分鐘得一分，每100 DHB 禮物亦得一分。聊天及反應唔算，所以分數唔可以隨便賺。",
+      "empty": "目前無分數。隨著人嘅觀看及禮物累積而增加。",
+      "widgetHint": "加入「忠誠觀眾」小工具，好令直播間顯示這個名單。"
+    },
     "controls": {
       "title": "快速控制",
       "intro": "用嚟中流。每個開關都可以喺應用程式同 OBS 入面，適合所有睇緊嘅人，直至你將佢翻返轉頭。",
@@ -4957,6 +4985,8 @@
       "join": "加入"
     },
     "kinds": {
+      "streamer_level": "流媒體級別",
+      "tip_jar": "禮物罐",
       "tip_alert": "提示警示",
       "follow_alert": "跟住警示",
       "subscribe_alert": "訂閱者警示",
@@ -4975,10 +5005,12 @@
       "rule_alert": "規則警示",
       "poll": "民調",
       "spin_wheel": "旋轉輪",
-      "streamer_level": "流媒體級別",
-      "tip_jar": "禮物罐"
+      "subathon_timer": "亞大賽計時器",
+      "points_board": "忠實嘅觀眾"
     },
     "hints": {
+      "streamer_level": "從你嘅個人檔案入面，你嘅串流播放器等級同每週連續紀錄",
+      "tip_jar": "一個隨住付費禮物入嚟而填滿嘅罐子",
       "tip_alert": "慶祝每個貼士，大小到佢嘅層次",
       "follow_alert": "顯示每位新追隨者",
       "subscribe_alert": "顯示每個新訂閱者",
@@ -4997,15 +5029,15 @@
       "rule_alert": "你啲規則嘅提示喺邊度出現",
       "poll": "你嘅即時民調，每個選項都有投票掣",
       "spin_wheel": "你規則入面嘅輪子喺邊度旋轉",
-      "streamer_level": "從你嘅個人檔案入面，你嘅串流播放器等級同每週連續紀錄",
-      "tip_jar": "一個隨住付費禮物入嚟而填滿嘅罐子"
+      "subathon_timer": "一個倒數，令禮物、追蹤及訂閱推遲",
+      "points_board": "你最頂嘅觀眾，按觀看及禮物得分排序"
     },
     "fields": {
+      "showStreak": "顯示每週嘅連續數",
       "style": "形象",
       "celebration": "慶祝",
       "banner": "橫額",
       "minAmount": "要顯示嘅最細小貼士（ DHB ）",
-      "showStreak": "顯示每週嘅連續數",
       "showMessage": "顯示提示訊息",
       "confirmedOnly": "只有確認付款之後先可以",
       "confirmedOnlyHint": "等幾秒先有鏈，所以從來都冇畀過嘅小費就永遠唔會出現。",

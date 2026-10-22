@@ -4779,6 +4779,10 @@
     "creatorEarnsDirect": "Abonenti maksā DeHub žetonos. Abonēšanas brīdī jūsu daļa nonāk jūsu makā, atskaitot platformas nodevu par jūsu nozīmītes līmeni."
   },
   "liveOverlay": {
+    "level": "Līmenis {{level}}",
+    "streak_one": "{{count}}-nedēļu sērija",
+    "streak_other": "{{count}}-nedēļu sērija",
+    "tipJar": "Dāvanu trauciņš",
     "someone": "Kāds",
     "newFollower": "Jauns sekotājs: {{name}}",
     "newSubscriber": "Jauns abonents: {{name}}",
@@ -4791,10 +4795,11 @@
     "tipped": "{{name}} nosūtīja dāvanu",
     "chatPreview": "Tērzēšanas ziņojumi tiek parādīti šeit",
     "wheelLanded": "{{name}} iedarbināja: {{result}}",
-    "level": "Līmenis {{level}}",
-    "streak_one": "{{count}}-nedēļu sērija",
-    "streak_other": "{{count}}-nedēļu sērija",
-    "tipJar": "Dāvanu trauciņš",
+    "subathon": "Subathon",
+    "subathonOver": "Laiks ir beidzies",
+    "pointsTitle": "Visvairāk lojālie skatītāji",
+    "points_one": "{{formatted}} punkti",
+    "points_other": "{{formatted}} punkti",
     "poll": {
       "closed": "Balsēs noslēgtas",
       "voteFor": "Balsoti par {{option}}",
@@ -4822,6 +4827,29 @@
     "youAreTimedOut": "Jums ir izbeigts laiks uz brīdi"
   },
   "liveStudio": {
+    "subathon": {
+      "title": "Subathon",
+      "intro": "Skaitītājs jūsu straumē. Katrs maksāts dāvanas, sekojums un abonements pievieno laiku, tāpēc telpa jums paliek dzīva.",
+      "secondsPerThousand": "Sekundes, kas pievienojas 1 000 DHB dāvanai",
+      "secondsPerFollow": "Sekundes, kas pievienojas sekojumam",
+      "secondsPerSubscribe": "Sekundes, kas pievienojas abonentam",
+      "capHours": "Ilgākais laiks, kā tas var notikt (stundās)",
+      "save": "Glabāt summas",
+      "saved": "Glabāti Subathon summas.",
+      "startMinutes": "Sākot ar (minūtēm)",
+      "start": "Sākt skaitītāju",
+      "stop": "Apturēt",
+      "addFive": "Pievienot 5 minūtes",
+      "removeFive": "Noņemt 5 minūtes",
+      "failed": "Šis nav strādājis. Mēģiniet vēlreiz.",
+      "widgetHint": "Rādīt jūsu Subathon skaitītāju. Sākt to no Subathon paneles Live Studio."
+    },
+    "points": {
+      "title": "Lojālie skatītāji",
+      "intro": "Skatītāji iegūst punktu katru minūti, ko skatās jūs, un vienu punktu katriem 100 DHB dāvanām. Chat un reakcijas nav iegūstami, tāpēc punktus nav iespējams \"izaugt\".",
+      "empty": "Joprojām nav punktu. Tie pieaug, kad cilvēki skata un dāvinās.",
+      "widgetHint": "Pievienojiet \"Lojālie skatītāji\" gadīti, lai šis saraksts tiktu parādīts straumē."
+    },
     "controls": {
       "title": "Ātrā vadība",
       "intro": "Vidējai straumei. Katrs slēdzis tiek turēts visiem, kas skatās, lietotnē un OBS, līdz jūs to apgriežat atpakaļ.",
@@ -4939,6 +4967,8 @@
       "join": "Pievienoties"
     },
     "kinds": {
+      "streamer_level": "Straumētāja līmenis",
+      "tip_jar": "Dāvanu trauciņš",
       "tip_alert": "Padoma brīdinājums",
       "follow_alert": "Sekot brīdinājumam",
       "subscribe_alert": "Abonenta brīdinājums",
@@ -4957,10 +4987,12 @@
       "rule_alert": "Noteikumu brīdinājumi",
       "poll": "Aptauja",
       "spin_wheel": "Griezējripa",
-      "streamer_level": "Straumētāja līmenis",
-      "tip_jar": "Dāvanu trauciņš"
+      "subathon_timer": "Subathon laiks",
+      "points_board": "Lojālie skatītāji"
     },
     "hints": {
+      "streamer_level": "Jūsu straumētāja līmenis un iknedēļas sērija no jūsu profila",
+      "tip_jar": "Burka, kas piepildās, kad ienāk apmaksātas dāvanas",
       "tip_alert": "Godina ikvienu dzeramnaudu, kuras lielums atbilst tās līmenim",
       "follow_alert": "Rāda katru jauno sekotāju",
       "subscribe_alert": "Parāda katru jauno abonentu",
@@ -4979,15 +5011,15 @@
       "rule_alert": "Kur tiek parādīti jūsu noteikumu paziņojumi",
       "poll": "Jūsu tiešsaistes aptauja ar balsošanas pogu katrai opcijai",
       "spin_wheel": "Kur griežas jūsu noteikumu riteņi",
-      "streamer_level": "Jūsu straumētāja līmenis un iknedēļas sērija no jūsu profila",
-      "tip_jar": "Burka, kas piepildās, kad ienāk apmaksātas dāvanas"
+      "subathon_timer": "Skaitītājs, kuru dāvanas, sekojumi un abonementi atgrūž atpakaļ",
+      "points_board": "Jūsu augstākie skatītāji pēc punktiem no skatīšanas un dāvināšanas."
     },
     "fields": {
+      "showStreak": "Rādīt iknedēļas sēriju",
       "style": "Stils",
       "celebration": "Svinības",
       "banner": "Reklāmkarogs",
       "minAmount": "Mazākais parādāmais padoms (DHB)",
-      "showStreak": "Rādīt iknedēļas sēriju",
       "showMessage": "Rādīt padoma ziņojumu",
       "confirmedOnly": "Tikai pēc maksājuma apstiprināšanas",
       "confirmedOnlyHint": "Gaida ķēdi dažas sekundes, tāpēc nekad netiek parādīta dzeramnauda.",

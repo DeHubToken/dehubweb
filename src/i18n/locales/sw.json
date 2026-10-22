@@ -4800,6 +4800,10 @@
     "creatorEarnsDirect": "Wasajili hulipa kwa ishara za DeHub. Gawio lako linatua kwenye mkoba wako pindi wanapojisajili, punguza ada ya tovuti ya kiwango cha beji yako."
   },
   "liveOverlay": {
+    "level": "Ngazi {{level}}",
+    "streak_one": "{{count}}-week streak",
+    "streak_other": "{{count}}-week streak",
+    "tipJar": "Chombo cha zawadi",
     "someone": "Mtu",
     "newFollower": "Mfuasi mpya: {{name}}",
     "newSubscriber": "Mteja mpya: {{name}}",
@@ -4812,10 +4816,11 @@
     "tipped": "{{name}} alituma zawadi",
     "chatPreview": "Ujumbe wa gumzo unaonekana hapa",
     "wheelLanded": "{{name}} spun: {{result}}",
-    "level": "Ngazi {{level}}",
-    "streak_one": "{{count}}-week streak",
-    "streak_other": "{{count}}-week streak",
-    "tipJar": "Chombo cha zawadi",
+    "subathon": "Mashindano ya mbio ndogo",
+    "subathonOver": "Muda imeishia",
+    "pointsTitle": "Wakusudi wa watazamaji wakuu",
+    "points_one": "{{formatted}} pointi",
+    "points_other": "{{formatted}} pointi",
     "poll": {
       "closed": "Kura imefungwa",
       "voteFor": "Piga kura kwa {{option}}",
@@ -4843,6 +4848,29 @@
     "youAreTimedOut": "Umepitwa na wakati kwa muda"
   },
   "liveStudio": {
+    "subathon": {
+      "title": "Mashindano ya mbio ndogo",
+      "intro": "Kutaja kwenye michezo yako. Kila hiba, kufuata na usajili wa msaada unaozaliwa unozidisha muda, hivyo mchezo huwa naweza kuendelea kuwa live.",
+      "secondsPerThousand": "Dhahabu za sekunde zinazozidi kwa 1,000 DHB zilizohiba",
+      "secondsPerFollow": "Sekunde zinazozidi kwa kufuata",
+      "secondsPerSubscribe": "Sekunde zinazozidi kwa usajili wa msaada",
+      "capHours": "Muda mrefu kuliko alizopatikana (mwaka)",
+      "save": "Kusimamisha miongozo",
+      "saved": "Miongozo ya Subathon zilizosimamishwa.",
+      "startMinutes": "Kuanza na (dakika)",
+      "start": "Kuanza kutaja",
+      "stop": "Kusawisha",
+      "addFive": "Zidisha dakika 5",
+      "removeFive": "Kutua dakika 5",
+      "failed": "Hayakuwa na faida. Subaha naweza kusaidia tena.",
+      "widgetHint": "Inashirikisha kutaja miongozo ya Subathon. Kuanza kutaja kutoka kwa panel ya Subathon katika Live Studio."
+    },
+    "points": {
+      "title": "Wakusudi wa watazamaji",
+      "intro": "Watazamaji wanapata nafasi kwa dakika moja ya kuwatazama na moja kwa 100 DHB zilizohiba. Habari na majaribio hayasipunguzi, hivyo nafasi hayasipatikani kwa kufanya kazi ya kilimo.",
+      "empty": "Hainapata nafasi bado. Wanazidi wakati wa watu kuwatazama na kuhiba.",
+      "widgetHint": "Pata widget ya wakusudi wa watazamaji ili kuzipata orodha hii katika michezo."
+    },
     "controls": {
       "title": "Vidhibiti vya haraka",
       "intro": "Kwa mkondo wa katikati. Kila swichi hushikilia kila mtu anayetazama, kwenye programu na katika OBS, hadi uirudishe nyuma.",
@@ -4960,6 +4988,8 @@
       "join": "Jiunge"
     },
     "kinds": {
+      "streamer_level": "Kiwango cha mtiririko",
+      "tip_jar": "Chombo cha zawadi",
       "tip_alert": "Arifa ya kidokezi",
       "follow_alert": "Fuata arifa",
       "subscribe_alert": "Arifa ya msajili",
@@ -4978,10 +5008,12 @@
       "rule_alert": "Arifa za sheria",
       "poll": "Kura",
       "spin_wheel": "Gurudumu la mzunguko",
-      "streamer_level": "Kiwango cha mtiririko",
-      "tip_jar": "Chombo cha zawadi"
+      "subathon_timer": "Miongozo ya Subathon",
+      "points_board": "Wakusudi wa watazamaji"
     },
     "hints": {
+      "streamer_level": "Kiwango chako cha mtiririko na mfululizo wa kila wiki, kutoka kwenye wasifu wako",
+      "tip_jar": "Chupa inayojaza kama zawadi zinazolipwa zinaingia",
       "tip_alert": "Husherehekea kila kiinua mgongo, kulingana na kiwango chake",
       "follow_alert": "Inaonyesha kila mfuasi mpya",
       "subscribe_alert": "Inaonyesha kila msajili mpya",
@@ -4999,15 +5031,15 @@
       "rule_alert": "Hapa ni jina la matatizo ya kawaida yako",
       "poll": "Kura yako ya moja kwa moja, ikiwa na kitufe cha kupiga kura kwa kila chaguo",
       "spin_wheel": "Ambapo magurudumu katika sheria zako huzunguka",
-      "streamer_level": "Kiwango chako cha mtiririko na mfululizo wa kila wiki, kutoka kwenye wasifu wako",
-      "tip_jar": "Chupa inayojaza kama zawadi zinazolipwa zinaingia"
+      "subathon_timer": "Kutaja ambayo hiba, kufuata na usajili wa msaada unazidi muda",
+      "points_board": "Watazamaji wenu bora kwa nafasi kutokana na kuwatazama na kuhiba"
     },
     "fields": {
+      "showStreak": "Onyesha safu ya kila wiki",
       "style": "Mtindo",
       "celebration": "Sherehe",
       "banner": "Bango",
       "minAmount": "Kidokezi kidogo zaidi cha kuonyesha (DHB)",
-      "showStreak": "Onyesha safu ya kila wiki",
       "showMessage": "Onyesha ujumbe wa kiinua mgongo",
       "confirmedOnly": "Ni baada tu ya malipo kuthibitisha",
       "confirmedOnlyHint": "Inasubiri sekunde chache kwa mnyororo, kwa hivyo bakshishi ambayo hailipwi kamwe haionekani.",

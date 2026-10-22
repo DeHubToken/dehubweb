@@ -4742,6 +4742,10 @@
     "creatorEarnsDirect": "Pretplatnici plaćaju u DeHub žetonima. Tvoja dionica završava u novčaniku čim se pretplati, umanjena za naknadu za platformu za tvoju razinu značke."
   },
   "liveOverlay": {
+    "level": "Razina {{level}}",
+    "streak_one": "{{count}}-tjedni period",
+    "streak_other": "{{count}}-tjedni period",
+    "tipJar": "Posuda za darove",
     "someone": "Netko",
     "newFollower": "Novi pratitelj: {{name}}",
     "newSubscriber": "Novi pretplatnik: {{name}}",
@@ -4754,10 +4758,11 @@
     "tipped": "{{name}} šalje dar",
     "chatPreview": "Ovdje se prikazuju poruke putem chata",
     "wheelLanded": "{{name}} spin: {{result}}",
-    "level": "Razina {{level}}",
-    "streak_one": "{{count}}-tjedni period",
-    "streak_other": "{{count}}-tjedni period",
-    "tipJar": "Posuda za darove",
+    "subathon": "Subathon",
+    "subathonOver": "Vrijeme je isteklo",
+    "pointsTitle": "Najlojalniji gledatelji",
+    "points_one": "{{formatted}} bod",
+    "points_other": "{{formatted}} bodova",
     "poll": {
       "closed": "Glasanje je završeno",
       "voteFor": "Glasaj za {{option}}",
@@ -4785,6 +4790,29 @@
     "youAreTimedOut": "Trenutno ste izbaceni iz čata."
   },
   "liveStudio": {
+    "subathon": {
+      "title": "Subathon",
+      "intro": "Vremenski brojač na vašem streamu. Svaki plaćeni dar, praćenje i pretplata dodaju vrijeme, tako da soba ostane živ.",
+      "secondsPerThousand": "Sekundi dodanih po 1.000 DHB-a darovanog",
+      "secondsPerFollow": "Sekundi dodanih po praćenju",
+      "secondsPerSubscribe": "Sekundi dodanih po pretplati",
+      "capHours": "Najduže može trajati (sati)",
+      "save": "Spremljene količine",
+      "saved": "Spremljene iznosi Subathona.",
+      "startMinutes": "Početni (minuta)",
+      "start": "Pokreni vremenski brojač",
+      "stop": "Zaustavi",
+      "addFive": "Dodaj 5 minuta",
+      "removeFive": "Oduzmi 5 minuta",
+      "failed": "To nije uspjelo. Pokusajte ponovno.",
+      "widgetHint": "Prikazuje vremenski brojač Subathona. Pokrenite ga s panela Subathon u Live Studio-u."
+    },
+    "points": {
+      "title": "Najlojalniji gledatelji",
+      "intro": "Gledatelji stiču bod za svaku minutu gledanja te jedan bod za svaka 100 DHB-a koje daruju. Čat i reakcije ne donose bodove, pa se bodovi ne mogu \"farbati\".",
+      "empty": "Još uvek nema bodova. Oni se nakupljaju dok ljudi gleda i daruju.",
+      "widgetHint": "Dodajte widget \"Najlojalniji gledatelji\" da biste prikazali ovu listu na streamu."
+    },
     "controls": {
       "title": "Brze kontrole",
       "intro": "Za srednji stream. Svaki prekidač vrijedi za sve koji gledaju, u aplikaciji i u ops, dok ga ne okrenete natrag.",
@@ -4902,6 +4930,8 @@
       "join": "Pridruži se"
     },
     "kinds": {
+      "streamer_level": "Razina streamera",
+      "tip_jar": "Posuda za darove",
       "tip_alert": "Obavijest o napojnici",
       "follow_alert": "Slijedi upozorenje",
       "subscribe_alert": "Upozorenje pretplatnika",
@@ -4920,10 +4950,12 @@
       "rule_alert": "Obavijesti o pravilima",
       "poll": "Anketa",
       "spin_wheel": "Okretni kotač",
-      "streamer_level": "Razina streamera",
-      "tip_jar": "Posuda za darove"
+      "subathon_timer": "Subathon timer",
+      "points_board": "Najlojalniji gledatelji"
     },
     "hints": {
+      "streamer_level": "Razina streamera i tjedni raspon, s tvog profila",
+      "tip_jar": "Staklenka koja se puni kad stignu plaćeni darovi",
       "tip_alert": "Slavi svaku napojnicu u skladu s njezinom veličinom",
       "follow_alert": "Prikazuje svakog novog pratitelja",
       "subscribe_alert": "Prikazuje svakog novog pretplatnika",
@@ -4942,15 +4974,15 @@
       "rule_alert": "Gdje se prikazuju obavijesti o pravilima",
       "poll": "Vaša anketa uživo, s gumbom za glasanje za svaku opciju",
       "spin_wheel": "Gdje se okreću kotači u vašim pravilima",
-      "streamer_level": "Razina streamera i tjedni raspon, s tvog profila",
-      "tip_jar": "Staklenka koja se puni kad stignu plaćeni darovi"
+      "subathon_timer": "Vremenski brojač koji se vraća zbog darovanja, praćenja i pretplata",
+      "points_board": "Vaši najviše bodovani gledatelji prema bodovima stičenim gledanjem i darovanjem"
     },
     "fields": {
+      "showStreak": "Prikaži tjedni raspon",
       "style": "Stil",
       "celebration": "Proslava",
       "banner": "Baner",
       "minAmount": "Najmanji savjet za prikaz (DHB)",
-      "showStreak": "Prikaži tjedni raspon",
       "showMessage": "Prikaži poruku s napojnicom",
       "confirmedOnly": "Tek nakon potvrde plaćanja",
       "confirmedOnlyHint": "Pričekajte nekoliko sekundi za lanac, tako da se napojnica koja nije plaćena nikada ne pojavi.",

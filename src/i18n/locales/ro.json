@@ -4800,6 +4800,10 @@
     "creatorEarnsDirect": "Abonații plătesc în jetoane DeHub. Cota ta ajunge în portofel în momentul în care se abonează, mai puțin taxa de platformă pentru nivelul insignei."
   },
   "liveOverlay": {
+    "level": "Nivel {{level}}",
+    "streak_one": "{{count}}-seară de streak",
+    "streak_other": "{{count}}-seară de streak",
+    "tipJar": "Pahar de cadouri",
     "someone": "Cineva",
     "newFollower": "Urmăritor nou: {{name}}",
     "newSubscriber": "Abonat nou: {{name}}",
@@ -4812,10 +4816,11 @@
     "tipped": "{{name}} a trimis un cadou",
     "chatPreview": "Mesajele de chat apar aici",
     "wheelLanded": "{{name}} spin: {{result}}",
-    "level": "Nivel {{level}}",
-    "streak_one": "{{count}}-seară de streak",
-    "streak_other": "{{count}}-seară de streak",
-    "tipJar": "Pahar de cadouri",
+    "subathon": "Subathon",
+    "subathonOver": "S-a terminat timpul",
+    "pointsTitle": "Cele mai loiale vizionare",
+    "points_one": "{{formatted}} punct",
+    "points_other": "{{formatted}} puncte",
     "poll": {
       "closed": "Votare închisă",
       "voteFor": "Vote pentru {{option}}",
@@ -4843,6 +4848,29 @@
     "youAreTimedOut": "Ați fost timelined pentru un moment"
   },
   "liveStudio": {
+    "subathon": {
+      "title": "Subathon",
+      "intro": "O countdown în timpul difuzării tale. Fiecare dar monetar, urmărire și abonament adaugă timp, astfel încât camera să te țină în direct.",
+      "secondsPerThousand": "Secunde adăugate pentru fiecare 1.000 DHB dăruite",
+      "secondsPerFollow": "Secunde adăugate pentru urmărire",
+      "secondsPerSubscribe": "Secunde adăugate pentru abonament",
+      "capHours": "Cel mai lung timp de funcționare (ore)",
+      "save": "Cantități salvate",
+      "saved": "Cantități salvate pentru Subathon.",
+      "startMinutes": "Pentru a începe cu (minute)",
+      "start": "Pornește countdown-ul",
+      "stop": "Oprește",
+      "addFive": "Adaugă 5 minute",
+      "removeFive": "Scot 5 minute",
+      "failed": "Nu a funcționat. Încercă din nou.",
+      "widgetHint": "Arată countdown-ul Subathon. Pornește-l din panoul Subathon în Live Studio."
+    },
+    "points": {
+      "title": "Vizionari loiali",
+      "intro": "Vizionarii câștigă un punct pentru fiecare minut petrecut privind difuzarea și unul pentru fiecare 100 DHB dăruite. Mesajele din chat și reacțiile nu dau puncte, așa că punctele nu pot fi obținute prin exploatare.",
+      "empty": "Nu există puncte încă. Acestea se acumulează pe măsură ce oamenii privesc și dăruiesc.",
+      "widgetHint": "Adaugă widget-ul \"Vizionari loiali\" pentru a afișa această listă în timpul difuzării."
+    },
     "controls": {
       "title": "Comenzi rapide",
       "intro": "Pentru mijlocul fluxului. Fiecare comutator este valabil pentru toată lumea care urmărește, în aplicație și în OBS, până când îl întoarceți.",
@@ -4960,6 +4988,8 @@
       "join": "Alătură-te"
     },
     "kinds": {
+      "streamer_level": "Nivelul streamerului",
+      "tip_jar": "Pahar de cadouri",
       "tip_alert": "Alertă de sugestie",
       "follow_alert": "Alertă de urmărire",
       "subscribe_alert": "Alertă de abonat",
@@ -4978,10 +5008,12 @@
       "rule_alert": "Alerte privind regulile",
       "poll": "Sondaj",
       "spin_wheel": "Roată de rotire",
-      "streamer_level": "Nivelul streamerului",
-      "tip_jar": "Pahar de cadouri"
+      "subathon_timer": "Timer Subathon",
+      "points_board": "Vizionari loiali"
     },
     "hints": {
+      "streamer_level": "Nivelul tău de streamer și streak-ul săptămânal, din profilul tău",
+      "tip_jar": "Un pahar care se umple pe măsură ce cadouri plătite sosesc",
       "tip_alert": "Celebrează fiecare sugestie, dimensionată în funcție de nivelul său",
       "follow_alert": "Afișează fiecare nou urmăritor",
       "subscribe_alert": "Afișează fiecare nou abonat",
@@ -5000,15 +5032,15 @@
       "rule_alert": "Unde apar alertele regulilor tale",
       "poll": "Sondajul dvs. live, cu un buton de vot pentru fiecare opțiune",
       "spin_wheel": "Unde se învârt roțile din regulile tale",
-      "streamer_level": "Nivelul tău de streamer și streak-ul săptămânal, din profilul tău",
-      "tip_jar": "Un pahar care se umple pe măsură ce cadouri plătite sosesc"
+      "subathon_timer": "O countdown pe care darurile, urmăririle și abonamentele le respinge",
+      "points_board": "Topul vizionarilor tăi după puncte obținute prin privire și dăruire"
     },
     "fields": {
+      "showStreak": "Arată streak-ul săptămânal",
       "style": "Stil",
       "celebration": "Celebration",
       "banner": "Banner",
       "minAmount": "Cel mai mic banchet (DHB)",
-      "showStreak": "Arată streak-ul săptămânal",
       "showMessage": "Arată mesajul banchetului",
       "confirmedOnly": "Doar după confirmarea plății",
       "confirmedOnlyHint": "Așteaptă câteva secunde pentru a se finaliza tranzacția, astfel încât un banchet care nu este niciodată plătit să nu apară niciodată.",

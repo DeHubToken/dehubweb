@@ -4799,6 +4799,10 @@
     "creatorEarnsDirect": "Prenumeratoriai moka DeHub žetonais. Kai tik užsiprenumeruosi, tavo dalis atsidurs tavo piniginėje, atėmus platformos mokestį už tavo ženklelio lygį."
   },
   "liveOverlay": {
+    "level": "Lygis {{level}}",
+    "streak_one": "{{count}}-savaitės serija",
+    "streak_other": "{{count}}-savaitės serija",
+    "tipJar": "Dovanų stiklainis",
     "someone": "Kažkas",
     "newFollower": "Naujas sekėjas: {{name}}",
     "newSubscriber": "Naujas prenumeratorius: {{name}}",
@@ -4811,10 +4815,11 @@
     "tipped": "{{name}} išsiuntė dovaną",
     "chatPreview": "Pokalbio žinutės rodomos čia",
     "wheelLanded": "{{name}} pasukė: {{result}}",
-    "level": "Lygis {{level}}",
-    "streak_one": "{{count}}-savaitės serija",
-    "streak_other": "{{count}}-savaitės serija",
-    "tipJar": "Dovanų stiklainis",
+    "subathon": "Subathon",
+    "subathonOver": "Laikas pasibaigė",
+    "pointsTitle": "Sveriausių žiūrovų",
+    "points_one": "{{formatted}} taškas",
+    "points_other": "{{formatted}} taškai",
     "poll": {
       "closed": "Balsavimas uždarytas",
       "voteFor": "Balsuokite už {{option}}",
@@ -4842,6 +4847,29 @@
     "youAreTimedOut": "Jūs laiką užfiksuota akimirką"
   },
   "liveStudio": {
+    "subathon": {
+      "title": "Subathon",
+      "intro": "Skaitiklis tavo stream'e. Kiekvienas mokamas dovanas, seka ir abonementas prideda laiko, kad salė laikytų tave gyvą.",
+      "secondsPerThousand": "Pridedami sekundės už 1 000 DHB dovanų",
+      "secondsPerFollow": "Pridedami sekundės už seką",
+      "secondsPerSubscribe": "Pridedami sekundės už abonementą",
+      "capHours": "Ilgiausias galimas trukmė (valandų)",
+      "save": "Išsaugoti sumos",
+      "saved": "Subathon sumos išsaugotos.",
+      "startMinutes": "Pradėti su (minutės)",
+      "start": "Pradėti skaitiklį",
+      "stop": "Stabdyti",
+      "addFive": "Pridėti 5 minutės",
+      "removeFive": "Atimti 5 minutės",
+      "failed": "Tai nepavyko. Bandykite dar kartą.",
+      "widgetHint": "Rodo tavo Subathon skaitiklį. Pradėk iš Subathon panelės Live Studio."
+    },
+    "points": {
+      "title": "Sveriausi žiūrovai",
+      "intro": "Žiūrovai gauna tašką už kiekvieną minutę, kurią žiūri tave, ir vieną už kiekvienus 100 DHB dovanus. Chat ir reakcijos nieko negauna, todėl taškai negali būti „auginami“.",
+      "empty": "Nėra taškų dar. Jie kauptis, kai žmonės žiūri ir dovanuoja.",
+      "widgetHint": "Pridėk „Sveriausių žiūrovų“ videtą, kad rodytų šį sąrašą stream'e."
+    },
     "controls": {
       "title": "Spartieji valdikliai",
       "intro": "Skirta viduriniajam srautui. Kiekvienas jungiklis skirtas visiems žiūrintiesiems programėlėje ir OBS, kol jį apversite.",
@@ -4959,6 +4987,8 @@
       "join": "Prisijungti"
     },
     "kinds": {
+      "streamer_level": "Transliuotojo lygis",
+      "tip_jar": "Dovanų stiklainis",
       "tip_alert": "Įspėjimas apie arbatpinig",
       "follow_alert": "Sekti įspėjimą",
       "subscribe_alert": "Prenumeratoriaus įspėjimas",
@@ -4977,10 +5007,12 @@
       "rule_alert": "Pranešimai apie taisyklę",
       "poll": "Apklausa",
       "spin_wheel": "Sukimo ratas",
-      "streamer_level": "Transliuotojo lygis",
-      "tip_jar": "Dovanų stiklainis"
+      "subathon_timer": "Subathon laikrodis",
+      "points_board": "Sveriausi žiūrovai"
     },
     "hints": {
+      "streamer_level": "Srauto lygis ir savaitinė seka iš jūsų profilio",
+      "tip_jar": "Stiklainis, kuris prisipildo, kai ateina apmokamos dovanos",
       "tip_alert": "Pagerbia kiekvieną patarimą, prilygstantį jo lygiui",
       "follow_alert": "Rodo kiekvieną naują sekėją",
       "subscribe_alert": "Rodykimas kiekvienam naujam abonentui.",
@@ -4999,15 +5031,15 @@
       "rule_alert": "Kur rodomi jūsų taisyklių pranešimai",
       "poll": "Jūsų tiesioginė apklausa su balsavimo mygtuku kiekvienai parinkčiai",
       "spin_wheel": "Kur sukasi jūsų taisyklių ratai",
-      "streamer_level": "Srauto lygis ir savaitinė seka iš jūsų profilio",
-      "tip_jar": "Stiklainis, kuris prisipildo, kai ateina apmokamos dovanos"
+      "subathon_timer": "Skaitiklis, kurį dovanos, sekos ir abonementai atidaro atgal",
+      "points_board": "Tavo aukščiausiai taškų už žiūrimą ir dovanavimą žiūrovai"
     },
     "fields": {
+      "showStreak": "Rodyti savaitės eilutę",
       "style": "Stilius",
       "celebration": "Šventė",
       "banner": "Reklamjuostė",
       "minAmount": "Mažiausias rodomas patarimas (DHB)",
-      "showStreak": "Rodyti savaitės eilutę",
       "showMessage": "Rodyti arbatpinigių žinutę",
       "confirmedOnly": "Tik po to, kai mokėjimas patvirtinamas",
       "confirmedOnlyHint": "Palaukia kelias sekundes iki grandinės, todėl arbatpinigiai, kurie niekada nemokami, niekada nepasirodo.",

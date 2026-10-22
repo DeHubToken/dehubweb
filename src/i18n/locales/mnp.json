@@ -4413,6 +4413,7 @@
     "streak_one": "{{count}}周连胜",
     "streak_other": "{{count}}周连胜",
     "tipJar": "礼品罐",
+    "subathon": "苏巴吞",
     "someone": "𠮷人",
     "newFollower": "新粉絲：{{name}}",
     "newSubscriber": "新訂閱：{{name}}",
@@ -4425,6 +4426,10 @@
     "tipped": "{{name}} 送了個禮物",
     "chatPreview": "聊天訊息會出現",
     "wheelLanded": "{{name}} 吾𠀀{{result}}",
+    "subathonOver": "時間到囉",
+    "pointsTitle": "最忠誠的觀眾",
+    "points_one": "{{formatted}} 分",
+    "points_other": "{{formatted}} 分",
     "poll": {
       "closed": "投票已關閉",
       "voteFor": "為{{option}}投票",
@@ -4452,6 +4457,29 @@
     "youAreTimedOut": "你剛剛超時一陣子"
   },
   "liveStudio": {
+    "subathon": {
+      "title": "苏巴吞",
+      "intro": "你直播間的倒數計時器。每送出一份付費禮物、追蹤或訂閱都會加時間，讓直播間保持直播狀態。",
+      "secondsPerThousand": "每送出1,000 DHB 加的秒數",
+      "secondsPerFollow": "每追蹤加的秒數",
+      "secondsPerSubscribe": "每訂閱加的秒數",
+      "capHours": "最長可以持續（小時）",
+      "save": "儲存金額",
+      "saved": "儲存的Subathon金額。",
+      "startMinutes": "開始時間（分鐘）",
+      "start": "開始倒數",
+      "stop": "停止",
+      "addFive": "加5分鐘",
+      "removeFive": "減5分鐘",
+      "failed": "那沒有效。再試一次。",
+      "widgetHint": "顯示你的Subathon倒數計時器。從Live Studio的Subathon面板開始。"
+    },
+    "points": {
+      "title": "忠诚观众",
+      "intro": "觀眾每看你直播一分鐘得一分，每送出100 DHB得一分。聊天和反應不算，所以分數不能靠這些東西來賺。",
+      "empty": "目前沒有分數。隨著人們觀看和送禮，分數會累積。",
+      "widgetHint": "把「忠誠觀眾」小工具加到直播中，顯示這個名單。"
+    },
     "controls": {
       "title": "快速控制",
       "intro": "对于中间流。在应用程序和OBS中，每个开关都适用于所有观看者，直到您将其翻转回来。",
@@ -4556,6 +4584,8 @@
     "kinds": {
       "streamer_level": "主播级别",
       "tip_jar": "礼品罐",
+      "subathon_timer": "Subathon计时器",
+      "points_board": "忠诚观众",
       "tip_alert": "提示警报",
       "share_alert": "分享提醒",
       "join_alert": "加入警报",
@@ -4586,7 +4616,9 @@
       "ticker": "一行你自己的文字在螢幕上滾動",
       "rule_alert": "规则提醒的显示位置",
       "poll": "您的直播投票，带有每个选项的投票按钮",
-      "spin_wheel": "规则中的车轮在哪里旋转"
+      "spin_wheel": "规则中的车轮在哪里旋转",
+      "subathon_timer": "一個倒數計時器，送禮、追蹤和訂閱會讓它倒數延後",
+      "points_board": "你觀看和送禮得分最高的觀眾"
     },
     "fields": {
       "showStreak": "显示每周连胜记录",

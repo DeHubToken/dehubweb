@@ -4814,6 +4814,10 @@
     "creatorEarnsDirect": "Suscriptorkuna DeHub tokenkunapi qullqita qunku. Accionesniyki billeteraykipi chayan chay rato suscribisqanku, menos plataforma qullqita insignia nivelniykipaq."
   },
   "liveOverlay": {
+    "level": "Nivel {{level}} nisqapi.",
+    "streak_one": "{{count}}-semana qatiqninpi",
+    "streak_other": "{{count}}-semana qatiqninpi",
+    "tipJar": "Regalo jarra",
     "someone": "Pipas",
     "newFollower": "Musuq qatiq: {{name}}",
     "newSubscriber": "Musuq suscriptor: {{name}}",
@@ -4826,10 +4830,11 @@
     "tipped": "{{name}} huk regalota apachirqan",
     "chatPreview": "Kaypim rikurin rimanakuy willakuykuna",
     "wheelLanded": "{{name}} muyuchisqa: {{result}}",
-    "level": "Nivel {{level}} nisqapi.",
-    "streak_one": "{{count}}-semana qatiqninpi",
-    "streak_other": "{{count}}-semana qatiqninpi",
-    "tipJar": "Regalo jarra",
+    "subathon": "Subatón nisqa",
+    "subathonOver": "Tiempoqa tukusqañam",
+    "pointsTitle": "Yaqa llapan hunt’aq qhawaqkuna",
+    "points_one": "{{formatted}} nisqa punto",
+    "points_other": "{{formatted}} nisqa puntokuna",
     "poll": {
       "closed": "Votacionqa wichqasqa",
       "voteFor": "{{option}} nisqapaq votacionta ruway.",
@@ -4857,6 +4862,29 @@
     "youAreTimedOut": "Huk ratullapaqmi tiempoyki tukusqaña kanki"
   },
   "liveStudio": {
+    "subathon": {
+      "title": "Subatón nisqa",
+      "intro": "Mayuykipi huk yupay kutichiy. Sapa pagasqa regalo, qatipay chaymanta suscripción pachata yapan, chayrayku cuarto kawsachisunki.",
+      "secondsPerThousand": "Segundos yapasqa sapa 1.000 DHB qusqa",
+      "secondsPerFollow": "Segundos yapasqa sapa qatiypi",
+      "secondsPerSubscribe": "Segundos yapasqa sapa suscripción",
+      "capHours": "Aswan unayta puriyta atin (horas) .",
+      "save": "Qullqikunata waqaychay",
+      "saved": "Subathon qullqikuna waqaychasqa.",
+      "startMinutes": "Qallarina (minutos) .",
+      "start": "Yupay kutichiyta qallariy",
+      "stop": "Sayay",
+      "addFive": "5 minutukunata yapay",
+      "removeFive": "5 minutota hurquy",
+      "failed": "Chayqa manan allinchu karqan. Hukmanta kallpachakuy.",
+      "widgetHint": "Subathon yupay kutichiyniyki rikuchin. Live Studio kaqpi Subathon panelmanta qallariy."
+    },
+    "points": {
+      "title": "Chiqap qawaqkuna",
+      "intro": "Qhawaqkuna sapa minuto qhawasusqaykimanta huk puntota gananku, sapa 100 DHB qusqankumantataq huk puntota gananku. Chat nisqapas, reaccionkunapas manam imatapas ganankuchu, chaymi puntokunataqa manam chakrata tarpuyta atikunmanchu.",
+      "empty": "Manaraqmi puntokuna kanchu. Runakuna qhawasqankuman hina, regalota hina qhawarisqankuman hinan paykunaqa hatarichinku.",
+      "widgetHint": "Yapay Hunt&#39;aq qhawaqkuna widgetta kay lista mayupi rikuchinaykipaq."
+    },
     "controls": {
       "title": "Utqaylla kamachinakuna",
       "intro": "Chawpi mayupaq. Sapa interruptor llapa qhawaqkunapaq hap&#39;in, app kaqpi chaymanta OBS kaqpi, qhipaman tikranaykikama.",
@@ -4974,6 +5002,8 @@
       "join": "Taqruy"
     },
     "kinds": {
+      "streamer_level": "Nivel de corriente nisqa",
+      "tip_jar": "Regalo jarra",
       "tip_alert": "Alerta de consejo",
       "follow_alert": "Alertata qatipay",
       "subscribe_alert": "Suscriptor nisqamanta willakuy",
@@ -4991,10 +5021,12 @@
       "rule_alert": "Kamachiy willaykuna",
       "poll": "Encuesta",
       "spin_wheel": "Rueda de giro",
-      "streamer_level": "Nivel de corriente nisqa",
-      "tip_jar": "Regalo jarra"
+      "subathon_timer": "Subathon pacha yupay",
+      "points_board": "Chiqap qawaqkuna"
     },
     "hints": {
+      "streamer_level": "Nivel de streamer nisqayki hinaspa sapa semana racha, perfilniykimanta",
+      "tip_jar": "Pagasqa regalokuna haykumusqanman hina hunt’akuq jarra",
       "tip_alert": "Sapa puntata raymichan, pataman hina sayayniyuq",
       "follow_alert": "Sapa musuq qatiqnintam qawachin",
       "subscribe_alert": "Sapa musuq suscriptor nisqatam qawachin",
@@ -5013,15 +5045,15 @@
       "rule_alert": "Maypichus kamachiykuna willasunki",
       "poll": "Kawsaq encuestayki, sapa akllanapaq voto botón nisqawan",
       "spin_wheel": "Maypichus kamachiyniykipi ruedakuna muyurinku",
-      "streamer_level": "Nivel de streamer nisqayki hinaspa sapa semana racha, perfilniykimanta",
-      "tip_jar": "Pagasqa regalokuna haykumusqanman hina hunt’akuq jarra"
+      "subathon_timer": "Huk yupay kutichiy, chaymi regalokuna, qatiq hinaspa suscripcionkuna qhipaman tanqan",
+      "points_board": "Aswan allin qhawaqniykikuna qhawaymanta chaymanta regalo quymanta puntokunawan"
     },
     "fields": {
+      "showStreak": "Sapa semana rachata qawachiy",
       "style": "Rikchay",
       "celebration": "Raymi raymi",
       "banner": "Bandera",
       "minAmount": "Aswan huchuy punta qawachinapaq (DHB) .",
-      "showStreak": "Sapa semana rachata qawachiy",
       "showMessage": "Yuyaychay willakuyta qawachiy",
       "confirmedOnly": "Pagay takyachisqa kaptinlla",
       "confirmedOnlyHint": "Suyanmi iskay kinsa segundokuna cadenapaq, chaymi mana hayk’aqpas pagasqa propina mana hayk’aqpas rikukunchu.",

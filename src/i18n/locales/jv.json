@@ -4611,6 +4611,10 @@
     "creatorEarnsDirect": "Pelanggan mbayar nganggo token DeHub. Bagianmu mlebu ing dompetmu nalika dheweke langganan, dikurangi biaya platform kanggo tingkatan lencana."
   },
   "liveOverlay": {
+    "level": "Tingkatan {{level}}",
+    "streak_one": "{{count}}-mingguan *streak*",
+    "streak_other": "{{count}}-mingguan *streak*",
+    "tipJar": "Wadah hadiah",
     "someone": "Sapa wae",
     "newFollower": "Pengikut anyar: {{name}}",
     "newSubscriber": "Langganan anyar: {{name}}",
@@ -4623,10 +4627,11 @@
     "tipped": "{{name}} nganti hadiah",
     "chatPreview": "Pesanan chat ditampilin gini",
     "wheelLanded": "{{name}} ngeluk-ngeluk: {{result}}",
-    "level": "Tingkatan {{level}}",
-    "streak_one": "{{count}}-mingguan *streak*",
-    "streak_other": "{{count}}-mingguan *streak*",
-    "tipJar": "Wadah hadiah",
+    "subathon": "Subathon",
+    "subathonOver": "Waktu udah habis",
+    "pointsTitle": "Tontonan yang paling setia",
+    "points_one": "{{formatted}} poin",
+    "points_other": "{{formatted}} poin",
     "poll": {
       "closed": "Voting ditutup",
       "voteFor": "Milih {{option}}",
@@ -4654,6 +4659,29 @@
     "youAreTimedOut": "Timeout sebentar."
   },
   "liveStudio": {
+    "subathon": {
+      "title": "Subathon",
+      "intro": "Countdown di streammu. Setiap hadiah bayar, follow, dan suskripsi tambah waktu, jaga ruangan supaya tetap live.",
+      "secondsPerThousand": "Detik yang ditambah per 1.000 DHB yang dihadiahkan",
+      "secondsPerFollow": "Detik yang ditambah per follow",
+      "secondsPerSubscribe": "Detik yang ditambah per suskripsi",
+      "capHours": "Waktu paling lama yang bisa berjalan (jam)",
+      "save": "Simpan jumlah",
+      "saved": "Jumlah Subathon yang tersimpan",
+      "startMinutes": "Mulai dengan (menit)",
+      "start": "Mulai countdown",
+      "stop": "Hentikan",
+      "addFive": "Tambah 5 menit",
+      "removeFive": "Kurangi 5 menit",
+      "failed": "Gak berfungsi. Coba lagi.",
+      "widgetHint": "Menampilkan countdown Subathonmu. Mulai dari panel Subathon di Live Studio."
+    },
+    "points": {
+      "title": "Tontonan yang setia",
+      "intro": "Tontonan dapat poin untuk setiap menit mereka nontonmu dan satu poin untuk setiap 100 DHB yang mereka hadiahkan. Chat dan reaksi gak bikin poin, jadi poin gak bisa diambil dengan mudah.",
+      "empty": "Belum ada poin. Poin akan bertambah saat orang-orang nonton dan hadiahkan.",
+      "widgetHint": "Tambahkan widget Tontonan yang Setia untuk menampilkan daftar ini di stream."
+    },
     "controls": {
       "title": "Kontrol cepet",
       "intro": "Kanggo ngisor-midstream. Tiwa tiwa ngandhok pike pisan kanggo semuanya ngandhok ngliwat di app lan di OBS, sampe kanggo ngelungguh kanggo ngembok.",
@@ -4767,6 +4795,8 @@
       "share": "Bareng"
     },
     "kinds": {
+      "streamer_level": "Tingkatan streamer",
+      "tip_jar": "Wadah hadiah",
       "tip_alert": "Peringatan Tip",
       "follow_alert": "Awas",
       "subscribe_alert": "Peringatan pelanggan",
@@ -4783,10 +4813,12 @@
       "rule_alert": "Peringatan aturan",
       "poll": "Poll",
       "spin_wheel": "Roda putar",
-      "streamer_level": "Tingkatan streamer",
-      "tip_jar": "Wadah hadiah"
+      "subathon_timer": "Timer Subathon",
+      "points_board": "Tontonan yang setia"
     },
     "hints": {
+      "streamer_level": "Tingkatanmu sebagai streamer dan *streak* mingguan dari profilmu",
+      "tip_jar": "Wadah yang penuh karena hadiah yang dibayar masuk",
       "tip_alert": "Ngrayakake saben tip, disesuaikan karo tingkaté",
       "follow_alert": "Nampilake saben pangikut anyar",
       "subscribe_alert": "Nuduhake saben pelanggan anyar",
@@ -4805,13 +4837,13 @@
       "rule_alert": "Endi aturan-aturan penting mu katon",
       "poll": "Pollmu yén live, lan ngabani tombol ngabani untuk tiworo pilihannya",
       "spin_wheel": "Ngendi roda-roda ing aturan-aturanmu muter",
-      "streamer_level": "Tingkatanmu sebagai streamer dan *streak* mingguan dari profilmu",
-      "tip_jar": "Wadah yang penuh karena hadiah yang dibayar masuk"
+      "subathon_timer": "Countdown yang ditolakin oleh hadiah, follow, dan suskripsi",
+      "points_board": "Tontonan teratasmu berdasarkan poin dari nonton dan hadiah"
     },
     "fields": {
+      "showStreak": "Tampilkan *streak* mingguan",
       "celebration": "Ngabdulakehan",
       "minAmount": "Tip paling cilik kanggo dituduhake (DHB)",
-      "showStreak": "Tampilkan *streak* mingguan",
       "confirmedOnly": "Mung sawisé pembayaran dikonfirmasi",
       "confirmedOnlyHint": "Nganthi sawetara detik kanggo rantai, dadi tip sing ora tau dibayar ora bakal katon.",
       "duration": "Dwi detik di layar",

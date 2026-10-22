@@ -4798,6 +4798,8 @@
   "liveOverlay": {
     "streak_one": "የ{{count}} ሳምንት ተከታታይ",
     "streak_other": "የ{{count}} ሳምንታት ተከታታይ",
+    "level": "ደረጃ {{level}}",
+    "tipJar": "የስጦታ ማሰሮ",
     "someone": "የሆነ ሰው",
     "newFollower": "አዲስ ተከታይ: {{name}}",
     "newSubscriber": "አዲስ ተመዝጋቢ: {{name}}",
@@ -4810,8 +4812,11 @@
     "tipped": "{{name}} አንድ ስጦታ ላከ",
     "chatPreview": "የውይይት መልዕክቶች እዚህ ይታያሉ",
     "wheelLanded": "{{name}} አሽከረከረ፦ {{result}}",
-    "level": "ደረጃ {{level}}",
-    "tipJar": "የስጦታ ማሰሮ",
+    "subathon": "ሰብሃትን",
+    "subathonOver": "ጊዜ ያልቃ",
+    "pointsTitle": "በጣም ታማኝ ተመልካቾች",
+    "points_one": "{{formatted}} ነጥብ",
+    "points_other": "{{formatted}} ነጥቦች",
     "poll": {
       "closed": "ድምጽ ማሰማት ተዘግቷል",
       "voteFor": "ለ {{option}} ድምጽ ይስጡ",
@@ -4839,6 +4844,29 @@
     "youAreTimedOut": "ለትንሽ ጊዜ ተዘጋጅተሃል"
   },
   "liveStudio": {
+    "subathon": {
+      "title": "ሰብሃትን",
+      "intro": "በእንደገና ላይ ያለ ቆጠራ። እያንዳንዱ የተከፈለ ስጦታ፣ ተከታይ እና ምዝገባ ጊዜ ይጨምራል፣ ስለዚህ ክፍሉ ሕያው ይቆያል።",
+      "secondsPerThousand": "በ1,000 DHB ስጦታ ላይ የተጨመሩ ሰከንዶች",
+      "secondsPerFollow": "በተከታይ ላይ የተጨመሩ ሰከንዶች",
+      "secondsPerSubscribe": "በምዝገባ ላይ የተጨመሩ ሰከንዶች",
+      "capHours": "ሊሄድ ይችላል ረጅሙ (ሰዓታት)",
+      "save": "መጠን ቁጠር",
+      "saved": "Subathon መጠን ተቁጠር።",
+      "startMinutes": "ጀምር (ደቂቃ)",
+      "start": "ቆጠራውን ጀምር",
+      "stop": "ቁም",
+      "addFive": "5 ደቂቃ ጨምር",
+      "removeFive": "5 ደቂቃ ውሰድ",
+      "failed": "ይህ አልሰራም። እንደገና ሞክር።",
+      "widgetHint": "የእርስዎን subathon ቆጠራ ያሳያል። ከ Live Studio ውስጥ ከ Subathon ፓነል ጀምር።"
+    },
+    "points": {
+      "title": "ታማኝ ተመልካቾች",
+      "intro": "ተመልካቾች ለእያንዳንዱ ደቂቃ ሲመለከቱ ነጥብ ያገኛሉ እና ለእያንዳንዱ 100 DHB ስጦታ አንድ። ውይይት እና ምላሾች ምንም ነገር አያገኙም፣ ስለዚህ ነጥቦች ሊመረጡ አይችሉም።",
+      "empty": "ገና ነጥብ የለም። ሰዎች ሲመለከቱ እና ሲሰጡ ይገነባሉ።",
+      "widgetHint": "ታማኝ ተመልካቾች ዊጀት ይህን ዝርዝር በእንደገና ላይ ለማሳየት ይጨምሩ።"
+    },
     "controls": {
       "title": "ፈጣን መቆጣጠሪያዎች",
       "intro": "ለመካከለኛ ዥረት. እያንዳንዱ መቀየሪያ ወደ ኋላ እስኪያንሸራተቱ ድረስ በመተግበሪያው እና በኦቢኤስ ውስጥ ለሚመለከቱት ሁሉ ይይዛል.",
@@ -4954,6 +4982,8 @@
       "join": "ይቀላቀሉ"
     },
     "kinds": {
+      "streamer_level": "የዥረት ደረጃ",
+      "tip_jar": "የስጦታ ማሰሮ",
       "tip_alert": "ጠቃሚ ምክር ማንቂያ",
       "follow_alert": "ማንቂያ ይከተሉ",
       "subscribe_alert": "የደንበኝነት ምዝገባ ማንቂያ",
@@ -4972,10 +5002,12 @@
       "rule_alert": "ደንብ ማንቂያዎች",
       "poll": "ድምጽ",
       "spin_wheel": "መንኮራኩር ያሽከርክሩ",
-      "streamer_level": "የዥረት ደረጃ",
-      "tip_jar": "የስጦታ ማሰሮ"
+      "subathon_timer": "Subathon ታይመር",
+      "points_board": "ታማኝ ተመልካቾች"
     },
     "hints": {
+      "streamer_level": "የእርስዎ ዥረት ደረጃ እና ሳምንታዊ ቁልል ፣ ከመገለጫዎ",
+      "tip_jar": "የተከፈለ ስጦታዎች ሲገቡ የሚሞላ ማሰሮ",
       "tip_alert": "እያንዳንዱን ጠቃሚ ምክር ያከብራል ፣ ወደ ደረጃው ይደርሳል",
       "follow_alert": "እያንዳንዱን አዲስ ተከታይ ያሳያል",
       "subscribe_alert": "እያንዳንዱን አዲስ ተመዝጋቢ ያሳያል",
@@ -4994,15 +5026,15 @@
       "rule_alert": "ደንብ ማንቂያዎችዎ የሚታዩበት ቦታ",
       "poll": "የእርስዎ የቀጥታ ምርጫ, ለእያንዳንዱ አማራጭ የድምጽ አዝራር ጋር",
       "spin_wheel": "በእርስዎ ደንቦች ውስጥ ጎማዎች የሚሽከረከሩበት ቦታ",
-      "streamer_level": "የእርስዎ ዥረት ደረጃ እና ሳምንታዊ ቁልል ፣ ከመገለጫዎ",
-      "tip_jar": "የተከፈለ ስጦታዎች ሲገቡ የሚሞላ ማሰሮ"
+      "subathon_timer": "ስጦታ፣ ተከታይ እና ምዝገባ ወደ ኋላ የሚገፋ ቆጠራ",
+      "points_board": "ከመመልከት እና ከስጦታ ነጥቦች ሊሉ ከፍተኛ ተመልካቾች"
     },
     "fields": {
+      "showStreak": "የሳምንቱን ስክሪፕት አሳይ",
       "style": "ቅጥ",
       "celebration": "ክብረ በዓል",
       "banner": "ሰንደቅ",
       "minAmount": "ለማሳየት ትንሹ ጠቃሚ ምክር (DHB)",
-      "showStreak": "የሳምንቱን ስክሪፕት አሳይ",
       "showMessage": "ጠቃሚ መልዕክት አሳይ",
       "confirmedOnly": "ክፍያው ካረጋገጠ በኋላ ብቻ",
       "confirmedOnlyHint": "ለሰንሰለት ጥቂት ሰከንዶች ይጠብቃል ፣ ስለሆነም በጭራሽ የማይከፈልበት ጠቃሚ ምክር በጭራሽ አይታይም ።",
