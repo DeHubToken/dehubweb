@@ -4712,7 +4712,19 @@
     "followersUnit": "mabiya",
     "topSupporters": "Manyan magoya baya",
     "tipped": "{{name}} aika kyauta",
-    "chatPreview": "Saƙonnin hira sun bayyana a nan"
+    "chatPreview": "Saƙonnin hira sun bayyana a nan",
+    "poll": {
+      "closed": "An rufe zabe",
+      "voteFor": "Kuri'a don {{option}}",
+      "signIn": "Shiga don jefa kuri'a",
+      "failed": "Kuri'arku ba ta ƙidaya ba. sake gwadawa.",
+      "voted_one": "Kun zabe · {{count}} kuri'a",
+      "voted_other": "Kun zabe · {{count}} kuri'u",
+      "votes_one": "{{count}} kuri'a",
+      "votes_other": "{{count}} kuri'u",
+      "howToVote_one": "Nau'in {{command}} da lambar a cikin hira don jefa kuri'a · {{count}} kuri'a",
+      "howToVote_other": "Nau'in {{command}} da lambar a cikin hira don jefa kuri'a · {{count}} kuri'u"
+    }
   },
   "liveChatModeration": {
     "timeout1m": "Lokaci don minti 1",
@@ -4728,6 +4740,37 @@
     "youAreTimedOut": "Kuna da lokaci don dan lokaci."
   },
   "liveStudio": {
+    "polls": {
+      "title": "Kuri'u",
+      "intro": "Tambayi mutanen da ke kallon watsa shirye-shiryenku wata tambaya. Suna amsawa tare da maɓallin a cikin aikace-aikacen DeHub, ko ta hanyar buga {{command}} da lambar zaɓi a cikin hira.",
+      "question": "Tambaya",
+      "questionPlaceholder": "Me ya kamata in yi wasa na gaba?",
+      "option": "Zabi {{n}}",
+      "addOption": "Ƙara wani zaɓi",
+      "removeOption": "Cire wani zaɓi {{n}}",
+      "duration": "Yaya tsawon lokacin jefa kuri'a ya buɗe",
+      "seconds_one": "{{count}} na biyu",
+      "seconds_other": "{{count}} dakika",
+      "minutes_one": "{{count}} mintuna",
+      "minutes_other": "{{count}} mintuna",
+      "start": "Fara zabe",
+      "end": "Karshen jefa kuri'a yanzu",
+      "started": "Zaɓinku yana buɗewa. Masu kallo na iya jefa kuri'a a yanzu.",
+      "notLive": "Je live farko. A zabe gudanar a kan watsa shirye-shirye kana yawo a yanzu.",
+      "startFailed": "Zaben bai fara ba. sake gwadawa.",
+      "closeFailed": "Voting bai ƙare ba. sake gwadawa.",
+      "live": "Zaben budewa · {{time}} bar",
+      "ended": "An rufe zabe",
+      "votes_one": "{{count}} kuri'a",
+      "votes_other": "{{count}} kuri'u",
+      "replaceHint": "Fara sabon zabe ya rufe wanda yake buɗewa.",
+      "widgetHint": "Nuna kuri'unku na kai tsaye. A cikin masu kallo na aikace-aikacen DeHub suna buga wani zaɓi don jefa kuri'a; a cikin OBS yana gaya wa mutane su rubuta {{command}} da lambar a cikin hira.",
+      "sample": {
+        "a": "Wani sabon abu",
+        "b": "Tsohon da aka fi so",
+        "c": "Kuna zaɓar"
+      }
+    },
     "title": "Live Studio",
     "subtitle": "Alerts da widgets don kayan aiki na streams naka",
     "h1": "Live Studio — stream alerts, goals da overlays don DeHub creators",
@@ -4816,7 +4859,8 @@
       "event_feed": "Ayyukan kwanan nan",
       "chat_box": "Akwatin tattaunawa",
       "ticker": "Ticker",
-      "rule_alert": "Gargajiya na Dokoki"
+      "rule_alert": "Gargajiya na Dokoki",
+      "poll": "Kuri'a"
     },
     "hints": {
       "follow_alert": "Nuna kowane sabon mabiya",
@@ -4833,7 +4877,8 @@
       "event_feed": "Sabbin kyaututtuka, mabiya, masu biyan kuɗi da mutane suna raba watsa shirye-shiryen ku",
       "chat_box": "Nuna saƙonnin tattaunawar watsa shirye-shiryenku akan allon",
       "ticker": "Layin rubutunku wanda ke gungurawa a duk faɗin allon",
-      "rule_alert": "Inda gargajiyar dokoki ta bayyana"
+      "rule_alert": "Inda gargajiyar dokoki ta bayyana",
+      "poll": "Zaben ku na rayuwa, tare da maɓallin jefa kuri'a ga kowane zaɓi"
     },
     "fields": {
       "style": "Salo",
@@ -4896,6 +4941,7 @@
       "addAction": "Ƙara aiki",
       "removeAction": "Cire aiki",
       "placeholders": "Yi amfani da {name}, {amount} da {message} a cikin rubutunku. Ana cire hanyoyin haɗi a cikin saƙonni.",
+      "placeholdersLive": "Yi amfani da {name}, {title} da {link} a cikin rubutunku: sunanka, taken watsa shirye-shirye da hanyar haɗi don kallon shi.",
       "alertText": "Alert text",
       "sound": "Sound",
       "sayText": "Rubutun da za a karanta da ƙarfi",
@@ -4909,6 +4955,7 @@
         "follow": "Someone follows",
         "subscribe": "Someone subscribes",
         "share": "Wani ya raba rafi",
+        "live": "Kuna fara watsa shirye-shirye",
         "command": "Ana amfani da umarnin hira",
         "keyword": "Saƙon hira ya ƙunshi kalma",
         "chat": "Any chat message"

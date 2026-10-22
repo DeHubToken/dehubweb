@@ -4792,7 +4792,19 @@
     "followersUnit": "obserwujący",
     "topSupporters": "Najlepsi kibice",
     "tipped": "{{name}} wysłał prezent",
-    "chatPreview": "Tutaj pojawiają się wiadomości na czacie"
+    "chatPreview": "Tutaj pojawiają się wiadomości na czacie",
+    "poll": {
+      "closed": "Głosowanie zakończone",
+      "voteFor": "Głosuj na {{option}}",
+      "signIn": "Zaloguj się, aby głosować",
+      "failed": "Twój głos się nie liczy. Spróbuj ponownie.",
+      "voted_one": "Głosowałeś · {{count}} głosów",
+      "voted_other": "Głosowałeś · {{count}} głosów",
+      "votes_one": "{{count}} głos",
+      "votes_other": "{{count}} głosów",
+      "howToVote_one": "Wpisz {{command}} i liczbę na czacie, aby zagłosować · {{count}}",
+      "howToVote_other": "Wpisz {{command}} i liczbę głosów na czacie, aby zagłosować · {{count}}"
+    }
   },
   "liveChatModeration": {
     "timeout1m": "Czas oczekiwania na 1 minutę",
@@ -4808,6 +4820,37 @@
     "youAreTimedOut": "Jesteś czasowo wykluczony na chwilę."
   },
   "liveStudio": {
+    "polls": {
+      "title": "Ankiety",
+      "intro": "Zadaj pytanie ludziom oglądającym Twoją transmisję. Odpowiadają przyciskiem w aplikacji DeHub lub pisząc {{command}} i numer opcji w czacie.",
+      "question": "Pytanie",
+      "questionPlaceholder": "Co mam teraz zagrać?",
+      "option": "Opcja {{n}}",
+      "addOption": "Dodaj opcję",
+      "removeOption": "Usuń opcję {{n}}",
+      "duration": "Jak długo trwa głosowanie",
+      "seconds_one": "{{count}} sekunda",
+      "seconds_other": "{{count}} sekund",
+      "minutes_one": "{{count}} minuta",
+      "minutes_other": "{{count}} minut",
+      "start": "Rozpocznij ankietę",
+      "end": "Zakończ głosowanie teraz",
+      "started": "Twoja ankieta jest otwarta. Widzowie mogą teraz głosować.",
+      "notLive": "Uruchom najpierw transmisję na żywo. Trwa ankieta na temat transmisji, którą teraz streamujesz.",
+      "startFailed": "Ankieta nie rozpoczęła się. Spróbuj ponownie.",
+      "closeFailed": "Głosowanie się nie skończyło. Spróbuj ponownie.",
+      "live": "Głosowanie otwarte · {{time}} pozostało",
+      "ended": "Głosowanie zakończone",
+      "votes_one": "{{count}} głos",
+      "votes_other": "{{count}} głosów",
+      "replaceHint": "Rozpoczęcie nowej ankiety zamyka tę, która jest otwarta.",
+      "widgetHint": "Pokazuje Twoją ankietę na żywo. W przeglądarce aplikacji DeHub stuknij opcję głosowania; w obs mówi ludziom, aby wpisali {{command}} i liczbę na czacie.",
+      "sample": {
+        "a": "Coś nowego",
+        "b": "Stare ulubione danie",
+        "c": "Ty wybierasz"
+      }
+    },
     "title": "Live Studio",
     "subtitle": "Alerty i widżety do Twoich transmisji",
     "h1": "Live Studio — alerty transmisji, cele i nakładki dla twórców DeHub",
@@ -4898,7 +4941,8 @@
       "event_feed": "Ostatnia aktywność",
       "chat_box": "Pole czatu",
       "ticker": "Pasek informacyjny",
-      "rule_alert": "Powiadomienia o regułach"
+      "rule_alert": "Powiadomienia o regułach",
+      "poll": "Ankieta"
     },
     "hints": {
       "tip_alert": "Świętuje każdą wskazówkę, dostosowaną do jej progu",
@@ -4916,7 +4960,8 @@
       "event_feed": "Najnowsze prezenty, obserwujący, subskrybenci i osoby udostępniające transmisję",
       "chat_box": "Wyświetla wiadomości na czacie Twojej transmisji na ekranie",
       "ticker": "Linia własnego tekstu, która przewija się po ekranie",
-      "rule_alert": "Gdzie pojawiają się twoje alerty z zasad"
+      "rule_alert": "Gdzie pojawiają się twoje alerty z zasad",
+      "poll": "Twoja ankieta na żywo, z przyciskiem głosowania dla każdej opcji"
     },
     "fields": {
       "style": "Style",
@@ -4980,6 +5025,7 @@
       "addAction": "Dodaj akcję",
       "removeAction": "Usunięto akcję.",
       "placeholders": "Użyj {name}, {amount} i {message} w tekście. Linki w wiadomościach są usuwane.",
+      "placeholdersLive": "Użyj {name}, {title} i {link} w tekście: swoje imię i nazwisko, tytuł transmisji i link do jej obejrzenia.",
       "alertText": "Tekst alertu",
       "sound": "Dźwięk",
       "sayText": "Tekst do przeczytania na głos",
@@ -4993,6 +5039,7 @@
         "follow": "Ktoś obserwuje",
         "subscribe": "Ktoś subskrybuje",
         "share": "Ktoś udostępnia strumień",
+        "live": "Zaczynasz nadawać",
         "command": "Używane jest polecenie czatu",
         "keyword": "Wiadomość na czacie zawiera słowo",
         "chat": "Dowolna wiadomość na czacie"

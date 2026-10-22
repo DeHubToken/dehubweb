@@ -4839,7 +4839,19 @@
     "followersUnit": "mga tagasunod",
     "topSupporters": "Mga nangungunang tagasuporta",
     "tipped": "Nagpadala ng regalo si {{name}}",
-    "chatPreview": "Lilitaw ang mga mensahe ng chat dito"
+    "chatPreview": "Lilitaw ang mga mensahe ng chat dito",
+    "poll": {
+      "closed": "Boto na natapos",
+      "voteFor": "Boto para sa {{option}}",
+      "signIn": "Mag-log in para bumoto",
+      "failed": "Ang iyong boto ay hindi nakapag-count. Subukan muli.",
+      "voted_one": "Iyong boto: {{count}} boto",
+      "voted_other": "Iyong boto: {{count}} boto",
+      "votes_one": "{{count}} boto",
+      "votes_other": "{{count}} boto",
+      "howToVote_one": "I-type ang {{command}} at isang numero sa chat para bumoto: {{count}} boto",
+      "howToVote_other": "I-type ang {{command}} at isang numero sa chat para bumoto: {{count}} boto"
+    }
   },
   "liveChatModeration": {
     "timeout1m": "Time out para sa 1 minuto",
@@ -4855,6 +4867,37 @@
     "youAreTimedOut": "Naka - time out ka nang ilang sandali"
   },
   "liveStudio": {
+    "polls": {
+      "title": "Pagboto",
+      "intro": "Tanungin ang mga tao na nakatingin sa iyong broadcast. Sagot sila sa pamamagitan ng isang button sa DeHub app, o sa pamamagitan ng pag-type ng {{command}} at ang numero ng opsyon sa chat.",
+      "question": "Tanong",
+      "questionPlaceholder": "Ano ang dapat kong maglaro na?",
+      "option": "Opsyun {{n}}",
+      "addOption": "Idagdag ang isang opsyon",
+      "removeOption": "Alisin ang opsyon {{n}}",
+      "duration": "Kailan ang pagboto ay magtatapos",
+      "seconds_one": "{{count}} segundo",
+      "seconds_other": "{{count}} segundo",
+      "minutes_one": "{{count}} minuto",
+      "minutes_other": "{{count}} minuto",
+      "start": "Simulan ang pagboto",
+      "end": "Tapusin ang pagboto ngayon",
+      "started": "Ang iyong pagboto ay bukas. Mga manonood ay maaaring bumoto na.",
+      "notLive": "Mag-live muna. Ang pagboto ay nagrerun sa broadcast na iyong ginagawad ngayon.",
+      "startFailed": "Hindi nagsimula ang pagboto. Subukan muli.",
+      "closeFailed": "Hindi natapos ang pagboto. Subukan muli.",
+      "live": "Pagboto bukas · {{time}} na nagtatagpo",
+      "ended": "Pagboto natapos",
+      "votes_one": "{{count}} bumoto",
+      "votes_other": "{{count}} mga boto",
+      "replaceHint": "Ang pagsisimula ng isang bagong poll ay nagsasara sa isa na bukas.",
+      "widgetHint": "Ipakita ang iyong live poll. Sa DeHub app, mag - tap ang mga manonood ng opsyon para bumoto; sa OBS, sinasabi nito sa mga tao na mag - type ng {{command}} at numero sa chat.",
+      "sample": {
+        "a": "May bago",
+        "b": "Isang lumang paborito",
+        "c": "Ikaw ang pipili"
+      }
+    },
     "title": "Instagram",
     "subtitle": "Mga alerto at widget para sa iyong mga stream",
     "h1": "Live Studio — stream ng mga alerto, mga layunin at mga overlay para sa mga tagalikha ng DeHub",
@@ -4929,6 +4972,7 @@
       "join": "Sumali"
     },
     "kinds": {
+      "poll": "Botohan",
       "tip_alert": "Alerto sa tip",
       "follow_alert": "Subaybayan ang alerto",
       "subscribe_alert": "Alerto sa subscriber",
@@ -4962,7 +5006,8 @@
       "event_feed": "Ang pinakabagong mga regalo, mga tagasunod, mga tagasuskribi at mga taong nagbabahagi ng iyong broadcast",
       "chat_box": "Ipinapakita ang mga mensahe sa chat ng iyong broadcast sa screen",
       "ticker": "Isang linya ng iyong sariling teksto na nag - scroll sa buong screen",
-      "rule_alert": "Kung saan lumilitaw ang mga alerto ng iyong mga panuntunan"
+      "rule_alert": "Kung saan lumilitaw ang mga alerto ng iyong mga panuntunan",
+      "poll": "Ang iyong live poll, na may isang pindutan ng boto para sa bawat pagpipilian"
     },
     "fields": {
       "style": "Estilo",
@@ -5026,6 +5071,7 @@
       "addAction": "Magdagdag ng aksyon",
       "removeAction": "Alisin ang aksyon",
       "placeholders": "Gamitin ang {name}, {amount} at {message} sa iyong text. Tinanggal ang mga link sa mga mensahe.",
+      "placeholdersLive": "Gamitin ang {name}, {title} at {link} sa iyong text: ang iyong pangalan, pamagat ng broadcast at link para mapanood ito.",
       "alertText": "Teksto ng alerto",
       "sound": "Tunog",
       "sayText": "Tekstong babasahin nang malakas",
@@ -5039,6 +5085,7 @@
         "follow": "Sinusundan ng isang tao",
         "subscribe": "May nag - subscribe",
         "share": "May nagbabahagi ng stream",
+        "live": "Nagsisimula kang mag - broadcast",
         "command": "Ginagamit ang isang chat command",
         "keyword": "Ang isang mensahe sa chat ay naglalaman ng isang salita",
         "chat": "Anumang mensahe sa chat"

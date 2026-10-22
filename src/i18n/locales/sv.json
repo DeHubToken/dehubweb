@@ -4728,7 +4728,19 @@
     "followersUnit": "följare",
     "topSupporters": "Toppanhängare",
     "tipped": "{{name}} skickade en gåva",
-    "chatPreview": "Chattmeddelanden visas här"
+    "chatPreview": "Chattmeddelanden visas här",
+    "poll": {
+      "closed": "Röstningen är avslutad",
+      "voteFor": "Rösta på {{option}}",
+      "signIn": "Logga in för att rösta",
+      "failed": "Din röst räknades inte. Försök igen.",
+      "voted_one": "Du har röstat · {{count}} röst",
+      "voted_other": "Du har röstat · {{count}} röster",
+      "votes_one": "{{count}} röst",
+      "votes_other": "{{count}} röster",
+      "howToVote_one": "Skriv {{command}} och ett nummer i chatt för att rösta · {{count}} röst",
+      "howToVote_other": "Skriv {{command}} och ett nummer i chatt för att rösta · {{count}} röster"
+    }
   },
   "liveChatModeration": {
     "timeout1m": "Tidsutgång för 1 minut",
@@ -4744,6 +4756,37 @@
     "youAreTimedOut": "Du är tidsutgång för en stund"
   },
   "liveStudio": {
+    "polls": {
+      "title": "Omröstningar",
+      "intro": "Ställ en fråga till de som tittar på din sändning. De svarar med en knapp i DeHub-appen, eller genom att skriva {{command}} och alternativets nummer i chatt.",
+      "question": "Fråga",
+      "questionPlaceholder": "Vad ska jag spela nästa?",
+      "option": "Alternativ {{n}}",
+      "addOption": "Lägg till ett alternativ",
+      "removeOption": "Ta bort alternativ {{n}}",
+      "duration": "Hur länge röstningen är öppen",
+      "seconds_one": "{{count}} sekund",
+      "seconds_other": "{{count}} sekunder",
+      "minutes_one": "{{count}} minut",
+      "minutes_other": "{{count}} minuter",
+      "start": "Starta omröstningen",
+      "end": "Avsluta röstningen nu",
+      "started": "Din omröstning är öppen. Tittare kan rösta nu.",
+      "notLive": "Gå live först. En omröstning körs på den sändning du streamar just nu.",
+      "startFailed": "Omröstningen startade inte. Försök igen.",
+      "closeFailed": "Röstningen har inte avslutats. Försök igen.",
+      "live": "Röstning öppen · {{time}} kvar",
+      "ended": "Röstningen är avslutad",
+      "votes_one": "{{count}} röst",
+      "votes_other": "{{count}} röster",
+      "replaceHint": "Att starta en ny omröstning stänger den som är öppen.",
+      "widgetHint": "Visar din live-omröstning. I DeHub-appvisarna trycker du på ett alternativ för att rösta; i OBS talar det om för folk att skriva {{command}} och ett nummer i chatten.",
+      "sample": {
+        "a": "Något nytt",
+        "b": "En gammal favorit",
+        "c": "Du väljer"
+      }
+    },
     "title": "Live Studio",
     "subtitle": "Alerts och widgetar för dina streamar",
     "h1": "Live Studio — stream-alertar, mål och överlagringar för DeHub-skapare",
@@ -4834,7 +4877,8 @@
       "event_feed": "Senaste aktivitet",
       "chat_box": "Chattruta",
       "ticker": "Ticker",
-      "rule_alert": "Regelvarningar"
+      "rule_alert": "Regelvarningar",
+      "poll": "Omröstning"
     },
     "hints": {
       "tip_alert": "Firar varje dricks, storleksanpassad till sin nivå",
@@ -4852,7 +4896,8 @@
       "event_feed": "De senaste gåvorna, följarna, prenumeranterna och personerna som delar din sändning",
       "chat_box": "Visar din sändnings chattmeddelanden på skärmen",
       "ticker": "En rad med din egen text som rullar över skärmen",
-      "rule_alert": "Där dina regler visas"
+      "rule_alert": "Där dina regler visas",
+      "poll": "Din live-omröstning, med en röstknapp för varje alternativ"
     },
     "fields": {
       "style": "Stil",
@@ -4916,6 +4961,7 @@
       "addAction": "Lägg till en åtgärd",
       "removeAction": "Ta bort åtgärd",
       "placeholders": "Använd {name}, {amount} och {message} i din text. Länkar i meddelanden tas bort.",
+      "placeholdersLive": "Använd {name}, {title} och {link} i din text: ditt namn, sändningens titel och en länk för att titta på den.",
       "alertText": "Varningstext",
       "sound": "Ljud",
       "sayText": "Text att läsa högt",
@@ -4929,6 +4975,7 @@
         "follow": "Någon följer",
         "subscribe": "Någon prenumererar",
         "share": "Någon delar flödet",
+        "live": "Du börjar sända",
         "command": "Ett chattkommando används",
         "keyword": "Ett chattmeddelande innehåller ett ord",
         "chat": "Alla chattmeddelanden"

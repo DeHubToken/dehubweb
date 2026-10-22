@@ -5047,7 +5047,19 @@
     "followersUnit": "pengikut",
     "topSupporters": "Penyokong utama",
     "tipped": "{{name}} menghantar hadiah",
-    "chatPreview": "Mesej sembang muncul di sini"
+    "chatPreview": "Mesej sembang muncul di sini",
+    "poll": {
+      "closed": "Voting telah ditutup",
+      "voteFor": "Undi untuk {{option}}",
+      "signIn": "Masuk untuk mengundi",
+      "failed": "Undi anda tidak dihitung. Cuba lagi.",
+      "voted_one": "Anda telah mengundi · {{count}} undi",
+      "voted_other": "Anda telah mengundi · {{count}} undi",
+      "votes_one": "{{count}} undi",
+      "votes_other": "{{count}} undi",
+      "howToVote_one": "Ketik {{command}} dan nombor dalam chat untuk mengundi · {{count}} undi",
+      "howToVote_other": "Ketik {{command}} dan nombor dalam chat untuk mengundi · {{count}} undi"
+    }
   },
   "liveChatModeration": {
     "timeout1m": "Waktu habis untuk 1 minit",
@@ -5063,6 +5075,37 @@
     "youAreTimedOut": "Anda sedang waktu habis untuk seketika"
   },
   "liveStudio": {
+    "polls": {
+      "title": "Pemungutan suara",
+      "intro": "Tanya orang yang menonton siaran langsung anda soalan. Mereka menjawab dengan tombol dalam aplikasi DeHub, atau dengan mengetik {{command}} dan nombor pilihan dalam chat.",
+      "question": "Soalan",
+      "questionPlaceholder": "Apa yang harus saya mainkan berikutnya?",
+      "option": "Opsi {{n}}",
+      "addOption": "Tambah opsi",
+      "removeOption": "Hapus opsi {{n}}",
+      "duration": "Berapa lama pemungutan suara tetap terbuka",
+      "seconds_one": "{{count}} saat",
+      "seconds_other": "{{count}} saat",
+      "minutes_one": "{{count}} minit",
+      "minutes_other": "{{count}} minit",
+      "start": "Mulakan pemungutan suara",
+      "end": "Hentikan pemungutan suara sekarang",
+      "started": "Pemungutan suara anda terbuka. Penonton boleh mengundi sekarang.",
+      "notLive": "Bergabunglah terlebih dahulu. Pemungutan suara akan berjalan pada siaran langsung yang anda siarkan sekarang.",
+      "startFailed": "Pemungutan suara tidak bermula. Cuba lagi.",
+      "closeFailed": "Pemungutan suara belum tamat. Cuba lagi.",
+      "live": "Pemungutan suara terbuka · {{time}} tersisa",
+      "ended": "Pemungutan suara telah ditutup",
+      "votes_one": "{{count}} undi",
+      "votes_other": "{{count}} undian",
+      "replaceHint": "Memulakan pengundian baharu akan menutup pengundian yang terbuka.",
+      "widgetHint": "Menunjukkan tinjauan langsung anda. Dalam aplikasi DeHub, penonton ketik pilihan untuk mengundi; dalam OBS ia memberitahu orang untuk menaip {{command}} dan nombor dalam sembang.",
+      "sample": {
+        "a": "Sesuatu yang baharu",
+        "b": "Kegemaran lama",
+        "c": "Anda pilih"
+      }
+    },
     "title": "Studio Langsung",
     "subtitle": "Amaran dan widget untuk siaran anda",
     "h1": "Studio Langsung — amaran siaran, matlamat dan lapisan untuk pencipta DeHub",
@@ -5153,7 +5196,8 @@
       "event_feed": "Aktiviti terkini",
       "chat_box": "Kotak sembang",
       "ticker": "Ticker",
-      "rule_alert": "Makluman peraturan"
+      "rule_alert": "Makluman peraturan",
+      "poll": "Pengundian"
     },
     "hints": {
       "tip_alert": "Meraikan setiap tip, bersaiz mengikut peringkatnya",
@@ -5171,7 +5215,8 @@
       "event_feed": "Hadiah terkini, pengikut, pelanggan dan orang yang berkongsi siaran anda",
       "chat_box": "Menunjukkan mesej sembang siaran anda pada skrin",
       "ticker": "Baris teks anda sendiri yang menatal merentasi skrin",
-      "rule_alert": "Di mana makluman peraturan anda dipaparkan"
+      "rule_alert": "Di mana makluman peraturan anda dipaparkan",
+      "poll": "Pengundian langsung anda, dengan butang undi untuk setiap pilihan"
     },
     "fields": {
       "style": "Gaya",
@@ -5235,6 +5280,7 @@
       "addAction": "Tambah tindakan",
       "removeAction": "Buang tindakan",
       "placeholders": "Gunakan {name}, {amount} dan {message} dalam teks anda. Pautan dalam mesej dibuang.",
+      "placeholdersLive": "Gunakan {name}, {title} dan {link} dalam teks anda: nama anda, tajuk siaran dan pautan untuk menontonnya.",
       "alertText": "Teks amaran",
       "sound": "Bunyi",
       "sayText": "Teks untuk dibaca dengan kuat",
@@ -5248,6 +5294,7 @@
         "follow": "Seseorang mengikuti",
         "subscribe": "Seseorang melanggan",
         "share": "Seseorang berkongsi strim",
+        "live": "Anda mula menyiarkan",
         "command": "Perintah sembang digunakan",
         "keyword": "Mesej sembang mengandungi perkataan",
         "chat": "Sebarang mesej sembang"

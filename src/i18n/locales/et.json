@@ -4773,7 +4773,19 @@
     "followersUnit": "jälgijad",
     "topSupporters": "Parimad toetajad",
     "tipped": "{{name}} saatis kingituse",
-    "chatPreview": "Vestlussõnumid kuvatakse siin"
+    "chatPreview": "Vestlussõnumid kuvatakse siin",
+    "poll": {
+      "closed": "Hääletus lõppes",
+      "voteFor": "Hääleta {{option}}",
+      "signIn": "Sisene hääletamiseks",
+      "failed": "Teie hääl ei kuulnud. Proovi uuesti.",
+      "voted_one": "Teie hääletasite · {{count}} hääl",
+      "voted_other": "Teie hääletasite · {{count}} hääl",
+      "votes_one": "{{count}} hääl",
+      "votes_other": "{{count}} hääl",
+      "howToVote_one": "Tüüpige {{command}} ja numberi ülesande numberis chatis hääletamiseks · {{count}} hääl",
+      "howToVote_other": "Tüüpige {{command}} ja numberi ülesande numberis chatis hääletamiseks · {{count}} hääl"
+    }
   },
   "liveChatModeration": {
     "timeout1m": "Aegumine 1 minutiks",
@@ -4789,6 +4801,37 @@
     "youAreTimedOut": "Oled hetkeks aegunud"
   },
   "liveStudio": {
+    "polls": {
+      "title": "Hääletused",
+      "intro": "Praegu vaatajate küsi küsimust. Nad vastavad DeHubi rakenduses nupu abil või tüüpides {{command}} ja valiku numberi ülesande numberis chatis.",
+      "question": "Küsimus",
+      "questionPlaceholder": "Mis mängasin järgmisena?",
+      "option": "Valik {{n}}",
+      "addOption": "Lisa valik",
+      "removeOption": "Eemalda valik {{n}}",
+      "duration": "Hääletuse kestus",
+      "seconds_one": "{{count}} sekundit",
+      "seconds_other": "{{count}} sekundit",
+      "minutes_one": "{{count}} minutit",
+      "minutes_other": "{{count}} minutit",
+      "start": "Alusta hääletus",
+      "end": "Lõpetage hääletus",
+      "started": "Teie hääletus on avatud. Vaatajaid saavad hääletada.",
+      "notLive": "Eelmine ülesanne. Hääletus toimub praegusel ülekandes.",
+      "startFailed": "Hääletus ei alustanud. Proovi uuesti.",
+      "closeFailed": "Hääletus ei lõppenud. Proovi uuesti.",
+      "live": "Hääletus on avatud · {{time}} jäänud",
+      "ended": "Hääletus lõppes",
+      "votes_one": "{{count}} hääletus",
+      "votes_other": "{{count}} häält",
+      "replaceHint": "Uue küsitluse alustamine sulgeb avatud küsitluse.",
+      "widgetHint": "Näitab teie reaalajas küsitlust. Puuduta DeHubi rakenduse vaatajates hääletamise võimalust; OBS-is ütleb see inimestele, et nad sisestaksid vestluses {{command}} ja numbri.",
+      "sample": {
+        "a": "Midagi uut",
+        "b": "Vana lemmik",
+        "c": "Sina valid"
+      }
+    },
     "title": "Live Studio",
     "subtitle": "Hoiatused ja vidinad teie voogudele",
     "h1": "Live Studio — voogude hoiatused, eesmärgid ja ülekatted DeHub loojatele",
@@ -4879,7 +4922,8 @@
       "event_feed": "Hiljutine tegevus",
       "chat_box": "Vestluskast",
       "ticker": "Tiksuja",
-      "rule_alert": "Reeglite märguanded"
+      "rule_alert": "Reeglite märguanded",
+      "poll": "Küsitlus"
     },
     "hints": {
       "tip_alert": "Tähistab igat oma tasemele vastavat jootraha",
@@ -4897,7 +4941,8 @@
       "event_feed": "Viimased kingitused, jälgijad, tellijad ja inimesed, kes jagavad sinu saadet",
       "chat_box": "Kuvab sinu ringhäälingu vestlussõnumid ekraanil",
       "ticker": "Sinu enda teksti rida, mis kerib üle ekraani",
-      "rule_alert": "Kus kuvatakse sinu reeglite märguanded"
+      "rule_alert": "Kus kuvatakse sinu reeglite märguanded",
+      "poll": "Sinu reaalajas küsitlus, hääletusnupp iga valiku jaoks"
     },
     "fields": {
       "style": "Stiil",
@@ -4961,6 +5006,7 @@
       "addAction": "Lisa toiming",
       "removeAction": "Eemalda toiming",
       "placeholders": "Kasuta tekstis {name}, {amount} ja {message}. Sõnumites olevad lingid eemaldatakse.",
+      "placeholdersLive": "Kasuta tekstis {name}, {title} ja {link}: oma nime, saate pealkirja ja linki selle vaatamiseks.",
       "alertText": "Teatise tekst",
       "sound": "Heli",
       "sayText": "Tekst valjusti lugemiseks",
@@ -4974,6 +5020,7 @@
         "follow": "Keegi jälgib",
         "subscribe": "Keegi tellib",
         "share": "Keegi jagab voogu",
+        "live": "Alustad edastamist",
         "command": "Kasutatakse vestluse käsku",
         "keyword": "Vestlussõnum sisaldab sõna",
         "chat": "Mis tahes vestlussõnum"

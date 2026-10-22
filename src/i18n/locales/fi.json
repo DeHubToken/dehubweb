@@ -4725,7 +4725,19 @@
     "followersUnit": "seuraajat",
     "topSupporters": "Parhaat kannattajat",
     "tipped": "{{name}} lähetti lahjan",
-    "chatPreview": "Chat-viestit näkyvät tässä"
+    "chatPreview": "Chat-viestit näkyvät tässä",
+    "poll": {
+      "closed": "Äänestys päättynyt",
+      "voteFor": "Äänestä {{option}}",
+      "signIn": "Kirjaudu sisään äänestääksesi",
+      "failed": "Äänestyssiisi ei laskettu. Yritä uudelleen.",
+      "voted_one": "Olet äänestänyt · {{count}} äänestä",
+      "voted_other": "Olet äänestänyt · {{count}} ääntä",
+      "votes_one": "{{count}} äänestä",
+      "votes_other": "{{count}} ääntä",
+      "howToVote_one": "Syötä {{command}} ja numero chatissa äänestääksesi · {{count}} äänestä",
+      "howToVote_other": "Syötä {{command}} ja numero chatissa äänestääksesi · {{count}} ääntä"
+    }
   },
   "liveChatModeration": {
     "timeout1m": "Aika loppuu 1 minuutiksi",
@@ -4741,6 +4753,37 @@
     "youAreTimedOut": "Olet aikakarsinnassa hetkellisesti"
   },
   "liveStudio": {
+    "polls": {
+      "title": "Kyselyt",
+      "intro": "Kysy katsojilta, jotka seuraavat lähetystäsi, kysymys. He vastaavat painamalla painiketta DeHub-sovelluksessa tai kirjoittamalla {{command}} ja valinnan numeron chatissa.",
+      "question": "Kysymys",
+      "questionPlaceholder": "Mitä seuraavaksi pelaan?",
+      "option": "Valintavaihtoehto {{n}}",
+      "addOption": "Lisää vaihtoehto",
+      "removeOption": "Poista vaihtoehto {{n}}",
+      "duration": "Kuinka kauan äänestys pysyy auki",
+      "seconds_one": "{{count}} sekunti",
+      "seconds_other": "{{count}} sekuntia",
+      "minutes_one": "{{count}} minuutti",
+      "minutes_other": "{{count}} minuuttia",
+      "start": "Aloita kysely",
+      "end": "Lopeta äänestys nyt",
+      "started": "Kyselysi on auki. Katsojat voivat äänestää nyt.",
+      "notLive": "Menä live ensin. Kysely käynnistyy nykyisessä lähetyssiisi.",
+      "startFailed": "Kysely ei käynnistynyt. Yritä uudelleen.",
+      "closeFailed": "Äänestys ei päättynyt. Yritä uudelleen.",
+      "live": "Äänestys auki · {{time}} jäljellä",
+      "ended": "Äänestys päättynyt",
+      "votes_one": "{{count}} äänestys",
+      "votes_other": "{{count}} ääntä",
+      "replaceHint": "Uuden kyselyn aloittaminen sulkee avoimen kyselyn.",
+      "widgetHint": "Näyttää livekyselysi. DeHub-sovelluksen katsojat napauttavat äänestysvaihtoehtoa; OBS: ssä se kehottaa ihmisiä kirjoittamaan {{command}} ja numeron chatissa.",
+      "sample": {
+        "a": "Jotain uutta",
+        "b": "Vanha suosikki",
+        "c": "Sinä valitset"
+      }
+    },
     "title": "Live-studio",
     "subtitle": "Hälytykset ja widgetit suoratoistoihisi",
     "h1": "Live Studio — suoratoista ilmoituksia, tavoitteita ja peittokuvia DeHubin tekijöille",
@@ -4831,7 +4874,8 @@
       "event_feed": "Viimeaikainen toiminta",
       "chat_box": "Keskusteluruutu",
       "ticker": "Ticker",
-      "rule_alert": "Sääntöhälytykset"
+      "rule_alert": "Sääntöhälytykset",
+      "poll": "Kysely"
     },
     "hints": {
       "tip_alert": "Juhlii jokaista tippiä sen tason mukaan",
@@ -4849,7 +4893,8 @@
       "event_feed": "Uusimmat lahjat, seuraajat, tilaajat ja ihmiset, jotka jakavat lähetyksesi",
       "chat_box": "Näyttää lähetyksesi chat-viestit näytöllä",
       "ticker": "Rivi omaa tekstiäsi, joka vierittää näytön poikki",
-      "rule_alert": "Missä sääntöjesi hälytykset näkyvät"
+      "rule_alert": "Missä sääntöjesi hälytykset näkyvät",
+      "poll": "Livekyselysi, jossa on äänestyspainike jokaiselle vaihtoehdolle"
     },
     "fields": {
       "style": "Tyyli",
@@ -4913,6 +4958,7 @@
       "addAction": "Lisää toiminto",
       "removeAction": "Poista toiminto",
       "placeholders": "Käytä tekstissäsi {name}, {amount} ja {message}. Viesteissä olevat linkit poistetaan.",
+      "placeholdersLive": "Käytä {name}, {title} ja {link} tekstissäsi: nimesi, lähetyksen otsikko ja linkki sen katseluun.",
       "alertText": "Hälytyksen teksti",
       "sound": "Ääni",
       "sayText": "Äänellä luettava teksti",
@@ -4926,6 +4972,7 @@
         "follow": "Joku seuraa",
         "subscribe": "Joku tilaa",
         "share": "Joku jakaa streamin",
+        "live": "Aloitat lähetyksen",
         "command": "Chat-komentoa käytetään",
         "keyword": "Chat-viesti sisältää sanan",
         "chat": "Mikä tahansa chat-viesti"

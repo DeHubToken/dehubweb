@@ -4805,7 +4805,19 @@
     "followersUnit": "người theo dõi",
     "topSupporters": "Những người ủng hộ hàng đầu",
     "tipped": "{{name}} đã gửi một món quà",
-    "chatPreview": "Tin nhắn trò chuyện xuất hiện ở đây"
+    "chatPreview": "Tin nhắn trò chuyện xuất hiện ở đây",
+    "poll": {
+      "closed": "Đã kết thúc bỏ phiếu",
+      "voteFor": "Bỏ phiếu cho {{option}}",
+      "signIn": "Đăng nhập để bỏ phiếu",
+      "failed": "Bỏ phiếu của bạn không được tính. Thử lại.",
+      "voted_one": "Bạn đã bỏ phiếu · {{count}} phiếu",
+      "voted_other": "Bạn đã bỏ phiếu · {{count}} phiếu",
+      "votes_one": "{{count}} phiếu",
+      "votes_other": "{{count}} phiếu",
+      "howToVote_one": "Gõ {{command}} và một số trong tin nhắn để bỏ phiếu · {{count}} phiếu",
+      "howToVote_other": "Gõ {{command}} và một số trong tin nhắn để bỏ phiếu · {{count}} phiếu"
+    }
   },
   "liveChatModeration": {
     "timeout1m": "Thời gian chờ 1 phút",
@@ -4821,6 +4833,37 @@
     "youAreTimedOut": "Bạn đang bị time out một lúc."
   },
   "liveStudio": {
+    "polls": {
+      "title": "Bầu chọn",
+      "intro": "Hỏi người xem đang theo dõi phát sóng của bạn một câu hỏi. Họ trả lời bằng cách nhấn nút trong ứng dụng DeHub, hoặc bằng cách gõ {{command}} và số của lựa chọn trong tin nhắn.",
+      "question": "Câu hỏi",
+      "questionPlaceholder": "Tôi nên chơi gì tiếp theo?",
+      "option": "Lựa chọn {{n}}",
+      "addOption": "Thêm một lựa chọn",
+      "removeOption": "Xóa lựa chọn {{n}}",
+      "duration": "Thời gian bỏ phiếu còn mở",
+      "seconds_one": "{{count}} giây",
+      "seconds_other": "{{count}} giây",
+      "minutes_one": "{{count}} phút",
+      "minutes_other": "{{count}} phút",
+      "start": "Bắt đầu cuộc bầu chọn",
+      "end": "Kết thúc bỏ phiếu ngay bây giờ",
+      "started": "Cuộc bầu chọn của bạn đang mở. Người xem có thể bỏ phiếu ngay bây giờ.",
+      "notLive": "Hãy đi trực tiếp trước. Cuộc bầu chọn sẽ chạy trên phát sóng bạn đang phát trực tiếp hiện tại.",
+      "startFailed": "Cuộc bầu chọn chưa bắt đầu. Thử lại.",
+      "closeFailed": "Bỏ phiếu chưa kết thúc. Thử lại.",
+      "live": "Bỏ phiếu đang mở · {{time}} còn lại",
+      "ended": "Đã kết thúc bỏ phiếu",
+      "votes_one": "{{count}} bình chọn",
+      "votes_other": "{{count}} phiếu",
+      "replaceHint": "Bắt đầu một cuộc thăm dò mới sẽ đóng cuộc thăm dò đang mở.",
+      "widgetHint": "Hiển thị cuộc thăm dò trực tiếp của bạn. Trong ứng dụng DeHub, người xem nhấn vào một tùy chọn để bỏ phiếu; trong OBS, nó yêu cầu mọi người nhập {{command}} và một số trong cuộc trò chuyện.",
+      "sample": {
+        "a": "Thông tin mới",
+        "b": "Một yêu thích cũ",
+        "c": "Bạn chọn"
+      }
+    },
     "title": "Phòng thu trực tiếp",
     "subtitle": "Cảnh báo và tiện ích cho luồng của bạn",
     "h1": "Live Studio — thông báo phát trực tuyến, mục tiêu và lớp phủ cho người sáng tạo DeHub",
@@ -4911,7 +4954,8 @@
       "event_feed": "Hoạt động gần đây",
       "chat_box": "Hộp trò chuyện",
       "ticker": "Ticker",
-      "rule_alert": "Cảnh báo quy tắc"
+      "rule_alert": "Cảnh báo quy tắc",
+      "poll": "Thăm dò ý kiến"
     },
     "hints": {
       "tip_alert": "Tưởng thưởng cho mỗi gợi ý, kích thước theo cấp bậc",
@@ -4929,7 +4973,8 @@
       "event_feed": "Quà tặng, người theo dõi, người đăng ký và những người mới nhất chia sẻ nội dung phát sóng của bạn",
       "chat_box": "Hiển thị tin nhắn trò chuyện của chương trình phát sóng của bạn trên màn hình",
       "ticker": "Một dòng văn bản của riêng bạn cuộn trên màn hình",
-      "rule_alert": "Đây là nơi hiển thị cảnh báo của quy tắc của bạn"
+      "rule_alert": "Đây là nơi hiển thị cảnh báo của quy tắc của bạn",
+      "poll": "Cuộc thăm dò trực tiếp của bạn, với nút bỏ phiếu cho mọi lựa chọn"
     },
     "fields": {
       "style": "Phong cách",
@@ -4993,6 +5038,7 @@
       "addAction": "Thêm một hành động",
       "removeAction": "Xóa hành động",
       "placeholders": "Sử dụng {name}, {amount} và {message} trong tin nhắn. Các liên kết trong tin nhắn sẽ bị xóa.",
+      "placeholdersLive": "Sử dụng {name}, {title} và {link} trong tin nhắn: tên của bạn, tiêu đề chương trình phát sóng và liên kết để xem.",
       "alertText": "Văn bản cảnh báo",
       "sound": "Âm thanh",
       "sayText": "Văn bản để đọc to",
@@ -5006,6 +5052,7 @@
         "follow": "Có người theo dõi",
         "subscribe": "Có người đăng ký",
         "share": "Ai đó chia sẻ luồng",
+        "live": "Bạn bắt đầu phát sóng",
         "command": "Một lệnh trò chuyện được sử dụng",
         "keyword": "Một tin nhắn trò chuyện có chứa một từ",
         "chat": "Bất kỳ tin nhắn trò chuyện nào"

@@ -4797,7 +4797,19 @@
     "followersUnit": "seguidores",
     "topSupporters": "Principais apoiadores",
     "tipped": "{{name}} enviou um presente",
-    "chatPreview": "As mensagens de chat aparecem aqui"
+    "chatPreview": "As mensagens de chat aparecem aqui",
+    "poll": {
+      "closed": "Votações encerradas",
+      "voteFor": "Vote em {{option}}",
+      "signIn": "Faça login para votar",
+      "failed": "O seu voto não foi contado. Tente novamente.",
+      "voted_one": "Você votou · {{count}} voto",
+      "voted_other": "Você votou · {{count}} votos",
+      "votes_one": "{{count}} voto",
+      "votes_other": "{{count}} votos",
+      "howToVote_one": "Digite {{command}} e um número no chat para votar · {{count}} voto",
+      "howToVote_other": "Digite {{command}} e um número no chat para votar · {{count}} votos"
+    }
   },
   "liveChatModeration": {
     "timeout1m": "Tempo limite para 1 minuto",
@@ -4813,6 +4825,37 @@
     "youAreTimedOut": "Você está temporariamente banido"
   },
   "liveStudio": {
+    "polls": {
+      "title": "Pesquisas",
+      "intro": "Pergunte às pessoas assistindo ao seu *stream* uma pergunta. Eles respondem com um botão no aplicativo DeHub ou digitando {{command}} e o número da opção no chat.",
+      "question": "Pergunta",
+      "questionPlaceholder": "O que devo jogar em seguida?",
+      "option": "Opção {{n}}",
+      "addOption": "Adicionar uma opção",
+      "removeOption": "Remover opção {{n}}",
+      "duration": "Por quanto tempo as votações ficam abertas",
+      "seconds_one": "{{count}} segundo",
+      "seconds_other": "{{count}} segundos",
+      "minutes_one": "{{count}} minuto",
+      "minutes_other": "{{count}} minutos",
+      "start": "Iniciar a pesquisa",
+      "end": "Encerrar as votações agora",
+      "started": "A sua pesquisa está aberta. Os espectadores podem votar agora.",
+      "notLive": "Vá ao ar primeiro. A pesquisa ocorre no *stream* que você está transmitindo agora.",
+      "startFailed": "A pesquisa não começou. Tente novamente.",
+      "closeFailed": "As votações não encerraram. Tente novamente.",
+      "live": "Votações abertas · {{time}} restantes",
+      "ended": "Votações encerradas",
+      "votes_one": "Voto de {{count}}",
+      "votes_other": "{{count}} votos",
+      "replaceHint": "Iniciar uma nova enquete fecha a que está aberta.",
+      "widgetHint": "Mostra a sua sondagem ao vivo. No aplicativo DeHub, os espectadores tocam em uma opção para votar; no Obs, ele diz às pessoas para digitar {{command}} e um número no chat.",
+      "sample": {
+        "a": "Algo novo",
+        "b": "Um antigo favorito",
+        "c": "Você escolhe"
+      }
+    },
     "title": "Estúdio ao Vivo",
     "subtitle": "Alertas e widgets para as suas transmissões",
     "h1": "Live Studio — transmita alertas, metas e sobreposições para criadores do DeHub",
@@ -4903,7 +4946,8 @@
       "event_feed": "Atividade recente",
       "chat_box": "Caixa de chat",
       "ticker": "Faixa de texto",
-      "rule_alert": "Alertas de regra"
+      "rule_alert": "Alertas de regra",
+      "poll": "Enquete"
     },
     "hints": {
       "tip_alert": "Celebra cada dica, dimensionada ao seu nível",
@@ -4921,7 +4965,8 @@
       "event_feed": "Os últimos presentes, seguidores, subscritores e pessoas que partilham a sua transmissão",
       "chat_box": "Mostra as mensagens de chat da sua transmissão no ecrã",
       "ticker": "Uma linha do seu próprio texto que percorre a tela",
-      "rule_alert": "Onde aparecem os alertas das suas regras"
+      "rule_alert": "Onde aparecem os alertas das suas regras",
+      "poll": "Sua enquete ao vivo, com um botão de voto para cada opção"
     },
     "fields": {
       "style": "Estilo",
@@ -4985,6 +5030,7 @@
       "addAction": "Adicionar uma ação",
       "removeAction": "Remover acção",
       "placeholders": "Use {name}, {amount} e {message} no seu SMS. Os links nas mensagens são removidos.",
+      "placeholdersLive": "Use {name}, {title} e {link} no seu texto: seu nome, o título da transmissão e um link para assisti-la.",
       "alertText": "Texto de alerta",
       "sound": "Som",
       "sayText": "Texto para ler em voz alta",
@@ -4998,6 +5044,7 @@
         "follow": "Alguém segue",
         "subscribe": "Alguém subscreve",
         "share": "Alguém partilha a transmissão",
+        "live": "Você começa a transmitir",
         "command": "Um comando de chat é usado",
         "keyword": "Uma mensagem de chat contém uma palavra",
         "chat": "Qualquer mensagem de chat"

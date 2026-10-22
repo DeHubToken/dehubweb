@@ -30,6 +30,10 @@ import { createOverlayEventBus, OverlayEventContext } from '../overlay/overlay-e
 import { createRuleBus, RuleAudio, RuleBusContext } from '../overlay/rule-bus';
 import { RulesPanel } from './RulesPanel';
 import { ModerationPanel } from './ModerationPanel';
+import { PollPanel } from './PollPanel';
+import { PollContext } from '../overlay/poll';
+import { getMyPoll } from '@/lib/api/dehub/live-polls';
+import { samplePoll, type LivePoll } from '@/lib/live-overlay/polls';
 import { StudioStage } from './StudioStage';
 import { WidgetSettings } from './WidgetSettings';
 
@@ -110,6 +114,31 @@ export function LiveStudio() {
     onError: () => toast.error(t('liveStudio.saveFailed')),
   });
 
+  // The creator's live poll, kept current by the control room below. The
+  // preview shows it, or a stand-in so the poll widget can be placed offline.
+  const [poll, setPoll] = useState<LivePoll | null>(null);
+  const pollRef = useRef<LivePoll | null>(null);
+  pollRef.current = poll;
+  useEffect(() => {
+    let cancelled = false;
+    getMyPoll()
+      .then((p) => !cancelled && setPoll(p))
+      .catch(() => undefined);
+    return () => {
+      cancelled = true;
+    };
+  }, []);
+  const previewPoll = useMemo(
+    () =>
+      poll ??
+      samplePoll(t('liveStudio.polls.questionPlaceholder'), [
+        t('liveStudio.polls.sample.a'),
+        t('liveStudio.polls.sample.b'),
+        t('liveStudio.polls.sample.c'),
+      ]),
+    [poll, t],
+  );
+
   // Test alerts come back through the control room and play on the preview.
   const bus = useMemo(() => createOverlayEventBus(), []);
   const ruleBus = useMemo(() => createRuleBus(), []);
@@ -124,6 +153,14 @@ export function LiveStudio() {
         sub = watchOverlayControl(token, 'studio', {
           onTest: (events) => events.forEach((event) => bus.publish(event)),
           onRule: (fired) => ruleBus.publish(fired),
+          // The socket is shared with any live card still mounted, so a poll
+          // from someone else's stream can arrive here too: only ours counts.
+          onPoll: (incoming) =>
+            pollRef.current?.id === incoming.id
+              ? setPoll(incoming)
+              : void getMyPoll()
+                  .then(setPoll)
+                  .catch(() => undefined),
         });
       })
       .catch(() => undefined);
@@ -180,14 +217,16 @@ export function LiveStudio() {
             <OverlayEventContext.Provider value={bus}>
               <RuleBusContext.Provider value={ruleBus}>
                 <RuleAudio playLive={false} />
-                <StudioStage
-                  widgets={widgets}
-                  portrait={portrait}
-                  selectedId={selectedId}
-                  stats={PREVIEW_STATS}
-                  onSelect={setSelectedId}
-                  onMove={move}
-                />
+                <PollContext.Provider value={{ poll: previewPoll, myVote: null, interactive: false }}>
+                  <StudioStage
+                    widgets={widgets}
+                    portrait={portrait}
+                    selectedId={selectedId}
+                    stats={PREVIEW_STATS}
+                    onSelect={setSelectedId}
+                    onMove={move}
+                  />
+                </PollContext.Provider>
               </RuleBusContext.Provider>
             </OverlayEventContext.Provider>
             <p className="mt-3 text-xs text-zinc-500">{t('liveStudio.layoutHint')}</p>
@@ -283,6 +322,8 @@ export function LiveStudio() {
           </PageSection>
         </div>
       </div>
+
+      <PollPanel poll={poll} onPoll={setPoll} />
 
       <RulesPanel hasAlertWidget={widgets.some((w) => w.kind === 'rule_alert' && w.enabled)} />
 

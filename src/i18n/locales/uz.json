@@ -4814,7 +4814,19 @@
     "followersUnit": "izdoshlar",
     "topSupporters": "Eng yaxshi tarafdorlar",
     "tipped": "{{name}} sovg&#39;a yubordi",
-    "chatPreview": "Xatlar bu yerda koʻrinadi"
+    "chatPreview": "Xatlar bu yerda koʻrinadi",
+    "poll": {
+      "closed": "Ovozlar yakunlandi",
+      "voteFor": "{{option}} uchun ovoz bering",
+      "signIn": "Ovoz berish uchun kirishingiz kerak",
+      "failed": "Ovozingiz hisoblana olmadi. Yana urinib ko'ring",
+      "voted_one": "Siz ovoz berdingiz · {{count}} ovoz",
+      "voted_other": "Siz ovoz berdingiz · {{count}} ovoz",
+      "votes_one": "{{count}} ovoz",
+      "votes_other": "{{count}} ovozlar",
+      "howToVote_one": "Chatda {{command}} va raqam yozib ovoz berish uchun · {{count}} ovoz",
+      "howToVote_other": "Chatda {{command}} va raqam yozib ovoz berish uchun · {{count}} ovozlar"
+    }
   },
   "liveChatModeration": {
     "timeout1m": "1 daqiqaga vaqt ajratildi",
@@ -4830,6 +4842,37 @@
     "youAreTimedOut": "Siz bir zumga vaqtingiz tugadi"
   },
   "liveStudio": {
+    "polls": {
+      "title": "Savollar",
+      "intro": "Koʻrishchilaringizga tarjimonlik paytida savol bering. Ular DeHub ilovasidagi tugma bilan yoki chatda {{command}} va variant raqamini yozib javob berishadi.",
+      "question": "Savol",
+      "questionPlaceholder": "Qaysi kino o‘ynatish kerak?",
+      "option": "Variant {{n}}",
+      "addOption": "Variant qo‘shing",
+      "removeOption": "Variant {{n}} ni o‘chiring",
+      "duration": "Ovoz berish muddati",
+      "seconds_one": "{{count}} sekund",
+      "seconds_other": "{{count}} sekund",
+      "minutes_one": "{{count}} daqiqa",
+      "minutes_other": "{{count}} daqiqa",
+      "start": "Savolni boshlang",
+      "end": "Hozir ovoz berishni yakunlang",
+      "started": "Savolingiz ochiq. Koʻrishchilar ovoz berishlari mumkin.",
+      "notLive": "Avval livega chiqing. Savol hozirda tarjimonlik qilayotganingizga asoslanadi.",
+      "startFailed": "Savol boshlanmadi. Yana urinib ko‘ring.",
+      "closeFailed": "Ovoz berish yakunlanmadi. Yana urinib ko‘ring.",
+      "live": "Ovoz berish ochiq · {{time}} qoldi",
+      "ended": "Ovozlar yakunlandi",
+      "votes_one": "{{count}} ovoz berish",
+      "votes_other": "{{count}} ovozlar",
+      "replaceHint": "Yangi so&#39;rovnomani boshlash ochiq bo&#39;lgan so&#39;rovnomani yopadi.",
+      "widgetHint": "Jonli soʻrovnomangizni koʻrsatadi. DeHub ilovasida tomoshabinlar ovoz berish uchun variantni bosishadi; OBS ilovasida esa odamlarga chatda {{command}} va raqamni yozishni aytadi.",
+      "sample": {
+        "a": "Yangi narsa",
+        "b": "Eski sevimli",
+        "c": "Siz tanlaysiz"
+      }
+    },
     "title": "Jonli studiya",
     "subtitle": "Strimlaringiz uchun ogohlantirishlar va vidjetlar",
     "h1": "Jonli studiya — DeHub ijodkorlari uchun ogohlantirishlar, maqsadlar va overlaylar",
@@ -4920,7 +4963,8 @@
       "event_feed": "So&#39;nggi faollik",
       "chat_box": "Chat oynasi",
       "ticker": "Ticker",
-      "rule_alert": "Qoida ogohlantirishlari"
+      "rule_alert": "Qoida ogohlantirishlari",
+      "poll": "So&#39;rovnoma"
     },
     "hints": {
       "tip_alert": "Har bir choychaqani, o&#39;z darajasiga mos ravishda nishonlaydi",
@@ -4938,7 +4982,8 @@
       "event_feed": "Eng so&#39;nggi sovg&#39;alar, izdoshlar, obunachilar va translyatsiyangizni baham ko&#39;rayotgan odamlar",
       "chat_box": "Ekranda eshittirishingizning chat xabarlarini ko&#39;rsatadi",
       "ticker": "Ekran bo&#39;ylab aylantiriladigan o&#39;zingizning matningiz qatori",
-      "rule_alert": "Sizning qoidangizning xabarlarini koʻrish joyi"
+      "rule_alert": "Sizning qoidangizning xabarlarini koʻrish joyi",
+      "poll": "Jonli so&#39;rovnomangiz, har bir variant uchun ovoz berish tugmasi bilan"
     },
     "fields": {
       "style": "Uslub",
@@ -5001,6 +5046,7 @@
       "addAction": "Amalni qoʻshish",
       "removeAction": "Amaldan olib tashlash",
       "placeholders": "Matningizda {name}, {amount} va {message} dan foydalaning. Xabarlardagi havolalar olib tashlandi.",
+      "placeholdersLive": "Matningizda {name}, {title} va {link} dan foydalaning: ismingiz, ko&#39;rsatuv sarlavhasi va uni tomosha qilish uchun havola.",
       "alertText": "Ogohlantirish matni",
       "sound": "Ovoz",
       "sayText": "Ovoz chiqarib o&#39;qish uchun matn",
@@ -5014,6 +5060,7 @@
         "follow": "Kimdir kuzatib bormoqda",
         "subscribe": "Kimdir obuna bo&#39;ladi",
         "share": "Kimdir oqimni ulashmoqda",
+        "live": "Siz efirga uzatishni boshlaysiz",
         "command": "Chat buyrug&#39;i ishlatiladi",
         "keyword": "Chat xabarida so&#39;z bor",
         "chat": "Har qanday chat xabari"

@@ -4771,7 +4771,19 @@
     "followersUnit": "følgere",
     "topSupporters": "Toptilhængere",
     "tipped": "{{name}} har sendt en gave",
-    "chatPreview": "Chatbeskeder vises her"
+    "chatPreview": "Chatbeskeder vises her",
+    "poll": {
+      "closed": "Afstemningen er lukket",
+      "voteFor": "Stem på {{option}}",
+      "signIn": "Log ind for at stemme",
+      "failed": "Din stemme talte ikke. Prøv igen.",
+      "voted_one": "Du stemte · {{count}} stemmer",
+      "voted_other": "Du stemte · {{count}} stemmer",
+      "votes_one": "{{count}} stemme",
+      "votes_other": "{{count}} stemmer",
+      "howToVote_one": "Skriv {{command}} og et tal i chat for at stemme · {{count}} stemme",
+      "howToVote_other": "Skriv {{command}} og et tal i chat for at stemme · {{count}} stemmer"
+    }
   },
   "liveChatModeration": {
     "timeout1m": "Tidsudløb i 1 minut",
@@ -4787,6 +4799,37 @@
     "youAreTimedOut": "Du er tidsudløbet i et øjeblik"
   },
   "liveStudio": {
+    "polls": {
+      "title": "Afstemninger",
+      "intro": "Spørg de mennesker, der ser på din live-stream, en spørgsmål. De svarer med en knap i DeHub-appen, eller ved at skrive {{command}} og valgets nummer i chat.",
+      "question": "Spørgsmål",
+      "questionPlaceholder": "Hvad skal jeg spille næste gang?",
+      "option": "Valgmulighed {{n}}",
+      "addOption": "Tilføj en valgmulighed",
+      "removeOption": "Fjern valgmulighed {{n}}",
+      "duration": "Hvor længe afstemningen varer",
+      "seconds_one": "{{count}} sekund",
+      "seconds_other": "{{count}} sekunder",
+      "minutes_one": "{{count}} minut",
+      "minutes_other": "{{count}} minutter",
+      "start": "Start afstemningen",
+      "end": "Slut afstemningen nu",
+      "started": "Din afstemning er åben. Seere kan stemme nu.",
+      "notLive": "Gå live først. En afstemning kører på den live-stream, du strømmer lige nu.",
+      "startFailed": "Afstemningen startede ikke. Prøv igen.",
+      "closeFailed": "Afstemningen sluttede ikke. Prøv igen.",
+      "live": "Afstemning åben · {{time}} tilbage",
+      "ended": "Afstemningen er lukket",
+      "votes_one": "{{count}}stemme",
+      "votes_other": "{{count}} stemmer",
+      "replaceHint": "Når du starter en ny afstemning, lukkes den, der er åben.",
+      "widgetHint": "Viser din live-afstemning. I DeHub-appens seere trykker du på en mulighed for at stemme; i OBS fortæller den folk at skrive {{command}} og et nummer i chatten.",
+      "sample": {
+        "a": "Noget nyt",
+        "b": "En gammel favorit",
+        "c": "Du vælger"
+      }
+    },
     "title": "Live Studio",
     "subtitle": "Alerts og widgets til dine streams",
     "h1": "Live Studio — stream-alert, mål og overlays til DeHub-creators",
@@ -4877,7 +4920,8 @@
       "event_feed": "Seneste aktivitet",
       "chat_box": "Chatboks",
       "ticker": "Ticker",
-      "rule_alert": "Regeladvarsler"
+      "rule_alert": "Regeladvarsler",
+      "poll": "Afstemning"
     },
     "hints": {
       "tip_alert": "Festiger hvert tip, tilpasset dets niveau",
@@ -4895,7 +4939,8 @@
       "event_feed": "De seneste gaver, følgere, abonnenter og personer, der deler din udsendelse",
       "chat_box": "Viser din udsendelses chatbeskeder på skærmen",
       "ticker": "En linje med din egen tekst, der ruller hen over skærmen",
-      "rule_alert": "Hvor dine reglers påmindelser vises"
+      "rule_alert": "Hvor dine reglers påmindelser vises",
+      "poll": "Din live-afstemning med en stemmeknap for hver mulighed"
     },
     "fields": {
       "style": "Stil",
@@ -4959,6 +5004,7 @@
       "addAction": "Tilføj en handling",
       "removeAction": "Fjern handling",
       "placeholders": "Brug {name}, {amount} og {message} i din tekst. Links i meddelelser fjernes.",
+      "placeholdersLive": "Brug {name}, {title} og {link} i din tekst: dit navn, udsendelsens titel og et link til at se den.",
       "alertText": "Advarselstekst",
       "sound": "Lyd",
       "sayText": "Tekst, der skal læses højt",
@@ -4972,6 +5018,7 @@
         "follow": "Nogen følger",
         "subscribe": "Nogen abonnerer",
         "share": "Nogen deler strømmen",
+        "live": "Du begynder at sende",
         "command": "Der bruges en chatkommando",
         "keyword": "En chatbesked indeholder et ord",
         "chat": "Enhver chatbesked"

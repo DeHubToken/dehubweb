@@ -4787,7 +4787,19 @@
     "followersUnit": "urmăritori",
     "topSupporters": "Susținători de top",
     "tipped": "{{name}} a trimis un cadou",
-    "chatPreview": "Mesajele de chat apar aici"
+    "chatPreview": "Mesajele de chat apar aici",
+    "poll": {
+      "howToVote_one": "Scrie {{command}} și un număr în chat ca să votezi · {{count}} vot",
+      "voted_one": "Ai votat · {{count}} vot",
+      "voted_other": "Ai votat · {{count}} voturi",
+      "closed": "Votare închisă",
+      "voteFor": "Vote pentru {{option}}",
+      "signIn": "Conectează-te pentru a vota",
+      "failed": "Votul dvs. nu a fost luat în considerare. Încercați din nou.",
+      "votes_one": "{{count}} vot",
+      "votes_other": "{{count}} voturi",
+      "howToVote_other": "Tastați {{command}} și un număr în chat pentru a vota · {{count}} voturi"
+    }
   },
   "liveChatModeration": {
     "timeout1m": "Timed out for 1 minute",
@@ -4803,6 +4815,37 @@
     "youAreTimedOut": "Ați fost timelined pentru un moment"
   },
   "liveStudio": {
+    "polls": {
+      "title": "Sondaje",
+      "intro": "Adresați o întrebare persoanelor care vă urmăresc difuzarea. Răspund cu un buton în aplicația DeHub sau tastând {{command}} și numărul opțiunii în chat.",
+      "question": "Întrebare",
+      "questionPlaceholder": "Ce ar trebui să joc în continuare?",
+      "option": "Opțiunea {{n}}",
+      "addOption": "Adaugă o opțiune",
+      "removeOption": "Elimină opțiunea {{n}}",
+      "duration": "Cât timp rămâne deschis votul",
+      "seconds_one": "{{count}} secundă",
+      "seconds_other": "{{count}} secunde",
+      "minutes_one": "{{count}} minut",
+      "minutes_other": "{{count}} minute",
+      "start": "Începe sondajul",
+      "end": "Încheie votarea acum",
+      "started": "Sondajul tău este deschis. Spectatorii pot vota acum.",
+      "notLive": "Intrați mai întâi în direct. Un sondaj rulează pe difuzarea pe care o difuzați chiar acum.",
+      "startFailed": "Sondajul nu a început. Încearcă din nou.",
+      "closeFailed": "Votul nu s-a încheiat. Încearcă din nou.",
+      "live": "Vot deschis · {{time}} rămas",
+      "ended": "Votare închisă",
+      "votes_one": "{{count}} vot",
+      "votes_other": "{{count}} voturi",
+      "replaceHint": "Începerea unui nou sondaj îl închide pe cel deschis.",
+      "widgetHint": "Afișează sondajul live. În aplicația DeHub, spectatorii ating o opțiune de vot; în OBS le spune oamenilor să tasteze {{command}} și un număr în chat.",
+      "sample": {
+        "a": "Ceva nou",
+        "b": "Un vechi favorit",
+        "c": "Tu alegi"
+      }
+    },
     "title": "Studio live",
     "subtitle": "Alerte și widget-uri pentru fluxurile dvs.",
     "h1": "Live Studio — alerte de flux, obiective și suprapuneri pentru creatorii DeHub",
@@ -4893,7 +4936,8 @@
       "event_feed": "Activitate recentă",
       "chat_box": "Casetă de chat",
       "ticker": "Indicativ",
-      "rule_alert": "Alerte privind regulile"
+      "rule_alert": "Alerte privind regulile",
+      "poll": "Sondaj"
     },
     "hints": {
       "tip_alert": "Celebrează fiecare sugestie, dimensionată în funcție de nivelul său",
@@ -4911,7 +4955,8 @@
       "event_feed": "Cele mai recente cadouri, adepți, abonați și persoane care vă împărtășesc difuzarea",
       "chat_box": "Afișează mesajele de chat ale difuzării pe ecran",
       "ticker": "Un rând din propriul text care se derulează pe ecran",
-      "rule_alert": "Unde apar alertele regulilor tale"
+      "rule_alert": "Unde apar alertele regulilor tale",
+      "poll": "Sondajul dvs. live, cu un buton de vot pentru fiecare opțiune"
     },
     "fields": {
       "style": "Stil",
@@ -4975,6 +5020,7 @@
       "addAction": "Adaugă o acțiune",
       "removeAction": "Elimină acțiunea",
       "placeholders": "Folosește {name}, {amount} și {message} în textul tău. Linkurile din mesaje sunt eliminate.",
+      "placeholdersLive": "Folosește {name}, {title} și {link} în textul tău: numele tău, titlul emisiunii și un link pentru a o viziona.",
       "alertText": "Text alertă",
       "sound": "Sunet",
       "sayText": "Text de citit cu voce tare",
@@ -4988,6 +5034,7 @@
         "follow": "Cineva urmărește",
         "subscribe": "Cineva se abonează",
         "share": "Cineva partajează fluxul",
+        "live": "Începeți să difuzați",
         "command": "Este utilizată o comandă de chat",
         "keyword": "Un mesaj de chat conține un cuvânt",
         "chat": "Orice mesaj de chat"

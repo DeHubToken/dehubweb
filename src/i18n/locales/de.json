@@ -4837,7 +4837,19 @@
     "followersUnit": "follower",
     "topSupporters": "Top-Unterstützer",
     "tipped": "{{name}} hat ein Geschenk gesendet",
-    "chatPreview": "Chat-Nachrichten werden hier angezeigt"
+    "chatPreview": "Chat-Nachrichten werden hier angezeigt",
+    "poll": {
+      "closed": "Abstimmung geschlossen",
+      "voteFor": "Stimme für {{option}} ab",
+      "signIn": "Melden Sie sich an, um abzust",
+      "failed": "Ihre Stimme hat nicht gezählt. Versuchen Sie es erneut.",
+      "voted_one": "Sie haben abgestimmt · {{count}} Abstimmung",
+      "voted_other": "Sie haben abgestimmt · {{count}} Stimmen",
+      "votes_one": "{{count}} stimme ab",
+      "votes_other": "{{count}} Stimmen",
+      "howToVote_one": "Geben Sie {{command}} und eine Nummer im Chat ein, um abzustimmen · {{count}} Abstimmung",
+      "howToVote_other": "Geben Sie {{command}} und eine Nummer im Chat ein, um abzustimmen · {{count}} Stimmen"
+    }
   },
   "liveChatModeration": {
     "timeout1m": "Zeitlimit für 1 Minute",
@@ -4853,6 +4865,37 @@
     "youAreTimedOut": "Du bist für einen Moment zeitlich begrenzt."
   },
   "liveStudio": {
+    "polls": {
+      "title": "Umfragen",
+      "intro": "Stellen Sie den Zuschauern Ihrer Sendung eine Frage. Sie antworten mit einer Schaltfläche in der DeHub-App oder indem sie {{command}} und die Nummer der Option im Chat eingeben.",
+      "question": "Frage",
+      "questionPlaceholder": "Was soll ich als nächstes spielen?",
+      "option": "Option {{n}}",
+      "addOption": "Option hinzufügen",
+      "removeOption": "Option {{n}}entfernen",
+      "duration": "Wie lange die Abstimmung offen bleibt",
+      "seconds_one": "{{count}} Sekunde",
+      "seconds_other": "{{count}} Sekunden",
+      "minutes_one": "{{count}} Minute",
+      "minutes_other": "{{count}} Minuten",
+      "start": "Umfrage starten",
+      "end": "Abstimmung jetzt beenden",
+      "started": "Ihre Umfrage ist offen. Zuschauer können jetzt abstimmen.",
+      "notLive": "Gehen Sie zuerst live. In der Sendung, die Sie gerade streamen, wird eine Umfrage durchgeführt.",
+      "startFailed": "Die Umfrage wurde nicht gestartet. Versuchen Sie es erneut.",
+      "closeFailed": "Die Abstimmung ist nicht beendet. Versuchen Sie es erneut.",
+      "live": "Abstimmung offen · {{time}} links",
+      "ended": "Abstimmung geschlossen",
+      "votes_one": "{{count}} vote",
+      "votes_other": "{{count}} Stimmen",
+      "replaceHint": "Wenn Sie eine neue Umfrage starten, wird die offene geschlossen.",
+      "widgetHint": "Zeigt Ihre Live-Umfrage an. In der DeHub-App tippen die Zuschauer auf eine Option, um abzustimmen; in OBS werden die Leute aufgefordert, {{command}} und eine Nummer im Chat einzugeben.",
+      "sample": {
+        "a": "Etwas Neues",
+        "b": "Ein alter Favorit",
+        "c": "Sie wählen"
+      }
+    },
     "title": "Live-Studio",
     "subtitle": "Alerts und Widgets für Ihre Streams",
     "h1": "Live Studio — Benachrichtigungen, Ziele und Overlays für DeHub-Ersteller streamen",
@@ -4942,7 +4985,8 @@
       "event_feed": "Letzte Aktivität",
       "chat_box": "Chat-Box",
       "ticker": "Laufschrift",
-      "rule_alert": "Regelwarnungen"
+      "rule_alert": "Regelwarnungen",
+      "poll": "Umfrage"
     },
     "hints": {
       "tip_alert": "Feiern Sie jeden Tipp, der auf sein Level zugeschnitten ist",
@@ -4960,7 +5004,8 @@
       "event_feed": "Die neuesten Geschenke, Follower, Abonnenten und Personen, die Ihre Sendung teilen",
       "chat_box": "Zeigt die Chat-Nachrichten Ihrer Sendung auf dem Bildschirm an",
       "ticker": "Eine Zeile Ihres eigenen Textes, der über den Bildschirm scrollt",
-      "rule_alert": "Wo die Warnungen deiner Regeln angezeigt werden"
+      "rule_alert": "Wo die Warnungen deiner Regeln angezeigt werden",
+      "poll": "Ihre Live-Umfrage mit einer Abstimmungsschaltfläche für jede Option"
     },
     "fields": {
       "style": "Stil",
@@ -5024,6 +5069,7 @@
       "addAction": "Aktion hinzufügen",
       "removeAction": "Aktion entfernen",
       "placeholders": "Verwenden Sie {name}, {amount} und {message} in Ihrem Text. Links in Nachrichten werden entfernt.",
+      "placeholdersLive": "Verwenden Sie {name}, {title} und {link} in Ihrem Text: Ihren Namen, den Titel der Sendung und einen Link, um sie anzusehen.",
       "alertText": "Benachrichtigungstext",
       "sound": "Ton",
       "sayText": "Vorzulesender Text",
@@ -5037,6 +5083,7 @@
         "follow": "Jemand folgt",
         "subscribe": "Jemand abonniert",
         "share": "Jemand teilt den Stream",
+        "live": "Sie beginnen mit der Übertragung",
         "command": "Ein Chat-Befehl wird verwendet",
         "keyword": "Eine Chat-Nachricht enthält ein Wort",
         "chat": "Jede Chat-Nachricht"
