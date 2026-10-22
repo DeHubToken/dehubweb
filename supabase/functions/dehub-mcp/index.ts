@@ -1489,7 +1489,7 @@ app.use("/*", async (c, next) => {
 });
 
 app.post("/*", async (c, next) => {
-  if (!/\/tasks(?:\/tick)?$/.test(new URL(c.req.url).pathname)) return next();
+  if (!/\/(?:tasks(?:\/tick)?|life\/tick)$/.test(new URL(c.req.url).pathname)) return next();
   try {
     return await handleTaskRequest(c.req.raw, {
       db,
