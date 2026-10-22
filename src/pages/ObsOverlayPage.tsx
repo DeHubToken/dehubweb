@@ -77,7 +77,7 @@ export default function ObsOverlayPage() {
     if (!token || notFound) return;
     let cancelled = false;
     let sub: { leave: () => void } | null = null;
-    import('@/lib/api/dehub/stream-presence')
+    import('@/lib/api/dehub/overlay-control')
       .then(({ watchOverlayControl }) => {
         if (cancelled) return;
         sub = watchOverlayControl(token, 'obs', {

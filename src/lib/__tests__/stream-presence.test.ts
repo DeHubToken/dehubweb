@@ -65,6 +65,11 @@ async function loadModule() {
   return import('@/lib/api/dehub/stream-presence');
 }
 
+async function loadControl() {
+  vi.resetModules();
+  return import('@/lib/api/dehub/overlay-control');
+}
+
 describe('stream presence socket', () => {
   beforeEach(() => {
     sockets = [];
@@ -307,13 +312,13 @@ describe('overlay control room', () => {
   });
 
   it('joins with its token and says what kind of surface it is', async () => {
-    const { watchOverlayControl } = await loadModule();
+    const { watchOverlayControl } = await loadControl();
     watchOverlayControl('A'.repeat(24), 'studio', {});
     expect(sockets[0].emitted).toEqual([{ event: 'overlay.join', payload: { token: 'A'.repeat(24), surface: 'studio' } }]);
   });
 
   it('turns a test tip into both the tip and its confirmation', async () => {
-    const { watchOverlayControl } = await loadModule();
+    const { watchOverlayControl } = await loadControl();
     const batches: unknown[] = [];
     watchOverlayControl('A'.repeat(24), 'studio', { onTest: (events) => batches.push(events) });
     sockets[0].deliver('overlay.test', { kind: 'tip', test: true, at: 'now', amount: 250000, message: 'hi', user: { address: '0xC' } });
@@ -324,7 +329,7 @@ describe('overlay control room', () => {
   });
 
   it('passes a test follow through as a follow', async () => {
-    const { watchOverlayControl } = await loadModule();
+    const { watchOverlayControl } = await loadControl();
     const batches: any[] = [];
     watchOverlayControl('A'.repeat(24), 'studio', { onTest: (events) => batches.push(events) });
     sockets[0].deliver('overlay.test', { kind: 'follow', user: { address: '0xD', username: 'dee' } });
@@ -332,7 +337,7 @@ describe('overlay control room', () => {
   });
 
   it('leaves the room when it is done', async () => {
-    const { watchOverlayControl } = await loadModule();
+    const { watchOverlayControl } = await loadControl();
     const sub = watchOverlayControl('A'.repeat(24), 'studio', {});
     sub.leave();
     expect(sockets[0].emitted.at(-1)).toEqual({ event: 'overlay.leave', payload: { token: 'A'.repeat(24) } });
@@ -346,7 +351,7 @@ describe('overlay control room join', () => {
   });
 
   it('reports whether the server accepted the token', async () => {
-    const { watchOverlayControl } = await loadModule();
+    const { watchOverlayControl } = await loadControl();
     const answers: boolean[] = [];
     watchOverlayControl('A'.repeat(24), 'obs', { onJoined: (ok) => answers.push(ok) });
     sockets[0].acks[0]({ ok: false });
