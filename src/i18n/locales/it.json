@@ -4791,9 +4791,52 @@
     "followersUnit": "followers",
     "topSupporters": "I migliori sostenitori",
     "tipped": "{{name}} ha inviato un regalo",
-    "chatPreview": "I messaggi della chat vengono visualizzati qui"
+    "chatPreview": "I messaggi della chat vengono visualizzati qui",
+    "poll": {
+      "closed": "Votazione chiusa",
+      "voteFor": "Vota per {{option}}",
+      "signIn": "Accedi per votare",
+      "failed": "Il tuo voto non è stato conteggiato. Riprova.",
+      "voted_one": "Hai votato · {{count}} voto",
+      "voted_other": "Hai votato · {{count}} voti",
+      "votes_one": "{{count}} voto",
+      "votes_other": "{{count}} voti",
+      "howToVote_one": "Digita {{command}} e un numero in chat per votare · {{count}} voto",
+      "howToVote_other": "Digita {{command}} e un numero in chat per votare · {{count}} voti"
+    }
   },
   "liveStudio": {
+    "polls": {
+      "title": "Sondaggi",
+      "intro": "Chiedi ai telespettatori che guardano il tuo stream una domanda. Rispondono con un pulsante nell’app DeHub, oppure scrivendo {{command}} e il numero dell’opzione in chat.",
+      "question": "Domanda",
+      "questionPlaceholder": "Cosa dovrei giocare dopo?",
+      "option": "Opzione {{n}}",
+      "addOption": "Aggiungi un’opzione",
+      "removeOption": "Rimuovi opzione {{n}}",
+      "duration": "Quanto dura la votazione",
+      "seconds_one": "{{count}} secondo",
+      "seconds_other": "{{count}} secondi",
+      "minutes_one": "{{count}} minuto",
+      "minutes_other": "{{count}} minuti",
+      "start": "Avvia il sondaggio",
+      "end": "Chiudi la votazione ora",
+      "started": "Il tuo sondaggio è aperto. I telespettatori possono votare ora.",
+      "notLive": "Vai in diretta prima. Il sondaggio si svolge durante lo stream attuale.",
+      "startFailed": "Il sondaggio non è iniziato. Riprova.",
+      "closeFailed": "La votazione non è terminata. Riprova.",
+      "live": "Votazione aperta · {{time}} rimasto",
+      "ended": "Votazione chiusa",
+      "votes_one": "{{count}} voto",
+      "votes_other": "{{count}} voti",
+      "replaceHint": "L'avvio di un nuovo sondaggio chiude quello aperto.",
+      "widgetHint": "Mostra il tuo sondaggio in tempo reale. Nell'app DeHub, tocca un'opzione per votare; in OBS dice alle persone di digitare {{command}} e un numero in chat.",
+      "sample": {
+        "a": "Qualcosa di nuovo",
+        "b": "Un vecchio favorito",
+        "c": "Scegli tu"
+      }
+    },
     "title": "Live Studio",
     "subtitle": "Avvisi e widget per i tuoi stream",
     "h1": "Live Studio — avvisi di stream, obiettivi e overlay per i creatori DeHub",
@@ -4883,7 +4926,8 @@
       "event_feed": "Attività recente",
       "chat_box": "Chat box",
       "ticker": "Testo scorrevole",
-      "rule_alert": "Avvisi delle regole"
+      "rule_alert": "Avvisi delle regole",
+      "poll": "Sondaggio"
     },
     "hints": {
       "tip_alert": "Celebra ogni mancia, dimensionata al suo livello",
@@ -4901,7 +4945,8 @@
       "event_feed": "Gli ultimi regali, follower, abbonati e persone che condividono la tua trasmissione",
       "chat_box": "Mostra i messaggi di chat della trasmissione sullo schermo",
       "ticker": "Una riga del tuo testo che scorre sullo schermo",
-      "rule_alert": "Dove vengono visualizzati gli avvisi delle tue regole"
+      "rule_alert": "Dove vengono visualizzati gli avvisi delle tue regole",
+      "poll": "Il tuo sondaggio dal vivo, con un pulsante di voto per ogni opzione"
     },
     "fields": {
       "style": "Stile",
@@ -4936,7 +4981,6 @@
       "fast": "Veloce"
     },
     "rules": {
-      "test": "Prova",
       "title": "Regole",
       "intro": "Quando succede qualcosa sul tuo stream, DeHub fa ciò che scegli: mostra un avviso, riproduce un suono, legge qualcosa ad alta voce, pubblica nella tua chat o informa il tuo Discord.",
       "add": "Aggiungi una regola",
@@ -4947,6 +4991,7 @@
       "saveFailed": "Impossibile salvare le regole.",
       "testFailed": "Quel test non è andato a buon fine. Riprova tra un momento.",
       "saveToTest": "Salva le tue regole per testarle",
+      "test": "Prova",
       "enabled": "Regola su",
       "remove": "Elimina regola",
       "save": "Salva regole",
@@ -4965,6 +5010,7 @@
       "addAction": "Aggiungi un'azione",
       "removeAction": "Rimuovi azione",
       "placeholders": "Usa {name}, {amount} e {message} nel testo. I link nei messaggi vengono rimossi.",
+      "placeholdersLive": "Usa {name}, {title} e {link} nel tuo testo: il tuo nome, il titolo della trasmissione e un link per guardarlo.",
       "alertText": "Testo dell'avviso",
       "sound": "Suono",
       "sayText": "Testo da leggere ad alta voce",
@@ -4978,6 +5024,7 @@
         "follow": "Qualcuno segue",
         "subscribe": "Qualcuno si iscrive",
         "share": "Qualcuno condivide lo stream",
+        "live": "Inizi a trasmettere",
         "command": "Viene utilizzato un comando chat",
         "keyword": "Un messaggio di chat contiene una parola",
         "chat": "Qualsiasi messaggio di chat"

@@ -4787,9 +4787,52 @@
     "followersUnit": "wafuasi",
     "topSupporters": "Wafuasi wakuu",
     "tipped": "{{name}} alituma zawadi",
-    "chatPreview": "Ujumbe wa gumzo unaonekana hapa"
+    "chatPreview": "Ujumbe wa gumzo unaonekana hapa",
+    "poll": {
+      "closed": "Kura imefungwa",
+      "voteFor": "Piga kura kwa {{option}}",
+      "signIn": "Ingia ili kupiga kura",
+      "failed": "Kura yako haikuhesabiwa. Jaribu tena.",
+      "voted_one": "Ulipiga kura · {{count}} kura",
+      "voted_other": "Ulipiga kura · {{count}} kura",
+      "votes_one": "{{count}} kura",
+      "votes_other": "{{count}} kura",
+      "howToVote_one": "Andika {{command}} na nambari kwenye gumzo ili upige kura · {{count}} kupiga kura",
+      "howToVote_other": "Andika {{command}} na nambari kwenye gumzo ili upige kura · {{count}} kura"
+    }
   },
   "liveStudio": {
+    "polls": {
+      "title": "Kura za Maoni",
+      "intro": "Uliza watu wanaotazama mtangazo wako swali. Wanajawab kwa kuchagua kitufe katika programu ya DeHub, au kwa kuandika {{command}} na namba ya chaguo katika mazungumzo.",
+      "question": "Swali",
+      "questionPlaceholder": "Ninatakiwa kucheza nini ijayo?",
+      "option": "Chaguo {{n}}",
+      "addOption": "Ongeza chaguo",
+      "removeOption": "Ondoa chaguo {{n}}",
+      "duration": "Kura itabaki wazi kwa muda gani",
+      "seconds_one": "{{count}} sekunde",
+      "seconds_other": "{{count}} sekunde",
+      "minutes_one": "{{count}} dakika",
+      "minutes_other": "{{count}} dakika",
+      "start": "Anza kura ya maoni",
+      "end": "Maliza kura sasa",
+      "started": "Kura yako iko wazi. Waangalizi wanaweza kupiga kura sasa.",
+      "notLive": "Jifanyie moja kwanza. Kura ya maoni inaendelea kwenye mtangazo unaoosambaza sasa.",
+      "startFailed": "Kura ya maoni haijaanza. Jaribu tena.",
+      "closeFailed": "Kura haikuishia. Jaribu tena.",
+      "live": "Kura iko wazi · {{time}} iliyobaki",
+      "ended": "Kura imefungwa",
+      "votes_one": "{{count}} kura",
+      "votes_other": "{{count}} kura",
+      "replaceHint": "Kuanzisha uchaguzi mpya kunafunga ule ulio wazi.",
+      "widgetHint": "Inaonyesha kura yako ya moja kwa moja. Katika watazamaji wa programu ya DeHub bofya chaguo la kupiga kura; katika OBS inawaambia watu kuandika {{command}} na nambari kwenye gumzo.",
+      "sample": {
+        "a": "Kitu kipya",
+        "b": "Kipendwa cha zamani",
+        "c": "Unachagua"
+      }
+    },
     "title": "Live Studio",
     "subtitle": "Onyo na widgets kwa ajili ya mtiririko wako",
     "h1": "Live Studio — onyo za mtiririko, malengo na overlays kwa waundaji wa DeHub",
@@ -4880,7 +4923,8 @@
       "event_feed": "Shughuli za hivi karibuni",
       "chat_box": "Sanduku la gumzo",
       "ticker": "Kileta tiketi",
-      "rule_alert": "Arifa za sheria"
+      "rule_alert": "Arifa za sheria",
+      "poll": "Kura"
     },
     "hints": {
       "tip_alert": "Husherehekea kila kiinua mgongo, kulingana na kiwango chake",
@@ -4897,7 +4941,8 @@
       "event_feed": "Zawadi za hivi karibuni, wafuasi, wanachama na watu wanaoshiriki matangazo yako",
       "chat_box": "Inaonyesha ujumbe wa gumzo wa matangazo yako kwenye skrini",
       "ticker": "Mstari wa maandishi yako mwenyewe ambayo yanasonga kwenye skrini",
-      "rule_alert": "Hapa ni jina la matatizo ya kawaida yako"
+      "rule_alert": "Hapa ni jina la matatizo ya kawaida yako",
+      "poll": "Kura yako ya moja kwa moja, ikiwa na kitufe cha kupiga kura kwa kila chaguo"
     },
     "fields": {
       "style": "Mtindo",
@@ -4961,6 +5006,7 @@
       "addAction": "Pata kazi",
       "removeAction": "Kufuta kazi",
       "placeholders": "Tumia {name}, {amount} na {message} katika maandishi yako. Viunganishi katika ujumbe vinaondolewa.",
+      "placeholdersLive": "Tumia {name}, {title} na {link} katika maandishi yako: jina lako, kichwa cha matangazo na kiunganishi cha kuitazama.",
       "alertText": "Maandishi ya arifa",
       "sound": "Sauti",
       "sayText": "Maandishi ya kusoma kwa sauti",
@@ -4974,6 +5020,7 @@
         "follow": "Mtu anamfuata",
         "subscribe": "Mtu anajisajili",
         "share": "Mtu anashiriki mkondo huo",
+        "live": "Unaanza kutangaza",
         "command": "Amri ya gumzo inatumika",
         "keyword": "Ujumbe wa gumzo una neno",
         "chat": "Ujumbe wowote wa gumzo"

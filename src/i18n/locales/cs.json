@@ -4727,9 +4727,52 @@
     "followersUnit": "následovníci",
     "topSupporters": "Nejlepší podporovatelé",
     "tipped": "{{name}} poslal/a dárek",
-    "chatPreview": "Zde se zobrazují zprávy z chatu"
+    "chatPreview": "Zde se zobrazují zprávy z chatu",
+    "poll": {
+      "closed": "Hlasování ukončeno",
+      "voteFor": "Hlasujte za {{option}}",
+      "signIn": "Přihlaste se k hlasování",
+      "failed": "Vaše hlasování neprošlo. Zkuste to znovu.",
+      "voted_one": "Hlasovali jste · {{count}} hlas",
+      "voted_other": "Hlasovali jste · {{count}} hlasy",
+      "votes_one": "{{count}} hlas",
+      "votes_other": "{{count}} hlasy",
+      "howToVote_one": "Zadejte {{command}} a číslo do chatu, abyste hlasovali · {{count}} hlas",
+      "howToVote_other": "Zadejte {{command}} a číslo do chatu, abyste hlasovali · {{count}} hlasy"
+    }
   },
   "liveStudio": {
+    "polls": {
+      "title": "Dotazníky",
+      "intro": "Zeptáte se lidí sledujících váš přenos na otázku. Odpovídají tlačítkem v aplikaci DeHub, nebo zadáním {{command}} a čísla možnosti do chatu.",
+      "question": "Otázka",
+      "questionPlaceholder": "Co bych měl hrát další?",
+      "option": "Možnost {{n}}",
+      "addOption": "Přidat možnost",
+      "removeOption": "Odstranit možnost {{n}}",
+      "duration": "Jak dlouho bude hlasování otevřeno",
+      "seconds_one": "{{count}} sekunda",
+      "seconds_other": "{{count}} sekundy",
+      "minutes_one": "{{count}} minuta",
+      "minutes_other": "{{count}} minuty",
+      "start": "Spustit dotazník",
+      "end": "Ukončit hlasování teď",
+      "started": "Vaše hlasování je otevřeno. Diváci mohou hlasovat nyní.",
+      "notLive": "Jděte naživo nejprve. Dotazník běží na přenosu, který právě streamujete.",
+      "startFailed": "Dotazník se nezačal. Zkuste to znovu.",
+      "closeFailed": "Hlasování ještě neskončilo. Zkuste to znovu.",
+      "live": "Hlasování otevřeno · {{time}} zbývá",
+      "ended": "Hlasování ukončeno",
+      "votes_one": "{{count}} hlas",
+      "votes_other": "{{count}} hlasů",
+      "replaceHint": "Zahájením nové ankety zavřete otevřenou anketu.",
+      "widgetHint": "Zobrazuje vaši živou anketu. V prohlížeči aplikace DeHub klepněte na možnost hlasovat; v OBS říká lidem, aby zadali {{command}} a číslo v chatu.",
+      "sample": {
+        "a": "Něco nového",
+        "b": "Stará oblíbená",
+        "c": "Vyber si"
+      }
+    },
     "title": "Live Studio",
     "subtitle": "Upozornění a widgety pro vaše streamy",
     "h1": "Live Studio — upozornění na stream, cíle a overlayy pro tvůrce DeHub",
@@ -4819,7 +4862,8 @@
       "event_feed": "Nedávná aktivita",
       "chat_box": "Chat box",
       "ticker": "Ticker",
-      "rule_alert": "Přidávám upozornění na pravidla."
+      "rule_alert": "Přidávám upozornění na pravidla.",
+      "poll": "Anketa"
     },
     "hints": {
       "tip_alert": "Oslavuje každé spropitné, dimenzované podle úrovně",
@@ -4837,7 +4881,8 @@
       "event_feed": "Nejnovější dárky, následovníci, odběratelé a lidé sdílející vaše vysílání",
       "chat_box": "Zobrazí chatové zprávy vašeho vysílání na obrazovce",
       "ticker": "Řádek vlastního textu, který se posouvá po obrazovce",
-      "rule_alert": "Kde se zobrazují upozornění na tvá pravidla"
+      "rule_alert": "Kde se zobrazují upozornění na tvá pravidla",
+      "poll": "Vaše živá anketa s hlasovacím tlačítkem pro každou možnost"
     },
     "fields": {
       "style": "Styl",
@@ -4901,6 +4946,7 @@
       "addAction": "Přidat akci",
       "removeAction": "Odstranit akci",
       "placeholders": "V textu použij {name}, {amount} a {message}. Odkazy ve zprávách jsou odstraněny.",
+      "placeholdersLive": "V textu použij {name}, {title} a {link}: své jméno, název pořadu a odkaz na jeho zhlédnutí.",
       "alertText": "Text upozornění",
       "sound": "Zvuk",
       "sayText": "Text k přečtení nahlas",
@@ -4914,6 +4960,7 @@
         "follow": "Někdo sleduje",
         "subscribe": "Někdo se přihlásí k odběru",
         "share": "Někdo sdílí stream",
+        "live": "Začínáte vysílat",
         "command": "Používá se příkaz chatu",
         "keyword": "Chatová zpráva obsahuje slovo",
         "chat": "Jakýkoli zprávový chatový příspěvek"
