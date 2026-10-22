@@ -573,8 +573,6 @@ function AppContent() {
               reached from outside the app far more often than from inside it. */}
           <Route path="/apk" element={<Suspense fallback={<PageLoader />}><ApkPage /></Suspense>} />
 
-          {/* "DeHub app" landing page: what DeHub is, where to get it, and
-              which DeHub it is not. Standalone like /apk. */}
           <Route path="/dehub-app" element={<Suspense fallback={<PageLoader />}><DehubAppPage /></Suspense>} />
 
           {/* The moderation handbook, published. Standalone for the same reason

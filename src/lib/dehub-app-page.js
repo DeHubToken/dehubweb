@@ -55,23 +55,6 @@ export const DEHUB_APP_PAGE = {
   ],
 };
 
-/** SoftwareApplication node describing the app itself. */
-export function dehubAppSoftwareLd() {
-  return {
-    '@type': 'SoftwareApplication',
-    name: 'DeHub',
-    url: `${APP_URL}${DEHUB_APP_PAGE.path}`,
-    description: DEHUB_APP_PAGE.description,
-    applicationCategory: 'SocialNetworkingApplication',
-    operatingSystem: 'Android, iOS, Web',
-    downloadUrl: [DEHUB_APP_LINKS.googlePlay, DEHUB_APP_LINKS.appStore],
-    installUrl: DEHUB_APP_LINKS.googlePlay,
-    sameAs: [DEHUB_APP_LINKS.googlePlay, DEHUB_APP_LINKS.appStore],
-    offers: { '@type': 'Offer', price: '0', priceCurrency: 'USD' },
-    publisher: { '@type': 'Organization', name: 'DeHub', url: APP_URL },
-  };
-}
-
 /** FAQPage node built from the same questions the page renders. */
 export function dehubAppFaqLd() {
   return {

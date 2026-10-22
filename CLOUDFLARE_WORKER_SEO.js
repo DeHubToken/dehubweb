@@ -34,7 +34,7 @@ export { EditorPresenceRoom } from './server/editor-presence.ts';
 import { ROUTE_SEGMENTS, WORKER_ASSET_ROUTES } from './src/lib/reserved-usernames.js';
 import { edgeMaintenanceResponse } from './server/edge-maintenance.mjs';
 import { CONSOLIDATED_GUIDES, MILESTONE_REDIRECTS, RETIRED_GUIDES } from './src/lib/blog-redirects.js';
-import { DEHUB_APP_LINKS, DEHUB_APP_PAGE, dehubAppFaqLd, dehubAppSoftwareLd } from './src/lib/dehub-app-page.js';
+import { DEHUB_APP_LINKS, DEHUB_APP_PAGE, dehubAppFaqLd } from './src/lib/dehub-app-page.js';
 
 /**
  * `/mal.eth` — a verified ENS handle standing in for a username.
@@ -1274,21 +1274,18 @@ const MARKETING_PAGES = {
 <p>Prefer the store? DeHub is also <a href="https://play.google.com/store/apps/details?id=io.dehub.mobile">on Google Play</a>.</p>`,
   },
   // The "DeHub app" brand query. Copy and structured data come from
-  // src/lib/dehub-app-page.js, which DehubAppPage.tsx renders too. The one
-  // page that does describe itself as a SoftwareApplication: it is the app's
-  // own landing page, free on every platform, with no rating to give — Search
-  // Console may list the Software App item as ineligible for a rich result,
-  // which costs nothing, while the entity itself is what this page is for.
-  // No card of its own in public/og: it shares the brand card (SHARE_IMAGE).
+  // src/lib/dehub-app-page.js, which DehubAppPage.tsx renders too. A WebPage
+  // about the app, like /apk, plus FAQPage for its questions. No card of its
+  // own in public/og: it shares the brand card (SHARE_IMAGE).
   'dehub-app': {
     title: DEHUB_APP_PAGE.title,
     description: DEHUB_APP_PAGE.description,
     heading: DEHUB_APP_PAGE.heading,
     og: 'brand',
     jsonLdExtra: {
-      about: { '@type': 'SoftwareApplication', name: 'DeHub', url: `${APP_URL}${DEHUB_APP_PAGE.path}` },
+      about: { '@type': 'Thing', name: 'DeHub', sameAs: [DEHUB_APP_LINKS.googlePlay, DEHUB_APP_LINKS.appStore] },
     },
-    extraJsonLd: [dehubAppSoftwareLd(), dehubAppFaqLd()],
+    extraJsonLd: [dehubAppFaqLd()],
     // The copy is fixed text from the shared module, so it goes in unescaped
     // like every other bodyHtml here; build-public-locales.mjs evaluates this
     // table to build the translated variants.
@@ -1660,9 +1657,8 @@ function buildMarketingHtml(key, meta) {
   // the two UA variants describe the same URL as two different entities.
   // Never a SoftwareApplication/WebApplication/MobileApplication: Google
   // reports those as invalid without a rating or review, and none of these
-  // pages has one to give (see arcadeGameLd for VideoGame). /dehub-app is the
-  // single deliberate exception, and carries it as a separate node in
-  // `extraJsonLd` rather than as the page's own type.
+  // pages has one to give (see arcadeGameLd for VideoGame). `extraJsonLd`
+  // adds further standalone nodes (FAQPage on /dehub-app).
   const jsonLd = {
     '@context': 'https://schema.org',
     '@type': meta.jsonLdType || 'WebPage',

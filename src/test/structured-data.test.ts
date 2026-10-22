@@ -214,7 +214,7 @@ describe('edge-rendered pages', () => {
     expect(types(plain)).not.toContain('FAQPage');
   });
 
-  it('renders /dehub-app with its cards, the app entity and its FAQ', async () => {
+  it('renders /dehub-app with its cards and its FAQ, without an app rich-result type', async () => {
     network({});
     const { res, body } = await crawl('/dehub-app');
     expect(res.status).toBe(200);
@@ -225,8 +225,8 @@ describe('edge-rendered pages', () => {
     expect(meta(body, 'og:image')).toBe('https://dehub.io/og/dehub-social-share.png');
     expect(meta(body, 'twitter:card')).toBe('summary_large_image');
     const all = nodes(jsonLd(body));
-    const app = all.find((n) => n['@type'] === 'SoftwareApplication' && n.offers)!;
-    expect(app).toMatchObject({ name: 'DeHub', operatingSystem: 'Android, iOS, Web', offers: { price: '0' } });
+    for (const t of APP_TYPES) expect(types(body)).not.toContain(t);
+    expect(types(body)).toEqual(expect.arrayContaining(['WebPage', 'Organization']));
     const faq = all.find((n) => n['@type'] === 'FAQPage') as { mainEntity: { name: string }[] };
     expect(faq.mainEntity.map((q) => q.name)).toContain('Is DeHub the DePaul University app?');
     for (const q of faq.mainEntity) expect(body).toContain(`<h3>${q.name}</h3>`);
