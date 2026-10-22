@@ -8405,5 +8405,14 @@
     "backToMedia": "Yazıya qayıt",
     "like": "Bəyən",
     "unlike": "Kimi sil"
+  },
+  "postProcessing": {
+    "uploading": "Yüklənir…",
+    "preparing": "Hazırlanır…",
+    "ready": "Hazırdır",
+    "preparingVideo": "Videonuz hazırlanır",
+    "posted": "Paylaşıldı",
+    "view": "Bax",
+    "failed": "Video emal edilə bilmədi"
   }
 }

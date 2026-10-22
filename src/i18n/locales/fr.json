@@ -14090,5 +14090,14 @@
     "nobodyYet": "Personne pour le moment",
     "rotate": "Faire pivoter l'écran",
     "showControls": "Afficher les commandes"
+  },
+  "postProcessing": {
+    "uploading": "Envoi…",
+    "preparing": "Préparation…",
+    "ready": "Prêt",
+    "preparingVideo": "Préparation de ta vidéo",
+    "posted": "Publié",
+    "view": "Voir",
+    "failed": "La vidéo n'a pas pu être traitée"
   }
 }

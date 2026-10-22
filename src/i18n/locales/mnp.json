@@ -7813,5 +7813,14 @@
     "followers": "关注者",
     "subscribers": "订阅者",
     "mentioned": "提到其人"
+  },
+  "postProcessing": {
+    "uploading": "上传中…",
+    "preparing": "准备中…",
+    "ready": "好了",
+    "preparingVideo": "正在准备你个视频",
+    "posted": "发好了",
+    "view": "看",
+    "failed": "视频处理弗了"
   }
 }

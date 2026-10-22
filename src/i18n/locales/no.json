@@ -8550,5 +8550,14 @@
     "backToMedia": "Tilbake til innlegget",
     "like": "Lik",
     "unlike": "Fjern liker"
+  },
+  "postProcessing": {
+    "uploading": "Laster opp…",
+    "preparing": "Forbereder…",
+    "ready": "Klar",
+    "preparingVideo": "Videoen din klargjøres",
+    "posted": "Publisert",
+    "view": "Se",
+    "failed": "Videoen kunne ikke behandles"
   }
 }

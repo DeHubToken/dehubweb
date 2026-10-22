@@ -8462,5 +8462,14 @@
     "backToMedia": "Ku noqo boostada",
     "like": "Sida",
     "unlike": "Ka saar sida"
+  },
+  "postProcessing": {
+    "uploading": "Waa la soo gelinayaa…",
+    "preparing": "Waa la diyaarinayaa…",
+    "ready": "Diyaar",
+    "preparingVideo": "Fiidiyowgaaga waa la diyaarinayaa",
+    "posted": "Waa la dhigay",
+    "view": "Arag",
+    "failed": "Fiidiyowga lama habayn karin"
   }
 }

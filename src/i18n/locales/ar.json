@@ -14090,5 +14090,14 @@
     "nobodyYet": "لا أحد بعد",
     "rotate": "تدوير الشاشة",
     "showControls": "إظهار عناصر التحكم"
+  },
+  "postProcessing": {
+    "uploading": "جارٍ الرفع…",
+    "preparing": "جارٍ التحضير…",
+    "ready": "جاهز",
+    "preparingVideo": "جارٍ تجهيز الفيديو",
+    "posted": "تم النشر",
+    "view": "عرض",
+    "failed": "تعذّرت معالجة الفيديو"
   }
 }

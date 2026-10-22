@@ -8738,5 +8738,14 @@
   "notification": {
     "noNotifications": "Walang mga abiso",
     "loadMore": "Mag-load ng higit pa"
+  },
+  "postProcessing": {
+    "uploading": "Ina-upload…",
+    "preparing": "Inihahanda…",
+    "ready": "Handa na",
+    "preparingVideo": "Inihahanda ang video mo",
+    "posted": "Nai-post na",
+    "view": "Tingnan",
+    "failed": "Hindi ma-process ang video"
   }
 }

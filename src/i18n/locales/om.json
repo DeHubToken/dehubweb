@@ -8535,5 +8535,14 @@
     "backToBlog": "Biloogiitti deebi'i",
     "sharePost": "Barreeffama qoodi",
     "relatedPosts": "Barreeffamoota Walqabatan"
+  },
+  "postProcessing": {
+    "uploading": "Olkaa'aa jira…",
+    "preparing": "Qophaa'aa jira…",
+    "ready": "Qophaa'eera",
+    "preparingVideo": "Viidiyoon kee qophaa'aa jira",
+    "posted": "Maxxanfameera",
+    "view": "Ilaali",
+    "failed": "Viidiyoo hojjechuun hin danda'amne"
   }
 }

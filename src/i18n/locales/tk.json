@@ -8458,5 +8458,14 @@
     "backToMedia": "Posta dolanmak",
     "like": "Hoşgeldin",
     "unlike": "Gaýdyny aýyr"
+  },
+  "postProcessing": {
+    "uploading": "Ýüklenýär…",
+    "preparing": "Taýýarlanýar…",
+    "ready": "Taýýar",
+    "preparingVideo": "Wideoňyz taýýarlanýar",
+    "posted": "Paýlaşyldy",
+    "view": "Gör",
+    "failed": "Wideony işläp bolmady"
   }
 }

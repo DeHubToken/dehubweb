@@ -7781,5 +7781,14 @@
     "backToMedia": "الرجوع إلى المنشور",
     "like": "إعجاب",
     "unlike": "إزالة الإعجاب"
+  },
+  "postProcessing": {
+    "uploading": "جاري الرفع…",
+    "preparing": "جاري التحضير…",
+    "ready": "جاهز",
+    "preparingVideo": "دا نحضّر الفيديو مالتك",
+    "posted": "انْشَر",
+    "view": "شوف",
+    "failed": "ما گدرنا نعالج الفيديو"
   }
 }

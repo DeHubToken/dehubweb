@@ -8468,5 +8468,14 @@
     "backToMedia": "يازمىغا قايتىش",
     "like": "LIKE",
     "unlike": "LIKE نى چىقىرىۋېتىش"
+  },
+  "postProcessing": {
+    "uploading": "يوللاۋاتىدۇ…",
+    "preparing": "تەييارلىنىۋاتىدۇ…",
+    "ready": "تەييار",
+    "preparingVideo": "سىنىڭىز تەييارلىنىۋاتىدۇ",
+    "posted": "يوللاندى",
+    "view": "كۆرۈش",
+    "failed": "سىننى بىر تەرەپ قىلغىلى بولمىدى"
   }
 }

@@ -8445,5 +8445,14 @@
     "backToMedia": "Komawa zuwa post",
     "like": "Kamar",
     "unlike": "Cire kamar"
+  },
+  "postProcessing": {
+    "uploading": "Ana lodawa…",
+    "preparing": "Ana shiryawa…",
+    "ready": "A shirye",
+    "preparingVideo": "Ana shirya bidiyonka",
+    "posted": "An wallafa",
+    "view": "Duba",
+    "failed": "Ba a iya sarrafa bidiyon ba"
   }
 }

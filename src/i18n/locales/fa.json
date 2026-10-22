@@ -8548,5 +8548,14 @@
     "backToMedia": "برگشت به پست",
     "like": "مانند",
     "unlike": "حذف لایک"
+  },
+  "postProcessing": {
+    "uploading": "در حال آپلود…",
+    "preparing": "در حال آماده‌سازی…",
+    "ready": "آماده",
+    "preparingVideo": "در حال آماده‌سازی ویدیوی شما",
+    "posted": "منتشر شد",
+    "view": "مشاهده",
+    "failed": "پردازش ویدیو ممکن نشد"
   }
 }

@@ -8558,5 +8558,14 @@
     "backToMedia": "Grįžti į įrašą",
     "like": "Patinka",
     "unlike": "Pašalinti „Patinka“"
+  },
+  "postProcessing": {
+    "uploading": "Įkeliama…",
+    "preparing": "Ruošiama…",
+    "ready": "Paruošta",
+    "preparingVideo": "Ruošiame jūsų vaizdo įrašą",
+    "posted": "Paskelbta",
+    "view": "Žiūrėti",
+    "failed": "Vaizdo įrašo apdoroti nepavyko"
   }
 }

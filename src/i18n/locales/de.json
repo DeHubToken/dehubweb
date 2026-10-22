@@ -8745,5 +8745,14 @@
     "phraseLoadFailed": "Deine Wiederherstellungsphrase konnte nicht geladen werden. Versuche es erneut oder öffne DeHub auf deinem ursprünglichen Gerät.",
     "noPhrase": "Diese Wallet wurde mit einem privaten Schlüssel gespeichert. DeHub hat daher keine Wiederherstellungsphrase zum Anzeigen. Sichere diesen Schlüssel, um dieselbe Wallet wiederherzustellen.",
     "keyWarning": "Wer diesen Schlüssel besitzt, kann deine Wallet kontrollieren. Bewahre ihn sicher auf und teile ihn niemals."
+  },
+  "postProcessing": {
+    "uploading": "Wird hochgeladen…",
+    "preparing": "Wird vorbereitet…",
+    "ready": "Bereit",
+    "preparingVideo": "Dein Video wird vorbereitet",
+    "posted": "Gepostet",
+    "view": "Ansehen",
+    "failed": "Das Video konnte nicht verarbeitet werden"
   }
 }

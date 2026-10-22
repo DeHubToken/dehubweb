@@ -8449,5 +8449,14 @@
     "backToMedia": "Tillbaka till inlägget",
     "like": "Gilla",
     "unlike": "Ta bort gilla"
+  },
+  "postProcessing": {
+    "uploading": "Laddar upp…",
+    "preparing": "Förbereder…",
+    "ready": "Klar",
+    "preparingVideo": "Din video förbereds",
+    "posted": "Publicerad",
+    "view": "Visa",
+    "failed": "Videon kunde inte bearbetas"
   }
 }

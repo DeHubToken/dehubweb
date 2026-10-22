@@ -7674,5 +7674,14 @@
     "followers": "المتابعين",
     "subscribers": "المشتركين",
     "mentioned": "اللي اتذكروا"
+  },
+  "postProcessing": {
+    "uploading": "بيرفع…",
+    "preparing": "بيجهّز…",
+    "ready": "جاهز",
+    "preparingVideo": "بنجهّز الفيديو بتاعك",
+    "posted": "اتنشر",
+    "view": "شوف",
+    "failed": "معرفناش نعالج الفيديو"
   }
 }

@@ -8675,5 +8675,14 @@
     "description": "Skep iets nuuts.",
     "newProject": "Nuwe projek",
     "newPost": "Nuwe plasing"
+  },
+  "postProcessing": {
+    "uploading": "Laai op…",
+    "preparing": "Berei voor…",
+    "ready": "Gereed",
+    "preparingVideo": "Jou video word voorberei",
+    "posted": "Geplaas",
+    "view": "Sien",
+    "failed": "Video kon nie verwerk word nie"
   }
 }

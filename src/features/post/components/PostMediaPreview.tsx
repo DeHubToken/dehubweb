@@ -29,6 +29,8 @@ import { AudioTrimmer } from './AudioTrimmer';
 import { VideoTrimmer } from './VideoTrimmer';
 import { generateFilterCSS, applyEditsToImageFile } from '@/lib/filters';
 import { ImageAnnotator } from './ImageAnnotator';
+import { DraftVideoProgress } from './DraftVideoProgress';
+import type { DraftVideoSnapshot } from '../lib/draft-video';
 
 interface PostMediaPreviewProps {
   media: MediaFile[];
@@ -48,6 +50,8 @@ interface PostMediaPreviewProps {
   onReplaceImage?: (index: number, file: File) => void;
   /** Keeps the parent composer from treating the portalled viewer as an outside press. */
   onFullscreenChange?: (open: boolean) => void;
+  /** The attached video's early upload, shown under its preview. */
+  draftVideo?: DraftVideoSnapshot | null;
 }
 
 const MAX_DURATION = 30; // 30 seconds max
@@ -110,6 +114,7 @@ export function PostMediaPreview({
   onApplyTrim,
   onReplaceImage,
   onFullscreenChange,
+  draftVideo,
 }: PostMediaPreviewProps) {
   const { t: _copy } = _useCopy();
   const [recordingIndex, setRecordingIndex] = useState<number | null>(null);
@@ -1038,6 +1043,8 @@ export function PostMediaPreview({
                         <X className="w-4 h-4 text-white" />
                       </button>
                     </div>
+
+                    <DraftVideoProgress draft={draftVideo} />
                     
                     {/* Thumbnail preview - same dimensions as video with drag & drop */}
                     <div 

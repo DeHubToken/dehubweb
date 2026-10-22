@@ -8507,5 +8507,14 @@
     "backToMedia": "Zrugg zum Post",
     "like": "Gefällt mir",
     "unlike": "Like entferne"
+  },
+  "postProcessing": {
+    "uploading": "Am Uelade…",
+    "preparing": "Am Vorbereite…",
+    "ready": "Parat",
+    "preparingVideo": "Dis Video wird vorbereitet",
+    "posted": "Pöschtet",
+    "view": "Aaluege",
+    "failed": "S Video het nöd chönne verarbeitet wärde"
   }
 }

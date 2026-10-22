@@ -8608,5 +8608,14 @@
     "phraseLoadFailed": "Impossibile caricare la frase di recupero. Riprova o apri DeHub sul dispositivo originale.",
     "noPhrase": "Questo portafoglio è stato salvato con una chiave privata, quindi DeHub non ha una frase di recupero da mostrare. Salva questa chiave per ripristinare lo stesso portafoglio.",
     "keyWarning": "Chiunque possieda questa chiave può controllare il tuo portafoglio. Conservala al sicuro e non condividerla mai."
+  },
+  "postProcessing": {
+    "uploading": "Caricamento…",
+    "preparing": "Preparazione…",
+    "ready": "Pronto",
+    "preparingVideo": "Stiamo preparando il tuo video",
+    "posted": "Pubblicato",
+    "view": "Vedi",
+    "failed": "Impossibile elaborare il video"
   }
 }

@@ -8635,5 +8635,14 @@
     "txPpvSale": "Fivarotana PPV — {{amount}} tokens",
     "txTipSent": "Fanomezana ho an'i {{name}} — {{amount}} tokens",
     "txTipReceived": "{{name}} nanome fanomezana anao — {{amount}} tokens"
+  },
+  "postProcessing": {
+    "uploading": "Mampakatra…",
+    "preparing": "Manomana…",
+    "ready": "Vonona",
+    "preparingVideo": "Manomana ny horonantsarinao",
+    "posted": "Voapetraka",
+    "view": "Jereo",
+    "failed": "Tsy voahodina ny horonantsary"
   }
 }

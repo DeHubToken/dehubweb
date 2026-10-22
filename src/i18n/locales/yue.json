@@ -8558,5 +8558,14 @@
     "backToMedia": "返去個帖子",
     "like": "似",
     "unlike": "移除鍾意"
+  },
+  "postProcessing": {
+    "uploading": "上傳緊…",
+    "preparing": "準備緊…",
+    "ready": "準備好",
+    "preparingVideo": "準備緊你條片",
+    "posted": "已發佈",
+    "view": "睇",
+    "failed": "處理唔到條片"
   }
 }
