@@ -401,6 +401,17 @@ export interface StreamGiftBroadcast {
 }
 
 /**
+ * A gift the chain has paid, from `streamer.tip.confirmed`. The amount is
+ * what moved on chain, never the sender's claim.
+ */
+export interface StreamPaidGift {
+  paidAmount: number;
+  message?: string;
+  address?: string;
+  transactionHash?: string;
+}
+
+/**
  * Hear every gift sent to a stream, so the celebration plays for the whole
  * room rather than only for whoever paid.
  *
@@ -416,6 +427,13 @@ export interface StreamGiftBroadcast {
 export function watchStreamGifts(
   streamId: string,
   onGift: (gift: StreamGiftBroadcast) => void,
+  /**
+   * Called again once the tip is paid. `streamer.tip` goes out when a gift is
+   * recorded, before anything is paid, with whatever the sender typed — so
+   * anything a forged tip must not be able to trigger (reading a message out
+   * to the room) waits for this.
+   */
+  onPaid?: (gift: StreamPaidGift) => void,
 ): StreamPresence {
   if (!streamId) return { leave: () => undefined };
 
@@ -443,8 +461,21 @@ export function watchStreamGifts(
     });
   };
 
+  const handlePaid = (data: any) => {
+    if (!onPaid || !isForStream(data, streamId)) return;
+    const paidAmount = Number(data?.paidAmount);
+    if (!Number.isFinite(paidAmount) || paidAmount <= 0) return;
+    onPaid({
+      paidAmount,
+      message: typeof data?.message === 'string' && data.message.trim() ? data.message : undefined,
+      address: String(data?.address || '').toLowerCase() || undefined,
+      transactionHash: String(data?.transactionHash || '').toLowerCase() || undefined,
+    });
+  };
+
   s.on('connect', join);
   s.on(EVENT.tipStreamer, handleGift);
+  s.on(EVENT.tipConfirmed, handlePaid);
   if (s.connected) join();
 
   return {
@@ -453,6 +484,7 @@ export function watchStreamGifts(
       left = true;
       s.off('connect', join);
       s.off(EVENT.tipStreamer, handleGift);
+      s.off(EVENT.tipConfirmed, handlePaid);
       releaseStreamSocket(conn);
     },
   };

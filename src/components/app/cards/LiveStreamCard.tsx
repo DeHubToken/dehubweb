@@ -447,18 +447,29 @@ export function LiveStreamCard({ stream, chatSlot, immersive = false }: LiveStre
    * and the miss was a paid-for celebration playing twice.
    */
   const ownGiftHashes = useRef<Set<string>>(new Set());
-  useStreamGifts(stream.streamId, !!stream.isLive, (gift) => {
-    if (gift.transactionHash && ownGiftHashes.current.has(gift.transactionHash)) return;
+  const isOwnGift = (gift: { address?: string; transactionHash?: string }) => {
+    if (gift.transactionHash && ownGiftHashes.current.has(gift.transactionHash)) return true;
     const me = walletAddress?.toLowerCase();
-    if (me && gift.address && gift.address === me) return;
-    enqueueGift(gift);
-    // Read the sender's line out over the stream. Every client in the room
-    // synthesises the same sentence off this one broadcast, so the whole
-    // audience hears it at once — and within a second of the tip, rather than
-    // behind the HLS buffer. The sender's own copy is spoken at submit time
-    // below, which is why their echo is dropped above before reaching here.
-    speakTipMessage(gift.message);
-  });
+    return !!(me && gift.address && gift.address === me);
+  };
+  useStreamGifts(
+    stream.streamId,
+    !!stream.isLive,
+    (gift) => {
+      if (isOwnGift(gift)) return;
+      enqueueGift(gift);
+    },
+    // Read the sender's line out over the stream once the tip is PAID. The
+    // unpaid broadcast carries whatever a client posted with any well-formed
+    // hash, and reading that aloud let anyone put words in every viewer's
+    // speakers for free. Every client synthesises the same sentence off this
+    // one event, so the room still hears it together, ahead of the HLS buffer.
+    // The sender's own copy is spoken at submit time below.
+    (paid) => {
+      if (isOwnGift(paid)) return;
+      speakTipMessage(paid.message);
+    },
+  );
 
   // Get the device voices ready while the viewer is watching rather than when
   // the first gift lands, so the first message of a stream is read on the beat

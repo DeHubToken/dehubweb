@@ -192,6 +192,52 @@ describe('stream gift broadcasts', () => {
     sockets[0].deliver('streamer.tip', { streamId: 'stream-1', gift: { meta: { amount: 10 } } });
     expect(gifts).toHaveLength(1);
   });
+
+  /** The message is read aloud off this one, so a forged tip cannot be. */
+  it('hands over a paid tip separately, with the paid amount and its message', async () => {
+    const { watchStreamGifts } = await loadModule();
+    const gifts: unknown[] = [];
+    const paid: unknown[] = [];
+    watchStreamGifts('stream-1', (g) => gifts.push(g), (p) => paid.push(p));
+
+    const confirmed = {
+      streamId: 'stream-1',
+      transactionHash: '0xABC',
+      address: '0xFA00000000000000000000000000000000000002',
+      paidAmount: 250,
+      claimedAmount: 250000,
+      message: 'gm',
+    };
+    sockets[0].deliver('streamer.tip.confirmed', confirmed);
+    sockets[0].deliver('streamer.tip.confirmed', { ...confirmed, streamId: 'stream-2' });
+    sockets[0].deliver('streamer.tip.confirmed', { ...confirmed, paidAmount: 0 });
+    sockets[0].deliver('streamer.tip.confirmed', { ...confirmed, message: '   ' });
+
+    expect(gifts).toEqual([]);
+    expect(paid).toEqual([
+      {
+        paidAmount: 250,
+        message: 'gm',
+        address: '0xfa00000000000000000000000000000000000002',
+        transactionHash: '0xabc',
+      },
+      {
+        paidAmount: 250,
+        message: undefined,
+        address: '0xfa00000000000000000000000000000000000002',
+        transactionHash: '0xabc',
+      },
+    ]);
+  });
+
+  it('stops hearing paid tips when it leaves', async () => {
+    const { watchStreamGifts } = await loadModule();
+    const paid: unknown[] = [];
+    const sub = watchStreamGifts('stream-1', () => undefined, (p) => paid.push(p));
+    sub.leave();
+    sockets[0].deliver('streamer.tip.confirmed', { streamId: 'stream-1', paidAmount: 5 });
+    expect(paid).toEqual([]);
+  });
 });
 
 /**
