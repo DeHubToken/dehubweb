@@ -1,5 +1,5 @@
 import { apiCall } from './core';
-import type { CreatorOverlay, OverlayRenderIn, OverlayWidget, PublicOverlay } from '@/lib/live-overlay/types';
+import { parseControls, type CreatorOverlay, type OverlayControls, type OverlayRenderIn, type OverlayWidget, type PublicOverlay } from '@/lib/live-overlay/types';
 import type { LiveRule } from '@/lib/live-overlay/rules';
 
 /**
@@ -27,6 +27,7 @@ function publicOverlay(raw: Partial<PublicOverlay> | undefined): PublicOverlay {
       startedAt: typeof raw?.stats?.startedAt === 'string' ? raw.stats.startedAt : null,
       reactions: Number(raw?.stats?.reactions) || 0,
     },
+    controls: parseControls(raw?.controls),
   };
 }
 
@@ -115,6 +116,17 @@ export async function getOverlayByToken(token: string): Promise<TokenOverlay> {
     creator: raw?.creator ?? { address: '' },
     live: raw?.live?.streamId ? { streamId: String(raw.live.streamId), tokenId: raw.live.tokenId ?? null } : null,
   };
+}
+
+/** Quick controls: only the switches sent change. Every surface drawing the overlay obeys at once. */
+export async function setMyControls(change: Partial<OverlayControls>): Promise<CreatorOverlay> {
+  return unwrap(
+    await apiCall<CreatorOverlay | { result: CreatorOverlay }>('/api/live-overlay/mine/controls', {
+      method: 'PUT',
+      body: change,
+      requiresAuth: true,
+    }),
+  );
 }
 
 /** Retire the OBS URL and issue a new one. Anything still open on the old URL goes blank. */

@@ -40,9 +40,18 @@ describe('fired rules from the server', () => {
       alerts: [{ text: 'hi', durationMs: 20000 }],
       sounds: ['airhorn'],
       say: ['gm'],
+      wheels: [],
       test: false,
     });
     expect(Object.keys(RULE_SOUND_FILES)).toContain('airhorn');
+  });
+
+  it('keeps a wheel only when it stops on one of its own segments', () => {
+    const wheels = (list: unknown) => parseRuleFired({ ruleId: 'r1', alerts: [], sounds: [], say: [], wheels: list })!.wheels;
+    expect(wheels([{ segments: ['Sing', 'Dance'], result: 1 }])).toEqual([{ segments: ['Sing', 'Dance'], result: 1 }]);
+    expect(wheels([{ segments: ['Sing', 'Dance'], result: 2 }])).toEqual([]);
+    expect(wheels([{ segments: ['Sing'], result: 0 }])).toEqual([]);
+    expect(wheels('spin')).toEqual([]);
   });
 
   it('ignores anything that is not a fired rule', () => {

@@ -12,6 +12,7 @@ import { ChevronDown, Loader2, Plus, Trash2 } from 'lucide-react';
 import { toast } from 'sonner';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
+import { Textarea } from '@/components/ui/textarea';
 import { Switch } from '@/components/ui/switch';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
 import { PageSection } from '@/components/app/page-kit/PageKit';
@@ -29,6 +30,7 @@ import {
   RULE_PRESETS,
   RULE_SOUNDS,
   RULE_TRIGGERS,
+  WHEEL_MAX_SEGMENTS,
   type LiveRule,
   type RuleAction,
   type RuleActionType,
@@ -470,6 +472,21 @@ function ActionFields({ action, onChange }: { action: RuleAction; onChange: (nex
           </Field>
           {textField(t('liveStudio.rules.webhookText'), action.text, (text) => onChange({ ...action, text }))}
         </div>
+      );
+    case 'wheel':
+      return (
+        <Field label={t('liveStudio.rules.wheelSegments')} hint={t('liveStudio.rules.wheelHint')}>
+          {(id) => (
+            <Textarea
+              id={id}
+              rows={4}
+              value={action.segments.join('\n')}
+              placeholder={t('liveStudio.rules.wheelPlaceholder')}
+              onChange={(e) => onChange({ ...action, segments: e.target.value.split('\n').slice(0, WHEEL_MAX_SEGMENTS).map((s) => s.slice(0, 30)) })}
+              className={SETTINGS_FIELD_CLASS}
+            />
+          )}
+        </Field>
       );
     default:
       return null;

@@ -21,6 +21,7 @@ import type { LiveAudience } from '@/lib/api/dehub/livestream';
 import { tierFromGift } from '@/lib/live/gift-tiers';
 import { buildAvatarUrl } from '@/lib/media-url';
 import { setting, type OverlayKind } from '@/lib/live-overlay/registry';
+import { WHEEL_SPIN_MS } from '@/lib/live-overlay/rules';
 import type { OverlayStats } from '@/lib/live-overlay/types';
 import type { LiveRoomEvent, StreamJoinUser } from '@/lib/api/dehub/stream-presence';
 import { useOverlayEvent } from './overlay-events';
@@ -519,7 +520,12 @@ interface RuleAlertItem {
 function RuleAlert(_: WidgetProps) {
   const queue = useAlertQueue<RuleAlertItem>((item) => item.durationMs);
   useRuleFired((fired) => {
-    for (const alert of fired.alerts) queue.push({ text: alert.text, user: fired.user, durationMs: alert.durationMs });
+    const show = () => {
+      for (const alert of fired.alerts) queue.push({ text: alert.text, user: fired.user, durationMs: alert.durationMs });
+    };
+    // An alert that names where a wheel stopped waits until it has stopped.
+    if (fired.wheels.length) window.setTimeout(show, WHEEL_SPIN_MS);
+    else show();
   });
   if (!queue.current) return null;
   const { item, leaving, id } = queue.current;
@@ -530,6 +536,75 @@ function RuleAlert(_: WidgetProps) {
         <div data-ow-lines>
           <div data-ow-title>{item.text}</div>
         </div>
+      </div>
+    </div>
+  );
+}
+
+// ─── Spin wheel ───────────────────────────────────────────────────────────────
+
+const WHEEL_COLORS = ['#f43f5e', '#f59e0b', '#22c55e', '#3b82f6', '#a855f7', '#14b8a6', '#ec4899', '#eab308', '#6366f1', '#10b981', '#ef4444', '#0ea5e9'];
+/** How long the result stays up after the wheel lands. */
+const WHEEL_HOLD_MS = 4000;
+
+interface SpinItem {
+  segments: string[];
+  result: number;
+  user: StreamJoinUser;
+}
+
+/**
+ * A stream rule's wheel. The server already chose where it stops; this only
+ * turns it there, so every viewer and the OBS picture land on the same answer.
+ */
+function SpinWheel(_: WidgetProps) {
+  const queue = useAlertQueue<SpinItem>(() => WHEEL_SPIN_MS + WHEEL_HOLD_MS);
+  useRuleFired((fired) => {
+    for (const wheel of fired.wheels) queue.push({ ...wheel, user: fired.user });
+  });
+  if (!queue.current) return null;
+  const { item, leaving, id } = queue.current;
+  return <WheelFace key={id} item={item} leaving={leaving} />;
+}
+
+function WheelFace({ item, leaving }: { item: SpinItem; leaving: boolean }) {
+  const { t } = useTranslation();
+  const name = useName(item.user);
+  const n = item.segments.length;
+  const slice = 360 / n;
+  // Five full turns, then the chosen slice's middle under the pointer at the top.
+  const target = 360 * 5 + (360 - (item.result + 0.5) * slice);
+  const [angle, setAngle] = useState(0);
+  const [landed, setLanded] = useState(false);
+  useEffect(() => {
+    const frame = requestAnimationFrame(() => setAngle(target));
+    const done = window.setTimeout(() => setLanded(true), WHEEL_SPIN_MS);
+    return () => {
+      cancelAnimationFrame(frame);
+      window.clearTimeout(done);
+    };
+  }, [target]);
+  const gradient = item.segments
+    .map((_, i) => `${WHEEL_COLORS[i % WHEEL_COLORS.length]} ${i * slice}deg ${(i + 1) * slice}deg`)
+    .join(', ');
+
+  return (
+    <div data-ow-wheel data-leaving={leaving || undefined}>
+      <div data-ow-wheel-stage>
+        <span data-ow-wheel-pointer aria-hidden />
+        <div
+          data-ow-wheel-disc
+          style={{ background: `conic-gradient(${gradient})`, transform: `rotate(${angle}deg)`, '--ow-wheel-ms': `${WHEEL_SPIN_MS}ms` } as CSSProperties}
+        >
+          {item.segments.map((segment, i) => (
+            <span key={i} data-ow-wheel-label style={{ transform: `rotate(${(i + 0.5) * slice}deg)` }}>
+              <span>{segment}</span>
+            </span>
+          ))}
+        </div>
+      </div>
+      <div data-ow-wheel-result data-shown={landed || undefined}>
+        {t('liveOverlay.wheelLanded', { name, result: item.segments[item.result] })}
       </div>
     </div>
   );
@@ -570,6 +645,8 @@ export function OverlayWidgetView({ kind, ...props }: WidgetProps & { kind: Over
       return <RuleAlert {...props} />;
     case 'poll':
       return <PollWidget settings={props.settings} />;
+    case 'spin_wheel':
+      return <SpinWheel {...props} />;
     default:
       return null;
   }

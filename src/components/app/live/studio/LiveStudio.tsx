@@ -33,6 +33,7 @@ import { createRuleBus, RuleAudio, RuleBusContext } from '../overlay/rule-bus';
 import { RulesPanel } from './RulesPanel';
 import { PollPanel } from './PollPanel';
 import { RecapPanel } from './RecapPanel';
+import { QuickControls } from './QuickControls';
 import { PollContext } from '../overlay/poll';
 import { getMyPoll } from '@/lib/api/dehub/live-polls';
 import { samplePoll, type LivePoll } from '@/lib/live-overlay/polls';
@@ -198,6 +199,8 @@ export function LiveStudio() {
       <p className="text-sm text-zinc-400">{t('liveStudio.intro')}</p>
 
       {justEnded && <RecapPanel address={walletAddress} streamId={justEnded} />}
+
+      <QuickControls overlay={data} queryKey={myOverlayKey} />
 
       <div className="grid gap-4 lg:grid-cols-[minmax(0,1fr)_340px]">
         <div className="space-y-4">
