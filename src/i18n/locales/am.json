@@ -297,8 +297,8 @@
     "compactMode": "ጥቅጥቅ ያለ ሁነታ",
     "compactModeDesc": "ለተጨማሪ ይዘት ክፍተት ቀንስ",
     "autoPlay": "ቪዲዮዎችን ራስ-ሰር አጫውት",
-    "autoplayPausePrompt": "የራስ-ሰር አጫውት ቅንብር",
     "autoPlayDesc": "በፊድ ውስጥ ቪዲዮዎችን ራስ-ሰር አጫውት",
+    "autoplayPausePrompt": "የራስ-ሰር አጫውት ቅንብር",
     "autoPlayMuted": "ራስ-አጫውትን ድምፅ አጥፍቶ ጀምር",
     "autoPlayMutedDesc": "በራሳቸው የሚጫወቱ ቪዲዮዎች ሁልጊዜ ድምፅ ጠፍቶ ይጀምራሉ",
     "showAnimations": "አኒሜሽኖችን አሳይ",
@@ -4770,6 +4770,17 @@
     "paidToCreatorWallet": "በቀጥታ ወደ ፈጣሪ ቦርሳ ይሂዱ",
     "creatorPaidDirectNote": "የፈጣሪ ድርሻ እርስዎ በሚመዘገቡበት ቅጽበት በቀጥታ ወደ ኪስዎ ይሄዳል ። DeHub አነስተኛ የመሣሪያ ስርዓት ክፍያዎችን ይጠብቃል ።",
     "creatorEarnsDirect": "ተመዝጋቢዎች በ DeHub ምልክቶች ውስጥ ይከፍላሉ ። የእርስዎ ድርሻ መሬቶች በኪስ ቦርሳዎ ውስጥ በሚመዘገቡበት ቅጽበት ፣ ለባጅ ደረጃዎ የመድረክ ክፍያ ያነሰ ።"
+  },
+  "liveOverlay": {
+    "someone": "የሆነ ሰው",
+    "newFollower": "አዲስ ተከታይ: {{name}}",
+    "newSubscriber": "አዲስ ተመዝጋቢ: {{name}}",
+    "subscribedTo": "{{name}} {{plan}} ተመዝግበዋል",
+    "shared": "{{name}} ዥረት አጋርቷል",
+    "joined": "{{name}} ተቀላቀለ",
+    "goalReached": "ግብ ደርሷል!",
+    "followersUnit": "ተከታዮች",
+    "topSupporters": "ከፍተኛ ደጋፊዎች"
   },
   "live": {
     "chatJoined": "ተቀላቀለ",

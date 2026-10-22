@@ -297,8 +297,8 @@
     "compactMode": "کمپیکٹ موڈ",
     "compactModeDesc": "زیادہ کانٹینٹ کے لئے جگہ کم کرو",
     "autoPlay": "آٹو-پلے ویڈیو",
-    "autoplayPausePrompt": "آٹو پلے سیٹنگ",
     "autoPlayDesc": "فیڈ میں ویڈیو خود سے چلاؤ",
+    "autoplayPausePrompt": "آٹو پلے سیٹنگ",
     "autoPlayMuted": "آٹو پلے بغیر آواز کے شروع کرو",
     "autoPlayMutedDesc": "اپنے آپ چلنے والے ویڈیو ہمیشہ بغیر آواز کے شروع ہوتے",
     "showAnimations": "اینیمیشن دکھاؤ",
@@ -4016,6 +4016,17 @@
     "paidToCreatorWallet": "سیدھا تخلیق کار کے والیٹ پر جاتا ہے",
     "creatorPaidDirectNote": "آپ سبسکرائب کرتے ہی کریئٹر کا حصہ سیدھا ان کے والٹ میں جاتا۔ DeHub تھوڑی سی پلیٹ فارم فیس رکھتا۔",
     "creatorEarnsDirect": "سبسکرائبرز DeHub ٹوکنز میں ادا کرتے۔ سبسکرائب کرتے ہی آپ کا حصہ آپ کے والٹ میں آجاتا، آپ کے بیج لیول کی پلیٹ فارم فیس کٹ کو۔"
+  },
+  "liveOverlay": {
+    "someone": "کوئی",
+    "newFollower": "نیا فالوور: {{name}}",
+    "newSubscriber": "نیا سبسکرائبر: {{name}}",
+    "subscribedTo": "{{name}} نے {{plan}} کو سبسکرائب کیا",
+    "shared": "{{name}} نے سٹریم شیئر کی",
+    "joined": "{{name}} شامل ہوا",
+    "goalReached": "ہدف حاصل ہوا!",
+    "followersUnit": "فالوورز",
+    "topSupporters": "ٹاپ سپورٹرز"
   },
   "live": {
     "chatJoined": "शामिल हुए",

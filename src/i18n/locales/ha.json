@@ -297,8 +297,8 @@
     "compactMode": "Yanayin matse",
     "compactModeDesc": "Rage tazara don ƙarin abun ciki",
     "autoPlay": "Bidiyo ta atomatik",
-    "autoplayPausePrompt": "Saitin kunna ta atomatik",
     "autoPlayDesc": "Bidiyo ta tashi ta atomatik a cikin jerin",
+    "autoplayPausePrompt": "Saitin kunna ta atomatik",
     "autoPlayMuted": "Fara kunna kai tsaye ba sauti",
     "autoPlayMutedDesc": "Bidiyoyin da ke kunnawa da kansu koyaushe za su fara ba tare da sauti ba",
     "showAnimations": "Nuna motsi",
@@ -4699,6 +4699,17 @@
     "paidToCreatorWallet": "Je kai tsaye zuwa walat na mahalicci",
     "creatorPaidDirectNote": "Rabon mahalicci yana kai tsaye zuwa walat ɗin su lokacin da kuka yi rajista. DeHub yana riƙe da ƙaramin kuɗin dandamali.",
     "creatorEarnsDirect": "Masu biyan kuɗi suna biyan kuɗi a cikin alamun DeHub. Kasashen rabon ku a cikin walat ɗin ku lokacin da suka yi rajista, ƙasa da kuɗin dandamali don ƙimar alamar ku."
+  },
+  "liveOverlay": {
+    "someone": "Wani",
+    "newFollower": "Sabon mabiya: {{name}}",
+    "newSubscriber": "Sabuwar mai biyan kuɗi: {{name}}",
+    "subscribedTo": "{{name}} rajista zuwa {{plan}}",
+    "shared": "{{name}} shared da rafi",
+    "joined": "{{name}} shiga",
+    "goalReached": "Manufar ta kai!",
+    "followersUnit": "mabiya",
+    "topSupporters": "Manyan magoya baya"
   },
   "live": {
     "chatJoined": "ya shiga",

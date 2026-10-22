@@ -4782,6 +4782,17 @@
     "creatorPaidDirectNote": "A parte do criador vai diretamente para a carteira no momento em que você se inscreve. O DeHub mantém uma pequena taxa de plataforma.",
     "creatorEarnsDirect": "Os assinantes pagam em tokens DeHub. A sua parte fica na sua carteira no momento em que é subscrita, menos a taxa da plataforma para o seu nível de emblema."
   },
+  "liveOverlay": {
+    "someone": "Alguém",
+    "newFollower": "Novo seguidor: {{name}}",
+    "newSubscriber": "Novo assinante: {{name}}",
+    "subscribedTo": "{{name}} subscreveu {{plan}}",
+    "shared": "{{name}} partilhou a transmissão",
+    "joined": "{{name}} entrou",
+    "goalReached": "Meta alcançada!",
+    "followersUnit": "seguidores",
+    "topSupporters": "Principais apoiadores"
+  },
   "live": {
     "chatJoined": "entrou",
     "chatSentGift": "enviou",

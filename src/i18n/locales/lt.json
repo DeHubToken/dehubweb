@@ -297,8 +297,8 @@
     "compactMode": "Kompaktiškas režimas",
     "compactModeDesc": "Sumažinti tarpą daugiau turiniui",
     "autoPlay": "Automatinis vaizdo įrašų paleidimas",
-    "autoplayPausePrompt": "Automatinio paleidimo nustatymas",
     "autoPlayDesc": "Automatiškai paleisti vaizdo įrašus sraute",
+    "autoplayPausePrompt": "Automatinio paleidimo nustatymas",
     "autoPlayMuted": "Automatinį paleidimą pradėti be garso",
     "autoPlayMutedDesc": "Savaime paleidžiami vaizdo įrašai visada prasideda be garso",
     "showAnimations": "Rodyti animacijas",
@@ -4773,6 +4773,17 @@
     "paidToCreatorWallet": "Eina tiesiai į kūrėjo piniginę",
     "creatorPaidDirectNote": "Kūrėjo dalis iškart patenka į jo piniginę, kai tik užsiprenumeruoji. „DeHub“ taiko nedidelį platformos mokestį.",
     "creatorEarnsDirect": "Prenumeratoriai moka DeHub žetonais. Kai tik užsiprenumeruosi, tavo dalis atsidurs tavo piniginėje, atėmus platformos mokestį už tavo ženklelio lygį."
+  },
+  "liveOverlay": {
+    "someone": "Kažkas",
+    "newFollower": "Naujas sekėjas: {{name}}",
+    "newSubscriber": "Naujas prenumeratorius: {{name}}",
+    "subscribedTo": "{{name}} prenumeravo {{plan}}",
+    "shared": "{{name}} bendrino srautą",
+    "joined": "{{name}} prisijungė",
+    "goalReached": "Tikslas pasiektas!",
+    "followersUnit": "sekėjai",
+    "topSupporters": "Geriausi rėmėjai"
   },
   "live": {
     "chatJoined": "prisijungė",

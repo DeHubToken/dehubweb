@@ -4783,6 +4783,17 @@
     "creatorPaidDirectNote": "订阅后，创作者的份额将直接存入他们的钱包。DeHub收取少量平台费。",
     "creatorEarnsDirect": "订阅者以DeHub代币支付。订阅会员订阅后，您的份额即会显示在您的钱包中，减去徽章等级的平台费。"
   },
+  "liveOverlay": {
+    "someone": "某人",
+    "newFollower": "新关注者： {{name}}",
+    "newSubscriber": "新订阅者： {{name}}",
+    "subscribedTo": "{{name}}订阅了{{plan}}",
+    "shared": "{{name}}分享了串流",
+    "joined": "{{name}}已加入",
+    "goalReached": "已达到目标！",
+    "followersUnit": "关注者",
+    "topSupporters": "顶级支持者"
+  },
   "live": {
     "chatJoined": "加入了",
     "chatSentGift": "送出了",

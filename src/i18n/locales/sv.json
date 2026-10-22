@@ -297,8 +297,8 @@
     "compactMode": "Kompakt läge",
     "compactModeDesc": "Minska avstånd för att visa mer innehåll",
     "autoPlay": "Automatisk uppspelning av videor",
-    "autoplayPausePrompt": "Inställning för automatisk uppspelning",
     "autoPlayDesc": "Videor spelas upp automatiskt",
+    "autoplayPausePrompt": "Inställning för automatisk uppspelning",
     "autoPlayMuted": "Starta autouppspelning utan ljud",
     "autoPlayMutedDesc": "Videor som spelas upp av sig själva startar alltid utan ljud",
     "showAnimations": "Visa animationer",
@@ -4715,6 +4715,17 @@
     "paidToCreatorWallet": "Går direkt till kreatörens plånbok",
     "creatorPaidDirectNote": "Kreatörens andel går direkt till hans eller hennes plånbok så fort du prenumererar. DeHub behåller en liten plattformsavgift.",
     "creatorEarnsDirect": "Prenumeranter betalar i DeHub-tokens. Din andel hamnar i din plånbok så fort de prenumererar, minus plattformsavgiften för din märkesnivå."
+  },
+  "liveOverlay": {
+    "someone": "Någon",
+    "newFollower": "Ny följare: {{name}}",
+    "newSubscriber": "Ny prenumerant: {{name}}",
+    "subscribedTo": "{{name}} prenumererar på {{plan}}",
+    "shared": "{{name}} delade flödet",
+    "joined": "{{name}} gick med",
+    "goalReached": "Målet har uppnåtts!",
+    "followersUnit": "följare",
+    "topSupporters": "Toppanhängare"
   },
   "live": {
     "chatJoined": "gick med",

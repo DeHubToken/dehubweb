@@ -297,8 +297,8 @@
     "compactMode": "Kompakt-Modus",
     "compactModeDesc": "Weniger Abstand für meh Inhalt",
     "autoPlay": "Videos automatisch abspile",
-    "autoplayPausePrompt": "Iistellig für automatischs Abspile",
     "autoPlayDesc": "Videos im Feed automatisch abspile",
+    "autoplayPausePrompt": "Iistellig für automatischs Abspile",
     "autoPlayMuted": "Autoplay stumm starte",
     "autoPlayMutedDesc": "Videos, wo vo sälber laufe, fanged immer ohni Ton aa",
     "showAnimations": "Animatione aazeige",
@@ -4766,6 +4766,16 @@
     "paidToCreatorWallet": "Geit direkt i d Wallet vom Schöpfer",
     "creatorPaidDirectNote": "Dr Schär vom Creator gaht grad i sini Wallet, grad wenn du abonnierisch. DeHub behaltet e chlii Plattform-Gebühr.",
     "creatorEarnsDirect": "Abonnente zahled mit DeHub Tokens. Din Anteil landet i dim Wallet, grad wenn sie abonniered, abzüglich de Plattformgebühr für din Badge-Tier."
+  },
+  "liveOverlay": {
+    "someone": "Irgendwer",
+    "newFollower": "Neuer Follower: {{name}}",
+    "newSubscriber": "Neue Abonnentin: {{name}}",
+    "subscribedTo": "{{name}} hat sich zu {{plan}} abonniert",
+    "shared": "{{name}} hat den Stream geteilt",
+    "goalReached": "Ziel erreicht!",
+    "followersUnit": "Folligend",
+    "topSupporters": "Top‑Unterstützer"
   },
   "live": {
     "chatJoined": "isch bitrete",

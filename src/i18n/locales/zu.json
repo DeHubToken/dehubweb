@@ -297,8 +297,8 @@
     "compactMode": "Imodi Yokuhlangana",
     "compactModeDesc": "Nciphisa isikhala sokuqukethwe okuningi",
     "autoPlay": "Dlala Amavidiyo Ngokuzenzakalelayo",
-    "autoplayPausePrompt": "Isilungiselelo sokudlala ngokuzenzakalelayo",
     "autoPlayDesc": "Dlala amavidiyo ngokuzenzakalelayo efidini",
+    "autoplayPausePrompt": "Isilungiselelo sokudlala ngokuzenzakalelayo",
     "autoPlayMuted": "Qala ukudlala okuzenzakalelayo ngaphandle komsindo",
     "autoPlayMutedDesc": "Amavidiyo azidlalelayo ahlala eqala umsindo uvaliwe",
     "showAnimations": "Bonisa Ama-animation",
@@ -4780,6 +4780,17 @@
     "paidToCreatorWallet": "Iya ngqo esikhwameni somsunguli",
     "creatorPaidDirectNote": "Isabelo somsunguli siya ngqo esikhwameni sakhe semali lapho ubhalisa. I-DeHub igcina inani elincane lepulatifomu.",
     "creatorEarnsDirect": "Ababhalisile bakhokha ngamathokheni e-DeHub. Izabelo zakho zihlala esikhwameni sakho semali lapho zibhalisa, nciphisa inani lepulatifomu lebanga lakho lebheji."
+  },
+  "liveOverlay": {
+    "someone": "Othile",
+    "newFollower": "Umlandeli omusha: {{name}}",
+    "newSubscriber": "Umbhalisi omusha: {{name}}",
+    "subscribedTo": "{{name}} ubhalisele i- {{plan}}",
+    "shared": "{{name}} wabelane ngokusakaza",
+    "joined": "{{name}} ujoyine",
+    "goalReached": "Umgomo ufinyelelwe!",
+    "followersUnit": "abalandeli",
+    "topSupporters": "Abasekeli abahamba phambili"
   },
   "live": {
     "chatJoined": "ujoyinile",

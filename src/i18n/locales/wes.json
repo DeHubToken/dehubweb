@@ -296,8 +296,8 @@
     "compactMode": "Compact Mode",
     "compactModeDesc": "Reduce space make more content fit show",
     "autoPlay": "Video dem go play demself",
-    "autoplayPausePrompt": "Auto play setting",
     "autoPlayDesc": "Play videos by themselves for feed",
+    "autoplayPausePrompt": "Auto play setting",
     "autoPlayMuted": "Make autoplay start without sound",
     "autoPlayMutedDesc": "Video weh di play by yi sef go always start with sound off",
     "showAnimations": "Show Animation dem",
@@ -4365,6 +4365,11 @@
     "paidToCreatorWallet": "E go straight for di creator wallet",
     "creatorPaidDirectNote": "Di creator share go straight go im wallet as soon as you subscribe. DeHub dey keep small platform fee.",
     "creatorEarnsDirect": "Subscribers di pay with DeHub tokens. Your share go land for your wallet di moment dem subscribe, minus di platform fee for your badge level."
+  },
+  "liveOverlay": {
+    "someone": "Wetin dem say?",
+    "joined": "{{name}} join",
+    "followersUnit": "foloas"
   },
   "live": {
     "chatJoined": "don join",

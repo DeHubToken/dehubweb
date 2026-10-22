@@ -297,8 +297,8 @@
     "compactMode": "مختصر موڊ",
     "compactModeDesc": "وڌيڪ مواد لاءِ جاءِ گهٽ ڪريو",
     "autoPlay": "وڊيو آٽو-پلي",
-    "autoplayPausePrompt": "آٽو پلي سيٽنگ",
     "autoPlayDesc": "فيڊ ۾ وڊيو خودڪار هلايو",
+    "autoplayPausePrompt": "آٽو پلي سيٽنگ",
     "autoPlayMuted": "آٽو پلي آواز کان سواءِ شروع ڪريو",
     "autoPlayMutedDesc": "پاڻمرادو هلندڙ وڊيوز هميشه آواز بند سان شروع ٿينديون",
     "showAnimations": "اينيميشن ڏيکاريو",
@@ -4721,6 +4721,17 @@
     "paidToCreatorWallet": "سڌي طرح خالق جي پرس ڏانهن وڃو",
     "creatorPaidDirectNote": "خالق جو حصو سڌو سنئون انهن جي والٽ ڏانهن وڃي ٿو جڏهن توهان سبسڪرائب ڪيو ٿا. DeHub هڪ ننڍڙي پليٽ فارم فيس رکي ٿو.",
     "creatorEarnsDirect": "سبسڪرائبرز DeHub ٽوڪن ۾ ادا ڪن ٿا. توهان جو حصو توهان جي والٽ ۾ زمينون جڏهن اهي سبسڪرائب ڪندا آهن، توهان جي بيج ٽائر لاءِ پليٽ فارم فيس گهٽ هوندي آهي."
+  },
+  "liveOverlay": {
+    "someone": "ڪو ماڻهو",
+    "newFollower": "نئون پيروڪار: {{name}}",
+    "newSubscriber": "نئون سبسڪرائبر: {{name}}",
+    "subscribedTo": "{{name}} رڪنيت حاصل ڪئي {{plan}}",
+    "shared": "{{name}} وهڪرو شيئر ڪيو",
+    "joined": "{{name}} شامل ٿيو",
+    "goalReached": "مقصد پهچي ويو!",
+    "followersUnit": "پوئلڳ",
+    "topSupporters": "مٿيون حامي"
   },
   "live": {
     "chatJoined": "شامل ٿيو",
