@@ -102,7 +102,7 @@ html[data-theme='glass'] [data-glass-embed] > [data-link-preview-layout='image']
   width: 34%; max-width: 180px; height: 112px; min-height: 112px; flex-shrink: 0; aspect-ratio: auto;
 }
 html[data-theme='glass'] [data-glass-embed] [data-link-preview-layout] h4 { white-space: normal; -webkit-line-clamp: 2; }
-html[data-theme='glass'] [data-video-card] > [data-feed-video-frame]:not([data-video-fullscreen]) { margin-inline: auto; }
+html[data-theme='glass'] [data-video-card] > [data-feed-video-frame]:not([data-video-fullscreen]) { margin-inline: auto !important; }
 html[data-theme='glass'] :is([data-kit-chip], [data-kit-square])[data-active='true'] { box-shadow: var(--glass-edge-flat), 0 0 18px -8px var(--tint-accent); }
 html[data-theme='glass'] :is([data-poll-card], [data-kit-empty], [data-app-state][data-app-state-size='page']) {
   border-radius: 24px; border-color: transparent;
@@ -114,9 +114,22 @@ html[data-theme='glass'] :is([data-page-bento], [data-feed-item], [data-side-pan
     box-shadow: inset 0 0 0 1px rgb(225 255 255 / .65), inset 0 1px 1px #fff, inset 0 -8px 16px -10px var(--tint-accent);
   }
 }
-html[data-theme='glass'] #app-root :is(input:not([type='checkbox']):not([type='radio']):not([type='range']):not([type='color']), textarea, select):not([data-on-media] *):not([data-keep-dark] *) {
+html[data-theme='glass'] #app-root :is(input:not([type='checkbox']):not([type='radio']):not([type='range']):not([type='color']), textarea, select):not(.bg-transparent):not(.border-0):not([data-on-media] *):not([data-keep-dark] *) {
   background-color: var(--theme-control-fill) !important;
   border-color: rgb(225 255 255 / .24);
+}
+html[data-theme='glass'] #app-root [data-search-bento] input {
+  background: transparent !important; border: 0 !important; box-shadow: none !important;
+}
+html[data-theme='glass'] [data-search-bento]:focus-within { filter: brightness(1.12); }
+html[data-theme='glass'] #app-root :is(input, textarea, select):not(.bg-transparent):not(.border-0):focus-visible {
+  border-color: rgb(225 255 255 / .75); box-shadow: none;
+}
+html[data-theme='glass'] [data-glass-bare-action] {
+  background: transparent !important; border-color: transparent !important; box-shadow: none !important;
+}
+html[data-theme='glass'] [data-glass-bare-action]:focus-visible {
+  outline: 2px solid #d7ffff; outline-offset: 4px; border-radius: 8px;
 }
 
 html[data-theme='glass'][data-theme] :is([data-feed-item], [data-page-bento], [data-side-panel]):not([data-bento-flat]):not(:has([data-page-bento])):not([data-keep-dark]):not(#_):not(#_) {
@@ -145,6 +158,18 @@ html[data-theme='glass'] [data-creator-page] :is([data-clear-top-bar], [data-cre
 }
 html[data-theme='glass'] [data-creator-banner] button { color: #efffff; }
 html[data-theme='glass'] [data-creator-create] { box-shadow: var(--glass-edge-flat); }
+html[data-theme='glass'] .docs-root { --muted-foreground: 185 32% 78%; }
+html[data-theme='glass'] .docs-root h1 .text-transparent {
+  background-image: linear-gradient(135deg, #efffff, #a6f5f2) !important;
+}
+html[data-theme='glass'] .docs-root :is(
+  [data-theme-button]:not([data-button-variant='ghost']):not([data-button-variant='destructive']),
+  [data-theme-button][data-button-variant='ghost'][class*='bg-muted'],
+  button.bg-muted
+) {
+  background: var(--glass-highlight), var(--theme-control-fill) !important;
+  color: #efffff !important; border-color: transparent !important; box-shadow: var(--glass-edge-flat) !important;
+}
 
 [data-glass-background] {
   position: fixed; inset: 0; z-index: 0; overflow: hidden; pointer-events: none;
@@ -196,6 +221,7 @@ html[data-theme='glass'] #app-root :is(button,a).bg-white:not([data-on-media]):n
 }
 
 /* A tinted transport deck, shared by uploaded tracks in feeds and post pages. */
+html[data-theme='glass'] [data-glass-audio-tile] { padding: 0; border: 0; background: transparent; box-shadow: none; }
 html[data-theme='glass'] [data-audio-preview-item] { flex: 0 0 100%; width: 100%; min-width: 0; }
 html[data-theme='glass'] [data-glass-audio-preview] { width: 100%; background: transparent; overflow: visible; }
 html[data-theme='glass'] [data-glass-audio-preview] [data-audio-preview-label] { display: none; }
@@ -244,8 +270,6 @@ html[data-theme='glass'] [data-glass-audio-transport] [data-glass-audio-popout] 
 [data-glass-audio-options] > div { position:absolute; right:0; top:100%; display:flex; gap:12px; align-items:center; padding:12px; width:240px; border-radius:18px; background:var(--stage-solid); box-shadow:var(--glass-edge); }
 [data-glass-audio-options] select { max-width:100px; }
 @media (hover:hover) {
-  html[data-theme='glass'] #app-root :is(button,a,[role='button']):not([data-on-media]):not([data-keep-dark] *):hover {
-    background-color: color-mix(in srgb,var(--tint-accent) 9%,transparent) !important;
-  }
+  html[data-theme='glass'] [data-glass-bare-action]:hover { filter: brightness(1.08); }
   html[data-theme='glass'] [data-glass-audio-transport] button:hover { filter:brightness(1.12); }
 }
