@@ -5816,7 +5816,9 @@
     "joined": "{{name}} se unió",
     "goalReached": "¡Objetivo alcanzado!",
     "followersUnit": "seguidores",
-    "topSupporters": "Principales simpatizantes"
+    "topSupporters": "Principales simpatizantes",
+    "tipped": "{{name}} ha enviado un regalo",
+    "chatPreview": "Los mensajes de chat aparecen aquí"
   },
   "liveStudio": {
     "title": "Estudio en directo",
@@ -5903,7 +5905,12 @@
       "top_supporters": "Principales simpatizantes",
       "viewer_count": "Recuento de espectadores",
       "text": "Texto",
-      "frame": "Bastidor"
+      "frame": "Bastidor",
+      "stream_timer": "Temporizador de difusión",
+      "reaction_counter": "Contador de reacciones",
+      "event_feed": "Actividad reciente",
+      "chat_box": "Cuadro de chat",
+      "ticker": "Marquesina"
     },
     "hints": {
       "tip_alert": "Celebra cada propina, ajustada a su nivel",
@@ -5915,7 +5922,12 @@
       "top_supporters": "Tus mayores propinas en esta transmisión",
       "viewer_count": "¿Cuántas personas están viendo",
       "text": "Una línea de texto o un tercio inferior",
-      "frame": "Un borde alrededor de tu transmisión"
+      "frame": "Un borde alrededor de tu transmisión",
+      "stream_timer": "Muestra cuánto tiempo ha estado transmitiendo",
+      "reaction_counter": "Cuenta cada reacción que recibe tu transmisión",
+      "event_feed": "Los últimos regalos, seguidores, suscriptores y personas que comparten tu transmisión",
+      "chat_box": "Muestra los mensajes de chat de tu transmisión en la pantalla",
+      "ticker": "Una línea de tu propio texto que se desplaza por la pantalla"
     },
     "fields": {
       "style": "Estilo",
@@ -5940,7 +5952,14 @@
       "glow": "Brillo",
       "thickness": "Espesor",
       "radius": "Redondeo de esquinas",
-      "accent": "Color"
+      "accent": "Color",
+      "label": "Etiqueta",
+      "lines": "Líneas mostradas",
+      "showAvatars": "Mostrar fotos de perfil",
+      "speed": "Rapidez",
+      "slow": "Lento",
+      "normal": "Normal",
+      "fast": "Rápido"
     }
   },
   "live": {

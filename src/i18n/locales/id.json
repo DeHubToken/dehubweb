@@ -4790,7 +4790,9 @@
     "joined": "{{name}} bergabung",
     "goalReached": "Gol tercapai!",
     "followersUnit": "pengikut",
-    "topSupporters": "Pendukung teratas"
+    "topSupporters": "Pendukung teratas",
+    "tipped": "{{name}} mengirim hadiah",
+    "chatPreview": "Pesan obrolan muncul di sini"
   },
   "liveStudio": {
     "title": "Studio Langsung",
@@ -4877,7 +4879,12 @@
       "top_supporters": "Pendukung teratas",
       "viewer_count": "Jumlah pemirsa",
       "text": "Teks",
-      "frame": "Bingkai"
+      "frame": "Bingkai",
+      "stream_timer": "Pengatur waktu siaran",
+      "reaction_counter": "Penghitung reaksi",
+      "event_feed": "Aktivitas terbaru",
+      "chat_box": "Kotak obrolan",
+      "ticker": "Ticker"
     },
     "hints": {
       "tip_alert": "Rayakan setiap tip, ukuran sesuai tingkatannya",
@@ -4889,7 +4896,12 @@
       "top_supporters": "Tip terbesar Anda untuk streaming ini",
       "viewer_count": "Berapa banyak orang yang menonton",
       "text": "Baris teks atau sepertiga bagian bawah",
-      "frame": "Perbatasan di sekitar aliran Anda"
+      "frame": "Perbatasan di sekitar aliran Anda",
+      "stream_timer": "Menunjukkan berapa lama Anda telah menyiarkan",
+      "reaction_counter": "Menghitung setiap reaksi yang diterima siaran Anda",
+      "event_feed": "Hadiah, pengikut, pelanggan, dan orang terbaru yang membagikan siaran Anda",
+      "chat_box": "Menampilkan pesan obrolan siaran Anda di layar",
+      "ticker": "Baris teks Anda sendiri yang bergulir di layar"
     },
     "fields": {
       "style": "Gaya",
@@ -4914,7 +4926,14 @@
       "glow": "Bersinar",
       "thickness": "Ketebalan",
       "radius": "Pembulatan sudut",
-      "accent": "Warna"
+      "accent": "Warna",
+      "label": "Label",
+      "lines": "Baris ditampilkan",
+      "showAvatars": "Tampilkan foto profil",
+      "speed": "Kecepatan",
+      "slow": "Lambat",
+      "normal": "Normal",
+      "fast": "Cepat"
     }
   },
   "live": {

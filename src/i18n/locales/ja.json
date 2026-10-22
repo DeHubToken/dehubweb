@@ -4779,7 +4779,9 @@
     "joined": "{{name}}が参加しました",
     "goalReached": "目標に到達しました！",
     "followersUnit": "フォロワー",
-    "topSupporters": "トップサポーター"
+    "topSupporters": "トップサポーター",
+    "tipped": "{{name}}さんがギフトを贈りました",
+    "chatPreview": "チャットメッセージがここに表示されます"
   },
   "liveStudio": {
     "title": "ライブスタジオ",
@@ -4866,7 +4868,12 @@
       "top_supporters": "トップサポーター",
       "viewer_count": "視聴者数",
       "text": "テキスト",
-      "frame": "フレーム"
+      "frame": "フレーム",
+      "stream_timer": "ブロードキャストタイマー",
+      "reaction_counter": "リアクションカウンター",
+      "event_feed": "最近のアクティビティ",
+      "chat_box": "チャットボックス",
+      "ticker": "ティッカー"
     },
     "hints": {
       "tip_alert": "各ティップをそのティアに合わせて祝う",
@@ -4878,7 +4885,12 @@
       "top_supporters": "この配信で最大のティッパー",
       "viewer_count": "何人が視聴しているか",
       "text": "テキスト行またはロワーサード",
-      "frame": "配信の周りに境界線"
+      "frame": "配信の周りに境界線",
+      "stream_timer": "ブロードキャストしている時間を表示します",
+      "reaction_counter": "ブロードキャストが受け取るすべての反応をカウントします",
+      "event_feed": "最新のギフト、フォロワー、購読者、ブロードキャストを共有している人",
+      "chat_box": "ブロードキャストのチャットメッセージを画面に表示します",
+      "ticker": "画面をスクロールする独自のテキストの行"
     },
     "fields": {
       "style": "スタイル",
@@ -4903,7 +4915,14 @@
       "glow": "輝き",
       "thickness": "厚さ",
       "radius": "角丸",
-      "accent": "色"
+      "accent": "色",
+      "label": "ラベル",
+      "lines": "表示された線",
+      "showAvatars": "プロフィール写真を表示",
+      "speed": "速度",
+      "slow": "遅い",
+      "normal": "ノーマル",
+      "fast": "高速"
     }
   },
   "live": {
