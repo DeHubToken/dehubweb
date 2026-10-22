@@ -297,8 +297,8 @@
     "compactMode": "Kompakte modus",
     "compactModeDesc": "Verminder spasiëring vir meer inhoud",
     "autoPlay": "Speel video's outomaties",
-    "autoplayPausePrompt": "Outospeel-instelling",
     "autoPlayDesc": "Speel video's outomaties in die voer",
+    "autoplayPausePrompt": "Outospeel-instelling",
     "autoPlayMuted": "Begin outospeel sonder klank",
     "autoPlayMutedDesc": "Video's wat vanself speel, begin altyd met die klank af",
     "showAnimations": "Wys animasies",
@@ -4810,6 +4810,17 @@
     "paidToCreatorWallet": "Gaan direk na die skepper se beursie",
     "creatorPaidDirectNote": "Die skepper se deel gaan direk na hul beursie die oomblik dat jy inteken. DeHub hou 'n klein platformfooi.",
     "creatorEarnsDirect": "Intekenare betaal in DeHub-tokens. Jou aandeel land in jou beursie die oomblik dat hulle inteken, minder die platformfooi vir jou wapenvlak."
+  },
+  "liveOverlay": {
+    "someone": "Iemand",
+    "followed": "{{name}} volg",
+    "subscribed": "{{name}} ingeteken",
+    "subscribedTo": "{{name}} ingeteken op {{plan}}",
+    "shared": "{{name}} deel die stroom",
+    "joined": "{{name}} aangesluit",
+    "goalReached": "Doel bereik!",
+    "followersUnit": "volgers",
+    "topSupporters": "Top ondersteuners"
   },
   "live": {
     "chatJoined": "het aangesluit",

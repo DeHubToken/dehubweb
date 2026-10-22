@@ -297,8 +297,8 @@
     "compactMode": "Yığcam Rejim",
     "compactModeDesc": "Daha çox məzmun üçün boşluğu azalt",
     "autoPlay": "Videoları Avto-oynat",
-    "autoplayPausePrompt": "Avto-oynatma ayarı",
     "autoPlayDesc": "Lentdə videoları avtomatik oynat",
+    "autoplayPausePrompt": "Avto-oynatma ayarı",
     "autoPlayMuted": "Avtomatik oynatmanı səssiz başlat",
     "autoPlayMutedDesc": "Özü oynayan videolar həmişə səssiz başlayır",
     "showAnimations": "Animasiyaları Göstər",
@@ -4682,6 +4682,16 @@
     "paidToCreatorWallet": "Birbaşa yaradıcının cüzdanına doğru gedir",
     "creatorPaidDirectNote": "Yaradıcı şəxsin payı birbaşa abunə olduğunuz an cüzdanına keçir. DeHub kiçik platforma haqqı saxlayır.",
     "creatorEarnsDirect": "Abunəçilər DeHub tokenlərində ödəniş edirlər. Pay torpaqlarınız abunə olduqları an cüzdanınızda olur, nişan səviyyəniz üçün platforma haqqını azaldın."
+  },
+  "liveOverlay": {
+    "someone": "Kimsə",
+    "followed": "{{name}} izlədi",
+    "subscribed": "{{name}} abunə oldu",
+    "shared": "{{name}} axını paylaşdı",
+    "joined": "{{name}} qoşuldu",
+    "goalReached": "Hədəfə çatdınız!",
+    "followersUnit": "izləyicilər",
+    "topSupporters": "Ən yaxşı dəstəkçilər"
   },
   "live": {
     "chatJoined": "qoşuldu",

@@ -295,8 +295,8 @@
     "compactMode": "الوضع المدمج",
     "compactModeDesc": "قلّل المسافات لمشاهدة محتوى أكتر",
     "autoPlay": "تشغيل تلقائي للفيديو",
-    "autoplayPausePrompt": "إعداد التشغيل التلقائي",
     "autoPlayDesc": "شغّل الفيديوهات تلقائياً في الفيد",
+    "autoplayPausePrompt": "إعداد التشغيل التلقائي",
     "autoPlayMuted": "ابدأ التشغيل التلقائي بدون صوت",
     "autoPlayMutedDesc": "الفيديوهات البتشتغل براها بتبدأ دايماً بدون صوت",
     "showAnimations": "أظهر الأنيميشنات",
@@ -4261,6 +4261,17 @@
     "paidToCreatorWallet": "يروح مباشرة لحافظة المبدع",
     "creatorPaidDirectNote": "حصّة المُبدع بتصل محفظتو فور اشتراكك. ديهاب بتاخد نسبة بسيطة رسوم للمنصة.",
     "creatorEarnsDirect": "المشتركين بيدفعوا برموز DeHub. نصيبك بيوصل لمحفظتك أول ما يشتركوا، بعد خصم رسوم المنصة حسب مستوى شارتك."
+  },
+  "liveOverlay": {
+    "someone": "زول",
+    "followed": "{{name}} تابع",
+    "subscribed": "{{name}} اشترك",
+    "subscribedTo": "{{name}} اشترك في {{plan}}",
+    "shared": "{{name}} شارك البث",
+    "joined": "{{name}} انضم",
+    "goalReached": "الهدف وصل!",
+    "followersUnit": "متابعين",
+    "topSupporters": "أقوى داعمين"
   },
   "live": {
     "chatJoined": "دخل",

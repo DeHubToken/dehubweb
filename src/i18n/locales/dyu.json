@@ -296,8 +296,8 @@
     "compactMode": "Kɔrɔbɔ",
     "compactModeDesc": "Kɔrɔbɔ kɛ",
     "autoPlay": "Kɔrɔbɔ",
-    "autoplayPausePrompt": "Video yɛrɛ ka daminɛ labɛnni",
     "autoPlayDesc": "Kɔrɔbɔ kɛ",
+    "autoplayPausePrompt": "Video yɛrɛ ka daminɛ labɛnni",
     "autoPlayMuted": "Autoplay daminɛ kumakan tɛ",
     "autoPlayMutedDesc": "Widewo minnu bɛ tɔgɔla u yɛrɛ ma, olu bɛ daminɛ tuma bɛɛ kumakan tɛ",
     "showAnimations": "Kɔrɔbɔ",
@@ -4619,6 +4619,15 @@
     "paidToCreatorWallet": "A bɛ taa dabaga ka wariboro la sisan",
     "creatorPaidDirectNote": "I mana don tuma min na, dabaga ka tila bɛ taa a ka wariboro la sisan. DeHub bɛ sara fitinin dɔ mara.",
     "creatorEarnsDirect": "Abonnew bɛ sara DeHub token na. U mana don tuma min na, i ka tila bɛ se i ka wariboro la, i ka badge hakɛ ka sara bɔlen a la."
+  },
+  "liveOverlay": {
+    "someone": "Mɔgɔ dɔ",
+    "followed": "{{name}}follow uwuwuwuwuwu",
+    "subscribed": "{{name}} subscribed",
+    "joined": "{{name}} join ye",
+    "goalReached": "An sera yɔrɔ min na, o ye nin ye!",
+    "followersUnit": "uwuwuwuwuwuuw",
+    "topSupporters": "Mɔgɔ minw be dɛmɛ don"
   },
   "live": {
     "chatJoined": "donna",

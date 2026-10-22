@@ -297,8 +297,8 @@
     "compactMode": "Mode compacte",
     "compactModeDesc": "Reduir espaiat per a més contingut",
     "autoPlay": "Reproducció automàtica de vídeos",
-    "autoplayPausePrompt": "Configuració de reproducció automàtica",
     "autoPlayDesc": "Reproduir automàticament els vídeos al feed",
+    "autoplayPausePrompt": "Configuració de reproducció automàtica",
     "autoPlayMuted": "Inicia la reproducció automàtica sense so",
     "autoPlayMutedDesc": "Els vídeos que es reprodueixen sols sempre comencen amb el so apagat",
     "showAnimations": "Mostrar animacions",
@@ -4711,6 +4711,17 @@
     "paidToCreatorWallet": "Va directament a la cartera del creador",
     "creatorPaidDirectNote": "La part del creador es dirigeix directament a la seva cartera en el moment en què et subscrius. DeHub manté una petita tarifa de plataforma.",
     "creatorEarnsDirect": "Els subscriptors paguen amb fitxes DeHub. La teva participació arribarà a la teva cartera en el moment en què es subscriguin, menys la tarifa de la plataforma per al teu nivell d'distintiu."
+  },
+  "liveOverlay": {
+    "someone": "Algú",
+    "followed": "{{name}} seguit",
+    "subscribed": "{{name}} subscrit",
+    "subscribedTo": "{{name}} s'ha subscrit a {{plan}}",
+    "shared": "{{name}}ha compartit el flux",
+    "joined": "{{name}} s'ha unit",
+    "goalReached": "Objectiu assolit!",
+    "followersUnit": "seguidors",
+    "topSupporters": "Els millors seguidors"
   },
   "live": {
     "chatJoined": "s'ha unit",
