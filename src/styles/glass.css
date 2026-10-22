@@ -119,7 +119,7 @@ html[data-theme='glass'] #app-root :is(input:not([type='checkbox']):not([type='r
   border-color: rgb(225 255 255 / .24);
 }
 html[data-theme='glass'] #app-root [data-search-bento] input {
-  background: transparent !important; border: 0 !important; box-shadow: none !important;
+  background: transparent !important; border: 0 !important; box-shadow: none !important; outline: none !important;
 }
 html[data-theme='glass'] [data-search-bento]:focus-within { filter: brightness(1.12); }
 html[data-theme='glass'] #app-root :is(input, textarea, select):not(.bg-transparent):not(.border-0):focus-visible {
@@ -175,11 +175,12 @@ html[data-theme='glass'] .docs-root .bg-card :is(.bg-card, .bg-muted, .bg-second
 }
 html[data-theme='glass'] .docs-root h1 .text-transparent {
   background-image: linear-gradient(135deg, #efffff, #a6f5f2) !important;
+  text-shadow: none !important;
 }
 html[data-theme='glass'] .docs-root :is(
   [data-theme-button]:not([data-button-variant='ghost']):not([data-button-variant='destructive']),
   [data-theme-button][data-button-variant='ghost'][class*='bg-muted'],
-  button.bg-muted
+  button.bg-muted, a.bg-primary, [data-docs-sidebar] a.bg-muted
 ) {
   background: var(--glass-highlight), var(--theme-control-fill) !important;
   color: #efffff !important; border-color: transparent !important; box-shadow: var(--glass-edge-flat) !important;
