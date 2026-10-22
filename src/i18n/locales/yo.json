@@ -4789,7 +4789,8 @@
       "reaction_counter": "Àdììtú ìfèsì",
       "event_feed": "Iṣẹ́ àìpẹ́ yìí",
       "chat_box": "Apoti Iwiregbe",
-      "ticker": "Ticker"
+      "ticker": "Ticker",
+      "rule_alert": "Àwọn ìkìlọ̀ ìlànà"
     },
     "hints": {
       "tip_alert": "Ṣe ayẹyẹ gbogbo awọn imọran, iwọn si ipele rẹ.",
@@ -4806,7 +4807,8 @@
       "reaction_counter": "Ka gbogbo èsì tí àtẹ̀jíṣẹ́ rẹ máa ń rí gbà",
       "event_feed": "Awọn ẹbun tuntun, awọn ọmọlẹyin, awọn alabapin ati awọn eniyan ti o pin igbohunsafefe rẹ",
       "chat_box": "Ṣe afihan awọn ifiranṣẹ iwiregbe igbohunsafefe rẹ loju iboju",
-      "ticker": "Òpó ọ̀rọ̀ tìrẹ tí ó ń lọ káàkiri mànàárà."
+      "ticker": "Òpó ọ̀rọ̀ tìrẹ tí ó ń lọ káàkiri mànàárà.",
+      "rule_alert": "Níbi tí àwọn ìkìlọ̀ àwọn òfin rẹ ti fara hàn"
     },
     "fields": {
       "style": "Àṣà",
@@ -4839,6 +4841,103 @@
       "slow": "Díẹ̀díẹ̀",
       "normal": "Ó ṣe déédéé",
       "fast": "Yara"
+    },
+    "rules": {
+      "audience": "Ta ni o le mu u ṣiṣẹ",
+      "sayText": "Ọ̀rọ̀ tí a ó kà sókè",
+      "title": "Àwọn ìlànà",
+      "intro": "Nígbà tí nǹkan bá ṣẹlẹ̀ lórí ẹ̀rọ rẹ, DeHub máa ń ṣe ohun tí o yàn: ó máa ń fi ìkìlọ̀ hàn, ó máa ń gbọ́ ohùn, ó máa ń ka ohun kan lókè, ó máa ń fi àwọn ohun kan sínú ìjíròrò rẹ tàbí ó máa ń sọ fún Discord rẹ.",
+      "add": "Ṣafikun ofin kan",
+      "limit": "O ti dé òpin {{count}} rules.",
+      "loadFailed": "Àwọn òfin rẹ kò lè gba ẹrù. Tún ojú-ìwé náà padà láti gbìyànjú lẹ́ẹ̀kan síi.",
+      "empty": "Kò sí òfin kankan síbẹ̀. Ṣàfikún ọ̀kan láti fèsì sí àwọn àbá, títẹ̀lé tàbí àwọn àṣẹ ìjíròrò.",
+      "saved": "Àwọn òfin tí ó wà ní ìpamọ́. Wọ́n ń sáré lórí ìmọ̀ràn rẹ tó kàn, títẹ̀lé tàbí títẹ̀lé àtẹ̀jíṣẹ́ rẹ.",
+      "saveFailed": "A kò lè fi òfin rẹ pamọ́.",
+      "testFailed": "Ìdánwò yẹn kò kọjá. Gbiyanju lẹẹkansi ni akoko kan.",
+      "saveToTest": "Fi àwọn ìlànà rẹ pamọ́ láti dán wọn wò.",
+      "test": "Ìdánwò",
+      "enabled": "Òfin lórí",
+      "remove": "Pa òfin náà rẹ́",
+      "save": "Fi àwọn òfin pamọ́",
+      "needsAlertWidget": "Àwọn ìlànà díẹ̀ nla sí ìkìlọ̀. Ṣafikun Rule alerts widget nítorí kí ó ní ibi tí yóó fi hàn.",
+      "name": "Orukọ",
+      "when": "Ìgbà wo",
+      "then": "Lẹ́yìn náà",
+      "minAmount": "Àbá tó kéré jù (DHB)",
+      "command": "Paṣẹ",
+      "keyword": "Ọ̀rọ̀ tàbí gbólóhùn",
+      "blockedWords": "Àwọn ọ̀rọ̀ tí a dènà",
+      "blockedWordsHint": "Yato si pẹlu awọn igbimọ. Awọn ifiranṣẹ ti o ni wọn ni a fojuinu ati pe wọn ko ka ni ariwo.",
+      "cooldown": "Dúró láàrin ìlò (ìkejì)",
+      "userCooldown": "Duro fun oluwo kọọkan (awọn aaya)",
+      "addAction": "Ṣafikun igbese kan",
+      "removeAction": "Yọ igbese kuro",
+      "placeholders": "Lo {name}, {amount} àti {message} nínú ọ̀rọ̀ rẹ. Wọ́n yọ àwọn ìjápọ inú àwọn àtẹ̀jíṣẹ́ kúrò.",
+      "alertText": "Alert text",
+      "sound": "Sound",
+      "chatText": "Message to post",
+      "chatHint": "Pipa lati akọọlẹ rẹ sinu iwiregbe ṣiṣan rẹ. Kò lè ṣe àtúnyẹ̀wò àtẹ̀jísẹ́ olùwò náà.",
+      "webhookUrl": "Webhook address",
+      "webhookHint": "Ojú ayélujára Discord tàbí Slack, tàbí àdírẹ́sì https èyíkéyìí tí ó gba ìfìwéránṣẹ́.",
+      "webhookText": "Message to send",
+      "triggers": {
+        "tip": "A tip arrives",
+        "follow": "Someone follows",
+        "subscribe": "Someone subscribes",
+        "share": "Ẹnikan pin ṣiṣan naa",
+        "command": "A máa ń lo àṣẹ ìbánisọ̀rọ̀.",
+        "keyword": "Ifiranṣẹ iwiregbe kan ni ọrọ kan",
+        "chat": "Any chat message"
+      },
+      "audiences": {
+        "everyone": "Everyone",
+        "followers": "Followers",
+        "subscribers": "Subscribers"
+      },
+      "actionTypes": {
+        "alert": "Show an alert",
+        "sound": "Play a sound",
+        "say": "Read aloud",
+        "chat": "Post in chat",
+        "webhook": "Send to a webhook"
+      },
+      "summary": {
+        "tip": "Ìmọ̀ràn {{amount}} DHB tàbí jù bẹ́ẹ̀ lọ"
+      },
+      "presets": {
+        "blank": "Blank rule",
+        "readChat": "Read chat aloud",
+        "bigTip": "Ìwo afẹ́fẹ́ fún àwọn ìmọ̀ràn ńlá",
+        "thankFollowers": "Ẹ ṣeun fún àwọn ọmọlẹ́yìn tuntun",
+        "command": "Chat command"
+      },
+      "presetHints": {
+        "blank": "Bẹrẹ lati ohunkohun",
+        "readChat": "Ka àwọn àtẹ̀jísẹ́ àwọn ọmọlẹ́yìn rẹ sókè, ẹnìkan lójú olùwo ní gbogbo àsìkò 30.",
+        "bigTip": "Ó máa ń ṣe ìwo afẹ́fẹ́, ó sì máa ń fi ìkìlọ̀ hàn fún àwọn àbá 100,000 DHB tàbí jù bẹ́ẹ̀ lọ.",
+        "thankFollowers": "Fi ọpẹ́ ránṣẹ́ nínú ìjíròrò rẹ nígbà tí ẹnìkan bá tẹ̀lé e.",
+        "command": "Dáhùn a !àṣẹ nínú ìjíròrò rẹ"
+      },
+      "presetText": {
+        "readChat": "{name} wí pé {message}",
+        "bigTip": "{name} rán {amount} DHB!",
+        "thankFollowers": "O ṣeun fún ìtẹ̀lé, {name}!",
+        "command": "Kaabo {name}, kí o wá sí àtẹ̀jáde náà!"
+      },
+      "sounds": {
+        "airhorn": "Ìwo afẹ́fẹ́",
+        "applause": "Ìyìn",
+        "cricket": "Crickets",
+        "drumroll": "Drum roll",
+        "lol": "Rírẹ́rìn-ín",
+        "ooh-ahh": "Ooh ahh",
+        "ooh-man": "Óò (ọkùnrin)",
+        "ohh-girl": "Ohh (obìnrin)",
+        "ba-dum-tish": "Ba dum tish",
+        "spooky": "Spooky",
+        "magic-spell": "Magic spell",
+        "shhh": "Shhh"
+      }
     }
   },
   "live": {

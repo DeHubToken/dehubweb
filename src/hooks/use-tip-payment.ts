@@ -23,9 +23,12 @@ import { BASE_CHAIN_ID } from '@/lib/contracts/dhb-token';
 import { useAuth } from '@/contexts/AuthContext';
 import type { ChainId } from '@/components/app/ChainSelector';
 import i18n from 'i18next';
+import type { DirectTipToken } from '@/lib/direct-tip-tokens';
 
 export const MIN_TIP_DHB = 1;
 export const MAX_TIP_DHB = Infinity;
+export const MIN_DIRECT_TIP = 0.1;
+export const DIRECT_QUICK_AMOUNTS = [1, 5, 10, 25, 50, 100];
 
 const MAX_DB_RETRIES = 3;
 
@@ -103,9 +106,12 @@ export function useTipPayment({
   const inFlight = useRef(false);
   const { walletAddress, openLoginModal } = useAuth();
 
+  /** `amount` DHB, or with `token` USDC/USDT on its chain; those skip the DHB tip_records. */
   const tip = useCallback(
-    async (amount: number) => {
+    async (amount: number, token?: DirectTipToken | null) => {
       if (inFlight.current) return;
+      const tipChainId = (token?.chainId ?? chainId) as ChainId;
+      const unit = token?.symbol ?? 'DHB';
 
       if (!walletAddress) {
         openLoginModal?.();
@@ -122,7 +128,11 @@ export function useTipPayment({
         return;
       }
 
-      if (amount < MIN_TIP_DHB || amount > MAX_TIP_DHB) {
+      if (token ? !(amount >= MIN_DIRECT_TIP) : amount < MIN_TIP_DHB || amount > MAX_TIP_DHB) {
+        if (token) {
+          toast.error(`Minimum tip is ${MIN_DIRECT_TIP} ${unit}`);
+          return;
+        }
         toast.error(dhbText(`Amount must be between ${MIN_TIP_DHB} and ${MAX_TIP_DHB} DHB`));
         return;
       }
@@ -137,7 +147,7 @@ export function useTipPayment({
           import('@/lib/contracts/read-tip-transaction'),
         ]);
 
-        await switchChain(chainId);
+        await switchChain(tipChainId);
 
         toast.loading('Sending tip...', { id: 'tip-payment' });
 
@@ -145,8 +155,9 @@ export function useTipPayment({
           tokenId: tokenId || 0,
           amount,
           to: creatorAddress,
-          chainId,
+          chainId: tipChainId,
           signerAddress: walletAddress,
+          ...(token ? { tokenAddress: token.address, decimals: token.decimals } : {}),
         });
 
         toast.loading(i18n.t('toasts.confirming_transaction'), { id: 'tip-payment' });
@@ -157,7 +168,13 @@ export function useTipPayment({
         (async () => {
           try {
             const confirmedTxHash = await tipResult.confirmed;
-            const confirmedTip = await readConfirmedTipDetails(confirmedTxHash, chainId);
+            const confirmedTip = await readConfirmedTipDetails(confirmedTxHash, tipChainId, token ?? undefined);
+
+            if (token) {
+              toast.success(`${confirmedTip.amount.toLocaleString()} ${unit} tip sent!`, { id: 'tip-payment' });
+              onConfirmed?.();
+              return;
+            }
 
             const saved = await persistTipRecord({
               walletAddress,

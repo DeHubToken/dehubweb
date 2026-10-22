@@ -30,6 +30,7 @@ import { markTokenUnlocked } from '@/lib/unlocked-tokens-store';
 import { isSolanaChain } from '@/lib/chains/constants';
 import { useAuth } from '@/contexts/AuthContext';
 import type { ChainId } from '@/components/app/ChainSelector';
+import { DIRECT_TIP_TOKENS } from '@/lib/direct-tip-tokens';
 
 interface UsePPVPaymentOptions {
   tokenId: string;
@@ -133,7 +134,12 @@ export function usePPVPayment({
       return;
     }
 
-    if (currency !== 'DHB') {
+    // USDC/USDT posts pay in that token through the same contract call. No
+    // swap or top-up step: the viewer has to hold it.
+    const stable = currency === 'DHB'
+      ? null
+      : DIRECT_TIP_TOKENS.find((tk) => tk.chainId === Number(chainId) && tk.symbol === currency) ?? null;
+    if (currency !== 'DHB' && !stable) {
       toast.error(i18n.t('tokenErrors.ppvTokensOnly'));
       return;
     }
@@ -163,8 +169,20 @@ export function usePPVPayment({
 
       let txHash: string;
 
+      if (stable) {
+        const held = await getERC20Balance(stable.address, signerAddress, chainId);
+        if (held < toWei(price, stable.decimals)) {
+          toast.error(i18n.t('tokenPayments.insufficientBalance', {
+            needed: `${price} ${stable.symbol}`,
+            held: `${Number(fromWei(held, stable.decimals)).toLocaleString()} ${stable.symbol}`,
+          }), { id: 'ppv-payment' });
+          setIsPaying(false);
+          return;
+        }
+      }
+
       const amountWei = toWei(price, DHB_TOKEN.decimals);
-      const dhbBalance = await getERC20Balance(chainConfig.dhbToken, signerAddress);
+      const dhbBalance = stable ? amountWei : await getERC20Balance(chainConfig.dhbToken, signerAddress);
 
       if (dhbBalance < amountWei) {
         const balanceHuman = Number(fromWei(dhbBalance));
@@ -201,6 +219,7 @@ export function usePPVPayment({
         amount: price,
         to: creatorAddress,
         chainId,
+        ...(stable ? { tokenAddress: stable.address, decimals: stable.decimals } : {}),
       });
       txHash = ppvResult.hash;
       await ppvResult.confirmed;
