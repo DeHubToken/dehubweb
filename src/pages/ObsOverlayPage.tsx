@@ -22,11 +22,12 @@ import '@/styles/live-overlay.css';
 import { SEOHead } from '@/components/SEOHead';
 import { getOverlayByToken, OverlayNotFoundError, type TokenOverlay } from '@/lib/api/dehub/live-overlay';
 import { drawOrder, placeWidget, rectFor } from '@/lib/live-overlay/layout';
-import { isKnownKind, type OverlayKind } from '@/lib/live-overlay/registry';
+import { isKnownKind, newWidget, type OverlayKind } from '@/lib/live-overlay/registry';
 import { createOverlayEventBus, OverlayEventContext } from '@/components/app/live/overlay/overlay-events';
 import { OverlayWidgetView } from '@/components/app/live/overlay/overlay-widgets';
 import { useOverlayChat } from '@/hooks/use-overlay-chat';
 import { createRuleBus, RuleAudio, RuleBusContext } from '@/components/app/live/overlay/rule-bus';
+import { PollContext, useStreamPoll } from '@/components/app/live/overlay/poll';
 
 /** How often to look for the creator going live, and for a stream ending. */
 const IDLE_POLL_MS = 10_000;
@@ -151,72 +152,82 @@ export default function ObsOverlayPage() {
 
   const picture = { left: 0, top: 0, width: size.w, height: size.h };
   const portrait = size.h > size.w;
-  const widgets =
+  // The poll is burned in for people watching the video somewhere the app's
+  // buttons are not: they vote with `!vote 2` in chat.
+  const polls = useStreamPoll(streamId, false);
+  const placed =
     data && !notFound
       ? drawOrder(
           data.widgets.filter((w) => w.enabled && isKnownKind(w.kind) && (!onlyWidget || w.id === onlyWidget)),
         )
       : [];
+  // A poll shows in the whole scene even if the creator never placed one: they started it to be seen.
+  const widgets =
+    !onlyWidget && polls.poll && data && !notFound && !placed.some((w) => w.kind === 'poll')
+      ? [...placed, newWidget('poll', placed)]
+      : placed;
   // A chat box hears the stream's chat room, which is keyed by the post's token id.
   useOverlayChat(data?.live?.tokenId ?? null, widgets.some((w) => w.kind === 'chat_box'), bus.publish);
 
   return (
     <OverlayEventContext.Provider value={bus}>
       <RuleBusContext.Provider value={rules}>
-        {/* One source plays the audio: the whole scene. Live rules only when OBS is
-            where the overlay is shown, or viewers' apps would play them too. */}
-        {!onlyWidget && <RuleAudio playLive={data?.renderIn === 'video'} />}
-        <SEOHead title={t('liveStudio.obs.pageTitle')} noindex noCanonical />
-        <div data-live-overlay data-obs-page style={{ position: 'fixed' }} aria-hidden>
-          {widgets.map((widget) => {
-            // One widget per source: it takes the whole source and OBS places it.
-            const box = onlyWidget ? picture : placeWidget(rectFor(widget, portrait), picture);
-            const style = {
-              left: box.left,
-              top: box.top,
-              width: box.width,
-              height: box.height,
-              '--ow-h': `${box.height}px`,
-              '--ow-w': `${box.width}px`,
-            } as CSSProperties;
-            return (
-              <div key={widget.id} data-overlay-widget={widget.kind} style={style}>
-                <OverlayWidgetView
-                  kind={widget.kind as OverlayKind}
-                  settings={widget.settings || {}}
-                  streamId={streamId ?? ''}
-                  stats={data!.stats}
-                  initialViewers={0}
-                />
-              </div>
-            );
-          })}
-        </div>
-  
-        {diag && (
-          <pre
-            style={{
-              position: 'fixed',
-              left: 8,
-              bottom: 8,
-              margin: 0,
-              padding: '6px 8px',
-              font: '12px/1.4 ui-monospace, Menlo, monospace',
-              color: '#fff',
-              background: 'rgb(0 0 0 / 0.75)',
-              borderRadius: 6,
-              zIndex: 50,
-            }}
-          >
-            {[
-              `${t('liveStudio.obs.diagLink')}: ${notFound ? t('liveStudio.obs.diagDead') : data ? t('liveStudio.obs.diagOk') : '…'}`,
-              `${t('liveStudio.obs.diagControl')}: ${joined === null ? '…' : joined ? t('liveStudio.obs.diagOk') : t('liveStudio.obs.diagDead')}`,
-              `${t('liveStudio.obs.diagStream')}: ${streamId ?? t('liveStudio.obs.diagOffline')}`,
-              `${t('liveStudio.obs.diagWidgets')}: ${widgets.length}`,
-              `${t('liveStudio.obs.diagLastEvent')}: ${lastEventAt ? `${Math.round((Date.now() - lastEventAt) / 1000)}s` : '—'}`,
-            ].join('\n')}
-          </pre>
-        )}
+        <PollContext.Provider value={{ ...polls, interactive: false }}>
+          {/* One source plays the audio: the whole scene. Live rules only when OBS is
+              where the overlay is shown, or viewers' apps would play them too. */}
+          {!onlyWidget && <RuleAudio playLive={data?.renderIn === 'video'} />}
+          <SEOHead title={t('liveStudio.obs.pageTitle')} noindex noCanonical />
+          <div data-live-overlay data-obs-page style={{ position: 'fixed' }} aria-hidden>
+            {widgets.map((widget) => {
+              // One widget per source: it takes the whole source and OBS places it.
+              const box = onlyWidget ? picture : placeWidget(rectFor(widget, portrait), picture);
+              const style = {
+                left: box.left,
+                top: box.top,
+                width: box.width,
+                height: box.height,
+                '--ow-h': `${box.height}px`,
+                '--ow-w': `${box.width}px`,
+              } as CSSProperties;
+              return (
+                <div key={widget.id} data-overlay-widget={widget.kind} style={style}>
+                  <OverlayWidgetView
+                    kind={widget.kind as OverlayKind}
+                    settings={widget.settings || {}}
+                    streamId={streamId ?? ''}
+                    stats={data!.stats}
+                    initialViewers={0}
+                  />
+                </div>
+              );
+            })}
+          </div>
+    
+          {diag && (
+            <pre
+              style={{
+                position: 'fixed',
+                left: 8,
+                bottom: 8,
+                margin: 0,
+                padding: '6px 8px',
+                font: '12px/1.4 ui-monospace, Menlo, monospace',
+                color: '#fff',
+                background: 'rgb(0 0 0 / 0.75)',
+                borderRadius: 6,
+                zIndex: 50,
+              }}
+            >
+              {[
+                `${t('liveStudio.obs.diagLink')}: ${notFound ? t('liveStudio.obs.diagDead') : data ? t('liveStudio.obs.diagOk') : '…'}`,
+                `${t('liveStudio.obs.diagControl')}: ${joined === null ? '…' : joined ? t('liveStudio.obs.diagOk') : t('liveStudio.obs.diagDead')}`,
+                `${t('liveStudio.obs.diagStream')}: ${streamId ?? t('liveStudio.obs.diagOffline')}`,
+                `${t('liveStudio.obs.diagWidgets')}: ${widgets.length}`,
+                `${t('liveStudio.obs.diagLastEvent')}: ${lastEventAt ? `${Math.round((Date.now() - lastEventAt) / 1000)}s` : '—'}`,
+              ].join('\n')}
+            </pre>
+          )}
+        </PollContext.Provider>
       </RuleBusContext.Provider>
     </OverlayEventContext.Provider>
   );

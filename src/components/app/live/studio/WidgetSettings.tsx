@@ -338,6 +338,15 @@ export function WidgetSettings({ widget, onChange }: Props) {
       );
       break;
 
+    case 'poll':
+      body = (
+        <>
+          <p className="text-xs text-zinc-500">{t('liveStudio.polls.widgetHint', { command: '!vote' })}</p>
+          {accentField}
+        </>
+      );
+      break;
+
     default:
       body = null;
   }
