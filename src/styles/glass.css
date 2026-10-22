@@ -241,7 +241,7 @@ html[data-theme='glass'] [data-audio-preview-item] { flex: 0 0 100%; width: 100%
 html[data-theme='glass'] [data-glass-audio-preview] { width: 100%; background: transparent; overflow: visible; }
 html[data-theme='glass'] [data-glass-audio-preview] [data-audio-preview-label] { display: none; }
 html[data-theme='glass'] [data-glass-audio-preview] [data-glass-audio] { width: 100%; aspect-ratio: auto; }
-html[data-theme='glass'] [data-glass-audio-preview] [data-glass-audio-options] { right: 40px; }
+html[data-theme='glass'] [data-glass-audio-preview] [data-glass-audio-options] { right: 6%; }
 html[data-theme='glass'] [data-glass-audio] {
   position: relative;
   display: flex; flex-direction: column; justify-content: flex-end;
@@ -256,8 +256,10 @@ html[data-theme='glass'] [data-glass-audio-crown] {
 html[data-theme='glass'] [data-glass-audio-shoulder] { position: absolute; inset: 0; width: 100%; height: calc(100% + 24px); color: #d7ffff; pointer-events: none; }
 html[data-theme='glass'] [data-glass-audio-crown] > canvas { position: relative; width: 84%; margin-inline: 8%; height: 44px !important; min-height: 32px; background: transparent !important; }
 html[data-theme='glass'] :is([data-audio-frame], [data-audio-backdrop]):not(#_):not(#_) { background: transparent !important; border: 0; border-radius: 32px 32px 48px 48px; }
+html[data-theme='glass'] [data-audio-backdrop] { backdrop-filter: none !important; }
+html[data-theme='glass'] [data-glass-audio-deck] { backdrop-filter: var(--glass-blur); }
 html[data-theme='glass'] [data-audio-frame]:not([data-video-fullscreen]) { height: 220px !important; min-height: 210px; aspect-ratio: auto !important; width: 100% !important; }
-[data-glass-audio-title] { position: relative; display: grid; text-align: center; gap: 3px; margin: 0 16% 6px; }
+[data-glass-audio-title] { position: relative; display: grid; text-align: center; gap: 3px; margin: 0 20% 6px; }
 [data-glass-audio-title] strong { font-size: 17px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 [data-glass-audio-title] span { font-size: 11px; letter-spacing: .08em; opacity: .8; }
 html[data-theme='glass'] [data-glass-audio] > canvas { width: 100%; height: 48px !important; flex: 1; min-height: 32px; padding: 0 24px; background: transparent !important; }
@@ -280,7 +282,7 @@ html[data-theme='glass'] [data-glass-audio-transport] button { position:relative
 html[data-theme='glass'] [data-glass-audio-transport] [data-glass-audio-play] { width:64px; height:64px; background:radial-gradient(ellipse at 35% 15%,rgb(220 255 255 / .48),color-mix(in srgb,var(--tint-accent) 32%,transparent) 55%,rgb(0 35 40 / .5)); }
 [data-glass-audio-transport] [data-glass-audio-play] svg { width:28px; height:28px; }
 html[data-theme='glass'] [data-glass-audio-transport] [data-glass-audio-popout] { position:absolute; right:14px; width:30px; height:30px; }
-[data-glass-audio-options] { position:absolute; top:10px; right:10%; z-index:30; }
+[data-glass-audio-options] { position:absolute; top:10px; right:6%; z-index:30; }
 [data-glass-audio-options] summary { cursor:pointer; list-style:none; padding:6px; letter-spacing:2px; }
 [data-glass-audio-options] > div { position:absolute; right:0; top:100%; display:flex; gap:12px; align-items:center; padding:12px; width:240px; border-radius:18px; background:var(--stage-solid); box-shadow:var(--glass-edge); }
 [data-glass-audio-options] select { max-width:100px; }
