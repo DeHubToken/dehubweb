@@ -111,7 +111,12 @@ export function StaticWaveform({
   const handlePointerDown = useCallback((e: React.PointerEvent<SVGSVGElement>) => {
     if (!onSeek) return;
     isDragging.current = true;
-    (e.target as Element).setPointerCapture(e.pointerId);
+    // Capture on the <svg> itself, not whichever bar was under the finger: a
+    // capture held by a 2px <rect> was lost the moment the bars re-rendered,
+    // and the drag stopped following. Keep the press from reaching a card
+    // underneath that would treat it as a tap.
+    e.stopPropagation();
+    e.currentTarget.setPointerCapture(e.pointerId);
     handleSeek(e);
   }, [onSeek, handleSeek]);
 
@@ -120,8 +125,11 @@ export function StaticWaveform({
     handleSeek(e);
   }, [handleSeek]);
 
-  const handlePointerUp = useCallback(() => {
+  const handlePointerUp = useCallback((e: React.PointerEvent<SVGSVGElement>) => {
     isDragging.current = false;
+    if (e.currentTarget.hasPointerCapture?.(e.pointerId)) {
+      e.currentTarget.releasePointerCapture(e.pointerId);
+    }
   }, []);
 
   // When showing playback progress, keep bar heights stable (base pattern only).
@@ -146,6 +154,8 @@ export function StaticWaveform({
       onPointerDown={handlePointerDown}
       onPointerMove={handlePointerMove}
       onPointerUp={handlePointerUp}
+      onPointerCancel={handlePointerUp}
+      onClick={onSeek ? (e) => e.stopPropagation() : undefined}
       style={onSeek ? { touchAction: 'none' } : undefined}
     >
       {bars.map((h, i) => {
