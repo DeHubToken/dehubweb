@@ -10,7 +10,7 @@ const muxers = vi.hoisted(() => ({ options: [] as Array<{ video: { codec: string
 vi.mock("mp4-muxer", () => ({ ArrayBufferTarget: class { buffer = new ArrayBuffer(4); }, Muxer: class { constructor(options: { video: { codec: string }; audio?: { codec: string } }) { muxers.options.push(options); } addVideoChunk() {} addAudioChunk() {} finalize() {} } }));
 const snapshot = { title: "4K queue", settings: { width: 3840, height: 2160, fps: 30, background: "black" }, tracks: [{ id: "visual", kind: "video" }], clips: [{ id: "shape", trackId: "visual", kind: "shape", start: 0, duration: 1, trimIn: 0 }] } as unknown as ProjectSnapshot;
 type Input = { timestamp: number; close(): void };
-type Init = { output(chunk: unknown): void; error(error: Error): void };
+type Init = { output(chunk: unknown, meta?: unknown): void; error(error: Error): void };
 type Codec = { encodeQueueSize: number; state: string; config: Record<string, unknown>; close(): void };
 let videos: Codec[], audios: Codec[], timestamps: number[], audioTimes: number[], frameCloses: number, audioCloses: number, videoPeak: number, audioPeak: number;
 let failure: Error | undefined, stalled: boolean, unsupported: string[];
@@ -33,7 +33,7 @@ function codec(kind: "video" | "audio") {
         if (this.encodeQueueSize === 8 && failure) setTimeout(() => { this.encodeQueueSize = 0; this.state = "closed"; this.init.error(failure!); }, 50);
         return;
       }
-      setTimeout(() => { this.encodeQueueSize--; (kind === "video" ? timestamps : audioTimes).push(timestamp); this.init.output({ timestamp }); }, 30);
+      setTimeout(() => { this.encodeQueueSize--; (kind === "video" ? timestamps : audioTimes).push(timestamp); this.init.output({ timestamp }, kind === "video" ? { decoderConfig: { codec: "avc1.42E028", description: new Uint8Array([1]) } } : undefined); }, 30);
     }
     flush() { return new Promise<void>(resolve => { const check = () => this.encodeQueueSize ? setTimeout(check, 10) : resolve(); check(); }); }
     close() { this.state = "closed"; }
