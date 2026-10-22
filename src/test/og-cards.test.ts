@@ -74,9 +74,25 @@ describe('per-route OG cards', () => {
     expect(copies).toEqual([]);
   });
 
+  /** Pages that deliberately reuse another page's card, each with its
+   *  reason. Each must name that card with `og: '<key>'` in its entry. */
+  const SHARED_CARD: Record<string, [string, string]> = {
+    stream: ['creators', 'the streamer landing page: "Become a creator" is the right picture'],
+  };
+
   it('gives every edge-rendered marketing page its own card', () => {
-    const without = tableKeys('MARKETING_PAGES').filter((k) => !cardKeys.has(k));
+    const without = tableKeys('MARKETING_PAGES').filter((k) => !cardKeys.has(k) && !(k in SHARED_CARD));
     expect(without).toEqual([]);
+  });
+
+  it('keeps the shared-card exceptions honest', () => {
+    for (const [key, [card]] of Object.entries(SHARED_CARD)) {
+      expect(cardKeys.has(key), key).toBe(false);
+      expect(cardKeys.has(card), card).toBe(true);
+      const start = WORKER.indexOf(`  '${key}': {`);
+      expect(start, key).toBeGreaterThan(-1);
+      expect(WORKER.slice(start, WORKER.indexOf('\n  },', start)), key).toContain(`og: '${card}'`);
+    }
   });
 
   it('gives every feed section page its own card', () => {

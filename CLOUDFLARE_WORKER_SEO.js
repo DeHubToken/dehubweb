@@ -34,6 +34,7 @@ export { EditorPresenceRoom } from './server/editor-presence.ts';
 import { ROUTE_SEGMENTS, WORKER_ASSET_ROUTES } from './src/lib/reserved-usernames.js';
 import { edgeMaintenanceResponse } from './server/edge-maintenance.mjs';
 import { CONSOLIDATED_GUIDES, MILESTONE_REDIRECTS, RETIRED_GUIDES } from './src/lib/blog-redirects.js';
+import { STREAM_LINKS, STREAM_PAGE, streamFaqLd } from './src/lib/streamer-page.js';
 
 /**
  * `/mal.eth` — a verified ENS handle standing in for a username.
@@ -1210,6 +1211,27 @@ const MARKETING_PAGES = {
 <p><a href="https://github.com/DeHubToken/dehub-mobile/releases/latest/download/dehub.apk">Download the DeHub APK</a> — Android 8 and up. Allow installs from your browser when Android asks.</p>
 <p>Prefer the store? DeHub is also <a href="https://play.google.com/store/apps/details?id=io.dehub.mobile">on Google Play</a>.</p>`,
   },
+  // The streamer landing page, and where affiliates send streamers
+  // (/r/<CODE>?to=/stream). Copy and FAQ come from src/lib/streamer-page.js,
+  // which StreamPage.tsx renders too. It reuses the creators card rather than
+  // carrying art of its own.
+  'stream': {
+    title: STREAM_PAGE.title,
+    description: STREAM_PAGE.description,
+    heading: STREAM_PAGE.heading,
+    og: 'creators',
+    extraJsonLd: [streamFaqLd()],
+    bodyHtml: `<p>${STREAM_PAGE.intro}</p>
+<ul>${STREAM_PAGE.proof.map(({ value, label }) => `<li><strong>${value}</strong> ${label}</li>`).join('\n')}</ul>
+${STREAM_PAGE.reasons.map(({ title, body }) => `<h2>${title}</h2>\n<p>${body}</p>`).join('\n')}
+<h2>Get started</h2>
+<ul><li><a href="${STREAM_LINKS.start}">Start streaming on DeHub</a></li>
+<li><a href="${STREAM_LINKS.migrate}">Import your YouTube channel</a></li>
+<li><a href="${STREAM_LINKS.affiliate}">Get your invite link</a></li></ul>
+<h2>Frequently asked questions</h2>
+${STREAM_PAGE.faq.map(({ q, a }) => `<h3>${q}</h3>\n<p>${a}</p>`).join('\n')}
+<p>Coming from TikTok? Read <a href="${STREAM_LINKS.tiktokGuide}">the UK creator guide to leaving TikTok</a> and <a href="${STREAM_LINKS.liveGuide}">Web3 live streaming: a decentralised Twitch alternative</a>.</p>`,
+  },
 
   // The moderation handbook, published. The page itself is an iframe around a
   // static document, so a crawler running no JS sees an empty shell — the copy
@@ -1568,7 +1590,9 @@ function buildMarketingHtml(key, meta) {
   // the two UA variants describe the same URL as two different entities.
   // Never a SoftwareApplication/WebApplication/MobileApplication: Google
   // reports those as invalid without a rating or review, and none of these
-  // pages has one to give (see arcadeGameLd for VideoGame).
+  // pages has one to give (see arcadeGameLd for VideoGame). `extraJsonLd`
+  // adds further standalone nodes (FAQPage on /stream), and `og` names
+  // another page's share card to reuse.
   const jsonLd = {
     '@context': 'https://schema.org',
     '@type': meta.jsonLdType || 'WebPage',
@@ -1604,11 +1628,11 @@ ${ogLocaleTag()}
 <meta property="og:title" content="${escHtml(meta.title)}">
 <meta property="og:description" content="${escHtml(meta.description)}">
 ${twitterTextTags(meta.title, meta.description)}
-${shareMetaTags(key, meta.title)}
+${shareMetaTags(meta.og || key, meta.title)}
 <meta name="twitter:site" content="@dehub_official">
 <script type="application/ld+json">${jsonLdScript(jsonLd)}</script>
 ${breadcrumbScript(trail)}
-</head>
+${(meta.extraJsonLd || []).map((node) => `<script type="application/ld+json">${jsonLdScript({ '@context': 'https://schema.org', ...node })}</script>\n`).join('')}</head>
 <body>
 <p><a href="${APP_URL}/">DeHub</a> › ${escHtml(meta.heading)}</p>
 <h1>${escHtml(meta.heading)}</h1>
