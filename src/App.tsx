@@ -421,22 +421,12 @@ function AppContent() {
   useEffect(() => {
     if (!wallet || !isAuthenticated || requiresUsername || isConnecting || isProcessingRedirect) return;
     import("@/lib/affiliate").then(m => m.attributeReferralIfPending(wallet)).catch(() => undefined);
-    // Where this account came from, written once; and the viewer's own code,
-    // so their first share link already credits them.
-    let isNewAccount = false;
-    try { isNewAccount = sessionStorage.getItem('dehub_is_new_account') === 'true'; } catch { /* storage blocked */ }
-    import("@/lib/first-touch").then(m => m.persistSignupAttribution(wallet, isNewAccount)).catch(() => undefined);
-    import("@/lib/useAffiliateShareUrl").then(m => m.loadViewerAffiliateCode(wallet)).catch(() => undefined);
-    if (isNewAccount) import("@/lib/analytics").then(m => m.trackSignup(wallet)).catch(() => undefined);
+    import("@/lib/growth-session").then(m => m.syncGrowthSession(wallet)).catch(() => undefined);
   }, [wallet, isAuthenticated, requiresUsername, isConnecting, isProcessingRedirect]);
 
-  // PostHog, only when VITE_POSTHOG_KEY is set. It loads once the page is
-  // idle and follows the signed-in wallet.
+  // Share attribution and PostHog follow sign-out too (src/lib/growth-session.ts).
   useEffect(() => {
-    import("@/lib/analytics").then(m => {
-      m.initAnalytics();
-      m.identifyAnalytics(isAuthenticated ? wallet : null);
-    }).catch(() => undefined);
+    if (!wallet || !isAuthenticated) import("@/lib/growth-session").then(m => m.syncGrowthSession(null)).catch(() => undefined);
   }, [wallet, isAuthenticated]);
 
   return (

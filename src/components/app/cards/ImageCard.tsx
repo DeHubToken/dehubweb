@@ -173,7 +173,7 @@ interface ImageCardProps {
  * before the image loads (CLS fix). Session-scoped, bounded by feed size.
  */
 import { createMediaAspectCache } from '@/lib/media-aspect-cache';
-import { viewerShareUrl } from '@/lib/useAffiliateShareUrl';
+import { viewerShareUrl } from '@/lib/share-url';
 const imageAspectRatioCache = createMediaAspectCache(
   () => localStorage.getItem('media-aspects-v1'), value => localStorage.setItem('media-aspects-v1', value),
 );

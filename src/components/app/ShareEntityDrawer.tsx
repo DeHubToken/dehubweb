@@ -25,7 +25,7 @@ import { toast } from 'sonner';
 import { Drawer, DrawerContent, DrawerHeader, DrawerTitle } from '@/components/ui/drawer';
 import { useGlobalDropZone } from '@/hooks/use-global-drop-zone';
 import { parseDehubLink, dehubLinkLabel } from '@/lib/dehub-links';
-import { viewerShareUrl } from '@/lib/useAffiliateShareUrl';
+import { viewerShareUrl } from '@/lib/share-url';
 import { trackShare } from '@/lib/analytics';
 
 const ShareToDmModal = lazy(() =>

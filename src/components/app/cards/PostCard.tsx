@@ -98,8 +98,7 @@ import type { TextPost } from '@/types/feed.types';
 import { usePostStage } from '@/components/app/post-stage/post-stage-context';
 import { StageMediaChrome } from '@/components/app/post-stage/StageMediaChrome';
 import { StageCreatorRow } from '@/components/app/post-stage/StageCreatorRow';
-import { viewerShareUrl } from '@/lib/useAffiliateShareUrl';
-import { trackShare } from '@/lib/analytics';
+import { viewerShareUrl } from '@/lib/share-url';
 
 /**
  * Lazy, and only mounted while open.
@@ -386,7 +385,7 @@ export const PostCard = memo(function PostCard({ post, threadSlot, onOpenComment
           text: post.content?.slice(0, 100) ?? '',
           url: postUrl,
         });
-        trackShare('image', { kind: 'post' });
+        void import('@/lib/analytics').then((m) => m.trackShare('image', { kind: 'post' }));
       } else {
         const a = document.createElement('a');
         a.href = URL.createObjectURL(blob);

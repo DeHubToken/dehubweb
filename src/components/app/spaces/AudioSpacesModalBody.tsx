@@ -85,7 +85,7 @@ import { supabase } from '@/integrations/supabase/client';
 import { useBookBoost, useSuperpowers } from '@/hooks/use-superpowers';
 import { deleteStageRecordings } from '@/lib/stage-recording-delete';
 import { formatDistanceToNow } from 'date-fns';
-import { viewerShareUrl } from '@/lib/useAffiliateShareUrl';
+import { viewerShareUrl } from '@/lib/share-url';
 import { trackShare } from '@/lib/analytics';
 
 type View = 'browse' | 'create' | 'live' | 'voice';

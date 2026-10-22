@@ -34,7 +34,6 @@
 import { useCallback, useSyncExternalStore } from 'react';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
-import { trackShare } from '@/lib/analytics';
 
 const ACTOR_STORAGE_KEY = 'dhb_share_actor_id';
 
@@ -200,7 +199,7 @@ export function useTrackPostLinkCopy() {
   const queryClient = useQueryClient();
   return useCallback(
     (tokenId: string | undefined, walletAddress?: string | null, currentCount = 0) => {
-      trackShare('copy_link', { kind: 'post' });
+      void import('@/lib/analytics').then((m) => m.trackShare('copy_link', { kind: 'post' }));
       void trackPostLinkCopy(tokenId, walletAddress, currentCount).then(() => {
         if (tokenId) {
           queryClient.invalidateQueries({ queryKey: ['post-link-copies', tokenId] });

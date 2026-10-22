@@ -90,7 +90,7 @@ import {
 import type { PostStageValue } from '@/components/app/post-stage/post-stage-context';
 const RepostShareSheet = lazy(() => import('@/components/app/post-stage/RepostShareSheet').then(m => ({ default: m.RepostShareSheet })));
 import { StageSaveTile } from '@/components/app/post-stage/StageSaveTile';
-import { viewerShareUrl } from '@/lib/useAffiliateShareUrl';
+import { viewerShareUrl } from '@/lib/share-url';
 
 interface ActionBarProps {
   /** Post ID for info navigation and voting */

@@ -58,7 +58,7 @@ import { useAuth } from '@/contexts/AuthContext';
 import { ASSISTANT_AVATAR, isAssistantAddress } from '@/lib/assistant';
 import { useAuthorThread } from '@/hooks/use-author-thread';
 import type { Comment } from '@/lib/comment-mapper';
-import { viewerShareUrl } from '@/lib/useAffiliateShareUrl';
+import { viewerShareUrl } from '@/lib/share-url';
 import { trackShare } from '@/lib/analytics';
 
 interface AuthorThreadProps {

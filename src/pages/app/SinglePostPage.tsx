@@ -91,7 +91,7 @@ import { usePostStagePhone } from '@/hooks/use-post-stage-phone';
 import { StageRelated } from '@/components/app/post-stage/StageRelated';
 import { PostStagePhone } from '@/components/app/post-stage/PostStagePhone';
 import type { PostStageValue } from '@/components/app/post-stage/post-stage-context';
-import { viewerShareUrl } from '@/lib/useAffiliateShareUrl';
+import { viewerShareUrl } from '@/lib/share-url';
 import { trackShare } from '@/lib/analytics';
 
 /*

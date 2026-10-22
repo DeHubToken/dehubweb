@@ -20,7 +20,7 @@ import { useTranslation } from 'react-i18next';
 import { DISPLAY_WALLET_OVERRIDES } from './ProfileConstants';
 import type { ProfileData } from '@/hooks/use-dehub-profile';
 import { LendBadgeRows } from './LendBadgeRows';
-import { viewerShareUrl } from '@/lib/useAffiliateShareUrl';
+import { viewerShareUrl } from '@/lib/share-url';
 import { trackShare } from '@/lib/analytics';
 
 interface ProfileOptionsDrawerProps {

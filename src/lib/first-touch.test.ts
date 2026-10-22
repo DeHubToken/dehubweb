@@ -1,6 +1,7 @@
 import { afterEach, describe, expect, it } from 'vitest';
 import { captureFirstTouch, getFirstTouch, readUtm } from './first-touch';
 
+const here = () => ({ path: window.location.pathname, search: window.location.search, referrer: '' });
 const clearCookie = () => { document.cookie = 'dehub_ft=; expires=Thu, 01 Jan 1970 00:00:00 GMT; path=/'; };
 
 afterEach(() => {
@@ -18,9 +19,9 @@ describe('first touch', () => {
 
   it('keeps the first landing and ignores later ones', () => {
     window.history.replaceState(null, '', '/app/post/9?utm_source=newsletter&utm_campaign=launch');
-    captureFirstTouch();
+    captureFirstTouch(here());
     window.history.replaceState(null, '', '/explore?utm_source=x');
-    captureFirstTouch();
+    captureFirstTouch(here());
 
     expect(getFirstTouch()).toMatchObject({
       utm_source: 'newsletter',
@@ -31,7 +32,7 @@ describe('first touch', () => {
 
   it('falls back to the cookie when localStorage was cleared', () => {
     window.history.replaceState(null, '', '/r/ABC123?utm_medium=dm');
-    captureFirstTouch();
+    captureFirstTouch(here());
     window.localStorage.clear();
     expect(getFirstTouch()).toMatchObject({ utm_medium: 'dm', landing_path: '/r/ABC123' });
   });
