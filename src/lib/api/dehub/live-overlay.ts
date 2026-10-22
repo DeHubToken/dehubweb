@@ -1,5 +1,6 @@
 import { apiCall } from './core';
 import type { CreatorOverlay, OverlayRenderIn, OverlayWidget, PublicOverlay } from '@/lib/live-overlay/types';
+import type { LiveRule } from '@/lib/live-overlay/rules';
 
 /**
  * The stream overlay routes on the stream API (`/api/live-overlay`).
@@ -50,6 +51,37 @@ export async function saveMyOverlay(overlay: { renderIn: OverlayRenderIn; widget
       requiresAuth: true,
     }),
   );
+}
+
+export interface MyRules {
+  rules: LiveRule[];
+  version: number;
+}
+
+function myRules(raw: Partial<MyRules> | undefined): MyRules {
+  return { rules: Array.isArray(raw?.rules) ? raw!.rules : [], version: Number(raw?.version) || 0 };
+}
+
+/** The creator's stream rules. Webhook addresses are in here, so this is never public. */
+export async function getMyRules(): Promise<MyRules> {
+  return myRules(unwrap(await apiCall<MyRules | { result: MyRules }>('/api/live-overlay/mine/rules', { requiresAuth: true })));
+}
+
+export async function saveMyRules(rules: LiveRule[]): Promise<MyRules> {
+  return myRules(
+    unwrap(
+      await apiCall<MyRules | { result: MyRules }>('/api/live-overlay/mine/rules', {
+        method: 'PUT',
+        body: { rules },
+        requiresAuth: true,
+      }),
+    ),
+  );
+}
+
+/** Plays one saved rule's alerts, sounds and read-aloud on the creator's own screens. */
+export async function testRule(ruleId: string): Promise<void> {
+  await apiCall(`/api/live-overlay/mine/rules/${encodeURIComponent(ruleId)}/test`, { method: 'POST', requiresAuth: true });
 }
 
 export type OverlayTestKind = 'tip' | 'follow' | 'subscribe' | 'share' | 'join';

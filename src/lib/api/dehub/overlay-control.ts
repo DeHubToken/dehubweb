@@ -9,6 +9,7 @@ import {
   type LiveRoomEvent,
   type StreamPresence,
 } from './stream-presence';
+import { parseRuleFired, type RuleFired } from '@/lib/live-overlay/rules';
 
 /**
  * A creator's overlay control room, `overlay:<token>`.
@@ -24,6 +25,8 @@ export interface OverlayControlHandlers {
   onUpdated?: (version: number) => void;
   /** The token was rotated; this connection no longer means anything. */
   onRevoked?: () => void;
+  /** A stream rule tested from Live Studio: what it shows, plays and reads. */
+  onRule?: (fired: RuleFired) => void;
   /** The server's answer to each join: false means the token is not (or no longer) real. */
   onJoined?: (ok: boolean) => void;
 }
@@ -76,6 +79,10 @@ export function watchOverlayControl(
   };
   const onUpdated = (data: any) => handlers.onUpdated?.(Number(data?.version) || 0);
   const onRevoked = () => handlers.onRevoked?.();
+  const onRule = (data: any) => {
+    const fired = parseRuleFired(data);
+    if (fired) handlers.onRule?.(fired);
+  };
 
   // An OBS page says it is still open, so the badge in Live Studio stays lit.
   const ping = surface === 'obs' ? window.setInterval(() => s.emit('overlay.ping', { token }), 60_000) : 0;
@@ -84,6 +91,7 @@ export function watchOverlayControl(
   s.on('overlay.test', onTest);
   s.on('overlay.updated', onUpdated);
   s.on('overlay.revoked', onRevoked);
+  s.on('overlay.rule', onRule);
   if (s.connected) join();
 
   return {
@@ -96,6 +104,43 @@ export function watchOverlayControl(
       s.off('overlay.test', onTest);
       s.off('overlay.updated', onUpdated);
       s.off('overlay.revoked', onRevoked);
+      s.off('overlay.rule', onRule);
+      releaseStreamSocket(conn);
+    },
+  };
+}
+
+/**
+ * A stream's fired rules, `stream.rule.fired` in its room — for the surfaces
+ * that play them (the overlay over a viewer's player, and the OBS page). Here
+ * rather than in stream-presence for the same boot-path reason as above.
+ */
+export function watchStreamRules(streamId: string, onRule: (fired: RuleFired) => void): StreamPresence {
+  if (!streamId) return { leave: () => undefined };
+
+  const conn = acquireStreamSocket();
+  const s = conn.socket;
+  let left = false;
+
+  const join = () => {
+    if (!left) s.emit('stream.join.room', { streamId });
+  };
+  const onFired = (data: any) => {
+    if (String(data?.streamId ?? '') !== streamId) return;
+    const fired = parseRuleFired(data);
+    if (fired) onRule(fired);
+  };
+
+  s.on('connect', join);
+  s.on('stream.rule.fired', onFired);
+  if (s.connected) join();
+
+  return {
+    leave: () => {
+      if (left) return;
+      left = true;
+      s.off('connect', join);
+      s.off('stream.rule.fired', onFired);
       releaseStreamSocket(conn);
     },
   };

@@ -26,6 +26,7 @@ import { isKnownKind, type OverlayKind } from '@/lib/live-overlay/registry';
 import { createOverlayEventBus, OverlayEventContext } from '@/components/app/live/overlay/overlay-events';
 import { OverlayWidgetView } from '@/components/app/live/overlay/overlay-widgets';
 import { useOverlayChat } from '@/hooks/use-overlay-chat';
+import { createRuleBus, RuleAudio, RuleBusContext } from '@/components/app/live/overlay/rule-bus';
 
 /** How often to look for the creator going live, and for a stream ending. */
 const IDLE_POLL_MS = 10_000;
@@ -49,6 +50,7 @@ export default function ObsOverlayPage() {
   const diag = params.get('diag') === '1';
   const size = useWindowSize();
   const bus = useMemo(() => createOverlayEventBus(), []);
+  const rules = useMemo(() => createRuleBus(), []);
   const [joined, setJoined] = useState<boolean | null>(null);
   const [revoked, setRevoked] = useState(false);
   const [lastEventAt, setLastEventAt] = useState<number | null>(null);
@@ -89,6 +91,10 @@ export default function ObsOverlayPage() {
           onUpdated: () => void refetch(),
           onRevoked: () => setRevoked(true),
           onJoined: setJoined,
+          onRule: (fired) => {
+            rules.publish(fired);
+            setLastEventAt(Date.now());
+          },
         });
       })
       .catch(() => undefined);
@@ -96,7 +102,7 @@ export default function ObsOverlayPage() {
       cancelled = true;
       sub?.leave();
     };
-  }, [token, notFound, bus, refetch]);
+  }, [token, notFound, bus, rules, refetch]);
 
   // The stream the creator is on air with right now, when there is one.
   const streamId = data?.live?.streamId ?? null;
@@ -123,6 +129,26 @@ export default function ObsOverlayPage() {
     };
   }, [streamId, bus, refetch]);
 
+  // Fired stream rules on the stream the creator is on air with.
+  useEffect(() => {
+    if (!streamId) return;
+    let cancelled = false;
+    let sub: { leave: () => void } | null = null;
+    import('@/lib/api/dehub/overlay-control')
+      .then(({ watchStreamRules }) => {
+        if (cancelled) return;
+        sub = watchStreamRules(streamId, (fired) => {
+          rules.publish(fired);
+          setLastEventAt(Date.now());
+        });
+      })
+      .catch(() => undefined);
+    return () => {
+      cancelled = true;
+      sub?.leave();
+    };
+  }, [streamId, rules]);
+
   const picture = { left: 0, top: 0, width: size.w, height: size.h };
   const portrait = size.h > size.w;
   const widgets =
@@ -136,57 +162,62 @@ export default function ObsOverlayPage() {
 
   return (
     <OverlayEventContext.Provider value={bus}>
-      <SEOHead title={t('liveStudio.obs.pageTitle')} noindex noCanonical />
-      <div data-live-overlay data-obs-page style={{ position: 'fixed' }} aria-hidden>
-        {widgets.map((widget) => {
-          // One widget per source: it takes the whole source and OBS places it.
-          const box = onlyWidget ? picture : placeWidget(rectFor(widget, portrait), picture);
-          const style = {
-            left: box.left,
-            top: box.top,
-            width: box.width,
-            height: box.height,
-            '--ow-h': `${box.height}px`,
-            '--ow-w': `${box.width}px`,
-          } as CSSProperties;
-          return (
-            <div key={widget.id} data-overlay-widget={widget.kind} style={style}>
-              <OverlayWidgetView
-                kind={widget.kind as OverlayKind}
-                settings={widget.settings || {}}
-                streamId={streamId ?? ''}
-                stats={data!.stats}
-                initialViewers={0}
-              />
-            </div>
-          );
-        })}
-      </div>
-
-      {diag && (
-        <pre
-          style={{
-            position: 'fixed',
-            left: 8,
-            bottom: 8,
-            margin: 0,
-            padding: '6px 8px',
-            font: '12px/1.4 ui-monospace, Menlo, monospace',
-            color: '#fff',
-            background: 'rgb(0 0 0 / 0.75)',
-            borderRadius: 6,
-            zIndex: 50,
-          }}
-        >
-          {[
-            `${t('liveStudio.obs.diagLink')}: ${notFound ? t('liveStudio.obs.diagDead') : data ? t('liveStudio.obs.diagOk') : '…'}`,
-            `${t('liveStudio.obs.diagControl')}: ${joined === null ? '…' : joined ? t('liveStudio.obs.diagOk') : t('liveStudio.obs.diagDead')}`,
-            `${t('liveStudio.obs.diagStream')}: ${streamId ?? t('liveStudio.obs.diagOffline')}`,
-            `${t('liveStudio.obs.diagWidgets')}: ${widgets.length}`,
-            `${t('liveStudio.obs.diagLastEvent')}: ${lastEventAt ? `${Math.round((Date.now() - lastEventAt) / 1000)}s` : '—'}`,
-          ].join('\n')}
-        </pre>
-      )}
+      <RuleBusContext.Provider value={rules}>
+        {/* One source plays the audio: the whole scene. Live rules only when OBS is
+            where the overlay is shown, or viewers' apps would play them too. */}
+        {!onlyWidget && <RuleAudio playLive={data?.renderIn === 'video'} />}
+        <SEOHead title={t('liveStudio.obs.pageTitle')} noindex noCanonical />
+        <div data-live-overlay data-obs-page style={{ position: 'fixed' }} aria-hidden>
+          {widgets.map((widget) => {
+            // One widget per source: it takes the whole source and OBS places it.
+            const box = onlyWidget ? picture : placeWidget(rectFor(widget, portrait), picture);
+            const style = {
+              left: box.left,
+              top: box.top,
+              width: box.width,
+              height: box.height,
+              '--ow-h': `${box.height}px`,
+              '--ow-w': `${box.width}px`,
+            } as CSSProperties;
+            return (
+              <div key={widget.id} data-overlay-widget={widget.kind} style={style}>
+                <OverlayWidgetView
+                  kind={widget.kind as OverlayKind}
+                  settings={widget.settings || {}}
+                  streamId={streamId ?? ''}
+                  stats={data!.stats}
+                  initialViewers={0}
+                />
+              </div>
+            );
+          })}
+        </div>
+  
+        {diag && (
+          <pre
+            style={{
+              position: 'fixed',
+              left: 8,
+              bottom: 8,
+              margin: 0,
+              padding: '6px 8px',
+              font: '12px/1.4 ui-monospace, Menlo, monospace',
+              color: '#fff',
+              background: 'rgb(0 0 0 / 0.75)',
+              borderRadius: 6,
+              zIndex: 50,
+            }}
+          >
+            {[
+              `${t('liveStudio.obs.diagLink')}: ${notFound ? t('liveStudio.obs.diagDead') : data ? t('liveStudio.obs.diagOk') : '…'}`,
+              `${t('liveStudio.obs.diagControl')}: ${joined === null ? '…' : joined ? t('liveStudio.obs.diagOk') : t('liveStudio.obs.diagDead')}`,
+              `${t('liveStudio.obs.diagStream')}: ${streamId ?? t('liveStudio.obs.diagOffline')}`,
+              `${t('liveStudio.obs.diagWidgets')}: ${widgets.length}`,
+              `${t('liveStudio.obs.diagLastEvent')}: ${lastEventAt ? `${Math.round((Date.now() - lastEventAt) / 1000)}s` : '—'}`,
+            ].join('\n')}
+          </pre>
+        )}
+      </RuleBusContext.Provider>
     </OverlayEventContext.Provider>
   );
 }

@@ -10,7 +10,7 @@
  *
  * Loaded on demand by the live card, which is on the boot path.
  */
-import { useMemo, useRef, type CSSProperties, type RefObject } from 'react';
+import { useEffect, useMemo, useRef, type CSSProperties, type RefObject } from 'react';
 import { useQueryClient } from '@tanstack/react-query';
 import '@/styles/live-overlay.css';
 import { useLiveRoomEvents } from '@/hooks/use-live-room-events';
@@ -22,6 +22,7 @@ import { isKnownKind, type OverlayKind } from '@/lib/live-overlay/registry';
 import type { PublicOverlay } from '@/lib/live-overlay/types';
 import { createOverlayEventBus, OverlayEventContext } from './overlay-events';
 import { OverlayWidgetView } from './overlay-widgets';
+import { createRuleBus, RuleAudio, RuleBusContext } from './rule-bus';
 
 interface Props {
   streamId: string;
@@ -55,33 +56,55 @@ export default function LiveOverlayLayer({ streamId, tokenId, overlay, videoRef,
   });
   useOverlayChat(tokenId, visible.some((w) => w.kind === 'chat_box'), bus.publish);
 
+  // Fired stream rules: heard here only while the overlay is drawn in the app.
+  // When OBS burns it into the video, the OBS page plays them — once.
+  const rules = useMemo(() => createRuleBus(), []);
+  const inApp = overlay.renderIn === 'app';
+  useEffect(() => {
+    if (!inApp || !streamId) return;
+    let cancelled = false;
+    let sub: { leave: () => void } | null = null;
+    import('@/lib/api/dehub/overlay-control')
+      .then(({ watchStreamRules }) => {
+        if (!cancelled) sub = watchStreamRules(streamId, rules.publish);
+      })
+      .catch(() => undefined);
+    return () => {
+      cancelled = true;
+      sub?.leave();
+    };
+  }, [inApp, streamId, rules]);
+
   return (
     <OverlayEventContext.Provider value={bus}>
-      <div ref={layerRef} data-live-overlay aria-hidden>
-        {picture.width > 0 &&
-          visible.map((widget) => {
-            const box = placeWidget(rectFor(widget, picture.portrait), picture);
-            const style = {
-              left: box.left,
-              top: box.top,
-              width: box.width,
-              height: box.height,
-              '--ow-h': `${box.height}px`,
-              '--ow-w': `${box.width}px`,
-            } as CSSProperties;
-            return (
-              <div key={widget.id} data-overlay-widget={widget.kind} style={style}>
-                <OverlayWidgetView
-                  kind={widget.kind as OverlayKind}
-                  settings={widget.settings || {}}
-                  streamId={streamId}
-                  stats={overlay.stats}
-                  initialViewers={initialViewers}
-                />
-              </div>
-            );
-          })}
-      </div>
+      <RuleBusContext.Provider value={rules}>
+        {inApp && <RuleAudio playLive />}
+        <div ref={layerRef} data-live-overlay aria-hidden>
+          {picture.width > 0 &&
+            visible.map((widget) => {
+              const box = placeWidget(rectFor(widget, picture.portrait), picture);
+              const style = {
+                left: box.left,
+                top: box.top,
+                width: box.width,
+                height: box.height,
+                '--ow-h': `${box.height}px`,
+                '--ow-w': `${box.width}px`,
+              } as CSSProperties;
+              return (
+                <div key={widget.id} data-overlay-widget={widget.kind} style={style}>
+                  <OverlayWidgetView
+                    kind={widget.kind as OverlayKind}
+                    settings={widget.settings || {}}
+                    streamId={streamId}
+                    stats={overlay.stats}
+                    initialViewers={initialViewers}
+                  />
+                </div>
+              );
+            })}
+        </div>
+      </RuleBusContext.Provider>
     </OverlayEventContext.Provider>
   );
 }

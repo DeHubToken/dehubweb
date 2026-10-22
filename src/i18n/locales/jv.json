@@ -4672,6 +4672,7 @@
       "share": "Bareng"
     },
     "kinds": {
+      "rule_alert": "Peringatan aturan",
       "tip_alert": "Peringatan Tip",
       "follow_alert": "Awas",
       "subscribe_alert": "Peringatan pelanggan",
@@ -4701,7 +4702,8 @@
       "reaction_counter": "Mengitung reaksi tiap broadcastmu",
       "event_feed": "Hadiah, pengikut, subscriber, dan orang yang share broadcastmu yang terbaru",
       "chat_box": "Nggawe pesanan chat broadcastmu ditampilin di layar",
-      "ticker": "Baris tulisan sendiri yang berjalan di layar"
+      "ticker": "Baris tulisan sendiri yang berjalan di layar",
+      "rule_alert": "Endi aturan-aturan penting mu katon"
     },
     "fields": {
       "celebration": "Ngabdulakehan",
@@ -4728,6 +4730,103 @@
       "slow": "Lambat",
       "normal": "Normal",
       "fast": "Cepat"
+    },
+    "rules": {
+      "empty": "Belum ada aturan. Tambahkan satu untuk bereaksi terhadap tips, mengikuti, atau perintah obrolan.",
+      "test": "Tes",
+      "enabled": "Aturan tentang",
+      "save": "Simpan aturan",
+      "needsAlertWidget": "Beberapa aturan menunjukkan peringatan. Tambahkan widget Lansiran aturan sehingga ada tempat untuk ditampilkan.",
+      "command": "Perintah",
+      "removeAction": "Hapus tindakan",
+      "alertText": "Teks peringatan",
+      "sound": "Suara",
+      "sayText": "Teks untuk dibaca dengan suara keras",
+      "chatText": "Pesan untuk diposting",
+      "chatHint": "Diposting dari akun Anda ke obrolan streaming Anda. Tidak dapat mengulangi pesan pemirsa.",
+      "webhookHint": "Webhook Discord atau Slack, atau alamat https apa pun yang menerima POSTINGAN.",
+      "summary": {
+        "tip": "Tips dari {{amount}} DHB atau lebih"
+      },
+      "title": "Rules",
+      "intro": "Nalika ana sing kedadeyan ing streammu, DeHub nindakake apa sing kowe pilih: nampilake alert, muter swara, maca bab-bab kanthi swara, ngirim ing chatmu utawa ngandhani Discord-mu.",
+      "add": "Tambah aturan",
+      "limit": "Kamu udh capai batas aturan {{count}} ini.",
+      "loadFailed": "Kloe atur-aturan ingkang ngajadi gak bisa ditulung. Klik \"Refresh\" gunae ngulik.",
+      "saved": "Kebijakan ini disimpan. Mereka berjalan di waktu tipmu selanjutnya, ikuti atau kirim pesan.",
+      "saveFailed": "Klo atur-aturmu ga bisa disimpen.",
+      "testFailed": "Kanggo uji coba ingkang kudu dijalani, nganggo gini nganggo gini. Coba lagi nglakoni ing ngantenan.",
+      "saveToTest": "Simpen aturanmu kanggo nyoba aturan kasebut",
+      "remove": "Kudu aturan-aturan.",
+      "name": "Name",
+      "when": "Kadha ngkapa",
+      "then": "Kulon.",
+      "minAmount": "Kecil-kecil tip (DHB)",
+      "keyword": "Kata atau ungkapan",
+      "audience": "Kénggo manéné kanggo ngaraniya?",
+      "blockedWords": "Blocked words",
+      "blockedWordsHint": ",",
+      "cooldown": "Waktu tunggu antar pakai (detik)",
+      "userCooldown": "Waktu tunggu per penonton (detik)",
+      "addAction": "Tambah sawijining aksi",
+      "placeholders": "Gunakake {name}, {amount} lan {message} ing teksmu. Link ing pesen dibusak.",
+      "webhookUrl": "Alamat webhook",
+      "webhookText": "Message to send",
+      "triggers": {
+        "follow": "Seseorang mengikuti",
+        "subscribe": "Seseorang berlangganan",
+        "command": "Perintah obrolan digunakan",
+        "keyword": "Pesan obrolan berisi kata",
+        "tip": "Sampiran sing ngarani.",
+        "share": "Kang ngarani stream dhuwur.",
+        "chat": "Sembarang pesen obrolan"
+      },
+      "audiences": {
+        "subscribers": "Pelanggan",
+        "everyone": "Kabeh",
+        "followers": "pengikut"
+      },
+      "actionTypes": {
+        "alert": "Tampilkan pemberitahuan",
+        "sound": "Putar suara",
+        "webhook": "Kirim ke webhook",
+        "say": "Waca kanthi swara",
+        "chat": "Post in chat"
+      },
+      "presets": {
+        "bigTip": "Klakson udara untuk tip besar",
+        "thankFollowers": "Ucapkan terima kasih kepada pengikut baru",
+        "blank": "Blank rule",
+        "readChat": "Waca obrolan kanthi swara",
+        "command": "Kode pesan nganti-nganti (chat command)"
+      },
+      "presetHints": {
+        "blank": "Mulai saka ora ana apa-apa",
+        "readChat": "Manggojek pesen pengikutmu ngajog, siji per pengliwat tiworo 30 detik",
+        "bigTip": "Ngepang air horn lan ngelukis peringatan buat tip 100.000 DHB lan ati",
+        "thankFollowers": "Ngepost pesan ngrejek di chatmu kalau pengikut",
+        "command": "Ngebalikan perintah `!command` di chatmu"
+      },
+      "presetText": {
+        "readChat": "{name} ngomong: {message}",
+        "bigTip": "{name} ngirim {amount} DHB!",
+        "thankFollowers": "Ngrejek follow, {name}!",
+        "command": "Halo {name}, selamat datang di stream!"
+      },
+      "sounds": {
+        "airhorn": "Air horn",
+        "applause": "Applause",
+        "cricket": "Ketuk-ketuk (kumbang)",
+        "drumroll": "Drum roll",
+        "lol": "Tawa",
+        "ooh-ahh": "Ooh ahh",
+        "ooh-man": "Ooh (pria)",
+        "ohh-girl": "Ohh (wanita)",
+        "ba-dum-tish": "Ba dum tish",
+        "spooky": "Spooky",
+        "magic-spell": "Sajen",
+        "shhh": "Shhh"
+      }
     }
   },
   "live": {
