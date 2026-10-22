@@ -1,4 +1,17 @@
 {
+  "liveChatModeration": {
+    "timeout1m": "وقت توقف دقيقة",
+    "timeout10m": "وقت توقف عشر دقائق",
+    "timeout1h": "وقت توقف ساعة",
+    "ban": "حظر من هذي البثات",
+    "makeModerator": "خلّيهم مشرف",
+    "timedOut": "تم توقيفه مؤقتاً.",
+    "banned": "محظور من هذي البثات.",
+    "madeModerator": "صارت مشرف الآن.",
+    "failed": "ما نفعت. جرّب مرة ثانية.",
+    "youAreBanned": "ما تقدر تكتب في بثات هذي القناة",
+    "youAreTimedOut": "أنت متوقف مؤقتاً لحظة"
+  },
   "errors": {
     "sponsorshipUnavailable": "المعاملات المجانية متوقفة من عندنا، ليست من محفظتك. حاول مرة أخرى قريبًا.",
     "gasSponsorshipFailed": "تعذّر تغطية هذه المعاملة. حاول بعد قليل."
@@ -4313,6 +4326,51 @@
     "stillCounting": "لسه بنعد: الهدايا ممكن تاخذ دقيقة لتأكيدها."
   },
   "liveStudio": {
+    "moderation": {
+      "title": "إدارة الدردشة",
+      "intro": "قوانين الدردشة تحت كل بثوك. ما توصلش للدردشة الرئيسية لـ DeHub: أي شخص تحظره هنا يقدر يكتب في أي مكان ثاني.",
+      "loadFailed": "ما قدرنا نحمل إعدادات الإدارة. عاود تحديث الصفحة وجرب مرة ثانية.",
+      "save": "احفظ قوانين الدردشة",
+      "saved": "تم حفظ قوانين الدردشة.",
+      "saveFailed": "ما قدرنا نحفظ التغيير.",
+      "slowMode": "وضع بطيء",
+      "slowModeHint": "كم الوقت اللي ينتظره المشاهد بين الرسائل. إنت ومشرفيك ما تنتظروا أبداً.",
+      "off": "إيقاف",
+      "seconds_one": "{{count}} ثانية",
+      "seconds_other": "{{count}} ثواني",
+      "followersOnly": "المتابعين فقط",
+      "subscribersOnly": "المشتركين فقط",
+      "subscribersOnlyHint": "يتجاوز المتابعين فقط.",
+      "bannedWords": "كلمات محظورة",
+      "bannedWordsHint": "افصلهم بفواصل. كتابة كلمة حرف بحرف ما يخلّصك منها.",
+      "wordAction": "لما أحد يستخدم وحدة",
+      "wordBlock": "أوقف الرسالة",
+      "wordTimeout": "أوقفها وحط له توقيف دقيقة",
+      "moderators": "المشرفون",
+      "moderatorsHint": "يقدرون يوقفون ويمنعون المشاهدين في البثوث حقك. ما يقدرون يتصرفون عليك أو مع بعضهم.",
+      "addModerator": "أضف",
+      "usernamePlaceholder": "اسم المستخدم",
+      "moderatorAdded": "المشرف مضاف.",
+      "moderatorNotFound": "ما في حساب بهذا الاسم.",
+      "removeModerator": "أزل المشرف",
+      "noModerators": "ما في مشرفين بعد.",
+      "banned": "منع من البثوث حقك",
+      "unban": "ألغِ الحظر",
+      "noBans": "ما حد ممنوع.",
+      "log": "الإجراءات الأخيرة",
+      "noLog": "ما في شيء بعد.",
+      "actions": {
+        "timeout_one": "{{actor}} مَشَى زَمَانُهَا {{target}} لِسَانِيَةَ {{count}}",
+        "timeout_other": "{{actor}} مَشَى الوقتِ {{target}} ل{{count}} دَقَائِقْ",
+        "ban": "{{actor}} تم حظره {{target}}",
+        "unban": "{{actor}} تم إلغاء حظره {{target}}",
+        "moderator-added": "{{target}} صار مشرف",
+        "moderator-removed": "{{target}} ما عاد مشرف",
+        "word-blocked": "وقف رسالة من {{target}} لـ \"{{word}}\"",
+        "word-timeout_one": "تم توقيف {{target}} لمدة {{count}} ثانية لـ \"{{word}}\"",
+        "word-timeout_other": "تم توقيف {{target}} لمدة {{count}} ثواني لـ \"{{word}}\""
+      }
+    },
     "polls": {
       "title": "استطلاعات الرأي",
       "intro": "سأسأل الناس الذين يشاهدون بثك سؤالاً. يردون عليه عن طريق زر في تطبيق DeHub، أو عن طريق كتابة {{command}} وعددهم في الشات.",

@@ -1,4 +1,17 @@
 {
+  "liveChatModeration": {
+    "timeout1m": "Time out for 1 minute",
+    "timeout10m": "Time out for 10 minutes",
+    "ban": "Ban from these streams",
+    "makeModerator": "Make moderator",
+    "timedOut": "Timed out.",
+    "banned": "Banned from these streams.",
+    "timeout1h": "Tym out fo 1 hour.",
+    "madeModerator": "E go be moderator now.",
+    "failed": "Na go no dey work. Try again.",
+    "youAreBanned": "Wah you no go chat wey dis creator dey stream, eh?",
+    "youAreTimedOut": "Mun ya na time out for a moment."
+  },
   "errors": {
     "sponsorshipUnavailable": "Free transaction dem don stop for we side, no be your wallet. Try again small time.",
     "gasSponsorshipFailed": "We no fit pay for dis transaction. Try again small time."
@@ -4410,6 +4423,51 @@
     "pollWinner": "{{option}} won"
   },
   "liveStudio": {
+    "moderation": {
+      "save": "Save chat rules",
+      "saved": "Chat rules saved.",
+      "slowMode": "Slow mode",
+      "off": "Off",
+      "seconds_one": "{{count}} second",
+      "followersOnly": "Followers only",
+      "subscribersOnly": "Subscribers only",
+      "subscribersOnlyHint": "Overrides followers only.",
+      "bannedWords": "Banned words",
+      "wordAction": "When someone uses one",
+      "wordBlock": "Stop the message",
+      "banned": "Banned from your streams",
+      "title": "Moderayshun of chat.",
+      "intro": "Rulz fo chat unda all of my streamz: dem no go reach DeHub main chat: if you ban here, you still go fit talk everywia.",
+      "loadFailed": "Na my moderation settings no go load wey. Come back page wey, try again.",
+      "saveFailed": "Wetin you try save no go save wey.",
+      "slowModeHint": "Wetin time each viewer go wait for message come. You and your moderators no go wait at all.",
+      "seconds_other": "{{count}} sekond",
+      "bannedWordsHint": "Wah, no change, same like before.",
+      "wordTimeout": "Stop wey, go time dem for one minute!",
+      "moderators": "Moderators",
+      "moderatorsHint": "E dem go stop timer an ban viewa fi yu stream. Dem no go act on yu or on each other.",
+      "addModerator": "Add",
+      "usernamePlaceholder": "Username",
+      "moderatorAdded": "Moderator added.",
+      "moderatorNotFound": "Wetin no account for dis username?",
+      "removeModerator": "Remove moderator",
+      "noModerators": "No moderators yet.",
+      "unban": "Unban",
+      "noBans": "Nobody is banned.",
+      "log": "Recent actions",
+      "noLog": "Nothing yet.",
+      "actions": {
+        "timeout_other": "{{actor}} timed out {{target}} for {{count}} seconds",
+        "moderator-added": "{{target}} became a moderator",
+        "moderator-removed": "{{target}} is no longer a moderator",
+        "word-timeout_one": "Timed out {{target}} for {{count}} second for \"{{word}}\"",
+        "timeout_one": "{{actor}} no go fit {{target}} foe {{count}} second",
+        "ban": "{{actor}} banned {{target}}",
+        "unban": "{{actor}} unbanned {{target}}",
+        "word-blocked": "Stopped a message from \"{{target}}\" for \"{{word}}\" no go dey stop.",
+        "word-timeout_other": "Time out\" for {{target}} \"for\" {{count}} \"second\" (if one) or \"seconds\" (if more) \"for\" \"{{word}}"
+      }
+    },
     "polls": {
       "title": "Polls",
       "intro": "Ask dem people watchin’ yu broadcast one question. Dem answer wit’ button in DeHub app, or by type \"{{command}}\" and number of option in chat.",

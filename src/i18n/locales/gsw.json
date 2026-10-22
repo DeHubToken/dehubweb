@@ -1,4 +1,17 @@
 {
+  "liveChatModeration": {
+    "timeout1m": "Zeitlimit für 1 Minute",
+    "timeout10m": "Zeitlimit für 10 Minuten",
+    "timeout1h": "Zeitlimit für 1 Stunde",
+    "ban": "Gesperrt von diesen Streams",
+    "makeModerator": "Macher:in zum Moderator:in machen",
+    "timedOut": "Zeitlimit gesetzt.",
+    "banned": "Von diesen Streams gesperrt.",
+    "madeModerator": "Sie sind jetzt Moderator:in.",
+    "failed": "Das hat nicht funktioniert. Nochmal versuchen.",
+    "youAreBanned": "Du kannst in diesen Streams von der Creator:in nicht chatten.",
+    "youAreTimedOut": "Du bist für einen Moment zeitlimitiert."
+  },
   "errors": {
     "sponsorshipUnavailable": "Gratis Transaktione sind bi üs pausiert, nid bi dinere Wallet. Probier s glii nomol.",
     "gasSponsorshipFailed": "Die Transaktion het nid chöne übernoh werde. Probier s glii nomol."
@@ -4816,6 +4829,51 @@
     "stillCounting": "Zäme noch am Zählä: Geschenke brauchä et Wile, bis se bestäät sünd."
   },
   "liveStudio": {
+    "moderation": {
+      "title": "Chat-Moderation",
+      "intro": "Regeln für den Chat unter allen deinen Streams. Sie kommen nie in den Hauptchat von DeHub – jemanden, den du hier sperrst, kann trotzdem überall sonst reden.",
+      "loadFailed": "Deine Moderations-Einstellungen konnten nicht geladen werden. Aktualisiere die Seite und versuche es erneut.",
+      "save": "Chat-Regeln speichern",
+      "saved": "Chat-Regeln gespeichert.",
+      "saveFailed": "Diese Änderung konnte nicht gespeichert werden.",
+      "slowMode": "Langsam-Modus",
+      "slowModeHint": "Wie lange Zuschauer:innen zwischen Nachrichten warten müssen. Du und deine Moderator:innen wartet nie.",
+      "off": "Aus",
+      "seconds_one": "{{count}} Sekunde",
+      "seconds_other": "{{count}} Sekunden",
+      "followersOnly": "Nur Follower:innen",
+      "subscribersOnly": "Nur Abonnent:innen",
+      "subscribersOnlyHint": "Überschreibt «Nur Follower:innen».",
+      "bannedWords": "Gesperrte Wörter",
+      "bannedWordsHint": "Mit Kommas trennen. Ein Wort buchstabieren geht nicht drumherum.",
+      "wordAction": "Wenn jemand eines verwendet",
+      "wordBlock": "Nachricht stoppen",
+      "wordTimeout": "Stoppe sie und setze sie für eine Minute zeitlimitiert.",
+      "moderators": "Moderator",
+      "moderatorsHint": "Sie können Zuschauer in deinen Streams zeitlich begrenzen und sperren. Sie können aber niht auf dich oder auf sich selbst handeln.",
+      "addModerator": "Hinzufügen",
+      "usernamePlaceholder": "Benutzername",
+      "moderatorAdded": "Moderator hinzugefügt.",
+      "moderatorNotFound": "Kein Konto mit diesem Benutzernamen.",
+      "removeModerator": "Moderator entfernen",
+      "noModerators": "Noch keine Moderatoren.",
+      "banned": "Von deinen Streams gesperrt",
+      "unban": "Entsperren",
+      "noBans": "Niemand ist gesperrt.",
+      "log": "Letzte Aktionen",
+      "noLog": "Noch nichts.",
+      "actions": {
+        "timeout_one": "{{actor}} isch abgelaufen {{target}} für {{count}} Sekundä",
+        "timeout_other": "{{actor}} isch abgelaufen {{target}} für {{count}} Sekundä.",
+        "ban": "{{actor}} hat {{target}} gesperrt",
+        "unban": "{{actor}} hat {{target}} entsperrt",
+        "moderator-added": "{{target}} wurde Moderator",
+        "moderator-removed": "{{target}} ist nicht mehr Moderator",
+        "word-blocked": "Hat eine Nachricht von {{target}} für \"{{word}}\" gestoppt",
+        "word-timeout_one": "{{target}} wurde für {{count}} Sekunde zeitlich begrenzt für \"{{word}}\"",
+        "word-timeout_other": "{{target}} wurde für {{count}} Sekunden zeitlich begrenzt für \"{{word}}\""
+      }
+    },
     "polls": {
       "title": "Umfragen",
       "intro": "Frage die Leute, die deinem Stream folgen, eine Frage. Sie antworten mit einem Button in der DeHub-App oder indem sie {{command}} und die Nummer der Option in den Chat schreiben.",

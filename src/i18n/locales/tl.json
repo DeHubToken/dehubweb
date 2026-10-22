@@ -1,4 +1,27 @@
 {
+  "liveRecap": {
+    "title": "I - recap ang stream",
+    "justEnded": "I - recap ang iyong stream",
+    "lastStream": "Huling stream mo",
+    "share": "Ibahagi",
+    "shareText": "Nag - stream ako ng \"{{title}}\" sa DeHub: {{duration}} live, {{peak}} nanonood sa rurok at {{followers}} mga bagong tagasunod.",
+    "untitled": "Walang pamagat na stream",
+    "copied": "Kinopya ang recap. I - paste ito kahit saan.",
+    "loadFailed": "Hindi nag - load ang recap. Subukan muli sa ilang sandali.",
+    "duration": "Live ang oras",
+    "peakViewers": "Karamihan sa mga nanonood nang sabay - sabay",
+    "gifts_one": "Mula {{count}}regalo",
+    "gifts_other": "Mula {{count}} mga regalo",
+    "newFollowers": "Mga bagong tagasunod",
+    "chatMessages": "Mga mensahe sa chat",
+    "chatters": "Mga taong nakikipag - chat",
+    "reactions": "Mga Reaksyon",
+    "shares": "Mga taong nagbabahagi",
+    "topSupporters": "Mga nangungunang tagasuporta",
+    "polls": "Mga botohan",
+    "pollWinner": "{{option}} won",
+    "stillCounting": "Nagbibilang pa rin: ang mga regalo ay maaaring tumagal ng isang minuto upang kumpirmahin."
+  },
   "errors": {
     "sponsorshipUnavailable": "Naka-pause ang mga libreng transaksyon sa panig namin, hindi sa wallet mo. Pakisubukan ulit mamaya.",
     "gasSponsorshipFailed": "Hindi nasagot ang bayad para sa transaksyong ito. Pakisubukan ulit mamaya."
@@ -4853,28 +4876,18 @@
       "howToVote_other": "I-type ang {{command}} at isang numero sa chat para bumoto: {{count}} boto"
     }
   },
-  "liveRecap": {
-    "title": "I - recap ang stream",
-    "justEnded": "I - recap ang iyong stream",
-    "lastStream": "Huling stream mo",
-    "share": "Ibahagi",
-    "shareText": "Nag - stream ako ng \"{{title}}\" sa DeHub: {{duration}} live, {{peak}} nanonood sa rurok at {{followers}} mga bagong tagasunod.",
-    "untitled": "Walang pamagat na stream",
-    "copied": "Kinopya ang recap. I - paste ito kahit saan.",
-    "loadFailed": "Hindi nag - load ang recap. Subukan muli sa ilang sandali.",
-    "duration": "Live ang oras",
-    "peakViewers": "Karamihan sa mga nanonood nang sabay - sabay",
-    "gifts_one": "Mula {{count}}regalo",
-    "gifts_other": "Mula {{count}} mga regalo",
-    "newFollowers": "Mga bagong tagasunod",
-    "chatMessages": "Mga mensahe sa chat",
-    "chatters": "Mga taong nakikipag - chat",
-    "reactions": "Mga Reaksyon",
-    "shares": "Mga taong nagbabahagi",
-    "topSupporters": "Mga nangungunang tagasuporta",
-    "polls": "Mga botohan",
-    "pollWinner": "{{option}} won",
-    "stillCounting": "Nagbibilang pa rin: ang mga regalo ay maaaring tumagal ng isang minuto upang kumpirmahin."
+  "liveChatModeration": {
+    "timeout1m": "Time out para sa 1 minuto",
+    "timeout10m": "Time out para sa 10 minuto",
+    "timeout1h": "Time out para sa 1 oras",
+    "ban": "Ipagbawal mula sa mga stream na ito",
+    "makeModerator": "Gumawa ng moderator",
+    "timedOut": "Nag - time out.",
+    "banned": "Ipagbawal mula sa mga stream na ito.",
+    "madeModerator": "Sila ngayon ay isang moderator.",
+    "failed": "Hindi iyon gumana. Subukan muli.",
+    "youAreBanned": "Hindi ka maaaring makipag - chat sa mga stream ng tagalikha na ito",
+    "youAreTimedOut": "Naka - time out ka nang ilang sandali"
   },
   "liveStudio": {
     "polls": {
@@ -4982,6 +4995,7 @@
       "join": "Sumali"
     },
     "kinds": {
+      "poll": "Botohan",
       "tip_alert": "Alerto sa tip",
       "follow_alert": "Subaybayan ang alerto",
       "subscribe_alert": "Alerto sa subscriber",
@@ -4997,8 +5011,7 @@
       "event_feed": "Kamakailang aktibidad",
       "chat_box": "Chat box",
       "ticker": "Ticker",
-      "rule_alert": "Mga alerto sa panuntunan",
-      "poll": "Botohan"
+      "rule_alert": "Mga alerto sa panuntunan"
     },
     "hints": {
       "tip_alert": "Ipinagdiriwang ang bawat tip, laki hanggang sa tier nito",
@@ -5148,6 +5161,51 @@
         "spooky": "Nakakatakot",
         "magic-spell": "Magic spell",
         "shhh": "Shhh"
+      }
+    },
+    "moderation": {
+      "save": "I-save ang mga patakaran ng chat",
+      "title": "Pagmo - moderate ng chat",
+      "intro": "Mga panuntunan para sa chat sa ilalim ng lahat ng iyong mga stream. Hindi nila kailanman maabot ang pangunahing chat ng DeHub: ang isang taong pinagbawalan mo dito ay maaari pa ring makipag - usap sa lahat ng dako.",
+      "loadFailed": "Hindi ma - load ang iyong mga setting ng pag - moderate. I - refresh ang page para subukang muli.",
+      "saved": "Na - save ang mga panuntunan sa chat.",
+      "saveFailed": "Hindi mase - save ang pagbabagong iyon.",
+      "slowMode": "Mabagal na mode",
+      "slowModeHint": "Gaano katagal naghihintay ang bawat viewer sa pagitan ng mga mensahe. Ikaw at ang iyong mga moderator ay hindi kailanman naghihintay.",
+      "off": "Naka - off",
+      "seconds_one": "{{count}} segundo",
+      "seconds_other": "{{count}} segundo",
+      "followersOnly": "Mga tagasunod lamang",
+      "subscribersOnly": "Mga subscriber lang",
+      "subscribersOnlyHint": "Overrides mga tagasunod lamang.",
+      "bannedWords": "Mga ipinagbabawal na salita",
+      "bannedWordsHint": "Paghiwalayin sa mga kuwit. Ang pagbaybay ng isang salita sa pamamagitan ng sulat ay hindi nakakakuha ng bilog na ito.",
+      "wordAction": "Kapag ang isang tao ay gumagamit ng isang",
+      "wordBlock": "Itigil ang mensahe",
+      "wordTimeout": "Itigil ito at oras ang mga ito para sa isang minuto",
+      "moderators": "Moderator",
+      "moderatorsHint": "Maaari silang *timeout* at *ban* ang mga *viewers* sa mga *stream* mo. Hindi sila maaaring gumawa ng aksyon sa iyo o sa kanila.",
+      "addModerator": "Magdagdag",
+      "usernamePlaceholder": "Username",
+      "moderatorAdded": "Idinagdag ang moderator.",
+      "moderatorNotFound": "Walang account na may ganitong username.",
+      "removeModerator": "Alisin ang moderator",
+      "noModerators": "Walang mga moderator pa.",
+      "banned": "Ipinagbabawal sa iyong mga stream",
+      "unban": "Unban",
+      "noBans": "Walang sinuman ang *banned*.",
+      "log": "Mga kamakailang aksyon",
+      "noLog": "Walang mga aksyon pa.",
+      "actions": {
+        "timeout_one": "{{actor}} *timed out* ang {{target}} para sa {{count}} segundo",
+        "timeout_other": "{{actor}} *timed out* ang {{target}} para sa {{count}} mga segundo",
+        "ban": "{{actor}} *banned* ang {{target}}",
+        "unban": "{{actor}} *unbanned* ang {{target}}",
+        "moderator-added": "Naging moderator na ang {{target}}",
+        "moderator-removed": "Hindi na moderator ang {{target}}",
+        "word-blocked": "Nagstop sa isang mensahe mula sa {{target}} para sa \"{{word}}\"",
+        "word-timeout_one": "*Timed out* ang {{target}} para sa {{count}} segundo para sa \"{{word}}\"",
+        "word-timeout_other": "*Timed out* ang {{target}} para sa {{count}} mga segundo para sa \"{{word}}\""
       }
     }
   },

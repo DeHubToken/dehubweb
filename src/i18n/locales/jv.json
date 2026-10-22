@@ -1,4 +1,17 @@
 {
+  "liveChatModeration": {
+    "timeout1m": "Waktu timeout 1 menit",
+    "timeout10m": "Waktu timeout 10 menit",
+    "timeout1h": "Waktu timeout 1 jam",
+    "ban": "Dilarang dari stream-stream ini",
+    "makeModerator": "Dijadikan moderator",
+    "timedOut": "Timeout.",
+    "banned": "Dilarang dari stream-stream ini.",
+    "madeModerator": "Kini dia jadi moderator.",
+    "failed": "Gak beres. Coba lagi.",
+    "youAreBanned": "Gak bisa ngetik di stream-stream kreator ini",
+    "youAreTimedOut": "Timeout sebentar."
+  },
   "errors": {
     "sponsorshipUnavailable": "Transaksi gratis lagi dijeda saka pihak kita, dudu ing dompet sampeyan. Coba maneh sedhela maneh.",
     "gasSponsorshipFailed": "Transaksi iki ora bisa disponsori. Coba maneh sedhela."
@@ -4636,6 +4649,51 @@
     "stillCounting": "Kudu ngarani: nganggo wonggo kudu wonggo menunggu kanggo konfirmasi, nganggo wonggo kudu wonggo menunggu kanggo ngarani."
   },
   "liveStudio": {
+    "moderation": {
+      "title": "Moderasi chat",
+      "intro": "Aturan chat di bawah semua streammu. Gak pernah sampai ke chat utama DeHub: orang yang kamu ban di sini masih bisa ngetik di mana-mana lain.",
+      "loadFailed": "Pengaturan moderasi kamu gak bisa dimuat. Segarkan halaman untuk coba lagi.",
+      "save": "Simpan aturan chat",
+      "saved": "Aturan chat udah disimpan.",
+      "saveFailed": "Perubahan ini gak bisa disimpan.",
+      "slowMode": "Mode lambat",
+      "slowModeHint": "Berapa lama penonton tunggu antar pesan. Kamu dan moderator gak usah tunggu.",
+      "off": "Mati",
+      "seconds_one": "{{count}} detik",
+      "seconds_other": "{{count}} detik",
+      "followersOnly": "Hanya pengikut",
+      "subscribersOnly": "Hanya subscriber",
+      "subscribersOnlyHint": "Menghapus \"hanya pengikut\".",
+      "bannedWords": "Kata-kata terlarang",
+      "bannedWordsHint": "Pisahkan dengan koma. Menulis kata huruf per huruf gak bisa meloloskan.",
+      "wordAction": "Kalo seseorang pakai salah satu",
+      "wordBlock": "Hentikan pesan",
+      "wordTimeout": "Hentikan dan timeout dia 1 menit",
+      "moderators": "Moderator",
+      "moderatorsHint": "Kang bisa ngatur waktu out dan ban penonton di stream mo. Kang ga bisa ngarani mo atawa ngarani kanggo rekan-rekan mo.",
+      "addModerator": "Tambah",
+      "usernamePlaceholder": "Username",
+      "moderatorAdded": "Moderator ditambah.",
+      "moderatorNotFound": "Gak ada akun dinaweh username gini.",
+      "removeModerator": "Hapus moderator",
+      "noModerators": "Belum ada moderator.",
+      "banned": "Dilarang di stream mo",
+      "unban": "Unban",
+      "noBans": "Gak ada yang dilarang.",
+      "log": "Aksi-aksi baru",
+      "noLog": "Belum ada.",
+      "actions": {
+        "timeout_one": "{{actor}} ditunaikan {{target}} untuk {{count}} detik",
+        "timeout_other": "{{actor}} ditunaikan {{target}} untuk {{count}} detik",
+        "ban": "{{actor}} dilarang {{target}}",
+        "unban": "{{actor}} dibebaskan {{target}}",
+        "moderator-added": "{{target}} jadi moderator",
+        "moderator-removed": "{{target}} gak lagi moderator",
+        "word-blocked": "Menghentikan pesan dari {{target}} untuk \"{{word}}\"",
+        "word-timeout_one": "Ditunaikan {{target}} untuk {{count}} detik untuk \"{{word}}\"",
+        "word-timeout_other": "Ditunaikan {{target}} untuk {{count}} detik untuk \"{{word}}\""
+      }
+    },
     "polls": {
       "title": "Jajak Pendapat",
       "intro": "Takon wong-wong sing nonton siaran sampeyan. Dheweke wangsul kanthi tombol ing aplikasi DeHub, utawa kanthi ngetik {{command}} lan nomer pilihan ing obrolan.",
