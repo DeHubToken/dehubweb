@@ -8273,9 +8273,9 @@
     "topUpEmptyHint": "Иловаи нишонаҳо барои тавлид бо AI"
   },
   "accountDeletion": {
-    "title": "& Ҳузфи қайдоти баҳисобгирӣ",
+    "title": "Нест кардани ҳисоб",
     "description": "Pagtatanggal ng iyong account at personal na data",
-    "warning": "Ин доимо профили DeHub, постҳо, шарҳҳо, паёмҳо ва нусхаи эҳтиётии ҳамёнро нест мекунад. I-save ang iyong mga detalye sa pagkakaroon ng wallet at ilipat ang anumang mga halaga bago. Амалиётҳои blockchain ҷамъиятӣ ва сабтҳои пардохти қонунӣ талаб карда намешавад. Ang iyong profile ay naglalaman; tinatanggap ang pagtatanggap sa loob ng 30 araw. Ин наметавонад барҳам дода шавад.",
+    "warning": "Ин профили DeHub, постҳо, шарҳҳо, паёмҳо ва нусхаи эҳтиётии захирашудаи ҳамёни шуморо бебозгашт нест мекунад. Аввал маълумоти барқарорсозии ҳамёни худро захира кунед ва ҳама дороиҳоро интиқол диҳед. Амалиётҳои ҷамъиятии блокчейн ва сабтҳои пардохте, ки қонун талаб мекунад, нест карда намешаванд. Профили шумо фавран пинҳон карда мешавад; несткунӣ дар давоми 30 рӯз анҷом меёбад. Ин амалро бекор кардан ғайриимкон аст.",
     "cancel": "Бекор кардан",
     "confirm": "Pagtatanggal ng aking account",
     "busy": "Фиристодани дархости несткунӣ...",
