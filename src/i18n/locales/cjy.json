@@ -1,4 +1,17 @@
 {
+  "liveChatModeration": {
+    "timeout1m": "超时 1 分钟",
+    "timeout10m": "超时 10 分钟",
+    "timeout1h": "超时 1 小时",
+    "ban": "禁止这些直播",
+    "makeModerator": "设为管理员",
+    "timedOut": "已超时。",
+    "banned": "已禁止这些直播。",
+    "madeModerator": "他们现在是管理员。",
+    "failed": "没有成功。请再试一次。",
+    "youAreBanned": "你无法在此创作者的直播中聊天",
+    "youAreTimedOut": "你已被短暂超时"
+  },
   "errors": {
     "sponsorshipUnavailable": "免费交易咾我搭停勒，勿是倷个钱包个问题。过歇再试试。",
     "gasSponsorshipFailed": "箇笔交易垫勿了。过歇再试试。"
@@ -4754,6 +4767,51 @@
     }
   },
   "liveStudio": {
+    "moderation": {
+      "title": "聊天管理",
+      "intro": "所有直播的聊天规则。它们不会进入 DeHub 的主聊天：在此被禁止的人仍可在其他地方发言。",
+      "loadFailed": "无法加载你的管理设置。请刷新页面重试。",
+      "save": "保存聊天规则",
+      "saved": "聊天规则已保存。",
+      "saveFailed": "此更改未能保存。",
+      "slowMode": "慢速模式",
+      "slowModeHint": "每位观众发送消息的间隔时间。你和你的管理员永不受限。",
+      "off": "关闭",
+      "seconds_one": "{{count}} 秒",
+      "seconds_other": "{{count}} 秒",
+      "followersOnly": "仅限粉丝",
+      "subscribersOnly": "仅限订阅者",
+      "subscribersOnlyHint": "覆盖仅限粉丝。",
+      "bannedWords": "禁用词汇",
+      "bannedWordsHint": "用逗号分隔。逐字拼写单词并不能绕过过滤。",
+      "wordAction": "当有人使用其中之一时",
+      "wordBlock": "阻止该消息",
+      "wordTimeout": "阻止并将其超时 1 分钟",
+      "moderators": "管理员",
+      "moderatorsHint": "他们可以在你的直播中对观众进行禁言和封禁。他们不能对你或彼此采取行动。",
+      "addModerator": "添加",
+      "usernamePlaceholder": "用户名",
+      "moderatorAdded": "已添加管理员。",
+      "moderatorNotFound": "没有该用户名的账号。",
+      "removeModerator": "移除管理员",
+      "noModerators": "尚无管理员。",
+      "banned": "已被封禁的观众",
+      "unban": "解封",
+      "noBans": "没有人被封禁。",
+      "log": "最近的操作",
+      "noLog": "暂无",
+      "actions": {
+        "timeout_one": "{{actor}} 超时 {{target}} 共 {{count}} 秒",
+        "timeout_other": "{{actor}} 超时 {{target}} 共 {{count}} 秒",
+        "ban": "{{actor}} 封禁了 {{target}}",
+        "unban": "{{actor}} 解封了 {{target}}",
+        "moderator-added": "{{target}} 成为管理员",
+        "moderator-removed": "{{target}} 不再是管理员",
+        "word-blocked": "停止 {{target}} 的消息 \"{{word}}\"",
+        "word-timeout_one": "禁言 {{target}} {{count}} 秒，原因 \"{{word}}\"",
+        "word-timeout_other": "禁言 {{target}} {{count}} 秒，原因 \"{{word}}\""
+      }
+    },
     "polls": {
       "title": "民意调查",
       "intro": "问正在观看您直播的人一个问题。他们通过在 DeHub 应用中按按钮或者在聊天中输入 {{command}} 和选项的编号来回答。",

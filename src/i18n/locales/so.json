@@ -4719,6 +4719,19 @@
       "howToVote_other": "Qor {{command}} iyo tiro buug ku yidh si aad codka siiso · {{count}} cod"
     }
   },
+  "liveChatModeration": {
+    "timeout1m": "Waqtiga 1-daqiiqo",
+    "timeout10m": "Waqtiga ka bax 10 daqiiqo",
+    "timeout1h": "Waqtiga ka bax 1 saac",
+    "ban": "Laga mamnuuco durdurradan",
+    "makeModerator": "Samee moderator",
+    "timedOut": "Timeed waaaay out.",
+    "banned": "Laga mamnuuco durdurradaas.",
+    "madeModerator": "Hadda waa moderator.",
+    "failed": "Taasi ma aysan shaqeyn. isku day mar kale.",
+    "youAreBanned": "Kama sheekeysan kartid durdurrada abuurkan",
+    "youAreTimedOut": "Daqiiqad ayaad ka soo baxaysaa."
+  },
   "liveStudio": {
     "polls": {
       "title": "Codinta",
@@ -4991,6 +5004,51 @@
         "spooky": "Spooky",
         "magic-spell": "Magic spell",
         "shhh": "Shhh"
+      }
+    },
+    "moderation": {
+      "title": "Dhexdhexaadinta sheekaysiga",
+      "intro": "Xeerarka wada sheekaysiga ee ka hooseeya dhammaan durdurradaada. Marna ma gaaraan wadahadalka ugu weyn ee DeHub: qof aad halkan ka mamnuucdo ayaa weli ka hadli kara meel kasta oo kale.",
+      "loadFailed": "Dejintaada dhexdhexaadinta lama rari karo. Dib u cusboonaysii bogga si aad u tijaabiso mar kale.",
+      "save": "Keydso xeerarka sheekaysiga",
+      "saved": "Xeerarka chat badbaadiyey.",
+      "saveFailed": "Isbedelkaas lama badbaadin karo.",
+      "slowMode": "Qaabka gaabiska ah",
+      "slowModeHint": "Muddo intee le 'eg ayuu qof kasta oo daawadayaashu sugayaa farriimaha dhexdooda? Adiga iyo moderators-kaaga waligaa ma sugin.",
+      "off": "Ka bax",
+      "seconds_one": "{{count}} labaad",
+      "seconds_other": "{{count}} seconds",
+      "followersOnly": "Raacayaasha kaliya",
+      "subscribersOnly": "Is-diiwaangeliyeyaasha oo keliya",
+      "subscribersOnlyHint": "Kuwa raacsan oo keliya ayaa ka gudba.",
+      "bannedWords": "Ereyada la mamnuucay",
+      "bannedWordsHint": "Kala sooc komas. turjumaadda warqad ka baxsan warqad ma gaadho wareegsan.",
+      "wordAction": "Marka qof isticmaalo mid ka mid ah",
+      "wordBlock": "Jooji fariinta",
+      "wordTimeout": "Jooji oo daqiiqad ku sii daa.",
+      "moderators": "Moderator",
+      "moderatorsHint": "Waxay waqti ka bixi karaan oo ka mamnuuci karaan daawadayaasha durdurradaada. Ma awoodaan inay ku dhaqmaan adiga ama midba midka kale.",
+      "addModerator": "Ku dar",
+      "usernamePlaceholder": "Magaca isticmaalaha",
+      "moderatorAdded": "Moderator ayaa intaa ku daray.",
+      "moderatorNotFound": "Xisaab la ma leh magacaas isticmaale.",
+      "removeModerator": "Ka saar moderator",
+      "noModerators": "No moderators yet.",
+      "banned": "Laga mamnuuco durdurradaada",
+      "unban": "Jinsi la 'aan",
+      "noBans": "Qofna waa la mamnuucay.",
+      "log": "Tallaabooyinkii ugu dambeeyay",
+      "noLog": "Waxba weli.",
+      "actions": {
+        "timeout_other": "{{actor}} wuxuu {{target}} aamusiyay {{count}} ilbiriqsi",
+        "timeout_one": "{{actor}} timed out {{target}} for {{count}} labaad",
+        "ban": "{{actor}} mamnuuca {{target}}",
+        "unban": "{{actor}} unbanned {{target}}",
+        "moderator-added": "{{target}} wuxuu noqday moderator",
+        "moderator-removed": "{{target}} mar dambe ma aha moderator",
+        "word-blocked": "Jooji fariin ka timid {{target}} for \"{{word}}\"",
+        "word-timeout_one": "Waqtiga ka baxay {{target}} for {{count}} labaad for \"{{word}}\"",
+        "word-timeout_other": "Waqtiga ka baxay {{target}} for {{count}} seconds for \"{{word}}\""
       }
     }
   },

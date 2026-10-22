@@ -4739,6 +4739,19 @@
       "howToVote_other": "Syötä {{command}} ja numero chatissa äänestääksesi · {{count}} ääntä"
     }
   },
+  "liveChatModeration": {
+    "timeout1m": "Aika loppuu 1 minuutiksi",
+    "timeout10m": "Aika loppuu 10 minuutiksi",
+    "timeout1h": "Aika loppuu 1 tunniksi",
+    "ban": "Kielletty näistä virroista",
+    "makeModerator": "Tehdään moderaattoriksi",
+    "timedOut": "Aikakarsinta.",
+    "banned": "Kielletty näistä virroista.",
+    "madeModerator": "He ovat nyt moderaattoreita.",
+    "failed": "Se ei toiminut. Yritä uudelleen.",
+    "youAreBanned": "Et voi chattailla tässä luovan virran kanssa",
+    "youAreTimedOut": "Olet aikakarsinnassa hetkellisesti"
+  },
   "liveStudio": {
     "polls": {
       "title": "Kyselyt",
@@ -5012,6 +5025,51 @@
         "spooky": "Pelottava",
         "magic-spell": "Taikaloitsu",
         "shhh": "Shhh"
+      }
+    },
+    "moderation": {
+      "title": "Chat-moderointi",
+      "intro": "Sääntöjä chattiin kaikille virroillesi. Ne eivät koskaan pääse DeHubin päächattiin: ketä sinä kiellet täältä, voi puhua muualla.",
+      "loadFailed": "Moderointiasetuksesi ei voinut ladata. Palauta sivu yrittääksesi uudelleen.",
+      "save": "Tallenna chat-säännöt",
+      "saved": "Chat-säännöt tallennettu.",
+      "saveFailed": "Tämä muutos ei voinut tallentua.",
+      "slowMode": "Hidas tila",
+      "slowModeHint": "Kuinka kauan katsojat odottavat viestien välillä. Sinä ja moderaattorisi eivät koskaan odota.",
+      "off": "Pois päältä",
+      "seconds_one": "{{count}} sekuntia",
+      "seconds_other": "{{count}} sekuntia",
+      "followersOnly": "Ainoastaan seuraajat",
+      "subscribersOnly": "Ainoastaan tilanneet",
+      "subscribersOnlyHint": "Ohittaa seuraajien ainoastaan.",
+      "bannedWords": "Kielletyt sanat",
+      "bannedWordsHint": "Erillään pilkulla. Kirjoittamalla sana kirjaimittain ei ohita sitä.",
+      "wordAction": "Kun joku käyttää yhtä",
+      "wordBlock": "Tukahduta viesti",
+      "wordTimeout": "Tukahduta ja aikakarsinta minuutiksi",
+      "moderators": "Moderaattorit",
+      "moderatorsHint": "He voivat timeout’oittaa ja kieltää katsojat suoratoistosi aikana. He eivät voi toimia sinusta tai toisistaan.",
+      "addModerator": "Lisää",
+      "usernamePlaceholder": "Käyttäjänimi",
+      "moderatorAdded": "Moderaattori lisätty.",
+      "moderatorNotFound": "Ei tällaisella käyttäjätunnuksella ole tiliä.",
+      "removeModerator": "Poista moderaattori",
+      "noModerators": "Ei moderaattoreita vielä.",
+      "banned": "Kielletty suoratoistosi aikana",
+      "unban": "Poista kieltäminen",
+      "noBans": "Ei ketään kiellettyä.",
+      "log": "Viimeaikaiset toimet",
+      "noLog": "Ei vielä mitään.",
+      "actions": {
+        "timeout_one": "{{actor}} timeout’oitti {{target}} {{count}} sekunniksi",
+        "timeout_other": "{{actor}} timeout’oitti {{target}} {{count}} sekuntiksi",
+        "ban": "{{actor}} kieltäytyi {{target}}",
+        "unban": "{{actor}} poisti kieltäytyksen {{target}}:stä",
+        "moderator-added": "{{target}} tuli moderaattoriksi",
+        "moderator-removed": "{{target}} ei enää ole moderaattori",
+        "word-blocked": "Estettiin viesti {{target}}:lta: \"{{word}}\"",
+        "word-timeout_one": "Timeout’oitti {{target}} {{count}} sekunniksi: \"{{word}}\"",
+        "word-timeout_other": "Timeout’oitti {{target}} {{count}} sekuntiksi: \"{{word}}\""
       }
     }
   },

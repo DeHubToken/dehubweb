@@ -4806,6 +4806,19 @@
       "howToVote_other": "Wpisz {{command}} i liczbę głosów na czacie, aby zagłosować · {{count}}"
     }
   },
+  "liveChatModeration": {
+    "timeout1m": "Czas oczekiwania na 1 minutę",
+    "timeout10m": "Czas oczekiwania na 10 minut",
+    "timeout1h": "Czas oczekiwania na 1 godzinę",
+    "ban": "Zakaz w tych strumieniach",
+    "makeModerator": "Zrób moderatora",
+    "timedOut": "Wykazano z listy czasowej.",
+    "banned": "Zakazano w tych strumieniach.",
+    "madeModerator": "Teraz są moderatorem.",
+    "failed": "To nie zadziałało. Spróbuj ponownie.",
+    "youAreBanned": "Nie możesz czatać w strumieniach tego twórcy.",
+    "youAreTimedOut": "Jesteś czasowo wykluczony na chwilę."
+  },
   "liveStudio": {
     "polls": {
       "title": "Ankiety",
@@ -5079,6 +5092,51 @@
         "spooky": "Upiorny",
         "magic-spell": "Magiczne zaklęcie",
         "shhh": "Ciii"
+      }
+    },
+    "moderation": {
+      "title": "Moderacja czatu",
+      "intro": "Zasady dla czatu pod wszystkimi Twoimi strumieniami. Nigdy nie docierają one do głównego czatu DeHub – kogo zakazasz tutaj, może nadal rozmawiać wszędzie indziej.",
+      "loadFailed": "Twoje ustawienia moderacji nie mogły zostać załadowane. Odśwież stronę, aby spróbować ponownie.",
+      "save": "Zapisz zasady czatu",
+      "saved": "Zasady czatu zapisano.",
+      "saveFailed": "Ta zmiana nie mogła zostać zapisana.",
+      "slowMode": "Tryb wolny",
+      "slowModeHint": "Ile czasu każdy widz musi czekać między wiadomościami. Ty i Twoi moderatorzy nigdy nie czekacie.",
+      "off": "Wyłączony",
+      "seconds_one": "{{count}} sekunda",
+      "seconds_other": "{{count}} sekundy",
+      "followersOnly": "Tylko obserwujący",
+      "subscribersOnly": "Tylko subskrybenci",
+      "subscribersOnlyHint": "Przełamuje zasady dla obserwujących.",
+      "bannedWords": "Zakazane słowa",
+      "bannedWordsHint": "Oddziel przecinkami. Pisanie słowa literą po literze nie obejdzie tego.",
+      "wordAction": "Kiedy ktoś użyje jednego",
+      "wordBlock": "Zablokuj wiadomość",
+      "wordTimeout": "Zablokuj ją i czasowo wyklucz na minutę.",
+      "moderators": "Moderatorzy",
+      "moderatorsHint": "Mogą przekroczyć limit czasu i zablokować widzów w Twoich strumieniach. Nie mogą działać na ciebie ani na siebie nawzajem.",
+      "addModerator": "Dodaj",
+      "usernamePlaceholder": "Nazwa użytkownika",
+      "moderatorAdded": "Moderator dodał.",
+      "moderatorNotFound": "Brak konta z tą nazwą użytkownika.",
+      "removeModerator": "Usuń Mderatora",
+      "noModerators": "Brak moderatorów.",
+      "banned": "Zablokowany w Twoich strumieniach",
+      "unban": "Odbanuj",
+      "noBans": "Nikt nie jest zakazany.",
+      "log": "Ostatnie działania",
+      "noLog": "Wciąż nic.",
+      "actions": {
+        "timeout_one": "{{actor}} przekroczył limit czasu {{target}} na {{count}} sekundę",
+        "timeout_other": "{{actor}} przekroczył limit czasu {{target}} na {{count}} sekund",
+        "ban": "{{actor}} zbanowany {{target}}",
+        "unban": "{{actor}} odblokowany {{target}}",
+        "moderator-added": "{{target}} został moderatorem",
+        "moderator-removed": "{{target}} nie jest już moderatorem",
+        "word-blocked": "Zatrzymano wiadomość od {{target}} dla „{{word}}”",
+        "word-timeout_one": "Przekroczono limit czasu {{target}} na {{count}} sekundę dla „{{word}}”",
+        "word-timeout_other": "Przekroczono limit czasu {{target}} na {{count}} sekund dla „{{word}}”"
       }
     }
   },

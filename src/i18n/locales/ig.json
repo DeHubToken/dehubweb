@@ -4745,6 +4745,19 @@
       "howToVote_other": "Pịnye {{command}} na ọnụ ọgụgụ na nkata iji votu · {{count}} votes"
     }
   },
+  "liveChatModeration": {
+    "timeout1m": "Oge apụ maka 1 nkeji",
+    "timeout10m": "Ihe dị ka nkeji 10.",
+    "timeout1h": "Oge apụ maka 1 hour",
+    "ban": "Mmachibido site na iyi ndị a",
+    "makeModerator": "Mee onye nhazi",
+    "timedOut": "Ọ bụ oge.",
+    "banned": "Amachibidoro site na iyi ndị a.",
+    "madeModerator": "Ha bụzi onye nhazi.",
+    "failed": "Nke ahụ arụghị ọrụ. Gbalịa ọzọ.",
+    "youAreBanned": "Ị nweghị ike ịkparịta ụka n 'ime iyi ndị na-emepụta ihe a",
+    "youAreTimedOut": "A chụpụla gị n 'oge obere oge."
+  },
   "liveStudio": {
     "polls": {
       "title": "Ntuli aka",
@@ -5018,6 +5031,51 @@
         "spooky": "Spooky",
         "magic-spell": "Ime Anwansi spell",
         "shhh": "Shhh"
+      }
+    },
+    "moderation": {
+      "title": "Nkata imeru ihe n 'ókè",
+      "intro": "Iwu maka nkata n 'okpuru iyi gị niile. Ha eruteghị isi nkata DeHub: onye ị machibidoro ebe a ka nwere ike ikwu okwu n' ebe ọ bụla ọzọ.",
+      "loadFailed": "Agaghị ebubataghi usoro nhazi gị. Megharịa ihuakwụkwọ ahụ ka ị nwaa ọzọ.",
+      "save": "Chekwaa iwu nkata",
+      "saved": "Chat iwu echekwara.",
+      "saveFailed": "Agaghị echekwa mgbanwe ahụ.",
+      "slowMode": "Ọnọdụ nwayọ",
+      "slowModeHint": "Ogologo oge ole onye ọ bụla na-ekiri ihe na-echere n 'etiti ozi. Gị na ndị nhazi gị anaghị echere.",
+      "off": "Gbanyụọ",
+      "seconds_one": "{{count}} nke abụọ",
+      "seconds_other": "{{count}} sekọnd",
+      "followersOnly": "Ndị na-eso ụzọ naanị",
+      "subscribersOnly": "Ndị debanyere aha naanị",
+      "subscribersOnlyHint": "Na-agabiga ndị na-eso ụzọ naanị.",
+      "bannedWords": "Okwu a machibidoro iwu",
+      "bannedWordsHint": "Kewapụ na commas. Ịsụpụta mkpụrụokwu site n 'akwụkwọ ozi anaghị agba ya gburugburu.",
+      "wordAction": "Mgbe mmadụ na-eji otu",
+      "wordBlock": "Kwụsị ozi ahụ",
+      "wordTimeout": "Kwụsị ya ma wepụta ha otu nkeji.",
+      "moderators": "Ndị nlekọta",
+      "moderatorsHint": "Ha nwere ike ịkwụsị na ịkpọ ndị na-ekiri n'ime ọsọ gị. Ha enweghị ike ịme ihe na gị ma ọ bụ na ibe ha.",
+      "addModerator": "Tinye",
+      "usernamePlaceholder": "Aha onye ọrụ",
+      "moderatorAdded": "Edozi ndị nlekọta.",
+      "moderatorNotFound": "Enweghị akaụntụ nwere aha ahụ.",
+      "removeModerator": "Wepụ ndị nlekọta",
+      "noModerators": "Enweghị ndị nlekọta ka.",
+      "banned": "Akpọrọ site n'ọsọ gị",
+      "unban": "Megharia",
+      "noBans": "Ọ dịghị onye akpọrọ.",
+      "log": "Omume ndị na-adịbeghị anya",
+      "noLog": "Ọ dịghị ihe ka.",
+      "actions": {
+        "timeout_one": "{{actor}} kwụsịrị {{target}} maka {{count}} nkeji",
+        "timeout_other": "{{actor}} kwụsịrị {{target}} maka {{count}} nkeji",
+        "ban": "{{actor}} kpọrọ {{target}}",
+        "unban": "{{actor}} megharia {{target}}",
+        "moderator-added": "{{target}} ghọrọ onye nlekọta",
+        "moderator-removed": "{{target}} abụghị onye nlekọta ọzọ",
+        "word-blocked": "Kwụsịrị ozi site n'{{target}} maka \"{{word}}\"",
+        "word-timeout_one": "Kwụsịrị {{target}} maka {{count}} nkeji maka \"{{word}}\"",
+        "word-timeout_other": "Kwụsịrị {{target}} maka {{count}} nkeji maka \"{{word}}\""
       }
     }
   },

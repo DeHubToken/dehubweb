@@ -4741,6 +4741,19 @@
       "howToVote_other": "Zadejte {{command}} a číslo do chatu, abyste hlasovali · {{count}} hlasy"
     }
   },
+  "liveChatModeration": {
+    "timeout1m": "Časový limit na 1 minutu",
+    "timeout10m": "Časový limit na 10 minut",
+    "timeout1h": "Časový limit na 1 hodinu",
+    "ban": "Zakázat tyto streamy",
+    "makeModerator": "Udělat moderátora",
+    "timedOut": "Časový limit.",
+    "banned": "Zakázáno tyto streamy.",
+    "madeModerator": "Nyní je moderátorem.",
+    "failed": "To nefungovalo. Zkus to znovu.",
+    "youAreBanned": "Nemůžeš chatovat v streamech tohoto tvůrce",
+    "youAreTimedOut": "Jsi na chvíli v časovém limitu"
+  },
   "liveStudio": {
     "polls": {
       "title": "Dotazníky",
@@ -5013,6 +5026,51 @@
         "spooky": "Strašidelné",
         "magic-spell": "Kouzlo",
         "shhh": "Shhh"
+      }
+    },
+    "moderation": {
+      "title": "Moderování chatu",
+      "intro": "Pravidla pro chat ve všech tvých streamech. Nikdy nedojdou do hlavního chatu DeHubu: někdo, koho zde zakážeš, může stále mluvit všude jinde.",
+      "loadFailed": "Nastavení moderování se nepodařilo načíst. Obnov stránku a zkus to znovu.",
+      "save": "Uložit pravidla chatu",
+      "saved": "Pravidla chatu uložena.",
+      "saveFailed": "Tuto změnu se nepodařilo uložit.",
+      "slowMode": "Pomalejší režim",
+      "slowModeHint": "Jak dlouho každý divák čeká mezi zprávami. Ty a tvoji moderátoři nikdy nečekají.",
+      "off": "Vypnuto",
+      "seconds_one": "{{count}} sekunda",
+      "seconds_other": "{{count}} sekund",
+      "followersOnly": "Pouze pro následovníky",
+      "subscribersOnly": "Pouze pro předplatitele",
+      "subscribersOnlyHint": "Přepisuje pouze pro následovníky.",
+      "bannedWords": "Zakázaná slova",
+      "bannedWordsHint": "Odděl čárkami. Psát slovo písmeno po písmenu neobchází zákaz.",
+      "wordAction": "Když někdo použije jedno",
+      "wordBlock": "Zastavit zprávu",
+      "wordTimeout": "Zastavit ji a dát časový limit na minutu",
+      "moderators": "Moderátoři",
+      "moderatorsHint": "Mohou dočasně vyloučit a zakázat diváky ve vašich přenosů. Nemohou jednat vůči vám nebo vůči sobě navzájem.",
+      "addModerator": "Přidat",
+      "usernamePlaceholder": "Uživatelské jméno",
+      "moderatorAdded": "Moderátor přidán.",
+      "moderatorNotFound": "Žádný účet s tímto uživatelským jménem.",
+      "removeModerator": "Odebrat moderátora",
+      "noModerators": "Zatím žádní moderátoři.",
+      "banned": "Zakázáno ve vašich přenosů",
+      "unban": "Odblokovat",
+      "noBans": "Nikdo není zakázán.",
+      "log": "Nedávné akce",
+      "noLog": "Zatím nic.",
+      "actions": {
+        "timeout_one": "{{actor}} byl/a dočasně vyloučen/a {{target}} pro {{count}} sekundu",
+        "timeout_other": "{{actor}} byl/a dočasně vyloučen/a {{target}} pro {{count}} sekundy",
+        "ban": "{{actor}} zakázal/a {{target}}",
+        "unban": "{{actor}} odblokoval/a {{target}}",
+        "moderator-added": "{{target}} se stal/a moderátorem",
+        "moderator-removed": "{{target}} již není moderátorem",
+        "word-blocked": "Zastavil/a zprávu od {{target}} pro \"{{word}}\"",
+        "word-timeout_one": "Dočasně vyloučil/a {{target}} pro {{count}} sekundu pro \"{{word}}\"",
+        "word-timeout_other": "Dočasně vyloučil/a {{target}} pro {{count}} sekundy pro \"{{word}}\""
       }
     }
   },
