@@ -4742,7 +4742,6 @@
     "creatorEarnsDirect": "Pretplatnici plaćaju u DeHub žetonima. Tvoja dionica završava u novčaniku čim se pretplati, umanjena za naknadu za platformu za tvoju razinu značke."
   },
   "liveOverlay": {
-    "wheelLanded": "{{name}} spin: {{result}}",
     "someone": "Netko",
     "newFollower": "Novi pratitelj: {{name}}",
     "newSubscriber": "Novi pretplatnik: {{name}}",
@@ -4754,6 +4753,11 @@
     "topSupporters": "Najpopularniji podržavatelji",
     "tipped": "{{name}} šalje dar",
     "chatPreview": "Ovdje se prikazuju poruke putem chata",
+    "wheelLanded": "{{name}} spin: {{result}}",
+    "level": "Razina {{level}}",
+    "streak_one": "{{count}}-tjedni period",
+    "streak_other": "{{count}}-tjedni period",
+    "tipJar": "Posuda za darove",
     "poll": {
       "closed": "Glasanje je završeno",
       "voteFor": "Glasaj za {{option}}",
@@ -4898,7 +4902,6 @@
       "join": "Pridruži se"
     },
     "kinds": {
-      "spin_wheel": "Okretni kotač",
       "tip_alert": "Obavijest o napojnici",
       "follow_alert": "Slijedi upozorenje",
       "subscribe_alert": "Upozorenje pretplatnika",
@@ -4915,10 +4918,12 @@
       "chat_box": "Okvir za razgovor",
       "ticker": "Ticker",
       "rule_alert": "Obavijesti o pravilima",
-      "poll": "Anketa"
+      "poll": "Anketa",
+      "spin_wheel": "Okretni kotač",
+      "streamer_level": "Razina streamera",
+      "tip_jar": "Posuda za darove"
     },
     "hints": {
-      "spin_wheel": "Gdje se okreću kotači u vašim pravilima",
       "tip_alert": "Slavi svaku napojnicu u skladu s njezinom veličinom",
       "follow_alert": "Prikazuje svakog novog pratitelja",
       "subscribe_alert": "Prikazuje svakog novog pretplatnika",
@@ -4935,13 +4940,17 @@
       "chat_box": "Prikazuje poruke chata vašeg emitiranja na zaslonu",
       "ticker": "Redak vlastitog teksta koji se pomiče po zaslonu",
       "rule_alert": "Gdje se prikazuju obavijesti o pravilima",
-      "poll": "Vaša anketa uživo, s gumbom za glasanje za svaku opciju"
+      "poll": "Vaša anketa uživo, s gumbom za glasanje za svaku opciju",
+      "spin_wheel": "Gdje se okreću kotači u vašim pravilima",
+      "streamer_level": "Razina streamera i tjedni raspon, s tvog profila",
+      "tip_jar": "Staklenka koja se puni kad stignu plaćeni darovi"
     },
     "fields": {
       "style": "Stil",
       "celebration": "Proslava",
       "banner": "Baner",
       "minAmount": "Najmanji savjet za prikaz (DHB)",
+      "showStreak": "Prikaži tjedni raspon",
       "showMessage": "Prikaži poruku s napojnicom",
       "confirmedOnly": "Tek nakon potvrde plaćanja",
       "confirmedOnlyHint": "Pričekajte nekoliko sekundi za lanac, tako da se napojnica koja nije plaćena nikada ne pojavi.",
@@ -4970,8 +4979,6 @@
       "fast": "Brzo"
     },
     "rules": {
-      "wheelSegments": "Segmenti kotača, jedan po liniji",
-      "wheelHint": "Između 2 i 12. DeHub odabire gdje se kotač zaustavlja, tako da svi koji gledaju vide isti rezultat. Upotrijebite {result} u upozorenju, glasnom čitanju ili čavrljanju kako biste ga imenovali.",
       "title": "Pravila",
       "intro": "Kada se nešto dogodi na vašem streamu, DeHub radi ono što odaberete: prikazuje upozorenje, reproducira zvuk, čita nešto naglas, objavljuje u vašem chatu ili govori vašem Discordu.",
       "add": "Dodajte pravilo",
@@ -5002,6 +5009,8 @@
       "removeAction": "Ukloni radnju",
       "placeholders": "Upotrijebite {name}, {amount} i {message} u svom tekstu. Uklanjaju se poveznice u porukama.",
       "placeholdersLive": "Upotrijebite {name}, {title} i {link} u svom tekstu: svoje ime, naslov emisije i poveznicu za gledanje.",
+      "wheelSegments": "Segmenti kotača, jedan po liniji",
+      "wheelHint": "Između 2 i 12. DeHub odabire gdje se kotač zaustavlja, tako da svi koji gledaju vide isti rezultat. Upotrijebite {result} u upozorenju, glasnom čitanju ili čavrljanju kako biste ga imenovali.",
       "alertText": "Tekst upozorenja",
       "sound": "Zvuk",
       "sayText": "Tekst za čitanje naglas",
@@ -5026,12 +5035,12 @@
         "subscribers": "Pretplatnici"
       },
       "actionTypes": {
-        "wheel": "Zavrti kotač",
         "alert": "Prikaži obavijest",
         "sound": "Reproduciraj zvuk",
         "say": "Čitajte naglas",
         "chat": "Objavi u chatu",
-        "webhook": "Pošalji u webhook"
+        "webhook": "Pošalji u webhook",
+        "wheel": "Zavrti kotač"
       },
       "summary": {
         "tip": "Napojnica od {{amount}} DHB ili više"

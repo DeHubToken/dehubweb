@@ -4810,7 +4810,6 @@
     "creatorEarnsDirect": "Os assinantes pagam em tokens DeHub. A sua parte fica na sua carteira no momento em que é subscrita, menos a taxa da plataforma para o seu nível de emblema."
   },
   "liveOverlay": {
-    "wheelLanded": "{{name}} rodado: {{result}}",
     "someone": "Alguém",
     "newFollower": "Novo seguidor: {{name}}",
     "newSubscriber": "Novo assinante: {{name}}",
@@ -4822,6 +4821,11 @@
     "topSupporters": "Principais apoiadores",
     "tipped": "{{name}} enviou um presente",
     "chatPreview": "As mensagens de chat aparecem aqui",
+    "wheelLanded": "{{name}} rodado: {{result}}",
+    "level": "Nível {{level}}",
+    "streak_one": "Sequência de {{count}}semanas",
+    "streak_other": "Sequência de {{count}}semanas",
+    "tipJar": "Jarra para presentes",
     "poll": {
       "closed": "Votações encerradas",
       "voteFor": "Vote em {{option}}",
@@ -4966,7 +4970,6 @@
       "join": "Juntar"
     },
     "kinds": {
-      "spin_wheel": "Roda giratória",
       "tip_alert": "Alerta de dica",
       "follow_alert": "Alerta de seguir",
       "subscribe_alert": "Alerta de assinante",
@@ -4983,10 +4986,12 @@
       "chat_box": "Caixa de chat",
       "ticker": "Faixa de texto",
       "rule_alert": "Alertas de regra",
-      "poll": "Enquete"
+      "poll": "Enquete",
+      "spin_wheel": "Roda giratória",
+      "streamer_level": "Nível do streamer",
+      "tip_jar": "Jarra para presentes"
     },
     "hints": {
-      "spin_wheel": "Onde as rodas das suas regras giram",
       "tip_alert": "Celebra cada dica, dimensionada ao seu nível",
       "follow_alert": "Mostra cada novo seguidor",
       "subscribe_alert": "Mostra cada novo assinante",
@@ -5003,13 +5008,17 @@
       "chat_box": "Mostra as mensagens de chat da sua transmissão no ecrã",
       "ticker": "Uma linha do seu próprio texto que percorre a tela",
       "rule_alert": "Onde aparecem os alertas das suas regras",
-      "poll": "Sua enquete ao vivo, com um botão de voto para cada opção"
+      "poll": "Sua enquete ao vivo, com um botão de voto para cada opção",
+      "spin_wheel": "Onde as rodas das suas regras giram",
+      "streamer_level": "O seu nível de streamer e sequência semanal, a partir do seu perfil",
+      "tip_jar": "Um pote que se enche quando chegam presentes pagos"
     },
     "fields": {
       "style": "Estilo",
       "celebration": "Celebração",
       "banner": "Banner",
       "minAmount": "Menor dica para mostrar (DHB)",
+      "showStreak": "Mostrar a sequência semanal",
       "showMessage": "Mostrar a mensagem de gratificação",
       "confirmedOnly": "Somente após a confirmação do pagamento",
       "confirmedOnlyHint": "Espera alguns segundos pela corrente, para que uma gorjeta que nunca é paga nunca apareça.",
@@ -5038,8 +5047,6 @@
       "fast": "Rápido"
     },
     "rules": {
-      "wheelSegments": "Segmentos de roda, um por linha",
-      "wheelHint": "Entre 2 e 12. O DeHub escolhe onde a roda para, para que todos os espectadores vejam o mesmo resultado. Utilize {result} numa ação de alerta, leitura em voz alta ou chat para lhe dar um nome.",
       "title": "Regras",
       "intro": "Quando algo acontece no seu stream, o DeHub faz o que você escolhe: mostra um alerta, toca um som, lê algo em voz alta, publica no seu chat ou diz ao seu Discord.",
       "add": "Adicionar uma regra",
@@ -5070,6 +5077,8 @@
       "removeAction": "Remover acção",
       "placeholders": "Use {name}, {amount} e {message} no seu SMS. Os links nas mensagens são removidos.",
       "placeholdersLive": "Use {name}, {title} e {link} no seu texto: seu nome, o título da transmissão e um link para assisti-la.",
+      "wheelSegments": "Segmentos de roda, um por linha",
+      "wheelHint": "Entre 2 e 12. O DeHub escolhe onde a roda para, para que todos os espectadores vejam o mesmo resultado. Utilize {result} numa ação de alerta, leitura em voz alta ou chat para lhe dar um nome.",
       "alertText": "Texto de alerta",
       "sound": "Som",
       "sayText": "Texto para ler em voz alta",
@@ -5094,12 +5103,12 @@
         "subscribers": "Subscritores"
       },
       "actionTypes": {
-        "wheel": "Gire uma roda",
         "alert": "Mostrar um alerta",
         "sound": "Tocar um som",
         "say": "Ler em voz alta",
         "chat": "Publique na conversa.",
-        "webhook": "Enviar para um webhook"
+        "webhook": "Enviar para um webhook",
+        "wheel": "Gire uma roda"
       },
       "summary": {
         "tip": "Dica de {{amount}} DHB ou mais"

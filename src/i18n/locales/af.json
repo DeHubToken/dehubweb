@@ -4836,7 +4836,6 @@
     "creatorEarnsDirect": "Intekenare betaal in DeHub-tokens. Jou aandeel land in jou beursie die oomblik dat hulle inteken, minder die platformfooi vir jou wapenvlak."
   },
   "liveOverlay": {
-    "wheelLanded": "{{name}} spun: {{result}}",
     "someone": "Iemand",
     "newFollower": "Nuwe volgeling: {{name}}",
     "newSubscriber": "Nuwe intekenaar: {{name}}",
@@ -4848,6 +4847,11 @@
     "topSupporters": "Top ondersteuners",
     "tipped": "{{name}} stuur 'n geskenk",
     "chatPreview": "Geselsboodskappe verskyn hier",
+    "wheelLanded": "{{name}} spun: {{result}}",
+    "level": "Vlak {{level}}",
+    "streak_one": "{{count}}-week streak",
+    "streak_other": "{{count}}-week streak",
+    "tipJar": "Geskenkpot",
     "poll": {
       "closed": "Stemming gesluit",
       "voteFor": "Stem vir {{option}}",
@@ -4992,7 +4996,6 @@
       "join": "Sluit aan"
     },
     "kinds": {
-      "spin_wheel": "Spin wiel",
       "tip_alert": "Wenk waarskuwing",
       "follow_alert": "Volg waarskuwing",
       "subscribe_alert": "Intekenaarwaarskuwing",
@@ -5009,10 +5012,12 @@
       "chat_box": "Geselsdoos",
       "ticker": "Ticker",
       "rule_alert": "Reël waarskuwings",
-      "poll": "Peiling"
+      "poll": "Peiling",
+      "spin_wheel": "Spin wiel",
+      "streamer_level": "Stroomvlak",
+      "tip_jar": "Geskenkpot"
     },
     "hints": {
-      "spin_wheel": "Waar die wiele in jou reëls draai",
       "tip_alert": "Vier elke punt, grootte tot sy vlak",
       "follow_alert": "Wys elke nuwe volgeling",
       "subscribe_alert": "Vertoon elke nuwe intekenaar",
@@ -5029,12 +5034,16 @@
       "chat_box": "Wys jou uitsending se kletsboodskappe op die skerm",
       "ticker": "'n Reël van jou eie teks wat oor die skerm blaai",
       "rule_alert": "Waar jou reëls se waarskuwings verskyn",
-      "poll": "Jou regstreekse peiling, met 'n stemknoppie vir elke opsie"
+      "poll": "Jou regstreekse peiling, met 'n stemknoppie vir elke opsie",
+      "spin_wheel": "Waar die wiele in jou reëls draai",
+      "streamer_level": "Jou streamer vlak en weeklikse streep, van jou profiel",
+      "tip_jar": "'N pot wat vul as betaalde geskenke kom in"
     },
     "fields": {
       "celebration": "Viering",
       "banner": "Banier",
       "minAmount": "Kleinste punt om te wys (DHB)",
+      "showStreak": "Wys die weeklikse streep",
       "showMessage": "Wys die wenkboodskap",
       "confirmedOnly": "Eers nadat die betaling bevestig is",
       "confirmedOnlyHint": "Wag 'n paar sekondes vir die ketting, sodat 'n punt wat nooit betaal word nie, nooit verskyn nie.",
@@ -5063,8 +5072,6 @@
       "fast": "Vinnig"
     },
     "rules": {
-      "wheelSegments": "Wielsegmente, een per lyn",
-      "wheelHint": "Tussen twee en twaalf. DeHub kies waar die wiel stop, sodat almal wat kyk dieselfde resultaat sien. Gebruik {result} in 'n waarskuwing, lees hardop of gesels aksie om dit te noem.",
       "title": "Reëls",
       "intro": "Wanneer iets op jou stroom gebeur, doen DeHub wat jy kies: wys 'n waarskuwing, speel 'n geluid, lees iets hardop, plaas in jou klets of vertel jou Discord.",
       "add": "Voeg 'n reël by",
@@ -5095,6 +5102,8 @@
       "removeAction": "Verwyder aksie",
       "placeholders": "Gebruik {name}, {amount} en {message} in jou teks. Links in messages delete.",
       "placeholdersLive": "Gebruik {name}, {title} en {link} in jou teks: jou naam, die titel van die uitsending en 'n skakel om dit te kyk.",
+      "wheelSegments": "Wielsegmente, een per lyn",
+      "wheelHint": "Tussen twee en twaalf. DeHub kies waar die wiel stop, sodat almal wat kyk dieselfde resultaat sien. Gebruik {result} in 'n waarskuwing, lees hardop of gesels aksie om dit te noem.",
       "alertText": "Waarskuwing teks",
       "sound": "Klank",
       "sayText": "Teks om hardop te lees",
@@ -5119,12 +5128,12 @@
         "subscribers": "Intekenaars"
       },
       "actionTypes": {
-        "wheel": "Draai 'n wiel",
         "alert": "Wys 'n waarskuwing",
         "sound": "Speel 'n klank",
         "say": "Lees hardop",
         "chat": "Skryf berig in die gespreksvenster.",
-        "webhook": "Stuur na 'n webhaak"
+        "webhook": "Stuur na 'n webhaak",
+        "wheel": "Draai 'n wiel"
       },
       "summary": {
         "tip": "Wenk van {{amount}} DHB of meer"

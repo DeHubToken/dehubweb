@@ -4852,7 +4852,6 @@
     "creatorEarnsDirect": "Nagbabayad ang mga subscriber sa mga token ng DeHub. Ang iyong share ay nasa iyong wallet sa sandaling mag - subscribe sila, mas mababa ang bayarin sa platform para sa iyong badge tier."
   },
   "liveOverlay": {
-    "wheelLanded": "{{name}}spun:{{result}}",
     "someone": "Isang tao",
     "newFollower": "Bagong tagasunod:{{name}}",
     "newSubscriber": "Bagong subscriber:{{name}}",
@@ -4864,6 +4863,11 @@
     "topSupporters": "Mga nangungunang tagasuporta",
     "tipped": "Nagpadala ng regalo si {{name}}",
     "chatPreview": "Lilitaw ang mga mensahe ng chat dito",
+    "wheelLanded": "{{name}}spun:{{result}}",
+    "level": "Level {{level}}",
+    "streak_one": "{{count}}-linggo ng streak",
+    "streak_other": "{{count}}-linggo ng streak",
+    "tipJar": "Garapon na regalo",
     "poll": {
       "closed": "Boto na natapos",
       "voteFor": "Boto para sa {{option}}",
@@ -5007,8 +5011,6 @@
       "join": "Sumali"
     },
     "kinds": {
-      "spin_wheel": "Paikutin ang gulong",
-      "poll": "Botohan",
       "tip_alert": "Alerto sa tip",
       "follow_alert": "Subaybayan ang alerto",
       "subscribe_alert": "Alerto sa subscriber",
@@ -5024,10 +5026,13 @@
       "event_feed": "Kamakailang aktibidad",
       "chat_box": "Chat box",
       "ticker": "Ticker",
-      "rule_alert": "Mga alerto sa panuntunan"
+      "rule_alert": "Mga alerto sa panuntunan",
+      "poll": "Botohan",
+      "spin_wheel": "Paikutin ang gulong",
+      "streamer_level": "Antas ng streamer",
+      "tip_jar": "Garapon na regalo"
     },
     "hints": {
-      "spin_wheel": "Kung saan ang mga gulong sa iyong mga panuntunan ay umiikot",
       "tip_alert": "Ipinagdiriwang ang bawat tip, laki hanggang sa tier nito",
       "follow_alert": "Ipinapakita ang bawat bagong tagasunod",
       "subscribe_alert": "Ipinapakita ang bawat bagong subscriber",
@@ -5044,13 +5049,17 @@
       "chat_box": "Ipinapakita ang mga mensahe sa chat ng iyong broadcast sa screen",
       "ticker": "Isang linya ng iyong sariling teksto na nag - scroll sa buong screen",
       "rule_alert": "Kung saan lumilitaw ang mga alerto ng iyong mga panuntunan",
-      "poll": "Ang iyong live poll, na may isang pindutan ng boto para sa bawat pagpipilian"
+      "poll": "Ang iyong live poll, na may isang pindutan ng boto para sa bawat pagpipilian",
+      "spin_wheel": "Kung saan ang mga gulong sa iyong mga panuntunan ay umiikot",
+      "streamer_level": "Ang iyong antas ng streamer at lingguhang streak, mula sa iyong profile",
+      "tip_jar": "Ang isang garapon na pumupuno bilang bayad na mga regalo ay pumapasok"
     },
     "fields": {
       "style": "Estilo",
       "celebration": "Pagdiriwang",
       "banner": "Banner",
       "minAmount": "Pinakamaliit na tip na ipapakita (DHB)",
+      "showStreak": "Ipakita ang weekly streak",
       "showMessage": "Ipakita ang mensahe ng tip",
       "confirmedOnly": "Pagkatapos lamang makumpirma ang pagbabayad",
       "confirmedOnlyHint": "Naghihintay ng ilang segundo para sa kadena, kaya ang isang tip na hindi kailanman binabayaran ay hindi lilitaw.",
@@ -5079,8 +5088,6 @@
       "fast": "Mabilis"
     },
     "rules": {
-      "wheelSegments": "Mga segment ng gulong, isa bawat linya",
-      "wheelHint": "Sa pagitan ng 2 at 12. Pinipili ng DeHub kung saan humihinto ang gulong, kaya nakikita ng lahat ng nanonood ang parehong resulta. Gamitin ang {result} sa isang alerto, read - loud o chat action para pangalanan ito.",
       "title": "Mga Panuntunan",
       "intro": "Kapag may nangyari sa iyong stream, ginagawa ng DeHub ang iyong pinili: nagpapakita ng alerto, nagpe - play ng tunog, nagbabasa ng isang bagay nang malakas, mga post sa iyong chat o nagsasabi sa iyong Discord.",
       "add": "Magdagdag ng alituntunin",
@@ -5111,6 +5118,8 @@
       "removeAction": "Alisin ang aksyon",
       "placeholders": "Gamitin ang {name}, {amount} at {message} sa iyong text. Tinanggal ang mga link sa mga mensahe.",
       "placeholdersLive": "Gamitin ang {name}, {title} at {link} sa iyong text: ang iyong pangalan, pamagat ng broadcast at link para mapanood ito.",
+      "wheelSegments": "Mga segment ng gulong, isa bawat linya",
+      "wheelHint": "Sa pagitan ng 2 at 12. Pinipili ng DeHub kung saan humihinto ang gulong, kaya nakikita ng lahat ng nanonood ang parehong resulta. Gamitin ang {result} sa isang alerto, read - loud o chat action para pangalanan ito.",
       "alertText": "Teksto ng alerto",
       "sound": "Tunog",
       "sayText": "Tekstong babasahin nang malakas",
@@ -5135,12 +5144,12 @@
         "subscribers": "Mga Subscriber"
       },
       "actionTypes": {
-        "wheel": "Paikutin ang isang wheel",
         "alert": "Magpakita ng alerto",
         "sound": "Magpatugtog ng tunog",
         "say": "Magbasa nang malakas",
         "chat": "Mag - post sa chat",
-        "webhook": "Ipadala sa isang webhook"
+        "webhook": "Ipadala sa isang webhook",
+        "wheel": "Paikutin ang isang wheel"
       },
       "summary": {
         "tip": "Tip na {{amount}} DHB o higit pa"
@@ -5181,10 +5190,10 @@
       }
     },
     "moderation": {
-      "save": "I-save ang mga patakaran ng chat",
       "title": "Pagmo - moderate ng chat",
       "intro": "Mga panuntunan para sa chat sa ilalim ng lahat ng iyong mga stream. Hindi nila kailanman maabot ang pangunahing chat ng DeHub: ang isang taong pinagbawalan mo dito ay maaari pa ring makipag - usap sa lahat ng dako.",
       "loadFailed": "Hindi ma - load ang iyong mga setting ng pag - moderate. I - refresh ang page para subukang muli.",
+      "save": "I-save ang mga patakaran ng chat",
       "saved": "Na - save ang mga panuntunan sa chat.",
       "saveFailed": "Hindi mase - save ang pagbabagong iyon.",
       "slowMode": "Mabagal na mode",

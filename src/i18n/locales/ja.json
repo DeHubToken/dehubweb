@@ -4797,7 +4797,6 @@
     "creatorEarnsDirect": "加入者はDeHubトークンで支払います。購読した瞬間にシェアがウォレットに表示されますが、バッジランクのプラットフォーム手数料は差し引かれます。"
   },
   "liveOverlay": {
-    "wheelLanded": "{{name}}回転：{{result}}",
     "someone": "誰か",
     "newFollower": "新規フォロワー：{{name}}",
     "newSubscriber": "新規購読者: {{name}}",
@@ -4809,6 +4808,11 @@
     "topSupporters": "トップサポーター",
     "tipped": "{{name}}さんがギフトを贈りました",
     "chatPreview": "チャットメッセージがここに表示されます",
+    "wheelLanded": "{{name}}回転：{{result}}",
+    "level": "レベル{{level}}",
+    "streak_one": "{{count}}週連続",
+    "streak_other": "{{count}}週連続",
+    "tipJar": "ギフトジャー",
     "poll": {
       "closed": "投票は終了しました",
       "voteFor": "{{option}}に投票する",
@@ -4953,7 +4957,6 @@
       "join": "参加"
     },
     "kinds": {
-      "spin_wheel": "ルーレットを回す",
       "tip_alert": "ヒントアラート",
       "follow_alert": "フォローアラート",
       "subscribe_alert": "購読者アラート",
@@ -4970,10 +4973,12 @@
       "chat_box": "チャットボックス",
       "ticker": "ティッカー",
       "rule_alert": "ルールアラート",
-      "poll": "投票"
+      "poll": "投票",
+      "spin_wheel": "ルーレットを回す",
+      "streamer_level": "ストリーマーレベル",
+      "tip_jar": "ギフトジャー"
     },
     "hints": {
-      "spin_wheel": "ルール内のホイールが回転する場所",
       "tip_alert": "各ティップをそのティアに合わせて祝う",
       "follow_alert": "新しいフォロワーを表示",
       "subscribe_alert": "新しい購読者を表示",
@@ -4990,13 +4995,17 @@
       "chat_box": "ブロードキャストのチャットメッセージを画面に表示します",
       "ticker": "画面をスクロールする独自のテキストの行",
       "rule_alert": "ルールのアラートが表示される場所",
-      "poll": "すべてのオプションに投票ボタンが付いたライブ投票"
+      "poll": "すべてのオプションに投票ボタンが付いたライブ投票",
+      "spin_wheel": "ルール内のホイールが回転する場所",
+      "streamer_level": "プロフィールからのストリーマーのレベルと週連続記録",
+      "tip_jar": "有料ギフトが入るといっぱいになる瓶"
     },
     "fields": {
       "style": "スタイル",
       "celebration": "お祝い",
       "banner": "バナー",
       "minAmount": "表示する最小のヒント（ DHB ）",
+      "showStreak": "週単位の連続記録を表示",
       "showMessage": "チップのメッセージを表示する",
       "confirmedOnly": "支払いが確認された後のみ",
       "confirmedOnlyHint": "チェーンのために数秒待つので、決して支払われないチップは表示されません。",
@@ -5025,8 +5034,6 @@
       "fast": "高速"
     },
     "rules": {
-      "wheelSegments": "ホイールセグメント、1ラインに1つ",
-      "wheelHint": "2歳から12歳の間。DeHubはホイールが停止する場所を選択するので、すべての視聴者が同じ結果を見ることができます。アラート、読み取り音声、またはチャットアクションで{result}を使用して名前を付けます。",
       "title": "ルール",
       "intro": "ストリームで何かが起こると、DeHubはアラートを表示したり、サウンドを再生したり、何かを声に出して読んだり、チャットで投稿したり、Discordに伝えたりします。",
       "add": "ルールを追加",
@@ -5057,6 +5064,8 @@
       "removeAction": "アクションを削除",
       "placeholders": "テキストに{name}、{amount}、{message}を使用してください。メッセージ内のリンクは削除されます。",
       "placeholdersLive": "テキストに{name}、{title}、{link}を使用してください。名前、放送のタイトル、視聴するためのリンク。",
+      "wheelSegments": "ホイールセグメント、1ラインに1つ",
+      "wheelHint": "2歳から12歳の間。DeHubはホイールが停止する場所を選択するので、すべての視聴者が同じ結果を見ることができます。アラート、読み取り音声、またはチャットアクションで{result}を使用して名前を付けます。",
       "alertText": "アラートテキスト",
       "sound": "サウンド",
       "sayText": "声に出して読むテキスト",
@@ -5081,12 +5090,12 @@
         "subscribers": "購読者"
       },
       "actionTypes": {
-        "wheel": "ルーレットを回す",
         "alert": "アラートを表示",
         "sound": "サウンドを再生",
         "say": "声に出して読む",
         "chat": "チャットに投稿",
-        "webhook": "Webhookに送信"
+        "webhook": "Webhookに送信",
+        "wheel": "ルーレットを回す"
       },
       "summary": {
         "tip": "{{amount}} DHB以上のヒント"
@@ -5160,9 +5169,9 @@
       "log": "最近の行動",
       "noLog": "- まだ泳いでいます",
       "actions": {
-        "ban": "{{actor}} が {{target}} をBANしました",
         "timeout_one": "{{actor}}は{{target}}を{{count}}秒間タイムアウトしました",
         "timeout_other": "{{actor}}は{{target}}を{{count}}秒間タイムアウトしました",
+        "ban": "{{actor}} が {{target}} をBANしました",
         "unban": "{{actor}}禁止解除{{target}}",
         "moderator-added": "{{target}}さんがモデレーターになりました",
         "moderator-removed": "{{target}}さんはモデレーターではなくなりました",

@@ -4737,7 +4737,6 @@
     "creatorEarnsDirect": "Els subscriptors paguen amb fitxes DeHub. La teva participació arribarà a la teva cartera en el moment en què es subscriguin, menys la tarifa de la plataforma per al teu nivell d'distintiu."
   },
   "liveOverlay": {
-    "wheelLanded": "{{name}} girat: {{result}}",
     "someone": "Algú",
     "newFollower": "Nou seguidor: {{name}}",
     "newSubscriber": "Subscriptor nou: {{name}}",
@@ -4749,6 +4748,11 @@
     "topSupporters": "Els millors seguidors",
     "tipped": "{{name}}ha enviat un regal",
     "chatPreview": "Els missatges de xat apareixen aquí",
+    "wheelLanded": "{{name}} girat: {{result}}",
+    "level": "Nivell {{level}}",
+    "streak_one": "Racha de {{count}}setmanes",
+    "streak_other": "Racha de {{count}}setmanes",
+    "tipJar": "Pot de regals",
     "poll": {
       "closed": "Votació tancada",
       "voteFor": "Vota per {{option}}",
@@ -4893,7 +4897,6 @@
       "join": "Unir-se"
     },
     "kinds": {
-      "spin_wheel": "Roda giratòria",
       "tip_alert": "Alerta de consell",
       "follow_alert": "Alerta de seguiment",
       "subscribe_alert": "Alerta de subscriptor",
@@ -4910,10 +4913,12 @@
       "chat_box": "Quadre de xat",
       "ticker": "Ticker",
       "rule_alert": "Alertes de regles",
-      "poll": "Enquesta"
+      "poll": "Enquesta",
+      "spin_wheel": "Roda giratòria",
+      "streamer_level": "Nivell del streamer",
+      "tip_jar": "Pot de regals"
     },
     "hints": {
-      "spin_wheel": "On giren les rodes de les teves regles",
       "tip_alert": "Celebra cada consell, dimensionat segons el seu nivell",
       "follow_alert": "Mostra cada nou seguidor",
       "subscribe_alert": "Mostra cada nou subscriptor",
@@ -4930,13 +4935,17 @@
       "chat_box": "Mostra els missatges de xat de la teva emissió a la pantalla",
       "ticker": "Una línia del teu propi text que es desplaça per la pantalla",
       "rule_alert": "On apareixen les alertes de les teves normes",
-      "poll": "La teva enquesta en directe, amb un botó de vot per a cada opció"
+      "poll": "La teva enquesta en directe, amb un botó de vot per a cada opció",
+      "spin_wheel": "On giren les rodes de les teves regles",
+      "streamer_level": "El teu nivell de streamer i la racha setmanal, des del teu perfil",
+      "tip_jar": "Un pot que s'omple a mesura que arriben els regals pagats"
     },
     "fields": {
       "style": "Estil",
       "celebration": "Celebració",
       "banner": "Banner",
       "minAmount": "Suggeriment més petit per mostrar (DHB)",
+      "showStreak": "Mostra la racha setmanal",
       "showMessage": "Mostra el missatge de suggeriment",
       "confirmedOnly": "Només després de confirmar el pagament",
       "confirmedOnlyHint": "Espera uns segons la cadena, per la qual cosa no apareix mai una propina que mai es paga.",
@@ -4965,8 +4974,6 @@
       "fast": "Ràpid"
     },
     "rules": {
-      "wheelSegments": "Segments de rodes, un per línia",
-      "wheelHint": "Entre 2 i 12. DeHub tria on s'atura la roda per tal que tots els usuaris vegin el mateix resultat. Utilitza {result} en una acció d'alerta, lectura en veu alta o xat per donar-li un nom.",
       "title": "Normes",
       "intro": "Quan passa alguna cosa al teu flux, DeHub fa el que tu triïs: mostra una alerta, reprodueix un so, llegeix alguna cosa en veu alta, publica al teu xat o diu al teu Discord.",
       "add": "Afegeix una regla",
@@ -4997,6 +5004,8 @@
       "removeAction": "Elimina l'acció",
       "placeholders": "Fes servir {name}, {amount} i {message} al text. S'han eliminat els enllaços dels missatges.",
       "placeholdersLive": "Utilitza {name}, {title} i {link} al text: el teu nom, el títol de l'emissió i un enllaç per veure-la.",
+      "wheelSegments": "Segments de rodes, un per línia",
+      "wheelHint": "Entre 2 i 12. DeHub tria on s'atura la roda per tal que tots els usuaris vegin el mateix resultat. Utilitza {result} en una acció d'alerta, lectura en veu alta o xat per donar-li un nom.",
       "alertText": "Text d'alerta",
       "sound": "So",
       "sayText": "Text per llegir en veu alta",
@@ -5021,12 +5030,12 @@
         "subscribers": "Subscriptors"
       },
       "actionTypes": {
-        "wheel": "Fes girar la roda",
         "alert": "Mostra un avís",
         "sound": "Reprodueix un so",
         "say": "Llegir en veu alta",
         "chat": "Publicar al xat",
-        "webhook": "Envia a un webhook"
+        "webhook": "Envia a un webhook",
+        "wheel": "Fes girar la roda"
       },
       "summary": {
         "tip": "Suggeriment de {{amount}} DHB o més"

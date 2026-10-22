@@ -4804,7 +4804,6 @@
     "creatorEarnsDirect": "Gli abbonati pagano in token DeHub. La tua quota arriva nel tuo portafoglio nel momento in cui si iscrivono, meno la commissione della piattaforma per il tuo livello di badge."
   },
   "liveOverlay": {
-    "wheelLanded": "{{name}} filato: {{result}}",
     "someone": "Qualcuno",
     "newFollower": "Nuovo follower: {{name}}",
     "newSubscriber": "Nuovo abbonato: {{name}}",
@@ -4816,6 +4815,11 @@
     "topSupporters": "I migliori sostenitori",
     "tipped": "{{name}} ha inviato un regalo",
     "chatPreview": "I messaggi della chat vengono visualizzati qui",
+    "wheelLanded": "{{name}} filato: {{result}}",
+    "level": "Livello {{level}}",
+    "streak_one": "{{count}}-seriedi settimane",
+    "streak_other": "{{count}}-seriedi settimane",
+    "tipJar": "Vaso regalo",
     "poll": {
       "closed": "Votazione chiusa",
       "voteFor": "Vota per {{option}}",
@@ -4959,7 +4963,6 @@
       "join": "Unisciti"
     },
     "kinds": {
-      "spin_wheel": "Ruota girevole",
       "tip_alert": "Avviso mancia",
       "follow_alert": "Avviso follow",
       "subscribe_alert": "Avviso abbonato",
@@ -4976,10 +4979,12 @@
       "chat_box": "Chat box",
       "ticker": "Testo scorrevole",
       "rule_alert": "Avvisi delle regole",
-      "poll": "Sondaggio"
+      "poll": "Sondaggio",
+      "spin_wheel": "Ruota girevole",
+      "streamer_level": "Livello streamer",
+      "tip_jar": "Vaso regalo"
     },
     "hints": {
-      "spin_wheel": "Dove girano le ruote nelle tue regole",
       "tip_alert": "Celebra ogni mancia, dimensionata al suo livello",
       "follow_alert": "Mostra ogni nuovo follower",
       "subscribe_alert": "Mostra ogni nuovo abbonato",
@@ -4996,13 +5001,17 @@
       "chat_box": "Mostra i messaggi di chat della trasmissione sullo schermo",
       "ticker": "Una riga del tuo testo che scorre sullo schermo",
       "rule_alert": "Dove vengono visualizzati gli avvisi delle tue regole",
-      "poll": "Il tuo sondaggio dal vivo, con un pulsante di voto per ogni opzione"
+      "poll": "Il tuo sondaggio dal vivo, con un pulsante di voto per ogni opzione",
+      "spin_wheel": "Dove girano le ruote nelle tue regole",
+      "streamer_level": "Il tuo livello di streamer e la tua serie settimanale, dal tuo profilo",
+      "tip_jar": "Un barattolo che si riempie quando arrivano i regali pagati"
     },
     "fields": {
       "style": "Stile",
       "celebration": "Celebrazione",
       "banner": "Banner",
       "minAmount": "Punta più piccola da mostrare (DHB)",
+      "showStreak": "Mostra la serie settimanale",
       "showMessage": "Mostra il messaggio della mancia",
       "confirmedOnly": "Solo dopo la conferma del pagamento",
       "confirmedOnlyHint": "Attende qualche secondo la catena, quindi non compare mai una mancia che non viene mai pagata.",
@@ -5031,8 +5040,6 @@
       "fast": "Veloce"
     },
     "rules": {
-      "wheelSegments": "Segmenti ruota, uno per riga",
-      "wheelHint": "Tra 2 e 12. DeHub sceglie dove si ferma la ruota, in modo che tutti gli spettatori vedano lo stesso risultato. Usa {result} in un'azione di avviso, lettura ad alta voce o chat per assegnargli un nome.",
       "title": "Regole",
       "intro": "Quando succede qualcosa sul tuo stream, DeHub fa ciò che scegli: mostra un avviso, riproduce un suono, legge qualcosa ad alta voce, pubblica nella tua chat o informa il tuo Discord.",
       "add": "Aggiungi una regola",
@@ -5063,6 +5070,8 @@
       "removeAction": "Rimuovi azione",
       "placeholders": "Usa {name}, {amount} e {message} nel testo. I link nei messaggi vengono rimossi.",
       "placeholdersLive": "Usa {name}, {title} e {link} nel tuo testo: il tuo nome, il titolo della trasmissione e un link per guardarlo.",
+      "wheelSegments": "Segmenti ruota, uno per riga",
+      "wheelHint": "Tra 2 e 12. DeHub sceglie dove si ferma la ruota, in modo che tutti gli spettatori vedano lo stesso risultato. Usa {result} in un'azione di avviso, lettura ad alta voce o chat per assegnargli un nome.",
       "alertText": "Testo dell'avviso",
       "sound": "Suono",
       "sayText": "Testo da leggere ad alta voce",
@@ -5087,12 +5096,12 @@
         "subscribers": "Iscritti"
       },
       "actionTypes": {
-        "wheel": "Gira una ruota",
         "alert": "Mostra un avviso",
         "sound": "Riproduci un suono",
         "say": "Leggi ad alta voce",
         "chat": "Pubblica in chat",
-        "webhook": "Invia a un webhook"
+        "webhook": "Invia a un webhook",
+        "wheel": "Gira una ruota"
       },
       "summary": {
         "tip": "Mancia di {{amount}} DHB o superiore"

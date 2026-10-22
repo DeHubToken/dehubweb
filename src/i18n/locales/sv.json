@@ -4741,7 +4741,6 @@
     "creatorEarnsDirect": "Prenumeranter betalar i DeHub-tokens. Din andel hamnar i din plånbok så fort de prenumererar, minus plattformsavgiften för din märkesnivå."
   },
   "liveOverlay": {
-    "wheelLanded": "{{name}} spinnade: {{result}}",
     "someone": "Någon",
     "newFollower": "Ny följare: {{name}}",
     "newSubscriber": "Ny prenumerant: {{name}}",
@@ -4753,6 +4752,11 @@
     "topSupporters": "Toppanhängare",
     "tipped": "{{name}} skickade en gåva",
     "chatPreview": "Chattmeddelanden visas här",
+    "wheelLanded": "{{name}} spinnade: {{result}}",
+    "level": "Nivå {{level}}",
+    "streak_one": "{{count}}-veckor",
+    "streak_other": "{{count}}-veckor",
+    "tipJar": "Presentburk",
     "poll": {
       "closed": "Röstningen är avslutad",
       "voteFor": "Rösta på {{option}}",
@@ -4897,7 +4901,6 @@
       "join": "Gå med"
     },
     "kinds": {
-      "spin_wheel": "Spinnhjul",
       "tip_alert": "Dricksvarning",
       "follow_alert": "Följ varning",
       "subscribe_alert": "Prenumerantvarning",
@@ -4914,10 +4917,12 @@
       "chat_box": "Chattruta",
       "ticker": "Ticker",
       "rule_alert": "Regelvarningar",
-      "poll": "Omröstning"
+      "poll": "Omröstning",
+      "spin_wheel": "Spinnhjul",
+      "streamer_level": "Streamernivå",
+      "tip_jar": "Presentburk"
     },
     "hints": {
-      "spin_wheel": "Där hjulen i dina regler snurrar",
       "tip_alert": "Firar varje dricks, storleksanpassad till sin nivå",
       "follow_alert": "Visar varje ny följare",
       "subscribe_alert": "Visar varje ny prenumerant",
@@ -4934,13 +4939,17 @@
       "chat_box": "Visar din sändnings chattmeddelanden på skärmen",
       "ticker": "En rad med din egen text som rullar över skärmen",
       "rule_alert": "Där dina regler visas",
-      "poll": "Din live-omröstning, med en röstknapp för varje alternativ"
+      "poll": "Din live-omröstning, med en röstknapp för varje alternativ",
+      "spin_wheel": "Där hjulen i dina regler snurrar",
+      "streamer_level": "Din streamernivå och veckosträcka, från din profil",
+      "tip_jar": "En burk som fylls när betalda gåvor kommer in"
     },
     "fields": {
       "style": "Stil",
       "celebration": "Firande",
       "banner": "Banner",
       "minAmount": "Minsta spets att visa (DHB)",
+      "showStreak": "Visa veckosträckan",
       "showMessage": "Visa TIP-meddelandet",
       "confirmedOnly": "Först efter att betalningen bekräftats",
       "confirmedOnlyHint": "Väntar några sekunder på kedjan, så ett tips som aldrig betalas visas aldrig.",
@@ -4969,8 +4978,6 @@
       "fast": "Snabb"
     },
     "rules": {
-      "wheelSegments": "Hjulsegment, en per linje",
-      "wheelHint": "Mellan 2 och 12. DeHub väljer var hjulet stannar, så att alla som tittar ser samma resultat. Använd {result} i en varning, högläsning eller chattåtgärd för att namnge den.",
       "title": "Regler",
       "intro": "När något händer i din ström gör DeHub vad du väljer: visar en varning, spelar upp ett ljud, läser något högt, lägger upp inlägg i din chatt eller berättar för din Discord.",
       "add": "Lägg till en regel",
@@ -5001,6 +5008,8 @@
       "removeAction": "Ta bort åtgärd",
       "placeholders": "Använd {name}, {amount} och {message} i din text. Länkar i meddelanden tas bort.",
       "placeholdersLive": "Använd {name}, {title} och {link} i din text: ditt namn, sändningens titel och en länk för att titta på den.",
+      "wheelSegments": "Hjulsegment, en per linje",
+      "wheelHint": "Mellan 2 och 12. DeHub väljer var hjulet stannar, så att alla som tittar ser samma resultat. Använd {result} i en varning, högläsning eller chattåtgärd för att namnge den.",
       "alertText": "Varningstext",
       "sound": "Ljud",
       "sayText": "Text att läsa högt",
@@ -5025,12 +5034,12 @@
         "subscribers": "Prenumeranter"
       },
       "actionTypes": {
-        "wheel": "Snurra ett hjul",
         "alert": "Visa en varning",
         "sound": "Spela upp ett ljud",
         "say": "Läs högt",
         "chat": "Publicera i chatten",
-        "webhook": "Skicka till en webhook"
+        "webhook": "Skicka till en webhook",
+        "wheel": "Snurra ett hjul"
       },
       "summary": {
         "tip": "Tips på {{amount}} DHB eller mer"

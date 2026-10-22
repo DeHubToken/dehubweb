@@ -4799,7 +4799,6 @@
     "creatorEarnsDirect": "Prenumeratoriai moka DeHub žetonais. Kai tik užsiprenumeruosi, tavo dalis atsidurs tavo piniginėje, atėmus platformos mokestį už tavo ženklelio lygį."
   },
   "liveOverlay": {
-    "wheelLanded": "{{name}} pasukė: {{result}}",
     "someone": "Kažkas",
     "newFollower": "Naujas sekėjas: {{name}}",
     "newSubscriber": "Naujas prenumeratorius: {{name}}",
@@ -4811,6 +4810,11 @@
     "topSupporters": "Geriausi rėmėjai",
     "tipped": "{{name}} išsiuntė dovaną",
     "chatPreview": "Pokalbio žinutės rodomos čia",
+    "wheelLanded": "{{name}} pasukė: {{result}}",
+    "level": "Lygis {{level}}",
+    "streak_one": "{{count}}-savaitės serija",
+    "streak_other": "{{count}}-savaitės serija",
+    "tipJar": "Dovanų stiklainis",
     "poll": {
       "closed": "Balsavimas uždarytas",
       "voteFor": "Balsuokite už {{option}}",
@@ -4955,7 +4959,6 @@
       "join": "Prisijungti"
     },
     "kinds": {
-      "spin_wheel": "Sukimo ratas",
       "tip_alert": "Įspėjimas apie arbatpinig",
       "follow_alert": "Sekti įspėjimą",
       "subscribe_alert": "Prenumeratoriaus įspėjimas",
@@ -4972,10 +4975,12 @@
       "chat_box": "Pokalbio laukelis",
       "ticker": "Žymeklis",
       "rule_alert": "Pranešimai apie taisyklę",
-      "poll": "Apklausa"
+      "poll": "Apklausa",
+      "spin_wheel": "Sukimo ratas",
+      "streamer_level": "Transliuotojo lygis",
+      "tip_jar": "Dovanų stiklainis"
     },
     "hints": {
-      "spin_wheel": "Kur sukasi jūsų taisyklių ratai",
       "tip_alert": "Pagerbia kiekvieną patarimą, prilygstantį jo lygiui",
       "follow_alert": "Rodo kiekvieną naują sekėją",
       "subscribe_alert": "Rodykimas kiekvienam naujam abonentui.",
@@ -4992,13 +4997,17 @@
       "chat_box": "Rodo transliacijos pokalbių žinutes ekrane",
       "ticker": "Jūsų teksto eilutė, slenkanti per ekraną",
       "rule_alert": "Kur rodomi jūsų taisyklių pranešimai",
-      "poll": "Jūsų tiesioginė apklausa su balsavimo mygtuku kiekvienai parinkčiai"
+      "poll": "Jūsų tiesioginė apklausa su balsavimo mygtuku kiekvienai parinkčiai",
+      "spin_wheel": "Kur sukasi jūsų taisyklių ratai",
+      "streamer_level": "Srauto lygis ir savaitinė seka iš jūsų profilio",
+      "tip_jar": "Stiklainis, kuris prisipildo, kai ateina apmokamos dovanos"
     },
     "fields": {
       "style": "Stilius",
       "celebration": "Šventė",
       "banner": "Reklamjuostė",
       "minAmount": "Mažiausias rodomas patarimas (DHB)",
+      "showStreak": "Rodyti savaitės eilutę",
       "showMessage": "Rodyti arbatpinigių žinutę",
       "confirmedOnly": "Tik po to, kai mokėjimas patvirtinamas",
       "confirmedOnlyHint": "Palaukia kelias sekundes iki grandinės, todėl arbatpinigiai, kurie niekada nemokami, niekada nepasirodo.",
@@ -5027,8 +5036,6 @@
       "fast": "Greitas"
     },
     "rules": {
-      "wheelSegments": "Ratų segmentai, po vieną eilutėje",
-      "wheelHint": "Nuo 2 iki 12. „DeHub“ renkasi, kur sustoja ratas, todėl visi žiūrintys mato tą patį rezultatą. Naudokite {result} įspėjime, garso skaitymo ar pokalbio veiksme, kad jį pavadintumėte.",
       "title": "Taisyklės",
       "intro": "Kai kas nors nutinka jūsų sraute, „DeHub“ daro tai, ką pasirenkate: rodo įspėjimą, leidžia garsą, skaito kažką garsiai, skelbia pokalbyje arba pasako „Discord“.",
       "add": "Pridėti taisyklę",
@@ -5059,6 +5066,8 @@
       "removeAction": "Pašalinti veiksmą",
       "placeholders": "Tekste naudokite {name}, {amount} ir {message}. Žinutėse esančios nuorodos pašalintos.",
       "placeholdersLive": "Tekste naudokite {name}, {title} ir {link}: savo vardą, transliacijos pavadinimą ir nuorodą, kad jį peržiūrėtumėte.",
+      "wheelSegments": "Ratų segmentai, po vieną eilutėje",
+      "wheelHint": "Nuo 2 iki 12. „DeHub“ renkasi, kur sustoja ratas, todėl visi žiūrintys mato tą patį rezultatą. Naudokite {result} įspėjime, garso skaitymo ar pokalbio veiksme, kad jį pavadintumėte.",
       "alertText": "Įspėjimo tekstas",
       "sound": "Garsas",
       "sayText": "Garsiai skaitomas tekstas",
@@ -5083,12 +5092,12 @@
         "subscribers": "Prenumeratoriai"
       },
       "actionTypes": {
-        "wheel": "Pasukite ratą",
         "alert": "Rodyti pranešimą",
         "sound": "Paleisti garsą",
         "say": "Skaityti garsiai",
         "chat": "Paskelbti pokalbyje",
-        "webhook": "Siųsti į žiniatinklio kablį"
+        "webhook": "Siųsti į žiniatinklio kablį",
+        "wheel": "Pasukite ratą"
       },
       "summary": {
         "tip": "{{amount}} DHB ar daugiau patarimų"

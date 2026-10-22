@@ -4919,7 +4919,6 @@
     "creatorEarnsDirect": "Predplatitelia platia v žetónoch DeHub. Váš podiel sa dostane do peňaženky v okamihu, keď sa prihlásia na odber, po odpočítaní poplatku za platformu pre vašu úroveň odznaku."
   },
   "liveOverlay": {
-    "wheelLanded": "{{name}} spôsobil: {{result}}",
     "someone": "Niekto",
     "newFollower": "Nový sledovateľ: {{name}}",
     "newSubscriber": "Nový odberateľ: {{name}}",
@@ -4931,6 +4930,11 @@
     "topSupporters": "Najlepší priaznivci",
     "tipped": "{{name}} odoslal/a darček",
     "chatPreview": "Správy z chatu sa zobrazujú tu",
+    "wheelLanded": "{{name}} spôsobil: {{result}}",
+    "level": "Úroveň {{level}}",
+    "streak_one": "{{count}}-týždňová séria",
+    "streak_other": "{{count}}-týždňová séria",
+    "tipJar": "Darčeková nádoba",
     "poll": {
       "closed": "Hlasovanie skončilo",
       "voteFor": "Hlasuj pre {{option}}",
@@ -5075,7 +5079,6 @@
       "join": "Pripojiť sa"
     },
     "kinds": {
-      "spin_wheel": "Rotačné koleso",
       "tip_alert": "Upozornenie NA prepitné",
       "follow_alert": "Sledovať upozornenie",
       "subscribe_alert": "Upozornenie účastníka",
@@ -5092,10 +5095,12 @@
       "chat_box": "Chat box",
       "ticker": "Ticker",
       "rule_alert": "Upozornenia na pravidlá",
-      "poll": "Anketa"
+      "poll": "Anketa",
+      "spin_wheel": "Rotačné koleso",
+      "streamer_level": "Úroveň streamera",
+      "tip_jar": "Darčeková nádoba"
     },
     "hints": {
-      "spin_wheel": "Kde sa točia kolesá vo vašich pravidlách",
       "tip_alert": "Oslavuje každé prepitné vo veľkosti podľa jeho úrovne",
       "follow_alert": "Zobrazí každého nového sledovateľa",
       "subscribe_alert": "Zobrazí každého nového odberateľa",
@@ -5112,13 +5117,17 @@
       "chat_box": "Zobrazuje chatové správy vášho vysielania na obrazovke",
       "ticker": "Riadok vlastného textu, ktorý sa posúva po obrazovke",
       "rule_alert": "Kde sa zobrazujú upozornenia na vaše pravidlá",
-      "poll": "Vaša živá anketa s hlasovacím tlačidlom pre každú možnosť"
+      "poll": "Vaša živá anketa s hlasovacím tlačidlom pre každú možnosť",
+      "spin_wheel": "Kde sa točia kolesá vo vašich pravidlách",
+      "streamer_level": "Vaša úroveň streamera a týždenná séria vo vašom profile",
+      "tip_jar": "Pohár, ktorý sa naplní pri príchode zaplatených darčekov"
     },
     "fields": {
       "style": "Štýl",
       "celebration": "Oslava",
       "banner": "Banner",
       "minAmount": "Najmenší tip na zobrazenie (DHB)",
+      "showStreak": "Zobraziť týždennú sériu",
       "showMessage": "Zobraziť správu s prepitným",
       "confirmedOnly": "Až po potvrdení platby",
       "confirmedOnlyHint": "Čaká niekoľko sekúnd na reťaz, takže sa nikdy nezobrazí tip, ktorý nie je zaplatený.",
@@ -5147,8 +5156,6 @@
       "fast": "Rýchlo"
     },
     "rules": {
-      "wheelSegments": "Segmenty kolies, jeden na riadok",
-      "wheelHint": "Medzi 2 a 12. DeHub vyberá, kde sa koleso zastaví, takže všetci sledujúci vidia rovnaký výsledok. Použite {result} v upozornení, nahlas na čítanie alebo akciu chatu, aby ste ho pomenovali.",
       "title": "Pravidlá",
       "intro": "Keď sa na vašom streame niečo stane, DeHub urobí to, čo si vyberiete: zobrazí upozornenie, prehrá zvuk, prečíta niečo nahlas, uverejní príspevok vo vašom chate alebo povie vášmu Discordu.",
       "add": "Pridať pravidlo",
@@ -5179,6 +5186,8 @@
       "removeAction": "Odstrániť akciu",
       "placeholders": "V texte použite {name}, {amount} a {message}. Odkazy v správach sa odstránia.",
       "placeholdersLive": "V texte použite {name}, {title} a {link}: svoje meno, názov vysielania a odkaz na jeho sledovanie.",
+      "wheelSegments": "Segmenty kolies, jeden na riadok",
+      "wheelHint": "Medzi 2 a 12. DeHub vyberá, kde sa koleso zastaví, takže všetci sledujúci vidia rovnaký výsledok. Použite {result} v upozornení, nahlas na čítanie alebo akciu chatu, aby ste ho pomenovali.",
       "alertText": "Text upozornenia",
       "sound": "Zvuk",
       "sayText": "Text na čítanie nahlas",
@@ -5203,12 +5212,12 @@
         "subscribers": "Odberatelia"
       },
       "actionTypes": {
-        "wheel": "Roztočte koleso",
         "alert": "Zobraziť upozornenie",
         "sound": "Prehrať zvuk",
         "say": "Čítať nahlas",
         "chat": "Uverejniť v chate",
-        "webhook": "Odoslať na webhook"
+        "webhook": "Odoslať na webhook",
+        "wheel": "Roztočte koleso"
       },
       "summary": {
         "tip": "Prepitné vo výške {{amount}} DHB alebo viac"

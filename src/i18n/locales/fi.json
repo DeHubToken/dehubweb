@@ -4738,7 +4738,6 @@
     "creatorEarnsDirect": "Tilaajat maksavat DeHub-poletteina. Osuutesi siirtyy lompakkoosi heti, kun he tilaavat sen, vähennettynä erikoismerkkitasostasi perittävällä alustamaksulla."
   },
   "liveOverlay": {
-    "wheelLanded": "{{name}} pyöritti: {{result}}",
     "someone": "Joku",
     "newFollower": "Uusi seuraaja: {{name}}",
     "newSubscriber": "Uusi tilaaja: {{name}}",
@@ -4750,6 +4749,11 @@
     "topSupporters": "Parhaat kannattajat",
     "tipped": "{{name}} lähetti lahjan",
     "chatPreview": "Chat-viestit näkyvät tässä",
+    "wheelLanded": "{{name}} pyöritti: {{result}}",
+    "level": "Taso {{level}}",
+    "streak_one": "{{count}}viikon putki",
+    "streak_other": "{{count}}viikon putki",
+    "tipJar": "Lahjapurkki",
     "poll": {
       "closed": "Äänestys päättynyt",
       "voteFor": "Äänestä {{option}}",
@@ -4894,7 +4898,6 @@
       "join": "Liity"
     },
     "kinds": {
-      "spin_wheel": "Pyöräytyspyörä",
       "tip_alert": "Vinkkihälytys",
       "follow_alert": "Seuraa hälytystä",
       "subscribe_alert": "Tilaajan hälytys",
@@ -4911,10 +4914,12 @@
       "chat_box": "Keskusteluruutu",
       "ticker": "Ticker",
       "rule_alert": "Sääntöhälytykset",
-      "poll": "Kysely"
+      "poll": "Kysely",
+      "spin_wheel": "Pyöräytyspyörä",
+      "streamer_level": "Suoratoistotaso",
+      "tip_jar": "Lahjapurkki"
     },
     "hints": {
-      "spin_wheel": "Sääntöjesi pyörät pyörivät",
       "tip_alert": "Juhlii jokaista tippiä sen tason mukaan",
       "follow_alert": "Näyttää jokaisen uuden seuraajan",
       "subscribe_alert": "Näyttää jokaisen uuden tilaajan",
@@ -4931,13 +4936,17 @@
       "chat_box": "Näyttää lähetyksesi chat-viestit näytöllä",
       "ticker": "Rivi omaa tekstiäsi, joka vierittää näytön poikki",
       "rule_alert": "Missä sääntöjesi hälytykset näkyvät",
-      "poll": "Livekyselysi, jossa on äänestyspainike jokaiselle vaihtoehdolle"
+      "poll": "Livekyselysi, jossa on äänestyspainike jokaiselle vaihtoehdolle",
+      "spin_wheel": "Sääntöjesi pyörät pyörivät",
+      "streamer_level": "Suoratoistotasosi ja viikoittainen putkesi profiilistasi",
+      "tip_jar": "Purkki, joka täyttyy maksettujen lahjojen tullessa"
     },
     "fields": {
       "style": "Tyyli",
       "celebration": "Juhla",
       "banner": "Banneri",
       "minAmount": "Pienin näytettävä vihje (DHB)",
+      "showStreak": "Näytä viikoittainen putki",
       "showMessage": "Näytä vihjeviesti",
       "confirmedOnly": "Vasta kun maksu on vahvistettu",
       "confirmedOnlyHint": "Odottaa muutaman sekunnin ketjulle, joten tippiä, jota ei koskaan makseta, ei koskaan näy.",
@@ -4966,8 +4975,6 @@
       "fast": "Nopea"
     },
     "rules": {
-      "wheelSegments": "Pyörän segmentit, yksi per rivi",
-      "wheelHint": "2 ja 12 välillä. DeHub valitsee, mihin pyörä pysähtyy, joten kaikki katsojat näkevät saman tuloksen. Käytä {result} -toimintoa hälytyksessä, ääneenluku- tai keskustelutoiminnossa sen nimeämiseen.",
       "title": "Säännöt",
       "intro": "Kun suoratoistossasi tapahtuu jotain, DeHub tekee mitä haluat: näyttää hälytyksen, soittaa äänen, lukee jotain ääneen, julkaisee viestejä chatissa tai kertoo Discordistasi.",
       "add": "Lisää sääntö",
@@ -4998,6 +5005,8 @@
       "removeAction": "Poista toiminto",
       "placeholders": "Käytä tekstissäsi {name}, {amount} ja {message}. Viesteissä olevat linkit poistetaan.",
       "placeholdersLive": "Käytä {name}, {title} ja {link} tekstissäsi: nimesi, lähetyksen otsikko ja linkki sen katseluun.",
+      "wheelSegments": "Pyörän segmentit, yksi per rivi",
+      "wheelHint": "2 ja 12 välillä. DeHub valitsee, mihin pyörä pysähtyy, joten kaikki katsojat näkevät saman tuloksen. Käytä {result} -toimintoa hälytyksessä, ääneenluku- tai keskustelutoiminnossa sen nimeämiseen.",
       "alertText": "Hälytyksen teksti",
       "sound": "Ääni",
       "sayText": "Äänellä luettava teksti",
@@ -5022,12 +5031,12 @@
         "subscribers": "Tilaajat"
       },
       "actionTypes": {
-        "wheel": "Pyöräytä pyörää",
         "alert": "Näytä hälytys",
         "sound": "Toista ääni",
         "say": "Lue ääneen",
         "chat": "Julkaise chatissa",
-        "webhook": "Lähetä webhookiin"
+        "webhook": "Lähetä webhookiin",
+        "wheel": "Pyöräytä pyörää"
       },
       "summary": {
         "tip": "Vihje: {{amount}} DHB tai enemmän"

@@ -4779,7 +4779,6 @@
     "creatorEarnsDirect": "Abonenti maksā DeHub žetonos. Abonēšanas brīdī jūsu daļa nonāk jūsu makā, atskaitot platformas nodevu par jūsu nozīmītes līmeni."
   },
   "liveOverlay": {
-    "wheelLanded": "{{name}} iedarbināja: {{result}}",
     "someone": "Kāds",
     "newFollower": "Jauns sekotājs: {{name}}",
     "newSubscriber": "Jauns abonents: {{name}}",
@@ -4791,6 +4790,11 @@
     "topSupporters": "Populārākie atbalstītāji",
     "tipped": "{{name}} nosūtīja dāvanu",
     "chatPreview": "Tērzēšanas ziņojumi tiek parādīti šeit",
+    "wheelLanded": "{{name}} iedarbināja: {{result}}",
+    "level": "Līmenis {{level}}",
+    "streak_one": "{{count}}-nedēļu sērija",
+    "streak_other": "{{count}}-nedēļu sērija",
+    "tipJar": "Dāvanu trauciņš",
     "poll": {
       "closed": "Balsēs noslēgtas",
       "voteFor": "Balsoti par {{option}}",
@@ -4935,7 +4939,6 @@
       "join": "Pievienoties"
     },
     "kinds": {
-      "spin_wheel": "Griezējripa",
       "tip_alert": "Padoma brīdinājums",
       "follow_alert": "Sekot brīdinājumam",
       "subscribe_alert": "Abonenta brīdinājums",
@@ -4952,10 +4955,12 @@
       "chat_box": "Tērzēšanas lodziņš",
       "ticker": "Atzīme",
       "rule_alert": "Noteikumu brīdinājumi",
-      "poll": "Aptauja"
+      "poll": "Aptauja",
+      "spin_wheel": "Griezējripa",
+      "streamer_level": "Straumētāja līmenis",
+      "tip_jar": "Dāvanu trauciņš"
     },
     "hints": {
-      "spin_wheel": "Kur griežas jūsu noteikumu riteņi",
       "tip_alert": "Godina ikvienu dzeramnaudu, kuras lielums atbilst tās līmenim",
       "follow_alert": "Rāda katru jauno sekotāju",
       "subscribe_alert": "Parāda katru jauno abonentu",
@@ -4972,13 +4977,17 @@
       "chat_box": "Rāda apraides tērzēšanas ziņojumus ekrānā",
       "ticker": "Jūsu teksta rindiņa, kas ritinās pa ekrānu",
       "rule_alert": "Kur tiek parādīti jūsu noteikumu paziņojumi",
-      "poll": "Jūsu tiešsaistes aptauja ar balsošanas pogu katrai opcijai"
+      "poll": "Jūsu tiešsaistes aptauja ar balsošanas pogu katrai opcijai",
+      "spin_wheel": "Kur griežas jūsu noteikumu riteņi",
+      "streamer_level": "Jūsu straumētāja līmenis un iknedēļas sērija no jūsu profila",
+      "tip_jar": "Burka, kas piepildās, kad ienāk apmaksātas dāvanas"
     },
     "fields": {
       "style": "Stils",
       "celebration": "Svinības",
       "banner": "Reklāmkarogs",
       "minAmount": "Mazākais parādāmais padoms (DHB)",
+      "showStreak": "Rādīt iknedēļas sēriju",
       "showMessage": "Rādīt padoma ziņojumu",
       "confirmedOnly": "Tikai pēc maksājuma apstiprināšanas",
       "confirmedOnlyHint": "Gaida ķēdi dažas sekundes, tāpēc nekad netiek parādīta dzeramnauda.",
@@ -5007,8 +5016,6 @@
       "fast": "Ātrs"
     },
     "rules": {
-      "wheelSegments": "Riteņu segmenti, viens rindā",
-      "wheelHint": "No 2 līdz 12. DeHub izvēlas vietu, kur ritenis apstājas, tāpēc visi skatītāji redz vienu un to pašu rezultātu. Izmantojiet {result} brīdinājumā, lasīšanas vai tērzēšanas darbībā, lai to nosauktu.",
       "title": "Noteikumi",
       "intro": "Kad jūsu straumē kaut kas notiek, DeHub dara to, ko jūs izvēlaties: parāda brīdinājumu, atskaņo skaņu, lasa kaut ko skaļi, publicē jūsu tērzēšanā vai stāsta jūsu Discord.",
       "add": "Pievienot noteikumu",
@@ -5039,6 +5046,8 @@
       "removeAction": "Noņemt darbību",
       "placeholders": "{name}, {amount} un {message} jāizmanto tekstā",
       "placeholdersLive": "Izmantojiet {name}, {title} un {link} savā tekstā: savu vārdu, raidījuma nosaukumu un saiti, lai to skatītos.",
+      "wheelSegments": "Riteņu segmenti, viens rindā",
+      "wheelHint": "No 2 līdz 12. DeHub izvēlas vietu, kur ritenis apstājas, tāpēc visi skatītāji redz vienu un to pašu rezultātu. Izmantojiet {result} brīdinājumā, lasīšanas vai tērzēšanas darbībā, lai to nosauktu.",
       "alertText": "Pazīstamā teksta ziņa",
       "sound": "Skana",
       "sayText": "Teksts, ko jālasa alust",
@@ -5063,12 +5072,12 @@
         "subscribers": "Abonētāji"
       },
       "actionTypes": {
-        "wheel": "Pagrieziet riteni",
         "alert": "Rādīt uzmanību",
         "sound": "Atspēlēt skanu",
         "say": "Lasīt alust",
         "chat": "Publicēt chatā",
-        "webhook": "Nosūtīt uz webhuku"
+        "webhook": "Nosūtīt uz webhuku",
+        "wheel": "Pagrieziet riteni"
       },
       "summary": {
         "tip": "Tips no {{amount}} DHB vai vairāk"

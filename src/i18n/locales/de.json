@@ -4850,7 +4850,6 @@
     "creatorEarnsDirect": "Abonnenten zahlen in DeHub-Token. Deine Aktie landet in deinem Wallet, sobald sie abonniert wird, abzüglich der Plattformgebühr für dein Abzeichen-Level."
   },
   "liveOverlay": {
-    "wheelLanded": "{{name}} gesponnen: {{result}}",
     "someone": "Jemand",
     "newFollower": "Neuer Follower: {{name}}",
     "newSubscriber": "Neuer Abonnent: {{name}}",
@@ -4862,6 +4861,11 @@
     "topSupporters": "Top-Unterstützer",
     "tipped": "{{name}} hat ein Geschenk gesendet",
     "chatPreview": "Chat-Nachrichten werden hier angezeigt",
+    "wheelLanded": "{{name}} gesponnen: {{result}}",
+    "level": "Level {{level}}",
+    "streak_one": "{{count}} -Wochensträhne",
+    "streak_other": "{{count}} -Wochensträhne",
+    "tipJar": "GESCHENKGEF",
     "poll": {
       "closed": "Abstimmung geschlossen",
       "voteFor": "Stimme für {{option}} ab",
@@ -5005,7 +5009,6 @@
       "join": "Beitreten"
     },
     "kinds": {
-      "spin_wheel": "Schleuderrad",
       "tip_alert": "TIPP-ALAR",
       "follow_alert": "Benachrichtigung folgen",
       "subscribe_alert": "Abonnenten-Alert",
@@ -5022,10 +5025,12 @@
       "chat_box": "Chat-Box",
       "ticker": "Laufschrift",
       "rule_alert": "Regelwarnungen",
-      "poll": "Umfrage"
+      "poll": "Umfrage",
+      "spin_wheel": "Schleuderrad",
+      "streamer_level": "Streamer-Level",
+      "tip_jar": "GESCHENKGEF"
     },
     "hints": {
-      "spin_wheel": "Wo sich die Räder in deinen Regeln drehen",
       "tip_alert": "Feiern Sie jeden Tipp, der auf sein Level zugeschnitten ist",
       "follow_alert": "Zeigt jeden neuen Follower an",
       "subscribe_alert": "Zeigt jeden neuen Abonnenten an",
@@ -5042,13 +5047,17 @@
       "chat_box": "Zeigt die Chat-Nachrichten Ihrer Sendung auf dem Bildschirm an",
       "ticker": "Eine Zeile Ihres eigenen Textes, der über den Bildschirm scrollt",
       "rule_alert": "Wo die Warnungen deiner Regeln angezeigt werden",
-      "poll": "Ihre Live-Umfrage mit einer Abstimmungsschaltfläche für jede Option"
+      "poll": "Ihre Live-Umfrage mit einer Abstimmungsschaltfläche für jede Option",
+      "spin_wheel": "Wo sich die Räder in deinen Regeln drehen",
+      "streamer_level": "Dein Streamer-Level und deine wöchentliche Serie aus deinem Profil",
+      "tip_jar": "Ein Glas, das sich füllt, wenn bezahlte Geschenke hereinkommen"
     },
     "fields": {
       "style": "Stil",
       "celebration": "Feier",
       "banner": "Banner",
       "minAmount": "Kleinster Tipp zum Anzeigen (DHB)",
+      "showStreak": "Die wöchentliche Serie anzeigen",
       "showMessage": "TIP-Nachricht anzeigen",
       "confirmedOnly": "Erst nach der Zahlungsbestätigung",
       "confirmedOnlyHint": "Wartet ein paar Sekunden auf die Kette, so dass ein Trinkgeld, das nie bezahlt wird, nie erscheint.",
@@ -5077,8 +5086,6 @@
       "fast": "Schnell"
     },
     "rules": {
-      "wheelSegments": "Radsegmente, eines pro Linie",
-      "wheelHint": "Zwischen 2 und 12. DeHub wählt aus, wo das Rad stoppt, so dass jeder, der zuschaut, das gleiche Ergebnis sieht. Verwenden Sie {result} in einer Alarm-, Vorlese- oder Chat-Aktion, um es zu benennen.",
       "title": "Regeln",
       "intro": "Wenn etwas in Ihrem Stream passiert, tut DeHub, was Sie möchten: Zeigt eine Warnung an, spielt einen Ton ab, liest etwas laut vor, postet in Ihrem Chat oder teilt es Ihrem Discord mit.",
       "add": "Eine Regel hinzufügen",
@@ -5109,6 +5116,8 @@
       "removeAction": "Aktion entfernen",
       "placeholders": "Verwenden Sie {name}, {amount} und {message} in Ihrem Text. Links in Nachrichten werden entfernt.",
       "placeholdersLive": "Verwenden Sie {name}, {title} und {link} in Ihrem Text: Ihren Namen, den Titel der Sendung und einen Link, um sie anzusehen.",
+      "wheelSegments": "Radsegmente, eines pro Linie",
+      "wheelHint": "Zwischen 2 und 12. DeHub wählt aus, wo das Rad stoppt, so dass jeder, der zuschaut, das gleiche Ergebnis sieht. Verwenden Sie {result} in einer Alarm-, Vorlese- oder Chat-Aktion, um es zu benennen.",
       "alertText": "Benachrichtigungstext",
       "sound": "Ton",
       "sayText": "Vorzulesender Text",
@@ -5133,12 +5142,12 @@
         "subscribers": "Abonnenten"
       },
       "actionTypes": {
-        "wheel": "Dreh ein Rad",
         "alert": "Eine Benachrichtigung anzeigen",
         "sound": "Einen Ton abspielen",
         "say": "Vorlesen",
         "chat": "Im Chat posten",
-        "webhook": "An einen Webhook senden"
+        "webhook": "An einen Webhook senden",
+        "wheel": "Dreh ein Rad"
       },
       "summary": {
         "tip": "Tipp von {{amount}} DHB oder mehr"

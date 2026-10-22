@@ -4794,7 +4794,6 @@
     "creatorEarnsDirect": "Abonentët paguajnë në tokenët DeHub. Pjesa jote vendoset në portofolin tënd në momentin që ata regjistrohen, minus tarifën e platformës për nivelin e distinktivit tënd."
   },
   "liveOverlay": {
-    "wheelLanded": "{{name}} spun: {{result}}",
     "someone": "Dikush",
     "newFollower": "Ndjekës i ri: {{name}}",
     "newSubscriber": "Abonent i ri: {{name}}",
@@ -4806,6 +4805,11 @@
     "topSupporters": "Mbështetësit më të mirë",
     "tipped": "{{name}} dërgoi një dhuratë",
     "chatPreview": "Mesazhet e bisedës shfaqen këtu",
+    "wheelLanded": "{{name}} spun: {{result}}",
+    "level": "Niveli {{level}}",
+    "streak_one": "{{count}}-week streak",
+    "streak_other": "{{count}}-week streak",
+    "tipJar": "Kavanoz dhuratë",
     "poll": {
       "closed": "Voting u mbyll",
       "voteFor": "Votoni për {{option}}",
@@ -4950,7 +4954,6 @@
       "join": "Bashkohu"
     },
     "kinds": {
-      "spin_wheel": "Rrota e centrifugimit",
       "tip_alert": "Lajmërim sugjerimi",
       "follow_alert": "Ndiq alarmin",
       "subscribe_alert": "Lajmërim i pajtimtarit",
@@ -4967,10 +4970,12 @@
       "chat_box": "Kutia e bisedës",
       "ticker": "Ticker",
       "rule_alert": "Lajmërime për rregullat",
-      "poll": "Sondazh"
+      "poll": "Sondazh",
+      "spin_wheel": "Rrota e centrifugimit",
+      "streamer_level": "Niveli i transmetuesit",
+      "tip_jar": "Kavanoz dhuratë"
     },
     "hints": {
-      "spin_wheel": "Ku rrotullohen rrotat në rregullat e tua",
       "tip_alert": "Feston çdo bakshish, të madhësisë sipas nivelit të tij",
       "follow_alert": "Shfaq çdo ndjekës të ri",
       "subscribe_alert": "Shfaq çdo pajtimtar të ri",
@@ -4987,13 +4992,17 @@
       "chat_box": "Shfaq mesazhet e bisedës së transmetimit tënd në ekran",
       "ticker": "Një rresht i tekstit tënd që lëviz nëpër ekran",
       "rule_alert": "Këtu ku shfaqen alerte të regujave tuaja",
-      "poll": "Sondazhi yt i drejtpërdrejtë, me një buton votimi për çdo opsion"
+      "poll": "Sondazhi yt i drejtpërdrejtë, me një buton votimi për çdo opsion",
+      "spin_wheel": "Ku rrotullohen rrotat në rregullat e tua",
+      "streamer_level": "Niveli i streamer-it dhe intervali javor, nga profili yt",
+      "tip_jar": "Vjen një kavanoz që mbushet me dhurata të paguara"
     },
     "fields": {
       "style": "Stili",
       "celebration": "Festim",
       "banner": "Baneri",
       "minAmount": "Sugjerimi më i vogël për t 'u shfaqur (DHB)",
+      "showStreak": "Shfaq intervalin javor",
       "showMessage": "Shfaq mesazhin e sugjerimit",
       "confirmedOnly": "Vetëm pasi pagesa të konfirmohet",
       "confirmedOnlyHint": "Prit disa sekonda për zinxhirin, kështu që një bakshish që nuk paguhet kurrë nuk shfaqet kurrë.",
@@ -5022,8 +5031,6 @@
       "fast": "Shpejt"
     },
     "rules": {
-      "wheelSegments": "Segmentet e rrotave, një për rresht",
-      "wheelHint": "Midis 2 dhe 12. DeHub zgjedh vendin ku ndalet rrota, kështu që të gjithë që shikojnë shohin të njëjtin rezultat. Përdor {result} në një lajmërim, lexim me zë ose bisedë për ta emëruar atë.",
       "title": "Rregullat",
       "intro": "Kur ndodh një gjë në stream-in tuaj, DeHub bëhet çfarë e keni zgjedhur: shfaqet një alert, luhet një zëri, lexohet një gjë në shpremë, postohet në chat-in tuaj ose i thotë Discord-it.",
       "add": "Shto një rregull",
@@ -5054,6 +5061,8 @@
       "removeAction": "Fshi një veprim",
       "placeholders": "Përdor {name}, {amount} dhe {message} në tekstin tënd. Lidhjet në mesazhe janë hequr.",
       "placeholdersLive": "Përdor {name}, {title} dhe {link} në tekstin tënd: emrin tënd, titullin e transmetimit dhe një link për ta parë atë.",
+      "wheelSegments": "Segmentet e rrotave, një për rresht",
+      "wheelHint": "Midis 2 dhe 12. DeHub zgjedh vendin ku ndalet rrota, kështu që të gjithë që shikojnë shohin të njëjtin rezultat. Përdor {result} në një lajmërim, lexim me zë ose bisedë për ta emëruar atë.",
       "alertText": "Teksti i paralajmërimit",
       "sound": "Tingull",
       "sayText": "Tekst për t 'u lexuar me zë të lartë",
@@ -5078,12 +5087,12 @@
         "subscribers": "Abonentët"
       },
       "actionTypes": {
-        "wheel": "Rrotullo një rrotë",
         "alert": "Shfaq një lajmërim",
         "sound": "Lësho një tingull",
         "say": "Lexo me zë të lartë",
         "chat": "Posto në chat",
-        "webhook": "Dërgoja një webhook-u"
+        "webhook": "Dërgoja një webhook-u",
+        "wheel": "Rrotullo një rrotë"
       },
       "summary": {
         "tip": "Sugjerim nga {{amount}} DHB ose më shumë"

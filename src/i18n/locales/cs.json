@@ -4740,7 +4740,6 @@
     "creatorEarnsDirect": "Předplatitelé platí v žetonech DeHub. Váš podíl se dostane do peněženky v okamžiku, kdy se přihlásí k odběru, po odečtení poplatku za platformu pro vaši úroveň odznaku."
   },
   "liveOverlay": {
-    "wheelLanded": "{{name}} přetáčel: {{result}}",
     "someone": "Někdo",
     "newFollower": "Nový sledující: {{name}}",
     "newSubscriber": "Nový odběratel: {{name}}",
@@ -4752,6 +4751,11 @@
     "topSupporters": "Nejlepší podporovatelé",
     "tipped": "{{name}} poslal/a dárek",
     "chatPreview": "Zde se zobrazují zprávy z chatu",
+    "wheelLanded": "{{name}} přetáčel: {{result}}",
+    "level": "Úroveň {{level}}",
+    "streak_one": "{{count}}-týdenní série",
+    "streak_other": "{{count}}-týdenní série",
+    "tipJar": "Dárková nádoba",
     "poll": {
       "closed": "Hlasování ukončeno",
       "voteFor": "Hlasujte za {{option}}",
@@ -4895,7 +4899,6 @@
       "join": "Přidat se"
     },
     "kinds": {
-      "spin_wheel": "Rotační kolo",
       "tip_alert": "Upozornění NA spropitné",
       "follow_alert": "Sledovat upozornění",
       "subscribe_alert": "Upozornění účastníka",
@@ -4912,10 +4915,12 @@
       "chat_box": "Chat box",
       "ticker": "Ticker",
       "rule_alert": "Přidávám upozornění na pravidla.",
-      "poll": "Anketa"
+      "poll": "Anketa",
+      "spin_wheel": "Rotační kolo",
+      "streamer_level": "Úroveň streameru",
+      "tip_jar": "Dárková nádoba"
     },
     "hints": {
-      "spin_wheel": "Kde se točí kola ve vašich pravidlech",
       "tip_alert": "Oslavuje každé spropitné, dimenzované podle úrovně",
       "follow_alert": "Zobrazí každého nového sledujícího",
       "subscribe_alert": "Zobrazí každého nového odběratele",
@@ -4932,13 +4937,17 @@
       "chat_box": "Zobrazí chatové zprávy vašeho vysílání na obrazovce",
       "ticker": "Řádek vlastního textu, který se posouvá po obrazovce",
       "rule_alert": "Kde se zobrazují upozornění na tvá pravidla",
-      "poll": "Vaše živá anketa s hlasovacím tlačítkem pro každou možnost"
+      "poll": "Vaše živá anketa s hlasovacím tlačítkem pro každou možnost",
+      "spin_wheel": "Kde se točí kola ve vašich pravidlech",
+      "streamer_level": "Vaše úroveň streameru a týdenní pruh, z vašeho profilu",
+      "tip_jar": "Sklenice, která se naplní při příchodu zaplacených dárků"
     },
     "fields": {
       "style": "Styl",
       "celebration": "Oslava",
       "banner": "Banner",
       "minAmount": "Nejmenší špička k zobrazení (DHB)",
+      "showStreak": "Zobrazit týdenní pruh",
       "showMessage": "Zobrazit zprávu se spropitným",
       "confirmedOnly": "Teprve po potvrzení platby",
       "confirmedOnlyHint": "Čeká několik sekund na řetěz, takže se nikdy neobjeví spropitné, které není zaplaceno.",
@@ -4967,8 +4976,6 @@
       "fast": "Rychle"
     },
     "rules": {
-      "wheelSegments": "Segmenty kol, jeden na řádek",
-      "wheelHint": "Mezi 2 a 12. DeHub vybírá, kde se kolo zastaví, takže každý, kdo se dívá, vidí stejný výsledek. K pojmenování použijte {result} v upozornění, nahlas při čtení nebo v chatu.",
       "title": "Pravidla",
       "intro": "Když se na vašem streamu něco stane, společnost DeHub udělá to, co si vyberete: zobrazí upozornění, přehraje zvuk, přečte něco nahlas, zveřejní příspěvky ve vašem chatu nebo sdělí váš Discord.",
       "add": "Přidat pravidlo",
@@ -4999,6 +5006,8 @@
       "removeAction": "Odstranit akci",
       "placeholders": "V textu použij {name}, {amount} a {message}. Odkazy ve zprávách jsou odstraněny.",
       "placeholdersLive": "V textu použij {name}, {title} a {link}: své jméno, název pořadu a odkaz na jeho zhlédnutí.",
+      "wheelSegments": "Segmenty kol, jeden na řádek",
+      "wheelHint": "Mezi 2 a 12. DeHub vybírá, kde se kolo zastaví, takže každý, kdo se dívá, vidí stejný výsledek. K pojmenování použijte {result} v upozornění, nahlas při čtení nebo v chatu.",
       "alertText": "Text upozornění",
       "sound": "Zvuk",
       "sayText": "Text k přečtení nahlas",
@@ -5023,12 +5032,12 @@
         "subscribers": "Odběratelé"
       },
       "actionTypes": {
-        "wheel": "Roztočte kolo",
         "alert": "Zobrazit upozornění",
         "sound": "Přehrát zvuk",
         "say": "Číst nahlas",
         "chat": "Zveřejnit v chatu",
-        "webhook": "Odeslat na webhook"
+        "webhook": "Odeslat na webhook",
+        "wheel": "Roztočte kolo"
       },
       "summary": {
         "tip": "Tip na {{amount}} DHB nebo víc"

@@ -4806,7 +4806,6 @@
     "creatorEarnsDirect": "Ababhalisile bakhokha ngamathokheni e-DeHub. Izabelo zakho zihlala esikhwameni sakho semali lapho zibhalisa, nciphisa inani lepulatifomu lebanga lakho lebheji."
   },
   "liveOverlay": {
-    "wheelLanded": "U-{{name}} uphendule: {{result}}",
     "someone": "Othile",
     "newFollower": "Umlandeli omusha: {{name}}",
     "newSubscriber": "Umbhalisi omusha: {{name}}",
@@ -4818,6 +4817,11 @@
     "topSupporters": "Abasekeli abahamba phambili",
     "tipped": "{{name}} uthumele isipho",
     "chatPreview": "Imiyalezo yokuxoxa iyavela lapha",
+    "wheelLanded": "U-{{name}} uphendule: {{result}}",
+    "level": "Izinga {{level}}",
+    "streak_one": "{{count}}-week streak",
+    "streak_other": "{{count}}-week streak",
+    "tipJar": "Imbiza yezipho",
     "poll": {
       "closed": "Ukuvota kuvaliwe",
       "voteFor": "Votela i- {{option}}",
@@ -4857,7 +4861,6 @@
       "failed": "Lolo shintsho alushintshanga. Zama futhi."
     },
     "polls": {
-      "closeFailed": "Ukuvota akuphelanga. Zama futhi.",
       "title": "Amavoti",
       "intro": "Buza abantu ababukela ukusakaza kwakho umbuzo. Baphendula ngenkinobho ku-app ye-DeHub, noma ngokuthayipha okuthi {{command}} nenombolo yenketho engxoxweni.",
       "question": "Umbuzo",
@@ -4875,6 +4878,7 @@
       "started": "Ukuvota kwakho kuvuliwe. Ababukeli bangavota manje.",
       "notLive": "Iya bukhoma kuqala. Ukuvota kuyaqhubeka ekusakazeni okusakazayo njengamanje.",
       "startFailed": "Ukuvota akuqalanga. Zama futhi.",
+      "closeFailed": "Ukuvota akuphelanga. Zama futhi.",
       "live": "Ukuvota kuvuliwe · {{time}} kwesobunxele",
       "ended": "Ukuvota kuvaliwe",
       "votes_one": "{{count}} vote",
@@ -4962,7 +4966,6 @@
       "join": "Joyina"
     },
     "kinds": {
-      "spin_wheel": "Isondo lokuphotha",
       "tip_alert": "Isexwayiso sokutiphu",
       "follow_alert": "Isexwayiso sokulandela",
       "subscribe_alert": "Isexwayiso somhlanganiseli",
@@ -4979,10 +4982,12 @@
       "chat_box": "Ibhokisi lengxoxo",
       "ticker": "Umthumeli wamathikithi",
       "rule_alert": "Izikhalo Zemithetho",
-      "poll": "Inhlolovo"
+      "poll": "Inhlolovo",
+      "spin_wheel": "Isondo lokuphotha",
+      "streamer_level": "Izinga lokusakaza",
+      "tip_jar": "Imbiza yezipho"
     },
     "hints": {
-      "spin_wheel": "Lapho amasondo emithethweni yakho ephotha khona",
       "tip_alert": "Kusebenzisa umuntu ngamunye otiphu, osayizi ngokwesigaba sakhe",
       "follow_alert": "Ikhonza umlandeli omusha ngamunye",
       "subscribe_alert": "Ikhonza umhlanganiseli omusha ngamunye",
@@ -4999,13 +5004,17 @@
       "chat_box": "Ibonisa imiyalezo yengxoxo yokusakaza kwakho esikrinini",
       "ticker": "Umugqa wombhalo wakho siqu oskrola esikrinini",
       "rule_alert": "Lapho izikhalo zemithetho zakho zivela khona",
-      "poll": "Ukuvota kwakho bukhoma, okunenkinobho yokuvota kukho konke ongakhetha kukho"
+      "poll": "Ukuvota kwakho bukhoma, okunenkinobho yokuvota kukho konke ongakhetha kukho",
+      "spin_wheel": "Lapho amasondo emithethweni yakho ephotha khona",
+      "streamer_level": "Izinga lakho lokusakaza kanye nochungechunge lwamasonto onke, oluvela kuphrofayili yakho",
+      "tip_jar": "Imbiza egcwalisa njengezipho ezikhokhelwayo"
     },
     "fields": {
       "style": "Isitayela",
       "celebration": "Umkhosi",
       "banner": "Ibhanela",
       "minAmount": "Icebiso elincane kunawo wonke elizoboniswa (DHB)",
+      "showStreak": "Bonisa umlando wamaviki onke",
       "showMessage": "Bonisa umlayezo wecebiso",
       "confirmedOnly": "Kuphela ngemva kokuqinisekiswa kwenkokhelo",
       "confirmedOnlyHint": "Ilinde imizuzwana embalwa ukuze iketanga, ngakho icebiso elingakhokhwa aliveli.",
@@ -5034,8 +5043,6 @@
       "fast": "Kuyashesha"
     },
     "rules": {
-      "wheelSegments": "Izingxenye zamasondo, eyodwa ngomugqa ngamunye",
-      "wheelHint": "Phakathi kuka-2 no-12. I-DeHub ikhetha lapho isondo limile khona, ukuze wonke umuntu obukayo abone umphumela ofanayo. Sebenzisa i-{result} kumyalezo, ukufunda ngokuzwakalayo noma isenzo sokuxoxa ukuze uyiqambe.",
       "title": "Imithetho",
       "intro": "Lapho kwenzeka okuthile ku-stream yakho, i-DeHub yenza lokho okukhethe: ikhombisa isikhazo, idlale umsindo, ifunde okuthile ngaphakathi, ifake ekusulwaneni kwakho noma itshele i-Discord yakho.",
       "add": "Engeza umthetho",
@@ -5066,6 +5073,8 @@
       "removeAction": "Susa isenzo",
       "placeholders": "Sebenzisa {name}, {amount} no {message} embhalweni wakho. Amalinki emiyalezweni ayasuswa.",
       "placeholdersLive": "Sebenzisa i-{name}, {title} no- {link} embhalweni wakho: igama lakho, isihloko sokusakaza nelinki yokuyibuka.",
+      "wheelSegments": "Izingxenye zamasondo, eyodwa ngomugqa ngamunye",
+      "wheelHint": "Phakathi kuka-2 no-12. I-DeHub ikhetha lapho isondo limile khona, ukuze wonke umuntu obukayo abone umphumela ofanayo. Sebenzisa i-{result} kumyalezo, ukufunda ngokuzwakalayo noma isenzo sokuxoxa ukuze uyiqambe.",
       "alertText": "Umbhalo wesixwayiso",
       "sound": "Umsindo",
       "sayText": "Umbhalo wokufunda ngokuzwakalayo",
@@ -5090,12 +5099,12 @@
         "subscribers": "Ababhalisile"
       },
       "actionTypes": {
-        "wheel": "Zungeza umjikelezo",
         "alert": "Bonisa umyalezo",
         "sound": "Dlala umsindo",
         "say": "Funda ngokuzwakalayo",
         "chat": "Phosta engxoxweni",
-        "webhook": "Thumela ku-webhook"
+        "webhook": "Thumela ku-webhook",
+        "wheel": "Zungeza umjikelezo"
       },
       "summary": {
         "tip": "Icebiso lika- {{amount}} DHB noma ngaphezulu"
@@ -5136,7 +5145,6 @@
       }
     },
     "moderation": {
-      "moderatorsHint": "Bangabathulisa futhi bavimbe ababukeli ezinhlelweni zakho. Abakwazi ukwenza lokho kuwe noma komunye nomunye.",
       "title": "Ukulinganisela ingxoxo",
       "intro": "Imithetho yengxoxo ngaphansi kwakho konke ukusakaza kwakho. Abalokothi bafinyelele engxoxweni eyinhloko ye-DeHub: othile omvimbelayo lapha usengakhuluma kwenye indawo.",
       "loadFailed": "Amasethingi akho okulinganisela awakwazanga ukulayishwa. Vuselela ikhasi ukuze uzame futhi.",
@@ -5157,6 +5165,7 @@
       "wordBlock": "Misa umyalezo",
       "wordTimeout": "Yimise futhi ubenze baphume umzuzu",
       "moderators": "Umqondisi",
+      "moderatorsHint": "Bangabathulisa futhi bavimbe ababukeli ezinhlelweni zakho. Abakwazi ukwenza lokho kuwe noma komunye nomunye.",
       "addModerator": "Faka",
       "usernamePlaceholder": "Igama lomsebenzisi",
       "moderatorAdded": "Umqondisi ufakiwe.",

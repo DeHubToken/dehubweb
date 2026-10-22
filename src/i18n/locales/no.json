@@ -4789,7 +4789,6 @@
     "creatorEarnsDirect": "Abonnenter betaler med DeHub-tokens. Andelen din havner i lommeboken din i det øyeblikket de abonnerer, minus plattformavgiften for badge-nivået ditt."
   },
   "liveOverlay": {
-    "wheelLanded": "{{name}} spunnet: {{result}}",
     "someone": "Noen",
     "newFollower": "Ny følger: {{name}}",
     "newSubscriber": "Ny abonnent: {{name}}",
@@ -4801,6 +4800,11 @@
     "topSupporters": "Toppstøttespillere",
     "tipped": "{{name}} sendte en gave",
     "chatPreview": "Chatmeldinger vises her",
+    "wheelLanded": "{{name}} spunnet: {{result}}",
+    "level": "Nivå {{level}}",
+    "streak_one": "{{count}}-ukers rekke",
+    "streak_other": "{{count}}-ukers rekke",
+    "tipJar": "Gavekrukke",
     "poll": {
       "closed": "Stemming lukket",
       "voteFor": "Stem på {{option}}",
@@ -4945,7 +4949,6 @@
       "join": "Bli med"
     },
     "kinds": {
-      "spin_wheel": "Spinnhjul",
       "tip_alert": "Tipsvarsel",
       "follow_alert": "Følgervarsel",
       "subscribe_alert": "Abonnementsvarsel",
@@ -4962,10 +4965,12 @@
       "chat_box": "Chatboks",
       "ticker": "Ticker",
       "rule_alert": "Regelvarsler",
-      "poll": "Avstemning"
+      "poll": "Avstemning",
+      "spin_wheel": "Spinnhjul",
+      "streamer_level": "Streamer-nivå",
+      "tip_jar": "Gavekrukke"
     },
     "hints": {
-      "spin_wheel": "Der hjulene i reglene dine snurrer",
       "tip_alert": "Feirer hvert tips, tilpasset nivået",
       "follow_alert": "Viser hver ny følger",
       "subscribe_alert": "Viser hver ny abonnent",
@@ -4982,13 +4987,17 @@
       "chat_box": "Viser chatmeldingene fra kringkastingen din på skjermen",
       "ticker": "En linje med din egen tekst som ruller over skjermen",
       "rule_alert": "Hvor varslene fra reglene dine vises",
-      "poll": "Din direkteavstemning, med en stemmeknapp for hvert alternativ"
+      "poll": "Din direkteavstemning, med en stemmeknapp for hvert alternativ",
+      "spin_wheel": "Der hjulene i reglene dine snurrer",
+      "streamer_level": "Ditt streamernivå og din ukentlige strømmerekke, fra profilen din",
+      "tip_jar": "En krukke som fylles opp etter hvert som betalte gaver kommer inn"
     },
     "fields": {
       "style": "Stil",
       "celebration": "Feiring",
       "banner": "Banner",
       "minAmount": "Minste spiss å vise (DHB)",
+      "showStreak": "Vis den ukentlige rekken",
       "showMessage": "Vis tipsmeldingen",
       "confirmedOnly": "Først etter at betalingen er bekreftet",
       "confirmedOnlyHint": "Venter noen sekunder på kjeden, så et tips som aldri blir utbetalt dukker aldri opp.",
@@ -5016,8 +5025,6 @@
       "fast": "Rask"
     },
     "rules": {
-      "wheelSegments": "Hjulsegmenter, ett per linje",
-      "wheelHint": "Mellom 2 og 12. DeHub velger hvor hjulet stopper, slik at alle som ser på ser det samme resultatet. Bruk {result} i en varsling, høytlesning eller chat-handling for å navngi den.",
       "title": "Regler",
       "intro": "Når noe skjer på strømmen din, gjør DeHub det du velger: viser et varsel, spiller av en lyd, leser noe høyt, legger ut innlegg i chatten din eller forteller det til Discord-brukeren din.",
       "add": "Legg til en regel",
@@ -5048,6 +5055,8 @@
       "removeAction": "Fjern handling",
       "placeholders": "Bruk {name}, {amount} og {message} i teksten din. Lenker i meldinger fjernes.",
       "placeholdersLive": "Bruk {name}, {title} og {link} i teksten din: navnet ditt, tittelen på sendingen og en lenke for å se den.",
+      "wheelSegments": "Hjulsegmenter, ett per linje",
+      "wheelHint": "Mellom 2 og 12. DeHub velger hvor hjulet stopper, slik at alle som ser på ser det samme resultatet. Bruk {result} i en varsling, høytlesning eller chat-handling for å navngi den.",
       "alertText": "Varseltekst",
       "sound": "Lyd",
       "sayText": "Tekst som skal leses høyt",
@@ -5072,12 +5081,12 @@
         "subscribers": "Abonnenter"
       },
       "actionTypes": {
-        "wheel": "Snurr et hjul",
         "alert": "Vis et varsel",
         "sound": "Spill av en lyd",
         "say": "Les høyt",
         "chat": "Legg ut innlegg i chatten",
-        "webhook": "Send til en webhook"
+        "webhook": "Send til en webhook",
+        "wheel": "Snurr et hjul"
       },
       "summary": {
         "tip": "Tips på {{amount}} DHB eller mer"
