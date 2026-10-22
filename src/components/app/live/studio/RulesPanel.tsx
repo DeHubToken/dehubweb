@@ -391,7 +391,9 @@ function RuleEditor({ rule, onChange }: { rule: LiveRule; onChange: (change: Par
             </li>
           ))}
         </ul>
-        <p className="mt-2 text-xs text-zinc-500">{t('liveStudio.rules.placeholders')}</p>
+        <p className="mt-2 text-xs text-zinc-500">
+          {t(rule.trigger.type === 'live' ? 'liveStudio.rules.placeholdersLive' : 'liveStudio.rules.placeholders')}
+        </p>
       </div>
     </div>
   );

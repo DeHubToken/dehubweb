@@ -4776,9 +4776,52 @@
     "followersUnit": "følgere",
     "topSupporters": "Toppstøttespillere",
     "tipped": "{{name}} sendte en gave",
-    "chatPreview": "Chatmeldinger vises her"
+    "chatPreview": "Chatmeldinger vises her",
+    "poll": {
+      "closed": "Stemming lukket",
+      "voteFor": "Stem på {{option}}",
+      "signIn": "Logg inn for å stemme",
+      "failed": "Din stemme teller ikke. Prøv på nytt.",
+      "voted_one": "Du har stemt · {{count}} stemme",
+      "voted_other": "Du har stemt · {{count}} stemmer",
+      "votes_one": "{{count}} stemme",
+      "votes_other": "{{count}} stemmer",
+      "howToVote_one": "Skriv {{command}} og et tall i chat for å stemme · {{count}} stemme",
+      "howToVote_other": "Skriv {{command}} og et tall i chat for å stemme · {{count}} stemmer"
+    }
   },
   "liveStudio": {
+    "polls": {
+      "title": "Avstemninger",
+      "intro": "Spør publikum som ser på din sending om et spørsmål. De svarer med en knapp i DeHub-appen, eller ved å skrive {{command}} og alternativets nummer i chat.",
+      "question": "Spørsmål",
+      "questionPlaceholder": "Hva skal jeg spille neste?",
+      "option": "Alternativ {{n}}",
+      "addOption": "Legg til et alternativ",
+      "removeOption": "Fjern alternativ {{n}}",
+      "duration": "Hvor lenge avstemningen skal være åpen",
+      "seconds_one": "{{count}} sekund",
+      "seconds_other": "{{count}} sekunder",
+      "minutes_one": "{{count}} minutt",
+      "minutes_other": "{{count}} minutter",
+      "start": "Start avstemningen",
+      "end": "Avslutt avstemningen nå",
+      "started": "Din avstemning er åpen. Tilskuere kan stemme nå.",
+      "notLive": "Gå live først. En avstemning kjører på sendingen du sender nå.",
+      "startFailed": "Avstemningen startet ikke. Prøv på nytt.",
+      "closeFailed": "Avstemningen er ikke avsluttet. Prøv på nytt.",
+      "live": "Avstemning åpen · {{time}} igjen",
+      "ended": "Avstemning lukket",
+      "votes_one": "{{count}} stemme",
+      "votes_other": "{{count}} stemmer",
+      "replaceHint": "Å starte en ny avstemning lukker den som er åpen.",
+      "widgetHint": "Viser din direkteavstemning. I DeHub-appen trykker seerne på et alternativ for å stemme; i OBS blir folk bedt om å skrive {{command}} og et tall i chatten.",
+      "sample": {
+        "a": "Noe nytt",
+        "b": "En gammel favoritt",
+        "c": "Du velger"
+      }
+    },
     "title": "Livestudio",
     "subtitle": "Varsler og widgeter for strømmingene dine",
     "h1": "Live Studio – strømmevarsler, mål og overlegg for DeHub-skapere",
@@ -4869,7 +4912,8 @@
       "event_feed": "Nylig aktivitet",
       "chat_box": "Chatboks",
       "ticker": "Ticker",
-      "rule_alert": "Regelvarsler"
+      "rule_alert": "Regelvarsler",
+      "poll": "Avstemning"
     },
     "hints": {
       "tip_alert": "Feirer hvert tips, tilpasset nivået",
@@ -4887,7 +4931,8 @@
       "event_feed": "De nyeste gavene, følgerne, abonnentene og personene som deler sendingen din",
       "chat_box": "Viser chatmeldingene fra kringkastingen din på skjermen",
       "ticker": "En linje med din egen tekst som ruller over skjermen",
-      "rule_alert": "Hvor varslene fra reglene dine vises"
+      "rule_alert": "Hvor varslene fra reglene dine vises",
+      "poll": "Din direkteavstemning, med en stemmeknapp for hvert alternativ"
     },
     "fields": {
       "style": "Stil",
@@ -4921,7 +4966,6 @@
       "fast": "Rask"
     },
     "rules": {
-      "test": "Prøv",
       "title": "Regler",
       "intro": "Når noe skjer på strømmen din, gjør DeHub det du velger: viser et varsel, spiller av en lyd, leser noe høyt, legger ut innlegg i chatten din eller forteller det til Discord-brukeren din.",
       "add": "Legg til en regel",
@@ -4932,6 +4976,7 @@
       "saveFailed": "Reglene dine kunne ikke lagres.",
       "testFailed": "Den testen gikk ikke gjennom. Prøv igjen om et øyeblikk.",
       "saveToTest": "Lagre reglene dine for å teste dem",
+      "test": "Prøv",
       "enabled": "Regel om",
       "remove": "Slett regel",
       "save": "Lagre regler",
@@ -4950,6 +4995,7 @@
       "addAction": "Legg til en handling",
       "removeAction": "Fjern handling",
       "placeholders": "Bruk {name}, {amount} og {message} i teksten din. Lenker i meldinger fjernes.",
+      "placeholdersLive": "Bruk {name}, {title} og {link} i teksten din: navnet ditt, tittelen på sendingen og en lenke for å se den.",
       "alertText": "Varseltekst",
       "sound": "Lyd",
       "sayText": "Tekst som skal leses høyt",
@@ -4963,6 +5009,7 @@
         "follow": "Noen følger",
         "subscribe": "Noen abonnerer",
         "share": "Noen deler strømmen",
+        "live": "Du starter med å sende direkte.",
         "command": "En chat-kommando brukes",
         "keyword": "En chatmelding inneholder et ord",
         "chat": "Enhver chatmelding"

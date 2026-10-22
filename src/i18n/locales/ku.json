@@ -4019,6 +4019,18 @@
     "creatorEarnsDirect": "بەشداربووان بە تۆکنی DeHub پارە دەدەن. کاتێک بەشداری دەکەن، بەشەکەت دەگاتە جزدانەکەت، دوای کرێی پلاتفۆرم بەپێی ئاستی باجەکەت."
   },
   "liveOverlay": {
+    "poll": {
+      "closed": "Dengdan girtî ye",
+      "voteFor": "Dengê xwe bide {{option}}",
+      "signIn": "Ji bo dengdanê têkeve",
+      "failed": "Dengê te nehat hejmartin. Dîsa biceribîne.",
+      "voted_one": "Te deng da · {{count}} deng",
+      "voted_other": "Te deng da · {{count}} deng",
+      "votes_one": "{{count}} deng",
+      "votes_other": "{{count}} deng",
+      "howToVote_one": "Ji bo dengdanê di sohbetê de {{command}} û hejmarekê binivîse · {{count}} deng",
+      "howToVote_other": "Ji bo dengdanê di sohbetê de {{command}} û hejmarekê binivîse · {{count}} deng"
+    },
     "someone": "Kesek",
     "newFollower": "Şopînerê nû: {{name}}",
     "newSubscriber": "Abonetiya nû: {{name}}",
@@ -4032,101 +4044,35 @@
     "chatPreview": "Peyamên chatê li vir xuya dibin"
   },
   "liveStudio": {
-    "rules": {
-      "title": "Rêgez",
-      "intro": "Paşî ku li ser strîmê te karekî bêt kirin, DeHub dikare bêje ku te bêje: pêşengê bide pêşeng, zêdekeke bide pêşeng, peyva ku te bêje, li ser çatê te bêje an jî li ser Discordê te bêje.",
-      "add": "Qaydeyek lê zêde bike",
-      "limit": "Te gihîştiye sînorê qaîdeyên {{count}}.",
-      "loadFailed": "Rêgezên te nehatin barkirin. Ji bo ceribandina dîsa rûpelê nûve bike.",
-      "empty": "Hîn qaîde tune ne. Yekê lê zêde bike da ku bertek nîşanî serişteyan, şopandinan an fermanên sohbetê bidî.",
-      "saved": "Rêgez hatin tomarkirin. Ew li ser şîret, şopandin an peyama we ya din dixebitin.",
-      "saveFailed": "Rêgezên te nehatin tomarkirin.",
-      "testFailed": "Ew ceribandin neqediya. Piştî demekê dîsa biceribîne.",
-      "saveToTest": "Rêgezên xwe hilînin da ku wan biceribînin",
-      "test": "Îmtîhan",
-      "enabled": "Hukum li ser",
-      "remove": "Jêbirina qaîdeyê",
-      "save": "Rêgezan tomar bike",
-      "needsAlertWidget": "Hin rêzik hişyariyek nîşan didin. Widgetê hişyariyên rêzikan lê zêde bikin da ku ew li cîhek xuya bibe.",
-      "name": "nav",
-      "when": "Heke",
-      "then": "Paşan",
-      "minAmount": "Serê herî biçûk (DHB)",
-      "command": "Ferman",
-      "keyword": "Peyv an jî hevok",
-      "audience": "Kî dikare wê vemirîne",
-      "blockedWords": "Peyvên astengkirî",
-      "blockedWordsHint": "Bi vergulan ji hev veqetînin. Peyamên ku wan dihewînin nayên paşguhkirin û qet bi dengekî bilind nayên xwendin.",
-      "cooldown": "Di navbera karanînan de li bendê bimînin (çirkeyan)",
-      "userCooldown": "Li bendê ji bo her temaşevanekî (saniye)",
-      "addAction": "Çalakiyekê lê zêde bike",
-      "removeAction": "Çalakiyê rake",
-      "placeholders": "Di nivîsa xwe de {name}, {amount} û {message} bi kar bîne. Girêdanên di peyaman de tên rakirin.",
-      "alertText": "Nivîsa hişyariyê",
-      "sound": "Rengdan",
-      "sayText": "Nivîsa ku bi dengekî bilind were xwendin",
-      "chatText": "Peyama ji bo şandinê",
-      "chatHint": "Ji hesabê te bo sohbeta weşana te hatiye şandin. Peyama temaşevan nikare dubare bike.",
-      "webhookUrl": "Navnîşana Webhookê",
-      "webhookHint": "Webhookek Discord an Slack, an jî her navnîşana https-ê ku POST-ek qebûl dike.",
-      "webhookText": "Peyama ji bo şandinê",
-      "triggers": {
-        "tip": "Serişteyek tê",
-        "follow": "Kesek li pey digere",
-        "subscribe": "Kesek abone dibe",
-        "share": "Kesek weşanê parve dike",
-        "command": "Fermana sohbetê tê bikaranîn",
-        "keyword": "Peyama sohbetê peyvekê dihewîne",
-        "chat": "Her peyama sohbetê"
-      },
-      "audiences": {
-        "everyone": "Her kes",
-        "followers": "Şopîner",
-        "subscribers": "Abone"
-      },
-      "actionTypes": {
-        "alert": "Hişyariyekê nîşan bide",
-        "sound": "Dengekî lê bide",
-        "say": "Bi dengekî bilind bixwîne",
-        "chat": "Di sohbetê de biweşîne",
-        "webhook": "Bişîne bo webhookekê"
-      },
-      "summary": {
-        "tip": "Serişteya {{amount}} DHB an jî zêdetir"
-      },
-      "presets": {
-        "blank": "Qayîdeya vala",
-        "readChat": "Sohbetê bi dengekî bilind bixwîne",
-        "bigTip": "Qorna hewayê ji bo serişteyên mezin",
-        "thankFollowers": "Spas ji şopînerên nû re",
-        "command": "Fermana sohbetê"
-      },
-      "presetHints": {
-        "blank": "Ji tunebûnê dest pê bike",
-        "readChat": "Peyamên şopînerên xwe bi dengekî bilind dixwîne, yek ji bo her temaşevanekî her 30 saniyeyan carekê",
-        "bigTip": "Qorneya hewayî lêdide û ji bo serişteyên 100,000 DHB an jî zêdetir hişyariyek nîşan dide.",
-        "thankFollowers": "Dema ku kesek dişopîne, di sohbeta xwe de spasdariyekê dişîne",
-        "command": "Di sohbeta te de bersiva fermanek ! dide"
-      },
-      "presetText": {
-        "readChat": "{name} dibêje {message}",
-        "bigTip": "{name} şandin {amount} DHB!",
-        "thankFollowers": "Spas ji bo şopandinê, {name}!",
-        "command": "Silav {name}, bi xêr hatî bo weşana zindî!"
-      },
-      "sounds": {
-        "airhorn": "Qorna hewayî",
-        "applause": "Çepik",
-        "cricket": "Krîket",
-        "drumroll": "Lêdana tembûrê",
-        "lol": "Pêkenîn",
-        "ooh-ahh": "Ax ah",
-        "ooh-man": "Ey (mêr)",
-        "ohh-girl": "Ey (jin)",
-        "ba-dum-tish": "Ba dum tiş",
-        "spooky": "Tirsnak",
-        "magic-spell": "Sêrbaziya efsûnî",
-        "shhh": "Şşş"
+    "polls": {
+      "title": "Rapirsî",
+      "intro": "Ji kesên ku weşana te temaşe dikin pirsekê bike. Ew bi bişkokekê di sepana DeHubê de, an jî bi nivîsandina {{command}} û hejmara vebijarkê di sohbetê de bersiv didin.",
+      "question": "Pirs",
+      "questionPlaceholder": "Ez paşê çi bilîzim?",
+      "option": "Vebijark {{n}}",
+      "addOption": "Vebijarkekê lê zêde bike",
+      "removeOption": "Vebijarka {{n}} rake",
+      "duration": "Dengdan çiqas vekirî dimîne",
+      "seconds_one": "{{count}} çirke",
+      "seconds_other": "{{count}} çirke",
+      "minutes_one": "{{count}} deqîqe",
+      "minutes_other": "{{count}} deqîqe",
+      "start": "Rapirsiyê dest pê bike",
+      "end": "Dengdanê niha biqedîne",
+      "started": "Rapirsiya te vekirî ye. Temaşevan niha dikarin deng bidin.",
+      "notLive": "Pêşî zindî bibe. Rapirsî li ser weşana ku tu niha dikî dimeşe.",
+      "startFailed": "Rapirsî dest pê nekir. Dîsa biceribîne.",
+      "closeFailed": "Dengdan neqediya. Dîsa biceribîne.",
+      "live": "Dengdan vekirî ye · {{time}} maye",
+      "ended": "Dengdan girtî ye",
+      "votes_one": "{{count}} deng",
+      "votes_other": "{{count}} deng",
+      "replaceHint": "Destpêkirina rapirsiyeke nû ya vekirî digire.",
+      "widgetHint": "Rapirsiya te ya zindî nîşan dide. Di sepana DeHubê de temaşevan ji bo dengdanê li vebijarkekê dixin; di OBSê de ji mirovan re dibêje ku di sohbetê de {{command}} û hejmarekê binivîsin.",
+      "sample": {
+        "a": "Tiştekî nû",
+        "b": "Bijareyeke kevn",
+        "c": "Tu hilbijêre"
       }
     },
     "title": "Live Studio",
@@ -4204,7 +4150,7 @@
       "join": "بەشداریکردن"
     },
     "kinds": {
-      "rule_alert": "Hişyariyên qaîdeyan",
+      "poll": "Rapirsî",
       "tip_alert": "ئاگاداریی بەخشش",
       "follow_alert": "ئاگاداریی فۆڵۆو",
       "subscribe_alert": "ئاگاداریی سەبسکرایب",
@@ -4219,10 +4165,11 @@
       "reaction_counter": "Jimara reaksiyonan",
       "event_feed": "Çalakiyên dawî",
       "chat_box": "Qutiya chatê",
-      "ticker": "Nivîsa diherike"
+      "ticker": "Nivîsa diherike",
+      "rule_alert": "Hişyariyên qaîdeyan"
     },
     "hints": {
-      "rule_alert": "Cihê ku hişyariyên qaîdeyên te lê xuya dibin",
+      "poll": "Rapirsiya te ya zindî, bi bişkokeke dengdanê ji bo her vebijarkê",
       "tip_alert": "هەموو بەخششێک بەپێی ئاستەکەی دیاری دەکات",
       "follow_alert": "هەموو فۆڵۆوەرێکی نوێ نیشان دەدات",
       "subscribe_alert": "هەموو سەبسکرایبەرێکی نوێ نیشان دەدات",
@@ -4237,7 +4184,8 @@
       "reaction_counter": "Her reaksiyona ku weşana te distîne dijmêre",
       "event_feed": "Diyariyên dawî, şopîner, abone û kesên ku weşana te parve dikin",
       "chat_box": "Peyamên chatê yên weşana te li ser ekranê nîşan dide",
-      "ticker": "Rêzek ji nivîsa te ya ku li ser ekranê diherike"
+      "ticker": "Rêzek ji nivîsa te ya ku li ser ekranê diherike",
+      "rule_alert": "Cihê ku hişyariyên qaîdeyên te lê xuya dibin"
     },
     "fields": {
       "style": "شێواز",
@@ -4270,6 +4218,105 @@
       "slow": "Hêdî",
       "normal": "Asayî",
       "fast": "Bilez"
+    },
+    "rules": {
+      "placeholdersLive": "Di nivîsa xwe de {name}, {title} û {link} bi kar bîne: navê te, sernavê weşanê û girêdanek ji bo temaşekirinê.",
+      "title": "Rêgez",
+      "intro": "Paşî ku li ser strîmê te karekî bêt kirin, DeHub dikare bêje ku te bêje: pêşengê bide pêşeng, zêdekeke bide pêşeng, peyva ku te bêje, li ser çatê te bêje an jî li ser Discordê te bêje.",
+      "add": "Qaydeyek lê zêde bike",
+      "limit": "Te gihîştiye sînorê qaîdeyên {{count}}.",
+      "loadFailed": "Rêgezên te nehatin barkirin. Ji bo ceribandina dîsa rûpelê nûve bike.",
+      "empty": "Hîn qaîde tune ne. Yekê lê zêde bike da ku bertek nîşanî serişteyan, şopandinan an fermanên sohbetê bidî.",
+      "saved": "Rêgez hatin tomarkirin. Ew li ser şîret, şopandin an peyama we ya din dixebitin.",
+      "saveFailed": "Rêgezên te nehatin tomarkirin.",
+      "testFailed": "Ew ceribandin neqediya. Piştî demekê dîsa biceribîne.",
+      "saveToTest": "Rêgezên xwe hilînin da ku wan biceribînin",
+      "test": "Îmtîhan",
+      "enabled": "Hukum li ser",
+      "remove": "Jêbirina qaîdeyê",
+      "save": "Rêgezan tomar bike",
+      "needsAlertWidget": "Hin rêzik hişyariyek nîşan didin. Widgetê hişyariyên rêzikan lê zêde bikin da ku ew li cîhek xuya bibe.",
+      "name": "nav",
+      "when": "Heke",
+      "then": "Paşan",
+      "minAmount": "Serê herî biçûk (DHB)",
+      "command": "Ferman",
+      "keyword": "Peyv an jî hevok",
+      "audience": "Kî dikare wê vemirîne",
+      "blockedWords": "Peyvên astengkirî",
+      "blockedWordsHint": "Bi vergulan ji hev veqetînin. Peyamên ku wan dihewînin nayên paşguhkirin û qet bi dengekî bilind nayên xwendin.",
+      "cooldown": "Di navbera karanînan de li bendê bimînin (çirkeyan)",
+      "userCooldown": "Li bendê ji bo her temaşevanekî (saniye)",
+      "addAction": "Çalakiyekê lê zêde bike",
+      "removeAction": "Çalakiyê rake",
+      "placeholders": "Di nivîsa xwe de {name}, {amount} û {message} bi kar bîne. Girêdanên di peyaman de tên rakirin.",
+      "alertText": "Nivîsa hişyariyê",
+      "sound": "Rengdan",
+      "sayText": "Nivîsa ku bi dengekî bilind were xwendin",
+      "chatText": "Peyama ji bo şandinê",
+      "chatHint": "Ji hesabê te bo sohbeta weşana te hatiye şandin. Peyama temaşevan nikare dubare bike.",
+      "webhookUrl": "Navnîşana Webhookê",
+      "webhookHint": "Webhookek Discord an Slack, an jî her navnîşana https-ê ku POST-ek qebûl dike.",
+      "webhookText": "Peyama ji bo şandinê",
+      "triggers": {
+        "live": "Tu dest bi weşanê dikî",
+        "tip": "Serişteyek tê",
+        "follow": "Kesek li pey digere",
+        "subscribe": "Kesek abone dibe",
+        "share": "Kesek weşanê parve dike",
+        "command": "Fermana sohbetê tê bikaranîn",
+        "keyword": "Peyama sohbetê peyvekê dihewîne",
+        "chat": "Her peyama sohbetê"
+      },
+      "audiences": {
+        "everyone": "Her kes",
+        "followers": "Şopîner",
+        "subscribers": "Abone"
+      },
+      "actionTypes": {
+        "alert": "Hişyariyekê nîşan bide",
+        "sound": "Dengekî lê bide",
+        "say": "Bi dengekî bilind bixwîne",
+        "chat": "Di sohbetê de biweşîne",
+        "webhook": "Bişîne bo webhookekê"
+      },
+      "summary": {
+        "tip": "Serişteya {{amount}} DHB an jî zêdetir"
+      },
+      "presets": {
+        "blank": "Qayîdeya vala",
+        "readChat": "Sohbetê bi dengekî bilind bixwîne",
+        "bigTip": "Qorna hewayê ji bo serişteyên mezin",
+        "thankFollowers": "Spas ji şopînerên nû re",
+        "command": "Fermana sohbetê"
+      },
+      "presetHints": {
+        "blank": "Ji tunebûnê dest pê bike",
+        "readChat": "Peyamên şopînerên xwe bi dengekî bilind dixwîne, yek ji bo her temaşevanekî her 30 saniyeyan carekê",
+        "bigTip": "Qorneya hewayî lêdide û ji bo serişteyên 100,000 DHB an jî zêdetir hişyariyek nîşan dide.",
+        "thankFollowers": "Dema ku kesek dişopîne, di sohbeta xwe de spasdariyekê dişîne",
+        "command": "Di sohbeta te de bersiva fermanek ! dide"
+      },
+      "presetText": {
+        "readChat": "{name} dibêje {message}",
+        "bigTip": "{name} şandin {amount} DHB!",
+        "thankFollowers": "Spas ji bo şopandinê, {name}!",
+        "command": "Silav {name}, bi xêr hatî bo weşana zindî!"
+      },
+      "sounds": {
+        "airhorn": "Qorna hewayî",
+        "applause": "Çepik",
+        "cricket": "Krîket",
+        "drumroll": "Lêdana tembûrê",
+        "lol": "Pêkenîn",
+        "ooh-ahh": "Ax ah",
+        "ooh-man": "Ey (mêr)",
+        "ohh-girl": "Ey (jin)",
+        "ba-dum-tish": "Ba dum tiş",
+        "spooky": "Tirsnak",
+        "magic-spell": "Sêrbaziya efsûnî",
+        "shhh": "Şşş"
+      }
     }
   },
   "live": {

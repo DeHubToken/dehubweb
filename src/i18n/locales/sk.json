@@ -4906,9 +4906,52 @@
     "followersUnit": "sledovatelia",
     "topSupporters": "Najlepší priaznivci",
     "tipped": "{{name}} odoslal/a darček",
-    "chatPreview": "Správy z chatu sa zobrazujú tu"
+    "chatPreview": "Správy z chatu sa zobrazujú tu",
+    "poll": {
+      "closed": "Hlasovanie skončilo",
+      "voteFor": "Hlasuj pre {{option}}",
+      "signIn": "Prihlás sa k hlasovaniu",
+      "failed": "Vaša hlas nebol započítaný. Skús to znova.",
+      "voted_one": "Hlasoval si · {{count}} hlas",
+      "voted_other": "Hlasoval si · {{count}} hlasy",
+      "votes_one": "{{count}} hlas",
+      "votes_other": "{{count}} hlasy",
+      "howToVote_one": "Typuj {{command}} a číslo v chatu, aby si hlasoval · {{count}} hlas",
+      "howToVote_other": "Typuj {{command}} a číslo v chatu, aby si hlasoval · {{count}} hlasy"
+    }
   },
   "liveStudio": {
+    "polls": {
+      "title": "Položky",
+      "intro": "Požaduj, aby ľudia sledujúci váš prenos položili otázku. Odpovedajú tlačidlom v aplikácii DeHub alebo typujúc {{command}} a číslo volby v chatu.",
+      "question": "Otázka",
+      "questionPlaceholder": "Čo by som mal hrať ďalej?",
+      "option": "Volba {{n}}",
+      "addOption": "Pridaj volbu",
+      "removeOption": "Odstráň volbu {{n}}",
+      "duration": "Doba, počas ktorej hlasovanie zostane otvorené",
+      "seconds_one": "{{count}} sekundy",
+      "seconds_other": "{{count}} sekundy",
+      "minutes_one": "{{count}} minúta",
+      "minutes_other": "{{count}} minúty",
+      "start": "Spustiť hlasovanie",
+      "end": "Koniec hlasovania",
+      "started": "Vaše hlasovanie je otvorené. Zrýchľajte si, aby sa mohli zhluknúť.",
+      "notLive": "Pojdi online prvý. Hlasovanie sa uskutočňuje v prenose, ktorý ste súčasne streamujú.",
+      "startFailed": "Hlasovanie sa nepodarilo spustiť. Skús to znova.",
+      "closeFailed": "Hlasovanie nebolo ukončené. Skús to znova.",
+      "live": "Hlasovanie je otvorené · {{time}} zostávajúcich sekúnd",
+      "ended": "Hlasovanie skončilo",
+      "votes_one": "{{count}} hlas",
+      "votes_other": "{{count}} hlasov",
+      "replaceHint": "Spustením novej ankety sa zatvorí otvorená anketa.",
+      "widgetHint": "Zobrazuje vašu živú anketu. V prehliadači aplikácie DeHub klepnite na možnosť hlasovať; v OBS povie ľuďom, aby zadali {{command}} a číslo v chate.",
+      "sample": {
+        "a": "Niečo nové",
+        "b": "Stará obľúbená",
+        "c": "Vyberiete si"
+      }
+    },
     "title": "Live Studio",
     "subtitle": "Upozornenia a miniaplikácie pre vaše streamy",
     "h1": "Live Studio — streamujte upozornenia, ciele a prekrytia pre tvorcov DeHub",
@@ -4999,7 +5042,8 @@
       "event_feed": "Nedávna aktivita",
       "chat_box": "Chat box",
       "ticker": "Ticker",
-      "rule_alert": "Upozornenia na pravidlá"
+      "rule_alert": "Upozornenia na pravidlá",
+      "poll": "Anketa"
     },
     "hints": {
       "tip_alert": "Oslavuje každé prepitné vo veľkosti podľa jeho úrovne",
@@ -5017,7 +5061,8 @@
       "event_feed": "Najnovšie dary, sledovatelia, odberatelia a ľudia zdieľajúci vaše vysielanie",
       "chat_box": "Zobrazuje chatové správy vášho vysielania na obrazovke",
       "ticker": "Riadok vlastného textu, ktorý sa posúva po obrazovke",
-      "rule_alert": "Kde sa zobrazujú upozornenia na vaše pravidlá"
+      "rule_alert": "Kde sa zobrazujú upozornenia na vaše pravidlá",
+      "poll": "Vaša živá anketa s hlasovacím tlačidlom pre každú možnosť"
     },
     "fields": {
       "style": "Štýl",
@@ -5081,6 +5126,7 @@
       "addAction": "Pridať akciu",
       "removeAction": "Odstrániť akciu",
       "placeholders": "V texte použite {name}, {amount} a {message}. Odkazy v správach sa odstránia.",
+      "placeholdersLive": "V texte použite {name}, {title} a {link}: svoje meno, názov vysielania a odkaz na jeho sledovanie.",
       "alertText": "Text upozornenia",
       "sound": "Zvuk",
       "sayText": "Text na čítanie nahlas",
@@ -5094,6 +5140,7 @@
         "follow": "Niekto nasleduje",
         "subscribe": "Niekto sa prihlási na odber",
         "share": "Niekto zdieľa stream",
+        "live": "Začnete vysielať",
         "command": "Používa sa príkaz na rozhovor",
         "keyword": "Chatová správa obsahuje slovo",
         "chat": "Akákoľvek správa z chatu"

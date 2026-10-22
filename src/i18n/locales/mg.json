@@ -4795,9 +4795,52 @@
     "followersUnit": "mpanara-dia",
     "topSupporters": "TOP mpanohana",
     "tipped": "{{name}} nandefa fanomezana",
-    "chatPreview": "Ny hafatra amin'ny Chat dia hita eto."
+    "chatPreview": "Ny hafatra amin'ny Chat dia hita eto.",
+    "poll": {
+      "closed": "Voting closed",
+      "voteFor": "Mifidiana ny {{option}}",
+      "signIn": "Sign in to vote",
+      "failed": "Tsy voaisa ny vatonao. Andramo indray.",
+      "voted_one": "Nifidy? {{count}} vote",
+      "voted_other": "Nifidy? {{count}} votes",
+      "votes_one": "{{count}} vote",
+      "votes_other": "{{count}} votes",
+      "howToVote_one": "Tadiavo ny {{command}} sy ny isa ao amin'ny karajia hifidianana · {{count}} vote",
+      "howToVote_other": "Mitendry {{command}} sy ny isa ao amin'ny karajia mba hifidy · {{count}} votes"
+    }
   },
   "liveStudio": {
+    "polls": {
+      "title": "Polls",
+      "intro": "Anontanio ny olona izay mijery ny fandaharany amin'ny fanontaniana. Mamaly amin'ny bokotra ao amin'ny fampiharana DeHub izy ireo, na amin'ny alalan'ny fanoratana ny {{command}} sy ny laharan'ny safidy amin'ny karajia.",
+      "question": "Question",
+      "questionPlaceholder": "Inona no tokony hilalao?",
+      "option": "Option {{n}}",
+      "addOption": "Add an option",
+      "removeOption": "Remove option {{n}}",
+      "duration": "Mandra-pahoviana no hisokatra ny fandrotsaham-bato",
+      "seconds_one": "{{count}} second",
+      "seconds_other": "{{count}} seconds",
+      "minutes_one": "{{count}} minute",
+      "minutes_other": "{{count}} minutes",
+      "start": "Manomboha ny fifidianana",
+      "end": "Mifarana ny fandrotsaham-bato izao",
+      "started": "Misokatra ny fandatsaham-bato. Nanomboka tamin'izany fotoana izany dia afaka mifidy ny vahoaka.",
+      "notLive": "Mandehana mivantana aloha. Ny fitsapan-kevitra dia mandeha amin'ny fandaharana izay alefanao amin'izao fotoana izao.",
+      "startFailed": "Tsy nandeha ny fifidianana. Andramo indray.",
+      "closeFailed": "Tsy nifarana ny fifidianana. Andramo indray.",
+      "live": "Voting open · {{time}} left",
+      "ended": "Voting closed",
+      "votes_one": "{{count}} vote",
+      "votes_other": "{{count}} Vato",
+      "replaceHint": "Nakatona ny birao fandatsaham-bato izay misokatra.",
+      "widgetHint": "Mampiseho ny fandrotsaham-bato mivantana nataonao izany. Ao amin'ny fampiharana DeHub, mahita safidy iray hifidianana ny mpijery; ao amin'ny OBS, milaza amin'ny vahoaka izy mba hitendry ny {{command}} sy ny maro amin'ny karajia.",
+      "sample": {
+        "a": "Zava-baovao",
+        "b": "Fa Andriamanitra tia mpanome amim-pifaliana.",
+        "c": "Misafidy ianao"
+      }
+    },
     "title": "Live Studio",
     "subtitle": "Fampahatsiahivana sy widgets ho an'ny fipetrahanao",
     "h1": "Live Studio — fampahatsiahivana, tanjona ary overlays ho an'ny mpamorona DeHub",
@@ -4873,6 +4916,7 @@
       "join": "Midira"
     },
     "kinds": {
+      "poll": "Fitsapan-kevitra",
       "tip_alert": "Fampandrenesana tip",
       "follow_alert": "Fampandrenesana arahana",
       "subscribe_alert": "Fampandrenesana mpisoratra",
@@ -4906,7 +4950,8 @@
       "event_feed": "Ny fanomezam-pahasoavana farany, ny mpanaraka, ny mpanjifany ary ny olona mizara ny fampielezam-peo",
       "chat_box": "Mampiseho ny hafatra amin'ny chat alefanao amin'ny efijery",
       "ticker": "Tsipika avy amin'ny andinin-teninao manokana izay manavatsava ny fàfana",
-      "rule_alert": "Toerana hita ny fampitandremana momba ny fitsipika"
+      "rule_alert": "Toerana hita ny fampitandremana momba ny fitsipika",
+      "poll": "Ny fifidianana mivantana, amin'ny bokotra fifidianana ho an'ny safidy tsirairay"
     },
     "fields": {
       "style": "Endrika",
@@ -4970,6 +5015,7 @@
       "addAction": "Manampy hetsika",
       "removeAction": "Esorina ny hetsika",
       "placeholders": "Ampiasao ny {name}, {amount} sy {message} ao amin'ny lahatsoratrao. Rohy mankany amin'ny hafatra dia maty.",
+      "placeholdersLive": "Ampiasao ny {name}, {title} sy {link} ao amin'ny lahatsoratrao: ny anaranao, ny lohatenin'ny fahitalavitra ary ny rohy hijerena azy.",
       "alertText": "Lahabolana fanairana",
       "sound": "Feo",
       "sayText": "Lahatsoratra vakina mafy",
@@ -4983,6 +5029,7 @@
         "follow": "Misy ny manaraka",
         "subscribe": "Olona iray subscribes",
         "share": "Nisy olona nizara ny renirano",
+        "live": "Manomboka mandefa ny onjam-peo",
         "command": "Misy baikom-piresahana ampiasaina",
         "keyword": "Misy teny iray ao amin'ny hafatra amin'ny chat",
         "chat": "Izay mety ho hafatra amin'ny chat"
@@ -5017,9 +5064,9 @@
         "command": "Mamaly ny !baiko ao amin'ny chat"
       },
       "presetText": {
-        "thankFollowers": "Misaotra tamin'ny fanarahana, {name}!",
         "readChat": "{name} says {message}",
         "bigTip": "{name} sent {amount} DHB!",
+        "thankFollowers": "Misaotra tamin'ny fanarahana, {name}!",
         "command": "Miarahaba ny {name} 0, tongasoa ato amin'ny onja!"
       },
       "sounds": {

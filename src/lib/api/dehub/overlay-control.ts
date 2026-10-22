@@ -10,6 +10,7 @@ import {
   type StreamPresence,
 } from './stream-presence';
 import { parseRuleFired, type RuleFired } from '@/lib/live-overlay/rules';
+import { parsePoll, type LivePoll } from '@/lib/live-overlay/polls';
 
 /**
  * A creator's overlay control room, `overlay:<token>`.
@@ -27,6 +28,8 @@ export interface OverlayControlHandlers {
   onRevoked?: () => void;
   /** A stream rule tested from Live Studio: what it shows, plays and reads. */
   onRule?: (fired: RuleFired) => void;
+  /** The creator's live poll opened, moved or closed. */
+  onPoll?: (poll: LivePoll) => void;
   /** The server's answer to each join: false means the token is not (or no longer) real. */
   onJoined?: (ok: boolean) => void;
 }
@@ -79,6 +82,10 @@ export function watchOverlayControl(
   };
   const onUpdated = (data: any) => handlers.onUpdated?.(Number(data?.version) || 0);
   const onRevoked = () => handlers.onRevoked?.();
+  const onPoll = (data: any) => {
+    const poll = parsePoll(data);
+    if (poll) handlers.onPoll?.(poll);
+  };
   const onRule = (data: any) => {
     const fired = parseRuleFired(data);
     if (fired) handlers.onRule?.(fired);
@@ -92,6 +99,7 @@ export function watchOverlayControl(
   s.on('overlay.updated', onUpdated);
   s.on('overlay.revoked', onRevoked);
   s.on('overlay.rule', onRule);
+  if (handlers.onPoll) s.on('stream.poll', onPoll);
   if (s.connected) join();
 
   return {
@@ -105,6 +113,7 @@ export function watchOverlayControl(
       s.off('overlay.updated', onUpdated);
       s.off('overlay.revoked', onRevoked);
       s.off('overlay.rule', onRule);
+      s.off('stream.poll', onPoll);
       releaseStreamSocket(conn);
     },
   };
@@ -141,6 +150,41 @@ export function watchStreamRules(streamId: string, onRule: (fired: RuleFired) =>
       left = true;
       s.off('connect', join);
       s.off('stream.rule.fired', onFired);
+      releaseStreamSocket(conn);
+    },
+  };
+}
+
+/**
+ * A stream's live poll, `stream.poll` in its room — the whole poll on open,
+ * as votes come in, and on close. For the overlay over a viewer's player and
+ * the OBS page; here for the same boot-path reason as above.
+ */
+export function watchStreamPoll(streamId: string, onPoll: (poll: LivePoll) => void): StreamPresence {
+  if (!streamId) return { leave: () => undefined };
+
+  const conn = acquireStreamSocket();
+  const s = conn.socket;
+  let left = false;
+
+  const join = () => {
+    if (!left) s.emit('stream.join.room', { streamId });
+  };
+  const onEvent = (data: any) => {
+    const poll = parsePoll(data);
+    if (poll && poll.streamId === streamId) onPoll(poll);
+  };
+
+  s.on('connect', join);
+  s.on('stream.poll', onEvent);
+  if (s.connected) join();
+
+  return {
+    leave: () => {
+      if (left) return;
+      left = true;
+      s.off('connect', join);
+      s.off('stream.poll', onEvent);
       releaseStreamSocket(conn);
     },
   };

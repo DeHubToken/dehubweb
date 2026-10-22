@@ -4763,9 +4763,52 @@
     "followersUnit": "ngā kaiwhaiwhai",
     "topSupporters": "Ko nga kaitautoko nui",
     "tipped": "{{name}} i tukuna he koha",
-    "chatPreview": "Ka puta mai ngā karere kōrerorero i konei"
+    "chatPreview": "Ka puta mai ngā karere kōrerorero i konei",
+    "poll": {
+      "closed": "Kua kati te pōti",
+      "voteFor": "Te pōti mō te {{option}}",
+      "signIn": "Hokona ki te pōti",
+      "failed": "Kaore to pooti i te tatau. Whakamātauria ano.",
+      "voted_one": "Kua pōti koe · {{count}} pōti",
+      "voted_other": "Kua pōti koe · {{count}} pōti",
+      "votes_one": "{{count}} pōti",
+      "votes_other": "{{count}} nga pooti",
+      "howToVote_one": "Momo {{command}} me te maha i roto i te kōrerorero ki te pōti · {{count}} pōti",
+      "howToVote_other": "Momo {{command}} me te maha i roto i te kōrerorero ki te pōti · {{count}} pōti"
+    }
   },
   "liveStudio": {
+    "polls": {
+      "title": "Ngā pōtae",
+      "intro": "Pātai atu ki te hunga e mātakitaki ana i tō pātai. Ka whakautu ratou ki te pātene i roto i te taupānga DeHub, ranei mā te tuhi {{command}} me te tau o te kōwhiringa i roto i te kōrerorero.",
+      "question": "Pātai",
+      "questionPlaceholder": "He aha te mea e whai ake nei e hiahia ana ahau ki te tākaro?",
+      "option": "Kōwhiringa {{n}}",
+      "addOption": "Tāpirihia he kōwhiringa",
+      "removeOption": "Whakakorea te kōwhiringa {{n}}",
+      "duration": "Kia pehea te roa o te pōti e tuwhera ana",
+      "seconds_one": "{{count}} tuarua",
+      "seconds_other": "{{count}} hēkona",
+      "minutes_one": "{{count}} meneti",
+      "minutes_other": "{{count}} meneti",
+      "start": "Tīmata i te pōti",
+      "end": "Whakamutua te pooti inaianei",
+      "started": "Kei te tuwhera tō pōti. Ka taea e ngā kaitirotiro te pōti i tēnei wā.",
+      "notLive": "Haere ora tuatahi. ka rere te pooti i runga i te whakaaturanga e rere koe i teie nei.",
+      "startFailed": "Kaore i tiimata te pooti. Whakamātauria ano.",
+      "closeFailed": "Kaore i mutu te pooti. Whakamātauria ano.",
+      "live": "Whakatuwherahia te pooti · {{time}} mahue",
+      "ended": "Kua kati te pōti",
+      "votes_one": "{{count}} pōti",
+      "votes_other": "{{count}} nga pooti",
+      "replaceHint": "Ko te tīmata i tētahi pōti hou ka kati i te mea e tuwhera ana.",
+      "widgetHint": "Whakaatuhia to pooti ora. I roto i nga kaitirotiro taupānga DeHub ka tapahia he whiringa ki te pooti; i roto i te OBS ka korerotia e te iwi ki te tuhi {{command}} me te maha i roto i te korerorero.",
+      "sample": {
+        "a": "He mea hou",
+        "b": "He tino pai",
+        "c": "Ka whiriwhiri koe"
+      }
+    },
     "title": "Live Studio",
     "subtitle": "Ngā ohonga me ngā taputapu mō ō ā koe rauemi tūtoko",
     "h1": "Live Studio — ngā ohonga rauemi tūtoko, ngā whāinga me ngā āhuatanga kōkiri mō ngā kaihanga DeHub",
@@ -4855,7 +4898,8 @@
       "event_feed": "Ngā mahi hou",
       "chat_box": "Pouaka kōrerorero",
       "ticker": "Ticker",
-      "rule_alert": "Onagrams Ture"
+      "rule_alert": "Onagrams Ture",
+      "poll": "Pūtea"
     },
     "hints": {
       "tip_alert": "E whakanui ana i nga tohu katoa, e whakanuia ana ki tona taumata",
@@ -4873,7 +4917,8 @@
       "event_feed": "Ko nga taonga hou, nga kaiwhaiwhai, nga kaiohauru me nga tangata e tohatoha ana i to whakaaturanga",
       "chat_box": "Whakaatuhia nga karere korerorero o to whakaaturanga i runga i te mata",
       "ticker": "He raina o to tuhinga ake e rere ana puta noa i te mata",
-      "rule_alert": "Kei hea te putanga o ō ture onagrams"
+      "rule_alert": "Kei hea te putanga o ō ture onagrams",
+      "poll": "To koutou pōti ora, ki te pātene pōti mō ia kōwhiringa"
     },
     "fields": {
       "style": "Kāhua",
@@ -4937,6 +4982,7 @@
       "addAction": "Tāpiri i te mahi",
       "removeAction": "Tango i te mahi",
       "placeholders": "Whakamahia {name}, {amount} me {message} i roto i to tuhinga. Ka tangohia nga hononga i roto i nga karere.",
+      "placeholdersLive": "Whakamahia {name}, {title} me {link} i roto i to tuhinga: to ingoa, te taitara o te panui me te hono ki te matakitaki.",
       "alertText": "Tuhinga o mua",
       "sound": "Whakarongo",
       "sayText": "Ngā tuhinga hei pānui i te reo nui",
@@ -4946,11 +4992,12 @@
       "webhookHint": "He paetukutuku Discord, Slack ranei, tetahi wāhitau https ranei e whakaae ana ki te pou.",
       "webhookText": "He karere ki te tuku",
       "triggers": {
-        "command": "Ka whakamahia he tono kōrerorero",
         "tip": "Ka tae mai he tohu",
         "follow": "Ko te tangata e whai ake nei",
         "subscribe": "He tangata e haina ana",
         "share": "Ka tohaina e tetahi te awa",
+        "live": "Ka tīmata koe ki te tuku",
+        "command": "Ka whakamahia he tono kōrerorero",
         "keyword": "Kei roto i te karere kōrerorero he kupu",
         "chat": "He karere kōrerorero katoa"
       },

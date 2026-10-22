@@ -26,6 +26,7 @@ import type { LiveRoomEvent, StreamJoinUser } from '@/lib/api/dehub/stream-prese
 import { useOverlayEvent } from './overlay-events';
 import { useAlertQueue } from './use-alert-queue';
 import { useRuleFired } from './rule-bus';
+import { PollWidget } from './poll';
 
 export interface WidgetProps {
   settings: Record<string, unknown>;
@@ -567,6 +568,8 @@ export function OverlayWidgetView({ kind, ...props }: WidgetProps & { kind: Over
       return <Ticker {...props} />;
     case 'rule_alert':
       return <RuleAlert {...props} />;
+    case 'poll':
+      return <PollWidget settings={props.settings} />;
     default:
       return null;
   }

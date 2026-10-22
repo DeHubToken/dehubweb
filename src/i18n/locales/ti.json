@@ -4674,9 +4674,52 @@
     "followersUnit": "ተኸታተልቲ",
     "topSupporters": "ላዕለዎት ደገፍቲ",
     "tipped": "{{name}} ህያብ ልኢኹ",
-    "chatPreview": "ናይ ቻት መልእኽትታት ኣብዚ ይረኣዩ"
+    "chatPreview": "ናይ ቻት መልእኽትታት ኣብዚ ይረኣዩ",
+    "poll": {
+      "voteFor": "ንዓ {{option}} ድምጺ ሃብ",
+      "closed": "ድምጺ ተዓጽዩ",
+      "signIn": "ንድምጺ ንምውሳድ ተጸምቢሩ",
+      "failed": "ድምጺኻ ኣይቆጸረን ። ደጊምካ ፈትኖ ።",
+      "voted_one": "You vote · {{count}} ድምጺ",
+      "voted_other": "You vote · {{count}} ድምጺ",
+      "votes_one": "{{count}} ድምጺ",
+      "votes_other": "{{count}} ድምጺ",
+      "howToVote_one": "ዓይነት {{command}} ን ቁጽሪ ኣብ ቻት ንድምጺ ንምውሳድ · {{count}} ድምጺ",
+      "howToVote_other": "ዓይነት {{command}} ን ቁጽሪ ኣብ ቻት ንድምጺ ንምውሳድ · {{count}} ድምጺ"
+    }
   },
   "liveStudio": {
+    "polls": {
+      "minutes_one": "{{count}} ደቒቕ",
+      "title": "ድምጺ",
+      "intro": "ነቶም ኣብ ስርሒትካ ዚርእዩ ሰባት ሕቶ ሕተቶም ። ኣብ DeHub App ዘሎ ጠውቑር ወይ ድማ {{command}} ብምጽሓፍ ከምኡ'ውን ኣብ ቻት ዘሎ ቁጽሪ እቲ ኣማራጺ ይምልሱ ።",
+      "question": "ሕቶ",
+      "questionPlaceholder": "ቀጺለ እንታይ ክጻወት ኣለኒ?",
+      "option": "ምርጫ {{n}}",
+      "addOption": "ኣማራጺ ኣክሎ",
+      "removeOption": "ኣማራጺ {{n}} ኣወግድ",
+      "duration": "ምስ ምርጫ ክፍሊት ምስ ምርጫ ክፍሊት ክሳብ መዓልቱ ምስ ምርጫ ክፍሊት ክሳብ መዓልቱ ምስ ምርጫ ክፍሊት ክሳብ መዓልቱ",
+      "seconds_one": "{{count}} ካልኣይቲ",
+      "seconds_other": "{{count}} ሰከንድ",
+      "minutes_other": "{{count}} ደቓይቕ",
+      "start": "ነቲ ምርጫ ምጅማር",
+      "end": "ሕጂ ድምጺ ምሃብ ኣቋሪጽካ",
+      "started": "እቲ ምርጫኻ ክፍትሕ እዩ ። እቶም ተዓዘብቲ ሕጂ ክመርጹ ይኽእሉ እዮም ።",
+      "notLive": "ፈለማ ብቀጥታ ግበር ። ኣብዚ እዋን እዚ ኣብ እትዝርጋሕዎ ስርሒት ድምጺ ይካየድ ።",
+      "startFailed": "እቲ ምርጫ ኣይተጀመረን ። ደጊምካ ፈትኖ ።",
+      "closeFailed": "እቲ ድምጺ ኣይተዛዘመን ። እንደገና ፈትኖ ።",
+      "live": "ክፍትሕ ድምጺ ምሃብ · {{time}} left",
+      "ended": "ድምጺ ተዓጽዩ",
+      "votes_one": "{{count}} ድምጺ",
+      "votes_other": "{{count}} ድምጺ",
+      "replaceHint": "ሓድሽ ምርጫ ምጅማር ነቲ ተኸፊቱ ዘሎ ይዓጽዎ ።",
+      "widgetHint": "ንቀጥታ ምርጫኻ ኣርኢ ። ኣብ DeHub App ተመልካቾች ናይ ድምጺ ኣማራጺ ይጥቀሙ ፣ ኣብ OBS ሰባት {{command}} ን ኣብ ቻት ቁጽሪ ክጽሕፉ ይነግሮም ።",
+      "sample": {
+        "a": "ሓድሽ ነገር",
+        "b": "ናይ ቀደም ፍቑር",
+        "c": "ንስኻ ኢኻ እትመርጽ"
+      }
+    },
     "title": "ህያው ስቱዲዮ",
     "subtitle": "መጠንቀቕታታትን ዊጅትን ንዥረታትካ",
     "h1": "Live Studio — ናይ DeHub ፈጣርቲ መጠንቀቕታታት ፣ ሸቶታትን ልዕሌታትን",
@@ -4766,7 +4809,8 @@
       "event_feed": "ናይ ቀረባ ንጥፈታት",
       "chat_box": "ናይ ቻት ሳጹን",
       "ticker": "ቲከር",
-      "rule_alert": "ደንብ ማንቂያዎች"
+      "rule_alert": "ደንብ ማንቂያዎች",
+      "poll": "ድምጺ"
     },
     "hints": {
       "tip_alert": "ንኹሉ ምልክት ዝተሓለወ ብዝተለወጠ ደረጃ ይኽእል",
@@ -4784,7 +4828,8 @@
       "event_feed": "ናይ መወዳእታ ህያባት ፡ ተኸታተልቲ ፡ ተመዝጋቢታትን ሰባት ነቲ ስርሒትካ ይካፈሉ",
       "chat_box": "ኣብ ገጽካ ናይ ዝርርብ መልእኽትታት ኣርኢ",
       "ticker": "ሓደ መስመር ናይ ገዛእ ርእስኻ ጽሑፍ ኣብ ልዕሊ እቲ ስክሪን ዝዞር",
-      "rule_alert": "ደንብ ማንቂያዎችህ የሚታዩበት ቦታ"
+      "rule_alert": "ደንብ ማንቂያዎችህ የሚታዩበት ቦታ",
+      "poll": "ብቀጥታ ምርጫኻ ፡ ንነፍሲ ወከፍ ኣማራጺ ናይ ድምጺ ጠውቑ"
     },
     "fields": {
       "style": "ስታይል",
@@ -4819,7 +4864,7 @@
       "fast": "ቀልጢፍካ"
     },
     "rules": {
-      "placeholders": "ኣብ ጽሑፍካ {name}፣ {amount}ን {message}ን ተጠቐም። ኣብ መልእኽቲ ዘለዉ ሊንክታት ይእለዩ።",
+      "placeholdersLive": "ኣብ ጽሑፍካ {name}፣ {title}ን {link}ን ተጠቐም፡ ስምካ፣ ኣርእስቲ ፈነወን ንምርኣይ ሊንክን።",
       "title": "ደንቦች",
       "intro": "በእንደገና ላይ ምንም ነገር ሲከሰት፣ DeHub ምን እንደምትመርጠው ያደርጋል፡ ማንቂያ ያሳያል፣ ድምጽ ይጫወታል፣ ምንዳ ይነግራል፣ በቻትህ ውስጥ ይልጥ ወይም ዲስኮርድህን ይነግራል።",
       "add": "ደንብ ጨምር",
@@ -4848,6 +4893,7 @@
       "userCooldown": "በእይታ ሰሪ ጠብቅ (ሰከንዶች)",
       "addAction": "ተግባር ጨምር",
       "removeAction": "ተግባር ወግድ",
+      "placeholders": "ኣብ ጽሑፍካ {name}፣ {amount}ን {message}ን ተጠቐም። ኣብ መልእኽቲ ዘለዉ ሊንክታት ይእለዩ።",
       "alertText": "ጽሑፍ ኣጠንቂቕካ",
       "sound": "ድምጺ",
       "sayText": "ብድምጺ ዝንበብ ጽሑፍ",
@@ -4861,6 +4907,7 @@
         "follow": "ሓደ ሰብ ይስዕቦ",
         "subscribe": "ሓደ ሰብ ይመዝገብ",
         "share": "ሓደ ሰብ ነቲ ዥረት ይካፈል",
+        "live": "ስርሒት ትጅምር",
         "command": "ናይ ቻት ትእዛዝ ይጥቀም",
         "keyword": "ናይ ቻት መልእኽቲ ሓደ ቃል ዝሓዘ",
         "chat": "ዝኾነ ናይ ቻት መልእኽቲ"
@@ -4895,8 +4942,8 @@
         "command": "መልሲ ሀ !ትእዛዝ ኣብ ቻት"
       },
       "presetText": {
-        "bigTip": "{name} {amount} DHB ሰዲዱ!",
         "readChat": "{name} ይብል {message}",
+        "bigTip": "{name} {amount} DHB ሰዲዱ!",
         "thankFollowers": "ስለቲ ዝስዕብኩም አመስግነኩም {name}!",
         "command": "ሰላም {name}, ናብ'ቲ ዥረት እንበጽሓኩም!"
       },
