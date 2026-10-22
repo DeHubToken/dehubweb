@@ -4645,6 +4645,7 @@
     "creatorEarnsDirect": "Abonnew bɛ sara DeHub token na. U mana don tuma min na, i ka tila bɛ se i ka wariboro la, i ka badge hakɛ ka sara bɔlen a la."
   },
   "liveOverlay": {
+    "wheelLanded": "{{name}} spun: {{result}}",
     "someone": "Mɔgɔ dɔ",
     "newFollower": "Mɔgɔ min be tugu a kɔ: {{name}}",
     "newSubscriber": "Mɔgɔ min be sɛbɛri kɛ: {{name}}",
@@ -4681,6 +4682,17 @@
     "youAreTimedOut": "I be bɔ waati dɔ la"
   },
   "liveStudio": {
+    "controls": {
+      "title": "Kɔrɔbɔli minw be se ka kɛ joona joona",
+      "intro": "O cogo kelen na, mɔgɔ o mɔgɔ be se k'a filɛ, a be se k'a filɛ, a be se k'a filɛ ani a be se k'a filɛ OBS kɔnɔ, fɔɔ i k'a yɛlɛma.",
+      "alertsPaused": "K'a to a ka baara la",
+      "alertsPausedHint": "Mɔgɔ tɛ sɔn ka sɔn, a tɛ sɔn ka koo dɔ kɛ min be mɔgɔ bali ka sɔn. An ka ladiliw, an ka laɲinitaw ani an ka baro kɛyɔrɔ be to ka taga.",
+      "soundsMuted": "O ye mankanba ye.",
+      "soundsMutedHint": "A tun tɛ se ka to ka mankan kɛ.",
+      "readAloudMuted": "Aw ka to ka kalan kɛ",
+      "readAloudMutedHint": "O kama, a tun man nɔgɔ ka mɔgɔ weele ka na a ka soo.",
+      "failed": "N'i ma siran, o be yɛlɛma ka kɛ ten."
+    },
     "polls": {
       "title": "Jula",
       "intro": "Mɔgɔ minw be i ka kalan lamɛnna, i ka ɲiningali dɔ kɛ u ye. U be se k'o jaabi ni tuguni ye DeHub ka porogramu kɔnɔ, walima ka {{command}} sɛbɛn ani ka kumaɲɔgɔnya kɛ n'o ye.",
@@ -4784,6 +4796,7 @@
       "join": "Join"
     },
     "kinds": {
+      "spin_wheel": "O ye nɛgɛso ye",
       "tip_alert": "Tip alert",
       "follow_alert": "Follow alert",
       "subscribe_alert": "Subscriber alert",
@@ -4803,6 +4816,7 @@
       "poll": "Fanga be mɔgɔ minw na,"
     },
     "hints": {
+      "spin_wheel": "I ka sariya kɔnɔ, i ka kan ka min fɔ, o ye tiɲɛ ye.",
       "tip_alert": "O la, a tun be se ka kɛ ko a tun ye mɔgɔ min ye, a tun b'o tigi le ye.",
       "follow_alert": "Ka tugu mɔgɔ kuraw kɔ",
       "subscribe_alert": "A ka kan ka kɛ i ka mɔgɔ kuraw bɛɛ ka kan ka kɛ i ka mɔgɔ kuraw ye",
@@ -4853,6 +4867,8 @@
       "fast": "Fanga be min na"
     },
     "rules": {
+      "wheelSegments": "Fanga be mɔgɔ minw na, olu ka kan ka kɛ kelen ye.",
+      "wheelHint": "(c) Ni a ye 10 ye, i n'a fɔ 19 ani 29 DeHub be nɛgɛso lɔyɔrɔ sugandi walisa mɔgɔ bɛɛ ka se ka o ɲɔgɔn ye. I ka kan ka {result} kɛ kunnafoni dɔ kɔnɔ, ka kalan kɛ walima ka baro kɛ n'o ye.",
       "title": "Sariya",
       "intro": "Ni koo dɔ kɛra i ka site web kan, DeHub b'a fɛ ka min kɛ, a b'o kɛ: a be lasɔmini dɔ yira, a be mankan dɔ bɔ, a be fɛɛn dɔ kalan ni kaanba ye, a be kuma i ka site web kɔnɔ wala a be kuma i ka Discord koo la.",
       "add": "A ka sariya sigi",
@@ -4907,6 +4923,7 @@
         "subscribers": "Subscribers"
       },
       "actionTypes": {
+        "wheel": "A be wotoro nin yɛlɛma",
         "alert": "Show an alert",
         "sound": "Play a sound",
         "say": "Read aloud",

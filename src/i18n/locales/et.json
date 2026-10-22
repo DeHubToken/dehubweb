@@ -4786,6 +4786,7 @@
     "creatorEarnsDirect": "Tellijad maksavad DeHubi žetoonides. Sinu osa jõuab Sinu rahakotti kohe, kui nad tellimuse tellivad, millest on maha arvatud platvormi tasu Sinu erimärgi taseme eest."
   },
   "liveOverlay": {
+    "wheelLanded": "{{name}} pööras: {{result}}",
     "someone": "Keegi",
     "newFollower": "Uus jälgija: {{name}}",
     "newSubscriber": "Uus abonent: {{name}}",
@@ -4824,6 +4825,17 @@
     "youAreTimedOut": "Oled hetkeks aegunud"
   },
   "liveStudio": {
+    "controls": {
+      "title": "Kiirkontrollid",
+      "intro": "Keskpaigaks. Iga lüliti hoiab kõigile, kes seda vaatavad, rakenduses ja OBS-is, kuni seda tagasi keerad.",
+      "alertsPaused": "Peata teavitused",
+      "alertsPausedHint": "Ekraanil ei kuvata kingitusi, jälgita ega juhita teavitusi. Loendurid, eesmärgid ja vestlusboks jätkuvad.",
+      "soundsMuted": "Vaigista hoiatussignaalid",
+      "soundsMutedHint": "Sinu reeglid lõpetavad helide mängimise.",
+      "readAloudMuted": "Peata valjusti lugemine",
+      "readAloudMutedHint": "Kinkekaarte ja reegliridu enam ette ei loeta.",
+      "failed": "Lüliti ei muutunud. Proovi uuesti."
+    },
     "polls": {
       "title": "Hääletused",
       "intro": "Praegu vaatajate küsi küsimust. Nad vastavad DeHubi rakenduses nupu abil või tüüpides {{command}} ja valiku numberi ülesande numberis chatis.",
@@ -4930,6 +4942,7 @@
       "join": "Liitu"
     },
     "kinds": {
+      "spin_wheel": "Tsentrifuugiratas",
       "tip_alert": "Jootraha hoiatus",
       "follow_alert": "Jälgi teadet",
       "subscribe_alert": "Abonendi hoiatus",
@@ -4949,6 +4962,7 @@
       "poll": "Küsitlus"
     },
     "hints": {
+      "spin_wheel": "Kus sinu reeglite rattad pöörlevad",
       "tip_alert": "Tähistab igat oma tasemele vastavat jootraha",
       "follow_alert": "Kuvab iga uue jälgija",
       "subscribe_alert": "Kuvab iga uue tellija",
@@ -5000,6 +5014,8 @@
       "fast": "Kiire"
     },
     "rules": {
+      "wheelSegments": "Ratta segmendid, üks rea kohta",
+      "wheelHint": "2 ja 12 vahel. DeHub valib, kus ratas peatub, nii et kõik vaatajad näevad sama tulemust. Kasuta märguandes, valjuhäälses lugemises või vestlustoimingus märguannet {result}.",
       "title": "Reeglid",
       "intro": "Kui teie voos juhtub midagi, teeb DeHub seda, mida soovite: kuvab märguande, esitab heli, loeb midagi valjusti, postitab teie vestlusesse või räägib teie ebakõlast.",
       "add": "Lisa reegel",
@@ -5054,6 +5070,7 @@
         "subscribers": "Tellijad"
       },
       "actionTypes": {
+        "wheel": "Keeruta ratast",
         "alert": "Kuva teade",
         "sound": "Esita heli",
         "say": "Loe valjusti",

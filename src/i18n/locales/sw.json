@@ -4800,6 +4800,7 @@
     "creatorEarnsDirect": "Wasajili hulipa kwa ishara za DeHub. Gawio lako linatua kwenye mkoba wako pindi wanapojisajili, punguza ada ya tovuti ya kiwango cha beji yako."
   },
   "liveOverlay": {
+    "wheelLanded": "{{name}} spun: {{result}}",
     "someone": "Mtu",
     "newFollower": "Mfuasi mpya: {{name}}",
     "newSubscriber": "Mteja mpya: {{name}}",
@@ -4838,6 +4839,17 @@
     "youAreTimedOut": "Umepitwa na wakati kwa muda"
   },
   "liveStudio": {
+    "controls": {
+      "title": "Vidhibiti vya haraka",
+      "intro": "Kwa mkondo wa katikati. Kila swichi hushikilia kila mtu anayetazama, kwenye programu na katika OBS, hadi uirudishe nyuma.",
+      "alertsPaused": "Arifa za kusitisha",
+      "alertsPausedHint": "Hakuna zawadi, fuata au tahadhari za sheria kwenye skrini. Kaunta, malengo na sanduku la gumzo linaendelea.",
+      "soundsMuted": "Nyamazisha sauti za arifa",
+      "soundsMutedHint": "Sheria zako huacha kucheza sauti.",
+      "readAloudMuted": "Simamisha usome kwa sauti",
+      "readAloudMutedHint": "Ujumbe wa zawadi na mistari ya sheria haisomeki tena.",
+      "failed": "Kubadilisha huko hakukubadilika. Jaribu tena."
+    },
     "polls": {
       "title": "Kura za Maoni",
       "intro": "Uliza watu wanaotazama mtangazo wako swali. Wanajawab kwa kuchagua kitufe katika programu ya DeHub, au kwa kuandika {{command}} na namba ya chaguo katika mazungumzo.",
@@ -4944,6 +4956,7 @@
       "join": "Jiunge"
     },
     "kinds": {
+      "spin_wheel": "Gurudumu la mzunguko",
       "tip_alert": "Arifa ya kidokezi",
       "follow_alert": "Fuata arifa",
       "subscribe_alert": "Arifa ya msajili",
@@ -4963,6 +4976,7 @@
       "poll": "Kura"
     },
     "hints": {
+      "spin_wheel": "Ambapo magurudumu katika sheria zako huzunguka",
       "tip_alert": "Husherehekea kila kiinua mgongo, kulingana na kiwango chake",
       "follow_alert": "Inaonyesha kila mfuasi mpya",
       "subscribe_alert": "Inaonyesha kila msajili mpya",
@@ -5013,6 +5027,8 @@
       "fast": "Haraka"
     },
     "rules": {
+      "wheelSegments": "Sehemu za magurudumu, moja kwa kila mstari",
+      "wheelHint": "Kati ya 2 na 12. DeHub huchagua mahali ambapo gurudumu linasimama, kwa hivyo kila mtu anayetazama anaona matokeo sawa. Tumia {result} katika arifa, soma kwa sauti au gumzo ili uitaje.",
       "title": "Kawaida",
       "intro": "Kwa kuwa kitu kinachofanyika katika stream yako, DeHub inafanya kitu kinachojitokeza: inashona matatizo, inatoa sauti, inafanya kitu kama kurejea, inapostia katika chat yako au inafundisha katika Discord yako.",
       "add": "Pata kawaida mpya",
@@ -5067,6 +5083,7 @@
         "subscribers": "Wasajili"
       },
       "actionTypes": {
+        "wheel": "Zungusha gurudumu",
         "alert": "Onyesha arifa",
         "sound": "Piga sauti",
         "say": "Soma kwa sauti",

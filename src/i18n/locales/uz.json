@@ -4827,6 +4827,7 @@
     "creatorEarnsDirect": "Obunachilar DeHub tokenlarida to&#39;lov qilishadi. Ular obuna bo&#39;lgan zahoti sizning ulushingiz hamyoningizga tushadi, nishon darajangiz uchun platforma to&#39;lovi chegiriladi."
   },
   "liveOverlay": {
+    "wheelLanded": "{{name}} aylantirildi: {{result}}",
     "someone": "Kimdir",
     "newFollower": "Yangi obunachi: {{name}}",
     "newSubscriber": "Yangi obunachi: {{name}}",
@@ -4865,6 +4866,17 @@
     "youAreTimedOut": "Siz bir zumga vaqtingiz tugadi"
   },
   "liveStudio": {
+    "controls": {
+      "title": "Tezkor boshqaruv elementlari",
+      "intro": "Strim o&#39;rtasida. Har bir tugma ilovada va OBSda tomosha qilayotgan har bir kishi uchun uni orqaga qaytarmaguningizcha ushlab turiladi.",
+      "alertsPaused": "Bildirishnomalarni to&#39;xtatib turish",
+      "alertsPausedHint": "Ekranda sovg&#39;a, amal qilish yoki qoida bo&#39;yicha ogohlantirishlar yo&#39;q. Hisoblagichlar, gollar va chat oynasi ishlashda davom etadi.",
+      "soundsMuted": "Ogohlantirish tovushlarini o&#39;chirish",
+      "soundsMutedHint": "Sizning qoidalaringiz tovushlarni ijro etishni to&#39;xtatadi.",
+      "readAloudMuted": "Ovoz chiqarib o&#39;qishni to&#39;xtating",
+      "readAloudMutedHint": "Sovg&#39;a xabarlari va qoidalar satrlari endi o&#39;qib chiqilmaydi.",
+      "failed": "Bu tugma o&#39;zgarmadi. Qaytadan urinib ko&#39;ring."
+    },
     "polls": {
       "title": "Savollar",
       "intro": "Koʻrishchilaringizga tarjimonlik paytida savol bering. Ular DeHub ilovasidagi tugma bilan yoki chatda {{command}} va variant raqamini yozib javob berishadi.",
@@ -4971,6 +4983,7 @@
       "join": "Qo&#39;shiling"
     },
     "kinds": {
+      "spin_wheel": "Aylanadigan g&#39;ildirak",
       "tip_alert": "Maslahat ogohlantirishi",
       "follow_alert": "Kuzatib borish haqida ogohlantirish",
       "subscribe_alert": "Obunachi ogohlantirishi",
@@ -4990,6 +5003,7 @@
       "poll": "So&#39;rovnoma"
     },
     "hints": {
+      "spin_wheel": "Qoidalaringizdagi g&#39;ildiraklar qayerda aylanadi",
       "tip_alert": "Har bir choychaqani, o&#39;z darajasiga mos ravishda nishonlaydi",
       "follow_alert": "Har bir yangi izdoshni ko&#39;rsatadi",
       "subscribe_alert": "Har bir yangi obunachini ko&#39;rsatadi",
@@ -5040,6 +5054,8 @@
       "fast": "Tez"
     },
     "rules": {
+      "wheelSegments": "G&#39;ildirak segmentlari, har bir qatorda bittadan",
+      "wheelHint": "2 dan 12 gacha. DeHub g&#39;ildirak qayerda to&#39;xtashini tanlaydi, shuning uchun hamma tomosha qilayotganlar bir xil natijani ko&#39;rishadi. Ogohlantirish, ovoz chiqarib o&#39;qish yoki chat harakatlarida {result} dan foydalaning.",
       "title": "Qoidalar",
       "intro": "Sizning streamingizda bir narsa sodir boʻlganda, DeHub sizning tanlangichingizga koʻra amalga oshiradi: xabar koʻrsatadi, ovoz oʻynaydi, narsani aytib beradi, chatga yozib yuboradi yoki Discordingizga xabar yuboradi.",
       "add": "Qoidani qoʻshish",
@@ -5094,6 +5110,7 @@
         "subscribers": "Obunachilar"
       },
       "actionTypes": {
+        "wheel": "G&#39;ildirakni aylantiring",
         "alert": "Ogohlantirishni ko&#39;rsatish",
         "sound": "Ovozni ijro etish",
         "say": "Ovoz chiqarib o&#39;qing",

@@ -4782,6 +4782,7 @@
     "creatorEarnsDirect": "Abonnente zahled mit DeHub Tokens. Din Anteil landet i dim Wallet, grad wenn sie abonniered, abzüglich de Plattformgebühr für din Badge-Tier."
   },
   "liveOverlay": {
+    "wheelLanded": "{{name}} hüt: {{result}}",
     "someone": "Irgendwer",
     "newFollower": "Neuer Follower: {{name}}",
     "newSubscriber": "Neue Abonnentin: {{name}}",
@@ -4829,6 +4830,17 @@
     "stillCounting": "Zäme noch am Zählä: Geschenke brauchä et Wile, bis se bestäät sünd."
   },
   "liveStudio": {
+    "controls": {
+      "alertsPaused": "Warnungen pausieren",
+      "readAloudMuted": "Vorlesen stoppen",
+      "title": "Schnellsteuerung",
+      "intro": "Fürs Live-Streaming. Jeder Schalter gilt für alle Zuschauer, sowohl in der App als auch in OBS, bis du ihn wieder umlegst.",
+      "alertsPausedHint": "Keini Geschenk-, Follow- oder Regel-Benachrichtigungen auf dem Bildschirm. Die Zähler, Tore und die Chatbox laufen weiter.",
+      "soundsMuted": "Stille Benachrichtigungsgeräusche",
+      "soundsMutedHint": "Dei Regeln stoppe mit dem Abspielen vo Klänge.",
+      "readAloudMutedHint": "Giftnachrichten und Regeln werden nicht mehr vorgelesen.",
+      "failed": "Dä Schalter isch net umgeschaltet worde. Versuche’s nochma."
+    },
     "moderation": {
       "title": "Chat-Moderation",
       "intro": "Regeln für den Chat unter allen deinen Streams. Sie kommen nie in den Hauptchat von DeHub – jemanden, den du hier sperrst, kann trotzdem überall sonst reden.",
@@ -4975,6 +4987,7 @@
       "join": "Mitmache"
     },
     "kinds": {
+      "spin_wheel": "Schleuderrad",
       "tip_alert": "Tipp-Alarm",
       "follow_alert": "Folge-Alarm",
       "subscribe_alert": "Abonnent-Alarm",
@@ -4994,6 +5007,7 @@
       "poll": "Umfrage"
     },
     "hints": {
+      "spin_wheel": "Wo die Räder in deinen Regeln dreh’n",
       "tip_alert": "Feiert jede Tipp, passend zu sim Level",
       "follow_alert": "Zeigt jede neue Follower",
       "subscribe_alert": "Zeigt jede neue Abonnent",
@@ -5044,6 +5058,8 @@
       "fast": "Schnell"
     },
     "rules": {
+      "wheelSegments": "Radsegment, eis pro Zeile",
+      "wheelHint": "Zwiisch 2 un 12. DeHub bestiimm, wo’s Rad stoppt, so sieht’s alle gleich. Nutzi {result} in eim Alert, eim Vorlesen oder eim Chat-Aktiön, um’s zu benämmi.",
       "title": "Regeln",
       "intro": "Wenn etwas auf deinem Stream passiert, macht DeHub, was du möchtest: zeigt eine Warnung, spielt ein Geräusch, liest etwas vor, postet in deinem Chat oder sagt etwas in deinem Discord.",
       "add": "Regel hinzufügen",
@@ -5098,6 +5114,7 @@
         "subscribers": "Abonnenten"
       },
       "actionTypes": {
+        "wheel": "Dreh das Rad!",
         "alert": "Zeig a Alert.",
         "sound": "Einen Ton abspielen",
         "say": "Vorlesen",

@@ -4779,6 +4779,7 @@
     "creatorEarnsDirect": "Abonenti maksā DeHub žetonos. Abonēšanas brīdī jūsu daļa nonāk jūsu makā, atskaitot platformas nodevu par jūsu nozīmītes līmeni."
   },
   "liveOverlay": {
+    "wheelLanded": "{{name}} iedarbināja: {{result}}",
     "someone": "Kāds",
     "newFollower": "Jauns sekotājs: {{name}}",
     "newSubscriber": "Jauns abonents: {{name}}",
@@ -4817,6 +4818,17 @@
     "youAreTimedOut": "Jums ir izbeigts laiks uz brīdi"
   },
   "liveStudio": {
+    "controls": {
+      "title": "Ātrā vadība",
+      "intro": "Vidējai straumei. Katrs slēdzis tiek turēts visiem, kas skatās, lietotnē un OBS, līdz jūs to apgriežat atpakaļ.",
+      "alertsPaused": "Apturēt paziņojumus",
+      "alertsPausedHint": "Ekrānā nav neviena dāvanas, sekošanas vai noteikumu brīdinājuma. Skaitītāji, mērķi un tērzēšanas lodziņš turpina darboties.",
+      "soundsMuted": "Izslēgt brīdinājuma skaņas",
+      "soundsMutedHint": "Jūsu noteikumi pārtrauc atskaņot skaņas.",
+      "readAloudMuted": "Apturēt audio lasīšanu",
+      "readAloudMutedHint": "Dāvanu ziņojumi un noteikumu rindas vairs netiek nolasītas.",
+      "failed": "Šis slēdzis nemainījās. Mēģiniet vēlreiz."
+    },
     "polls": {
       "title": "Apzināšanās",
       "intro": "Ieteikiet skatītājiem, kas skatās jūsu pārraidījumā, jautājumu. Viņi atbild ar pogu DeHub priemakā, vai rakstot {{command}} un iespējas numuru chatā.",
@@ -4923,6 +4935,7 @@
       "join": "Pievienoties"
     },
     "kinds": {
+      "spin_wheel": "Griezējripa",
       "tip_alert": "Padoma brīdinājums",
       "follow_alert": "Sekot brīdinājumam",
       "subscribe_alert": "Abonenta brīdinājums",
@@ -4942,6 +4955,7 @@
       "poll": "Aptauja"
     },
     "hints": {
+      "spin_wheel": "Kur griežas jūsu noteikumu riteņi",
       "tip_alert": "Godina ikvienu dzeramnaudu, kuras lielums atbilst tās līmenim",
       "follow_alert": "Rāda katru jauno sekotāju",
       "subscribe_alert": "Parāda katru jauno abonentu",
@@ -4993,6 +5007,8 @@
       "fast": "Ātrs"
     },
     "rules": {
+      "wheelSegments": "Riteņu segmenti, viens rindā",
+      "wheelHint": "No 2 līdz 12. DeHub izvēlas vietu, kur ritenis apstājas, tāpēc visi skatītāji redz vienu un to pašu rezultātu. Izmantojiet {result} brīdinājumā, lasīšanas vai tērzēšanas darbībā, lai to nosauktu.",
       "title": "Noteikumi",
       "intro": "Kad jūsu straumē kaut kas notiek, DeHub dara to, ko jūs izvēlaties: parāda brīdinājumu, atskaņo skaņu, lasa kaut ko skaļi, publicē jūsu tērzēšanā vai stāsta jūsu Discord.",
       "add": "Pievienot noteikumu",
@@ -5047,6 +5063,7 @@
         "subscribers": "Abonētāji"
       },
       "actionTypes": {
+        "wheel": "Pagrieziet riteni",
         "alert": "Rādīt uzmanību",
         "sound": "Atspēlēt skanu",
         "say": "Lasīt alust",

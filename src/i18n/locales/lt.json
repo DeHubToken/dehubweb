@@ -4799,6 +4799,7 @@
     "creatorEarnsDirect": "Prenumeratoriai moka DeHub žetonais. Kai tik užsiprenumeruosi, tavo dalis atsidurs tavo piniginėje, atėmus platformos mokestį už tavo ženklelio lygį."
   },
   "liveOverlay": {
+    "wheelLanded": "{{name}} pasukė: {{result}}",
     "someone": "Kažkas",
     "newFollower": "Naujas sekėjas: {{name}}",
     "newSubscriber": "Naujas prenumeratorius: {{name}}",
@@ -4837,6 +4838,17 @@
     "youAreTimedOut": "Jūs laiką užfiksuota akimirką"
   },
   "liveStudio": {
+    "controls": {
+      "title": "Spartieji valdikliai",
+      "intro": "Skirta viduriniajam srautui. Kiekvienas jungiklis skirtas visiems žiūrintiesiems programėlėje ir OBS, kol jį apversite.",
+      "alertsPaused": "Pristabdyti pranešimus",
+      "alertsPausedHint": "Ekrane nėra pranešimų apie dovanas, sekimą ar taisykles. Skaitikliai, tikslai ir pokalbių dėžutė nesustoja.",
+      "soundsMuted": "Nutildyti įspėjimo garsus",
+      "soundsMutedHint": "Jūsų taisyklės nustoja leisti garsus.",
+      "readAloudMuted": "Stabdyti garsinį skaitymą",
+      "readAloudMutedHint": "Dovanų žinutės ir taisyklių eilutės nebeskaitomos.",
+      "failed": "Šis jungiklis nepasikeitė. Bandykite dar kartą."
+    },
     "polls": {
       "title": "Apskaičiuojamosios",
       "intro": "Klauskite žiūrovus, stebintys jūsų transliaciją, klausimą. Jie atsakys mygtuku DeHub aplikacijoje, arba rašydami {{command}} ir pasirinkimo numerį chat'e.",
@@ -4943,6 +4955,7 @@
       "join": "Prisijungti"
     },
     "kinds": {
+      "spin_wheel": "Sukimo ratas",
       "tip_alert": "Įspėjimas apie arbatpinig",
       "follow_alert": "Sekti įspėjimą",
       "subscribe_alert": "Prenumeratoriaus įspėjimas",
@@ -4962,6 +4975,7 @@
       "poll": "Apklausa"
     },
     "hints": {
+      "spin_wheel": "Kur sukasi jūsų taisyklių ratai",
       "tip_alert": "Pagerbia kiekvieną patarimą, prilygstantį jo lygiui",
       "follow_alert": "Rodo kiekvieną naują sekėją",
       "subscribe_alert": "Rodykimas kiekvienam naujam abonentui.",
@@ -5013,6 +5027,8 @@
       "fast": "Greitas"
     },
     "rules": {
+      "wheelSegments": "Ratų segmentai, po vieną eilutėje",
+      "wheelHint": "Nuo 2 iki 12. „DeHub“ renkasi, kur sustoja ratas, todėl visi žiūrintys mato tą patį rezultatą. Naudokite {result} įspėjime, garso skaitymo ar pokalbio veiksme, kad jį pavadintumėte.",
       "title": "Taisyklės",
       "intro": "Kai kas nors nutinka jūsų sraute, „DeHub“ daro tai, ką pasirenkate: rodo įspėjimą, leidžia garsą, skaito kažką garsiai, skelbia pokalbyje arba pasako „Discord“.",
       "add": "Pridėti taisyklę",
@@ -5067,6 +5083,7 @@
         "subscribers": "Prenumeratoriai"
       },
       "actionTypes": {
+        "wheel": "Pasukite ratą",
         "alert": "Rodyti pranešimą",
         "sound": "Paleisti garsą",
         "say": "Skaityti garsiai",

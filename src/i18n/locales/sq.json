@@ -4794,6 +4794,7 @@
     "creatorEarnsDirect": "Abonentët paguajnë në tokenët DeHub. Pjesa jote vendoset në portofolin tënd në momentin që ata regjistrohen, minus tarifën e platformës për nivelin e distinktivit tënd."
   },
   "liveOverlay": {
+    "wheelLanded": "{{name}} spun: {{result}}",
     "someone": "Dikush",
     "newFollower": "Ndjekës i ri: {{name}}",
     "newSubscriber": "Abonent i ri: {{name}}",
@@ -4832,6 +4833,17 @@
     "youAreTimedOut": "Ju jeni kohëzuar për një moment."
   },
   "liveStudio": {
+    "controls": {
+      "title": "Kontrolle të shpejta",
+      "intro": "Për rrjedhën e mesme. Çdo ndërprerës mban për të gjithë që shikojnë, në aplikacion dhe në OBS, derisa ta ktheni mbrapsht.",
+      "alertsPaused": "Pezullo lajmërimet",
+      "alertsPausedHint": "Nuk ka lajmërime për dhurata, ndjekje ose rregulla në ekran. Numëratorët, golat dhe kutia e bisedës vazhdojnë.",
+      "soundsMuted": "Tingujt e alarmit të heshtur",
+      "soundsMutedHint": "Rregullat e tua ndalojnë së luajturi tinguj.",
+      "readAloudMuted": "Ndalo leximin me zë",
+      "readAloudMutedHint": "Mesazhet e dhuratave dhe rregullat nuk lexohen më.",
+      "failed": "Ky çelës nuk ndryshoi. Provo përsëri."
+    },
     "polls": {
       "title": "Përshtypje",
       "intro": "Pyeti shikuesit që shikojnë transmetimin tuaj një pyetje. Ata përgjigjen me një buton në aplikacionin DeHub, ose duke shkruar {{command}} dhe numrin e opsionit në mesazhe.",
@@ -4938,6 +4950,7 @@
       "join": "Bashkohu"
     },
     "kinds": {
+      "spin_wheel": "Rrota e centrifugimit",
       "tip_alert": "Lajmërim sugjerimi",
       "follow_alert": "Ndiq alarmin",
       "subscribe_alert": "Lajmërim i pajtimtarit",
@@ -4957,6 +4970,7 @@
       "poll": "Sondazh"
     },
     "hints": {
+      "spin_wheel": "Ku rrotullohen rrotat në rregullat e tua",
       "tip_alert": "Feston çdo bakshish, të madhësisë sipas nivelit të tij",
       "follow_alert": "Shfaq çdo ndjekës të ri",
       "subscribe_alert": "Shfaq çdo pajtimtar të ri",
@@ -5008,6 +5022,8 @@
       "fast": "Shpejt"
     },
     "rules": {
+      "wheelSegments": "Segmentet e rrotave, një për rresht",
+      "wheelHint": "Midis 2 dhe 12. DeHub zgjedh vendin ku ndalet rrota, kështu që të gjithë që shikojnë shohin të njëjtin rezultat. Përdor {result} në një lajmërim, lexim me zë ose bisedë për ta emëruar atë.",
       "title": "Rregullat",
       "intro": "Kur ndodh një gjë në stream-in tuaj, DeHub bëhet çfarë e keni zgjedhur: shfaqet një alert, luhet një zëri, lexohet një gjë në shpremë, postohet në chat-in tuaj ose i thotë Discord-it.",
       "add": "Shto një rregull",
@@ -5062,6 +5078,7 @@
         "subscribers": "Abonentët"
       },
       "actionTypes": {
+        "wheel": "Rrotullo një rrotë",
         "alert": "Shfaq një lajmërim",
         "sound": "Lësho një tingull",
         "say": "Lexo me zë të lartë",

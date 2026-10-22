@@ -5834,6 +5834,7 @@
     "creatorEarnsDirect": "Aboneler DeHub tokenleri ile ödeme yapar. Payınız, abone oldukları anda cüzdanınıza düşer ve rozet seviyenizin platform ücreti düşülür."
   },
   "liveOverlay": {
+    "wheelLanded": "{{name}} spun :{{result}}",
     "someone": "Birisi",
     "newFollower": "Yeni takipçi: {{name}}",
     "newSubscriber": "Yeni abone: {{name}}",
@@ -5872,6 +5873,17 @@
     "youAreTimedOut": "Bir an için zaman aşımına uğradınız"
   },
   "liveStudio": {
+    "controls": {
+      "title": "Hızlı kontroller",
+      "intro": "Akış ortasında. Her anahtar, siz geri çevirene kadar uygulamada ve OBS'de izleyen herkes için geçerlidir.",
+      "alertsPaused": "Uyarıları duraklat",
+      "alertsPausedHint": "Ekranda hediye, takip veya kural uyarısı yok. Sayaçlar, hedefler ve sohbet kutusu devam eder.",
+      "soundsMuted": "Uyarı seslerini sessize al",
+      "soundsMutedHint": "Kurallarınız sesleri çalmayı bırakır.",
+      "readAloudMuted": "Sesli okumayı durdur",
+      "readAloudMutedHint": "Hediye mesajları ve kural satırları artık okunmuyor.",
+      "failed": "Bu anahtar değişmedi. Tekrar deneyin."
+    },
     "polls": {
       "title": "Anketler",
       "intro": "Seyircilerinizle canlı yayınınız sırasında bir soru sorun. Cevaplarını DeHub uygulamasında bir düğmeyle veya chat'te {{command}} ve seçeneğin numarasını yazarak veriyorlar.",
@@ -5978,6 +5990,7 @@
       "join": "Katıl"
     },
     "kinds": {
+      "spin_wheel": "Döner çark",
       "tip_alert": "Bahşiş uyarısı",
       "follow_alert": "Takip uyarısı",
       "subscribe_alert": "Abone uyarısı",
@@ -5997,6 +6010,7 @@
       "poll": "Anket"
     },
     "hints": {
+      "spin_wheel": "Kurallarınızdaki çarkların döndüğü yer",
       "tip_alert": "Seviyesine göre boyutlandırılmış her bahşişi kutlar",
       "follow_alert": "Her yeni takipçiyi gösterir",
       "subscribe_alert": "Her yeni aboneyi gösterir",
@@ -6048,6 +6062,8 @@
       "fast": "Hızlı"
     },
     "rules": {
+      "wheelSegments": "Tekerlek segmentleri, hat başına bir adet",
+      "wheelHint": "2 ile 12 arasında. DeHub tekerleğin durduğu yeri seçer, böylece izleyen herkes aynı sonucu görür. Bir uyarı, sesli okuma veya sohbet eyleminde {result} kullanın.",
       "title": "Kurallar",
       "intro": "Akışınızda bir şey olduğunda, DeHub seçtiğiniz şeyi yapar: bir uyarı gösterir, bir ses çalar, yüksek sesle bir şeyler okur, sohbetinizde yayınlar veya Discord'unuza söyler.",
       "add": "Kural ekle",
@@ -6102,6 +6118,7 @@
         "subscribers": "Aboneler"
       },
       "actionTypes": {
+        "wheel": "Tekerleği döndür",
         "alert": "Uyarı göster",
         "sound": "Ses çal",
         "say": "Yüksek sesle oku",

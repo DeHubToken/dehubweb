@@ -4718,6 +4718,7 @@
     "creatorEarnsDirect": "Macaamiisha waxay bixiyaan calaamadaha DeHub. Dhulalka saamigaaga ee boorsadaada marka ay isdiiwaangeliyaan, ka yar qiimaha boosteejada ee heerka calaamaddaada."
   },
   "liveOverlay": {
+    "wheelLanded": "{{name}} spun: {{result}}",
     "someone": "Qof",
     "newFollower": "Raacaha Cusub: {{name}}",
     "newSubscriber": "Isticmaale cusub: {{name}}",
@@ -4756,6 +4757,17 @@
     "youAreTimedOut": "Daqiiqad ayaad ka soo baxaysaa."
   },
   "liveStudio": {
+    "controls": {
+      "title": "Xakamaynta degdegga ah",
+      "intro": "Wixii badhtamihii. Beddel kasta wuxuu u hayaa qof kasta oo daawanaya, barnaamijka iyo OBS, ilaa aad dib u rogto.",
+      "alertsPaused": "Jooji digniinta",
+      "alertsPausedHint": "Ma jiro hadiyad, raac ama xeer digniino shaashadda. La-taliyayaasha, yoolalka iyo sanduuqa sheekaysiga ayaa sii socda.",
+      "soundsMuted": "Codadka digniinta Mute",
+      "soundsMutedHint": "Qawaaniintaadu waxay joojiyaan inay ku ciyaaraan dhawaaqyada.",
+      "readAloudMuted": "Jooji akhriska-aloud",
+      "readAloudMutedHint": "Farriimaha hadiyadaha iyo khadadka xeerka mar dambe lama akhriyo.",
+      "failed": "Beddelkaas isma beddelin ee isku day mar kale."
+    },
     "polls": {
       "title": "Codinta",
       "intro": "Weydiiso dadka daawanaya siidaada su'aal. Iyagu jawaab siiyaan buuton ku yaal DeHub app-ka, ama qor {{command}} iyo tiro xaasida buug ku yidh.",
@@ -4861,6 +4873,7 @@
       "join": "Join"
     },
     "kinds": {
+      "spin_wheel": "Giraangiraha wareejinaya",
       "tip_alert": "Tip alert",
       "follow_alert": "Follow alert",
       "subscribe_alert": "Subscriber alert",
@@ -4880,6 +4893,7 @@
       "poll": "Codbixinta"
     },
     "hints": {
+      "spin_wheel": "Halka giraangiraha ku jira xeerarkaaga ay wareegaan",
       "tip_alert": "Waxay u dabaaldegtaa talooyin kasta, oo si weyn loo cabbiray heerarkeeda",
       "follow_alert": "Muuji raac kasta oo cusub",
       "subscribe_alert": "Muuji isticmaale kasta oo cusub",
@@ -4931,6 +4945,8 @@
       "fast": "Si dhakhso ah"
     },
     "rules": {
+      "wheelSegments": "Qaybaha Wheel, hal xariiq",
+      "wheelHint": "Inta u dhaxaysa 2 iyo 12. DeHub wuxuu doortaa meesha giraangiraha uu istaago, sidaa darteed qof kasta oo daawanaya wuxuu arkaa natiijo isku mid ah. Isticmaal {result} in digniin ah, akhri-aloud ama ficil wada sheekaysi si aad u magacawdo.",
       "title": "Xeerarka",
       "intro": "Marka wax dhacdo stream-kaaga, DeHub waxay sameeysaa waxaad doortay: muujinaysaa ogeysiis, ciyaarsataa codka, akhriso wax iska yimid, ku qor chat-kaaga ama uu DeHub-ku Discord-kaaga u sheego.",
       "add": "Ku dar xeer",
@@ -4985,6 +5001,7 @@
         "subscribers": "Macaamiisha"
       },
       "actionTypes": {
+        "wheel": "Ku wareeji giraangiraha",
         "alert": "Muuji digniin",
         "sound": "Shid cod",
         "say": "Si weyn u akhri",

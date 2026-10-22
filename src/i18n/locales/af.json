@@ -4836,6 +4836,7 @@
     "creatorEarnsDirect": "Intekenare betaal in DeHub-tokens. Jou aandeel land in jou beursie die oomblik dat hulle inteken, minder die platformfooi vir jou wapenvlak."
   },
   "liveOverlay": {
+    "wheelLanded": "{{name}} spun: {{result}}",
     "someone": "Iemand",
     "newFollower": "Nuwe volgeling: {{name}}",
     "newSubscriber": "Nuwe intekenaar: {{name}}",
@@ -4874,6 +4875,17 @@
     "youAreTimedOut": "Jy is vir ’n oomblik tyd uit"
   },
   "liveStudio": {
+    "controls": {
+      "title": "Vinnige kontroles",
+      "intro": "Vir middelstroom. Elke skakelaar hou vir almal wat kyk, in die app en in OBS, totdat jy dit terugdraai.",
+      "alertsPaused": "Pouseer waarskuwings",
+      "alertsPausedHint": "Geen geskenk, volg of reël waarskuwings op die skerm nie. Telers, doelwitte en die kletsboks gaan voort.",
+      "soundsMuted": "Doof alarmgeluide",
+      "soundsMutedHint": "Jou reëls hou op om geluide te speel.",
+      "readAloudMuted": "Hou op om hardop te lees",
+      "readAloudMutedHint": "Geskenkboodskappe en reëllyne word nie meer gelees nie.",
+      "failed": "Die skakelaar het nie verander nie. Probeer weer."
+    },
     "polls": {
       "title": "Stembusse",
       "intro": "Vra die mense wat na jou uitsending kyk, 'n vraag. Hulle antwoord met 'n knoppie in die DeHub-app, of deur {{command}} en die opsie se nommer in die klets te tik.",
@@ -4980,6 +4992,7 @@
       "join": "Sluit aan"
     },
     "kinds": {
+      "spin_wheel": "Spin wiel",
       "tip_alert": "Wenk waarskuwing",
       "follow_alert": "Volg waarskuwing",
       "subscribe_alert": "Intekenaarwaarskuwing",
@@ -4999,6 +5012,7 @@
       "poll": "Peiling"
     },
     "hints": {
+      "spin_wheel": "Waar die wiele in jou reëls draai",
       "tip_alert": "Vier elke punt, grootte tot sy vlak",
       "follow_alert": "Wys elke nuwe volgeling",
       "subscribe_alert": "Vertoon elke nuwe intekenaar",
@@ -5049,6 +5063,8 @@
       "fast": "Vinnig"
     },
     "rules": {
+      "wheelSegments": "Wielsegmente, een per lyn",
+      "wheelHint": "Tussen twee en twaalf. DeHub kies waar die wiel stop, sodat almal wat kyk dieselfde resultaat sien. Gebruik {result} in 'n waarskuwing, lees hardop of gesels aksie om dit te noem.",
       "title": "Reëls",
       "intro": "Wanneer iets op jou stroom gebeur, doen DeHub wat jy kies: wys 'n waarskuwing, speel 'n geluid, lees iets hardop, plaas in jou klets of vertel jou Discord.",
       "add": "Voeg 'n reël by",
@@ -5103,6 +5119,7 @@
         "subscribers": "Intekenaars"
       },
       "actionTypes": {
+        "wheel": "Draai 'n wiel",
         "alert": "Wys 'n waarskuwing",
         "sound": "Speel 'n klank",
         "say": "Lees hardop",

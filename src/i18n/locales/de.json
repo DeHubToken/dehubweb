@@ -4850,6 +4850,7 @@
     "creatorEarnsDirect": "Abonnenten zahlen in DeHub-Token. Deine Aktie landet in deinem Wallet, sobald sie abonniert wird, abzüglich der Plattformgebühr für dein Abzeichen-Level."
   },
   "liveOverlay": {
+    "wheelLanded": "{{name}} gesponnen: {{result}}",
     "someone": "Jemand",
     "newFollower": "Neuer Follower: {{name}}",
     "newSubscriber": "Neuer Abonnent: {{name}}",
@@ -4888,6 +4889,17 @@
     "youAreTimedOut": "Du bist für einen Moment zeitlich begrenzt."
   },
   "liveStudio": {
+    "controls": {
+      "title": "Schnellbedienung",
+      "intro": "Für den Mid-Stream. Jeder Schalter hält für alle, die zuschauen, in der App und im OBS, bis Sie ihn zurückdrehen.",
+      "alertsPaused": "Warnungen pausieren",
+      "alertsPausedHint": "Keine Geschenk-, Folge- oder Regelbenachrichtigungen auf dem Bildschirm. Zähler, Ziele und die Chat-Box gehen weiter.",
+      "soundsMuted": "Alarmgeräusche stummschalten",
+      "soundsMutedHint": "Deine Regeln hören auf, Geräusche abzuspielen.",
+      "readAloudMuted": "Vorlesen stoppen",
+      "readAloudMutedHint": "Geschenknachrichten und Regelzeilen werden nicht mehr ausgelesen.",
+      "failed": "Dieser Schalter hat sich nicht geändert. Versuchen Sie es erneut."
+    },
     "polls": {
       "title": "Umfragen",
       "intro": "Stellen Sie den Zuschauern Ihrer Sendung eine Frage. Sie antworten mit einer Schaltfläche in der DeHub-App oder indem sie {{command}} und die Nummer der Option im Chat eingeben.",
@@ -4993,6 +5005,7 @@
       "join": "Beitreten"
     },
     "kinds": {
+      "spin_wheel": "Schleuderrad",
       "tip_alert": "TIPP-ALAR",
       "follow_alert": "Benachrichtigung folgen",
       "subscribe_alert": "Abonnenten-Alert",
@@ -5012,6 +5025,7 @@
       "poll": "Umfrage"
     },
     "hints": {
+      "spin_wheel": "Wo sich die Räder in deinen Regeln drehen",
       "tip_alert": "Feiern Sie jeden Tipp, der auf sein Level zugeschnitten ist",
       "follow_alert": "Zeigt jeden neuen Follower an",
       "subscribe_alert": "Zeigt jeden neuen Abonnenten an",
@@ -5063,6 +5077,8 @@
       "fast": "Schnell"
     },
     "rules": {
+      "wheelSegments": "Radsegmente, eines pro Linie",
+      "wheelHint": "Zwischen 2 und 12. DeHub wählt aus, wo das Rad stoppt, so dass jeder, der zuschaut, das gleiche Ergebnis sieht. Verwenden Sie {result} in einer Alarm-, Vorlese- oder Chat-Aktion, um es zu benennen.",
       "title": "Regeln",
       "intro": "Wenn etwas in Ihrem Stream passiert, tut DeHub, was Sie möchten: Zeigt eine Warnung an, spielt einen Ton ab, liest etwas laut vor, postet in Ihrem Chat oder teilt es Ihrem Discord mit.",
       "add": "Eine Regel hinzufügen",
@@ -5117,6 +5133,7 @@
         "subscribers": "Abonnenten"
       },
       "actionTypes": {
+        "wheel": "Dreh ein Rad",
         "alert": "Eine Benachrichtigung anzeigen",
         "sound": "Einen Ton abspielen",
         "say": "Vorlesen",

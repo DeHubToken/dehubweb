@@ -47,6 +47,8 @@ export interface PublicOverlay {
   widgets: OverlayWidget[];
   version: number;
   stats: OverlayStats;
+  /** Missing from an older API: read as all off. */
+  controls?: OverlayControls;
 }
 
 export interface CreatorOverlay {
@@ -55,4 +57,24 @@ export interface CreatorOverlay {
   widgets: OverlayWidget[];
   version: number;
   obsConnected: boolean;
+  controls?: OverlayControls;
+}
+
+/**
+ * Quick controls: switches a creator flips mid-stream that hold for everyone
+ * at once. Off means normal. See dehub-stream-backend models/LiveOverlay.ts.
+ */
+export interface OverlayControls {
+  /** Alerts (gifts, follows, rules, wheels) stop appearing. Counters and the chat box keep going. */
+  alertsPaused: boolean;
+  soundsMuted: boolean;
+  /** Nothing is read aloud: no gift messages, no rule read-aloud. */
+  readAloudMuted: boolean;
+}
+
+export const NO_CONTROLS: OverlayControls = { alertsPaused: false, soundsMuted: false, readAloudMuted: false };
+
+export function parseControls(raw: unknown): OverlayControls {
+  const c = (raw && typeof raw === 'object' ? raw : {}) as Record<string, unknown>;
+  return { alertsPaused: c.alertsPaused === true, soundsMuted: c.soundsMuted === true, readAloudMuted: c.readAloudMuted === true };
 }

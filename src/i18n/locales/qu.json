@@ -4804,6 +4804,7 @@
     "creatorEarnsDirect": "Suscriptorkuna DeHub tokenkunapi qullqita qunku. Accionesniyki billeteraykipi chayan chay rato suscribisqanku, menos plataforma qullqita insignia nivelniykipaq."
   },
   "liveOverlay": {
+    "wheelLanded": "{{name}} muyuchisqa: {{result}}",
     "someone": "Pipas",
     "newFollower": "Musuq qatiq: {{name}}",
     "newSubscriber": "Musuq suscriptor: {{name}}",
@@ -4852,6 +4853,17 @@
     "stillCounting": "Yupachkanraqmi: regalokunaqa huk minutollapim takyachinman."
   },
   "liveStudio": {
+    "controls": {
+      "title": "Utqaylla kamachinakuna",
+      "intro": "Chawpi mayupaq. Sapa interruptor llapa qhawaqkunapaq hap&#39;in, app kaqpi chaymanta OBS kaqpi, qhipaman tikranaykikama.",
+      "alertsPaused": "Alertas de pausa",
+      "alertsPausedHint": "Pantallapi mana regalo, qatiy nitaq kamachiy alertakuna. Yupaqkuna, metakuna chaymanta chat box nisqa purichkanku.",
+      "soundsMuted": "Mute alerta nisqa t’uqyaykuna",
+      "soundsMutedHint": "Kamachiyniykikunaqa manañam t’uqyaykunata tocankuchu.",
+      "readAloudMuted": "Amaña kallpawan leeychu",
+      "readAloudMutedHint": "Regalo willakuykunapas kamachikuy chirukunapas manañam ñawinchasqañachu.",
+      "failed": "Chay cambioqa manan cambiarqanchu. Hukmanta kallpachakuy."
+    },
     "moderation": {
       "subscribersOnly": "Suscriptorkunallapaq",
       "title": "Chat moderación nisqa",
@@ -5003,6 +5015,7 @@
       "join": "Taqruy"
     },
     "kinds": {
+      "spin_wheel": "Rueda de giro",
       "tip_alert": "Alerta de consejo",
       "follow_alert": "Alertata qatipay",
       "subscribe_alert": "Suscriptor nisqamanta willakuy",
@@ -5021,6 +5034,7 @@
       "poll": "Encuesta"
     },
     "hints": {
+      "spin_wheel": "Maypichus kamachiyniykipi ruedakuna muyurinku",
       "tip_alert": "Sapa puntata raymichan, pataman hina sayayniyuq",
       "follow_alert": "Sapa musuq qatiqnintam qawachin",
       "subscribe_alert": "Sapa musuq suscriptor nisqatam qawachin",
@@ -5072,6 +5086,8 @@
       "fast": "Utqay"
     },
     "rules": {
+      "wheelSegments": "Rueda segmentos, sapa chirupi huk",
+      "wheelHint": "2manta 12kama.DeHub maypi rueda sayan chayta akllan, chayrayku llapa qhawaqkuna kikin ruwayta rikunku. {result} llamk&#39;achiy huk alerta, kallpawan ñawiriy utaq rimanakuy ruwaypi sutichaypaq.",
       "title": "Kamachiykuna",
       "intro": "Imapis streamniykipi kaptinqa, DeHub munashqaykita ruran: willayta rikuchin, qapariyninta uyarichin, imatapis ñawirin, chatniykipi qillqan, icha Discordniykiman willan.",
       "add": "Kamachiyta yapay",
@@ -5126,6 +5142,7 @@
         "subscribers": "Suscriptores nisqakuna"
       },
       "actionTypes": {
+        "wheel": "Huk rueda muyuchiy",
         "alert": "Huk alertata qawachiy",
         "sound": "Huk t’uqyayta tocay",
         "say": "Sinchita leey",

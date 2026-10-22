@@ -5834,6 +5834,7 @@
     "creatorEarnsDirect": "Los suscriptores pagan en tokens DeHub. Tu acción llega a tu billetera en el momento en que se suscriben, menos la tarifa de la plataforma para tu nivel de insignia."
   },
   "liveOverlay": {
+    "wheelLanded": "{{name}} giró: {{result}}",
     "someone": "Alguien",
     "newFollower": "Nuevo seguidor: {{name}}",
     "newSubscriber": "Nuevo suscriptor: {{name}}",
@@ -5872,6 +5873,17 @@
     "youAreTimedOut": "Estás en tiempo de espera por un momento"
   },
   "liveStudio": {
+    "controls": {
+      "title": "Controles rápidos",
+      "intro": "Para mid-stream. Cada interruptor se mantiene para que todos lo vean, en la aplicación y en OBS, hasta que lo voltees hacia atrás.",
+      "alertsPaused": "Pausar alertas",
+      "alertsPausedHint": "No hay alertas de regalo, seguimiento o reglas en la pantalla. Los contadores, los goles y el cuadro de chat continúan.",
+      "soundsMuted": "Silenciar sonidos de alerta",
+      "soundsMutedHint": "Tus reglas dejan de reproducir sonidos.",
+      "readAloudMuted": "Detener lectura en voz alta",
+      "readAloudMutedHint": "Los mensajes de regalo y las líneas de reglas ya no se leen.",
+      "failed": "Ese interruptor no ha cambiado. Inténtalo de nuevo."
+    },
     "polls": {
       "title": "Encuestas",
       "intro": "Haga una pregunta a las personas que ven su transmisión. Responden con un botón en la aplicación DeHub o escribiendo {{command}} y el número de la opción en el chat.",
@@ -5978,6 +5990,7 @@
       "join": "Unirse"
     },
     "kinds": {
+      "spin_wheel": "Rueda giratoria",
       "tip_alert": "Alerta de propina",
       "follow_alert": "Seguir alerta",
       "subscribe_alert": "Alerta de suscriptor",
@@ -5997,6 +6010,7 @@
       "poll": "Encuesta"
     },
     "hints": {
+      "spin_wheel": "Donde las ruedas de tus reglas giran",
       "tip_alert": "Celebra cada propina, ajustada a su nivel",
       "follow_alert": "Muestra a cada nuevo seguidor",
       "subscribe_alert": "Muestra cada nuevo suscriptor",
@@ -6048,6 +6062,8 @@
       "fast": "Rápido"
     },
     "rules": {
+      "wheelSegments": "Segmentos de rueda, uno por línea",
+      "wheelHint": "Entre 2 y 12. DeHub elige dónde se detiene la rueda, para que todos los espectadores vean el mismo resultado. Usa {result} en una acción de alerta, lectura en voz alta o chat para nombrarla.",
       "title": "Normas",
       "intro": "Cuando sucede algo en su transmisión, DeHub hace lo que usted elige: muestra una alerta, reproduce un sonido, lee algo en voz alta, publica en su chat o le dice a su Discord.",
       "add": "Añade una regla",
@@ -6102,6 +6118,7 @@
         "subscribers": "Suscriptores"
       },
       "actionTypes": {
+        "wheel": "Gira una ruleta",
         "alert": "Mostrar una alerta",
         "sound": "Reproducir un sonido",
         "say": "Leer en voz alta",
