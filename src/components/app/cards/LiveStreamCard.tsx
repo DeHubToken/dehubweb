@@ -101,6 +101,7 @@ const LiveGiftBuyDrawer = lazy(() => import('@/components/app/live/LiveGiftBuyDr
 const TipPayWith = lazy(() => import('@/components/app/tips/TipPayWith'));
 // The creator's overlay; lazy, most streams have none.
 const LiveOverlayLayer = lazy(() => import('@/components/app/live/overlay/LiveOverlayLayer'));
+const ReplayOverlayLayer = lazy(() => import('@/components/app/live/overlay/ReplayOverlayLayer'));
 import { speakTipMessage, warmTipTts, setTipTtsEnabled, MAX_TTS_CHARS } from '@/lib/live/tip-tts';
 import { useAuth } from '@/contexts/AuthContext';
 import { useBookmarkPost } from '@/hooks/use-bookmarks';
@@ -421,7 +422,8 @@ export function LiveStreamCard({ stream, chatSlot, immersive = false }: LiveStre
    */
   const { items: giftCelebrations, enqueue: enqueueGift } = useGiftAnimations();
   // A creator's own tip alert replaces the built-in celebration, never both.
-  const { data: streamOverlay } = useStreamOverlay(stream.streamId, !!stream.isLive && !streamEnded);
+  // A replay draws the overlay too, from the stream's own log (ReplayOverlayLayer).
+  const { data: streamOverlay } = useStreamOverlay(stream.streamId, (!!stream.isLive && !streamEnded) || (streamEnded && !!stream.replayUrl));
   const overlayOwnsCelebration = overlayReplacesCelebration(streamOverlay);
   /**
    * The tier the amount currently in the box will play — whether it was
@@ -1489,6 +1491,11 @@ export function LiveStreamCard({ stream, chatSlot, immersive = false }: LiveStre
               videoRef={videoRef}
               initialViewers={Number(livePresence) || 0}
             />
+          </Suspense>
+        )}
+        {streamOverlay && streamOverlay.version > 0 && streamOverlay.renderIn === 'app' && streamEnded && stream.replayUrl && stream.streamId && (
+          <Suspense fallback={null}>
+            <ReplayOverlayLayer streamId={stream.streamId} overlay={streamOverlay} videoRef={replayRef} />
           </Suspense>
         )}
         <LiveReactionFlow streamId={stream.streamId} enabled={!!stream.isLive && !streamEnded} bottom={immersive ? 100 : 56} self={selfReaction} />
