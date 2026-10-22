@@ -28,10 +28,15 @@ describe('OBS overlay page', () => {
   });
 
   it('is routed outside the app shell, wallet stack and theme canvas', () => {
+    // Beside /r/:code in the top-level Routes, ahead of the catch-all that
+    // mounts the wallet stack. The app shell has a `path="*"` of its own
+    // further up the file, so the wallet element is the marker, not that.
     const overlayRoute = app.indexOf('path="/overlay/:token"');
-    const catchAll = app.indexOf('path="*"');
-    expect(overlayRoute).toBeGreaterThan(-1);
-    expect(catchAll).toBeGreaterThan(-1);
-    expect(overlayRoute).toBeLessThan(catchAll);
+    const referral = app.indexOf('path="/r/:code"');
+    const walletShell = app.indexOf('<WalletProviders>');
+    expect(referral).toBeGreaterThan(-1);
+    expect(walletShell).toBeGreaterThan(-1);
+    expect(overlayRoute).toBeGreaterThan(referral);
+    expect(overlayRoute).toBeLessThan(walletShell);
   });
 });
