@@ -11,8 +11,9 @@ import { useTranslation as _useCopy } from 'react-i18next';
  * the only useful thing the card can say is that the room is open.
  *
  * The host's cover graphic, if they set one, sits above the card content at
- * its full aspect — the same aspect-video/object-contain treatment
- * StageCoverArt gives it on the stage page itself. It used to back the whole
+ * its own shape — full width, natural height, the same treatment
+ * StageCoverArt gives it on the stage page itself, so a non-16:9 cover gets
+ * no letterbox bars in the feed either. It used to back the whole
  * card as an absolutely-positioned object-cover layer, which cropped it to
  * whatever height the text happened to make (~150px of a 16:9 graphic); art
  * designed to announce an event was mostly invisible. With the image out from
@@ -99,16 +100,17 @@ export function StageLinkEmbed({ stageId, stageShortId, fallback = null }: Stage
         hasCover && 'hover:border-white/20',
       )}
     >
-      {/* Cover graphic, whole and uncropped — the same aspect-video +
-          object-contain treatment StageCoverArt uses on the stage page.
+      {/* Cover graphic at its own shape — full width, natural height, the
+          same treatment StageCoverArt uses on the stage page. Very tall
+          uploads are capped so one card cannot swallow the feed.
           aria-hidden because the heading below already names the stage. */}
       {hasCover && (
-        <div aria-hidden className="w-full aspect-video bg-black">
+        <div aria-hidden className="w-full">
           <img
             src={stage.cover_image_url!}
             alt=""
             loading="lazy"
-            className="w-full h-full object-contain"
+            className="block w-full h-auto max-h-[70vh] object-cover"
           />
         </div>
       )}
