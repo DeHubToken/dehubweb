@@ -4521,7 +4521,8 @@
       "reaction_counter": "Reaction counter",
       "event_feed": "Recent activity",
       "chat_box": "Chat box",
-      "ticker": "Ticker"
+      "ticker": "Ticker",
+      "rule_alert": "Rule alerts"
     },
     "hints": {
       "tip_alert": "हर टिप के जश्न मनावै, ओकर टियर के हिसाब से साइज में",
@@ -4560,6 +4561,7 @@
       "fast": "Fast"
     },
     "rules": {
+      "add": "Ekta niyam joro",
       "saved": "قواعدك محفوظة. ستعمل عند تيب أو تليك أو رسالتك التالية.",
       "saveFailed": "کودهای شما ذخیره نشد.",
       "saveToTest": "قوانین‌تو ذخیره کن تا امتحانشون کنم.",
@@ -4569,6 +4571,7 @@
       "minAmount": "بەشەکەتەن تۆپ (DHB)",
       "keyword": "کلمه یا عبارت",
       "userCooldown": "دقیقه بر هر نگاهنده (ثانیه)",
+      "webhookText": "भेजेक ले संदेश",
       "triggers": {
         "chat": "Any chat message"
       },

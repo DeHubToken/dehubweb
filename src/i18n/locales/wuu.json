@@ -4464,6 +4464,7 @@
     "rules": {
       "enabled": "规则关于",
       "remove": "删脱规则",
+      "command": "指令",
       "cooldown": "等一下用 (秒)",
       "userCooldown": "等人頭 (秒)",
       "sayText": "要读出来的文本",
