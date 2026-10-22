@@ -5060,6 +5060,7 @@
     "creatorEarnsDirect": "Pelanggan membayar dalam token DeHub. Bahagian anda masuk ke dalam dompet anda sebaik sahaja mereka melanggan, tolak yuran platform untuk peringkat lencana anda."
   },
   "liveOverlay": {
+    "subathon": "Subathon",
     "someone": "Seseorang",
     "newFollower": "Pengikut baharu: {{name}}",
     "newSubscriber": "Pelanggan baharu: {{name}}",
@@ -5104,6 +5105,7 @@
   },
   "liveStudio": {
     "subathon": {
+      "title": "Subathon",
       "intro": "Penghitung mundur di siaran anda. Setiap hadiah bayaran, pengikut dan langganan menambah masa, jadi bilik akan mempertahankan anda tetap siaran.",
       "secondsPerThousand": "Saat ditambah per 1,000 DHB yang dihadiahkan",
       "secondsPerFollow": "Saat ditambah per pengikut",

@@ -4757,6 +4757,7 @@
   },
   "liveStudio": {
     "subathon": {
+      "stop": "Dúró",
       "title": "Subathon",
       "intro": "Ìkàwé lórí ìgbìsí rẹ. Gbogbo ẹ̀bùn tí wọ́n sanwó fún, ìlépa àti ìforúkọsílẹ̀ máa ń fi àkókò kún un, nítorí náà yàrá náà máa ń jẹ́ kí o wà láàyè.",
       "secondsPerThousand": "Èkejì tí a fi kún un ní gbogbo ẹ̀bùn 1,000 DHB",

@@ -4763,6 +4763,8 @@
   },
   "liveStudio": {
     "subathon": {
+      "intro": "Tirinta hoos u dhacaysa ee baahintaada. Hadiyad kasta oo la bixiyo, raacitaan iyo isdiiwaangelin waxay ku daraan waqti, sidaas darteed qolku wuu ku haynayaa adiga oo toos ah.",
+      "secondsPerThousand": "Ilbiriqsiyo lagu daro 1,000 DHB oo hadiyad ah",
       "title": "Subathon",
       "secondsPerFollow": "Seconds lagu daray per raac",
       "secondsPerSubscribe": "Labaad oo lagu daray isdiiwaangelin kasta",

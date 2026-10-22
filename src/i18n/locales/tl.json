@@ -4852,6 +4852,7 @@
     "creatorEarnsDirect": "Nagbabayad ang mga subscriber sa mga token ng DeHub. Ang iyong share ay nasa iyong wallet sa sandaling mag - subscribe sila, mas mababa ang bayarin sa platform para sa iyong badge tier."
   },
   "liveOverlay": {
+    "subathon": "Subathon",
     "someone": "Isang tao",
     "newFollower": "Bagong tagasunod:{{name}}",
     "newSubscriber": "Bagong subscriber:{{name}}",
@@ -4896,6 +4897,8 @@
   },
   "liveStudio": {
     "subathon": {
+      "title": "Subathon",
+      "addFive": "Magdagdag ng 5 minuto",
       "intro": "Isang countdown sa iyong stream. Bawat bayad na regalo, susunod at pagsubskrib, idinadagdag ang oras upang manatili ka sa live.",
       "secondsPerThousand": "Mga segundo na idinagdag sa bawat 1,000 DHB gifted",
       "secondsPerFollow": "Mga segundo na idinagdag kada follow",
@@ -5032,6 +5035,7 @@
       "join": "Sumali"
     },
     "kinds": {
+      "subathon_timer": "Timer ng subathon",
       "tip_alert": "Alerto sa tip",
       "follow_alert": "Subaybayan ang alerto",
       "subscribe_alert": "Alerto sa subscriber",

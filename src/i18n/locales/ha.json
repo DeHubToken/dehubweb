@@ -4725,6 +4725,7 @@
     "creatorEarnsDirect": "Masu biyan kuɗi suna biyan kuɗi a cikin alamun DeHub. Kasashen rabon ku a cikin walat ɗin ku lokacin da suka yi rajista, ƙasa da kuɗin dandamali don ƙimar alamar ku."
   },
   "liveOverlay": {
+    "subathon": "Subathon",
     "someone": "Wani",
     "newFollower": "Sabon mabiya: {{name}}",
     "newSubscriber": "Sabuwar mai biyan kuɗi: {{name}}",
@@ -4769,6 +4770,7 @@
   },
   "liveStudio": {
     "subathon": {
+      "title": "Subathon",
       "intro": "Ƙidaya a kan rafi. Kowane kyautar da aka biya, bi da biyan kuɗi yana ƙara lokaci, don haka ɗakin yana kiyaye ku.",
       "secondsPerThousand": "Na biyu da aka kara da 1,000 DHB kyauta",
       "secondsPerFollow": "Seconds kara da per bi",

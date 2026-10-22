@@ -4689,6 +4689,7 @@
     "creatorEarnsDirect": "እቶም ተመዝጋቢታት ኣብ DeHub ምልክታት ይኽፈሉ እዮም ። እቲ ናይ ባጅ ደረጃኻ ናይ መድረኽ ክፍሊት ዝሕተተሉ እዋን ፡ ኣብ ቦርሳኻ ዘሎ መሬትካ ።"
   },
   "liveOverlay": {
+    "subathon": "ሳባቶን",
     "someone": "ሓደ ሰብ",
     "newFollower": "ሓድሽ ተኸታሊ ፦ {{name}}",
     "newSubscriber": "ሓድሽ ኣባል ፦ {{name}}",
@@ -4731,6 +4732,7 @@
   },
   "liveStudio": {
     "subathon": {
+      "title": "ሳባቶን",
       "intro": "ኣብ ገማግም ባሕሪኻ ድማ ቆጸራ ግበር ። ነፍሲ ወከፍ እተኸፍለ ውህበት ፡ ሰዓብን ኣባልነትን ግዜ ይውስኽ ፡ ስለዚ ፡ እቲ ክፍሊ ንህይወትካ ይሕልወካ እዩ ።",
       "secondsPerThousand": "ኣብ ነፍሲ ወከፍ 1,000 DHB እተዋህበ",
       "secondsPerFollow": "ኣብ ነፍሲ ወከፍ ተኸታታሊ እተወሰኸ ካልኢት",
@@ -4868,6 +4870,7 @@
       "join": "ተቐሊል"
     },
     "kinds": {
+      "subathon_timer": "ሰዓት ሳባቶን",
       "tip_alert": "ምልክት ማሕበር",
       "follow_alert": "ተኸተል ማሕበር",
       "subscribe_alert": "ተመዝገብ ማሕበር",

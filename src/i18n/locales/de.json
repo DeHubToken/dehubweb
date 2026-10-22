@@ -4850,6 +4850,7 @@
     "creatorEarnsDirect": "Abonnenten zahlen in DeHub-Token. Deine Aktie landet in deinem Wallet, sobald sie abonniert wird, abzüglich der Plattformgebühr für dein Abzeichen-Level."
   },
   "liveOverlay": {
+    "subathon": "Subathon",
     "someone": "Jemand",
     "newFollower": "Neuer Follower: {{name}}",
     "newSubscriber": "Neuer Abonnent: {{name}}",
@@ -4894,6 +4895,7 @@
   },
   "liveStudio": {
     "subathon": {
+      "title": "Subathon",
       "intro": "Ein Countdown für Ihren Stream. Jedes bezahlte Geschenk, Follow und Abonnement verlängert die Zeit, sodass der Raum dich am Leben hält.",
       "secondsPerThousand": "Hinzugefügte Sekunden pro 1.000 DHB-Geschenke",
       "secondsPerFollow": "Sekunden pro Folge hinzugefügt",

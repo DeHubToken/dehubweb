@@ -4792,6 +4792,7 @@
     "creatorEarnsDirect": "Abonnente zahled mit DeHub Tokens. Din Anteil landet i dim Wallet, grad wenn sie abonniered, abzüglich de Plattformgebühr für din Badge-Tier."
   },
   "liveOverlay": {
+    "subathon": "Subathon",
     "someone": "Irgendwer",
     "newFollower": "Neuer Follower: {{name}}",
     "newSubscriber": "Neue Abonnentin: {{name}}",
@@ -4835,6 +4836,9 @@
   },
   "liveStudio": {
     "subathon": {
+      "title": "Subathon",
+      "start": "Countdown starten",
+      "stop": "Stopp",
       "intro": "Eini Countdown auf deim Stream. Jeder bezahlte Gift, Follow und Abo gäbt Zeit, so bleibt’s Room live.",
       "secondsPerThousand": "Sekunden, die pro 1'000 DHB geschenkt werden, hinzugefügt",
       "secondsPerFollow": "Sekunden pro Follow gfügt",
@@ -4849,6 +4853,7 @@
       "widgetHint": "Zeigst deini Subathon-Zählrückwärtslauf an. Startschtihle es im Subathon-Panel in Live Studio."
     },
     "points": {
+      "widgetHint": "Fügen Sie das Widget Loyale Zuschauer hinzu, um diese Liste im Stream anzuzeigen.",
       "title": "Loyale Zuschauer",
       "intro": "Zuschauende verdiene a Pukt für jede Minute, wo se di schaue, und a Pukt für je 100 DHB, wo se dir schenke. Chat und Reaktione bringe nix ein – Pukt kenne mer folglich net «farmen».",
       "empty": "Kei Punkte no. Die bauen sich auf, wenn Leute zuschauen und schenken."
@@ -4965,6 +4970,7 @@
       "join": "Mitmache"
     },
     "kinds": {
+      "subathon_timer": "Subathon-Timer",
       "tip_alert": "Tipp-Alarm",
       "follow_alert": "Folge-Alarm",
       "subscribe_alert": "Abonnent-Alarm",
@@ -4986,6 +4992,7 @@
       "points_board": "Loyale Zuschauer"
     },
     "hints": {
+      "points_board": "Ihre Top-Zuschauer nach Punkten aus Zuschauen und Verschenken",
       "tip_alert": "Feiert jede Tipp, passend zu sim Level",
       "follow_alert": "Zeigt jede neue Follower",
       "subscribe_alert": "Zeigt jede neue Abonnent",

@@ -4042,6 +4042,11 @@
     "creatorEarnsDirect": "بەشداربووان بە تۆکنی DeHub پارە دەدەن. کاتێک بەشداری دەکەن، بەشەکەت دەگاتە جزدانەکەت، دوای کرێی پلاتفۆرم بەپێی ئاستی باجەکەت."
   },
   "liveOverlay": {
+    "subathon": "Subathon",
+    "subathonOver": "Dem qediya",
+    "pointsTitle": "Temaşevanên herî dilsoz",
+    "points_one": "{{formatted}} xal",
+    "points_other": "{{formatted}} xal",
     "someone": "Kesek",
     "newFollower": "Şopînerê nû: {{name}}",
     "newSubscriber": "Abonetiya nû: {{name}}",
@@ -4081,6 +4086,29 @@
     "youAreTimedOut": "Tu ji bo demekê hatî bêdengkirin"
   },
   "liveStudio": {
+    "subathon": {
+      "title": "Subathon",
+      "intro": "Jimartinek berevajî li ser weşana te. Her diyariya dayî, şopandin û abonetî dem lê zêde dike, ji ber vê yekê odeyê te zindî dihêle.",
+      "secondsPerThousand": "Çirkeyên ku ji bo her 1,000 DHB diyarî tên zêdekirin",
+      "secondsPerFollow": "Çirkeyên ku ji bo her şopandinê tên zêdekirin",
+      "secondsPerSubscribe": "Çirkeyên ku ji bo her abonetiyê tên zêdekirin",
+      "capHours": "Herî dirêj dikare bimeşe (saet)",
+      "save": "Mîqdaran tomar bike",
+      "saved": "Mîqdarên subathonê hatin tomarkirin.",
+      "startMinutes": "Dest pê bike bi (deqîqe)",
+      "start": "Jimartinê dest pê bike",
+      "stop": "Rawestîne",
+      "addFive": "5 deqîqe lê zêde bike",
+      "removeFive": "5 deqîqe kêm bike",
+      "failed": "Ev nebû. Dîsa biceribîne.",
+      "widgetHint": "Jimartina subathona te nîşan dide. Wê ji panela Subathonê di Live Studioyê de dest pê bike."
+    },
+    "points": {
+      "title": "Temaşevanên dilsoz",
+      "intro": "Temaşevan ji bo her deqîqeya ku te temaşe dikin xalek û ji bo her 100 DHB ku diyarî dikin xalek qezenc dikin. Sohbet û bertek tiştek qezenc nakin, ji ber vê yekê xal nayên berhevkirin bi xapandinê.",
+      "empty": "Hîn xal tune ne. Gava mirov temaşe dikin û diyarî didin ew zêde dibin.",
+      "widgetHint": "Ji bo nîşandana vê lîsteyê li ser weşanê widgeta Temaşevanên dilsoz lê zêde bike."
+    },
     "controls": {
       "title": "Kontrolên bilez",
       "intro": "Ji bo nîvê weşanê. Her guhêrbar ji bo hemû temaşevanan, di sepanê de û di OBSê de, dimîne heta ku tu wê vegerînî.",
@@ -4198,6 +4226,8 @@
       "join": "بەشداریکردن"
     },
     "kinds": {
+      "subathon_timer": "Demjimêra subathonê",
+      "points_board": "Temaşevanên dilsoz",
       "tip_alert": "ئاگاداریی بەخشش",
       "follow_alert": "ئاگاداریی فۆڵۆو",
       "subscribe_alert": "ئاگاداریی سەبسکرایب",
@@ -4218,6 +4248,8 @@
       "spin_wheel": "Çerxa bextê"
     },
     "hints": {
+      "subathon_timer": "Jimartinek berevajî ku diyarî, şopandin û abonetî wê dirêj dikin",
+      "points_board": "Temaşevanên te yên sereke li gorî xalên ji temaşekirin û diyariyan",
       "tip_alert": "هەموو بەخششێک بەپێی ئاستەکەی دیاری دەکات",
       "follow_alert": "هەموو فۆڵۆوەرێکی نوێ نیشان دەدات",
       "subscribe_alert": "هەموو سەبسکرایبەرێکی نوێ نیشان دەدات",

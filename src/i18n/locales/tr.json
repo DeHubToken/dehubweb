@@ -5834,6 +5834,7 @@
     "creatorEarnsDirect": "Aboneler DeHub tokenleri ile ödeme yapar. Payınız, abone oldukları anda cüzdanınıza düşer ve rozet seviyenizin platform ücreti düşülür."
   },
   "liveOverlay": {
+    "subathon": "Subathon",
     "someone": "Birisi",
     "newFollower": "Yeni takipçi: {{name}}",
     "newSubscriber": "Yeni abone: {{name}}",
@@ -5878,6 +5879,7 @@
   },
   "liveStudio": {
     "subathon": {
+      "title": "Subathon",
       "intro": "Akışınızda bir geri sayım. Ödenen her hediye, takip ve abonelik size zaman kazandırır, böylece oda sizi canlı tutar.",
       "secondsPerThousand": "Hediye edilen 1.000 DHB başına saniye eklendi",
       "secondsPerFollow": "Takip başına saniye eklendi",
@@ -6016,6 +6018,7 @@
       "join": "Katıl"
     },
     "kinds": {
+      "subathon_timer": "Subathon sayacı",
       "tip_alert": "Bahşiş uyarısı",
       "follow_alert": "Takip uyarısı",
       "subscribe_alert": "Abone uyarısı",

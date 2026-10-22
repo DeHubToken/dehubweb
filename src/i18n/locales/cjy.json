@@ -4753,6 +4753,7 @@
     "creatorEarnsDirect": "订阅者以 DeHub 代币支付。一旦他们订阅，您的份额就会立即进入您的钱包，减去您徽章级别的平台费用。"
   },
   "liveOverlay": {
+    "subathon": "苏巴吞",
     "someone": "有人",
     "newFollower": "新粉丝：{{name}}",
     "newSubscriber": "新订阅用户：{{name}}",
@@ -4796,6 +4797,7 @@
   },
   "liveStudio": {
     "subathon": {
+      "title": "苏巴吞",
       "intro": "在你的直播中倒计时。每一次付费礼物、关注和订阅都会增加时间，让房间保持直播。",
       "secondsPerThousand": "每赠送 1,000 DHB 增加的秒数",
       "secondsPerFollow": "每关注增加的秒数",

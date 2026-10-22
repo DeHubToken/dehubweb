@@ -4744,6 +4744,7 @@
     "creatorEarnsDirect": "Ndị debanyere aha na-akwụ ụgwọ na akara ngosi DeHub. Gị òkè ala gị obere akpa mgbe ha debanyere aha, obere n 'elu ikpo okwu ego maka gị baajị tier."
   },
   "liveOverlay": {
+    "subathon": "Subathon",
     "someone": "Mmadụ",
     "newFollower": "Ọhụrụ na-eso ụzọ: {{name}}",
     "newSubscriber": "Onye debanyere aha ọhụrụ: {{name}}",
@@ -4788,6 +4789,7 @@
   },
   "liveStudio": {
     "subathon": {
+      "title": "Subathon",
       "intro": "Ngụkọ ọnụ na iyi gị. Onyinye ọ bụla a kwụrụ ụgwọ, soro na ndenye aha na-agbakwụnye oge, ya mere ime ụlọ ahụ na-eme ka ị dị ndụ.",
       "secondsPerThousand": "Sekọnd kwukwara kwa 1,000 DHB onyinye",
       "secondsPerFollow": "Nke abụọ agbakwunyere kwa na-eso",

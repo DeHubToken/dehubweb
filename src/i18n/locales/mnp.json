@@ -4409,6 +4409,7 @@
     "creatorEarnsDirect": "订阅者用DeHub代币支付。一旦他们订阅，你的份额就会立即进入你的钱包，减去你徽章等级的平台费用。"
   },
   "liveOverlay": {
+    "subathon": "苏巴吞",
     "someone": "𠮷人",
     "newFollower": "新粉絲：{{name}}",
     "newSubscriber": "新訂閱：{{name}}",
@@ -4453,6 +4454,7 @@
   },
   "liveStudio": {
     "subathon": {
+      "title": "苏巴吞",
       "intro": "你直播間的倒數計時器。每送出一份付費禮物、追蹤或訂閱都會加時間，讓直播間保持直播狀態。",
       "secondsPerThousand": "每送出1,000 DHB 加的秒數",
       "secondsPerFollow": "每追蹤加的秒數",
@@ -4469,6 +4471,7 @@
       "widgetHint": "顯示你的Subathon倒數計時器。從Live Studio的Subathon面板開始。"
     },
     "points": {
+      "title": "忠诚观众",
       "intro": "觀眾每看你直播一分鐘得一分，每送出100 DHB得一分。聊天和反應不算，所以分數不能靠這些東西來賺。",
       "empty": "目前沒有分數。隨著人們觀看和送禮，分數會累積。",
       "widgetHint": "把「忠誠觀眾」小工具加到直播中，顯示這個名單。"
@@ -4575,6 +4578,8 @@
       "share": "分享"
     },
     "kinds": {
+      "subathon_timer": "Subathon计时器",
+      "points_board": "忠诚观众",
       "tip_alert": "提示警报",
       "share_alert": "分享提醒",
       "join_alert": "加入警报",
