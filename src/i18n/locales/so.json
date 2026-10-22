@@ -4969,6 +4969,8 @@
       "slowMode": "Qaabka gaabiska ah",
       "slowModeHint": "Muddo intee le 'eg ayuu qof kasta oo daawadayaashu sugayaa farriimaha dhexdooda? Adiga iyo moderators-kaaga waligaa ma sugin.",
       "off": "Ka bax",
+      "seconds_one": "{{count}} labaad",
+      "seconds_other": "{{count}} seconds",
       "followersOnly": "Raacayaasha kaliya",
       "subscribersOnly": "Is-diiwaangeliyeyaasha oo keliya",
       "subscribersOnlyHint": "Kuwa raacsan oo keliya ayaa ka gudba.",
@@ -4984,6 +4986,7 @@
       "moderatorAdded": "Moderator ayaa intaa ku daray.",
       "moderatorNotFound": "Xisaab la ma leh magacaas isticmaale.",
       "removeModerator": "Ka saar moderator",
+      "noModerators": "No moderators yet.",
       "banned": "Laga mamnuuco durdurradaada",
       "unban": "Jinsi la 'aan",
       "noBans": "Qofna waa la mamnuucay.",
@@ -4992,8 +4995,10 @@
       "actions": {
         "timeout_one": "{{actor}} timed out {{target}} for {{count}} labaad",
         "ban": "{{actor}} mamnuuca {{target}}",
+        "unban": "{{actor}} unbanned {{target}}",
         "moderator-added": "{{target}} wuxuu noqday moderator",
         "moderator-removed": "{{target}} mar dambe ma aha moderator",
+        "word-blocked": "Jooji fariin ka timid {{target}} for \"{{word}}\"",
         "word-timeout_one": "Waqtiga ka baxay {{target}} for {{count}} labaad for \"{{word}}\"",
         "word-timeout_other": "Waqtiga ka baxay {{target}} for {{count}} seconds for \"{{word}}\""
       }

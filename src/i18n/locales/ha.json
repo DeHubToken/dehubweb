@@ -4716,6 +4716,8 @@
   },
   "liveChatModeration": {
     "timeout1m": "Lokaci don minti 1",
+    "timeout10m": "Lokaci na minti 10",
+    "timeout1h": "Lokaci na awa 1",
     "ban": "Hana daga waɗannan raƙuman ruwa",
     "makeModerator": "Yi moderator",
     "timedOut": "Lokaci ya fita.",
