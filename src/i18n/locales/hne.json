@@ -4693,6 +4693,7 @@
     "creatorEarnsDirect": "सब्सक्राइबर DeHub टोकन म भुगतान करत हंवय । अपन शेयर जमीन ल अपन पर्स म जब ओमन साइन अप करत हंवय, तो आपके बैज स्तर बर मंच शुल्क कम होत हवय ।"
   },
   "liveOverlay": {
+    "wheelLanded": "{{name}} स्पून: {{result}}",
     "someone": "केकरो",
     "newFollower": "नवा अनुयायी: {{name}} action: inmenu",
     "newSubscriber": "नवा सब्सक्राइबर: {{name}}label",

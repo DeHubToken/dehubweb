@@ -4775,6 +4775,7 @@
     "creatorEarnsDirect": "구독자는 DeHub 토큰으로 결제합니다. 구독하는 순간 지갑에 공유가 들어오므로 배지 등급에 대한 플랫폼 수수료가 줄어듭니다."
   },
   "liveOverlay": {
+    "wheelLanded": "{{name}}님이 돌렸어요: {{result}}",
     "someone": "누군가",
     "newFollower": "새 팔로워: {{name}}",
     "newSubscriber": "신규 구독자: {{name}}",

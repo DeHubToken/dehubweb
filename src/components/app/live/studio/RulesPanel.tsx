@@ -481,7 +481,6 @@ function ActionFields({ action, onChange }: { action: RuleAction; onChange: (nex
               id={id}
               rows={4}
               value={action.segments.join('\n')}
-              placeholder={t('liveStudio.rules.wheelPlaceholder')}
               onChange={(e) => onChange({ ...action, segments: e.target.value.split('\n').slice(0, WHEEL_MAX_SEGMENTS).map((s) => s.slice(0, 30)) })}
               className={SETTINGS_FIELD_CLASS}
             />

@@ -4019,6 +4019,7 @@
     "creatorEarnsDirect": "بەشداربووان بە تۆکنی DeHub پارە دەدەن. کاتێک بەشداری دەکەن، بەشەکەت دەگاتە جزدانەکەت، دوای کرێی پلاتفۆرم بەپێی ئاستی باجەکەت."
   },
   "liveOverlay": {
+    "wheelLanded": "{{name}} zivirand: {{result}}",
     "someone": "Kesek",
     "newFollower": "Şopînerê nû: {{name}}",
     "newSubscriber": "Abonetiya nû: {{name}}",
@@ -4032,6 +4033,17 @@
     "chatPreview": "Peyamên chatê li vir xuya dibin"
   },
   "liveStudio": {
+    "controls": {
+      "title": "Kontrolên bilez",
+      "intro": "Ji bo nîvê weşanê. Her guhêrbar ji bo hemû temaşevanan, di sepanê de û di OBSê de, dimîne heta ku tu wê vegerînî.",
+      "alertsPaused": "Hişyariyan rawestîne",
+      "alertsPausedHint": "Li ser ekranê hişyariyên diyarî, şopandin an qaîdeyan tune ne. Hejmarker, armanc û qutiya sohbetê berdewam dikin.",
+      "soundsMuted": "Dengên hişyariyan bêdeng bike",
+      "soundsMutedHint": "Qaîdeyên te êdî deng lê nadin.",
+      "readAloudMuted": "Xwendina bi deng rawestîne",
+      "readAloudMutedHint": "Peyamên diyariyan û rêzên qaîdeyan êdî nayên xwendin.",
+      "failed": "Ev guhêrbar neguherî. Dîsa biceribîne."
+    },
     "title": "Live Studio",
     "subtitle": "Hişyarî û widget'ên bo navnîşanên te",
     "h1": "Live Studio — ئاگادارییەکانی ستریم، ئامانجەکان و ئۆڤەرلەیەکان بۆ دروستکەرانی DeHub",
@@ -4107,6 +4119,7 @@
       "join": "بەشداریکردن"
     },
     "kinds": {
+      "spin_wheel": "Çerxa bextê",
       "tip_alert": "ئاگاداریی بەخشش",
       "follow_alert": "ئاگاداریی فۆڵۆو",
       "subscribe_alert": "ئاگاداریی سەبسکرایب",
@@ -4125,6 +4138,7 @@
       "rule_alert": "Hişyariyên qaîdeyan"
     },
     "hints": {
+      "spin_wheel": "Cihê ku çerxên di qaîdeyên te de dizivirin",
       "tip_alert": "هەموو بەخششێک بەپێی ئاستەکەی دیاری دەکات",
       "follow_alert": "هەموو فۆڵۆوەرێکی نوێ نیشان دەدات",
       "subscribe_alert": "هەموو سەبسکرایبەرێکی نوێ نیشان دەدات",
@@ -4175,6 +4189,8 @@
       "fast": "Bilez"
     },
     "rules": {
+      "wheelSegments": "Beşên çerxê, her yek li rêzekê",
+      "wheelHint": "Di navbera 2 û 12an de. DeHub hildibijêre ku çerx li ku raweste, ji ber vê yekê her kesê ku temaşe dike heman encamê dibîne. Ji bo navkirina wê {result} di hişyariyek, xwendina bi deng an kiryareke sohbetê de bi kar bîne.",
       "title": "Rêgez",
       "intro": "Paşî ku li ser strîmê te karekî bêt kirin, DeHub dikare bêje ku te bêje: pêşengê bide pêşeng, zêdekeke bide pêşeng, peyva ku te bêje, li ser çatê te bêje an jî li ser Discordê te bêje.",
       "add": "Qaydeyek lê zêde bike",
@@ -4227,6 +4243,7 @@
         "subscribers": "Abone"
       },
       "actionTypes": {
+        "wheel": "Çerxekê bizivirîne",
         "alert": "Hişyariyekê nîşan bide",
         "sound": "Dengekî lê bide",
         "say": "Bi dengekî bilind bixwîne",

@@ -4730,6 +4730,7 @@
     "creatorEarnsDirect": "දායකයින් DeHub ටෝකන වලින් ගෙවයි. ඔවුන් දායක වූ සැණින් ඔබේ කොටස ඔබේ පසුම්බියට එයි, ඔබේ ලාංඡන මට්ටමේ වේදිකා ගාස්තුව අඩු කර."
   },
   "liveOverlay": {
+    "wheelLanded": "{{name}} කැරකෙව්වා: {{result}}",
     "someone": "යමෙකු",
     "newFollower": "නව අනුගාමිකයා: {{name}}",
     "newSubscriber": "නව ග් ‍ රාහකයා: {{name}}",

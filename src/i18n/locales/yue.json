@@ -4973,7 +4973,6 @@
       "placeholders": "喺你嘅文字入面用 {name} 、 {amount} 同 {message} 。訊息入面嘅連結已經移除。",
       "wheelSegments": "輪段，每行一個",
       "wheelHint": "至 12 之間。 DeHub 會揀車輪停喺邊，所以所有睇緊嘅人都會見到相同嘅結果。喺警示、朗讀或者即時通訊動作入面用 {result} 嚟命名佢。",
-      "wheelPlaceholder": "唱一首歌&#10;做10個俯卧撐&#10;揀下一個遊戲",
       "alertText": "警示文字",
       "sound": "聲",
       "sayText": "要大聲讀嘅文字",

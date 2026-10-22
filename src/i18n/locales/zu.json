@@ -4783,6 +4783,7 @@
     "creatorEarnsDirect": "Ababhalisile bakhokha ngamathokheni e-DeHub. Izabelo zakho zihlala esikhwameni sakho semali lapho zibhalisa, nciphisa inani lepulatifomu lebanga lakho lebheji."
   },
   "liveOverlay": {
+    "wheelLanded": "U-{{name}} uphendule: {{result}}",
     "someone": "Othile",
     "newFollower": "Umlandeli omusha: {{name}}",
     "newSubscriber": "Umbhalisi omusha: {{name}}",

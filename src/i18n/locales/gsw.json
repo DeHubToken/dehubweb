@@ -4783,6 +4783,8 @@
   },
   "liveStudio": {
     "controls": {
+      "alertsPaused": "Warnungen pausieren",
+      "readAloudMuted": "Vorlesen stoppen",
       "title": "Schnellsteuerung",
       "intro": "Fürs Live-Streaming. Jeder Schalter gilt für alle Zuschauer, sowohl in der App als auch in OBS, bis du ihn wieder umlegst.",
       "alertsPausedHint": "Keini Geschenk-, Follow- oder Regel-Benachrichtigungen auf dem Bildschirm. Die Zähler, Tore und die Chatbox laufen weiter.",
@@ -4861,6 +4863,7 @@
       "join": "Mitmache"
     },
     "kinds": {
+      "spin_wheel": "Schleuderrad",
       "tip_alert": "Tipp-Alarm",
       "follow_alert": "Folge-Alarm",
       "subscribe_alert": "Abonnent-Alarm",

@@ -5004,7 +5004,6 @@
       "placeholders": "Matningizda {name}, {amount} va {message} dan foydalaning. Xabarlardagi havolalar olib tashlandi.",
       "wheelSegments": "G&#39;ildirak segmentlari, har bir qatorda bittadan",
       "wheelHint": "2 dan 12 gacha. DeHub g&#39;ildirak qayerda to&#39;xtashini tanlaydi, shuning uchun hamma tomosha qilayotganlar bir xil natijani ko&#39;rishadi. Ogohlantirish, ovoz chiqarib o&#39;qish yoki chat harakatlarida {result} dan foydalaning.",
-      "wheelPlaceholder": "Qo&#39;shiq kuylang&#10; 10 ta push-up mashqini bajaring&#10; Keyingi o&#39;yinni tanlang",
       "alertText": "Ogohlantirish matni",
       "sound": "Ovoz",
       "sayText": "Ovoz chiqarib o&#39;qish uchun matn",

@@ -4965,7 +4965,6 @@
       "placeholders": "Bruk {name}, {amount} og {message} i teksten din. Lenker i meldinger fjernes.",
       "wheelSegments": "Hjulsegmenter, ett per linje",
       "wheelHint": "Mellom 2 og 12. DeHub velger hvor hjulet stopper, slik at alle som ser på ser det samme resultatet. Bruk {result} i en varsling, høytlesning eller chat-handling for å navngi den.",
-      "wheelPlaceholder": "Syng en sang&#10; Gjør 10 push-ups&#10; Velg det neste spillet",
       "alertText": "Varseltekst",
       "sound": "Lyd",
       "sayText": "Tekst som skal leses høyt",

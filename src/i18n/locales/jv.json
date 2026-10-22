@@ -4603,6 +4603,8 @@
   },
   "liveStudio": {
     "controls": {
+      "alertsPaused": "Jeda pemberitahuan",
+      "soundsMuted": "Bunyi peringatan bisu",
       "title": "Kontrol cepet",
       "intro": "Kanggo ngisor-midstream. Tiwa tiwa ngandhok pike pisan kanggo semuanya ngandhok ngliwat di app lan di OBS, sampe kanggo ngelungguh kanggo ngembok.",
       "alertsPausedHint": "Gak ada pemberian hadiah, notifikasi follow, atau peringatan aturan di layar. Angka-angka counter, tujuan, dan kotak obrolan tetap berjalan.",
@@ -4682,6 +4684,7 @@
       "share": "Bareng"
     },
     "kinds": {
+      "spin_wheel": "Roda putar",
       "tip_alert": "Peringatan Tip",
       "follow_alert": "Awas",
       "subscribe_alert": "Peringatan pelanggan",
@@ -4742,6 +4745,7 @@
       "fast": "Cepat"
     },
     "rules": {
+      "wheelSegments": "Segmen roda, satu per baris",
       "title": "Rules",
       "intro": "Nalika ana sing kedadeyan ing streammu, DeHub nindakake apa sing kowe pilih: nampilake alert, muter swara, maca bab-bab kanthi swara, ngirim ing chatmu utawa ngandhani Discord-mu.",
       "add": "Tambah aturan",
@@ -4777,6 +4781,7 @@
         "followers": "pengikut"
       },
       "actionTypes": {
+        "wheel": "Putar roda",
         "say": "Waca kanthi swara",
         "chat": "Post in chat"
       },

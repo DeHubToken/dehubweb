@@ -4773,6 +4773,7 @@
     "creatorEarnsDirect": "ተመዝጋቢዎች በ DeHub ምልክቶች ውስጥ ይከፍላሉ ። የእርስዎ ድርሻ መሬቶች በኪስ ቦርሳዎ ውስጥ በሚመዘገቡበት ቅጽበት ፣ ለባጅ ደረጃዎ የመድረክ ክፍያ ያነሰ ።"
   },
   "liveOverlay": {
+    "wheelLanded": "{{name}} አሽከረከረ፦ {{result}}",
     "someone": "የሆነ ሰው",
     "newFollower": "አዲስ ተከታይ: {{name}}",
     "newSubscriber": "አዲስ ተመዝጋቢ: {{name}}",

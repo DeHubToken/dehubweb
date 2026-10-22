@@ -4766,6 +4766,7 @@
     "creatorEarnsDirect": "يدفع المشتركون بعملات DeHub. تصل حصتك إلى محفظتك في اللحظة التي يشتركون فيها، مخصومًا منها رسوم المنصة لمستوى شارتك."
   },
   "liveOverlay": {
+    "wheelLanded": "{{name}} قام بتدوير: {{result}}",
     "someone": "شخص ما",
     "newFollower": "متابع جديد: {{name}}",
     "newSubscriber": "مشترك جديد: {{name}}",

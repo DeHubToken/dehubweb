@@ -4736,6 +4736,7 @@
   },
   "liveStudio": {
     "controls": {
+      "intro": "Maka n'etiti mgbasa ozi. Mgbanwe ọ bụla na-adịgide maka onye ọ bụla na-ekiri, na ngwa na na OBS, ruo mgbe ị gbanwere ya.",
       "title": "Njikwa ngwa ngwa",
       "alertsPaused": "Kwụsị alerts",
       "alertsPausedHint": "Enweghị onyinye, soro ma ọ bụ chịkwaa ịdọ aka ná ntị na ihuenyo. Counters, ihe mgbaru ọsọ na chat igbe na-aga n 'ihu.",
