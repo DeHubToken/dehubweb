@@ -4984,6 +4984,12 @@
       "log": "Soňky hereketler",
       "noLog": "Häzir däl.",
       "actions": {
+        "ban": "{{actor}} {{target}} ulanyjyny gadagan etdi",
+        "moderator-added": "{{target}} moderator boldy",
+        "timeout_one": "{{actor}} {{target}} ulanyjyny {{count}} sekunt sesini kesdi",
+        "timeout_other": "{{actor}} {{target}} ulanyjyny {{count}} sekunt sesini kesdi",
+        "word-timeout_one": "\"{{word}}\" üçin {{target}} {{count}} sekunt sesi kesildi",
+        "word-timeout_other": "\"{{word}}\" üçin {{target}} {{count}} sekunt sesi kesildi",
         "unban": "{{actor}}unbained {{target}}",
         "moderator-removed": "{{target}} indi moderator däl",
         "word-blocked": "\"{{word}}\" üçin {{target}} -den habar goýuldy"

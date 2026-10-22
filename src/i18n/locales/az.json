@@ -4983,6 +4983,8 @@
       "log": "Son fəaliyyətlər",
       "noLog": "Hələ heç nə yoxdur.",
       "actions": {
+        "timeout_one": "{{actor}} {{target}} istifadəçisini {{count}} saniyəlik susdurdu",
+        "timeout_other": "{{actor}} {{target}} istifadəçisini {{count}} saniyəlik susdurdu",
         "ban": "{{actor}} qadağan {{target}}",
         "unban": "{{actor}}unbned {{target}}",
         "moderator-added": "{{target}} moderator oldu",

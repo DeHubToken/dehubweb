@@ -4804,6 +4804,7 @@
     "chatPreview": "Kaypim rikurin rimanakuy willakuykuna"
   },
   "liveChatModeration": {
+    "madeModerator": "Kunanqa moderador kanña.",
     "timeout1m": "1 minutopaq tiempo tukusqa",
     "timeout10m": "10 minutopaq tiempo tukusqa",
     "timeout1h": "1 horapaq pacha lluqsiy",
@@ -5055,6 +5056,7 @@
       }
     },
     "moderation": {
+      "subscribersOnly": "Suscriptorkunallapaq",
       "title": "Chat moderación nisqa",
       "intro": "Llapan mayuykikuna urapi rimanakuypaq kamachiykuna. Mana hayk&#39;aqpas DeHubpa hatun rimanakuyninman chayankuchu: kaypi hark&#39;asqayki runaqa tukuy hinantinpi rimayta atinraqmi.",
       "loadFailed": "Moderación nisqa churasqaykikunaqa manam kargayta atirqanchu. P&#39;anqata musuqmanta musuqmanta kallpachakunaykipaq.",

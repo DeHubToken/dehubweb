@@ -4993,6 +4993,10 @@
       }
     },
     "moderation": {
+      "moderatorAdded": "Модератор илова шуд.",
+      "seconds_one": "{{count}} сония",
+      "seconds_other": "{{count}} сония",
+      "slowModeHint": "Ҳар тамошобин байни паёмҳо чӣ қадар интизор мешавад. Шумо ва модераторонатон ҳеҷ гоҳ интизор намешавед.",
       "title": "Мудирияти чат",
       "intro": "Mga patakaran para sa chat sa ilalim ng lahat ng iyong mga stream. Онҳо ҳеҷ гоҳ ба сӯҳбати асосии DeHub намерасанд: касе, ки шумо дар ин ҷо манъ мекунед, метавонад дар ҳама ҷо гап занад.",
       "loadFailed": "Hindi mai-load ang iyong mga setting ng moderasyon. I-refresh ang pahina upang subukan muli.",
@@ -5022,6 +5026,11 @@
       "log": "Амалҳои охирин",
       "noLog": "Чизе ҳанӯз нест.",
       "actions": {
+        "ban": "{{actor}} {{target}}-ро манъ кард",
+        "moderator-added": "{{target}} модератор шуд",
+        "timeout_other": "{{actor}} {{target}}-ро барои {{count}} сония хомӯш кард",
+        "word-timeout_one": "{{target}} барои \"{{word}}\" ба {{count}} сония хомӯш карда шуд",
+        "word-timeout_other": "{{target}} барои \"{{word}}\" ба {{count}} сония хомӯш карда шуд",
         "timeout_one": "{{actor}} timed out {{target}} {{count}} second",
         "unban": "{{actor}} unbanned{{target}}",
         "moderator-removed": "{{target}}info: whatsthis",

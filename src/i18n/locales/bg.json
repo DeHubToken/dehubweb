@@ -5073,6 +5073,7 @@
       "log": "Недавни действия",
       "noLog": "Все още нищо.",
       "actions": {
+        "ban": "{{actor}} блокира {{target}}",
         "timeout_one": "Времето за {{actor}} изтече {{target}} за {{count}} секунда",
         "timeout_other": "Времето за {{actor}} изтече {{target}} за {{count}} секунди",
         "unban": "{{actor}} небанен {{target}}",

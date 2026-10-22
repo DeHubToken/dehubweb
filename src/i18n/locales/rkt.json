@@ -4668,6 +4668,7 @@
       "log": "সাম্প্রতিক পদক্ষেপসমূহ",
       "noLog": "এখনও কিছু নেই ।",
       "actions": {
+        "word-timeout_other": "\"{{word}}\" এর জন্য {{target}}-কে {{count}} সেকেন্ডের জন্য চুপ করানো হয়েছে",
         "timeout_one": "{{actor}} তিমা হয়ে গেল {{target}}{{count}} সেকেন্ডে",
         "timeout_other": "{{actor}} তমতম হয়ে গেলো {{target}} কে {{count}} সেকেন্ডে",
         "ban": "{{actor}} বান্ডিত হৈ গৈল {{target}}",

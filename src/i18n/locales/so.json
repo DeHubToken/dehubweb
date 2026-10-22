@@ -4993,6 +4993,7 @@
       "log": "Tallaabooyinkii ugu dambeeyay",
       "noLog": "Waxba weli.",
       "actions": {
+        "timeout_other": "{{actor}} wuxuu {{target}} aamusiyay {{count}} ilbiriqsi",
         "timeout_one": "{{actor}} timed out {{target}} for {{count}} labaad",
         "ban": "{{actor}} mamnuuca {{target}}",
         "unban": "{{actor}} unbanned {{target}}",

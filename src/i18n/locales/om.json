@@ -5001,6 +5001,7 @@
       }
     },
     "moderation": {
+      "unban": "Dhorkaa kaasi",
       "title": "Chat moderation gochuu",
       "intro": "Seerota chat streams keessan hunda jalatti. Isaan gonkumaa chat ijoo DeHub bira hin ga&#39;an: namni ati asitti ugguru ammallee bakka biraa hundatti haasa&#39;uu danda&#39;a.",
       "loadFailed": "Sajoo jiddugaleessaa kee fe&#39;amuu hin dandeenye. Irra deebi&#39;ii yaaluuf fuula haaromsi.",
