@@ -4694,9 +4694,52 @@
     "followersUnit": "izləyicilər",
     "topSupporters": "Ən yaxşı dəstəkçilər",
     "tipped": "{{name}} hədiyyə göndərdi",
-    "chatPreview": "Söhbət mesajları burada görünür"
+    "chatPreview": "Söhbət mesajları burada görünür",
+    "poll": {
+      "closed": "Səsvermə başa çatdı",
+      "voteFor": "{{option}} üçün səs ver",
+      "signIn": "Səs vermək üçün daxil olun",
+      "failed": "Səsverməniz qəbul edilmədi. Yenidən cəhd edin.",
+      "voted_one": "Sən səs verdin · {{count}} səs",
+      "voted_other": "Sən səs verdin · {{count}} səs",
+      "votes_one": "{{count}} səs",
+      "votes_other": "{{count}} səs",
+      "howToVote_one": "Chatda {{command}} və bir rəqəm yazaraq səs ver · {{count}} səs",
+      "howToVote_other": "Chatda {{command}} və bir rəqəm yazaraq səs ver · {{count}} səs"
+    }
   },
   "liveStudio": {
+    "polls": {
+      "title": "Səsvermələr",
+      "intro": "Canlı yayını izləyənlərə bir sual sorun. Onlar DeHub tətbiqində düymə ilə cavab verir, yaxud da chatda {{command}} və seçənin rəqəmini yazırlar.",
+      "question": "Sual",
+      "questionPlaceholder": "Nə oynamağa davam etməliyəm?",
+      "option": "Seçənək {{n}}",
+      "addOption": "Seçənək əlavə et",
+      "removeOption": "Seçənək {{n}}-ni sil",
+      "duration": "Səsvermənin neçə dəqiqə açıq qalacağı",
+      "seconds_one": "{{count}} saniyə",
+      "seconds_other": "{{count}} saniyə",
+      "minutes_one": "{{count}} dəqiqə",
+      "minutes_other": "{{count}} dəqiqə",
+      "start": "Səsverməni başlat",
+      "end": "Şimdi səsverməni bitir",
+      "started": "Səsverməniz açılıb. İzləyicilər səs verə bilər.",
+      "notLive": "Öncə canlı yayına gedin. Səsvermə şimdi canlı yayınızda aparılır.",
+      "startFailed": "Səsvermə başlanmadı. Yenidən cəhd edin.",
+      "closeFailed": "Səsvermə bitmədi. Yenidən cəhd edin.",
+      "live": "Səsvermə açılıb · {{time}} qalıb",
+      "ended": "Səsvermə başa çatdı",
+      "votes_one": "{{count}} səs",
+      "votes_other": "{{count}} səs",
+      "replaceHint": "Yeni sorğuya başlamaq açıq olanı bağlayır.",
+      "widgetHint": "Canlı sorğunuzu göstərir. DeHub tətbiqində izləyicilər səs vermək seçiminə basır; OBS-də insanlara {{command}} və söhbət zamanı bir sıra yazın deyir.",
+      "sample": {
+        "a": "Yeni bir şey",
+        "b": "Köhnə favorit",
+        "c": "Seçdiyiniz"
+      }
+    },
     "title": "Canlı Studio",
     "subtitle": "Sizə aid xəbərdarlıqlar və vidjetlər",
     "h1": "Canlı Studio — DeHub yaradıcısı üçün yayım xəbərdarlıqları, məqsədlər və örtüklər",
@@ -4787,7 +4830,8 @@
       "event_feed": "Son fəaliyyət",
       "chat_box": "Söhbət qutusu",
       "ticker": "Etiketçi",
-      "rule_alert": "Qayda xəbərdarlıqları"
+      "rule_alert": "Qayda xəbərdarlıqları",
+      "poll": "Sorğu"
     },
     "hints": {
       "tip_alert": "Hər bir təklifə təşəkkür edir, boyu təyinatına görə dəyişir.",
@@ -4805,7 +4849,8 @@
       "event_feed": "Yayımınızı paylaşan ən son hədiyyələr, izləyicilər, abunəçilər və insanlar",
       "chat_box": "Yayımınızın söhbət mesajlarını ekranda göstərir",
       "ticker": "Ekranda sürüşdürülən öz mətninizin sətri",
-      "rule_alert": "Sizin quranızın xəbərləri yerə düşür"
+      "rule_alert": "Sizin quranızın xəbərləri yerə düşür",
+      "poll": "Canlı sorğunuz, hər bir seçim üçün səs düyməsi ilə"
     },
     "fields": {
       "style": "Üslub",
@@ -4869,6 +4914,7 @@
       "addAction": "Əməli əlavə et",
       "removeAction": "Əməli sil",
       "placeholders": "Mətninizdə {name}, {amount} və {message} istifadə edin. Mesajlardakı linklər silinir.",
+      "placeholdersLive": "Mətninizdə {name}, {title} və {link} istifadə edin: adınız, yayımın başlığı və onu izləmək üçün link.",
       "alertText": "Xəbərdarlıq mətni",
       "sound": "Səs",
       "sayText": "Ucadan oxumaq üçün mətn",
@@ -4882,6 +4928,7 @@
         "follow": "Kimsə aşağıdakıları edir",
         "subscribe": "Kimsə abunə olur",
         "share": "Kimsə axını paylaşır",
+        "live": "Yayıma başlayırsınız",
         "command": "Söhbət əmri istifadə olunur",
         "keyword": "Söhbət mesajında bir kəlmə var",
         "chat": "Hər hansı söhbət mesajı"

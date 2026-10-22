@@ -18,11 +18,12 @@ import { useOverlayChat } from '@/hooks/use-overlay-chat';
 import { streamOverlayKey } from '@/hooks/use-stream-overlay';
 import { useVideoPictureRect } from '@/hooks/use-video-picture-rect';
 import { drawOrder, placeWidget, rectFor } from '@/lib/live-overlay/layout';
-import { isKnownKind, type OverlayKind } from '@/lib/live-overlay/registry';
-import type { PublicOverlay } from '@/lib/live-overlay/types';
+import { isKnownKind, newWidget, type OverlayKind } from '@/lib/live-overlay/registry';
+import type { OverlayWidget, PublicOverlay } from '@/lib/live-overlay/types';
 import { createOverlayEventBus, OverlayEventContext } from './overlay-events';
 import { OverlayWidgetView } from './overlay-widgets';
 import { createRuleBus, RuleAudio, RuleBusContext } from './rule-bus';
+import { PollContext, PollWidget, useStreamPoll } from './poll';
 
 interface Props {
   streamId: string;
@@ -41,7 +42,19 @@ export default function LiveOverlayLayer({ streamId, tokenId, overlay, videoRef,
   const bus = useMemo(() => createOverlayEventBus(), []);
 
   const visible = useMemo(
-    () => (overlay.renderIn === 'app' ? drawOrder(overlay.widgets.filter((w) => w.enabled && isKnownKind(w.kind))) : []),
+    () =>
+      overlay.renderIn === 'app'
+        ? drawOrder(overlay.widgets.filter((w) => w.enabled && w.kind !== 'poll' && isKnownKind(w.kind)))
+        : [],
+    [overlay],
+  );
+
+  // A poll is the one thing viewers touch, so it is drawn whatever renderIn
+  // says: over an OBS stream it lands on the same spot as the burned-in copy
+  // and covers it with buttons. Where the creator placed it, or the default spot.
+  const polls = useStreamPoll(streamId, true);
+  const pollWidget = useMemo(
+    () => overlay.widgets.find((w) => w.enabled && w.kind === 'poll') ?? newWidget('poll', []),
     [overlay],
   );
 
@@ -81,30 +94,40 @@ export default function LiveOverlayLayer({ streamId, tokenId, overlay, videoRef,
         {inApp && <RuleAudio playLive />}
         <div ref={layerRef} data-live-overlay aria-hidden>
           {picture.width > 0 &&
-            visible.map((widget) => {
-              const box = placeWidget(rectFor(widget, picture.portrait), picture);
-              const style = {
-                left: box.left,
-                top: box.top,
-                width: box.width,
-                height: box.height,
-                '--ow-h': `${box.height}px`,
-                '--ow-w': `${box.width}px`,
-              } as CSSProperties;
-              return (
-                <div key={widget.id} data-overlay-widget={widget.kind} style={style}>
-                  <OverlayWidgetView
-                    kind={widget.kind as OverlayKind}
-                    settings={widget.settings || {}}
-                    streamId={streamId}
-                    stats={overlay.stats}
-                    initialViewers={initialViewers}
-                  />
-                </div>
-              );
-            })}
+            visible.map((widget) => (
+              <div key={widget.id} data-overlay-widget={widget.kind} style={boxStyle(widget, picture)}>
+                <OverlayWidgetView
+                  kind={widget.kind as OverlayKind}
+                  settings={widget.settings || {}}
+                  streamId={streamId}
+                  stats={overlay.stats}
+                  initialViewers={initialViewers}
+                />
+              </div>
+            ))}
         </div>
+        {picture.width > 0 && polls.poll && (
+          <div data-live-overlay>
+            <div data-overlay-widget="poll" style={boxStyle(pollWidget, picture)}>
+              <PollContext.Provider value={{ ...polls, interactive: true }}>
+                <PollWidget settings={pollWidget.settings || {}} />
+              </PollContext.Provider>
+            </div>
+          </div>
+        )}
       </RuleBusContext.Provider>
     </OverlayEventContext.Provider>
   );
+}
+
+function boxStyle(widget: OverlayWidget, picture: ReturnType<typeof useVideoPictureRect>): CSSProperties {
+  const box = placeWidget(rectFor(widget, picture.portrait), picture);
+  return {
+    left: box.left,
+    top: box.top,
+    width: box.width,
+    height: box.height,
+    '--ow-h': `${box.height}px`,
+    '--ow-w': `${box.width}px`,
+  } as CSSProperties;
 }

@@ -4766,9 +4766,52 @@
     "followersUnit": "sekotāji",
     "topSupporters": "Populārākie atbalstītāji",
     "tipped": "{{name}} nosūtīja dāvanu",
-    "chatPreview": "Tērzēšanas ziņojumi tiek parādīti šeit"
+    "chatPreview": "Tērzēšanas ziņojumi tiek parādīti šeit",
+    "poll": {
+      "closed": "Balsēs noslēgtas",
+      "voteFor": "Balsoti par {{option}}",
+      "signIn": "Ielogojieties, lai balsotu",
+      "failed": "Jūsu balsis nav skaitīta. Mēģiniet vēlreiz.",
+      "voted_one": "Jūs balsotāji · {{count}} balsis",
+      "voted_other": "Jūs balsotāji · {{count}} balsis",
+      "votes_one": "{{count}} balsis",
+      "votes_other": "{{count}} balsis",
+      "howToVote_one": "Ierakstiet {{command}} un skaitli chatā, lai balsotu · {{count}} balsis",
+      "howToVote_other": "Ierakstiet {{command}} un skaitli chatā, lai balsotu · {{count}} balsis"
+    }
   },
   "liveStudio": {
+    "polls": {
+      "title": "Apzināšanās",
+      "intro": "Ieteikiet skatītājiem, kas skatās jūsu pārraidījumā, jautājumu. Viņi atbild ar pogu DeHub priemakā, vai rakstot {{command}} un iespējas numuru chatā.",
+      "question": "Jautājums",
+      "questionPlaceholder": "Kas man jāspēlē nākamreiz?",
+      "option": "Iespēja {{n}}",
+      "addOption": "Pievienot iespēju",
+      "removeOption": "Noņemt iespēju {{n}}",
+      "duration": "Kā garu balsēs būs atvērtas",
+      "seconds_one": "{{count}} sekunde",
+      "seconds_other": "{{count}} sekundes",
+      "minutes_one": "{{count}} minūte",
+      "minutes_other": "{{count}} minūtes",
+      "start": "Sākt apzināšanos",
+      "end": "Beigt balsēšanu šim brīdim",
+      "started": "Jūsu apzināšana ir atvērta. Skatītāji var balsot šim brīdim.",
+      "notLive": "Jāiet uz dzīvi pirms tam. Apzināšana notiek pārraidījumā, ko šim brīdim pārraidās.",
+      "startFailed": "Apzināšana nav sākusies. Mēģiniet vēlreiz.",
+      "closeFailed": "Balsēšana nav beigusies. Mēģiniet vēlreiz.",
+      "live": "Balsēšana atvērta · {{time}} atlikušo",
+      "ended": "Balsēšana noslēgta",
+      "votes_one": "{{count}} vote",
+      "votes_other": "{{count}} balsis",
+      "replaceHint": "Jaunas aptaujas sākšana aizver atvērto aptauju.",
+      "widgetHint": "Parāda jūsu tiešraides aptauju. DeHub lietotnes skatītājos pieskarieties opcijai balsot; OBS tas liek cilvēkiem ierakstīt {{command}} un numuru tērzēšanā.",
+      "sample": {
+        "a": "Kaut kas jauns",
+        "b": "Vecs favorīts",
+        "c": "Jūs izvēlaties"
+      }
+    },
     "title": "Live Studio",
     "subtitle": "Paziņojumi un logrīki jūsu straumēm",
     "h1": "Live Studio — straumes paziņojumi, mērķi un pārklājumi DeHub radītājiem",
@@ -4859,7 +4902,8 @@
       "event_feed": "Jaunākās aktivitātes",
       "chat_box": "Tērzēšanas lodziņš",
       "ticker": "Atzīme",
-      "rule_alert": "Noteikumu brīdinājumi"
+      "rule_alert": "Noteikumu brīdinājumi",
+      "poll": "Aptauja"
     },
     "hints": {
       "tip_alert": "Godina ikvienu dzeramnaudu, kuras lielums atbilst tās līmenim",
@@ -4877,7 +4921,8 @@
       "event_feed": "Jaunākās dāvanas, sekotāji, abonenti un cilvēki, kas dalās ar jūsu pārraidi",
       "chat_box": "Rāda apraides tērzēšanas ziņojumus ekrānā",
       "ticker": "Jūsu teksta rindiņa, kas ritinās pa ekrānu",
-      "rule_alert": "Kur tiek parādīti jūsu noteikumu paziņojumi"
+      "rule_alert": "Kur tiek parādīti jūsu noteikumu paziņojumi",
+      "poll": "Jūsu tiešsaistes aptauja ar balsošanas pogu katrai opcijai"
     },
     "fields": {
       "style": "Stils",
@@ -4941,6 +4986,7 @@
       "addAction": "Pievienot darbību",
       "removeAction": "Noņemt darbību",
       "placeholders": "{name}, {amount} un {message} jāizmanto tekstā",
+      "placeholdersLive": "Izmantojiet {name}, {title} un {link} savā tekstā: savu vārdu, raidījuma nosaukumu un saiti, lai to skatītos.",
       "alertText": "Pazīstamā teksta ziņa",
       "sound": "Skana",
       "sayText": "Teksts, ko jālasa alust",
@@ -4954,6 +5000,7 @@
         "follow": "Kaut kas seko",
         "subscribe": "Kaut kas abonējas",
         "share": "Kaut kas dalās ar strīmu",
+        "live": "Jūs sākat apraidi",
         "command": "Chatā tiek izmantots komandu",
         "keyword": "Chatā ziņa satur vārdu",
         "chat": "Visas chatā ziņas"

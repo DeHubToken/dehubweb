@@ -4726,9 +4726,52 @@
     "followersUnit": "ئەگەشكۈچىلەر",
     "topSupporters": "ئەڭ يۇقىرى مەدەتكارلار",
     "tipped": "{{name}} ھەدىيە ئەۋەتتى",
-    "chatPreview": "بۇ يەردە پاراڭلىشىش ئۇچۇرلىرى كۆرۈنىدۇ"
+    "chatPreview": "بۇ يەردە پاراڭلىشىش ئۇچۇرلىرى كۆرۈنىدۇ",
+    "poll": {
+      "closed": "Soyghush qopqaldi",
+      "voteFor": "{{option}} bo'yicha soygulash",
+      "signIn": "Soyghush uchun kirish qiling",
+      "failed": "Soyghushingiz hisoblana olmadi. Yana urinib ko'ring.",
+      "voted_one": "Siz soygulashdingiz · {{count}} soygulash",
+      "voted_other": "Siz soygulashdingiz · {{count}} soygulashlar",
+      "votes_one": "{{count}} soygulash",
+      "votes_other": "{{count}} soygulashlar",
+      "howToVote_one": "Chatda {{command}} va raqam yozib soygulash · {{count}} soygulash",
+      "howToVote_other": "Chatda {{command}} va raqam yozib soygulash · {{count}} soygulashlar"
+    }
   },
   "liveStudio": {
+    "polls": {
+      "title": "Soyghushlar",
+      "intro": "Kanaliiz ko'rganlar orasida savol bering. Ular DeHub ilovasida tugma bilan javob berishlar yoki chatda {{command}} va tanlov raqamini yozishlar.",
+      "question": "Savol",
+      "questionPlaceholder": "Qaysi o'yinni keyingi o'ynash kerak?",
+      "option": "Tanlov {{n}}",
+      "addOption": "Tanlov qo'shing",
+      "removeOption": "Tanlov {{n}} ni o'chiring",
+      "duration": "Soyghush qanchalik ochiq qoladi",
+      "seconds_one": "{{count}} sekund",
+      "seconds_other": "{{count}} sekundlar",
+      "minutes_one": "{{count}} daqiqa",
+      "minutes_other": "{{count}} daqiqa",
+      "start": "Soyghushni boshlang",
+      "end": "Hozir soygulashni tugatding",
+      "started": "Soyghushingiz ochiq. Ko'rganlar soygulash qila oladilar.",
+      "notLive": "Avval canli ko'rsatuvga chiqing. Soyghush siz hozirda stream qilib turganingizda o'tadi.",
+      "startFailed": "Soyghush boshlanmadi. Yana urinib ko'ring.",
+      "closeFailed": "Soyghush tugamadi. Yana urinib ko'ring.",
+      "live": "Soyghush ochiq · {{time}} qoldi",
+      "ended": "Soyghush qopqaldi",
+      "votes_one": "{{count}} VOOT",
+      "votes_other": "{{count}} votes",
+      "replaceHint": "يېڭى بىر سايلامنى باشلاش ئېچىۋېتىلگەن سايلامنى تاقايدۇ.",
+      "widgetHint": "ھاياتلىق ئاۋازىڭىزنى كۆرسىتىڭ. DeHub ئەپ كۆرگۈچلىرى ئاۋاز بېرىش تاللانمىسىنى تاللايدۇ ؛ OBS دىكى كىشىلەرگە {{command}} ۋە پاراڭدىكى ساننى كىرگۈزۈشنى ئېيتىدۇ.",
+      "sample": {
+        "a": "بىرەر يېڭىلىق",
+        "b": "قەدىمىي ياقتۇرىدىغان",
+        "c": "سىز تاللايسىز"
+      }
+    },
     "title": "ياۋرۇ ستىدىي",
     "subtitle": "ئېقىمىڭىزغا ماس كېلىدىغان ئاگاھلاندۇرۇش ۋە ۋىجېتلار",
     "h1": "Live Studio — DeHub ياراتقۇچىلار ئۈچۈن ئېقىش ئاگاھلاندۇرۇشلىرى، نىشانلىرى ۋە قاتلاملىرى",
@@ -4812,7 +4855,8 @@
       "event_feed": "يېقىندا ئېلىپ بېرىلغان پائالىيەت",
       "chat_box": "پاراڭلىشىش ساندۇقى",
       "ticker": "Ticker",
-      "rule_alert": "قائىدە ئاگاھلاندۇرۇشلار"
+      "rule_alert": "قائىدە ئاگاھلاندۇرۇشلار",
+      "poll": "Poll"
     },
     "hints": {
       "tip_alert": "(اﷲ تائالانىڭ ئىلمىي ئەزەلىسىدە ھىدايەتتىن) بۇرۇۋېتىلگەن ئادەم (قۇرئانغا ۋە مۇھەممەد ئەلەيھىسسالامغا ئىمان كەلتۈرۈش",
@@ -4830,7 +4874,8 @@
       "event_feed": "ئەڭ يېڭى سوۋغاتلار، ئەگەشكۈچىلەر، ئابونتلار ۋە تارقىتىشنى ئورتاقلاشقۇچىلار",
       "chat_box": "ئېكراندا تارقىتىشنىڭ پاراڭلىشىش ئۇچۇرلىرىنى كۆرسىتىدۇ",
       "ticker": "ئېكراننى ئايلاندۇرىدىغان ئۆز تېكىستىڭىزدىكى بىر سىزىق",
-      "rule_alert": "قائىدىلىرىڭىزنىڭ ئاگاھلاندۇرۇشلىرى قەيەردە كۆرۈنىدۇ"
+      "rule_alert": "قائىدىلىرىڭىزنىڭ ئاگاھلاندۇرۇشلىرى قەيەردە كۆرۈنىدۇ",
+      "poll": "ھاياتلىق ئاۋازىڭىز، ھەر بىر تاللاش ئۈچۈن ئاۋاز بېتى بار"
     },
     "fields": {
       "celebration": "ھېيت",
@@ -4893,6 +4938,7 @@
       "addAction": "ھەرىكەت قوشۇش",
       "removeAction": "ھەرىكەتنى چىقىرىۋېتىش",
       "placeholders": "تېكىستىڭىزدە {name}, {amount} ۋە {message} نى ئىشلىتىڭ. ئۇچۇرلاردىكى ئۇلانمىلار ئۆچۈرۈۋېتىلدى.",
+      "placeholdersLive": "تېكىستىڭىزدە {name}, {title} ۋە {link} نى ئىشلىتىڭ: ئىسمىڭىز، تېلېۋىزىيە تىياتىرىنىڭ بېتى ۋە ئۇنى كۆرۈش ئۇلىنىشى.",
       "alertText": "ئاگاھلاندۇرۇش تېكىستى",
       "sound": "ئاۋازى",
       "sayText": "ئۈنلۈك ئوقۇش تېكىستى",
@@ -4906,6 +4952,7 @@
         "follow": "بىرسى ئەگىشىدۇ",
         "subscribe": "بىرەرسى ئىمزا قويىدۇ",
         "share": "بىرسى ئېقىمىنى ئورتاق تەقسىم قىلىدۇ",
+        "live": "سىز تارقىتىشنى باشلايسىز",
         "command": "سۆھبەت بۇيرۇقى ئىشلىتىلىدۇ",
         "keyword": "سۆھبەت خېتىدە بىر سۆز بار",
         "chat": "ھەرقانداق پاراڭلاشقۇچ ئۇچۇر"
