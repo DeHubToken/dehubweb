@@ -6017,7 +6017,7 @@
     "seoDescription": "Voeg tip alerts, volger alerts, doelbalken en top supporter borden toe aan je DeHub live streams. Ontworpen voor elke kijker, vanaf elk telefoon, browser, capture card of encoder.",
     "signIn": "Meld je aan om alerts en widgets voor je streams in te stellen.",
     "intro": "Alles wat je hier toevoegt verschijnt bovenop je streams voor elke kijker in de DeHub app — of je nu live gaat vanaf je telefoon, de browser, een capture card of een encoder.",
-    "open": "Open Live Studio",
+    "open": "Live Studio openen",
     "settingsLinkTitle": "Alerts en widgets",
     "settingsLinkBody": "Tip alerts, doelen en meer bovenop je streams, ingesteld in Live Studio.",
     "preview": "Voorbeeld",
@@ -6045,7 +6045,7 @@
     "loadFailed": "Kan je widgets niet laden. Ververs de pagina om het opnieuw te proberen.",
     "limit": "Je hebt de limiet van 40 widgets bereikt.",
     "tests": {
-      "tip": "Tip",
+      "tip": "Fooi",
       "follow": "Volgen",
       "subscribe": "Abonneren",
       "share": "Delen",

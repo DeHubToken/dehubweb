@@ -4913,7 +4913,7 @@
     "seoDescription": "Pridajte upozornenia na tipy, upozornenia na sledovateľov, branky a dosky najlepších podporovateľov do svojich živých prenosov DeHub. Kreslené pre každého diváka, z ľubovoľného telefónu, prehliadača, karty alebo kodéra.",
     "signIn": "Ak chcete nastaviť upozornenia a miniaplikácie pre svoje streamy, prihláste sa.",
     "intro": "Všetko, čo sem pridáte, sa zobrazí vo vašich streamoch pre každého diváka v aplikácii DeHub — či už idete naživo zo svojho telefónu, prehliadača, karty na snímanie alebo kodéra.",
-    "open": "Open Live Studio",
+    "open": "Otvoriť Live Studio",
     "settingsLinkTitle": "Upozornenia a miniaplikácie",
     "settingsLinkBody": "Upozornenia na prepitné, ciele a ďalšie informácie o vašich streamoch nastavené v Live Studio.",
     "preview": "Náhľad",
@@ -4941,7 +4941,7 @@
     "loadFailed": "Nepodarilo sa načítať miniaplikácie. Obnovte stránku a skúste to znova.",
     "limit": "Dosiahli ste limit 40 miniaplikácií.",
     "tests": {
-      "tip": "Tip",
+      "tip": "Prepitné",
       "follow": "Sledovať",
       "subscribe": "Prihlásiť sa na odber",
       "share": "Zdieľať",
