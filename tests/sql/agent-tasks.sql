@@ -84,3 +84,19 @@ DO $$ DECLARE claimed jsonb; BEGIN
  IF public.claim_agent_task()->>'id'=claimed->>'id' THEN RAISE EXCEPTION 'Paused task claimed'; END IF;
 END $$;
 RESET ROLE;
+
+\ir ../../supabase/migrations/20261022050000_agent_lives.sql
+INSERT INTO ai_agent_lives(agent_id,sentient,persona,next_at) VALUES('00000000-0000-0000-0000-000000000001',true,'{"version":1}',now()-interval '1 minute');
+SET ROLE anon;
+DO $$ BEGIN
+ BEGIN PERFORM 1 FROM public.ai_agent_lives; RAISE EXCEPTION 'Agent lives visible'; EXCEPTION WHEN insufficient_privilege THEN NULL; END;
+ BEGIN PERFORM 1 FROM public.ai_agent_life_events; RAISE EXCEPTION 'Agent life events visible'; EXCEPTION WHEN insufficient_privilege THEN NULL; END;
+ BEGIN PERFORM public.claim_agent_life(); RAISE EXCEPTION 'Public life claim permitted'; EXCEPTION WHEN insufficient_privilege THEN NULL; END;
+END $$;
+RESET ROLE;
+SET ROLE service_role;
+DO $$ BEGIN
+ IF public.claim_agent_life() IS DISTINCT FROM '00000000-0000-0000-0000-000000000001'::uuid THEN RAISE EXCEPTION 'Due agent not claimed'; END IF;
+ IF public.claim_agent_life() IS NOT NULL THEN RAISE EXCEPTION 'Leased agent claimed twice'; END IF;
+END $$;
+RESET ROLE;
