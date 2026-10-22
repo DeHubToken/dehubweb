@@ -22,6 +22,7 @@ import { getChainConfig } from '@/lib/contracts/dhb-token';
 import { isSolanaChain, findLockToken, isValidEvmAddress } from '@/lib/chains/constants';
 import { isValidSolanaAddress } from '@/lib/solana/wallet';
 import type { Currency } from '../types';
+import { DIRECT_TIP_TOKENS } from '@/lib/direct-tip-tokens';
 
 export interface BuildStreamInfoInput {
   /** The chain the post mints on — decides DHB vs SPL, and EVM-only features. */
@@ -149,10 +150,18 @@ export function buildStreamInfo(input: BuildStreamInfoInput): BuildStreamInfoRes
         streamInfo.payPerViewContractAddress = splToken.address;
         streamInfo.payPerViewChainIds = [chainId];
       } else {
-        // EVM PPV is always DHB. Old drafts can still carry USD, which ships
-        // with no contract address and cannot be paid — coerce it.
-        streamInfo.payPerViewTokenSymbol = 'DHB';
-        if (evmChainConfig?.dhbToken) {
+        // DHB, or USDC/USDT where the chain's controller accepts them. Old
+        // drafts can still carry USD, which has no contract — coerce it to DHB.
+        const stable = DIRECT_TIP_TOKENS.find((tk) => tk.chainId === chainId && tk.symbol === ppvCurrency);
+        // Never quietly reprice 5 USDC as 5 DHB after a chain switch.
+        if (!stable && (ppvCurrency === 'USDC' || ppvCurrency === 'USDT')) {
+          return { error: `${ppvCurrency} is not available for pay-per-view on this chain`, streamInfo, bounty: null };
+        }
+        streamInfo.payPerViewTokenSymbol = stable?.symbol ?? 'DHB';
+        if (stable) {
+          streamInfo.payPerViewContractAddress = stable.address;
+          streamInfo.payPerViewChainIds = [chainId];
+        } else if (evmChainConfig?.dhbToken) {
           streamInfo.payPerViewContractAddress = evmChainConfig.dhbToken;
           streamInfo.payPerViewChainIds = [chainId];
         }

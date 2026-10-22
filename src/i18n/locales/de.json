@@ -748,6 +748,7 @@
     "price": "Preis",
     "ppvDhbInfo": "Zahlungen erfolgen in DeHub-Token auf der Base-Kette",
     "ppvUsdInfo": "Zahlungen erfolgen in USD",
+    "ppvStableInfo": "Käufer zahlen in {{symbol}}, direkt an dich",
     "setupBounty": "Belohnung einrichten",
     "viewersToReward": "Zu belohnende Zuschauer",
     "numberOfViewers": "Anzahl der Zuschauer",

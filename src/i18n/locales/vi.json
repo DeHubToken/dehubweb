@@ -718,6 +718,7 @@
     "price": "Price",
     "ppvDhbInfo": "Thanh toán bằng token DeHub trên chuỗi Base",
     "ppvUsdInfo": "Các thanh toán bằng USD",
+    "ppvStableInfo": "Người mua trả bằng {{symbol}}, gửi thẳng cho bạn",
     "setupBounty": "Set Up Bounty",
     "viewersToReward": "Viewers to reward",
     "numberOfViewers": "Number of viewers",

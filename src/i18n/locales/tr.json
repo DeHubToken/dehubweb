@@ -936,6 +936,7 @@
     "price": "Fiyat",
     "ppvDhbInfo": "Ödemeler Base zincirinde DeHub tokenları ile yapılır",
     "ppvUsdInfo": "Ödemeler USD ile yapılır",
+    "ppvStableInfo": "Alıcılar {{symbol}} ile öder, doğrudan size gönderilir",
     "setupBounty": "Ödül ayarla",
     "viewersToReward": "Ödüllendirilecek izleyiciler",
     "numberOfViewers": "İzleyici sayısı",

@@ -899,6 +899,7 @@
     "price": "Price",
     "ppvDhbInfo": "Payments are in DeHub tokens on Base chain",
     "ppvUsdInfo": "Payments are in USD",
+    "ppvStableInfo": "Buyers pay in {{symbol}}, sent straight to you",
     "setupBounty": "Set Up Bounty",
     "viewersToReward": "Viewers to reward",
     "numberOfViewers": "Number of viewers",

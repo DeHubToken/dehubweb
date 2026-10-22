@@ -704,6 +704,7 @@
     "price": "价格",
     "ppvDhbInfo": "付款为 Base 链上的 DeHub 代币",
     "ppvUsdInfo": "使用美元支付",
+    "ppvStableInfo": "买家以 {{symbol}} 支付，直接发送给你",
     "setupBounty": "设置赏金",
     "viewersToReward": "奖励观众数",
     "numberOfViewers": "观众数量",

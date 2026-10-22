@@ -704,6 +704,7 @@
     "price": "가격",
     "ppvDhbInfo": "결제는 Base 체인의 DeHub 토큰으로 이루어집니다.",
     "ppvUsdInfo": "결제는 USD로 진행됩니다",
+    "ppvStableInfo": "구매자는 {{symbol}}(으)로 결제하며 바로 받게 됩니다",
     "setupBounty": "보상 설정",
     "viewersToReward": "보상할 시청자",
     "numberOfViewers": "시청자 수",
