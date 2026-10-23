@@ -31,6 +31,7 @@ import { isStreamLive } from '@/lib/live-status';
 import { BLOCKED_POST_IDS } from '@/constants/post.constants';
 import { useAuth } from '@/contexts/AuthContext';
 import { hlsUrlFor, liveProviderOf, liveThumbnailFor } from '@/lib/live-ingest';
+import { toStoryboard } from '@/lib/storyboard';
 
 // Fallback thumbnails for when API doesn't return one
 const FALLBACK_THUMBNAILS = [
@@ -197,6 +198,7 @@ export function mapNFTToVideoItem(nft: DeHubNFT, index: number): VideoItem {
     thumbnail,
     videoUrl,
     transcodingStatus: nft.transcodingStatus,
+    storyboard: toStoryboard(nft.storyboard),
     audioUrl,
     audioDuration: isAudioPost ? (typeof duration === 'number' ? duration : 0) : undefined,
     isAudio: isAudioPost,
