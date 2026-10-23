@@ -342,6 +342,15 @@ export interface SuggestedAccount {
   isFollowing?: boolean;
   badgeBalance?: number;
   hideBadgeAndBalance?: boolean;
+  /** Profile banner path, as the profile API returns it. */
+  coverImageUrl?: string | null;
+  aboutMe?: string | null;
+  uploads?: number;
+  followsYou?: boolean;
+  /** Why the server picked this account. */
+  reason?: 'follows_you' | 'followed_by_people_you_know' | 'engagement_overlap' | 'suggested';
+  /** Up to two people you follow who follow them. */
+  mutualConnections?: { address: string; username?: string; displayName?: string; avatarImageUrl?: string }[];
 }
 
 export async function getSuggestedAccounts(limit: number = 10, page: number = 1): Promise<{ items: SuggestedAccount[]; hasMore: boolean }> {

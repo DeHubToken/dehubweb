@@ -15,21 +15,15 @@ import { useTranslation as _useCopy } from 'react-i18next';
  * @module components/app/mobile/MobileWhoToFollowCarousel
  */
 
-import { useMemo, useCallback, useRef, useEffect } from 'react';
+import { useMemo, useCallback, useRef, useEffect, useState } from 'react';
 import { useInfiniteQuery, useQueryClient } from '@tanstack/react-query';
 import { Loader2 } from "lucide-react";
-import UserPlus from "@/components/ui/cut-icons/add-account";
-import RefreshCw from "@/components/ui/cut-icons/refresh";
-
 import ChevronRight from "@/components/ui/cut-icons/next";
 
 import { useNavigate } from 'react-router-dom';
 import { AppState } from '@/components/app/AppState';
-import { BadgedName } from '@/components/app/BadgedName';
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { Button } from '@/components/ui/button';
+import { FollowCoverCard, suggestionName } from '@/components/app/FollowCoverCard';
 import { getSuggestedAccounts, getCachedSuggestedProfiles, type SuggestedAccount } from '@/lib/api/dehub';
-import { buildAvatarUrl, deviceWidth } from '@/lib/media-url';
 import { useAuth } from '@/contexts/AuthContext';
 import { useReauthHandler } from '@/hooks/use-reauth-handler';
 import { useFollowedSuggestions } from '@/hooks/use-followed-suggestions';
@@ -39,8 +33,15 @@ import { SwipeableCarousel } from '@/components/app/SwipeableCarousel';
 
 const BATCH_SIZE = 10;
 const MAX_PAGES = 10;
+/** How long a followed card shows "Following" before it leaves the row. */
+const FOLLOWED_LINGER_MS = 700;
 
-export function MobileWhoToFollowCarousel() {
+interface MobileWhoToFollowCarouselProps {
+  /** Explore lists it among its sections: no empty state there, no "See all" back to Explore. */
+  surface?: 'feed' | 'explore';
+}
+
+export function MobileWhoToFollowCarousel({ surface = 'feed' }: MobileWhoToFollowCarouselProps = {}) {
   const { t: _copy } = _useCopy();
   const navigate = useNavigate();
   const { isAuthenticated, walletAddress } = useAuth();
@@ -48,6 +49,12 @@ export function MobileWhoToFollowCarousel() {
   const { followedUsers, markFollowed, unmarkFollowed } = useFollowedSuggestions();
   const followOverrides = useFollowOverrides();
   const queryClient = useQueryClient();
+  const [justFollowed, setJustFollowed] = useState<Set<string>>(() => new Set());
+  const lingerTimers = useRef(new Map<string, ReturnType<typeof setTimeout>>());
+  useEffect(() => {
+    const timers = lingerTimers.current;
+    return () => timers.forEach(clearTimeout);
+  }, []);
 
   const {
     data,
@@ -118,29 +125,27 @@ export function MobileWhoToFollowCarousel() {
     }
   }, [fetchNextPage, hasNextPage, isFetchingNextPage]);
 
-  const getAvatarUrl = (user: SuggestedAccount) => {
-    const avatarPath = user.avatarImageUrl || user.avatarUrl;
-    if (avatarPath && user.address) {
-      // Rendered at w-24 below, well above the default avatar size.
-      return buildAvatarUrl(user.address, avatarPath, deviceWidth(96));
-    }
-    return undefined;
-  };
-
-  const getDisplayName = (user: SuggestedAccount) => {
-    return user.displayName || user.username || `${user.address.slice(0, 6)}...`;
-  };
-
-  const handleUserClick = (user: SuggestedAccount) => {
+  const handleUserClick = useCallback((user: SuggestedAccount) => {
     const target = user.username || user.address;
     if (target) {
       navigate(`/${target}`);
     }
-  };
+  }, [navigate]);
 
-  const handleFollow = (e: React.MouseEvent, user: SuggestedAccount) => {
-    e.stopPropagation();
+  const setFollowedFlag = useCallback((address: string, on: boolean) => {
+    setJustFollowed((prev) => {
+      if (prev.has(address) === on) return prev;
+      const next = new Set(prev);
+      if (on) next.add(address); else next.delete(address);
+      return next;
+    });
+  }, []);
 
+  const handleDismiss = useCallback((user: SuggestedAccount) => {
+    markFollowed(user.address);
+  }, [markFollowed]);
+
+  const handleFollow = (user: SuggestedAccount) => {
     if (!isAuthenticated) {
       toast.error(_copy("copy.404bd6545a07", { defaultValue: "Please log in to follow users" }));
       return;
@@ -150,11 +155,23 @@ export function MobileWhoToFollowCarousel() {
       return;
     }
 
-    // Optimistic: hide the suggestion instantly, revert if the API call fails
-    markFollowed(user.address);
+    if (justFollowed.has(user.address)) return;
+
+    // Optimistic: the card says Following straight away, then leaves the row;
+    // a failed call puts it back as it was.
+    setFollowedFlag(user.address, true);
+    lingerTimers.current.set(user.address, setTimeout(() => {
+      lingerTimers.current.delete(user.address);
+      markFollowed(user.address);
+      setFollowedFlag(user.address, false);
+    }, FOLLOWED_LINGER_MS));
     toggleFollowFor(queryClient, user.address, false, {
-      name: getDisplayName(user),
+      name: suggestionName(user),
       onError: (error, info) => {
+        const timer = lingerTimers.current.get(user.address);
+        if (timer) clearTimeout(timer);
+        lingerTimers.current.delete(user.address);
+        setFollowedFlag(user.address, false);
         unmarkFollowed(user.address);
         if (!info.handled) handleApiError(error, 'Failed to follow user');
       },
@@ -166,6 +183,7 @@ export function MobileWhoToFollowCarousel() {
   }
 
   if (isLoading) {
+    if (surface === 'explore') return null;
     return (
       <div data-discovery-section className="py-4">
         <div className="flex items-center justify-center py-8">
@@ -176,6 +194,7 @@ export function MobileWhoToFollowCarousel() {
   }
 
   if (filteredSuggestions.length === 0) {
+    if (surface === 'explore') return null;
     return (
       <div data-discovery-section data-who-to-follow data-no-swipe className="py-4 border-b border-zinc-800/50">
         <AppState
@@ -190,68 +209,46 @@ export function MobileWhoToFollowCarousel() {
   }
 
   return (
-    <div data-discovery-section data-who-to-follow data-no-swipe className="py-4 border-b border-zinc-800/50">
-      {/* Header */}
-      <div className="flex items-center justify-between px-4 mb-3">
-        <div className="flex items-center gap-2">
-          <UserPlus className="w-4 h-4 text-zinc-400" />
-          <span className="text-sm font-semibold text-white">{_copy("copy.bac527bf9a36", { defaultValue: "Follow Suggestions" })}</span>
-        </div>
-        <button 
-          onClick={() => navigate('/app/explore')}
-          className="flex items-center gap-1 text-xs text-zinc-400 hover:text-white transition-colors"
-        >{_copy("copy.44c9d36485b7", { defaultValue: "See All" })}<ChevronRight className="w-3 h-3" />
-        </button>
+    // No data-discovery-section here: glass dresses that as a bento, and the
+    // cards already carry the theme's surface.
+    <section
+      data-who-to-follow
+      data-follow-cards
+      data-follow-surface={surface}
+      data-no-swipe
+      className={surface === 'feed' ? 'py-4 border-b border-zinc-800/50' : 'py-1'}
+    >
+      <div data-fc-head>
+        <h2 data-fc-title>{_copy("copy.036cfd952896", { defaultValue: "Who to follow" })}</h2>
+        {surface === 'feed' && (
+          <button type="button" data-fc-see-all onClick={() => navigate('/app/explore')}>
+            {_copy("copy.44c9d36485b7", { defaultValue: "See All" })}<ChevronRight className="w-3.5 h-3.5" />
+          </button>
+        )}
       </div>
 
-      {/* Horizontal Carousel */}
       <SwipeableCarousel
         ref={carouselRef}
-        className="flex gap-3 overflow-x-auto overscroll-x-contain scrollbar-hide px-4 pb-2 snap-x snap-mandatory"
+        fadeEdges
+        className="fc-rail flex overflow-x-auto overscroll-x-contain scrollbar-hide px-4 pb-2 snap-x snap-mandatory scroll-px-4"
         onScroll={handleScroll}
       >
         {filteredSuggestions.map((user) => (
-          <div
-            data-discovery-card
+          <FollowCoverCard
             key={user.address}
-            onClick={() => handleUserClick(user)}
-            className="flex-shrink-0 w-[104px] bg-zinc-900 rounded-xl p-1 cursor-pointer hover:bg-zinc-800/80 transition-colors snap-start"
-          >
-            <div className="flex flex-col items-center text-center">
-              <Avatar data-discovery-avatar className="w-24 h-24 mb-2">
-                {getAvatarUrl(user) && <AvatarImage src={getAvatarUrl(user)} />}
-                <AvatarFallback className="bg-zinc-700 text-white font-medium text-xl">
-                  {getDisplayName(user).charAt(0).toUpperCase()}
-                </AvatarFallback>
-              </Avatar>
-              {/* Reserve the badge line even when this account has no badge. This
-                  keeps every Follow button on the same baseline in the row. */}
-              <div className="flex h-6 items-end justify-center w-full mb-2">
-                <BadgedName
-                  badgeBalance={user.hideBadgeAndBalance ? 0 : user.badgeBalance}
-                  username={user.username}
-                  className="font-semibold text-white text-xs truncate"
-                  wrapperClassName="justify-center"
-                >
-                  {getDisplayName(user)}
-                </BadgedName>
-              </div>
-              <Button
-                data-discovery-follow
-                size="sm"
-                variant="outline"
-                onClick={(e) => handleFollow(e, user)}
-                className="w-24 h-7 text-[10px] font-semibold rounded-lg border-zinc-700 text-white hover:bg-zinc-800 bg-transparent flex items-center justify-center"
-              >{_copy("copy.641d1ef657bd", { defaultValue: "Follow" })}</Button>
-            </div>
-          </div>
+            user={user}
+            followed={justFollowed.has(user.address)}
+            onOpen={handleUserClick}
+            onFollow={handleFollow}
+            onDismiss={handleDismiss}
+          />
         ))}
         {isFetchingNextPage && (
-          <div className="flex-shrink-0 w-[104px] flex items-center justify-center">
+          <div className="flex-shrink-0 w-16 flex items-center justify-center">
             <Loader2 className="w-4 h-4 text-zinc-500 animate-spin" />
           </div>
         )}
       </SwipeableCarousel>
-    </div>
+    </section>
   );
 }
