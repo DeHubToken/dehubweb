@@ -229,8 +229,13 @@ const StageContext = createContext<StageContextType | null>(null);
 /** Stages auto-close after 30 silent minutes; a row older than this ended that way. */
 const INACTIVITY_END_MS = 29 * 60_000;
 function endedForInactivity(row: { last_speech_at?: string | null; started_at?: string | null }): boolean {
-  const last = row.last_speech_at || row.started_at;
-  return !!last && Date.now() - new Date(last).getTime() >= INACTIVITY_END_MS;
+  // Silence before the stage went live does not count: a scheduled stage still
+  // carries the last_speech_at it was announced with.
+  const last = Math.max(
+    row.last_speech_at ? new Date(row.last_speech_at).getTime() : 0,
+    row.started_at ? new Date(row.started_at).getTime() : 0,
+  );
+  return last > 0 && Date.now() - last >= INACTIVITY_END_MS;
 }
 function toastInactivityEnd(title: string) {
   toast.info(i18n.t('stages.autoEnd.title'), {
@@ -624,6 +629,22 @@ export function StageProvider({ children }: { children: ReactNode }) {
   /** Realtime channel the host announces the current station on. */
   const radioChannelRef = useRef<any>(null);
   /**
+   * Bumped by every start and every stop. A start that wakes from an await to
+   * find the number moved on has been overtaken: by a stop (the host pressed
+   * Stop while it was still tuning in) or by a newer start. Without this a stop
+   * pressed mid-connect cleared the panel, then the start carried on and played
+   * the station anyway, with no control left on screen to take it off.
+   */
+  const radioGenRef = useRef(0);
+  /** True from a stop until the next start. */
+  const radioOffRef = useRef(true);
+  /**
+   * The first publish of a session, while it is in flight. Two quick taps both
+   * found no track and each published one, so the room got the station twice
+   * and Stop only took one of them down.
+   */
+  const radioPublishRef = useRef<Promise<any> | null>(null);
+  /**
    * Every remote speaker's audio track, kept so the room can be turned down.
    *
    * Playing a track and forgetting it was fine while nothing needed to change
@@ -683,6 +704,23 @@ export function StageProvider({ children }: { children: ReactNode }) {
   /** Last time this client reported the local user speaking (throttle: once a minute). */
   const lastSpeechTouchRef = useRef(0);
   const hasHandledStageEndRef = useRef(false);
+  /**
+   * Bump the stage's last_speech_at so the 30-minute idle sweep leaves it up.
+   * A query builder only runs once something awaits or `then`s it; this used to
+   * be fired with `void`, which never sent the request, so no stage ever
+   * registered speech and every one was judged by its start time alone.
+   */
+  const touchStageSpeech = (spaceId: string) => {
+    (withWalletHeader(
+      supabase.rpc('touch_stage_speech' as never, { space_id: spaceId } as never) as never,
+      walletAddressRef.current,
+    ) as unknown as PromiseLike<{ error: { message?: string } | null }>).then(
+      ({ error }: { error: { message?: string } | null }) => {
+        if (error) stageLogger.warn('Stage speech touch failed', { spaceId, error: error.message });
+      },
+      () => { /* network blip; the next minute retries */ },
+    );
+  };
   // Keep refs aligned before effects run (avoids host-only fetches seeing stale role on first mount).
   walletAddressRef.current = walletAddress;
   myRoleRef.current = myRole;
@@ -1108,10 +1146,7 @@ export function StageProvider({ children }: { children: ReactNode }) {
           const now = Date.now();
           if (local && (local.level || 0) >= SPEECH_LEVEL && spaceId && now - lastSpeechTouchRef.current >= SPEECH_TOUCH_MS) {
             lastSpeechTouchRef.current = now;
-            void withWalletHeader(
-              supabase.rpc('touch_stage_speech' as never, { space_id: spaceId } as never) as never,
-              walletAddressRef.current,
-            );
+            touchStageSpeech(spaceId);
           }
         }
         // Agora levels are 0-100, normalize to 0-1
@@ -1484,6 +1519,10 @@ export function StageProvider({ children }: { children: ReactNode }) {
               // for a scheduled stage is whenever it was announced. Stamp the
               // real start so duration and the recorded list stay honest.
               started_at: new Date().toISOString(),
+              // ...and restart the idle clock: last_speech_at was also stamped
+              // at announcement, so the 30-minute sweep ended the stage on its
+              // first run after going live.
+              last_speech_at: new Date().toISOString(),
               speaker_count: 1,
             })
             .eq('id', spaceId)
@@ -1772,6 +1811,8 @@ export function StageProvider({ children }: { children: ReactNode }) {
     // Silence the radio synchronously with the rest of the UI reset. Leaving
     // the channel would stop the room hearing it, but the host would still be
     // listening to a station with no control left on screen to stop it.
+    radioGenRef.current += 1;
+    radioOffRef.current = true;
     setRadioStation(null);
     setRadioStatus('idle');
     setRadioQueue([]);
@@ -2140,6 +2181,8 @@ export function StageProvider({ children }: { children: ReactNode }) {
   // `lib/stage-radio.ts` for the audio graph and the constraints behind it.
 
   const stopRadio = useCallback(async () => {
+    radioGenRef.current += 1;
+    radioOffRef.current = true;
     const track = radioTrackRef.current;
     radioTrackRef.current = null;
     setRadioStation(null);
@@ -2183,6 +2226,22 @@ export function StageProvider({ children }: { children: ReactNode }) {
     if (myRoleRef.current !== 'host') { toast.error(_copy("copy.bc8a2a418b4d", { defaultValue: "Only the host can put the radio on air" })); return; }
     if (!station.url) { toast.error(_copy("copy.b47c545f76a1", { defaultValue: "That station has no stream to play" })); return; }
 
+    const gen = ++radioGenRef.current;
+    radioOffRef.current = false;
+    const stale = () => gen !== radioGenRef.current;
+    /** A stop landed while this start was waiting: make sure nothing is left playing. */
+    const settleStopped = () => {
+      if (!radioOffRef.current) return;
+      stopStageRadioStream();
+      closeStageRadioTap();
+      const orphan = radioTrackRef.current;
+      radioTrackRef.current = null;
+      if (orphan) {
+        void agoraClientRef.current?.unpublish([orphan]).catch(() => {});
+        try { orphan.close(); } catch { /* noop */ }
+      }
+    };
+
     setRadioStation(station);
     setRadioStatus('connecting');
     // A set is only replaced when one is handed in — advancing through a queue
@@ -2195,21 +2254,32 @@ export function StageProvider({ children }: { children: ReactNode }) {
       // after it is an `src` swap on the same element behind the same tap, so
       // the room hears a cut, not a reconnect.
       if (!radioTrackRef.current) {
-        const mediaStreamTrack = openStageRadioTap();
-        const AgoraRTC = (await import('agora-rtc-sdk-ng')).default;
-        const track = AgoraRTC.createCustomAudioTrack({ mediaStreamTrack });
-        // Re-read the client: importing the SDK is awaited, and the host may
-        // have left the stage while it loaded.
-        const client = agoraClientRef.current;
-        if (!client) throw new Error('Left the stage before the radio started');
-        await client.publish([track]);
-        radioTrackRef.current = track;
+        if (!radioPublishRef.current) {
+          radioPublishRef.current = (async () => {
+            const mediaStreamTrack = openStageRadioTap();
+            const AgoraRTC = (await import('agora-rtc-sdk-ng')).default;
+            const track = AgoraRTC.createCustomAudioTrack({ mediaStreamTrack });
+            // Re-read the client: importing the SDK is awaited, and the host may
+            // have left the stage while it loaded.
+            const client = agoraClientRef.current;
+            if (!client) {
+              try { track.close(); } catch { /* noop */ }
+              throw new Error('Left the stage before the radio started');
+            }
+            await client.publish([track]);
+            radioTrackRef.current = track;
+            return track;
+          })().finally(() => { radioPublishRef.current = null; });
+        }
+        await radioPublishRef.current;
       }
+      if (stale()) { settleStopped(); return; }
 
       setStageRadioBroadcastLevel(radioVolumeStateRef.current / 100);
       setStageRadioMonitorLevel(radioMonitorRef.current ? 0.6 : 0);
 
       await playStageRadioStream(station.url, (status, message) => {
+        if (stale()) return;
         if (status === 'ended') {
           // The end of the audio means opposite things for the two kinds of
           // source. A clip finishing is the normal handover to the next one in
@@ -2222,7 +2292,9 @@ export function StageProvider({ children }: { children: ReactNode }) {
         setRadioStatus(status);
         if (status === 'error') toast.error(`${station.name}: ${message || 'Stream unavailable'}`);
       });
+      if (stale()) settleStopped();
     } catch (err) {
+      if (stale()) { settleStopped(); return; }
       console.error('[Stage] Radio start failed', err);
       toast.error(_copy("copy.88be655c6f72", { defaultValue: "Could not put that station on air" }));
       void stopRadio();
@@ -2297,6 +2369,17 @@ export function StageProvider({ children }: { children: ReactNode }) {
       payload: { station: radioStation ? toRadioLabel(radioStation) : null },
     }).catch(() => {});
   }, [radioStation]);
+
+  // Music on air is the room being used, even with every mic muted: keep the
+  // idle clock from ending a stage that is playing to its listeners.
+  const radioOnAir = myRole === 'host' && !!radioStation && radioStatus === 'live';
+  useEffect(() => {
+    const spaceId = currentSpace?.id;
+    if (!radioOnAir || !spaceId) return;
+    touchStageSpeech(spaceId);
+    const timer = setInterval(() => touchStageSpeech(spaceId), SPEECH_TOUCH_MS);
+    return () => clearInterval(timer);
+  }, [radioOnAir, currentSpace?.id]); // eslint-disable-line react-hooks/exhaustive-deps
 
   // ─── Raise / lower hand ──────────────────────────────────────────────────
 
