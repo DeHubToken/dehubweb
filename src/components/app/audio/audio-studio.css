@@ -52,6 +52,15 @@ html:is([data-theme='system'],[data-theme='glass']) [data-audio-backdrop]:has([d
 html:is([data-theme='system'],[data-theme='glass']) [data-audio-frame][data-video-fullscreen]:has([data-audio-studio]):not(#_):not(#_) { border-radius:0; background:rgb(3 9 12 / .96) !important; }
 [data-audio-frame][data-video-fullscreen]:has([data-audio-studio]) [data-audio-backdrop] > .absolute { height:100%; display:flex; align-items:center; justify-content:center; padding:24px; }
 [data-audio-frame][data-video-fullscreen] [data-audio-studio] { max-width:760px; }
+/* Fullscreen shows the animation edge to edge; the card around it steps aside. */
+[data-audio-frame][data-video-fullscreen]:has([data-audio-studio-fullscreen]) [data-audio-backdrop] > .absolute:not(#_) { padding:0; }
+[data-audio-studio][data-audio-studio-fullscreen]:not(#_) { position:absolute; inset:0; max-width:none; width:100%; height:100%; padding:0; border:0; border-radius:0; background:#000; box-shadow:none; }
+[data-audio-studio-fullscreen] :is([data-audio-studio-title],[data-audio-studio-deck],[data-audio-studio-options]) { display:none; }
+[data-audio-studio-fullscreen] [data-audio-studio-motion] { position:absolute; inset:0; margin:0; border-radius:0; box-shadow:none; }
+[data-audio-studio-fullscreen] [data-audio-studio-motion] canvas { height:100% !important; border-radius:0; }
+[data-audio-studio-fs-bar] { position:absolute; inset:auto 0 0 0; display:flex; justify-content:space-between; align-items:center; padding:16px max(16px,env(safe-area-inset-right)) max(16px,env(safe-area-inset-bottom)) max(16px,env(safe-area-inset-left)); background:linear-gradient(0deg,#000a,transparent); }
+[data-audio-studio-fs-bar] button { width:44px; height:44px; border-radius:50%; background:linear-gradient(150deg,#ffffff1a,#0006); box-shadow:inset 0 1px 1px #ffffff40,inset 0 0 0 1px #ffffff26; }
+[data-audio-studio-fs-bar] button svg { width:20px; height:20px; }
 @media (max-width:480px) { [data-audio-studio] { padding:10px; border-radius:24px; } [data-audio-studio-options] { gap:8px; } }
 @media (hover:hover) { [data-audio-studio] button:hover { filter:brightness(1.12); } }
 @media (prefers-reduced-transparency:reduce) { [data-audio-studio][data-material='glass'] { background:#0c3037; backdrop-filter:none; } }
