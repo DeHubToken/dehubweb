@@ -27,6 +27,7 @@ import { isAnonymousFeedResponse } from '@/lib/feed-response-auth';
 const DEHUB_API_BASE = "https://api.dehub.io";
 
 import { parseSoundtrackTag } from '@/lib/soundtrack';
+import { toStoryboard } from '@/lib/storyboard';
 export { parseSoundtrackTag } from '@/lib/soundtrack';
 
 // ===========================================================================
@@ -74,6 +75,8 @@ export interface UnifiedFeedItem {
   /** Async video transcode state, written optimistically before the CDN file
    *  exists. Absent on posts predating this field — treat as 'done'. */
   transcodingStatus?: 'pending' | 'on' | 'done' | 'failed';
+  /** Seek-preview sprite sheet, raw — read through toStoryboard. */
+  storyboard?: unknown;
   category?: string[];
   /** Absent means safe — see ContentRating. */
   contentRating?: ContentRating;
@@ -281,6 +284,7 @@ function mapVideoItem(item: UnifiedFeedItem, index: number): VideoItem {
     uploadedAgo: formatTimeAgo(item.createdAt),
     status: item.status,
     transcodingStatus: item.transcodingStatus,
+    storyboard: toStoryboard(item.storyboard),
     newPostId: (item as any).newPostId,
     creatorId: item.minter,
     creatorUsername: item.minterUsername || item.mintername,
