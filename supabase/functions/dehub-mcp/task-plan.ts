@@ -19,6 +19,7 @@ export const taskStepSchema = z.object({
   author: z.string().trim().regex(/^(?:@?[a-z0-9_]{1,50}|0x[a-f0-9]{40})$/i).nullable().optional(),
   category: z.string().trim().min(1).max(100).regex(/^[^\r\n]+$/).nullable().optional(),
   topic: z.string().max(2000).nullable().default(null),
+  news: z.boolean().optional(),
   recent_keywords: z.array(z.string().trim().min(2).max(40)).min(1).max(6).nullable().default(null),
   recent_limit: z.number().int().min(1).max(3).nullable().default(null),
   media_pool: z.array(z.object({ url: z.string().url(), type: z.enum(["image", "video"]), subject: z.string().min(3).max(200), caption: z.string().trim().min(1).max(480).optional(), thumbnail_url: z.string().url().optional() }).strict()).max(12).nullable().default(null),

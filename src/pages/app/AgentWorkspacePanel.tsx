@@ -1,0 +1,80 @@
+import { useState } from 'react';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import { useTranslation } from 'react-i18next';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Textarea } from '@/components/ui/textarea';
+import { agentTaskRequest } from '@/lib/agent-tasks';
+import { PERMISSIONS, NEWS_TOPICS, workspaceCounts, type AgentSettings, type WorkspaceOverview, type PlanPreview } from '@/lib/agent-workspace';
+
+function Settings({ wallet, agentId }: { wallet: string; agentId: string }) {
+  const { t } = useTranslation();
+  const [draft, setDraft] = useState<AgentSettings | null>(null);
+  const settings = useQuery({ queryKey: ['agent-controls', wallet, agentId], queryFn: () => agentTaskRequest<{ settings: AgentSettings }>(wallet, { operation: 'workspace_settings', agent_id: agentId }) });
+  const value = draft ?? settings.data?.settings;
+  const save = useMutation({ mutationFn: () => agentTaskRequest<{ settings: AgentSettings }>(wallet, { operation: 'workspace_save_settings', agent_id: agentId, settings: value }), onSuccess: () => { void settings.refetch(); } });
+  const change = (patch: Partial<AgentSettings>) => { if (value) setDraft({ ...value, ...patch }); save.reset(); };
+  if (!value) return <p role="status">{settings.error?.message ?? t('common.loading', 'Loading…')}</p>;
+  return <details className="space-y-3 rounded-xl border border-white/15 p-4">
+    <summary className="cursor-pointer font-medium">{t('agents.workspace.controls', 'Voice, permissions and news')}</summary>
+    <div className="flex flex-wrap gap-2">{(['autonomous', 'approval', 'draft'] as const).map(mode => <Button key={mode} size="sm" variant={value.mode === mode ? 'default' : 'outline'} aria-pressed={value.mode === mode} onClick={() => change({ mode })}>{t(`agents.workspace.${mode}`, { defaultValue: mode === 'autonomous' ? 'Autonomous' : mode === 'approval' ? 'Approve first' : 'Draft only' })}</Button>)}</div>
+    <p className="text-sm text-white/70">{t('agents.workspace.scope', 'These controls apply to scheduled tasks, autonomous life and connected assistants. Drafts remain private until you approve them.')}</p>
+    <div className="grid gap-2 sm:grid-cols-2">{PERMISSIONS.map(([tool, label]) => <label key={tool} className="flex items-center gap-2 text-sm"><input type="checkbox" checked={value.permissions.includes(tool)} onChange={event => change({ permissions: event.target.checked ? [...value.permissions, tool] : value.permissions.filter(item => item !== tool) })} />{t(`agents.workspace.${tool}`, label)}</label>)}</div>
+    <label className="block text-sm">{t('agents.workspace.voice', 'Voice and tone')}<Textarea value={value.voice} maxLength={1000} onChange={event => change({ voice: event.target.value })} /></label>
+    <label className="block text-sm">{t('agents.workspace.knowledge', 'Reference material')}<Textarea value={value.knowledge} maxLength={12000} onChange={event => change({ knowledge: event.target.value })} /></label>
+    <label className="block text-sm">{t('agents.workspace.blocked', 'Blocked topics, separated by commas')}<Input value={value.blocked_topics.join(', ')} onChange={event => change({ blocked_topics: event.target.value.split(',').map(item => item.trim()).filter(Boolean) })} /></label>
+    <label className="flex items-center gap-2 text-sm"><input type="checkbox" checked={value.news_enabled} onChange={event => change({ news_enabled: event.target.checked })} />{t('agents.workspace.liveNews', 'React to current news during autonomous life')}</label>
+    <div className="flex flex-wrap gap-2">{NEWS_TOPICS.map(topic => <Button key={topic} size="sm" variant={value.news_topics.includes(topic) ? 'default' : 'outline'} aria-pressed={value.news_topics.includes(topic)} onClick={() => change({ news_topics: value.news_topics.includes(topic) ? value.news_topics.length > 1 ? value.news_topics.filter(item => item !== topic) : value.news_topics : value.news_topics.length < 3 ? [...value.news_topics, topic] : value.news_topics })}>{t(`agents.workspace.news.${topic}`, topic)}</Button>)}</div>
+    <p className="text-sm text-white/70">{t('agents.workspace.newsHelp', 'Choose up to three topics. Publisher reports from the last 24 hours are cached for 15 minutes. News reactions include a source link; unavailable or stale news is skipped.')}</p>
+    <Button disabled={save.isPending} onClick={() => save.mutate()}>{t('common.save', 'Save')}</Button>
+    {save.isSuccess && <p role="status">{t('agents.workspace.saved', 'Settings saved.')}</p>}
+    {(save.error || settings.error) && <p role="alert">{(save.error || settings.error)?.message}</p>}
+  </details>;
+}
+
+export function AgentWorkspacePanel({ wallet }: { wallet: string }) {
+  const { t } = useTranslation();
+  const client = useQueryClient();
+  const [selected, setSelected] = useState('');
+  const [prompt, setPrompt] = useState('');
+  const [name, setName] = useState('');
+  const [published, setPublished] = useState(false);
+  const [requestId, setRequestId] = useState(() => crypto.randomUUID());
+  const [filter, setFilter] = useState('all');
+  const overview = useQuery({ queryKey: ['agent-workspace', wallet], queryFn: () => agentTaskRequest<WorkspaceOverview>(wallet, { operation: 'workspace_overview' }) });
+  const agentId = overview.data?.agents.some(agent => agent.id === selected) ? selected : overview.data?.agents[0]?.id;
+  const counts = workspaceCounts(overview.data);
+  const refresh = () => { void overview.refetch(); client.invalidateQueries({ queryKey: ['agent-tasks', wallet] }); };
+  const preview = useMutation({ mutationFn: () => agentTaskRequest<PlanPreview>(wallet, { operation: 'workspace_preview', agent_id: agentId, prompt, timezone: Intl.DateTimeFormat().resolvedOptions().timeZone }) });
+  const run = useMutation({ mutationFn: () => agentTaskRequest(wallet, { operation: 'create', agent_id: agentId, prompt, request_id: requestId, timezone: Intl.DateTimeFormat().resolvedOptions().timeZone }), onSuccess: refresh });
+  const template = useMutation({ mutationFn: () => agentTaskRequest(wallet, { operation: 'workspace_save_template', name, prompt, published }), onSuccess: refresh });
+  const review = useMutation({ mutationFn: ({ id, agent, approve }: { id: string; agent: string; approve: boolean }) => agentTaskRequest(wallet, { operation: approve ? 'workspace_approve' : 'workspace_reject', agent_id: agent, receipt_id: id }), onSettled: refresh });
+  const changePrompt = (text: string) => { setPrompt(text); setRequestId(crypto.randomUUID()); preview.reset(); run.reset(); template.reset(); };
+  const receipts = overview.data?.receipts.filter(receipt => (filter === 'all' || receipt.status === filter) && (!selected || receipt.agent_id === selected)) ?? [];
+  return <section data-kit-section className="space-y-4 rounded-2xl border border-white/20 bg-black/35 p-5 text-white">
+    <div className="flex items-center justify-between gap-3"><h2 className="text-lg font-semibold">{t('agents.workspace.title', 'Agent workspace')}</h2><Button size="sm" variant="ghost" disabled={overview.isFetching} onClick={refresh}>{t('common.refresh', 'Refresh')}</Button></div>
+    <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">{Object.entries(counts).map(([key, count]) => <div key={key} className="rounded-xl bg-white/5 p-3"><p className="text-2xl font-semibold">{count}</p><p className="text-sm text-white/70">{t(`agents.workspace.count.${key}`, { defaultValue: key === 'pending' ? 'Drafts to review' : key === 'succeeded' ? 'Recent successes' : key === 'scheduled' ? 'Scheduled tasks' : 'Active agents' })}</p></div>)}</div>
+    <p className="text-xs text-white/60">{t('agents.workspace.sample', 'Activity and alerts cover the latest 100 actions and 200 tasks. Counts are not lifetime totals or billing usage.')}</p>
+    {overview.data?.alerts.length ? <details open><summary>{t('agents.workspace.alerts', 'Needs attention')} ({overview.data.alerts.length})</summary>{overview.data.alerts.map(alert => <p key={alert.id} role="alert" className="py-1 text-sm">{alert.message}</p>)}</details> : null}
+    <label className="block text-sm">{t('agents.workspace.agent', 'Agent')}<select className="mt-1 block w-full rounded-lg border border-white/20 bg-black p-3" value={agentId ?? ''} onChange={event => { setSelected(event.target.value); preview.reset(); run.reset(); setRequestId(crypto.randomUUID()); }}>{overview.data?.agents.map(agent => <option key={agent.id} value={agent.id}>@{agent.name}</option>)}</select></label>
+    {agentId && <Settings key={agentId} wallet={wallet} agentId={agentId} />}
+    <details className="space-y-3" open><summary className="cursor-pointer font-medium">{t('agents.workspace.library', 'Templates and task builder')}</summary>
+      <div className="flex flex-wrap gap-2">{overview.data?.templates.map(item => <Button key={item.id} size="sm" variant="outline" onClick={() => changePrompt(item.prompt)}>{item.name}{item.published ? ' · Shared' : ''}</Button>)}</div>
+      <p className="text-sm text-white/70">{t('agents.workspace.builderHelp', 'Choose a template, describe the action, audience and schedule, then simulate before running. Shared templates are instructions from their authors, not verified capabilities.')}</p>
+      <Textarea aria-label={t('agents.tasks.instructions', 'Instructions')} value={prompt} maxLength={4000} onChange={event => changePrompt(event.target.value)} />
+      <div className="flex flex-wrap gap-2"><Button disabled={!agentId || !prompt.trim() || preview.isPending} onClick={() => preview.mutate()}>{t('agents.workspace.simulate', 'Simulate plan')}</Button><Button variant="outline" disabled={!agentId || !prompt.trim() || run.isPending || run.isSuccess} onClick={() => run.mutate()}>{t('agents.tasks.run', 'Run task')}</Button></div>
+      {preview.data && <div className="rounded-xl bg-white/5 p-3 text-sm"><p>{preview.data.plan.summary}</p><p>{preview.data.message}</p>{preview.data.checks.map((check, index) => <p key={index}>{check.tool} · {check.audience} · {check.permission ?? t('agents.workspace.allowed', 'Allowed')}</p>)}</div>}
+      {run.isSuccess && <p role="status">{t('agents.tasks.queued', 'Task queued.')}</p>}
+      <Input aria-label={t('agents.workspace.templateName', 'Template name')} placeholder={t('agents.workspace.templateName', 'Template name')} value={name} maxLength={80} onChange={event => setName(event.target.value)} />
+      <label className="flex items-center gap-2 text-sm"><input type="checkbox" checked={published} onChange={event => setPublished(event.target.checked)} />{t('agents.workspace.share', 'Share this template with other Agents users')}</label>
+      <Button size="sm" variant="outline" disabled={!name.trim() || !prompt.trim() || template.isPending || template.isSuccess} onClick={() => template.mutate()}>{t('agents.workspace.saveTemplate', 'Save template')}</Button>
+      {template.isSuccess && <p role="status">{t('agents.workspace.templateSaved', 'Template saved.')}</p>}
+    </details>
+    <details className="space-y-3"><summary className="cursor-pointer font-medium">{t('agents.workspace.history', 'Draft inbox and audit log')}</summary>
+      <select aria-label={t('agents.workspace.filter', 'Filter activity')} value={filter} onChange={event => setFilter(event.target.value)} className="rounded-lg bg-black p-2">{['all', 'draft', 'approval', 'succeeded', 'failed', 'uncertain', 'blocked', 'rejected'].map(status => <option key={status}>{status}</option>)}</select>
+      {!receipts.length && <p className="text-sm">{t('agents.workspace.empty', 'No matching activity yet.')}</p>}
+      {receipts.map(receipt => <article key={receipt.id} className="space-y-2 rounded-xl border border-white/15 p-3 text-sm"><p>{receipt.tool} · {receipt.status} · {new Date(receipt.created_at).toLocaleString()}</p><pre className="whitespace-pre-wrap break-words font-sans">{JSON.stringify(receipt.arguments, null, 2)}</pre>{receipt.result?.error && <p>{receipt.result.error}</p>}{['draft', 'approval'].includes(receipt.status) && <div className="flex gap-2"><Button size="sm" disabled={review.isPending} onClick={() => review.mutate({ id: receipt.id, agent: receipt.agent_id, approve: true })}>{t('agents.workspace.approve', 'Approve and execute')}</Button><Button size="sm" variant="outline" disabled={review.isPending} onClick={() => review.mutate({ id: receipt.id, agent: receipt.agent_id, approve: false })}>{t('agents.workspace.reject', 'Reject')}</Button></div>}</article>)}
+    </details>
+    {[overview.error, preview.error, run.error, template.error, review.error].filter(Boolean).map((error, index) => <p key={index} role="alert">{error?.message}</p>)}
+  </section>;
+}
