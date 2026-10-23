@@ -364,8 +364,8 @@ export async function handleLifeTick(context: LifeContext, req: Request): Promis
 /** Owner view: is it alive, what is it doing, what did it do lately. */
 export async function lifeStatus(db: any, agentId: string) {
   const life = checked(await db.from("ai_agent_lives").select("sentient,persona,state,next_at").eq("agent_id", agentId).maybeSingle());
-  const events = checked(await db.from("ai_agent_life_events").select("kind,target,content,meta,created_at").eq("agent_id", agentId)
-    .in("kind", ["post", "comment", "reply", "like", "profile", "error"]).order("created_at", { ascending: false }).limit(15));
+  const events = checked(await db.from("ai_agent_life_events").select("id,kind,target,content,meta,created_at").eq("agent_id", agentId)
+    .in("kind", ["post", "comment", "reply", "like", "profile", "error"]).order("created_at", { ascending: false }).limit(100));
   const persona = life?.persona as Persona | undefined;
   return {
     sentient: !!life?.sentient,
@@ -376,7 +376,9 @@ export async function lifeStatus(db: any, agentId: string) {
     timezone: persona?.timezone ?? null,
     daily: { posts: life?.state?.day === (persona ? localClock(persona.timezone).day : null) ? (life?.state?.posts ?? 0) : 0,
       target: persona?.posts_per_day?.[0] ?? 1 },
-    events: (events ?? []).map((event: any) => ({ kind: event.kind, content: event.content, target: event.target, created_at: event.created_at })),
+    events: (events ?? []).map((event: any) => ({ id: event.id, kind: event.kind, content: event.content, target: event.target,
+      post_id: event.kind === 'reply' ? event.meta?.post : event.target,
+      unliked: !!event.meta?.owner_unliked, edited: !!event.meta?.owner_edited, created_at: event.created_at })),
   };
 }
 
