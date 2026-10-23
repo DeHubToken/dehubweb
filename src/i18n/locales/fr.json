@@ -1700,7 +1700,15 @@
     "mostPlayed": "Les plus écoutés",
     "mostLiked": "Les plus aimés",
     "mostRecent": "Les plus récents",
-    "chartOrder": "Ordre du classement audio"
+    "chartOrder": "Ordre du classement audio",
+    "chartKind": "Classement musical",
+    "chartAudio": "Audio",
+    "chartVideos": "Clips musicaux",
+    "videoCharts": "Classement des clips",
+    "mostViewed": "Les plus vus",
+    "trendingWeek": "Tendances de la semaine",
+    "newest": "Nouveautés",
+    "videoChartOrder": "Ordre du classement des clips"
   },
   "notFound": {
     "title": "Page non trouvée",
