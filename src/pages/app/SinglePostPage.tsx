@@ -168,6 +168,7 @@ function toVideoItem(nft: DeHubNFT): VideoItem {
     id: String(nft.tokenId),
     contentRating: nft.contentRating,
     mediaDescriptions: nft.mediaDescriptions,
+    spoilerText: nft.spoilerText,
     shopLinks: (nft as any).shopLinks,
     shopListingCount: (nft as any).shopListingCount,
     type: 'video',
@@ -255,6 +256,7 @@ function toImagePost(nft: DeHubNFT): ImagePost {
     id: String(nft.tokenId),
     contentRating: nft.contentRating,
     mediaDescriptions: nft.mediaDescriptions,
+    spoilerText: nft.spoilerText,
     shopLinks: (nft as any).shopLinks,
     shopListingCount: (nft as any).shopListingCount,
     type: 'image',
@@ -334,6 +336,7 @@ function toTextPost(nft: DeHubNFT): TextPost {
     id: String(nft.tokenId),
     contentRating: nft.contentRating,
     mediaDescriptions: nft.mediaDescriptions,
+    spoilerText: nft.spoilerText,
     shopLinks: (nft as any).shopLinks,
     shopListingCount: (nft as any).shopListingCount,
     type: 'post',
@@ -450,6 +453,7 @@ function toLiveStream(nft: DeHubNFT): LiveStream {
     id: String(nft.tokenId),
     contentRating: nft.contentRating,
     mediaDescriptions: nft.mediaDescriptions,
+    spoilerText: nft.spoilerText,
     // The Shop board rides straight through to LiveStreamCard, which is what
     // renders the player here — the button lives inside it.
     shopLinks: (nft as any).shopLinks,
@@ -1430,6 +1434,7 @@ function SinglePostPageContent({ inOverlay = false, overrideId }: SinglePostPage
           currentTitle={videoData.title}
           currentDescription={videoData.description}
           currentContentRating={videoData.contentRating}
+          currentSpoilerText={videoData.spoilerText}
           currentShopLinks={videoData.shopLinks}
           onSuccess={(edited) => {
             applyOptimisticEdit(queryClient, id || '', edited);

@@ -46,6 +46,8 @@ export interface BaseFeedItem {
   contentRating?: ContentRating;
   /** Alt text, one per piece of media in display order (gallery images by position, a video first). */
   mediaDescriptions?: string[];
+  /** Content warning: the post opens collapsed behind this one line. */
+  spoilerText?: string;
   /**
    * The creator published this for children — the Kids Mode allowlist.
    *
