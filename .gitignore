@@ -99,6 +99,7 @@ scripts/*
 !scripts/i18n-rebuild-pr.mjs
 !scripts/edge-cors-check.mjs
 !scripts/build-theme-icon-materials.mjs
+!scripts/build-glass-icons.mjs
 !scripts/edge-imports-check.mjs
 !scripts/mojibake-check.mjs
 !scripts/build-badge-plates.mjs

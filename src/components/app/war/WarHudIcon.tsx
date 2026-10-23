@@ -208,7 +208,7 @@ const SYSTEM_REFRESHED_KEYS = new Set<ThemeIconKey>([
 ]);
 
 /** Bump when a file is redrawn in place, or browsers and the app keep the old art. */
-export const THEME_ICON_REVISION = '11';
+export const THEME_ICON_REVISION = '12';
 
 const TRANSPARENT_PNG_KEYS = new Set<ThemeIconKey>([
   'boost', 'second-wind', 'comment-anchor', 'trend-jacker', 'timeline-bomber',
