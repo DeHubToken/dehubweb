@@ -835,6 +835,7 @@ export type Database = {
           status: string
           swarm_id: string | null
           swarm_index: number | null
+          swarm_mode: string
           swarm_size: number | null
           updated_at: string
         }
@@ -858,6 +859,7 @@ export type Database = {
           status?: string
           swarm_id?: string | null
           swarm_index?: number | null
+          swarm_mode?: string
           swarm_size?: number | null
           updated_at?: string
         }
@@ -881,6 +883,7 @@ export type Database = {
           status?: string
           swarm_id?: string | null
           swarm_index?: number | null
+          swarm_mode?: string
           swarm_size?: number | null
           updated_at?: string
         }
@@ -8947,6 +8950,20 @@ export type Database = {
           id: string
         }[]
       }
+      create_agent_swarm_tasks_v2: {
+        Args: {
+          p_agent_ids: string[]
+          p_interval_minutes: number
+          p_mode: string
+          p_owner_wallet: string
+          p_plan: Json
+          p_prompt: string
+          p_request_id: string
+        }
+        Returns: {
+          id: string
+        }[]
+      }
       decrement_listing_stock: {
         Args: { p_listing_id: string }
         Returns: number
@@ -9237,6 +9254,10 @@ export type Database = {
       get_signed_request_wallet_address: { Args: never; Returns: string }
       get_user_id_by_email: { Args: { p_email: string }; Returns: string }
       get_user_id_by_phone: { Args: { p_phone: string }; Returns: string }
+      governance_has_comment_badge: {
+        Args: { token?: string; wallet: string }
+        Returns: boolean
+      }
       increment_category_count: { Args: { p_name: string }; Returns: undefined }
       increment_stage_listens: {
         Args: { p_space_id: string }
