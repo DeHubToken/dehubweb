@@ -1,5 +1,5 @@
 {
-  "version": "3de3ff5bff9f6b31",
+  "version": "4e28ee29ec8ef3b1",
   "routes": {
     "/": [
       "ar",
@@ -198,6 +198,13 @@
       "tr"
     ],
     "/dao": [
+      "ar",
+      "es",
+      "fr",
+      "nl",
+      "tr"
+    ],
+    "/dehub-app": [
       "ar",
       "es",
       "fr",

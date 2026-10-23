@@ -82,3 +82,22 @@ identity without downloading weights. Deployment still requires a real public
 video render and an authenticated stage speech request on production. Confirm
 the cached voice follows pause, seek, mute and playback speed on web/mobile,
 and that each volume slider affects only its own track.
+
+## Stage clips
+
+The same service renders vertical shorts from finished public Stages
+(`clips.py`, `POST /clips`). The `stage-clips` Edge Function picks up to three
+30-60 s highlights from the transcript, writes each clip's captions, DeHub
+watermark and end card as an ASS overlay, and sends one job per stage. The
+worker cuts each window, builds a 1080x1920 frame (the stage video over a
+blurred copy, or for audio-only stages the cover or host avatar with a
+waveform), burns in the overlay and uploads the MP4 through a signed URL to
+the public `stage-clips` bucket. Clips run on their own thread, one stage at a
+time with one waiting, so they never take the dub slot.
+
+No new secret: the function reuses `DUB_WORKER_SECRET` and derives the route
+from the dub worker URL (`…/jobs` becomes `…/clips`); set
+`STAGE_CLIP_WORKER_URL` to point elsewhere. The image needs
+`fonts-dejavu-core` next to ffmpeg; on the existing host install it with apt.
+Finished clips are queued for the brand accounts as `stage_clip` posts that
+wait for an admin.

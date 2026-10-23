@@ -1,6 +1,6 @@
 {
-  "modules": 620,
-  "sourceBytes": 3857229,
+  "modules": 621,
+  "sourceBytes": 3860520,
   "files": [
     "server/public-page-locales.js",
     "src/App.tsx",
@@ -566,6 +566,7 @@
     "src/lib/scroll-freeze-watchdog.ts",
     "src/lib/seo/public-locales.ts",
     "src/lib/seo/route-meta.ts",
+    "src/lib/share-url.ts",
     "src/lib/short-video.ts",
     "src/lib/shorts-photos.ts",
     "src/lib/shorts-rotation.ts",

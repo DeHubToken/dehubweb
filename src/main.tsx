@@ -38,6 +38,10 @@ import "./styles/pinned-community-stage.css";
 installSupabaseInterceptor();
 // Serve original images on networks that cannot reach the dehub.io transforms.
 installImageOriginFallback();
+// First-touch attribution. The URL is read now, before a redirect such as
+// /r/CODE -> /app?ref=CODE can replace it; the module itself loads lazily.
+const landing = { path: location.pathname, search: location.search, referrer: document.referrer };
+void import("./lib/first-touch").then((m) => m.captureFirstTouch(landing)).catch(() => undefined);
 // Signs wallet-scoped REST and storage requests; see src/lib/wallet-session.ts.
 installWalletSessionFetch();
 

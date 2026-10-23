@@ -60,6 +60,8 @@ import { useAuth } from '@/contexts/AuthContext';
 import { ASSISTANT_AVATAR, isAssistantAddress } from '@/lib/assistant';
 import { useAuthorThread } from '@/hooks/use-author-thread';
 import type { Comment } from '@/lib/comment-mapper';
+import { viewerShareUrl } from '@/lib/share-url';
+import { trackShare } from '@/lib/analytics';
 
 interface AuthorThreadProps {
   tokenId: string;
@@ -183,8 +185,9 @@ function ThreadEntry({
   const handleLike = () => handleReact(reactionForThumbTap(heldReaction, state.reactionCounts));
 
   const handleShare = () => {
+    trackShare('copy_link', { kind: 'comment' });
     navigator.clipboard
-      .writeText(dehubLinkFor.threadEntry(tokenId, entry.id))
+      .writeText(viewerShareUrl(dehubLinkFor.threadEntry(tokenId, entry.id)))
       .then(() => toast.success(t('comments.linkCopied')))
       .catch(() => toast.error(t('comments.copyLinkFailed')));
   };

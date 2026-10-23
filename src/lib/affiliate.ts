@@ -72,23 +72,30 @@ const randomCode = (len = 8) => {
   return out;
 };
 
+/** The wallet's active affiliate code, without creating one. */
+export async function findAffiliateCode(
+  ownerAddress: string,
+): Promise<{ code: string; share_name: string | null } | null> {
+  // @ts-ignore - new table may not yet be in generated Database types
+  const { data } = await supabase
+    .from("affiliate_codes" as never)
+    .select("code,share_name")
+    .ilike("owner_address", ownerAddress.toLowerCase())
+    .eq("active", true)
+    .order("created_at", { ascending: true })
+    .limit(1) as unknown as { data: Array<{ code: string; share_name: string | null }> | null };
+  return data?.[0] ?? null;
+}
+
 export async function getOrCreateAffiliateCode(
   ownerAddress: string,
   shareName?: string | null,
 ): Promise<{ code: string; share_name: string | null } | null> {
   const addr = ownerAddress.toLowerCase();
   const cleanShareName = shareName?.trim().replace(/^@+/, "").slice(0, 32) || null;
-  // @ts-ignore - new table may not yet be in generated Database types
-  const { data: existing } = await supabase
-    .from("affiliate_codes" as never)
-    .select("code,share_name")
-    .ilike("owner_address", addr)
-    .eq("active", true)
-    .order("created_at", { ascending: true })
-    .limit(1) as unknown as { data: Array<{ code: string; share_name: string | null }> | null };
+  const current = await findAffiliateCode(addr);
 
-  if (existing && existing.length > 0) {
-    const current = existing[0];
+  if (current) {
     if (cleanShareName && current.share_name !== cleanShareName) {
       const { data } = await withWalletHeader(
         // @ts-ignore
