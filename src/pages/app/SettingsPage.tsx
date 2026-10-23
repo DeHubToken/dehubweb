@@ -274,6 +274,7 @@ import { ThemePreviewCard } from '@/components/app/settings/ThemePreviewCard';
 import { KeywordFiltersSection } from '@/components/app/settings/KeywordFiltersSection';
 import { NotificationFiltersSetting } from '@/components/app/settings/NotificationFiltersSetting';
 import { ProfileFieldsSetting } from '@/components/app/settings/ProfileFieldsSetting';
+import { FediverseHandleSetting } from '@/components/app/settings/FediverseHandleSetting';
 
 export default function SettingsPage() {
   const { t: _copy } = _useCopy();
@@ -1126,6 +1127,9 @@ function ProfileSettings() {
 
       {/* Profile fields — label/value lines under the bio, links verified by rel="me" */}
       <ProfileFieldsSetting />
+
+      {/* Fediverse — the @username@dehub.io address Mastodon can follow */}
+      <FediverseHandleSetting />
 
       {/* Links */}
       <div className="space-y-6">
