@@ -1,6 +1,7 @@
 import { localizePublicChrome, localizeStructuredData } from './server/public-page-locales.js';
 import { handleWorkReceipt } from './server/work-receipts.ts';
 import { handleEditorPresence } from './server/editor-presence.ts';
+import { stageShareImageUrl } from './server/stage-share-card.js';
 import { applyPostShareImage, applyProfileShareImage } from './server/post-share-card.js';
 import { handleFinanceRequest } from './server/finance-stats.js';
 import { handleCreatorMotionSource } from './server/creator-motion-source.js';
@@ -2794,6 +2795,7 @@ function shareCardImage(url) {
   if (!url) return null;
   // Already a 1200x630 card: one of ours, or one this function made.
   if (url.startsWith(`${APP_URL}/og/`) || url === SHARE_IMAGE) return url;
+  if (url.startsWith(`${APP_URL}/_og/stage/`)) return url;
   if (url.startsWith(`${IMAGE_TRANSFORM_BASE}fit=`)) return url;
   // Undo an earlier transform (the fn's avatar crop, repairProxiedImages'
   // scale-down) so the card is cut from the original.
@@ -3351,8 +3353,10 @@ function buildStageHtml(stage) {
     200,
   );
   // The share image is the stage's own cover when the host set one; failing
-  // that, the host's profile picture — a face beats a generic banner.
-  const image = stage.cover_image_url || stageHostAvatarUrl(stage);
+  // that, the generated ticket the app and site draw for it
+  // (server/stage-share-card.js), so every link unfurls with the stage's
+  // title, date and status.
+  const image = stage.cover_image_url || (stage.id ? stageShareImageUrl(stage.id) : stageHostAvatarUrl(stage));
   const startsAt = stage.scheduled_at || stage.started_at || '';
 
   return entityHtml({
@@ -6222,6 +6226,11 @@ async function handleRequest(request, env, ctx) {
   if (profileCard) {
     const { handleProfileShareImage } = await import('./server/post-share-image.js');
     return handleProfileShareImage(request, env, ctx, profileCard[1], fetchAccountInfo);
+  }
+  const stageCard = pathname.match(/^\/_og\/stage\/v1\/([0-9a-fA-F-]{16,64})\.png$/);
+  if (stageCard) {
+    const { handleStageShareImage } = await import('./server/stage-share-image.js');
+    return handleStageShareImage(request, env, ctx, stageCard[1], supabaseLookup);
   }
   if (pathname.startsWith(OG_SOURCE_PREFIX)) return ogSourceResponse(request, env, pathname);
 
