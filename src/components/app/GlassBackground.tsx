@@ -23,9 +23,27 @@ export function GlassBackground() {
       const ratio = Math.min(window.devicePixelRatio || 1, 2);
       canvas.width = Math.round(width * ratio);
       canvas.height = Math.round(height * ratio);
+      context.fillStyle = '#021018';
+      context.fillRect(0, 0, canvas.width, canvas.height);
+      context.fillStyle = getComputedStyle(canvas).getPropertyValue('--tint-accent').trim() || '#00d2e6';
+      const colour = context.fillStyle;
+      const channels = /^#[\da-f]{6}$/i.test(colour)
+        ? [1, 3, 5].map(offset => parseInt(colour.slice(offset, offset + 2), 16))
+        : [0, 210, 230];
+      const mix = (base: number[], weight: number) => `rgb(${base.map((channel, index) => Math.round(channel * (1 - weight) + channels[index] * weight)).join(',')})`;
       const scale = Math.max(width / 1600, height / 1000);
       context.setTransform(ratio * scale, 0, 0, ratio * scale,
         ratio * (width - 1600 * scale) / 2, ratio * (height - 1000 * scale) / 2);
+      const sky = context.createRadialGradient(1600, 0, 0, 1600, 0, 1500);
+      sky.addColorStop(0, mix([17, 69, 82], .31));
+      sky.addColorStop(1, 'transparent');
+      context.fillStyle = sky;
+      context.fillRect(-1600, -1000, 4800, 3000);
+      const floor = context.createRadialGradient(320, 1000, 0, 320, 1000, 1100);
+      floor.addColorStop(0, mix([8, 44, 56], .13));
+      floor.addColorStop(1, 'transparent');
+      context.fillStyle = floor;
+      context.fillRect(-1600, -1000, 4800, 3000);
       const light = context.createLinearGradient(0, 0, 1600, 1000);
       light.addColorStop(0, 'rgba(255,255,255,.7)');
       light.addColorStop(.3, 'rgba(255,255,255,.08)');
@@ -49,8 +67,10 @@ export function GlassBackground() {
       resizeFrame = requestAnimationFrame(paint);
     });
     observer.observe(canvas);
+    const colourObserver = new MutationObserver(paint);
+    colourObserver.observe(document.documentElement, { attributes: true, attributeFilter: ['style'] });
     paint();
-    return () => { observer.disconnect(); cancelAnimationFrame(resizeFrame); };
+    return () => { observer.disconnect(); colourObserver.disconnect(); cancelAnimationFrame(resizeFrame); };
   }, []);
   useEffect(() => {
     const root = ref.current;
