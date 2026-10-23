@@ -6183,7 +6183,10 @@
     "play": "പ്ലേ ചെയ്യുക",
     "pause": "താല്‍ക്കാലികമായി നിര്‍ത്തുക",
     "listens_one": "{{count}}ശ്രദ്ധിക്കുക",
-    "listens_other": "{{count}}-ന്റെ ശ്രവണം"
+    "listens_other": "{{count}}-ന്റെ ശ്രവണം",
+    "lyrics": "വരികൾ",
+    "lyricsLoading": "വരികൾ തിരയുന്നു…",
+    "lyricsNone": "വരികൾ കണ്ടെത്തിയില്ല"
   },
   "converter": {
     "seoTitle": "കൺവെർട്ടർ — DeHub-ലേക്ക് ഒരു വീഡിയോ ഇമ്പോർട്ട് ചെയ്യുക",

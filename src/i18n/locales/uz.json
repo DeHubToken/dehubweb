@@ -6231,7 +6231,10 @@
     "play": "Oʻynash",
     "pause": "Pausekeyboard label",
     "listens_one": "{{count}} eshit",
-    "listens_other": "{{count}} tinglaydi"
+    "listens_other": "{{count}} tinglaydi",
+    "lyrics": "Qoʻshiq matni",
+    "lyricsLoading": "Matn qidirilmoqda…",
+    "lyricsNone": "Matn topilmadi"
   },
   "converter": {
     "seoTitle": "Konvertor — DeHub-ga video import qiling",

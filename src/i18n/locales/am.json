@@ -6189,7 +6189,10 @@
     "play": "አጫውት",
     "pause": "እረፍት",
     "listens_one": "{{count}} ያዳምጡ",
-    "listens_other": "{{count}} ያዳምጡ"
+    "listens_other": "{{count}} ያዳምጡ",
+    "lyrics": "የዘፈን ግጥም",
+    "lyricsLoading": "ግጥም በመፈለግ ላይ…",
+    "lyricsNone": "ምንም ግጥም አልተገኘም"
   },
   "converter": {
     "seoTitle": "ኮንቬርተር — ቪዲዮ ወደ DeHub ያስገቡ",

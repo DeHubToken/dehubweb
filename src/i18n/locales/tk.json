@@ -6108,7 +6108,10 @@
     "play": "Oynat",
     "pause": "Galanlar",
     "listens_one": "{{count}} gulak asyň",
-    "listens_other": "{{count}} listens"
+    "listens_other": "{{count}} listens",
+    "lyrics": "Aýdymyň sözleri",
+    "lyricsLoading": "Sözler gözlenýär…",
+    "lyricsNone": "Söz tapylmady"
   },
   "converter": {
     "seoTitle": "Konwerter — DeHub-a wideo import et",

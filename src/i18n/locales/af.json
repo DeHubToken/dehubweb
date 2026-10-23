@@ -6239,7 +6239,10 @@
     "play": "Speel",
     "pause": "Pouseer",
     "listens_one": "{{count}} luister",
-    "listens_other": "{{count}} luisteraars"
+    "listens_other": "{{count}} luisteraars",
+    "lyrics": "Lirieke",
+    "lyricsLoading": "Soek lirieke…",
+    "lyricsNone": "Geen lirieke gevind nie"
   },
   "converter": {
     "seoTitle": "Omskakelaar — voer 'n video in DeHub in",

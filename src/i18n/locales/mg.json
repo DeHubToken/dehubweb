@@ -6209,7 +6209,10 @@
     "play": "Mamaky",
     "pause": "Miato",
     "listens_one": "{{count}} mihaino",
-    "listens_other": "{{count}} сонсens"
+    "listens_other": "{{count}} сонсens",
+    "lyrics": "Tononkira",
+    "lyricsLoading": "Mitady tononkira…",
+    "lyricsNone": "Tsy nahitana tononkira"
   },
   "converter": {
     "seoTitle": "Converter — mamindra video ao DeHub",

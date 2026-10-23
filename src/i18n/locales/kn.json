@@ -6191,7 +6191,10 @@
     "play": "ಪ್ಲೇ ಮಾಡಿ",
     "pause": "ವಿರಾಮ",
     "listens_one": "{{count}} ಆಲಿಸಿ",
-    "listens_other": "{{count}} ಕೇಳುತ್ತಾನೆ"
+    "listens_other": "{{count}} ಕೇಳುತ್ತಾನೆ",
+    "lyrics": "ಹಾಡಿನ ಸಾಹಿತ್ಯ",
+    "lyricsLoading": "ಸಾಹಿತ್ಯ ಹುಡುಕಲಾಗುತ್ತಿದೆ…",
+    "lyricsNone": "ಸಾಹಿತ್ಯ ಸಿಗಲಿಲ್ಲ"
   },
   "converter": {
     "seoTitle": "ಕನ್ವರ್ಟರ್ — DeHub ಗೆ ವಿಡಿಯೋ ಆಮದು ಮಾಡಿ",

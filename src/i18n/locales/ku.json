@@ -5306,7 +5306,10 @@
   "audioPost": {
     "popOut": "پاپ ئاوت — لە کاتی گەڕاندا گوێ بگرە",
     "listens_one": "{{count}} گوێ بگرە",
-    "listens_other": "{{count}} گوێ دەگرێت"
+    "listens_other": "{{count}} گوێ دەگرێت",
+    "lyrics": "Gotinên stranê",
+    "lyricsLoading": "Gotin tên lêgerîn…",
+    "lyricsNone": "Gotin nehatin dîtin"
   },
   "converter": {
     "ownership": "Ez xwediyê vê naverokê me, an jî destûra xwediyê mafan heye ku ez wê li ser DeHub biweşînim.",

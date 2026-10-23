@@ -6207,7 +6207,10 @@
     "play": "খেলুন",
     "pause": "বিরতি",
     "listens_one": "{{count}} শুনুন",
-    "listens_other": "{{count}} লিসেনস"
+    "listens_other": "{{count}} লিসেনস",
+    "lyrics": "গানের কথা",
+    "lyricsLoading": "গানের কথা খোঁজা হচ্ছে…",
+    "lyricsNone": "কোনো গানের কথা পাওয়া যায়নি"
   },
   "converter": {
     "seoTitle": "কনভার্টার — DeHub-এ একটি ভিডিও আমদানি করুন",

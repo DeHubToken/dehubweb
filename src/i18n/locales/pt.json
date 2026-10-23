@@ -6220,7 +6220,10 @@
     "play": "Reproduzir",
     "pause": "Pausar",
     "listens_one": "{{count}} reprodução",
-    "listens_other": "{{count}} reproduções"
+    "listens_other": "{{count}} reproduções",
+    "lyrics": "Letra",
+    "lyricsLoading": "Buscando a letra…",
+    "lyricsNone": "Nenhuma letra encontrada"
   },
   "converter": {
     "seoTitle": "Conversor — importar um vídeo para DeHub",

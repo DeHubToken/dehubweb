@@ -6054,7 +6054,10 @@
     "play": "Oxut",
     "pause": "Fasilə ver",
     "listens_one": "{{count}} dinlə",
-    "listens_other": "{{count}} dinləyir"
+    "listens_other": "{{count}} dinləyir",
+    "lyrics": "Mahnı sözləri",
+    "lyricsLoading": "Sözlər axtarılır…",
+    "lyricsNone": "Söz tapılmadı"
   },
   "converter": {
     "seoTitle": "Converter — DeHub-a video idxal edin",
