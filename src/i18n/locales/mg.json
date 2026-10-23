@@ -193,6 +193,7 @@
     "heading": "DeHub Fohy"
   },
   "settings": {
+    "usernameTaken": "Efa misy mampiasa io anarana io",
     "postingChain": "Blockchain ho an’ny lahatsoratra",
     "showOnline": "Asehoy rehefa an-tserasera aho",
     "showOnlineDesc": "Ny olona izay alefanao dia mahita teboka maitso eo akaikin'ny anaranao raha mampiasa DeHub ianao",
@@ -2387,6 +2388,7 @@
     "pendingSubmitted": "{{amount}} tapaho nalefa. Mbola hojerena ny fanamafisana. Aza alefa indray."
   },
   "communities": {
+    "chatTab": "Resaka",
     "title": "Vondrom-piarahamonina",
     "create": "Mamorona",
     "searchPlaceholder": "Hikaroka vondrom-piarahamonina...",
@@ -2421,7 +2423,6 @@
     "addDescription": "Ampio famaritana...",
     "communityDescription": "Famaritana ny vondrom-piarahamonina...",
     "posts": "Lahatsoratra",
-    "chat": "Resaka",
     "membersTab": "Mpikambana ({{count}})",
     "about": "Mombamomba",
     "backToCommunities": "Vondrom-piarahamonina",
@@ -3878,6 +3879,7 @@
     "sellYourFractions": "Amidio ny tombotsoa azo avy aminao ({{held}} FOTSINY)"
   },
   "creator": {
+    "libraryEmpty": "Hiseho eto ireo zavatra noforoninao voatahiry.",
     "whatToCreate": "Inona no mamorona",
     "startCreatingWith": "Manomboka amin'ny {{model}}",
     "studioSubtitle": "Lazalazao ny sehatra, ny toetra, ny toe-po na ny fomba. Eto ambany eto ny fizotry ny valim-pifidianana ary miditra avy hatrany ao amin'ny sehatry ny mpamoaka lahatsoratra.",
@@ -6789,6 +6791,7 @@
     "seoDescription": "Antontan-taratasy ofisialin’ny DeHub: topi-maso ny sehatra, dApps, toekarena token tokens, staking, lalao, drafitra, FAQ sy ny maro hafa."
   },
   "dex": {
+    "title": "marika / USD",
     "seoTitle": "DEX — Varotra tokens amin'ny vidiny tianao",
     "seoDescription": "Mametraha ny vidin'ny fividianana na fivarotana tokens miaraka amin'ny famandrihana fetra Uniswap v4 ao amin'ny Base na BNB Chain. Boky famandrihana mivantana, halaliny ny tsoka ary vidiny USD iray iombonana.",
     "venue": "Tambajotra",
@@ -7010,6 +7013,7 @@
     }
   },
   "editor": {
+    "video": { "tFade": "Fifangaroana", "none": "Tsy misy", "transition": "Tetezamita", "speed": "Hafainganana", "sound": "Feo","video": "Horonan-tsary"},
     "review": {
       "title": "Famerenana tetikasa",
       "shared": "Nozaraina taminao",

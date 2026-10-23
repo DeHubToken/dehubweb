@@ -193,6 +193,7 @@
     "heading": "Curtas do DeHub"
   },
   "settings": {
+    "usernameTaken": "Nome de usuário em uso",
     "showDislikesDesc": "Qualquer pessoa pode abrir a aba «Não gostei» do seu perfil. Desativado, só você pode ver.",
     "showDislikes": "Mostrar meus «não gostei» para todos",
     "postingChain": "Blockchain das publicações",
@@ -2379,6 +2380,7 @@
     "pendingSubmitted": "{{amount}} tokens enviados. A confirmação ainda está sendo verificada. Não envie novamente."
   },
   "communities": {
+    "chatTab": "Chat",
     "title": "Comunidades",
     "create": "Criar",
     "searchPlaceholder": "Buscar comunidades...",
@@ -2413,7 +2415,6 @@
     "addDescription": "Adicione uma descrição...",
     "communityDescription": "Descrição da comunidade...",
     "posts": "Publicações",
-    "chat": "Chat",
     "membersTab": "Membros ({{count}})",
     "about": "Sobre",
     "backToCommunities": "Comunidades",
@@ -3880,6 +3881,7 @@
     "sellYourFractions": "Venda suas frações ({{held}} mantidas)"
   },
   "creator": {
+    "libraryEmpty": "Suas gerações salvas aparecerão aqui.",
     "whatToCreate": "O que criar",
     "startCreatingWith": "Comece a criar com {{model}}",
     "studioSubtitle": "Descreva uma cena, personagem, clima ou estilo. Os resultados aparecem abaixo e vão direto para o editor.",
@@ -6801,6 +6803,7 @@
     "seoDescription": "Documentação oficial do DeHub: visão geral da plataforma, dApps, economia do token tokens, staking, jogos, roteiro, FAQ e mais."
   },
   "dex": {
+    "title": "tokens / USD",
     "seoTitle": "DEX — Negocie tokens pelo seu preço",
     "seoDescription": "Defina seu preço de compra ou venda de tokens com uma ordem limite do Uniswap v4 na Base ou BNB Chain. Livro de ofertas ao vivo, profundidade de mercado e um preço compartilhado em USD.",
     "venue": "Rede",
@@ -7023,6 +7026,7 @@
     }
   },
   "editor": {
+    "video": { "tFade": "Dissolver", "none": "Nenhuma", "transition": "Transição", "speed": "Velocidade", "sound": "Som","video": "Vídeo"},
     "review": {
       "title": "Revisão do projeto",
       "shared": "Partilhado consigo",

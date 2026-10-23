@@ -163,7 +163,7 @@ export default function CommunityPage() {
       <div className="flex border-b border-white/[0.08] px-3">
         {([
           { key: 'posts' as Tab, label: t('communities.posts') },
-          { key: 'chat' as Tab, label: t('communities.chat') },
+          { key: 'chat' as Tab, label: t('communities.chatTab') },
           { key: 'events' as Tab, label: _copy("copy.8d14f6e72de8", { defaultValue: "Events" }) },
           { key: 'members' as Tab, label: t('communities.membersLabel') },
           { key: 'about' as Tab, label: t('communities.about') },

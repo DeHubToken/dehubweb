@@ -193,6 +193,7 @@
     "heading": "DeHubi lühivideod"
   },
   "settings": {
+    "usernameTaken": "Kasutajanimi on võetud",
     "postingChain": "Postituste plokiahel",
     "showOnline": "Näita, kui ma olen võrgus",
     "showOnlineDesc": "Inimesed, kellele sõnumi saadad, näevad DeHubi kasutamise ajal sinu nime kõrval rohelist täppi",
@@ -2353,6 +2354,7 @@
     "pendingSubmitted": "{{amount}} märk on esitatud. Kinnitust kontrollitakse endiselt. Ärge saatke seda uuesti."
   },
   "communities": {
+    "chatTab": "Vestlus",
     "title": "Kogukonnad",
     "create": "Loo",
     "searchPlaceholder": "Otsi kogukondi...",
@@ -2387,7 +2389,6 @@
     "addDescription": "Lisa kirjeldus...",
     "communityDescription": "Kogukonna kirjeldus...",
     "posts": "Postitused",
-    "chat": "Vestlus",
     "membersTab": "Liikmed ({{count}})",
     "about": "Teave",
     "backToCommunities": "Kogukonnad",
@@ -3853,6 +3854,7 @@
     "sellYourFractions": "Müüge oma fraktsioonid ({{held}} hoitud)"
   },
   "creator": {
+    "libraryEmpty": "Sinu salvestatud genereeringud ilmuvad siia.",
     "whatToCreate": "Mida luua",
     "startCreatingWith": "Alusta loomisega {{model}}",
     "studioSubtitle": "Kirjelda stseeni, tegelast, meeleolu või stiili. Tulemused ilmuvad allpool ja jätkavad otse redaktorisse.",
@@ -6751,6 +6753,7 @@
     "seoDescription": "DeHubi ametlik dokumentatsioon: platvormi ülevaade, dAppid, žetooni tokeni majandus, staking, mängud, teekaart, KKK ja muu."
   },
   "dex": {
+    "title": "märki / USD",
     "seoTitle": "DEX — Kaubelge žetooni-ga oma hinnaga",
     "seoDescription": "Määrake oma žetooni ostu- või müügihind Uniswap v4 limiitkorraldusega Base'is või BNB Chainis. Reaalajas tellimuste raamat, turu sügavus ja üks ühine USD hind.",
     "venue": "Võrk",
@@ -6973,6 +6976,7 @@
     }
   },
   "editor": {
+    "video": { "tFade": "Ristsulandus", "none": "Puudub", "transition": "Üleminek", "speed": "Kiirus", "sound": "Heli","video": "Video"},
     "review": {
       "title": "Projekti ülevaatus",
       "shared": "Sinuga jagatud",

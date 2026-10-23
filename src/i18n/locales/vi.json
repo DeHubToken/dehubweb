@@ -193,6 +193,7 @@
     "heading": "Video ngắn DeHub"
   },
   "settings": {
+    "usernameTaken": "Tên người dùng đã có người dùng",
     "showDislikesDesc": "Ai cũng có thể mở tab Không thích trên hồ sơ của bạn. Khi tắt, chỉ bạn xem được.",
     "showDislikes": "Hiển thị lượt không thích của tôi cho mọi người",
     "postingChain": "Chuỗi khối đăng bài",
@@ -2386,6 +2387,7 @@
     "pendingSubmitted": "{{amount}} token đã được gửi. Việc xác nhận vẫn đang được kiểm tra. Vui lòng không gửi lại."
   },
   "communities": {
+    "chatTab": "Trò chuyện",
     "title": "Cộng đồng",
     "create": "Tạo",
     "searchPlaceholder": "Tìm kiếm cộng đồng...",
@@ -2420,7 +2422,6 @@
     "addDescription": "Thêm mô tả...",
     "communityDescription": "Mô tả cộng đồng...",
     "posts": "Bài viết",
-    "chat": "Trò chuyện",
     "membersTab": "Thành viên ({{count}})",
     "about": "Giới thiệu",
     "backToCommunities": "Cộng đồng",
@@ -3887,6 +3888,7 @@
     "sellYourFractions": "Bán các phần của bạn ({{held}} được giữ)"
   },
   "creator": {
+    "libraryEmpty": "Các nội dung đã tạo bạn lưu sẽ xuất hiện ở đây.",
     "whatToCreate": "Cái gì để tạo",
     "startCreatingWith": "Bắt đầu tạo với {{model}}",
     "studioSubtitle": "Mô tả một cảnh, nhân vật, tâm trạng hoặc phong cách. Kết quả xuất hiện dưới đây và đi thẳng vào trình chỉnh sửa.",
@@ -6808,6 +6810,7 @@
     "seoDescription": "Tài liệu chính thức của DeHub: tổng quan nền tảng, dApp, kinh tế token token, staking, trò chơi, lộ trình, FAQ và hơn thế nữa."
   },
   "dex": {
+    "title": "token / USD",
     "seoTitle": "DEX — Giao dịch token theo giá của bạn",
     "seoDescription": "Đặt giá mua hoặc bán token của bạn với lệnh giới hạn Uniswap v4 trên Base hoặc BNB Chain. Sổ lệnh trực tiếp, độ sâu thị trường và một mức giá USD chung.",
     "venue": "Mạng",
@@ -7029,6 +7032,7 @@
     }
   },
   "editor": {
+    "video": { "tFade": "Hòa tan", "none": "Không có", "transition": "Chuyển cảnh", "speed": "Tốc độ", "sound": "Âm thanh","video": "Video"},
     "review": {
       "title": "Đánh giá dự án",
       "shared": "Được chia sẻ với bạn",

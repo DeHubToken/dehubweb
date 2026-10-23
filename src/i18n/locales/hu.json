@@ -193,6 +193,7 @@
     "heading": "DeHub Shorts"
   },
   "settings": {
+    "usernameTaken": "A felhasználónév foglalt",
     "showDislikesDesc": "Bárki megnyithatja a profilod Nemtetszések lapját. Ha ki van kapcsolva, csak te látod.",
     "showDislikes": "Nemtetszéseim megjelenítése mindenkinek",
     "postingChain": "Bejegyzések blokklánca",
@@ -2318,6 +2319,7 @@
     "pendingSubmitted": "{{amount}} token elküldve. A megerősítés még ellenőrzés alatt áll. Ne küldje el újra."
   },
   "communities": {
+    "chatTab": "Csevegés",
     "title": "Közösségek",
     "create": "Létrehozás",
     "searchPlaceholder": "Közösségek keresése...",
@@ -2352,7 +2354,6 @@
     "addDescription": "Adj hozzá leírást...",
     "communityDescription": "Közösség leírása...",
     "posts": "Bejegyzések",
-    "chat": "Csevegés",
     "membersTab": "Tagok ({{count}})",
     "about": "Névjegy",
     "backToCommunities": "Közösségek",
@@ -3817,6 +3818,7 @@
     "sellYourFractions": "Adja el töredékeit ({{held}} tartva)"
   },
   "creator": {
+    "libraryEmpty": "A mentett generálásaid itt jelennek meg.",
     "whatToCreate": "Mit kell létrehozni",
     "startCreatingWith": "Kezdj el létrehozni a {{model}} segítségével",
     "studioSubtitle": "Írj le egy jelenetet, karaktert, hangulatot vagy stílust. Az eredmények alul jelennek meg és közvetlenül az editorba kerülnek.",
@@ -6677,6 +6679,7 @@
     "seoDescription": "Hivatalos DeHub dokumentáció: platform áttekintés, dApp-ok, a tokenek token gazdaságtana, staking, játékok, ütemterv, GYIK és több."
   },
   "dex": {
+    "title": "tokenek / USD",
     "seoTitle": "DEX — Kereskedj tokenek-vel a saját áradon",
     "seoDescription": "Állítsd be a tokenek vételi vagy eladási árat egy Uniswap v4 limit megbízással Base vagy BNB Chain hálózaton. Élő megbízási könyv, piaci mélység és egy megosztott USD ár.",
     "venue": "Hálózat",
@@ -6899,6 +6902,7 @@
     }
   },
   "editor": {
+    "video": { "tFade": "Keresztáttűnés", "none": "Nincs", "transition": "Áttűnés", "speed": "Sebesség", "sound": "Hang","video": "Videó"},
     "review": {
       "title": "Projekt áttekintése",
       "shared": "Veled megosztva",

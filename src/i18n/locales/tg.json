@@ -193,6 +193,7 @@
     "heading": "Кӯтоҳҳои DeHub"
   },
   "settings": {
+    "usernameTaken": "Ин ном гирифта шудааст",
     "postingChain": "Блокчейни нашрҳо",
     "showOnline": "Ipakita kapag ako online",
     "showOnlineDesc": "Ang mga tao na iyong mensahe ay makita ng isang green dot sa tabi ng iyong pangalan habang gumagamit",
@@ -2351,6 +2352,7 @@
     "pendingSubmitted": "{{amount}} токен фиристода шуд. Тасдиқ то ҳол тафтиш карда мешавад. Онро дубора фиристед."
   },
   "communities": {
+    "chatTab": "Чат",
     "title": "Ҷамоатҳо",
     "create": "Эҷод",
     "searchPlaceholder": "Ҷустуҷӯи ҷамоатҳо...",
@@ -2385,7 +2387,6 @@
     "addDescription": "Тавсиф илова кунед...",
     "communityDescription": "Тавсифи ҷамоат...",
     "posts": "Постҳо",
-    "chat": "Чат",
     "membersTab": "Аъзоён ({{count}})",
     "about": "Дар бораи",
     "backToCommunities": "Ҷамоатҳо",
@@ -3821,6 +3822,7 @@
     "sellYourFractions": "Fraksioné siz ro sarf konid ({{held}} darid)"
   },
   "creator": {
+    "libraryEmpty": "Тавлидҳои нигоҳдоштаи шумо дар ин ҷо пайдо мешаванд.",
     "whatToCreate": "Chand ro ta'min konid",
     "startCreatingWith": "Ba ta'minoti {{model}} boqé shurod",
     "studioSubtitle": "Тасвир кардани манзара, аломат, кайфият ё услуб. Mga resulta ng land sa ibaba at naglalapat nang direktang sa editor.",
@@ -6718,6 +6720,7 @@
     "seoDescription": "Ҳуҷҷатҳои расмии DeHub: шарҳи платформа, dApps, иқтисоди токени нишонаҳо, стейкинг, бозиҳо, нақшаи роҳ, саволҳои маъмул ва ғайра."
   },
   "dex": {
+    "title": "Доллари Сотидонаи Амрико",
     "seoTitle": "DEX — нишонаҳо-ро бо нархи худ савдо кунед",
     "seoDescription": "Бо фармоиши маҳдуди Uniswap v4 дар Base ё BNB Chain нархи харид ё фурӯши нишонаҳо-и худро муқаррар кунед. Китоби фармоишии зинда, умқи бозор ва як нархи муштараки долларӣ.",
     "venue": "Шабака",
@@ -6935,6 +6938,7 @@
     }
   },
   "editor": {
+    "video": { "tFade": "Омехташавӣ", "none": "Ҳеҷ", "transition": "Гузариш", "speed": "Суръат", "sound": "Садо","video": "Видео"},
     "review": {
       "title": "Баррасии лоиҳа",
       "shared": "Бо шумо мубодила шудааст",

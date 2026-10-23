@@ -193,6 +193,7 @@
     "heading": "DeHub Shorts"
   },
   "settings": {
+    "usernameTaken": "Nama pengguna telah diambil",
     "showDislikesDesc": "Sesiapa boleh membuka tab Tidak Suka pada profil anda. Apabila dimatikan, hanya anda yang boleh melihatnya.",
     "showDislikes": "Tunjukkan tidak suka saya kepada semua",
     "postingChain": "Rantaian blok siaran",
@@ -2633,6 +2634,7 @@
     "pendingSubmitted": "{{amount}} token diserahkan. Pengesahan masih disemak. Jangan hantar semula."
   },
   "communities": {
+    "chatTab": "Sembang",
     "title": "Komuniti",
     "create": "Cipta",
     "searchPlaceholder": "Cari komuniti...",
@@ -2667,7 +2669,6 @@
     "addDescription": "Tambah keterangan...",
     "communityDescription": "Keterangan komuniti...",
     "posts": "Siaran",
-    "chat": "Sembang",
     "membersTab": "Ahli ({{count}})",
     "about": "Perihal",
     "backToCommunities": "Komuniti",
@@ -4133,6 +4134,7 @@
     "sellYourFractions": "Jual pecahan anda ({{held}} dipegang)"
   },
   "creator": {
+    "libraryEmpty": "Hasil janaan anda yang disimpan akan dipaparkan di sini.",
     "whatToCreate": "Apa yang hendak dibuat",
     "startCreatingWith": "Mulai membuat dengan {{model}}",
     "studioSubtitle": "Terangkan pemandangan, watak, suasana atau gaya. Hasil muncul di bawah dan terus ke editor.",
@@ -7030,6 +7032,7 @@
     "seoDescription": "Dokumentasi rasmi DeHub: gambaran platform, dApps, ekonomi token token, staking, permainan, peta jalan, soalan lazim dan lain-lain."
   },
   "dex": {
+    "title": "token / USD",
     "seoTitle": "DEX — Dagangkan token pada harga anda",
     "seoDescription": "Tetapkan harga beli atau jual token anda dengan pesanan had Uniswap v4 pada Base atau BNB Chain. Buku pesanan langsung, kedalaman pasaran dan satu harga USD perkongsian.",
     "venue": "Rangkaian",
@@ -7252,6 +7255,7 @@
     }
   },
   "editor": {
+    "video": { "tFade": "Larut silang", "none": "Tiada", "transition": "Peralihan", "speed": "Kelajuan", "sound": "Bunyi","video": "Video"},
     "review": {
       "title": "Semakan projek",
       "shared": "Dikongsi dengan anda",

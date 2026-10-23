@@ -193,6 +193,7 @@
     "heading": "DeHub Shorts"
   },
   "settings": {
+    "usernameTaken": "Brukernavnet er opptatt",
     "showDislikesDesc": "Alle kan åpne fanen Misliker på profilen din. Når dette er av, kan bare du se den.",
     "showDislikes": "Vis mine misliker for alle",
     "postingChain": "Blokkjede for innlegg",
@@ -2371,6 +2372,7 @@
     "pendingSubmitted": "{{amount}} tokens innsendt. Bekreftelse blir fortsatt sjekket. Ikke send den igjen."
   },
   "communities": {
+    "chatTab": "Chat",
     "title": "Fellesskap",
     "create": "Opprett",
     "searchPlaceholder": "Søk i fellesskap...",
@@ -2405,7 +2407,6 @@
     "addDescription": "Legg til en beskrivelse...",
     "communityDescription": "Fellesskapsbeskrivelse...",
     "posts": "Innlegg",
-    "chat": "Chat",
     "membersTab": "Medlemmer ({{count}})",
     "about": "Om",
     "backToCommunities": "Fellesskap",
@@ -3864,6 +3865,7 @@
     "sellYourFractions": "Selg brøkdeler du holder ({{held}} holdt)"
   },
   "creator": {
+    "libraryEmpty": "Dine lagrede genereringer vises her.",
     "whatToCreate": "Hva skal jeg lage",
     "startCreatingWith": "Start å lage med {{model}}",
     "studioSubtitle": "Beskriv en scene, karakter, stemning eller stil. Resultatene kommer under og går rett inn i redigeringsvinduet.",
@@ -6777,6 +6779,7 @@
     "seoDescription": "Offisiell DeHub-dokumentasjon: plattformoversikt, dApps, tokens-tokenøkonomi, staking, spill, veikart, FAQ og mer."
   },
   "dex": {
+    "title": "tokens / USD",
     "seoTitle": "DEX — Handle tokens til din pris",
     "seoDescription": "Sett din tokens kjøps- eller salgspris med en Uniswap v4 limitordre på Base eller BNB Chain. Live ordrebok, markedsdybde og én felles USD-pris.",
     "venue": "Nettverk",
@@ -6999,6 +7002,7 @@
     }
   },
   "editor": {
+    "video": { "tFade": "Krysstoning", "none": "Ingen", "transition": "Overgang", "speed": "Hastighet", "sound": "Lyd","video": "Video"},
     "review": {
       "title": "Prosjektgjennomgang",
       "shared": "Delt med deg",

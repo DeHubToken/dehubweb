@@ -193,6 +193,7 @@
     "heading": "DeHub लघुचित्राणि"
   },
   "settings": {
+    "usernameTaken": "उपयोक्तृनाम गृहीतम्",
     "postingChain": "प्रकाशनस्य ब्लॉकचेन",
     "showOnline": "ऑनलाईन सूचनाः When I am online",
     "showOnlineDesc": "हरितवर्णेन युक्तं त्वया दृष्टं यदिदं त्वया ॥",
@@ -2353,6 +2354,7 @@
     "pendingSubmitted": "{{amount}} टोकन जमा किए गए। पुष्टि अभी भी जाँची जा रही है। इसे फिर से न भेजें।"
   },
   "communities": {
+    "chatTab": "वार्तालापः",
     "title": "संघ (Communities)",
     "create": "निर्मातु",
     "searchPlaceholder": "समुदायान् अन्विष्यतु...",
@@ -2387,7 +2389,6 @@
     "addDescription": "वर्णनं योजयतु...",
     "communityDescription": "संघ का वर्णन (Community description...)",
     "posts": "पोस्ट (Posts)",
-    "chat": "वार्तालापः",
     "membersTab": "सदस्याः ({{count}})",
     "about": "विषये",
     "backToCommunities": "संघ (Communities)",
@@ -3817,6 +3818,7 @@
     "sellYourFractions": "तेरे {{held}} (रखे गए) अंश बेचना"
   },
   "creator": {
+    "libraryEmpty": "भवतः रक्षिताः सृष्टयः अत्र दृश्यन्ते।",
     "whatToCreate": "किं सृजति = किं करोति",
     "startCreatingWith": "शुभारम्भः {{model}}",
     "countRunning_one": "{{count}} धावति धावति",
@@ -6620,6 +6622,7 @@
     "seoDescription": "DeHub इत्यस्य आधिकारिकं प्रलेखनम्: मञ्चपरिचयः, dApps, टोकन टोकन-अर्थव्यवस्था, स्टेकिङ्ग्, क्रीडाः, मार्गचित्रम्, प्रायःपृष्टप्रश्नाः, अधिकं च।"
   },
   "dex": {
+    "title": "टोकन / USD",
     "seoTitle": "DEX — तुमच्या किमतीवर टोकन चा व्यापार करा",
     "seoDescription": "Base किंवा BNB Chain वर Uniswap v4 लिमिट ऑर्डरसह तुमची टोकन खरेदी किंवा विक्री किंमत सेट करा. लाईव्ह ऑर्डर बुक, मार्केट डेप्थ आणि एक सामायिक USD किंमत.",
     "venue": "नेटवर्क",
@@ -6837,6 +6840,7 @@
     }
   },
   "editor": {
+    "video": { "tFade": "मिश्रविलयः", "none": "किमपि न", "transition": "संक्रमणम्", "speed": "वेगः", "sound": "ध्वनिः","video": "चलच्चित्रम्"},
     "review": {
       "title": "परियोजनासमीक्षा",
       "shared": "भवता सह साझीकृतम्",

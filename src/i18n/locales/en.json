@@ -271,6 +271,7 @@
     "heading": "DeHub Shorts"
   },
   "settings": {
+    "usernameTaken": "Username taken",
     "postingChain": "Posting chain",
     "showOnline": "Show when I'm online",
     "showOnlineDesc": "People you message see a green dot next to your name while you're using DeHub",
@@ -2825,6 +2826,7 @@
     "statsLoadFailed": "Couldn't load staking stats"
   },
   "communities": {
+    "chatTab": "Chat",
     "followerInvites": {
       "title": "Invite followers",
       "detail": "Choose up to 50 followers per batch. Paid or closed DMs are skipped. Check the chat for unconfirmed sends before trying again.",
@@ -4656,6 +4658,7 @@
     "sellYourFractions": "Sell your fractions ({{held}} held)"
   },
   "creator": {
+    "libraryEmpty": "Your saved generations will appear here.",
     "toolRemake": "Remake",
     "toolMaboroshi": "Maboroshi",
     "toolMaboroshiDesc": "Replace characters and objects, review a draft, then export with your original soundtrack.",
@@ -7852,6 +7855,7 @@
     "seoDescription": "Official DeHub documentation: platform overview, dApps, token economics, staking, games, roadmap, FAQ and more."
   },
   "dex": {
+    "title": "Tokens / USD",
     "seoTitle": "DEX — Trade tokens at your price",
     "seoDescription": "Set your token buy or sell price with a Uniswap v4 limit order on Base or BNB Chain. Live order book, market depth and one shared USD price.",
     "venue": "Network",
@@ -8076,6 +8080,7 @@
     "priceChartCleared": "Price chart cleared. Fixed reference price: $0.0001. Execution prices depend on available orders."
   },
   "editor": {
+    "video": { "tFade": "Cross-dissolve", "none": "None", "transition": "Transition", "speed": "Speed", "sound": "Sound","video": "Video"},
     "review": {
       "title": "Project review",
       "shared": "Shared with you",

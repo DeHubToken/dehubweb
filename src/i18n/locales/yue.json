@@ -193,6 +193,7 @@
     "heading": "DeHub 短片"
   },
   "settings": {
+    "usernameTaken": "用戶名已被使用",
     "postingChain": "發帖區塊鏈",
     "showOnline": "當我上網嗰陣顯示",
     "showOnlineDesc": "當你用緊 DeHub 嗰陣，你發訊息嘅人會見到你個名旁邊有個綠色點",
@@ -2367,6 +2368,7 @@
     "pendingSubmitted": "{{amount}} 個代幣已提交。正在檢查確認。請勿重複發送。"
   },
   "communities": {
+    "chatTab": "傾偈",
     "title": "社群",
     "create": "建立",
     "searchPlaceholder": "搜尋社群...",
@@ -2401,7 +2403,6 @@
     "addDescription": "加個描述...",
     "communityDescription": "社群描述...",
     "posts": "帖子",
-    "chat": "傾偈",
     "membersTab": "成員（{{count}}）",
     "about": "關於",
     "backToCommunities": "社群",
@@ -3862,6 +3863,7 @@
     "sellYourFractions": "出售你的分數 ({{held}} 持有)"
   },
   "creator": {
+    "libraryEmpty": "你儲存咗嘅生成內容會喺度顯示。",
     "whatToCreate": "要創作甚麼",
     "startCreatingWith": "用 {{model}} 開始創作",
     "studioSubtitle": "描述一個場景、角色、氣氛或風格。結果會出現下方並直接進入編輯器。",
@@ -6314,7 +6316,7 @@
     "kindVideo": "影片",
     "kindAudio": "音頻",
     "kindImage": "圖片",
-    "tileSourceKind": "{{ 來源 } } · {{ 種類 } }",
+    "tileSourceKind": "{{source}} · {{kind}}",
     "reviewTitle": "喺發佈之前睇吓",
     "reviewSubtitle": "由 {{source}} ，作為 {{kind}} 。編輯任何你鍾意嘅內容 — 將標題留空，以保留原始內容。",
     "reviewName": "標題:",
@@ -6781,6 +6783,7 @@
     "seoDescription": "DeHub 官方文档：平台概览、dApp、代幣 代币经济、质押、游戏、路线图、常见问题等。"
   },
   "dex": {
+    "title": "代幣 / 美元",
     "seoTitle": "DEX — 以你嘅價錢交易 代幣",
     "seoDescription": "喺 Base 或 BNB Chain 上，用 Uniswap v4 限價單設定你嘅 代幣 買入或賣出價。即時委託價簿、市場深度同埋一個統一嘅美元價。",
     "venue": "網絡",
@@ -7003,6 +7006,7 @@
     }
   },
   "editor": {
+    "video": { "tFade": "交叉溶解", "none": "冇", "transition": "轉場", "speed": "速度", "sound": "聲音","video": "影片"},
     "review": {
       "title": "項目審閱",
       "shared": "同你分享",

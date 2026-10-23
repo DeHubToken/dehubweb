@@ -193,6 +193,7 @@
     "heading": "Shorts på DeHub"
   },
   "settings": {
+    "usernameTaken": "Användarnamnet är upptaget",
     "showDislikesDesc": "Vem som helst kan öppna fliken Ogillanden på din profil. När detta är av kan bara du se den.",
     "showDislikes": "Visa mina ogillanden för alla",
     "postingChain": "Blockkedja för inlägg",
@@ -2322,6 +2323,7 @@
     "pendingSubmitted": "{{amount}} tokens inskickade. Bekräftelse kontrolleras fortfarande. Skicka inte igen."
   },
   "communities": {
+    "chatTab": "Chatt",
     "title": "Communities",
     "create": "Skapa",
     "searchPlaceholder": "Sök communities...",
@@ -2356,7 +2358,6 @@
     "addDescription": "Lägg till en beskrivning...",
     "communityDescription": "Communitybeskrivning...",
     "posts": "Inlägg",
-    "chat": "Chatt",
     "membersTab": "Medlemmar ({{count}})",
     "about": "Om",
     "backToCommunities": "Communities",
@@ -3816,6 +3817,7 @@
     "sellYourFractions": "Sälj dina fraktioner ({{held}} innehålls)"
   },
   "creator": {
+    "libraryEmpty": "Dina sparade genereringar visas här.",
     "whatToCreate": "Vad ska skapas",
     "startCreatingWith": "Börja skapa med {{model}}",
     "studioSubtitle": "Beskriv en scen, karaktär, stämning eller stil. Resultaten visas nedan och går direkt in i redigeraren.",
@@ -6678,6 +6680,7 @@
     "seoDescription": "Officiell DeHub-dokumentation: plattformsöversikt, dApps, tokens-tokenekonomi, staking, spel, färdplan, FAQ och mer."
   },
   "dex": {
+    "title": "tokens / USD",
     "seoTitle": "DEX — Handla tokens till ditt pris",
     "seoDescription": "Ställ in ditt tokens-köp- eller säljpris med en Uniswap v4-limitorder på Base eller BNB Chain. Live orderbok, marknadsdjup och ett gemensamt USD-pris.",
     "venue": "Nätverk",
@@ -6900,6 +6903,7 @@
     }
   },
   "editor": {
+    "video": { "tFade": "Övertoning", "none": "Ingen", "transition": "Övergång", "speed": "Hastighet", "sound": "Ljud","video": "Video"},
     "review": {
       "title": "Projektgranskning",
       "shared": "Delat med dig",

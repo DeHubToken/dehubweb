@@ -193,6 +193,7 @@
     "heading": "Shorts pe DeHub"
   },
   "settings": {
+    "usernameTaken": "Numele de utilizator este ocupat",
     "showDislikesDesc": "Oricine poate deschide fila Nu-mi place din profilul tău. Când e dezactivat, doar tu o vezi.",
     "showDislikes": "Arată tuturor ce nu-mi place",
     "postingChain": "Blockchain pentru postări",
@@ -2368,6 +2369,7 @@
     "pendingSubmitted": "{{amount}} token-uri trimise. Confirmarea este încă în curs de verificare. Nu-l trimite din nou."
   },
   "communities": {
+    "chatTab": "Chat",
     "title": "Comunități",
     "create": "Creează",
     "searchPlaceholder": "Caută comunități...",
@@ -2402,7 +2404,6 @@
     "addDescription": "Adaugă o descriere...",
     "communityDescription": "Descrierea comunității...",
     "posts": "Postări",
-    "chat": "Chat",
     "membersTab": "Membri ({{count}})",
     "about": "Despre",
     "backToCommunities": "Comunități",
@@ -3869,6 +3870,7 @@
     "sellYourFractions": "Vinde-ți fracțiunile ({{held}} deținute)"
   },
   "creator": {
+    "libraryEmpty": "Generările tale salvate vor apărea aici.",
     "whatToCreate": "Ce să creezi",
     "startCreatingWith": "Începeți să creați cu {{model}}",
     "studioSubtitle": "Descrieți o scenă, personaj, stare de spirit sau stil. Rezultatele apar mai jos și se duc direct în editor.",
@@ -6789,6 +6791,7 @@
     "seoDescription": "Documentația oficială DeHub: prezentare generală a platformei, dApps, economia tokenului tokenuri, staking, jocuri, foaie de parcurs, întrebări frecvente și altele."
   },
   "dex": {
+    "title": "tokenuri / USD",
     "seoTitle": "DEX — Tranzacționează tokenuri la prețul tău",
     "seoDescription": "Setează prețul de cumpărare sau vânzare al tokenuri cu o comandă limită Uniswap v4 pe Base sau BNB Chain. Cartea de ordine live, profunzimea pieței și un preț USD comun.",
     "venue": "Rețea",
@@ -7011,6 +7014,7 @@
     }
   },
   "editor": {
+    "video": { "tFade": "Dizolvare", "none": "Niciuna", "transition": "Tranziție", "speed": "Viteză", "sound": "Sunet","video": "Video"},
     "review": {
       "title": "Revizuirea proiectului",
       "shared": "Partajat cu tine",

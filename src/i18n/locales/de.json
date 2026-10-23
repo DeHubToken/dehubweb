@@ -237,6 +237,7 @@
     "heading": "DeHub Kurzvideos"
   },
   "settings": {
+    "usernameTaken": "Nutzername vergeben",
     "showDislikesDesc": "Jeder kann den Tab „Dislikes“ in deinem Profil öffnen. Wenn das aus ist, siehst nur du ihn.",
     "showDislikes": "Meine Dislikes allen zeigen",
     "postingChain": "Blockchain für Beiträge",
@@ -2423,6 +2424,7 @@
     "pendingSubmitted": "{{amount}} Token eingereicht. Die Bestätigung wird noch geprüft. Senden Sie ihn nicht erneut."
   },
   "communities": {
+    "chatTab": "Chat",
     "title": "Communities",
     "create": "Erstellen",
     "searchPlaceholder": "Communities suchen...",
@@ -2457,7 +2459,6 @@
     "addDescription": "Beschreibung hinzufügen...",
     "communityDescription": "Community-Beschreibung...",
     "posts": "Beiträge",
-    "chat": "Chat",
     "membersTab": "Mitglieder ({{count}})",
     "about": "Über",
     "backToCommunities": "Communities",
@@ -3924,6 +3925,7 @@
     "sellYourFractions": "Verkaufe deine Anteile ({{held}} gehalten)"
   },
   "creator": {
+    "libraryEmpty": "Deine gespeicherten Generierungen erscheinen hier.",
     "toolRemake": "Remake",
     "toolMaboroshi": "Maboroshi",
     "toolMaboroshiDesc": "Ersetze Figuren und Objekte, prüfe einen Entwurf und exportiere mit der ursprünglichen Tonspur.",
@@ -6840,6 +6842,7 @@
     "seoDescription": "Offizielle DeHub-Dokumentation: Plattformüberblick, dApps, Tokens-Tokenökonomie, Staking, Spiele, Roadmap, FAQ und mehr."
   },
   "dex": {
+    "title": "Tokens / USD",
     "seoTitle": "DEX — Tokens zu Ihrem Preis handeln",
     "seoDescription": "Legen Sie Ihren Tokens-Kauf- oder Verkaufspreis mit einer Uniswap v4 Limit Order auf Base oder BNB Chain fest. Live Orderbuch, Markttiefe und ein gemeinsamer USD-Preis.",
     "venue": "Netzwerk",
@@ -7062,6 +7065,7 @@
     }
   },
   "editor": {
+    "video": { "tFade": "Überblenden", "none": "Keiner", "transition": "Übergang", "speed": "Geschwindigkeit", "sound": "Ton","video": "Video"},
     "review": {
       "title": "Projektprüfung",
       "shared": "Mit dir geteilt",

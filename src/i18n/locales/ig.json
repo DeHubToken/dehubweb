@@ -193,6 +193,7 @@
     "heading": "Vidio dị mkpụmkpụ DeHub"
   },
   "settings": {
+    "usernameTaken": "E werela aha njirimara a",
     "postingChain": "Blockchain maka mbipụta",
     "showOnline": "Gosi mgbe m nọ n 'ịntanetị",
     "showOnlineDesc": "Ndị mmadụ ị na-eziga ozi na-ahụ ntụpọ akwụkwọ ndụ akwụkwọ ndụ n 'akụkụ aha gị mgbe ị na-eji DeHub",
@@ -2361,6 +2362,7 @@
     "pendingSubmitted": "{{amount}} tokenịị ezigola. A ka na-enyocha nkwenye. Ezigola ya ọzọ."
   },
   "communities": {
+    "chatTab": "Mkparịta Ụka",
     "title": "Obodo",
     "create": "Mepụta",
     "searchPlaceholder": "Chọọ obodo...",
@@ -2394,7 +2396,6 @@
     "addDescription": "Tinye nkọwa...",
     "communityDescription": "Nkọwa obodo...",
     "posts": "Post",
-    "chat": "Mkparịta Ụka",
     "membersTab": "Ndị Otu ({{count}})",
     "about": "Gbasara",
     "backToCommunities": "Obodo",
@@ -3842,6 +3843,7 @@
     "sellYourFractions": "Ree gị fractions ({{held}} ẹkenịmde)"
   },
   "creator": {
+    "libraryEmpty": "Ihe ndị i mepụtara ma chekwaa ga-apụta ebe a.",
     "whatToCreate": "Ihe ị ga-eke",
     "startCreatingWith": "Malite na-ekewapụta na {{model}}",
     "studioSubtitle": "Kọwaa a idaha, agwa, ọnọdụ ma ọ bụ style. Nsonaazụ dara n 'okpuru ma buru kpọmkwem n' ime nchịkọta akụkọ.",
@@ -6711,6 +6713,7 @@
     "seoDescription": "Akwụkwọ gọọmentị nke DeHub: nchịkọta ikpo okwu, dApps, akụnụba token tokens, staking, egwuregwu, map okporo ụzọ, ajụjụ ndị a na-ajụkarị na ndị ọzọ."
   },
   "dex": {
+    "title": "tokens / USD",
     "seoTitle": "DEX — Zụọ ma ree tokens n'ọnụ ahịa gị",
     "seoDescription": "Tọọ ọnụ ahịa ị ga-eji zụta ma ọ bụ ree tokens site n'iji usoro iwu nwere oke nke Uniswap v4 na Base ma ọ bụ BNB Chain. Akwụkwọ iwu dị ndụ, omimi ahịa na otu ọnụ ahịa USD a na-ekerịta.",
     "venue": "Netwọk",
@@ -6933,6 +6936,7 @@
     }
   },
   "editor": {
+    "video": { "tFade": "Ngwakọta nwayọọ", "none": "Ọ dịghị", "transition": "Mgbanwe", "speed": "Ọsọ", "sound": "Ụda","video": "Vidio"},
     "review": {
       "title": "Nyocha ọrụ",
       "shared": "Ekekọrịtara gị",
