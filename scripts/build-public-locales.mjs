@@ -4,6 +4,7 @@ import vm from 'node:vm';
 import { createHash } from 'node:crypto';
 import ts from 'typescript';
 import { mdToHtml } from './markdown-html.mjs';
+import * as streamerPage from '../src/lib/streamer-page.js';
 import * as dehubAppPage from '../src/lib/dehub-app-page.js';
 
 export const PRIORITY_LOCALES = ['ar', 'es', 'fr', 'nl', 'tr'];
@@ -65,7 +66,7 @@ export function collectPublicSources(root) {
   const source = fs.readFileSync(path.join(root, 'CLOUDFLARE_WORKER_SEO.js'), 'utf8');
   const ast = ts.createSourceFile('worker.js', source, ts.ScriptTarget.Latest, true, ts.ScriptKind.JS);
   const declarations = ast.statements.filter(ts.isVariableStatement).flatMap(statement => [...statement.declarationList.declarations]);
-  const context = { APP_URL: 'https://dehub.io', arcadeGameLd: () => ({}), ...dehubAppPage };
+  const context = { APP_URL: 'https://dehub.io', arcadeGameLd: () => ({}), ...streamerPage, ...dehubAppPage };
   const value = name => {
     const declaration = declarations.find(item => item.name.getText(ast) === name);
     if (!declaration?.initializer) throw new Error(`Missing crawler source: ${name}`);

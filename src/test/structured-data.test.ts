@@ -181,6 +181,28 @@ describe('edge-rendered pages', () => {
     expect(meta(body, 'og:image:width')).toBe('1200');
   });
 
+  it('renders /stream with the creators card, its FAQ and the three ways in', async () => {
+    network({});
+    const { res, body } = await crawl('/stream');
+    expect(res.status).toBe(200);
+    expect(body).toContain('<link rel="canonical" href="https://dehub.io/stream">');
+    expect(meta(body, 'og:title')).toContain('Stream on DeHub');
+    expect(meta(body, 'twitter:title')).toBe(meta(body, 'og:title'));
+    expect(meta(body, 'og:image')).toBe('https://dehub.io/og/creators.jpg');
+    expect(meta(body, 'twitter:card')).toBe('summary_large_image');
+    for (const t of APP_TYPES) expect(types(body)).not.toContain(t);
+    const faq = nodes(jsonLd(body)).find((n) => n['@type'] === 'FAQPage') as { mainEntity: { name: string; acceptedAnswer: { text: string } }[] };
+    expect(faq.mainEntity.length).toBeGreaterThanOrEqual(3);
+    for (const q of faq.mainEntity) {
+      expect(body).toContain(`<h3>${q.name}</h3>`);
+      expect(body).toContain(`<p>${q.acceptedAnswer.text}</p>`);
+    }
+    for (const href of ['https://dehub.io/app', 'https://dehub.io/app/migrate-youtube', 'https://dehub.io/app/affiliate']) {
+      expect(body).toContain(`href="${href}"`);
+    }
+    expectValidTrail(body, 'https://dehub.io/stream');
+  });
+
   it('marks a post FAQ section up as FAQPage, and nothing else', async () => {
     network({});
     const content = (slug: string) => readFileSync(resolve(ROOT, `public/blog-content/${slug}.json`), 'utf8');
