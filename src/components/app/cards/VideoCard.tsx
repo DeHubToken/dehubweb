@@ -149,6 +149,7 @@ import { repostPost } from '@/lib/api/dehub';
 import { useSyncedAudio } from '@/hooks/use-synced-audio';
 import { handoffAudioFor } from '@/lib/audio-handoff';
 import { isHoldGated, isSubscriberGated, cheapestSubscriberPlan, subscriberPlanPrice } from '@/lib/content-gate';
+import { isVideoAccessExpiring, useResumeAcrossRefresh, useVideoAccess, videoNeedsAccess } from '@/lib/api/dehub/video-access';
 
 /** Lazy: PlanCard reaches the subscription contracts, and this card boots. */
 const SubscriberGateDrawer = lazy(() =>
@@ -1257,13 +1258,25 @@ export const VideoCard = memo(function VideoCard({ video, postPage = false, onBa
   // Folded into isContentGated so the warning gets the behaviour a locked post
   // already has: no autoplay, no controls, no poster fallback painted over it.
   const isContentGated = isPPVLocked || isBountyLocked || isHoldingsLocked || isSubGated || matureGate.isGated;
+  // A gated post's file is private: once the viewer is through the gate it
+  // plays from a signed URL the API hands out. An open post whose file fails
+  // is asked about once too, in case its gate was just removed and the file is
+  // not public again yet.
+  const requiresVideoAccess = !video.isAudio && !!video.videoUrl && !(video.isLivePost && video.isLiveNow) && videoNeedsAccess(video);
+  const [accessFallback, setAccessFallback] = useState(false);
+  const videoAccess = useVideoAccess(video.id, (requiresVideoAccess && !isContentGated) || accessFallback, walletAddress);
+  const playableVideoUrl = requiresVideoAccess || accessFallback
+    ? videoAccess.data?.url ?? (requiresVideoAccess ? undefined : video.videoUrl)
+    : video.videoUrl;
+  const accessFailed = requiresVideoAccess && !isContentGated && videoAccess.isError;
   const downloadVideo = useVideoDownload();
   const handleDownloadVideo = useCallback(async () => {
     if (isContentGated || !video.videoUrl) return;
     setShowOptionsDrawer(false);
     if (!video.isAudio) {
+      if (!playableVideoUrl) return;
       videoRef.current?.pause();
-      await downloadVideo({ url: video.videoUrl, title: video.title || String(video.id), username: video.creatorUsername });
+      await downloadVideo({ url: playableVideoUrl, title: video.title || String(video.id), username: video.creatorUsername });
       return;
     }
     try {
@@ -1275,7 +1288,7 @@ export const VideoCard = memo(function VideoCard({ video, postPage = false, onBa
       a.href = url; a.download = (video.title || String(video.id)) + (blob.type.includes("mpeg") ? ".mp3" : blob.type.includes("wav") ? ".wav" : blob.type.includes("ogg") ? ".ogg" : ".m4a"); a.click();
       setTimeout(() => URL.revokeObjectURL(url), 30000);
     } catch { toast.error(t("editor.export.failed")); }
-  }, [isContentGated, video.videoUrl, video.isAudio, video.title, video.id, video.creatorUsername, downloadVideo, t]);
+  }, [isContentGated, video.videoUrl, playableVideoUrl, video.isAudio, video.title, video.id, video.creatorUsername, downloadVideo, t]);
 
 
 
@@ -1316,7 +1329,11 @@ export const VideoCard = memo(function VideoCard({ video, postPage = false, onBa
       return;
     }
     
-    if (!video.videoUrl || isContentGated || isVideoNotReady) return;
+    if (requiresVideoAccess && !playableVideoUrl && !isContentGated) {
+      void videoAccess.refetch({ cancelRefetch: false });
+      return;
+    }
+    if (!playableVideoUrl || isContentGated || isVideoNotReady) return;
 
     if (isPlaying) {
       if (autoStartedRef.current && !isImmersive) recordPause();
@@ -1350,7 +1367,7 @@ export const VideoCard = memo(function VideoCard({ video, postPage = false, onBa
       // Attach src imperatively if the media-release gate detached it and the
       // re-render hasn't landed yet (tap can beat the render).
       const vidEl = videoRef.current;
-      if (vidEl && !vidEl.getAttribute('src') && video.videoUrl) vidEl.src = video.videoUrl;
+      if (vidEl && !vidEl.getAttribute('src') && playableVideoUrl) vidEl.src = playableVideoUrl;
       setHasError(false);
       if (!vidEl) { setIsLoading(false); return; }
       requestVideoPlayback(vidEl).then(() => {
@@ -1372,7 +1389,7 @@ export const VideoCard = memo(function VideoCard({ video, postPage = false, onBa
         videoPlaybackManager.stop(instanceId);
       });
     }
-  }, [isPlaying, video.videoUrl, video.isAudio, video.id, instanceId, showControlsBriefly, isContentGated, isVideoNotReady, isImmersive, recordPause, cancelPause]);
+  }, [isPlaying, playableVideoUrl, requiresVideoAccess, videoAccess.refetch, video.isAudio, video.id, instanceId, showControlsBriefly, isContentGated, isVideoNotReady, isImmersive, recordPause, cancelPause]);
 
   const toggleMute = useCallback((e: React.MouseEvent) => {
     e.stopPropagation();
@@ -1506,16 +1523,16 @@ export const VideoCard = memo(function VideoCard({ video, postPage = false, onBa
   // profile had none. Asking for the media as soon as the controls come up
   // costs one small range request and only for the card being looked at.
   useEffect(() => {
-    if (!controlsVisible || (!nearViewport && !showControls) || duration > 0 || video.isAudio || !video.videoUrl) return;
+    if (!controlsVisible || (!nearViewport && !showControls) || duration > 0 || video.isAudio || !playableVideoUrl) return;
     setNearViewport(true);
     const vid = videoRef.current;
     if (!vid) return;
-    if (!vid.getAttribute('src')) vid.src = video.videoUrl;
+    if (!vid.getAttribute('src')) vid.src = playableVideoUrl;
     if (vid.preload === 'none') vid.preload = 'metadata';
     if (vid.readyState === 0) {
       try { vid.load(); } catch { /* noop */ }
     }
-  }, [controlsVisible, nearViewport, showControls, duration, video.isAudio, video.videoUrl]);
+  }, [controlsVisible, nearViewport, showControls, duration, video.isAudio, playableVideoUrl]);
 
   // The saved volume only ever reached the element through an explicit
   // adjustment, so a viewer who had turned a video down got full volume back on
@@ -1724,12 +1741,15 @@ export const VideoCard = memo(function VideoCard({ video, postPage = false, onBa
   const feedVideoShape = useFeedVideoShape();
   const feedFrameAspect = Math.max(mediaAspect, FEED_VIDEO_MIN_ASPECT[feedVideoShape]);
 
+  // Before the handoff assigns `src`, so a refreshed signature resumes in place.
+  useResumeAcrossRefresh(videoRef, mediaAttached && !isVideoNotReady ? playableVideoUrl : undefined);
+
   // Claims the shared <video> for this post into the slot rendered below, and
   // keeps this card's props on it while this card is the one showing it.
   const { attachSlot: attachVideoSlot, isActive: ownsVideoElement, takeOver: takeVideoElement } = useHandoffVideo({
     videoRef,
     handoffKey: video.id,
-    src: mediaAttached && !isVideoNotReady ? video.videoUrl : undefined,
+    src: mediaAttached && !isVideoNotReady ? playableVideoUrl : undefined,
     poster: thumbnail || undefined,
     muted: isMuted,
     loop: !!(video.isAd || isLooping),
@@ -1767,7 +1787,7 @@ export const VideoCard = memo(function VideoCard({ video, postPage = false, onBa
   }, [ownsVideoElement, instanceId]);
 
   takeVideoRef.current = takeVideoElement;
-  const playbackPhase = usePlaybackRecovery(videoRef, video.videoUrl, ownsVideoElement, {
+  const playbackPhase = usePlaybackRecovery(videoRef, playableVideoUrl, ownsVideoElement, {
     component: 'VideoCard', postId: video.id,
     allowed: () => !!videoRef.current && videoRef.current.dataset.userPaused !== 'true' &&
       !visualActivity.isCallBusy() && ((playbackAllowedRef.current && surfaceActiveRef.current &&
@@ -1786,6 +1806,22 @@ export const VideoCard = memo(function VideoCard({ video, postPage = false, onBa
       videoPlaybackManager.stop(instanceId);
     }
   }, [playbackPhase, instanceId]);
+
+  // A signed URL that lapsed mid-session fails like a broken file: fetch a
+  // fresh one and pick up where it stopped. An open post that fails gets one
+  // access check.
+  const refetchVideoAccess = videoAccess.refetch;
+  useEffect(() => {
+    if (playbackPhase !== 'failed') return;
+    if (videoAccess.data?.private) {
+      if (isVideoAccessExpiring(videoAccess.data)) void refetchVideoAccess();
+    } else if (!requiresVideoAccess && !video.isAudio && walletAddress) {
+      setAccessFallback(true);
+    }
+  }, [playbackPhase, videoAccess.data, refetchVideoAccess, requiresVideoAccess, video.isAudio, walletAddress]);
+  useEffect(() => {
+    if (accessFailed) setHasError(true);
+  }, [accessFailed]);
 
   // Play state follows the element itself while this card holds it, and is
   // off while it doesn't. The element changes hands and gets paused or resumed
@@ -3213,7 +3249,7 @@ export const VideoCard = memo(function VideoCard({ video, postPage = false, onBa
           author: video.channel,
           title: video.title,
           imageUrl: thumbnail,
-          videoUrl: video.videoUrl,
+          videoUrl: playableVideoUrl ?? video.videoUrl,
         }}
       />
 
