@@ -1956,6 +1956,8 @@
     "copyFailed": "କପି ହୋଇପାରିଲାନି"
   },
   "profileOptions": {
+    "copyRssFeed": "RSS ଫିଡ୍ ଲିଙ୍କ କପି କରନ୍ତୁ",
+    "rssFeedCopied": "RSS ଫିଡ୍ ଲିଙ୍କ କପି ହୋଇଛି",
     "copyProfileUrl": "ପ୍ରୋଫାଇଲ୍ URL କପି କରନ୍ତୁ",
     "copyUsername": "ବ୍ୟବହାରକାରୀ ନାମ କପି କରନ୍ତୁ",
     "copyAddress": "ଠିକଣା କପି କରନ୍ତୁ",

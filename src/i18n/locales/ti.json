@@ -1940,6 +1940,8 @@
     "copyFailed": "ክቅዳሕ ኣይከኣለን"
   },
   "profileOptions": {
+    "copyRssFeed": "ናይ RSS ፊድ መላግቦ ቅዳሕ",
+    "rssFeedCopied": "ናይ RSS ፊድ መላግቦ ተቐዲሑ",
     "copyProfileUrl": "ናይ ፕሮፋይል URL ቅዳሕ",
     "copyUsername": "ናይ ተጠቃሚ ስም ቅዳሕ",
     "copyAddress": "ኣድራሻ ቅዳሕ",

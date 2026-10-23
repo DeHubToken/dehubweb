@@ -1985,6 +1985,8 @@
     "copyFailed": "Kopi godhamuu hin dandeenye"
   },
   "profileOptions": {
+    "copyRssFeed": "Liinkii RSS feed waraabi",
+    "rssFeedCopied": "Liinkiin RSS feed waraabame",
     "copyProfileUrl": "URL piroofaayilii waraabi",
     "copyUsername": "Maqaa fayyadamaa waraabi",
     "copyAddress": "Teessoo waraabi",

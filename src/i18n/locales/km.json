@@ -1978,6 +1978,8 @@
     "copyFailed": "មិនអាចចម្លងបានទេ។"
   },
   "profileOptions": {
+    "copyRssFeed": "ចម្លងតំណ RSS feed",
+    "rssFeedCopied": "បានចម្លងតំណ RSS feed",
     "copyProfileUrl": "ចម្លង URL ប្រវត្តិរូប",
     "copyUsername": "ចម្លងឈ្មោះអ្នកប្រើប្រាស់",
     "copyAddress": "ចម្លងអាសយដ្ឋាន",

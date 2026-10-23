@@ -1976,6 +1976,8 @@
     "copyFailed": "కాపీ చేయలేకపోయింది"
   },
   "profileOptions": {
+    "copyRssFeed": "RSS ఫీడ్ లింక్ కాపీ చేయండి",
+    "rssFeedCopied": "RSS ఫీడ్ లింక్ కాపీ అయింది",
     "copyProfileUrl": "ప్రొఫైల్ URL కాపీ చేయండి",
     "copyUsername": "వాడుకరి పేరు కాపీ చేయండి",
     "copyAddress": "చిరునామా కాపీ చేయండి",

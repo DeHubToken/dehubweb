@@ -1969,6 +1969,8 @@
     "copyFailed": "Хуулах боломжгүй"
   },
   "profileOptions": {
+    "copyRssFeed": "RSS сувгийн холбоосыг хуулах",
+    "rssFeedCopied": "RSS сувгийн холбоос хуулагдлаа",
     "copyProfileUrl": "Профайл URL хуулах",
     "copyUsername": "Хэрэглэгчийн нэр хуулах",
     "copyAddress": "Хаяг хуулах",

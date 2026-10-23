@@ -1959,6 +1959,8 @@
     "copyFailed": "Copy نئیں ہو سکیا"
   },
   "profileOptions": {
+    "copyRssFeed": "RSS فیڈ لنک کاپی کرو",
+    "rssFeedCopied": "RSS فیڈ لنک کاپی تھی ڳیا",
     "copyProfileUrl": "پروفائل URL کاپی کرو",
     "copyUsername": "یوزرنیم کاپی کرو",
     "copyAddress": "پتہ کاپی کرو",

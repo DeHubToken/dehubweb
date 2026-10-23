@@ -1977,6 +1977,8 @@
     "copyFailed": "Nu s-a putut copia"
   },
   "profileOptions": {
+    "copyRssFeed": "Copiază linkul fluxului RSS",
+    "rssFeedCopied": "Linkul fluxului RSS a fost copiat",
     "copyProfileUrl": "Copiază URL-ul profilului",
     "copyUsername": "Copiază numele de utilizator",
     "copyAddress": "Copiază adresa",

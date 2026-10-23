@@ -1969,6 +1969,8 @@
     "copyFailed": "E nweghị ike idetuo ya"
   },
   "profileOptions": {
+    "copyRssFeed": "Detụọ njikọ feed RSS",
+    "rssFeedCopied": "Edepụtala njikọ feed RSS",
     "copyProfileUrl": "Detụọ URL profaịlụ",
     "copyUsername": "Detụọ aha onye ọrụ",
     "copyAddress": "Detụọ adreesị",

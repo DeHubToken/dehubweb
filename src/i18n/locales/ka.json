@@ -1993,6 +1993,8 @@
     "copyFailed": "ვერ მოხერხდა კოპირება"
   },
   "profileOptions": {
+    "copyRssFeed": "RSS არხის ბმულის კოპირება",
+    "rssFeedCopied": "RSS არხის ბმული დაკოპირდა",
     "copyProfileUrl": "პროფილის URL-ის კოპირება",
     "copyUsername": "მომხმარებლის სახელის კოპირება",
     "copyAddress": "მისამართის კოპირება",

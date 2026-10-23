@@ -1959,6 +1959,8 @@
     "copyFailed": "Neizdevās kopēt"
   },
   "profileOptions": {
+    "copyRssFeed": "Kopēt RSS plūsmas saiti",
+    "rssFeedCopied": "RSS plūsmas saite nokopēta",
     "copyProfileUrl": "Kopēt profila URL",
     "copyUsername": "Kopēt lietotājvārdu",
     "copyAddress": "Kopēt adresi",

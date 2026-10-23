@@ -1974,6 +1974,8 @@
     "copyFailed": "કોપી કરી શકાયું નથી"
   },
   "profileOptions": {
+    "copyRssFeed": "RSS ફીડ લિંક કૉપિ કરો",
+    "rssFeedCopied": "RSS ફીડ લિંક કૉપિ થઈ",
     "copyProfileUrl": "પ્રોફાઈલ URL કૉપિ કરો",
     "copyUsername": "યૂઝરનેમ કૉપિ કરો",
     "copyAddress": "એડ્રેસ કૉપિ કરો",

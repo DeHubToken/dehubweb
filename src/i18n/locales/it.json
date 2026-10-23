@@ -1983,6 +1983,8 @@
     "copyFailed": "Impossibile copiare"
   },
   "profileOptions": {
+    "copyRssFeed": "Copia link del feed RSS",
+    "rssFeedCopied": "Link del feed RSS copiato",
     "copyProfileUrl": "Copia URL profilo",
     "copyUsername": "Copia nome utente",
     "copyAddress": "Copia indirizzo",

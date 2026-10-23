@@ -1975,6 +1975,8 @@
     "copyFailed": "Չհաջողվեց պատճենել"
   },
   "profileOptions": {
+    "copyRssFeed": "Պատճենել RSS հոսքի հղումը",
+    "rssFeedCopied": "RSS հոսքի հղումը պատճենվեց",
     "copyProfileUrl": "Պատdelays profili URL-ə",
     "copyUsername": "Պdelays ogtagorci anun",
     "copyAddress": "Պdelays hascen",

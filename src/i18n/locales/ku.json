@@ -1773,6 +1773,8 @@
     "copyFailed": "نەکرا کۆپی بکرێت"
   },
   "profileOptions": {
+    "copyRssFeed": "بەستەری فیدی RSS کۆپی بکە",
+    "rssFeedCopied": "بەستەری فیدی RSS کۆپی کرا",
     "copyProfileUrl": "لینکی پرۆفایل کۆپی بکە",
     "copyUsername": "ناوی بەکارهێنەر کۆپی بکە",
     "copyAddress": "ناونیشان کۆپی بکە",
