@@ -54,6 +54,8 @@ export interface BaseFeedItem {
   quoteRevoked?: boolean;
   /** Who may reply; absent means anyone. */
   replyPolicy?: 'public' | 'followers' | 'following' | 'mentioned';
+  /** Who may see it; absent means everyone. */
+  visibility?: 'public' | 'followers' | 'direct';
   /**
    * The creator published this for children — the Kids Mode allowlist.
    *

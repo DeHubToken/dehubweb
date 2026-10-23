@@ -20,7 +20,7 @@ import { useState, useCallback, useEffect, useRef, lazy, Suspense } from 'react'
 import { useQueryClient } from '@tanstack/react-query';
 import { Code, ImageDown } from "lucide-react";
 import { copyPostEmbedCode } from '@/lib/post-embed-code';
-import type { QuotePolicy } from '@/lib/api/dehub/types';
+import type { PostVisibility, QuotePolicy } from '@/lib/api/dehub/types';
 import ThumbsDown from "@/components/ui/cut-icons/dislike";
 import Quote from "@/components/ui/cut-icons/quote";
 import Link from "@/components/ui/cut-icons/link";
@@ -193,6 +193,12 @@ interface ActionBarProps {
    * who does not follow with a refusal the composer shows.
    */
   quotePolicy?: QuotePolicy;
+  /**
+   * Who may see the post. A followers-only or direct post cannot be reposted,
+   * quoted, embedded or sent in a message: each would hand it to people it
+   * was not written for. Absent is everyone.
+   */
+  visibility?: PostVisibility;
   /**
    * Listen for double-tap-to-like events for this post (default true).
    * Set false on secondary instances of the same post (e.g. a copy of the bar
@@ -388,6 +394,7 @@ export function ActionBar({
   tokenId,
   isOwnPost = false,
   quotePolicy,
+  visibility,
   enableDoubleTapLike = true,
   quickRepost = false,
   centered = false,
@@ -864,7 +871,14 @@ export function ActionBar({
     setIsReposted(initialIsReposted || (postId ? isPostReposted(postId) : false));
   }, [initialIsReposted, postId, walletAddress]);
 
+  // Only a public post travels further than its own audience.
+  const isPublicPost = !visibility || visibility === 'public';
+
   const handleRepost = () => {
+    if (!isPublicPost) {
+      toast.info(_copy('postVisibility.noRepost'));
+      return;
+    }
     if (onRepost) {
       setRepostDelta(prev => prev + 1);
       setIsReposted(true);
@@ -900,7 +914,7 @@ export function ActionBar({
   };
 
   // The author turned quotes off for everyone but themselves.
-  const canQuote = quotePolicy !== 'nobody' || isOwnPost;
+  const canQuote = isPublicPost && (quotePolicy !== 'nobody' || isOwnPost);
 
   const handleQuote = () => {
     if (onQuote) {
@@ -913,7 +927,7 @@ export function ActionBar({
 
   // "Send in a message" — only for real posts (numeric tokenId). Feature-request
   // and governance cards reuse ActionBar with non-post ids and must not show it.
-  const canSendInDm = typeof tokenId === 'number' && tokenId > 0;
+  const canSendInDm = isPublicPost && typeof tokenId === 'number' && tokenId > 0;
   const [dmShareOpen, setDmShareOpen] = useState(false);
   const handleSendInDm = () => {
     setSheetOpen(false);
@@ -931,6 +945,8 @@ export function ActionBar({
           <Repeat2 className="w-5 h-5" />
           <span className="font-medium"><TranslationText name="copy.aed838e7efff" fallback={"Undo Repost"} /></span>
         </button>
+      ) : !isPublicPost ? (
+        <p className="px-4 py-3 text-sm text-zinc-400">{_copy('postVisibility.noRepost')}</p>
       ) : (
         <button
           onClick={(e) => { e.stopPropagation(); handleRepost(); }}
@@ -984,7 +1000,7 @@ export function ActionBar({
         <Link className="w-5 h-5" />
         <span className="font-medium"><TranslationText name="copy.724e78a3254c" fallback={"Copy Link"} /></span>
       </button>
-      {postId && /^\d+$/.test(postId) && (
+      {isPublicPost && postId && /^\d+$/.test(postId) && (
         <button
           onClick={(e) => { e.stopPropagation(); copyPostEmbedCode(postId, _copy); setSheetOpen(false); }}
           className="flex items-center gap-3 w-full p-4 text-zinc-200 hover:text-white hover:bg-white/10 rounded-xl transition-all duration-200"
@@ -1177,6 +1193,7 @@ export function ActionBar({
           onUndoRepost={handleUndoRepost}
           onQuote={handleQuote}
           canQuote={canQuote}
+          canRepost={isPublicPost}
           shareUrl={viewerShareUrl(shareUrlForPost())}
           onCopyLink={handleCopyLink}
           quoteCount={stage.quoteCount}

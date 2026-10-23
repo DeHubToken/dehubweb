@@ -384,6 +384,9 @@ function PostModalForAccount({ isOpen, onClose, initialFiles, onFilesProcessed, 
         setQuotePolicy={actions.setQuotePolicy}
         replyPolicy={state.replyPolicy}
         setReplyPolicy={actions.setReplyPolicy}
+        visibility={state.visibility}
+        // A quote and a livestream are always public.
+        setVisibility={isQuoting || state.liveMode ? undefined : actions.setVisibility}
         isForKids={state.isForKids}
         setIsForKids={actions.setIsForKids}
         shopLinks={state.shopLinks}
@@ -402,7 +405,7 @@ function PostModalForAccount({ isOpen, onClose, initialFiles, onFilesProcessed, 
       />
 
       <PostActionBar
-        extraTool={!state.liveMode && !isQuoting ? <CrossPostPicker onNavigateAway={handleClose} /> : undefined}
+        extraTool={!state.liveMode && !isQuoting && state.visibility === 'public' ? <CrossPostPicker onNavigateAway={handleClose} /> : undefined}
         hideLive={isQuoting}
         imageInputRef={refs.imageInputRef}
         videoInputRef={refs.videoInputRef}

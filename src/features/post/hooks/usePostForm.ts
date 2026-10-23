@@ -48,7 +48,7 @@ import type { MediaFile, Currency, PostFormState, PostFormActions, PostFormCompu
 import type { FilterSettings, CropSettings } from '../types/filters';
 import type { Draft } from '../components/DraftsSheet';
 import type { TextPost, ImagePost, VideoItem } from '@/types/feed.types';
-import type { DeHubNFT, QuotePolicy, ReplyPolicy } from '@/lib/api/dehub/types';
+import type { DeHubNFT, PostVisibility, QuotePolicy, ReplyPolicy } from '@/lib/api/dehub/types';
 import type { PostChainId } from '@/components/app/ChainSelector';
 import { normalizeCategoryList } from '@/lib/category-names';
 import { trackFirstPost } from '@/lib/analytics';
@@ -361,6 +361,8 @@ export function usePostForm(
   const [quotePolicy, setQuotePolicy] = useState<QuotePolicy>('public');
   // Who may reply. Anyone, unless the creator narrows it.
   const [replyPolicy, setReplyPolicy] = useState<ReplyPolicy>('public');
+  // Who may see the post. Everyone, unless the creator narrows it; fixed once posted.
+  const [visibility, setVisibility] = useState<PostVisibility>('public');
   const [isEnhancing, setIsEnhancing] = useState(false);
   const [isPosting, setIsPosting] = useState(false);
   const [uploadProgress, setUploadProgress] = useState(0);
@@ -1219,6 +1221,7 @@ export function usePostForm(
     setContentWarning(null);
     setQuotePolicy('public');
     setReplyPolicy('public');
+    setVisibility('public');
     setScheduledDate(null);
     setTitleText.complete(titleText, '');
     // Cleared per post, deliberately. A board is usually specific to what was
@@ -1442,6 +1445,13 @@ export function usePostForm(
     // Validate required fields
     if (!text.trim() && media.length === 0 && !liveMode && !pollIsValid) {
       toast.error(_copy("copy.26fc0b87a364", { defaultValue: "Add some content first" }));
+      return;
+    }
+
+    // A post for mentioned people only needs somebody mentioned. The server
+    // refuses one without (VISIBILITY_NEEDS_MENTION); say so before uploading.
+    if (visibility === 'direct' && !liveMode && !isQuoting && !/@[a-zA-Z0-9_]{1,30}\b/.test(text)) {
+      toast.error(t('postVisibility.needsMention'));
       return;
     }
 
@@ -1977,6 +1987,8 @@ export function usePostForm(
         spoilerText: contentWarning?.trim() || undefined,
         quotePolicy,
         replyPolicy,
+        // A livestream and a quote are always public.
+        visibility: liveMode || isQuoting ? undefined : visibility,
       };
       const uploadWithFile = (percent: number) => setUploadProgress(Math.round(percent * 0.6)); // XHR bytes map to 0-60%
 
@@ -2054,7 +2066,9 @@ export function usePostForm(
           });
       }
 
-      if (!mintResponse.duplicate && !liveMode && !isQuoting) {
+      // Never for a followers-only or direct post: another network would publish
+      // it to everyone there.
+      if (!mintResponse.duplicate && !liveMode && !isQuoting && visibility === 'public') {
         void crossPost({
           text: [submittedTitle, submittedDescription].filter(Boolean).join('\n\n'),
           files: files.filter((f): f is File => f instanceof File),
@@ -2709,7 +2723,7 @@ export function usePostForm(
     effectiveShouldMint, mintFee, isMature, isForKids,
     selectedCategory, shopLinks, shopListingIds, myPlanIds,
     postQuota?.outstandingDhb, refreshPostQuota, onLiveStreamReady,
-    isQuoting, quotedPost, contentWarning, quotePolicy, replyPolicy,
+    isQuoting, quotedPost, contentWarning, quotePolicy, replyPolicy, visibility,
     , _copy
   ]);
 
@@ -2745,6 +2759,7 @@ export function usePostForm(
       contentWarning,
       quotePolicy,
       replyPolicy,
+      visibility,
       isEnhancing,
       isPosting,
       uploadProgress,
@@ -2787,6 +2802,7 @@ export function usePostForm(
       setContentWarning,
       setQuotePolicy,
       setReplyPolicy,
+      setVisibility,
       handleImageSelect,
       handleVideoSelect,
       handleFileDrop,
