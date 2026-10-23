@@ -1798,6 +1798,9 @@
     "monthsAgo": "há {{count}}me",
     "forLabel": "Para",
     "againstLabel": "Contra",
+    "lentBadgeCantVote": "Seu crachá é emprestado a você e os crachás emprestados não podem votar. Compre DHB para ganhar o seu próprio emblema.",
+    "lentBadgeNoVote": "Os distintivos da Quaresma não podem votar.",
+    "buyDhb": "Comprar DHB",
     "discussion": {
       "title": "Discussão",
       "intro": "Faça perguntas de acompanhamento ou discuta a proposta antes de votar.",
@@ -4810,10 +4813,6 @@
     "creatorEarnsDirect": "Os assinantes pagam em tokens DeHub. A sua parte fica na sua carteira no momento em que é subscrita, menos a taxa da plataforma para o seu nível de emblema."
   },
   "liveOverlay": {
-    "level": "Nível {{level}}",
-    "streak_one": "Sequência de {{count}}semanas",
-    "streak_other": "Sequência de {{count}}semanas",
-    "tipJar": "Jarra para presentes",
     "someone": "Alguém",
     "newFollower": "Novo seguidor: {{name}}",
     "newSubscriber": "Novo assinante: {{name}}",
@@ -4831,6 +4830,10 @@
     "pointsTitle": "Os espectadores mais leais",
     "points_one": "{{formatted}} ponto",
     "points_other": "{{formatted}} pontos",
+    "level": "Nível {{level}}",
+    "streak_one": "Sequência de {{count}}semanas",
+    "streak_other": "Sequência de {{count}}semanas",
+    "tipJar": "Jarra para presentes",
     "poll": {
       "closed": "Votações encerradas",
       "voteFor": "Vote em {{option}}",
@@ -4998,8 +5001,6 @@
       "join": "Juntar"
     },
     "kinds": {
-      "streamer_level": "Nível do streamer",
-      "tip_jar": "Jarra para presentes",
       "tip_alert": "Alerta de dica",
       "follow_alert": "Alerta de seguir",
       "subscribe_alert": "Alerta de assinante",
@@ -5019,11 +5020,11 @@
       "poll": "Enquete",
       "spin_wheel": "Roda giratória",
       "subathon_timer": "Temporizador Subathon",
-      "points_board": "Espectadores leais"
+      "points_board": "Espectadores leais",
+      "streamer_level": "Nível do streamer",
+      "tip_jar": "Jarra para presentes"
     },
     "hints": {
-      "streamer_level": "O seu nível de streamer e sequência semanal, a partir do seu perfil",
-      "tip_jar": "Um pote que se enche quando chegam presentes pagos",
       "tip_alert": "Celebra cada dica, dimensionada ao seu nível",
       "follow_alert": "Mostra cada novo seguidor",
       "subscribe_alert": "Mostra cada novo assinante",
@@ -5043,14 +5044,16 @@
       "poll": "Sua enquete ao vivo, com um botão de voto para cada opção",
       "spin_wheel": "Onde as rodas das suas regras giram",
       "subathon_timer": "Uma contagem regressiva que presentes, follows e assinaturas empurram para trás",
-      "points_board": "Seus espectadores mais destacados por pontos de assistência e presenteação"
+      "points_board": "Seus espectadores mais destacados por pontos de assistência e presenteação",
+      "streamer_level": "O seu nível de streamer e sequência semanal, a partir do seu perfil",
+      "tip_jar": "Um pote que se enche quando chegam presentes pagos"
     },
     "fields": {
-      "showStreak": "Mostrar a sequência semanal",
       "style": "Estilo",
       "celebration": "Celebração",
       "banner": "Banner",
       "minAmount": "Menor dica para mostrar (DHB)",
+      "showStreak": "Mostrar a sequência semanal",
       "showMessage": "Mostrar a mensagem de gratificação",
       "confirmedOnly": "Somente após a confirmação do pagamento",
       "confirmedOnlyHint": "Espera alguns segundos pela corrente, para que uma gorjeta que nunca é paga nunca apareça.",

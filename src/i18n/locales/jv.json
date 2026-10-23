@@ -1790,6 +1790,9 @@
     "monthsAgo": "{{count}}b kepungkur",
     "forLabel": "Kanggo",
     "againstLabel": "Nalika",
+    "lentBadgeCantVote": "Lencana sampeyan dipinjam, lan lencana sing dipinjam ora bisa milih. Tuku DHB kanggo entuk lencana dhewe.",
+    "lentBadgeNoVote": "Lencana Lent ora bisa milih.",
+    "buyDhb": "Tuku DHB",
     "discussion": {
       "title": "Dhiskusi",
       "intro": "Ajokna pitakonan susulan utawa rembugen usulané sadurungé milih.",
@@ -4611,10 +4614,6 @@
     "creatorEarnsDirect": "Pelanggan mbayar nganggo token DeHub. Bagianmu mlebu ing dompetmu nalika dheweke langganan, dikurangi biaya platform kanggo tingkatan lencana."
   },
   "liveOverlay": {
-    "level": "Tingkatan {{level}}",
-    "streak_one": "{{count}}-mingguan *streak*",
-    "streak_other": "{{count}}-mingguan *streak*",
-    "tipJar": "Wadah hadiah",
     "someone": "Sapa wae",
     "newFollower": "Pengikut anyar: {{name}}",
     "newSubscriber": "Langganan anyar: {{name}}",
@@ -4632,6 +4631,10 @@
     "pointsTitle": "Tontonan yang paling setia",
     "points_one": "{{formatted}} poin",
     "points_other": "{{formatted}} poin",
+    "level": "Tingkatan {{level}}",
+    "streak_one": "{{count}}-mingguan *streak*",
+    "streak_other": "{{count}}-mingguan *streak*",
+    "tipJar": "Wadah hadiah",
     "poll": {
       "closed": "Voting ditutup",
       "voteFor": "Milih {{option}}",
@@ -4795,8 +4798,6 @@
       "share": "Bareng"
     },
     "kinds": {
-      "streamer_level": "Tingkatan streamer",
-      "tip_jar": "Wadah hadiah",
       "tip_alert": "Peringatan Tip",
       "follow_alert": "Awas",
       "subscribe_alert": "Peringatan pelanggan",
@@ -4814,11 +4815,11 @@
       "poll": "Poll",
       "spin_wheel": "Roda putar",
       "subathon_timer": "Timer Subathon",
-      "points_board": "Tontonan yang setia"
+      "points_board": "Tontonan yang setia",
+      "streamer_level": "Tingkatan streamer",
+      "tip_jar": "Wadah hadiah"
     },
     "hints": {
-      "streamer_level": "Tingkatanmu sebagai streamer dan *streak* mingguan dari profilmu",
-      "tip_jar": "Wadah yang penuh karena hadiah yang dibayar masuk",
       "tip_alert": "Ngrayakake saben tip, disesuaikan karo tingkaté",
       "follow_alert": "Nampilake saben pangikut anyar",
       "subscribe_alert": "Nuduhake saben pelanggan anyar",
@@ -4838,12 +4839,14 @@
       "poll": "Pollmu yén live, lan ngabani tombol ngabani untuk tiworo pilihannya",
       "spin_wheel": "Ngendi roda-roda ing aturan-aturanmu muter",
       "subathon_timer": "Countdown yang ditolakin oleh hadiah, follow, dan suskripsi",
-      "points_board": "Tontonan teratasmu berdasarkan poin dari nonton dan hadiah"
+      "points_board": "Tontonan teratasmu berdasarkan poin dari nonton dan hadiah",
+      "streamer_level": "Tingkatanmu sebagai streamer dan *streak* mingguan dari profilmu",
+      "tip_jar": "Wadah yang penuh karena hadiah yang dibayar masuk"
     },
     "fields": {
-      "showStreak": "Tampilkan *streak* mingguan",
       "celebration": "Ngabdulakehan",
       "minAmount": "Tip paling cilik kanggo dituduhake (DHB)",
+      "showStreak": "Tampilkan *streak* mingguan",
       "confirmedOnly": "Mung sawisé pembayaran dikonfirmasi",
       "confirmedOnlyHint": "Nganthi sawetara detik kanggo rantai, dadi tip sing ora tau dibayar ora bakal katon.",
       "duration": "Dwi detik di layar",

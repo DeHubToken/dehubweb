@@ -1786,6 +1786,9 @@
     "monthsAgo": "prije {{count}}mj",
     "forLabel": "Za",
     "againstLabel": "Protiv",
+    "lentBadgeCantVote": "Vaša je značka posuđena vama, a posuđene značke ne mogu glasati. Kupite DHB i zaradite vlastitu značku.",
+    "lentBadgeNoVote": "Korizmene značke ne mogu glasati.",
+    "buyDhb": "Kupite DHB",
     "discussion": {
       "title": "Rasprava",
       "intro": "Postavite dodatna pitanja ili raspravite o prijedlogu prije glasovanja.",
@@ -4742,10 +4745,6 @@
     "creatorEarnsDirect": "Pretplatnici plaćaju u DeHub žetonima. Tvoja dionica završava u novčaniku čim se pretplati, umanjena za naknadu za platformu za tvoju razinu značke."
   },
   "liveOverlay": {
-    "level": "Razina {{level}}",
-    "streak_one": "{{count}}-tjedni period",
-    "streak_other": "{{count}}-tjedni period",
-    "tipJar": "Posuda za darove",
     "someone": "Netko",
     "newFollower": "Novi pratitelj: {{name}}",
     "newSubscriber": "Novi pretplatnik: {{name}}",
@@ -4763,6 +4762,10 @@
     "pointsTitle": "Najlojalniji gledatelji",
     "points_one": "{{formatted}} bod",
     "points_other": "{{formatted}} bodova",
+    "level": "Razina {{level}}",
+    "streak_one": "{{count}}-tjedni period",
+    "streak_other": "{{count}}-tjedni period",
+    "tipJar": "Posuda za darove",
     "poll": {
       "closed": "Glasanje je završeno",
       "voteFor": "Glasaj za {{option}}",
@@ -4930,8 +4933,6 @@
       "join": "Pridruži se"
     },
     "kinds": {
-      "streamer_level": "Razina streamera",
-      "tip_jar": "Posuda za darove",
       "tip_alert": "Obavijest o napojnici",
       "follow_alert": "Slijedi upozorenje",
       "subscribe_alert": "Upozorenje pretplatnika",
@@ -4951,11 +4952,11 @@
       "poll": "Anketa",
       "spin_wheel": "Okretni kotač",
       "subathon_timer": "Subathon timer",
-      "points_board": "Najlojalniji gledatelji"
+      "points_board": "Najlojalniji gledatelji",
+      "streamer_level": "Razina streamera",
+      "tip_jar": "Posuda za darove"
     },
     "hints": {
-      "streamer_level": "Razina streamera i tjedni raspon, s tvog profila",
-      "tip_jar": "Staklenka koja se puni kad stignu plaćeni darovi",
       "tip_alert": "Slavi svaku napojnicu u skladu s njezinom veličinom",
       "follow_alert": "Prikazuje svakog novog pratitelja",
       "subscribe_alert": "Prikazuje svakog novog pretplatnika",
@@ -4975,14 +4976,16 @@
       "poll": "Vaša anketa uživo, s gumbom za glasanje za svaku opciju",
       "spin_wheel": "Gdje se okreću kotači u vašim pravilima",
       "subathon_timer": "Vremenski brojač koji se vraća zbog darovanja, praćenja i pretplata",
-      "points_board": "Vaši najviše bodovani gledatelji prema bodovima stičenim gledanjem i darovanjem"
+      "points_board": "Vaši najviše bodovani gledatelji prema bodovima stičenim gledanjem i darovanjem",
+      "streamer_level": "Razina streamera i tjedni raspon, s tvog profila",
+      "tip_jar": "Staklenka koja se puni kad stignu plaćeni darovi"
     },
     "fields": {
-      "showStreak": "Prikaži tjedni raspon",
       "style": "Stil",
       "celebration": "Proslava",
       "banner": "Baner",
       "minAmount": "Najmanji savjet za prikaz (DHB)",
+      "showStreak": "Prikaži tjedni raspon",
       "showMessage": "Prikaži poruku s napojnicom",
       "confirmedOnly": "Tek nakon potvrde plaćanja",
       "confirmedOnlyHint": "Pričekajte nekoliko sekundi za lanac, tako da se napojnica koja nije plaćena nikada ne pojavi.",

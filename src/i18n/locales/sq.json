@@ -1790,6 +1790,9 @@
     "monthsAgo": "{{count}}mj më parë",
     "forLabel": "Për",
     "againstLabel": "Kundër",
+    "lentBadgeCantVote": "Distinktivi yt të është huazuar ty dhe distinktivët e huazuar nuk mund të votojnë. Bli DHB për të fituar distinktivin tënd.",
+    "lentBadgeNoVote": "Distinktivët e huazuar nuk mund të votojnë.",
+    "buyDhb": "Blej DHB",
     "discussion": {
       "title": "Diskutim",
       "intro": "Bëj pyetje vijuese ose diskuto propozimin para se të votosh.",
@@ -4794,10 +4797,6 @@
     "creatorEarnsDirect": "Abonentët paguajnë në tokenët DeHub. Pjesa jote vendoset në portofolin tënd në momentin që ata regjistrohen, minus tarifën e platformës për nivelin e distinktivit tënd."
   },
   "liveOverlay": {
-    "level": "Niveli {{level}}",
-    "streak_one": "{{count}}-week streak",
-    "streak_other": "{{count}}-week streak",
-    "tipJar": "Kavanoz dhuratë",
     "someone": "Dikush",
     "newFollower": "Ndjekës i ri: {{name}}",
     "newSubscriber": "Abonent i ri: {{name}}",
@@ -4815,6 +4814,10 @@
     "pointsTitle": "Shikuesit më të besnikë",
     "points_one": "{{formatted}} pikë",
     "points_other": "{{formatted}} pikë",
+    "level": "Niveli {{level}}",
+    "streak_one": "{{count}}-week streak",
+    "streak_other": "{{count}}-week streak",
+    "tipJar": "Kavanoz dhuratë",
     "poll": {
       "closed": "Voting u mbyll",
       "voteFor": "Votoni për {{option}}",
@@ -4982,8 +4985,6 @@
       "join": "Bashkohu"
     },
     "kinds": {
-      "streamer_level": "Niveli i transmetuesit",
-      "tip_jar": "Kavanoz dhuratë",
       "tip_alert": "Lajmërim sugjerimi",
       "follow_alert": "Ndiq alarmin",
       "subscribe_alert": "Lajmërim i pajtimtarit",
@@ -5003,11 +5004,11 @@
       "poll": "Sondazh",
       "spin_wheel": "Rrota e centrifugimit",
       "subathon_timer": "Subathon timer",
-      "points_board": "Shikuesit të besnikë"
+      "points_board": "Shikuesit të besnikë",
+      "streamer_level": "Niveli i transmetuesit",
+      "tip_jar": "Kavanoz dhuratë"
     },
     "hints": {
-      "streamer_level": "Niveli i streamer-it dhe intervali javor, nga profili yt",
-      "tip_jar": "Vjen një kavanoz që mbushet me dhurata të paguara",
       "tip_alert": "Feston çdo bakshish, të madhësisë sipas nivelit të tij",
       "follow_alert": "Shfaq çdo ndjekës të ri",
       "subscribe_alert": "Shfaq çdo pajtimtar të ri",
@@ -5027,14 +5028,16 @@
       "poll": "Sondazhi yt i drejtpërdrejtë, me një buton votimi për çdo opsion",
       "spin_wheel": "Ku rrotullohen rrotat në rregullat e tua",
       "subathon_timer": "Një countdown që donacionet, followet dhe abonimet e shtojnë kohën",
-      "points_board": "Shikuesit më të mëdhenj sipas pikëve nga shikimi dhe donacionimi"
+      "points_board": "Shikuesit më të mëdhenj sipas pikëve nga shikimi dhe donacionimi",
+      "streamer_level": "Niveli i streamer-it dhe intervali javor, nga profili yt",
+      "tip_jar": "Vjen një kavanoz që mbushet me dhurata të paguara"
     },
     "fields": {
-      "showStreak": "Shfaq intervalin javor",
       "style": "Stili",
       "celebration": "Festim",
       "banner": "Baneri",
       "minAmount": "Sugjerimi më i vogël për t 'u shfaqur (DHB)",
+      "showStreak": "Shfaq intervalin javor",
       "showMessage": "Shfaq mesazhin e sugjerimit",
       "confirmedOnly": "Vetëm pasi pagesa të konfirmohet",
       "confirmedOnlyHint": "Prit disa sekonda për zinxhirin, kështu që një bakshish që nuk paguhet kurrë nuk shfaqet kurrë.",

@@ -1783,6 +1783,9 @@
     "monthsAgo": "{{count}}ay əvvəl",
     "forLabel": "Elan Növü",
     "againstLabel": "Qarşı",
+    "lentBadgeCantVote": "Nişanınız lentə alınır və mərc nişanları səs verə bilmir. Öz nişanınızı qazanmaq üçün DHB alın.",
+    "lentBadgeNoVote": "Lent nişanları səs verə bilməz.",
+    "buyDhb": "DHB-ni al",
     "discussion": {
       "title": "Müzakirə",
       "intro": "Səs verməzdən əvvəl ard-arda suallar verin və ya təklifi müzakirə edin.",
@@ -4708,10 +4711,6 @@
     "creatorEarnsDirect": "Abunəçilər DeHub tokenlərində ödəniş edirlər. Pay torpaqlarınız abunə olduqları an cüzdanınızda olur, nişan səviyyəniz üçün platforma haqqını azaldın."
   },
   "liveOverlay": {
-    "level": "Səviyyə {{level}}",
-    "streak_one": "{{count}}-həftə zolağı",
-    "streak_other": "{{count}}-həftə zolağı",
-    "tipJar": "Hədiyyə bankası",
     "someone": "Kimsə",
     "newFollower": "Yeni izləyici: {{name}}",
     "newSubscriber": "Yeni abunəçi: {{name}}",
@@ -4728,6 +4727,10 @@
     "pointsTitle": "Ən sadıq izləyicilər",
     "points_one": "{{formatted}} xal",
     "points_other": "{{formatted}} xal",
+    "level": "Səviyyə {{level}}",
+    "streak_one": "{{count}}-həftə zolağı",
+    "streak_other": "{{count}}-həftə zolağı",
+    "tipJar": "Hədiyyə bankası",
     "poll": {
       "closed": "Səsvermə başa çatdı",
       "voteFor": "{{option}} üçün səs ver",
@@ -4895,8 +4898,6 @@
       "join": "Qoşul"
     },
     "kinds": {
-      "streamer_level": "Axınçı səviyyəsi",
-      "tip_jar": "Hədiyyə bankası",
       "tip_alert": "İpucu xəbərdarlığı",
       "follow_alert": "Xəbərdarlığa əməl edin",
       "subscribe_alert": "Abunəçi xəbərdarlığı",
@@ -4916,11 +4917,11 @@
       "poll": "Sorğu",
       "spin_wheel": "Fırlatma çarxı",
       "subathon_timer": "Yarmarka taymeri",
-      "points_board": "Sadiq izləyicilər"
+      "points_board": "Sadiq izləyicilər",
+      "streamer_level": "Axınçı səviyyəsi",
+      "tip_jar": "Hədiyyə bankası"
     },
     "hints": {
-      "streamer_level": "Profilinizdən axın səviyyəsi və həftəlik zolağınız",
-      "tip_jar": "Ödənişli hədiyyələrin daxil olduğu banka",
       "tip_alert": "Hər bir təklifə təşəkkür edir, boyu təyinatına görə dəyişir.",
       "follow_alert": "Hər yeni izləyicini göstərir",
       "subscribe_alert": "Hər yeni abunəçini göstərir",
@@ -4940,14 +4941,16 @@
       "poll": "Canlı sorğunuz, hər bir seçim üçün səs düyməsi ilə",
       "spin_wheel": "Qaydalarınızdakı təkərlərin fırlandığı yer",
       "subathon_timer": "Hədiyyələr, izləmələr və abunələrlə geri atılan bir sayğı",
-      "points_board": "İzləmə və hədiyyə ilə qazandıqları xallar üzrə sizin ən yaxşı izləyiciləriniz"
+      "points_board": "İzləmə və hədiyyə ilə qazandıqları xallar üzrə sizin ən yaxşı izləyiciləriniz",
+      "streamer_level": "Profilinizdən axın səviyyəsi və həftəlik zolağınız",
+      "tip_jar": "Ödənişli hədiyyələrin daxil olduğu banka"
     },
     "fields": {
-      "showStreak": "Həftəlik zolağı göstər",
       "style": "Üslub",
       "celebration": "Qeyd",
       "banner": "Banner",
       "minAmount": "Göstərmək üçün ən kiçik ipucu (DHB)",
+      "showStreak": "Həftəlik zolağı göstər",
       "showMessage": "İpucu mesajını göstər",
       "confirmedOnly": "Yalnız ödəniş təsdiq edildikdən sonra",
       "confirmedOnlyHint": "Zəncir üçün bir neçə saniyə gözləmək lazımdır, odur ki, heç vaxt ödənilməyən ipucu heç vaxt görünmür.",
