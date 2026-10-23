@@ -46,6 +46,7 @@ export async function searchNFTs(params: SearchNFTsParams = {}): Promise<Paginat
     sortBy,
     sortOrder,
     category: params.category,
+    range: params.range,
     minter: params.creator_id,
     postType: params.postType,
     search: params.search,

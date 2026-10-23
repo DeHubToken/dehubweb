@@ -354,6 +354,8 @@ export interface SearchNFTsParams {
   unit?: number;
   category?: string;
   sortMode?: "new" | "popular" | "trending" | "by-comments" | "by-tips";
+  /** Only posts created inside this window (the server's /feed `range`). */
+  range?: "day" | "week" | "month" | "year";
   creator_id?: string;
   postType?: string;
   search?: string;
