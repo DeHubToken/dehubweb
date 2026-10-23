@@ -60,3 +60,26 @@ Deno.test('approval rejects altered arguments and accepts equivalent JSON key or
   await controlledAction(db, { id: 'agent' }, 'dehub_comment', { token_id: '1', content: 'Hello' }, call, 'receipt');
   assertEquals(calls, 1); assertEquals(rows.ai_agent_receipts[0].status, 'succeeded');
 });
+import { alertWebhook, moderationSchema, reversalLabel } from './workspace-actions.ts';
+
+Deno.test('external alerts accept only fixed Discord webhook destinations', () => {
+  for (const url of ['', 'https://discord.com/api/webhooks/123/abc_DEF-123']) {
+    if (!alertWebhook.safeParse(url).success) throw new Error('Valid webhook rejected');
+  }
+  for (const url of ['http://discord.com/api/webhooks/123/token', 'https://discord.com.evil.test/api/webhooks/123/token', 'https://127.0.0.1/api/webhooks/123/token', 'https://discord.com/api/webhooks/123/token?wait=true', 'https://discord.com/api/webhooks/123/../other']) {
+    if (alertWebhook.safeParse(url).success) throw new Error('Untrusted destination accepted');
+  }
+});
+
+Deno.test('reversal eligibility excludes uncertain, repeated and unsupported actions', () => {
+  const receipt = { tool: 'dehub_post_create', status: 'succeeded', result: { post: { token_id: 42 } } };
+  if (!reversalLabel(receipt)) throw new Error('Published post missing correction');
+  for (const patch of [{ status: 'uncertain' }, { rollback_status: 'executing' }, { rollback_status: 'uncertain' }, { result: { skipped: true } }, { tool: 'dehub_update_profile' }]) {
+    if (reversalLabel({ ...receipt, ...patch })) throw new Error('Unsafe correction offered');
+  }
+});
+
+Deno.test('moderation validates specific stream, wallet and bounded timeout', () => {
+  if (!moderationSchema.seconds.safeParse(300).success || moderationSchema.seconds.safeParse(3601).success || moderationSchema.seconds.safeParse(0).success) throw new Error('Invalid timeout bounds');
+  if (moderationSchema.token_id.safeParse('../admin').success || moderationSchema.target_wallet.safeParse('someone').success) throw new Error('Invalid moderation target');
+});
