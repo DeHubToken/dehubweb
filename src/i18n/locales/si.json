@@ -3030,6 +3030,7 @@
     "shopAllowanceUsed": "{{allowance}} න් {{allowance}} භාවිතා කරන ලදී. ඉහළ බැජ් එකක් සහ තවත් ස්ලොට් එකක් සඳහා වැඩි DeHub ටෝකන කොටස් කරන්න."
   },
   "stages": {
+    "allStages": "සියලුම ශ්‍රව්‍ය කාමර",
     "title": "ශ්‍රව්‍ය කාමර",
     "tabLive": "සජීවී",
     "tabUpcoming": "ඉදිරියට එන",

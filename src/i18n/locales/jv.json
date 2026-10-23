@@ -3027,6 +3027,7 @@
     "shopAllowanceUsed": "{{allowance}} saka {{allowance}} digunakake. Stake token DeHub luwih akeh kanggo badge sing luwih dhuwur lan slot liyane."
   },
   "stages": {
+    "allStages": "Kabeh ruang swara",
     "title": "Ruang swara",
     "tabLive": "Live",
     "tabUpcoming": "Akan datang",

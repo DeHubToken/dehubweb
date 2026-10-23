@@ -2996,6 +2996,7 @@
     "shopAllowanceUsed": "{{allowance}} ካብ {{allowance}} ተጠቒሙ። ንላዕሊ ባጅን ካልኣይ ቦታን ብምስላፍ DeHub ቶክን ብዝበለጸ ሰልፍ።"
   },
   "stages": {
+    "allStages": "ኩሎም ናይ ድምጺ ክፍልታት",
     "title": "ናይ ድምጺ ክፍልታት",
     "tabLive": "ህያው",
     "tabUpcoming": "ዝመጽእ",

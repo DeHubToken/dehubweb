@@ -3049,6 +3049,7 @@
     "shopAllowanceUsed": "{{allowance}} میں سے {{allowance}} استعمال ہوا۔ اعلیٰ بیج اور ایک اور سلاٹ کے لیے مزید DeHub ٹوکنز اسٹیک کریں۔"
   },
   "stages": {
+    "allStages": "تمام آڈیو رومز",
     "title": "آڈیو رومز",
     "tabLive": "لائیو",
     "tabUpcoming": "آنے والا",

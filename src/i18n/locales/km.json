@@ -3042,6 +3042,7 @@
     "shopAllowanceUsed": "{{allowance}} នៃ {{allowance}} បានប្រើ ។ ចាក់ថូខឹន DeHub បន្ថែមទៀតសម្រាប់ផ្លាកសញ្ញាកាន់តែខ្ពស់ និងរន្ធផ្សេងទៀត ។"
   },
   "stages": {
+    "allStages": "បន្ទប់សំឡេងទាំងអស់",
     "title": "បន្ទប់សំឡេង",
     "tabLive": "ផ្សាយផ្ទាល់",
     "tabUpcoming": "ខាងមុខ",

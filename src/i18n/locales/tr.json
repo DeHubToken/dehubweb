@@ -3829,6 +3829,7 @@
     "shopAllowanceUsed": "{{allowance}} / {{allowance}} kullanıldı. Daha yüksek bir rozet ve başka bir yuva için daha fazla DeHub jetonu stake edin."
   },
   "stages": {
+    "allStages": "Tüm sesli odalar",
     "title": "Sesli odalar",
     "tabLive": "Canlı",
     "tabUpcoming": "Yaklaşan",

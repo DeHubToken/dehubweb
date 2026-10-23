@@ -2992,6 +2992,7 @@
     "shopAllowanceUsed": "{{allowance}} a {{allowance}} -ból használva. Stakeljen több DeHub tokent egy magasabb jelvényért és egy újabb slotért."
   },
   "stages": {
+    "allStages": "Összes hangszoba",
     "title": "Hangszobák",
     "tabLive": "Élő",
     "tabUpcoming": "Közelgő",

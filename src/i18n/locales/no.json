@@ -3045,6 +3045,7 @@
     "shopAllowanceUsed": "{{allowance}} av {{allowance}} brukt. Stak mer DeHub-tokens for et høyere badge og en annen plass."
   },
   "stages": {
+    "allStages": "Alle lydrom",
     "title": "Lydrom",
     "tabLive": "Bo",
     "tabUpcoming": "Kommende",

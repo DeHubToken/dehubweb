@@ -3034,6 +3034,7 @@
     "shopAllowanceUsed": "{{allowance}} له {{allowance}} څخه کارول شوي. د لوړ بیج (badge) او بل سلاټ (slot) لپاره نور ډی هب (DeHub) توکونه سټیک (stake) کړئ."
   },
   "stages": {
+    "allStages": "ټولې غږيزې خونې",
     "title": "غږيزې خونې",
     "tabLive": "په ژوندۍ ب Liveه",
     "tabUpcoming": "د راتلونکي په اړه",

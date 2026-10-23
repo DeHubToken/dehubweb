@@ -4022,6 +4022,7 @@
     "shopAllowanceUsed": "{{allowance}} van {{allowance}} gebruikt. Stake meer DeHub tokens voor een hogere badge en een extra slot."
   },
   "stages": {
+    "allStages": "Alle audioruimtes",
     "title": "Audioruimtes",
     "tabLive": "Live",
     "tabUpcoming": "Aankomend",

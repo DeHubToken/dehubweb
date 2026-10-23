@@ -3037,6 +3037,7 @@
     "shopAllowanceUsed": "{{allowance}} ၏ {{allowance}} ကို အသုံးပြုပြီးပါပြီ။ ပိုမိုမြင့်မားသော badge နှင့် အခြား slot တစ်ခုအတွက် DeHub တိုကင်များကို ပိုမို stake လုပ်ပါ။"
   },
   "stages": {
+    "allStages": "အသံခန်းအားလုံး",
     "title": "အသံခန်းများ",
     "tabLive": "တိုက်ရိုက်",
     "tabUpcoming": "လာမည့်",
