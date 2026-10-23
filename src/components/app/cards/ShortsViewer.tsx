@@ -98,6 +98,8 @@ import { setVoteCache, getVoteCache } from '@/lib/vote-cache';
 import { getVideoPreferences, getPlaybackRateFor, setPlaybackRate as vpSetPlaybackRate, PLAYBACK_RATES, formatRate, useMediaMuted } from '@/lib/video-preferences';
 import { videoPlaybackManager } from '@/lib/video-playback-manager';
 import { createWheelGesture } from '@/lib/wheel-gesture';
+import { completesSwipeBack } from '@/lib/swipe-back';
+import { useAnyOverlayOpen } from '@/lib/overlay-open';
 import { lockBodyScroll } from '@/lib/body-scroll-lock';
 import { UserMentionDropdown } from '@/components/app/mentions';
 import { usePostLinkCopyCount, useLinkCopyFloor, useTrackPostLinkCopy } from '@/hooks/use-link-copy-count';
@@ -332,6 +334,9 @@ const PAUSE_ZONE_END = 2 / 3;
 // its whole run. Long enough to read who posted it, short enough that the
 // video is unobstructed for most of its length.
 const AUTO_HIDE_MS = 3000;
+
+/** How far in from the left edge a swipe-back may start (the shell uses 28). */
+const EDGE_SWIPE_ZONE_PX = 32;
 
 // The same idea on desktop, where there is a pointer to key off: the chrome
 // clears once the mouse has been still for this long, and the moment it leaves
@@ -1134,17 +1139,46 @@ export function ShortsViewer({ shorts, initialIndex, onClose, onLoadMore, hasMor
   // that is no longer on the page.
   useEffect(() => () => releaseMediaSession(instanceId), [instanceId]);
 
+  /**
+   * Swipe back: a drag that starts at the left edge and runs right closes the
+   * viewer, back to the tab it was opened from. The shell's own swipe-back
+   * (useSwipeBack) is told to ignore the viewer, because it clicks the last
+   * visible back control and this one fades out with the chrome, which would
+   * leave it pressing the page's back button underneath instead.
+   *
+   * Only sideways travel counts, so the vertical flick between shorts and the
+   * tap ladder on the video are untouched: both give up on a horizontal move.
+   */
+  const anyOverlayOpen = useAnyOverlayOpen();
+  const edgeSwipe = useRef<{ id: number; x: number; y: number; at: number } | null>(null);
+  const swipeDirection = typeof document !== 'undefined' && document.documentElement.dir === 'rtl' ? -1 : 1;
+
   // Prevent touch events from bubbling to parent page
   const handleTouchStart = (e: React.TouchEvent) => {
     e.stopPropagation();
+    edgeSwipe.current = null;
+    if (!isMobile || showComments || anyOverlayOpen || e.touches.length !== 1) return;
+    const touch = e.touches[0];
+    const edge = swipeDirection < 0 ? window.innerWidth - touch.clientX : touch.clientX;
+    if (edge < 0 || edge > EDGE_SWIPE_ZONE_PX) return;
+    edgeSwipe.current = { id: touch.identifier, x: touch.clientX, y: touch.clientY, at: performance.now() };
   };
 
   const handleTouchMove = (e: React.TouchEvent) => {
     e.stopPropagation();
+    if (e.touches.length !== 1) edgeSwipe.current = null;
   };
 
   const handleTouchEnd = (e: React.TouchEvent) => {
     e.stopPropagation();
+    const origin = edgeSwipe.current;
+    edgeSwipe.current = null;
+    if (!origin) return;
+    const touch = Array.from(e.changedTouches).find(t => t.identifier === origin.id);
+    if (!touch) return;
+    const dx = (touch.clientX - origin.x) * swipeDirection;
+    const elapsed = Math.max(1, performance.now() - origin.at);
+    if (completesSwipeBack(dx, touch.clientY - origin.y, dx / elapsed * 1000)) onClose();
   };
 
   // Overlay hide/show gesture handlers - integrated with drag system
@@ -1380,6 +1414,8 @@ export function ShortsViewer({ shorts, initialIndex, onClose, onLoadMore, hasMor
       // becomes the white page instead of letting the feed show through.
       data-media-full={isMobile ? '' : undefined}
       data-shorts-viewer
+      // The viewer runs its own swipe-back; see handleTouchStart.
+      data-swipe-back-ignore={isMobile ? '' : undefined}
       className={cn("fixed inset-0 z-[60] flex items-center justify-center", isMobile ? "bg-black" : "bg-black/60 backdrop-blur-[24px]")}
       // `overscroll-behavior: contain` stops scroll-chaining/rubber-banding
       // without the `touch-action: none` that used to freeze the comments
