@@ -37,6 +37,8 @@ import { supabase } from '@/integrations/supabase/client';
 import { dehubLinkFor } from '@/lib/dehub-links';
 import { toast } from 'sonner';
 import type { AudioSpace } from '@/types/audio-spaces.types';
+import { viewerShareUrl } from '@/lib/share-url';
+import { trackShare } from '@/lib/analytics';
 
 /** 8 MB — a cover is decoration, not an upload feature. */
 const MAX_COVER_BYTES = 8 * 1024 * 1024;
@@ -184,7 +186,8 @@ export function ScheduleStagePanel({
         <Button
           variant="ghost"
           onClick={() => {
-            navigator.clipboard.writeText(link).then(
+            trackShare('copy_link', { kind: 'stage' });
+            navigator.clipboard.writeText(viewerShareUrl(link)).then(
               () => toast.success(t('stages.linkCopied')),
               () => toast.error(t('stages.couldNotCopyLink')),
             );

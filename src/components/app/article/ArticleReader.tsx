@@ -10,6 +10,8 @@ import Share2 from "@/components/ui/cut-icons/feedshare";
 
 import { articleHeadings, articleReadingMinutes } from '@/lib/article';
 import { ArticleBody } from './ArticleBody';
+import { viewerShareUrl } from '@/lib/share-url';
+import { trackShare } from '@/lib/analytics';
 
 type TextSize = 's' | 'm' | 'l';
 const SIZE_KEY = 'dehub.article.size';
@@ -97,13 +99,19 @@ export function ArticleReader({ title, body, coverUrl, createdAt, children, shar
   };
 
   const share = async () => {
+    const url = viewerShareUrl(shareUrl);
     try {
-      if (navigator.share) { await navigator.share({ title: title || undefined, url: shareUrl }); return; }
+      if (navigator.share) {
+        await navigator.share({ title: title || undefined, url });
+        trackShare('native', { kind: 'article' });
+        return;
+      }
     } catch (e) {
       if ((e as Error)?.name === 'AbortError') return;
     }
     try {
-      await navigator.clipboard.writeText(shareUrl);
+      await navigator.clipboard.writeText(url);
+      trackShare('copy_link', { kind: 'article' });
       toast.success(t('articles.linkCopied', 'Link copied'));
     } catch {
       toast.error(t('articles.linkCopyFailed', "Couldn't copy the link"));

@@ -425,7 +425,13 @@ function AppContent() {
   useEffect(() => {
     if (!wallet || !isAuthenticated || requiresUsername || isConnecting || isProcessingRedirect) return;
     import("@/lib/affiliate").then(m => m.attributeReferralIfPending(wallet)).catch(() => undefined);
+    import("@/lib/growth-session").then(m => m.syncGrowthSession(wallet)).catch(() => undefined);
   }, [wallet, isAuthenticated, requiresUsername, isConnecting, isProcessingRedirect]);
+
+  // Share attribution and PostHog follow sign-out too (src/lib/growth-session.ts).
+  useEffect(() => {
+    if (!wallet || !isAuthenticated) import("@/lib/growth-session").then(m => m.syncGrowthSession(null)).catch(() => undefined);
+  }, [wallet, isAuthenticated]);
 
   return (
     <>
