@@ -22,7 +22,7 @@ import type { ProfileData } from '@/hooks/use-dehub-profile';
 import { LendBadgeRows } from './LendBadgeRows';
 import { viewerShareUrl } from '@/lib/share-url';
 import { trackShare } from '@/lib/analytics';
-import { profileFeedUrl } from '../../../../server/rss-feeds.js';
+import { profileFeedUrl } from '@/lib/profile-feed-url';
 
 interface ProfileOptionsDrawerProps {
   profile: ProfileData;
@@ -70,7 +70,7 @@ export function ProfileOptionsContent({
 
   // A private account has no feed: the worker answers its .rss with a 404.
   const handleCopyRssFeed = () => {
-    navigator.clipboard.writeText(profileFeedUrl('https://dehub.io', profile.handle));
+    navigator.clipboard.writeText(profileFeedUrl(profile.handle));
     trackShare('copy_link', { kind: 'profile_rss' });
     toast.success(t('profileOptions.rssFeedCopied'));
     setShareSheetOpen(false);
