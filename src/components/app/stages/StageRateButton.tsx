@@ -42,6 +42,7 @@ export function StageRateButton({
 
   return (
     <span
+      data-glass-playback-control
       role="button"
       tabIndex={0}
       aria-label={_copy("copy.9bf75671f22f", { defaultValue: "Playback speed {{value1}}", value1: label })}

@@ -102,6 +102,8 @@ import {
   reactionMeta,
   reconcileReactionCounts,
   resolveThumbReaction,
+  resolveThumbCount,
+  dislikesOutnumberLikes,
   type PostReaction,
   type ReactionCounts,
 } from '@/lib/reactions';
@@ -491,8 +493,9 @@ const CommentItem = memo(function CommentItem({ comment, tokenId, onLike, onShow
     ? null
     : comment.myReaction ?? (comment.isDisliked ? 'dislike' : null);
   const leadReaction = isOwnComment
-    ? null
+    ? (dislikesOutnumberLikes(comment.reactionCounts) ? 'dislike' : null)
     : resolveThumbReaction(comment.reactionCounts, myHeldReaction);
+  const thumbCount = resolveThumbCount(comment.likes, comment.dislikes ?? 0, leadReaction);
 
   return (
     <motion.div
@@ -751,7 +754,7 @@ const CommentItem = memo(function CommentItem({ comment, tokenId, onLike, onShow
                 ) : (
                   <ThumbsUp className={cn(COMMENT_ICON_CLASS.like, !isOwnComment && comment.isLiked && "fill-current")} />
                 )}
-                {(comment.likes > 0 || isOwnComment) && <span className="text-xs">{comment.likes}</span>}
+                {(thumbCount > 0 || isOwnComment) && <span className="text-xs">{thumbCount}</span>}
               </button>
             </span>
             {/* Every comment is replyable, replies included — threads nest without limit. */}

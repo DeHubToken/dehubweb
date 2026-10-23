@@ -240,7 +240,11 @@ function FeePaymentStep({
       toast.success(dhbText(`Paid ${amount.toLocaleString()} DHB — opening chat! 🎉`), { id: 'dm-fee-gate' });
       // Paying to unlock DMs already makes the per-message cost explicit —
       // don't make them click through the same warning again in the thread.
-      localStorage.setItem(DM_FEE_WARNING_SEEN_KEY, '1');
+      try {
+        localStorage.setItem(DM_FEE_WARNING_SEEN_KEY, '1');
+      } catch {
+        /* already paid — never block opening the chat */
+      }
       onPaid(messageText.trim(), txHash);
     } catch (error: unknown) {
       console.error('[NewConversationModal] Payment failed:', error);

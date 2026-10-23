@@ -50,11 +50,15 @@ import {
   useSubmitGovernanceProposal,
   useVoteGovernanceProposal,
   useSelfVoteWeight,
+  useExplainCannotVote,
+  uploadProposalMedia,
   BADGE_VOTE_WEIGHT,
   type GovernanceSort,
   type GovernanceProposal,
+  type ProposalMedia as ProposalMediaValue,
 } from '@/hooks/use-governance';
 import { ProposalDiscussion } from '@/components/app/governance/ProposalDiscussion';
+import { ProposalMedia } from '@/components/app/governance/ProposalMedia';
 import { z } from 'zod';
 
 type PageTab = 'proposals' | 'passed' | 'rejected';
@@ -167,6 +171,7 @@ function GovernanceCard({
         <div className="pt-1 space-y-2">
           <TranslatableText publicContent text={proposal.title} className="text-white font-semibold text-sm leading-tight" as="h3" hideControls />
           <TranslatableText publicContent text={proposal.description} className="text-zinc-400 text-sm leading-relaxed" as="p" hideControls />
+          <ProposalMedia url={proposal.media_url} type={proposal.media_type} alt={proposal.title} />
 
         {/* Vote ratio bar */}
         {(() => {
@@ -286,9 +291,28 @@ function SubmitProposalDrawer({
   const { t } = useTranslation();
   const [title, setTitle] = useSurfaceDraft("pages/app/GovernancePage.tsx:title", '');
   const [description, setDescription] = useSurfaceDraft("pages/app/GovernancePage.tsx:description", '');
+  // Uploaded on pick and kept as a draft, so a failed submit keeps it too.
+  const [media, setMedia] = useSurfaceDraft<ProposalMediaValue | null>("pages/app/GovernancePage.tsx:media", null);
+  const [uploading, setUploading] = useState(false);
+  const fileInputRef = useRef<HTMLInputElement>(null);
   const [errors, setErrors] = useState<Record<string, string>>({});
+  const { walletAddress } = useAuth();
+  const { weight: selfWeight } = useSelfVoteWeight();
 
   const submitMutation = useSubmitGovernanceProposal();
+
+  const handlePickMedia = async (file: File | undefined) => {
+    if (!file || !walletAddress) return;
+    setUploading(true);
+    try {
+      setMedia(await uploadProposalMedia(file, walletAddress));
+    } catch (err) {
+      toast.error(err instanceof Error ? err.message : 'Upload failed');
+    } finally {
+      setUploading(false);
+      if (fileInputRef.current) fileInputRef.current.value = '';
+    }
+  };
 
   const proposalSchema = useMemo(() => z.object({
     title: z.string().trim().min(1, t('governance.titleRequired')).max(100, t('governance.titleMaxLength')),
@@ -307,11 +331,12 @@ function SubmitProposalDrawer({
     }
     setErrors({});
     submitMutation.mutate(
-      { title: result.data.title, description: result.data.description },
+      { title: result.data.title, description: result.data.description, media },
       {
         onSuccess: () => {
           setTitle.complete(title, '');
           setDescription.complete(description, '');
+          setMedia.complete(media, null);
           onOpenChange(false);
         },
       }
@@ -320,7 +345,9 @@ function SubmitProposalDrawer({
 
   return (
     <Drawer open={open} onOpenChange={onOpenChange}>
-      <DrawerContent column className="bg-black/60 backdrop-blur-[24px] border-white/10 max-h-[85dvh]">
+      {/* scrollable: with an attachment the form outgrows the sheet, and the
+          submit button sat below the fold with no way to reach it. */}
+      <DrawerContent column scrollable className="bg-black/60 backdrop-blur-[24px] border-white/10 max-h-[85dvh]">
         <DrawerHeader className="relative">
           <DrawerTitle className="text-white text-lg font-bold">{t('governance.submitProposal')}</DrawerTitle>
           <button
@@ -364,9 +391,48 @@ function SubmitProposalDrawer({
             </div>
           </div>
 
+          <div>
+            <input
+              ref={fileInputRef}
+              type="file"
+              accept="image/*,video/*"
+              className="hidden"
+              onChange={(e) => handlePickMedia(e.target.files?.[0])}
+            />
+            {media ? (
+              <div className="relative">
+                <ProposalMedia url={media.url} type={media.type} alt={title || 'Proposal attachment'} />
+                <button
+                  type="button"
+                  onClick={() => setMedia(null)}
+                  className="absolute right-2 top-2 w-7 h-7 flex items-center justify-center rounded-lg bg-black/70 text-zinc-300 hover:text-white"
+                  aria-label={t('governance.removeMedia', 'Remove attachment')}
+                >
+                  <X className="w-3.5 h-3.5" />
+                </button>
+              </div>
+            ) : (
+              <button
+                type="button"
+                onClick={() => fileInputRef.current?.click()}
+                disabled={uploading}
+                className="w-full flex items-center justify-center gap-2 rounded-xl border border-dashed border-zinc-700 py-3 text-xs text-zinc-400 hover:text-white hover:border-zinc-500 transition-colors"
+              >
+                {uploading ? <Loader2 className="w-4 h-4 animate-spin" /> : <Plus className="w-4 h-4" />}
+                {t('governance.addMedia', 'Add image or video')}
+              </button>
+            )}
+          </div>
+
+          <p className="text-zinc-500 text-[11px] text-center">
+            {selfWeight > 0
+              ? t('governance.freeForBadgeHolders', 'Free for badge holders. Your draft saves as you type.')
+              : t('governance.proposalFeeNote', 'Proposals cost 10,000 DHB without a staking badge. Your draft saves as you type.')}
+          </p>
+
           <Button
             onClick={handleSubmit}
-            disabled={submitMutation.isPending}
+            disabled={submitMutation.isPending || uploading}
             variant="glass"
             className="w-full rounded-xl font-semibold"
           >
@@ -454,7 +520,8 @@ function InfiniteScrollSentinel({ onIntersect, isFetching }: { onIntersect: () =
 // ──────────────────────────────────────────────────
 function VoteWeightInfo({ badgeBalance, username }: { badgeBalance: number | undefined; username: string | null | undefined }) {
   const { t } = useTranslation();
-  const { weight, badgeName } = useSelfVoteWeight();
+  const { weight, badgeName, lent } = useSelfVoteWeight();
+  const navigate = useNavigate();
   const badgeImageUrl = getBadgeUrl(badgeBalance, username);
   const [showTiers, setShowTiers] = useState(false);
 
@@ -467,7 +534,18 @@ function VoteWeightInfo({ badgeBalance, username }: { badgeBalance: number | und
             {weight > 0 ? (
               <>{t('governance.yourVoteWeight')} <span className="text-white font-bold">{weight}×</span> ({badgeName})</>
             ) : (
-              <span className="text-zinc-500">{t('governance.holdTokensToVote')}</span>
+              <span className="text-zinc-500">
+                {lent
+                  ? t('governance.lentBadgeCantVote')
+                  : t('governance.holdTokensToVote')}{' '}
+                <button
+                  type="button"
+                  onClick={() => navigate('/app/buy')}
+                  className="text-white font-semibold underline underline-offset-2"
+                >
+                  {t('governance.buyDhb', { defaultValue: 'Buy DHB' })}
+                </button>
+              </span>
             )}
           </span>
         </div>
@@ -534,7 +612,8 @@ export default function GovernancePage() {
   const userBadgeBalance = user?.badgeBalance as number | undefined;
   const username = user?.username;
 
-  const { weight: selfWeight, badgeName: selfBadge } = useSelfVoteWeight();
+  const { weight: selfWeight, badgeName: selfBadge, lent: selfLent } = useSelfVoteWeight();
+  const explainCannotVote = useExplainCannotVote();
 
   const handleVote = useCallback(
     (proposalId: string, voteType: 1 | -1, currentVote: number | undefined) => {
@@ -543,12 +622,12 @@ export default function GovernancePage() {
         return;
       }
       if (selfWeight === 0) {
-        toast.error(t('governance.mustHoldTokens'));
+        explainCannotVote(selfLent);
         return;
       }
       voteMutation.mutate({ proposalId, voteType, currentVote, voteWeight: selfWeight, badgeName: selfBadge });
     },
-    [isAuthenticated, openLoginModal, voteMutation, selfWeight, selfBadge, t]
+    [isAuthenticated, openLoginModal, voteMutation, selfWeight, selfBadge, selfLent, explainCannotVote]
   );
 
   const handleSubmitClick = () => {
@@ -646,8 +725,8 @@ export default function GovernancePage() {
           ) : (
             <PageEmpty
               icon="governance"
-              title={t('governance.noProposalsYet')}
-              body={t('governance.beFirstToSubmit')}
+              title={passedCount + rejectedCount > 0 ? t('governance.noOpenProposals', 'No open proposals right now') : t('governance.noProposalsYet')}
+              body={passedCount + rejectedCount > 0 ? t('governance.decidedInTabs', 'Decided proposals are in the Passed and Rejected tabs.') : t('governance.beFirstToSubmit')}
               action={
                 <KitButton onClick={handleSubmitClick}>
                   <Plus className="w-4 h-4" />
