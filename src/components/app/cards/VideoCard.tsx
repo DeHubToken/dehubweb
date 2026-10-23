@@ -53,7 +53,8 @@ const SegmentMarkerDrawer = lazy(() =>
 import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
 import { useQueryClient } from '@tanstack/react-query';
 import MoreVertical from '@/components/ui/cut-icons/morevertical';
-import { ListPlus, Clock, Zap, Ticket, Star, Loader2 } from "lucide-react";
+import { ListPlus, Clock, Zap, Ticket, Star, Loader2, Code } from "lucide-react";
+import { copyPostEmbedCode } from '@/lib/post-embed-code';
 import Eye from "@/components/ui/cut-icons/visibility";
 import Flag from "@/components/ui/cut-icons/report";
 import Ban from "@/components/ui/cut-icons/blocked";
@@ -3326,6 +3327,14 @@ export const VideoCard = memo(function VideoCard({ video, postPage = false, onBa
             >
               <Link2 className="w-5 h-5" /> {t('postOptions.copyLink')}
             </button>
+            {!isContentGated && /^\d+$/.test(String(video.id)) && (
+              <button
+                onClick={() => { copyPostEmbedCode(video.id, t); setShowOptionsDrawer(false); }}
+                className="flex items-center gap-3 px-4 py-3 text-white hover:bg-white/10 rounded-xl transition-colors text-left"
+              >
+                <Code className="w-5 h-5" /> {t('postOptions.copyEmbedCode')}
+              </button>
+            )}
             {!isOwnPost && (
               <button onClick={handleMuteCreator} className="flex items-center gap-3 px-4 py-3 text-white hover:bg-white/10 rounded-xl transition-colors text-left">
                 <VolumeX className="w-5 h-5" /> {t('postOptions.muteCreator')}

@@ -630,6 +630,10 @@
     "dmSent": "{{name}}-a {{amount}} tokenler iberildi!"
   },
   "postOptions": {
+    "embed": "Goýmak",
+    "copyEmbedCode": "Goýma koduny göçür",
+    "embedCodeCopied": "Goýma kody göçürildi",
+    "copyFailed": "Baglanyşygy göçürip bolmady",
     "options": "Saýlawlar",
     "aiOverview": "Görüş",
     "sendTip": "Sylag iber",

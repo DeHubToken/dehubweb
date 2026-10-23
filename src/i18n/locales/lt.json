@@ -628,6 +628,10 @@
     "dmSent": "{{name}} išsiųsta {{amount}} žetonų!"
   },
   "postOptions": {
+    "embed": "Įterpti",
+    "copyEmbedCode": "Kopijuoti įterpimo kodą",
+    "embedCodeCopied": "Įterpimo kodas nukopijuotas",
+    "copyFailed": "Nepavyko nukopijuoti nuorodos",
     "options": "Parinktys",
     "aiOverview": "DI apžvalga",
     "sendTip": "Siųsti arbatpinigius",

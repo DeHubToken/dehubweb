@@ -861,6 +861,9 @@
     "dmSent": "{{name}} adlı kişiye {{amount}} jeton gönderildi!"
   },
   "postOptions": {
+    "embed": "Yerleştir",
+    "copyEmbedCode": "Yerleştirme kodunu kopyala",
+    "embedCodeCopied": "Yerleştirme kodu kopyalandı",
     "options": "Seçenekler",
     "aiOverview": "Yapay zekaya genel bakış",
     "sendTip": "Bahşiş Gönder",

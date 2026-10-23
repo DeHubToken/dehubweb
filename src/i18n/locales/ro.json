@@ -632,6 +632,10 @@
     "dmSent": "Ați trimis {{amount}} tokenuri către {{name}}!"
   },
   "postOptions": {
+    "embed": "Încorporează",
+    "copyEmbedCode": "Copiază codul de încorporare",
+    "embedCodeCopied": "Codul de încorporare a fost copiat",
+    "copyFailed": "Linkul nu a putut fi copiat",
     "options": "Opțiuni",
     "aiOverview": "Prezentare generală AI",
     "sendTip": "Trimite bacșiș",

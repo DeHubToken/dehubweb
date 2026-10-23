@@ -630,6 +630,10 @@
     "dmSent": "Nandefa {{amount}} tokens ho an'i {{name}}!"
   },
   "postOptions": {
+    "embed": "Ampidiro",
+    "copyEmbedCode": "Adikao ny kaody fampidirana",
+    "embedCodeCopied": "Voadika ny kaody fampidirana",
+    "copyFailed": "Tsy afaka nandika ny rohy",
     "options": "Safidy",
     "aiOverview": "MANDRAKIZAY",
     "sendTip": "Handefa fanomezana",

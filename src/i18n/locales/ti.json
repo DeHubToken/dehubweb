@@ -622,6 +622,10 @@
     "dmSent": "{{amount}} ምልክታት ን{{name}} ተሰዲዱ!"
   },
   "postOptions": {
+    "embed": "ኣእቱ",
+    "copyEmbedCode": "ናይ ምእታው ኮድ ቅዳሕ",
+    "embedCodeCopied": "ናይ ምእታው ኮድ ተቐዲሑ",
+    "copyFailed": "መላግቦ ክቕዳሕ ኣይተኻእለን",
     "options": "ምርጫታት",
     "aiOverview": "ሓፈሻዊ ኣመለኻኽታ AI",
     "sendTip": "ሽልማት ስደድ",

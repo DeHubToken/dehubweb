@@ -630,6 +630,10 @@
     "dmSent": "{{amount}} ቶከኖች ለ{{name}} ተልኳል!"
   },
   "postOptions": {
+    "embed": "አካትት",
+    "copyEmbedCode": "የማካተቻ ኮድ ቅዳ",
+    "embedCodeCopied": "የማካተቻ ኮድ ተቀድቷል",
+    "copyFailed": "አገናኙን መቅዳት አልተቻለም",
     "options": "አማራጮች",
     "aiOverview": "የአይአይ አጠቃላይ እይታ",
     "sendTip": "ጥቆማ ላክ",

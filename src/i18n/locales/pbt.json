@@ -629,6 +629,10 @@
     "dmSent": "{{name}} ته {{amount}} ټوکنونه ولېږل شول!"
   },
   "postOptions": {
+    "embed": "ښخول",
+    "copyEmbedCode": "د ښخولو کوډ کاپي کړئ",
+    "embedCodeCopied": "د ښخولو کوډ کاپي شو",
+    "copyFailed": "لینک کاپي نه شو",
     "options": "اختیارونه",
     "aiOverview": "د عمومي لید لید",
     "sendTip": "ټپ ولیږئ",

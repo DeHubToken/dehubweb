@@ -632,6 +632,10 @@
     "dmSent": "{{amount}} tokens aan {{name}} gestuur!"
   },
   "postOptions": {
+    "embed": "Inbed",
+    "copyEmbedCode": "Kopieer inbedkode",
+    "embedCodeCopied": "Inbedkode gekopieer",
+    "copyFailed": "Kon nie skakel kopieer nie",
     "options": "Opsies",
     "aiOverview": "AI-oorsig",
     "sendTip": "Stuur fooi",

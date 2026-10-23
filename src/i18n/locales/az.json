@@ -630,6 +630,10 @@
     "dmSent": "{{amount}} tokenlər {{name}} üçün göndərildi!"
   },
   "postOptions": {
+    "embed": "Yerləşdir",
+    "copyEmbedCode": "Yerləşdirmə kodunu kopyala",
+    "embedCodeCopied": "Yerləşdirmə kodu kopyalandı",
+    "copyFailed": "Linki kopyalamaq mümkün olmadı",
     "options": "Seçimlər",
     "aiOverview": "AI icmalı",
     "sendTip": "Bəxşiş Göndər",

@@ -632,6 +632,10 @@
     "dmSent": "S'han enviat {{amount}} fitxes a {{name}}!"
   },
   "postOptions": {
+    "embed": "Insereix",
+    "copyEmbedCode": "Copia el codi d'inserció",
+    "embedCodeCopied": "Codi d'inserció copiat",
+    "copyFailed": "No s'ha pogut copiar l'enllaç",
     "options": "Opcions",
     "aiOverview": "Resum de la IA",
     "sendTip": "Enviar propina",

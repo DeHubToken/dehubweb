@@ -630,6 +630,10 @@
     "dmSent": "{{name}} ga {{amount}} tokenlar yuborildi!"
   },
   "postOptions": {
+    "embed": "Joylashtirish",
+    "copyEmbedCode": "Joylashtirish kodini nusxalash",
+    "embedCodeCopied": "Joylashtirish kodi nusxalandi",
+    "copyFailed": "Havolani nusxalab boʻlmadi",
     "options": "Parametrlar",
     "aiOverview": "Sun'iy intellektga umumiy nuqtai nazar",
     "sendTip": "Tip yuborish",

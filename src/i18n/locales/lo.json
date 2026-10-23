@@ -629,6 +629,10 @@
     "dmSent": "ສົ່ງ {{amount}} ໂທເຄັນ ໃຫ້ {{name}} ແລ້ວ!"
   },
   "postOptions": {
+    "embed": "ຝັງ",
+    "copyEmbedCode": "ຄັດລອກໂຄດຝັງ",
+    "embedCodeCopied": "ຄັດລອກໂຄດຝັງແລ້ວ",
+    "copyFailed": "ບໍ່ສາມາດຄັດລອກລິ້ງໄດ້",
     "options": "ຕົວເລືອກ",
     "aiOverview": "ພາບລວມຂອງ AI",
     "sendTip": "ສົ່ງທິບ",

@@ -629,6 +629,10 @@
     "dmSent": "已给 {{name}} 发 {{amount}} 代幣！"
   },
   "postOptions": {
+    "embed": "嵌入",
+    "copyEmbedCode": "复制嵌入代码",
+    "embedCodeCopied": "嵌入代码已复制",
+    "copyFailed": "无法复制链接",
     "options": "选项",
     "sendTip": "送打赏",
     "queue": "排队",

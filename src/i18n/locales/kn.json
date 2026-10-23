@@ -626,6 +626,10 @@
     "dmSent": "{{name}} ಗೆ {{amount}} ಟೋಕನ್‌ಗಳು ಕಳುಹಿಸಲಾಗಿದೆ!"
   },
   "postOptions": {
+    "embed": "ಎಂಬೆಡ್",
+    "copyEmbedCode": "ಎಂಬೆಡ್ ಕೋಡ್ ನಕಲಿಸಿ",
+    "embedCodeCopied": "ಎಂಬೆಡ್ ಕೋಡ್ ನಕಲಾಗಿದೆ",
+    "copyFailed": "ಲಿಂಕ್ ನಕಲಿಸಲು ಸಾಧ್ಯವಾಗಲಿಲ್ಲ",
     "options": "ಆಯ್ಕೆಗಳು",
     "aiOverview": "AI ಅವಲೋಕನ",
     "sendTip": "ಉಡುಗೊರೆ ಕಳುಹಿಸಿ",

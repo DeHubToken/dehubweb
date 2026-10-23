@@ -628,6 +628,10 @@
     "dmSent": "A ti fi {{amount}} àmì ránṣẹ́ sí {{name}}!"
   },
   "postOptions": {
+    "embed": "Fi sinu",
+    "copyEmbedCode": "Daakọ koodu ifisinu",
+    "embedCodeCopied": "A ti daakọ koodu ifisinu",
+    "copyFailed": "Ko ṣee ṣe lati daakọ ọna asopọ naa",
     "options": "Àwọn àṣàyàn",
     "aiOverview": "Àkíyèsí AI",
     "sendTip": "Fi Ẹ̀bùn Ránṣẹ́",

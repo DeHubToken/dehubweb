@@ -511,6 +511,10 @@
     "dmSent": "{{amount}} توکن ji {{name}} re hat şandin!"
   },
   "postOptions": {
+    "embed": "تێخستن",
+    "copyEmbedCode": "کۆدی تێخستن کۆپی بکە",
+    "embedCodeCopied": "کۆدی تێخستن کۆپی کرا",
+    "copyFailed": "نەتوانرا بەستەرەکە کۆپی بکرێت",
     "options": "Vebijêrk",
     "sendTip": "Bexşîş Bişîne",
     "queue": "Rêz",

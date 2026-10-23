@@ -861,6 +861,9 @@
     "dmSent": "تم إرسال {{amount}} عملات إلى {{name}}!"
   },
   "postOptions": {
+    "embed": "تضمين",
+    "copyEmbedCode": "نسخ رمز التضمين",
+    "embedCodeCopied": "تم نسخ رمز التضمين",
     "options": "خيارات",
     "aiOverview": "نظرة عامة على الذكاء الاصطناعي",
     "sendTip": "إرسال إكرامية",

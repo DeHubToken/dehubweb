@@ -616,6 +616,10 @@
     "dmSent": "{{name}} nosūtīti {{amount}} žetoni!"
   },
   "postOptions": {
+    "embed": "Iegult",
+    "copyEmbedCode": "Kopēt iegulšanas kodu",
+    "embedCodeCopied": "Iegulšanas kods nokopēts",
+    "copyFailed": "Neizdevās nokopēt saiti",
     "options": "Opcijas",
     "aiOverview": "MI pārskats",
     "sendTip": "Sūtīt dzeramnaudu",

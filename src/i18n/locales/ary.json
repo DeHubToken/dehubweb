@@ -630,6 +630,10 @@
     "dmSent": "تصيفطو {{amount}} عملات رمزية ل {{name}}!"
   },
   "postOptions": {
+    "embed": "تضمين",
+    "copyEmbedCode": "نسخ كود التضمين",
+    "embedCodeCopied": "تنسخ كود التضمين",
+    "copyFailed": "ما قدرناش ننسخو الرابط",
     "options": "خيارات",
     "aiOverview": "نظرة عامة على الذكاء الاصطناعي",
     "sendTip": "بعت تيب",

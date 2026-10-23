@@ -630,6 +630,10 @@
     "dmSent": "An aika {{amount}} tokens ga {{name}}!"
   },
   "postOptions": {
+    "embed": "Saka",
+    "copyEmbedCode": "Kwafi lambar sakawa",
+    "embedCodeCopied": "An kwafi lambar sakawa",
+    "copyFailed": "Ba a iya kwafi hanyar haɗin ba",
     "options": "Zaɓuɓɓuka",
     "aiOverview": "AI bayyani",
     "sendTip": "Aika Kyauta",

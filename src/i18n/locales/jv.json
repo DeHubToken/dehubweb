@@ -630,6 +630,10 @@
     "dmSent": "Ngirim {{amount}} token menyang {{name}}!"
   },
   "postOptions": {
+    "embed": "Lebokake",
+    "copyEmbedCode": "Salin kode lebokan",
+    "embedCodeCopied": "Kode lebokan wis disalin",
+    "copyFailed": "Ora bisa nyalin pranala",
     "options": "Opsi",
     "aiOverview": "Ringkesan AI",
     "sendTip": "Kirim Hadiah",

@@ -634,6 +634,10 @@
     "dmSent": "{{name}}님에게 {{amount}} DHB를 보냈어요!"
   },
   "postOptions": {
+    "embed": "퍼가기",
+    "copyEmbedCode": "퍼가기 코드 복사",
+    "embedCodeCopied": "퍼가기 코드가 복사되었습니다",
+    "copyFailed": "링크를 복사할 수 없습니다",
     "options": "옵션",
     "aiOverview": "AI 개요",
     "sendTip": "팁 보내기",
