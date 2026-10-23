@@ -25,14 +25,14 @@ export interface KeywordFilter {
   createdAt: string | null;
 }
 
-export interface KeywordFilterInput {
+export type KeywordFilterInput = {
   phrase?: string;
   wholeWord?: boolean;
   action?: FilterAction;
   contexts?: FilterContext[];
   /** Seconds from now; null for no expiry. Absent leaves an edit's expiry alone. */
   expiresIn?: number | null;
-}
+};
 
 function unwrap<T>(response: any): T {
   if (response && response.status === false) throw new Error(response.error || 'Request failed');
