@@ -158,3 +158,12 @@ describe('discovery', () => {
     expect(WORKER).toContain('type="application/rss+xml" title="${escHtml(`${account.displayName || feedHandle} on DeHub`)}" href="${escHtml(profileFeedUrl(APP_URL, feedHandle))}"');
   });
 });
+
+describe('the client copy of the feed URL', () => {
+  it('matches what the worker advertises', async () => {
+    const { profileFeedUrl: clientFeedUrl } = await import('@/lib/profile-feed-url');
+    for (const handle of ['maldoteth', '@maldoteth', 'mal.eth', 'name with space']) {
+      expect(clientFeedUrl(handle)).toBe(profileFeedUrl('https://dehub.io', handle));
+    }
+  });
+});
