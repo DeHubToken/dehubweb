@@ -9,6 +9,7 @@ import { handleAccountMcp, isAccountMcpRoute } from './server/account-mcp.js';
 import { handleRssFeed, profileFeedUrl, rssFeedRoute } from './server/rss-feeds.js';
 import { profileFieldLinks } from './server/profile-fields.js';
 import { apRelayTarget, handleApRelay } from './server/activitypub-relay.js';
+import { handleMastodonRelay, mastodonRelayTarget } from './server/mastodon-relay.js';
 import { embedRoute, handleEmbedPage, handleOembed, oembedLinkTag } from './server/post-embed.js';
 export { AccountMcpAuth } from './server/account-mcp-auth.js';
 export { EditorPresenceRoom } from './server/editor-presence.ts';
@@ -5742,6 +5743,12 @@ async function handleRequest(request, env, ctx) {
       couldBeProfileSegment(segment, SYSTEM_ROUTES),
     );
     if (apTarget) return handleApRelay(request, apTarget, 'https://api.dehub.io');
+
+    // Mastodon apps signed in to dehub.io (server/mastodon-relay.js): the
+    // client API and the OAuth token endpoints. The approval page itself,
+    // /oauth/authorize, falls through to the SPA.
+    const mastodonTarget = mastodonRelayTarget(pathname);
+    if (mastodonTarget) return handleMastodonRelay(request, mastodonTarget, 'https://api.dehub.io');
   }
 
   // RSS for every profile and hashtag (server/rss-feeds.js). Every UA, and
