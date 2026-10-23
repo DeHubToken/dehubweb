@@ -2,9 +2,9 @@ import { useEffect, useId, useRef } from 'react';
 import { isBackgroundPaused, subscribeBackgroundPaused } from '@/lib/background-gate';
 
 const crystalRibbons = [
-  'M-260 1270C160 500 550 1100 920 430S1420-180 1850-160L1850 130C1390 30 1280 380 1030 700S210 650-100 1360Z',
-  'M-220 520C300 1100 690 570 1010 240S1480-100 1840 110L1850 330C1430 30 1260 200 1080 430S370 1320-260 710Z',
-  'M260-180C660 200 560 360 1020 350S1360 650 1770 620L1780 770C1240 750 1300 430 960 470S540 360 180-120Z',
+  'M-220 1220C160 520 550 1050 940 460S1420-160 1850-80',
+  'M-220 520C300 1100 690 570 1010 240S1480-100 1840 110',
+  'M260-180C660 200 560 360 1020 350S1360 650 1770 620',
 ];
 
 export function GlassBackground() {
@@ -51,7 +51,9 @@ export function GlassBackground() {
         </linearGradient>
         <linearGradient id={`${id}edge`} x2="1" y2="1"><stop stopColor="#fff" stopOpacity=".7"/><stop offset=".3" stopColor="#fff" stopOpacity=".08"/><stop offset=".65" stopColor="#eaffff" stopOpacity=".5"/><stop offset="1" stopColor="#fff" stopOpacity=".08"/></linearGradient>
       </defs>
-      {crystalRibbons.map((d, i) => <path key={i} d={d} fill={`url(#${id}face)`} opacity={i === 2 ? .45 : 1} />)}
+      {crystalRibbons.map((d, i) => <g key={i} opacity={i === 2 ? .3 : 1}>
+        {Array.from({ length: 32 }, (_, layer) => <path key={layer} d={d} stroke={`url(#${id}edge)`} strokeWidth={300 * (1 - layer / 32)} strokeOpacity={.006 + layer * .0005} strokeLinecap="round" />)}
+      </g>)}
     </svg>
   </div></div>;
 }
