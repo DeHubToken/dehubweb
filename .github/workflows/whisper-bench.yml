@@ -1,0 +1,74 @@
+name: Whisper benchmark
+on:
+  push:
+    branches: [whisper-worker]
+    paths:
+      - 'services/whisper/**'
+      - '.github/workflows/whisper-bench.yml'
+env:
+  POSTS: 6326,6792,6104,6327,5636,6563,5869,5508,6525,3652,3947,3923
+  STAGE: 16ad83ec-1472-4d1f-82dc-dc00fe36c9e6
+jobs:
+  run:
+    runs-on: ubuntu-latest
+    timeout-minutes: 150
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - label: small
+            model: small
+            args: --diarize
+          - label: medium
+            model: medium
+            args: --diarize
+          - label: small-novad
+            model: small
+            args: --no-vad
+          - label: large-v3-turbo
+            model: large-v3-turbo
+            args: ''
+    env:
+      WHISPER_MODELS_DIR: ${{ github.workspace }}/models
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - run: sudo apt-get update && sudo apt-get install -y --no-install-recommends ffmpeg
+      - run: pip install -r services/whisper/requirements.txt
+      - name: Diarization models
+        run: |
+          mkdir -p models
+          curl -fsSL https://github.com/k2-fsa/sherpa-onnx/releases/download/speaker-segmentation-models/sherpa-onnx-pyannote-segmentation-3-0.tar.bz2 | tar -xj -C models
+          curl -fsSL -o models/3dspeaker_speech_eres2net_base_sv_zh-cn_3dspeaker_16k.onnx https://github.com/k2-fsa/sherpa-onnx/releases/download/speaker-recongition-models/3dspeaker_speech_eres2net_base_sv_zh-cn_3dspeaker_16k.onnx
+      - run: nproc && lscpu | grep -E 'Model name|^CPU\(s\)' && free -g && pip list 2>/dev/null | grep -iE 'faster|ctranslate|sherpa|onnxruntime'
+      - name: Benchmark
+        working-directory: services/whisper
+        run: |
+          STAGE_ARG=""
+          case "${{ matrix.args }}" in *--diarize*) STAGE_ARG="--stage $STAGE";; esac
+          python bench.py run --model ${{ matrix.model }} --label ${{ matrix.label }} --out ../../${{ matrix.label }}.json --posts $POSTS $STAGE_ARG ${{ matrix.args }}
+      - uses: actions/upload-artifact@v4
+        with:
+          name: bench-${{ matrix.label }}
+          path: ${{ matrix.label }}.json
+  report:
+    needs: run
+    if: always()
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: bench-*
+          merge-multiple: true
+      - run: pip install requests
+      - run: python services/whisper/bench.py combine $(ls *.json) | tee report.md >> "$GITHUB_STEP_SUMMARY"
+      - uses: actions/upload-artifact@v4
+        with:
+          name: bench-report
+          path: report.md
