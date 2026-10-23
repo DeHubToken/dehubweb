@@ -1784,6 +1784,9 @@
     "monthsAgo": "{{count}}ọn gara aga",
     "forLabel": "Maka",
     "againstLabel": "Megide",
+    "lentBadgeCantVote": "A gbazinyere gị baajị gị, ma baajị ị gbazinyere enweghị ike ịtụ vootu. Zụrụ DHB iji nweta baajị nke gị.",
+    "lentBadgeNoVote": "Baajị Lent enweghị ike ịtụ vootu.",
+    "buyDhb": "Zụrụ DHB",
     "discussion": {
       "title": "Mkparịta ụka",
       "intro": "Jụọ ajụjụ ndị na-esochi ma ọ bụ tụlee atụmatụ ahụ tupu ị tụọ vootu.",
@@ -4744,11 +4747,6 @@
     "creatorEarnsDirect": "Ndị debanyere aha na-akwụ ụgwọ na akara ngosi DeHub. Gị òkè ala gị obere akpa mgbe ha debanyere aha, obere n 'elu ikpo okwu ego maka gị baajị tier."
   },
   "liveOverlay": {
-    "level": "Ọkwa {{level}}",
-    "streak_one": "{{count}}-Week streak",
-    "streak_other": "{{count}}-Week streak",
-    "tipJar": "Onyinye ite",
-    "subathon": "Subathon",
     "someone": "Mmadụ",
     "newFollower": "Ọhụrụ na-eso ụzọ: {{name}}",
     "newSubscriber": "Onye debanyere aha ọhụrụ: {{name}}",
@@ -4761,10 +4759,15 @@
     "tipped": "{{name}} zitere onyinye",
     "chatPreview": "Chat ozi egosi ebe a",
     "wheelLanded": "{{name}}spun: {{result}}",
+    "subathon": "Subathon",
     "subathonOver": "Oge agwụla",
     "pointsTitle": "Kasị eguzosi ike n 'ihe na-ekiri",
     "points_one": "{{formatted}} isi",
     "points_other": "{{formatted}} ihe",
+    "level": "Ọkwa {{level}}",
+    "streak_one": "{{count}}-Week streak",
+    "streak_other": "{{count}}-Week streak",
+    "tipJar": "Onyinye ite",
     "poll": {
       "closed": "Votu mechiri emechi",
       "voteFor": "Vote maka {{option}}",
@@ -4932,8 +4935,6 @@
       "join": "Jikọọ"
     },
     "kinds": {
-      "streamer_level": "Streamer larịị",
-      "tip_jar": "Onyinye ite",
       "tip_alert": "NDỤMỌDỤ",
       "follow_alert": "Soro ọkwa",
       "subscribe_alert": "Ịdọ aka ná ntị ndị debanyere aha",
@@ -4953,11 +4954,11 @@
       "poll": "Pọtụfoliyo",
       "spin_wheel": "Atụ ogho wheel",
       "subathon_timer": "Subathon ngụ oge",
-      "points_board": "Ndị na-ekiri na-eguzosi ike n 'ihe"
+      "points_board": "Ndị na-ekiri na-eguzosi ike n 'ihe",
+      "streamer_level": "Streamer larịị",
+      "tip_jar": "Onyinye ite"
     },
     "hints": {
-      "streamer_level": "Gị streamer larịị na kwa izu streak, si gị profaịlụ",
-      "tip_jar": "A ite na-ejuputa dị ka ugwo onyinye na-abata",
       "tip_alert": "Na-eme ememe ọ bụla n 'ọnụ, size ya tier",
       "follow_alert": "Na-egosi ọ bụla ọhụrụ na-eso ụzọ",
       "subscribe_alert": "Na-egosi ọ bụla ọhụrụ ụtụ magazin",
@@ -4977,14 +4978,16 @@
       "poll": "Gị ndụ ntuli aka, na a votu button maka ọ bụla nhọrọ",
       "spin_wheel": "Ebe wiil gị iwu atụ ogho",
       "subathon_timer": "A countdown na onyinye, na-eso na ndenye aha push azụ",
-      "points_board": "Ndị na-ekiri gị n 'elu site na isi site na ikiri na onyinye"
+      "points_board": "Ndị na-ekiri gị n 'elu site na isi site na ikiri na onyinye",
+      "streamer_level": "Gị streamer larịị na kwa izu streak, si gị profaịlụ",
+      "tip_jar": "A ite na-ejuputa dị ka ugwo onyinye na-abata"
     },
     "fields": {
-      "showStreak": "Gosi usoro nke izuụka",
       "style": "Ụdị",
       "celebration": "Ememe",
       "banner": "Banner",
       "minAmount": "Kasị nta n 'ọnụ na-egosi (DHB)",
+      "showStreak": "Gosi usoro nke izuụka",
       "showMessage": "Gosi ozi n 'ọnụ",
       "confirmedOnly": "Naanị mgbe ịkwụ ụgwọ ahụ kwadoro",
       "confirmedOnlyHint": "Na-echere sekọnd ole na ole maka agbụ ahụ, ya mere, ọnụ nke a na-akwụghị ụgwọ apụtaghị ma ọlị.",

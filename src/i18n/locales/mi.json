@@ -1789,6 +1789,9 @@
     "monthsAgo": "{{count}} marama ki muri",
     "forLabel": "ataahua te ra",
     "againstLabel": "Ki te whawhai",
+    "lentBadgeCantVote": "Kei te hoatu e to koutou potae ki a koutou, a e kore e taea e nga potae potae te pōti. Hokona te DHB ki te whiwhi i to koutou ake tohu.",
+    "lentBadgeNoVote": "Kaore e taea e nga rangatira te pooti.",
+    "buyDhb": "Hokona DHB",
     "discussion": {
       "title": "Kōrerorero",
       "intro": "Pātai i ngā pātai whai muri, kōrero rānei i te kaupapa i mua i te pōti.",
@@ -4776,10 +4779,6 @@
     "creatorEarnsDirect": "Ka utua e nga kaiohauru nga tohu DeHub. Ko to koutou wahi whenua i roto i to koutou putea i te wa e rēhita ratou, iti iho i te utu papa mo to koutou taumata badge."
   },
   "liveOverlay": {
-    "level": "Taumata {{level}}",
-    "streak_one": "{{count}} - wiki streak",
-    "streak_other": "{{count}} - wiki streak",
-    "tipJar": "Kohikohinga",
     "someone": "He tangata",
     "newFollower": "Tō muri mai: {{name}}",
     "newSubscriber": "Kaihoko hou: {{name}}",
@@ -4797,6 +4796,10 @@
     "pointsTitle": "Ngā kaitirotiro tino whakapono",
     "points_one": "{{formatted}} tohu",
     "points_other": "{{formatted}} tohu",
+    "level": "Taumata {{level}}",
+    "streak_one": "{{count}} - wiki streak",
+    "streak_other": "{{count}} - wiki streak",
+    "tipJar": "Kohikohinga",
     "poll": {
       "closed": "Kua kati te pōti",
       "voteFor": "Te pōti mō te {{option}}",
@@ -4963,8 +4966,6 @@
       "join": "Hono mai"
     },
     "kinds": {
-      "streamer_level": "Taumata Streamer",
-      "tip_jar": "Kohikohinga",
       "tip_alert": "Whakaaturanga Whakaaturanga",
       "follow_alert": "Te whai i te whakatupato",
       "subscribe_alert": "Whakapā mai",
@@ -4984,11 +4985,11 @@
       "poll": "Pūtea",
       "spin_wheel": "Whero Spin",
       "subathon_timer": "Taima Subathon",
-      "points_board": "Ngā kaitirotiro whakapono"
+      "points_board": "Ngā kaitirotiro whakapono",
+      "streamer_level": "Taumata Streamer",
+      "tip_jar": "Kohikohinga"
     },
     "hints": {
-      "streamer_level": "Ko to taumata rere me te streak wiki, mai i to tohu",
-      "tip_jar": "He potae e whakakii ana i nga taonga utu ka tae mai ki roto",
       "tip_alert": "E whakanui ana i nga tohu katoa, e whakanuia ana ki tona taumata",
       "follow_alert": "Whakaatuhia nga akonga hou katoa",
       "subscribe_alert": "Whakaatuhia nga kaiohauru hou katoa",
@@ -5008,14 +5009,16 @@
       "poll": "To koutou pōti ora, ki te pātene pōti mō ia kōwhiringa",
       "spin_wheel": "Kei hea nga wira i roto i o ture e huri ana",
       "subathon_timer": "He tatauranga whakataha e tukituki whakamuri ana i ngā taonga, whai, me ngā tāpui",
-      "points_board": "Ō ngā kaitirotiro tohu nui i te titiro me te taonga"
+      "points_board": "Ō ngā kaitirotiro tohu nui i te titiro me te taonga",
+      "streamer_level": "Ko to taumata rere me te streak wiki, mai i to tohu",
+      "tip_jar": "He potae e whakakii ana i nga taonga utu ka tae mai ki roto"
     },
     "fields": {
-      "showStreak": "Whakaatu i te whārangi wiki",
       "style": "Kāhua",
       "celebration": "Te whakanui",
       "banner": "Banner",
       "minAmount": "He tohutohu iti rawa hei whakaatu (DHB)",
+      "showStreak": "Whakaatu i te whārangi wiki",
       "showMessage": "Whakaatuhia te karere tohutohu",
       "confirmedOnly": "Anake i muri i te whakamana o te utu",
       "confirmedOnlyHint": "E tatari ana i etahi hēkona mo te mekameka, kia kore ai e puta he tohu e kore e utua.",

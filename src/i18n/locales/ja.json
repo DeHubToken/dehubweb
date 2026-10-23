@@ -1793,6 +1793,9 @@
     "monthsAgo": "{{count}}ヶ月前",
     "forLabel": "のために",
     "againstLabel": "反する",
+    "lentBadgeCantVote": "バッジは貸し出され、貸し出されたバッジは投票できません。DHBを購入して、自分のバッジを獲得しましょう。",
+    "lentBadgeNoVote": "貸し切りバッジは投票できません。",
+    "buyDhb": "DHBを購入",
     "discussion": {
       "title": "ディスカッション",
       "intro": "投票する前に、フォローアップの質問をしたり、提案について話し合ったりしてください。",
@@ -4797,10 +4800,6 @@
     "creatorEarnsDirect": "加入者はDeHubトークンで支払います。購読した瞬間にシェアがウォレットに表示されますが、バッジランクのプラットフォーム手数料は差し引かれます。"
   },
   "liveOverlay": {
-    "level": "レベル{{level}}",
-    "streak_one": "{{count}}週連続",
-    "streak_other": "{{count}}週連続",
-    "tipJar": "ギフトジャー",
     "someone": "誰か",
     "newFollower": "新規フォロワー：{{name}}",
     "newSubscriber": "新規購読者: {{name}}",
@@ -4818,6 +4817,10 @@
     "pointsTitle": "最も忠実な視聴者",
     "points_one": "{{formatted}} ポイント",
     "points_other": "{{formatted}} ポイント",
+    "level": "レベル{{level}}",
+    "streak_one": "{{count}}週連続",
+    "streak_other": "{{count}}週連続",
+    "tipJar": "ギフトジャー",
     "poll": {
       "closed": "投票は終了しました",
       "voteFor": "{{option}}に投票する",
@@ -4985,8 +4988,6 @@
       "join": "参加"
     },
     "kinds": {
-      "streamer_level": "ストリーマーレベル",
-      "tip_jar": "ギフトジャー",
       "tip_alert": "ヒントアラート",
       "follow_alert": "フォローアラート",
       "subscribe_alert": "購読者アラート",
@@ -5006,11 +5007,11 @@
       "poll": "投票",
       "spin_wheel": "ルーレットを回す",
       "subathon_timer": "サバソンタイマー",
-      "points_board": "忠実な視聴者"
+      "points_board": "忠実な視聴者",
+      "streamer_level": "ストリーマーレベル",
+      "tip_jar": "ギフトジャー"
     },
     "hints": {
-      "streamer_level": "プロフィールからのストリーマーのレベルと週連続記録",
-      "tip_jar": "有料ギフトが入るといっぱいになる瓶",
       "tip_alert": "各ティップをそのティアに合わせて祝う",
       "follow_alert": "新しいフォロワーを表示",
       "subscribe_alert": "新しい購読者を表示",
@@ -5030,14 +5031,16 @@
       "poll": "すべてのオプションに投票ボタンが付いたライブ投票",
       "spin_wheel": "ルール内のホイールが回転する場所",
       "subathon_timer": "ギフト、フォロー、購読によって後退するカウントダウン",
-      "points_board": "視聴とギフトによるポイントで上位視聴者"
+      "points_board": "視聴とギフトによるポイントで上位視聴者",
+      "streamer_level": "プロフィールからのストリーマーのレベルと週連続記録",
+      "tip_jar": "有料ギフトが入るといっぱいになる瓶"
     },
     "fields": {
-      "showStreak": "週単位の連続記録を表示",
       "style": "スタイル",
       "celebration": "お祝い",
       "banner": "バナー",
       "minAmount": "表示する最小のヒント（ DHB ）",
+      "showStreak": "週単位の連続記録を表示",
       "showMessage": "チップのメッセージを表示する",
       "confirmedOnly": "支払いが確認された後のみ",
       "confirmedOnlyHint": "チェーンのために数秒待つので、決して支払われないチップは表示されません。",

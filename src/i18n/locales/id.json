@@ -1794,6 +1794,9 @@
     "monthsAgo": "{{count}}bl lalu",
     "forLabel": "Sebagai",
     "againstLabel": "Melawan",
+    "lentBadgeCantVote": "Lencana Anda dipinjamkan kepada Anda, dan lencana yang dipinjamkan tidak dapat memilih. Beli DHB untuk mendapatkan lencana Anda sendiri.",
+    "lentBadgeNoVote": "Lencana yang dipinjamkan tidak dapat memberikan suara.",
+    "buyDhb": "Beli DHB",
     "discussion": {
       "title": "Pembahasan",
       "intro": "Ajukan pertanyaan lanjutan atau diskusikan proposal sebelum Anda memilih.",
@@ -4808,10 +4811,6 @@
     "creatorEarnsDirect": "Pelanggan membayar dalam token DeHub. Bagian Anda masuk ke dompet Anda saat mereka berlangganan, dikurangi biaya platform untuk tingkatan lencana Anda."
   },
   "liveOverlay": {
-    "level": "Level {{level}}",
-    "streak_one": "{{count}}-minggu beruntun",
-    "streak_other": "{{count}}-minggu beruntun",
-    "tipJar": "Guci hadiah",
     "someone": "Seseorang",
     "newFollower": "Pengikut baru: {{name}}",
     "newSubscriber": "Pelanggan baru: {{name}}",
@@ -4829,6 +4828,10 @@
     "pointsTitle": "Penggemar paling setia",
     "points_one": "{{formatted}} poin",
     "points_other": "{{formatted}} poin",
+    "level": "Level {{level}}",
+    "streak_one": "{{count}}-minggu beruntun",
+    "streak_other": "{{count}}-minggu beruntun",
+    "tipJar": "Guci hadiah",
     "poll": {
       "closed": "Voting telah ditutup",
       "voteFor": "Pilih {{option}}",
@@ -4996,8 +4999,6 @@
       "join": "Gabung"
     },
     "kinds": {
-      "streamer_level": "Level streamer",
-      "tip_jar": "Guci hadiah",
       "tip_alert": "Peringatan tip",
       "follow_alert": "Ikuti pemberitahuan",
       "subscribe_alert": "Peringatan pelanggan",
@@ -5017,11 +5018,11 @@
       "poll": "Jajak Pendapat",
       "spin_wheel": "Roda putar",
       "subathon_timer": "Penghitung mundur Subathon",
-      "points_board": "Penggemar setia"
+      "points_board": "Penggemar setia",
+      "streamer_level": "Level streamer",
+      "tip_jar": "Guci hadiah"
     },
     "hints": {
-      "streamer_level": "Level streamer dan beruntun mingguan Anda, dari profil Anda",
-      "tip_jar": "Sebuah toples yang terisi saat hadiah berbayar masuk",
       "tip_alert": "Rayakan setiap tip, ukuran sesuai tingkatannya",
       "follow_alert": "Menampilkan setiap pengikut baru",
       "subscribe_alert": "Menampilkan setiap pelanggan baru",
@@ -5041,14 +5042,16 @@
       "poll": "Jajak pendapat langsung Anda, dengan tombol suara untuk setiap opsi",
       "spin_wheel": "Di mana roda dalam aturan Anda berputar",
       "subathon_timer": "Penghitung mundur yang ditolak oleh hadiah, follow, dan langganan",
-      "points_board": "Penggemar teratas Anda berdasarkan poin dari menonton dan memberikan hadiah"
+      "points_board": "Penggemar teratas Anda berdasarkan poin dari menonton dan memberikan hadiah",
+      "streamer_level": "Level streamer dan beruntun mingguan Anda, dari profil Anda",
+      "tip_jar": "Sebuah toples yang terisi saat hadiah berbayar masuk"
     },
     "fields": {
-      "showStreak": "Tampilkan rentetan mingguan",
       "style": "Gaya",
       "celebration": "Perayaan",
       "banner": "Banner",
       "minAmount": "Tip terkecil untuk ditampilkan (DHB)",
+      "showStreak": "Tampilkan rentetan mingguan",
       "showMessage": "Tampilkan pesan tip",
       "confirmedOnly": "Hanya setelah pembayaran dikonfirmasi",
       "confirmedOnlyHint": "Menunggu beberapa detik untuk rantai, jadi tip yang tidak pernah dibayar tidak pernah muncul.",

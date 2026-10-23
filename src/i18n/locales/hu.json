@@ -1786,6 +1786,9 @@
     "monthsAgo": "{{count}} hónapja",
     "forLabel": "->",
     "againstLabel": "Ellene",
+    "lentBadgeCantVote": "A jelvényedet kölcsönadtuk neked, és a kölcsönadott jelvények nem szavazhatnak. Vásárolj DHB-t, hogy megszerezd a saját jelvényedet.",
+    "lentBadgeNoVote": "A nagyböjti jelvények nem szavazhatnak.",
+    "buyDhb": "Vásároljon DHB-t",
     "discussion": {
       "title": "Megbeszélés",
       "intro": "Szavazás előtt tegyen fel további kérdéseket, vagy vitassa meg az ajánlatot.",
@@ -4739,10 +4742,6 @@
     "creatorEarnsDirect": "Az előfizetők DeHub tokenekben fizetnek. A részvényed az előfizetés pillanatában a pénztárcádba kerül, levonva belőle a jelvényszinted platformdíját."
   },
   "liveOverlay": {
-    "level": "Szint {{level}}",
-    "streak_one": "{{count}}hetes sorozat",
-    "streak_other": "{{count}}hetes sorozat",
-    "tipJar": "Ajándékdoboz",
     "someone": "Valaki",
     "newFollower": "Új követő: {{name}}",
     "newSubscriber": "Új előfizető: {{name}}",
@@ -4760,6 +4759,10 @@
     "pointsTitle": "Leghűségesebb nézők",
     "points_one": "{{formatted}} pont",
     "points_other": "{{formatted}} pont",
+    "level": "Szint {{level}}",
+    "streak_one": "{{count}}hetes sorozat",
+    "streak_other": "{{count}}hetes sorozat",
+    "tipJar": "Ajándékdoboz",
     "poll": {
       "closed": "A szavazás lezárult",
       "voteFor": "Szavazz erre: {{option}}",
@@ -4927,8 +4930,6 @@
       "join": "Adományozás"
     },
     "kinds": {
-      "streamer_level": "Streamer szint",
-      "tip_jar": "Ajándékdoboz",
       "tip_alert": "Tanács-alert",
       "follow_alert": "Követés-alert",
       "subscribe_alert": "Feliratkozó-alert",
@@ -4948,11 +4949,11 @@
       "poll": "Szavazás",
       "spin_wheel": "Centrifugáló kerék",
       "subathon_timer": "Subathon időzítő",
-      "points_board": "Hűséges nézők"
+      "points_board": "Hűséges nézők",
+      "streamer_level": "Streamer szint",
+      "tip_jar": "Ajándékdoboz"
     },
     "hints": {
-      "streamer_level": "A streamer szinted és a heti csíkszámod a profilodból",
-      "tip_jar": "Egy befőttesüveg, ami megtelik, ahogy a fizetett ajándékok beérkeznek",
       "tip_alert": "Üdvözöl minden tippeket, méretük a szintjükhöz igazodva",
       "follow_alert": "Mutatja meg minden új követőt",
       "subscribe_alert": "Mutatja meg minden új feliratkozót",
@@ -4972,14 +4973,16 @@
       "poll": "Élő szavazásod, szavazógombbal minden opcióhoz",
       "spin_wheel": "Ahol a szabályaid kerekei forognak",
       "subathon_timer": "A visszaszámlálás, amely az ajándékokat, a követéseket és az előfizetéseket visszaszorítja",
-      "points_board": "A legjobb nézők pontonként a nézésből és az ajándékozásból"
+      "points_board": "A legjobb nézők pontonként a nézésből és az ajándékozásból",
+      "streamer_level": "A streamer szinted és a heti csíkszámod a profilodból",
+      "tip_jar": "Egy befőttesüveg, ami megtelik, ahogy a fizetett ajándékok beérkeznek"
     },
     "fields": {
-      "showStreak": "Heti sorozat megjelenítése",
       "style": "Stílus",
       "celebration": "Ünnepség",
       "banner": "Banner",
       "minAmount": "Legkisebb megjeleníthető tipp (DHB)",
+      "showStreak": "Heti sorozat megjelenítése",
       "showMessage": "Borravaló üzenetének megjelenítése",
       "confirmedOnly": "Csak a fizetés visszaigazolását követően",
       "confirmedOnlyHint": "Vár néhány másodpercet a láncra, így a soha ki nem fizetett borravaló soha nem jelenik meg.",

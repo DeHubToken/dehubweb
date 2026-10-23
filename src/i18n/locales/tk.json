@@ -1773,6 +1773,9 @@
     "monthsAgo": "{{count}} aý öň",
     "forLabel": "Üçin",
     "againstLabel": "Garşylyk",
+    "lentBadgeCantVote": "Siziň nyşanyňyz size karz berilýär, we karz berlen nyşanlar ses berip bilmeýär. Özüňize nyşan gazanmak üçin DHB satyn alyň.",
+    "lentBadgeNoVote": "Gysga çadyrlar seslenip bilmeýär.",
+    "buyDhb": "DHB satyn al",
     "discussion": {
       "title": "Dawalaşmak",
       "intro": "Siz seslenmezden öň, indiki soraglary beriň ýa-da teklibi gürrüň beriň.",
@@ -4716,10 +4719,6 @@
     "creatorEarnsDirect": "Abonentler DeHub tokensinde töleýärler. Siziň paýyňyz olaryň ýazylan pursadyna çenli pul çuwalyňyzda ýerleşýär, bu bolsa pul çuwalyňyz üçin platformyň tölegini azaltýar."
   },
   "liveOverlay": {
-    "level": "{{level}}",
-    "streak_one": "{{count}}-week streak",
-    "streak_other": "{{count}}-week streak",
-    "tipJar": "Hediýe küýzesi",
     "someone": "Biriniň",
     "newFollower": "Täze şägirdi: {{name}}",
     "newSubscriber": "Täze abonent: {{name}}",
@@ -4734,6 +4733,10 @@
     "pointsTitle": "Wepaly diňleýjiler",
     "points_one": "{{formatted}} nöqtesi",
     "points_other": "{{formatted}} noqtalar",
+    "level": "{{level}}",
+    "streak_one": "{{count}}-week streak",
+    "streak_other": "{{count}}-week streak",
+    "tipJar": "Hediýe küýzesi",
     "poll": {
       "closed": "Saýlama ýapyldy",
       "voteFor": "{{option}} üçin seslen",
@@ -4897,8 +4900,6 @@
       "join": "Gir"
     },
     "kinds": {
-      "streamer_level": "Streamer derejesi",
-      "tip_jar": "Hediýe küýzesi",
       "tip_alert": "Tip Alarm",
       "follow_alert": "Ägä boluň",
       "subscribe_alert": "Abonent duýduryşy",
@@ -4917,11 +4918,11 @@
       "poll": "Poll",
       "spin_wheel": "Garawul diňi",
       "subathon_timer": "Subathon wagtlaýynlaýjy",
-      "points_board": "Wepaly diňleýjiler"
+      "points_board": "Wepaly diňleýjiler",
+      "streamer_level": "Streamer derejesi",
+      "tip_jar": "Hediýe küýzesi"
     },
     "hints": {
-      "streamer_level": "Siziň akmaç derejäňiz we hepdede bir gezek, profilyňyzdan",
-      "tip_jar": "Bir çuwal pully sowgatlar ýaly dolup-daşýar",
       "tip_alert": "Ol her bir çüýreçini, her bir çüýreçini,",
       "follow_alert": "Her täze şägirdi görkez",
       "subscribe_alert": "Ähli täze abonentleri görkez",
@@ -4941,14 +4942,16 @@
       "poll": "Her bir saýlama üçin bir seslenme tugmasy bilen",
       "spin_wheel": "Kanunlaryňyzyň tigirleri nirede döwülýär",
       "subathon_timer": "Hediýeler, yzyna eýermek we ýazylanlary yzyna çekmek",
-      "points_board": "Seniň iň gowy diňleýjileriň seredýän we sowgat berýän ýerleri bilen"
+      "points_board": "Seniň iň gowy diňleýjileriň seredýän we sowgat berýän ýerleri bilen",
+      "streamer_level": "Siziň akmaç derejäňiz we hepdede bir gezek, profilyňyzdan",
+      "tip_jar": "Bir çuwal pully sowgatlar ýaly dolup-daşýar"
     },
     "fields": {
-      "showStreak": "Ýekşenbe güni görkeziň",
       "style": "Şablony",
       "celebration": "Ýatlama",
       "banner": "Banner",
       "minAmount": "Göstermek üçin iň kiçijik maslahat (DHB)",
+      "showStreak": "Ýekşenbe güni görkeziň",
       "showMessage": "Uzaklyk habaryny görkez",
       "confirmedOnly": "Ödeme tassyklanandan soň",
       "confirmedOnlyHint": "Birnäçe saniýede zynjyr üçin garaşyň, şonuň üçin hiç haçan tölenmedik pul asla görünmez.",

@@ -1776,6 +1776,9 @@
     "monthsAgo": "{{count}} м пеш",
     "forLabel": "Барои...",
     "againstLabel": "Бар зидди",
+    "lentBadgeCantVote": "Шиносоҳи шумо ба шумо қарз дода шудааст, ва шиносоҳои қарзӣ наметавонанд овоз диҳанд. DHB-ро харид кунед, то шиносоҳи худро ба даст оред.",
+    "lentBadgeNoVote": "Параметрҳои пайвастшуда овоз дода намешаванд.",
+    "buyDhb": "DHB-ро харид кунед",
     "discussion": {
       "title": "Баҳс",
       "intro": "Саволҳои пайгириро пурсед ё пеш аз овоздиҳӣ муҳокима кунед.",
@@ -4753,10 +4756,6 @@
     "creatorEarnsDirect": "Муштариён дар нишонаҳои DeHub пардохт мекунанд. Заминҳои саҳми шумо дар ҳамёни шумо лаҳзае, ки онҳо обуна мешаванд, камтар ҳаққи платформа барои дараҷаи нишони шумо."
   },
   "liveOverlay": {
-    "level": "Ҳамвор {{level}}",
-    "streak_one": "{{count}} - ҳафта сатр",
-    "streak_other": "{{count}} - ҳафта сатр",
-    "tipJar": "Кӯзаи атои",
     "someone": "Касе",
     "newFollower": "Пайравони нав: {{name}}",
     "newSubscriber": "Муштарии нав: {{name}}",
@@ -4774,6 +4773,10 @@
     "pointsTitle": "Engastor bozorgtar bozorgdodon",
     "points_one": "{{formatted}} nuqtasi",
     "points_other": "{{formatted}} nuqtalar",
+    "level": "Ҳамвор {{level}}",
+    "streak_one": "{{count}} - ҳафта сатр",
+    "streak_other": "{{count}} - ҳафта сатр",
+    "tipJar": "Кӯзаи атои",
     "poll": {
       "closed": "Саркар кардан баст",
       "voteFor": "Барайи {{option}} бара кардан",
@@ -4938,8 +4941,6 @@
       "join": "Ба ҳамроҳ шудан"
     },
     "kinds": {
-      "streamer_level": "Сатҳи стример",
-      "tip_jar": "Кӯзаи атои",
       "tip_alert": "Пораи огоҳӣ",
       "follow_alert": "Огоҳии пайгирӣ",
       "subscribe_alert": "Огоҳии абони",
@@ -4959,11 +4960,11 @@
       "poll": "Назарпурсӣ",
       "spin_wheel": "Чархи чархиш",
       "subathon_timer": "Subathon saniyegar",
-      "points_board": "Engastor bozorgodon"
+      "points_board": "Engastor bozorgodon",
+      "streamer_level": "Сатҳи стример",
+      "tip_jar": "Кӯзаи атои"
     },
     "hints": {
-      "streamer_level": "Сатҳи ҷараён ва сатри ҳафтаинаи шумо, аз профили шумо",
-      "tip_jar": "Name",
       "tip_alert": "Ҳар порсаро, ки ба сатҳи худ мувофиқ аст, нишон медиҳад",
       "follow_alert": "Ҳар пайгирии навро нишон медиҳад",
       "subscribe_alert": "Ҳар абони навро нишон медиҳад",
@@ -4983,14 +4984,16 @@
       "poll": "Интихоби зиндаи шумо, бо тугмаи овоздиҳӣ барои ҳар як вариант",
       "spin_wheel": "Дар куҷо чархҳо дар қоидаҳои шумо чарх мезананд",
       "subathon_timer": "Ko'rib chiquvchilar, taqdim etish va abonentliklar saniyegarni orqaga suradigan saniyegar",
-      "points_board": "Ko'rib chiquvchilar nuqtalariga ko'ra sizning eng yuqori ko'rib chiquvchilaringizni ko'rsatadi."
+      "points_board": "Ko'rib chiquvchilar nuqtalariga ko'ra sizning eng yuqori ko'rib chiquvchilaringizni ko'rsatadi.",
+      "streamer_level": "Сатҳи ҷараён ва сатри ҳафтаинаи шумо, аз профили шумо",
+      "tip_jar": "Name"
     },
     "fields": {
-      "showStreak": "Намоиши сатри ҳарҳафтаина",
       "style": "Стил",
       "celebration": "Ҷашнвораҳо",
       "banner": "Паннер",
       "minAmount": "Маслиҳати хурдтарин барои нишон додан (DHB)",
+      "showStreak": "Намоиши сатри ҳарҳафтаина",
       "showMessage": "Ipakita ang tip na mensahe",
       "confirmedOnly": "Танҳо пас аз тасдиқи пардохт",
       "confirmedOnlyHint": "Naghintay ang ilang segundo para sa zincîra, kaya ang tip na hindi paalagay ay hindi lilitaw.",

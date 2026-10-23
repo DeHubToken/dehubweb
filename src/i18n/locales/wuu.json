@@ -1784,6 +1784,9 @@
     "monthsAgo": "{{count}}个月前",
     "forLabel": "为",
     "againstLabel": "對",
+    "lentBadgeCantVote": "侬个徽章是借给侬个，借来个徽章弗能投票。买DHB来弄自家个徽章。",
+    "lentBadgeNoVote": "Lent 徽章不能投票。",
+    "buyDhb": "买 DHB",
     "discussion": {
       "title": "讨论",
       "intro": "投票前问一些后续问题或者讨论一下这个提议。",
@@ -4361,11 +4364,6 @@
     "creatorEarnsDirect": "订户用DeHub代币支付。一旦他们订阅，您的份额就会立即进入您的钱包，减去您徽章级别的平台费用。"
   },
   "liveOverlay": {
-    "level": "等级{{level}}",
-    "streak_one": "{{count}}周连胜",
-    "streak_other": "{{count}}周连胜",
-    "tipJar": "礼品罐",
-    "subathon": "苏巴吞",
     "someone": "有人",
     "newFollower": "新关注者：{{name}}",
     "newSubscriber": "新订阅者：{{name}}",
@@ -4378,10 +4376,15 @@
     "tipped": "{{name}} 送咱个礼物",
     "chatPreview": "聊天訊息會出現喔",
     "wheelLanded": "{{name}} 吾𠀀{{result}}",
+    "subathon": "苏巴吞",
     "subathonOver": "時間到囉",
     "pointsTitle": "最忠心的觀眾",
     "points_one": "{{formatted}}點",
     "points_other": "{{formatted}}點數",
+    "level": "等级{{level}}",
+    "streak_one": "{{count}}周连胜",
+    "streak_other": "{{count}}周连胜",
+    "tipJar": "礼品罐",
     "poll": {
       "closed": "投票已关闭",
       "voteFor": "投票给{{option}}",
@@ -4519,8 +4522,6 @@
       "join": "加入"
     },
     "kinds": {
-      "streamer_level": "主播级别",
-      "tip_jar": "礼品罐",
       "tip_alert": "打赏提醒",
       "follow_alert": "关注提醒",
       "subscribe_alert": "订阅提醒",
@@ -4540,11 +4541,11 @@
       "poll": "投票",
       "spin_wheel": "旋转转盘",
       "subathon_timer": "Subathon計時器",
-      "points_board": "忠心觀眾"
+      "points_board": "忠心觀眾",
+      "streamer_level": "主播级别",
+      "tip_jar": "礼品罐"
     },
     "hints": {
-      "streamer_level": "您的个人资料中的流媒体播放器级别和每周连续播放次数",
-      "tip_jar": "当有偿礼物进来时，一个罐子会装满",
       "tip_alert": "为每笔打赏庆祝，按等级大小显示",
       "follow_alert": "显示每位新关注者",
       "subscribe_alert": "显示每位新订阅者",
@@ -4564,14 +4565,16 @@
       "poll": "您的实时投票，每个选项都有投票按钮",
       "spin_wheel": "规则中的车轮在哪里旋转",
       "subathon_timer": "一個倒數計時器，讓贈送、追蹤和訂閱推遲倒數",
-      "points_board": "你觀看和贈送中最高的觀眾點數"
+      "points_board": "你觀看和贈送中最高的觀眾點數",
+      "streamer_level": "您的个人资料中的流媒体播放器级别和每周连续播放次数",
+      "tip_jar": "当有偿礼物进来时，一个罐子会装满"
     },
     "fields": {
-      "showStreak": "显示每周连胜记录",
       "style": "样式",
       "celebration": "庆祝",
       "banner": "横幅",
       "minAmount": "最小小费显示（DHB）",
+      "showStreak": "显示每周连胜记录",
       "showMessage": "显示小费信息",
       "confirmedOnly": "仅在付款确认后",
       "confirmedOnlyHint": "等待几秒钟链路，所以从未付款的小费不会出现。",
