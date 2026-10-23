@@ -58,6 +58,7 @@ import {
   type ProposalMedia as ProposalMediaValue,
 } from '@/hooks/use-governance';
 import { ProposalDiscussion } from '@/components/app/governance/ProposalDiscussion';
+import { useProposalShare } from '@/components/app/governance/useProposalShare';
 import { ProposalMedia } from '@/components/app/governance/ProposalMedia';
 import { z } from 'zod';
 
@@ -103,6 +104,7 @@ function GovernanceCard({
   const isMobile = useIsMobile();
   const navigate = useNavigate();
 
+  const share = useProposalShare(proposal);
   const cachedAvatar = useProfileAvatar(proposal.author_wallet_address);
   const avatarUrl = proposal.author_avatar
     ? buildAvatarUrl(proposal.author_wallet_address, proposal.author_avatar)
@@ -216,7 +218,9 @@ function GovernanceCard({
             commentCount={proposal.comment_count}
             voteWeight={userWeight}
             disabled={voteDisabled || votingClosed}
+            {...share.actionBarProps}
           />
+          {share.quoteComposer}
         </div>
 
         {/* Comments Section */}
