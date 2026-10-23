@@ -1,6 +1,6 @@
 /* Only the first feed audio card needs to clear the floating navigation pill. */
 @media (max-width: 1023px) {
-  [data-cinematic-first] [data-audio-colour]:not([data-audio-fullscreen]) {
+  [data-cinematic-first] [data-audio-volume]:not([data-audio-fullscreen]) {
     left: 0.25rem;
     right: auto;
   }
