@@ -241,7 +241,9 @@ export async function getNotifications(
   limit: number = 30,
   category?: NotificationCategory,
   unreadOnly: boolean = false,
-  types?: string[]
+  types?: string[],
+  /** The notifications the reader's filters held back, instead of the main list. */
+  filtered = false,
 ): Promise<{ items: DeHubNotification[]; totalCount: number; hasMore: boolean }> {
   const params: Record<string, string | number> = {
     page,
@@ -258,6 +260,10 @@ export async function getNotifications(
   // ones) degrades to an unfiltered page rather than an empty one.
   if (types?.length) {
     params.types = types.join(',');
+  }
+
+  if (filtered) {
+    params.filtered = 'true';
   }
 
   const response = await apiCall<NotificationsApiResponse | { result: RawNotification[] } | RawNotification[]>("/api/notification", {
