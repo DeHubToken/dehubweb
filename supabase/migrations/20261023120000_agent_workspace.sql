@@ -21,8 +21,10 @@ CREATE TABLE public.ai_agent_templates (
   name text NOT NULL CHECK (length(name) BETWEEN 1 AND 80),
   prompt text NOT NULL CHECK (length(prompt) BETWEEN 1 AND 4000),
   published boolean NOT NULL DEFAULT false,
+  evaluation jsonb NOT NULL DEFAULT '{}'::jsonb,
   created_at timestamptz NOT NULL DEFAULT now()
 );
+ALTER TABLE public.ai_agent_tasks ADD COLUMN workspace_template_id text;
 CREATE TABLE public.ai_agent_news_cache (
   feed text PRIMARY KEY,
   stories jsonb NOT NULL DEFAULT '[]'::jsonb,
