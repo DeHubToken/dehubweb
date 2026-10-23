@@ -48,7 +48,7 @@ import type { MediaFile, Currency, PostFormState, PostFormActions, PostFormCompu
 import type { FilterSettings, CropSettings } from '../types/filters';
 import type { Draft } from '../components/DraftsSheet';
 import type { TextPost, ImagePost, VideoItem } from '@/types/feed.types';
-import type { DeHubNFT, QuotePolicy } from '@/lib/api/dehub/types';
+import type { DeHubNFT, QuotePolicy, ReplyPolicy } from '@/lib/api/dehub/types';
 import type { PostChainId } from '@/components/app/ChainSelector';
 import { normalizeCategoryList } from '@/lib/category-names';
 import { trackFirstPost } from '@/lib/analytics';
@@ -359,6 +359,8 @@ export function usePostForm(
   const [contentWarning, setContentWarning] = useState<string | null>(null);
   // Who may quote the post. Anyone, unless the creator narrows it.
   const [quotePolicy, setQuotePolicy] = useState<QuotePolicy>('public');
+  // Who may reply. Anyone, unless the creator narrows it.
+  const [replyPolicy, setReplyPolicy] = useState<ReplyPolicy>('public');
   const [isEnhancing, setIsEnhancing] = useState(false);
   const [isPosting, setIsPosting] = useState(false);
   const [uploadProgress, setUploadProgress] = useState(0);
@@ -1216,6 +1218,7 @@ export function usePostForm(
     setPoll.complete(poll, null);
     setContentWarning(null);
     setQuotePolicy('public');
+    setReplyPolicy('public');
     setScheduledDate(null);
     setTitleText.complete(titleText, '');
     // Cleared per post, deliberately. A board is usually specific to what was
@@ -1973,6 +1976,7 @@ export function usePostForm(
           : undefined,
         spoilerText: contentWarning?.trim() || undefined,
         quotePolicy,
+        replyPolicy,
       };
       const uploadWithFile = (percent: number) => setUploadProgress(Math.round(percent * 0.6)); // XHR bytes map to 0-60%
 
@@ -2705,7 +2709,7 @@ export function usePostForm(
     effectiveShouldMint, mintFee, isMature, isForKids,
     selectedCategory, shopLinks, shopListingIds, myPlanIds,
     postQuota?.outstandingDhb, refreshPostQuota, onLiveStreamReady,
-    isQuoting, quotedPost, contentWarning, quotePolicy,
+    isQuoting, quotedPost, contentWarning, quotePolicy, replyPolicy,
     , _copy
   ]);
 
@@ -2740,6 +2744,7 @@ export function usePostForm(
       poll,
       contentWarning,
       quotePolicy,
+      replyPolicy,
       isEnhancing,
       isPosting,
       uploadProgress,
@@ -2781,6 +2786,7 @@ export function usePostForm(
       setPoll,
       setContentWarning,
       setQuotePolicy,
+      setReplyPolicy,
       handleImageSelect,
       handleVideoSelect,
       handleFileDrop,

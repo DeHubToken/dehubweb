@@ -863,6 +863,7 @@ export const PostCard = memo(function PostCard({ post, threadSlot, onOpenComment
             tokenId={post.id}
             initialTab={commentsInitialTab}
             commentsDisabled={!!(post as { commentsDisabled?: boolean }).commentsDisabled}
+            replyPolicy={post.replyPolicy}
             forKids={!!post.forKids}
             postAuthorAddress={threadSlot ? post.author.id : undefined}
           />
@@ -1071,6 +1072,7 @@ export const PostCard = memo(function PostCard({ post, threadSlot, onOpenComment
             currentContentRating={post.contentRating}
             currentSpoilerText={post.spoilerText}
             currentQuotePolicy={post.quotePolicy}
+            currentReplyPolicy={post.replyPolicy}
             currentForKids={post.forKids}
             currentShopLinks={post.shopLinks}
             onSuccess={(edited) => {

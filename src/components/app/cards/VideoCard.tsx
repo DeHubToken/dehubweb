@@ -3276,6 +3276,7 @@ export const VideoCard = memo(function VideoCard({ video, postPage = false, onBa
                 tokenId={video.id}
                 initialTab={commentsInitialTab}
                 commentsDisabled={!!(video as { commentsDisabled?: boolean }).commentsDisabled}
+                replyPolicy={video.replyPolicy}
                 forKids={!!video.forKids}
                 immersive={isImmersive}
               />
@@ -3505,6 +3506,7 @@ export const VideoCard = memo(function VideoCard({ video, postPage = false, onBa
             currentContentRating={video.contentRating}
             currentSpoilerText={video.spoilerText}
             currentQuotePolicy={video.quotePolicy}
+            currentReplyPolicy={video.replyPolicy}
             currentForKids={video.forKids}
             currentShopLinks={video.shopLinks}
             onSuccess={(edited) => {

@@ -382,6 +382,8 @@ function PostModalForAccount({ isOpen, onClose, initialFiles, onFilesProcessed, 
         setIsMature={actions.setIsMature}
         quotePolicy={state.quotePolicy}
         setQuotePolicy={actions.setQuotePolicy}
+        replyPolicy={state.replyPolicy}
+        setReplyPolicy={actions.setReplyPolicy}
         isForKids={state.isForKids}
         setIsForKids={actions.setIsForKids}
         shopLinks={state.shopLinks}
