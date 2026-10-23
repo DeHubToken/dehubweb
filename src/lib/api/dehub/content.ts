@@ -1,4 +1,5 @@
 import { apiCall, authedUpload } from './core';
+import { ResumableUnsupportedError, resumableUpload } from './resumable-upload';
 import type { ContentRating, ShopLink } from './types';
 
 export interface StreamInfo {
@@ -739,12 +740,25 @@ export interface DraftVideoInfo {
  * Upload a video as a draft. Rejects with UploadHttpError on an error status
  * (413 over the tier's size, 400 unreadable, 404/503 when the server has no
  * drafts) and with an AbortError when `signal` fires.
+ *
+ * Sent in resumable chunks, so a dropped connection or a token refresh
+ * carries on from the last chunk the server holds. An API without the
+ * resumable endpoint gets the single multipart request it always did.
  */
-export function createDraftVideo(
+export async function createDraftVideo(
   file: File,
   postType: 'video' | 'short',
   options: { onProgress?: (percent: number) => void; signal?: AbortSignal } = {},
 ): Promise<{ draftId: string; status: DraftVideoStatus }> {
+  try {
+    return await resumableUpload<{ draftId: string; status: DraftVideoStatus }>('/api/draft_video/resumable', file, {
+      metadata: { postType },
+      onProgress: options.onProgress,
+      signal: options.signal,
+    });
+  } catch (error) {
+    if (!(error instanceof ResumableUnsupportedError)) throw error;
+  }
   const formData = new FormData();
   formData.append('postType', postType);
   formData.append('file', file);
