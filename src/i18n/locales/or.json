@@ -627,6 +627,10 @@
     "dmSent": "{{name}} ଙ୍କୁ {{amount}} ଟୋକେନ୍ ପଠାଗଲା!"
   },
   "postOptions": {
+    "embed": "ଏମ୍ବେଡ୍",
+    "copyEmbedCode": "ଏମ୍ବେଡ୍ କୋଡ୍ କପି କରନ୍ତୁ",
+    "embedCodeCopied": "ଏମ୍ବେଡ୍ କୋଡ୍ କପି ହୋଇଛି",
+    "copyFailed": "ଲିଙ୍କ କପି କରିହେଲା ନାହିଁ",
     "options": "ବିକଳ୍ପ",
     "aiOverview": "AI ସଂକ୍ଷିପ୍ତ ଦୃଷ୍ଟିକୋଣ",
     "sendTip": "ଟିପ ପଠାନ୍ତୁ",

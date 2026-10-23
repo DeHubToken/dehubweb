@@ -629,6 +629,10 @@
     "dmSent": "{{amount}} Tokens a {{name}} gschickt!"
   },
   "postOptions": {
+    "embed": "Iibette",
+    "copyEmbedCode": "Iibettigscode kopiere",
+    "embedCodeCopied": "Iibettigscode kopiert",
+    "copyFailed": "Link het nöd chöne kopiert werde",
     "options": "Optione",
     "aiOverview": "KI Übersicht",
     "sendTip": "Trinkgäld schicke",

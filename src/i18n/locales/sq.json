@@ -630,6 +630,10 @@
     "dmSent": "U dërguan {{amount}} tokena te {{name}}!"
   },
   "postOptions": {
+    "embed": "Ngulit",
+    "copyEmbedCode": "Kopjo kodin e ngulitjes",
+    "embedCodeCopied": "Kodi i ngulitjes u kopjua",
+    "copyFailed": "Lidhja nuk mund të kopjohej",
     "options": "Opsionet",
     "aiOverview": "Përmbledhje e AI",
     "sendTip": "Dërgo Bakshish",

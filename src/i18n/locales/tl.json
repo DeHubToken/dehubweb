@@ -677,6 +677,10 @@
     "dmSent": "Naipadala ang {{amount}} tokens kay {{name}}!"
   },
   "postOptions": {
+    "embed": "I-embed",
+    "copyEmbedCode": "Kopyahin ang embed code",
+    "embedCodeCopied": "Nakopya ang embed code",
+    "copyFailed": "Hindi makopya ang link",
     "options": "Mga Opsyon",
     "aiOverview": "Pangkalahatang - ideya ng AI",
     "sendTip": "Magpadala ng Tip",

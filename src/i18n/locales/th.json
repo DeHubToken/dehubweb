@@ -664,6 +664,10 @@
     "dmSent": "ส่ง {{amount}} โทเค็น ให้ {{name}} แล้ว!"
   },
   "postOptions": {
+    "embed": "ฝัง",
+    "copyEmbedCode": "คัดลอกโค้ดฝัง",
+    "embedCodeCopied": "คัดลอกโค้ดฝังแล้ว",
+    "copyFailed": "ไม่สามารถคัดลอกลิงก์ได้",
     "options": "ตัวเลือก",
     "aiOverview": "ภาพรวม AI",
     "sendTip": "ส่งทิป",

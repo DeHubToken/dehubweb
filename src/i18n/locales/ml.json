@@ -628,6 +628,10 @@
     "dmSent": "{{name}}-ന് {{amount}} ടോക്കണുകൾ അയച്ചു!"
   },
   "postOptions": {
+    "embed": "എംബെഡ്",
+    "copyEmbedCode": "എംബെഡ് കോഡ് പകർത്തുക",
+    "embedCodeCopied": "എംബെഡ് കോഡ് പകർത്തി",
+    "copyFailed": "ലിങ്ക് പകർത്താനായില്ല",
     "options": "ഓപ്ഷനുകൾ",
     "aiOverview": "AI അവലോകനം",
     "sendTip": "ടിപ്പ് അയയ്ക്കുക",

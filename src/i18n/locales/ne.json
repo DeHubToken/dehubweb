@@ -630,6 +630,10 @@
     "dmSent": "{{name}} लाई {{amount}} टोकन पठाइयो!"
   },
   "postOptions": {
+    "embed": "इम्बेड",
+    "copyEmbedCode": "इम्बेड कोड कपि गर्नुहोस्",
+    "embedCodeCopied": "इम्बेड कोड कपि भयो",
+    "copyFailed": "लिङ्क कपि गर्न सकिएन",
     "options": "विकल्पहरू",
     "aiOverview": "AI सिंहावलोकन",
     "sendTip": "टिप पठाउनुहोस्",

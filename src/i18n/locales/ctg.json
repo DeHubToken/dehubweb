@@ -664,6 +664,10 @@
     "dmSent": "{{name}} রে {{amount}} টোকেন পাঠাই দিয়ে!"
   },
   "postOptions": {
+    "embed": "এমবেড",
+    "copyEmbedCode": "এমবেড কোড কপি গরো",
+    "embedCodeCopied": "এমবেড কোড কপি অইছে",
+    "copyFailed": "লিংক কপি গরা ন গেল",
     "options": "অপশন",
     "sendTip": "টিপ পাঠাও",
     "queue": "কিউ",

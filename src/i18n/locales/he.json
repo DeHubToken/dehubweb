@@ -632,6 +632,10 @@
     "dmSent": "נשלחו {{amount}} אסימונים ל-{{name}}!"
   },
   "postOptions": {
+    "embed": "הטמעה",
+    "copyEmbedCode": "העתק קוד הטמעה",
+    "embedCodeCopied": "קוד ההטמעה הועתק",
+    "copyFailed": "לא ניתן היה להעתיק את הקישור",
     "options": "אפשרויות",
     "aiOverview": "סקירה כללית על בינה מלאכותית",
     "sendTip": "שלח טיפ",

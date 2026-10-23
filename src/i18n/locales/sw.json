@@ -632,6 +632,10 @@
     "dmSent": "Umetuma {{amount}} tokeni kwa {{name}}!"
   },
   "postOptions": {
+    "embed": "Pachika",
+    "copyEmbedCode": "Nakili msimbo wa kupachika",
+    "embedCodeCopied": "Msimbo wa kupachika umenakiliwa",
+    "copyFailed": "Imeshindwa kunakili kiungo",
     "options": "Chaguzi",
     "aiOverview": "Muhtasari wa AI",
     "sendTip": "Tuma Kidokezo",

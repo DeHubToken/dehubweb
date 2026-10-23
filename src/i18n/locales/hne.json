@@ -624,6 +624,10 @@
     "dmSent": "{{name}} ला {{amount}} टोकन भेज दे गे!"
   },
   "postOptions": {
+    "embed": "एम्बेड",
+    "copyEmbedCode": "एम्बेड कोड कॉपी करव",
+    "embedCodeCopied": "एम्बेड कोड कॉपी हो गे",
+    "copyFailed": "लिंक कॉपी नइ हो सकिस",
     "options": "विकल्प",
     "aiOverview": "एआई सिंहावलोकन",
     "sendTip": "टिप भेजव",

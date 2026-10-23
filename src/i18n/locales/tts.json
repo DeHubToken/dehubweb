@@ -609,6 +609,10 @@
     "dmSent": "ส่ง {{amount}} เหรียญ ให้ {{name}} แล้ว!"
   },
   "postOptions": {
+    "embed": "ฝัง",
+    "copyEmbedCode": "คัดลอกโค้ดฝัง",
+    "embedCodeCopied": "คัดลอกโค้ดฝังแล้ว",
+    "copyFailed": "บ่สามารถคัดลอกลิงก์ได้",
     "options": "ตัวเลือก",
     "sendTip": "ส่งทิป",
     "queue": "คิว",

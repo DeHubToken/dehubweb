@@ -630,6 +630,10 @@
     "dmSent": "{{amount}} žetooni saadetud saajale {{name}}!"
   },
   "postOptions": {
+    "embed": "Manusta",
+    "copyEmbedCode": "Kopeeri manustamiskood",
+    "embedCodeCopied": "Manustamiskood kopeeritud",
+    "copyFailed": "Linki ei õnnestunud kopeerida",
     "options": "Valikud",
     "aiOverview": "Tehisintellekti ülevaade",
     "sendTip": "Saada jootraha",

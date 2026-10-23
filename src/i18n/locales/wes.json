@@ -592,6 +592,10 @@
     "dmSent": "You don send {{amount}} tokens give {{name}}!"
   },
   "postOptions": {
+    "embed": "Embed",
+    "copyEmbedCode": "Copy embed code",
+    "embedCodeCopied": "Embed code don copy",
+    "copyFailed": "We no fit copy the link",
     "options": "Option dem",
     "aiOverview": "AI overview",
     "sendTip": "Send Tip",

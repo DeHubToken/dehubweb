@@ -613,6 +613,10 @@
     "dmSent": "انرسل {{amount}} توكنز لـ {{name}}!"
   },
   "postOptions": {
+    "embed": "تضمين",
+    "copyEmbedCode": "نسخ رمز التضمين",
+    "embedCodeCopied": "تم نسخ رمز التضمين",
+    "copyFailed": "تعذّر نسخ الرابط",
     "options": "خيارات",
     "sendTip": "أرسل إكرامية",
     "queue": "قائمة الانتظار",

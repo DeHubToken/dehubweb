@@ -30,7 +30,8 @@ import { getAiScrapingPreference } from '@/lib/ai-scraping';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { useLayoutEffect, useEffect, useState, useRef, useCallback, useMemo, Suspense } from 'react';
 import { lazyWithRetry } from '@/lib/lazy-with-retry';
-import { Clock } from "lucide-react";
+import { Clock, Code } from "lucide-react";
+import { copyPostEmbedCode } from '@/lib/post-embed-code';
 import Sparkles from "@/components/ui/cut-icons/assistant";
 import Flag from "@/components/ui/cut-icons/report";
 import Link2 from "@/components/ui/cut-icons/link";
@@ -1382,6 +1383,14 @@ function SinglePostPageContent({ inOverlay = false, overrideId }: SinglePostPage
               >
                 <Link2 className="w-5 h-5" /> {t('postOptions.copyLink')}
               </button>
+              {id && /^\d+$/.test(id) && (
+                <button
+                  onClick={() => { copyPostEmbedCode(id, t); setShowDesktopOptionsDrawer(false); }}
+                  className="flex items-center gap-3 px-4 py-3 text-white hover:bg-white/10 rounded-xl transition-colors text-left"
+                >
+                  <Code className="w-5 h-5" /> {t('postOptions.copyEmbedCode')}
+                </button>
+              )}
               {/* Block Creator removed until implemented — dead button. */}
               {walletAddress && videoData.creatorId?.toLowerCase() === walletAddress.toLowerCase() && (
                 <>

@@ -630,6 +630,10 @@
     "dmSent": "E zigara {{name}} {{amount}} tokens!"
   },
   "postOptions": {
+    "embed": "Tinye n'ime",
+    "copyEmbedCode": "Detụọ koodu ntinye",
+    "embedCodeCopied": "Edepụtala koodu ntinye",
+    "copyFailed": "Enweghị ike idetụọ njikọ ahụ",
     "options": "Nhọrọ",
     "aiOverview": "AI Nchịkọta",
     "sendTip": "Ziga Onyinye",

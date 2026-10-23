@@ -627,6 +627,10 @@
     "dmSent": "{{name}} колдонуучусуна {{amount}} токендер жөнөтүлдү!"
   },
   "postOptions": {
+    "embed": "Кыстаруу",
+    "copyEmbedCode": "Кыстаруу кодун көчүрүү",
+    "embedCodeCopied": "Кыстаруу коду көчүрүлдү",
+    "copyFailed": "Шилтемени көчүрүү мүмкүн болбоду",
     "options": "Тандоолор",
     "aiOverview": "AI обзору",
     "sendTip": "Сыйлык жөнөтүү",

@@ -629,6 +629,10 @@
     "dmSent": "{{name}} کي {{amount}} ٽوڪن موڪليا ويا!"
   },
   "postOptions": {
+    "embed": "ايمبيڊ",
+    "copyEmbedCode": "ايمبيڊ ڪوڊ ڪاپي ڪريو",
+    "embedCodeCopied": "ايمبيڊ ڪوڊ ڪاپي ٿي ويو",
+    "copyFailed": "لنڪ ڪاپي نه ٿي سگهي",
     "options": "اختيار",
     "aiOverview": "AI جو جائزو",
     "sendTip": "ٽپ موڪليو",

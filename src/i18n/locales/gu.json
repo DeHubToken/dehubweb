@@ -630,6 +630,10 @@
     "dmSent": "{{name}}ને {{amount}} ટોકન્સ મોકલ્યા!"
   },
   "postOptions": {
+    "embed": "એમ્બેડ",
+    "copyEmbedCode": "એમ્બેડ કોડ કૉપિ કરો",
+    "embedCodeCopied": "એમ્બેડ કોડ કૉપિ થયો",
+    "copyFailed": "લિંક કૉપિ થઈ શકી નહીં",
     "options": "વિકલ્પો",
     "aiOverview": "AI વિહંગાવલોકન",
     "sendTip": "ટિપ મોકલો",

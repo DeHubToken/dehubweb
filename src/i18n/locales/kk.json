@@ -625,6 +625,10 @@
     "dmSent": "{{name}} пайдаланушысына {{amount}} токендер жіберілді!"
   },
   "postOptions": {
+    "embed": "Ендіру",
+    "copyEmbedCode": "Ендіру кодын көшіру",
+    "embedCodeCopied": "Ендіру коды көшірілді",
+    "copyFailed": "Сілтемені көшіру мүмкін болмады",
     "options": "Параметрлер",
     "aiOverview": "AI шолуы",
     "sendTip": "Тип жіберу",

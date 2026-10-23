@@ -601,6 +601,10 @@
     "dmSent": "{{name}} کو {{amount}} دراو بھیج دیل!"
   },
   "postOptions": {
+    "embed": "ایمبیڈ",
+    "copyEmbedCode": "ایمبیڈ کوڈ کاپی کرو",
+    "embedCodeCopied": "ایمبیڈ کوڈ کاپی ہو گیا",
+    "copyFailed": "لنک کاپی نہیں ہو سکا",
     "options": "آپشن",
     "sendTip": "ٹِپ بھیجو",
     "queue": "قطار",

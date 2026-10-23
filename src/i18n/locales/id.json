@@ -634,6 +634,10 @@
     "dmSent": "Terkirim {{amount}} token ke {{name}}!"
   },
   "postOptions": {
+    "embed": "Sematkan",
+    "copyEmbedCode": "Salin kode sematan",
+    "embedCodeCopied": "Kode sematan disalin",
+    "copyFailed": "Tidak dapat menyalin tautan",
     "options": "Opsi",
     "aiOverview": "Ikhtisar AI",
     "sendTip": "Kirim Tip",
