@@ -131,7 +131,7 @@ export function GeneratedStageCover({
 
       <div
         className="absolute inset-y-0 left-0 flex flex-col"
-        style={{ width: '62%', padding: '5.5cqw 0 10cqw 5.5cqw' }}
+        style={{ width: '56%', padding: '5.5cqw 0 10cqw 5.5cqw' }}
       >
         <div
           data-gsc-brand
