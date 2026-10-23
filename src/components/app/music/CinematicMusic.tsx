@@ -27,16 +27,19 @@ import { getCustomLogo } from '@/components/app/radio/RadioStationCard';
 import { StagesCarousel } from '@/components/app/music/StagesCarousel';
 import { openStageModal } from '@/contexts/StageContext';
 import { searchNFTs, type DeHubNFT } from '@/lib/api/dehub';
+import { fetchMusicVideoChart, MUSIC_VIDEO_CHART_SORTS, type MusicVideoChartSort } from '@/lib/music-video-chart';
+import '@/components/app/audio/audio-studio.css';
 import { formatViews } from '@/lib/feed-utils';
 import { isBlockedCreator, mapNFTToVideoItem } from '@/lib/music-feed-items';
 import type { VideoItem } from '@/types/feed.types';
 import { viewerShareUrl } from '@/lib/share-url';
 import { trackShare } from '@/lib/analytics';
 
-type Chip = 'top' | 'radio' | 'stages' | 'new';
+type Chip = 'top' | 'videos' | 'radio' | 'stages' | 'new';
 
 const CHIPS: { key: Chip; label: string }[] = [
   { key: 'top', get label() { return _translateCopy("copy.50ea9e32e19c", { defaultValue: "Top 50" }); } },
+  { key: 'videos', get label() { return _translateCopy('music.chartVideos', { defaultValue: 'Music videos' }); } },
   { key: 'radio', get label() { return _translateCopy("copy.2a7dfeb2f2b0", { defaultValue: "Radio" }); } },
   { key: 'stages', get label() { return _translateCopy("copy.3a17aa4e4abb", { defaultValue: "Stages" }); } },
   { key: 'new', get label() { return _translateCopy("copy.18fdd549b2ed", { defaultValue: "New" }); } },
@@ -239,6 +242,20 @@ function useMusicChart(mode: 'trending' | 'new', blockedAddresses?: Set<string>,
   return { items, isLoading };
 }
 
+function useMusicVideoChart(sort: MusicVideoChartSort, blockedAddresses?: Set<string>, enabled = true) {
+  const { data, isLoading } = useQuery({
+    queryKey: ['music-video-chart', 'cinematic', sort],
+    queryFn: () => fetchMusicVideoChart(sort),
+    enabled,
+    staleTime: 5 * 60 * 1000,
+  });
+  const items = useMemo<VideoItem[]>(
+    () => (data || []).filter((nft) => !isBlockedCreator(nft, blockedAddresses)).map((nft, i) => mapNFTToVideoItem(nft, i)),
+    [data, blockedAddresses],
+  );
+  return { items, isLoading };
+}
+
 function SectionTitle({ title, action, onAction }: { title: string; action?: string; onAction?: () => void }) {
   return (
     <div className="flex items-baseline justify-between px-3.5 pb-2 pt-5">
@@ -266,15 +283,18 @@ export function CinematicMusic({ radioStations, blockedAddresses, showFilters = 
 
   const top = useMusicChart('trending', blockedAddresses, chip === 'top');
   const fresh = useMusicChart('new', blockedAddresses, chip === 'new');
+  const [videoSort, setVideoSort] = useState<MusicVideoChartSort>('views');
+  const videos = useMusicVideoChart(videoSort, blockedAddresses, chip === 'videos');
 
   // The station on air in the hero: whatever is playing, else the first pick.
   const heroStation = (isPlaying && currentStation) || radioStations[0];
 
   const openPost = (item: VideoItem) => navigate(`/app/post/${item.id}`, { state: { fromFeed: true } });
 
-  const renderTracks = (list: { items: VideoItem[]; isLoading: boolean }, title: string) => (
+  const renderTracks = (list: { items: VideoItem[]; isLoading: boolean }, title: string, header?: React.ReactNode) => (
     <>
       <SectionTitle title={title} action={list.items.length > 0 ? 'Play all' : undefined} onAction={() => list.items[0] && openPost(list.items[0])} />
+      {header}
       <div className="-mx-2 border-t border-white/[0.12]">
         {list.isLoading ? (
           <ChartSkeleton />
@@ -325,6 +345,16 @@ export function CinematicMusic({ radioStations, blockedAddresses, showFilters = 
 
       {chip === 'top' && renderTracks(top, 'Top 50')}
       {chip === 'new' && renderTracks(fresh, 'New releases')}
+      {chip === 'videos' && renderTracks(videos, _copy('music.videoCharts', { defaultValue: 'Music Video Charts' }), (
+        <div data-no-swipe data-music-chart-kind role="group" aria-label={_copy('music.videoChartOrder', { defaultValue: 'Music video chart order' })} className="overflow-x-auto px-0.5 scrollbar-hide">
+          {MUSIC_VIDEO_CHART_SORTS.map((sort) => (
+            <button key={sort.value} type="button" aria-selected={videoSort === sort.value} onClick={() => setVideoSort(sort.value)} className="shrink-0 whitespace-nowrap">
+              <span>{sort.label}</span>
+              {videoSort === sort.value && <span aria-hidden data-music-chart-beam />}
+            </button>
+          ))}
+        </div>
+      ))}
       {chip === 'radio' && (
         <>
           <SectionTitle title={_copy("copy.38be740dac96", { defaultValue: "Radio stations" })} />
