@@ -259,14 +259,14 @@ describe('resumableUpload', () => {
 
   it('passes the tier limit refusal through untouched', async () => {
     server.createStatus = 413;
-    const error = await resumableUpload('/api/draft_video/resumable', file(1000)).catch((e) => e);
+    const error = await resumableUpload('/api/draft_video/resumable', file(1000)).catch((e: UploadHttpError) => e);
     expect(error).toBeInstanceOf(UploadHttpError);
     expect(error.status).toBe(413);
   });
 
   it('passes an unreadable-video refusal on the last chunk through untouched', async () => {
     server.finishStatus = 400;
-    const error = await resumableUpload('/api/draft_video/resumable', file(1000)).catch((e) => e);
+    const error = await resumableUpload('/api/draft_video/resumable', file(1000)).catch((e: UploadHttpError) => e);
     expect(error).toBeInstanceOf(UploadHttpError);
     expect(error.status).toBe(400);
     expect(error.serverMessage).toContain('readable video');
