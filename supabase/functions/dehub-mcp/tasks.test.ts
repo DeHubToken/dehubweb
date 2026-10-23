@@ -9,6 +9,8 @@ Deno.test('post filters intersect exact author and category without title keywor
   assert(!matchesPostFilters({ minter: '0xabc', category: 'Music videos', name: 'Music' }, scope), 'partial category included');
   assert(!matchesPostFilters({ minter: '0xabc', name: 'Music' }, scope), 'title substituted for category');
   assert(matchesPostFilters({}, {}), 'unfiltered task excluded a post');
+  assert(matchesPostFilters({ minter: '0xabc', category: ['Art'] }, { author: '0xabc', categories: ['Music', 'Art'] }), 'multiple categories must match any selected category');
+  assert(!matchesPostFilters({ minter: '0xdef', category: ['Art'] }, { author: '0xabc', categories: ['Music', 'Art'] }), 'multiple categories bypassed author');
 });
 Deno.test('post drafts keep concrete opinions but reject invented scenes and generic filler', () => {
   assert(!postBreaksGroundingRules("Basil leaves going yellow? I'd check the pot before adding water.", 100, 'yellow basil leaves'), 'rejected a grounded opinion');
