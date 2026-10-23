@@ -33,6 +33,8 @@ const user = { address: wallet, walletAddress: wallet, username: 'governance_che
 await context.addInitScript(({ wallet, token, user }) => {
   localStorage.setItem('dehub_wallet', wallet);
   localStorage.setItem('dehub_token', token);
+  localStorage.setItem('dehub_token_expires_at', String(Date.now() + 3600000));
+  localStorage.setItem('dehub_token_timestamp', String(Date.now()));
   localStorage.setItem('dehub_user', JSON.stringify(user));
   localStorage.setItem('i18nextLng', 'en');
 }, { wallet, token, user });
