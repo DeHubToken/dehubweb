@@ -1,3 +1,4 @@
+import { ensureWalletSession } from '@/lib/wallet-session';
 import { walletScopedClient } from '@/lib/supabase-wallet-client';
 import { useTranslation as _useCopy } from 'react-i18next';
 import { useState, useRef, useCallback, useEffect, useMemo } from 'react';
@@ -219,7 +220,10 @@ export const useCall = (): UseCallReturn => {
       const call = data as CallSession;
       if (generationRef.current !== generation) { await markEnded(call); return; }
       publishCall(call);
-      void apiCall('/api/push/call-ring', { method: 'POST', body: { sessionId: call.id }, requiresAuth: true })
+      void ensureWalletSession(call.caller_address).then(session => {
+        if (!session) throw new Error('Signed call session unavailable');
+        return apiCall('/api/push/call-ring', { method: 'POST', body: { sessionId: call.id, walletSession: session.token }, requiresAuth: true });
+      })
         .catch(error => console.warn('Call ring push failed', error));
       callMessageHandlerRef.current?.(callType === 'video' ? '📹 Video call' : '📞 Voice call');
       const joined = await joinAgoraChannel(call, generation);
