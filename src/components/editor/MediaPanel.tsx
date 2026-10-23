@@ -1,7 +1,7 @@
 import { useTranslation as _useCopy } from 'react-i18next';
 import { useCallback, useMemo, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { Film, HardDrive } from "lucide-react";
+import { Film, HardDrive, Replace } from "lucide-react";
 import Upload from "@/components/ui/cut-icons/upload";
 import Trash2 from "@/components/ui/cut-icons/delete";
 import Music from "@/components/ui/cut-icons/music";
@@ -23,6 +23,7 @@ import { formatBytes } from "@/lib/editor/quota";
 import { deleteEditorAsset } from "@/lib/editor/cloudMedia";
 import { AppState } from "@/components/app/AppState";
 import { RecordingPanel } from "@/components/editor/RecordingPanel";
+import { replaceDesignMedia } from "@/lib/editor/replaceMedia";
 
 function formatDuration(s?: number | null) {
   if (!s || !Number.isFinite(s)) return "—";
@@ -43,6 +44,7 @@ export function MediaPanel() {
   const media = useEditorStore((s) => s.media).filter(m => !m.name.startsWith(".dehub-video-matte-"));
   const removeMediaFromStore = useEditorStore((s) => s.removeMedia);
   const addClipFromMedia = useEditorStore((s) => s.addClipFromMedia);
+  const replacementTarget = useEditorStore(s => s.selectedClipIds.length === 1 ? s.clips.find(c => c.id === s.selectedClipIds[0] && (c.kind === "image" || c.kind === "video" || c.kind === "audio" || (c.kind === "shape" && c.photoFrame))) : undefined);
 
   const cloudAssets = useEditorMediaStore((s) => s.cloudAssets);
   const removeCloudAsset = useEditorMediaStore((s) => s.removeCloudAsset);
@@ -248,6 +250,14 @@ export function MediaPanel() {
                     >
                       <Plus className="h-3.5 w-3.5" />
                     </button>
+                    {replacementTarget && !replacementTarget.locked && (replacementTarget.kind === "audio" ? m.kind !== "image" : m.kind !== "audio") && <button type="button" title={t("editor.media.replace", { defaultValue: "Replace selected layer" })} aria-label={t("editor.media.replaceWith", { defaultValue: "Replace selected layer with {{name}}", name: m.name })} onClick={event => {
+                      event.stopPropagation();
+                      const s = useEditorStore.getState(), before = s.toSnapshot();
+                      const target = s.clips.find(c => c.id === replacementTarget.id);
+                      const previous = target && "mediaId" in target ? s.media.find(media => media.id === target.mediaId) : undefined;
+                      const next = replaceDesignMedia(before, replacementTarget.id, m, previous);
+                      if (next !== before) s.applyDesignEdit(before, next);
+                    }} className="flex h-11 w-9 shrink-0 items-center justify-center rounded-md text-white/70 hover:bg-white/10"><Replace className="h-4 w-4" /></button>}
                     <button
                       type="button"
                       aria-label={_copy("copy.d2f6b9b77710", { defaultValue: "Remove {{value1}}", value1: m.name })}

@@ -1,0 +1,8 @@
+import { useTranslation } from "react-i18next";
+import { useBrandPresets } from "@/lib/editor/useBrandPresets";
+import { SavePalettePreset } from "./SavePalettePreset";
+export function MockupBrandPalettes({ colours, onChange }: { colours: string[]; onChange: (colours: string[]) => void }) {
+  const { t } = useTranslation(), library = useBrandPresets();
+  const palettes = library.presets.filter(preset => preset.styles.colors.length > 0);
+  return <details className="rounded-lg border border-white/10 p-3"><summary className="min-h-9 cursor-pointer text-xs font-medium text-white/75">{t("editor.mockups.palettes", { defaultValue: "Saved frame palettes" })}</summary><div className="space-y-3 pt-2"><div className="flex flex-wrap gap-2">{palettes.map(preset => <button key={preset.id} type="button" onClick={() => onChange([...preset.styles.colors])} className="flex min-h-9 items-center gap-2 rounded-lg border border-white/20 px-3 text-xs text-white/75"><span aria-hidden="true" className="flex overflow-hidden rounded">{preset.styles.colors.slice(0, 3).map((colour, index) => <span key={index} className="h-4 w-3" style={{ backgroundColor: colour }} />)}</span>{preset.name}</button>)}</div>{!palettes.length && <p className="text-xs text-white/45">{t("editor.mockups.noPalettes", { defaultValue: "Save a palette in Brand styles to use it here." })}</p>}<p className="text-[10px] text-white/45">{t("editor.mockups.paletteHint", { defaultValue: "The first three colours set frame material, details and screen background. Missing colours keep their current values. Save palette stores these frame colours in Brand styles." })}</p><SavePalettePreset colours={[...new Set(colours)]} /></div></details>;
+}

@@ -1,3 +1,7 @@
+import { designPdfLink, type DesignPdfLink } from "./designLinks";
+import { computeClipAnimation } from "./animationPresets";
+import { resolveClipAt } from "./keyframes";
+import { ensureProjectFonts } from "./googleFonts";
 import { waitForEncoderCapacity } from "./encoderQueue";
 import { exportFilename } from "./exportName";
 import { waitForVideoFrame } from "./videoFrame";
@@ -16,7 +20,7 @@ import { stampEnding } from "./endingFile";
 import type { MediaClip, ProjectSnapshot } from "./types";
 import type { MediaItem } from "@/store/editorStore";
 import { computeRenderOps } from "./transitions";
-import { drawClip } from "./render";
+import { drawClip, clipBox, getTransform } from "./render";
 import { timelineDuration } from "./pages";
 import { loadBrandOutroArtwork } from "./brandOutroArtwork";
 import { BRAND_OUTRO_DURATION, drawBrandOutro, outroSoundSample, outroUsername } from "./brandOutro";
@@ -50,6 +54,7 @@ export interface ExportOptions {
 }
 
 export interface ExportResult {
+  links?: DesignPdfLink[];
   blob: Blob;
   filename: string;
   /** WebCodecs codec strings actually used, for the export journal. */
@@ -292,6 +297,7 @@ export async function exportProject(opts: ExportOptions): Promise<ExportResult> 
 
   const { snapshot, media, format, scale, videoBitrate, audioBitrate = 192_000, cutEndAt, onProgress, signal } = opts;
   const { settings, clips, tracks } = snapshot;
+  await ensureProjectFonts(clips.filter(c => !c.hidden && !tracks.find(track => track.id === c.trackId)?.hidden));
   const fps = settings.fps;
   const width = Math.max(2, Math.round(settings.width * scale) & ~1);
   const height = Math.max(2, Math.round(settings.height * scale) & ~1);
@@ -534,6 +540,7 @@ export async function exportProject(opts: ExportOptions): Promise<ExportResult> 
 async function exportGif(opts: ExportOptions): Promise<ExportResult> {
   const { snapshot, signal, onProgress } = opts;
   const { settings, clips, tracks } = snapshot;
+  await ensureProjectFonts(clips.filter(c => !c.hidden && !tracks.find(track => track.id === c.trackId)?.hidden));
   const fullDuration = timelineDuration(settings, clips);
   const range = exportTimeRange(fullDuration, opts.range ?? (opts.cutEndAt != null && opts.cutEndAt > 0 ? { start: 0, end: Math.min(opts.cutEndAt, fullDuration) } : undefined));
   const contentDuration = range.duration;
@@ -610,6 +617,10 @@ export interface StillOptions {
   time: number;
   /** JPEG quality 0..1. */
   quality?: number;
+  /** PNG can retain the canvas alpha channel instead of painting a page colour. */
+  transparent?: boolean;
+  /** Documents show their complete artwork rather than a partial entrance or exit animation. */
+  ignoreAnimations?: boolean;
 }
 
 /**
@@ -631,10 +642,11 @@ export async function exportStill(opts: StillOptions): Promise<ExportResult> {
     return !!tr && !tr.hidden && tr.kind !== "audio";
   };
   const trackZ = (trackId: string) => tracks.findIndex((x) => x.id === trackId);
-  const ops = computeRenderOps(clips, isVisualTrack, t, width).sort(
+  const ops = computeRenderOps(clips, isVisualTrack, t, width).map(op => opts.ignoreAnimations ? { ...op, clip: { ...op.clip, animateIn: undefined, animateOut: undefined } } : op).sort(
     (a, b) => trackZ(a.clip.trackId) - trackZ(b.clip.trackId),
   );
 
+  await ensureProjectFonts(ops.map(op => op.clip));
   const used = new Set(ops.map((op) => (op.clip.kind === "text" ? "" : (op.clip as MediaClip).mediaId)));
   const matteIds = new Set(ops.flatMap(op => op.clip.kind === "video" ? videoMatteMediaIds(op.clip.videoMatte) : []));
   for (const id of matteIds) used.add(id);
@@ -647,8 +659,10 @@ export async function exportStill(opts: StillOptions): Promise<ExportResult> {
   canvas.height = height;
   const ctx = canvas.getContext("2d");
   if (!ctx) throw new Error("Could not acquire canvas context");
-  ctx.fillStyle = settings.background;
-  ctx.fillRect(0, 0, width, height);
+    if (!(format === "png" && opts.transparent)) {
+      ctx.fillStyle = settings.background;
+      ctx.fillRect(0, 0, width, height);
+    }
   await mattePages.select(videoMatteFramesForOps(ops, t));
   for (const op of ops) {
     if (op.clip.kind === "video") {
@@ -668,11 +682,19 @@ export async function exportStill(opts: StillOptions): Promise<ExportResult> {
     ctx.restore();
   }
 
+  const links = ops.flatMap(op => {
+    if (!op.clip.href || op.alpha <= 0.001) return [];
+    const clip = resolveClipAt(op.clip, t);
+    if ((getTransform(clip).opacity ?? 1) <= 0.001) return [];
+    const box = clipBox(ctx, clip, width, height, { videos, images });
+    const link = box ? designPdfLink(clip.href, box, width, height, computeClipAnimation(clip, t), op.translateX, op.clipRect) : null;
+    return link ? [link] : [];
+  });
   const mime = format === "png" ? "image/png" : "image/jpeg";
   const blob = await new Promise<Blob>((resolve, reject) =>
     canvas.toBlob((b) => (b ? resolve(b) : reject(new Error("Could not encode image"))), mime, quality),
   );
-  return { blob, filename: exportFilename(snapshot.title, format, "", "design") };
+  return { blob, filename: exportFilename(snapshot.title, format, "", "design"), links };
   } finally {
     mattePages.dispose(); videos.forEach(v => { v.pause(); v.removeAttribute("src"); v.load(); }); images.forEach(image => { releaseGifImage(image); image.src = ""; });
   }

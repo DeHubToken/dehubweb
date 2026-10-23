@@ -1,165 +1,18 @@
+import { graphicFontSample } from "./graphicFontSample";
+import { graphicFontCss } from "./graphicFonts";
 /**
  * Curated list of popular free Google Fonts + lazy loader.
  * We inject a stylesheet link on demand for the family/weight requested;
  * the browser cache keeps subsequent uses instant.
  */
 
-export interface GoogleFont {
-  family: string;
-  category: "sans-serif" | "serif" | "display" | "handwriting" | "monospace";
-  /** Weights we consider "safe" to request for this family. */
-  weights: number[];
-}
+import { GOOGLE_FONTS, type GoogleFont } from "./fontCatalogue";
+import type { Clip } from "./types";
+export { GOOGLE_FONTS };
+export type { GoogleFont };
 
-/** Top ~150 popular free Google Fonts across all categories. */
-export const GOOGLE_FONTS: GoogleFont[] = [
-  // Sans-serif
-  { family: "Inter", category: "sans-serif", weights: [300, 400, 500, 600, 700, 800, 900] },
-  { family: "Roboto", category: "sans-serif", weights: [300, 400, 500, 700, 900] },
-  { family: "Open Sans", category: "sans-serif", weights: [300, 400, 500, 600, 700, 800] },
-  { family: "Lato", category: "sans-serif", weights: [300, 400, 700, 900] },
-  { family: "Montserrat", category: "sans-serif", weights: [300, 400, 500, 600, 700, 800, 900] },
-  { family: "Poppins", category: "sans-serif", weights: [300, 400, 500, 600, 700, 800, 900] },
-  { family: "Nunito", category: "sans-serif", weights: [300, 400, 600, 700, 800, 900] },
-  { family: "Raleway", category: "sans-serif", weights: [300, 400, 500, 600, 700, 800, 900] },
-  { family: "Work Sans", category: "sans-serif", weights: [300, 400, 500, 600, 700, 800] },
-  { family: "Rubik", category: "sans-serif", weights: [300, 400, 500, 600, 700, 800, 900] },
-  { family: "Manrope", category: "sans-serif", weights: [300, 400, 500, 600, 700, 800] },
-  { family: "DM Sans", category: "sans-serif", weights: [400, 500, 700] },
-  { family: "Plus Jakarta Sans", category: "sans-serif", weights: [300, 400, 500, 600, 700, 800] },
-  { family: "Space Grotesk", category: "sans-serif", weights: [300, 400, 500, 600, 700] },
-  { family: "Sora", category: "sans-serif", weights: [300, 400, 500, 600, 700, 800] },
-  { family: "Outfit", category: "sans-serif", weights: [300, 400, 500, 600, 700, 800, 900] },
-  { family: "Figtree", category: "sans-serif", weights: [300, 400, 500, 600, 700, 800, 900] },
-  { family: "Urbanist", category: "sans-serif", weights: [300, 400, 500, 600, 700, 800, 900] },
-  { family: "Nunito Sans", category: "sans-serif", weights: [300, 400, 600, 700, 800, 900] },
-  { family: "PT Sans", category: "sans-serif", weights: [400, 700] },
-  { family: "Source Sans 3", category: "sans-serif", weights: [300, 400, 600, 700, 900] },
-  { family: "Fira Sans", category: "sans-serif", weights: [300, 400, 500, 600, 700, 800, 900] },
-  { family: "Barlow", category: "sans-serif", weights: [300, 400, 500, 600, 700, 800, 900] },
-  { family: "Karla", category: "sans-serif", weights: [300, 400, 500, 600, 700, 800] },
-  { family: "Cabin", category: "sans-serif", weights: [400, 500, 600, 700] },
-  { family: "Muli", category: "sans-serif", weights: [300, 400, 600, 700, 800, 900] },
-  { family: "Mulish", category: "sans-serif", weights: [300, 400, 500, 600, 700, 800, 900] },
-  { family: "Assistant", category: "sans-serif", weights: [300, 400, 500, 600, 700, 800] },
-  { family: "Josefin Sans", category: "sans-serif", weights: [300, 400, 500, 600, 700] },
-  { family: "Quicksand", category: "sans-serif", weights: [300, 400, 500, 600, 700] },
-  { family: "Oxygen", category: "sans-serif", weights: [300, 400, 700] },
-  { family: "Hind", category: "sans-serif", weights: [300, 400, 500, 600, 700] },
-  { family: "Titillium Web", category: "sans-serif", weights: [300, 400, 600, 700, 900] },
-  { family: "Dosis", category: "sans-serif", weights: [300, 400, 500, 600, 700, 800] },
-  { family: "Archivo", category: "sans-serif", weights: [300, 400, 500, 600, 700, 800, 900] },
-  { family: "Archivo Narrow", category: "sans-serif", weights: [400, 500, 600, 700] },
-  { family: "Exo 2", category: "sans-serif", weights: [300, 400, 500, 600, 700, 800, 900] },
-  { family: "IBM Plex Sans", category: "sans-serif", weights: [300, 400, 500, 600, 700] },
-  { family: "Chivo", category: "sans-serif", weights: [300, 400, 500, 600, 700, 800, 900] },
-  { family: "Prompt", category: "sans-serif", weights: [300, 400, 500, 600, 700, 800, 900] },
-  { family: "Kanit", category: "sans-serif", weights: [300, 400, 500, 600, 700, 800, 900] },
-  { family: "Heebo", category: "sans-serif", weights: [300, 400, 500, 600, 700, 800, 900] },
-  { family: "Public Sans", category: "sans-serif", weights: [300, 400, 500, 600, 700, 800, 900] },
-  { family: "Red Hat Display", category: "sans-serif", weights: [400, 500, 600, 700, 800, 900] },
-  { family: "Onest", category: "sans-serif", weights: [300, 400, 500, 600, 700, 800] },
-  { family: "Bricolage Grotesque", category: "sans-serif", weights: [300, 400, 500, 600, 700, 800] },
-  { family: "Instrument Sans", category: "sans-serif", weights: [400, 500, 600, 700] },
-  { family: "Geologica", category: "sans-serif", weights: [300, 400, 500, 600, 700, 800, 900] },
 
-  // Serif
-  { family: "Playfair Display", category: "serif", weights: [400, 500, 600, 700, 800, 900] },
-  { family: "Merriweather", category: "serif", weights: [300, 400, 700, 900] },
-  { family: "Lora", category: "serif", weights: [400, 500, 600, 700] },
-  { family: "PT Serif", category: "serif", weights: [400, 700] },
-  { family: "Noto Serif", category: "serif", weights: [400, 700] },
-  { family: "Cormorant Garamond", category: "serif", weights: [300, 400, 500, 600, 700] },
-  { family: "EB Garamond", category: "serif", weights: [400, 500, 600, 700, 800] },
-  { family: "Libre Baskerville", category: "serif", weights: [400, 700] },
-  { family: "Bitter", category: "serif", weights: [300, 400, 500, 600, 700, 800, 900] },
-  { family: "Crimson Text", category: "serif", weights: [400, 600, 700] },
-  { family: "Roboto Slab", category: "serif", weights: [300, 400, 500, 600, 700, 800, 900] },
-  { family: "Source Serif 4", category: "serif", weights: [300, 400, 600, 700, 900] },
-  { family: "Fraunces", category: "serif", weights: [300, 400, 500, 600, 700, 800, 900] },
-  { family: "DM Serif Display", category: "serif", weights: [400] },
-  { family: "DM Serif Text", category: "serif", weights: [400] },
-  { family: "Cardo", category: "serif", weights: [400, 700] },
-  { family: "Vollkorn", category: "serif", weights: [400, 500, 600, 700, 800, 900] },
-  { family: "Alegreya", category: "serif", weights: [400, 500, 700, 800, 900] },
-  { family: "Spectral", category: "serif", weights: [300, 400, 500, 600, 700, 800] },
-  { family: "Cormorant", category: "serif", weights: [300, 400, 500, 600, 700] },
-  { family: "Tinos", category: "serif", weights: [400, 700] },
-  { family: "Old Standard TT", category: "serif", weights: [400, 700] },
-  { family: "Instrument Serif", category: "serif", weights: [400] },
-
-  // Display
-  { family: "Bebas Neue", category: "display", weights: [400] },
-  { family: "Oswald", category: "display", weights: [300, 400, 500, 600, 700] },
-  { family: "Anton", category: "display", weights: [400] },
-  { family: "Righteous", category: "display", weights: [400] },
-  { family: "Abril Fatface", category: "display", weights: [400] },
-  { family: "Fjalla One", category: "display", weights: [400] },
-  { family: "Alfa Slab One", category: "display", weights: [400] },
-  { family: "Bungee", category: "display", weights: [400] },
-  { family: "Bungee Inline", category: "display", weights: [400] },
-  { family: "Bungee Shade", category: "display", weights: [400] },
-  { family: "Passion One", category: "display", weights: [400, 700, 900] },
-  { family: "Staatliches", category: "display", weights: [400] },
-  { family: "Ultra", category: "display", weights: [400] },
-  { family: "Bowlby One", category: "display", weights: [400] },
-  { family: "Russo One", category: "display", weights: [400] },
-  { family: "Squada One", category: "display", weights: [400] },
-  { family: "Bangers", category: "display", weights: [400] },
-  { family: "Fugaz One", category: "display", weights: [400] },
-  { family: "Titan One", category: "display", weights: [400] },
-  { family: "Monoton", category: "display", weights: [400] },
-  { family: "Faster One", category: "display", weights: [400] },
-  { family: "Black Ops One", category: "display", weights: [400] },
-  { family: "Audiowide", category: "display", weights: [400] },
-  { family: "Orbitron", category: "display", weights: [400, 500, 600, 700, 800, 900] },
-  { family: "Press Start 2P", category: "display", weights: [400] },
-  { family: "VT323", category: "display", weights: [400] },
-  { family: "Silkscreen", category: "display", weights: [400, 700] },
-  { family: "Rubik Mono One", category: "display", weights: [400] },
-  { family: "Unica One", category: "display", weights: [400] },
-  { family: "Big Shoulders Display", category: "display", weights: [300, 400, 500, 600, 700, 800, 900] },
-  { family: "Yeseva One", category: "display", weights: [400] },
-  { family: "Amatic SC", category: "display", weights: [400, 700] },
-
-  // Handwriting / script
-  { family: "Dancing Script", category: "handwriting", weights: [400, 500, 600, 700] },
-  { family: "Pacifico", category: "handwriting", weights: [400] },
-  { family: "Caveat", category: "handwriting", weights: [400, 500, 600, 700] },
-  { family: "Shadows Into Light", category: "handwriting", weights: [400] },
-  { family: "Satisfy", category: "handwriting", weights: [400] },
-  { family: "Great Vibes", category: "handwriting", weights: [400] },
-  { family: "Kaushan Script", category: "handwriting", weights: [400] },
-  { family: "Sacramento", category: "handwriting", weights: [400] },
-  { family: "Allura", category: "handwriting", weights: [400] },
-  { family: "Cookie", category: "handwriting", weights: [400] },
-  { family: "Parisienne", category: "handwriting", weights: [400] },
-  { family: "Marck Script", category: "handwriting", weights: [400] },
-  { family: "Homemade Apple", category: "handwriting", weights: [400] },
-  { family: "Permanent Marker", category: "handwriting", weights: [400] },
-  { family: "Indie Flower", category: "handwriting", weights: [400] },
-  { family: "Architects Daughter", category: "handwriting", weights: [400] },
-  { family: "Patrick Hand", category: "handwriting", weights: [400] },
-  { family: "Kalam", category: "handwriting", weights: [300, 400, 700] },
-  { family: "Gochi Hand", category: "handwriting", weights: [400] },
-  { family: "Nothing You Could Do", category: "handwriting", weights: [400] },
-  { family: "Reenie Beanie", category: "handwriting", weights: [400] },
-  { family: "Rock Salt", category: "handwriting", weights: [400] },
-
-  // Monospace
-  { family: "JetBrains Mono", category: "monospace", weights: [300, 400, 500, 600, 700, 800] },
-  { family: "Fira Code", category: "monospace", weights: [300, 400, 500, 600, 700] },
-  { family: "Source Code Pro", category: "monospace", weights: [300, 400, 500, 600, 700, 800, 900] },
-  { family: "IBM Plex Mono", category: "monospace", weights: [300, 400, 500, 600, 700] },
-  { family: "Space Mono", category: "monospace", weights: [400, 700] },
-  { family: "Roboto Mono", category: "monospace", weights: [300, 400, 500, 600, 700] },
-  { family: "Inconsolata", category: "monospace", weights: [300, 400, 500, 600, 700, 800, 900] },
-  { family: "Ubuntu Mono", category: "monospace", weights: [400, 700] },
-  { family: "Anonymous Pro", category: "monospace", weights: [400, 700] },
-  { family: "DM Mono", category: "monospace", weights: [300, 400, 500] },
-];
-
-const loaded = new Set<string>();
+const loaded = new Map<string, Promise<void>>();
 
 function toUrlFamily(family: string): string {
   return family.trim().replace(/\s+/g, "+");
@@ -167,10 +20,14 @@ function toUrlFamily(family: string): string {
 
 /** Inject a Google Fonts stylesheet for a family + weights (once per key). */
 export function loadGoogleFont(family: string, weights: number[] = [400, 700]): void {
-  if (typeof document === "undefined") return;
+  void requestFontStylesheet(family, weights).catch(() => {});
+}
+
+function requestFontStylesheet(family: string, weights: number[]): Promise<void> {
+  if (typeof document === "undefined") return Promise.resolve();
   const key = `${family}|${weights.slice().sort().join(",")}`;
-  if (loaded.has(key)) return;
-  loaded.add(key);
+  const previous = loaded.get(key);
+  if (previous) return previous;
   const url = `https://fonts.googleapis.com/css2?family=${toUrlFamily(family)}:wght@${weights
     .slice()
     .sort((a, b) => a - b)
@@ -179,7 +36,40 @@ export function loadGoogleFont(family: string, weights: number[] = [400, 700]): 
   link.rel = "stylesheet";
   link.href = url;
   link.setAttribute("data-google-font", family);
+  const promise = new Promise<void>((resolve, reject) => {
+    const timer = window.setTimeout(() => { link.onload = null; link.onerror = null; loaded.delete(key); link.remove(); reject(new Error(`Could not load ${family}`)); }, 8000);
+    link.onload = () => { window.clearTimeout(timer); link.onload = null; link.onerror = null; resolve(); };
+    link.onerror = () => { window.clearTimeout(timer); link.onload = null; link.onerror = null; loaded.delete(key); link.remove(); reject(new Error(`Could not load ${family}`)); };
+  });
+  loaded.set(key, promise);
   document.head.appendChild(link);
+  return promise;
+}
+
+/** Export waits for fonts actually used by the project instead of capturing temporary fallbacks. */
+export async function ensureProjectFonts(clips: readonly Clip[]): Promise<void> {
+  if (typeof document === "undefined" || !document.fonts?.load) return;
+  const fonts = new Map<string, { font: GoogleFont; weights: Set<number>; sample: string }>();
+  for (const clip of clips) {
+    if (clip.kind === "shape" && (clip.chart || clip.table)) {
+      const graphic = clip.table ?? clip.chart!, font = findFontByCss(graphicFontCss(graphic.fontFamily));
+      if (font) { const entry = fonts.get(font.family) ?? { font, weights: new Set<number>(), sample: "" }; for (const wanted of [400, 500, 600, 700]) entry.weights.add(font.weights.reduce((best, weight) => Math.abs(weight - wanted) < Math.abs(best - wanted) ? weight : best, font.weights[0])); entry.sample = (entry.sample + graphicFontSample(graphic)).slice(0, 1000); fonts.set(font.family, entry); }
+    }
+    if (clip.kind !== "text") continue;
+    const font = findFontByCss(clip.fontFamily);
+    if (!font) continue;
+    const entry = fonts.get(font.family) ?? { font, weights: new Set<number>(), sample: "" };
+    const weight = font.weights.reduce((best, value) => Math.abs(value - clip.fontWeight) < Math.abs(best - clip.fontWeight) ? value : best, font.weights[0]);
+    entry.weights.add(weight); entry.sample = (entry.sample + clip.text).slice(0, 1000); fonts.set(font.family, entry);
+  }
+  await Promise.all([...fonts.values()].map(async ({ font, weights, sample }) => {
+    await requestFontStylesheet(font.family, font.weights);
+    let timer: ReturnType<typeof setTimeout> | undefined;
+    try {
+      await Promise.race([Promise.all([...weights].map(weight => document.fonts.load(`${weight} 16px "${font.family}"`, sample || "Design"))),
+        new Promise<never>((_, reject) => { timer = setTimeout(() => reject(new Error(`Could not load ${font.family}`)), 8000); })]);
+    } finally { if (timer !== undefined) clearTimeout(timer); }
+  }));
 }
 
 /** Extract the primary family name from a CSS font-family value. */
@@ -206,4 +96,13 @@ export function fontFamilyCss(family: string, category: GoogleFont["category"] =
 export function findFontByCss(css: string): GoogleFont | null {
   const name = primaryFamily(css);
   return GOOGLE_FONTS.find((f) => f.family.toLowerCase() === name.toLowerCase()) ?? null;
+}
+
+export async function ensureGraphicFont(family?: string, sample = "Design"): Promise<void> {
+  if (typeof document === "undefined" || !document.fonts?.load) return;
+  const font = findFontByCss(graphicFontCss(family)); if (!font) return;
+  await requestFontStylesheet(font.family, font.weights);
+  let timer: ReturnType<typeof setTimeout> | undefined;
+  try { await Promise.race([Promise.all([400, 500, 600, 700].map(weight => document.fonts.load(`${weight} 16px "${font.family}"`, sample || "Design"))), new Promise<never>((_, reject) => { timer = setTimeout(() => reject(new Error("Could not load the graphic font")), 8000); })]); }
+  finally { if (timer !== undefined) clearTimeout(timer); }
 }

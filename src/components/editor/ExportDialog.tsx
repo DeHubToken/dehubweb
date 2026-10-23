@@ -1,3 +1,10 @@
+import { DocumentImageQualityControls } from "./DocumentImageQualityControls";
+import { documentImageProfile, documentImageScale, type DocumentImageProfile } from "@/lib/editor/documentImageProfile";
+import { JpegQualityControl } from "./JpegQualityControl";
+import { presentationNotesText } from "@/lib/editor/presentationNotesText";
+import { SectionExportPicker } from "./SectionExportPicker";
+import { designPageSections } from "@/lib/editor/pageDetails";
+import { pageFilenamePatternError } from "@/lib/editor/pageFilenamePattern";
 import { prepareFileShare } from "@/lib/editor/shareFile";
 import { hasTimelineMotion } from "@/lib/editor/projectMotion";
 import { useTranslation as _useCopy } from 'react-i18next';
@@ -11,6 +18,7 @@ import { useEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 import { Progress } from "@/components/ui/progress";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { LiquidGlassBubble2 } from "@/components/ui/liquid-glass-bubble-2";
@@ -23,7 +31,7 @@ import { toast } from "sonner";
 import { useEditorStore, selectTimelineDuration } from "@/store/editorStore";
 import { exportProject, exportStill, isExportSupported, type ExportFormat, type StillFormat } from "@/lib/editor/exporter";
 import { getPages } from "@/lib/editor/pages";
-import { pageExportFrames } from "@/lib/editor/pageExports";
+import { parsePageExportOrder, pageExportFrames, resolvePageExportScope } from "@/lib/editor/pageExports";
 import { exportFilename } from "@/lib/editor/exportName";
 import { zipFiles } from "@/lib/editor/zip";
 import { useAuth } from "@/contexts/AuthContext";
@@ -32,6 +40,8 @@ import { GIF_CONTENT_LIMIT, gifPlan } from "@/lib/editor/gif";
 import { clipExportRanges, type ExportScope } from "@/lib/editor/exportRanges";
 import { ZIP_DOWNLOAD_LIMIT } from "@/lib/editor/zipArchive";
 import { zipDownloadFiles } from "@/lib/editor/zipDownloadFiles";
+import { writePdfDocument } from "@/lib/editor/pdfDocument";
+import { exportPresentation } from "@/lib/editor/exportPresentation";
 import { startExportJournal } from "@/lib/editor/exportJournal";
 import { uploadEditorAsset } from "@/lib/editor/cloudMedia";
 
@@ -43,7 +53,7 @@ interface Props {
   onOpenChange: (v: boolean) => void;
 }
 
-type Format = ExportFormat | StillFormat;
+type Format = ExportFormat | StillFormat | "pdf" | "pptx" | "notes";
 
 const QUALITY_PRESETS = {
   low: 2_500_000,
@@ -53,7 +63,7 @@ const QUALITY_PRESETS = {
 } as const;
 type Quality = keyof typeof QUALITY_PRESETS;
 
-const isStill = (f: Format): f is StillFormat => f === "png" || f === "jpg";
+const isStill = (f: Format): boolean => f === "png" || f === "jpg" || f === "pdf" || f === "pptx" || f === "notes";
 
 export function ExportDialog({ open, onOpenChange }: Props) {
   const { t: _copy } = _useCopy();
@@ -71,7 +81,15 @@ export function ExportDialog({ open, onOpenChange }: Props) {
   const [format, setFormat] = useState<Format>("mp4");
   const [scaleKey, setScaleKey] = useState("1");
   const [qualityKey, setQualityKey] = useState<Quality>("high");
-  const [allPages, setAllPages] = useState(true);
+  const [pageScope, setPageScope] = useState<"all" | "current" | "custom" | "section">("all");
+  const [sectionName, setSectionName] = useState("");
+  const [pageSelection, setPageSelection] = useState("1");
+  const [filenamePattern, setFilenamePattern] = useState("");
+  const [documentQuality, setDocumentQuality] = useState<DocumentImageProfile>("standard");
+  const [jpegQuality, setJpegQuality] = useState(0.92);
+  const [transparent, setTransparent] = useState(false);
+  const [cropMarks, setCropMarks] = useState(false);
+  const [bookmarks, setBookmarks] = useState(true);
   const [scope, setScope] = useState<ExportScope>("timeline");
   const rangeSnapshot = { ...toSnapshot(), clips, tracks };
   const allRanges = clipExportRanges(rangeSnapshot);
@@ -79,6 +97,7 @@ export function ExportDialog({ open, onOpenChange }: Props) {
   const ranges = scope === "selection" ? selectedRanges : allRanges;
   const pages = getPages(settings, clips);
   const multiPage = pages.length > 1;
+  const sections = designPageSections(rangeSnapshot), effectiveSection = sections.some(section => section.name === sectionName) ? sectionName : sections[0]?.name ?? "";
 
   const [busy, setBusy] = useState(false);
   const [progress, setProgress] = useState(0);
@@ -88,7 +107,7 @@ export function ExportDialog({ open, onOpenChange }: Props) {
   const videoSupported = isExportSupported();
   const still = isStill(format);
   const gif = format === "gif";
-  const scale = parseFloat(scaleKey);
+  const scale = format === "pdf" || format === "pptx" ? documentImageScale(settings.width, settings.height, parseFloat(scaleKey), documentQuality) : parseFloat(scaleKey);
   const gifOutput = gifPlan(settings.width, settings.height, scale, BRAND_OUTRO_DURATION, settings.fps);
   const outW = gif ? gifOutput.width : Math.round(settings.width * scale);
   const outH = gif ? gifOutput.height : Math.round(settings.height * scale);
@@ -99,7 +118,7 @@ export function ExportDialog({ open, onOpenChange }: Props) {
     if (!open) return;
     const hasMotion = hasTimelineMotion(clips);
     setFormat(hasMotion ? "mp4" : "png");
-    setScaleKey("1");
+    setScaleKey("1"); setFilenamePattern("");
     setScope("timeline");
     // Only on open; changing clips while the dialog is up should not reset a choice.
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -153,14 +172,38 @@ export function ExportDialog({ open, onOpenChange }: Props) {
     const check = () => { if (ctl.signal.aborted) throw new DOMException("Export cancelled", "AbortError"); };
     try {
       const snapshot = toSnapshot();
-      const frames = pageExportFrames(snapshot, currentTime, allPages ? "all" : "current", format as StillFormat);
-      if (multiPage && allPages) {
-        const files: { name: string; blob: Blob }[] = [];
-        for (const frame of frames) {
+      if (format === "notes") {
+        const content = presentationNotesText(snapshot, currentTime, resolvePageExportScope(snapshot, pageScope, pageSelection, effectiveSection));
+        download(new Blob(["\uFEFF", content], { type: "text/plain;charset=utf-8" }), exportFilename(snapshot.title, "txt", "-notes", "design"));
+        setProgress(100); onOpenChange(false); return;
+      }
+      const imageFormat = format === "pdf" || format === "pptx" ? "jpg" : format as StillFormat;
+      const frames = pageExportFrames(snapshot, currentTime, resolvePageExportScope(snapshot, pageScope, pageSelection, effectiveSection), imageFormat, format === "png" || format === "jpg" ? filenamePattern : "");
+      if (format === "pptx") {
+        let captured = 0;
+        const blob = await exportPresentation(snapshot, currentTime, resolvePageExportScope(snapshot, pageScope, pageSelection, effectiveSection), async time => {
+          check(); setLabel(t("editor.pages.exporting", { current: ++captured, total: frames.length }));
+          const { blob, links } = await exportStill({ snapshot, media, format: "jpg", quality: documentImageProfile(documentQuality).quality, scale, ignoreAnimations: true, time });
+          return { blob, links: links ?? [] };
+        }, ctl.signal, fraction => setProgress(Math.round(fraction * 100)));
+        check(); download(blob, exportFilename(snapshot.title, "pptx", "", "design"));
+      } else if (format === "pdf") {
+        const parts: ArrayBuffer[] = [];
+        await writePdfDocument(frames.length, async index => {
           check();
-          setProgress(Math.round((frame.index / frames.length) * 100));
-          setLabel(t("editor.pages.exporting", { current: frame.index + 1, total: frames.length }));
-          const { blob } = await exportStill({ snapshot, media, format: format as StillFormat, scale, time: frame.time });
+          setProgress(Math.round(index / frames.length * 95));
+          setLabel(t("editor.pages.exporting", { current: index + 1, total: frames.length }));
+          const { blob, links } = await exportStill({ snapshot, media, format: "jpg", quality: documentImageProfile(documentQuality).quality, scale, ignoreAnimations: true, time: frames[index].time });
+          return { jpeg: new Uint8Array(await blob.arrayBuffer()), width: Math.max(2, Math.round(snapshot.settings.width * scale)), height: Math.max(2, Math.round(snapshot.settings.height * scale)), designWidth: snapshot.settings.width, designHeight: snapshot.settings.height, dpi: snapshot.settings.printDpi, cropMarks, links };
+        }, part => { parts.push(part.slice().buffer as ArrayBuffer); }, ctl.signal, frames.map(frame => frame.index), { title: snapshot.title, bookmarks, pageSections: frames.map(frame => snapshot.settings.pageDetails?.[frame.index]?.section ?? ""), pageTitles: frames.map(frame => snapshot.settings.pageDetails?.[frame.index]?.title ?? ""), pageLabels: frames.map(frame => String(frame.index + 1)) });
+        check(); download(new Blob(parts, { type: "application/pdf" }), exportFilename(snapshot.title, "pdf", "", "design"));
+      } else if (frames.length > 1) {
+        const files: { name: string; blob: Blob }[] = [];
+        for (const [index, frame] of frames.entries()) {
+          check();
+          setProgress(Math.round((index / frames.length) * 100));
+          setLabel(t("editor.pages.exporting", { current: index + 1, total: frames.length }));
+          const { blob } = await exportStill({ snapshot, media, format: format as StillFormat, quality: jpegQuality, scale, ignoreAnimations: true, time: frame.time, transparent });
           check();
           files.push({ name: frame.filename, blob });
         }
@@ -169,9 +212,9 @@ export function ExportDialog({ open, onOpenChange }: Props) {
         download(zip, exportFilename(snapshot.title, "zip", "", "design"));
       } else {
         const time = frames[0].time;
-        const { blob, filename } = await exportStill({ snapshot, media, format: format as StillFormat, scale, time });
+        const { blob } = await exportStill({ snapshot, media, format: format as StillFormat, quality: jpegQuality, scale, ignoreAnimations: multiPage, time, transparent });
         check();
-        download(blob, filename);
+        download(blob, frames[0].filename);
       }
       onOpenChange(false);
     } catch (e) {
@@ -260,7 +303,10 @@ export function ExportDialog({ open, onOpenChange }: Props) {
   };
   const scales = still ? ["0.5", "1", "2"] : ["1", "0.75", "0.5"];
   const gifTooLong = gif && (scope === "timeline" ? duration > GIF_CONTENT_LIMIT : ranges.some(r => r.end - r.start > GIF_CONTENT_LIMIT));
-  const canDownload = duration > 0 && (still || motionSupported) && (still || scope === "timeline" || ranges.length > 0) && !gifTooLong;
+  const filenameError = format === "png" || format === "jpg" ? pageFilenamePatternError(filenamePattern) : "";
+  let pageOrderError = "";
+  if (still && pageScope === "custom") { try { parsePageExportOrder(pageSelection, pages.length); } catch (reason) { pageOrderError = reason instanceof Error ? reason.message : "Choose existing pages"; } }
+  const canDownload = !pageOrderError && !filenameError && !(still && pageScope === "section" && !effectiveSection) && duration > 0 && (still || motionSupported) && (still || scope === "timeline" || ranges.length > 0) && !gifTooLong;
 
   return (
     <Dialog open={open} onOpenChange={(v) => { if (!busy) onOpenChange(v); }}>
@@ -268,7 +314,7 @@ export function ExportDialog({ open, onOpenChange }: Props) {
         <DialogHeader>
           <DialogTitle>{t("editor.export.title")}</DialogTitle>
           <DialogDescription className="text-white/60">
-            {gif ? t("editor.export.gifHint") : still ? t("editor.export.stillDescription") : t("editor.export.videoDescription")}
+            {format === "notes" ? t("editor.export.notesTextHint", { defaultValue: "Downloads section headings, original page numbers, page names, and presenter notes as a text file." }) : gif ? t("editor.export.gifHint") : still ? t("editor.export.stillDescription") : t("editor.export.videoDescription")}
           </DialogDescription>
         </DialogHeader>
 
@@ -286,6 +332,9 @@ export function ExportDialog({ open, onOpenChange }: Props) {
                 <SelectContent className="border-white/10 bg-black/90 text-white backdrop-blur-[24px]">
                   <SelectItem value="png">{t("editor.export.png")}</SelectItem>
                   <SelectItem value="jpg">{t("editor.export.jpg")}</SelectItem>
+                  <SelectItem value="pdf">{t("editor.export.pdf", { defaultValue: "PDF document" })}</SelectItem>
+                  <SelectItem value="notes">{t("editor.export.notesText", { defaultValue: "Presenter notes (.txt)" })}</SelectItem>
+                    <SelectItem value="pptx">{t("editor.export.pptx", { defaultValue: "PowerPoint presentation" })}</SelectItem>
                   <SelectItem value="mp4">{t("editor.export.mp4")}</SelectItem>
                   <SelectItem value="webm">{t("editor.export.webm")}</SelectItem>
                   <SelectItem value="gif">{t("emojiPicker.tabGif")}</SelectItem>
@@ -304,7 +353,7 @@ export function ExportDialog({ open, onOpenChange }: Props) {
                 </Select>
               </Row>
             )}
-            <Row label={t("editor.export.resolution")}>
+            {format !== "notes" && <Row label={t("editor.export.resolution")}>
               <Select value={scaleKey} onValueChange={setScaleKey}>
                 <SelectTrigger className="h-9 border-white/10 bg-white/5 text-white"><SelectValue /></SelectTrigger>
                 <SelectContent className="border-white/10 bg-black/90 text-white backdrop-blur-[24px]">
@@ -318,18 +367,33 @@ export function ExportDialog({ open, onOpenChange }: Props) {
                   })}
                 </SelectContent>
               </Select>
-            </Row>
+            </Row>}
+            {(format === "pdf" || format === "pptx") && <DocumentImageQualityControls value={documentQuality} onChange={setDocumentQuality} />}
+            {format === "pdf" && <label className="flex min-h-9 items-center gap-2 text-xs text-white/75"><input type="checkbox" checked={cropMarks} onChange={event => setCropMarks(event.target.checked)} />{t("editor.export.cropMarks", { defaultValue: "Crop marks and print margins" })}</label>}
+            {format === "pdf" && multiPage && <label className="flex min-h-9 items-center gap-2 text-xs text-white/75"><input type="checkbox" checked={bookmarks} onChange={event => setBookmarks(event.target.checked)} />{t("editor.export.pageBookmarks", { defaultValue: "Page-name bookmarks" })}</label>}
+            {format === "pdf" && cropMarks && <p className="text-xs text-white/45">{t("editor.export.cropMarkHint", { defaultValue: "Adds cutting marks outside the artwork. The saved print resolution sets the finished page size." })}</p>}
+            {(format === "png" || format === "jpg") && <div className="space-y-2"><label className="text-xs text-white/65">{t("editor.export.filenamePattern", { defaultValue: "Page filename pattern" })}<Input value={filenamePattern} maxLength={160} onChange={event => setFilenamePattern(event.target.value)} placeholder="{title}-{page:2}-{name}" className="mt-2 h-9 border-white/10 bg-white/5 text-white" /></label><div className="flex flex-wrap gap-2">{[["", "Default"], ["{title}-{page:2}", "Title and number"], ["{page:2}-{name}", "Page names"]].map(([pattern, label]) => <button type="button" key={label} onClick={() => setFilenamePattern(pattern)} className="min-h-8 rounded-lg border border-white/20 px-3 text-xs text-white/65">{t(`editor.export.filenamePreset.${label}`, { defaultValue: label })}</button>)}</div><p className="text-[10px] text-white/45">{t("editor.export.filenameHint", { defaultValue: "Leave blank for default names. Use {title}, {name}, {section}, {page}, or {page:3}. Add a prefix as plain text. Duplicate names receive a page-number suffix." })}</p>{filenameError && <p role="alert" className="text-xs text-red-300">{filenameError}</p>}</div>}
+            {format === "jpg" && <JpegQualityControl value={jpegQuality} onChange={setJpegQuality} />}
+            {format === "png" && <label className="flex min-h-9 items-center gap-2 text-xs text-white/75"><input type="checkbox" checked={transparent} onChange={e => setTransparent(e.target.checked)} />{t("editor.export.transparent", { defaultValue: "Transparent background" })}</label>}
+            {format === "notes" && <p className="text-xs text-white/55">{t("editor.export.notesTextHint", { defaultValue: "Downloads section headings, original page numbers, page names, and presenter notes as a text file." })}</p>}
+            {format === "pptx" && <p className="text-xs text-white/55">{t("editor.export.pptxHint", { defaultValue: "Each page becomes one slide image, with presenter notes and links. Edit individual text and elements in the original design." })}</p>}
             {still && multiPage && (
               <Row label={t("editor.pages.label")}>
-                <Select value={allPages ? "all" : "one"} onValueChange={(v) => setAllPages(v === "all")}>
+                <Select value={pageScope} onValueChange={v => setPageScope(v as typeof pageScope)}>
                   <SelectTrigger className="h-9 border-white/10 bg-white/5 text-white"><SelectValue /></SelectTrigger>
                   <SelectContent className="border-white/10 bg-black/90 text-white backdrop-blur-[24px]">
-                    <SelectItem value="all">{t("editor.pages.allZip", { count: pages.length })}</SelectItem>
-                    <SelectItem value="one">{t("editor.pages.thisPage")}</SelectItem>
+                    <SelectItem value="all">{format === "pptx" ? t("editor.pages.allPptx", { defaultValue: "All {{count}} pages in one presentation", count: pages.length }) : format === "notes" ? t("editor.pages.allNotes", { defaultValue: "All {{count}} pages in one notes file", count: pages.length }) : format === "pdf" ? t("editor.pages.allPdf", { defaultValue: "All {{count}} pages in one PDF", count: pages.length }) : t("editor.pages.allZip", { count: pages.length })}</SelectItem>
+                    <SelectItem value="current">{t("editor.pages.thisPage")}</SelectItem>
+                    {!!sections.length && <SelectItem value="section">{t("editor.export.section", { defaultValue: "Named section" })}</SelectItem>}
+                    <SelectItem value="custom">{t("editor.pages.choosePages", { defaultValue: "Choose pages" })}</SelectItem>
                   </SelectContent>
                 </Select>
               </Row>
             )}
+            {still && pageScope === "section" && <SectionExportPicker sections={sections} value={effectiveSection} onChange={setSectionName} />}
+            {still && multiPage && pageScope === "custom" && <p className="text-[10px] text-white/45">{t("editor.export.pageOrderHint", { defaultValue: "Pages follow the order entered. Use 3,1-2 to start with page 3, or 5-1 to reverse a range. Repeated page numbers appear once." })}</p>}
+            {still && pageOrderError && <p role="alert" className="text-xs text-red-300">{pageOrderError}</p>}
+            {still && multiPage && pageScope === "custom" && <Row label={t("editor.pages.pageNumbers", { defaultValue: "Page numbers" })}><Input value={pageSelection} onChange={e => setPageSelection(e.target.value)} placeholder="1,3-5" aria-label={t("editor.pages.pageNumbers", { defaultValue: "Page numbers" })} className="h-9 border-white/10 bg-white/5 text-white" /></Row>}
             {!still && !gif && (
               <Row label={t("editor.export.quality")}>
                 <Select value={qualityKey} onValueChange={(v) => setQualityKey(v as Quality)}>
@@ -345,7 +409,7 @@ export function ExportDialog({ open, onOpenChange }: Props) {
             )}
 
             <div className="rounded-md border border-white/10 bg-white/5 p-2.5 text-xs text-white/70">
-              {still ? (
+              {format === "notes" ? <div>{t("editor.export.notesText", { defaultValue: "Presenter notes (.txt)" })}</div> : still ? (
                 <div>{t("editor.export.frameAt", { time: Math.min(currentTime, duration).toFixed(2) })}</div>
               ) : (
                 <>
@@ -355,11 +419,11 @@ export function ExportDialog({ open, onOpenChange }: Props) {
                   </> : <div>{t("editor.export.rangeHint")}</div>}
                 </>
               )}
-              <div>
+              {format !== "notes" && <div>
                 {still
                   ? t("editor.export.outputStill", { width: outW, height: outH })
                   : t("editor.export.outputVideo", { width: outW, height: outH, fps: gif ? gifOutput.fps : settings.fps })}
-              </div>
+              </div>}
               {gifTooLong && <div>{t("editor.export.gifTooLong")}</div>}
             </div>
           </div>

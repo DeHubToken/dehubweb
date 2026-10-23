@@ -1,3 +1,6 @@
+import { SavedPhotoLooks } from "./SavedPhotoLooks";
+import { inferFilterStrength, scaledFilterEffects } from "@/lib/editor/filterStrength";
+import { DUOTONE_PRESETS } from "@/lib/editor/photoTone";
 import { useTranslation as _useCopy } from 'react-i18next';
 import { useEditorDraftFocus } from "@/components/editor/useEditorDraftFocus";
 import { ScreenSwitch } from "@/components/editor/ScreenSwitch";
@@ -70,6 +73,7 @@ export function Inspector() {
     ? (selected as MediaClip)
     : null;
   const visualMedia = mediaClip && mediaClip.kind !== "audio" ? mediaClip : null;
+  const activeFilter = inferFilterStrength(visualMedia?.effects);
   const hasAudio = mediaClip && (mediaClip.kind === "video" || mediaClip.kind === "audio") ? mediaClip : null;
 
   const currentFontWeights = useMemo(() => {
@@ -193,10 +197,13 @@ export function Inspector() {
             <p className="text-[10px] uppercase tracking-wide text-white/40">{_copy("copy.ba4e64037fff", { defaultValue: "Vibes" })}</p>
             <div className="grid grid-cols-4 gap-1">
               {FILTER_PRESETS.map((p) => {
-                const active = presetMatches(visualMedia.effects, p.effects);
+                const active = activeFilter?.id === p.id;
                 return (
                   <button
                     key={p.id}
+                    type="button"
+                    disabled={visualMedia.locked}
+                    aria-pressed={active}
                     onClick={() => updateMediaClip(visualMedia.id, { effects: applyFilterPreset(p.id) })}
                     className={cn(
                       "rounded-md border px-1 py-1 text-[10px] transition",
@@ -204,14 +211,25 @@ export function Inspector() {
                         ? "border-white/50 bg-white/15 text-white"
                         : "border-white/10 text-white/60 hover:bg-white/5 hover:text-white",
                     )}
-                    title={p.label}
+                    title={t(`editor.filters.${p.id}`, { defaultValue: p.label })}
                   >
-                    {p.label}
+                    {t(`editor.filters.${p.id}`, { defaultValue: p.label })}
                   </button>
                 );
               })}
             </div>
 
+            {activeFilter && activeFilter.id !== "none" && <EffectSlider label={t("editor.filters.strength", { defaultValue: "Filter strength: {{value}}%", value: Math.round(activeFilter.strength * 100) })} value={activeFilter.strength} min={0.01} max={1} step={0.01} onChange={strength => { if (!visualMedia.locked) updateMediaClip(visualMedia.id, { effects: scaledFilterEffects(activeFilter.id, strength) }); }} />}
+            <SavedPhotoLooks key={visualMedia.id} value={visualMedia.effects ?? {}} disabled={!!visualMedia.locked} onApply={effects => { if (!visualMedia.locked) updateMediaClip(visualMedia.id, { effects }); }} />
+            <p className="pt-1 text-[10px] uppercase tracking-wide text-white/40">{t("editor.photoTone.duotone", { defaultValue: "Duotone" })}</p>
+            <div className="grid grid-cols-3 gap-1">
+              <button type="button" disabled={visualMedia.locked} onClick={() => updateMediaClip(visualMedia.id, { effects: { ...visualMedia.effects, duotone: null } })} className="min-h-9 rounded-lg border border-white/15 text-xs text-white/70 disabled:opacity-35">{t("editor.photoTone.original", { defaultValue: "Original colours" })}</button>
+              {DUOTONE_PRESETS.map(preset => <button type="button" key={preset.id} disabled={visualMedia.locked} onClick={() => updateMediaClip(visualMedia.id, { effects: { ...visualMedia.effects, duotone: { dark: preset.dark, light: preset.light, amount: 1 } } })} className="min-h-9 rounded-lg border border-white/15 px-2 text-xs disabled:opacity-35"><span aria-hidden className="mr-1 inline-flex overflow-hidden rounded"><span className="h-3 w-2" style={{ background: preset.dark }} /><span className="h-3 w-2" style={{ background: preset.light }} /></span>{t(`editor.photoTone.preset.${preset.id}`, { defaultValue: preset.label })}</button>)}
+            </div>
+            {visualMedia.effects?.duotone && <>
+              <div className="grid grid-cols-2 gap-2">{(["dark", "light"] as const).map(key => <label key={key} className="text-xs text-white/60">{t(`editor.photoTone.${key}`, { defaultValue: key === "dark" ? "Shadows colour" : "Highlights colour" })}<input type="color" value={visualMedia.effects!.duotone![key]} disabled={visualMedia.locked} onChange={event => updateMediaClip(visualMedia.id, { effects: { ...visualMedia.effects, duotone: { ...visualMedia.effects!.duotone!, [key]: event.target.value } } })} className="mt-1 h-8 w-full bg-transparent" /></label>)}</div>
+              <EffectSlider label={t("editor.photoTone.strength", { defaultValue: "Duotone strength" })} value={visualMedia.effects.duotone.amount} min={0} max={1} step={0.01} onChange={amount => { if (!visualMedia.locked) updateMediaClip(visualMedia.id, { effects: { ...visualMedia.effects, duotone: { ...visualMedia.effects!.duotone!, amount } } }); }} />
+            </>}
             <p className="pt-1 text-[10px] uppercase tracking-wide text-white/40">{_copy("copy.358511c8c098", { defaultValue: "Effects" })}</p>
             <EffectSlider label={_copy("copy.ec811d30a89c", { defaultValue: "Brightness" })} value={visualMedia.effects?.brightness ?? 1} min={0} max={2} step={0.01}
               onChange={(v) => updateMediaClip(visualMedia.id, { effects: { ...visualMedia.effects, brightness: v } })} />
@@ -236,6 +254,7 @@ export function Inspector() {
             <EffectSlider label={t("editor.adjust.tint", { value: Math.round((visualMedia.effects?.tint ?? 0) * 100) })}
               value={visualMedia.effects?.tint ?? 0} min={-1} max={1} step={0.01}
               onChange={(v) => updateMediaClip(visualMedia.id, { effects: { ...visualMedia.effects, tint: v } })} />
+            {(["sharpen", "grain", "vibrance", "highlights", "shadows", "fade"] as const).map(key => <EffectSlider key={key} label={t(`editor.photoTone.${key}`, { defaultValue: ({ sharpen: "Sharpen", grain: "Film grain", vibrance: "Vibrance", highlights: "Highlights", shadows: "Shadows", fade: "Fade" })[key] })} value={visualMedia.effects?.[key] ?? 0} min={key === "fade" || key === "grain" || key === "sharpen" ? 0 : -1} max={1} step={0.01} onChange={value => { if (!visualMedia.locked) updateMediaClip(visualMedia.id, { effects: { ...visualMedia.effects, [key]: value } }); }} />)}
             <EffectSlider label={t("editor.adjust.vignette", { value: Math.round((visualMedia.effects?.vignette ?? 0) * 100) })}
               value={visualMedia.effects?.vignette ?? 0} min={0} max={1} step={0.01}
               onChange={(v) => updateMediaClip(visualMedia.id, { effects: { ...visualMedia.effects, vignette: v } })} />
@@ -353,6 +372,9 @@ export function Inspector() {
                 </select>
               </Field>
             </div>
+            <EffectSlider label={t("editor.text.curve", { defaultValue: "Curve {{value}}", value: Math.round(text.curve ?? 0) })}
+              value={text.curve ?? 0} min={-100} max={100} step={1}
+              onChange={curve => updateTextClip(text.id, { curve })} />
             <Field label={_copy("copy.119ef3fa607e", { defaultValue: "Font family" })}>
               <FontPicker
                 value={text.fontFamily}
@@ -396,6 +418,7 @@ export function Inspector() {
               </label>
               {text.background && (
                 <div className="mt-2 space-y-2">
+                  <label className="flex min-h-9 items-center gap-2 text-xs text-white/65"><input type="checkbox" checked={!!text.background.perLine} onChange={event => updateTextClip(text.id, { background: { ...text.background!, perLine: event.target.checked } })} />{t("editor.text.backgroundPerLine", { defaultValue: "Fit background to each line" })}</label>
                   <div className="grid grid-cols-2 gap-2">
                     <Field label={_copy("copy.3a9dfa58df63", { defaultValue: "Colour" })}>
                       <input type="color" value={text.background.color}
@@ -497,21 +520,6 @@ function EffectSlider({
   );
 }
 
-/** Shallow compare of two ClipEffects objects for preset highlight. */
-function presetMatches(current: MediaClip["effects"], preset: MediaClip["effects"]): boolean {
-  const keys: (keyof NonNullable<MediaClip["effects"]>)[] = [
-    "brightness", "contrast", "saturation", "blur", "grayscale", "sepia", "hueRotate", "invert",
-  ];
-  const norm = (e: MediaClip["effects"], k: keyof NonNullable<MediaClip["effects"]>) => {
-    const v = e?.[k];
-    if (v === undefined) {
-      // Default neutral values differ by field.
-      return k === "brightness" || k === "contrast" || k === "saturation" ? 1 : 0;
-    }
-    return v;
-  };
-  return keys.every((k) => Math.abs(norm(current, k) - norm(preset, k)) < 0.001);
-}
 
 function AnimationSection({ clip }: { clip: Clip }) {
   const { t: _copy } = _useCopy();
@@ -533,7 +541,7 @@ function AnimationSection({ clip }: { clip: Clip }) {
             !inA ? "border-white/50 bg-white/15 text-white" : "border-white/10 text-white/60 hover:bg-white/5 hover:text-white",
           )}
         >{_copy("copy.dc937b598926", { defaultValue: "None" })}</button>
-        {ANIMATION_PRESETS.map((p) => {
+        {ANIMATION_PRESETS.filter(p => p.kind !== "typewriter" || clip.kind === "text").map((p) => {
           const active = inA?.kind === p.kind;
           return (
             <button
@@ -572,7 +580,7 @@ function AnimationSection({ clip }: { clip: Clip }) {
             !outA ? "border-white/50 bg-white/15 text-white" : "border-white/10 text-white/60 hover:bg-white/5 hover:text-white",
           )}
         >{_copy("copy.dc937b598926", { defaultValue: "None" })}</button>
-        {ANIMATION_PRESETS.map((p) => {
+        {ANIMATION_PRESETS.filter(p => p.kind !== "typewriter" || clip.kind === "text").map((p) => {
           const active = outA?.kind === p.kind;
           return (
             <button

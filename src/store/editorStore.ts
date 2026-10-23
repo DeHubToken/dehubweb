@@ -1,3 +1,5 @@
+import { duplicateDesignPageSelection } from "@/lib/editor/designClone";
+import { reportDesignClipboard } from "@/lib/editor/designClipboard";
 import { projectEditGate, type ProjectEditLease } from "@/lib/editor/projectEditGate";
 /**
  * Editor state: media library, multi-track timeline, playback, project settings,
@@ -9,9 +11,10 @@ import { projectReviewSnapshotKey } from "@/lib/editor/cloudProjectReview";
 import { create } from "zustand";
 import { nanoid } from "nanoid";
 import type { MediaMeta, StoredMedia } from "@/lib/editor/mediaStore";
-import { appendPage, getPages, pageAt, removePage, timelineDuration } from "@/lib/editor/pages";
+import { appendPage, getPages, pageAt, removePage, reorderPage, setPageDuration, timelineDuration } from "@/lib/editor/pages";
 import { applyTimelineOp, sliceTimelineClip } from "@/lib/editor/timelineAgent";
 import { fitCaptionTrack } from "@/lib/editor/textFit";
+import { groupedSelection, groupDesignLayers, ungroupDesignLayers, remapDesignGroups } from "@/lib/editor/designGroups";
 import {
   DEFAULT_SETTINGS,
   type Clip,
@@ -66,6 +69,7 @@ interface EditorState extends EditableState {
   applySharedSnapshot: (snap: ProjectSnapshot, expectedKey: string) => number;
   newProject: () => void;
   toSnapshot: () => ProjectSnapshot;
+  applyDesignEdit: (expected: ProjectSnapshot, next: ProjectSnapshot) => boolean;
 
   // --- media library ---
   setMedia: (items: MediaItem[]) => void;
@@ -81,6 +85,9 @@ interface EditorState extends EditableState {
   // --- selection ---
   selectClip: (id: string | null, additive?: boolean) => void;
   selectMany: (ids: string[]) => void;
+  selectGroupMember: (id: string) => void;
+  groupSelected: () => void;
+  ungroupSelected: () => void;
 
   // --- history ---
   undo: () => void;
@@ -135,6 +142,8 @@ interface EditorState extends EditableState {
   addPage: (opts?: { duplicate?: boolean }) => void;
   /** Delete a page and its layers; later pages move up to close the gap. */
   deletePage: (index: number) => void;
+  movePage: (from: number, to: number) => void;
+  resizePage: (index: number, duration: number) => void;
 
   editing: boolean;
   scopeVersion: number;
@@ -296,17 +305,27 @@ export const useEditorStore = create<EditorState>((set, get) => {
   selectClip: (id, additive) =>
     set((s) => {
       if (id === null) return { selectedClipIds: [] };
+      const group = groupedSelection(s.clips, [id], s.currentTime);
       if (additive) {
         const exists = s.selectedClipIds.includes(id);
         return {
           selectedClipIds: exists
-            ? s.selectedClipIds.filter((x) => x !== id)
-            : [...s.selectedClipIds, id],
+            ? s.selectedClipIds.filter((x) => !group.includes(x))
+            : [...new Set([...s.selectedClipIds, ...group])],
         };
       }
-      return { selectedClipIds: [id] };
+      return { selectedClipIds: group };
     }),
-  selectMany: (ids) => set({ selectedClipIds: ids }),
+  selectMany: (ids) => set(s => ({ selectedClipIds: groupedSelection(s.clips, ids, s.currentTime) })),
+  selectGroupMember: (id) => set(s => ({ selectedClipIds: s.clips.some(c => c.id === id) ? [id] : [] })),
+  groupSelected: () => {
+    const s = get(), before = s.toSnapshot(), next = groupDesignLayers(before, s.selectedClipIds, () => nanoid(10));
+    if (next !== before) s.applyDesignEdit(before, next);
+  },
+  ungroupSelected: () => {
+    const s = get(), before = s.toSnapshot(), next = ungroupDesignLayers(before, s.selectedClipIds);
+    if (next !== before) s.applyDesignEdit(before, next);
+  },
 
   // ── history ──
   undo: () =>
@@ -630,8 +649,9 @@ export const useEditorStore = create<EditorState>((set, get) => {
 
   rippleDelete: (ids) => {
     const s = get();
-    const target = ids ?? s.selectedClipIds;
+    const target = groupedSelection(s.clips, ids ?? s.selectedClipIds, s.currentTime);
     if (!target.length) return;
+    if (s.clips.some(c => target.includes(c.id) && c.groupId && c.locked)) return;
     const past = [...s.past, snapshotEditable(s)].slice(-MAX_HISTORY);
     set({
       past,
@@ -659,38 +679,15 @@ export const useEditorStore = create<EditorState>((set, get) => {
       newIds.push(copy.id);
     }
     if (!additions.length) return;
-    set({ past, future: [], clips: workingClips, selectedClipIds: newIds });
+    set({ past, future: [], clips: [...s.clips, ...remapDesignGroups(additions, () => nanoid(10))], selectedClipIds: newIds });
   },
 
   duplicateOnCanvas: () => {
-    const s = get();
-    if (!s.selectedClipIds.length) return;
-    const past = [...s.past, snapshotEditable(s)].slice(-MAX_HISTORY);
-    let tracks = s.tracks.slice();
-    const additions: Clip[] = [];
-    for (const id of s.selectedClipIds) {
-      const orig = s.clips.find((c) => c.id === id);
-      if (!orig) continue;
-      const src = tracks.find((t) => t.id === orig.trackId);
-      if (!src) continue;
-      const count = tracks.filter((t) => t.kind === src.kind).length + 1;
-      const label = src.kind === "text" ? "Text" : src.kind === "audio" ? "Audio" : "Video";
-      const track: Track = { id: nanoid(8), kind: src.kind, name: `${label} ${count}`, muted: false, hidden: false };
-      tracks.splice(tracks.indexOf(src) + 1, 0, track);
-      const nudge = 0.03;
-      const copy = { ...orig, id: nanoid(10), trackId: track.id } as Clip;
-      if (copy.kind === "text") {
-        copy.x = Math.min(1, copy.x + nudge);
-        copy.y = Math.min(1, copy.y + nudge);
-      } else if (copy.kind !== "audio") {
-        const tf = copy.transform ?? { x: 0.5, y: 0.5, scale: 1, rotation: 0 };
-        copy.transform = { ...tf, x: Math.min(1, tf.x + nudge), y: Math.min(1, tf.y + nudge) };
-      }
-      additions.push(copy);
-    }
-    if (!additions.length) return;
-    tracks = tracks.slice();
-    set({ past, future: [], tracks, clips: [...s.clips, ...additions], selectedClipIds: additions.map((c) => c.id) });
+    const store = get(), before = store.toSnapshot();
+    try {
+      const result = duplicateDesignPageSelection(before, store.selectedClipIds, store.currentTime, () => nanoid(10));
+      if (result && store.applyDesignEdit(before, result.project)) { get().setIsPlaying(false); get().selectMany(result.ids); }
+    } catch (error) { reportDesignClipboard({ kind: "error", message: error instanceof Error ? error.message : String(error) }); }
   },
 
   copySelectedToClipboard: () => {
@@ -730,7 +727,7 @@ export const useEditorStore = create<EditorState>((set, get) => {
     // Default: paste immediately after the copied clips' end. Fallback to playhead.
     const baseTime = opts?.time ?? parsed.sourceEnd ?? s.currentTime;
     const overrideTrackId = opts?.trackId;
-    for (const c of parsed.relative) {
+    for (const c of remapDesignGroups(parsed.relative, () => nanoid(10))) {
       let track =
         (overrideTrackId ? s.tracks.find((t) => t.id === overrideTrackId) : null) ??
         s.tracks.find((t) => t.id === c.trackId) ??
@@ -757,7 +754,7 @@ export const useEditorStore = create<EditorState>((set, get) => {
       if (!track) continue;
       const desired = baseTime + c.start;
       const placed = findFreeStart(workingClips, track.id, desired, c.duration);
-      const copy = { ...c, id: nanoid(10), trackId: track.id, start: placed } as Clip;
+      const copy = { ...c, id: nanoid(10), trackId: track.id, start: placed, isPageBackground: undefined } as Clip;
       workingClips = [...workingClips, copy];
       newIds.push(copy.id);
     }
@@ -773,7 +770,7 @@ export const useEditorStore = create<EditorState>((set, get) => {
       past,
       future: [],
       clips: s.clips.map((c) =>
-        c.id === id && c.kind === "text" ? ({ ...c, ...patch } as TextClip) : c,
+        c.id === id && c.kind === "text" ? ({ ...c, ...(patch.text !== undefined && patch.text !== c.text ? { pageNumber: undefined } : {}), ...patch } as TextClip) : c,
       ),
     });
   },
@@ -810,6 +807,17 @@ export const useEditorStore = create<EditorState>((set, get) => {
     });
   },
 
+  applyDesignEdit: (expected, next) => {
+    const s = get();
+    if (expected.id !== s.projectId || next.id !== s.projectId ||
+      projectReviewSnapshotKey(s.toSnapshot()) !== projectReviewSnapshotKey(expected)) return false;
+    const existing = new Set(next.clips.map(c => c.id));
+    set({ past: [...s.past, snapshotEditable(s)].slice(-MAX_HISTORY), future: [], tracks: next.tracks,
+      clips: next.clips, settings: next.settings, selectedClipIds: s.selectedClipIds.filter(id => existing.has(id)),
+      currentTime: Math.min(s.currentTime, timelineDuration(next.settings, next.clips)), isPlaying: false });
+    return true;
+  },
+
   updateSettings: (patch) => {
     const s = get();
     const past = [...s.past, snapshotEditable(s)].slice(-MAX_HISTORY);
@@ -844,6 +852,22 @@ export const useEditorStore = create<EditorState>((set, get) => {
       currentTime: page.start,
       selectedClipIds: [],
     });
+  },
+
+  movePage: (from, to) => {
+    const s = get();
+    const page = reorderPage(s.settings, s.clips, from, to, () => nanoid(10));
+    if (!page) return;
+    set({ past: [...s.past, snapshotEditable(s)].slice(-MAX_HISTORY), future: [],
+      clips: page.clips, settings: page.settings, currentTime: page.start, selectedClipIds: [], isPlaying: false });
+  },
+
+  resizePage: (index, duration) => {
+    const s = get();
+    const page = setPageDuration(s.settings, s.clips, index, duration, () => nanoid(10));
+    if (!page) return;
+    set({ past: [...s.past, snapshotEditable(s)].slice(-MAX_HISTORY), future: [], clips: page.clips,
+      settings: page.settings, currentTime: page.start, selectedClipIds: [], isPlaying: false });
   },
 
   beginGesture: () => {

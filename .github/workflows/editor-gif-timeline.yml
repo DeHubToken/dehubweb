@@ -24,7 +24,7 @@ jobs:
           node-version: '22'
       - name: Prepare hosted browser and output decoder
         run: |
-          npm install --prefix "$RUNNER_TEMP/editor-browser" --no-save --no-package-lock --ignore-scripts playwright@1.64.0 esbuild@0.25.12 mp4-muxer@5.2.2 webm-muxer@5.1.4
+          npm install --prefix "$RUNNER_TEMP/editor-browser" --no-save --no-package-lock --ignore-scripts playwright@1.64.0 esbuild@0.25.12 mp4-muxer@5.2.2 webm-muxer@5.1.4 qrcode-generator@1.5.2
           "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome" --version
           brew install ffmpeg
       - name: Verify real GIF scrubbing and branded MP4 frames
