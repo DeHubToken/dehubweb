@@ -50,6 +50,7 @@ import {
   useSubmitGovernanceProposal,
   useVoteGovernanceProposal,
   useSelfVoteWeight,
+  useExplainCannotVote,
   uploadProposalMedia,
   BADGE_VOTE_WEIGHT,
   type GovernanceSort,
@@ -519,7 +520,8 @@ function InfiniteScrollSentinel({ onIntersect, isFetching }: { onIntersect: () =
 // ──────────────────────────────────────────────────
 function VoteWeightInfo({ badgeBalance, username }: { badgeBalance: number | undefined; username: string | null | undefined }) {
   const { t } = useTranslation();
-  const { weight, badgeName } = useSelfVoteWeight();
+  const { weight, badgeName, lent } = useSelfVoteWeight();
+  const navigate = useNavigate();
   const badgeImageUrl = getBadgeUrl(badgeBalance, username);
   const [showTiers, setShowTiers] = useState(false);
 
@@ -532,7 +534,18 @@ function VoteWeightInfo({ badgeBalance, username }: { badgeBalance: number | und
             {weight > 0 ? (
               <>{t('governance.yourVoteWeight')} <span className="text-white font-bold">{weight}×</span> ({badgeName})</>
             ) : (
-              <span className="text-zinc-500">{t('governance.holdTokensToVote')}</span>
+              <span className="text-zinc-500">
+                {lent
+                  ? t('governance.lentBadgeCantVote')
+                  : t('governance.holdTokensToVote')}{' '}
+                <button
+                  type="button"
+                  onClick={() => navigate('/app/buy')}
+                  className="text-white font-semibold underline underline-offset-2"
+                >
+                  {t('governance.buyDhb', { defaultValue: 'Buy DHB' })}
+                </button>
+              </span>
             )}
           </span>
         </div>
@@ -599,7 +612,8 @@ export default function GovernancePage() {
   const userBadgeBalance = user?.badgeBalance as number | undefined;
   const username = user?.username;
 
-  const { weight: selfWeight, badgeName: selfBadge } = useSelfVoteWeight();
+  const { weight: selfWeight, badgeName: selfBadge, lent: selfLent } = useSelfVoteWeight();
+  const explainCannotVote = useExplainCannotVote();
 
   const handleVote = useCallback(
     (proposalId: string, voteType: 1 | -1, currentVote: number | undefined) => {
@@ -608,12 +622,12 @@ export default function GovernancePage() {
         return;
       }
       if (selfWeight === 0) {
-        toast.error(t('governance.mustHoldTokens'));
+        explainCannotVote(selfLent);
         return;
       }
       voteMutation.mutate({ proposalId, voteType, currentVote, voteWeight: selfWeight, badgeName: selfBadge });
     },
-    [isAuthenticated, openLoginModal, voteMutation, selfWeight, selfBadge, t]
+    [isAuthenticated, openLoginModal, voteMutation, selfWeight, selfBadge, selfLent, explainCannotVote]
   );
 
   const handleSubmitClick = () => {

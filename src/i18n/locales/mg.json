@@ -1811,6 +1811,8 @@
     "monthsAgo": "{{count}}v lasa",
     "forLabel": "Ny",
     "againstLabel": "Manohitra",
+    "lentBadgeCantVote": "Misy ny fanomezan-dàlana ho anao, ary tsy mahazo mifidy ny mari-pamantarana natolotra anao. Mividiana DHB mba hahazoana ny mari-pamantarana manokana.",
+    "buyDhb": "Mividiana DHB",
     "discussion": {
       "title": "Fifanakalozan-kevitra",
       "intro": "Anontanio ny fanontaniana fanaraha-maso na mifanakalo hevitra momba izany alohan'ny hifidiananao.",
@@ -4808,10 +4810,6 @@
     "creatorEarnsDirect": "Ny mpandraharaha mandoa ao DeHub famantarana. Ny anjara tany ao amin'ny kitapom-batsy ny fotoana izy ireo misoratra anarana, tsy ny sehatra saran'ny noho ny badge Tier."
   },
   "liveOverlay": {
-    "level": "Ambaratonga {{level}}",
-    "streak_one": "{{count}}-week voasakana",
-    "streak_other": "{{count}}-week voasakana",
-    "tipJar": "Fanomezana siny",
     "someone": "Olona iray",
     "newFollower": "Mpanara-baovao: {{name}}",
     "newSubscriber": "Mpamandrika vaovao: {{name}}",
@@ -4829,6 +4827,10 @@
     "pointsTitle": "Mpandinika mahatoky indrindra",
     "points_one": "{{formatted}} toetra",
     "points_other": "{{formatted}} toetra",
+    "level": "Ambaratonga {{level}}",
+    "streak_one": "{{count}}-week voasakana",
+    "streak_other": "{{count}}-week voasakana",
+    "tipJar": "Fanomezana siny",
     "poll": {
       "closed": "Voting closed",
       "voteFor": "Mifidiana ny {{option}}",
@@ -4996,8 +4998,6 @@
       "join": "Midira"
     },
     "kinds": {
-      "streamer_level": "Dingana mirohotra",
-      "tip_jar": "Fanomezana siny",
       "tip_alert": "Fampandrenesana tip",
       "follow_alert": "Fampandrenesana arahana",
       "subscribe_alert": "Fampandrenesana mpisoratra",
@@ -5017,11 +5017,11 @@
       "poll": "Fitsapan-kevitra",
       "spin_wheel": "Kofehy ireny kodia",
       "subathon_timer": "Famantarana fandaniana Subathon",
-      "points_board": "Mpandinika mahatoky"
+      "points_board": "Mpandinika mahatoky",
+      "streamer_level": "Dingana mirohotra",
+      "tip_jar": "Fanomezana siny"
     },
     "hints": {
-      "streamer_level": "Ny haavon'ny renirano sy ny isan-kerinandro streak, avy amin'ny mombamomba azy",
-      "tip_jar": "Ny siny izay mameno ny toy ny fanomezana karama tonga ao",
       "tip_alert": "Mankalaza ny tip rehetra, arakaraka ny haavon'izy ireo",
       "follow_alert": "Maneho ny mpanaraka vaovao tsirairay",
       "subscribe_alert": "Maneho ny mpisoratra vaovao tsirairay",
@@ -5041,14 +5041,16 @@
       "poll": "Ny fifidianana mivantana, amin'ny bokotra fifidianana ho an'ny safidy tsirairay",
       "spin_wheel": "Aiza ny kodiarana ao amin'ny fitsipika mihodina",
       "subathon_timer": "Fandaniana izay itazonin'ny fanomezana karama, fanarahana ary subscription",
-      "points_board": "Ny mpandinika ambony indrindra amin'ny toetra avy amin'ny fijery ary fanomezana"
+      "points_board": "Ny mpandinika ambony indrindra amin'ny toetra avy amin'ny fijery ary fanomezana",
+      "streamer_level": "Ny haavon'ny renirano sy ny isan-kerinandro streak, avy amin'ny mombamomba azy",
+      "tip_jar": "Ny siny izay mameno ny toy ny fanomezana karama tonga ao"
     },
     "fields": {
-      "showStreak": "Asehoy ny faran'ny herinandro streak",
       "style": "Endrika",
       "celebration": "Fankalazana",
       "banner": "Sora-baventy",
       "minAmount": "Torohevitra kely indrindra hanehoana (DHB)",
+      "showStreak": "Asehoy ny faran'ny herinandro streak",
       "showMessage": "Maneho ny hafatra filazana",
       "confirmedOnly": "Rehefa avy manamafy ny fandoavana",
       "confirmedOnlyHint": "Miandry segondra vitsy ho an'ny rojo, ka ny tendrony izay tsy azo aloa mihitsy dia tsy hita mihitsy.",
@@ -8560,6 +8562,15 @@
     "like": "Toy ny",
     "unlike": "Esory toy ny"
   },
+  "postProcessing": {
+    "uploading": "Mampakatra…",
+    "preparing": "Manomana…",
+    "ready": "Vonona",
+    "preparingVideo": "Manomana ny horonantsarinao",
+    "posted": "Voapetraka",
+    "view": "Jereo",
+    "failed": "Tsy voahodina ny horonantsary"
+  },
   "createPost": {
     "title": "Mamorona",
     "whatsOnYourMind": "Inona no ao an-tsainao?",
@@ -8635,14 +8646,5 @@
     "txPpvSale": "Fivarotana PPV — {{amount}} tokens",
     "txTipSent": "Fanomezana ho an'i {{name}} — {{amount}} tokens",
     "txTipReceived": "{{name}} nanome fanomezana anao — {{amount}} tokens"
-  },
-  "postProcessing": {
-    "uploading": "Mampakatra…",
-    "preparing": "Manomana…",
-    "ready": "Vonona",
-    "preparingVideo": "Manomana ny horonantsarinao",
-    "posted": "Voapetraka",
-    "view": "Jereo",
-    "failed": "Tsy voahodina ny horonantsary"
   }
 }

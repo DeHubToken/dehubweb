@@ -2182,6 +2182,8 @@
     "monthsAgo": "{{count}}mo ago",
     "forLabel": "For",
     "againstLabel": "Against",
+    "lentBadgeCantVote": "Your badge is lent to you, and lent badges can't vote. Buy DHB to earn your own badge.",
+    "buyDhb": "Buy DHB",
     "discussion": {
       "title": "Discussion",
       "intro": "Ask follow-up questions or discuss the proposal before you vote.",

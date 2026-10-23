@@ -1839,6 +1839,8 @@
     "monthsAgo": "{{count}}mo ago",
     "forLabel": "Para",
     "againstLabel": "kinahinatnan",
+    "lentBadgeCantVote": "Pinahiram sa iyo ang iyong badge, at hindi makakaboto ang mga pinahiram na badge. Bumili ng DHB upang kumita ng iyong sariling badge.",
+    "buyDhb": "Bumili ng DHB",
     "discussion": {
       "title": "Talakayan",
       "intro": "Magtanong ng mga follow - up na tanong o talakayin ang panukala bago ka bumoto.",
@@ -4852,11 +4854,6 @@
     "creatorEarnsDirect": "Nagbabayad ang mga subscriber sa mga token ng DeHub. Ang iyong share ay nasa iyong wallet sa sandaling mag - subscribe sila, mas mababa ang bayarin sa platform para sa iyong badge tier."
   },
   "liveOverlay": {
-    "level": "Level {{level}}",
-    "streak_one": "{{count}}-linggo ng streak",
-    "streak_other": "{{count}}-linggo ng streak",
-    "tipJar": "Garapon na regalo",
-    "subathon": "Subathon",
     "someone": "Isang tao",
     "newFollower": "Bagong tagasunod:{{name}}",
     "newSubscriber": "Bagong subscriber:{{name}}",
@@ -4869,10 +4866,15 @@
     "tipped": "Nagpadala ng regalo si {{name}}",
     "chatPreview": "Lilitaw ang mga mensahe ng chat dito",
     "wheelLanded": "{{name}}spun:{{result}}",
+    "subathon": "Subathon",
     "subathonOver": "Tapos na ang oras",
     "pointsTitle": "Karamihan sa mga tapat na manonood",
     "points_one": "{{formatted}} punto",
     "points_other": "{{formatted}} mga punto",
+    "level": "Level {{level}}",
+    "streak_one": "{{count}}-linggo ng streak",
+    "streak_other": "{{count}}-linggo ng streak",
+    "tipJar": "Garapon na regalo",
     "poll": {
       "closed": "Boto na natapos",
       "voteFor": "Boto para sa {{option}}",
@@ -4902,7 +4904,6 @@
   "liveStudio": {
     "subathon": {
       "title": "Subathon",
-      "addFive": "Magdagdag ng 5 minuto",
       "intro": "Isang countdown sa iyong stream. Bawat bayad na regalo, susunod at pagsubskrib, idinadagdag ang oras upang manatili ka sa live.",
       "secondsPerThousand": "Mga segundo na idinagdag sa bawat 1,000 DHB gifted",
       "secondsPerFollow": "Mga segundo na idinagdag kada follow",
@@ -4913,6 +4914,7 @@
       "startMinutes": "Magsimula sa (mga minuto)",
       "start": "Simulan ang countdown",
       "stop": "Ihinto",
+      "addFive": "Magdagdag ng 5 minuto",
       "removeFive": "Mag - alis ng 5 minuto",
       "failed": "Hindi iyon gumana. Subukan muli.",
       "widgetHint": "Ipinapakita ang iyong countdown ng subathon. Simulan ito mula sa Subathon panel sa Live Studio."
@@ -5039,9 +5041,6 @@
       "join": "Sumali"
     },
     "kinds": {
-      "streamer_level": "Antas ng streamer",
-      "tip_jar": "Garapon na regalo",
-      "subathon_timer": "Timer ng subathon",
       "tip_alert": "Alerto sa tip",
       "follow_alert": "Subaybayan ang alerto",
       "subscribe_alert": "Alerto sa subscriber",
@@ -5060,11 +5059,12 @@
       "rule_alert": "Mga alerto sa panuntunan",
       "poll": "Botohan",
       "spin_wheel": "Paikutin ang gulong",
-      "points_board": "Mga tapat na manonood"
+      "subathon_timer": "Timer ng subathon",
+      "points_board": "Mga tapat na manonood",
+      "streamer_level": "Antas ng streamer",
+      "tip_jar": "Garapon na regalo"
     },
     "hints": {
-      "streamer_level": "Ang iyong antas ng streamer at lingguhang streak, mula sa iyong profile",
-      "tip_jar": "Ang isang garapon na pumupuno bilang bayad na mga regalo ay pumapasok",
       "tip_alert": "Ipinagdiriwang ang bawat tip, laki hanggang sa tier nito",
       "follow_alert": "Ipinapakita ang bawat bagong tagasunod",
       "subscribe_alert": "Ipinapakita ang bawat bagong subscriber",
@@ -5084,14 +5084,16 @@
       "poll": "Ang iyong live poll, na may isang pindutan ng boto para sa bawat pagpipilian",
       "spin_wheel": "Kung saan ang mga gulong sa iyong mga panuntunan ay umiikot",
       "subathon_timer": "Isang countdown na ang mga regalo, susunod at pagsubskrib ay nagpapalit ng oras",
-      "points_board": "Ang iyong mga nangungunang manonood ayon sa mga puntos mula sa panonood at pagbibigay ng regalo"
+      "points_board": "Ang iyong mga nangungunang manonood ayon sa mga puntos mula sa panonood at pagbibigay ng regalo",
+      "streamer_level": "Ang iyong antas ng streamer at lingguhang streak, mula sa iyong profile",
+      "tip_jar": "Ang isang garapon na pumupuno bilang bayad na mga regalo ay pumapasok"
     },
     "fields": {
-      "showStreak": "Ipakita ang weekly streak",
       "style": "Estilo",
       "celebration": "Pagdiriwang",
       "banner": "Banner",
       "minAmount": "Pinakamaliit na tip na ipapakita (DHB)",
+      "showStreak": "Ipakita ang weekly streak",
       "showMessage": "Ipakita ang mensahe ng tip",
       "confirmedOnly": "Pagkatapos lamang makumpirma ang pagbabayad",
       "confirmedOnlyHint": "Naghihintay ng ilang segundo para sa kadena, kaya ang isang tip na hindi kailanman binabayaran ay hindi lilitaw.",
@@ -8687,6 +8689,15 @@
     "like": "I - like",
     "unlike": "Alisin ang like"
   },
+  "postProcessing": {
+    "uploading": "Ina-upload…",
+    "preparing": "Inihahanda…",
+    "ready": "Handa na",
+    "preparingVideo": "Inihahanda ang video mo",
+    "posted": "Nai-post na",
+    "view": "Tingnan",
+    "failed": "Hindi ma-process ang video"
+  },
   "walletSelector": {
     "title": "Piliin ang Wallet",
     "description": "Piliin ang wallet na gusto mong ikonekta sa app na ito."
@@ -8738,14 +8749,5 @@
   "notification": {
     "noNotifications": "Walang mga abiso",
     "loadMore": "Mag-load ng higit pa"
-  },
-  "postProcessing": {
-    "uploading": "Ina-upload…",
-    "preparing": "Inihahanda…",
-    "ready": "Handa na",
-    "preparingVideo": "Inihahanda ang video mo",
-    "posted": "Nai-post na",
-    "view": "Tingnan",
-    "failed": "Hindi ma-process ang video"
   }
 }

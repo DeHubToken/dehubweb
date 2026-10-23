@@ -1754,6 +1754,8 @@
     "monthsAgo": "{{count}} مہینے پہلے",
     "forLabel": "For",
     "againstLabel": "ضد",
+    "lentBadgeCantVote": "Tumhar badge tumra la dehal gel achhi, aur dehal badge vote nahi kar sakait. DHB kinla apna badge pawe khatir.",
+    "buyDhb": "Kharid DHB",
     "discussion": {
       "title": "بحث",
       "intro": "اطرح أسئلة متابعة أو ناقش الاقتراح قبل التصويت.",
@@ -4452,13 +4454,6 @@
     "creatorEarnsDirect": "सदस्य DeHub टोकन में भुगतान करयना। सदस्यता लेते ही रउरा हिस्सा रउरा वॉलेट में आएला, रउरा बैज लेवल कर प्लेटफॉर्म फीस काइट के।"
   },
   "liveOverlay": {
-    "level": "स्तर {{level}}",
-    "streak_one": "{{count}}-हफ़्ते का सिलसिला",
-    "streak_other": "{{count}}-हफ़्ते का सिलसिला",
-    "tipJar": "गिफ़्ट जार",
-    "subathon": "सुबाथन",
-    "subathonOver": "समय पूरा हो गया है",
-    "pointsTitle": "सबसे वफादार दर्शक",
     "someone": "कोई",
     "newFollower": "नया अनुयायी: {{name}}",
     "newSubscriber": "नया सदस्य: {{name}}",
@@ -4470,8 +4465,15 @@
     "topSupporters": "शीर्ष समर्थक",
     "chatPreview": "Chat messages appear here",
     "wheelLanded": "{{name}} स्पून: {{result}}",
+    "subathon": "सुबाथन",
+    "subathonOver": "समय पूरा हो गया है",
+    "pointsTitle": "सबसे वफादार दर्शक",
     "points_one": "{{formatted}} نکتہ",
     "points_other": "{{formatted}} نکتہ",
+    "level": "स्तर {{level}}",
+    "streak_one": "{{count}}-हफ़्ते का सिलसिला",
+    "streak_other": "{{count}}-हफ़्ते का सिलसिला",
+    "tipJar": "गिफ़्ट जार",
     "poll": {
       "closed": "Voting closed",
       "voteFor": "{{option}}",
@@ -4502,25 +4504,25 @@
     "subathon": {
       "title": "सुबाथन",
       "intro": "आपकी स्ट्रीम पर एक उलटी गिनती। हर सशुल्क गिफ़्ट, फ़ॉलो और सब्सक्रिप्शन में समय लगता है, इसलिए कमरा आपको ज़िंदा रखता है।",
-      "capHours": "यह सबसे लंबे समय तक चल सकता है (घंटे)",
-      "save": "राशि बचाएँ",
-      "start": "उलटी गिनती शुरू करें",
-      "stop": "रोकें",
-      "removeFive": "5 मिनट की छुट्टी लें",
-      "widgetHint": "अपना सबथॉन उलटी गिनती दिखाता है। इसे लाइव स्टूडियो में Subathon पैनल से शुरू करें।",
       "secondsPerThousand": "دقیقه‌های اضافه شده برای هر ۱۰۰۰ دی‌اچ‌بی هدیه داده شده",
       "secondsPerFollow": "دقیقه‌های اضافه شده پس از دنبال کردن",
       "secondsPerSubscribe": "دقیقه‌های اضافه‌شده برای هر اشتراک",
+      "capHours": "यह सबसे लंबे समय तक चल सकता है (घंटे)",
+      "save": "राशि बचाएँ",
       "saved": "Subathon amounts saved.",
       "startMinutes": "(دقیقه‌ها)",
+      "start": "उलटी गिनती शुरू करें",
+      "stop": "रोकें",
       "addFive": "۵ دقیقه اضافه کن",
-      "failed": "assistant error"
+      "removeFive": "5 मिनट की छुट्टी लें",
+      "failed": "assistant error",
+      "widgetHint": "अपना सबथॉन उलटी गिनती दिखाता है। इसे लाइव स्टूडियो में Subathon पैनल से शुरू करें।"
     },
     "points": {
       "title": "वफादार दर्शक",
       "intro": "दर्शक हर उस मिनट के लिए एक पॉइंट कमाते हैं जो वे आपको देखते हैं और हर 100 DHB के लिए एक पॉइंट गिफ़्ट करते हैं। चैट और प्रतिक्रियाओं से कोई फ़ायदा नहीं होता, इसलिए पॉइंट को फ़ार्मेड नहीं किया जा सकता।",
-      "widgetHint": "इस लिस्ट को स्ट्रीम पर दिखाने के लिए लॉयल व्यूअर विजेट जोड़ें।",
-      "empty": "نقطه‌ای ندارم. این‌ها با دیدن و دادن هدیه توسط مردم افزایش می‌یابند."
+      "empty": "نقطه‌ای ندارم. این‌ها با دیدن و دادن هدیه توسط مردم افزایش می‌یابند.",
+      "widgetHint": "इस लिस्ट को स्ट्रीम पर दिखाने के लिए लॉयल व्यूअर विजेट जोड़ें।"
     },
     "controls": {
       "title": "झटपट नियंत्रण",
@@ -4630,10 +4632,6 @@
       "join": "जॉइन"
     },
     "kinds": {
-      "streamer_level": "स्ट्रीमर लेवल",
-      "tip_jar": "गिफ़्ट जार",
-      "subathon_timer": "सबथॉन टाइमर",
-      "points_board": "वफादार दर्शक",
       "tip_alert": "टिप अलर्ट",
       "follow_alert": "फॉलो अलर्ट",
       "subscribe_alert": "सब्सक्राइबर अलर्ट",
@@ -4651,13 +4649,13 @@
       "ticker": "Ticker",
       "rule_alert": "Rule alerts",
       "poll": "पोल",
-      "spin_wheel": "चक्र घुमाओ"
+      "spin_wheel": "चक्र घुमाओ",
+      "subathon_timer": "सबथॉन टाइमर",
+      "points_board": "वफादार दर्शक",
+      "streamer_level": "स्ट्रीमर लेवल",
+      "tip_jar": "गिफ़्ट जार"
     },
     "hints": {
-      "streamer_level": "आपकी प्रोफ़ाइल से आपका स्ट्रीमर लेवल और साप्ताहिक लकीर",
-      "tip_jar": "एक जार जो भुगतान किए गए उपहारों के रूप में भरता है",
-      "subathon_timer": "एक उलटी गिनती जिसे गिफ़्ट, फ़ॉलो और सब्सक्रिप्शन पीछे धकेलते हैं",
-      "points_board": "आपके टॉप व्यूअर देखने और गिफ़्ट करने के पॉइंट के हिसाब से",
       "tip_alert": "हर टिप के जश्न मनावै, ओकर टियर के हिसाब से साइज में",
       "follow_alert": "हर नया फॉलोअर देखावै",
       "subscribe_alert": "हर नया सब्सक्राइबर देखावै",
@@ -4671,14 +4669,18 @@
       "ticker": "आपन सुद्ध पाठ जे स्क्रीन भर चलत रहे",
       "rule_alert": "आपके नियमों के अलर्ट कहाँ दिखाई देते हैं",
       "poll": "हर विकल्प के लिए वोट बटन के साथ आपका लाइव पोल",
-      "spin_wheel": "आपके नियमों के पहिए कहाँ घूमते हैं"
+      "spin_wheel": "आपके नियमों के पहिए कहाँ घूमते हैं",
+      "subathon_timer": "एक उलटी गिनती जिसे गिफ़्ट, फ़ॉलो और सब्सक्रिप्शन पीछे धकेलते हैं",
+      "points_board": "आपके टॉप व्यूअर देखने और गिफ़्ट करने के पॉइंट के हिसाब से",
+      "streamer_level": "आपकी प्रोफ़ाइल से आपका स्ट्रीमर लेवल और साप्ताहिक लकीर",
+      "tip_jar": "एक जार जो भुगतान किए गए उपहारों के रूप में भरता है"
     },
     "fields": {
-      "showStreak": "साप्ताहिक स्ट्रीक दिखाएँ",
       "style": "स्टाइल",
       "celebration": "Celebration",
       "banner": "बैनर",
       "minAmount": "सबसे छोटा टिप दिखाने के लिए (DHB)",
+      "showStreak": "साप्ताहिक स्ट्रीक दिखाएँ",
       "confirmedOnly": "केवळ भुगतान पुष्टि होइके बाद",
       "duration": "دقیقه‌ها بر پرده",
       "metricTips": "ई स्ट्रीम के टिप दिहा",
@@ -8010,6 +8012,15 @@
     "like": "लाईक",
     "unlike": "लाईक हटाउ"
   },
+  "postProcessing": {
+    "uploading": "اپلوڈ ہوت ہے…",
+    "preparing": "تیار ہوت ہے…",
+    "ready": "تیار",
+    "preparingVideo": "توہر ویڈیو تیار ہوت ہے",
+    "posted": "پوسٹ ہوئے گیلک",
+    "view": "دیکھو",
+    "failed": "ویڈیو پروسیس نہیں ہوئے پاولک"
+  },
   "post": {
     "like": "پسند",
     "comment": "تبصرہ",
@@ -8060,14 +8071,5 @@
     "inProgress": "جاری ہے",
     "completed": "مکمل",
     "underReview": "جائزے میں"
-  },
-  "postProcessing": {
-    "uploading": "اپلوڈ ہوت ہے…",
-    "preparing": "تیار ہوت ہے…",
-    "ready": "تیار",
-    "preparingVideo": "توہر ویڈیو تیار ہوت ہے",
-    "posted": "پوسٹ ہوئے گیلک",
-    "view": "دیکھو",
-    "failed": "ویڈیو پروسیس نہیں ہوئے پاولک"
   }
 }
