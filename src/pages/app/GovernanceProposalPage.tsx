@@ -10,13 +10,13 @@ import {
   useGovernanceUserVotes,
   useVoteGovernanceProposal,
   useSelfVoteWeight,
+  useExplainCannotVote,
   type GovernanceProposal,
 } from '@/hooks/use-governance';
 import { useAuth } from '@/contexts/AuthContext';
 import { useTranslation } from 'react-i18next';
 import { useCallback, useEffect, useRef } from 'react';
 import { KitButton, PageBody, PageEmpty, PageIsland } from '@/components/app/page-kit/PageKit';
-import { toast } from 'sonner';
 import { SEOHead } from '@/components/SEOHead';
 import { TranslatableText } from '@/components/app/TranslatableText';
 import { CardHeader } from '@/components/app/cards/CardHeader';
@@ -58,7 +58,8 @@ export default function GovernanceProposalPage() {
   const { data: userVotes } = useGovernanceUserVotes();
   const voteMutation = useVoteGovernanceProposal();
 
-  const { weight: userWeight, badgeName: userBadge } = useSelfVoteWeight();
+  const { weight: userWeight, badgeName: userBadge, lent: userLent } = useSelfVoteWeight();
+  const explainCannotVote = useExplainCannotVote();
 
   // The discussion panel sits under the card; the comment action and a
   // comment deep link both bring it into view.
@@ -78,10 +79,10 @@ export default function GovernanceProposalPage() {
     (voteType: 1 | -1) => {
       if (!isAuthenticated) { openLoginModal(); return; }
       if (!proposalId) return;
-      if (userWeight === 0) { toast.error(t('governance.mustHoldTokens')); return; }
+      if (userWeight === 0) { explainCannotVote(userLent); return; }
       voteMutation.mutate({ proposalId, voteType, currentVote, voteWeight: userWeight, badgeName: userBadge });
     },
-    [isAuthenticated, openLoginModal, proposalId, currentVote, voteMutation, userWeight, userBadge, t]
+    [isAuthenticated, openLoginModal, proposalId, currentVote, voteMutation, userWeight, userBadge, userLent, explainCannotVote]
   );
 
   if (isLoading) {
