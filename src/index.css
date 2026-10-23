@@ -6875,7 +6875,15 @@ html[data-theme="minimal"] [data-profile-single-row] [data-feed-tab-btn] {
   opacity: 1;
 }
 
-/* Generated stage covers: thumbnails keep only title, host and date disc. */
+/* Generated stage covers: thumbnails keep only the ticket (title, host, date
+   stub); the corner tags, status line and barcode are too small to read. */
 @container (max-width: 300px) {
-  [data-gsc-brand], [data-gsc-when] { display: none !important; }
+  [data-gsc-tags], [data-gsc-site], [data-gsc-status], [data-gsc-barcode], [data-gsc-stubline], [data-gsc-when] { display: none !important; }
+  [data-gsc-ticket] { top: 5cqw !important; bottom: 5cqw !important; }
+}
+/* The cover's paper parts keep dark ink in every theme; the light themes turn
+   all text inside [data-keep-dark] white, which would blank the date stub. */
+html:root [data-stage-generated-cover] [data-gsc-ink],
+html:root [data-stage-generated-cover] [data-gsc-ink] * {
+  color: #09090b !important;
 }
