@@ -1,5 +1,5 @@
 faster-whisper==1.1.1
-sherpa-onnx>=1.10.30,<2
+sherpa-onnx==1.13.8
 runpod>=1.7.0,<2
 requests>=2.31,<3
 fastapi>=0.115,<1

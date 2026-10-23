@@ -56,6 +56,6 @@ jobs:
         if: matrix.gpu == '0'
         run: |
           docker run --rm ghcr.io/dehubtoken/dehub-whisper:cpu python -c "import numpy as np, engine; a = (np.random.randn(16000 * 5) * 0.01).astype('float32'); print(engine.transcribe(a)); print(engine.diarize(a))"
-          docker run -d --name w -p 7860:7860 -e WHISPER_WORKER_SECRET=ci ghcr.io/dehubtoken/dehub-whisper:cpu
+          docker run -d --name whisper-ci -p 7860:7860 -e WHISPER_WORKER_SECRET=ci ghcr.io/dehubtoken/dehub-whisper:cpu
           for i in $(seq 1 30); do curl -fs localhost:7860/ && exit 0; sleep 2; done
-          docker logs w; exit 1
+          docker logs whisper-ci; exit 1
