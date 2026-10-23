@@ -34,7 +34,10 @@ jobs:
           PREVIEW_TLS_KEY: /tmp/preview-key.pem
       - run: deno check ${{ matrix.lock }} --node-modules-dir=none supabase/functions/fetch-link-preview/index.ts
       - run: deno test ${{ matrix.lock }} --node-modules-dir=none supabase/functions/dehub-mcp/request-budget.test.ts
-      - run: deno check ${{ matrix.lock }} --node-modules-dir=none --config supabase/functions/dehub-mcp/deno.json supabase/functions/dehub-mcp/index.ts
+      # The older compiler cannot resolve the SDK's npm declaration exports.
+      # Runtime transport tests above still run against the production version.
+      - if: matrix.deno == 'v2.x'
+        run: deno check --node-modules-dir=none --config supabase/functions/dehub-mcp/deno.json supabase/functions/dehub-mcp/index.ts
   authorization:
     runs-on: ubuntu-latest
     timeout-minutes: 10
