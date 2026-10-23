@@ -6,7 +6,7 @@
  */
 
 import type { DeHubNFT } from '@/lib/api/dehub';
-import { buildAvatarUrl, buildImageUrl, buildVideoUrl, extractAvatarPath } from '@/lib/media-url';
+import { buildAvatarUrl, buildImageUrl, buildVideoUrl, buildHlsUrl, extractAvatarPath } from '@/lib/media-url';
 import { formatDuration, formatViews, formatTimeAgo } from '@/lib/feed-utils';
 import { resolveViewCount } from '@/lib/engagement';
 import type { VideoItem } from '@/types/feed.types';
@@ -74,6 +74,7 @@ export function mapNFTToVideoItem(nft: DeHubNFT, index: number): VideoItem {
     uploadedAgo: formatTimeAgo(nft.createdAt || nft.created_at),
     duration: formatDuration(duration),
     videoUrl: isAudioPost ? undefined : buildVideoUrl(tokenId),
+    hlsUrl: isAudioPost ? undefined : buildHlsUrl(nft.hlsUrl),
     audioUrl,
     audioDuration: isAudioPost ? (typeof duration === 'number' ? duration : 0) : undefined,
     isAudio: isAudioPost,

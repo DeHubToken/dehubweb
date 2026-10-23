@@ -196,6 +196,7 @@ const DubMenuItem = lazy(() =>
 );
 import { VideoGlitchLoader } from '@/components/app/video/VideoGlitchLoaderLazy';
 import { cancelVideoPlayback, requestVideoPlayback } from '@/lib/video-start';
+import { isLadderPlayback, setVideoSource, syncVideoLoad, videoSourceOf } from '@/lib/hls-vod';
 import { usePlaybackRecovery } from '@/hooks/use-playback-recovery';
 import { usePostStage } from '@/components/app/post-stage/post-stage-context';
 import { StageCreatorRow } from '@/components/app/post-stage/StageCreatorRow';
@@ -1080,7 +1081,7 @@ export const VideoCard = memo(function VideoCard({ video, postPage = false, onBa
   useEffect(() => {
     if (mediaAttached) return;
     const vid = videoRef.current;
-    if (vid && !vid.getAttribute('src')) {
+    if (vid && !videoSourceOf(vid)) {
       try { vid.load(); } catch { /* noop */ }
     }
   }, [mediaAttached]);
@@ -1132,7 +1133,7 @@ export const VideoCard = memo(function VideoCard({ video, postPage = false, onBa
               // Fast fling race: the media-attach state may not have
               // re-rendered yet — attach the src imperatively before play()
               // (React reconciles to the same value on the next render).
-              if (!vid.getAttribute('src') && video.videoUrl) vid.src = video.videoUrl;
+              attachPostMedia(vid);
               // Only the clip that is actually on screen may take the sound;
               // one peeking in at the bottom of the window plays silently.
               const prominent = isProminent(containerRef.current);
@@ -1272,6 +1273,19 @@ export const VideoCard = memo(function VideoCard({ video, postPage = false, onBa
     ? videoAccess.data?.url ?? (requiresVideoAccess ? undefined : video.videoUrl)
     : video.videoUrl;
   const accessFailed = requiresVideoAccess && !isContentGated && videoAccess.isError;
+  // An open post's HLS ladder. A gated one plays its signed file and never has
+  // one: a playlist would hand out every rendition by public URL.
+  const ladderUrl = requiresVideoAccess || accessFallback ? undefined : video.hlsUrl;
+  // Feed cards are small and there are many of them, so their ladder starts on
+  // the lowest rung and climbs; the post page starts where the connection
+  // allows. Without a ladder the file plays as before.
+  const ladderStartsLow = !postPage && !isImmersive;
+  /** Imperative attach for paths that can beat the render that sets src. */
+  const attachPostMedia = (vid: HTMLVideoElement) => {
+    if (!videoSourceOf(vid) && playableVideoUrl) {
+      setVideoSource(vid, { src: playableVideoUrl, hls: ladderUrl, startLow: ladderStartsLow });
+    }
+  };
   const downloadVideo = useVideoDownload();
   const handleDownloadVideo = useCallback(async () => {
     if (isContentGated || !video.videoUrl) return;
@@ -1370,7 +1384,7 @@ export const VideoCard = memo(function VideoCard({ video, postPage = false, onBa
       // Attach src imperatively if the media-release gate detached it and the
       // re-render hasn't landed yet (tap can beat the render).
       const vidEl = videoRef.current;
-      if (vidEl && !vidEl.getAttribute('src') && playableVideoUrl) vidEl.src = playableVideoUrl;
+      if (vidEl) attachPostMedia(vidEl);
       setHasError(false);
       if (!vidEl) { setIsLoading(false); return; }
       requestVideoPlayback(vidEl).then(() => {
@@ -1530,9 +1544,12 @@ export const VideoCard = memo(function VideoCard({ video, postPage = false, onBa
     setNearViewport(true);
     const vid = videoRef.current;
     if (!vid) return;
-    if (!vid.getAttribute('src')) vid.src = playableVideoUrl;
+    attachPostMedia(vid);
     if (vid.preload === 'none') vid.preload = 'metadata';
-    if (vid.readyState === 0) {
+    if (isLadderPlayback(vid)) {
+      // hls.js loads its first segment itself; load() would detach it.
+      syncVideoLoad(vid);
+    } else if (vid.readyState === 0) {
       try { vid.load(); } catch { /* noop */ }
     }
   }, [controlsVisible, nearViewport, showControls, duration, video.isAudio, playableVideoUrl]);
@@ -1753,6 +1770,8 @@ export const VideoCard = memo(function VideoCard({ video, postPage = false, onBa
     videoRef,
     handoffKey: video.id,
     src: mediaAttached && !isVideoNotReady ? playableVideoUrl : undefined,
+    hlsSrc: ladderUrl,
+    startLow: ladderStartsLow,
     poster: thumbnail || undefined,
     muted: isMuted,
     loop: !!(video.isAd || isLooping),
@@ -1763,7 +1782,7 @@ export const VideoCard = memo(function VideoCard({ video, postPage = false, onBa
     onTimeUpdate: handleTimeUpdate,
     onLoadedMetadata: handleLoadedMetadata,
     onAdopt: (el) => {
-      if (!el.getAttribute('src')) return;
+      if (!videoSourceOf(el)) return;
       setNearViewport(true);
       isPlayingRef.current = !el.paused;
       setIsPlaying(!el.paused);

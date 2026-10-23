@@ -51,7 +51,7 @@ import { parseSoundtrackTag, findCachedFeedPost } from '@/hooks/use-unified-feed
 import { PollCard } from '@/components/app/cards/PollCard';
 import { useStreamLiveStatus } from '@/hooks/use-stream-live-status';
 
-import { buildAvatarUrl, extractAvatarPath, buildImageUrl, buildFeedImageUrls, buildVideoUrl } from '@/lib/media-url';
+import { buildAvatarUrl, extractAvatarPath, buildImageUrl, buildFeedImageUrls, buildVideoUrl, buildHlsUrl } from '@/lib/media-url';
 import { extractReplayUrl, isReplayTruncated } from '@/lib/live-replay';
 import { hasStreamEnded, isStreamLive, streamRefreshInterval } from '@/lib/live-status';
 import { PageHeader } from '@/components/app/PageHeader';
@@ -171,6 +171,7 @@ function toVideoItem(nft: DeHubNFT): VideoItem {
     type: 'video',
     thumbnail: buildImageUrl(nft.tokenId, nft.imageUrl) || '/placeholder.svg',
     videoUrl: isAudioPost ? undefined : (nft.tokenId ? buildVideoUrl(nft.tokenId) : undefined),
+    hlsUrl: isAudioPost ? undefined : buildHlsUrl(nft.hlsUrl),
     audioUrl,
     audioDuration: isAudioPost ? (typeof durationSeconds === 'number' ? durationSeconds : 0) : undefined,
     isAudio: isAudioPost,

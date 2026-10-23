@@ -2,7 +2,7 @@
  * Shared NFT → FeedItem mapper
  * Used by bookmarks, notifications, and anywhere we need to convert raw DeHubNFT to renderable feed cards.
  */
-import { buildAvatarUrl, buildImageUrl, buildVideoUrl, buildFeedImageUrls } from '@/lib/media-url';
+import { buildAvatarUrl, buildImageUrl, buildVideoUrl, buildHlsUrl, buildFeedImageUrls } from '@/lib/media-url';
 import { formatDuration, formatViews, formatTimeAgo } from '@/lib/feed-utils';
 import type { DeHubNFT } from '@/lib/api/dehub';
 import { resolveDislikeCount, resolveLikeCount, resolveMyReaction, resolveReactionCounts, resolveViewCount } from '@/lib/engagement';
@@ -33,6 +33,7 @@ function mapNFTToVideoItem(nft: DeHubNFT): VideoItem {
     shopListingCount: (nft as any).shopListingCount,
     thumbnail,
     videoUrl: videoUrl || nft.videoUrl || undefined,
+    hlsUrl: buildHlsUrl(nft.hlsUrl),
     transcodingStatus: nft.transcodingStatus,
     storyboard: toStoryboard(nft.storyboard),
     duration: formatDuration(nft.videoDuration || nft.duration),
