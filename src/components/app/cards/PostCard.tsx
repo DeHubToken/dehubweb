@@ -308,19 +308,17 @@ export const PostCard = memo(function PostCard({ post, threadSlot, onOpenComment
 
   // Navigate to single post page when clicking non-interactive areas
   // Pre-cache post data for instant display on the single post page
-  /**
-   * Double 👍 / triple ❤️ on the post body, matching every other feed card.
-   *
-   * No `onSingleTap`: the body deliberately does nothing on a single tap, which
-   * is what keeps the gesture free of the 260ms wait. A card whose first tap
-   * navigates would have to hold that navigation back to find out whether a
-   * second tap is coming; giving the content region no tap action of its own
-   * removes the question entirely. Opening the post stays instant from the
-   * header, the metadata row and the card's own padding.
-   */
+  /** Only central body taps wait for double 👍 / triple ❤️. Every other
+   * body tap opens immediately; links and text selection keep their actions. */
   const tapGestures = useTapGestures({
     postId: post.id,
+    reactionArea: 'center',
     enableLongPress: false,
+    onSingleTap: () => {
+      if (wasDrawerJustDismissed() || window.getSelection()?.toString().length) return;
+      cacheTextPostForNavigation(queryClient, post);
+      navigate(`/app/post/${post.id}`, { state: { fromFeed: true } });
+    },
   });
 
   const handleCardClick = useCallback((e: React.MouseEvent) => {
@@ -637,16 +635,9 @@ export const PostCard = memo(function PostCard({ post, threadSlot, onOpenComment
 
       </div>
 
-      {/* Content.
-          `data-no-navigate` is what keeps navigation instant. handleCardClick
-          skips this subtree, so the body carries no single-tap action to hold
-          back while a second tap is awaited — the same arrangement VideoCard's
-          media already has, and the reason Instagram's double-tap has no lag.
-          Tapping anywhere else on the card still opens the post immediately.
-
-          The hold is off here on purpose: a long press on text is how you
-          select it, and taking that over would cost copy/paste on every text
-          post. The tray is still a hold away on the ActionBar's thumb. */}
+      {/* Pointer gestures own body navigation; the compatibility click is
+          excluded here so a central double/triple tap cannot open the post.
+          Holds remain available for text selection. */}
       <div
         className="relative pt-3 space-y-2"
         data-no-navigate
