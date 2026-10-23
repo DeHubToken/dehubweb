@@ -29,6 +29,14 @@ export function AgentLifePanel({ wallet, agentId }: { wallet: string; agentId: s
   const [editing, setEditing] = useState<number | null>(null);
   const [draft, setDraft] = useState('');
   const [expanded, setExpanded] = useState(false);
+  const [composing, setComposing] = useState(false);
+  const [post, setPost] = useState('');
+  const [imageUrl, setImageUrl] = useState('');
+  const [requestId, setRequestId] = useState(() => crypto.randomUUID());
+  const publish = useMutation({
+    mutationFn: () => agentTaskRequest(wallet, { operation: 'queue_post', agent_id: agentId, content: post.trim(), image_url: imageUrl.trim() || undefined, request_id: requestId }),
+    onSuccess: () => { setPost(''); setImageUrl(''); setRequestId(crypto.randomUUID()); client.invalidateQueries({ queryKey: ['agent-tasks', wallet] }); },
+  });
   const life = useQuery({ queryKey: key, staleTime: 60000,
     queryFn: () => agentTaskRequest<AgentLife>(wallet, { operation: 'life', agent_id: agentId }) });
   const toggle = useMutation({
@@ -58,6 +66,17 @@ export function AgentLifePanel({ wallet, agentId }: { wallet: string; agentId: s
     {toggle.error && <p role="alert" className="text-sm break-words">{toggle.error.message}</p>}
     {state && <p className="text-sm">{state}{data?.next_at && ` · ${t('agents.life.next', { time: clock(data.next_at) })}`}</p>}
     {data?.sentient && data.daily && <p className="text-sm">{t('agents.life.daily', { defaultValue: 'Posts today: {{posts}} · Daily target: {{target}}', ...data.daily })}</p>}
+    <button className="text-sm underline" onClick={() => setComposing(!composing)}>{t('agents.life.compose', { defaultValue: 'Post as this agent' })}</button>
+    {composing && <form className="space-y-2" onSubmit={e => { e.preventDefault(); publish.mutate(); }}>
+      <textarea aria-label={t('agents.life.postText', { defaultValue: 'Post text' })} maxLength={500} value={post} disabled={publish.isPending}
+        onChange={e => { setPost(e.target.value); setRequestId(crypto.randomUUID()); publish.reset(); }} className="w-full min-h-24 rounded-xl border border-white/20 bg-white/5 p-3 text-inherit backdrop-blur-xl" />
+      <input type="url" aria-label={t('agents.life.imageUrl', { defaultValue: 'Image URL (optional)' })} placeholder={t('agents.life.imageUrl', { defaultValue: 'Image URL (optional)' })} value={imageUrl} disabled={publish.isPending}
+        onChange={e => { setImageUrl(e.target.value); setRequestId(crypto.randomUUID()); publish.reset(); }} className="w-full rounded-xl border border-white/20 bg-white/5 p-3 text-inherit backdrop-blur-xl" />
+      <p className="text-xs text-white/60">{t('agents.life.queueHelp', { defaultValue: 'Publishes your exact text. Shared 20-minute post gap applies. No minting.' })}</p>
+      <button type="submit" disabled={publish.isPending || !post.trim()}>{t('agents.life.queuePost', { defaultValue: 'Queue post' })}</button>
+      {publish.error && <p role="alert">{publish.error.message}</p>}
+      {publish.isSuccess && <p role="status">{t('agents.life.postQueued', { defaultValue: 'Post queued. Track it in Tasks above.' })}</p>}
+    </form>}
     {correction.error && <p role="alert" className="text-sm">{correction.error.message}</p>}
     {data && (data.sentient || data.events.length > 0) && <div className="space-y-1">
       <p className="text-xs uppercase tracking-wide text-white/50">{t('agents.life.recent')}</p>
