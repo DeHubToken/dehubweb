@@ -20,6 +20,7 @@ import { NAV_ITEMS } from '@/constants/app.constants';
 import type { NavItem } from '@/types/app.types';
 import { SidebarNavItem } from './SidebarNavItem';
 import { CrumblingLogo } from './CrumblingLogo';
+import { DesktopCrumblingWordmark } from './DesktopCrumblingWordmark';
 import { filterNavItems, exploreSearchHref } from './nav-search';
 import { canManageAgents } from '@/lib/agent-access';
 import { useSearchHistory } from '@/hooks/use-search-history';
@@ -402,7 +403,8 @@ export function DesktopSidebar({ onPostClick }: DesktopSidebarProps) {
               onClick={handleLogoClick}
               data-glass-bare-action
               className={cn(
-                "cursor-pointer flex items-center justify-center overflow-hidden",
+                "cursor-pointer flex items-center justify-center",
+                renderCompactLogo ? "overflow-hidden" : "overflow-visible",
                 // Compact width HUGS the 22px mark rather than padding it to 28.
                 // The row is mx-auto inside the rail's 44px content box, and
                 // margin:auto silently resolves to 0 the moment the row is wider
@@ -413,7 +415,7 @@ export function DesktopSidebar({ onPostClick }: DesktopSidebarProps) {
                 renderCompactLogo ? "w-[22px] h-[24px]" : "w-[135px] h-[42px]"
               )}
             >
-              <CrumblingLogo>{isWarTheme ? (
+              {!renderCompactLogo ? <DesktopCrumblingWordmark light={isLightTheme} /> : <CrumblingLogo>{isWarTheme ? (
                 <>
                   <WarLogo
                     src={dehubLogoCompact}
@@ -443,7 +445,7 @@ export function DesktopSidebar({ onPostClick }: DesktopSidebarProps) {
                     onError={() => setRenderCompactLogo(true)}
                   />
                 </>
-              )}</CrumblingLogo>
+              )}</CrumblingLogo>}
             </button>
             {isCollapsed && (
               <button
