@@ -270,7 +270,7 @@ interface UsePostFormReturn {
   };
   actions: PostFormActions & {
     setScheduledDate: (date: Date | null) => void;
-    saveDraft: (article?: { body: string; title: string; imageData?: string; socialData?: string }) => void;
+    saveDraft: (article?: { body: string; title: string; imageData?: string; socialData?: string }, replaceId?: string) => void;
     loadDraft: (draft: Draft) => void;
     deleteDraft: (id: string) => void;
     startRecording: () => void;
@@ -1260,7 +1260,8 @@ export function usePostForm(
   }, [user?.address]);
 
   // Drafts actions
-  const saveDraft = useCallback((article?: { body: string; title: string; imageData?: string; socialData?: string }) => {
+  // replaceId swaps an opened draft for its edited copy instead of keeping both.
+  const saveDraft = useCallback((article?: { body: string; title: string; imageData?: string; socialData?: string }, replaceId?: string) => {
     const newDraft: Draft = {
       id: Date.now().toString(),
       text,
@@ -1284,11 +1285,12 @@ export function usePostForm(
         shopListingIds,
       },
     };
-    const updatedDrafts = [newDraft, ...drafts].slice(0, 10);
+    const updatedDrafts = [newDraft, ...drafts.filter(d => d.id !== replaceId)].slice(0, 10);
     setDrafts(updatedDrafts);
     saveDraftsLocal(draftsKey, updatedDrafts);
     // Persist to DB
     if (user?.address) {
+      if (replaceId) deleteDraftFromDb(replaceId, user.address);
       saveDraftToDb(user.address, newDraft).then((dbId) => {
         if (dbId) {
           // Update local draft with DB id for proper deletion later
