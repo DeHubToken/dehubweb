@@ -50,11 +50,14 @@ import {
   useSubmitGovernanceProposal,
   useVoteGovernanceProposal,
   useSelfVoteWeight,
+  uploadProposalMedia,
   BADGE_VOTE_WEIGHT,
   type GovernanceSort,
   type GovernanceProposal,
+  type ProposalMedia as ProposalMediaValue,
 } from '@/hooks/use-governance';
 import { ProposalDiscussion } from '@/components/app/governance/ProposalDiscussion';
+import { ProposalMedia } from '@/components/app/governance/ProposalMedia';
 import { z } from 'zod';
 
 type PageTab = 'proposals' | 'passed' | 'rejected';
@@ -167,6 +170,7 @@ function GovernanceCard({
         <div className="pt-1 space-y-2">
           <TranslatableText publicContent text={proposal.title} className="text-white font-semibold text-sm leading-tight" as="h3" hideControls />
           <TranslatableText publicContent text={proposal.description} className="text-zinc-400 text-sm leading-relaxed" as="p" hideControls />
+          <ProposalMedia url={proposal.media_url} type={proposal.media_type} alt={proposal.title} />
 
         {/* Vote ratio bar */}
         {(() => {
@@ -286,9 +290,28 @@ function SubmitProposalDrawer({
   const { t } = useTranslation();
   const [title, setTitle] = useSurfaceDraft("pages/app/GovernancePage.tsx:title", '');
   const [description, setDescription] = useSurfaceDraft("pages/app/GovernancePage.tsx:description", '');
+  // Uploaded on pick and kept as a draft, so a failed submit keeps it too.
+  const [media, setMedia] = useSurfaceDraft<ProposalMediaValue | null>("pages/app/GovernancePage.tsx:media", null);
+  const [uploading, setUploading] = useState(false);
+  const fileInputRef = useRef<HTMLInputElement>(null);
   const [errors, setErrors] = useState<Record<string, string>>({});
+  const { walletAddress } = useAuth();
+  const { weight: selfWeight } = useSelfVoteWeight();
 
   const submitMutation = useSubmitGovernanceProposal();
+
+  const handlePickMedia = async (file: File | undefined) => {
+    if (!file || !walletAddress) return;
+    setUploading(true);
+    try {
+      setMedia(await uploadProposalMedia(file, walletAddress));
+    } catch (err) {
+      toast.error(err instanceof Error ? err.message : 'Upload failed');
+    } finally {
+      setUploading(false);
+      if (fileInputRef.current) fileInputRef.current.value = '';
+    }
+  };
 
   const proposalSchema = useMemo(() => z.object({
     title: z.string().trim().min(1, t('governance.titleRequired')).max(100, t('governance.titleMaxLength')),
@@ -307,11 +330,12 @@ function SubmitProposalDrawer({
     }
     setErrors({});
     submitMutation.mutate(
-      { title: result.data.title, description: result.data.description },
+      { title: result.data.title, description: result.data.description, media },
       {
         onSuccess: () => {
           setTitle.complete(title, '');
           setDescription.complete(description, '');
+          setMedia.complete(media, null);
           onOpenChange(false);
         },
       }
@@ -364,9 +388,48 @@ function SubmitProposalDrawer({
             </div>
           </div>
 
+          <div>
+            <input
+              ref={fileInputRef}
+              type="file"
+              accept="image/*,video/*"
+              className="hidden"
+              onChange={(e) => handlePickMedia(e.target.files?.[0])}
+            />
+            {media ? (
+              <div className="relative">
+                <ProposalMedia url={media.url} type={media.type} alt={title || 'Proposal attachment'} />
+                <button
+                  type="button"
+                  onClick={() => setMedia(null)}
+                  className="absolute right-2 top-2 w-7 h-7 flex items-center justify-center rounded-lg bg-black/70 text-zinc-300 hover:text-white"
+                  aria-label={t('governance.removeMedia', 'Remove attachment')}
+                >
+                  <X className="w-3.5 h-3.5" />
+                </button>
+              </div>
+            ) : (
+              <button
+                type="button"
+                onClick={() => fileInputRef.current?.click()}
+                disabled={uploading}
+                className="w-full flex items-center justify-center gap-2 rounded-xl border border-dashed border-zinc-700 py-3 text-xs text-zinc-400 hover:text-white hover:border-zinc-500 transition-colors"
+              >
+                {uploading ? <Loader2 className="w-4 h-4 animate-spin" /> : <Plus className="w-4 h-4" />}
+                {t('governance.addMedia', 'Add image or video')}
+              </button>
+            )}
+          </div>
+
+          <p className="text-zinc-500 text-[11px] text-center">
+            {selfWeight > 0
+              ? t('governance.freeForBadgeHolders', 'Free for badge holders. Your draft saves as you type.')
+              : t('governance.proposalFeeNote', 'Proposals cost 10,000 DHB without a staking badge. Your draft saves as you type.')}
+          </p>
+
           <Button
             onClick={handleSubmit}
-            disabled={submitMutation.isPending}
+            disabled={submitMutation.isPending || uploading}
             variant="glass"
             className="w-full rounded-xl font-semibold"
           >
@@ -646,8 +709,8 @@ export default function GovernancePage() {
           ) : (
             <PageEmpty
               icon="governance"
-              title={t('governance.noProposalsYet')}
-              body={t('governance.beFirstToSubmit')}
+              title={passedCount + rejectedCount > 0 ? t('governance.noOpenProposals', 'No open proposals right now') : t('governance.noProposalsYet')}
+              body={passedCount + rejectedCount > 0 ? t('governance.decidedInTabs', 'Decided proposals are in the Passed and Rejected tabs.') : t('governance.beFirstToSubmit')}
               action={
                 <KitButton onClick={handleSubmitClick}>
                   <Plus className="w-4 h-4" />
