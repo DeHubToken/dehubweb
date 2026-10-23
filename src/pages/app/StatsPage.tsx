@@ -193,15 +193,15 @@ function ChartTooltip({
   const entries = (payload ?? []).filter((entry) => entry.value != null);
   if (!active || !entries.length) return null;
   return (
-    <div
-      data-keep-dark
-      className="rounded-xl bg-zinc-900 border border-zinc-700 px-3 py-2 shadow-lg"
-    >
-      <div className="text-[11px] text-zinc-400 mb-1">{label}</div>
+    // Liquid glass like every hover label (glass-surfaces.css), which also
+    // sets the ink per theme: the old keep-dark card got light-theme ink
+    // text on its dark fill, so the numbers vanished in light themes.
+    <div data-glass-tooltip className="rounded-xl px-3 py-2">
+      <div className="text-[11px] opacity-80 mb-1">{label}</div>
       {entries.map((entry) => (
-        <div key={entry.dataKey} className="text-xs text-white tabular-nums">
+        <div key={entry.dataKey} className="text-xs tabular-nums">
           {formatCount(entry.value)}{' '}
-          <span className="text-zinc-400">
+          <span className="opacity-80">
             {entry.dataKey === 'pageViews'
               ? t('stats.chart.pageViews', 'page views')
               : t('stats.chart.visitors', 'visitors')}
@@ -445,16 +445,16 @@ function CommunityTooltip({
   const row = payload[0].payload;
   const entries = payload.filter((entry) => entry.value != null);
   return (
-    <div data-keep-dark className="rounded-xl bg-zinc-900 border border-zinc-700 px-3 py-2 shadow-lg">
-      <div className="text-[11px] text-zinc-400 mb-1">{row.date}</div>
+    <div data-glass-tooltip className="rounded-xl px-3 py-2">
+      <div className="text-[11px] opacity-80 mb-1">{row.date}</div>
       {entries.map((entry) => (
-        <div key={entry.name} className="text-xs text-white tabular-nums">
-          {formatCount(entry.value)} <span className="text-zinc-400">{entry.name}</span>
+        <div key={entry.name} className="text-xs tabular-nums">
+          {formatCount(entry.value)} <span className="opacity-80">{entry.name}</span>
         </div>
       ))}
       {newLabel && row.newUsers != null && (
-        <div className="text-xs text-white tabular-nums">
-          +{formatCount(row.newUsers)} <span className="text-zinc-400">{newLabel}</span>
+        <div className="text-xs tabular-nums">
+          +{formatCount(row.newUsers)} <span className="opacity-80">{newLabel}</span>
         </div>
       )}
     </div>
@@ -633,7 +633,7 @@ function CommunitySection({ range }: { range: Range }) {
         ) : (
           <div className="text-white">
             <ResponsiveContainer width="100%" height={180}>
-              <AreaChart data={view.members} margin={{ top: 4, right: 4, left: -22, bottom: 0 }}>
+              <AreaChart data={view.members} margin={{ top: 4, right: 4, left: 0, bottom: 0 }}>
                 <defs>
                   <linearGradient id="statsMembersFill" x1="0" y1="0" x2="0" y2="1">
                     <stop offset="0%" stopColor="currentColor" stopOpacity={0.35} />
@@ -703,7 +703,7 @@ function CommunitySection({ range }: { range: Range }) {
         ) : (
           <div className="text-white">
             <ResponsiveContainer width="100%" height={180}>
-              <LineChart data={view.active} margin={{ top: 4, right: 4, left: -22, bottom: 0 }}>
+              <LineChart data={view.active} margin={{ top: 4, right: 4, left: 0, bottom: 0 }}>
                 <XAxis
                   dataKey="label"
                   tick={{ fontSize: 10, fill: 'currentColor', opacity: 0.45 }}
@@ -1004,7 +1004,7 @@ export default function StatsPage() {
               ) : (
                 <div className="text-white">
                   <ResponsiveContainer width="100%" height={180}>
-                    <AreaChart data={view.chart} margin={{ top: 4, right: 4, left: -22, bottom: 0 }}>
+                    <AreaChart data={view.chart} margin={{ top: 4, right: 4, left: 0, bottom: 0 }}>
                       <defs>
                         <linearGradient id="statsVisitorsFill" x1="0" y1="0" x2="0" y2="1">
                           <stop offset="0%" stopColor="currentColor" stopOpacity={0.35} />

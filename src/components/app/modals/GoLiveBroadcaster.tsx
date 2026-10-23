@@ -25,6 +25,7 @@ import Radio from "@/components/ui/cut-icons/live";
 
 import Mic from "@/components/ui/cut-icons/mic";
 import MessageSquare from "@/components/ui/cut-icons/messages";
+import StudioIcon from "@/components/ui/cut-icons/command";
 import X from "@/components/ui/cut-icons/close";
 
 import { cn } from '@/lib/utils';
@@ -2050,6 +2051,16 @@ export function GoLiveBroadcaster({
             <MessageSquare className="h-5 w-5" />
           </ControlButton>
         )}
+
+        {/* A new tab: leaving this page would end the broadcast. */}
+        <ControlButton
+          floating={fullBleed}
+          active
+          onClick={() => window.open('/live-studio', '_blank', 'noopener')}
+          label={t('liveStudio.open')}
+        >
+          <StudioIcon className="h-5 w-5" />
+        </ControlButton>
       </div>
 
       {/* The room, at a glance. Only once media is flowing — before that every

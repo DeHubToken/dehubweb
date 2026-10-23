@@ -42,8 +42,8 @@ export const ROUTE_SEGMENTS = [
   'admin', 'admin-manual', 'affiliate', 'agents', 'apk', 'app', 'apps', 'arcade', 'assistant',
   'auth', 'bounty', 'bridge', 'builder', 'cinema', 'communities', 'connect', 'converter', 'creator', 'creators',
   'dehub-app', 'delete-account', 'depin', 'dex', 'docs', 'editor', 'events', 'explore', 'features', 'feedback',
-  'governance', 'dao', 'guide', 'guides', 'jobs', 'launchpad', 'leaderboard',
-  'maintenance', 'mcp', 'mobile-preview', 'music', 'newpost', 'packs', 'posts', 'premium', 'pricing',
+  'governance', 'dao', 'guide', 'guides', 'jobs', 'launchpad', 'leaderboard', 'live-studio',
+  'maintenance', 'mcp', 'mobile-preview', 'music', 'newpost', 'overlay', 'packs', 'posts', 'premium', 'pricing',
   'prompt', 'r',
   'radio', 'raffle', 'requests', 'shorts', 'stage', 'stages', 'stake', 'stats', 'top-100',
   'tv',
@@ -119,6 +119,33 @@ export const WORKER_ASSET_ROUTES = [
 ];
 
 /**
+ * Brand names. `riftn` is the name DeHub is moving to (riftn.com), so nobody
+ * may hold it or an obvious copy of it: `riftn_`, `riftn-official`, `RIFTN`,
+ * `r1ftn`, `official_riftn` and the like. Matched by rule rather than listed,
+ * because the copies are endless.
+ */
+const BRAND_NAMES = ['riftn'];
+const BRAND_PREFIXES = ['', 'official', 'real', 'the', 'team', 'iam', 'its', 'get', 'join', 'hey'];
+
+// Drop separators and fold the usual lookalike characters, so `r1ftn`,
+// `rlftn` and `riftn_` all read as `riftn`.
+const foldLookalikes = (value) =>
+  value
+    .replace(/[^a-z0-9]/g, '')
+    .replace(/[1l]/g, 'i')
+    .replace(/0/g, 'o');
+
+const BRAND_LOOKALIKES = BRAND_NAMES.flatMap((brand) =>
+  BRAND_PREFIXES.map((prefix) => foldLookalikes(prefix + brand)),
+);
+
+/** True for a brand name or an impersonation of one. */
+export function isBrandLookalike(name) {
+  const compact = foldLookalikes(name);
+  return BRAND_LOOKALIKES.some((stem) => compact.startsWith(stem));
+}
+
+/**
  * Normalise the way a username is compared. The stored form is lowercase, but
  * inputs arrive with an `@`, with padding, and — from the mobile edit screen,
  * which does not sanitise its TextInput — in mixed case. Router matching is
@@ -148,6 +175,8 @@ export function isReservedUsername(value) {
   if (!name) return false;
 
   if (RESERVED_USERNAMES.has(name)) return true;
+
+  if (isBrandLookalike(name)) return true;
 
   // Anything with a dot is read as a file by the worker (`skill.md`,
   // `favicon.ico`), never as a profile.

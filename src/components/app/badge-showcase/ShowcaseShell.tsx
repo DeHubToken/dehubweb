@@ -76,6 +76,10 @@ interface ShowcaseShellProps {
 
 /** How long each entry holds before the dock plays on to the next. */
 const AUTOPLAY_MS = 4800;
+/** A close always finishes within this long, whatever the stage does. */
+const CLOSE_FAILSAFE_MS = 1500;
+/** The X shows this long after opening even if the opening has not finished. */
+const CLOSE_BUTTON_DELAY_MS = 2000;
 
 const FLYER_FILTER = 'drop-shadow(0 18px 30px rgba(0,0,0,0.55))';
 
@@ -134,6 +138,8 @@ export function ShowcaseShell({
   const closeRef = useRef<HTMLButtonElement>(null);
   const stageRef = useRef<StickerStage | MetalStage | ThemeStage | null>(null);
   const closingRef = useRef(false);
+  const closedRef = useRef(false);
+  const failsafeRef = useRef(0);
   const shownIndex = useRef(originIndex);
   const flightRaf = useRef(0);
   const introCanvasRef = useRef<HTMLCanvasElement>(null);
@@ -281,7 +287,7 @@ export function ShowcaseShell({
     let live = true;
     const fail = () => {
       if (!live) return;
-      if (closingRef.current) { onClose(); return; }
+      if (closingRef.current) { finish(); return; }
       setShown(true);
       if (anchor) anchor.style.visibility = 'hidden';
       setGlFailed(true);
@@ -375,9 +381,30 @@ export function ShowcaseShell({
 
   /* ---------- close ---------- */
 
+  // Every way out ends here, once. The flight home and the stage's own close
+  // report back when they end; one that never does (a lost WebGL context, a
+  // close asked for mid-opening) left the black screen up with every way out
+  // already spent, so a close also always finishes on a timer.
+  const finish = useCallback(() => {
+    if (closedRef.current) return;
+    closedRef.current = true;
+    window.clearTimeout(failsafeRef.current);
+    onClose();
+  }, [onClose]);
+  useEffect(() => () => window.clearTimeout(failsafeRef.current), []);
+
+  // The X never waits on the opening: if it stalls, there is still a way out.
+  const [closeEarly, setCloseEarly] = useState(false);
+  useEffect(() => {
+    const id = window.setTimeout(() => setCloseEarly(true), CLOSE_BUTTON_DELAY_MS);
+    return () => window.clearTimeout(id);
+  }, []);
+
   const requestClose = useCallback(() => {
-    if (closingRef.current) return;
+    // Asked again while already closing: go now rather than wait it out.
+    if (closingRef.current) return finish();
     closingRef.current = true;
+    failsafeRef.current = window.setTimeout(finish, CLOSE_FAILSAFE_MS);
     setPhase('exit');
     setPlaying(false);
     introRef.current?.cancel();
@@ -387,21 +414,21 @@ export function ShowcaseShell({
     const hero = heroBox();
     const flyHome = !!home && !!hero && !reduceMotion && index === originIndex;
     if (cinematic && !glFailed) {
-      if (flyHome && home && (stageRef.current instanceof MetalStage || stageRef.current instanceof ThemeStage)) stageRef.current.close(home, onClose);
-      else { setFading(true); window.setTimeout(onClose, reduceMotion ? 0 : 240); }
+      if (flyHome && home && (stageRef.current instanceof MetalStage || stageRef.current instanceof ThemeStage)) stageRef.current.close(home, finish);
+      else { setFading(true); window.setTimeout(finish, reduceMotion ? 0 : 240); }
       return;
     }
     if (flyHome && hero && home) {
       placeFlyer(hero, restTilt);
       setStickerOn(false);
-      fly(hero, home, 560, 'home', onClose);
+      fly(hero, home, 560, 'home', finish);
     } else {
       setFading(true);
-      window.setTimeout(onClose, reduceMotion ? 0 : 240);
+      window.setTimeout(finish, reduceMotion ? 0 : 240);
     }
     // fly and restTilt only touch refs and the fixed origin entry.
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [phase, anchorBox, heroBox, reduceMotion, index, originIndex, onClose, cinematic, glFailed]);
+  }, [phase, anchorBox, heroBox, reduceMotion, index, originIndex, finish, cinematic, glFailed]);
 
   handlers.current = { next: () => goTo(index + 1), close: requestClose, interact: pause };
 
@@ -492,6 +519,7 @@ export function ShowcaseShell({
 
   const open = shown && phase !== 'exit';
   const panelIn = phase === 'open';
+  const closeShown = (panelIn || closeEarly) && phase !== 'exit';
   const autoplaying = playing && phase === 'open';
 
   const api: ShowcaseApi = {
@@ -499,7 +527,7 @@ export function ShowcaseShell({
     goTo,
     pause,
     close: (then) => {
-      onClose();
+      finish();
       then?.();
     },
     dismiss: requestClose,
@@ -626,7 +654,7 @@ export function ShowcaseShell({
           drop the button into the flow above the stage. */}
       <div
         className="absolute right-4 top-[max(env(safe-area-inset-top),12px)] z-20 transition-opacity duration-300 lg:right-[max(1.5rem,calc(50%-590px+1.5rem))] lg:top-6"
-        style={{ opacity: panelIn ? 1 : 0 }}
+        style={{ opacity: closeShown ? 1 : 0 }}
       >
         <button
           ref={closeRef}

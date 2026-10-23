@@ -217,7 +217,7 @@ export const VoiceWaveformPlayer = memo(function VoiceWaveformPlayer({ src, clas
     : formatDuration(duration);
 
   return (
-    <div className={`flex items-center gap-2.5 rounded-xl bg-white/[0.06] backdrop-blur-sm px-3 py-2 max-w-[260px] ${className || ''}`}>
+    <div data-glass-playback-surface className={`flex items-center gap-2.5 rounded-xl bg-white/[0.06] backdrop-blur-sm px-3 py-2 max-w-[260px] ${className || ''}`}>
       {/* Play/Pause button */}
       <button
         onClick={togglePlay}
