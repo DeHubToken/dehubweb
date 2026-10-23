@@ -227,11 +227,11 @@
   },
   "settings": {
     "usernameTaken": "Nom d'usuari ocupat",
-    "showDislikesDesc": "Qualsevol pot obrir la pestanya «No m'agrada» del teu perfil. Si està desactivat, només tu la pots veure.",
-    "showDislikes": "Mostra a tothom els meus «no m'agrada»",
     "postingChain": "Cadena de blocs de les publicacions",
     "showOnline": "Mostra quan estic en línia",
     "showOnlineDesc": "Les persones a les quals enviïs missatges veuen un punt verd al costat del teu nom mentre utilitzes DeHub",
+    "showDislikes": "Mostra a tothom els meus «no m'agrada»",
+    "showDislikesDesc": "Qualsevol pot obrir la pestanya «No m'agrada» del teu perfil. Si està desactivat, només tu la pots veure.",
     "smartReplies": "Respostes suggerides",
     "smartRepliesDesc": "Redacta dues respostes que pots tocar en un xat. La × dels suggeriments ho desactiva.",
     "title": "Configuració",
@@ -754,7 +754,6 @@
     "embed": "Insereix",
     "copyEmbedCode": "Copia el codi d'inserció",
     "embedCodeCopied": "Codi d'inserció copiat",
-    "copyFailed": "No s'ha pogut copiar l'enllaç",
     "options": "Opcions",
     "aiOverview": "Resum de la IA",
     "sendTip": "Enviar propina",
@@ -782,7 +781,8 @@
     "unpinPost": "Desenllaça el teu perfil",
     "postPinned": "S'ha fixat al teu perfil",
     "postUnpinned": "S'ha desvinculat del teu perfil",
-    "pinFailed": "No s'ha pogut fixar ni desanclar aquesta publicació"
+    "pinFailed": "No s'ha pogut fixar ni desanclar aquesta publicació",
+    "copyFailed": "No s'ha pogut copiar l'enllaç"
   },
   "filters": {
     "sort": "Ordenar",
@@ -1516,7 +1516,6 @@
     "returnHome": "Tornar a l'inici"
   },
   "profile": {
-    "dislikes": { "loadMore": "Carrega'n més", "privateDesc": "Aquest compte es guarda els seus «no m'agrada».", "privateTitle": "Els «no m'agrada» són privats", "emptyOther": "Encara res.", "emptyOwn": "Les publicacions que no t'agraden surten dels teus feeds i apareixen aquí. Desfés el «no m'agrada» per recuperar la publicació.", "emptyTitle": "Encara cap «no m'agrada»" },
     "back": "Enrere",
     "usernameAvailable": "Nom d'usuari disponible!",
     "signUpToClaim": "Registra't avui per reclamar",
@@ -1544,8 +1543,16 @@
       "commentUnavailable": "Aquest comentari ja no està disponible"
     },
     "tabs": {
-      "dislikes": "No m'agrada",
-      "playlists": "Llista de reproducció"
+      "playlists": "Llista de reproducció",
+      "dislikes": "No m'agrada"
+    },
+    "dislikes": {
+      "emptyTitle": "Encara cap «no m'agrada»",
+      "emptyOwn": "Les publicacions que no t'agraden surten dels teus feeds i apareixen aquí. Desfés el «no m'agrada» per recuperar la publicació.",
+      "emptyOther": "Encara res.",
+      "privateTitle": "Els «no m'agrada» són privats",
+      "privateDesc": "Aquest compte es guarda els seus «no m'agrada».",
+      "loadMore": "Carrega'n més"
     },
     "offerWorthNow": "Aproximadament {{amount}} tokens al tipus actual",
     "offerNotePlaceholder": "Afegeix una nota (opcional)",
@@ -2387,6 +2394,30 @@
     "addDescription": "Afegeix una descripció...",
     "communityDescription": "Descripció de la comunitat...",
     "posts": "Publicacions",
+    "chat": {
+      "intervalHour": "1 hora",
+      "intervalHours": "{{count}} hores",
+      "intervalMinute": "1 minut",
+      "intervalMinutes": "{{count}} minuts",
+      "intervalSecond": "1 segon",
+      "intervalSeconds": "{{count}} segons",
+      "muted": "Estàs silenciat",
+      "mutedUntil": "Estàs silenciat fins a les {{until}}",
+      "postingDisabled": "La publicació està desactivada per als membres aquí",
+      "pinnedGif": "GIF",
+      "pinnedMedia": "Mitjans de comunic",
+      "jumpToPinned": "Vés al missatge fixat",
+      "pinnedMessage": "Missatge fixat",
+      "unpin": "Desancla",
+      "pin": "PIN",
+      "delete": "Elimina",
+      "slowMode": "Mode lent: un missatge cada {{interval}}",
+      "slowModeWait": "Mode lent: espera {{time}}",
+      "send": "Envia",
+      "deleteMessageTitle": "Vols eliminar aquest missatge?",
+      "deleteMessageBody": "Això no es pot desfer.",
+      "cancel": "Cancel·la"
+    },
     "membersTab": "Membres ({{count}})",
     "about": "Quant a",
     "backToCommunities": "Comunitats",
@@ -6933,7 +6964,14 @@
     }
   },
   "editor": {
-    "video": { "tFade": "Fos encadenat", "none": "Cap", "transition": "Transició", "speed": "Velocitat", "sound": "So","video": "Vídeo"},
+    "video": {
+      "tFade": "Fos encadenat",
+      "none": "Cap",
+      "transition": "Transició",
+      "speed": "Velocitat",
+      "sound": "So",
+      "video": "Vídeo"
+    },
     "review": {
       "title": "Revisió del projecte",
       "shared": "Compartit amb tu",

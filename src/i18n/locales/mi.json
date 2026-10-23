@@ -751,7 +751,6 @@
     "embed": "Tāmau",
     "copyEmbedCode": "Tāruatia te waehere tāmau",
     "embedCodeCopied": "Kua tāruatia te waehere tāmau",
-    "copyFailed": "Kāore i taea te tārua i te hono",
     "options": "Kōwhiringa",
     "aiOverview": "Te tirohanga whānui o te AI",
     "sendTip": "Tukuna koha",
@@ -779,7 +778,8 @@
     "unpinPost": "Unpin i tō kōtaha",
     "postPinned": "Whakapā mai ki tō kōtaha",
     "postUnpinned": "Te kore e taea te tiki i to koutou pūkete",
-    "pinFailed": "Kaore e taea e au te tuhi, te whakakore ranei i tenei tuhinga"
+    "pinFailed": "Kaore e taea e au te tuhi, te whakakore ranei i tenei tuhinga",
+    "copyFailed": "Kāore i taea te tārua i te hono"
   },
   "filters": {
     "sort": "Raupapa",
@@ -2435,6 +2435,30 @@
     "addDescription": "Tāpirihia he whakaahuatanga...",
     "communityDescription": "Whakaahuatanga hapori...",
     "posts": "Ngā Pānui",
+    "chat": {
+      "intervalHour": "1 haora",
+      "intervalHours": "{{count}} haora",
+      "intervalMinute": "1 meneti",
+      "intervalMinutes": "{{count}} meneti",
+      "intervalSecond": "1 hēkona",
+      "intervalSeconds": "{{count}} hēkona",
+      "muted": "Kua hurihia koe",
+      "mutedUntil": "Ka hurihia koe tae noa ki te {{until}}",
+      "postingDisabled": "He ngoikore te tuku ki nga mema i konei",
+      "pinnedGif": "GIF",
+      "pinnedMedia": "Ngā pāpāho",
+      "jumpToPinned": "Whakatika ki te karere pinned",
+      "pinnedMessage": "He karere pinned",
+      "unpin": "Unpin",
+      "pin": "PIN",
+      "delete": "Mukua",
+      "slowMode": "Aratau puhoi: kotahi karere ia {{interval}}",
+      "slowModeWait": "Aratau puhoi — tatari {{time}}",
+      "send": "Tukua",
+      "deleteMessageTitle": "Ka taea e koe te whakakore i tenei karere?",
+      "deleteMessageBody": "Kaore e taea te whakakore i tenei.",
+      "cancel": "Whakakorea"
+    },
     "membersTab": "Ngā Mema ({{count}})",
     "about": "Mō",
     "backToCommunities": "Ngā Hapori",
@@ -7014,7 +7038,14 @@
     }
   },
   "editor": {
-    "video": { "tFade": "Memeha whakawhiti", "none": "Kore", "transition": "Whakawhitinga", "speed": "Tere", "sound": "Oro","video": "Ataata"},
+    "video": {
+      "tFade": "Memeha whakawhiti",
+      "none": "Kore",
+      "transition": "Whakawhitinga",
+      "speed": "Tere",
+      "sound": "Oro",
+      "video": "Ataata"
+    },
     "review": {
       "title": "Arotake kaupapa",
       "shared": "I tiritiria ki a koe",

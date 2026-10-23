@@ -769,7 +769,6 @@
     "embed": "এমবেড",
     "copyEmbedCode": "এমবেড কোড কপি করো",
     "embedCodeCopied": "এমবেড কোড কপি অইছে",
-    "copyFailed": "লিংক কপি করা গেল না",
     "options": "অপশন",
     "aiOverview": "এআই ওভারভিউ",
     "sendTip": "টিপ পাঠাও",
@@ -798,6 +797,7 @@
     "postPinned": "আপনার প্রোফাইলে পিন করা হয়েছে",
     "postUnpinned": "আপনার প্রোফাইল থেকে আনপিন করা হয়েছে",
     "pinFailed": "এই পোস্টটি পিন বা আনপিন করা যায়নি",
+    "copyFailed": "লিংক কপি করা গেল না",
     "reportPost": "পোস্ট রিপোর্ট করো",
     "muteConversation": "কথা মিউট করো"
   },
@@ -2566,6 +2566,29 @@
     "addDescription": "বর্ণনা যোগ করো...",
     "communityDescription": "কমিউনিটির বর্ণনা...",
     "posts": "পোস্ট",
+    "chat": {
+      "intervalHour": "১ ঘন্টা",
+      "intervalHours": "{{count}} ঘন্টা",
+      "intervalMinute": "১ মিনিট",
+      "intervalMinutes": "{{count}} মিনিট",
+      "intervalSecond": "১ সেকেন্ড",
+      "intervalSeconds": "{{count}} সেকেন্ড",
+      "muted": "আপনি মিউট আছেন",
+      "mutedUntil": "আপনি মিউট আছেন {{until}} পর্যন্ত",
+      "postingDisabled": "এখানে সদস্যদের জন্য পোস্টিং নিষ্ক্রিয়",
+      "pinnedMedia": "মিডিয়া",
+      "jumpToPinned": "পিন করা বার্তায় যান",
+      "pinnedMessage": "পিন করা বার্তা",
+      "unpin": "আনপিন",
+      "pin": "পিন",
+      "delete": "মুছুন",
+      "slowMode": "স্লো মোড: প্রতি {{interval}} বার্তা",
+      "slowModeWait": "স্লো মোড — অপেক্ষা করুন {{time}}",
+      "send": "পাঠান",
+      "deleteMessageTitle": "এই বার্তাটি মুছবেন?",
+      "deleteMessageBody": "এটি ফিরিয়ে আনা যাবে না।",
+      "cancel": "বাতিল"
+    },
     "membersTab": "সদস্য ({{count}})",
     "about": "সম্পর্কে",
     "backToCommunities": "কমিউনিটি",
@@ -6366,7 +6389,14 @@
     }
   },
   "editor": {
-    "video": { "tFade": "মিলাইয়া বদল", "none": "কিচ্ছু না", "transition": "ট্রানজিশন", "speed": "গতি", "sound": "আওয়াজ","video": "ভিডিও"},
+    "video": {
+      "tFade": "মিলাইয়া বদল",
+      "none": "কিচ্ছু না",
+      "transition": "ট্রানজিশন",
+      "speed": "গতি",
+      "sound": "আওয়াজ",
+      "video": "ভিডিও"
+    },
     "review": {
       "title": "প্রকল্প পর্যালোচনা",
       "shared": "আপনার সাথে শেয়ার করা",

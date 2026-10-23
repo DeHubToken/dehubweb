@@ -731,7 +731,6 @@
     "embed": "ฝัง",
     "copyEmbedCode": "คัดลอกโค้ดฝัง",
     "embedCodeCopied": "คัดลอกโค้ดฝังแล้ว",
-    "copyFailed": "บ่สามารถคัดลอกลิงก์ได้",
     "options": "ตัวเลือก",
     "sendTip": "ส่งทิป",
     "queue": "คิว",
@@ -758,7 +757,8 @@
     "unpinPost": "ยกเลิกการปักหมุดที่โปรไฟล์ของคุณ",
     "postPinned": "ปักหมุดไว้ที่โปรไฟล์ของคุณแล้ว",
     "postUnpinned": "ยกเลิกการปักหมุดที่โปรไฟล์ของคุณแล้ว",
-    "pinFailed": "ไม่สามารถปักหมุดหรือยกเลิกการปักหมุดโพสต์นี้ได้"
+    "pinFailed": "ไม่สามารถปักหมุดหรือยกเลิกการปักหมุดโพสต์นี้ได้",
+    "copyFailed": "บ่สามารถคัดลอกลิงก์ได้"
   },
   "filters": {
     "sort": "เรียง",
@@ -2400,6 +2400,30 @@
     "assignTicker": "กำหนดกราฟ ticker",
     "addDescription": "เพิ่มคำอธิบาย...",
     "communityDescription": "คำอธิบายของชุมชน...",
+    "chat": {
+      "intervalHour": "1 ชั่วโมง",
+      "intervalHours": "{{count}} ชั่วโมง",
+      "intervalMinute": "1 นาที",
+      "intervalMinutes": "{{count}} นาที",
+      "intervalSecond": "1 วินาที",
+      "intervalSeconds": "{{count}} วินาที",
+      "muted": "คุณถูกปิดเสียง",
+      "mutedUntil": "คุณถูกปิดเสียงจนถึง {{until}}",
+      "postingDisabled": "การโพสต์ถูกปิดใช้งานสำหรับสมาชิกที่นี่",
+      "pinnedGif": "GIF",
+      "pinnedMedia": "สื่อ",
+      "jumpToPinned": "ข้ามไปยังข้อความที่ติดป้าย",
+      "pinnedMessage": "ข้อความที่ติดป้าย",
+      "unpin": "ถอดป้าย",
+      "pin": "ติดป้าย",
+      "delete": "ลบ",
+      "slowMode": "โหมดช้า: 1 ข้อความทุก {{interval}}",
+      "slowModeWait": "โหมดช้า — รอ {{time}}",
+      "send": "ส่ง",
+      "deleteMessageTitle": "ลบข้อความนี้?",
+      "deleteMessageBody": "ไม่สามารถยกเลิกได้",
+      "cancel": "ยกเลิก"
+    },
     "membersTab": "สมาซิก ({{count}})",
     "about": "เกี่ยวกับ",
     "communityNotFound": "บ่พบซุมซน",
@@ -6539,7 +6563,14 @@
     }
   },
   "editor": {
-    "video": { "tFade": "ละลายภาพ", "none": "บ่มี", "transition": "ทรานซิชัน", "speed": "ความไว", "sound": "เสียง","video": "วิดีโอ"},
+    "video": {
+      "tFade": "ละลายภาพ",
+      "none": "บ่มี",
+      "transition": "ทรานซิชัน",
+      "speed": "ความไว",
+      "sound": "เสียง",
+      "video": "วิดีโอ"
+    },
     "review": {
       "title": "ตรวจสอบโปรเจกต์",
       "shared": "แชร์กับคุณ",

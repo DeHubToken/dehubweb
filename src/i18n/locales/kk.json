@@ -747,7 +747,6 @@
     "embed": "Ендіру",
     "copyEmbedCode": "Ендіру кодын көшіру",
     "embedCodeCopied": "Ендіру коды көшірілді",
-    "copyFailed": "Сілтемені көшіру мүмкін болмады",
     "options": "Параметрлер",
     "aiOverview": "AI шолуы",
     "sendTip": "Тип жіберу",
@@ -775,7 +774,8 @@
     "unpinPost": "Профиліңізден шығарыңыз",
     "postPinned": "Профиліңізге енгізілді",
     "postUnpinned": "Профиліңізден ажыратылған",
-    "pinFailed": "Бұл лауазымды енгізу немесе алып тастау мүмкін болмады"
+    "pinFailed": "Бұл лауазымды енгізу немесе алып тастау мүмкін болмады",
+    "copyFailed": "Сілтемені көшіру мүмкін болмады"
   },
   "filters": {
     "sort": "Сұрыптау",
@@ -2448,6 +2448,30 @@
     "addDescription": "Сипаттама қосу...",
     "communityDescription": "Қауымдастық сипаттамасы...",
     "posts": "Хабарламалар",
+    "chat": {
+      "intervalHour": "1 сағат",
+      "intervalHours": "{{count}} сағат",
+      "intervalMinute": "1 минут",
+      "intervalMinutes": "{{count}} минуттар",
+      "intervalSecond": "1 секунд",
+      "intervalSeconds": "{{count}} секунд",
+      "muted": "Сіз өзгертілгенсіз",
+      "mutedUntil": "Сіз {{until}} дейін өзгертілдіңіз",
+      "postingDisabled": "Мұнда мүшелер үшін орналастыру өшірілген",
+      "pinnedGif": "ГИФ",
+      "pinnedMedia": "БАҚ",
+      "jumpToPinned": "Белгіленген хабарламаға секіру",
+      "pinnedMessage": "Кірістірілген хабарлама",
+      "unpin": "Ажырату",
+      "pin": "Пин",
+      "delete": "Жою",
+      "slowMode": "Баяу режим: әрбір {{interval}} бір хабарлама",
+      "slowModeWait": "Баяу режим — күту {{time}}",
+      "send": "Жіберу",
+      "deleteMessageTitle": "Бұл хабарламаны өшіру керек пе?",
+      "deleteMessageBody": "Мұны болдырмау мүмкін емес.",
+      "cancel": "Бас тарту"
+    },
     "membersTab": "Мүшелер ({{count}})",
     "about": "Туралы",
     "backToCommunities": "Қауымдастықтар",
@@ -7041,7 +7065,14 @@
     }
   },
   "editor": {
-    "video": { "tFade": "Айқаспалы ауысу", "none": "Жоқ", "transition": "Ауысу", "speed": "Жылдамдық", "sound": "Дыбыс","video": "Бейне"},
+    "video": {
+      "tFade": "Айқаспалы ауысу",
+      "none": "Жоқ",
+      "transition": "Ауысу",
+      "speed": "Жылдамдық",
+      "sound": "Дыбыс",
+      "video": "Бейне"
+    },
     "review": {
       "title": "Жобаны қарау",
       "shared": "Сізбен бөлісілген",

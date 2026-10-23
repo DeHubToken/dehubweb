@@ -752,7 +752,6 @@
     "embed": "इम्बेड",
     "copyEmbedCode": "इम्बेड कोड कपि गर्नुहोस्",
     "embedCodeCopied": "इम्बेड कोड कपि भयो",
-    "copyFailed": "लिङ्क कपि गर्न सकिएन",
     "options": "विकल्पहरू",
     "aiOverview": "AI सिंहावलोकन",
     "sendTip": "टिप पठाउनुहोस्",
@@ -780,7 +779,8 @@
     "unpinPost": "तपाईंको प्रोफाइलबाट अनपिन गर्नुहोस्",
     "postPinned": "तपाईंको प्रोफाइलमा पिन गरियो",
     "postUnpinned": "तपाईंको प्रोफाइलबाट पिन हटाइयो",
-    "pinFailed": "यो पोस्ट पिन गर्न वा अनपिन गर्न सकिएन"
+    "pinFailed": "यो पोस्ट पिन गर्न वा अनपिन गर्न सकिएन",
+    "copyFailed": "लिङ्क कपि गर्न सकिएन"
   },
   "filters": {
     "sort": "क्रमबद्ध गर्नुहोस्",
@@ -2443,6 +2443,29 @@
     "addDescription": "वर्णन थप्नुहोस्...",
     "communityDescription": "समुदाय विवरण...",
     "posts": "पोस्टहरू",
+    "chat": {
+      "intervalHour": "१ घण्टा",
+      "intervalHours": "{{count}} घण्टा",
+      "intervalMinute": "१ मिनेट",
+      "intervalMinutes": "{{count}} मिनेट",
+      "intervalSecond": "१ सेकेन्ड",
+      "intervalSeconds": "{{count}} सेकेन्ड",
+      "muted": "तपाईं मौन हुनुहुन्छ",
+      "mutedUntil": "तपाईं {{until}} सम्म म्यूट हुनुहुन्छ",
+      "postingDisabled": "यहाँ सदस्यहरूको लागि पोस्टिङ अक्षम गरिएको छ",
+      "pinnedMedia": "मिडिया",
+      "jumpToPinned": "पिन गरिएको सन्देशमा जानुहोस्",
+      "pinnedMessage": "पिन गरिएको सन्देश",
+      "unpin": "अनपिन",
+      "pin": "पिन",
+      "delete": "मेटाउनुहोस्",
+      "slowMode": "ढिलो मोड: प्रत्येक {{interval}} मा एक सन्देश",
+      "slowModeWait": "ढिलो मोड — {{time}} पर्खनुहोस्",
+      "send": "पठाउनुहोस्",
+      "deleteMessageTitle": "यो सन्देश मेट्नुहुन्छ?",
+      "deleteMessageBody": "यसलाई पूर्ववत गर्न सकिँदैन ।",
+      "cancel": "रद्द गर्नुहोस्"
+    },
     "membersTab": "सदस्यहरू ({{count}})",
     "about": "बारेमा",
     "backToCommunities": "समुदायहरू",
@@ -6917,7 +6940,14 @@
     }
   },
   "editor": {
-    "video": { "tFade": "क्रस-डिजल्भ", "none": "कुनै पनि होइन", "transition": "ट्रान्जिसन", "speed": "गति", "sound": "ध्वनि","video": "भिडियो"},
+    "video": {
+      "tFade": "क्रस-डिजल्भ",
+      "none": "कुनै पनि होइन",
+      "transition": "ट्रान्जिसन",
+      "speed": "गति",
+      "sound": "ध्वनि",
+      "video": "भिडियो"
+    },
     "review": {
       "title": "परियोजना समीक्षा",
       "shared": "तपाईंसँग साझा गरिएको",

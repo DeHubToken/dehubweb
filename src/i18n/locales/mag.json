@@ -745,7 +745,6 @@
     "embed": "एम्बेड",
     "copyEmbedCode": "एम्बेड कोड कॉपी करीं",
     "embedCodeCopied": "एम्बेड कोड कॉपी हो गेल",
-    "copyFailed": "लिंक कॉपी न हो सकल",
     "options": "विकल्प",
     "aiOverview": "ओवरहेड ओवरहेड समीक्षा",
     "sendTip": "टिप भेजो",
@@ -773,7 +772,8 @@
     "unpinPost": "अपना प्रोफ़ाइल से लॉगिन करे",
     "postPinned": "अपन प्रोफाइल देखू",
     "postUnpinned": "अपना प्रोफ़ाइल से कोई हल नहीं करे",
-    "pinFailed": "जिसपर चलना बनावा और छलावा ना हो"
+    "pinFailed": "जिसपर चलना बनावा और छलावा ना हो",
+    "copyFailed": "लिंक कॉपी न हो सकल"
   },
   "filters": {
     "sort": "सॉर्ट",
@@ -2399,6 +2399,23 @@
     "addDescription": "विवरण जोड़ऽ...",
     "communityDescription": "कम्युनिटी के विवरण...",
     "posts": "पोस्ट सब",
+    "chat": {
+      "intervalHour": "एक घंटे में सब काम होई जाइये",
+      "intervalMinute": "एक पल के लिए हल्के",
+      "intervalSecond": "पहिले पइसवा चाहीं हो",
+      "muted": "तिमी हल्लै हुन्छौ",
+      "postingDisabled": "सदस्यों के लिए अक्षम करे संदेश",
+      "pinnedGif": "जीएलई बनाम जीएलई",
+      "pinnedMedia": "मीडिया हलचल",
+      "jumpToPinned": "उच्चारण रेकार्ड करे sms pic",
+      "unpin": "अनलिमिटेड, अनलिमिटेड",
+      "pin": "पिन",
+      "delete": "हटाबू",
+      "send": "भेजवा भेजवा",
+      "deleteMessageTitle": "इ सन्देश के डिलीट करे के की जरूरत हइ?",
+      "deleteMessageBody": "2 मई के बाद, उन्हें जीवित नहीं छोड़ा जा सकता है ।",
+      "cancel": "रद्द करे"
+    },
     "membersTab": "सदस्य ({{count}})",
     "about": "बारे में",
     "backToCommunities": "कम्युनिटी सब",
@@ -6862,7 +6879,14 @@
     }
   },
   "editor": {
-    "video": { "tFade": "क्रॉस-डिजॉल्व", "none": "कुछो न", "transition": "ट्रांजिशन", "speed": "रफ्तार", "sound": "आवाज","video": "वीडियो"},
+    "video": {
+      "tFade": "क्रॉस-डिजॉल्व",
+      "none": "कुछो न",
+      "transition": "ट्रांजिशन",
+      "speed": "रफ्तार",
+      "sound": "आवाज",
+      "video": "वीडियो"
+    },
     "review": {
       "title": "प्रोजेक्ट समीक्षा",
       "shared": "आपके साथ साझा किया गया",

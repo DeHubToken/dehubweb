@@ -742,7 +742,6 @@
     "embed": "एम्बेड",
     "copyEmbedCode": "एम्बेड कोड कॉपी करीं",
     "embedCodeCopied": "एम्बेड कोड कॉपी हो गइल",
-    "copyFailed": "लिंक कॉपी ना हो पावल",
     "options": "विकल्प",
     "aiOverview": "ओवरव्यू समायोजित करें",
     "sendTip": "उपहार भेजीं",
@@ -770,7 +769,8 @@
     "unpinPost": "अपने प्रोफ़ाइल से फ़ाइलें निकालें",
     "postPinned": "अपने प्रोफ़ाइल में Login करे",
     "postUnpinned": "अपने प्रोफ़ाइल से फ़ाइलें निकालें",
-    "pinFailed": "अनुमति नहीं, फिर भी सिखा रहे ड्राइविंग"
+    "pinFailed": "अनुमति नहीं, फिर भी सिखा रहे ड्राइविंग",
+    "copyFailed": "लिंक कॉपी ना हो पावल"
   },
   "filters": {
     "sort": "छाँटीं",
@@ -2422,6 +2422,23 @@
     "addDescription": "एगो हम हमार दिल Lyrics: -",
     "communityDescription": "समुदाय के विवरण...",
     "posts": "पोस्ट लिखने वाला",
+    "chat": {
+      "intervalHour": "घड्याळी पहाटे पहा",
+      "intervalMinute": "11 मिनट एगो",
+      "intervalSecond": "1 सेकेंड ओपेनियन जरूर लें",
+      "muted": "आपने ठग गईल",
+      "postingDisabled": "ई सदस्य सदस्यता रद्द कइल गइल बा इहाँ",
+      "pinnedGif": "गिफ्ट, गिफ्ट,",
+      "pinnedMedia": "मीडिया बाटे",
+      "pinnedMessage": "एगो सन्देश",
+      "unpin": "अनलिमिटेड, अनलिमि",
+      "pin": "पेन पेन",
+      "delete": "हटावल जाय (_D)",
+      "send": "भेजे जा रहे हो",
+      "deleteMessageTitle": "कि आपने कभी, अन्दर से बहार देखा?",
+      "deleteMessageBody": "यह सब खाली नहीं जा सकता ।",
+      "cancel": "रद्द करे"
+    },
     "membersTab": "सदस्य ({{count}})",
     "about": "के बारे में",
     "backToCommunities": "समाजाला सर्वसामान्य",
@@ -6887,7 +6904,14 @@
     }
   },
   "editor": {
-    "video": { "tFade": "घुलत-मिलत", "none": "कुछु ना", "transition": "ट्रांज़िशन", "speed": "स्पीड", "sound": "आवाज","video": "वीडियो"},
+    "video": {
+      "tFade": "घुलत-मिलत",
+      "none": "कुछु ना",
+      "transition": "ट्रांज़िशन",
+      "speed": "स्पीड",
+      "sound": "आवाज",
+      "video": "वीडियो"
+    },
     "review": {
       "title": "प्रोजेक्ट समीक्षा",
       "shared": "आपके साथ साझा किया गया",

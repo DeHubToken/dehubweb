@@ -751,7 +751,6 @@
     "embed": "ښخول",
     "copyEmbedCode": "د ښخولو کوډ کاپي کړئ",
     "embedCodeCopied": "د ښخولو کوډ کاپي شو",
-    "copyFailed": "لینک کاپي نه شو",
     "options": "اختیارونه",
     "aiOverview": "د عمومي لید لید",
     "sendTip": "ټپ ولیږئ",
@@ -779,7 +778,8 @@
     "unpinPost": "ستاسو د انسټاګرام پروفایل څخه غیر فعال کړئ",
     "postPinned": "خپل پروفایل ته ننوتل",
     "postUnpinned": "ستاسو د انسټاګرام پروفایل څخه غیر فعال کړئ",
-    "pinFailed": "تاسو نشئ کولی دا پوسټ پین یا غیر فعال کړئ"
+    "pinFailed": "تاسو نشئ کولی دا پوسټ پین یا غیر فعال کړئ",
+    "copyFailed": "لینک کاپي نه شو"
   },
   "filters": {
     "sort": "ترتیب",
@@ -2426,6 +2426,24 @@
     "addDescription": "توضیحات وړاندې کړئ...",
     "communityDescription": "د ټولنې تشریح...",
     "posts": "پوستونه",
+    "chat": {
+      "intervalHour": "د 1 ساعت په اړه",
+      "intervalMinute": "د 1 دقیقې",
+      "intervalMinutes": "{{count}} دقیقه",
+      "intervalSecond": "په ثانیه کې",
+      "muted": "تاسو له منځه تللي یاست",
+      "postingDisabled": "د معلولينو لپاره دلته ټک ورکړئ",
+      "pinnedGif": "د GIF په اړه",
+      "pinnedMedia": "د رسنيو د",
+      "jumpToPinned": "پيامک سرکاري پيامک سرکاري",
+      "pinnedMessage": "پيامک په نه په",
+      "unpin": "په نه په",
+      "delete": "له منځه یوسئ",
+      "send": "د لیږلو لپاره",
+      "deleteMessageTitle": "ایا تاسو دا پیغام لرې کړی ؟",
+      "deleteMessageBody": "دا له پامه غورځول کیدی نشي.",
+      "cancel": "لغوه کول"
+    },
     "membersTab": "غړي ({{count}})",
     "about": "په اړه",
     "backToCommunities": "کومونټي",
@@ -6882,7 +6900,14 @@
     }
   },
   "editor": {
-    "video": { "tFade": "ګډ ورکېدل", "none": "هیڅ", "transition": "لېږد", "speed": "سرعت", "sound": "غږ","video": "ویډیو"},
+    "video": {
+      "tFade": "ګډ ورکېدل",
+      "none": "هیڅ",
+      "transition": "لېږد",
+      "speed": "سرعت",
+      "sound": "غږ",
+      "video": "ویډیو"
+    },
     "review": {
       "title": "د پروژې بیاکتنه",
       "shared": "له تاسو سره شریک شوي",

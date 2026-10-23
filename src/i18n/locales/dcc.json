@@ -713,7 +713,6 @@
     "embed": "ایمبیڈ",
     "copyEmbedCode": "ایمبیڈ کوڈ کاپی کرو",
     "embedCodeCopied": "ایمبیڈ کوڈ کاپی ہو گیا",
-    "copyFailed": "لنک کاپی نئیں ہو سکا",
     "options": "آپشن",
     "sendTip": "ٹپ بھیجو",
     "queue": "قطار",
@@ -740,7 +739,8 @@
     "unpinPost": "اپنے پروفائل سے پین ہٹائیں",
     "postPinned": "اپنے پروفائل پر پین کر دیا گیا",
     "postUnpinned": "اپنے پروفائل سے پین ہٹا دیا گیا",
-    "pinFailed": "یہ پوسٹ پین یا پین سے ہٹانے میں ناکام رہی"
+    "pinFailed": "یہ پوسٹ پین یا پین سے ہٹانے میں ناکام رہی",
+    "copyFailed": "لنک کاپی نئیں ہو سکا"
   },
   "filters": {
     "sort": "سارٹ",
@@ -2304,6 +2304,29 @@
     "ticker": "ٹکر",
     "assignTicker": "ٹکر چارٹ لگاؤ",
     "communityDescription": "برادری کی تفصیل...",
+    "chat": {
+      "intervalHour": "1 گھنٹہ",
+      "intervalHours": "{{count}} گھنٹے",
+      "intervalMinute": "1 منٹ",
+      "intervalMinutes": "{{count}} منٹ",
+      "intervalSecond": "1 سیکنڈ",
+      "intervalSeconds": "{{count}} سیکنڈ",
+      "muted": "آپ کو موقوف کر دیا گیا ہے",
+      "mutedUntil": "آپ کو موقوف کر دیا گیا ہے جب تک {{until}}",
+      "postingDisabled": "یہاں ممبران کے لیے پوسٹنگ غیر فعال ہے",
+      "pinnedMedia": "میڈیا",
+      "jumpToPinned": "پن شدہ پیغام پر جائیں",
+      "pinnedMessage": "پن شدہ پیغام",
+      "unpin": "انپن کریں",
+      "pin": "پن کریں",
+      "delete": "حذف کریں",
+      "slowMode": "سست موڈ: ہر {{interval}} پر ایک پیغام",
+      "slowModeWait": "سست موڈ — انتظار کریں {{time}}",
+      "send": "بھیجیں",
+      "deleteMessageTitle": "یہ پیغام حذف کریں؟",
+      "deleteMessageBody": "یہ عمل واپس نہیں لیا جا سکتا۔",
+      "cancel": "منسوخ کریں"
+    },
     "membersTab": "ارکان ({{count}})",
     "about": "بارے میں",
     "communityNotFound": "برادری نکو ملی",
@@ -5767,7 +5790,14 @@
     }
   },
   "editor": {
-    "video": { "tFade": "کراس ڈیزالو", "none": "کچھ نئیں", "transition": "ٹرانزیشن", "speed": "اسپیڈ", "sound": "آواز","video": "ویڈیو"},
+    "video": {
+      "tFade": "کراس ڈیزالو",
+      "none": "کچھ نئیں",
+      "transition": "ٹرانزیشن",
+      "speed": "اسپیڈ",
+      "sound": "آواز",
+      "video": "ویڈیو"
+    },
     "review": {
       "title": "پروجیکٹ کا جائزہ",
       "shared": "آپ کے ساتھ اشتراک کردہ",

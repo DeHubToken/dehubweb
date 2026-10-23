@@ -227,11 +227,11 @@
   },
   "settings": {
     "usernameTaken": "이미 사용 중인 사용자 이름입니다",
-    "showDislikesDesc": "누구나 내 프로필의 싫어요 탭을 열 수 있습니다. 끄면 나만 볼 수 있습니다.",
-    "showDislikes": "내 싫어요를 모두에게 공개",
     "postingChain": "게시물 블록체인",
     "showOnline": "온라인 상태일 때 표시",
     "showOnlineDesc": "DeHub를 사용하는 동안 내가 메시지를 보내는 사람들에게 내 이름 옆에 초록색 점이 표시됩니다.",
+    "showDislikes": "내 싫어요를 모두에게 공개",
+    "showDislikesDesc": "누구나 내 프로필의 싫어요 탭을 열 수 있습니다. 끄면 나만 볼 수 있습니다.",
     "smartReplies": "추천 답장",
     "smartRepliesDesc": "채팅에서 탭할 수 있는 답장 두 개를 만들어 줍니다. 추천의 × 를 누르면 꺼집니다.",
     "title": "설정",
@@ -756,7 +756,6 @@
     "embed": "퍼가기",
     "copyEmbedCode": "퍼가기 코드 복사",
     "embedCodeCopied": "퍼가기 코드가 복사되었습니다",
-    "copyFailed": "링크를 복사할 수 없습니다",
     "options": "옵션",
     "aiOverview": "AI 개요",
     "sendTip": "팁 보내기",
@@ -784,7 +783,8 @@
     "unpinPost": "프로필에서 고정 해제하기",
     "postPinned": "프로필에 고정됨",
     "postUnpinned": "프로필에서 고정 해제됨",
-    "pinFailed": "이 포스트를 고정하거나 고정 해제할 수 없습니다."
+    "pinFailed": "이 포스트를 고정하거나 고정 해제할 수 없습니다.",
+    "copyFailed": "링크를 복사할 수 없습니다"
   },
   "filters": {
     "sort": "정렬",
@@ -1523,7 +1523,6 @@
     "returnHome": "홈으로 돌아가기"
   },
   "profile": {
-    "dislikes": { "loadMore": "더 보기", "privateDesc": "이 계정은 싫어요를 공개하지 않습니다.", "privateTitle": "싫어요는 비공개입니다", "emptyOther": "아직 아무것도 없습니다.", "emptyOwn": "싫어요를 누른 게시물은 피드에서 사라지고 여기에 표시됩니다. 싫어요를 취소하면 게시물이 돌아옵니다.", "emptyTitle": "아직 싫어요가 없습니다" },
     "back": "뒤로",
     "usernameAvailable": "사용 가능한 사용자명!",
     "signUpToClaim": "가입하여 획득",
@@ -1551,8 +1550,16 @@
       "commentUnavailable": "이 댓글은 더 이상 사용할 수 없습니다"
     },
     "tabs": {
-      "dislikes": "싫어요",
-      "playlists": "재생 목록"
+      "playlists": "재생 목록",
+      "dislikes": "싫어요"
+    },
+    "dislikes": {
+      "emptyTitle": "아직 싫어요가 없습니다",
+      "emptyOwn": "싫어요를 누른 게시물은 피드에서 사라지고 여기에 표시됩니다. 싫어요를 취소하면 게시물이 돌아옵니다.",
+      "emptyOther": "아직 아무것도 없습니다.",
+      "privateTitle": "싫어요는 비공개입니다",
+      "privateDesc": "이 계정은 싫어요를 공개하지 않습니다.",
+      "loadMore": "더 보기"
     },
     "offerWorthNow": "현재 환율로 약 {{amount}}개의 토큰",
     "offerNotePlaceholder": "메모 추가 (선택)",
@@ -2444,6 +2451,29 @@
     "addDescription": "설명을 추가하세요...",
     "communityDescription": "커뮤니티 설명...",
     "posts": "게시물",
+    "chat": {
+      "intervalHour": "1시간",
+      "intervalHours": "{{count}} 시간",
+      "intervalMinute": "1분",
+      "intervalMinutes": "{{count}} 분",
+      "intervalSecond": "1초",
+      "intervalSeconds": "{{count}} 초",
+      "muted": "음소거 상태입니다",
+      "mutedUntil": "{{until}} 까지 음소거됩니다",
+      "postingDisabled": "여기에서 회원 게시를 사용할 수 없습니다.",
+      "pinnedMedia": "미디어",
+      "jumpToPinned": "고정된 메시지로 이동",
+      "pinnedMessage": "고정된 메시지",
+      "unpin": "고정 해제",
+      "pin": "PIN 번호",
+      "delete": "삭제",
+      "slowMode": "느린 모드: {{interval}} 마다 하나의 메시지",
+      "slowModeWait": "느린 모드 — {{time}} 대기",
+      "send": "보내기",
+      "deleteMessageTitle": "이 메시지를 삭제하시겠어요?",
+      "deleteMessageBody": "이 작업은 취소할 수 없습니다.",
+      "cancel": "취소"
+    },
     "membersTab": "멤버 ({{count}})",
     "about": "소개",
     "backToCommunities": "커뮤니티",
@@ -7048,7 +7078,14 @@
     }
   },
   "editor": {
-    "video": { "tFade": "크로스 디졸브", "none": "없음", "transition": "전환", "speed": "속도", "sound": "사운드","video": "동영상"},
+    "video": {
+      "tFade": "크로스 디졸브",
+      "none": "없음",
+      "transition": "전환",
+      "speed": "속도",
+      "sound": "사운드",
+      "video": "동영상"
+    },
     "review": {
       "title": "프로젝트 검토",
       "shared": "나와 공유됨",

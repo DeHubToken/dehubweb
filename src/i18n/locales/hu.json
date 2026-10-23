@@ -227,11 +227,11 @@
   },
   "settings": {
     "usernameTaken": "A felhasználónév foglalt",
-    "showDislikesDesc": "Bárki megnyithatja a profilod Nemtetszések lapját. Ha ki van kapcsolva, csak te látod.",
-    "showDislikes": "Nemtetszéseim megjelenítése mindenkinek",
     "postingChain": "Bejegyzések blokklánca",
     "showOnline": "Megjelenítés, amikor online vagyok",
     "showOnlineDesc": "Azok a személyek, akiknek üzenetet küldesz, egy zöld pontot látnak a neved mellett, miközben a DeHubot használod",
+    "showDislikes": "Nemtetszéseim megjelenítése mindenkinek",
+    "showDislikesDesc": "Bárki megnyithatja a profilod Nemtetszések lapját. Ha ki van kapcsolva, csak te látod.",
     "smartReplies": "Javasolt válaszok",
     "smartRepliesDesc": "Két választ fogalmaz meg, amelyekre a csevegésben rákoppinthatsz. A javaslatokon lévő × kikapcsolja ezt.",
     "title": "Beállítások",
@@ -754,7 +754,6 @@
     "embed": "Beágyazás",
     "copyEmbedCode": "Beágyazási kód másolása",
     "embedCodeCopied": "Beágyazási kód másolva",
-    "copyFailed": "Nem sikerült a linket másolni",
     "options": "Lehetőségek",
     "aiOverview": "AI áttekintés",
     "sendTip": "Borravaló küldése",
@@ -782,7 +781,8 @@
     "unpinPost": "Leválasztás a profilodról",
     "postPinned": "Rögzítve a profilodhoz",
     "postUnpinned": "Eltávolítva a profilodból",
-    "pinFailed": "Nem sikerült rögzíteni vagy feloldani ezt a bejegyzést"
+    "pinFailed": "Nem sikerült rögzíteni vagy feloldani ezt a bejegyzést",
+    "copyFailed": "Nem sikerült a linket másolni"
   },
   "filters": {
     "sort": "Rendezés",
@@ -1515,7 +1515,6 @@
     "returnHome": "Vissza a kezdőlapra"
   },
   "profile": {
-    "dislikes": { "loadMore": "Továbbiak betöltése", "privateDesc": "Ez a fiók megtartja magának a nemtetszéseit.", "privateTitle": "A nemtetszések privátak", "emptyOther": "Még semmi.", "emptyOwn": "A nem tetsző bejegyzések eltűnnek a hírfolyamaidból, és itt jelennek meg. Vond vissza a nemtetszést, hogy visszahozd a bejegyzést.", "emptyTitle": "Még nincs nemtetszés" },
     "back": "Vissza",
     "usernameAvailable": "Felhasználónév elérhető!",
     "signUpToClaim": "Regisztráljon és foglalja le",
@@ -1543,8 +1542,16 @@
       "commentUnavailable": "Ez a megjegyzés már nem érhető el"
     },
     "tabs": {
-      "dislikes": "Nemtetszések",
-      "playlists": "Játéklisták"
+      "playlists": "Játéklisták",
+      "dislikes": "Nemtetszések"
+    },
+    "dislikes": {
+      "emptyTitle": "Még nincs nemtetszés",
+      "emptyOwn": "A nem tetsző bejegyzések eltűnnek a hírfolyamaidból, és itt jelennek meg. Vond vissza a nemtetszést, hogy visszahozd a bejegyzést.",
+      "emptyOther": "Még semmi.",
+      "privateTitle": "A nemtetszések privátak",
+      "privateDesc": "Ez a fiók megtartja magának a nemtetszéseit.",
+      "loadMore": "Továbbiak betöltése"
     },
     "offerWorthNow": "Körülbelül {{amount}} token a jelenlegi árfolyamon",
     "offerNotePlaceholder": "Írj egy üzenetet (nem kötelező)",
@@ -2387,6 +2394,30 @@
     "addDescription": "Adj hozzá leírást...",
     "communityDescription": "Közösség leírása...",
     "posts": "Bejegyzések",
+    "chat": {
+      "intervalHour": "1 óra",
+      "intervalHours": "{{count}} óra",
+      "intervalMinute": "1 perc",
+      "intervalMinutes": "{{count}} perc",
+      "intervalSecond": "1 másodperc",
+      "intervalSeconds": "{{count}} másodperc",
+      "muted": "El van némítva",
+      "mutedUntil": "Elnémítva eddig: {{until}}",
+      "postingDisabled": "A kiküldetés itt le van tiltva a tagok számára",
+      "pinnedGif": "GIF",
+      "pinnedMedia": "Média",
+      "jumpToPinned": "Ugrás a rögzített üzenetre",
+      "pinnedMessage": "Rögzített üzenet",
+      "unpin": "Rögzítés feloldása",
+      "pin": "PIN",
+      "delete": "Törlés",
+      "slowMode": "Lassú üzemmód: minden {{interval}} után egy üzenet",
+      "slowModeWait": "Lassú üzemmód — várjon {{time}}",
+      "send": "Küldés",
+      "deleteMessageTitle": "Törlöd ezt az üzenetet?",
+      "deleteMessageBody": "A művelet nem vonható vissza.",
+      "cancel": "Mégse"
+    },
     "membersTab": "Tagok ({{count}})",
     "about": "Névjegy",
     "backToCommunities": "Közösségek",
@@ -6935,7 +6966,14 @@
     }
   },
   "editor": {
-    "video": { "tFade": "Keresztáttűnés", "none": "Nincs", "transition": "Áttűnés", "speed": "Sebesség", "sound": "Hang","video": "Videó"},
+    "video": {
+      "tFade": "Keresztáttűnés",
+      "none": "Nincs",
+      "transition": "Áttűnés",
+      "speed": "Sebesség",
+      "sound": "Hang",
+      "video": "Videó"
+    },
     "review": {
       "title": "Projekt áttekintése",
       "shared": "Veled megosztva",

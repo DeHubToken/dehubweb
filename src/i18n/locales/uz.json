@@ -752,7 +752,6 @@
     "embed": "Joylashtirish",
     "copyEmbedCode": "Joylashtirish kodini nusxalash",
     "embedCodeCopied": "Joylashtirish kodi nusxalandi",
-    "copyFailed": "Havolani nusxalab boʻlmadi",
     "options": "Parametrlar",
     "aiOverview": "Sun'iy intellektga umumiy nuqtai nazar",
     "sendTip": "Tip yuborish",
@@ -780,7 +779,8 @@
     "unpinPost": "Profilingizdan olib tashlash",
     "postPinned": "Profilingizga mahkamlandi",
     "postUnpinned": "Profilingizdan olib tashlandi",
-    "pinFailed": "Bu postni mahkamlab yoki olib tashlab bo'lmadi"
+    "pinFailed": "Bu postni mahkamlab yoki olib tashlab bo'lmadi",
+    "copyFailed": "Havolani nusxalab boʻlmadi"
   },
   "filters": {
     "sort": "Saralash",
@@ -2453,6 +2453,30 @@
     "addDescription": "Tavsif qo'shing...",
     "communityDescription": "Jamoa tavsifi...",
     "posts": "Postlar",
+    "chat": {
+      "intervalHour": "1 soat",
+      "intervalHours": "{{count}} soat",
+      "intervalMinute": "1 daqiqa",
+      "intervalMinutes": "{{count}} daqiqa",
+      "intervalSecond": "1 soniya",
+      "intervalSeconds": "{{count}} soniya",
+      "muted": "Siz ovozsizsiz",
+      "mutedUntil": "Siz {{until}} gacha ovozsiz holatdasiz",
+      "postingDisabled": "Bu yerdagi a&#39;zolar uchun post qoldirish o&#39;chirib qo&#39;yilgan",
+      "pinnedGif": "GIF",
+      "pinnedMedia": "Media",
+      "jumpToPinned": "Qadalgan xabarga o&#39;tish",
+      "pinnedMessage": "Qadalgan xabar",
+      "unpin": "Olib tashlash",
+      "pin": "Pin",
+      "delete": "O&#39;chirish",
+      "slowMode": "Sekin rejim: har {{interval}} da bitta xabar",
+      "slowModeWait": "Sekin rejim — kuting {{time}}",
+      "send": "Yuborish",
+      "deleteMessageTitle": "Bu xabar oʻchirilsinmi?",
+      "deleteMessageBody": "Buni bekor qilib bo&#39;lmaydi.",
+      "cancel": "Bekor qilish"
+    },
     "membersTab": "A'zolar ({{count}})",
     "about": "Haqida",
     "backToCommunities": "Jamoalar",
@@ -7069,7 +7093,14 @@
     }
   },
   "editor": {
-    "video": { "tFade": "Aralash o‘tish", "none": "Yo‘q", "transition": "O‘tish", "speed": "Tezlik", "sound": "Ovoz","video": "Video"},
+    "video": {
+      "tFade": "Aralash o‘tish",
+      "none": "Yo‘q",
+      "transition": "O‘tish",
+      "speed": "Tezlik",
+      "sound": "Ovoz",
+      "video": "Video"
+    },
     "review": {
       "title": "Loyihani ko‘rib chiqish",
       "shared": "Siz bilan ulashilgan",

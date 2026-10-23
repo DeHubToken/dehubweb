@@ -750,7 +750,6 @@
     "embed": "Fi sinu",
     "copyEmbedCode": "Daakọ koodu ifisinu",
     "embedCodeCopied": "A ti daakọ koodu ifisinu",
-    "copyFailed": "Ko ṣee ṣe lati daakọ ọna asopọ naa",
     "options": "Àwọn àṣàyàn",
     "aiOverview": "Àkíyèsí AI",
     "sendTip": "Fi Ẹ̀bùn Ránṣẹ́",
@@ -778,7 +777,8 @@
     "unpinPost": "Yọ kuro ninu profaili rẹ",
     "postPinned": "Pọn si profaili rẹ",
     "postUnpinned": "Unpinned lati rẹ profaili",
-    "pinFailed": "Ko le pin tabi yọ ifiweranṣẹ yii kuro."
+    "pinFailed": "Ko le pin tabi yọ ifiweranṣẹ yii kuro.",
+    "copyFailed": "Ko ṣee ṣe lati daakọ ọna asopọ naa"
   },
   "filters": {
     "sort": "Tò",
@@ -2428,6 +2428,30 @@
     "addDescription": "Ṣàfikún àpèjúwe...",
     "communityDescription": "Àpèjúwe àwùjọ...",
     "posts": "Àwọn Àtẹ̀jáde",
+    "chat": {
+      "intervalHour": "Wákàtí 1",
+      "intervalHours": "{{count}} wákàtí",
+      "intervalMinute": "Iṣẹju 1",
+      "intervalMinutes": "{{count}} iṣẹju",
+      "intervalSecond": "1 ìkejì",
+      "intervalSeconds": "{{count}} ìkejì",
+      "muted": "O dákẹ́ jẹ́ẹ́",
+      "mutedUntil": "O dákẹ́ títí di {{until}}",
+      "postingDisabled": "Ifiweranṣẹ jẹ alaabo fun awọn ọmọ ẹgbẹ nibi",
+      "pinnedGif": "GIF",
+      "pinnedMedia": "Media",
+      "jumpToPinned": "Jabọ si ifiranṣẹ pinned",
+      "pinnedMessage": "Ifiranṣẹ Pinned",
+      "unpin": "Unpin",
+      "pin": "Pin",
+      "delete": "Paarẹ",
+      "slowMode": "Ipò dídára: àtẹ̀jíṣẹ́ kan ní gbogbo {{interval}}",
+      "slowModeWait": "Ipo ti o lọra — duro {{time}}",
+      "send": "Fi ranṣẹ",
+      "deleteMessageTitle": "Pa àtẹ̀jíṣẹ́ yìí rẹ́?",
+      "deleteMessageBody": "Èyí kò lè di àtúnṣe.",
+      "cancel": "Fagilee"
+    },
     "membersTab": "Àwọn Ọmọ Ẹgbẹ́ ({{count}})",
     "about": "Nípa",
     "backToCommunities": "Àwọn Àwùjọ",
@@ -6934,7 +6958,14 @@
     }
   },
   "editor": {
-    "video": { "tFade": "Ìdàpọ̀ ìyípadà", "none": "Kò sí", "transition": "Ìyípadà", "speed": "Ìyára", "sound": "Ohùn","video": "Fídíò"},
+    "video": {
+      "tFade": "Ìdàpọ̀ ìyípadà",
+      "none": "Kò sí",
+      "transition": "Ìyípadà",
+      "speed": "Ìyára",
+      "sound": "Ohùn",
+      "video": "Fídíò"
+    },
     "review": {
       "title": "Àyẹ̀wò iṣẹ́",
       "shared": "Pín pẹ̀lú rẹ",

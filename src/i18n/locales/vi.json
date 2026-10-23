@@ -227,11 +227,11 @@
   },
   "settings": {
     "usernameTaken": "Tên người dùng đã có người dùng",
-    "showDislikesDesc": "Ai cũng có thể mở tab Không thích trên hồ sơ của bạn. Khi tắt, chỉ bạn xem được.",
-    "showDislikes": "Hiển thị lượt không thích của tôi cho mọi người",
     "postingChain": "Chuỗi khối đăng bài",
     "showOnline": "Hiển thị khi tôi trực tuyến",
     "showOnlineDesc": "Những người bạn nhắn tin thấy một dấu chấm màu xanh lá cây bên cạnh tên của bạn trong khi bạn đang sử dụng DeHub",
+    "showDislikes": "Hiển thị lượt không thích của tôi cho mọi người",
+    "showDislikesDesc": "Ai cũng có thể mở tab Không thích trên hồ sơ của bạn. Khi tắt, chỉ bạn xem được.",
     "smartReplies": "Câu trả lời gợi ý",
     "smartRepliesDesc": "Soạn hai câu trả lời bạn có thể chạm trong cuộc trò chuyện. Dấu × trên các gợi ý sẽ tắt tính năng này.",
     "title": "Settings",
@@ -770,7 +770,6 @@
     "embed": "Nhúng",
     "copyEmbedCode": "Sao chép mã nhúng",
     "embedCodeCopied": "Đã sao chép mã nhúng",
-    "copyFailed": "Không thể sao chép liên kết",
     "options": "Options",
     "aiOverview": "Tổng quan về AI",
     "sendTip": "Send Tip",
@@ -798,7 +797,8 @@
     "unpinPost": "Bỏ ghim khỏi hồ sơ của bạn",
     "postPinned": "Đã ghim vào hồ sơ của bạn",
     "postUnpinned": "Đã bỏ ghim khỏi hồ sơ của bạn",
-    "pinFailed": "Không thể ghim hoặc bỏ ghim bài đăng này"
+    "pinFailed": "Không thể ghim hoặc bỏ ghim bài đăng này",
+    "copyFailed": "Không thể sao chép liên kết"
   },
   "filters": {
     "sort": "Sort",
@@ -1538,7 +1538,6 @@
     "returnHome": "Return Home"
   },
   "profile": {
-    "dislikes": { "loadMore": "Tải thêm", "privateDesc": "Tài khoản này giữ kín lượt không thích.", "privateTitle": "Lượt không thích là riêng tư", "emptyOther": "Chưa có gì.", "emptyOwn": "Bài bạn không thích sẽ rời khỏi bảng tin và hiện ở đây. Hủy không thích để đưa bài trở lại.", "emptyTitle": "Chưa có lượt không thích" },
     "back": "Back",
     "usernameAvailable": "Username available!",
     "signUpToClaim": "Đăng ký hôm nay để nhận",
@@ -1566,8 +1565,16 @@
       "commentUnavailable": "Bình luận này không còn khả dụng"
     },
     "tabs": {
-      "dislikes": "Không thích",
-      "playlists": "Danh sách phát"
+      "playlists": "Danh sách phát",
+      "dislikes": "Không thích"
+    },
+    "dislikes": {
+      "emptyTitle": "Chưa có lượt không thích",
+      "emptyOwn": "Bài bạn không thích sẽ rời khỏi bảng tin và hiện ở đây. Hủy không thích để đưa bài trở lại.",
+      "emptyOther": "Chưa có gì.",
+      "privateTitle": "Lượt không thích là riêng tư",
+      "privateDesc": "Tài khoản này giữ kín lượt không thích.",
+      "loadMore": "Tải thêm"
     },
     "offerWorthNow": "Khoảng {{amount}} token với tỷ giá hiện tại",
     "offerNotePlaceholder": "Thêm ghi chú (không bắt buộc)",
@@ -2455,6 +2462,30 @@
     "addDescription": "Thêm mô tả...",
     "communityDescription": "Mô tả cộng đồng...",
     "posts": "Bài viết",
+    "chat": {
+      "intervalHour": "1 giờ",
+      "intervalHours": "{{count}} giờ",
+      "intervalMinute": "1 phút",
+      "intervalMinutes": "{{count}} phút",
+      "intervalSecond": "1 giây",
+      "intervalSeconds": "{{count}} giây",
+      "muted": "Bạn đã bị tắt tiếng",
+      "mutedUntil": "Bạn sẽ bị tắt tiếng cho đến {{until}}",
+      "postingDisabled": "Đăng bài bị vô hiệu hóa cho các thành viên ở đây",
+      "pinnedGif": "GIF",
+      "pinnedMedia": "Truyền thông",
+      "jumpToPinned": "Chuyển đến tin nhắn đã ghim",
+      "pinnedMessage": "Tin nhắn đã ghim",
+      "unpin": "Bỏ ghim",
+      "pin": "Mã PIN",
+      "delete": "Xóa",
+      "slowMode": "Chế độ chậm: một tin nhắn mỗi {{interval}}",
+      "slowModeWait": "Chế độ chậm — chờ {{time}}",
+      "send": "Gửi",
+      "deleteMessageTitle": "Xóa tin nhắn này?",
+      "deleteMessageBody": "Không thể hoàn tác thao tác này.",
+      "cancel": "Hủy"
+    },
     "membersTab": "Thành viên ({{count}})",
     "about": "Giới thiệu",
     "backToCommunities": "Cộng đồng",
@@ -7065,7 +7096,14 @@
     }
   },
   "editor": {
-    "video": { "tFade": "Hòa tan", "none": "Không có", "transition": "Chuyển cảnh", "speed": "Tốc độ", "sound": "Âm thanh","video": "Video"},
+    "video": {
+      "tFade": "Hòa tan",
+      "none": "Không có",
+      "transition": "Chuyển cảnh",
+      "speed": "Tốc độ",
+      "sound": "Âm thanh",
+      "video": "Video"
+    },
     "review": {
       "title": "Đánh giá dự án",
       "shared": "Được chia sẻ với bạn",

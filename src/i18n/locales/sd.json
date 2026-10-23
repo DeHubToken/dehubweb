@@ -751,7 +751,6 @@
     "embed": "ايمبيڊ",
     "copyEmbedCode": "ايمبيڊ ڪوڊ ڪاپي ڪريو",
     "embedCodeCopied": "ايمبيڊ ڪوڊ ڪاپي ٿي ويو",
-    "copyFailed": "لنڪ ڪاپي نه ٿي سگهي",
     "options": "اختيار",
     "aiOverview": "AI جو جائزو",
     "sendTip": "ٽپ موڪليو",
@@ -779,7 +778,8 @@
     "unpinPost": "پنهنجي پروفائل مان پن ڪ unيو",
     "postPinned": "توھان جي پروفائل تي پن",
     "postUnpinned": "توهان جي پروفائيل مان Unpinned",
-    "pinFailed": "هن پوسٽ کي پن يا ڪ unي نه سگھيو"
+    "pinFailed": "هن پوسٽ کي پن يا ڪ unي نه سگھيو",
+    "copyFailed": "لنڪ ڪاپي نه ٿي سگهي"
   },
   "filters": {
     "sort": "ترتيب",
@@ -2431,6 +2431,29 @@
     "addDescription": "تشريح شامل ڪريو...",
     "communityDescription": "ڪميونٽي تفصيل...",
     "posts": "تحريرون",
+    "chat": {
+      "intervalHour": "1 گھنٹے پهريان",
+      "intervalHours": "{{count}} ڪلاڪن",
+      "intervalMinute": "1 ماهه",
+      "intervalMinutes": "{{count}} ماهه",
+      "intervalSecond": "1 سيڪنڊ",
+      "intervalSeconds": "{{count}} سيڪنڊ",
+      "muted": "تون خاموش ٿي ويو آهين",
+      "mutedUntil": "توهان {{until}} تائين خاموش ٿي ويا آهيو",
+      "postingDisabled": "هتي جي ميمبرن لاءِ پوسٽنگ معذور آهي",
+      "pinnedGif": "ڳيف",
+      "pinnedMedia": "ميڊيا",
+      "jumpToPinned": "پيامهاي ارسالي در ارسالي",
+      "pinnedMessage": "پنڊ ٿيل پيغام",
+      "unpin": "انپِن",
+      "delete": "ڊاهيو",
+      "slowMode": "سست موڊ: هڪ پيغام هر {{interval}}",
+      "slowModeWait": "سست موڊ — انتظار ڪريو {{time}}",
+      "send": "موڪليو",
+      "deleteMessageTitle": "ھي پيغام ختم ڪريو ؟",
+      "deleteMessageBody": "هي رد نه ٿو ڪري سگھجي.",
+      "cancel": "منسوخ ڪريو"
+    },
     "membersTab": "ميمبر ({{count}})",
     "about": "باري ۾",
     "backToCommunities": "برادرين",
@@ -6974,7 +6997,14 @@
     }
   },
   "editor": {
-    "video": { "tFade": "ملي گم ٿيڻ", "none": "ڪجهه به نه", "transition": "ٽرانزيشن", "speed": "رفتار", "sound": "آواز","video": "وڊيو"},
+    "video": {
+      "tFade": "ملي گم ٿيڻ",
+      "none": "ڪجهه به نه",
+      "transition": "ٽرانزيشن",
+      "speed": "رفتار",
+      "sound": "آواز",
+      "video": "وڊيو"
+    },
     "review": {
       "title": "منصوبي جو جائزو",
       "shared": "توهان سان شيئر ڪيل",

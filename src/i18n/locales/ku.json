@@ -633,7 +633,6 @@
     "embed": "تێخستن",
     "copyEmbedCode": "کۆدی تێخستن کۆپی بکە",
     "embedCodeCopied": "کۆدی تێخستن کۆپی کرا",
-    "copyFailed": "نەتوانرا بەستەرەکە کۆپی بکرێت",
     "options": "Vebijêrk",
     "sendTip": "Bexşîş Bişîne",
     "queue": "Rêz",
@@ -653,7 +652,8 @@
     "endStream": "Weşana Zindî biqedîne",
     "linkCopied": "Girêdan hat kopîkirin",
     "postUrlCopied": "URL-ya şandiyê hat kopîkirin",
-    "boostPost": "Şandiyê Boost Bike"
+    "boostPost": "Şandiyê Boost Bike",
+    "copyFailed": "نەتوانرا بەستەرەکە کۆپی بکرێت"
   },
   "filters": {
     "sort": "Rêzkirin",
@@ -2223,6 +2223,9 @@
     "addDescription": "Danasînekê zêde bike...",
     "communityDescription": "Danasîna civakê...",
     "posts": "Şandî",
+    "chat": {
+      "pinnedGif": "وێنەی جوڵاو"
+    },
     "membersTab": "Endam ({{count}})",
     "about": "Derbar",
     "backToCommunities": "Civak",
@@ -6015,7 +6018,14 @@
     }
   },
   "editor": {
-    "video": { "tFade": "Derbasbûna nerm", "none": "Tune", "transition": "Derbasbûn", "speed": "Lez", "sound": "Deng","video": "Vîdyo"},
+    "video": {
+      "tFade": "Derbasbûna nerm",
+      "none": "Tune",
+      "transition": "Derbasbûn",
+      "speed": "Lez",
+      "sound": "Deng",
+      "video": "Vîdyo"
+    },
     "review": {
       "title": "Vekolîna projeyê",
       "shared": "Bi te re parvekirî",
