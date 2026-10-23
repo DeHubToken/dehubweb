@@ -1,27 +1,28 @@
-// Make a finished stage recording seekable, then hand it to transcription.
+// Make a finished stage recording seekable and playable everywhere, then hand
+// it to transcription.
 //
-// Neither recorder produces a file a player can scrub:
+// Neither recorder produces a file every player can use:
 //
 //   web    MediaRecorder streams WebM, so the Segment and every Cluster carry
-//          an unknown size, Info has no Duration and there are no Cues.
+//          an unknown size, Info has no Duration and there are no Cues. And
+//          WebM itself is unplayable on iPhone apps: AVPlayer has no WebM
+//          demuxer (Safari only manages because WebKit ships its own).
 //   mobile Agora writes a raw ADTS AAC elementary stream, which has no header
 //          and no index of any kind.
 //
-// Browsers paper over both (Chrome bisects clusters and estimates a bitrate),
-// which is why this only ever showed up in the app: media3 returns
+// Browsers paper over the indexing (Chrome bisects clusters and estimates a
+// bitrate), which is why that only ever showed up in the app: media3 returns
 // SeekMap.Unseekable and a duration of C.TIME_UNSET, so the scrubber is dead
 // and every seekTo is silently dropped.
 //
-// Web already fixes its own half in the browser, on the way to the bucket
-// (src/lib/webm-seekable.ts, #422) — cheaper than a round trip and it needs no
-// deploy. So the AAC path here is the one that carries mobile, and the WebM
-// path is the net beneath the client pass, which fails open by design and
-// would otherwise leave an unindexed upload with nothing to catch it.
+// So both are re-filed as MP4: the web's Opus packets into an Opus MP4 (iOS
+// 17+, Chrome, Firefox, Safari 17+ and media3 all play it), mobile's AAC into
+// an M4A. If the Opus path cannot read a WebM, the older WebM repair is the
+// fallback, so a file this cannot convert still comes out seekable.
 //
-// Nothing here transcodes. The WebM path rewrites only the container's
-// bookkeeping and the AAC path only re-wraps existing access units, so the
-// audio comes out bit-for-bit identical either way — which also means this is
-// cheap enough to run inline on the upload path.
+// Nothing here transcodes. Every path only re-wraps the encoded packets, so
+// the audio comes out bit-for-bit identical — which also means this is cheap
+// enough to run inline on the upload path.
 //
 // The original object is never overwritten. The repair is written alongside it
 // and audio_spaces.recording_url is repointed, so reverting is one UPDATE.
@@ -29,7 +30,8 @@
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2.45.0';
 import { repairWebm, AlreadyIndexed } from './webm.ts';
 import { parseAdts, isAdts, AAC_SAMPLES_PER_FRAME } from './adts.ts';
-import { buildM4a } from './mp4.ts';
+import { buildM4a, buildOpusMp4 } from './mp4.ts';
+import { extractOpus } from './opus.ts';
 
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
@@ -40,7 +42,9 @@ const corsHeaders = {
 const BUCKET = 'stage-recordings';
 
 /** Objects this function itself produces — seeing one means the work is done. */
-const FINALIZED = ['recording.m4a', 'recording.indexed.webm'];
+// recording.indexed.webm is deliberately not here any more: a WebM that was
+// only indexed still cannot play on an iPhone, so it is taken on to MP4.
+const FINALIZED = ['recording.m4a', 'recording.mp4'];
 
 const json = (body: unknown, status = 200) =>
   new Response(JSON.stringify(body), {
@@ -53,7 +57,7 @@ interface Finalized {
   objectName: string;
   contentType: string;
   durationMs: number;
-  kind: 'webm' | 'aac';
+  kind: 'opus' | 'webm' | 'aac';
   note?: string;
 }
 
@@ -62,6 +66,24 @@ function finalize(src: Uint8Array): Finalized {
   const isEbml = src.length > 4 && src[0] === 0x1a && src[1] === 0x45 && src[2] === 0xdf && src[3] === 0xa3;
 
   if (isEbml) {
+    try {
+      const opus = extractOpus(src);
+      const m = buildOpusMp4(opus);
+      const notes = [
+        opus.joinedStreams ? `joined ${opus.joinedStreams} restarted stream(s) (voice effect switched mid-recording)` : '',
+        opus.droppedStreams ? `left out ${opus.droppedStreams} stream(s) with a different channel layout` : '',
+      ].filter(Boolean);
+      return {
+        bytes: m.bytes,
+        objectName: 'recording.mp4',
+        contentType: 'audio/mp4',
+        durationMs: m.durationMs,
+        kind: 'opus',
+        note: notes.length ? notes.join('; ') : undefined,
+      };
+    } catch (e) {
+      console.warn(`[finalize] Opus MP4 not possible, indexing the WebM instead — ${(e as Error).message}`);
+    }
     const r = repairWebm(src);
     return {
       bytes: r.bytes,

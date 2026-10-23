@@ -296,6 +296,7 @@ function PostModalForAccount({ isOpen, onClose, initialFiles, onFilesProcessed, 
         poll={state.poll}
         onPollChange={actions.setPoll}
         onMediaFullscreenChange={setMediaFullscreenOpen}
+        draftVideo={state.draftVideo}
         hideScheduleAndDrafts={isQuoting}
       />
       {quotedPost && (

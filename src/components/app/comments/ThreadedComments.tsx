@@ -54,6 +54,8 @@ import {
   reactionForThumbTap,
   reactionMeta,
   resolveThumbReaction,
+  resolveThumbCount,
+  dislikesOutnumberLikes,
   type PostReaction,
 } from '@/lib/reactions';
 import { buildAvatarUrl } from '@/lib/media-url';
@@ -144,7 +146,10 @@ function CommentRow<C extends ThreadedComment>({
   // is no separate thumbs-down.
   const likeTray = useReactionTray(!isOwn);
 
-  const leadReaction = isOwn ? null : resolveThumbReaction(comment.reactionCounts, comment.myReaction);
+  const leadReaction = isOwn
+    ? (dislikesOutnumberLikes(comment.reactionCounts) ? 'dislike' : null)
+    : resolveThumbReaction(comment.reactionCounts, comment.myReaction);
+  const thumbCount = resolveThumbCount(comment.likes, comment.dislikes, leadReaction);
   const held = isOwn ? null : comment.myReaction ?? null;
 
   const avatarUrl = comment.avatar ? buildAvatarUrl(comment.wallet_address, comment.avatar) : null;
@@ -276,7 +281,7 @@ function CommentRow<C extends ThreadedComment>({
                 ) : (
                   <ThumbsUp className={cn('w-4 h-4', held && 'fill-current')} />
                 )}
-                {comment.likes > 0 && <span className="text-xs">{comment.likes}</span>}
+                {thumbCount > 0 && <span className="text-xs">{thumbCount}</span>}
               </button>
             </span>
 

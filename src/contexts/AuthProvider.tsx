@@ -264,6 +264,8 @@ function normalizeUser(userData: Partial<DeHubUser> | null | undefined, fallback
     createdAt: safe.createdAt,
     lastLoginTimestamp: safe.lastLoginTimestamp,
     badgeBalance,
+    // Governance votes count only this, so a lent badge can be told apart.
+    ownBadgeBalance: typeof safe.ownBadgeBalance === 'number' ? safe.ownBadgeBalance : undefined,
     balanceData: safe.balanceData,
     // This builder is an allowlist — anything not named here is dropped, which
     // is why it has to be listed explicitly rather than spread in. Settings
