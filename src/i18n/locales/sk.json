@@ -262,6 +262,11 @@
       "hintDeny": "UI systémy a crawlery, ktoré rešpektujú tento signál, sú požiadané, aby sa netrénovali na vašom audiu, umeleckých dielach a písaní. Crawlery, ktoré ignorujú signál, nie sú blokované.",
       "saved": "Predvoľba školenia AI uložená"
     },
+    "defaultFeed": "Predvolený kanál",
+    "defaultFeedDesc": "Vyberte, ktorý kanál sa otvorí vždy, keď otvoríte DeHub",
+    "feedToggles": "Obnoviť filtre kanála",
+    "feedTogglesDesc": "Filtre, ktoré v kanáli zapnete, zostanú predvolené, kým ich neobnovíte",
+    "feedTogglesCleared": "Filtre kanála obnovené",
     "defaultProfileTab": "Predvolená karta profilu",
     "defaultProfileTabDesc": "Vyber, ktorú kartu uvidia návštevníci na tvojom profile ako prvú",
     "public": "Verejné",

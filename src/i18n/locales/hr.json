@@ -258,6 +258,11 @@
       "hintDeny": "Od sustava umjetne inteligencije i indeksirača koji poštuju ovaj signal traži se da ne vježbaju na vašem zvuku, umjetničkim djelima i pisanju. Alati za indeksiranje koji zanemaruju signal nisu njime blokirani.",
       "saved": "Postavka umjetne inteligencije za obuku je spremljena"
     },
+    "defaultFeed": "Zadani feed",
+    "defaultFeedDesc": "Odaberite koji se feed otvara svaki put kad otvorite DeHub",
+    "feedToggles": "Poništi filtre feeda",
+    "feedTogglesDesc": "Filtri koje uključite u feedu ostaju vaši zadani dok ih ne poništite",
+    "feedTogglesCleared": "Filtri feeda poništeni",
     "defaultProfileTab": "Zadana kartica profila",
     "defaultProfileTabDesc": "Odaberite koju karticu posjetitelji prvo vide na vašem profilu",
     "public": "Javno",

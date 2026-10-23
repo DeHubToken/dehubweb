@@ -258,6 +258,11 @@
       "hintDeny": "Sirnoonni AI fi crawlers mallattoo kana kabajan sagalee, hojii aartii fi barreeffama keessan irratti akka hin leenjifamne gaafatamna. Crawlers kanneen mallattoo tuffatan ittiin hin ugguraman.",
       "saved": "Filannoon leenjii AI qusatameera"
     },
+    "defaultFeed": "Feed durtii",
+    "defaultFeedDesc": "Yeroo DeHub banattu hunda feed kam akka banamu filadhu",
+    "feedToggles": "Calleessitoota feed haaromsi",
+    "feedTogglesDesc": "Calleessitoonni feed keessatti banattu hanga haaromsitutti durtii kee ta'anii turu",
+    "feedTogglesCleared": "Calleessitoonni feed haaromfamaniiru",
     "defaultProfileTab": "Tab profaayilii durtii",
     "defaultProfileTabDesc": "Daawwattoonni profaayilii kee irratti tab kam jalqaba akka arganu filadhu",
     "public": "Ummataa",

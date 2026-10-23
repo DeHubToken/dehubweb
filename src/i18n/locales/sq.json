@@ -258,6 +258,11 @@
       "hintDeny": "Sistemet AI dhe zvarritësit që respektojnë këtë sinjal u kërkohet të mos trajnohen në audio, vepra arti dhe shkrime. Zvarritësit që injorojnë sinjalin nuk bllokohen prej tij.",
       "saved": "Preferenca e trajnimit të AI u ruajt"
     },
+    "defaultFeed": "Furnizimi i parazgjedhur",
+    "defaultFeedDesc": "Zgjidh cili furnizim hapet sa herë që hap DeHub",
+    "feedToggles": "Rivendos filtrat e furnizimit",
+    "feedTogglesDesc": "Filtrat që aktivizon në një furnizim mbeten të parazgjedhurit e tu derisa t'i rivendosësh",
+    "feedTogglesCleared": "Filtrat e furnizimit u rivendosën",
     "defaultProfileTab": "Skeda e parazgjedhur e profilit",
     "defaultProfileTabDesc": "Zgjidh cilën skedë shohin të parën vizitorët në profilin tënd",
     "public": "Publik",

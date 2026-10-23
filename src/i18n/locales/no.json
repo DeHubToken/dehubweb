@@ -260,6 +260,11 @@
       "hintDeny": "AI-systemer og robotsøkere som respekterer dette signalet blir bedt om ikke å trene på lyd, grafikk og tekst. Robotsøkere som ignorerer signalet blokkeres ikke av det.",
       "saved": "AI-opplæringspreferanser lagret"
     },
+    "defaultFeed": "Standardfeed",
+    "defaultFeedDesc": "Velg hvilken feed som åpnes hver gang du åpner DeHub",
+    "feedToggles": "Tilbakestill feedfiltre",
+    "feedTogglesDesc": "Filtre du slår på i en feed, forblir standardene dine til du tilbakestiller dem",
+    "feedTogglesCleared": "Feedfiltre tilbakestilt",
     "defaultProfileTab": "Standardfane på profilen",
     "defaultProfileTabDesc": "Velg hvilken fane besøkende ser først på profilen din",
     "public": "Offentlig",

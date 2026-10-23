@@ -258,6 +258,11 @@
       "hintDeny": "Ushbu signalga rioya qiladigan sun'iy intellekt tizimlari va qidiruv tizimlaridan sizning audio, badiiy asaringiz va yozuvlaringiz ustida mashq qilmaslik so'raladi. Signalni e'tiborsiz qoldiradigan qidiruv tizimlari u tomonidan bloklanmaydi.",
       "saved": "Sun'iy intellekt bo'yicha o'qitish afzalligi saqlandi"
     },
+    "defaultFeed": "Standart lenta",
+    "defaultFeedDesc": "DeHub'ni har ochganingizda qaysi lenta ochilishini tanlang",
+    "feedToggles": "Lenta filtrlarini tiklash",
+    "feedTogglesDesc": "Lentada yoqqan filtrlaringiz tiklamaguningizcha standart bo'lib qoladi",
+    "feedTogglesCleared": "Lenta filtrlari tiklandi",
     "defaultProfileTab": "Standart profil varag'i",
     "defaultProfileTabDesc": "Tashrif buyuruvchilar profilingizda birinchi qaysi varaqni ko'rishini tanlang",
     "public": "Ommaviy",

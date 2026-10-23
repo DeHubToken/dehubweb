@@ -260,6 +260,11 @@
       "hintDeny": "Sistem AI dan perayap yang menghormati isyarat ini diminta untuk tidak melatih audio, karya seni dan tulisan anda. Perayap yang mengabaikan isyarat tidak disekat olehnya.",
       "saved": "Pilihan latihan AI disimpan"
     },
+    "defaultFeed": "Suapan lalai",
+    "defaultFeedDesc": "Pilih suapan yang dibuka setiap kali anda membuka DeHub",
+    "feedToggles": "Tetapkan semula penapis suapan",
+    "feedTogglesDesc": "Penapis yang anda hidupkan dalam suapan kekal sebagai lalai sehingga anda menetapkannya semula",
+    "feedTogglesCleared": "Penapis suapan ditetapkan semula",
     "defaultProfileTab": "Tab profil lalai",
     "defaultProfileTabDesc": "Pilih tab yang pelawat lihat dahulu pada profil anda",
     "public": "Awam",

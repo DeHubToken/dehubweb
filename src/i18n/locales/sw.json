@@ -260,6 +260,11 @@
       "hintDeny": "Mifumo ya AI na watambaaji wanaoheshimu ishara hii wanaombwa kutofundisha juu ya sauti, sanaa na uandishi wako. Matambaa yanayopuuza ishara hayazuiliwi nayo.",
       "saved": "Upendeleo wa mafunzo ya AI umehifadhiwa"
     },
+    "defaultFeed": "Mlisho chaguo-msingi",
+    "defaultFeedDesc": "Chagua mlisho unaofunguka kila unapofungua DeHub",
+    "feedToggles": "Weka upya vichujio vya mlisho",
+    "feedTogglesDesc": "Vichujio unavyowasha kwenye mlisho hubaki kuwa chaguo-msingi lako hadi uviweke upya",
+    "feedTogglesCleared": "Vichujio vya mlisho vimewekwa upya",
     "defaultProfileTab": "Kichupo chaguo-msingi cha wasifu",
     "defaultProfileTabDesc": "Chagua kichupo ambacho wageni huona kwanza kwenye wasifu wako",
     "public": "Umma",

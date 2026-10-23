@@ -304,6 +304,11 @@
       "hintDeny": "KI-Systeme und Crawler, die dieses Signal respektieren, werden gebeten, nicht mit Ihrem Audio, Ihren Grafiken und Ihrem Schreiben zu trainieren. Crawler, die das Signal ignorieren, werden dadurch nicht blockiert.",
       "saved": "KI-Schulungspräferenz gespeichert"
     },
+    "defaultFeed": "Standard-Feed",
+    "defaultFeedDesc": "Wähle, welcher Feed sich bei jedem Öffnen von DeHub zeigt",
+    "feedToggles": "Feed-Filter zurücksetzen",
+    "feedTogglesDesc": "Filter, die du in einem Feed einschaltest, bleiben deine Standards, bis du sie zurücksetzt",
+    "feedTogglesCleared": "Feed-Filter zurückgesetzt",
     "defaultProfileTab": "Standard-Profiltab",
     "defaultProfileTabDesc": "Wähle, welchen Tab Besucher auf deinem Profil zuerst sehen",
     "public": "Öffentlich",

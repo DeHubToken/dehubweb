@@ -260,6 +260,11 @@
       "hintDeny": "AI-system och sökrobotar som respekterar denna signal ombeds att inte träna på ditt ljud, konstverk och skrivande. Crawlers som ignorerar signalen blockeras inte av den.",
       "saved": "AI-utbildningspreferens sparad"
     },
+    "defaultFeed": "Standardflöde",
+    "defaultFeedDesc": "Välj vilket flöde som öppnas varje gång du öppnar DeHub",
+    "feedToggles": "Återställ flödesfilter",
+    "feedTogglesDesc": "Filter du slår på i ett flöde förblir dina standarder tills du återställer dem",
+    "feedTogglesCleared": "Flödesfilter återställda",
     "defaultProfileTab": "Standardflik på profilen",
     "defaultProfileTabDesc": "Välj vilken flik besökare ser först på din profil",
     "public": "Offentlig",
