@@ -1005,7 +1005,7 @@ export function AudioVisualizer({
   const stopBubble = (e: React.SyntheticEvent) => e.stopPropagation();
 
   if (theme === 'glass' || (theme === 'system' && !isLightTheme)) return (
-    <div data-no-swipe data-video-controls data-audio-player data-audio-studio data-material={theme} className={className} onClick={stopBubble}>
+    <div data-no-swipe data-video-controls data-audio-player data-audio-studio data-material={theme} data-audio-studio-fullscreen={isFullscreen || undefined} className={className} onClick={stopBubble}>
       <div data-audio-studio-title>
         {artworkUrl && !artworkUrl.split('?')[0].endsWith('/placeholder.svg') && <img data-audio-studio-cover src={artworkUrl} alt="" loading="lazy" onError={event => { event.currentTarget.hidden = true; }} />}
         <div><strong>{displayTitle || popoutTrack?.title || t('audioPost.untitled')}</strong>
@@ -1017,6 +1017,11 @@ export function AudioVisualizer({
         onPointerDown={e => beginScrub(e.currentTarget, e, false)}
         onPointerMove={e => moveScrub(e.currentTarget, e)}
         onPointerUp={e => endScrub(e.currentTarget, e)} onPointerCancel={cancelScrub} />
+        {/* Fullscreen is the animation alone: play and exit over it, the card hidden. */}
+        {isFullscreen && onFullscreen && <div data-audio-studio-fs-bar>
+          <button type="button" aria-label={isPlaying ? t('audioPost.pause') : t('audioPost.play')} onClick={handlePlayPause}>{isPlaying ? <GlassPause fill="currentColor" /> : <GlassPlay fill="currentColor" />}</button>
+          <button type="button" aria-label={_copy('copy.37fd4e355ba3', { defaultValue: 'Exit fullscreen' })} onClick={onFullscreen}><Minimize /></button>
+        </div>}
       </div>
       <div data-audio-studio-deck>
         <svg data-audio-studio-wave viewBox="0 0 600 32" preserveAspectRatio="none" aria-hidden="true">
