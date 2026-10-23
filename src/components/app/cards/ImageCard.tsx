@@ -223,6 +223,7 @@ function ImageSlide({
   // gets the same triple-tap ❤️ and hold-for-the-tray as every other surface.
   const tapGestures = useTapGestures({
     postId,
+    reactionArea: immersive ? 'surface' : 'center',
     onSingleTap: () => onImageClick(idx),
   });
   // Feed items carry no image dimensions, so first paint reserves minHeight and
@@ -562,6 +563,7 @@ function FeedDescription({
   // the card; two and three taps still react. Links and "See more" keep theirs.
   const tapGestures = useTapGestures({
     postId,
+    reactionArea: 'center',
     disabled,
     enableLongPress: false,
     onSingleTap: (event) => {
@@ -1757,4 +1759,3 @@ export const ImageCard = memo(function ImageCard({ post, aboveFold = false, onOp
     </div>
   );
 });
-

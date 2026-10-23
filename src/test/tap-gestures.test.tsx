@@ -488,7 +488,7 @@ describe('surfaces are wired consistently', () => {
 
   it('uses the reaction ladder in the immersive video player too', () => {
     expect(VIDEO_CARD).toContain('disabled: hideActions || !!video.isAudio || isContentGated');
-    expect(VIDEO_CARD).toContain('onSingleTap: isImmersive ? () =>');
+    expect(VIDEO_CARD).toContain('onSingleTap: feedPreview ? openPreviewInShorts : isImmersive ? () =>');
     expect(VIDEO_CARD).toContain('onUndoSingleTap: isImmersive ? handlePlayClick : undefined');
     expect(VIDEO_CARD).not.toContain('handleDoubleTapSeek');
     expect(VIDEO_CARD).not.toContain('lastTapRef');
@@ -508,11 +508,10 @@ describe('surfaces are wired consistently', () => {
   });
 
   it('gives a text post the ladder without costing it instant navigation', () => {
-    // The body carries no single-tap action, so there is nothing to hold back
-    // while a second tap is awaited — the same reason Instagram's double-tap
-    // has no lag. Tapping the rest of the card still opens the post at once.
+    // The body opens immediately outside its central reaction area, while
+    // the center retains double/triple tap reactions.
     expect(POST).toContain('const tapGestures = useTapGestures({');
-    expect(POST).not.toMatch(/useTapGestures\(\{[^}]*onSingleTap/s);
+    expect(POST).toMatch(/useTapGestures\(\{[^}]*reactionArea: 'center'[^}]*onSingleTap/s);
     // The body sits inside `data-no-navigate` and carries the ladder.
     expect(POST).toMatch(/data-no-navigate\s*\n\s*>\s*\n[\s\S]*?\{\.\.\.tapGestures\}/);
 
@@ -562,5 +561,67 @@ describe('surfaces are wired consistently', () => {
     // PPV / holdings-locked / mature-gated card would take the gesture and
     // show nothing back. ImageCard already opts out by construction.
     expect(VIDEO_CARD).toContain('|| isContentGated,');
+  });
+});
+
+
+
+describe('central feed reaction area', () => {
+  const surfacePointer = (x: number, y: number) => ({
+    ...pointer(x, y),
+    currentTarget: { getBoundingClientRect: () => ({ left: 10, top: 20, width: 200, height: 200 }) },
+  }) as unknown as React.PointerEvent;
+  function tap(h: ReturnType<typeof mountGesture>, x = 110, y = 120) {
+    act(() => {
+      h.current!.onPointerDown(surfacePointer(x, y));
+      h.current!.onPointerUp(surfacePointer(x, y));
+    });
+  }
+
+  it('opens immediately away from the center without scheduling a reaction', () => {
+    const onSingleTap = vi.fn();
+    const h = mountGesture({ postId: '7', reactionArea: 'center', onSingleTap });
+    tap(h, 30, 120);
+    expect(onSingleTap).toHaveBeenCalledTimes(1);
+    act(() => void vi.advanceTimersByTime(1000));
+    expect(onSingleTap).toHaveBeenCalledTimes(1);
+    expect(casts).toEqual([]);
+  });
+
+  it('retains delayed single, double-like and triple-love only at the center', () => {
+    const onSingleTap = vi.fn();
+    const h = mountGesture({ postId: '7', reactionArea: 'center', onSingleTap });
+    tap(h);
+    expect(onSingleTap).not.toHaveBeenCalled();
+    act(() => void vi.advanceTimersByTime(360));
+    expect(onSingleTap).toHaveBeenCalledTimes(1);
+    tap(h); tap(h);
+    act(() => void vi.advanceTimersByTime(360));
+    expect(casts.map(c => c.reaction)).toEqual(['like']);
+    tap(h); tap(h); tap(h);
+    expect(casts.map(c => c.reaction)).toEqual(['like', 'love']);
+    expect(onSingleTap).toHaveBeenCalledTimes(1);
+  });
+
+  it('drops a pending central reaction when a later outer tap opens the post', () => {
+    const onSingleTap = vi.fn();
+    const h = mountGesture({ postId: '7', reactionArea: 'center', onSingleTap });
+    tap(h); tap(h); tap(h, 30, 120);
+    expect(onSingleTap).toHaveBeenCalledTimes(1);
+    act(() => void vi.advanceTimersByTime(1000));
+    expect(onSingleTap).toHaveBeenCalledTimes(1);
+    expect(casts).toEqual([]);
+  });
+
+  it('still rejects a scroll ending outside the center', () => {
+    const onSingleTap = vi.fn();
+    const h = mountGesture({ postId: '7', reactionArea: 'center', onSingleTap });
+    act(() => {
+      h.current!.onPointerDown(surfacePointer(30, 120));
+      h.current!.onPointerUp(surfacePointer(30, 180));
+    });
+    act(() => void vi.advanceTimersByTime(1000));
+    expect(onSingleTap).not.toHaveBeenCalled();
+    expect(casts).toEqual([]);
   });
 });
