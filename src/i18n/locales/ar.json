@@ -1748,7 +1748,19 @@
     "mostViewed": "الأكثر مشاهدة",
     "trendingWeek": "الرائج هذا الأسبوع",
     "newest": "الأحدث",
-    "videoChartOrder": "ترتيب قائمة الفيديوهات الموسيقية"
+    "videoChartOrder": "ترتيب قائمة الفيديوهات الموسيقية",
+    "country": "الدولة",
+    "quality": "الجودة",
+    "votes": "الأصوات",
+    "plays": "مرات الاستماع",
+    "onAir": "على الهواء",
+    "liveRadio": "راديو مباشر",
+    "pause": "إيقاف مؤقت",
+    "listenLive": "استمع مباشرة",
+    "nextStation": "المحطة التالية",
+    "shareStation": "مشاركة المحطة",
+    "shareStationTitle": "{{name}} على راديو DeHub",
+    "linkCopied": "تم نسخ الرابط"
   },
   "notFound": {
     "title": "الصفحة غير موجودة",

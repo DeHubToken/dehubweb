@@ -3,7 +3,9 @@
  * =========
  * One chart on the Music tab: a title, its chart orders, the selected entry
  * up front (player, station or stage card) and the numbered list beside it.
- * The list holds every entry and scrolls on its own, with no scrollbar.
+ * The two halves are the same width and the list stretches to the height of
+ * the entry beside it, so every chart reads as two equal decks. The list
+ * holds every entry and scrolls on its own, with no scrollbar.
  * Audio uploads, music videos, radio and stages all use it, so every shelf
  * on the page reads the same way.
  *
@@ -47,10 +49,16 @@ export function ChartDesk<S extends string>({
   empty: { icon: 'audio' | 'videos' | 'stages'; title: string };
   /** Artwork shape in the list: 16:9 posters, square logos, or none. */
   thumbs?: 'none' | 'wide' | 'square';
-  renderSelected: (id: string) => ReactNode;
+  /** `next` selects the entry after this one, wrapping to the top. */
+  renderSelected: (id: string, controls: { next: () => void }) => ReactNode;
 }) {
   const [selectedId, setSelectedId] = useState<string | null>(null);
   const selected = rows.find(row => row.id === selectedId) || rows[0];
+  const selectedIndex = selected ? rows.indexOf(selected) : -1;
+  const sortName = sorts.find(option => option.value === sort)?.label;
+  const next = () => {
+    if (rows.length > 1) setSelectedId(rows[(selectedIndex + 1) % rows.length].id);
+  };
   const scrollRef = useRef<HTMLDivElement>(null);
 
   // A new order starts at its number one, scrolled back to the top.
@@ -79,8 +87,11 @@ export function ChartDesk<S extends string>({
         <AppState icon={empty.icon} title={empty.title} size="compact" />
       ) : (
         <div data-listening-desk-layout data-chart-thumbs={thumbs}>
-          <div data-listening-desk-player>{renderSelected(selected.id)}</div>
-          <div data-listening-desk-tracks ref={scrollRef}>
+          <div data-listening-desk-player>
+            <span data-desk-rank>#{selectedIndex + 1}{sortName ? ` · ${sortName}` : ''}</span>
+            {renderSelected(selected.id, { next })}
+          </div>
+          <div data-listening-desk-tracks><div data-listening-desk-scroll ref={scrollRef}>
             {rows.map((row, index) => <button type="button" key={row.id} data-selected={row.id === selected.id} onClick={() => setSelectedId(row.id)} aria-pressed={row.id === selected.id}>
               <span data-track-number>{String(index + 1).padStart(2, '0')}</span>
               {thumbs !== 'none' && <span data-chart-thumb={thumbs}>{row.thumb ? <img src={row.thumb} alt="" loading="lazy" /> : <Play className="h-4 w-4" />}</span>}
@@ -88,7 +99,7 @@ export function ChartDesk<S extends string>({
               {row.trailing != null && <span data-track-duration>{row.trailing}</span>}
               <Play className="h-4 w-4 shrink-0" />
             </button>)}
-          </div>
+          </div></div>
         </div>
       )}
     </div>

@@ -1711,7 +1711,19 @@
     "mostViewed": "Most viewed",
     "trendingWeek": "Trending this week",
     "newest": "Newest",
-    "videoChartOrder": "Music video chart order"
+    "videoChartOrder": "Music video chart order",
+    "country": "Country",
+    "quality": "Quality",
+    "votes": "Votes",
+    "plays": "Plays",
+    "onAir": "On air",
+    "liveRadio": "Live radio",
+    "pause": "Pause",
+    "listenLive": "Listen live",
+    "nextStation": "Next station",
+    "shareStation": "Share station",
+    "shareStationTitle": "{{name}} on DeHub Radio",
+    "linkCopied": "Link copied"
   },
   "notFound": {
     "title": "Page Not Found",
