@@ -1,4 +1,26 @@
 {
+  "followedTags": {
+    "follow": "#{{tag}} takip et",
+    "following": "Takip ediliyor",
+    "unfollow": "#{{tag}} takibi bırak",
+    "followed": "Artık #{{tag}} takip ediyorsun. Gönderileri Takip Edilenler akışında görünecek.",
+    "unfollowed": "#{{tag}} takibi bırakıldı",
+    "failed": "Kaydedilmedi. Tekrar dene.",
+    "clear": "Temizle"
+  },
+  "notificationFilters": {
+    "title": "Bildirimleri filtrele",
+    "description": "Çevren dışından biri seninle etkileşime girdiğinde ne olacağını seç. Filtrelenen bildirimler rozet ve anlık bildirim olmadan Filtrelenenler altında bekler.",
+    "notFollowing": "Takip etmediğin kişiler",
+    "notFollowers": "Seni takip etmeyen kişiler",
+    "newAccounts": "Yeni hesaplar (30 günden yeni)",
+    "accept": "Bana bildir",
+    "filter": "Filtrele",
+    "drop": "Tamamen gizle",
+    "filteredTitle": "Filtrelenen bildirimler",
+    "filteredEmpty": "Hiçbir şey filtrelenmedi.",
+    "failed": "Kaydedilmedi. Tekrar dene."
+  },
   "keywordFilters": {
     "title": "Sessize alınan kelimeler",
     "description": "Bu kelimeleri içeren gönderileri ve yorumları gizle ya da bir uyarının arkasına katla. Bu listeyi yalnızca sen görürsün.",

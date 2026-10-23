@@ -1,4 +1,26 @@
 {
+  "followedTags": {
+    "follow": "Follow #{{tag}}",
+    "following": "Following",
+    "unfollow": "Unfollow #{{tag}}",
+    "followed": "Following #{{tag}}. Its posts will show in your Following feed.",
+    "unfollowed": "Unfollowed #{{tag}}",
+    "failed": "That didn't save. Try again.",
+    "clear": "Clear"
+  },
+  "notificationFilters": {
+    "title": "Filter notifications from",
+    "description": "Choose what happens when someone outside your circle interacts with you. Filtered notifications wait under Filtered, with no badge and no push.",
+    "notFollowing": "People you don't follow",
+    "notFollowers": "People who don't follow you",
+    "newAccounts": "New accounts (under 30 days)",
+    "accept": "Notify me",
+    "filter": "Filter",
+    "drop": "Hide completely",
+    "filteredTitle": "Filtered notifications",
+    "filteredEmpty": "Nothing has been filtered.",
+    "failed": "That didn't save. Try again."
+  },
   "keywordFilters": {
     "title": "Muted words",
     "description": "Hide posts and comments that contain these words, or fold them behind a warning. Only you see this list.",

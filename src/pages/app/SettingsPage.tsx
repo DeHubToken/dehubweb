@@ -272,6 +272,7 @@ import { usePendingAction } from '@/hooks/use-pending-action';
 import { useScrollFadeMask } from '@/components/app/feeds/useScrollFadeMask';
 import { ThemePreviewCard } from '@/components/app/settings/ThemePreviewCard';
 import { KeywordFiltersSection } from '@/components/app/settings/KeywordFiltersSection';
+import { NotificationFiltersSetting } from '@/components/app/settings/NotificationFiltersSetting';
 
 export default function SettingsPage() {
   const { t: _copy } = _useCopy();
@@ -1413,6 +1414,9 @@ function NotificationSettings() {
           </div>
         </div>
       </div>
+
+      {/* Who may reach you at all — Mastodon's notification filters */}
+      <NotificationFiltersSetting />
 
       {/* Activity */}
       <div>

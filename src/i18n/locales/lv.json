@@ -1,4 +1,26 @@
 {
+  "followedTags": {
+    "follow": "Sekot #{{tag}}",
+    "following": "Seko",
+    "unfollow": "Pārtraukt sekot #{{tag}}",
+    "followed": "Tagad tu seko #{{tag}}. Tā ieraksti parādīsies tavā Sekotie plūsmā.",
+    "unfollowed": "Tu vairs neseko #{{tag}}",
+    "failed": "Netika saglabāts. Mēģini vēlreiz.",
+    "clear": "Notīrīt"
+  },
+  "notificationFilters": {
+    "title": "Filtrēt paziņojumus no",
+    "description": "Izvēlies, kas notiek, kad kāds ārpus tava loka ar tevi mijiedarbojas. Filtrētie paziņojumi gaida sadaļā Filtrētie, bez nozīmītes un bez push paziņojuma.",
+    "notFollowing": "Cilvēkiem, kuriem tu neseko",
+    "notFollowers": "Cilvēkiem, kuri tev neseko",
+    "newAccounts": "Jauniem kontiem (jaunākiem par 30 dienām)",
+    "accept": "Paziņot man",
+    "filter": "Filtrēt",
+    "drop": "Pilnībā paslēpt",
+    "filteredTitle": "Filtrētie paziņojumi",
+    "filteredEmpty": "Nekas nav filtrēts.",
+    "failed": "Netika saglabāts. Mēģini vēlreiz."
+  },
   "keywordFilters": {
     "title": "Apklusinātie vārdi",
     "description": "Paslēp ierakstus un komentārus ar šiem vārdiem vai saloki tos aiz brīdinājuma. Šo sarakstu redzi tikai tu.",
