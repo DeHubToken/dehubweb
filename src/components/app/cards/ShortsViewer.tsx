@@ -209,7 +209,6 @@ function ShortCaption({
 }) {
   const { t: _copy } = _useCopy();
   const { t } = useI18n();
-  const { theme } = useTheme();
 
   // "Untitled" is the uploader's placeholder, not a heading anybody wrote.
   const rawTitle = (short.title || '').trim();
@@ -355,6 +354,7 @@ const CORNER_CONTROL =
 export function ShortsViewer({ shorts, initialIndex, onClose, onLoadMore, hasMore, isLoadingMore, reuseInitialVideo = false }: ShortsViewerProps) {
   const { t: _copy } = _useCopy();
   const { t } = useI18n();
+  const { theme } = useTheme();
   const instanceId = useId();
   useEffect(() => {
     const paused = Array.from(document.querySelectorAll<HTMLElement>('[data-cached-page]'))
