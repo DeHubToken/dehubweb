@@ -6831,12 +6831,43 @@ export type Database = {
           },
         ]
       }
+      transcription_worker: {
+        Row: {
+          enabled: boolean
+          id: number
+          runpod_api_key: string | null
+          runpod_endpoint_id: string | null
+          secret: string | null
+          updated_at: string
+          worker_url: string | null
+        }
+        Insert: {
+          enabled?: boolean
+          id?: number
+          runpod_api_key?: string | null
+          runpod_endpoint_id?: string | null
+          secret?: string | null
+          updated_at?: string
+          worker_url?: string | null
+        }
+        Update: {
+          enabled?: boolean
+          id?: number
+          runpod_api_key?: string | null
+          runpod_endpoint_id?: string | null
+          secret?: string | null
+          updated_at?: string
+          worker_url?: string | null
+        }
+        Relationships: []
+      }
       transcripts: {
         Row: {
           attempts: number
           chapters: Json
           created_at: string
           duration_seconds: number | null
+          engine_job_id: string | null
           error: string | null
           full_text: string | null
           id: string
@@ -6864,6 +6895,7 @@ export type Database = {
           chapters?: Json
           created_at?: string
           duration_seconds?: number | null
+          engine_job_id?: string | null
           error?: string | null
           full_text?: string | null
           id?: string
@@ -6891,6 +6923,7 @@ export type Database = {
           chapters?: Json
           created_at?: string
           duration_seconds?: number | null
+          engine_job_id?: string | null
           error?: string | null
           full_text?: string | null
           id?: string
@@ -8930,6 +8963,19 @@ export type Database = {
           reset_at: string
         }[]
       }
+      consume_edge_rate_limit: {
+        Args: {
+          p_action_type: string
+          p_bucket_key: string
+          p_limit: number
+          p_window_ms: number
+        }
+        Returns: {
+          allowed: boolean
+          remaining: number
+          reset_at: string
+        }[]
+      }
       consume_phone_otp: {
         Args: { p_code_hash: string; p_max_attempts: number; p_phone: string }
         Returns: {
@@ -9279,6 +9325,7 @@ export type Database = {
         Args: { _community_id: string; _wallet_address: string }
         Returns: boolean
       }
+      is_signed_stage_host: { Args: { p_space_id: string }; Returns: boolean }
       is_stage_host: { Args: { p_space_id: string }; Returns: boolean }
       issue_wallet_session: {
         Args: {
