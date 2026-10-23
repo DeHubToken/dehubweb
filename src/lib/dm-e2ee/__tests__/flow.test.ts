@@ -1,3 +1,4 @@
+import { apiCall } from '@/lib/api/dehub/core';
 /**
  * The whole client flow against the real key manager, with only the network
  * stubbed: two users set up identities from signatures, publish keys, seal
@@ -177,7 +178,9 @@ describe('dm-e2ee client flow', () => {
     const rotated = deriveIdentityFromSignature('0x' + '47'.repeat(65));
     registry.set(B, toBase64(rotated.publicKey));
     const incoming = encryptText('new history', deriveSessionKey(rotated.privateKey, mine.publicKey, B, A));
+    vi.mocked(apiCall).mockClear();
     expect(await Promise.all(Array.from({ length: 10 }, () => decryptFromPeer(B, incoming)))).toEqual(Array(10).fill('new history'));
+    expect(vi.mocked(apiCall).mock.calls.filter(([endpoint]) => endpoint === `/api/dm/e2ee-key/${B}`).length).toBe(1);
     expect(await decryptFromPeer(B, oldMessage)).toBe('old history');
     unloadIdentity();
     await loadIdentity(A);
