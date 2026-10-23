@@ -8796,5 +8796,15 @@
     "posted": "Gepostet",
     "view": "Ansehen",
     "failed": "Das Video konnte nicht verarbeitet werden"
+  },
+  "loginStack": {
+    "tip": "DHB-Trinkgeld",
+    "headlineTop": "Dir wird alles gehören",
+    "headlineAccent": "und du wirst glücklich sein.",
+    "orContinueWith": "oder weiter mit",
+    "phone": "Telefon",
+    "fingerprint": "Fingerabdruck",
+    "exploreFirst": "Erst umsehen",
+    "codeNote": "Wir senden dir einen Code per E-Mail, ohne Passwort."
   }
 }

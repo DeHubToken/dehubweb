@@ -8499,5 +8499,15 @@
     "posted": "Közzétéve",
     "view": "Megnézem",
     "failed": "A videót nem sikerült feldolgozni"
+  },
+  "loginStack": {
+    "tip": "DHB borravaló",
+    "headlineTop": "Mindened meglesz",
+    "headlineAccent": "és boldog leszel.",
+    "orContinueWith": "vagy folytasd ezzel",
+    "phone": "Telefon",
+    "fingerprint": "Ujjlenyomat",
+    "exploreFirst": "Előbb nézz körül",
+    "codeNote": "E-mailben küldünk egy kódot, jelszó nélkül."
   }
 }
