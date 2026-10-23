@@ -13,7 +13,6 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Badge } from '@/components/ui/badge';
 import { toast } from 'sonner';
 import { Bot } from "lucide-react";
 import Copy from "@/components/ui/cut-icons/copy";
@@ -29,7 +28,7 @@ import Plus from "@/components/ui/cut-icons/add";
 import { KitButton, PageBody, PageEmpty, PageIsland } from '@/components/app/page-kit/PageKit';
 import { SEOHead } from '@/components/SEOHead';
 import { canManageAgents } from '@/lib/agent-access';
-import { AgentTasksPanel } from './AgentTasksPanel';
+import { AgentActivity, AgentTasksPanel } from './AgentTasksPanel';
 import { AgentProfilePanel } from './AgentProfilePanel';
 import { AgentLifePanel } from './AgentLifePanel';
 
@@ -67,6 +66,7 @@ export default function AgentsPage() {
   const [newAgentDescription, setNewAgentDescription] = useSurfaceDraft("pages/app/AgentsPage.tsx:newAgentDescription", '');
   const [visibleKeys, setVisibleKeys] = useState<Set<string>>(new Set());
   const [openConnections, setOpenConnections] = useState<Set<string>>(new Set());
+  const [activityAgent, setActivityAgent] = useState<string | null>(null);
   const [revealing, setRevealing] = useState(false);
 
   const { data: agents, isLoading, isError, refetch } = useQuery({
@@ -406,11 +406,13 @@ export default function AgentsPage() {
                         <p className="text-sm leading-relaxed text-white/80">{agent.description}</p>
                       </div>
                     </Link>
-                    <Badge variant={agent.is_active ? 'default' : 'secondary'}>
-                      {agent.is_active ? t('agents.active') : t('agents.inactive')}
-                    </Badge>
+                    <Button size="sm" variant={agent.is_active ? 'default' : 'secondary'} className="rounded-full" aria-expanded={activityAgent === agent.id} aria-controls={`agent-activity-${agent.id}`}
+                      onClick={() => setActivityAgent(current => current === agent.id ? null : agent.id)}>
+                      {agent.is_active ? t('agents.tasks.enabled') : t('agents.inactive')}
+                    </Button>
                   </div>
 
+                  {activityAgent === agent.id && <AgentActivity wallet={walletAddress} agentId={agent.id} lastActive={agent.last_active_at} />}
                   {/* API Key */}
                   <AgentProfilePanel wallet={walletAddress} agentId={agent.id} agentName={agent.name} />
                   <AgentLifePanel wallet={walletAddress} agentId={agent.id} />

@@ -2,7 +2,7 @@ import assert from 'node:assert/strict';
 import { test } from 'node:test';
 import {
   creatorOfDay, dhbUpdate, fitsPlatform, growthPulse, isUnfeaturable, leaderboard, liveStream,
-  shortsOfWeek, slotFor, stage, textFor, textsFor, utmLink, weekKey,
+  shortsOfWeek, slotFor, stage, stageClip, textFor, textsFor, utmLink, weekKey,
 } from './posts.ts';
 
 const at = new Date('2026-10-22T16:00:00Z');
@@ -123,4 +123,22 @@ test('weekly slots open only on their day, from an hour before', () => {
   assert.equal(slotFor('live_now', late), null);
   assert.equal(weekKey(new Date('2026-01-01T00:00:00Z')), '2026-W01');
   assert.equal(weekKey(monday), '2026-W43');
+});
+
+test('stage clips carry the video and a tagged link back to the stage', () => {
+  const draft = stageClip({
+    stage: { id: '7f1c0a52-8d0e-4b8e-9a43-2f4b8c1d2e3f', short_id: 42, title: 'Builders hour', host_username: 'maya' },
+    index: 1,
+    hook: 'Here’s the thing nobody tells you about shipping.',
+    videoUrl: 'https://example.supabase.co/storage/v1/object/public/stage-clips/a/b/c.mp4',
+  }, at);
+  assert.equal(draft.kind, 'stage_clip');
+  assert.equal(draft.sourceRef, 'stage:7f1c0a52-8d0e-4b8e-9a43-2f4b8c1d2e3f:1');
+  assert.deepEqual(draft.media, [{ url: 'https://example.supabase.co/storage/v1/object/public/stage-clips/a/b/c.mp4', type: 'video' }]);
+  const texts = textsFor(draft, ['tiktok', 'instagram', 'youtube', 'twitter']);
+  for (const [platform, text] of Object.entries(texts)) {
+    assert.ok(text.includes(`https://dehub.io/stages/42?utm_source=${platform}&utm_medium=social&utm_campaign=autopost_stage_clip`), platform);
+    assert.ok(text.startsWith('From “Builders hour”, a DeHub Stage hosted by maya'), platform);
+  }
+  assert.ok(texts.twitter.length <= 280);
 });

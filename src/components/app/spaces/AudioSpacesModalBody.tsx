@@ -86,6 +86,8 @@ import { supabase } from '@/integrations/supabase/client';
 import { useBookBoost, useSuperpowers } from '@/hooks/use-superpowers';
 import { deleteStageRecordings } from '@/lib/stage-recording-delete';
 import { formatDistanceToNow } from 'date-fns';
+import { viewerShareUrl } from '@/lib/share-url';
+import { trackShare } from '@/lib/analytics';
 
 type View = 'browse' | 'create' | 'live' | 'voice';
 
@@ -307,7 +309,8 @@ export function AudioSpacesModalBody() {
 
   const handleCopyInviteLink = () => {
     if (!currentSpace) return;
-    const url = dehubLinkFor.stage(currentSpace);
+    const url = viewerShareUrl(dehubLinkFor.stage(currentSpace));
+    trackShare('copy_link', { kind: 'stage' });
     navigator.clipboard.writeText(url).then(() => {
       toast.success(t('stages.inviteLinkCopied'));
     }).catch(() => {

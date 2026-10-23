@@ -33,6 +33,9 @@ interface QueuedView {
   path: string;
   prevPath?: string;
   referrerHost?: string;
+  utmSource?: string | null;
+  utmMedium?: string | null;
+  utmCampaign?: string | null;
 }
 
 // Matches the `ord <= 50` cap the RPC applies to a batch.
@@ -117,12 +120,15 @@ export function recordPageView(pathname: string): void {
 
   const prevPath = lastPath;
   const host = prevPath ? null : referrerHost(document.referrer, window.location.host);
+  // Campaign tags belong to the landing; the RPC caps their length.
+  const q = prevPath ? null : new URLSearchParams(window.location.search);
   lastPath = path;
 
   QUEUE.push({
     path,
     ...(prevPath ? { prevPath } : {}),
     ...(host ? { referrerHost: host } : {}),
+    ...(q?.has('utm_source') ? { utmSource: q.get('utm_source'), utmMedium: q.get('utm_medium'), utmCampaign: q.get('utm_campaign') } : {}),
   });
 
   ensureTimer();

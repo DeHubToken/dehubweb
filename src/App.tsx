@@ -239,6 +239,7 @@ const ConnectPage = React.lazy(() => import("./pages/ConnectPage"));
 const ConnectChatGPTPage = React.lazy(() => import("./pages/ConnectChatGPTPage"));
 const ConnectClaudePage = React.lazy(() => import("./pages/ConnectClaudePage"));
 const ApkPage = React.lazy(() => import("./pages/ApkPage"));
+const DehubAppPage = React.lazy(() => import("./pages/DehubAppPage"));
 const AdminManualPage = React.lazy(() => import("./pages/AdminManualPage"));
 // The arcade player is a standalone full-viewport surface (no AppLayout): the
 // games take the whole window and two of them take the pointer, so the header
@@ -424,7 +425,13 @@ function AppContent() {
   useEffect(() => {
     if (!wallet || !isAuthenticated || requiresUsername || isConnecting || isProcessingRedirect) return;
     import("@/lib/affiliate").then(m => m.attributeReferralIfPending(wallet)).catch(() => undefined);
+    import("@/lib/growth-session").then(m => m.syncGrowthSession(wallet)).catch(() => undefined);
   }, [wallet, isAuthenticated, requiresUsername, isConnecting, isProcessingRedirect]);
+
+  // Share attribution and PostHog follow sign-out too (src/lib/growth-session.ts).
+  useEffect(() => {
+    if (!wallet || !isAuthenticated) import("@/lib/growth-session").then(m => m.syncGrowthSession(null)).catch(() => undefined);
+  }, [wallet, isAuthenticated]);
 
   return (
     <>
@@ -574,6 +581,8 @@ function AppContent() {
               single non-scrolling screen that owns the viewport, and it is
               reached from outside the app far more often than from inside it. */}
           <Route path="/apk" element={<Suspense fallback={<PageLoader />}><ApkPage /></Suspense>} />
+
+          <Route path="/dehub-app" element={<Suspense fallback={<PageLoader />}><DehubAppPage /></Suspense>} />
 
           {/* The moderation handbook, published. Standalone for the same reason
               as /apk — it owns the viewport and is reached from outside the app

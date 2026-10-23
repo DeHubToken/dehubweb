@@ -97,6 +97,7 @@ import type { TextPost } from '@/types/feed.types';
 import { usePostStage } from '@/components/app/post-stage/post-stage-context';
 import { StageMediaChrome } from '@/components/app/post-stage/StageMediaChrome';
 import { StageCreatorRow } from '@/components/app/post-stage/StageCreatorRow';
+import { viewerShareUrl } from '@/lib/share-url';
 
 /**
  * Lazy, and only mounted while open.
@@ -377,7 +378,7 @@ export const PostCard = memo(function PostCard({ post, threadSlot, onOpenComment
       });
 
       const file = new File([blob], 'dehub-post.png', { type: 'image/png' });
-      const postUrl = `https://dehub.io${post.newPostId ? `/newpost/${post.newPostId}` : `/app/post/${post.id}`}`;
+      const postUrl = viewerShareUrl(`https://dehub.io${post.newPostId ? `/newpost/${post.newPostId}` : `/app/post/${post.id}`}`);
 
       if (navigator.canShare?.({ files: [file] })) {
         await navigator.share({
@@ -385,6 +386,7 @@ export const PostCard = memo(function PostCard({ post, threadSlot, onOpenComment
           text: post.content?.slice(0, 100) ?? '',
           url: postUrl,
         });
+        void import('@/lib/analytics').then((m) => m.trackShare('image', { kind: 'post' }));
       } else {
         const a = document.createElement('a');
         a.href = URL.createObjectURL(blob);
@@ -503,7 +505,7 @@ export const PostCard = memo(function PostCard({ post, threadSlot, onOpenComment
               </button>
               <button
                 onClick={() => {
-                  const url = `${window.location.origin}/app/post/${post.id}`;
+                  const url = viewerShareUrl(`${window.location.origin}/app/post/${post.id}`);
                   navigator.clipboard.writeText(url);
                   toast.success(t('postOptions.postUrlCopied'));
                   trackLinkCopy(post.id, walletAddress, linkCopyCount);

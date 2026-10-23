@@ -92,3 +92,16 @@ Deno.test('views and written replies are limited to posts', () => {
   assert(taskPlanSchema.safeParse({ ...base, steps: [{ ...step, tool: 'dehub_comment', arguments: {}, topic: 'Friendly' }] }).success);
   assert(!taskPlanSchema.safeParse({ ...base, steps: [{ ...step, tool: 'dehub_comment', arguments: { token_id: '1' }, audience: 'single', from: null, to: null, topic: 'Friendly' }] }).success);
 });
+
+Deno.test('universal likes never request interests or use the selective three-like cap', () => {
+  const now = new Date('2026-10-20T19:30:00Z');
+  for (const prompt of ['Like every post in the last 24 hours', 'like every post today in last day every categorhy', 'Like all posts last day across all categories.']) {
+    const plan = explicitTaskPlan(prompt, now, 'Europe/London');
+    assert(plan?.steps.length === 1 && plan.steps[0].audience === 'posts');
+    assert(plan?.steps[0].from === '2026-10-19T19:30:00.000Z' && plan.steps[0].to === now.toISOString());
+    assert(plan?.steps[0].recent_keywords === null && plan.steps[0].recent_limit === null);
+  }
+  assert(explicitTaskPlan('Like every post today', now, 'Europe/London')?.steps[0].from === '2026-10-19T23:00:00.000Z');
+  assert(explicitTaskPlan('Like every post today', new Date('2026-10-25T19:30:00Z'), 'Europe/London')?.steps[0].from === '2026-10-24T23:00:00.000Z');
+  for (const prompt of ['Like every post today except music', 'Like every post today and follow everyone', 'Like every post daily', 'Like every post']) assert(explicitTaskPlan(prompt, now) === null, 'ignored a constraint or guessed a window');
+});

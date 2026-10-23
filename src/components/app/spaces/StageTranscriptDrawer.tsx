@@ -66,6 +66,8 @@ import { PLAYBACK_RATES } from '@/lib/video-preferences';
 import { getStagePlaybackState } from '@/lib/stage-playback';
 import { formatStageRate } from '@/components/app/stages/StageRateButton';
 import { usePendingAction } from '@/hooks/use-pending-action';
+import { viewerShareUrl } from '@/lib/share-url';
+import { trackShare } from '@/lib/analytics';
 
 interface Segment { speaker: string; text: string; start: number; end: number }
 interface Chapter { title: string; start: number; end: number }
@@ -623,8 +625,9 @@ export function StageTranscriptDrawer({ space, open, onOpenChange }: Props) {
   };
 
   const handleShare = async () => {
-    const url = stageDeepLink();
+    const url = viewerShareUrl(stageDeepLink());
     await navigator.clipboard.writeText(url);
+    trackShare('copy_link', { kind: 'stage' });
     toast.success(t('stages.stageLinkCopied'));
   };
 
