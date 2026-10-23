@@ -654,8 +654,8 @@ export function PostContentArea({
               >
                 <Save className="w-4 h-4 text-white" />
                 {drafts.length > 0 && (
-                  <span className="absolute -top-1 -right-1 w-4 h-4 rounded-full bg-white text-black text-[10px] font-bold flex items-center justify-center">
-                    {drafts.length}
+                  <span className="absolute -top-1 -right-1 min-w-4 h-4 px-[3px] rounded-full bg-white text-black text-[10px] font-bold flex items-center justify-center">
+                    {drafts.length > 9 ? '9+' : drafts.length}
                   </span>
                 )}
               </motion.button>
