@@ -2,6 +2,7 @@ import { Hono } from "hono";
 import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { StreamableHTTPTransport } from "@hono/mcp";
 import { z } from "zod";
+import { boundMcpRequest } from "./request-budget.ts";
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
 import { Interface, JsonRpcProvider, Wallet, formatEther } from "ethers";
 import { requireDeHubAuth } from "../_shared/auth.ts";
@@ -1580,4 +1581,11 @@ app.all("/*", async (c) => {
   return transport.handleRequest(c);
 });
 
-Deno.serve(app.fetch);
+Deno.serve(async (request) => {
+  const bounded = await boundMcpRequest(request);
+  if (bounded instanceof Response) {
+    for (const [key, value] of Object.entries(CORS_HEADERS)) bounded.headers.set(key, value);
+    return bounded;
+  }
+  return app.fetch(bounded);
+});
