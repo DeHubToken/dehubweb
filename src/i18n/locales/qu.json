@@ -239,6 +239,11 @@
       "hintDeny": "Sistemas AI kaqmanta chaymanta rastreadores kaqmanta kay señalta respetakuq mañasqa kanku ama audioykipi, arte ruwasqaykipi chaymanta qillqaykipi yachachinankupaq. Chay señalta mana uyariq rastreadorkunaqa manam chaywan harkasqachu.",
       "saved": "AI yachachiy munasqa waqaychasqa"
     },
+    "defaultFeed": "Ñawpaq feed",
+    "defaultFeedDesc": "Akllay mayqin feed kichakunanta sapa DeHub kichaptiyki",
+    "feedToggles": "Feed filtrokunata musuqmanta churay",
+    "feedTogglesDesc": "Feedpi hap'ichisqayki filtrokunaqa ñawpaqniykipaq qhepakun musuqmanta churanaykikama",
+    "feedTogglesCleared": "Feed filtrokuna musuqmanta churasqa",
     "defaultProfileTab": "Ñawpaq willakuy pestaña",
     "defaultProfileTabDesc": "Willakuyniykipi, watukuqkuna mayqin pestañata ñawpaqta rikunanta akllay",
     "public": "Tukuypaq",

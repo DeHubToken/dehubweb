@@ -475,10 +475,10 @@ export function VideosFeed({ showFilters = false, isRefreshing = false, refreshK
   const activeFilterClass = useActiveFilterClass();
   
   // Sort is now client-side - default to "Latest" for instant loading - persisted to sessionStorage
-  const [selectedSort, setSelectedSort] = usePersistedFeedFilter<SortOption>('videos', 'sort', DEFAULT_FEED_SORT);
+  const [selectedSort, setSelectedSort] = usePersistedFeedFilter<SortOption>('videos', 'sort', DEFAULT_FEED_SORT, SORT_OPTIONS);
   // Duration and upload date are client-side filters - persisted
-  const [selectedDuration, setSelectedDuration] = usePersistedFeedFilter<typeof DURATION_FILTERS[number]>('videos', 'duration', DURATION_FILTERS[0]);
-  const [selectedUploadDate, setSelectedUploadDate] = usePersistedFeedFilter<DateFilterOption>('videos', 'date', DATE_FILTER_OPTIONS[0]);
+  const [selectedDuration, setSelectedDuration] = usePersistedFeedFilter<typeof DURATION_FILTERS[number]>('videos', 'duration', DURATION_FILTERS[0], DURATION_FILTERS);
+  const [selectedUploadDate, setSelectedUploadDate] = usePersistedFeedFilter<DateFilterOption>('videos', 'date', DATE_FILTER_OPTIONS[0], DATE_FILTER_OPTIONS);
   const [selectedCategory, setSelectedCategory] = usePersistedFeedFilter<string | null>('videos', 'category', null);
   const [contentFilters, toggleContentFilter, resetContentFilters] = usePersistedContentFilters('videos');
   // Hide watched sticks across sessions (localStorage, not the session-scoped

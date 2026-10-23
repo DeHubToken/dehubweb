@@ -241,6 +241,11 @@
       "hintDeny": "Ai sistemi di intelligenza artificiale e ai crawler che rispettano questo segnale viene chiesto di non allenarsi su audio, grafica e scrittura. I cingoli che ignorano il segnale non vengono bloccati da esso.",
       "saved": "Preferenze di addestramento AI salvate"
     },
+    "defaultFeed": "Feed predefinito",
+    "defaultFeedDesc": "Scegli quale feed si apre ogni volta che apri DeHub",
+    "feedToggles": "Reimposta i filtri del feed",
+    "feedTogglesDesc": "I filtri che attivi in un feed restano predefiniti finché non li reimposti",
+    "feedTogglesCleared": "Filtri del feed reimpostati",
     "defaultProfileTab": "Scheda profilo predefinita",
     "defaultProfileTabDesc": "Scegli quale scheda vedono per prima i visitatori sul tuo profilo",
     "public": "Pubblico",

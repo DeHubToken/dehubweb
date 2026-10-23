@@ -356,6 +356,11 @@
       "hintDeny": "Se pide a los sistemas de IA y rastreadores que respeten esta señal que no entrenen en tu audio, arte y escritura. Los rastreadores que ignoran la señal no son bloqueados por ella.",
       "saved": "Preferencias de formación de IA guardadas"
     },
+    "defaultFeed": "Feed predeterminado",
+    "defaultFeedDesc": "Elige qué feed se abre cada vez que abres DeHub",
+    "feedToggles": "Restablecer filtros del feed",
+    "feedTogglesDesc": "Los filtros que actives en un feed se quedan como tus predeterminados hasta que los restablezcas",
+    "feedTogglesCleared": "Filtros del feed restablecidos",
     "defaultProfileTab": "Pestaña de perfil por defecto",
     "defaultProfileTabDesc": "Elige qué pestaña ven primero los visitantes en tu perfil",
     "public": "Público",

@@ -238,6 +238,11 @@
       "hintDeny": "O la, aw ka kan ka aw ka kumakanw, aw ka dɔnkiliw ani aw ka sɛbɛri kɛcogow degi. Mɔgɔ minw tɛ sɔn ka kuma, olu tɛ se ka kuma.",
       "saved": "Kalan min ka di mɔgɔ ye"
     },
+    "defaultFeed": "Feed bɛnnen",
+    "defaultFeedDesc": "A sugandi feed min bɛ dayɛlɛ tuma o tuma i ye DeHub dayɛlɛ",
+    "feedToggles": "Feed filtrew segin u nɔ na",
+    "feedTogglesDesc": "Filtre minw i ye u dayɛlɛ feed kɔnɔ, olu bɛ to i ka bɛnnenw ye fo i k'u segin",
+    "feedTogglesCleared": "Feed filtrew seginna u nɔ na",
     "defaultProfileTab": "Sɛbɛn tabu bɛnnen",
     "defaultProfileTabDesc": "Tabu min ka kan ka jira taalabagaw ɲɛ i ka sɛbɛn kan, o sugandi",
     "public": "Kɔrɔbɔ",

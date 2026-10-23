@@ -239,6 +239,11 @@
       "hintDeny": "Seda signaali austavatel tehisintellektisüsteemidel ja roomikutel palutakse mitte treenida teie heli, kunstiteoseid ja kirjutamist. See ei blokeeri signaali eiravaid roomikuid.",
       "saved": "Tehisintellekti koolituse eelistus on salv"
     },
+    "defaultFeed": "Vaikevoog",
+    "defaultFeedDesc": "Vali, milline voog avaneb iga kord, kui DeHubi avad",
+    "feedToggles": "Lähtesta voo filtrid",
+    "feedTogglesDesc": "Voos sisse lülitatud filtrid jäävad sinu vaikeväärtusteks, kuni need lähtestad",
+    "feedTogglesCleared": "Voo filtrid lähtestatud",
     "defaultProfileTab": "Profiili vaikevahekaart",
     "defaultProfileTabDesc": "Vali, millist vahekaarti külastajad sinu profiilil esimesena näevad",
     "public": "Avalik",

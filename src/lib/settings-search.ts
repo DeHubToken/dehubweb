@@ -63,6 +63,8 @@ export const SETTINGS_SEARCH_INDEX: SettingsSearchEntry[] = [
   { tab: 'appearance', anchor: 'jungle-mood', label: 'Time of day', labelKey: 'jungleMood.title', keywords: 'jungle day evening night dusk dark light mode sun moon' },
   { tab: 'appearance', anchor: 'language', label: 'Language', labelKey: 'settings.language', keywords: 'translate locale english' },
   { tab: 'appearance', anchor: 'feed-layout', label: 'Feed Layout', labelKey: 'settings.feedLayout', keywords: 'compact comfortable sidebar density' },
+  { tab: 'appearance', anchor: 'default-feed', label: 'Default feed', labelKey: 'settings.defaultFeed', keywords: 'home shorts videos images music audio live open start tab' },
+  { tab: 'appearance', anchor: 'feed-toggles', label: 'Reset feed toggles', labelKey: 'settings.feedToggles', keywords: 'filters sort default remember clear' },
   { tab: 'appearance', anchor: 'default-profile-tab', label: 'Default profile tab', labelKey: 'settings.defaultProfileTab', keywords: 'landing tab visitors' },
   { tab: 'appearance', anchor: 'autoplay', label: 'Auto-play', labelKey: 'settings.autoPlay', keywords: 'autoplay video play automatically' },
   { tab: 'appearance', anchor: 'autoplay-muted', label: 'Start autoplay muted', labelKey: 'settings.autoPlayMuted', keywords: 'autoplay mute muted sound audio silent quiet volume' },

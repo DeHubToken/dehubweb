@@ -239,6 +239,11 @@
       "hintDeny": "尊重呢個訊號嘅人工智能系統同爬蟲程式被要求唔好訓練你嘅音頻、藝術品同寫作。忽略訊號嘅爬蟲程式唔會被佢阻擋。",
       "saved": "儲存咗 AI 訓練偏好設定"
     },
+    "defaultFeed": "預設動態",
+    "defaultFeedDesc": "揀選每次打開 DeHub 時顯示嘅動態",
+    "feedToggles": "重設動態篩選",
+    "feedTogglesDesc": "你喺動態開咗嘅篩選會保留做預設，直到你重設為止",
+    "feedTogglesCleared": "動態篩選已重設",
     "defaultProfileTab": "預設檔案分頁",
     "defaultProfileTabDesc": "揀訪客喺你檔案上最先睇到邊個分頁",
     "public": "公開",

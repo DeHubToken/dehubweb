@@ -239,6 +239,11 @@
       "hintDeny": "Bu siqnala hörmət edən AI sistemləri və tarayıcılardan audio, incəsənət və yazı üzərində məşq etməmələri xahiş olunur. Siqnala məhəl qoymayan sürünənlər bununla bloklanmır.",
       "saved": "AI təlimi tərcihləri yaddaşda saxlanıldı"
     },
+    "defaultFeed": "Defolt lent",
+    "defaultFeedDesc": "DeHub-u hər açanda hansı lentin açılacağını seçin",
+    "feedToggles": "Lent filtrlərini sıfırla",
+    "feedTogglesDesc": "Lentdə yandırdığınız filtrlər sıfırlayana qədər defoltunuz olaraq qalır",
+    "feedTogglesCleared": "Lent filtrləri sıfırlandı",
     "defaultProfileTab": "Standart profil vərəqi",
     "defaultProfileTabDesc": "Ziyarətçilərin profilinizdə ilk hansı vərəqi görəcəyini seçin",
     "public": "Açıq",

@@ -241,6 +241,11 @@
       "hintDeny": "Ang mga sistema ng AI at mga crawler na iginagalang ang signal na ito ay hinihiling na huwag sanayin sa iyong audio, likhang sining at pagsulat. Crawlers na huwag pansinin ang signal ay hindi hinarangan ng mga ito.",
       "saved": "Na - save ang preperensiya sa pagsasanay ng AI"
     },
+    "defaultFeed": "Default na feed",
+    "defaultFeedDesc": "Piliin kung aling feed ang bubukas tuwing bubuksan mo ang DeHub",
+    "feedToggles": "I-reset ang mga filter ng feed",
+    "feedTogglesDesc": "Ang mga filter na binuksan mo sa feed ay mananatiling default hanggang i-reset mo",
+    "feedTogglesCleared": "Na-reset ang mga filter ng feed",
     "defaultProfileTab": "Default na tab ng profile",
     "defaultProfileTabDesc": "Piliin kung aling tab ang unang makikita ng mga bisita sa profile mo",
     "public": "Pampubliko",

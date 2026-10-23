@@ -241,6 +241,11 @@
       "hintDeny": "AI-systemer og crawlere, der respekterer dette signal, bliver bedt om ikke at træne på din lyd, kunst og skrivning. Crawlere, der ignorerer signalet, blokeres ikke af det.",
       "saved": "AI-træningspræference gemt"
     },
+    "defaultFeed": "Standardfeed",
+    "defaultFeedDesc": "Vælg hvilket feed der åbner, hver gang du åbner DeHub",
+    "feedToggles": "Nulstil feedfiltre",
+    "feedTogglesDesc": "Filtre du slår til i et feed, forbliver dine standarder, indtil du nulstiller dem",
+    "feedTogglesCleared": "Feedfiltre nulstillet",
     "defaultProfileTab": "Standardfane på profilen",
     "defaultProfileTabDesc": "Vælg, hvilken fane besøgende ser først på din profil",
     "public": "Offentlig",

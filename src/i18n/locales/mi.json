@@ -239,6 +239,11 @@
       "hintDeny": "Ko nga punaha AI me nga kaiwhaiwhai e whakaute ana i tenei tohu ka tonoa kia kaua e whakangungu i runga i to ororongo, mahi toi me te tuhi. Ko nga kaiwhaiwhai e kore e aro ki te tohu kaore i te aukati i a ia.",
       "saved": "Ko te hiahia o te whakangungu AI e ora ana"
     },
+    "defaultFeed": "Whāngai taunoa",
+    "defaultFeedDesc": "Kōwhiria te whāngai ka tuwhera i ia wā ka huaki koe i a DeHub",
+    "feedToggles": "Tautuhi anō ngā tātari whāngai",
+    "feedTogglesDesc": "Ka noho ngā tātari ka whakakāhia e koe hei taunoa mōu kia tautuhi anō rā anō",
+    "feedTogglesCleared": "Kua tautuhia anōtia ngā tātari whāngai",
     "defaultProfileTab": "Ripa kōtaha taunoa",
     "defaultProfileTabDesc": "Tīpakohia ko tēhea ripa ka kite tuatahi ngā manuhiri i tō kōtaha",
     "public": "Tūmatanui",

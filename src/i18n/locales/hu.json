@@ -241,6 +241,11 @@
       "hintDeny": "Azokat az MI-rendszereket és robotokat, amelyek tiszteletben tartják ezt a jelet, arra kérjük, hogy ne gyakoroljanak a hangra, a műalkotásokra és az írásra. Azok a lánctalpasok, amelyek figyelmen kívül hagyják a jelet, nem blokkolják azt.",
       "saved": "AI képzési preferencia mentve"
     },
+    "defaultFeed": "Alapértelmezett hírfolyam",
+    "defaultFeedDesc": "Válaszd ki, melyik hírfolyam nyíljon meg a DeHub minden megnyitásakor",
+    "feedToggles": "Hírfolyam-szűrők visszaállítása",
+    "feedTogglesDesc": "A hírfolyamban bekapcsolt szűrők alapértelmezettek maradnak, amíg vissza nem állítod őket",
+    "feedTogglesCleared": "Hírfolyam-szűrők visszaállítva",
     "defaultProfileTab": "Alapértelmezett profillap",
     "defaultProfileTabDesc": "Válaszd ki, melyik lapot lássák először a látogatók a profilodon",
     "public": "Nyilvános",

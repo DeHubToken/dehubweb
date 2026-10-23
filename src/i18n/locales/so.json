@@ -239,6 +239,11 @@
       "hintDeny": "Nidaamyada AI iyo crawlers ixtiraamaya calaamadan waxaa laga codsanayaa inaysan ku tababarin maqalkaaga, farshaxankaaga iyo qoraaga. Crawlers oo iska indho tiraya calaamadda looma xannibo.",
       "saved": "Doorbididda tababarka AI ee la badbaadiyay"
     },
+    "defaultFeed": "Feed-ka caadiga ah",
+    "defaultFeedDesc": "Dooro feed-ka furmaya mar kasta oo aad furto DeHub",
+    "feedToggles": "Dib u deji shaandhooyinka feed-ka",
+    "feedTogglesDesc": "Shaandhooyinka aad ka shiddo feed-ka waxay ahaanayaan kuwa caadiga ah ilaa aad dib u dejiso",
+    "feedTogglesCleared": "Shaandhooyinka feed-ka dib ayaa loo dejiyay",
     "defaultProfileTab": "Tabka profilka caadiga ah",
     "defaultProfileTabDesc": "Dooro tabka ay booqdayaashu marka hore arkaan profilkaaga",
     "public": "Dadweyne",
