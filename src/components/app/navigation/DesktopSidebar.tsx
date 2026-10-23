@@ -19,6 +19,7 @@ import X from "@/components/ui/cut-icons/close";
 import { NAV_ITEMS } from '@/constants/app.constants';
 import type { NavItem } from '@/types/app.types';
 import { SidebarNavItem } from './SidebarNavItem';
+import { CrumblingLogo } from './CrumblingLogo';
 import { filterNavItems, exploreSearchHref } from './nav-search';
 import { canManageAgents } from '@/lib/agent-access';
 import { useSearchHistory } from '@/hooks/use-search-history';
@@ -412,7 +413,7 @@ export function DesktopSidebar({ onPostClick }: DesktopSidebarProps) {
                 renderCompactLogo ? "w-[22px] h-[24px]" : "w-[135px] h-[42px]"
               )}
             >
-              {isWarTheme ? (
+              <CrumblingLogo>{isWarTheme ? (
                 <>
                   <WarLogo
                     src={dehubLogoCompact}
@@ -442,7 +443,7 @@ export function DesktopSidebar({ onPostClick }: DesktopSidebarProps) {
                     onError={() => setRenderCompactLogo(true)}
                   />
                 </>
-              )}
+              )}</CrumblingLogo>
             </button>
             {isCollapsed && (
               <button
