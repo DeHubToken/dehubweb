@@ -53,6 +53,7 @@ import {
   type SearchCreator 
 } from '@/hooks/use-dehub-search';
 import { useSearchHistory } from '@/hooks/use-search-history';
+import { useIsMobile } from '@/hooks/use-mobile';
 import { useDeHubUserSearch } from '@/hooks/use-dehub-user-search';
 import { useFollow } from '@/hooks/use-follow';
 import { useFollowStatus } from '@/hooks/use-follow-status';
@@ -319,6 +320,7 @@ export default function ExplorePage() {
 
   // Search history hook
   const { recentSearches, addToHistory, removeFromHistory, clearHistory } = useSearchHistory();
+  const isMobile = useIsMobile();
   
   // Search analytics mutation
   const { mutate: logSearch } = useSearchAnalytics();
@@ -1112,9 +1114,21 @@ export default function ExplorePage() {
                     </div>
                     {recentSearches.length > 0 ? (
                       <div className="flex flex-wrap gap-2">
+                        <AnimatePresence initial={false}>
                         {recentSearches.map((term) => (
-                          <div
+                          /* Phones: swipe a chip sideways to drop it, as well
+                             as the X. Desktop keeps the X only. */
+                          <motion.div
                             key={term}
+                            layout
+                            drag={isMobile ? 'x' : false}
+                            dragSnapToOrigin
+                            dragElastic={0.6}
+                            onDragEnd={(_, info) => {
+                              if (Math.abs(info.offset.x) > 72 || Math.abs(info.velocity.x) > 600) removeFromHistory(term);
+                            }}
+                            exit={{ opacity: 0, scale: 0.85, transition: { duration: 0.15 } }}
+                            style={isMobile ? { touchAction: 'pan-y' } : undefined}
                             className="group flex items-center bg-zinc-800 hover:bg-zinc-700 rounded-xl transition-colors max-w-full"
                           >
                             <button
@@ -1132,8 +1146,9 @@ export default function ExplorePage() {
                             >
                               <X className="w-3.5 h-3.5" />
                             </button>
-                          </div>
+                          </motion.div>
                         ))}
+                        </AnimatePresence>
                       </div>
                     ) : (
                       <p className="text-zinc-500 text-sm">{t('explorePage.noRecentSearches')}</p>
