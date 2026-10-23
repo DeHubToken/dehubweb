@@ -52,7 +52,7 @@ import { ArticleFeedCover } from '@/components/app/article/ArticleFeedCoverLazy'
 const ArticleReader = lazy(() =>
   import('@/components/app/article/ArticleReader').then((m) => ({ default: m.ArticleReader }))
 );
-import { QuotedPostEmbed } from './QuotedPostEmbed';
+import { QuotedPostEmbed, RemovedQuoteNotice } from './QuotedPostEmbed';
 import { FeedLinkPreviews } from './FeedLinkPreviews';
 import { DehubLinkEmbeds, useDehubLinks } from '@/components/app/cards/DehubLinkEmbedsLazy';
 import { AssetRefCards, useAssetRefsInText } from '@/components/app/cards/AssetRefCards';
@@ -769,8 +769,9 @@ export const PostCard = memo(function PostCard({ post, threadSlot, onOpenComment
 
         {/* Quoted post embed (Twitter-style) */}
         {post.isQuotePost && post.quotedPost && (
-          <QuotedPostEmbed quotedPost={post.quotedPost} className="mt-2" />
+          <QuotedPostEmbed quotedPost={post.quotedPost} quoteTokenId={post.id} className="mt-2" />
         )}
+        {post.isQuotePost && post.quoteRevoked && <RemovedQuoteNotice className="mt-2" />}
 
         {/* DeHub entity cards — post, profile, community, invite, store, item, event */}
         <DehubLinkEmbeds links={dehubLinks} />
@@ -812,6 +813,7 @@ export const PostCard = memo(function PostCard({ post, threadSlot, onOpenComment
             newPostSlug={post.status === 'signed' ? post.newPostId ?? null : null}
             tokenId={parseInt(post.id, 10) || undefined}
             isOwnPost={!!isOwnPost}
+            quotePolicy={post.quotePolicy}
             stage={stage}
             utilityDesktopAnchor
             className="p-0"
@@ -1068,6 +1070,7 @@ export const PostCard = memo(function PostCard({ post, threadSlot, onOpenComment
             currentCategories={post.categories ?? []}
             currentContentRating={post.contentRating}
             currentSpoilerText={post.spoilerText}
+            currentQuotePolicy={post.quotePolicy}
             currentForKids={post.forKids}
             currentShopLinks={post.shopLinks}
             onSuccess={(edited) => {

@@ -14,6 +14,9 @@
  */
 export type ContentRating = 'safe' | 'mature' | 'blocked' | 'pending';
 
+/** Who may quote a post (dehub-stream-backend src/repost/quote-policy). Absent means anyone. */
+export type QuotePolicy = 'public' | 'followers' | 'nobody';
+
 // Types based on DeHub API response (supports both API field naming conventions)
 export interface DeHubUser {
   _id?: string;
@@ -310,6 +313,10 @@ export interface DeHubNFT {
   mediaDescriptions?: string[];
   /** Content warning: the post opens collapsed behind this one line. */
   spoilerText?: string;
+  /** Who may quote it; absent means anyone. */
+  quotePolicy?: 'public' | 'followers' | 'nobody';
+  /** A quote whose quoted author took their post back out of it. */
+  quoteRevoked?: boolean;
   /**
    * The creator published this for children — the Kids Mode allowlist.
    *
