@@ -1,0 +1,51 @@
+name: Security regression
+on:
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  link-preview:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: denoland/setup-deno@v2
+        with:
+          deno-version: v2.x
+      - run: deno test --allow-net supabase/functions/fetch-link-preview/public-page.test.ts
+      - run: deno check supabase/functions/fetch-link-preview/index.ts
+  authorization:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    services:
+      postgres:
+        image: postgres:16
+        env:
+          POSTGRES_PASSWORD: fixture-only
+          POSTGRES_DB: security_test
+        ports: ['5432:5432']
+        options: --health-cmd pg_isready --health-interval 5s --health-timeout 5s --health-retries 10
+    env:
+      PGHOST: localhost
+      PGUSER: postgres
+      PGPASSWORD: fixture-only
+      PGDATABASE: security_test
+    steps:
+      - uses: actions/checkout@v4
+      - name: Check private calls and stage permissions
+        run: |
+          psql -v ON_ERROR_STOP=1 -f tests/sql/security-audit-bootstrap.sql
+          sed '/CREATE OR REPLACE FUNCTION public.get_my_agents/,$d' supabase/migrations/20260929093849_7f219ea4-80f1-4f9f-8809-1e8e709b55a9.sql | psql -v ON_ERROR_STOP=1
+          psql -v ON_ERROR_STOP=1 -f supabase/migrations/20261023210000_call_stage_authorization.sql
+          psql -v ON_ERROR_STOP=1 -f supabase/migrations/20261023210100_atomic_edge_rate_limit.sql
+          psql -v ON_ERROR_STOP=1 -f tests/sql/security-audit.sql
+      - name: Exactly one concurrent rate-limit winner
+        run: |
+          for client in $(seq 1 24); do
+            psql -v ON_ERROR_STOP=1 -Atc "SET ROLE service_role; SELECT allowed FROM public.consume_edge_rate_limit('race','audit',1,60000);" > "/tmp/rate-$client" &
+          done
+          wait
+          test "$(cat /tmp/rate-* | grep -c '^t$')" -eq 1
+          test "$(cat /tmp/rate-* | grep -c '^f$')" -eq 23

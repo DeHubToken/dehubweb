@@ -1,5 +1,6 @@
+import { walletScopedClient } from '@/lib/supabase-wallet-client';
 import { useTranslation as _useCopy } from 'react-i18next';
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, useMemo } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/contexts/AuthContext';
 import { toast } from 'sonner';
@@ -31,6 +32,7 @@ export function useCallbackRequests(): UseCallbackRequestsReturn {
   const [sentRequests, setSentRequests] = useState<CallbackRequest[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const { walletAddress: userAddress } = useAuth();
+  const callClient = useMemo(() => userAddress ? walletScopedClient(userAddress) : supabase, [userAddress]);
 
   const fetchRequests = useCallback(async () => {
     if (!userAddress) return;
@@ -38,10 +40,10 @@ export function useCallbackRequests(): UseCallbackRequestsReturn {
     try {
       setIsLoading(true);
 
-      const { data: pending, error: pendingError } = await supabase
+      const { data: pending, error: pendingError } = await callClient
         .from('callback_requests')
         .select('*')
-        .eq('recipient_address', userAddress)
+        .eq('recipient_address', userAddress.toLowerCase())
         .eq('status', 'pending')
         .gt('expires_at', new Date().toISOString())
         .order('created_at', { ascending: false });
@@ -52,10 +54,10 @@ export function useCallbackRequests(): UseCallbackRequestsReturn {
         setPendingRequests((pending || []) as CallbackRequest[]);
       }
 
-      const { data: sent, error: sentError } = await supabase
+      const { data: sent, error: sentError } = await callClient
         .from('callback_requests')
         .select('*')
-        .eq('requester_address', userAddress)
+        .eq('requester_address', userAddress.toLowerCase())
         .in('status', ['pending', 'completed'])
         .gt('expires_at', new Date().toISOString())
         .order('created_at', { ascending: false });
@@ -70,16 +72,16 @@ export function useCallbackRequests(): UseCallbackRequestsReturn {
     } finally {
       setIsLoading(false);
     }
-  }, [userAddress]);
+  }, [userAddress, callClient]);
 
   const sendCallbackRequest = useCallback(
     async (recipientAddress: string, callType: 'audio' | 'video', message?: string): Promise<boolean> => {
       if (!userAddress) return false;
 
       try {
-        const { error } = await supabase.from('callback_requests').insert({
-          requester_address: userAddress,
-          recipient_address: recipientAddress,
+        const { error } = await callClient.from('callback_requests').insert({
+          requester_address: userAddress.toLowerCase(),
+          recipient_address: recipientAddress.toLowerCase(),
           call_type: callType,
           message: message || null,
           status: 'pending',
@@ -102,12 +104,12 @@ export function useCallbackRequests(): UseCallbackRequestsReturn {
         return false;
       }
     },
-    [userAddress, fetchRequests, _copy],
+    [userAddress, callClient, fetchRequests, _copy],
   );
 
   const markAsCompleted = useCallback(async (requestId: string): Promise<boolean> => {
     try {
-      const { error } = await supabase.from('callback_requests').update({ status: 'completed' }).eq('id', requestId);
+      const { error } = await callClient.from('callback_requests').update({ status: 'completed' }).eq('id', requestId);
 
       if (error) {
         console.error('Error marking request as completed:', error);
@@ -124,51 +126,19 @@ export function useCallbackRequests(): UseCallbackRequestsReturn {
       console.error('Error marking request as completed:', error);
       return false;
     }
-  }, []);
+  }, [callClient]);
 
   useEffect(() => {
     if (!userAddress) return;
 
-    const channel = supabase
-      .channel('callback_requests')
-      .on(
-        'postgres_changes',
-        {
-          event: 'INSERT',
-          schema: 'public',
-          table: 'callback_requests',
-          filter: `recipient_address=eq.${userAddress}`,
-        },
-        (payload) => {
-          const newRequest = payload.new as CallbackRequest;
-          setPendingRequests((prev) => [newRequest, ...prev]);
-
-          toast.info(_copy("copy.7bb6682e5826", { defaultValue: "New callback request" }), {
-            description: `${newRequest.call_type === 'video' ? 'Video' : 'Voice'} call request from ${newRequest.requester_address.slice(0, 6)}...`,
-          });
-        },
-      )
-      .on(
-        'postgres_changes',
-        {
-          event: 'UPDATE',
-          schema: 'public',
-          table: 'callback_requests',
-          filter: `recipient_address=eq.${userAddress}`,
-        },
-        (payload) => {
-          const updatedRequest = payload.new as CallbackRequest;
-          if (updatedRequest.status === 'completed') {
-            setPendingRequests((prev) => prev.filter((req) => req.id !== updatedRequest.id));
-          }
-        },
-      )
-      .subscribe((status) => {
-        if (status === 'SUBSCRIBED') fetchRequests();
-      });
-
+    const refresh = () => { if (document.visibilityState === 'visible') void fetchRequests(); };
+    const timer = setInterval(refresh, 30_000);
+    document.addEventListener('visibilitychange', refresh);
+    window.addEventListener('online', refresh);
     return () => {
-      supabase.removeChannel(channel);
+      clearInterval(timer);
+      document.removeEventListener('visibilitychange', refresh);
+      window.removeEventListener('online', refresh);
     };
   }, [userAddress, fetchRequests]);
 
