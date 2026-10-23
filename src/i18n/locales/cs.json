@@ -1,4 +1,13 @@
 {
+  "followedTags": {
+    "follow": "Sledovat #{{tag}}",
+    "following": "Sledujete",
+    "unfollow": "Přestat sledovat #{{tag}}",
+    "followed": "Teď sledujete #{{tag}}. Jeho příspěvky se zobrazí ve vašem kanálu Sledované.",
+    "unfollowed": "Přestali jste sledovat #{{tag}}",
+    "failed": "Neuložilo se. Zkuste to znovu.",
+    "clear": "Vymazat"
+  },
   "notificationFilters": {
     "title": "Filtrovat oznámení od",
     "description": "Vyberte, co se stane, když s vámi bude komunikovat někdo mimo váš okruh. Filtrovaná oznámení čekají ve složce Filtrováno, bez odznaku a bez push oznámení.",

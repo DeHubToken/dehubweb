@@ -1,4 +1,13 @@
 {
+  "followedTags": {
+    "follow": "Segui #{{tag}}",
+    "following": "Segui già",
+    "unfollow": "Smetti di seguire #{{tag}}",
+    "followed": "Ora segui #{{tag}}. I suoi post compariranno nel feed Seguiti.",
+    "unfollowed": "Non segui più #{{tag}}",
+    "failed": "Non è stato salvato. Riprova.",
+    "clear": "Cancella"
+  },
   "notificationFilters": {
     "title": "Filtra le notifiche da",
     "description": "Scegli cosa succede quando qualcuno fuori dalla tua cerchia interagisce con te. Le notifiche filtrate restano in Filtrate, senza badge né notifica push.",

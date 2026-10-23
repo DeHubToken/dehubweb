@@ -1,4 +1,13 @@
 {
+  "followedTags": {
+    "follow": "#{{tag}} qatiy",
+    "following": "Qatichkanki",
+    "unfollow": "#{{tag}} qatiyta saqiy",
+    "followed": "Kunanqa #{{tag}} qatichkanki. Qillqankuna qatisqayki mikhuypi rikhurinqa.",
+    "unfollowed": "#{{tag}} qatiyta saqirqanki",
+    "failed": "Manam waqaychakurqanchu. Watiqmanta ruray.",
+    "clear": "Pichay"
+  },
   "notificationFilters": {
     "title": "Willakuykunata suysuy",
     "description": "Akllay ima kananta, muyuyki hawanmanta pipas qamwan rimanakuptin. Suysusqa willakuykunaqa \"Suysusqa\" nisqapi suyanku, mana unanchayniyuq mana tanqayniyuq.",

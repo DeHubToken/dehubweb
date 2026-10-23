@@ -1,4 +1,13 @@
 {
+  "followedTags": {
+    "follow": "Ikuti #{{tag}}",
+    "following": "Mengikuti",
+    "unfollow": "Berhenti mengikuti #{{tag}}",
+    "followed": "Kamu sekarang mengikuti #{{tag}}. Postingannya akan muncul di feed Mengikuti.",
+    "unfollowed": "Berhenti mengikuti #{{tag}}",
+    "failed": "Tidak tersimpan. Coba lagi.",
+    "clear": "Hapus"
+  },
   "notificationFilters": {
     "title": "Saring notifikasi dari",
     "description": "Pilih apa yang terjadi saat seseorang di luar lingkaranmu berinteraksi denganmu. Notifikasi yang disaring menunggu di Disaring, tanpa lencana dan tanpa push.",
