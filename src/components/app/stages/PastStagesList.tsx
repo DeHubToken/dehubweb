@@ -266,13 +266,12 @@ export function PastStagesList({
                     wider screens. It sits beside the text, never beside the
                     bar: the bar used to share its row with the artwork and got
                     squeezed to a sliver nobody could drag. */}
-                {space.cover_image_url && (
-                  <StageCoverArt
-                    src={space.cover_image_url}
-                    title={space.title}
-                    className="w-full sm:w-44 shrink-0 rounded-xl overflow-hidden self-start"
-                  />
-                )}
+                <StageCoverArt
+                  src={space.cover_image_url}
+                  title={space.title}
+                  stage={space}
+                  className="w-full sm:w-44 shrink-0 rounded-xl overflow-hidden self-start"
+                />
 
                 <div className="flex-1 min-w-0 flex flex-col gap-1.5">
                   <div className="flex items-start gap-2">

@@ -258,9 +258,7 @@ export default function StageDeepLinkPage() {
         />
 
         <div className="relative w-full rounded-2xl overflow-hidden border border-white/10">
-          {stage.cover_image_url && (
-            <StageCoverArt src={stage.cover_image_url} title={stage.title} />
-          )}
+          <StageCoverArt src={stage.cover_image_url} title={stage.title} stage={stage} />
           <div className="relative p-6 bg-zinc-900">
             <div className="flex items-center justify-between gap-2 mb-3">
               <div className="inline-flex items-center gap-1.5 px-2 py-1 rounded-lg bg-white/10">
@@ -421,9 +419,7 @@ export default function StageDeepLinkPage() {
         />
 
         <div className="relative w-full rounded-2xl overflow-hidden border border-white/10">
-          {stage.cover_image_url && (
-            <StageCoverArt src={stage.cover_image_url} title={stage.title} />
-          )}
+          <StageCoverArt src={stage.cover_image_url} title={stage.title} stage={stage} />
           <div className="relative p-6 bg-zinc-900">
             <div className="flex items-center justify-between gap-2 mb-3">
               <div className="inline-flex items-center gap-1.5 px-2 py-1 rounded-lg bg-white/10">
@@ -617,9 +613,7 @@ export default function StageDeepLinkPage() {
         />
 
         <div className="relative w-full rounded-2xl overflow-hidden border border-white/10">
-          {stage.cover_image_url && (
-            <StageCoverArt src={stage.cover_image_url} title={stage.title} />
-          )}
+          <StageCoverArt src={stage.cover_image_url} title={stage.title} stage={stage} />
           <div className="relative p-6 bg-zinc-900">
             <div className="flex items-center justify-between mb-3">
               <div className="inline-flex items-center gap-1.5 px-2 py-1 rounded-lg bg-red-500/20">
