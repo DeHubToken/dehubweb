@@ -26,7 +26,7 @@ import Maximize from "@/components/ui/cut-icons/fullscreen";
 import MoreHorizontal from "@/components/ui/cut-icons/more";
 import PictureInPicture2 from "@/components/ui/cut-icons/picture-in-picture";
 import { VIEWER_CONTROL } from '@/lib/viewer-chrome';
-import { useTheme } from '@/contexts/ThemeContext';
+import { useAppTheme } from '@/contexts/ThemeContext';
 import { GlassBackground } from '@/components/app/GlassBackground';
 import Eye from "@/components/ui/cut-icons/visibility";
 import Info from "@/components/ui/cut-icons/information";
@@ -354,7 +354,7 @@ const CORNER_CONTROL =
 export function ShortsViewer({ shorts, initialIndex, onClose, onLoadMore, hasMore, isLoadingMore, reuseInitialVideo = false }: ShortsViewerProps) {
   const { t: _copy } = _useCopy();
   const { t } = useI18n();
-  const { theme } = useTheme();
+  const { theme } = useAppTheme();
   const instanceId = useId();
   useEffect(() => {
     const paused = Array.from(document.querySelectorAll<HTMLElement>('[data-cached-page]'))
