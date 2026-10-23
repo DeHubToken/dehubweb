@@ -150,6 +150,8 @@ export interface VideoItem extends BaseFeedItem {
   type: 'video';
   thumbnail: string;
   videoUrl?: string;
+  /** Full HLS master playlist URL; plays instead of videoUrl where it can (lib/hls-vod). */
+  hlsUrl?: string;
   /** Formatted duration string (e.g., "1:23") */
   duration: string;
   /** Raw duration in seconds for caching/filtering */
@@ -481,6 +483,8 @@ export interface ShortVideo extends BaseFeedItem {
    * viewer plays a signed URL from the access endpoint instead of `videoUrl`.
    */
   gated?: boolean;
+  /** Full HLS master playlist URL; plays instead of videoUrl where it can (lib/hls-vod). */
+  hlsUrl?: string;
   /** Async video transcode state, written optimistically before the CDN file
    *  exists. Absent on posts predating this field — treat as 'done'. */
   transcodingStatus?: 'pending' | 'on' | 'done' | 'failed';

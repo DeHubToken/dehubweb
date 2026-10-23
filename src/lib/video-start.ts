@@ -1,4 +1,5 @@
 import { recoveryForVideo } from './browser-playback-recovery';
+import { reloadVideoSource } from './hls-vod';
 
 export function cancelVideoPlayback(player: HTMLVideoElement | null): void {
   if (player) recoveryForVideo(player)?.stop();
@@ -10,6 +11,6 @@ export function requestVideoPlayback(
 ): Promise<void> {
   const recovery = recoveryForVideo(player);
   if (recovery) { recovery.start(); return Promise.resolve(); }
-  if (player.error) player.load();
+  if (player.error) reloadVideoSource(player);
   return player.play();
 }

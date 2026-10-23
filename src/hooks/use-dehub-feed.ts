@@ -22,7 +22,7 @@ import {
   type LiveStream as ApiLiveStream,
 } from '@/lib/api/dehub';
 import { resolveDislikeCount, resolveLikeCount, resolveMyReaction, resolveReactionCounts, resolveViewCount } from '@/lib/engagement';
-import { buildAvatarUrl, buildFeedImageUrls } from '@/lib/media-url';
+import { buildAvatarUrl, buildFeedImageUrls, buildHlsUrl } from '@/lib/media-url';
 import { parseSoundtrackTag, getFeedViewer } from '@/hooks/use-unified-feed';
 import { formatDuration, formatViews, formatTimeAgo } from '@/lib/feed-utils';
 import type { VideoItem, ImagePost, LiveStream } from '@/types/feed.types';
@@ -197,6 +197,7 @@ export function mapNFTToVideoItem(nft: DeHubNFT, index: number): VideoItem {
     shopListingCount: (nft as any).shopListingCount,
     thumbnail,
     videoUrl,
+    hlsUrl: isLivePost ? undefined : buildHlsUrl(nft.hlsUrl),
     transcodingStatus: nft.transcodingStatus,
     storyboard: toStoryboard(nft.storyboard),
     audioUrl,
