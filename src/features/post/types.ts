@@ -36,6 +36,8 @@ export interface MediaFile {
   cropSettings?: CropSettings;
   trimStart?: number;
   trimEnd?: number;
+  /** Alt text: what the image or video shows, for people who cannot see it. */
+  description?: string;
 }
 
 /**

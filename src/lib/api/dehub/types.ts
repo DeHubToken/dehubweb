@@ -306,6 +306,8 @@ export interface DeHubNFT {
   isDeleted?: boolean;
   /** Absent means safe — the API stores nothing for the default. */
   contentRating?: ContentRating;
+  /** Alt text, one per piece of media in display order (gallery images by position, a video first). */
+  mediaDescriptions?: string[];
   /**
    * The creator published this for children — the Kids Mode allowlist.
    *

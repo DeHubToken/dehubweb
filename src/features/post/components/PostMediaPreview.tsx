@@ -30,6 +30,7 @@ import { VideoTrimmer } from './VideoTrimmer';
 import { generateFilterCSS, applyEditsToImageFile } from '@/lib/filters';
 import { ImageAnnotator } from './ImageAnnotator';
 import { DraftVideoProgress } from './DraftVideoProgress';
+import { AltTextButton, AltTextDialog } from './AltTextEditor';
 import type { DraftVideoSnapshot } from '../lib/draft-video';
 
 interface PostMediaPreviewProps {
@@ -48,6 +49,8 @@ interface PostMediaPreviewProps {
   onApplyTrim?: (index: number, trimStart: number, trimEnd: number) => void;
   /** Replace an image's bytes outright — used by the annotator, which bakes. */
   onReplaceImage?: (index: number, file: File) => void;
+  /** Alt text for one image or video; without it the ALT buttons are not shown. */
+  onSetDescription?: (index: number, description: string) => void;
   /** Keeps the parent composer from treating the portalled viewer as an outside press. */
   onFullscreenChange?: (open: boolean) => void;
   /** The attached video's early upload, shown under its preview. */
@@ -115,7 +118,9 @@ export function PostMediaPreview({
   onReplaceImage,
   onFullscreenChange,
   draftVideo,
+  onSetDescription,
 }: PostMediaPreviewProps) {
+  const [altEditorIndex, setAltEditorIndex] = useState<number | null>(null);
   const { t: _copy } = _useCopy();
   const [recordingIndex, setRecordingIndex] = useState<number | null>(null);
   const [recordingTime, setRecordingTime] = useState(0);
@@ -608,6 +613,9 @@ export function PostMediaPreview({
                 {m.type === 'image' ? (
                   /* ==================== IMAGE PREVIEW ==================== */
                   <div className="relative h-[160px] sm:h-[200px] md:h-[240px] rounded-2xl overflow-hidden bg-zinc-900">
+                    {onSetDescription && (
+                      <AltTextButton hasText={!!m.description} onClick={() => setAltEditorIndex(index)} className="absolute bottom-2 right-2" />
+                    )}
                     {media.filter(item => item.type === 'image').length > 1 && (
                       <button type="button" aria-label={_copy("copy.58bb510b9e80", { defaultValue: "Drag to reorder photo {{value1}}", value1: index + 1 })} title={_copy("copy.eb2b5e480faa", { defaultValue: "Drag to reorder photos" })}
                         className="absolute z-20 bottom-2 left-2 flex items-center gap-1 rounded-lg bg-black/75 px-2 py-1 text-xs text-white touch-none cursor-grab active:cursor-grabbing"
@@ -1015,8 +1023,11 @@ export function PostMediaPreview({
                         </div>
                       )}
                       
-                      {/* Bottom right: Music Video Toggle */}
+                      {/* Bottom right: alt text, then the Music Video Toggle */}
                       <div className="absolute bottom-2 right-2 flex items-center gap-1.5">
+                        {onSetDescription && (
+                          <AltTextButton hasText={!!m.description} onClick={() => setAltEditorIndex(index)} />
+                        )}
                         <Tooltip>
                           <TooltipTrigger asChild>
                             <button
@@ -1235,6 +1246,17 @@ export function PostMediaPreview({
           fileType={annotator.type}
           sourceIdentity={annotator.sourceIdentity}
           onApply={(file) => onReplaceImage?.(annotator.index, file)}
+        />
+      )}
+
+      {onSetDescription && altEditorIndex !== null && media[altEditorIndex] && (
+        <AltTextDialog
+          open
+          onOpenChange={(open) => { if (!open) setAltEditorIndex(null); }}
+          kind={media[altEditorIndex].type === 'video' ? 'video' : 'image'}
+          previewSrc={media[altEditorIndex].preview}
+          initial={media[altEditorIndex].description}
+          onSave={(text) => onSetDescription(altEditorIndex, text)}
         />
       )}
 

@@ -248,6 +248,7 @@ function PostModalForAccount({ isOpen, onClose, initialFiles, onFilesProcessed, 
         onClearCrop={actions.clearCropFromMedia}
         onApplyTrim={actions.applyTrimToMedia}
         onReplaceImage={actions.replaceImageFile}
+        onSetMediaDescription={actions.setMediaDescription}
         liveMode={state.liveMode}
         canPost={computed.canPost}
         destinations={computed.destinations}

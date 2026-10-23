@@ -434,6 +434,7 @@ function nftToFeedItem(pinnedPost: any): FeedItemType {
         // at the top of the feed for a viewer who never opted in. The video
         // and text branches below carry it; this one did not.
         contentRating: pinnedPost.contentRating,
+        mediaDescriptions: pinnedPost.mediaDescriptions,
         username: pinnedPost.minterDisplayName || pinnedPost.mintername || 'unknown',
         verified: false,
         avatar,
@@ -465,6 +466,7 @@ function nftToFeedItem(pinnedPost: any): FeedItemType {
         id,
         type: 'video',
         contentRating: pinnedPost.contentRating,
+        mediaDescriptions: pinnedPost.mediaDescriptions,
         thumbnail,
         videoUrl,
         hlsUrl: buildHlsUrl(pinnedPost.hlsUrl),
@@ -501,6 +503,7 @@ function nftToFeedItem(pinnedPost: any): FeedItemType {
         id,
         type: 'post',
         contentRating: pinnedPost.contentRating,
+        mediaDescriptions: pinnedPost.mediaDescriptions,
         author: {
           id: pinnedPost.minter,
           name: pinnedPost.minterDisplayName || pinnedPost.mintername || 'Unknown',
