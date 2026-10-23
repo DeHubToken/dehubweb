@@ -1,4 +1,15 @@
 {
+  "profileFields": {
+    "title": "Mpaghara profaịlụ",
+    "description": "Ruo ahịrị anọ ọzọ na profaịlụ gị, dị ka weebụsaịtị ma ọ bụ nnọchiaha gị.",
+    "label": "Aha",
+    "content": "Ọdịnaya",
+    "save": "Chekwaa mpaghara",
+    "saved": "Echekwala mpaghara profaịlụ",
+    "failed": "Edebeghị ya. Nwaa ọzọ.",
+    "verified": "Njikọ akwadoro",
+    "verifyHint": "Iji kwado njikọ, tinye nke a na ibe ahụ, wee chekwaa ọzọ: {{snippet}}"
+  },
   "followedTags": {
     "follow": "Soro #{{tag}}",
     "following": "Ị na-eso",
