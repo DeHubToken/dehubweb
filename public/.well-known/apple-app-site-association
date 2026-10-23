@@ -40,7 +40,8 @@
           { "/": "/bounty/*", "comment": "One bounty" },
           { "/": "/communities/*", "comment": "One community, or a community invite" },
           { "/": "/stores/*", "comment": "One store or listing" },
-          { "/": "/events/*", "comment": "One event" }
+          { "/": "/events/*", "comment": "One event" },
+          { "/": "/r/*", "comment": "Invite link" }
         ]
       }
     ]

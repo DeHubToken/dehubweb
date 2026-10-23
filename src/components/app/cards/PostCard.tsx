@@ -58,7 +58,6 @@ import { AssetRefCards, useAssetRefsInText } from '@/components/app/cards/AssetR
 import { TranslatableText, useTranslation, renderTextWithLinks } from '../TranslatableText';
 import { useTranslation as useI18n } from 'react-i18next';
 import { PostAIChatLazy } from './PostAIChatLazy';
-import { buildPostShareImage } from '@/lib/build-post-share-image';
 import { ReportModal } from '../modals/ReportModal';
 import { DeletePostModal } from '../modals/DeletePostModal';
 // Lazy, mounted on demand — see the note on the same pair in VideoCard.
@@ -372,6 +371,8 @@ export const PostCard = memo(function PostCard({ post, threadSlot, onOpenComment
 
   const handleShareAsImage = useCallback(async () => {
     try {
+      // Loaded on demand: share-as-image is a menu action, not first paint.
+      const { buildPostShareImage } = await import('@/lib/build-post-share-image');
       const blob = await buildPostShareImage({
         postId: post.id,
       });

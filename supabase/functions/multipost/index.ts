@@ -13,21 +13,13 @@ import {
   bundleDiscount, bundlePriceUsd, creditsFor,
 } from '../_shared/social-pricing.ts';
 import { createSigner, farcasterConfigured, getSigner, getUsername, publishCast } from '../_shared/farcaster.ts';
+import { TEXT_LIMIT, withLinkWithin } from '../_shared/social-text.ts';
+import { ZERNIO_PLATFORMS, incompatibility, listZernioAccounts, platformExtras, zernio, type MediaItem, type ZAccount } from '../_shared/zernio.ts';
 
-const ZERNIO = 'https://zernio.com/api/v1';
 const DHB_BASE = '0xD20ab1015f6a2De4a6FdDEbAB270113F689c2F7c';
 const FARCASTER_ACCOUNT_ID = 'farcaster';
 
-const ZERNIO_PLATFORMS = [
-  'twitter', 'instagram', 'facebook', 'youtube', 'tiktok', 'linkedin',
-  'threads', 'pinterest', 'reddit', 'googlebusiness', 'snapchat', 'discord',
-] as const;
 const PLATFORMS = [...ZERNIO_PLATFORMS, 'farcaster'] as const;
-type ZernioPlatform = typeof ZERNIO_PLATFORMS[number];
-
-const TEXT_LIMIT: Partial<Record<ZernioPlatform, number>> = {
-  twitter: 280, threads: 500, instagram: 2200, tiktok: 2200, linkedin: 3000, pinterest: 800, googlebusiness: 1500,
-};
 
 // Paying slightly under the quote is allowed so a price tick between quote and
 // confirmation does not strand a transfer that already left the wallet.
@@ -35,22 +27,7 @@ const PRICE_SLACK = 0.95;
 
 type Admin = ReturnType<typeof serviceClient>;
 
-interface ZAccount { _id: string; platform: string; username?: string; displayName?: string; isActive?: boolean }
-interface MediaItem { url: string; type: 'image' | 'video' | 'gif' | 'document' }
 interface Skip { accountId: string; platform: string; reason: string }
-
-async function zernio(path: string, init: RequestInit = {}): Promise<{ status: number; data: any }> {
-  const key = Deno.env.get('ZERNIO_API_KEY');
-  if (!key) throw new Error('Multi-posting is not configured yet.');
-  const res = await fetch(`${ZERNIO}${path}`, {
-    ...init,
-    headers: { Authorization: `Bearer ${key}`, 'Content-Type': 'application/json', ...(init.headers ?? {}) },
-    signal: AbortSignal.timeout(30000),
-  });
-  let data: any = null;
-  try { data = await res.json(); } catch { /* empty body */ }
-  return { status: res.status, data };
-}
 
 async function getDhbPriceUsd(): Promise<number | null> {
   try {
@@ -80,13 +57,6 @@ async function getProfileId(admin: Admin, wallet: string, create: boolean): Prom
   if (!id) throw new Error(res.data?.error || 'Could not set up multi-posting for this account.');
   await admin.from('social_profiles').upsert({ wallet_address: wallet, zernio_profile_id: id });
   return id;
-}
-
-async function listZernioAccounts(profileId: string | null): Promise<ZAccount[]> {
-  if (!profileId) return [];
-  const res = await zernio(`/accounts?profileId=${encodeURIComponent(profileId)}`);
-  const accounts: ZAccount[] = res.data?.accounts ?? [];
-  return accounts.filter((a) => a.isActive !== false);
 }
 
 interface FarcasterRow { signer_uuid: string; fid: number | null; username: string | null; status: string; approval_url: string | null }
@@ -126,55 +96,6 @@ function isAllowedRedirect(url: string): boolean {
   } catch {
     return false;
   }
-}
-
-function clip(text: string, limit?: number): string {
-  if (!limit || text.length <= limit) return text;
-  return text.slice(0, limit - 1).trimEnd() + '…';
-}
-
-/** Why an account cannot take this post, or null if it can. */
-function incompatibility(platform: string, media: MediaItem[], content: string): string | null {
-  const videos = media.filter((m) => m.type === 'video').length;
-  const images = media.filter((m) => m.type === 'image' || m.type === 'gif').length;
-  switch (platform) {
-    case 'youtube': return videos === 1 ? null : 'needs_video';
-    case 'tiktok': return videos === 1 || (videos === 0 && images > 0) ? null : 'needs_media';
-    case 'instagram': return media.length > 0 ? null : 'needs_media';
-    case 'snapchat': return media.length > 0 ? null : 'needs_media';
-    case 'pinterest': return media.length > 0 ? null : 'needs_media';
-    default: return content.trim() || media.length ? null : 'empty';
-  }
-}
-
-async function platformExtras(platform: string, accountId: string, content: string): Promise<{ data?: Record<string, unknown>; tiktok?: Record<string, unknown>; skip?: string }> {
-  if (platform === 'youtube') {
-    const title = clip((content.split('\n')[0] || 'New video').trim(), 100);
-    return { data: { title, visibility: 'public' } };
-  }
-  if (platform === 'pinterest') {
-    const res = await zernio(`/accounts/${accountId}/pinterest-boards`);
-    const boards = res.data?.boards ?? res.data ?? [];
-    const boardId = Array.isArray(boards) ? (boards[0]?.id ?? boards[0]?._id) : null;
-    return boardId ? { data: { boardId, title: clip(content.split('\n')[0] || '', 100) } } : { skip: 'no_board' };
-  }
-  if (platform === 'tiktok') {
-    const res = await zernio(`/accounts/${accountId}/tiktok/creator-info`);
-    const info = res.data?.creatorInfo ?? res.data?.data ?? res.data ?? {};
-    const options: string[] = info.privacy_level_options ?? info.privacyLevelOptions ?? [];
-    const privacy = options.includes('PUBLIC_TO_EVERYONE') ? 'PUBLIC_TO_EVERYONE' : (options[0] ?? 'PUBLIC_TO_EVERYONE');
-    return {
-      tiktok: {
-        privacy_level: privacy,
-        allow_comment: true,
-        allow_duet: true,
-        allow_stitch: true,
-        content_preview_confirmed: true,
-        express_consent_given: true,
-      },
-    };
-  }
-  return {};
 }
 
 const pricing = () => ({
@@ -352,9 +273,7 @@ Deno.serve(async (req) => {
         if (reason) { skipped.push({ accountId: account._id, platform: account.platform, reason }); continue; }
         const extras = await platformExtras(account.platform, account._id, content);
         if (extras.skip) { skipped.push({ accountId: account._id, platform: account.platform, reason: extras.skip }); continue; }
-        const limit = TEXT_LIMIT[account.platform as ZernioPlatform];
-        const withLink = link ? `${content}\n\n${link}` : content;
-        const text = limit && withLink.length > limit ? clip(content, limit - (link ? link.length + 2 : 0)) + (link ? `\n\n${link}` : '') : withLink;
+        const text = withLinkWithin(content, link, TEXT_LIMIT[account.platform]);
         targets.push({
           account,
           entry: { platform: account.platform, accountId: account._id, customContent: text, ...(extras.data ? { platformSpecificData: extras.data } : {}) },
