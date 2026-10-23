@@ -1,6 +1,6 @@
 import { walletScopedClient } from '@/lib/supabase-wallet-client';
 import { useTranslation as _useCopy } from 'react-i18next';
-import { useState, useEffect, useCallback, useMemo } from 'react';
+import { useState, useEffect, useCallback, useMemo, useRef } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/contexts/AuthContext';
 import { toast } from 'sonner';
@@ -33,6 +33,9 @@ export function useCallbackRequests(): UseCallbackRequestsReturn {
   const [isLoading, setIsLoading] = useState(false);
   const { walletAddress: userAddress } = useAuth();
   const callClient = useMemo(() => userAddress ? walletScopedClient(userAddress) : supabase, [userAddress]);
+  const currentWallet = useRef(userAddress);
+  currentWallet.current = userAddress;
+  const seenRequests = useRef<{wallet: string; ids: Set<string>} | null>(null);
 
   const fetchRequests = useCallback(async () => {
     if (!userAddress) return;
@@ -48,10 +51,22 @@ export function useCallbackRequests(): UseCallbackRequestsReturn {
         .gt('expires_at', new Date().toISOString())
         .order('created_at', { ascending: false });
 
+      if (currentWallet.current !== userAddress) return;
       if (pendingError) {
         console.error('Error fetching pending requests:', pendingError);
       } else {
-        setPendingRequests((pending || []) as CallbackRequest[]);
+        const requests = (pending || []) as CallbackRequest[];
+        if (seenRequests.current?.wallet === userAddress) {
+          for (const request of requests) {
+            if (!seenRequests.current.ids.has(request.id)) {
+              toast.info(_copy("copy.7bb6682e5826", { defaultValue: "New callback request" }), {
+                description: `${request.call_type === 'video' ? 'Video' : 'Voice'} call request from ${request.requester_address.slice(0, 6)}...`,
+              });
+            }
+          }
+        }
+        seenRequests.current = { wallet: userAddress, ids: new Set(requests.map(request => request.id)) };
+        setPendingRequests(requests);
       }
 
       const { data: sent, error: sentError } = await callClient
@@ -62,6 +77,7 @@ export function useCallbackRequests(): UseCallbackRequestsReturn {
         .gt('expires_at', new Date().toISOString())
         .order('created_at', { ascending: false });
 
+      if (currentWallet.current !== userAddress) return;
       if (sentError) {
         console.error('Error fetching sent requests:', sentError);
       } else {
@@ -70,9 +86,9 @@ export function useCallbackRequests(): UseCallbackRequestsReturn {
     } catch (error) {
       console.error('Error fetching callback requests:', error);
     } finally {
-      setIsLoading(false);
+      if (currentWallet.current === userAddress) setIsLoading(false);
     }
-  }, [userAddress, callClient]);
+  }, [userAddress, callClient, _copy]);
 
   const sendCallbackRequest = useCallback(
     async (recipientAddress: string, callType: 'audio' | 'video', message?: string): Promise<boolean> => {
@@ -108,6 +124,7 @@ export function useCallbackRequests(): UseCallbackRequestsReturn {
   );
 
   const markAsCompleted = useCallback(async (requestId: string): Promise<boolean> => {
+    if (!userAddress) return false;
     try {
       const { error } = await callClient.from('callback_requests').update({ status: 'completed' }).eq('id', requestId);
 
@@ -126,7 +143,14 @@ export function useCallbackRequests(): UseCallbackRequestsReturn {
       console.error('Error marking request as completed:', error);
       return false;
     }
-  }, [callClient]);
+  }, [callClient, userAddress]);
+
+  useEffect(() => {
+    setPendingRequests([]);
+    setSentRequests([]);
+    setIsLoading(false);
+    seenRequests.current = null;
+  }, [userAddress]);
 
   useEffect(() => {
     if (!userAddress) return;
