@@ -1748,7 +1748,19 @@
     "mostViewed": "Más vistos",
     "trendingWeek": "Tendencia esta semana",
     "newest": "Más nuevos",
-    "videoChartOrder": "Orden de la lista de videos musicales"
+    "videoChartOrder": "Orden de la lista de videos musicales",
+    "country": "País",
+    "quality": "Calidad",
+    "votes": "Votos",
+    "plays": "Escuchas",
+    "onAir": "Al aire",
+    "liveRadio": "Radio en vivo",
+    "pause": "Pausa",
+    "listenLive": "Escuchar en vivo",
+    "nextStation": "Siguiente emisora",
+    "shareStation": "Compartir emisora",
+    "shareStationTitle": "{{name}} en DeHub Radio",
+    "linkCopied": "Enlace copiado"
   },
   "notFound": {
     "title": "Página no encontrada",
