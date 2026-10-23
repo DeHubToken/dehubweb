@@ -31,6 +31,7 @@ import { SEOHead } from '@/components/SEOHead';
 import { canManageAgents } from '@/lib/agent-access';
 import { AgentTasksPanel } from './AgentTasksPanel';
 import { AgentProfilePanel } from './AgentProfilePanel';
+import { AgentLifePanel } from './AgentLifePanel';
 
 interface AIAgent {
   id: string;
@@ -412,6 +413,7 @@ export default function AgentsPage() {
 
                   {/* API Key */}
                   <AgentProfilePanel wallet={walletAddress} agentId={agent.id} agentName={agent.name} />
+                  <AgentLifePanel wallet={walletAddress} agentId={agent.id} />
                   <details open={openConnections.has(agent.id)} className="mt-4 rounded-xl border border-white/15 bg-black/20 p-3">
                     <summary onClick={event => {
                       event.preventDefault();

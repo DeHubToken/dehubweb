@@ -1,6 +1,8 @@
 import { aiChat } from "../_shared/ai-chat.ts";
 import { requireDeHubAuth } from "../_shared/auth.ts";
 import { recordPostViews } from "./post-views.ts";
+import { correctActivity } from "./activity-edit.ts";
+import { handleLifeTick, lifeStatus, setSentient } from "./life.ts";
 import { agentOwnerAllowed, explicitTaskPlan, LIVE_WINDOW_MAX_DAYS, LIVE_WINDOW_RECHECK_MINUTES, nextScheduledRun, readableTime, parseTaskPlan, PLAN_TOOL, taskPlanSchema, windowSteps, type TaskPlan, type TaskStep } from "./task-plan.ts";
 
 // The same validated callbacks serve MCP clients and the durable task runner.
@@ -371,7 +373,13 @@ export async function runTask(context: Context, req: Request, task: any) {
 
 export async function handleTaskRequest(req: Request, context: Context): Promise<Response> {
   const db = context.db();
-  if (new URL(req.url).pathname.endsWith("/tasks/tick")) {
+  const path = new URL(req.url).pathname;
+  if (path.endsWith("/life/tick")) {
+    const config = checked(await db.from("ai_agent_runner").select("secret").eq("id", true).single());
+    if (!req.headers.get("x-agent-runner-secret") || req.headers.get("x-agent-runner-secret") !== config.secret) return json({ error: "Forbidden" }, 403);
+    return handleLifeTick(context, req);
+  }
+  if (path.endsWith("/tasks/tick")) {
     const config = checked(await db.from("ai_agent_runner").select("secret").eq("id", true).single());
     if (!req.headers.get("x-agent-runner-secret") || req.headers.get("x-agent-runner-secret") !== config.secret) return json({ error: "Forbidden" }, 403);
     const task = checked(await db.rpc("claim_agent_task"));
@@ -417,6 +425,59 @@ export async function handleTaskRequest(req: Request, context: Context): Promise
     const result = await tool.call(args);
     const payload = result.structuredContent ?? JSON.parse(result.content?.[0]?.text ?? '{}');
     return json(payload, result.isError ? 422 : 200);
+  }
+  if (input.operation === "queue_post") {
+    if (typeof input.content !== 'string' || !input.content.trim() || input.content.trim().length > 500 || !/^[0-9a-f-]{36}$/i.test(input.request_id ?? '')) return json({ error: 'Enter a post between 1 and 500 characters.' }, 400);
+    const agent = checked(await db.from('ai_agents').select('id,api_key').eq('id', input.agent_id).eq('human_owner_wallet', auth.wallet).eq('is_active', true).maybeSingle());
+    if (!agent) return json({ error: 'Select an active agent you own.' }, 403);
+    const existing = checked(await db.from('ai_agent_tasks').select('id').eq('owner_wallet', auth.wallet).eq('request_id', input.request_id).maybeSingle());
+    if (existing) return json({ task: existing });
+    const args = { content: input.content.trim(), mint: false, ...(input.image_url ? { media_url: input.image_url, media_type: 'image' } : {}) };
+    try { context.tools(agent.api_key, req).get('dehub_post_create')!.validate(args); }
+    catch { return json({ error: 'Check the post text and image URL.' }, 400); }
+    const plan = { summary: 'Publish your written post once.', interval_minutes: null, steps: [{ tool: 'dehub_post_create', arguments: args, audience: 'single', from: null, to: null, topic: null }] };
+    const result = await db.from('ai_agent_tasks').insert({ agent_id: agent.id, owner_wallet: auth.wallet, request_id: input.request_id, prompt: 'Publish this written post once.', plan }).select('id').single();
+    if (result.error) {
+      const retry = checked(await db.from('ai_agent_tasks').select('id').eq('owner_wallet', auth.wallet).eq('request_id', input.request_id).maybeSingle());
+      if (retry) return json({ task: retry });
+      return json({ error: 'Could not queue the post. Try again.' }, 409);
+    }
+    return json({ task: result.data });
+  }
+  if (input.operation === "correct_activity") {
+    const agent = checked(await db.from("ai_agents").select("id,owner_wallet_address,wallet_private_key").eq("id", input.agent_id).eq("human_owner_wallet", auth.wallet).eq("is_active", true).maybeSingle());
+    if (!agent) return json({ error: "Select an active agent you own." }, 403);
+    if (!Number.isSafeInteger(input.event_id) || input.event_id < 1) return json({ error: "Select an activity." }, 400);
+    const event = checked(await db.from("ai_agent_life_events").select("id,kind,target,content,meta").eq("id", input.event_id).eq("agent_id", agent.id).maybeSingle());
+    if (!event) return json({ error: "Activity not found." }, 404);
+    if (event.meta?.correction_until && Date.parse(event.meta.correction_until) > Date.now()) return json({ error: "This activity is already being changed. Please wait." }, 409);
+    const token = await context.token(agent);
+    if (!token) return json({ error: "Could not sign in as this agent." }, 503);
+    const lock = crypto.randomUUID();
+    const meta = { ...event.meta, correction_lock: lock, correction_until: new Date(Date.now() + 180000).toISOString() };
+    const claimed = checked(await db.from("ai_agent_life_events").update({ meta }).eq("id", event.id).eq("agent_id", agent.id).eq("meta", JSON.stringify(event.meta)).select("id"));
+    if (!claimed.length) return json({ error: "Activity changed. Refresh and try again." }, 409);
+    event.meta = meta;
+    try { await correctActivity(db, agent, event, token, input.action, input.content); }
+    catch (error) { return json({ error: message(error) }, 422); }
+    finally {
+      const current = checked(await db.from("ai_agent_life_events").select("meta").eq("id", event.id).eq("agent_id", agent.id).maybeSingle());
+      if (current?.meta?.correction_lock === lock) {
+        const { correction_lock: _lock, correction_until: _until, ...rest } = current.meta;
+        checked(await db.from("ai_agent_life_events").update({ meta: rest }).eq("id", event.id).contains("meta", { correction_lock: lock }));
+      }
+    }
+    return json(await lifeStatus(db, agent.id));
+  }
+  if (input.operation === "life" || input.operation === "set_alive") {
+    const agent = checked(await db.from("ai_agents").select("id,name,description").eq("id", input.agent_id).eq("human_owner_wallet", auth.wallet).eq("is_active", true).maybeSingle());
+    if (!agent) return json({ error: "Select an active agent you own." }, 403);
+    if (input.operation === "set_alive") {
+      if (typeof input.alive !== "boolean") return json({ error: "Choose on or off." }, 400);
+      const result = await setSentient(db, agent, input.alive);
+      if ("error" in result) return json(result, 503);
+    }
+    return json(await lifeStatus(db, agent.id));
   }
   if (input.operation === "list") {
     const tasks = checked(await db.from("ai_agent_tasks").select("id,agent_id,prompt,plan,status,completed_actions,next_run_at,needs_review,message,created_at,swarm_id,swarm_index,swarm_size").eq("owner_wallet", auth.wallet).order("created_at", { ascending: false }).limit(50));

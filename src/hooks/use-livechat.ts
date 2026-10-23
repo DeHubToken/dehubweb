@@ -15,7 +15,7 @@ import {
 import {
   getSocket, joinRoom, leaveRoom, emitSendMessage,
   onLiveChatMessage, onRoomJoined, onMessageDeleted,
-  onUserBanned, onUserUnbanned, onReactionUpdated, onMessageEdited,
+  onUserBanned, onUserUnbanned, onReactionUpdated, onMessageEdited, onStreamModeration,
   emitAddReaction, emitRemoveReaction, emitEditMessage, emitDeleteMessage,
   onLiveChatError, debugSocketEvents,
 } from '@/lib/api/dehub/socket';
@@ -324,8 +324,15 @@ export function useLiveChatMessages(roomId: string | null) {
   const [isSending, setIsSending] = useState(false);
   const [isConnected, setIsConnected] = useState(false);
   const [isBanned, setIsBanned] = useState(false);
+  /** This viewer moderates the room: a stream's creator, their moderators, staff. */
+  const [isModerator, setIsModerator] = useState(false);
+  /** Until when a stream timeout keeps this viewer quiet here, if one does. */
+  const [mutedUntil, setMutedUntil] = useState<number | null>(null);
   const { isAuthenticated, user, walletAddress } = useAuth();
   const initialLoadDone = useRef(false);
+  // Read inside the room's socket handlers, which are bound once per room.
+  const walletRef = useRef(walletAddress);
+  walletRef.current = walletAddress;
   /**
    * The current list, for callbacks that need to read it without being rebuilt
    * every time it changes. `send` used to depend on `messages` purely to look
@@ -422,6 +429,7 @@ export function useLiveChatMessages(roomId: string | null) {
     const unsubJoined = onRoomJoined(roomId, (data) => {
       console.log('[LiveChat] Room joined, banned:', data.isBanned);
       setIsBanned(data.isBanned || false);
+      setIsModerator(!!(data.yourUser as { isModerator?: boolean } | null)?.isModerator);
       initialLoadDone.current = true;
     });
 
@@ -530,6 +538,19 @@ export function useLiveChatMessages(roomId: string | null) {
       );
     });
 
+    // A stream creator's own moderation. About this viewer: they are timed
+    // out or banned in this room only. About someone else: a banned viewer's
+    // lines leave the room, as they do on every stream chat people know.
+    const unsubModerated = onStreamModeration(roomId, ({ address, action, seconds }) => {
+      const me = (walletRef.current || '').toLowerCase();
+      if (me && address === me) {
+        if (action === 'ban') setIsBanned(true);
+        else setMutedUntil(Date.now() + (seconds ?? 60) * 1000);
+        return;
+      }
+      if (action === 'ban') setMessages((prev) => prev.filter((m) => m.sender_address.toLowerCase() !== address));
+    });
+
     const unsubBanned = onUserBanned(roomId, (data) => {
       setIsBanned(true);
       toast.error(data.message || 'You have been banned from chat');
@@ -551,6 +572,7 @@ export function useLiveChatMessages(roomId: string | null) {
       unsubReaction();
       unsubBanned();
       unsubUnbanned();
+      unsubModerated();
       unsubDebug();
       socket.off('connect', onConnect);
       socket.off('disconnect', onDisconnect);
@@ -779,7 +801,7 @@ export function useLiveChatMessages(roomId: string | null) {
   }, [roomId, walletAddress]);
 
   return {
-    messages, isLoading, isSending, isConnected, isBanned,
+    messages, isLoading, isSending, isConnected, isBanned, isModerator, mutedUntil,
     send, addReaction, removeReaction, editMessage, deleteMessage,
     refetch: () => fetchMessages(false),
   };

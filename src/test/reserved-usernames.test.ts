@@ -135,4 +135,19 @@ describe('/app children answer at the bare path too', () => {
   it('found children to check', () => {
     expect(appChildSegments().length).toBeGreaterThan(20);
   });
+
+  it('refuses riftn and its lookalikes', () => {
+    for (const name of [
+      'riftn', 'RIFTN', '@Riftn', 'riftn_', 'riftn-', 'riftn1', 'riftn_official',
+      'riftnhq', 'r1ftn', 'rlftn', 'official_riftn', 'the_riftn', 'realriftn',
+    ]) {
+      expect(isReservedUsername(name)).toBe(true);
+    }
+  });
+
+  it('leaves names that only contain riftn mid-word alone', () => {
+    for (const name of ['driftnet', 'swiftnode', 'rift', 'rif_tom']) {
+      expect(isReservedUsername(name)).toBe(false);
+    }
+  });
 });

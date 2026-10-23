@@ -15,7 +15,8 @@
 import { ID, concat, element, readChildren, readId, readSize, readUint, uintBytes, writeId } from './ebml.ts';
 import { repairWebm, AlreadyIndexed } from './webm.ts';
 import { parseAdts, isAdts, AAC_SAMPLES_PER_FRAME } from './adts.ts';
-import { buildM4a, readBoxes, findPath } from './mp4.ts';
+import { buildM4a, buildOpusMp4, opusPacketSamples, readBoxes, findPath } from './mp4.ts';
+import { extractOpus } from './opus.ts';
 
 let failures = 0;
 function ok(cond: boolean, what: string) {
@@ -242,6 +243,121 @@ ok(entry.type === 'mp4a', 'sample entry is mp4a');
 ok(mdv.getUint32(entry.dataStart + 24) >>> 16 === 44100, 'stsd sample rate survives 16.16 encoding');
 ok(mdv.getUint16(entry.dataStart + 16) === 2, 'stsd channel count is right');
 
+// ── WebM/Opus → MP4/Opus ────────────────────────────────────────────────────
+
+console.log('\n# opus to mp4');
+
+// TOC bytes: config 31 is CELT fullband 20 ms; code 3 with a count byte of 3
+// is Chrome's three-frame 60 ms packet. Config 1 code 0 is one 20 ms SILK frame.
+ok(opusPacketSamples(Uint8Array.of((31 << 3) | 3, 3, 0)) === 2880, 'three 20 ms CELT frames read as 60 ms');
+ok(opusPacketSamples(Uint8Array.of((1 << 3) | 0, 0)) === 960, 'one 20 ms SILK frame reads as 20 ms');
+ok(opusPacketSamples(Uint8Array.of((16 << 3) | 1, 0)) === 240, 'two 2.5 ms CELT frames read as 5 ms');
+ok(opusPacketSamples(Uint8Array.of((3 << 3) | 3, 63)) === 0, 'a packet over 120 ms is refused');
+ok(opusPacketSamples(new Uint8Array(0)) === 0, 'an empty packet is refused');
+
+/** OpusHead as a WebM carries it: little-endian, stereo, pre-skip 312. */
+const OPUS_HEAD = Uint8Array.of(
+  ...Array.from('OpusHead', (c) => c.charCodeAt(0)),
+  1, 2, 0x38, 0x01, 0x80, 0xbb, 0x00, 0x00, 0x00, 0x00, 0,
+);
+const OPUS_PACKETS = 90;
+
+function opusPacket(i: number): Uint8Array {
+  return Uint8Array.from({ length: 40 + (i % 23) }, (_, k) => (k === 0 ? (31 << 3) | 3 : k === 1 ? 3 : (i * 11 + k) & 0xff));
+}
+
+/** A WebM shaped like Chrome's MediaRecorder output, with a real OpusHead. */
+function opusWebm(): { bytes: Uint8Array; packets: Uint8Array[] } {
+  const header = element(ID.EBML, element(0x4286, uintBytes(1, 1), 1), 1);
+  const info = element(ID.Info, element(ID.TimecodeScale, uintBytes(1_000_000, 3), 1), 1);
+  const tracks = element(ID.Tracks,
+    element(0xae, concat([
+      element(0xd7, uintBytes(1, 1), 1),
+      element(0x83, uintBytes(2, 1), 1),
+      element(0x86, Uint8Array.from('A_OPUS', (c) => c.charCodeAt(0)), 1),
+      element(0x63a2, OPUS_HEAD, 1),
+    ]), 1), 1);
+  const packets: Uint8Array[] = [];
+  const parts: Uint8Array[] = [header, writeId(ID.Segment), UNKNOWN, info, tracks];
+  for (let c = 0; c < OPUS_PACKETS / 10; c++) {
+    const body: Uint8Array[] = [element(ID.Timecode, uintBytes(c * 600, 4), 1)];
+    for (let i = 0; i < 10; i++) {
+      const p = opusPacket(c * 10 + i);
+      packets.push(p);
+      const rel = i * 60;
+      body.push(element(ID.SimpleBlock, concat([Uint8Array.of(0x81, (rel >> 8) & 0xff, rel & 0xff, 0x80), p]), 1));
+    }
+    parts.push(writeId(ID.Cluster), UNKNOWN, concat(body));
+  }
+  return { bytes: concat(parts), packets };
+}
+
+const { bytes: opusSrc, packets: opusPackets } = opusWebm();
+const lifted = extractOpus(opusSrc);
+ok(lifted.packets.length === OPUS_PACKETS, `all ${OPUS_PACKETS} packets lifted`);
+ok(
+  lifted.packets.every((p, i) => p.length === opusPackets[i].length && p.every((v, j) => v === opusPackets[i][j])),
+  'every packet is byte-identical',
+);
+ok(lifted.durations.every((d) => d === 2880), 'every packet is 60 ms');
+ok(lifted.head.channels === 2 && lifted.head.preSkip === 312 && lifted.head.inputSampleRate === 48000, 'OpusHead read little-endian');
+
+const joinedSrc = concat([opusSrc, opusSrc]);
+const joined = extractOpus(joinedSrc);
+ok(joined.packets.length === OPUS_PACKETS * 2 && joined.joinedStreams === 1, 'a restarted recorder is joined on, not dropped');
+
+const om = buildOpusMp4(lifted);
+const ob = om.bytes;
+const odv = new DataView(ob.buffer, ob.byteOffset, ob.byteLength);
+const oBoxes = readBoxes(ob, 0, ob.length);
+ok(oBoxes.map((b) => b.type).join(',') === 'ftyp,moov,mdat', 'opus: top level is ftyp,moov,mdat');
+ok(oBoxes[oBoxes.length - 1].end === ob.length, 'opus: boxes cover the file exactly');
+ok(om.durationMs === OPUS_PACKETS * 60, `opus: duration is ${OPUS_PACKETS * 60}ms (got ${om.durationMs})`);
+
+const oMoov = oBoxes.find((b) => b.type === 'moov')!;
+const oMdat = oBoxes.find((b) => b.type === 'mdat')!;
+const mdhd = findPath(ob, oMoov.dataStart, oMoov.end, ['trak', 'mdia', 'mdhd'])!;
+ok(odv.getUint32(mdhd.dataStart + 12) === 48000, 'opus: media timescale is 48 kHz');
+ok(odv.getUint32(mdhd.dataStart + 16) === OPUS_PACKETS * 2880, 'opus: media duration counts every sample');
+ok(!!findPath(ob, oMoov.dataStart, oMoov.end, ['trak', 'edts', 'elst']), 'opus: carries a whole-track edit list');
+
+const oStbl = findPath(ob, oMoov.dataStart, oMoov.end, ['trak', 'mdia', 'minf', 'stbl'])!;
+const oTbl = (t: string) => readBoxes(ob, oStbl.dataStart, oStbl.end).find((b) => b.type === t);
+ok(['stts', 'stsz', 'stsc', 'stco', 'sgpd', 'sbgp'].every((t) => !!oTbl(t)), 'opus: sample table and roll group are complete');
+ok(odv.getUint32(oTbl('stco')!.dataStart + 8) === oMdat.dataStart, 'opus: stco points at mdat payload');
+
+const oStts = oTbl('stts')!;
+let sttsTotal = 0;
+for (let i = 0, n = odv.getUint32(oStts.dataStart + 4); i < n; i++) {
+  sttsTotal += odv.getUint32(oStts.dataStart + 8 + i * 8) * odv.getUint32(oStts.dataStart + 12 + i * 8);
+}
+ok(sttsTotal === OPUS_PACKETS * 2880, 'opus: stts adds up to the media duration');
+
+const oStsz = oTbl('stsz')!;
+let oOff = oMdat.dataStart;
+let oBad = 0;
+for (let i = 0; i < OPUS_PACKETS; i++) {
+  const size = odv.getUint32(oStsz.dataStart + 12 + i * 4);
+  const got = ob.subarray(oOff, oOff + size);
+  if (size !== opusPackets[i].length || !opusPackets[i].every((v, j) => v === got[j])) oBad++;
+  oOff += size;
+}
+ok(oBad === 0, 'opus: every packet is readable at its table offset and unchanged');
+ok(oOff === oMdat.end, 'opus: the packet sizes exactly fill mdat');
+
+const oStsd = findPath(ob, oStbl.dataStart, oStbl.end, ['stsd'])!;
+const oEntry = readBoxes(ob, oStsd.dataStart + 8, oStsd.end)[0];
+ok(oEntry.type === 'Opus', 'opus: sample entry is Opus');
+ok(odv.getUint16(oEntry.dataStart + 16) === 2, 'opus: sample entry channel count is right');
+ok(odv.getUint32(oEntry.dataStart + 24) >>> 16 === 48000, 'opus: sample entry rate is 48 kHz');
+const dOps = readBoxes(ob, oEntry.dataStart + 28, oEntry.end).find((b) => b.type === 'dOps')!;
+ok(!!dOps, 'opus: dOps present');
+ok(
+  ob[dOps.dataStart] === 0 && ob[dOps.dataStart + 1] === 2 &&
+    odv.getUint16(dOps.dataStart + 2) === 312 && odv.getUint32(dOps.dataStart + 4) === 48000,
+  'opus: dOps is the OpusHead rewritten big-endian',
+);
+
 // ── Bad input must throw, never produce a plausible-looking file ────────────
 
 console.log('\n# hostile input');
@@ -261,6 +377,15 @@ for (const [label, bytes] of [
   let threw = false;
   try { parseAdts(bytes); } catch { threw = true; }
   ok(threw, `parseAdts rejects ${label}`);
+}
+for (const [label, bytes] of [
+  ['empty', new Uint8Array(0)],
+  ['garbage', Uint8Array.from({ length: 2048 }, (_, i) => (i * 37) & 0xff)],
+  ['a WebM with no OpusHead', rawWebm],
+] as const) {
+  let threw = false;
+  try { extractOpus(bytes); } catch { threw = true; }
+  ok(threw, `extractOpus rejects ${label}`);
 }
 // Truncation is survivable, but only if what comes out still re-parses.
 const cut = parseAdts(adts.subarray(0, 12_345));

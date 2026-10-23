@@ -43,9 +43,16 @@ async function parseWrappedTip(
   return tipTransactionInterface.parseTransaction({ data: `0x${data.slice(at, at + 8 + 256)}` });
 }
 
+/** The token a tip was paid in, when it is not the chain's DHB. */
+export interface TipToken {
+  address: string;
+  decimals: number;
+}
+
 export async function readConfirmedTipDetails(
   txHash: string,
   chainId: ChainId,
+  token?: TipToken,
 ): Promise<ConfirmedTipDetails> {
   const chainConfig = getChainConfig(chainId);
   let lastError: unknown;
@@ -54,14 +61,14 @@ export async function readConfirmedTipDetails(
     request.timeout = 8000;
     const provider = new JsonRpcProvider(request, chainId, { staticNetwork: true });
     try {
-      return await readTipFromProvider(provider, txHash, chainId);
+      return await readTipFromProvider(provider, txHash, chainId, token);
     } catch (error) { lastError = error; }
     finally { provider.destroy(); }
   }
   throw lastError ?? new Error('Tip transaction lookup is unavailable');
 }
 
-async function readTipFromProvider(provider: JsonRpcProvider, txHash: string, chainId: ChainId): Promise<ConfirmedTipDetails> {
+async function readTipFromProvider(provider: JsonRpcProvider, txHash: string, chainId: ChainId, token?: TipToken): Promise<ConfirmedTipDetails> {
   const chainConfig = getChainConfig(chainId);
   const tx = await provider.getTransaction(txHash);
 
@@ -78,11 +85,12 @@ async function readTipFromProvider(provider: JsonRpcProvider, txHash: string, ch
   }
 
   const tokenAddress = String(parsed.args[3]);
-  if (tokenAddress.toLowerCase() !== chainConfig.dhbToken.toLowerCase()) {
+  const expectedToken = token?.address ?? chainConfig.dhbToken;
+  if (tokenAddress.toLowerCase() !== expectedToken.toLowerCase()) {
     throw new Error('Tip transaction used an unexpected token');
   }
 
-  const amount = Number(formatUnits(parsed.args[1], DHB_TOKEN.decimals));
+  const amount = Number(formatUnits(parsed.args[1], token?.decimals ?? DHB_TOKEN.decimals));
   if (!Number.isFinite(amount) || amount <= 0) {
     throw new Error('Decoded tip amount is invalid');
   }
