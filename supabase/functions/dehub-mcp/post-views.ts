@@ -1,10 +1,10 @@
 /** `agent` tags signed-in views as agent traffic; they still count in the public totals. */
 type Viewer = { token: string; agent?: boolean } | { anonymousUrl: string; deviceId: string };
 
-export class PostViewsRateLimit extends Error {
+export class PublicReadRateLimit extends Error {
   readonly retryAt: string;
-  constructor(retryAfter: string | null, now = Date.now()) {
-    super('The public view counter is busy. Waiting before retrying.');
+  constructor(retryAfter: string | null, now = Date.now(), resource = 'view counter') {
+    super(`The public ${resource} is busy. Waiting before retrying.`);
     const seconds = retryAfter?.trim().match(/^\d+(?:\.\d+)?$/);
     const requested = seconds ? now + Number(seconds[0]) * 1000 : Date.parse(retryAfter ?? '');
     this.retryAt = new Date(Math.max(now + 60000, Number.isFinite(requested) ? requested : 0)).toISOString();
@@ -25,7 +25,7 @@ export async function recordPostViews(ids: unknown[], viewer: Viewer, request: t
       body: JSON.stringify(signedIn ? { tokenIds: batch, ...(viewer.agent ? { source: 'agent' } : {}) } : { tokenIds: batch.map(String), deviceId: viewer.deviceId }),
       signal: AbortSignal.timeout(10000),
     });
-    if (response.status === 429) throw new PostViewsRateLimit(response.headers.get('retry-after'));
+    if (response.status === 429) throw new PublicReadRateLimit(response.headers.get('retry-after'));
     if (!response.ok || (await response.json()).success !== true) {
       throw new Error(`Could not record public post views (${response.status}). Please retry.`);
     }
