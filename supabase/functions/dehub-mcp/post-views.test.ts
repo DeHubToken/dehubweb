@@ -1,6 +1,22 @@
-import { anonymousViewerId, recordPostViews } from './post-views.ts';
+import { anonymousViewerId, PostViewsRateLimit, recordPostViews } from './post-views.ts';
 
 const assert = (value: unknown, message: string) => { if (!value) throw new Error(message); };
+
+Deno.test('view throttling respects Retry-After and never retries inline', async () => {
+  const now = Date.parse('2026-10-23T12:00:00Z');
+  for (const [header, delay] of [[null, 60000], ['invalid', 60000], ['1', 60000], ['120', 120000], ['Fri, 23 Oct 2026 12:03:00 GMT', 180000]] as const) {
+    assert(Date.parse(new PostViewsRateLimit(header, now).retryAt) === now + delay, 'wrong retry deadline');
+  }
+  let calls = 0;
+  let error: unknown;
+  try {
+    await recordPostViews([1, 2], { token: 'reader-session' }, async () => {
+      calls++;
+      return new Response('', { status: 429, headers: { 'Retry-After': '120' } });
+    });
+  } catch (caught) { error = caught; }
+  assert(error instanceof PostViewsRateLimit && calls === 1, 'throttle was swallowed or retried immediately');
+});
 
 Deno.test('public views use the reader token, deduplicate IDs and respect batch limits', async () => {
   const calls: { url: string; ids: number[] }[] = [];
