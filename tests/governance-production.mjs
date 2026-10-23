@@ -9,6 +9,9 @@ await mkdir(output, { recursive: true });
 const source = await readFile('src/integrations/supabase/client.ts', 'utf8');
 const anonKey = source.match(/"(eyJ[^"\s]+)"/)?.[1];
 assert.ok(anonKey, 'Public Supabase key must be available');
+const appSource = await readFile('src/App.tsx', 'utf8');
+const cacheVersion = appSource.match(/CURRENT_CACHE_VERSION = '([^']+)'/)?.[1];
+assert.ok(cacheVersion, 'Session fixture must match the application cache migration');
 const wallet = '0x1111111111111111111111111111111111111111';
 const token = `${Buffer.from(JSON.stringify({ alg: 'none' })).toString('base64url')}.${Buffer.from(JSON.stringify({ exp: Math.floor(Date.now() / 1000) + 3600 })).toString('base64url')}.invalid-production-test`;
 const report = { backend: [], toast: null };
@@ -27,17 +30,23 @@ for (const base of ['https://aigxuutjaqsywioxjefr.supabase.co', 'https://dehub.i
 }
 
 // Exercise the shipped UI's rejection handling without a real account or write.
-const browser = await chromium.launch({ headless: true });
+const browser = await chromium.launch({ headless: true, channel: 'chrome' });
 const context = await browser.newContext({ viewport: { width: 1280, height: 900 }, locale: 'en-GB' });
 const user = { address: wallet, walletAddress: wallet, username: 'governance_check', displayName: 'Governance verification', badgeBalance: 0, ownBadgeBalance: 0, badgeLock: null };
-await context.addInitScript(({ wallet, token, user }) => {
+await context.addInitScript(({ wallet, token, user, cacheVersion }) => {
+  localStorage.setItem('dehub_cache_version', cacheVersion);
+  localStorage.setItem('dehub_connection_source', 'web3auth');
   localStorage.setItem('dehub_wallet', wallet);
   localStorage.setItem('dehub_token', token);
+  localStorage.setItem('dehub_token_expires_at', String(Date.now() + 3600000));
+  localStorage.setItem('dehub_token_timestamp', String(Date.now()));
   localStorage.setItem('dehub_user', JSON.stringify(user));
   localStorage.setItem('i18nextLng', 'en');
-}, { wallet, token, user });
+}, { wallet, token, user, cacheVersion });
 let refusedWrites = 0;
 const page = await context.newPage();
+report.pageErrors = [];
+page.on('pageerror', error => report.pageErrors.push(error.message));
 const cors = { 'access-control-allow-origin': 'https://dehub.io', 'access-control-allow-headers': '*', 'access-control-allow-methods': 'GET,POST,PATCH,DELETE,OPTIONS' };
 await page.route('**/*', async route => {
   const request = route.request();
@@ -69,6 +78,7 @@ try {
   await page.screenshot({ path: `${output}/badge-holders-only.png`, fullPage: true });
   report.toast = 'Exact toast rendered by production bundle after an isolated simulated backend denial; draft retained; no comment saved';
 } finally {
+  report.session = await page.evaluate(() => ({ walletPresent: !!localStorage.getItem('dehub_wallet'), tokenPresent: !!localStorage.getItem('dehub_token'), cacheVersion: localStorage.getItem('dehub_cache_version') })).catch(() => null);
   await page.screenshot({ path: `${output}/final-state.png`, fullPage: true }).catch(() => {});
   await writeFile(`${output}/report.json`, JSON.stringify(report, null, 2));
   await browser.close();
