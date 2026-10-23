@@ -1,3 +1,4 @@
+import { walletScopedClient } from '@/lib/supabase-wallet-client';
 import { useTranslation as _useCopy } from 'react-i18next';
 import { useState, useRef, useCallback, useEffect, useMemo } from 'react';
 import { supabase } from '@/integrations/supabase/client';
@@ -61,6 +62,7 @@ export const useCall = (): UseCallReturn => {
   const remoteVideoRef = useRef<HTMLDivElement>(null);
   const remoteAudioRef = useRef<HTMLAudioElement>(null);
   const { walletAddress: userAddress } = useAuth();
+  const callClient = useMemo(() => userAddress ? walletScopedClient(userAddress) : supabase, [userAddress]);
 
   const publishCall = useCallback((call: CallSession | null) => {
     currentCallRef.current = call;
@@ -71,9 +73,9 @@ export const useCall = (): UseCallReturn => {
   }, []);
   const markEnded = useCallback(async (call: CallSession | null) => {
     if (!call || call.id === 'pending') return;
-    try { await supabase.from('call_sessions').update({ status: 'ended' }).eq('id', call.id); }
+    try { await callClient.from('call_sessions').update({ status: 'ended' }).eq('id', call.id); }
     catch (error) { console.warn('Call status update failed', error); }
-  }, []);
+  }, [callClient]);
   const clearTimers = useCallback(() => {
     if (callTimeoutRef.current) clearTimeout(callTimeoutRef.current);
     if (pollingIntervalRef.current) clearInterval(pollingIntervalRef.current);
@@ -209,7 +211,7 @@ export const useCall = (): UseCallReturn => {
     setIsMinimized(false); setCallFailureReason(null); setIsUserOffline(false); setIsConnecting(true);
     visualActivity.setCall(true, true);
     try {
-      const { data, error } = await supabase.from('call_sessions').insert({
+      const { data, error } = await callClient.from('call_sessions').insert({
         caller_address: pending.caller_address, recipient_address: pending.recipient_address,
         call_type: callType, status: 'ringing',
       }).select().single();
@@ -236,7 +238,7 @@ export const useCall = (): UseCallReturn => {
         if (checking || generationRef.current !== generation) return;
         checking = true;
         try {
-          const { data: status } = await supabase.from('call_sessions').select('status').eq('id', call.id).single();
+          const { data: status } = await callClient.from('call_sessions').select('status').eq('id', call.id).single();
           if (generationRef.current !== generation) return;
           if (status?.status === 'ended') void endCall();
           else if (status?.status === 'connected') {
@@ -252,7 +254,7 @@ export const useCall = (): UseCallReturn => {
         console.warn('Call start failed', error); setCallFailureReason('technical_error'); await endCall();
       }
     }
-  }, [userAddress, publishCall, markEnded, joinAgoraChannel, endCall]);
+  }, [userAddress, callClient, publishCall, markEnded, joinAgoraChannel, endCall]);
 
   const acceptCall = useCallback(async () => {
     const call = currentCallRef.current;
@@ -261,7 +263,7 @@ export const useCall = (): UseCallReturn => {
     joiningRef.current = true;
     setIsIncoming(false); setIsConnecting(true); clearTimers();
     try {
-      const { error } = await supabase.from('call_sessions').update({ status: 'connected' }).eq('id', call.id);
+      const { error } = await callClient.from('call_sessions').update({ status: 'connected' }).eq('id', call.id);
       if (generationRef.current !== generation) { await markEnded(call); return; }
       if (error) throw error;
       publishCall({ ...call, status: 'connected' });
@@ -270,7 +272,7 @@ export const useCall = (): UseCallReturn => {
     } catch (error) {
       if (generationRef.current === generation) { setCallFailureReason('technical_error'); await endCall(); }
     } finally { if (generationRef.current === generation) joiningRef.current = false; }
-  }, [clearTimers, publishCall, joinAgoraChannel, endCall, markEnded]);
+  }, [callClient, clearTimers, publishCall, joinAgoraChannel, endCall, markEnded]);
   const checkForCalls = useCallback(async (recover = false): Promise<void> => {
     if (!userAddress || currentCallRef.current || !callChecksVisible()) return;
     const generation = generationRef.current;
@@ -300,7 +302,7 @@ export const useCall = (): UseCallReturn => {
         if (request.recover && generationRef.current === generation) void checkRef.current();
       }
     }
-  }, [userAddress, publishCall, endCall]);
+  }, [userAddress, callClient, publishCall, endCall]);
   const checkRef = useRef(checkForCalls);
   checkRef.current = checkForCalls;
   useEffect(() => {
@@ -380,7 +382,7 @@ export const useCall = (): UseCallReturn => {
   const minimizeCall = useCallback(() => setIsMinimized(true), []);
   const maximizeCall = useCallback(() => setIsMinimized(false), []);
   const clearCallFailure = useCallback(() => { setCallFailureReason(null); setIsUserOffline(false); }, []);
-  const debugCallState = useCallback(() => { console.log('Call state', currentCallRef.current); debugAllCalls(); }, []);
+  const debugCallState = useCallback(() => { console.log('Call state', currentCallRef.current); if (userAddress) void debugAllCalls(userAddress); }, [userAddress]);
   const peerAddress = currentCall
     ? currentCall.caller_address.toLowerCase() === userAddress?.toLowerCase()
       ? currentCall.recipient_address : currentCall.caller_address : '';
