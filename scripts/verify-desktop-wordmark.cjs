@@ -15,6 +15,7 @@ const { chromium } = require('playwright');
     page.on('pageerror', error => errors.push(String(error)));
     await page.setContent('<style>body{margin:0;background:#070b11;color:#ddd;font:16px system-ui}button{display:block;width:980px;padding:0;border:0;background:radial-gradient(ellipse at center,#17212c,#020304)}canvas{display:block;width:100%;aspect-ratio:350/177.2}</style><button aria-label="Reassemble"><canvas></canvas></button>');
     await page.addScriptTag({ content: bundle.outputFiles[0].text });
+    await page.mouse.move(999, 549);
     await page.evaluate(async image => {
       const canvas = document.querySelector('canvas');
       window.wordmark = await WordmarkRenderer.createDesktopWordmark(canvas, image, { stage: .6 });
@@ -30,6 +31,7 @@ const { chromium } = require('playwright');
     await page.screenshot({ path: 'wordmark-evidence/day-0.png' });
     await page.waitForFunction(() => Number(document.querySelector('canvas').dataset.fractureProgress) > .59);
     await page.getByRole('button', { name: 'Reassemble' }).hover();
+    assert.equal(await page.locator('canvas').getAttribute('data-fracture-target'), '0', 'Hover must target the assembled state');
     await page.waitForFunction(() => Number(document.querySelector('canvas').dataset.fractureProgress) === 0);
     await page.screenshot({ path: 'wordmark-evidence/hover-intact.png' });
     await page.mouse.move(999, 549);
