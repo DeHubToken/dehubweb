@@ -2053,6 +2053,8 @@
     "monthsAgo": "{{count}}mo ago",
     "forLabel": "Misalnya,",
     "againstLabel": "Disaster",
+    "lentBadgeCantVote": "Lencana anda dipinjamkan kepada anda, dan lencana yang dipinjamkan tidak boleh mengundi. Beli DHB untuk mendapatkan lencana anda sendiri.",
+    "buyDhb": "Beli DHB",
     "discussion": {
       "title": "Perbincangan",
       "intro": "Tanya soalan susulan atau bincangkan cadangan sebelum anda mengundi.",
@@ -5060,11 +5062,6 @@
     "creatorEarnsDirect": "Pelanggan membayar dalam token DeHub. Bahagian anda masuk ke dalam dompet anda sebaik sahaja mereka melanggan, tolak yuran platform untuk peringkat lencana anda."
   },
   "liveOverlay": {
-    "level": "Level {{level}}",
-    "streak_one": "{{count}}minggu berturut-turut",
-    "streak_other": "{{count}}minggu berturut-turut",
-    "tipJar": "Balang hadiah",
-    "subathon": "Subathon",
     "someone": "Seseorang",
     "newFollower": "Pengikut baharu: {{name}}",
     "newSubscriber": "Pelanggan baharu: {{name}}",
@@ -5077,10 +5074,15 @@
     "tipped": "{{name}} menghantar hadiah",
     "chatPreview": "Mesej sembang muncul di sini",
     "wheelLanded": "{{name}} spun: {{result}}",
+    "subathon": "Subathon",
     "subathonOver": "Waktu habis",
     "pointsTitle": "Pengikut yang paling setia",
     "points_one": "{{formatted}} poin",
     "points_other": "{{formatted}} poin",
+    "level": "Level {{level}}",
+    "streak_one": "{{count}}minggu berturut-turut",
+    "streak_other": "{{count}}minggu berturut-turut",
+    "tipJar": "Balang hadiah",
     "poll": {
       "closed": "Voting telah ditutup",
       "voteFor": "Undi untuk {{option}}",
@@ -5248,8 +5250,6 @@
       "join": "Sertai"
     },
     "kinds": {
-      "streamer_level": "Tahap penstrim",
-      "tip_jar": "Balang hadiah",
       "tip_alert": "Makluman tip",
       "follow_alert": "Ikuti makluman",
       "subscribe_alert": "Makluman pelanggan",
@@ -5269,11 +5269,11 @@
       "poll": "Pengundian",
       "spin_wheel": "Roda berputar",
       "subathon_timer": "Pemasa subathon",
-      "points_board": "Penonton setia"
+      "points_board": "Penonton setia",
+      "streamer_level": "Tahap penstrim",
+      "tip_jar": "Balang hadiah"
     },
     "hints": {
-      "streamer_level": "Tahap penstrim dan rentetan mingguan anda, daripada profil anda",
-      "tip_jar": "Balang yang terisi apabila hadiah berbayar masuk",
       "tip_alert": "Meraikan setiap tip, bersaiz mengikut peringkatnya",
       "follow_alert": "Menunjukkan setiap pengikut baharu",
       "subscribe_alert": "Menunjukkan setiap pelanggan baharu",
@@ -5293,14 +5293,16 @@
       "poll": "Pengundian langsung anda, dengan butang undi untuk setiap pilihan",
       "spin_wheel": "Tempat roda dalam peraturan anda berputar",
       "subathon_timer": "Penghitung mundur yang hadiah, pengikut dan langganan menolak kembali",
-      "points_board": "Pengikut teratas anda berdasarkan poin dari menonton dan menghadiahkan"
+      "points_board": "Pengikut teratas anda berdasarkan poin dari menonton dan menghadiahkan",
+      "streamer_level": "Tahap penstrim dan rentetan mingguan anda, daripada profil anda",
+      "tip_jar": "Balang yang terisi apabila hadiah berbayar masuk"
     },
     "fields": {
-      "showStreak": "Tunjukkan rentetan mingguan",
       "style": "Gaya",
       "celebration": "Perayaan",
       "banner": "Sepanduk",
       "minAmount": "Petua terkecil untuk ditunjukkan (DHB)",
+      "showStreak": "Tunjukkan rentetan mingguan",
       "showMessage": "Tunjukkan mesej tip",
       "confirmedOnly": "Hanya selepas bayaran disahkan",
       "confirmedOnlyHint": "Menunggu beberapa saat untuk rantaian, jadi tip yang tidak pernah dibayar tidak akan muncul.",

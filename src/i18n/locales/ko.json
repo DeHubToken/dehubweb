@@ -1796,6 +1796,8 @@
     "monthsAgo": "{{count}}개월 전",
     "forLabel": "에 대한",
     "againstLabel": "대적",
+    "lentBadgeCantVote": "배지가 대여되었으며 대여한 배지는 투표할 수 없습니다. DHB를 구매하고 나만의 배지를 받으세요.",
+    "buyDhb": "DHB 구매",
     "discussion": {
       "title": "토론",
       "intro": "투표하기 전에 후속 질문을 하거나 제안에 대해 논의하세요.",
@@ -4801,10 +4803,6 @@
     "creatorEarnsDirect": "구독자는 DeHub 토큰으로 결제합니다. 구독하는 순간 지갑에 공유가 들어오므로 배지 등급에 대한 플랫폼 수수료가 줄어듭니다."
   },
   "liveOverlay": {
-    "level": "레벨 {{level}}",
-    "streak_one": "{{count}} -주 연속",
-    "streak_other": "{{count}} -주 연속",
-    "tipJar": "선물 항아리",
     "someone": "누군가",
     "newFollower": "새 팔로워: {{name}}",
     "newSubscriber": "신규 구독자: {{name}}",
@@ -4822,6 +4820,10 @@
     "pointsTitle": "가장 충성도 높은 시청자",
     "points_one": "{{formatted}} 포인트",
     "points_other": "{{formatted}} 포인트",
+    "level": "레벨 {{level}}",
+    "streak_one": "{{count}} -주 연속",
+    "streak_other": "{{count}} -주 연속",
+    "tipJar": "선물 항아리",
     "poll": {
       "closed": "투표 마감됨",
       "voteFor": "{{option}}에게 투표하세요",
@@ -4989,9 +4991,6 @@
       "join": "가입하기"
     },
     "kinds": {
-      "streamer_level": "스트리머 레벨",
-      "tip_jar": "선물 항아리",
-      "points_board": "충성 시청자",
       "tip_alert": "팁 알림",
       "follow_alert": "경보 준수",
       "subscribe_alert": "구독자 경고",
@@ -5010,11 +5009,12 @@
       "rule_alert": "규칙 경고",
       "poll": "설문조사",
       "spin_wheel": "스핀 룰렛",
-      "subathon_timer": "서브아톤 타이머"
+      "subathon_timer": "서브아톤 타이머",
+      "points_board": "충성 시청자",
+      "streamer_level": "스트리머 레벨",
+      "tip_jar": "선물 항아리"
     },
     "hints": {
-      "streamer_level": "프로필에서 스트리머 레벨 및 주간 연속 기록 확인",
-      "tip_jar": "유료 선물이 들어올 때 채워지는 항아리",
       "tip_alert": "등급에 맞게 조정된 모든 팁을 축하하세요",
       "follow_alert": "각 새 팔로워 표시",
       "subscribe_alert": "각 신규 가입자를 표시합니다",
@@ -5034,14 +5034,16 @@
       "poll": "모든 옵션에 투표 버튼이 있는 실시간 투표",
       "spin_wheel": "규칙의 바퀴가 회전하는 곳",
       "subathon_timer": "선물, 팔로우 및 구독이 뒤로 밀리는 카운트다운",
-      "points_board": "시청 및 선물의 포인트로 최고 시청자"
+      "points_board": "시청 및 선물의 포인트로 최고 시청자",
+      "streamer_level": "프로필에서 스트리머 레벨 및 주간 연속 기록 확인",
+      "tip_jar": "유료 선물이 들어올 때 채워지는 항아리"
     },
     "fields": {
-      "showStreak": "주간 연속 운행 표시",
       "style": "스타일",
       "celebration": "축하",
       "banner": "배너",
       "minAmount": "표시할 가장 작은 팁 (DHB)",
+      "showStreak": "주간 연속 운행 표시",
       "showMessage": "팁 메시지 보기",
       "confirmedOnly": "결제가 확인된 후에만",
       "confirmedOnlyHint": "체인을 위해 몇 초를 기다리므로 지불하지 않은 팁은 결코 나타나지 않습니다.",

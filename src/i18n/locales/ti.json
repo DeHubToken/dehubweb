@@ -1757,6 +1757,8 @@
     "monthsAgo": "{{count}} ወርሒ ቅድም",
     "forLabel": "ን",
     "againstLabel": "ኣንጻር",
+    "lentBadgeCantVote": "ባጅኻ ልቓሕ እዩ ፣ ባጅታት ልቓሕ ድማ ኪመርጹ ኣይክእሉን እዮም ። ናይ ገዛእ ርእስኻ ባጅ ንምርካብ DHB ግዛ ።",
+    "buyDhb": "DHB ግዛ",
     "discussion": {
       "title": "ዘተ",
       "intro": "ቅድሚ ምምራጽካ ተኸታታሊ ሕቶታት ሕተቶ ወይ ነቲ ሓሳብ ተዘራረብ ።",
@@ -4689,11 +4691,6 @@
     "creatorEarnsDirect": "እቶም ተመዝጋቢታት ኣብ DeHub ምልክታት ይኽፈሉ እዮም ። እቲ ናይ ባጅ ደረጃኻ ናይ መድረኽ ክፍሊት ዝሕተተሉ እዋን ፡ ኣብ ቦርሳኻ ዘሎ መሬትካ ።"
   },
   "liveOverlay": {
-    "level": "ደረጃ {{level}}",
-    "streak_one": "{{count}}-ሰሙን ተከታታይ",
-    "streak_other": "{{count}}-ሰሙን ተከታታይ",
-    "tipJar": "ህያብ ዕንጨይቲ",
-    "subathon": "ሳባቶን",
     "someone": "ሓደ ሰብ",
     "newFollower": "ሓድሽ ተኸታሊ ፦ {{name}}",
     "newSubscriber": "ሓድሽ ኣባል ፦ {{name}}",
@@ -4704,10 +4701,15 @@
     "tipped": "{{name}} ህያብ ልኢኹ",
     "chatPreview": "ናይ ቻት መልእኽትታት ኣብዚ ይረኣዩ",
     "wheelLanded": "{{name}} ኣዝዩሩ፦ {{result}}",
+    "subathon": "ሳባቶን",
     "subathonOver": "ግዜኡ ይድህስስስ",
     "pointsTitle": "ዝያዳ እሙናት ተመልካቾች",
     "points_one": "{{formatted}} ነጥቢ",
     "points_other": "{{formatted}} ነጥቢ",
+    "level": "ደረጃ {{level}}",
+    "streak_one": "{{count}}-ሰሙን ተከታታይ",
+    "streak_other": "{{count}}-ሰሙን ተከታታይ",
+    "tipJar": "ህያብ ዕንጨይቲ",
     "poll": {
       "closed": "ድምጺ ተዓጽዩ",
       "voteFor": "ንዓ {{option}} ድምጺ ሃብ",
@@ -4874,9 +4876,6 @@
       "join": "ተቐሊል"
     },
     "kinds": {
-      "streamer_level": "ደረጃ ዥረት",
-      "tip_jar": "ህያብ ዕንጨይቲ",
-      "subathon_timer": "ሰዓት ሳባቶን",
       "tip_alert": "ምልክት ማሕበር",
       "follow_alert": "ተኸተል ማሕበር",
       "subscribe_alert": "ተመዝገብ ማሕበር",
@@ -4895,11 +4894,12 @@
       "rule_alert": "ደንብ ማንቂያዎች",
       "poll": "ድምጺ",
       "spin_wheel": "መንኰራኵር ስፒን",
-      "points_board": "እሙናት ተዓዘብቲ"
+      "subathon_timer": "ሰዓት ሳባቶን",
+      "points_board": "እሙናት ተዓዘብቲ",
+      "streamer_level": "ደረጃ ዥረት",
+      "tip_jar": "ህያብ ዕንጨይቲ"
     },
     "hints": {
-      "streamer_level": "ደረጃ ዥረትካን ሳምንታዊ ስክሪፕትካን ፡ ካብ መገለጺኻ",
-      "tip_jar": "ከም እተኸፍለ ህያባት ዚመልእ ዕንጨይቲ",
       "tip_alert": "ንኹሉ ምልክት ዝተሓለወ ብዝተለወጠ ደረጃ ይኽእል",
       "follow_alert": "ንሓደ ሓደሽ ተኸተል ይርከብ",
       "subscribe_alert": "ንሓደ ሓደሽ ተመዝገብ ይርከብ",
@@ -4919,14 +4919,16 @@
       "poll": "ብቀጥታ ምርጫኻ ፡ ንነፍሲ ወከፍ ኣማራጺ ናይ ድምጺ ጠውቑ",
       "spin_wheel": "እቲ ኣብ ሕግታትካ ዘሎ መንኰራኵር",
       "subathon_timer": "ህያባት ፡ ተኸታተልቲ ፡ ምዝገባታት ንድሕሪት ዝምለሱ",
-      "points_board": "ናይ ምርኣይን ህያብን ነጥቢ ዘለዎም ላዕለዎት ተዓዘብቲ"
+      "points_board": "ናይ ምርኣይን ህያብን ነጥቢ ዘለዎም ላዕለዎት ተዓዘብቲ",
+      "streamer_level": "ደረጃ ዥረትካን ሳምንታዊ ስክሪፕትካን ፡ ካብ መገለጺኻ",
+      "tip_jar": "ከም እተኸፍለ ህያባት ዚመልእ ዕንጨይቲ"
     },
     "fields": {
-      "showStreak": "ሳምንታዊ ስክሪፕት ኣርኢ",
       "style": "ስታይል",
       "celebration": "በዓል",
       "banner": "ባንዴራ",
       "minAmount": "ንእሽቶ ምኽሪ (DHB)",
+      "showStreak": "ሳምንታዊ ስክሪፕት ኣርኢ",
       "showMessage": "ነቲ መልእኽቲ ኣርኢ",
       "confirmedOnly": "እቲ ክፍሊት ድሕሪ ምርግጋጽ ጥራይ",
       "confirmedOnlyHint": "እቲ ሰንሰለት ንገለ ካልኢት ይጽበ ፣ ስለዚ እቲ ዘይኽፈለሉ ነጥቢ ፈጺሙ ኣይርአን ።",

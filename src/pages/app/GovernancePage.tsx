@@ -536,7 +536,7 @@ function VoteWeightInfo({ badgeBalance, username }: { badgeBalance: number | und
             ) : (
               <span className="text-zinc-500">
                 {lent
-                  ? t('governance.lentBadgeNoVote', { defaultValue: "Lent badges can't vote." })
+                  ? t('governance.lentBadgeCantVote')
                   : t('governance.holdTokensToVote')}{' '}
                 <button
                   type="button"

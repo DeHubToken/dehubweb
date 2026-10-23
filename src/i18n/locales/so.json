@@ -1789,6 +1789,8 @@
     "monthsAgo": "{{count}}b ka hor",
     "forLabel": "Wixii ...",
     "againstLabel": "Ka soo horjeeda",
+    "lentBadgeCantVote": "Calaamaddaada ayaa lagugu amaahdaa, Calaamadaha amaahduna ma codayn karaan. Iibso DHB si aad u kasbato astaantaada.",
+    "buyDhb": "Iibso DHB",
     "discussion": {
       "title": "Wadahadalka",
       "intro": "Weydii su 'aalaha la socda ama kala hadal soo jeedinta ka hor intaadan codeyn.",
@@ -4718,10 +4720,6 @@
     "creatorEarnsDirect": "Macaamiisha waxay bixiyaan calaamadaha DeHub. Dhulalka saamigaaga ee boorsadaada marka ay isdiiwaangeliyaan, ka yar qiimaha boosteejada ee heerka calaamaddaada."
   },
   "liveOverlay": {
-    "level": "Heerka {{level}}",
-    "streak_one": "{{count}}-week streak",
-    "streak_other": "{{count}}-week streak",
-    "tipJar": "Jar hadiyad ah",
     "someone": "Qof",
     "newFollower": "Raacaha Cusub: {{name}}",
     "newSubscriber": "Isticmaale cusub: {{name}}",
@@ -4739,6 +4737,10 @@
     "pointsTitle": "Daawadayaasha ugu daacadsan",
     "points_one": "{{formatted}} dhibic",
     "points_other": "{{formatted}} dhibcood",
+    "level": "Heerka {{level}}",
+    "streak_one": "{{count}}-week streak",
+    "streak_other": "{{count}}-week streak",
+    "tipJar": "Jar hadiyad ah",
     "poll": {
       "closed": "Codka xidhan",
       "voteFor": "Cod siis {{option}}",
@@ -4767,9 +4769,9 @@
   },
   "liveStudio": {
     "subathon": {
+      "title": "Subathon",
       "intro": "Tirinta hoos u dhacaysa ee baahintaada. Hadiyad kasta oo la bixiyo, raacitaan iyo isdiiwaangelin waxay ku daraan waqti, sidaas darteed qolku wuu ku haynayaa adiga oo toos ah.",
       "secondsPerThousand": "Ilbiriqsiyo lagu daro 1,000 DHB oo hadiyad ah",
-      "title": "Subathon",
       "secondsPerFollow": "Seconds lagu daray per raac",
       "secondsPerSubscribe": "Labaad oo lagu daray isdiiwaangelin kasta",
       "capHours": "Waqtiga ugu dheer ee uu socon karo (saacadaha)",
@@ -4905,8 +4907,6 @@
       "join": "Join"
     },
     "kinds": {
-      "streamer_level": "Heerka Streamer",
-      "tip_jar": "Jar hadiyad ah",
       "tip_alert": "Tip alert",
       "follow_alert": "Follow alert",
       "subscribe_alert": "Subscriber alert",
@@ -4926,11 +4926,11 @@
       "poll": "Codbixinta",
       "spin_wheel": "Giraangiraha wareejinaya",
       "subathon_timer": "Waqtiga Subathon",
-      "points_board": "Daawadayaasha Daacadnimada ah"
+      "points_board": "Daawadayaasha Daacadnimada ah",
+      "streamer_level": "Heerka Streamer",
+      "tip_jar": "Jar hadiyad ah"
     },
     "hints": {
-      "streamer_level": "Heerkaaga qulqulka iyo isbuuclaha, laga soo bilaabo astaantaada",
-      "tip_jar": "Dheriga oo buuxiya sida hadiyadaha la bixiyo ay u soo galaan",
       "tip_alert": "Waxay u dabaaldegtaa talooyin kasta, oo si weyn loo cabbiray heerarkeeda",
       "follow_alert": "Muuji raac kasta oo cusub",
       "subscribe_alert": "Muuji isticmaale kasta oo cusub",
@@ -4950,14 +4950,16 @@
       "poll": "Codbixintaada tooska ah, oo leh badhanka codbixinta ikhtiyaar kasta",
       "spin_wheel": "Halka giraangiraha ku jira xeerarkaaga ay wareegaan",
       "subathon_timer": "Xisaabinta hadiyadaha, raacitaanka iyo isdiiwaangelinta ayaa dib u riixaya",
-      "points_board": "Daawadayaashaada ugu sareeya by dhibcood ka daawashada iyo hibada"
+      "points_board": "Daawadayaashaada ugu sareeya by dhibcood ka daawashada iyo hibada",
+      "streamer_level": "Heerkaaga qulqulka iyo isbuuclaha, laga soo bilaabo astaantaada",
+      "tip_jar": "Dheriga oo buuxiya sida hadiyadaha la bixiyo ay u soo galaan"
     },
     "fields": {
-      "showStreak": "Muuji streak-ka toddobaadlaha ah",
       "style": "Style",
       "celebration": "Dabaaldegga",
       "banner": "Banner",
       "minAmount": "Tilmaanta ugu yar ee lagu muujiyo (DHB)",
+      "showStreak": "Muuji streak-ka toddobaadlaha ah",
       "showMessage": "Muuji fariinta tip",
       "confirmedOnly": "Kaliya ka dib marka lacag bixinta la xaqiijiyo",
       "confirmedOnlyHint": "Waxay sugeysaa dhowr ilbiriqsi silsiladda, sidaa darteed talooyin aan waligood la bixin waligood ma muuqdaan.",

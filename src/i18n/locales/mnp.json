@@ -1766,6 +1766,8 @@
     "daysAgo": "{{count}}天前",
     "monthsAgo": "{{count}}月前",
     "againstLabel": "對抗",
+    "lentBadgeCantVote": "你的徽章已借给你，借来的徽章不能投票。购买 DHB 以获得自己的徽章。",
+    "buyDhb": "買DHB",
     "discussion": {
       "title": "討論",
       "intro": "投票前請提出後續問題或討論該提案。",
@@ -4409,11 +4411,6 @@
     "creatorEarnsDirect": "订阅者用DeHub代币支付。一旦他们订阅，你的份额就会立即进入你的钱包，减去你徽章等级的平台费用。"
   },
   "liveOverlay": {
-    "level": "等级{{level}}",
-    "streak_one": "{{count}}周连胜",
-    "streak_other": "{{count}}周连胜",
-    "tipJar": "礼品罐",
-    "subathon": "苏巴吞",
     "someone": "𠮷人",
     "newFollower": "新粉絲：{{name}}",
     "newSubscriber": "新訂閱：{{name}}",
@@ -4426,10 +4423,15 @@
     "tipped": "{{name}} 送了個禮物",
     "chatPreview": "聊天訊息會出現",
     "wheelLanded": "{{name}} 吾𠀀{{result}}",
+    "subathon": "苏巴吞",
     "subathonOver": "時間到囉",
     "pointsTitle": "最忠誠的觀眾",
     "points_one": "{{formatted}} 分",
     "points_other": "{{formatted}} 分",
+    "level": "等级{{level}}",
+    "streak_one": "{{count}}周连胜",
+    "streak_other": "{{count}}周连胜",
+    "tipJar": "礼品罐",
     "poll": {
       "closed": "投票已關閉",
       "voteFor": "為{{option}}投票",
@@ -4582,10 +4584,6 @@
       "share": "分享"
     },
     "kinds": {
-      "streamer_level": "主播级别",
-      "tip_jar": "礼品罐",
-      "subathon_timer": "Subathon计时器",
-      "points_board": "忠诚观众",
       "tip_alert": "提示警报",
       "share_alert": "分享提醒",
       "join_alert": "加入警报",
@@ -4599,11 +4597,13 @@
       "ticker": "快訊",
       "rule_alert": "规则警报",
       "poll": "投票",
-      "spin_wheel": "旋转转盘"
+      "spin_wheel": "旋转转盘",
+      "subathon_timer": "Subathon计时器",
+      "points_board": "忠诚观众",
+      "streamer_level": "主播级别",
+      "tip_jar": "礼品罐"
     },
     "hints": {
-      "streamer_level": "您的个人资料中的流媒体播放器级别和每周连续播放次数",
-      "tip_jar": "当有偿礼物进来时，一个罐子会装满",
       "follow_alert": "显示每个新关注者",
       "subscribe_alert": "显示每个新订阅者",
       "join_alert": "欢迎每位观众的到来",
@@ -4618,14 +4618,16 @@
       "poll": "您的直播投票，带有每个选项的投票按钮",
       "spin_wheel": "规则中的车轮在哪里旋转",
       "subathon_timer": "一個倒數計時器，送禮、追蹤和訂閱會讓它倒數延後",
-      "points_board": "你觀看和送禮得分最高的觀眾"
+      "points_board": "你觀看和送禮得分最高的觀眾",
+      "streamer_level": "您的个人资料中的流媒体播放器级别和每周连续播放次数",
+      "tip_jar": "当有偿礼物进来时，一个罐子会装满"
     },
     "fields": {
-      "showStreak": "显示每周连胜记录",
       "style": "风格",
       "celebration": "庆祝",
       "banner": "横幅",
       "minAmount": "最小提示显示（DHB）",
+      "showStreak": "显示每周连胜记录",
       "showMessage": "显示提示信息",
       "confirmedOnly": "仅在付款确认后",
       "confirmedOnlyHint": "等待几秒钟以链式处理，因此从未付款的提示永不出现。",
@@ -7776,6 +7778,15 @@
     "like": "点赞",
     "unlike": "取消点赞"
   },
+  "postProcessing": {
+    "uploading": "上传中…",
+    "preparing": "准备中…",
+    "ready": "好了",
+    "preparingVideo": "正在准备你个视频",
+    "posted": "发好了",
+    "view": "看",
+    "failed": "视频处理弗了"
+  },
   "post": {
     "like": "赞",
     "comment": "评论",
@@ -7813,14 +7824,5 @@
     "followers": "关注者",
     "subscribers": "订阅者",
     "mentioned": "提到其人"
-  },
-  "postProcessing": {
-    "uploading": "上传中…",
-    "preparing": "准备中…",
-    "ready": "好了",
-    "preparingVideo": "正在准备你个视频",
-    "posted": "发好了",
-    "view": "看",
-    "failed": "视频处理弗了"
   }
 }

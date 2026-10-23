@@ -1790,6 +1790,8 @@
     "monthsAgo": "{{count}}個月前",
     "forLabel": "畀",
     "againstLabel": "反對",
+    "lentBadgeCantVote": "你個徽章係借畀你，而借咗嘅徽章就唔可以投票。買 DHB 就可以賺到你自己嘅徽章。",
+    "buyDhb": "買 DHB",
     "discussion": {
       "title": "討論",
       "intro": "喺投票之前問啲跟進問題或者討論個提案。",
@@ -4797,10 +4799,6 @@
     "creatorEarnsDirect": "訂閱者用 DeHub 代幣付款。當佢哋訂閱嗰陣，你嘅份額就會喺你嘅銀包入面，減去你嘅徽章層嘅平台費用。"
   },
   "liveOverlay": {
-    "level": "等級 {{level}}",
-    "streak_one": "{{count}}- 連續一星期",
-    "streak_other": "{{count}}- 連續一星期",
-    "tipJar": "禮物罐",
     "someone": "有人",
     "newFollower": "新追隨者： {{name}}",
     "newSubscriber": "新訂閱者： {{name}}",
@@ -4818,6 +4816,10 @@
     "pointsTitle": "最忠誠嘅觀眾",
     "points_one": "{{formatted}} 分",
     "points_other": "{{formatted}} 分",
+    "level": "等級 {{level}}",
+    "streak_one": "{{count}}- 連續一星期",
+    "streak_other": "{{count}}- 連續一星期",
+    "tipJar": "禮物罐",
     "poll": {
       "closed": "投票已經結束",
       "voteFor": "投 {{option}}",
@@ -4985,8 +4987,6 @@
       "join": "加入"
     },
     "kinds": {
-      "streamer_level": "流媒體級別",
-      "tip_jar": "禮物罐",
       "tip_alert": "提示警示",
       "follow_alert": "跟住警示",
       "subscribe_alert": "訂閱者警示",
@@ -5006,11 +5006,11 @@
       "poll": "民調",
       "spin_wheel": "旋轉輪",
       "subathon_timer": "亞大賽計時器",
-      "points_board": "忠實嘅觀眾"
+      "points_board": "忠實嘅觀眾",
+      "streamer_level": "流媒體級別",
+      "tip_jar": "禮物罐"
     },
     "hints": {
-      "streamer_level": "從你嘅個人檔案入面，你嘅串流播放器等級同每週連續紀錄",
-      "tip_jar": "一個隨住付費禮物入嚟而填滿嘅罐子",
       "tip_alert": "慶祝每個貼士，大小到佢嘅層次",
       "follow_alert": "顯示每位新追隨者",
       "subscribe_alert": "顯示每個新訂閱者",
@@ -5030,14 +5030,16 @@
       "poll": "你嘅即時民調，每個選項都有投票掣",
       "spin_wheel": "你規則入面嘅輪子喺邊度旋轉",
       "subathon_timer": "一個倒數，令禮物、追蹤及訂閱推遲",
-      "points_board": "你最頂嘅觀眾，按觀看及禮物得分排序"
+      "points_board": "你最頂嘅觀眾，按觀看及禮物得分排序",
+      "streamer_level": "從你嘅個人檔案入面，你嘅串流播放器等級同每週連續紀錄",
+      "tip_jar": "一個隨住付費禮物入嚟而填滿嘅罐子"
     },
     "fields": {
-      "showStreak": "顯示每週嘅連續數",
       "style": "形象",
       "celebration": "慶祝",
       "banner": "橫額",
       "minAmount": "要顯示嘅最細小貼士（ DHB ）",
+      "showStreak": "顯示每週嘅連續數",
       "showMessage": "顯示提示訊息",
       "confirmedOnly": "只有確認付款之後先可以",
       "confirmedOnlyHint": "等幾秒先有鏈，所以從來都冇畀過嘅小費就永遠唔會出現。",
