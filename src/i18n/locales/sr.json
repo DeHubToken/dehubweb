@@ -3049,6 +3049,7 @@
     "shopAllowanceUsed": "{{allowance}} од {{allowance}} коришћено. Уложите више ДеХуб токена за вишу значку и још једно место."
   },
   "stages": {
+    "allStages": "Све аудио собе",
     "title": "Аудио собе",
     "tabLive": "Ливе",
     "tabUpcoming": "Упцоминг",

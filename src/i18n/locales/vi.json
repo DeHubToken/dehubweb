@@ -3062,6 +3062,7 @@
     "shopAllowanceUsed": "{{allowance}} trên {{allowance}} đã được sử dụng. Staking thêm token DeHub để có huy hiệu cao hơn và thêm một ô."
   },
   "stages": {
+    "allStages": "Tất cả phòng âm thanh",
     "title": "Phòng âm thanh",
     "tabLive": "Trực tiếp",
     "tabUpcoming": "Sắp tới",

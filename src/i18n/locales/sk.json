@@ -3160,6 +3160,7 @@
     "shopAllowanceUsed": "Použitých {{allowance}} z {{allowance}}. Stakujte viac tokenov DeHub pre vyšší odznak a ďalší slot."
   },
   "stages": {
+    "allStages": "Všetky audio miestnosti",
     "title": "Audio miestnosti",
     "tabLive": "Naživo",
     "tabUpcoming": "Nadchádzajúce",

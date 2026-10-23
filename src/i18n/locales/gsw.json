@@ -3073,6 +3073,7 @@
     "shopAllowanceUsed": "{{allowance}} von {{allowance}} verwendet. Setzen Sie mehr DeHub-Tokens für einen höheren Badge und einen weiteren Slot."
   },
   "stages": {
+    "allStages": "Alli Audio-Rüüm",
     "title": "Audio-Rüüm",
     "tabLive": "Live",
     "tabUpcoming": "Künftig",

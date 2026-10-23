@@ -3829,6 +3829,7 @@
     "shopAllowanceUsed": "{{allowance}} de {{allowance}} usados. Haz más staking de tokens DeHub para obtener una insignia superior y otra ranura."
   },
   "stages": {
+    "allStages": "Todas las salas de audio",
     "title": "Salas de audio",
     "tabLive": "En directo",
     "tabUpcoming": "Próximas",

@@ -3774,6 +3774,7 @@
     "shopAllowanceUsed": "{{allowance}} of {{allowance}} used. Stake more DeHub tokens for a higher badge and another slot."
   },
   "stages": {
+    "allStages": "All Stages",
     "title": "Stages",
     "tabLive": "Live",
     "tabUpcoming": "Upcoming",

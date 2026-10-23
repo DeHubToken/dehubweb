@@ -3046,6 +3046,7 @@
     "shopAllowanceUsed": "{{allowance}} లో {{allowance}} ఉపయోగించబడింది. అధిక బ్యాడ్జ్ మరియు మరొక స్లాట్ కోసం మరిన్ని DeHub టోకెన్లను స్టేక్ చేయండి."
   },
   "stages": {
+    "allStages": "అన్ని ఆడియో రూమ్‌లు",
     "title": "ఆడియో రూమ్‌లు",
     "tabLive": "లైవ్",
     "tabUpcoming": "రాబోయే",

@@ -3062,6 +3062,7 @@
     "shopAllowanceUsed": "{{allowance}} dan {{allowance}} ishlatildi. Yuqori medal va boshqa o'rin uchun ko'proq DeHub tokenlarini stavka qiling."
   },
   "stages": {
+    "allStages": "Barcha audio xonalar",
     "title": "Audio xonalar",
     "tabLive": "Jonli",
     "tabUpcoming": "Yaqinlashib kelayotgan",

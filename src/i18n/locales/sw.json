@@ -3047,6 +3047,7 @@
     "shopAllowanceUsed": "{{allowance}} kati ya {{allowance}} zimetumika. Weka tokeni zaidi za DeHub kwa beji ya juu na nafasi nyingine."
   },
   "stages": {
+    "allStages": "Vyumba vyote vya sauti",
     "title": "Vyumba vya sauti",
     "tabLive": "Moja kwa moja",
     "tabUpcoming": "Ijayo",

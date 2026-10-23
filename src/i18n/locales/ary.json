@@ -3071,6 +3071,7 @@
     "shopAllowanceUsed": "{{allowance}} من {{allowance}} مستعملة. دير ستيكينغ لتوكنز DeHub أكثر باش تاخد شارة أعلى و بلاصة أخرى."
   },
   "stages": {
+    "allStages": "كاع الغرف الصوتية",
     "title": "الغرف الصوتية",
     "tabLive": "مباشر",
     "tabUpcoming": "القادمة",

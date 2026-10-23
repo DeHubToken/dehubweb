@@ -3033,6 +3033,7 @@
     "shopAllowanceUsed": "{{allowance}} ninu {{allowance}} ni a lo. Fi awọn àmi-ìṣẹ́ DeHub diẹ sii fun aṣẹ-aṣẹ ti o ga julọ ati iho miiran."
   },
   "stages": {
+    "allStages": "Gbogbo àwọn yàrá ohùn",
     "title": "Àwọn yàrá ohùn",
     "tabLive": "Gbe",
     "tabUpcoming": "Ti n bọ",

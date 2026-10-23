@@ -2994,6 +2994,7 @@
     "shopAllowanceUsed": "{{allowance}} / {{allowance}} käytetty. Panosta lisää DeHub-tokeneita saadaksesi korkeamman merkin ja toisen paikan."
   },
   "stages": {
+    "allStages": "Kaikki äänihuoneet",
     "title": "Äänihuoneet",
     "tabLive": "Live",
     "tabUpcoming": "Tulevat",

@@ -2993,6 +2993,7 @@
     "shopAllowanceUsed": "{{allowance}} de {{allowance}} utilitzats. Fes staking de més testimonis DeHub per a un distintiu superior i una altra ranura."
   },
   "stages": {
+    "allStages": "Totes les sales d'àudio",
     "title": "Sales d'àudio",
     "tabLive": "En directe",
     "tabUpcoming": "Properes",
