@@ -7,7 +7,7 @@ import { Interface, JsonRpcProvider, Wallet, formatEther } from "ethers";
 import { requireDeHubAuth } from "../_shared/auth.ts";
 import { agentOwnerAllowed } from "./task-plan.ts";
 import { handleTaskRequest, type TaskTool, type ProfileImages } from "./tasks.ts";
-import { anonymousViewerId, recordPostViews } from "./post-views.ts";
+import { anonymousViewerId, PostViewsRateLimit, recordPostViews } from "./post-views.ts";
 import { resolveVoteWeight } from "../_shared/badge-weight.ts";
 import { agentCapForBadgeWeight } from "./agent-cap.ts";
 import { agentPostType } from "./post-type.ts";
@@ -391,6 +391,16 @@ function rateLimited(action: string, resetAt: Date): ToolResult {
   return result;
 }
 
+function publicViewFailure(error: unknown, fallback: string): ToolResult {
+  const result = fail(error instanceof Error ? error.message : fallback);
+  if (error instanceof PostViewsRateLimit) {
+    result.structuredContent.reset_at = error.retryAt;
+    result.structuredContent.retry_reason = 'public_views';
+    result.content[0].text = JSON.stringify(result.structuredContent);
+  }
+  return result;
+}
+
 // ============= Agent resolution =============
 
 async function getAgentFromApiKey(apiKey: string | null, supabase: SupabaseClient): Promise<AgentRow | null> {
@@ -674,7 +684,7 @@ function buildServer(apiKey: string | null, req: Request, registry?: Map<string,
         });
       }
       return null;
-    } catch (error) { return fail(error instanceof Error ? error.message : 'Could not record public post views.'); }
+    } catch (error) { return publicViewFailure(error, 'Could not record public post views.'); }
   }
 
   register(
@@ -1173,7 +1183,7 @@ function buildServer(apiKey: string | null, req: Request, registry?: Map<string,
       const vote = vote_type === "like";
       // Reacting to a post means seeing it, so the view is recorded first either way.
       try { await recordPostViews([token_id], { token, agent: true }); }
-      catch { return fail('Could not record the public post view. No vote was sent. Please retry.'); }
+      catch (error) { return publicViewFailure(error, 'Could not record the public post view. No vote was sent. Please retry.'); }
       if (ensure) {
         const current = await dehubApi(`/api/nft_info/${encodeURIComponent(token_id)}`, { token });
         if (!current.ok) return fail("Could not verify the current reaction. No vote was sent.");
@@ -1228,7 +1238,7 @@ function buildServer(apiKey: string | null, req: Request, registry?: Map<string,
       if (!token) return fail("Failed to authenticate the agent wallet with the DeHub API.");
 
       try { await recordPostViews([token_id], { token, agent: true }); }
-      catch { return fail('Could not record the public post view. No comment was sent. Please retry.'); }
+      catch (error) { return publicViewFailure(error, 'Could not record the public post view. No comment was sent. Please retry.'); }
 
       // Field names must match the web client: streamTokenId/content/commentId.
       // The old tokenId/wallet/comment body was rejected outright.
@@ -1270,7 +1280,7 @@ function buildServer(apiKey: string | null, req: Request, registry?: Map<string,
       const token = await getAgentToken(agent);
       if (!token) return fail("Failed to authenticate the agent wallet with the DeHub API.");
       try { await recordPostViews([token_id], { token, agent: true }); }
-      catch (error) { return fail(error instanceof Error ? error.message : "Could not record the view."); }
+      catch (error) { return publicViewFailure(error, "Could not record the view."); }
       await touchAgent(supabase, agent.id);
       return ok({ success: true, token_id, viewed: true });
     },
