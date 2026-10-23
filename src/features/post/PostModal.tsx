@@ -21,6 +21,12 @@ import { BannedAccountNotice } from '@/components/app/BannedAccountNotice';
 import { useBannedAccount } from '@/hooks/use-banned-account';
 import { QuotedPostEmbed } from '@/components/app/cards/QuotedPostEmbed';
 import type { DeHubNFT } from '@/lib/api/dehub/types';
+import { toast } from 'sonner';
+
+/** Closing with more words than this saves the post to Drafts. */
+const AUTO_DRAFT_MIN_WORDS = 3;
+const stripTags = (html: string) => html.replace(/<[^>]*>/g, ' ');
+const countWords = (value: string) => value.split(/\s+/).filter(Boolean).length;
 
 const CreatePlanModal = lazy(() =>
   import('@/components/app/subscriptions/CreatePlanModal').then((module) => ({
@@ -66,13 +72,16 @@ function PostModalForAccount({ isOpen, onClose, initialFiles, onFilesProcessed, 
   const [mediaFullscreenOpen, setMediaFullscreenOpen] = useState(false);
   const [articleImage, setArticleImage] = useState<File | null>(null);
   const [articleImagePreview, setArticleImagePreview] = useState('');
-  const saveArticleDraft = () => {
+  const saveArticleDraft = (replaceId?: string) => {
     const done = () => { actions.resetForm(); finishPost(); };
     draftImageData(articleImage)
-      .then(imageData => actions.saveDraft({ body: articleBody, title: state.titleText, imageData, socialData: imageData }))
-      .catch(() => actions.saveDraft({ body: articleBody, title: state.titleText }))
+      .then(imageData => actions.saveDraft({ body: articleBody, title: state.titleText, imageData, socialData: imageData }, replaceId))
+      .catch(() => actions.saveDraft({ body: articleBody, title: state.titleText }, replaceId))
       .finally(done);
   };
+  // The draft this composer was filled from, so closing it again updates that
+  // draft rather than stacking a copy beside it.
+  const openedDraftRef = useRef<{ id: string; text: string; body: string } | null>(null);
   const draftImageData = async (file: File | null): Promise<string | undefined> => {
     if (!file) return undefined;
     const bitmap = await createImageBitmap(file);
@@ -167,6 +176,31 @@ function PostModalForAccount({ isOpen, onClose, initialFiles, onFilesProcessed, 
     onClose();
   };
 
+  // Closing a post that was being written keeps it: anything over three words
+  // goes into Drafts and the composer opens empty next time. Quotes and live
+  // setups are left as they were — a quote loses its target outside this
+  // composer, and a broadcast has already published its post.
+  const closeKeepingDraft = () => {
+    const opened = openedDraftRef.current;
+    openedDraftRef.current = null;
+    const words = countWords(articleMode ? `${state.titleText} ${stripTags(articleBody)}` : `${state.titleText} ${state.text}`);
+    if (isQuoting || liveStream || state.liveMode !== null || state.isPosting || words <= AUTO_DRAFT_MIN_WORDS) {
+      handleClose();
+      return;
+    }
+    const unchanged = opened && opened.text === state.text && opened.body === (articleMode ? articleBody : '');
+    if (!unchanged) {
+      if (articleMode) saveArticleDraft(opened?.id);
+      else actions.saveDraft(undefined, opened?.id);
+      toast.success(_copy('drafts.saved', { defaultValue: 'Draft saved' }));
+    }
+    if (!articleMode || unchanged) {
+      actions.resetForm();
+      if (articleMode) finishPost();
+    }
+    handleClose();
+  };
+
   const selectPostMode = () => {
     setArticleMode(false);
     actions.setLiveMode(null);
@@ -218,7 +252,7 @@ function PostModalForAccount({ isOpen, onClose, initialFiles, onFilesProcessed, 
           setBody={setArticleBody}
           coverPreview={articleImagePreview}
           onCoverChange={setArticleImage}
-          onSaveDraft={saveArticleDraft}
+          onSaveDraft={() => saveArticleDraft()}
           onPublish={() => actions.handlePost({ articleBody: articleBody.trim(), articleImage: articleImage || undefined, socialImage: articleImage || undefined })}
           formReady={computed.canPost && !computed.hasVideo && !computed.hasImage && !computed.hasAudio}
           isPosting={state.isPosting}
@@ -272,6 +306,7 @@ function PostModalForAccount({ isOpen, onClose, initialFiles, onFilesProcessed, 
           handleClose();
         }}
         onLoadDraft={draft => {
+          openedDraftRef.current = { id: draft.id, text: draft.text, body: draft.articleBody || '' };
           actions.loadDraft(draft);
           if (draft.articleBody) {
             setArticleMode(true);
@@ -399,7 +434,7 @@ function PostModalForAccount({ isOpen, onClose, initialFiles, onFilesProcessed, 
         onOpenSoundPicker={() => setSoundPickerOpen(true)}
         attachedSound={attachedSound}
         onClearSound={clearSound}
-        onCloseModal={handleClose}
+        onCloseModal={closeKeepingDraft}
         onTogglePoll={handleTogglePoll}
         hasPoll={!!state.poll}
         onToggleContentWarning={() => actions.setContentWarning(state.contentWarning === null ? '' : null)}
@@ -413,7 +448,7 @@ function PostModalForAccount({ isOpen, onClose, initialFiles, onFilesProcessed, 
   // Prevent drawer from closing when camera is open
   const handleDrawerChange = (open: boolean) => {
     if (!open && (state.isCameraModalOpen || mediaFullscreenOpen)) return;
-    if (!open) handleClose();
+    if (!open) closeKeepingDraft();
   };
 
   // Use Drawer/Sheet on ALL devices (mobile, tablet, desktop)
