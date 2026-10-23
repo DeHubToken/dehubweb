@@ -194,6 +194,8 @@
     "postingChain": "Posting chain",
     "showOnline": "Show when I'm online",
     "showOnlineDesc": "People you message see a green dot next to your name while you're using DeHub",
+    "showDislikes": "Show my dislikes to everyone",
+    "showDislikesDesc": "Anyone can open the Dislikes tab on your profile. When this is off, only you can see it.",
     "smartReplies": "Suggested replies",
     "smartRepliesDesc": "Draft two replies you can tap in a chat. The × on the suggestions turns this off.",
     "title": "Settings",
@@ -1705,7 +1707,16 @@
       "commentUnavailable": "This comment is no longer available"
     },
     "tabs": {
-      "playlists": "Playlists"
+      "playlists": "Playlists",
+      "dislikes": "Dislikes"
+    },
+    "dislikes": {
+      "emptyTitle": "No dislikes yet",
+      "emptyOwn": "Posts you dislike leave your feeds and show up here. Undo a dislike to bring the post back.",
+      "emptyOther": "Nothing disliked yet.",
+      "privateTitle": "Dislikes are private",
+      "privateDesc": "This account keeps its dislikes to itself.",
+      "loadMore": "Load more"
     },
     "offerWorthNow": "About {{amount}} tokens at the current rate",
     "offerNotePlaceholder": "Add a note (optional)",

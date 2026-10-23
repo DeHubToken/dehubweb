@@ -2,7 +2,9 @@ import { translateCopy as _translateCopy } from '@/i18n/copy';
 import { useTranslation as _useCopy } from 'react-i18next';
 import { lazy, Suspense, useEffect, useId, useState } from 'react';
 import { createPortal } from 'react-dom';
-import { PenSquare, Cable } from 'lucide-react';
+import { PenSquare, Cable, ThumbsDown, Undo2 } from 'lucide-react';
+import { WindowedFeedItem } from '@/components/app/feeds/WindowedFeedItem';
+import { hideDislikedPost, restoreDislikedPost } from '@/lib/disliked-posts-store';
 import { useTranslation } from 'react-i18next';
 import { toast } from 'sonner';
 import { showUpdateToast } from '@/components/app/NewVersionToast';
@@ -412,6 +414,44 @@ function ReactionsGallery() {
 }
 
 /**
+ * Disliking a post folds it out of the feed (the 👎 button below plays that
+ * without casting a real vote; ↺ brings it back), and the profile Dislikes
+ * tab's empty and private states.
+ */
+function DislikesGallery() {
+  const { t } = useTranslation();
+  const postId = '990010';
+  return (
+    <AuthContext.Provider value={GALLERY_AUTH}>
+    <section data-page-bento data-dislikes-gallery className="mb-5 rounded-3xl border border-white/10 bg-white/[0.04] p-4">
+      <div className="mb-3 flex items-center gap-2">
+        <h2 className="text-sm font-semibold">{t('profile.tabs.dislikes')}</h2>
+        <button type="button" data-dislikes-play aria-label={t('profile.tabs.dislikes')} onClick={() => hideDislikedPost(postId)}
+          className="ml-auto rounded-full border border-white/15 bg-white/5 p-2"><ThumbsDown className="h-4 w-4" /></button>
+        <button type="button" data-dislikes-undo aria-label={t('common.undo', 'Undo')} onClick={() => restoreDislikedPost(postId)}
+          className="rounded-full border border-white/15 bg-white/5 p-2"><Undo2 className="h-4 w-4" /></button>
+      </div>
+      <div data-feed-root className="space-y-3">
+        <WindowedFeedItem data-feed-item eager estimatedHeight={160} vanishOnDislike={postId}
+          className="rounded-2xl border border-white/[0.12] bg-white/[0.03] p-3">
+          <img src={galleryCover} alt="" className="aspect-video w-full max-w-md rounded-xl object-cover" />
+          <ActionBar postId={postId} likeCount={4} dislikeCount={1} commentCount={2} repostCount={0}
+            reactionCounts={SAMPLE_REACTIONS} myReaction={null} hideUtility />
+        </WindowedFeedItem>
+        <div data-feed-item className="rounded-2xl border border-white/[0.12] bg-white/[0.03] p-3 text-xs text-zinc-400">
+          {t('profile.dislikes.emptyOwn')}
+        </div>
+      </div>
+      <div className="mt-4 grid gap-4 sm:grid-cols-2">
+        <div className="rounded-2xl border border-white/10 bg-black/30"><AppState icon="posts" title={t('profile.dislikes.emptyTitle')} description={t('profile.dislikes.emptyOwn')} size="compact" /></div>
+        <div className="rounded-2xl border border-white/10 bg-black/30"><AppState icon="lock" title={t('profile.dislikes.privateTitle')} description={t('profile.dislikes.privateDesc')} size="compact" /></div>
+      </div>
+    </section>
+    </AuthContext.Provider>
+  );
+}
+
+/**
  * A new video's way to playable: the composer's bar under the attached video
  * while it uploads early (lib/draft-video), and the glass dock pill that
  * follows the post's transcode after Post. `?dock=processing|done|failed`
@@ -658,6 +698,7 @@ export default function StateGalleryPage() {
         <CaptureCardGallery />
         <LiveAvatarsGallery />
         <ReactionsGallery />
+        <DislikesGallery />
         <MenusGallery />
 
         <ArticleGallery onAction={press} />

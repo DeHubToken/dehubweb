@@ -228,6 +228,8 @@
     "heading": "Cortos de DeHub"
   },
   "settings": {
+    "showDislikesDesc": "Cualquiera puede abrir la pestaña «No me gusta» de tu perfil. Si está desactivado, solo tú puedes verla.",
+    "showDislikes": "Mostrar mis «no me gusta» a todos",
     "postingChain": "Cadena de bloques de las publicaciones",
     "showOnline": "Mostrar cuando estoy conectado",
     "showOnlineDesc": "Las personas a las que envías mensajes ven un punto verde junto a tu nombre mientras usas DeHub",
@@ -1715,6 +1717,7 @@
     "returnHome": "Volver al inicio"
   },
   "profile": {
+    "dislikes": { "loadMore": "Cargar más", "privateDesc": "Esta cuenta mantiene sus «no me gusta» en privado.", "privateTitle": "Los «no me gusta» son privados", "emptyOther": "Todavía nada marcado con «no me gusta».", "emptyOwn": "Las publicaciones que no te gustan salen de tus feeds y aparecen aquí. Quita el «no me gusta» para recuperar la publicación.", "emptyTitle": "Aún no hay «no me gusta»" },
     "back": "Volver",
     "usernameAvailable": "¡Nombre de usuario disponible!",
     "signUpToClaim": "Regístrate hoy para reclamar",
@@ -1742,6 +1745,7 @@
       "commentUnavailable": "Este comentario ya no está disponible"
     },
     "tabs": {
+      "dislikes": "No me gusta",
       "playlists": "Listas de reproducción"
     },
     "offerWorthNow": "Aproximadamente {{amount}} tokens a la tasa actual",

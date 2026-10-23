@@ -2,7 +2,7 @@ import { useTranslation as _useCopy } from 'react-i18next';
 import { useSurfaceDraft } from '@/hooks/use-surface-draft';
 import { useMemo, useEffect, useRef, useCallback, useState } from 'react';
 import { useSearchParams, useParams, useNavigate } from 'react-router-dom';
-import { Film, Star, Pin, ListVideo } from "lucide-react";
+import { Film, Star, Pin, ListVideo, ThumbsDown } from "lucide-react";
 import Image from "@/components/ui/cut-icons/images";
 import Radio from "@/components/ui/cut-icons/live";
 import PieChart from "@/components/ui/cut-icons/fractions";
@@ -38,6 +38,7 @@ import { toast } from 'sonner';
 import type { TextPost, ImagePost, VideoItem } from '@/types/feed.types';
 import type { TabValue } from '@/components/app/profile/ProfileConstants';
 import { useProfileContentCounts } from '@/hooks/use-profile-content-counts';
+import { canSeeDislikesTab, useProfileDislikes } from '@/hooks/use-profile-dislikes';
 
 /** The /api/feed postType each type tab lists; the same split the app uses. */
 const PROFILE_TAB_POST_TYPE: Partial<Record<TabValue, string>> = {
@@ -435,6 +436,11 @@ export function useProfilePage({ activeTab = 'home' }: UseProfilePageOptions = {
 
   const { plans, isLoading: isLoadingPlans, hasPlans, isOwnPlans } = useCreatorPlans(apiProfile?.walletAddress, secondaryEnabled);
 
+  // Dislikes: always on your own profile, on anyone else's only if they made it public.
+  const showDislikesTab = canSeeDislikesTab(!!isViewingOwnProfile, apiProfile?.customs as Record<string, unknown> | undefined);
+  const dislikesQuery = useProfileDislikes(apiProfile?.walletAddress, showDislikesTab && secondaryEnabled);
+  const dislikesCount = dislikesQuery.data?.pages?.[0]?.totalCount ?? 0;
+
   const PROFILE_TABS: { icon: typeof Home; label: string; value: TabValue; count: number }[] = useMemo(() => {
     // All also merges in reposts the server total leaves out.
     const homeCount = Math.max(tabCount('home', 0), activeTab === 'home' && !isContentFiltered ? ALL_CONTENT.length : 0);
@@ -452,10 +458,14 @@ export function useProfilePage({ activeTab = 'home' }: UseProfilePageOptions = {
         ? [{ icon: ListVideo, label: _copy("copy.dcd0a4d2c65a", { defaultValue: "Playlists" }), value: 'playlists' as TabValue, count: playlistCount }]
         : []),
     ].sort((a, b) => b.count - a.count);
-    return [homeTab, ...restTabs];
+    // Last, not sorted in: it is about what you turned away, not what you made.
+    const dislikesTab = showDislikesTab
+      ? [{ icon: ThumbsDown as unknown as typeof Home, label: _copy("profile.tabs.dislikes", { defaultValue: "Dislikes" }), value: 'dislikes' as TabValue, count: dislikesCount }]
+      : [];
+    return [homeTab, ...restTabs, ...dislikesTab];
     // tabCount reads only the values listed here.
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [serverCounts, activeTab, isContentFiltered, contentTotal, ALL_CONTENT.length, PROFILE_POSTS.length, PROFILE_IMAGES.length, ALL_PROFILE_VIDEOS.length, PROFILE_LIVE.length, commentCount, plans.length, pinnedCount, playlistCount, _copy]);
+  }, [serverCounts, activeTab, isContentFiltered, contentTotal, ALL_CONTENT.length, PROFILE_POSTS.length, PROFILE_IMAGES.length, ALL_PROFILE_VIDEOS.length, PROFILE_LIVE.length, commentCount, plans.length, pinnedCount, playlistCount, showDislikesTab, dislikesCount, _copy]);
   const { isSubscribed, isLoading: isLoadingSubscription } = useIsSubscribed(
     !isViewingOwnProfile ? apiProfile?.walletAddress : undefined,
     secondaryEnabled

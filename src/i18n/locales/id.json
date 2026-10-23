@@ -113,6 +113,8 @@
     "heading": "DeHub Shorts"
   },
   "settings": {
+    "showDislikesDesc": "Siapa pun bisa membuka tab Tidak Suka di profilmu. Jika nonaktif, hanya kamu yang bisa melihatnya.",
+    "showDislikes": "Tampilkan tidak sukaku ke semua orang",
     "postingChain": "Blockchain postingan",
     "showOnline": "Tampilkan saat saya online",
     "showOnlineDesc": "Orang yang Anda kirimi pesan melihat titik hijau di samping nama Anda saat Anda menggunakan DeHub",
@@ -1399,6 +1401,7 @@
     "returnHome": "Kembali ke Beranda"
   },
   "profile": {
+    "dislikes": { "loadMore": "Muat lebih banyak", "privateDesc": "Akun ini menyimpan tidak sukanya sendiri.", "privateTitle": "Tidak suka bersifat pribadi", "emptyOther": "Belum ada yang tidak disukai.", "emptyOwn": "Postingan yang tidak kamu sukai hilang dari feed-mu dan muncul di sini. Batalkan tidak suka untuk mengembalikan postingan.", "emptyTitle": "Belum ada tidak suka" },
     "back": "Kembali",
     "usernameAvailable": "Nama pengguna tersedia!",
     "signUpToClaim": "Daftar hari ini untuk mengklaim",
@@ -1426,6 +1429,7 @@
       "commentUnavailable": "Komentar ini tidak lagi tersedia"
     },
     "tabs": {
+      "dislikes": "Tidak Suka",
       "playlists": "Daftar Putar"
     },
     "offerWorthNow": "Sekitar {{amount}} token dengan kurs saat ini",

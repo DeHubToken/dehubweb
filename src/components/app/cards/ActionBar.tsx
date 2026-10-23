@@ -66,6 +66,7 @@ const ReactionInfoDrawer = lazy(() =>
   import('./ReactionInfoDrawer').then((m) => ({ default: m.ReactionInfoDrawer }))
 );
 import { getVoteCache, setVoteCache, patchFeedCaches } from '@/lib/vote-cache';
+import { hideDislikedPost, restoreDislikedPost } from '@/lib/disliked-posts-store';
 import { applyVoteStateToNFT, isVoteConfirmed } from '@/lib/engagement';
 import { usePostLinkCopyCount, useLinkCopyFloor, useTrackPostLinkCopy } from '@/hooks/use-link-copy-count';
 import { isPostReposted, markReposted, unmarkReposted } from '@/lib/repost-cache';
@@ -619,6 +620,9 @@ export function ActionBar({
       };
       setVoteCache(postId, voteState);
       patchFeedCaches(queryClient, postId, voteState);
+      // A dislike takes the post out of this viewer's feeds; undoing it brings it back.
+      if (nextNegative && !wasNegative) hideDislikedPost(postId);
+      else if (wasNegative && !nextNegative) restoreDislikedPost(postId);
       // Also patch the single-post query cache so dedicated post pages reflect the vote immediately
       queryClient.setQueriesData<any>(
         { queryKey: ['single-post', postId] },
@@ -677,6 +681,7 @@ export function ActionBar({
           queryClient.invalidateQueries({ queryKey: ['unified-feed'], refetchType: 'none' });
           queryClient.invalidateQueries({ queryKey: ['dehub-feed'], refetchType: 'none' });
           queryClient.invalidateQueries({ queryKey: ['dehub-user-content'], refetchType: 'none' });
+          if (nextNegative || wasNegative) queryClient.invalidateQueries({ queryKey: ['profile-dislikes'], refetchType: 'none' });
         }, 2000);
       }
     } catch (error: unknown) {
@@ -698,6 +703,8 @@ export function ActionBar({
         };
         setVoteCache(postId, revertState);
         patchFeedCaches(queryClient, postId, revertState);
+        if (nextNegative && !wasNegative) restoreDislikedPost(postId);
+        else if (wasNegative && !nextNegative) hideDislikedPost(postId);
         queryClient.setQueriesData<any>(
           { queryKey: ['single-post', postId] },
           (old: any) => old ? applyVoteStateToNFT(old, revertState) : old,

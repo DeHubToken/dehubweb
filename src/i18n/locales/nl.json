@@ -228,6 +228,8 @@
     "heading": "DeHub-shorts"
   },
   "settings": {
+    "showDislikesDesc": "Iedereen kan het tabblad Dislikes op je profiel openen. Staat dit uit, dan zie alleen jij het.",
+    "showDislikes": "Mijn dislikes aan iedereen tonen",
     "postingChain": "Blockchain voor berichten",
     "showOnline": "Laat zien wanneer ik online ben",
     "showOnlineDesc": "Mensen die je een bericht stuurt, zien een groene stip naast je naam terwijl je DeHub gebruikt",
@@ -1908,6 +1910,7 @@
     "returnHome": "Terug naar home"
   },
   "profile": {
+    "dislikes": { "loadMore": "Meer laden", "privateDesc": "Dit account houdt zijn dislikes voor zichzelf.", "privateTitle": "Dislikes zijn privé", "emptyOther": "Nog niets gedisliket.", "emptyOwn": "Berichten die je disliket verdwijnen uit je feeds en verschijnen hier. Maak een dislike ongedaan om het bericht terug te halen.", "emptyTitle": "Nog geen dislikes" },
     "back": "Terug",
     "usernameAvailable": "Gebruikersnaam beschikbaar!",
     "signUpToClaim": "Meld je vandaag aan om te claimen",
@@ -1935,6 +1938,7 @@
       "commentUnavailable": "Deze reactie is niet meer beschikbaar"
     },
     "tabs": {
+      "dislikes": "Dislikes",
       "playlists": "Afspeellijsten"
     },
     "offerWorthNow": "Ongeveer {{amount}} tokens tegen de huidige koers",

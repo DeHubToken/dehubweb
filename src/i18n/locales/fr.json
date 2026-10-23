@@ -228,6 +228,8 @@
     "heading": "Courts DeHub"
   },
   "settings": {
+    "showDislikesDesc": "Tout le monde peut ouvrir l'onglet « Je n'aime pas » de votre profil. Désactivé, vous seul pouvez le voir.",
+    "showDislikes": "Montrer mes « je n'aime pas » à tout le monde",
     "postingChain": "Blockchain des publications",
     "showOnline": "Montrer quand je suis en ligne",
     "showOnlineDesc": "Les personnes que vous envoyez un message voient un point vert à côté de votre nom lorsque vous utilisez DeHub",
@@ -1715,6 +1717,7 @@
     "returnHome": "Retour à l'accueil"
   },
   "profile": {
+    "dislikes": { "loadMore": "Charger plus", "privateDesc": "Ce compte garde ses « je n'aime pas » pour lui.", "privateTitle": "Les « je n'aime pas » sont privés", "emptyOther": "Rien pour l'instant.", "emptyOwn": "Les publications que vous n'aimez pas quittent vos fils et apparaissent ici. Annulez le « je n'aime pas » pour faire revenir la publication.", "emptyTitle": "Aucun « je n'aime pas » pour l'instant" },
     "back": "Retour",
     "usernameAvailable": "Nom d'utilisateur disponible !",
     "signUpToClaim": "Inscrivez-vous pour le réclamer",
@@ -1742,6 +1745,7 @@
       "commentUnavailable": "Ce commentaire n'est plus disponible"
     },
     "tabs": {
+      "dislikes": "Je n'aime pas",
       "playlists": "Playlists"
     },
     "offerWorthNow": "Environ {{amount}} jetons au taux actuel",
