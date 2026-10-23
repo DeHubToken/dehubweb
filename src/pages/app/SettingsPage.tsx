@@ -2526,6 +2526,7 @@ const THEME_OPTIONS = [
   { value: 'immersive', labelKey: 'settings.immersive', available: true },
   { value: 'minimal', labelKey: 'settings.minimal', available: true },
   { value: 'light', labelKey: 'settings.minimalLight', available: true },
+  { value: 'glass', labelKey: 'settings.glass', available: true },
   { value: 'cosmic', labelKey: 'settings.cosmic', available: true },
   { value: 'hazy', labelKey: 'settings.hazy', available: true },
   { value: 'swarms', labelKey: 'settings.swarms', available: true },
@@ -2564,7 +2565,7 @@ function AppearanceSettings({ theme, themeChoice, setTheme }: { theme: string; t
               <ThemePreviewCard
                 key={option.value}
                 value={option.value}
-                label={t(option.labelKey)}
+                label={option.value === 'glass' ? 'Glassy' : t(option.labelKey)}
                 active={themeChoice === option.value}
                 available={option.available}
                 onSelect={() => {
@@ -2580,7 +2581,7 @@ function AppearanceSettings({ theme, themeChoice, setTheme }: { theme: string; t
         </div>
 
         {/* Custom color for hue-driven WebGL themes */}
-        {(theme === 'cosmic' || theme === 'hazy' || theme === 'swarms' || theme === 'lavalamp') && (
+        {(theme === 'glass' || theme === 'cosmic' || theme === 'hazy' || theme === 'swarms' || theme === 'lavalamp') && (
           <div data-setting-anchor="theme-color">
             <ThemeColorPicker theme={theme} />
           </div>

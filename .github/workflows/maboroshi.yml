@@ -3,6 +3,7 @@ on:
   pull_request:
     paths:
       - 'services/maboroshi/**'
+      - 'tests/maboroshi-remake-browser.mjs'
       - 'supabase/functions/maboroshi-provider/**'
       - 'supabase/migrations/*maboroshi_stage_payments.sql'
       - 'tests/sql/maboroshi-payment*'
@@ -65,8 +66,24 @@ jobs:
       - run: |
           node --check services/maboroshi/static/studio.js
           node --check services/maboroshi/static/presets.js
+          node --check services/maboroshi/static/remake.js
       - uses: denoland/setup-deno@v2
         with:
           deno-version: v2.x
       - run: deno test supabase/functions/maboroshi-provider/*_test.ts
       - run: deno check supabase/functions/maboroshi-provider/index.ts
+      - name: Install hosted Remake browser
+        run: |
+          npm install --prefix "$RUNNER_TEMP/remake-browser" --no-save --no-package-lock --ignore-scripts playwright@1.64.0
+          "$RUNNER_TEMP/remake-browser/node_modules/.bin/playwright" install --with-deps chromium
+      - name: Verify cut review, isolated payments, revisions and assembly in a browser
+        env:
+          REMAKE_BROWSER_ROOT: ${{ runner.temp }}/remake-browser
+        run: node tests/maboroshi-remake-browser.mjs
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: remake-browser-results
+          path: remake-browser-results/
+          if-no-files-found: ignore
+          retention-days: 14

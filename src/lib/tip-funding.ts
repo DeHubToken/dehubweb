@@ -80,6 +80,8 @@ export interface TipFundingSource {
   decimals: number;
   balance: bigint;
   isNative?: boolean;
+  /** Set by TipPayWith when this token is paid to the creator as it is (lib/direct-tip-tokens). */
+  direct?: import('@/lib/direct-tip-tokens').DirectTipToken;
 }
 
 export type TipFundingStage = 'quote' | 'approve' | 'bridge' | 'arriving' | 'pay' | 'delivering' | 'swap';

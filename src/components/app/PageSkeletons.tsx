@@ -204,7 +204,7 @@ export function ExploreSkeleton() {
     <div className="min-h-screen">
       {/* Search Header */}
       <div className="p-2 sm:p-3 space-y-2 sm:space-y-3">
-        <div className="bg-zinc-900 rounded-2xl p-3 sm:p-4">
+        <div data-glass-loading-surface className="bg-zinc-900 rounded-2xl p-3 sm:p-4">
           <div className="flex gap-2">
             <Skeleton className={`flex-1 h-[48px] rounded-xl ${SK}`} />
             <Skeleton className={`w-12 h-[48px] rounded-xl ${SK}`} />
@@ -212,7 +212,7 @@ export function ExploreSkeleton() {
         </div>
 
         {/* Tabs Bento */}
-        <div className="bg-zinc-900 rounded-2xl p-2">
+        <div data-glass-loading-surface className="bg-zinc-900 rounded-2xl p-2">
           <div className="flex">
             {Array.from({ length: 5 }).map((_, i) => (
               <div key={i} className="flex-1 flex items-center justify-center gap-2 py-2 px-2">
@@ -239,7 +239,7 @@ export function ProfileSkeleton() {
   return (
     <div className="p-2 sm:p-3 space-y-2 sm:space-y-3">
       {/* Profile Card Bento */}
-      <div className="max-sm:-mx-2 bg-zinc-900 rounded-2xl overflow-hidden">
+      <div data-glass-loading-surface className="max-sm:-mx-2 bg-zinc-900 rounded-2xl overflow-hidden">
         <Skeleton className={`aspect-[3/1] w-full ${SK}`} />
         <div className="px-4 sm:px-6 pb-4">
           <div className="flex items-end justify-between -mt-12 sm:-mt-14 mb-4">
@@ -285,7 +285,7 @@ export function ProfileSkeleton() {
 export function MessagesSkeleton() {
   return (
     <div className="h-full p-3 sm:p-4">
-      <div className="w-full h-[calc(100dvh-120px)] lg:h-[calc(100dvh-32px)] bg-zinc-900 rounded-2xl flex flex-col overflow-hidden">
+      <div data-glass-loading-surface className="w-full h-[calc(100dvh-120px)] lg:h-[calc(100dvh-32px)] bg-zinc-900 rounded-2xl flex flex-col overflow-hidden">
         {/* Header */}
         <div className="p-4">
           <div className="flex items-center justify-between mb-4">
@@ -317,7 +317,7 @@ export function NotificationsSkeleton() {
     <div className="min-h-screen">
       {/* Header */}
       <div className="p-3 sm:p-4">
-        <div className="bg-zinc-900 rounded-2xl px-4 py-3">
+        <div data-glass-loading-surface className="bg-zinc-900 rounded-2xl px-4 py-3">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-2">
               <Skeleton className={`w-9 h-9 rounded-xl ${SK}`} />
@@ -330,7 +330,7 @@ export function NotificationsSkeleton() {
 
       {/* Tab bar bento */}
       <div className="px-3 sm:px-4 py-2">
-        <div className="bg-zinc-900 rounded-2xl p-2">
+        <div data-glass-loading-surface className="bg-zinc-900 rounded-2xl p-2">
           <div className="flex gap-1 overflow-hidden">
             {Array.from({ length: 6 }).map((_, i) => (
               <div key={i} className="flex-shrink-0 flex items-center justify-center gap-2 px-3 sm:px-4 py-2">
@@ -404,7 +404,7 @@ export function SettingsSkeleton() {
   return (
     <div className="min-h-screen p-3 sm:p-4">
       {/* Header Bento */}
-      <div className="bg-zinc-900 rounded-2xl p-4 sm:p-6 mb-4">
+      <div data-glass-loading-surface className="bg-zinc-900 rounded-2xl p-4 sm:p-6 mb-4">
         <div className="flex items-center justify-between mb-4">
           <div className="flex items-center gap-4">
             <Skeleton className={`w-10 h-10 rounded-xl ${SK}`} />
@@ -424,7 +424,7 @@ export function SettingsSkeleton() {
       </div>
 
       {/* Content Bento */}
-      <div className="bg-zinc-900 rounded-2xl p-4 sm:p-6">
+      <div data-glass-loading-surface className="bg-zinc-900 rounded-2xl p-4 sm:p-6">
         <ContentLoader minHeight="42vh" />
       </div>
     </div>
@@ -437,7 +437,7 @@ export function SettingsSkeleton() {
 export function FeaturesSkeleton() {
   return (
     <div className="min-h-screen p-3 sm:p-4">
-      <div className="bg-zinc-900 rounded-2xl p-4 sm:p-6 mb-4">
+      <div data-glass-loading-surface className="bg-zinc-900 rounded-2xl p-4 sm:p-6 mb-4">
         <div className="flex items-center justify-between mb-4">
           <div className="flex items-center gap-3">
             <Skeleton className={`w-12 h-12 rounded-xl ${SK}`} />
@@ -482,7 +482,7 @@ export function GridSkeleton() {
   return (
     <div className="p-3 sm:p-4 space-y-4">
       {/* Header bento */}
-      <div className="bg-zinc-900 rounded-2xl p-4">
+      <div data-glass-loading-surface className="bg-zinc-900 rounded-2xl p-4">
         <div className="flex items-center gap-3 mb-4">
           <Skeleton className={`w-10 h-10 rounded-xl ${SK}`} />
           <Skeleton className={`h-5 w-28 ${SK}`} />
@@ -506,7 +506,7 @@ export function GridSkeleton() {
 export function GenericPageSkeleton() {
   return (
     <div className="p-3 sm:p-4 space-y-4">
-      <div className="bg-zinc-900 rounded-2xl p-4 sm:p-6">
+      <div data-glass-loading-surface className="bg-zinc-900 rounded-2xl p-4 sm:p-6">
         <div className="flex items-center gap-3 mb-4">
           <Skeleton className={`w-10 h-10 rounded-xl ${SK}`} />
           <div className="space-y-2">

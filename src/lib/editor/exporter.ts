@@ -23,6 +23,7 @@ import { BRAND_OUTRO_DURATION, drawBrandOutro, outroSoundSample, outroUsername }
 import { GIF_CONTENT_LIMIT, gifPlan, gifFrameDelay, gifWorkerSession } from "./gif";
 import { GIF_WORKER } from "./gifRuntime";
 import { exportTimeRange, exportAudioSegment, type ExportRange } from "./exportRanges";
+import { cleanDecoderConfig, videoDecoderConfigFixer } from "./videoDecoderConfig";
 
 
 export type ExportFormat = "mp4" | "webm" | "gif";
@@ -286,7 +287,7 @@ function audioBufferSliceToInterleaved(
 export async function exportProject(opts: ExportOptions): Promise<ExportResult> {
   if (opts.format === "gif") return exportGif(opts);
   if (!isExportSupported()) {
-    throw new Error("Your browser doesn't support video export. Use a Chromium-based browser (Chrome, Edge, Brave, Arc).");
+    throw new Error("Your browser doesn't support video export. Use an up-to-date Chrome, Edge, Firefox or Safari.");
   }
 
   const { snapshot, media, format, scale, videoBitrate, audioBitrate = 192_000, cutEndAt, onProgress, signal } = opts;
@@ -354,10 +355,18 @@ export async function exportProject(opts: ExportOptions): Promise<ExportResult> 
         : {}),
       fastStart: "in-memory",
     });
+    const fixVideoChunk = videoDecoderConfigFixer({ codec: videoCodec, muxerCodec: videoMuxerCodec, width, height });
     muxer = {
-      addVideoChunk: (c, meta) => m.addVideoChunk(c, meta),
-      addAudioChunk: haveAudio ? (c, meta) => m.addAudioChunk(c, meta) : undefined,
-      finalize: () => m.finalize(),
+      addVideoChunk: (c, meta) => {
+        const fixed = fixVideoChunk(c, meta);
+        m.addVideoChunk(fixed.chunk, fixed.meta);
+      },
+      // A partial audio config (no description) would wipe the AAC config the muxer prefills.
+      addAudioChunk: haveAudio ? (c, meta) => m.addAudioChunk(c, meta?.decoderConfig ? { ...meta, decoderConfig: cleanDecoderConfig(meta.decoderConfig) } : meta) : undefined,
+      finalize: () => {
+        if (!fixVideoChunk.hasConfig()) throw new Error("This browser's video encoder didn't produce a playable MP4. Try WebM, or Chrome.");
+        m.finalize();
+      },
       target,
     };
   } else {

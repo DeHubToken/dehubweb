@@ -49,7 +49,7 @@ export default function EditorPage() {
   }, [setInspectorOpen, setPanel]);
 
   return (
-    <div className="fixed inset-0 flex flex-col bg-black text-white">
+    <div data-glass-editor className="fixed inset-0 flex flex-col bg-black text-white">
       {/* Page metadata lives in CreatorEditorHost, which is the only component
           that knows which of the two co-mounted surfaces is actually visible. */}
       <EditorTopBar />

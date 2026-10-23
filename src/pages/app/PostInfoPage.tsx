@@ -171,7 +171,7 @@ export default function PostInfoPage() {
   // PPV status and purchase count
   const isPPV = nftInfo?.is_ppv || nftInfo?.streamInfo?.isPayPerView || false;
   const ppvPrice = nftInfo?.ppv_price || nftInfo?.streamInfo?.payPerViewAmount;
-  const ppvCurrency = nftInfo?.ppv_currency || 'DHB';
+  const ppvCurrency = nftInfo?.ppv_currency || nftInfo?.streamInfo?.payPerViewTokenSymbol || 'DHB';
   const { data: ppvPurchaseCount } = usePPVPurchaseCount(isPPV ? postId : undefined);
 
   // Fetch tips for this specific post from tip_records. Floored against the

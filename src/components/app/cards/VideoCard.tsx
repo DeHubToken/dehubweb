@@ -2163,6 +2163,7 @@ export const VideoCard = memo(function VideoCard({ video, postPage = false, onBa
         data-feed-preview={phoneFeedFrame || undefined}
         data-media-frame-key={!isImmersive && !isFullscreen ? `video:${video.id}` : undefined}
         data-media-frame-measured={resolvedVideoAspect == null ? undefined : measuredAspect}
+        data-audio-frame={video.isAudio || undefined}
         data-no-navigate
         data-feed-video-frame={cropFeedVideo || undefined}
         data-video-split-controls={splitControls || undefined}
@@ -2400,7 +2401,7 @@ export const VideoCard = memo(function VideoCard({ video, postPage = false, onBa
           <>
             {video.isAudio && video.audioUrl ? (
               /* Audio post: liquid glass container with static waveform backdrop */
-              <div className="relative w-full h-full bg-black/60 backdrop-blur-[24px] border border-white/10 overflow-hidden">
+              <div data-audio-backdrop className="relative w-full h-full bg-black/60 backdrop-blur-[24px] border border-white/10 overflow-hidden">
                 {/* Live AudioVisualizer */}
                 <div className="absolute inset-0">
                   <Suspense fallback={<div className="w-full h-full rounded-xl bg-black/40" />}>

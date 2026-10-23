@@ -48,9 +48,21 @@
           // waiting for the render-blocking stylesheet that normally carries it.
           // Values mirror the settled `background-color` of <html> per theme —
           // keep them in sync with index.css if a theme's backdrop changes.
-          var BG = { light: '#f9f8f4', osaka: '#0a0812', jungle: '#16110c' };
+          var BG = { glass: '#082a30', light: '#f9f8f4', osaka: '#0a0812', jungle: '#16110c' };
           d.style.setProperty('--boot-bg', tone === 'light' ? '#fff' : BG[t] || '#000');
           d.style.setProperty('--boot-fg', t === 'light' || tone === 'light' ? '#09090b' : '#fff');
+
+          // An OBS browser source (/overlay/<token>, ObsOverlayPage). The page
+          // is composited over somebody's live stream, so NOTHING may paint
+          // but the widgets — not the backdrop, not the boot skeleton, and not
+          // before the bundle arrives either, or every source refresh flashes
+          // a black frame into the broadcast. color-scheme goes back to normal
+          // because a dark scheme makes the browser paint the canvas itself.
+          if (location.pathname.indexOf('/overlay/') === 0) {
+            d.dataset.obsOverlay = 'on';
+            d.style.setProperty('--boot-bg', 'transparent');
+            d.style.colorScheme = 'normal';
+          }
 
           d.dataset.dimLights = localStorage.getItem('dehub.dimLights') === '1' ? 'true' : 'false';
           var s = Number(localStorage.getItem('dehub.dimStrength'));
@@ -436,6 +448,13 @@
       *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
       html, body { height: 100%; width: 100%; background-color: var(--boot-bg, #000); color: var(--boot-fg, #fff); font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
       #root { height: 100%; min-height: 100dvh; background-color: var(--boot-bg, #000); }
+      /* OBS browser source: transparent all the way down, whatever a theme's
+         stylesheet says later, and none of the app's chrome or toasts. */
+      html[data-obs-overlay][data-obs-overlay],
+      html[data-obs-overlay][data-obs-overlay] body,
+      html[data-obs-overlay][data-obs-overlay] #root { background: transparent !important; overflow: hidden !important; }
+      html[data-obs-overlay] .bskel,
+      html[data-obs-overlay] [data-sonner-toaster] { display: none !important; }
 
       /* --- Boot skeleton ------------------------------------------------
          The three-column app shell, painted at parse time with no JavaScript,
