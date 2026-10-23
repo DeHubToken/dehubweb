@@ -1,4 +1,15 @@
 {
+  "profileFields": {
+    "title": "Pole profilu",
+    "description": "Až čtyři řádky navíc na vašem profilu, třeba web nebo vaše zájmena.",
+    "label": "Popisek",
+    "content": "Obsah",
+    "save": "Uložit pole",
+    "saved": "Pole profilu uložena",
+    "failed": "Neuložilo se. Zkuste to znovu.",
+    "verified": "Ověřený odkaz",
+    "verifyHint": "Chcete-li odkaz ověřit, přidejte toto na danou stránku a uložte znovu: {{snippet}}"
+  },
   "followedTags": {
     "follow": "Sledovat #{{tag}}",
     "following": "Sledujete",

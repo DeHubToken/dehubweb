@@ -1,4 +1,15 @@
 {
+  "profileFields": {
+    "title": "Profil sahələri",
+    "description": "Profilinizdə dörd əlavə sətrə qədər, məsələn veb sayt və ya əvəzlikləriniz.",
+    "label": "Etiket",
+    "content": "Məzmun",
+    "save": "Sahələri yadda saxla",
+    "saved": "Profil sahələri yadda saxlanıldı",
+    "failed": "Yadda saxlanılmadı. Yenidən cəhd edin.",
+    "verified": "Təsdiqlənmiş link",
+    "verifyHint": "Linki təsdiqləmək üçün bunu həmin səhifəyə əlavə edin, sonra yenidən yadda saxlayın: {{snippet}}"
+  },
   "followedTags": {
     "follow": "#{{tag}} izlə",
     "following": "İzləyirsiniz",

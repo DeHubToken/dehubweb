@@ -1,4 +1,15 @@
 {
+  "profileFields": {
+    "title": "Àwọn pápá profaili",
+    "description": "Títí dé ìlà mẹ́rin àfikún lórí profaili rẹ, bí ojúlé wẹ́ẹ̀bù tàbí àwọn arọ́pò orúkọ rẹ.",
+    "label": "Àmì",
+    "content": "Àkóónú",
+    "save": "Fi àwọn pápá pamọ́",
+    "saved": "A ti fi àwọn pápá profaili pamọ́",
+    "failed": "Kò fi pamọ́. Tún gbìyànjú.",
+    "verified": "Ìjápọ̀ tí a ti fìdí rẹ̀ múlẹ̀",
+    "verifyHint": "Láti fìdí ìjápọ̀ múlẹ̀, fi èyí kún ojú-ìwé yẹn, lẹ́yìn náà tún fi pamọ́: {{snippet}}"
+  },
   "followedTags": {
     "follow": "Tẹ̀lé #{{tag}}",
     "following": "O ń tẹ̀lé",

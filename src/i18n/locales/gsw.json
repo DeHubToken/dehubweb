@@ -1,4 +1,15 @@
 {
+  "profileFields": {
+    "title": "Profilfälder",
+    "description": "Bis zu vier zuesätzlichi Ziile i dim Profil, wie e Websiite oder dini Pronome.",
+    "label": "Bezeichnig",
+    "content": "Inhalt",
+    "save": "Fälder speichere",
+    "saved": "Profilfälder gspeicheret",
+    "failed": "Das isch nöd gspeicheret worde. Probier's nomal.",
+    "verified": "Bestätigte Link",
+    "verifyHint": "Zum en Link bestätige, füeg das uf dere Siite ii und speicher nomal: {{snippet}}"
+  },
   "followedTags": {
     "follow": "#{{tag}} folge",
     "following": "Folg ich",

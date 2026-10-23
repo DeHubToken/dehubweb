@@ -1,4 +1,15 @@
 {
+  "profileFields": {
+    "title": "個人檔案欄位",
+    "description": "喺個人檔案加最多四行，例如網站或者你嘅代名詞。",
+    "label": "標籤",
+    "content": "內容",
+    "save": "儲存欄位",
+    "saved": "已儲存個人檔案欄位",
+    "failed": "儲存唔到，請再試吓。",
+    "verified": "已驗證連結",
+    "verifyHint": "要驗證連結，請將呢段加入嗰個頁面，然後再儲存一次：{{snippet}}"
+  },
   "followedTags": {
     "follow": "追蹤 #{{tag}}",
     "following": "追蹤緊",

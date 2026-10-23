@@ -49,6 +49,7 @@ export const SETTINGS_SEARCH_INDEX: SettingsSearchEntry[] = [
   { tab: 'profile', anchor: 'username', label: 'Username', labelKey: 'settings.username', keywords: 'handle rename @' },
   { tab: 'profile', anchor: 'bio', label: 'Bio', labelKey: 'settings.bio', keywords: 'about description' },
   { tab: 'profile', anchor: 'social-links', label: 'Social Links', labelKey: 'settings.socialLinks', keywords: 'twitter x instagram tiktok youtube discord telegram facebook followers follower count total reach audience' },
+  { tab: 'profile', anchor: 'profile-fields', label: 'Profile fields', labelKey: 'profileFields.title', keywords: 'website pronouns links verify rel me metadata fields' },
   { tab: 'profile', anchor: 'sign-in', label: 'Sign-in', labelKey: 'settings.signIn', keywords: 'email login password recovery' },
   { tab: 'profile', anchor: 'ens', label: 'ENS', labelKey: 'settings.ensSection', keywords: 'ens domain eth name verified handle' },
   { tab: 'profile', anchor: 'stream-key', label: 'Stream key', labelKey: 'settings.streamKey.section', keywords: 'obs encoder rtmp stream key ingest server xbox twitch aircast go live broadcast' },

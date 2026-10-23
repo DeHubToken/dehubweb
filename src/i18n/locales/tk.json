@@ -1,4 +1,15 @@
 {
+  "profileFields": {
+    "title": "Profil meýdanlary",
+    "description": "Profiliňizde dört goşmaça setire çenli, meselem web sahypa ýa-da çalyşmalaryňyz.",
+    "label": "Bellik",
+    "content": "Mazmun",
+    "save": "Meýdanlary ýatda sakla",
+    "saved": "Profil meýdanlary ýatda saklandy",
+    "failed": "Ýatda saklanmady. Gaýtadan synanyşyň.",
+    "verified": "Tassyklanan baglanyşyk",
+    "verifyHint": "Baglanyşygy tassyklamak üçin muny şol sahypa goşuň, soň gaýtadan ýatda saklaň: {{snippet}}"
+  },
   "followedTags": {
     "follow": "#{{tag}} yzarla",
     "following": "Yzarlaýarsyňyz",
