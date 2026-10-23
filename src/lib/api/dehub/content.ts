@@ -66,6 +66,12 @@ export interface MintPostParams {
    */
   idempotencyKey?: string;
   /**
+   * A video already uploaded through createDraftVideo. When set the video is
+   * not sent again: `files` stays empty and only the thumbnail goes up.
+   * /user_mint only — quotes keep sending the file.
+   */
+  draftVideoId?: string;
+  /**
    * 'mature' marks the post adult or graphic. It then reaches the creator's
    * followers, their profile and anyone with the link, but stays off the
    * public home, shorts, search and suggestion feeds — unless a viewer has
@@ -203,6 +209,10 @@ export async function mintPost(
 
   if (params.idempotencyKey) {
     formData.append('idempotencyKey', params.idempotencyKey);
+  }
+
+  if (params.draftVideoId && !params.quotedTokenId) {
+    formData.append('draftVideoId', params.draftVideoId);
   }
 
   if (params.scheduledAt) {
@@ -710,4 +720,42 @@ export async function settlePostCharge(
     requiresAuth: true,
     body: { txHash, chainId },
   });
+}
+
+// ── Draft videos ──
+// A video is uploaded and transcoded while its caption is still being written,
+// then claimed by /user_mint through `draftVideoId`. Drafts expire after 24h.
+
+export type DraftVideoStatus = 'processing' | 'ready' | 'failed' | 'used';
+
+export interface DraftVideoInfo {
+  draftId: string;
+  status: DraftVideoStatus;
+  progress: number;
+  error?: string;
+}
+
+/**
+ * Upload a video as a draft. Rejects with UploadHttpError on an error status
+ * (413 over the tier's size, 400 unreadable, 404/503 when the server has no
+ * drafts) and with an AbortError when `signal` fires.
+ */
+export function createDraftVideo(
+  file: File,
+  postType: 'video' | 'short',
+  options: { onProgress?: (percent: number) => void; signal?: AbortSignal } = {},
+): Promise<{ draftId: string; status: DraftVideoStatus }> {
+  const formData = new FormData();
+  formData.append('postType', postType);
+  formData.append('file', file);
+  return authedUpload<{ draftId: string; status: DraftVideoStatus }>('/api/draft_video', formData, {
+    onProgress: options.onProgress,
+    signal: options.signal,
+    timeoutMs: 8 * 60 * 1000,
+    unwrapResult: true,
+  });
+}
+
+export function getDraftVideo(draftId: string): Promise<DraftVideoInfo> {
+  return apiCall<DraftVideoInfo>(`/api/draft_video/${encodeURIComponent(draftId)}`, { requiresAuth: true });
 }
