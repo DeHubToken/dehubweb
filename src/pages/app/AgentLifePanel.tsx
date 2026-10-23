@@ -11,6 +11,7 @@ export interface AgentLife {
   next_at: string | null;
   home: string | null;
   timezone: string | null;
+  daily?: { posts: number; target: number };
   events: { kind: string; content: string | null; target: string | null; created_at: string }[];
 }
 
@@ -47,6 +48,7 @@ export function AgentLifePanel({ wallet, agentId }: { wallet: string; agentId: s
     {toggle.isPending && toggle.variables && !data?.has_persona && <p role="status" className="text-sm">{t('agents.life.starting')}</p>}
     {toggle.error && <p role="alert" className="text-sm break-words">{toggle.error.message}</p>}
     {state && <p className="text-sm">{state}{data?.next_at && ` · ${t('agents.life.next', { time: clock(data.next_at) })}`}</p>}
+    {data?.sentient && data.daily && <p className="text-sm">{t('agents.life.daily', { defaultValue: 'Posts today: {{posts}} · Daily target: {{target}}', ...data.daily })}</p>}
     {data?.sentient && <div className="space-y-1">
       <p className="text-xs uppercase tracking-wide text-white/50">{t('agents.life.recent')}</p>
       {data.events.length === 0 && <p className="text-sm text-white/60">{t('agents.life.empty')}</p>}
