@@ -1,4 +1,26 @@
 {
+  "followedTags": {
+    "follow": "关注 #{{tag}}",
+    "following": "已关注",
+    "unfollow": "取消关注 #{{tag}}",
+    "followed": "已关注 #{{tag}}，相关帖子会出现在你的关注动态里。",
+    "unfollowed": "已取消关注 #{{tag}}",
+    "failed": "没有保存成功，请再试一次。",
+    "clear": "清除"
+  },
+  "notificationFilters": {
+    "title": "过滤以下来源的通知",
+    "description": "选择圈子以外的人与你互动时会发生什么。被过滤的通知会留在“已过滤”里，不显示角标，也不推送。",
+    "notFollowing": "你没有关注的人",
+    "notFollowers": "没有关注你的人",
+    "newAccounts": "新账号（不满 30 天）",
+    "accept": "通知我",
+    "filter": "过滤",
+    "drop": "完全隐藏",
+    "filteredTitle": "已过滤的通知",
+    "filteredEmpty": "没有被过滤的通知。",
+    "failed": "没有保存成功，请再试一次。"
+  },
   "keywordFilters": {
     "title": "屏蔽词",
     "description": "隐藏包含这些词的帖子和评论，或者把它们折叠在提示后面。只有你能看到这个列表。",

@@ -1,4 +1,26 @@
 {
+  "followedTags": {
+    "follow": "Araho #{{tag}}",
+    "following": "Manaraka",
+    "unfollow": "Aza manaraka #{{tag}} intsony",
+    "followed": "Manaraka #{{tag}} ianao izao. Hiseho ao amin'ny lahatsoratra arahinao ireo lahatsorany.",
+    "unfollowed": "Tsy manaraka #{{tag}} intsony ianao",
+    "failed": "Tsy voatahiry. Andramo indray.",
+    "clear": "Fafao"
+  },
+  "notificationFilters": {
+    "title": "Sivano ny fampandrenesana avy amin'ny",
+    "description": "Safidio izay hitranga rehefa misy olona ivelan'ny faribolanao mifandray aminao. Miandry ao amin'ny \"Voasivana\" ireo fampandrenesana voasivana, tsy misy marika na fampandrenesana tampoka.",
+    "notFollowing": "Olona tsy arahinao",
+    "notFollowers": "Olona tsy manaraka anao",
+    "newAccounts": "Kaonty vaovao (latsaky ny 30 andro)",
+    "accept": "Ampahafantaro aho",
+    "filter": "Sivano",
+    "drop": "Afeno tanteraka",
+    "filteredTitle": "Fampandrenesana voasivana",
+    "filteredEmpty": "Tsy misy voasivana.",
+    "failed": "Tsy voatahiry. Andramo indray."
+  },
   "keywordFilters": {
     "title": "Teny nampanginina",
     "description": "Afeno ny lahatsoratra sy fanehoan-kevitra misy ireo teny ireo, na aforony ao ambadiky ny fampitandremana. Ianao ihany no mahita ity lisitra ity.",

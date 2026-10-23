@@ -42,7 +42,12 @@ export const notificationKeys = {
 export function useNotifications(
   category?: NotificationCategory,
   types?: string[],
-  options?: { notifyOnNew?: boolean },
+  options?: {
+    notifyOnNew?: boolean;
+    /** List what the reader's notification filters held back. Fetched only while enabled. */
+    filtered?: boolean;
+    enabled?: boolean;
+  },
 ) {
   const { isAuthenticated } = useAuth();
   const { t } = useTranslation();
@@ -50,9 +55,9 @@ export function useNotifications(
   const prevIdsRef = useRef<Set<string>>(new Set());
 
   const query = useInfiniteQuery({
-    queryKey: notificationKeys.list(category, types),
+    queryKey: options?.filtered ? [...notificationKeys.list(category, types), 'filtered'] : notificationKeys.list(category, types),
     queryFn: async ({ pageParam = 1 }) => {
-      return getNotifications(pageParam, 30, category, false, types);
+      return getNotifications(pageParam, 30, category, false, types, !!options?.filtered);
     },
     getNextPageParam: (lastPage, allPages) => {
       if (lastPage.hasMore) {
@@ -61,7 +66,7 @@ export function useNotifications(
       return undefined;
     },
     initialPageParam: 1,
-    enabled: isAuthenticated,
+    enabled: isAuthenticated && (options?.enabled ?? true),
     staleTime: 2 * 60 * 1000,
     refetchInterval: 5 * 60 * 1000,
   });
@@ -75,7 +80,7 @@ export function useNotifications(
   // same data, so with a tab active every row absent from the previously seen
   // set looks "new" — switching to Tips would fire a desktop notification per
   // tip already sitting in the list.
-  const notifyOnNew = (options?.notifyOnNew ?? true) && !types?.length;
+  const notifyOnNew = (options?.notifyOnNew ?? true) && !types?.length && !options?.filtered;
 
   // Trigger browser notifications for newly arrived unread items.
   //
