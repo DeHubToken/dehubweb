@@ -655,10 +655,10 @@ function buildServer(apiKey: string | null, req: Request, registry?: Map<string,
         return fail('Image uploads cannot be saved as drafts. Use hosted image URLs for approval, or choose autonomous mode before uploading.');
       }
       return controlledAction(store, agent, name, args, () => callback(args), approvalId,
-        ['dehub_vote', 'dehub_follow'].includes(name) ? async () => {
+        (['dehub_vote', 'dehub_follow'].includes(name) || name === 'dehub_update_profile' && !profileImages.avatar && !profileImages.banner) ? async () => {
           const token = await getAgentToken(agent);
           if (!token) throw new Error('Could not authenticate before capturing the prior state.');
-          return captureUndo(token, name, args);
+          return captureUndo(token, name, args, agent.owner_wallet_address);
         } : undefined);
     };
     server.registerTool<z.ZodRawShape, z.ZodRawShape>(name, config, async (args) => invoke(args));

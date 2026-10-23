@@ -60,7 +60,7 @@ Deno.test('approval rejects altered arguments and accepts equivalent JSON key or
   await controlledAction(db, { id: 'agent' }, 'dehub_comment', { token_id: '1', content: 'Hello' }, call, 'receipt');
   assertEquals(calls, 1); assertEquals(rows.ai_agent_receipts[0].status, 'succeeded');
 });
-import { alertWebhook, moderationSchema, reversalLabel } from './workspace-actions.ts';
+import { alertWebhook, moderationSchema, reversalLabel, reverseReceipt } from './workspace-actions.ts';
 
 Deno.test('external alerts accept only fixed Discord webhook destinations', () => {
   for (const url of ['', 'https://discord.com/api/webhooks/123/abc_DEF-123']) {
@@ -82,4 +82,28 @@ Deno.test('reversal eligibility excludes uncertain, repeated and unsupported act
 Deno.test('moderation validates specific stream, wallet and bounded timeout', () => {
   if (!moderationSchema.seconds.safeParse(300).success || moderationSchema.seconds.safeParse(3601).success || moderationSchema.seconds.safeParse(0).success) throw new Error('Invalid timeout bounds');
   if (moderationSchema.token_id.safeParse('../admin').success || moderationSchema.target_wallet.safeParse('someone').success) throw new Error('Invalid moderation target');
+});
+
+Deno.test('corrections claim once and verify the resulting visibility', async () => {
+  const originalFetch = globalThis.fetch;
+  const receipt: any = { id: 'post', agent_id: 'agent', tool: 'dehub_post_create', status: 'succeeded', result: { post: { token_id: 42 } }, arguments: {}, rollback_status: null };
+  const states: string[] = []; let calls = 0;
+  const db: any = { from: () => {
+    let patch: any; let expected: string | null | undefined;
+    const query: any = { update: (value: any) => { patch = value; return query; }, eq: () => query,
+      is: (_key: string, value: null) => { expected = value; return query; }, select: () => query,
+      then: (resolve: any) => {
+        const matches = expected === undefined || receipt.rollback_status === expected;
+        if (matches) { Object.assign(receipt, patch); states.push(patch.rollback_status); }
+        return Promise.resolve({ data: matches ? [{ id: receipt.id }] : [], error: null }).then(resolve);
+      } };
+    return query;
+  } };
+  try {
+    globalThis.fetch = (() => { calls++; return Promise.resolve(Response.json(calls === 1 ? { result: true } : { result: { isHidden: true } })); }) as typeof fetch;
+    await reverseReceipt(db, 'private', receipt);
+    assertEquals(states, ['executing', 'succeeded']); assertEquals(calls, 2);
+    try { await reverseReceipt(db, 'private', receipt); } catch { /* Already corrected. */ }
+    assertEquals(calls, 2);
+  } finally { globalThis.fetch = originalFetch; }
 });
