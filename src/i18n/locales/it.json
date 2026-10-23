@@ -113,6 +113,8 @@
     "heading": "DeHub Shorts"
   },
   "settings": {
+    "showDislikesDesc": "Chiunque può aprire la scheda «Non mi piace» del tuo profilo. Se disattivato, solo tu puoi vederla.",
+    "showDislikes": "Mostra a tutti i miei «non mi piace»",
     "postingChain": "Blockchain dei post",
     "showOnline": "Mostra quando sono online",
     "showOnlineDesc": "Le persone a cui invii un messaggio vedono un punto verde accanto al tuo nome mentre utilizzi DeHub",
@@ -1399,6 +1401,7 @@
     "returnHome": "Torna alla home"
   },
   "profile": {
+    "dislikes": { "loadMore": "Carica altro", "privateDesc": "Questo account tiene per sé i suoi «non mi piace».", "privateTitle": "I «non mi piace» sono privati", "emptyOther": "Ancora niente.", "emptyOwn": "I post che non ti piacciono escono dai tuoi feed e compaiono qui. Annulla il «non mi piace» per riportare indietro il post.", "emptyTitle": "Ancora nessun «non mi piace»" },
     "back": "Indietro",
     "usernameAvailable": "Nome utente disponibile!",
     "signUpToClaim": "Registrati oggi per richiederlo",
@@ -1426,6 +1429,7 @@
       "commentUnavailable": "Questo commento non è più disponibile"
     },
     "tabs": {
+      "dislikes": "Non mi piace",
       "playlists": "Playlist"
     },
     "offerWorthNow": "Circa {{amount}} token al tasso attuale",

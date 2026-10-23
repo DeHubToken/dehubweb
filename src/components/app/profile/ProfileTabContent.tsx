@@ -38,6 +38,8 @@ import { ProfileImageGrid } from '@/components/app/profile/ProfileImageGrid';
 import { getUserComments, getNFTInfo, getMediaUrl, editComment, deleteComment } from '@/lib/api/dehub';
 import type { DeHubNFT } from '@/lib/api/dehub';
 import { useUserPins } from '@/hooks/use-pins';
+import { useProfileDislikes } from '@/hooks/use-profile-dislikes';
+import { mapNFTToFeedItem } from '@/lib/nft-to-feed-item';
 import { usePublicPlaylists, usePublicPlaylistItems } from '@/hooks/use-bookmark-folders';
 import type { PublicPlaylist } from '@/lib/api/dehub';
 import { buildImageUrl, buildFeedImageUrls, buildAvatarUrl, extractAvatarPath, buildVideoUrl } from '@/lib/media-url';
@@ -400,6 +402,11 @@ export function ProfileTabContent({
       {/* PLAYLISTS TAB — the profile's public bookmark folders */}
       <TabPanel activeTab={activeTab} visitedTabs={visitedTabs.current} tab="playlists">
         <PlaylistsTabPanel profileAddress={profileAddress} isOwnProfile={!!isViewingOwnProfile} />
+      </TabPanel>
+
+      {/* DISLIKES TAB — private unless the owner made it public */}
+      <TabPanel activeTab={activeTab} visitedTabs={visitedTabs.current} tab="dislikes">
+        <DislikesTabPanel profileAddress={profileAddress} isOwnProfile={!!isViewingOwnProfile} />
       </TabPanel>
 
       {/* On-scroll loading for content-backed tabs */}
@@ -917,6 +924,76 @@ function PlaylistPostsPanel({
               </Button>
             </div>
           )}
+        </div>
+      )}
+    </div>
+  );
+}
+
+// ============================================================================
+// Dislikes Tab Panel
+// ============================================================================
+
+/**
+ * Posts this account disliked, newest first. They are out of the owner's
+ * feeds; undoing the dislike here (tap the 👎 thumb) brings a post back.
+ */
+function DislikesTabPanel({ profileAddress, isOwnProfile }: { profileAddress: string; isOwnProfile: boolean }) {
+  const { t } = useTranslation();
+  const query = useProfileDislikes(profileAddress, true);
+  const items = (query.data?.pages ?? []).flatMap((page) => page.items).map(mapNFTToFeedItem);
+
+  if (query.isLoading) {
+    return (
+      <div className="flex items-center justify-center py-10">
+        <Loader2 className="w-6 h-6 text-zinc-400 animate-spin" />
+      </div>
+    );
+  }
+
+  if (query.isError) {
+    return <AppState icon="lock" title={t('profile.dislikes.privateTitle')} description={t('profile.dislikes.privateDesc')} size="section" />;
+  }
+
+  if (items.length === 0) {
+    return (
+      <AppState
+        icon="posts"
+        title={t('profile.dislikes.emptyTitle')}
+        description={isOwnProfile ? t('profile.dislikes.emptyOwn') : t('profile.dislikes.emptyOther')}
+        size="section"
+      />
+    );
+  }
+
+  return (
+    <div className="space-y-3" data-profile-dislikes>
+      {items.map((item) => (
+        <div
+          key={`dislike-${item.id}`}
+          data-feed-item
+          data-cinematic={item.type === 'video' ? 'video' : item.type === 'image' ? 'image' : 'post'}
+          className="rounded-xl border border-white/[0.12] bg-white/[0.03] p-3"
+        >
+          {item.type === 'video' ? (
+            <VideoCard video={item as VideoItem} />
+          ) : item.type === 'image' ? (
+            <ImageCard post={item as ImagePost} />
+          ) : (
+            <PostCard post={item as TextPost} />
+          )}
+        </div>
+      ))}
+      {query.hasNextPage && (
+        <div className="flex justify-center pt-1">
+          <Button
+            variant="ghost"
+            onClick={() => query.fetchNextPage()}
+            disabled={query.isFetchingNextPage}
+            className="h-9 rounded-lg bg-white/5 border border-white/10 text-zinc-300 hover:bg-white/10 hover:text-white text-xs"
+          >
+            {query.isFetchingNextPage ? <Loader2 className="w-4 h-4 animate-spin" /> : t('profile.dislikes.loadMore')}
+          </Button>
         </div>
       )}
     </div>

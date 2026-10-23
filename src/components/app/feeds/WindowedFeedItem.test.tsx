@@ -57,3 +57,25 @@ describe('windowed feed cards', () => {
     expect(screen.getByRole('dialog')).toBeTruthy();
   });
 });
+
+describe('disliked feed cards', () => {
+  it('fold away when the viewer dislikes the post, and stay gone on remount until undone', async () => {
+    const { hideDislikedPost, restoreDislikedPost } = await import('@/lib/disliked-posts-store');
+    vi.useFakeTimers();
+    try {
+      const view = render(<WindowedFeedItem eager estimatedHeight={520} vanishOnDislike="9001" data-testid="slot"><span>Post</span></WindowedFeedItem>);
+      act(() => hideDislikedPost('9001'));
+      expect(screen.getByTestId('slot').dataset.dislikeVanish).toBe('leaving');
+      act(() => { vi.advanceTimersByTime(1000); });
+      expect(screen.queryByTestId('slot')).toBeNull();
+
+      view.unmount();
+      render(<WindowedFeedItem eager estimatedHeight={520} vanishOnDislike="9001" data-testid="again"><span>Post</span></WindowedFeedItem>);
+      expect(screen.queryByTestId('again')).toBeNull();
+      act(() => restoreDislikedPost('9001'));
+      expect(screen.getByTestId('again')).toBeTruthy();
+    } finally {
+      vi.useRealTimers();
+    }
+  });
+});

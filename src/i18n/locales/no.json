@@ -113,6 +113,8 @@
     "heading": "DeHub Shorts"
   },
   "settings": {
+    "showDislikesDesc": "Alle kan åpne fanen Misliker på profilen din. Når dette er av, kan bare du se den.",
+    "showDislikes": "Vis mine misliker for alle",
     "postingChain": "Blokkjede for innlegg",
     "showOnline": "Vis når jeg er pålogget",
     "showOnlineDesc": "Folk du sender meldinger til ser en grønn prikk ved siden av navnet ditt mens du bruker DeHub",
@@ -1395,6 +1397,7 @@
     "returnHome": "Gå tilbake til hjem"
   },
   "profile": {
+    "dislikes": { "loadMore": "Last inn flere", "privateDesc": "Denne kontoen holder misliker for seg selv.", "privateTitle": "Misliker er private", "emptyOther": "Ingenting ennå.", "emptyOwn": "Innlegg du misliker forsvinner fra feedene dine og vises her. Angre en misliker for å få innlegget tilbake.", "emptyTitle": "Ingen misliker ennå" },
     "back": "Tilbake",
     "usernameAvailable": "Brukernavn tilgjengelig!",
     "signUpToClaim": "Registrer deg i dag for å sikre det",
@@ -1422,6 +1425,7 @@
       "commentUnavailable": "Denne kommentaren er ikke lenger tilgjengelig"
     },
     "tabs": {
+      "dislikes": "Misliker",
       "playlists": "Spillelister"
     },
     "offerWorthNow": "Omtrent {{amount}} tokens til gjeldende kurs",

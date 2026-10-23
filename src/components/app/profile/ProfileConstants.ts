@@ -38,7 +38,7 @@ export function getDefaultBanner(walletAddress?: string): string {
   return DEFAULT_BANNERS[hash % DEFAULT_BANNERS.length];
 }
 
-export type TabValue = 'home' | 'posts' | 'images' | 'videos' | 'subscribers' | 'songs' | 'live' | 'fractions' | 'pinned' | 'playlists';
+export type TabValue = 'home' | 'posts' | 'images' | 'videos' | 'subscribers' | 'songs' | 'live' | 'fractions' | 'pinned' | 'playlists' | 'dislikes';
 
 /**
  * Canonical list of profile tabs a user can pick as the one visitors land on
@@ -62,9 +62,10 @@ export const PROFILE_TAB_OPTIONS: { value: TabValue; label: string }[] = [
  * Every tab a link can open with `?tab=`. Playlists is on purpose NOT in
  * PROFILE_TAB_OPTIONS: the tab only exists while the profile has a public
  * playlist, so it cannot be the tab a profile opens on by default — but a
- * copied playlist link still has to land on it.
+ * copied playlist link still has to land on it. Dislikes is the same: it is
+ * private unless the owner makes it public, so it is never a landing tab.
  */
-export const LINKABLE_PROFILE_TABS: TabValue[] = [...PROFILE_TAB_OPTIONS.map((o) => o.value), 'playlists'];
+export const LINKABLE_PROFILE_TABS: TabValue[] = [...PROFILE_TAB_OPTIONS.map((o) => o.value), 'playlists', 'dislikes'];
 
 export function isProfileTabValue(raw: unknown): raw is TabValue {
   return LINKABLE_PROFILE_TABS.includes(raw as TabValue);

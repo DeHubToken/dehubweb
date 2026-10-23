@@ -113,6 +113,8 @@
     "heading": "Shorts på DeHub"
   },
   "settings": {
+    "showDislikesDesc": "Vem som helst kan öppna fliken Ogillanden på din profil. När detta är av kan bara du se den.",
+    "showDislikes": "Visa mina ogillanden för alla",
     "postingChain": "Blockkedja för inlägg",
     "showOnline": "Visa när jag är online",
     "showOnlineDesc": "Personer du skickar meddelanden till ser en grön prick bredvid ditt namn när du använder DeHub",
@@ -1395,6 +1397,7 @@
     "returnHome": "Tillbaka till startsidan"
   },
   "profile": {
+    "dislikes": { "loadMore": "Läs in fler", "privateDesc": "Det här kontot håller sina ogillanden för sig själv.", "privateTitle": "Ogillanden är privata", "emptyOther": "Inget ogillat än.", "emptyOwn": "Inlägg du ogillar försvinner från dina flöden och visas här. Ångra ogillandet för att få tillbaka inlägget.", "emptyTitle": "Inga ogillanden än" },
     "back": "Tillbaka",
     "usernameAvailable": "Användarnamnet är tillgängligt!",
     "signUpToClaim": "Registrera dig för att ta det",
@@ -1422,6 +1425,7 @@
       "commentUnavailable": "Den här kommentaren är inte längre tillgänglig"
     },
     "tabs": {
+      "dislikes": "Ogillanden",
       "playlists": "Spellistor"
     },
     "offerWorthNow": "Cirka {{amount}} tokens till nuvarande kurs",

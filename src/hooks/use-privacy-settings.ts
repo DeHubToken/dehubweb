@@ -1,4 +1,5 @@
 import { useTranslation as _useCopy } from 'react-i18next';
+import { DISLIKES_VISIBILITY_KEY, dislikesArePublic } from '@/hooks/use-profile-dislikes';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useAuth } from '@/contexts/AuthContext';
 import { toast } from 'sonner';
@@ -66,6 +67,7 @@ export function usePrivacySettings() {
       hide_badge_and_balance?: boolean;
       ai_scraping?: AiScrapingPreference;
       show_online?: boolean;
+      show_dislikes?: boolean;
     }) => {
       if (!walletAddress) throw new Error('Not authenticated');
 
@@ -104,6 +106,9 @@ export function usePrivacySettings() {
       if (updates.default_profile_tab !== undefined) {
         customsUpdates.defaultProfileTab = updates.default_profile_tab;
       }
+      if (updates.show_dislikes !== undefined) {
+        customsUpdates[DISLIKES_VISIBILITY_KEY] = updates.show_dislikes ? 'public' : 'private';
+      }
 
       let mergedCustoms: Record<string, string> | undefined;
       if (Object.keys(customsUpdates).length > 0) {
@@ -141,6 +146,7 @@ export function usePrivacySettings() {
     hide_badge_and_balance?: boolean;
     ai_scraping?: AiScrapingPreference;
     show_online?: boolean;
+    show_dislikes?: boolean;
   }) => {
     updateMutation.mutate(updates);
   };
@@ -154,6 +160,7 @@ export function usePrivacySettings() {
     hideBadgeAndBalance,
     aiScraping,
     showOnline,
+    showDislikes: dislikesArePublic(customs as Record<string, unknown> | undefined),
     defaultPostVisibility: (customs?.defaultPostVisibility as 'public' | 'private') ?? 'public',
     defaultProfileTab: parseDefaultProfileTab(customs?.defaultProfileTab),
     updateSettings,

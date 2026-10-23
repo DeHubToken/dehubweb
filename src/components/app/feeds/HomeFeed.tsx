@@ -1567,6 +1567,7 @@ export function HomeFeed({ active = true, shuffleKey, isRefreshing, showFilters 
         data-cinematic-first={firstFeedPost ? '' : undefined}
         className="rounded-2xl border border-white/[0.12] bg-white/[0.03] p-3"
         eager={index < 3} estimatedHeight={parseInt(intrinsicH, 10)}
+        vanishOnDislike={item.type === 'ad' ? undefined : (item.data as any)?.id}
       >
         {index >= 0 && queuedBoostIds.includes(String((item.data as any)?.id)) && (
           <button

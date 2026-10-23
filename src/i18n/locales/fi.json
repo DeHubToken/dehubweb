@@ -113,6 +113,8 @@
     "heading": "DeHub Lyhyet"
   },
   "settings": {
+    "showDislikesDesc": "Kuka tahansa voi avata profiilisi En tykkää -välilehden. Kun tämä on pois päältä, vain sinä näet sen.",
+    "showDislikes": "Näytä en tykkää -merkintäni kaikille",
     "postingChain": "Julkaisujen lohkoketju",
     "showOnline": "Näytä, kun olen online-tilassa",
     "showOnlineDesc": "Viestisi näkevät vihreän pisteen nimesi vieressä, kun käytät DeHubia",
@@ -1391,6 +1393,7 @@
     "returnHome": "Palaa etusivulle"
   },
   "profile": {
+    "dislikes": { "loadMore": "Lataa lisää", "privateDesc": "Tämä tili pitää en tykkää -merkintänsä omana tietonaan.", "privateTitle": "En tykkää -merkinnät ovat yksityisiä", "emptyOther": "Ei vielä mitään.", "emptyOwn": "Julkaisut, joista et tykkää, poistuvat syötteistäsi ja näkyvät täällä. Peru merkintä palauttaaksesi julkaisun.", "emptyTitle": "Ei vielä en tykkää -merkintöjä" },
     "back": "Takaisin",
     "usernameAvailable": "Käyttäjätunnus on saatavilla!",
     "signUpToClaim": "Rekisteröidy tänään varataksesi",
@@ -1418,6 +1421,7 @@
       "commentUnavailable": "Tämä kommentti ei ole enää saatavilla"
     },
     "tabs": {
+      "dislikes": "En tykkää",
       "playlists": "Soittolistat"
     },
     "offerWorthNow": "Noin {{amount}} rahakketta nykyisellä kurssilla",
