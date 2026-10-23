@@ -6,6 +6,7 @@ on:
       - 'supabase/functions/anon-views/**'
       - 'supabase/migrations/20261011210000_private_agent_tasks.sql'
       - 'supabase/migrations/20261013010000_badge_agent_capacity.sql'
+      - 'supabase/migrations/20261020230000_agent_swarm_controls.sql'
       - 'supabase/migrations/20261022050000_agent_lives.sql'
       - 'tests/sql/agent-tasks.sql'
       - '.github/workflows/agent-tasks.yml'
