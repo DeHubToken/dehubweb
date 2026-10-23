@@ -12,6 +12,10 @@ import { useTranslation as _useCopy } from 'react-i18next';
  * feed's multi-column path — which is what a wide window gets — never carried
  * this row either. It runs at every width now, in both feed paths.
  *
+ * It never runs dry: the feed pages through everyone ranked by activity and
+ * profile completeness, Explore by newest sign-up, empty profiles last, and
+ * keeps loading as you follow, skip or scroll until nobody is left.
+ *
  * @module components/app/mobile/MobileWhoToFollowCarousel
  */
 
@@ -23,7 +27,7 @@ import ChevronRight from "@/components/ui/cut-icons/next";
 import { useNavigate } from 'react-router-dom';
 import { AppState } from '@/components/app/AppState';
 import { FollowCoverCard, suggestionName } from '@/components/app/FollowCoverCard';
-import { getSuggestedAccounts, getCachedSuggestedProfiles, type SuggestedAccount } from '@/lib/api/dehub';
+import { getSuggestedAccounts, getRankedSuggestions, type SuggestedAccount } from '@/lib/api/dehub';
 import { useAuth } from '@/contexts/AuthContext';
 import { useReauthHandler } from '@/hooks/use-reauth-handler';
 import { useFollowedSuggestions } from '@/hooks/use-followed-suggestions';
@@ -32,7 +36,6 @@ import { toast } from 'sonner';
 import { SwipeableCarousel } from '@/components/app/SwipeableCarousel';
 
 const BATCH_SIZE = 10;
-const MAX_PAGES = 10;
 /** How long a followed card shows "Following" before it leaves the row. */
 const FOLLOWED_LINGER_MS = 700;
 
@@ -65,26 +68,22 @@ export function MobileWhoToFollowCarousel({ surface = 'feed' }: MobileWhoToFollo
     hasNextPage,
     isFetchingNextPage,
   } = useInfiniteQuery({
-    queryKey: isAuthenticated ? ['suggested-accounts', walletAddress] : ['cached-suggested-profiles'],
-    queryFn: ({ pageParam = 1 }) => {
-      if (!isAuthenticated) {
-        const offset = (pageParam - 1) * BATCH_SIZE;
-        return getCachedSuggestedProfiles(BATCH_SIZE, offset);
+    queryKey: ['suggested-accounts', walletAddress, surface],
+    queryFn: async ({ pageParam }) => {
+      const sort = surface === 'explore' ? 'newest' : 'active';
+      try {
+        return await getRankedSuggestions(sort, pageParam, BATCH_SIZE);
+      } catch (error) {
+        // A server without the ranked list yet still gets the old ten picks.
+        if (pageParam) throw error;
+        const legacy = await getSuggestedAccounts(BATCH_SIZE, 1);
+        return { items: legacy.items, nextCursor: null };
       }
-      return getSuggestedAccounts(BATCH_SIZE, pageParam);
     },
-    getNextPageParam: (lastPage, allPages) => {
-      if (!lastPage.hasMore) return undefined;
-      if (allPages.length >= MAX_PAGES) return undefined;
-      const allPreviousAddresses = new Set(
-        allPages.slice(0, -1).flatMap(p => p.items.map(i => i.address))
-      );
-      const newItems = lastPage.items.filter(i => !allPreviousAddresses.has(i.address));
-      if (newItems.length === 0) return undefined;
-      return allPages.length + 1;
-    },
-    initialPageParam: 1,
-    staleTime: isAuthenticated ? 5 * 60 * 1000 : 30 * 60 * 1000,
+    getNextPageParam: (lastPage) => lastPage.nextCursor ?? undefined,
+    initialPageParam: null as string | null,
+    enabled: isAuthenticated,
+    staleTime: 5 * 60 * 1000,
   });
 
   const allSuggestions = useMemo(() => {
@@ -101,17 +100,11 @@ export function MobileWhoToFollowCarousel({ surface = 'feed' }: MobileWhoToFollo
     });
   }, [allSuggestions, followedUsers]);
 
-  // Auto-fetch more when filtered list drops below 3
-  const prevFilteredCount = useRef(filteredSuggestions.length);
+  // Keep a few cards ahead: following or skipping pulls the next page in.
   useEffect(() => {
-    if (
-      filteredSuggestions.length < 3 &&
-      filteredSuggestions.length < prevFilteredCount.current &&
-      hasNextPage && !isFetchingNextPage
-    ) {
+    if (filteredSuggestions.length < 5 && hasNextPage && !isFetchingNextPage) {
       fetchNextPage();
     }
-    prevFilteredCount.current = filteredSuggestions.length;
   }, [filteredSuggestions.length, hasNextPage, isFetchingNextPage, fetchNextPage]);
 
   // Load more when user scrolls near the end of the carousel
