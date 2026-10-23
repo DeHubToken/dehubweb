@@ -193,6 +193,7 @@
     "heading": "DeHub قىسقا ۋىدىئولىرى"
   },
   "settings": {
+    "usernameTaken": "بۇ ئىشلەتكۈچى نامى ئىگىلەنگەن",
     "postingChain": "يازما بلوكچەينى",
     "showOnline": "مەن توردا بولغاندا كۆرسىتىش پروگراممىسى",
     "showOnlineDesc": "سىز يوللىغان كىشىلەر DeHub نى ئىشلەتكەندە ئىسمىڭىزنىڭ يېنىدىكى يېشىل نوقتىنى كۆرىدۇ",
@@ -2359,6 +2360,7 @@
     "pendingSubmitted": "{{amount}} token yuborildi. Tasdiqlash hal qilinmoqda. Qayta yubormang."
   },
   "communities": {
+    "chatTab": "سۆھبەت",
     "title": "Jamiyatlar",
     "create": "قۇرۇش",
     "searchPlaceholder": "مەھەللىلەرنى ئىزدەش...",
@@ -2393,7 +2395,6 @@
     "addDescription": "Ta'rif qo'shing...",
     "communityDescription": "مەھەللە چۈشەندۈرۈشى...",
     "posts": "Yorliqlar",
-    "chat": "سۆھبەت",
     "membersTab": "ئەزالار ({{count}})",
     "about": "ھەققىدە",
     "backToCommunities": "Jamiyatlar",
@@ -3822,6 +3823,7 @@
     "sellYourFractions": "بۆلەكلىرىڭىزنى سېتىۋېلىڭ ({{held}} hold)"
   },
   "creator": {
+    "libraryEmpty": "ساقلىغان ھاسىلاتلىرىڭىز بۇ يەردە كۆرۈنىدۇ.",
     "whatToCreate": "ياراتماقچى بولغان نەرسىنى",
     "startCreatingWith": "{{model}} بىلەن قۇرۇشقا باشلايدۇ",
     "studioSubtitle": "بىر كۆرۈنۈشنى، خاراكتېرنى، روھى ياكى ئۇسلۇبنى تەسۋىرلەڭ. نەتىجىلەرنى تۆۋەنگە چۈشۈرۈپ تەھرىرلىگۈچكە يۆتكەيدۇ.",
@@ -6698,6 +6700,7 @@
     "seoDescription": "DeHub نىڭ رەسمىي ھۆججەتلىرى: سۇپا قىسقىچە چۈشەندۈرۈش، dApps، نۆتىك پۇل توكېن ئىقتىسادى، staking، ئويۇنلار، يول خەرىتىسى، كۆپ سورىلىدىغان سوئاللار ۋە باشقىلار."
   },
   "dex": {
+    "title": "توكنلار / USD",
     "seoTitle": "DEX — باھاسىدا نۆتىك پۇل تىجارىتى",
     "seoDescription": "Base ياكى BnB زەنجىرىدە Uniswap v4 چەكلىمە بۇيرۇقى ئارقىلىق نۆتىك پۇل سېتىۋېلىش ياكى سېتىش باھاسىنى تەڭشەش. ھاياتلىق بۇيرۇق كىتابى، بازارنىڭ چوڭقۇرلىقى ۋە بىر ئورتاق دوللار قىممىتى.",
     "venue": "Network",
@@ -6916,6 +6919,7 @@
     }
   },
   "editor": {
+    "video": { "tFade": "ئارىلاش ئۆتۈش", "none": "يوق", "transition": "ئۆتۈش", "speed": "سۈرئەت", "sound": "ئاۋاز","video": "ۋىدىئو"},
     "review": {
       "title": "تۈرنى تەكشۈرۈش",
       "shared": "سىز بىلەن ھەمبەھىرلەندى",

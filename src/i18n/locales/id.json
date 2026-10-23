@@ -193,6 +193,7 @@
     "heading": "DeHub Shorts"
   },
   "settings": {
+    "usernameTaken": "Nama pengguna sudah dipakai",
     "showDislikesDesc": "Siapa pun bisa membuka tab Tidak Suka di profilmu. Jika nonaktif, hanya kamu yang bisa melihatnya.",
     "showDislikes": "Tampilkan tidak sukaku ke semua orang",
     "postingChain": "Blockchain postingan",
@@ -2375,6 +2376,7 @@
     "pendingSubmitted": "{{amount}} token dikirim. Konfirmasi masih diperiksa. Jangan kirim lagi."
   },
   "communities": {
+    "chatTab": "Obrolan",
     "title": "Komunitas",
     "create": "Buat",
     "searchPlaceholder": "Cari komunitas...",
@@ -2409,7 +2411,6 @@
     "addDescription": "Tambahkan deskripsi...",
     "communityDescription": "Deskripsi komunitas...",
     "posts": "Postingan",
-    "chat": "Obrolan",
     "membersTab": "Anggota ({{count}})",
     "about": "Tentang",
     "backToCommunities": "Komunitas",
@@ -3876,6 +3877,7 @@
     "sellYourFractions": "Jual fraksi Anda ({{held}} dipegang)"
   },
   "creator": {
+    "libraryEmpty": "Hasil generasi tersimpan Anda akan muncul di sini.",
     "whatToCreate": "Mau membuat apa",
     "startCreatingWith": "Mulai berkarya dengan {{model}}",
     "studioSubtitle": "Jelaskan sebuah adegan, karakter, suasana, atau gaya. Hasilnya muncul di bawah dan langsung bisa dibawa ke editor.",
@@ -6799,6 +6801,7 @@
     "seoDescription": "Dokumentasi resmi DeHub: gambaran platform, dApps, ekonomi token token, staking, gim, peta jalan, FAQ, dan lainnya."
   },
   "dex": {
+    "title": "token / USD",
     "seoTitle": "DEX — Perdagangkan token dengan harga Anda",
     "seoDescription": "Tetapkan harga beli atau jual token Anda dengan pesanan batas Uniswap v4 di Base atau BNB Chain. Buku pesanan langsung, kedalaman pasar, dan satu harga USD bersama.",
     "venue": "Jaringan",
@@ -7021,6 +7024,7 @@
     }
   },
   "editor": {
+    "video": { "tFade": "Larut silang", "none": "Tidak ada", "transition": "Transisi", "speed": "Kecepatan", "sound": "Suara","video": "Video"},
     "review": {
       "title": "Tinjauan proyek",
       "shared": "Dibagikan kepada Anda",

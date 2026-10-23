@@ -193,6 +193,7 @@
     "heading": "Krótkie filmy DeHub"
   },
   "settings": {
+    "usernameTaken": "Nazwa użytkownika zajęta",
     "showDislikesDesc": "Każdy może otworzyć kartę „Nie lubię” na twoim profilu. Gdy to jest wyłączone, widzisz ją tylko ty.",
     "showDislikes": "Pokazuj wszystkim moje łapki w dół",
     "postingChain": "Blockchain postów",
@@ -2375,6 +2376,7 @@
     "pendingSubmitted": "{{amount}} tokenów przesłanych. Potwierdzenie jest nadal sprawdzane. Nie wysyłaj ponownie."
   },
   "communities": {
+    "chatTab": "Czat",
     "title": "Społeczności",
     "create": "Utwórz",
     "searchPlaceholder": "Szukaj społeczności...",
@@ -2409,7 +2411,6 @@
     "addDescription": "Dodaj opis...",
     "communityDescription": "Opis społeczności...",
     "posts": "Posty",
-    "chat": "Czat",
     "membersTab": "Członkowie ({{count}})",
     "about": "Informacje",
     "backToCommunities": "Społeczności",
@@ -3876,6 +3877,7 @@
     "sellYourFractions": "Sprzedaj swoje ułamki ({{held}} zatrzymane)"
   },
   "creator": {
+    "libraryEmpty": "Tutaj pojawią się Twoje zapisane generacje.",
     "whatToCreate": "Co utworzyć",
     "startCreatingWith": "Zacznij tworzyć z {{model}}",
     "studioSubtitle": "Opisz scenę, postać, nastrój lub styl. Wyniki pojawią się poniżej i przejdą bezpośrednio do edytora.",
@@ -6752,6 +6754,7 @@
     "seoDescription": "Oficjalna dokumentacja DeHub: przegląd platformy, dApps, ekonomia tokena tokenów, staking, gry, plan rozwoju, FAQ i więcej."
   },
   "dex": {
+    "title": "tokeny / USD",
     "seoTitle": "DEX — Handel tokenów po Twojej cenie",
     "seoDescription": "Ustaw swoją cenę kupna lub sprzedaży tokenów za pomocą zlecenia z limitem Uniswap v4 na Base lub BNB Chain. Księga zleceń na żywo, głębokość rynku i jedna wspólna cena w USD.",
     "venue": "Sieć",
@@ -6974,6 +6977,7 @@
     }
   },
   "editor": {
+    "video": { "tFade": "Przenikanie", "none": "Brak", "transition": "Przejście", "speed": "Prędkość", "sound": "Dźwięk","video": "Wideo"},
     "review": {
       "title": "Przegląd projektu",
       "shared": "Udostępnione tobie",

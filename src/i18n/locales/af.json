@@ -193,6 +193,7 @@
     "heading": "DeHub Shorts"
   },
   "settings": {
+    "usernameTaken": "Gebruikersnaam is geneem",
     "postingChain": "Blokketting vir plasings",
     "showOnline": "Toon wanneer ik online kom",
     "showOnlineDesc": "Mense wat jy boodskap sien 'n groen kolletjie langs jou naam terwyl jy DeHub gebruik",
@@ -2400,6 +2401,7 @@
     "pendingSubmitted": "{{amount}} tokens ingedien. Bevestiging word nog nagegaan. Moenie dit weer stuur nie."
   },
   "communities": {
+    "chatTab": "Klets",
     "title": "Gemeenskappe",
     "create": "Skep",
     "searchPlaceholder": "Soek gemeenskappe...",
@@ -2434,7 +2436,6 @@
     "addDescription": "Voeg 'n beskrywing by...",
     "communityDescription": "Gemeenskapsbeskrywing...",
     "posts": "Plasings",
-    "chat": "Klets",
     "membersTab": "Lede ({{count}})",
     "about": "Meer oor",
     "backToCommunities": "Gemeenskappe",
@@ -3901,6 +3902,7 @@
     "sellYourFractions": "Verkoop jou fraksies ({{held}} gehou)"
   },
   "creator": {
+    "libraryEmpty": "Jou gestoorde generasies sal hier verskyn.",
     "whatToCreate": "Wat om te skep",
     "startCreatingWith": "Begin met skep met {{model}}",
     "studioSubtitle": "Beskryf 'n toneel, karakter, stemming of styl. Resultate verskyn hieronder en gaan direk in die redigeerder.",
@@ -6848,6 +6850,7 @@
     "faq": "Gereelde vrae"
   },
   "dex": {
+    "title": "tokens / USD",
     "seoTitle": "DEX — Verhandel tokens teen jou prys",
     "seoDescription": "Stel jou tokens koop- of verkoop prys met 'n Uniswap v4 limiet order op Base of BNB Chain. Regstreekse orderboek, markdiepte en een gedeelde USD prys.",
     "venue": "Netwerk",
@@ -7070,6 +7073,7 @@
     }
   },
   "editor": {
+    "video": { "tFade": "Oorvloei", "none": "Geen", "transition": "Oorgang", "speed": "Spoed", "sound": "Klank","video": "Video"},
     "review": {
       "title": "Projekhersiening",
       "shared": "Met jou gedeel",

@@ -193,6 +193,7 @@
     "heading": "Di DeHub Shorts"
   },
   "settings": {
+    "usernameTaken": "Dem don take dis username",
     "postingChain": "Blockchain wey you go use post",
     "showOnline": "Wen yu dey online.",
     "showOnlineDesc": "Pipo wey dey message you go see green dot for beside your name while you dey use DeHub.",
@@ -2197,6 +2198,7 @@
     "pendingSubmitted": "{{amount}} tokens wey send na still dey check for confirmation. No go send again."
   },
   "communities": {
+    "chatTab": "Chat",
     "title": "Communities",
     "create": "Create",
     "searchPlaceholder": "Search communities...",
@@ -2229,7 +2231,6 @@
     "addDescription": "Add a description...",
     "communityDescription": "Community description...",
     "posts": "Posts",
-    "chat": "Chat",
     "membersTab": "Members ({{count}})",
     "about": "About",
     "backToCommunities": "Communities",
@@ -3430,6 +3431,7 @@
     "needsYouHold": "Wan go for {{needed}}, you dey hold {{held}}"
   },
   "creator": {
+    "libraryEmpty": "Your saved generations go show for here.",
     "whatToCreate": "What to create",
     "countRunning_one": "{{count}} running",
     "countRunning_other": "{{count}} running",
@@ -5695,6 +5697,7 @@
     "seoDescription": "Official DeHub documentation: platform overview, dApps, tokens token economics, staking, games, roadmap, FAQ and more."
   },
   "dex": {
+    "title": "tokens / USD",
     "venue": "Network",
     "marketPrice": "Market price · USD",
     "bookPrice": "{{chain}} book price · USD",
@@ -5877,6 +5880,7 @@
     }
   },
   "editor": {
+    "video": { "tFade": "Blend enter", "none": "Nothing", "transition": "Transition", "speed": "Speed", "sound": "Sound","video": "Video"},
     "review": {
       "title": "Check project",
       "shared": "Dem share am with you",

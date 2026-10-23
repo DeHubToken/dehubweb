@@ -198,6 +198,7 @@
     "heading": "วิดีโอสั้น DeHub"
   },
   "settings": {
+    "usernameTaken": "ชื่อผู้ใช้นี้ถูกใช้แล้ว",
     "showDislikesDesc": "ทุกคนเปิดแท็บไม่ชอบในโปรไฟล์ของคุณได้ หากปิดไว้ จะมีแค่คุณที่เห็น",
     "showDislikes": "แสดงสิ่งที่ฉันไม่ชอบให้ทุกคนเห็น",
     "postingChain": "บล็อกเชนสำหรับโพสต์",
@@ -2398,6 +2399,7 @@
     "pendingSubmitted": "{{amount}} โทเค็นถูกส่งแล้ว กำลังตรวจสอบการยืนยันอยู่ อย่าส่งอีกครั้ง"
   },
   "communities": {
+    "chatTab": "แชท",
     "title": "ชุมชน",
     "create": "สร้าง",
     "searchPlaceholder": "ค้นหาชุมชน...",
@@ -2432,7 +2434,6 @@
     "addDescription": "เพิ่มคำอธิบาย...",
     "communityDescription": "คำอธิบายชุมชน...",
     "posts": "โพสต์",
-    "chat": "แชท",
     "membersTab": "สมาชิก ({{count}})",
     "about": "เกี่ยวกับ",
     "backToCommunities": "ชุมชน",
@@ -3887,6 +3888,7 @@
     "sellYourFractions": "ขายเศษส่วนของคุณ (ค้างไว้ {{held}})"
   },
   "creator": {
+    "libraryEmpty": "ผลงานที่คุณบันทึกไว้จะแสดงที่นี่",
     "whatToCreate": "สิ่งที่ต้องสร้าง",
     "startCreatingWith": "เริ่มสร้างสรรค์ด้วย {{model}}",
     "studioSubtitle": "อธิบายฉากตัวละครอารมณ์หรือสไตล์ผลลัพธ์อยู่ด้านล่างและตรงไปที่เครื่องมือตัดต่อ",
@@ -7020,6 +7022,7 @@
     }
   },
   "editor": {
+    "video": { "tFade": "ละลายภาพ", "none": "ไม่มี", "transition": "ทรานซิชัน", "speed": "ความเร็ว", "sound": "เสียง","video": "วิดีโอ"},
     "review": {
       "title": "ตรวจสอบโปรเจกต์",
       "shared": "แชร์กับคุณ",

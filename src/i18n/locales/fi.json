@@ -193,6 +193,7 @@
     "heading": "DeHub Lyhyet"
   },
   "settings": {
+    "usernameTaken": "Käyttäjänimi on varattu",
     "showDislikesDesc": "Kuka tahansa voi avata profiilisi En tykkää -välilehden. Kun tämä on pois päältä, vain sinä näet sen.",
     "showDislikes": "Näytä en tykkää -merkintäni kaikille",
     "postingChain": "Julkaisujen lohkoketju",
@@ -2318,6 +2319,7 @@
     "pendingSubmitted": "{{amount}} tokenia lähetetty. Vahvistusta tarkistetaan vielä. Älä lähetä uudelleen."
   },
   "communities": {
+    "chatTab": "Chat",
     "title": "Yhteisöt",
     "create": "Luo",
     "searchPlaceholder": "Etsi yhteisöjä...",
@@ -2352,7 +2354,6 @@
     "addDescription": "Lisää kuvaus...",
     "communityDescription": "Yhteisön kuvaus...",
     "posts": "Julkaisut",
-    "chat": "Chat",
     "membersTab": "Jäsenet ({{count}})",
     "about": "Tietoa",
     "backToCommunities": "Yhteisöt",
@@ -3815,6 +3816,7 @@
     "sellYourFractions": "Myy fraktioitasi ({{held}} hallussasi)"
   },
   "creator": {
+    "libraryEmpty": "Tallennetut generointisi näkyvät täällä.",
     "whatToCreate": "Mitä luoda",
     "startCreatingWith": "Aloita luominen {{model}}:lla",
     "studioSubtitle": "Kuvaile kohtaus, hahmo, tunnelma tai tyyli. Tulokset näkyvät alla ja siirtyvät suoraan editoriin.",
@@ -6676,6 +6678,7 @@
     "seoDescription": "DeHubin virallinen dokumentaatio: alustan yleiskatsaus, dApps, tokenia-tokenin talous, staking, pelit, tiekartta, UKK ja muuta."
   },
   "dex": {
+    "title": "tokenia / USD",
     "seoTitle": "DEX — Käy kauppaa tokenia:llä omalla hinnallasi",
     "seoDescription": "Aseta tokenia:n osto- tai myyntihinta Uniswap v4 -rajatoimeksiannolla Base- tai BNB-ketjussa. Reaaliaikainen tilauskirja, markkinasyvyys ja yksi jaettu USD-hinta.",
     "venue": "Verkko",
@@ -6898,6 +6901,7 @@
     }
   },
   "editor": {
+    "video": { "tFade": "Ristihäivytys", "none": "Ei mitään", "transition": "Siirtymä", "speed": "Nopeus", "sound": "Ääni","video": "Video"},
     "review": {
       "title": "Projektin tarkistus",
       "shared": "Jaettu kanssasi",

@@ -193,6 +193,7 @@
     "heading": "Shorts ng DeHub"
   },
   "settings": {
+    "usernameTaken": "Nakuha na ang username",
     "showDislikesDesc": "Kahit sino ay puwedeng magbukas ng tab na Ayaw sa profile mo. Kapag naka-off, ikaw lang ang makakakita.",
     "showDislikes": "Ipakita sa lahat ang mga ayaw ko",
     "postingChain": "Blockchain para sa mga post",
@@ -2420,6 +2421,7 @@
     "pendingSubmitted": "{{amount}} tokens na-submit. Kasalukuyang sinusuri pa ang kumpirmasyon. Huwag mo na itong ipadala muli."
   },
   "communities": {
+    "chatTab": "Chat",
     "title": "Communities",
     "create": "Gumawa",
     "searchPlaceholder": "Maghanap ng komunidad...",
@@ -2454,7 +2456,6 @@
     "addDescription": "Magdagdag ng paglalarawan...",
     "communityDescription": "Community description...",
     "posts": "Posts",
-    "chat": "Chat",
     "membersTab": "Mga miyembro ({{count}})",
     "about": "Tungkol sa",
     "backToCommunities": "Communities",
@@ -3921,6 +3922,7 @@
     "sellYourFractions": "Ibenta ang iyong mga fraction ({{held}} na hawak)"
   },
   "creator": {
+    "libraryEmpty": "Lalabas dito ang iyong mga naka-save na likha.",
     "whatToCreate": "Ano ang gagawin",
     "startCreatingWith": "Magsimula ng paglikha gamit ang {{model}}",
     "studioSubtitle": "Ilarawan ang isang eksena, karakter, mood o istilo. Ang mga resulta ay lalabas sa ibaba at direktang papasok sa editor.",
@@ -6837,6 +6839,7 @@
     "seoDescription": "Opisyal na dokumentasyon ng DeHub: pangkalahatang-ideya ng platform, dApps, ekonomiya ng tokens token, staking, mga laro, roadmap, FAQ at higit pa."
   },
   "dex": {
+    "title": "tokens / USD",
     "seoTitle": "DEX — I — trade ang tokens sa iyong presyo",
     "seoDescription": "Itakda ang iyong tokens bumili o magbenta ng presyo na may isang Uniswap v4 limit order sa Base o BNB Chain. Live na aklat ng order, lalim ng merkado at isang ibinahaging presyo ng USD.",
     "venue": "Network",
@@ -7057,6 +7060,7 @@
     }
   },
   "editor": {
+    "video": { "tFade": "Paghahalo", "none": "Wala", "transition": "Transisyon", "speed": "Bilis", "sound": "Tunog","video": "Video"},
     "review": {
       "title": "Pagsusuri ng proyekto",
       "shared": "Ibinahagi sa iyo",

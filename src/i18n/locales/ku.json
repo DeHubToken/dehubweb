@@ -192,6 +192,7 @@
     "heading": "DeHub Kurt"
   },
   "settings": {
+    "usernameTaken": "Navê bikarhêner hatiye girtin",
     "postingChain": "Blokzincîra weşanê",
     "showOnline": "Dema ku ez serhêl im nîşan bide",
     "showOnlineDesc": "Kesên ku hûn peyamên wan dişînin dema ku hûn DeHub bikar tînin li kêleka navê we xalek kesk dibînin.",
@@ -2154,6 +2155,7 @@
     "pendingSubmitted": "{{amount}} توکن ارسال شد. تایید هنوز در حال بررسی است. دوباره ارسال نکنید."
   },
   "communities": {
+    "chatTab": "Sohbet",
     "title": "Civak",
     "create": "Biafirîne",
     "searchPlaceholder": "Li civakan bigere...",
@@ -2188,7 +2190,6 @@
     "addDescription": "Danasînekê zêde bike...",
     "communityDescription": "Danasîna civakê...",
     "posts": "Şandî",
-    "chat": "Sohbet",
     "membersTab": "Endam ({{count}})",
     "about": "Derbar",
     "backToCommunities": "Civak",
@@ -3401,6 +3402,7 @@
     "sellYourFractions": "فرۆشتنی به‌شه‌کانی تۆ ({{held}} گیراوه‌)"
   },
   "creator": {
+    "libraryEmpty": "Çêkirinên te yên tomarkirî dê li vir xuya bibin.",
     "whatToCreate": "چی دروست بکرێت",
     "startCreatingWith": "ده‌ستپێکردنی دروستکردن به‌ {{model}}",
     "studioSubtitle": "وه‌سفکردنی دیمه‌نێک، که‌سایه‌تییه‌ک، ‌هاوڕه‌نگێک یان شێوازێک. ئه‌نجامه‌کان له‌ خواره‌وه‌ ده‌بن و ڕاسته‌وخۆ ده‌چنه‌ ناو ئه‌دیتۆره‌که‌وه‌.",
@@ -5407,7 +5409,7 @@
     "kindVideo": "ڤیدیۆ",
     "kindAudio": "Deng",
     "kindImage": "Wêne",
-    "tileSourceKind": "{{çavkanî}} · {{cure}}",
+    "tileSourceKind": "{{source}} · {{kind}}",
     "reviewTitle": "Berî şandinê binirxîne",
     "reviewSubtitle": "Ji {{source}}, wek {{kind}}. Her tiştê ku hûn dixwazin biguherînin - sernavê vala bihêlin da ku orîjînal bimîne.",
     "reviewName": "سەردێڕ",
@@ -5790,6 +5792,7 @@
     "seoDescription": "Belgeyên fermî yên DeHub: nêrîna giştî ya platformê, dApps, aboriya tokena توکن, staking, lîstik, nexşerê, pirsên pir tên kirin û bêtir."
   },
   "dex": {
+    "title": "tokens / USD",
     "seoTitle": "DEX — بازرگانی توکن بە نرخی خۆت بکە",
     "seoDescription": "نرخی کڕین یان فرۆشتنی توکن خۆت دابنێ بە فەرمانی سنووردارکردنی Uniswap v4 لەسەر Base یان BNB Chain. کتێبی فەرمانی زیندوو، قووڵایی بازاڕ و یەک نرخی هاوبەشی دۆلاری.",
     "venue": "ڕاژە",
@@ -5979,6 +5982,7 @@
     }
   },
   "editor": {
+    "video": { "tFade": "Derbasbûna nerm", "none": "Tune", "transition": "Derbasbûn", "speed": "Lez", "sound": "Deng","video": "Vîdyo"},
     "review": {
       "title": "Vekolîna projeyê",
       "shared": "Bi te re parvekirî",

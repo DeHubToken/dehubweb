@@ -193,6 +193,7 @@
     "heading": "DeHub kratki videozapisi"
   },
   "settings": {
+    "usernameTaken": "Korisničko ime je zauzeto",
     "postingChain": "Blockchain za objave",
     "showOnline": "Prikaži kad sam na mreži",
     "showOnlineDesc": "Osobe kojima pošaljete poruku vide zelenu točku pored vašeg imena dok koristite DeHub",
@@ -2314,6 +2315,7 @@
     "pendingSubmitted": "{{amount}} tokena poslano. Potvrda se još uvijek provjerava. Nemojte slati ponovno."
   },
   "communities": {
+    "chatTab": "Razgovor",
     "title": "Zajednice",
     "create": "Stvori",
     "searchPlaceholder": "Pretraži zajednice...",
@@ -2348,7 +2350,6 @@
     "addDescription": "Dodaj opis...",
     "communityDescription": "Opis zajednice...",
     "posts": "Objave",
-    "chat": "Razgovor",
     "membersTab": "Članovi ({{count}})",
     "about": "O zajednici",
     "backToCommunities": "Zajednice",
@@ -3815,6 +3816,7 @@
     "sellYourFractions": "Prodajte svoje razlomke ({{held}} držite)"
   },
   "creator": {
+    "libraryEmpty": "Tvoje spremljene generacije pojavit će se ovdje.",
     "whatToCreate": "Što stvoriti",
     "startCreatingWith": "Počni stvarati s {{model}}",
     "studioSubtitle": "Opiši scenu, lik, raspoloženje ili stil. Rezultati se pojavljuju dolje i direktno se prenose u uređivač.",
@@ -6676,6 +6678,7 @@
     "seoDescription": "Službena DeHub dokumentacija: pregled platforme, dApps, ekonomija tokena tokena, staking, igre, plan razvoja, česta pitanja i više."
   },
   "dex": {
+    "title": "tokena / USD",
     "seoTitle": "DEX — Trgujte tokena po svojoj cijeni",
     "seoDescription": "Postavite svoju tokena cijenu za kupnju ili prodaju s Uniswap v4 limit narudžbom na Base ili BNB Chainu. Knjiga narudžbi uživo, dubina tržišta i jedna zajednička USD cijena.",
     "venue": "Mreža",
@@ -6898,6 +6901,7 @@
     }
   },
   "editor": {
+    "video": { "tFade": "Pretapanje", "none": "Nijedan", "transition": "Prijelaz", "speed": "Brzina", "sound": "Zvuk","video": "Video"},
     "review": {
       "title": "Pregled projekta",
       "shared": "Podijeljeno s vama",

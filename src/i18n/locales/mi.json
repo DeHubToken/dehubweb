@@ -193,6 +193,7 @@
     "heading": "DeHub Poto"
   },
   "settings": {
+    "usernameTaken": "Kua riro te ingoa kaiwhakamahi",
     "postingChain": "Poraka mekameka mō ngā whakairinga",
     "showOnline": "Whakaatu i te wa e ahau i runga i te ipurangi",
     "showOnlineDesc": "Ko nga tangata e tuku ana koe ka kite i tetahi tohu matomato i te taha o to ingoa i a koe e whakamahi ana i te DeHub",
@@ -2366,6 +2367,7 @@
     "pendingSubmitted": "{{amount}} tohu kua tukuna. Kei te tirotirohia tonu te whakau. Kaua e tukuna anō."
   },
   "communities": {
+    "chatTab": "Kōrerorero",
     "title": "Ngā Hapori",
     "create": "Waihanga",
     "searchPlaceholder": "Rapua ngā hapori...",
@@ -2400,7 +2402,6 @@
     "addDescription": "Tāpirihia he whakaahuatanga...",
     "communityDescription": "Whakaahuatanga hapori...",
     "posts": "Ngā Pānui",
-    "chat": "Kōrerorero",
     "membersTab": "Ngā Mema ({{count}})",
     "about": "Mō",
     "backToCommunities": "Ngā Hapori",
@@ -3847,6 +3848,7 @@
     "sellYourFractions": "Hokona o koutou wehenga ({{held}} puritia)"
   },
   "creator": {
+    "libraryEmpty": "Ka puta mai ō whakaputanga kua tiakina i konei.",
     "whatToCreate": "He aha te hanga",
     "startCreatingWith": "Tīmata ki te hanga ki {{model}}",
     "studioSubtitle": "Whakaahuahia he āhua, he tangata, he kare-ā-roto, he momo rānei. Ka puta ngā hua ki raro, ka tika ki roto i te etita.",
@@ -6290,7 +6292,7 @@
     "kindImage": "Whakaahua",
     "tileSourceKind": "{{source}} · {{kind}}",
     "reviewTitle": "Arotake i mua i te tuku",
-    "reviewSubtitle": "Mai i te {{puna}}, rite {{kind}}}. Whakatika i nga mea katoa e hiahia ana koe — waiho te taitara kore ki te pupuri i te taketake.",
+    "reviewSubtitle": "Mai i te {{source}}, rite {{kind}}. Whakatika i nga mea katoa e hiahia ana koe — waiho te taitara kore ki te pupuri i te taketake.",
     "reviewName": "Ingoa",
     "reviewNamePlaceholder": "Waiho noa ki te pupuri i te taitara taketake",
     "reviewDescription": "Whakaahuatanga",
@@ -6756,6 +6758,7 @@
     "seoDescription": "Tuhinga mana o DeHub: tirohanga whānui o te pae, dApps, ōhanga tohu tohu, staking, kēmu, mahere, pātai auau me ētahi atu."
   },
   "dex": {
+    "title": "tohu / USD",
     "seoTitle": "DEX — Hokohoko tohu i tō utu",
     "seoDescription": "Whakaritea tō utu hoko, hoko rānei i te tohu mā te ota rohe Uniswap v4 i runga i te Base, i te BNB Chain rānei. Pukapuka ota ora, hōhonutanga o te mākete, me tētahi utu USD kotahi.",
     "venue": "Whatunga",
@@ -6978,6 +6981,7 @@
     }
   },
   "editor": {
+    "video": { "tFade": "Memeha whakawhiti", "none": "Kore", "transition": "Whakawhitinga", "speed": "Tere", "sound": "Oro","video": "Ataata"},
     "review": {
       "title": "Arotake kaupapa",
       "shared": "I tiritiria ki a koe",

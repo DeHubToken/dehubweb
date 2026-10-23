@@ -193,6 +193,7 @@
     "heading": "Curts de DeHub"
   },
   "settings": {
+    "usernameTaken": "Nom d'usuari ocupat",
     "showDislikesDesc": "Qualsevol pot obrir la pestanya «No m'agrada» del teu perfil. Si està desactivat, només tu la pots veure.",
     "showDislikes": "Mostra a tothom els meus «no m'agrada»",
     "postingChain": "Cadena de blocs de les publicacions",
@@ -2318,6 +2319,7 @@
     "pendingSubmitted": "{{amount}} testimonis enviats. La confirmació encara s'està comprovant. No l'enviïs de nou."
   },
   "communities": {
+    "chatTab": "Xat",
     "title": "Comunitats",
     "create": "Crea",
     "searchPlaceholder": "Cerca comunitats...",
@@ -2352,7 +2354,6 @@
     "addDescription": "Afegeix una descripció...",
     "communityDescription": "Descripció de la comunitat...",
     "posts": "Publicacions",
-    "chat": "Xat",
     "membersTab": "Membres ({{count}})",
     "about": "Quant a",
     "backToCommunities": "Comunitats",
@@ -3817,6 +3818,7 @@
     "sellYourFractions": "Vendre les teves fraccions ({{held}} retingudes)"
   },
   "creator": {
+    "libraryEmpty": "Les teves generacions desades apareixeran aquí.",
     "whatToCreate": "Què crear",
     "startCreatingWith": "Comença a crear amb {{model}}",
     "studioSubtitle": "Descriu una escena, personatge, estat d'ànim o estil. Els resultats apareixen a continuació i van directament a l'editor.",
@@ -6675,6 +6677,7 @@
     "seoDescription": "Documentació oficial de DeHub: visió general de la plataforma, dApps, economia del token fitxes, staking, jocs, full de ruta, preguntes freqüents i més."
   },
   "dex": {
+    "title": "tokens / USD",
     "seoTitle": "DEX — Intercanvia fitxes al teu preu",
     "seoDescription": "Estableix el teu preu de compra o venda de fitxes amb una ordre límit de Uniswap v4 a Base o BNB Chain. Llibre d'ordres en directe, profunditat de mercat i un preu compartit en USD.",
     "venue": "Xarxa",
@@ -6897,6 +6900,7 @@
     }
   },
   "editor": {
+    "video": { "tFade": "Fos encadenat", "none": "Cap", "transition": "Transició", "speed": "Velocitat", "sound": "So","video": "Vídeo"},
     "review": {
       "title": "Revisió del projecte",
       "shared": "Compartit amb tu",

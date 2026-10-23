@@ -193,6 +193,7 @@
     "heading": "DeHub 쇼츠"
   },
   "settings": {
+    "usernameTaken": "이미 사용 중인 사용자 이름입니다",
     "showDislikesDesc": "누구나 내 프로필의 싫어요 탭을 열 수 있습니다. 끄면 나만 볼 수 있습니다.",
     "showDislikes": "내 싫어요를 모두에게 공개",
     "postingChain": "게시물 블록체인",
@@ -2375,6 +2376,7 @@
     "pendingSubmitted": "{{amount}} 토큰이 제출되었습니다. 확인 중입니다. 다시 보내지 마세요."
   },
   "communities": {
+    "chatTab": "채팅",
     "title": "커뮤니티",
     "create": "만들기",
     "searchPlaceholder": "커뮤니티 검색...",
@@ -2409,7 +2411,6 @@
     "addDescription": "설명을 추가하세요...",
     "communityDescription": "커뮤니티 설명...",
     "posts": "게시물",
-    "chat": "채팅",
     "membersTab": "멤버 ({{count}})",
     "about": "소개",
     "backToCommunities": "커뮤니티",
@@ -3875,6 +3876,7 @@
     "sellYourFractions": "분수 판매 ({{held}} 보유)"
   },
   "creator": {
+    "libraryEmpty": "저장한 생성물이 여기에 표시됩니다.",
     "whatToCreate": "만들 항목",
     "startCreatingWith": "{{model}}로 만들기 시작",
     "studioSubtitle": "장면, 캐릭터, 분위기 또는 스타일을 설명하세요. 결과는 아래에 표시되고 편집기로 바로 이동합니다.",
@@ -6790,6 +6792,7 @@
     "seoDescription": "DeHub 공식 문서: 플랫폼 개요, dApp, 토큰 토큰 이코노미, 스테이킹, 게임, 로드맵, FAQ 등."
   },
   "dex": {
+    "title": "토큰 / USD",
     "seoTitle": "DEX — DHB를 원하는 가격에 거래하세요",
     "seoDescription": "Base 또는 BNB Chain에서 Uniswap v4 지정가 주문으로 토큰 매수 또는 매도 가격을 설정하세요. 실시간 주문 장부, 시장 깊이, 하나의 통합 USD 가격을 제공합니다.",
     "venue": "네트워크",
@@ -7012,6 +7015,7 @@
     }
   },
   "editor": {
+    "video": { "tFade": "크로스 디졸브", "none": "없음", "transition": "전환", "speed": "속도", "sound": "사운드","video": "동영상"},
     "review": {
       "title": "프로젝트 검토",
       "shared": "나와 공유됨",

@@ -308,6 +308,7 @@
     "heading": "DeHub-shorts"
   },
   "settings": {
+    "usernameTaken": "Gebruikersnaam is bezet",
     "showDislikesDesc": "Iedereen kan het tabblad Dislikes op je profiel openen. Staat dit uit, dan zie alleen jij het.",
     "showDislikes": "Mijn dislikes aan iedereen tonen",
     "postingChain": "Blockchain voor berichten",
@@ -3065,6 +3066,7 @@
     "statsLoadFailed": "Kon stakingstatistieken niet laden"
   },
   "communities": {
+    "chatTab": "Chat",
     "followerInvites": {
       "title": "Volgers uitnodigen",
       "detail": "Kies maximaal 50 volgers per keer. Betaalde of gesloten privéberichten worden overgeslagen. Controleer onbevestigde verzendingen in de chat voordat je het opnieuw probeert.",
@@ -4897,6 +4899,7 @@
     "sellYourFractions": "Verkoop uw fracties ({{held}} in bezit)"
   },
   "creator": {
+    "libraryEmpty": "Je opgeslagen generaties verschijnen hier.",
     "toolRemake": "Remake",
     "toolMaboroshi": "Maboroshi",
     "toolMaboroshiDesc": "Vervang karakters en objecten, beoordeel een concept, en exporteer met uw originele soundtrack.",
@@ -8095,6 +8098,7 @@
     "seoDescription": "Officiële DeHub-documentatie: overzicht van het platform, dApps, tokens-tokeneconomie, staking, games, roadmap, FAQ en meer."
   },
   "dex": {
+    "title": "tokens / USD",
     "seoTitle": "DEX — Verhandel tokens tegen jouw prijs",
     "seoDescription": "Stel je tokens koop- of verkoopprijs in met een Uniswap v4 limietorder op Base of BNB Chain. Live orderboek, marktliquiditeit en één gedeelde USD-prijs.",
     "venue": "Netwerk",
@@ -8319,6 +8323,7 @@
     "priceChartCleared": "Prijsgrafiek is geleegd. Referentieprijs is vastgesteld op $0.0001. Uitvoeringsprijzen zijn afhankelijk van beschikbare orders."
   },
   "editor": {
+    "video": { "tFade": "Overvloeien", "none": "Geen", "transition": "Overgang", "speed": "Snelheid", "sound": "Geluid","video": "Video"},
     "review": {
       "title": "Projectbeoordeling",
       "shared": "Met jou gedeeld",

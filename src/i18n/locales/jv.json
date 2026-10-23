@@ -193,6 +193,7 @@
     "heading": "DeHub Cekak"
   },
   "settings": {
+    "usernameTaken": "Jeneng pangguna wis dienggo",
     "postingChain": "Blockchain kanggo kiriman",
     "showOnline": "Tampilake kapan aku lagi online",
     "showOnlineDesc": "Wong sing kok peseni bakal weruh titik ijo ing sandinge jenengmu nalika lagi nggunakake DeHub",
@@ -2361,6 +2362,7 @@
     "pendingSubmitted": "{{amount}} token wis dikirim. Konfirmasi isih dicek. Aja dikirim maneh."
   },
   "communities": {
+    "chatTab": "Obrolan",
     "title": "Komunitas",
     "create": "Gawe",
     "searchPlaceholder": "Golek komunitas...",
@@ -2395,7 +2397,6 @@
     "addDescription": "Tambahake katrangan...",
     "communityDescription": "Katrangan komunitas...",
     "posts": "Kiriman",
-    "chat": "Obrolan",
     "membersTab": "Anggota ({{count}})",
     "about": "Babagan",
     "backToCommunities": "Komunitas",
@@ -3786,6 +3787,7 @@
     "sellYourFractions": "Jual fraksi kanggo wongane ({{held}} dipegang)"
   },
   "creator": {
+    "libraryEmpty": "Asil generasi sing koksimpen bakal katon ing kene.",
     "whatToCreate": "Apa kanggo dadi",
     "startCreatingWith": "Mulane ngarani lanjar kanggo wongane {{model}}",
     "studioSubtitle": "Jelasna sawijining adegan, paraga, swasana utawa gaya. Asil bakal katampa ing ngisor iki lan langsung mlebu ing editor.",
@@ -6525,6 +6527,7 @@
     "seoDescription": "Dokumentasi resmi DeHub: gambaran platform, dApps, ekonomi token token, staking, game, peta dalan, FAQ lan liya-liyane."
   },
   "dex": {
+    "title": "token / USD",
     "seoTitle": "DEX — Ngalih token ing rega sampeyan",
     "seoDescription": "Setel rega tuku utawa adol token nganggo pesen wates Uniswap v4 ing Base utawa BNB Chain. Buku pesen langsung, jerone pasar lan siji rega USD sing padha.",
     "venue": "Jaringan",
@@ -6747,6 +6750,7 @@
     }
   },
   "editor": {
+    "video": { "tFade": "Lebur silang", "none": "Ora ana", "transition": "Transisi", "speed": "Kacepetan", "sound": "Swara","video": "Video"},
     "review": {
       "title": "Priksa proyek",
       "shared": "Dibagi karo sampeyan",
