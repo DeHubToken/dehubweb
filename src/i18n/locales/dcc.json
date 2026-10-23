@@ -5076,7 +5076,10 @@
     "play": "پلی",
     "pause": "پوز",
     "listens_one": "{{count}} سن رہا ہے",
-    "listens_other": "{{count}} سن رہا ہے"
+    "listens_other": "{{count}} سن رہا ہے",
+    "lyrics": "गाण्याचे बोल",
+    "lyricsLoading": "बोल शोधत आहे…",
+    "lyricsNone": "बोल सापडले नाहीत"
   },
   "converter": {
     "seoTitle": "کنورٹر — ایک ویڈیو کو ڈے ہب میں ایمپورٹ کریں",

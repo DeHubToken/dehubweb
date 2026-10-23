@@ -6147,7 +6147,10 @@
     "play": "Тоглуулах",
     "pause": "Түр зогсоох",
     "listens_one": "{{count}} сонсох",
-    "listens_other": "{{count}} дараалсан"
+    "listens_other": "{{count}} дараалсан",
+    "lyrics": "Дууны үг",
+    "lyricsLoading": "Үг хайж байна…",
+    "lyricsNone": "Үг олдсонгүй"
   },
   "converter": {
     "seoTitle": "Хөрвүүлэгч — DeHub-д видео импортлох",

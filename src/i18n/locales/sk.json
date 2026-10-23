@@ -6324,7 +6324,10 @@
     "play": "Prehrať",
     "pause": "Pozastaviť",
     "listens_one": "{{count}} počúvajte",
-    "listens_other": "{{count}} počúva"
+    "listens_other": "{{count}} počúva",
+    "lyrics": "Text piesne",
+    "lyricsLoading": "Hľadáme text…",
+    "lyricsNone": "Text sa nenašiel"
   },
   "converter": {
     "seoTitle": "Konvertor — importovať video do DeHub",

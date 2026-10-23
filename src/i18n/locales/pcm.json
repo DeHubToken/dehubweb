@@ -5217,7 +5217,10 @@
     "play": "Play",
     "pause": "Pause",
     "listens_one": "{{count}} listen",
-    "listens_other": "{{count}} listens"
+    "listens_other": "{{count}} listens",
+    "lyrics": "Song words",
+    "lyricsLoading": "Dey find song words…",
+    "lyricsNone": "No song words dey"
   },
   "converter": {
     "title": "Import a video",

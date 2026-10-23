@@ -6564,7 +6564,10 @@
     "play": "Відтворити",
     "pause": "Пауза",
     "listens_one": "{{count}} прослуховування",
-    "listens_other": "{{count}} прослуховувань"
+    "listens_other": "{{count}} прослуховувань",
+    "lyrics": "Текст пісні",
+    "lyricsLoading": "Шукаємо текст…",
+    "lyricsNone": "Текст не знайдено"
   },
   "converter": {
     "seoTitle": "Конвертер — імпортуйте відео до DeHub",

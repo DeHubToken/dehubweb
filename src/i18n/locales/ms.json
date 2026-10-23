@@ -6450,7 +6450,10 @@
     "play": "Main",
     "pause": "Jeda",
     "listens_one": "{{count}} dengar",
-    "listens_other": "{{count}} mendengar"
+    "listens_other": "{{count}} mendengar",
+    "lyrics": "Lirik",
+    "lyricsLoading": "Mencari lirik…",
+    "lyricsNone": "Tiada lirik ditemui"
   },
   "converter": {
     "seoTitle": "Penukar — import video ke DeHub",

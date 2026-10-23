@@ -10,6 +10,7 @@ import { toast } from 'sonner';
 import { showUpdateToast } from '@/components/app/NewVersionToast';
 import type { BuildVersion } from '@/lib/version-check';
 import { useSearchParams } from 'react-router-dom';
+import { transcriptKey } from '@/hooks/use-transcript';
 import { AppState } from '@/components/app/AppState';
 import { LiveRipple } from '@/components/app/LiveRipple';
 import { CaptureCardSetup } from '@/components/app/live/CaptureCardSetup';
@@ -264,9 +265,24 @@ function CaptureCardGallery() {
  * Audio post player with its animation style chips: the selected style wears
  * the profile tabs' "Beam" (glowing line, idle chips dimmed), never a pill.
  */
+const GALLERY_LYRICS_TRACK = { tokenId: 'state-gallery-lyrics', audioUrl: '', title: 'Late night lo-fi', artist: 'juno' };
+
 function AudioGallery() {
   const { t: _copy } = _useCopy();
+  const { t } = useTranslation();
   const [playing, setPlaying] = useState(false);
+  const queryClient = useQueryClient();
+  // A finished transcript for the lyrics tile, so it shows lines without a real post.
+  useState(() => queryClient.setQueryData(transcriptKey('audio', GALLERY_LYRICS_TRACK.tokenId), {
+    id: 'state-gallery-lyrics', source_kind: 'audio', source_ref: GALLERY_LYRICS_TRACK.tokenId, status: 'ready',
+    provider: 'deepgram', source_lang: 'en', duration_seconds: 184,
+    segments: [
+      { start: 0, end: 4, text: 'City lights are fading out tonight' },
+      { start: 4, end: 8, text: 'I keep the radio low and drive' },
+    ],
+    full_text: null, vtt: null, summary: null, summary_status: 'none', chapters: [], speaker_map: {}, speaker_overrides: {},
+    visibility: 'public', attempts: 1, error: null, updated_at: new Date(0).toISOString(),
+  }));
   return (
     <section data-page-bento data-audio-gallery className="mb-5 rounded-3xl border border-white/10 bg-white/[0.04] p-4">
       <h2 className="mb-3 text-sm font-semibold">{_copy("copy.bc1b88907d3b", { defaultValue: "Audio" })}</h2>
@@ -280,6 +296,21 @@ function AudioGallery() {
           seed="state-gallery"
           decodeEnabled={false}
           durationHint={184}
+        />
+      </div>
+      <p className="mt-4 mb-2 text-xs opacity-70">{t('audioPost.lyrics')}</p>
+      <div className="relative h-56 overflow-hidden rounded-2xl bg-black/60 backdrop-blur-[24px] border border-white/10">
+        <AudioVisualizer
+          audioUrl=""
+          isPlaying={false}
+          onPlayPause={() => undefined}
+          className="w-full h-full"
+          showStylePicker
+          seed="state-gallery-lyrics"
+          decodeEnabled={false}
+          durationHint={184}
+          popoutTrack={GALLERY_LYRICS_TRACK}
+          initialShowLyrics
         />
       </div>
     </section>

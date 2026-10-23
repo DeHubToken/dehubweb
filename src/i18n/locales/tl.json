@@ -6259,7 +6259,10 @@
     "play": "Maglaro",
     "pause": "I - pause",
     "listens_one": "{{count}} pakinggan",
-    "listens_other": "{{count}} listens"
+    "listens_other": "{{count}} listens",
+    "lyrics": "Liriko",
+    "lyricsLoading": "Hinahanap ang liriko…",
+    "lyricsNone": "Walang nakitang liriko"
   },
   "converter": {
     "seoTitle": "Converter — mag-import ng video sa DeHub",

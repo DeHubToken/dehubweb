@@ -6184,7 +6184,10 @@
     "play": "Atskaņot",
     "pause": "Apturēt",
     "listens_one": "{{count}} klausīties",
-    "listens_other": "{{count}} klausās"
+    "listens_other": "{{count}} klausās",
+    "lyrics": "Dziesmas vārdi",
+    "lyricsLoading": "Meklējam vārdus…",
+    "lyricsNone": "Vārdi nav atrasti"
   },
   "converter": {
     "seoTitle": "Konvertors — importējiet video uz DeHub",

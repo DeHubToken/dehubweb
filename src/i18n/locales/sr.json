@@ -6208,7 +6208,10 @@
     "play": "Пуни",
     "pause": "Паузирај",
     "listens_one": "{{count}} слуша",
-    "listens_other": "{{count}} слушају"
+    "listens_other": "{{count}} слушају",
+    "lyrics": "Текст песме",
+    "lyricsLoading": "Тражимо текст…",
+    "lyricsNone": "Текст није пронађен"
   },
   "converter": {
     "seoTitle": "Преводилац — унеси видео у ДеХаб",

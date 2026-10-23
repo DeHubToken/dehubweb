@@ -6097,7 +6097,10 @@
     "play": "Play",
     "pause": "Duro",
     "listens_one": "{{count}} gbọ",
-    "listens_other": "{{count}} tẹ́tí sí"
+    "listens_other": "{{count}} tẹ́tí sí",
+    "lyrics": "Ọ̀rọ̀ orin",
+    "lyricsLoading": "À ń wá ọ̀rọ̀ orin…",
+    "lyricsNone": "A kò rí ọ̀rọ̀ orin"
   },
   "converter": {
     "seoTitle": "Converter — tun fidio sinu DeHub",

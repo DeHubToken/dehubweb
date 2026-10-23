@@ -6132,7 +6132,10 @@
     "play": "Gwuo",
     "pause": "Kwụsị",
     "listens_one": "{{count}} gee ntị",
-    "listens_other": "{{count}} na-ege ntị"
+    "listens_other": "{{count}} na-ege ntị",
+    "lyrics": "Okwu abụ",
+    "lyricsLoading": "Na-achọ okwu abụ…",
+    "lyricsNone": "Ahụghị okwu abụ"
   },
   "converter": {
     "seoTitle": "Converter — webụ vidio na DeHub",

@@ -7319,7 +7319,10 @@
     "pause": "Duraklat",
     "listens_one": "{{count}} dinlenme",
     "listens_other": "{{count}} dinlenme",
-    "visualizerColour": "Görselleştirici rengi"
+    "visualizerColour": "Görselleştirici rengi",
+    "lyrics": "Şarkı sözleri",
+    "lyricsLoading": "Sözler aranıyor…",
+    "lyricsNone": "Söz bulunamadı"
   },
   "converter": {
     "seoTitle": "Dönüştürücü — DeHub'a video aktarın",

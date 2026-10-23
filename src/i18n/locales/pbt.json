@@ -6051,7 +6051,10 @@
     "untitled": "د ویډیو پوسته",
     "creator": "د DeHub جوړونکی",
     "play": "لوبې وکړئ",
-    "pause": "په وقفه کې"
+    "pause": "په وقفه کې",
+    "lyrics": "د سندرې متن",
+    "lyricsLoading": "متن لټول کیږي…",
+    "lyricsNone": "متن ونه موندل شو"
   },
   "converter": {
     "seoTitle": "کنورټر — ویډیو DeHub ته درون کړئ",
