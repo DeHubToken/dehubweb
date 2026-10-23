@@ -1,3 +1,4 @@
+import { workspaceCapabilities } from './workspace-capabilities.ts';
 import { assert, assertEquals } from 'jsr:@std/assert@1';
 import { blockedReason, controlledAction, settingsSchema } from './controls.ts';
 import { freshStory, parseNews, newsTopicsFor, relevantNews } from './news.ts';
@@ -106,4 +107,14 @@ Deno.test('corrections claim once and verify the resulting visibility', async ()
     try { await reverseReceipt(db, 'private', receipt); } catch { /* Already corrected. */ }
     assertEquals(calls, 2);
   } finally { globalThis.fetch = originalFetch; }
+});
+
+
+Deno.test('workspace capability stays off until the migrated readiness contract is true', async () => {
+  for (const response of [{ data: null, error: { code: 'PGRST202' } }, { data: false, error: null }, { data: 'true', error: null }]) {
+    const db = { rpc: (name: string) => { assertEquals(name, 'agent_workspace_ready'); return Promise.resolve(response); } };
+    assertEquals(await workspaceCapabilities(db), { workspace: false, version: 1 });
+  }
+  assertEquals(await workspaceCapabilities({ rpc: () => Promise.resolve({ data: true, error: null }) }), { workspace: true, version: 1 });
+  assertEquals(await workspaceCapabilities({ rpc: () => { throw new Error('offline'); } }), { workspace: false, version: 1 });
 });

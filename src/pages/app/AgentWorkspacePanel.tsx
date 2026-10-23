@@ -7,7 +7,7 @@ import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { agentTaskRequest } from '@/lib/agent-tasks';
 import type { GrowthReport } from '@/lib/agent-workspace';
-import { PERMISSIONS, NEWS_TOPICS, BUILDER_ACTIONS, buildAgentPrompt, workspaceCounts, type BuilderAction, type AgentSettings, type WorkspaceOverview, type PlanPreview } from '@/lib/agent-workspace';
+import { PERMISSIONS, NEWS_TOPICS, BUILDER_ACTIONS, buildAgentPrompt, workspaceCounts, workspaceAvailable, type BuilderAction, type AgentSettings, type WorkspaceOverview, type PlanPreview } from '@/lib/agent-workspace';
 
 function Settings({ wallet, agentId }: { wallet: string; agentId: string }) {
   const { t } = useTranslation();
@@ -37,6 +37,24 @@ function Settings({ wallet, agentId }: { wallet: string; agentId: string }) {
 }
 
 export function AgentWorkspacePanel({ wallet }: { wallet: string }) {
+  const capability = useQuery({
+    queryKey: ['agent-workspace-capabilities', wallet],
+    queryFn: async () => {
+      try {
+        return await agentTaskRequest<{ workspace: boolean; version: number }>(wallet, { operation: 'workspace_capabilities' });
+      } catch {
+        // Production may still run the older function, or its migration may
+        // not be available yet. Existing agent/task controls remain mounted.
+        return null;
+      }
+    },
+    retry: false,
+    staleTime: 60_000,
+  });
+  return workspaceAvailable(capability.data) ? <AgentWorkspaceContent wallet={wallet} /> : null;
+}
+
+function AgentWorkspaceContent({ wallet }: { wallet: string }) {
   const { t } = useTranslation();
   const client = useQueryClient();
   const [selected, setSelected] = useState('');
