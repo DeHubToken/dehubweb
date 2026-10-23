@@ -375,6 +375,7 @@ function EndlessScrollView({
             data-cinematic-first={index === 0 ? '' : undefined}
             className="rounded-xl border border-white/[0.12] bg-white/[0.03] p-3"
             eager={index < 3} estimatedHeight={640}
+            vanishOnDislike={post.id}
           >
             <ImageCard post={post} />
           </WindowedFeedItem>

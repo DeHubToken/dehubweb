@@ -113,6 +113,8 @@
     "heading": "DeHub 쇼츠"
   },
   "settings": {
+    "showDislikesDesc": "누구나 내 프로필의 싫어요 탭을 열 수 있습니다. 끄면 나만 볼 수 있습니다.",
+    "showDislikes": "내 싫어요를 모두에게 공개",
     "postingChain": "게시물 블록체인",
     "showOnline": "온라인 상태일 때 표시",
     "showOnlineDesc": "DeHub를 사용하는 동안 내가 메시지를 보내는 사람들에게 내 이름 옆에 초록색 점이 표시됩니다.",
@@ -1398,6 +1400,7 @@
     "returnHome": "홈으로 돌아가기"
   },
   "profile": {
+    "dislikes": { "loadMore": "더 보기", "privateDesc": "이 계정은 싫어요를 공개하지 않습니다.", "privateTitle": "싫어요는 비공개입니다", "emptyOther": "아직 아무것도 없습니다.", "emptyOwn": "싫어요를 누른 게시물은 피드에서 사라지고 여기에 표시됩니다. 싫어요를 취소하면 게시물이 돌아옵니다.", "emptyTitle": "아직 싫어요가 없습니다" },
     "back": "뒤로",
     "usernameAvailable": "사용 가능한 사용자명!",
     "signUpToClaim": "가입하여 획득",
@@ -1425,6 +1428,7 @@
       "commentUnavailable": "이 댓글은 더 이상 사용할 수 없습니다"
     },
     "tabs": {
+      "dislikes": "싫어요",
       "playlists": "재생 목록"
     },
     "offerWorthNow": "현재 환율로 약 {{amount}}개의 토큰",

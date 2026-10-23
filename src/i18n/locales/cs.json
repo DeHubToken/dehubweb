@@ -113,6 +113,8 @@
     "heading": "DeHub Shorts"
   },
   "settings": {
+    "showDislikesDesc": "Kdokoli může otevřít kartu Nelíbí se na tvém profilu. Když je to vypnuté, vidíš ji jen ty.",
+    "showDislikes": "Zobrazit všem, co se mi nelíbí",
     "postingChain": "Blockchain příspěvků",
     "showOnline": "Zobrazit, když jsem online",
     "showOnlineDesc": "Lidé, kterým posíláte zprávu, uvidí zelenou tečku vedle vašeho jména, když používáte službu DeHub",
@@ -1390,6 +1392,7 @@
     "returnHome": "Zpět na hlavní stránku"
   },
   "profile": {
+    "dislikes": { "loadMore": "Načíst další", "privateDesc": "Tento účet si svá nelíbí se nechává pro sebe.", "privateTitle": "Nelíbí se je soukromé", "emptyOther": "Zatím nic.", "emptyOwn": "Příspěvky, které se ti nelíbí, zmizí z tvých kanálů a objeví se tady. Zruš nelíbí se a příspěvek se vrátí.", "emptyTitle": "Zatím nic" },
     "back": "Zpět",
     "usernameAvailable": "Uživatelské jméno je dostupné!",
     "signUpToClaim": "Zaregistrujte se a získejte ho",
@@ -1417,6 +1420,7 @@
       "commentUnavailable": "Tento komentář již není k dispozici"
     },
     "tabs": {
+      "dislikes": "Nelíbí se",
       "playlists": "Playlisty"
     },
     "offerWorthNow": "Přibližně {{amount}} tokenů při aktuálním kurzu",

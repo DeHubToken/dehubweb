@@ -113,6 +113,8 @@
     "heading": "DeHub Shorts"
   },
   "settings": {
+    "showDislikesDesc": "Alle kan åbne fanen Dislikes på din profil. Når dette er slået fra, kan kun du se den.",
+    "showDislikes": "Vis mine dislikes for alle",
     "postingChain": "Blockchain til opslag",
     "showOnline": "Vis, når jeg er online",
     "showOnlineDesc": "Personer, du sender en besked til, ser en grøn prik ved siden af dit navn, mens du bruger DeHub",
@@ -1395,6 +1397,7 @@
     "returnHome": "Tilbage til forsiden"
   },
   "profile": {
+    "dislikes": { "loadMore": "Indlæs flere", "privateDesc": "Denne konto holder sine dislikes for sig selv.", "privateTitle": "Dislikes er private", "emptyOther": "Intet endnu.", "emptyOwn": "Opslag, du disliker, forsvinder fra dine feeds og vises her. Fortryd et dislike for at få opslaget tilbage.", "emptyTitle": "Ingen dislikes endnu" },
     "back": "Tilbage",
     "usernameAvailable": "Brugernavn er ledigt!",
     "signUpToClaim": "Tilmeld dig og gør krav på det",
@@ -1422,6 +1425,7 @@
       "commentUnavailable": "Denne kommentar er ikke længere tilgængelig"
     },
     "tabs": {
+      "dislikes": "Dislikes",
       "playlists": "Spillelister"
     },
     "offerWorthNow": "Cirka {{amount}} tokens til den aktuelle kurs",

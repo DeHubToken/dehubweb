@@ -113,6 +113,8 @@
     "heading": "Krótkie filmy DeHub"
   },
   "settings": {
+    "showDislikesDesc": "Każdy może otworzyć kartę „Nie lubię” na twoim profilu. Gdy to jest wyłączone, widzisz ją tylko ty.",
+    "showDislikes": "Pokazuj wszystkim moje łapki w dół",
     "postingChain": "Blockchain postów",
     "showOnline": "Pokaż, gdy jestem online",
     "showOnlineDesc": "Osoby, do których piszesz, widzą zieloną kropkę obok Twojego imienia podczas korzystania z DeHub",
@@ -1399,6 +1401,7 @@
     "returnHome": "Wróć na stronę główną"
   },
   "profile": {
+    "dislikes": { "loadMore": "Wczytaj więcej", "privateDesc": "To konto zachowuje swoje łapki w dół dla siebie.", "privateTitle": "Łapki w dół są prywatne", "emptyOther": "Jeszcze nic.", "emptyOwn": "Posty, którym dajesz łapkę w dół, znikają z twoich kanałów i pojawiają się tutaj. Cofnij łapkę w dół, aby przywrócić post.", "emptyTitle": "Brak łapek w dół" },
     "back": "Wróć",
     "usernameAvailable": "Nazwa użytkownika dostępna!",
     "signUpToClaim": "Zarejestruj się dzisiaj, aby ją zarezerwować",
@@ -1426,6 +1429,7 @@
       "commentUnavailable": "Ten komentarz nie jest już dostępny"
     },
     "tabs": {
+      "dislikes": "Nie lubię",
       "playlists": "Playlisty"
     },
     "offerWorthNow": "Około {{amount}} tokenów po obecnym kursie",

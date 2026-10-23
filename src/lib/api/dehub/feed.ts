@@ -259,6 +259,21 @@ export async function getLikedPosts(
   });
 }
 
+/**
+ * Posts an account disliked, newest first (the profile Dislikes tab). The API
+ * answers 403 for someone else's dislikes unless they made them public
+ * (customs.dislikesVisibility = 'public').
+ */
+export async function getDislikedPosts(
+  address: string,
+  page: number = 1,
+  limit: number = 20,
+): Promise<{ result: DeHubNFT[]; pagination?: { page: number; limit: number; totalCount: number; totalPages: number; hasMore: boolean } }> {
+  return apiCall<{ result: DeHubNFT[]; pagination?: any }>("/api/disliked_posts", {
+    params: { address: address.toLowerCase(), page, limit },
+  });
+}
+
 export async function getWatchHistory(
   page: number = 0,
   limit: number = 20,

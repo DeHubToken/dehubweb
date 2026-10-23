@@ -228,6 +228,8 @@
     "heading": "DeHub Kısa Videolar"
   },
   "settings": {
+    "showDislikesDesc": "Herkes profilindeki Beğenilmeyenler sekmesini açabilir. Bu kapalıyken yalnızca sen görebilirsin.",
+    "showDislikes": "Beğenmediklerimi herkese göster",
     "postingChain": "Gönderi blokzinciri",
     "showOnline": "Çevrimiçi olduğumda göster",
     "showOnlineDesc": "Mesaj gönderdiğiniz kişiler, DeHub'ı kullanırken adınızın yanında yeşil bir nokta görür",
@@ -1715,6 +1717,7 @@
     "returnHome": "Ana Sayfaya Dön"
   },
   "profile": {
+    "dislikes": { "loadMore": "Daha fazla yükle", "privateDesc": "Bu hesap beğenmediklerini kendine saklıyor.", "privateTitle": "Beğenilmeyenler gizli", "emptyOther": "Henüz beğenilmeyen bir şey yok.", "emptyOwn": "Beğenmediğin gönderiler akışlarından çıkar ve burada görünür. Gönderiyi geri getirmek için beğenmemeyi geri al.", "emptyTitle": "Henüz beğenmediğin bir şey yok" },
     "back": "Geri",
     "usernameAvailable": "Kullanıcı adı mevcut!",
     "signUpToClaim": "Almak için bugün kaydolun",
@@ -1742,6 +1745,7 @@
       "commentUnavailable": "Bu yorum artık mevcut değil"
     },
     "tabs": {
+      "dislikes": "Beğenilmeyenler",
       "playlists": "Oynatma Listeleri"
     },
     "offerWorthNow": "Mevcut kurdan yaklaşık {{amount}} jeton",
