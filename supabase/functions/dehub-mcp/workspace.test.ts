@@ -22,7 +22,7 @@ function fixture(mode: 'draft' | 'approval' | 'autonomous') {
   const rows: Record<string, any[]> = { ai_agent_controls: [{ agent_id: 'agent', settings: { mode } }], ai_agent_receipts: [] };
   const db = { from(table: string) {
     let action = 'read', values: any, single = false; const filters: ((row: any) => boolean)[] = [];
-    const query: any = { select: () => query, eq: (key: string, value: unknown) => { filters.push(row => row[key] === value); return query; },
+    const query: any = { select: () => query, eq: (key: string, value: unknown) => { filters.push(row => row[key] === value); return query; }, in: (key: string, values: unknown[]) => { filters.push(row => values.includes(row[key])); return query; },
       insert: (value: any) => { action = 'insert'; values = value; return query; }, update: (value: any) => { action = 'update'; values = value; return query; },
       single: () => { single = true; return query; }, maybeSingle: () => { single = true; return query; },
       then: (resolve: any) => { let selected = rows[table].filter(row => filters.every(test => test(row)));
