@@ -12,6 +12,7 @@ below (speaker assignment, segment building) are testable without weights.
 """
 from __future__ import annotations
 
+import bisect
 import os
 import subprocess
 from typing import Any, Iterable
@@ -19,13 +20,19 @@ from typing import Any, Iterable
 import numpy as np
 
 SR = 16_000
-MODEL = os.environ.get("WHISPER_MODEL", "small")
+MODEL = os.environ.get("WHISPER_MODEL", "medium")
 MODELS_DIR = os.environ.get("WHISPER_MODELS_DIR", "/models")
 # A caption line longer than this reads badly and seeks badly.
 MAX_SEGMENT_S = 6.0
 # A pause this long starts a new line even mid-sentence.
 MAX_GAP_S = 1.0
 MAX_AUDIO_S = float(os.environ.get("WHISPER_MAX_SECONDS", str(4 * 3600)))
+# Clusters this small are one voice split in two, not a second person.
+MINOR_SPEAKER_S = 8.0
+MINOR_SPEAKER_SHARE = 0.03
+# Chosen on real posts and stages; see the README benchmark.
+DIARIZE_EMBEDDING = os.environ.get("DIARIZE_EMBEDDING", "3dspeaker_speech_eres2net_base_sv_zh-cn_3dspeaker_16k.onnx")
+DIARIZE_THRESHOLD = float(os.environ.get("DIARIZE_THRESHOLD", "0.95"))
 
 _whisper = None
 _diarizer = None
@@ -65,7 +72,7 @@ def diarizer():
         import sherpa_onnx
 
         seg = os.path.join(MODELS_DIR, "sherpa-onnx-pyannote-segmentation-3-0", "model.onnx")
-        emb = os.path.join(MODELS_DIR, os.environ.get("DIARIZE_EMBEDDING", "3dspeaker_speech_eres2net_base_sv_zh-cn_3dspeaker_16k.onnx"))
+        emb = os.path.join(MODELS_DIR, DIARIZE_EMBEDDING)
         config = sherpa_onnx.OfflineSpeakerDiarizationConfig(
             segmentation=sherpa_onnx.OfflineSpeakerSegmentationModelConfig(
                 pyannote=sherpa_onnx.OfflineSpeakerSegmentationPyannoteModelConfig(model=seg),
@@ -74,7 +81,7 @@ def diarizer():
             embedding=sherpa_onnx.SpeakerEmbeddingExtractorConfig(model=emb, num_threads=threads()),
             clustering=sherpa_onnx.FastClusteringConfig(
                 num_clusters=-1,
-                threshold=float(os.environ.get("DIARIZE_THRESHOLD", "0.5")),
+                threshold=DIARIZE_THRESHOLD,
             ),
             min_duration_on=0.3,
             min_duration_off=0.5,
@@ -175,6 +182,35 @@ def assign_speakers(words: list[dict], turns: Iterable[tuple[float, float, int]]
             last = spk
 
 
+def absorb_minor_speakers(words: list[dict], min_seconds: float = MINOR_SPEAKER_S, min_share: float = MINOR_SPEAKER_SHARE) -> None:
+    """A voice heard for a few seconds of a long recording is almost always the
+    clusterer splitting one person — a laugh, a turn away from the mic — not a
+    guest. Fold it into whoever is talking around it. Both limits must hold, so
+    a guest with twenty seconds in an hour-long stage keeps their own label."""
+    talk: dict[str, float] = {}
+    for w in words:
+        if w.get("speaker"):
+            talk[w["speaker"]] = talk.get(w["speaker"], 0.0) + max(0.0, w["end"] - w["start"])
+    total = sum(talk.values())
+    minor = {s for s, t in talk.items() if t < min_seconds and t < min_share * total}
+    if not minor or len(minor) == len(talk):
+        return
+    keep = [i for i, w in enumerate(words) if w.get("speaker") and w["speaker"] not in minor]
+
+    def mid(w: dict) -> float:
+        return (w["start"] + w["end"]) / 2
+
+    for i, w in enumerate(words):
+        if w.get("speaker") not in minor:
+            continue
+        k = bisect.bisect_left(keep, i)
+        around = [keep[x] for x in (k - 1, k) if 0 <= x < len(keep)]
+        # On a tie the earlier neighbour wins: a trailing word belongs to the
+        # sentence it ends.
+        nearest = min(around, key=lambda c: abs(mid(words[c]) - mid(w)))
+        w["speaker"] = words[nearest]["speaker"]
+
+
 def build_segments(words: list[dict]) -> list[dict]:
     """Caption lines. Whisper's own segment boundaries are kept (they fall on
     sentences); inside one, a change of speaker, a pause or a line running past
@@ -216,6 +252,7 @@ def transcribe(audio: np.ndarray, *, diarize_speakers: bool = False, language: s
     diarized = False
     if diarize_speakers and words:
         assign_speakers(words, diarize(audio))
+        absorb_minor_speakers(words)
         diarized = True
     segments = build_segments(words)
     return {

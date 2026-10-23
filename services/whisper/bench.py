@@ -271,8 +271,15 @@ def diarize_sweep(args) -> None:
         # Each stored line stands in for its words: enough to score who spoke it.
         lines = [{"start": s["start"], "end": s["end"], "word": s["text"], "segment": i} for i, s in enumerate(row["segments"])]
         engine.assign_speakers(lines, turns)
-        segments = [{"start": x["start"], "end": x["end"], "text": x["word"], "speaker": x.get("speaker")} for x in lines]
         reference = row["reference_segments"]
+
+        def scored():
+            segs = [{"start": x["start"], "end": x["end"], "text": x["word"], "speaker": x.get("speaker")} for x in lines]
+            return speaker_agreement(segs, reference), len({x.get("speaker") for x in lines if x.get("speaker")})
+
+        raw, raw_n = scored()
+        engine.absorb_minor_speakers(lines)
+        agreement, kept = scored()
         ref_time: dict = {}
         for s in reference:
             ref_time[s.get("speaker")] = ref_time.get(s.get("speaker"), 0) + float(s["end"]) - float(s["start"])
@@ -281,10 +288,13 @@ def diarize_sweep(args) -> None:
             "audio_s": round(len(audio) / engine.SR, 1),
             "diarize_s": round(took, 1),
             "speakers": len({t[2] for t in turns}),
+            "speakers_on_lines": raw_n,
+            "speakers_after_cleanup": kept,
+            "agreement_raw": raw,
             # Voices holding at least 5% of the reference's speech, so a lone
             # "Oh." does not count as a second person.
             "reference_speakers": sum(1 for v in ref_time.values() if v >= 0.05 * sum(ref_time.values())),
-            "agreement": speaker_agreement(segments, reference),
+            "agreement": agreement,
         })
         print(json.dumps(results[-1]), flush=True)
     out = {"embedding": os.environ.get("DIARIZE_EMBEDDING"), "threshold": os.environ.get("DIARIZE_THRESHOLD"), "results": results}

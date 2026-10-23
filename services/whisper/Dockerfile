@@ -1,7 +1,7 @@
 FROM python:3.11-slim
 
-# small won the benchmark in the README; build with --build-arg to try another.
-ARG WHISPER_MODEL=small
+# medium won the benchmark in the README; build with --build-arg to try another.
+ARG WHISPER_MODEL=medium
 # 1 adds the CUDA 12 / cuDNN 9 user-space libraries for a GPU host (RunPod).
 ARG GPU=0
 ENV PYTHONUNBUFFERED=1 HF_HOME=/models/hf WHISPER_MODELS_DIR=/models WHISPER_MODEL=${WHISPER_MODEL}

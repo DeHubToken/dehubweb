@@ -19,12 +19,6 @@ jobs:
       fail-fast: false
       matrix:
         include:
-          - { embedding: 3dspeaker_speech_campplus_sv_en_voxceleb_16k.onnx, threshold: '0.8' }
-          - { embedding: 3dspeaker_speech_campplus_sv_en_voxceleb_16k.onnx, threshold: '0.9' }
-          - { embedding: 3dspeaker_speech_campplus_sv_en_voxceleb_16k.onnx, threshold: '0.95' }
-          - { embedding: wespeaker_en_voxceleb_resnet34.onnx, threshold: '0.75' }
-          - { embedding: wespeaker_en_voxceleb_resnet34.onnx, threshold: '0.85' }
-          - { embedding: wespeaker_en_voxceleb_resnet34.onnx, threshold: '0.9' }
           - { embedding: 3dspeaker_speech_eres2net_base_sv_zh-cn_3dspeaker_16k.onnx, threshold: '0.9' }
           - { embedding: 3dspeaker_speech_eres2net_base_sv_zh-cn_3dspeaker_16k.onnx, threshold: '0.95' }
     env:
@@ -78,9 +72,9 @@ jobs:
         run: |
           python services/whisper/bench.py combine runs/small.json runs/medium.json runs/small-novad.json runs/large-v3-turbo.json > report.md
           echo >> report.md
-          echo '| embedding | threshold | source | audio s | diarize s | speakers found | reference speakers | agreement |' >> report.md
-          echo '|---|---|---|---|---|---|---|---|' >> report.md
-          for f in diarize/*.json; do python -c "import json,sys; d=json.load(open(sys.argv[1])); [print(f\"| {d['embedding']} | {d['threshold']} | {r['ref']} | {r['audio_s']} | {r['diarize_s']} | {r['speakers']} | {r['reference_speakers']} | {r['agreement']} |\") for r in d['results']]" "$f" >> report.md; done
+          echo '| embedding | threshold | source | audio s | diarize s | clusters | speakers on lines | after clean-up | reference speakers | agreement before | agreement after |' >> report.md
+          echo '|---|---|---|---|---|---|---|---|---|---|---|' >> report.md
+          for f in diarize/*.json; do python -c "import json,sys; d=json.load(open(sys.argv[1])); [print(f\"| {d['embedding']} | {d['threshold']} | {r['ref']} | {r['audio_s']} | {r['diarize_s']} | {r['speakers']} | {r['speakers_on_lines']} | {r['speakers_after_cleanup']} | {r['reference_speakers']} | {r['agreement_raw']} | {r['agreement']} |\") for r in d['results']]" "$f" >> report.md; done
           cat report.md >> "$GITHUB_STEP_SUMMARY"
       - uses: actions/upload-artifact@v4
         with:

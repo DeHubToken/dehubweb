@@ -23,6 +23,27 @@ class SegmentTests(unittest.TestCase):
         engine.assign_speakers(words, [(0, 0.6, 2), (3.5, 4, 1)])
         self.assertEqual([w["speaker"] for w in words], ["speaker_2", "speaker_1", "speaker_1"])
 
+    def test_a_few_stray_seconds_join_the_voice_around_them(self):
+        words = [word(i, i + 0.8, " a") for i in range(100)]
+        for w in words:
+            w["speaker"] = "speaker_0"
+        words[40]["speaker"] = "speaker_7"
+        words[99]["speaker"] = "speaker_3"
+        engine.absorb_minor_speakers(words)
+        self.assertEqual({w["speaker"] for w in words}, {"speaker_0"})
+
+    def test_a_real_guest_keeps_their_label(self):
+        host = [dict(word(i, i + 0.8, " h"), speaker="speaker_0") for i in range(600)]
+        guest = [dict(word(600 + i, 600 + i + 0.8, " g"), speaker="speaker_1") for i in range(25)]
+        words = host + guest
+        engine.absorb_minor_speakers(words)
+        self.assertEqual(words[-1]["speaker"], "speaker_1")
+
+    def test_a_short_clip_with_two_voices_keeps_both(self):
+        words = [dict(word(0, 2, " hi"), speaker="speaker_0"), dict(word(2.5, 4, " yo"), speaker="speaker_1")]
+        engine.absorb_minor_speakers(words)
+        self.assertEqual([w["speaker"] for w in words], ["speaker_0", "speaker_1"])
+
     def test_long_lines_and_pauses_split(self):
         words = [word(i * 0.5, i * 0.5 + 0.4, f" w{i}") for i in range(20)]
         words.append(word(20, 20.3, " late"))
