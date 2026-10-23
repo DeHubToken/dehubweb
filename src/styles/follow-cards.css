@@ -78,9 +78,6 @@
 [data-follow-card] [data-fc-cover] img {
   width: 100%; height: 100%; object-fit: cover; display: block;
 }
-[data-follow-card] [data-fc-cover] img[data-fc-cover-wash] {
-  transform: scale(1.8); filter: blur(16px) saturate(1.3); opacity: 0.9;
-}
 [data-follow-card] [data-fc-dismiss] {
   position: absolute; top: 8px; right: 8px; z-index: 2;
   width: 26px; height: 26px; border-radius: 999px;
@@ -102,7 +99,7 @@
 [data-follow-card] [data-fc-avatar-fallback] { background: var(--fc-avatar-fill); color: #ffffff; }
 
 [data-follow-card] [data-fc-body] {
-  display: flex; flex-direction: column; min-width: 0;
+  display: flex; flex-direction: column; min-width: 0; flex: 1 1 auto;
   padding: 8px var(--fc-pad) var(--fc-pad);
 }
 [data-follow-card] [data-fc-name] { font-size: 0.9375rem; font-weight: 700; color: var(--fc-ink); }
@@ -116,6 +113,7 @@
   min-height: calc(2 * 1.35em);
   overflow-wrap: anywhere;
 }
+[data-follow-card] [data-fc-bio][data-empty] { color: var(--fc-muted); font-style: italic; }
 [data-follow-card] [data-fc-reason] {
   display: flex; align-items: center; gap: 6px; min-height: 18px; margin-top: 8px;
   font-size: 0.75rem; color: var(--fc-muted); min-width: 0;
@@ -128,7 +126,7 @@
 }
 [data-follow-card] [data-fc-mutuals] > * + * { margin-left: -5px; }
 [data-follow-card] [data-fc-foot] {
-  display: flex; align-items: center; justify-content: space-between; gap: 8px; margin-top: 10px;
+  display: flex; align-items: center; justify-content: space-between; gap: 8px; margin-top: auto; padding-top: 10px;
 }
 [data-follow-card] [data-fc-count] {
   font-size: 0.75rem; color: var(--fc-muted); font-variant-numeric: tabular-nums;
