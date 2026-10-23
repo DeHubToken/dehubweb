@@ -88,9 +88,9 @@ function rng(seed: number): () => number {
   };
 }
 
-function formatPart(date: Date, opts: Intl.DateTimeFormatOptions, fallback: string): string {
+function formatPart(date: Date, opts: Intl.DateTimeFormatOptions, fallback: string, locale?: string): string {
   try {
-    return date.toLocaleString(undefined, opts);
+    return date.toLocaleString(locale, opts);
   } catch {
     return fallback;
   }
@@ -103,7 +103,8 @@ export function stageCoverDate(stage: StageCoverSource): Date | null {
   return Number.isNaN(d.getTime()) ? null : d;
 }
 
-export function buildStageCover(stage: StageCoverSource): StageCoverModel {
+/** `locale` picks the language for the month and weekday; undefined = browser. */
+export function buildStageCover(stage: StageCoverSource, locale?: string): StageCoverModel {
   const seed = hash(stage.id || stage.title || 'dehub-stage');
   const next = rng(seed);
 
@@ -132,13 +133,14 @@ export function buildStageCover(stage: StageCoverSource): StageCoverModel {
   const date = stageCoverDate(stage);
   const day = date ? String(date.getDate()) : '';
   const month = date
-    ? formatPart(date, { month: 'short' }, '').replace('.', '').toUpperCase()
+    ? formatPart(date, { month: 'short' }, '', locale).replace('.', '').toUpperCase()
     : '';
   const when = date
-    ? `${formatPart(date, { weekday: 'short', month: 'short', day: 'numeric' }, date.toDateString())} · ${formatPart(
+    ? `${formatPart(date, { weekday: 'short', month: 'short', day: 'numeric' }, date.toDateString(), locale)} · ${formatPart(
         date,
         { hour: 'numeric', minute: '2-digit' },
         '',
+        locale,
       )}`
     : '';
 
