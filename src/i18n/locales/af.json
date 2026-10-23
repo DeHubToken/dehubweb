@@ -239,6 +239,11 @@
       "hintDeny": "AI-stelsels en kruipers wat hierdie sein respekteer, word gevra om nie op u klank-, kunswerk- en skryfwerk op te lei nie. Kruipers wat die sein ignoreer, word nie daardeur geblokkeer nie.",
       "saved": "AI-opleidingsvoorkeur gestoor"
     },
+    "defaultFeed": "Verstek-voer",
+    "defaultFeedDesc": "Kies watter voer oopmaak elke keer as jy DeHub oopmaak",
+    "feedToggles": "Stel voerfilters terug",
+    "feedTogglesDesc": "Filters wat jy in 'n voer aanskakel, bly jou verstek totdat jy dit terugstel",
+    "feedTogglesCleared": "Voerfilters teruggestel",
     "defaultProfileTab": "Verstek profieloortjie",
     "defaultProfileTabDesc": "Kies watter oortjie besoekers eerste op jou profiel sien",
     "public": "Publiek",

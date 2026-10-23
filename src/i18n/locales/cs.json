@@ -241,6 +241,11 @@
       "hintDeny": "Umělá inteligence a prohledávače, které respektují tento signál, jsou žádány, aby netrénovaly na vašem zvuku, uměleckých dílech a psaní. Prohledávače, které ignorují signál, nejsou blokovány.",
       "saved": "Předvolba školení AI uložena"
     },
+    "defaultFeed": "Výchozí kanál",
+    "defaultFeedDesc": "Vyberte, který kanál se otevře pokaždé, když otevřete DeHub",
+    "feedToggles": "Obnovit filtry kanálu",
+    "feedTogglesDesc": "Filtry, které v kanálu zapnete, zůstanou výchozí, dokud je neobnovíte",
+    "feedTogglesCleared": "Filtry kanálu obnoveny",
     "defaultProfileTab": "Výchozí karta profilu",
     "defaultProfileTabDesc": "Vyber, kterou kartu uvidí návštěvníci na tvém profilu jako první",
     "public": "Veřejné",

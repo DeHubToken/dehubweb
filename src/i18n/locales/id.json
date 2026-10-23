@@ -241,6 +241,11 @@
       "hintDeny": "Sistem AI dan perayap yang menghormati sinyal ini diminta untuk tidak melatih audio, karya seni, dan tulisan Anda. Perayap yang mengabaikan sinyal tidak terhalang olehnya.",
       "saved": "Preferensi pelatihan AI disimpan"
     },
+    "defaultFeed": "Feed default",
+    "defaultFeedDesc": "Pilih feed yang terbuka setiap kali kamu membuka DeHub",
+    "feedToggles": "Atur ulang filter feed",
+    "feedTogglesDesc": "Filter yang kamu aktifkan di feed tetap menjadi default sampai kamu mengatur ulang",
+    "feedTogglesCleared": "Filter feed diatur ulang",
     "defaultProfileTab": "Tab profil bawaan",
     "defaultProfileTabDesc": "Pilih tab mana yang pertama dilihat pengunjung di profil Anda",
     "public": "Publik",

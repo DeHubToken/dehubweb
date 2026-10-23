@@ -425,8 +425,8 @@ export function ImagesFeed({
   const isFetchingRef = useRef(false); // Synchronous fetch guard to prevent race conditions
   
   // Filter states - default to "Latest" - persisted to sessionStorage
-  const [selectedSort, setSelectedSort] = usePersistedFeedFilter<SortOption>('images', 'sort', DEFAULT_FEED_SORT);
-  const [selectedUploadDate, setSelectedUploadDate] = usePersistedFeedFilter<DateFilterOption>('images', 'date', DATE_FILTER_OPTIONS[0]);
+  const [selectedSort, setSelectedSort] = usePersistedFeedFilter<SortOption>('images', 'sort', DEFAULT_FEED_SORT, SORT_OPTIONS);
+  const [selectedUploadDate, setSelectedUploadDate] = usePersistedFeedFilter<DateFilterOption>('images', 'date', DATE_FILTER_OPTIONS[0], DATE_FILTER_OPTIONS);
   const [contentFilters, toggleContentFilter, resetContentFilters] = usePersistedContentFilters('images');
   const { ref: fadeRef, style: fadeStyle } = useScrollFadeMask<HTMLDivElement>();
 

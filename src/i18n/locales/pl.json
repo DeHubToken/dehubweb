@@ -241,6 +241,11 @@
       "hintDeny": "Systemy sztucznej inteligencji i roboty, które respektują ten sygnał, są proszone o nieszkolenie się w zakresie dźwięku, grafiki i pisania. Nie blokuje on robotów, które ignorują sygnał.",
       "saved": "Zapisano preferencje treningu sztucznej inteligencji"
     },
+    "defaultFeed": "Domyślny kanał",
+    "defaultFeedDesc": "Wybierz, który kanał otwiera się za każdym razem, gdy otwierasz DeHub",
+    "feedToggles": "Zresetuj filtry kanału",
+    "feedTogglesDesc": "Filtry włączone w kanale zostają domyślne, dopóki ich nie zresetujesz",
+    "feedTogglesCleared": "Filtry kanału zresetowane",
     "defaultProfileTab": "Domyślna zakładka profilu",
     "defaultProfileTabDesc": "Wybierz, którą zakładkę odwiedzający zobaczą najpierw na Twoim profilu",
     "public": "Publiczny",

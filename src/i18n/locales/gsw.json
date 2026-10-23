@@ -239,6 +239,11 @@
       "hintDeny": "AI-System und Crawler, wo das Signal respektiered, werded gfroged, nöd uf dim Audio, Kunst und Text z'trainiere. Crawler, wo s'Signal ignoriere, werded nöd druch's blockiert.",
       "saved": "AI-Training-Präferenz gspeichered"
     },
+    "defaultFeed": "Standard-Feed",
+    "defaultFeedDesc": "Wähle, welcher Feed sich bei jedem Öffnen von DeHub zeigt",
+    "feedToggles": "Feed-Filter zurücksetzen",
+    "feedTogglesDesc": "Filter, die du in einem Feed einschaltest, bleiben deine Standards, bis du sie zurücksetzt",
+    "feedTogglesCleared": "Feed-Filter zurückgesetzt",
     "defaultProfileTab": "Standard-Profiltab",
     "defaultProfileTabDesc": "Wähl, wele Tab Bsucher zersch uf dim Profil gseh",
     "public": "Öffentlech",

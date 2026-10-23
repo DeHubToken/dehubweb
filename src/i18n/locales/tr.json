@@ -356,6 +356,11 @@
       "hintDeny": "Bu sinyale saygı duyan yapay zeka sistemleri ve tarayıcılardan ses, sanat eseriniz ve yazınız üzerinde eğitim almamaları istenir. Sinyali görmezden gelen tarayıcılar sinyal tarafından engellenmez.",
       "saved": "Yapay zeka eğitim tercihi kaydedildi"
     },
+    "defaultFeed": "Varsayılan akış",
+    "defaultFeedDesc": "DeHub'ı her açtığında hangi akışın açılacağını seç",
+    "feedToggles": "Akış filtrelerini sıfırla",
+    "feedTogglesDesc": "Bir akışta açtığın filtreler sen sıfırlayana kadar varsayılanın olarak kalır",
+    "feedTogglesCleared": "Akış filtreleri sıfırlandı",
     "defaultProfileTab": "Varsayılan profil sekmesi",
     "defaultProfileTabDesc": "Ziyaretçilerin profilinizde ilk hangi sekmeyi göreceğini seçin",
     "public": "Herkese Açık",

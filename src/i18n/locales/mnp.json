@@ -239,6 +239,11 @@
       "hintDeny": "要求遵守此訊號的 AI 系統和爬蟲不要使用您的音訊、藝術作品和文字進行訓練。忽略此訊號的爬蟲不會被其阻止。",
       "saved": "AI 訓練偏好設定已儲存"
     },
+    "defaultFeed": "默认动态",
+    "defaultFeedDesc": "选择每次打开 DeHub 时显示的动态",
+    "feedToggles": "重置动态筛选",
+    "feedTogglesDesc": "你在动态中开启的筛选会保留为默认设置，直到你重置",
+    "feedTogglesCleared": "动态筛选已重置",
     "defaultProfileTab": "默认资料分页",
     "defaultProfileTabDesc": "拣访客在汝资料顶先看着佗一个分页",
     "public": "公开",
