@@ -241,6 +241,40 @@ def combine(paths: list[str]) -> None:
                   f"speakers {x['speakers']} (Scribe {ref_speakers}), speaker agreement with Scribe {agree}, WER vs Scribe {ws}")
 
 
+def diarize_sweep(args) -> None:
+    """Re-run only the speaker pass over a stage already transcribed in an
+    earlier run, so a threshold or embedding model can be tried in minutes."""
+    import engine
+    from handler import download
+
+    previous = json.load(open(args.source, encoding="utf-8"))
+    row = next(x for x in previous["rows"] if x["kind"] == "stage")
+    with tempfile.TemporaryDirectory() as tmp:
+        path = os.path.join(tmp, "media")
+        download(stage_recording(row["ref"]), path)
+        audio = engine.load_audio(path)
+    t0 = time.time()
+    turns = engine.diarize(audio)
+    took = time.time() - t0
+    # Each stored line stands in for its words: enough to score who spoke it.
+    lines = [{"start": s["start"], "end": s["end"], "word": s["text"], "segment": i} for i, s in enumerate(row["segments"])]
+    engine.assign_speakers(lines, turns)
+    segments = [{"start": x["start"], "end": x["end"], "text": x["word"], "speaker": x.get("speaker")} for x in lines]
+    agree = speaker_agreement(segments, row["reference_segments"])
+    out = {
+        "embedding": os.environ.get("DIARIZE_EMBEDDING"),
+        "threshold": os.environ.get("DIARIZE_THRESHOLD"),
+        "audio_s": round(len(audio) / engine.SR, 1),
+        "diarize_s": round(took, 1),
+        "speakers": len({t[2] for t in turns}),
+        "reference_speakers": len({s.get("speaker") for s in row["reference_segments"]}),
+        "agreement": agree,
+    }
+    print(json.dumps(out))
+    with open(args.out, "w", encoding="utf-8") as f:
+        json.dump(out, f)
+
+
 def main() -> None:
     p = argparse.ArgumentParser()
     sub = p.add_subparsers(dest="cmd", required=True)
@@ -254,10 +288,15 @@ def main() -> None:
     r.add_argument("--no-vad", action="store_true")
     c = sub.add_parser("combine")
     c.add_argument("paths", nargs="+")
+    d = sub.add_parser("diarize")
+    d.add_argument("--source", required=True)
+    d.add_argument("--out", required=True)
     args = p.parse_args()
     if args.cmd == "run":
         os.environ["WHISPER_MODEL"] = args.model
         run(args)
+    elif args.cmd == "diarize":
+        diarize_sweep(args)
     else:
         combine(args.paths)
 

@@ -1,0 +1,86 @@
+name: Whisper benchmark report
+on:
+  push:
+    branches: [whisper-worker]
+    paths:
+      - 'services/whisper/bench.py'
+      - 'services/whisper/engine.py'
+      - '.github/workflows/whisper-bench-2.yml'
+permissions:
+  contents: read
+  actions: read
+env:
+  SOURCE_RUN: '39999217296'
+jobs:
+  diarize:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    strategy:
+      fail-fast: false
+      matrix:
+        embedding:
+          - 3dspeaker_speech_eres2net_base_sv_zh-cn_3dspeaker_16k.onnx
+          - 3dspeaker_speech_campplus_sv_en_voxceleb_16k.onnx
+          - wespeaker_en_voxceleb_resnet34.onnx
+        threshold: ['0.6', '0.75', '0.9']
+    env:
+      WHISPER_MODELS_DIR: ${{ github.workspace }}/models
+      DIARIZE_EMBEDDING: ${{ matrix.embedding }}
+      DIARIZE_THRESHOLD: ${{ matrix.threshold }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - run: sudo apt-get update && sudo apt-get install -y --no-install-recommends ffmpeg
+      - run: pip install numpy requests 'sherpa-onnx>=1.10.30,<2'
+      - run: |
+          mkdir -p models
+          curl -fsSL https://github.com/k2-fsa/sherpa-onnx/releases/download/speaker-segmentation-models/sherpa-onnx-pyannote-segmentation-3-0.tar.bz2 | tar -xj -C models
+          curl -fsSL -o models/${{ matrix.embedding }} https://github.com/k2-fsa/sherpa-onnx/releases/download/speaker-recongition-models/${{ matrix.embedding }}
+      - uses: actions/download-artifact@v4
+        with:
+          name: bench-small
+          run-id: ${{ env.SOURCE_RUN }}
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+      - run: python services/whisper/bench.py diarize --source small.json --out diarize-${{ strategy.job-index }}.json
+      - uses: actions/upload-artifact@v4
+        with:
+          name: diarize-${{ strategy.job-index }}
+          path: diarize-${{ strategy.job-index }}.json
+  report:
+    needs: diarize
+    if: always()
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - run: pip install requests
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: bench-*
+          path: runs
+          merge-multiple: true
+          run-id: ${{ env.SOURCE_RUN }}
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: diarize-*
+          path: diarize
+          merge-multiple: true
+      - name: Report
+        run: |
+          python services/whisper/bench.py combine runs/small.json runs/medium.json runs/small-novad.json runs/large-v3-turbo.json > report.md
+          echo >> report.md
+          echo '| embedding | threshold | diarize s | speakers found | Scribe speakers | agreement with Scribe |' >> report.md
+          echo '|---|---|---|---|---|---|' >> report.md
+          for f in diarize/*.json; do python -c "import json,sys; d=json.load(open(sys.argv[1])); print(f\"| {d['embedding']} | {d['threshold']} | {d['diarize_s']} | {d['speakers']} | {d['reference_speakers']} | {d['agreement']} |\")" "$f" >> report.md; done
+          cat report.md >> "$GITHUB_STEP_SUMMARY"
+      - uses: actions/upload-artifact@v4
+        with:
+          name: bench-report
+          path: |
+            report.md
+            runs/*.json
