@@ -5,7 +5,7 @@ import { useBulkPagePreview, type BulkPagePreviewOptions } from "@/lib/editor/us
 
 export function BulkPagePreview({ options }: { options: BulkPagePreviewOptions }) {
   const { t } = useTranslation(), [open, setOpen] = useState(false);
-  const clips = useEditorStore(store => store.clips), tracks = useEditorStore(store => store.tracks), settings = useEditorStore(store => store.settings), title = useEditorStore(store => store.title), id = useEditorStore(store => store.projectId);
+  const clips = useEditorStore(store => store.clips), tracks = useEditorStore(store => store.tracks), settings = useEditorStore(store => store.settings), title = useEditorStore(store => store.projectTitle), id = useEditorStore(store => store.projectId);
   const project = useMemo(() => useEditorStore.getState().toSnapshot(), [id, title, clips, tracks, settings]);
   const readMedia = useCallback(async (mediaId: string) => useEditorStore.getState().media.find(media => media.id === mediaId), []);
   const result = useBulkPagePreview(project, options, readMedia, open);

@@ -32,7 +32,7 @@ export function QrPanel() {
   };
   return <div className="space-y-3">
     <div className="flex min-h-40 items-center justify-center">{preview.value ? <svg viewBox={`0 0 ${preview.value.cells.length + quietZone * 2} ${preview.value.cells.length + quietZone * 2}`} role="img" aria-label={t("editor.qr.preview", { defaultValue: "QR code preview" })} className="h-40 w-40" shapeRendering="crispEdges"><rect width="100%" height="100%" fill={preview.value.background} /><path d={qrPreviewPath(preview.value)} fill={preview.value.foreground} /></svg> : <p role="status" className="max-w-sm text-center text-xs text-white/50">{t(preview.pending ? "editor.qr.preparing" : "editor.qr.invalidPreview", { defaultValue: preview.pending ? "Preparing preview…" : "Use shorter text and two different hex colours, or choose a more compact correction level." })}</p>}</div>
-    <QrVectorDownload value={preview.value} title={useEditorStore.getState().title} />
+    <QrVectorDownload value={preview.value} title={useEditorStore.getState().projectTitle} />
     <p className="text-xs text-white/60">{t("editor.qr.hint", { defaultValue: "Create a QR code for a link or text. Keep strong contrast between the foreground and background." })}</p>
     <QrBrandPalettes value={[foreground, background]} onChange={colours => { setForeground(colours[0]); setBackground(colours[1]); setError(""); }} />
     <QrContentBuilder key={`${selected?.id ?? "new"}:${draftEpoch}`} onUse={value => { setContent(value); setError(""); }} />
