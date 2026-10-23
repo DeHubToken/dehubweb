@@ -183,7 +183,8 @@ export function ExportDialog({ open, onOpenChange }: Props) {
         let captured = 0;
         const blob = await exportPresentation(snapshot, currentTime, resolvePageExportScope(snapshot, pageScope, pageSelection, effectiveSection), async time => {
           check(); setLabel(t("editor.pages.exporting", { current: ++captured, total: frames.length }));
-          return exportStill({ snapshot, media, format: "jpg", quality: documentImageProfile(documentQuality).quality, scale, ignoreAnimations: true, time });
+          const { blob, links } = await exportStill({ snapshot, media, format: "jpg", quality: documentImageProfile(documentQuality).quality, scale, ignoreAnimations: true, time });
+          return { blob, links: links ?? [] };
         }, ctl.signal, fraction => setProgress(Math.round(fraction * 100)));
         check(); download(blob, exportFilename(snapshot.title, "pptx", "", "design"));
       } else if (format === "pdf") {

@@ -14,7 +14,7 @@ import { BackgroundScopeControls } from "./BackgroundScopeControls";
 
 export function FillPanel() {
   const { t } = useTranslation();
-  const settings = useEditorStore(store => store.settings), title = useEditorStore(store => store.title);
+  const settings = useEditorStore(store => store.settings), title = useEditorStore(store => store.projectTitle);
   const ids = useEditorStore(store => store.selectedClipIds), clips = useEditorStore(store => store.clips);
   const selected = clips.find(clip => ids.includes(clip.id) && (clip.kind === "text" || clip.kind === "shape"));
   const { fill, setFill, first } = useGradientDraft(selected);
