@@ -58,17 +58,23 @@ export function withWalletHeader<T extends { setHeader?: (key: string, value: st
  *
  * Deliberately NOT the shared client with a mutated header: that one is used by
  * everything, and a global wallet header on it would silently change the RLS a
- * hundred unrelated queries run under. This one is built per call, holds no
- * session, and is thrown away after.
+ * hundred unrelated queries run under. Reuse one isolated, non-persistent client
+ * per wallet so polling does not repeatedly construct authentication clients.
  */
+const walletClients = new Map<string, ReturnType<typeof createClient<Database>>>();
 export function walletScopedClient(walletAddress: string) {
-  return createClient<Database>(SUPABASE_URL, SUPABASE_PUBLISHABLE_KEY, {
-    auth: { persistSession: false, autoRefreshToken: false },
+  const wallet = walletAddress.toLowerCase();
+  const existing = walletClients.get(wallet);
+  if (existing) return existing;
+  const client = createClient<Database>(SUPABASE_URL, SUPABASE_PUBLISHABLE_KEY, {
+    auth: { persistSession: false, autoRefreshToken: false, detectSessionInUrl: false, storageKey: `dehub-wallet-client-${wallet}` },
     global: {
-      headers: { 'x-wallet-address': walletAddress.toLowerCase() },
+      headers: { 'x-wallet-address': wallet },
       fetch: supabaseRelayFetch,
     },
   });
+  walletClients.set(wallet, client);
+  return client;
 }
 
 /**
