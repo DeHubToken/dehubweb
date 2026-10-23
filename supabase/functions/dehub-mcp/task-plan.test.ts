@@ -1,5 +1,18 @@
 import { agentOwnerAllowed, explicitTaskPlan, nextScheduledRun, parseTaskPlan, PLAN_TOOL, taskPlanSchema } from './task-plan.ts';
 const assert = (value: unknown, message = 'Assertion failed') => { if (!value) throw new Error(message); };
+Deno.test('filtered dislike windows preserve exact scope and reject contradictory reactions', () => {
+  const command = 'Every post from 2026-10-01T00:00:00Z to 2026-10-02T00:00:00Z\nActions: dislike\nAuthor: @maldoteth\nCategory: Music';
+  const plan = explicitTaskPlan(command)!;
+  assert(plan.steps[0].author === '@maldoteth' && plan.steps[0].category === 'Music');
+  assert(plan.steps[0].arguments.vote_type === 'dislike');
+  assert(plan.summary.includes('@maldoteth') && plan.summary.includes('Music'));
+  let rejected = false;
+  try { explicitTaskPlan(command.replace('Actions: dislike', 'Actions: like, dislike')); } catch { rejected = true; }
+  assert(rejected, 'accepted opposing reactions');
+  const now = new Date('2026-10-23T12:00:00Z');
+  assert(explicitTaskPlan('dislike all posts last hour', now)!.steps[0].from === '2026-10-23T11:00:00.000Z');
+  assert(explicitTaskPlan('like all posts last month', now)!.steps[0].from === '2026-09-23T12:00:00.000Z');
+});
 const base = { summary: 'Like yesterday’s posts', interval_minutes: null, steps: [{ tool: 'dehub_vote', arguments: { vote_type: 'like' }, audience: 'posts', from: '2026-10-10T00:00:00Z', to: '2026-10-11T00:00:00Z', topic: null }] };
 
 Deno.test('only the pinned owner receives access, never a username or missing wallet', () => {

@@ -1,7 +1,15 @@
-import { handleTaskRequest, postBreaksGroundingRules, postText, replyBreaksRules, runTask, type TaskTool, type ProfileImages } from './tasks.ts';
+import { handleTaskRequest, matchesPostFilters, postBreaksGroundingRules, postText, replyBreaksRules, runTask, type TaskTool, type ProfileImages } from './tasks.ts';
 import { AGENT_OWNER } from './task-plan.ts';
 
 const assert = (value: unknown, description: string) => { if (!value) throw new Error(description); };
+Deno.test('post filters intersect exact author and category without title keyword leakage', () => {
+  const scope = { author: '0xABC', category: 'Music' };
+  assert(matchesPostFilters({ minter: '0xabc', category: ['Art', 'music'] }, scope), 'case-insensitive array category rejected');
+  assert(!matchesPostFilters({ minter: '0xdef', category: 'Music' }, scope), 'wrong author included');
+  assert(!matchesPostFilters({ minter: '0xabc', category: 'Music videos', name: 'Music' }, scope), 'partial category included');
+  assert(!matchesPostFilters({ minter: '0xabc', name: 'Music' }, scope), 'title substituted for category');
+  assert(matchesPostFilters({}, {}), 'unfiltered task excluded a post');
+});
 Deno.test('post drafts keep concrete opinions but reject invented scenes and generic filler', () => {
   assert(!postBreaksGroundingRules("Basil leaves going yellow? I'd check the pot before adding water.", 100, 'yellow basil leaves'), 'rejected a grounded opinion');
   assert(postBreaksGroundingRules('Just whispered to my basil—turns out it prefers silence.', 100, 'yellow basil leaves'), 'allowed an invented action');
