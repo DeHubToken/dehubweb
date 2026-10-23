@@ -3,7 +3,7 @@ import { requireDeHubAuth } from "../_shared/auth.ts";
 import { recordPostViews } from "./post-views.ts";
 import { correctActivity } from "./activity-edit.ts";
 import { handleLifeTick, lifeStatus, setSentient } from "./life.ts";
-import { handleWorkspace } from './workspace.ts';
+import { handleWorkspace, matchingTemplate } from './workspace.ts';
 import { agentSettings, writingContext } from './controls.ts';
 import { currentNews, newsReaction, newsTopicsFor, type NewsStory } from './news.ts';
 import { agentOwnerAllowed, explicitTaskPlan, LIVE_WINDOW_MAX_DAYS, LIVE_WINDOW_RECHECK_MINUTES, nextScheduledRun, readableTime, parseTaskPlan, PLAN_TOOL, taskPlanSchema, windowSteps, type TaskPlan, type TaskStep } from "./task-plan.ts";
@@ -560,7 +560,8 @@ export async function handleTaskRequest(req: Request, context: Context): Promise
     let plan: TaskPlan;
     try { plan = await planPrompt(input.prompt.trim(), timezone, context.tools(agent.api_key, req)); }
     catch (error) { return json({ error: message(error) }, 422); }
-    const task = checked(await db.from("ai_agent_tasks").insert({ agent_id: agent.id, owner_wallet: auth.wallet, request_id: input.request_id, prompt: input.prompt.trim(), plan }).select("id").single());
+    const template = await matchingTemplate(db, auth.wallet, input.template_id, input.prompt.trim());
+    const task = checked(await db.from("ai_agent_tasks").insert({ agent_id: agent.id, owner_wallet: auth.wallet, request_id: input.request_id, prompt: input.prompt.trim(), plan, workspace_template_id: template }).select("id").single());
     return json({ task });
   }
   if (input.swarm_id && ['pause', 'resume', 'cancel'].includes(input.operation)) {

@@ -10,6 +10,14 @@ const STARTERS = [
   { id: 'news', name: 'Current events', prompt: 'Post once per day about current news and real-world events.' },
   { id: 'growth', name: 'Growth report', prompt: '' },
 ];
+export async function matchingTemplate(db: any, owner: string, id: unknown, prompt: string): Promise<string | null> {
+  if (typeof id !== 'string') return null;
+  const starter = STARTERS.find(item => item.id === id && item.prompt === prompt);
+  if (starter) return starter.id;
+  if (!uuid(id)) return null;
+  const saved = checked(await db.from('ai_agent_templates').select('id,prompt').eq('id', id).or(`owner_wallet.eq.${owner},published.eq.true`).maybeSingle());
+  return saved?.prompt === prompt ? saved.id : null;
+}
 const uuid = (value: unknown) => typeof value === 'string' && /^[0-9a-f-]{36}$/i.test(value);
 const error = (message: string, status = 400) => Response.json({ error: message }, { status });
 export async function handleWorkspace(req: Request, context: Context, wallet: string, input: Record<string, any>): Promise<Response> {
@@ -18,19 +26,31 @@ export async function handleWorkspace(req: Request, context: Context, wallet: st
     const agents = checked(await db.from('ai_agents').select('id,name,is_active,last_active_at').eq('human_owner_wallet', wallet));
     const ids = agents.map((agent: any) => agent.id);
     const receipts = ids.length ? checked(await db.from('ai_agent_receipts').select('id,agent_id,tool,arguments,status,result,created_at').in('agent_id', ids).order('created_at', { ascending: false }).limit(100)) : [];
-    const tasks = checked(await db.from('ai_agent_tasks').select('id,agent_id,status,next_run_at,message,needs_review').eq('owner_wallet', wallet).order('created_at', { ascending: false }).limit(200));
-    const templates = checked(await db.from('ai_agent_templates').select('id,name,prompt,published,owner_wallet').or(`owner_wallet.eq.${wallet},published.eq.true`).order('created_at', { ascending: false }).limit(100));
+    const tasks = checked(await db.from('ai_agent_tasks').select('id,agent_id,status,next_run_at,message,needs_review,workspace_template_id').eq('owner_wallet', wallet).order('created_at', { ascending: false }).limit(200));
+    const templates = checked(await db.from('ai_agent_templates').select('id,name,prompt,published,owner_wallet,evaluation').or(`owner_wallet.eq.${wallet},published.eq.true`).order('created_at', { ascending: false }).limit(100));
     const alerts = [
       ...tasks.filter((task: any) => task.needs_review || task.status === 'failed').map((task: any) => ({ id: task.id, message: task.message || 'A task needs attention.' })),
       ...receipts.filter((receipt: any) => ['uncertain', 'failed', 'blocked'].includes(receipt.status) || receipt.status === 'executing' && Date.parse(receipt.created_at) < Date.now() - 300000).slice(0, 10).map((receipt: any) => ({ id: receipt.id, message: receipt.result?.error || `${receipt.tool}: ${receipt.status}. Check activity before retrying.` })),
     ];
-    return Response.json({ agents, receipts, tasks, alerts, templates: [...STARTERS, ...templates], sampled: true });
+    const library = [...STARTERS, ...templates].map(template => {
+      const runs = tasks.filter((task: any) => task.workspace_template_id === template.id);
+      return { ...template, runs: runs.length, completed: runs.filter((task: any) => task.status === 'completed').length, failed: runs.filter((task: any) => task.status === 'failed').length };
+    });
+    return Response.json({ agents, receipts, tasks, alerts, templates: library, sampled: true });
   }
   if (input.operation === 'workspace_save_template') {
     if (typeof input.name !== 'string' || !input.name.trim() || input.name.length > 80 || typeof input.prompt !== 'string' || !input.prompt.trim() || input.prompt.length > 4000 || typeof input.published !== 'boolean') return error('Enter a name, instructions and sharing preference.');
     const count = await db.from('ai_agent_templates').select('id', { count: 'exact', head: true }).eq('owner_wallet', wallet); checked(count);
     if (count.count >= 100) return error('Your library already contains 100 templates.', 409);
-    const template = checked(await db.from('ai_agent_templates').insert({ owner_wallet: wallet, name: input.name.trim(), prompt: input.prompt.trim(), published: input.published }).select('id').single());
+    if (!uuid(input.agent_id)) return error('Select an agent to evaluate this template.');
+    const evaluator = checked(await db.from('ai_agents').select('api_key').eq('id', input.agent_id).eq('human_owner_wallet', wallet).maybeSingle());
+    if (!evaluator) return error('Agent not found.', 404);
+    let plan;
+    try { plan = await planPrompt(input.prompt.trim(), 'UTC', context.tools(evaluator.api_key, req)); }
+    catch (reason) { return error(reason instanceof Error ? reason.message : 'This template could not be evaluated.', 422); }
+    const evaluation = { checked_at: new Date().toISOString(), tools: [...new Set(plan.steps.map(step => step.tool))], summary: plan.summary,
+      checks: ['Supported actions', 'Valid targets and time windows', 'Schedule within posting limits'], scope: 'Plan validation only; not a quality or safety certification.' };
+    const template = checked(await db.from('ai_agent_templates').insert({ owner_wallet: wallet, name: input.name.trim(), prompt: input.prompt.trim(), published: input.published, evaluation }).select('id').single());
     return Response.json({ template });
   }
   if (!uuid(input.agent_id)) return error('Select an agent.');

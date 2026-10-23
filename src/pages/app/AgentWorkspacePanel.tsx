@@ -38,6 +38,7 @@ export function AgentWorkspacePanel({ wallet }: { wallet: string }) {
   const client = useQueryClient();
   const [selected, setSelected] = useState('');
   const [prompt, setPrompt] = useState('');
+  const [templateId, setTemplateId] = useState<string | null>(null);
   const [name, setName] = useState('');
   const [published, setPublished] = useState(false);
   const [requestId, setRequestId] = useState(() => crypto.randomUUID());
@@ -51,10 +52,10 @@ export function AgentWorkspacePanel({ wallet }: { wallet: string }) {
   const report = useMutation({ mutationFn: () => agentTaskRequest<GrowthReport>(wallet, { operation: 'workspace_report', agent_id: agentId }) });
   const refresh = () => { void overview.refetch(); client.invalidateQueries({ queryKey: ['agent-tasks', wallet] }); };
   const preview = useMutation({ mutationFn: () => agentTaskRequest<PlanPreview>(wallet, { operation: 'workspace_preview', agent_id: agentId, prompt, timezone: Intl.DateTimeFormat().resolvedOptions().timeZone }) });
-  const run = useMutation({ mutationFn: () => agentTaskRequest(wallet, { operation: 'create', agent_id: agentId, prompt, request_id: requestId, timezone: Intl.DateTimeFormat().resolvedOptions().timeZone }), onSuccess: refresh });
-  const template = useMutation({ mutationFn: () => agentTaskRequest(wallet, { operation: 'workspace_save_template', name, prompt, published }), onSuccess: refresh });
+  const run = useMutation({ mutationFn: () => agentTaskRequest(wallet, { operation: 'create', agent_id: agentId, prompt, template_id: templateId, request_id: requestId, timezone: Intl.DateTimeFormat().resolvedOptions().timeZone }), onSuccess: refresh });
+  const template = useMutation({ mutationFn: () => agentTaskRequest(wallet, { operation: 'workspace_save_template', agent_id: agentId, name, prompt, published }), onSuccess: refresh });
   const review = useMutation({ mutationFn: ({ id, agent, approve }: { id: string; agent: string; approve: boolean }) => agentTaskRequest(wallet, { operation: approve ? 'workspace_approve' : 'workspace_reject', agent_id: agent, receipt_id: id }), onSettled: refresh });
-  const changePrompt = (text: string) => { setPrompt(text); setRequestId(crypto.randomUUID()); preview.reset(); run.reset(); template.reset(); };
+  const changePrompt = (text: string) => { setPrompt(text); setTemplateId(null); setRequestId(crypto.randomUUID()); preview.reset(); run.reset(); template.reset(); };
   const receipts = overview.data?.receipts.filter(receipt => (filter === 'all' || receipt.status === filter) && (!selected || receipt.agent_id === selected)) ?? [];
   return <section data-kit-section className="space-y-4 rounded-2xl border border-white/20 bg-black/35 p-5 text-white">
     <div className="flex items-center justify-between gap-3"><h2 className="text-lg font-semibold">{t('agents.workspace.title', 'Agent workspace')}</h2><Button size="sm" variant="ghost" disabled={overview.isFetching} onClick={refresh}>{t('common.refresh', 'Refresh')}</Button></div>
@@ -67,7 +68,7 @@ export function AgentWorkspacePanel({ wallet }: { wallet: string }) {
     {report.data && <p className="text-sm">{t('agents.workspace.growthResult', { defaultValue: '{{followers}} followers · {{following}} following', ...report.data })} · {report.data.follower_change === null ? t('agents.workspace.baseline', 'First snapshot; capture another later to compare.') : t('agents.workspace.growthChange', { defaultValue: 'Follower change: {{count}} since {{time}}', count: report.data.follower_change, time: new Date(report.data.previous_at!).toLocaleString() })}</p>}
     {report.error && <p role="alert">{report.error.message}</p>}
     <details className="space-y-3" open><summary className="cursor-pointer font-medium">{t('agents.workspace.library', 'Templates and task builder')}</summary>
-      <div className="flex flex-wrap gap-2">{overview.data?.templates.filter(item => item.id !== 'growth').map(item => <Button key={item.id} size="sm" variant="outline" onClick={() => changePrompt(item.prompt)}>{item.name}{item.published ? ' · Shared' : ''}</Button>)}</div>
+      <div className="grid gap-2 sm:grid-cols-2">{overview.data?.templates.filter(item => item.id !== 'growth').map(item => <div key={item.id} className="rounded-xl border border-white/15 p-3"><Button size="sm" variant="outline" onClick={() => { changePrompt(item.prompt); setTemplateId(item.id); }}>{item.name}{item.published ? ' · Shared' : ''}</Button><p className="mt-2 text-xs text-white/70">{t('agents.workspace.runs', { defaultValue: '{{runs}} recent runs · {{completed}} completed · {{failed}} failed', runs: item.runs ?? 0, completed: item.completed ?? 0, failed: item.failed ?? 0 })}</p>{item.evaluation?.checked_at && <p className="text-xs text-white/70">{t('agents.workspace.planValidated', 'Plan validated')} · {item.evaluation.tools?.join(', ')}</p>}</div>)}</div>
       <div className="grid gap-3 sm:grid-cols-3">
         <label className="text-sm">{t('agents.workspace.action', 'Action')}<select className="block w-full rounded-lg bg-black p-3" value={action} onChange={event => setAction(event.target.value as BuilderAction)}>{BUILDER_ACTIONS.map(item => <option key={item} value={item}>{t(`agents.workspace.builder.${item}`, { defaultValue: item === 'news' ? 'React to news' : item === 'reply' ? 'Reply to recent posts' : item === 'curate' ? 'Like relevant posts' : 'Write a post' })}</option>)}</select></label>
         <label className="text-sm">{t('agents.workspace.subject', 'Topic or reply style')}<Input value={topic} maxLength={500} onChange={event => setTopic(event.target.value)} /></label>
