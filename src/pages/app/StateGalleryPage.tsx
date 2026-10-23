@@ -66,6 +66,44 @@ import galleryCover from '@/assets/banners/agent-marco_v.png';
 import galleryAvatar from '@/assets/avatars/marco_v.png';
 import galleryCommunityArt from '@/assets/banners/agent-vrgl.png';
 import galleryCommunityLogo from '@/assets/avatars/vrgl.png';
+import followAvatarEllaverse from '@/assets/avatars/ellaverse.png';
+import followAvatarKai from '@/assets/avatars/0xkai.png';
+import followAvatarLuna from '@/assets/avatars/xluna.png';
+import followAvatarRio from '@/assets/avatars/riooo.png';
+import followCoverEllaverse from '@/assets/banners/agent-ellaverse.png';
+import followCoverLuna from '@/assets/banners/agent-xluna.png';
+import { FollowCoverCard } from '@/components/app/FollowCoverCard';
+import type { SuggestedAccount } from '@/lib/api/dehub';
+
+/**
+ * Who to follow cover cards in every state they ship in: a cover, no cover
+ * (the avatar wash), mutual friends, follows you, no bio, and the moment after
+ * Follow is tapped. Laid out bare, as the feed and Explore carry them, so each
+ * theme's own card surface (or none, in System) is what shows.
+ */
+function FollowCardsGallery() {
+  const { t: _copy } = _useCopy();
+  const abs = (src: string) => new URL(src, window.location.origin).href;
+  const users: SuggestedAccount[] = [
+    { address: '0x1111111111111111111111111111111111111111', username: 'ellaverse', displayName: 'Ella Verse', avatarImageUrl: abs(followAvatarEllaverse), coverImageUrl: abs(followCoverEllaverse), aboutMe: 'Film photographer. Golden hour every day, no filters, no regrets.', followers: 12400, badgeBalance: 2_000_000, reason: 'followed_by_people_you_know', mutualConnections: [{ address: '0x2222222222222222222222222222222222222222', displayName: 'Kai', avatarImageUrl: abs(followAvatarKai) }, { address: '0x3333333333333333333333333333333333333333', displayName: 'Luna', avatarImageUrl: abs(followAvatarLuna) }] },
+    { address: '0x2222222222222222222222222222222222222222', username: '0xkai', displayName: '0xKai', avatarImageUrl: abs(followAvatarKai), aboutMe: 'Lo-fi beats and late night streams. Live most Fridays.', followers: 3100, badgeBalance: 0, reason: 'follows_you', followsYou: true },
+    { address: '0x3333333333333333333333333333333333333333', username: 'xluna', displayName: 'Luna', avatarImageUrl: abs(followAvatarLuna), coverImageUrl: abs(followCoverLuna), aboutMe: '', followers: 51200, badgeBalance: 600_000, reason: 'suggested' },
+    { address: '0x4444444444444444444444444444444444444444', username: 'riooo', displayName: 'Rio', avatarImageUrl: abs(followAvatarRio), aboutMe: 'Travel shorts from 40 countries and counting.', followers: 890, badgeBalance: 0, reason: 'engagement_overlap' },
+  ];
+  const noop = () => {};
+  return (
+    <section data-follow-cards-gallery className="mb-5">
+      <h2 className="mb-3 text-sm font-semibold">{_copy("copy.036cfd952896", { defaultValue: "Who to follow" })}</h2>
+      <div data-follow-cards className="-mx-4">
+        <div className="fc-rail flex overflow-x-auto scrollbar-hide px-4 pb-2">
+          {users.map((user, i) => (
+            <FollowCoverCard key={user.address} user={user} followed={i === 3} onOpen={noop} onFollow={noop} onDismiss={noop} />
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}
 
 function PredictionGallery() {
   const { t: _copy } = _useCopy();
@@ -573,6 +611,8 @@ export default function StateGalleryPage() {
         <VideoProcessingGallery
           docked={(['processing', 'done', 'failed'] as const).find((phase) => phase === params.get('dock')) ?? null}
         />
+
+        <FollowCardsGallery />
 
         <StreamerArtworkGallery />
 
