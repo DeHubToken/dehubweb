@@ -184,11 +184,12 @@
         "npm:typescript@^5.8.3",
         "npm:vaul@~0.9.9",
         "npm:viem@2.44.4",
-        "npm:vite@^8.3.1",
-        "npm:vitest@^5.0.2",
+        "npm:vite@^8.3.3",
+        "npm:vitest@^5.0.5",
         "npm:wagmi@^2.19.5",
         "npm:webm-muxer@^5.1.4",
         "npm:wrangler@^4.149.0",
+        "npm:zod-to-json-schema@3.25.2",
         "npm:zod@^3.25.76",
         "npm:zustand@^5.0.14"
       ]

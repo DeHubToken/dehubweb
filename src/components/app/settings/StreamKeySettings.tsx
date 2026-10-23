@@ -11,6 +11,7 @@ import Radio from "@/components/ui/cut-icons/live";
 import { toast } from 'sonner';
 import { useTranslation } from 'react-i18next';
 
+import { Link } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import {
@@ -244,6 +245,16 @@ export function StreamKeySettings() {
         )}
         {t('settings.streamKey.rotate', 'Reset stream key')}
       </Button>
+
+      <div className="flex items-center justify-between gap-4 rounded-xl border border-zinc-700 p-3">
+        <div className="min-w-0">
+          <p className="text-sm font-medium text-white">{t('liveStudio.settingsLinkTitle')}</p>
+          <p className="mt-0.5 text-xs text-zinc-500">{t('liveStudio.settingsLinkBody')}</p>
+        </div>
+        <Button asChild variant="outline" className={SETTINGS_INLINE_ACTION_CLASS}>
+          <Link to="/live-studio">{t('liveStudio.open')}</Link>
+        </Button>
+      </div>
     </div>
   );
 }

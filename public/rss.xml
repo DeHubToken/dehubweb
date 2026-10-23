@@ -9,7 +9,15 @@
     <copyright>Copyright 2026 DeHub</copyright>
     <managingEditor>team@dehub.io (DeHub Team)</managingEditor>
     <webMaster>team@dehub.io (DeHub Team)</webMaster>
-    <lastBuildDate>Sat, 17 Oct 2026 12:00:00 GMT</lastBuildDate>
+    <lastBuildDate>Thu, 22 Oct 2026 18:00:00 GMT</lastBuildDate>
+    <item>
+      <title>DeHub’s next chapter: Riftn, BNB recovery and the road to relaunch</title>
+      <description>DeHub proposes the Riftn name, a renewed focus on BNB, a public recovery campaign, and a relaunch timetable. Recovery remains subject to Binance’s assessment.</description>
+      <link>https://dehub.io/guides/dehub-next-chapter-riftn-bnb-recovery-relaunch</link>
+      <guid>https://dehub.io/guides/dehub-next-chapter-riftn-bnb-recovery-relaunch</guid>
+      <pubDate>Thu, 22 Oct 2026 18:00:00 GMT</pubDate>
+      <dc:creator>DeHub Team</dc:creator>
+    </item>
     <item>
       <title>Q4 Development Overview</title>
       <description>Everything DeHub shipped since October across web, mobile, the streaming backend and admin — the video editor, Creator, AI agents, live, profiles, System Light and wallets — with pull request links throughout.</description>
@@ -160,14 +168,6 @@
       <link>https://dehub.io/guides/is-watch-to-earn-legit</link>
       <guid>https://dehub.io/guides/is-watch-to-earn-legit</guid>
       <pubDate>Thu, 21 May 2026 16:20:00 GMT</pubDate>
-      <dc:creator>DeHub Team</dc:creator>
-    </item>
-    <item>
-      <title>Cheelee Alternative: DeHub vs Cheelee vs Theta.tv vs XCAD (2026)</title>
-      <description>Looking for a Cheelee alternative? Compare DeHub vs Cheelee, Theta.tv and XCAD Network on cost, payouts and features to pick the best watch-to-earn app in 2026.</description>
-      <link>https://dehub.io/guides/dehub-vs-cheelee-theta-xcad-watch-to-earn</link>
-      <guid>https://dehub.io/guides/dehub-vs-cheelee-theta-xcad-watch-to-earn</guid>
-      <pubDate>Tue, 12 May 2026 10:00:00 GMT</pubDate>
       <dc:creator>DeHub Team</dc:creator>
     </item>
   </channel>

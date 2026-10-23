@@ -11,6 +11,10 @@ export function markVideoProcessing(client: QueryClient, tokenId: number | strin
   client.setQueryData(processingKey(tokenId), 'pending');
 }
 
+export function setVideoProcessingStatus(client: QueryClient, tokenId: number | string, status: VideoProcessingStatus) {
+  client.setQueryData(processingKey(tokenId), status);
+}
+
 /** Follow only visible, unfinished videos. A shared key keeps duplicate cards
  * on the same status without refreshing the feed or moving its scroll position. */
 export function useVideoProcessingStatus(
@@ -54,5 +58,27 @@ export function useVideoProcessingStatus(
     refetchIntervalInBackground: false,
     retry: false,
   });
+  // The token's socket channel says `done` the moment the transcode lands, so
+  // a card on screen flips without waiting for its next poll. Shared through
+  // the same key, so every card showing this post flips together.
+  const listening = enabled && canFollow && isPending(query.data ?? cached ?? initialStatus);
+  useEffect(() => {
+    if (!listening) return;
+    // Loaded on demand: feed cards are on the boot path, the socket is not.
+    let cancelled = false;
+    let unsubscribe: (() => void) | undefined;
+    void import('@/lib/api/dehub/job-socket').then(({ subscribeJobChannel }) => {
+      if (cancelled) return;
+      unsubscribe = subscribeJobChannel(String(tokenId), (event) => {
+        if (event.stage === 'done') client.setQueryData(processingKey(tokenId), 'done');
+        else if (event.stage === 'failed') client.setQueryData(processingKey(tokenId), 'failed');
+      });
+    });
+    return () => {
+      cancelled = true;
+      unsubscribe?.();
+    };
+  }, [listening, tokenId, client]);
+
   return canFollow ? query.data ?? initialStatus : initialStatus;
 }

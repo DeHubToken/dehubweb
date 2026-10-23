@@ -78,6 +78,24 @@ export class PaymentRequiredError extends Error {
   }
 }
 
+/**
+ * An upload the server answered with an error status. Carries the status and
+ * the body's `code` so a caller can tell "this feature is not on this server"
+ * (404/503) or "that draft is gone" (409 DRAFT_UNAVAILABLE) apart from a real
+ * failure — the message stays what it always was.
+ */
+export class UploadHttpError extends Error {
+  constructor(
+    message: string,
+    readonly status: number,
+    readonly code?: string,
+    readonly serverMessage?: string,
+  ) {
+    super(message);
+    this.name = 'UploadHttpError';
+  }
+}
+
 // ── Token Storage ──
 
 export const setAuthToken = (token: string | null) => {
@@ -615,6 +633,8 @@ export interface AuthedUploadOptions {
   timeoutMs?: number;
   /** Unwrap `{ result: … }` envelopes returned by some endpoints. */
   unwrapResult?: boolean;
+  /** Aborting rejects with a DOMException named "AbortError". */
+  signal?: AbortSignal;
 }
 
 interface XhrOutcome<T> {
@@ -635,10 +655,20 @@ function sendAuthedXhr<T>(
     timeoutMs: number;
     unwrapResult: boolean;
     onProgress?: (percent: number) => void;
+    signal?: AbortSignal;
   },
 ): Promise<XhrOutcome<T>> {
   return new Promise((resolve, reject) => {
+    const abortError = () => new DOMException("Upload aborted", "AbortError");
+    if (opts.signal?.aborted) {
+      reject(abortError());
+      return;
+    }
     const xhr = new XMLHttpRequest();
+    const onAbort = () => xhr.abort();
+    opts.signal?.addEventListener("abort", onAbort, { once: true });
+    xhr.onloadend = () => opts.signal?.removeEventListener("abort", onAbort);
+    xhr.onabort = () => reject(abortError());
 
     // Track upload progress (bytes sent to server)
     xhr.upload.onprogress = (event) => {
@@ -698,10 +728,11 @@ export async function authedUpload<T>(
     onProgress,
     timeoutMs = 8 * 60 * 1000,
     unwrapResult = false,
+    signal,
   } = options;
 
   const url = new URL(endpoint, DEHUB_API_BASE).toString();
-  const xhrOpts = { method, timeoutMs, unwrapResult, onProgress };
+  const xhrOpts = { method, timeoutMs, unwrapResult, onProgress, signal };
 
   // Refresh up front when the token is already dead, so a large upload is not
   // pushed over the wire with a doomed token and then repeated in full.
@@ -744,5 +775,10 @@ export async function authedUpload<T>(
     throw new PaymentRequiredError(result.message || "This post needs DHB you do not have.");
   }
 
-  throw new Error(`Upload failed (HTTP ${result.status}): ${result.message}`);
+  throw new UploadHttpError(
+    `Upload failed (HTTP ${result.status}): ${result.message}`,
+    result.status,
+    result.code,
+    result.message,
+  );
 }
