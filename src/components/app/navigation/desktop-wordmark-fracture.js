@@ -9,7 +9,7 @@ function randomGenerator() {
   return () => { seed = (Math.imul(seed, 1664525) + 1013904223) >>> 0; return seed / 4294967296; };
 }
 
-function simplify(points, epsilon = .34) {
+function simplify(points, epsilon = .16) {
   if (points.length <= 3) return points;
   const a = points[0], b = points[points.length - 1];
   const dx = b.x - a.x, dy = b.y - a.y, length = dx * dx + dy * dy;
@@ -26,7 +26,7 @@ function simplify(points, epsilon = .34) {
 
 async function fractureShapes(src) {
   const image = new Image(); image.src = src; await image.decode();
-  const raster = document.createElement('canvas'); raster.width = 540; raster.height = 163;
+  const raster = document.createElement('canvas'); raster.width = 1080; raster.height = 325;
   const ctx = raster.getContext('2d', { willReadFrequently: true });
   if (!ctx) throw new Error('Wordmark mask unavailable');
   const scale = Math.min(raster.width/image.width, raster.height/image.height);
@@ -71,7 +71,7 @@ async function fractureShapes(src) {
     while(map.size){
       const first=map.keys().next().value;let current=first;const points=[];
       do {
-        points.push(new THREE.Vector2((current%(w+1))/2-WIDTH/2,HEIGHT/2-Math.floor(current/(w+1))/2));
+        points.push(new THREE.Vector2((current%(w+1))/4-WIDTH/2,HEIGHT/2-Math.floor(current/(w+1))/4));
         const next=map.get(current); if(!next) break;
         const end=next.pop();if(!next.length)map.delete(current);current=end;
       } while(current!==first && points.length<20000);
@@ -103,26 +103,27 @@ export async function createDesktopWordmark(canvas, src, options = {}) {
   const renderer=new THREE.WebGLRenderer({canvas,alpha:true,antialias:true,powerPreference:'low-power'});
   renderer.setPixelRatio(Math.min(window.devicePixelRatio||1,2));
   renderer.setClearColor(0,0);renderer.outputColorSpace=THREE.SRGBColorSpace;
-  renderer.toneMapping=THREE.ACESFilmicToneMapping;renderer.toneMappingExposure=1.2;
+  renderer.toneMapping=THREE.ACESFilmicToneMapping;renderer.toneMappingExposure=.9;
   const scene=new THREE.Scene(), camera=new THREE.OrthographicCamera(-VIEW_W/2,VIEW_W/2,VIEW_H/2,-VIEW_H/2,.1,1000);
   camera.position.set(0,0,400);camera.lookAt(0,0,0);
-  scene.add(new THREE.HemisphereLight(0xffffff,0x2a3443,2.1));
+  scene.add(new THREE.HemisphereLight(0xffffff,0x2a3443,1.1));
   const key=new THREE.DirectionalLight(0xffffff,3.2);key.position.set(-100,140,220);scene.add(key);
   const cyan=new THREE.DirectionalLight(0x70ddff,2.3);cyan.position.set(-180,-20,45);scene.add(cyan);
   const gold=new THREE.DirectionalLight(0xffc66b,2.5);gold.position.set(180,40,25);scene.add(gold);
-  const material=new THREE.MeshStandardMaterial({color:0xf2f3f5,roughness:.25,metalness:.28});
+  const material=new THREE.MeshStandardMaterial({color:0xf2f3f5,roughness:.25,metalness:.18});
   const side=new THREE.MeshStandardMaterial({color:0xb0bac8,roughness:.48,metalness:.36});
+  const sculpture=new THREE.Group();sculpture.rotation.set(.12,-.075,0);scene.add(sculpture);
   const pieces=shapes.map(({shape,cx,cy,id},index)=>{
-    const geometry=new THREE.ExtrudeGeometry(shape,{depth:3.4,bevelEnabled:true,bevelSize:.22,bevelThickness:.3,bevelSegments:2,steps:1,curveSegments:1});
-    geometry.translate(-cx,-cy,-1.7);
-    const mesh=new THREE.Mesh(geometry,[material,side]);scene.add(mesh);
+    const geometry=new THREE.ExtrudeGeometry(shape,{depth:5.5,bevelEnabled:true,bevelSize:.36,bevelThickness:.5,bevelSegments:3,steps:1,curveSegments:1});
+    geometry.translate(-cx,-cy,-2.75);
+    const mesh=new THREE.Mesh(geometry,[material,side]);sculpture.add(mesh);
     const order=rand(),direction=rand()*Math.PI*2;
     return {mesh,cx,cy,order,dx:Math.cos(direction)*(13+rand()*28),dy:-12-rand()*42,dz:(rand()-.25)*40,rx:(rand()-.5)*3,ry:(rand()-.5)*3,rz:(rand()-.5)*2.5,late:index%17===0};
   });
   const moteGeometry=new THREE.OctahedronGeometry(.6,0);
   const moteMaterials=[new THREE.MeshBasicMaterial({color:0x9cecff}),new THREE.MeshBasicMaterial({color:0xffce83})];
   const motes=Array.from({length:100},(_,i)=>{
-    const anchor=pieces[Math.floor(rand()*pieces.length)],mesh=new THREE.Mesh(moteGeometry,moteMaterials[i%2]);scene.add(mesh);
+    const anchor=pieces[Math.floor(rand()*pieces.length)],mesh=new THREE.Mesh(moteGeometry,moteMaterials[i%2]);sculpture.add(mesh);
     return {mesh,anchor,dx:(rand()-.5)*42,dy:-rand()*54,dz:rand()*30,s:.25+rand()*.85,delay:rand()*.45};
   });
   const motion=matchMedia('(prefers-reduced-motion: reduce)');
@@ -152,6 +153,7 @@ export async function createDesktopWordmark(canvas, src, options = {}) {
   }
   function animate(next){
     target=next;from=value;started=performance.now();duration=next<value?1350:2500;
+    canvas.dataset.fractureTarget=String(next);
     cancelAnimationFrame(raf);raf=0;
     if(motion.matches){value=target;draw(value);}else if(visible&&!document.hidden)raf=requestAnimationFrame(tick);
   }
