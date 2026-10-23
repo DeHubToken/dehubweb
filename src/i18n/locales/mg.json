@@ -1,4 +1,13 @@
 {
+  "followedTags": {
+    "follow": "Araho #{{tag}}",
+    "following": "Manaraka",
+    "unfollow": "Aza manaraka #{{tag}} intsony",
+    "followed": "Manaraka #{{tag}} ianao izao. Hiseho ao amin'ny lahatsoratra arahinao ireo lahatsorany.",
+    "unfollowed": "Tsy manaraka #{{tag}} intsony ianao",
+    "failed": "Tsy voatahiry. Andramo indray.",
+    "clear": "Fafao"
+  },
   "notificationFilters": {
     "title": "Sivano ny fampandrenesana avy amin'ny",
     "description": "Safidio izay hitranga rehefa misy olona ivelan'ny faribolanao mifandray aminao. Miandry ao amin'ny \"Voasivana\" ireo fampandrenesana voasivana, tsy misy marika na fampandrenesana tampoka.",

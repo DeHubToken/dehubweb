@@ -1,4 +1,13 @@
 {
+  "followedTags": {
+    "follow": "Jälgi #{{tag}}",
+    "following": "Jälgid",
+    "unfollow": "Lõpeta #{{tag}} jälgimine",
+    "followed": "Jälgid nüüd #{{tag}}. Selle postitused ilmuvad sinu Jälgitavate voos.",
+    "unfollowed": "Lõpetasid #{{tag}} jälgimise",
+    "failed": "Ei salvestunud. Proovi uuesti.",
+    "clear": "Tühjenda"
+  },
   "notificationFilters": {
     "title": "Filtreeri teavitusi",
     "description": "Vali, mis juhtub, kui keegi väljastpoolt sinu ringi sinuga suhtleb. Filtreeritud teavitused ootavad jaotises Filtreeritud, ilma märgi ja tõuketeateta.",

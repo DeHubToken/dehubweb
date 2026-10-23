@@ -1,4 +1,13 @@
 {
+  "followedTags": {
+    "follow": "Följ #{{tag}}",
+    "following": "Följer",
+    "unfollow": "Sluta följa #{{tag}}",
+    "followed": "Du följer nu #{{tag}}. Inlägg med den visas i ditt Följer-flöde.",
+    "unfollowed": "Du följer inte längre #{{tag}}",
+    "failed": "Det sparades inte. Försök igen.",
+    "clear": "Rensa"
+  },
   "notificationFilters": {
     "title": "Filtrera aviseringar från",
     "description": "Välj vad som händer när någon utanför din krets interagerar med dig. Filtrerade aviseringar väntar under Filtrerat, utan märke och utan push.",

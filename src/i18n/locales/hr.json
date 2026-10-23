@@ -1,4 +1,13 @@
 {
+  "followedTags": {
+    "follow": "Prati #{{tag}}",
+    "following": "Pratiš",
+    "unfollow": "Prestani pratiti #{{tag}}",
+    "followed": "Sada pratiš #{{tag}}. Njegove objave pojavit će se u tvom feedu Praćeno.",
+    "unfollowed": "Prestao si pratiti #{{tag}}",
+    "failed": "Nije spremljeno. Pokušaj ponovno.",
+    "clear": "Očisti"
+  },
   "notificationFilters": {
     "title": "Filtriraj obavijesti od",
     "description": "Odaberi što se događa kad netko izvan tvog kruga stupi u interakciju s tobom. Filtrirane obavijesti čekaju pod Filtrirano, bez oznake i bez push obavijesti.",

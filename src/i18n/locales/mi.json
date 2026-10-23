@@ -1,4 +1,13 @@
 {
+  "followedTags": {
+    "follow": "Whai i #{{tag}}",
+    "following": "E whai ana",
+    "unfollow": "Kaua e whai i #{{tag}}",
+    "followed": "Kei te whai koe i #{{tag}} ināianei. Ka puta ōna pānui ki tō whāngai Ka whāia.",
+    "unfollowed": "Kua mutu tō whai i #{{tag}}",
+    "failed": "Kāore i tiakina. Whakamātauria anō.",
+    "clear": "Ūkui"
+  },
   "notificationFilters": {
     "title": "Tātari pānui mai i",
     "description": "Kōwhiria te mea ka puta ina whakawhitiwhiti tētahi i waho o tō porowhita ki a koe. Ka tatari ngā pānui kua tātarihia ki raro i \"Kua tātarihia\", kāore he tohu, kāore he pānui pana.",
