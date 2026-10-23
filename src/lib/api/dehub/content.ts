@@ -113,6 +113,8 @@ export interface MintPostParams {
   shopListingCount?: number;
   /** Alt text, one per uploaded image or video in file order. */
   mediaDescriptions?: string[];
+  /** Content warning: one line shown in place of the post until a viewer opens it. */
+  spoilerText?: string;
 }
 
 export interface MintResponse {
@@ -251,6 +253,10 @@ export async function mintPost(
 
   if (params.mediaDescriptions?.some(Boolean)) {
     formData.append('mediaDescriptions', JSON.stringify(params.mediaDescriptions));
+  }
+
+  if (params.spoilerText?.trim()) {
+    formData.append('spoilerText', params.spoilerText.trim());
   }
 
   // Only sent when there is a board. An empty array would be a valid "clear
@@ -430,6 +436,8 @@ export interface EditPostParams {
   shopListingCount?: number;
   /** Replace the post's alt text, one per piece of media in display order. `[]` clears it. */
   mediaDescriptions?: string[];
+  /** Replace the content warning. `''` takes it off. */
+  spoilerText?: string;
 }
 
 export interface EditPostResponse {

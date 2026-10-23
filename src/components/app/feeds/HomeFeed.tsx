@@ -435,6 +435,7 @@ function nftToFeedItem(pinnedPost: any): FeedItemType {
         // and text branches below carry it; this one did not.
         contentRating: pinnedPost.contentRating,
         mediaDescriptions: pinnedPost.mediaDescriptions,
+        spoilerText: pinnedPost.spoilerText,
         username: pinnedPost.minterDisplayName || pinnedPost.mintername || 'unknown',
         verified: false,
         avatar,
@@ -467,6 +468,7 @@ function nftToFeedItem(pinnedPost: any): FeedItemType {
         type: 'video',
         contentRating: pinnedPost.contentRating,
         mediaDescriptions: pinnedPost.mediaDescriptions,
+        spoilerText: pinnedPost.spoilerText,
         thumbnail,
         videoUrl,
         hlsUrl: buildHlsUrl(pinnedPost.hlsUrl),
@@ -504,6 +506,7 @@ function nftToFeedItem(pinnedPost: any): FeedItemType {
         type: 'post',
         contentRating: pinnedPost.contentRating,
         mediaDescriptions: pinnedPost.mediaDescriptions,
+        spoilerText: pinnedPost.spoilerText,
         author: {
           id: pinnedPost.minter,
           name: pinnedPost.minterDisplayName || pinnedPost.mintername || 'Unknown',

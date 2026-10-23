@@ -355,6 +355,8 @@ export function usePostForm(
   const [tokenAmount, setTokenAmount] = useDraftState(draftScope + ":tokenAmount", d?.tokenAmount ?? '');
   const [liveMode, setLiveMode] = useState<LiveMode>(null);
   const [poll, setPoll] = useDraftState<PollData | null>(draftScope + ":poll", d?.poll ?? null);
+  // The content warning being written: null is "none", '' is "toggled on, still empty".
+  const [contentWarning, setContentWarning] = useState<string | null>(null);
   const [isEnhancing, setIsEnhancing] = useState(false);
   const [isPosting, setIsPosting] = useState(false);
   const [uploadProgress, setUploadProgress] = useState(0);
@@ -1210,6 +1212,7 @@ export function usePostForm(
     setTokenAmount.complete(tokenAmount, '');
     setLiveMode(null);
     setPoll.complete(poll, null);
+    setContentWarning(null);
     setScheduledDate(null);
     setTitleText.complete(titleText, '');
     // Cleared per post, deliberately. A board is usually specific to what was
@@ -1963,6 +1966,7 @@ export function usePostForm(
         mediaDescriptions: media.some(m => m.description)
           ? media.filter(m => m.type !== 'audio').map(m => m.description || '')
           : undefined,
+        spoilerText: contentWarning?.trim() || undefined,
       };
       const uploadWithFile = (percent: number) => setUploadProgress(Math.round(percent * 0.6)); // XHR bytes map to 0-60%
 
@@ -2687,7 +2691,7 @@ export function usePostForm(
     effectiveShouldMint, mintFee, isMature, isForKids,
     selectedCategory, shopLinks, shopListingIds, myPlanIds,
     postQuota?.outstandingDhb, refreshPostQuota, onLiveStreamReady,
-    isQuoting, quotedPost,
+    isQuoting, quotedPost, contentWarning,
     , _copy
   ]);
 
@@ -2720,6 +2724,7 @@ export function usePostForm(
       tokenAmount,
       liveMode,
       poll,
+      contentWarning,
       isEnhancing,
       isPosting,
       uploadProgress,
@@ -2759,6 +2764,7 @@ export function usePostForm(
       setTokenAmount,
       setLiveMode,
       setPoll,
+      setContentWarning,
       handleImageSelect,
       handleVideoSelect,
       handleFileDrop,

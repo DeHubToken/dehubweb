@@ -92,6 +92,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { CardHeader } from './CardHeader';
 import { PostHeaderOptionsButton } from './PostHeaderOptionsButton';
 import { MatureContentGate, useMatureGate } from './MatureContentGate';
+import { ContentWarningGate, useContentWarning } from './ContentWarningGate';
 import { BadgedName } from '@/components/app/BadgedName';
 import { ActionBar } from './ActionBar';
 import { useLiveReaction } from '@/hooks/use-live-reaction';
@@ -1260,6 +1261,7 @@ export const VideoCard = memo(function VideoCard({ video, postPage = false, onBa
   // pay-per-view, and the creator's own post is warned about too — the warning
   // is for whoever is looking at the screen.
   const matureGate = useMatureGate(video.contentRating);
+  const contentWarning = useContentWarning(video.spoilerText);
   // Folded into isContentGated so the warning gets the behaviour a locked post
   // already has: no autoplay, no controls, no poster fallback painted over it.
   const isContentGated = isPPVLocked || isBountyLocked || isHoldingsLocked || isSubGated || matureGate.isGated;
@@ -2308,7 +2310,11 @@ export const VideoCard = memo(function VideoCard({ video, postPage = false, onBa
         <div data-video-picture className={splitControls ? "absolute inset-x-0 top-0 bottom-[47px]" : "contents"}>
         {/* Mature warning sits outermost: revealing it falls through to
             whatever gate the post actually has, rather than replacing it. */}
-        {matureGate.isGated ? (
+        {contentWarning.hidden ? (
+          <div className="flex w-full h-full min-h-[180px] items-center justify-center rounded-lg bg-zinc-900 p-4">
+            <ContentWarningGate text={contentWarning.text} onReveal={contentWarning.reveal} className="w-full" />
+          </div>
+        ) : matureGate.isGated ? (
           <MatureContentGate
             preview={thumbnail}
             onReveal={matureGate.reveal}
@@ -3144,6 +3150,8 @@ export const VideoCard = memo(function VideoCard({ video, postPage = false, onBa
 
             return (
               <>
+                {/* Behind a content warning, the caption opens with the post. */}
+                {!contentWarning.hidden && (<>
                 {/* auto={false}: the card's own useTranslation above already
                     translated this text and hands the result down. Left on, this
                     asked the edge function to translate the translation. */}
@@ -3157,6 +3165,7 @@ export const VideoCard = memo(function VideoCard({ video, postPage = false, onBa
                     clampLines={stage ? (shownTitle ? 2 : 3) : 4}
                   />
                 )}
+                </>)}
               </>
             );
           })()}
@@ -3493,6 +3502,7 @@ export const VideoCard = memo(function VideoCard({ video, postPage = false, onBa
             currentDescription={video.description ?? ''}
             currentCategories={video.categories ?? []}
             currentContentRating={video.contentRating}
+            currentSpoilerText={video.spoilerText}
             currentForKids={video.forKids}
             currentShopLinks={video.shopLinks}
             onSuccess={(edited) => {
