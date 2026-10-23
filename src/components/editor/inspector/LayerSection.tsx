@@ -273,7 +273,6 @@ export function LayerSection({ clip }: { clip: Clip }) {
             {live(t("editor.outline.width", { defaultValue: "Border width: {{value}}", value: Math.round(mediaClip.border.width) }), mediaClip.border.width, 1, 80, 1, value => patchClipLive(clip.id, { border: { ...mediaClip.border!, width: value } }))}
             <StrokePattern stroke={mediaClip.border} onChange={border => patchClip(clip.id, { border })} />
           </>}
-          {text.stroke && <StrokePattern stroke={text.stroke} onChange={stroke => patchClip(clip.id, { stroke })} />}
           <div className="grid grid-cols-4 gap-1">
             {iconBtn(t("editor.menu.fitCanvas"), <Minimize className="h-3.5 w-3.5" />,
               () => patchClip(clip.id, { fit: "contain", ...placementPatch(mediaClip, { x: 0.5, y: 0.5, scale: 1 }) }),
