@@ -16,6 +16,8 @@ jobs:
           deno-version: v2.x
       - run: deno test --node-modules-dir=none --allow-net --allow-env supabase/functions/fetch-link-preview/public-page.test.ts supabase/functions/_shared/auth-rate-limit.test.ts
       - run: deno check --node-modules-dir=none supabase/functions/fetch-link-preview/index.ts
+      - run: deno test --node-modules-dir=none supabase/functions/dehub-mcp/request-budget.test.ts
+      - run: deno check --node-modules-dir=none --config supabase/functions/dehub-mcp/deno.json supabase/functions/dehub-mcp/index.ts
   authorization:
     runs-on: ubuntu-latest
     timeout-minutes: 10
