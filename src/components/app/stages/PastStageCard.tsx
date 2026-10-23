@@ -44,7 +44,7 @@ export function PastStageCard({ space, className }: { space: AudioSpace; classNa
         className,
       )}
     >
-      {hasCover && <StageCoverArt src={space.cover_image_url!} title={space.title} />}
+      <StageCoverArt src={space.cover_image_url} title={space.title} stage={space} />
 
       <div className="relative p-3 space-y-1.5">
         <div className="flex items-center justify-between gap-2">

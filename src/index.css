@@ -6873,3 +6873,8 @@ html[data-theme="minimal"] [data-profile-tab-beam] {
 html[data-theme="minimal"] [data-profile-single-row] [data-feed-tab-btn] {
   opacity: 1;
 }
+
+/* Generated stage covers: thumbnails keep only title, host and date disc. */
+@container (max-width: 300px) {
+  [data-gsc-brand], [data-gsc-when] { display: none !important; }
+}
