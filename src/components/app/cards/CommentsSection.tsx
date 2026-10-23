@@ -138,6 +138,7 @@ import { CommonGroundSheet } from './CommonGroundSheet';
 import { viewerShareUrl } from '@/lib/share-url';
 import { trackShare } from '@/lib/analytics';
 import type { ReplyPolicy } from '@/lib/api/dehub/types';
+import { KeywordFilterGate } from './KeywordFilterGate';
 
 // The comment data shape and its API mapper live in @/lib/comment-mapper so
 // non-component consumers can share them. Re-exported here for the surfaces
@@ -442,7 +443,7 @@ const PostCreatorContext = createContext<{
  * module constant, and the per-row figures (tip total, tipped, highlighted) as
  * primitives. A new inline function here would quietly undo all of it.
  */
-const CommentItem = memo(function CommentItem({ comment, tokenId, onLike, onShowLikers, onReact, onReply, onShare, onEdit, onDelete, onTip, tipTotal, viewerTipped, onUserPress, isReply, threadLineAbove, threadLineBelow, isOwnComment, isThreadEntry, onAnchor, onPin, highlighted, onReport }: CommentItemProps) {
+const CommentItemBody = memo(function CommentItem({ comment, tokenId, onLike, onShowLikers, onReact, onReply, onShare, onEdit, onDelete, onTip, tipTotal, viewerTipped, onUserPress, isReply, threadLineAbove, threadLineBelow, isOwnComment, isThreadEntry, onAnchor, onPin, highlighted, onReport }: CommentItemProps) {
   const [isEditing, setIsEditing] = useState(false);
   // Bumps each time this viewer tips this comment, replaying the gem swirl.
   const [tipBurst, setTipBurst] = useState(0);
@@ -942,6 +943,15 @@ const CommentItem = memo(function CommentItem({ comment, tokenId, onLike, onShow
         </div>
       </div>
     </motion.div>
+  );
+});
+
+/** Comments pass the viewer's keyword filters too, under Conversations. */
+const CommentItem = memo(function FilteredCommentItem(props: CommentItemProps) {
+  return (
+    <KeywordFilterGate texts={[props.comment.text]} own={props.isOwnComment} context="thread" className="my-1">
+      <CommentItemBody {...props} />
+    </KeywordFilterGate>
   );
 });
 
