@@ -18,6 +18,7 @@ export const taskStepSchema = z.object({
   to: z.string().datetime().nullable().default(null),
   author: z.string().trim().regex(/^(?:@?[a-z0-9_]{1,50}|0x[a-f0-9]{40})$/i).nullable().optional(),
   category: z.string().trim().min(1).max(100).regex(/^[^\r\n]+$/).nullable().optional(),
+  categories: z.array(z.string().trim().min(1).max(100).regex(/^[^\r\n]+$/)).min(1).max(20).nullable().optional(),
   topic: z.string().max(2000).nullable().default(null),
   recent_keywords: z.array(z.string().trim().min(2).max(40)).min(1).max(6).nullable().default(null),
   recent_limit: z.number().int().min(1).max(3).nullable().default(null),
@@ -30,7 +31,8 @@ export const taskPlanSchema = z.object({
 }).strict().superRefine((plan, ctx) => {
   plan.steps.forEach((step, index) => {
     const invalid = (message: string) => ctx.addIssue({ code: "custom", message, path: ["steps", index] });
-    if ((step.author || step.category) && !windowSteps(step)) invalid("Author and category filters require a post window.");
+    if ((step.author || step.category || step.categories) && !windowSteps(step)) invalid("Author and category filters require a post window.");
+    if (step.category && step.categories) invalid("Use one category filter format.");
     if (step.audience === "all_users" && step.tool !== "dehub_follow") invalid("All users supports following only.");
     if (step.audience === "post_authors" && step.tool !== "dehub_follow") invalid("Post authors supports following only.");
     if (step.audience === "posts" && !["dehub_vote", "dehub_comment", "dehub_view"].includes(step.tool)) invalid("Posts supports views, reactions and comments only.");
@@ -94,8 +96,8 @@ export function explicitTaskPlan(prompt: string, now = new Date(), timezone = "U
         { tool: 'dehub_post_create', arguments: {}, audience: 'single', from: null, to: null, topic },
       ] });
   }
-  const window = text.match(/^Every post from (\S+) to (\S+)\nActions: ([a-z, ]+)(?:\nAuthor: ([^\n]+))?(?:\nCategory: ([^\n]+))?(?:\nReply style: ([^\n]{1,500}))?$/i);
-  if (window) return everyPostPlan(window[1], window[2], window[3], window[6], window[4], window[5]);
+  const window = text.match(/^Every post from (\S+) to (\S+)\nActions: ([a-z, ]+)(?:\nAuthor: ([^\n]+))?(?:\nCategory: ([^\n]+))?(?:\nCategories: ([^\n]+))?(?:\nReply style: ([^\n]{1,500}))?$/i);
+  if (window) return everyPostPlan(window[1], window[2], window[3], window[7], window[4], window[5], window[6] ? JSON.parse(window[6]) : undefined);
   const follow = text.match(/^follow\s+(@[a-z0-9_]{3,20}|0x[a-f0-9]{40})(?:\s+once)?[.!]?$/i);
   if (follow) return taskPlanSchema.parse({ summary: `Follow ${follow[1]} once.`, interval_minutes: null,
     steps: [{ tool: 'dehub_follow', arguments: { target_wallet: follow[1].replace(/^@/, ''), action: 'follow' }, audience: 'single', from: null, to: null, topic: null }] });
@@ -118,14 +120,14 @@ export const readableTime = (value: string | number | Date) =>
   new Date(value).toLocaleString("en-GB", { timeZone: "UTC", day: "numeric", month: "short", year: "numeric", hour: "2-digit", minute: "2-digit" }).replace(",", "") + " UTC";
 
 /** "Every post from A to B" from the task form: exact, so it never goes through the planner. */
-function everyPostPlan(from: string, to: string, list: string, style?: string, author?: string, category?: string): TaskPlan {
+function everyPostPlan(from: string, to: string, list: string, style?: string, author?: string, category?: string, categories?: string[]): TaskPlan {
   const start = new Date(from), end = new Date(to);
   if (!Number.isFinite(start.getTime()) || !Number.isFinite(end.getTime())) throw new Error("Choose a valid start and end time.");
   const actions = [...new Set(list.toLowerCase().split(",").map(value => value.trim()).filter(Boolean))];
   if (!actions.length || actions.some(action => !["view", "like", "dislike", "reply"].includes(action))) throw new Error("Choose view, like, dislike or reply.");
   if (actions.includes("like") && actions.includes("dislike")) throw new Error("Choose either like or dislike, not both.");
   if (actions.includes("reply") && !style?.trim()) throw new Error("Describe how the agent should reply.");
-  const window = { audience: "posts", from: start.toISOString(), to: end.toISOString(), topic: null, ...(author ? { author } : {}), ...(category ? { category } : {}) };
+  const window = { audience: "posts", from: start.toISOString(), to: end.toISOString(), topic: null, ...(author ? { author } : {}), ...(category ? { category } : {}), ...(categories ? { categories } : {}) };
   const steps = [
     ...(actions.includes("view") ? [{ ...window, tool: "dehub_view", arguments: {} }] : []),
     ...(actions.includes("like") ? [{ ...window, tool: "dehub_vote", arguments: { vote_type: "like" } }] : []),
@@ -133,7 +135,7 @@ function everyPostPlan(from: string, to: string, list: string, style?: string, a
     ...(actions.includes("reply") ? [{ ...window, tool: "dehub_comment", arguments: {}, topic: style!.trim() }] : []),
   ];
   const names = actions.map(action => ({ view: "view", like: "like", dislike: "dislike", reply: "reply to" })[action]).join(", ").replace(/, ([^,]*)$/, " and $1");
-  return taskPlanSchema.parse({ summary: `${names[0].toUpperCase()}${names.slice(1)} every post${author ? ` by ${author}` : ''}${category ? ` in category ${category}` : ''} from ${readableTime(start)} to ${readableTime(end)}.`, interval_minutes: null, steps });
+  return taskPlanSchema.parse({ summary: `${names[0].toUpperCase()}${names.slice(1)} every post${author ? ` by ${author}` : ' by all creators'}${categories ? ` in any of: ${categories.join(', ')}` : category ? ` in category ${category}` : ' across all categories'} from ${readableTime(start)} to ${readableTime(end)}.`, interval_minutes: null, steps });
 }
 
 export const PLAN_TOOL = {
@@ -168,6 +170,7 @@ export const PLAN_TOOL = {
                 from: { type: ["string", "null"], description: "Inclusive ISO UTC start of a bulk post time window." },
                 author: { type: ["string", "null"], description: "Exact username or wallet of the post creator to filter by; null for all authors. Resolved before queueing." },
                 category: { type: ["string", "null"], description: "Exact post category to filter by, case insensitive; null for all categories. This is not a keyword search." },
+                categories: { type: ["array", "null"], items: { type: "string" }, description: "Up to 20 exact category names. Match any selected category; combine with author when supplied. Use null for all categories. Do not also set category." },
                 to: { type: ["string", "null"], description: `Exclusive ISO UTC end of a bulk post time window. May be up to ${LIVE_WINDOW_MAX_DAYS} days ahead; new posts are then covered as they appear.` },
                 topic: { type: ["string", "null"], description: "Instructions for an original post on each run, or for a reply written to each post in a window; null for literal supplied content." },
                 recent_keywords: { type: ["array", "null"], items: { type: "string" }, description: "One to six exact interests for selected_posts; null otherwise." },
