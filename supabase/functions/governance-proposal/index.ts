@@ -9,9 +9,17 @@
 // transfer is confirmed against the chain by `claimDhbPayment`, and the hash
 // is stored on the row: `governance_proposals.fee_tx_hash` is unique, so one
 // transfer buys exactly one proposal even inside the claim window.
+//
+// Badge holders post free: anyone the vote weight ladder already counts as a
+// voter can propose without the fee. Everyone else still pays it.
+//
+// A proposal may carry one image or video, uploaded by the browser to the
+// public `feature-media` bucket under the author's own wallet folder. Only a
+// URL in that folder is accepted.
 
 import { handleCorsPreflight, jsonResponse, guardPaidEndpoint, serviceClient } from "../_shared/auth.ts";
 import { claimDhbPayment } from "../_shared/dhb-transfer.ts";
+import { resolveVoteWeight } from "../_shared/badge-weight.ts";
 
 const PROPOSAL_FEE_DHB = 10000;
 const VOTING_WINDOW_DAYS = 7;
@@ -26,7 +34,7 @@ Deno.serve(async (req) => {
   if (!auth.ok) return auth.response;
   const wallet = auth.wallet;
 
-  let body: { title?: unknown; description?: unknown; txHash?: unknown };
+  let body: { title?: unknown; description?: unknown; txHash?: unknown; mediaUrl?: unknown; mediaType?: unknown };
   try {
     body = await req.json();
   } catch {
@@ -42,10 +50,29 @@ Deno.serve(async (req) => {
     return jsonResponse({ error: "A description of up to 5000 characters is required." }, 400);
   }
 
+  const mediaUrl = typeof body.mediaUrl === "string" ? body.mediaUrl.trim() : "";
+  const mediaType = body.mediaType === "image" || body.mediaType === "video" ? body.mediaType : null;
+  if (mediaUrl) {
+    const folder = `${Deno.env.get("SUPABASE_URL") ?? ""}/storage/v1/object/public/feature-media/${wallet.toLowerCase()}/`;
+    if (!mediaType || !mediaUrl.toLowerCase().startsWith(folder.toLowerCase()) || mediaUrl.length > 500) {
+      return jsonResponse({ error: "That attachment could not be used. Upload it again." }, 400);
+    }
+  }
+
   const supabase = serviceClient();
 
-  const payment = await claimDhbPayment(txHash, wallet, PROPOSAL_FEE_DHB, "governance", supabase);
-  if (!payment.ok) return jsonResponse({ error: payment.reason }, 402);
+  // Badge holders skip the fee. A failed badge lookup falls back to the fee
+  // rather than letting the proposal through free.
+  const { weight } = await resolveVoteWeight(wallet);
+  let feeHash: string | null = null;
+  if (weight <= 0) {
+    if (!txHash) {
+      return jsonResponse({ error: `Proposals cost ${PROPOSAL_FEE_DHB.toLocaleString()} DHB without a staking badge.`, feeRequired: true }, 402);
+    }
+    const payment = await claimDhbPayment(txHash, wallet, PROPOSAL_FEE_DHB, "governance", supabase);
+    if (!payment.ok) return jsonResponse({ error: payment.reason, feeRequired: true }, 402);
+    feeHash = payment.hash.toLowerCase();
+  }
 
   // The API holds the display fields; taking them from the request would let a
   // proposal be posted under someone else's name and avatar.
@@ -63,19 +90,32 @@ Deno.serve(async (req) => {
 
   const votingEndsAt = new Date(Date.now() + VOTING_WINDOW_DAYS * 24 * 60 * 60 * 1000).toISOString();
 
-  const { data, error } = await supabase
-    .from("governance_proposals")
-    .insert({
-      title,
-      description,
-      author_wallet_address: wallet,
-      author_username: username,
-      author_avatar: avatar,
-      fee_tx_hash: payment.hash.toLowerCase(),
-      voting_ends_at: votingEndsAt,
-    })
-    .select()
-    .single();
+  const row: Record<string, unknown> = {
+    title,
+    description,
+    author_wallet_address: wallet,
+    author_username: username,
+    author_avatar: avatar,
+    fee_tx_hash: feeHash,
+    voting_ends_at: votingEndsAt,
+  };
+  if (mediaUrl) {
+    row.media_url = mediaUrl;
+    row.media_type = mediaType;
+  }
+
+  const insert = (values: Record<string, unknown>) =>
+    supabase.from("governance_proposals").insert(values).select().single();
+
+  let { data, error } = await insert(row);
+
+  // Media columns not migrated yet: keep the proposal, drop the attachment.
+  const code = (error as { code?: string } | null)?.code;
+  if (error && mediaUrl && (code === "PGRST204" || code === "42703")) {
+    delete row.media_url;
+    delete row.media_type;
+    ({ data, error } = await insert(row));
+  }
 
   if (error) {
     // 23505 is the unique index on fee_tx_hash: the transfer already bought a
@@ -84,7 +124,11 @@ Deno.serve(async (req) => {
       return jsonResponse({ error: "That transfer has already been used for a proposal." }, 409);
     }
     console.error("governance-proposal: insert failed", error);
-    return jsonResponse({ error: "Fee confirmed but the proposal could not be saved. Contact support with your transaction hash." }, 500);
+    return jsonResponse({
+      error: feeHash
+        ? "Fee confirmed but the proposal could not be saved. Your draft is kept — press Submit again to retry without paying twice."
+        : "The proposal could not be saved. Your draft is kept — press Submit again.",
+    }, 500);
   }
 
   return jsonResponse({ success: true, proposal: data });

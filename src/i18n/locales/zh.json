@@ -1797,6 +1797,8 @@
     "monthsAgo": "{{count}}个月前",
     "forLabel": "对于",
     "againstLabel": "反对",
+    "lentBadgeCantVote": "您的徽章已出借给您，出借的徽章无法投票。购买DHB以获得自己的徽章。",
+    "buyDhb": "购买DHB",
     "discussion": {
       "title": "讨论",
       "intro": "在投票前询问后续问题或讨论提案。",
@@ -4811,10 +4813,6 @@
     "creatorEarnsDirect": "订阅者以DeHub代币支付。订阅会员订阅后，您的份额即会显示在您的钱包中，减去徽章等级的平台费。"
   },
   "liveOverlay": {
-    "level": "等级{{level}}",
-    "streak_one": "{{count}}周连胜",
-    "streak_other": "{{count}}周连胜",
-    "tipJar": "礼品罐",
     "someone": "某人",
     "newFollower": "新关注者： {{name}}",
     "newSubscriber": "新订阅者： {{name}}",
@@ -4832,6 +4830,10 @@
     "pointsTitle": "最忠诚的观众",
     "points_one": "{{formatted}} 分",
     "points_other": "{{formatted}} 分",
+    "level": "等级{{level}}",
+    "streak_one": "{{count}}周连胜",
+    "streak_other": "{{count}}周连胜",
+    "tipJar": "礼品罐",
     "poll": {
       "closed": "投票已关闭",
       "voteFor": "投票给{{option}}",
@@ -4999,8 +5001,6 @@
       "join": "加入"
     },
     "kinds": {
-      "streamer_level": "主播级别",
-      "tip_jar": "礼品罐",
       "tip_alert": "小费提醒",
       "follow_alert": "关注提醒",
       "subscribe_alert": "订阅者警报",
@@ -5020,11 +5020,11 @@
       "poll": "投票",
       "spin_wheel": "旋转转盘",
       "subathon_timer": "Subathon计时器",
-      "points_board": "忠诚观众"
+      "points_board": "忠诚观众",
+      "streamer_level": "主播级别",
+      "tip_jar": "礼品罐"
     },
     "hints": {
-      "streamer_level": "您的个人资料中的流媒体播放器级别和每周连续播放次数",
-      "tip_jar": "当有偿礼物进来时，一个罐子会装满",
       "tip_alert": "庆祝每笔小费，按会员等级计算",
       "follow_alert": "显示每个新关注者",
       "subscribe_alert": "显示每个新订阅者",
@@ -5044,14 +5044,16 @@
       "poll": "您的实时投票，每个选项都有投票按钮",
       "spin_wheel": "规则中的车轮在哪里旋转",
       "subathon_timer": "一个倒计时，礼物、关注和订阅会推迟倒计时",
-      "points_board": "你的前排观众（通过观看和赠送获得的分数排行）"
+      "points_board": "你的前排观众（通过观看和赠送获得的分数排行）",
+      "streamer_level": "您的个人资料中的流媒体播放器级别和每周连续播放次数",
+      "tip_jar": "当有偿礼物进来时，一个罐子会装满"
     },
     "fields": {
-      "showStreak": "显示每周连胜记录",
       "style": "样式",
       "celebration": "庆祝活动",
       "banner": "横幅",
       "minAmount": "要显示的最小提示（ DHB ）",
+      "showStreak": "显示每周连胜记录",
       "showMessage": "显示小费消息",
       "confirmedOnly": "仅在付款确认后",
       "confirmedOnlyHint": "等待链条几秒钟，因此永远不会出现从未支付的小费。",
@@ -8684,5 +8686,14 @@
     "backToMedia": "返回帖子",
     "like": "喜欢",
     "unlike": "移除赞"
+  },
+  "postProcessing": {
+    "uploading": "上传中…",
+    "preparing": "准备中…",
+    "ready": "就绪",
+    "preparingVideo": "正在准备你的视频",
+    "posted": "已发布",
+    "view": "查看",
+    "failed": "视频无法处理"
   }
 }

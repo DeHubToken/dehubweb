@@ -1786,6 +1786,8 @@
     "monthsAgo": "{{count}} kk sitten",
     "forLabel": "Tietoa",
     "againstLabel": "Vastaan",
+    "lentBadgeCantVote": "Kunniamerkkisi on lainattu sinulle, eivätkä lainatut kunniamerkit voi äänestää. Osta DHB ja ansaitse oma erikoismerkkisi.",
+    "buyDhb": "Osta DHB",
     "discussion": {
       "title": "Keskustelu",
       "intro": "Esitä jatkokysymyksiä tai keskustele ehdotuksesta ennen äänestystä.",
@@ -4738,10 +4740,6 @@
     "creatorEarnsDirect": "Tilaajat maksavat DeHub-poletteina. Osuutesi siirtyy lompakkoosi heti, kun he tilaavat sen, vähennettynä erikoismerkkitasostasi perittävällä alustamaksulla."
   },
   "liveOverlay": {
-    "level": "Taso {{level}}",
-    "streak_one": "{{count}}viikon putki",
-    "streak_other": "{{count}}viikon putki",
-    "tipJar": "Lahjapurkki",
     "someone": "Joku",
     "newFollower": "Uusi seuraaja: {{name}}",
     "newSubscriber": "Uusi tilaaja: {{name}}",
@@ -4759,6 +4757,10 @@
     "pointsTitle": "Arvostetuimmat katsojat",
     "points_one": "{{formatted}} pistettä",
     "points_other": "{{formatted}} pistettä",
+    "level": "Taso {{level}}",
+    "streak_one": "{{count}}viikon putki",
+    "streak_other": "{{count}}viikon putki",
+    "tipJar": "Lahjapurkki",
     "poll": {
       "closed": "Äänestys päättynyt",
       "voteFor": "Äänestä {{option}}",
@@ -4926,8 +4928,6 @@
       "join": "Liity"
     },
     "kinds": {
-      "streamer_level": "Suoratoistotaso",
-      "tip_jar": "Lahjapurkki",
       "tip_alert": "Vinkkihälytys",
       "follow_alert": "Seuraa hälytystä",
       "subscribe_alert": "Tilaajan hälytys",
@@ -4947,11 +4947,11 @@
       "poll": "Kysely",
       "spin_wheel": "Pyöräytyspyörä",
       "subathon_timer": "Subathon-kello",
-      "points_board": "Arvostetuimmat katsojat"
+      "points_board": "Arvostetuimmat katsojat",
+      "streamer_level": "Suoratoistotaso",
+      "tip_jar": "Lahjapurkki"
     },
     "hints": {
-      "streamer_level": "Suoratoistotasosi ja viikoittainen putkesi profiilistasi",
-      "tip_jar": "Purkki, joka täyttyy maksettujen lahjojen tullessa",
       "tip_alert": "Juhlii jokaista tippiä sen tason mukaan",
       "follow_alert": "Näyttää jokaisen uuden seuraajan",
       "subscribe_alert": "Näyttää jokaisen uuden tilaajan",
@@ -4971,14 +4971,16 @@
       "poll": "Livekyselysi, jossa on äänestyspainike jokaiselle vaihtoehdolle",
       "spin_wheel": "Sääntöjesi pyörät pyörivät",
       "subathon_timer": "Laskuri, jonka lahjat, seuraamiset ja tilaukset työntävät takaisin",
-      "points_board": "Parhaat katsojasi pisteistä katselusta ja lahjoituksista"
+      "points_board": "Parhaat katsojasi pisteistä katselusta ja lahjoituksista",
+      "streamer_level": "Suoratoistotasosi ja viikoittainen putkesi profiilistasi",
+      "tip_jar": "Purkki, joka täyttyy maksettujen lahjojen tullessa"
     },
     "fields": {
-      "showStreak": "Näytä viikoittainen putki",
       "style": "Tyyli",
       "celebration": "Juhla",
       "banner": "Banneri",
       "minAmount": "Pienin näytettävä vihje (DHB)",
+      "showStreak": "Näytä viikoittainen putki",
       "showMessage": "Näytä vihjeviesti",
       "confirmedOnly": "Vasta kun maksu on vahvistettu",
       "confirmedOnlyHint": "Odottaa muutaman sekunnin ketjulle, joten tippiä, jota ei koskaan makseta, ei koskaan näy.",
@@ -8447,5 +8449,14 @@
     "backToMedia": "Takaisin postaukseen",
     "like": "Tykkää",
     "unlike": "Poista tykkäys"
+  },
+  "postProcessing": {
+    "uploading": "Ladataan…",
+    "preparing": "Valmistellaan…",
+    "ready": "Valmis",
+    "preparingVideo": "Videotasi valmistellaan",
+    "posted": "Julkaistu",
+    "view": "Näytä",
+    "failed": "Videota ei voitu käsitellä"
   }
 }

@@ -1788,6 +1788,8 @@
     "monthsAgo": "prieš {{count}} mėn.",
     "forLabel": "„Durų",
     "againstLabel": "„Prieš\"_____",
+    "lentBadgeCantVote": "Tavo ženklelis tau paskolintas, o paskolinti ženkleliai negali balsuoti. Įsigykite DHB ir užsidirbkite savo ženklelį.",
+    "buyDhb": "Pirkti DHB",
     "discussion": {
       "title": "Diskusija",
       "intro": "Prieš balsuodami užduokite papildomų klausimų arba aptarkite pasiūlymą.",
@@ -4799,10 +4801,6 @@
     "creatorEarnsDirect": "Prenumeratoriai moka DeHub žetonais. Kai tik užsiprenumeruosi, tavo dalis atsidurs tavo piniginėje, atėmus platformos mokestį už tavo ženklelio lygį."
   },
   "liveOverlay": {
-    "level": "Lygis {{level}}",
-    "streak_one": "{{count}}-savaitės serija",
-    "streak_other": "{{count}}-savaitės serija",
-    "tipJar": "Dovanų stiklainis",
     "someone": "Kažkas",
     "newFollower": "Naujas sekėjas: {{name}}",
     "newSubscriber": "Naujas prenumeratorius: {{name}}",
@@ -4820,6 +4818,10 @@
     "pointsTitle": "Sveriausių žiūrovų",
     "points_one": "{{formatted}} taškas",
     "points_other": "{{formatted}} taškai",
+    "level": "Lygis {{level}}",
+    "streak_one": "{{count}}-savaitės serija",
+    "streak_other": "{{count}}-savaitės serija",
+    "tipJar": "Dovanų stiklainis",
     "poll": {
       "closed": "Balsavimas uždarytas",
       "voteFor": "Balsuokite už {{option}}",
@@ -4987,8 +4989,6 @@
       "join": "Prisijungti"
     },
     "kinds": {
-      "streamer_level": "Transliuotojo lygis",
-      "tip_jar": "Dovanų stiklainis",
       "tip_alert": "Įspėjimas apie arbatpinig",
       "follow_alert": "Sekti įspėjimą",
       "subscribe_alert": "Prenumeratoriaus įspėjimas",
@@ -5008,11 +5008,11 @@
       "poll": "Apklausa",
       "spin_wheel": "Sukimo ratas",
       "subathon_timer": "Subathon laikrodis",
-      "points_board": "Sveriausi žiūrovai"
+      "points_board": "Sveriausi žiūrovai",
+      "streamer_level": "Transliuotojo lygis",
+      "tip_jar": "Dovanų stiklainis"
     },
     "hints": {
-      "streamer_level": "Srauto lygis ir savaitinė seka iš jūsų profilio",
-      "tip_jar": "Stiklainis, kuris prisipildo, kai ateina apmokamos dovanos",
       "tip_alert": "Pagerbia kiekvieną patarimą, prilygstantį jo lygiui",
       "follow_alert": "Rodo kiekvieną naują sekėją",
       "subscribe_alert": "Rodykimas kiekvienam naujam abonentui.",
@@ -5032,14 +5032,16 @@
       "poll": "Jūsų tiesioginė apklausa su balsavimo mygtuku kiekvienai parinkčiai",
       "spin_wheel": "Kur sukasi jūsų taisyklių ratai",
       "subathon_timer": "Skaitiklis, kurį dovanos, sekos ir abonementai atidaro atgal",
-      "points_board": "Tavo aukščiausiai taškų už žiūrimą ir dovanavimą žiūrovai"
+      "points_board": "Tavo aukščiausiai taškų už žiūrimą ir dovanavimą žiūrovai",
+      "streamer_level": "Srauto lygis ir savaitinė seka iš jūsų profilio",
+      "tip_jar": "Stiklainis, kuris prisipildo, kai ateina apmokamos dovanos"
     },
     "fields": {
-      "showStreak": "Rodyti savaitės eilutę",
       "style": "Stilius",
       "celebration": "Šventė",
       "banner": "Reklamjuostė",
       "minAmount": "Mažiausias rodomas patarimas (DHB)",
+      "showStreak": "Rodyti savaitės eilutę",
       "showMessage": "Rodyti arbatpinigių žinutę",
       "confirmedOnly": "Tik po to, kai mokėjimas patvirtinamas",
       "confirmedOnlyHint": "Palaukia kelias sekundes iki grandinės, todėl arbatpinigiai, kurie niekada nemokami, niekada nepasirodo.",
@@ -8558,5 +8560,14 @@
     "backToMedia": "Grįžti į įrašą",
     "like": "Patinka",
     "unlike": "Pašalinti „Patinka“"
+  },
+  "postProcessing": {
+    "uploading": "Įkeliama…",
+    "preparing": "Ruošiama…",
+    "ready": "Paruošta",
+    "preparingVideo": "Ruošiame jūsų vaizdo įrašą",
+    "posted": "Paskelbta",
+    "view": "Žiūrėti",
+    "failed": "Vaizdo įrašo apdoroti nepavyko"
   }
 }

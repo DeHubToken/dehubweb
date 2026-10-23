@@ -1889,6 +1889,8 @@
     "monthsAgo": "{{count}}mo ago",
     "forLabel": "Dôvod",
     "againstLabel": "Hlasy proti:",
+    "lentBadgeCantVote": "Váš odznak je požičaný a požičané odznaky nemôžu hlasovať. Kúpte si DHB a získajte svoj vlastný odznak.",
+    "buyDhb": "Kúpiť DHB",
     "discussion": {
       "title": "Diskusia",
       "intro": "Pred hlasovaním sa opýtajte na nadväzujúce otázky alebo prediskutujte návrh.",
@@ -4919,10 +4921,6 @@
     "creatorEarnsDirect": "Predplatitelia platia v žetónoch DeHub. Váš podiel sa dostane do peňaženky v okamihu, keď sa prihlásia na odber, po odpočítaní poplatku za platformu pre vašu úroveň odznaku."
   },
   "liveOverlay": {
-    "level": "Úroveň {{level}}",
-    "streak_one": "{{count}}-týždňová séria",
-    "streak_other": "{{count}}-týždňová séria",
-    "tipJar": "Darčeková nádoba",
     "someone": "Niekto",
     "newFollower": "Nový sledovateľ: {{name}}",
     "newSubscriber": "Nový odberateľ: {{name}}",
@@ -4940,6 +4938,10 @@
     "pointsTitle": "Najloajálnejší diváci",
     "points_one": "{{formatted}} bod",
     "points_other": "{{formatted}} body",
+    "level": "Úroveň {{level}}",
+    "streak_one": "{{count}}-týždňová séria",
+    "streak_other": "{{count}}-týždňová séria",
+    "tipJar": "Darčeková nádoba",
     "poll": {
       "closed": "Hlasovanie skončilo",
       "voteFor": "Hlasuj pre {{option}}",
@@ -5107,8 +5109,6 @@
       "join": "Pripojiť sa"
     },
     "kinds": {
-      "streamer_level": "Úroveň streamera",
-      "tip_jar": "Darčeková nádoba",
       "tip_alert": "Upozornenie NA prepitné",
       "follow_alert": "Sledovať upozornenie",
       "subscribe_alert": "Upozornenie účastníka",
@@ -5128,11 +5128,11 @@
       "poll": "Anketa",
       "spin_wheel": "Rotačné koleso",
       "subathon_timer": "Subathon časovač",
-      "points_board": "Lojálni diváci"
+      "points_board": "Lojálni diváci",
+      "streamer_level": "Úroveň streamera",
+      "tip_jar": "Darčeková nádoba"
     },
     "hints": {
-      "streamer_level": "Vaša úroveň streamera a týždenná séria vo vašom profile",
-      "tip_jar": "Pohár, ktorý sa naplní pri príchode zaplatených darčekov",
       "tip_alert": "Oslavuje každé prepitné vo veľkosti podľa jeho úrovne",
       "follow_alert": "Zobrazí každého nového sledovateľa",
       "subscribe_alert": "Zobrazí každého nového odberateľa",
@@ -5152,14 +5152,16 @@
       "poll": "Vaša živá anketa s hlasovacím tlačidlom pre každú možnosť",
       "spin_wheel": "Kde sa točia kolesá vo vašich pravidlách",
       "subathon_timer": "Počítadlo, ktoré odkladá čas darčekmi, sledovaním a predplatnými",
-      "points_board": "Tvoj top diváci podľa bodov z sledovania a darovania"
+      "points_board": "Tvoj top diváci podľa bodov z sledovania a darovania",
+      "streamer_level": "Vaša úroveň streamera a týždenná séria vo vašom profile",
+      "tip_jar": "Pohár, ktorý sa naplní pri príchode zaplatených darčekov"
     },
     "fields": {
-      "showStreak": "Zobraziť týždennú sériu",
       "style": "Štýl",
       "celebration": "Oslava",
       "banner": "Banner",
       "minAmount": "Najmenší tip na zobrazenie (DHB)",
+      "showStreak": "Zobraziť týždennú sériu",
       "showMessage": "Zobraziť správu s prepitným",
       "confirmedOnly": "Až po potvrdení platby",
       "confirmedOnlyHint": "Čaká niekoľko sekúnd na reťaz, takže sa nikdy nezobrazí tip, ktorý nie je zaplatený.",
@@ -8679,6 +8681,15 @@
     "backToMedia": "Späť na príspevok",
     "like": "Páči sa mi to",
     "unlike": "Odstrániť Páči sa mi to"
+  },
+  "postProcessing": {
+    "uploading": "Nahráva sa…",
+    "preparing": "Pripravuje sa…",
+    "ready": "Hotovo",
+    "preparingVideo": "Pripravujeme vaše video",
+    "posted": "Zverejnené",
+    "view": "Zobraziť",
+    "failed": "Video sa nepodarilo spracovať"
   },
   "post": {
     "like": "Páči sa mi",

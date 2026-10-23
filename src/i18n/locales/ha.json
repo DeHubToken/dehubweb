@@ -1790,6 +1790,8 @@
     "monthsAgo": "{{count}}wa da suka wuce",
     "forLabel": "domin",
     "againstLabel": "A kan",
+    "lentBadgeCantVote": "Alamar ku tana ba ku bashi, kuma alamu na bashi ba za su iya jefa kuri'a ba. Sayi DHB don samun alamar ku.",
+    "buyDhb": "Sayi DHB",
     "discussion": {
       "title": "Tattaunawa",
       "intro": "Tambayi tambayoyi masu biyowa ko tattauna shawarwarin kafin ka kada kuri'a.",
@@ -4725,11 +4727,6 @@
     "creatorEarnsDirect": "Masu biyan kuɗi suna biyan kuɗi a cikin alamun DeHub. Kasashen rabon ku a cikin walat ɗin ku lokacin da suka yi rajista, ƙasa da kuɗin dandamali don ƙimar alamar ku."
   },
   "liveOverlay": {
-    "level": "Mataki {{level}}",
-    "streak_one": "{{count}}-week streak",
-    "streak_other": "{{count}}-week streak",
-    "tipJar": "Kyauta jar",
-    "subathon": "Subathon",
     "someone": "Wani",
     "newFollower": "Sabon mabiya: {{name}}",
     "newSubscriber": "Sabuwar mai biyan kuɗi: {{name}}",
@@ -4742,10 +4739,15 @@
     "tipped": "{{name}} aika kyauta",
     "chatPreview": "Saƙonnin hira sun bayyana a nan",
     "wheelLanded": "{{name}} spun: {{result}}",
+    "subathon": "Subathon",
     "subathonOver": "Lokaci ya tashi",
     "pointsTitle": "Mafi yawan masu kallo masu aminci",
     "points_one": "{{formatted}} aya",
     "points_other": "{{formatted}} maki",
+    "level": "Mataki {{level}}",
+    "streak_one": "{{count}}-week streak",
+    "streak_other": "{{count}}-week streak",
+    "tipJar": "Kyauta jar",
     "poll": {
       "closed": "An rufe zabe",
       "voteFor": "Kuri'a don {{option}}",
@@ -4913,8 +4915,6 @@
       "join": "Shiga"
     },
     "kinds": {
-      "streamer_level": "Streamer matakin",
-      "tip_jar": "Kyauta jar",
       "tip_alert": "Tip faert",
       "follow_alert": "Bi faɗakarwa",
       "subscribe_alert": "Subscriber faɗakarwa",
@@ -4932,11 +4932,11 @@
       "poll": "Kuri'a",
       "spin_wheel": "Spin dabaran",
       "subathon_timer": "Subathon lokaci",
-      "points_board": "Masu kallo masu aminci"
+      "points_board": "Masu kallo masu aminci",
+      "streamer_level": "Streamer matakin",
+      "tip_jar": "Kyauta jar"
     },
     "hints": {
-      "streamer_level": "Your streamer matakin da mako-mako streak, daga your profile",
-      "tip_jar": "Gwangwani da ke cikawa yayin da aka biya kyauta ya shigo",
       "follow_alert": "Nuna kowane sabon mabiya",
       "subscribe_alert": "Nuna kowane sabon mai biyan kuɗi",
       "share_alert": "Nuna lokacin da wani ya raba rafi naka",
@@ -4955,14 +4955,16 @@
       "poll": "Zaben ku na rayuwa, tare da maɓallin jefa kuri'a ga kowane zaɓi",
       "spin_wheel": "Inda ƙafafun da ke cikin dokokinku ke juyawa",
       "subathon_timer": "Ƙididdigar da kyaututtuka, bi da biyan kuɗi ke turawa baya",
-      "points_board": "Manyan masu kallon ku ta maki daga kallo da kyauta"
+      "points_board": "Manyan masu kallon ku ta maki daga kallo da kyauta",
+      "streamer_level": "Your streamer matakin da mako-mako streak, daga your profile",
+      "tip_jar": "Gwangwani da ke cikawa yayin da aka biya kyauta ya shigo"
     },
     "fields": {
-      "showStreak": "Nuna streak na mako-mako",
       "style": "Salo",
       "celebration": "Gida",
       "banner": "Gida",
       "minAmount": "Karamina karamina don nuna (DHB)",
+      "showStreak": "Nuna streak na mako-mako",
       "showMessage": "Nuna saƙon karamina",
       "confirmedOnly": "Kawai bayan jiyya ta tabbata",
       "confirmedOnlyHint": "Jira 'yan seconds don sarkar, don haka tip wanda ba a taɓa biya ba ya bayyana.",
@@ -8445,5 +8447,14 @@
     "backToMedia": "Komawa zuwa post",
     "like": "Kamar",
     "unlike": "Cire kamar"
+  },
+  "postProcessing": {
+    "uploading": "Ana lodawa…",
+    "preparing": "Ana shiryawa…",
+    "ready": "A shirye",
+    "preparingVideo": "Ana shirya bidiyonka",
+    "posted": "An wallafa",
+    "view": "Duba",
+    "failed": "Ba a iya sarrafa bidiyon ba"
   }
 }

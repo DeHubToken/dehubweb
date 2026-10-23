@@ -1829,7 +1829,24 @@
     "tokensUnit": "tokens"
   },
   "agents": {
-    "life": {"title":"Con vida","help":"Deja que este agente viva por su cuenta. Tiene su propio horario, publica, da me gusta y responde con su propia voz, y duerme por la noche.","starting":"Preparando su personalidad…","awake":"Despierto en {{home}}","asleep":"Dormido en {{home}}","next":"próxima visita {{time}}","recent":"Últimamente","empty":"Nada todavía. Se pasará pronto.","kind":{"post":"Publicó","comment":"Comentó","reply":"Respondió","like":"Le gustó una publicación","profile":"Actualizó su perfil","error":"Algo salió mal"}},
+    "life": {
+      "title": "Con vida",
+      "help": "Deja que este agente viva por su cuenta. Tiene su propio horario, publica, da me gusta y responde con su propia voz, y duerme por la noche.",
+      "starting": "Preparando su personalidad…",
+      "awake": "Despierto en {{home}}",
+      "asleep": "Dormido en {{home}}",
+      "next": "próxima visita {{time}}",
+      "recent": "Últimamente",
+      "empty": "Nada todavía. Se pasará pronto.",
+      "kind": {
+        "post": "Publicó",
+        "comment": "Comentó",
+        "reply": "Respondió",
+        "like": "Le gustó una publicación",
+        "profile": "Actualizó su perfil",
+        "error": "Algo salió mal"
+      }
+    },
     "profile": {
       "edit": "Editar perfil",
       "avatar": "Avatar",
@@ -2219,6 +2236,8 @@
     "monthsAgo": "hace {{count}}me",
     "forLabel": "Por",
     "againstLabel": "En contra",
+    "lentBadgeCantVote": "Tu insignia te es prestada, y las insignias prestadas no pueden votar. Compre DHB para ganar su propia insignia.",
+    "buyDhb": "Comprar DHB",
     "discussion": {
       "title": "Discusión",
       "intro": "Haga preguntas de seguimiento o discuta la propuesta antes de votar.",
@@ -5835,10 +5854,6 @@
     "creatorEarnsDirect": "Los suscriptores pagan en tokens DeHub. Tu acción llega a tu billetera en el momento en que se suscriben, menos la tarifa de la plataforma para tu nivel de insignia."
   },
   "liveOverlay": {
-    "level": "Nivel {{level}}",
-    "streak_one": "Racha de {{count}}semanas",
-    "streak_other": "Racha de {{count}}semanas",
-    "tipJar": "Tarro de regalo",
     "someone": "Alguien",
     "newFollower": "Nuevo seguidor: {{name}}",
     "newSubscriber": "Nuevo suscriptor: {{name}}",
@@ -5856,6 +5871,10 @@
     "pointsTitle": "Los espectadores más leales",
     "points_one": "{{formatted}} punto",
     "points_other": "{{formatted}} puntos",
+    "level": "Nivel {{level}}",
+    "streak_one": "Racha de {{count}}semanas",
+    "streak_other": "Racha de {{count}}semanas",
+    "tipJar": "Tarro de regalo",
     "poll": {
       "closed": "Votación cerrada",
       "voteFor": "Vota por {{option}}",
@@ -6023,8 +6042,6 @@
       "join": "Unirse"
     },
     "kinds": {
-      "streamer_level": "Nivel de streamer",
-      "tip_jar": "Tarro de regalo",
       "tip_alert": "Alerta de propina",
       "follow_alert": "Seguir alerta",
       "subscribe_alert": "Alerta de suscriptor",
@@ -6044,11 +6061,11 @@
       "poll": "Encuesta",
       "spin_wheel": "Rueda giratoria",
       "subathon_timer": "Cronómetro Subathon",
-      "points_board": "Espectadores leales"
+      "points_board": "Espectadores leales",
+      "streamer_level": "Nivel de streamer",
+      "tip_jar": "Tarro de regalo"
     },
     "hints": {
-      "streamer_level": "Tu nivel de streamer y racha semanal, desde tu perfil",
-      "tip_jar": "Un frasco que se llena a medida que llegan los regalos pagados",
       "tip_alert": "Celebra cada propina, ajustada a su nivel",
       "follow_alert": "Muestra a cada nuevo seguidor",
       "subscribe_alert": "Muestra cada nuevo suscriptor",
@@ -6068,14 +6085,16 @@
       "poll": "Tu encuesta en vivo, con un botón de voto para cada opción",
       "spin_wheel": "Donde las ruedas de tus reglas giran",
       "subathon_timer": "Un conteo regresivo que los regalos, seguimientos y suscripciones hacen retroceder",
-      "points_board": "Tus espectadores más destacados por puntos de ver y regalar"
+      "points_board": "Tus espectadores más destacados por puntos de ver y regalar",
+      "streamer_level": "Tu nivel de streamer y racha semanal, desde tu perfil",
+      "tip_jar": "Un frasco que se llena a medida que llegan los regalos pagados"
     },
     "fields": {
-      "showStreak": "Mostrar la racha semanal",
       "style": "Estilo",
       "celebration": "Celebración",
       "banner": "Banner",
       "minAmount": "Consejo más pequeño para mostrar (DHB)",
+      "showStreak": "Mostrar la racha semanal",
       "showMessage": "Mostrar el mensaje de propina",
       "confirmedOnly": "Solo después de que el pago se confirme",
       "confirmedOnlyHint": "Espera unos segundos a la cadena, por lo que nunca aparece una propina que nunca se paga.",
@@ -14086,5 +14105,14 @@
     "nobodyYet": "Aún no hay nadie",
     "rotate": "Girar pantalla",
     "showControls": "Mostrar controles"
+  },
+  "postProcessing": {
+    "uploading": "Subiendo…",
+    "preparing": "Preparando…",
+    "ready": "Listo",
+    "preparingVideo": "Preparando tu video",
+    "posted": "Publicado",
+    "view": "Ver",
+    "failed": "No se pudo procesar el video"
   }
 }

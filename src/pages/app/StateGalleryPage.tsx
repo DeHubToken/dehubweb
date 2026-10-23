@@ -1,6 +1,7 @@
 import { translateCopy as _translateCopy } from '@/i18n/copy';
 import { useTranslation as _useCopy } from 'react-i18next';
 import { lazy, Suspense, useEffect, useId, useState } from 'react';
+import { createPortal } from 'react-dom';
 import { PenSquare, Cable } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { toast } from 'sonner';
@@ -51,6 +52,11 @@ import type { DeHubPoll } from '@/lib/api/dehub';
 import { ProfileHeader } from '@/components/app/profile/ProfileHeader';
 import type { ProfileData } from '@/hooks/use-dehub-profile';
 import type { Community, PinnedCommunity } from '@/hooks/use-communities';
+import { DraftVideoProgress } from '@/features/post/components/DraftVideoProgress';
+import { PostProcessingPill } from '@/components/app/PostProcessingDock';
+import type { PostProcessingPhase } from '@/store/postProcessingStore';
+import { ProposalLinkEmbed } from '@/components/app/governance/ProposalLinkEmbed';
+import type { GovernanceProposal } from '@/hooks/use-governance';
 import galleryCover from '@/assets/banners/agent-marco_v.png';
 import galleryAvatar from '@/assets/avatars/marco_v.png';
 import galleryCommunityArt from '@/assets/banners/agent-vrgl.png';
@@ -147,6 +153,8 @@ function ArticleGallery({ onAction }: { onAction: () => void }) {
 }
 
 const SAMPLE_REACTIONS: ReactionCounts = { like: 19, love: 4, hot: 2, lol: 1, dislike: 3 };
+/** A post whose dislikes outnumber its likes: the thumb shows 👎 and the dislike total. */
+const SAMPLE_DISLIKED_REACTIONS: ReactionCounts = { like: 2, love: 1, dislike: 9 };
 
 /**
  * A post's action row with its reaction tray: hover (desktop) or hold (touch)
@@ -333,6 +341,7 @@ function ReactionsGallery() {
   const rows = [
     { id: '990001', label: _copy("copy.5735e3593d23", { defaultValue: "No reaction yet" }), myReaction: null },
     { id: '990002', label: _copy("copy.bf74a035bfa2", { defaultValue: "You disliked it" }), myReaction: 'dislike' as const },
+    { id: '990003', label: '👍 3 · 👎 9', myReaction: null, counts: SAMPLE_DISLIKED_REACTIONS, likes: 3, dislikes: 9 },
   ];
   return (
     <AuthContext.Provider value={GALLERY_AUTH}>
@@ -344,11 +353,11 @@ function ReactionsGallery() {
             <p className="px-3 text-xs text-zinc-500">{row.label}</p>
             <ActionBar
               postId={row.id}
-              likeCount={26}
-              dislikeCount={3}
+              likeCount={'likes' in row ? row.likes : 26}
+              dislikeCount={'dislikes' in row ? row.dislikes : 3}
               commentCount={5}
               repostCount={2}
-              reactionCounts={SAMPLE_REACTIONS}
+              reactionCounts={'counts' in row ? row.counts : SAMPLE_REACTIONS}
               myReaction={row.myReaction}
               isDisliked={row.myReaction === 'dislike'}
               hideUtility
@@ -358,6 +367,51 @@ function ReactionsGallery() {
       </div>
     </section>
     </AuthContext.Provider>
+  );
+}
+
+/**
+ * A new video's way to playable: the composer's bar under the attached video
+ * while it uploads early (lib/draft-video), and the glass dock pill that
+ * follows the post's transcode after Post. `?dock=processing|done|failed`
+ * also pins the pill where the app docks it, above the phone bottom nav.
+ */
+function VideoProcessingGallery({ docked }: { docked: PostProcessingPhase | null }) {
+  const { t } = useTranslation();
+  const drafts = [
+    { phase: 'uploading', uploadPercent: 40, processPercent: 0, draftId: null },
+    { phase: 'processing', uploadPercent: 100, processPercent: 62, draftId: 'gallery' },
+    { phase: 'ready', uploadPercent: 100, processPercent: 100, draftId: 'gallery' },
+  ] as const;
+  return (
+    <section data-page-bento data-video-processing-gallery className="mb-5 rounded-3xl border border-white/10 bg-white/[0.04] p-4">
+      <h2 className="mb-3 text-sm font-semibold">{t('postProcessing.preparingVideo')}</h2>
+      <div className="flex flex-wrap gap-5" data-draft-progress-samples>
+        {drafts.map((draft) => (
+          <div key={draft.phase} data-draft-sample={draft.phase} className="flex flex-col gap-3">
+            <img src={galleryCover} alt="" className="aspect-video w-[280px] rounded-2xl object-cover sm:w-[320px] md:w-[380px]" />
+            <DraftVideoProgress draft={{ ...draft }} />
+          </div>
+        ))}
+      </div>
+      <div
+        data-dock-samples
+        className="mt-5 flex flex-wrap items-center gap-3 rounded-2xl p-4"
+        style={{ backgroundImage: `url(${galleryCover})`, backgroundSize: 'cover', backgroundPosition: 'center' }}
+      >
+        <PostProcessingPill phase="processing" progress={62} thumbnail={galleryCover} />
+        <PostProcessingPill phase="done" progress={100} thumbnail={galleryCover} onPress={() => undefined} />
+        <PostProcessingPill phase="failed" progress={0} thumbnail={galleryCover} onPress={() => undefined} />
+      </div>
+      {/* Portalled: the bento's backdrop filter would otherwise pin a fixed
+          child to the section instead of the viewport. */}
+      {docked && createPortal(
+        <div data-processing-dock-anchor>
+          <PostProcessingPill phase={docked} progress={docked === 'processing' ? 62 : 100} thumbnail={galleryCover} onPress={docked === 'processing' ? undefined : () => undefined} />
+        </div>,
+        document.body,
+      )}
+    </section>
   );
 }
 
@@ -435,11 +489,16 @@ export default function StateGalleryPage() {
 
         {params.get('predictions') === '1' && <PredictionGallery />}
 
+        <VideoProcessingGallery
+          docked={(['processing', 'done', 'failed'] as const).find((phase) => phase === params.get('dock')) ?? null}
+        />
+
         <StreamerArtworkGallery />
 
         <PinnedProfileGallery />
 
         <PollGallery />
+        <ProposalCardGallery />
         <LiveViewerGallery />
 
         <section data-page-bento data-badge-gallery className="mb-5 rounded-3xl border border-white/10 bg-white/[0.04] p-4">
@@ -842,6 +901,42 @@ function PageKitGallery() {
           <KitButton variant="quiet">{_copy("copy.c0ebb7d6b693", { defaultValue: "Quiet" })}</KitButton>
         </div>
         <PageEmpty icon="stores" title={_copy("copy.38975ad4e835", { defaultValue: "No listings yet" })} body="Be the first to sell something." />
+      </div>
+    </section>
+  );
+}
+
+/** Sample proposals for the proposal card a quoted or reposted proposal shows as. */
+const GALLERY_PROPOSALS: GovernanceProposal[] = (() => {
+  const day = 86_400_000;
+  const base = {
+    author_wallet_address: '0x1111111111111111111111111111111111111111',
+    author_username: 'marco_v',
+    author_avatar: null,
+    vote_count: 0,
+    comment_count: 4,
+    created_at: new Date(Date.now() - 2 * day).toISOString(),
+    updated_at: new Date(Date.now() - day).toISOString(),
+  };
+  return [
+    { ...base, id: '00000000-0000-4000-8000-000000000001', status: 'open', title: 'Add a creator fund paid from 1% of tips', description: 'Each month, 1% of all tips goes into a pool split between the ten most-watched new creators.', like_count: 4200, dislike_count: 1300, voting_ends_at: new Date(Date.now() + 3 * day).toISOString() },
+    { ...base, id: '00000000-0000-4000-8000-000000000002', status: 'passed', title: 'Weekly community stage for governance Q&A', description: 'A recorded stage every Friday where proposers answer questions before votes close.', like_count: 9100, dislike_count: 700, voting_ends_at: new Date(Date.now() - day).toISOString() },
+    { ...base, id: '00000000-0000-4000-8000-000000000003', status: 'rejected', title: 'Remove mature content from search', description: '', like_count: 900, dislike_count: 5600, voting_ends_at: new Date(Date.now() - day).toISOString() },
+  ] as GovernanceProposal[];
+})();
+
+function ProposalCardGallery() {
+  const { t } = useTranslation();
+  const queryClient = useQueryClient();
+  // Seed before the cards mount so they render the samples, never fetch.
+  useState(() => GALLERY_PROPOSALS.forEach((p) => queryClient.setQueryData(['governance-proposal', p.id], p)));
+  return (
+    <section data-page-bento data-proposal-gallery className="mb-5 rounded-3xl border border-white/10 bg-white/[0.04] p-4">
+      <h2 className="mb-3 text-sm font-semibold">{t('governance.title', 'Governance')}</h2>
+      <div className="grid gap-4 md:grid-cols-3">
+        {GALLERY_PROPOSALS.map((p) => (
+          <ProposalLinkEmbed key={p.id} proposalId={p.id} path="/app/state-gallery" />
+        ))}
       </div>
     </section>
   );

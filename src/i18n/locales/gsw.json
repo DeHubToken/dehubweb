@@ -1788,6 +1788,8 @@
     "monthsAgo": "vor {{count}}M",
     "forLabel": "Für",
     "againstLabel": "Gäge",
+    "lentBadgeCantVote": "Dini Badge isch dir gläint, und gläinte Badges chönd nöd abstimme. Chauf DHB zum dini eige Badge z'ergän.",
+    "buyDhb": "Chauf DHB",
     "discussion": {
       "title": "Diskussio",
       "intro": "Stell nöchti Froge oder diskutiere der Vorschlag, bevor du abstimmisch.",
@@ -4792,11 +4794,6 @@
     "creatorEarnsDirect": "Abonnente zahled mit DeHub Tokens. Din Anteil landet i dim Wallet, grad wenn sie abonniered, abzüglich de Plattformgebühr für din Badge-Tier."
   },
   "liveOverlay": {
-    "level": "Level {{level}}",
-    "streak_one": "{{count}}-Woche Streak",
-    "streak_other": "{{count}}-Woche Streak",
-    "tipJar": "Geschenkschrank",
-    "subathon": "Subathon",
     "someone": "Irgendwer",
     "newFollower": "Neuer Follower: {{name}}",
     "newSubscriber": "Neue Abonnentin: {{name}}",
@@ -4808,10 +4805,15 @@
     "tipped": "{{name}} hätt a Geschenk gschickt",
     "chatPreview": "Chatnachrichten erscheinen hier",
     "wheelLanded": "{{name}} hüt: {{result}}",
+    "subathon": "Subathon",
     "subathonOver": "Zeit abgelaufen",
     "pointsTitle": "Meiste treue Zuschauer:innen",
     "points_one": "{{formatted}} Punkt",
     "points_other": "{{formatted}} Punkte",
+    "level": "Level {{level}}",
+    "streak_one": "{{count}}-Woche Streak",
+    "streak_other": "{{count}}-Woche Streak",
+    "tipJar": "Geschenkschrank",
     "poll": {
       "closed": "Voting abgeschlossen",
       "voteFor": "Stimm ab für {{option}}",
@@ -4841,8 +4843,6 @@
   "liveStudio": {
     "subathon": {
       "title": "Subathon",
-      "start": "Countdown starten",
-      "stop": "Stopp",
       "intro": "Eini Countdown auf deim Stream. Jeder bezahlte Gift, Follow und Abo gäbt Zeit, so bleibt’s Room live.",
       "secondsPerThousand": "Sekunden, die pro 1'000 DHB geschenkt werden, hinzugefügt",
       "secondsPerFollow": "Sekunden pro Follow gfügt",
@@ -4851,16 +4851,18 @@
       "save": "Sparbeträge speichern",
       "saved": "Subathon-Beträge gespart.",
       "startMinutes": "Start mit (Minuten)",
+      "start": "Countdown starten",
+      "stop": "Stopp",
       "addFive": "Add 5 Minütli",
       "removeFive": "Zäme 5 Minütli abschtäi.",
       "failed": "Das hat net funktioniert. Versuchs no wieder.",
       "widgetHint": "Zeigst deini Subathon-Zählrückwärtslauf an. Startschtihle es im Subathon-Panel in Live Studio."
     },
     "points": {
-      "widgetHint": "Fügen Sie das Widget Loyale Zuschauer hinzu, um diese Liste im Stream anzuzeigen.",
       "title": "Loyale Zuschauer",
       "intro": "Zuschauende verdiene a Pukt für jede Minute, wo se di schaue, und a Pukt für je 100 DHB, wo se dir schenke. Chat und Reaktione bringe nix ein – Pukt kenne mer folglich net «farmen».",
-      "empty": "Kei Punkte no. Die bauen sich auf, wenn Leute zuschauen und schenken."
+      "empty": "Kei Punkte no. Die bauen sich auf, wenn Leute zuschauen und schenken.",
+      "widgetHint": "Fügen Sie das Widget Loyale Zuschauer hinzu, um diese Liste im Stream anzuzeigen."
     },
     "controls": {
       "title": "Schnellsteuerung",
@@ -4974,9 +4976,6 @@
       "join": "Mitmache"
     },
     "kinds": {
-      "streamer_level": "Streamer-Level",
-      "tip_jar": "Geschenkschrank",
-      "subathon_timer": "Subathon-Timer",
       "tip_alert": "Tipp-Alarm",
       "follow_alert": "Folge-Alarm",
       "subscribe_alert": "Abonnent-Alarm",
@@ -4995,12 +4994,12 @@
       "rule_alert": "Regel-Warnungen",
       "poll": "Umfrage",
       "spin_wheel": "Schleuderrad",
-      "points_board": "Loyale Zuschauer"
+      "subathon_timer": "Subathon-Timer",
+      "points_board": "Loyale Zuschauer",
+      "streamer_level": "Streamer-Level",
+      "tip_jar": "Geschenkschrank"
     },
     "hints": {
-      "streamer_level": "Dein Streamer-Level und die wöchentliche Streak, von deinem Profil",
-      "tip_jar": "Ein Schrank, der sich mit bezahlten Geschenken füllt",
-      "points_board": "Ihre Top-Zuschauer nach Punkten aus Zuschauen und Verschenken",
       "tip_alert": "Feiert jede Tipp, passend zu sim Level",
       "follow_alert": "Zeigt jede neue Follower",
       "subscribe_alert": "Zeigt jede neue Abonnent",
@@ -5019,14 +5018,17 @@
       "rule_alert": "Wo deine Regel-Warnungen erscheinen",
       "poll": "Deine Live-Umfrage, mit einem Abstimmknopf für jede Option",
       "spin_wheel": "Wo die Räder in deinen Regeln dreh’n",
-      "subathon_timer": "Ene Zählrückwärts, wo Geschenke, Follower und Abonnements zurückgedrängt werden."
+      "subathon_timer": "Ene Zählrückwärts, wo Geschenke, Follower und Abonnements zurückgedrängt werden.",
+      "points_board": "Ihre Top-Zuschauer nach Punkten aus Zuschauen und Verschenken",
+      "streamer_level": "Dein Streamer-Level und die wöchentliche Streak, von deinem Profil",
+      "tip_jar": "Ein Schrank, der sich mit bezahlten Geschenken füllt"
     },
     "fields": {
-      "showStreak": "Zeigt die wöchentliche Streak",
       "style": "Stil",
       "celebration": "Feier",
       "banner": "Banner",
       "minAmount": "Kleinste Spende für (DHB)",
+      "showStreak": "Zeigt die wöchentliche Streak",
       "showMessage": "Zeig d'Tipp-Nachricht",
       "confirmedOnly": "Erst wenn d'Zahlig bestätigt isch",
       "confirmedOnlyHint": "Wärt a paar Sekundli auf die Kette, so a Trinkgeld, das nie bezahlt wird, taucht nie auf.",
@@ -8507,5 +8509,14 @@
     "backToMedia": "Zrugg zum Post",
     "like": "Gefällt mir",
     "unlike": "Like entferne"
+  },
+  "postProcessing": {
+    "uploading": "Am Uelade…",
+    "preparing": "Am Vorbereite…",
+    "ready": "Parat",
+    "preparingVideo": "Dis Video wird vorbereitet",
+    "posted": "Pöschtet",
+    "view": "Aaluege",
+    "failed": "S Video het nöd chönne verarbeitet wärde"
   }
 }

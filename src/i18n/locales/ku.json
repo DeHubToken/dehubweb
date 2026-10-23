@@ -4042,15 +4042,6 @@
     "creatorEarnsDirect": "بەشداربووان بە تۆکنی DeHub پارە دەدەن. کاتێک بەشداری دەکەن، بەشەکەت دەگاتە جزدانەکەت، دوای کرێی پلاتفۆرم بەپێی ئاستی باجەکەت."
   },
   "liveOverlay": {
-    "level": "Asta {{level}}",
-    "streak_one": "Rêzeya {{count}} hefteyî",
-    "streak_other": "Rêzeya {{count}} hefteyî",
-    "tipJar": "Kûpa diyariyan",
-    "subathon": "Subathon",
-    "subathonOver": "Dem qediya",
-    "pointsTitle": "Temaşevanên herî dilsoz",
-    "points_one": "{{formatted}} xal",
-    "points_other": "{{formatted}} xal",
     "someone": "Kesek",
     "newFollower": "Şopînerê nû: {{name}}",
     "newSubscriber": "Abonetiya nû: {{name}}",
@@ -4063,6 +4054,15 @@
     "tipped": "{{name}} diyariyek şand",
     "chatPreview": "Peyamên chatê li vir xuya dibin",
     "wheelLanded": "{{name}} zivirand: {{result}}",
+    "subathon": "Subathon",
+    "subathonOver": "Dem qediya",
+    "pointsTitle": "Temaşevanên herî dilsoz",
+    "points_one": "{{formatted}} xal",
+    "points_other": "{{formatted}} xal",
+    "level": "Asta {{level}}",
+    "streak_one": "Rêzeya {{count}} hefteyî",
+    "streak_other": "Rêzeya {{count}} hefteyî",
+    "tipJar": "Kûpa diyariyan",
     "poll": {
       "closed": "Dengdan girtî ye",
       "voteFor": "Dengê xwe bide {{option}}",
@@ -4230,10 +4230,6 @@
       "join": "بەشداریکردن"
     },
     "kinds": {
-      "streamer_level": "Asta weşanvan",
-      "tip_jar": "Kûpa diyariyan",
-      "subathon_timer": "Demjimêra subathonê",
-      "points_board": "Temaşevanên dilsoz",
       "tip_alert": "ئاگاداریی بەخشش",
       "follow_alert": "ئاگاداریی فۆڵۆو",
       "subscribe_alert": "ئاگاداریی سەبسکرایب",
@@ -4251,13 +4247,13 @@
       "ticker": "Nivîsa diherike",
       "rule_alert": "Hişyariyên qaîdeyan",
       "poll": "Rapirsî",
-      "spin_wheel": "Çerxa bextê"
+      "spin_wheel": "Çerxa bextê",
+      "subathon_timer": "Demjimêra subathonê",
+      "points_board": "Temaşevanên dilsoz",
+      "streamer_level": "Asta weşanvan",
+      "tip_jar": "Kûpa diyariyan"
     },
     "hints": {
-      "streamer_level": "Asta te ya weşanvaniyê û rêzeya hefteyî, ji profîla te",
-      "tip_jar": "Kûpek ku gava diyariyên dayî tên tije dibe",
-      "subathon_timer": "Jimartinek berevajî ku diyarî, şopandin û abonetî wê dirêj dikin",
-      "points_board": "Temaşevanên te yên sereke li gorî xalên ji temaşekirin û diyariyan",
       "tip_alert": "هەموو بەخششێک بەپێی ئاستەکەی دیاری دەکات",
       "follow_alert": "هەموو فۆڵۆوەرێکی نوێ نیشان دەدات",
       "subscribe_alert": "هەموو سەبسکرایبەرێکی نوێ نیشان دەدات",
@@ -4275,14 +4271,18 @@
       "ticker": "Rêzek ji nivîsa te ya ku li ser ekranê diherike",
       "rule_alert": "Cihê ku hişyariyên qaîdeyên te lê xuya dibin",
       "poll": "Rapirsiya te ya zindî, bi bişkokeke dengdanê ji bo her vebijarkê",
-      "spin_wheel": "Cihê ku çerxên di qaîdeyên te de dizivirin"
+      "spin_wheel": "Cihê ku çerxên di qaîdeyên te de dizivirin",
+      "subathon_timer": "Jimartinek berevajî ku diyarî, şopandin û abonetî wê dirêj dikin",
+      "points_board": "Temaşevanên te yên sereke li gorî xalên ji temaşekirin û diyariyan",
+      "streamer_level": "Asta te ya weşanvaniyê û rêzeya hefteyî, ji profîla te",
+      "tip_jar": "Kûpek ku gava diyariyên dayî tên tije dibe"
     },
     "fields": {
-      "showStreak": "Rêzeya hefteyî nîşan bide",
       "style": "شێواز",
       "celebration": "Kêfî",
       "banner": "Banner",
       "minAmount": "Serê herî biçûk ê ku were nîşandan (DHB)",
+      "showStreak": "Rêzeya hefteyî nîşan bide",
       "showMessage": "Peyama serişteyê nîşan bide",
       "confirmedOnly": "Tenê piştî ku dravdan piştrast dibe",
       "confirmedOnlyHint": "Çend saniyeyan li benda zincîrê dimîne, ji ber vê yekê bahşişek ku qet nayê dayîn qet xuya nake.",
@@ -7349,5 +7349,14 @@
     "shareFacebook": "هاوبەشکردن لە Facebook",
     "shareTelegram": "هاوبەشکردن لە Telegram",
     "copyLink": "لینکەکە کۆپی بکە"
+  },
+  "postProcessing": {
+    "uploading": "بار دەکرێت…",
+    "preparing": "ئامادە دەکرێت…",
+    "ready": "ئامادەیە",
+    "preparingVideo": "ڤیدیۆکەت ئامادە دەکرێت",
+    "posted": "بڵاوکرایەوە",
+    "view": "بینین",
+    "failed": "ڤیدیۆکە نەتوانرا پرۆسێس بکرێت"
   }
 }

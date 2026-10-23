@@ -2022,7 +2022,24 @@
     "tokensUnit": "tokens"
   },
   "agents": {
-    "life": {"title":"Levend","help":"Laat deze agent zelfstandig leven. Hij heeft zijn eigen tijden, post, liket en reageert met zijn eigen stem, en slaapt 's nachts.","starting":"Persoonlijkheid wordt ingesteld…","awake":"Wakker in {{home}}","asleep":"Slaapt in {{home}}","next":"volgende keer {{time}}","recent":"Recent","empty":"Nog niets. Hij komt snel langs.","kind":{"post":"Plaatste","comment":"Reageerde","reply":"Antwoordde","like":"Vond een post leuk","profile":"Werkte zijn profiel bij","error":"Er ging iets mis"}},
+    "life": {
+      "title": "Levend",
+      "help": "Laat deze agent zelfstandig leven. Hij heeft zijn eigen tijden, post, liket en reageert met zijn eigen stem, en slaapt 's nachts.",
+      "starting": "Persoonlijkheid wordt ingesteld…",
+      "awake": "Wakker in {{home}}",
+      "asleep": "Slaapt in {{home}}",
+      "next": "volgende keer {{time}}",
+      "recent": "Recent",
+      "empty": "Nog niets. Hij komt snel langs.",
+      "kind": {
+        "post": "Plaatste",
+        "comment": "Reageerde",
+        "reply": "Antwoordde",
+        "like": "Vond een post leuk",
+        "profile": "Werkte zijn profiel bij",
+        "error": "Er ging iets mis"
+      }
+    },
     "profile": {
       "edit": "Profiel bewerken",
       "avatar": "Avatar",
@@ -2412,6 +2429,8 @@
     "monthsAgo": "{{count}}ma geleden",
     "forLabel": "Voor",
     "againstLabel": "Tegen",
+    "lentBadgeCantVote": "Je badge is aan je uitgeleend en uitgeleende badges kunnen niet stemmen. Koop DHB om je eigen badge te verdienen.",
+    "buyDhb": "DHB kopen",
     "discussion": {
       "title": "Discussie",
       "intro": "Stel vervolgvragen of bespreek het voorstel voordat je stemt.",
@@ -6028,10 +6047,6 @@
     "creatorEarnsDirect": "Abonnees betalen in DeHub-tokens. Je aandeel komt in je portemonnee terecht op het moment dat ze zich abonneren, minus de platformkosten voor je badge-niveau."
   },
   "liveOverlay": {
-    "level": "Niveau {{level}}",
-    "streak_one": "{{count}}-week streak",
-    "streak_other": "{{count}}-week streak",
-    "tipJar": "Geschenkpot",
     "someone": "Iemand",
     "newFollower": "Nieuwe volger: {{name}}",
     "newSubscriber": "Nieuwe abonnee: {{name}}",
@@ -6049,6 +6064,10 @@
     "pointsTitle": "De meest loyale kijkers",
     "points_one": "{{formatted}} punt",
     "points_other": "{{formatted}} punten",
+    "level": "Niveau {{level}}",
+    "streak_one": "{{count}}-week streak",
+    "streak_other": "{{count}}-week streak",
+    "tipJar": "Geschenkpot",
     "poll": {
       "closed": "Stemming gesloten",
       "voteFor": "Stem op {{option}}",
@@ -6216,8 +6235,6 @@
       "join": "Deelnemen"
     },
     "kinds": {
-      "streamer_level": "Streamer-niveau",
-      "tip_jar": "Geschenkpot",
       "tip_alert": "Tipmelding",
       "follow_alert": "Volgmelding",
       "subscribe_alert": "Abonneemelding",
@@ -6237,11 +6254,11 @@
       "poll": "Poll",
       "spin_wheel": "Draaischijf",
       "subathon_timer": "Subathon-timer",
-      "points_board": "Loyale kijkers"
+      "points_board": "Loyale kijkers",
+      "streamer_level": "Streamer-niveau",
+      "tip_jar": "Geschenkpot"
     },
     "hints": {
-      "streamer_level": "Je streamer-niveau en wekelijkse reeks, vanuit je profiel",
-      "tip_jar": "Een pot die volloopt als betaalde geschenken binnenkomen",
       "tip_alert": "Viirt elke tip, aangepast aan zijn niveau",
       "follow_alert": "Toont elke nieuwe volger",
       "subscribe_alert": "Toont elke nieuwe abonnee",
@@ -6261,14 +6278,16 @@
       "poll": "Uw live poll, met een stemknop voor elke optie",
       "spin_wheel": "Waar de wielen in je regels draaien",
       "subathon_timer": "Een afteller die gifts, follows en abonnementen terugzet",
-      "points_board": "Je topkijkers op basis van punten van kijken en geven"
+      "points_board": "Je topkijkers op basis van punten van kijken en geven",
+      "streamer_level": "Je streamer-niveau en wekelijkse reeks, vanuit je profiel",
+      "tip_jar": "Een pot die volloopt als betaalde geschenken binnenkomen"
     },
     "fields": {
-      "showStreak": "Toon de wekelijkse reeks",
       "style": "Stijl",
       "celebration": "Viering",
       "banner": "Banner",
       "minAmount": "Kleinste tip om te laten zien (DHB)",
+      "showStreak": "Toon de wekelijkse reeks",
       "showMessage": "Het bericht met de fooi weergeven",
       "confirmedOnly": "Pas nadat de betaling is bevestigd",
       "confirmedOnlyHint": "Wacht een paar seconden op de ketting, dus een tip die nooit wordt betaald, verschijnt nooit.",
@@ -14338,5 +14357,14 @@
     "nobodyYet": "Nog niemand",
     "rotate": "Scherm draaien",
     "showControls": "Bediening tonen"
+  },
+  "postProcessing": {
+    "uploading": "Uploaden…",
+    "preparing": "Voorbereiden…",
+    "ready": "Klaar",
+    "preparingVideo": "Je video wordt voorbereid",
+    "posted": "Geplaatst",
+    "view": "Bekijken",
+    "failed": "De video kon niet worden verwerkt"
   }
 }

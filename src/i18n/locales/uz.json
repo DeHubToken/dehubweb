@@ -1807,6 +1807,8 @@
     "monthsAgo": "{{count}}mo ago",
     "forLabel": "Quyidagi uchun",
     "againstLabel": "Qarshi",
+    "lentBadgeCantVote": "Nishoningiz sizga qarzga berilgan va qarzga berilgan nishonlar ovoz bera olmaydi. O&#39;z nishoningizni olish uchun DHB sotib oling.",
+    "buyDhb": "DHB sotib oling",
     "discussion": {
       "title": "Muhokama",
       "intro": "Ovoz berishdan oldin qo'shimcha savollar bering yoki taklifni muhokama qiling.",
@@ -4827,10 +4829,6 @@
     "creatorEarnsDirect": "Obunachilar DeHub tokenlarida to'lov qilishadi. Ular obuna bo'lgan zahoti sizning ulushingiz hamyoningizga tushadi, nishon darajangiz uchun platforma to'lovi chegiriladi."
   },
   "liveOverlay": {
-    "level": "Daraja {{level}}",
-    "streak_one": "{{count}}-haftalik seriya",
-    "streak_other": "{{count}}-haftalik seriya",
-    "tipJar": "Sovg'a idishi",
     "someone": "Kimdir",
     "newFollower": "Yangi obunachi: {{name}}",
     "newSubscriber": "Yangi obunachi: {{name}}",
@@ -4848,6 +4846,10 @@
     "pointsTitle": "Eng sadoqatli tomoshabinlar",
     "points_one": "{{formatted}} ochko",
     "points_other": "{{formatted}} ochko",
+    "level": "Daraja {{level}}",
+    "streak_one": "{{count}}-haftalik seriya",
+    "streak_other": "{{count}}-haftalik seriya",
+    "tipJar": "Sovg'a idishi",
     "poll": {
       "closed": "Ovozlar yakunlandi",
       "voteFor": "{{option}} uchun ovoz bering",
@@ -5015,8 +5017,6 @@
       "join": "Qo'shiling"
     },
     "kinds": {
-      "streamer_level": "Striming darajasi",
-      "tip_jar": "Sovg'a idishi",
       "tip_alert": "Maslahat ogohlantirishi",
       "follow_alert": "Kuzatib borish haqida ogohlantirish",
       "subscribe_alert": "Obunachi ogohlantirishi",
@@ -5036,11 +5036,11 @@
       "poll": "So'rovnoma",
       "spin_wheel": "Aylanadigan g'ildirak",
       "subathon_timer": "Subaton taymeri",
-      "points_board": "Sodiq tomoshabinlar"
+      "points_board": "Sodiq tomoshabinlar",
+      "streamer_level": "Striming darajasi",
+      "tip_jar": "Sovg'a idishi"
     },
     "hints": {
-      "streamer_level": "Profilingizdan olingan strimer darajangiz va haftalik seriyangiz",
-      "tip_jar": "Changʻida toʻldiriladigan jar, chunki pul evaziga berilgan sovgʻalar keladi.",
       "tip_alert": "Har bir choychaqani, o'z darajasiga mos ravishda nishonlaydi",
       "follow_alert": "Har bir yangi izdoshni ko'rsatadi",
       "subscribe_alert": "Har bir yangi obunachini ko'rsatadi",
@@ -5060,13 +5060,15 @@
       "poll": "Jonli so'rovnomangiz, har bir variant uchun ovoz berish tugmasi bilan",
       "spin_wheel": "Qoidalaringizdagi g'ildiraklar qayerda aylanadi",
       "subathon_timer": "Tomoshabinlar, hodiya, taklif va abonentlik sanovini orqaga siljitadi",
-      "points_board": "Tomoshabinlar va hodiya qilishdan olingan ochkolari boʻyicha sizning eng yuqori tomoshabinlar roʻyxati"
+      "points_board": "Tomoshabinlar va hodiya qilishdan olingan ochkolari boʻyicha sizning eng yuqori tomoshabinlar roʻyxati",
+      "streamer_level": "Profilingizdan olingan strimer darajangiz va haftalik seriyangiz",
+      "tip_jar": "Changʻida toʻldiriladigan jar, chunki pul evaziga berilgan sovgʻalar keladi."
     },
     "fields": {
-      "showStreak": "Haftalik seriyani ko'rsatish",
       "style": "Uslub",
       "celebration": "Bayram",
       "minAmount": "Ko'rsatish uchun eng kichik uchi (DHB)",
+      "showStreak": "Haftalik seriyani ko'rsatish",
       "showMessage": "Maslahat xabarini ko'rsatish",
       "confirmedOnly": "Faqat to'lov tasdiqlangandan keyin",
       "confirmedOnlyHint": "Zanjir uchun bir necha soniya kutadi, shuning uchun hech qachon to'lanmagan choychaqa hech qachon ko'rinmaydi.",
@@ -8587,6 +8589,15 @@
     "backToMedia": "Xabarga qaytish",
     "like": "Yoqdi",
     "unlike": "Yoqtirishni olib tashlash"
+  },
+  "postProcessing": {
+    "uploading": "Yuklanmoqda…",
+    "preparing": "Tayyorlanmoqda…",
+    "ready": "Tayyor",
+    "preparingVideo": "Videongiz tayyorlanmoqda",
+    "posted": "Joylandi",
+    "view": "Ko‘rish",
+    "failed": "Videoni qayta ishlab bo‘lmadi"
   },
   "spaces": {
     "title": "Boʻlimlar",

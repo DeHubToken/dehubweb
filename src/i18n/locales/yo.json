@@ -1785,6 +1785,8 @@
     "monthsAgo": "{{count}}oṣ sẹ́yìn",
     "forLabel": "Fun ...",
     "againstLabel": "Lodi si",
+    "lentBadgeCantVote": "Àmì ìbánisọ̀rọ̀ rẹ ni a yá fún ọ, àti pé àmì ìbánisọ̀rọ̀ tí o yá kò lè dìbò. Ra DHB láti gba àmì ẹ̀yẹ tìrẹ.",
+    "buyDhb": "Ra DHB",
     "discussion": {
       "title": "Ìjíròrò",
       "intro": "Béèrè àwọn ìbéèrè tó tẹ̀lé e tàbí kí o jíròrò àbá náà kí o tó dìbò.",
@@ -4712,10 +4714,6 @@
     "creatorPaidDirectNote": "Ìpín olùṣẹ̀dá náà lọ tààrà sí àpamọ́ wọn ní àsìkò tí o bá ṣe ìforúkọsílẹ̀. DeHub máa ń san owó orí pẹpẹ kékeré."
   },
   "liveOverlay": {
-    "level": "Ipele {{level}}",
-    "streak_one": "{{count}}-week streak",
-    "streak_other": "{{count}}-week streak",
-    "tipJar": "Ìkòkò ẹ̀bùn",
     "someone": "Ẹnikan",
     "newFollower": "Àwọn ọmọlẹ́yìn tuntun: {{name}}",
     "newSubscriber": "Olùpèsè tuntun: {{name}}",
@@ -4733,6 +4731,10 @@
     "pointsTitle": "Ọpọlọpọ awọn oluwo oloootitọ",
     "points_one": "{{formatted}} ojuami",
     "points_other": "{{formatted}} awọn aaye",
+    "level": "Ipele {{level}}",
+    "streak_one": "{{count}}-week streak",
+    "streak_other": "{{count}}-week streak",
+    "tipJar": "Ìkòkò ẹ̀bùn",
     "poll": {
       "closed": "Voting closed",
       "voteFor": "Dibo fun {{option}}",
@@ -4761,7 +4763,6 @@
   },
   "liveStudio": {
     "subathon": {
-      "stop": "Dúró",
       "title": "Subathon",
       "intro": "Ìkàwé lórí ìgbìsí rẹ. Gbogbo ẹ̀bùn tí wọ́n sanwó fún, ìlépa àti ìforúkọsílẹ̀ máa ń fi àkókò kún un, nítorí náà yàrá náà máa ń jẹ́ kí o wà láàyè.",
       "secondsPerThousand": "Èkejì tí a fi kún un ní gbogbo ẹ̀bùn 1,000 DHB",
@@ -4772,6 +4773,7 @@
       "saved": "Owó tí a fi pamọ́ ní abẹ́ eré-ìdárayá.",
       "startMinutes": "Bẹ̀rẹ̀ pẹ̀lú (ìṣẹ́jú)",
       "start": "Bẹrẹ àkójọpọ̀ náà",
+      "stop": "Dúró",
       "addFive": "Ṣafikun iṣẹju 5",
       "removeFive": "Yọ iṣẹju 5 kuro",
       "failed": "Ìyẹn kò ṣiṣẹ́. Gbìyànjú lẹ́ẹ̀kan síi.",
@@ -4900,8 +4902,6 @@
       "join": "Darapọ mọ"
     },
     "kinds": {
-      "streamer_level": "Ipele Streamer",
-      "tip_jar": "Ìkòkò ẹ̀bùn",
       "tip_alert": "Ìkìlọ̀ Ìmọ̀ràn",
       "follow_alert": "Tẹle itaniji",
       "subscribe_alert": "Ikilọ ti awọn alabapin",
@@ -4919,11 +4919,11 @@
       "poll": "Ìbò",
       "spin_wheel": "Yí kẹ̀kẹ́ yípo",
       "subathon_timer": "Àsìkò Subathon",
-      "points_board": "Àwọn olùwò olóòótọ́"
+      "points_board": "Àwọn olùwò olóòótọ́",
+      "streamer_level": "Ipele Streamer",
+      "tip_jar": "Ìkòkò ẹ̀bùn"
     },
     "hints": {
-      "streamer_level": "Ipele ṣiṣan rẹ àti ìlà ọ̀sọ̀ọ̀sẹ̀ rẹ, láti inú àkójọpọ̀ rẹ",
-      "tip_jar": "Igo ti o kun bi awọn ẹbun ti o sanwo ti n wọle",
       "tip_alert": "Ṣe ayẹyẹ gbogbo awọn imọran, iwọn si ipele rẹ.",
       "follow_alert": "Ṣàfihàn ọmọlẹ́yìn tuntun kọ̀ọ̀kan",
       "subscribe_alert": "Ṣe afihan alabapin tuntun kọọkan",
@@ -4943,14 +4943,16 @@
       "poll": "Ìbò ìgbé ayé rẹ, pẹ̀lú bọ́tìnì ìbò fún gbogbo àṣàyàn",
       "spin_wheel": "Níbo ni àwọn kẹ̀kẹ́ tí ó wà nínú òfin rẹ ti ń yípo",
       "subathon_timer": "Ìkàwé tí ó ń fúnni ní ẹ̀bùn, tí ó ń tẹ̀lé àti tí ó ń tẹ àwọn ìforúkọsílẹ̀ padà.",
-      "points_board": "Àwọn olùwoye tó ga jùlọ rẹ nípa àwọn kókó láti wíwo àti fífún wọn ní ẹ̀bùn."
+      "points_board": "Àwọn olùwoye tó ga jùlọ rẹ nípa àwọn kókó láti wíwo àti fífún wọn ní ẹ̀bùn.",
+      "streamer_level": "Ipele ṣiṣan rẹ àti ìlà ọ̀sọ̀ọ̀sẹ̀ rẹ, láti inú àkójọpọ̀ rẹ",
+      "tip_jar": "Igo ti o kun bi awọn ẹbun ti o sanwo ti n wọle"
     },
     "fields": {
-      "showStreak": "Fi ìlà ọ̀sọ̀ọ̀sẹ̀ hàn",
       "style": "Àṣà",
       "celebration": "Ayẹyẹ",
       "banner": "Àsìá ilẹ̀",
       "minAmount": "Ìmọ̀ràn kéékèèké jù láti fi hàn (DHB)",
+      "showStreak": "Fi ìlà ọ̀sọ̀ọ̀sẹ̀ hàn",
       "showMessage": "Fi àtẹ̀jísẹ́ àtẹ̀jíṣẹ́ náà hàn",
       "confirmedOnly": "Nikan lẹhin ti isanwo naa jẹrisi",
       "confirmedOnlyHint": "Dúró fún ìṣẹ́jú díẹ̀ fún ẹ̀wọ̀n náà, nítorí náà ìmọ̀ràn tí a kò san kò ní fara hàn.",
@@ -8442,5 +8444,14 @@
     "backToMedia": "Pada sí ìfìkún",
     "like": "Fẹ́ràn",
     "unlike": "Yọfẹ́ràn"
+  },
+  "postProcessing": {
+    "uploading": "Ń gbé sókè…",
+    "preparing": "Ń múra sílẹ̀…",
+    "ready": "Ó ti ṣetán",
+    "preparingVideo": "À ń múra fídíò rẹ sílẹ̀",
+    "posted": "A ti fi sílẹ̀",
+    "view": "Wò ó",
+    "failed": "A kò lè ṣe fídíò náà"
   }
 }
