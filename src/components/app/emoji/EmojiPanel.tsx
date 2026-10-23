@@ -207,8 +207,17 @@ export function EmojiPanel({ onSelect, selected, className, autoFocus = true }: 
     requestAnimationFrame(() => {
       const el = sectionRefs.current[key];
       const box = scrollRef.current;
-      if (el && box) box.scrollTo({ top: el.offsetTop, behavior: 'smooth' });
+      if (!el || !box) return;
+      // Hold the tapped tab while the smooth scroll passes the sections in
+      // between, so the highlight moves once instead of stepping through them.
+      jumpLock.current = { top: Math.min(el.offsetTop, box.scrollHeight - box.clientHeight), until: Date.now() + 900 };
+      box.scrollTo({ top: el.offsetTop, behavior: 'smooth' });
     });
+  };
+
+  const jumpLock = useRef<{ top: number; until: number } | null>(null);
+  const releaseJump = () => {
+    jumpLock.current = null;
   };
 
   // Scroll-spy: the category bar follows whichever section sits at the top.
@@ -216,6 +225,11 @@ export function EmojiPanel({ onSelect, selected, className, autoFocus = true }: 
     if (results) return;
     const box = scrollRef.current;
     if (!box) return;
+    const lock = jumpLock.current;
+    if (lock) {
+      if (Math.abs(box.scrollTop - lock.top) < 2 || Date.now() > lock.until) jumpLock.current = null;
+      return;
+    }
     // Sections are laid out against the scroller itself (it is `relative`).
     const top = box.scrollTop + 8;
     let current: SectionKey = sections[0]?.key ?? 'dehub';
@@ -400,7 +414,12 @@ export function EmojiPanel({ onSelect, selected, className, autoFocus = true }: 
       </div>
 
       {/* Grid */}
-      <div ref={scrollRef} onScroll={onScroll} className="relative h-64 overflow-y-auto overscroll-contain pb-1">
+      <div
+        ref={scrollRef}
+        onScroll={onScroll}
+        onWheel={releaseJump}
+        onTouchStart={releaseJump}
+        className="relative h-64 overflow-y-auto overscroll-contain pb-1">
         {adding ? (
           // Inline rather than a dialog: a dialog portals outside the popover this
           // panel lives in, and the popover closes on that outside press —

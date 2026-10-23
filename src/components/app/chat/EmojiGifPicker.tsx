@@ -60,6 +60,13 @@ interface EmojiGifPickerProps {
 export function EmojiGifPicker({ onEmojiSelect, onGifSelect, triggerClassName, iconClassName }: EmojiGifPickerProps) {
   const { t } = useTranslation();
   const [open, setOpen] = useState(false);
+  // Touch screens: the picker opens beside the keyboard instead of taking
+  // focus, so the composer stays open with its text and caret and the user
+  // carries on typing. Desktop keeps the search field focus it always had.
+  const [touch] = useState(() => typeof window !== 'undefined' && !!window.matchMedia?.('(pointer: coarse)').matches);
+  const keepComposerFocus = (e: React.MouseEvent) => {
+    if (!(e.target as HTMLElement).closest('input, textarea')) e.preventDefault();
+  };
   const [activeTab, setActiveTab] = useState<'emoji' | 'sticker' | 'gif'>('emoji');
   const gifPacks = useGifPacks();
   // Kids Mode: creator packs are unreviewed uploads, the same reason custom
@@ -134,12 +141,19 @@ export function EmojiGifPicker({ onEmojiSelect, onGifSelect, triggerClassName, i
           variant="ghost"
           size="icon"
           className={cn("h-8 w-8 text-white hover:text-white hover:bg-zinc-700", triggerClassName)}
+          onPointerDown={touch ? (e) => e.preventDefault() : undefined}
+          onMouseDown={touch ? (e) => e.preventDefault() : undefined}
         >
           <Smile className={cn("w-5 h-5", iconClassName)} />
         </Button>
       </PopoverTrigger>
       <PopoverContent 
         collisionPadding={8}
+        onOpenAutoFocus={touch ? (e) => e.preventDefault() : undefined}
+        onCloseAutoFocus={touch ? (e) => e.preventDefault() : undefined}
+        // Taps on emoji, GIFs and tabs leave the composer focused; only the
+        // search fields take the keyboard.
+        onMouseDown={touch ? keepComposerFocus : undefined}
         className="w-[calc(100vw-1rem)] sm:w-[22rem] p-0 overflow-hidden" 
         align="start"
         side="top"
@@ -162,7 +176,7 @@ export function EmojiGifPicker({ onEmojiSelect, onGifSelect, triggerClassName, i
         </div>
 
         {activeTab === 'emoji' ? (
-          <EmojiPanel onSelect={handleEmojiClick} />
+          <EmojiPanel onSelect={handleEmojiClick} autoFocus={!touch} />
         ) : activeTab === 'sticker' && !kids ? (
           <StickerPanel onSelect={handleGifClick} />
         ) : (
