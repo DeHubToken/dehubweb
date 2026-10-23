@@ -20,6 +20,8 @@ import { useTranslation } from 'react-i18next';
 import { DISPLAY_WALLET_OVERRIDES } from './ProfileConstants';
 import type { ProfileData } from '@/hooks/use-dehub-profile';
 import { LendBadgeRows } from './LendBadgeRows';
+import { viewerShareUrl } from '@/lib/share-url';
+import { trackShare } from '@/lib/analytics';
 
 interface ProfileOptionsDrawerProps {
   profile: ProfileData;
@@ -53,7 +55,8 @@ export function ProfileOptionsContent({
   const [lendingBadge, setLendingBadge] = useState(false);
 
   const handleCopyProfileUrl = () => {
-    navigator.clipboard.writeText(`https://dehub.io/${profile.handle.replace('@', '')}`);
+    navigator.clipboard.writeText(viewerShareUrl(`https://dehub.io/${profile.handle.replace('@', '')}`));
+    trackShare('copy_link', { kind: 'profile' });
     toast.success(t('profileOptions.profileUrlCopied'));
     setShareSheetOpen(false);
   };

@@ -30,6 +30,8 @@ import { toast } from 'sonner';
 import { useTranslation } from 'react-i18next';
 import { DescriptionWithLinks } from './DescriptionWithLinks';
 import { storageImage, deviceWidth, isMdUp } from '@/lib/media-url';
+import { viewerShareUrl } from '@/lib/share-url';
+import { trackShare } from '@/lib/analytics';
 
 interface CommunityHeaderProps {
   community: Community;
@@ -246,7 +248,8 @@ export function CommunityHeader({ community, isMember, isPendingMember, isOwner,
               )}
               <button
                 onClick={() => {
-                  navigator.clipboard.writeText(dehubLinkFor.community(community.slug));
+                  navigator.clipboard.writeText(viewerShareUrl(dehubLinkFor.community(community.slug)));
+                  trackShare('copy_link', { kind: 'community' });
                   toast.success(t('communities.linkCopied'));
                 }}
                 className="w-full flex items-center gap-2.5 px-3 py-2 rounded-xl text-sm text-white hover:bg-white/10 transition-colors"
