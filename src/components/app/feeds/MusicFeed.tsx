@@ -1,4 +1,5 @@
 import { WindowedFeedItem } from '@/components/app/feeds/WindowedFeedItem';
+import '@/components/app/audio/audio-studio.css';
 import { translateCopy as _translateCopy } from '@/i18n/copy';
 import { useTranslation as _useCopy } from 'react-i18next';
 /**
@@ -270,7 +271,7 @@ function InlineVideoCard({ video, onSeeAll }: { video: VideoItem; onSeeAll: () =
   };
 
   return (
-    <div className="flex-shrink-0 w-[280px] text-left group rounded-xl border border-white/[0.12] bg-white/[0.03] p-2">
+    <div data-glass-media-card className="flex-shrink-0 w-[280px] text-left group rounded-xl border border-white/[0.12] bg-white/[0.03] p-2">
       <div 
         onClick={handleContainerClick}
         className="aspect-video rounded-xl overflow-hidden bg-zinc-800 mb-2 relative cursor-pointer"
@@ -421,6 +422,8 @@ function MusicVideosCarousel({ videos, totalCount, isLoading, onSeeAll }: {
 
 function AudioUploadsCarousel({ audioItems, isLoading }: { audioItems: VideoItem[]; isLoading: boolean }) {
   const { t: _copy } = _useCopy();
+  const [selectedId, setSelectedId] = useState<string | null>(null);
+  const selected = audioItems.find(item => item.id === selectedId) || audioItems[0];
   const [visibleCount, setVisibleCount] = useState(CAROUSEL_INITIAL_VISIBLE);
   const scrollRef = useRef<HTMLDivElement>(null);
 
@@ -436,7 +439,7 @@ function AudioUploadsCarousel({ audioItems, isLoading }: { audioItems: VideoItem
   const visibleItems = audioItems.slice(0, visibleCount);
 
   return (
-    <div>
+    <div data-listening-desk>
       <SectionHeader icon={Disc3} title={_copy("copy.302b4ce5c73d", { defaultValue: "Audio Uploads" })} count={audioItems.length} />
       {isLoading ? (
         <div className="flex gap-3 overflow-hidden pr-8">
@@ -451,24 +454,17 @@ function AudioUploadsCarousel({ audioItems, isLoading }: { audioItems: VideoItem
       ) : audioItems.length === 0 ? (
         <AppState icon="audio" title={_copy("copy.cccec0619e2d", { defaultValue: "No audio uploads yet" })} size="compact" />
       ) : (
-        <div className="relative">
-          <SwipeableCarousel
-            fadeEdges
-            ref={scrollRef}
-            onScroll={handleScroll}
-            className="flex gap-3 overflow-x-auto scrollbar-hide pr-8"
-          >
-            {visibleItems.map((item) => (
-              <div key={item.id} className="flex-shrink-0 w-[280px] rounded-xl border border-white/[0.12] bg-white/[0.03] p-2">
-                <VideoCard video={item} hideActions />
-              </div>
-            ))}
-            {visibleCount < audioItems.length && (
-              <div className="flex-shrink-0 w-[280px] aspect-video rounded-xl bg-zinc-800 flex items-center justify-center">
-                <Loader2 className="w-6 h-6 text-zinc-500 animate-spin" />
-              </div>
-            )}
-          </SwipeableCarousel>
+        <div data-listening-desk-layout>
+          <div data-listening-desk-player>{selected && <VideoCard key={selected.id} video={selected} hideActions />}</div>
+          <div data-listening-desk-tracks ref={scrollRef} onScroll={handleScroll}>
+            {visibleItems.map((item, index) => <button type="button" key={item.id} data-selected={item.id === selected?.id} onClick={() => setSelectedId(item.id)} aria-pressed={item.id === selected?.id}>
+              <span data-track-number>{String(index + 1).padStart(2, '0')}</span>
+              <span data-track-info><strong>{item.title}</strong><small>{item.channel}</small></span>
+              <span data-track-duration>{item.duration}</span>
+              <Play className="h-4 w-4 shrink-0" />
+            </button>)}
+            {visibleCount < audioItems.length && <button type="button" onClick={() => setVisibleCount(count => count + CAROUSEL_LOAD_MORE)}>{_copy('copy.14c21c5e3ffe', { defaultValue: 'See all ' })}<ChevronRight className="h-4 w-4" /></button>}
+          </div>
         </div>
       )}
     </div>
@@ -524,9 +520,9 @@ function AllSection({
 
   return (
     <div className="space-y-4 pb-32">
+      <AudioUploadsCarousel audioItems={audioUploads} isLoading={isLoadingAudio} />
       <MusicVideosCarousel videos={musicVideos} totalCount={totalVideoCount} isLoading={isLoadingVideos} onSeeAll={onGoToVideos} />
       <RadioCarousel stations={radioStations} onSeeAll={onGoToRadio} />
-      <AudioUploadsCarousel audioItems={audioUploads} isLoading={isLoadingAudio} />
       <StagesCarousel onOpenStages={onOpenStages} />
       <TracksCarousel />
       <PodcastsCarousel />

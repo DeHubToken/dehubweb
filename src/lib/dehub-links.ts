@@ -38,7 +38,8 @@ export type DehubLinkKind =
   | 'stage'
   | 'film'
   | 'bounty'
-  | 'app';
+  | 'app'
+  | 'proposal';
 
 export interface DehubLinkMatch {
   kind: DehubLinkKind;
@@ -72,6 +73,8 @@ export interface DehubLinkMatch {
   bountyJobKey?: string;
   /** `/apps/<slug>` — a mini app in the store. */
   appSlug?: string;
+  /** `/app/governance/<uuid>` — a governance proposal. */
+  proposalId?: string;
 }
 
 // ── Hosts ───────────────────────────────────────────────────────────────────
@@ -121,7 +124,7 @@ const ABSOLUTE_URL_RE = /(?:https?:\/\/)?(?:[a-z0-9-]+\.)+[a-z]{2,}(?::\d+)?\/[^
 // and `work` are the same story again for bounty detail pages — /bounty/7 is
 // canonical, /work/<uuid> is the pre-numbering form still out in the wild.
 // `apps` is the mini app store, /apps/<slug>.
-const BARE_PATH_RE = /\/(?:app|apps|communities|posts|stages?|bounty|work)\/[^\s<>"'`]*/gi;
+const BARE_PATH_RE = /\/(?:app|apps|communities|posts|stages?|bounty|work|governance)\/[^\s<>"'`]*/gi;
 
 // A URL at the end of a sentence carries the punctuation with it.
 const TRAILING_PUNCTUATION_RE = /[.,;:!?)\]}>"']+$/;
@@ -242,6 +245,15 @@ export function parseDehubLink(input: string): DehubLinkMatch | null {
   if (isAppScoped && scoped[0] === 'events' && scoped[1]) {
     if (!/^\d+$/.test(scoped[1])) return null;
     return { ...base, kind: 'event', eventNumber: scoped[1] };
+  }
+
+  // ── /app/governance/:uuid — one governance proposal ──
+  //
+  // Both /app/governance/... and the top-level /governance/... are routed.
+  // Bare /governance is the board and stays a plain link.
+  if (scoped[0] === 'governance' && scoped[1] && !scoped[2]) {
+    if (!/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(scoped[1])) return null;
+    return { ...base, kind: 'proposal', proposalId: scoped[1].toLowerCase() };
   }
 
   // ── /stage/:id — the invite / announcement link ──
@@ -457,6 +469,7 @@ export const dehubLinkFor = {
   film: (objectType: 'movie' | 'show', id: string | number) =>
     `${shareOrigin()}/cinema/${objectType === 'show' ? 'series' : 'film'}/${encodeURIComponent(String(id))}`,
   bounty: (jobNumber: string | number) => `${shareOrigin()}/bounty/${jobNumber}`,
+  proposal: (proposalId: string) => `${shareOrigin()}/app/governance/${proposalId}`,
 };
 
 /** Human label for a link kind — used by share sheets and fallback chips. */
@@ -473,5 +486,6 @@ export function dehubLinkLabel(kind: DehubLinkKind): string {
     case 'film': return 'title';
     case 'bounty': return 'bounty';
     case 'app': return 'app';
+    case 'proposal': return 'proposal';
   }
 }

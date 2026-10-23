@@ -72,6 +72,9 @@ export const TabbedSidePanel = memo(function TabbedSidePanel() {
             key={tab.id}
             onClick={() => handleTabClick(tab.id)}
             aria-label={tab.label}
+            // Hover label: NativeTitleTooltips draws it as the glass tooltip,
+            // in a body-level layer the panel's overflow-hidden never clips.
+            title={tab.label}
               className={`group relative flex-1 py-2.5 flex flex-col items-center justify-center transition-colors ${
                 effectiveTab === tab.id
                   ? 'text-white'
@@ -89,14 +92,6 @@ export const TabbedSidePanel = memo(function TabbedSidePanel() {
                   {publicUnread > 99 ? '99+' : publicUnread}
                 </span>
               )}
-              {/* Hover label — drops below the icon row, so the panel's
-                  overflow-hidden never clips it. */}
-              <span
-                aria-hidden="true"
-                className="pointer-events-none absolute left-1/2 top-full z-30 -translate-x-1/2 translate-y-1 whitespace-nowrap rounded-md bg-zinc-800 px-2 py-1 text-[11px] font-medium leading-none text-zinc-100 opacity-0 shadow-lg transition-opacity duration-150 group-hover:opacity-100"
-              >
-                {tab.label}
-              </span>
             </button>
           );
         })}

@@ -19,6 +19,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from PIL import Image
 
 import access
+import remake
 from mask_review import state as review_state, review, require_approved
 
 ROOT = Path(__file__).resolve().parent
@@ -38,7 +39,9 @@ def run_stage(ident, stage, resume=False):
     access.update(ident, state='running')
     progress = lambda text: access.update(ident, status=text)
     try:
-        if stage == 'prepare':
+        if stage == 'assemble':
+            remake.assemble(row)
+        elif stage == 'prepare':
             if row['mode'] == 'depth':
                 from pipeline import run
                 run(folder / 'upload.mp4', folder, row['subject'], 'replicate', progress)
@@ -70,6 +73,9 @@ def run_stage(ident, stage, resume=False):
     except Exception:
         # Provider response bodies and signed URLs stay out of user-visible errors.
         log.exception('Maboroshi %s failed for %s', stage, ident)
+        if stage == 'assemble':
+            access.update(ident, state='editing', status='Assembly failed. Your generated shots are saved; assemble again without a generation charge.')
+            return
         target = folder / 'hd' if stage == 'hd' else folder
         response_path = target / ('response.json' if stage == 'hd' else 'seedance-response.json')
         submitted = response_path.exists() or (target / 'submission-attempted.json').exists()
@@ -90,7 +96,9 @@ async def lifespan(app):
         folder = access.folder(row['id'])
         target = folder / 'hd' if row['stage'] == 'hd' else folder
         response = target / ('response.json' if row['stage'] == 'hd' else 'seedance-response.json')
-        if row['stage'] != 'prepare' and response.exists():
+        if row['stage'] == 'assemble':
+            executor.submit(run_stage, row['id'], 'assemble', True)
+        elif row['stage'] != 'prepare' and response.exists():
             executor.submit(run_stage, row['id'], row['stage'], True)
         else:
             access.update(row['id'], state='attention', status='Processing was interrupted. Saved work needs review; no paid step was automatically repeated.')
@@ -125,7 +133,8 @@ def setup():
 
 @app.get('/health')
 def health():
-    return {'service': 'maboroshi', 'ready': access.readiness(), 'modes': list(access.MODES), 'maxSeconds': 30, 'maxBytes': LIMIT}
+    return {'service': 'maboroshi', 'ready': access.readiness(), 'modes': list(access.MODES), 'maxSeconds': 30, 'maxBytes': LIMIT,
+            'remakeContract': 1, 'maxRemakeShots': remake.MAX_SHOTS}
 
 
 def snapshot(row):
@@ -147,7 +156,9 @@ def snapshot(row):
     else:
         result['resolvedPrompt'] = resolved_prompt(folder, row['prompt'], bool(row['reference_seconds']), bool(row['second_reference'])) if row['reference'] else ''
     stages = ('draft',) if row['renderer'] == 'kling' else ('prepare', 'draft', 'hd')
-    result['quotes'] = {stage: access.price(row, stage) for stage in stages} if access.readiness() else {}
+    result['remake'] = remake.snapshot(row)
+    result['workflow'] = 'remake' if result['remake'] or (folder / 'remake-intent.json').exists() else ''
+    result['quotes'] = {stage: access.price(row, stage) for stage in stages} if not result['remake'] and access.readiness() else {}
     adjustment = folder / ('hd/duration-adjustment.json' if row['state'] == 'complete' else 'duration-adjustment.json')
     result['durationAdjustment'] = json.loads(adjustment.read_text()) if adjustment.exists() else None
     return result
@@ -156,8 +167,8 @@ def snapshot(row):
 @app.get('/jobs')
 def list_jobs(wallet=Depends(owner)):
     with access.database() as db:
-        rows = db.execute('SELECT id,created,state,status,mode,subject FROM jobs WHERE wallet=? ORDER BY created DESC LIMIT 30', (wallet,)).fetchall()
-    return {'jobs': [dict(row) for row in rows]}
+        rows = db.execute('SELECT id,created,state,status,mode,subject FROM jobs WHERE wallet=? ORDER BY created DESC LIMIT 1500', (wallet,)).fetchall()
+    return {'jobs': [{**dict(row), 'workflow': 'remake' if (access.DATA / 'runs' / row['id'] / 'remake-intent.json').exists() or (access.DATA / 'runs' / row['id'] / 'remake.json').exists() else ''} for row in rows if not remake.child(access.DATA / 'runs' / row['id'])][:30]}
 
 
 @app.get('/session')
@@ -204,13 +215,16 @@ def validate_video(path, audio=False):
 
 
 @app.post('/jobs', status_code=201)
-def create_job(video: UploadFile = File(...), mode: str = Form('depth'), subject: str = Form('person'), renderer: str = Form('seedance'), wallet=Depends(owner)):
+def create_job(video: UploadFile = File(...), mode: str = Form('depth'), subject: str = Form('person'), renderer: str = Form('seedance'), workflow: str = Form(''), wallet=Depends(owner)):
     if renderer not in ('seedance', 'kling'):
         raise HTTPException(400, 'Choose Kling or Seedance Premium.')
+    if workflow not in ('', 'remake') or workflow == 'remake' and renderer != 'kling':
+        raise HTTPException(400, 'Remake uses Kling with image references.')
     if mode not in access.MODES or not 1 <= len(subject.strip()) <= 200:
         raise HTTPException(400, 'Choose a preparation mode and describe the subject in up to 200 characters.')
     with lock, access.database() as db:
-        count = db.execute('SELECT COUNT(*) FROM jobs WHERE wallet=? AND created>?', (wallet, int(time.time()) - 86400)).fetchone()[0]
+        recent = db.execute('SELECT id FROM jobs WHERE wallet=? AND created>?', (wallet, int(time.time()) - 86400)).fetchall()
+        count = sum(not remake.child(access.DATA / 'runs' / row['id']) for row in recent)
         if count >= 10:
             raise HTTPException(429, 'You can upload up to ten Maboroshi clips per day.')
         if shutil.disk_usage(access.DATA).free < 5 * 1024 ** 3:
@@ -228,6 +242,8 @@ def create_job(video: UploadFile = File(...), mode: str = Form('depth'), subject
                         raise HTTPException(400, 'Kling needs a 3–15 second MP4 or MOV, at least 720 pixels on each side. Use Seedance Premium for other clips.')
                 shutil.copy2(folder / 'upload.mp4', folder / 'seedance-input.mp4')
                 (folder / 'workflow-mode.json').write_text(json.dumps({'mode': 'kling'}))
+            if workflow == 'remake':
+                (folder / 'remake-intent.json').write_text('{"version":1}')
             db.execute('INSERT INTO jobs (id,wallet,created,state,stage,status,mode,subject,seconds,renderer) VALUES (?,?,?,?,?,?,?,?,?,?)',
                 (ident, wallet, int(time.time()), 'prepared' if renderer == 'kling' else 'uploaded', '',
                  'Review your source clip, then generate with Kling.' if renderer == 'kling' else 'Source saved. Review the preparation price to continue.', mode, subject.strip(), seconds, renderer))
@@ -241,6 +257,8 @@ def create_job(video: UploadFile = File(...), mode: str = Form('depth'), subject
 def references(ident: str, prompt: str = Form(...), reference: UploadFile | None = File(None), second: UploadFile | None = File(None), wallet=Depends(owner)):
     with lock:
         row = access.job(ident, wallet)
+        if remake.read(access.folder(ident)):
+            raise HTTPException(409, 'References are saved with the shot plan. Revise an individual shot or start a new project for a different cast.')
         if row['state'] not in ('uploaded', 'prepared') or not 1 <= len(prompt.strip()) <= 6000:
             raise HTTPException(409, 'Character references can be changed before preparation or after the clip is ready for review. Use a prompt of up to 6,000 characters.')
         folder = access.folder(ident)
@@ -313,6 +331,16 @@ def stage_quote(ident, stage, wallet):
     if stage not in ('prepare', 'draft', 'hd'):
         raise HTTPException(404)
     row = access.job(ident, wallet)
+    if remake.read(access.folder(ident)):
+        raise HTTPException(409, 'Generate the individual shots in this edit. Assembly has no generation charge.')
+    parent = remake.child(access.folder(ident))
+    if parent:
+        project = access.job(parent['parent'], wallet)
+        plan = remake.read(access.folder(project['id']))
+        if not plan or plan.get('building') or project['state'] not in ('editing', 'edit_complete'):
+            raise HTTPException(409, 'Finish saving the parent shot plan before generating.')
+        if not any(shot['id'] == ident for shot in plan['shots']):
+            raise HTTPException(409, 'Only the selected version of a shot can start a new render.')
     if row['renderer'] == 'kling' and stage != 'draft':
         raise HTTPException(400, 'Kling has one complete render and no separate preparation or HD step.')
     expected = {'prepare': 'uploaded', 'draft': 'prepared', 'hd': 'draft'}[stage]
@@ -351,6 +379,93 @@ def checkout(ident: str, stage: str, wallet=Depends(owner)):
         return {'id': ident, 'stage': stage, 'wallet': wallet, 'price_micros': amount,
                 'renderer': row['renderer'],
                 'payment_ref': payment['tx_hash'] if payment else None}
+
+
+@app.post('/jobs/{ident}/remake/scan')
+def scan_remake(ident: str, wallet=Depends(owner)):
+    with lock:
+        row = access.job(ident, wallet)
+        if row['renderer'] != 'kling' or row['state'] != 'prepared' or remake.child(access.folder(ident)):
+            raise HTTPException(409, 'Choose a saved Kling reference before scanning its cuts.')
+        try:
+            return remake.scan(access.folder(ident) / 'upload.mp4')
+        except ValueError as error:
+            raise HTTPException(400, str(error))
+
+
+@app.post('/jobs/{ident}/remake/plan')
+def plan_remake(ident: str, cuts: str = Form('[]'), wallet=Depends(owner)):
+    with lock:
+        row = access.job(ident, wallet)
+        if len(cuts) > 512:
+            raise HTTPException(400, 'Enter at most seven cut times.')
+        if shutil.disk_usage(access.DATA).free < 5 * 1024 ** 3:
+            raise HTTPException(503, 'Storage is temporarily full. Nothing has been charged.')
+        try:
+            remake.plan(row, json.loads(cuts))
+        except (ValueError, TypeError) as error:
+            raise HTTPException(400, str(error))
+    return snapshot(access.job(ident, wallet))
+
+
+@app.post('/jobs/{ident}/remake/revise')
+def revise_remake(ident: str, shot: int = Form(...), prompt: str = Form(...), wallet=Depends(owner)):
+    with lock:
+        row = access.job(ident, wallet)
+        if row['state'] not in ('editing', 'edit_complete'):
+            raise HTTPException(409, 'Wait for assembly to finish before revising a shot.')
+        remake.revise(row, shot, prompt)
+    return snapshot(access.job(ident, wallet))
+
+
+@app.post('/jobs/{ident}/remake/assemble')
+def assemble_remake(ident: str, wallet=Depends(owner)):
+    with lock:
+        row = access.job(ident, wallet)
+        if row['stage'] == 'assemble' and row['state'] in ('queued', 'running', 'edit_complete'):
+            return snapshot(row)
+        manifest = remake.read(access.folder(ident))
+        if not manifest or manifest.get('building') or row['state'] != 'editing' or not manifest['shots']:
+            raise HTTPException(409, 'Finish the shot plan before assembling.')
+        if any(access.job(shot['id'], wallet)['state'] != 'complete' for shot in manifest['shots']):
+            raise HTTPException(409, 'Complete each shot before assembling.')
+        with access.database() as db:
+            active = db.execute("SELECT COUNT(*) FROM jobs WHERE state IN ('queued','running')").fetchone()[0]
+        if active >= 4:
+            raise HTTPException(503, 'Processing is busy. Your shots are saved; try assembly later.')
+        access.update(ident, state='queued', stage='assemble', status='Assembling shots and restoring the original soundtrack.')
+        executor.submit(run_stage, ident, 'assemble')
+    return snapshot(access.job(ident, wallet))
+
+
+@app.post('/jobs/{ident}/remake/select')
+def select_remake(ident: str, shot: int = Form(...), version: str = Form(...), wallet=Depends(owner)):
+    with lock:
+        row = access.job(ident, wallet)
+        if row['state'] not in ('editing', 'edit_complete'):
+            raise HTTPException(409, 'Wait for assembly to finish before switching shot versions.')
+        remake.select_version(row, shot, version)
+    return snapshot(access.job(ident, wallet))
+
+
+@app.post('/jobs/{ident}/remake/collect')
+def collect_remake(ident: str, shot: int = Form(...), wallet=Depends(owner)):
+    with lock:
+        row = access.job(ident, wallet)
+        plan = remake.read(access.folder(ident))
+        if not plan or plan.get('building') or not 0 <= shot < len(plan['shots']):
+            raise HTTPException(400, 'Choose a saved shot.')
+        saved = access.job(plan['shots'][shot]['id'], wallet)
+        response = access.folder(saved['id']) / 'seedance-response.json'
+        if saved['state'] != 'attention' or not response.exists() or not json.loads(response.read_text()).get('requestId'):
+            raise HTTPException(409, 'No confirmed provider request is available to collect. The submission needs reconciliation.')
+        with access.database() as db:
+            active = db.execute("SELECT COUNT(*) FROM jobs WHERE state IN ('queued','running')").fetchone()[0]
+        if active >= 4:
+            raise HTTPException(503, 'Processing is busy. Try collecting this saved render later.')
+        access.update(saved['id'], state='queued', status='Collecting the existing render. No new generation will be submitted.')
+        executor.submit(run_stage, saved['id'], 'draft', True)
+    return snapshot(access.job(ident, wallet))
 
 
 @app.post('/jobs/{ident}/{stage}')

@@ -17,7 +17,7 @@
  * styles/docs-glass.css; src/test/docs-theme-lists.test.ts holds the two, and
  * the app's THEME_OPTIONS, together.
  */
-export const DOCS_CANVAS_THEMES = ['cosmic', 'hazy', 'swarms', 'lavalamp', 'winter', 'war', 'osaka', 'jungle', 'island', 'hacker', 'horror'] as const;
+export const DOCS_CANVAS_THEMES = ['glass', 'cosmic', 'hazy', 'swarms', 'lavalamp', 'winter', 'war', 'osaka', 'jungle', 'island', 'hacker', 'horror'] as const;
 
 export function isDocsCanvasTheme(appTheme: string | undefined): boolean {
   return !!appTheme && (DOCS_CANVAS_THEMES as readonly string[]).includes(appTheme);

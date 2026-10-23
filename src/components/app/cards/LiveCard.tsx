@@ -61,10 +61,8 @@ export function LiveCard({ stream }: LiveCardProps) {
   const [showReportModal, setShowReportModal] = useState(false);
   const navigate = useNavigate();
   const { openLoginModal, walletAddress } = useAuth();
-  // Who is watching right now, from the stream socket — the same figure the
-  // post page shows. `stream.viewers` is the post's view total, which read
-  // "15 tuned in" on the card while the room said 2.
-  const [livePresence, setLivePresence] = useState<number | null>(null);
+  // "Tuned in" on the card is the post's all-time views (`stream.viewers`);
+  // who is in the room right now lives on the live page itself.
   const { selfReaction, sendLiveReaction } = useLiveReaction(stream.streamId, !!stream.isLive);
   // Bookmark state for the three-dot menu. The same action is an icon in the
   // ActionBar's left-anchored utility cluster on desktop; both read this one
@@ -197,7 +195,6 @@ export function LiveCard({ stream }: LiveCardProps) {
               creatorId={stream.creatorId}
               isOwner={stream.isOwner}
               selfReaction={selfReaction}
-              onViewerCount={setLivePresence}
               urls={[stream.playbackUrl, ...(stream.playbackUrls || [])]}
               thumbnail={stream.thumbnail ? cdnImage(stream.thumbnail, { width: 720 }) : undefined}
               fallbackLabel={t('feed.live')}
@@ -243,7 +240,7 @@ export function LiveCard({ stream }: LiveCardProps) {
           dislikeCount={stream.dislikeCount}
           commentCount={stream.commentCount}
         />
-        <p className="font-semibold text-white text-sm">{livePresence != null ? String(livePresence) : stream.viewers}{_copy("copy.8bd95a29c9cb", { defaultValue: " tuned in" })}</p>
+        <p className="font-semibold text-white text-sm">{stream.viewers}{_copy("copy.8bd95a29c9cb", { defaultValue: " tuned in" })}</p>
         <h3 className="text-white text-sm mt-1">{stream.title}</h3>
         <p className="text-zinc-500 text-xs mt-1">{stream.game}</p>
       </div>

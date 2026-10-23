@@ -21,7 +21,13 @@ export type LoginStep =
   // the picker.
   | 'wallet-signing'
   | 'wallet-create'
+  // A silent sign-up's first wallet action: set a password or biometrics on
+  // the wallet that already exists. The session is live; only this is asked.
+  | 'wallet-secure'
   | 'wallet-unlock'
+  // The profile lives on the wallet from the original sign-in, not the one
+  // saved for this login. Recover that wallet to get in.
+  | 'wallet-restore'
   // The account exists but has no profile yet — username, display name, and
   // optionally a picture and a reading language. Mandatory: the sheet will not
   // close while `requiresUsername` is set, so the only other way out is Log out.
@@ -37,11 +43,13 @@ export type LoginStep =
  * network round-trips. Nothing about signing in belongs on screen during it.
  */
 export function resumingStep(
-  phase: 'none' | 'create' | 'unlock',
+  phase: 'none' | 'create' | 'unlock' | 'restore' | 'secure',
   isResolving: boolean,
 ): LoginStep | null {
   if (phase === 'create') return 'wallet-create';
+  if (phase === 'secure') return 'wallet-secure';
   if (phase === 'unlock') return 'wallet-unlock';
+  if (phase === 'restore') return 'wallet-restore';
   if (isResolving) return 'resuming';
   return null;
 }

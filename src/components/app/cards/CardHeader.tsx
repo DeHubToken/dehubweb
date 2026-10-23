@@ -1,4 +1,5 @@
 import { translateCopy as _translateCopy } from '@/i18n/copy';
+import { LiveRipple } from '@/components/app/LiveRipple';
 /**
  * Card Header Component
  * =====================
@@ -137,7 +138,7 @@ export function CardHeader({
   };
 
   return (
-    <div className={`flex items-end gap-3 pr-3 flex-1 min-w-0 ${contentType === 'image' ? 'pb-2' : 'pb-3'}`}>
+    <div className={`flex items-center gap-3 pr-3 flex-1 min-w-0 ${contentType === 'image' ? 'pb-2' : 'pb-3'}`}>
       <ProfileHoverCard
         creatorId={creatorId}
         creatorUsername={creatorUsername}
@@ -154,12 +155,14 @@ export function CardHeader({
              so the button needs a name of its own — one per card on the feed,
              and all of them were nameless on the 2026-09-02 Lighthouse run. */
           aria-label={t('feed.viewProfile', { name: username })}
-          className={`shrink-0 ${isClickable ? 'cursor-pointer' : 'cursor-default'}`}
+          className={`flex shrink-0 ${isClickable ? 'cursor-pointer' : 'cursor-default'}`}
         >
-          <Avatar className="w-9 h-9 rounded-md">
-            {avatarSrc && <AvatarImage src={avatarSrc} onError={() => setImageError(true)} className="rounded-md" />}
-            <AvatarFallback className="bg-zinc-700 text-white font-medium rounded-md">{username[0]?.toUpperCase()}</AvatarFallback>
-          </Avatar>
+          <LiveRipple ids={[creatorId, creatorUsername, handle]} className="rounded-md">
+            <Avatar className="w-9 h-9 rounded-md">
+              {avatarSrc && <AvatarImage src={avatarSrc} onError={() => setImageError(true)} className="rounded-md" />}
+              <AvatarFallback className="bg-zinc-700 text-white font-medium rounded-md">{username[0]?.toUpperCase()}</AvatarFallback>
+            </Avatar>
+          </LiveRipple>
         </button>
       </ProfileHoverCard>
       {/* Only the name and the @handle open the profile. The blank space
@@ -196,7 +199,7 @@ export function CardHeader({
             )}
             {timestamp && (
               <>
-                <span className="text-zinc-600 text-[13px]">·</span>
+                <span className="text-zinc-600 text-[13px] leading-4">·</span>
                 <span className="text-zinc-500 text-[13px] leading-4 shrink-0">{timestamp}</span>
               </>
             )}

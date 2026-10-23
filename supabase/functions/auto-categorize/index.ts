@@ -22,7 +22,7 @@
 // reordered — the model is told what is already there and asked what is
 // missing.
 import { admin, corsHeaders, DEHUB_API_BASE, json } from '../_shared/transcripts.ts';
-import { classify, CategorizationUnavailable, postImageUrl } from '../_shared/categorize.ts';
+import { classify, CategorizationUnavailable, postExtraImageUrls, postImageUrl } from '../_shared/categorize.ts';
 
 const SERVICE_KEY = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!;
 /** The same service-to-service secret the assistant tools use. One secret,
@@ -83,7 +83,14 @@ async function fetchPost(tokenId: string): Promise<any | null> {
 async function saveCategories(
   tokenId: string,
   categories: string[],
-  extra: { confidence: number | null; model: string; reasoning: string; usedTranscript: boolean },
+  extra: {
+    confidence: number | null;
+    model: string;
+    reasoning: string;
+    usedTranscript: boolean;
+    mature: boolean;
+    matureConfidence: number | null;
+  },
 ): Promise<string[]> {
   const res = await fetch(`${DEHUB_API_BASE}/api/internal/categorize`, {
     method: 'POST',
@@ -156,8 +163,10 @@ async function categorizeOne(
   if (String(post.status ?? '').toLowerCase() === 'deleted') return { tokenId, added: [], skipped: 'deleted' };
 
   const existing: string[] = Array.isArray(post.category) ? post.category.filter(Boolean) : [];
-  const room = TARGET_CATEGORIES - existing.length;
-  if (room <= 0) return { tokenId, added: [], skipped: 'already full' };
+  // A fully tagged post is still read once: the same call is the automatic
+  // mature check. The API adds nothing past the target, so any categories the
+  // model returns for it are dropped there.
+  const room = Math.max(1, TARGET_CATEGORIES - existing.length);
 
   const transcript = await transcriptFor(tokenId);
 
@@ -174,6 +183,7 @@ async function categorizeOne(
     transcript: transcript.text,
     transcriptPublic: transcript.isPublic,
     imageUrl: postImageUrl(post),
+    extraImageUrls: postExtraImageUrls(post),
     availableCategories: available,
     existing,
     maxCategories: room,
@@ -184,6 +194,8 @@ async function categorizeOne(
     model: result.model,
     reasoning: result.reasoning,
     usedTranscript: result.usedTranscript,
+    mature: result.mature,
+    matureConfidence: result.matureConfidence,
   });
   return { tokenId, added };
 }

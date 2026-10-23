@@ -30,11 +30,10 @@ const TooltipContent = React.forwardRef<
     <TooltipPrimitive.Content
       ref={ref}
       sideOffset={sideOffset}
+      // Liquid glass frost, tint and ink come from styles/glass-surfaces.css.
+      data-glass-tooltip=""
       className={cn(
         "z-50 overflow-hidden rounded-md px-2 py-1 text-[11px] font-medium leading-tight animate-in fade-in-0 zoom-in-95 data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=closed]:zoom-out-95 data-[side=bottom]:slide-in-from-top-2 data-[side=left]:slide-in-from-right-2 data-[side=right]:slide-in-from-left-2 data-[side=top]:slide-in-from-bottom-2",
-        // Matches the hover label NativeTitleTooltips draws for `title=`
-        // attributes, so every tooltip in the app reads as one thing.
-        "bg-zinc-800 text-zinc-100 shadow-[0_8px_24px_rgba(0,0,0,0.35)]",
         className,
       )}
       {...props}

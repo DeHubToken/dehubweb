@@ -1,9 +1,11 @@
 import { localizePublicChrome, localizeStructuredData } from './server/public-page-locales.js';
 import { handleWorkReceipt } from './server/work-receipts.ts';
 import { handleEditorPresence } from './server/editor-presence.ts';
-import { applyTextPostImage } from './server/post-share-card.js';
+import { applyPostShareImage, applyProfileShareImage } from './server/post-share-card.js';
 import { handleFinanceRequest } from './server/finance-stats.js';
 import { handleCreatorMotionSource } from './server/creator-motion-source.js';
+import { handleAccountMcp, isAccountMcpRoute } from './server/account-mcp.js';
+export { AccountMcpAuth } from './server/account-mcp-auth.js';
 export { EditorPresenceRoom } from './server/editor-presence.ts';
 
 /**
@@ -179,6 +181,7 @@ const OG_CARD_ROUTES = new Set([
   // Public app pages that unfurled as the homepage: the SPA had SEO for them,
   // the edge did not, so crawlers got the shell under a noindex.
   'dex', 'ads', 'buy',
+  'live-studio',
 ]);
 
 /** A route's own share card, or the shared one when it has none. */
@@ -1504,6 +1507,17 @@ const MARKETING_PAGES = {
     heading: 'DeHub Launchpad',
     bodyHtml: `<p>The launchpad is where a business, project or creator issues a coin on DeHub. Live launches are listed with their activity, and creating one runs from the same page.</p>
 <p>Coins are speculative assets and can lose their value entirely. Nothing here is investment advice.</p>`,
+  },
+  'live-studio': {
+    title: 'Live Studio — Stream Alerts, Goals and Overlays | DeHub',
+    description:
+      'Add tip alerts, follower alerts, goal bars and top supporter boards to your DeHub live streams. Drawn for every viewer, from any phone, browser, capture card or encoder.',
+    heading: 'DeHub Live Studio',
+    bodyHtml: `<p>Live Studio is where a DeHub creator sets up what appears over their live streams: an alert for every tip, sized to the tier it buys; alerts when someone follows, subscribes, shares or arrives; a goal bar; a board of the stream's biggest supporters; a viewer count; and text, lower thirds and frames.</p>
+<h2>Drawn for every viewer</h2>
+<p>Each viewer's DeHub app draws the overlay over the stream itself, so it works whatever the stream comes from — a phone, the browser, an HDMI capture card or an encoder like OBS — and costs the streamer nothing to run.</p>
+<h2>Counted from the chain</h2>
+<p>Tips on DeHub are on-chain payments. Goals and the supporters board count what the chain actually paid, not what a client claimed, so they cannot be moved by a fake event.</p>`,
   },
   'stats': {
     title: 'Live Site Stats — DeHub Visitors and Members in Real Time',
@@ -3525,9 +3539,8 @@ function buildCreatorPackHtml(pack) {
 }
 
 /**
- * A single DAO proposal, /app/governance/<uuid>. Proposals carry no art of
- * their own, so the governance card stands in — that is still the page's
- * subject, unlike the homepage card it was getting.
+ * A single DAO proposal, /app/governance/<uuid>. An attached image is the
+ * share card; otherwise the governance card stands in.
  */
 function buildProposalHtml(proposal) {
   const canonicalUrl = `${APP_URL}/app/governance/${proposal.id}`;
@@ -3545,7 +3558,9 @@ function buildProposalHtml(proposal) {
     canonicalUrl,
     title: `${name} — DeHub Governance`,
     description,
-    image: shareImage('governance'),
+    image: proposal.media_type === 'image' && /^https:\/\//.test(String(proposal.media_url || ''))
+      ? proposal.media_url
+      : shareImage('governance'),
     ogType: 'article',
     heading: name,
     breadcrumb: `<a href="${APP_URL}">DeHub</a> › <a href="${APP_URL}/governance">Governance</a>`,
@@ -3966,7 +3981,7 @@ const SSR_STATIC_ROUTES = new Set([
   'arcade',
   // Same again: each of these is one page with a top-level route AND an /app
   // twin, both rendered from MARKETING_PAGES.
-  'accounts', 'converter', 'events', 'launchpad', 'stats',
+  'accounts', 'converter', 'events', 'launchpad', 'stats', 'live-studio',
   'migrate-youtube',
   // These three used to be the exception — /app-only pages that named their own
   // `path` in MARKETING_PAGES so the canonical would not point at a URL the
@@ -5359,6 +5374,7 @@ function ssrCachePut(ctx, key, resp) {
 async function handleRequest(request, env, ctx) {
   const maintenance = await edgeMaintenanceResponse(request, env);
   if (maintenance) return maintenance;
+  if (isAccountMcpRoute(new URL(request.url).pathname)) return handleAccountMcp(request, env);
   if (new URL(request.url).pathname.startsWith('/api/editor/presence/')) {
     return handleEditorPresence(canonicalOriginRequest(request), env);
   }
@@ -6086,6 +6102,11 @@ async function handleRequest(request, env, ctx) {
       rows: supabaseRows,
       price: fetchShareBadgePrice,
     });
+  }
+  const profileCard = pathname.match(/^\/_og\/profile\/v1\/([A-Za-z0-9_][A-Za-z0-9_.-]{0,63})\.png$/);
+  if (profileCard) {
+    const { handleProfileShareImage } = await import('./server/post-share-image.js');
+    return handleProfileShareImage(request, env, ctx, profileCard[1], fetchAccountInfo);
   }
   if (pathname.startsWith(OG_SOURCE_PREFIX)) return ogSourceResponse(request, env, pathname);
 
@@ -6825,6 +6846,7 @@ async function handleRequest(request, env, ctx) {
         ? ((html.match(/<link rel="canonical" href="https:\/\/dehub\.io\/([^"/?#]+)">/) || [])[1] || proxiedSegments[0])
         : '';
     let postShareRecord = null;
+    let profileShareAccount = null;
     if (proxiedPostId) {
       // Every post, not just a bodyless one: the title work in enrichPostMeta
       // has to reach the posts that DO have body text, because those are
@@ -6863,6 +6885,7 @@ async function handleRequest(request, env, ctx) {
       // the avatar URL is only a fallback for the wallet (a profile with no
       // avatar has none, and its posts were never listed).
       const account = await fetchAccountInfo(proxiedHandle);
+      profileShareAccount = account;
       html = enrichProfileMeta(html, proxiedHandle, account && account.displayName);
       const address = String((account && account.address) || '').toLowerCase() || profileAddressOf(html);
       const rows = address ? await fetchFeedRowsOrNull(`minter=${address}`) : null;
@@ -6902,13 +6925,16 @@ async function handleRequest(request, env, ctx) {
     if (proxiedHandle) {
       html = profileBannerCard(html);
       html = logoCardDimensions(html);
+      // The rendered card when the account read succeeded; the padded avatar
+      // above stays as the fallback when it did not.
+      html = applyProfileShareImage(html, profileShareAccount);
     }
     // Structured data and cards on the rest of the fn's entity pages: a
     // profile as ProfilePage, a community as a page rather than a rival brand
     // Organization, and post/community images as true 1200x630 cards.
     const proxiedCommunity = !proxiedPostId && /^\/app\/communities\/[^/?#]+/.test(ssrPath);
     if (proxiedPostId) {
-      html = applyTextPostImage(dropTwitterPlayer(cardProxiedImage(html)), postShareRecord);
+      html = applyPostShareImage(dropTwitterPlayer(cardProxiedImage(html)), postShareRecord);
     } else if (proxiedHandle) {
       html = rewriteJsonLd(html, (ld) => profilePageLd(ld, proxiedHandle));
     } else if (proxiedCommunity) {

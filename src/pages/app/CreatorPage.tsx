@@ -70,6 +70,11 @@ const NAV_KEYS: Record<string, string> = {
 
 const tools: Tool[] = [
   {
+    id: 'remake', nameKey: 'creator.toolRemake', labelKey: 'creator.navVideo',
+    descriptionKey: 'creator.toolMaboroshiDesc', icon: Clapperboard, category: 'Video', badge: 'NEW',
+    action: { kind: 'navigate', to: '/creator/remake' },
+  },
+  {
     id: 'builder',
     nameKey: 'creator.toolBuilder',
     labelKey: 'creator.navApps',
@@ -278,7 +283,7 @@ export default function CreatorPage() {
 
         <div ref={headerRef} className="sticky top-0 z-50">
         {!bannerDismissed && (
-          <div className="relative flex h-8 items-center justify-center px-10 text-center text-[12px] font-black uppercase tracking-[0.08em] text-black" style={metallicStyle}>
+          <div data-creator-banner className="relative flex h-8 items-center justify-center px-10 text-center text-[12px] font-black uppercase tracking-[0.08em] text-black" style={metallicStyle}>
             <span>{t('creator.bannerCopy')}</span>
             <button
               type="button"
@@ -341,7 +346,9 @@ export default function CreatorPage() {
               <div className="hidden items-center gap-2 sm:flex">
                 <button
                   type="button"
-                  onClick={() => navigate('/premium')}
+                  // The AI credit plans live at the bottom of this page, so
+                  // Pricing scrolls there instead of leaving for /premium.
+                  onClick={() => document.querySelector('[data-creator-pricing]')?.scrollIntoView({ behavior: 'smooth', block: 'start' })}
                   className="relative rounded-lg bg-white/[0.08] px-4 py-2 text-sm font-semibold text-white hover:bg-white/[0.12]"
                 >
                   {t('creator.pricing')}
@@ -453,7 +460,7 @@ export default function CreatorPage() {
         </section>
         </div>
 
-        <div style={{ contentVisibility: 'auto', containIntrinsicSize: 'auto 600px' }}>
+        <div id="pricing" data-creator-pricing className="scroll-mt-28" style={{ contentVisibility: 'auto', containIntrinsicSize: 'auto 600px' }}>
           <PricingSection />
         </div>
 

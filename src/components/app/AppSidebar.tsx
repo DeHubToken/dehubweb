@@ -18,6 +18,7 @@ import { MobileMenuGrid } from './navigation/MobileMenuGrid';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { buildAvatarUrl } from '@/lib/media-url';
 import { useSelfBadge } from '@/hooks/use-self-badge-balance';
+import { BadgedName } from '@/components/app/BadgedName';
 import { useUnreadNotificationCount } from '@/hooks/use-notifications';
 import { useCustomUnreadCount } from '@/hooks/use-custom-notifications';
 import { useTotalUnreadCount } from '@/hooks/use-messages';
@@ -132,7 +133,11 @@ export function AppSidebar({ isOpen, onOpenChange }: AppSidebarProps) {
             </AvatarFallback>
           </Avatar>
           <div className="min-w-0 flex-1">
-            <p className="truncate text-[15px] font-semibold text-white">{user.displayName || user.username}</p>
+            <p className="flex min-w-0 text-[15px] font-semibold text-white">
+              <BadgedName badgeBalance={user.badgeBalance} username={user.username} lookupId={user.username || user.address}>
+                {user.displayName || user.username}
+              </BadgedName>
+            </p>
             {user.username && <p className="truncate text-[13px] text-zinc-400">@{user.username}</p>}
           </div>
           {Math.floor(dhbBalance) > 0 && (

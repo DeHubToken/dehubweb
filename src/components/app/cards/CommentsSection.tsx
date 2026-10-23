@@ -102,6 +102,8 @@ import {
   reactionMeta,
   reconcileReactionCounts,
   resolveThumbReaction,
+  resolveThumbCount,
+  dislikesOutnumberLikes,
   type PostReaction,
   type ReactionCounts,
 } from '@/lib/reactions';
@@ -491,8 +493,9 @@ const CommentItem = memo(function CommentItem({ comment, tokenId, onLike, onShow
     ? null
     : comment.myReaction ?? (comment.isDisliked ? 'dislike' : null);
   const leadReaction = isOwnComment
-    ? null
+    ? (dislikesOutnumberLikes(comment.reactionCounts) ? 'dislike' : null)
     : resolveThumbReaction(comment.reactionCounts, myHeldReaction);
+  const thumbCount = resolveThumbCount(comment.likes, comment.dislikes ?? 0, leadReaction);
 
   return (
     <motion.div
@@ -751,7 +754,7 @@ const CommentItem = memo(function CommentItem({ comment, tokenId, onLike, onShow
                 ) : (
                   <ThumbsUp className={cn(COMMENT_ICON_CLASS.like, !isOwnComment && comment.isLiked && "fill-current")} />
                 )}
-                {(comment.likes > 0 || isOwnComment) && <span className="text-xs">{comment.likes}</span>}
+                {(thumbCount > 0 || isOwnComment) && <span className="text-xs">{thumbCount}</span>}
               </button>
             </span>
             {/* Every comment is replyable, replies included — threads nest without limit. */}
@@ -3067,7 +3070,7 @@ function CommentsSectionForAccount({ tokenId, onClose, initialTab, embedded = fa
                   onSelect={mention.handleSelect}
                   onClose={mention.handleClose}
                 />
-                {/* Tools stay below the editable area; AI and Send occupy the adjacent column. */}
+                {/* Tools stay below the editable area; Send (and AI on phones) occupy the adjacent column. */}
                 <div className={cn(
                   "flex items-center gap-1.5",
                   isInputExpanded
@@ -3167,10 +3170,8 @@ function CommentsSectionForAccount({ tokenId, onClose, initialTab, embedded = fa
                       <Mic className="w-4 h-4" />
                     </button>
                   )}
-
-                </div>
-                <div data-comment-actions className={cn("shrink-0 flex items-center", isInputExpanded ? "col-start-2 row-start-1 row-span-2 flex-col self-end gap-1 pb-0.5" : "ml-1")}>
-                  {newComment.trim().length > 0 && (
+                  {/* Desktop: AI sits beside the mic. Phones keep it above Post. */}
+                  {!isMobile && newComment.trim().length > 0 && (
                     <button
                       type="button"
                       onClick={() => setAiMenu('open')}
@@ -3178,7 +3179,22 @@ function CommentsSectionForAccount({ tokenId, onClose, initialTab, embedded = fa
                       data-comment-tool="ai"
                       aria-label={t('conversation.coach.aiMenu')}
                       title={t('conversation.coach.aiMenu')}
-                      className="w-7 h-7 flex-shrink-0 flex items-center justify-center bg-white/[0.08] backdrop-blur-xl border border-white/[0.12] rounded-lg text-zinc-400 hover:text-white transition-colors disabled:opacity-60"
+                      className="w-8 h-8 flex-shrink-0 flex items-center justify-center bg-white/[0.08] backdrop-blur-xl border border-white/[0.12] rounded-lg text-zinc-400 hover:text-white transition-colors disabled:opacity-60"
+                    >
+                      {aiRewriting ? <Loader2 className="w-4 h-4 animate-spin" /> : <Sparkles className="w-4 h-4" />}
+                    </button>
+                  )}
+                </div>
+                <div data-comment-actions className={cn("shrink-0 flex items-center", isInputExpanded ? "col-start-2 row-start-1 row-span-2 flex-col self-end gap-1 pb-0.5" : "ml-1")}>
+                  {isMobile && newComment.trim().length > 0 && (
+                    <button
+                      type="button"
+                      onClick={() => setAiMenu('open')}
+                      disabled={coachStatus === 'loading' || aiRewriting}
+                      data-comment-tool="ai"
+                      aria-label={t('conversation.coach.aiMenu')}
+                      title={t('conversation.coach.aiMenu')}
+                      className="h-9 min-w-9 self-stretch flex-shrink-0 flex items-center justify-center bg-white/[0.08] backdrop-blur-xl border border-white/[0.12] rounded-lg text-zinc-400 hover:text-white transition-colors disabled:opacity-60"
                     >
                       {aiRewriting ? <Loader2 className="w-4 h-4 animate-spin" /> : <Sparkles className="w-4 h-4" />}
                     </button>

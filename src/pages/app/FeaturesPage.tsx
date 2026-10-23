@@ -35,7 +35,7 @@ import { TranslatableText, SharedTranslationProvider, useSharedTranslationContro
 import { PostMetadata } from '@/components/app/cards/PostMetadata';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
-import { Drawer, DrawerContent, DrawerHeader, DrawerTitle } from '@/components/ui/drawer';
+import { featurePromptFields } from '@/lib/feature-prompt';
 import { CardHeader } from '@/components/app/cards/CardHeader';
 import { ActionBar } from '@/components/app/cards/ActionBar';
 import { useAuth } from '@/contexts/AuthContext';
@@ -337,7 +337,7 @@ function FeatureCard({
               <MoreVertical className="w-4 h-4" />
             </button>
             {showMenu && (
-              <div className="absolute right-0 top-9 z-50 w-36 rounded-xl border border-white/10 bg-zinc-900/95 backdrop-blur-xl shadow-xl overflow-hidden">
+              <div data-glass-menu className="absolute right-0 top-9 z-50 w-36 rounded-xl border border-white/10 bg-zinc-900/95 backdrop-blur-xl shadow-xl overflow-hidden">
                 <button
                   type="button"
                   onClick={handleEdit}
@@ -436,7 +436,7 @@ function FeatureCard({
         ) : (
           <>
             <TranslatableText publicContent text={feature.title} className="text-white font-semibold text-sm leading-tight" as="h3" hideControls />
-            <TranslatableText publicContent text={feature.description} className="text-zinc-400 text-sm leading-relaxed" as="p" />
+            {feature.description !== feature.title && <TranslatableText publicContent text={feature.description} className="text-zinc-400 text-sm leading-relaxed" as="p" />}
 
             {/* Attached media — one full-width, several as a grid */}
             <FeatureAttachments feature={feature} />
@@ -506,303 +506,132 @@ function FeatureCard({
 // ──────────────────────────────────────────────────
 // Submit Feature Drawer
 // ──────────────────────────────────────────────────
-function SubmitFeatureDrawer({
-  open,
-  onOpenChange,
-  initialCategory,
-}: {
-  open: boolean;
-  onOpenChange: (open: boolean) => void;
-  initialCategory?: FeatureCategory;
-}) {
-  const { t: _copy } = _useCopy();
+function PromptComposer({ initialCategory, focusRequest, onPosted }: { initialCategory?: FeatureCategory; focusRequest: number; onPosted: () => void }) {
   const { t } = useI18n();
+  const { isAuthenticated, openLoginModal } = useAuth();
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
   const [deviceDetails, setDeviceDetails] = useState('');
-  const [category, setCategory] = useState<FeatureCategory>(initialCategory || 'new_feature');
+  const [category, setCategory] = useState<FeatureCategory>('new_feature');
   const [attachments, setAttachments] = useState<{ file: File; preview: string }[]>([]);
-  const [errors, setErrors] = useState<Record<string, string>>({});
+  const [error, setError] = useState('');
+  const [dragging, setDragging] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
-
-  // Sync category when the drawer opens based on whether a bug category is requested
-  useEffect(() => {
-    if (open) {
-      setCategory(initialCategory || 'new_feature');
-    }
-  }, [open, initialCategory]);
-
-  /*
-   * A bug report is the longest thing most people ever type into DeHub, and it
-   * was held in a drawer that empties on reload. Only the written fields are
-   * kept: `category` is owned by whoever opened the drawer (the effect above
-   * resets it every time, so a restored value would be overwritten anyway), and
-   * attachments are File handles, which do not survive serialisation.
-   */
-  const draft = useFormDraft(
-    'feature-request',
-    { title, description, deviceDetails },
-    (saved) => {
-      if (saved.title !== undefined) setTitle(saved.title);
-      if (saved.description !== undefined) setDescription(saved.description);
-      if (saved.deviceDetails !== undefined) setDeviceDetails(saved.deviceDetails);
-    },
-  );
-
+  const promptRef = useRef<HTMLTextAreaElement>(null);
+  const previewsRef = useRef(attachments);
+  previewsRef.current = attachments;
   const submitMutation = useSubmitFeatureRequest();
+  const draft = useFormDraft('feature-request', { title, description, deviceDetails }, (saved) => {
+    if (saved.title !== undefined) setTitle(saved.title);
+    if (saved.description !== undefined) setDescription(saved.description);
+    if (saved.deviceDetails !== undefined) setDeviceDetails(saved.deviceDetails);
+  });
 
-  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const picked = Array.from(e.target.files ?? []);
-    // Re-picking the same file after removing it fires no change event unless the
-    // input is cleared, so reset it on every pass rather than only on submit.
-    if (fileInputRef.current) fileInputRef.current.value = '';
-    if (picked.length === 0) return;
-
-    const oversized = picked.filter(f => f.size > MAX_FEATURE_ATTACHMENT_BYTES);
-    const room = MAX_FEATURE_ATTACHMENTS - attachments.length;
-    const accepted = picked
-      .filter(f => f.size <= MAX_FEATURE_ATTACHMENT_BYTES)
-      .slice(0, Math.max(room, 0));
-
-    if (accepted.length > 0) {
-      setAttachments(prev => [
-        ...prev,
-        ...accepted.map(file => ({ file, preview: URL.createObjectURL(file) })),
-      ]);
+  useEffect(() => { if (initialCategory) setCategory(initialCategory); }, [initialCategory]);
+  useEffect(() => {
+    if (focusRequest) {
+      promptRef.current?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      promptRef.current?.focus({ preventScroll: true });
     }
+  }, [focusRequest]);
+  useEffect(() => () => previewsRef.current.forEach(a => URL.revokeObjectURL(a.preview)), []);
 
-    // One message, whichever limit bit: a partial accept is easy to miss.
-    const message = oversized.length > 0
-      ? 'Each file must be under 20MB'
+  const addFiles = (picked: File[]) => {
+    if (submitMutation.isPending) return;
+    const valid = picked.filter(file => /^(image|video)\//.test(file.type) && file.size <= MAX_FEATURE_ATTACHMENT_BYTES);
+    const room = Math.max(0, MAX_FEATURE_ATTACHMENTS - attachments.length);
+    const accepted = valid.slice(0, room);
+    setAttachments(prev => [...prev, ...accepted.map(file => ({ file, preview: URL.createObjectURL(file) }))]);
+    setError(valid.length < picked.length
+      ? t('features.promptMediaError', 'Choose images or videos under 20MB each.')
       : accepted.length < picked.length
-        ? `Up to ${MAX_FEATURE_ATTACHMENTS} attachments`
-        : null;
-    setErrors(prev => {
-      const { media, ...rest } = prev;
-      return message ? { ...rest, media: message } : rest;
-    });
+        ? t('features.promptMediaLimit', 'Up to {{max}} attachments.', { max: MAX_FEATURE_ATTACHMENTS }) : '');
   };
-
   const removeAttachment = (index: number) => {
-    setAttachments(prev => {
-      const target = prev[index];
-      if (target) URL.revokeObjectURL(target.preview);
-      return prev.filter((_, i) => i !== index);
-    });
-    setErrors(prev => { const { media, ...rest } = prev; return rest; });
+    URL.revokeObjectURL(attachments[index].preview);
+    setAttachments(prev => prev.filter((_, i) => i !== index));
+    setError('');
   };
-
-  const clearAttachments = () => {
-    setAttachments(prev => {
-      prev.forEach(a => URL.revokeObjectURL(a.preview));
-      return [];
-    });
-    if (fileInputRef.current) fileInputRef.current.value = '';
-  };
-
-  // Previews are object URLs; unmounting the drawer without this leaks them.
-  useEffect(() => () => {
-    attachments.forEach(a => URL.revokeObjectURL(a.preview));
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
-
   const handleSubmit = () => {
-    const result = featureSchema.safeParse({ title, description, category });
-    if (!result.success) {
-      const fieldErrors: Record<string, string> = {};
-      for (const issue of result.error.issues) {
-        fieldErrors[issue.path[0] as string] = issue.message;
-      }
-      setErrors(fieldErrors);
-      return;
-    }
-    setErrors({});
-    const fullDescription = deviceDetails.trim()
-      ? `${result.data.description}\n\n📱 Device & OS: ${deviceDetails.trim()}`
-      : result.data.description;
-    submitMutation.mutate(
-      {
-        title: result.data.title,
-        description: fullDescription,
-        category: result.data.category as FeatureCategory,
-        mediaFiles: attachments.map(a => a.file),
-      },
-      {
-        onSuccess: () => {
-          if (!draft.clear()) return;
-          setTitle('');
-          setDescription('');
-          setDeviceDetails('');
-          setCategory('new_feature');
-          clearAttachments();
-          // Filed — the draft of it must not reopen pre-filled and get sent twice.
-          onOpenChange(false);
-        },
-      }
-    );
+    if (!description.trim() || submitMutation.isPending) return;
+    if (!isAuthenticated) { openLoginModal(); return; }
+    const prompt = description.trim();
+    const result = featureSchema.safeParse({
+      title: featurePromptFields(prompt, title).title,
+      description: prompt, category,
+    });
+    if (!result.success) { setError(result.error.issues[0].message); return; }
+    setError('');
+    submitMutation.mutate({
+      title: featurePromptFields(prompt, title).title,
+      category,
+      description: featurePromptFields(prompt, title, deviceDetails).description,
+      mediaFiles: attachments.map(a => a.file),
+    }, { onSuccess: () => {
+      if (!draft.clear()) return;
+      setTitle(''); setDescription(''); setDeviceDetails('');
+      setCategory(initialCategory || 'new_feature');
+      previewsRef.current.forEach(a => URL.revokeObjectURL(a.preview));
+      setAttachments([]);
+      onPosted();
+    } });
   };
 
   return (
-    <Drawer open={open} onOpenChange={onOpenChange}>
-      <DrawerContent column className="bg-black/60 backdrop-blur-[24px] border-white/10 max-h-[85dvh]">
-        <DrawerHeader className="relative">
-          <DrawerTitle className="text-white text-lg font-bold">{t('features.submitDrawerTitle')}</DrawerTitle>
-          <button
-            type="button"
-            onClick={() => onOpenChange(false)}
-            className="absolute right-4 top-4 w-8 h-8 flex items-center justify-center rounded-xl bg-zinc-800 hover:bg-zinc-700 text-zinc-400 hover:text-white transition-colors"
-          >
-            <X className="w-4 h-4" />
-          </button>
-        </DrawerHeader>
-
-        <div className="px-4 pb-6 space-y-4 overflow-y-auto overscroll-contain flex-1">
-          {/* Title */}
-          <div>
-            <label className="text-zinc-400 text-xs font-medium mb-1 block">{t('features.titleLabel')}</label>
-            <Input
-              value={title}
-              onChange={(e) => setTitle(e.target.value)}
-              placeholder={t('features.titlePlaceholder')}
-              maxLength={100}
-              className="bg-zinc-900 border-zinc-800 text-white placeholder:text-zinc-600 rounded-xl"
-            />
-            <div className="flex justify-between mt-1">
-              {errors.title && <span className="text-red-400 text-[11px]">{errors.title}</span>}
-              <span className="text-zinc-500 text-[11px] ml-auto">{title.length}/100</span>
+    <section data-page-bento data-feature-composer className="rounded-2xl bg-zinc-900 p-4 sm:p-6 mb-3"
+      onDragOver={e => { if (e.dataTransfer.types.includes('Files')) { e.preventDefault(); setDragging(true); } }}
+      onDragLeave={e => { if (!e.currentTarget.contains(e.relatedTarget as Node | null)) setDragging(false); }}
+      onDrop={e => { e.preventDefault(); setDragging(false); addFiles(Array.from(e.dataTransfer.files)); }}>
+      <h2 className="text-base sm:text-lg font-semibold text-white mb-1">{t('features.promptHeading', 'What should we build next?')}</h2>
+      <p className="text-xs text-zinc-400 mb-3">{t('features.promptHint', 'Describe it. Drop in a screenshot. Make it happen.')}</p>
+      <div className={cn('rounded-xl border border-white/15 bg-black/10 p-3 transition-colors focus-within:border-white/40', dragging && 'ring-2 ring-current')}>
+        <textarea ref={promptRef} value={description} onChange={e => setDescription(e.target.value)}
+          aria-label={t('features.promptLabel', 'Your prompt')}
+          placeholder={t('features.promptPlaceholder', 'Describe an idea, improvement, or bug…')}
+          maxLength={1000} rows={4} disabled={submitMutation.isPending}
+          onKeyDown={e => { if ((e.metaKey || e.ctrlKey) && e.key === 'Enter' && !e.nativeEvent.isComposing) { e.preventDefault(); handleSubmit(); } }}
+          onPaste={e => { const files = Array.from(e.clipboardData.files); if (files.length) { e.preventDefault(); addFiles(files); } }}
+          className="w-full bg-transparent text-white placeholder:text-zinc-500 text-sm leading-relaxed resize-y min-h-24 max-h-80 outline-none disabled:opacity-60" />
+        {attachments.length > 0 && <div className="flex gap-2 overflow-x-auto py-2">
+          {attachments.map((attachment, index) => <div key={attachment.preview} className="relative shrink-0 w-28">
+            <div className="h-20 rounded-lg overflow-hidden border border-white/15 bg-black/20">
+              {attachment.file.type.startsWith('video/') ? <video src={attachment.preview} className="w-full h-full object-cover" muted /> : <img src={attachment.preview} alt={attachment.file.name} className="w-full h-full object-cover" />}
             </div>
-          </div>
-
-          {/* Description */}
-          <div>
-            <label className="text-zinc-400 text-xs font-medium mb-1 block">{t('features.descriptionLabel')}</label>
-            <textarea
-              value={description}
-              onChange={(e) => setDescription(e.target.value)}
-              placeholder={t('features.descriptionPlaceholder')}
-              maxLength={1000}
-              rows={4}
-              className="w-full bg-zinc-900 border border-zinc-800 text-white placeholder:text-zinc-600 rounded-xl px-3 py-2 text-sm resize-none focus:outline-none focus:ring-2 focus:ring-white/20 focus:border-transparent"
-            />
-            <div className="flex justify-between mt-1">
-              {errors.description && <span className="text-red-400 text-[11px]">{errors.description}</span>}
-              <span className="text-zinc-500 text-[11px] ml-auto">{description.length}/1000</span>
-            </div>
-          </div>
-
-          {/* Device & OS Details */}
-          <div>
-            <label className="text-zinc-400 text-xs font-medium mb-1 block">{_copy("copy.72a478ec65bf", { defaultValue: "Device & OS Details (optional)" })}</label>
-            <textarea
-              value={deviceDetails}
-              onChange={(e) => setDeviceDetails(e.target.value)}
-              placeholder="e.g. iPhone 15 Pro, iOS 18.2 / Samsung S24, Android 15 / MacBook Pro, Chrome 124..."
-              maxLength={300}
-              rows={2}
-              className="w-full bg-zinc-900 border border-zinc-800 text-white placeholder:text-zinc-600 rounded-xl px-3 py-2 text-sm resize-none focus:outline-none focus:ring-2 focus:ring-white/20 focus:border-transparent"
-            />
-            <span className="text-zinc-500 text-[11px] ml-auto block text-right mt-1">{deviceDetails.length}/300</span>
-          </div>
-          <div>
-            <label className="text-zinc-400 text-xs font-medium mb-2 block">{t('features.categoryLabel')}</label>
-            <div className="flex flex-wrap gap-2">
-              {CATEGORIES.filter((c) => c.id !== 'all').map((cat) => (
-                <button
-                  key={cat.id}
-                  type="button"
-                  data-filter-chip
-                  data-active={category === cat.id ? 'true' : undefined}
-                  aria-pressed={category === cat.id}
-                  onClick={() => setCategory(cat.id as FeatureCategory)}
-                  className={`px-3 py-1.5 rounded-xl text-xs font-medium transition-colors ${
-                    category === cat.id
-                      ? 'bg-white text-black'
-                      : 'bg-zinc-800 text-zinc-400 hover:bg-zinc-700 hover:text-white'
-                  }`}
-                >
-                  {category === cat.id && <span aria-hidden="true">✓ </span>}
-                  {t(cat.labelKey)}
-                </button>
-              ))}
-            </div>
-          </div>
-
-          {/* Media Upload */}
-          <div>
-            <label className="text-zinc-400 text-xs font-medium mb-1 block">{_copy("copy.cbf32246775e", { defaultValue: "Attach Images or Videos (optional)" })}<span className="text-zinc-600 font-normal">{_copy("copy.ea3a3da9b73e", { defaultValue: " — up to " })}{MAX_FEATURE_ATTACHMENTS}</span>
-            </label>
-            <input
-              ref={fileInputRef}
-              type="file"
-              accept="image/*,video/*"
-              multiple
-              onChange={handleFileChange}
-              className="hidden"
-            />
-            {attachments.length > 0 && (
-              <div className="grid grid-cols-3 gap-2 mb-2">
-                {attachments.map((attachment, index) => (
-                  <div
-                    key={attachment.preview}
-                    className="relative aspect-square rounded-xl overflow-hidden border border-white/10 bg-zinc-900"
-                  >
-                    {attachment.file.type.startsWith('video/') ? (
-                      <video src={attachment.preview} className="w-full h-full object-cover" muted />
-                    ) : (
-                      <img src={attachment.preview} alt={_copy("copy.1b9bd763f963", { defaultValue: "Attachment {{value1}}", value1: index + 1 })} className="w-full h-full object-cover" />
-                    )}
-                    <button
-                      type="button"
-                      onClick={() => removeAttachment(index)}
-                      aria-label={_copy("copy.58e271dd9ad8", { defaultValue: "Remove attachment {{value1}}", value1: index + 1 })}
-                      className="absolute top-1 right-1 w-6 h-6 flex items-center justify-center rounded-lg bg-black/70 text-white hover:bg-black/90 transition-colors"
-                    >
-                      <X className="w-3.5 h-3.5" />
-                    </button>
-                  </div>
-                ))}
-              </div>
-            )}
-            {attachments.length < MAX_FEATURE_ATTACHMENTS && (
-              <button
-                type="button"
-                onClick={() => fileInputRef.current?.click()}
-                className="w-full h-24 rounded-xl border border-dashed border-white/10 bg-zinc-900/50 flex flex-col items-center justify-center gap-1.5 text-zinc-500 hover:text-zinc-300 hover:border-white/20 transition-colors"
-              >
-                <ImagePlus className="w-5 h-5" />
-                <span className="text-xs">
-                  {attachments.length === 0 ? _copy("copy.fd274232d93a", { defaultValue: "Click to upload" }) : _copy("copy.d7246da527c1", { defaultValue: "Add another" })}
-                </span>
-              </button>
-            )}
-            {errors.media && <span className="text-red-400 text-[11px] mt-1 block">{errors.media}</span>}
-          </div>
-
-          {/* Submit */}
-          <Button
-            onClick={handleSubmit}
-            disabled={submitMutation.isPending}
-            variant="glass"
-            className="w-full rounded-xl font-semibold"
-          >
-            {submitMutation.isPending ? (
-              <Loader2 className="w-4 h-4 animate-spin" />
-            ) : (
-              <>
-                <Sparkles className="w-4 h-4" />
-                {t('features.submitRequest')}
-              </>
-            )}
+            <button type="button" disabled={submitMutation.isPending} onClick={() => removeAttachment(index)}
+              aria-label={t('features.removePromptAttachment', 'Remove {{name}}', { name: attachment.file.name })}
+              className="absolute right-1 top-1 w-6 h-6 rounded-full bg-black/80 text-white flex items-center justify-center"><X className="w-3.5 h-3.5" /></button>
+            <p className="text-[10px] text-zinc-400 truncate mt-1">{attachment.file.name}</p>
+          </div>)}
+        </div>}
+        <div className="flex flex-wrap items-center gap-2 border-t border-white/10 pt-3 mt-2">
+          <input ref={fileInputRef} type="file" accept="image/*,video/*" multiple className="hidden" onChange={e => { addFiles(Array.from(e.target.files ?? [])); e.target.value = ''; }} />
+          <Button type="button" variant="ghost" size="sm" className="rounded-lg px-2" disabled={submitMutation.isPending || attachments.length >= MAX_FEATURE_ATTACHMENTS} onClick={() => fileInputRef.current?.click()}>
+            <ImagePlus className="w-4 h-4" />{t('features.promptAttach', 'Attach images')}
+          </Button>
+          <span className="hidden sm:inline text-[11px] text-zinc-500">{t('features.promptDrop', 'Paste or drop images here')}</span>
+          <Button type="button" variant="glass" className="rounded-xl ml-auto" disabled={!description.trim() || submitMutation.isPending} onClick={handleSubmit}>
+            {submitMutation.isPending ? <Loader2 className="w-4 h-4 animate-spin" /> : <Plus className="w-4 h-4" />}
+            {t('features.promptPost', 'Post prompt')}
           </Button>
         </div>
-      </DrawerContent>
-    </Drawer>
+      </div>
+      <div className="flex justify-between gap-3 mt-2 text-[11px] text-zinc-500">
+        <span>{description.length}/1000</span><span className="hidden sm:inline">{t('features.promptShortcut', 'Ctrl / ⌘ + Enter to post')}</span>
+      </div>
+      {error && <p role="alert" className="text-sm text-red-400 mt-2">{error}</p>}
+      <details className="mt-2 text-xs text-zinc-400" open={initialCategory === 'bug_fix' ? true : undefined}>
+        <summary className="cursor-pointer py-1">{t('features.promptDetails', 'Optional details')}</summary>
+        <fieldset disabled={submitMutation.isPending} className="grid gap-3 mt-2">
+          <label>{t('features.titleLabel')}<Input className="mt-1" value={title} maxLength={100} onChange={e => setTitle(e.target.value)} /></label>
+          <label>{t('features.categoryLabel')}<select value={category} onChange={e => setCategory(e.target.value as FeatureCategory)} className="block w-full rounded-lg bg-zinc-800 border border-white/15 p-2 mt-1 text-white">
+            {CATEGORIES.filter(c => c.id !== 'all').map(cat => <option key={cat.id} value={cat.id}>{t(cat.labelKey)}</option>)}
+          </select></label>
+          <label>{t('features.promptDevice', 'Device & OS (for bugs)')}<Input className="mt-1" value={deviceDetails} maxLength={300} onChange={e => setDeviceDetails(e.target.value)} /></label>
+        </fieldset>
+      </details>
+    </section>
   );
 }
-
-// ──────────────────────────────────────────────────
-// Skeleton Loader
-// ──────────────────────────────────────────────────
 function FeatureSkeletons() {
   return (
     <div className="space-y-3">
@@ -910,14 +739,15 @@ export default function FeaturesPage() {
   const isLightTheme = (theme === 'light' || themeChoice === 'system-light');
   const [searchParams, setSearchParams] = useSearchParams();
   const [activeTab, setActiveTab] = useState<PageTab>('requests');
-  const [sort, setSort] = useState<FeatureSort>('most_voted');
+  const [sort, setSort] = useState<FeatureSort>('newest');
   const [category, setCategory] = useState<FeatureCategory | 'all'>('all');
   const { layerRef: featuresCatLayerRef, setRef: setFeaturesCatRef, rect: featuresCatRect, onScroll: onFeaturesCatScroll } = useTabIndicator(category);
   const { ref: featuresCatFadeRef, style: featuresCatFadeStyle } = useScrollFadeMask<HTMLDivElement>();
   const { layerRef: featuresSortLayerRef, setRef: setFeaturesSortRef, rect: featuresSortRect, onScroll: onFeaturesSortScroll } = useTabIndicator(sort);
   const [searchInput, setSearchInput] = useSurfaceDraft("src/pages/app/FeaturesPage.tsx:searchInput", '');
   const search = useDebouncedValue(searchInput, 300);
-  const [drawerOpen, setDrawerOpen] = useState(false);
+  const [composerFocus, setComposerFocus] = useState(0);
+  const [showFilters, setShowFilters] = useState(false);
   const [initialCategory, setInitialCategory] = useState<FeatureCategory | undefined>(undefined);
 
   // Handle deep-link from "Report a Bug" buttons: open the bug-fix category
@@ -928,12 +758,14 @@ export default function FeaturesPage() {
       setActiveTab('requests');
       setCategory('bug_fix');
       setInitialCategory('bug_fix');
-      setDrawerOpen(true);
+      setComposerFocus(value => value + 1);
       setSearchParams({}, { replace: true });
       return;
     }
 
     const requestedTab = searchParams.get('tab');
+    if (requestedTab === 'prompts') setActiveTab('requests');
+    if (requestedTab === 'queued') setActiveTab('shipping');
     if (requestedTab === 'requests' || requestedTab === 'shipping' || requestedTab === 'shipped') {
       setActiveTab(requestedTab);
     }
@@ -1025,13 +857,14 @@ export default function FeaturesPage() {
       openLoginModal();
       return;
     }
-    setDrawerOpen(true);
+    setActiveTab('requests');
+    setComposerFocus(value => value + 1);
   };
 
   // `open` is counted server-side with the same status filter the list uses, so
   // the tab badge always matches the rows below it.
   const { data: counts } = useFeatureCounts();
-  const totalCount = counts?.total ?? features.length;
+
   const remainingCount = counts?.open ?? features.length;
   const shippedCount = shippedFeatures?.length ?? 0;
   const inProgressCount = inProgressFeatures?.length ?? 0;
@@ -1043,7 +876,7 @@ export default function FeaturesPage() {
   useFeedSwallowClip(contentRef, '[data-feed-nav-outer] > [data-page-bento]', [], { allThemes: true });
 
   return (
-    <div className="min-h-screen">
+    <div data-requests-page className="min-h-screen">
       <SEOHead title={_copy("copy.5d2d9bc248a3", { defaultValue: "Feature Requests & Bug Reporting — DeHub" })} description={_copy("copy.2c94a53da07c", { defaultValue: "Submit feature requests, report bugs, and vote on community ideas to shape DeHub's roadmap. Track open, in-progress, and shipped features." })} url="https://dehub.io/app/features" jsonLd={{ '@context': 'https://schema.org', '@type': 'WebPage', name: 'DeHub Feature Requests & Bug Reporting', url: 'https://dehub.io/app/features', description: _copy("copy.d2c76d7df46f", { defaultValue: "Submit feature requests, report bugs, and vote on community ideas to shape DeHub's roadmap." }), isPartOf: { '@type': 'WebSite', name: 'DeHub', url: 'https://dehub.io' } }} />
       <h1 className="sr-only">{_copy("copy.64ce9ca9f7d1", { defaultValue: "DeHub Features — Feature Requests, Bug Reporting & Community Roadmap" })}</h1>
       {/* Sticky nav pill. `data-feed-nav-outer` already rides the scroll on
@@ -1058,18 +891,19 @@ export default function FeaturesPage() {
           <div className="flex items-center gap-3">
             <BrandIcon src={featuresLightbulb} alt={_copy("copy.5697d03daef4", { defaultValue: "Features" })} className="w-12 h-12 object-contain" />
             <div>
-              <h1 className="text-xl font-bold text-white">{t('features.title')}</h1>
-              <p className="text-zinc-500 text-sm">{totalCount === 1 ? t('features.ideaSubmitted') : t('features.ideasSubmitted', { count: totalCount })}</p>
+              <h1 className="text-xl font-bold text-white">{t('features.promptPageTitle', 'Requests')}</h1>
+              <p className="text-zinc-500 text-sm">{t('features.promptSubtitle', 'Build DeHub with a prompt')}</p>
             </div>
           </div>
           <Button
             onClick={handleSubmitClick}
+            aria-label={t('features.promptNew', 'New prompt')}
             variant="glass"
             className="rounded-xl font-semibold text-sm"
             size="sm"
           >
             <Plus className="w-4 h-4" />
-            <span className="hidden sm:inline">{t('features.submit')}</span>
+            <span className="hidden sm:inline">{t('features.promptNew', 'New prompt')}</span>
           </Button>
         </div>
 
@@ -1077,7 +911,7 @@ export default function FeaturesPage() {
         <div className="relative mb-3">
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-zinc-500" />
           <Input
-            placeholder={t('features.searchPlaceholder')}
+            placeholder={t('features.promptSearch', 'Search prompts…')}
             value={searchInput}
             onChange={(e) => setSearchInput(e.target.value)}
             className="pl-10 bg-zinc-800 border-zinc-700 text-white placeholder:text-zinc-500 rounded-xl"
@@ -1085,7 +919,7 @@ export default function FeaturesPage() {
         </div>
 
         {/* Page Tabs: Requests / Shipping / Shipped */}
-        <div className="relative flex gap-1 bg-zinc-800/40 rounded-xl p-1 mb-3">
+        <div role="tablist" aria-label={t('features.promptPageTitle', 'Requests')} className="relative flex gap-1 bg-zinc-800/40 rounded-xl p-1 mb-3">
           {/* Sliding liquid glass indicator */}
           <div
             className={cn(
@@ -1103,11 +937,12 @@ export default function FeaturesPage() {
           <button
             type="button"
             onClick={() => setActiveTab('requests')}
+            role="tab" aria-selected={activeTab === 'requests'}
             className={`relative z-10 flex-1 py-2 rounded-lg text-sm font-medium transition-colors duration-300 flex items-center justify-center gap-1.5 ${
               activeTab === 'requests' ? 'text-white' : 'text-zinc-500 hover:text-zinc-300'
             }`}
           >
-            {t('features.requests')}
+            {t('features.prompts', 'Prompts')}
             {remainingCount > 0 && (
               <span className="text-[10px] bg-white/10 text-white/70 px-1.5 py-0.5 rounded-md font-semibold">
                 {remainingCount}
@@ -1117,12 +952,13 @@ export default function FeaturesPage() {
           <button
             type="button"
             onClick={() => setActiveTab('shipping')}
+            role="tab" aria-selected={activeTab === 'shipping'}
             className={`relative z-10 flex-1 py-2 rounded-lg text-sm font-medium transition-colors duration-300 flex items-center justify-center gap-1.5 ${
               activeTab === 'shipping' ? 'text-white' : 'text-zinc-500 hover:text-zinc-300'
             }`}
           >
             <Loader2 className="w-3.5 h-3.5" />
-            {t('features.shipping', 'Shipping')}
+            {t('features.queued', 'Queued')}
             {inProgressCount > 0 && (
               <span className="text-[10px] bg-white/10 text-white/70 px-1.5 py-0.5 rounded-md font-semibold">
                 {inProgressCount}
@@ -1132,6 +968,7 @@ export default function FeaturesPage() {
           <button
             type="button"
             onClick={() => setActiveTab('shipped')}
+            role="tab" aria-selected={activeTab === 'shipped'}
             className={`relative z-10 flex-1 py-2 rounded-lg text-sm font-medium transition-colors duration-300 flex items-center justify-center gap-1.5 ${
               activeTab === 'shipped' ? 'text-white' : 'text-zinc-500 hover:text-zinc-300'
             }`}
@@ -1152,6 +989,10 @@ export default function FeaturesPage() {
             Sort stays Requests-only: Shipping and Shipped are ordered by ship
             date, which is the order people expect on a changelog. */}
         <>
+            <Button variant="ghost" size="sm" className="mb-2 rounded-lg" aria-expanded={showFilters} onClick={() => setShowFilters(value => !value)}>
+              {t('features.promptFilters', 'Filter by category')}{category !== 'all' && ` · ${CATEGORY_LABELS[category]}`}
+            </Button>
+            {showFilters && <>
             {/* Category Pills */}
             <div className="relative mb-3">
               <div ref={featuresCatLayerRef} className="relative" style={{ overflowX: 'clip', overflowClipMargin: '8px' }}>
@@ -1181,6 +1022,7 @@ export default function FeaturesPage() {
               </div>
             </div>
 
+            </>}
             {/* Sort Tabs */}
             {activeTab === 'requests' && (
             <div ref={featuresSortLayerRef} className="relative" style={{ overflowX: 'clip', overflowClipMargin: '8px' }}>
@@ -1213,6 +1055,9 @@ export default function FeaturesPage() {
       <div data-feed-swallow-bounds>
 <div ref={contentRef} className="px-2 sm:px-3 pt-2 pb-3">
 <FeedSwallowMotion>
+      <div hidden={activeTab !== 'requests'}>
+        <PromptComposer initialCategory={initialCategory} focusRequest={composerFocus} onPosted={() => { setCategory('all'); setSearchInput(''); setSort('newest'); }} />
+      </div>
       {/* The request a notification pointed at, above whichever tab is open. */}
       {focusedRequest && (
         <div className="mb-3">
@@ -1352,15 +1197,7 @@ export default function FeaturesPage() {
 </div>
 </div>
 
-      {/* Submit Drawer */}
-      <SubmitFeatureDrawer
-        open={drawerOpen}
-        onOpenChange={(open) => {
-          setDrawerOpen(open);
-          if (!open) setInitialCategory(undefined);
-        }}
-        initialCategory={initialCategory}
-      />
+
     </div>
   );
 }

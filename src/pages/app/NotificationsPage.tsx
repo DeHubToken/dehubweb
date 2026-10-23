@@ -139,7 +139,7 @@ function NotificationPostCards({ tokenIds }: { tokenIds: number[] }) {
             return null;
         }
         return (
-          <div key={item.id} className="rounded-xl border border-white/[0.12] bg-white/[0.03] backdrop-blur-[24px] p-3">
+          <div key={item.id} className="rounded-xl border border-white/[0.12] bg-white/[0.03] p-3">
             {card}
           </div>
         );
@@ -2318,7 +2318,9 @@ export default function NotificationsPage({ inDrawer = false }: { inDrawer?: boo
                       onMarkAsRead={handleMarkAsRead}
                       isMarkingAsRead={bundle.allIds.includes(markingNotificationId || '')}
                       enrichedAvatars={enrichedAvatars}
-                      style={offscreenRowStyle(index)}
+                      // iOS WebKit can leave content-visibility rows unpainted inside the
+                      // bell drawer's transformed scroller, showing a black sheet.
+                      style={inDrawer ? undefined : offscreenRowStyle(index)}
                     />
                   </motion.div>
                 ))}

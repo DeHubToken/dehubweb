@@ -2832,6 +2832,31 @@ export const blogPostsMetadata: BlogPost[] = [
 // arrays at runtime in blogUtils.ts — metadata-only logic, no third copy here.
 export const newPostsMetadata: BlogPost[] = [
   {
+    "id": "dehub-next-chapter-riftn-bnb-recovery-relaunch",
+    "slug": "dehub-next-chapter-riftn-bnb-recovery-relaunch",
+    "title": "DeHub’s next chapter: Riftn, BNB recovery and the road to relaunch",
+    "excerpt": "Our proposed move to Riftn, the push for a proper assessment of our stuck BNB, and the plan to get DeHub relaunched and trading.",
+    "content": "",
+    "bannerImage": "/media/dehub-to-riftn-transition.png",
+    "bannerImageAlt": "DeHub to Riftn — the next chapter",
+    "author": {
+      "name": "DeHub Team"
+    },
+    "publishedAt": "2026-10-22T18:00:00.000Z",
+    "tags": [
+      "DeHub",
+      "Riftn",
+      "BNB",
+      "Community",
+      "Relaunch"
+    ],
+    "readingTime": 6,
+    "featured": true,
+    "status": "published",
+    "seoTitle": "DeHub’s next chapter: Riftn, BNB recovery and relaunch",
+    "seoDescription": "DeHub proposes the Riftn name, a renewed focus on BNB, a public recovery campaign, and a relaunch timetable. Recovery remains subject to Binance’s assessment."
+  },
+  {
     "id": "dehub-token-exchange-listings-update-2026",
     "slug": "dehub-token-exchange-listings-update-2026",
     "title": "DeHub Token and Exchange Listings Update",
@@ -2855,6 +2880,31 @@ export const newPostsMetadata: BlogPost[] = [
     "status": "published",
     "seoTitle": "DeHub Token and Exchange Listings Update | DeHub",
     "seoDescription": "DeHub shares its token utility, AI credit and buyback plans, DEX access, and the estimated timing for official exchange listings."
+  },
+  {
+    "id": "q4-development-overview",
+    "slug": "q4-development-overview",
+    "title": "Q4 Development Overview",
+    "excerpt": "Everything we shipped since October across dehubweb, dehub-mobile, dehub-stream-backend and stream-admin-hub — the video editor, Creator and Maboroshi, AI agents, feeds, live, profiles, System Light, wallets and the stats page, with the pull request next to each entry.",
+    "content": "",
+    "bannerImage": "/media/q4-development-overview-banner.png",
+    "bannerImageAlt": "Q4 Development Overview - DeHub rocket banner",
+    "author": {
+      "name": "DeHub Team"
+    },
+    "publishedAt": "2026-10-17T12:00:00.000Z",
+    "tags": [
+      "Development",
+      "Update",
+      "Q4",
+      "Shipping",
+      "2026"
+    ],
+    "readingTime": 12,
+    "featured": false,
+    "status": "published",
+    "seoTitle": "Q4 Development Overview | DeHub",
+    "seoDescription": "Everything DeHub shipped since October across web, mobile, the streaming backend and admin — the video editor, Creator, AI agents, live, profiles, System Light and wallets — with pull request links throughout."
   },
   {
     "id": "q3-development-overview",
@@ -3418,29 +3468,29 @@ export const newPostsMetadata: BlogPost[] = [
 
 // getLatestPost() result — docs home hero.
 export const latestPostMetadata: BlogPost | undefined = {
-  "id": "dehub-token-exchange-listings-update-2026",
-  "slug": "dehub-token-exchange-listings-update-2026",
-  "title": "DeHub Token and Exchange Listings Update",
-  "excerpt": "An update on the new token, AI credits, planned buybacks for stakers, and the expected timing of official exchange listings.",
+  "id": "dehub-next-chapter-riftn-bnb-recovery-relaunch",
+  "slug": "dehub-next-chapter-riftn-bnb-recovery-relaunch",
+  "title": "DeHub’s next chapter: Riftn, BNB recovery and the road to relaunch",
+  "excerpt": "Our proposed move to Riftn, the push for a proper assessment of our stuck BNB, and the plan to get DeHub relaunched and trading.",
   "content": "",
-  "bannerImage": "/media/dehub-token-exchange-listings-2026.jpg",
-  "bannerImageAlt": "DeHub listing soon announcement banner",
+  "bannerImage": "/media/dehub-to-riftn-transition.png",
+  "bannerImageAlt": "DeHub to Riftn — the next chapter",
   "author": {
     "name": "DeHub Team"
   },
-  "publishedAt": "2026-09-18T19:32:10.000Z",
+  "publishedAt": "2026-10-22T18:00:00.000Z",
   "tags": [
-    "DHB",
-    "Token",
-    "Exchange Listings",
-    "AI Credits",
-    "Staking"
+    "DeHub",
+    "Riftn",
+    "BNB",
+    "Community",
+    "Relaunch"
   ],
-  "readingTime": 3,
+  "readingTime": 6,
   "featured": true,
   "status": "published",
-  "seoTitle": "DeHub Token and Exchange Listings Update | DeHub",
-  "seoDescription": "DeHub shares its token utility, AI credit and buyback plans, DEX access, and the estimated timing for official exchange listings."
+  "seoTitle": "DeHub’s next chapter: Riftn, BNB recovery and relaunch",
+  "seoDescription": "DeHub proposes the Riftn name, a renewed focus on BNB, a public recovery campaign, and a relaunch timetable. Recovery remains subject to Binance’s assessment."
 };
 
 export const excludedTitles: string[] = [

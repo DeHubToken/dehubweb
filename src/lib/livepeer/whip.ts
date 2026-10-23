@@ -135,6 +135,17 @@ export interface PublishOptions {
    * wrapped, so a throwing callback can never take a broadcast down.
    */
   onHealth?: (health: WhipHealth) => void;
+  /**
+   * Ceiling for the video encoder. Left unset the browser picks its own, which
+   * for a webcam is right and for a capture card is far too low: a 1080p60
+   * game at the default lands around 2.5 Mbit/s and smears on every fast pan.
+   */
+  videoEncoding?: VideoEncoding;
+}
+
+export interface VideoEncoding {
+  maxBitrateKbps: number;
+  maxFramerate?: number;
 }
 
 /** How often the sender is asked what it is really sending. */
@@ -215,6 +226,7 @@ export async function publishToWhip({
   iceServers: extraIceServers,
   onStateChange,
   onHealth,
+  videoEncoding,
 }: PublishOptions): Promise<WhipSession> {
   if (!streamKey) throw new Error('A stream key is required to go live.');
 
@@ -353,6 +365,20 @@ export async function publishToWhip({
       transceivers.video = pc.addTransceiver(videoTrack, {
         direction: 'sendonly',
         streams: [stream],
+        // Set at creation: changing the encoding list after negotiation is
+        // refused, and this is the one spot every browser honours it.
+        ...(videoEncoding
+          ? {
+              sendEncodings: [
+                {
+                  maxBitrate: videoEncoding.maxBitrateKbps * 1000,
+                  ...(videoEncoding.maxFramerate
+                    ? { maxFramerate: videoEncoding.maxFramerate }
+                    : {}),
+                },
+              ],
+            }
+          : {}),
       });
       preferH264(transceivers.video);
     }

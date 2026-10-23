@@ -42,8 +42,9 @@ import { useTranslation } from 'react-i18next';
 import { SEOHead } from '@/components/SEOHead';
 import { AppState } from '@/components/app/AppState';
 import { useAuth } from '@/contexts/AuthContext';
-import { confirmStake, readStakeReceipt, refreshConfirmedStake, stakeFromReplacement, type StakeAttempt } from '@/lib/stake-confirmation';
+import { confirmStake, recoverStake, readStakeEvidence, refreshConfirmedStake, stakeFromReplacement, type StakeAttempt } from '@/lib/stake-confirmation';
 import { createLogger } from '@/lib/logger';
+import { retiredStakeMessage } from '@/lib/stake-recovery-messages';
 const stakeLog = createLogger('Staking');
 const pendingStakeKey = (wallet: string) => `dehub:pending-stake:${wallet.toLowerCase()}`;
 const recordStakeEvent = (message: string, attempt: StakeAttempt, outcome?: string) => {
@@ -155,7 +156,7 @@ function StatCard({
 
 export default function StakingPage() {
   const { t: _copy } = _useCopy();
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
   const queryClient = useQueryClient();
   const isStakeRouteActive = useIsStakeRouteActive();
   const { data: stats, isLoading: statsLoading, isError: statsError, refetch: refetchStats } = useStakingStats();
@@ -325,16 +326,29 @@ export default function StakingPage() {
     if (checkingStake.current) return;
     checkingStake.current = true;
     try {
-      const urls = [...new Set([
-        CHAIN_CONFIGS[attempt.chainId as 56 | 8453]?.rpcUrl,
-        attempt.chainId === 56 ? 'https://bsc-rpc.publicnode.com' : 'https://mainnet.base.org',
-      ].filter(Boolean))];
-      const outcome = await confirmStake(attempt, receipt ? [async () => receipt] : urls.map(url => () => readStakeReceipt(url, attempt.hash)), error => {
+      // Recovery needs two RPCs that can answer an unknown historical hash.
+      // The token-read RPC can reject those as archive requests instead of
+      // returning null, which would keep old saved attempts pending forever.
+      const urls = attempt.chainId === 56
+        ? ['https://bsc-dataseed.binance.org', 'https://bsc-rpc.publicnode.com']
+        : ['https://mainnet.base.org', 'https://base.drpc.org'];
+      const onReadError = (error: unknown) => {
         const diagnostic = `${attempt.hash}:${String(error)}`;
         if (receiptDiagnostics.current.has(diagnostic)) return;
         receiptDiagnostics.current.add(diagnostic);
         void stakeLog.warn('Receipt lookup unavailable', { hash: attempt.hash, chainId: attempt.chainId, error: String(error) });
-      });
+      };
+      const recovery = receipt
+        ? { outcome: await confirmStake(attempt, [async () => receipt], onReadError), attempt }
+        : await recoverStake(attempt, urls.map(url => () => readStakeEvidence(url, attempt)), onReadError);
+      const { outcome } = recovery;
+      if (outcome === 'pending' && (recovery.attempt.nonce !== attempt.nonce || recovery.attempt.submittedAt !== attempt.submittedAt)) {
+        try {
+          const saved = JSON.parse(localStorage.getItem(pendingStakeKey(attempt.wallet)) || 'null');
+          if (saved?.hash === attempt.hash) localStorage.setItem(pendingStakeKey(attempt.wallet), JSON.stringify(recovery.attempt));
+        } catch {}
+        setPendingStake(previous => previous?.hash === attempt.hash ? recovery.attempt : previous);
+      }
       if (outcome === 'pending') return;
       clearPendingStake(attempt);
       recordStakeEvent('Stake outcome verified', attempt, outcome);
@@ -361,6 +375,13 @@ export default function StakingPage() {
             queryClient.invalidateQueries({ queryKey: ['dhb-staked', attempt.wallet.toLowerCase()] }),
           ])).catch(() => {});
         }, 60_000);
+      } else if (outcome === 'replaced' || outcome === 'not-found') {
+        toast.info(retiredStakeMessage(i18n.resolvedLanguage || i18n.language));
+        void refreshConfirmedStake(
+          () => refreshStakePosition(attempt.wallet),
+          async () => { await supabase.functions.invoke('sync-staking-deposits', { body: { wallet: attempt.wallet } }); },
+          async () => { await Promise.all([refetchUser(), queryClient.invalidateQueries({ queryKey: ['dhb-staked', attempt.wallet.toLowerCase()] }), queryClient.invalidateQueries({ queryKey: ['wallet-tokens'] })]); },
+        ).catch(() => {});
       } else {
         toast.error(t('toasts.transaction_reverted'), { description: _copy("copy.6e39c3cc12e5", { defaultValue: "The blockchain confirmed this transaction reverted." }) });
       }
@@ -441,6 +462,11 @@ export default function StakingPage() {
         await stakeTransferFlow(formatUnits(amountWei, 18), BASE_CHAIN_ID, 'Base', walletAddress);
       }
     } catch (err: any) {
+      if (err?.message === 'INSUFFICIENT_TOKEN_BALANCE') {
+        toast.dismiss();
+        toast.error(t('toasts.insufficient_balance', 'Insufficient balance'));
+        return;
+      }
       void stakeLog.error('Stake request unresolved', { error: String(err), wallet: currentWallet }, err);
       toast.dismiss();
       // Locked wallet: the unlock sheet and its toast are already up, and

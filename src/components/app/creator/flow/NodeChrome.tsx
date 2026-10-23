@@ -241,7 +241,8 @@ export function IoHandle({ type, id, kind, accepts, connected, error, top = '50%
 export function HandleTip({ top, text }: { top: string; text: string }) {
   return (
     <div
-      className="pointer-events-none absolute left-0 z-[1001] whitespace-nowrap rounded-lg border border-white/10 bg-black/90 px-2.5 py-1 text-[10px] text-zinc-200 shadow-xl backdrop-blur"
+      data-glass-tooltip
+      className="pointer-events-none absolute left-0 z-[1001] whitespace-nowrap rounded-lg px-2.5 py-1 text-[10px]"
       style={{ top, transform: 'translate(calc(-100% - 34px), -50%)' }}
     >
       {text}

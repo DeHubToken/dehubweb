@@ -1,9 +1,9 @@
 {
-  "webcredentials": { "apps": ["FU4BL8RC2L.io.dehub.mobile"] },
+  "webcredentials": { "apps": ["J8BTYL3PDK.io.dehub.mobile", "FU4BL8RC2L.io.dehub.mobile"] },
   "applinks": {
     "details": [
       {
-        "appIDs": ["FU4BL8RC2L.io.dehub.mobile"],
+        "appIDs": ["J8BTYL3PDK.io.dehub.mobile", "FU4BL8RC2L.io.dehub.mobile"],
         "components": [
           { "/": "/app", "comment": "App home" },
           { "/": "/app/*", "comment": "Posts, communities, stores, events, messages, notifications, leaderboard" },
@@ -40,7 +40,8 @@
           { "/": "/bounty/*", "comment": "One bounty" },
           { "/": "/communities/*", "comment": "One community, or a community invite" },
           { "/": "/stores/*", "comment": "One store or listing" },
-          { "/": "/events/*", "comment": "One event" }
+          { "/": "/events/*", "comment": "One event" },
+          { "/": "/r/*", "comment": "Invite link" }
         ]
       }
     ]

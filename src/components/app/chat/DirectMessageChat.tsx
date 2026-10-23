@@ -36,6 +36,11 @@ import { TipGemIcon } from '@/components/app/cards/TipGemIcon';
 import { useTranslation as useI18n } from 'react-i18next';
 import { useDmEncryption } from '@/hooks/use-dm-encryption';
 import { prepareOutgoing } from '@/lib/dm-e2ee/keys';
+import { encodeMediaDescriptor, type MediaDescriptor } from '@/lib/dm-e2ee/media';
+import { encryptedMediaLabel } from '@/lib/dm-e2ee/media-label';
+import { loadDecryptedBlob, loadDecryptedMedia } from '@/lib/dm-e2ee/media-cache';
+import { MAX_ENVELOPE_CHARS, uploadDmMedia } from '@/lib/dm-e2ee/media-send';
+import { useDecryptedMedia } from '@/hooks/use-decrypted-media';
 import dehubCoin from '@/assets/dehub-coin.png';
 import { Button } from '@/components/ui/button';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
@@ -49,7 +54,7 @@ import { useMessages, useSendMessage, useDeleteConversation, useCreateAndStart, 
 import { useAuth } from '@/contexts/AuthContext';
 import { useDmSettings } from '@/hooks/use-dm-settings';
 import { useBannedAccount } from '@/hooks/use-banned-account';
-import { getMediaUrl, blockConversation, unblockConversation, getDMPlanSettings, grantFreeDmAccess, revokeFreeDmAccess, getAccountInfo, pinDmMessage, unpinDmMessage, type DMMessageType, type DeHubConversation, type DmMessage, type DmFee } from '@/lib/api/dehub';
+import { getMediaUrl, forwardDmMessage, blockConversation, unblockConversation, getDMPlanSettings, grantFreeDmAccess, revokeFreeDmAccess, getAccountInfo, pinDmMessage, unpinDmMessage, type DMMessageType, type DeHubConversation, type DmMessage, type DmFee } from '@/lib/api/dehub';
 import { apiCall, getAuthToken, DEHUB_API_BASE } from '@/lib/api/dehub/core';
 import { buildAvatarUrl } from '@/lib/media-url';
 import { BadgedName } from '@/components/app/BadgedName';
@@ -65,6 +70,7 @@ import { formatDistanceToNow } from 'date-fns';
 import {
   getERC20Balance,
   checkDHBPaused,
+  looksLikePausedRevert,
 } from '@/lib/contracts/aa-utils';
 import { toastTxError } from '@/lib/tx-error-toast';
 import { getChainConfig, BASE_CHAIN_ID, BNB_CHAIN_ID } from '@/lib/contracts/dhb-token';
@@ -201,6 +207,179 @@ function VoiceMessagePlayer({
   );
 }
 
+/** Bubble size for an attachment of w×h, inside the 280×256 a plain image gets. */
+function encryptedMediaBox(w?: number, h?: number): { width: number; height: number } {
+  if (!w || !h) return { width: 220, height: 165 };
+  const scale = Math.min(1, 280 / w, 256 / h);
+  return { width: Math.max(80, Math.round(w * scale)), height: Math.max(60, Math.round(h * scale)) };
+}
+
+function EncryptedMediaPlaceholder({
+  media,
+  status,
+  onRetry,
+  children,
+}: {
+  media: MediaDescriptor;
+  status: 'idle' | 'loading' | 'ready' | 'error';
+  onRetry: () => void;
+  children?: ReactNode;
+}) {
+  const { t: _copy } = _useCopy();
+  const { t: tr } = useI18n();
+  const box = encryptedMediaBox(media.w, media.h);
+  return (
+    <div
+      className="relative overflow-hidden rounded-lg bg-zinc-800 max-w-full"
+      style={{ width: box.width, height: box.height }}
+    >
+      {media.thumb && (
+        <img src={media.thumb} alt="" aria-hidden className="absolute inset-0 h-full w-full object-cover blur-lg scale-110" />
+      )}
+      <div className="absolute inset-0 flex flex-col items-center justify-center gap-1.5 bg-black/20">
+        {status === 'error' ? (
+          <button
+            type="button"
+            onClick={(e) => { e.stopPropagation(); onRetry(); }}
+            className="flex flex-col items-center gap-1 rounded-lg bg-black/60 px-3 py-2 text-xs text-white/90 hover:bg-black/70"
+            title={tr('messages.tryAgain')}
+          >
+            <AlertCircle className="h-4 w-4" />
+            <span>{_copy("copy.ca1844969742", { defaultValue: "Unavailable" })}</span>
+            <span className="inline-flex items-center gap-1 text-white/60"><RotateCcw className="h-3 w-3" />{tr('messages.tryAgain')}</span>
+          </button>
+        ) : status === 'loading' ? (
+          <Loader2 className="h-6 w-6 animate-spin text-white/80" />
+        ) : children}
+      </div>
+    </div>
+  );
+}
+
+/**
+ * An end-to-end encrypted attachment: fetched as ciphertext, opened here and
+ * shown from a local blob. Photos and voice open as soon as they render;
+ * videos and files wait for a tap, so scrolling past them downloads nothing.
+ */
+function EncryptedMediaBody({
+  messageId,
+  media,
+  mediaUrl,
+  voiceDuration,
+  onOpenImage,
+}: {
+  messageId: string;
+  media: MediaDescriptor;
+  mediaUrl?: string;
+  voiceDuration?: number | null;
+  onOpenImage?: (url: string) => void;
+}) {
+  const { t: _copy } = _useCopy();
+  const eager = media.kind === 'image' || media.kind === 'audio';
+  const { url, status, load, retry } = useDecryptedMedia(mediaUrl, media, { messageId, enabled: eager });
+  const [fileBusy, setFileBusy] = useState(false);
+  const [fileFailed, setFileFailed] = useState(false);
+  const uploading = !mediaUrl && !url;
+
+  if (media.kind === 'audio') {
+    if (status === 'error') {
+      return (
+        <button type="button" onClick={retry} className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-zinc-700/50 hover:bg-zinc-600/50 text-sm text-zinc-300">
+          <AlertCircle className="w-4 h-4" />
+          <span>{_copy("copy.ca1844969742", { defaultValue: "Unavailable" })}</span>
+          <RotateCcw className="w-3.5 h-3.5 text-zinc-400" />
+        </button>
+      );
+    }
+    return <VoiceMessagePlayer audioUrl={url} duration={voiceDuration ?? media.dur ?? null} isPending={uploading} />;
+  }
+
+  if (media.kind === 'file') {
+    const download = async () => {
+      if (fileBusy) return;
+      setFileFailed(false);
+      setFileBusy(true);
+      try {
+        const objectUrl = url ?? (mediaUrl ? await loadDecryptedMedia(mediaUrl, media, messageId) : undefined);
+        if (!objectUrl) return;
+        const a = document.createElement('a');
+        a.href = objectUrl;
+        a.download = media.name || 'file';
+        a.click();
+      } catch (err) {
+        console.warn('[DM] Could not open encrypted file:', err);
+        setFileFailed(true);
+      } finally {
+        setFileBusy(false);
+      }
+    };
+    return (
+      <button
+        type="button"
+        onClick={() => void download()}
+        disabled={uploading}
+        className="group flex w-full items-center gap-3 rounded-lg border border-white/10 bg-white/[0.04] px-3 py-2.5 text-left transition-colors hover:bg-white/[0.08] max-w-[280px] disabled:cursor-default"
+      >
+        <span className="flex h-9 w-9 flex-shrink-0 items-center justify-center rounded-lg bg-white/10">
+          {fileFailed ? <AlertCircle className="h-4 w-4 text-white" /> : <FileText className="h-4 w-4 text-white" />}
+        </span>
+        <span className="min-w-0 flex-1">
+          <span className="block truncate text-sm text-white" title={media.name}>
+            {media.name || _copy("copy.040d2b3689dd", { defaultValue: "Attachment" })}
+          </span>
+          <span className="block text-xs text-white/50">
+            {fileFailed
+              ? _copy("copy.ca1844969742", { defaultValue: "Unavailable" })
+              : uploading
+                ? _copy("copy.c62cd2cb247c", { defaultValue: "Uploading file..." })
+                : <>{getAttachmentLabel(media.name || '')}{media.size ? ` · ${formatAttachmentSize(media.size)}` : ''}</>}
+          </span>
+        </span>
+        {fileBusy || uploading
+          ? <Loader2 className="h-4 w-4 flex-shrink-0 animate-spin text-white/60" />
+          : fileFailed
+            ? <RotateCcw className="h-4 w-4 flex-shrink-0 text-white/60" />
+            : <Download className="h-4 w-4 flex-shrink-0 text-white/40 transition-colors group-hover:text-white/80" />}
+      </button>
+    );
+  }
+
+  if (media.kind === 'video') {
+    if (status === 'ready' && url) {
+      return <video src={url} controls autoPlay={!!mediaUrl} playsInline className="max-w-full max-h-64 rounded-lg bg-black" />;
+    }
+    return (
+      <EncryptedMediaPlaceholder media={media} status={uploading ? 'loading' : status} onRetry={retry}>
+        <button
+          type="button"
+          onClick={load}
+          className="flex h-11 w-11 items-center justify-center rounded-full bg-black/60 text-white hover:bg-black/70"
+          aria-label={_copy("copy.d534be829e32", { defaultValue: "Video" })}
+        >
+          <Play className="h-5 w-5" />
+        </button>
+        {media.dur != null && (
+          <span className="absolute bottom-1.5 right-2 rounded bg-black/60 px-1.5 text-[10px] tabular-nums text-white">
+            {Math.floor(media.dur / 60)}:{String(Math.round(media.dur % 60)).padStart(2, '0')}
+          </span>
+        )}
+      </EncryptedMediaPlaceholder>
+    );
+  }
+
+  if (status === 'ready' && url) {
+    return (
+      <img
+        src={url}
+        alt={_copy("copy.f9c984552075", { defaultValue: "Shared image" })}
+        className="max-w-full max-h-64 rounded-lg object-cover cursor-zoom-in"
+        onClick={() => onOpenImage?.(url)}
+      />
+    );
+  }
+  return <EncryptedMediaPlaceholder media={media} status={uploading || status === 'idle' ? 'loading' : status} onRetry={retry} />;
+}
+
 // memo: every DirectMessageChat state change (scroll-position toggles, search
 // keystrokes, incoming messages) used to re-render EVERY bubble — each parsing
 // dates via formatDistanceToNow. Handler props are useCallback'd by the
@@ -280,6 +459,11 @@ const MessageBubble = memo(function MessageBubble({
   // separates them. Optimistic sends carry it too, so the pending bubble reads
   // "Uploading file…" rather than promising an image that never arrives.
   const isFileMedia = primaryMedia?.type === 'file';
+  // An encrypted attachment opens only through its descriptor. Ciphertext
+  // without one (sealed to a key this device lacks) is never rendered; the
+  // "can't be opened" line below stands in for it.
+  const encMedia = message.encMedia;
+  const isLockedMedia = !encMedia && !!primaryMedia?.encrypted;
 
   // A shared entity: a text message whose content contains a link to something
   // inside DeHub. Rendered as a rich, tappable card instead of a raw link.
@@ -415,7 +599,7 @@ const MessageBubble = memo(function MessageBubble({
             >
               <Reply className="w-3 h-3 flex-shrink-0" />
               <span className="text-zinc-300 font-medium flex-shrink-0">{message.replyTo.sender?.displayName || message.replyTo.sender?.username || _copy("copy.b512d97e7cbf", { defaultValue: "User" })}</span>
-              <span className="truncate">{message.replyTo.content || _copy("copy.2bc85f36b3e4", { defaultValue: "📎 Media" })}</span>
+              <span className="truncate">{message.replyTo.content || (message.replyTo.encMedia ? encryptedMediaLabel(message.replyTo.encMedia, _copy) : _copy("copy.2bc85f36b3e4", { defaultValue: "📎 Media" }))}</span>
             </button>
           </div>
         )}
@@ -529,7 +713,22 @@ const MessageBubble = memo(function MessageBubble({
             )}
 
             {/* Media (image or document) — loading state while mediaUrls is empty */}
-            {message.msgType === 'media' && (
+            {message.msgType === 'media' && encMedia && (
+              <div>
+                <EncryptedMediaBody
+                  messageId={message._id}
+                  media={encMedia}
+                  mediaUrl={primaryMediaUrl}
+                  onOpenImage={onOpenImage}
+                />
+                {message.content && (
+                  <p dir="auto" className="text-sm mt-1 break-words whitespace-pre-wrap text-left">
+                    {renderChatTextWithLinks(isTranslated ? translatedText : message.content)}
+                  </p>
+                )}
+              </div>
+            )}
+            {message.msgType === 'media' && !encMedia && !isLockedMedia && (
               <div>
                 {primaryMediaUrl && isFileMedia ? (
                   <>
@@ -602,7 +801,15 @@ const MessageBubble = memo(function MessageBubble({
             )}
 
             {/* Voice message — show player when mediaUrls available, else pending */}
-            {message.msgType === 'voice' && (
+            {message.msgType === 'voice' && encMedia && (
+              <EncryptedMediaBody
+                messageId={message._id}
+                media={encMedia}
+                mediaUrl={primaryMediaUrl}
+                voiceDuration={message.voiceDuration}
+              />
+            )}
+            {message.msgType === 'voice' && !encMedia && !isLockedMedia && (
               <VoiceMessagePlayer
                 audioUrl={primaryMediaUrl ? (getMediaUrl(primaryMediaUrl) || primaryMediaUrl) : undefined}
                 duration={message.voiceDuration}
@@ -994,7 +1201,11 @@ export function DirectMessageChat({ conversation, onBack, initialComposerText, d
   const [showFeeWarning, setShowFeeWarning] = useState(false);
   const feeWarningResolveRef = useRef<((confirmed: boolean) => void) | null>(null);
   const confirmFeeSend = useCallback((): Promise<boolean> => {
-    if (localStorage.getItem(DM_FEE_WARNING_SEEN_KEY) === '1') return Promise.resolve(true);
+    try {
+      if (localStorage.getItem(DM_FEE_WARNING_SEEN_KEY) === '1') return Promise.resolve(true);
+    } catch {
+      /* storage unavailable: show the warning */
+    }
     return new Promise<boolean>((resolve) => {
       feeWarningResolveRef.current = resolve;
       setShowFeeWarning(true);
@@ -1008,7 +1219,11 @@ export function DirectMessageChat({ conversation, onBack, initialComposerText, d
     }
   };
   const handleFeeWarningConfirm = () => {
-    localStorage.setItem(DM_FEE_WARNING_SEEN_KEY, '1');
+    try {
+      localStorage.setItem(DM_FEE_WARNING_SEEN_KEY, '1');
+    } catch {
+      /* not remembering the warning must never block the send */
+    }
     feeWarningResolveRef.current?.(true);
     feeWarningResolveRef.current = null;
     setShowFeeWarning(false);
@@ -1435,11 +1650,12 @@ export function DirectMessageChat({ conversation, onBack, initialComposerText, d
       userId: sender?.address || sender?._id || '',
       userName: sender?.displayName || sender?.username
         || (sender?.address ? `${sender.address.slice(0, 6)}...${sender.address.slice(-4)}` : 'User'),
-      content: replyTarget.content || (replyTarget.msgType === 'voice' ? '🎤 Voice' : ''),
+      content: replyTarget.content
+        || (replyTarget.encMedia ? encryptedMediaLabel(replyTarget.encMedia, _copy) : replyTarget.msgType === 'voice' ? '🎤 Voice' : ''),
       timestamp: new Date(replyTarget.createdAt),
       type: replyTarget.msgType === 'gif' ? 'gif' as const : replyTarget.msgType === 'msg' ? 'text' as const : 'image' as const,
     };
-  }, [replyTarget]);
+  }, [replyTarget, _copy]);
 
   const handleStartEdit = useCallback((message: DmMessage) => {
     setEditingMessageId(message._id);
@@ -1486,6 +1702,38 @@ export function DirectMessageChat({ conversation, onBack, initialComposerText, d
     return true;
   }, [queryClient, resolvedConversationId, otherUser?.address]);
 
+  /*
+   * An encrypted attachment is forwarded without re-uploading it: the file on
+   * the CDN stays as it is and only its descriptor (which holds the file key)
+   * is sealed again for the target conversation. A target that cannot be
+   * encrypted gets the file opened here and sent as an ordinary attachment,
+   * the same way an encrypted text line goes to such a chat in plaintext.
+   */
+  const forwardEncryptedMedia = useCallback(
+    async (message: DmMessage, media: MediaDescriptor, targetConversationId: string) => {
+      const stored = message.mediaUrls?.[0]?.url;
+      if (!stored) throw new Error('This attachment is still uploading.');
+      const targetPeer = peerAddressForConversation(queryClient, targetConversationId, walletAddress);
+      const wire = await prepareOutgoing(targetPeer, encodeMediaDescriptor(media));
+      if (wire.encrypted && wire.content.length <= MAX_ENVELOPE_CHARS) {
+        await forwardDmMessage(message._id, targetConversationId, wire.content);
+      } else {
+        const blob = await loadDecryptedBlob(stored, media, message._id);
+        const file = new File([blob], media.name || 'file', { type: media.mime });
+        await uploadDmMedia(file, targetConversationId, user?._id || walletAddress || '', {
+          peerAddress: targetPeer,
+          caption: media.caption || '',
+          msgType: media.kind === 'audio' ? 'voice' : 'media',
+          voiceDuration: media.kind === 'audio' && media.dur != null ? Math.round(media.dur) : undefined,
+        });
+      }
+      // The REST forward does not echo over the socket; pick the new line up from the API.
+      queryClient.invalidateQueries({ queryKey: messagesKeys.messages(targetConversationId) });
+      queryClient.invalidateQueries({ queryKey: messagesKeys.conversations() });
+    },
+    [queryClient, walletAddress, user?._id],
+  );
+
   const handleForwardSelect = useCallback(
     async (targetConversationId: string) => {
       if (!forwardMessageTarget) return;
@@ -1501,7 +1749,9 @@ export function DirectMessageChat({ conversation, onBack, initialComposerText, d
        * the message.
        */
       try {
-        if (forwardMessageTarget.encrypted) {
+        if (forwardMessageTarget.encMedia) {
+          await forwardEncryptedMedia(forwardMessageTarget, forwardMessageTarget.encMedia, targetConversationId);
+        } else if (forwardMessageTarget.encrypted) {
           // The server cannot re-encrypt for another conversation, so an
           // encrypted line is re-sent from here: plaintext from the cache,
           // encrypted again for the target's peer, citing the original.
@@ -1531,7 +1781,7 @@ export function DirectMessageChat({ conversation, onBack, initialComposerText, d
       toast.success(_copy("copy.4b0ad27c8ac8", { defaultValue: "Message forwarded" }));
       setForwardMessageTarget(null);
     },
-    [forwardMessageTarget, queryClient, walletAddress, tr, _copy],
+    [forwardMessageTarget, queryClient, walletAddress, tr, _copy, forwardEncryptedMedia],
   );
 
   // Handle scroll
@@ -1587,6 +1837,7 @@ export function DirectMessageChat({ conversation, onBack, initialComposerText, d
       ? {
           _id: replyingTo._id,
           content: replyingTo.content,
+          ...(replyingTo.encMedia ? { encMedia: replyingTo.encMedia } : {}),
           msgType: replyingTo.msgType,
           mediaUrls: replyingTo.mediaUrls.map(m => ({ ...m, mimeType: m.mimeType || '' })),
           voiceDuration: replyingTo.voiceDuration,
@@ -1712,7 +1963,7 @@ export function DirectMessageChat({ conversation, onBack, initialComposerText, d
         console.error('[DM] Fee payment failed:', error);
         const errStr = String((error as any)?.message || error).toLowerCase();
         const isSessionExpired = errStr.includes('session expired') || errStr.includes('torus keyring') || errStr.includes('unable to find matching address') || errStr.includes('log in again');
-        const isPausedErr = errStr.includes('paused') || errStr.includes('erc20pausable');
+        const isPausedErr = looksLikePausedRevert(errStr);
         // STF (SafeTransferFrom) can be caused by DHB being paused — check on-chain
         const isSTF = errStr.includes('stf') || errStr.includes('535446') || errStr.includes('safetransfer') || errStr.includes('token transfer failed');
 
@@ -1723,7 +1974,7 @@ export function DirectMessageChat({ conversation, onBack, initialComposerText, d
             action: { label: _copy("copy.bfd402b2f6f3", { defaultValue: "Sign in" }), onClick: () => openLoginModal() },
             duration: 10000,
           });
-        } else if (isPausedErr || (isSTF && await checkDHBPaused().catch(() => false))) {
+        } else if ((isPausedErr || isSTF) && await checkDHBPaused().catch(() => false)) {
           toast.error(tr('tokens.transactionsPaused'), {
             id: 'dm-fee-send',
             description: tr('tokens.transactionsPausedDesc'),
@@ -2049,7 +2300,7 @@ export function DirectMessageChat({ conversation, onBack, initialComposerText, d
           <Pin className="w-3.5 h-3.5 text-white/80 flex-shrink-0 fill-current" />
           <div className="flex flex-col min-w-0 flex-1">
             <span className="text-zinc-300 text-[10px] font-semibold uppercase tracking-wide leading-none mb-0.5">{_copy("copy.2aa60e3c77ee", { defaultValue: "Pinned Message" })}</span>
-            <span className="text-zinc-400 text-xs truncate">{pinnedMessage.content || _copy("copy.2bc85f36b3e4", { defaultValue: "📎 Media" })}</span>
+            <span className="text-zinc-400 text-xs truncate">{pinnedMessage.content || (pinnedMessage.encMedia ? encryptedMediaLabel(pinnedMessage.encMedia, _copy) : _copy("copy.2bc85f36b3e4", { defaultValue: "📎 Media" }))}</span>
           </div>
           <X
             onClick={(e) => { e.stopPropagation(); handleUnpinMessage(); }}

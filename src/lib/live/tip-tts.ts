@@ -8,129 +8,37 @@
  * mixed into the video: the words ride the `streamer.tip` socket broadcast that
  * already reaches every socket in the stream's room, and each client synthesises
  * the same sentence locally. So the room hears it within a second of the tip
- * landing — ahead of the ~10s HLS buffer, not behind it — and the host hears it
- * too, which is what puts it into an OBS capture of desktop audio if they want
- * it in the recording.
+ * landing, ahead of the ~10s HLS buffer, and the host hears it too, which is
+ * what puts it into an OBS capture of desktop audio if they want it.
  *
- * The engine is eSpeak NG (via meSpeak), speaking through its `old` variant —
- * the free, offline, open-source old-man voice. Two reasons it beats the
- * alternatives here:
- *
- * - **It costs nothing per tip.** The platform's other TTS surface (StageTTS)
- *   bills ElevenLabs per character. A busy stream takes hundreds of gifts an
- *   hour and every one of them would be a paid API call, multiplied by nothing
- *   at all — one synthesis serves one viewer. Synthesising locally is free at
- *   any audience size.
- * - **It is ~660 kB, once.** A neural voice (Piper/VITS) is 20–80 MB of model
- *   per viewer. That is not a thing to hand somebody on mobile data so they can
- *   hear a tip message.
- *
- * Loaded from jsDelivr on demand rather than bundled: it must not touch the
- * boot path (see the boot-performance budget), it is only ever needed by
- * somebody actually watching a live stream, and eSpeak is GPL — keeping it a
- * separately-fetched work rather than linking it into the app bundle is
- * deliberate. A CDN failure degrades to silence, never to a broken player.
+ * The voice is the device's own, the same one dubbed videos speak with
+ * (dub-preference.ts picks it). It costs nothing per tip, needs no download,
+ * and sounds like a person rather than a speak-and-spell. A browser with no
+ * speech engine or no voice for the language stays silent; the celebration and
+ * the on-screen text still play.
  */
-
-/**
- * Where the engine comes from. Three fetches on first use: the module (~307 kB),
- * the config (~283 kB) and the English voice (~68 kB), all gzipped wire sizes.
- */
-const CDN = 'https://cdn.jsdelivr.net/npm/mespeak@2.0.2';
-
-/**
- * eSpeak's `old` variant — an aged, creaky male voice. The string is passed
- * straight to eSpeak as `-v en+old`, so it is the engine's name, not ours.
- */
-const VOICE_VARIANT = 'old';
+import { loadVoices, pickVoice, primeSpeech, synth } from '@/hooks/dub-preference';
 
 /**
  * Long enough for a real message, short enough that one tip cannot hold the
- * stream's audio hostage. At ~135 wpm this caps a single reading at roughly
- * 15 seconds.
+ * stream's audio hostage. At a normal speaking pace this caps a single reading
+ * at roughly 15 seconds.
  */
 export const MAX_TTS_CHARS = 200;
 
 /**
  * Never queue more than this. A stream taking gifts faster than it can read
  * them would otherwise build a backlog that plays out minutes after the tips
- * landed — by which point the words are answering a conversation that has
- * moved on. Past the cap the oldest waiting message is dropped, because the
+ * landed. Past the cap the oldest waiting message is dropped, because the
  * newest tip is the one the room is currently looking at.
  */
 const MAX_QUEUE = 5;
 
-/** How long to wait on `loadVoice`'s callback before giving up on it. */
-const VOICE_LOAD_TIMEOUT_MS = 5000;
-
-interface MeSpeak {
-  loadConfig: (config: unknown) => void;
-  isConfigLoaded: () => boolean;
-  loadVoice: (voice: unknown, cb: (ok: boolean, msg: string) => void) => void;
-  speak: (text: string, opts: Record<string, unknown>) => string | undefined;
-}
-
-let enginePromise: Promise<MeSpeak> | null = null;
-
-/**
- * Fetch and initialise the synthesiser, at most once per tab.
- *
- * **`loadVoice` reports failure and must still be called.** Its callback comes
- * back `(false, "en/en-us")` because the dictionary file it wants to create is
- * already in the emscripten filesystem — but the voice IS installed by the time
- * it says so, and without the call `speak` returns nothing at all. Measured on
- * the real engine: config alone yields 0 bytes for a sentence that yields 83 kB
- * once the voice is loaded, and the only other sign is a console warning
- * ("No voice module loaded, deferring call"). So the callback's verdict is
- * deliberately ignored.
- *
- * It is raced against a timeout because a callback that never fires would
- * otherwise leave every queued tip waiting on a promise that never settles.
- */
-async function loadEngine(): Promise<MeSpeak> {
-  if (!enginePromise) {
-    enginePromise = (async () => {
-      const mod = await import(/* @vite-ignore */ `${CDN}/src/index.js/+esm`);
-      const engine = ((mod as { default?: MeSpeak }).default ?? mod) as MeSpeak;
-      if (!engine.isConfigLoaded()) {
-        const config = await fetch(`${CDN}/src/mespeak_config.json`).then((r) => {
-          if (!r.ok) throw new Error(`tts config ${r.status}`);
-          return r.json();
-        });
-        engine.loadConfig(config);
-      }
-      const voice = await fetch(`${CDN}/voices/en/en-us.json`).then((r) => {
-        if (!r.ok) throw new Error(`tts voice ${r.status}`);
-        return r.json();
-      });
-      await new Promise<void>((done) => {
-        const timer = setTimeout(done, VOICE_LOAD_TIMEOUT_MS);
-        try {
-          engine.loadVoice(voice, () => {
-            clearTimeout(timer);
-            done();
-          });
-        } catch {
-          clearTimeout(timer);
-          done();
-        }
-      });
-      return engine;
-    })().catch((err) => {
-      // Let a later gift retry rather than wedging the feature on one bad
-      // fetch — a CDN blip should not silence the stream for the whole session.
-      enginePromise = null;
-      throw err;
-    });
-  }
-  return enginePromise;
-}
-
 /**
  * Strip a tip message down to something worth speaking aloud.
  *
- * URLs go because eSpeak reads them letter by letter and a link is thirty
- * seconds of "aitch tee tee pee colon slash slash". Control characters and
+ * URLs go because a speech engine reads them letter by letter, and a link is
+ * thirty seconds of "aitch tee tee pee colon slash slash". Control characters and
  * runs of punctuation go because they are how you make the synthesiser stutter
  * for a minute on a two-word message.
  */
@@ -146,15 +54,46 @@ export function sanitiseTtsText(raw: string | undefined | null): string {
     .slice(0, MAX_TTS_CHARS);
 }
 
-interface QueuedLine {
-  text: string;
+const SCRIPT_LANGS: [RegExp, string][] = [
+  [/\p{Script=Hangul}/u, 'ko'],
+  [/[\p{Script=Hiragana}\p{Script=Katakana}]/u, 'ja'],
+  [/\p{Script=Han}/u, 'zh'],
+  [/\p{Script=Cyrillic}/u, 'ru'],
+  [/\p{Script=Arabic}/u, 'ar'],
+  [/\p{Script=Hebrew}/u, 'he'],
+  [/\p{Script=Greek}/u, 'el'],
+  [/\p{Script=Devanagari}/u, 'hi'],
+  [/\p{Script=Thai}/u, 'th'],
+];
+const SCRIPT_OF_LANG: Record<string, string> = {
+  ko: 'ko', ja: 'ja', zh: 'zh', yue: 'zh', ru: 'ru', uk: 'ru', bg: 'ru', sr: 'ru', kk: 'ru', mn: 'ru',
+  ar: 'ar', fa: 'ar', ur: 'ar', ps: 'ar', he: 'he', iw: 'he', yi: 'he', el: 'el', hi: 'hi', mr: 'hi', ne: 'hi', th: 'th',
+};
+
+/**
+ * Which language to read a message in.
+ *
+ * A tip is not translated, so it is read in the language it was written in.
+ * The script decides that for anything non-Latin. Latin text is read in the
+ * viewer's language when that is itself a Latin-script one (a Spanish viewer
+ * most likely got a Spanish tip), and in English otherwise, rather than a
+ * Russian voice spelling out English words.
+ */
+export function tipVoiceLang(text: string, viewerLang: string | null | undefined): string {
+  const viewer = (viewerLang || 'en').toLowerCase().replace('_', '-');
+  const base = viewer.split('-')[0];
+  for (const [re, lang] of SCRIPT_LANGS) {
+    if (re.test(text)) return SCRIPT_OF_LANG[base] === lang ? viewer : lang;
+  }
+  return SCRIPT_OF_LANG[base] ? 'en' : viewer;
 }
 
-const queue: QueuedLine[] = [];
-let current: HTMLAudioElement | null = null;
+const queue: string[] = [];
 let draining = false;
 /** Viewers who have turned tip readings off. Also honoured by a muted player. */
 let enabled = true;
+/** Settles the line being read when it is cut short. */
+let cutCurrent: (() => void) | null = null;
 
 /** Turn tip readings on or off for this tab. Stops anything mid-sentence. */
 export function setTipTtsEnabled(on: boolean): void {
@@ -169,11 +108,14 @@ export function isTipTtsEnabled(): boolean {
 /** Cut the current reading and drop anything waiting. */
 export function stopTipTts(): void {
   queue.length = 0;
-  if (current) {
-    current.pause();
-    current.src = '';
-    current = null;
+  if (cutCurrent) {
+    synth()?.cancel();
+    cutCurrent();
   }
+}
+
+function viewerLanguage(): string {
+  return typeof document !== 'undefined' ? document.documentElement.lang || 'en' : 'en';
 }
 
 async function drain(): Promise<void> {
@@ -181,21 +123,15 @@ async function drain(): Promise<void> {
   draining = true;
   try {
     while (queue.length > 0 && enabled) {
-      const next = queue.shift();
-      if (!next) break;
+      const text = queue.shift();
+      if (!text) break;
       try {
-        const engine = await loadEngine();
-        const wav = engine.speak(next.text, {
-          rawdata: 'base64',
-          variant: VOICE_VARIANT,
-          // Slow and low. The default rate reads a tip like a train
-          // announcement; this is the wheeze the voice is here for.
-          speed: 135,
-          pitch: 25,
-          amplitude: 100,
-        });
-        if (!wav || !enabled) continue;
-        await playWav(wav);
+        const s = synth();
+        if (!s) continue;
+        const lang = tipVoiceLang(text, viewerLanguage());
+        const voice = pickVoice(await loadVoices(), lang);
+        if (!voice || !enabled) continue;
+        await speakLine(s, text, voice);
       } catch {
         // One unreadable message must not stall the ones behind it, and a
         // stream losing its tip voice is not worth a toast on every gift.
@@ -206,20 +142,28 @@ async function drain(): Promise<void> {
   }
 }
 
-function playWav(base64: string): Promise<void> {
+/** Longest a line may hold the queue if the engine never reports the end. */
+const LINE_TIMEOUT_MS = 20_000;
+
+function speakLine(s: SpeechSynthesis, text: string, voice: SpeechSynthesisVoice): Promise<void> {
   return new Promise((resolve) => {
-    const audio = new Audio(`data:audio/wav;base64,${base64}`);
-    current = audio;
+    const u = new SpeechSynthesisUtterance(text);
+    u.voice = voice;
+    u.lang = voice.lang;
+    let timer: ReturnType<typeof setTimeout> | null = null;
     const done = () => {
-      if (current === audio) current = null;
+      if (timer !== null) clearTimeout(timer);
+      timer = null;
+      if (cutCurrent === done) cutCurrent = null;
       resolve();
     };
-    audio.onended = done;
-    audio.onerror = done;
-    // Autoplay is blocked until the viewer has interacted with the page. They
-    // pressed play on a live stream to get here, so it normally is not — but
-    // a rejection must resolve rather than hang the queue forever.
-    audio.play().catch(done);
+    cutCurrent = done;
+    u.onend = done;
+    u.onerror = done;
+    // Some engines never fire onend (Chrome drops it on long idle tabs), and
+    // a line that never ends would silence every tip behind it.
+    timer = setTimeout(done, LINE_TIMEOUT_MS);
+    s.speak(u);
   });
 }
 
@@ -233,12 +177,25 @@ export function speakTipMessage(message: string | undefined | null): void {
   if (!enabled) return;
   const text = sanitiseTtsText(message);
   if (!text) return;
-  queue.push({ text });
+  queue.push(text);
   while (queue.length > MAX_QUEUE) queue.shift();
   void drain();
 }
 
-/** Pull the module down ahead of the first gift, so nobody waits on the CDN. */
+let primeArmed = false;
+
+/**
+ * List the device voices ahead of the first gift (Chrome fills them in late),
+ * and unlock speech on the viewer's next tap: iOS Safari only speaks once
+ * speech has started inside a gesture, and a gift arrives from a socket.
+ */
 export function warmTipTts(): void {
-  void loadEngine().catch(() => undefined);
+  void loadVoices().catch(() => undefined);
+  if (primeArmed || typeof document === 'undefined') return;
+  primeArmed = true;
+  const prime = () => {
+    primeSpeech();
+    document.removeEventListener('pointerdown', prime, true);
+  };
+  document.addEventListener('pointerdown', prime, true);
 }

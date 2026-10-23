@@ -50,6 +50,10 @@ const LoginWalletsStep = React.lazy(() =>
 const WalletCreateStep = React.lazy(() =>
   import('@/components/app/wallet-setup/WalletCreateStep').then(m => ({ default: m.WalletCreateStep })),
 );
+const SwitchOldAccountPanel = React.lazy(() =>
+  import('@/components/app/settings/WalletRecoveryTools').then(m => ({ default: m.SwitchOldAccountPanel })),
+);
+
 const WalletUnlockStep = React.lazy(() =>
   import('@/components/app/wallet-setup/WalletUnlockStep').then(m => ({ default: m.WalletUnlockStep })),
 );
@@ -115,7 +119,7 @@ function LoginModalBodyInner({ open, step, setStep }: LoginModalBodyProps) {
   const {
     connectWithProvider, connectWithEmail, cancelEmailMagicLink, verifyEmailOtp, connectWithSMS, verifyPhoneOtp,
     connectWithTelegram, connectWithPasskey, connectWithWallet, completeSmartWalletLogin, setWagmiAuthIntent, isConnecting,
-    supabaseUserId, disconnect, isAuthenticated, switchToProfile,
+    supabaseUserId, disconnect, isAuthenticated, switchToProfile, closeLoginModal,
   } = useAuth();
   const {
     isConnected: isWagmiAlreadyConnected,
@@ -1035,9 +1039,42 @@ function LoginModalBodyInner({ open, step, setStep }: LoginModalBodyProps) {
           />
         </React.Suspense>
       )}
+      {step === 'wallet-secure' && supabaseUserId && (
+        <React.Suspense fallback={<DeHubPageLoader size={56} minHeight="180px" />}>
+          <WalletCreateStep
+            userId={supabaseUserId}
+            securing
+            onComplete={async () => {
+              const [{ clearDeviceSeed }, { finishWalletSecure }] = await Promise.all([
+                import('@/lib/wallet-core/device-seed'),
+                import('@/lib/wallet-secure-flow'),
+              ]);
+              await clearDeviceSeed(supabaseUserId);
+              finishWalletSecure(true);
+              // Let the waiting action resume first: closing the sheet cancels
+              // whatever is still waiting on it.
+              await new Promise((resolve) => setTimeout(resolve, 0));
+              closeLoginModal();
+            }}
+          />
+        </React.Suspense>
+      )}
       {step === 'wallet-unlock' && supabaseUserId && (
         <React.Suspense fallback={<DeHubPageLoader size={56} minHeight="180px" />}>
           <WalletUnlockStep userId={supabaseUserId} onComplete={completeSmartWalletLogin} onLogout={handleWalletLogout} />
+        </React.Suspense>
+      )}
+      {step === 'wallet-restore' && supabaseUserId && (
+        <React.Suspense fallback={<DeHubPageLoader size={56} minHeight="180px" />}>
+          <div className="space-y-4">
+            <p className="text-white/70 text-sm leading-relaxed">{t('loginModal.restoreOriginalWallet', 'Your profile is on the wallet from your original sign-in, not the one saved for this login. Sign in the way you first joined DeHub to bring that wallet back. Your profile and funds stay as they are.')}</p>
+            <SwitchOldAccountPanel onDone={closeLoginModal} />
+            <button
+              type="button"
+              onClick={handleWalletLogout}
+              className="w-full text-center text-xs text-white/50 hover:text-white/80 transition-colors border-t border-white/10 pt-3"
+            >{t('loginModal.useAnotherLogin', 'Use a different login')}</button>
+          </div>
         </React.Suspense>
       )}
       {/* The site preloader carries every gap in the wallet handoff: the

@@ -31,6 +31,10 @@ const server = createServer((req, res) => { res.setHeader('Content-Type', 'text/
 await new Promise(done => server.listen(0, '127.0.0.1', done));
 const url = `http://127.0.0.1:${server.address().port}`;
 const evidence = [];
+// The fixture pill sits 8px down with a 12px radius; the feed stops below the
+// rounded corners. Square pills (light) keep the 4px rim cut.
+const CUT = 8 + 12;
+const cutFor = theme => theme === 'light' ? 8 + 4 : CUT;
 function assertCut(bytes, bottom, label, viewportWidth, showThrough = true) {
   const png = bytes[0] === 137 ? PNG.sync.read(bytes) : jpeg.decode(bytes, { useTArray: true });
   const scale = viewportWidth ? png.width / viewportWidth : 1;
@@ -60,7 +64,7 @@ function assertMovingCut(bytes, label) {
     if (png.data[i] > 230 && png.data[i + 1] < 20 && png.data[i + 2] < 20) { navTop = y; break; }
   }
   if (navTop < 0) return false; // Hidden pill: its cut is outside the viewport.
-  assertCut(bytes, navTop + 4, label);
+  assertCut(bytes, navTop + 12, label);
   return true;
 }
 try {
@@ -110,7 +114,7 @@ try {
             await page.evaluate(y => window.scrollTo(0, y), y);
             await page.evaluate(() => new Promise(resolve => requestAnimationFrame(() => requestAnimationFrame(resolve))));
             const png = await page.screenshot();
-            assertCut(png, 12, `${name}/${width}/${theme}/${y}`, width, y > 0);
+            assertCut(png, cutFor(theme), `${name}/${width}/${theme}/${y}`, width, y > 0);
           }
           await page.screenshot({ path: `${output}/${name}-${width}-${theme}.png` });
         }
@@ -137,7 +141,7 @@ try {
         await page.evaluate(() => new Promise(resolve => requestAnimationFrame(() => requestAnimationFrame(resolve))));
         await page.evaluate(() => window.scrollTo(0, 14000));
         await page.evaluate(() => new Promise(resolve => requestAnimationFrame(() => requestAnimationFrame(resolve))));
-        assertCut(await page.screenshot(), 12, `${name}/${width}/loaded-more`);
+        assertCut(await page.screenshot(), CUT, `${name}/${width}/loaded-more`);
         if (name === 'chromium') {
           await page.evaluate(() => { document.documentElement.dataset.theme = 'system'; window.scrollTo(0, 400); });
           await page.evaluate(() => new Promise(resolve => requestAnimationFrame(() => requestAnimationFrame(resolve))));
@@ -162,7 +166,7 @@ try {
           const duringStall = trace.filter(event => event.name === 'Screenshot' && event.ts > start + 300000 && event.ts < end && event.args.snapshot);
           await writeFile(`${output}/stall-trace-${width}.json`, JSON.stringify(trace));
           assert(duringStall.length > 0, 'Must capture compositor frames during the traced main-thread stall');
-          for (const frame of duringStall) assertCut(Buffer.from(frame.args.snapshot, 'base64'), 12, `blocked-main-thread/${width}`, width);
+          for (const frame of duringStall) assertCut(Buffer.from(frame.args.snapshot, 'base64'), CUT, `blocked-main-thread/${width}`, width);
           await writeFile(`${output}/blocked-main-thread-${width}.jpg`, Buffer.from(duringStall.at(-1).args.snapshot, 'base64'));
           await cdp.detach();
         }

@@ -29,6 +29,7 @@ import {
   getWalletAddress,
   switchChain,
   checkDHBPaused,
+  looksLikePausedRevert,
 } from '@/lib/contracts/aa-utils';
 import { toastTxError } from '@/lib/tx-error-toast';
 import { BASE_CHAIN_ID } from '@/lib/contracts/dhb-token';
@@ -38,6 +39,9 @@ import { getAccountInfo } from '@/lib/api/dehub';
 import { useAuth } from '@/contexts/AuthContext';
 import { fundTipFromSource } from '@/lib/tip-funding-run';
 import type { TipFundingSource } from '@/lib/tip-funding';
+import { DIRECT_QUICK_AMOUNTS, MIN_DIRECT_TIP } from '@/hooks/use-tip-payment';
+import usdcLogo from '@/assets/usdc-logo.png';
+import usdtLogo from '@/assets/usdt-logo.png';
 
 const TipPayWith = lazy(() => import('@/components/app/tips/TipPayWith'));
 
@@ -69,6 +73,8 @@ export function DmTipDialog({
   // Another token to pay with; it becomes DHB on Base before the tip.
   const [payWith, setPayWith] = useState<TipFundingSource | null>(null);
   const [recipientPrivate, setRecipientPrivate] = useState(false);
+  // Each open starts in DHB, so a saved DHB draft is never read as USDC.
+  useEffect(() => { if (open) setPayWith(null); }, [open]);
   const [privacyChecking, setPrivacyChecking] = useState(false);
 
   useEffect(() => {
@@ -82,8 +88,19 @@ export function DmTipDialog({
     return () => { cancelled = true; };
   }, [open, recipientAddress]);
 
+  // USDC/USDT paid as is; not with a DM plan minimum, which is in DHB.
+  const directToken = minAmount > 0 ? null : payWith?.direct ?? null;
+  const directLogo = directToken?.symbol === 'USDT' ? usdtLogo : usdcLogo;
+  const coin = directToken ? directLogo : dehubCoin;
+  const changePayWith = (source: TipFundingSource | null) => {
+    if (source?.direct || directToken) setAmount('');
+    setPayWith(source);
+  };
+
   const parsedAmount = parseFloat(amount);
-  const isValidAmount = !Number.isNaN(parsedAmount) && parsedAmount >= 1;
+  const directBalance = directToken && payWith ? Number(payWith.balance) / 10 ** payWith.decimals : null;
+  const isValidAmount = !Number.isNaN(parsedAmount) && parsedAmount >= (directToken ? MIN_DIRECT_TIP : 1)
+    && (directBalance == null || parsedAmount <= directBalance);
 
   const handleQuickAmount = (val: number) => {
     setAmount(String(val));
@@ -109,9 +126,9 @@ export function DmTipDialog({
 
     setIsSending(true);
     try {
-      const chainId = BASE_CHAIN_ID;
+      const chainId = (directToken?.chainId ?? BASE_CHAIN_ID) as typeof BASE_CHAIN_ID;
 
-      if (payWith && walletAddress) {
+      if (payWith && walletAddress && !directToken) {
         const ready = await fundTipFromSource(payWith, parsedAmount, walletAddress, t, 'dm-tip');
         if (!ready) return;
       }
@@ -127,6 +144,7 @@ export function DmTipDialog({
         to: recipientAddress,
         chainId,
         signerAddress,
+        ...(directToken ? { tokenAddress: directToken.address, decimals: directToken.decimals } : {}),
       });
 
       // Show success immediately on tx submission
@@ -153,9 +171,9 @@ export function DmTipDialog({
     } catch (error: unknown) {
       console.error('[DmTip] Failed:', error);
       const errStr = String((error as any)?.message || error).toLowerCase();
-      const isPausedErr = errStr.includes('paused') || errStr.includes('erc20pausable');
+      const isPausedErr = looksLikePausedRevert(errStr);
       const isSTF = errStr.includes('stf') || errStr.includes('535446') || errStr.includes('safetransfer') || errStr.includes('token transfer failed');
-      if (isPausedErr || (isSTF && await checkDHBPaused().catch(() => false))) {
+      if ((isPausedErr || isSTF) && await checkDHBPaused().catch(() => false)) {
         toast.error(t('tokens.transactionsPaused'), {
           id: 'dm-tip',
           description: t('tokens.transactionsPausedDesc'),
@@ -188,7 +206,7 @@ export function DmTipDialog({
           <div>
             <p className="text-white/60 text-xs mb-2">{_copy("copy.a5bcfef4d57a", { defaultValue: "Quick amounts" })}</p>
             <div className="flex flex-wrap gap-2">
-              {QUICK_AMOUNTS.filter((val) => val >= minAmount).map((val) => (
+              {(directToken ? DIRECT_QUICK_AMOUNTS : QUICK_AMOUNTS.filter((val) => val >= minAmount)).map((val) => (
                 <button
                   key={val}
                   type="button"
@@ -199,7 +217,7 @@ export function DmTipDialog({
                       : 'bg-white/5 text-white hover:bg-white/10 border border-white/10'
                   }`}
                 >
-                  <span className="inline-flex items-center gap-1">{val.toLocaleString()} <img src={dehubCoin} alt={tokenLabel()} className="w-4 h-4" style={{ marginTop: '-1px' }} /></span>
+                  <span className="inline-flex items-center gap-1">{val.toLocaleString()} <img src={coin} alt={directToken?.symbol ?? tokenLabel()} className="w-4 h-4" style={{ marginTop: '-1px' }} /></span>
                 </button>
               ))}
             </div>
@@ -209,10 +227,10 @@ export function DmTipDialog({
           <div>
             <p className="text-white/60 text-xs mb-2">{_copy("copy.ddb09d30c5c6", { defaultValue: "Or enter amount" })}</p>
             <div className="relative">
-              <img src={dehubCoin} alt={tokenLabel()} className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5" />
+              <img src={coin} alt={directToken?.symbol ?? tokenLabel()} className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5" />
               <Input
                 type="number"
-                min={Math.max(1, minAmount)}
+                min={directToken ? MIN_DIRECT_TIP : Math.max(1, minAmount)}
                 step={0.1}
                 placeholder={_copy("copy.2d700ab23246", { defaultValue: "Enter amount" })}
                 value={amount}
@@ -224,7 +242,7 @@ export function DmTipDialog({
 
           {open && walletAddress && !recipientPrivate ? (
             <Suspense fallback={null}>
-              <TipPayWith amountDhb={isValidAmount ? parsedAmount : 0} value={payWith} onChange={setPayWith} />
+              <TipPayWith amountDhb={isValidAmount && !directToken ? parsedAmount : 0} value={payWith} onChange={changePayWith} direct={minAmount <= 0} recipientName={recipientName} />
             </Suspense>
           ) : null}
 

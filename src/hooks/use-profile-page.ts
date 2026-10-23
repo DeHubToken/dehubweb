@@ -33,11 +33,31 @@ import { useOptimisticPosts } from '@/hooks/use-optimistic-posts';
 import { useUserPins } from '@/hooks/use-pins';
 import { usePublicPlaylists } from '@/hooks/use-bookmark-folders';
 import { usePullToRefresh } from '@/hooks/use-pull-to-refresh';
-import { getUserComments, blockUser, unblockUser, getUserReposts, getNFTInfo } from '@/lib/api/dehub';
+import { getUserComments, blockUser, unblockUser, getUserReposts, getUserProposalReposts, getNFTInfo } from '@/lib/api/dehub';
 import { toast } from 'sonner';
 import type { TextPost, ImagePost, VideoItem } from '@/types/feed.types';
 import type { TabValue } from '@/components/app/profile/ProfileConstants';
+import { useProfileContentCounts } from '@/hooks/use-profile-content-counts';
+
+/** The /api/feed postType each type tab lists; the same split the app uses. */
+const PROFILE_TAB_POST_TYPE: Partial<Record<TabValue, string>> = {
+  posts: 'feed-simple',
+  images: 'feed-images',
+  videos: 'video',
+  songs: 'feed-audio',
+  live: 'live',
+};
 import { scrollDocumentToSmooth } from '@/lib/document-scroll';
+
+/** A reposted governance proposal on the profile timeline. */
+export interface ProfileProposalItem {
+  id: string;
+  proposalId: string;
+}
+
+export type ProfileContentItem =
+  | { type: 'post' | 'image' | 'video'; data: TextPost | ImagePost | VideoItem; createdAt: string; isRepost?: boolean; repostedAt?: string }
+  | { type: 'proposal'; data: ProfileProposalItem; createdAt: string; isRepost?: boolean; repostedAt?: string };
 
 const PULL_THRESHOLD = 80;
 
@@ -140,17 +160,27 @@ export function useProfilePage({ activeTab = 'home' }: UseProfilePageOptions = {
   // the visitor is standing on with no way to see why. The choice is parked
   // rather than cleared, so coming back to All restores it.
   const showPostTypeFilter = activeTab === 'home';
-  const appliedContentFilters = useMemo<ProfileContentFilters>(
+  const visitorFilters = useMemo<ProfileContentFilters>(
     () => (showPostTypeFilter ? contentFilters : { ...contentFilters, postType: 'all' }),
     [showPostTypeFilter, contentFilters],
   );
+  // A type tab asks the server for its own type. Splitting one mixed list on
+  // the client meant a tab only ever held what the first pages happened to
+  // contain: a creator whose latest 30 posts were text showed "Videos 0", and
+  // the videos only arrived once the tab was opened and scrolled.
+  const tabPostType = PROFILE_TAB_POST_TYPE[activeTab];
+  const appliedContentFilters = useMemo<ProfileContentFilters>(
+    () => (tabPostType ? { ...visitorFilters, postType: tabPostType as ProfileContentFilters['postType'] } : visitorFilters),
+    [tabPostType, visitorFilters],
+  );
 
   // Drives the "no matches" empty state and suppresses the client-side merges
-  // (reposts, comments) that a server-ordered list has no place for.
+  // (reposts, comments) that a server-ordered list has no place for. Only the
+  // visitor's own choices count; the tab's type is not a filter they set.
   const isContentFiltered =
     contentSort !== 'newest' ||
     !!debouncedContentSearch.trim() ||
-    countActiveProfileFilters(appliedContentFilters) > 0;
+    countActiveProfileFilters(visitorFilters) > 0;
 
   // Reset the toolbar when the visitor moves to another profile — a query
   // typed on one channel has no meaning on the next, and neither does a
@@ -242,6 +272,16 @@ export function useProfilePage({ activeTab = 'home' }: UseProfilePageOptions = {
     staleTime: 2 * 60 * 1000,
   });
 
+  // Governance proposals this user reposted. They have no tokenId, so they come
+  // from their own endpoint and merge into "All" as proposal cards.
+  const { data: proposalRepostsData } = useQuery({
+    queryKey: ['user-proposal-reposts', apiProfile?.walletAddress?.toLowerCase()],
+    queryFn: () => getUserProposalReposts(apiProfile!.walletAddress!, 1, 50),
+    enabled: repostsEnabled && !!apiProfile?.walletAddress,
+    staleTime: 2 * 60 * 1000,
+    retry: false,
+  });
+
   const profile = apiProfile;
   const isOwnProfile = !routeUsername && (!userId || (currentUser?.address === userId) || (currentWalletAddress === userId));
   const isViewingOwnProfile = isOwnProfile || (apiProfile?.walletAddress && apiProfile.walletAddress.toLowerCase() === currentWalletAddress?.toLowerCase());
@@ -276,7 +316,7 @@ export function useProfilePage({ activeTab = 'home' }: UseProfilePageOptions = {
       if (nft?.tokenId !== undefined) serverRank.set(String(nft.tokenId), i);
     });
 
-    const unified: Array<{ type: 'post' | 'image' | 'video'; data: TextPost | ImagePost | VideoItem; createdAt: string; isRepost?: boolean; repostedAt?: string }> = [
+    const unified: Array<ProfileContentItem> = [
       ...separated.posts.map(p => ({ type: 'post' as const, data: p, createdAt: p.createdAt || '' })),
       ...separated.images.map(i => ({ type: 'image' as const, data: i, createdAt: i.createdAt || '' })),
       ...separated.videos.map(v => ({ type: 'video' as const, data: v, createdAt: v.createdAt || '' })),
@@ -322,6 +362,16 @@ export function useProfilePage({ activeTab = 'home' }: UseProfilePageOptions = {
       });
     }
 
+    for (const r of proposalRepostsData ?? []) {
+      unified.push({
+        type: 'proposal',
+        data: { id: `proposal-${r.proposalId}`, proposalId: r.proposalId },
+        createdAt: r.repostedAt,
+        isRepost: true,
+        repostedAt: r.repostedAt,
+      });
+    }
+
     unified.sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
 
     return {
@@ -331,7 +381,7 @@ export function useProfilePage({ activeTab = 'home' }: UseProfilePageOptions = {
       PROFILE_LIVE: separated.lives,
       ALL_CONTENT: unified,
     };
-  }, [userContentData, repostsData, isContentFiltered]);
+  }, [userContentData, repostsData, proposalRepostsData, isContentFiltered]);
 
   // Comment count — lazy-loaded after a short delay to avoid blocking initial paint
   const [commentCountEnabled, setCommentCountEnabled] = useState(false);
@@ -358,27 +408,21 @@ export function useProfilePage({ activeTab = 'home' }: UseProfilePageOptions = {
   const { data: publicPlaylists } = usePublicPlaylists(apiProfile?.walletAddress);
   const playlistCount = publicPlaylists?.length ?? 0;
 
-  // True total from the API's pagination metadata — not the number of pages
-  // loaded so far. Keeps the "All" badge accurate without downloading everything.
+  // True total of the list on screen, from the API's pagination metadata, not
+  // the number of pages loaded so far.
   const contentTotal = (userContentData?.pages?.[0] as { total?: number } | undefined)?.total ?? 0;
 
-  const PROFILE_TABS: { icon: typeof Home; label: string; value: TabValue; count: number }[] = useMemo(() => {
-    const homeTab = { icon: Home, label: _copy("copy.a52ace420f21", { defaultValue: "All" }), value: 'home' as TabValue, count: Math.max(contentTotal, ALL_CONTENT.length) };
-    const restTabs = [
-      { icon: MessageSquare, label: _copy("copy.a80811cf6889", { defaultValue: "Posts" }), value: 'posts' as TabValue, count: PROFILE_POSTS.length + commentCount },
-      { icon: Image, label: _copy("copy.be7e2f201293", { defaultValue: "Images" }), value: 'images' as TabValue, count: PROFILE_IMAGES.length },
-      { icon: Film, label: _copy("copy.c9a9639463c2", { defaultValue: "Videos" }), value: 'videos' as TabValue, count: ALL_PROFILE_VIDEOS.length },
-      { icon: Star, label: _copy("copy.17371507e9f7", { defaultValue: "Subs" }), value: 'subscribers' as TabValue, count: 0 },
-      { icon: Play, label: _copy("copy.bc1b88907d3b", { defaultValue: "Audio" }), value: 'songs' as TabValue, count: 0 },
-      { icon: Radio, label: _copy("copy.b64ac05f17e6", { defaultValue: "Live" }), value: 'live' as TabValue, count: PROFILE_LIVE.length },
-      { icon: PieChart, label: _copy("copy.487aaa977933", { defaultValue: "Fractions" }), value: 'fractions' as TabValue, count: 0 },
-      { icon: Pin, label: _copy("copy.f20c87946555", { defaultValue: "Pinned" }), value: 'pinned' as TabValue, count: pinnedCount },
-      ...(playlistCount > 0
-        ? [{ icon: ListVideo, label: _copy("copy.dcd0a4d2c65a", { defaultValue: "Playlists" }), value: 'playlists' as TabValue, count: playlistCount }]
-        : []),
-    ].sort((a, b) => b.count - a.count);
-    return [homeTab, ...restTabs];
-  }, [contentTotal, ALL_CONTENT.length, PROFILE_POSTS.length, PROFILE_IMAGES.length, ALL_PROFILE_VIDEOS.length, PROFILE_LIVE.length, commentCount, pinnedCount, playlistCount, _copy]);
+  // Every badge comes from the server's per-type totals, counted with the same
+  // filter its tab lists with, so a badge never says 0 above a full tab. While
+  // the visitor has a search or filter running, the tab they are on shows how
+  // many of its posts match instead.
+  const { data: serverCounts } = useProfileContentCounts(contentUserId);
+  const tabCount = (tab: TabValue, fallback: number): number => {
+    if (tab === activeTab && isContentFiltered) return contentTotal;
+    const server = serverCounts?.[tab as keyof typeof serverCounts];
+    if (typeof server === 'number') return server;
+    return tab === activeTab ? Math.max(contentTotal, fallback) : fallback;
+  };
 
   // Subscriptions — deferred slightly so profile + first content page win the
   // wire on the (slow) API; the header Subscribe button pops in right after.
@@ -390,6 +434,28 @@ export function useProfilePage({ activeTab = 'home' }: UseProfilePageOptions = {
   }, [apiProfile?.walletAddress]);
 
   const { plans, isLoading: isLoadingPlans, hasPlans, isOwnPlans } = useCreatorPlans(apiProfile?.walletAddress, secondaryEnabled);
+
+  const PROFILE_TABS: { icon: typeof Home; label: string; value: TabValue; count: number }[] = useMemo(() => {
+    // All also merges in reposts the server total leaves out.
+    const homeCount = Math.max(tabCount('home', 0), activeTab === 'home' && !isContentFiltered ? ALL_CONTENT.length : 0);
+    const homeTab = { icon: Home, label: _copy("copy.a52ace420f21", { defaultValue: "All" }), value: 'home' as TabValue, count: homeCount };
+    const restTabs = [
+      { icon: MessageSquare, label: _copy("copy.a80811cf6889", { defaultValue: "Posts" }), value: 'posts' as TabValue, count: tabCount('posts', PROFILE_POSTS.length + commentCount) },
+      { icon: Image, label: _copy("copy.be7e2f201293", { defaultValue: "Images" }), value: 'images' as TabValue, count: tabCount('images', PROFILE_IMAGES.length) },
+      { icon: Film, label: _copy("copy.c9a9639463c2", { defaultValue: "Videos" }), value: 'videos' as TabValue, count: tabCount('videos', ALL_PROFILE_VIDEOS.length) },
+      { icon: Star, label: _copy("copy.17371507e9f7", { defaultValue: "Subs" }), value: 'subscribers' as TabValue, count: plans.length },
+      { icon: Play, label: _copy("copy.bc1b88907d3b", { defaultValue: "Audio" }), value: 'songs' as TabValue, count: tabCount('songs', ALL_PROFILE_VIDEOS.length) },
+      { icon: Radio, label: _copy("copy.b64ac05f17e6", { defaultValue: "Live" }), value: 'live' as TabValue, count: tabCount('live', PROFILE_LIVE.length) },
+      { icon: PieChart, label: _copy("copy.487aaa977933", { defaultValue: "Fractions" }), value: 'fractions' as TabValue, count: 0 },
+      { icon: Pin, label: _copy("copy.f20c87946555", { defaultValue: "Pinned" }), value: 'pinned' as TabValue, count: pinnedCount },
+      ...(playlistCount > 0
+        ? [{ icon: ListVideo, label: _copy("copy.dcd0a4d2c65a", { defaultValue: "Playlists" }), value: 'playlists' as TabValue, count: playlistCount }]
+        : []),
+    ].sort((a, b) => b.count - a.count);
+    return [homeTab, ...restTabs];
+    // tabCount reads only the values listed here.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [serverCounts, activeTab, isContentFiltered, contentTotal, ALL_CONTENT.length, PROFILE_POSTS.length, PROFILE_IMAGES.length, ALL_PROFILE_VIDEOS.length, PROFILE_LIVE.length, commentCount, plans.length, pinnedCount, playlistCount, _copy]);
   const { isSubscribed, isLoading: isLoadingSubscription } = useIsSubscribed(
     !isViewingOwnProfile ? apiProfile?.walletAddress : undefined,
     secondaryEnabled

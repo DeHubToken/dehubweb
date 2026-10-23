@@ -38,6 +38,7 @@ vi.mock('@/components/app/AppState', () => ({ AppState: () => null }));
 vi.mock('@/components/app/DhbAmount', () => ({ DhbCoin: () => null }));
 vi.mock('@/components/app/VerifiedBadge', () => ({ VerifiedBadge: () => null }));
 vi.mock('@/components/app/BadgeIcon', () => ({ BadgeIcon: () => null }));
+vi.mock('@/components/app/LiveRipple', () => ({ LiveRipple: ({ children }: { children: ReactNode }) => children }));
 vi.mock('@/components/app/chat/OnlineDot', () => ({ OnlineDot: () => null }));
 vi.mock('@/components/app/AuthGate', () => ({ AuthGate: () => null }));
 vi.mock('@/components/SEOHead', () => ({ SEOHead: () => null }));

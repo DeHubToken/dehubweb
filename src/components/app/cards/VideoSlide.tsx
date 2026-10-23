@@ -40,7 +40,8 @@ interface VideoSlideProps {
   isMuted: boolean;
   playbackRate?: number;
   onTimeUpdate?: (currentTime: number, duration: number, loops?: boolean) => void;
-  onTap?: () => void;
+  /** Gets the tap itself, so the viewer can tell the centre from the edges. */
+  onTap?: (event?: React.PointerEvent) => void;
   /**
    * Reverses `onTap` silently. Supplying it is what lets the first tap act
    * immediately instead of waiting 260ms to see whether a second is coming —
@@ -155,7 +156,7 @@ export const VideoSlide = memo(function VideoSlide({
     // straight back if a second one turns up — no 260ms wait to find out. The
     // video never visibly pauses on a double tap, and tap-to-pause stays as
     // instant as it was before the ladder existed.
-    onSingleTap: () => onTap?.(),
+    onSingleTap: (event) => onTap?.(event),
     onUndoSingleTap: () => (onTapUndo ?? onTap)?.(),
   });
 
@@ -223,6 +224,8 @@ export const VideoSlide = memo(function VideoSlide({
 
   const slideId = useId();
   const fitWhole = letterbox || videoAspect !== 'portrait';
+  // Photo slides sit on a plain theme backdrop: tall photos fill the screen, wide ones letterbox.
+  const isPhotoSlide = !!short.imageUrls?.length;
   const { attachSlot } = useHandoffVideo({
     videoRef,
     handoffKey: handoffKey ?? `shorts:${slideId}`,
@@ -436,7 +439,7 @@ export const VideoSlide = memo(function VideoSlide({
   // each slide, and a transformed ancestor makes `fixed` resolve against that
   // wrapper rather than the viewport.
   return (
-    <div className="absolute inset-0 bg-black" style={{ willChange: 'transform' }}>
+    <div data-keep-dark data-shorts-photo-slide={isPhotoSlide || undefined} className="absolute inset-0 bg-black" style={{ willChange: 'transform' }}>
       {/* Liquid glass fill behind letterboxed / non-portrait videos.
           One filtered layer plus a plain tint. It used to be a blurred layer
           with a second backdrop-blur pass stacked on it — blurring what was
@@ -444,7 +447,7 @@ export const VideoSlide = memo(function VideoSlide({
           on every frame the player resized (comments opening/closing) or
           moved, which is where those transitions lost frames. The two blur
           and saturate passes are folded into the one filter. */}
-      {fitWhole && thumbnail && (
+      {fitWhole && thumbnail && !isPhotoSlide && (
         <>
           <div
             className="absolute inset-0 z-0"
@@ -456,7 +459,7 @@ export const VideoSlide = memo(function VideoSlide({
               transform: 'scale(1.1)',
             }}
           />
-          <div className="absolute inset-0 z-[1] bg-black/40" />
+          <div data-keep-dark className="absolute inset-0 z-[1] bg-black/40" />
         </>
       )}
 
@@ -474,11 +477,11 @@ export const VideoSlide = memo(function VideoSlide({
           /* Transcode job failed server-side — videoUrl was written
              optimistically at upload time and the file was never actually
              produced, so a player here would just sit on a dead src. */
-          <div className="relative w-full h-full bg-zinc-900">
+          <div data-keep-dark className="relative w-full h-full bg-zinc-900">
             {thumbnail && (
               <img src={thumbnail} alt="" className="absolute inset-0 w-full h-full object-cover opacity-50" />
             )}
-            <div className="absolute inset-0 flex flex-col items-center justify-center gap-2 bg-black/40">
+            <div data-keep-dark className="absolute inset-0 flex flex-col items-center justify-center gap-2 bg-black/40">
               {/* Retry is offered on the post itself, not here: a slide in the
                   carousel carries no ownership, and the creator reaching their
                   own broken short does so through their profile. */}
@@ -490,7 +493,7 @@ export const VideoSlide = memo(function VideoSlide({
         ) : transcodingStatus === 'pending' || transcodingStatus === 'on' ? (
           /* Still transcoding — same optimistic videoUrl, but recoverable
              once the job finishes, unlike the 'failed' branch above. */
-          <div className="relative w-full h-full bg-zinc-900">
+          <div data-keep-dark className="relative w-full h-full bg-zinc-900">
             {thumbnail && (
               <img src={thumbnail} alt="" className="absolute inset-0 w-full h-full object-cover opacity-50" />
             )}
@@ -504,7 +507,7 @@ export const VideoSlide = memo(function VideoSlide({
         ) : (short.videoUrl || short.soundtrackUrl) ? (
           <div ref={attachSlot} className="w-full h-full" />
         ) : (
-          <div className="w-full h-full flex items-center justify-center bg-zinc-900">
+          <div data-keep-dark className="w-full h-full flex items-center justify-center bg-zinc-900">
             <img 
               src={thumbnail} 
               alt={short.description || _copy("copy.e8faa500e9f4", { defaultValue: "Short video" })}

@@ -325,6 +325,7 @@ export function TVPreviewCard({ channel }: TVPreviewCardProps) {
 
   return (
     <div
+      data-glass-media-card
       className={cn(
         'w-full bg-black/40 backdrop-blur-[24px] saturate-[180%] border border-white/10',
         'rounded-2xl overflow-hidden',

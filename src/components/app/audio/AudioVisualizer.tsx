@@ -3,6 +3,7 @@ import { useTranslation as _useCopy } from 'react-i18next';
 import { useMediaVolume, useMediaMuted, setVolume, setMediaMuted as setSelfMuted } from '@/lib/video-preferences';
 import { videoPlaybackManager } from '@/lib/video-playback-manager';
 import * as React from 'react';
+import './audio-studio.css';
 import { useRef, useContext, useEffect, useLayoutEffect, useState, useCallback, useMemo } from 'react';
 import { CachedPageActiveContext } from '@/contexts/CachedPageActiveContext';
 import { useTranslation } from 'react-i18next';
@@ -13,7 +14,7 @@ import {
   useAudioPostPlayback,
   type AudioPostTrack,
 } from '@/lib/audio-post-playback';
-import { Minimize, PictureInPicture2 } from "lucide-react";
+import { Minimize, PictureInPicture2, RotateCcw, RotateCw, Play as GlassPlay, Pause as GlassPause } from "lucide-react";
 import Volume2 from "@/components/ui/cut-icons/volume";
 import VolumeX from "@/components/ui/cut-icons/mute";
 import Maximize from "@/components/ui/cut-icons/fullscreen";
@@ -79,6 +80,7 @@ interface AudioVisualizerProps {
   isPlaying: boolean;
   onPlayPause: () => void;
   className?: string;
+  displayTitle?: string;
   showStylePicker?: boolean;
   /** When true the audio output is muted (visualizer still animates). */
   muted?: boolean;
@@ -158,9 +160,6 @@ const STYLES: { value: AnyStyle; label: string }[] = [
 
 /** One height for every control in the bottom row, so they line up. */
 const CONTROL_H = 'h-8';
-/** The liquid-glass surface all three controls share. */
-const GLASS_PILL =
-  'rounded-lg bg-gradient-to-br from-white/25 via-white/15 to-white/8 backdrop-blur-xl border border-white/30';
 const HUE_GRADIENT =
   'linear-gradient(to right, hsl(0, 80%, 60%), hsl(60, 80%, 60%), hsl(120, 80%, 60%), hsl(180, 80%, 60%), hsl(240, 80%, 60%), hsl(300, 80%, 60%), hsl(360, 80%, 60%))';
 
@@ -188,6 +187,7 @@ export function AudioVisualizer({
   isPlaying: isPlayingProp,
   onPlayPause,
   className = '',
+  displayTitle,
   showStylePicker = true,
   muted = false,
   seed = 'default',
@@ -275,10 +275,30 @@ export function AudioVisualizer({
   const { ref: chipScrollRef, style: chipFadeStyle } = useScrollFadeMask<HTMLDivElement>();
 
   // Every card starts on Default; a pick sticks until it unmounts.
-  const [style, setStyle] = useState<AnyStyle>('static');
+  const styleKey = `dehub.audio.style.${handoffKey || seed}`;
+  const readStyle = () => {
+    try {
+      const saved = window.localStorage.getItem(styleKey);
+      if (STYLES.some(item => item.value === saved)) return saved as AnyStyle;
+    } catch { /* Storage may be unavailable. */ }
+    return theme === 'system' || theme === 'glass' ? 'liquid' : 'static';
+  };
+  const [style, setStyleState] = useState<AnyStyle>(readStyle);
+  useEffect(() => { setStyleState(readStyle()); }, [styleKey, theme]);
+  const setStyle = useCallback((value: AnyStyle) => {
+    setStyleState(value);
+    try { window.localStorage.setItem(styleKey, value); } catch { /* Session-only selection. */ }
+  }, [styleKey]);
   const listenerRef = useRef<AudioListener | null>(null);
   const extraStateRef = useRef<Record<string, unknown>>({});
   const [hue, setHue] = useState(0);
+  const [reducedMotion, setReducedMotion] = useState(false);
+  useEffect(() => {
+    const preference = window.matchMedia('(prefers-reduced-motion: reduce)');
+    const sync = () => setReducedMotion(preference.matches);
+    sync(); preference.addEventListener('change', sync);
+    return () => preference.removeEventListener('change', sync);
+  }, []);
   const [waveformPeaks, setWaveformPeaks] = useState<number[] | null>(null);
   const [duration, setDuration] = useState(durationHint);
   const [currentTime, setCurrentTime] = useState(0);
@@ -477,6 +497,13 @@ export function AudioVisualizer({
       // silently breaking later visualizers. Per-element sources/analysers
       // still attach to the shared context (one source per element is fine).
       if (!sharedVisualizerContext) {
+        // The track plays through Web Audio, which iPhone Safari silences when
+        // the ring switch is on mute. A 'playback' session plays like a music
+        // app instead (Safari 16.4+; other browsers lack it and ignore this).
+        const session = (navigator as Navigator & { audioSession?: { type: string } }).audioSession;
+        if (session && session.type !== 'playback') {
+          try { session.type = 'playback'; } catch { /* read-only on some builds */ }
+        }
         sharedVisualizerContext = new (window.AudioContext || (window as any).webkitAudioContext)();
       }
       audioContextRef.current = sharedVisualizerContext;
@@ -531,7 +558,7 @@ export function AudioVisualizer({
     const ro = new ResizeObserver(apply);
     ro.observe(canvas);
     return () => ro.disconnect();
-  }, []);
+  }, [theme]);
 
   /* ─── Drawing ─────────────────────────────────────────────────────────── */
 
@@ -570,7 +597,21 @@ export function AudioVisualizer({
         staticAnalyser.getByteFrequencyData(freq);
         staticData = freq;
       }
-      drawStatic(ctx, staticData, width, height, hue, seed, progress, peaksRef.current, STATIC_BAR_COUNT);
+      if (theme === 'glass') {
+        ctx.clearRect(0, 0, width, height);
+        const shape = peaksRef.current?.length ? peaksRef.current : idleShape;
+        const step = width / shape.length;
+        shape.forEach((peak, index) => {
+          const level = staticData.length ? staticData[Math.floor(index / shape.length * staticData.length)] / 255 : 0;
+          const envelope = .025 + .975 * Math.pow(Math.sin(Math.PI * index / Math.max(1, shape.length - 1)), 1.5);
+          const barHeight = Math.max(1, Math.min(1, peak + level * .15) * envelope * height * .88);
+          ctx.fillStyle = index / shape.length <= progress ? '#efffff' : 'rgba(190,255,250,.65)';
+          const barWidth = Math.max(1, step * .5);
+          ctx.beginPath();
+          ctx.roundRect(index * step, height - barHeight, barWidth, barHeight, Math.min(barWidth / 2, barHeight / 2));
+          ctx.fill();
+        });
+      } else drawStatic(ctx, staticData, width, height, hue, seed, progress, peaksRef.current, STATIC_BAR_COUNT);
       return;
     }
 
@@ -649,7 +690,7 @@ export function AudioVisualizer({
   // frame, so changing style or dragging the hue slider mid-playback left a
   // second (then a third) rAF loop running against the same canvas.
   useEffect(() => {
-    if (!isPlaying || !isActiveClaim || !decodeEnabled) {
+    if (!isPlaying || !isActiveClaim || !decodeEnabled || reducedMotion) {
       if (animationRef.current) cancelAnimationFrame(animationRef.current);
       animationRef.current = null;
       return;
@@ -666,15 +707,15 @@ export function AudioVisualizer({
       if (animationRef.current) cancelAnimationFrame(animationRef.current);
       animationRef.current = null;
     };
-  }, [isPlaying, isActiveClaim, decodeEnabled]);
+  }, [isPlaying, isActiveClaim, decodeEnabled, reducedMotion]);
 
   // Repaint the idle frame whenever anything it depends on changes. Without
   // this a style picked while paused left the *previous* style's last frame on
   // the canvas, which is what "can't change the animation" looked like.
   useEffect(() => {
-    if (isPlaying) return;
+    if (isPlaying && !reducedMotion) return;
     drawFrame();
-  }, [isPlaying, drawFrame, canvasSize, scrubRatio, currentTime]);
+  }, [isPlaying, reducedMotion, drawFrame, canvasSize, scrubRatio, currentTime]);
 
   useEffect(() => {
     resetSpectrum();
@@ -787,7 +828,13 @@ export function AudioVisualizer({
     }
 
     if (isPlaying) {
-      audioRef.current.play().catch(console.error);
+      audioRef.current.play().catch((err) => {
+        console.error(err);
+        // Refused or unplayable (iPhone rejects some formats): show the play
+        // button again rather than a pause button stuck at 0:00. An AbortError
+        // is just a pause landing first, which already put the button back.
+        if (err?.name !== 'AbortError' && isPlayingRef.current) onPlayPauseRef.current();
+      });
     } else {
       audioRef.current.pause();
     }
@@ -938,11 +985,50 @@ export function AudioVisualizer({
   const displayRatio = scrubRatio ?? playedRatio;
   const displayTime = scrubRatio !== null ? scrubRatio * duration : currentTime;
   const isEffectivelyMuted = muted || selfMuted || volume === 0;
-  const glassShadow = isLightTheme
-    ? 'shadow-[0_2px_8px_rgba(0,0,0,0.1),inset_0_1px_0_rgba(255,255,255,0.15)]'
-    : 'shadow-[0_4px_16px_rgba(0,0,0,0.2),inset_0_1px_0_rgba(255,255,255,0.3)]';
 
   const stopBubble = (e: React.SyntheticEvent) => e.stopPropagation();
+
+  if (theme === 'glass' || (theme === 'system' && !isLightTheme)) return (
+    <div data-no-swipe data-video-controls data-audio-player data-audio-studio data-material={theme} className={className} onClick={stopBubble}>
+      <div data-audio-studio-title>
+        <strong>{displayTitle || popoutTrack?.title || t('audioPost.untitled')}</strong>
+        <span>{popoutTrack?.artist || t('audioPost.creator')}</span>
+      </div>
+      <div data-audio-studio-motion>
+      <canvas ref={canvasRef} width={canvasSize.w} height={canvasSize.h}
+        style={{ touchAction: 'pan-y' }}
+        onPointerDown={e => beginScrub(e.currentTarget, e, false)}
+        onPointerMove={e => moveScrub(e.currentTarget, e)}
+        onPointerUp={e => endScrub(e.currentTarget, e)} onPointerCancel={cancelScrub} />
+      </div>
+      <div data-audio-studio-deck>
+        <svg data-audio-studio-wave viewBox="0 0 600 32" preserveAspectRatio="none" aria-hidden="true">
+          {idleShape.map((peak, index) => {
+            const envelope = .1 + .9 * Math.pow(Math.sin(Math.PI * index / Math.max(1, idleShape.length - 1)), .8);
+            const height = Math.max(2, peak * envelope * 30);
+            return <rect key={index} x={index / idleShape.length * 600} y={32 - height} width={Math.max(1, 600 / idleShape.length * .45)} height={height} rx="1" fill={index / idleShape.length <= displayRatio ? 'currentColor' : 'currentColor'} opacity={index / idleShape.length <= displayRatio ? .95 : .35} />;
+          })}
+        </svg>
+        <div data-audio-studio-time><span>{formatTime(displayTime)}</span><span>{formatTime(duration)}</span></div>
+        <input type="range" min={0} max={1000} step={1} value={Math.round(displayRatio * 1000)}
+          aria-label={_copy('copy.67ae3405bcd4', { defaultValue: 'Seek' })}
+          onChange={e => seekTo(Number(e.target.value) / 1000)} />
+        <div data-audio-studio-transport>
+          <button type="button" aria-label="−10 s" onClick={() => seekTo(duration ? (currentTime - 10) / duration : 0)}><RotateCcw /><small>10</small></button>
+          <button type="button" data-audio-studio-play aria-label={isPlaying ? t('audioPost.pause') : t('audioPost.play')} onClick={handlePlayPause}>{isPlaying ? <GlassPause fill="currentColor" /> : <GlassPlay fill="currentColor" />}</button>
+          <button type="button" aria-label="+10 s" onClick={() => seekTo(duration ? (currentTime + 10) / duration : 0)}><RotateCw /><small>10</small></button>
+        </div>
+      </div>
+      <div data-audio-studio-options>
+          {showStylePicker && <select aria-label={t('nav.settings')} value={style} onChange={e => setStyle(e.target.value as AnyStyle)}>{STYLES.map(s => <option key={s.value} value={s.value}>{s.label}</option>)}</select>}
+          {popoutTrack && <button type="button" aria-label={isPoppedOut ? t('audioPost.closeCornerPlayer') : t('audioPost.popOut')} onClick={handlePopOut}><PictureInPicture2 /></button>}
+          {showVolume && <button type="button" aria-label={isEffectivelyMuted ? _copy('copy.ce4ee4efc5e3', { defaultValue: 'Unmute' }) : _copy('copy.8dd6857baf02', { defaultValue: 'Mute' })} onClick={() => { const next = !isEffectivelyMuted; setSelfMuted(next); videoPlaybackManager.globalMuted = next; onMuteChange?.(next); }}><Volume2 /></button>}
+          {showVolume && <input aria-label={_copy('copy.b10fb966d720', { defaultValue: 'Volume' })} type="range" min="0" max="100" value={isEffectivelyMuted ? 0 : Math.round(volume * 100)} onChange={e => { const value = Number(e.target.value); setVolume(value / 100); setSelfMuted(value === 0); videoPlaybackManager.globalMuted = value === 0; onMuteChange?.(value === 0); }} />}
+          {showStylePicker && <input type="range" min="0" max="360" value={hue} aria-label={_copy('copy.89a167dad6da', { defaultValue: 'Visualizer colour' })} onChange={e => setHue(Number(e.target.value))} data-audio-hue />}
+          {onFullscreen && <button type="button" aria-label={isFullscreen ? _copy('copy.37fd4e355ba3', { defaultValue: 'Exit fullscreen' }) : _copy('copy.c461dbb2bab7', { defaultValue: 'Fullscreen' })} onClick={onFullscreen}><Maximize /></button>}
+      </div>
+    </div>
+  );
 
   return (
     <div data-no-swipe data-video-controls data-audio-player className={`relative ${className}`} {...bottomScrub}>
@@ -1131,18 +1217,21 @@ export function AudioVisualizer({
                       onTouchStart={stopBubble}
                       className={cn(
                         // Faint dark backing so labels stay readable over white-heavy themes.
-                        'relative inline-flex items-center px-2 text-[10px] font-medium rounded-full overflow-hidden whitespace-nowrap transition-colors text-white/75 hover:text-white bg-black/25',
+                        'relative inline-flex items-center px-2 text-[10px] font-medium rounded-full whitespace-nowrap transition-opacity duration-300 text-white bg-black/25',
+                        style !== s.value && 'opacity-60 hover:opacity-90',
                         CONTROL_H,
                       )}
                     >
+                      {/* "Beam", like the profile tabs: a short glowing line
+                          under the selected style instead of a filled pill. */}
                       {style === s.value && (
-                        <div
+                        <span
+                          aria-hidden
                           data-audio-style-active
-                          data-keep-round
-                          className={cn('absolute inset-0 rounded-full', GLASS_PILL, glassShadow)}
+                          className="pointer-events-none absolute bottom-1 left-1/2 h-[2px] w-[40%] min-w-[10px] -translate-x-1/2 rounded-full bg-current shadow-[0_0_8px_currentColor,0_0_2px_currentColor]"
                         />
                       )}
-                      <span className={`relative z-10 ${style === s.value ? 'text-white' : ''}`}>{s.label}</span>
+                      <span className="relative z-10">{s.label}</span>
                     </button>
                   ))}
                 </div>

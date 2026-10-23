@@ -24,6 +24,8 @@ import {
   toBase64,
   type IdentityKeyPair,
 } from './crypto';
+import type { MediaDescriptor } from './media';
+import { openMediaPlaintext } from './media-message';
 
 const STORAGE_PREFIX = 'dehub-dm-e2ee:';
 const PEER_KEY_TTL_MS = 5 * 60_000;
@@ -104,6 +106,8 @@ export function unloadIdentity() {
   current = null;
   sessionKeys.clear();
   peerKeys.clear();
+  // Only loaded once an attachment has been opened, so nothing to clear before.
+  void import('./media-cache').then(m => m.clearDecryptedMedia()).catch(() => {});
   notify();
 }
 
@@ -203,6 +207,16 @@ export function canEncryptTo(peerAddress: string): boolean {
 }
 
 /**
+ * Async counterpart of canEncryptTo: derives the session key if it can. Lets a
+ * sender decide up front whether an attachment will travel encrypted, before
+ * spending time shrinking and sealing it.
+ */
+export async function canEncryptToPeer(peerAddress: string | null | undefined): Promise<boolean> {
+  if (!peerAddress) return false;
+  return !!(await getSessionKey(peerAddress));
+}
+
+/**
  * Encrypt outgoing text for a peer. Returns null when encryption is not
  * possible (no identity yet, peer has no key) so the caller can send plain.
  */
@@ -293,7 +307,9 @@ export interface DecryptableMessage {
   content: string;
   encrypted?: boolean;
   undecryptable?: boolean;
-  replyTo?: { content: string } | null;
+  /** Set when the plaintext was an encrypted attachment's descriptor; `content` is then its caption. */
+  encMedia?: MediaDescriptor;
+  replyTo?: { content: string; encMedia?: MediaDescriptor } | null;
 }
 
 export async function decryptMessageInPlace<T extends DecryptableMessage>(
@@ -304,12 +320,16 @@ export async function decryptMessageInPlace<T extends DecryptableMessage>(
   if (isEncryptedContent(msg.content)) {
     const plain = peerAddress ? await decryptFromPeer(peerAddress, msg.content) : null;
     out = plain !== null
-      ? { ...out, content: plain, encrypted: true, undecryptable: false }
+      ? { ...out, encrypted: true, undecryptable: false, ...openMediaPlaintext(plain) }
       : { ...out, content: '', encrypted: true, undecryptable: true };
   }
   if (msg.replyTo && isEncryptedContent(msg.replyTo.content)) {
     const plain = peerAddress ? await decryptFromPeer(peerAddress, msg.replyTo.content) : null;
-    out = { ...out, replyTo: { ...msg.replyTo, content: plain ?? '' } };
+    const opened = openMediaPlaintext(plain ?? '');
+    out = {
+      ...out,
+      replyTo: { ...msg.replyTo, content: opened.content, ...(opened.encMedia ? { encMedia: opened.encMedia } : {}) },
+    };
   }
   return out;
 }

@@ -228,7 +228,7 @@ async function publicRpcCall(rpcUrl: string, method: string, params: unknown[]):
   });
   const result = await response.json();
   if (result.error) {
-    throw new Error(result.error.message || JSON.stringify(result.error));
+    throw Object.assign(new Error(result.error.message || JSON.stringify(result.error)), { data: result.error.data });
   }
   return result.result;
 }
@@ -419,7 +419,7 @@ export function parseTxError(error: unknown, context: string = 'transaction'): s
   if (lowerError.includes('user rejected') || lowerError.includes('user denied')) {
     return 'Transaction was rejected by user.';
   }
-  if (lowerError.includes('paused') || lowerError.includes('erc20pausable')) {
+  if (looksLikePausedRevert(lowerError)) {
     return i18n.t('tokenErrors.transactionsPaused');
   }
   if (lowerError.includes('insufficient funds')) {
@@ -548,6 +548,13 @@ export async function writeContractAA(
       const message = (estimateError?.message || estimateError?.error?.message || '').toLowerCase();
       if (message.includes('insufficient funds') || message.includes('insufficient balance') ||
           message.includes('gas required exceeds allowance')) throw new Error('INSUFFICIENT_GAS_FUNDS');
+      // The token itself says the wallet is short (OpenZeppelin's message or
+      // its ERC20InsufficientBalance error). Sending anyway gave the wallet a
+      // hash for a transfer that could never land, and staking then waited on it.
+      const revertData = String(estimateError?.data ?? '').toLowerCase();
+      if (message.includes('exceeds balance') || revertData.startsWith('0xe450d38c')) {
+        throw new Error('INSUFFICIENT_TOKEN_BALANCE');
+      }
       console.warn('[AA] Gas estimation failed, using default:', estimateError);
       gasLimitBigInt = BigInt(500_000);
       gasLimit = toHex(gasLimitBigInt);
@@ -804,6 +811,17 @@ export async function readContractAll<T extends readonly unknown[]>(
   ]);
 
   return contractInterface.decodeFunctionResult(functionName, result) as unknown as T;
+}
+
+/**
+ * True only for an actual Pausable revert. A bare "paused" substring also hits
+ * request bodies, unrelated contracts and paused media, and told people DHB was
+ * paused while the token was live. Callers that can await should still confirm
+ * with checkDHBPaused before saying so.
+ */
+export function looksLikePausedRevert(message: string): boolean {
+  const m = message.toLowerCase();
+  return m.includes('pausable: paused') || m.includes('erc20pausable') || m.includes('enforcedpause');
 }
 
 /**

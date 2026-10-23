@@ -34,6 +34,7 @@ import { Skeleton } from '@/components/ui/skeleton';
 import { BadgeIcon } from '@/components/app/BadgeIcon';
 import { useDMRealtime } from '@/hooks/use-dm-realtime';
 import { conversationIdentity } from '@/lib/conversation-identity';
+import { encryptedMediaLabel } from '@/lib/dm-e2ee/media-label';
 import { useDraftText } from '@/hooks/use-draft';
 import { SwipeableRow } from '@/components/ui/swipeable-row';
 import { scheduleDelete, undoDelete, usePendingDeletes, UNDO_WINDOW_MS } from '@/lib/undoable-delete';
@@ -46,6 +47,7 @@ import dehubLogo from '@/assets/dehub-logo.png';
 import { SEOHead } from '@/components/SEOHead';
 import { blockUser } from '@/lib/api/dehub/blocks';
 import { toast } from 'sonner';
+import { LiveRipple } from '@/components/app/LiveRipple';
 
 function ConversationBadge({ user }: { user?: DeHubUser }) {
   if (!user) return null;
@@ -135,14 +137,14 @@ function ConversationItem({
         isSelected ? 'bg-white/[0.07]' : ''
       }`}
     >
-      <div className="relative">
+      <LiveRipple ids={[otherUser?.address, otherUser?.username]} className="relative rounded-lg">
         <Avatar className="w-12 h-12">
           {avatarUrl && <AvatarImage src={avatarUrl} />}
           <AvatarFallback className="bg-zinc-700 text-white font-medium">
             {(fallbackName.startsWith('0x') ? fallbackName.charAt(2) : fallbackName.charAt(0)).toUpperCase()}
           </AvatarFallback>
         </Avatar>
-      </div>
+      </LiveRipple>
 
       <div className="flex-1 min-w-0">
         <div className="flex items-center gap-1.5">
@@ -184,7 +186,9 @@ function ConversationItem({
           </p>
         ) : (
           <p className={`text-sm truncate text-white ${conversation.unreadCount > 0 ? 'font-bold' : 'font-normal'}`}>
-            {conversation.lastMessage?.type === 'image' ? _copy("copy.1b13ff986443", { defaultValue: "📷 Photo" }) :
+            {conversation.lastMessage?.encMedia
+              ? encryptedMediaLabel(conversation.lastMessage.encMedia, _copy) :
+             conversation.lastMessage?.type === 'image' ? _copy("copy.1b13ff986443", { defaultValue: "📷 Photo" }) :
              conversation.lastMessage?.type === 'gif' ? _copy("copy.fd0ce9669a4e", { defaultValue: "🎞️ GIF" }) :
              lastMessagePreview}
           </p>

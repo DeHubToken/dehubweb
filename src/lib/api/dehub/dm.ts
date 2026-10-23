@@ -2,6 +2,7 @@ import { supabase } from '@/integrations/supabase/client';
 import { apiCall, getAuthToken, authedUpload, ensureFreshToken } from './core';
 import { getAccountSummaries, type AccountSummary } from './users';
 import type { DeHubUser, DeHubNFT } from './types';
+import type { MediaDescriptor, MediaKind } from '@/lib/dm-e2ee/media';
 
 // ─── Legacy types (kept for backward compat with GroupSettingsDrawer etc.) ────
 
@@ -42,6 +43,8 @@ export interface DeHubDMMessage {
   content: string;
   encrypted?: boolean;
   undecryptable?: boolean;
+  /** Opened descriptor of an end-to-end encrypted attachment. */
+  encMedia?: MediaDescriptor;
   type: DMMessageType;
   mediaUrl?: string;
   createdAt: string;
@@ -63,11 +66,22 @@ export interface DmSender {
   avatarImageUrl: string;
 }
 
+/** One attachment on a message. `encrypted` marks ciphertext whose key is in the encrypted `content`. */
+export interface DmMediaUrl {
+  url: string;
+  type: string;
+  mimeType?: string;
+  name?: string;
+  size?: number;
+  encrypted?: boolean;
+}
+
 export interface ReplyPreview {
   _id: string;
   content: string;
+  encMedia?: MediaDescriptor;
   msgType: DmMsgType;
-  mediaUrls: Array<{ url: string; type: string; mimeType: string; name?: string; size?: number }>;
+  mediaUrls: Array<{ url: string; type: string; mimeType: string; name?: string; size?: number; encrypted?: boolean }>;
   voiceDuration: number | null;
   sender: DmSender;
 }
@@ -81,8 +95,13 @@ export interface DmMessage {
   encrypted?: boolean;
   /** Encrypted, but this device holds no key for it — render a placeholder, never the envelope. */
   undecryptable?: boolean;
+  /**
+   * An end-to-end encrypted attachment's descriptor (file key, real type,
+   * name, preview), opened from `content`; `content` then holds its caption.
+   */
+  encMedia?: MediaDescriptor;
   msgType: DmMsgType;
-  mediaUrls: Array<{ url: string; type: string; mimeType?: string; name?: string; size?: number }>;
+  mediaUrls: DmMediaUrl[];
   uploadStatus?: 'pending' | 'success' | 'failed' | 'simple';
   voiceDuration: number | null;
   isRead: boolean;
@@ -589,6 +608,11 @@ export async function uploadAndSendMedia(
     voiceDuration?: number;
     replyTo?: string;
     txHash?: string;
+    /**
+     * The file is end-to-end encrypted ciphertext of this kind. The server
+     * stores it untouched and requires `content` to be an encrypted envelope.
+     */
+    encryptedKind?: MediaKind;
   }
 ): Promise<DmMessage> {
   console.log('[DM API] uploadAndSendMedia called', { fileName: file.name, size: file.size, conversationId });
@@ -602,12 +626,34 @@ export async function uploadAndSendMedia(
   if (opts?.voiceDuration != null) formData.append('voiceDuration', String(opts.voiceDuration));
   if (opts?.replyTo) formData.append('replyTo', opts.replyTo);
   if (opts?.txHash) formData.append('txHash', opts.txHash);
+  if (opts?.encryptedKind) formData.append('encryptedKind', opts.encryptedKind);
 
   const raw = await authedUpload<Record<string, unknown>>('/api/dm/upload', formData, {
     unwrapResult: true,
   });
   const myAddress = localStorage.getItem('dehub_wallet')?.toLowerCase() || '';
   return parseDmMessage(raw, myAddress);
+}
+
+/**
+ * Forward an existing DM message over REST. `content` replaces the copied
+ * content and must be an encrypted envelope: an encrypted attachment is
+ * forwarded by resealing its descriptor for the target conversation, and the
+ * ciphertext already on the CDN is reused as it is.
+ */
+export async function forwardDmMessage(
+  messageId: string,
+  conversationId: string,
+  content?: string,
+): Promise<DmMessage> {
+  const res = await apiCall<{ status?: boolean; message?: string; result?: Record<string, unknown> }>('/api/dm/forward', {
+    method: 'POST',
+    body: { conversationId, messageId, ...(content ? { content } : {}) },
+    requiresAuth: true,
+  });
+  if (res?.status === false || !res?.result) throw new Error(res?.message || 'Could not forward the message.');
+  const myAddress = localStorage.getItem('dehub_wallet')?.toLowerCase() || '';
+  return parseDmMessage(res.result, myAddress);
 }
 
 /**

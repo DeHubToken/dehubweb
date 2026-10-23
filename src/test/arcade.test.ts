@@ -141,9 +141,8 @@ describe('arcade registry', () => {
         // authenticate postMessage without granting access to the app DOM.
         if (file === repo('src/pages/app/MaboroshiPage.tsx')) {
           expect(source).toContain("const ORIGIN = 'https://live.dehub.io';");
-          expect(source).toContain('const STUDIO = `${ORIGIN}/maboroshi/`;');
           expect(source).toContain('src={studioUrl}');
-          expect(source).toContain('const studioUrl = /^[a-z0-9-]{1,80}$/.test(preset) ? `${STUDIO}?preset=${encodeURIComponent(preset)}` : STUDIO;');
+          expect(source).toContain('const studioUrl = maboroshiStudioUrl(preset, remake);');
           expect(source).toContain('event.origin !== ORIGIN');
           expect(source).toContain('event.source !== frame.current?.contentWindow');
           expect(value).toBe('allow-scripts allow-same-origin allow-forms allow-downloads');
