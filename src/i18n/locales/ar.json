@@ -3833,6 +3833,7 @@
     "shopAllowanceUsed": "تم استخدام {{allowance}} من {{allowance}}. قم بتخزين المزيد من رموز DeHub للحصول على شارة أعلى وفتحة أخرى."
   },
   "stages": {
+    "allStages": "كل الغرف الصوتية",
     "title": "الغرف الصوتية",
     "tabLive": "مباشر",
     "tabUpcoming": "قادمة",

@@ -3046,6 +3046,7 @@
     "shopAllowanceUsed": "{{allowance}} এর মধ্যে {{allowance}} ব্যবহার করা হয়েছে। উচ্চতর ব্যাজ এবং অন্য স্লটের জন্য আরও DeHub টোকেন স্টেক করুন।"
   },
   "stages": {
+    "allStages": "সব অডিও রুম",
     "title": "অডিও রুম",
     "tabLive": "লাইভ",
     "tabUpcoming": "আসন্ন",

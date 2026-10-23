@@ -3048,6 +3048,7 @@
     "shopAllowanceUsed": "{{allowance}} मध्ये {{allowance}} प्रयोग गरियो। उच्च ब्याज र अर्को स्लटको लागि थप DeHub टोकनहरू स्टेक गर्नुहोस्।"
   },
   "stages": {
+    "allStages": "सबै अडियो कोठाहरू",
     "title": "अडियो कोठाहरू",
     "tabLive": "प्रत्यक्ष",
     "tabUpcoming": "आगामी",

@@ -2940,6 +2940,7 @@
     "shopAllowanceUsed": "{{allowance}} آف {{allowance}} استعمال ہوئے۔ ودھ بیج تے اک ہور سلاٹ واسطے ودھ DeHub ٹوکن سٹیک کرن۔"
   },
   "stages": {
+    "allStages": "سارے آڈیو روم",
     "title": "آڈیو روم",
     "tabLive": "جائو",
     "tabUpcoming": "آئندہ",

@@ -2993,6 +2993,7 @@
     "shopAllowanceUsed": "ใช้ไป {{allowance}} จาก {{allowance}} วางเดิมพันโทเคน DeHub เพิ่มเติมเพื่อรับป้ายที่สูงขึ้นและช่องอีกช่อง"
   },
   "stages": {
+    "allStages": "ห้องเสียงทั้งหมด",
     "title": "ห้องเสียง",
     "tabLive": "สด",
     "tabUpcoming": "กำลังจะมาถึง",

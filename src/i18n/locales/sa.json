@@ -3022,6 +3022,7 @@
     "shopAllowanceUsed": "{{allowance}} में से {{allowance}} का उपयोग किया गया। उच्च बैज और एक और स्लॉट के लिए अधिक DeHub टोकन स्टेक करें।"
   },
   "stages": {
+    "allStages": "सर्वाः श्रव्यकक्षाः",
     "title": "श्रव्यकक्षाः",
     "tabLive": "जीवितं",
     "tabUpcoming": "आगतम्",

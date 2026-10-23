@@ -2986,6 +2986,7 @@
     "shopAllowanceUsed": "د {{allowance}} څخه {{allowance}} کارول شوي. د لوړ بیرج او بل سلاټ لپاره نور د هاب توکنونه سټیک کړئ."
   },
   "stages": {
+    "allStages": "سب آڈیو روم",
     "title": "آڈیو روم",
     "tabLive": "در حال اجرا",
     "tabUpcoming": "آتی",

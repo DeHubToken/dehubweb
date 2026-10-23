@@ -3833,6 +3833,7 @@
     "shopAllowanceUsed": "{{allowance}} sur {{allowance}} utilisés. Staké plus de jetons DeHub pour un badge supérieur et un emplacement supplémentaire."
   },
   "stages": {
+    "allStages": "Tous les salons audio",
     "title": "Salons audio",
     "tabLive": "En direct",
     "tabUpcoming": "À venir",

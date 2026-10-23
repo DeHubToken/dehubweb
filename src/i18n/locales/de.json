@@ -3099,6 +3099,7 @@
     "shopAllowanceUsed": "{{allowance}} von {{allowance}} verwendet. Setzen Sie mehr DeHub-Token für eine höhere Badge und einen weiteren Slot."
   },
   "stages": {
+    "allStages": "Alle Audioräume",
     "title": "Audioräume",
     "tabLive": "Live",
     "tabUpcoming": "Bevorstehend",

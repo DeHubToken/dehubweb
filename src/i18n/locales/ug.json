@@ -3021,6 +3021,7 @@
     "shopAllowanceUsed": "{{allowance}} of {{allowance}} used. ئېگىز نومۇر ۋە باشقا سىلوت ئۈچۈن تېخىمۇ كۆپ DeHub بەلگىلىرى قۇيۇڭ."
   },
   "stages": {
+    "allStages": "بارلىق ئاۋازلىق ئۆيلەر",
     "title": "ئاۋازلىق ئۆيلەر",
     "tabLive": "Live",
     "tabUpcoming": "كەلگۈسى",

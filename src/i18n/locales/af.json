@@ -3080,6 +3080,7 @@
     "shopAllowanceUsed": "{{allowance}} van {{allowance}} gebruik. Staking meer DeHub tokens vir 'n hoër badge en nog 'n gleuf."
   },
   "stages": {
+    "allStages": "Alle oudiokamers",
     "title": "Oudiokamers",
     "tabLive": "Regstreeks",
     "tabUpcoming": "Komende",

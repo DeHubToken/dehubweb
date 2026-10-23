@@ -3045,6 +3045,7 @@
     "shopAllowanceUsed": "{{allowance}} nga {{allowance}} të përdorura. Stakoni më shumë tokena DeHub për një medalje më të lartë dhe një slot tjetër."
   },
   "stages": {
+    "allStages": "Të gjitha dhomat audio",
     "title": "Dhoma audio",
     "tabLive": "Drejtpërdrejt",
     "tabUpcoming": "Të ardhshme",
