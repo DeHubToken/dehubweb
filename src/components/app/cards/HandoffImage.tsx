@@ -22,6 +22,8 @@ interface ImageProps extends Pick<HTMLAttributes<HTMLSpanElement>, 'onClick' | '
   srcSet?: string;
   sizes?: string;
   className?: string;
+  /** The creator's alt text; empty marks the image decorative, as before. */
+  alt?: string;
   style?: CSSProperties;
   width?: number;
   height?: number;
@@ -62,6 +64,7 @@ function show(entry: Entry) {
   };
   notifyFailure();
   if (image.className !== (props.className ?? '')) image.className = props.className ?? '';
+  if (image.alt !== (props.alt ?? '')) image.alt = props.alt ?? '';
   const nextStyle: Record<string, string> = {};
   for (const [property, value] of Object.entries(props.style ?? {})) {
     if (value == null) continue;

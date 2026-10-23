@@ -56,6 +56,7 @@ import { useQueryClient } from '@tanstack/react-query';
 import MoreVertical from '@/components/ui/cut-icons/morevertical';
 import { ListPlus, Clock, Zap, Ticket, Star, Loader2, Code } from "lucide-react";
 import { copyPostEmbedCode } from '@/lib/post-embed-code';
+import { AltTextBadge } from './AltTextBadge';
 import Eye from "@/components/ui/cut-icons/visibility";
 import Flag from "@/components/ui/cut-icons/report";
 import Ban from "@/components/ui/cut-icons/blocked";
@@ -2552,6 +2553,7 @@ export const VideoCard = memo(function VideoCard({ video, postPage = false, onBa
                   />
                 )}
                 <div ref={attachVideoSlot} className={cn("absolute inset-0 w-full h-full", hasError && "invisible")} />
+                <AltTextBadge text={video.mediaDescriptions?.[0]} className="absolute left-2 top-2" />
               </>
             ) : video.isLivePost && video.isLiveNow ? (
               /* On air: play the stream right here. The feed used to show only
