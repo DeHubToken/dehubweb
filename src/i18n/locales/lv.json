@@ -1,4 +1,13 @@
 {
+  "followedTags": {
+    "follow": "Sekot #{{tag}}",
+    "following": "Seko",
+    "unfollow": "Pārtraukt sekot #{{tag}}",
+    "followed": "Tagad tu seko #{{tag}}. Tā ieraksti parādīsies tavā Sekotie plūsmā.",
+    "unfollowed": "Tu vairs neseko #{{tag}}",
+    "failed": "Netika saglabāts. Mēģini vēlreiz.",
+    "clear": "Notīrīt"
+  },
   "notificationFilters": {
     "title": "Filtrēt paziņojumus no",
     "description": "Izvēlies, kas notiek, kad kāds ārpus tava loka ar tevi mijiedarbojas. Filtrētie paziņojumi gaida sadaļā Filtrētie, bez nozīmītes un bez push paziņojuma.",

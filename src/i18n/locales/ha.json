@@ -1,4 +1,13 @@
 {
+  "followedTags": {
+    "follow": "Bi #{{tag}}",
+    "following": "Kana bi",
+    "unfollow": "Daina bin #{{tag}}",
+    "followed": "Yanzu kana bin #{{tag}}. Rubuce-rubucensa za su bayyana a cikin abincin Waɗanda kake bi.",
+    "unfollowed": "Ka daina bin #{{tag}}",
+    "failed": "Ba a ajiye ba. Sake gwadawa.",
+    "clear": "Share"
+  },
   "notificationFilters": {
     "title": "Tace sanarwa daga",
     "description": "Zaɓi abin da zai faru idan wani a wajen da'irarka ya yi hulɗa da kai. Sanarwar da aka tace tana jira a ƙarƙashin \"An tace\", ba alama ba turawa.",

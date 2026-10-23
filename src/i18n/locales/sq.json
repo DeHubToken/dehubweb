@@ -1,4 +1,13 @@
 {
+  "followedTags": {
+    "follow": "Ndiq #{{tag}}",
+    "following": "E ndjek",
+    "unfollow": "Mos e ndiq më #{{tag}}",
+    "followed": "Tani e ndjek #{{tag}}. Postimet e tij do të shfaqen te prurja Të ndjekurit.",
+    "unfollowed": "Nuk e ndjek më #{{tag}}",
+    "failed": "Nuk u ruajt. Provo përsëri.",
+    "clear": "Pastro"
+  },
   "notificationFilters": {
     "title": "Filtro njoftimet nga",
     "description": "Zgjidh çfarë ndodh kur dikush jashtë rrethit tënd ndërvepron me ty. Njoftimet e filtruara presin te Të filtruara, pa distinktiv dhe pa njoftim push.",

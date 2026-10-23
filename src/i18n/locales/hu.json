@@ -1,4 +1,13 @@
 {
+  "followedTags": {
+    "follow": "#{{tag}} követése",
+    "following": "Követed",
+    "unfollow": "#{{tag}} követésének leállítása",
+    "followed": "Mostantól követed: #{{tag}}. A bejegyzései a Követettek hírfolyamodban jelennek meg.",
+    "unfollowed": "Már nem követed: #{{tag}}",
+    "failed": "Nem sikerült menteni. Próbáld újra.",
+    "clear": "Törlés"
+  },
   "notificationFilters": {
     "title": "Értesítések szűrése tőlük",
     "description": "Válaszd ki, mi történjen, ha valaki a körödön kívülről lép kapcsolatba veled. A szűrt értesítések a Szűrt alatt várnak, jelvény és push nélkül.",

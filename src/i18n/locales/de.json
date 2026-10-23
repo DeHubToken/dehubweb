@@ -1,4 +1,13 @@
 {
+  "followedTags": {
+    "follow": "#{{tag}} folgen",
+    "following": "Folge ich",
+    "unfollow": "#{{tag}} entfolgen",
+    "followed": "Du folgst jetzt #{{tag}}. Beiträge damit erscheinen in deinem Folge-ich-Feed.",
+    "unfollowed": "Du folgst #{{tag}} nicht mehr",
+    "failed": "Das wurde nicht gespeichert. Versuch es noch einmal.",
+    "clear": "Löschen"
+  },
   "notificationFilters": {
     "title": "Benachrichtigungen filtern von",
     "description": "Wähle, was passiert, wenn jemand außerhalb deines Umfelds mit dir interagiert. Gefilterte Benachrichtigungen warten unter „Gefiltert“, ohne Zähler und ohne Push.",

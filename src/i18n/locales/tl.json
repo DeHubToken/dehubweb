@@ -1,4 +1,13 @@
 {
+  "followedTags": {
+    "follow": "I-follow ang #{{tag}}",
+    "following": "Fina-follow",
+    "unfollow": "I-unfollow ang #{{tag}}",
+    "followed": "Fina-follow mo na ang #{{tag}}. Lalabas ang mga post nito sa Following feed mo.",
+    "unfollowed": "Na-unfollow ang #{{tag}}",
+    "failed": "Hindi na-save. Subukan ulit.",
+    "clear": "I-clear"
+  },
   "notificationFilters": {
     "title": "I-filter ang mga notification mula sa",
     "description": "Piliin kung ano ang mangyayari kapag may taong labas sa iyong grupo na nakipag-ugnayan sa iyo. Naghihintay ang mga na-filter na notification sa Na-filter, walang badge at walang push.",

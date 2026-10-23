@@ -1,4 +1,13 @@
 {
+  "followedTags": {
+    "follow": "Follow #{{tag}}",
+    "following": "You dey follow",
+    "unfollow": "Unfollow #{{tag}}",
+    "followed": "You don dey follow #{{tag}}. Im posts go show for your Following feed.",
+    "unfollowed": "You don unfollow #{{tag}}",
+    "failed": "E no save. Try again.",
+    "clear": "Clear am"
+  },
   "notificationFilters": {
     "title": "Filter notifications from",
     "description": "Choose wetin go happen when person wey no dey your circle interact with you. Filtered notifications go wait under Filtered, no badge and no push.",

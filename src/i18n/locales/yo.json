@@ -1,4 +1,13 @@
 {
+  "followedTags": {
+    "follow": "Tẹ̀lé #{{tag}}",
+    "following": "O ń tẹ̀lé",
+    "unfollow": "Dẹ́kun títẹ̀lé #{{tag}}",
+    "followed": "O ti ń tẹ̀lé #{{tag}} báyìí. Àwọn ìfìwéránṣẹ́ rẹ̀ yóò hàn nínú àwọn tí o ń tẹ̀lé.",
+    "unfollowed": "O ti dẹ́kun títẹ̀lé #{{tag}}",
+    "failed": "Kò fi pamọ́. Tún gbìyànjú.",
+    "clear": "Pa rẹ́"
+  },
   "notificationFilters": {
     "title": "Ṣàlẹ̀mọ́ àwọn ìfitónilétí láti ọ̀dọ̀",
     "description": "Yan ohun tí yóò ṣẹlẹ̀ nígbà tí ẹnìkan tí kò sí nínú àyíká rẹ bá bá ọ ṣe nǹkan. Àwọn ìfitónilétí tí a ṣàlẹ̀mọ́ ń dúró sí abẹ́ \"A ti ṣàlẹ̀mọ́\", láìsí àmì àti láìsí ìtaniji.",
