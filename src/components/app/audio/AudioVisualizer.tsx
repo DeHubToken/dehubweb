@@ -1005,7 +1005,7 @@ export function AudioVisualizer({
   const stopBubble = (e: React.SyntheticEvent) => e.stopPropagation();
 
   if (theme === 'glass' || (theme === 'system' && !isLightTheme)) return (
-    <div data-no-swipe data-video-controls data-audio-player data-audio-studio data-material={theme} className={className} onClick={stopBubble}>
+    <div data-no-swipe data-video-controls data-audio-player data-audio-studio data-material={theme} data-audio-studio-fullscreen={isFullscreen || undefined} className={className} onClick={stopBubble}>
       <div data-audio-studio-title>
         {artworkUrl && !artworkUrl.split('?')[0].endsWith('/placeholder.svg') && <img data-audio-studio-cover src={artworkUrl} alt="" loading="lazy" onError={event => { event.currentTarget.hidden = true; }} />}
         <div><strong>{displayTitle || popoutTrack?.title || t('audioPost.untitled')}</strong>
@@ -1017,6 +1017,11 @@ export function AudioVisualizer({
         onPointerDown={e => beginScrub(e.currentTarget, e, false)}
         onPointerMove={e => moveScrub(e.currentTarget, e)}
         onPointerUp={e => endScrub(e.currentTarget, e)} onPointerCancel={cancelScrub} />
+        {/* Fullscreen is the animation alone: play and exit over it, the card hidden. */}
+        {isFullscreen && onFullscreen && <div data-audio-studio-fs-bar>
+          <button type="button" aria-label={isPlaying ? t('audioPost.pause') : t('audioPost.play')} onClick={handlePlayPause}>{isPlaying ? <GlassPause fill="currentColor" /> : <GlassPlay fill="currentColor" />}</button>
+          <button type="button" aria-label={_copy('copy.37fd4e355ba3', { defaultValue: 'Exit fullscreen' })} onClick={onFullscreen}><Minimize /></button>
+        </div>}
       </div>
       <div data-audio-studio-deck>
         <svg data-audio-studio-wave viewBox="0 0 600 32" preserveAspectRatio="none" aria-hidden="true">
@@ -1042,8 +1047,8 @@ export function AudioVisualizer({
           {showVolume && <button type="button" aria-label={isEffectivelyMuted ? _copy('copy.ce4ee4efc5e3', { defaultValue: 'Unmute' }) : _copy('copy.8dd6857baf02', { defaultValue: 'Mute' })} onClick={() => { const next = !isEffectivelyMuted; if (!next && volume === 0) setVolume(.8); setSelfMuted(next); videoPlaybackManager.globalMuted = next; onMuteChange?.(next); }}><Volume2 /></button>}
           {onFullscreen && <button type="button" aria-label={isFullscreen ? _copy('copy.37fd4e355ba3', { defaultValue: 'Exit fullscreen' }) : _copy('copy.c461dbb2bab7', { defaultValue: 'Fullscreen' })} onClick={onFullscreen}><Maximize /></button>}
           {(showVolume || showStylePicker) && <div data-audio-studio-levels>
-            {showVolume && <input aria-label={_copy('copy.b10fb966d720', { defaultValue: 'Volume' })} type="range" min="0" max="100" value={isEffectivelyMuted ? 0 : Math.round(volume * 100)} onChange={e => { const value = Number(e.target.value); setVolume(value / 100); setSelfMuted(value === 0); videoPlaybackManager.globalMuted = value === 0; onMuteChange?.(value === 0); }} />}
             {showStylePicker && <input type="range" min="0" max="360" value={hue} aria-label={_copy('copy.89a167dad6da', { defaultValue: 'Visualizer colour' })} onChange={e => setHue(Number(e.target.value))} data-audio-hue />}
+            {showVolume && <input aria-label={_copy('copy.b10fb966d720', { defaultValue: 'Volume' })} type="range" min="0" max="100" value={isEffectivelyMuted ? 0 : Math.round(volume * 100)} onChange={e => { const value = Number(e.target.value); setVolume(value / 100); setSelfMuted(value === 0); videoPlaybackManager.globalMuted = value === 0; onMuteChange?.(value === 0); }} />}
           </div>}
       </div>
     </div>
@@ -1063,11 +1068,10 @@ export function AudioVisualizer({
         onPointerCancel={cancelScrub}
       />
 
-      {/* Normally beside volume; the first feed post clears the nav capsule. */}
+      {/* Colour takes the corner; volume sits beside it. */}
       <div
         data-audio-colour
-        data-audio-fullscreen={isFullscreen || undefined}
-        className={cn('absolute top-2 z-20 pointer-events-none', showVolume ? 'right-[110px]' : 'right-2')}
+        className="absolute right-2 top-2 z-20 pointer-events-none"
       >
         {/* Colour slider matches the unframed volume slider. */}
         {showStylePicker && (
@@ -1109,7 +1113,12 @@ export function AudioVisualizer({
 
       </div>
 
-      <div className="absolute right-2 top-2 z-20 pointer-events-auto">
+      {/* Normally beside colour; the first feed post clears the nav capsule. */}
+      <div
+        data-audio-volume
+        data-audio-fullscreen={isFullscreen || undefined}
+        className={cn('absolute top-2 z-20 pointer-events-auto', showStylePicker ? 'right-[76px]' : 'right-2')}
+      >
               {showVolume && (
               <div
                 className={cn('shrink-0 flex items-center gap-1.5 px-1', CONTROL_H)}
