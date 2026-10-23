@@ -719,7 +719,6 @@
     "embed": "Ugradi",
     "copyEmbedCode": "Kopiraj kod za ugradnju",
     "embedCodeCopied": "Kod za ugradnju kopiran",
-    "copyFailed": "Poveznicu nije moguće kopirati",
     "options": "Mogućnosti",
     "aiOverview": "AI pregled",
     "sendTip": "Pošalji napojnicu",
@@ -747,7 +746,8 @@
     "unpinPost": "Otkvači sa svog profila",
     "postPinned": "Prikvačeno na tvoj profil",
     "postUnpinned": "Otkvačeno s tvog profila",
-    "pinFailed": "Nije moguće prikvačiti ili otkvačiti ovu objavu"
+    "pinFailed": "Nije moguće prikvačiti ili otkvačiti ovu objavu",
+    "copyFailed": "Poveznicu nije moguće kopirati"
   },
   "filters": {
     "sort": "Sortiraj",
@@ -2350,6 +2350,30 @@
     "addDescription": "Dodaj opis...",
     "communityDescription": "Opis zajednice...",
     "posts": "Objave",
+    "chat": {
+      "intervalHour": "1 sat",
+      "intervalHours": "{{count}} h",
+      "intervalMinute": "1 minuta",
+      "intervalMinutes": "{{count}} min",
+      "intervalSecond": "1 sekunda",
+      "intervalSeconds": "{{count}} s",
+      "muted": "Isključen vam je zvuk",
+      "mutedUntil": "Isključen vam je zvuk do {{until}}",
+      "postingDisabled": "Objavljivanje je onemogućeno za članove ovdje",
+      "pinnedGif": "GIF",
+      "pinnedMedia": "Mediji",
+      "jumpToPinned": "Prijeđi na prikvačenu poruku",
+      "pinnedMessage": "Prikvačena poruka",
+      "unpin": "Otkvači",
+      "pin": "PIN",
+      "delete": "Izbriši",
+      "slowMode": "Usporeni način rada: jedna poruka svakih {{interval}}",
+      "slowModeWait": "Usporeni način rada — pričekajte {{time}}",
+      "send": "Pošalji",
+      "deleteMessageTitle": "Želite li izbrisati ovu poruku?",
+      "deleteMessageBody": "To se ne može poništiti.",
+      "cancel": "Odustani"
+    },
     "membersTab": "Članovi ({{count}})",
     "about": "O zajednici",
     "backToCommunities": "Zajednice",
@@ -6901,7 +6925,14 @@
     }
   },
   "editor": {
-    "video": { "tFade": "Pretapanje", "none": "Nijedan", "transition": "Prijelaz", "speed": "Brzina", "sound": "Zvuk","video": "Video"},
+    "video": {
+      "tFade": "Pretapanje",
+      "none": "Nijedan",
+      "transition": "Prijelaz",
+      "speed": "Brzina",
+      "sound": "Zvuk",
+      "video": "Video"
+    },
     "review": {
       "title": "Pregled projekta",
       "shared": "Podijeljeno s vama",

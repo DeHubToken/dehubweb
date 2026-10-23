@@ -194,11 +194,11 @@
   },
   "settings": {
     "usernameTaken": "Nama pengguna sudah dipakai",
-    "showDislikesDesc": "Siapa pun bisa membuka tab Tidak Suka di profilmu. Jika nonaktif, hanya kamu yang bisa melihatnya.",
-    "showDislikes": "Tampilkan tidak sukaku ke semua orang",
     "postingChain": "Blockchain postingan",
     "showOnline": "Tampilkan saat saya online",
     "showOnlineDesc": "Orang yang Anda kirimi pesan melihat titik hijau di samping nama Anda saat Anda menggunakan DeHub",
+    "showDislikes": "Tampilkan tidak sukaku ke semua orang",
+    "showDislikesDesc": "Siapa pun bisa membuka tab Tidak Suka di profilmu. Jika nonaktif, hanya kamu yang bisa melihatnya.",
     "smartReplies": "Balasan yang disarankan",
     "smartRepliesDesc": "Menyusun dua balasan yang bisa kamu ketuk di obrolan. Tanda × pada saran akan mematikannya.",
     "title": "Pengaturan",
@@ -723,7 +723,6 @@
     "embed": "Sematkan",
     "copyEmbedCode": "Salin kode sematan",
     "embedCodeCopied": "Kode sematan disalin",
-    "copyFailed": "Tidak dapat menyalin tautan",
     "options": "Opsi",
     "aiOverview": "Ikhtisar AI",
     "sendTip": "Kirim Tip",
@@ -751,7 +750,8 @@
     "unpinPost": "Batalkan sematan dari profil Anda",
     "postPinned": "Disematkan ke profil Anda",
     "postUnpinned": "Tidak disematkan dari profil Anda",
-    "pinFailed": "Tidak dapat menyematkan atau membatalkan sematan postingan ini"
+    "pinFailed": "Tidak dapat menyematkan atau membatalkan sematan postingan ini",
+    "copyFailed": "Tidak dapat menyalin tautan"
   },
   "filters": {
     "sort": "Urutkan",
@@ -1491,7 +1491,6 @@
     "returnHome": "Kembali ke Beranda"
   },
   "profile": {
-    "dislikes": { "loadMore": "Muat lebih banyak", "privateDesc": "Akun ini menyimpan tidak sukanya sendiri.", "privateTitle": "Tidak suka bersifat pribadi", "emptyOther": "Belum ada yang tidak disukai.", "emptyOwn": "Postingan yang tidak kamu sukai hilang dari feed-mu dan muncul di sini. Batalkan tidak suka untuk mengembalikan postingan.", "emptyTitle": "Belum ada tidak suka" },
     "back": "Kembali",
     "usernameAvailable": "Nama pengguna tersedia!",
     "signUpToClaim": "Daftar hari ini untuk mengklaim",
@@ -1519,8 +1518,16 @@
       "commentUnavailable": "Komentar ini tidak lagi tersedia"
     },
     "tabs": {
-      "dislikes": "Tidak Suka",
-      "playlists": "Daftar Putar"
+      "playlists": "Daftar Putar",
+      "dislikes": "Tidak Suka"
+    },
+    "dislikes": {
+      "emptyTitle": "Belum ada tidak suka",
+      "emptyOwn": "Postingan yang tidak kamu sukai hilang dari feed-mu dan muncul di sini. Batalkan tidak suka untuk mengembalikan postingan.",
+      "emptyOther": "Belum ada yang tidak disukai.",
+      "privateTitle": "Tidak suka bersifat pribadi",
+      "privateDesc": "Akun ini menyimpan tidak sukanya sendiri.",
+      "loadMore": "Muat lebih banyak"
     },
     "offerWorthNow": "Sekitar {{amount}} token dengan kurs saat ini",
     "offerNotePlaceholder": "Tambahkan catatan (opsional)",
@@ -2411,6 +2418,30 @@
     "addDescription": "Tambahkan deskripsi...",
     "communityDescription": "Deskripsi komunitas...",
     "posts": "Postingan",
+    "chat": {
+      "intervalHour": "1 jam",
+      "intervalHours": "{{count}} jam",
+      "intervalMinute": "1 menit",
+      "intervalMinutes": "{{count}} menit",
+      "intervalSecond": "1 detik",
+      "intervalSeconds": "{{count}} detik",
+      "muted": "Anda diredam",
+      "mutedUntil": "Anda diredam hingga {{until}}",
+      "postingDisabled": "Posting dinonaktifkan untuk anggota di sini",
+      "pinnedGif": "GIF",
+      "pinnedMedia": "Media",
+      "jumpToPinned": "Langsung ke pesan yang disematkan",
+      "pinnedMessage": "Pesan yang disematkan",
+      "unpin": "Batal sematkan",
+      "pin": "PIN",
+      "delete": "Hapus",
+      "slowMode": "Mode lambat: satu pesan setiap {{interval}}",
+      "slowModeWait": "Mode lambat — tunggu {{time}}",
+      "send": "Kirim",
+      "deleteMessageTitle": "Hapus pesan ini?",
+      "deleteMessageBody": "Ini tidak dapat diurungkan.",
+      "cancel": "Batalkan"
+    },
     "membersTab": "Anggota ({{count}})",
     "about": "Tentang",
     "backToCommunities": "Komunitas",
@@ -7024,7 +7055,14 @@
     }
   },
   "editor": {
-    "video": { "tFade": "Larut silang", "none": "Tidak ada", "transition": "Transisi", "speed": "Kecepatan", "sound": "Suara","video": "Video"},
+    "video": {
+      "tFade": "Larut silang",
+      "none": "Tidak ada",
+      "transition": "Transisi",
+      "speed": "Kecepatan",
+      "sound": "Suara",
+      "video": "Video"
+    },
     "review": {
       "title": "Tinjauan proyek",
       "shared": "Dibagikan kepada Anda",

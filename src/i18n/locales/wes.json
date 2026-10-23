@@ -681,7 +681,6 @@
     "embed": "Embed",
     "copyEmbedCode": "Copy embed code",
     "embedCodeCopied": "Embed code don copy",
-    "copyFailed": "We no fit copy the link",
     "options": "Option dem",
     "aiOverview": "AI overview",
     "sendTip": "Send Tip",
@@ -706,7 +705,8 @@
     "bookmark": "Bookmark",
     "removeBookmark": "Remove bookmark",
     "postUnpinned": "Dee no fit stay pin apon yu profile",
-    "pinFailed": "Wetin no go pin or unpin post dis?"
+    "pinFailed": "Wetin no go pin or unpin post dis?",
+    "copyFailed": "We no fit copy the link"
   },
   "filters": {
     "sort": "Sort",
@@ -2307,6 +2307,27 @@
     "addDescription": "Add description...",
     "communityDescription": "Community description...",
     "posts": "Post",
+    "chat": {
+      "intervalHour": "1 hour",
+      "intervalHours": "{{count}} hours",
+      "intervalMinute": "1 minute",
+      "intervalMinutes": "{{count}} minutes",
+      "intervalSecond": "1 second",
+      "intervalSeconds": "{{count}} seconds",
+      "muted": "You mute",
+      "postingDisabled": "Members no fit post here.",
+      "pinnedGif": "GIF",
+      "pinnedMedia": "Media",
+      "pinnedMessage": "Pinned message",
+      "unpin": "Unpin",
+      "pin": "Pin",
+      "delete": "Delete",
+      "slowMode": "Slow mode: one message every {{interval}}",
+      "slowModeWait": "Slow mode — wait {{time}}",
+      "send": "Send",
+      "deleteMessageBody": "Dis no fit be undo.",
+      "cancel": "Cancel"
+    },
     "membersTab": "Member dem ({{count}})",
     "about": "About",
     "backToCommunities": "Community",
@@ -6273,7 +6294,14 @@
     }
   },
   "editor": {
-    "video": { "tFade": "Cross-fade", "none": "Nothing", "transition": "Transition", "speed": "Speed", "sound": "Nois","video": "Video"},
+    "video": {
+      "tFade": "Cross-fade",
+      "none": "Nothing",
+      "transition": "Transition",
+      "speed": "Speed",
+      "sound": "Nois",
+      "video": "Video"
+    },
     "review": {
       "title": "Check project",
       "shared": "Dem share am with you",

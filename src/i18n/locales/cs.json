@@ -194,11 +194,11 @@
   },
   "settings": {
     "usernameTaken": "Uživatelské jméno je obsazené",
-    "showDislikesDesc": "Kdokoli může otevřít kartu Nelíbí se na tvém profilu. Když je to vypnuté, vidíš ji jen ty.",
-    "showDislikes": "Zobrazit všem, co se mi nelíbí",
     "postingChain": "Blockchain příspěvků",
     "showOnline": "Zobrazit, když jsem online",
     "showOnlineDesc": "Lidé, kterým posíláte zprávu, uvidí zelenou tečku vedle vašeho jména, když používáte službu DeHub",
+    "showDislikes": "Zobrazit všem, co se mi nelíbí",
+    "showDislikesDesc": "Kdokoli může otevřít kartu Nelíbí se na tvém profilu. Když je to vypnuté, vidíš ji jen ty.",
     "smartReplies": "Navrhované odpovědi",
     "smartRepliesDesc": "Připraví dvě odpovědi, na které v chatu klepneš. × u návrhů to vypne.",
     "title": "Nastavení",
@@ -721,7 +721,6 @@
     "embed": "Vložit",
     "copyEmbedCode": "Kopírovat kód pro vložení",
     "embedCodeCopied": "Kód pro vložení zkopírován",
-    "copyFailed": "Odkaz se nepodařilo zkopírovat",
     "options": "Možnosti",
     "aiOverview": "Přehled AI",
     "sendTip": "Poslat spropitné",
@@ -749,7 +748,8 @@
     "unpinPost": "Odpojit od profilu",
     "postPinned": "Připnuto k tvému profilu",
     "postUnpinned": "Odpojeno od tvého profilu",
-    "pinFailed": "Tento příspěvek se nepodařilo připnout nebo odepnout"
+    "pinFailed": "Tento příspěvek se nepodařilo připnout nebo odepnout",
+    "copyFailed": "Odkaz se nepodařilo zkopírovat"
   },
   "filters": {
     "sort": "Řadit",
@@ -1482,7 +1482,6 @@
     "returnHome": "Zpět na hlavní stránku"
   },
   "profile": {
-    "dislikes": { "loadMore": "Načíst další", "privateDesc": "Tento účet si svá nelíbí se nechává pro sebe.", "privateTitle": "Nelíbí se je soukromé", "emptyOther": "Zatím nic.", "emptyOwn": "Příspěvky, které se ti nelíbí, zmizí z tvých kanálů a objeví se tady. Zruš nelíbí se a příspěvek se vrátí.", "emptyTitle": "Zatím nic" },
     "back": "Zpět",
     "usernameAvailable": "Uživatelské jméno je dostupné!",
     "signUpToClaim": "Zaregistrujte se a získejte ho",
@@ -1510,8 +1509,16 @@
       "commentUnavailable": "Tento komentář již není k dispozici"
     },
     "tabs": {
-      "dislikes": "Nelíbí se",
-      "playlists": "Playlisty"
+      "playlists": "Playlisty",
+      "dislikes": "Nelíbí se"
+    },
+    "dislikes": {
+      "emptyTitle": "Zatím nic",
+      "emptyOwn": "Příspěvky, které se ti nelíbí, zmizí z tvých kanálů a objeví se tady. Zruš nelíbí se a příspěvek se vrátí.",
+      "emptyOther": "Zatím nic.",
+      "privateTitle": "Nelíbí se je soukromé",
+      "privateDesc": "Tento účet si svá nelíbí se nechává pro sebe.",
+      "loadMore": "Načíst další"
     },
     "offerWorthNow": "Přibližně {{amount}} tokenů při aktuálním kurzu",
     "offerNotePlaceholder": "Přidej poznámku (nepovinné)",
@@ -2354,6 +2361,30 @@
     "addDescription": "Přidejte popis...",
     "communityDescription": "Popis komunity...",
     "posts": "Příspěvky",
+    "chat": {
+      "intervalHour": "1 hodina",
+      "intervalHours": "{{count}} hodin",
+      "intervalMinute": "1 minuta",
+      "intervalMinutes": "{{count}} minut",
+      "intervalSecond": "1 sekunda",
+      "intervalSeconds": "{{count}} sekund",
+      "muted": "Jste ztlumeni",
+      "mutedUntil": "Jste ztlumeni do {{until}}",
+      "postingDisabled": "Publikování je pro členy zakázáno zde",
+      "pinnedGif": "GIF",
+      "pinnedMedia": "Média",
+      "jumpToPinned": "Přejít na připnutou zprávu",
+      "pinnedMessage": "Připnutá zpráva",
+      "unpin": "Zrušit připnutí",
+      "pin": "PIN",
+      "delete": "Odstranit",
+      "slowMode": "Pomalý režim: jedna zpráva každých {{interval}}",
+      "slowModeWait": "Pomalý režim — počkejte {{time}}",
+      "send": "Odeslat",
+      "deleteMessageTitle": "Smazat tuto zprávu?",
+      "deleteMessageBody": "Tuto akci nelze vrátit zpět.",
+      "cancel": "Zrušit"
+    },
     "membersTab": "Členové ({{count}})",
     "about": "O komunitě",
     "backToCommunities": "Komunity",
@@ -6901,7 +6932,14 @@
     }
   },
   "editor": {
-    "video": { "tFade": "Prolínání", "none": "Žádný", "transition": "Přechod", "speed": "Rychlost", "sound": "Zvuk","video": "Video"},
+    "video": {
+      "tFade": "Prolínání",
+      "none": "Žádný",
+      "transition": "Přechod",
+      "speed": "Rychlost",
+      "sound": "Zvuk",
+      "video": "Video"
+    },
     "review": {
       "title": "Kontrola projektu",
       "shared": "Sdíleno s vámi",

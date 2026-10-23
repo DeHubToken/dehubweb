@@ -711,7 +711,6 @@
     "embed": "ኣእቱ",
     "copyEmbedCode": "ናይ ምእታው ኮድ ቅዳሕ",
     "embedCodeCopied": "ናይ ምእታው ኮድ ተቐዲሑ",
-    "copyFailed": "መላግቦ ክቕዳሕ ኣይተኻእለን",
     "options": "ምርጫታት",
     "aiOverview": "ሓፈሻዊ ኣመለኻኽታ AI",
     "sendTip": "ሽልማት ስደድ",
@@ -739,7 +738,8 @@
     "unpinPost": "ካብ መገለጺኻ ኣርሕቕ",
     "postPinned": "ኣብ መገለጺኻ ተጸሚድካ",
     "postUnpinned": "ካብ መገለጺኻ ርሒቕካ",
-    "pinFailed": "ነዚ ጽሑፍ እዚ ክተኣታተወሉ ወይ ክተኣታተወሉ ኣይከኣለን ።"
+    "pinFailed": "ነዚ ጽሑፍ እዚ ክተኣታተወሉ ወይ ክተኣታተወሉ ኣይከኣለን ።",
+    "copyFailed": "መላግቦ ክቕዳሕ ኣይተኻእለን"
   },
   "filters": {
     "sort": "ደርድር",
@@ -2368,6 +2368,29 @@
     "addDescription": "መግለጺ ወስኽ...",
     "communityDescription": "መግለጺ ማሕበረሰብ...",
     "posts": "ልኡኻት",
+    "chat": {
+      "intervalHour": "1 ሰዓት",
+      "intervalHours": "{{count}} ሰዓታት",
+      "intervalMinute": "1 ደቒቕ",
+      "intervalMinutes": "{{count}} ደቓይቕ",
+      "intervalSecond": "1 ካልኢት",
+      "intervalSeconds": "{{count}} ሰከንድ",
+      "muted": "ንስኻ ተሃዊኽካ ኢኻ",
+      "mutedUntil": "ክሳብ {{until}}",
+      "postingDisabled": "እቲ ልኡኽ ንኣባላት ኣብዚ ተሰናኺሉ ኣሎ",
+      "pinnedGif": "ግሪፍ",
+      "pinnedMedia": "መራኸቢ ብዙሓን",
+      "jumpToPinned": "ናብ ዝተሰነየ መልእኽቲ ዘርግሕ",
+      "pinnedMessage": "መልእኽቲ",
+      "pin": "ፒን",
+      "delete": "ሰርዝ",
+      "slowMode": "ቀስ ብቐስ ኣገባብ: ሓደ መልእኽቲ ኣብ ነፍሲ ወከፍ {{interval}}",
+      "slowModeWait": "ቀሊል ኣገባብ — ተጸበዩ {{time}}",
+      "send": "ልኢኽ",
+      "deleteMessageTitle": "ነዚ መልእኽቲ እዚ ክትሰርሖ ትኽእልዶ ፧",
+      "deleteMessageBody": "እዚ ክጠፍእ ኣይክእልን እዩ ።",
+      "cancel": "ሰርዝ"
+    },
     "membersTab": "ኣባላት ({{count}})",
     "about": "ብዛዕባ",
     "backToCommunities": "ማሕበረሰባት",
@@ -6874,7 +6897,14 @@
     }
   },
   "editor": {
-    "video": { "tFade": "ምሕዋስ", "none": "የለን", "transition": "ምስግጋር", "speed": "ቅልጣፈ", "sound": "ድምጺ","video": "ቪድዮ"},
+    "video": {
+      "tFade": "ምሕዋስ",
+      "none": "የለን",
+      "transition": "ምስግጋር",
+      "speed": "ቅልጣፈ",
+      "sound": "ድምጺ",
+      "video": "ቪድዮ"
+    },
     "review": {
       "title": "ግምገማ ፕሮጀክት",
       "shared": "ምሳኹም ዝተኻፈለ",

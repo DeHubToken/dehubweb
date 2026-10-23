@@ -719,7 +719,6 @@
     "embed": "Ku dhex rid",
     "copyEmbedCode": "Koobi koodka ku dhex ridista",
     "embedCodeCopied": "Koodka ku dhex ridista waa la koobiyay",
-    "copyFailed": "Lama koobiyi karin xiriirka",
     "options": "Ikhtiyaarada",
     "aiOverview": "Aragtida guud ee AI",
     "sendTip": "Dir Bakhshiish",
@@ -747,7 +746,8 @@
     "unpinPost": "Ka saar astaantaada",
     "postPinned": "Ku dheji astaantaada",
     "postUnpinned": "La 'aan ka timid astaantaada",
-    "pinFailed": "Can 't pin or unpin this post"
+    "pinFailed": "Can 't pin or unpin this post",
+    "copyFailed": "Lama koobiyi karin xiriirka"
   },
   "filters": {
     "sort": "Kala sooc",
@@ -2401,6 +2401,30 @@
     "addDescription": "Ku dar sharaxaad...",
     "communityDescription": "Sharaxaadda bulshada...",
     "posts": "Qoraallada",
+    "chat": {
+      "intervalHour": "1 saac",
+      "intervalHours": "{{count}} Saacadaha",
+      "intervalMinute": "1 daqiiqo",
+      "intervalMinutes": "{{count}} Daqiiqadaha",
+      "intervalSecond": "1 labaad",
+      "intervalSeconds": "{{count}} seconds",
+      "muted": "Waxaad tahay mowduuc",
+      "mutedUntil": "Waxaad tahay muted ilaa {{until}}",
+      "postingDisabled": "Boostada ayaa naafo u ah xubnaha halkan",
+      "pinnedGif": "GIF",
+      "pinnedMedia": "Warbaahinta",
+      "jumpToPinned": "Ku bood farriinta qaawan ee loo yaqaan 'pinned message'",
+      "pinnedMessage": "Fariin Pinned ah",
+      "unpin": "Unpin",
+      "pin": "PIN",
+      "delete": "Tirtir",
+      "slowMode": "Qaabka gaabiska ah: hal fariin kasta {{interval}}",
+      "slowModeWait": "Qaabka gaabiska ah — sug {{time}}",
+      "send": "Dir",
+      "deleteMessageTitle": "Tirtir fariintan?",
+      "deleteMessageBody": "Tani ma noqon karto mid aan la baabi 'in karin.",
+      "cancel": "Jooji"
+    },
     "membersTab": "Xubnaha ({{count}})",
     "about": "Ku saabsan",
     "backToCommunities": "Bulshooyinka",
@@ -6915,7 +6939,14 @@
     }
   },
   "editor": {
-    "video": { "tFade": "Isku-dhex-milmid", "none": "Midna", "transition": "Kala-gudub", "speed": "Xawaare", "sound": "Cod","video": "Muuqaal"},
+    "video": {
+      "tFade": "Isku-dhex-milmid",
+      "none": "Midna",
+      "transition": "Kala-gudub",
+      "speed": "Xawaare",
+      "sound": "Cod",
+      "video": "Muuqaal"
+    },
     "review": {
       "title": "Dib u eegista mashruuca",
       "shared": "Lala wadaagay adiga",

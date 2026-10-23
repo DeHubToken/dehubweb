@@ -717,7 +717,6 @@
     "embed": "Убудаваць",
     "copyEmbedCode": "Капіяваць код для ўбудавання",
     "embedCodeCopied": "Код для ўбудавання скапіяваны",
-    "copyFailed": "Не ўдалося скапіяваць спасылку",
     "options": "Параметры",
     "aiOverview": "Агляд штучнага інтэлекту",
     "sendTip": "Адправіць чаявыя",
@@ -745,7 +744,8 @@
     "unpinPost": "Выдаліць з вашага профілю",
     "postPinned": "Прышпілены да вашага профілю",
     "postUnpinned": "Адлучаны ад вашага профілю",
-    "pinFailed": "Немагчыма зафіксаваць або адключыць гэты пост"
+    "pinFailed": "Немагчыма зафіксаваць або адключыць гэты пост",
+    "copyFailed": "Не ўдалося скапіяваць спасылку"
   },
   "filters": {
     "sort": "Сартаваць",
@@ -2411,6 +2411,30 @@
     "addDescription": "Дадайце апісанне...",
     "communityDescription": "Апісанне суполкі...",
     "posts": "Пасты",
+    "chat": {
+      "intervalHour": "1 гадзіна",
+      "intervalHours": "{{count}} гадзін",
+      "intervalMinute": "1 хвіліна",
+      "intervalMinutes": "{{count}} хвілін",
+      "intervalSecond": "1 секунда",
+      "intervalSeconds": "{{count}} секунд",
+      "muted": "Вы прыглушаныя",
+      "mutedUntil": "Вы прыглушаныя, пакуль {{until}}",
+      "postingDisabled": "Паведамленне адключана для членаў тут",
+      "pinnedGif": "ГІФ",
+      "pinnedMedia": "Медыя",
+      "jumpToPinned": "Перайсці да прышпіленага паведамлення",
+      "pinnedMessage": "Зафіксаванае паведамленне",
+      "unpin": "Адключыць",
+      "pin": "PIN-код",
+      "delete": "Выдаліць",
+      "slowMode": "Павольны рэжым: па адным паведамленні кожны {{interval}}",
+      "slowModeWait": "Павольны рэжым — чакайце {{time}}",
+      "send": "Даслаць",
+      "deleteMessageTitle": "Выдаліць гэтае паведамленне?",
+      "deleteMessageBody": "Гэта немагчыма адмяніць.",
+      "cancel": "Скасаваць"
+    },
     "membersTab": "Удзельнікі ({{count}})",
     "about": "Пра суполку",
     "backToCommunities": "Суполкі",
@@ -7011,7 +7035,14 @@
     }
   },
   "editor": {
-    "video": { "tFade": "Плаўнае змешванне", "none": "Няма", "transition": "Пераход", "speed": "Хуткасць", "sound": "Гук","video": "Відэа"},
+    "video": {
+      "tFade": "Плаўнае змешванне",
+      "none": "Няма",
+      "transition": "Пераход",
+      "speed": "Хуткасць",
+      "sound": "Гук",
+      "video": "Відэа"
+    },
     "review": {
       "title": "Агляд праекта",
       "shared": "Абагулена з вамі",

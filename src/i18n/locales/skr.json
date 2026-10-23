@@ -708,7 +708,6 @@
     "embed": "ایمبیڈ",
     "copyEmbedCode": "ایمبیڈ کوڈ کاپی کرو",
     "embedCodeCopied": "ایمبیڈ کوڈ کاپی تھی ڳیا",
-    "copyFailed": "لنک کاپی نہ تھی سڳیا",
     "options": "اختیارات",
     "aiOverview": "AI دا جائزہ",
     "sendTip": "ٹِپ گھلو",
@@ -735,7 +734,8 @@
     "pinPost": "پروفائل پر چسپاں کر دیجیے",
     "postPinned": "پروفائل پر پین کیا گیا",
     "postUnpinned": "پروفائل سے پین ہٹ گیا",
-    "pinFailed": "یہ پوسٹ پین یا پین سے ہٹانا ممکن نہیں"
+    "pinFailed": "یہ پوسٹ پین یا پین سے ہٹانا ممکن نہیں",
+    "copyFailed": "لنک کاپی نہ تھی سڳیا"
   },
   "filters": {
     "sort": "ترتیب",
@@ -2380,6 +2380,29 @@
     "addDescription": "تفصیل شامل کرو...",
     "communityDescription": "کمیونٹی دی تفصیل...",
     "posts": "پوسٹاں",
+    "chat": {
+      "intervalHour": "1 گھنٹہ",
+      "intervalHours": "{{count}} گھنٹے",
+      "intervalMinute": "1 منٹ",
+      "intervalMinutes": "{{count}} منٹ",
+      "intervalSecond": "1 سیکنڈ",
+      "intervalSeconds": "{{count}} سیکنڈ",
+      "muted": "تُسیں مِوٹ ہوۓ ہو",
+      "mutedUntil": "تُسیں مِوٹ ہوۓ ہو جدو تک {{until}}",
+      "postingDisabled": "یہاں ممبران لئی پوسٹنگ بند اے",
+      "pinnedMedia": "میڈیا",
+      "jumpToPinned": "پِنڈ کردہ پیغام تے جمپ کرو",
+      "pinnedMessage": "پِنڈ کردہ پیغام",
+      "unpin": "انپِن",
+      "pin": "پِن",
+      "delete": "حذف",
+      "slowMode": "سُلو موڈ: ہر {{interval}} تے اک پیغام",
+      "slowModeWait": "سُلو موڈ — انتظار کرو {{time}}",
+      "send": "بھیجو",
+      "deleteMessageTitle": "ایہ پیغام حذف کرو؟",
+      "deleteMessageBody": "ایہ واپس نہیں کیتا جا سکدا۔",
+      "cancel": "منسوخ"
+    },
     "membersTab": "ممبر ({{count}})",
     "about": "بارے",
     "backToCommunities": "کمیونٹیاں",
@@ -6184,7 +6207,14 @@
     }
   },
   "editor": {
-    "video": { "tFade": "رل مل ونڄݨ", "none": "کجھ وی نہ", "transition": "ٹرانزیشن", "speed": "رفتار", "sound": "آواز","video": "ویڈیو"},
+    "video": {
+      "tFade": "رل مل ونڄݨ",
+      "none": "کجھ وی نہ",
+      "transition": "ٹرانزیشن",
+      "speed": "رفتار",
+      "sound": "آواز",
+      "video": "ویڈیو"
+    },
     "review": {
       "title": "پروجیکٹ کا جائزہ",
       "shared": "آپ کے ساتھ اشتراک کردہ",

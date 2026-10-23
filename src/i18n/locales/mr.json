@@ -719,7 +719,6 @@
     "embed": "एम्बेड",
     "copyEmbedCode": "एम्बेड कोड कॉपी करा",
     "embedCodeCopied": "एम्बेड कोड कॉपी झाला",
-    "copyFailed": "लिंक कॉपी करता आली नाही",
     "options": "पर्याय",
     "aiOverview": "एआय विहंगावलोकन",
     "sendTip": "टिप पाठवा",
@@ -747,7 +746,8 @@
     "unpinPost": "तुमच्या प्रोफाइलमधून पिन अनपिन करा",
     "postPinned": "तुमच्या प्रोफाइलवर पिन केले",
     "postUnpinned": "तुमच्या प्रोफाइलमधून अनपिन केलेले",
-    "pinFailed": "या पोस्टला पिन करणे किंवा अनपिन करणे शक्य नाही"
+    "pinFailed": "या पोस्टला पिन करणे किंवा अनपिन करणे शक्य नाही",
+    "copyFailed": "लिंक कॉपी करता आली नाही"
   },
   "filters": {
     "sort": "क्रमवारी",
@@ -2407,6 +2407,29 @@
     "addDescription": "वर्णन जोडा...",
     "communityDescription": "समुदायाचे वर्णन...",
     "posts": "पोस्ट",
+    "chat": {
+      "intervalHour": "1 तास",
+      "intervalHours": "{{count}} तास",
+      "intervalMinute": "1 मिनिट",
+      "intervalMinutes": "{{count}} मिनिटे",
+      "intervalSecond": "1 सेकंद",
+      "intervalSeconds": "{{count}} सेकंद",
+      "muted": "तुम्हाला म्यूट केले आहे",
+      "mutedUntil": "तुम्हाला {{until}} पर्यंत म्यूट केले आहे",
+      "postingDisabled": "इथे सदस्यांसाठी पोस्टिंग अक्षम आहे",
+      "pinnedMedia": "मीडिया",
+      "jumpToPinned": "पिन केलेल्या संदेशाकडे जा",
+      "pinnedMessage": "पिन केलेला संदेश",
+      "unpin": "अनपिन",
+      "pin": "पिन",
+      "delete": "हटवा",
+      "slowMode": "स्लो मोड: प्रत्येक {{interval}} मध्ये एक संदेश",
+      "slowModeWait": "स्लो मोड — प्रतीक्षा करा {{time}}",
+      "send": "पाठवा",
+      "deleteMessageTitle": "हा संदेश हटवायचा?",
+      "deleteMessageBody": "हे पूर्ववत करता येणार नाही.",
+      "cancel": "रद्द करा"
+    },
     "membersTab": "सदस्य ({{count}})",
     "about": "विषयी",
     "backToCommunities": "समुदाय",
@@ -6990,7 +7013,14 @@
     }
   },
   "editor": {
-    "video": { "tFade": "क्रॉस-डिझॉल्व्ह", "none": "काहीही नाही", "transition": "ट्रांझिशन", "speed": "वेग", "sound": "आवाज","video": "व्हिडिओ"},
+    "video": {
+      "tFade": "क्रॉस-डिझॉल्व्ह",
+      "none": "काहीही नाही",
+      "transition": "ट्रांझिशन",
+      "speed": "वेग",
+      "sound": "आवाज",
+      "video": "व्हिडिओ"
+    },
     "review": {
       "title": "प्रकल्प पुनरावलोकन",
       "shared": "तुमच्यासोबत शेअर केलेले",

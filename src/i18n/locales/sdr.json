@@ -690,7 +690,6 @@
     "embed": "ایمبیڈ",
     "copyEmbedCode": "ایمبیڈ کوڈ کاپی کرو",
     "embedCodeCopied": "ایمبیڈ کوڈ کاپی ہو گیا",
-    "copyFailed": "لنک کاپی نہیں ہو سکا",
     "options": "آپشن",
     "sendTip": "ٹِپ بھیجو",
     "queue": "قطار",
@@ -717,7 +716,8 @@
     "unpinPost": "प्रोफ़ाइल से अनपिन करें",
     "postPinned": "Tohre profile mein pin kar dehel",
     "postUnpinned": "نپین شده از پروفایل شما",
-    "pinFailed": "E post ke pin ya unpin naikhel gail"
+    "pinFailed": "E post ke pin ya unpin naikhel gail",
+    "copyFailed": "لنک کاپی نہیں ہو سکا"
   },
   "filters": {
     "sort": "ترتیب",
@@ -2363,6 +2363,29 @@
     "addDescription": "أضف وصفًا...",
     "communityDescription": "سماج کے بیان...",
     "posts": "المنشورات",
+    "chat": {
+      "intervalHour": "1 hour",
+      "intervalHours": "{{count}} hours",
+      "intervalMinute": "1 minute",
+      "intervalMinutes": "{{count}} minutes",
+      "intervalSecond": "1 second",
+      "intervalSeconds": "{{count}} seconds",
+      "muted": "तुम्हें म्यूट कर दिया गया है",
+      "postingDisabled": "इहाँ सदस्यन के लिए पोस्टिंग बंद बा",
+      "pinnedGif": "GIF",
+      "pinnedMedia": "Media",
+      "jumpToPinned": "पिन्ड संदेश पर कूदें",
+      "pinnedMessage": "Pinned message",
+      "unpin": "Unpin",
+      "pin": "Pin",
+      "delete": "Delete",
+      "slowMode": "Slow mode: one message every {{interval}}",
+      "slowModeWait": "Slow mode — wait {{time}}",
+      "send": "Send",
+      "deleteMessageTitle": "ई संदेश हटाव?",
+      "deleteMessageBody": "ई बात उलट नहीं हो सकै.",
+      "cancel": "Cancel"
+    },
     "membersTab": "رکن ({{count}})",
     "about": "بارے میں",
     "backToCommunities": "المجتمعات",
@@ -6493,7 +6516,14 @@
     }
   },
   "editor": {
-    "video": { "tFade": "گھل مل جانا", "none": "کچھو نہیں", "transition": "ٹرانزیشن", "speed": "رفتار", "sound": "آواز","video": "ویڈیو"},
+    "video": {
+      "tFade": "گھل مل جانا",
+      "none": "کچھو نہیں",
+      "transition": "ٹرانزیشن",
+      "speed": "رفتار",
+      "sound": "آواز",
+      "video": "ویڈیو"
+    },
     "review": {
       "title": "प्रोजेक्ट समीक्षा",
       "shared": "आपके साथ साझा किया गया",

@@ -719,7 +719,6 @@
     "embed": "Ampidiro",
     "copyEmbedCode": "Adikao ny kaody fampidirana",
     "embedCodeCopied": "Voadika ny kaody fampidirana",
-    "copyFailed": "Tsy afaka nandika ny rohy",
     "options": "Safidy",
     "aiOverview": "MANDRAKIZAY",
     "sendTip": "Handefa fanomezana",
@@ -747,7 +746,8 @@
     "unpinPost": "Unpin avy amin'ny mombamomba anao",
     "postPinned": "Nafotaka tamin'ny mombamomba anao",
     "postUnpinned": "Tsy tafalatsaka amin'ny mombamomba anao",
-    "pinFailed": "Tsy nahafaritra na nangeja ity lahatsoratra ity"
+    "pinFailed": "Tsy nahafaritra na nangeja ity lahatsoratra ity",
+    "copyFailed": "Tsy afaka nandika ny rohy"
   },
   "filters": {
     "sort": "Alamino",
@@ -2423,6 +2423,28 @@
     "addDescription": "Ampio famaritana...",
     "communityDescription": "Famaritana ny vondrom-piarahamonina...",
     "posts": "Lahatsoratra",
+    "chat": {
+      "intervalHour": "ora 1",
+      "intervalHours": "{{count}} hours",
+      "intervalMinute": "minitra",
+      "intervalMinutes": "{{count}} minutes",
+      "intervalSecond": "1 faharoa",
+      "intervalSeconds": "{{count}} segondra",
+      "muted": "Hiantsehatra ianao",
+      "postingDisabled": "Ny fangatahana ho an'ny fakan-tena ambony dia tsy maintsy atao amin'ny mpikambana",
+      "pinnedGif": "GIF",
+      "pinnedMedia": "Haino aman-jery",
+      "jumpToPinned": "Alefaso any amin'ilay hafatra voapetraka",
+      "pinnedMessage": "Hafatra voapetraka",
+      "unpin": "Unpin",
+      "pin": "PIN",
+      "delete": "Hamafa",
+      "slowMode": "Slow mode: hafatra iray isaky ny {{interval}}",
+      "send": "Ambakireny",
+      "deleteMessageTitle": "Fafao io hafatra io?",
+      "deleteMessageBody": "Voavaha io taratasin-tadidy io.",
+      "cancel": "Ajanona"
+    },
     "membersTab": "Mpikambana ({{count}})",
     "about": "Mombamomba",
     "backToCommunities": "Vondrom-piarahamonina",
@@ -7013,7 +7035,14 @@
     }
   },
   "editor": {
-    "video": { "tFade": "Fifangaroana", "none": "Tsy misy", "transition": "Tetezamita", "speed": "Hafainganana", "sound": "Feo","video": "Horonan-tsary"},
+    "video": {
+      "tFade": "Fifangaroana",
+      "none": "Tsy misy",
+      "transition": "Tetezamita",
+      "speed": "Hafainganana",
+      "sound": "Feo",
+      "video": "Horonan-tsary"
+    },
     "review": {
       "title": "Famerenana tetikasa",
       "shared": "Nozaraina taminao",

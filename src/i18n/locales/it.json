@@ -194,11 +194,11 @@
   },
   "settings": {
     "usernameTaken": "Nome utente già in uso",
-    "showDislikesDesc": "Chiunque può aprire la scheda «Non mi piace» del tuo profilo. Se disattivato, solo tu puoi vederla.",
-    "showDislikes": "Mostra a tutti i miei «non mi piace»",
     "postingChain": "Blockchain dei post",
     "showOnline": "Mostra quando sono online",
     "showOnlineDesc": "Le persone a cui invii un messaggio vedono un punto verde accanto al tuo nome mentre utilizzi DeHub",
+    "showDislikes": "Mostra a tutti i miei «non mi piace»",
+    "showDislikesDesc": "Chiunque può aprire la scheda «Non mi piace» del tuo profilo. Se disattivato, solo tu puoi vederla.",
     "smartReplies": "Risposte suggerite",
     "smartRepliesDesc": "Prepara due risposte che puoi toccare in chat. La × sui suggerimenti le disattiva.",
     "title": "Impostazioni",
@@ -723,7 +723,6 @@
     "embed": "Incorpora",
     "copyEmbedCode": "Copia codice di incorporamento",
     "embedCodeCopied": "Codice di incorporamento copiato",
-    "copyFailed": "Impossibile copiare il link",
     "options": "Opzioni",
     "aiOverview": "Panoramica AI",
     "sendTip": "Invia mancia",
@@ -751,7 +750,8 @@
     "unpinPost": "Rimuovi dal tuo profilo",
     "postPinned": "Fissato sul tuo profilo",
     "postUnpinned": "Rimosso dal tuo profilo",
-    "pinFailed": "Impossibile fissare o rimuovere questo post"
+    "pinFailed": "Impossibile fissare o rimuovere questo post",
+    "copyFailed": "Impossibile copiare il link"
   },
   "filters": {
     "sort": "Ordina",
@@ -1491,7 +1491,6 @@
     "returnHome": "Torna alla home"
   },
   "profile": {
-    "dislikes": { "loadMore": "Carica altro", "privateDesc": "Questo account tiene per sé i suoi «non mi piace».", "privateTitle": "I «non mi piace» sono privati", "emptyOther": "Ancora niente.", "emptyOwn": "I post che non ti piacciono escono dai tuoi feed e compaiono qui. Annulla il «non mi piace» per riportare indietro il post.", "emptyTitle": "Ancora nessun «non mi piace»" },
     "back": "Indietro",
     "usernameAvailable": "Nome utente disponibile!",
     "signUpToClaim": "Registrati oggi per richiederlo",
@@ -1519,8 +1518,16 @@
       "commentUnavailable": "Questo commento non è più disponibile"
     },
     "tabs": {
-      "dislikes": "Non mi piace",
-      "playlists": "Playlist"
+      "playlists": "Playlist",
+      "dislikes": "Non mi piace"
+    },
+    "dislikes": {
+      "emptyTitle": "Ancora nessun «non mi piace»",
+      "emptyOwn": "I post che non ti piacciono escono dai tuoi feed e compaiono qui. Annulla il «non mi piace» per riportare indietro il post.",
+      "emptyOther": "Ancora niente.",
+      "privateTitle": "I «non mi piace» sono privati",
+      "privateDesc": "Questo account tiene per sé i suoi «non mi piace».",
+      "loadMore": "Carica altro"
     },
     "offerWorthNow": "Circa {{amount}} token al tasso attuale",
     "offerNotePlaceholder": "Aggiungi una nota (facoltativo)",
@@ -2411,6 +2418,30 @@
     "addDescription": "Aggiungi una descrizione...",
     "communityDescription": "Descrizione della community...",
     "posts": "Post",
+    "chat": {
+      "intervalHour": "1 ora",
+      "intervalHours": "{{count}} ore",
+      "intervalMinute": "1 minuto",
+      "intervalMinutes": "{{count}} minuti",
+      "intervalSecond": "1 secondo",
+      "intervalSeconds": "{{count}} secondi",
+      "muted": "Sei silenziato",
+      "mutedUntil": "Sei disattivato fino a {{until}}",
+      "postingDisabled": "La pubblicazione è disabilitata per i membri qui",
+      "pinnedGif": "GIF",
+      "pinnedMedia": "Media",
+      "jumpToPinned": "Vai al messaggio bloccato",
+      "pinnedMessage": "Messaggio bloccato",
+      "unpin": "Sblocca",
+      "pin": "Pin",
+      "delete": "Elimina",
+      "slowMode": "Modalità lenta: un messaggio ogni {{interval}}",
+      "slowModeWait": "Modalità lenta — attendere {{time}}",
+      "send": "Invia",
+      "deleteMessageTitle": "Eliminare questo messaggio?",
+      "deleteMessageBody": "Questa operazione non può essere annullata.",
+      "cancel": "Annulla"
+    },
     "membersTab": "Membri ({{count}})",
     "about": "Informazioni",
     "backToCommunities": "Community",
@@ -7019,7 +7050,14 @@
     }
   },
   "editor": {
-    "video": { "tFade": "Dissolvenza incrociata", "none": "Nessuna", "transition": "Transizione", "speed": "Velocità", "sound": "Suono","video": "Video"},
+    "video": {
+      "tFade": "Dissolvenza incrociata",
+      "none": "Nessuna",
+      "transition": "Transizione",
+      "speed": "Velocità",
+      "sound": "Suono",
+      "video": "Video"
+    },
     "review": {
       "title": "Revisione del progetto",
       "shared": "Condiviso con te",

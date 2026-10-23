@@ -194,11 +194,11 @@
   },
   "settings": {
     "usernameTaken": "Nazwa użytkownika zajęta",
-    "showDislikesDesc": "Każdy może otworzyć kartę „Nie lubię” na twoim profilu. Gdy to jest wyłączone, widzisz ją tylko ty.",
-    "showDislikes": "Pokazuj wszystkim moje łapki w dół",
     "postingChain": "Blockchain postów",
     "showOnline": "Pokaż, gdy jestem online",
     "showOnlineDesc": "Osoby, do których piszesz, widzą zieloną kropkę obok Twojego imienia podczas korzystania z DeHub",
+    "showDislikes": "Pokazuj wszystkim moje łapki w dół",
+    "showDislikesDesc": "Każdy może otworzyć kartę „Nie lubię” na twoim profilu. Gdy to jest wyłączone, widzisz ją tylko ty.",
     "smartReplies": "Sugerowane odpowiedzi",
     "smartRepliesDesc": "Przygotowuje dwie odpowiedzi, które możesz dotknąć na czacie. × przy sugestiach je wyłącza.",
     "title": "Ustawienia",
@@ -723,7 +723,6 @@
     "embed": "Osadź",
     "copyEmbedCode": "Kopiuj kod do osadzenia",
     "embedCodeCopied": "Kod do osadzenia skopiowany",
-    "copyFailed": "Nie udało się skopiować linku",
     "options": "Opcje",
     "aiOverview": "Przegląd sztucznej inteligencji",
     "sendTip": "Wyślij napiwek",
@@ -751,7 +750,8 @@
     "unpinPost": "Odepnij od swojego profilu",
     "postPinned": "Przypięte do Twojego profilu",
     "postUnpinned": "Odepnij od swojego profilu",
-    "pinFailed": "Nie można przypiąć ani odpiąć tego wpisu"
+    "pinFailed": "Nie można przypiąć ani odpiąć tego wpisu",
+    "copyFailed": "Nie udało się skopiować linku"
   },
   "filters": {
     "sort": "Sortuj",
@@ -1491,7 +1491,6 @@
     "returnHome": "Wróć na stronę główną"
   },
   "profile": {
-    "dislikes": { "loadMore": "Wczytaj więcej", "privateDesc": "To konto zachowuje swoje łapki w dół dla siebie.", "privateTitle": "Łapki w dół są prywatne", "emptyOther": "Jeszcze nic.", "emptyOwn": "Posty, którym dajesz łapkę w dół, znikają z twoich kanałów i pojawiają się tutaj. Cofnij łapkę w dół, aby przywrócić post.", "emptyTitle": "Brak łapek w dół" },
     "back": "Wróć",
     "usernameAvailable": "Nazwa użytkownika dostępna!",
     "signUpToClaim": "Zarejestruj się dzisiaj, aby ją zarezerwować",
@@ -1519,8 +1518,16 @@
       "commentUnavailable": "Ten komentarz nie jest już dostępny"
     },
     "tabs": {
-      "dislikes": "Nie lubię",
-      "playlists": "Playlisty"
+      "playlists": "Playlisty",
+      "dislikes": "Nie lubię"
+    },
+    "dislikes": {
+      "emptyTitle": "Brak łapek w dół",
+      "emptyOwn": "Posty, którym dajesz łapkę w dół, znikają z twoich kanałów i pojawiają się tutaj. Cofnij łapkę w dół, aby przywrócić post.",
+      "emptyOther": "Jeszcze nic.",
+      "privateTitle": "Łapki w dół są prywatne",
+      "privateDesc": "To konto zachowuje swoje łapki w dół dla siebie.",
+      "loadMore": "Wczytaj więcej"
     },
     "offerWorthNow": "Około {{amount}} tokenów po obecnym kursie",
     "offerNotePlaceholder": "Dodaj notatkę (opcjonalnie)",
@@ -2411,6 +2418,30 @@
     "addDescription": "Dodaj opis...",
     "communityDescription": "Opis społeczności...",
     "posts": "Posty",
+    "chat": {
+      "intervalHour": "1 godzina",
+      "intervalHours": "{{count}} godz.",
+      "intervalMinute": "1 minuta",
+      "intervalMinutes": "{{count}} minut",
+      "intervalSecond": "1 sekunda",
+      "intervalSeconds": "{{count}} sekund",
+      "muted": "Jesteś wyciszony",
+      "mutedUntil": "Jesteś wyciszony do {{until}}",
+      "postingDisabled": "Publikowanie jest wyłączone dla członków tutaj",
+      "pinnedGif": "GIF",
+      "pinnedMedia": "Media",
+      "jumpToPinned": "Przejdź do przypiętej wiadomości",
+      "pinnedMessage": "Przypięta wiadomość",
+      "unpin": "Odepnij",
+      "pin": "PIN",
+      "delete": "Usuń",
+      "slowMode": "Tryb wolny: jedna wiadomość co {{interval}}",
+      "slowModeWait": "Tryb wolny — odczekaj {{time}}",
+      "send": "Wyślij",
+      "deleteMessageTitle": "Usunąć tę wiadomość?",
+      "deleteMessageBody": "Tej czynności nie można cofnąć.",
+      "cancel": "Anuluj"
+    },
     "membersTab": "Członkowie ({{count}})",
     "about": "Informacje",
     "backToCommunities": "Społeczności",
@@ -6977,7 +7008,14 @@
     }
   },
   "editor": {
-    "video": { "tFade": "Przenikanie", "none": "Brak", "transition": "Przejście", "speed": "Prędkość", "sound": "Dźwięk","video": "Wideo"},
+    "video": {
+      "tFade": "Przenikanie",
+      "none": "Brak",
+      "transition": "Przejście",
+      "speed": "Prędkość",
+      "sound": "Dźwięk",
+      "video": "Wideo"
+    },
     "review": {
       "title": "Przegląd projektu",
       "shared": "Udostępnione tobie",

@@ -719,7 +719,6 @@
     "embed": "嵌入",
     "copyEmbedCode": "复制嵌入代码",
     "embedCodeCopied": "嵌入代码已复制",
-    "copyFailed": "无法复制链接",
     "options": "选项",
     "sendTip": "送礼物",
     "queue": "排队",
@@ -746,7 +745,8 @@
     "unpinPost": "从你的个人资料取消钉扎",
     "postPinned": "已钉到你的个人资料",
     "postUnpinned": "已从你的个人资料取消钉扎",
-    "pinFailed": "无法钉扎或取消钉扎此帖子"
+    "pinFailed": "无法钉扎或取消钉扎此帖子",
+    "copyFailed": "无法复制链接"
   },
   "filters": {
     "sort": "排序",
@@ -2397,6 +2397,29 @@
     "addDescription": "加一段描述...",
     "communityDescription": "社区描述...",
     "posts": "帖子",
+    "chat": {
+      "intervalHour": "1 小时",
+      "intervalHours": "{{count}} 小时",
+      "intervalMinute": "1 分钟",
+      "intervalMinutes": "{{count}} 分钟",
+      "intervalSecond": "1 秒",
+      "intervalSeconds": "{{count}} 秒",
+      "muted": "你被禁言",
+      "mutedUntil": "你被禁言至 {{until}}",
+      "postingDisabled": "此处成员禁发",
+      "pinnedMedia": "媒体",
+      "jumpToPinned": "跳到置顶消息",
+      "pinnedMessage": "置顶消息",
+      "unpin": "取消置顶",
+      "pin": "置顶",
+      "delete": "删除",
+      "slowMode": "慢速模式：每 {{interval}} 发送一条",
+      "slowModeWait": "慢速模式 — 等待 {{time}}",
+      "send": "发送",
+      "deleteMessageTitle": "删除此消息？",
+      "deleteMessageBody": "此操作不可撤销。",
+      "cancel": "取消"
+    },
     "membersTab": "成员（{{count}}）",
     "about": "关于",
     "backToCommunities": "社区",
@@ -6366,7 +6389,14 @@
     }
   },
   "editor": {
-    "video": { "tFade": "交叉溶解", "none": "无", "transition": "转场", "speed": "速度", "sound": "声音","video": "视频"},
+    "video": {
+      "tFade": "交叉溶解",
+      "none": "无",
+      "transition": "转场",
+      "speed": "速度",
+      "sound": "声音",
+      "video": "视频"
+    },
     "review": {
       "title": "项目审阅",
       "shared": "与你共享",

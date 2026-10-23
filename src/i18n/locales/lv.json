@@ -705,7 +705,6 @@
     "embed": "Iegult",
     "copyEmbedCode": "Kopēt iegulšanas kodu",
     "embedCodeCopied": "Iegulšanas kods nokopēts",
-    "copyFailed": "Neizdevās nokopēt saiti",
     "options": "Opcijas",
     "aiOverview": "MI pārskats",
     "sendTip": "Sūtīt dzeramnaudu",
@@ -733,7 +732,8 @@
     "unpinPost": "Atspraust no profila",
     "postPinned": "Piesprausts jūsu profilam",
     "postUnpinned": "Atsprausti no jūsu profila",
-    "pinFailed": "Nevarēja piespraust vai atspraust šo ziņu"
+    "pinFailed": "Nevarēja piespraust vai atspraust šo ziņu",
+    "copyFailed": "Neizdevās nokopēt saiti"
   },
   "filters": {
     "sort": "Kārtot",
@@ -2387,6 +2387,30 @@
     "addDescription": "Pievienot aprakstu...",
     "communityDescription": "Kopienas apraksts...",
     "posts": "Ieraksti",
+    "chat": {
+      "intervalHour": "1 stunda",
+      "intervalHours": "{{count}} stundas",
+      "intervalMinute": "1 minūte",
+      "intervalMinutes": "{{count}} minūtes",
+      "intervalSecond": "1 sekunde",
+      "intervalSeconds": "{{count}} sekundes",
+      "muted": "Jūs esat izslēgts",
+      "mutedUntil": "Jūs esat izslēgts līdz {{until}}",
+      "postingDisabled": "Šeit dalībniekiem ir atspējota publicēšana",
+      "pinnedGif": "GIF",
+      "pinnedMedia": "Multivide",
+      "jumpToPinned": "Pāriet uz piesprausto ziņojumu",
+      "pinnedMessage": "Piesprausts ziņojums",
+      "unpin": "Atspraust",
+      "pin": "PIN kods",
+      "delete": "Dzēst",
+      "slowMode": "Lēnais režīms: viens ziņojums ik pēc {{interval}}",
+      "slowModeWait": "Lēnais režīms — gaidiet {{time}}",
+      "send": "Sūtīt",
+      "deleteMessageTitle": "Vai dzēst šo ziņojumu?",
+      "deleteMessageBody": "Šo darbību nevar atsaukt.",
+      "cancel": "Atcelt"
+    },
     "membersTab": "Dalībnieki ({{count}})",
     "about": "Par kopienu",
     "backToCommunities": "Kopienas",
@@ -6989,7 +7013,14 @@
     }
   },
   "editor": {
-    "video": { "tFade": "Pārplūšana", "none": "Nav", "transition": "Pāreja", "speed": "Ātrums", "sound": "Skaņa","video": "Video"},
+    "video": {
+      "tFade": "Pārplūšana",
+      "none": "Nav",
+      "transition": "Pāreja",
+      "speed": "Ātrums",
+      "sound": "Skaņa",
+      "video": "Video"
+    },
     "review": {
       "title": "Projekta pārskatīšana",
       "shared": "Kopīgots ar jums",

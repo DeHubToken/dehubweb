@@ -194,11 +194,11 @@
   },
   "settings": {
     "usernameTaken": "Användarnamnet är upptaget",
-    "showDislikesDesc": "Vem som helst kan öppna fliken Ogillanden på din profil. När detta är av kan bara du se den.",
-    "showDislikes": "Visa mina ogillanden för alla",
     "postingChain": "Blockkedja för inlägg",
     "showOnline": "Visa när jag är online",
     "showOnlineDesc": "Personer du skickar meddelanden till ser en grön prick bredvid ditt namn när du använder DeHub",
+    "showDislikes": "Visa mina ogillanden för alla",
+    "showDislikesDesc": "Vem som helst kan öppna fliken Ogillanden på din profil. När detta är av kan bara du se den.",
     "smartReplies": "Föreslagna svar",
     "smartRepliesDesc": "Skriver två svar som du kan trycka på i en chatt. × på förslagen stänger av det.",
     "title": "Inställningar",
@@ -721,7 +721,6 @@
     "embed": "Bädda in",
     "copyEmbedCode": "Kopiera inbäddningskod",
     "embedCodeCopied": "Inbäddningskod kopierad",
-    "copyFailed": "Det gick inte att kopiera länken",
     "options": "Alternativ",
     "aiOverview": "AI-översikt",
     "sendTip": "Skicka dricks",
@@ -749,7 +748,8 @@
     "unpinPost": "Ta bort fästet från din profil",
     "postPinned": "Fäst i din profil",
     "postUnpinned": "Frigjord från din profil",
-    "pinFailed": "Det gick inte att fästa eller ta bort det här inlägget"
+    "pinFailed": "Det gick inte att fästa eller ta bort det här inlägget",
+    "copyFailed": "Det gick inte att kopiera länken"
   },
   "filters": {
     "sort": "Sortera",
@@ -1487,7 +1487,6 @@
     "returnHome": "Tillbaka till startsidan"
   },
   "profile": {
-    "dislikes": { "loadMore": "Läs in fler", "privateDesc": "Det här kontot håller sina ogillanden för sig själv.", "privateTitle": "Ogillanden är privata", "emptyOther": "Inget ogillat än.", "emptyOwn": "Inlägg du ogillar försvinner från dina flöden och visas här. Ångra ogillandet för att få tillbaka inlägget.", "emptyTitle": "Inga ogillanden än" },
     "back": "Tillbaka",
     "usernameAvailable": "Användarnamnet är tillgängligt!",
     "signUpToClaim": "Registrera dig för att ta det",
@@ -1515,8 +1514,16 @@
       "commentUnavailable": "Den här kommentaren är inte längre tillgänglig"
     },
     "tabs": {
-      "dislikes": "Ogillanden",
-      "playlists": "Spellistor"
+      "playlists": "Spellistor",
+      "dislikes": "Ogillanden"
+    },
+    "dislikes": {
+      "emptyTitle": "Inga ogillanden än",
+      "emptyOwn": "Inlägg du ogillar försvinner från dina flöden och visas här. Ångra ogillandet för att få tillbaka inlägget.",
+      "emptyOther": "Inget ogillat än.",
+      "privateTitle": "Ogillanden är privata",
+      "privateDesc": "Det här kontot håller sina ogillanden för sig själv.",
+      "loadMore": "Läs in fler"
     },
     "offerWorthNow": "Cirka {{amount}} tokens till nuvarande kurs",
     "offerNotePlaceholder": "Lägg till en notering (valfritt)",
@@ -2358,6 +2365,30 @@
     "addDescription": "Lägg till en beskrivning...",
     "communityDescription": "Communitybeskrivning...",
     "posts": "Inlägg",
+    "chat": {
+      "intervalHour": "1 timme",
+      "intervalHours": "{{count}} timmar",
+      "intervalMinute": "1 minut",
+      "intervalMinutes": "{{count}} minuter",
+      "intervalSecond": "1 sekund",
+      "intervalSeconds": "{{count}} sekunder",
+      "muted": "Du är avstängd",
+      "mutedUntil": "Du är avstängd tills {{until}}",
+      "postingDisabled": "Inlägg är inaktiverat för medlemmar här",
+      "pinnedGif": "GIF",
+      "pinnedMedia": "Media",
+      "jumpToPinned": "Hoppa till det fastnålade meddelandet",
+      "pinnedMessage": "Fäst meddelande",
+      "unpin": "Lossa fästet",
+      "pin": "Pin",
+      "delete": "Radera",
+      "slowMode": "Långsamt läge: ett meddelande var {{interval}}",
+      "slowModeWait": "Långsamt läge — vänta {{time}}",
+      "send": "Skicka",
+      "deleteMessageTitle": "Ta bort det här meddelandet?",
+      "deleteMessageBody": "Detta kan inte ångras.",
+      "cancel": "Avbryt"
+    },
     "membersTab": "Medlemmar ({{count}})",
     "about": "Om",
     "backToCommunities": "Communities",
@@ -6903,7 +6934,14 @@
     }
   },
   "editor": {
-    "video": { "tFade": "Övertoning", "none": "Ingen", "transition": "Övergång", "speed": "Hastighet", "sound": "Ljud","video": "Video"},
+    "video": {
+      "tFade": "Övertoning",
+      "none": "Ingen",
+      "transition": "Övergång",
+      "speed": "Hastighet",
+      "sound": "Ljud",
+      "video": "Video"
+    },
     "review": {
       "title": "Projektgranskning",
       "shared": "Delat med dig",

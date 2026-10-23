@@ -719,7 +719,6 @@
     "embed": "ჩაშენება",
     "copyEmbedCode": "ჩაშენების კოდის კოპირება",
     "embedCodeCopied": "ჩაშენების კოდი დაკოპირდა",
-    "copyFailed": "ბმულის კოპირება ვერ მოხერხდა",
     "options": "პარამეტრები",
     "aiOverview": "ხელოვნური ინტელექტის მიმოხილვა",
     "sendTip": "ტიპის გაგზავნა",
@@ -747,7 +746,8 @@
     "unpinPost": "პროფილიდან მოხსნა",
     "postPinned": "მიმაგრებულია თქვენს პროფილზე",
     "postUnpinned": "მოხსნილია თქვენი პროფილიდან",
-    "pinFailed": "ჩანაწერის მიმაგრების ან მოხსნის შეცდომა"
+    "pinFailed": "ჩანაწერის მიმაგრების ან მოხსნის შეცდომა",
+    "copyFailed": "ბმულის კოპირება ვერ მოხერხდა"
   },
   "filters": {
     "sort": "სორტირება",
@@ -2421,6 +2421,30 @@
     "addDescription": "აღწერის დამატება...",
     "communityDescription": "საზოგადოების აღწერა...",
     "posts": "პოსტები",
+    "chat": {
+      "intervalHour": "1 საათი",
+      "intervalHours": "{{count}} საათი",
+      "intervalMinute": "1 წუთი",
+      "intervalMinutes": "{{count}} წუთი",
+      "intervalSecond": "1 წამი",
+      "intervalSeconds": "{{count}} წამი",
+      "muted": "დადუმებული ხართ",
+      "mutedUntil": "თქვენ დადუმებული ხართ {{until}}-მდე",
+      "postingDisabled": "აქ წევრების განთავსება გამორთულია",
+      "pinnedGif": "გიფ",
+      "pinnedMedia": "მედია",
+      "jumpToPinned": "მიმაგრებულ შეტყობინებაზე გადასვლა",
+      "pinnedMessage": "მიმაგრებული შეტყობინება",
+      "unpin": "მოხსნა",
+      "pin": "PIN-კოდი",
+      "delete": "წაშლა",
+      "slowMode": "ნელი რეჟიმი: ერთი შეტყობინება ყოველ {{interval}}",
+      "slowModeWait": "ნელი რეჟიმი — ლოდინი {{time}}",
+      "send": "გაგზავნა",
+      "deleteMessageTitle": "გსურთ ამ შეტყობინების წაშლა?",
+      "deleteMessageBody": "ამის გაუქმება შეუძლებელია.",
+      "cancel": "გაუქმება"
+    },
     "membersTab": "წევრები ({{count}})",
     "about": "შესახებ",
     "backToCommunities": "საზოგადოებები",
@@ -7028,7 +7052,14 @@
     }
   },
   "editor": {
-    "video": { "tFade": "ჯვარედინი გადასვლა", "none": "არცერთი", "transition": "გადასვლა", "speed": "სიჩქარე", "sound": "ხმა","video": "ვიდეო"},
+    "video": {
+      "tFade": "ჯვარედინი გადასვლა",
+      "none": "არცერთი",
+      "transition": "გადასვლა",
+      "speed": "სიჩქარე",
+      "sound": "ხმა",
+      "video": "ვიდეო"
+    },
     "review": {
       "title": "პროექტის განხილვა",
       "shared": "თქვენთან გაზიარებული",

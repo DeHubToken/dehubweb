@@ -718,7 +718,6 @@
     "embed": "ຝັງ",
     "copyEmbedCode": "ຄັດລອກໂຄດຝັງ",
     "embedCodeCopied": "ຄັດລອກໂຄດຝັງແລ້ວ",
-    "copyFailed": "ບໍ່ສາມາດຄັດລອກລິ້ງໄດ້",
     "options": "ຕົວເລືອກ",
     "aiOverview": "ພາບລວມຂອງ AI",
     "sendTip": "ສົ່ງທິບ",
@@ -746,7 +745,8 @@
     "unpinPost": "Unpin ຈາກໂປຣໄຟລ໌ຂອງທ່ານ",
     "postPinned": "ເອົາໄປໃສ່ໂປຣໄຟລ໌ຂອງທ່ານ",
     "postUnpinned": "Unpinned ຈາກໂປຣໄຟລ໌ຂອງທ່ານ",
-    "pinFailed": "ບໍ່ສາມາດໃສ່ລະຫັດ PIN ຫຼື ຖອນລະຫັດ PIN ຂອງໂພສນີ້ໄດ້"
+    "pinFailed": "ບໍ່ສາມາດໃສ່ລະຫັດ PIN ຫຼື ຖອນລະຫັດ PIN ຂອງໂພສນີ້ໄດ້",
+    "copyFailed": "ບໍ່ສາມາດຄັດລອກລິ້ງໄດ້"
   },
   "filters": {
     "sort": "ຈັດລຽງ",
@@ -2397,6 +2397,29 @@
     "addDescription": "ເພີ່ມຄຳອະທິບາຍ...",
     "communityDescription": "ຄຳອະທິບາຍຊຸມຊົນ...",
     "posts": "ໂພສ",
+    "chat": {
+      "intervalHour": "1 ຊົ່ວໂມງ",
+      "intervalHours": "{{count}} ຊົ່ວໂມງ",
+      "intervalMinute": "1 ນາທີ",
+      "intervalMinutes": "{{count}} ນາທີ",
+      "intervalSecond": "1 ວິນາທີ",
+      "intervalSeconds": "{{count}} ວິນາທີ",
+      "muted": "ທ່ານໄດ້ຖືກປັບ ໃຫມ",
+      "mutedUntil": "ທ່ານໄດ້ຖືກ muted ຈົນກ່ວາ {{until}}",
+      "postingDisabled": "ການໂພສຖືກປິດໃຊ້ງານສຳລັບສະມາຊິກທີ່ນີ້",
+      "pinnedMedia": "ສື່",
+      "jumpToPinned": "ກະໂດດໄປທີ່ຂໍ້ຄວາມທີ່ pinned",
+      "pinnedMessage": "ຂໍ້ຄວາມທີ່ຖືກຄັດລອກ",
+      "unpin": "ປົດລinອກ",
+      "pin": "ລະຫັດ PIN",
+      "delete": "ລຶບ",
+      "slowMode": "ໂຫມດ ຊ້າ: ຂໍ້ຄວາມ ຫນຶ່ງ ທຸກໆ {{interval}}",
+      "slowModeWait": "ໂໝດຊ້າ — ລໍຖ້າ {{time}}",
+      "send": "ສົ່ງ",
+      "deleteMessageTitle": "ລຶບຂໍ້ຄວາມນີ້ບໍ?",
+      "deleteMessageBody": "ມັນບໍ່ຄວນຖືກລົບລ້າງ.",
+      "cancel": "ຍົກເລີກ"
+    },
     "membersTab": "ສະມາຊິກ ({{count}})",
     "about": "ກ່ຽວກັບ",
     "backToCommunities": "ຊຸມຊົນ",
@@ -6974,7 +6997,14 @@
     }
   },
   "editor": {
-    "video": { "tFade": "ຈາງຊ້ອນ", "none": "ບໍ່ມີ", "transition": "ການປ່ຽນສາກ", "speed": "ຄວາມໄວ", "sound": "ສຽງ","video": "ວິດີໂອ"},
+    "video": {
+      "tFade": "ຈາງຊ້ອນ",
+      "none": "ບໍ່ມີ",
+      "transition": "ການປ່ຽນສາກ",
+      "speed": "ຄວາມໄວ",
+      "sound": "ສຽງ",
+      "video": "ວິດີໂອ"
+    },
     "review": {
       "title": "ກວດສອບໂຄງການ",
       "shared": "ແບ່ງປັນກັບທ່ານ",
