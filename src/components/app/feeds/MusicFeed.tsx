@@ -10,18 +10,14 @@ import { useTranslation as _useCopy } from 'react-i18next';
  * @module components/app/feeds/MusicFeed
  */
 
-import { useState, useMemo, useRef, useCallback, useEffect, useId } from 'react';
+import { useState, useMemo, useRef, useEffect } from 'react';
 import { useDragTabIndicator } from '@/hooks/use-drag-tab-indicator';
-import { useNavigate } from 'react-router-dom';
-import { Mic2, Disc3, Loader2, Headphones } from "lucide-react";
+import { Mic2, Disc3 } from "lucide-react";
 import Music from "@/components/ui/cut-icons/music";
 import Radio from "@/components/ui/cut-icons/live";
-import Volume2 from "@/components/ui/cut-icons/volume";
-import VolumeX from "@/components/ui/cut-icons/mute";
 
 import Play from "@/components/ui/cut-icons/play";
 import ChevronRight from "@/components/ui/cut-icons/next";
-import Pause from "@/components/ui/cut-icons/pause";
 
 import { AppState } from '@/components/app/AppState';
 import { AnimatePresence, motion } from 'framer-motion';
@@ -36,27 +32,21 @@ import { cn } from '@/lib/utils';
 // fullscreen visualizer, so importing one component through it pulled the whole
 // canvas visualizer module onto the boot path.
 import { RadioSection } from '@/components/app/radio/RadioSection';
-import { StagesCarousel } from '@/components/app/music/StagesCarousel';
+import { StagesChart } from '@/components/app/music/StagesCarousel';
+import { ChartDesk, type ChartDeskRow } from '@/components/app/music/ChartDesk';
 import { CinematicMusic } from '@/components/app/music/CinematicMusic';
 import { useCinematicPhone } from '@/hooks/use-cinematic-phone';
 import { openStageModal } from '@/contexts/StageContext';
 
 import { RadioStationCard } from '@/components/app/radio/RadioStationCard';
-import { SwipeableCarousel } from '@/components/app/SwipeableCarousel';
-import {
-  claimMediaSession,
-  releaseMediaSession,
-  setMediaSessionPlaying,
-} from '@/lib/media-session';
 import { VideoCard } from '@/components/app/cards/VideoCard';
-import { searchNFTs, getNFTInfo, getBlockList, type DeHubNFT } from '@/lib/api/dehub';
-import { MANUAL_MUSIC_TOKEN_IDS } from '@/constants/music.constants';
+import { searchNFTs, getBlockList, type DeHubNFT } from '@/lib/api/dehub';
 import { isBlockedCreator, mapNFTToVideoItem } from '@/lib/music-feed-items';
 import { resolveLikeCount, resolveViewCount } from '@/lib/engagement';
 import { fetchMusicVideoChart, MUSIC_VIDEO_CHART_SORTS, type MusicVideoChartSort } from '@/lib/music-video-chart';
+import { getPrimaryTags, getTopStations } from '@/lib/api/radio-browser';
 import { getCuratedCarouselStations, type RadioStation } from '@/lib/api/radio-browser';
 import { useAuth } from '@/contexts/AuthContext';
-import { videoPlaybackManager } from '@/lib/video-playback-manager';
 import type { VideoItem } from '@/types/feed.types';
 
 // ============================================================================
@@ -74,8 +64,6 @@ const MUSIC_SUB_TABS: { icon?: typeof Music; customIcon?: string; label: string;
   { customIcon: stagesMicIcon, get label() { return _translateCopy("copy.3a17aa4e4abb", { defaultValue: "Stages" }); }, value: 'stages' },
 ];
 
-const CAROUSEL_INITIAL_VISIBLE = 6; // Initial visible items in carousel
-const CAROUSEL_LOAD_MORE = 6; // Load more items when scrolling
 const VIDEOS_PAGE_SIZE = 10; // Page size for videos tab - small for fast initial load
 // Page size for the "All" tab carousels. Only CAROUSEL_INITIAL_VISIBLE items
 // render up front and the rest are revealed on horizontal scroll, so fetching
@@ -129,401 +117,97 @@ function SectionHeader({ icon: Icon, title, count, onSeeAll }: {
   );
 }
 
-function RadioCarousel({ stations, onSeeAll }: { stations: RadioStation[]; onSeeAll: () => void }) {
-  const { t: _copy } = _useCopy();
-  if (stations.length === 0) {
-    return (
-      <div>
-        <SectionHeader icon={Radio} title={_copy("copy.42ee912bff23", { defaultValue: "Radio Stations" })} />
-        <p className="text-zinc-500 text-sm">{_copy("copy.7c14e8607c11", { defaultValue: "Loading stations..." })}</p>
-      </div>
-    );
-  }
-
-  return (
-    <div>
-      <SectionHeader icon={Radio} title={_copy("copy.42ee912bff23", { defaultValue: "Radio Stations" })} onSeeAll={onSeeAll} />
-      <SwipeableCarousel className="flex gap-3 overflow-x-auto scrollbar-hide pr-8">
-        {stations.slice(0, 10).map((station) => (
-          <div key={station.stationuuid} className="flex-shrink-0 w-[280px]">
-            <RadioStationCard station={station} />
-          </div>
-        ))}
-      </SwipeableCarousel>
-    </div>
-  );
-}
-/** Avatar with error fallback for music cards */
-function MusicCardAvatar({ avatar, name }: { avatar?: string; name?: string }) {
-  const [failed, setFailed] = useState(false);
-  if (avatar && !failed) {
-    return (
-      <img
-        src={avatar}
-        alt={name || ''}
-        className="w-8 h-8 rounded-xl object-cover hover:opacity-80 transition-opacity pointer-events-none"
-        onError={() => setFailed(true)}
-      />
-    );
-  }
-  return (
-    <div className="w-8 h-8 rounded-xl bg-zinc-700 flex items-center justify-center pointer-events-none">
-      <span className="text-white text-xs font-medium">{name?.[0]?.toUpperCase() || '?'}</span>
-    </div>
-  );
-}
-
-// Inline playable video thumbnail card for carousel
-function InlineVideoCard({ video, onSeeAll }: { video: VideoItem; onSeeAll: () => void }) {
-  const instanceId = useId();
-  const [isPlaying, setIsPlaying] = useState(false);
-  const [isMuted, setIsMuted] = useState(() => videoPlaybackManager.globalMuted);
-  const videoRef = useRef<HTMLVideoElement>(null);
-  const navigate = useNavigate();
-
-  // Pause callback for the playback manager
-  const pauseVideo = useCallback(() => {
-    videoRef.current?.pause();
-    setIsPlaying(false);
-  }, []);
-
-  // Register with playback manager
-  useEffect(() => {
-    videoPlaybackManager.register(instanceId, pauseVideo);
-    return () => {
-      videoPlaybackManager.unregister(instanceId);
-    };
-  }, [instanceId, pauseVideo]);
-
-  const handlePlayClick = (e: React.MouseEvent) => {
-    e.stopPropagation();
-    if (isPlaying) {
-      videoRef.current?.pause();
-      setIsPlaying(false);
-      videoPlaybackManager.stop(instanceId);
-    } else {
-      // Sync mute state from global manager
-      const currentGlobalMuted = videoPlaybackManager.globalMuted;
-      setIsMuted(currentGlobalMuted);
-      if (videoRef.current) {
-        videoRef.current.muted = currentGlobalMuted;
-      }
-      // Notify manager - this will pause any other playing video
-      videoPlaybackManager.play(instanceId);
-      videoRef.current?.play();
-      setIsPlaying(true);
-    }
-  };
-
-  /**
-   * Hold the OS media session while this preview is audible.
-   *
-   * The carousel starts muted from the global default, so `!isMuted` is the
-   * test as everywhere else — a silent thumbnail must not take the lock
-   * screen off whatever is actually playing.
-   */
-  useEffect(() => {
-    if (!isPlaying || isMuted) {
-      releaseMediaSession(instanceId);
-      return;
-    }
-    claimMediaSession(
-      instanceId,
-      {
-        title: video.title || "DeHub music",
-        artist: video.channel || "DeHub",
-        artwork: video.thumbnail || null,
-      },
-      {
-        play: () => {
-          videoRef.current?.play().catch(() => {});
-          setIsPlaying(true);
-        },
-        pause: () => {
-          videoRef.current?.pause();
-          setIsPlaying(false);
-          videoPlaybackManager.stop(instanceId);
-        },
-      },
-    );
-    setMediaSessionPlaying(instanceId, true);
-  }, [isPlaying, isMuted, instanceId, video.title, video.channel, video.thumbnail]);
-
-  useEffect(() => () => releaseMediaSession(instanceId), [instanceId]);
-
-  const handleMuteClick = (e: React.MouseEvent) => {
-    e.stopPropagation();
-    setIsMuted(!isMuted);
-  };
-
-  const handleContainerClick = () => {
-    // If not playing, navigate to full view
-    if (!isPlaying) {
-      navigate(`/app/post/${video.id}`, { state: { fromFeed: true } });
-    }
-  };
-
-  const handleProfileClick = (e: React.MouseEvent) => {
-    e.stopPropagation();
-    // Navigate to user profile using the actual username from API
-    const username = video.creatorUsername?.replace('@', '') || video.channel?.replace('@', '') || '';
-    if (username && username !== 'Anonymous') {
-      navigate(`/${username}`);
-    }
-  };
-
-  return (
-    <div data-glass-media-card className="flex-shrink-0 w-[280px] text-left group rounded-xl border border-white/[0.12] bg-white/[0.03] p-2">
-      <div 
-        onClick={handleContainerClick}
-        className="aspect-video rounded-xl overflow-hidden bg-zinc-800 mb-2 relative cursor-pointer"
-      >
-        {/* Show video if playing, otherwise thumbnail */}
-        {isPlaying && video.videoUrl ? (
-          <video
-            ref={videoRef}
-            src={video.videoUrl}
-            className="w-full h-full object-cover"
-            muted={isMuted}
-            playsInline
-            {...{"webkit-playsinline": ""}}
-            autoPlay
-            loop
-            onEnded={() => setIsPlaying(false)}
-          />
-        ) : (
-          <img 
-            src={video.thumbnail} 
-            alt="" 
-            className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" 
-          />
-        )}
-        
-        {/* Play/Pause button overlay */}
-        <button
-          onClick={handlePlayClick}
-          className={cn(
-            "absolute inset-0 flex items-center justify-center transition-opacity bg-black/30",
-            isPlaying ? "opacity-0 hover:opacity-100" : "opacity-0 group-hover:opacity-100"
-          )}
-        >
-          <div className="w-12 h-12 rounded-xl bg-black/40 backdrop-blur-[24px] saturate-[180%] flex items-center justify-center border border-white/10">
-            {isPlaying ? (
-              <Pause className="w-6 h-6 text-white fill-white" />
-            ) : (
-              <Play className="w-6 h-6 text-white fill-white ml-0.5" />
-            )}
-          </div>
-        </button>
-
-        {/* Mute button when playing */}
-        {isPlaying && (
-          <button
-            onClick={handleMuteClick}
-            className="absolute bottom-2 right-2 w-8 h-8 rounded-lg bg-black/50 flex items-center justify-center z-10"
-          >
-            {isMuted ? (
-              <VolumeX className="w-4 h-4 text-white" />
-            ) : (
-              <Volume2 className="w-4 h-4 text-white" />
-            )}
-          </button>
-        )}
-
-        {/* Duration badge */}
-        {!isPlaying && video.duration && (
-          <div data-keep-dark className="absolute bottom-2 right-2 px-1.5 py-0.5 bg-black/70 rounded text-xs text-white">
-            {video.duration}
-          </div>
-        )}
-      </div>
-      
-      {/* Title and channel info with avatar */}
-      <div className="flex gap-2">
-        <button
-          type="button"
-          onClick={handleProfileClick}
-          onPointerDown={(e) => e.stopPropagation()}
-          className="flex-shrink-0 cursor-pointer"
-        >
-          <MusicCardAvatar avatar={video.channelAvatar} name={video.channel} />
-        </button>
-        <div className="min-w-0 flex-1">
-          <p className="text-white text-sm font-medium truncate">{video.title}</p>
-          <button 
-            onClick={handleProfileClick}
-            className="text-zinc-500 text-xs hover:text-white transition-colors text-left"
-          >
-            {video.channel}
-          </button>
-        </div>
-      </div>
-    </div>
-  );
-}
-
-function MusicVideosCarousel({ videos, totalCount, isLoading, onSeeAll }: { 
-  videos: VideoItem[]; 
-  totalCount: number;
-  isLoading: boolean; 
-  onSeeAll: () => void;
-}) {
-  const { t: _copy } = _useCopy();
-  const [visibleCount, setVisibleCount] = useState(CAROUSEL_INITIAL_VISIBLE);
-  const scrollRef = useRef<HTMLDivElement>(null);
-  
-  // Progressive loading on scroll
-  const handleScroll = useCallback(() => {
-    const el = scrollRef.current;
-    if (!el) return;
-    
-    // Check if scrolled near the end (within 100px of right edge)
-    const scrollRight = el.scrollWidth - el.scrollLeft - el.clientWidth;
-    if (scrollRight < 100 && visibleCount < videos.length) {
-      setVisibleCount(prev => Math.min(prev + CAROUSEL_LOAD_MORE, videos.length));
-    }
-  }, [visibleCount, videos.length]);
-  
-  const visibleVideos = videos.slice(0, visibleCount);
-  
-  return (
-    <div>
-      <SectionHeader icon={Play} title={_copy("copy.ab4d6796dbbe", { defaultValue: "Music Videos" })} onSeeAll={videos.length > 0 ? onSeeAll : undefined} />
-      {isLoading ? (
-        <div className="flex gap-3 overflow-hidden pr-8">
-          {Array.from({ length: 3 }).map((_, i) => (
-            <div key={i} className="w-[280px] flex-shrink-0">
-              <MusicVideoCardSkeleton />
-            </div>
-          ))}
-        </div>
-      ) : videos.length === 0 ? (
-        <AppState icon="videos" title={_copy("copy.26be785e21b7", { defaultValue: "No music videos yet" })} size="compact" />
-      ) : (
-        <div className="relative">
-          <SwipeableCarousel
-            fadeEdges
-            ref={scrollRef}
-            onScroll={handleScroll}
-            className="flex gap-3 overflow-x-auto scrollbar-hide pr-8"
-          >
-            {visibleVideos.map((video) => (
-              <InlineVideoCard key={video.id} video={video} onSeeAll={onSeeAll} />
-            ))}
-            {visibleCount < videos.length && (
-              <div className="flex-shrink-0 w-[280px] aspect-video rounded-xl bg-zinc-800 flex items-center justify-center">
-                <Loader2 className="w-6 h-6 text-zinc-500 animate-spin" />
-              </div>
-            )}
-          </SwipeableCarousel>
-        </div>
-      )}
-    </div>
-  );
-}
-
 type AudioChartSort = 'trending' | 'popular' | 'new';
-type VideoChartSort = MusicVideoChartSort;
-type MusicChartKind = 'audio' | 'videos';
+type RadioChartSort = 'picks' | 'played' | 'voted' | 'trending';
+// The radio chart ranks the top-voted stations the directory reports.
+const RADIO_CHART_SIZE = 30;
 
-function useChartSortLabels() {
-  const { t: _copy } = _useCopy();
-  return {
-    audio: [
-      { value: 'trending', label: _copy('music.mostPlayed', { defaultValue: 'Most played' }) },
-      { value: 'popular', label: _copy('music.mostLiked', { defaultValue: 'Most liked' }) },
-      { value: 'new', label: _copy('music.mostRecent', { defaultValue: 'Most recent' }) },
-    ] as { value: AudioChartSort; label: string }[],
-    videos: MUSIC_VIDEO_CHART_SORTS,
-  };
+function videoRows(items: VideoItem[], withViews: boolean): ChartDeskRow[] {
+  return items.map(item => ({
+    id: item.id,
+    title: item.title,
+    subtitle: withViews && item.views ? `${item.channel} · ${item.views}` : item.channel,
+    thumb: item.thumbnail,
+    trailing: item.duration,
+  }));
 }
 
-// The music charts: one desk (player + numbered list) with an Audio and a
-// Music videos tab, each with its own chart orders.
-function MusicChartDesk({ kind, onKind, items, isLoading, audioSort, onAudioSort, videoSort, onVideoSort }: {
-  kind: MusicChartKind;
-  onKind: (kind: MusicChartKind) => void;
-  items: VideoItem[];
-  isLoading: boolean;
-  audioSort: AudioChartSort;
-  onAudioSort: (sort: AudioChartSort) => void;
-  videoSort: VideoChartSort;
-  onVideoSort: (sort: VideoChartSort) => void;
-}) {
+function AudioChart({ items, isLoading, sort, onSort }: { items: VideoItem[]; isLoading: boolean; sort: AudioChartSort; onSort: (sort: AudioChartSort) => void }) {
   const { t: _copy } = _useCopy();
-  const sorts = useChartSortLabels();
-  const [selectedId, setSelectedId] = useState<string | null>(null);
-  const selected = items.find(item => item.id === selectedId) || items[0];
-  const [visibleCount, setVisibleCount] = useState(CAROUSEL_INITIAL_VISIBLE);
-  const scrollRef = useRef<HTMLDivElement>(null);
-  const isVideos = kind === 'videos';
-
-  // A new chart starts at its number one with the short list again.
-  useEffect(() => {
-    setSelectedId(null);
-    setVisibleCount(CAROUSEL_INITIAL_VISIBLE);
-  }, [kind, audioSort, videoSort]);
-
-  const handleScroll = useCallback(() => {
-    const el = scrollRef.current;
-    if (!el) return;
-    const scrollRight = el.scrollWidth - el.scrollLeft - el.clientWidth;
-    if (scrollRight < 100 && visibleCount < items.length) {
-      setVisibleCount(prev => Math.min(prev + CAROUSEL_LOAD_MORE, items.length));
-    }
-  }, [visibleCount, items.length]);
-
-  const visibleItems = items.slice(0, visibleCount);
-  const kinds: { value: MusicChartKind; label: string }[] = [
-    { value: 'audio', label: _copy('music.chartAudio', { defaultValue: 'Audio' }) },
-    { value: 'videos', label: _copy('music.chartVideos', { defaultValue: 'Music videos' }) },
-  ];
-
   return (
-    <div data-listening-desk>
-      <SectionHeader icon={isVideos ? Play : Disc3} title={isVideos ? _copy('music.videoCharts', { defaultValue: 'Music Video Charts' }) : _copy("copy.302b4ce5c73d", { defaultValue: "Audio Uploads" })} count={items.length} />
-      <div data-music-chart-kind role="tablist" aria-label={_copy('music.chartKind', { defaultValue: 'Music chart' })}>
-        {kinds.map(k => <button key={k.value} type="button" role="tab" aria-selected={kind === k.value} onClick={() => onKind(k.value)}>
-          {k.value === 'videos' ? <Play className="h-3.5 w-3.5" /> : <Disc3 className="h-3.5 w-3.5" />}
-          <span>{k.label}</span>
-          {kind === k.value && <span aria-hidden data-music-chart-beam />}
-        </button>)}
-      </div>
-      <div data-audio-chart-sort role="group" aria-label={isVideos ? _copy('music.videoChartOrder', { defaultValue: 'Music video chart order' }) : _copy('music.chartOrder', { defaultValue: 'Audio chart order' })}>
-        {isVideos
-          ? sorts.videos.map(sort => <button key={sort.value} type="button" aria-pressed={videoSort === sort.value} onClick={() => onVideoSort(sort.value)}>{sort.label}</button>)
-          : sorts.audio.map(sort => <button key={sort.value} type="button" aria-pressed={audioSort === sort.value} onClick={() => onAudioSort(sort.value)}>{sort.label}</button>)}
-      </div>
-      {isLoading ? (
-        <div className="flex gap-3 overflow-hidden pr-8">
-          {Array.from({ length: 3 }).map((_, i) => (
-            <div key={i} className="w-[280px] flex-shrink-0">
-              <div className="aspect-video rounded-xl bg-zinc-800 animate-pulse" />
-              <div className="mt-2 h-3 bg-zinc-800 rounded w-3/4 animate-pulse" />
-              <div className="mt-1 h-2.5 bg-zinc-800 rounded w-1/2 animate-pulse" />
-            </div>
-          ))}
-        </div>
-      ) : items.length === 0 ? (
-        isVideos
-          ? <AppState icon="videos" title={_copy("copy.26be785e21b7", { defaultValue: "No music videos yet" })} size="compact" />
-          : <AppState icon="audio" title={_copy("copy.cccec0619e2d", { defaultValue: "No audio uploads yet" })} size="compact" />
-      ) : (
-        <div data-listening-desk-layout data-chart-kind={kind}>
-          <div data-listening-desk-player>{selected && <VideoCard key={selected.id} video={selected} hideActions />}</div>
-          <div data-listening-desk-tracks ref={scrollRef} onScroll={handleScroll}>
-            {visibleItems.map((item, index) => <button type="button" key={item.id} data-selected={item.id === selected?.id} onClick={() => setSelectedId(item.id)} aria-pressed={item.id === selected?.id}>
-              <span data-track-number>{String(index + 1).padStart(2, '0')}</span>
-              {isVideos && <span data-chart-thumb>{item.thumbnail ? <img src={item.thumbnail} alt="" loading="lazy" /> : <Play className="h-4 w-4" />}</span>}
-              <span data-track-info><strong>{item.title}</strong><small>{isVideos && item.views ? `${item.channel} · ${item.views}` : item.channel}</small></span>
-              <span data-track-duration>{item.duration}</span>
-              <Play className="h-4 w-4 shrink-0" />
-            </button>)}
-            {visibleCount < items.length && <button type="button" onClick={() => setVisibleCount(count => count + CAROUSEL_LOAD_MORE)}>{_copy('copy.14c21c5e3ffe', { defaultValue: 'See all ' })}<ChevronRight className="h-4 w-4" /></button>}
-          </div>
-        </div>
-      )}
-    </div>
+    <ChartDesk
+      header={<SectionHeader icon={Disc3} title={_copy("copy.302b4ce5c73d", { defaultValue: "Audio Uploads" })} count={items.length} />}
+      sorts={[
+        { value: 'trending', label: _copy('music.mostPlayed', { defaultValue: 'Most played' }) },
+        { value: 'popular', label: _copy('music.mostLiked', { defaultValue: 'Most liked' }) },
+        { value: 'new', label: _copy('music.mostRecent', { defaultValue: 'Most recent' }) },
+      ]}
+      sort={sort}
+      onSort={onSort}
+      sortLabel={_copy('music.chartOrder', { defaultValue: 'Audio chart order' })}
+      rows={videoRows(items, false)}
+      isLoading={isLoading}
+      empty={{ icon: 'audio', title: _copy("copy.cccec0619e2d", { defaultValue: "No audio uploads yet" }) }}
+      renderSelected={id => { const item = items.find(i => i.id === id); return item ? <VideoCard key={item.id} video={item} hideActions /> : null; }}
+    />
+  );
+}
+
+function MusicVideoChart({ items, isLoading, sort, onSort, onSeeAll }: { items: VideoItem[]; isLoading: boolean; sort: MusicVideoChartSort; onSort: (sort: MusicVideoChartSort) => void; onSeeAll: () => void }) {
+  const { t: _copy } = _useCopy();
+  return (
+    <ChartDesk
+      header={<SectionHeader icon={Play} title={_copy("copy.ab4d6796dbbe", { defaultValue: "Music Videos" })} onSeeAll={items.length > 0 ? onSeeAll : undefined} />}
+      sorts={MUSIC_VIDEO_CHART_SORTS}
+      sort={sort}
+      onSort={onSort}
+      sortLabel={_copy('music.videoChartOrder', { defaultValue: 'Music video chart order' })}
+      rows={videoRows(items, true)}
+      isLoading={isLoading}
+      thumbs="wide"
+      empty={{ icon: 'videos', title: _copy("copy.26be785e21b7", { defaultValue: "No music videos yet" }) }}
+      renderSelected={id => { const item = items.find(i => i.id === id); return item ? <VideoCard key={item.id} video={item} hideActions /> : null; }}
+    />
+  );
+}
+
+function RadioChart({ picks, onSeeAll }: { picks: RadioStation[]; onSeeAll: () => void }) {
+  const { t: _copy } = _useCopy();
+  const [sort, setSort] = useState<RadioChartSort>('picks');
+  const { data: top = [], isLoading } = useQuery({
+    queryKey: ['radio-chart-top'],
+    queryFn: () => getTopStations(RADIO_CHART_SIZE),
+    enabled: sort !== 'picks',
+    staleTime: 60 * 60 * 1000,
+  });
+  const stations = useMemo(() => {
+    if (sort === 'picks') return picks;
+    const key = sort === 'played' ? 'clickcount' : sort === 'voted' ? 'votes' : 'clicktrend';
+    return [...top].sort((a, b) => (b[key] || 0) - (a[key] || 0));
+  }, [sort, picks, top]);
+  return (
+    <ChartDesk
+      header={<SectionHeader icon={Radio} title={_copy("copy.42ee912bff23", { defaultValue: "Radio Stations" })} onSeeAll={onSeeAll} />}
+      sorts={[
+        { value: 'picks', label: _copy('music.radioPicks', { defaultValue: 'Our picks' }) },
+        { value: 'played', label: _copy('music.mostPlayed', { defaultValue: 'Most played' }) },
+        { value: 'voted', label: _copy('music.mostVoted', { defaultValue: 'Most voted' }) },
+        { value: 'trending', label: _copy('music.trending', { defaultValue: 'Trending' }) },
+      ]}
+      sort={sort}
+      onSort={setSort}
+      sortLabel={_copy('music.radioChartOrder', { defaultValue: 'Radio chart order' })}
+      rows={stations.map(station => ({
+        id: station.stationuuid,
+        title: station.name,
+        subtitle: [getPrimaryTags(station.tags).join(', '), station.countrycode].filter(Boolean).join(' · '),
+        thumb: station.favicon || undefined,
+      }))}
+      isLoading={sort === 'picks' ? picks.length === 0 : isLoading}
+      thumbs="square"
+      empty={{ icon: 'audio', title: _copy("copy.7c14e8607c11", { defaultValue: "Loading stations..." }) }}
+      renderSelected={id => { const station = stations.find(s => s.stationuuid === id); return station ? <RadioStationCard station={station} /> : null; }}
+    />
   );
 }
 
@@ -548,38 +232,32 @@ function PodcastsCarousel() {
 }
 
 // All Section with all subsections
-function AllSection({ 
-  radioStations, 
-  musicVideos,
-  totalVideoCount,
-  isLoadingVideos,
-  isLoadingAudio,
-  chart,
+function AllSection({
+  radioStations,
+  isLoading,
+  audioChart,
+  videoChart,
   onGoToRadio,
-  onGoToVideos,
   onOpenStages,
-}: { 
+}: {
   radioStations: RadioStation[];
-  musicVideos: VideoItem[];
-  totalVideoCount: number;
-  isLoadingVideos: boolean;
-  isLoadingAudio: boolean;
-  chart: React.ReactNode;
+  isLoading: boolean;
+  audioChart: React.ReactNode;
+  videoChart: React.ReactNode;
   onGoToRadio: () => void;
-  onGoToVideos: () => void;
   onOpenStages: () => void;
 }) {
-  // Show full skeleton on initial load (no videos loaded yet and still fetching)
-  if (isLoadingVideos && musicVideos.length === 0 && isLoadingAudio) {
+  // Show full skeleton on initial load (no chart loaded yet and still fetching)
+  if (isLoading) {
     return <MusicFeedSkeleton />;
   }
 
   return (
     <div className="space-y-4 pb-32">
-      {chart}
-      <MusicVideosCarousel videos={musicVideos} totalCount={totalVideoCount} isLoading={isLoadingVideos} onSeeAll={onGoToVideos} />
-      <RadioCarousel stations={radioStations} onSeeAll={onGoToRadio} />
-      <StagesCarousel onOpenStages={onOpenStages} />
+      {audioChart}
+      {videoChart}
+      <RadioChart picks={radioStations} onSeeAll={onGoToRadio} />
+      <StagesChart onOpenStages={onOpenStages} />
       <TracksCarousel />
       <PodcastsCarousel />
     </div>
@@ -703,8 +381,7 @@ interface MusicFeedProps {
 export function MusicFeed({ showFilters = false, isRefreshing = false }: MusicFeedProps) {
   const [activeSubTab, setActiveSubTab] = useState<MusicSubTab>('all');
   const [chartSort, setChartSort] = useState<AudioChartSort>('trending');
-  const [chartKind, setChartKind] = useState<MusicChartKind>('audio');
-  const [videoChartSort, setVideoChartSort] = useState<VideoChartSort>('views');
+  const [videoChartSort, setVideoChartSort] = useState<MusicVideoChartSort>('views');
   const musicSubIsDraggingRef = useRef(false);
   const { layerRef: musicSubTabLayerRef, setRef: setMusicSubTabRef, rect: musicSubTabRect, onScroll: onMusicSubTabScroll } = useTabIndicator(activeSubTab, undefined, musicSubIsDraggingRef);
 
@@ -733,36 +410,6 @@ export function MusicFeed({ showFilters = false, isRefreshing = false }: MusicFe
     staleTime: 60 * 60 * 1000,
   });
 
-  // Fetch music-categorized videos for carousel - randomized
-  const { data: carouselVideosData, isLoading: isLoadingCarouselVideos } = useQuery({
-    queryKey: ['music-videos-carousel', walletAddress],
-    queryFn: async () => {
-      // The manual tokens do not depend on the search results, so both go out
-      // together — awaiting the search first left the nft_info calls sitting
-      // idle for the whole search round trip.
-      const [response, manualTokens] = await Promise.all([
-        searchNFTs({
-          category: 'Music',
-          postType: 'video',
-          unit: CAROUSEL_PAGE_SIZE,
-          sortMode: 'popular',
-        }),
-        Promise.all(
-          MANUAL_MUSIC_TOKEN_IDS.map(tokenId => getNFTInfo(String(tokenId)).catch(() => null))
-        ).then(tokens => tokens.filter(Boolean) as DeHubNFT[]),
-      ]);
-
-      // Merge: manual tokens first (so they appear at the front), then API
-      // results with duplicates removed. Blocked creators are filtered on
-      // render, not here, so a late-arriving block list still applies.
-      const manualTokenIds = new Set(manualTokens.map(t => t.tokenId));
-      const apiResults = (response.data || [])
-        .filter((nft: DeHubNFT) => !manualTokenIds.has(nft.tokenId));
-
-      return [...manualTokens, ...apiResults];
-    },
-    staleTime: 5 * 60 * 1000,
-  });
 
   // Fetch audio uploads for carousel (try both postType values)
   const { data: audioUploadsData, isLoading: isLoadingAudio } = useQuery({
@@ -802,7 +449,6 @@ export function MusicFeed({ showFilters = false, isRefreshing = false }: MusicFe
   // Music video charts, ranked on the server.
   const { data: videoChartData, isLoading: isLoadingVideoChart } = useQuery({
     queryKey: ['music-video-chart', walletAddress, videoChartSort],
-    enabled: chartKind === 'videos',
     queryFn: () => fetchMusicVideoChart(videoChartSort),
     staleTime: 5 * 60 * 1000,
   });
@@ -811,17 +457,6 @@ export function MusicFeed({ showFilters = false, isRefreshing = false }: MusicFe
     .filter(nft => !isBlockedCreator(nft, blockedAddresses))
     .map((nft, index) => mapNFTToVideoItem(nft, index)), [videoChartData, blockedAddresses]);
 
-  // Shuffle and map to VideoItem for carousel - randomized on each mount
-  const carouselVideos = useMemo(() => {
-    if (!carouselVideosData) return [];
-    // Fisher-Yates shuffle
-    const shuffled = carouselVideosData.filter(nft => !isBlockedCreator(nft, blockedAddresses));
-    for (let i = shuffled.length - 1; i > 0; i--) {
-      const j = Math.floor(Math.random() * (i + 1));
-      [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
-    }
-    return shuffled.map((nft, index) => mapNFTToVideoItem(nft, index));
-  }, [carouselVideosData, blockedAddresses]);
 
   const getEmptyLabel = () => {
     switch (activeSubTab) {
@@ -866,26 +501,12 @@ export function MusicFeed({ showFilters = false, isRefreshing = false }: MusicFe
     switch (activeSubTab) {
       case 'all':
         return (
-          <AllSection 
-            radioStations={radioStations} 
-            musicVideos={carouselVideos}
-            totalVideoCount={carouselVideos.length}
-            isLoadingVideos={isLoadingCarouselVideos}
-            isLoadingAudio={isLoadingAudio}
-            chart={
-              <MusicChartDesk
-                kind={chartKind}
-                onKind={setChartKind}
-                items={chartKind === 'videos' ? videoChart : audioUploads}
-                isLoading={chartKind === 'videos' ? isLoadingVideoChart : isLoadingAudio}
-                audioSort={chartSort}
-                onAudioSort={setChartSort}
-                videoSort={videoChartSort}
-                onVideoSort={setVideoChartSort}
-              />
-            }
+          <AllSection
+            radioStations={radioStations}
+            isLoading={isLoadingAudio && isLoadingVideoChart}
+            audioChart={<AudioChart items={audioUploads} isLoading={isLoadingAudio} sort={chartSort} onSort={setChartSort} />}
+            videoChart={<MusicVideoChart items={videoChart} isLoading={isLoadingVideoChart} sort={videoChartSort} onSort={setVideoChartSort} onSeeAll={() => setActiveSubTab('videos')} />}
             onGoToRadio={() => setActiveSubTab('radio')}
-            onGoToVideos={() => setActiveSubTab('videos')}
             onOpenStages={() => openStageModal('browse')}
           />
         );
@@ -896,7 +517,7 @@ export function MusicFeed({ showFilters = false, isRefreshing = false }: MusicFe
       case 'stages':
         return (
           <div className="pb-32">
-            <StagesCarousel onOpenStages={() => openStageModal('browse')} />
+            <StagesChart onOpenStages={() => openStageModal('browse')} />
           </div>
         );
       case 'tracks':
