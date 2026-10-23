@@ -629,6 +629,10 @@
     "dmSent": "Kua tukuna te {{amount}} tohu ki a {{name}}!"
   },
   "postOptions": {
+    "embed": "Tāmau",
+    "copyEmbedCode": "Tāruatia te waehere tāmau",
+    "embedCodeCopied": "Kua tāruatia te waehere tāmau",
+    "copyFailed": "Kāore i taea te tārua i te hono",
     "options": "Kōwhiringa",
     "aiOverview": "Te tirohanga whānui o te AI",
     "sendTip": "Tukuna koha",

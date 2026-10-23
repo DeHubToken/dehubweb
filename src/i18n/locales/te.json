@@ -630,6 +630,10 @@
     "dmSent": "{{name}} కు {{amount}} టోకెన్లు పంపబడింది!"
   },
   "postOptions": {
+    "embed": "ఎంబెడ్",
+    "copyEmbedCode": "ఎంబెడ్ కోడ్ కాపీ చేయండి",
+    "embedCodeCopied": "ఎంబెడ్ కోడ్ కాపీ అయింది",
+    "copyFailed": "లింక్‌ను కాపీ చేయడం సాధ్యపడలేదు",
     "options": "ఎంపికలు",
     "aiOverview": "AI అవలోకనం",
     "sendTip": "టిప్ పంపు",

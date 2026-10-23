@@ -678,6 +678,10 @@
     "dmSent": "{{amount}} Tokens an {{name}} gesendet!"
   },
   "postOptions": {
+    "embed": "Einbetten",
+    "copyEmbedCode": "Einbettungscode kopieren",
+    "embedCodeCopied": "Einbettungscode kopiert",
+    "copyFailed": "Link konnte nicht kopiert werden",
     "options": "Optionen",
     "aiOverview": "KI-Übersicht",
     "sendTip": "Trinkgeld senden",

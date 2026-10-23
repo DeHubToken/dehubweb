@@ -897,6 +897,10 @@
     "dmSent": "{{amount}} token dihantar kepada {{name}}!"
   },
   "postOptions": {
+    "embed": "Benamkan",
+    "copyEmbedCode": "Salin kod benam",
+    "embedCodeCopied": "Kod benam disalin",
+    "copyFailed": "Tidak dapat menyalin pautan",
     "options": "Pilihan",
     "aiOverview": "Gambaran keseluruhan AI",
     "sendTip": "Hantar Tip",

@@ -632,6 +632,10 @@
     "dmSent": "{{amount}} tokenek elküldve neki: {{name}}!"
   },
   "postOptions": {
+    "embed": "Beágyazás",
+    "copyEmbedCode": "Beágyazási kód másolása",
+    "embedCodeCopied": "Beágyazási kód másolva",
+    "copyFailed": "Nem sikerült a linket másolni",
     "options": "Lehetőségek",
     "aiOverview": "AI áttekintés",
     "sendTip": "Borravaló küldése",

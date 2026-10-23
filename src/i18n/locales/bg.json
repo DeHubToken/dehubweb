@@ -632,6 +632,10 @@
     "dmSent": "Изпратени {{amount}} токена на {{name}}!"
   },
   "postOptions": {
+    "embed": "Вграждане",
+    "copyEmbedCode": "Копирай кода за вграждане",
+    "embedCodeCopied": "Кодът за вграждане е копиран",
+    "copyFailed": "Връзката не можа да бъде копирана",
     "options": "Опции",
     "aiOverview": "Общ преглед на ИИ",
     "sendTip": "Изпрати бакшиш",

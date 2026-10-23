@@ -593,6 +593,10 @@
     "dmSent": "اتبعت {{amount}} توكنز لـ {{name}}!"
   },
   "postOptions": {
+    "embed": "تضمين",
+    "copyEmbedCode": "نسخ رمز التضمين",
+    "embedCodeCopied": "تم نسخ رمز التضمين",
+    "copyFailed": "تعذّر نسخ الرابط",
     "options": "خيارات",
     "aiOverview": "ملخّص عن الذكاء الاصطناعي",
     "sendTip": "ابعت بقشيش",

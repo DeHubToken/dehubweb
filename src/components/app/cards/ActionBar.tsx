@@ -18,7 +18,8 @@ import { useTranslation as _useCopy } from 'react-i18next';
 
 import { useState, useCallback, useEffect, useRef, lazy, Suspense } from 'react';
 import { useQueryClient } from '@tanstack/react-query';
-import { ImageDown } from "lucide-react";
+import { Code, ImageDown } from "lucide-react";
+import { copyPostEmbedCode } from '@/lib/post-embed-code';
 import ThumbsDown from "@/components/ui/cut-icons/dislike";
 import Quote from "@/components/ui/cut-icons/quote";
 import Link from "@/components/ui/cut-icons/link";
@@ -970,6 +971,15 @@ export function ActionBar({
         <Link className="w-5 h-5" />
         <span className="font-medium"><TranslationText name="copy.724e78a3254c" fallback={"Copy Link"} /></span>
       </button>
+      {postId && /^\d+$/.test(postId) && (
+        <button
+          onClick={(e) => { e.stopPropagation(); copyPostEmbedCode(postId, _copy); setSheetOpen(false); }}
+          className="flex items-center gap-3 w-full p-4 text-zinc-200 hover:text-white hover:bg-white/10 rounded-xl transition-all duration-200"
+        >
+          <Code className="w-5 h-5" />
+          <span className="font-medium">{_copy('postOptions.copyEmbedCode')}</span>
+        </button>
+      )}
     </>
   );
 

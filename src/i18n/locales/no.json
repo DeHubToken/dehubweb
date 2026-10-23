@@ -632,6 +632,10 @@
     "dmSent": "Sendte {{amount}} tokens til {{name}}!"
   },
   "postOptions": {
+    "embed": "Bygg inn",
+    "copyEmbedCode": "Kopier innbyggingskode",
+    "embedCodeCopied": "Innbyggingskode kopiert",
+    "copyFailed": "Kunne ikke kopiere lenken",
     "options": "Alternativer",
     "aiOverview": "AI-oversikt",
     "sendTip": "Send tips",

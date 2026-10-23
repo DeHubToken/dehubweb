@@ -630,6 +630,10 @@
     "dmSent": "{{amount}} թոքեններ ուղարկվեց {{name}}-ին!"
   },
   "postOptions": {
+    "embed": "Ներդնել",
+    "copyEmbedCode": "Պատճենել ներդրման կոդը",
+    "embedCodeCopied": "Ներդրման կոդը պատճենվեց",
+    "copyFailed": "Չհաջողվեց պատճենել հղումը",
     "options": "Entrankhner",
     "aiOverview": "ԱԻ ընդհանուր նկարագրություն",
     "sendTip": "Ougharkuhr tsoug",

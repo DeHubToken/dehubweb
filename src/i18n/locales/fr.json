@@ -861,6 +861,9 @@
     "dmSent": "{{amount}} jetons envoyés à {{name}} !"
   },
   "postOptions": {
+    "embed": "Intégrer",
+    "copyEmbedCode": "Copier le code d'intégration",
+    "embedCodeCopied": "Code d'intégration copié",
     "options": "Options",
     "aiOverview": "Vue d'ensemble de l'IA",
     "sendTip": "Envoyer un pourboire",

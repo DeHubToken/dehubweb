@@ -599,6 +599,10 @@
     "dmSent": "انداز {{amount}} توكنز لـ {{name}}!"
   },
   "postOptions": {
+    "embed": "تضمين",
+    "copyEmbedCode": "نسخ كود التضمين",
+    "embedCodeCopied": "تم نسخ كود التضمين",
+    "copyFailed": "ما گدرنا ننسخ الرابط",
     "options": "خيارات",
     "sendTip": "أرسل إكرامية",
     "queue": "قائمة الانتظار",

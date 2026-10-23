@@ -634,6 +634,10 @@
     "dmSent": "Inviati {{amount}} token a {{name}}!"
   },
   "postOptions": {
+    "embed": "Incorpora",
+    "copyEmbedCode": "Copia codice di incorporamento",
+    "embedCodeCopied": "Codice di incorporamento copiato",
+    "copyFailed": "Impossibile copiare il link",
     "options": "Opzioni",
     "aiOverview": "Panoramica AI",
     "sendTip": "Invia mancia",

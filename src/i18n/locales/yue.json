@@ -630,6 +630,10 @@
     "dmSent": "已經傳送 {{amount}} 代幣 畀 {{name}}！"
   },
   "postOptions": {
+    "embed": "嵌入",
+    "copyEmbedCode": "複製嵌入代碼",
+    "embedCodeCopied": "已複製嵌入代碼",
+    "copyFailed": "複製唔到連結",
     "options": "選項",
     "aiOverview": "人工智能概覽",
     "sendTip": "送禮物",

@@ -633,6 +633,10 @@
     "dmSent": "{{name}}に{{amount}} DHBを送りました！"
   },
   "postOptions": {
+    "embed": "埋め込み",
+    "copyEmbedCode": "埋め込みコードをコピー",
+    "embedCodeCopied": "埋め込みコードをコピーしました",
+    "copyFailed": "リンクをコピーできませんでした",
     "options": "オプション",
     "aiOverview": "AIの概要",
     "sendTip": "チップを送る",

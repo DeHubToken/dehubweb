@@ -647,6 +647,10 @@
     "confirmTip": "টিপ নিশ্চিত করো"
   },
   "postOptions": {
+    "embed": "এমবেড",
+    "copyEmbedCode": "এমবেড কোড কপি করো",
+    "embedCodeCopied": "এমবেড কোড কপি অইছে",
+    "copyFailed": "লিংক কপি করা গেল না",
     "options": "অপশন",
     "aiOverview": "এআই ওভারভিউ",
     "sendTip": "টিপ পাঠাও",

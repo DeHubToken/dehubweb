@@ -630,6 +630,10 @@
     "dmSent": "Kuthunyelwe u-{{amount}} tokens ku-{{name}}!"
   },
   "postOptions": {
+    "embed": "Shumeka",
+    "copyEmbedCode": "Kopisha ikhodi yokushumeka",
+    "embedCodeCopied": "Ikhodi yokushumeka ikopishiwe",
+    "copyFailed": "Akukwazanga ukukopisha isixhumanisi",
     "options": "Izinketho",
     "aiOverview": "Isifinyezo se-AI",
     "sendTip": "Thumela Ithiphu",

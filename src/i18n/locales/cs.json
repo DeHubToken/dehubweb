@@ -632,6 +632,10 @@
     "dmSent": "Odesláno {{amount}} tokenů uživateli {{name}}!"
   },
   "postOptions": {
+    "embed": "Vložit",
+    "copyEmbedCode": "Kopírovat kód pro vložení",
+    "embedCodeCopied": "Kód pro vložení zkopírován",
+    "copyFailed": "Odkaz se nepodařilo zkopírovat",
     "options": "Možnosti",
     "aiOverview": "Přehled AI",
     "sendTip": "Poslat spropitné",

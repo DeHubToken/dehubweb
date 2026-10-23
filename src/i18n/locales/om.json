@@ -630,6 +630,10 @@
     "dmSent": "{{amount}} mallattoolee {{name}}-f ergame!"
   },
   "postOptions": {
+    "embed": "Keessa galchi",
+    "copyEmbedCode": "Koodii keessa galchuu waraabi",
+    "embedCodeCopied": "Koodiin keessa galchuu waraabame",
+    "copyFailed": "Liinkii waraabuun hin danda'amne",
     "options": "Filannoowwan",
     "aiOverview": "Haala waliigalaa AI",
     "sendTip": "Tiippii Ergi",
