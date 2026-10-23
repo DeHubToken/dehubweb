@@ -1007,7 +1007,7 @@ export function AudioVisualizer({
   if (theme === 'glass' || (theme === 'system' && !isLightTheme)) return (
     <div data-no-swipe data-video-controls data-audio-player data-audio-studio data-material={theme} className={className} onClick={stopBubble}>
       <div data-audio-studio-title>
-        {artworkUrl && <img data-audio-studio-cover src={artworkUrl} alt="" loading="lazy" onError={event => { event.currentTarget.hidden = true; }} />}
+        {artworkUrl && !artworkUrl.split('?')[0].endsWith('/placeholder.svg') && <img data-audio-studio-cover src={artworkUrl} alt="" loading="lazy" onError={event => { event.currentTarget.hidden = true; }} />}
         <div><strong>{displayTitle || popoutTrack?.title || t('audioPost.untitled')}</strong>
         <span>{popoutTrack?.artist || t('audioPost.creator')}</span></div>
       </div>
