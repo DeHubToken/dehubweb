@@ -397,6 +397,29 @@ export async function getSuggestedAccounts(limit: number = 10, page: number = 1)
 }
 
 /**
+ * The endless Who to follow list: every account you don't follow, a page at a
+ * time. `active` (feed) puts recently active, complete profiles first;
+ * `newest` (Explore) the newest sign-ups. Empty profiles come last on both.
+ * `nextCursor` is null once everyone has been shown.
+ */
+export async function getRankedSuggestions(
+  sort: 'active' | 'newest',
+  cursor?: string | null,
+  limit: number = 10,
+): Promise<{ items: SuggestedAccount[]; nextCursor: string | null }> {
+  const response = await apiCall<any>("/api/suggested-accounts", {
+    params: { sort, limit, ...(cursor ? { cursor } : {}) },
+    requiresAuth: true,
+  });
+  const result = response && typeof response === 'object' && 'result' in response ? response.result : response;
+  const items = Array.isArray(result?.items) ? result.items : [];
+  return {
+    items: items.map((i: SuggestedAccount) => ({ ...i, badgeBalance: i.badgeBalance ?? 0 })),
+    nextCursor: typeof result?.nextCursor === 'string' ? result.nextCursor : null,
+  };
+}
+
+/**
  * Fetch cached suggested profiles for unauthenticated users.
  * These are pre-cached top active users from the leaderboard.
  */

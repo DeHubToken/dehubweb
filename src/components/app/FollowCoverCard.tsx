@@ -12,8 +12,11 @@ import { useTranslation as _useCopy } from 'react-i18next';
  * carries structure. System, System Light and the Minimals draw no box at
  * all: the cards stand on the page with a hairline between them.
  *
- * Accounts with no cover get a blown-up, blurred copy of their own avatar, so
- * every card still has a banner in that person's colours.
+ * The banner is the one their profile shows: their own, or the same default
+ * banner the profile page picks for them when they never set one.
+ *
+ * Someone who already follows you gets Follow back on the button rather than
+ * a line of its own; the reason line only carries mutual friends.
  *
  * @module components/app/FollowCoverCard
  */
@@ -24,6 +27,7 @@ import X from "@/components/ui/cut-icons/close";
 import { BadgedName } from '@/components/app/BadgedName';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { buildAvatarUrl, buildCoverUrl, deviceWidth } from '@/lib/media-url';
+import { getDefaultBanner } from '@/components/app/profile/ProfileConstants';
 import { formatCount } from '@/lib/feed-utils';
 import type { SuggestedAccount } from '@/lib/api/dehub';
 import '@/styles/follow-cards.css';
@@ -46,13 +50,15 @@ function FollowCoverCardInner({ user, followed = false, onOpen, onFollow, onDism
   const name = suggestionName(user);
   const avatarPath = user.avatarImageUrl || user.avatarUrl;
   const avatar = avatarPath ? buildAvatarUrl(user.address, avatarPath, deviceWidth(56)) : undefined;
-  const cover = user.coverImageUrl ? buildCoverUrl(user.address, user.coverImageUrl, deviceWidth(240)) : undefined;
+  const cover = user.coverImageUrl
+    ? buildCoverUrl(user.address, user.coverImageUrl, deviceWidth(240))
+    : getDefaultBanner(user.address);
+  const followsYou = user.followsYou || user.reason === 'follows_you';
   const mutuals = (user.mutualConnections ?? []).slice(0, 2);
+  const bio = user.aboutMe?.trim();
 
   let reason: string | null = null;
-  if (user.reason === 'follows_you' || user.followsYou) {
-    reason = _copy('follow.followsYou', { defaultValue: 'Follows you' });
-  } else if (mutuals.length) {
+  if (mutuals.length) {
     const names = mutuals.map((m) => m.displayName || m.username || `${m.address.slice(0, 6)}...`).join(', ');
     reason = `${_copy('copy.d0f08798ff1a', { defaultValue: 'Followed by ' })}${names}`;
   }
@@ -65,11 +71,7 @@ function FollowCoverCardInner({ user, followed = false, onOpen, onFollow, onDism
       className="snap-start"
     >
       <div data-fc-cover aria-hidden="true">
-        {cover ? (
-          <img src={cover} alt="" loading="lazy" decoding="async" />
-        ) : avatar ? (
-          <img src={avatar} alt="" loading="lazy" decoding="async" data-fc-cover-wash />
-        ) : null}
+        <img src={cover} alt="" loading="lazy" decoding="async" />
       </div>
       <button
         type="button"
@@ -100,9 +102,12 @@ function FollowCoverCardInner({ user, followed = false, onOpen, onFollow, onDism
           <span data-fc-name>{name}</span>
         </BadgedName>
         <span data-fc-handle>{user.username ? `@${user.username}` : `${user.address.slice(0, 6)}...${user.address.slice(-4)}`}</span>
-        <p data-fc-bio>{user.aboutMe?.trim() || ' '}</p>
+        <p data-fc-bio data-empty={bio ? undefined : true}>
+          {bio || _copy('copy.0c820caf16c0', { defaultValue: 'No bio yet' })}
+        </p>
+        {reason && (
         <div data-fc-reason>
-          {mutuals.length > 0 && !user.followsYou && (
+          {mutuals.length > 0 && (
             <span data-fc-mutuals aria-hidden="true">
               {mutuals.map((m) => {
                 const src = m.avatarImageUrl ? buildAvatarUrl(m.address, m.avatarImageUrl, deviceWidth(18)) : undefined;
@@ -110,8 +115,9 @@ function FollowCoverCardInner({ user, followed = false, onOpen, onFollow, onDism
               })}
             </span>
           )}
-          {reason && <span className="truncate">{reason}</span>}
+          <span className="truncate">{reason}</span>
         </div>
+        )}
         <div data-fc-foot>
           <span data-fc-count>
             {_copy('accounts.followersCount', { defaultValue: '{{value}} followers', value: formatCount(user.followers ?? 0) })}
@@ -131,6 +137,8 @@ function FollowCoverCardInner({ user, followed = false, onOpen, onFollow, onDism
                 <Check className="w-3.5 h-3.5" />
                 {_copy('copy.344b4271ca01', { defaultValue: 'Following' })}
               </>
+            ) : followsYou ? (
+              _copy('follow.followBack', { defaultValue: 'Follow back' })
             ) : (
               _copy('copy.641d1ef657bd', { defaultValue: 'Follow' })
             )}
