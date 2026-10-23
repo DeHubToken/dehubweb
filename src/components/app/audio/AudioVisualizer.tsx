@@ -81,6 +81,7 @@ interface AudioVisualizerProps {
   onPlayPause: () => void;
   className?: string;
   displayTitle?: string;
+  artworkUrl?: string;
   showStylePicker?: boolean;
   /** When true the audio output is muted (visualizer still animates). */
   muted?: boolean;
@@ -188,6 +189,7 @@ export function AudioVisualizer({
   onPlayPause,
   className = '',
   displayTitle,
+  artworkUrl,
   showStylePicker = true,
   muted = false,
   seed = 'default',
@@ -629,8 +631,19 @@ export function AudioVisualizer({
       const time = new Uint8Array(analyser.frequencyBinCount);
       analyser.getByteFrequencyData(freq);
       analyser.getByteTimeDomainData(time);
-      frequencyData = freq;
-      timeData = time;
+      // Muted media and unavailable analysis can return an all-zero spectrum.
+      // Keep the selected visual alive without changing audio output.
+      const hasSignal = freq.some(value => value > 0);
+      if (hasSignal) {
+        frequencyData = freq;
+        timeData = time;
+      } else {
+        const phase = performance.now() / 850;
+        frequencyData = Uint8Array.from(idleFrequency, (value, index) =>
+          Math.round(value * (.55 + .45 * Math.sin(phase + index * .13) ** 2)));
+        timeData = Uint8Array.from(idleTime, (value, index) =>
+          Math.round(128 + (value - 128) * Math.sin(phase + index * .04)));
+      }
     }
 
     if (isExtraStyle(style)) {
@@ -991,8 +1004,9 @@ export function AudioVisualizer({
   if (theme === 'glass' || (theme === 'system' && !isLightTheme)) return (
     <div data-no-swipe data-video-controls data-audio-player data-audio-studio data-material={theme} className={className} onClick={stopBubble}>
       <div data-audio-studio-title>
-        <strong>{displayTitle || popoutTrack?.title || t('audioPost.untitled')}</strong>
-        <span>{popoutTrack?.artist || t('audioPost.creator')}</span>
+        {artworkUrl && <img data-audio-studio-cover src={artworkUrl} alt="" loading="lazy" />}
+        <div><strong>{displayTitle || popoutTrack?.title || t('audioPost.untitled')}</strong>
+        <span>{popoutTrack?.artist || t('audioPost.creator')}</span></div>
       </div>
       <div data-audio-studio-motion>
       <canvas ref={canvasRef} width={canvasSize.w} height={canvasSize.h}
