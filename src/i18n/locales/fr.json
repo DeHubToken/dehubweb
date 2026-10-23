@@ -1696,7 +1696,11 @@
     "radio": "Radio",
     "trendingTracks": "Pistes tendance",
     "moreVideos": "Plus de vidéos",
-    "newReleases": "Nouveautés"
+    "newReleases": "Nouveautés",
+    "mostPlayed": "Les plus écoutés",
+    "mostLiked": "Les plus aimés",
+    "mostRecent": "Les plus récents",
+    "chartOrder": "Ordre du classement audio"
   },
   "notFound": {
     "title": "Page non trouvée",
@@ -7252,7 +7256,8 @@
     "play": "Lecture",
     "pause": "Pause",
     "listens_one": "{{count}} écoute",
-    "listens_other": "{{count}} écoutes"
+    "listens_other": "{{count}} écoutes",
+    "visualizerColour": "Couleur de la visualisation"
   },
   "converter": {
     "seoTitle": "Convertisseur — importer une vidéo vers DeHub",
@@ -14138,5 +14143,8 @@
     "posted": "Publié",
     "view": "Voir",
     "failed": "La vidéo n'a pas pu être traitée"
+  },
+  "player": {
+    "volume": "Volume"
   }
 }

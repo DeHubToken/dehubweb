@@ -1696,7 +1696,11 @@
     "radio": "راديو",
     "trendingTracks": "المقاطع الرائجة",
     "moreVideos": "المزيد من الفيديوهات",
-    "newReleases": "إصدارات جديدة"
+    "newReleases": "إصدارات جديدة",
+    "mostPlayed": "الأكثر تشغيلًا",
+    "mostLiked": "الأكثر إعجابًا",
+    "mostRecent": "الأحدث",
+    "chartOrder": "ترتيب المقاطع الصوتية"
   },
   "notFound": {
     "title": "الصفحة غير موجودة",
@@ -7252,7 +7256,8 @@
     "play": "تشغيل",
     "pause": "إيقاف مؤقت",
     "listens_one": "{{count}} استماع",
-    "listens_other": "{{count}} استماع"
+    "listens_other": "{{count}} استماع",
+    "visualizerColour": "لون المؤثرات البصرية"
   },
   "converter": {
     "seoTitle": "محول — استيراد فيديو إلى DeHub",
@@ -14138,5 +14143,8 @@
     "posted": "تم النشر",
     "view": "عرض",
     "failed": "تعذّرت معالجة الفيديو"
+  },
+  "player": {
+    "volume": "مستوى الصوت"
   }
 }

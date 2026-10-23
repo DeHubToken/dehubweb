@@ -2411,6 +2411,7 @@ export const VideoCard = memo(function VideoCard({ video, postPage = false, onBa
                       viewerKey={walletAddress}
                       requiresAccess={!!video.isPPV || isHoldGated(video.isLocked, video.lockedPrice) || !!video.subscriberPlans?.length}
                       audioUrl={video.audioUrl}
+                      artworkUrl={thumbnail || undefined}
                       isPlaying={isPlaying}
                       onPlayPause={handlePlayClick}
                       className="w-full h-full"
@@ -2432,7 +2433,7 @@ export const VideoCard = memo(function VideoCard({ video, postPage = false, onBa
                         audioUrl: video.audioUrl,
                         title: video.title || '',
                         artist: video.channel || '',
-                        artworkUrl: video.channelAvatar || null,
+                        artworkUrl: thumbnail || video.channelAvatar || null,
                       }}
                       onPopOutChange={handleAudioPopOutChange}
                       /* The feed card and the post page's card share one
