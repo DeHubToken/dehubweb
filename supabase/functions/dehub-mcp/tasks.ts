@@ -5,7 +5,7 @@ import { correctActivity } from "./activity-edit.ts";
 import { handleLifeTick, lifeStatus, setSentient } from "./life.ts";
 import { handleWorkspace } from './workspace.ts';
 import { agentSettings, writingContext } from './controls.ts';
-import { currentNews, newsReaction, type NewsStory } from './news.ts';
+import { currentNews, newsReaction, newsTopicsFor, type NewsStory } from './news.ts';
 import { agentOwnerAllowed, explicitTaskPlan, LIVE_WINDOW_MAX_DAYS, LIVE_WINDOW_RECHECK_MINUTES, nextScheduledRun, readableTime, parseTaskPlan, PLAN_TOOL, taskPlanSchema, windowSteps, type TaskPlan, type TaskStep } from "./task-plan.ts";
 
 // The same validated callbacks serve MCP clients and the durable task runner.
@@ -326,7 +326,7 @@ export async function runTask(context: Context, req: Request, task: any) {
     let content: string | undefined = media?.caption;
     let newsSource: NewsStory | undefined;
     if (step.tool === 'dehub_post_create' && step.topic && step.news) {
-      const stories = await currentNews(db, preferences.news_topics);
+      const stories = await currentNews(db, newsTopicsFor(step.topic, preferences.news_topics));
       const previous = checked(await db.from('ai_agent_task_actions').select('result').eq('task_id', task.id).order('created_at', { ascending: false }).limit(100));
       newsSource = stories.find(story => !previous.some((row: any) => row.result?.source?.url === story.url));
       content = newsSource ? await newsReaction(newsSource, `${agent.description}\n${writingContext(preferences)}`, step.topic) ?? undefined : undefined;

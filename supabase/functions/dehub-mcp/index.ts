@@ -11,7 +11,7 @@ import { anonymousViewerId, recordPostViews } from "./post-views.ts";
 import { resolveVoteWeight } from "../_shared/badge-weight.ts";
 import { agentCapForBadgeWeight } from "./agent-cap.ts";
 import { agentPostType } from "./post-type.ts";
-import { controlledAction, WRITE_TOOLS } from './controls.ts';
+import { agentSettings, controlledAction, WRITE_TOOLS } from './controls.ts';
 
 const DEHUB_API_BASE = "https://api.dehub.io";
 const SUPABASE_URL = Deno.env.get("SUPABASE_URL")!;
@@ -650,6 +650,9 @@ function buildServer(apiKey: string | null, req: Request, registry?: Map<string,
       const store = db();
       const agent = await getAgentFromApiKey(apiKey, store);
       if (!agent || !agent.is_active) return fail('Agent access is unavailable.');
+      if (name === 'dehub_update_profile' && (profileImages.avatar || profileImages.banner) && (await agentSettings(store, agent.id)).mode !== 'autonomous') {
+        return fail('Image uploads cannot be saved as drafts. Use hosted image URLs for approval, or choose autonomous mode before uploading.');
+      }
       return controlledAction(store, agent, name, args, () => callback(args), approvalId);
     };
     server.registerTool<z.ZodRawShape, z.ZodRawShape>(name, config, async (args) => invoke(args));

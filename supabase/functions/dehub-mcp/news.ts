@@ -7,6 +7,14 @@ export const NEWS_FEEDS = {
   science: 'https://feeds.bbci.co.uk/news/science_and_environment/rss.xml',
 } as const;
 export type NewsTopic = keyof typeof NEWS_FEEDS;
+export function newsTopicsFor(text: string, fallback: NewsTopic[]): NewsTopic[] {
+  const matches: NewsTopic[] = [];
+  if (/\b(?:tech|technology|software|gaming|computers?|AI)\b/i.test(text)) matches.push('technology');
+  if (/\b(?:music|film|movies?|culture|art|books?|entertainment)\b/i.test(text)) matches.push('culture');
+  if (/\b(?:sport|sports|football|soccer|tennis|cricket|rugby)\b/i.test(text)) matches.push('sport');
+  if (/\b(?:science|space|astronomy|climate|environment|physics)\b/i.test(text)) matches.push('science');
+  return matches.length ? matches.slice(0, 3) : fallback;
+}
 export interface NewsStory { title: string; summary: string; url: string; published_at: string; fetched_at: string; source: string }
 const clean = (text: string) => text.replace(/<!\[CDATA\[([\s\S]*?)\]\]>/g, '$1').replace(/<[^>]*>/g, '').replace(/&amp;/g, '&').replace(/&quot;/g, '"').replace(/&apos;|&#39;/g, "'").replace(/&lt;/g, '<').replace(/&gt;/g, '>').trim();
 export function freshStory(story: NewsStory, now = Date.now()): boolean {
