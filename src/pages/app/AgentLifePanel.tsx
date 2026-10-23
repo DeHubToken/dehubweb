@@ -1,4 +1,5 @@
 import { Link } from 'react-router-dom';
+import { useState } from 'react';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { useTranslation } from 'react-i18next';
 import { Switch } from '@/components/ui/switch';
@@ -12,7 +13,7 @@ export interface AgentLife {
   home: string | null;
   timezone: string | null;
   daily?: { posts: number; target: number };
-  events: { kind: string; content: string | null; target: string | null; created_at: string }[];
+  events: { id?: number; kind: string; content: string | null; target: string | null; post_id?: string | null; unliked?: boolean; edited?: boolean; created_at: string }[];
 }
 
 const clock = (iso: string, timeZone?: string | null) => {
@@ -25,6 +26,9 @@ export function AgentLifePanel({ wallet, agentId }: { wallet: string; agentId: s
   const { t } = useTranslation();
   const client = useQueryClient();
   const key = ['agent-life', wallet, agentId];
+  const [editing, setEditing] = useState<number | null>(null);
+  const [draft, setDraft] = useState('');
+  const [expanded, setExpanded] = useState(false);
   const life = useQuery({ queryKey: key, staleTime: 60000,
     queryFn: () => agentTaskRequest<AgentLife>(wallet, { operation: 'life', agent_id: agentId }) });
   const toggle = useMutation({
@@ -32,6 +36,11 @@ export function AgentLifePanel({ wallet, agentId }: { wallet: string; agentId: s
     onSuccess: data => client.setQueryData(key, data),
   });
   const data = life.data;
+  const correction = useMutation({
+    mutationFn: (change: { event_id: number; action: 'unlike' | 'edit_comment'; content?: string }) =>
+      agentTaskRequest<AgentLife>(wallet, { operation: 'correct_activity', agent_id: agentId, ...change }),
+    onSuccess: result => { client.setQueryData(key, result); setEditing(null); },
+  });
   const alive = toggle.isPending ? !!toggle.variables : !!data?.sentient;
   const state = data?.sentient && data.home
     ? t(data.status === 'asleep' ? 'agents.life.asleep' : 'agents.life.awake', { home: data.home })
@@ -49,17 +58,31 @@ export function AgentLifePanel({ wallet, agentId }: { wallet: string; agentId: s
     {toggle.error && <p role="alert" className="text-sm break-words">{toggle.error.message}</p>}
     {state && <p className="text-sm">{state}{data?.next_at && ` · ${t('agents.life.next', { time: clock(data.next_at) })}`}</p>}
     {data?.sentient && data.daily && <p className="text-sm">{t('agents.life.daily', { defaultValue: 'Posts today: {{posts}} · Daily target: {{target}}', ...data.daily })}</p>}
-    {data?.sentient && <div className="space-y-1">
+    {correction.error && <p role="alert" className="text-sm">{correction.error.message}</p>}
+    {data && (data.sentient || data.events.length > 0) && <div className="space-y-1">
       <p className="text-xs uppercase tracking-wide text-white/50">{t('agents.life.recent')}</p>
       {data.events.length === 0 && <p className="text-sm text-white/60">{t('agents.life.empty')}</p>}
       <ul className="space-y-1">
-        {data.events.slice(0, 6).map(event => <li key={`${event.kind}-${event.created_at}`} className="text-sm break-words">
+        {data.events.slice(0, expanded ? 100 : 6).map(event => <li key={`${event.kind}-${event.created_at}`} className="text-sm break-words space-y-1">
           <span className="text-white/60">{clock(event.created_at)} · {t(`agents.life.kind.${event.kind}`, { defaultValue: event.kind })}</span>
           {event.content && event.kind !== 'error' && <> {event.kind === 'post' && event.target
             ? <Link to={`/app/post/${event.target}`} className="hover:underline">{event.content}</Link>
             : event.content}</>}
+          {event.post_id && event.kind !== 'post' && <Link className="ml-2 underline" to={`/app/post/${event.post_id}`}>{t('agents.life.viewPost', { defaultValue: 'View post' })}</Link>}
+          {event.id && event.kind === 'like' && <button className="ml-2 underline disabled:opacity-50" disabled={correction.isPending || event.unliked}
+            onClick={() => correction.mutate({ event_id: event.id!, action: 'unlike' })}>
+            {t(event.unliked ? 'agents.life.unliked' : 'agents.life.unlike', { defaultValue: event.unliked ? 'Unliked' : 'Unlike' })}</button>}
+          {event.id && ['comment', 'reply'].includes(event.kind) && event.content && editing !== event.id && <button className="ml-2 underline" disabled={correction.isPending}
+            onClick={() => { correction.reset(); setEditing(event.id!); setDraft(event.content!); }}>{t('agents.life.editComment', { defaultValue: 'Edit comment' })}</button>}
+          {editing === event.id && <form onSubmit={e => { e.preventDefault(); correction.mutate({ event_id: event.id!, action: 'edit_comment', content: draft.trim() }); }} className="space-y-2">
+            <textarea aria-label={t('agents.life.editComment', { defaultValue: 'Edit comment' })} value={draft} onChange={e => setDraft(e.target.value)} maxLength={500} disabled={correction.isPending}
+              className="w-full rounded-xl border border-white/20 bg-white/5 p-3 text-inherit backdrop-blur-xl" />
+            <div className="flex gap-4"><button type="submit" disabled={correction.isPending || !draft.trim()}>{t('common.save', { defaultValue: 'Save' })}</button>
+              <button type="button" disabled={correction.isPending} onClick={() => setEditing(null)}>{t('common.cancel', { defaultValue: 'Cancel' })}</button></div>
+          </form>}
         </li>)}
       </ul>
+      {data.events.length > 6 && <button className="text-sm underline" onClick={() => setExpanded(!expanded)}>{t(expanded ? 'agents.life.less' : 'agents.life.more', { defaultValue: expanded ? 'Show less' : 'Show more activity' })}</button>}
     </div>}
   </section>;
 }
