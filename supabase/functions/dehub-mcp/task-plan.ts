@@ -54,8 +54,33 @@ export type TaskPlan = z.infer<typeof taskPlanSchema>;
 export type TaskStep = z.infer<typeof taskStepSchema>;
 
 /** Exact commands need no model round trip; other wording uses the planner. */
-export function explicitTaskPlan(prompt: string): TaskPlan | null {
+export function explicitTaskPlan(prompt: string, now = new Date(), timezone = "UTC"): TaskPlan | null {
   const text = prompt.trim();
+  // Universal likes are a time-window task, never a keyword-limited selection.
+  const universal = text.toLowerCase().replace(/[.!]+$/, '').replace(/\s+/g, ' ').match(
+    /^(like|view) (?:all|every) posts? (?:from |in |for |over |during )?(?:the )?(today|last 24 hours|past 24 hours|last day|past day|last 7 days|past 7 days|today in last day)(?: (?:in |across )?(?:all|every) categor(?:y|ies|hy))?$/,
+  );
+  if (universal) {
+    let from = now.getTime() - (/7 days/.test(universal[2]) ? 7 : 1) * 86400000;
+    if (universal[2] === 'today') {
+      // Solve local midnight against the zone offset, including DST boundaries.
+      const parts = (date: Date) => Object.fromEntries(new Intl.DateTimeFormat('en-GB', {
+        timeZone: timezone, year: 'numeric', month: '2-digit', day: '2-digit',
+        hour: '2-digit', minute: '2-digit', second: '2-digit', hourCycle: 'h23',
+      }).formatToParts(date).map(part => [part.type, part.value]));
+      const local = parts(now);
+      const midnight = Date.UTC(+local.year, +local.month - 1, +local.day);
+      from = midnight;
+      for (let attempt = 0; attempt < 4; attempt++) {
+        const at = parts(new Date(from));
+        const represented = Date.UTC(+at.year, +at.month - 1, +at.day, +at.hour, +at.minute, +at.second);
+        const next = from + midnight - represented;
+        if (next === from) break;
+        from = next;
+      }
+    }
+    return everyPostPlan(new Date(from).toISOString(), now.toISOString(), universal[1]);
+  }
   const daily = text.match(/^Post once per day about: ([^\n]+)\nStyle: ([^\n]+)\nLike up to ([1-3]) recent posts per day about: ([^\n]+)$/i);
   if (daily) {
     const keywords = daily[4].split(',').map(value => value.trim()).filter(Boolean);

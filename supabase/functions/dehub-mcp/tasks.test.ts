@@ -313,3 +313,41 @@ Deno.test('written replies are grounded in the post and stay plain', () => {
   assert(!replyBreaksRules('That pressing sounds warmer than the reissue, which side did you play first?'), 'rejected a plain reply');
   for (const reply of ['Check https://example.com', 'Love it #vinyl', 'Hey @someone look', '"Quoted reply"', 'x'.repeat(221), '']) assert(replyBreaksRules(reply), `allowed: ${reply.slice(0, 20)}`);
 });
+
+Deno.test('each-agent swarms execute every target for every member', async () => {
+  const performed: string[][] = [];
+  const originalFetch = globalThis.fetch;
+  globalThis.fetch = async (url) => {
+    if (String(url).includes('/api/feed?')) return Response.json({ result: [123, 124, 125, 126].map(tokenId => ({
+      tokenId, createdAt: '2026-10-01T12:00:00Z',
+    })), pagination: { next_cursor: null } });
+    assert(String(url) === 'https://api.dehub.io/api/view/batch', 'unexpected network request');
+    return Response.json({ success: true });
+  };
+  try {
+    for (const index of [0, 1]) {
+      const test = fixture();
+      const step = test.task.plan.steps[0] as any;
+      step.audience = 'posts'; step.from = '2026-10-01T00:00:00Z'; step.to = '2026-10-02T00:00:00Z';
+      (test.task as any).swarm_mode = 'each'; (test.task as any).swarm_size = 2; (test.task as any).swarm_index = index;
+      await test.run();
+      performed.push(test.rows.ai_agent_task_actions.map(action => action.target));
+    }
+  } finally { globalThis.fetch = originalFetch; }
+  assert(performed.length === 2 && performed.every(targets => targets.length === 4 && new Set(targets).size === 4), 'each-agent mode partitioned or lost targets');
+});
+
+Deno.test('each-agent mode preserves a one-off action for every selected agent', async () => {
+  const test = fixture();
+  Object.assign(test.task, { swarm_size: 2, swarm_index: 1, swarm_mode: 'each' });
+  await test.run();
+  assert(test.calls() === 1 && test.task.status === 'completed', 'partitioned a broadcast single action');
+});
+
+Deno.test('an in-flight failure cannot replace an owner cancellation with a paused task', async () => {
+  const test = fixture();
+  test.onCall(async () => { test.task.status = 'cancelled'; throw new Error('Connection ended'); });
+  await test.run();
+  assert(test.task.status === 'cancelled', 'overwrote owner cancellation');
+  assert(test.rows.ai_agent_task_actions[0].status === 'uncertain', 'lost the uncertain outcome');
+});
