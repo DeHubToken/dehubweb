@@ -60,6 +60,39 @@ export interface GovernanceProposal {
   updated_at: string;
   /** When voting closes. Null on the rows that predate the seven-day window. */
   voting_ends_at: string | null;
+  /** Optional attachment, stored in the public feature-media bucket. */
+  media_url?: string | null;
+  media_type?: 'image' | 'video' | null;
+}
+
+/** A proposal attachment, uploaded as soon as it is picked so a draft keeps it. */
+export interface ProposalMedia {
+  url: string;
+  type: 'image' | 'video';
+}
+
+export const MAX_PROPOSAL_MEDIA_BYTES = 50 * 1024 * 1024;
+
+/**
+ * Upload a proposal attachment to the author's own folder in `feature-media`.
+ * The edge function only accepts URLs inside that folder.
+ */
+export async function uploadProposalMedia(file: File, walletAddress: string): Promise<ProposalMedia> {
+  const type: ProposalMedia['type'] | null = file.type.startsWith('image/')
+    ? 'image'
+    : file.type.startsWith('video/')
+      ? 'video'
+      : null;
+  if (!type) throw new Error('Pick an image or a video.');
+  if (file.size > MAX_PROPOSAL_MEDIA_BYTES) throw new Error('Files must be 50 MB or smaller.');
+  const ext = file.name.split('.').pop()?.toLowerCase().replace(/[^a-z0-9]/g, '') || (type === 'image' ? 'jpg' : 'mp4');
+  const path = `${walletAddress.toLowerCase()}/governance-${Date.now()}.${ext}`;
+  const { error } = await supabase.storage
+    .from('feature-media')
+    .upload(path, file, { contentType: file.type, upsert: false, cacheControl: '31536000' });
+  if (error) throw new Error(`Upload failed: ${error.message}`);
+  const { data } = supabase.storage.from('feature-media').getPublicUrl(path);
+  return { url: data.publicUrl, type };
 }
 
 /**
@@ -301,7 +334,8 @@ const FEE_RETRY_DELAYS_MS = [2000, 4000, 8000];
 async function submitWithPaidFee(
   title: string,
   description: string,
-  txHash: string,
+  txHash: string | null,
+  media: ProposalMedia | null,
 ): Promise<{ proposal: GovernanceProposal }> {
   let lastError: unknown;
   for (let attempt = 0; attempt <= FEE_RETRY_DELAYS_MS.length; attempt++) {
@@ -309,7 +343,8 @@ async function submitWithPaidFee(
       return await callGovernance<{ proposal: GovernanceProposal }>('governance-proposal', {
         title: title.trim(),
         description: description.trim(),
-        txHash,
+        ...(txHash ? { txHash } : {}),
+        ...(media ? { mediaUrl: media.url, mediaType: media.type } : {}),
       });
     } catch (err) {
       lastError = err;
@@ -328,9 +363,10 @@ export function useSubmitGovernanceProposal() {
   const { t: _copy } = _useCopy();
   const queryClient = useQueryClient();
   const { walletAddress } = useAuth();
+  const { weight: selfWeight } = useSelfVoteWeight();
 
   return useMutation({
-    mutationFn: async ({ title, description }: { title: string; description: string }) => {
+    mutationFn: async ({ title, description, media = null }: { title: string; description: string; media?: ProposalMedia | null }) => {
       if (!walletAddress) throw new Error('Not authenticated');
 
       // A fee already paid for this exact proposal is reused rather than paid
@@ -338,9 +374,22 @@ export function useSubmitGovernanceProposal() {
       // proposal did not — the retry below is the same call, not a new charge.
       const alreadyPaid = readProposalFee(title, description);
       if (alreadyPaid) {
-        const retried = await submitWithPaidFee(title, description, alreadyPaid);
+        const retried = await submitWithPaidFee(title, description, alreadyPaid, media);
         forgetProposalFee();
         return retried.proposal;
+      }
+
+      // Badge holders post free. The server decides; if it disagrees (badge
+      // lookup lagging), it answers with feeRequired and we fall through to
+      // the paid path below.
+      if (selfWeight > 0) {
+        try {
+          const free = await submitWithPaidFee(title, description, null, media);
+          return free.proposal;
+        } catch (err) {
+          const message = err instanceof Error ? err.message : String(err);
+          if (!/without a staking badge/i.test(message)) throw err;
+        }
       }
 
       // ── Charge 10,000 DHB proposal fee ─────────────────────
@@ -379,7 +428,7 @@ export function useSubmitGovernanceProposal() {
       // The row is written by the edge function, not from here: the insert
       // this replaced had no idea a fee existed, so posting straight to
       // PostgREST created a free proposal.
-      const result = await submitWithPaidFee(title, description, feeTxHash);
+      const result = await submitWithPaidFee(title, description, feeTxHash, media);
       forgetProposalFee();
       return result.proposal;
     },
@@ -390,7 +439,11 @@ export function useSubmitGovernanceProposal() {
     },
     onError: (err: any) => {
       toast.dismiss('governance-proposal-fee');
-      toastTxError(err, err?.message || 'Failed to submit proposal');
+      // The drawer's fields are drafts persisted per account, so nothing typed
+      // is lost — say so, otherwise a failure reads as "my proposal vanished".
+      toastTxError(err, err?.message || 'Failed to submit proposal', {
+        description: 'Your draft is saved — press Submit to retry.',
+      });
     },
   });
 }
