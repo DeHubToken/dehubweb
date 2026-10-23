@@ -8613,5 +8613,15 @@
     "contact": "Contact",
     "privacy": "Politica de confidențialitate",
     "terms": "Termeni și condiții"
+  },
+  "loginStack": {
+    "tip": "Bacșiș în DHB",
+    "headlineTop": "Vei deține totul",
+    "headlineAccent": "și vei fi fericit.",
+    "orContinueWith": "sau continuă cu",
+    "phone": "Telefon",
+    "fingerprint": "Amprentă",
+    "exploreFirst": "Explorează mai întâi",
+    "codeNote": "Îți trimitem un cod pe e-mail, fără parolă."
   }
 }

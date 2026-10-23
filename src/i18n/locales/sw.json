@@ -8586,5 +8586,15 @@
     "posted": "Imechapishwa",
     "view": "Tazama",
     "failed": "Video haikuweza kuchakatwa"
+  },
+  "loginStack": {
+    "tip": "Tuza kwa DHB",
+    "headlineTop": "Utamiliki kila kitu",
+    "headlineAccent": "na utakuwa na furaha.",
+    "orContinueWith": "au endelea kwa",
+    "phone": "Simu",
+    "fingerprint": "Alama ya kidole",
+    "exploreFirst": "Gundua kwanza",
+    "codeNote": "Tunakutumia msimbo kwa barua pepe, bila nenosiri."
   }
 }

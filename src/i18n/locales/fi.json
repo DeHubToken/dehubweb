@@ -8495,5 +8495,15 @@
     "posted": "Julkaistu",
     "view": "Näytä",
     "failed": "Videota ei voitu käsitellä"
+  },
+  "loginStack": {
+    "tip": "Anna DHB-tippi",
+    "headlineTop": "Omistat kaiken",
+    "headlineAccent": "ja olet onnellinen.",
+    "orContinueWith": "tai jatka käyttäen",
+    "phone": "Puhelin",
+    "fingerprint": "Sormenjälki",
+    "exploreFirst": "Tutustu ensin",
+    "codeNote": "Lähetämme sinulle koodin sähköpostilla, ilman salasanaa."
   }
 }

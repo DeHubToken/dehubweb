@@ -1,4 +1,5 @@
 import { useSurfaceDraft } from '@/hooks/use-surface-draft';
+import '@/styles/login-stack.css';
 /**
  * Everything inside the login sheet below the header.
  *
@@ -100,6 +101,12 @@ interface LoginModalBodyProps {
   open: boolean;
   step: LoginStep;
   setStep: (step: LoginStep) => void;
+  /**
+   * `stack`: the phone sheet's email-first list under the Shorts Stack hero
+   * (email field up front, the other ways in as round buttons, crypto as a
+   * row of links). Desktop keeps the default list.
+   */
+  layout?: 'default' | 'stack';
 }
 
 /**
@@ -115,7 +122,7 @@ export function LoginModalBody(props: LoginModalBodyProps) {
   );
 }
 
-function LoginModalBodyInner({ open, step, setStep }: LoginModalBodyProps) {
+function LoginModalBodyInner({ open, step, setStep, layout = 'default' }: LoginModalBodyProps) {
   const {
     connectWithProvider, connectWithEmail, cancelEmailMagicLink, verifyEmailOtp, connectWithSMS, verifyPhoneOtp,
     connectWithTelegram, connectWithPasskey, connectWithWallet, completeSmartWalletLogin, setWagmiAuthIntent, isConnecting,
@@ -779,6 +786,149 @@ function LoginModalBodyInner({ open, step, setStep }: LoginModalBodyProps) {
     </div>
   );
 
+  // Phone sheet, options step. Same handlers as the default list; only the
+  // order and weight change: email is the field on screen, every other way in
+  // is one tap below it.
+  const stackOptionClass = 'login-stack-option text-white disabled:opacity-50';
+  const renderStackMainStep = () => (
+    <div className="space-y-4">
+      {!isAuthenticated && (
+        <LoginSavedProfiles disabled={isConnecting} onSwitch={handleSwitchProfile} />
+      )}
+      {walletSignupBlocked && (
+        <div role="alert" className="flex items-start gap-2 rounded-xl border border-white/15 bg-white/10 p-3 text-sm text-white">
+          <Wallet className="w-4 h-4 mt-0.5 shrink-0" />
+          <div className="flex-1 min-w-0 space-y-1">
+            <p className="font-medium">{t('loginModal.walletBlockedTitle', 'This wallet is brand new')}</p>
+            <p className="text-white/70">
+              {t('loginModal.walletBlockedBody', 'New wallets need a balance or a past transaction to open an account. Sign up with one of the options below, then connect this wallet from Settings.')}
+            </p>
+          </div>
+          <button
+            type="button"
+            onClick={() => setWalletSignupBlocked(false)}
+            aria-label={t('common.close', 'Close')}
+            className="p-1 -m-1 rounded-lg text-white/50 hover:text-white hover:bg-white/10 transition-colors shrink-0"
+          >
+            <X className="w-4 h-4" />
+          </button>
+        </div>
+      )}
+      {setupIntent && (
+        <div className="flex items-start gap-2 rounded-xl border border-white/15 bg-white/10 p-3 text-sm text-white">
+          <ArrowDownToLine className="w-4 h-4 mt-0.5 shrink-0" />
+          <p className="flex-1 min-w-0">
+            {t('loginModal.migrateIntentHint', 'Sign in with any option below. If it matches an earlier DeHub account you will bring over its wallet, username and balance.')}
+          </p>
+          <button
+            type="button"
+            onClick={() => chooseSetupIntent(null)}
+            aria-label={t('common.cancel', 'Cancel')}
+            className="p-1 -m-1 rounded-lg text-white/50 hover:text-white hover:bg-white/10 transition-colors shrink-0"
+          >
+            <X className="w-4 h-4" />
+          </button>
+        </div>
+      )}
+
+      <form onSubmit={handleEmailSubmit} className="space-y-2.5" noValidate>
+        <label htmlFor="login-stack-email" className="sr-only">{t('loginModal.emailPlaceholder')}</label>
+        <div className="relative">
+          <Mail className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-white/40 pointer-events-none" aria-hidden="true" />
+          <Input
+            id="login-stack-email"
+            type="email"
+            inputMode="email"
+            autoComplete="email"
+            placeholder={t('loginModal.emailPlaceholder')}
+            value={email}
+            onChange={(e) => { setEmail(e.target.value); if (emailError) setEmailError(''); }}
+            disabled={isConnecting}
+            className="h-14 pl-12 bg-white/10 border-white/10 text-white text-base placeholder:text-white/40 rounded-2xl"
+          />
+        </div>
+        {emailError && <p className="text-red-400 text-sm">{emailError}</p>}
+        <Button
+          type="submit"
+          disabled={isConnecting}
+          className="w-full h-14 bg-white hover:opacity-90 text-black text-base font-bold rounded-2xl"
+        >
+          {activeProvider === 'email' ? (
+            <span className="flex items-center gap-2">
+              <Loader2 className="w-4 h-4 animate-spin" />
+              {t('loginModal.sendingLink')}
+            </span>
+          ) : (
+            t('loginModal.continueEmail')
+          )}
+        </Button>
+      </form>
+
+      <div className="flex items-center gap-3">
+        <Separator className="flex-1 bg-white/10" />
+        <span className="text-white/40 text-xs font-medium">{t('loginStack.orContinueWith', 'or continue with')}</span>
+        <Separator className="flex-1 bg-white/10" />
+      </div>
+
+      <div className="flex justify-center gap-7">
+        <button type="button" onClick={() => handleSocialLogin('google')} disabled={isConnecting} className={stackOptionClass} aria-label={t('loginModal.continueGoogle')}>
+          <span className="login-stack-option__disc">{activeProvider === 'google' ? <Loader2 className="w-5 h-5 animate-spin" /> : <GoogleIcon />}</span>
+          Google
+        </button>
+        <button type="button" onClick={() => handleSocialLogin('apple')} disabled={isConnecting} className={stackOptionClass} aria-label={t('loginModal.continueApple', 'Continue with Apple')}>
+          <span className="login-stack-option__disc">{activeProvider === 'apple' ? <Loader2 className="w-5 h-5 animate-spin" /> : <AppleIcon />}</span>
+          Apple
+        </button>
+        <button type="button" onClick={() => setStep('phone')} disabled={isConnecting} className={stackOptionClass} aria-label={t('loginModal.continuePhone', 'Continue with phone')}>
+          <span className="login-stack-option__disc"><Phone className="w-5 h-5" /></span>
+          {t('loginStack.phone', 'Phone')}
+        </button>
+        {passkeyAvailable && (
+          <button type="button" onClick={() => setStep('passkey')} disabled={isConnecting} className={stackOptionClass} aria-label={t('loginModal.continuePasskey', 'Continue with fingerprint')}>
+            <span className="login-stack-option__disc"><Fingerprint className="w-5 h-5" /></span>
+            {t('loginStack.fingerprint', 'Fingerprint')}
+          </button>
+        )}
+        {telegramEnabled && (
+          <button type="button" onClick={handleTelegramLogin} disabled={isConnecting} className={stackOptionClass} aria-label={t('loginModal.continueTelegram', 'Continue with Telegram')}>
+            <span className="login-stack-option__disc">{activeProvider === 'telegram' ? <Loader2 className="w-5 h-5 animate-spin" /> : <TelegramIcon />}</span>
+            Telegram
+          </button>
+        )}
+      </div>
+
+      <div className="flex flex-wrap items-center justify-center gap-x-4 text-sm font-semibold">
+        <button
+          type="button"
+          onClick={() => setStep('wallets')}
+          onPointerEnter={() => { void import('./LoginWalletsStep'); }}
+          disabled={isConnecting}
+          className="h-10 text-white underline underline-offset-4 decoration-white/30"
+        >
+          {t('loginModal.connectWallet')}
+        </button>
+        <button
+          type="button"
+          onClick={() => { chooseSetupIntent(null); setStep('import-wallet'); }}
+          disabled={isConnecting}
+          className="h-10 text-white underline underline-offset-4 decoration-white/30"
+        >
+          {t('copy.a865110e919b', 'Import wallet')}
+        </button>
+        {!setupIntent && (
+          <button
+            type="button"
+            onClick={() => chooseSetupIntent('migrate')}
+            disabled={isConnecting}
+            className="h-10 text-white underline underline-offset-4 decoration-white/30"
+          >
+            {t('loginModal.migrateAccount', 'Migrate account')}
+          </button>
+        )}
+      </div>
+    </div>
+  );
+
   const renderEmailStep = () => (
     <div className="space-y-4">
       <form onSubmit={handleEmailSubmit} className="space-y-4">
@@ -986,7 +1136,7 @@ function LoginModalBodyInner({ open, step, setStep }: LoginModalBodyProps) {
       {/* The same placeholder the shell shows while this chunk is in flight,
           so the wait for the chunk and the wait for the probes read as one
           beat rather than two — and the options appear once, complete. */}
-      {step === 'main' && (probes ? renderMainStep() : <LoginBodySkeleton />)}
+      {step === 'main' && (probes ? (layout === 'stack' ? renderStackMainStep() : renderMainStep()) : <LoginBodySkeleton />)}
       {step === 'passkey' && renderPasskeyStep()}
       {step === 'email' && renderEmailStep()}
       {step === 'email-waiting' && renderEmailWaitingStep()}

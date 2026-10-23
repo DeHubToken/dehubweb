@@ -8494,5 +8494,15 @@
     "posted": "Publicat",
     "view": "Mostra",
     "failed": "No s'ha pogut processar el vídeo"
+  },
+  "loginStack": {
+    "tip": "Propina en DHB",
+    "headlineTop": "Ho tindràs tot",
+    "headlineAccent": "i seràs feliç.",
+    "orContinueWith": "o continua amb",
+    "phone": "Telèfon",
+    "fingerprint": "Empremta",
+    "exploreFirst": "Explora primer",
+    "codeNote": "T'enviem un codi per correu, sense contrasenya."
   }
 }

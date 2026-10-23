@@ -8745,5 +8745,15 @@
     "posted": "Publicado",
     "view": "Ver",
     "failed": "Não foi possível processar o vídeo"
+  },
+  "loginStack": {
+    "tip": "Gorjeta em DHB",
+    "headlineTop": "Você vai ter tudo",
+    "headlineAccent": "e ser feliz.",
+    "orContinueWith": "ou continue com",
+    "phone": "Telefone",
+    "fingerprint": "Digital",
+    "exploreFirst": "Explorar primeiro",
+    "codeNote": "Enviamos um código por e-mail, sem senha."
   }
 }

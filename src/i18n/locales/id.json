@@ -8618,5 +8618,15 @@
     "posted": "Diposting",
     "view": "Lihat",
     "failed": "Video tidak dapat diproses"
+  },
+  "loginStack": {
+    "tip": "Tip DHB",
+    "headlineTop": "Kamu akan memiliki segalanya",
+    "headlineAccent": "dan bahagia.",
+    "orContinueWith": "atau lanjut dengan",
+    "phone": "Telepon",
+    "fingerprint": "Sidik jari",
+    "exploreFirst": "Jelajahi dulu",
+    "codeNote": "Kami kirim kode lewat email, tanpa kata sandi."
   }
 }

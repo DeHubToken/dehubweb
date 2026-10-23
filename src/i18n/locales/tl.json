@@ -8786,5 +8786,15 @@
   "notification": {
     "noNotifications": "Walang mga abiso",
     "loadMore": "Mag-load ng higit pa"
+  },
+  "loginStack": {
+    "tip": "Mag-tip ng DHB",
+    "headlineTop": "Mapapasaiyo ang lahat",
+    "headlineAccent": "at magiging masaya ka.",
+    "orContinueWith": "o magpatuloy gamit ang",
+    "phone": "Telepono",
+    "fingerprint": "Fingerprint",
+    "exploreFirst": "Mag-explore muna",
+    "codeNote": "Magpapadala kami ng code sa email, walang password."
   }
 }
