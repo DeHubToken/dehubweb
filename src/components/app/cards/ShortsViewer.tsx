@@ -1414,9 +1414,9 @@ export function ShortsViewer({ shorts, initialIndex, onClose, onLoadMore, hasMor
       // becomes the white page instead of letting the feed show through.
       data-media-full={isMobile ? '' : undefined}
       data-shorts-viewer
+      className={cn("fixed inset-0 z-[60] flex items-center justify-center", isMobile ? "bg-black" : "bg-black/60 backdrop-blur-[24px]")}
       // The viewer runs its own swipe-back; see handleTouchStart.
       data-swipe-back-ignore={isMobile ? '' : undefined}
-      className={cn("fixed inset-0 z-[60] flex items-center justify-center", isMobile ? "bg-black" : "bg-black/60 backdrop-blur-[24px]")}
       // `overscroll-behavior: contain` stops scroll-chaining/rubber-banding
       // without the `touch-action: none` that used to freeze the comments
       // panel. The video carousel manages its own swipe gestures via Framer's
