@@ -30,27 +30,25 @@ export async function boundMcpRequest(request: Request): Promise<Request | Respo
   if (declared && Number(declared) > MAX_BODY_BYTES) return rejected(413, 'Request body is too large');
   const reader = request.body?.getReader();
   if (!reader) return rejected(400, 'Invalid JSON body');
-  const chunks: Uint8Array[] = [];
+  const buffer = new Uint8Array(MAX_BODY_BYTES);
   let size = 0;
   try {
     while (true) {
       const { done, value } = await reader.read();
       if (done) break;
-      size += value.byteLength;
-      if (size > MAX_BODY_BYTES) {
+      if (size + value.byteLength > MAX_BODY_BYTES) {
         void reader.cancel().catch(() => {});
         return rejected(413, 'Request body is too large');
       }
-      chunks.push(value);
+      buffer.set(value, size);
+      size += value.byteLength;
     }
   } catch {
     return rejected(400, 'Could not read request body');
   } finally {
     reader.releaseLock();
   }
-  const bytes = new Uint8Array(size);
-  let offset = 0;
-  for (const chunk of chunks) { bytes.set(chunk, offset); offset += chunk.byteLength; }
+  const bytes = buffer.subarray(0, size);
   let value: unknown;
   try { value = JSON.parse(new TextDecoder('utf-8', { fatal: true }).decode(bytes)); }
   catch { return rejected(400, 'Invalid JSON body'); }
