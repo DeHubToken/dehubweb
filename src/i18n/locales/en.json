@@ -9885,6 +9885,11 @@
     "reminderLater": "Not now"
   },
   "copy": {
+    "b3412a3b86de": "Invite streamers",
+    "8c91325d901b": "Send streamers to the DeHub streaming page with this message. Your link attributes them to you before they land.",
+    "cc96aaa18cf2": "Come stream on DeHub with me. Tips land on-chain straight in your wallet, you own your audience, and you can keep posting to TikTok and everywhere else in one step. Sign up here: {{link}}",
+    "77db95ebd737": " Copy message",
+    "846d8244b7d8": "Invite message copied",
     "7af023c43013": "Docs",
     "090940e73258": "Builder",
     "c3d4759d35d0": "Builder preview",

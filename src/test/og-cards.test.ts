@@ -74,23 +74,26 @@ describe('per-route OG cards', () => {
     expect(copies).toEqual([]);
   });
 
-  /** Pages that deliberately carry the brand card (SHARE_IMAGE), each with
-   *  its reason. Each must say so with `og: 'brand'` in its entry. */
-  const BRAND_CARD: Record<string, string> = {
-    'dehub-app': 'the brand-query landing page: the brand card is the right picture',
+  /** Pages that deliberately reuse another card, each with its reason. Each
+   *  must name that card with `og: '<key>'` in its entry; 'brand' is the
+   *  shared brand card (SHARE_IMAGE). */
+  const SHARED_CARD: Record<string, [string, string]> = {
+    stream: ['creators', 'the streamer landing page: "Become a creator" is the right picture'],
+    'dehub-app': ['brand', 'the brand-query landing page: the brand card is the right picture'],
   };
 
   it('gives every edge-rendered marketing page its own card', () => {
-    const without = tableKeys('MARKETING_PAGES').filter((k) => !cardKeys.has(k) && !(k in BRAND_CARD));
+    const without = tableKeys('MARKETING_PAGES').filter((k) => !cardKeys.has(k) && !(k in SHARED_CARD));
     expect(without).toEqual([]);
   });
 
-  it('keeps the brand-card exceptions honest', () => {
-    for (const key of Object.keys(BRAND_CARD)) {
+  it('keeps the shared-card exceptions honest', () => {
+    for (const [key, [card]] of Object.entries(SHARED_CARD)) {
       expect(cardKeys.has(key), key).toBe(false);
+      if (card !== 'brand') expect(cardKeys.has(card), card).toBe(true);
       const start = WORKER.indexOf(`  '${key}': {`);
       expect(start, key).toBeGreaterThan(-1);
-      expect(WORKER.slice(start, WORKER.indexOf('\n  },', start)), key).toContain("og: 'brand'");
+      expect(WORKER.slice(start, WORKER.indexOf('\n  },', start)), key).toContain(`og: '${card}'`);
     }
   });
 
