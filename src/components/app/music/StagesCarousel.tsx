@@ -25,7 +25,8 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { useQuery } from '@tanstack/react-query';
-import { useLiveSpaces, useStage } from '@/contexts/StageContext';
+import { useLiveSpaces, useScheduledSpaces, useStage } from '@/contexts/StageContext';
+import { ChartDesk } from '@/components/app/music/ChartDesk';
 import { SwipeableCarousel } from '@/components/app/SwipeableCarousel';
 import { StageHostLink } from '@/components/app/stages/StageHostLink';
 import { PastStageCard } from '@/components/app/stages/PastStageCard';
@@ -43,7 +44,7 @@ interface StagesCarouselProps {
   onOpenStages: () => void;
 }
 
-function StageCard({ space, onClick }: { space: AudioSpace; onClick: () => void }) {
+function StageCard({ space, onClick, wide = false }: { space: AudioSpace; onClick: () => void; wide?: boolean }) {
   const { t: _copy } = _useCopy();
   const { t } = useTranslation();
   const totalListeners = (space.speaker_count || 1) + (space.listener_count || 0);
@@ -58,7 +59,7 @@ function StageCard({ space, onClick }: { space: AudioSpace; onClick: () => void 
   return (
     <button
       onClick={onClick}
-      className="flex-shrink-0 w-[260px] self-start rounded-xl border border-white/[0.12] bg-white/[0.03] backdrop-blur-[24px] overflow-hidden text-left hover:border-white/20 transition-all group"
+      className={cn(wide ? 'w-full' : 'flex-shrink-0 w-[260px] self-start', 'rounded-xl border border-white/[0.12] bg-white/[0.03] backdrop-blur-[24px] overflow-hidden text-left hover:border-white/20 transition-all group')}
     >
       {/* The host's cover, or the stage's generated poster when there is none. */}
       <StageCoverArt src={space.cover_image_url} title={space.title} stage={space} />
@@ -221,6 +222,120 @@ export function StagesCarousel({ onOpenStages }: StagesCarouselProps) {
         </div>
       )}
     </div>
+  );
+}
+
+type StagesChartSort = 'live' | 'upcoming' | 'listened' | 'recent';
+
+/** Ended stages for the chart, ranked by listens or by when they ended. */
+function usePastStages(order: 'total_listens' | 'ended_at', enabled: boolean) {
+  return useQuery({
+    // 'recent' shares ['past-stages'] with the /stages page and the carousel.
+    queryKey: order === 'ended_at' ? ['past-stages'] : ['past-stages', order],
+    enabled,
+    queryFn: async () => {
+      const { data } = await supabase
+        .from('audio_spaces')
+        .select('*')
+        .eq('status', 'ended')
+        .order(order, { ascending: false, nullsFirst: false })
+        .limit(20);
+      return (data as AudioSpace[]) || [];
+    },
+    staleTime: 5 * 60_000,
+  });
+}
+
+function UpcomingStagePanel({ space }: { space: AudioSpace }) {
+  const { t: _copy } = _useCopy();
+  const navigate = useNavigate();
+  const when = space.scheduled_at ? new Date(space.scheduled_at) : null;
+  return (
+    <button
+      type="button"
+      onClick={() => navigate(space.short_id != null ? `/stages/${space.short_id}` : `/stage/${space.id}`)}
+      className="w-full rounded-xl border border-white/[0.08] bg-white/[0.03] overflow-hidden text-left hover:bg-white/[0.06] transition-colors"
+    >
+      <StageCoverArt src={space.cover_image_url} title={space.title} stage={space} />
+      <div className="p-3 space-y-1">
+        <p className="text-zinc-400 text-[11px] font-medium">
+          {_copy('music.upcoming', { defaultValue: 'Upcoming' })}
+          {when && ` · ${when.toLocaleString(undefined, { weekday: 'short', day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit' })}`}
+        </p>
+        <h4 className="text-white font-semibold text-sm line-clamp-2">{space.title}</h4>
+      </div>
+    </button>
+  );
+}
+
+/**
+ * Stages as a chart, like the audio chart above it: Live now, Upcoming, Most
+ * listened and Recent, the picked stage up front and the list beside it.
+ */
+export function StagesChart({ onOpenStages }: StagesCarouselProps) {
+  const { t: _copy } = _useCopy();
+  const { openModal, joinSpace } = useStage();
+  const liveSpaces = useLiveSpaces();
+  const scheduledSpaces = useScheduledSpaces();
+  // Open on whatever is happening: live rooms first, else what is coming up,
+  // else the most listened recordings.
+  const [chosen, setChosen] = useState<StagesChartSort | null>(null);
+  const sort: StagesChartSort = chosen ?? (liveSpaces.length ? 'live' : scheduledSpaces.length ? 'upcoming' : 'listened');
+  const listened = usePastStages('total_listens', sort === 'listened');
+  const recent = usePastStages('ended_at', sort === 'recent');
+
+  const spaces = sort === 'live' ? liveSpaces
+    : sort === 'upcoming' ? scheduledSpaces
+    : sort === 'listened' ? listened.data || []
+    : recent.data || [];
+  const isLoading = sort === 'listened' ? listened.isLoading : sort === 'recent' ? recent.isLoading : false;
+
+  const subtitle = (space: AudioSpace) => {
+    const host = space.host_username ? `@${space.host_username}` : space.host_wallet_address?.slice(0, 6) || '';
+    if (sort === 'live') return `${host} · ${(space.speaker_count || 1) + (space.listener_count || 0)} ${_copy('music.listening', { defaultValue: 'listening' })}`;
+    if (sort === 'upcoming' && space.scheduled_at) return `${host} · ${new Date(space.scheduled_at).toLocaleDateString(undefined, { day: 'numeric', month: 'short' })}`;
+    return space.total_listens ? `${host} · ${space.total_listens} ${_copy('music.listens', { defaultValue: 'listens' })}` : host;
+  };
+
+  return (
+    <ChartDesk
+      header={
+        <div className="flex items-center justify-between mb-3">
+          <h2 className="font-bold text-white flex items-center gap-2">
+            <BrandIcon src={stagesMicIcon} alt="" className="w-5 h-5 object-contain" />{_copy("copy.3a17aa4e4abb", { defaultValue: "Stages" })}
+            {liveSpaces.length > 0 && <span className="text-zinc-500 font-normal text-sm">({liveSpaces.length} {_copy('music.liveCount', { defaultValue: 'live' })})</span>}
+          </h2>
+          <button onClick={onOpenStages} className="text-zinc-400 text-sm hover:text-white flex items-center gap-1">
+            {_copy("copy.14c21c5e3ffe", { defaultValue: "See all " })}<ChevronRight className="w-4 h-4" />
+          </button>
+        </div>
+      }
+      sorts={[
+        { value: 'live', label: _copy('music.stagesLive', { defaultValue: 'Live now' }) },
+        { value: 'upcoming', label: _copy('music.upcoming', { defaultValue: 'Upcoming' }) },
+        { value: 'listened', label: _copy('music.mostListened', { defaultValue: 'Most listened' }) },
+        { value: 'recent', label: _copy('music.recentStages', { defaultValue: 'Recent' }) },
+      ]}
+      sort={sort}
+      onSort={setChosen}
+      sortLabel={_copy('music.stagesChartOrder', { defaultValue: 'Stages chart order' })}
+      rows={spaces.map(space => ({
+        id: space.id,
+        title: space.title,
+        subtitle: subtitle(space),
+        thumb: space.cover_image_url || undefined,
+      }))}
+      isLoading={isLoading}
+      thumbs="wide"
+      empty={{ icon: 'stages', title: sort === 'live' ? _copy("copy.3b59e95daada", { defaultValue: "No live stages right now" }) : _copy('music.noStages', { defaultValue: 'No stages here yet' }) }}
+      renderSelected={id => {
+        const space = spaces.find(s => s.id === id);
+        if (!space) return null;
+        if (sort === 'live') return <StageCard space={space} onClick={() => { openModal('live'); joinSpace(space.id); }} wide />;
+        if (sort === 'upcoming') return <UpcomingStagePanel space={space} />;
+        return <PastStageCard key={space.id} space={space} />;
+      }}
+    />
   );
 }
 
