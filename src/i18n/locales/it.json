@@ -8659,5 +8659,15 @@
     "posted": "Pubblicato",
     "view": "Vedi",
     "failed": "Impossibile elaborare il video"
+  },
+  "loginStack": {
+    "tip": "Mancia in DHB",
+    "headlineTop": "Possiederai tutto",
+    "headlineAccent": "e sarai felice.",
+    "orContinueWith": "oppure continua con",
+    "phone": "Telefono",
+    "fingerprint": "Impronta",
+    "exploreFirst": "Esplora prima",
+    "codeNote": "Ti inviamo un codice via email, senza password."
   }
 }

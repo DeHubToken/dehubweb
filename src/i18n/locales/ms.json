@@ -8852,5 +8852,15 @@
     "posted": "Disiarkan",
     "view": "Lihat",
     "failed": "Video tidak dapat diproses"
+  },
+  "loginStack": {
+    "tip": "Tip DHB",
+    "headlineTop": "Anda akan memiliki segalanya",
+    "headlineAccent": "dan gembira.",
+    "orContinueWith": "atau teruskan dengan",
+    "phone": "Telefon",
+    "fingerprint": "Cap jari",
+    "exploreFirst": "Teroka dahulu",
+    "codeNote": "Kami e-melkan kod kepada anda, tanpa kata laluan."
   }
 }

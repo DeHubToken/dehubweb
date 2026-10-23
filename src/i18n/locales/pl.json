@@ -8640,5 +8640,15 @@
     "posted": "Opublikowano",
     "view": "Zobacz",
     "failed": "Nie udało się przetworzyć filmu"
+  },
+  "loginStack": {
+    "tip": "Napiwek w DHB",
+    "headlineTop": "Będziesz mieć wszystko",
+    "headlineAccent": "i będziesz szczęśliwy.",
+    "orContinueWith": "lub kontynuuj przez",
+    "phone": "Telefon",
+    "fingerprint": "Odcisk palca",
+    "exploreFirst": "Najpierw się rozejrzyj",
+    "codeNote": "Wyślemy ci kod e-mailem, bez hasła."
   }
 }

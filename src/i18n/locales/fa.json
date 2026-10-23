@@ -8599,5 +8599,15 @@
     "posted": "منتشر شد",
     "view": "مشاهده",
     "failed": "پردازش ویدیو ممکن نشد"
+  },
+  "loginStack": {
+    "tip": "انعام DHB",
+    "headlineTop": "صاحب همه چیز خواهی شد",
+    "headlineAccent": "و خوشحال خواهی بود.",
+    "orContinueWith": "یا ادامه با",
+    "phone": "تلفن",
+    "fingerprint": "اثر انگشت",
+    "exploreFirst": "اول گشتی بزن",
+    "codeNote": "یک کد برایت ایمیل می‌کنیم، بدون رمز عبور."
   }
 }

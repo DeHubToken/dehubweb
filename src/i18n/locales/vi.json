@@ -8702,5 +8702,15 @@
     "posted": "Đã đăng",
     "view": "Xem",
     "failed": "Không thể xử lý video"
+  },
+  "loginStack": {
+    "tip": "Tip DHB",
+    "headlineTop": "Bạn sẽ sở hữu mọi thứ",
+    "headlineAccent": "và hạnh phúc.",
+    "orContinueWith": "hoặc tiếp tục với",
+    "phone": "Điện thoại",
+    "fingerprint": "Vân tay",
+    "exploreFirst": "Khám phá trước",
+    "codeNote": "Chúng tôi gửi mã qua email, không cần mật khẩu."
   }
 }

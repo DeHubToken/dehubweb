@@ -9089,5 +9089,15 @@
     "footer": {
       "allRightsReserved": "Всі права захищені"
     }
+  },
+  "loginStack": {
+    "tip": "Чайові в DHB",
+    "headlineTop": "Усе буде твоїм",
+    "headlineAccent": "і ти будеш щасливий.",
+    "orContinueWith": "або продовжити через",
+    "phone": "Телефон",
+    "fingerprint": "Відбиток пальця",
+    "exploreFirst": "Спершу роздивитися",
+    "codeNote": "Ми надішлемо код на пошту, пароль не потрібен."
   }
 }

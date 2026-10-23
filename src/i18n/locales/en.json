@@ -14136,5 +14136,15 @@
   },
   "player": {
     "volume": "Volume level"
+  },
+  "loginStack": {
+    "tip": "Tip DHB",
+    "headlineTop": "You will own everything",
+    "headlineAccent": "and be happy.",
+    "orContinueWith": "or continue with",
+    "phone": "Phone",
+    "fingerprint": "Fingerprint",
+    "exploreFirst": "Explore first",
+    "codeNote": "We email you a code, no password needed."
   }
 }
