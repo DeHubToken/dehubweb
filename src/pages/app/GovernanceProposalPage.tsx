@@ -26,6 +26,7 @@ import { useProfileAvatar } from '@/hooks/use-profile-avatar-cache';
 import { DeHubPageLoader } from '@/components/app/DeHubLoader';
 import { ProposalVerdictLabel, verdictOf, votingTimeLeft, isVotingClosed } from '@/components/app/governance/ProposalVerdict';
 import { ProposalDiscussion } from '@/components/app/governance/ProposalDiscussion';
+import { ProposalMedia } from '@/components/app/governance/ProposalMedia';
 
 function formatTimeAgo(dateStr: string, t: (key: string, opts?: any) => string): string {
   const seconds = Math.floor((Date.now() - new Date(dateStr).getTime()) / 1000);
@@ -123,7 +124,7 @@ export default function GovernanceProposalPage() {
 
   return (
     <div className="min-h-screen max-w-2xl mx-auto">
-      <SEOHead title={_copy("copy.c1cd85f576ed", { defaultValue: "{{value1}} — DeHub Governance", value1: proposal.title })} description={(proposal.description || _copy("copy.2f33a51e3171", { defaultValue: "DeHub governance proposal — vote and discuss." })).slice(0, 155)} url={`https://dehub.io/app/governance/${proposalId}`} type="article" />
+      <SEOHead title={_copy("copy.c1cd85f576ed", { defaultValue: "{{value1}} — DeHub Governance", value1: proposal.title })} description={(proposal.description || _copy("copy.2f33a51e3171", { defaultValue: "DeHub governance proposal — vote and discuss." })).slice(0, 155)} url={`https://dehub.io/app/governance/${proposalId}`} type="article" {...(proposal.media_type === 'image' && proposal.media_url ? { image: proposal.media_url } : {})} />
       <PageIsland
         back
         onBack={() => navigate('/app/governance')}
@@ -164,6 +165,7 @@ export default function GovernanceProposalPage() {
 
         <TranslatableText publicContent text={proposal.title} className="text-white font-semibold text-base leading-tight mb-2" as="h1" hideControls />
         <TranslatableText publicContent text={proposal.description} className="text-zinc-400 text-sm leading-relaxed mb-4" as="p" />
+        <ProposalMedia url={proposal.media_url} type={proposal.media_type} alt={proposal.title} className="mb-4" />
 
         {/* Vote ratio bar */}
         <div className="space-y-1 mb-3">
