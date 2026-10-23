@@ -1,3 +1,4 @@
+import { workspaceCapabilities } from './workspace-capabilities.ts';
 import { type Context, planPrompt } from './tasks.ts';
 import { agentSettings, blockedReason, checked, settingsSchema, writingContext } from './controls.ts';
 import { currentNews, newsReaction, newsTopicsFor } from './news.ts';
@@ -23,6 +24,7 @@ const uuid = (value: unknown) => typeof value === 'string' && /^[0-9a-f-]{36}$/i
 const error = (message: string, status = 400) => Response.json({ error: message }, { status });
 export async function handleWorkspace(req: Request, context: Context, wallet: string, input: Record<string, any>): Promise<Response> {
   const db = context.db();
+  if (input.operation === 'workspace_capabilities') return Response.json(await workspaceCapabilities(db));
   if (input.operation === 'workspace_overview') {
     const agents = checked(await db.from('ai_agents').select('id,name,is_active,last_active_at').eq('human_owner_wallet', wallet));
     const ids = agents.map((agent: any) => agent.id);

@@ -8,3 +8,15 @@ BEGIN
     IF NOT has_table_privilege('service_role', 'public.' || target, 'SELECT,INSERT,UPDATE') THEN RAISE EXCEPTION 'Service access missing for %', target; END IF;
   END LOOP;
 END $$;
+
+DO $$ BEGIN
+  IF NOT public.agent_workspace_ready() THEN RAISE EXCEPTION 'Workspace readiness missing after migrations'; END IF;
+  IF has_function_privilege('anon','public.agent_workspace_ready()','EXECUTE') OR has_function_privilege('authenticated','public.agent_workspace_ready()','EXECUTE') THEN RAISE EXCEPTION 'Workspace readiness exposed publicly'; END IF;
+  IF NOT has_function_privilege('service_role','public.agent_workspace_ready()','EXECUTE') THEN RAISE EXCEPTION 'Service readiness access missing'; END IF;
+END $$;
+BEGIN;
+ALTER FUNCTION public.create_agent_swarm_tasks_v2(text,uuid[],uuid,text,jsonb,numeric,text) RENAME TO workspace_readiness_dependency_probe;
+DO $$ BEGIN
+  IF public.agent_workspace_ready() THEN RAISE EXCEPTION 'Workspace activated without swarm migration'; END IF;
+END $$;
+ROLLBACK;

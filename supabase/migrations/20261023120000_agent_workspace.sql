@@ -40,3 +40,22 @@ ALTER TABLE public.ai_agent_templates ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.ai_agent_news_cache ENABLE ROW LEVEL SECURITY;
 REVOKE ALL ON public.ai_agent_controls,public.ai_agent_receipts,public.ai_agent_templates,public.ai_agent_news_cache FROM PUBLIC,anon,authenticated;
 GRANT ALL ON public.ai_agent_controls,public.ai_agent_receipts,public.ai_agent_templates,public.ai_agent_news_cache TO service_role;
+
+
+-- A schema-backed capability, readable only by the service role. Frontends
+-- stay compatible with an older function until this migration and the swarm
+-- dependency have both been applied. Never deploy controlledAction ahead of
+-- these migrations: this probe does not bypass missing write controls.
+CREATE OR REPLACE FUNCTION public.agent_workspace_ready()
+RETURNS boolean
+LANGUAGE sql STABLE SECURITY INVOKER SET search_path=pg_catalog,public AS $$
+  SELECT to_regclass('public.ai_agent_controls') IS NOT NULL
+    AND to_regclass('public.ai_agent_receipts') IS NOT NULL
+    AND to_regclass('public.ai_agent_templates') IS NOT NULL
+    AND to_regclass('public.ai_agent_news_cache') IS NOT NULL
+    AND to_regprocedure('public.create_agent_swarm_tasks_v2(text,uuid[],uuid,text,jsonb,numeric,text)') IS NOT NULL
+    AND EXISTS (SELECT 1 FROM pg_attribute WHERE attrelid=to_regclass('public.ai_agent_tasks') AND attname='workspace_template_id' AND NOT attisdropped)
+    AND EXISTS (SELECT 1 FROM pg_attribute WHERE attrelid=to_regclass('public.ai_agent_tasks') AND attname='swarm_mode' AND NOT attisdropped);
+$$;
+REVOKE ALL ON FUNCTION public.agent_workspace_ready() FROM PUBLIC,anon,authenticated;
+GRANT EXECUTE ON FUNCTION public.agent_workspace_ready() TO service_role;
