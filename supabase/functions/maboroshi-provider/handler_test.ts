@@ -6,6 +6,10 @@ const env = (name: string) => values[name];
 const signed = `https://live.dehub.io/maboroshi/media/${'a'.repeat(32)}/seedance-input.mp4?expires=1999999999&signature=${'b'.repeat(64)}`;
 const req = (body: unknown, credential = secret) => new Request('https://example.org', {method: 'POST', headers: {'x-internal-secret': credential}, body: JSON.stringify(body)});
 function assert(value: unknown, message = 'Assertion failed'): asserts value { if (!value) throw new Error(message); }
+// The mock fetch is cast to `typeof fetch`, so its options arrive as a union of
+// RequestInit variants; read the two fields the tests need through one cast.
+const bodyOf = (options: unknown) => String((options as { body?: unknown })?.body);
+const headersOf = (options: unknown) => (options as { headers?: HeadersInit })?.headers;
 
 Deno.test('Kling uses the exact edit endpoint and keeps audio without draft or HD', async () => {
   const sent: any[] = [];
