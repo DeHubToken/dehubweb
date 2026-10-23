@@ -623,6 +623,10 @@
     "dmSent": "{{name}} के {{amount}} टोकन भेजल गेल!"
   },
   "postOptions": {
+    "embed": "एम्बेड",
+    "copyEmbedCode": "एम्बेड कोड कॉपी करीं",
+    "embedCodeCopied": "एम्बेड कोड कॉपी हो गेल",
+    "copyFailed": "लिंक कॉपी न हो सकल",
     "options": "विकल्प",
     "aiOverview": "ओवरहेड ओवरहेड समीक्षा",
     "sendTip": "टिप भेजो",

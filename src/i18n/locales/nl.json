@@ -1054,6 +1054,9 @@
     "dmSent": "{{amount}} tokens verzonden naar {{name}}!"
   },
   "postOptions": {
+    "embed": "Insluiten",
+    "copyEmbedCode": "Insluitcode kopiëren",
+    "embedCodeCopied": "Insluitcode gekopieerd",
     "options": "Opties",
     "aiOverview": "AI-overzicht",
     "sendTip": "Fooi sturen",

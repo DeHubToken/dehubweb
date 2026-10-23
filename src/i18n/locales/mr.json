@@ -630,6 +630,10 @@
     "dmSent": "{{name}} यांना {{amount}} टोकन पाठवले!"
   },
   "postOptions": {
+    "embed": "एम्बेड",
+    "copyEmbedCode": "एम्बेड कोड कॉपी करा",
+    "embedCodeCopied": "एम्बेड कोड कॉपी झाला",
+    "copyFailed": "लिंक कॉपी करता आली नाही",
     "options": "पर्याय",
     "aiOverview": "एआय विहंगावलोकन",
     "sendTip": "टिप पाठवा",

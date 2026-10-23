@@ -619,6 +619,10 @@
     "dmSent": "{{amount}} o ye koo ɲuman ye. cira {{name}} ma!"
   },
   "postOptions": {
+    "embed": "Don kɔnɔ",
+    "copyEmbedCode": "Don-kɔnɔ kode kopi",
+    "embedCodeCopied": "Don-kɔnɔ kode kopira",
+    "copyFailed": "A ma se ka lien kopi",
     "options": "Kɔrɔbɔ",
     "aiOverview": "A filɛ, a ye min fɔ",
     "sendTip": "Kɔrɔbɔ",

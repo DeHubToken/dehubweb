@@ -619,6 +619,10 @@
     "dmSent": "{{name}} کوں {{amount}} ٹوکن گھل ݙتے!"
   },
   "postOptions": {
+    "embed": "ایمبیڈ",
+    "copyEmbedCode": "ایمبیڈ کوڈ کاپی کرو",
+    "embedCodeCopied": "ایمبیڈ کوڈ کاپی تھی ڳیا",
+    "copyFailed": "لنک کاپی نہ تھی سڳیا",
     "options": "اختیارات",
     "aiOverview": "AI دا جائزہ",
     "sendTip": "ٹِپ گھلو",

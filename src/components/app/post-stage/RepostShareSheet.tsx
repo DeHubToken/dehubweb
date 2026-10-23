@@ -25,6 +25,8 @@ import { Drawer, DrawerContent, DrawerHeader, DrawerTitle } from '@/components/u
 import { getPostQuotes, getPostReposters } from '@/lib/api/dehub';
 import { buildAvatarUrl, extractAvatarPath } from '@/lib/media-url';
 import { trackShare } from '@/lib/analytics';
+import { Code } from 'lucide-react';
+import { copyPostEmbedCode } from '@/lib/post-embed-code';
 
 interface RepostShareSheetProps {
   open: boolean;
@@ -145,6 +147,9 @@ export function RepostShareSheet({
     { key: 'x', label: 'X', icon: <XGlyph />, onClick: () => openExternal(`https://x.com/intent/post?url=${encoded}&text=${text}`, 'x') },
     { key: 'telegram', label: 'Telegram', icon: <Send className="h-[18px] w-[18px]" />, onClick: () => openExternal(`https://t.me/share/url?url=${encoded}&text=${text}`, 'telegram') },
     { key: 'whatsapp', label: _copy("copy.6a40edf1fc87", { defaultValue: "WhatsApp" }), icon: <MessageCircle className="h-[18px] w-[18px]" />, onClick: () => openExternal(`https://wa.me/?text=${text}${text ? '%20' : ''}${encoded}`, 'whatsapp') },
+    ...(tokenId && /^\d+$/.test(tokenId)
+      ? [{ key: 'embed', label: t('postOptions.embed'), icon: <Code className="h-[18px] w-[18px]" />, onClick: () => { copyPostEmbedCode(tokenId, t); onOpenChange(false); } }]
+      : []),
     { key: 'more', label: t('postStage.more', 'More'), icon: <MoreHorizontal className="h-[18px] w-[18px]" />, onClick: () => { void nativeShare(); } },
   ];
 

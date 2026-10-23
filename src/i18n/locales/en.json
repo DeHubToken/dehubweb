@@ -824,6 +824,9 @@
     "dmSent": "Sent {{amount}} tokens to {{name}}!"
   },
   "postOptions": {
+    "embed": "Embed",
+    "copyEmbedCode": "Copy embed code",
+    "embedCodeCopied": "Embed code copied",
     "options": "Options",
     "aiOverview": "AI overview",
     "sendTip": "Send Tip",

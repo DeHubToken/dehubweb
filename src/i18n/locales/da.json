@@ -632,6 +632,10 @@
     "dmSent": "Sendte {{amount}} tokens til {{name}}!"
   },
   "postOptions": {
+    "embed": "Indlejr",
+    "copyEmbedCode": "Kopiér indlejringskode",
+    "embedCodeCopied": "Indlejringskode kopieret",
+    "copyFailed": "Linket kunne ikke kopieres",
     "options": "Valgmuligheder",
     "aiOverview": "AI-overblik",
     "sendTip": "Send drikkepenge",

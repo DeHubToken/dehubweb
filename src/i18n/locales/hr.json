@@ -630,6 +630,10 @@
     "dmSent": "Poslano {{amount}} tokena korisniku {{name}}!"
   },
   "postOptions": {
+    "embed": "Ugradi",
+    "copyEmbedCode": "Kopiraj kod za ugradnju",
+    "embedCodeCopied": "Kod za ugradnju kopiran",
+    "copyFailed": "Poveznicu nije moguće kopirati",
     "options": "Mogućnosti",
     "aiOverview": "AI pregled",
     "sendTip": "Pošalji napojnicu",

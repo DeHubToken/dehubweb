@@ -630,6 +630,10 @@
     "dmSent": "{{name}} ਨੂੰ {{amount}} ਟੋਕਨ ਭੇਜੇ ਗਏ!"
   },
   "postOptions": {
+    "embed": "ਏਮਬੈੱਡ",
+    "copyEmbedCode": "ਏਮਬੈੱਡ ਕੋਡ ਕਾਪੀ ਕਰੋ",
+    "embedCodeCopied": "ਏਮਬੈੱਡ ਕੋਡ ਕਾਪੀ ਹੋ ਗਿਆ",
+    "copyFailed": "ਲਿੰਕ ਕਾਪੀ ਨਹੀਂ ਹੋ ਸਕਿਆ",
     "options": "ਵਿਕਲਪ",
     "aiOverview": "AI ਸੰਖੇਪ ਜਾਣਕਾਰੀ",
     "sendTip": "ਟਿੱਪ ਭੇਜੋ",

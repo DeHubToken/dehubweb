@@ -632,6 +632,10 @@
     "dmSent": "{{name}} কে {{amount}} টোকেন পাঠানো হয়েছে!"
   },
   "postOptions": {
+    "embed": "এমবেড",
+    "copyEmbedCode": "এমবেড কোড কপি করুন",
+    "embedCodeCopied": "এমবেড কোড কপি হয়েছে",
+    "copyFailed": "লিংক কপি করা যায়নি",
     "options": "বিকল্প",
     "aiOverview": "AI ওভারভিউ",
     "sendTip": "টিপ পাঠান",

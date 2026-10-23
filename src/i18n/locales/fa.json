@@ -630,6 +630,10 @@
     "dmSent": "{{amount}} توکن‌ها برای {{name}} ارسال شد!"
   },
   "postOptions": {
+    "embed": "جاسازی",
+    "copyEmbedCode": "کپی کد جاسازی",
+    "embedCodeCopied": "کد جاسازی کپی شد",
+    "copyFailed": "کپی لینک ممکن نشد",
     "options": "گزینه‌ها",
     "aiOverview": "مرور کلی هوش مصنوعی",
     "sendTip": "ارسال انعام",

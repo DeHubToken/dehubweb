@@ -628,6 +628,10 @@
     "dmSent": "{{name}}-д {{amount}} токен илгээлээ!"
   },
   "postOptions": {
+    "embed": "Суулгах",
+    "copyEmbedCode": "Суулгах кодыг хуулах",
+    "embedCodeCopied": "Суулгах код хуулагдлаа",
+    "copyFailed": "Холбоосыг хуулж чадсангүй",
     "options": "Сонголтууд",
     "aiOverview": "AI тойм",
     "sendTip": "Бэлэг илгээх",

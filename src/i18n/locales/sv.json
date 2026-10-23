@@ -632,6 +632,10 @@
     "dmSent": "Skickade {{amount}} tokens till {{name}}!"
   },
   "postOptions": {
+    "embed": "Bädda in",
+    "copyEmbedCode": "Kopiera inbäddningskod",
+    "embedCodeCopied": "Inbäddningskod kopierad",
+    "copyFailed": "Det gick inte att kopiera länken",
     "options": "Alternativ",
     "aiOverview": "AI-översikt",
     "sendTip": "Skicka dricks",

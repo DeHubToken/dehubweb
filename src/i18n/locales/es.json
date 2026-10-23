@@ -861,6 +861,9 @@
     "dmSent": "¡Enviaste {{amount}} tokens a {{name}}!"
   },
   "postOptions": {
+    "embed": "Insertar",
+    "copyEmbedCode": "Copiar código de inserción",
+    "embedCodeCopied": "Código de inserción copiado",
     "options": "Opciones",
     "aiOverview": "Descripción general de la IA",
     "sendTip": "Enviar propina",

@@ -632,6 +632,10 @@
     "dmSent": "{{name}} کو {{amount}} ٹوکن بھیج دیے گئے!"
   },
   "postOptions": {
+    "embed": "ایمبیڈ",
+    "copyEmbedCode": "ایمبیڈ کوڈ کاپی کریں",
+    "embedCodeCopied": "ایمبیڈ کوڈ کاپی ہو گیا",
+    "copyFailed": "لنک کاپی نہیں ہو سکا",
     "options": "اختیارات",
     "aiOverview": "AI کا مجموعی جائزہ",
     "sendTip": "ٹپ بھیجیں",

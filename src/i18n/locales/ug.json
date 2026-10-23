@@ -630,6 +630,10 @@
     "dmSent": "{{name}} گە {{amount}} نۆتىك پۇل ئەۋەتىلدى!"
   },
   "postOptions": {
+    "embed": "سىڭدۈرۈش",
+    "copyEmbedCode": "سىڭدۈرۈش كودىنى كۆچۈرۈش",
+    "embedCodeCopied": "سىڭدۈرۈش كودى كۆچۈرۈلدى",
+    "copyFailed": "ئۇلىنىشنى كۆچۈرگىلى بولمىدى",
     "options": "تاللانمىلار",
     "aiOverview": "AI ئومۇمىي كۆرۈنۈش",
     "sendTip": "ئىئانە ئەۋەتىش",

@@ -634,6 +634,10 @@
     "dmSent": "{{amount}} tokens enviados para {{name}}!"
   },
   "postOptions": {
+    "embed": "Incorporar",
+    "copyEmbedCode": "Copiar código de incorporação",
+    "embedCodeCopied": "Código de incorporação copiado",
+    "copyFailed": "Não foi possível copiar o link",
     "options": "Opções",
     "aiOverview": "AI overview",
     "sendTip": "Enviar gorjeta",

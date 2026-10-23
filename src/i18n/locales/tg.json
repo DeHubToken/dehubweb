@@ -629,6 +629,10 @@
     "dmSent": "{{amount}} нишонаҳо ба {{name}} фиристода шуд!"
   },
   "postOptions": {
+    "embed": "Ҷойгир кардан",
+    "copyEmbedCode": "Нусхабардории коди ҷойгиркунӣ",
+    "embedCodeCopied": "Коди ҷойгиркунӣ нусхабардорӣ шуд",
+    "copyFailed": "Пайвандро нусхабардорӣ кардан муяссар нашуд",
     "options": "Имконот",
     "aiOverview": "Pangkalahatang-ideya",
     "sendTip": "Фиристодани инъом",

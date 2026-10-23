@@ -634,6 +634,10 @@
     "dmSent": "Wysłano {{amount}} tokenów do {{name}}!"
   },
   "postOptions": {
+    "embed": "Osadź",
+    "copyEmbedCode": "Kopiuj kod do osadzenia",
+    "embedCodeCopied": "Kod do osadzenia skopiowany",
+    "copyFailed": "Nie udało się skopiować linku",
     "options": "Opcje",
     "aiOverview": "Przegląd sztucznej inteligencji",
     "sendTip": "Wyślij napiwek",

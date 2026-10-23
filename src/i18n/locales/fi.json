@@ -632,6 +632,10 @@
     "dmSent": "Lähetettiin {{amount}} tokenia vastaanottajalle {{name}}!"
   },
   "postOptions": {
+    "embed": "Upota",
+    "copyEmbedCode": "Kopioi upotuskoodi",
+    "embedCodeCopied": "Upotuskoodi kopioitu",
+    "copyFailed": "Linkkiä ei voitu kopioida",
     "options": "Vaihtoehdot",
     "aiOverview": "Tekoälyn yleiskatsa",
     "sendTip": "Lähetä tippi",

@@ -630,6 +630,10 @@
     "dmSent": "{{amount}} fichas nisqakuna {{name}}-man apachisqa!"
   },
   "postOptions": {
+    "embed": "Churay",
+    "copyEmbedCode": "Churana kodigota copiay",
+    "embedCodeCopied": "Churana kodigoqa copiasqañam",
+    "copyFailed": "Manam tinkiyta copiayta atikurqanchu",
     "options": "Akllakuna",
     "aiOverview": "AI nisqamanta qhawariy",
     "sendTip": "Propina apachiy",

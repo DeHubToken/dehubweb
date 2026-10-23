@@ -648,6 +648,10 @@
     "dmSent": "Đã gửi {{amount}} token cho {{name}}!"
   },
   "postOptions": {
+    "embed": "Nhúng",
+    "copyEmbedCode": "Sao chép mã nhúng",
+    "embedCodeCopied": "Đã sao chép mã nhúng",
+    "copyFailed": "Không thể sao chép liên kết",
     "options": "Options",
     "aiOverview": "Tổng quan về AI",
     "sendTip": "Send Tip",
