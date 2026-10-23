@@ -175,6 +175,9 @@ function ThemedBackgrounds({ preview = false }: { preview?: boolean }) {
 // Pages — lazy loaded
 const DeleteAccount = React.lazy(() => import("./pages/DeleteAccount"));
 const MaintenancePage = React.lazy(() => import('./pages/MaintenancePage'));
+// OBS browser source. Outside WalletProviders and the theme canvas on purpose:
+// it is composited over a live broadcast, so it carries nothing but widgets.
+const ObsOverlayPage = React.lazy(() => import('./pages/ObsOverlayPage'));
 const AuthConfirm = React.lazy(() => import("./pages/AuthConfirm"));
 const TelegramAuth = React.lazy(() => import("./pages/TelegramAuth"));
 const CreatorsPage = React.lazy(() => import("./pages/app/CreatorsPage"));
@@ -791,6 +794,8 @@ function AppContent() {
                 (audio_spaces.short_id); the exact /stages path below still opens
                 the hub page — a param segment never matches the bare route. */}
             <Route path="/stage/:id" element={<Suspense fallback={<PageLoader />}><StageDeepLinkPage /></Suspense>} />
+            {/* Stage 15 was replaced by stage 18; old links land on the new one. */}
+            <Route path="/stages/15" element={<Navigate to="/stages/18" replace />} />
             <Route path="/stages/:id" element={<Suspense fallback={<PageLoader />}><StageDeepLinkPage /></Suspense>} />
             {/* An off-chain post's own URL — the canonical share form is top-level. */}
             <Route path="/newpost/:n" element={<Suspense fallback={<PageLoader />}><NewPostPage /></Suspense>} />
@@ -936,6 +941,9 @@ const App = () => (
              * paints without waiting for the ~1.5 MB wallet chunk.
              */}
             <Route path="/r/:code" element={<ReferralLanding />} />
+            {/* A creator's stream overlay, as an OBS browser source. index.html
+                makes these pages transparent before the bundle runs. */}
+            <Route path="/overlay/:token" element={<Suspense fallback={null}><ObsOverlayPage /></Suspense>} />
             {/* /r/<code>/<any/path> attributes the visit, then redirects to that
                 path — one shareable link that earns and lands somewhere specific. */}
             <Route path="/r/:code/*" element={<ReferralLanding />} />
