@@ -33,6 +33,7 @@ import { getPostImageBytesForBadge, getPostImageLimitForBadge, MAX_IMAGE_UPLOAD_
 // chain-config constants are imported statically.
 import { usePostingChain } from '@/hooks/use-posting-chain';
 import { isSolanaChain } from '@/lib/chains/constants';
+import { postUploadChainId } from '@/lib/post-upload-chain';
 import { connectSolanaWallet } from '@/lib/solana/wallet';
 import { broadcastSolanaMint } from '@/lib/solana/mint';
 import { confirmEvmMint } from '@/lib/api/dehub/solana';
@@ -1512,8 +1513,10 @@ export function usePostForm(
       }
 
       const postingOnSolana = isSolanaChain(chainId);
+      const uploadChainId = postUploadChainId(chainId, effectiveShouldMint);
+      const uploadOnSolana = isSolanaChain(uploadChainId);
 
-      if (isQuoting && postingOnSolana) {
+      if (isQuoting && uploadOnSolana) {
         toast.error(_copy("copy.20cd34f41ecd", { defaultValue: "Quotes post on Base — switch chain to quote this post" }));
         setIsPosting(false);
         return;
@@ -1559,7 +1562,7 @@ export function usePostForm(
       // the `minter` field for Solana, so an EVM post needs no address from
       // here; the account's own address is sent for continuity of the logs.
       let minterAddress: string;
-      if (postingOnSolana) {
+      if (uploadOnSolana) {
         minterAddress = await connectSolanaWallet();
       } else if (effectiveShouldMint) {
         minterAddress = await getWeb3AuthSigner();
@@ -1928,7 +1931,7 @@ export function usePostForm(
         articleImage: extra?.articleImage,
         socialImage: extra?.socialImage,
         postType,
-        chainId,
+        chainId: uploadChainId,
         category: mergedCategories,
         streamInfo,
         files: files.length > 0 ? files : undefined,
@@ -2060,7 +2063,7 @@ export function usePostForm(
 
       const isSolanaMint = !!(mintResponse.isSolana && mintResponse.transaction && mintResponse.mintAddress);
 
-      if (postingOnSolana && !isSolanaMint && !alreadyOnChain) {
+      if (uploadOnSolana && !isSolanaMint && !alreadyOnChain) {
         throw new Error(
           mintResponse.isSolana
             ? 'Solana mint data incomplete from server. Please try again.'
