@@ -15,8 +15,9 @@ import {
 } from '@/hooks/use-governance';
 import { useAuth } from '@/contexts/AuthContext';
 import { useTranslation } from 'react-i18next';
-import { useCallback, useEffect, useRef } from 'react';
+import { lazy, Suspense, useCallback, useEffect, useRef, useState } from 'react';
 import { KitButton, PageBody, PageEmpty, PageIsland } from '@/components/app/page-kit/PageKit';
+import { toast } from 'sonner';
 import { SEOHead } from '@/components/SEOHead';
 import { TranslatableText } from '@/components/app/TranslatableText';
 import { CardHeader } from '@/components/app/cards/CardHeader';
@@ -27,6 +28,12 @@ import { DeHubPageLoader } from '@/components/app/DeHubLoader';
 import { ProposalVerdictLabel, verdictOf, votingTimeLeft, isVotingClosed } from '@/components/app/governance/ProposalVerdict';
 import { ProposalDiscussion } from '@/components/app/governance/ProposalDiscussion';
 import { ProposalMedia } from '@/components/app/governance/ProposalMedia';
+import { useProposalRepost } from '@/hooks/use-proposal-repost';
+import { dehubLinkFor } from '@/lib/dehub-links';
+
+// Quoting a proposal is posting its link: the composer cards it up, and the
+// post carries the proposal card into followers' feeds.
+const PostModal = lazy(() => import('@/features/post').then((m) => ({ default: m.PostModal })));
 
 function formatTimeAgo(dateStr: string, t: (key: string, opts?: any) => string): string {
   const seconds = Math.floor((Date.now() - new Date(dateStr).getTime()) / 1000);
@@ -52,7 +59,7 @@ export default function GovernanceProposalPage() {
   // `?comment=` the post page and the features board read.
   const focusedCommentId = searchParams.get('comment');
   const { t } = useTranslation();
-  const { isAuthenticated, openLoginModal } = useAuth();
+  const { isAuthenticated, openLoginModal, walletAddress } = useAuth();
 
   const { data: proposal, isLoading } = useGovernanceProposal(proposalId);
   const { data: userVotes } = useGovernanceUserVotes();
@@ -60,6 +67,23 @@ export default function GovernanceProposalPage() {
 
   const { weight: userWeight, badgeName: userBadge, lent: userLent } = useSelfVoteWeight();
   const explainCannotVote = useExplainCannotVote();
+  const repost = useProposalRepost(proposal, walletAddress);
+  const [quoteOpen, setQuoteOpen] = useState(false);
+  const proposalUrl = proposalId ? dehubLinkFor.proposal(proposalId) : '';
+  const handleRepost = useCallback(() => {
+    if (!isAuthenticated) {
+      openLoginModal();
+      return Promise.reject(new Error('Sign in to repost'));
+    }
+    return repost.toggle().catch((error: unknown) => {
+      toast.error(_copy("copy.7527dc6722fc", { defaultValue: "Failed to repost" }));
+      throw error;
+    });
+  }, [isAuthenticated, openLoginModal, repost, _copy]);
+  const handleQuote = useCallback(() => {
+    if (!isAuthenticated) { openLoginModal(); return; }
+    setQuoteOpen(true);
+  }, [isAuthenticated, openLoginModal]);
 
   // The discussion panel sits under the card; the comment action and a
   // comment deep link both bring it into view.
@@ -199,6 +223,11 @@ export default function GovernanceProposalPage() {
           commentCount={proposal.comment_count}
           voteWeight={userWeight}
           disabled={voteMutation.isPending || isVotingClosed(proposal)}
+          shareUrl={proposalUrl}
+          onRepost={handleRepost}
+          onQuote={handleQuote}
+          repostCount={repost.count}
+          isReposted={repost.reposted}
         />
       </div>
 
@@ -213,6 +242,11 @@ export default function GovernanceProposalPage() {
         />
       </div>
       </PageBody>
+      {quoteOpen && (
+        <Suspense fallback={null}>
+          <PostModal isOpen={quoteOpen} onClose={() => setQuoteOpen(false)} initialText={proposalUrl} />
+        </Suspense>
+      )}
     </div>
   );
 }
