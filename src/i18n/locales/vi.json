@@ -1,4 +1,13 @@
 {
+  "followedTags": {
+    "follow": "Theo dõi #{{tag}}",
+    "following": "Đang theo dõi",
+    "unfollow": "Bỏ theo dõi #{{tag}}",
+    "followed": "Bạn đang theo dõi #{{tag}}. Bài đăng của thẻ này sẽ hiện trong bảng tin Đang theo dõi.",
+    "unfollowed": "Đã bỏ theo dõi #{{tag}}",
+    "failed": "Chưa lưu được. Hãy thử lại.",
+    "clear": "Xóa"
+  },
   "notificationFilters": {
     "title": "Lọc thông báo từ",
     "description": "Chọn điều sẽ xảy ra khi ai đó ngoài vòng của bạn tương tác với bạn. Thông báo đã lọc nằm trong mục Đã lọc, không có huy hiệu và không đẩy thông báo.",

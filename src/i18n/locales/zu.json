@@ -1,4 +1,13 @@
 {
+  "followedTags": {
+    "follow": "Landela i-#{{tag}}",
+    "following": "Uyalandela",
+    "unfollow": "Yeka ukulandela i-#{{tag}}",
+    "followed": "Manje uyalandela i-#{{tag}}. Okuthunyelwe kwayo kuzovela kokuphakelayo kwakho Okulandelayo.",
+    "unfollowed": "Uyekile ukulandela i-#{{tag}}",
+    "failed": "Akulondolozwanga. Zama futhi.",
+    "clear": "Sula"
+  },
   "notificationFilters": {
     "title": "Hlunga izaziso ezivela ku-",
     "description": "Khetha okwenzekayo uma othile ongaphandle kwendilinga yakho exhumana nawe. Izaziso ezihlungiwe zilinda ngaphansi kokuthi \"Kuhlungiwe\", ngaphandle kwebheji noma isaziso esiphushwayo.",

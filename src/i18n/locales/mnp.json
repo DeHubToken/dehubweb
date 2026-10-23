@@ -1,4 +1,13 @@
 {
+  "followedTags": {
+    "follow": "关注 #{{tag}}",
+    "following": "已关注",
+    "unfollow": "取消关注 #{{tag}}",
+    "followed": "已关注 #{{tag}}，相关帖子会出现在你的关注动态里。",
+    "unfollowed": "已取消关注 #{{tag}}",
+    "failed": "没有保存成功，请再试一次。",
+    "clear": "清除"
+  },
   "notificationFilters": {
     "title": "过滤以下来源的通知",
     "description": "选择圈子以外的人与你互动时会发生什么。被过滤的通知会留在“已过滤”里，不显示角标，也不推送。",

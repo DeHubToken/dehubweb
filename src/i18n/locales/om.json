@@ -1,4 +1,13 @@
 {
+  "followedTags": {
+    "follow": "#{{tag}} hordofi",
+    "following": "Hordofaa jirta",
+    "unfollow": "#{{tag}} hordofuu dhiisi",
+    "followed": "Amma #{{tag}} hordofaa jirta. Maxxansaaleen isaa fayyaa hordoftu keessatti mul'atu.",
+    "unfollowed": "#{{tag}} hordofuu dhiifte",
+    "failed": "Hin olkaa'amne. Irra deebi'ii yaali.",
+    "clear": "Qulqulleessi"
+  },
   "notificationFilters": {
     "title": "Beeksisa irraa calali",
     "description": "Yeroo namni geengoo kee alaa si wajjin walqunnamu maaltu akka ta'u filadhu. Beeksisni calalame mallattoo fi dhiibbaa malee jalatti \"Calalame\" eegu.",

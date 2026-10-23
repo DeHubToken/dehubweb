@@ -1,4 +1,13 @@
 {
+  "followedTags": {
+    "follow": "关注 #{{tag}}",
+    "following": "已经关注",
+    "unfollow": "取消关注 #{{tag}}",
+    "followed": "已经关注 #{{tag}}，相关帖子会出现勒侬个关注动态里。",
+    "unfollowed": "已经取消关注 #{{tag}}",
+    "failed": "呒没保存好，请再试一趟。",
+    "clear": "清脱"
+  },
   "notificationFilters": {
     "title": "过滤以下来源个通知",
     "description": "选择圈子外头个人搭侬互动辰光会哪能。过滤脱个通知会摆勒“已过滤”里，呒没角标，也勿推送。",

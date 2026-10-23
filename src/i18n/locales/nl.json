@@ -1,4 +1,13 @@
 {
+  "followedTags": {
+    "follow": "Volg #{{tag}}",
+    "following": "Volgend",
+    "unfollow": "Ontvolg #{{tag}}",
+    "followed": "Je volgt nu #{{tag}}. Berichten ermee verschijnen in je Volgend-feed.",
+    "unfollowed": "Je volgt #{{tag}} niet meer",
+    "failed": "Dat is niet opgeslagen. Probeer het opnieuw.",
+    "clear": "Wissen"
+  },
   "notificationFilters": {
     "title": "Meldingen filteren van",
     "description": "Kies wat er gebeurt als iemand buiten je kring met je communiceert. Gefilterde meldingen wachten onder Gefilterd, zonder badge en zonder pushmelding.",

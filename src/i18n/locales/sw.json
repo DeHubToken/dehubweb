@@ -1,4 +1,13 @@
 {
+  "followedTags": {
+    "follow": "Fuata #{{tag}}",
+    "following": "Unafuata",
+    "unfollow": "Acha kufuata #{{tag}}",
+    "followed": "Sasa unafuata #{{tag}}. Machapisho yake yataonekana kwenye mlisho wa Unaowafuata.",
+    "unfollowed": "Umeacha kufuata #{{tag}}",
+    "failed": "Haikuhifadhiwa. Jaribu tena.",
+    "clear": "Futa"
+  },
   "notificationFilters": {
     "title": "Chuja arifa kutoka kwa",
     "description": "Chagua kinachotokea mtu aliye nje ya mduara wako anapoingiliana nawe. Arifa zilizochujwa husubiri chini ya Zilizochujwa, bila beji wala arifa ya kusukuma.",

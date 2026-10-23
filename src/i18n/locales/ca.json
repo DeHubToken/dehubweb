@@ -1,4 +1,13 @@
 {
+  "followedTags": {
+    "follow": "Segueix #{{tag}}",
+    "following": "Seguint",
+    "unfollow": "Deixa de seguir #{{tag}}",
+    "followed": "Ara segueixes #{{tag}}. Les seves publicacions sortiran al teu feed de Seguint.",
+    "unfollowed": "Has deixat de seguir #{{tag}}",
+    "failed": "No s'ha desat. Torna-ho a provar.",
+    "clear": "Esborra"
+  },
   "notificationFilters": {
     "title": "Filtra les notificacions de",
     "description": "Tria què passa quan algú de fora del teu cercle interactua amb tu. Les notificacions filtrades esperen a Filtrades, sense indicador ni avís push.",

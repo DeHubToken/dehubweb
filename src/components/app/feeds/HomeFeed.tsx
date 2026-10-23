@@ -116,6 +116,7 @@ import type { ServedAd } from '@/lib/ads/povr';
 import { useServedAds } from '@/hooks/use-ad-serving';
 import { SponsoredAdCard } from '@/components/app/cards/SponsoredAdCard';
 import { toStoryboard } from '@/lib/storyboard';
+import { FollowTagBar } from './FollowTagBar';
 
 // ============================================================================
 // TYPES & CONSTANTS
@@ -2023,6 +2024,11 @@ export function HomeFeed({ active = true, shuffleKey, isRefreshing, showFilters 
                 buttonClassName="px-3 py-1.5 rounded-xl text-xs"
               />
             </div>
+          )}
+
+          {/* One hashtag picked — where a tapped #tag lands: offer to follow it. */}
+          {selectedCategories.length === 1 && (
+            <FollowTagBar tag={selectedCategories[0]} onClear={() => setSelectedCategories([])} />
           )}
 
           {/*

@@ -1,4 +1,13 @@
 {
+  "followedTags": {
+    "follow": "Ikuti #{{tag}}",
+    "following": "Mengikuti",
+    "unfollow": "Nyahikut #{{tag}}",
+    "followed": "Anda kini mengikuti #{{tag}}. Siarannya akan muncul dalam suapan Mengikuti anda.",
+    "unfollowed": "Berhenti mengikuti #{{tag}}",
+    "failed": "Tidak disimpan. Cuba lagi.",
+    "clear": "Kosongkan"
+  },
   "notificationFilters": {
     "title": "Tapis pemberitahuan daripada",
     "description": "Pilih apa yang berlaku apabila seseorang di luar bulatan anda berinteraksi dengan anda. Pemberitahuan yang ditapis menunggu di bawah Ditapis, tanpa lencana dan tanpa push.",

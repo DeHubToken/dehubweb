@@ -1,4 +1,13 @@
 {
+  "followedTags": {
+    "follow": "Obserwuj #{{tag}}",
+    "following": "Obserwujesz",
+    "unfollow": "Przestań obserwować #{{tag}}",
+    "followed": "Obserwujesz teraz #{{tag}}. Posty z nim pojawią się w twoim kanale Obserwowane.",
+    "unfollowed": "Przestałeś obserwować #{{tag}}",
+    "failed": "Nie zapisano. Spróbuj ponownie.",
+    "clear": "Wyczyść"
+  },
   "notificationFilters": {
     "title": "Filtruj powiadomienia od",
     "description": "Wybierz, co się dzieje, gdy ktoś spoza twojego kręgu wchodzi z tobą w interakcję. Odfiltrowane powiadomienia czekają w sekcji Odfiltrowane, bez plakietki i bez powiadomienia push.",

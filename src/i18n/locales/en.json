@@ -1,4 +1,13 @@
 {
+  "followedTags": {
+    "follow": "Follow #{{tag}}",
+    "following": "Following",
+    "unfollow": "Unfollow #{{tag}}",
+    "followed": "Following #{{tag}}. Its posts will show in your Following feed.",
+    "unfollowed": "Unfollowed #{{tag}}",
+    "failed": "That didn't save. Try again.",
+    "clear": "Clear"
+  },
   "notificationFilters": {
     "title": "Filter notifications from",
     "description": "Choose what happens when someone outside your circle interacts with you. Filtered notifications wait under Filtered, with no badge and no push.",
