@@ -5318,6 +5318,8 @@
     }
   },
   "goLive": {
+    "bigEvent": "Velká událost",
+    "bigEventHint": "Pro velké publikum: diváci sledují zhruba se 20sekundovým zpožděním, ale s menším sekáním.",
     "goLive": "Jít naživo",
     "youAreLive": "Jsi naživo",
     "streamReady": "Stream připraven",

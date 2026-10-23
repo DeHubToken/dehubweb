@@ -5292,6 +5292,8 @@
     }
   },
   "goLive": {
+    "bigEvent": "Dhacdo weyn",
+    "bigEventHint": "Daawadayaal badan: daawadayaashu waxay daawadaan qiyaastii 20 ilbiriqsi dib, iyadoo kala go'yadu ay yar yihiin.",
     "goLive": "Go Live",
     "youAreLive": "Waxaa Live ah",
     "streamReady": "Stream Ready",

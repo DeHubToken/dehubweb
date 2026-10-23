@@ -5292,6 +5292,8 @@
     }
   },
   "goLive": {
+    "bigEvent": "Babban taro",
+    "bigEventHint": "Don masu kallo da yawa: masu kallo za su gani da jinkirin kusan daƙiƙa 20, tare da ƙarancin katsewa.",
     "goLive": "Tafi Live",
     "youAreLive": "Kana Live",
     "streamReady": "Stream Ready",

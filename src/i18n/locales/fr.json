@@ -6471,6 +6471,8 @@
     }
   },
   "goLive": {
+    "bigEvent": "Grand événement",
+    "bigEventHint": "Pour un large public : les spectateurs regardent avec environ 20 secondes de décalage, avec moins de coupures.",
     "goLive": "Aller en direct",
     "youAreLive": "Vous êtes en direct",
     "streamReady": "Flux prêt",

@@ -5213,6 +5213,8 @@
     }
   },
   "goLive": {
+    "bigEvent": "Ko belebele",
+    "bigEventHint": "Mɔgɔ caman ye: lajɛbagaw bɛ a filɛ sɛgɔn 20 ɲɔgɔn kɔfɛ, tigɛli ka dɔgɔ.",
     "goLive": "Go Live",
     "youAreLive": "You're Live",
     "streamReady": "Stream Ready",

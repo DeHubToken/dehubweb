@@ -178,6 +178,17 @@ interface GoLiveBroadcasterProps {
    * ending the latter discards its post instead of leaving a dead live card.
    */
   onLive?: () => void;
+  /**
+   * Called once, when every route to the self-hosted ingest has failed before
+   * any media flowed. Resolves with the same stream re-provisioned on Livepeer;
+   * the broadcaster publishes there on the capture it already has. Before this
+   * the creator got an error and had to tap Go Live again.
+   */
+  onSelfHostedUnreachable?: () => Promise<{
+    streamKey: string;
+    playbackId?: string;
+    provider?: string;
+  } | null>;
 }
 
 type Phase = 'starting' | 'connecting' | 'live' | 'reconnecting' | 'error';
@@ -385,6 +396,7 @@ export function GoLiveBroadcaster({
   tokenId,
   onEnd,
   onLive,
+  onSelfHostedUnreachable,
 }: GoLiveBroadcasterProps) {
   const { t: _copy } = _useCopy();
   const { t } = useTranslation();
@@ -493,6 +505,8 @@ export function GoLiveBroadcaster({
   // frozen) never restarts the ingest because the parent re-rendered.
   const onLiveRef = useRef(onLive);
   useEffect(() => { onLiveRef.current = onLive; }, [onLive]);
+  const onSelfHostedUnreachableRef = useRef(onSelfHostedUnreachable);
+  useEffect(() => { onSelfHostedUnreachableRef.current = onSelfHostedUnreachable; }, [onSelfHostedUnreachable]);
 
   /** Feature detection, not a device check: undefined on iOS and on Android. */
   const canShareScreen = typeof navigator?.mediaDevices?.getDisplayMedia === 'function';
@@ -1345,6 +1359,58 @@ export function GoLiveBroadcaster({
         // already died is not worth a third attempt.
         let mediaRecoveryUsed = false;
 
+        // The last way out for a self-hosted start: every route has failed
+        // before a byte of media, so the same stream moves to Livepeer and
+        // publishes there on the capture already running — once per broadcast.
+        // Resolves false when there is nothing to move or the move failed, and
+        // the caller shows its error as before.
+        let livepeerFallbackUsed = false;
+        const fallBackToLivepeer = async (dead: WhipSession | null): Promise<boolean> => {
+          const ask = onSelfHostedUnreachableRef.current;
+          if (livepeerFallbackUsed || !ask || !directBits.url) return false;
+          livepeerFallbackUsed = true;
+          setPhase('connecting');
+          await dead?.stop().catch(() => undefined);
+          if (sessionRef.current === dead) sessionRef.current = null;
+          if (cancelled) return true;
+          try {
+            const moved = await ask();
+            if (cancelled) return true;
+            if (!moved?.streamKey || moved.provider === 'mediamtx') return false;
+            logger.warn('self-hosted ingest unreachable; publishing on Livepeer');
+            const next = await publishToWhip({
+              streamKey: moved.streamKey,
+              stream,
+              videoEncoding: videoEncodingRef.current,
+              onHealth: (sample) => {
+                if (!cancelled) reportHealthRef.current(sample);
+              },
+              onStateChange: (state: WhipState, detail) => {
+                if (cancelled) return;
+                if (state === 'live') {
+                  setPhase('live');
+                  onLiveRef.current?.();
+                } else if (state === 'reconnecting') setPhase('reconnecting');
+                else if (state === 'failed') {
+                  setPhase('error');
+                  setErrorMessage(detail || 'The broadcast connection failed.');
+                  void teardown();
+                }
+              },
+            });
+            if (cancelled) {
+              await next.stop();
+              return true;
+            }
+            sessionRef.current = next;
+            await acquireWakeLock();
+            return true;
+          } catch (error) {
+            logger.error('Livepeer fallback failed', {}, error);
+            return false;
+          }
+        };
+
         const openSession = async (viaRelay: boolean): Promise<WhipSession> => {
           const endpointBits = viaRelay ? relayBits : directBits;
           const relayIce = viaRelay ? turnServers : undefined;
@@ -1420,17 +1486,28 @@ export function GoLiveBroadcaster({
                   clearIngestUnreachable();
                   clearRelayFailed();
                 }
-                setPhase('error');
-                setErrorMessage(
-                  mediaDied
-                    ? 'This network blocked the video from leaving your device. Tap Go Live again — the retry takes a different route.'
-                    : detail || 'The broadcast connection failed.'
-                );
-                // Nothing left to try, so holding the camera, mic and wake lock
-                // on a dead error screen is pure leak (hardware light on, phone
-                // kept awake). Stop the local capture; the End button still
-                // runs the backend teardown.
-                void teardown();
+                const showFailure = () => {
+                  setPhase('error');
+                  setErrorMessage(
+                    mediaDied
+                      ? 'This network blocked the video from leaving your device. Tap Go Live again — the retry takes a different route.'
+                      : detail || 'The broadcast connection failed.'
+                  );
+                  // Nothing left to try, so holding the camera, mic and wake
+                  // lock on a dead error screen is pure leak (hardware light
+                  // on, phone kept awake). Stop the local capture; the End
+                  // button still runs the backend teardown.
+                  void teardown();
+                };
+                // Both self-hosted routes are spent and no media ever flowed:
+                // the stream itself moves to Livepeer before anything is shown.
+                if (mediaNeverStarted) {
+                  void fallBackToLivepeer(opened).then((moved) => {
+                    if (!moved && !cancelled) showFailure();
+                  });
+                  return;
+                }
+                showFailure();
               }
             },
           });
@@ -1471,6 +1548,7 @@ export function GoLiveBroadcaster({
               else markIngestUnreachable();
             }
             if (cancelled) return;
+            if (await fallBackToLivepeer(null)) return;
             setPhase('error');
             setErrorMessage(describeMediaError(error));
             void teardown();
@@ -1479,40 +1557,48 @@ export function GoLiveBroadcaster({
 
         let session: WhipSession;
         try {
-          session = await openSession(relayFirst);
-        } catch (error) {
-          // Only a self-hosted attempt that died path-shaped teaches this
-          // device anything or has anywhere else to go; every other failure
-          // (bad key, camera, a Livepeer stream) just propagates.
-          if (!directBits.url || !isPathDeadError(error)) throw error;
-          if (relayFirst) {
-            // The relay died first. Remember it — the next mint must not let
-            // "a relay is deployed" outvote this device's own evidence again
-            // — then give the direct path one shot: the relay was chosen on
-            // a probe or an old marker, and both lie in both directions.
-            markRelayFailed();
-            if (cancelled) return;
-            try {
-              session = await openSession(false);
-            } catch (directError) {
-              if (isPathDeadError(directError)) markIngestUnreachable();
-              throw directError;
-            }
-          } else {
-            // The signaling POST died pointed straight at the ingest.
-            // Remember it — a stuck creator retries in a loop, and the next
-            // mint should know — then reach for the relay this device was
-            // too optimistic to use the first time.
-            markIngestUnreachable();
-            if (cancelled) return;
-            if (!canRelay) throw error;
-            try {
-              session = await openSession(true);
-            } catch (relayError) {
-              if (isPathDeadError(relayError)) markRelayFailed();
-              throw relayError;
+          try {
+            session = await openSession(relayFirst);
+          } catch (error) {
+            // Only a self-hosted attempt that died path-shaped teaches this
+            // device anything or has anywhere else to go; every other failure
+            // (bad key, camera, a Livepeer stream) just propagates.
+            if (!directBits.url || !isPathDeadError(error)) throw error;
+            if (relayFirst) {
+              // The relay died first. Remember it — the next mint must not let
+              // "a relay is deployed" outvote this device's own evidence again
+              // — then give the direct path one shot: the relay was chosen on
+              // a probe or an old marker, and both lie in both directions.
+              markRelayFailed();
+              if (cancelled) return;
+              try {
+                session = await openSession(false);
+              } catch (directError) {
+                if (isPathDeadError(directError)) markIngestUnreachable();
+                throw directError;
+              }
+            } else {
+              // The signaling POST died pointed straight at the ingest.
+              // Remember it — a stuck creator retries in a loop, and the next
+              // mint should know — then reach for the relay this device was
+              // too optimistic to use the first time.
+              markIngestUnreachable();
+              if (cancelled) return;
+              if (!canRelay) throw error;
+              try {
+                session = await openSession(true);
+              } catch (relayError) {
+                if (isPathDeadError(relayError)) markRelayFailed();
+                throw relayError;
+              }
             }
           }
+        } catch (error) {
+          // Every self-hosted route refused the publish. Before the creator
+          // sees anything, the same stream moves to Livepeer and goes out
+          // there; only if that fails too does the error below surface.
+          if (!cancelled && (await fallBackToLivepeer(null))) return;
+          throw error;
         }
 
         if (cancelled) {

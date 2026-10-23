@@ -5283,6 +5283,8 @@
     }
   },
   "goLive": {
+    "bigEvent": "Uly çäre",
+    "bigEventHint": "Köp tomaşaçy üçin: tomaşaçylar takmynan 20 sekunt gijikme bilen, emma az kesilme bilen görýärler.",
     "goLive": "Go Live",
     "youAreLive": "Siz Canlı Siziz",
     "streamReady": "Stream Taýyn",

@@ -5374,6 +5374,8 @@
     }
   },
   "goLive": {
+    "bigEvent": "Didelis renginys",
+    "bigEventHint": "Didelei auditorijai: žiūrovai mato maždaug 20 sekundžių vėliau, bet su mažiau trikdžių.",
     "goLive": "Tiesioginis transliavimas",
     "youAreLive": "Jūs transliuojate",
     "streamReady": "Transliavimas paruoštas",
