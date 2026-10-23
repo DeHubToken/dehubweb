@@ -1,0 +1,28 @@
+name: Governance badge production verification
+on:
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Prepare isolated browser
+        run: |
+          npm install --prefix "$RUNNER_TEMP/governance-browser" --no-save --no-package-lock --ignore-scripts playwright@1.64.0
+          "$RUNNER_TEMP/governance-browser/node_modules/.bin/playwright" install --with-deps chromium
+      - name: Check production guard and toast
+        env:
+          GOVERNANCE_BROWSER_ROOT: ${{ runner.temp }}/governance-browser
+        run: node tests/governance-production.mjs
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: governance-production
+          path: governance-results/
+          retention-days: 14
