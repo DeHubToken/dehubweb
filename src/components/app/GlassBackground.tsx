@@ -1,11 +1,6 @@
 import { useEffect, useRef } from 'react';
 import { isBackgroundPaused, subscribeBackgroundPaused } from '@/lib/background-gate';
-
-const crystalRibbons = [
-  'M-220 1220C160 520 550 1050 940 460S1420-160 1850-80',
-  'M-220 520C300 1100 690 570 1010 240S1480-100 1840 110',
-  'M260-180C660 200 560 360 1020 350S1360 650 1770 620',
-];
+import { glassLightPixel } from '@/lib/glass-light-field';
 
 export function GlassBackground() {
   const ref = useRef<HTMLDivElement>(null);
@@ -15,61 +10,35 @@ export function GlassBackground() {
     if (!canvas) return;
     const context = canvas.getContext('2d');
     if (!context) return;
-    const lightCanvas = document.createElement('canvas');
-    const lightContext = lightCanvas.getContext('2d');
-    if (!lightContext) return;
-    const paths = crystalRibbons.map(path => new Path2D(path));
     let resizeFrame = 0;
     const paint = () => {
       const { width, height } = canvas.getBoundingClientRect();
       if (!width || !height) return;
-      const ratio = Math.min(window.devicePixelRatio || 1, 2);
+      const ratio = Math.min(window.devicePixelRatio || 1, 1.5, Math.sqrt(1_500_000 / (width * height)));
       canvas.width = Math.round(width * ratio);
       canvas.height = Math.round(height * ratio);
-      lightCanvas.width = canvas.width;
-      lightCanvas.height = canvas.height;
-      context.fillStyle = '#021018';
-      context.fillRect(0, 0, canvas.width, canvas.height);
       context.fillStyle = getComputedStyle(canvas).getPropertyValue('--tint-accent').trim() || '#00d2e6';
       const colour = context.fillStyle;
       const channels = /^#[\da-f]{6}$/i.test(colour)
         ? [1, 3, 5].map(offset => parseInt(colour.slice(offset, offset + 2), 16))
         : [0, 210, 230];
-      const mix = (base: number[], weight: number) => `rgb(${base.map((channel, index) => Math.round(channel * (1 - weight) + channels[index] * weight)).join(',')})`;
       const scale = Math.max(width / 1600, height / 1000);
-      context.setTransform(ratio * scale, 0, 0, ratio * scale,
-        ratio * (width - 1600 * scale) / 2, ratio * (height - 1000 * scale) / 2);
-      lightContext.setTransform(ratio * scale, 0, 0, ratio * scale,
-        ratio * (width - 1600 * scale) / 2, ratio * (height - 1000 * scale) / 2);
-      const sky = context.createRadialGradient(1600, 0, 0, 1600, 0, 1500);
-      sky.addColorStop(0, mix([17, 69, 82], .31));
-      sky.addColorStop(1, 'transparent');
-      context.fillStyle = sky;
-      context.fillRect(-1600, -1000, 4800, 3000);
-      const floor = context.createRadialGradient(320, 1000, 0, 320, 1000, 1100);
-      floor.addColorStop(0, mix([8, 44, 56], .13));
-      floor.addColorStop(1, 'transparent');
-      context.fillStyle = floor;
-      context.fillRect(-1600, -1000, 4800, 3000);
-      const light = lightContext.createLinearGradient(0, 0, 1600, 1000);
-      light.addColorStop(0, 'rgba(255,255,255,.7)');
-      light.addColorStop(.3, 'rgba(255,255,255,.08)');
-      light.addColorStop(.65, 'rgba(234,255,255,.5)');
-      light.addColorStop(1, 'rgba(255,255,255,.08)');
-      lightContext.strokeStyle = light;
-      lightContext.lineCap = 'round';
-      paths.forEach((path, index) => {
-        for (let layer = 0; layer < 64; layer++) {
-          lightContext.lineWidth = 300 * (1 - layer / 64);
-          lightContext.globalAlpha = (.003 + layer * .000125) * (index === 2 ? .3 : 1);
-          lightContext.stroke(path);
+      const offsetX = (width - 1600 * scale) / 2;
+      const offsetY = (height - 1000 * scale) / 2;
+      const image = context.createImageData(canvas.width, canvas.height);
+      for (let py = 0; py < canvas.height; py++) {
+        const y = (py / ratio - offsetY) / scale;
+        for (let px = 0; px < canvas.width; px++) {
+          const x = (px / ratio - offsetX) / scale;
+          const colour = glassLightPixel(x, y, channels);
+          const index = (py * canvas.width + px) * 4;
+          image.data[index] = colour[0]; image.data[index + 1] = colour[1]; image.data[index + 2] = colour[2]; image.data[index + 3] = 255;
         }
-      });
-      context.setTransform(1, 0, 0, 1, 0, 0);
-      context.drawImage(lightCanvas, 0, 0);
+      }
+      context.putImageData(image, 0, 0);
     };
     // Paint once per size change. Pointer response and the slow light loop
-    // move this single surface instead of compositing translucent SVG layers.
+    // move this single smooth field without repainting it on every frame.
     const observer = new ResizeObserver(() => {
       cancelAnimationFrame(resizeFrame);
       resizeFrame = requestAnimationFrame(paint);
@@ -78,7 +47,7 @@ export function GlassBackground() {
     const colourObserver = new MutationObserver(paint);
     colourObserver.observe(document.documentElement, { attributes: true, attributeFilter: ['style'] });
     paint();
-    return () => { observer.disconnect(); colourObserver.disconnect(); cancelAnimationFrame(resizeFrame); lightCanvas.width = 0; lightCanvas.height = 0; };
+    return () => { observer.disconnect(); colourObserver.disconnect(); cancelAnimationFrame(resizeFrame); };
   }, []);
   useEffect(() => {
     const root = ref.current;
