@@ -100,6 +100,12 @@ interface ActionBarProps {
    * /app/post/<tokenId> the post hasn't earned. Omitted → old behaviour.
    */
   newPostSlug?: number | null;
+  /**
+   * The link Copy Link and the share targets hand out, for surfaces whose
+   * items are not posts (a governance proposal lives at its own route, not
+   * /app/post/<id>). Omitted → the post's own link.
+   */
+  shareUrl?: string;
   /** Handler for comment action */
   onComment?: () => void;
   /** Handler for share action */
@@ -341,6 +347,7 @@ const COMPACT_BUTTON_CLASS =
 export function ActionBar({
   postId,
   newPostSlug,
+  shareUrl,
   onComment,
   onShare,
   onRepost,
@@ -816,7 +823,9 @@ export function ActionBar({
 
   // An off-chain post shares as its own slug, never as an NFT-style URL.
   const shareUrlForPost = () =>
-    newPostSlug != null
+    shareUrl
+      ? shareUrl
+      : newPostSlug != null
       ? dehubLinkFor.newPost(newPostSlug)
       : postId
         ? dehubLinkFor.post(postId)
@@ -1234,7 +1243,7 @@ export function ActionBar({
             ) : (
               <ThumbsUp className={cn(FEED_ICON_CLASS.like, isLiked && 'fill-current')} />
             )}
-            <span className="tabular-nums">{formatCount(localLikeCount)}</span>
+            <span className="tabular-nums">{formatCount(thumbCount)}</span>
           </motion.button>
         </span>
 

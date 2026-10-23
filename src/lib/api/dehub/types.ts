@@ -114,6 +114,8 @@ export interface DeHubUser {
   online?: boolean;
   staked?: number;
   badgeBalance?: number;
+  /** What the account holds itself, before any badge lent to it. */
+  ownBadgeBalance?: number;
   /**
    * The tier this holder has already earned and the DHB it cost them.
    * Written by the API; keeps a badge from being taken back when the token

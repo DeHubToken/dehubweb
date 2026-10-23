@@ -114,9 +114,18 @@ jobs:
       - name: Refresh the widget fallback list
         run: node scripts/i18n-fanout.mjs --emit-fallback-list
 
+      # build-seo-i18n.mjs reaches scripts/build-public-locales.mjs, which
+      # parses TypeScript with the `typescript` package. Nothing else in this
+      # job needs node_modules, so only that one package is installed — at the
+      # version package.json pins — rather than the whole tree.
+      - name: Install the TypeScript parser
+        run: npm install --no-save --no-package-lock --ignore-scripts "typescript@$(node -p "require('./package.json').devDependencies.typescript || require('./package.json').dependencies.typescript")"
+
       # seo-i18n.json is built from the locale files and a test fails when it
       # lags them, so every fill that touches a page's seoTitle/seoDescription
-      # has to ship the regenerated file with it.
+      # has to ship the regenerated file with it. The same script rewrites the
+      # sitemap alternates and the content-addressed crawler pages, which a new
+      # sitemap row or a crawler-copy edit changes, so those ship too.
       - name: Regenerate SEO translations
         run: node scripts/build-seo-i18n.mjs
 
@@ -147,3 +156,6 @@ jobs:
             src/i18n/locales/*.json
             src/i18n/widget-fallback-locales.ts
             public/seo-i18n.json
+            public/sitemap-static.xml
+            src/i18n/public-locales.json
+            public/locale-pages

@@ -243,6 +243,18 @@ export function onMessageDeleted(roomId: string | undefined, cb: (data: { messag
   return subscribe(roomId, ['messageDeleted', 'livechat:messageDeleted'], cb);
 }
 
+/** A stream's creator or their moderator timed someone out of, or banned them from, this room. */
+export function onStreamModeration(
+  roomId: string | undefined,
+  cb: (data: { address: string; action: 'timeout' | 'ban'; seconds?: number }) => void,
+): () => void {
+  return subscribe(roomId, ['livechat:userModerated'], (data: any) => {
+    const address = String(data?.address || '').toLowerCase();
+    if (!address || (data?.roomId && data.roomId !== roomId)) return;
+    cb({ address, action: data?.action === 'ban' ? 'ban' : 'timeout', seconds: Number(data?.seconds) || undefined });
+  });
+}
+
 /**
  * Subscribe to the gateway's error channel.
  *

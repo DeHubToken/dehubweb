@@ -289,6 +289,9 @@ export interface SendPPVParams {
   amount: number;
   to: string;
   chainId?: ChainId;
+  /** The post's PPV token when it is not DHB (USDC/USDT), with its own decimals. */
+  tokenAddress?: string;
+  decimals?: number;
 }
 
 export interface SendPPVResult {
@@ -314,23 +317,27 @@ export async function sendFundsForPPV(
     throw new Error('You cannot pay yourself');
   }
 
-  const amountWei = toWei(params.amount, DHB_TOKEN.decimals);
+  const tokenAddress = params.tokenAddress || chainConfig.dhbToken;
+  const decimals = params.tokenAddress ? params.decimals ?? DHB_TOKEN.decimals : DHB_TOKEN.decimals;
+  const amountWei = toWei(params.amount, decimals);
   const chainKey = `${chainId}-${signerAddress}`;
 
   const [balance, allowance] = await Promise.all([
-    params.skipBalanceCheck ? Promise.resolve(amountWei) : getDHBBalance(signerAddress, chainId),
-    getDHBAllowance(signerAddress, chainId),
+    params.skipBalanceCheck ? Promise.resolve(amountWei) : getERC20Balance(tokenAddress, signerAddress, chainId),
+    getERC20Allowance(tokenAddress, signerAddress, chainConfig.streamController, chainId),
   ]);
 
   if (!params.skipBalanceCheck && balance < amountWei) {
     throw new Error(
-      i18n.t('tokenPayments.insufficientBalance', { needed: params.amount, held: Number(balance) / 1e18 }),
+      i18n.t('tokenPayments.insufficientBalance', { needed: params.amount, held: Number(balance) / 10 ** decimals }),
     );
   }
 
   if (allowance < amountWei) {
     const maxApproval = BigInt('0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff');
-    await approveDHB(maxApproval, chainId);
+    const approval = await approveERC20(tokenAddress, chainConfig.streamController, maxApproval, chainId);
+    const receipt = await approval.wait(1);
+    if (receipt.status !== 1) throw new Error('Token approval reverted. Nothing was paid.');
   }
   approvedChains.add(chainKey);
   persistApprovalCache();
@@ -341,7 +348,7 @@ export async function sendFundsForPPV(
     chainConfig.streamController,
     streamControllerInterface,
     'sendFundsForPPV',
-    [tokenId, amountWei, params.to, chainConfig.dhbToken],
+    [tokenId, amountWei, params.to, tokenAddress],
     { context: 'PPV unlock payment', chainId },
   );
 

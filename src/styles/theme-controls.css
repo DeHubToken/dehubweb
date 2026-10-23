@@ -45,21 +45,24 @@ html:is([data-theme='system'], [data-theme='immersive'], [data-theme='minimal'],
   --control-ink: #fff;
   --control-shadow: inset 0 1px 0 rgba(255,255,255,0.45), inset 0 -1px 0 rgba(255,255,255,0.10);
 }
+/* Light controls are flat: a quiet ink wash with a hairline, no bevel or
+   gradient. The raised white sheen read as a stack of floating, shadowed
+   pills on paper, and made a selected chip look the same as its neighbours. */
 html[data-theme='light'] {
-  --control-fill: #f3f3f3;
-  --control-raised: #e4e4e7;
-  --control-sheen: linear-gradient(160deg, #fff, #e4e4e7);
-  --control-edge: rgba(0,0,0,0.20);
+  --control-fill: rgba(0,0,0,0.05);
+  --control-raised: rgba(0,0,0,0.09);
+  --control-sheen: linear-gradient(transparent, transparent);
+  --control-edge: rgba(0,0,0,0.10);
   --control-ink: #1a1a1a;
-  --control-shadow: inset 0 1px 0 #fff, inset 0 -1px 0 rgba(0,0,0,0.12);
+  --control-shadow: none;
 }
 html[data-system-tone="light"] {
-  --control-fill: #f3f3f3;
-  --control-raised: #e4e4e7;
-  --control-sheen: linear-gradient(160deg, #fff, #e4e4e7);
-  --control-edge: rgba(0,0,0,0.20);
-  --control-ink: #1a1a1a;
-  --control-shadow: inset 0 1px 0 #fff, inset 0 -1px 0 rgba(0,0,0,0.12);
+  --control-fill: rgba(11,11,13,0.05);
+  --control-raised: rgba(11,11,13,0.09);
+  --control-sheen: linear-gradient(transparent, transparent);
+  --control-edge: rgba(11,11,13,0.10);
+  --control-ink: #0b0b0d;
+  --control-shadow: none;
 }
 html[data-theme='minimal'] {
   --control-fill: #000;
@@ -94,7 +97,7 @@ html[data-theme='light'] [data-nav-create] svg {
 html[data-system-tone="light"] [data-nav-create] svg {
   stroke: var(--control-ink) !important;
 }
-html[data-theme='light'] [data-nav-create] > [aria-hidden='true'] {
+html[data-theme='light'] [data-nav-create] > div[aria-hidden='true'] {
   display: none;
 }
 html[data-theme='light'] [data-nav-create] .animate-spin {
@@ -279,3 +282,24 @@ html:is([data-theme='war'], [data-theme='osaka'], [data-theme='jungle'])
   :is(span, svg) {
   color: var(--theme-control-foreground) !important;
 }
+
+
+/* Light themes: the selected chip (written bg-white + dark text for dark
+   themes) becomes solid ink with white type, so it stands apart from the flat
+   idle chips instead of turning into the same pale pill (white type on a
+   white sheen in System Light). Two extra ids beat the control material. */
+html:is([data-theme='light'], [data-system-tone='light'])
+  :is(#app-root, [data-theme-page-surface], [role='dialog'], [role='alertdialog'], [data-vaul-drawer])
+  :is(button, a, [role='button']).bg-white:is(.text-black, .text-zinc-900, .text-zinc-950):not([data-keep-white]):not([data-on-media]):not([data-on-media] *):not([data-media-full] *):not(#_):not(#_) {
+  background: #111114 !important;
+  border-color: transparent !important;
+  box-shadow: none !important;
+  color: #fff !important;
+}
+html:is([data-theme='light'], [data-system-tone='light'])
+  :is(#app-root, [data-theme-page-surface], [role='dialog'], [role='alertdialog'], [data-vaul-drawer])
+  :is(button, a, [role='button']).bg-white:is(.text-black, .text-zinc-900, .text-zinc-950):not([data-keep-white]):not([data-on-media]):not([data-on-media] *):not([data-media-full] *):not(#_):not(#_)
+  :is([class*='text-black'], [class*='text-zinc-'], .text-white, svg) {
+  color: rgba(255,255,255,0.86) !important;
+}
+
