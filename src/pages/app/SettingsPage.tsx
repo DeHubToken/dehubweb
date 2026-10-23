@@ -275,6 +275,7 @@ import { KeywordFiltersSection } from '@/components/app/settings/KeywordFiltersS
 import { NotificationFiltersSetting } from '@/components/app/settings/NotificationFiltersSetting';
 import { ProfileFieldsSetting } from '@/components/app/settings/ProfileFieldsSetting';
 import { FediverseHandleSetting } from '@/components/app/settings/FediverseHandleSetting';
+import { ConnectedAppsSetting } from '@/components/app/settings/ConnectedAppsSetting';
 
 export default function SettingsPage() {
   const { t: _copy } = _useCopy();
@@ -1130,6 +1131,9 @@ function ProfileSettings() {
 
       {/* Fediverse — the @username@dehub.io address Mastodon can follow */}
       <FediverseHandleSetting />
+
+      {/* Connected apps — Mastodon apps signed in to this account */}
+      <ConnectedAppsSetting />
 
       {/* Links */}
       <div className="space-y-6">
