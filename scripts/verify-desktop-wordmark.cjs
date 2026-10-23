@@ -30,6 +30,7 @@ const { chromium } = require('playwright');
     assert.equal(await progress(), 0, 'The first two seconds must stay intact');
     await page.screenshot({ path: 'wordmark-evidence/day-0.png' });
     await page.waitForFunction(() => Number(document.querySelector('canvas').dataset.fractureProgress) > .59);
+    await page.screenshot({ path: 'wordmark-evidence/day-3-entry.png' });
     await page.getByRole('button', { name: 'Reassemble' }).hover();
     assert.equal(await page.locator('canvas').getAttribute('data-fracture-target'), '0', 'Hover must target the assembled state');
     await page.waitForFunction(() => Number(document.querySelector('canvas').dataset.fractureProgress) === 0);

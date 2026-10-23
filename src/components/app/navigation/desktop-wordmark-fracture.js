@@ -51,7 +51,7 @@ async function fractureShapes(src) {
     seeds.forEach((s,n)=>{const d=(x-s.x)**2+(y-s.y)**2;if(d<distance){distance=d;nearest=n;}});
     owners[i]=nearest;
   }
-  const edges = seeds.map(()=>new Map());
+  const edges = [...seeds.map(()=>new Map()), new Map()];
   const vertex=(x,y)=>y*(w+1)+x;
   function edge(id,x1,y1,x2,y2) {
     const start=vertex(x1,y1), end=vertex(x2,y2);
@@ -64,6 +64,11 @@ async function fractureShapes(src) {
     if(x===w-1||owners[i+1]!==id) edge(id,x+1,y,x+1,y+1);
     if(y===h-1||owners[i+w]!==id) edge(id,x+1,y+1,x,y+1);
     if(x===0||owners[i-1]!==id) edge(id,x,y+1,x,y);
+    // A second contour contains only the silhouette, with no fracture seams.
+    if(y===0||owners[i-w]<0) edge(seeds.length,x,y,x+1,y);
+    if(x===w-1||owners[i+1]<0) edge(seeds.length,x+1,y,x+1,y+1);
+    if(y===h-1||owners[i+w]<0) edge(seeds.length,x+1,y+1,x,y+1);
+    if(x===0||owners[i-1]<0) edge(seeds.length,x,y+1,x,y);
   }
   const pieces=[];
   edges.forEach((map,id)=>{
@@ -113,8 +118,12 @@ export async function createDesktopWordmark(canvas, src, options = {}) {
   const material=new THREE.MeshStandardMaterial({color:0xf2f3f5,roughness:.25,metalness:.18});
   const side=new THREE.MeshStandardMaterial({color:0xb0bac8,roughness:.48,metalness:.36});
   const sculpture=new THREE.Group();sculpture.rotation.set(.12,-.075,0);scene.add(sculpture);
-  const pieces=shapes.map(({shape,cx,cy,id},index)=>{
-    const geometry=new THREE.ExtrudeGeometry(shape,{depth:5.5,bevelEnabled:true,bevelSize:.36,bevelThickness:.5,bevelSegments:3,steps:1,curveSegments:1});
+  const extrusion={depth:5.5,bevelEnabled:true,bevelSize:.36,bevelThickness:.5,bevelSegments:3,steps:1,curveSegments:1};
+  const intactGeometry=new THREE.ExtrudeGeometry(shapes.filter(p=>p.id===74).map(p=>p.shape),extrusion);
+  intactGeometry.translate(0,0,-2.75);
+  const intact=new THREE.Mesh(intactGeometry,[material,side]);sculpture.add(intact);
+  const pieces=shapes.filter(p=>p.id!==74).map(({shape,cx,cy,id},index)=>{
+    const geometry=new THREE.ExtrudeGeometry(shape,extrusion);
     geometry.translate(-cx,-cy,-2.75);
     const mesh=new THREE.Mesh(geometry,[material,side]);sculpture.add(mesh);
     const order=rand(),direction=rand()*Math.PI*2;
@@ -129,13 +138,14 @@ export async function createDesktopWordmark(canvas, src, options = {}) {
   const motion=matchMedia('(prefers-reduced-motion: reduce)');
   let value=0,target=0,from=0,started=0,duration=2200,raf=0,disposed=false,visible=true,stage=clamp(options.stage??0),held=false,entryReady=false,timer=0;
   function draw(progress){
+    intact.visible=progress<.008;
     pieces.forEach(p=>{
       const loosen=smooth((progress-.14-p.order*.55)/.28);
       const cracks=smooth(progress/.28)*.20;
       p.mesh.position.set(p.cx+p.dx*loosen+Math.sign(p.cx)*cracks,p.cy+p.dy*loosen-Math.sign(p.cy)*cracks,p.dz*loosen);
       p.mesh.rotation.set(p.rx*loosen,p.ry*loosen,p.rz*loosen);
       const vanish=p.late ? smooth((progress-.985)/.06) : smooth((progress-.77-p.order*.16)/.13);
-      p.mesh.scale.setScalar(1-vanish);p.mesh.visible=vanish<.999;
+      p.mesh.scale.setScalar(1-vanish);p.mesh.visible=!intact.visible&&vanish<.999;
     });
     motes.forEach(p=>{
       const movement=smooth((progress-p.delay)/.65),scale=movement*(1-smooth((progress-.9)/.16));
@@ -174,6 +184,6 @@ export async function createDesktopWordmark(canvas, src, options = {}) {
     setHovered(next){held=next;refresh();},
     setLight(light){material.color.set(light?0x28303a:0xf2f3f5);side.color.set(light?0x455568:0xb0bac8);draw(value);},
     replay,
-    dispose(){disposed=true;clearTimeout(timer);cancelAnimationFrame(raf);observer.disconnect();intersection.disconnect();document.removeEventListener('visibilitychange',visibility);motion.removeEventListener('change',refresh);canvas.removeEventListener('webglcontextlost',contextLost);pieces.forEach(p=>p.mesh.geometry.dispose());moteGeometry.dispose();material.dispose();side.dispose();moteMaterials.forEach(m=>m.dispose());renderer.dispose();},
+    dispose(){disposed=true;clearTimeout(timer);cancelAnimationFrame(raf);observer.disconnect();intersection.disconnect();document.removeEventListener('visibilitychange',visibility);motion.removeEventListener('change',refresh);canvas.removeEventListener('webglcontextlost',contextLost);pieces.forEach(p=>p.mesh.geometry.dispose());intactGeometry.dispose();moteGeometry.dispose();material.dispose();side.dispose();moteMaterials.forEach(m=>m.dispose());renderer.dispose();},
   };
 }
