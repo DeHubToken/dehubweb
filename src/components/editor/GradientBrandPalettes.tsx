@@ -1,0 +1,10 @@
+import { SavePalettePreset } from "./SavePalettePreset";
+import { useTranslation } from "react-i18next";
+import { useBrandPresets } from "@/lib/editor/useBrandPresets";
+import { gradientFromBrandPalette } from "@/lib/editor/gradientBrandPalette";
+import type { GradientFill } from "@/lib/editor/gradientFill";
+export function GradientBrandPalettes({ value, onChange }: { value: GradientFill; onChange: (value: GradientFill) => void }) {
+  const { t } = useTranslation(), library = useBrandPresets(), palettes = library.presets.filter(preset => preset.styles.colors.length >= 2);
+  const colours = [...new Set(value.stops.slice().sort((a, b) => a.offset - b.offset).map(stop => stop.colour))];
+  return <details className="rounded-lg border border-white/10 p-3"><summary className="cursor-pointer text-xs font-medium text-white/75">{t("editor.gradients.brandPalettes", { defaultValue: "Saved palettes and gradient colours" })}</summary><div className="mt-3 space-y-3"><div className="flex flex-wrap gap-2">{palettes.map(preset => <button type="button" key={preset.id} onClick={() => onChange(gradientFromBrandPalette(value, preset.styles.colors))} className="flex min-h-9 items-center gap-2 rounded-lg border border-white/20 px-3 text-xs text-white/75"><span aria-hidden="true" className="flex overflow-hidden rounded">{preset.styles.colors.map((colour, index) => <span key={index} className="h-4 w-2" style={{ background: colour }} />)}</span>{preset.name}</button>)}</div>{!palettes.length && <p className="text-xs text-white/45">{t("editor.gradients.noBrandPalettes", { defaultValue: "Save a palette with at least two colours in Brand styles to use it here." })}</p>}<p className="text-xs text-white/45">{t("editor.gradients.brandPaletteHint", { defaultValue: "Loads palette colours into the gradient draft with opaque, evenly spaced stops. Gradients use up to eight colours; larger palettes keep their endpoints and sample the colours between them." })}</p><SavePalettePreset colours={colours} /></div></details>;
+}

@@ -1,3 +1,11 @@
+import { resolvedTextDirection } from "./textDirection";
+import { strokeDashOffset } from "./strokePatterns";
+import { paintOpacity } from "./paintOpacity";
+import { freehandPath } from "./freehand";
+import { vectorSymbolPath } from "./vectorSymbols";
+import { drawConnector } from "./connectors";
+import { applyPhotoTone, needsPhotoTone } from "./photoTone";
+import { textRevealLines } from "./textReveal";
 /**
  * Shared clip renderer.
  * =====================
@@ -10,11 +18,15 @@
  * testing and the pixels that get drawn can never disagree about where a clip
  * is.
  */
-import type { Clip, ClipTransform, KeyframeProp, MediaClip, ShapeClip, TextClip } from "./types";
+import type { Clip, ClipTransform, KeyframeProp, MediaClip, ShapeClip, TextClip, TextStroke } from "./types";
 import { computeClipAnimation } from "./animationPresets";
 import { videoMatteFrame } from "./videoMatte";
 import { gifImageFrame } from "./gifImage";
 import { measuredTextLayout } from "./textLayout";
+import { drawDataVisual } from "./dataVisuals";
+import { createGradientFill } from "./gradientFill";
+import { drawQrGraphic } from "./qrGraphic";
+import { shapePolygon } from "./shapeGeometry";
 import { KEY_EPSILON, isAnimated, keyframeProps, resolveClipAt, setKey, staticValue } from "./keyframes";
 
 export type Ctx2D = CanvasRenderingContext2D | OffscreenCanvasRenderingContext2D;
@@ -127,6 +139,7 @@ function setLetterSpacing(ctx: Ctx2D, px: number) {
 
 function layoutText(ctx: Ctx2D, text: TextClip, W: number, H: number) {
   ctx.save();
+  ctx.direction = resolvedTextDirection(text.text, text.direction);
   const result = measuredTextLayout(text, W, H, (line, size, spacing) => {
     ctx.font = fontFor(text, size);
     setLetterSpacing(ctx, spacing);
@@ -149,10 +162,10 @@ export function clipBoxForSize(
   const tr = getTransform(clip);
   if (clip.kind === "text") {
     const l = layoutText(ctx, clip, W, H);
-    const w = l.maxW + l.pad * 2;
-    const h = l.lines.length * l.lh + l.pad * 2;
+    const w = (l.curve ? l.curve.width : l.maxW) + l.pad * 2;
+    const h = (l.curve ? l.curve.height : l.height) + l.pad * 2;
     const ax = clip.x * W;
-    const cx = clip.align === "centre" ? ax : clip.align === "left" ? ax + l.maxW / 2 : ax - l.maxW / 2;
+    const cx = clip.align === "centre" ? ax : clip.align === "left" ? ax + (l.curve ? l.curve.width : l.maxW) / 2 : ax - (l.curve ? l.curve.width : l.maxW) / 2;
     return { cx, cy: clip.y * H, w, h, rotation: tr.rotation };
   }
   if (clip.kind === "shape") {
@@ -222,9 +235,9 @@ function clearShadow(ctx: Ctx2D) {
   ctx.shadowOffsetY = 0;
 }
 
-export function roundRectPath(ctx: Ctx2D, x: number, y: number, w: number, h: number, r: number) {
+export function roundRectPath(ctx: Ctx2D, x: number, y: number, w: number, h: number, r: number, append = false) {
   const rr = Math.max(0, Math.min(r, w / 2, h / 2));
-  ctx.beginPath();
+  if (!append) ctx.beginPath();
   ctx.moveTo(x + rr, y);
   ctx.arcTo(x + w, y, x + w, y + h, rr);
   ctx.arcTo(x + w, y + h, x, y + h, rr);
@@ -257,6 +270,17 @@ export function drawClip(ctx: Ctx2D, W: number, H: number, keyed: Clip, t: numbe
   ctx.translate(box.cx, box.cy);
   if (tr.rotation) ctx.rotate((tr.rotation * Math.PI) / 180);
   if (tr.flipH || tr.flipV) ctx.scale(tr.flipH ? -1 : 1, tr.flipV ? -1 : 1);
+  if (anim.rotation) ctx.rotate(anim.rotation * Math.PI / 180);
+  for (const reveal of anim.reveals ?? []) {
+    const progress = Math.max(0, Math.min(1, reveal.progress));
+    const width = reveal.axis === "x" ? box.w * progress : box.w;
+    const height = reveal.axis === "y" ? box.h * progress : box.h;
+    const x = -box.w / 2 + (reveal.axis === "x" && reveal.from === "end" ? box.w - width : 0);
+    const y = -box.h / 2 + (reveal.axis === "y" && reveal.from === "end" ? box.h - height : 0);
+    ctx.beginPath();
+    ctx.rect(x, y, width, height);
+    ctx.clip();
+  }
 
   // Text used to fade in over its first 0.3s by default, which made every
   // title invisible at 0s: exactly where a still design sits and where PNG
@@ -265,8 +289,8 @@ export function drawClip(ctx: Ctx2D, W: number, H: number, keyed: Clip, t: numbe
   ctx.filter = cssFilterFor(clip, anim.blurPx);
   if (clip.blend && clip.blend !== "normal") ctx.globalCompositeOperation = clip.blend;
 
-  if (clip.kind === "text") drawText(ctx, clip, box, W, H);
-  else if (clip.kind === "shape") drawShape(ctx, clip, box, H);
+  if (clip.kind === "text") drawText(ctx, clip, box, W, H, anim.textProgress);
+  else if (clip.kind === "shape") drawShape(ctx, clip, box, H, t);
   else drawMedia(ctx, clip as MediaClip, box, H, src, sourceTime ?? ((clip as MediaClip).trimIn + (t - clip.start) * ((clip as MediaClip).speed ?? 1)));
 
   ctx.restore();
@@ -278,6 +302,7 @@ export function drawClip(ctx: Ctx2D, W: number, H: number, keyed: Clip, t: numbe
 // pixels (destination-in against the source), so a cut-out never tints the
 // layers beneath it. One scratch canvas is reused for every clip and frame.
 let scratch: OffscreenCanvas | HTMLCanvasElement | null = null;
+const stillGradeCache = new WeakMap<HTMLImageElement, { key: string; el: CanvasImageSource; w: number; h: number }>();
 
 function scratchCanvas(w: number, h: number): OffscreenCanvas | HTMLCanvasElement | null {
   if (!scratch) {
@@ -291,7 +316,7 @@ function scratchCanvas(w: number, h: number): OffscreenCanvas | HTMLCanvasElemen
 }
 
 export function needsGrade(e: MediaClip["effects"]): boolean {
-  return !!e && (!!e.warmth || !!e.tint || !!e.vignette);
+  return !!e && (!!e.warmth || !!e.tint || !!e.vignette || needsPhotoTone(e));
 }
 
 function grade(el: CanvasImageSource, sx: number, sy: number, sw: number, sh: number, w: number, h: number, e: NonNullable<MediaClip["effects"]>) {
@@ -300,6 +325,10 @@ function grade(el: CanvasImageSource, sx: number, sy: number, sw: number, sh: nu
   const k = Math.min(1, 1600 / Math.max(w, h));
   const cw = Math.max(1, Math.round(w * k));
   const ch = Math.max(1, Math.round(h * k));
+  const still = typeof HTMLImageElement !== "undefined" && el instanceof HTMLImageElement ? el : null;
+  const cacheKey = still ? [still.currentSrc || still.src, sx, sy, sw, sh, cw, ch, JSON.stringify(e)].join("|") : "";
+  const cached = still ? stillGradeCache.get(still) : null;
+  if (cached?.key === cacheKey) return cached;
   const cvs = scratchCanvas(cw, ch);
   const g = cvs?.getContext("2d") as Ctx2D | null;
   if (!cvs || !g) return null;
@@ -308,6 +337,11 @@ function grade(el: CanvasImageSource, sx: number, sy: number, sw: number, sh: nu
   g.filter = "none";
   g.globalCompositeOperation = "copy";
   g.drawImage(el, sx, sy, sw, sh, 0, 0, cw, ch);
+  if (needsPhotoTone(e)) {
+    const image = g.getImageData(0, 0, cw, ch);
+    applyPhotoTone(image.data, e, true, cw, ch);
+    g.putImageData(image, 0, 0);
+  }
   const fillBlend = (colour: string, alpha: number, mode: GlobalCompositeOperation) => {
     g.globalCompositeOperation = mode;
     g.globalAlpha = alpha;
@@ -333,6 +367,12 @@ function grade(el: CanvasImageSource, sx: number, sy: number, sw: number, sh: nu
   g.globalAlpha = 1;
   g.drawImage(el, sx, sy, sw, sh, 0, 0, cw, ch);
   g.globalCompositeOperation = "source-over";
+  if (still) {
+    const copy = typeof OffscreenCanvas !== "undefined" ? new OffscreenCanvas(cw, ch) : document.createElement("canvas");
+    copy.width = cw; copy.height = ch;
+    const context = copy.getContext("2d") as Ctx2D | null;
+    if (context) { context.drawImage(cvs, 0, 0); const result = { key: cacheKey, el: copy as CanvasImageSource, w: cw, h: ch }; stillGradeCache.set(still, result); return result; }
+  }
   return { el: cvs as CanvasImageSource, w: cw, h: ch };
 }
 
@@ -376,18 +416,20 @@ function drawMedia(ctx: Ctx2D, clip: MediaClip, box: ClipBox, H: number, src: Re
   const x = -box.w / 2;
   const y = -box.h / 2;
   const r = ((clip.radius ?? 0) / 1080) * H;
+  const framePath = () => clip.frame && clip.frame !== "rect"
+    ? shapePath(ctx, clip.frame, box.w, box.h) : roundRectPath(ctx, x, y, box.w, box.h, r);
 
-  if (r > 0) {
+  if (r > 0 || (clip.frame && clip.frame !== "rect")) {
     if (clip.shadow && clip.shadow.opacity > 0) {
       ctx.save();
       applyShadow(ctx, clip, H);
       ctx.fillStyle = "#000";
-      roundRectPath(ctx, x, y, box.w, box.h, r);
+      framePath();
       ctx.fill();
       ctx.restore();
     }
     ctx.save();
-    roundRectPath(ctx, x, y, box.w, box.h, r);
+    framePath();
     ctx.clip();
     ctx.drawImage(el, sx, sy, sw, sh, x, y, box.w, box.h);
     ctx.restore();
@@ -397,13 +439,25 @@ function drawMedia(ctx: Ctx2D, clip: MediaClip, box: ClipBox, H: number, src: Re
     ctx.drawImage(el, sx, sy, sw, sh, x, y, box.w, box.h);
     clearShadow(ctx);
   }
+  if (clip.border && clip.border.width > 0) {
+    ctx.save(); framePath();
+    ctx.globalAlpha *= paintOpacity(clip.border.opacity); ctx.lineWidth = clip.border.width * H / 1080; ctx.strokeStyle = clip.border.color;
+    ctx.setLineDash((Array.isArray(clip.border.dash) ? clip.border.dash : []).filter(n => Number.isFinite(n) && n >= 0).slice(0, 8).map(n => n * H / 1080));
+    ctx.lineDashOffset = strokeDashOffset(clip.border.dashOffset) * H / 1080;
+    ctx.stroke(); ctx.restore();
+  }
 }
 
 /** Build the outline of a shape centred on the origin. */
-export function shapePath(ctx: Ctx2D, shape: ShapeClip["shape"], w: number, h: number, radius = 0, points?: [number, number][]) {
+export function shapePath(ctx: Ctx2D, shape: ShapeClip["shape"], w: number, h: number, radius = 0, points?: [number, number][], geometry?: ShapeClip["geometry"]) {
   const hw = w / 2;
   const hh = h / 2;
   ctx.beginPath();
+  const polygon = shapePolygon(shape, w, h, geometry);
+  if (polygon) {
+    polygon.forEach((point, index) => { if (index === 0) ctx.moveTo(point[0], point[1]); else ctx.lineTo(point[0], point[1]); });
+    ctx.closePath(); return;
+  }
   switch (shape) {
     case "path": {
       // Midpoint quadratic smoothing: the curve passes through the midpoint of
@@ -475,28 +529,57 @@ export function shapePath(ctx: Ctx2D, shape: ShapeClip["shape"], w: number, h: n
   ctx.closePath();
 }
 
-function drawShape(ctx: Ctx2D, clip: ShapeClip, box: ClipBox, H: number) {
+function drawShape(ctx: Ctx2D, clip: ShapeClip, box: ClipBox, H: number, time?: number) {
+  if (clip.photoFrame) {
+    drawShape(ctx, { ...clip, photoFrame: false }, box, H, time);
+    const size = Math.min(box.w, box.h) * 0.35;
+    ctx.fillStyle = "#94a3b8"; ctx.beginPath(); ctx.moveTo(-size, size * 0.65); ctx.lineTo(-size * 0.2, -size * 0.45); ctx.lineTo(size * 0.25, size * 0.2); ctx.lineTo(size * 0.55, -size * 0.2); ctx.lineTo(size, size * 0.65); ctx.closePath(); ctx.fill();
+    ctx.beginPath(); ctx.arc(size * 0.55, -size * 0.65, size * 0.18, 0, Math.PI * 2); ctx.fill(); return;
+  }
+  if (clip.qr) { drawQrGraphic(ctx, box.w, box.h, clip.qr); return; }
+  if (clip.chart || clip.table) {
+    drawDataVisual(ctx, box.w, box.h, clip.chart, clip.table, time === undefined ? undefined : (time - clip.start) / Math.max(0.001, clip.duration));
+    return;
+  }
   const k = H / 1080;
-  const open = clip.shape === "line" || clip.shape === "arrow" || clip.shape === "path";
-  shapePath(ctx, clip.shape, box.w, box.h, (clip.radius ?? 0) * k, clip.points);
+  if (clip.connector) {
+    const stroke = clip.stroke ?? { color: clip.fill ?? "#ffffff", width: 8 };
+    if (stroke.width <= 0) return;
+    ctx.lineWidth = stroke.width * k;
+    ctx.strokeStyle = createGradientFill(ctx, box.w, box.h, clip.gradient) || stroke.color;
+    ctx.setLineDash((stroke.dash || []).filter(Number.isFinite).slice(0, 8).map(value => Math.max(0, value) * k));
+    ctx.lineDashOffset = strokeDashOffset(stroke.dashOffset) * H / 1080;
+    const alpha = ctx.globalAlpha; ctx.globalAlpha *= paintOpacity(stroke.opacity); applyShadow(ctx, clip, H); drawConnector(ctx, box.w, box.h, clip.connector); clearShadow(ctx); ctx.globalAlpha = alpha; return;
+  }
+  const open = clip.shape === "line" || clip.shape === "arrow" || (clip.shape === "path" && !clip.closedPath);
+  if (clip.symbol) vectorSymbolPath(ctx, box.w, box.h, clip.symbol);
+  else if (clip.shape === "path") freehandPath(ctx, box.w, box.h, clip.points ?? [], clip.pathSmoothing ?? 1, !!clip.closedPath);
+  else shapePath(ctx, clip.shape, box.w, box.h, (clip.radius ?? 0) * k, clip.points, clip.geometry);
   applyShadow(ctx, clip, H);
-  if (!open && clip.fill) {
-    ctx.fillStyle = clip.fill;
-    ctx.fill();
+  const gradient = createGradientFill(ctx, box.w, box.h, clip.gradient);
+  if (!open && (clip.fill || (!clip.symbol && gradient))) {
+    ctx.fillStyle = gradient ?? clip.fill!;
+    const alpha = ctx.globalAlpha; ctx.globalAlpha *= paintOpacity(clip.fillOpacity);
+    ctx.fill(); ctx.globalAlpha = alpha;
     clearShadow(ctx);
   }
-  const stroke = clip.stroke ?? (open ? { color: clip.fill ?? "#ffffff", width: 8 } : null);
+  const stroke: TextStroke | null = clip.stroke ?? (open ? { color: clip.fill ?? "#ffffff", width: 8 } : null);
   if (stroke && stroke.width > 0) {
+    ctx.setLineDash((Array.isArray(stroke.dash) ? stroke.dash : []).filter(n => Number.isFinite(n) && n >= 0).slice(0, 8).map(n => n * k));
+    ctx.lineDashOffset = strokeDashOffset(stroke.dashOffset) * H / 1080;
     ctx.lineWidth = stroke.width * k;
-    ctx.strokeStyle = stroke.color;
-    ctx.lineJoin = "round";
-    ctx.lineCap = "round";
-    ctx.stroke();
+    ctx.strokeStyle = (open || clip.symbol && !clip.fill) && gradient ? gradient : stroke.color;
+    ctx.lineJoin = clip.strokeJoin ?? "round";
+    ctx.lineCap = clip.shape === "path" && clip.points?.length === 1 ? "round" : clip.strokeCap ?? "round";
+    const alpha = ctx.globalAlpha; ctx.globalAlpha *= paintOpacity(stroke.opacity); ctx.stroke(); ctx.globalAlpha = alpha;
   }
   clearShadow(ctx);
 }
 
-function drawText(ctx: Ctx2D, text: TextClip, box: ClipBox, W: number, H: number) {
+function drawText(ctx: Ctx2D, text: TextClip, box: ClipBox, W: number, H: number, progress?: number) {
+  ctx.direction = resolvedTextDirection(text.text, text.direction);
+  const rtl = ctx.direction === "rtl";
+  const textAlpha = ctx.globalAlpha, fillAlpha = paintOpacity(text.fillOpacity);
   const l = layoutText(ctx, text, W, H);
   ctx.font = fontFor(text, l.size);
   setLetterSpacing(ctx, l.spacing);
@@ -504,7 +587,11 @@ function drawText(ctx: Ctx2D, text: TextClip, box: ClipBox, W: number, H: number
   ctx.textAlign = text.align === "centre" ? "center" : text.align;
   // Local frame: origin is the box centre.
   const ax = text.align === "centre" ? 0 : text.align === "left" ? -l.maxW / 2 : l.maxW / 2;
-  const startY = -((l.lines.length - 1) * l.lh) / 2;
+  const startY = -(l.height - l.lh) / 2;
+  const lines = progress === undefined ? l.lines : textRevealLines(l.lines, progress);
+  const leftFor = (i: number) => text.align === "centre" ? ax - l.widths[i] / 2 : text.align === "left" ? ax + (l.offsets?.[i] ?? 0) : ax + (l.offsets?.[i] ?? 0) - l.widths[i];
+  const drawX = (i: number) => progress === undefined ? ax + (l.offsets?.[i] ?? 0) : rtl ? leftFor(i) + l.widths[i] : leftFor(i);
+  if (progress !== undefined) ctx.textAlign = rtl ? "right" : "left";
 
   if (text.background && text.background.opacity > 0) {
     const radius = Math.max(0, (text.background.radius / 1080) * H);
@@ -512,7 +599,11 @@ function drawText(ctx: Ctx2D, text: TextClip, box: ClipBox, W: number, H: number
     ctx.globalAlpha = a * text.background.opacity;
     ctx.fillStyle = text.background.color;
     applyShadow(ctx, text, H);
-    roundRectPath(ctx, -box.w / 2, -box.h / 2, box.w, box.h, radius);
+    if (text.background.perLine && !l.curve) {
+      const padding = Math.max(0, text.background.padding / 1080 * H * l.scale);
+      ctx.beginPath();
+      l.lines.forEach((line, index) => { if (line.trim()) roundRectPath(ctx, leftFor(index) - padding, startY + l.lineY[index] - l.size / 2 - padding, l.widths[index] + padding * 2, l.size + padding * 2, radius * l.scale, true); });
+    } else roundRectPath(ctx, -box.w / 2, -box.h / 2, box.w, box.h, radius);
     ctx.fill();
     clearShadow(ctx);
     ctx.globalAlpha = a;
@@ -520,24 +611,78 @@ function drawText(ctx: Ctx2D, text: TextClip, box: ClipBox, W: number, H: number
     applyShadow(ctx, text, H);
   }
 
-  if (text.stroke && text.stroke.width > 0) {
-    ctx.lineWidth = (text.stroke.width / 1080) * H * l.scale;
-    ctx.strokeStyle = text.stroke.color;
+  const drawEcho = (value: string, x: number, y: number) => {
+    const alpha = ctx.globalAlpha, fill = ctx.fillStyle;
+    for (const layer of (text.echo || []).slice(0, 3)) {
+      if (!/^#[\da-f]{6}$/i.test(layer.colour) || ![layer.x, layer.y, layer.opacity].every(Number.isFinite)) continue;
+      ctx.globalAlpha = alpha * fillAlpha * Math.max(0, Math.min(1, layer.opacity));
+      ctx.fillStyle = layer.colour;
+      ctx.fillText(value, x + Math.max(-100, Math.min(100, layer.x)) / 1080 * H * l.scale, y + Math.max(-100, Math.min(100, layer.y)) / 1080 * H * l.scale);
+    }
+    ctx.globalAlpha = alpha; ctx.fillStyle = fill;
+  };
+  if (l.curve) {
+    ctx.textAlign = "center";
+    setLetterSpacing(ctx, 0);
+    const glyphs = l.curve.glyphs;
+    const visible = progress == null ? glyphs.length : Math.floor(glyphs.length * Math.max(0, Math.min(1, progress)) + 1e-7);
+    const outline: TextStroke | null = text.stroke || (text.hollow ? { color: text.color, width: 3 } : null);
+    ctx.fillStyle = createGradientFill(ctx, box.w, box.h, text.gradient) || text.color;
+    if (outline) {
+      ctx.strokeStyle = outline.color;
+      ctx.lineWidth = outline.width / 1080 * H * l.scale;
+      ctx.lineJoin = "round";
+      ctx.setLineDash((Array.isArray(outline.dash) ? outline.dash : []).filter(n => Number.isFinite(n) && n >= 0).slice(0, 8).map(n => n * H / 1080));
+      ctx.lineDashOffset = strokeDashOffset(outline.dashOffset) * H / 1080;
+    }
+    glyphs.slice(0, visible).forEach(glyph => {
+      ctx.save();
+      ctx.translate(glyph.x, glyph.y);
+      ctx.rotate(glyph.rotation);
+      drawEcho(glyph.text, 0, 0);
+      if (outline && outline.width > 0) { ctx.globalAlpha = textAlpha * paintOpacity(outline.opacity); ctx.strokeText(glyph.text, 0, 0); }
+      ctx.globalAlpha = textAlpha * fillAlpha;
+      if (!text.hollow) ctx.fillText(glyph.text, 0, 0);
+      clearShadow(ctx);
+      if (text.strikethrough) ctx.fillRect(-glyph.width / 2, 0, glyph.width, Math.max(1, l.size * 0.055));
+      if (text.underline) ctx.fillRect(-glyph.width / 2, l.size * 0.45, glyph.width, Math.max(1, l.size * 0.06));
+      ctx.restore();
+    });
+    clearShadow(ctx);
+    return;
+  }
+  lines.forEach((line, index) => drawEcho(line, drawX(index), startY + l.lineY[index]));
+  const textStroke: TextStroke | null = text.stroke ?? (text.hollow ? { color: text.color, width: 3 } : null);
+  if (textStroke && textStroke.width > 0) {
+    ctx.setLineDash((Array.isArray(textStroke.dash) ? textStroke.dash : []).filter(n => Number.isFinite(n) && n >= 0).slice(0, 8).map(n => n * H / 1080));
+    ctx.lineDashOffset = strokeDashOffset(textStroke.dashOffset) * H / 1080;
+    ctx.lineWidth = (textStroke.width / 1080) * H * l.scale;
+    ctx.strokeStyle = textStroke.color;
     ctx.lineJoin = "round";
-    l.lines.forEach((ln, i) => ctx.strokeText(ln, ax, startY + i * l.lh));
+    ctx.globalAlpha = textAlpha * paintOpacity(textStroke.opacity);
+    lines.forEach((ln, i) => ctx.strokeText(ln, drawX(i), startY + l.lineY[i]));
+    ctx.globalAlpha = textAlpha;
     clearShadow(ctx);
   }
 
-  ctx.fillStyle = text.color;
-  l.lines.forEach((ln, i) => ctx.fillText(ln, ax, startY + i * l.lh));
+  ctx.fillStyle = createGradientFill(ctx, box.w, box.h, text.gradient) ?? text.color;
+  ctx.globalAlpha = textAlpha * fillAlpha;
+  if (!text.hollow) lines.forEach((ln, i) => ctx.fillText(ln, drawX(i), startY + l.lineY[i]));
   clearShadow(ctx);
 
+  if (text.strikethrough) {
+    l.lines.forEach((_, i) => {
+      const width = progress === undefined ? l.widths[i] : ctx.measureText(lines[i]).width, left = rtl && progress !== undefined ? leftFor(i) + l.widths[i] - width : leftFor(i);
+      ctx.fillRect(left, startY + l.lineY[i], width, Math.max(1, l.size * 0.055));
+    });
+  }
   if (text.underline) {
     const thick = Math.max(1, l.size * 0.06);
     l.lines.forEach((_, i) => {
-      const w = l.widths[i];
-      const left = text.align === "centre" ? ax - w / 2 : text.align === "left" ? ax : ax - w;
-      ctx.fillRect(left, startY + i * l.lh + l.size * 0.45, w, thick);
+      const w = progress === undefined ? l.widths[i] : ctx.measureText(lines[i]).width;
+      const left = rtl && progress !== undefined ? leftFor(i) + l.widths[i] - w : leftFor(i);
+      ctx.fillRect(left, startY + l.lineY[i] + l.size * 0.45, w, thick);
     });
   }
+  ctx.globalAlpha = textAlpha;
 }

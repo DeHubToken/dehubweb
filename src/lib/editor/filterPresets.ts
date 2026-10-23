@@ -15,6 +15,9 @@ export const FILTER_PRESETS: FilterPreset[] = [
   { id: "none", label: "Original", effects: {} },
   // Warm/cool/sunny used to rotate hue, which skews skin tones; they now use
   // the real white-balance grade (warmth), and a few looks gain a vignette.
+  { id: "natural", label: "Natural", effects: { vibrance: 0.4, highlights: -0.12, shadows: 0.1, contrast: 1.03 } },
+  { id: "softLight", label: "Soft light", effects: { vibrance: 0.2, highlights: -0.2, shadows: 0.2, warmth: 0.08, fade: 0.08 } },
+  { id: "crisp", label: "Crisp", effects: { vibrance: 0.5, contrast: 1.12, highlights: -0.08, shadows: -0.08 } },
   { id: "cinematic", label: "Cinematic", effects: { contrast: 1.15, saturation: 1.1, brightness: 0.95, warmth: 0.1, vignette: 0.3 } },
   { id: "warm", label: "Warm", effects: { saturation: 1.1, brightness: 1.03, warmth: 0.55 } },
   { id: "cool", label: "Cool", effects: { saturation: 1.05, brightness: 1.02, warmth: -0.5 } },

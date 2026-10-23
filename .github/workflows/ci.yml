@@ -186,6 +186,8 @@ jobs:
 
   typecheck:
     name: Typecheck
+    env:
+      NODE_OPTIONS: --max-old-space-size=6144
     runs-on: ubuntu-latest
     timeout-minutes: 10
     steps:

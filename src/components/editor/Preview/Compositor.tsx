@@ -1,3 +1,23 @@
+import { clipFontFamilies } from "@/lib/editor/graphicFonts";
+import { ensureProjectFonts } from "@/lib/editor/googleFonts";
+import { nextDesignLayer } from "@/lib/editor/layerNavigation";
+import { SpacingGuides } from "../SpacingGuides";
+import { OverlapLayerPicker } from "../OverlapLayerPicker";
+import { nextOverlappingLayer } from "@/lib/editor/layerChoices";
+import { useTextDraftHistory } from "@/lib/editor/useTextDraftHistory";
+import { changeSelectedTextCase, type TextCase } from "@/lib/editor/textCase";
+import { selectionSpacingBox, smartSpacingSnap, type SpacingGuide } from "@/lib/editor/smartSpacing";
+import { beginDesignColourSample, cancelDesignColourPick, finishDesignColourSample, useDesignColourPick } from "@/lib/editor/designColourPicker";
+import { designPrintDpi } from "@/lib/editor/documentDimensions";
+import { registerDesignPagePreview } from "@/lib/editor/designPagePreviews";
+import { freehandSvg, type PenSettings } from "@/lib/editor/freehand";
+import { insertFreehandStroke } from "@/lib/editor/freehandProject";
+import { nanoid } from "nanoid";
+import { FIT_VIEWPORT, focusDesignSelection, zoomDesignViewport, type DesignViewport } from "@/lib/editor/designViewport";
+import { PresentationView } from "./PresentationView";
+import { panMediaCrop, zoomMediaCrop } from "@/lib/editor/mediaCrop";
+import { GuideEditorLayer } from "../GuideEditorLayer";
+import { DesignRulers } from "../DesignRulers";
 import { useEditorDraftFocus } from "@/components/editor/useEditorDraftFocus";
 import type { ProjectEditLease } from "@/lib/editor/projectEditGate";
 import { stepTimelineFrame } from "@/lib/editor/frameStep";
@@ -42,7 +62,7 @@ import {
 import { cn } from "@/lib/utils";
 import { selectTimelineDuration, useEditorStore } from "@/store/editorStore";
 import { recordOpts, useEditorUiStore } from "@/store/editorUiStore";
-import type { Clip, MediaClip, TextClip } from "@/lib/editor/types";
+import type { Clip, ClipTransform, MediaClip, TextClip } from "@/lib/editor/types";
 import { computeRenderOps, type RenderOp } from "@/lib/editor/transitions";
 import { clipBox, drawClip, getTransform, isVisualClip, placementPatch, placementPatchAt, pointInBox, type ClipBox } from "@/lib/editor/render";
 import { isAnimated, keyTimes, resolveClipAt } from "@/lib/editor/keyframes";
@@ -52,6 +72,9 @@ import { importFiles } from "@/lib/editor/importFiles";
 import { TEXT_DRAG_MIME, type TextPreset } from "@/lib/editor/textPresets";
 import { useBgRemovalStore } from "@/store/editorBgRemovalStore";
 import { PagesStrip } from "./PagesStrip";
+import { GOOGLE_FONTS, loadGoogleFont, primaryFamily } from "@/lib/editor/googleFonts";
+import { replaceDesignMedia } from "@/lib/editor/replaceMedia";
+import { getDesignGuides } from "@/lib/editor/designGuides";
 import { audioGainAt } from "@/lib/editor/audioEnvelope";
 import { leaseMedia } from "@/lib/editor/mediaLeases";
 
@@ -97,12 +120,14 @@ function halfExtents(b: ClipBox) {
 }
 
 type Gesture =
+  | { mode: "crop"; id: string; clip: MediaClip; box: ClipBox; px: number; py: number }
   | {
-      mode: "move"; id: string; px: number; py: number; box: ClipBox; ax: number; ay: number;
+      mode: "move"; id: string; px: number; py: number; box: ClipBox; snapBox?: ClipBox; ax: number; ay: number;
       /** Other selected layers that travel with this one. */
       group: { id: string; ax: number; ay: number }[];
     }
   | { mode: "marquee"; x0: number; y0: number; additive: boolean }
+  | { mode: "group-transform"; operation: "scale" | "rotate"; cx: number; cy: number; dist: number; angle: number; members: { clip: Clip; transform: ClipTransform }[] }
   | { mode: "scale"; id: string; box: ClipBox; dist: number; scale: number; font: number }
   | { mode: "rotate"; id: string; box: ClipBox; angle: number; rotation: number }
   | { mode: "stretch"; id: string; box: ClipBox; axis: "x" | "y"; scale: number };
@@ -113,11 +138,22 @@ export function Compositor() {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const wrapRef = useRef<HTMLDivElement>(null);
   const surfaceRef = useRef<HTMLDivElement>(null);
+  const [presenting, setPresenting] = useState(false);
+  const presentingRef = useRef(false); presentingRef.current = presenting;
+  useCloseOnSurfaceSwitch(useCallback(() => setPresenting(false), []));
 
   const tracks = useEditorStore((s) => s.tracks);
   const clips = useEditorStore((s) => s.clips);
+  const fontFamilies = useMemo(() => [...new Set(clipFontFamilies(clips).map(primaryFamily))].sort().join("|"), [clips]);
+  useEffect(() => {
+    for (const family of fontFamilies.split("|")) {
+      const font = GOOGLE_FONTS.find(item => item.family === family);
+      if (font) loadGoogleFont(font.family, font.weights);
+    }
+  }, [fontFamilies]);
   const media = useEditorStore((s) => s.media);
   const settings = useEditorStore((s) => s.settings);
+  const layoutGuides = useMemo(() => getDesignGuides(settings.guides), [settings.guides]);
   const currentTime = useEditorStore((s) => s.currentTime);
   const isPlaying = useEditorStore((s) => s.isPlaying);
   const isLooping = useEditorStore((s) => s.isLooping);
@@ -146,6 +182,22 @@ export function Compositor() {
   const imagePool = useRef<Map<string, HTMLImageElement>>(new Map());
   const gifLoads = useRef(new Map<string, AbortController>());
   const sources = useMemo(() => ({ videos: videoPool.current, images: imagePool.current, videosByClip: new Map<string, HTMLVideoElement>() }), []);
+  const previewProject = useEditorStore(state => state.projectId);
+  const colourPick = useDesignColourPick(), sampling = colourPick?.projectId === previewProject;
+  useEffect(() => { if (presenting && sampling) cancelDesignColourPick(colourPick.token); }, [presenting, sampling, colourPick?.token]);
+  useLayoutEffect(() => registerDesignPagePreview(previewProject, async (snapshot, at, maxEdge) => {
+    if (useEditorStore.getState().projectId !== snapshot.id) throw new Error("This design is no longer open");
+    await ensureProjectFonts(snapshot.clips);
+    if (useEditorStore.getState().projectId !== snapshot.id) throw new Error("This design is no longer open");
+    const { width, height, background } = snapshot.settings, ratio = Math.min(1, maxEdge / Math.max(width, height));
+    const canvas = document.createElement("canvas"); canvas.width = Math.max(1, Math.round(width * ratio)); canvas.height = Math.max(1, Math.round(height * ratio));
+    const context = canvas.getContext("2d"); if (!context) throw new Error("Page previews are unavailable");
+    context.scale(canvas.width / width, canvas.height / height); context.fillStyle = background; context.fillRect(0, 0, width, height);
+    const hidden = new Set(snapshot.tracks.filter(track => track.hidden).map(track => track.id)), order = new Map(snapshot.tracks.map((track, index) => [track.id, index]));
+    const visible = snapshot.clips.filter(clip => isVisualClip(clip) && !clip.hidden && !hidden.has(clip.trackId) && at >= clip.start && at < clip.start + clip.duration).sort((a, b) => (order.get(a.trackId) ?? 0) - (order.get(b.trackId) ?? 0));
+    for (const clip of visible) { context.save(); try { drawClip(context, width, height, { ...clip, animateIn: undefined, animateOut: undefined }, at, sources); } finally { context.restore(); } }
+    return canvas.toDataURL("image/jpeg", 0.75);
+  }), [previewProject, sources]);
   useEffect(() => () => {
     extraVideos.current.forEach(releaseMedia);
     extraAudio.current.forEach(releaseMedia);
@@ -343,7 +395,7 @@ export function Compositor() {
 
       // Draw to canvas.
       const canvas = canvasRef.current;
-      if (canvas) {
+      if (canvas && !presentingRef.current) {
         const W = state.settings.width;
         const H = state.settings.height;
         if (canvas.width !== W) canvas.width = W;
@@ -390,7 +442,43 @@ export function Compositor() {
   }, [tracks, clips, settings, sources]);
 
   // ── Layout: scale canvas to fit (sync initial measurement + observer) ──
-  const [scale, setScale] = useState(0);
+  const [fitScale, setFitScale] = useState(0);
+  const [viewport, setViewport] = useState<DesignViewport>(FIT_VIEWPORT);
+  const [navigating, setNavigating] = useState(false);
+  const [editingGuides, setEditingGuides] = useState(false);
+  const viewportCleanup = useRef<(() => void) | null>(null);
+  const viewportProject = useEditorStore(s => s.projectId);
+  const scale = fitScale * viewport.zoom;
+  useEffect(() => { viewportCleanup.current?.(); setViewport(FIT_VIEWPORT); setNavigating(false); setEditingGuides(false); setPresenting(false); }, [viewportProject, settings.width, settings.height]);
+  useEffect(() => () => viewportCleanup.current?.(), []);
+  useCloseOnSurfaceSwitch(useCallback(() => { viewportCleanup.current?.(); setNavigating(false); setEditingGuides(false); }, []));
+  useEffect(() => {
+    if (!editingGuides) return;
+    const close = (event: KeyboardEvent) => { if (event.key === "Escape") { event.preventDefault(); setEditingGuides(false); } };
+    window.addEventListener("keydown", close); return () => window.removeEventListener("keydown", close);
+  }, [editingGuides]);
+  const startViewportPan = (event: React.PointerEvent<Element>) => {
+    if (event.button !== 0) return;
+    event.preventDefault(); event.stopPropagation(); viewportCleanup.current?.();
+    const before = viewport, x = event.clientX, y = event.clientY, pointer = event.pointerId;
+    const move = (next: PointerEvent) => { if (next.pointerId === pointer) setViewport({ ...before, x: before.x + next.clientX - x, y: before.y + next.clientY - y }); };
+    const end = (next: PointerEvent) => { if (next.pointerId === pointer) cleanup(); };
+    const cleanup = () => { window.removeEventListener("pointermove", move); window.removeEventListener("pointerup", end); window.removeEventListener("pointercancel", end); viewportCleanup.current = null; };
+    viewportCleanup.current = cleanup;
+    window.addEventListener("pointermove", move); window.addEventListener("pointerup", end); window.addEventListener("pointercancel", end);
+  };
+  useEffect(() => {
+    const element = wrapRef.current; if (!element) return;
+    const wheel = (event: WheelEvent) => {
+      if (!event.ctrlKey && !event.metaKey) return;
+      event.preventDefault();
+      viewportCleanup.current?.();
+      const rect = element.getBoundingClientRect(), anchor = { x: event.clientX - rect.left - rect.width / 2, y: event.clientY - rect.top - rect.height / 2 };
+      setViewport(before => zoomDesignViewport(before, before.zoom * Math.exp(-event.deltaY * 0.002), anchor));
+    };
+    element.addEventListener("wheel", wheel, { passive: false });
+    return () => element.removeEventListener("wheel", wheel);
+  }, []);
   const PAD = 24;
   const retryRef = useRef<number | null>(null);
 
@@ -411,7 +499,7 @@ export function Compositor() {
     const ah = Math.max(0, wrap.clientHeight - PAD * 2);
     if (aw <= 0 || ah <= 0) return false;
     const s = Math.min(aw / settings.width, ah / settings.height);
-    setScale(Math.max(0.01, s));
+    setFitScale(Math.max(0.01, s));
     return true;
   }, [settings.width, settings.height]);
 
@@ -513,6 +601,14 @@ export function Compositor() {
     return null;
   }, [toCanvas, layersAt]);
 
+  const [croppingId, setCroppingId] = useState<string | null>(null);
+  const [overlapIds, setOverlapIds] = useState<string[] | null>(null), [contextLayerIds, setContextLayerIds] = useState<string[]>([]);
+  useEffect(() => setOverlapIds(null), [viewportProject, currentTime]);
+  useCloseOnSurfaceSwitch(useCallback(() => setOverlapIds(null), []));
+  const cropProject = useEditorStore(s => s.projectId);
+  useEffect(() => setCroppingId(null), [cropProject]);
+  useEffect(() => { if (croppingId && (selectedClipIds.length !== 1 || selectedClipIds[0] !== croppingId || !clips.some(c => c.id === croppingId && !c.locked))) setCroppingId(null); }, [croppingId, selectedClipIds, clips]);
+  useCloseOnSurfaceSwitch(useCallback(() => setCroppingId(null), []));
   const [editingTextId, setEditingTextId] = useState<string | null>(null);
   const editingText = useMemo(() => {
     if (!editingTextId) return null;
@@ -520,12 +616,54 @@ export function Compositor() {
     return c && c.kind === "text" ? (c as TextClip) : null;
   }, [editingTextId, clips]);
 
+  const textEditLease = useRef<ProjectEditLease | null>(null);
+  const textEditOriginal = useRef<TextClip | null>(null);
+  const textInput = useRef<HTMLTextAreaElement>(null);
+  const finishTextEditing = useCallback(() => {
+    const lease = textEditLease.current;
+    textEditLease.current = null;
+    textEditOriginal.current = null;
+    lease?.release();
+    setEditingTextId(null);
+  }, []);
+  useLayoutEffect(() => () => {
+    const lease = textEditLease.current;
+    textEditLease.current = null;
+    textEditOriginal.current = null;
+    lease?.release();
+  }, [editingTextId, cropProject]);
+  useEffect(() => {
+    if (editingTextId && (!editingText || editingText.locked || selectedClipIds.length !== 1 || selectedClipIds[0] !== editingTextId)) finishTextEditing();
+  }, [editingTextId, editingText, selectedClipIds, finishTextEditing]);
+  useCloseOnSurfaceSwitch(finishTextEditing);
+  const textHistory = useTextDraftHistory(`${cropProject}:${editingTextId}`, editingText?.text ?? "", value => {
+    const store = useEditorStore.getState(), clip = store.clips.find(clip => clip.id === editingTextId);
+    if (store.projectId !== cropProject || !clip || clip.kind !== "text" || clip.locked) return;
+    if (!textEditLease.current) { textEditOriginal.current = clip; textEditLease.current = store.beginGesture(); }
+    const original = textEditOriginal.current;
+    if (textEditLease.current.isCurrent()) store.patchClipLive(clip.id, { text: value, pageNumber: original?.text === value ? original.pageNumber : undefined });
+  });
+  const applyTextCase = (mode: TextCase) => {
+    const input = textInput.current;
+    if (!input || !editingText) return;
+    const next = changeSelectedTextCase(editingText.text, { start: input.selectionStart, end: input.selectionEnd }, mode);
+    textHistory.change(next.value);
+    requestAnimationFrame(() => { if (textInput.current === input && input.isConnected) { input.focus(); input.setSelectionRange(next.selection.start, next.selection.end); } });
+  };
+
+  useLayoutEffect(() => {
+    const input = textInput.current; if (!input || !editingTextId) return;
+    input.style.height = "auto";
+    input.style.height = `${Math.min(Math.max(32, input.scrollHeight), Math.max(48, (surfaceRef.current?.clientHeight ?? 400) - 24))}px`;
+  }, [editingTextId, editingText?.text, editingText?.fontSize, editingText?.fontFamily, editingText?.fontWeight, editingText?.maxWidth, editingText?.lineHeight, editingText?.letterSpacing, scale]);
+
   const selectedClip = useMemo(() => {
     if (selectedClipIds.length !== 1) return null;
     const c = clips.find((x) => x.id === selectedClipIds[0]);
     return c && isVisualClip(c) ? c : null;
   }, [selectedClipIds, clips]);
 
+  const [spacingGuides, setSpacingGuides] = useState<SpacingGuide[]>([]);
   const [guides, setGuides] = useState<{ v: number[]; h: number[] }>({ v: [], h: [] });
   // Drag-to-select rectangle, in canvas pixels.
   const [marquee, setMarqueeState] = useState<{ x: number; y: number; w: number; h: number } | null>(null);
@@ -546,8 +684,30 @@ export function Compositor() {
     const H = s.settings.height;
     const p = toCanvas(e.clientX, e.clientY);
 
+    if (g.mode === "crop") {
+      const patch = panMediaCrop(g.clip, g.box, p.x - g.px, p.y - g.py);
+      if (patch) s.patchClipLive(g.id, patch);
+      return;
+    }
+
     if (g.mode === "marquee") {
       setMarquee({ x: Math.min(g.x0, p.x), y: Math.min(g.y0, p.y), w: Math.abs(p.x - g.x0), h: Math.abs(p.y - g.y0) });
+      return;
+    }
+
+    if (g.mode === "group-transform") {
+      const ratio = g.operation === "scale" ? Math.max(0.05, Math.min(20, Math.hypot(p.x - g.cx, p.y - g.cy) / Math.max(1, g.dist))) : 1;
+      let degrees = g.operation === "rotate" ? (Math.atan2(p.y - g.cy, p.x - g.cx) - g.angle) * 180 / Math.PI : 0;
+      if (e.shiftKey) degrees = Math.round(degrees / 15) * 15;
+      const rad = degrees * Math.PI / 180, cos = Math.cos(rad), sin = Math.sin(rad);
+      for (const { clip: member, transform: tr } of g.members) {
+        const x = (tr.x * W - g.cx) * ratio, y = (tr.y * H - g.cy) * ratio;
+        const place = { x: (g.cx + x * cos - y * sin) / W, y: (g.cy + x * sin + y * cos) / H,
+          ...(g.operation === "rotate" ? { rotation: tr.rotation + degrees } : {}),
+          ...(g.operation === "scale" && member.kind !== "text" ? { scale: Math.max(0.05, Math.min(20, tr.scale * ratio)) } : {}) };
+        s.patchClipLive(member.id, { ...placementPatchAt(member, place, s.currentTime, recordOpts()),
+          ...(g.operation === "scale" && member.kind === "text" ? { fontSize: Math.max(6, Math.min(1000, member.fontSize * ratio)) } : {}) });
+      }
       return;
     }
 
@@ -555,14 +715,20 @@ export function Compositor() {
     if (!clip) return;
 
     if (g.mode === "move") {
-      let cx = g.box.cx + (p.x - g.px);
-      let cy = g.box.cy + (p.y - g.py);
+      const snapBox = g.snapBox ?? g.box;
+      let cx = snapBox.cx + (p.x - g.px);
+      let cy = snapBox.cy + (p.y - g.py);
       const snapDist = SNAP_PX / Math.max(0.01, scale);
-      const { hw, hh } = halfExtents(g.box);
+      const { hw, hh } = halfExtents(snapBox);
       const moving = new Set([g.id, ...g.group.map((m) => m.id)]);
       const others = layersAt().filter((l) => !moving.has(l.clip.id));
       const xs = [0, W / 2, W];
       const ys = [0, H / 2, H];
+      const persistent = getDesignGuides(s.settings.guides);
+      if (persistent.snap) {
+        xs.push(...persistent.vertical.map(value => value * W)); ys.push(...persistent.horizontal.map(value => value * H));
+        if (persistent.margin) { const margin = persistent.margin * Math.min(W, H); xs.push(margin, W - margin); ys.push(margin, H - margin); }
+      }
       for (const o of others) {
         const e2 = halfExtents(o.box);
         xs.push(o.box.cx - e2.hw, o.box.cx, o.box.cx + e2.hw);
@@ -583,8 +749,10 @@ export function Compositor() {
       if (sx) cx += sx.shift;
       if (sy) cy += sy.shift;
       setGuides({ v: sx ? [sx.line] : [], h: sy ? [sy.line] : [] });
-      const dx = (cx - g.box.cx) / W;
-      const dy = (cy - g.box.cy) / H;
+      const spacing = !e.altKey && persistent.spacing ? smartSpacingSnap({ ...snapBox, cx, cy }, others.filter(layer => !layer.clip.isPageBackground).map(layer => layer.box), snapDist, { horizontal: !sx, vertical: !sy }) : { dx: 0, dy: 0, guides: [] };
+      cx += spacing.dx; cy += spacing.dy; setSpacingGuides(spacing.guides);
+      const dx = (cx - snapBox.cx) / W;
+      const dy = (cy - snapBox.cy) / H;
       s.patchClipLive(g.id, placementPatchAt(clip, { x: g.ax + dx, y: g.ay + dy }, s.currentTime, recordOpts()));
       for (const m of g.group) {
         const other = s.clips.find((c) => c.id === m.id);
@@ -647,7 +815,7 @@ export function Compositor() {
     }
     gestureRef.current = null;
     gestureLease.current?.release(); gestureLease.current = null;
-    setGuides({ v: [], h: [] });
+    setGuides({ v: [], h: [] }); setSpacingGuides([]);
     window.removeEventListener("pointermove", onGestureMove);
     window.removeEventListener("pointerup", onGestureEnd);
     window.removeEventListener("pointercancel", onGestureEnd);
@@ -663,9 +831,45 @@ export function Compositor() {
   }, [onGestureMove, onGestureEnd]);
 
   useEffect(() => () => { onGestureEnd(); strokeCleanup.current?.(); }, [onGestureEnd]);
+  useCloseOnSurfaceSwitch(onGestureEnd);
+  useEffect(() => {
+    if (!croppingId) return;
+    const escape = (event: KeyboardEvent) => {
+      if (event.key !== "Escape" || (event.target instanceof Element && event.target.closest("input, textarea, select, [contenteditable=true]"))) return;
+      event.preventDefault(); onGestureEnd(); setCroppingId(null);
+    };
+    window.addEventListener("keydown", escape);
+    return () => window.removeEventListener("keydown", escape);
+  }, [croppingId, onGestureEnd]);
 
-  const startStroke = (e: React.PointerEvent<HTMLCanvasElement>, pen: { color: string; width: number }) => {
+  useEffect(() => {
+    const begin = (event: Event) => {
+      if (!wrapRef.current?.getClientRects().length) return;
+      const id = (event as CustomEvent<{ id: string }>).detail?.id;
+      const store = useEditorStore.getState(), clip = store.clips.find(value => value.id === id);
+      if (!clip || clip.locked || (clip.kind !== "image" && clip.kind !== "video")) return;
+      onGestureEnd(); setEditingGuides(false); setNavigating(false); store.setIsPlaying(false); store.selectGroupMember(id); setCroppingId(id);
+    };
+    window.addEventListener("editor:crop-photo", begin);
+    return () => window.removeEventListener("editor:crop-photo", begin);
+  }, [onGestureEnd]);
+  useEffect(() => {
+    const begin = (event: Event) => {
+      if (!wrapRef.current?.getClientRects().length) return;
+      const id = (event as CustomEvent<{ id: string }>).detail?.id;
+      const store = useEditorStore.getState(), clip = store.clips.find(value => value.id === id);
+      if (clip?.kind !== "text" || clip.locked) return;
+      onGestureEnd(); setEditingGuides(false); setNavigating(false); setCroppingId(null); store.setIsPlaying(false); store.selectGroupMember(clip.id);
+      if (draftFocus.begin()) setEditingTextId(clip.id);
+    };
+    window.addEventListener("editor:edit-text", begin);
+    return () => window.removeEventListener("editor:edit-text", begin);
+  }, [onGestureEnd, draftFocus.begin]);
+
+
+  const startStroke = (e: React.PointerEvent<HTMLCanvasElement>, pen: PenSettings) => {
     strokeCleanup.current?.();
+    const strokeTime = useEditorStore.getState().currentTime; useEditorStore.getState().setIsPlaying(false);
     const lease = useEditorStore.getState().holdEdits();
     const pts: [number, number][] = [];
     const push = (clientX: number, clientY: number) => {
@@ -694,24 +898,8 @@ export function Compositor() {
       try {
       if (!pts.length) return;
       const s = useEditorStore.getState();
-      const W = s.settings.width;
-      const H = s.settings.height;
-      const xs = pts.map((p) => p[0]);
-      const ys = pts.map((p) => p[1]);
-      const minX = Math.min(...xs), maxX = Math.max(...xs), minY = Math.min(...ys), maxY = Math.max(...ys);
-      // Give a straight or tiny stroke a real box so its points stay finite.
-      const w = Math.max(maxX - minX, 4);
-      const h = Math.max(maxY - minY, 4);
-      const cx = (minX + maxX) / 2;
-      const cy = (minY + maxY) / 2;
-      s.addShapeClip("path", {
-        fill: null,
-        stroke: { color: pen.color, width: pen.width },
-        w: w / W,
-        h: h / H,
-        points: pts.map(([x, y]) => [(x - cx) / w, (y - cy) / h] as [number, number]),
-        transform: { x: cx / W, y: cy / H, scale: 1, rotation: 0 },
-      });
+      const before = s.toSnapshot(), result = insertFreehandStroke(before, strokeTime, pts, pen, () => nanoid(10));
+      if (result) s.applyDesignEdit(before, result.project);
       // Keep drawing: no selection box getting in the way of the next stroke.
       useEditorStore.getState().selectClip(null);
       } finally { lease.release(); }
@@ -723,14 +911,28 @@ export function Compositor() {
   };
 
   const onCanvasPointerDown = (e: React.PointerEvent<HTMLCanvasElement>) => {
-    if (editingTextId) return;
+    if (editingTextId || editingGuides || sampling) return;
     if (e.button !== 0) return;
+    if (navigating) { startViewportPan(e); return; }
     if (draw) {
       startStroke(e, draw);
       return;
     }
     const hit = hitTest(e.clientX, e.clientY);
     const p = toCanvas(e.clientX, e.clientY);
+    if ((e.ctrlKey || e.metaKey) && !e.shiftKey && !croppingId) {
+      e.preventDefault(); onGestureEnd();
+      const ids = layersAt().filter(layer => pointInBox(layer.box, p.x, p.y)).reverse().map(layer => layer.clip.id);
+      const next = nextOverlappingLayer(ids, selectedClipIds[0] ?? null);
+      if (next) selectClip(next);
+      return;
+    }
+    if (croppingId && hit?.clip.id === croppingId && (hit.clip.kind === "image" || hit.clip.kind === "video")) {
+      startGesture({ mode: "crop", id: hit.clip.id, clip: hit.clip, box: hit.box, px: p.x, py: p.y });
+      return;
+    }
+    if (croppingId) setCroppingId(null);
+    if (hit?.clip.isPageBackground) { selectClip(hit.clip.id); return; }
     if (!hit) {
       // Drag on empty canvas draws a selection box; a plain click clears.
       if (!e.shiftKey) selectClip(null);
@@ -746,17 +948,19 @@ export function Compositor() {
     // Grabbing a layer that is part of a multi-selection moves the whole group.
     const inGroup = selectedClipIds.length > 1 && selectedClipIds.includes(hit.clip.id);
     if (!inGroup && (selectedClipIds[0] !== hit.clip.id || selectedClipIds.length !== 1)) selectClip(hit.clip.id);
+    const actualSelection = useEditorStore.getState().selectedClipIds;
+    if (useEditorStore.getState().clips.some(c => actualSelection.includes(c.id) && c.locked)) return;
     const now = useEditorStore.getState().currentTime;
     const tr = getTransform(resolveClipAt(hit.clip, now));
     const all = useEditorStore.getState().clips;
-    const group = inGroup
-      ? selectedClipIds
+    const group = actualSelection.length > 1
+      ? actualSelection
           .filter((id) => id !== hit.clip.id)
           .map((id) => all.find((c) => c.id === id))
           .filter((c): c is Clip => !!c && isVisualClip(c) && !c.locked)
           .map((c) => { const r = getTransform(resolveClipAt(c, now)); return { id: c.id, ax: r.x, ay: r.y }; })
       : [];
-    startGesture({ mode: "move", id: hit.clip.id, px: p.x, py: p.y, box: hit.box, ax: tr.x, ay: tr.y, group });
+    startGesture({ mode: "move", id: hit.clip.id, px: p.x, py: p.y, box: hit.box, snapBox: selectionSpacingBox(layersAt().filter(layer => actualSelection.includes(layer.clip.id)).map(layer => layer.box)), ax: tr.x, ay: tr.y, group });
   };
 
   const onHandleDown = (mode: "scale" | "rotate" | "stretch-x" | "stretch-y") => (e: React.PointerEvent) => {
@@ -784,16 +988,23 @@ export function Compositor() {
   };
 
   const onCanvasDoubleClick = (e: React.MouseEvent<HTMLCanvasElement>) => {
+    if (editingGuides) return;
+    if (navigating) { viewportCleanup.current?.(); setViewport(FIT_VIEWPORT); return; }
     const hit = hitTest(e.clientX, e.clientY);
     if (hit && hit.clip.kind === "text") {
-      selectClip(hit.clip.id);
+      if (hit.clip.groupId) useEditorStore.getState().selectGroupMember(hit.clip.id); else selectClip(hit.clip.id);
       if (draftFocus.begin()) setEditingTextId(hit.clip.id);
     } else if (hit) {
-      selectClip(hit.clip.id);
+      if (hit.clip.kind === "image" || hit.clip.kind === "video") {
+        onGestureEnd(); setNavigating(false); useEditorStore.getState().selectGroupMember(hit.clip.id); useEditorStore.getState().setIsPlaying(false); setCroppingId(hit.clip.id);
+      }
+      if (hit.clip.groupId) useEditorStore.getState().selectGroupMember(hit.clip.id); else selectClip(hit.clip.id);
       window.dispatchEvent(new Event("editor:open-inspector"));
     }
   };
   const onCanvasContextMenu = (e: React.MouseEvent<HTMLCanvasElement>) => {
+    const point = toCanvas(e.clientX, e.clientY);
+    setContextLayerIds(layersAt().filter(layer => pointInBox(layer.box, point.x, point.y)).reverse().map(layer => layer.clip.id));
     const hit = hitTest(e.clientX, e.clientY);
     if (hit) selectClip(hit.clip.id);
     else selectClip(null);
@@ -853,7 +1064,16 @@ export function Compositor() {
       e.preventDefault();
       try {
         const parsed = JSON.parse(mediaRaw) as { mediaId?: unknown };
-        if (typeof parsed.mediaId === "string") placeAt(addClipFromMedia(parsed.mediaId), nx, ny);
+        if (typeof parsed.mediaId === "string") {
+          const s = useEditorStore.getState(), hit = hitTest(e.clientX, e.clientY);
+          const source = s.media.find(media => media.id === parsed.mediaId);
+          const target = hit?.clip;
+          if (target && (((target.kind === "image" || target.kind === "video") && target.frame) || (target.kind === "shape" && target.photoFrame)) && source && source.kind !== "audio") {
+            const before = s.toSnapshot(), previous = "mediaId" in target ? s.media.find(media => media.id === target.mediaId) : undefined;
+            const next = replaceDesignMedia(before, target.id, source, previous);
+            if (next !== before) { s.applyDesignEdit(before, next); s.selectClip(target.id); }
+          } else placeAt(addClipFromMedia(parsed.mediaId), nx, ny);
+        }
       } catch { /* noop */ }
       return;
     }
@@ -861,7 +1081,21 @@ export function Compositor() {
     if (e.dataTransfer.files?.length) {
       e.preventDefault();
       const files = Array.from(e.dataTransfer.files);
+      const scope = useEditorStore.getState().projectId;
+      const target = hitTest(e.clientX, e.clientY)?.clip;
+      const frameTarget = target && (((target.kind === "image" || target.kind === "video") && target.frame) || (target.kind === "shape" && target.photoFrame)) ? target : null;
       void importFiles(files, { wallet: quota.walletAddress }).then((ids) => {
+        const s = useEditorStore.getState();
+        if (s.projectId !== scope) return;
+        if (frameTarget && ids.length === 1) {
+          if (s.clips.find(c => c.id === frameTarget.id) !== frameTarget) return;
+          const source = s.media.find(media => media.id === ids[0]);
+          if (!source || source.kind === "audio") return;
+          const before = s.toSnapshot(), previous = "mediaId" in frameTarget ? s.media.find(media => media.id === frameTarget.mediaId) : undefined;
+          const next = replaceDesignMedia(before, frameTarget.id, source, previous);
+          if (next !== before) { s.applyDesignEdit(before, next); s.selectGroupMember(frameTarget.id); }
+          return;
+        }
         ids.forEach((id, i) => placeAt(addClipFromMedia(id), Math.min(1, nx + i * 0.03), Math.min(1, ny + i * 0.03)));
       });
     }
@@ -881,6 +1115,17 @@ export function Compositor() {
     }
     return { left: x0 * scale, top: y0 * scale, width: (x1 - x0) * scale, height: (y1 - y0) * scale };
   })();
+  const onGroupHandleDown = (operation: "scale" | "rotate") => (event: React.PointerEvent) => {
+    event.preventDefault(); event.stopPropagation();
+    if (!groupBounds || scale <= 0) return;
+    const s = useEditorStore.getState();
+    const members = s.clips.filter(c => selectedClipIds.includes(c.id) && isVisualClip(c));
+    if (members.length < 2 || members.some(c => c.locked)) return;
+    const cx = (groupBounds.left + groupBounds.width / 2) / scale, cy = (groupBounds.top + groupBounds.height / 2) / scale;
+    const p = toCanvas(event.clientX, event.clientY);
+    startGesture({ mode: "group-transform", operation, cx, cy, dist: Math.hypot(p.x - cx, p.y - cy), angle: Math.atan2(p.y - cy, p.x - cx),
+      members: members.map(clip => ({ clip, transform: getTransform(resolveClipAt(clip, s.currentTime)) })) });
+  };
 
   // Where the selected layer travels over its clip: a dashed path with a
   // diamond at each keyframe, drawn only when its position is animated.
@@ -903,7 +1148,7 @@ export function Compositor() {
     return { pts, keys };
   }, [selectedClip, settings.width, settings.height, sources]);
 
-  const overlay = selBox && selectedClip && !selectedClip.locked && !editingTextId && scale > 0
+  const overlay = selBox && selectedClip && !selectedClip.locked && !selectedClip.isPageBackground && !editingTextId && !croppingId && !navigating && !editingGuides && !sampling && scale > 0
     ? {
         left: (selBox.cx - selBox.w / 2) * scale,
         top: (selBox.cy - selBox.h / 2) * scale,
@@ -913,10 +1158,32 @@ export function Compositor() {
       }
     : null;
 
+  const focusSelection = () => {
+    const store = useEditorStore.getState(), wrap = wrapRef.current;
+    if (!wrap) return;
+    const boxes = layersAt().filter(layer => store.selectedClipIds.includes(layer.clip.id)).map(layer => layer.box);
+    const next = focusDesignSelection(boxes, store.settings, fitScale, { width: wrap.clientWidth, height: wrap.clientHeight });
+    if (next) { onGestureEnd(); viewportCleanup.current?.(); store.setIsPlaying(false); setEditingGuides(false); setViewport(next); }
+  };
+  useEffect(() => {
+    const command = (event: Event) => {
+      if (!wrapRef.current?.getClientRects().length || presentingRef.current) return;
+      if (event.type === "editor:focus-selection") focusSelection();
+      else { viewportCleanup.current?.(); setViewport(FIT_VIEWPORT); }
+    };
+    window.addEventListener("editor:focus-selection", command); window.addEventListener("editor:fit-page", command);
+    return () => { window.removeEventListener("editor:focus-selection", command); window.removeEventListener("editor:fit-page", command); };
+  }, [fitScale, layersAt, onGestureEnd]);
+
   return (
     <section data-glass-editor-canvas className="flex h-full min-h-0 min-w-0 flex-1 flex-col bg-black">
+      {sampling && <div role="status" className="flex shrink-0 items-center gap-3 border-b border-cyan-300/20 bg-neutral-950 px-3 py-2 text-xs text-cyan-100"><span className="min-w-0 flex-1">{colourPick.error || t("editor.colourPicker.canvasHint", { defaultValue: "Click a colour on the page. Escape cancels." })}</span><button type="button" onClick={() => cancelDesignColourPick(colourPick.token)} className="min-h-8 rounded-lg border border-white/20 px-3">{t("common.cancel", { defaultValue: "Cancel" })}</button></div>}
+      {presenting && <PresentationView sources={sources} onClose={() => setPresenting(false)} />}
+      {croppingId && <div className="flex shrink-0 items-center gap-2 border-b border-white/15 bg-neutral-950 px-3 py-2 text-xs text-white/70"><span className="min-w-0 flex-1">{t("editor.crop.canvasHint", { defaultValue: "Drag to move the image inside its frame." })}</span>{[0.9, 1.1].map(zoom => <button type="button" key={zoom} aria-label={t(zoom < 1 ? "editor.crop.zoomOut" : "editor.crop.zoomIn", { defaultValue: zoom < 1 ? "Zoom image out" : "Zoom image in" })} onClick={() => { const store = useEditorStore.getState(), clip = store.clips.find(c => c.id === croppingId); if (clip && (clip.kind === "image" || clip.kind === "video")) { const patch = zoomMediaCrop(clip, zoom); if (patch) store.patchClip(clip.id, patch); } }} className="min-h-8 min-w-8 rounded-lg border border-white/20 px-2">{zoom < 1 ? "−" : "+"}</button>)}<button type="button" onClick={() => { onGestureEnd(); setCroppingId(null); }} className="min-h-8 rounded-lg bg-white px-3 font-medium text-black">{t("editor.crop.done", { defaultValue: "Done" })}</button></div>}
+
       <div {...draftFocus.props}
         ref={wrapRef}
+        onPointerDown={event => { if (navigating && !editingTextId && !(event.target instanceof Element && event.target.closest("button, input, textarea, select"))) startViewportPan(event); }}
         onDragOver={onSurfaceDragOver}
         onDragLeave={onSurfaceDragLeave}
         onDrop={onSurfaceDrop}
@@ -929,10 +1196,12 @@ export function Compositor() {
             height: Math.max(2, settings.height * scale),
             background: settings.background,
             visibility: scale > 0 ? "visible" : "hidden",
-            margin: "auto",
+            position: "absolute", left: "50%", top: "50%",
+            transform: `translate(calc(-50% + ${viewport.x}px), calc(-50% + ${viewport.y}px))`,
+            cursor: navigating ? "grab" : undefined,
           }}
           className={cn(
-            "relative col-start-1 row-start-1 rounded-lg shadow-2xl ring-1 ring-white/10 transition",
+            "relative col-start-1 row-start-1 rounded-lg shadow-2xl ring-1 ring-white/10",
             recording && "ring-2 ring-red-500/70",
             dropKind && "ring-2 ring-white/70",
           )}
@@ -949,17 +1218,20 @@ export function Compositor() {
                   onContextMenu={onCanvasContextMenu}
                   className={cn(
                     "h-full w-full touch-none",
-                    draw ? "cursor-crosshair" : editingTextId ? "cursor-text" : selectedClip ? "cursor-move" : "cursor-default",
+                    navigating ? "cursor-grab" : draw ? "cursor-crosshair" : editingTextId ? "cursor-text" : selectedClip ? "cursor-move" : "cursor-default",
                   )}
                 />
               </ContextMenuTrigger>
-              <CanvasContextMenu clip={selectedClip} onEdit={(id) => { if (draftFocus.begin()) setEditingTextId(id); }} />
+              <CanvasContextMenu clip={selectedClip} overlapCount={contextLayerIds.length} onPickLayers={() => setOverlapIds(contextLayerIds)} onEdit={(id) => { if (draftFocus.begin()) setEditingTextId(id); }} />
             </ContextMenu>
           </div>
 
-          {groupBounds && (
+          {groupBounds && !navigating && !croppingId && !editingGuides && !sampling && (
             <div className="pointer-events-none absolute rounded-[2px] border-2 border-dashed border-white/90"
-              style={groupBounds} />
+              style={groupBounds}>
+              <button type="button" aria-label={t("editor.groups.resize", { defaultValue: "Resize selection" })} title={t("editor.groups.resize", { defaultValue: "Resize selection" })} onPointerDown={onGroupHandleDown("scale")} className="pointer-events-auto absolute -bottom-2 -right-2 h-4 w-4 cursor-nwse-resize rounded-sm border border-black bg-white" />
+              <button type="button" aria-label={t("editor.groups.rotate", { defaultValue: "Rotate selection" })} title={t("editor.groups.rotate", { defaultValue: "Rotate selection" })} onPointerDown={onGroupHandleDown("rotate")} className="pointer-events-auto absolute -top-8 left-1/2 h-5 w-5 -translate-x-1/2 cursor-grab rounded-full border border-black bg-white" />
+            </div>
           )}
           {marquee && (
             <div className="pointer-events-none absolute border border-sky-300 bg-sky-300/10"
@@ -968,18 +1240,20 @@ export function Compositor() {
 
           {stroke && draw && (
             <svg className="pointer-events-none absolute inset-0 h-full w-full overflow-visible">
-              <polyline
-                points={stroke.map(([x, y]) => `${x * scale},${y * scale}`).join(" ")}
+              <path
+                d={freehandSvg(stroke, scale, scale, draw.smoothing ?? 1, !!draw.closed)}
+                opacity={draw.opacity ?? 1}
+                strokeDasharray={draw.dash?.map(value => value * settings.height / 1080 * scale).join(" ")}
                 fill="none"
                 stroke={draw.color}
-                strokeWidth={Math.max(1, (draw.width / 1080) * settings.height * scale)}
-                strokeLinecap="round"
-                strokeLinejoin="round"
+                strokeWidth={Math.max(0.1, (draw.width / 1080) * settings.height * scale)}
+                strokeLinecap={stroke.length === 1 ? "round" : draw.cap ?? "round"}
+                strokeLinejoin={draw.join ?? "round"}
               />
             </svg>
           )}
 
-          {motionPath && !editingTextId && scale > 0 && (
+          {motionPath && !editingTextId && !editingGuides && scale > 0 && (
             <svg className="pointer-events-none absolute inset-0 h-full w-full overflow-visible">
               <polyline
                 points={motionPath.pts.map(([x, y]) => `${x * scale},${y * scale}`).join(" ")}
@@ -1003,7 +1277,12 @@ export function Compositor() {
             </div>
           )}
 
+          {croppingId && selBox && <div aria-hidden className="pointer-events-none absolute border-2 border-cyan-300" style={{ left: (selBox.cx - selBox.w / 2) * scale, top: (selBox.cy - selBox.h / 2) * scale, width: selBox.w * scale, height: selBox.h * scale, transform: `rotate(${selBox.rotation}deg)` }}>{[1 / 3, 2 / 3].map(n => <div key={n}><div className="absolute bottom-0 top-0 w-px bg-white/50" style={{ left: `${n * 100}%` }} /><div className="absolute left-0 right-0 h-px bg-white/50" style={{ top: `${n * 100}%` }} /></div>)}</div>}
           {/* Snapping guides */}
+          {(layoutGuides.rulers || editingGuides) && <DesignRulers width={settings.width} height={settings.height} scale={scale} unit={layoutGuides.unit} dpi={designPrintDpi(settings)} />}
+          {layoutGuides.visible && !editingGuides && layoutGuides.vertical.map(x => <div key={`layout-v${x}`} aria-hidden className="pointer-events-none absolute bottom-0 top-0 w-px bg-cyan-400/65" style={{ left: x * settings.width * scale }} />)}
+          {layoutGuides.visible && !editingGuides && layoutGuides.horizontal.map(y => <div key={`layout-h${y}`} aria-hidden className="pointer-events-none absolute left-0 right-0 h-px bg-cyan-400/65" style={{ top: y * settings.height * scale }} />)}
+          {layoutGuides.visible && layoutGuides.margin > 0 && <div aria-hidden className="pointer-events-none absolute border border-dashed border-cyan-300/60" style={{ inset: layoutGuides.margin * Math.min(settings.width, settings.height) * scale }} />}
           {guides.v.map((x) => (
             <div key={`v${x}`} className="pointer-events-none absolute top-0 bottom-0 w-px bg-fuchsia-400"
               style={{ left: x * scale }} />
@@ -1013,6 +1292,17 @@ export function Compositor() {
               style={{ top: y * scale }} />
           ))}
 
+          {sampling && <div className="absolute inset-0 z-30 cursor-crosshair touch-none" onPointerDown={event => {
+            if (event.button !== 0) return; event.preventDefault(); event.stopPropagation();
+            const token = beginDesignColourSample(previewProject); if (token === null) return;
+            try { const canvas = canvasRef.current, point = toCanvas(event.clientX, event.clientY), context = canvas?.getContext("2d"); if (!canvas || !context) throw new Error("The canvas is not ready");
+              const pixel = context.getImageData(Math.max(0, Math.min(canvas.width - 1, Math.floor(point.x))), Math.max(0, Math.min(canvas.height - 1, Math.floor(point.y))), 1, 1).data;
+              finishDesignColourSample(token, "#" + Array.from(pixel.slice(0, 3)).map(value => value.toString(16).padStart(2, "0")).join(""));
+            } catch { finishDesignColourSample(token, null, t("editor.colourPicker.failed", { defaultValue: "Could not read the canvas colour. Try again or enter a colour value." })); }
+          }} />}
+          <GuideEditorLayer active={editingGuides} disabled={sampling || presenting || (!editingGuides && (!!croppingId || !!editingTextId || !!draw || navigating))} rulers={layoutGuides.rulers || editingGuides} surface={surfaceRef} width={settings.width} height={settings.height} scale={scale} projectId={viewportProject} onActivate={() => { useEditorStore.getState().setIsPlaying(false); setEditingGuides(true); }} />
+
+          <SpacingGuides guides={spacingGuides} scale={scale} />
           {/* Selection box with resize and rotate handles. It may extend past
               the page edge, which is why the surface itself does not clip. */}
           {overlay && (
@@ -1082,14 +1372,31 @@ export function Compositor() {
               </div>
             </div>
           )}
-          {editingText && (
+          {editingText && (<>
+            <div data-inline-text-tools role="toolbar" aria-label={t("editor.text.editingTools", { defaultValue: "Text editing tools" })} className="absolute bottom-3 left-3 right-3 z-20 flex w-fit max-w-[calc(100%-1.5rem)] flex-wrap items-center gap-1 rounded-xl border border-white/20 bg-neutral-950/95 p-1.5 shadow-lg" onMouseDown={event => event.preventDefault()} onBlur={event => { const target = event.relatedTarget; if (target !== textInput.current && !(target instanceof Element && target.closest("[data-inline-text-tools]"))) finishTextEditing(); }} onKeyDown={event => { if (event.key === "Escape") { event.preventDefault(); finishTextEditing(); draftFocus.finish(); } }}>
+              <button type="button" disabled={!textHistory.canUndo} onClick={textHistory.undo} className="min-h-9 rounded-lg px-3 text-xs text-white disabled:opacity-35">{t("common.undo", { defaultValue: "Undo" })}</button>
+              <button type="button" disabled={!textHistory.canRedo} onClick={textHistory.redo} className="min-h-9 rounded-lg px-3 text-xs text-white disabled:opacity-35">{t("common.redo", { defaultValue: "Redo" })}</button>
+              {(["upper", "lower", "title"] as const).map(mode => <button type="button" key={mode} onClick={() => applyTextCase(mode)} className="min-h-9 rounded-lg px-3 text-xs text-white hover:bg-white/10">{t(`editor.text.case.${mode}`, { defaultValue: ({ upper: "UPPERCASE", lower: "lowercase", title: "Title Case" })[mode] })}</button>)}
+              <button type="button" onClick={() => { finishTextEditing(); draftFocus.finish(); }} className="min-h-9 rounded-lg bg-white px-3 text-xs text-black">{t("common.done")}</button>
+            </div>
             <textarea
+              dir={editingText?.direction ?? "auto"}
+              ref={textInput}
+              wrap={editingText.maxWidth ? "soft" : "off"}
               autoFocus
               value={editingText.text}
-              onChange={(e) => updateTextClip(editingText.id, { text: e.target.value })}
-              onBlur={() => setEditingTextId(null)}
+              aria-label={t("editor.menu.editText")}
+              onChange={(e) => textHistory.change(e.target.value)}
+              onBlur={event => { if (!(event.relatedTarget instanceof Element && event.relatedTarget.closest("[data-inline-text-tools]"))) finishTextEditing(); }}
               onKeyDown={(e) => {
-                if (e.key === "Escape") { e.preventDefault(); draftFocus.finish(); setEditingTextId(null); }
+                if (e.nativeEvent.isComposing) return;
+                if ((e.metaKey || e.ctrlKey) && ["z", "y"].includes(e.key.toLowerCase())) {
+                  e.preventDefault(); e.stopPropagation();
+                  if (e.key.toLowerCase() === "y" || e.shiftKey) textHistory.redo(); else textHistory.undo();
+                }
+                if (e.key === "Escape" || (e.key === "Enter" && (e.metaKey || e.ctrlKey))) {
+                  e.preventDefault(); e.stopPropagation(); finishTextEditing(); draftFocus.finish();
+                }
               }}
               style={{
                 position: "absolute",
@@ -1113,16 +1420,35 @@ export function Compositor() {
                 outline: "none",
                 resize: "none",
                 minWidth: 80,
+                width: `${Math.max(80, (editingText.maxWidth ? editingText.maxWidth * settings.width : selBox?.w ?? 200) * scale + 12)}px`,
+                maxWidth: "calc(100% - 12px)",
+                maxHeight: "calc(100% - 24px)",
+                overflow: "auto",
                 lineHeight: editingText.lineHeight ?? 1.2,
+                letterSpacing: `${(editingText.letterSpacing ?? 0) / 1080 * settings.height * scale}px`,
+                textDecorationLine: [editingText.underline ? "underline" : "", editingText.strikethrough ? "line-through" : ""].filter(Boolean).join(" ") || "none",
                 caretColor: "#fff",
               }}
               rows={Math.max(1, editingText.text.split("\n").length)}
             />
-          )}
+          </>)}
         </div>
       </div>
 
 
+      {overlapIds && <OverlapLayerPicker project={{ clips, tracks }} ids={overlapIds} selectedId={selectedClipIds[0] ?? null} onSelect={id => selectClip(id)} onClose={() => setOverlapIds(null)} />}
+      <div role="toolbar" aria-label={t("editor.viewport.toolbar", { defaultValue: "Canvas navigation" })} className="flex shrink-0 items-center justify-end gap-2 overflow-x-auto whitespace-nowrap border-t border-white/10 bg-neutral-950 px-3 py-1.5 text-xs text-white/70 [&>button]:shrink-0 [&>span]:shrink-0">
+        <button type="button" onClick={() => { onGestureEnd(); finishTextEditing(); draftFocus.finish(); viewportCleanup.current?.(); setCroppingId(null); setNavigating(false); setEditingGuides(false); useEditorStore.getState().setIsPlaying(false); setPresenting(true); }} className="mr-auto min-h-8 rounded-lg border border-white/20 px-3">{t("editor.present.title", { defaultValue: "Present pages" })}</button>
+        <button type="button" aria-pressed={editingGuides} onClick={() => { onGestureEnd(); finishTextEditing(); draftFocus.finish(); viewportCleanup.current?.(); setCroppingId(null); setNavigating(false); useEditorUiStore.getState().setDraw(null); useEditorStore.getState().setIsPlaying(false); setEditingGuides(value => !value); }} className={`min-h-8 rounded-lg border px-3 ${editingGuides ? "border-cyan-300 bg-cyan-300/15" : "border-white/20"}`}>{t(editingGuides ? "editor.guides.done" : "editor.guides.edit", { defaultValue: editingGuides ? "Done guides" : "Edit guides" })}</button>
+        <button type="button" aria-pressed={navigating} onClick={() => { onGestureEnd(); setEditingGuides(false); setCroppingId(null); if (!navigating) useEditorUiStore.getState().setDraw(null); setNavigating(value => !value); }} className={`min-h-8 rounded-lg border px-3 ${navigating ? "border-white bg-white/15" : "border-white/20"}`}>{t("editor.viewport.pan", { defaultValue: "Pan canvas" })}</button>
+        <button type="button" aria-label={t("editor.viewport.zoomOut", { defaultValue: "Zoom canvas out" })} onClick={() => setViewport(before => zoomDesignViewport(before, before.zoom / 1.2))} className="min-h-8 min-w-8 rounded-lg border border-white/20">−</button>
+        <span className="min-w-10 text-center tabular-nums">{Math.round(scale * 100)}%</span>
+        <button type="button" aria-label={t("editor.viewport.zoomIn", { defaultValue: "Zoom canvas in" })} onClick={() => setViewport(before => zoomDesignViewport(before, before.zoom * 1.2))} className="min-h-8 min-w-8 rounded-lg border border-white/20">+</button>
+        {([-1, 1] as const).map(direction => <button type="button" key={direction} disabled={editingGuides || sampling || !!editingTextId || !!draw} onClick={() => { onGestureEnd(); const store = useEditorStore.getState(), next = nextDesignLayer(store.toSnapshot(), store.currentTime, store.selectedClipIds, direction); if (next) { store.setIsPlaying(false); store.selectClip(next); } }} title={t(direction === -1 ? "editor.layers.previousShortcut" : "editor.layers.nextShortcut", { defaultValue: direction === -1 ? "Previous layer (Alt+PageUp)" : "Next layer (Alt+PageDown)" })} className="min-h-8 rounded-lg border border-white/20 px-3 disabled:opacity-35">{t(direction === -1 ? "editor.layers.previousLayer" : "editor.layers.nextLayer", { defaultValue: direction === -1 ? "Previous layer" : "Next layer" })}</button>)}
+        <button type="button" disabled={!selectedClip || editingGuides || sampling || !!editingTextId} onClick={() => { if (!selBox) return; onGestureEnd(); useEditorStore.getState().setIsPlaying(false); setOverlapIds(layersAt().filter(layer => pointInBox(layer.box, selBox.cx, selBox.cy)).reverse().map(layer => layer.clip.id)); }} title={t("editor.layers.overlapShortcut", { defaultValue: "Ctrl or Command + click cycles overlapping layers" })} className="min-h-8 rounded-lg border border-white/20 px-3 disabled:opacity-35">{t("editor.layers.overlapping", { defaultValue: "Overlapping layers" })}</button>
+        <button type="button" disabled={!selectedClipIds.length} onClick={focusSelection} title={t("editor.viewport.selectionShortcut", { defaultValue: "Zoom to selection (Shift+2)" })} className="min-h-8 rounded-lg border border-white/20 px-3 disabled:opacity-35">{t("editor.viewport.selection", { defaultValue: "Selection" })}</button>
+        <button type="button" title={t("editor.viewport.fitShortcut", { defaultValue: "Fit page (Shift+1)" })} onClick={() => { viewportCleanup.current?.(); setViewport(FIT_VIEWPORT); }} className="min-h-8 rounded-lg border border-white/20 px-3">{t("editor.viewport.fit", { defaultValue: "Fit" })}</button>
+      </div>
       <PagesStrip sources={sources} />
 
       <div className="flex min-w-0 items-center gap-1 border-t border-white/10 bg-black/60 px-2 py-2.5 backdrop-blur-[24px] sm:gap-3 sm:px-4">
@@ -1203,9 +1529,13 @@ export function Compositor() {
 function CanvasContextMenu({
   clip,
   onEdit,
+  overlapCount,
+  onPickLayers,
 }: {
   clip: Clip | null;
   onEdit: (id: string) => void;
+  overlapCount: number;
+  onPickLayers: () => void;
 }) {
   const { t } = useTranslation();
   const moveTrack = useEditorStore((s) => s.moveTrack);
@@ -1237,6 +1567,7 @@ function CanvasContextMenu({
 
   return (
     <ContextMenuContent className={menuClass}>
+      {overlapCount > 1 && <><ContextMenuItem onSelect={onPickLayers}>{t("editor.layers.overlapping", { defaultValue: "Overlapping layers" })}</ContextMenuItem><ContextMenuSeparator className="bg-white/10" /></>}
       {clip.kind === "text" && (
         <>
           <ContextMenuItem onSelect={() => onEdit(clip.id)}>

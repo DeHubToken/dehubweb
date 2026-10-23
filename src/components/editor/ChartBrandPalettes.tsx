@@ -1,0 +1,8 @@
+import { SavePalettePreset } from "./SavePalettePreset";
+import { useTranslation } from "react-i18next";
+import { useBrandPresets } from "@/lib/editor/useBrandPresets";
+export function ChartBrandPalettes({ value, onChange }: { value: readonly string[]; onChange: (value: string[]) => void }) {
+  const { t } = useTranslation(), library = useBrandPresets(), palettes = library.presets.filter(preset => preset.styles.colors.length > 0);
+  const colours = [...new Set(value)].slice(0, 10);
+  return <details className="rounded-lg border border-white/10 p-3"><summary className="cursor-pointer text-xs font-medium text-white/75">{t("editor.charts.brandPalettes", { defaultValue: "Saved palettes and chart colours" })}</summary><div className="mt-3 space-y-3"><div className="flex flex-wrap gap-2">{palettes.map(preset => <button type="button" key={preset.id} onClick={() => onChange([...preset.styles.colors])} className="flex min-h-9 items-center gap-2 rounded-lg border border-white/20 px-3 text-xs text-white/75"><span aria-hidden="true" className="flex overflow-hidden rounded">{preset.styles.colors.map((colour, index) => <span key={index} className="h-4 w-2" style={{ background: colour }} />)}</span>{preset.name}</button>)}</div>{!palettes.length && <p className="text-xs text-white/45">{t("editor.charts.noBrandPalettes", { defaultValue: "Save a colour palette in Brand styles to use it here." })}</p>}<p className="text-xs text-white/45">{t("editor.charts.brandPaletteHint", { defaultValue: "Loads a saved palette into this chart draft. Save palette stores up to the first ten distinct chart colours in Brand styles. Chart values stay unchanged." })}</p><SavePalettePreset colours={colours} /></div></details>;
+}

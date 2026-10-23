@@ -1,10 +1,12 @@
 import { describe, expect, it } from "vitest";
 import { measuredTextLayout, type MeasuredTextStyle } from "./textLayout";
 import { TEXT_LAYOUT_RUNTIME } from "./textLayoutRuntime";
+import { resolvedTextDirection } from "./textDirection";
+import { balancedTextParagraph } from "./balancedTextWrap";
 import { subtitleLayers, exportSubtitles, parseSubtitles } from "./subtitles";
 import { captionLayers } from "./captionLayout";
 
-const nativeLayout = new Function(TEXT_LAYOUT_RUNTIME + "; return measuredTextLayout;")() as typeof measuredTextLayout;
+const nativeLayout = new Function("resolvedTextDirection", "balancedTextParagraph", TEXT_LAYOUT_RUNTIME + "; return measuredTextLayout;")(resolvedTextDirection, balancedTextParagraph) as typeof measuredTextLayout;
 const measure = (line: string, size: number, spacing: number) => Array.from(line).length * (size * 0.56 + spacing);
 const paragraph = "My first tip is to back up your videos before editing. Keep one copy on a separate drive so a mistake cannot destroy your originals.";
 const style = (patch: Partial<MeasuredTextStyle> = {}): MeasuredTextStyle => ({ text: paragraph, fontSize: 64, x: 0.5, y: 0.84, align: "centre", maxWidth: 0.9, maxHeight: 0.28, stroke: { width: 8 }, ...patch });
