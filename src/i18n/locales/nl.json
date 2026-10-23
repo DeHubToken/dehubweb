@@ -1941,7 +1941,19 @@
     "mostViewed": "Meest bekeken",
     "trendingWeek": "Trending deze week",
     "newest": "Nieuwste",
-    "videoChartOrder": "Volgorde van de muziekvideolijst"
+    "videoChartOrder": "Volgorde van de muziekvideolijst",
+    "country": "Land",
+    "quality": "Kwaliteit",
+    "votes": "Stemmen",
+    "plays": "Keer beluisterd",
+    "onAir": "In de lucht",
+    "liveRadio": "Live radio",
+    "pause": "Pauze",
+    "listenLive": "Live luisteren",
+    "nextStation": "Volgende zender",
+    "shareStation": "Zender delen",
+    "shareStationTitle": "{{name}} op DeHub Radio",
+    "linkCopied": "Link gekopieerd"
   },
   "notFound": {
     "title": "Pagina niet gevonden",

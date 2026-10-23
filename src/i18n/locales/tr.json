@@ -1748,7 +1748,19 @@
     "mostViewed": "En çok izlenen",
     "trendingWeek": "Bu hafta trend",
     "newest": "En yeni",
-    "videoChartOrder": "Müzik video listesi sıralaması"
+    "videoChartOrder": "Müzik video listesi sıralaması",
+    "country": "Ülke",
+    "quality": "Kalite",
+    "votes": "Oylar",
+    "plays": "Dinlenme",
+    "onAir": "Yayında",
+    "liveRadio": "Canlı radyo",
+    "pause": "Duraklat",
+    "listenLive": "Canlı dinle",
+    "nextStation": "Sonraki istasyon",
+    "shareStation": "İstasyonu paylaş",
+    "shareStationTitle": "DeHub Radio’da {{name}}",
+    "linkCopied": "Bağlantı kopyalandı"
   },
   "notFound": {
     "title": "Sayfa Bulunamadı",

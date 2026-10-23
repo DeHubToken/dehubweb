@@ -272,7 +272,7 @@ function UpcomingStagePanel({ space }: { space: AudioSpace }) {
  * Stages as a chart, like the audio chart above it: Live now, Upcoming, Most
  * listened and Recent, the picked stage up front and the list beside it.
  */
-export function StagesChart({ onOpenStages }: StagesCarouselProps) {
+export function StagesChart(_props: StagesCarouselProps) {
   const { t: _copy } = _useCopy();
   const { openModal, joinSpace } = useStage();
   const liveSpaces = useLiveSpaces();
@@ -305,9 +305,6 @@ export function StagesChart({ onOpenStages }: StagesCarouselProps) {
             <BrandIcon src={stagesMicIcon} alt="" className="w-5 h-5 object-contain" />{_copy("copy.3a17aa4e4abb", { defaultValue: "Stages" })}
             {liveSpaces.length > 0 && <span className="text-zinc-500 font-normal text-sm">({liveSpaces.length} {_copy('music.liveCount', { defaultValue: 'live' })})</span>}
           </h2>
-          <button onClick={onOpenStages} className="text-zinc-400 text-sm hover:text-white flex items-center gap-1">
-            {_copy("copy.14c21c5e3ffe", { defaultValue: "See all " })}<ChevronRight className="w-4 h-4" />
-          </button>
         </div>
       }
       sorts={[
