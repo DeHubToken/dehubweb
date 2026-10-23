@@ -3050,6 +3050,7 @@
     "shopAllowanceUsed": "{{allowance}} / {{allowance}} を使用しました。より高いバッジと別のスロットを得るには、DeHubトークンをさらにステークしてください。"
   },
   "stages": {
+    "allStages": "すべての音声ルーム",
     "title": "音声ルーム",
     "tabLive": "ライブ",
     "tabUpcoming": "今後の予約",

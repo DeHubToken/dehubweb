@@ -3051,6 +3051,7 @@
     "shopAllowanceUsed": "{{allowance}} af {{allowance}} brugt. Stak flere DeHub tokens for en højere badge og en ekstra plads."
   },
   "stages": {
+    "allStages": "Alle lydrum",
     "title": "Lydrum",
     "tabLive": "Live",
     "tabUpcoming": "Kommende",

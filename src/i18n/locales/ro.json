@@ -3044,6 +3044,7 @@
     "shopAllowanceUsed": "{{allowance}} din {{allowance}} utilizate. Mizează mai multe token-uri DeHub pentru o insignă superioară și un alt slot."
   },
   "stages": {
+    "allStages": "Toate camerele audio",
     "title": "Camere audio",
     "tabLive": "Live",
     "tabUpcoming": "Viitoare",

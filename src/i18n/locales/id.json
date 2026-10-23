@@ -3051,6 +3051,7 @@
     "shopAllowanceUsed": "{{allowance}} dari {{allowance}} terpakai. Staking lebih banyak token DeHub untuk lencana yang lebih tinggi dan slot lainnya."
   },
   "stages": {
+    "allStages": "Semua ruang audio",
     "title": "Ruang audio",
     "tabLive": "Live",
     "tabUpcoming": "Akan datang",

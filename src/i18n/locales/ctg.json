@@ -3068,6 +3068,7 @@
     "shopAllowanceUsed": "{{allowance}} of {{allowance}} ব্যবহার করিয়ি আছে। আরো ডিহাব টোকেন স্টেক করিয়ি আরো হাই ব্যাজ আর অন্য স্লট পান।"
   },
   "stages": {
+    "allStages": "সব অডিও রুম",
     "title": "অডিও রুম",
     "tabLive": "জীবিত",
     "tabUpcoming": "আগামী",

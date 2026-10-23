@@ -3096,6 +3096,7 @@
     "shopAllowanceUsed": "{{allowance}} sa {{allowance}} ang nagamit. Mag-stake ng mas maraming DeHub tokens para sa mas mataas na badge at isa pang slot."
   },
   "stages": {
+    "allStages": "Lahat ng audio room",
     "title": "Mga audio room",
     "tabLive": "Live",
     "tabUpcoming": "Nalalapit",

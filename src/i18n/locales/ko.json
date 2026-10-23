@@ -3050,6 +3050,7 @@
     "shopAllowanceUsed": "{{allowance}} / {{allowance}} 사용됨. 더 높은 뱃지와 추가 슬롯을 위해 DeHub 토큰을 더 스테이킹하세요."
   },
   "stages": {
+    "allStages": "모든 오디오 룸",
     "title": "오디오 룸",
     "tabLive": "라이브",
     "tabUpcoming": "예정",

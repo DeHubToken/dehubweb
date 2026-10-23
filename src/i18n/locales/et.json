@@ -3032,6 +3032,7 @@
     "shopAllowanceUsed": "Kasutatud {{allowance}} {{allowance}}-st. Panustage rohkem DeHub märke, et saada kõrgem märk ja veel üks koht."
   },
   "stages": {
+    "allStages": "Kõik helitoad",
     "title": "Helitoad",
     "tabLive": "Otse",
     "tabUpcoming": "Eelseisev",

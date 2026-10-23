@@ -3046,6 +3046,7 @@
     "shopAllowanceUsed": "{{allowance}} מתוך {{allowance}} בשימוש. הפקד יותר אסימוני DeHub עבור תג גבוה יותר וחריץ נוסף."
   },
   "stages": {
+    "allStages": "כל חדרי האודיו",
     "title": "חדרי אודיו",
     "tabLive": "שידור חי",
     "tabUpcoming": "בקרוב",

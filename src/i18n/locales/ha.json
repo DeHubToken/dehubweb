@@ -3043,6 +3043,7 @@
     "shopAllowanceUsed": "{{allowance}} daga cikin {{allowance}} an yi amfani da su. Sanya ƙarin DeHub tokens don samun babba badge da wani wuri."
   },
   "stages": {
+    "allStages": "Duk dakunan sauti",
     "title": "Dakunan sauti",
     "tabLive": "Rayuwa",
     "tabUpcoming": "Sabuntawa",

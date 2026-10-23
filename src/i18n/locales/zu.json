@@ -3073,6 +3073,7 @@
     "shopAllowanceUsed": "{{allowance}} kwezi-{{allowance}} kusetshenzisiwe. Beka amathuluzi engeziwe e-DeHub ukuze uthole ibheji eliphezulu nenye indawo."
   },
   "stages": {
+    "allStages": "Wonke amagumbi omsindo",
     "title": "Amagumbi omsindo",
     "tabLive": "Bukhoma",
     "tabUpcoming": "Okuzayo",

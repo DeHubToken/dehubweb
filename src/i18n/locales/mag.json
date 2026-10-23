@@ -2990,6 +2990,7 @@
     "shopAllowanceUsed": "{{allowance}} में से {{allowance}} इस्तेमाल भईल बा। ऊँच बैज आ दोसर स्लॉट खातिर आउर DeHub टोकन स्टेक करs।"
   },
   "stages": {
+    "allStages": "सब ऑडियो रूम",
     "title": "ऑडियो रूम",
     "tabLive": "आगामी",
     "tabUpcoming": "रेकॉर्डेड",

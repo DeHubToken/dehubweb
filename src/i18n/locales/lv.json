@@ -3030,6 +3030,7 @@
     "shopAllowanceUsed": "Izmantoti {{allowance}} no {{allowance}}. Likiet vairāk DeHub žetonu, lai iegūtu augstāku emblēmu un vēl vienu vietu."
   },
   "stages": {
+    "allStages": "Visas audio istabas",
     "title": "Audio istabas",
     "tabLive": "Tiešraide",
     "tabUpcoming": "Gaidāmie",

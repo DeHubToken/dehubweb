@@ -2929,6 +2929,7 @@
     "shopAllowanceUsed": "تم استخدام {{allowance}} من {{allowance}}. قم بتخزين المزيد من توكنات DeHub للحصول على شارة أعلى وفتحة أخرى."
   },
   "stages": {
+    "allStages": "كل الغرف الصوتية",
     "title": "الغرف الصوتية",
     "tabHosting": "إِسْتِئْجَار",
     "liveCount": "({{count}} حياً)",

@@ -3042,6 +3042,7 @@
     "shopAllowanceUsed": "{{allowance}} kan {{allowance}} fayyadame. Baajii ol'aanaa fi bakka biraatiif mallattoolee DeHub dabalataa kaa'i."
   },
   "stages": {
+    "allStages": "Kutaalee sagalee hunda",
     "title": "Kutaalee sagalee",
     "tabLive": "Jiraachuu",
     "tabUpcoming": "Dhufaa jira",
