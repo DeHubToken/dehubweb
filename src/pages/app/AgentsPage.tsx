@@ -31,6 +31,7 @@ import { canManageAgents } from '@/lib/agent-access';
 import { AgentActivity, AgentTasksPanel } from './AgentTasksPanel';
 import { AgentProfilePanel } from './AgentProfilePanel';
 import { AgentLifePanel } from './AgentLifePanel';
+import { AgentWorkspacePanel } from './AgentWorkspacePanel';
 
 interface AIAgent {
   id: string;
@@ -302,6 +303,7 @@ export default function AgentsPage() {
           </div>
         </div>
 
+        <AgentWorkspacePanel wallet={walletAddress} />
         <AgentTasksPanel wallet={walletAddress} agents={listedAgents ?? []} />
 
         {agentAllowance && <p className="text-sm text-white/75">{t('agents.capacity', { used: agents?.length ?? 0, limit: agentAllowance.limit, badge: agentAllowance.badge ?? t('agents.noBadge') })}</p>}

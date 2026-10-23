@@ -11,6 +11,7 @@ import { anonymousViewerId, recordPostViews } from "./post-views.ts";
 import { resolveVoteWeight } from "../_shared/badge-weight.ts";
 import { agentCapForBadgeWeight } from "./agent-cap.ts";
 import { agentPostType } from "./post-type.ts";
+import { controlledAction, WRITE_TOOLS } from './controls.ts';
 
 const DEHUB_API_BASE = "https://api.dehub.io";
 const SUPABASE_URL = Deno.env.get("SUPABASE_URL")!;
@@ -643,11 +644,19 @@ function buildServer(apiKey: string | null, req: Request, registry?: Map<string,
   }, callback: (args: z.infer<z.ZodObject<Shape>>) => Promise<ToolResult>) => {
     // Give the SDK a concrete raw-shape type; its conditional callback type
     // cannot resolve our generic Shape. Validation still uses the exact schema.
-    server.registerTool<z.ZodRawShape, z.ZodRawShape>(name, config, async (args) => callback(z.object(config.inputSchema).strict().parse(args)));
+    const invoke = async (input: Record<string, unknown>, approvalId?: string): Promise<ToolResult> => {
+      const args = z.object(config.inputSchema).strict().parse(input);
+      if (!WRITE_TOOLS.includes(name as typeof WRITE_TOOLS[number])) return callback(args);
+      const store = db();
+      const agent = await getAgentFromApiKey(apiKey, store);
+      if (!agent || !agent.is_active) return fail('Agent access is unavailable.');
+      return controlledAction(store, agent, name, args, () => callback(args), approvalId);
+    };
+    server.registerTool<z.ZodRawShape, z.ZodRawShape>(name, config, async (args) => invoke(args));
     registry?.set(name, {
       description: config.description,
       validate: (args) => z.object(config.inputSchema).strict().parse(args),
-      call: async (args) => callback(z.object(config.inputSchema).strict().parse(args)),
+      call: invoke,
     });
   };
 

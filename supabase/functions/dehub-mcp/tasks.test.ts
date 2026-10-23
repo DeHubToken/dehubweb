@@ -36,6 +36,7 @@ const fixture = (prior?: string) => {
       single: () => { one = true; return query; }, maybeSingle: () => { one = true; return query; },
       then: (resolve: any, reject: any) => {
         try {
+          rows[table] ??= [];
           let matched = rows[table].filter(row => predicates.every(test => test(row)));
           if (operation === 'insert') { const row = { ...structuredClone(values), id: crypto.randomUUID() }; rows[table].push(row); matched = [row]; }
           if (operation === 'upsert') {
