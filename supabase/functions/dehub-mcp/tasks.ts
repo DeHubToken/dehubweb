@@ -162,10 +162,11 @@ export function replyBreaksRules(reply: string): boolean {
 }
 
 /** Match exact metadata, never words in the title or description. Both filters must match. */
-export function matchesPostFilters(post: any, step: Pick<TaskStep, 'author' | 'category'>): boolean {
+export function matchesPostFilters(post: any, step: Pick<TaskStep, 'author' | 'category' | 'categories'>): boolean {
   if (step.author && String(post.minter ?? '').toLowerCase() !== step.author.toLowerCase()) return false;
   const categories = Array.isArray(post.category) ? post.category : [post.category];
-  return !step.category || categories.some((value: unknown) => typeof value === 'string' && value.trim().toLowerCase() === step.category!.trim().toLowerCase());
+  const selected = step.categories ?? (step.category ? [step.category] : []);
+  return selected.length === 0 || categories.some((value: unknown) => typeof value === 'string' && selected.some(category => value.trim().toLowerCase() === category.trim().toLowerCase()));
 }
 
 async function loadTargets(step: TaskStep, task: any, token: string, ownedWallets: Set<string>): Promise<void> {

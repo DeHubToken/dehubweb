@@ -5,6 +5,10 @@ Deno.test('filtered dislike windows preserve exact scope and reject contradictor
   const plan = explicitTaskPlan(command)!;
   assert(plan.steps[0].author === '@maldoteth' && plan.steps[0].category === 'Music');
   assert(plan.steps[0].arguments.vote_type === 'dislike');
+  const multi = explicitTaskPlan(command.replace('Category: Music', 'Categories: ["Music","Art"]'))!;
+  assert(multi.steps[0].categories?.join(',') === 'Music,Art');
+  const all = explicitTaskPlan(command.replace('\nAuthor: @maldoteth\nCategory: Music', ''))!;
+  assert(!all.steps[0].author && !all.steps[0].category && !all.steps[0].categories);
   assert(plan.summary.includes('@maldoteth') && plan.summary.includes('Music'));
   let rejected = false;
   try { explicitTaskPlan(command.replace('Actions: dislike', 'Actions: like, dislike')); } catch { rejected = true; }
