@@ -38,11 +38,13 @@ import {
   unloadIdentity,
 } from '../keys';
 import {
+  decryptText,
   deriveIdentityFromSignature,
   deriveSessionKey,
   encryptText,
   encryptionSignMessage,
   isEncryptedContent,
+  toBase64,
 } from '../crypto';
 
 const A = '0xaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa';
@@ -167,4 +169,55 @@ describe('dm-e2ee client flow', () => {
     await become(A);
     expect(await decryptFromPeer(B, sealed)).toBeNull();
   });
+  it('refreshes a stale peer key and still reads old history after reload', async () => {
+    await become(B);
+    await become(A);
+    const oldMessage = (await encryptForPeer(B, 'old history'))!;
+    const mine = deriveIdentityFromSignature(awaitSignature(A));
+    const rotated = deriveIdentityFromSignature('0x' + '47'.repeat(65));
+    registry.set(B, toBase64(rotated.publicKey));
+    const incoming = encryptText('new history', deriveSessionKey(rotated.privateKey, mine.publicKey, B, A));
+    expect(await decryptFromPeer(B, incoming)).toBe('new history');
+    expect(await decryptFromPeer(B, oldMessage)).toBe('old history');
+    unloadIdentity();
+    await loadIdentity(A);
+    expect(await decryptFromPeer(B, oldMessage)).toBe('old history');
+    expect(await decryptFromPeer(B, incoming)).toBe('new history');
+    // The same current session must encrypt to the refreshed key.
+    const reply = (await encryptForPeer(B, 'reply'))!;
+    expect(decryptText(reply, deriveSessionKey(rotated.privateKey, mine.publicKey, B, A))).toBe('reply');
+  });
+
+  it('preserves an existing identity before replacement and opens its history after reload', async () => {
+    await become(B);
+    unloadIdentity();
+    const old = deriveIdentityFromSignature('0x' + '38'.repeat(65));
+    const oldRecord = { v: 1, priv: toBase64(old.privateKey), pub: toBase64(old.publicKey) };
+    localStorage.setItem('dehub-dm-e2ee:' + A, JSON.stringify(oldRecord));
+    const peer = deriveIdentityFromSignature(awaitSignature(B));
+    const history = encryptText('before migration', deriveSessionKey(peer.privateKey, old.publicKey, B, A));
+    caller = A;
+    await setupIdentity(A, walletFor(A));
+    const stored = JSON.parse((localStorage.getItem('dehub-dm-e2ee:' + A))!);
+    expect(stored.previous).toContainEqual({ priv: oldRecord.priv, pub: oldRecord.pub });
+    unloadIdentity();
+    await loadIdentity(A);
+    expect(await decryptFromPeer(B, history)).toBe('before migration');
+    expect(registry.get(A)).toBe(getIdentity()!.publicKey);
+  });
+
+  it('does not replace or publish over an unreadable stored identity', async () => {
+    const oldRecord = { v: 1, priv: 'damaged', pub: 'damaged' };
+    localStorage.setItem('dehub-dm-e2ee:' + A, JSON.stringify(oldRecord));
+    caller = A;
+    await expect(setupIdentity(A, walletFor(A))).rejects.toThrow('preserved');
+    expect(JSON.parse((localStorage.getItem('dehub-dm-e2ee:' + A))!)).toEqual(oldRecord);
+    expect(registry.has(A)).toBe(false);
+    expect(getIdentity()).toBeNull();
+  });
+
 });
+
+function awaitSignature(address: string): string {
+  return '0x' + Buffer.from(`${address}:${encryptionSignMessage(address)}`).toString('hex').padEnd(130, '0').slice(0, 130);
+}

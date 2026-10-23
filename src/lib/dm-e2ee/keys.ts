@@ -35,10 +35,18 @@ interface StoredIdentity {
   v: 1;
   priv: string;
   pub: string;
+  previous?: Array<{ priv: string; pub: string }>;
 }
 
 let current: { address: string; keys: IdentityKeyPair } | null = null;
+// Keep prior session keys for history; the current peer key is still refreshed.
 const sessionKeys = new Map<string, Uint8Array>();
+let previousIdentities: IdentityKeyPair[] = [];
+const historicalPublicKeys = new Map<string, Set<string>>();
+let historyWrite: Promise<void> = Promise.resolve();
+const refreshAttempts = new Map<string, number>();
+const refreshes = new Map<string, Promise<Uint8Array | null>>();
+const peerFetches = new Map<string, Promise<string | null>>();
 const peerKeys = new Map<string, { key: string | null; at: number }>();
 const listeners = new Set<() => void>();
 
@@ -70,9 +78,21 @@ function readStored(address: string): StoredIdentity | null {
   }
 }
 
-function writeStored(address: string, keys: IdentityKeyPair) {
-  const rec: StoredIdentity = { v: 1, priv: toBase64(keys.privateKey), pub: toBase64(keys.publicKey) };
-  try { localStorage.setItem(STORAGE_PREFIX + norm(address), JSON.stringify(rec)); } catch { /* quota / private mode */ }
+async function writeStored(address: string, keys: IdentityKeyPair): Promise<void> {
+  // Read failures or invalid records must never turn into an overwrite.
+  const raw = localStorage.getItem(STORAGE_PREFIX + norm(address));
+  const old = raw ? JSON.parse(raw) as StoredIdentity : null;
+  if (old && (!isValidPublicKey(old.pub) || fromBase64(old.priv).length !== 32)) {
+    throw new Error('Existing message identity could not be preserved');
+  }
+  const pub = toBase64(keys.publicKey);
+  const previous = [...(old?.previous ?? [])];
+  if (old && old.pub !== pub && !previous.some(item => item.pub === old.pub)) {
+    previous.push({ priv: old.priv, pub: old.pub });
+  }
+  const rec: StoredIdentity = { v: 1, priv: toBase64(keys.privateKey), pub, previous };
+  localStorage.setItem(STORAGE_PREFIX + norm(address), JSON.stringify(rec));
+  previousIdentities = previous.map(item => ({ privateKey: fromBase64(item.priv), publicKey: fromBase64(item.pub) }));
 }
 
 /** The identity currently loaded in memory, if any. */
@@ -93,6 +113,7 @@ export function loadIdentity(address: string): boolean {
   if (!stored) return false;
   try {
     current = { address: addr, keys: { privateKey: fromBase64(stored.priv), publicKey: fromBase64(stored.pub) } };
+    previousIdentities = (stored.previous ?? []).map(item => ({ privateKey: fromBase64(item.priv), publicKey: fromBase64(item.pub) }));
     sessionKeys.clear();
     notify();
     return true;
@@ -104,6 +125,11 @@ export function loadIdentity(address: string): boolean {
 /** Forget the in-memory identity (sign-out). The stored copy stays for the next sign-in. */
 export function unloadIdentity() {
   current = null;
+  previousIdentities = [];
+  historicalPublicKeys.clear();
+  refreshAttempts.clear();
+  refreshes.clear();
+  peerFetches.clear();
   sessionKeys.clear();
   peerKeys.clear();
   // Only loaded once an attachment has been opened, so nothing to clear before.
@@ -124,9 +150,9 @@ export async function setupIdentity(
   const { encryptionSignMessage } = await import('./crypto');
   const signature = await sign(encryptionSignMessage(addr));
   const keys = deriveIdentityFromSignature(signature);
+  await writeStored(addr, keys);
   current = { address: addr, keys };
   sessionKeys.clear();
-  writeStored(addr, keys);
   const publicKey = toBase64(keys.publicKey);
   await publishPublicKey(publicKey);
   peerKeys.set(addr, { key: publicKey, at: Date.now() });
@@ -188,22 +214,84 @@ export function getCachedPeerPublicKey(address: string): string | null | undefin
   return peerKeys.get(norm(address))?.key;
 }
 
-async function getSessionKey(peerAddress: string): Promise<Uint8Array | null> {
-  if (!current) return null;
+/** Persist public keys already seen by this account so reloads retain history. */
+async function rememberPeerKey(address: string, peer: string, publicKey: string | null): Promise<void> {
+  const operation = historyWrite.then(async () => {
+    const storageKey = `dehub-dm-peers:${address}:${peer}`;
+    const existing = current?.address === address ? historicalPublicKeys.get(peer) : undefined;
+    if (existing && (!publicKey || existing.has(publicKey))) return;
+    const raw = localStorage.getItem(storageKey);
+    const stored: unknown = raw ? JSON.parse(raw) : [];
+    if (!Array.isArray(stored) || !stored.every(isValidPublicKey)) return;
+    if (current?.address !== address) return;
+    const keys = historicalPublicKeys.get(peer) ?? new Set<string>();
+    stored.forEach(value => keys.add(value));
+    const changed = !!publicKey && !stored.includes(publicKey);
+    if (publicKey) keys.add(publicKey);
+    historicalPublicKeys.set(peer, keys);
+    if (changed) { localStorage.setItem(storageKey, JSON.stringify([...keys])); }
+  });
+  // Storage failure cannot delete old records or prevent reading with a key
+  // already in memory. Identity replacement, separately, fails closed.
+  historyWrite = operation.catch(() => {});
+  await historyWrite;
+}
+
+function sessionId(peer: string, publicKey: string): string {
+  return `${peer}:${publicKey}`;
+}
+
+async function getSessionKey(peerAddress: string, force = false): Promise<Uint8Array | null> {
+  const identity = current;
+  if (!identity) return null;
   const peer = norm(peerAddress);
   if (!peer) return null;
-  const hit = sessionKeys.get(peer);
+  // Resolve the peer before consulting the derived cache so its TTL is honored.
+  const fetchId = `${identity.address}:${peer}:${force}`;
+  let pending = peerFetches.get(fetchId);
+  if (!pending) {
+    pending = fetchPeerPublicKey(peer, { force });
+    peerFetches.set(fetchId, pending);
+  }
+  let pub: string | null;
+  try { pub = await pending; }
+  finally { if (peerFetches.get(fetchId) === pending) peerFetches.delete(fetchId); }
+  if (current !== identity) return null;
+  await rememberPeerKey(identity.address, peer, pub);
+  if (!pub || current !== identity) return null;
+  const id = sessionId(peer, pub);
+  const hit = sessionKeys.get(id);
   if (hit) return hit;
-  const pub = await fetchPeerPublicKey(peer);
-  if (!pub) return null;
-  const key = deriveSessionKey(current.keys.privateKey, fromBase64(pub), current.address, peer);
-  sessionKeys.set(peer, key);
+  const key = deriveSessionKey(identity.keys.privateKey, fromBase64(pub), identity.address, peer);
+  sessionKeys.set(id, key);
   return key;
+}
+
+/** Try retained identities and session keys without changing any message. */
+function openHistory(peerAddress: string, envelope: string): string | null {
+  if (!current) return null;
+  const peer = norm(peerAddress);
+  const publicKeys = new Set(historicalPublicKeys.get(peer));
+  const latest = peerKeys.get(peer)?.key;
+  if (latest) publicKeys.add(latest);
+  for (const [id, key] of sessionKeys) {
+    if (!id.startsWith(`${peer}:`)) continue;
+    publicKeys.add(id.slice(peer.length + 1));
+    try { return decryptText(envelope, key); } catch { /* try another retained key */ }
+  }
+  for (const identity of [current.keys, ...previousIdentities]) {
+    for (const pub of [...publicKeys, toBase64(identity.publicKey)]) {
+      try {
+        return decryptText(envelope, deriveSessionKey(identity.privateKey, fromBase64(pub), current.address, peer));
+      } catch { /* wrong historical key or unauthenticated envelope */ }
+    }
+  }
+  return null;
 }
 
 /** True once a session key for this peer is derived (sync decrypt possible). */
 export function canEncryptTo(peerAddress: string): boolean {
-  return !!current && sessionKeys.has(norm(peerAddress));
+  return !!current && !!peerKeys.get(norm(peerAddress))?.key && sessionKeys.has(sessionId(norm(peerAddress), peerKeys.get(norm(peerAddress))!.key!));
 }
 
 /**
@@ -248,53 +336,37 @@ export async function prepareOutgoing(
 /** Decrypt an envelope from/for a peer. Null when it cannot be opened. */
 export async function decryptFromPeer(peerAddress: string, envelope: string): Promise<string | null> {
   if (!isEncryptedContent(envelope)) return envelope;
+  const identity = current;
+  if (!identity) return null;
   const key = await getSessionKey(peerAddress);
+  if (current !== identity) return null;
   if (key) {
-    try {
-      return decryptText(envelope, key);
-    } catch { /* not sealed with the current session key — try the legacy one */ }
+    try { return decryptText(envelope, key); } catch { /* refresh a stale peer key */ }
   }
-  return decryptLegacySelfSealed(peerAddress, envelope);
+  const historical = openHistory(peerAddress, envelope);
+  if (historical !== null) return historical;
+  const peer = norm(peerAddress);
+  const last = refreshAttempts.get(peer);
+  let refresh = refreshes.get(peer);
+  // One refresh per peer per 30 seconds, shared by a whole history batch.
+  if (!refresh && (last === undefined || Date.now() - last >= PEER_KEY_MISS_TTL_MS)) {
+    refreshAttempts.set(peer, Date.now());
+    refresh = getSessionKey(peer, true);
+    refreshes.set(peer, refresh);
+  }
+  if (refresh) {
+    try { await refresh; }
+    finally { if (refreshes.get(peer) === refresh) refreshes.delete(peer); }
+  }
+  return current === identity ? openHistory(peer, envelope) : null;
 }
 
-/**
- * Open a message this device sealed to ITSELF, before 2026-09-05.
- *
- * Until then the API answered every peer-key lookup with the caller's own key,
- * so everything sent was encrypted under a session key derived from this
- * device's own keypair. Correcting the lookup changes that key, which would
- * otherwise turn a sender's whole outbox into padlocks — the one place those
- * lines had always opened. The recipient never could read them and still
- * cannot; nothing here changes that.
- *
- * Read path only: nothing is written this way again, and the key it derives is
- * worthless to anyone but this device.
- */
-function decryptLegacySelfSealed(peerAddress: string, envelope: string): string | null {
-  if (!current) return null;
-  try {
-    const key = deriveSessionKey(
-      current.keys.privateKey,
-      current.keys.publicKey,
-      current.address,
-      norm(peerAddress),
-    );
-    return decryptText(envelope, key);
-  } catch {
-    return null;
-  }
-}
+
 
 /** Sync variant for hot paths; only works once the session key is cached. */
 export function decryptFromPeerSync(peerAddress: string, envelope: string): string | null {
   if (!isEncryptedContent(envelope)) return envelope;
-  const key = sessionKeys.get(norm(peerAddress));
-  if (!key) return null;
-  try {
-    return decryptText(envelope, key);
-  } catch {
-    return null;
-  }
+  return openHistory(peerAddress, envelope);
 }
 
 /**
