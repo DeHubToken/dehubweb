@@ -115,6 +115,7 @@ import type { VideoItem, ImagePost, TextPost, ShortVideo } from '@/types/feed.ty
 import type { ServedAd } from '@/lib/ads/povr';
 import { useServedAds } from '@/hooks/use-ad-serving';
 import { SponsoredAdCard } from '@/components/app/cards/SponsoredAdCard';
+import { toStoryboard } from '@/lib/storyboard';
 
 // ============================================================================
 // TYPES & CONSTANTS
@@ -1051,6 +1052,7 @@ export function HomeFeed({ active = true, shuffleKey, isRefreshing, showFilters 
           : `https://dehubcdn.ams3.cdn.digitaloceanspaces.com/videos/${id}.mp4`,
         hlsUrl: buildHlsUrl(item.hlsUrl),
         transcodingStatus: item.transcodingStatus,
+        storyboard: toStoryboard(item.storyboard),
         // Both, not one: the caption usually lives in the title, and a short
         // that carried a title AND a description only ever showed the second.
         title: item.name || '',
