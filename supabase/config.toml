@@ -35,6 +35,10 @@ project_id = "aigxuutjaqsywioxjefr"
   # against GET /api/admin/me. Not a Supabase JWT.
   [functions.admin-transcripts]
     verify_jwt = false
+  # Cron sends the vault scheduler key, the panel an admin JWT from api.dehub.io;
+  # neither is a Supabase JWT.
+  [functions.growth-autopost]
+    verify_jwt = false
   [functions.anon-views]
     verify_jwt = false
   [functions.ads-admin]
@@ -411,6 +415,12 @@ project_id = "aigxuutjaqsywioxjefr"
   # verify_jwt = false because the caller holds a DeHub *admin* bearer token,
   # not a Supabase JWT. The function validates it against api.dehub.io itself.
   [functions.work-admin]
+    verify_jwt = false
+  # Admin bearer token from api.dehub.io, re-verified inside the function.
+  [functions.admin-user-creations]
+    verify_jwt = false
+  # Signed-in callers send x-dehub-token; signed-out exports are journalled by IP.
+  [functions.editor-export-log]
     verify_jwt = false
   # Caller identity is verified against the DeHub API token.
   [functions.ads-creator-support]

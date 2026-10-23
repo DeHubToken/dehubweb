@@ -1,8 +1,9 @@
 import { useContext, useLayoutEffect, type RefObject } from 'react';
 import { CachedPageActiveContext } from '@/contexts/CachedPageActiveContext';
 
-const GLASS_NAV_THEMES = ['cosmic', 'hazy', 'swarms', 'lavalamp', 'winter', 'war', 'osaka', 'jungle', 'island', 'hacker', 'horror', 'system', 'immersive'];
-// The feed stops just inside the upper rim, above the pill's curved midpoint.
+const GLASS_NAV_THEMES = ['glass', 'cosmic', 'hazy', 'swarms', 'lavalamp', 'winter', 'war', 'osaka', 'jungle', 'island', 'hacker', 'horror', 'system', 'immersive'];
+// The feed stops below the pill's rounded top corners, so nothing peeks past
+// them. Falls back to this when the pill reports no radius.
 const PILL_CUT_INSET = 4;
 type TimelineConstructor = new (options: { source: Element; axis: 'block' }) => AnimationTimeline;
 
@@ -55,6 +56,7 @@ export function useFeedSwallowClip(
     let lastClip = '';
     let clipTarget: HTMLElement = el;
     let findCut = true;
+    let cutInset = PILL_CUT_INSET;
     let motionUntil = 0;
     const cutLayer = el.querySelector<HTMLElement>(':scope > [data-feed-swallow-cut]');
     const motion = cutLayer?.querySelector<HTMLElement>(':scope > [data-feed-swallow-motion]');
@@ -107,6 +109,8 @@ export function useFeedSwallowClip(
           cut = next;
           if (cut) resizeObserver.observe(cut);
         }
+        // Themes change the pill's radius, so re-read it with the cut.
+        cutInset = (cut && parseFloat(getComputedStyle(cut).borderTopLeftRadius)) || PILL_CUT_INSET;
         source = scrollSource(el);
         findCut = false;
       }
@@ -119,7 +123,7 @@ export function useFeedSwallowClip(
       // Profile headers explicitly request their bottom edge. Every feed pill
       // uses one full-width line at the upper rim, including canvas themes.
       const bottom = !nested && opts.edge === 'bottom';
-      const cutY = bottom ? pr.bottom : pr.top + Math.min(PILL_CUT_INSET, pr.height / 2);
+      const cutY = bottom ? pr.bottom : pr.top + Math.min(cutInset, pr.height / 2);
       const shape = (y: number) => `inset(${y.toFixed(2)}px 0 0 0)`;
       const currentY = cutY - cr.top;
       const outer = cut.closest<HTMLElement>('[data-feed-nav-outer], [data-kit-island-outer]');

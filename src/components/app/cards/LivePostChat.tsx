@@ -16,6 +16,9 @@ import Eye from "@/components/ui/cut-icons/visibility";
 import Languages from "@/components/ui/cut-icons/language";
 import Pencil from "@/components/ui/cut-icons/edit";
 import Trash2 from "@/components/ui/cut-icons/delete";
+import Clock from "@/components/ui/cut-icons/clock";
+import Ban from "@/components/ui/cut-icons/blocked";
+import ShieldCheck from "@/components/ui/cut-icons/security";
 
 import MessageSquare from "@/components/ui/cut-icons/messages";
 import Send from "@/components/ui/cut-icons/send";
@@ -33,10 +36,12 @@ import { InlineEmoji } from '@/components/app/emoji/EmojiText';
 import { useTranslation as useTextTranslation } from '@/components/app/TranslatableText';
 import { useLiveChatMessages } from '@/hooks/use-livechat';
 import { useStreamAudience } from '@/hooks/use-stream-audience';
+import { useLiveAudience } from '@/hooks/use-live-audience';
+import { LiveAudienceSheet } from '@/components/app/live/LiveAudienceSheet';
 import { useAuth } from '@/contexts/AuthContext';
 import { buildAvatarUrl, buildAvatarCdnFallbackUrl } from '@/lib/media-url';
 import { getMediaUrl, getAuthToken, uploadLiveChatVoice } from '@/lib/api/dehub';
-import { pinLiveChatMessage, unpinLiveChatMessage, streamChatRoomId } from '@/lib/api/dehub/livechat';
+import { addStreamModerator, banFromStreams, pinLiveChatMessage, timeOutInStream, unpinLiveChatMessage, streamChatRoomId } from '@/lib/api/dehub/livechat';
 import { VoiceRecorder } from '@/components/app/chat/VoiceRecorder';
 import { VoiceWaveformPlayer } from '@/components/app/chat/VoiceWaveformPlayer';
 import { toast } from 'sonner';
@@ -153,6 +158,13 @@ interface LivePostChatProps {
   overlay?: boolean;
 }
 
+/** The timeouts a creator or moderator can hand out from a chat line. */
+const TIMEOUTS = [
+  { seconds: 60, key: 'timeout1m' },
+  { seconds: 600, key: 'timeout10m' },
+  { seconds: 3600, key: 'timeout1h' },
+] as const;
+
 export function LivePostChat({ tokenId, streamId: liveStreamId, isOffline = false, isHost = false, overlay = false }: LivePostChatProps) {
   const { t: _copy } = _useCopy();
   // Gift, share and the reaction thumb, when a full-bleed viewer is around
@@ -191,7 +203,18 @@ export function LivePostChat({ tokenId, streamId: liveStreamId, isOffline = fals
     onMentionInsert: (_user, newText) => setNewMessage(newText),
   });
 
-  const { messages: chatMessages, isLoading, isSending, send, editMessage, deleteMessage } = useLiveChatMessages(streamId);
+  const { messages: chatMessages, isLoading, isSending, send, editMessage, deleteMessage, isModerator, isBanned: bannedHere, mutedUntil } = useLiveChatMessages(streamId);
+  // The stream's creator and the moderators they appointed act on other people's lines.
+  const canModerate = isHost || isModerator;
+  // A stream timeout quiets this viewer here until it runs out, then lets go.
+  const [muted, setMuted] = useState(false);
+  useEffect(() => {
+    const left = mutedUntil ? mutedUntil - Date.now() : 0;
+    setMuted(left > 0);
+    if (left <= 0) return;
+    const id = setTimeout(() => setMuted(false), left);
+    return () => clearTimeout(id);
+  }, [mutedUntil]);
   // Joins and gifts, as the app's chat has always drawn them: a row with the
   // viewer's face and name, then what they did. They used to be a bare grey
   // line with no avatar, and gifts were not in the chat at all.
@@ -214,6 +237,13 @@ export function LivePostChat({ tokenId, streamId: liveStreamId, isOffline = fals
   // the host's own overlay. Null when the caller has no stream ObjectId to
   // resolve, and then nothing is drawn: no number beats a wrong one.
   const watching = useStreamAudience(liveStreamId, !isOffline);
+  // Tapping the count opens Who's here, the same sheet the phone live page
+  // and the app open from their "N here" pill. Fetched only while open.
+  const [audienceOpen, setAudienceOpen] = useState(false);
+  const { data: audience, isLoading: audienceLoading } = useLiveAudience(liveStreamId, {
+    open: audienceOpen,
+    enabled: audienceOpen,
+  });
 
   // Sync pinned message from server data
   useEffect(() => {
@@ -299,14 +329,24 @@ export function LivePostChat({ tokenId, streamId: liveStreamId, isOffline = fals
     void deleteMessage(msg.id);
   }, [deleteMessage]);
 
+  const moderate = useCallback(async (msg: SupabaseLiveChatMessage, act: () => Promise<unknown>, done: string) => {
+    setContextMenuMsg(null);
+    try {
+      await act();
+      toast.success(done);
+    } catch {
+      toast.error(t('liveChatModeration.failed'));
+    }
+  }, [t]);
+
   const handleMessageContextMenu = useCallback((e: React.MouseEvent, msg: SupabaseLiveChatMessage) => {
     // Opens for the host (pinning) and for whoever wrote the line (edit,
     // delete). Everyone else keeps the browser's own menu.
-    if (!isHost && !isMine(msg)) return;
+    if (!canModerate && !isMine(msg)) return;
     e.preventDefault();
     setContextMenuPos({ x: e.clientX, y: e.clientY });
     setContextMenuMsg(msg);
-  }, [isHost, isMine]);
+  }, [canModerate, isMine]);
 
   const handleVoiceRecordingComplete = useCallback(async (blob: Blob, _duration: number) => {
     if (!isAuthenticated) {
@@ -390,10 +430,20 @@ export function LivePostChat({ tokenId, streamId: liveStreamId, isOffline = fals
             exactly what the old global count looked like, so this one says
             what it is counting. */}
         {watching !== null && (
-          <div className="flex items-center gap-1.5 text-zinc-500 text-xs" title={_copy("copy.7c5784e7b79a", { defaultValue: "People watching this stream right now" })}>
+          <button
+            type="button"
+            onClick={() => setAudienceOpen(true)}
+            aria-label={t('liveAudience.whosHere', "Who's here")}
+            data-filter-chip
+            className="inline-flex shrink-0 items-center gap-1.5 pl-2.5 pr-2 py-[5px] rounded-lg text-xs font-medium bg-gradient-to-br from-white/20 via-white/10 to-white/5 backdrop-blur-xl border border-white/30 text-white shadow-[0_2px_8px_rgba(0,0,0,0.2),inset_0_1px_0_rgba(255,255,255,0.3)] transition-all hover:border-white/50"
+            title={_copy("copy.7c5784e7b79a", { defaultValue: "People watching this stream right now" })}
+          >
             <Eye className="w-3.5 h-3.5" />
             <span>{watching}{_copy("copy.dcb8e1a4fcaa", { defaultValue: " watching" })}</span>
-          </div>
+          </button>
+        )}
+        {watching !== null && (
+          <LiveAudienceSheet open={audienceOpen} onOpenChange={setAudienceOpen} audience={audience} loading={audienceLoading} />
         )}
       </div>
 
@@ -431,7 +481,7 @@ export function LivePostChat({ tokenId, streamId: liveStreamId, isOffline = fals
       <div
         ref={messagesContainerRef}
         className={cn(
-          'overflow-y-auto scrollbar-hide',
+          'overflow-y-auto overscroll-contain scrollbar-hide',
           overlay
             // The mask lives on the scroller, so the dissolve stays pinned to
             // the top edge while messages travel under it. -webkit- kept for
@@ -580,8 +630,9 @@ export function LivePostChat({ tokenId, streamId: liveStreamId, isOffline = fals
       </div>
 
       {/* Right-click context menu for host */}
-      {contextMenuMsg && (isHost || isMine(contextMenuMsg)) && (
+      {contextMenuMsg && (canModerate || isMine(contextMenuMsg)) && (
         <div
+          data-glass-menu
           className="fixed z-50 bg-zinc-800 border border-white/10 rounded-xl shadow-2xl py-1 min-w-[140px]"
           style={{ top: contextMenuPos.y, left: contextMenuPos.x }}
           onClick={(e) => e.stopPropagation()}
@@ -610,6 +661,34 @@ export function LivePostChat({ tokenId, streamId: liveStreamId, isOffline = fals
             >
               <Trash2 className="w-3.5 h-3.5" />{_copy("copy.87e7176a7ce7", { defaultValue: "Delete message" })}</button>
           )}
+          {canModerate && !isMine(contextMenuMsg) && contextMenuMsg.message_type !== 'system' && contextMenuMsg.sender_address && (
+            <>
+              <div className="my-1 border-t border-white/10" />
+              {TIMEOUTS.map(({ seconds, key }) => (
+                <button
+                  key={key}
+                  onClick={() => moderate(contextMenuMsg, () => timeOutInStream(tokenId, contextMenuMsg.sender_address, seconds), t('liveChatModeration.timedOut'))}
+                  className="flex items-center gap-2 w-full px-3 py-2 text-sm text-white hover:bg-white/10 transition-colors"
+                >
+                  <Clock className="w-3.5 h-3.5" />{t(`liveChatModeration.${key}`)}
+                </button>
+              ))}
+              <button
+                onClick={() => moderate(contextMenuMsg, () => banFromStreams(tokenId, contextMenuMsg.sender_address), t('liveChatModeration.banned'))}
+                className="flex items-center gap-2 w-full px-3 py-2 text-sm text-red-400 hover:bg-white/10 transition-colors"
+              >
+                <Ban className="w-3.5 h-3.5" />{t('liveChatModeration.ban')}
+              </button>
+              {isHost && (
+                <button
+                  onClick={() => moderate(contextMenuMsg, () => addStreamModerator(contextMenuMsg.sender_address), t('liveChatModeration.madeModerator'))}
+                  className="flex items-center gap-2 w-full px-3 py-2 text-sm text-white hover:bg-white/10 transition-colors"
+                >
+                  <ShieldCheck className="w-3.5 h-3.5" />{t('liveChatModeration.makeModerator')}
+                </button>
+              )}
+            </>
+          )}
         </div>
       )}
 
@@ -633,8 +712,8 @@ export function LivePostChat({ tokenId, streamId: liveStreamId, isOffline = fals
               mention.handleInput(val, cursorPos ?? undefined);
             }}
             onKeyDown={handleKeyDown}
-            placeholder={isOffline ? _copy("copy.17529a437b97", { defaultValue: "Chat is offline" }) : _copy("copy.69518e684f06", { defaultValue: "Type a message..." })}
-            disabled={isOffline || !isAuthenticated}
+            placeholder={isOffline ? _copy("copy.17529a437b97", { defaultValue: "Chat is offline" }) : bannedHere ? t('liveChatModeration.youAreBanned') : muted ? t('liveChatModeration.youAreTimedOut') : _copy("copy.69518e684f06", { defaultValue: "Type a message..." })}
+            disabled={isOffline || !isAuthenticated || bannedHere || muted}
             className={cn(
               'max-h-32 resize-none text-white text-sm',
               overlay ? (newMessage.trim() ? 'pr-14' : 'pr-4') : 'pr-24',
@@ -661,7 +740,7 @@ export function LivePostChat({ tokenId, streamId: liveStreamId, isOffline = fals
             {!overlay && (
               <VoiceRecorder
                 onRecordingComplete={handleVoiceRecordingComplete}
-                disabled={isOffline || !isAuthenticated}
+                disabled={isOffline || !isAuthenticated || bannedHere || muted}
               />
             )}
             {(!overlay || newMessage.trim().length > 0) && (

@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { sanitiseTtsText, MAX_TTS_CHARS } from '@/lib/live/tip-tts';
+import { sanitiseTtsText, tipVoiceLang, MAX_TTS_CHARS } from '@/lib/live/tip-tts';
 
 describe('sanitiseTtsText', () => {
   it('keeps an ordinary message intact', () => {
@@ -7,7 +7,7 @@ describe('sanitiseTtsText', () => {
   });
 
   it('drops links rather than spelling them out', () => {
-    // eSpeak reads a URL character by character, so one link is half a minute
+    // A speech engine reads a URL character by character, so one link is half a minute
     // of "aitch tee tee pee colon slash slash".
     expect(sanitiseTtsText('check https://dehub.io/app now')).toBe('check now');
   });
@@ -41,5 +41,23 @@ describe('sanitiseTtsText', () => {
     // which alphabet somebody types in.
     expect(sanitiseTtsText('привет мир')).toBe('привет мир');
     expect(sanitiseTtsText('こんにちは')).toBe('こんにちは');
+  });
+});
+
+describe('tipVoiceLang', () => {
+  it('reads Latin text in a Latin-script viewer language', () => {
+    expect(tipVoiceLang('hola amigos', 'es')).toBe('es');
+    expect(tipVoiceLang('hello', 'en-GB')).toBe('en-gb');
+  });
+
+  it('reads Latin text in English for a non-Latin viewer', () => {
+    expect(tipVoiceLang('hello stream', 'ru')).toBe('en');
+  });
+
+  it('follows the script of the message', () => {
+    expect(tipVoiceLang('привет', 'en')).toBe('ru');
+    expect(tipVoiceLang('привіт', 'uk')).toBe('uk');
+    expect(tipVoiceLang('こんにちは', 'en')).toBe('ja');
+    expect(tipVoiceLang('مرحبا', 'fr')).toBe('ar');
   });
 });

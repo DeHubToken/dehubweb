@@ -20,6 +20,19 @@ import {
   dismissRecordingToast,
 } from '@/lib/stage-recording-toast';
 import { withWalletHeader, endStageOnExit } from '@/lib/supabase-wallet-client';
+import { holdMicAudioSession } from '@/lib/audio-session';
+import {
+  RECORDING_BITS_PER_SECOND,
+  addMixRemote,
+  closeRecordingMix,
+  createRecordingMix,
+  dropMixRemote,
+  pickRecordingType,
+  recorderMixes,
+  recordingFileFor,
+  setMixLocal,
+  type RecordingMix,
+} from '@/lib/stage-recording-mix';
 import { watchStages, type StageChange } from '@/lib/stage-broadcast';
 import { isChunkLoadError } from '@/lib/lazy-with-retry';
 import { createLogger } from '@/lib/logger';
@@ -294,6 +307,15 @@ function subscribeLiveSpaces(cb: () => void) {
  * Ordering only. Nothing is added to or removed from the list, so a client
  * that cannot reach the endpoint shows exactly what it showed before.
  */
+/**
+ * The live stages as the realtime channel last reported them, without the
+ * Front Row reordering. For callers that only ask "is this person on a stage"
+ * and should not pull in the Front Row query to answer it.
+ */
+export function useLiveSpacesUnordered(): AudioSpace[] {
+  return useSyncExternalStore(subscribeLiveSpaces, () => liveSpacesStore);
+}
+
 export function useLiveSpaces(): AudioSpace[] {
   const spaces = useSyncExternalStore(subscribeLiveSpaces, () => liveSpacesStore);
   const { data: frontRow } = useFrontRow();
@@ -626,6 +648,14 @@ export function StageProvider({ children }: { children: ReactNode }) {
   }>>([]);
   /** True while the finished recording is being uploaded — read by the unload guard. */
   const recordingUploadInFlightRef = useRef(false);
+  /** What the recorder listens to: the host's voice plus every remote speaker. */
+  const recordingMixRef = useRef<RecordingMix | null>(null);
+  /** A join or go-live in progress; a second tap must not start another. */
+  const roomSwitchInFlightRef = useRef(false);
+  /** The last leaveSpace's background teardown, so a switch can wait it out. */
+  const leaveTeardownRef = useRef<Promise<void>>(Promise.resolve());
+  /** Gives iPhone Safari its audio session back once this client's mic closes. */
+  const micSessionReleaseRef = useRef<(() => void) | null>(null);
 
   /** Serialize injectAudio (TTS / soundboard) so tracks don’t overlap on Agora */
   const injectAudioChainRef = useRef<Promise<void>>(Promise.resolve());
@@ -746,19 +776,28 @@ export function StageProvider({ children }: { children: ReactNode }) {
 
   const startRecording = useCallback((spaceId: string) => {
     try {
-      // Record the voice-effect-processed stream (same audio that Agora publishes).
-      // Accessed via ref so this callback stays stable with [] deps.
+      // The host's voice, with the effect applied: the same audio Agora
+      // publishes. Accessed via ref so this callback stays stable with [] deps.
       const processedStream = voiceEffectsHookRef.current.getProcessedStream();
       if (!processedStream) {
         console.warn('[Stage] Cannot start recording — processed audio stream not ready');
         return;
       }
 
-      const mimeType = MediaRecorder.isTypeSupported('audio/webm;codecs=opus')
-        ? 'audio/webm;codecs=opus'
-        : 'audio/webm';
+      // The recorder hears the room, not just the host: see RecordingMix.
+      // Speakers already on stage are plugged in now; later ones arrive
+      // through the user-published handler.
+      const mix = createRecordingMix();
+      if (mix) {
+        setMixLocal(mix, processedStream);
+        for (const [uid, track] of remoteAudioTracksRef.current) addMixRemote(mix, uid, track);
+      }
+      const source = mix?.dest.stream ?? processedStream;
 
-      const recorder = new MediaRecorder(processedStream, { mimeType });
+      const mimeType = pickRecordingType();
+      const options: MediaRecorderOptions = { audioBitsPerSecond: RECORDING_BITS_PER_SECOND };
+      if (mimeType) options.mimeType = mimeType;
+      const recorder = new MediaRecorder(source, options);
       recordingChunksRef.current = [];
       recordingSpaceIdRef.current = spaceId;
       recordingTimelineRef.current = [];
@@ -770,7 +809,11 @@ export function StageProvider({ children }: { children: ReactNode }) {
 
       recorder.start(1000); // collect chunks every 1s
       mediaRecorderRef.current = recorder;
-      console.log('[Stage] Recording started (voice-effect-processed stream)');
+      if (mix) {
+        recorderMixes.set(recorder, mix);
+        recordingMixRef.current = mix;
+      }
+      console.log(`[Stage] Recording started (${recorder.mimeType || mimeType || 'browser default'}, ${mix ? `host + ${mix.remotes.size} speaker(s)` : 'host only'})`);
 
       // The host's dubbing voice is NOT taken from here any more.
       //
@@ -805,8 +848,10 @@ export function StageProvider({ children }: { children: ReactNode }) {
     // wait reads as progress instead of something the host has to guess at.
     showRecordingUploading();
 
+    const mix = recorderMixes.get(recorder);
     return new Promise<void>((resolve) => {
       recorder.onstop = async () => {
+        closeRecordingMix(mix);
         try {
           const chunks = recordingChunksRef.current;
           if (chunks.length === 0) { dismissRecordingToast(); resolve(); return; }
@@ -820,27 +865,28 @@ export function StageProvider({ children }: { children: ReactNode }) {
           // the transcriber and both players see exactly what they saw before,
           // only seekable. Loaded on demand — it runs once per stage, for
           // hosts only, and has no business in the main bundle.
-          let blob = new Blob(chunks, { type: 'audio/webm' });
-          let clientFinalised = false;
-          try {
-            const { makeWebmSeekable } = await import('@/lib/webm-seekable');
-            const finalised = await makeWebmSeekable(blob);
-            if (finalised.changed) {
-              blob = finalised.blob;
-              clientFinalised = true;
-              console.log(
-                `[Stage] Recording finalised: ${finalised.durationMs}ms, ${finalised.cuePoints} cue points`,
-              );
-            } else {
-              console.warn('[Stage] Recording uploaded as recorded:', finalised.reason);
+          const file = recordingFileFor(recorder.mimeType || chunks[0]?.type || '');
+          let blob = new Blob(chunks, { type: file.contentType });
+          if (file.ext === 'webm') {
+            try {
+              const { makeWebmSeekable } = await import('@/lib/webm-seekable');
+              const finalised = await makeWebmSeekable(blob);
+              if (finalised.changed) {
+                blob = finalised.blob;
+                console.log(
+                  `[Stage] Recording finalised: ${finalised.durationMs}ms, ${finalised.cuePoints} cue points`,
+                );
+              } else {
+                console.warn('[Stage] Recording uploaded as recorded:', finalised.reason);
+              }
+            } catch (err) {
+              // An unseekable recording beats no recording. Nothing this pass
+              // can go wrong with is worth failing the only upload over.
+              console.warn('[Stage] Recording finalise skipped:', err);
             }
-          } catch (err) {
-            // An unseekable recording beats no recording. Nothing this pass
-            // can go wrong with is worth failing the only upload over.
-            console.warn('[Stage] Recording finalise skipped:', err);
           }
 
-          const path = `${spaceId}/recording.webm`;
+          const path = `${spaceId}/recording.${file.ext}`;
 
           // One retry, and a visible failure. This upload is the only copy of
           // the stage in existence, the finally below wipes the chunks
@@ -853,7 +899,7 @@ export function StageProvider({ children }: { children: ReactNode }) {
           for (let attempt = 0; attempt < 2; attempt++) {
             const { error } = await supabase.storage
               .from('stage-recordings')
-              .upload(path, blob, { contentType: 'audio/webm', upsert: true });
+              .upload(path, blob, { contentType: file.contentType, upsert: true });
             uploadErr = error;
             if (!uploadErr) break;
             console.warn(`[Stage] Upload attempt ${attempt + 1} failed:`, uploadErr.message);
@@ -884,15 +930,12 @@ export function StageProvider({ children }: { children: ReactNode }) {
             // Pass the timeline so the edge function can label diarized speakers
             // (host vs AI/TTS/soundboard) instead of "Speaker 1/2".
             const timeline = recordingTimelineRef.current.slice();
-            // The finalise above fails open on purpose — an unseekable
-            // recording beats no recording — which leaves nothing to catch a
-            // file that slipped through unindexed (a host on a stale cached
-            // bundle is the likely way). When that happens, hand the upload to
-            // finalize-stage-recording, which repairs it server-side and chains
-            // into transcription itself. When the client pass worked there is
-            // nothing left to do, so go straight to the transcriber rather than
-            // pay a pointless 20 MB round trip to be told so.
-            const next = clientFinalised ? 'transcribe-stage' : 'finalize-stage-recording';
+            // A WebM always goes through finalize-stage-recording now, even
+            // when the pass above indexed it: iPhones cannot play WebM at all,
+            // and that function re-files the same Opus packets as an MP4 every
+            // player can use, then chains into transcription itself. Safari's
+            // MP4 needs none of that and goes straight to the transcriber.
+            const next = file.ext === 'webm' ? 'finalize-stage-recording' : 'transcribe-stage';
             supabase.functions
               .invoke(next, { body: { stageId: spaceId, timeline } })
               .catch((err) => console.warn(`[Stage] ${next} trigger failed:`, err));
@@ -910,6 +953,10 @@ export function StageProvider({ children }: { children: ReactNode }) {
         }
       };
 
+      // Nothing new reaches this file once it stops, so later speakers stop
+      // being plugged into its mix straight away; the graph itself is closed
+      // once the recorder has handed over its last chunk.
+      if (recordingMixRef.current === mix) recordingMixRef.current = null;
       recorder.stop();
     });
   }, []);
@@ -1088,6 +1135,8 @@ export function StageProvider({ children }: { children: ReactNode }) {
           if (remoteUser.audioTrack) {
             remoteAudioTracksRef.current.set(remoteUser.uid, remoteUser.audioTrack);
             try { remoteUser.audioTrack.setVolume(roomVolumeRef.current); } catch { /* older SDK */ }
+            // A host's recording takes every voice in the room, not just theirs.
+            if (recordingMixRef.current) addMixRemote(recordingMixRef.current, remoteUser.uid, remoteUser.audioTrack);
           }
         } else if (mediaType === 'video' && remoteUser.videoTrack) {
           // Take the small copy on phones and tablets. Throws when the sharer's
@@ -1111,18 +1160,24 @@ export function StageProvider({ children }: { children: ReactNode }) {
         // Participant bookkeeping rides realtime DB events; the only thing Agora
         // has to tell us here is that a screen went away.
         if (mediaType === 'video') clearRemoteScreenShare(remoteUser?.uid);
-        if (mediaType === 'audio') remoteAudioTracksRef.current.delete(remoteUser?.uid);
+        if (mediaType === 'audio') {
+          remoteAudioTracksRef.current.delete(remoteUser?.uid);
+          if (recordingMixRef.current) dropMixRemote(recordingMixRef.current, remoteUser?.uid);
+        }
       });
 
       // A sharer who closes the tab never gets to unpublish.
       client.on('user-left', (remoteUser: any) => {
         remoteAudioTracksRef.current.delete(remoteUser?.uid);
+        if (recordingMixRef.current) dropMixRemote(recordingMixRef.current, remoteUser?.uid);
         clearRemoteScreenShare(remoteUser?.uid);
       });
 
       await client.join(tokenData.appId, tokenData.channel, tokenData.token, tokenData.uid);
 
       if (role === 'host' || role === 'speaker') {
+        micSessionReleaseRef.current?.();
+        micSessionReleaseRef.current = holdMicAudioSession();
         const rawStream = await navigator.mediaDevices.getUserMedia({ audio: true });
         const processedTrack = await voiceEffectsHook.processStream(rawStream, voiceEffect);
         const AgoraRTC2 = AgoraRTC; // reuse import
@@ -1135,6 +1190,8 @@ export function StageProvider({ children }: { children: ReactNode }) {
       setIsConnected(true);
     } catch (err) {
       // Drop whatever got as far as joining, so a retry starts clean.
+      micSessionReleaseRef.current?.();
+      micSessionReleaseRef.current = null;
       const client = agoraClientRef.current;
       agoraClientRef.current = null;
       if (client) {
@@ -1152,6 +1209,8 @@ export function StageProvider({ children }: { children: ReactNode }) {
     try {
       const AgoraRTC = (await import('agora-rtc-sdk-ng')).default;
       await agoraClientRef.current.setClientRole('host');
+      micSessionReleaseRef.current?.();
+      micSessionReleaseRef.current = holdMicAudioSession();
       const rawStream = await navigator.mediaDevices.getUserMedia({ audio: true });
       const processedTrack = await voiceEffectsHook.processStream(rawStream, voiceEffect);
       const customTrack = AgoraRTC.createCustomAudioTrack({ mediaStreamTrack: processedTrack });
@@ -1169,6 +1228,38 @@ export function StageProvider({ children }: { children: ReactNode }) {
   }, [voiceEffect, voiceEffectsHook, _copy]);
 
   // ─── Create stage ────────────────────────────────────────────────────────
+
+  /**
+   * Make way for another room before entering it.
+   *
+   * Every way into a stage (a home rail card, the carousel, a link, the list)
+   * called straight into join with no thought for the room already open. That
+   * built a second Agora client on top of the first: both rooms played at once,
+   * the old seat was never given up, and a host's recorder restarted and threw
+   * away everything recorded so far.
+   *
+   * 'same' when already in `nextSpaceId` (nothing to do), false when the move
+   * is refused, true once the old room is fully torn down. A host is refused
+   * rather than walked out, because leaving ends their stage for everyone.
+   */
+  const vacateCurrentRoom = useCallback(
+    async (nextSpaceId: string | null): Promise<boolean | 'same'> => {
+      const inRoom = currentSpaceIdRef.current;
+      if (!inRoom) return true;
+      if (inRoom === nextSpaceId) return 'same';
+      if (myRoleRef.current === 'host') {
+        toast.error("You're hosting a live stage", { description: 'End it before you join or start another.' });
+        return false;
+      }
+      await leaveSpaceRef.current();
+      // The old client leaves in the background and then closes the voice
+      // effect graph; joining before that lands would have it close the new
+      // room's microphone instead. Capped, so a hung leave cannot block.
+      await Promise.race([leaveTeardownRef.current, new Promise((r) => setTimeout(r, 5000))]);
+      return true;
+    },
+    [],
+  );
 
   /**
    * Put the host on the air for a stage row that already exists.
@@ -1248,6 +1339,9 @@ export function StageProvider({ children }: { children: ReactNode }) {
   const createSpace = useCallback(
     async (title: string, description?: string, coverImageUrl?: string | null): Promise<AudioSpace | null> => {
       if (!walletAddress) { toast.error(_copy("copy.f6101c84c1c8", { defaultValue: "Please log in first" })); return null; }
+      if (roomSwitchInFlightRef.current) return null;
+      if (!(await vacateCurrentRoom(null))) return null;
+      roomSwitchInFlightRef.current = true;
       setIsLoading(true);
       try {
         const channelName = `stage_${Date.now()}_${Math.random().toString(36).substring(7)}`;
@@ -1286,10 +1380,11 @@ export function StageProvider({ children }: { children: ReactNode }) {
         toast.error(describeStageFailure(err));
         return null;
       } finally {
+        roomSwitchInFlightRef.current = false;
         setIsLoading(false);
       }
     },
-    [walletAddress, user, goLiveAsHost, signed, _copy],
+    [walletAddress, user, goLiveAsHost, vacateCurrentRoom, signed, _copy],
   );
 
   // Feed the module-level opener the composer uses (see createStageNow above).
@@ -1376,6 +1471,9 @@ export function StageProvider({ children }: { children: ReactNode }) {
           toast.error(_copy("copy.5d3b3ffaef04", { defaultValue: "This stage has already ended" }));
           return false;
         }
+        // Starting your own stage from inside somebody else's room: leave it
+        // first, so the two do not play at once.
+        if (!(await vacateCurrentRoom(spaceId))) return false;
 
         const { data: space, error } = await signed(
           supabase
@@ -1406,7 +1504,7 @@ export function StageProvider({ children }: { children: ReactNode }) {
         setIsLoading(false);
       }
     },
-    [walletAddress, goLiveAsHost, refreshScheduledSpaces, signed, _copy],
+    [walletAddress, goLiveAsHost, refreshScheduledSpaces, vacateCurrentRoom, signed, _copy],
   );
 
   /** Call off a scheduled stage. Host only; the row is removed outright. */
@@ -1438,6 +1536,12 @@ export function StageProvider({ children }: { children: ReactNode }) {
   const joinSpace = useCallback(
     async (spaceId: string): Promise<boolean> => {
       if (!walletAddress) { toast.error(_copy("copy.f6101c84c1c8", { defaultValue: "Please log in first" })); return false; }
+      // Two taps, or two cards, must not race two joins.
+      if (roomSwitchInFlightRef.current) return false;
+      const vacated = await vacateCurrentRoom(spaceId);
+      if (vacated === 'same') return true;
+      if (!vacated) return false;
+      roomSwitchInFlightRef.current = true;
       // A visitor who was guest-listening and then logged in joins properly —
       // drop the listen-only session before taking the real one.
       if (guestSpaceRef.current) await guestStopListeningRef.current();
@@ -1542,10 +1646,11 @@ export function StageProvider({ children }: { children: ReactNode }) {
         });
         return false;
       } finally {
+        roomSwitchInFlightRef.current = false;
         setIsLoading(false);
       }
     },
-    [walletAddress, user, startRecording, _copy],
+    [walletAddress, user, startRecording, vacateCurrentRoom, _copy],
   );
 
   // ─── Guest listening ─────────────────────────────────────────────────────
@@ -1645,6 +1750,8 @@ export function StageProvider({ children }: { children: ReactNode }) {
     const screenVideo = screenVideoTrackRef.current;
     const screenAudio = screenAudioTrackRef.current;
     const radioTrack = radioTrackRef.current;
+    const releaseMicSession = micSessionReleaseRef.current;
+    micSessionReleaseRef.current = null;
     agoraClientRef.current = null;
     localAudioTrackRef.current = null;
     screenVideoTrackRef.current = null;
@@ -1673,7 +1780,7 @@ export function StageProvider({ children }: { children: ReactNode }) {
 
     // ── Teardown in the background (recording upload, Agora leave, DB counts).
     //    Order matters: stop/upload the recording before closing the audio graph. ──
-    void (async () => {
+    leaveTeardownRef.current = (async () => {
       try {
         if (wasHost && recorder) {
           // Ring-fenced: a recording that fails to upload must not carry the
@@ -1690,6 +1797,7 @@ export function StageProvider({ children }: { children: ReactNode }) {
         if (localTrack) {
           try { localTrack.stop(); localTrack.close(); } catch { /* noop */ }
         }
+        releaseMicSession?.();
         // Closing the display capture is what drops the browser's "you are
         // sharing" bar — leaving the channel alone would leave it up.
         for (const track of [screenVideo, screenAudio, radioTrack]) {
@@ -1839,24 +1947,32 @@ export function StageProvider({ children }: { children: ReactNode }) {
       await agoraClientRef.current.publish([customTrack]);
 
       // rebuildEffect closes the old AudioContext and creates a new one, so the
-      // MediaStreamDestination (and its track) is brand-new. Restart the MediaRecorder
-      // on the new stream so the recording continues with the active voice effect.
-      const activeRecorder = mediaRecorderRef.current;
-      if (activeRecorder && activeRecorder.state !== 'inactive') {
-        activeRecorder.addEventListener('stop', () => {
-          const newStream = voiceEffectsHookRef.current.getProcessedStream();
-          if (!newStream) return;
-          const mimeType = MediaRecorder.isTypeSupported('audio/webm;codecs=opus')
-            ? 'audio/webm;codecs=opus'
-            : 'audio/webm';
-          const newRecorder = new MediaRecorder(newStream, { mimeType });
-          newRecorder.ondataavailable = (e) => {
-            if (e.data.size > 0) recordingChunksRef.current.push(e.data);
-          };
-          newRecorder.start(1000);
-          mediaRecorderRef.current = newRecorder;
-        }, { once: true });
-        activeRecorder.stop();
+      // processed stream is brand-new. The recorder keeps running on its own
+      // mix; only the host's input to it is swapped, so the file stays one
+      // continuous stream instead of a second recording glued onto the first.
+      const mix = recordingMixRef.current;
+      if (mix) {
+        setMixLocal(mix, voiceEffectsHookRef.current.getProcessedStream());
+      } else {
+        const activeRecorder = mediaRecorderRef.current;
+        if (activeRecorder && activeRecorder.state !== 'inactive') {
+          // No mix (Web Audio refused one): the recorder is reading the old
+          // processed stream directly and has to follow it to the new one.
+          activeRecorder.addEventListener('stop', () => {
+            const newStream = voiceEffectsHookRef.current.getProcessedStream();
+            if (!newStream) return;
+            const mimeType = pickRecordingType();
+            const options: MediaRecorderOptions = { audioBitsPerSecond: RECORDING_BITS_PER_SECOND };
+            if (mimeType) options.mimeType = mimeType;
+            const newRecorder = new MediaRecorder(newStream, options);
+            newRecorder.ondataavailable = (e) => {
+              if (e.data.size > 0) recordingChunksRef.current.push(e.data);
+            };
+            newRecorder.start(1000);
+            mediaRecorderRef.current = newRecorder;
+          }, { once: true });
+          activeRecorder.stop();
+        }
       }
 
       toast.success(`Voice: ${effectId === 'none' ? 'Normal' : effectId}`);
@@ -2196,9 +2312,9 @@ export function StageProvider({ children }: { children: ReactNode }) {
           status: 'pending',
         }),
       );
-      // The table is UNIQUE on (space_id, wallet_address, status), and a
-      // pending row survives a disconnect while the local hasRaisedHand state
-      // does not — so a listener who dropped and rejoined got "Failed to raise
+      // Only one pending row per person per stage is allowed, and a pending
+      // row survives a disconnect while the local hasRaisedHand state does
+      // not — so a listener who dropped and rejoined got "Failed to raise
       // hand" on every press for the rest of the stage. A duplicate pending
       // row IS the state being asked for; treat it as success.
       if (error && error.code !== '23505') throw error;

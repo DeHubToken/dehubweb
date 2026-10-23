@@ -193,7 +193,9 @@ export function LoginModal({ open, onOpenChange }: LoginModalProps) {
         : getWalletSetupIntent() === 'import' ? t('loginModal.importExternalWallet', 'Import')
         : t('loginModal.secureAccount', 'Secure account')
       )
+    : step === 'wallet-secure' ? t('loginModal.secureAccount', 'Secure account')
     : step === 'wallet-unlock' ? t('loginModal.unlockWallet', 'Unlock your wallet')
+    : step === 'wallet-restore' ? t('loginModal.restoreWalletTitle', 'Bring back your wallet')
     : step === 'profile' ? t('settings.profile')
     : step === 'resuming' || step === 'wallet-signing' ? t('loginModal.signingIn', 'Signing you in…')
     : t('loginModal.connectWallet');
@@ -209,7 +211,7 @@ export function LoginModal({ open, onOpenChange }: LoginModalProps) {
   // task. On desktop it therefore lives as a compact panel centred inside the
   // app's middle column. The mobile flow deliberately remains a bottom sheet,
   // where that presentation is both expected and keyboard-safe.
-  const usesDesktopUnlockPanel = step === 'wallet-unlock' && !isMobile;
+  const usesDesktopUnlockPanel = (step === 'wallet-unlock' || step === 'wallet-secure') && !isMobile;
 
   const sheetBody = (
     <>

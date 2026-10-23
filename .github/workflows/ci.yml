@@ -16,6 +16,21 @@ env:
   PNPM_VERSION: '9'
 
 jobs:
+  account-mcp:
+    name: Account MCP permissions and Creator jobs
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Install only server schema dependencies
+        run: |
+          npm install --prefix "$RUNNER_TEMP/account-mcp" --no-package-lock --ignore-scripts zod@3.25.76 zod-to-json-schema@3.25.2
+          ln -s "$RUNNER_TEMP/account-mcp/node_modules" node_modules
+      - run: node --experimental-strip-types --test server/account-mcp.test.mjs
+
   dex-dehub-pool:
     name: DeHub pool market scope
     runs-on: ubuntu-latest
@@ -259,12 +274,14 @@ jobs:
           node --test server/edge-maintenance.test.mjs
           node --test server/post-share-card.test.mjs server/finance-stats.test.mjs
           timeout 120s node tests/post-share-workerd.mjs
+          timeout 120s node tests/account-mcp-workerd.mjs
 
       - name: Validate production Worker bundle
         run: |
           mkdir -p dist
           printf '<!doctype html><title>Worker bundle check</title>' > dist/index.html
           pnpm exec wrangler deploy --dry-run --outdir "$RUNNER_TEMP/share-worker"
+
 
       - uses: actions/upload-artifact@v4
         with:
@@ -345,6 +362,9 @@ jobs:
 
       - name: Complete editor scene descriptions
         run: node --experimental-strip-types --test supabase/functions/editor-agent/scene.test.ts supabase/functions/editor-agent/answer.test.ts supabase/functions/editor-agent/generation.test.ts
+
+      - name: Brand autopost text fits every platform
+        run: node --experimental-strip-types --test supabase/functions/growth-autopost/posts.test.ts
 
   boot-path:
     name: Boot path

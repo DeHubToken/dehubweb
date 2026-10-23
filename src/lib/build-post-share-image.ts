@@ -6,7 +6,8 @@ export async function buildPostShareImage({ postId }: { postId: string }): Promi
     credentials: 'omit',
     signal: AbortSignal.timeout(15000),
   });
-  if (!response.ok || !response.headers.get('Content-Type')?.startsWith('image/png')) {
+  // A post that may not show its own card (mature, restricted) answers with the brand card.
+  if (!response.ok || !response.headers.get('Content-Type')?.startsWith('image/png') || response.headers.get('X-DeHub-Share-Card') === 'brand') {
     throw new Error('Post share image unavailable');
   }
   return response.blob();

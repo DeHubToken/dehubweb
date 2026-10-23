@@ -846,7 +846,8 @@ export const ImageCard = memo(function ImageCard({ post, aboveFold = false, onOp
 
   const handleImageClick = (index: number) => {
     if (wasDrawerJustDismissed()) return;
-    if (!postPage && (isPPV || isLocked || isSubGated || isW2E || matureGate.isGated)) {
+    // Only photos with a song continue in the shorts viewer; plain photos open their post.
+    if (!postPage && (!post.soundtrackUrl || isPPV || isLocked || isSubGated || isW2E || matureGate.isGated)) {
       openPost();
       return;
     }
@@ -937,7 +938,7 @@ export const ImageCard = memo(function ImageCard({ post, aboveFold = false, onOp
   }, [openPost, showPPVDrawer, showBountyDrawer, showLockedDrawer]);
 
   const headerRow = (
-    <div data-card-head={stage ? undefined : 'plain'} className={stage ? 'contents' : 'flex items-end justify-between'} style={{ paddingBottom: 0 }}>
+    <div data-card-head={stage ? undefined : 'plain'} className={stage ? 'contents' : 'flex items-start justify-between'} style={{ paddingBottom: 0 }}>
       {stage ? (
         <StageCreatorRow
           name={post.username}

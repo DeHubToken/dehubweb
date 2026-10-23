@@ -1,23 +1,14 @@
 import { useTranslation as _useCopy } from 'react-i18next';
 /**
- * StageCoverArt — a stage's graphic, whole, at one ratio everywhere
- * =================================================================
+ * StageCoverArt — a stage's graphic, whole, everywhere
+ * ====================================================
  * Every stage surface renders its cover through this, so the listing cards,
  * the live cards and the /stages/:n page cannot drift apart again.
  *
- * Two rules, and they are the whole component:
- *
- * 1. **16:9, always.** A ratio rather than a height, so it holds identically
- *    on a phone and a widescreen monitor. A height letterboxes a wide card
- *    into a strip and swallows a narrow one.
- * 2. **`contain`, never `cover`.** `cover` fills the box by cutting whatever
- *    does not fit, which silently ate the top and bottom of any cover that
- *    was not already 16:9. Containing it means a host always sees the graphic
- *    they uploaded — a non-16:9 cover is bordered, not cropped.
- *
- * The black bed is what those borders show, and it is also why the art no
- * longer sits behind the card text: a contained image has empty space in it,
- * and text over that reads as a mistake rather than a design.
+ * The box takes the image's own shape: full width, natural height. A cover
+ * that is not 16:9 is neither cropped nor letterboxed, so there is never an
+ * empty band above or below it. An extremely tall upload is capped at 70vh
+ * and only then filled with `cover`, so it cannot swallow the page.
  */
 
 import { cn } from '@/lib/utils';
@@ -34,12 +25,12 @@ export function StageCoverArt({
 }) {
   const { t: _copy } = _useCopy();
   return (
-    <div className={cn('w-full aspect-video bg-black', className)}>
+    <div className={cn('w-full bg-black', className)}>
       <img
         src={src}
         alt={title ? _copy("copy.99ca327a47b5", { defaultValue: "Cover graphic for {{value1}}", value1: title }) : ''}
         loading="lazy"
-        className="w-full h-full object-contain"
+        className="block w-full h-auto max-h-[70vh] object-cover"
       />
     </div>
   );

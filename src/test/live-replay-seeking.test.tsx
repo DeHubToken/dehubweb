@@ -10,6 +10,7 @@ vi.mock('@/hooks/use-dehub-profile', () => ({ useDeHubProfile: () => ({}) }));
 vi.mock('@/hooks/use-follow', () => ({ useFollowOverrides: () => new Map(), toggleFollowFor: vi.fn() }));
 vi.mock('@/hooks/use-live-audience', () => ({ useLiveAudience: () => ({ data: undefined, isLoading: false }) }));
 vi.mock('@/components/app/BadgeIcon', () => ({ BadgeIcon: () => null }));
+vi.mock('@/hooks/use-live-creators', () => ({ useIsLive: () => false, useLiveTarget: () => null, liveTargetPath: () => '' }));
 afterEach(() => { cleanup(); vi.restoreAllMocks(); vi.unstubAllGlobals(); });
 
 function mount(progress = 0.5) {

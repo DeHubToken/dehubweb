@@ -61,7 +61,7 @@ import {
   type PostReaction,
   type ReactionCounts,
 } from '@/lib/reactions';
-import { ReactionEmoji, animatedReactionSrc } from './ReactionEmoji';
+import { ReactionEmoji, preloadAnimatedReaction } from './ReactionEmoji';
 
 /** How close to the edge of the screen the tray is allowed to sit, in px. */
 const EDGE_MARGIN = 8;
@@ -125,6 +125,10 @@ export function ReactionPicker({
   const reactions = [...positives, ...negatives];
   const isDrawer = useIsMobile();
   const trayRef = useRef<HTMLDivElement>(null);
+  // Marks where the tray hangs in the action bar. The tray itself is portalled
+  // out of the post card (see below), so it is placed from this box.
+  const anchorRef = useRef<HTMLSpanElement>(null);
+  const [anchor, setAnchor] = useState<{ bottom: number; x: number } | null>(null);
   const reduceMotion = useReducedMotion();
   // How far the tray has been pulled back inside the viewport, in px. Kept on a
   // ref as well as in state because each measurement has to subtract the nudge
@@ -144,7 +148,7 @@ export function ReactionPicker({
   // rather than flashing the still emoji while the first file loads.
   useEffect(() => {
     if (!open || reduceMotion) return;
-    for (const reaction of reactions) new Image().src = animatedReactionSrc(reaction.key);
+    for (const reaction of reactions) preloadAnimatedReaction(reaction.key).catch(() => {});
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [open, reduceMotion, polarity]);
   useEffect(() => {
@@ -177,16 +181,30 @@ export function ReactionPicker({
 
   // Measured on every opening rather than once: the button this hangs off moves
   // with the feed. A resize or a rotation invalidates the figure outright.
+  // Scrolling closes the tray, so nothing else can move it while it is open.
   useLayoutEffect(() => {
     if (!open || isDrawer) {
       nudgeRef.current = 0;
       setNudge(0);
+      setAnchor(null);
       return;
     }
-    clampToViewport();
-    window.addEventListener('resize', clampToViewport);
-    return () => window.removeEventListener('resize', clampToViewport);
-  }, [open, isDrawer, clampToViewport]);
+    const place = () => {
+      const rect = anchorRef.current?.getBoundingClientRect();
+      if (!rect) return;
+      setAnchor({
+        bottom: window.innerHeight - rect.top + 8,
+        x: align === 'left' ? rect.left : align === 'center' ? rect.left + rect.width / 2 : rect.right,
+      });
+    };
+    place();
+    window.addEventListener('resize', place);
+    return () => window.removeEventListener('resize', place);
+  }, [open, isDrawer, align]);
+
+  useLayoutEffect(() => {
+    if (open && !isDrawer && anchor) clampToViewport();
+  }, [open, isDrawer, anchor, clampToViewport]);
 
   // Dismiss on any press outside the tray, on scroll, and on Escape.
   useEffect(() => {
@@ -216,9 +234,14 @@ export function ReactionPicker({
     };
   }, [open, onClose]);
 
+  // Both the drawer and the desktop tray render outside the post card. A card
+  // is frosted glass itself, and anything with a backdrop filter, a filter or
+  // a fade traps a nested blur inside it, so a tray drawn in the card could
+  // only frost the card's own pixels and read as see-through over the feed.
+  const portalTarget =
+    typeof document === 'undefined' ? null : document.getElementById('app-root') ?? document.body;
+
   if (isDrawer) {
-    const portalTarget =
-      typeof document === 'undefined' ? null : document.getElementById('app-root') ?? document.body;
     if (!portalTarget) return null;
     const stop = (e: { stopPropagation: () => void }) => e.stopPropagation();
     return createPortal(
@@ -420,27 +443,26 @@ export function ReactionPicker({
     );
   };
 
+  const shift = align === 'right' ? '-100%' : align === 'center' ? '-50%' : '0px';
+
   return (
+    <>
+    {open && <span ref={anchorRef} aria-hidden="true" className="pointer-events-none absolute inset-0" />}
+    {portalTarget && createPortal(
     <AnimatePresence>
-      {open && (
+      {open && anchor && (
         /* The positioned box is a plain div so the nudge that keeps the tray on
            screen is never fighting the entrance animation's own transform, and
            so the width cap applies to a box that is not being scaled as it
-           opens. */
+           opens. It sits 8px above the action bar's thumb group. */
         <div
           ref={trayRef}
           data-no-navigate
-          className={cn(
-            'absolute bottom-full mb-2 z-50 max-w-[calc(100vw-1rem)]',
-            align === 'right' && 'right-0',
-            align === 'left' && 'left-0',
-            align === 'center' && 'left-1/2',
-          )}
+          className="fixed z-[75] max-w-[calc(100vw-1rem)]"
           style={{
-            transform:
-              align === 'center'
-                ? `translateX(calc(-50% + ${nudge}px))`
-                : `translateX(${nudge}px)`,
+            bottom: anchor.bottom,
+            left: anchor.x,
+            transform: `translateX(calc(${shift} + ${nudge}px))`,
           }}
         >
         <motion.div
@@ -527,6 +549,9 @@ export function ReactionPicker({
         </motion.div>
         </div>
       )}
-    </AnimatePresence>
+    </AnimatePresence>,
+    portalTarget,
+    )}
+    </>
   );
 }

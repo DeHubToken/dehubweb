@@ -49,7 +49,7 @@ shared styles or rewrite stored preferences to work around an older binary.
 
 Verify the mobile fallback with an extra style on a binary without Skia, both
 paused and playing, on Home and Explore. Also check a Skia-enabled binary and
-the matching web style on `staging.dehub.io`. Keep the recovery OTA on the
+the matching web style on `dehub.io`. Keep the recovery OTA on the
 affected runtime so existing installs can receive it. Confirm its update ID
 on the affected phone before treating the blackout as resolved.
 

@@ -206,6 +206,7 @@ export const QuotedPostEmbed = memo(function QuotedPostEmbed({ quotedPost, class
   return (
     <div
       onClick={handleClick}
+      data-glass-embed
       className={`border border-zinc-700/60 rounded-2xl overflow-hidden cursor-pointer hover:bg-white/[0.03] transition-colors ${className || ''}`}
     >
       {/* Media thumbnail (top, like Twitter) */}

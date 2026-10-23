@@ -83,6 +83,7 @@ export function SlashSkillDropdown({
   return (
     <div
       ref={listRef}
+      data-glass-menu
       className="absolute bottom-full left-0 right-0 mb-2 z-50 rounded-2xl bg-black/70 backdrop-blur-[24px] border border-white/10 shadow-2xl overflow-hidden max-w-md"
     >
       <div className="px-3 py-2 flex items-center justify-between border-b border-white/5">

@@ -17,6 +17,7 @@ import { VIDEO_MODELS, getVideoCostUsd } from '@/constants/video-models.constant
 import { MODEL3D_MODELS, getModel3dCostUsd } from '@/constants/model3d-models.constants';
 import dehubCoin from '@/assets/dehub-coin.png';
 import { cn } from '@/lib/utils';
+import { useAppTheme } from '@/contexts/ThemeContext';
 
 export type GalleryItem = { id: string; image_url: string | null; video_url: string | null; created_at: string };
 
@@ -57,50 +58,46 @@ export function thumbUrl(url: string, width = 480): string {
 }
 
 /**
- * The hero's backdrop: a tilted wall of recent community stills, dimmed and
- * faded into the page. Decorative, so it is hidden from assistive tech and
- * simply stays empty if the gallery cannot load.
+ * The hero's backdrop: a silent loop of Maboroshi before/after swaps (no text in
+ * it), dimmed and faded into the page. Phones get a vertical cut. With
+ * reduced motion only the still poster shows. Decorative, so hidden from
+ * assistive tech.
  */
 export function CreatorHeroWall() {
-  const [items, setItems] = useState<GalleryItem[]>([]);
-  useEffect(() => {
-    let cancelled = false;
-    void loadCreatorGallery().then((all) => {
-      if (!cancelled) setItems(all.filter((i) => i.image_url).slice(0, 15));
-    });
-    return () => { cancelled = true; };
-  }, []);
+  const { theme } = useAppTheme();
+  const [phone] = useState(() => typeof window !== 'undefined' && window.matchMedia('(max-width: 639px)').matches);
+  const [still] = useState(() => typeof window !== 'undefined' && window.matchMedia('(prefers-reduced-motion: reduce)').matches);
+  const cut = phone ? '9x16' : '16x9';
+  if (theme === 'glass') return null;
 
   return (
     <div
       aria-hidden
+      data-creator-hero-video
       className="pointer-events-none absolute inset-x-0 top-0 z-0 h-[600px] overflow-hidden sm:h-[640px]"
       // Faded out by a mask rather than painted over, so it melts into
       // whatever each theme draws behind the page.
-      style={{ WebkitMaskImage: 'linear-gradient(to bottom, #000 45%, transparent)', maskImage: 'linear-gradient(to bottom, #000 45%, transparent)' }}
+      style={{ WebkitMaskImage: 'linear-gradient(to bottom, #000 55%, transparent)', maskImage: 'linear-gradient(to bottom, #000 55%, transparent)' }}
     >
-      {items.length > 0 && (
-        <div className="absolute -inset-x-16 -top-10 grid rotate-[-4deg] grid-cols-3 gap-3 opacity-50 sm:grid-cols-5">
-          {items.map((item, i) => (
-            <div
-              key={item.id}
-              className={cn('aspect-[3/4] overflow-hidden rounded-2xl bg-white/5', i % 2 === 1 && '-translate-y-10', i >= 9 && 'hidden sm:block')}
-            >
-              <img
-                src={thumbUrl(item.image_url!, 320)}
-                alt=""
-                loading="lazy"
-                decoding="async"
-                fetchPriority="low"
-                className="h-full w-full object-cover"
-                draggable={false}
-              />
-            </div>
-          ))}
-        </div>
+      {still ? (
+        <img src={`/creator-hero/hero-${cut}-poster.jpg`} alt="" className="h-full w-full object-cover" draggable={false} />
+      ) : (
+        <video
+          className="h-full w-full object-cover"
+          poster={`/creator-hero/hero-${cut}-poster.jpg`}
+          autoPlay
+          muted
+          loop
+          playsInline
+          preload="auto"
+          disablePictureInPicture
+        >
+          <source src={`/creator-hero/hero-${cut}.webm`} type="video/webm" />
+          <source src={`/creator-hero/hero-${cut}.mp4`} type="video/mp4" />
+        </video>
       )}
-      {/* Dims the wall so the headline and composer stay readable. */}
-      <div className="absolute inset-0" style={{ background: 'radial-gradient(ellipse at 50% 35%, rgba(9,10,11,0.45), rgba(9,10,11,0.8) 70%)' }} />
+      {/* Dims the video so the headline and composer stay readable. */}
+      <div className="absolute inset-0" style={{ background: 'radial-gradient(ellipse at 50% 40%, rgba(9,10,11,0.5), rgba(9,10,11,0.88) 75%)' }} />
     </div>
   );
 }

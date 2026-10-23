@@ -69,3 +69,26 @@ Deno.test('exact follow and posting commands preserve explicit intent without a 
     assert(rejected, 'accepted a schedule outside the rate budget');
   }
 });
+
+Deno.test('every post in a time window: views, likes and written replies from the task form', () => {
+  const plan = explicitTaskPlan('Every post from 2026-10-01T00:00:00Z to 2026-10-08T00:00:00Z\nActions: view, like, reply\nReply style: warm and brief');
+  assert(plan?.interval_minutes === null && plan.steps.length === 3, 'lost an action');
+  assert(plan!.steps.every(step => step.audience === 'posts' && step.from === '2026-10-01T00:00:00.000Z' && step.to === '2026-10-08T00:00:00.000Z'), 'lost the window');
+  assert(plan!.steps[0].tool === 'dehub_view' && plan!.steps[1].arguments.vote_type === 'like' && plan!.steps[2].topic === 'warm and brief', 'wrong actions');
+  assert(explicitTaskPlan('Every post from 2026-10-01T00:00:00Z to 2026-10-02T00:00:00Z\nActions: view')?.steps.length === 1);
+  for (const prompt of ['Every post from 2026-10-01T00:00:00Z to 2026-10-02T00:00:00Z\nActions: reply', 'Every post from 2026-10-01T00:00:00Z to 2026-10-02T00:00:00Z\nActions: tip', 'Every post from yesterday to 2026-10-02T00:00:00Z\nActions: view']) {
+    let rejected = false;
+    try { explicitTaskPlan(prompt); } catch { rejected = true; }
+    assert(rejected, `accepted: ${prompt}`);
+  }
+  let reversed = false;
+  try { explicitTaskPlan('Every post from 2026-10-02T00:00:00Z to 2026-10-01T00:00:00Z\nActions: view'); } catch { reversed = true; }
+  assert(reversed, 'accepted a window that ends before it starts');
+});
+Deno.test('views and written replies are limited to posts', () => {
+  const step = base.steps[0];
+  assert(taskPlanSchema.safeParse({ ...base, steps: [{ ...step, tool: 'dehub_view', arguments: {} }] }).success);
+  assert(!taskPlanSchema.safeParse({ ...base, steps: [{ ...step, tool: 'dehub_view', arguments: {}, audience: 'all_users', from: null, to: null }] }).success);
+  assert(taskPlanSchema.safeParse({ ...base, steps: [{ ...step, tool: 'dehub_comment', arguments: {}, topic: 'Friendly' }] }).success);
+  assert(!taskPlanSchema.safeParse({ ...base, steps: [{ ...step, tool: 'dehub_comment', arguments: { token_id: '1' }, audience: 'single', from: null, to: null, topic: 'Friendly' }] }).success);
+});

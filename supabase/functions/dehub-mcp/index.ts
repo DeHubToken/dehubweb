@@ -102,27 +102,52 @@ const AUTH_HINT =
 // ============= DeHub authentication =============
 
 /**
- * Build the DeHub authentication message.
- * Must match the backend verification format exactly.
- * timestamp is Unix epoch seconds.
+ * The backend issues a single-use challenge per sign-in (WALLET_CHALLENGE_REQUIRED),
+ * and refuses the old timestamp message. Rebuild the text locally so the agent
+ * key only ever signs the login wording, never something the server chose.
  */
-function buildAuthMessage(address: string, timestamp: number): string {
-  const displayedDate = new Date(timestamp * 1000);
-  return `Welcome to DeHub!\n\nClick to sign in for authentication.\nSignatures are valid for 24 hours.\nYour wallet address is ${address}.\nIt is ${displayedDate.toUTCString()}.`;
+function buildChallengeMessage(proof: { challengeId: string; address: string; chainId: number; purpose: string; timestamp: number }): string {
+  return [
+    "dehub.io requests wallet verification.",
+    "",
+    "URI: https://dehub.io",
+    "Version: 2",
+    "Address: " + proof.address.toLowerCase(),
+    "Chain ID: " + proof.chainId,
+    "Purpose: " + proof.purpose,
+    "Nonce: " + proof.challengeId,
+    "Issued At: " + new Date(proof.timestamp * 1000).toISOString(),
+    "Expiration Time: " + new Date((proof.timestamp + 600) * 1000).toISOString(),
+    "",
+    "This request is single-use. It does not authorize a blockchain transaction.",
+  ].join("\n");
 }
 
-async function authenticateWithDeHub(privateKey: string, ownedRegistration?: { ownerToken: string; registrationId: string }): Promise<string | null> {
+async function authenticateWithDeHub(privateKey: string, ownedRegistration?: { ownerToken: string; registrationId: string }): Promise<{ token: string; expiresIn: number } | null> {
   try {
     const wallet = new Wallet(privateKey);
     const address = wallet.address.toLowerCase();
-    const timestamp = Math.floor(Date.now() / 1000);
-    const message = buildAuthMessage(address, timestamp);
+    const challengeResponse = await fetch(`${DEHUB_API_BASE}/api/auth/wallet-challenge`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ address, chainId: CHAIN_ID, purpose: "login-web" }),
+    });
+    if (!challengeResponse.ok) {
+      console.error(`[DeHub Auth] Challenge failed (${challengeResponse.status}):`, await challengeResponse.text());
+      return null;
+    }
+    const challenge = await challengeResponse.json();
+    const message = buildChallengeMessage({ ...challenge, address, chainId: CHAIN_ID, purpose: "login-web" });
+    if (challenge.address !== address || challenge.message !== message) {
+      console.error("[DeHub Auth] Challenge text did not match the login wording.");
+      return null;
+    }
     const sig = await wallet.signMessage(message);
 
     const response = await fetch(`${DEHUB_API_BASE}/api/web/auth`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ address, sig, timestamp, chainId: CHAIN_ID, ownedRegistration }),
+      body: JSON.stringify({ address, sig, timestamp: challenge.timestamp, chainId: CHAIN_ID, challengeId: challenge.challengeId, ownedRegistration }),
     });
 
     if (!response.ok) {
@@ -136,16 +161,15 @@ async function authenticateWithDeHub(privateKey: string, ownedRegistration?: { o
       console.error("[DeHub Auth] No token in response:", JSON.stringify(data));
       return null;
     }
-    return token;
+    return { token, expiresIn: Number(data.result?.expiresIn ?? data.expiresIn) || 15 * 60 };
   } catch (error) {
     console.error("[DeHub Auth] Error:", error);
     return null;
   }
 }
 
-// Signatures are good for 24h; re-sign well inside that. Instances are recycled
+// Access tokens last 15 minutes. Re-sign a minute early; instances are recycled
 // often, so this only saves the repeat calls within one warm instance.
-const TOKEN_TTL_MS = 6 * 60 * 60 * 1000;
 const tokenCache = new Map<string, { token: string; expiresAt: number }>();
 
 async function getAgentToken(agent: AgentRow): Promise<string | null> {
@@ -153,9 +177,10 @@ async function getAgentToken(agent: AgentRow): Promise<string | null> {
   if (cached && cached.expiresAt > Date.now()) return cached.token;
   if (!agent.wallet_private_key) return null;
 
-  const token = await authenticateWithDeHub(agent.wallet_private_key);
-  if (token) tokenCache.set(agent.id, { token, expiresAt: Date.now() + TOKEN_TTL_MS });
-  return token;
+  const session = await authenticateWithDeHub(agent.wallet_private_key);
+  if (!session) return null;
+  tokenCache.set(agent.id, { token: session.token, expiresAt: Date.now() + Math.max(60, session.expiresIn - 60) * 1000 });
+  return session.token;
 }
 
 /**
@@ -486,7 +511,7 @@ async function registerAgent(
   const privateKey = registration.wallet_private_key!;
   const apiKey = registration.api_key;
 
-  const authToken = await authenticateWithDeHub(privateKey, { ownerToken: auth.token, registrationId: registration.id });
+  const authToken = (await authenticateWithDeHub(privateKey, { ownerToken: auth.token, registrationId: registration.id }))?.token;
   if (!authToken) {
     return { status: 502, body: { error: `Account setup could not finish. Retry with the same name "${name}" to continue the reserved registration.` } };
   }
@@ -641,7 +666,7 @@ function buildServer(apiKey: string | null, req: Request, registry?: Map<string,
       if (agent) {
         const token = await getAgentToken(agent);
         if (!token) return fail('Could not authenticate to record public post views.');
-        await recordPostViews(ids, { token });
+        await recordPostViews(ids, { token, agent: true });
       } else {
         await recordPostViews(ids, {
           anonymousUrl: `${SUPABASE_URL}/functions/v1/anon-views`,
@@ -1146,12 +1171,13 @@ function buildServer(apiKey: string | null, req: Request, registry?: Map<string,
       if (!token) return fail("Failed to authenticate the agent wallet with the DeHub API.");
 
       const vote = vote_type === "like";
+      // Reacting to a post means seeing it, so the view is recorded first either way.
+      try { await recordPostViews([token_id], { token, agent: true }); }
+      catch { return fail('Could not record the public post view. No vote was sent. Please retry.'); }
       if (ensure) {
         const current = await dehubApi(`/api/nft_info/${encodeURIComponent(token_id)}`, { token });
         if (!current.ok) return fail("Could not verify the current reaction. No vote was sent.");
         const post = unwrap(current.data);
-        try { await recordPostViews([post?.tokenId], { token }); }
-        catch { return fail('Could not record the public post view. No vote was sent. Please retry.'); }
         if ((vote && post.isLiked === true) || (!vote && post.isDisliked === true)) return ok({ success: true, skipped: true, token_id, message: "This reaction is already set." });
       }
       // The backend reads `vote` from the query string because a `false` body
@@ -1201,6 +1227,9 @@ function buildServer(apiKey: string | null, req: Request, registry?: Map<string,
       const token = await getAgentToken(agent);
       if (!token) return fail("Failed to authenticate the agent wallet with the DeHub API.");
 
+      try { await recordPostViews([token_id], { token, agent: true }); }
+      catch { return fail('Could not record the public post view. No comment was sent. Please retry.'); }
+
       // Field names must match the web client: streamTokenId/content/commentId.
       // The old tokenId/wallet/comment body was rejected outright.
       const body: Record<string, unknown> = { streamTokenId: Number(token_id), content };
@@ -1214,8 +1243,36 @@ function buildServer(apiKey: string | null, req: Request, registry?: Map<string,
         success: true,
         token_id,
         comment: unwrap(response.data),
+        comment_id: (response.data as any)?.commentId ?? (response.data as any)?.comment?.id ?? unwrap(response.data)?.id ?? null,
         comments_remaining_this_hour: check.remaining,
       });
+    },
+  );
+
+  register(
+    "dehub_view",
+    {
+      title: "View a post",
+      description:
+        "Record that this agent viewed a post. The view counts in the post's public view total like any other signed-in view (once per viewer per post per cooldown) and is tagged as agent traffic. dehub_feed, dehub_post, dehub_vote and dehub_comment already record views for the posts they touch.",
+      inputSchema: {
+        token_id: z.string().regex(/^\d+$/).describe("The token ID of the post"),
+      },
+      annotations: { ...WRITE, idempotentHint: true, title: "View a post" },
+    },
+    async ({ token_id }) => {
+      const supabase = db();
+      const resolved = await requireAgent(apiKey, supabase, { needsWallet: true });
+      if ("error" in resolved) return resolved.error;
+      const { agent } = resolved;
+      const check = await checkRateLimit(supabase, agent.id, "default");
+      if (!check.allowed) return rateLimited("read operations", check.resetAt);
+      const token = await getAgentToken(agent);
+      if (!token) return fail("Failed to authenticate the agent wallet with the DeHub API.");
+      try { await recordPostViews([token_id], { token, agent: true }); }
+      catch (error) { return fail(error instanceof Error ? error.message : "Could not record the view."); }
+      await touchAgent(supabase, agent.id);
+      return ok({ success: true, token_id, viewed: true });
     },
   );
 
@@ -1433,7 +1490,7 @@ app.use("/*", async (c, next) => {
 });
 
 app.post("/*", async (c, next) => {
-  if (!/\/tasks(?:\/tick)?$/.test(new URL(c.req.url).pathname)) return next();
+  if (!/\/(?:tasks(?:\/tick)?|life\/tick)$/.test(new URL(c.req.url).pathname)) return next();
   try {
     return await handleTaskRequest(c.req.raw, {
       db,

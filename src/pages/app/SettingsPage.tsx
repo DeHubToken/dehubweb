@@ -116,6 +116,7 @@ import { EmailSignInSettings } from '@/components/app/settings/EmailSignInSettin
 import { EnsHandleSettings } from '@/components/app/settings/EnsHandleSettings';
 import { SolanaWalletSettings } from '@/components/app/settings/SolanaWalletSettings';
 import { StreamKeySettings } from '@/components/app/settings/StreamKeySettings';
+import { TwitchMirrorSettings } from '@/components/app/settings/TwitchMirrorSettings';
 import { ActiveSessions } from '@/components/app/settings/ActiveSessions';
 import { ProfilesSection } from '@/components/app/settings/ProfilesSection';
 import { CollapsibleStack } from '@/components/app/settings/CollapsibleStack';
@@ -400,7 +401,7 @@ export default function SettingsPage() {
             aria-controls="settings-search-results"
           />
           {settingsSearchFocused && settingsSearch.trim() && (
-            <div id="settings-search-results" role="listbox" className="absolute left-0 right-0 top-full mt-2 z-40 bg-zinc-900 border border-white/10 rounded-xl overflow-hidden shadow-xl">
+            <div id="settings-search-results" role="listbox" data-glass-menu className="absolute left-0 right-0 top-full mt-2 z-40 bg-zinc-900 border border-white/10 rounded-xl overflow-hidden shadow-xl">
               {settingsSearchResults.length > 0 ? (
                 settingsSearchResults.map((result, i) => (
                   <button
@@ -1237,6 +1238,10 @@ function ProfileSettings() {
         <div data-setting-anchor="stream-key">
           <h3 className={SETTINGS_HEADING_CLASS}>{t('settings.streamKey.section', 'Stream key')}</h3>
           <StreamKeySettings />
+        </div>
+        <div data-setting-anchor="twitch-mirror" id="twitch-mirror">
+          <h3 className={SETTINGS_HEADING_CLASS}>{t('twitchMirror.title')}</h3>
+          <TwitchMirrorSettings />
         </div>
 
         {/* Badge delegation — a badge is a profile-facing thing (who holds
@@ -2521,6 +2526,7 @@ const THEME_OPTIONS = [
   { value: 'immersive', labelKey: 'settings.immersive', available: true },
   { value: 'minimal', labelKey: 'settings.minimal', available: true },
   { value: 'light', labelKey: 'settings.minimalLight', available: true },
+  { value: 'glass', labelKey: 'settings.glass', available: true },
   { value: 'cosmic', labelKey: 'settings.cosmic', available: true },
   { value: 'hazy', labelKey: 'settings.hazy', available: true },
   { value: 'swarms', labelKey: 'settings.swarms', available: true },
@@ -2559,7 +2565,7 @@ function AppearanceSettings({ theme, themeChoice, setTheme }: { theme: string; t
               <ThemePreviewCard
                 key={option.value}
                 value={option.value}
-                label={t(option.labelKey)}
+                label={option.value === 'glass' ? 'Glassy' : t(option.labelKey)}
                 active={themeChoice === option.value}
                 available={option.available}
                 onSelect={() => {
@@ -2575,7 +2581,7 @@ function AppearanceSettings({ theme, themeChoice, setTheme }: { theme: string; t
         </div>
 
         {/* Custom color for hue-driven WebGL themes */}
-        {(theme === 'cosmic' || theme === 'hazy' || theme === 'swarms' || theme === 'lavalamp') && (
+        {(theme === 'glass' || theme === 'cosmic' || theme === 'hazy' || theme === 'swarms' || theme === 'lavalamp') && (
           <div data-setting-anchor="theme-color">
             <ThemeColorPicker theme={theme} />
           </div>

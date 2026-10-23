@@ -263,7 +263,7 @@ function ShortCaption({
             data-shorts-scrollable={expanded || undefined}
             style={expanded ? { touchAction: 'pan-y' } : undefined}
             className={`overflow-y-auto scrollbar-hide transition-all duration-200 ${
-              expanded ? 'max-h-[calc(2.5rem+200px)]' : ''
+              expanded ? 'max-h-[55svh]' : ''
             }`}
           >
             {shownTitle && (
@@ -317,6 +317,11 @@ const SMOOTH_TRANSITION = {
 // seek strip so a restore tap never scrubs the timeline.
 const RESTORE_ZONE_TOP = 0.61; // 30% -> 24% of the frame: 20% smaller.
 const RESTORE_ZONE_BOTTOM = 0.85;
+
+// The play/pause target: the middle third of the frame on both axes. A tap
+// outside it hides or shows the buttons instead.
+const PAUSE_ZONE_START = 1 / 3;
+const PAUSE_ZONE_END = 2 / 3;
 
 // How long a short plays untouched before the chrome clears itself. The
 // swipe-down is a deliberate act almost nobody discovers, so a short played
@@ -399,12 +404,9 @@ export function ShortsViewer({ shorts, initialIndex, onClose, onLoadMore, hasMor
   // Gesture tracking for overlay hide/show
   const overlaySwipeStartY = useRef<number | null>(null);
   const overlaySwipeStartX = useRef<number | null>(null);
-  // Tap-to-restore tracking (used only while the chrome is hidden)
-  const restoreTouchStart = useRef<{ x: number; y: number } | null>(null);
-  // Set when a restore tap fires so the click it synthesises doesn't also
-  // pause the video; cleared by the next togglePlayPause or the timer below.
-  const suppressVideoTapRef = useRef(false);
-  const suppressVideoTapTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+  // What the last video tap did, so the second tap of a double tap (a like)
+  // can put it back: a pause, or the chrome state from before the toggle.
+  const lastVideoTap = useRef<{ kind: 'pause' } | { kind: 'chrome'; overlaysHidden: boolean; autoHidden: boolean } | null>(null);
 
   // Drag state for visual feedback
   // Finger movement stays on the compositor, without rerendering every sheet,
@@ -1057,13 +1059,6 @@ export function ShortsViewer({ shorts, initialIndex, onClose, onLoadMore, hasMor
   const lastToggleTookEffect = useRef(false);
 
   const togglePlayPause = useCallback(() => {
-    // A tap that just brought the hidden chrome back is a "restore", not a
-    // play/pause — swallow the click it synthesises.
-    if (suppressVideoTapRef.current) {
-      suppressVideoTapRef.current = false;
-      lastToggleTookEffect.current = false;
-      return;
-    }
     // The auto-clear takes no restore band and swallows no tap: it was never
     // asked for, so undoing it should not cost the viewer the play/pause they
     // meant. The timer re-arms off the state change and clears it again.
@@ -1188,45 +1183,44 @@ export function ShortsViewer({ shorts, initialIndex, onClose, onLoadMore, hasMor
     overlaySwipeStartX.current = null;
   }, [isMobile, overlaysHidden, goToNext, goToPrev]);
 
-  // Keep tap-to-restore as a second route. The carousel also accepts an
-  // upward swipe from this lower area without paging (isRestoreDrag).
-  const handleRestoreTouchStart = useCallback((e: React.PointerEvent) => {
-    if (!isMobile || !overlaysHidden || showComments) return;
-    restoreTouchStart.current = { x: e.clientX, y: e.clientY };
-  }, [isMobile, overlaysHidden, showComments]);
-
-  const handleRestoreTouchEnd = useCallback((e: React.PointerEvent) => {
-    const start = restoreTouchStart.current;
-    restoreTouchStart.current = null;
-    if (!isMobile || !overlaysHidden || showComments || !start) return;
-
+  /**
+   * A tap on the video itself (buttons, caption and avatar take their own).
+   *
+   * The centre of the frame, a third of its width and a third of its height,
+   * plays and pauses. Anywhere else clears every button off the video for an
+   * immersive view, and the next tap there brings them all back.
+   */
+  const handleVideoTap = useCallback((event?: React.PointerEvent) => {
     const frame = videoContainer?.getBoundingClientRect();
-    if (!frame) return;
-    const startY = start.y - frame.top;
-    const screenHeight = frame.height;
-
-    // Stops short of the bottom 15% so a restore tap never scrubs the timeline.
-    const startedInZone =
-      startY > screenHeight * RESTORE_ZONE_TOP &&
-      startY < screenHeight * RESTORE_ZONE_BOTTOM;
-    if (!startedInZone) return;
-
-    const isTap =
-      Math.abs(e.clientY - start.y) < 10 && Math.abs(e.clientX - start.x) < 10;
-    if (!isTap) return;
-
-    setOverlaysHidden(false);
+    const x = event && frame?.width ? (event.clientX - frame.left) / frame.width : 0.5;
+    const y = event && frame?.height ? (event.clientY - frame.top) / frame.height : 0.5;
+    const inPauseZone =
+      x >= PAUSE_ZONE_START && x <= PAUSE_ZONE_END &&
+      y >= PAUSE_ZONE_START && y <= PAUSE_ZONE_END;
+    if (inPauseZone) {
+      lastVideoTap.current = { kind: 'pause' };
+      togglePlayPause();
+      return;
+    }
+    lastVideoTap.current = { kind: 'chrome', overlaysHidden, autoHidden };
+    const hide = !(overlaysHidden || autoHidden);
+    setOverlaysHidden(hide);
     setAutoHidden(false);
-    suppressVideoTapRef.current = true;
-    if (suppressVideoTapTimer.current) clearTimeout(suppressVideoTapTimer.current);
-    suppressVideoTapTimer.current = setTimeout(() => {
-      suppressVideoTapRef.current = false;
-    }, 400);
-  }, [isMobile, overlaysHidden, showComments, videoContainer]);
+    if (hide) setIsDescriptionExpanded(false);
+  }, [videoContainer, overlaysHidden, autoHidden, togglePlayPause]);
 
-  useEffect(() => () => {
-    if (suppressVideoTapTimer.current) clearTimeout(suppressVideoTapTimer.current);
-  }, []);
+  /** The second tap of a double tap turned the first into a like: undo it. */
+  const undoVideoTap = useCallback(() => {
+    const last = lastVideoTap.current;
+    lastVideoTap.current = null;
+    if (!last) return;
+    if (last.kind === 'pause') {
+      undoPlayPause();
+      return;
+    }
+    setOverlaysHidden(last.overlaysHidden);
+    setAutoHidden(last.autoHidden);
+  }, [undoPlayPause]);
 
   /**
    * Clear the chrome once the short has played untouched for AUTO_HIDE_MS.
@@ -1376,7 +1370,12 @@ export function ShortsViewer({ shorts, initialIndex, onClose, onLoadMore, hasMor
       initial={false}
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
-      data-media-full
+      // Phones are all picture, so the whole viewer keeps its white chrome.
+      // On desktop only the player is: the side panels sit on the page's own
+      // colours, so in System Light they read ink on white and the scrim
+      // becomes the white page instead of letting the feed show through.
+      data-media-full={isMobile ? '' : undefined}
+      data-shorts-viewer
       className={cn("fixed inset-0 z-[60] flex items-center justify-center", isMobile ? "bg-black" : "bg-black/60 backdrop-blur-[24px]")}
       // `overscroll-behavior: contain` stops scroll-chaining/rubber-banding
       // without the `touch-action: none` that used to freeze the comments
@@ -1429,6 +1428,7 @@ export function ShortsViewer({ shorts, initialIndex, onClose, onLoadMore, hasMor
         <motion.div
           ref={attachVideoContainer}
           data-media-full
+          data-keep-dark
           className={cn(
             "relative overflow-hidden",
             isMobile
@@ -1452,11 +1452,7 @@ export function ShortsViewer({ shorts, initialIndex, onClose, onLoadMore, hasMor
           )}
           animate={isMobile ? { height: showComments ? '50%' : '100%' } : undefined}
           transition={SMOOTH_TRANSITION}
-          // Capture runs before the slide's pointer-up playback toggle. A
-          // restore tap must be consumed before that toggle, not after it.
-          onPointerDownCapture={handleRestoreTouchStart}
-          onPointerUpCapture={handleRestoreTouchEnd}
-          onPointerCancelCapture={() => { restoreTouchStart.current = null; resetDragOffset(); endTimelineSeek(); }}
+          onPointerCancelCapture={() => { resetDragOffset(); endTimelineSeek(); }}
           onMouseMove={isMobile ? undefined : handleDesktopPointerMove}
           onMouseLeave={isMobile ? undefined : handleDesktopPointerLeave}
         >
@@ -1503,8 +1499,8 @@ export function ShortsViewer({ shorts, initialIndex, onClose, onLoadMore, hasMor
                       isMuted={isMuted}
                       playbackRate={playbackRate}
                       onTimeUpdate={isActive ? trackView : undefined}
-                      onTap={togglePlayPause}
-                      onTapUndo={undoPlayPause}
+                      onTap={handleVideoTap}
+                      onTapUndo={undoVideoTap}
                       onSeekStart={beginTimelineSeek}
                       onSeekEnd={endTimelineSeek}
                       showPlayIndicator={isActive ? showPlayIndicator : null}
@@ -1621,7 +1617,7 @@ export function ShortsViewer({ shorts, initialIndex, onClose, onLoadMore, hasMor
                       <button onClick={() => handleNavigateToProfile()} className="flex-shrink-0">
                         <Avatar className="w-11 h-11 rounded-xl border-2 border-white/20" key={currentShort.avatar || currentShort.id}>
                           <AvatarImage src={currentShort.avatar} alt={currentShort.creatorUsername || currentShort.username} className="rounded-xl" />
-                          <AvatarFallback className="bg-zinc-700 text-white font-medium rounded-xl">{(currentShort.creatorUsername || currentShort.username)[0]?.toUpperCase()}</AvatarFallback>
+                          <AvatarFallback data-keep-dark className="bg-zinc-700 text-white font-medium rounded-xl">{(currentShort.creatorUsername || currentShort.username)[0]?.toUpperCase()}</AvatarFallback>
                         </Avatar>
                       </button>
                       <button onClick={() => handleNavigateToProfile()} className="flex flex-col items-start text-left min-w-0">
@@ -1636,6 +1632,8 @@ export function ShortsViewer({ shorts, initialIndex, onClose, onLoadMore, hasMor
                 )}
 
                 <div
+                  data-shorts-actions
+                  data-on-media
                   className={cn(
                     "relative flex items-center justify-between px-4 pt-2",
                     chromeHidden ? "pointer-events-none" : "pointer-events-auto",
@@ -1808,8 +1806,8 @@ export function ShortsViewer({ shorts, initialIndex, onClose, onLoadMore, hasMor
           {/* Mobile-only overlays - TikTok-style layout */}
           {isMobile && (
             <>
-              {/* Lower-area upward swipes restore through the carousel;
-                  lower-band taps restore through the video container. */}
+              {/* Lower-area upward swipes restore through the carousel; a tap
+                  outside the centre restores through handleVideoTap. */}
 
               {/* Animated overlay container */}
               <motion.div
@@ -1817,6 +1815,23 @@ export function ShortsViewer({ shorts, initialIndex, onClose, onLoadMore, hasMor
                 animate={{ opacity: (chromeHidden || showComments) ? 0 : 1 }}
                 transition={{ duration: 0.25, ease: 'easeOut' }}
               >
+                {/* An open caption dims the video so it reads properly. A tap on
+                    the dimmed video closes it again. */}
+                <AnimatePresence>
+                  {isDescriptionExpanded && !showComments && !chromeHidden && (
+                    <motion.div
+                      key="caption-dim"
+                      data-keep-dark
+                      className="absolute inset-0 bg-black/70 pointer-events-auto"
+                      initial={{ opacity: 0 }}
+                      animate={{ opacity: 1 }}
+                      exit={{ opacity: 0 }}
+                      transition={{ duration: 0.2, ease: 'easeOut' }}
+                      onClick={() => setIsDescriptionExpanded(false)}
+                    />
+                  )}
+                </AnimatePresence>
+
                 {/* Bottom gradient overlay - fades from transparent to black */}
                 <div className="absolute inset-x-0 bottom-0 h-1/2 bg-gradient-to-t from-black/80 via-black/40 to-transparent pointer-events-none" />
                 
@@ -1844,7 +1859,7 @@ export function ShortsViewer({ shorts, initialIndex, onClose, onLoadMore, hasMor
                     >
                       <Avatar className="w-12 h-12 rounded-xl" key={currentShort.avatar || currentShort.id}>
                         <AvatarImage src={currentShort.avatar} alt={currentShort.creatorUsername || currentShort.username} className="rounded-xl" />
-                        <AvatarFallback className="bg-zinc-700 text-white font-medium rounded-xl">{(currentShort.creatorUsername || currentShort.username)[0]?.toUpperCase()}</AvatarFallback>
+                        <AvatarFallback data-keep-dark className="bg-zinc-700 text-white font-medium rounded-xl">{(currentShort.creatorUsername || currentShort.username)[0]?.toUpperCase()}</AvatarFallback>
                       </Avatar>
                     </button>
                     <button
@@ -1871,6 +1886,8 @@ export function ShortsViewer({ shorts, initialIndex, onClose, onLoadMore, hasMor
                 {/* Action bar — horizontal row evenly spread across the bottom,
                     matching the feed post card action bar (like at far right). */}
                 <div
+                  data-shorts-actions
+                  data-on-media
                   className={cn("mt-3 px-4 flex items-center justify-between pointer-events-auto", (showComments || chromeHidden) && "pointer-events-none")}
                   onTouchStart={handleOverlayGestureTouchStart}
                   onTouchEnd={handleOverlayGestureTouchEnd}
@@ -2057,7 +2074,7 @@ export function ShortsViewer({ shorts, initialIndex, onClose, onLoadMore, hasMor
               >
                 <Avatar className="w-10 h-10 lg:w-12 lg:h-12 border-2 border-white/20 flex-shrink-0 rounded-xl" key={currentShort.avatar || currentShort.id}>
                   <AvatarImage src={currentShort.avatar} alt={currentShort.creatorUsername || currentShort.username} className="rounded-xl" />
-                  <AvatarFallback className="bg-zinc-700 text-white font-medium rounded-xl">{(currentShort.creatorUsername || currentShort.username)[0]?.toUpperCase()}</AvatarFallback>
+                  <AvatarFallback data-keep-dark className="bg-zinc-700 text-white font-medium rounded-xl">{(currentShort.creatorUsername || currentShort.username)[0]?.toUpperCase()}</AvatarFallback>
                 </Avatar>
                 <div className="flex flex-col flex-1 min-w-0">
                   {currentShort.displayName && (

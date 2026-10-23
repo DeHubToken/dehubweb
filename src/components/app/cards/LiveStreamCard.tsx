@@ -13,6 +13,7 @@ import { lazy, Suspense, useState, useCallback, useRef, useEffect, useMemo } fro
 import { useFeedPlaybackAllowed, visualActivity } from '@/lib/visual-activity';
 import { isVideoInPictureInPicture, releaseAfterPictureInPicture } from '@/lib/picture-in-picture';
 import { useVideoFullscreen } from '@/hooks/use-video-fullscreen';
+import { lockBodyScroll } from '@/lib/body-scroll-lock';
 import { useKeyboardOpen, useVisualViewportBox } from '@/hooks/use-keyboard-open';
 import { AppState } from '@/components/app/AppState';
 import { ButtonLoader } from '@/components/app/DeHubLoader';
@@ -22,7 +23,6 @@ import {
   setMediaSessionPlaying,
 } from '@/lib/media-session';
 import { useNavigate } from 'react-router-dom';
-import { motion } from 'framer-motion';
 import MoreVertical from "@/components/ui/cut-icons/morevertical";
 import { Heart, StopCircle, Activity, Loader2 } from "lucide-react";
 import AssistantNavIcon from "@/components/ui/AssistantNavIcon";
@@ -90,6 +90,8 @@ import { useLivePlaybackFeedback } from '@/hooks/use-live-playback-feedback';
 import { useStreamGifts } from '@/hooks/use-stream-gifts';
 import { useGiftAnimations } from '@/hooks/use-gift-animations';
 import { GiftAnimationOverlay } from '@/components/app/live/GiftAnimationOverlay';
+import { useStreamOverlay } from '@/hooks/use-stream-overlay';
+import { overlayOwnsCelebration as overlayReplacesCelebration } from '@/lib/live-overlay/built-in';
 import { LiveReactionFlow, type SelfReaction } from '@/components/app/live/LiveReactionFlow';
 import { useEngagementWeight } from '@/hooks/use-engagement-weight';
 import type { PostReaction } from '@/lib/reactions';
@@ -97,6 +99,9 @@ import { GIFT_TIERS, tierFromAmount } from '@/lib/live/gift-tiers';
 
 const LiveGiftBuyDrawer = lazy(() => import('@/components/app/live/LiveGiftBuyDrawer').then(m => ({ default: m.LiveGiftBuyDrawer })));
 const TipPayWith = lazy(() => import('@/components/app/tips/TipPayWith'));
+// The creator's overlay; lazy, most streams have none.
+const LiveOverlayLayer = lazy(() => import('@/components/app/live/overlay/LiveOverlayLayer'));
+const ReplayOverlayLayer = lazy(() => import('@/components/app/live/overlay/ReplayOverlayLayer'));
 import { speakTipMessage, warmTipTts, setTipTtsEnabled, MAX_TTS_CHARS } from '@/lib/live/tip-tts';
 import { useAuth } from '@/contexts/AuthContext';
 import { useBookmarkPost } from '@/hooks/use-bookmarks';
@@ -108,6 +113,9 @@ import { useTipPayment, MIN_TIP_DHB } from '@/hooks/use-tip-payment';
 import { useQueryClient } from '@tanstack/react-query';
 import { toast } from 'sonner';
 import { fundTipFromSource } from '@/lib/tip-funding-run';
+import type { DirectTipToken } from '@/lib/direct-tip-tokens';
+import { DHB_PRELISTING_USD } from '@/lib/subscription-pricing';
+
 import type { TipFundingSource } from '@/lib/tip-funding';
 import { formatDistanceToNow } from 'date-fns';
 // NOTE: stream-controller reaches wallet/contract code (aa-utils → wagmi) and
@@ -160,9 +168,19 @@ interface LiveStreamCardProps {
   immersive?: boolean;
 }
 
+/** What a gift of `dhb` costs in a dollar stablecoin, at the DHB sale peg. */
+const giftCostIn = (dhb: number) => Math.round(dhb * DHB_PRELISTING_USD * 1e6) / 1e6;
+
 export function LiveStreamCard({ stream, chatSlot, immersive = false }: LiveStreamCardProps) {
   const { t: _copy } = _useCopy();
   const keyboardOpen = useKeyboardOpen(immersive);
+  // Full-bleed sits `fixed` over the post page, so a swipe on it (or past the
+  // end of the chat) scrolled the page underneath and woke its videos. Hold
+  // the page still while the stream owns the screen.
+  useEffect(() => {
+    if (!immersive) return;
+    return lockBodyScroll('immersive-live');
+  }, [immersive]);
   // Android shrinks the fixed root with the keyboard (interactive-widget);
   // iOS keeps it full height and draws the keys over the chat box. Fit the
   // root to what is visible above the keys when that happens.
@@ -265,8 +283,13 @@ export function LiveStreamCard({ stream, chatSlot, immersive = false }: LiveStre
   const [error, setError] = useState<string | null>(null);
   const [giftAmount, setGiftAmount] = useSurfaceDraft("components/app/cards/LiveStreamCard.tsx:giftAmount", '', draftIdentity(stream));
   const [giftMessage, setGiftMessage] = useSurfaceDraft("components/app/cards/LiveStreamCard.tsx:giftMessage", '', draftIdentity(stream));
-  // Another token to pay the gift with; it becomes DHB on Base before the tip.
+  // USDC/USDT to pay the gift with, sent straight to the creator. The gift is
+  // still picked in DHB tiers; it costs those DHB at the sale peg in dollars.
   const [giftPayWith, setGiftPayWith] = useState<TipFundingSource | null>(null);
+  const giftDirect = giftPayWith?.direct ?? null;
+  // The token of the gift on its way, read when it is submitted (the payment
+  // reports the stablecoin amount; the room counts the DHB it stands for).
+  const sendingGiftToken = useRef<DirectTipToken | null>(null);
   const [fundingGift, setFundingGift] = useState(false);
   const [dhbBalance, setDhbBalance] = useState<string | null>(null);
   const [balanceLoading, setBalanceLoading] = useState(false);
@@ -384,38 +407,24 @@ export function LiveStreamCard({ stream, chatSlot, immersive = false }: LiveStre
       walletAddress.toLowerCase() === stream.creatorId.toLowerCase()
   );
   /*
-   * Counts this tab among the people watching, and reads the live number back.
-   *
-   * Web viewers were never counted at all — `addViewer` is reachable only
-   * through the stream gateway and only the mobile app connected, so the
-   * "tuned in" figure has always been mobile-only. Production streams show
-   * peaks of 0, 1 and 3 for exactly that reason.
-   *
-   * Falls back to the API's stored total when the socket has nothing to say
-   * yet, so the card never flashes a zero over a busy stream.
-   *
-   * The creator is never counted among their own audience. Joining bumps
-   * `totalViews` and moves `peakViewers`, so a host who scrolls past their own
-   * live post — or opens it to check how it looks — was inflating the figure
-   * they then read back off their broadcast console.
+   * Counts this tab among the viewers (web was never counted before) and
+   * reads the live number back, falling back to the stored total. The
+   * creator is never counted in their own audience.
    */
   const livePresence = useStreamPresence(
     stream.streamId,
     !!stream.isLive && !streamEnded && isPlaying && !isOwnStream
   );
-  const viewersLabel = livePresence != null ? String(livePresence) : stream.viewers;
 
   /*
-   * Gift celebrations.
-   *
-   * Two sources feed the same queue. The sender's own gift is enqueued the
-   * moment the tip transaction is submitted, because the round trip through
-   * the backend and back out over the socket takes seconds and a paid-for
-   * celebration should not lag the payment. Everyone else's arrives on the
-   * `streamer.tip` broadcast — which also echoes the sender's own gift back,
-   * so that echo is dropped on the wallet address to avoid playing it twice.
+   * Gift celebrations: the sender's own plays at submit, everyone else's off
+   * `streamer.tip`, whose echo of the sender's own is dropped below.
    */
   const { items: giftCelebrations, enqueue: enqueueGift } = useGiftAnimations();
+  // A creator's own tip alert replaces the built-in celebration, never both.
+  // A replay draws the overlay too, from the stream's own log (ReplayOverlayLayer).
+  const { data: streamOverlay } = useStreamOverlay(stream.streamId, (!!stream.isLive && !streamEnded) || (streamEnded && !!stream.replayUrl));
+  const overlayOwnsCelebration = overlayReplacesCelebration(streamOverlay);
   /**
    * The tier the amount currently in the box will play — whether it was
    * picked from a tile or typed. A custom amount is not a lesser gift; it
@@ -434,23 +443,29 @@ export function LiveStreamCard({ stream, chatSlot, immersive = false }: LiveStre
    * and the miss was a paid-for celebration playing twice.
    */
   const ownGiftHashes = useRef<Set<string>>(new Set());
-  useStreamGifts(stream.streamId, !!stream.isLive, (gift) => {
-    if (gift.transactionHash && ownGiftHashes.current.has(gift.transactionHash)) return;
+  const isOwnGift = (gift: { address?: string; transactionHash?: string }) => {
+    if (gift.transactionHash && ownGiftHashes.current.has(gift.transactionHash)) return true;
     const me = walletAddress?.toLowerCase();
-    if (me && gift.address && gift.address === me) return;
-    enqueueGift(gift);
-    // Read the sender's line out over the stream. Every client in the room
-    // synthesises the same sentence off this one broadcast, so the whole
-    // audience hears it at once — and within a second of the tip, rather than
-    // behind the HLS buffer. The sender's own copy is spoken at submit time
-    // below, which is why their echo is dropped above before reaching here.
-    speakTipMessage(gift.message);
-  });
+    return !!(me && gift.address && gift.address === me);
+  };
+  useStreamGifts(
+    stream.streamId,
+    !!stream.isLive,
+    (gift) => {
+      if (isOwnGift(gift)) return;
+      enqueueGift(gift);
+    },
+    // Read aloud only once PAID: the unpaid broadcast carries whatever any
+    // client posted. The sender's own copy is spoken at submit time below.
+    (paid) => {
+      if (isOwnGift(paid) || streamOverlay?.controls?.readAloudMuted) return;
+      speakTipMessage(paid.message);
+    },
+  );
 
-  // Pull the ~590 kB synthesiser down while the viewer is watching rather than
-  // when the first gift lands, so the first message of a stream is not read out
-  // several seconds after its celebration has finished playing. Only for a
-  // stream actually live — it must never touch a feed scroll or the boot path.
+  // Get the device voices ready while the viewer is watching rather than when
+  // the first gift lands, so the first message of a stream is read on the beat
+  // of its celebration. Only for a stream actually live.
   useEffect(() => {
     if (stream.isLive && !streamEnded) warmTipTts();
   }, [stream.isLive, streamEnded]);
@@ -514,14 +529,8 @@ export function LiveStreamCard({ stream, chatSlot, immersive = false }: LiveStre
   }, [showGiftDrawer, walletAddress, giftBalanceVersion]);
 
   /**
-   * WebRTC first, HLS second.
-   *
-   * HLS is a playlist of finished segments, so a viewer sits 10-20 seconds
-   * behind the broadcaster — long enough that a tip or a question lands on a
-   * host who has moved on. WHEP plays the same playbackId over WebRTC at about
-   * a second. It is not universal (no nearby node, a UDP-hostile network, a
-   * stream that never went live), so a failure or a silent connect falls
-   * straight back to the ladder below rather than leaving a black frame.
+   * WebRTC first (about a second behind), HLS second (10-20 seconds). A
+   * failure or a silent connect falls back to the ladder below.
    */
   useEffect(() => {
     if (transport !== 'whep' || streamEnded || !whepPlaybackId) return;
@@ -661,13 +670,9 @@ export function LiveStreamCard({ stream, chatSlot, immersive = false }: LiveStre
       void video.play().catch(() => setIsBuffering(false));
     };
 
-    // Prefer native HLS wherever the browser provides it (Safari + every iOS
-    // browser): the hardware media pipeline runs far cooler than hls.js's
-    // software MSE, and it skips the ~540 kB hls.js download. iOS 17+ added
-    // MediaSource, so the old `!('MediaSource' in window)` guard wrongly routed
-    // modern iPhones through the hls.js decoder that was overheating them.
-    // Self-hosted ladders may carry Opus audio. A positive native HLS probe
-    // does not establish codec support; use the same MSE path as the feed.
+    // Native HLS where the browser has it (Safari, iOS): cooler than hls.js
+    // and skips its download. Not for self-hosted ladders, which may carry
+    // Opus that a positive native probe does not promise to play.
     const selfHosted = liveSourceFromHlsUrl(currentUrl())?.provider === 'mediamtx';
     if (!selfHosted && video.canPlayType('application/vnd.apple.mpegurl')) {
       // Native playback has none of hls.js's built-in resilience, so re-create
@@ -881,16 +886,9 @@ export function LiveStreamCard({ stream, chatSlot, immersive = false }: LiveStre
   }, [isPlaying, isBuffering, videoId]);
 
   /**
-   * Hold the OS media session while this stream is actually audible.
-   *
-   * `videoId` rather than a fresh useId: the card already has a stable
-   * per-stream identity that the playback manager keys off, and reusing it
-   * keeps the two arbiters agreeing about which player is which.
-   *
-   * No seek handlers — a live broadcast has nowhere to scrub to, and offering
-   * a dead scrub bar on the lock screen is worse than offering none. `stop`
-   * is wired because leaving a stream is a real thing to want to do from a
-   * locked phone, unlike pausing one.
+   * Hold the OS media session while this stream is audible, keyed on the
+   * same `videoId` the playback manager uses. No seek handlers: live has
+   * nowhere to scrub to.
    */
   useEffect(() => {
     if (!isPlaying || isMuted || streamEnded) {
@@ -934,7 +932,7 @@ export function LiveStreamCard({ stream, chatSlot, immersive = false }: LiveStre
   // Muting the stream mutes the tip readings with it, and cuts one already
   // mid-sentence. They are synthesised locally, so nothing about the player's
   // own volume would otherwise touch them — a viewer who muted a stream in a
-  // quiet room would have had an old man start shouting tip messages at them.
+  // quiet room would otherwise have had tip messages read out loud at them.
   useEffect(() => {
     setTipTtsEnabled(!isMuted);
   }, [isMuted]);
@@ -953,9 +951,13 @@ export function LiveStreamCard({ stream, chatSlot, immersive = false }: LiveStre
   const { tip: sendGiftTip, isTipping: isSendingGift } = useTipPayment({
     creatorAddress: stream.creatorId,
     tokenId: numericTokenId,
-    onSubmitted: (txHash, amount) => {
+    onSubmitted: (txHash, paid) => {
       ownGiftHashes.current.add(String(txHash).toLowerCase());
-      queryClient.setQueryData(['post-tip-count', stream.id], (old: number | undefined) => (old || 0) + amount);
+      const paidToken = sendingGiftToken.current;
+      sendingGiftToken.current = null;
+      // Tiers, celebrations and the stream total are all in DHB.
+      const amount = paidToken ? Math.round(paid / DHB_PRELISTING_USD) : paid;
+      if (!paidToken) queryClient.setQueryData(['post-tip-count', stream.id], (old: number | undefined) => (old || 0) + amount);
       if (!apiStreamId || !stream.creatorId) return;
       // Play the celebration the sender paid for straight away, before the
       // record round-trips.
@@ -975,7 +977,7 @@ export function LiveStreamCard({ stream, chatSlot, immersive = false }: LiveStre
         tokenId: stream.id,
         amount,
         recipient: stream.creatorId,
-        tokenAddress: DHB_TOKEN.address,
+        tokenAddress: paidToken?.address ?? DHB_TOKEN.address,
         // The tier the amount bought, by its English name. Mobile's viewer
         // reads exactly this field to choose which celebration to play, so a
         // web gift without it was downgraded to the bottom tier on every
@@ -1034,6 +1036,18 @@ export function LiveStreamCard({ stream, chatSlot, immersive = false }: LiveStre
     // sheet watching a spinner for a payment that is already on its way. The
     // amount and message stay in state until it succeeds, so a failed send
     // reopens with everything still filled in.
+    if (giftDirect) {
+      const cost = giftCostIn(amount);
+      const balance = giftPayWith ? Number(giftPayWith.balance) / 10 ** giftPayWith.decimals : 0;
+      if (cost > balance) {
+        toast.error(t('liveGift.notEnoughToken', { symbol: giftDirect.symbol, defaultValue: 'Not enough {{symbol}} for this gift' }));
+        return;
+      }
+      setShowGiftDrawer(false);
+      sendingGiftToken.current = giftDirect;
+      void sendGiftTip(cost, giftDirect).finally(() => { sendingGiftToken.current = null; });
+      return;
+    }
     setShowGiftDrawer(false);
     if (!giftPayWith || !walletAddress) {
       void sendGiftTip(amount);
@@ -1043,7 +1057,7 @@ export function LiveStreamCard({ stream, chatSlot, immersive = false }: LiveStre
     void fundTipFromSource(giftPayWith, amount, walletAddress, t)
       .then(ready => { if (ready) return sendGiftTip(amount); })
       .finally(() => setFundingGift(false));
-  }, [isAuthenticated, streamEnded, numericTokenId, giftAmount, sendGiftTip, giftPayWith, walletAddress, t, _copy]);
+  }, [isAuthenticated, streamEnded, numericTokenId, giftAmount, sendGiftTip, giftPayWith, giftDirect, walletAddress, t, _copy]);
 
   const handleEndStream = useCallback(async () => {
     if (!isAuthenticated) return;
@@ -1181,7 +1195,7 @@ export function LiveStreamCard({ stream, chatSlot, immersive = false }: LiveStre
           ? // The picture is the screen. `fixed` rather than a tall block in
             // the page: the post page still scrolls under it, and a stream
             // is not a thing you scroll past on a phone.
-            'fixed inset-0 z-[55] bg-black isolate'
+            'fixed inset-0 z-[55] bg-black isolate overscroll-contain'
           : 'rounded-xl border border-white/[0.08] bg-transparent p-3 isolate'
       )}
     >
@@ -1203,18 +1217,8 @@ export function LiveStreamCard({ stream, chatSlot, immersive = false }: LiveStre
               it lives in the ActionBar below with the tray, the counts and the
               viewer's own state. A stream-only heart here kept a second
               counter nobody else could see and never showed as pressed. */}
-          {/* Gift button */}
-          {!streamEnded && (
-            <motion.button
-              onClick={() => setShowGiftDrawer(true)}
-              className="text-zinc-400 hover:text-white transition-colors"
-              whileHover={{ scale: 1.1 }}
-              whileTap={{ scale: 0.95 }}
-              aria-label={_copy("copy.9472b5b3c94a", { defaultValue: "Send gift" })}
-            >
-              <Gem className="w-5 h-5" />
-            </motion.button>
-          )}
+          {/* Gifting is the diamond in the action bar under the picture,
+              beside every other button; a second one up here was a copy. */}
           {optionsMenu}
         </div>
       </div>
@@ -1435,7 +1439,6 @@ export function LiveStreamCard({ stream, chatSlot, immersive = false }: LiveStre
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-2">
                   <span data-live-badge className="px-2 py-0.5 bg-red-500 text-white text-xs font-semibold rounded">{_copy("copy.35e0d0360a0a", { defaultValue: "LIVE" })}</span>
-                  <span className="text-white text-sm">{viewersLabel}{_copy("copy.8bd95a29c9cb", { defaultValue: " tuned in" })}</span>
                 </div>
                 <div className="flex items-center gap-2">
                   <button
@@ -1477,7 +1480,25 @@ export function LiveStreamCard({ stream, chatSlot, immersive = false }: LiveStre
             — and INSIDE the fullscreen container so the effect follows the
             player into fullscreen, where it lands over the chat column rather
             than animating behind it. */}
-        <GiftAnimationOverlay items={giftCelebrations} />
+        {!overlayOwnsCelebration && <GiftAnimationOverlay items={giftCelebrations} />}
+        {/* Only once the creator has saved an overlay (version > 0). */}
+        {streamOverlay && streamOverlay.version > 0 && stream.streamId && stream.isLive && !streamEnded && (
+          <Suspense fallback={null}>
+            <LiveOverlayLayer
+              streamId={stream.streamId}
+              tokenId={stream.id}
+              overlay={streamOverlay}
+              videoRef={videoRef}
+              initialViewers={Number(livePresence) || 0}
+              creator={stream.creatorId}
+            />
+          </Suspense>
+        )}
+        {streamOverlay && streamOverlay.version > 0 && streamOverlay.renderIn === 'app' && streamEnded && stream.replayUrl && stream.streamId && (
+          <Suspense fallback={null}>
+            <ReplayOverlayLayer streamId={stream.streamId} overlay={streamOverlay} videoRef={replayRef} />
+          </Suspense>
+        )}
         <LiveReactionFlow streamId={stream.streamId} enabled={!!stream.isLive && !streamEnded} bottom={immersive ? 100 : 56} self={selfReaction} />
 
         {/* Full-bleed chrome. Inside the media container so it travels with
@@ -1517,7 +1538,7 @@ export function LiveStreamCard({ stream, chatSlot, immersive = false }: LiveStre
             title={stream.title?.trim() || undefined}
             isLive={!!stream.isLive && !streamEnded}
             isEnded={streamEnded}
-            viewers={livePresence ?? viewersLabel}
+            viewers={livePresence}
             giftTotal={stream.totalTips ?? 0}
             startedAt={stream.startedAt ?? null}
             isMuted={isMuted}
@@ -1596,7 +1617,9 @@ export function LiveStreamCard({ stream, chatSlot, immersive = false }: LiveStre
             className="p-0 mb-2"
           />
           {!streamEnded && (
-            <p className="font-semibold text-white text-sm">{viewersLabel}{_copy("copy.8bd95a29c9cb", { defaultValue: " tuned in" })}</p>
+            // "Tuned in" is everyone who has ever opened this live, not the
+            // room right now; the room is the "watching" figure in the chat.
+            <p className="font-semibold text-white text-sm">{stream.viewers}{_copy("copy.8bd95a29c9cb", { defaultValue: " tuned in" })}</p>
           )}
           <h3 className="text-white text-sm mt-1">{stream.title}</h3>
           <p className="text-zinc-500 text-xs mt-1">{stream.game}</p>
@@ -1745,9 +1768,11 @@ export function LiveStreamCard({ stream, chatSlot, immersive = false }: LiveStre
             {showGiftDrawer && walletAddress ? (
               <Suspense fallback={null}>
                 <TipPayWith
-                  amountDhb={Number(giftAmount) >= MIN_TIP_DHB ? Number(giftAmount) : 0}
+                  amountDhb={0}
                   value={giftPayWith}
                   onChange={setGiftPayWith}
+                  direct
+                  recipientName={stream.streamer || stream.creatorUsername}
                 />
               </Suspense>
             ) : null}
@@ -1758,7 +1783,8 @@ export function LiveStreamCard({ stream, chatSlot, immersive = false }: LiveStre
                 disabled={isSendingGift || fundingGift || !giftAmount}
                 className="w-full bg-white hover:bg-zinc-200 text-black py-5 font-semibold rounded-xl"
               >
-                {isSendingGift || fundingGift ? <Loader2 className="w-4 h-4 mr-2 animate-spin" /> : <Gem className="w-4 h-4 mr-2" />}{_copy("copy.1c5ccbd708df", { defaultValue: "Send Gift" })}</Button>
+                {isSendingGift || fundingGift ? <Loader2 className="w-4 h-4 mr-2 animate-spin" /> : <Gem className="w-4 h-4 mr-2" />}{_copy("copy.1c5ccbd708df", { defaultValue: "Send Gift" })}
+                {giftDirect && Number(giftAmount) > 0 ? <span className="ml-1.5 tabular-nums">· {giftCostIn(Number(giftAmount))} <span>{giftDirect.symbol}</span></span> : null}</Button>
               <Button variant="glass" className="w-full py-5 rounded-xl" onClick={() => setShowBuyDrawer(true)}>{_copy("copy.1dffe3aad33c", { defaultValue: "Buy tokens" })}</Button>
               <Button variant="glass" className="w-full py-5 rounded-xl" onClick={() => setShowGiftDrawer(false)}>{_copy("copy.19766ed6ccb2", { defaultValue: "Cancel" })}</Button>
             </div>

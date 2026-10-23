@@ -25,7 +25,8 @@ export type WalletProvider = 'metamask' | 'phantom' | 'trust';
  *  - 'create'  — Supabase-authed but no wallet row: show create flow
  *  - 'unlock'  — wallet exists: show password unlock
  */
-export type WalletPhase = 'none' | 'create' | 'unlock';
+// 'secure': "Secure your wallet" at the first wallet action of a silent sign-up.
+export type WalletPhase = 'none' | 'create' | 'unlock' | 'restore' | 'secure';
 
 export interface AuthContextType {
   user: DeHubUser | null;

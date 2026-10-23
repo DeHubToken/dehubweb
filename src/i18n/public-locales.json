@@ -1,5 +1,5 @@
 {
-  "version": "f1a6b17c8812a27f",
+  "version": "3de3ff5bff9f6b31",
   "routes": {
     "/": [
       "ar",
@@ -673,6 +673,13 @@
       "nl",
       "tr"
     ],
+    "/guides/dehub-next-chapter-riftn-bnb-recovery-relaunch": [
+      "ar",
+      "es",
+      "fr",
+      "nl",
+      "tr"
+    ],
     "/guides/dehub-takeover": [
       "ar",
       "es",
@@ -1093,6 +1100,13 @@
       "nl",
       "tr"
     ],
+    "/guides/q4-development-overview": [
+      "ar",
+      "es",
+      "fr",
+      "nl",
+      "tr"
+    ],
     "/guides/ready-to-debate-your-side-bring-it-to-dehub": [
       "ar",
       "es",
@@ -1346,6 +1360,13 @@
       "tr"
     ],
     "/leaderboard": [
+      "ar",
+      "es",
+      "fr",
+      "nl",
+      "tr"
+    ],
+    "/live-studio": [
       "ar",
       "es",
       "fr",

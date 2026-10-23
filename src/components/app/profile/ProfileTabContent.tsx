@@ -5,6 +5,8 @@ import { BrandIcon } from '@/components/app/war/WarHudIcon';
 import React, { useState, useRef, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import Repeat2 from "@/components/ui/cut-icons/repost";
+import { ProposalLinkEmbed } from '@/components/app/governance/ProposalLinkEmbed';
+import type { ProfileContentItem } from '@/hooks/use-profile-page';
 
 import { Loader2, Heart, ArrowUpRight, Pin, ListVideo, ChevronLeft } from "lucide-react";
 import Info from "@/components/ui/cut-icons/information";
@@ -70,7 +72,7 @@ const NO_MATCHES_COPY = {
 
 // Height estimates for off-screen cards so content-visibility can reserve
 // scroll space without measuring — mirrors the home feed (HomeFeed.tsx).
-const CV_INTRINSIC = { post: '320px', image: '640px', video: '520px' } as const;
+const CV_INTRINSIC = { post: '320px', image: '640px', video: '520px', proposal: '220px' } as const;
 
 /**
  * Off-screen cards (index >= 3) get `content-visibility: auto` so the browser
@@ -80,7 +82,7 @@ const CV_INTRINSIC = { post: '320px', image: '640px', video: '520px' } as const;
  * first few cards stay eager for an instant first paint. Same technique the
  * home feed already uses.
  */
-function offscreenCardStyle(type: 'post' | 'image' | 'video', index: number): React.CSSProperties | undefined {
+function offscreenCardStyle(type: 'post' | 'image' | 'video' | 'proposal', index: number): React.CSSProperties | undefined {
   if (index < 3) return undefined;
   // `auto` keyword: after a card renders once, the browser remembers its real
   // size and reuses that as the placeholder when it's skipped again — so a card
@@ -154,7 +156,7 @@ interface ProfileTabContentProps {
   activeTab: TabValue;
   profileAddress: string;
   // Content arrays
-  ALL_CONTENT: Array<{ type: 'post' | 'image' | 'video'; data: TextPost | ImagePost | VideoItem; createdAt: string; isRepost?: boolean }>;
+  ALL_CONTENT: ProfileContentItem[];
   PROFILE_POSTS: TextPost[];
   PROFILE_IMAGES: ImagePost[];
   ALL_PROFILE_VIDEOS: VideoItem[];
@@ -261,7 +263,7 @@ export function ProfileTabContent({
   return (
     <div style={{ position: 'relative' }}>
       {/* Loading overlay for content tabs on first load */}
-      {showLoading && ['home', 'posts', 'images', 'videos'].includes(activeTab) && (
+      {showLoading && ['home', 'posts', 'images', 'videos', 'songs', 'live'].includes(activeTab) && (
         <div className="flex flex-col items-center justify-center min-h-[200px]">
           <Loader2 className="w-8 h-8 text-muted-foreground animate-spin" />
         </div>
@@ -353,7 +355,21 @@ export function ProfileTabContent({
 
       {/* SONGS TAB */}
       <TabPanel activeTab={activeTab} visitedTabs={visitedTabs.current} tab="songs">
-        <ProfileEmptyState iconSrc={audio3dIcon} iconAlt="Audio" title={_copy("copy.f9a83d6ac749", { defaultValue: "No audio yet" })} subtitle={_copy("copy.0ff0f3e32eca", { defaultValue: "Audio tracks will appear here" })} />
+        {/* On this tab the content query asks for audio only, so the
+            video-card list holds this creator's tracks. */}
+        {showLoading ? null : ALL_PROFILE_VIDEOS.length === 0 ? (
+          isContentFiltered
+            ? <ProfileEmptyState iconSrc={audio3dIcon} iconAlt="Audio" {...NO_MATCHES_COPY} />
+            : <ProfileEmptyState iconSrc={audio3dIcon} iconAlt="Audio" title={_copy("copy.f9a83d6ac749", { defaultValue: "No audio yet" })} subtitle={_copy("copy.0ff0f3e32eca", { defaultValue: "Audio tracks will appear here" })} />
+        ) : (
+          <div className="space-y-3">
+            {ALL_PROFILE_VIDEOS.map((track, index) => (
+              <div key={track.id} data-feed-item data-cinematic="video" className="rounded-xl border border-white/[0.12] bg-white/[0.03] p-3" style={offscreenCardStyle('video', index)}>
+                <VideoCard video={track} aboveFold={index < 3} />
+              </div>
+            ))}
+          </div>
+        )}
       </TabPanel>
 
       {/* LIVE TAB */}
@@ -387,7 +403,7 @@ export function ProfileTabContent({
       </TabPanel>
 
       {/* On-scroll loading for content-backed tabs */}
-      {fetchNextContentPage && ['home', 'posts', 'images', 'videos', 'live'].includes(activeTab) && (
+      {fetchNextContentPage && ['home', 'posts', 'images', 'videos', 'songs', 'live'].includes(activeTab) && (
         <LoadMoreSentinel
           hasNextPage={hasNextContentPage}
           isFetchingNextPage={isFetchingNextContentPage}
@@ -409,7 +425,7 @@ function HomeTabPanel({
   isLoading,
   isContentFiltered = false,
 }: {
-  ALL_CONTENT: Array<{ type: 'post' | 'image' | 'video'; data: TextPost | ImagePost | VideoItem; createdAt: string; isRepost?: boolean }>;
+  ALL_CONTENT: ProfileContentItem[];
   isViewingOwnProfile: boolean | undefined;
   optimisticPosts: OptimisticPost[];
   isLoading: boolean;
@@ -448,7 +464,9 @@ function HomeTabPanel({
       })}
       {ALL_CONTENT.map((item, index) => {
         const aboveFold = index < 3;
-        const card = item.type === 'post'
+        const card = item.type === 'proposal'
+          ? <ProposalLinkEmbed key={item.data.id} proposalId={item.data.proposalId} />
+          : item.type === 'post'
           ? <PostCard key={item.data.id} post={item.data as TextPost} />
           : item.type === 'image'
           ? <ImageCard key={item.data.id} post={item.data as ImagePost} aboveFold={aboveFold} />

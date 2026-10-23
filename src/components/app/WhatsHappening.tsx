@@ -34,7 +34,9 @@ import { TrendingTopicsList } from './TrendingTopicsList';
 import { BadgedName } from '@/components/app/BadgedName';
 import { formatTimeAgo } from '@/lib/feed-utils';
 import { useStage, useLiveSpaces } from '@/contexts/StageContext';
+import { useDeHubLive, DEFAULT_DEHUB_LIVE_QUERY_OPTIONS, mapApiLiveStreamToLocal } from '@/hooks/use-dehub-feed';
 import { useDiscoveryTab, type DiscoveryTab, type DiscoverySurface } from '@/hooks/use-discovery-tab';
+import { LiveRipple } from '@/components/app/LiveRipple';
 
 const COUNTRIES = [
   { code: 'global', flag: '🌍', name: 'Global' },
@@ -255,6 +257,15 @@ export const WhatsHappening = memo(function WhatsHappening({ showCountrySelector
   // Live stages for the stages tab — shared from StageProvider's single
   // fetch + realtime channel (was a duplicate query + 60s poll here).
   const liveStages = useLiveSpaces().slice(0, 10);
+  // Live video streams. The tab used to list audio Stages only, so a creator
+  // broadcasting video showed "No one live right now". Same query key as the
+  // Live feed and home carousel, so the cache is shared and nothing refetches.
+  const { data: liveData } = useDeHubLive({ ...DEFAULT_DEHUB_LIVE_QUERY_OPTIONS, enabled: isVisibleInstance });
+  const liveStreams = React.useMemo(() => {
+    const all = liveData?.pages.flatMap(page => page.data || []) ?? [];
+    return all.map((stream, index) => mapApiLiveStreamToLocal(stream, index)).filter(s => s.isLive).slice(0, 10);
+  }, [liveData]);
+  const hasAnyLive = liveStreams.length > 0 || liveStages.length > 0;
 
   return (
     <div data-side-panel data-discovery-surface={surface} className="bg-zinc-900 rounded-2xl overflow-hidden relative">
@@ -262,7 +273,7 @@ export const WhatsHappening = memo(function WhatsHappening({ showCountrySelector
       <div data-side-panel-tabs className="flex">
         {(['posts', 'stages', 'tickers'] as Tab[]).map(tab => {
           const Icon = tabIcons[tab];
-          const isStagesLive = tab === 'stages' && liveStages.length > 0;
+          const isStagesLive = tab === 'stages' && hasAnyLive;
           return (
             <button
               type="button"
@@ -271,6 +282,7 @@ export const WhatsHappening = memo(function WhatsHappening({ showCountrySelector
               key={tab}
               onClick={() => handleMainTabChange(tab)}
               aria-label={tabLabels[tab]}
+              title={tabLabels[tab]}
               aria-pressed={activeTab === tab}
               className={`relative flex-1 py-2.5 flex flex-col items-center justify-center transition-colors ${
                 activeTab === tab
@@ -320,8 +332,38 @@ export const WhatsHappening = memo(function WhatsHappening({ showCountrySelector
               : 'opacity-0 pointer-events-none absolute inset-0 flex flex-col'
           )}
         >
-          {liveStages.length > 0 ? (
+          {hasAnyLive ? (
             <div className="flex flex-col gap-1">
+              {liveStreams.map((stream) => (
+                <button
+                  key={`stream-${stream.id}`}
+                  data-live-stream-row
+                  onClick={() => navigate(`/app/post/${stream.id}`, { state: { fromFeed: true } })}
+                  className="flex items-center gap-3 w-full px-3 py-2.5 rounded-xl hover:bg-zinc-800/60 transition-colors group text-left"
+                >
+                  <LiveRipple live size="sm" className="rounded-lg">
+                    <div className="w-8 h-8 rounded-lg bg-red-500/20 flex items-center justify-center shrink-0 overflow-hidden">
+                      {stream.avatar ? (
+                        <img src={stream.avatar} alt="" className="w-full h-full object-cover" loading="lazy" />
+                      ) : (
+                        <Video className="w-4 h-4 text-red-400" />
+                      )}
+                    </div>
+                  </LiveRipple>
+                  <div className="min-w-0 flex-1">
+                    <p className="text-sm text-zinc-200 font-medium truncate group-hover:text-white transition-colors">
+                      {stream.title || stream.streamer}
+                    </p>
+                    <div className="flex items-center gap-2 text-[11px] text-zinc-500">
+                      <BadgedName lookupId={stream.creatorUsername || stream.creatorId}>
+                        @{stream.creatorUsername || stream.creatorId?.slice(0, 6) || stream.streamer}
+                      </BadgedName>
+                      <span className="flex items-center gap-0.5">
+                        <span data-live-pulse className="w-1.5 h-1.5 rounded-full bg-red-500 animate-pulse" />{_copy("copy.b64ac05f17e6", { defaultValue: "Live" })}</span>
+                    </div>
+                  </div>
+                </button>
+              ))}
               {liveStages.map((stage) => (
                 <button
                   key={stage.id}
@@ -455,7 +497,7 @@ export const WhatsHappening = memo(function WhatsHappening({ showCountrySelector
             <ChevronDown className="w-3 h-3 transition-transform" style={{ transform: `rotate(${showCountryDropdown ? -90 : 90}deg)` }} />
           </button>
           {showCountryDropdown && (
-            <div data-inline-popover className="absolute left-0 right-0 bottom-full mb-1 w-48 mx-auto bg-zinc-800 border border-zinc-700/50 rounded-xl shadow-xl z-50 py-1 max-h-72 flex flex-col">
+            <div data-inline-popover data-glass-menu className="absolute left-0 right-0 bottom-full mb-1 w-48 mx-auto bg-zinc-800 border border-zinc-700/50 rounded-xl shadow-xl z-50 py-1 max-h-72 flex flex-col">
               <div className="px-2 py-1.5 border-b border-zinc-700/50">
                 <div className="relative">
                   <Search className="absolute left-2 top-1/2 -translate-y-1/2 w-3 h-3 text-zinc-500" />

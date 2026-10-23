@@ -1,4 +1,4 @@
-import { handleTaskRequest, postBreaksGroundingRules, runTask, type TaskTool, type ProfileImages } from './tasks.ts';
+import { handleTaskRequest, postBreaksGroundingRules, postText, replyBreaksRules, runTask, type TaskTool, type ProfileImages } from './tasks.ts';
 import { AGENT_OWNER } from './task-plan.ts';
 
 const assert = (value: unknown, description: string) => { if (!value) throw new Error(description); };
@@ -22,6 +22,7 @@ const fixture = (prior?: string) => {
       eq: (key: string, value: any) => { predicates.push(row => row[key] === value); return query; },
       match: (match: any) => { Object.entries(match).forEach(([key, value]) => query.eq(key, value)); return query; },
       insert: (input: any) => { operation = 'insert'; values = input; return query; },
+      upsert: (input: any[]) => { operation = 'upsert'; values = input; return query; },
       update: (input: any) => { operation = 'update'; values = input; return query; },
       delete: () => { operation = 'delete'; return query; },
       single: () => { one = true; return query; }, maybeSingle: () => { one = true; return query; },
@@ -29,6 +30,11 @@ const fixture = (prior?: string) => {
         try {
           let matched = rows[table].filter(row => predicates.every(test => test(row)));
           if (operation === 'insert') { const row = { ...structuredClone(values), id: crypto.randomUUID() }; rows[table].push(row); matched = [row]; }
+          if (operation === 'upsert') {
+            const key = (row: any) => [row.task_id, row.cycle, row.step, row.target].join('|');
+            matched = values.filter((row: any) => !rows[table].some(existing => key(existing) === key(row))).map((row: any) => ({ ...structuredClone(row), id: crypto.randomUUID() }));
+            rows[table].push(...matched);
+          }
           if (operation === 'update') matched.forEach(row => Object.assign(row, structuredClone(values)));
           if (operation === 'delete') rows[table] = rows[table].filter(row => !matched.includes(row));
           return Promise.resolve({ data: structuredClone(one ? matched[0] ?? null : matched), error: null }).then(resolve, reject);
@@ -248,4 +254,62 @@ Deno.test('unsupported or oversized profile uploads never reach a write callback
     const result = await profileRequest(form);
     assert(result.status === 400 && !result.call, 'invalid image reached profile write');
   }
+});
+
+Deno.test('viewing every post in a window records tagged views and logs each post once, without any write tool', async () => {
+  const test = fixture();
+  const step = test.task.plan.steps[0] as any;
+  Object.assign(step, { tool: 'dehub_view', arguments: {}, audience: 'posts', from: '2026-10-01T00:00:00Z', to: '2026-10-02T00:00:00Z' });
+  const originalFetch = globalThis.fetch;
+  const viewed: any[] = [];
+  globalThis.fetch = async (url, init) => {
+    if (String(url).includes('/api/feed?')) return Response.json({ result: [123, 124, 125].map(tokenId => ({ tokenId, createdAt: '2026-10-01T12:00:00Z' })), pagination: { next_cursor: null } });
+    assert(String(url) === 'https://api.dehub.io/api/view/batch', 'unexpected network request');
+    viewed.push(JSON.parse(String(init?.body)));
+    return Response.json({ success: true });
+  };
+  try { await test.run(); } finally { globalThis.fetch = originalFetch; }
+  assert(viewed.length === 1 && viewed[0].source === 'agent' && viewed[0].tokenIds.length === 3, 'views were not recorded or not tagged as agent traffic');
+  assert(test.calls() === 0, 'a view task called a write tool');
+  assert(test.rows.ai_agent_task_actions.filter(action => action.tool === 'dehub_view' && action.status === 'succeeded').length === 3, 'viewed posts were not logged');
+  assert(test.task.completed_actions === 3 && test.task.status === 'completed', 'the view task did not finish');
+});
+
+Deno.test('a window that ends in the future covers posts so far, then checks again from where it stopped', async () => {
+  const test = fixture();
+  const step = test.task.plan.steps[0] as any;
+  const from = new Date(Date.now() - 3600_000).toISOString();
+  Object.assign(step, { tool: 'dehub_view', arguments: {}, audience: 'posts', from, to: new Date(Date.now() + 2 * 86400_000).toISOString() });
+  const originalFetch = globalThis.fetch;
+  const windows: { from: string | null; to: string | null }[] = [];
+  globalThis.fetch = async (url) => {
+    if (String(url).includes('/api/feed?')) {
+      const query = new URL(String(url)).searchParams;
+      windows.push({ from: query.get('from'), to: query.get('to') });
+      return Response.json({ result: [], pagination: { next_cursor: null } });
+    }
+    return Response.json({ success: true });
+  };
+  try {
+    await test.run();
+    assert(test.task.status === 'queued', 'a live window finished early');
+    const recheck = Date.parse((test.task as any).next_run_at);
+    assert(recheck > Date.now() && recheck <= Date.now() + 31 * 60_000, 'the next check is not within the recheck interval');
+    const scanned = (test.task.cursor as any).scanned?.[0];
+    assert(scanned && Date.parse(scanned) <= Date.now(), 'did not remember how far it covered');
+    assert(windows[0].from === from && Date.parse(windows[0].to!) <= Date.now(), 'first pass reached into the future');
+    // Pretend the recheck happens a minute later, so the next pass has new time to cover.
+    const resumeFrom = new Date(Date.now() - 60_000).toISOString();
+    (test.task.cursor as any).scanned[0] = resumeFrom;
+    test.task.status = 'running';
+    await runTask({ db: () => (test as any).db, token: async () => 'test', tools: () => test.registry }, new Request('https://example.test/tasks/tick'), structuredClone(test.task));
+    assert(windows[1]?.from === resumeFrom, 'the next pass did not start where the last one stopped');
+  } finally { globalThis.fetch = originalFetch; }
+});
+
+Deno.test('written replies are grounded in the post and stay plain', () => {
+  assert(postText({ name: 'Vinyl haul', description: 'Vinyl haul' }) === 'Vinyl haul', 'repeated the same text');
+  assert(postText({ name: '', description: '  ' }) === '', 'invented text for an empty post');
+  assert(!replyBreaksRules('That pressing sounds warmer than the reissue, which side did you play first?'), 'rejected a plain reply');
+  for (const reply of ['Check https://example.com', 'Love it #vinyl', 'Hey @someone look', '"Quoted reply"', 'x'.repeat(221), '']) assert(replyBreaksRules(reply), `allowed: ${reply.slice(0, 20)}`);
 });

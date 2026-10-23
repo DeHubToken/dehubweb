@@ -399,6 +399,7 @@ export function DesktopSidebar({ onPostClick }: DesktopSidebarProps) {
             </button>
             <button
               onClick={handleLogoClick}
+              data-glass-bare-action
               className={cn(
                 "cursor-pointer flex items-center justify-center overflow-hidden",
                 // Compact width HUGS the 22px mark rather than padding it to 28.
@@ -629,7 +630,7 @@ export function DesktopSidebar({ onPostClick }: DesktopSidebarProps) {
                     isAIActive ? 'font-semibold' : isLightTheme ? 'hover:font-semibold' : 'hover:bg-zinc-800/50'
                   )}
                 >
-                  <div className={cn(
+                  <div data-sidebar-assistant-icon className={cn(
                     "relative z-10 w-9 h-9 rounded-xl flex items-center justify-center flex-shrink-0 transition-colors",
                     isAIActive ? "bg-transparent" : isCollapsed ? "bg-transparent" : "lg:bg-zinc-800 bg-transparent"
                   )}>
