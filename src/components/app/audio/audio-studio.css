@@ -53,7 +53,8 @@ html:is([data-theme='system'],[data-theme='glass']) [data-audio-frame][data-vide
 [data-listening-desk-layout] { display:grid; grid-template-columns:minmax(0,1fr) minmax(170px,.5fr); gap:18px; align-items:start; }
 [data-listening-desk-player] { min-width:0; }
 [data-listening-desk-player] [data-feed-item] { border:0 !important; box-shadow:none !important; padding:0 !important; background:transparent !important; }
-[data-listening-desk-tracks] { min-width:0; max-height:460px; overflow:auto; scrollbar-width:thin; }
+[data-listening-desk-tracks] { min-width:0; max-height:460px; overflow:auto; scrollbar-width:none; -ms-overflow-style:none; }
+[data-listening-desk-tracks]::-webkit-scrollbar { display:none; }
 [data-listening-desk-tracks] > button { display:flex; width:100%; gap:12px; align-items:center; text-align:left; padding:15px 10px; border-bottom:1px solid #ffffff0c; color:inherit; background:transparent; border-radius:10px; }
 [data-listening-desk-tracks] > button[data-selected='true'] { background:#ffffff0b; }
 [data-track-number] { font-size:10px; opacity:.4; font-variant-numeric:tabular-nums; }
