@@ -1,5 +1,5 @@
 {
-  "version": "5c3e2861adf781d7",
+  "version": "5744f5c773e5cfa3",
   "routes": {
     "/": [
       "ar",
@@ -198,6 +198,13 @@
       "tr"
     ],
     "/dao": [
+      "ar",
+      "es",
+      "fr",
+      "nl",
+      "tr"
+    ],
+    "/dehub-app": [
       "ar",
       "es",
       "fr",
@@ -667,6 +674,13 @@
       "tr"
     ],
     "/guides/dehub-massive-week-bnb-recognition-first-class-partnership-app-store-launch": [
+      "ar",
+      "es",
+      "fr",
+      "nl",
+      "tr"
+    ],
+    "/guides/dehub-next-chapter-riftn-bnb-recovery-relaunch": [
       "ar",
       "es",
       "fr",
@@ -1353,6 +1367,13 @@
       "tr"
     ],
     "/leaderboard": [
+      "ar",
+      "es",
+      "fr",
+      "nl",
+      "tr"
+    ],
+    "/live-studio": [
       "ar",
       "es",
       "fr",

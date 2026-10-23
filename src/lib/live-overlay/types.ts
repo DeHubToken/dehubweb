@@ -36,6 +36,10 @@ export type OverlayRenderIn = 'app' | 'video';
 export interface OverlayStats {
   totalTips: number;
   followers: number;
+  /** When the stream went live (ISO), so a timer survives a refresh. */
+  startedAt?: string | null;
+  /** Reactions the stream has had so far. */
+  reactions?: number;
 }
 
 export interface PublicOverlay {
@@ -43,6 +47,9 @@ export interface PublicOverlay {
   widgets: OverlayWidget[];
   version: number;
   stats: OverlayStats;
+  /** Missing from an older API: read as all off. */
+  controls?: OverlayControls;
+  subathon?: OverlaySubathon | null;
 }
 
 export interface CreatorOverlay {
@@ -51,4 +58,37 @@ export interface CreatorOverlay {
   widgets: OverlayWidget[];
   version: number;
   obsConnected: boolean;
+  controls?: OverlayControls;
+}
+
+/**
+ * Quick controls: switches a creator flips mid-stream that hold for everyone
+ * at once. Off means normal. See dehub-stream-backend models/LiveOverlay.ts.
+ */
+export interface OverlayControls {
+  /** Alerts (gifts, follows, rules, wheels) stop appearing. Counters and the chat box keep going. */
+  alertsPaused: boolean;
+  soundsMuted: boolean;
+  /** Nothing is read aloud: no gift messages, no rule read-aloud. */
+  readAloudMuted: boolean;
+}
+
+export const NO_CONTROLS: OverlayControls = { alertsPaused: false, soundsMuted: false, readAloudMuted: false };
+
+export function parseControls(raw: unknown): OverlayControls {
+  const c = (raw && typeof raw === 'object' ? raw : {}) as Record<string, unknown>;
+  return { alertsPaused: c.alertsPaused === true, soundsMuted: c.soundsMuted === true, readAloudMuted: c.readAloudMuted === true };
+}
+
+/** A subathon counting down right now. Viewers only ever see one that is running. */
+export interface OverlaySubathon {
+  running: true;
+  /** When it reaches zero (ISO). Gifts, follows and subscriptions move it later. */
+  endsAt: string;
+}
+
+export function parseSubathon(raw: unknown): OverlaySubathon | null {
+  const s = raw as { running?: unknown; endsAt?: unknown } | null | undefined;
+  if (!s || s.running !== true || typeof s.endsAt !== 'string' || Number.isNaN(Date.parse(s.endsAt))) return null;
+  return { running: true, endsAt: s.endsAt };
 }

@@ -1,7 +1,7 @@
 import { localizePublicChrome, localizeStructuredData } from './server/public-page-locales.js';
 import { handleWorkReceipt } from './server/work-receipts.ts';
 import { handleEditorPresence } from './server/editor-presence.ts';
-import { applyTextPostImage } from './server/post-share-card.js';
+import { applyPostShareImage, applyProfileShareImage } from './server/post-share-card.js';
 import { handleFinanceRequest } from './server/finance-stats.js';
 import { handleCreatorMotionSource } from './server/creator-motion-source.js';
 import { handleAccountMcp, isAccountMcpRoute } from './server/account-mcp.js';
@@ -35,6 +35,7 @@ import { ROUTE_SEGMENTS, WORKER_ASSET_ROUTES } from './src/lib/reserved-username
 import { edgeMaintenanceResponse } from './server/edge-maintenance.mjs';
 import { CONSOLIDATED_GUIDES, MILESTONE_REDIRECTS, RETIRED_GUIDES } from './src/lib/blog-redirects.js';
 import { STREAM_LINKS, STREAM_PAGE, streamFaqLd } from './src/lib/streamer-page.js';
+import { DEHUB_APP_LINKS, DEHUB_APP_PAGE, dehubAppFaqLd } from './src/lib/dehub-app-page.js';
 
 /**
  * `/mal.eth` — a verified ENS handle standing in for a username.
@@ -182,6 +183,7 @@ const OG_CARD_ROUTES = new Set([
   // Public app pages that unfurled as the homepage: the SPA had SEO for them,
   // the edge did not, so crawlers got the shell under a noindex.
   'dex', 'ads', 'buy',
+  'live-studio',
 ]);
 
 /** A route's own share card, or the shared one when it has none. */
@@ -709,6 +711,43 @@ function blogAuthorLd(author) {
     : { '@type': 'Person', name };
 }
 
+/**
+ * FAQPage node for a post whose body ends in a "Frequently asked questions"
+ * section — 22 of the guides do, each written as `### question` + answer under
+ * a `## Frequently asked questions` heading, which the manifest renders as
+ * <h3>/<p> under an <h2>. The Q&A was in the HTML and nowhere in the markup.
+ *
+ * Google limits FAQ rich results to authoritative government and health sites,
+ * so this wins no snippet; it is here because structured Q&A is what Bing and
+ * the AI answer engines quote from. Each answer is everything between its
+ * question and the next one, so a list inside an answer is kept. Null unless
+ * there are at least two pairs, so a stray heading can never emit a stub.
+ */
+function postFaqLd(contentHtml) {
+  if (!contentHtml) return null;
+  const head = /<h2>\s*(?:frequently asked questions|faqs?)\s*<\/h2>/i.exec(contentHtml);
+  if (!head) return null;
+  let section = contentHtml.slice(head.index + head[0].length);
+  const next = section.indexOf('<h2>');
+  if (next !== -1) section = section.slice(0, next);
+  const text = (html) => html
+    .replace(/<\/(?:p|li)>/g, ' ')
+    .replace(/<[^>]+>/g, '')
+    .replace(/&(?:amp|quot|lt|gt|#39);/g, (e) => HTML_ENTITIES[e])
+    .replace(/\s+/g, ' ')
+    .trim();
+  const mainEntity = [];
+  const parts = section.split(/<h3>/).slice(1);
+  for (const part of parts) {
+    const end = part.indexOf('</h3>');
+    if (end === -1) continue;
+    const name = text(part.slice(0, end));
+    const answer = text(part.slice(end + 5));
+    if (name && answer) mainEntity.push({ '@type': 'Question', name, acceptedAnswer: { '@type': 'Answer', text: answer } });
+  }
+  return mainEntity.length >= 2 ? { '@type': 'FAQPage', mainEntity } : null;
+}
+
 function buildBlogHtml(post, canonicalUrl, contentHtml, manifest) {
   const image = buildBlogShareImage(post);
   const title = post.seoTitle || `${post.title} — DeHub Blog`;
@@ -735,6 +774,8 @@ function buildBlogHtml(post, canonicalUrl, contentHtml, manifest) {
       breadcrumbLd([HOME_CRUMB, { name: 'Blog', url: `${APP_URL}/docs/blog` }, { name: post.title, url: canonicalUrl }]),
     ],
   };
+  const faq = postFaqLd(contentHtml);
+  if (faq) jsonLd['@graph'].push({ ...faq, '@id': `${canonicalUrl}#faq` });
   return `<!DOCTYPE html>
 <html lang="en">
 <head>
@@ -843,6 +884,29 @@ const PRIMARY_NAV = [
   { path: '/music', label: 'Music' },
   { path: '/tv', label: 'DeHub TV' },
 ];
+
+// The keyword-targeted guides, linked from the homepage. Before this the
+// homepage's bot HTML carried ~44 internal links and none reached a money page:
+// the only route in was the unpaginated /docs/blog index, so each guide got a
+// sliver of an already second-hand signal. Sits beside the section nav rather
+// than inside HOME_INTRO_HTML, which mirrors the SPA panel word for word.
+const HOME_GUIDE_LINKS = [
+  ['/guides/what-is-watch-to-earn', 'What is watch-to-earn?'],
+  ['/guides/best-watch-to-earn-platforms-2026', 'Best watch-to-earn platforms 2026'],
+  ['/guides/is-watch-to-earn-legit', 'Is watch-to-earn legit?'],
+  ['/guides/dehub-vs-cheelee-theta-xcad-watch-to-earn', 'Cheelee alternative: DeHub vs Cheelee, Theta.tv and XCAD'],
+  ['/guides/web3-live-streaming-decentralised-twitch-alternative', 'Web3 live streaming: a decentralised Twitch alternative'],
+  ['/guides/best-decentralised-social-media-platforms-2026', 'Best decentralised social media platforms 2026'],
+  ['/guides/dehub-vs-depaul-dehub-vs-rowan-dehub', 'DeHub vs DePaul DeHUB vs Rowan DEHub'],
+  ['/dehub-app', 'Get the DeHub app'],
+];
+
+function homeGuidesHtml() {
+  const items = HOME_GUIDE_LINKS.map(([href, label]) =>
+    `<li style="margin:6px 0"><a href="${APP_URL}${href}">${escHtml(label)}</a></li>`
+  ).join('');
+  return `<nav aria-label="DeHub guides"><h2 style="font-size:16px">Guides</h2><ul style="list-style:none;padding:0;margin:0">${items}</ul></nav>`;
+}
 
 function primaryNavHtml(currentPath = '') {
   const items = PRIMARY_NAV.map((n) =>
@@ -1231,6 +1295,34 @@ ${STREAM_PAGE.reasons.map(({ title, body }) => `<h2>${title}</h2>\n<p>${body}</p
 <h2>Frequently asked questions</h2>
 ${STREAM_PAGE.faq.map(({ q, a }) => `<h3>${q}</h3>\n<p>${a}</p>`).join('\n')}
 <p>Coming from TikTok? Read <a href="${STREAM_LINKS.tiktokGuide}">the UK creator guide to leaving TikTok</a> and <a href="${STREAM_LINKS.liveGuide}">Web3 live streaming: a decentralised Twitch alternative</a>.</p>`,
+
+  },
+
+  // The "DeHub app" brand query. Copy and structured data come from
+  // src/lib/dehub-app-page.js, which DehubAppPage.tsx renders too. A WebPage
+  // about the app, like /apk, plus FAQPage for its questions. No card of its
+  // own in public/og: it shares the brand card (SHARE_IMAGE).
+  'dehub-app': {
+    title: DEHUB_APP_PAGE.title,
+    description: DEHUB_APP_PAGE.description,
+    heading: DEHUB_APP_PAGE.heading,
+    og: 'brand',
+    jsonLdExtra: {
+      about: { '@type': 'Thing', name: 'DeHub', sameAs: [DEHUB_APP_LINKS.googlePlay, DEHUB_APP_LINKS.appStore] },
+    },
+    extraJsonLd: [dehubAppFaqLd()],
+    // The copy is fixed text from the shared module, so it goes in unescaped
+    // like every other bodyHtml here; build-public-locales.mjs evaluates this
+    // table to build the translated variants.
+    bodyHtml: `${DEHUB_APP_PAGE.intro.map((p) => `<p>${p}</p>`).join('\n')}
+<h2>Download DeHub</h2>
+<ul><li><a href="${DEHUB_APP_LINKS.googlePlay}">DeHub on Google Play</a> for Android</li>
+<li><a href="${DEHUB_APP_LINKS.appStore}">DeHub on the App Store</a> for iPhone</li>
+<li><a href="${DEHUB_APP_LINKS.web}">Open DeHub in your browser</a>, no install needed</li>
+<li><a href="${DEHUB_APP_LINKS.apk}">Download the DeHub APK</a> for Android without Google Play</li></ul>
+<h2>Frequently asked questions</h2>
+${DEHUB_APP_PAGE.faq.map(({ q, a }) => `<h3>${q}</h3>\n<p>${a}</p>`).join('\n')}
+<p>Still not sure which DeHub you need? <a href="${DEHUB_APP_LINKS.disambiguation}">DeHub vs DePaul DeHUB vs Rowan DEHub</a> sorts it out, and <a href="${DEHUB_APP_LINKS.whatIsDehub}">What is DeHub?</a> covers the platform in depth.</p>`,
   },
 
   // The moderation handbook, published. The page itself is an iframe around a
@@ -1529,6 +1621,17 @@ ${STREAM_PAGE.faq.map(({ q, a }) => `<h3>${q}</h3>\n<p>${a}</p>`).join('\n')}
     bodyHtml: `<p>The launchpad is where a business, project or creator issues a coin on DeHub. Live launches are listed with their activity, and creating one runs from the same page.</p>
 <p>Coins are speculative assets and can lose their value entirely. Nothing here is investment advice.</p>`,
   },
+  'live-studio': {
+    title: 'Live Studio — Stream Alerts, Goals and Overlays | DeHub',
+    description:
+      'Add tip alerts, follower alerts, goal bars and top supporter boards to your DeHub live streams. Drawn for every viewer, from any phone, browser, capture card or encoder.',
+    heading: 'DeHub Live Studio',
+    bodyHtml: `<p>Live Studio is where a DeHub creator sets up what appears over their live streams: an alert for every tip, sized to the tier it buys; alerts when someone follows, subscribes, shares or arrives; a goal bar; a board of the stream's biggest supporters; a viewer count; and text, lower thirds and frames.</p>
+<h2>Drawn for every viewer</h2>
+<p>Each viewer's DeHub app draws the overlay over the stream itself, so it works whatever the stream comes from — a phone, the browser, an HDMI capture card or an encoder like OBS — and costs the streamer nothing to run.</p>
+<h2>Counted from the chain</h2>
+<p>Tips on DeHub are on-chain payments. Goals and the supporters board count what the chain actually paid, not what a client claimed, so they cannot be moved by a fake event.</p>`,
+  },
   'stats': {
     title: 'Live Site Stats — DeHub Visitors and Members in Real Time',
     description: "Live numbers for dehub.io: visitors measured at Cloudflare's edge, DeHub's own member counts, and what the platform earns and spends — revenue, costs and where the original token tax went, with every on-chain line linked to its transaction.",
@@ -1591,8 +1694,8 @@ function buildMarketingHtml(key, meta) {
   // Never a SoftwareApplication/WebApplication/MobileApplication: Google
   // reports those as invalid without a rating or review, and none of these
   // pages has one to give (see arcadeGameLd for VideoGame). `extraJsonLd`
-  // adds further standalone nodes (FAQPage on /stream), and `og` names
-  // another page's share card to reuse.
+  // adds further standalone nodes (FAQPage on /stream and /dehub-app), and
+  // `og` names another page's share card to reuse.
   const jsonLd = {
     '@context': 'https://schema.org',
     '@type': meta.jsonLdType || 'WebPage',
@@ -3551,9 +3654,8 @@ function buildCreatorPackHtml(pack) {
 }
 
 /**
- * A single DAO proposal, /app/governance/<uuid>. Proposals carry no art of
- * their own, so the governance card stands in — that is still the page's
- * subject, unlike the homepage card it was getting.
+ * A single DAO proposal, /app/governance/<uuid>. An attached image is the
+ * share card; otherwise the governance card stands in.
  */
 function buildProposalHtml(proposal) {
   const canonicalUrl = `${APP_URL}/app/governance/${proposal.id}`;
@@ -3571,7 +3673,9 @@ function buildProposalHtml(proposal) {
     canonicalUrl,
     title: `${name} — DeHub Governance`,
     description,
-    image: shareImage('governance'),
+    image: proposal.media_type === 'image' && /^https:\/\//.test(String(proposal.media_url || ''))
+      ? proposal.media_url
+      : shareImage('governance'),
     ogType: 'article',
     heading: name,
     breadcrumb: `<a href="${APP_URL}">DeHub</a> › <a href="${APP_URL}/governance">Governance</a>`,
@@ -3992,7 +4096,7 @@ const SSR_STATIC_ROUTES = new Set([
   'arcade',
   // Same again: each of these is one page with a top-level route AND an /app
   // twin, both rendered from MARKETING_PAGES.
-  'accounts', 'converter', 'events', 'launchpad', 'stats',
+  'accounts', 'converter', 'events', 'launchpad', 'stats', 'live-studio',
   'migrate-youtube',
   // These three used to be the exception — /app-only pages that named their own
   // `path` in MARKETING_PAGES so the canonical would not point at a URL the
@@ -6114,6 +6218,11 @@ async function handleRequest(request, env, ctx) {
       price: fetchShareBadgePrice,
     });
   }
+  const profileCard = pathname.match(/^\/_og\/profile\/v1\/([A-Za-z0-9_][A-Za-z0-9_.-]{0,63})\.png$/);
+  if (profileCard) {
+    const { handleProfileShareImage } = await import('./server/post-share-image.js');
+    return handleProfileShareImage(request, env, ctx, profileCard[1], fetchAccountInfo);
+  }
   if (pathname.startsWith(OG_SOURCE_PREFIX)) return ogSourceResponse(request, env, pathname);
 
   // Skip static assets immediately.
@@ -6852,6 +6961,7 @@ async function handleRequest(request, env, ctx) {
         ? ((html.match(/<link rel="canonical" href="https:\/\/dehub\.io\/([^"/?#]+)">/) || [])[1] || proxiedSegments[0])
         : '';
     let postShareRecord = null;
+    let profileShareAccount = null;
     if (proxiedPostId) {
       // Every post, not just a bodyless one: the title work in enrichPostMeta
       // has to reach the posts that DO have body text, because those are
@@ -6890,6 +7000,7 @@ async function handleRequest(request, env, ctx) {
       // the avatar URL is only a fallback for the wallet (a profile with no
       // avatar has none, and its posts were never listed).
       const account = await fetchAccountInfo(proxiedHandle);
+      profileShareAccount = account;
       html = enrichProfileMeta(html, proxiedHandle, account && account.displayName);
       const address = String((account && account.address) || '').toLowerCase() || profileAddressOf(html);
       const rows = address ? await fetchFeedRowsOrNull(`minter=${address}`) : null;
@@ -6929,13 +7040,16 @@ async function handleRequest(request, env, ctx) {
     if (proxiedHandle) {
       html = profileBannerCard(html);
       html = logoCardDimensions(html);
+      // The rendered card when the account read succeeded; the padded avatar
+      // above stays as the fallback when it did not.
+      html = applyProfileShareImage(html, profileShareAccount);
     }
     // Structured data and cards on the rest of the fn's entity pages: a
     // profile as ProfilePage, a community as a page rather than a rival brand
     // Organization, and post/community images as true 1200x630 cards.
     const proxiedCommunity = !proxiedPostId && /^\/app\/communities\/[^/?#]+/.test(ssrPath);
     if (proxiedPostId) {
-      html = applyTextPostImage(dropTwitterPlayer(cardProxiedImage(html)), postShareRecord);
+      html = applyPostShareImage(dropTwitterPlayer(cardProxiedImage(html)), postShareRecord);
     } else if (proxiedHandle) {
       html = rewriteJsonLd(html, (ld) => profilePageLd(ld, proxiedHandle));
     } else if (proxiedCommunity) {
@@ -7027,6 +7141,8 @@ async function handleRequest(request, env, ctx) {
       // A consistent nav here makes these sections the strongest sitelink
       // candidates. Injected first so it sits above the blog link + post list.
       html = html.replace('</body>', `<section style="max-width:600px;margin:24px auto;text-align:left">${primaryNavHtml('/')}</section></body>`);
+      // The money guides, right under the section nav (see HOME_GUIDE_LINKS).
+      html = html.replace('</body>', `<section style="max-width:600px;margin:24px auto;text-align:left">${homeGuidesHtml()}</section></body>`);
       // Blog was linked from nowhere in bot HTML — give crawlers a path in.
       html = html.replace('</body>', `<p style="max-width:600px;margin:16px auto"><a href="${APP_URL}/docs/blog">DeHub Blog — news, guides &amp; product updates</a></p></body>`);
       try {

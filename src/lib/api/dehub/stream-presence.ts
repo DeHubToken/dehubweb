@@ -122,7 +122,7 @@ export function sendStreamReaction(streamId: string, value: unknown): void {
   }
 }
 
-interface StreamConnection {
+export interface StreamConnection {
   socket: Socket;
   /** The session token its handshake was built with. */
   token: string | null;
@@ -135,22 +135,11 @@ interface StreamConnection {
 let active: StreamConnection | null = null;
 
 /**
- * Take a share of the root-namespace socket, shared by every stream this tab
- * has open.
- *
- * A new session needs a new socket — the gateway reads the viewer's address off
- * the handshake, and a stale token would keep counting the previous account.
- * What it must NOT do is disconnect the old one: this used to, and every
- * presence opened before the token rotated kept a reference to a socket that
- * had just been closed under it. Those viewers stopped being counted, their
- * number froze at whatever it last was, and their `leave` became a no-op —
- * silently, on the very screens these counts exist for. A manual `disconnect()`
- * also cancels reconnection, so the socket never came back.
- *
- * So a rotated token retires the connection instead: it stops being handed out,
- * and closes itself once its last holder leaves.
+ * Take a share of the root-namespace socket every stream in this tab uses. A
+ * rotated token gets a new socket and RETIRES the old one — closed once its
+ * last holder leaves, never disconnected under presences still holding it.
  */
-function acquireStreamSocket(): StreamConnection {
+export function acquireStreamSocket(): StreamConnection {
   const token = getAuthToken();
 
   // Retire, don't close. Whoever still holds it keeps a working socket.
@@ -179,7 +168,7 @@ function acquireStreamSocket(): StreamConnection {
 }
 
 /** Give a share back. The socket closes when the last one is returned. */
-function releaseStreamSocket(conn: StreamConnection): void {
+export function releaseStreamSocket(conn: StreamConnection): void {
   conn.refs -= 1;
   if (conn.refs > 0) return;
   if (active === conn) active = null;
@@ -257,22 +246,8 @@ export function watchStreamJoins(
 
 /**
  * Join a stream as a viewer and report the count back as it changes.
- *
- * `streamId` is the Mongo ObjectId every `/api/live/{id}/*` route takes, never
- * the NFT tokenId — the gateway looks the stream up by it and a tokenId simply
- * matches nothing.
- *
- * Signed in or not, this tab is counted. Which pair of events it uses is the
- * only difference: `stream.join` is auth-guarded and keys the viewer by wallet
- * address, so a logged-out tab used to bail out here and be counted as nobody —
- * a creator whose audience was not signed in read "0 watching" over a stream
- * people were watching. `stream.join.anon` counts by socket id instead.
- *
- * The choice is made once, at join, from whether a token is on disk. It is not
- * re-evaluated if the viewer signs in mid-stream: they keep the anonymous seat
- * until the socket closes, which counts them exactly once either way. Claiming
- * the second seat is the failure worth avoiding, and the gateway refuses it
- * anyway.
+ * `streamId` is the Mongo ObjectId, never the NFT tokenId. Signed-out tabs are
+ * counted too, through `stream.join.anon`; the choice is made once, at join.
  */
 export function joinStreamPresence(
   streamId: string,
@@ -401,6 +376,17 @@ export interface StreamGiftBroadcast {
 }
 
 /**
+ * A gift the chain has paid, from `streamer.tip.confirmed`. The amount is
+ * what moved on chain, never the sender's claim.
+ */
+export interface StreamPaidGift {
+  paidAmount: number;
+  message?: string;
+  address?: string;
+  transactionHash?: string;
+}
+
+/**
  * Hear every gift sent to a stream, so the celebration plays for the whole
  * room rather than only for whoever paid.
  *
@@ -416,6 +402,13 @@ export interface StreamGiftBroadcast {
 export function watchStreamGifts(
   streamId: string,
   onGift: (gift: StreamGiftBroadcast) => void,
+  /**
+   * Called again once the tip is paid. `streamer.tip` goes out when a gift is
+   * recorded, before anything is paid, with whatever the sender typed — so
+   * anything a forged tip must not be able to trigger (reading a message out
+   * to the room) waits for this.
+   */
+  onPaid?: (gift: StreamPaidGift) => void,
 ): StreamPresence {
   if (!streamId) return { leave: () => undefined };
 
@@ -443,8 +436,21 @@ export function watchStreamGifts(
     });
   };
 
+  const handlePaid = (data: any) => {
+    if (!onPaid || !isForStream(data, streamId)) return;
+    const paidAmount = Number(data?.paidAmount);
+    if (!Number.isFinite(paidAmount) || paidAmount <= 0) return;
+    onPaid({
+      paidAmount,
+      message: typeof data?.message === 'string' && data.message.trim() ? data.message : undefined,
+      address: String(data?.address || '').toLowerCase() || undefined,
+      transactionHash: String(data?.transactionHash || '').toLowerCase() || undefined,
+    });
+  };
+
   s.on('connect', join);
   s.on(EVENT.tipStreamer, handleGift);
+  s.on(EVENT.tipConfirmed, handlePaid);
   if (s.connected) join();
 
   return {
@@ -453,6 +459,7 @@ export function watchStreamGifts(
       left = true;
       s.off('connect', join);
       s.off(EVENT.tipStreamer, handleGift);
+      s.off(EVENT.tipConfirmed, handlePaid);
       releaseStreamSocket(conn);
     },
   };
@@ -474,13 +481,25 @@ export type LiveRoomEvent =
       message?: string;
       transactionHash?: string;
     }
-  | { type: 'tipConfirmed'; paidAmount: number; address: string; transactionHash: string }
+  | {
+      type: 'tipConfirmed';
+      paidAmount: number;
+      address: string;
+      transactionHash: string;
+      user?: StreamJoinUser;
+      selectedTier?: string;
+      message?: string;
+    }
   | { type: 'follow' | 'share' | 'join'; user: StreamJoinUser }
   | { type: 'subscribe'; user: StreamJoinUser; planName?: string }
   | { type: 'viewers'; count: number }
-  | { type: 'overlayUpdated'; version: number };
+  | { type: 'overlayUpdated'; version: number }
+  | { type: 'reaction'; reactionType: string; user: StreamJoinUser }
+  // From the stream's chat room, which is a different connection (use-overlay-chat).
+  | { type: 'chat'; id: string; text: string; user: StreamJoinUser }
+  | { type: 'chatDeleted'; id: string };
 
-function roomUser(raw: any): StreamJoinUser {
+export function roomUser(raw: any): StreamJoinUser {
   const user = raw && typeof raw === 'object' ? raw : {};
   return {
     address: user.address ? String(user.address).toLowerCase() : undefined,
@@ -535,7 +554,15 @@ export function watchLiveRoomEvents(streamId: string, onEvent: (event: LiveRoomE
       paidAmount,
       address: String(data?.address || '').toLowerCase(),
       transactionHash: String(data?.transactionHash || '').toLowerCase(),
+      user: data?.user ? roomUser(data.user) : undefined,
+      selectedTier: data?.selectedTier || undefined,
+      message: data?.message || undefined,
     });
+  };
+
+  const onReaction = (data: any) => {
+    if (!isForStream(data, streamId) || typeof data?.reactionType !== 'string') return;
+    onEvent({ type: 'reaction', reactionType: data.reactionType, user: roomUser(data.user) });
   };
 
   const person = (type: 'follow' | 'share') => (data: any) => {
@@ -578,6 +605,7 @@ export function watchLiveRoomEvents(streamId: string, onEvent: (event: LiveRoomE
     [EVENT.viewCountUpdate, onCount],
     [EVENT.leaveStream, onCount],
     [EVENT.overlayUpdated, onOverlay],
+    [EVENT.reaction, onReaction],
   ];
 
   s.on('connect', join);

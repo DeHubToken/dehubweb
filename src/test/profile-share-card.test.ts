@@ -90,8 +90,8 @@ describe('profileBannerCard', () => {
   });
 
   it('only runs on the profile branch of the proxy', () => {
-    // …followed only by the logo fallback's true dimensions, for a profile
-    // with no avatar to make a banner from.
-    expect(WORKER).toMatch(/if \(proxiedHandle\) \{\n\s+html = profileBannerCard\(html\);\n\s+html = logoCardDimensions\(html\);\n\s+\}/);
+    // …followed by the logo fallback's true dimensions, for a profile with
+    // no avatar to make a banner from, and then the rendered profile card.
+    expect(WORKER).toMatch(/if \(proxiedHandle\) \{\n\s+html = profileBannerCard\(html\);\n\s+html = logoCardDimensions\(html\);\n(?:\s+\/\/.*\n)*\s+html = applyProfileShareImage\(html, profileShareAccount\);\n\s+\}/);
   });
 });

@@ -31,7 +31,12 @@ class FakeSocket {
     return this;
   }
   off(event: string, cb: Handler) { this.handlers.get(event)?.delete(cb); return this; }
-  emit(event: string, payload: unknown) { this.emitted.push({ event, payload }); return this; }
+  acks: Array<(ack: unknown) => void> = [];
+  emit(event: string, payload: unknown, ack?: (ack: unknown) => void) {
+    this.emitted.push({ event, payload });
+    if (ack) this.acks.push(ack);
+    return this;
+  }
   disconnect() { this.disconnected = true; this.connected = false; return this; }
 
   /** Deliver a server event to whoever is listening. */
@@ -58,6 +63,11 @@ vi.mock('@/lib/api/dehub/core', () => ({
 async function loadModule() {
   vi.resetModules();
   return import('@/lib/api/dehub/stream-presence');
+}
+
+async function loadControl() {
+  vi.resetModules();
+  return import('@/lib/api/dehub/overlay-control');
 }
 
 describe('stream presence socket', () => {
@@ -192,6 +202,52 @@ describe('stream gift broadcasts', () => {
     sockets[0].deliver('streamer.tip', { streamId: 'stream-1', gift: { meta: { amount: 10 } } });
     expect(gifts).toHaveLength(1);
   });
+
+  /** The message is read aloud off this one, so a forged tip cannot be. */
+  it('hands over a paid tip separately, with the paid amount and its message', async () => {
+    const { watchStreamGifts } = await loadModule();
+    const gifts: unknown[] = [];
+    const paid: unknown[] = [];
+    watchStreamGifts('stream-1', (g) => gifts.push(g), (p) => paid.push(p));
+
+    const confirmed = {
+      streamId: 'stream-1',
+      transactionHash: '0xABC',
+      address: '0xFA00000000000000000000000000000000000002',
+      paidAmount: 250,
+      claimedAmount: 250000,
+      message: 'gm',
+    };
+    sockets[0].deliver('streamer.tip.confirmed', confirmed);
+    sockets[0].deliver('streamer.tip.confirmed', { ...confirmed, streamId: 'stream-2' });
+    sockets[0].deliver('streamer.tip.confirmed', { ...confirmed, paidAmount: 0 });
+    sockets[0].deliver('streamer.tip.confirmed', { ...confirmed, message: '   ' });
+
+    expect(gifts).toEqual([]);
+    expect(paid).toEqual([
+      {
+        paidAmount: 250,
+        message: 'gm',
+        address: '0xfa00000000000000000000000000000000000002',
+        transactionHash: '0xabc',
+      },
+      {
+        paidAmount: 250,
+        message: undefined,
+        address: '0xfa00000000000000000000000000000000000002',
+        transactionHash: '0xabc',
+      },
+    ]);
+  });
+
+  it('stops hearing paid tips when it leaves', async () => {
+    const { watchStreamGifts } = await loadModule();
+    const paid: unknown[] = [];
+    const sub = watchStreamGifts('stream-1', () => undefined, (p) => paid.push(p));
+    sub.leave();
+    sockets[0].deliver('streamer.tip.confirmed', { streamId: 'stream-1', paidAmount: 5 });
+    expect(paid).toEqual([]);
+  });
 });
 
 /**
@@ -244,6 +300,38 @@ describe('live room events for the overlay', () => {
     ]);
   });
 
+  it('names the sender of a paid tip when the confirmation carries them', async () => {
+    const { events, socket } = await watch();
+    socket.deliver('streamer.tip.confirmed', {
+      streamId: 'stream-1',
+      paidAmount: 250,
+      address: '0xFAN',
+      transactionHash: '0xHASH',
+      selectedTier: 'Crown',
+      message: 'gm',
+      user: { address: '0xFAN', username: 'fan' },
+    });
+    expect(events).toEqual([
+      {
+        type: 'tipConfirmed',
+        paidAmount: 250,
+        address: '0xfan',
+        transactionHash: '0xhash',
+        selectedTier: 'Crown',
+        message: 'gm',
+        user: { address: '0xfan', username: 'fan', displayName: undefined, avatarImageUrl: undefined },
+      },
+    ]);
+  });
+
+  it('passes reactions on with who sent them', async () => {
+    const { events, socket } = await watch();
+    socket.deliver('stream.reaction', { streamId: 'stream-1', reactionType: 'HEART', user: { address: '0xA' } });
+    socket.deliver('stream.reaction', { streamId: 'stream-2', reactionType: 'HEART', user: { address: '0xB' } });
+    socket.deliver('stream.reaction', { streamId: 'stream-1' });
+    expect(events).toEqual([{ type: 'reaction', reactionType: 'HEART', user: expect.objectContaining({ address: '0xa' }) }]);
+  });
+
   it('turns follows, subscriptions and shares into people', async () => {
     const { events, socket } = await watch();
     const user = { address: '0xA', username: 'ann' };
@@ -287,5 +375,64 @@ describe('live room events for the overlay', () => {
     socket.deliver('stream.follow', { streamId: 'stream-1', user: { address: '0xA' } });
     expect(events).toEqual([]);
     expect(socket.disconnected).toBe(true);
+  });
+});
+
+/**
+ * Live Studio and the OBS page listen on the creator's control room. A test
+ * alert arrives there and nowhere else, already shaped like the room events a
+ * widget reads.
+ */
+describe('overlay control room', () => {
+  beforeEach(() => {
+    sockets = [];
+    token = 'token-a';
+  });
+
+  it('joins with its token and says what kind of surface it is', async () => {
+    const { watchOverlayControl } = await loadControl();
+    watchOverlayControl('A'.repeat(24), 'studio', {});
+    expect(sockets[0].emitted).toEqual([{ event: 'overlay.join', payload: { token: 'A'.repeat(24), surface: 'studio' } }]);
+  });
+
+  it('turns a test tip into both the tip and its confirmation', async () => {
+    const { watchOverlayControl } = await loadControl();
+    const batches: unknown[] = [];
+    watchOverlayControl('A'.repeat(24), 'studio', { onTest: (events) => batches.push(events) });
+    sockets[0].deliver('overlay.test', { kind: 'tip', test: true, at: 'now', amount: 250000, message: 'hi', user: { address: '0xC' } });
+    const [events] = batches as any[];
+    expect(events.map((e: any) => e.type)).toEqual(['tip', 'tipConfirmed']);
+    expect(events[0]).toMatchObject({ amount: 250000, message: 'hi', transactionHash: 'test-now' });
+    expect(events[1]).toMatchObject({ paidAmount: 250000, transactionHash: 'test-now' });
+  });
+
+  it('passes a test follow through as a follow', async () => {
+    const { watchOverlayControl } = await loadControl();
+    const batches: any[] = [];
+    watchOverlayControl('A'.repeat(24), 'studio', { onTest: (events) => batches.push(events) });
+    sockets[0].deliver('overlay.test', { kind: 'follow', user: { address: '0xD', username: 'dee' } });
+    expect(batches[0]).toMatchObject([{ type: 'follow', user: { username: 'dee' } }]);
+  });
+
+  it('leaves the room when it is done', async () => {
+    const { watchOverlayControl } = await loadControl();
+    const sub = watchOverlayControl('A'.repeat(24), 'studio', {});
+    sub.leave();
+    expect(sockets[0].emitted.at(-1)).toEqual({ event: 'overlay.leave', payload: { token: 'A'.repeat(24) } });
+  });
+});
+
+describe('overlay control room join', () => {
+  beforeEach(() => {
+    sockets = [];
+    token = 'token-a';
+  });
+
+  it('reports whether the server accepted the token', async () => {
+    const { watchOverlayControl } = await loadControl();
+    const answers: boolean[] = [];
+    watchOverlayControl('A'.repeat(24), 'obs', { onJoined: (ok) => answers.push(ok) });
+    sockets[0].acks[0]({ ok: false });
+    expect(answers).toEqual([false]);
   });
 });
