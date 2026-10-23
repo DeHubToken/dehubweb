@@ -257,9 +257,9 @@ export default function StageDeepLinkPage() {
           noindex
         />
 
-        <div className="relative w-full rounded-2xl overflow-hidden border border-white/10">
+        <div data-stage-surface className="relative w-full rounded-2xl overflow-hidden border border-white/10">
           <StageCoverArt src={stage.cover_image_url} title={stage.title} stage={stage} />
-          <div className="relative p-6 bg-zinc-900">
+          <div data-stage-body className="relative p-6 bg-zinc-900">
             <div className="flex items-center justify-between gap-2 mb-3">
               <div className="inline-flex items-center gap-1.5 px-2 py-1 rounded-lg bg-white/10">
                 <CalendarDays className="w-3 h-3 text-zinc-300" />
@@ -418,9 +418,9 @@ export default function StageDeepLinkPage() {
           noindex
         />
 
-        <div className="relative w-full rounded-2xl overflow-hidden border border-white/10">
+        <div data-stage-surface className="relative w-full rounded-2xl overflow-hidden border border-white/10">
           <StageCoverArt src={stage.cover_image_url} title={stage.title} stage={stage} />
-          <div className="relative p-6 bg-zinc-900">
+          <div data-stage-body className="relative p-6 bg-zinc-900">
             <div className="flex items-center justify-between gap-2 mb-3">
               <div className="inline-flex items-center gap-1.5 px-2 py-1 rounded-lg bg-white/10">
                 <Clock className="w-3 h-3 text-zinc-400" />
@@ -612,9 +612,9 @@ export default function StageDeepLinkPage() {
           noindex
         />
 
-        <div className="relative w-full rounded-2xl overflow-hidden border border-white/10">
+        <div data-stage-surface className="relative w-full rounded-2xl overflow-hidden border border-white/10">
           <StageCoverArt src={stage.cover_image_url} title={stage.title} stage={stage} />
-          <div className="relative p-6 bg-zinc-900">
+          <div data-stage-body className="relative p-6 bg-zinc-900">
             <div className="flex items-center justify-between mb-3">
               <div className="inline-flex items-center gap-1.5 px-2 py-1 rounded-lg bg-red-500/20">
                 <span className="relative flex h-2 w-2">
