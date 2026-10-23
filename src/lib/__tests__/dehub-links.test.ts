@@ -206,3 +206,29 @@ describe('findDehubLinks /bounty and legacy /work', () => {
     expect(parseDehubLink('https://evil.example/work/3fa85f64-5717-4562-b3fc-2c963f66afa6')).toBeNull();
   });
 });
+
+describe('governance proposal links', () => {
+  const id = '3fa85f64-5717-4562-b3fc-2c963f66afa6';
+
+  it('cards /app/governance/<uuid> and the top-level form', () => {
+    for (const url of [`https://dehub.io/app/governance/${id}`, `https://dehub.io/governance/${id}`, `/app/governance/${id}`]) {
+      const m = parseDehubLink(url);
+      expect(m?.kind).toBe('proposal');
+      expect(m?.proposalId).toBe(id);
+    }
+  });
+
+  it('keeps a comment deep link in the path', () => {
+    expect(parseDehubLink(`https://dehub.io/app/governance/${id}?comment=9`)?.path).toBe(`/app/governance/${id}?comment=9`);
+  });
+
+  it('leaves the board, bad ids and foreign hosts alone', () => {
+    expect(parseDehubLink('https://dehub.io/app/governance')).toBeNull();
+    expect(parseDehubLink('https://dehub.io/app/governance/123')).toBeNull();
+    expect(parseDehubLink(`https://evil.example/app/governance/${id}`)).toBeNull();
+  });
+
+  it('finds a proposal link in post text', () => {
+    expect(findDehubLinks(`worth a vote https://dehub.io/app/governance/${id}`).map((l) => l.kind)).toEqual(['proposal']);
+  });
+});

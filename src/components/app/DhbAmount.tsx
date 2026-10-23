@@ -44,7 +44,7 @@ export function DhbAmount({ amount, currency, iconClassName, className }: DhbAmo
           loading="lazy"
         />
       ) : (
-        currency
+        <span>{currency}</span>
       )}
     </span>
   );

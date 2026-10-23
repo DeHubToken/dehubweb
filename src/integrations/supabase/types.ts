@@ -632,6 +632,82 @@ export type Database = {
           },
         ]
       }
+      ai_agent_life_events: {
+        Row: {
+          agent_id: string
+          content: string | null
+          created_at: string
+          id: number
+          kind: string
+          meta: Json
+          target: string | null
+        }
+        Insert: {
+          agent_id: string
+          content?: string | null
+          created_at?: string
+          id?: never
+          kind: string
+          meta?: Json
+          target?: string | null
+        }
+        Update: {
+          agent_id?: string
+          content?: string | null
+          created_at?: string
+          id?: never
+          kind?: string
+          meta?: Json
+          target?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "ai_agent_life_events_agent_id_fkey"
+            columns: ["agent_id"]
+            isOneToOne: false
+            referencedRelation: "ai_agents"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      ai_agent_lives: {
+        Row: {
+          agent_id: string
+          lease_until: string | null
+          next_at: string
+          persona: Json | null
+          sentient: boolean
+          state: Json
+          updated_at: string
+        }
+        Insert: {
+          agent_id: string
+          lease_until?: string | null
+          next_at?: string
+          persona?: Json | null
+          sentient?: boolean
+          state?: Json
+          updated_at?: string
+        }
+        Update: {
+          agent_id?: string
+          lease_until?: string | null
+          next_at?: string
+          persona?: Json | null
+          sentient?: boolean
+          state?: Json
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "ai_agent_lives_agent_id_fkey"
+            columns: ["agent_id"]
+            isOneToOne: true
+            referencedRelation: "ai_agents"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       ai_agent_post_slots: {
         Row: {
           next_post_at: string
@@ -4321,6 +4397,8 @@ export type Database = {
           fee_tx_hash: string | null
           id: string
           like_count: number
+          media_type: string | null
+          media_url: string | null
           status: string
           title: string
           updated_at: string
@@ -4338,6 +4416,8 @@ export type Database = {
           fee_tx_hash?: string | null
           id?: string
           like_count?: number
+          media_type?: string | null
+          media_url?: string | null
           status?: string
           title: string
           updated_at?: string
@@ -4355,6 +4435,8 @@ export type Database = {
           fee_tx_hash?: string | null
           id?: string
           like_count?: number
+          media_type?: string | null
+          media_url?: string | null
           status?: string
           title?: string
           updated_at?: string
@@ -8609,6 +8691,7 @@ export type Database = {
           wins: number
         }[]
       }
+      claim_agent_life: { Args: never; Returns: string }
       claim_agent_task: { Args: never; Returns: Json }
       claim_paid_translation: { Args: { p_cap: number }; Returns: boolean }
       claim_reaction_tip: { Args: never; Returns: boolean }
@@ -9357,6 +9440,7 @@ export type Database = {
           space_id: string
         }[]
       }
+      tick_agent_lives: { Args: never; Returns: undefined }
       tick_agent_tasks: { Args: never; Returns: undefined }
       touch_post_translation: {
         Args: { p_target_lang: string; p_text_hash: string }
