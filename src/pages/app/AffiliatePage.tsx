@@ -34,6 +34,7 @@ import { buildReferralDeepLink, sanitizeDeepLinkPath } from "@/lib/affiliateDeep
 import { streamerInviteLink } from "@/lib/streamer-page.js";
 import { Input } from "@/components/ui/input";
 import { PageBody } from "@/components/app/page-kit/PageKit";
+import { trackEvent } from "@/lib/analytics";
 
 const SITE = typeof window !== "undefined" ? window.location.origin : "https://dehub.io";
 
@@ -142,14 +143,20 @@ export default function AffiliatePage() {
   );
 
   const copy = async (txt: string, label = "Copied") => {
-    try { await navigator.clipboard.writeText(txt); toast.success(label); }
+    try {
+      await navigator.clipboard.writeText(txt);
+      trackEvent("invite_link_copied", { method: "copy", deep_link: !txt.endsWith(`/r/${stats?.code}`) });
+      toast.success(label);
+    }
     catch { toast.error(_copy("copy.5b50e7a693fe", { defaultValue: "Copy failed" })); }
   };
 
   const nativeShare = () => {
     const nav = navigator as Navigator & { share?: (d: ShareData) => Promise<void> };
     if (nav.share) {
-      nav.share({ title: "DeHub", text: "Join me on DeHub.", url: shareUrl }).catch(() => undefined);
+      nav.share({ title: "DeHub", text: "Join me on DeHub.", url: shareUrl })
+        .then(() => trackEvent("invite_link_copied", { method: "native", deep_link: false }))
+        .catch(() => undefined);
     } else {
       void copy(shareUrl, "Invite link copied");
     }

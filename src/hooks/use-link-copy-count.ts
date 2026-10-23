@@ -199,6 +199,7 @@ export function useTrackPostLinkCopy() {
   const queryClient = useQueryClient();
   return useCallback(
     (tokenId: string | undefined, walletAddress?: string | null, currentCount = 0) => {
+      void import('@/lib/analytics').then((m) => m.trackShare('copy_link', { kind: 'post' }));
       void trackPostLinkCopy(tokenId, walletAddress, currentCount).then(() => {
         if (tokenId) {
           queryClient.invalidateQueries({ queryKey: ['post-link-copies', tokenId] });

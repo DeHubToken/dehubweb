@@ -173,6 +173,7 @@ interface ImageCardProps {
  * before the image loads (CLS fix). Session-scoped, bounded by feed size.
  */
 import { createMediaAspectCache } from '@/lib/media-aspect-cache';
+import { viewerShareUrl } from '@/lib/share-url';
 const imageAspectRatioCache = createMediaAspectCache(
   () => localStorage.getItem('media-aspects-v1'), value => localStorage.setItem('media-aspects-v1', value),
 );
@@ -1020,7 +1021,7 @@ export const ImageCard = memo(function ImageCard({ post, aboveFold = false, onOp
               </button>
               <button
                 onClick={() => {
-                  const url = `${window.location.origin}/app/post/${post.id}`;
+                  const url = viewerShareUrl(`${window.location.origin}/app/post/${post.id}`);
                   navigator.clipboard.writeText(url);
                   toast.success(t('postOptions.postUrlCopied'));
                   trackLinkCopy(post.id, walletAddress, linkCopyCount);
