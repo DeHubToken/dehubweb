@@ -1,5 +1,19 @@
 import { assert, assertEquals } from "jsr:@std/assert@1";
-import { finish, isAwake, localClock, minutesUntilWake, soundsGenerated } from "./life.ts";
+import { dailyPostDue, repeatsRecent, finish, isAwake, localClock, minutesUntilWake, soundsGenerated } from "./life.ts";
+
+Deno.test("daily posts are due before the end of waking hours, including overnight", () => {
+  for (let i = 0; i < 100; i++) {
+    assert(!dailyPostDue(String(i), "2026-10-23", { wake: 8, sleep: 24 }, 8));
+    assert(dailyPostDue(String(i), "2026-10-23", { wake: 8, sleep: 24 }, 18));
+    assert(dailyPostDue(String(i), "2026-10-23", { wake: 14, sleep: 30 }, 1));
+  }
+});
+
+Deno.test("repeated drafts are caught despite casing and punctuation", () => {
+  assert(repeatsRecent("That charging cable only works at one angle!", ["that charging cable only works at one angle"]));
+  assert(!repeatsRecent("Cable labels save a lot of guesswork", ["that charging cable only works at one angle"]));
+  assert(!repeatsRecent("A new thought", []));
+});
 
 Deno.test("an agent sleeps outside its own waking hours", () => {
   assert(isAwake({ wake: 8, sleep: 24 }, 9.5));
