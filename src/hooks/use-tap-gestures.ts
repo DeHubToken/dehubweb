@@ -18,6 +18,7 @@
  * `MOVE_SLOP_PX` stops being a tap and is left entirely to those layers.
  */
 import { useCallback, useEffect, useRef } from 'react';
+import { isInTapReactionCenter } from '@/lib/tap-reaction-center';
 import {
   emitOpenReactions,
   emitTapReaction,
@@ -61,6 +62,8 @@ function isMediaControl(target: EventTarget | null) {
 
 export interface UseTapGesturesOptions {
   postId?: string | number;
+  /** Feed posts reserve only their central area for multi-tap reactions. */
+  reactionArea?: 'center' | 'surface';
   /**
    * The surface's own single-tap action. By default it is held back
    * `TAP_WINDOW_MS` so a second tap can overtake it — the price of telling one
@@ -89,6 +92,7 @@ export interface UseTapGesturesOptions {
 
 export function useTapGestures({
   postId,
+  reactionArea = 'surface',
   onSingleTap,
   onUndoSingleTap,
   disabled,
@@ -100,7 +104,7 @@ export function useTapGestures({
   const holdTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
   const taps = useRef(0);
   /** Where and which pointer started the press, or null once it is disqualified. */
-  const origin = useRef<{ x: number; y: number; id: number } | null>(null);
+  const origin = useRef<{ x: number; y: number; id: number; central: boolean } | null>(null);
   /** A hold already acted, so the release that ends it must not also tap. */
   const held = useRef(false);
 
@@ -136,7 +140,9 @@ export function useTapGestures({
         return;
       }
       held.current = false;
-      origin.current = { x: event.clientX, y: event.clientY, id: event.pointerId };
+      const rect = reactionArea === 'center' ? event.currentTarget.getBoundingClientRect() : null;
+      const central = !rect || isInTapReactionCenter(event.clientX - rect.left, event.clientY - rect.top, rect.width, rect.height);
+      origin.current = { x: event.clientX, y: event.clientY, id: event.pointerId, central };
 
       if (!enableLongPress) return;
       if (holdTimer.current) clearTimeout(holdTimer.current);
@@ -152,7 +158,7 @@ export function useTapGestures({
         emitOpenReactions(id);
       }, LONG_PRESS_MS);
     },
-    [disabled, id, enableLongPress, reset],
+    [disabled, id, enableLongPress, reactionArea, reset],
   );
 
   const onPointerMove = useCallback(
@@ -210,6 +216,15 @@ export function useTapGestures({
         return;
       }
       origin.current = null;
+
+      // The rest of a feed post is an immediate open target. Crossing out
+      // of the center also cancels a pending center gesture, so a later timer
+      // cannot open or react to the post after navigation.
+      if (!from.central) {
+        reset();
+        onSingleTap?.(event);
+        return;
+      }
 
       const point = { x: event.clientX, y: event.clientY };
       taps.current += 1;

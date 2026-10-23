@@ -1889,7 +1889,11 @@
     "radio": "Radio",
     "trendingTracks": "Populaire nummers",
     "moreVideos": "Meer video's",
-    "newReleases": "Nieuwe releases"
+    "newReleases": "Nieuwe releases",
+    "mostPlayed": "Meest afgespeeld",
+    "mostLiked": "Meest geliket",
+    "mostRecent": "Meest recent",
+    "chartOrder": "Volgorde van de audiolijst"
   },
   "notFound": {
     "title": "Pagina niet gevonden",
@@ -2087,6 +2091,20 @@
       "comment": "Opmerking",
       "profile": "Profielupdate",
       "window": {
+        "authorAll": "Alle makers",
+        "authorChoose": "Kies maker",
+        "categoryAll": "Alle categorieën",
+        "categoryChoose": "Kies categorieën",
+        "categoryHint": "Voeg maximaal 20 categorieën toe, gescheiden door komma\u0027s. Eén overeenkomst is genoeg. Laat leeg voor alles.",
+        "last1h": "Afgelopen uur",
+        "last30d": "Afgelopen 30 dagen",
+        "allTime": "Altijd",
+        "dislike": "Niet leuk",
+        "author": "Auteur (optioneel)",
+        "category": "Categorie (optioneel)",
+        "authorPlaceholder": "@gebruikersnaam of wallet",
+        "categoryPlaceholder": "Exacte categorienaam",
+        "filterHelp": "Laat filters leeg voor alle berichten. Bij twee filters moeten beide overeenkomen. Bestaande gelijke reacties blijven behouden; een tegengestelde reactie vervangt ze.",
         "mode": "Taaktype",
         "write": "Instructies schrijven",
         "title": "Elke post in een periode",
@@ -4022,6 +4040,7 @@
     "shopAllowanceUsed": "{{allowance}} van {{allowance}} gebruikt. Stake meer DeHub tokens voor een hogere badge en een extra slot."
   },
   "stages": {
+    "allStages": "Alle audioruimtes",
     "title": "Audioruimtes",
     "tabLive": "Live",
     "tabUpcoming": "Aankomend",
@@ -7426,7 +7445,8 @@
     "play": "Afspelen",
     "pause": "Pauzeren",
     "listens_one": "{{count}} keer beluisterd",
-    "listens_other": "{{count}} keer beluisterd"
+    "listens_other": "{{count}} keer beluisterd",
+    "visualizerColour": "Kleur van de visualisatie"
   },
   "converter": {
     "seoTitle": "Converter — importeer een video naar DeHub",
@@ -10192,6 +10212,11 @@
     "reminderLater": "Niet nu"
   },
   "copy": {
+    "b3412a3b86de": "Nodig streamers uit",
+    "8c91325d901b": "Stuur streamers met dit bericht naar de DeHub-streamingpagina. Je link schrijft ze aan jou toe voordat ze aankomen.",
+    "cc96aaa18cf2": "Kom met mij streamen op DeHub. Fooien komen on-chain rechtstreeks in je wallet, je publiek is van jou en je kunt in één stap blijven posten op TikTok en overal elders. Meld je hier aan: {{link}}",
+    "77db95ebd737": " Bericht kopiëren",
+    "846d8244b7d8": "Uitnodigingsbericht gekopieerd",
     "7af023c43013": "Documentatie",
     "090940e73258": "Bouwer",
     "c3d4759d35d0": "Voorbeeld van bouwer",
@@ -14366,5 +14391,8 @@
     "posted": "Geplaatst",
     "view": "Bekijken",
     "failed": "De video kon niet worden verwerkt"
+  },
+  "player": {
+    "volume": "Volume"
   }
 }

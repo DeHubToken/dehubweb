@@ -3051,6 +3051,7 @@
     "shopAllowanceUsed": "Wykorzystano {{allowance}} z {{allowance}}. Zablokuj więcej tokenów DeHub, aby uzyskać wyższą odznakę i dodatkowe miejsce."
   },
   "stages": {
+    "allStages": "Wszystkie pokoje audio",
     "title": "Pokoje audio",
     "tabLive": "Na żywo",
     "tabUpcoming": "Nadchodzące",

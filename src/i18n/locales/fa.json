@@ -3068,6 +3068,7 @@
     "shopAllowanceUsed": "{{allowance}} از {{allowance}} استفاده شد. توکن‌های DeHub بیشتری را برای نشان بالاتر و یک اسلات دیگر استیک کنید."
   },
   "stages": {
+    "allStages": "همه اتاق‌های صوتی",
     "title": "اتاق‌های صوتی",
     "tabLive": "زنده",
     "tabUpcoming": "پیش رو",

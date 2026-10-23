@@ -2982,6 +2982,7 @@
     "shopAllowanceUsed": "{{allowance}} / {{allowance}} istifadə edildi. Daha yüksək nişan və başqa bir yer üçün daha çox DeHub tokeni steykinq edin."
   },
   "stages": {
+    "allStages": "Bütün səsli otaqlar",
     "title": "Səsli otaqlar",
     "tabLive": "Canlı",
     "tabUpcoming": "Qarşıdan gələn",

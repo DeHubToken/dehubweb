@@ -3046,6 +3046,7 @@
     "shopAllowanceUsed": "{{allowance}} पैकी {{allowance}} वापरले. उच्च बॅज आणि आणखी एका स्लॉटसाठी अधिक DeHub टोकन स्टेक करा."
   },
   "stages": {
+    "allStages": "सर्व ऑडिओ रूम",
     "title": "ऑडिओ रूम",
     "tabLive": "थेट",
     "tabUpcoming": "आगामी",

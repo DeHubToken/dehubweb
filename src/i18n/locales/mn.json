@@ -3025,6 +3025,7 @@
     "shopAllowanceUsed": "{{allowance}} -аас {{allowance}} ашигласан. Илүү өндөр багц болон нэмэлт орон зай авахын тулд DeHub токенээ стейк хийнэ үү."
   },
   "stages": {
+    "allStages": "Бүх аудио өрөөнүүд",
     "title": "Аудио өрөөнүүд",
     "tabLive": "Шууд",
     "tabUpcoming": "Ирэх",

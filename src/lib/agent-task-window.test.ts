@@ -1,9 +1,17 @@
 import { describe, expect, it } from 'vitest';
-import { windowPrompt, windowRange } from './agent-task-window';
+import { toggleWindowAction, windowPrompt, windowRange } from './agent-task-window';
 
 const now = new Date('2026-10-17T12:00:00Z');
 
 describe('every post in a time period', () => {
+  it('supports hour, month and all-time scopes without opposing reactions', () => {
+    expect(windowRange('last1h', { from: '', to: '' }, now)?.from.toISOString()).toBe('2026-10-17T11:00:00.000Z');
+    expect(windowRange('last30d', { from: '', to: '' }, now)?.from.toISOString()).toBe('2026-09-17T12:00:00.000Z');
+    expect(windowRange('allTime', { from: '', to: '' }, now)?.from.getTime()).toBe(0);
+    expect(toggleWindowAction(['view', 'like'], 'dislike')).toEqual(['view', 'dislike']);
+    expect(toggleWindowAction(['dislike'], 'like')).toEqual(['like']);
+    expect(windowPrompt({ from: new Date(0), to: now }, ['dislike'], '', { author: ' @maldoteth ', category: ' Music ' })).toContain('Actions: dislike\nAuthor: @maldoteth\nCategory: Music');
+  });
   it('turns presets into windows, and lets "next 7 days" end in the future', () => {
     expect(windowRange('last24h', { from: '', to: '' }, now)).toEqual({ from: new Date('2026-10-16T12:00:00Z'), to: now });
     expect(windowRange('next7d', { from: '', to: '' }, now)?.to.toISOString()).toBe('2026-10-24T12:00:00.000Z');

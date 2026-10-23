@@ -3051,6 +3051,7 @@
     "shopAllowanceUsed": "{{allowance}} di {{allowance}} utilizzati. Metti in staking più token DeHub per un badge superiore e un altro slot."
   },
   "stages": {
+    "allStages": "Tutte le stanze audio",
     "title": "Stanze audio",
     "tabLive": "Live",
     "tabUpcoming": "In programma",

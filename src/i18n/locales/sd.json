@@ -3035,6 +3035,7 @@
     "shopAllowanceUsed": "{{allowance}} مان {{allowance}} استعمال ٿيو. اعليٰ بيج ۽ ٻئي سلاٽ لاءِ وڌيڪ DeHub ٽوڪن اسٽيڪ ڪريو."
   },
   "stages": {
+    "allStages": "سڀ آڊيو روم",
     "title": "آڊيو روم",
     "tabLive": "لائيو",
     "tabUpcoming": "ايندڙ",

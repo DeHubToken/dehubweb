@@ -2884,6 +2884,7 @@
     "shopAllowanceUsed": "{{allowance}} من {{allowance}} اتستخدموا. اعمل ستاكينج لتوكنات DeHub أكتر عشان تاخد شارة أعلى وفتحة تانية."
   },
   "stages": {
+    "allStages": "كل الغرف الصوتية",
     "title": "الغرف الصوتية",
     "liveCount": "({{count}} حي)",
     "logInToStart": "دخلي ليبدأوا العرض",

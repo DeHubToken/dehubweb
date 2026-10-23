@@ -2887,6 +2887,7 @@
     "shopAllowanceUsed": "已使用 {{allowance}} 個中的 {{allowance}} 個。質押更多 DeHub 代幣以獲得更高的徽章和另一個插槽。"
   },
   "stages": {
+    "allStages": "全部语音房",
     "title": "语音房",
     "liveCount": "({{count}} 直播)",
     "upcomingCount": "({{count}} 來哋)",

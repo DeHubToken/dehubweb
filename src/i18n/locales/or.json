@@ -3014,6 +3014,7 @@
     "shopAllowanceUsed": "{{allowance}} ରୁ {{allowance}} ବ୍ୟବହୃତ। ଉଚ୍ଚ ବ୍ୟାଜ୍ ଏବଂ ଅନ୍ୟ ଏକ ସ୍ଲଟ୍ ପାଇଁ ଅଧିକ DeHub ଟୋକେନ୍ ଷ୍ଟେକ୍ କରନ୍ତୁ।"
   },
   "stages": {
+    "allStages": "ସମସ୍ତ ଅଡିଓ ରୁମ୍",
     "title": "ଅଡିଓ ରୁମ୍",
     "tabLive": "ଲାଇଭ",
     "tabUpcoming": "ଆସୁଥିବା",

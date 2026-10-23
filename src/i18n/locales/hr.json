@@ -2994,6 +2994,7 @@
     "shopAllowanceUsed": "Iskorišteno {{allowance}} od {{allowance}}. Uložite više DeHub tokena za višu značku i još jedno mjesto."
   },
   "stages": {
+    "allStages": "Sve audio sobe",
     "title": "Audio sobe",
     "tabLive": "Uživo",
     "tabUpcoming": "Predstojeće",
