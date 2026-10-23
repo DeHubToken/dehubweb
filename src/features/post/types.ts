@@ -123,6 +123,8 @@ export interface PostFormActions {
   clearCropFromMedia: (index: number) => void;
   applyTrimToMedia: (index: number, trimStart: number, trimEnd: number) => void;
   replaceImageFile: (index: number, file: File) => void;
+  /** Alt text for one attached image or video; blank clears it. */
+  setMediaDescription: (index: number, description: string) => void;
   handleEnhanceWithAI: (mode?: 'spellcheck' | 'grammar' | 'style', style?: string) => Promise<void>;
   insertFormatting: (format: 'bold' | 'italic' | 'mention') => void;
   handlePost: (extra?: { soundtrackTag?: string; articleBody?: string; articleImage?: File; socialImage?: File }) => void;
