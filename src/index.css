@@ -2205,8 +2205,9 @@ html:is([data-theme="glass"], [data-theme="cosmic"], [data-theme="hazy"], [data-
   /* Tailwind `backdrop-blur-*` chips and scrims inside the shell (media
      badges, gate tiles, carousel arrows) pair the blur with a 10-60% black.
      Unblurred, that is a see-through wash over a photo or the canvas; lift the
-     low steps to one readable smoke. Denser steps are left as they are. */
-  html:is([data-theme="glass"], [data-theme="cosmic"], [data-theme="hazy"], [data-theme="swarms"], [data-theme="lavalamp"], [data-theme="winter"], [data-theme="war"], [data-theme="osaka"], [data-theme="jungle"], [data-theme="island"], [data-theme="hacker"], [data-theme="horror"]) #app-root [class*="backdrop-blur"]:is([class*="bg-black/1"], [class*="bg-black/2"], [class*="bg-black/3"], [class*="bg-black/4"], [class*="bg-black/5"], [class*="bg-black/6"]) {
+     low steps to one readable smoke. Denser steps are left as they are.
+     Glass retains its own translucent teal materials on phones. */
+  html:is([data-theme="cosmic"], [data-theme="hazy"], [data-theme="swarms"], [data-theme="lavalamp"], [data-theme="winter"], [data-theme="war"], [data-theme="osaka"], [data-theme="jungle"], [data-theme="island"], [data-theme="hacker"], [data-theme="horror"]) #app-root [class*="backdrop-blur"]:is([class*="bg-black/1"], [class*="bg-black/2"], [class*="bg-black/3"], [class*="bg-black/4"], [class*="bg-black/5"], [class*="bg-black/6"]) {
     background-color: rgb(0 0 0 / 0.72) !important;
   }
 }
