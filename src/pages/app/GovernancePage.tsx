@@ -344,7 +344,9 @@ function SubmitProposalDrawer({
 
   return (
     <Drawer open={open} onOpenChange={onOpenChange}>
-      <DrawerContent column className="bg-black/60 backdrop-blur-[24px] border-white/10 max-h-[85dvh]">
+      {/* scrollable: with an attachment the form outgrows the sheet, and the
+          submit button sat below the fold with no way to reach it. */}
+      <DrawerContent column scrollable className="bg-black/60 backdrop-blur-[24px] border-white/10 max-h-[85dvh]">
         <DrawerHeader className="relative">
           <DrawerTitle className="text-white text-lg font-bold">{t('governance.submitProposal')}</DrawerTitle>
           <button
