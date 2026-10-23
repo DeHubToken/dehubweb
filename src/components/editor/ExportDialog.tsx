@@ -120,7 +120,10 @@ export function ExportDialog({ open, onOpenChange }: Props) {
     const a = document.createElement("a");
     a.href = url;
     a.download = filename;
+    // Some browsers ignore clicks on links that aren't in the page.
+    document.body.appendChild(a);
     a.click();
+    a.remove();
     setTimeout(() => URL.revokeObjectURL(url), 5000);
     const share = prepareFileShare(blob, filename);
     toast.success(t("editor.export.done", { filename }), share ? {
