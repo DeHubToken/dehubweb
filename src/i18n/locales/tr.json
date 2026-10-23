@@ -1696,7 +1696,11 @@
     "radio": "Radyo",
     "trendingTracks": "Trend Parçalar",
     "moreVideos": "Daha Fazla Video",
-    "newReleases": "Yeni Çıkanlar"
+    "newReleases": "Yeni Çıkanlar",
+    "mostPlayed": "En çok çalınanlar",
+    "mostLiked": "En çok beğenilenler",
+    "mostRecent": "En yeniler",
+    "chartOrder": "Ses sıralaması"
   },
   "notFound": {
     "title": "Sayfa Bulunamadı",
@@ -7248,7 +7252,8 @@
     "play": "Oynat",
     "pause": "Duraklat",
     "listens_one": "{{count}} dinlenme",
-    "listens_other": "{{count}} dinlenme"
+    "listens_other": "{{count}} dinlenme",
+    "visualizerColour": "Görselleştirici rengi"
   },
   "converter": {
     "seoTitle": "Dönüştürücü — DeHub'a video aktarın",
@@ -14134,5 +14139,8 @@
     "posted": "Paylaşıldı",
     "view": "Görüntüle",
     "failed": "Video işlenemedi"
+  },
+  "player": {
+    "volume": "Ses düzeyi"
   }
 }
