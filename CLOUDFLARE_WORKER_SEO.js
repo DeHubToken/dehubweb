@@ -3539,9 +3539,8 @@ function buildCreatorPackHtml(pack) {
 }
 
 /**
- * A single DAO proposal, /app/governance/<uuid>. Proposals carry no art of
- * their own, so the governance card stands in — that is still the page's
- * subject, unlike the homepage card it was getting.
+ * A single DAO proposal, /app/governance/<uuid>. An attached image is the
+ * share card; otherwise the governance card stands in.
  */
 function buildProposalHtml(proposal) {
   const canonicalUrl = `${APP_URL}/app/governance/${proposal.id}`;
@@ -3559,7 +3558,9 @@ function buildProposalHtml(proposal) {
     canonicalUrl,
     title: `${name} — DeHub Governance`,
     description,
-    image: shareImage('governance'),
+    image: proposal.media_type === 'image' && /^https:\/\//.test(String(proposal.media_url || ''))
+      ? proposal.media_url
+      : shareImage('governance'),
     ogType: 'article',
     heading: name,
     breadcrumb: `<a href="${APP_URL}">DeHub</a> › <a href="${APP_URL}/governance">Governance</a>`,
