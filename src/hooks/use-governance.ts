@@ -15,6 +15,8 @@ import { useTranslation as _useCopy } from 'react-i18next';
  * that answer, for the panel that tells someone what their vote is worth.
  */
 
+import { useCallback } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { useQuery, useInfiniteQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import i18n from 'i18next';
 import { supabase } from '@/integrations/supabase/client';
@@ -142,12 +144,42 @@ export function getVoteWeight(
  * `preferLiveBalance` promotes them the moment the tokens land, and the lock
  * and scale come from the same place every other badge on the page reads.
  */
-export function useSelfVoteWeight(): { weight: number; badgeName: string | null } {
+export function useSelfVoteWeight(): { weight: number; badgeName: string | null; lent: boolean } {
   const { user } = useAuth();
   const self = useSelfBadge();
   const scale = useBadgeScale();
-  const balance = preferLiveBalance(user?.badgeBalance as number | undefined, self.balance);
-  return getVoteWeight(balance, user?.username, { scale, lock: self.lock });
+  const context = { scale, lock: self.lock };
+  // Only DHB the voter holds counts. `badgeBalance` includes a badge lent to
+  // them, which is shown everywhere but does not vote; `lent` says that is
+  // why someone wearing a badge gets weight 0.
+  const own = user?.ownBadgeBalance;
+  const balance = preferLiveBalance((own ?? user?.badgeBalance) as number | undefined, self.balance);
+  const result = getVoteWeight(balance, user?.username, context);
+  const lent = result.weight === 0
+    && own !== undefined
+    && getVoteWeight(user?.badgeBalance as number | undefined, user?.username, context).weight > 0;
+  return { ...result, lent };
+}
+
+/**
+ * Tell someone why they cannot vote, with a way to fix it. A lent badge is
+ * named as the reason, since it looks the same as an earned one.
+ */
+export function useExplainCannotVote(): (lent: boolean) => void {
+  const navigate = useNavigate();
+  return useCallback((lent: boolean) => {
+    toast.error(
+      lent
+        ? i18n.t('governance.lentBadgeCantVote', {
+          defaultValue: "Your badge is lent to you, and lent badges can't vote. Buy DHB to earn your own badge.",
+        })
+        : i18n.t('governance.mustHoldTokens'),
+      {
+        id: 'governance-cannot-vote',
+        action: { label: i18n.t('governance.buyDhb', { defaultValue: 'Buy DHB' }), onClick: () => navigate('/app/buy') },
+      },
+    );
+  }, [navigate]);
 }
 
 export { BADGE_VOTE_WEIGHT };
@@ -171,14 +203,17 @@ async function callGovernance<T>(name: string, body: Record<string, unknown>): P
   if (error) {
     const context = (error as { context?: Response }).context;
     let detail: string | undefined;
+    let code: string | undefined;
     if (context) {
       try {
-        detail = (await context.json())?.error;
+        const payload = await context.json();
+        detail = payload?.error;
+        code = typeof payload?.code === 'string' ? payload.code : undefined;
       } catch {
         // Body was not JSON — fall through to the generic message.
       }
     }
-    throw new Error(detail || error.message || 'Request failed');
+    throw Object.assign(new Error(detail || error.message || 'Request failed'), code ? { code } : {});
   }
   if ((data as { error?: string })?.error) throw new Error((data as { error: string }).error);
   return data as T;
@@ -451,6 +486,7 @@ export function useSubmitGovernanceProposal() {
 export function useVoteGovernanceProposal() {
   const queryClient = useQueryClient();
   const { walletAddress } = useAuth();
+  const explainCannotVote = useExplainCannotVote();
 
   return useMutation({
     mutationFn: async ({ proposalId, voteType, voteWeight }: {
@@ -563,6 +599,10 @@ export function useVoteGovernanceProposal() {
       }
       if (context?.previousDetail && context?.proposalId) {
         queryClient.setQueryData(['governance-proposal', context.proposalId], context.previousDetail);
+      }
+      if (err?.code === 'LENT_BADGE' || err?.code === 'NO_BADGE') {
+        explainCannotVote(err.code === 'LENT_BADGE');
+        return;
       }
       toastTxError(err, err?.message || i18n.t('governance.voteFailedHoldTokens'));
     },
