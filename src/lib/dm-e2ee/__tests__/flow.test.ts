@@ -177,7 +177,7 @@ describe('dm-e2ee client flow', () => {
     const rotated = deriveIdentityFromSignature('0x' + '47'.repeat(65));
     registry.set(B, toBase64(rotated.publicKey));
     const incoming = encryptText('new history', deriveSessionKey(rotated.privateKey, mine.publicKey, B, A));
-    expect(await decryptFromPeer(B, incoming)).toBe('new history');
+    expect(await Promise.all(Array.from({ length: 10 }, () => decryptFromPeer(B, incoming)))).toEqual(Array(10).fill('new history'));
     expect(await decryptFromPeer(B, oldMessage)).toBe('old history');
     unloadIdentity();
     await loadIdentity(A);
@@ -214,6 +214,19 @@ describe('dm-e2ee client flow', () => {
     expect(JSON.parse((localStorage.getItem('dehub-dm-e2ee:' + A))!)).toEqual(oldRecord);
     expect(registry.has(A)).toBe(false);
     expect(getIdentity()).toBeNull();
+  });
+
+  it('keeps the identity and published key when replacement cannot be saved', async () => {
+    await become(A);
+    const before = localStorage.getItem('dehub-dm-e2ee:' + A);
+    const publicKey = getIdentity()!.publicKey;
+    const save = vi.spyOn(Storage.prototype, 'setItem').mockImplementationOnce(() => { throw new Error('Storage full'); });
+    try {
+      await expect(setupIdentity(A, walletFor(A))).rejects.toThrow('Storage full');
+      expect(localStorage.getItem('dehub-dm-e2ee:' + A)).toBe(before);
+      expect(getIdentity()!.publicKey).toBe(publicKey);
+      expect(registry.get(A)).toBe(publicKey);
+    } finally { save.mockRestore(); }
   });
 
 });
