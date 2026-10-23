@@ -5285,6 +5285,8 @@
     }
   },
   "goLive": {
+    "bigEvent": "Ìṣẹ̀lẹ̀ ńlá",
+    "bigEventHint": "Fún ọ̀pọ̀ òǹwòran: àwọn òǹwòran yóò máa wò ó ní nǹkan bí ìṣẹ́jú-àáyá 20 sẹ́yìn, pẹ̀lú ìdádúró díẹ̀.",
     "goLive": "Lọ Gbe",
     "youAreLive": "O wà láàyè",
     "streamReady": "Ṣetan ṣiṣan",

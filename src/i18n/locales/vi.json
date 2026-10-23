@@ -5397,6 +5397,8 @@
     }
   },
   "goLive": {
+    "bigEvent": "Sự kiện lớn",
+    "bigEventHint": "Dành cho lượng người xem lớn: người xem sẽ xem chậm khoảng 20 giây nhưng ít bị gián đoạn hơn.",
     "goLive": "Phát Trực Tiếp",
     "youAreLive": "Bạn Đang Phát Trực Tiếp",
     "streamReady": "Luồng Sẵn Sàng",

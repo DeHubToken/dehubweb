@@ -5430,6 +5430,8 @@
     }
   },
   "goLive": {
+    "bigEvent": "Malaking event",
+    "bigEventHint": "Para sa malalaking audience: mga 20 segundong huli ang panonood ng mga manonood, pero mas kaunti ang pagkaputol.",
     "goLive": "Mag-Live",
     "youAreLive": "Ikaw ay Live",
     "streamReady": "Stream Ready",

@@ -85,7 +85,7 @@ import { useAuth } from '@/contexts/AuthContext';
 import { VideoCardSkeleton, ImageCardSkeleton, PostCardSkeleton } from '@/components/app/feeds/FeedSkeletons';
 import { useFeedSwallowClip } from '@/hooks/use-feed-swallow-clip';
 import type { VideoItem, ImagePost, TextPost, LiveStream } from '@/types/feed.types';
-import { hlsUrlFor, liveProviderOf } from '@/lib/live-ingest';
+import { hlsUrlFor, liveProviderOf, noteLatencyMode } from '@/lib/live-ingest';
 import { FocusCommentProvider } from '@/lib/focus-comment';
 import { canonicalUrl } from '@/lib/seo/route-meta';
 import { usePostStagePhone } from '@/hooks/use-post-stage-phone';
@@ -410,6 +410,7 @@ function buildLivePlaybackUrl(nft: DeHubNFT): string | undefined {
 /** Build all possible playback URLs for fallback (different Livepeer CDNs) */
 function buildLivePlaybackUrls(nft: DeHubNFT): string[] {
   const stream = (nft as any).stream;
+  noteLatencyMode(stream);
   const playbackId = stream?.playbackId;
   if (!playbackId) return [];
   // Only Livepeer has a second CDN to fall back to; a self-hosted stream is

@@ -6419,6 +6419,8 @@
     }
   },
   "goLive": {
+    "bigEvent": "Big event",
+    "bigEventHint": "For big audiences: viewers watch about 20 seconds behind, with fewer interruptions.",
     "goLive": "Go Live",
     "youAreLive": "You're Live",
     "streamReady": "Stream Ready",

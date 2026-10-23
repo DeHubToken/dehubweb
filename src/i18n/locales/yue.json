@@ -5372,6 +5372,8 @@
     }
   },
   "goLive": {
+    "bigEvent": "大型活動",
+    "bigEventHint": "啱大量觀眾：觀眾會遲大約 20 秒睇，但冇咁易斷。",
     "goLive": "去直播",
     "youAreLive": "你正在直播",
     "streamReady": "串流已準備好",

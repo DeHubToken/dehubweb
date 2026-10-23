@@ -5367,6 +5367,8 @@
     }
   },
   "goLive": {
+    "bigEvent": "Stort arrangement",
+    "bigEventHint": "For et stort publikum: seerne ser omtrent 20 sekunder forsinket, med færre avbrudd.",
     "goLive": "Gå Live",
     "youAreLive": "Du er Live",
     "streamReady": "Stream Klar",

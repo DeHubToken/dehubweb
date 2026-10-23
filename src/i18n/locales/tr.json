@@ -6467,6 +6467,8 @@
     }
   },
   "goLive": {
+    "bigEvent": "Büyük etkinlik",
+    "bigEventHint": "Büyük kitleler için: izleyiciler yayını yaklaşık 20 saniye geriden, daha az kesintiyle izler.",
     "goLive": "Canlı yayına geç",
     "youAreLive": "Yayındasınız",
     "streamReady": "Yayın hazır",

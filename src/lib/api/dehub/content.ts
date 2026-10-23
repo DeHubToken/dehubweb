@@ -47,6 +47,12 @@ export interface MintPostParams {
    */
   ingestPreference?: 'livepeer';
   /**
+   * Live posts only. 'event' marks a big event: viewers play HLS from about
+   * twenty seconds behind live instead of a WebRTC session each. Sent as the
+   * stream's `settings.latencyMode`.
+   */
+  latencyMode?: 'event';
+  /**
    * Publish without minting on-chain. The post lands in feeds as soon as this
    * call returns and the client skips the contract step entirely.
    */
@@ -206,6 +212,12 @@ export async function mintPost(
 
   if (params.ingestPreference) {
     formData.append('ingestPreference', params.ingestPreference);
+  }
+
+  // Only the field that differs from the server's defaults: chat stays on and
+  // the minimum tip stays where it is.
+  if (params.latencyMode === 'event') {
+    formData.append('settings', JSON.stringify({ latencyMode: 'event' }));
   }
 
   if (params.idempotencyKey) {

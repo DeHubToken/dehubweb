@@ -5320,6 +5320,8 @@
     }
   },
   "goLive": {
+    "bigEvent": "Stort evenemang",
+    "bigEventHint": "För stor publik: tittarna ser sändningen cirka 20 sekunder fördröjd, med färre avbrott.",
     "goLive": "Gå Live",
     "youAreLive": "Du är Live",
     "streamReady": "Stream Klar",

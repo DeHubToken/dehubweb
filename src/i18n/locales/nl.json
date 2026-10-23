@@ -6660,6 +6660,8 @@
     }
   },
   "goLive": {
+    "bigEvent": "Groot evenement",
+    "bigEventHint": "Voor een groot publiek: kijkers zien het ongeveer 20 seconden later, met minder onderbrekingen.",
     "goLive": "Live gaan",
     "youAreLive": "Je bent Live",
     "streamReady": "Stream Gereed",

@@ -5361,6 +5361,8 @@
     }
   },
   "goLive": {
+    "bigEvent": "Suursündmus",
+    "bigEventHint": "Suurele publikule: vaatajad näevad umbes 20-sekundilise viivitusega, kuid vähemate katkestustega.",
     "goLive": "Mine otse",
     "youAreLive": "Olete Otse",
     "streamReady": "Voog on valmis",

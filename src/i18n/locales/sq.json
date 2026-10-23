@@ -5369,6 +5369,8 @@
     }
   },
   "goLive": {
+    "bigEvent": "Ngjarje e madhe",
+    "bigEventHint": "Për audienca të mëdha: shikuesit e shohin me rreth 20 sekonda vonesë, me më pak ndërprerje.",
     "goLive": "Shko Live",
     "youAreLive": "Jeni Live",
     "streamReady": "Stream Gati",
