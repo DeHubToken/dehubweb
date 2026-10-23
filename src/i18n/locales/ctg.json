@@ -197,6 +197,7 @@
     "heading": "DeHub ছোডো ভিডিও"
   },
   "settings": {
+    "usernameTaken": "ইউজারনেম লওয়া অইগেছে",
     "postingChain": "পোস্টর ব্লকচেইন",
     "showOnline": "আমার অনলাইন থাকলে দেখাও",
     "showOnlineDesc": "People you message see a green dot next to your name while you're using DeHub",
@@ -2468,6 +2469,7 @@
     "pendingSubmitted": "{{amount}} টোকেন সাবমিট করিয়ি আছে। কনফার্মেশন চেক করিয়ি আছে। আবার পাঠাইবা না।"
   },
   "communities": {
+    "chatTab": "চ্যাট",
     "create": "বানান",
     "searchPlaceholder": "সম্প্রদায় হইজন...",
     "noCommunities": "কোনো কমিউনিটি পাওয়া যাই নাই",
@@ -2492,7 +2494,6 @@
     "ticker": "টিকার",
     "assignTicker": "টিকার চার্ট নির্ধারণ গরন",
     "communityDescription": "সম্প্রদায়র বিবরণ...",
-    "chat": "চ্যাট",
     "membersTab": "সদস্য ({{count}})",
     "about": "পরিচিতি",
     "communityNotFound": "সম্প্রদায় পাওয়া যায় ন",
@@ -3877,6 +3878,7 @@
     "sellYourFractions": "তোমার ভাগ ভেঙে বিক্রি করো ({{held}} রাখা আছে)"
   },
   "creator": {
+    "libraryEmpty": "তোঁয়ার সেভ গরা জেনারেশন ইয়ানত দেহা যাইবো।",
     "whatToCreate": "কি তৈরি করবো",
     "startCreatingWith": "{{model}}-এ তৈরি শুরু করো",
     "studioSubtitle": "একটা দৃশ্য, চরিত্র, মেজাজ বা স্টাইল বর্ণনা করো। ফলাফল নিচে আসবে এবং সরাসরি সম্পাদকায় যাবে।",
@@ -6303,6 +6305,7 @@
     "seoDescription": "DeHub-এর অফিসিয়াল ডকুমেন্টেশন: প্ল্যাটফর্ম পরিচিতি, dApps, টোকেন টোকেন অর্থনীতি, স্টেকিং, গেম, রোডম্যাপ, সাধারণ প্রশ্ন ও আরও অনেক কিছু।"
   },
   "dex": {
+    "title": "ডিএইচবি / মার্কিন ডলার",
     "marketPrice": "বাজার মূল্য · USD",
     "bookPrice": "{{chain}} বইয়ের দাম · USD",
     "change24": "২৪ ঘণ্টায় পরিবর্তন",
@@ -6501,6 +6504,7 @@
     }
   },
   "editor": {
+    "video": { "tFade": "ক্রস-ডিজলভ", "none": "কিছু ন", "transition": "ট্রানজিশন", "speed": "স্পিড", "sound": "আবাজ","video": "ভিডিও"},
     "review": {
       "title": "প্রকল্প পর্যালোচনা",
       "shared": "আপনার সাথে শেয়ার করা",

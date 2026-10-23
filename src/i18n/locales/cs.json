@@ -193,6 +193,7 @@
     "heading": "DeHub Shorts"
   },
   "settings": {
+    "usernameTaken": "Uživatelské jméno je obsazené",
     "showDislikesDesc": "Kdokoli může otevřít kartu Nelíbí se na tvém profilu. Když je to vypnuté, vidíš ji jen ty.",
     "showDislikes": "Zobrazit všem, co se mi nelíbí",
     "postingChain": "Blockchain příspěvků",
@@ -2318,6 +2319,7 @@
     "pendingSubmitted": "{{amount}} tokenů odesláno. Potvrzení se stále kontroluje. Neodesílejte znovu."
   },
   "communities": {
+    "chatTab": "Chat",
     "title": "Komunity",
     "create": "Vytvořit",
     "searchPlaceholder": "Hledat komunity...",
@@ -2352,7 +2354,6 @@
     "addDescription": "Přidejte popis...",
     "communityDescription": "Popis komunity...",
     "posts": "Příspěvky",
-    "chat": "Chat",
     "membersTab": "Členové ({{count}})",
     "about": "O komunitě",
     "backToCommunities": "Komunity",
@@ -3817,6 +3818,7 @@
     "sellYourFractions": "Prodej své zlomky ({{held}} drženo)"
   },
   "creator": {
+    "libraryEmpty": "Vaše uložené generace se zobrazí tady.",
     "whatToCreate": "Co vytvořit",
     "startCreatingWith": "Začni vytvářet s {{model}}",
     "studioSubtitle": "Popište scénu, postavu, náladu nebo styl. Výsledky se zobrazí níže a přejdou přímo do editoru.",
@@ -6676,6 +6678,7 @@
     "seoDescription": "Oficiální dokumentace DeHub: přehled platformy, dApps, ekonomika tokenu tokenů, staking, hry, plán vývoje, FAQ a další."
   },
   "dex": {
+    "title": "tokeny / USD",
     "seoTitle": "DEX — Obchodujte tokenů za vaši cenu",
     "seoDescription": "Nastavte si nákupní nebo prodejní cenu tokenů pomocí limitní objednávky Uniswap v4 na Base nebo BNB Chain. Živý kniha objednávek, hloubka trhu a jedna sdílená cena v USD.",
     "venue": "Síť",
@@ -6898,6 +6901,7 @@
     }
   },
   "editor": {
+    "video": { "tFade": "Prolínání", "none": "Žádný", "transition": "Přechod", "speed": "Rychlost", "sound": "Zvuk","video": "Video"},
     "review": {
       "title": "Kontrola projektu",
       "shared": "Sdíleno s vámi",

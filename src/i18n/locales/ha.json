@@ -193,6 +193,7 @@
     "heading": "Gajerun bidiyon DeHub"
   },
   "settings": {
+    "usernameTaken": "An riga an ɗauki sunan",
     "postingChain": "Blockchain na wallafawa",
     "showOnline": "Nuna lokacin da nake kan layi",
     "showOnlineDesc": "Mutanen da kake sako suna ganin kore dot kusa da sunanka yayin da kake amfani da DeHub",
@@ -2367,6 +2368,7 @@
     "pendingSubmitted": "{{amount}} tokens an aiko su. Ana ci gaba da duba tabbaci. Kada ka sake aiko shi."
   },
   "communities": {
+    "chatTab": "Hira",
     "title": "Al'ummomi",
     "create": "Ƙirƙira",
     "searchPlaceholder": "Bincika al'ummomi...",
@@ -2401,7 +2403,6 @@
     "addDescription": "Ƙara bayani...",
     "communityDescription": "Bayanin al'umma...",
     "posts": "Wallafe-wallafe",
-    "chat": "Hira",
     "membersTab": "Membobi ({{count}})",
     "about": "Game da",
     "backToCommunities": "Al'ummomi",
@@ -3836,6 +3837,7 @@
     "sellYourFractions": "Sayar da sassan ku ({{held}} rike)"
   },
   "creator": {
+    "libraryEmpty": "Abubuwan da ka ƙirƙira ka ajiye za su bayyana a nan.",
     "whatToCreate": "Abin da za a ƙirƙiri",
     "startCreatingWith": "Fara ƙirƙirar tare da {{model}}",
     "studioSubtitle": "Bayyana wani wuri, hali, yanayi ko salon. Sakamakon ƙasa a ƙasa kuma kai tsaye a cikin edita.",
@@ -6676,6 +6678,7 @@
     "seoDescription": "Takardun hukuma na DeHub: bayanin dandamali, dApps, tattalin arzikin token tokens, staking, wasanni, tsarin gaba, tambayoyin da ake yawan yi da ƙari."
   },
   "dex": {
+    "title": "tokens / USD",
     "seoTitle": "DEX — Sanya tokens a farashin da kake so",
     "seoDescription": "Sanya farashin siyan ko siyar da tokens tare da odar iyaka ta Uniswap v4 akan Base ko BNB Chain. Littafin oda na kai tsaye, zurfin kasuwa da kuma farashin USD ɗaya da aka raba.",
     "venue": "Sakamakon",
@@ -6896,6 +6899,7 @@
     }
   },
   "editor": {
+    "video": { "tFade": "Haɗuwa a hankali", "none": "Babu", "transition": "Sauyawa", "speed": "Gudu", "sound": "Sauti","video": "Bidiyo"},
     "review": {
       "title": "Bitar aiki",
       "shared": "An raba tare da kai",

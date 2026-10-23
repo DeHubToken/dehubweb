@@ -193,6 +193,7 @@
     "heading": "DeHub Shorts"
   },
   "settings": {
+    "usernameTaken": "Benutzername scho vergä",
     "postingChain": "Blockchain für Biiträg",
     "showOnline": "Zeig, wenn i online bi.",
     "showOnlineDesc": "Mensch, wo du schicksch, gseht e grün Punkt neben dinem Name, wänn du DeHub nutzt.",
@@ -2395,6 +2396,7 @@
     "pendingSubmitted": "{{amount}} Tokens eingereicht. Die Bestätigung wird noch geprüft. Senden Sie sie nicht erneut."
   },
   "communities": {
+    "chatTab": "Chat",
     "title": "Gemeinschaften",
     "create": "Erstelle",
     "searchPlaceholder": "Communitys sueche...",
@@ -2429,7 +2431,6 @@
     "addDescription": "Bschribig dezuefüege...",
     "communityDescription": "Beschreibung der Gemeinschaft...",
     "posts": "Posts",
-    "chat": "Chat",
     "membersTab": "Mitglieder ({{count}})",
     "about": "Über",
     "backToCommunities": "Gemeinschaften",
@@ -3870,6 +3871,7 @@
     "sellYourFractions": "Verkauf deine Anteile ({{held}} gehalten)"
   },
   "creator": {
+    "libraryEmpty": "Dini gspeicherete Generierige erschiined da.",
     "whatToCreate": "Was erstellen?",
     "startCreatingWith": "Erstelle mit {{model}}",
     "studioSubtitle": "Beschreibe eine Szene, Figur, Stimmung oder Stil. Die Ergebnisse erscheinen unten und gehen direkt in den Editor.",
@@ -6736,6 +6738,7 @@
     "seoDescription": "Offizielle DeHub-Dokumentation: Plattformüberblick, dApps, Tokens-Tokenökonomie, Staking, Spiele, Roadmap, FAQ und mehr."
   },
   "dex": {
+    "title": "Tokens / USD",
     "seoTitle": "DEX — Tokens zu dim Preis handle",
     "seoDescription": "Setz dim Tokens Kauf- oder Verchaufspreis mit ere Uniswap v4 Limit Order uf Base oder BNB Chain. Live Orderbook, Markt-Tiefe und eini gmeinsami USD-Preis.",
     "venue": "Netzwerk",
@@ -6958,6 +6961,7 @@
     }
   },
   "editor": {
+    "video": { "tFade": "Überbländig", "none": "Kei", "transition": "Übergang", "speed": "Gschwindigkeit", "sound": "Ton","video": "Video"},
     "review": {
       "title": "Projektprüefig",
       "shared": "Mit dir teilt",

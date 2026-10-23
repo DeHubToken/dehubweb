@@ -193,6 +193,7 @@
     "heading": "DeHub Īsvideo"
   },
   "settings": {
+    "usernameTaken": "Lietotājvārds ir aizņemts",
     "postingChain": "Ierakstu blokķēde",
     "showOnline": "Rādīt, kad esmu tiešsaistē",
     "showOnlineDesc": "Kamēr izmantojat DeHub, personas, kurām sūtāt ziņojumus, blakus jūsu vārdam redz zaļu punktu",
@@ -2351,6 +2352,7 @@
     "pendingSubmitted": "{{amount}} žetoni iesniegti. Apstiprināšana vēl tiek pārbaudīta. Nesūtiet to vēlreiz."
   },
   "communities": {
+    "chatTab": "Tērzēšana",
     "title": "Kopienas",
     "create": "Izveidot",
     "searchPlaceholder": "Meklēt kopienas...",
@@ -2385,7 +2387,6 @@
     "addDescription": "Pievienot aprakstu...",
     "communityDescription": "Kopienas apraksts...",
     "posts": "Ieraksti",
-    "chat": "Tērzēšana",
     "membersTab": "Dalībnieki ({{count}})",
     "about": "Par kopienu",
     "backToCommunities": "Kopienas",
@@ -3851,6 +3852,7 @@
     "sellYourFractions": "Pārdot savas daļas ({{held}} turētas)"
   },
   "creator": {
+    "libraryEmpty": "Šeit parādīsies jūsu saglabātās ģenerācijas.",
     "whatToCreate": "Ko izveidot",
     "startCreatingWith": "Sākt veidot ar {{model}}",
     "studioSubtitle": "Aprakstiet ainu, tēlu, noskaņu vai stilu. Rezultāti parādīsies zemāk un nonāks tieši redaktorā.",
@@ -6764,6 +6766,7 @@
     "seoDescription": "Oficiālā DeHub dokumentācija: platformas pārskats, dApps, žetoni tokena ekonomika, staking, spēles, ceļvedis, bieži uzdotie jautājumi un vairāk."
   },
   "dex": {
+    "title": "žetoni / USD",
     "seoTitle": "DEX — Tirdziniet žetoni par savu cenu",
     "seoDescription": "Nosakiet savu žetoni pirkšanas vai pārdošanas cenu ar Uniswap v4 limituzdevumu uz Base vai BNB Chain. Tiešsaistes uzdevumu grāmata, tirgus dziļums un viena kopēja USD cena.",
     "venue": "Tīkls",
@@ -6986,6 +6989,7 @@
     }
   },
   "editor": {
+    "video": { "tFade": "Pārplūšana", "none": "Nav", "transition": "Pāreja", "speed": "Ātrums", "sound": "Skaņa","video": "Video"},
     "review": {
       "title": "Projekta pārskatīšana",
       "shared": "Kopīgots ar jums",

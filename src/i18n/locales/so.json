@@ -193,6 +193,7 @@
     "heading": "DeHub Gaagaaban"
   },
   "settings": {
+    "usernameTaken": "Magaca isticmaalaha waa la qaatay",
     "postingChain": "Blockchain-ka qoraallada",
     "showOnline": "Muuji marka aan ku jiro internetka",
     "showOnlineDesc": "Dadka aad fariin u aragto dhibic cagaaran oo ku xiga magacaaga inta aad isticmaaleyso DeHub",
@@ -2365,6 +2366,7 @@
     "pendingSubmitted": "{{amount}} token oo la soo gudbiyay. Xaqiijintu weli waa la hubinayaa. Ha u soo dirin mar kale."
   },
   "communities": {
+    "chatTab": "Sheekaysi",
     "title": "Bulshooyinka",
     "create": "Samee",
     "searchPlaceholder": "Raadi bulshooyinka...",
@@ -2399,7 +2401,6 @@
     "addDescription": "Ku dar sharaxaad...",
     "communityDescription": "Sharaxaadda bulshada...",
     "posts": "Qoraallada",
-    "chat": "Sheekaysi",
     "membersTab": "Xubnaha ({{count}})",
     "about": "Ku saabsan",
     "backToCommunities": "Bulshooyinka",
@@ -3825,6 +3826,7 @@
     "sellYourFractions": "Iibso jajabkaaga ({{held}} held)"
   },
   "creator": {
+    "libraryEmpty": "Waxyaabihii aad abuurtay ee la kaydiyay halkan ayay ka muuqan doonaan.",
     "whatToCreate": "Waxa la abuuro",
     "startCreatingWith": "Bilow abuurista {{model}}",
     "studioSubtitle": "Qeex muuqaal, dabeecad, niyadda ama qaabka. Natiijooyinka dhulka hoos ku qoran oo si toos ah u qaado tifaftiraha.",
@@ -6691,6 +6693,7 @@
     "seoDescription": "Dukumentiga rasmiga ah ee DeHub: guud ahaan barxadda, dApps, dhaqaalaha token-ka tokens, staking, ciyaaro, qorshaha mustaqbalka, su’aalaha badanaa la weydiiyo iyo wax kale."
   },
   "dex": {
+    "title": "tokens / USD",
     "seoTitle": "DEX — Ku ganacsada tokens qiimahaaga",
     "seoDescription": "U deji qiimahaaga iibka ama iibinta tokens adoo isticmaalaya Uniswap v4 limit order oo ku taal Base ama BNB Chain. Live order book, market depth iyo hal qiimo oo USD ah.",
     "venue": "Network",
@@ -6912,6 +6915,7 @@
     }
   },
   "editor": {
+    "video": { "tFade": "Isku-dhex-milmid", "none": "Midna", "transition": "Kala-gudub", "speed": "Xawaare", "sound": "Cod","video": "Muuqaal"},
     "review": {
       "title": "Dib u eegista mashruuca",
       "shared": "Lala wadaagay adiga",

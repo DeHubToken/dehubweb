@@ -193,6 +193,7 @@
     "heading": "Shkurtimëtra DeHub"
   },
   "settings": {
+    "usernameTaken": "Emri i përdoruesit është i zënë",
     "postingChain": "Blockchain për postimet",
     "showOnline": "Shfaq kur jam online",
     "showOnlineDesc": "Njerëzve që u dërgon mesazhe u shfaqet një pikë e gjelbër pranë emrit tënd ndërsa përdor DeHub",
@@ -2367,6 +2368,7 @@
     "pendingSubmitted": "{{amount}} token të dorëzuar. Konfirmimi ende po kontrollohet. Mos e dërgoni përsëri."
   },
   "communities": {
+    "chatTab": "Biseda",
     "title": "Komunitetet",
     "create": "Krijo",
     "searchPlaceholder": "Kërko komunitete...",
@@ -2401,7 +2403,6 @@
     "addDescription": "Shto një përshkrim...",
     "communityDescription": "Përshkrimi i komunitetit...",
     "posts": "Postimet",
-    "chat": "Biseda",
     "membersTab": "Anëtarët ({{count}})",
     "about": "Rreth",
     "backToCommunities": "Komunitetet",
@@ -3865,6 +3866,7 @@
     "sellYourFractions": "Shitni fraksionet tuaja ({{held}} mbeten)"
   },
   "creator": {
+    "libraryEmpty": "Gjenerimet tuaja të ruajtura do të shfaqen këtu.",
     "whatToCreate": "Cfarë të krijoni",
     "startCreatingWith": "Fillo të krijosh me {{model}}",
     "studioSubtitle": "Përshkruaj një skenë, karakter, gjendje shpirtërore ose stil. Rezultatet ulen më poshtë dhe mbarten direkt në redaktor.",
@@ -6777,6 +6779,7 @@
     "seoDescription": "Dokumentacioni zyrtar i DeHub: përmbledhje e platformës, dApps, ekonomia e tokenit tokena, staking, lojëra, plani i zhvillimit, pyetje të shpeshta dhe më shumë."
   },
   "dex": {
+    "title": "tokena / USD",
     "seoTitle": "DEX — Tregtoh tokena me çmimin tuaj",
     "seoDescription": "Vendosni çmimin tuaj të blerjes ose shitjes së tokena me një urdhër kufitar Uniswap v4 në Base ose BNB Chain. Libër urdhrash i drejtpërdrejtë, thellësi tregu dhe një çmim i përbashkët USD.",
     "venue": "Rrjeti",
@@ -6997,6 +7000,7 @@
     }
   },
   "editor": {
+    "video": { "tFade": "Shkrirje", "none": "Asnjë", "transition": "Kalim", "speed": "Shpejtësia", "sound": "Tingull","video": "Video"},
     "review": {
       "title": "Shqyrtimi i projektit",
       "shared": "Ndarë me ju",

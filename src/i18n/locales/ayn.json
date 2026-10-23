@@ -192,6 +192,7 @@
     "heading": "فيديوهات DeHub القصيرة"
   },
   "settings": {
+    "usernameTaken": "الاسم مأخوذ",
     "postingChain": "شبكة النشر",
     "showOnline": "فرّج لي متى أنا أونلاين",
     "showOnlineDesc": "الناس اللي تبعث لهم رسائل يشوفوا نقطة خضرا جنب اسمك وإنت تستخدم DeHub",
@@ -2334,6 +2335,7 @@
     "pendingSubmitted": "تم إرسال {{amount}} توكن. لا يزال التأكيد قيد الفحص. لا ترسلها مرة أخرى."
   },
   "communities": {
+    "chatTab": "دردشة",
     "title": "مجتمعات",
     "create": "أنشئ",
     "searchPlaceholder": "دوّر على مجتمعات...",
@@ -2361,7 +2363,6 @@
     "ticker": "التيكر",
     "assignTicker": "عيّن رسم التيكر",
     "communityDescription": "وصف المجتمع...",
-    "chat": "دردشة",
     "membersTab": "الأعضاء ({{count}})",
     "about": "عن",
     "backToCommunities": "مجتمعات",
@@ -3617,6 +3618,7 @@
     "needsYouHold": "حاجت ل{{needed}}، انت بتحتفظ ب{{held}}"
   },
   "creator": {
+    "libraryEmpty": "توليداتك المحفوظة بتظهر هنا.",
     "startCreatingWith": "بِدَايَةِ خَلْقِكْ مَعَ {{model}}",
     "countRunning_one": "{{count}} يجري",
     "countRunning_other": "{{count}} يجري",
@@ -6105,6 +6107,7 @@
     "seoDescription": "الوثائق الرسمية لـ DeHub: نظرة عامة على المنصة، التطبيقات اللامركزية، اقتصاد توكن توكنز، التخزين، الألعاب، خارطة الطريق، الأسئلة الشائعة والمزيد."
   },
   "dex": {
+    "title": "دولار جنوب أفريقيا / دولار أمريكي",
     "seoTitle": "DEX — تداول توكنز بالسعر اللي تبيه",
     "seoDescription": "حدد سعر شراء أو بيع توكنز حقك بأمر محدد من Uniswap v4 على Base أو BNB Chain. دفتر أوامر مباشر، عمق السوق وسعر موحد بالدولار.",
     "venue": "الشبكة",
@@ -6327,6 +6330,7 @@
     }
   },
   "editor": {
+    "video": { "tFade": "تلاشٍ متداخل", "none": "بدون", "transition": "انتقال", "speed": "السرعة", "sound": "صوت","video": "فيديو"},
     "review": {
       "title": "مراجعة المشروع",
       "shared": "تمت مشاركته معك",

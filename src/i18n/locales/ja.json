@@ -192,6 +192,7 @@
     "heading": "DeHub ショート"
   },
   "settings": {
+    "usernameTaken": "このユーザー名は使用済みです",
     "showDislikesDesc": "誰でもプロフィールの「よくないね」タブを開けます。オフのときは自分だけが見られます。",
     "showDislikes": "自分の「よくないね」を全員に表示",
     "postingChain": "投稿用ブロックチェーン",
@@ -2374,6 +2375,7 @@
     "pendingSubmitted": "{{amount}} トークンを送信しました。確認はまだチェック中です。再度送信しないでください。"
   },
   "communities": {
+    "chatTab": "チャット",
     "title": "コミュニティ",
     "create": "作成",
     "searchPlaceholder": "コミュニティを検索...",
@@ -2408,7 +2410,6 @@
     "addDescription": "説明を追加...",
     "communityDescription": "コミュニティの説明...",
     "posts": "投稿",
-    "chat": "チャット",
     "membersTab": "メンバー（{{count}}）",
     "about": "概要",
     "backToCommunities": "コミュニティ",
@@ -3873,6 +3874,7 @@
     "sellYourFractions": "あなたの分数を売却してください({{held}}保有)"
   },
   "creator": {
+    "libraryEmpty": "保存した生成物がここに表示されます。",
     "whatToCreate": "何を作成するか",
     "startCreatingWith": "{{model}}で作成を開始してください",
     "studioSubtitle": "シーン、キャラクター、ムード、またはスタイルを説明してください。結果は以下に表示され、エディターに直接移動します。",
@@ -7008,6 +7010,7 @@
     }
   },
   "editor": {
+    "video": { "tFade": "クロスディゾルブ", "none": "なし", "transition": "トランジション", "speed": "速度", "sound": "サウンド","video": "動画"},
     "review": {
       "title": "プロジェクトレビュー",
       "shared": "あなたと共有",

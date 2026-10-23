@@ -193,6 +193,7 @@
     "heading": "DeHub Uchuy videokuna"
   },
   "settings": {
+    "usernameTaken": "Kay suti hap'isqaña",
     "postingChain": "Qillqakunapaq blockchain",
     "showOnline": "Internetpi kachkaptiy qawachiy",
     "showOnlineDesc": "Runakuna willakuyniyki huk verde ch'ikuta sutiykip ladunpi rikunku DeHub llamk'achkanki",
@@ -2398,6 +2399,7 @@
     "pendingSubmitted": "{{amount}} tokenkuna apachisqa. Confirmación nisqa qhawarisqaraqmi kashan. Ama hukmanta apachiychu."
   },
   "communities": {
+    "chatTab": "Rimanakuy",
     "title": "Ayllukuna",
     "create": "Kamariy",
     "searchPlaceholder": "Ayllukunata maskay...",
@@ -2432,7 +2434,6 @@
     "addDescription": "Sutinchayta yapay...",
     "communityDescription": "Ayllupa sutinchaynin...",
     "posts": "Willakuykuna",
-    "chat": "Rimanakuy",
     "membersTab": "Runakuna ({{count}})",
     "about": "Kaymanta",
     "backToCommunities": "Ayllukuna",
@@ -3888,6 +3889,7 @@
     "sellYourFractions": "Fraccionesniykikunata rantiy ({{held}} hap'isqa) ."
   },
   "creator": {
+    "libraryEmpty": "Waqaychasqa ruwasqaykikuna kaypi rikhurinqa.",
     "whatToCreate": "Imakunata unanchanapaq",
     "startCreatingWith": "{{model}} nisqawan paqarichiyta qallariy.",
     "studioSubtitle": "Ima escenamanta, personajemanta, estadomanta utaq estilomanta willakuy. Resultados urayman chayanku hinaspa derechota editorman apanku.",
@@ -6796,6 +6798,7 @@
     "seoDescription": "DeHub qillqa ofisial: plataforma qhawariy, dApps, fichas nisqakuna token qullqi kamay, staking, pukllaykuna, ñan kamay, tapukuykuna, aswan."
   },
   "dex": {
+    "title": "simikuna / USD nisqa",
     "seoTitle": "DEX — DHBta munashkayki k'anchanpi ruway",
     "seoDescription": "Base ichaqa BNB Chainpi Uniswap v4 limit orderwan fichas nisqakuna rantiy/rantiyta munashkayki k'anchanpi churay. Kawsay order book, merkado kachkaynin, hukllachasqa USD k'anchan.",
     "venue": "Network",
@@ -7018,6 +7021,7 @@
     }
   },
   "editor": {
+    "video": { "tFade": "Chaqrupakuy", "none": "Mana imapas", "transition": "Chimpay", "speed": "Utqay", "sound": "Uyariy","video": "Video"},
     "review": {
       "title": "Rurayta qhawana",
       "shared": "Qamwan rakisqa",

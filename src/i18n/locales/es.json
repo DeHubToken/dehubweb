@@ -308,6 +308,7 @@
     "heading": "Cortos de DeHub"
   },
   "settings": {
+    "usernameTaken": "Nombre de usuario ocupado",
     "showDislikesDesc": "Cualquiera puede abrir la pestaña «No me gusta» de tu perfil. Si está desactivado, solo tú puedes verla.",
     "showDislikes": "Mostrar mis «no me gusta» a todos",
     "postingChain": "Cadena de bloques de las publicaciones",
@@ -2872,6 +2873,7 @@
     "statsLoadFailed": "No se pudieron cargar las estadísticas de staking"
   },
   "communities": {
+    "chatTab": "Chat",
     "followerInvites": {
       "title": "Invitar seguidores",
       "detail": "Elige hasta 50 seguidores por lote. Se omiten los mensajes privados cerrados o de pago. Revisa el chat para comprobar los envíos sin confirmar antes de reintentarlo.",
@@ -4704,6 +4706,7 @@
     "sellYourFractions": "Vender tus fracciones ({{held}} en cartera)"
   },
   "creator": {
+    "libraryEmpty": "Tus generaciones guardadas aparecerán aquí.",
     "toolRemake": "Remake",
     "toolMaboroshi": "Maboroshi",
     "toolMaboroshiDesc": "Sustituye personajes y objetos, revisa un borrador y exporta con la banda sonora original.",
@@ -7900,6 +7903,7 @@
     "seoDescription": "Documentación oficial de DeHub: visión general de la plataforma, dApps, economía del token tokens, staking, juegos, hoja de ruta, preguntas frecuentes y más."
   },
   "dex": {
+    "title": "tokens / USD",
     "seoTitle": "DEX — Comerciar tokens a tu precio",
     "seoDescription": "Establece tu precio de compra o venta de tokens con una orden limitada de Uniswap v4 en Base o BNB Chain. Libro de órdenes en vivo, profundidad de mercado y un precio compartido en USD.",
     "venue": "Red",
@@ -8124,6 +8128,7 @@
     "priceChartCleared": "Gráfico de precios borrado. Precio de referencia fijo: $0.0001. Los precios de ejecución dependen de las órdenes disponibles."
   },
   "editor": {
+    "video": { "tFade": "Fundido cruzado", "none": "Ninguna", "transition": "Transición", "speed": "Velocidad", "sound": "Sonido","video": "Vídeo"},
     "review": {
       "title": "Revisión del proyecto",
       "shared": "Compartido contigo",

@@ -193,6 +193,7 @@
     "heading": "הקצרים של DeHub"
   },
   "settings": {
+    "usernameTaken": "שם המשתמש תפוס",
     "showDislikesDesc": "כל אחד יכול לפתוח את הלשונית 'לא אהבתי' בפרופיל שלך. כשזה כבוי, רק את/ה רואה אותה.",
     "showDislikes": "להציג לכולם את מה שלא אהבתי",
     "postingChain": "בלוקצ׳יין לפרסום",
@@ -2372,6 +2373,7 @@
     "pendingSubmitted": "{{amount}} אסימונים נשלחו. האישור עדיין נבדק. אל תשלח שוב."
   },
   "communities": {
+    "chatTab": "צ'אט",
     "title": "קהילות",
     "create": "צור",
     "searchPlaceholder": "חפש קהילות...",
@@ -2406,7 +2408,6 @@
     "addDescription": "הוסף תיאור...",
     "communityDescription": "תיאור הקהילה...",
     "posts": "פוסטים",
-    "chat": "צ'אט",
     "membersTab": "חברים ({{count}})",
     "about": "אודות",
     "backToCommunities": "קהילות",
@@ -3871,6 +3872,7 @@
     "sellYourFractions": "מכור את השברים שלך ({{held}} מוחזק)"
   },
   "creator": {
+    "libraryEmpty": "היצירות השמורות שלך יופיעו כאן.",
     "whatToCreate": "מה ליצור",
     "startCreatingWith": "התחל ליצור עם {{model}}",
     "studioSubtitle": "תאר סצנה, דמות, מצב רוח או סגנון. התוצאות מופיעות למטה ועוברות ישירות לעורך.",
@@ -6786,6 +6788,7 @@
     "seoDescription": "התיעוד הרשמי של DeHub: סקירת הפלטפורמה, dApps, כלכלת טוקן אסימונים, סטייקינג, משחקים, מפת דרכים, שאלות נפוצות ועוד."
   },
   "dex": {
+    "title": "אסימונים / דולר אמריקאי",
     "seoTitle": "DEX — סחר ב-אסימונים במחיר שלך",
     "seoDescription": "הגדר את מחיר הקנייה או המכירה של אסימונים שלך עם הזמנת מגבלה של Uniswap v4 ב-Base או BNB Chain. ספר הזמנות חי, עומק שוק ומחיר USD משותף אחד.",
     "venue": "רשת",
@@ -7007,6 +7010,7 @@
     }
   },
   "editor": {
+    "video": { "tFade": "מעבר מתמזג", "none": "ללא", "transition": "מעבר", "speed": "מהירות", "sound": "צליל","video": "וידאו"},
     "review": {
       "title": "סקירת פרויקט",
       "shared": "שותף איתך",

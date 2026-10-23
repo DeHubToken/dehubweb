@@ -193,6 +193,7 @@
     "heading": "DeHub چھوٹا ویڈیو"
   },
   "settings": {
+    "usernameTaken": "یوزرنیم پہلے سے لے لیل گیل ہے",
     "postingChain": "پوسٹ کے واسطے بلاک چین",
     "showOnline": "Nga u shfaq kur jam online",
     "showOnlineDesc": "Mensen die je een bericht sturen, zien een groen stipje naast je naam terwijl je DeHub gebruikt",
@@ -2327,6 +2328,7 @@
     "pendingSubmitted": "{{amount}} توکونه سپارل شوي. تایید لاهم چک کیږي. دا بیا مه لیږئ."
   },
   "communities": {
+    "chatTab": "بات چیت",
     "title": "المجتمعات",
     "create": "بناؤ",
     "searchPlaceholder": "سماج کھوجو...",
@@ -2361,7 +2363,6 @@
     "addDescription": "أضف وصفًا...",
     "communityDescription": "سماج کے بیان...",
     "posts": "المنشورات",
-    "chat": "بات چیت",
     "membersTab": "رکن ({{count}})",
     "about": "بارے میں",
     "backToCommunities": "المجتمعات",
@@ -3708,6 +3709,7 @@
     "sellYourFractions": "فروش بخش‌های خود را ({{held}} در دسترس)"
   },
   "creator": {
+    "libraryEmpty": "تہار سیو کرل جنریشن اِہاں دیکھائی دیہی۔",
     "whatToCreate": "چه چیزی را ایجاد کنید",
     "startCreatingWith": "با {{model}} شروع به ایجاد کنید",
     "studioSubtitle": "یک صحنه، شخصیت، حالت روحی یا سبک را توصیف کنید. نتایج زیر ظاهر می‌شوند و به‌طور مستقیم وارد ویرایشگر می‌شوند.",
@@ -6271,6 +6273,7 @@
     "seoDescription": "Belgeyên fermî yên DeHub: nêrîna giştî ya platformê, dApps, aboriya tokena دراو, staking, lîstik, nexşerê, pirsên pir tên kirin û bêtir."
   },
   "dex": {
+    "title": "tokens / USD",
     "seoTitle": "DEX — دراو په خپل نرخ سوداګري وکړئ",
     "seoDescription": "په Base یا BNB Chain کې د Uniswap v4 محدودیت آرډر سره خپل دراو پیرود یا پلور نرخ تنظیم کړئ. ژوندی آرډر کتاب، د بازار ژوروالی او یو شریک USD نرخ.",
     "venue": "شبکه",
@@ -6490,6 +6493,7 @@
     }
   },
   "editor": {
+    "video": { "tFade": "گھل مل جانا", "none": "کچھو نہیں", "transition": "ٹرانزیشن", "speed": "رفتار", "sound": "آواز","video": "ویڈیو"},
     "review": {
       "title": "प्रोजेक्ट समीक्षा",
       "shared": "आपके साथ साझा किया गया",

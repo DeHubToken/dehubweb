@@ -193,6 +193,7 @@
     "heading": "DeHub ሾርትስ"
   },
   "settings": {
+    "usernameTaken": "የተጠቃሚ ስሙ ተይዟል",
     "postingChain": "የልጥፍ ብሎክቼይን",
     "showOnline": "በመስመር ላይ ስሆን አሳይ",
     "showOnlineDesc": "እርስዎ የሚያስተላልፉት ሰዎች DeHub በሚጠቀሙበት ጊዜ ከስምዎ አጠገብ አረንጓዴ ነጥብ ያያሉ",
@@ -2394,6 +2395,7 @@
     "pendingSubmitted": "{{amount}} ቶከኖች ተልከዋል። ማረጋገጫው ገና እየተጣራ ነው። እንደገና አይላኩት።"
   },
   "communities": {
+    "chatTab": "ውይይት",
     "title": "ማህበረሰቦች",
     "create": "ፍጠር",
     "searchPlaceholder": "ማህበረሰቦችን ፈልግ...",
@@ -2428,7 +2430,6 @@
     "addDescription": "መግለጫ ያክሉ...",
     "communityDescription": "የማህበረሰብ መግለጫ...",
     "posts": "ልጥፎች",
-    "chat": "ውይይት",
     "membersTab": "አባላት ({{count}})",
     "about": "ስለ",
     "backToCommunities": "ማህበረሰቦች",
@@ -3881,6 +3882,7 @@
     "sellYourFractions": "ክፍልፍሎችዎን ይሽጡ ({{held}} የተያዘ)"
   },
   "creator": {
+    "libraryEmpty": "የተቀመጡ ፈጠራዎችዎ እዚህ ይታያሉ።",
     "whatToCreate": "ምን ለመፍጠር",
     "startCreatingWith": "መፍጠር ይጀምሩ {{model}}",
     "studioSubtitle": "አንድ ትዕይንት, ገጸ-ባህሪ, ስሜት ወይም ዘይቤ ግለጽ. ከታች ያለውን ውጤት መሬት እና በቀጥታ ወደ አርታኢ ተሸክመው.",
@@ -6302,7 +6304,7 @@
     "kindImage": "ሙዚቃ",
     "tileSourceKind": "{{source}} · {{kind}}",
     "reviewTitle": "ከመለጠፍዎ በፊት ይገምግሙ",
-    "reviewSubtitle": "ከ {{source}} ፣ እንደ {{kind}}} ። የሚወዱትን ማንኛውንም ነገር ያርትዑ — የመጀመሪያውን ለማቆየት ርዕሱን ባዶ ይተው ።",
+    "reviewSubtitle": "ከ {{source}} ፣ እንደ {{kind}} ። የሚወዱትን ማንኛውንም ነገር ያርትዑ — የመጀመሪያውን ለማቆየት ርዕሱን ባዶ ይተው ።",
     "reviewName": "ርዕስ",
     "reviewNamePlaceholder": "የመጀመሪያውን ርዕስ ለማቆየት ባዶ ይተው",
     "reviewDescription": "መግለጫ",
@@ -6766,6 +6768,7 @@
     "seoDescription": "ኦፊሴላዊ የDeHub ሰነዶች፦ የመድረክ አጠቃላይ እይታ፣ dApps፣ የDHB ቶከን ኢኮኖሚ፣ ስቴኪንግ፣ ጨዋታዎች፣ የመንገድ ካርታ፣ ተደጋጋሚ ጥያቄዎች እና ተጨማሪ።"
   },
   "dex": {
+    "title": "ዳህብ / USD",
     "seoTitle": "DEX — ቶከኖች ን በዋጋዎ ይገበያዩ",
     "seoDescription": "በBase ወይም BNB Chain ላይ በUniswap v4 limit order የDHBዎን የመግዣ ወይም የመሸጫ ዋጋ ያዘጋጁ። የቀጥታ የትዕዛዝ ደብተር፣ የገበያ ጥልቀት እና አንድ የተጋራ የአሜሪካን ዶላር ዋጋ።",
     "venue": "ኔትወርክ",
@@ -6987,6 +6990,7 @@
     }
   },
   "editor": {
+    "video": { "tFade": "ደብዝዞ መቀላቀል", "none": "ምንም", "transition": "ሽግግር", "speed": "ፍጥነት", "sound": "ድምፅ","video": "ቪዲዮ"},
     "review": {
       "title": "የፕሮጀክት ግምገማ",
       "shared": "ለእርስዎ የተጋሩ",

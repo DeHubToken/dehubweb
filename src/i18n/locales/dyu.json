@@ -193,6 +193,7 @@
     "heading": "DeHub Video surunw"
   },
   "settings": {
+    "usernameTaken": "Tɔgɔ tara ka ban",
     "postingChain": "Blokisɛn min bɛ kɛ postiw la",
     "showOnline": "N'i be n' ka site web kan, i ka n' ka site web yira",
     "showOnlineDesc": "Mɔgɔ minw be kuma, olu be yɔrɔ dɔ ye i tɔgɔ gɛrɛfɛ n'i be DeHub ta",
@@ -2328,6 +2329,7 @@
     "pendingSubmitted": "{{amount}}tokens submitted. Confirmation be to ka sɛgɛsɛgɛ. N'i ma siran, o be yɛlɛma ka kɛ ten."
   },
   "communities": {
+    "chatTab": "Baro",
     "title": "Communities",
     "create": "Dilan",
     "searchPlaceholder": "Jɛkuluw ɲini...",
@@ -2362,7 +2364,6 @@
     "addDescription": "Add a description...",
     "communityDescription": "Jɛkulu ɲɛfɔli...",
     "posts": "Posts",
-    "chat": "Baro",
     "membersTab": "Tɔndenw ({{count}})",
     "about": "A kan",
     "backToCommunities": "Communities",
@@ -3762,6 +3763,7 @@
     "needsYouHold": "Need {{needed}}, you hold {{held}}"
   },
   "creator": {
+    "libraryEmpty": "I ka dilanni maralenw bɛna bɔ yan.",
     "whatToCreate": "Nka, an ka ɲi ka mun lo kɛ do?",
     "startCreatingWith": "Add {{model}}",
     "studioSubtitle": "I ka koo, i ka jogo, i ka miiriya wala i ka kokɛcogo ɲɛfɔ. A be sɔrɔ duguma ani a be taga ni a ye sɛbɛbaga fɛ.",
@@ -6582,6 +6584,7 @@
     "seoDescription": "Documentation officielle de DeHub : présentation de la plateforme, dApps, économie du token o ye koo ɲuman ye., staking, jeux, feuille de route, FAQ et plus encore."
   },
   "dex": {
+    "title": "tokens / USD",
     "seoTitle": "Dddd — Trade o ye koo ɲuman ye. at your price",
     "seoDescription": "I ka o ye koo ɲuman ye. san walima ka feere ni Uniswap v4 hakɛ dɔ ye min be sɔrɔ BNB ka jɔrɔkɔ kan. O la, an bena a ye ko an ye wari min sɔrɔ, o ye wari min ye, o ye wari min ye.",
     "venue": "Network",
@@ -6793,6 +6796,7 @@
     }
   },
   "editor": {
+    "video": { "tFade": "Ɲɔgɔn kɔnɔ tɛmɛ", "none": "Foyi", "transition": "Tɛmɛni", "speed": "Teliya", "sound": "Mankan","video": "Video"},
     "review": {
       "title": "Porozɛ lajɛ",
       "shared": "I fɛ tila",

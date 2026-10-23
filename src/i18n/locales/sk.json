@@ -197,6 +197,7 @@
     "heading": "Krátke videá DeHub"
   },
   "settings": {
+    "usernameTaken": "Používateľské meno je obsadené",
     "postingChain": "Blockchain príspevkov",
     "showOnline": "Zobraziť, keď som online",
     "showOnlineDesc": "Ľudia, ktorým napíšete správu, uvidia zelenú bodku vedľa vášho mena počas používania služby DeHub",
@@ -2480,6 +2481,7 @@
     "pendingSubmitted": "{{amount}} tokenov odoslaných. Potvrdenie sa stále overuje. Neodosielajte ich znova."
   },
   "communities": {
+    "chatTab": "Chat",
     "title": "Komunity",
     "create": "Vytvoriť",
     "searchPlaceholder": "Hľadať komunity...",
@@ -2514,7 +2516,6 @@
     "addDescription": "Pridať popis...",
     "communityDescription": "Popis komunity...",
     "posts": "Príspevky",
-    "chat": "Chat",
     "membersTab": "Členovia ({{count}})",
     "about": "O komunite",
     "backToCommunities": "Komunity",
@@ -3981,6 +3982,7 @@
     "sellYourFractions": "Predaj svoje zlomky ({{held}} držaných)"
   },
   "creator": {
+    "libraryEmpty": "Tu sa zobrazia vaše uložené generovania.",
     "whatToCreate": "Čo vytvoriť",
     "startCreatingWith": "Začni vytvárať s {{model}}",
     "studioSubtitle": "Popísaný je scénus, postava, nálada alebo štýl. Výsledky sa objaví nižšie a priamo sa dostanú do editoru.",
@@ -6904,6 +6906,7 @@
     "seoDescription": "Oficiálna dokumentácia DeHub: prehľad platformy, dApps, ekonomika tokenu tokenov, staking, hry, plán rozvoja, FAQ a ďalšie."
   },
   "dex": {
+    "title": "tokenov / USD",
     "seoTitle": "DEX — Obchodujte tokenov za vašu cenu",
     "seoDescription": "Nastavte si cenu nákupu alebo predaja tokenov pomocou limitnej objednávky Uniswap v4 na Base alebo BNB Chain. Živý kniha objednávok, hĺbka trhu a jedna zdieľaná cena v USD.",
     "venue": "Sieť",
@@ -7126,6 +7129,7 @@
     }
   },
   "editor": {
+    "video": { "tFade": "Prelínanie", "none": "Žiadny", "transition": "Prechod", "speed": "Rýchlosť", "sound": "Zvuk","video": "Video"},
     "review": {
       "title": "Kontrola projektu",
       "shared": "Zdieľané s vami",

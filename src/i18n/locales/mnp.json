@@ -193,6 +193,7 @@
     "heading": "DeHub 短视频"
   },
   "settings": {
+    "usernameTaken": "用户名已被占用",
     "postingChain": "发帖区块链",
     "showOnline": "顯示我線上",
     "showOnlineDesc": "DeHub 期间，你发信息的人会看到你名字旁边有个绿点",
@@ -2343,6 +2344,7 @@
     "pendingSubmitted": "{{amount}} 粒代币已提交。正在检查确认。请勿重复发送。"
   },
   "communities": {
+    "chatTab": "聊天",
     "title": "社群",
     "create": "建立",
     "searchPlaceholder": "寻社区...",
@@ -2377,7 +2379,6 @@
     "addDescription": "加入描述...",
     "communityDescription": "社区描述...",
     "posts": "貼文",
-    "chat": "聊天",
     "membersTab": "成员（{{count}}）",
     "about": "关于",
     "backToCommunities": "社群",
@@ -3667,6 +3668,7 @@
     "sellYourFractions": "賣你的分數（{{held}}持有）"
   },
   "creator": {
+    "libraryEmpty": "你保存的生成内容将显示在这里。",
     "whatToCreate": "要創造什麼",
     "startCreatingWith": "開始創造用 {{model}}",
     "studioSubtitle": "描述一個場景、角色、氣氛或風格。結果會出現在下面，並直接進入編輯器。",
@@ -6094,6 +6096,7 @@
     "seoDescription": "DeHub 官方文档：平台概览、dApp、代幣 代币经济、质押、游戏、路线图、常见问题等。"
   },
   "dex": {
+    "title": "美元/美元",
     "seoTitle": "DEX — 以您自己的价格交易 代幣",
     "seoDescription": "在 Base 或 BNB Chain 上使用 Uniswap v4 限价单设置您的 代幣 买入或卖出价格。实时订单簿、市场深度和统一的美元价格。",
     "venue": "网络",
@@ -6315,6 +6318,7 @@
     }
   },
   "editor": {
+    "video": { "tFade": "交叉溶解", "none": "无", "transition": "转场", "speed": "速度", "sound": "声音","video": "视频"},
     "review": {
       "title": "项目审阅",
       "shared": "与你共享",
