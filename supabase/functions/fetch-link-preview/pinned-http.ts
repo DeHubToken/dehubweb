@@ -109,12 +109,13 @@ export async function pinnedHttp(url: URL, address: string, signal: AbortSignal)
   signal.throwIfAborted();
   signal.addEventListener('abort', close, { once: true });
   try {
-    conn = await Deno.connect({ hostname: address, port: Number(url.port || (url.protocol === 'https:' ? 443 : 80)) });
+    const tcp = await Deno.connect({ hostname: address, port: Number(url.port || (url.protocol === 'https:' ? 443 : 80)) });
+    conn = tcp;
     signal.throwIfAborted();
     if (url.protocol === 'https:') {
       // Connect only to the vetted IP; verify the certificate and SNI against
       // the original hostname. Supported by the deployed Deno 2.1 runtime.
-      conn = await Deno.startTls(conn, { hostname: url.hostname.replace(/^\[|\]$/g, ''), alpnProtocols: ['http/1.1'] });
+      conn = await Deno.startTls(tcp, { hostname: url.hostname.replace(/^\[|\]$/g, ''), alpnProtocols: ['http/1.1'] });
       signal.throwIfAborted();
     }
     const request = new TextEncoder().encode(`GET ${url.pathname}${url.search} HTTP/1.1\r\nHost: ${url.host}\r\nUser-Agent: DeHubLinkPreview/1.0\r\nAccept: text/html,application/xhtml+xml\r\nAccept-Encoding: identity\r\nConnection: close\r\n\r\n`);
