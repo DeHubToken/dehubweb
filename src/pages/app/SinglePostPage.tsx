@@ -91,6 +91,8 @@ import { usePostStagePhone } from '@/hooks/use-post-stage-phone';
 import { StageRelated } from '@/components/app/post-stage/StageRelated';
 import { PostStagePhone } from '@/components/app/post-stage/PostStagePhone';
 import type { PostStageValue } from '@/components/app/post-stage/post-stage-context';
+import { viewerShareUrl } from '@/lib/share-url';
+import { trackShare } from '@/lib/analytics';
 
 /*
  * Only a live post ever renders this, and a live post is a small minority of
@@ -1369,7 +1371,8 @@ function SinglePostPageContent({ inOverlay = false, overrideId }: SinglePostPage
               {/* Download removed until implemented — dead button. */}
               <button 
                 onClick={() => {
-                  const url = `${window.location.origin}/app/post/${id}`;
+                  const url = viewerShareUrl(`${window.location.origin}/app/post/${id}`);
+                  trackShare('copy_link', { kind: 'post' });
                   navigator.clipboard.writeText(url)
                     .then(() => toast.success(t('postOptions.linkCopied')))
                     .catch(() => toast.error(t('postOptions.copyFailed', 'Could not copy link')));

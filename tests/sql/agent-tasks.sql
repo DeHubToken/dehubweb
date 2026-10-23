@@ -103,3 +103,46 @@ DO $$ BEGIN
  IF public.claim_agent_life() IS NOT NULL THEN RAISE EXCEPTION 'Leased agent claimed twice'; END IF;
 END $$;
 RESET ROLE;
+
+-- Swarms accept the full badge allowance and preserve per-agent execution.
+\ir ../../supabase/migrations/20261013000000_agent_task_swarms.sql
+\ir ../../supabase/migrations/20261020230000_agent_swarm_controls.sql
+SET ROLE service_role;
+UPDATE public.ai_agents SET is_active=true WHERE human_owner_wallet='0x9324840523a5d17dd12a2f11a9472e5a199c1937';
+UPDATE public.ai_agent_tasks SET status='completed',lease=NULL,lease_until=NULL;
+DO $$
+DECLARE
+  owner_wallet text := '0x9324840523a5d17dd12a2f11a9472e5a199c1937';
+  members uuid[];
+  request uuid := gen_random_uuid();
+  shared uuid := gen_random_uuid();
+  count_tasks integer;
+BEGIN
+  SELECT array_agg(a.id ORDER BY a.id) INTO members FROM public.ai_agents a WHERE a.human_owner_wallet=owner_wallet;
+  SELECT count(*) INTO count_tasks FROM public.create_agent_swarm_tasks_v2(owner_wallet,members,request,'Like every post', '{}'::jsonb,NULL,'each');
+  IF count_tasks<>25 THEN RAISE EXCEPTION 'Full allowance rejected'; END IF;
+  IF EXISTS(SELECT 1 FROM ai_agent_tasks WHERE swarm_id=request AND (swarm_size<>25 OR swarm_mode<>'each' OR next_run_at<>cycle_started_at)) THEN RAISE EXCEPTION 'Incorrect member metadata'; END IF;
+  PERFORM public.create_agent_swarm_tasks_v2(owner_wallet,members,request,'Like every post', '{}'::jsonb,NULL,'each');
+  IF (SELECT count(*) FROM ai_agent_tasks WHERE swarm_id=request)<>25 THEN RAISE EXCEPTION 'Retry duplicated tasks'; END IF;
+  IF (SELECT count(DISTINCT next_run_at) FROM ai_agent_tasks WHERE swarm_id=request)<>1 THEN RAISE EXCEPTION 'Each-agent mode staggered the schedule'; END IF;
+  PERFORM public.create_agent_swarm_tasks_v2(owner_wallet,members[1:2],shared,'Daily shared post', '{}'::jsonb,1440,'shared');
+  IF (SELECT max(next_run_at)-min(next_run_at) FROM ai_agent_tasks WHERE swarm_id=shared)<>interval '1 day' THEN RAISE EXCEPTION 'Shared cadence changed'; END IF;
+  BEGIN
+    PERFORM public.create_agent_swarm_tasks_v2(owner_wallet,ARRAY[members[1],members[1]],gen_random_uuid(),'Duplicate', '{}'::jsonb,NULL,'each');
+    RAISE EXCEPTION 'Duplicate members accepted';
+  EXCEPTION WHEN raise_exception THEN
+    IF SQLERRM<>'Select active agents you own.' THEN RAISE; END IF;
+  END;
+  UPDATE ai_agent_tasks SET status='cancelled' WHERE swarm_id=request;
+  IF EXISTS(SELECT 1 FROM ai_agent_tasks WHERE swarm_id=request AND status<>'cancelled') THEN RAISE EXCEPTION 'Cancel state unavailable'; END IF;
+END $$;
+RESET ROLE;
+SET ROLE anon;
+DO $$ BEGIN
+  BEGIN
+    PERFORM public.create_agent_swarm_tasks_v2('0x9324840523a5d17dd12a2f11a9472e5a199c1937',ARRAY[]::uuid[],gen_random_uuid(),'Unauthorized','{}'::jsonb,NULL,'each');
+    RAISE EXCEPTION 'Public swarm creation permitted';
+  EXCEPTION WHEN insufficient_privilege THEN NULL;
+  END;
+END $$;
+RESET ROLE;
