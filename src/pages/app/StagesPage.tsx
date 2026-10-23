@@ -74,8 +74,8 @@ const HOSTING_TAB: StagesTabDef = { icon: Mic, labelKey: 'stages.tabHosting', va
  * Leads with the cover graphic when the host set one — an announcement in a
  * list of announcements is competing for attention, which is the whole reason
  * the graphic exists. It sits above the text rather than behind it (see
- * StageCoverArt) so nothing is cropped away. Without a cover the card is just
- * the text panel, so a stage with no art does not look broken.
+ * StageCoverArt) so nothing is cropped away. Without a cover the card shows
+ * the stage's generated poster (GeneratedStageCover).
  */
 function ScheduledStageCard({
   space,
@@ -99,7 +99,6 @@ function ScheduledStageCard({
   const avatar =
     buildAvatarUrl(space.host_wallet_address || '', space.host_avatar) ||
     buildAvatarCdnFallbackUrl(space.host_wallet_address || '');
-  const hasCover = !!space.cover_image_url;
   const { isAuthenticated } = useAuth();
   // The host starts the stage; a reminder is for everyone waiting on them.
   const { hasReminder, toggleReminder, isToggling } = useStageReminder(space.id);
@@ -109,7 +108,7 @@ function ScheduledStageCard({
       data-page-bento
       className="relative rounded-2xl overflow-hidden flex flex-col border border-transparent bg-zinc-900"
     >
-      {hasCover && <StageCoverArt src={space.cover_image_url!} title={space.title} />}
+      <StageCoverArt src={space.cover_image_url} title={space.title} stage={space} />
 
       <div className="relative p-4 flex flex-col flex-1">
         <div className="flex items-center justify-between mb-3">
@@ -243,9 +242,8 @@ function LiveStageCard({
   const avatar =
     buildAvatarUrl(space.host_wallet_address || '', space.host_avatar) ||
     buildAvatarCdnFallbackUrl(space.host_wallet_address || '');
-  // A stage started from an announcement keeps its cover, so a live room has
-  // artwork to show as often as an upcoming one does.
-  const hasCover = !!space.cover_image_url;
+  // A stage started from an announcement keeps its cover; one without gets
+  // its generated poster, so every live card has artwork.
 
   return (
     <button
@@ -257,7 +255,7 @@ function LiveStageCard({
         'border border-transparent hover:border-white/15 bg-zinc-900',
       )}
     >
-      {hasCover && <StageCoverArt src={space.cover_image_url!} title={space.title} />}
+      <StageCoverArt src={space.cover_image_url} title={space.title} stage={space} />
 
       <div className="relative p-4 flex flex-col flex-1">
         <div className="flex items-center justify-between mb-3">

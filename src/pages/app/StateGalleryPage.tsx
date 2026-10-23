@@ -57,6 +57,9 @@ import { PostProcessingPill } from '@/components/app/PostProcessingDock';
 import type { PostProcessingPhase } from '@/store/postProcessingStore';
 import { ProposalLinkEmbed } from '@/components/app/governance/ProposalLinkEmbed';
 import type { GovernanceProposal } from '@/hooks/use-governance';
+import { GeneratedStageCover } from '@/components/app/stages/GeneratedStageCover';
+import { PastStageCard } from '@/components/app/stages/PastStageCard';
+import type { AudioSpace } from '@/types/audio-spaces.types';
 import galleryCover from '@/assets/banners/agent-marco_v.png';
 import galleryAvatar from '@/assets/avatars/marco_v.png';
 import galleryCommunityArt from '@/assets/banners/agent-vrgl.png';
@@ -238,6 +241,44 @@ function AudioGallery() {
           decodeEnabled={false}
           durationHint={184}
         />
+      </div>
+    </section>
+  );
+}
+
+/**
+ * Stage covers: a stage with no uploaded cover gets a poster drawn from its
+ * title, time and host (GeneratedStageCover). Same stage, same poster. The
+ * last tile is a real recorded-stage card without a cover.
+ */
+const GALLERY_STAGES = [
+  { id: 'gallery-stage-1', title: 'Town Hall: what ships next', host_username: 'maldoteth', scheduled_at: '2026-10-23T19:00:00Z' },
+  { id: 'gallery-stage-2', title: 'Late night lo-fi', host_username: 'juno', started_at: '2026-10-24T23:30:00Z' },
+  { id: 'gallery-stage-3', title: 'Creators AMA: growing from zero to your first thousand fans on DeHub', host_username: 'kira', scheduled_at: '2026-11-02T17:00:00Z' },
+  { id: 'gallery-stage-4', title: 'Market open', host_wallet_address: '0x8f3a00000000000000000000000000000000c0de', started_at: '2026-10-30T08:00:00Z' },
+];
+
+function StageCoversGallery() {
+  const { t: _copy } = _useCopy();
+  const ended = {
+    id: 'gallery-stage-5', short_id: null, channel_name: 'gallery', title: 'Friday night set, requests open',
+    host_wallet_address: '0x00000000000000000000000000000000000000a1', host_username: 'marco_v', status: 'ended',
+    listener_count: 0, speaker_count: 1, started_at: '2026-10-17T21:00:00Z', created_at: '2026-10-17T21:00:00Z',
+    ended_at: '2026-10-17T22:10:00Z', total_listens: 128, cover_image_url: null,
+  } as AudioSpace;
+  return (
+    <section data-page-bento data-stage-covers-gallery className="mb-5 rounded-3xl border border-white/10 bg-white/[0.04] p-4">
+      <h2 className="mb-3 text-sm font-semibold">{_copy("copy.3a17aa4e4abb", { defaultValue: "Stages" })}</h2>
+      <div className="grid gap-3 sm:grid-cols-2">
+        {GALLERY_STAGES.map((stage) => (
+          <GeneratedStageCover key={stage.id} stage={stage} className="rounded-2xl" />
+        ))}
+        <div className="flex gap-3 items-start">
+          <GeneratedStageCover stage={GALLERY_STAGES[0]} className="w-44 shrink-0 rounded-xl" />
+          <AuthContext.Provider value={GALLERY_AUTH}>
+            <PastStageCard space={ended} className="max-w-[260px]" />
+          </AuthContext.Provider>
+        </div>
       </div>
     </section>
   );
@@ -613,6 +654,7 @@ export default function StateGalleryPage() {
         <ToastsGallery />
         <TooltipsGallery />
         <AudioGallery />
+        <StageCoversGallery />
         <CaptureCardGallery />
         <LiveAvatarsGallery />
         <ReactionsGallery />
