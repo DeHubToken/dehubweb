@@ -4397,6 +4397,8 @@ export type Database = {
           fee_tx_hash: string | null
           id: string
           like_count: number
+          media_type: string | null
+          media_url: string | null
           status: string
           title: string
           updated_at: string
@@ -4414,6 +4416,8 @@ export type Database = {
           fee_tx_hash?: string | null
           id?: string
           like_count?: number
+          media_type?: string | null
+          media_url?: string | null
           status?: string
           title: string
           updated_at?: string
@@ -4431,6 +4435,8 @@ export type Database = {
           fee_tx_hash?: string | null
           id?: string
           like_count?: number
+          media_type?: string | null
+          media_url?: string | null
           status?: string
           title?: string
           updated_at?: string
