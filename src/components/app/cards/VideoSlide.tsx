@@ -248,6 +248,9 @@ const VideoSlideBody = memo(function VideoSlideBody({
     videoRef,
     handoffKey: handoffKey ?? `shorts:${slideId}`,
     src: playableSrc || undefined,
+    // A photo short's src is its soundtrack, and a gated short plays a signed
+    // file; neither has a ladder.
+    hlsSrc: short.soundtrackUrl || playbackSrc !== undefined ? undefined : short.hlsUrl,
     poster: thumbnail,
     muted: isMuted,
     loop: isLooping,

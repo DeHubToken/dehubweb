@@ -28,6 +28,7 @@
 
 /** A card currently asking to display the element, innermost claim last. */
 import { isVideoInPictureInPicture, releaseAfterPictureInPicture } from './picture-in-picture';
+import { clearVideoSource } from './hls-vod';
 
 interface Claim {
   token: object;
@@ -118,9 +119,9 @@ function dispose(key: string) {
   el.remove();
   // Drop the source so the decoder and any in-flight range requests go with it.
   // removeAttribute + load() is the documented way to actually release it; just
-  // clearing `.src` leaves the element pointed at the document URL.
-  el.removeAttribute('src');
-  el.load();
+  // clearing `.src` leaves the element pointed at the document URL. An HLS
+  // ladder's hls.js instance goes with it (lib/hls-vod).
+  clearVideoSource(el);
 }
 
 function park(key: string) {

@@ -40,7 +40,7 @@ import { ImageCard } from '@/components/app/cards/ImageCard';
 import { VideoCard } from '@/components/app/cards/VideoCard';
 import { formatTimeAgo, formatViews } from '@/lib/feed-utils';
 import { resolveViewCount } from '@/lib/engagement';
-import { buildAvatarUrl, extractAvatarPath, buildImageUrl, buildFeedImageUrls, buildVideoUrl } from '@/lib/media-url';
+import { buildAvatarUrl, extractAvatarPath, buildImageUrl, buildFeedImageUrls, buildVideoUrl, buildHlsUrl } from '@/lib/media-url';
 import { ProfileHeader } from '@/components/app/profile/ProfileHeader';
 import { ProfileTabContent } from '@/components/app/profile/ProfileTabContent';
 import { ProfileContentToolbar } from '@/components/app/profile/ProfileContentToolbar';
@@ -155,6 +155,7 @@ function PinnedPostItem({ pin }: { pin: any }) {
           id: String(post.tokenId), type: 'video',
           thumbnail: buildImageUrl(post.tokenId, post.imageUrl) || '/placeholder.svg',
           videoUrl: buildVideoUrl(post.tokenId),
+          hlsUrl: buildHlsUrl(post.hlsUrl),
           title: post.title || post.name || '',
           channel: post.minterDisplayName || post.minterUsername || creatorObj?.display_name || 'Unknown',
           channelAvatar: avatar, verified: false,

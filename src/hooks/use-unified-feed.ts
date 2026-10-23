@@ -10,7 +10,7 @@
 import { useEffect, useMemo, useState } from 'react';
 import { useInfiniteQuery, useQuery, useQueryClient, keepPreviousData, type QueryClient } from '@tanstack/react-query';
 import { getAuthToken, isTokenExpired, ensureFreshToken, DEHUB_CDN_BASE, getMediaUrl, type DeHubNFT, getBlockList, getNFTInfo } from '@/lib/api/dehub';
-import { buildAvatarUrl, buildImageUrl, buildVideoUrl, buildFeedImageUrls, extractAvatarPath } from '@/lib/media-url';
+import { buildAvatarUrl, buildImageUrl, buildVideoUrl, buildHlsUrl, buildFeedImageUrls, extractAvatarPath } from '@/lib/media-url';
 import { formatDuration, formatViews, formatTimeAgo } from '@/lib/feed-utils';
 import { resolveLikeCount, resolveDislikeCount, resolveMyReaction, resolveReactionCounts, resolveViewCount } from '@/lib/engagement';
 import { mergeLiveCounts, type RawFeedRow } from '@/lib/live-counts';
@@ -68,6 +68,8 @@ export interface UnifiedFeedItem {
   imageUrl: string;
   imageUrls?: string[];
   videoUrl?: string;
+  /** HLS master playlist key, on public posts with a rendition ready. */
+  hlsUrl?: string;
   minter: string;
   owner?: string;
   postType: 'video' | 'feed-images' | 'feed-simple' | 'live' | 'audio' | 'feed-audio';
@@ -270,6 +272,7 @@ function mapVideoItem(item: UnifiedFeedItem, index: number): VideoItem {
     type: 'video',
     thumbnail,
     videoUrl,
+    hlsUrl: buildHlsUrl(item.hlsUrl),
     audioUrl,
     audioDuration: isAudioPost ? item.audioDuration : undefined,
     isAudio: isAudioPost,

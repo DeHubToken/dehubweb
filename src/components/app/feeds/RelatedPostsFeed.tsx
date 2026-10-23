@@ -14,7 +14,7 @@ import { PostCard } from '@/components/app/cards/PostCard';
 import { VideoCard } from '@/components/app/cards/VideoCard';
 import { SponsoredAdCard } from '@/components/app/cards/SponsoredAdCard';
 import { useServedAds } from '@/hooks/use-ad-serving';
-import { buildAvatarUrl, extractAvatarPath, buildImageUrl, buildVideoUrl } from '@/lib/media-url';
+import { buildAvatarUrl, extractAvatarPath, buildImageUrl, buildVideoUrl, buildHlsUrl } from '@/lib/media-url';
 import { formatTimeAgo, formatViews } from '@/lib/feed-utils';
 import { resolveViewCount } from '@/lib/engagement';
 import type { VideoItem } from '@/types/feed.types';
@@ -41,6 +41,7 @@ function adToVideoItem(nft: any): VideoItem {
     type: 'video',
     thumbnail: buildImageUrl(nft.tokenId, nft.imageUrl) || '/placeholder.svg',
     videoUrl: nft.tokenId ? buildVideoUrl(nft.tokenId) : undefined,
+    hlsUrl: buildHlsUrl(nft.hlsUrl),
     duration: formatDuration(durationSeconds),
     durationSeconds: typeof durationSeconds === 'number' ? durationSeconds : 0,
     title: nft.title || nft.name || '',

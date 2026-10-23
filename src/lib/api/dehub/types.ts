@@ -168,6 +168,8 @@ export interface DeHubNFT {
   imageUrl: string;
   imageUrls?: string[];
   videoUrl?: string;
+  /** HLS master playlist key, on public posts with a rendition ready. See buildHlsUrl. */
+  hlsUrl?: string;
   media_url?: string;
   thumbnail_url?: string;
   postType: "video" | "image" | "audio";
