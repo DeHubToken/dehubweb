@@ -1234,7 +1234,7 @@ export function ActionBar({
             ) : (
               <ThumbsUp className={cn(FEED_ICON_CLASS.like, isLiked && 'fill-current')} />
             )}
-            <span className="tabular-nums">{formatCount(localLikeCount)}</span>
+            <span className="tabular-nums">{formatCount(thumbCount)}</span>
           </motion.button>
         </span>
 

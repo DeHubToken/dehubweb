@@ -151,6 +151,8 @@ function ArticleGallery({ onAction }: { onAction: () => void }) {
 }
 
 const SAMPLE_REACTIONS: ReactionCounts = { like: 19, love: 4, hot: 2, lol: 1, dislike: 3 };
+/** A post whose dislikes outnumber its likes: the thumb shows 👎 and the dislike total. */
+const SAMPLE_DISLIKED_REACTIONS: ReactionCounts = { like: 2, love: 1, dislike: 9 };
 
 /**
  * A post's action row with its reaction tray: hover (desktop) or hold (touch)
@@ -337,6 +339,7 @@ function ReactionsGallery() {
   const rows = [
     { id: '990001', label: _copy("copy.5735e3593d23", { defaultValue: "No reaction yet" }), myReaction: null },
     { id: '990002', label: _copy("copy.bf74a035bfa2", { defaultValue: "You disliked it" }), myReaction: 'dislike' as const },
+    { id: '990003', label: '👍 3 · 👎 9', myReaction: null, counts: SAMPLE_DISLIKED_REACTIONS, likes: 3, dislikes: 9 },
   ];
   return (
     <AuthContext.Provider value={GALLERY_AUTH}>
@@ -348,11 +351,11 @@ function ReactionsGallery() {
             <p className="px-3 text-xs text-zinc-500">{row.label}</p>
             <ActionBar
               postId={row.id}
-              likeCount={26}
-              dislikeCount={3}
+              likeCount={'likes' in row ? row.likes : 26}
+              dislikeCount={'dislikes' in row ? row.dislikes : 3}
               commentCount={5}
               repostCount={2}
-              reactionCounts={SAMPLE_REACTIONS}
+              reactionCounts={'counts' in row ? row.counts : SAMPLE_REACTIONS}
               myReaction={row.myReaction}
               isDisliked={row.myReaction === 'dislike'}
               hideUtility
