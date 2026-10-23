@@ -5,7 +5,7 @@ import { getSavedPosts, getLikedPosts, getWatchHistory, clearWatchHistory, toggl
 import { useAuth } from '@/contexts/AuthContext';
 import { toast } from 'sonner';
 import { supabase } from '@/integrations/supabase/client';
-import { buildAvatarUrl, buildImageUrl, buildVideoUrl, buildFeedImageUrls } from '@/lib/media-url';
+import { buildAvatarUrl, buildImageUrl, buildVideoUrl, buildHlsUrl, buildFeedImageUrls } from '@/lib/media-url';
 import { formatDuration, formatViews, formatTimeAgo } from '@/lib/feed-utils';
 import { resolveViewCount } from '@/lib/engagement';
 import type { VideoItem, ImagePost, TextPost, FeedItem } from '@/types/feed.types';
@@ -46,6 +46,7 @@ function mapNFTToVideoItem(nft: DeHubNFT): VideoItem {
     contentRating: nft.contentRating,
     thumbnail,
     videoUrl: videoUrl || nft.videoUrl,
+    hlsUrl: buildHlsUrl(nft.hlsUrl),
     duration: formatDuration(nft.videoDuration || nft.duration),
     title: nft.name || nft.title || nft.description?.split('\n')[0] || '',
     channel: nft.minterDisplayName || nft.mintername || 'Unknown Creator',

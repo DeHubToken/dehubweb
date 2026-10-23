@@ -96,7 +96,7 @@ import { getMediaUrl, getNFTInfo, getCategories } from '@/lib/api/dehub';
 import { useBoostQueue } from '@/hooks/use-superpowers';
 import type { DeHubCategory } from '@/lib/api/dehub';
 import { getCuratedCarouselStations, type RadioStation } from '@/lib/api/radio-browser';
-import { buildAvatarUrl, buildImageUrl, buildVideoUrl, buildFeedImageUrls } from '@/lib/media-url';
+import { buildAvatarUrl, buildImageUrl, buildVideoUrl, buildHlsUrl, buildFeedImageUrls } from '@/lib/media-url';
 import { useAuth } from '@/contexts/AuthContext';
 import { useKidsModeLock } from '@/hooks/use-kids-mode';
 import { useHideWatched, useWatchedVideoIds } from '@/hooks/use-watched-videos';
@@ -466,6 +466,7 @@ function nftToFeedItem(pinnedPost: any): FeedItemType {
         contentRating: pinnedPost.contentRating,
         thumbnail,
         videoUrl,
+        hlsUrl: buildHlsUrl(pinnedPost.hlsUrl),
         duration: formatDuration(pinnedPost.videoDuration || pinnedPost.duration || 0),
         title: pinnedPost.name || pinnedPost.description?.split('\n')[0] || '',
         channel: pinnedPost.minterDisplayName || pinnedPost.mintername || 'Unknown Creator',
@@ -1048,6 +1049,7 @@ export function HomeFeed({ active = true, shuffleKey, isRefreshing, showFilters 
         videoUrl: item.videoUrl
           ? (item.videoUrl.startsWith('http') ? item.videoUrl : `https://dehubcdn.ams3.cdn.digitaloceanspaces.com/${item.videoUrl}`)
           : `https://dehubcdn.ams3.cdn.digitaloceanspaces.com/videos/${id}.mp4`,
+        hlsUrl: buildHlsUrl(item.hlsUrl),
         transcodingStatus: item.transcodingStatus,
         // Both, not one: the caption usually lives in the title, and a short
         // that carried a title AND a description only ever showed the second.

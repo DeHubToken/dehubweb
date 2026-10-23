@@ -1,4 +1,5 @@
 import { createPlaybackRecovery, playbackSourceIdentity, type PlaybackPhase } from './playback-recovery';
+import { reloadVideoSource, videoSourceOf } from './hls-vod';
 
 const recoveries = new WeakMap<object, ReturnType<typeof createPlaybackRecovery>>();
 export const recoveryForVideo = (video: object) => recoveries.get(video);
@@ -16,7 +17,8 @@ export function attachPlaybackRecovery(video: HTMLVideoElement, options: {
       const position = video.currentTime;
       const duration = video.duration;
       if (reload || video.error) {
-        video.load();
+        // Through hls-vod: load() would tear an HLS ladder's MediaSource away.
+        reloadVideoSource(video);
         // currentTime can be set before metadata; the browser applies it once
         // the new resource is seekable. Live streams stay at their live edge.
         if (position > 0 && Number.isFinite(duration) && position < duration) video.currentTime = position;
@@ -33,7 +35,7 @@ export function attachPlaybackRecovery(video: HTMLVideoElement, options: {
       void import('./logger').then(({ logToBackend }) => logToBackend({
         level: event === 'failed' ? 'error' : 'info', component: options.component,
         message: `playback ${event}`,
-        metadata: { ...detail, postId: options.postId, source: playbackSourceIdentity(video.currentSrc || video.src), code: video.error?.code, readyState: video.readyState, networkState: video.networkState },
+        metadata: { ...detail, postId: options.postId, source: playbackSourceIdentity(videoSourceOf(video) || video.currentSrc || video.src), code: video.error?.code, readyState: video.readyState, networkState: video.networkState },
       }, true)).catch(() => {});
     },
   });

@@ -9,6 +9,7 @@ import {
   buildCoverUrl,
   buildImageUrl,
   buildVideoUrl,
+  buildHlsUrl,
   buildFeedImageUrls,
   extractAvatarPath,
 } from '@/lib/media-url';
@@ -150,6 +151,27 @@ describe('buildImageUrl', () => {
 describe('buildVideoUrl', () => {
   it('builds correct video URL', () => {
     expect(buildVideoUrl(42)).toBe(`${DEHUB_CDN_BASE}videos/42.mp4`);
+  });
+});
+
+// ── buildHlsUrl ──
+
+describe('buildHlsUrl', () => {
+  it('builds the master playlist URL from the API key', () => {
+    expect(buildHlsUrl('videos/42/hls/k3x9/master.m3u8')).toBe(`${DEHUB_CDN_BASE}videos/42/hls/k3x9/master.m3u8`);
+    expect(buildHlsUrl('/videos/42/hls/k3x9/master.m3u8')).toBe(`${DEHUB_CDN_BASE}videos/42/hls/k3x9/master.m3u8`);
+  });
+
+  it('passes an already-built URL through, so a mapped item can be mapped again', () => {
+    const built = `${DEHUB_CDN_BASE}videos/42/hls/k3x9/master.m3u8`;
+    expect(buildHlsUrl(built)).toBe(built);
+  });
+
+  it('never turns anything else into a video source', () => {
+    expect(buildHlsUrl(undefined)).toBeUndefined();
+    expect(buildHlsUrl('')).toBeUndefined();
+    expect(buildHlsUrl('videos/42.mp4')).toBeUndefined();
+    expect(buildHlsUrl('https://elsewhere.example/master.m3u8')).toBeUndefined();
   });
 });
 

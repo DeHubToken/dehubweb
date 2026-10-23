@@ -42,7 +42,7 @@ import { useProfileDislikes } from '@/hooks/use-profile-dislikes';
 import { mapNFTToFeedItem } from '@/lib/nft-to-feed-item';
 import { usePublicPlaylists, usePublicPlaylistItems } from '@/hooks/use-bookmark-folders';
 import type { PublicPlaylist } from '@/lib/api/dehub';
-import { buildImageUrl, buildFeedImageUrls, buildAvatarUrl, extractAvatarPath, buildVideoUrl } from '@/lib/media-url';
+import { buildImageUrl, buildFeedImageUrls, buildAvatarUrl, extractAvatarPath, buildVideoUrl, buildHlsUrl } from '@/lib/media-url';
 import { formatTimeAgo, formatViews } from '@/lib/feed-utils';
 import { resolveViewCount } from '@/lib/engagement';
 import type { TextPost, ImagePost, VideoItem } from '@/types/feed.types';
@@ -1050,6 +1050,7 @@ function PinnedPostCard({ pin }: { pin: any }) {
           id: String(post.tokenId), type: 'video', contentRating: post.contentRating,
           thumbnail: buildImageUrl(post.tokenId, post.imageUrl) || '/placeholder.svg',
           videoUrl: buildVideoUrl(post.tokenId),
+          hlsUrl: buildHlsUrl(post.hlsUrl),
           transcodingStatus: post.transcodingStatus,
           title: post.title || post.name || '',
           channel: post.minterDisplayName || post.minterUsername || creatorObj?.display_name || 'Unknown',

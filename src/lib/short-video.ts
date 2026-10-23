@@ -9,7 +9,7 @@
  */
 
 import { getMediaUrl } from '@/lib/api/dehub';
-import { buildAvatarUrl } from '@/lib/media-url';
+import { buildAvatarUrl, buildHlsUrl } from '@/lib/media-url';
 import { resolveViewCount } from '@/lib/engagement';
 import { shortsPhotoMedia } from '@/lib/shorts-photos';
 import { toStoryboard } from '@/lib/storyboard';
@@ -62,6 +62,7 @@ export function mapToShortVideo(nft: any, index: number): ShortVideo & { duratio
     dislikes: nft.totalVotes?.against || nft.dislike_count || 0,
     thumbnail: getMediaUrl(nft.imageUrl) || getMediaUrl(nft.thumbnail_url) || '',
     videoUrl: getMediaUrl(nft.videoUrl) || getMediaUrl(nft.media_url) || (id ? `https://dehubcdn.ams3.cdn.digitaloceanspaces.com/videos/${id}.mp4` : ''),
+    hlsUrl: buildHlsUrl(nft.hlsUrl),
     transcodingStatus: nft.transcodingStatus,
     gated: videoNeedsAccess({
       isPPV: nft.streamInfo?.isPayPerView,
@@ -105,6 +106,7 @@ export function videoItemToShort(video: VideoItem): ShortVideo {
     dislikes: video.dislikeCount ?? 0,
     thumbnail: video.thumbnail,
     videoUrl: video.videoUrl || '',
+    hlsUrl: video.hlsUrl,
     transcodingStatus: video.transcodingStatus,
     gated: videoNeedsAccess(video),
     storyboard: video.storyboard,

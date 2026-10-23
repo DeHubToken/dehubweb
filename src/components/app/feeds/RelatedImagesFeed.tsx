@@ -13,7 +13,7 @@ import { Loader2 } from 'lucide-react';
 import { searchNFTs, getNFTInfo } from '@/lib/api/dehub';
 import { mapNFTToImagePost } from '@/hooks/use-dehub-feed';
 import { ImageCard } from '@/components/app/cards/ImageCard';
-import { buildAvatarUrl, extractAvatarPath, buildImageUrl, buildFeedImageUrls, buildVideoUrl } from '@/lib/media-url';
+import { buildAvatarUrl, extractAvatarPath, buildImageUrl, buildFeedImageUrls, buildVideoUrl, buildHlsUrl } from '@/lib/media-url';
 import { formatTimeAgo, formatViews } from '@/lib/feed-utils';
 import { resolveViewCount } from '@/lib/engagement';
 import type { VideoItem } from '@/types/feed.types';
@@ -47,6 +47,7 @@ function adToVideoItem(nft: any): VideoItem {
     type: 'video',
     thumbnail: buildImageUrl(nft.tokenId, nft.imageUrl) || '/placeholder.svg',
     videoUrl: nft.tokenId ? buildVideoUrl(nft.tokenId) : undefined,
+    hlsUrl: buildHlsUrl(nft.hlsUrl),
     duration: formatDuration(durationSeconds),
     durationSeconds: typeof durationSeconds === 'number' ? durationSeconds : 0,
     title: nft.title || nft.name || '',
