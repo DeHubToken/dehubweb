@@ -1201,7 +1201,11 @@ export function DirectMessageChat({ conversation, onBack, initialComposerText, d
   const [showFeeWarning, setShowFeeWarning] = useState(false);
   const feeWarningResolveRef = useRef<((confirmed: boolean) => void) | null>(null);
   const confirmFeeSend = useCallback((): Promise<boolean> => {
-    if (localStorage.getItem(DM_FEE_WARNING_SEEN_KEY) === '1') return Promise.resolve(true);
+    try {
+      if (localStorage.getItem(DM_FEE_WARNING_SEEN_KEY) === '1') return Promise.resolve(true);
+    } catch {
+      /* storage unavailable: show the warning */
+    }
     return new Promise<boolean>((resolve) => {
       feeWarningResolveRef.current = resolve;
       setShowFeeWarning(true);
@@ -1215,7 +1219,11 @@ export function DirectMessageChat({ conversation, onBack, initialComposerText, d
     }
   };
   const handleFeeWarningConfirm = () => {
-    localStorage.setItem(DM_FEE_WARNING_SEEN_KEY, '1');
+    try {
+      localStorage.setItem(DM_FEE_WARNING_SEEN_KEY, '1');
+    } catch {
+      /* not remembering the warning must never block the send */
+    }
     feeWarningResolveRef.current?.(true);
     feeWarningResolveRef.current = null;
     setShowFeeWarning(false);
