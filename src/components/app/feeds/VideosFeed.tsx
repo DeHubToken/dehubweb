@@ -63,6 +63,7 @@ import leagueCategory from '@/assets/league-category.png';
 import apexCategory from '@/assets/apex-category.png';
 import justchattingCategory from '@/assets/justchatting-category.png';
 import { resolveViewCount } from '@/lib/engagement';
+import { toStoryboard } from '@/lib/storyboard';
 
 // ============================================================================
 // TYPES
@@ -720,6 +721,7 @@ export function VideosFeed({ showFilters = false, isRefreshing = false, refreshK
           : `https://dehubcdn.ams3.cdn.digitaloceanspaces.com/videos/${id}.mp4`,
         hlsUrl: buildHlsUrl(item.hlsUrl),
         transcodingStatus: item.transcodingStatus,
+        storyboard: toStoryboard(item.storyboard),
         // Both, not one: the caption usually lives in the title, and a short
         // that carried a title AND a description only ever showed the second.
         title: item.name || '',
