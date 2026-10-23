@@ -1965,6 +1965,8 @@
     "copyFailed": "کاپي نشو شو"
   },
   "profileOptions": {
+    "copyRssFeed": "د RSS فیډ لینک کاپي کړئ",
+    "rssFeedCopied": "د RSS فیډ لینک کاپي شو",
     "copyProfileUrl": "د پروفایل URL کاپي کړئ",
     "copyUsername": "د کارونکي نوم کاپي کړئ",
     "copyAddress": "پته کاپي کړئ",

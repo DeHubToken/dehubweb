@@ -1982,6 +1982,8 @@
     "copyFailed": "ကူးယူ၍မရပါ"
   },
   "profileOptions": {
+    "copyRssFeed": "RSS feed လင့်ခ်ကို ကူးယူရန်",
+    "rssFeedCopied": "RSS feed လင့်ခ်ကို ကူးယူပြီးပါပြီ",
     "copyProfileUrl": "ပရိုဖိုင် URL ကူးယူရန်",
     "copyUsername": "အသုံးပြုသူအမည် ကူးယူရန်",
     "copyAddress": "လိပ်စာ ကူးယူရန်",

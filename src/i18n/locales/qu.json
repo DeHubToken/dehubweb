@@ -2006,6 +2006,8 @@
     "copyFailed": "Mana kopiayta atirqachu"
   },
   "profileOptions": {
+    "copyRssFeed": "RSS feed tinkiyta copiay",
+    "rssFeedCopied": "RSS feed tinkiyqa copiasqañam",
     "copyProfileUrl": "Profilpa URL nisqanta copiay",
     "copyUsername": "Sutita copiay",
     "copyAddress": "Ñanta copiay",

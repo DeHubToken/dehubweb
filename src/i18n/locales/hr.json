@@ -1971,6 +1971,8 @@
     "copyFailed": "Nije moguće kopirati"
   },
   "profileOptions": {
+    "copyRssFeed": "Kopiraj poveznicu RSS feeda",
+    "rssFeedCopied": "Poveznica RSS feeda kopirana",
     "copyProfileUrl": "Kopiraj URL profila",
     "copyUsername": "Kopiraj korisničko ime",
     "copyAddress": "Kopiraj adresu",

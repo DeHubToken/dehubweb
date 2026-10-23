@@ -1980,6 +1980,8 @@
     "copyFailed": "לא ניתן היה להעתיק"
   },
   "profileOptions": {
+    "copyRssFeed": "העתק קישור לפיד RSS",
+    "rssFeedCopied": "הקישור לפיד RSS הועתק",
     "copyProfileUrl": "העתק קישור לפרופיל",
     "copyUsername": "העתק שם משתמש",
     "copyAddress": "העתק כתובת",

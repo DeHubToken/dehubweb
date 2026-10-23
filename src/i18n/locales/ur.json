@@ -1983,6 +1983,8 @@
     "copyFailed": "کاپی نہیں ہو سکا"
   },
   "profileOptions": {
+    "copyRssFeed": "RSS فیڈ لنک کاپی کریں",
+    "rssFeedCopied": "RSS فیڈ لنک کاپی ہو گیا",
     "copyProfileUrl": "پروفائل URL کاپی کریں",
     "copyUsername": "صارف نام کاپی کریں",
     "copyAddress": "پتہ کاپی کریں",

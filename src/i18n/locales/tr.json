@@ -2468,6 +2468,8 @@
     "copyFailed": "Kopyalanamadı"
   },
   "profileOptions": {
+    "copyRssFeed": "RSS akışı bağlantısını kopyala",
+    "rssFeedCopied": "RSS akışı bağlantısı kopyalandı",
     "copyProfileUrl": "Profil URL'sini kopyala",
     "copyUsername": "Kullanıcı adını kopyala",
     "copyAddress": "Adresi kopyala",

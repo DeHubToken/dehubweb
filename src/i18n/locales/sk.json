@@ -2088,6 +2088,8 @@
     "copyFailed": "Nepodarilo sa skopírovať"
   },
   "profileOptions": {
+    "copyRssFeed": "Kopírovať odkaz na RSS kanál",
+    "rssFeedCopied": "Odkaz na RSS kanál skopírovaný",
     "copyProfileUrl": "Kopírovať URL profilu",
     "copyUsername": "Kopírovať meno používateľa",
     "copyAddress": "Kopírovať adresu",

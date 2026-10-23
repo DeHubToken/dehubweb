@@ -1994,6 +1994,8 @@
     "copyFailed": "Không thể sao chép"
   },
   "profileOptions": {
+    "copyRssFeed": "Sao chép liên kết nguồn cấp RSS",
+    "rssFeedCopied": "Đã sao chép liên kết nguồn cấp RSS",
     "copyProfileUrl": "Sao chép URL hồ sơ",
     "copyUsername": "Sao chép tên người dùng",
     "copyAddress": "Sao chép địa chỉ",

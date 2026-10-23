@@ -6,6 +6,7 @@ import { applyPostShareImage, applyProfileShareImage } from './server/post-share
 import { handleFinanceRequest } from './server/finance-stats.js';
 import { handleCreatorMotionSource } from './server/creator-motion-source.js';
 import { handleAccountMcp, isAccountMcpRoute } from './server/account-mcp.js';
+import { handleRssFeed, profileFeedUrl, rssFeedRoute } from './server/rss-feeds.js';
 export { AccountMcpAuth } from './server/account-mcp-auth.js';
 export { EditorPresenceRoom } from './server/editor-presence.ts';
 
@@ -5730,6 +5731,21 @@ async function handleRequest(request, env, ctx) {
     return handleStatsRequest(request, env, pathname.endsWith('/raw'));
   }
 
+  // RSS for every profile and hashtag (server/rss-feeds.js). Every UA, and
+  // ahead of the file-path 404 further down, which would otherwise claim the
+  // `.rss` extension.
+  const rssRoute = rssFeedRoute(pathname, (segment) => couldBeProfileSegment(segment, SYSTEM_ROUTES));
+  if (rssRoute) {
+    return handleRssFeed(request, ctx, rssRoute, {
+      appUrl: APP_URL,
+      fetchAccount: fetchAccountInfo,
+      fetchRows: fetchFeedRowsOrNull,
+      labelOf: postLabel,
+      imageOf: postSitemapImage,
+      mediaUrl: (raw) => (/^https?:\/\//i.test(raw) ? raw : `${CDN_ORIGIN}/${String(raw).replace(/^\/+/, '')}`),
+    });
+  }
+
   // URL-space hygiene (all UAs — these paths have no content in the SPA
   // either): bare /guides has no route, /app twins of the blog duplicate it.
   const trimmedPath = pathname.replace(/\/+$/, '') || '/';
@@ -7011,6 +7027,14 @@ async function handleRequest(request, env, ctx) {
       const account = await fetchAccountInfo(proxiedHandle);
       profileShareAccount = account;
       html = enrichProfileMeta(html, proxiedHandle, account && account.displayName);
+      // Feed readers find the profile's RSS from the page itself.
+      if (account && !account.isPrivate) {
+        const feedHandle = String(account.username || proxiedHandle);
+        html = html.replace(
+          '</head>',
+          `<link rel="alternate" type="application/rss+xml" title="${escHtml(`${account.displayName || feedHandle} on DeHub`)}" href="${escHtml(profileFeedUrl(APP_URL, feedHandle))}"></head>`,
+        );
+      }
       const address = String((account && account.address) || '').toLowerCase() || profileAddressOf(html);
       const rows = address ? await fetchFeedRowsOrNull(`minter=${address}`) : null;
       html = injectBeforeCta(html, postListHtml('Recent posts', rows || [], { author: false }));

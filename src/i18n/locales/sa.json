@@ -1961,6 +1961,8 @@
     "copyFailed": "कॉपी नहीं हो सका"
   },
   "profileOptions": {
+    "copyRssFeed": "RSS फीड लिङ्कं प्रतिलिपिं कुर्वन्तु",
+    "rssFeedCopied": "RSS फीड लिङ्कः प्रतिलिपितः",
     "copyProfileUrl": "प्रोफाइल URL प्रतिलिपिं कुर्वन्तु",
     "copyUsername": "उपयोक्तृनाम प्रतिलिपिं कुर्वन्तु",
     "copyAddress": "सङ्केतं प्रतिलिपिं कुर्वन्तु",

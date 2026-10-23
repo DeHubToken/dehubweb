@@ -2341,6 +2341,8 @@
     "copyFailed": "Не вдалося скопіювати"
   },
   "profileOptions": {
+    "copyRssFeed": "Копіювати посилання на RSS-стрічку",
+    "rssFeedCopied": "Посилання на RSS-стрічку скопійовано",
     "copyProfileUrl": "Копіювати URL профілю",
     "copyUsername": "Копіювати ім'я користувача",
     "copyAddress": "Копіювати адресу",

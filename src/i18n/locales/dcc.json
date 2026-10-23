@@ -1860,6 +1860,8 @@
     "copyFailed": "کاپی نئیں ہو سکا"
   },
   "profileOptions": {
+    "copyRssFeed": "RSS فیڈ لنک کاپی کرو",
+    "rssFeedCopied": "RSS فیڈ لنک کاپی ہو گیا",
     "copyProfileUrl": "پروفائل لنک کاپی کرو",
     "copyUsername": "یوزر نیم کاپی کرو",
     "copyAddress": "ایڈریس کاپی کرو",

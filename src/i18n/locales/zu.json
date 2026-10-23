@@ -2004,6 +2004,8 @@
     "copyFailed": "Ayikwazanga ukukopisha"
   },
   "profileOptions": {
+    "copyRssFeed": "Kopisha isixhumanisi sokuphakelayo kwe-RSS",
+    "rssFeedCopied": "Isixhumanisi sokuphakelayo kwe-RSS sikopishiwe",
     "copyProfileUrl": "Kopisha i-URL yephrofayela",
     "copyUsername": "Kopisha igama lomsebenzisi",
     "copyAddress": "Kopisha ikheli",

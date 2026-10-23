@@ -1982,6 +1982,8 @@
     "copyFailed": "Не може да се копира"
   },
   "profileOptions": {
+    "copyRssFeed": "Копирай връзката към RSS емисията",
+    "rssFeedCopied": "Връзката към RSS емисията е копирана",
     "copyProfileUrl": "Копирай URL на профила",
     "copyUsername": "Копирай потребителско име",
     "copyAddress": "Копирай адрес",

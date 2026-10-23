@@ -1983,6 +1983,8 @@
     "copyFailed": "Kunne ikke kopiere"
   },
   "profileOptions": {
+    "copyRssFeed": "Kopiér link til RSS-feed",
+    "rssFeedCopied": "Link til RSS-feed kopieret",
     "copyProfileUrl": "Kopiér profil-URL",
     "copyUsername": "Kopiér brugernavn",
     "copyAddress": "Kopiér adresse",

@@ -1971,6 +1971,8 @@
     "copyFailed": "Көчүрүү мүмкүн болгон жок"
   },
   "profileOptions": {
+    "copyRssFeed": "RSS тасмасынын шилтемесин көчүрүү",
+    "rssFeedCopied": "RSS тасмасынын шилтемеси көчүрүлдү",
     "copyProfileUrl": "Профиль URL көчүрүү",
     "copyUsername": "Колдонуучу атын көчүрүү",
     "copyAddress": "Даректи көчүрүү",

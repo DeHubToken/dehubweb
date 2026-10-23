@@ -1975,6 +1975,8 @@
     "copyFailed": "無法複製"
   },
   "profileOptions": {
+    "copyRssFeed": "複製 RSS 訂閱連結",
+    "rssFeedCopied": "已複製 RSS 訂閱連結",
     "copyProfileUrl": "複製個人資料連結",
     "copyUsername": "複製用戶名",
     "copyAddress": "複製地址",

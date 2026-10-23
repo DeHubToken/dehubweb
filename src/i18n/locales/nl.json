@@ -2661,6 +2661,8 @@
     "copyFailed": "Kon niet kopiëren"
   },
   "profileOptions": {
+    "copyRssFeed": "RSS-feedlink kopiëren",
+    "rssFeedCopied": "RSS-feedlink gekopieerd",
     "copyProfileUrl": "Profiel-URL kopiëren",
     "copyUsername": "Gebruikersnaam kopiëren",
     "copyAddress": "Adres kopiëren",

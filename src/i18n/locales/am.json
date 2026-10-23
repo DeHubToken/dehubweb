@@ -2002,6 +2002,8 @@
     "copyFailed": "መቅዳት አልተቻለም"
   },
   "profileOptions": {
+    "copyRssFeed": "የRSS ምግብ አገናኝ ቅዳ",
+    "rssFeedCopied": "የRSS ምግብ አገናኝ ተቀድቷል",
     "copyProfileUrl": "የመገለጫ URL ቅዳ",
     "copyUsername": "የተጠቃሚ ስም ቅዳ",
     "copyAddress": "አድራሻ ቅዳ",
