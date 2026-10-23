@@ -719,7 +719,6 @@
     "embed": "ఎంబెడ్",
     "copyEmbedCode": "ఎంబెడ్ కోడ్ కాపీ చేయండి",
     "embedCodeCopied": "ఎంబెడ్ కోడ్ కాపీ అయింది",
-    "copyFailed": "లింక్‌ను కాపీ చేయడం సాధ్యపడలేదు",
     "options": "ఎంపికలు",
     "aiOverview": "AI అవలోకనం",
     "sendTip": "టిప్ పంపు",
@@ -747,7 +746,8 @@
     "unpinPost": "మీ ప్రొఫైల్ నుండి అన్ ‌ పిన్ చేయండి",
     "postPinned": "మీ ప్రొఫైల్ ‌ కు పిన్ చేయబడింది",
     "postUnpinned": "మీ ప్రొఫైల్ నుండి అన్ ‌ పిన్ చేయబడింది",
-    "pinFailed": "ఈ పోస్ట్ ‌ ను పిన్ చేయడం లేదా అన్ ‌ పిన్ చేయడం సాధ్యం కాలేదు"
+    "pinFailed": "ఈ పోస్ట్ ‌ ను పిన్ చేయడం లేదా అన్ ‌ పిన్ చేయడం సాధ్యం కాలేదు",
+    "copyFailed": "లింక్‌ను కాపీ చేయడం సాధ్యపడలేదు"
   },
   "filters": {
     "sort": "సార్ట్",
@@ -2404,6 +2404,29 @@
     "addDescription": "వివరణ జోడించండి...",
     "communityDescription": "కమ్యూనిటీ వివరణ...",
     "posts": "పోస్టులు",
+    "chat": {
+      "intervalHour": "1 గంట",
+      "intervalHours": "{{count}} గంటలు",
+      "intervalMinute": "1 నిమిషం",
+      "intervalMinutes": "{{count}} నిమిషాలు",
+      "intervalSecond": "1 సెకను",
+      "intervalSeconds": "{{count}} సెకన్లు",
+      "muted": "మీరు మ్యూట్ అయ్యారు",
+      "mutedUntil": "మీరు {{until}} వరకు మ్యూట్ చేయబడ్డారు",
+      "postingDisabled": "సభ్యుల కోసం ఇక్కడ పోస్టింగ్ నిలిపివేయబడింది",
+      "pinnedMedia": "మీడియా",
+      "jumpToPinned": "పిన్ చేసిన సందేశానికి వెళ్లండి",
+      "pinnedMessage": "పిన్ చేసిన సందేశం",
+      "unpin": "అన్ ‌ పిన్ చేయండి",
+      "pin": "పిన్",
+      "delete": "తొలగించు",
+      "slowMode": "నెమ్మదిగా మోడ్: ప్రతి {{interval}} ఒక సందేశం",
+      "slowModeWait": "నెమ్మదిగా మోడ్ — {{time}} వేచి ఉండండి",
+      "send": "పంపండి",
+      "deleteMessageTitle": "ఈ సందేశాన్ని తొలగించాలా?",
+      "deleteMessageBody": "ఇది రద్దు చేయబడదు.",
+      "cancel": "రద్దు చేయండి"
+    },
     "membersTab": "సభ్యులు ({{count}})",
     "about": "గురించి",
     "backToCommunities": "కమ్యూనిటీలు",
@@ -7000,7 +7023,14 @@
     }
   },
   "editor": {
-    "video": { "tFade": "క్రాస్-డిసాల్వ్", "none": "ఏదీ లేదు", "transition": "ట్రాన్సిషన్", "speed": "వేగం", "sound": "ధ్వని","video": "వీడియో"},
+    "video": {
+      "tFade": "క్రాస్-డిసాల్వ్",
+      "none": "ఏదీ లేదు",
+      "transition": "ట్రాన్సిషన్",
+      "speed": "వేగం",
+      "sound": "ధ్వని",
+      "video": "వీడియో"
+    },
     "review": {
       "title": "ప్రాజెక్ట్ సమీక్ష",
       "shared": "మీతో షేర్ చేయబడింది",

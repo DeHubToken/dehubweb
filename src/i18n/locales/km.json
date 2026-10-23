@@ -717,7 +717,6 @@
     "embed": "បង្កប់",
     "copyEmbedCode": "ចម្លងកូដបង្កប់",
     "embedCodeCopied": "បានចម្លងកូដបង្កប់",
-    "copyFailed": "មិនអាចចម្លងតំណបានទេ",
     "options": "ជម្រើស",
     "aiOverview": "ទិដ្ឋភាពទូទៅនៃ AI",
     "sendTip": "ផ្ញើជំនួយ",
@@ -745,7 +744,8 @@
     "unpinPost": "ដកខ្ទាស់ពីប្រូហ្វាលរបស់អ្នក",
     "postPinned": "បានខ្ទាស់ចូលប្រូហ្វាលរបស់អ្នក",
     "postUnpinned": "បានដកហូតពីប្រូហ្វាលរបស់អ្នក",
-    "pinFailed": "មិន អាច ខ្ទាស់ ឬ ដក ខ្ទាស់ ប្រកាស នេះ បាន ទេ"
+    "pinFailed": "មិន អាច ខ្ទាស់ ឬ ដក ខ្ទាស់ ប្រកាស នេះ បាន ទេ",
+    "copyFailed": "មិនអាចចម្លងតំណបានទេ"
   },
   "filters": {
     "sort": "តម្រៀប",
@@ -2405,6 +2405,29 @@
     "addDescription": "បន្ថែមការពិពណ៌នា...",
     "communityDescription": "ការពិពណ៌នាសហគមន៍...",
     "posts": "ប្រកាស",
+    "chat": {
+      "intervalHour": "1 ម៉ោង",
+      "intervalHours": "{{count}} ម៉ោង",
+      "intervalMinute": "1 នាទី",
+      "intervalMinutes": "{{count}} នាទី",
+      "intervalSecond": "1 វិនាទី",
+      "intervalSeconds": "{{count}} វិនាទី",
+      "muted": "អ្នកត្រូវបានបិទសំឡេង",
+      "mutedUntil": "អ្នកត្រូវបានបិទសំឡេងរហូតដល់ {{until}}",
+      "postingDisabled": "ការបង្ហោះត្រូវបានបិទសម្រាប់សមាជិកនៅទីនេះ",
+      "pinnedMedia": "ប្រព័ន្ធផ្សព្វផ្សាយ",
+      "jumpToPinned": "លោតទៅសារដែលបានខ្ទាស់",
+      "pinnedMessage": "សារ ដែល បាន ខ្ទាស់",
+      "unpin": "ដកខ្ទាស់",
+      "pin": "ភីន",
+      "delete": "លុបចោល",
+      "slowMode": "របៀប យឺត & # 160; ៖ សារ មួយ រៀងរាល់{{interval}}",
+      "slowModeWait": "ម៉ូដយឺត —រង់ចាំ{{time}}",
+      "send": "ផ្ញើ",
+      "deleteMessageTitle": "លុបចោលសារនេះឬ?",
+      "deleteMessageBody": "វា មិន អាច លុបចោល បាន ទេ ។",
+      "cancel": "បោះបង់"
+    },
     "membersTab": "សមាជិក ({{count}})",
     "about": "អំពី",
     "backToCommunities": "សហគមន៍",
@@ -6994,7 +7017,14 @@
     }
   },
   "editor": {
-    "video": { "tFade": "រលាយឆ្លង", "none": "គ្មាន", "transition": "ការផ្លាស់ប្ដូរ", "speed": "ល្បឿន", "sound": "សំឡេង","video": "វីដេអូ"},
+    "video": {
+      "tFade": "រលាយឆ្លង",
+      "none": "គ្មាន",
+      "transition": "ការផ្លាស់ប្ដូរ",
+      "speed": "ល្បឿន",
+      "sound": "សំឡេង",
+      "video": "វីដេអូ"
+    },
     "review": {
       "title": "ពិនិត្យគម្រោង",
       "shared": "បានចែករំលែកជាមួយអ្នក",

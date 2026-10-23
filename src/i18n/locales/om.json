@@ -719,7 +719,6 @@
     "embed": "Keessa galchi",
     "copyEmbedCode": "Koodii keessa galchuu waraabi",
     "embedCodeCopied": "Koodiin keessa galchuu waraabame",
-    "copyFailed": "Liinkii waraabuun hin danda'amne",
     "options": "Filannoowwan",
     "aiOverview": "Haala waliigalaa AI",
     "sendTip": "Tiippii Ergi",
@@ -747,7 +746,8 @@
     "unpinPost": "Profaayila keessan irraa unpin",
     "postPinned": "Profaayilii keessan irratti pinned ta'eera",
     "postUnpinned": "Profaayila keessan irraa unpinned",
-    "pinFailed": "Barreeffama kana pin ykn unpin gochuu hin dandeenye"
+    "pinFailed": "Barreeffama kana pin ykn unpin gochuu hin dandeenye",
+    "copyFailed": "Liinkii waraabuun hin danda'amne"
   },
   "filters": {
     "sort": "Tartiibsi",
@@ -2413,6 +2413,30 @@
     "addDescription": "Ibsa itti dabali...",
     "communityDescription": "Ibsa hawaasaa...",
     "posts": "Maxxansaalee",
+    "chat": {
+      "intervalHour": "1 sa'aatii",
+      "intervalHours": "{{count}} sa'aatii",
+      "intervalMinute": "1 daqiiqa",
+      "intervalMinutes": "{{count}} daqiiqaa",
+      "intervalSecond": "1 sekandii",
+      "intervalSeconds": "{{count}} sekandii",
+      "muted": "Sitti dhageessifame",
+      "mutedUntil": "Sitti dhageessifame hanga {{until}}",
+      "postingDisabled": "Barreeffamuu miseensotaaf as hin hayyamamu",
+      "pinnedGif": "GIF",
+      "pinnedMedia": "Meediyaa",
+      "jumpToPinned": "Ergaa maxxanfameetti ce'i",
+      "pinnedMessage": "Ergaa maxxanfame",
+      "unpin": "Maxxansa haqu",
+      "pin": "Maxxansi",
+      "delete": "Haqu",
+      "slowMode": "Haala suuta: ergaa tokko yeroo {{interval}}",
+      "slowModeWait": "Haala suuta — eeggadhu {{time}}",
+      "send": "Ergi",
+      "deleteMessageTitle": "Ergaa kana haquu?",
+      "deleteMessageBody": "Kun deebi'ee hin gochamu.",
+      "cancel": "Dhaabi"
+    },
     "membersTab": "Miseensota ({{count}})",
     "about": "Waa'ee",
     "backToCommunities": "Hawaasota",
@@ -6959,7 +6983,14 @@
     }
   },
   "editor": {
-    "video": { "tFade": "Walitti makamuu", "none": "Homaa", "transition": "Ce'umsa", "speed": "Saffisa", "sound": "Sagalee","video": "Viidiyoo"},
+    "video": {
+      "tFade": "Walitti makamuu",
+      "none": "Homaa",
+      "transition": "Ce'umsa",
+      "speed": "Saffisa",
+      "sound": "Sagalee",
+      "video": "Viidiyoo"
+    },
     "review": {
       "title": "Sakatta'iinsa pirojektii",
       "shared": "Si waliin qoodame",

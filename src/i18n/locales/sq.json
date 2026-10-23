@@ -719,7 +719,6 @@
     "embed": "Ngulit",
     "copyEmbedCode": "Kopjo kodin e ngulitjes",
     "embedCodeCopied": "Kodi i ngulitjes u kopjua",
-    "copyFailed": "Lidhja nuk mund të kopjohej",
     "options": "Opsionet",
     "aiOverview": "Përmbledhje e AI",
     "sendTip": "Dërgo Bakshish",
@@ -747,7 +746,8 @@
     "unpinPost": "Hiqe nga profili yt",
     "postPinned": "Pinned në profilin tënd",
     "postUnpinned": "Shkëputur nga profili yt",
-    "pinFailed": "Nuk mund ta shënjoj ose çaktivizoj këtë postim"
+    "pinFailed": "Nuk mund ta shënjoj ose çaktivizoj këtë postim",
+    "copyFailed": "Lidhja nuk mund të kopjohej"
   },
   "filters": {
     "sort": "Rendit",
@@ -2403,6 +2403,30 @@
     "addDescription": "Shto një përshkrim...",
     "communityDescription": "Përshkrimi i komunitetit...",
     "posts": "Postimet",
+    "chat": {
+      "intervalHour": "1 orë",
+      "intervalHours": "{{count}} orë",
+      "intervalMinute": "1 minutë",
+      "intervalMinutes": "{{count}} minuta",
+      "intervalSecond": "1 sekondë",
+      "intervalSeconds": "{{count}} sekonda",
+      "muted": "Je i heshtur",
+      "mutedUntil": "Je i heshtur deri në {{until}}",
+      "postingDisabled": "Postimi është çaktivizuar për anëtarët këtu",
+      "pinnedGif": "GIF",
+      "pinnedMedia": "Media",
+      "jumpToPinned": "Kalo te mesazhi i mbërthyer",
+      "pinnedMessage": "Mesazh i koduar",
+      "unpin": "Çaktivizo",
+      "pin": "PIN",
+      "delete": "Fshi",
+      "slowMode": "Modaliteti i ngadaltë: një mesazh çdo {{interval}}",
+      "slowModeWait": "Modaliteti i ngadaltë — prit {{time}}",
+      "send": "Dërgo",
+      "deleteMessageTitle": "Dëshiron ta fshish këtë mesazh?",
+      "deleteMessageBody": "Kjo nuk mund të zhbëhet.",
+      "cancel": "Anulo"
+    },
     "membersTab": "Anëtarët ({{count}})",
     "about": "Rreth",
     "backToCommunities": "Komunitetet",
@@ -7000,7 +7024,14 @@
     }
   },
   "editor": {
-    "video": { "tFade": "Shkrirje", "none": "Asnjë", "transition": "Kalim", "speed": "Shpejtësia", "sound": "Tingull","video": "Video"},
+    "video": {
+      "tFade": "Shkrirje",
+      "none": "Asnjë",
+      "transition": "Kalim",
+      "speed": "Shpejtësia",
+      "sound": "Tingull",
+      "video": "Video"
+    },
     "review": {
       "title": "Shqyrtimi i projektit",
       "shared": "Ndarë me ju",

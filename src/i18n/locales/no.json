@@ -194,11 +194,11 @@
   },
   "settings": {
     "usernameTaken": "Brukernavnet er opptatt",
-    "showDislikesDesc": "Alle kan åpne fanen Misliker på profilen din. Når dette er av, kan bare du se den.",
-    "showDislikes": "Vis mine misliker for alle",
     "postingChain": "Blokkjede for innlegg",
     "showOnline": "Vis når jeg er pålogget",
     "showOnlineDesc": "Folk du sender meldinger til ser en grønn prikk ved siden av navnet ditt mens du bruker DeHub",
+    "showDislikes": "Vis mine misliker for alle",
+    "showDislikesDesc": "Alle kan åpne fanen Misliker på profilen din. Når dette er av, kan bare du se den.",
     "smartReplies": "Foreslåtte svar",
     "smartRepliesDesc": "Lager to svar du kan trykke på i en chat. × på forslagene slår dette av.",
     "title": "Innstillinger",
@@ -721,7 +721,6 @@
     "embed": "Bygg inn",
     "copyEmbedCode": "Kopier innbyggingskode",
     "embedCodeCopied": "Innbyggingskode kopiert",
-    "copyFailed": "Kunne ikke kopiere lenken",
     "options": "Alternativer",
     "aiOverview": "AI-oversikt",
     "sendTip": "Send tips",
@@ -749,7 +748,8 @@
     "unpinPost": "Fjern fra profilen din",
     "postPinned": "Festet til profilen din",
     "postUnpinned": "Løsnet fra profilen din",
-    "pinFailed": "Kunne ikke feste eller løsne dette innlegget"
+    "pinFailed": "Kunne ikke feste eller løsne dette innlegget",
+    "copyFailed": "Kunne ikke kopiere lenken"
   },
   "filters": {
     "sort": "Sorter",
@@ -1487,7 +1487,6 @@
     "returnHome": "Gå tilbake til hjem"
   },
   "profile": {
-    "dislikes": { "loadMore": "Last inn flere", "privateDesc": "Denne kontoen holder misliker for seg selv.", "privateTitle": "Misliker er private", "emptyOther": "Ingenting ennå.", "emptyOwn": "Innlegg du misliker forsvinner fra feedene dine og vises her. Angre en misliker for å få innlegget tilbake.", "emptyTitle": "Ingen misliker ennå" },
     "back": "Tilbake",
     "usernameAvailable": "Brukernavn tilgjengelig!",
     "signUpToClaim": "Registrer deg i dag for å sikre det",
@@ -1515,8 +1514,16 @@
       "commentUnavailable": "Denne kommentaren er ikke lenger tilgjengelig"
     },
     "tabs": {
-      "dislikes": "Misliker",
-      "playlists": "Spillelister"
+      "playlists": "Spillelister",
+      "dislikes": "Misliker"
+    },
+    "dislikes": {
+      "emptyTitle": "Ingen misliker ennå",
+      "emptyOwn": "Innlegg du misliker forsvinner fra feedene dine og vises her. Angre en misliker for å få innlegget tilbake.",
+      "emptyOther": "Ingenting ennå.",
+      "privateTitle": "Misliker er private",
+      "privateDesc": "Denne kontoen holder misliker for seg selv.",
+      "loadMore": "Last inn flere"
     },
     "offerWorthNow": "Omtrent {{amount}} tokens til gjeldende kurs",
     "offerNotePlaceholder": "Legg til et notat (valgfritt)",
@@ -2407,6 +2414,30 @@
     "addDescription": "Legg til en beskrivelse...",
     "communityDescription": "Fellesskapsbeskrivelse...",
     "posts": "Innlegg",
+    "chat": {
+      "intervalHour": "1 time",
+      "intervalHours": "{{count}} timer",
+      "intervalMinute": "1 minutt",
+      "intervalMinutes": "{{count}} minutter",
+      "intervalSecond": "1 sekund",
+      "intervalSeconds": "{{count}} sekunder",
+      "muted": "Du er dempet",
+      "mutedUntil": "Du er dempet til {{until}}",
+      "postingDisabled": "Publisering er deaktivert for medlemmer her",
+      "pinnedGif": "GIF-en",
+      "pinnedMedia": "Media",
+      "jumpToPinned": "Hopp til den festede meldingen",
+      "pinnedMessage": "Festet melding",
+      "unpin": "Løsne",
+      "pin": "Fest",
+      "delete": "Slett",
+      "slowMode": "Sakte modus: én melding hver {{interval}}",
+      "slowModeWait": "Sakte modus – vent {{time}}",
+      "send": "Sende",
+      "deleteMessageTitle": "Slette denne meldingen?",
+      "deleteMessageBody": "Dette kan ikke angres.",
+      "cancel": "Kansellere"
+    },
     "membersTab": "Medlemmer ({{count}})",
     "about": "Om",
     "backToCommunities": "Fellesskap",
@@ -7002,7 +7033,14 @@
     }
   },
   "editor": {
-    "video": { "tFade": "Krysstoning", "none": "Ingen", "transition": "Overgang", "speed": "Hastighet", "sound": "Lyd","video": "Video"},
+    "video": {
+      "tFade": "Krysstoning",
+      "none": "Ingen",
+      "transition": "Overgang",
+      "speed": "Hastighet",
+      "sound": "Lyd",
+      "video": "Video"
+    },
     "review": {
       "title": "Prosjektgjennomgang",
       "shared": "Delt med deg",

@@ -194,11 +194,11 @@
   },
   "settings": {
     "usernameTaken": "यूज़रनेम पहले से लिया गया है",
-    "showDislikesDesc": "कोई भी आपकी प्रोफ़ाइल पर नापसंद टैब खोल सकता है। बंद होने पर सिर्फ़ आप इसे देख सकते हैं।",
-    "showDislikes": "मेरी नापसंद सबको दिखाएँ",
     "postingChain": "पोस्ट के लिए ब्लॉकचेन",
     "showOnline": "मेरे ऑनलाइन होने पर दिखाएँ",
     "showOnlineDesc": "आप जिन लोगों को मैसेज भेजते हैं, उन्हें DeHub का इस्तेमाल करते समय आपके नाम के बगल में हरे रंग की डॉट दिखाई देती है",
+    "showDislikes": "मेरी नापसंद सबको दिखाएँ",
+    "showDislikesDesc": "कोई भी आपकी प्रोफ़ाइल पर नापसंद टैब खोल सकता है। बंद होने पर सिर्फ़ आप इसे देख सकते हैं।",
     "smartReplies": "सुझाए गए जवाब",
     "smartRepliesDesc": "चैट में टैप करने लायक दो जवाब तैयार करता है। सुझावों पर लगा × इसे बंद कर देता है।",
     "title": "सेटिंग्स",
@@ -723,7 +723,6 @@
     "embed": "एम्बेड",
     "copyEmbedCode": "एम्बेड कोड कॉपी करें",
     "embedCodeCopied": "एम्बेड कोड कॉपी हो गया",
-    "copyFailed": "लिंक कॉपी नहीं हो सका",
     "options": "Options",
     "aiOverview": "AI सिंहावलोकन",
     "sendTip": "Send Tip",
@@ -751,7 +750,8 @@
     "unpinPost": "अपनी प्रोफ़ाइल से अनपिन करें",
     "postPinned": "आपकी प्रोफ़ाइल पर पिन किया गया",
     "postUnpinned": "आपकी प्रोफ़ाइल से अनपिन किया गया",
-    "pinFailed": "इस पोस्ट को पिन या अनपिन नहीं किया जा सका"
+    "pinFailed": "इस पोस्ट को पिन या अनपिन नहीं किया जा सका",
+    "copyFailed": "लिंक कॉपी नहीं हो सका"
   },
   "filters": {
     "sort": "Sort",
@@ -1498,7 +1498,6 @@
     "returnHome": "होम पर लौटें"
   },
   "profile": {
-    "dislikes": { "loadMore": "और लोड करें", "privateDesc": "यह खाता अपनी नापसंद निजी रखता है।", "privateTitle": "नापसंद निजी हैं", "emptyOther": "अभी तक कुछ नापसंद नहीं किया।", "emptyOwn": "जिन पोस्ट को आप नापसंद करते हैं वे आपकी फ़ीड से हट जाती हैं और यहाँ दिखती हैं। पोस्ट वापस लाने के लिए नापसंद हटाएँ।", "emptyTitle": "अभी तक कोई नापसंद नहीं" },
     "back": "वापस",
     "usernameAvailable": "यूज़रनेम उपलब्ध है!",
     "signUpToClaim": "क्लेम करने के लिए आज ही साइन अप करें",
@@ -1526,8 +1525,16 @@
       "commentUnavailable": "यह टिप्पणी अब उपलब्ध नहीं है"
     },
     "tabs": {
-      "dislikes": "नापसंद",
-      "playlists": "प्लेलिस्ट"
+      "playlists": "प्लेलिस्ट",
+      "dislikes": "नापसंद"
+    },
+    "dislikes": {
+      "emptyTitle": "अभी तक कोई नापसंद नहीं",
+      "emptyOwn": "जिन पोस्ट को आप नापसंद करते हैं वे आपकी फ़ीड से हट जाती हैं और यहाँ दिखती हैं। पोस्ट वापस लाने के लिए नापसंद हटाएँ।",
+      "emptyOther": "अभी तक कुछ नापसंद नहीं किया।",
+      "privateTitle": "नापसंद निजी हैं",
+      "privateDesc": "यह खाता अपनी नापसंद निजी रखता है।",
+      "loadMore": "और लोड करें"
     },
     "offerWorthNow": "वर्तमान दर पर {{amount}} टोकन के बारे में",
     "offerNotePlaceholder": "नोट जोड़ें (वैकल्पिक)",
@@ -2418,6 +2425,29 @@
     "addDescription": "विवरण जोड़ें...",
     "communityDescription": "समुदाय का विवरण...",
     "posts": "पोस्ट",
+    "chat": {
+      "intervalHour": "1 घंटा",
+      "intervalHours": "{{count}} घंटे",
+      "intervalMinute": "1 मिनट",
+      "intervalMinutes": "{{count}} मिनट",
+      "intervalSecond": "1 सेकंड",
+      "intervalSeconds": "{{count}} सेकंड",
+      "muted": "आप म्यूट हैं",
+      "mutedUntil": "आप {{until}} तक म्यूट हैं",
+      "postingDisabled": "यहाँ सदस्यों के लिए पोस्टिंग अक्षम है",
+      "pinnedMedia": "मीडिया",
+      "jumpToPinned": "पिन किए गए मैसेज पर जाएँ",
+      "pinnedMessage": "पिन किया गया मैसेज",
+      "unpin": "अनपिन करें",
+      "pin": "पिन",
+      "delete": "हटाएँ",
+      "slowMode": "स्लो मोड: हर {{interval}} पर एक मैसेज",
+      "slowModeWait": "धीमा मोड — {{time}} का इंतज़ार करें",
+      "send": "भेजें",
+      "deleteMessageTitle": "इस मैसेज को मिटाएँ?",
+      "deleteMessageBody": "इसे पूर्ववत नहीं किया जा सकता।",
+      "cancel": "कैंसिल करें"
+    },
     "membersTab": "सदस्य ({{count}})",
     "about": "परिचय",
     "backToCommunities": "समुदाय",
@@ -7031,7 +7061,14 @@
     }
   },
   "editor": {
-    "video": { "tFade": "क्रॉस-डिज़ॉल्व", "none": "कोई नहीं", "transition": "ट्रांज़िशन", "speed": "गति", "sound": "साउंड","video": "वीडियो"},
+    "video": {
+      "tFade": "क्रॉस-डिज़ॉल्व",
+      "none": "कोई नहीं",
+      "transition": "ट्रांज़िशन",
+      "speed": "गति",
+      "sound": "साउंड",
+      "video": "वीडियो"
+    },
     "review": {
       "title": "प्रोजेक्ट समीक्षा",
       "shared": "आपके साथ साझा किया गया",

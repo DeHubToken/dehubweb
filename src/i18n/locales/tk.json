@@ -719,7 +719,6 @@
     "embed": "Goýmak",
     "copyEmbedCode": "Goýma koduny göçür",
     "embedCodeCopied": "Goýma kody göçürildi",
-    "copyFailed": "Baglanyşygy göçürip bolmady",
     "options": "Saýlawlar",
     "aiOverview": "Görüş",
     "sendTip": "Sylag iber",
@@ -747,7 +746,8 @@
     "unpinPost": "Profilinden çyk",
     "postPinned": "Profiline gir",
     "postUnpinned": "Profilinden çykyş",
-    "pinFailed": "Bu posty ýazmaga ýa-da ýazmaga rugsat berilmeýär"
+    "pinFailed": "Bu posty ýazmaga ýa-da ýazmaga rugsat berilmeýär",
+    "copyFailed": "Baglanyşygy göçürip bolmady"
   },
   "filters": {
     "sort": "Tertiple",
@@ -2386,6 +2386,30 @@
     "addDescription": "Bir açıklama ekleyin...",
     "communityDescription": "Jemgyýet beýany...",
     "posts": "Postlar",
+    "chat": {
+      "intervalHour": "1 sagat",
+      "intervalHours": "{{count}} Saat",
+      "intervalMinute": "1 minut",
+      "intervalMinutes": "{{count}} minutlar",
+      "intervalSecond": "1 sekund",
+      "intervalSeconds": "{{count}} sekundlar",
+      "muted": "Sen üýtgedildiň",
+      "mutedUntil": "Siz {{until}} çenli üýtgedildiňiz",
+      "postingDisabled": "Bu ýerde agzalar üçin ýazmak mümkinçiliginiň ýokdugy",
+      "pinnedGif": "GIF",
+      "pinnedMedia": "Medya",
+      "jumpToPinned": "Öwrenilen habaryň içine gir",
+      "pinnedMessage": "Pinned Message",
+      "unpin": "Unpin",
+      "pin": "Pin",
+      "delete": "Ewez Et",
+      "slowMode": "Slow mode: her bir habar{{interval}}",
+      "slowModeWait": "Slow mode — garaş {{time}}",
+      "send": "Gönder",
+      "deleteMessageTitle": "Bu habar ýitirilýärmi?",
+      "deleteMessageBody": "Bu şeýle ret edilmeli däl.",
+      "cancel": "Gaýd Et"
+    },
     "membersTab": "Agzalar ({{count}})",
     "about": "Barada",
     "backToCommunities": "Jemagatlar",
@@ -6911,7 +6935,14 @@
     }
   },
   "editor": {
-    "video": { "tFade": "Garyşyp geçiş", "none": "Ýok", "transition": "Geçiş", "speed": "Tizlik", "sound": "Ses","video": "Wideo"},
+    "video": {
+      "tFade": "Garyşyp geçiş",
+      "none": "Ýok",
+      "transition": "Geçiş",
+      "speed": "Tizlik",
+      "sound": "Ses",
+      "video": "Wideo"
+    },
     "review": {
       "title": "Taslama syny",
       "shared": "Siziň bilen paýlaşylan",

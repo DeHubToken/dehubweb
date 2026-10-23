@@ -717,7 +717,6 @@
     "embed": "Суулгах",
     "copyEmbedCode": "Суулгах кодыг хуулах",
     "embedCodeCopied": "Суулгах код хуулагдлаа",
-    "copyFailed": "Холбоосыг хуулж чадсангүй",
     "options": "Сонголтууд",
     "aiOverview": "AI тойм",
     "sendTip": "Бэлэг илгээх",
@@ -745,7 +744,8 @@
     "unpinPost": "Профайлаасаа хасах",
     "postPinned": "Таны профайл руу зүүсэн",
     "postUnpinned": "Профайлаасаа хасагдахгүй",
-    "pinFailed": "Энэ нийтлэлийг зүүж эсвэл задалж чадсангүй"
+    "pinFailed": "Энэ нийтлэлийг зүүж эсвэл задалж чадсангүй",
+    "copyFailed": "Холбоосыг хуулж чадсангүй"
   },
   "filters": {
     "sort": "Эрэмбэлэх",
@@ -2396,6 +2396,28 @@
     "addDescription": "Тайлбар нэмэх...",
     "communityDescription": "Нийгэмлэгийн тодорхойлолт...",
     "posts": "Бичлэгүүд",
+    "chat": {
+      "intervalHour": "1 цаг",
+      "intervalMinute": "1 минут",
+      "intervalMinutes": "{{count}} минут",
+      "intervalSecond": "1 секунд",
+      "intervalSeconds": "{{count}} секунд",
+      "muted": "Та дуугүй байна",
+      "mutedUntil": "Та {{until}} хүртэл анир чимээгүй байна",
+      "postingDisabled": "Энд гишүүдэд тусгалтыг идэвхгүй болгосон",
+      "pinnedGif": "ГИФ",
+      "pinnedMedia": "Хэвлэл мэдээлэл",
+      "jumpToPinned": "Анхааруулсан зурвас руу алхана",
+      "pinnedMessage": "Уншсан зурвас",
+      "unpin": "Үл Товч",
+      "delete": "Устгах",
+      "slowMode": "Удаан горим: {{interval}}1 тутамд нэг мессеж",
+      "slowModeWait": "Удаан горим — {{time}} хүлээх",
+      "send": "Илгээх",
+      "deleteMessageTitle": "Энэ зурвасыг устгах уу?",
+      "deleteMessageBody": "Энэ нь буцаах боломжгүй.",
+      "cancel": "Цуцлах"
+    },
     "membersTab": "Гишүүд ({{count}})",
     "about": "Тухай",
     "backToCommunities": "Нийгэмлэгүүд",
@@ -6952,7 +6974,14 @@
     }
   },
   "editor": {
-    "video": { "tFade": "Уусалт", "none": "Байхгүй", "transition": "Шилжилт", "speed": "Хурд", "sound": "Дуу","video": "Видео"},
+    "video": {
+      "tFade": "Уусалт",
+      "none": "Байхгүй",
+      "transition": "Шилжилт",
+      "speed": "Хурд",
+      "sound": "Дуу",
+      "video": "Видео"
+    },
     "review": {
       "title": "Төслийн хяналт",
       "shared": "Тантай хуваалцсан",

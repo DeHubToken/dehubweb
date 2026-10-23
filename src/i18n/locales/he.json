@@ -194,11 +194,11 @@
   },
   "settings": {
     "usernameTaken": "שם המשתמש תפוס",
-    "showDislikesDesc": "כל אחד יכול לפתוח את הלשונית 'לא אהבתי' בפרופיל שלך. כשזה כבוי, רק את/ה רואה אותה.",
-    "showDislikes": "להציג לכולם את מה שלא אהבתי",
     "postingChain": "בלוקצ׳יין לפרסום",
     "showOnline": "הצגה כשאני במצב מחובר",
     "showOnlineDesc": "אנשים שאתם שולחים להם הודעה רואים נקודה ירוקה ליד השם שלכם בזמן שאתם משתמשים ב - DeHub",
+    "showDislikes": "להציג לכולם את מה שלא אהבתי",
+    "showDislikesDesc": "כל אחד יכול לפתוח את הלשונית 'לא אהבתי' בפרופיל שלך. כשזה כבוי, רק את/ה רואה אותה.",
     "smartReplies": "תשובות מוצעות",
     "smartRepliesDesc": "מנסח שתי תשובות שאפשר להקיש עליהן בצ'אט. ה-× שעל ההצעות מכבה את זה.",
     "title": "הגדרות",
@@ -721,7 +721,6 @@
     "embed": "הטמעה",
     "copyEmbedCode": "העתק קוד הטמעה",
     "embedCodeCopied": "קוד ההטמעה הועתק",
-    "copyFailed": "לא ניתן היה להעתיק את הקישור",
     "options": "אפשרויות",
     "aiOverview": "סקירה כללית על בינה מלאכותית",
     "sendTip": "שלח טיפ",
@@ -749,7 +748,8 @@
     "unpinPost": "הסרת הצמדה מהפרופיל שלך",
     "postPinned": "מוצמדים לפרופיל שלך",
     "postUnpinned": "הסיכה בוטלה מהפרופיל שלך",
-    "pinFailed": "לא ניתן היה להצמיד או לבטל את הצמדת הפוסט הזה"
+    "pinFailed": "לא ניתן היה להצמיד או לבטל את הצמדת הפוסט הזה",
+    "copyFailed": "לא ניתן היה להעתיק את הקישור"
   },
   "filters": {
     "sort": "מיון",
@@ -1484,7 +1484,6 @@
     "returnHome": "חזור לדף הבית"
   },
   "profile": {
-    "dislikes": { "loadMore": "טען עוד", "privateDesc": "החשבון הזה שומר את מה שלא אהב לעצמו.", "privateTitle": "לא אהבתי הוא פרטי", "emptyOther": "עדיין אין כלום.", "emptyOwn": "פוסטים שלא אהבת יוצאים מהפידים שלך ומופיעים כאן. בטל/י את הלא-אהבתי כדי להחזיר את הפוסט.", "emptyTitle": "עדיין אין" },
     "back": "חזור",
     "usernameAvailable": "שם המשתמש זמין!",
     "signUpToClaim": "הירשם כדי לתפוס",
@@ -1512,8 +1511,16 @@
       "commentUnavailable": "התגובה הזו כבר לא זמינה"
     },
     "tabs": {
-      "dislikes": "לא אהבתי",
-      "playlists": "פלייליסטים"
+      "playlists": "פלייליסטים",
+      "dislikes": "לא אהבתי"
+    },
+    "dislikes": {
+      "emptyTitle": "עדיין אין",
+      "emptyOwn": "פוסטים שלא אהבת יוצאים מהפידים שלך ומופיעים כאן. בטל/י את הלא-אהבתי כדי להחזיר את הפוסט.",
+      "emptyOther": "עדיין אין כלום.",
+      "privateTitle": "לא אהבתי הוא פרטי",
+      "privateDesc": "החשבון הזה שומר את מה שלא אהב לעצמו.",
+      "loadMore": "טען עוד"
     },
     "offerWorthNow": "כ-{{amount}} אסימונים בשער הנוכחי",
     "offerNotePlaceholder": "הוסף הערה (אופציונלי)",
@@ -2408,6 +2415,29 @@
     "addDescription": "הוסף תיאור...",
     "communityDescription": "תיאור הקהילה...",
     "posts": "פוסטים",
+    "chat": {
+      "intervalHour": "שעה אחת",
+      "intervalHours": "{{count}} שעות",
+      "intervalMinute": "דקה אחת",
+      "intervalMinutes": "{{count}} דקות",
+      "intervalSecond": "שנייה אחת",
+      "intervalSeconds": "{{count}} שניות",
+      "muted": "אתה מושתק",
+      "mutedUntil": "אתם מושתקים עד {{until}}",
+      "postingDisabled": "הפרסום מושבת עבור חברים כאן",
+      "pinnedMedia": "מדיה",
+      "jumpToPinned": "מעבר להודעה המוצמדת",
+      "pinnedMessage": "הודעה מוצמדת",
+      "unpin": "בטל הצמדה",
+      "pin": "קוד PIN",
+      "delete": "מחיקה",
+      "slowMode": "מצב איטי: הודעה אחת בכל {{interval}}",
+      "slowModeWait": "מצב איטי — יש להמתין {{time}}",
+      "send": "שליחה",
+      "deleteMessageTitle": "למחוק את ההודעה הזו?",
+      "deleteMessageBody": "לא ניתן לבטל פעולה זו.",
+      "cancel": "ביטול"
+    },
     "membersTab": "חברים ({{count}})",
     "about": "אודות",
     "backToCommunities": "קהילות",
@@ -7010,7 +7040,14 @@
     }
   },
   "editor": {
-    "video": { "tFade": "מעבר מתמזג", "none": "ללא", "transition": "מעבר", "speed": "מהירות", "sound": "צליל","video": "וידאו"},
+    "video": {
+      "tFade": "מעבר מתמזג",
+      "none": "ללא",
+      "transition": "מעבר",
+      "speed": "מהירות",
+      "sound": "צליל",
+      "video": "וידאו"
+    },
     "review": {
       "title": "סקירת פרויקט",
       "shared": "שותף איתך",

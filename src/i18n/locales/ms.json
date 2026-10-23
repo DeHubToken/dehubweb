@@ -194,11 +194,11 @@
   },
   "settings": {
     "usernameTaken": "Nama pengguna telah diambil",
-    "showDislikesDesc": "Sesiapa boleh membuka tab Tidak Suka pada profil anda. Apabila dimatikan, hanya anda yang boleh melihatnya.",
-    "showDislikes": "Tunjukkan tidak suka saya kepada semua",
     "postingChain": "Rantaian blok siaran",
     "showOnline": "Tunjukkan apabila saya berada dalam talian",
     "showOnlineDesc": "Orang yang anda mesej melihat titik hijau di sebelah nama anda semasa anda menggunakan DeHub",
+    "showDislikes": "Tunjukkan tidak suka saya kepada semua",
+    "showDislikesDesc": "Sesiapa boleh membuka tab Tidak Suka pada profil anda. Apabila dimatikan, hanya anda yang boleh melihatnya.",
     "smartReplies": "Balasan yang dicadangkan",
     "smartRepliesDesc": "Menyediakan dua balasan yang boleh anda ketik dalam sembang. Tanda × pada cadangan akan mematikannya.",
     "title": "Tetapan",
@@ -986,7 +986,6 @@
     "embed": "Benamkan",
     "copyEmbedCode": "Salin kod benam",
     "embedCodeCopied": "Kod benam disalin",
-    "copyFailed": "Tidak dapat menyalin pautan",
     "options": "Pilihan",
     "aiOverview": "Gambaran keseluruhan AI",
     "sendTip": "Hantar Tip",
@@ -1014,7 +1013,8 @@
     "unpinPost": "Buang sematan daripada profil anda",
     "postPinned": "Disematkan pada profil anda",
     "postUnpinned": "Tidak disematkan daripada profil anda",
-    "pinFailed": "Tidak dapat menyematkan atau membatalkan pin hantaran ini"
+    "pinFailed": "Tidak dapat menyematkan atau membatalkan pin hantaran ini",
+    "copyFailed": "Tidak dapat menyalin pautan"
   },
   "filters": {
     "sort": "Isih",
@@ -1750,7 +1750,6 @@
     "returnHome": "Return Home"
   },
   "profile": {
-    "dislikes": { "loadMore": "Muat lagi", "privateDesc": "Akaun ini menyimpan tidak sukanya sendiri.", "privateTitle": "Tidak suka adalah peribadi", "emptyOther": "Belum ada apa-apa.", "emptyOwn": "Siaran yang anda tidak suka keluar dari suapan anda dan dipaparkan di sini. Batalkan tidak suka untuk mengembalikan siaran.", "emptyTitle": "Belum ada tidak suka" },
     "back": "Back",
     "usernameAvailable": "Username available!",
     "signUpToClaim": "Daftar hari ini untuk menuntut",
@@ -1778,8 +1777,16 @@
       "commentUnavailable": "Komen ini tidak lagi tersedia"
     },
     "tabs": {
-      "dislikes": "Tidak Suka",
-      "playlists": "Senarai main"
+      "playlists": "Senarai main",
+      "dislikes": "Tidak Suka"
+    },
+    "dislikes": {
+      "emptyTitle": "Belum ada tidak suka",
+      "emptyOwn": "Siaran yang anda tidak suka keluar dari suapan anda dan dipaparkan di sini. Batalkan tidak suka untuk mengembalikan siaran.",
+      "emptyOther": "Belum ada apa-apa.",
+      "privateTitle": "Tidak suka adalah peribadi",
+      "privateDesc": "Akaun ini menyimpan tidak sukanya sendiri.",
+      "loadMore": "Muat lagi"
     },
     "offerWorthNow": "Kira-kira {{amount}} token pada kadar semasa",
     "offerNotePlaceholder": "Tambah nota (pilihan)",
@@ -2669,6 +2676,30 @@
     "addDescription": "Tambah keterangan...",
     "communityDescription": "Keterangan komuniti...",
     "posts": "Siaran",
+    "chat": {
+      "intervalHour": "1 jam",
+      "intervalHours": "{{count}} jam",
+      "intervalMinute": "1 minit",
+      "intervalMinutes": "{{count}} minit",
+      "intervalSecond": "1 saat",
+      "intervalSeconds": "{{count}} saat",
+      "muted": "Anda diredam",
+      "mutedUntil": "Anda diredam sehingga {{until}}",
+      "postingDisabled": "Penyiaran dinyahdayakan untuk ahli di sini",
+      "pinnedGif": "GIF",
+      "pinnedMedia": "Media",
+      "jumpToPinned": "Lompat ke mesej yang disematkan",
+      "pinnedMessage": "Mesej yang disematkan",
+      "unpin": "Buka pin",
+      "pin": "Pin",
+      "delete": "Hapus",
+      "slowMode": "Mod perlahan: satu mesej setiap {{interval}}",
+      "slowModeWait": "Mod perlahan — tunggu {{time}}",
+      "send": "Hantar",
+      "deleteMessageTitle": "Hapuskan mesej ini?",
+      "deleteMessageBody": "Ini tidak boleh dibuat asal.",
+      "cancel": "Batal"
+    },
     "membersTab": "Ahli ({{count}})",
     "about": "Perihal",
     "backToCommunities": "Komuniti",
@@ -7255,7 +7286,14 @@
     }
   },
   "editor": {
-    "video": { "tFade": "Larut silang", "none": "Tiada", "transition": "Peralihan", "speed": "Kelajuan", "sound": "Bunyi","video": "Video"},
+    "video": {
+      "tFade": "Larut silang",
+      "none": "Tiada",
+      "transition": "Peralihan",
+      "speed": "Kelajuan",
+      "sound": "Bunyi",
+      "video": "Video"
+    },
     "review": {
       "title": "Semakan projek",
       "shared": "Dikongsi dengan anda",

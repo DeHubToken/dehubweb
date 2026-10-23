@@ -745,7 +745,6 @@
     "embed": "Vložiť",
     "copyEmbedCode": "Kopírovať kód na vloženie",
     "embedCodeCopied": "Kód na vloženie skopírovaný",
-    "copyFailed": "Odkaz sa nepodarilo skopírovať",
     "options": "Možnosti",
     "aiOverview": "Prehľad AI",
     "sendTip": "Poslať tip",
@@ -773,7 +772,8 @@
     "unpinPost": "Zrušiť pripnutie zo svojho profilu",
     "postPinned": "Pripnuté k vášmu profilu",
     "postUnpinned": "Odpojené od vášho profilu",
-    "pinFailed": "Nepodarilo sa pripnúť alebo zrušiť pripnutie tohto príspevku"
+    "pinFailed": "Nepodarilo sa pripnúť alebo zrušiť pripnutie tohto príspevku",
+    "copyFailed": "Odkaz sa nepodarilo skopírovať"
   },
   "filters": {
     "sort": "Zoradiť",
@@ -2516,6 +2516,30 @@
     "addDescription": "Pridať popis...",
     "communityDescription": "Popis komunity...",
     "posts": "Príspevky",
+    "chat": {
+      "intervalHour": "1 hodina",
+      "intervalHours": "{{count}} hodín",
+      "intervalMinute": "1 minúta",
+      "intervalMinutes": "{{count}} min",
+      "intervalSecond": "1 sekunda",
+      "intervalSeconds": "{{count}} sekúnd",
+      "muted": "Ste stlmený",
+      "mutedUntil": "Stlmíme vás do {{until}}",
+      "postingDisabled": "Uverejňovanie je pre členov zakázané tu",
+      "pinnedGif": "GIF",
+      "pinnedMedia": "Médiá",
+      "jumpToPinned": "Prejsť na pripnutú správu",
+      "pinnedMessage": "Pripnutá správa",
+      "unpin": "Zrušiť pripnutie",
+      "pin": "PIN",
+      "delete": "Odstrániť",
+      "slowMode": "Pomalý režim: jedna správa každých {{interval}}",
+      "slowModeWait": "Pomalý režim — počkajte {{time}}",
+      "send": "Odoslať",
+      "deleteMessageTitle": "Odstrániť túto správu?",
+      "deleteMessageBody": "Toto nie je možné vrátiť späť.",
+      "cancel": "Zrušiť"
+    },
     "membersTab": "Členovia ({{count}})",
     "about": "O komunite",
     "backToCommunities": "Komunity",
@@ -7129,7 +7153,14 @@
     }
   },
   "editor": {
-    "video": { "tFade": "Prelínanie", "none": "Žiadny", "transition": "Prechod", "speed": "Rýchlosť", "sound": "Zvuk","video": "Video"},
+    "video": {
+      "tFade": "Prelínanie",
+      "none": "Žiadny",
+      "transition": "Prechod",
+      "speed": "Rýchlosť",
+      "sound": "Zvuk",
+      "video": "Video"
+    },
     "review": {
       "title": "Kontrola projektu",
       "shared": "Zdieľané s vami",

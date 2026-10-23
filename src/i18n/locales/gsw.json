@@ -718,7 +718,6 @@
     "embed": "Iibette",
     "copyEmbedCode": "Iibettigscode kopiere",
     "embedCodeCopied": "Iibettigscode kopiert",
-    "copyFailed": "Link het nöd chöne kopiert werde",
     "options": "Optione",
     "aiOverview": "KI Übersicht",
     "sendTip": "Trinkgäld schicke",
@@ -746,7 +745,8 @@
     "unpinPost": "Vom Profil entpinnen",
     "postPinned": "Auf Profil gepinnt",
     "postUnpinned": "Vom Profil entpinnt",
-    "pinFailed": "Konntä Post nöd pinnen oder entpinne"
+    "pinFailed": "Konntä Post nöd pinnen oder entpinne",
+    "copyFailed": "Link het nöd chöne kopiert werde"
   },
   "filters": {
     "sort": "Sortiere",
@@ -2431,6 +2431,30 @@
     "addDescription": "Bschribig dezuefüege...",
     "communityDescription": "Beschreibung der Gemeinschaft...",
     "posts": "Posts",
+    "chat": {
+      "intervalHour": "1 Stund",
+      "intervalHours": "{{count}} Stund",
+      "intervalMinute": "1 Minute",
+      "intervalMinutes": "{{count}} Minute",
+      "intervalSecond": "1 Sekunde",
+      "intervalSeconds": "{{count}} Sekunde",
+      "muted": "Du bisch stumm gschalte",
+      "mutedUntil": "Du bisch bis {{until}} stumm gschalte",
+      "postingDisabled": "Poste isch da für Mitglieder deaktiviert",
+      "pinnedGif": "GIF",
+      "pinnedMedia": "Medie",
+      "jumpToPinned": "Zum gpinnten Message springe",
+      "pinnedMessage": "Gpinntes Message",
+      "unpin": "Entpinnen",
+      "pin": "Pinne",
+      "delete": "Lösche",
+      "slowMode": "Langsammodus: ein Message jede {{interval}}",
+      "slowModeWait": "Langsammodus — warte {{time}}",
+      "send": "Sende",
+      "deleteMessageTitle": "Diees Message lösche?",
+      "deleteMessageBody": "Das cha nöd rückgängig gmacht werde.",
+      "cancel": "Abbräche"
+    },
     "membersTab": "Mitglieder ({{count}})",
     "about": "Über",
     "backToCommunities": "Gemeinschaften",
@@ -6961,7 +6985,14 @@
     }
   },
   "editor": {
-    "video": { "tFade": "Überbländig", "none": "Kei", "transition": "Übergang", "speed": "Gschwindigkeit", "sound": "Ton","video": "Video"},
+    "video": {
+      "tFade": "Überbländig",
+      "none": "Kei",
+      "transition": "Übergang",
+      "speed": "Gschwindigkeit",
+      "sound": "Ton",
+      "video": "Video"
+    },
     "review": {
       "title": "Projektprüefig",
       "shared": "Mit dir teilt",

@@ -194,11 +194,11 @@
   },
   "settings": {
     "usernameTaken": "Nakuha na ang username",
-    "showDislikesDesc": "Kahit sino ay puwedeng magbukas ng tab na Ayaw sa profile mo. Kapag naka-off, ikaw lang ang makakakita.",
-    "showDislikes": "Ipakita sa lahat ang mga ayaw ko",
     "postingChain": "Blockchain para sa mga post",
     "showOnline": "Ipakita kapag ako ay online",
     "showOnlineDesc": "Nakakakita ang mga taong pinadalhan mo ng mensahe ng berdeng tuldok sa tabi ng iyong pangalan habang gumagamit ka ng DeHub",
+    "showDislikes": "Ipakita sa lahat ang mga ayaw ko",
+    "showDislikesDesc": "Kahit sino ay puwedeng magbukas ng tab na Ayaw sa profile mo. Kapag naka-off, ikaw lang ang makakakita.",
     "smartReplies": "Mga iminungkahing sagot",
     "smartRepliesDesc": "Gumagawa ng dalawang sagot na puwede mong i-tap sa chat. Ang × sa mga mungkahi ang nagpapatay nito.",
     "title": "Mga Setting",
@@ -766,7 +766,6 @@
     "embed": "I-embed",
     "copyEmbedCode": "Kopyahin ang embed code",
     "embedCodeCopied": "Nakopya ang embed code",
-    "copyFailed": "Hindi makopya ang link",
     "options": "Mga Opsyon",
     "aiOverview": "Pangkalahatang - ideya ng AI",
     "sendTip": "Magpadala ng Tip",
@@ -794,7 +793,8 @@
     "unpinPost": "I - unpin mula sa iyong profile",
     "postPinned": "Na - pin sa iyong profile",
     "postUnpinned": "Na - unpin mula sa iyong profile",
-    "pinFailed": "Hindi ma - pin o ma - unpin ang post na ito"
+    "pinFailed": "Hindi ma - pin o ma - unpin ang post na ito",
+    "copyFailed": "Hindi makopya ang link"
   },
   "filters": {
     "sort": "Ayusin",
@@ -1537,7 +1537,6 @@
     "returnHome": "Return Home"
   },
   "profile": {
-    "dislikes": { "loadMore": "Mag-load pa", "privateDesc": "Itinatago ng account na ito ang mga ayaw nito.", "privateTitle": "Pribado ang mga ayaw", "emptyOther": "Wala pang ayaw.", "emptyOwn": "Ang mga post na ayaw mo ay aalis sa mga feed mo at lalabas dito. I-undo ang ayaw para ibalik ang post.", "emptyTitle": "Wala pang ayaw" },
     "back": "Back",
     "usernameAvailable": "Username available!",
     "signUpToClaim": "Mag-sign up ngayon upang i-claim",
@@ -1565,8 +1564,16 @@
       "commentUnavailable": "Hindi na available ang komentong ito"
     },
     "tabs": {
-      "dislikes": "Ayaw",
-      "playlists": "Mga Playlist"
+      "playlists": "Mga Playlist",
+      "dislikes": "Ayaw"
+    },
+    "dislikes": {
+      "emptyTitle": "Wala pang ayaw",
+      "emptyOwn": "Ang mga post na ayaw mo ay aalis sa mga feed mo at lalabas dito. I-undo ang ayaw para ibalik ang post.",
+      "emptyOther": "Wala pang ayaw.",
+      "privateTitle": "Pribado ang mga ayaw",
+      "privateDesc": "Itinatago ng account na ito ang mga ayaw nito.",
+      "loadMore": "Mag-load pa"
     },
     "offerWorthNow": "Tinatayang {{amount}} na token sa kasalukuyang rate",
     "offerNotePlaceholder": "Magdagdag ng paalala (opsyonal)",
@@ -2456,6 +2463,30 @@
     "addDescription": "Magdagdag ng paglalarawan...",
     "communityDescription": "Community description...",
     "posts": "Posts",
+    "chat": {
+      "intervalHour": "1 oras",
+      "intervalHours": "{{count}} oras",
+      "intervalMinute": "1 minuto",
+      "intervalMinutes": "{{count}} minuto",
+      "intervalSecond": "1 segundo",
+      "intervalSeconds": "{{count}} segundo",
+      "muted": "Na - mute ka",
+      "mutedUntil": "Naka - mute ka hanggang {{until}}",
+      "postingDisabled": "Hindi pinagana ang pag - post para sa mga miyembro dito",
+      "pinnedGif": "GIF",
+      "pinnedMedia": "Media",
+      "jumpToPinned": "Pumunta sa naka - pin na mensahe",
+      "pinnedMessage": "Naka - pin na mensahe",
+      "unpin": "I - unpin",
+      "pin": "Pin",
+      "delete": "Tanggalin",
+      "slowMode": "Mabagal na mode: isang mensahe kada {{interval}}",
+      "slowModeWait": "Mabagal na mode — maghintay {{time}}",
+      "send": "Ipadala",
+      "deleteMessageTitle": "Tanggalin ang mensaheng ito?",
+      "deleteMessageBody": "Hindi ito mababawi.",
+      "cancel": "Kanselahin"
+    },
     "membersTab": "Mga miyembro ({{count}})",
     "about": "Tungkol sa",
     "backToCommunities": "Communities",
@@ -7060,7 +7091,14 @@
     }
   },
   "editor": {
-    "video": { "tFade": "Paghahalo", "none": "Wala", "transition": "Transisyon", "speed": "Bilis", "sound": "Tunog","video": "Video"},
+    "video": {
+      "tFade": "Paghahalo",
+      "none": "Wala",
+      "transition": "Transisyon",
+      "speed": "Bilis",
+      "sound": "Tunog",
+      "video": "Video"
+    },
     "review": {
       "title": "Pagsusuri ng proyekto",
       "shared": "Ibinahagi sa iyo",
@@ -8803,6 +8841,16 @@
     "view": "Tingnan",
     "failed": "Hindi ma-process ang video"
   },
+  "loginStack": {
+    "tip": "Mag-tip ng DHB",
+    "headlineTop": "Mapapasaiyo ang lahat",
+    "headlineAccent": "at magiging masaya ka.",
+    "orContinueWith": "o magpatuloy gamit ang",
+    "phone": "Telepono",
+    "fingerprint": "Fingerprint",
+    "exploreFirst": "Mag-explore muna",
+    "codeNote": "Magpapadala kami ng code sa email, walang password."
+  },
   "walletSelector": {
     "title": "Piliin ang Wallet",
     "description": "Piliin ang wallet na gusto mong ikonekta sa app na ito."
@@ -8854,15 +8902,5 @@
   "notification": {
     "noNotifications": "Walang mga abiso",
     "loadMore": "Mag-load ng higit pa"
-  },
-  "loginStack": {
-    "tip": "Mag-tip ng DHB",
-    "headlineTop": "Mapapasaiyo ang lahat",
-    "headlineAccent": "at magiging masaya ka.",
-    "orContinueWith": "o magpatuloy gamit ang",
-    "phone": "Telepono",
-    "fingerprint": "Fingerprint",
-    "exploreFirst": "Mag-explore muna",
-    "codeNote": "Magpapadala kami ng code sa email, walang password."
   }
 }

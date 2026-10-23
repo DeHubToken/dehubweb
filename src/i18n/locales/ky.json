@@ -716,7 +716,6 @@
     "embed": "Кыстаруу",
     "copyEmbedCode": "Кыстаруу кодун көчүрүү",
     "embedCodeCopied": "Кыстаруу коду көчүрүлдү",
-    "copyFailed": "Шилтемени көчүрүү мүмкүн болбоду",
     "options": "Тандоолор",
     "aiOverview": "AI обзору",
     "sendTip": "Сыйлык жөнөтүү",
@@ -744,7 +743,8 @@
     "unpinPost": "Профилиңизден өчүрүү",
     "postPinned": "Профилиңизге чапталган",
     "postUnpinned": "Профилиңизден өчүрүлгөн",
-    "pinFailed": "Бул постту киргизүүгө же алып салууга болбоду"
+    "pinFailed": "Бул постту киргизүүгө же алып салууга болбоду",
+    "copyFailed": "Шилтемени көчүрүү мүмкүн болбоду"
   },
   "filters": {
     "sort": "Иреттөө",
@@ -2399,6 +2399,30 @@
     "addDescription": "Сүрөттөмө кошуу...",
     "communityDescription": "Коомчулуктун сүрөттөмөсү...",
     "posts": "Посттор",
+    "chat": {
+      "intervalHour": "1 саат",
+      "intervalHours": "{{count}} Саат",
+      "intervalMinute": "1 мүнөт",
+      "intervalMinutes": "{{count}} мүнөттөр",
+      "intervalSecond": "1 секунданын",
+      "intervalSeconds": "{{count}} секунд",
+      "muted": "Сиз өзгөрдүңүз",
+      "mutedUntil": "Сиз {{until}} чейин өчүрүлдүңүз",
+      "postingDisabled": "Жарыялоо бул жердеги мүчөлөр үчүн өчүрүлгөн",
+      "pinnedGif": "GIF",
+      "pinnedMedia": "Медиа",
+      "jumpToPinned": "Чапталган билдирүүгө секирүү",
+      "pinnedMessage": "Чапталган билдирүү",
+      "unpin": "Unpin",
+      "pin": "Pin",
+      "delete": "Өчүрүү",
+      "slowMode": "Жай режими: ар бир билдирүү {{interval}}",
+      "slowModeWait": "Жай режими — күтүү {{time}}",
+      "send": "Жөнөтүү",
+      "deleteMessageTitle": "Бул билдирүүнү өчүрүү керекпи?",
+      "deleteMessageBody": "Муну жокко чыгаруу мүмкүн эмес.",
+      "cancel": "Жокко чыгаруу"
+    },
     "membersTab": "Мүчөлөр ({{count}})",
     "about": "Жөнүндө",
     "backToCommunities": "Коомчулуктар",
@@ -7001,7 +7025,14 @@
     }
   },
   "editor": {
-    "video": { "tFade": "Кайчылаш өтүү", "none": "Жок", "transition": "Өтүү", "speed": "Ылдамдык", "sound": "Үн","video": "Видео"},
+    "video": {
+      "tFade": "Кайчылаш өтүү",
+      "none": "Жок",
+      "transition": "Өтүү",
+      "speed": "Ылдамдык",
+      "sound": "Үн",
+      "video": "Видео"
+    },
     "review": {
       "title": "Долбоорду карап чыгуу",
       "shared": "Сиз менен бөлүшүлгөн",

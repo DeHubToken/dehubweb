@@ -194,11 +194,11 @@
   },
   "settings": {
     "usernameTaken": "Jina la mtumiaji limechukuliwa",
-    "showDislikesDesc": "Mtu yeyote anaweza kufungua kichupo cha Sivyopenda kwenye wasifu wako. Kikizimwa, ni wewe tu unayekiona.",
-    "showDislikes": "Onyesha nisivyopenda kwa kila mtu",
     "postingChain": "Mnyororo wa bloku wa machapisho",
     "showOnline": "Onyesha wakati niko mtandaoni",
     "showOnlineDesc": "Watu unaotuma ujumbe wanaona nukta ya kijani karibu na jina lako unapotumia DeHub",
+    "showDislikes": "Onyesha nisivyopenda kwa kila mtu",
+    "showDislikesDesc": "Mtu yeyote anaweza kufungua kichupo cha Sivyopenda kwenye wasifu wako. Kikizimwa, ni wewe tu unayekiona.",
     "smartReplies": "Majibu yanayopendekezwa",
     "smartRepliesDesc": "Huandaa majibu mawili unayoweza kugusa kwenye gumzo. Alama ya × kwenye mapendekezo huzima hii.",
     "title": "Mipangilio",
@@ -721,7 +721,6 @@
     "embed": "Pachika",
     "copyEmbedCode": "Nakili msimbo wa kupachika",
     "embedCodeCopied": "Msimbo wa kupachika umenakiliwa",
-    "copyFailed": "Imeshindwa kunakili kiungo",
     "options": "Chaguzi",
     "aiOverview": "Muhtasari wa AI",
     "sendTip": "Tuma Kidokezo",
@@ -749,7 +748,8 @@
     "unpinPost": "Ondoa kwenye wasifu wako",
     "postPinned": "Imewekwa kwenye wasifu wako",
     "postUnpinned": "Imeondolewa kwenye wasifu wako",
-    "pinFailed": "Haikuweza kuweka PIN au kuiondoa kwenye chapisho hili"
+    "pinFailed": "Haikuweza kuweka PIN au kuiondoa kwenye chapisho hili",
+    "copyFailed": "Imeshindwa kunakili kiungo"
   },
   "filters": {
     "sort": "Panga",
@@ -1488,7 +1488,6 @@
     "returnHome": "Rudi Nyumbani"
   },
   "profile": {
-    "dislikes": { "loadMore": "Pakia zaidi", "privateDesc": "Akaunti hii inaweka sivyopenda vyake kwa siri.", "privateTitle": "Sivyopenda ni siri", "emptyOther": "Bado hakuna kitu.", "emptyOwn": "Machapisho usiyoyapenda yanaondoka kwenye milisho yako na kuonekana hapa. Tendua usiyopenda ili kurudisha chapisho.", "emptyTitle": "Bado hakuna" },
     "back": "Rudi",
     "usernameAvailable": "Jina la mtumiaji linapatikana!",
     "signUpToClaim": "Jisajili leo kudai",
@@ -1516,8 +1515,16 @@
       "commentUnavailable": "Maoni haya hayapatikani tena"
     },
     "tabs": {
-      "dislikes": "Sivyopenda",
-      "playlists": "Orodha za kucheza"
+      "playlists": "Orodha za kucheza",
+      "dislikes": "Sivyopenda"
+    },
+    "dislikes": {
+      "emptyTitle": "Bado hakuna",
+      "emptyOwn": "Machapisho usiyoyapenda yanaondoka kwenye milisho yako na kuonekana hapa. Tendua usiyopenda ili kurudisha chapisho.",
+      "emptyOther": "Bado hakuna kitu.",
+      "privateTitle": "Sivyopenda ni siri",
+      "privateDesc": "Akaunti hii inaweka sivyopenda vyake kwa siri.",
+      "loadMore": "Pakia zaidi"
     },
     "offerWorthNow": "Takriban tokeni {{amount}} kwa kiwango cha sasa",
     "offerNotePlaceholder": "Ongeza ujumbe (si lazima)",
@@ -2407,6 +2414,30 @@
     "addDescription": "Ongeza maelezo...",
     "communityDescription": "Maelezo ya jumuiya...",
     "posts": "Machapisho",
+    "chat": {
+      "intervalHour": "Saa 1",
+      "intervalHours": "Saa {{count}}",
+      "intervalMinute": "Dakika 1",
+      "intervalMinutes": "Dakika {{count}}",
+      "intervalSecond": "Sekunde 1",
+      "intervalSeconds": "{{count}} sekunde",
+      "muted": "Umetupwa",
+      "mutedUntil": "Unakata tamaa hadi {{until}}",
+      "postingDisabled": "Chapisho limelemazwa kwa wanachama hapa",
+      "pinnedGif": "GIF",
+      "pinnedMedia": "Vyombo vya habari",
+      "jumpToPinned": "Ruka kwenye ujumbe uliowekwa pini",
+      "pinnedMessage": "Ujumbe uliowekwa pini",
+      "unpin": "Ondoa pini",
+      "pin": "PIN",
+      "delete": "Futa",
+      "slowMode": "Hali ya polepole: ujumbe mmoja kila {{interval}}",
+      "slowModeWait": "Hali ya polepole — subiri {{time}}",
+      "send": "Tuma",
+      "deleteMessageTitle": "Ungependa kufuta ujumbe huu?",
+      "deleteMessageBody": "Hii haiwezi kutenduliwa.",
+      "cancel": "Ghairi"
+    },
     "membersTab": "Wanachama ({{count}})",
     "about": "Kuhusu",
     "backToCommunities": "Jumuiya",
@@ -6993,7 +7024,14 @@
     }
   },
   "editor": {
-    "video": { "tFade": "Kuyeyuka", "none": "Hakuna", "transition": "Mpito", "speed": "Kasi", "sound": "Sauti","video": "Video"},
+    "video": {
+      "tFade": "Kuyeyuka",
+      "none": "Hakuna",
+      "transition": "Mpito",
+      "speed": "Kasi",
+      "sound": "Sauti",
+      "video": "Video"
+    },
     "review": {
       "title": "Ukaguzi wa mradi",
       "shared": "Umeshirikiwa",

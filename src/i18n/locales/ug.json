@@ -719,7 +719,6 @@
     "embed": "سىڭدۈرۈش",
     "copyEmbedCode": "سىڭدۈرۈش كودىنى كۆچۈرۈش",
     "embedCodeCopied": "سىڭدۈرۈش كودى كۆچۈرۈلدى",
-    "copyFailed": "ئۇلىنىشنى كۆچۈرگىلى بولمىدى",
     "options": "تاللانمىلار",
     "aiOverview": "AI ئومۇمىي كۆرۈنۈش",
     "sendTip": "ئىئانە ئەۋەتىش",
@@ -747,7 +746,8 @@
     "unpinPost": "پروفىللىڭىزدىن چىقىرىش پروگراممىسى",
     "postPinned": "پروفىللىڭىزغا كىرگۈزۈلدى",
     "postUnpinned": "پروفىللىڭىزدىن چىقىرىلمىغان",
-    "pinFailed": "بۇ يازمىنى كىرگۈزگىلى ياكى چىقىرىۋەتكىلى بولمىدى"
+    "pinFailed": "بۇ يازمىنى كىرگۈزگىلى ياكى چىقىرىۋەتكىلى بولمىدى",
+    "copyFailed": "ئۇلىنىشنى كۆچۈرگىلى بولمىدى"
   },
   "filters": {
     "sort": "تەرتىپلەش",
@@ -2395,6 +2395,30 @@
     "addDescription": "Ta'rif qo'shing...",
     "communityDescription": "مەھەللە چۈشەندۈرۈشى...",
     "posts": "Yorliqlar",
+    "chat": {
+      "intervalHour": "1 سائەت",
+      "intervalHours": "{{count}} hours",
+      "intervalMinute": "1 مىنۇت",
+      "intervalMinutes": "{{count}} مىنوت",
+      "intervalSecond": "1 سېكۇنت",
+      "intervalSeconds": "{{count}} seconds",
+      "muted": "سىز ئۆزگەرتىلىۋاتىسىز",
+      "mutedUntil": "سىز تاكى {{until}}غىچە ئۆزگەرتىلدىڭىز",
+      "postingDisabled": "بۇ يەردىكى ئەزالارغا يوللاش ئىقتىدارى ئۆچۈرۈلگەن",
+      "pinnedGif": "GIF",
+      "pinnedMedia": "ئاخبارات ۋاسىتىلىرى",
+      "jumpToPinned": "بەلگىلەنگەن ئۇچۇرغا ئۆتۈش",
+      "pinnedMessage": "كىرگۈزۈلگەن ئۇچۇر",
+      "unpin": "Unpin",
+      "pin": "Pin",
+      "delete": "ئۆچۈرۈش",
+      "slowMode": "ئاستالىق ھالىتى: ھەربىر بىر ئۇچۇر {{interval}}",
+      "slowModeWait": "Slow mode — wait {{time}}",
+      "send": "ئەۋەتىش",
+      "deleteMessageTitle": "بۇ ئۇچۇرنى ئۆچۈرگىلى بولامدۇ ؟",
+      "deleteMessageBody": "بۇنى رەت قىلغىلى بولمايدۇ.",
+      "cancel": "ئەمەلدىن قالدۇرۇش"
+    },
     "membersTab": "ئەزالار ({{count}})",
     "about": "ھەققىدە",
     "backToCommunities": "Jamiyatlar",
@@ -6919,7 +6943,14 @@
     }
   },
   "editor": {
-    "video": { "tFade": "ئارىلاش ئۆتۈش", "none": "يوق", "transition": "ئۆتۈش", "speed": "سۈرئەت", "sound": "ئاۋاز","video": "ۋىدىئو"},
+    "video": {
+      "tFade": "ئارىلاش ئۆتۈش",
+      "none": "يوق",
+      "transition": "ئۆتۈش",
+      "speed": "سۈرئەت",
+      "sound": "ئاۋاز",
+      "video": "ۋىدىئو"
+    },
     "review": {
       "title": "تۈرنى تەكشۈرۈش",
       "shared": "سىز بىلەن ھەمبەھىرلەندى",

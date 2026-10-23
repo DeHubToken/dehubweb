@@ -719,7 +719,6 @@
     "embed": "Churay",
     "copyEmbedCode": "Churana kodigota copiay",
     "embedCodeCopied": "Churana kodigoqa copiasqañam",
-    "copyFailed": "Manam tinkiyta copiayta atikurqanchu",
     "options": "Akllakuna",
     "aiOverview": "AI nisqamanta qhawariy",
     "sendTip": "Propina apachiy",
@@ -747,7 +746,8 @@
     "unpinPost": "Perfilniykimanta hurquy",
     "postPinned": "Perfilniykiman clavado",
     "postUnpinned": "Perfilniykimanta mana pinchasqa",
-    "pinFailed": "Mana kay qillqasqata pinchayta nitaq unpinchayta atirqanichu"
+    "pinFailed": "Mana kay qillqasqata pinchayta nitaq unpinchayta atirqanichu",
+    "copyFailed": "Manam tinkiyta copiayta atikurqanchu"
   },
   "filters": {
     "sort": "Churay",
@@ -2434,6 +2434,29 @@
     "addDescription": "Sutinchayta yapay...",
     "communityDescription": "Ayllupa sutinchaynin...",
     "posts": "Willakuykuna",
+    "chat": {
+      "intervalHour": "1 hora",
+      "intervalHours": "{{count}} horas",
+      "intervalMinute": "1 minutu",
+      "intervalMinutes": "{{count}} minutokuna",
+      "intervalSecond": "1 segundo",
+      "intervalSeconds": "{{count}} segundos nisqapi",
+      "muted": "Qamqa upallallam kachkanki",
+      "mutedUntil": "{{until}} nisqakamam upallachisqa kanki.",
+      "postingDisabled": "Kaypi kaq miembrukunapaq churayqa mana llamk&#39;achisqam",
+      "pinnedGif": "GIF nisqa",
+      "jumpToPinned": "Pinchasqa willakuyman saltay",
+      "pinnedMessage": "Pinchasqa willakuy",
+      "unpin": "Unpin",
+      "pin": "Takyachiy",
+      "delete": "Chinkachiy",
+      "slowMode": "Modo lento: huk willakuy sapa {{interval}} .",
+      "slowModeWait": "Modo llampu — suyay {{time}}",
+      "send": "Apachiy",
+      "deleteMessageTitle": "¿Kay willayta qulluchiy?",
+      "deleteMessageBody": "Kaytaqa manam kutichiyta atikunmanchu.",
+      "cancel": "Sayachiy"
+    },
     "membersTab": "Runakuna ({{count}})",
     "about": "Kaymanta",
     "backToCommunities": "Ayllukuna",
@@ -7021,7 +7044,14 @@
     }
   },
   "editor": {
-    "video": { "tFade": "Chaqrupakuy", "none": "Mana imapas", "transition": "Chimpay", "speed": "Utqay", "sound": "Uyariy","video": "Video"},
+    "video": {
+      "tFade": "Chaqrupakuy",
+      "none": "Mana imapas",
+      "transition": "Chimpay",
+      "speed": "Utqay",
+      "sound": "Uyariy",
+      "video": "Video"
+    },
     "review": {
       "title": "Rurayta qhawana",
       "shared": "Qamwan rakisqa",

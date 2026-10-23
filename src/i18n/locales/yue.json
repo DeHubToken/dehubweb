@@ -719,7 +719,6 @@
     "embed": "嵌入",
     "copyEmbedCode": "複製嵌入代碼",
     "embedCodeCopied": "已複製嵌入代碼",
-    "copyFailed": "複製唔到連結",
     "options": "選項",
     "aiOverview": "人工智能概覽",
     "sendTip": "送禮物",
@@ -747,7 +746,8 @@
     "unpinPost": "喺你嘅個人檔案度取消固定",
     "postPinned": "固定喺你嘅個人檔案",
     "postUnpinned": "喺你嘅個人檔案入面取消固定",
-    "pinFailed": "固定或者解除固定唔到呢個帖子"
+    "pinFailed": "固定或者解除固定唔到呢個帖子",
+    "copyFailed": "複製唔到連結"
   },
   "filters": {
     "sort": "排序",
@@ -2403,6 +2403,29 @@
     "addDescription": "加個描述...",
     "communityDescription": "社群描述...",
     "posts": "帖子",
+    "chat": {
+      "intervalHour": "1 個鐘",
+      "intervalHours": "{{count}} 小時",
+      "intervalMinute": "1 分鐘",
+      "intervalMinutes": "{{count}} 分鐘",
+      "intervalSecond": "1秒",
+      "intervalSeconds": "{{count}} 秒",
+      "muted": "你係靜音咗",
+      "mutedUntil": "你被靜音到 {{until}}",
+      "postingDisabled": "喺呢度停用咗會員嘅發佈功能",
+      "pinnedMedia": "媒體",
+      "jumpToPinned": "跳到固定咗嘅訊息",
+      "pinnedMessage": "固定咗嘅訊息",
+      "unpin": "解除固定",
+      "pin": "別針",
+      "delete": "刪除",
+      "slowMode": "慢速模式：每個 {{interval}} 一個訊息",
+      "slowModeWait": "慢模式 — 等下 {{time}}",
+      "send": "寄送",
+      "deleteMessageTitle": "刪除呢個訊息？",
+      "deleteMessageBody": "呢個係復原唔到嘅。",
+      "cancel": "取消"
+    },
     "membersTab": "成員（{{count}}）",
     "about": "關於",
     "backToCommunities": "社群",
@@ -7006,7 +7029,14 @@
     }
   },
   "editor": {
-    "video": { "tFade": "交叉溶解", "none": "冇", "transition": "轉場", "speed": "速度", "sound": "聲音","video": "影片"},
+    "video": {
+      "tFade": "交叉溶解",
+      "none": "冇",
+      "transition": "轉場",
+      "speed": "速度",
+      "sound": "聲音",
+      "video": "影片"
+    },
     "review": {
       "title": "項目審閱",
       "shared": "同你分享",

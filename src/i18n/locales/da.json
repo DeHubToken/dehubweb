@@ -194,11 +194,11 @@
   },
   "settings": {
     "usernameTaken": "Brugernavnet er taget",
-    "showDislikesDesc": "Alle kan åbne fanen Dislikes på din profil. Når dette er slået fra, kan kun du se den.",
-    "showDislikes": "Vis mine dislikes for alle",
     "postingChain": "Blockchain til opslag",
     "showOnline": "Vis, når jeg er online",
     "showOnlineDesc": "Personer, du sender en besked til, ser en grøn prik ved siden af dit navn, mens du bruger DeHub",
+    "showDislikes": "Vis mine dislikes for alle",
+    "showDislikesDesc": "Alle kan åbne fanen Dislikes på din profil. Når dette er slået fra, kan kun du se den.",
     "smartReplies": "Foreslåede svar",
     "smartRepliesDesc": "Skriver to svar, du kan trykke på i en chat. × på forslagene slår det fra.",
     "title": "Indstillinger",
@@ -721,7 +721,6 @@
     "embed": "Indlejr",
     "copyEmbedCode": "Kopiér indlejringskode",
     "embedCodeCopied": "Indlejringskode kopieret",
-    "copyFailed": "Linket kunne ikke kopieres",
     "options": "Valgmuligheder",
     "aiOverview": "AI-overblik",
     "sendTip": "Send drikkepenge",
@@ -749,7 +748,8 @@
     "unpinPost": "Fjern fastgørelse fra din profil",
     "postPinned": "Fastgjort til din profil",
     "postUnpinned": "Ikke fastgjort fra din profil",
-    "pinFailed": "Kunne ikke fastgøre eller frigøre dette indlæg"
+    "pinFailed": "Kunne ikke fastgøre eller frigøre dette indlæg",
+    "copyFailed": "Linket kunne ikke kopieres"
   },
   "filters": {
     "sort": "Sorter",
@@ -1487,7 +1487,6 @@
     "returnHome": "Tilbage til forsiden"
   },
   "profile": {
-    "dislikes": { "loadMore": "Indlæs flere", "privateDesc": "Denne konto holder sine dislikes for sig selv.", "privateTitle": "Dislikes er private", "emptyOther": "Intet endnu.", "emptyOwn": "Opslag, du disliker, forsvinder fra dine feeds og vises her. Fortryd et dislike for at få opslaget tilbage.", "emptyTitle": "Ingen dislikes endnu" },
     "back": "Tilbage",
     "usernameAvailable": "Brugernavn er ledigt!",
     "signUpToClaim": "Tilmeld dig og gør krav på det",
@@ -1515,8 +1514,16 @@
       "commentUnavailable": "Denne kommentar er ikke længere tilgængelig"
     },
     "tabs": {
-      "dislikes": "Dislikes",
-      "playlists": "Spillelister"
+      "playlists": "Spillelister",
+      "dislikes": "Dislikes"
+    },
+    "dislikes": {
+      "emptyTitle": "Ingen dislikes endnu",
+      "emptyOwn": "Opslag, du disliker, forsvinder fra dine feeds og vises her. Fortryd et dislike for at få opslaget tilbage.",
+      "emptyOther": "Intet endnu.",
+      "privateTitle": "Dislikes er private",
+      "privateDesc": "Denne konto holder sine dislikes for sig selv.",
+      "loadMore": "Indlæs flere"
     },
     "offerWorthNow": "Cirka {{amount}} tokens til den aktuelle kurs",
     "offerNotePlaceholder": "Tilføj en note (valgfrit)",
@@ -2411,6 +2418,30 @@
     "addDescription": "Tilføj en beskrivelse...",
     "communityDescription": "Fællesskabsbeskrivelse...",
     "posts": "Opslag",
+    "chat": {
+      "intervalHour": "1 time",
+      "intervalHours": "{{count}}timer",
+      "intervalMinute": "1 minut",
+      "intervalMinutes": "{{count}} minutter",
+      "intervalSecond": "1 sekund",
+      "intervalSeconds": "{{count}} sekunder",
+      "muted": "Du er slået fra",
+      "mutedUntil": "Du er slået fra indtil {{until}}",
+      "postingDisabled": "Opslag er deaktiveret for medlemmer her",
+      "pinnedGif": "GIF",
+      "pinnedMedia": "Medier",
+      "jumpToPinned": "Gå til den fastgjorte besked",
+      "pinnedMessage": "Fastgjort besked",
+      "unpin": "Fjern fastgørelse",
+      "pin": "Pin",
+      "delete": "Slet",
+      "slowMode": "Langsom tilstand: en besked hver {{interval}}",
+      "slowModeWait": "Langsom tilstand — vent {{time}}",
+      "send": "Send",
+      "deleteMessageTitle": "Vil du slette denne besked?",
+      "deleteMessageBody": "Dette kan ikke fortrydes.",
+      "cancel": "Annuller"
+    },
     "membersTab": "Medlemmer ({{count}})",
     "about": "Om",
     "backToCommunities": "Fællesskaber",
@@ -6929,7 +6960,14 @@
     }
   },
   "editor": {
-    "video": { "tFade": "Overtoning", "none": "Ingen", "transition": "Overgang", "speed": "Hastighed", "sound": "Lyd","video": "Video"},
+    "video": {
+      "tFade": "Overtoning",
+      "none": "Ingen",
+      "transition": "Overgang",
+      "speed": "Hastighed",
+      "sound": "Lyd",
+      "video": "Video"
+    },
     "review": {
       "title": "Projektgennemgang",
       "shared": "Delt med dig",

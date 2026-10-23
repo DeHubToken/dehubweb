@@ -753,7 +753,6 @@
     "embed": "এমবেড",
     "copyEmbedCode": "এমবেড কোড কপি গরো",
     "embedCodeCopied": "এমবেড কোড কপি অইছে",
-    "copyFailed": "লিংক কপি গরা ন গেল",
     "options": "অপশন",
     "sendTip": "টিপ পাঠাও",
     "queue": "কিউ",
@@ -780,7 +779,8 @@
     "unpinPost": "তুমার প্রোফাইলর থেইন্য আনপিন কর",
     "postPinned": "তুমার প্রোফাইলর লগে পিন অইছে",
     "postUnpinned": "তুমার প্রোফাইলর থেইন্য আনপিন অইগেছে",
-    "pinFailed": "এই পোস্ট পিন বা আনপিন করতা পারিরনাই"
+    "pinFailed": "এই পোস্ট পিন বা আনপিন করতা পারিরনাই",
+    "copyFailed": "লিংক কপি গরা ন গেল"
   },
   "filters": {
     "sort": "সাজাও",
@@ -2494,6 +2494,29 @@
     "ticker": "টিকার",
     "assignTicker": "টিকার চার্ট নির্ধারণ গরন",
     "communityDescription": "সম্প্রদায়র বিবরণ...",
+    "chat": {
+      "intervalHour": "১ ঘন্টা",
+      "intervalHours": "{{count}} ঘন্টা",
+      "intervalMinute": "১ মিনিট",
+      "intervalMinutes": "{{count}} মিনিট",
+      "intervalSecond": "১ সেকেন্ড",
+      "intervalSeconds": "{{count}} সেকেন্ড",
+      "muted": "আপনে মিউট হইছে",
+      "mutedUntil": "আপনে মিউট হইছে {{until}} পর্যন্ত",
+      "postingDisabled": "এখানে সদস্যগোর পোস্টিং নিষ্ক্রিয়",
+      "pinnedMedia": "মিডিয়া",
+      "jumpToPinned": "পিন করা মেসেজে যাও",
+      "pinnedMessage": "পিন করা মেসেজ",
+      "unpin": "আনপিন",
+      "pin": "পিন",
+      "delete": "ডিলিট",
+      "slowMode": "স্লো মোড: প্রতি {{interval}} তে একডা মেসেজ",
+      "slowModeWait": "স্লো মোড — অপেক্ষা করুন {{time}}",
+      "send": "পাঠাও",
+      "deleteMessageTitle": "এই মেসেজডা ডিলিট করমু?",
+      "deleteMessageBody": "এটা ফিরাইয়া নেওয়া যাইব না.",
+      "cancel": "বাতিল করুন"
+    },
     "membersTab": "সদস্য ({{count}})",
     "about": "পরিচিতি",
     "communityNotFound": "সম্প্রদায় পাওয়া যায় ন",
@@ -6504,7 +6527,14 @@
     }
   },
   "editor": {
-    "video": { "tFade": "ক্রস-ডিজলভ", "none": "কিছু ন", "transition": "ট্রানজিশন", "speed": "স্পিড", "sound": "আবাজ","video": "ভিডিও"},
+    "video": {
+      "tFade": "ক্রস-ডিজলভ",
+      "none": "কিছু ন",
+      "transition": "ট্রানজিশন",
+      "speed": "স্পিড",
+      "sound": "আবাজ",
+      "video": "ভিডিও"
+    },
     "review": {
       "title": "প্রকল্প পর্যালোচনা",
       "shared": "আপনার সাথে শেয়ার করা",

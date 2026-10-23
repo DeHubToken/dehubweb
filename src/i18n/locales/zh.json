@@ -194,11 +194,11 @@
   },
   "settings": {
     "usernameTaken": "用户名已被占用",
-    "showDislikesDesc": "任何人都可以打开你个人资料中的“踩”标签。关闭后只有你自己能看到。",
-    "showDislikes": "向所有人显示我踩过的内容",
     "postingChain": "发帖区块链",
     "showOnline": "在我上线时显示",
     "showOnlineDesc": "当您使用DeHub时，您发送消息的人会在您的姓名旁边看到一个绿点",
+    "showDislikes": "向所有人显示我踩过的内容",
+    "showDislikesDesc": "任何人都可以打开你个人资料中的“踩”标签。关闭后只有你自己能看到。",
     "smartReplies": "建议回复",
     "smartRepliesDesc": "在聊天中生成两条可以点按的回复。建议上的 × 会关闭此功能。",
     "title": "设置",
@@ -723,7 +723,6 @@
     "embed": "嵌入",
     "copyEmbedCode": "复制嵌入代码",
     "embedCodeCopied": "嵌入代码已复制",
-    "copyFailed": "无法复制链接",
     "options": "选项",
     "aiOverview": "AI概述",
     "sendTip": "发送打赏",
@@ -751,7 +750,8 @@
     "unpinPost": "取消固定您的个人资料",
     "postPinned": "已固定到您的个人资料",
     "postUnpinned": "已从您的个人资料中取消固定",
-    "pinFailed": "无法固定或取消固定此帖子"
+    "pinFailed": "无法固定或取消固定此帖子",
+    "copyFailed": "无法复制链接"
   },
   "filters": {
     "sort": "排序",
@@ -1490,7 +1490,6 @@
     "returnHome": "返回首页"
   },
   "profile": {
-    "dislikes": { "loadMore": "加载更多", "privateDesc": "此账号不公开踩过的内容。", "privateTitle": "踩过的内容是私密的", "emptyOther": "还没有踩过任何内容。", "emptyOwn": "你踩过的帖子会从你的信息流中消失并显示在这里。取消踩即可恢复该帖子。", "emptyTitle": "还没有踩过的内容" },
     "back": "返回",
     "usernameAvailable": "用户名可用！",
     "signUpToClaim": "注册以获取",
@@ -1518,8 +1517,16 @@
       "commentUnavailable": "此评论不再可用"
     },
     "tabs": {
-      "dislikes": "踩",
-      "playlists": "播放列表"
+      "playlists": "播放列表",
+      "dislikes": "踩"
+    },
+    "dislikes": {
+      "emptyTitle": "还没有踩过的内容",
+      "emptyOwn": "你踩过的帖子会从你的信息流中消失并显示在这里。取消踩即可恢复该帖子。",
+      "emptyOther": "还没有踩过任何内容。",
+      "privateTitle": "踩过的内容是私密的",
+      "privateDesc": "此账号不公开踩过的内容。",
+      "loadMore": "加载更多"
     },
     "offerWorthNow": "按当前汇率约 {{amount}} 个代币",
     "offerNotePlaceholder": "添加备注（可选）",
@@ -2414,6 +2421,29 @@
     "addDescription": "添加描述...",
     "communityDescription": "社区描述...",
     "posts": "帖子",
+    "chat": {
+      "intervalHour": "1小时",
+      "intervalHours": "{{count}}小时",
+      "intervalMinute": "1分钟",
+      "intervalMinutes": "{{count}}分钟",
+      "intervalSecond": "1秒",
+      "intervalSeconds": "{{count}}秒",
+      "muted": "您已被静音",
+      "mutedUntil": "您已静音，直到{{until}}",
+      "postingDisabled": "此处已为会员禁用发布",
+      "pinnedMedia": "媒体",
+      "jumpToPinned": "跳转到固定的消息",
+      "pinnedMessage": "已固定的消息",
+      "unpin": "取消固定",
+      "pin": "PIN码",
+      "delete": "删除",
+      "slowMode": "慢速模式：每{{interval}}一条消息",
+      "slowModeWait": "慢速模式—等待{{time}}",
+      "send": "发送",
+      "deleteMessageTitle": "删除此消息？",
+      "deleteMessageBody": "此操作无法撤消。",
+      "cancel": "取消"
+    },
     "membersTab": "成员（{{count}}）",
     "about": "关于",
     "backToCommunities": "社区",
@@ -7026,7 +7056,14 @@
     }
   },
   "editor": {
-    "video": { "tFade": "交叉溶解", "none": "无", "transition": "转场", "speed": "速度", "sound": "声音","video": "视频"},
+    "video": {
+      "tFade": "交叉溶解",
+      "none": "无",
+      "transition": "转场",
+      "speed": "速度",
+      "sound": "声音",
+      "video": "视频"
+    },
     "review": {
       "title": "项目审阅",
       "shared": "与你共享",

@@ -718,7 +718,6 @@
     "embed": "Ҷойгир кардан",
     "copyEmbedCode": "Нусхабардории коди ҷойгиркунӣ",
     "embedCodeCopied": "Коди ҷойгиркунӣ нусхабардорӣ шуд",
-    "copyFailed": "Пайвандро нусхабардорӣ кардан муяссар нашуд",
     "options": "Имконот",
     "aiOverview": "Pangkalahatang-ideya",
     "sendTip": "Фиристодани инъом",
@@ -746,7 +745,8 @@
     "unpinPost": "I-unpin mula sa iyong profile",
     "postPinned": "Ipinapakita sa iyong profile",
     "postUnpinned": "Hindi nagpinapakita mula sa iyong profile",
-    "pinFailed": "Наметавонам ин постро PIN кунам ё ғайри фаъол созам"
+    "pinFailed": "Наметавонам ин постро PIN кунам ё ғайри фаъол созам",
+    "copyFailed": "Пайвандро нусхабардорӣ кардан муяссар нашуд"
   },
   "filters": {
     "sort": "Мураттаб",
@@ -2387,6 +2387,29 @@
     "addDescription": "Тавсиф илова кунед...",
     "communityDescription": "Тавсифи ҷамоат...",
     "posts": "Постҳо",
+    "chat": {
+      "intervalHour": "1 соат",
+      "intervalHours": "{{count}} info: whatsthis",
+      "intervalMinute": "1 дақиқа",
+      "intervalMinutes": "{{count}} дақиқаҳо",
+      "intervalSecond": "1 дақиқа",
+      "muted": "Шумо хомӯш карда шудаед",
+      "mutedUntil": "Шумо хомӯш карда шудаед то {{until}}",
+      "postingDisabled": "Ang pagpapa-post ay hindi pinagana para sa mga",
+      "pinnedGif": "GIF",
+      "pinnedMedia": "Медиа",
+      "jumpToPinned": "Гузаштан ба иттилооти пинҳонӣ",
+      "pinnedMessage": "Иттилооти пинҳонӣ",
+      "unpin": "Unpin",
+      "pin": "PIN",
+      "delete": "Tanggalin",
+      "slowMode": "Ҳолати суст: як паём ҳар {{interval}}",
+      "slowModeWait": "Ҳолати суст — интизор {{time}}",
+      "send": "Фиристодан",
+      "deleteMessageTitle": "Tanggalin ang mensahe na ito?",
+      "deleteMessageBody": "Ин наметавонад барҳам дода шавад.",
+      "cancel": "Бекор кардан"
+    },
     "membersTab": "Аъзоён ({{count}})",
     "about": "Дар бораи",
     "backToCommunities": "Ҷамоатҳо",
@@ -6938,7 +6961,14 @@
     }
   },
   "editor": {
-    "video": { "tFade": "Омехташавӣ", "none": "Ҳеҷ", "transition": "Гузариш", "speed": "Суръат", "sound": "Садо","video": "Видео"},
+    "video": {
+      "tFade": "Омехташавӣ",
+      "none": "Ҳеҷ",
+      "transition": "Гузариш",
+      "speed": "Суръат",
+      "sound": "Садо",
+      "video": "Видео"
+    },
     "review": {
       "title": "Баррасии лоиҳа",
       "shared": "Бо шумо мубодила шудааст",

@@ -715,7 +715,6 @@
     "embed": "अन्तर्निवेशय",
     "copyEmbedCode": "अन्तर्निवेश-कूटं प्रतिलिपिं कुर्वन्तु",
     "embedCodeCopied": "अन्तर्निवेश-कूटं प्रतिलिपितम्",
-    "copyFailed": "लिङ्कस्य प्रतिलिपिः न शक्यते स्म",
     "options": "विकल्पाः",
     "aiOverview": "अवलोकनं",
     "sendTip": "उपहारं प्रेषयतु",
@@ -743,7 +742,8 @@
     "unpinPost": "तेरे चित्रो पे न जाऊं",
     "postPinned": "भवतः प्रोफाइलम् प्रति निवर्त्यताम्",
     "postUnpinned": "तेरे नखरे पे न जाऊं",
-    "pinFailed": "एतत् पदं पञ्जीकर्तुम् अहं न शक्नोमि/न शक्नोमि"
+    "pinFailed": "एतत् पदं पञ्जीकर्तुम् अहं न शक्नोमि/न शक्नोमि",
+    "copyFailed": "लिङ्कस्य प्रतिलिपिः न शक्यते स्म"
   },
   "filters": {
     "sort": "क्रमयतु",
@@ -2389,6 +2389,28 @@
     "addDescription": "वर्णनं योजयतु...",
     "communityDescription": "संघ का वर्णन (Community description...)",
     "posts": "पोस्ट (Posts)",
+    "chat": {
+      "intervalHour": "१ तासां",
+      "intervalHours": "{{count}} घंटा/घंटा",
+      "intervalMinute": "१ मिनिटे",
+      "intervalMinutes": "{{count}} मिनिट्स",
+      "intervalSecond": "१ सेकण्डम्",
+      "intervalSeconds": "{{count}} सेकण्ड",
+      "muted": "यूयं मन्यध्वं",
+      "postingDisabled": "सदस्यःःEdit इत्यनेन सह अधो लिखितानां पृष्ठानां परिसन्धिं करोतुः",
+      "pinnedGif": "GIF",
+      "pinnedMedia": "सञ्चारमाध्यमम्",
+      "jumpToPinned": "कोई प्राप्त संदेश खोलना",
+      "pinnedMessage": "पञ्जीकृतं सन्देशम्",
+      "unpin": "अनपेक्षितम्",
+      "pin": "पिनम्",
+      "delete": "निष्कास्यताम्",
+      "slowModeWait": "प्रतिक्षा - प्रतिक्षा {{time}}",
+      "send": "प्रेष्यताम्",
+      "deleteMessageTitle": "कोई संदेश दे?",
+      "deleteMessageBody": "इह न संभवति ।",
+      "cancel": "रद्दम्"
+    },
     "membersTab": "सदस्याः ({{count}})",
     "about": "विषये",
     "backToCommunities": "संघ (Communities)",
@@ -6840,7 +6862,14 @@
     }
   },
   "editor": {
-    "video": { "tFade": "मिश्रविलयः", "none": "किमपि न", "transition": "संक्रमणम्", "speed": "वेगः", "sound": "ध्वनिः","video": "चलच्चित्रम्"},
+    "video": {
+      "tFade": "मिश्रविलयः",
+      "none": "किमपि न",
+      "transition": "संक्रमणम्",
+      "speed": "वेगः",
+      "sound": "ध्वनिः",
+      "video": "चलच्चित्रम्"
+    },
     "review": {
       "title": "परियोजनासमीक्षा",
       "shared": "भवता सह साझीकृतम्",

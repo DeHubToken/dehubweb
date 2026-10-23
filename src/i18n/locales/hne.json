@@ -713,7 +713,6 @@
     "embed": "एम्बेड",
     "copyEmbedCode": "एम्बेड कोड कॉपी करव",
     "embedCodeCopied": "एम्बेड कोड कॉपी हो गे",
-    "copyFailed": "लिंक कॉपी नइ हो सकिस",
     "options": "विकल्प",
     "aiOverview": "एआई सिंहावलोकन",
     "sendTip": "टिप भेजव",
@@ -741,7 +740,8 @@
     "unpinPost": "अपन प्रोफ़ाइल ले लिंक",
     "postPinned": "अपन प्रोफ़ाइल म खोज",
     "postUnpinned": "अपन प्रोफ़ाइल ले साइन अप करव",
-    "pinFailed": "ये पोस्ट ल पिन या अनपिन नइ कर सकिस"
+    "pinFailed": "ये पोस्ट ल पिन या अनपिन नइ कर सकिस",
+    "copyFailed": "लिंक कॉपी नइ हो सकिस"
   },
   "filters": {
     "sort": "क्रम",
@@ -2382,6 +2382,26 @@
     "addDescription": "विवरण जोड़व...",
     "communityDescription": "समुदाय के विवरण...",
     "posts": "पोस्ट",
+    "chat": {
+      "intervalHour": "1 घंटा",
+      "intervalMinute": "1 मिनट",
+      "intervalSecond": "1 सेकन्ड",
+      "muted": "तुंहर ले गारी हो गे हे",
+      "postingDisabled": "सदस्य मन ल अक्षम करे जात हे",
+      "pinnedGif": "जीआईएफ",
+      "pinnedMedia": "मीडिया",
+      "jumpToPinned": "पिन्ड संदेस मं कूदव",
+      "pinnedMessage": "पंक्तियाँ संदेस",
+      "unpin": "अनपिन",
+      "pin": "पिन",
+      "delete": "मेटाव",
+      "slowMode": "धीमी मोड: एक संदेस हर {{interval}}",
+      "slowModeWait": "धीमी मोड — अगोरव {{time}}",
+      "send": "भेजव",
+      "deleteMessageTitle": "ये संदेस ल मेटाव?",
+      "deleteMessageBody": "एहर मना करे के जरूरत नी हवय!",
+      "cancel": "खारिज करव"
+    },
     "membersTab": "सदस्य ({{count}})",
     "about": "बारे मा",
     "backToCommunities": "समुदाय",
@@ -6881,7 +6901,14 @@
     }
   },
   "editor": {
-    "video": { "tFade": "क्रॉस-डिजॉल्व", "none": "कुछू नइ", "transition": "ट्रांजिशन", "speed": "रफ्तार", "sound": "आवाज","video": "वीडियो"},
+    "video": {
+      "tFade": "क्रॉस-डिजॉल्व",
+      "none": "कुछू नइ",
+      "transition": "ट्रांजिशन",
+      "speed": "रफ्तार",
+      "sound": "आवाज",
+      "video": "वीडियो"
+    },
     "review": {
       "title": "प्रोजेक्ट समीक्षा",
       "shared": "आपके साथ साझा किया गया",

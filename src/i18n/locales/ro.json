@@ -194,11 +194,11 @@
   },
   "settings": {
     "usernameTaken": "Numele de utilizator este ocupat",
-    "showDislikesDesc": "Oricine poate deschide fila Nu-mi place din profilul tău. Când e dezactivat, doar tu o vezi.",
-    "showDislikes": "Arată tuturor ce nu-mi place",
     "postingChain": "Blockchain pentru postări",
     "showOnline": "Afișează când sunt online",
     "showOnlineDesc": "Persoanele cărora le trimiți mesaje văd un punct verde lângă numele tău în timp ce folosești DeHub",
+    "showDislikes": "Arată tuturor ce nu-mi place",
+    "showDislikesDesc": "Oricine poate deschide fila Nu-mi place din profilul tău. Când e dezactivat, doar tu o vezi.",
     "smartReplies": "Răspunsuri sugerate",
     "smartRepliesDesc": "Redactează două răspunsuri pe care le poți atinge într-un chat. × de pe sugestii dezactivează asta.",
     "title": "Setări",
@@ -721,7 +721,6 @@
     "embed": "Încorporează",
     "copyEmbedCode": "Copiază codul de încorporare",
     "embedCodeCopied": "Codul de încorporare a fost copiat",
-    "copyFailed": "Linkul nu a putut fi copiat",
     "options": "Opțiuni",
     "aiOverview": "Prezentare generală AI",
     "sendTip": "Trimite bacșiș",
@@ -749,7 +748,8 @@
     "unpinPost": "Anulează fixarea din profilul tău",
     "postPinned": "Fixat la profilul tău",
     "postUnpinned": "S-a deconectat de la profilul tău",
-    "pinFailed": "Nu s-a putut fixa sau anula fixarea acestei postări"
+    "pinFailed": "Nu s-a putut fixa sau anula fixarea acestei postări",
+    "copyFailed": "Linkul nu a putut fi copiat"
   },
   "filters": {
     "sort": "Sortare",
@@ -1486,7 +1486,6 @@
     "returnHome": "Return Home"
   },
   "profile": {
-    "dislikes": { "loadMore": "Încarcă mai multe", "privateDesc": "Acest cont își păstrează nu-mi place-urile pentru sine.", "privateTitle": "Nu-mi place este privat", "emptyOther": "Încă nimic.", "emptyOwn": "Postările care nu-ți plac dispar din fluxurile tale și apar aici. Anulează nu-mi place pentru a aduce postarea înapoi.", "emptyTitle": "Încă nimic" },
     "back": "Back",
     "usernameAvailable": "Username available!",
     "signUpToClaim": "Înscrie-te astăzi pentru a revendica",
@@ -1514,8 +1513,16 @@
       "commentUnavailable": "Acest comentariu nu mai este disponibil"
     },
     "tabs": {
-      "dislikes": "Nu-mi place",
-      "playlists": "Liste de redare"
+      "playlists": "Liste de redare",
+      "dislikes": "Nu-mi place"
+    },
+    "dislikes": {
+      "emptyTitle": "Încă nimic",
+      "emptyOwn": "Postările care nu-ți plac dispar din fluxurile tale și apar aici. Anulează nu-mi place pentru a aduce postarea înapoi.",
+      "emptyOther": "Încă nimic.",
+      "privateTitle": "Nu-mi place este privat",
+      "privateDesc": "Acest cont își păstrează nu-mi place-urile pentru sine.",
+      "loadMore": "Încarcă mai multe"
     },
     "offerWorthNow": "Aproximativ {{amount}} tokenuri la cursul actual",
     "offerNotePlaceholder": "Adaugă o notă (opțional)",
@@ -2404,6 +2411,30 @@
     "addDescription": "Adaugă o descriere...",
     "communityDescription": "Descrierea comunității...",
     "posts": "Postări",
+    "chat": {
+      "intervalHour": "1 oră",
+      "intervalHours": "{{count}} ore",
+      "intervalMinute": "1 minut",
+      "intervalMinutes": "{{count}} minute",
+      "intervalSecond": "1 secundă",
+      "intervalSeconds": "{{count}} secunde",
+      "muted": "Sunteți dezactivat (ă)",
+      "mutedUntil": "Sunteți dezactivat (ă) până la{{until}}",
+      "postingDisabled": "Postarea este dezactivată pentru membrii de aici",
+      "pinnedGif": "GIF",
+      "pinnedMedia": "Media",
+      "jumpToPinned": "Salt la mesajul fixat",
+      "pinnedMessage": "Mesaj fixat",
+      "unpin": "Anulați fixarea",
+      "pin": "Știft",
+      "delete": "Șterge",
+      "slowMode": "Mod lent: un mesaj la fiecare {{interval}}",
+      "slowModeWait": "Mod lent — așteptați {{time}}",
+      "send": "Trimite",
+      "deleteMessageTitle": "Ștergeți acest mesaj?",
+      "deleteMessageBody": "Acest lucru nu poate fi anulat.",
+      "cancel": "Anulează"
+    },
     "membersTab": "Membri ({{count}})",
     "about": "Despre",
     "backToCommunities": "Comunități",
@@ -7014,7 +7045,14 @@
     }
   },
   "editor": {
-    "video": { "tFade": "Dizolvare", "none": "Niciuna", "transition": "Tranziție", "speed": "Viteză", "sound": "Sunet","video": "Video"},
+    "video": {
+      "tFade": "Dizolvare",
+      "none": "Niciuna",
+      "transition": "Tranziție",
+      "speed": "Viteză",
+      "sound": "Sunet",
+      "video": "Video"
+    },
     "review": {
       "title": "Revizuirea proiectului",
       "shared": "Partajat cu tine",
@@ -8676,12 +8714,6 @@
     "view": "Vezi",
     "failed": "Videoclipul nu a putut fi procesat"
   },
-  "footer": {
-    "about": "Despre noi",
-    "contact": "Contact",
-    "privacy": "Politica de confidențialitate",
-    "terms": "Termeni și condiții"
-  },
   "loginStack": {
     "tip": "Bacșiș în DHB",
     "headlineTop": "Vei deține totul",
@@ -8691,5 +8723,11 @@
     "fingerprint": "Amprentă",
     "exploreFirst": "Explorează mai întâi",
     "codeNote": "Îți trimitem un cod pe e-mail, fără parolă."
+  },
+  "footer": {
+    "about": "Despre noi",
+    "contact": "Contact",
+    "privacy": "Politica de confidențialitate",
+    "terms": "Termeni și condiții"
   }
 }
