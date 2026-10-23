@@ -1,0 +1,172 @@
+/* A new video's road to playable: the slim bar under the composer's video
+   preview while it uploads early, and the glass dock pill that follows the
+   post through its transcode after Post.
+
+   Colours come from the theme's own tokens. --ink and --ink-muted are only
+   defined on the paper themes (Minimal Light, System Light), so on every dark
+   and canvas theme the white fallbacks apply; --float-glass is the frost the
+   toasts and sheets already use on each theme (styles/glass-surfaces.css). No
+   Tailwind colour classes on purpose: the theme safety nets match on those. */
+
+[data-video-progress],
+[data-processing-dock] {
+  --vp-ink: var(--ink, #ffffff);
+  --vp-muted: var(--ink-muted, rgb(255 255 255 / 0.62));
+  --vp-track: var(--hairline-strong, rgb(255 255 255 / 0.14));
+  --vp-fill: var(--vp-ink);
+  --vp-ready: rgb(52 211 153);
+}
+:is(html[data-theme='light'], html[data-system-tone='light']) :is([data-video-progress], [data-processing-dock]) {
+  --vp-ready: rgb(5 150 105);
+}
+
+/* Composer bar */
+[data-video-progress] {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  color: var(--vp-ink);
+}
+[data-video-progress] [data-vp-track] {
+  height: 4px;
+  border-radius: 9999px;
+  overflow: hidden;
+  background: var(--vp-track);
+}
+[data-video-progress] [data-vp-fill] {
+  height: 100%;
+  border-radius: inherit;
+  background: var(--vp-fill);
+  transition: width 300ms ease-out, background-color 300ms ease-out;
+}
+[data-video-progress][data-phase='ready'] [data-vp-fill] {
+  background: var(--vp-ready);
+}
+[data-video-progress] [data-vp-row] {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 12px;
+  line-height: 16px;
+}
+[data-video-progress] [data-vp-label] {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  color: var(--vp-muted);
+}
+[data-video-progress][data-phase='ready'] [data-vp-label] {
+  color: var(--vp-ready);
+}
+[data-video-progress] [data-vp-percent] {
+  color: var(--vp-muted);
+  font-variant-numeric: tabular-nums;
+}
+
+/* Dock pill */
+[data-processing-dock] {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  max-width: min(320px, calc(100vw - 32px));
+  padding: 6px 14px 6px 6px;
+  border-radius: 9999px;
+  color: var(--vp-ink);
+  background:
+    linear-gradient(rgb(255 255 255 / 0.14), rgb(255 255 255 / 0.02) 45%, rgb(255 255 255 / 0)),
+    var(--float-glass, rgb(9 9 11 / 0.72));
+  -webkit-backdrop-filter: var(--float-glass-blur, blur(24px) saturate(160%));
+  backdrop-filter: var(--float-glass-blur, blur(24px) saturate(160%));
+  box-shadow:
+    inset 0 0 0 1px rgb(255 255 255 / 0.16),
+    inset 0 1px 0 rgb(255 255 255 / 0.3),
+    0 8px 24px rgb(0 0 0 / 0.28);
+  text-align: left;
+}
+:is(html[data-theme='light'], html[data-system-tone='light']) [data-processing-dock] {
+  box-shadow:
+    inset 0 0 0 1px var(--hairline-strong, rgb(0 0 0 / 0.12)),
+    inset 0 1px 0 rgb(255 255 255 / 0.7),
+    0 8px 24px rgb(0 0 0 / 0.12);
+}
+button[data-processing-dock] {
+  cursor: pointer;
+}
+[data-processing-dock] [data-pd-thumb] {
+  position: relative;
+  flex: none;
+  width: 36px;
+  height: 36px;
+  border-radius: 9999px;
+  overflow: hidden;
+  background: var(--vp-track);
+}
+[data-processing-dock] [data-pd-thumb] img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+/* A ring of progress around the thumbnail. */
+[data-processing-dock] [data-pd-ring] {
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background: conic-gradient(var(--vp-fill) var(--pd-progress, 0%), transparent 0);
+  -webkit-mask: radial-gradient(circle, transparent 15px, #000 15.5px);
+  mask: radial-gradient(circle, transparent 15px, #000 15.5px);
+}
+[data-processing-dock][data-phase='done'] [data-pd-ring] {
+  background: var(--vp-ready);
+}
+[data-processing-dock][data-phase='failed'] [data-pd-ring] {
+  background: rgb(248 113 113);
+}
+[data-processing-dock] [data-pd-text] {
+  min-width: 0;
+  font-size: 13px;
+  line-height: 18px;
+  font-weight: 500;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+[data-processing-dock] [data-pd-percent] {
+  flex: none;
+  font-size: 12px;
+  color: var(--vp-muted);
+  font-variant-numeric: tabular-nums;
+}
+[data-processing-dock] [data-pd-view] {
+  font-weight: 600;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+/* Where the dock sits: above the phone bottom nav, and small at the foot of
+   the main column on desktop. */
+[data-processing-dock-anchor] {
+  position: fixed;
+  z-index: 60;
+  left: 50%;
+  bottom: calc(76px + env(safe-area-inset-bottom, 0px));
+  transform: translateX(-50%);
+  pointer-events: none;
+  animation: processing-dock-in 220ms ease-out;
+}
+[data-processing-dock-anchor] > * {
+  pointer-events: auto;
+}
+@media (min-width: 1024px) {
+  [data-processing-dock-anchor] {
+    left: calc(var(--app-main-left, 0px) + var(--app-main-width, 100vw) / 2);
+    bottom: 24px;
+  }
+}
+@keyframes processing-dock-in {
+  from { opacity: 0; transform: translate(-50%, 8px); }
+  to { opacity: 1; transform: translate(-50%, 0); }
+}
+@media (prefers-reduced-motion: reduce) {
+  [data-processing-dock-anchor] { animation: none; }
+  [data-video-progress] [data-vp-fill] { transition: none; }
+}

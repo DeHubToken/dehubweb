@@ -1842,6 +1842,8 @@
     "monthsAgo": "vor {{count}}Mo",
     "forLabel": "Für",
     "againstLabel": "Gegen",
+    "lentBadgeCantVote": "Dein Abzeichen wird dir verliehen, und verliehene Abzeichen können nicht abstimmen. Kaufen Sie DHB, um Ihr eigenes Abzeichen zu erhalten.",
+    "buyDhb": "DHB kaufen",
     "discussion": {
       "title": "Diskussion",
       "intro": "Stellen Sie Folgefragen oder besprechen Sie den Vorschlag, bevor Sie abstimmen.",
@@ -4850,11 +4852,6 @@
     "creatorEarnsDirect": "Abonnenten zahlen in DeHub-Token. Deine Aktie landet in deinem Wallet, sobald sie abonniert wird, abzüglich der Plattformgebühr für dein Abzeichen-Level."
   },
   "liveOverlay": {
-    "level": "Level {{level}}",
-    "streak_one": "{{count}} -Wochensträhne",
-    "streak_other": "{{count}} -Wochensträhne",
-    "tipJar": "GESCHENKGEF",
-    "subathon": "Subathon",
     "someone": "Jemand",
     "newFollower": "Neuer Follower: {{name}}",
     "newSubscriber": "Neuer Abonnent: {{name}}",
@@ -4867,10 +4864,15 @@
     "tipped": "{{name}} hat ein Geschenk gesendet",
     "chatPreview": "Chat-Nachrichten werden hier angezeigt",
     "wheelLanded": "{{name}} gesponnen: {{result}}",
+    "subathon": "Subathon",
     "subathonOver": "Die Zeit ist abgelaufen",
     "pointsTitle": "Die treuesten Zuschauer",
     "points_one": "{{formatted}} Punkt",
     "points_other": "{{formatted}} Punkte",
+    "level": "Level {{level}}",
+    "streak_one": "{{count}} -Wochensträhne",
+    "streak_other": "{{count}} -Wochensträhne",
+    "tipJar": "GESCHENKGEF",
     "poll": {
       "closed": "Abstimmung geschlossen",
       "voteFor": "Stimme für {{option}} ab",
@@ -5037,8 +5039,6 @@
       "join": "Beitreten"
     },
     "kinds": {
-      "streamer_level": "Streamer-Level",
-      "tip_jar": "GESCHENKGEF",
       "tip_alert": "TIPP-ALAR",
       "follow_alert": "Benachrichtigung folgen",
       "subscribe_alert": "Abonnenten-Alert",
@@ -5058,11 +5058,11 @@
       "poll": "Umfrage",
       "spin_wheel": "Schleuderrad",
       "subathon_timer": "Subathon-Timer",
-      "points_board": "Loyale Zuschauer"
+      "points_board": "Loyale Zuschauer",
+      "streamer_level": "Streamer-Level",
+      "tip_jar": "GESCHENKGEF"
     },
     "hints": {
-      "streamer_level": "Dein Streamer-Level und deine wöchentliche Serie aus deinem Profil",
-      "tip_jar": "Ein Glas, das sich füllt, wenn bezahlte Geschenke hereinkommen",
       "tip_alert": "Feiern Sie jeden Tipp, der auf sein Level zugeschnitten ist",
       "follow_alert": "Zeigt jeden neuen Follower an",
       "subscribe_alert": "Zeigt jeden neuen Abonnenten an",
@@ -5082,14 +5082,16 @@
       "poll": "Ihre Live-Umfrage mit einer Abstimmungsschaltfläche für jede Option",
       "spin_wheel": "Wo sich die Räder in deinen Regeln drehen",
       "subathon_timer": "Ein Countdown, der Geschenke, Follows und Abonnements zurückdrängt",
-      "points_board": "Ihre Top-Zuschauer nach Punkten aus Zuschauen und Verschenken"
+      "points_board": "Ihre Top-Zuschauer nach Punkten aus Zuschauen und Verschenken",
+      "streamer_level": "Dein Streamer-Level und deine wöchentliche Serie aus deinem Profil",
+      "tip_jar": "Ein Glas, das sich füllt, wenn bezahlte Geschenke hereinkommen"
     },
     "fields": {
-      "showStreak": "Die wöchentliche Serie anzeigen",
       "style": "Stil",
       "celebration": "Feier",
       "banner": "Banner",
       "minAmount": "Kleinster Tipp zum Anzeigen (DHB)",
+      "showStreak": "Die wöchentliche Serie anzeigen",
       "showMessage": "TIP-Nachricht anzeigen",
       "confirmedOnly": "Erst nach der Zahlungsbestätigung",
       "confirmedOnlyHint": "Wartet ein paar Sekunden auf die Kette, so dass ein Trinkgeld, das nie bezahlt wird, nie erscheint.",
@@ -8745,5 +8747,14 @@
     "phraseLoadFailed": "Deine Wiederherstellungsphrase konnte nicht geladen werden. Versuche es erneut oder öffne DeHub auf deinem ursprünglichen Gerät.",
     "noPhrase": "Diese Wallet wurde mit einem privaten Schlüssel gespeichert. DeHub hat daher keine Wiederherstellungsphrase zum Anzeigen. Sichere diesen Schlüssel, um dieselbe Wallet wiederherzustellen.",
     "keyWarning": "Wer diesen Schlüssel besitzt, kann deine Wallet kontrollieren. Bewahre ihn sicher auf und teile ihn niemals."
+  },
+  "postProcessing": {
+    "uploading": "Wird hochgeladen…",
+    "preparing": "Wird vorbereitet…",
+    "ready": "Bereit",
+    "preparingVideo": "Dein Video wird vorbereitet",
+    "posted": "Gepostet",
+    "view": "Ansehen",
+    "failed": "Das Video konnte nicht verarbeitet werden"
   }
 }

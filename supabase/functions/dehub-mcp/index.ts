@@ -1243,6 +1243,7 @@ function buildServer(apiKey: string | null, req: Request, registry?: Map<string,
         success: true,
         token_id,
         comment: unwrap(response.data),
+        comment_id: (response.data as any)?.commentId ?? (response.data as any)?.comment?.id ?? unwrap(response.data)?.id ?? null,
         comments_remaining_this_hour: check.remaining,
       });
     },

@@ -1757,6 +1757,8 @@
     "monthsAgo": "{{count}} kɔrɔbɔ",
     "forLabel": "Mun na do?",
     "againstLabel": "O kama, a ka ɲi ka",
+    "lentBadgeCantVote": "I ka batɛmu dira i ma, i ka batɛmu tɛ se ka kɛ. I yɛrɛ ka batɛmu ta walisa ka DHB san.",
+    "buyDhb": "Sɔ DHB",
     "discussion": {
       "title": "Ɲiningaliw",
       "intro": "A ka fisa fana ka baro kɛ n'i ma vote.",
@@ -4645,10 +4647,6 @@
     "creatorEarnsDirect": "Abonnew bɛ sara DeHub token na. U mana don tuma min na, i ka tila bɛ se i ka wariboro la, i ka badge hakɛ ka sara bɔlen a la."
   },
   "liveOverlay": {
-    "level": "O ye {{level}}",
-    "streak_one": "{{count}}-week streak",
-    "streak_other": "{{count}}-week streak",
-    "tipJar": "A ye min fɔ, o ye tiɲɛ ye",
     "someone": "Mɔgɔ dɔ",
     "newFollower": "Mɔgɔ min be tugu a kɔ: {{name}}",
     "newSubscriber": "Mɔgɔ min be sɛbɛri kɛ: {{name}}",
@@ -4664,6 +4662,10 @@
     "pointsTitle": "I ka mɔgɔ kantigiw",
     "points_one": "{{formatted}} point",
     "points_other": "{{formatted}} points",
+    "level": "O ye {{level}}",
+    "streak_one": "{{count}}-week streak",
+    "streak_other": "{{count}}-week streak",
+    "tipJar": "A ye min fɔ, o ye tiɲɛ ye",
     "poll": {
       "closed": "Jula ni a kɛnɛ",
       "voteFor": "Jula fɛ {{option}}",
@@ -4828,8 +4830,6 @@
       "join": "Join"
     },
     "kinds": {
-      "streamer_level": "Fɛɛn minw be se ka kɛ",
-      "tip_jar": "A ye min fɔ, o ye tiɲɛ ye",
       "tip_alert": "Tip alert",
       "follow_alert": "Follow alert",
       "subscribe_alert": "Subscriber alert",
@@ -4849,11 +4849,11 @@
       "poll": "Fanga be mɔgɔ minw na,",
       "spin_wheel": "O ye nɛgɛso ye",
       "subathon_timer": "O ye wagati ta ye",
-      "points_board": "Mɔgɔ minw be kantigiya kɛ"
+      "points_board": "Mɔgɔ minw be kantigiya kɛ",
+      "streamer_level": "Fɛɛn minw be se ka kɛ",
+      "tip_jar": "A ye min fɔ, o ye tiɲɛ ye"
     },
     "hints": {
-      "streamer_level": "I ka kunnafoniw hakɛ ani i ka dɔgɔkun o dɔgɔkun kunnafoniw, i ka kunnafoniw kɔnɔ",
-      "tip_jar": "O kɔ, a ye fɛɛn dɔ di a ma min tun ka kan ka kɛ a yɛrɛ ta ye.",
       "tip_alert": "O la, a tun be se ka kɛ ko a tun ye mɔgɔ min ye, a tun b'o tigi le ye.",
       "follow_alert": "Ka tugu mɔgɔ kuraw kɔ",
       "subscribe_alert": "A ka kan ka kɛ i ka mɔgɔ kuraw bɛɛ ka kan ka kɛ i ka mɔgɔ kuraw ye",
@@ -4872,14 +4872,16 @@
       "poll": "I ka ɲɛnamaya kɛcogo ka di i ye, i ka vote tuguni kelen kelen bɛɛ la",
       "spin_wheel": "I ka sariya kɔnɔ, i ka kan ka min fɔ, o ye tiɲɛ ye.",
       "subathon_timer": "O la, mɔgɔ minw be sɔn ka fɛɛn dɔ di, olu be sɔn ka fɛɛn dɔ di.",
-      "points_board": "I ka mɔgɔ minw ye mɔgɔbabaw ye, i ka olu filɛ ani k'u ka nilifɛnw di u ma"
+      "points_board": "I ka mɔgɔ minw ye mɔgɔbabaw ye, i ka olu filɛ ani k'u ka nilifɛnw di u ma",
+      "streamer_level": "I ka kunnafoniw hakɛ ani i ka dɔgɔkun o dɔgɔkun kunnafoniw, i ka kunnafoniw kɔnɔ",
+      "tip_jar": "O kɔ, a ye fɛɛn dɔ di a ma min tun ka kan ka kɛ a yɛrɛ ta ye."
     },
     "fields": {
-      "showStreak": "Dɔgɔkun hakilila-nyuma",
       "style": "Style",
       "celebration": "Ɲanagwɛ",
       "banner": "Fanga be mɔgɔ minw na, olu ka kan",
       "minAmount": "O la, a ka ɲi ka kɛ ni mɔgɔ dɔ ye min be se k'a yɛrɛ tanga a ka baara ma.",
+      "showStreak": "Dɔgɔkun hakilila-nyuma",
       "showMessage": "Ka kumaɲɔgɔnya kɛ ni mɔgɔ dɔ ye",
       "confirmedOnly": "O kɔ, u y'a fɔ ko:",
       "confirmedOnlyHint": "O kama, a tun man kan ka wari caaman sara.",
@@ -8326,5 +8328,14 @@
     "backToMedia": "An ka segi o koo kan",
     "like": "O cogo la,",
     "unlike": "A tun be i ko"
+  },
+  "postProcessing": {
+    "uploading": "A bɛ ka bila…",
+    "preparing": "A bɛ ka labɛn…",
+    "ready": "A labɛnna",
+    "preparingVideo": "I ka widewo bɛ ka labɛn",
+    "posted": "A bilala",
+    "view": "Lajɛ",
+    "failed": "Widewo ma se ka labɛn"
   }
 }

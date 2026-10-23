@@ -1829,7 +1829,24 @@
     "tokensUnit": "jetons"
   },
   "agents": {
-    "life": {"title":"Vivant","help":"Laisse cet agent vivre de lui-même. Il a ses propres horaires, publie, aime et répond avec sa propre voix, et dort la nuit.","starting":"Création de sa personnalité…","awake":"Éveillé à {{home}}","asleep":"Endormi à {{home}}","next":"prochain passage {{time}}","recent":"Récemment","empty":"Rien pour l'instant. Il passera bientôt.","kind":{"post":"A publié","comment":"A commenté","reply":"A répondu","like":"A aimé une publication","profile":"A mis à jour son profil","error":"Un problème est survenu"}},
+    "life": {
+      "title": "Vivant",
+      "help": "Laisse cet agent vivre de lui-même. Il a ses propres horaires, publie, aime et répond avec sa propre voix, et dort la nuit.",
+      "starting": "Création de sa personnalité…",
+      "awake": "Éveillé à {{home}}",
+      "asleep": "Endormi à {{home}}",
+      "next": "prochain passage {{time}}",
+      "recent": "Récemment",
+      "empty": "Rien pour l'instant. Il passera bientôt.",
+      "kind": {
+        "post": "A publié",
+        "comment": "A commenté",
+        "reply": "A répondu",
+        "like": "A aimé une publication",
+        "profile": "A mis à jour son profil",
+        "error": "Un problème est survenu"
+      }
+    },
     "profile": {
       "edit": "Modifier le profil",
       "avatar": "Avatar",
@@ -2223,6 +2240,8 @@
     "monthsAgo": "il y a {{count}}mo",
     "forLabel": "Pour",
     "againstLabel": "Contre",
+    "lentBadgeCantVote": "Votre badge vous est prêté et les badges prêtés ne peuvent pas voter. Achetez DHB pour gagner votre propre badge.",
+    "buyDhb": "Acheter DHB",
     "discussion": {
       "title": "Discussion",
       "intro": "Posez des questions de suivi ou discutez de la proposition avant de voter.",
@@ -5839,10 +5858,6 @@
     "creatorEarnsDirect": "Les abonnés paient en jetons DeHub. Votre part atterrit dans votre portefeuille au moment où ils s'abonnent, moins les frais de plateforme pour votre niveau de badge."
   },
   "liveOverlay": {
-    "level": "Niveau {{level}}",
-    "streak_one": "{{count}}-week streak",
-    "streak_other": "{{count}}-week streak",
-    "tipJar": "Pot cadeau",
     "someone": "Quelqu'un",
     "newFollower": "Nouveau follower : {{name}}",
     "newSubscriber": "Nouvel abonné : {{name}}",
@@ -5860,6 +5875,10 @@
     "pointsTitle": "Les spectateurs les plus fidèles",
     "points_one": "{{formatted}} point",
     "points_other": "{{formatted}} points",
+    "level": "Niveau {{level}}",
+    "streak_one": "{{count}}-week streak",
+    "streak_other": "{{count}}-week streak",
+    "tipJar": "Pot cadeau",
     "poll": {
       "closed": "Voting fermé",
       "voteFor": "Voter pour {{option}}",
@@ -6027,8 +6046,6 @@
       "join": "Rejoindre"
     },
     "kinds": {
-      "streamer_level": "Niveau du streamer",
-      "tip_jar": "Pot cadeau",
       "tip_alert": "Alerte de pourboire",
       "follow_alert": "Suivre l'alerte",
       "subscribe_alert": "Alerte abonné",
@@ -6048,11 +6065,11 @@
       "poll": "Sondage",
       "spin_wheel": "Roue rotative",
       "subathon_timer": "Minuteur Subathon",
-      "points_board": "Spectateurs fidèles"
+      "points_board": "Spectateurs fidèles",
+      "streamer_level": "Niveau du streamer",
+      "tip_jar": "Pot cadeau"
     },
     "hints": {
-      "streamer_level": "Votre niveau de streamer et votre séquence hebdomadaire, à partir de votre profil",
-      "tip_jar": "Un pot qui se remplit au fur et à mesure que les cadeaux payants arrivent",
       "tip_alert": "Célèbre chaque pourboire, dimensionné à son niveau",
       "follow_alert": "Affiche chaque nouvel abonné",
       "subscribe_alert": "Affiche chaque nouvel abonné",
@@ -6072,14 +6089,16 @@
       "poll": "Votre sondage en direct, avec un bouton de vote pour chaque option",
       "spin_wheel": "Où tournent les roues de vos règles",
       "subathon_timer": "Un compte à rebours que les cadeaux, les suivis et les abonnements repoussent",
-      "points_board": "Vos meilleurs spectateurs par points grâce à la visionnage et aux dons"
+      "points_board": "Vos meilleurs spectateurs par points grâce à la visionnage et aux dons",
+      "streamer_level": "Votre niveau de streamer et votre séquence hebdomadaire, à partir de votre profil",
+      "tip_jar": "Un pot qui se remplit au fur et à mesure que les cadeaux payants arrivent"
     },
     "fields": {
-      "showStreak": "Afficher la série hebdomadaire",
       "style": "Style",
       "celebration": "Célébration",
       "banner": "Bannière",
       "minAmount": "Le plus petit pourboire à afficher (DHB)",
+      "showStreak": "Afficher la série hebdomadaire",
       "showMessage": "Afficher le message de pourboire",
       "confirmedOnly": "Seulement après que le paiement confirme",
       "confirmedOnlyHint": "Attend quelques secondes pour la chaîne, donc un pourboire qui n'est jamais payé n'apparaît jamais.",
@@ -14090,5 +14109,14 @@
     "nobodyYet": "Personne pour le moment",
     "rotate": "Faire pivoter l'écran",
     "showControls": "Afficher les commandes"
+  },
+  "postProcessing": {
+    "uploading": "Envoi…",
+    "preparing": "Préparation…",
+    "ready": "Prêt",
+    "preparingVideo": "Préparation de ta vidéo",
+    "posted": "Publié",
+    "view": "Voir",
+    "failed": "La vidéo n'a pas pu être traitée"
   }
 }

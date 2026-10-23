@@ -1822,6 +1822,8 @@
     "monthsAgo": "{{count}}mo ago",
     "forLabel": "vir",
     "againstLabel": "teen",
+    "lentBadgeCantVote": "Jou kenteken is aan jou geleen, en geleende kentekens kan nie stem nie. Koop DHB om jou eie badge te verdien.",
+    "buyDhb": "Koop DHB",
     "discussion": {
       "title": "Bespreking",
       "intro": "Stel opvolgvrae of bespreek die voorstel voordat u stem.",
@@ -4836,10 +4838,6 @@
     "creatorEarnsDirect": "Intekenare betaal in DeHub-tokens. Jou aandeel land in jou beursie die oomblik dat hulle inteken, minder die platformfooi vir jou wapenvlak."
   },
   "liveOverlay": {
-    "level": "Vlak {{level}}",
-    "streak_one": "{{count}}-week streak",
-    "streak_other": "{{count}}-week streak",
-    "tipJar": "Geskenkpot",
     "someone": "Iemand",
     "newFollower": "Nuwe volgeling: {{name}}",
     "newSubscriber": "Nuwe intekenaar: {{name}}",
@@ -4857,6 +4855,10 @@
     "pointsTitle": "Mees lojale kykers",
     "points_one": "{{formatted}} punt",
     "points_other": "{{formatted}} punte",
+    "level": "Vlak {{level}}",
+    "streak_one": "{{count}}-week streak",
+    "streak_other": "{{count}}-week streak",
+    "tipJar": "Geskenkpot",
     "poll": {
       "closed": "Stemming gesluit",
       "voteFor": "Stem vir {{option}}",
@@ -5024,8 +5026,6 @@
       "join": "Sluit aan"
     },
     "kinds": {
-      "streamer_level": "Stroomvlak",
-      "tip_jar": "Geskenkpot",
       "tip_alert": "Wenk waarskuwing",
       "follow_alert": "Volg waarskuwing",
       "subscribe_alert": "Intekenaarwaarskuwing",
@@ -5045,11 +5045,11 @@
       "poll": "Peiling",
       "spin_wheel": "Spin wiel",
       "subathon_timer": "Subathon-timer",
-      "points_board": "Lojale kykers"
+      "points_board": "Lojale kykers",
+      "streamer_level": "Stroomvlak",
+      "tip_jar": "Geskenkpot"
     },
     "hints": {
-      "streamer_level": "Jou streamer vlak en weeklikse streep, van jou profiel",
-      "tip_jar": "'N pot wat vul as betaalde geskenke kom in",
       "tip_alert": "Vier elke punt, grootte tot sy vlak",
       "follow_alert": "Wys elke nuwe volgeling",
       "subscribe_alert": "Vertoon elke nuwe intekenaar",
@@ -5069,13 +5069,15 @@
       "poll": "Jou regstreekse peiling, met 'n stemknoppie vir elke opsie",
       "spin_wheel": "Waar die wiele in jou reëls draai",
       "subathon_timer": "'n Aftelling wat geskenke, volgs en intekeninge terugstoot",
-      "points_board": "Jou top kykers volgens punte van kyk en geskenk"
+      "points_board": "Jou top kykers volgens punte van kyk en geskenk",
+      "streamer_level": "Jou streamer vlak en weeklikse streep, van jou profiel",
+      "tip_jar": "'N pot wat vul as betaalde geskenke kom in"
     },
     "fields": {
-      "showStreak": "Wys die weeklikse streep",
       "celebration": "Viering",
       "banner": "Banier",
       "minAmount": "Kleinste punt om te wys (DHB)",
+      "showStreak": "Wys die weeklikse streep",
       "showMessage": "Wys die wenkboodskap",
       "confirmedOnly": "Eers nadat die betaling bevestig is",
       "confirmedOnlyHint": "Wag 'n paar sekondes vir die ketting, sodat 'n punt wat nooit betaal word nie, nooit verskyn nie.",
@@ -8641,6 +8643,15 @@
     "backToMedia": "Terug na die pos",
     "like": "Hou van",
     "unlike": "Verwyder soos"
+  },
+  "postProcessing": {
+    "uploading": "Laai op…",
+    "preparing": "Berei voor…",
+    "ready": "Gereed",
+    "preparingVideo": "Jou video word voorberei",
+    "posted": "Geplaas",
+    "view": "Sien",
+    "failed": "Video kon nie verwerk word nie"
   },
   "footer": {
     "company": "Maatskappy",

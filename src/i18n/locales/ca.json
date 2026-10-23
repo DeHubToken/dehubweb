@@ -1786,6 +1786,8 @@
     "monthsAgo": "fa {{count}} mesos",
     "forLabel": "Per",
     "againstLabel": "contra",
+    "lentBadgeCantVote": "T'han prestat el distintiu i aquest no pot votar. Compra DHB per guanyar el teu propi distintiu.",
+    "buyDhb": "Compra DHB",
     "discussion": {
       "title": "Discussió",
       "intro": "Fes preguntes de seguiment o discuteix la proposta abans de votar.",
@@ -4737,10 +4739,6 @@
     "creatorEarnsDirect": "Els subscriptors paguen amb fitxes DeHub. La teva participació arribarà a la teva cartera en el moment en què es subscriguin, menys la tarifa de la plataforma per al teu nivell d'distintiu."
   },
   "liveOverlay": {
-    "level": "Nivell {{level}}",
-    "streak_one": "Racha de {{count}}setmanes",
-    "streak_other": "Racha de {{count}}setmanes",
-    "tipJar": "Pot de regals",
     "someone": "Algú",
     "newFollower": "Nou seguidor: {{name}}",
     "newSubscriber": "Subscriptor nou: {{name}}",
@@ -4758,6 +4756,10 @@
     "pointsTitle": "Els espectadors més lleials",
     "points_one": "{{formatted}} punt",
     "points_other": "{{formatted}} punts",
+    "level": "Nivell {{level}}",
+    "streak_one": "Racha de {{count}}setmanes",
+    "streak_other": "Racha de {{count}}setmanes",
+    "tipJar": "Pot de regals",
     "poll": {
       "closed": "Votació tancada",
       "voteFor": "Vota per {{option}}",
@@ -4925,8 +4927,6 @@
       "join": "Unir-se"
     },
     "kinds": {
-      "streamer_level": "Nivell del streamer",
-      "tip_jar": "Pot de regals",
       "tip_alert": "Alerta de consell",
       "follow_alert": "Alerta de seguiment",
       "subscribe_alert": "Alerta de subscriptor",
@@ -4946,11 +4946,11 @@
       "poll": "Enquesta",
       "spin_wheel": "Roda giratòria",
       "subathon_timer": "Comptador enrere del Subathon",
-      "points_board": "Espectadors lleials"
+      "points_board": "Espectadors lleials",
+      "streamer_level": "Nivell del streamer",
+      "tip_jar": "Pot de regals"
     },
     "hints": {
-      "streamer_level": "El teu nivell de streamer i la racha setmanal, des del teu perfil",
-      "tip_jar": "Un pot que s'omple a mesura que arriben els regals pagats",
       "tip_alert": "Celebra cada consell, dimensionat segons el seu nivell",
       "follow_alert": "Mostra cada nou seguidor",
       "subscribe_alert": "Mostra cada nou subscriptor",
@@ -4970,14 +4970,16 @@
       "poll": "La teva enquesta en directe, amb un botó de vot per a cada opció",
       "spin_wheel": "On giren les rodes de les teves regles",
       "subathon_timer": "Un comptador enrere que els regals, seguiments i subscripcions empenten enrere",
-      "points_board": "Els teus espectadors més destacats per punts de visionat i regal"
+      "points_board": "Els teus espectadors més destacats per punts de visionat i regal",
+      "streamer_level": "El teu nivell de streamer i la racha setmanal, des del teu perfil",
+      "tip_jar": "Un pot que s'omple a mesura que arriben els regals pagats"
     },
     "fields": {
-      "showStreak": "Mostra la racha setmanal",
       "style": "Estil",
       "celebration": "Celebració",
       "banner": "Banner",
       "minAmount": "Suggeriment més petit per mostrar (DHB)",
+      "showStreak": "Mostra la racha setmanal",
       "showMessage": "Mostra el missatge de suggeriment",
       "confirmedOnly": "Només després de confirmar el pagament",
       "confirmedOnlyHint": "Espera uns segons la cadena, per la qual cosa no apareix mai una propina que mai es paga.",
@@ -8446,5 +8448,14 @@
     "backToMedia": "Torna a l'entrada",
     "like": "M'agrada",
     "unlike": "Elimina els \"m'agrada\""
+  },
+  "postProcessing": {
+    "uploading": "Pujant…",
+    "preparing": "Preparant…",
+    "ready": "A punt",
+    "preparingVideo": "Preparant el teu vídeo",
+    "posted": "Publicat",
+    "view": "Mostra",
+    "failed": "No s'ha pogut processar el vídeo"
   }
 }

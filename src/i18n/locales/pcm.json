@@ -1632,6 +1632,8 @@
     "monthsAgo": "{{count}}mo ago",
     "forLabel": "For",
     "againstLabel": "Against",
+    "lentBadgeCantVote": "Your badge na wey dem lend you, and lent badges no fit vote. Buy DHB make you get your own badge.",
+    "buyDhb": "Buy DHB",
     "discussion": {
       "title": "Discussion",
       "reply": "Reply",
@@ -4137,10 +4139,6 @@
     "creatorEarnsDirect": "Subscribers dey pay with DeHub tokens. Your share go land for your wallet di moment dem subscribe, minus di platform fee for your badge level."
   },
   "liveOverlay": {
-    "level": "Level {{level}}",
-    "streak_one": "{{count}}-week streak",
-    "streak_other": "{{count}}-week streak",
-    "tipJar": "Gift jar",
     "joined": "{{name}} joined",
     "goalReached": "Goal reached!",
     "followersUnit": "followers",
@@ -4151,6 +4149,10 @@
     "pointsTitle": "Most loyal viewers",
     "points_one": "{{formatted}} point",
     "points_other": "{{formatted}} points",
+    "level": "Level {{level}}",
+    "streak_one": "{{count}}-week streak",
+    "streak_other": "{{count}}-week streak",
+    "tipJar": "Gift jar",
     "poll": {
       "closed": "Voting closed",
       "voteFor": "Vote for {{option}}",
@@ -4179,27 +4181,27 @@
   },
   "liveStudio": {
     "subathon": {
-      "intro": "A countdown on your stream. Every paid gift, follow and subscription adds time, so the room keeps you live.",
-      "capHours": "Longest it can run (hours)",
-      "startMinutes": "Start with (minutes)",
-      "start": "Start the countdown",
-      "removeFive": "Take off 5 minutes",
-      "widgetHint": "Shows your subathon countdown. Start it from the Subathon panel in Live Studio.",
       "title": "Subathon",
+      "intro": "A countdown on your stream. Every paid gift, follow and subscription adds time, so the room keeps you live.",
       "secondsPerThousand": "Seconds added per 1,000 DHB gifted",
       "secondsPerFollow": "Seconds added per follow",
       "secondsPerSubscribe": "Seconds added per subscription",
+      "capHours": "Longest it can run (hours)",
       "save": "Save amounts",
       "saved": "Subathon amounts saved.",
+      "startMinutes": "Start with (minutes)",
+      "start": "Start the countdown",
       "stop": "Stop",
       "addFive": "Add 5 minutes",
-      "failed": "Na dey go wrong. Try again."
+      "removeFive": "Take off 5 minutes",
+      "failed": "Na dey go wrong. Try again.",
+      "widgetHint": "Shows your subathon countdown. Start it from the Subathon panel in Live Studio."
     },
     "points": {
-      "widgetHint": "Add the Loyal viewers widget to show this list on stream.",
       "title": "Loyal viewers",
       "intro": "Viewers get one point for every minute dey watch you, and one point for every 100 DHB dey gift you. Chat and reactions no give point, so you can't just farm points.",
-      "empty": "No point yet. Dem dey increase when people watch and give gift."
+      "empty": "No point yet. Dem dey increase when people watch and give gift.",
+      "widgetHint": "Add the Loyal viewers widget to show this list on stream."
     },
     "controls": {
       "title": "Quick controls",
@@ -4290,8 +4292,6 @@
       "join": "Join"
     },
     "kinds": {
-      "streamer_level": "Streamer level",
-      "tip_jar": "Gift jar",
       "tip_alert": "Tip alert",
       "follow_alert": "Follow alert",
       "subscribe_alert": "Subscriber alert",
@@ -4311,25 +4311,27 @@
       "poll": "Poll",
       "spin_wheel": "Spin wheel",
       "subathon_timer": "Subathon timer",
-      "points_board": "Loyal viewers"
+      "points_board": "Loyal viewers",
+      "streamer_level": "Streamer level",
+      "tip_jar": "Gift jar"
     },
     "hints": {
-      "streamer_level": "Your streamer level and weekly streak, from your profile",
-      "tip_jar": "A jar that fills up as paid gifts come in",
-      "subathon_timer": "A countdown that gifts, follows and subscriptions push back",
-      "points_board": "Your top viewers by points from watching and gifting",
       "tip_alert": "Celebrate every tip, e size according to e tier",
       "join_alert": "Welcomes each viewer as they arrive",
       "rule_alert": "Where your rules' alerts appear",
       "poll": "Your live poll, with a vote button for every option",
-      "spin_wheel": "Where the wheels in your rules spin"
+      "spin_wheel": "Where the wheels in your rules spin",
+      "subathon_timer": "A countdown that gifts, follows and subscriptions push back",
+      "points_board": "Your top viewers by points from watching and gifting",
+      "streamer_level": "Your streamer level and weekly streak, from your profile",
+      "tip_jar": "A jar that fills up as paid gifts come in"
     },
     "fields": {
-      "showStreak": "Show the weekly streak",
       "style": "Style",
       "celebration": "Celebration",
       "banner": "Banner",
       "minAmount": "Smallest tip wey you fit show (DHB)",
+      "showStreak": "Show the weekly streak",
       "confirmedOnlyHint": "Wait a few seconds for the chain, so a tip dat no go be paid never go show up.",
       "duration": "Seconds on screen",
       "metric": "Counts",
@@ -7174,5 +7176,14 @@
     "backToComments": "Back to comments",
     "like": "Like",
     "unlike": "Remove like"
+  },
+  "postProcessing": {
+    "uploading": "E dey upload…",
+    "preparing": "E dey prepare…",
+    "ready": "E don ready",
+    "preparingVideo": "We dey prepare your video",
+    "posted": "E don post",
+    "view": "See am",
+    "failed": "We no fit process di video"
   }
 }

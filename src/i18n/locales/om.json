@@ -1800,6 +1800,8 @@
     "monthsAgo": "{{count}}mo ago",
     "forLabel": "F",
     "againstLabel": "Faallaa",
+    "lentBadgeCantVote": "Baajiin kee siif liqeesse, baajii liqeesse immoo sagalee kennuu hin danda&#39;u. Baajii mataa keessanii argachuuf DHB bitadhaa.",
+    "buyDhb": "DHB bitadhaa",
     "discussion": {
       "title": "Marii",
       "intro": "Sagalee kennuu kee dura gaaffii hordoffii gaafadhu ykn yaada dhihaate irratti mari’adhu.",
@@ -4760,10 +4762,6 @@
     "creatorEarnsDirect": "Maamiltoonni mallattoo DeHub tiin kaffalu. Aksiyooniin keessan yeroo isaan subscribe godhanitti boorsaa keessan keessa bu'a, kaffaltii waltajjii sadarkaa baajii keessanii hir'isuun."
   },
   "liveOverlay": {
-    "level": "Sadarkaa {{level}}",
-    "streak_one": "{{count}}-torban walitti aansuun",
-    "streak_other": "{{count}}-torban walitti aansuun",
-    "tipJar": "Jaarsa kennaa",
     "someone": "namni tokko",
     "newFollower": "Hordofaa haaraa: {{name}}",
     "newSubscriber": "Maamiltoonni haaraan: {{name}}",
@@ -4781,6 +4779,10 @@
     "pointsTitle": "Ilaaltoota itti gaafatamtuu",
     "points_one": "{{formatted}} qabxii",
     "points_other": "{{formatted}} qabxii",
+    "level": "Sadarkaa {{level}}",
+    "streak_one": "{{count}}-torban walitti aansuun",
+    "streak_other": "{{count}}-torban walitti aansuun",
+    "tipJar": "Jaarsa kennaa",
     "poll": {
       "closed": "Sagalee kennuun cufameera",
       "voteFor": "Sagalee kennaa {{option}}",
@@ -4948,8 +4950,6 @@
       "join": "Itti makamuu"
     },
     "kinds": {
-      "streamer_level": "Sadarkaa Streamer",
-      "tip_jar": "Jaarsa kennaa",
       "tip_alert": "Gorsa akeekkachiisa",
       "follow_alert": "Akeekkachiisa hordofaa",
       "subscribe_alert": "Akeekkachiisa maamilootaa",
@@ -4968,11 +4968,11 @@
       "poll": "Sagalee",
       "spin_wheel": "Wiil naanna'uu",
       "subathon_timer": "Yeroo hir'isu subathon",
-      "points_board": "Ilaaltoota itti gaafatamtuu"
+      "points_board": "Ilaaltoota itti gaafatamtuu",
+      "streamer_level": "Sadarkaa Streamer",
+      "tip_jar": "Jaarsa kennaa"
     },
     "hints": {
-      "streamer_level": "Sadarkaa streamer keessanii fi streak torban torbaniin, profile keessan irraa",
-      "tip_jar": "Jaarsi akka kennaa kaffaltii qabuutti guutu ni seena",
       "tip_alert": "Gorsa hunda kabaja, hamma sadarkaa isaatti",
       "follow_alert": "Tokkoon tokkoon hordoftoota haaraa agarsiisa",
       "subscribe_alert": "Tokkoon tokkoon maamiloota haaraa agarsiisa",
@@ -4992,13 +4992,15 @@
       "poll": "Filannoo kallattiin keessan, filannoo hundaaf button sagalee kan qabu",
       "spin_wheel": "Bakka girgiddaan seera kee keessa jiru itti naanna'u",
       "subathon_timer": "Yeroo hir'isu handeessii, hordofuu fi subscription duubatti kaata",
-      "points_board": "Ilaaltoota kee guddaa qabxii irraa ilaaluu fi handeessuu"
+      "points_board": "Ilaaltoota kee guddaa qabxii irraa ilaaluu fi handeessuu",
+      "streamer_level": "Sadarkaa streamer keessanii fi streak torban torbaniin, profile keessan irraa",
+      "tip_jar": "Jaarsi akka kennaa kaffaltii qabuutti guutu ni seena"
     },
     "fields": {
-      "showStreak": "Tartiiba torbanitti agarsiisi",
       "style": "Akkaataa",
       "celebration": "Kabaja",
       "minAmount": "Gorsa xiqqaa agarsiisuuf (DHB) .",
+      "showStreak": "Tartiiba torbanitti agarsiisi",
       "showMessage": "Ergaa gorsaa agarsiisi",
       "confirmedOnly": "Kaffaltiin erga mirkanaa'ee booda qofa",
       "confirmedOnlyHint": "Sansalataaf sekondii muraasa eega, kanaaf tippiin gonkumaa hin kaffalamiin gonkumaa hin mul'atu.",
@@ -8509,6 +8511,15 @@
     "backToMedia": "Gara barreeffamaatti deebi'a",
     "like": "Akka",
     "unlike": "Akka balleessi"
+  },
+  "postProcessing": {
+    "uploading": "Olkaa'aa jira…",
+    "preparing": "Qophaa'aa jira…",
+    "ready": "Qophaa'eera",
+    "preparingVideo": "Viidiyoon kee qophaa'aa jira",
+    "posted": "Maxxanfameera",
+    "view": "Ilaali",
+    "failed": "Viidiyoo hojjechuun hin danda'amne"
   },
   "spaces": {
     "title": "Bakkeewwan",

@@ -1790,6 +1790,8 @@
     "monthsAgo": "{{count}}mnd siden",
     "forLabel": "For",
     "againstLabel": "Mot",
+    "lentBadgeCantVote": "Merket ditt er lånt ut til deg, og utlånte merker kan ikke stemme. Kjøp DHB for å få ditt eget merke.",
+    "buyDhb": "Kjøp DHB",
     "discussion": {
       "title": "Samtale",
       "intro": "Still oppfølgingsspørsmål eller diskuter forslaget før du stemmer.",
@@ -4789,10 +4791,6 @@
     "creatorEarnsDirect": "Abonnenter betaler med DeHub-tokens. Andelen din havner i lommeboken din i det øyeblikket de abonnerer, minus plattformavgiften for badge-nivået ditt."
   },
   "liveOverlay": {
-    "level": "Nivå {{level}}",
-    "streak_one": "{{count}}-ukers rekke",
-    "streak_other": "{{count}}-ukers rekke",
-    "tipJar": "Gavekrukke",
     "someone": "Noen",
     "newFollower": "Ny følger: {{name}}",
     "newSubscriber": "Ny abonnent: {{name}}",
@@ -4810,6 +4808,10 @@
     "pointsTitle": "De mest lojale tilskuere",
     "points_one": "{{formatted}} poeng",
     "points_other": "{{formatted}} poeng",
+    "level": "Nivå {{level}}",
+    "streak_one": "{{count}}-ukers rekke",
+    "streak_other": "{{count}}-ukers rekke",
+    "tipJar": "Gavekrukke",
     "poll": {
       "closed": "Stemming lukket",
       "voteFor": "Stem på {{option}}",
@@ -4977,8 +4979,6 @@
       "join": "Bli med"
     },
     "kinds": {
-      "streamer_level": "Streamer-nivå",
-      "tip_jar": "Gavekrukke",
       "tip_alert": "Tipsvarsel",
       "follow_alert": "Følgervarsel",
       "subscribe_alert": "Abonnementsvarsel",
@@ -4998,11 +4998,11 @@
       "poll": "Avstemning",
       "spin_wheel": "Spinnhjul",
       "subathon_timer": "Subathon-timer",
-      "points_board": "Lojale tilskuere"
+      "points_board": "Lojale tilskuere",
+      "streamer_level": "Streamer-nivå",
+      "tip_jar": "Gavekrukke"
     },
     "hints": {
-      "streamer_level": "Ditt streamernivå og din ukentlige strømmerekke, fra profilen din",
-      "tip_jar": "En krukke som fylles opp etter hvert som betalte gaver kommer inn",
       "tip_alert": "Feirer hvert tips, tilpasset nivået",
       "follow_alert": "Viser hver ny følger",
       "subscribe_alert": "Viser hver ny abonnent",
@@ -5022,14 +5022,16 @@
       "poll": "Din direkteavstemning, med en stemmeknapp for hvert alternativ",
       "spin_wheel": "Der hjulene i reglene dine snurrer",
       "subathon_timer": "En nedtelling som gaver, følg og abonnements tilføyer tid",
-      "points_board": "Dine topp-tilskuere etter poeng fra å se og gi"
+      "points_board": "Dine topp-tilskuere etter poeng fra å se og gi",
+      "streamer_level": "Ditt streamernivå og din ukentlige strømmerekke, fra profilen din",
+      "tip_jar": "En krukke som fylles opp etter hvert som betalte gaver kommer inn"
     },
     "fields": {
-      "showStreak": "Vis den ukentlige rekken",
       "style": "Stil",
       "celebration": "Feiring",
       "banner": "Banner",
       "minAmount": "Minste spiss å vise (DHB)",
+      "showStreak": "Vis den ukentlige rekken",
       "showMessage": "Vis tipsmeldingen",
       "confirmedOnly": "Først etter at betalingen er bekreftet",
       "confirmedOnlyHint": "Venter noen sekunder på kjeden, så et tips som aldri blir utbetalt dukker aldri opp.",
@@ -8550,5 +8552,14 @@
     "backToMedia": "Tilbake til innlegget",
     "like": "Lik",
     "unlike": "Fjern liker"
+  },
+  "postProcessing": {
+    "uploading": "Laster opp…",
+    "preparing": "Forbereder…",
+    "ready": "Klar",
+    "preparingVideo": "Videoen din klargjøres",
+    "posted": "Publisert",
+    "view": "Se",
+    "failed": "Videoen kunne ikke behandles"
   }
 }

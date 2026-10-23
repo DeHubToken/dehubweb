@@ -1805,6 +1805,8 @@
     "monthsAgo": "{{count}}mo ago",
     "forLabel": "Cho",
     "againstLabel": "Chống lại",
+    "lentBadgeCantVote": "Huy hiệu của bạn được cho bạn mượn và huy hiệu cho mượn không thể bỏ phiếu. Mua DHB để kiếm huy hiệu của riêng bạn.",
+    "buyDhb": "Mua DHB",
     "discussion": {
       "title": "Thảo luận",
       "intro": "Đặt câu hỏi tiếp theo hoặc thảo luận về đề xuất trước khi bỏ phiếu.",
@@ -4818,10 +4820,6 @@
     "creatorEarnsDirect": "Người đăng ký thanh toán bằng mã thông báo DeHub. Cổ phần của bạn nằm trong ví của bạn ngay khi họ đăng ký, trừ đi phí nền tảng cho cấp độ huy hiệu của bạn."
   },
   "liveOverlay": {
-    "level": "Cấp {{level}}",
-    "streak_one": "Chuỗi {{count}}tuần",
-    "streak_other": "Chuỗi {{count}}tuần",
-    "tipJar": "Lọ quà tặng",
     "someone": "Ai đó",
     "newFollower": "Người theo dõi mới: {{name}}",
     "newSubscriber": "Người đăng ký mới: {{name}}",
@@ -4839,6 +4837,10 @@
     "pointsTitle": "Người xem trung thành nhất",
     "points_one": "{{formatted}} điểm",
     "points_other": "{{formatted}} điểm",
+    "level": "Cấp {{level}}",
+    "streak_one": "Chuỗi {{count}}tuần",
+    "streak_other": "Chuỗi {{count}}tuần",
+    "tipJar": "Lọ quà tặng",
     "poll": {
       "closed": "Đã kết thúc bỏ phiếu",
       "voteFor": "Bỏ phiếu cho {{option}}",
@@ -5006,8 +5008,6 @@
       "join": "Tham gia"
     },
     "kinds": {
-      "streamer_level": "Cấp độ streamer",
-      "tip_jar": "Lọ quà tặng",
       "tip_alert": "Cảnh báo gợi ý",
       "follow_alert": "Cảnh báo theo dõi",
       "subscribe_alert": "Cảnh báo người đăng ký",
@@ -5027,11 +5027,11 @@
       "poll": "Thăm dò ý kiến",
       "spin_wheel": "Bánh xe quay",
       "subathon_timer": "Bộ hẹn giờ Subathon",
-      "points_board": "Người xem trung thành"
+      "points_board": "Người xem trung thành",
+      "streamer_level": "Cấp độ streamer",
+      "tip_jar": "Lọ quà tặng"
     },
     "hints": {
-      "streamer_level": "Cấp độ streamer và streak hàng tuần của bạn, từ hồ sơ của bạn",
-      "tip_jar": "Một cái lọ được đổ đầy khi quà tặng trả tiền được gửi đến",
       "tip_alert": "Tưởng thưởng cho mỗi gợi ý, kích thước theo cấp bậc",
       "follow_alert": "Hiển thị từng người theo dõi mới",
       "subscribe_alert": "Hiển thị từng người đăng ký mới",
@@ -5051,14 +5051,16 @@
       "poll": "Cuộc thăm dò trực tiếp của bạn, với nút bỏ phiếu cho mọi lựa chọn",
       "spin_wheel": "Khi các bánh xe trong quy tắc của bạn quay",
       "subathon_timer": "Một đếm ngược mà các món quà, theo dõi và đăng ký sẽ kéo dài",
-      "points_board": "Top người xem của bạn theo điểm từ việc xem và tặng quà"
+      "points_board": "Top người xem của bạn theo điểm từ việc xem và tặng quà",
+      "streamer_level": "Cấp độ streamer và streak hàng tuần của bạn, từ hồ sơ của bạn",
+      "tip_jar": "Một cái lọ được đổ đầy khi quà tặng trả tiền được gửi đến"
     },
     "fields": {
-      "showStreak": "Hiển thị chuỗi hàng tuần",
       "style": "Phong cách",
       "celebration": "Lễ kỷ niệm",
       "banner": "Biểu ngữ",
       "minAmount": "Mẹo nhỏ nhất để hiển thị (DHB)",
+      "showStreak": "Hiển thị chuỗi hàng tuần",
       "showMessage": "Hiển thị tin nhắn mẹo",
       "confirmedOnly": "Chỉ sau khi khoản thanh toán được xác nhận",
       "confirmedOnlyHint": "Chờ vài giây cho chuỗi, vì vậy tiền boa không bao giờ được trả sẽ không bao giờ xuất hiện.",
@@ -8651,5 +8653,14 @@
     "backToMedia": "Quay lại bài đăng",
     "like": "Thích",
     "unlike": "Xóa lượt thích"
+  },
+  "postProcessing": {
+    "uploading": "Đang tải lên…",
+    "preparing": "Đang chuẩn bị…",
+    "ready": "Sẵn sàng",
+    "preparingVideo": "Đang chuẩn bị video của bạn",
+    "posted": "Đã đăng",
+    "view": "Xem",
+    "failed": "Không thể xử lý video"
   }
 }

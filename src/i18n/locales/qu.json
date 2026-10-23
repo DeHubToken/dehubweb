@@ -1791,6 +1791,8 @@
     "monthsAgo": "{{count}}killa ñawpaq",
     "forLabel": "napaq...",
     "againstLabel": "Contrapi",
+    "lentBadgeCantVote": "Insigniaykiqa prestasqam kachkan, prestasqa insigniakunapas manam votayta atinkuchu. DHB rantiy kikiykipa insigniaykita gananaykipaq.",
+    "buyDhb": "DHB nisqa rantiy",
     "discussion": {
       "title": "Rimanakuy",
       "intro": "Qatipanapaq tapukuykunata ruway utaq manaraq votachkaspa chay propuestamanta rimanakuy.",
@@ -4814,10 +4816,6 @@
     "creatorEarnsDirect": "Suscriptorkuna DeHub tokenkunapi qullqita qunku. Accionesniyki billeteraykipi chayan chay rato suscribisqanku, menos plataforma qullqita insignia nivelniykipaq."
   },
   "liveOverlay": {
-    "level": "Nivel {{level}} nisqapi.",
-    "streak_one": "{{count}}-semana qatiqninpi",
-    "streak_other": "{{count}}-semana qatiqninpi",
-    "tipJar": "Regalo jarra",
     "someone": "Pipas",
     "newFollower": "Musuq qatiq: {{name}}",
     "newSubscriber": "Musuq suscriptor: {{name}}",
@@ -4835,6 +4833,10 @@
     "pointsTitle": "Yaqa llapan hunt’aq qhawaqkuna",
     "points_one": "{{formatted}} nisqa punto",
     "points_other": "{{formatted}} nisqa puntokuna",
+    "level": "Nivel {{level}} nisqapi.",
+    "streak_one": "{{count}}-semana qatiqninpi",
+    "streak_other": "{{count}}-semana qatiqninpi",
+    "tipJar": "Regalo jarra",
     "poll": {
       "closed": "Votacionqa wichqasqa",
       "voteFor": "{{option}} nisqapaq votacionta ruway.",
@@ -5002,8 +5004,6 @@
       "join": "Taqruy"
     },
     "kinds": {
-      "streamer_level": "Nivel de corriente nisqa",
-      "tip_jar": "Regalo jarra",
       "tip_alert": "Alerta de consejo",
       "follow_alert": "Alertata qatipay",
       "subscribe_alert": "Suscriptor nisqamanta willakuy",
@@ -5022,11 +5022,11 @@
       "poll": "Encuesta",
       "spin_wheel": "Rueda de giro",
       "subathon_timer": "Subathon pacha yupay",
-      "points_board": "Chiqap qawaqkuna"
+      "points_board": "Chiqap qawaqkuna",
+      "streamer_level": "Nivel de corriente nisqa",
+      "tip_jar": "Regalo jarra"
     },
     "hints": {
-      "streamer_level": "Nivel de streamer nisqayki hinaspa sapa semana racha, perfilniykimanta",
-      "tip_jar": "Pagasqa regalokuna haykumusqanman hina hunt’akuq jarra",
       "tip_alert": "Sapa puntata raymichan, pataman hina sayayniyuq",
       "follow_alert": "Sapa musuq qatiqnintam qawachin",
       "subscribe_alert": "Sapa musuq suscriptor nisqatam qawachin",
@@ -5046,14 +5046,16 @@
       "poll": "Kawsaq encuestayki, sapa akllanapaq voto botón nisqawan",
       "spin_wheel": "Maypichus kamachiyniykipi ruedakuna muyurinku",
       "subathon_timer": "Huk yupay kutichiy, chaymi regalokuna, qatiq hinaspa suscripcionkuna qhipaman tanqan",
-      "points_board": "Aswan allin qhawaqniykikuna qhawaymanta chaymanta regalo quymanta puntokunawan"
+      "points_board": "Aswan allin qhawaqniykikuna qhawaymanta chaymanta regalo quymanta puntokunawan",
+      "streamer_level": "Nivel de streamer nisqayki hinaspa sapa semana racha, perfilniykimanta",
+      "tip_jar": "Pagasqa regalokuna haykumusqanman hina hunt’akuq jarra"
     },
     "fields": {
-      "showStreak": "Sapa semana rachata qawachiy",
       "style": "Rikchay",
       "celebration": "Raymi raymi",
       "banner": "Bandera",
       "minAmount": "Aswan huchuy punta qawachinapaq (DHB) .",
+      "showStreak": "Sapa semana rachata qawachiy",
       "showMessage": "Yuyaychay willakuyta qawachiy",
       "confirmedOnly": "Pagay takyachisqa kaptinlla",
       "confirmedOnlyHint": "Suyanmi iskay kinsa segundokuna cadenapaq, chaymi mana hayk’aqpas pagasqa propina mana hayk’aqpas rikukunchu.",
@@ -8568,5 +8570,14 @@
     "backToMedia": "Post nisqaman kutiy",
     "like": "Munasqa",
     "unlike": "Saqiy imayna"
+  },
+  "postProcessing": {
+    "uploading": "Qatichkan…",
+    "preparing": "Wakichichkan…",
+    "ready": "Wakichisqa",
+    "preparingVideo": "Videoykita wakichichkan",
+    "posted": "Churasqa",
+    "view": "Qhaway",
+    "failed": "Manam videota ruwayta atikurqanchu"
   }
 }
