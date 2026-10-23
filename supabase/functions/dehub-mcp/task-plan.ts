@@ -16,6 +16,8 @@ export const taskStepSchema = z.object({
   audience: z.enum(["single", "all_users", "post_authors", "posts", "selected_posts"]),
   from: z.string().datetime().nullable().default(null),
   to: z.string().datetime().nullable().default(null),
+  author: z.string().trim().regex(/^(?:@?[a-z0-9_]{1,50}|0x[a-f0-9]{40})$/i).nullable().optional(),
+  category: z.string().trim().min(1).max(100).regex(/^[^\r\n]+$/).nullable().optional(),
   topic: z.string().max(2000).nullable().default(null),
   recent_keywords: z.array(z.string().trim().min(2).max(40)).min(1).max(6).nullable().default(null),
   recent_limit: z.number().int().min(1).max(3).nullable().default(null),
@@ -28,6 +30,7 @@ export const taskPlanSchema = z.object({
 }).strict().superRefine((plan, ctx) => {
   plan.steps.forEach((step, index) => {
     const invalid = (message: string) => ctx.addIssue({ code: "custom", message, path: ["steps", index] });
+    if ((step.author || step.category) && !windowSteps(step)) invalid("Author and category filters require a post window.");
     if (step.audience === "all_users" && step.tool !== "dehub_follow") invalid("All users supports following only.");
     if (step.audience === "post_authors" && step.tool !== "dehub_follow") invalid("Post authors supports following only.");
     if (step.audience === "posts" && !["dehub_vote", "dehub_comment", "dehub_view"].includes(step.tool)) invalid("Posts supports views, reactions and comments only.");
@@ -58,10 +61,10 @@ export function explicitTaskPlan(prompt: string, now = new Date(), timezone = "U
   const text = prompt.trim();
   // Universal likes are a time-window task, never a keyword-limited selection.
   const universal = text.toLowerCase().replace(/[.!]+$/, '').replace(/\s+/g, ' ').match(
-    /^(like|view) (?:all|every) posts? (?:from |in |for |over |during )?(?:the )?(today|last 24 hours|past 24 hours|last day|past day|last 7 days|past 7 days|today in last day)(?: (?:in |across )?(?:all|every) categor(?:y|ies|hy))?$/,
+    /^(like|dislike|view) (?:all|every) posts? (?:from |in |for |over |during )?(?:the )?(today|last hour|past hour|last 24 hours|past 24 hours|last day|past day|last 7 days|past 7 days|last week|past week|last month|past month|last 30 days|past 30 days|today in last day)(?: (?:in |across )?(?:all|every) categor(?:y|ies|hy))?$/,
   );
   if (universal) {
-    let from = now.getTime() - (/7 days/.test(universal[2]) ? 7 : 1) * 86400000;
+    let from = now.getTime() - (/hour$/.test(universal[2]) ? 1 / 24 : /7 days|week/.test(universal[2]) ? 7 : /30 days|month/.test(universal[2]) ? 30 : 1) * 86400000;
     if (universal[2] === 'today') {
       // Solve local midnight against the zone offset, including DST boundaries.
       const parts = (date: Date) => Object.fromEntries(new Intl.DateTimeFormat('en-GB', {
@@ -91,8 +94,8 @@ export function explicitTaskPlan(prompt: string, now = new Date(), timezone = "U
         { tool: 'dehub_post_create', arguments: {}, audience: 'single', from: null, to: null, topic },
       ] });
   }
-  const window = text.match(/^Every post from (\S+) to (\S+)\nActions: ([a-z, ]+)(?:\nReply style: ([^\n]{1,500}))?$/i);
-  if (window) return everyPostPlan(window[1], window[2], window[3], window[4]);
+  const window = text.match(/^Every post from (\S+) to (\S+)\nActions: ([a-z, ]+)(?:\nAuthor: ([^\n]+))?(?:\nCategory: ([^\n]+))?(?:\nReply style: ([^\n]{1,500}))?$/i);
+  if (window) return everyPostPlan(window[1], window[2], window[3], window[6], window[4], window[5]);
   const follow = text.match(/^follow\s+(@[a-z0-9_]{3,20}|0x[a-f0-9]{40})(?:\s+once)?[.!]?$/i);
   if (follow) return taskPlanSchema.parse({ summary: `Follow ${follow[1]} once.`, interval_minutes: null,
     steps: [{ tool: 'dehub_follow', arguments: { target_wallet: follow[1].replace(/^@/, ''), action: 'follow' }, audience: 'single', from: null, to: null, topic: null }] });
@@ -115,20 +118,22 @@ export const readableTime = (value: string | number | Date) =>
   new Date(value).toLocaleString("en-GB", { timeZone: "UTC", day: "numeric", month: "short", year: "numeric", hour: "2-digit", minute: "2-digit" }).replace(",", "") + " UTC";
 
 /** "Every post from A to B" from the task form: exact, so it never goes through the planner. */
-function everyPostPlan(from: string, to: string, list: string, style?: string): TaskPlan {
+function everyPostPlan(from: string, to: string, list: string, style?: string, author?: string, category?: string): TaskPlan {
   const start = new Date(from), end = new Date(to);
   if (!Number.isFinite(start.getTime()) || !Number.isFinite(end.getTime())) throw new Error("Choose a valid start and end time.");
   const actions = [...new Set(list.toLowerCase().split(",").map(value => value.trim()).filter(Boolean))];
-  if (!actions.length || actions.some(action => !["view", "like", "reply"].includes(action))) throw new Error("Choose view, like or reply.");
+  if (!actions.length || actions.some(action => !["view", "like", "dislike", "reply"].includes(action))) throw new Error("Choose view, like, dislike or reply.");
+  if (actions.includes("like") && actions.includes("dislike")) throw new Error("Choose either like or dislike, not both.");
   if (actions.includes("reply") && !style?.trim()) throw new Error("Describe how the agent should reply.");
-  const window = { audience: "posts", from: start.toISOString(), to: end.toISOString(), topic: null };
+  const window = { audience: "posts", from: start.toISOString(), to: end.toISOString(), topic: null, ...(author ? { author } : {}), ...(category ? { category } : {}) };
   const steps = [
     ...(actions.includes("view") ? [{ ...window, tool: "dehub_view", arguments: {} }] : []),
     ...(actions.includes("like") ? [{ ...window, tool: "dehub_vote", arguments: { vote_type: "like" } }] : []),
+    ...(actions.includes("dislike") ? [{ ...window, tool: "dehub_vote", arguments: { vote_type: "dislike" } }] : []),
     ...(actions.includes("reply") ? [{ ...window, tool: "dehub_comment", arguments: {}, topic: style!.trim() }] : []),
   ];
-  const names = actions.map(action => ({ view: "view", like: "like", reply: "reply to" })[action]).join(", ").replace(/, ([^,]*)$/, " and $1");
-  return taskPlanSchema.parse({ summary: `${names[0].toUpperCase()}${names.slice(1)} every post from ${readableTime(start)} to ${readableTime(end)}.`, interval_minutes: null, steps });
+  const names = actions.map(action => ({ view: "view", like: "like", dislike: "dislike", reply: "reply to" })[action]).join(", ").replace(/, ([^,]*)$/, " and $1");
+  return taskPlanSchema.parse({ summary: `${names[0].toUpperCase()}${names.slice(1)} every post${author ? ` by ${author}` : ''}${category ? ` in category ${category}` : ''} from ${readableTime(start)} to ${readableTime(end)}.`, interval_minutes: null, steps });
 }
 
 export const PLAN_TOOL = {
@@ -161,6 +166,8 @@ export const PLAN_TOOL = {
                 },
                 audience: { type: "string", enum: ["single", "all_users", "post_authors", "posts", "selected_posts"] },
                 from: { type: ["string", "null"], description: "Inclusive ISO UTC start of a bulk post time window." },
+                author: { type: ["string", "null"], description: "Exact username or wallet of the post creator to filter by; null for all authors. Resolved before queueing." },
+                category: { type: ["string", "null"], description: "Exact post category to filter by, case insensitive; null for all categories. This is not a keyword search." },
                 to: { type: ["string", "null"], description: `Exclusive ISO UTC end of a bulk post time window. May be up to ${LIVE_WINDOW_MAX_DAYS} days ahead; new posts are then covered as they appear.` },
                 topic: { type: ["string", "null"], description: "Instructions for an original post on each run, or for a reply written to each post in a window; null for literal supplied content." },
                 recent_keywords: { type: ["array", "null"], items: { type: "string" }, description: "One to six exact interests for selected_posts; null otherwise." },
