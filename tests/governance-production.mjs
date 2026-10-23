@@ -38,19 +38,21 @@ await context.addInitScript(({ wallet, token, user }) => {
 }, { wallet, token, user });
 let refusedWrites = 0;
 const page = await context.newPage();
+const cors = { 'access-control-allow-origin': 'https://dehub.io', 'access-control-allow-headers': '*', 'access-control-allow-methods': 'GET,POST,PATCH,DELETE,OPTIONS' };
 await page.route('**/*', async route => {
   const request = route.request();
   const url = new URL(request.url());
   const api = url.hostname === 'api.dehub.io' || url.pathname.startsWith('/_api/');
   if (api) {
-    if (url.pathname.includes('/account_info/')) return route.fulfill({ json: { result: user } });
-    return route.fulfill({ json: { status: true, result: [], count: 0, unreadCount: 0 } });
+    if (request.method() === 'OPTIONS') return route.fulfill({ status: 204, headers: cors });
+    if (url.pathname.includes('/account_info/')) return route.fulfill({ headers: cors, json: { result: user } });
+    return route.fulfill({ headers: cors, json: { status: true, result: [], count: 0, unreadCount: 0 } });
   }
   if (url.pathname.endsWith('/rest/v1/governance_comments') && request.method() === 'POST') {
     assert.equal(request.headers()['x-dehub-token'], token, 'Comment must carry the refreshed session');
     assert.equal(request.postDataJSON().wallet_address, wallet);
     refusedWrites += 1;
-    return route.fulfill({ status: 403, json: { code: '42501', message: 'Badge holders only', details: null, hint: null } });
+    return route.fulfill({ status: 401, headers: cors, json: { code: '42501', message: 'Badge holders only', details: null, hint: null } });
   }
   if (url.pathname.includes('/rest/v1/') && !['GET', 'HEAD', 'OPTIONS'].includes(request.method())) return route.abort();
   return route.continue();
