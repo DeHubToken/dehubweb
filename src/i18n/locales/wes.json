@@ -257,6 +257,11 @@
       "hintDeny": "AI system wey respect dis signal no go train on yu audio, art, na writing yu. Crawler wey ignore dis signal no go block by dis.",
       "saved": "AI training preference saved"
     },
+    "defaultFeed": "Default feed",
+    "defaultFeedDesc": "Choose which feed go open every time wey you open DeHub",
+    "feedToggles": "Reset feed filters",
+    "feedTogglesDesc": "Filters wey you on for feed go stay as your default until you reset dem",
+    "feedTogglesCleared": "Feed filters don reset",
     "defaultProfileTab": "Default profile tab",
     "defaultProfileTabDesc": "Choose wich tab visitor dem go si fes fo yua profile",
     "public": "Public",

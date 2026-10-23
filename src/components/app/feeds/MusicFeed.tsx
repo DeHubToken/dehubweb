@@ -48,6 +48,7 @@ import { getPrimaryTags, getTopStations } from '@/lib/api/radio-browser';
 import { getCuratedCarouselStations, type RadioStation } from '@/lib/api/radio-browser';
 import { useAuth } from '@/contexts/AuthContext';
 import type { VideoItem } from '@/types/feed.types';
+import { usePersistedFeedFilter } from '@/hooks/use-persisted-feed-filter';
 
 // ============================================================================
 // TYPES
@@ -379,8 +380,8 @@ interface MusicFeedProps {
 }
 
 export function MusicFeed({ showFilters = false, isRefreshing = false }: MusicFeedProps) {
-  const [activeSubTab, setActiveSubTab] = useState<MusicSubTab>('all');
-  const [chartSort, setChartSort] = useState<AudioChartSort>('trending');
+  const [activeSubTab, setActiveSubTab] = usePersistedFeedFilter<MusicSubTab>('music', 'subTab', 'all');
+  const [chartSort, setChartSort] = usePersistedFeedFilter<AudioChartSort>('music', 'chartSort', 'trending');
   const [videoChartSort, setVideoChartSort] = useState<MusicVideoChartSort>('views');
   const musicSubIsDraggingRef = useRef(false);
   const { layerRef: musicSubTabLayerRef, setRef: setMusicSubTabRef, rect: musicSubTabRect, onScroll: onMusicSubTabScroll } = useTabIndicator(activeSubTab, undefined, musicSubIsDraggingRef);

@@ -260,6 +260,11 @@
       "hintDeny": "Es demana als sistemes d'intel·ligència artificial i als rastrejadors que respectin aquest senyal que no entrenin en el teu àudio, obres d'art i escriptura. Els rastrejadors que ignoren el senyal no queden bloquejats per aquest.",
       "saved": "Preferència d'entrenament d'IA desada"
     },
+    "defaultFeed": "Feed predeterminat",
+    "defaultFeedDesc": "Tria quin feed s'obre cada vegada que obres DeHub",
+    "feedToggles": "Restableix els filtres del feed",
+    "feedTogglesDesc": "Els filtres que activis en un feed es mantenen com a predeterminats fins que els restableixis",
+    "feedTogglesCleared": "Filtres del feed restablerts",
     "defaultProfileTab": "Pestanya de perfil per defecte",
     "defaultProfileTabDesc": "Tria quina pestanya veuen primer els visitants al teu perfil",
     "public": "Públic",

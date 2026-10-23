@@ -258,6 +258,11 @@
       "hintDeny": "AI sistēmas un rāpuļprogrammas, kas respektē šo signālu, tiek lūgtas neapmācīt jūsu audio, mākslas darbus un rakstīšanu. Rāpuļprogrammas, kas ignorē signālu, ar to netiek bloķētas.",
       "saved": "MI apmācības preference ir saglabāta"
     },
+    "defaultFeed": "Noklusējuma plūsma",
+    "defaultFeedDesc": "Izvēlieties, kura plūsma atveras katru reizi, kad atverat DeHub",
+    "feedToggles": "Atiestatīt plūsmas filtrus",
+    "feedTogglesDesc": "Plūsmā ieslēgtie filtri paliek kā jūsu noklusējums, līdz tos atiestatāt",
+    "feedTogglesCleared": "Plūsmas filtri atiestatīti",
     "defaultProfileTab": "Noklusējuma profila cilne",
     "defaultProfileTabDesc": "Izvēlieties, kuru cilni apmeklētāji jūsu profilā redz vispirms",
     "public": "Publisks",

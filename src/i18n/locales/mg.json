@@ -258,6 +258,11 @@
       "hintDeny": "Ny rafitra AI sy ny mpitsikilo izay manaja ity mari-pamantarana ity dia angatahana tsy hampiofana ny feo, ny zavakanto ary ny soratra. Tsy voasakana ireo mpidoroka tsy miraharaha ny fanairana.",
       "saved": "AI fiofanana voatahiry"
     },
+    "defaultFeed": "Feed mahazatra",
+    "defaultFeedDesc": "Safidio izay feed hisokatra isaky ny manokatra DeHub ianao",
+    "feedToggles": "Avereno ny sivana feed",
+    "feedTogglesDesc": "Ny sivana alefanao ao amin'ny feed dia mijanona ho mahazatra mandra-pamerinao azy",
+    "feedTogglesCleared": "Naverina ny sivana feed",
     "defaultProfileTab": "Vakizoro mombamomba mahazatra",
     "defaultProfileTabDesc": "Fidio hoe vakizoro inona no hitan'ny mpitsidika voalohany ao amin'ny mombamomba anao",
     "public": "Ho an'ny rehetra",

@@ -258,6 +258,11 @@
       "hintDeny": "Sistem lan crawler AI sing ngurmati sinyal iki dijaluk supaya ora nglatih audio, karya seni, lan tulisanmu. Crawler sing nglirwakake sinyal ora diblokir dening iku.",
       "saved": "Preferensi latihan AI disimpen"
     },
+    "defaultFeed": "Feed gawan",
+    "defaultFeedDesc": "Pilih feed sing dibukak saben sampeyan mbukak DeHub",
+    "feedToggles": "Reset saringan feed",
+    "feedTogglesDesc": "Saringan sing sampeyan uripake ing feed tetep dadi gawan nganti sampeyan reset",
+    "feedTogglesCleared": "Saringan feed wis direset",
     "defaultProfileTab": "Tab profil gawan",
     "defaultProfileTabDesc": "Pilih tab endi sing dideleng dhisik dening tamu ing profilmu",
     "public": "Umum",

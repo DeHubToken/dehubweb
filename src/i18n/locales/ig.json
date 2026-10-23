@@ -258,6 +258,11 @@
       "hintDeny": "AI usoro na crawlers na-akwanyere mgbaàmà a na-jụrụ ghara ịzụ na gị audio, artwork na ide. A naghị egbochi ndị na-agbagharị agbagharị na-eleghara ihe mgbaàmà ahụ anya.",
       "saved": "AI ọzụzụ mmasị echekwara"
     },
+    "defaultFeed": "Feed ndabara",
+    "defaultFeedDesc": "Họrọ feed ga-emeghe oge ọ bụla ị meghere DeHub",
+    "feedToggles": "Tọgharịa nzacha feed",
+    "feedTogglesDesc": "Nzacha ị gbanyere na feed ga-anọgide dị ka ndabara gị ruo mgbe ị tọgharịrị ha",
+    "feedTogglesCleared": "Etọgharịala nzacha feed",
     "defaultProfileTab": "Tab profaịlụ ndabara",
     "defaultProfileTabDesc": "Họrọ tab ndị ọbịa na-ahụ na mbụ na profaịlụ gị",
     "public": "Ọha",

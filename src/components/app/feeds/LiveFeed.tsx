@@ -9,7 +9,7 @@ import { useTranslation as _useCopy } from 'react-i18next';
  * @module components/app/feeds/LiveFeed
  */
 
-import { useMemo, useState } from 'react';
+import { useMemo } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
 import { useAutoRetryFeed } from '@/hooks/use-auto-retry-feed';
 import { Tv } from "lucide-react";
@@ -54,6 +54,7 @@ import leagueCategory from '@/assets/league-category.png';
 import minecraftCategory from '@/assets/minecraft-category.png';
 import justchattingCategory from '@/assets/justchatting-category.png';
 import lcsCategory from '@/assets/lcs-category.png';
+import { usePersistedFeedFilter } from '@/hooks/use-persisted-feed-filter';
 
 // Categories data - all zeroed until API integration
 const MOCK_CATEGORIES = [
@@ -76,7 +77,7 @@ interface LiveFeedProps {
 export function LiveFeed({ isRefreshing = false, showFilters = false }: LiveFeedProps) {
   const { t: _copy } = _useCopy();
 
-  const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
+  const [selectedCategory, setSelectedCategory] = usePersistedFeedFilter<string | null>('live', 'category', null);
   const navigate = useNavigate();
   const cinematic = useCinematicPhone();
 

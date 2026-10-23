@@ -260,6 +260,11 @@
       "hintDeny": "Các hệ thống AI và trình thu thập thông tin tôn trọng tín hiệu này được yêu cầu không đào tạo về âm thanh, tác phẩm nghệ thuật và văn bản của bạn. Trình thu thập thông tin bỏ qua tín hiệu không bị chặn bởi nó.",
       "saved": "Đã lưu tùy chọn đào tạo AI"
     },
+    "defaultFeed": "Bảng tin mặc định",
+    "defaultFeedDesc": "Chọn bảng tin mở ra mỗi khi bạn mở DeHub",
+    "feedToggles": "Đặt lại bộ lọc bảng tin",
+    "feedTogglesDesc": "Bộ lọc bạn bật trong bảng tin sẽ là mặc định cho đến khi bạn đặt lại",
+    "feedTogglesCleared": "Đã đặt lại bộ lọc bảng tin",
     "defaultProfileTab": "Tab hồ sơ mặc định",
     "defaultProfileTabDesc": "Chọn tab mà khách xem đầu tiên trên hồ sơ của bạn",
     "public": "Public",

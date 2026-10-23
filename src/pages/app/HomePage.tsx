@@ -42,6 +42,7 @@ import { clearPrefetchState } from '@/hooks/use-feed-prefetch';
 import { useFeedSwallowClip } from '@/hooks/use-feed-swallow-clip';
 import { useSystemFeedHeaderMotion } from '@/hooks/use-system-feed-header-motion';
 import { clearPersistedFeedFilters } from '@/hooks/use-persisted-feed-filter';
+import { readFeedToggles } from '@/lib/feed-defaults';
 import { SORT_OPTIONS } from '@/lib/feed-utils';
 import { SEOHead } from '@/components/SEOHead';
 import { useTranslation } from 'react-i18next';
@@ -288,18 +289,18 @@ export default function HomePage() {
   const checkActiveFilters = useCallback(() => {
     try {
       const stored = sessionStorage.getItem('feed-filter-states');
-      if (!stored) { setHasActiveFilters(false); return; }
-      const all = JSON.parse(stored);
-      const home = all?.home || {};
+      // No choice this session: the feed is on the saved default toggles.
+      const home = (stored ? JSON.parse(stored)?.home : null) || readFeedToggles().home || {};
       const sort = home.sort;
+      const sortValue = typeof sort === 'string' ? sort : sort?.value;
       const category = home.category;
       const postType = home.postType;
       const cf = home.contentFilters;
       const active = 
-        (sort && sort.value !== 'latest') ||
+        (sortValue && sortValue !== 'latest') ||
         (category && category !== 'all') ||
         (postType && postType !== 'all') ||
-        (cf && (cf.ppv || cf.w2e || cf.locked));
+        (Array.isArray(cf) ? cf.length > 0 : cf && (cf.ppv || cf.w2e || cf.locked));
       setHasActiveFilters(!!active);
     } catch { setHasActiveFilters(false); }
   }, []);

@@ -248,6 +248,11 @@
     "aiScraping": {
       "hintAllow": "سیستەمەکان و گەڕۆکەکانی زیرەکی دەستکرد کە ئەم نیشانە ڕێز دەگرن، دەتوانن لەسەر دەنگ، هونەر و نووسینەکانی تۆ مەشق بکەن."
     },
+    "defaultFeed": "Feeda xwerû",
+    "defaultFeedDesc": "Hilbijêre ku her carê DeHub vedikî kîjan feed vebe",
+    "feedToggles": "Parzûnên feedê ji nû ve saz bike",
+    "feedTogglesDesc": "Parzûnên ku tu di feedê de vedikî heta ku tu wan ji nû ve saz nekî xwerû dimînin",
+    "feedTogglesCleared": "Parzûnên feedê ji nû ve hatin sazkirin",
     "defaultProfileTab": "Taba profîla xwerû",
     "defaultProfileTabDesc": "Hilbijêre bê serdanker di profîla te de pêşî kîjan tabê dibînin",
     "public": "Giştî",
