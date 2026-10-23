@@ -336,6 +336,32 @@ describe('proxied pages', () => {
     expect(meta(body, 'og:video')).toBe(`${CDN}/videos/6126.mp4`);
   });
 
+  it('gives a video post its rendered card and a mature one the brand card', async () => {
+    const poster = `${CDN}/images/6127.jpg`;
+    const page = `<!DOCTYPE html><html><head><title>Clip</title>
+<link rel="canonical" href="https://dehub.io/app/post/6127">
+<meta property="og:image" content="${poster}">
+<meta property="og:video" content="${CDN}/videos/6127.mp4">
+<meta name="twitter:card" content="player">
+<meta name="twitter:image" content="${poster}">
+</head><body><h1>Clip</h1></body></html>`;
+    const record = { tokenId: 6127, mintername: 'jesse', description: 'Clip night', postType: 'video', videoUrl: 'videos/6127.mp4', thumbnail_url: 'images/6127.jpg' };
+    network({ [FN]: html(page), 'https://api.dehub.io/api/nft_info/6127': json({ result: record }) });
+    let { body } = await crawl('/app/post/6127');
+    expect(meta(body, 'og:image')).toBe('https://dehub.io/_og/post/v4/6127.png');
+    expect(meta(body, 'twitter:image')).toBe('https://dehub.io/_og/post/v4/6127.png');
+    expect(meta(body, 'twitter:card')).toBe('summary_large_image');
+    expect(meta(body, 'og:image:width')).toBe('1200');
+    expect(meta(body, 'og:image:height')).toBe('630');
+
+    network({ [FN]: html(page), 'https://api.dehub.io/api/nft_info/6127': json({ result: { ...record, contentRating: 'mature' } }) });
+    ({ body } = await crawl('/app/post/6127'));
+    expect(meta(body, 'og:image')).toBe('https://dehub.io/og/dehub-social-share.png');
+    expect(meta(body, 'twitter:image')).toBe('https://dehub.io/og/dehub-social-share.png');
+    expect(body).not.toContain('og:video');
+    expect(body).not.toMatch(/<meta [^>]*6127\.jpg/);
+  });
+
   it('marks a community as a page, not an Organization, with a true-size card', async () => {
     const avatar = `${STORAGE}/community-media/dehub/avatar.jpg`;
     network({

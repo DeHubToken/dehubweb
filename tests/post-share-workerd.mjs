@@ -25,7 +25,7 @@ const mf = new Miniflare(convertV4MiniflareOptions({
   durableObjects: { EDITOR_PRESENCE: { className: 'EditorPresenceRoom', useSQLite: true } },
   serviceBindings: { ASSETS: request => {
     const path = decodeURIComponent(new URL(request.url).pathname);
-    assert.ok(['/brand-kit/font/exo-500.ttf', '/brand/mark-white.png', '/brand/share-chrome-edge.png'].includes(path) || /^\/brand\/share-badges\/[a-z-]+\.png$/.test(path));
+    assert.ok(['/brand-kit/font/exo-500.ttf', '/brand/mark-white.png', '/brand/share-chrome-edge.png', '/og/dehub-social-share.png'].includes(path) || /^\/brand\/share-badges\/[a-z-]+\.png$/.test(path));
     return new WorkerResponse(readFileSync(new URL(`../public${path}`, import.meta.url)), { headers: { 'Content-Type': path.endsWith('.png') ? 'image/png' : 'font/ttf' } });
   } },
   outboundService: request => {
@@ -40,6 +40,11 @@ const mf = new Miniflare(convertV4MiniflareOptions({
     if (pathname === '/api/account_info/maldoteth') return failDetails ? new WorkerResponse('Unavailable', { status: 503 }) : json({ status: true, result: profile });
     if (pathname === '/api/poll/6501') return poll ? json({ status: true, result: poll }) : new WorkerResponse('Poll not found', { status: 404 });
     if (pathname.startsWith('/api/live/creator/')) return json(progress);
+    if (pathname.startsWith('/images/')) {
+      assert.equal(new URL(request.url).origin, 'https://dehubcdn.ams3.digitaloceanspaces.com');
+      if (pathname.endsWith('/missing.jpg')) return new WorkerResponse('Missing poster', { status: 404 });
+      return new WorkerResponse(readFileSync(new URL('../public/og/apps.jpg', import.meta.url)), { headers: { 'Content-Type': 'image/jpeg' } });
+    }
     if (new URL(request.url).pathname.startsWith('/avatars/')) {
       assert.equal(new URL(request.url).origin, 'https://dehubcdn.ams3.digitaloceanspaces.com');
       if (request.url.endsWith('/missing.jpg')) return new WorkerResponse('Missing avatar', { status: 404 });
@@ -89,10 +94,33 @@ try {
   assert.notDeepEqual(Buffer.from(await changed.arrayBuffer()), png);
   post = { ...post, isHidden: true };
   const restricted = await dispatch(url);
-  assert.equal(restricted.status, 404);
+  assert.equal(restricted.status, 200);
+  assert.equal(restricted.headers.get('X-DeHub-Share-Card'), 'brand');
   assert.equal(restricted.headers.get('Cache-Control'), 'no-store');
-  await restricted.arrayBuffer();
+  assert.deepEqual(Buffer.from(await restricted.arrayBuffer()), readFileSync(new URL('../public/og/dehub-social-share.png', import.meta.url)));
   assert.equal(requests, 4);
+  post = { ...original, postType: 'video', videoUrl: 'videos/6501.mp4', thumbnail_url: 'images/6501.jpg', totalTips: 3100 };
+  const video = await dispatch(url);
+  assert.equal(video.status, 200);
+  assert.equal(video.headers.get('X-DeHub-Post-Media'), 'video');
+  assert.ok(video.headers.get('Cache-Control').startsWith('public,'));
+  writeFileSync('post-card-checks/worker-video-post.png', Buffer.from(await video.arrayBuffer()));
+  post = { ...post, contentRating: 'mature' };
+  const posterReads = outboundUrls.filter((u) => u.includes('/images/')).length;
+  const mature = await dispatch(url);
+  assert.equal(mature.headers.get('X-DeHub-Share-Card'), 'brand');
+  assert.equal(outboundUrls.filter((u) => u.includes('/images/')).length, posterReads, 'a mature poster is never fetched');
+  await mature.arrayBuffer();
+  post = { ...original, postType: 'video', videoUrl: 'videos/6501.mp4', thumbnail_url: 'images/missing.jpg' };
+  const noPoster = await dispatch(url);
+  assert.equal(noPoster.headers.get('X-DeHub-Post-Media'), 'unavailable');
+  assert.equal(noPoster.headers.get('Cache-Control'), 'no-store', 'a card without its picture is not cached');
+  await noPoster.arrayBuffer();
+  post = { ...post, description: '' };
+  const blank = await dispatch(url);
+  assert.equal(blank.headers.get('X-DeHub-Share-Card'), 'brand');
+  assert.equal(blank.headers.get('X-DeHub-Share-Fallback'), 'media');
+  await blank.arrayBuffer();
   post = { ...original, minterAvatarUrl: 'avatars/missing.jpg' };
   const missingAvatar = await dispatch(url);
   assert.equal(missingAvatar.status, 200);
@@ -144,12 +172,25 @@ try {
     assert.equal(legacy.headers.get('X-DeHub-Share-Card'), 'v4');
     await legacy.arrayBuffer();
   }
+  profile = { ...profile, followers: 2048, avatarImageUrl: 'avatars/mal.jpg' };
+  const profileCard = await dispatch('https://dehub.io/_og/profile/v1/maldoteth.png');
+  assert.equal(profileCard.status, 200);
+  assert.equal(profileCard.headers.get('X-DeHub-Share-Card'), 'profile-v1');
+  assert.equal(profileCard.headers.get('X-DeHub-Profile-Followers'), '2048');
+  assert.equal(profileCard.headers.get('X-DeHub-Post-Avatar'), 'image');
+  const profilePng = Buffer.from(await profileCard.arrayBuffer());
+  assert.equal(profilePng.readUInt32BE(16), 1200);
+  assert.equal(profilePng.readUInt32BE(20), 630);
+  writeFileSync('post-card-checks/worker-profile.png', profilePng);
   failDetails = true;
+  const missingProfile = await dispatch('https://dehub.io/_og/profile/v1/maldoteth.png');
+  assert.equal(missingProfile.headers.get('X-DeHub-Share-Card'), 'brand');
+  await missingProfile.arrayBuffer();
   const unavailable = await dispatch(url);
   assert.equal(unavailable.headers.get('Cache-Control'), 'no-store');
   assert.equal(unavailable.headers.get('X-DeHub-Post-Badges'), '');
   await unavailable.arrayBuffer();
-  console.log('Production Worker preserves public gating and avatars; refreshes badges, poll closure and counts; renders long names, four choices, ties and empty polls.');
+  console.log('Production Worker preserves public gating and avatars; refreshes badges, poll closure and counts; renders long names, four choices, ties and empty polls; media posts, mature fallbacks and profiles.');
 } finally {
   console.log('Closing production Worker resources.');
   // Header-only assertions still leave PNG streams open. Close them before
