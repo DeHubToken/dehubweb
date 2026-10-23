@@ -44,7 +44,7 @@ await page.route('**/*', async route => {
   const url = new URL(request.url());
   const api = url.hostname === 'api.dehub.io' || url.pathname.startsWith('/_api/');
   if (api) {
-    if (request.method() === 'OPTIONS') return route.fulfill({ status: 204, headers: cors });
+    if (request.method() === 'OPTIONS') return route.fulfill({ status: 204, headers: { ...cors, 'access-control-allow-headers': request.headers()['access-control-request-headers'] || '*' } });
     if (url.pathname.includes('/account_info/')) return route.fulfill({ headers: cors, json: { result: user } });
     return route.fulfill({ headers: cors, json: { status: true, result: [], count: 0, unreadCount: 0 } });
   }
