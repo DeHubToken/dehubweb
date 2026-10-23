@@ -33,7 +33,7 @@ import { useOptimisticPosts } from '@/hooks/use-optimistic-posts';
 import { useUserPins } from '@/hooks/use-pins';
 import { usePublicPlaylists } from '@/hooks/use-bookmark-folders';
 import { usePullToRefresh } from '@/hooks/use-pull-to-refresh';
-import { getUserComments, blockUser, unblockUser, getUserReposts, getNFTInfo } from '@/lib/api/dehub';
+import { getUserComments, blockUser, unblockUser, getUserReposts, getUserProposalReposts, getNFTInfo } from '@/lib/api/dehub';
 import { toast } from 'sonner';
 import type { TextPost, ImagePost, VideoItem } from '@/types/feed.types';
 import type { TabValue } from '@/components/app/profile/ProfileConstants';
@@ -48,6 +48,16 @@ const PROFILE_TAB_POST_TYPE: Partial<Record<TabValue, string>> = {
   live: 'live',
 };
 import { scrollDocumentToSmooth } from '@/lib/document-scroll';
+
+/** A reposted governance proposal on the profile timeline. */
+export interface ProfileProposalItem {
+  id: string;
+  proposalId: string;
+}
+
+export type ProfileContentItem =
+  | { type: 'post' | 'image' | 'video'; data: TextPost | ImagePost | VideoItem; createdAt: string; isRepost?: boolean; repostedAt?: string }
+  | { type: 'proposal'; data: ProfileProposalItem; createdAt: string; isRepost?: boolean; repostedAt?: string };
 
 const PULL_THRESHOLD = 80;
 
@@ -262,6 +272,16 @@ export function useProfilePage({ activeTab = 'home' }: UseProfilePageOptions = {
     staleTime: 2 * 60 * 1000,
   });
 
+  // Governance proposals this user reposted. They have no tokenId, so they come
+  // from their own endpoint and merge into "All" as proposal cards.
+  const { data: proposalRepostsData } = useQuery({
+    queryKey: ['user-proposal-reposts', apiProfile?.walletAddress?.toLowerCase()],
+    queryFn: () => getUserProposalReposts(apiProfile!.walletAddress!, 1, 50),
+    enabled: repostsEnabled && !!apiProfile?.walletAddress,
+    staleTime: 2 * 60 * 1000,
+    retry: false,
+  });
+
   const profile = apiProfile;
   const isOwnProfile = !routeUsername && (!userId || (currentUser?.address === userId) || (currentWalletAddress === userId));
   const isViewingOwnProfile = isOwnProfile || (apiProfile?.walletAddress && apiProfile.walletAddress.toLowerCase() === currentWalletAddress?.toLowerCase());
@@ -296,7 +316,7 @@ export function useProfilePage({ activeTab = 'home' }: UseProfilePageOptions = {
       if (nft?.tokenId !== undefined) serverRank.set(String(nft.tokenId), i);
     });
 
-    const unified: Array<{ type: 'post' | 'image' | 'video'; data: TextPost | ImagePost | VideoItem; createdAt: string; isRepost?: boolean; repostedAt?: string }> = [
+    const unified: Array<ProfileContentItem> = [
       ...separated.posts.map(p => ({ type: 'post' as const, data: p, createdAt: p.createdAt || '' })),
       ...separated.images.map(i => ({ type: 'image' as const, data: i, createdAt: i.createdAt || '' })),
       ...separated.videos.map(v => ({ type: 'video' as const, data: v, createdAt: v.createdAt || '' })),
@@ -342,6 +362,16 @@ export function useProfilePage({ activeTab = 'home' }: UseProfilePageOptions = {
       });
     }
 
+    for (const r of proposalRepostsData ?? []) {
+      unified.push({
+        type: 'proposal',
+        data: { id: `proposal-${r.proposalId}`, proposalId: r.proposalId },
+        createdAt: r.repostedAt,
+        isRepost: true,
+        repostedAt: r.repostedAt,
+      });
+    }
+
     unified.sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
 
     return {
@@ -351,7 +381,7 @@ export function useProfilePage({ activeTab = 'home' }: UseProfilePageOptions = {
       PROFILE_LIVE: separated.lives,
       ALL_CONTENT: unified,
     };
-  }, [userContentData, repostsData, isContentFiltered]);
+  }, [userContentData, repostsData, proposalRepostsData, isContentFiltered]);
 
   // Comment count — lazy-loaded after a short delay to avoid blocking initial paint
   const [commentCountEnabled, setCommentCountEnabled] = useState(false);

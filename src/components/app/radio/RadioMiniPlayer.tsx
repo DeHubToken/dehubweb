@@ -162,6 +162,7 @@ export function RadioMiniPlayer() {
     return (
       <AnimatePresence>
         <motion.div
+          data-glass-playback-surface
           drag
           dragMomentum={false}
           dragElastic={0.1}
@@ -235,6 +236,7 @@ export function RadioMiniPlayer() {
     <>
       <AnimatePresence>
         <motion.div
+          data-glass-playback-surface
           ref={barRef}
           drag
           dragControls={dragControls}

@@ -107,6 +107,7 @@ export interface UnifiedFeedItem {
     lockContentChainIds?: number[];
     isPayPerView: boolean;
     payPerViewAmount?: number;
+    payPerViewTokenSymbol?: string;
     isAddBounty: boolean;
     addBountyFirstXViewers?: number | string;
     addBountyFirstXComments?: number | string;
@@ -295,7 +296,7 @@ function mapVideoItem(item: UnifiedFeedItem, index: number): VideoItem {
     ppvBuyerCount: item.ppvBuyerCount || 0,
     isPPV,
     ppvPrice: item.streamInfo?.payPerViewAmount,
-    ppvCurrency: 'DHB',
+    ppvCurrency: item.streamInfo?.payPerViewTokenSymbol || 'DHB',
     isW2E,
     isLocked,
     lockedPrice: item.streamInfo?.lockContentAmount,
@@ -387,7 +388,7 @@ function mapImagePost(item: UnifiedFeedItem, index: number): ImagePost {
     createdAt: item.createdAt,
     isPPV: item.streamInfo?.isPayPerView ?? false,
     ppvPrice: item.streamInfo?.payPerViewAmount,
-    ppvCurrency: 'DHB',
+    ppvCurrency: item.streamInfo?.payPerViewTokenSymbol || 'DHB',
     isW2E: item.streamInfo?.isAddBounty || item.is_w2e || false,
     isLocked: item.streamInfo?.isLockContent ?? false,
     lockedPrice: item.streamInfo?.lockContentAmount,

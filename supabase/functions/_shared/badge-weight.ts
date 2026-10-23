@@ -156,6 +156,11 @@ export function badgeTier(
 export interface ResolvedWeight {
   weight: number;
   badgeName: string | null;
+  /**
+   * Set only with `ownOnly`: the account wears a badge, but it was lent to it
+   * and what it holds itself earns none.
+   */
+  lent?: boolean;
 }
 
 const DEHUB_API_BASE = "https://api.dehub.io";
@@ -187,7 +192,11 @@ async function ladderScale(): Promise<number> {
  * actually enforced. An unreachable API returns 0 rather than 1: failing open
  * would hand a free vote to anyone who could make the lookup fail.
  */
-export async function resolveVoteWeight(wallet: string, requireAccount = false): Promise<ResolvedWeight> {
+export async function resolveVoteWeight(
+  wallet: string,
+  requireAccount = false,
+  opts: { ownOnly?: boolean } = {},
+): Promise<ResolvedWeight> {
   let account: Record<string, unknown> | null = null;
   try {
     const res = await fetch(`${DEHUB_API_BASE}/api/account_info/${encodeURIComponent(wallet)}`);
@@ -204,10 +213,16 @@ export async function resolveVoteWeight(wallet: string, requireAccount = false):
   }
 
   const scale = await ladderScale();
-  const badgeName = badgeTier(account.badgeBalance, (account.username as string) ?? null, {
-    scale,
-    lock: account.badgeLock,
-  });
-  if (!badgeName) return { weight: 0, badgeName: null };
+  const username = (account.username as string) ?? null;
+  const rendered = badgeTier(account.badgeBalance, username, { scale, lock: account.badgeLock });
+
+  // `badgeBalance` folds in a badge lent to this account. Governance counts
+  // only what the voter holds, so a lent badge is shown but does not vote.
+  // Older API rows without `ownBadgeBalance` fall back to the rendered figure.
+  const own = account.ownBadgeBalance;
+  const badgeName = opts.ownOnly && own !== undefined && own !== null
+    ? badgeTier(own, username, { scale, lock: account.badgeLock })
+    : rendered;
+  if (!badgeName) return { weight: 0, badgeName: null, lent: !!opts.ownOnly && !!rendered };
   return { weight: BADGE_VOTE_WEIGHT[badgeName] ?? 1, badgeName };
 }
