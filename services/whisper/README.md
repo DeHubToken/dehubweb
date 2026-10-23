@@ -57,6 +57,11 @@ kill switch.
 Never on live.dehub.io or the API droplet. Transcription uses every core it is
 given, and lives must not break.
 
+**Not hosted yet; `enabled` stays off and Deepgram does the work.** Switch it on
+once monthly transcription passes about 10,000 minutes (Deepgram is $4.30 per
+1,000): RunPod Serverless 16 GB GPU at $0.58/hour billed per second (about $1
+per 1,000 minutes), or a DigitalOcean 4 vCPU / 8 GB droplet at $48/month flat.
+
 - **RunPod Serverless (GPU):** image `ghcr.io/dehubtoken/dehub-whisper:gpu`,
   container start command `python handler.py`, 16 GB tier, 0 idle workers,
   at most 2 workers, execution timeout 900 s. `transcribe` posts to
