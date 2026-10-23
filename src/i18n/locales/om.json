@@ -193,6 +193,7 @@
     "heading": "DeHub Gabaabduu"
   },
   "settings": {
+    "usernameTaken": "Maqaan fayyadamaa fudhatameera",
     "postingChain": "Biloookcheenii maxxansaa",
     "showOnline": "Yeroon toora interneetii irra jiru agarsiisi",
     "showOnlineDesc": "Namoonni ergaa ergitu osoo DeHub fayyadamtu maqaa kee cinaatti tuqaa magariisa argu",
@@ -2377,6 +2378,7 @@
     "pendingSubmitted": "{{amount}} tokens dhiyaateera. Mirkaneessi ammallee sakatta'amaa jira. Ammas hin erginaa."
   },
   "communities": {
+    "chatTab": "Haasawa",
     "title": "Hawaasota",
     "create": "Uumi",
     "searchPlaceholder": "Hawaasota barbaadi...",
@@ -2411,7 +2413,6 @@
     "addDescription": "Ibsa itti dabali...",
     "communityDescription": "Ibsa hawaasaa...",
     "posts": "Maxxansaalee",
-    "chat": "Haasawa",
     "membersTab": "Miseensota ({{count}})",
     "about": "Waa'ee",
     "backToCommunities": "Hawaasota",
@@ -3840,6 +3841,7 @@
     "sellYourFractions": "Firaakshinoota kee gurguraa ({{held}} qabame) ."
   },
   "creator": {
+    "libraryEmpty": "Uumamawwan kee olkaa'aman asitti mul'atu.",
     "whatToCreate": "Maal uumuu qabna",
     "startCreatingWith": "{{model}} irraa uumuu jalqabi.",
     "studioSubtitle": "Mul’ata, amala, miira ykn akkaataa ibsi. Bu'aan gadi bu'ee kallattiin gara gulaalaa seena.",
@@ -6734,6 +6736,7 @@
     "seoDescription": "Galmee ifaa DeHub: ilaalcha waliigalaa pilaatifoormii, dApps, diinagdee tookenii mallattoolee, staking, taphoota, karoora, gaaffiiwwan yeroo baay’ee gaafataman fi kan biroo."
   },
   "dex": {
+    "title": "tokkenoota / USD",
     "seoTitle": "DEX — mallattoolee ati gatii keetiin gurguraa",
     "seoDescription": "mallattoolee bitachuu ykn gurguruu gatii kee Uniswap v4 limit order irratti Base ykn BNB Chain irratti godhi. Order book, market depth fi gatii tokko qofa USD.",
     "venue": "Network",
@@ -6956,6 +6959,7 @@
     }
   },
   "editor": {
+    "video": { "tFade": "Walitti makamuu", "none": "Homaa", "transition": "Ce'umsa", "speed": "Saffisa", "sound": "Sagalee","video": "Viidiyoo"},
     "review": {
       "title": "Sakatta'iinsa pirojektii",
       "shared": "Si waliin qoodame",

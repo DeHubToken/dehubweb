@@ -59,14 +59,14 @@ export default function QuickActionsDrawer({ context, initialReport, onClose }: 
   return <Drawer open onOpenChange={open => { if (!open) close(); }} dismissible={!busy && !submit.isPending}>
     <DrawerContent data-quick-actions-ui column className="px-4 pb-6 text-white">
       <DrawerHeader className="px-0 pr-10 text-left">
-        <DrawerTitle>{view === 'report' ? t('quickActions.question') : view === 'profiles' ? t('settings.switchAccount') : t('quickActions.title')}</DrawerTitle>
+        <DrawerTitle>{view === 'report' ? t('quickActions.question') : view === 'profiles' ? t('sidebar.switchAccount') : t('quickActions.title')}</DrawerTitle>
         <DrawerDescription>{view === 'report' ? t('quickActions.publicNotice') : t('quickActions.hint')}</DrawerDescription>
       </DrawerHeader>
       <button aria-label={t('common.close')} className="absolute right-4 top-4 p-2" disabled={busy || submit.isPending} onClick={close}><X className="h-5 w-5" /></button>
       {view === 'menu' && <div>
         <button className={row} onClick={() => setView('report')}><Bug size={20} />{t('settings.reportBug')}</button>
         <button className={row} onClick={() => window.location.reload()}><RefreshCw size={20} />{t('quickActions.refresh')}</button>
-        <button className={row} onClick={() => setView('profiles')}><Users size={20} />{t('settings.switchAccount')}</button>
+        <button className={row} onClick={() => setView('profiles')}><Users size={20} />{t('sidebar.switchAccount')}</button>
         <button className={row} disabled={!isAuthenticated || busy} onClick={async () => { setBusy(true); try { await disconnect(); onClose(); } catch { setError(true); setBusy(false); } }}><LogOut size={20} />{t('quickActions.logout')}</button>
       </div>}
       {view === 'profiles' && <div className="max-h-[65dvh] overflow-y-auto"><ProfilesSection onSelect={onClose} /></div>}

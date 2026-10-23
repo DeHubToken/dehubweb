@@ -193,6 +193,7 @@
     "heading": "ሓጺርቲ DeHub"
   },
   "settings": {
+    "usernameTaken": "ስም ተጠቃሚ ተታሒዙ",
     "postingChain": "ናይ ልጥፋት ብሎክቸይን",
     "showOnline": "ኣብ ኢንተርነት ከለኹ ኣርኢ",
     "showOnlineDesc": "እቶም እትልእኮም ሰባት DeHub ክትጥቀም ከለኻ ኣብ ጥቓ ስምካ ዘሎ ሕጫውቲ ነጥቢ ይርእዩ",
@@ -2332,6 +2333,7 @@
     "pendingSubmitted": "{{amount}} ቶክን ተሰሚዎ። ተረጋግጽኡ ይካየድ ኣሎ። ደጊም ኣይሰደዶ።"
   },
   "communities": {
+    "chatTab": "ዝርርብ",
     "title": "ማሕበረሰባት",
     "create": "ፍጠር",
     "searchPlaceholder": "ማሕበረሰባት ድለ...",
@@ -2366,7 +2368,6 @@
     "addDescription": "መግለጺ ወስኽ...",
     "communityDescription": "መግለጺ ማሕበረሰብ...",
     "posts": "ልኡኻት",
-    "chat": "ዝርርብ",
     "membersTab": "ኣባላት ({{count}})",
     "about": "ብዛዕባ",
     "backToCommunities": "ማሕበረሰባት",
@@ -3791,6 +3792,7 @@
     "sellYourFractions": "ንክፍላትካ ሸይጥ ({{held}} held)"
   },
   "creator": {
+    "libraryEmpty": "ዝዓቀብካዮም ፍርያት ኣብዚ ክርኣዩ እዮም።",
     "whatToCreate": "እንታይ ከም እትፈጥር",
     "startCreatingWith": "ምስ {{model}}",
     "studioSubtitle": "ሓደ ትዕይንት ፡ ባህሪ ፡ ስምዒት ወይ ቅጥዒ ግለጽ ። ኣብ ታሕቲ ዘሎ መሬት ብምውጻእ ብቐጥታ ናብ ኣሰናዳኢ ይኣቱ ።",
@@ -6189,7 +6191,7 @@
     "kindImage": "ስእልታት",
     "tileSourceKind": "{{source}} · {{kind}}",
     "reviewTitle": "ቅድሚ ምእታዉ ገምግም",
-    "reviewSubtitle": "ካብ {{source}} ፡ ከም {{kind}}} ። ነቲ ኦሪጅናል ንምዕቃብ ፡ ነቲ ኣርእስቲ ባዶ ግበር ።",
+    "reviewSubtitle": "ካብ {{source}} ፡ ከም {{kind}} ። ነቲ ኦሪጅናል ንምዕቃብ ፡ ነቲ ኣርእስቲ ባዶ ግበር ።",
     "reviewName": "ኣርእስቲ",
     "reviewNamePlaceholder": "ነቲ ናይ መጀመርታ ኣርእስቲ ንምሕላው ባዶ ግበር",
     "reviewDescription": "መግለጺ",
@@ -6655,6 +6657,7 @@
     "seoDescription": "ወግዓዊ ሰነዳት DeHub፦ ሓፈሻዊ ትሕዝቶ መድረኽ፡ dApps፡ ቁጠባ ቶከን ምልክታት፡ ስቴኪንግ፡ ጸወታታት፡ መንገዲ ካርታ፡ ተደጋጋሚ ሕቶታትን ካልእን።"
   },
   "dex": {
+    "title": "ቶክንስ / ዶላር",
     "seoTitle": "DEX — ኣብ ዋጋኻ ምልክታት ንግዲ",
     "seoDescription": "ዋጋ DHBኻ ብ Uniswap v4 ገደብ ትእዛዝ ኣብ Base ወይ BnB Chain ኣዳሉ ወይ ሸይጥ ። ህያው መጽሓፍ ቅደም ተከተል ፡ ጥልቀት ዕዳጋን ሓደ ናይ ሓባር USD ዋጋን ።",
     "venue": "ኔትወርክ",
@@ -6871,6 +6874,7 @@
     }
   },
   "editor": {
+    "video": { "tFade": "ምሕዋስ", "none": "የለን", "transition": "ምስግጋር", "speed": "ቅልጣፈ", "sound": "ድምጺ","video": "ቪድዮ"},
     "review": {
       "title": "ግምገማ ፕሮጀክት",
       "shared": "ምሳኹም ዝተኻፈለ",

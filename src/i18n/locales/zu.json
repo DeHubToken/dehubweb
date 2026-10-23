@@ -193,6 +193,7 @@
     "heading": "Okufushane kwe-DeHub"
   },
   "settings": {
+    "usernameTaken": "Igama lomsebenzisi selithathiwe",
     "postingChain": "I-blockchain yokuthumela",
     "showOnline": "Bonisa uma ngiku-inthanethi",
     "showOnlineDesc": "Abantu obathumelela umyalezo babona ichashazi eliluhlaza eceleni kwegama lakho ngenkathi usebenzisa i-DeHub",
@@ -2396,6 +2397,7 @@
     "pendingSubmitted": "{{amount}} amathuluzi athunyelwe. Ukuqinisekiswa kusahlolwa. Ungawuthumeli futhi."
   },
   "communities": {
+    "chatTab": "Ingxoxo",
     "title": "Imiphakathi",
     "create": "Dala",
     "searchPlaceholder": "Sesha imiphakathi...",
@@ -2430,7 +2432,6 @@
     "addDescription": "Engeza incazelo...",
     "communityDescription": "Incazelo yomphakathi...",
     "posts": "Okuthunyelwe",
-    "chat": "Ingxoxo",
     "membersTab": "Amalungu ({{count}})",
     "about": "Mayelana",
     "backToCommunities": "Imiphakathi",
@@ -3883,6 +3884,7 @@
     "sellYourFractions": "Thengisa izingxenyana zakho ({{held}} held)"
   },
   "creator": {
+    "libraryEmpty": "Okwenziwe okulondolozile kuzovela lapha.",
     "whatToCreate": "Lokho ongakusungula",
     "startCreatingWith": "Qala ukusungula nge- {{model}}",
     "studioSubtitle": "Chaza isigcawu, uhlamvu, isimo noma isitayela. Imiphumela ifika ngezansi futhi iqonde kumhleli.",
@@ -6789,6 +6791,7 @@
     "seoDescription": "Amadokhumenti asemthethweni e-DeHub: ukubuka konke kwesizinda, ama-dApps, umnotho wethokheni ye-tokens, i-staking, imidlalo, uhlelo lwekusasa, imibuzo evamile nokunye."
   },
   "dex": {
+    "title": "amathokheni / USD",
     "seoTitle": "DEX — Shintsha i-tokens ngentengo yakho",
     "seoDescription": "Setha intengo yakho yokuthenga noma yokudayisa i-tokens nge-Uniswap v4 limit order ku-Base noma ku-BNB Chain. I-oda encwadini ebukhoma, ukujula kwemakethe nenye intengo eyabiwe ye-USD.",
     "venue": "Inethiwekhi",
@@ -7011,6 +7014,7 @@
     }
   },
   "editor": {
+    "video": { "tFade": "Ukuxubana", "none": "Lutho", "transition": "Ushintsho", "speed": "Isivinini", "sound": "Umsindo","video": "Ividiyo"},
     "review": {
       "title": "Ukubuyekezwa kwephrojekthi",
       "shared": "Kwabelwane nawe",

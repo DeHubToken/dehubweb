@@ -193,6 +193,7 @@
     "heading": "DeHub Trumpieji"
   },
   "settings": {
+    "usernameTaken": "Naudotojo vardas užimtas",
     "postingChain": "Įrašų blokų grandinė",
     "showOnline": "Rodyti, kada esu prisijungęs",
     "showOnlineDesc": "Kai naudojatės „DeHub“, žmonės, kuriems rašote žinutes, šalia jūsų vardo mato žalią tašką",
@@ -2365,6 +2366,7 @@
     "pendingSubmitted": "{{amount}} žetonų pateikta. Patvirtinimas vis dar tikrinamas. Nesiųskite dar kartą."
   },
   "communities": {
+    "chatTab": "Pokalbis",
     "title": "Bendruomenės",
     "create": "Kurti",
     "searchPlaceholder": "Ieškoti bendruomenių...",
@@ -2399,7 +2401,6 @@
     "addDescription": "Pridėti aprašymą...",
     "communityDescription": "Bendruomenės aprašymas...",
     "posts": "Įrašai",
-    "chat": "Pokalbis",
     "membersTab": "Nariai ({{count}})",
     "about": "Apie",
     "backToCommunities": "Bendruomenės",
@@ -3866,6 +3867,7 @@
     "sellYourFractions": "Parduokite savo trupmenas ({{held}} turima)"
   },
   "creator": {
+    "libraryEmpty": "Čia bus rodomi jūsų išsaugoti generavimai.",
     "whatToCreate": "Ką sukurti",
     "startCreatingWith": "Pradėkite kurti su {{model}}",
     "studioSubtitle": "Apibūdinkite sceną, personažą, nuotaiką ar stilių. Rezultatai pasirodys žemiau ir pateks tiesiai į redaktorių.",
@@ -6784,6 +6786,7 @@
     "seoDescription": "Oficiali DeHub dokumentacija: platformos apžvalga, dApps, žetonų tokeno ekonomika, staking, žaidimai, planas, DUK ir daugiau."
   },
   "dex": {
+    "title": "ženklai / USD",
     "seoTitle": "DEX — prekiaukite žetonų savo kaina",
     "seoDescription": "Nustatykite savo žetonų pirkimo ar pardavimo kainą su „Uniswap v4“ limitiniu pavedimu „Base“ arba „BNB Chain“. Tiesioginė pavedimų knyga, rinkos gylis ir viena bendra USD kaina.",
     "venue": "Tinklas",
@@ -7005,6 +7008,7 @@
     }
   },
   "editor": {
+    "video": { "tFade": "Persiliejimas", "none": "Nėra", "transition": "Perėjimas", "speed": "Greitis", "sound": "Garsas","video": "Vaizdo įrašas"},
     "review": {
       "title": "Projekto peržiūra",
       "shared": "Bendrinama su jumis",

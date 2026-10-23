@@ -193,6 +193,7 @@
     "heading": "DeHub Shorts"
   },
   "settings": {
+    "usernameTaken": "Nome utente già in uso",
     "showDislikesDesc": "Chiunque può aprire la scheda «Non mi piace» del tuo profilo. Se disattivato, solo tu puoi vederla.",
     "showDislikes": "Mostra a tutti i miei «non mi piace»",
     "postingChain": "Blockchain dei post",
@@ -2375,6 +2376,7 @@
     "pendingSubmitted": "{{amount}} token inviati. La conferma è ancora in fase di verifica. Non inviarli di nuovo."
   },
   "communities": {
+    "chatTab": "Chat",
     "title": "Comunità",
     "create": "Crea",
     "searchPlaceholder": "Cerca community...",
@@ -2409,7 +2411,6 @@
     "addDescription": "Aggiungi una descrizione...",
     "communityDescription": "Descrizione della community...",
     "posts": "Post",
-    "chat": "Chat",
     "membersTab": "Membri ({{count}})",
     "about": "Informazioni",
     "backToCommunities": "Community",
@@ -3876,6 +3877,7 @@
     "sellYourFractions": "Vendi le tue frazioni ({{held}} possedute)"
   },
   "creator": {
+    "libraryEmpty": "Le tue generazioni salvate appariranno qui.",
     "whatToCreate": "Cosa creare",
     "startCreatingWith": "Inizia a creare con {{model}}",
     "studioSubtitle": "Descrivi una scena, un personaggio, un'atmosfera o uno stile. I risultati appariranno di seguito e passeranno direttamente all'editor.",
@@ -6794,6 +6796,7 @@
     "seoDescription": "Documentazione ufficiale di DeHub: panoramica della piattaforma, dApp, economia del token token, staking, giochi, roadmap, FAQ e altro."
   },
   "dex": {
+    "title": "token / USD",
     "seoTitle": "DEX — Scambia token al tuo prezzo",
     "seoDescription": "Imposta il tuo prezzo di acquisto o vendita di token con un ordine limite Uniswap v4 su Base o BNB Chain. Order book live, profondità di mercato e un unico prezzo condiviso in USD.",
     "venue": "Rete",
@@ -7016,6 +7019,7 @@
     }
   },
   "editor": {
+    "video": { "tFade": "Dissolvenza incrociata", "none": "Nessuna", "transition": "Transizione", "speed": "Velocità", "sound": "Suono","video": "Video"},
     "review": {
       "title": "Revisione del progetto",
       "shared": "Condiviso con te",

@@ -193,6 +193,7 @@
     "heading": "DeHub gysga wideolary"
   },
   "settings": {
+    "usernameTaken": "Ulanyjy ady eýelenen",
     "postingChain": "Ýazgylaryň blokçeýni",
     "showOnline": "Men onlayn bolanymda görkeziň",
     "showOnlineDesc": "Adamlar DeHub ulanýan wagtyň özünde adyňyň ýanynda ýaşyl dot görýärler.",
@@ -2350,6 +2351,7 @@
     "pendingSubmitted": "{{amount}} sanly wagt tabşyryldy. Tassyklaýyş heniz barlanýar. Ony gaýtadan ibermäň."
   },
   "communities": {
+    "chatTab": "Söhbet",
     "title": "Toplumlar",
     "create": "Döret",
     "searchPlaceholder": "Jemgyýetleri gözle...",
@@ -2384,7 +2386,6 @@
     "addDescription": "Bir açıklama ekleyin...",
     "communityDescription": "Jemgyýet beýany...",
     "posts": "Postlar",
-    "chat": "Söhbet",
     "membersTab": "Agzalar ({{count}})",
     "about": "Barada",
     "backToCommunities": "Jemagatlar",
@@ -3818,6 +3819,7 @@
     "sellYourFractions": "Fraksiyalarýnýzý sat ({{held}} saklanýan)"
   },
   "creator": {
+    "libraryEmpty": "Saklanan döredilenleriňiz şu ýerde peýda bolar.",
     "whatToCreate": "Neyi yarata biler",
     "startCreatingWith": "{{model}}-ýnla yarataýan baþlaýýn",
     "studioSubtitle": "Sahne, personaj, ruh halý ýa da üslüb táýanýr. Natiýe altta ýokaryla ýaýlanýp redaktorýna doðru gider.",
@@ -6688,6 +6690,7 @@
     "seoDescription": "DeHub-yň resmi resminamalary: platforma synlary, dApps, tokenler token ykdysadyýeti, staking, oýunlar, ýol kartasy, ýygy soralýan soraglar we başgalar."
   },
   "dex": {
+    "title": "tokenlar / USD",
     "seoTitle": "DEX — tokenler söwdasy öz bahasyňyzda",
     "seoDescription": "Base ýa-da BNB Chain-däki Uniswap v4 çäklendirilen buýrugy bilen tokenler satyn almak ýa-da satmak bahasyňyzy belläň. Hakyky buýurmalar kitaby, bazaryň çuňlugy we bir umumy ABŞ dollary bahasy.",
     "venue": "Tor",
@@ -6908,6 +6911,7 @@
     }
   },
   "editor": {
+    "video": { "tFade": "Garyşyp geçiş", "none": "Ýok", "transition": "Geçiş", "speed": "Tizlik", "sound": "Ses","video": "Wideo"},
     "review": {
       "title": "Taslama syny",
       "shared": "Siziň bilen paýlaşylan",

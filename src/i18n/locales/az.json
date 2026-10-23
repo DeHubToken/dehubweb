@@ -193,6 +193,7 @@
     "heading": "DeHub Qısalar"
   },
   "settings": {
+    "usernameTaken": "Bu ad tutulub",
     "postingChain": "Paylaşım blokçeyni",
     "showOnline": "Onlayn olduğum vaxtı göstərin",
     "showOnlineDesc": "Mesaj göndərdiyiniz insanlar DeHub-dan istifadə edərkən adınızın yanında yaşıl nöqtə görür",
@@ -2311,6 +2312,7 @@
     "pendingSubmitted": "{{amount}} token göndərildi. Təsdiqlənmə hələ də yoxlanılır. Bir daha göndərməyin."
   },
   "communities": {
+    "chatTab": "Söhbət",
     "title": "İcmalar",
     "create": "Yarat",
     "searchPlaceholder": "İcmaları axtar...",
@@ -2345,7 +2347,6 @@
     "addDescription": "Təsvir əlavə edin...",
     "communityDescription": "İcma təsviri...",
     "posts": "Paylaşımlar",
-    "chat": "Söhbət",
     "membersTab": "Üzvlər ({{count}})",
     "about": "Haqqında",
     "backToCommunities": "İcmalar",
@@ -3787,6 +3788,7 @@
     "sellYourFractions": "Fraksiyalarınızı satın ({{held}} saxlanılır)"
   },
   "creator": {
+    "libraryEmpty": "Saxladığınız generasiyalar burada görünəcək.",
     "whatToCreate": "Nə yaratmaq lazımdır",
     "startCreatingWith": "{{model}} ilə yaratmağa başlayın",
     "studioSubtitle": "Səhnə, personaj, əhval-ruhiyyə və ya stil təsvir edin. Nəticələr aşağıda görünür və birbaşa redaktora keçir.",
@@ -6632,6 +6634,7 @@
     "seoDescription": "Rəsmi DeHub sənədləri: platformaya baxış, dApps, tokenlər token iqtisadiyyatı, steykinq, oyunlar, yol xəritəsi, FAQ və daha çoxu."
   },
   "dex": {
+    "title": "token / USD",
     "seoTitle": "DEX — tokenlər-ni öz qiymətinizlə ticarət edin",
     "seoDescription": "Base və ya BNB Chain-də Uniswap v4 limit sifarişi ilə tokenlər alış və ya satış qiymətinizi təyin edin. Canlı sifariş kitabı, bazar dərinliyi və vahid ortaq USD qiyməti.",
     "venue": "Şəbəkə",
@@ -6854,6 +6857,7 @@
     }
   },
   "editor": {
+    "video": { "tFade": "Qarışıq keçid", "none": "Heç biri", "transition": "Keçid", "speed": "Sürət", "sound": "Səs","video": "Video"},
     "review": {
       "title": "Layihə baxışı",
       "shared": "Sizinlə paylaşılanlar",

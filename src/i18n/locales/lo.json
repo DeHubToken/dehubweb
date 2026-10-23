@@ -193,6 +193,7 @@
     "heading": "ວິດີໂອສັ້ນ DeHub"
   },
   "settings": {
+    "usernameTaken": "ຊື່ຜູ້ໃຊ້ຖືກໃຊ້ແລ້ວ",
     "postingChain": "ບລັອກເຊນສຳລັບໂພສ",
     "showOnline": "ສະແດງເມື່ອຂ້ອຍຢູ່ໃນອອນໄລນ໌",
     "showOnlineDesc": "ຄົນທີ່ທ່ານສົ່ງຂໍ້ຄວາມເຫັນຈຸດສີຂຽວຢູ່ຂ້າງຊື່ຂອງທ່ານໃນຂະນະທີ່ທ່ານ ກໍາ ລັງໃຊ້ DeHub",
@@ -2361,6 +2362,7 @@
     "pendingSubmitted": "{{amount}} tokens ຍື່ນສະ ເຫນີ .ການຢືນຢັນຍັງຖືກກວດສອບຢູ່. ຈົ່ງຢ່າ ພາກັນ ອັດລັດຖະບານນີ້ ລົງອີກ."
   },
   "communities": {
+    "chatTab": "ແຊັດ",
     "title": "ຊຸມຊົນ",
     "create": "ສ້າງ",
     "searchPlaceholder": "ຄົ້ນຫາຊຸມຊົນ...",
@@ -2395,7 +2397,6 @@
     "addDescription": "ເພີ່ມຄຳອະທິບາຍ...",
     "communityDescription": "ຄຳອະທິບາຍຊຸມຊົນ...",
     "posts": "ໂພສ",
-    "chat": "ແຊັດ",
     "membersTab": "ສະມາຊິກ ({{count}})",
     "about": "ກ່ຽວກັບ",
     "backToCommunities": "ຊຸມຊົນ",
@@ -3843,6 +3844,7 @@
     "sellYourFractions": "ຂາຍສ່ວນຂອງເຈົ້າ (ຖື {{held}})"
   },
   "creator": {
+    "libraryEmpty": "ການສ້າງທີ່ບັນທຶກໄວ້ຂອງທ່ານຈະປາກົດຢູ່ບ່ອນນີ້.",
     "whatToCreate": "ສິ່ງທີ່ຈະສ້າງ",
     "startCreatingWith": "ເລີ່ມສ້າງດ້ວຍ {{model}}",
     "studioSubtitle": "ອະທິບາຍ scene, character, mood, or style. Results land below and carry straight into the editor.",
@@ -6281,7 +6283,7 @@
     "kindVideo": "ວີດີໂອ",
     "kindAudio": "ສຽງ",
     "kindImage": "ຮູບພາບ",
-    "tileSourceKind": "{{ແຫຼ່ງຂໍ້ມູນ}} · {{ປະເພດ}}",
+    "tileSourceKind": "{{source}} · {{kind}}",
     "reviewTitle": "ການທົບທວນຄືນກ່ອນການໂພສ",
     "reviewSubtitle": "ຈາກ {{source}}, ເປັນ {{kind}}. ແກ້ໄຂທຸກສິ່ງທີ່ທ່ານຕ້ອງການ - ໃຫ້ຫົວຂໍ້ເປົ່າເພື່ອຮັກສາຕົ້ນສະບັບ.",
     "reviewName": "ຫົວຂໍ້",
@@ -6749,6 +6751,7 @@
     "seoDescription": "ເອກະສານທາງການຂອງ DeHub: ພາບລວມແພລດຟອມ, dApps, ເສດຖະກິດໂທເຄນ ໂທເຄັນ, ສະເຕກກິ້ງ, ເກມ, ແຜນທາງ, ຄຳຖາມທີ່ພົບເລື້ອຍ ແລະ ອື່ນໆ."
   },
   "dex": {
+    "title": "ສິວາດາການການບໍລິການ",
     "seoTitle": "DEX — ຊື້ຂາຍ ໂທເຄັນ ໃນລາຄາຂອງທ່ານ",
     "seoDescription": "ຕັ້ງລາຄາຊື້ ຫຼືຂາຍ ໂທເຄັນ ຂອງທ່ານດ້ວຍຄຳສັ່ງຈຳກັດຂອງ Uniswap v4 ໃນ Base ຫຼື BNB Chain. ປຶ້ມຄຳສັ່ງສົດ, ຄວາມເລິກຂອງຕະຫຼາດ ແລະລາຄາ USD ລວມໜຶ່ງດຽວ.",
     "venue": "ເຄືອຂ່າຍ",
@@ -6971,6 +6974,7 @@
     }
   },
   "editor": {
+    "video": { "tFade": "ຈາງຊ້ອນ", "none": "ບໍ່ມີ", "transition": "ການປ່ຽນສາກ", "speed": "ຄວາມໄວ", "sound": "ສຽງ","video": "ວິດີໂອ"},
     "review": {
       "title": "ກວດສອບໂຄງການ",
       "shared": "ແບ່ງປັນກັບທ່ານ",

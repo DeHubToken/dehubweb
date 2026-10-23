@@ -308,6 +308,7 @@
     "heading": "DeHub Kısa Videolar"
   },
   "settings": {
+    "usernameTaken": "Kullanıcı adı alınmış",
     "showDislikesDesc": "Herkes profilindeki Beğenilmeyenler sekmesini açabilir. Bu kapalıyken yalnızca sen görebilirsin.",
     "showDislikes": "Beğenmediklerimi herkese göster",
     "postingChain": "Gönderi blokzinciri",
@@ -2872,6 +2873,7 @@
     "statsLoadFailed": "Staking istatistikleri yüklenemedi"
   },
   "communities": {
+    "chatTab": "Sohbet",
     "followerInvites": {
       "title": "Takipçileri davet et",
       "detail": "Her grupta en fazla 50 takipçi seçin. Ücretli veya kapalı özel mesajlar atlanır. Tekrar denemeden önce onaylanmamış gönderileri sohbette kontrol edin.",
@@ -4704,6 +4706,7 @@
     "sellYourFractions": "Paylarınızı satın ({{held}} adet)"
   },
   "creator": {
+    "libraryEmpty": "Kayıtlı üretimleriniz burada görünecek.",
     "toolRemake": "Remake",
     "toolMaboroshi": "Maboroshi",
     "toolMaboroshiDesc": "Karakterleri ve nesneleri değiştirin, bir taslağı gözden geçirin, ardından orijinal film müziğinizle dışa aktarın.",
@@ -7900,6 +7903,7 @@
     "seoDescription": "Resmî DeHub dokümantasyonu: platforma genel bakış, dApp’ler, jeton token ekonomisi, staking, oyunlar, yol haritası, SSS ve daha fazlası."
   },
   "dex": {
+    "title": "token / USD",
     "seoTitle": "DEX — jeton'yi kendi fiyatınızla takas edin",
     "seoDescription": "Base veya BNB Chain'de Uniswap v4 limit emriyle jeton alım veya satım fiyatınızı belirleyin. Canlı emir defteri, piyasa derinliği ve tek bir paylaşılan USD fiyatı.",
     "venue": "Ağ",
@@ -8124,6 +8128,7 @@
     "priceChartCleared": "Fiyat grafiği temizlendi. Sabit referans fiyatı: 0.0001 $. Uygulama fiyatları mevcut siparişlere bağlıdır."
   },
   "editor": {
+    "video": { "tFade": "Çapraz geçiş", "none": "Yok", "transition": "Geçiş", "speed": "Hız", "sound": "Ses","video": "Video"},
     "review": {
       "title": "Proje incelemesi",
       "shared": "Sizinle paylaşılan",

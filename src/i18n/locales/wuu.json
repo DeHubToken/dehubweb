@@ -193,6 +193,7 @@
     "heading": "DeHub 短片"
   },
   "settings": {
+    "usernameTaken": "用户名已被占用",
     "postingChain": "发帖区块链",
     "showOnline": "显示我在线辰光",
     "showOnlineDesc": "搿个辰光，搿个用DeHub，搿个名字旁边会得看到一个绿点。",
@@ -2361,6 +2362,7 @@
     "pendingSubmitted": "{{amount}} 隻代幣已提交。正在檢查確認。請勿重複發送。"
   },
   "communities": {
+    "chatTab": "聊天",
     "title": "社区",
     "create": "创建",
     "searchPlaceholder": "搜索社区...",
@@ -2395,7 +2397,6 @@
     "addDescription": "加一段描述...",
     "communityDescription": "社区描述...",
     "posts": "帖子",
-    "chat": "聊天",
     "membersTab": "成员（{{count}}）",
     "about": "关于",
     "backToCommunities": "社区",
@@ -3572,6 +3573,7 @@
     "sellYourFractions": "賣出你的分割({{held}}持有)"
   },
   "creator": {
+    "libraryEmpty": "侬保存个生成内容会辣此地显示。",
     "whatToCreate": "要創造什麼",
     "startCreatingWith": "用{{model}}開始創作",
     "studioSubtitle": "描述一個場景、角色、氣氛或風格。結果會出現在下方，並直接進入編輯器。",
@@ -6141,6 +6143,7 @@
     "seoDescription": "DeHub 官方文档：平台概览、dApp、代币 代币经济、质押、游戏、路线图、常见问题等。"
   },
   "dex": {
+    "title": "代币 / 美元",
     "seoTitle": "DEX — 以您个价交易DHB",
     "seoDescription": "用Base或BNB Chain上个Uniswap v4限价单，设定您个DHB买入或卖出价。实时委托单簿、市场深度搭一个共享美元价。",
     "venue": "网络",
@@ -6363,6 +6366,7 @@
     }
   },
   "editor": {
+    "video": { "tFade": "交叉溶解", "none": "无", "transition": "转场", "speed": "速度", "sound": "声音","video": "视频"},
     "review": {
       "title": "项目审阅",
       "shared": "与你共享",

@@ -193,6 +193,7 @@
     "heading": "Fídíò kúkúrú DeHub"
   },
   "settings": {
+    "usernameTaken": "A ti gba orúkọ olùmúlò yìí",
     "postingChain": "Blockchain fún àwọn àtẹ̀jáde",
     "showOnline": "Fi hàn nígbà tí mo wà lórí ayélujára",
     "showOnlineDesc": "Àwọn ènìyàn tí o fi àtẹ̀jíṣẹ́ ránṣẹ́ rí àmì aláwọ̀ ewé lẹ́gbẹ̀ẹ́ orúkọ rẹ nígbà tí ò ń lo DeHub",
@@ -2359,6 +2360,7 @@
     "pendingSubmitted": "{{amount}} àmi-ìṣẹ́ ni a ti fi sílẹ̀. Ìfọwọ́ sí tí a sì ń ṣàyẹ̀wò. Má ṣe fi rán an sílẹ̀ lẹ́ẹ̀kan sí i."
   },
   "communities": {
+    "chatTab": "Ìbánisọ̀rọ̀",
     "title": "Àwọn Àwùjọ",
     "create": "Ṣẹ̀dá",
     "searchPlaceholder": "Wá àwọn àwùjọ...",
@@ -2393,7 +2395,6 @@
     "addDescription": "Ṣàfikún àpèjúwe...",
     "communityDescription": "Àpèjúwe àwùjọ...",
     "posts": "Àwọn Àtẹ̀jáde",
-    "chat": "Ìbánisọ̀rọ̀",
     "membersTab": "Àwọn Ọmọ Ẹgbẹ́ ({{count}})",
     "about": "Nípa",
     "backToCommunities": "Àwọn Àwùjọ",
@@ -3817,6 +3818,7 @@
     "sellYourFractions": "Ta ìpín rẹ ({{held}} mú)"
   },
   "creator": {
+    "libraryEmpty": "Àwọn ìṣẹ̀dá rẹ tí o fi pamọ́ yóò hàn níbí.",
     "whatToCreate": "What to create",
     "startCreatingWith": "Bẹ̀rẹ̀ sí ṣẹ̀dá pẹ̀lú {{model}}",
     "studioSubtitle": "Ṣàlàyé ìran kan, ìwà kan, ìrònú kan tàbí ọ̀nà kan. Ìyọrísí rẹ̀ wà nísàlẹ̀ kí ó sì gbé e lọ tààrà sínú olùtúmọ̀.",
@@ -6210,7 +6212,7 @@
     "kindImage": "Àwọn àwòrán",
     "tileSourceKind": "{{source}} · {{kind}}",
     "reviewTitle": "Ṣe àtúnyẹ̀wò kí o tó gbé e jáde",
-    "reviewSubtitle": "Láti {{orísun}}, bí {{irú}}. Ṣàtúnṣe ohunkóhun tí o bá fẹ́ — jẹ́ kí àkọlé náà di òfìfo láti fi ojúlówó pamọ́.",
+    "reviewSubtitle": "Láti {{source}}, bí {{kind}}. Ṣàtúnṣe ohunkóhun tí o bá fẹ́ — jẹ́ kí àkọlé náà di òfìfo láti fi ojúlówó pamọ́.",
     "reviewName": "Àkọlé",
     "reviewNamePlaceholder": "Fi òfìfo sílẹ̀ láti pa àkọlé ìpilẹ̀ṣẹ̀ náà mọ́.",
     "reviewDescription": "Àpèjúwe",
@@ -6676,6 +6678,7 @@
     "seoDescription": "Ìwé ìṣàkóso DeHub: àkópọ̀ pẹpẹ, dApps, ètò ọrọ̀-ajé tòkénì àmì, staking, eré, àwòrán ọ̀nà, àwọn ìbéèrè tí a sábà béèrè àti bẹ́ẹ̀ bẹ́ẹ̀ lọ."
   },
   "dex": {
+    "title": "awọn ami-ami / USD",
     "seoTitle": "DEX — Ṣowo àmì ni idiyele rẹ",
     "seoDescription": "Ṣeto idiyele rira tabi tita àmì rẹ pẹlu aṣẹ opin Uniswap v4 lori Base tabi BNB Chain. Iwe aṣẹ ti nṣiṣe lọwọ, ijinle ọja ati idiyele USD ti o pin pin.",
     "venue": "Nẹtiwọọki",
@@ -6898,6 +6901,7 @@
     }
   },
   "editor": {
+    "video": { "tFade": "Ìdàpọ̀ ìyípadà", "none": "Kò sí", "transition": "Ìyípadà", "speed": "Ìyára", "sound": "Ohùn","video": "Fídíò"},
     "review": {
       "title": "Àyẹ̀wò iṣẹ́",
       "shared": "Pín pẹ̀lú rẹ",

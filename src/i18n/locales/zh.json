@@ -193,6 +193,7 @@
     "heading": "DeHub 短视频"
   },
   "settings": {
+    "usernameTaken": "用户名已被占用",
     "showDislikesDesc": "任何人都可以打开你个人资料中的“踩”标签。关闭后只有你自己能看到。",
     "showDislikes": "向所有人显示我踩过的内容",
     "postingChain": "发帖区块链",
@@ -2378,6 +2379,7 @@
     "pendingSubmitted": "{{amount}} 个代币已提交。正在检查确认。请勿重复发送。"
   },
   "communities": {
+    "chatTab": "聊天",
     "title": "社区",
     "create": "创建",
     "searchPlaceholder": "搜索社区...",
@@ -2412,7 +2414,6 @@
     "addDescription": "添加描述...",
     "communityDescription": "社区描述...",
     "posts": "帖子",
-    "chat": "聊天",
     "membersTab": "成员（{{count}}）",
     "about": "关于",
     "backToCommunities": "社区",
@@ -3878,6 +3879,7 @@
     "sellYourFractions": "出售你的碎片（持有 {{held}} 份）"
   },
   "creator": {
+    "libraryEmpty": "你保存的生成内容会显示在这里。",
     "whatToCreate": "创作类型",
     "startCreatingWith": "用 {{model}} 开始创作",
     "studioSubtitle": "描述一个场景、角色、氛围或风格。结果会出现在下方，并可直接带入编辑器。",
@@ -7024,6 +7026,7 @@
     }
   },
   "editor": {
+    "video": { "tFade": "交叉溶解", "none": "无", "transition": "转场", "speed": "速度", "sound": "声音","video": "视频"},
     "review": {
       "title": "项目审阅",
       "shared": "与你共享",

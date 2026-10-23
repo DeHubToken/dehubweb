@@ -193,6 +193,7 @@
     "heading": "DeHub qisqa videolari"
   },
   "settings": {
+    "usernameTaken": "Bu foydalanuvchi nomi band",
     "postingChain": "Postlar blokcheyni",
     "showOnline": "Onlayn bo'lganimda ko'rsatilsin",
     "showOnlineDesc": "DeHub’dan foydalanayotganingizda xabar yuborgan odamlaringiz ismingiz yonida yashil nuqta ko‘rishadi",
@@ -2384,6 +2385,7 @@
     "pendingSubmitted": "{{amount}} ta token yuborildi. Tasdiqlash hali tekshirilmoqda. Uni qayta yubormang."
   },
   "communities": {
+    "chatTab": "Chat",
     "title": "Jamoalar",
     "create": "Yaratish",
     "searchPlaceholder": "Jamoalarni qidirish...",
@@ -2418,7 +2420,6 @@
     "addDescription": "Tavsif qo'shing...",
     "communityDescription": "Jamoa tavsifi...",
     "posts": "Postlar",
-    "chat": "Chat",
     "membersTab": "A'zolar ({{count}})",
     "about": "Haqida",
     "backToCommunities": "Jamoalar",
@@ -3883,6 +3884,7 @@
     "sellYourFractions": "Kasrlaringizni soting ({{held}} ushlab turilgan)"
   },
   "creator": {
+    "libraryEmpty": "Saqlangan generatsiyalaringiz shu yerda paydo bo‘ladi.",
     "whatToCreate": "Nima yaratish kerak",
     "startCreatingWith": "{{model}} bilan yaratishni boshlang",
     "studioSubtitle": "Sahna, personaj, kayfiyat yoki uslubni tasvirlab bering. Natijalar quyida keltirilgan va to'g'ridan-to'g'ri muharrirga uzatiladi.",
@@ -6811,6 +6813,7 @@
     "seoDescription": "DeHub rasmiy hujjatlari: platforma sharhi, dApps, tokenlar token iqtisodiyoti, staking, oʻyinlar, yoʻl xaritasi, koʻp beriladigan savollar va boshqalar."
   },
   "dex": {
+    "title": "tokenlar / USD",
     "seoTitle": "DEX — tokenlar ni oʻzingiz belgilagan narxda savdo qiling",
     "seoDescription": "Base yoki BNB Chain’da Uniswap v4 limit buyurtmasi bilan tokenlar sotib olish yoki sotish narxini belgilang. Jonli buyurtmalar kitobi, bozor chuqurligi va bitta umumiy AQSh dollari narxi.",
     "venue": "Tarmoq",
@@ -7033,6 +7036,7 @@
     }
   },
   "editor": {
+    "video": { "tFade": "Aralash o‘tish", "none": "Yo‘q", "transition": "O‘tish", "speed": "Tezlik", "sound": "Ovoz","video": "Video"},
     "review": {
       "title": "Loyihani ko‘rib chiqish",
       "shared": "Siz bilan ulashilgan",
