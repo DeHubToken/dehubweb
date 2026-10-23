@@ -6139,7 +6139,10 @@
     "play": "Бозикунӣ",
     "pause": "Таваққуф",
     "listens_one": "{{count}} info: whatsthis",
-    "listens_other": "{{count}} info: whatsthis"
+    "listens_other": "{{count}} info: whatsthis",
+    "lyrics": "Матни суруд",
+    "lyricsLoading": "Матн ҷустуҷӯ мешавад…",
+    "lyricsNone": "Матн ёфт нашуд"
   },
   "converter": {
     "seoTitle": "Табдилкунанда — видеоро ба DeHub ворид кунед",

@@ -6209,7 +6209,10 @@
     "play": "Dlala",
     "pause": "Misa okwesikhashana",
     "listens_one": "{{count}} lalela",
-    "listens_other": "{{count}} uyalalela"
+    "listens_other": "{{count}} uyalalela",
+    "lyrics": "Amazwi engoma",
+    "lyricsLoading": "Kufunwa amazwi…",
+    "lyricsNone": "Awekho amazwi atholakele"
   },
   "converter": {
     "seoTitle": "I-Converter — kufaka i-video ku-DeHub",

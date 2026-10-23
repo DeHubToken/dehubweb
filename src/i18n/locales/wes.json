@@ -5575,7 +5575,10 @@
     "play": "Play",
     "pause": "Pause",
     "listens_one": "{{count}} listen",
-    "listens_other": "{{count}} listens"
+    "listens_other": "{{count}} listens",
+    "lyrics": "Song words",
+    "lyricsLoading": "We di find song words…",
+    "lyricsNone": "No song words"
   },
   "converter": {
     "title": "Import a video",

@@ -5527,7 +5527,10 @@
     "play": "شغل",
     "pause": "إيقاف مؤقت",
     "listens_one": "{{count}} استمع",
-    "listens_other": "{{count}} يستمع"
+    "listens_other": "{{count}} يستمع",
+    "lyrics": "كلمات الأغنية",
+    "lyricsLoading": "جارٍ جلب الكلمات…",
+    "lyricsNone": "لا توجد كلمات"
   },
   "converter": {
     "seoTitle": "محول — استيراد فيديو إلى DeHub",

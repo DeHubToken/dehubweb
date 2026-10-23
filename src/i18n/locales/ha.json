@@ -6096,7 +6096,10 @@
     "play": "Yi wasa",
     "pause": "Dakatar da",
     "listens_one": "{{count}} saurare",
-    "listens_other": "{{count}} sauraro"
+    "listens_other": "{{count}} sauraro",
+    "lyrics": "Kalmomin waƙa",
+    "lyricsLoading": "Ana neman kalmomi…",
+    "lyricsNone": "Ba a sami kalmomi ba"
   },
   "converter": {
     "seoTitle": "Converter — shigo da bidiyo zuwa DeHub",

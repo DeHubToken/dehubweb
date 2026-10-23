@@ -6154,7 +6154,10 @@
     "play": "taphachuu",
     "pause": "Gidduutti dhaabuu",
     "listens_one": "{{count}} dhaggeeffadhaa",
-    "listens_other": "{{count}} dhaggeeffata"
+    "listens_other": "{{count}} dhaggeeffata",
+    "lyrics": "Jechoota sirbaa",
+    "lyricsLoading": "Jechoota barbaadaa jira…",
+    "lyricsNone": "Jechoonni hin argamne"
   },
   "converter": {
     "seoTitle": "Converter — video gara DeHub galchuu",

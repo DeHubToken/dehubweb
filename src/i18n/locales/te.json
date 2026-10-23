@@ -6196,7 +6196,10 @@
     "play": "ప్లే చేయండి",
     "pause": "పాజ్ చేయండి",
     "listens_one": "{{count}} వినండి",
-    "listens_other": "{{count}} వినుతుంది"
+    "listens_other": "{{count}} వినుతుంది",
+    "lyrics": "పాట సాహిత్యం",
+    "lyricsLoading": "సాహిత్యం వెతుకుతోంది…",
+    "lyricsNone": "సాహిత్యం దొరకలేదు"
   },
   "converter": {
     "seoTitle": "కన్వర్టర్ — DeHub కు వీడియోను ఇంపోర్ట్ చేయండి",

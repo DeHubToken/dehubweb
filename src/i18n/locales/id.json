@@ -6218,7 +6218,10 @@
     "play": "Putar",
     "pause": "Jeda",
     "listens_one": "{{count}} kali didengar",
-    "listens_other": "{{count}} kali didengar"
+    "listens_other": "{{count}} kali didengar",
+    "lyrics": "Lirik",
+    "lyricsLoading": "Mencari lirik…",
+    "lyricsNone": "Lirik tidak ditemukan"
   },
   "converter": {
     "seoTitle": "Konverter — impor video ke DeHub",

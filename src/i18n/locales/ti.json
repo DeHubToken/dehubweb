@@ -6075,7 +6075,10 @@
     "creator": "DeHub ፈጣሪ",
     "play": "ተጻወት",
     "pause": "ዕረፍቲ",
-    "listens_one": "{{count}} ስማዕ"
+    "listens_one": "{{count}} ስማዕ",
+    "lyrics": "ግጥሚ",
+    "lyricsLoading": "ግጥሚ ይድለ ኣሎ…",
+    "lyricsNone": "ግጥሚ ኣይተረኽበን"
   },
   "converter": {
     "seoTitle": "መለወጢ — ቪድዮ ናብ DeHub ኣምጽእ",

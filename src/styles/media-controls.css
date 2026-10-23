@@ -213,3 +213,22 @@ html[data-theme="system"][data-system-tone="light"]:not(#_):not(#_):not(#_):not(
 html[data-theme="system"][data-system-tone="light"]:not(#_):not(#_):not(#_):not(#_):not(#_) [data-audio-player] [data-audio-style] {
   background-color: rgba(11, 11, 13, 0.06) !important;
 }
+
+/* Lyrics over an audio post: every line on its own solid block, white on
+   near-black in every theme, so it reads over whatever the animation draws. */
+html[data-theme]:not(#_):not(#_):not(#_):not(#_):not(#_):not(#_) [data-audio-lyrics] [data-audio-lyric-line] > span {
+  display: inline;
+  padding: 0.12em 0.45em;
+  border-radius: 4px;
+  background-color: rgba(0, 0, 0, 0.86) !important;
+  color: #fff !important;
+  line-height: 1.75;
+  -webkit-box-decoration-break: clone;
+  box-decoration-break: clone;
+  text-shadow: none !important;
+  -webkit-text-stroke: 0 !important;
+}
+html[data-theme]:not(#_):not(#_):not(#_):not(#_):not(#_):not(#_) [data-audio-lyrics] [data-audio-lyric-next] > span {
+  background-color: rgba(0, 0, 0, 0.62) !important;
+  color: rgba(255, 255, 255, 0.78) !important;
+}

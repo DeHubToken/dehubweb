@@ -6085,7 +6085,10 @@
     "untitled": "आडियो पोस्ट",
     "creator": "डेहब निर्माता",
     "play": "बजाव",
-    "pause": "ठहरव"
+    "pause": "ठहरव",
+    "lyrics": "गीत के बोल",
+    "lyricsLoading": "बोल ढूँढ रहे हैं…",
+    "lyricsNone": "कोई बोल नहीं मिले"
   },
   "converter": {
     "seoTitle": "कनवर्टर — DeHub मा भिडियो आयात गर्नुहोस्",

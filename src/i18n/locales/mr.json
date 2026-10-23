@@ -6188,7 +6188,10 @@
     "creator": "DeHub निर्मिक",
     "play": "खेळ",
     "pause": "विराम द्या",
-    "listens_one": "{{count}} ऐका"
+    "listens_one": "{{count}} ऐका",
+    "lyrics": "गाण्याचे बोल",
+    "lyricsLoading": "बोल शोधत आहे…",
+    "lyricsNone": "बोल सापडले नाहीत"
   },
   "converter": {
     "seoTitle": "कनव्हर्टर — DeHub मध्ये व्हिडिओ आयात करा",

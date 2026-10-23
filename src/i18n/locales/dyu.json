@@ -6013,7 +6013,10 @@
     "creator": "Danbaga",
     "play": "A be to ka to ka to",
     "pause": "N' ye n' ka baara dabila",
-    "listens_other": "{{count}} listens"
+    "listens_other": "{{count}} listens",
+    "lyrics": "Dɔnkili kumaw",
+    "lyricsLoading": "Dɔnkili kumaw bɛ ɲinina…",
+    "lyricsNone": "Dɔnkili kuma si ma sɔrɔ"
   },
   "converter": {
     "seoTitle": "Converter — video la DeHub la sɛbɛn",

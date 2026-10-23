@@ -134,3 +134,7 @@ html:is([data-theme="light"],[data-system-tone="light"]) [data-listening-desk-sc
 @media (max-width:1400px) { [data-radio-stage-logo] { width:120px; height:120px; } [data-radio-stage-title] h3 { font-size:24px; } }
 /* Narrow screens stack the halves: the entry on top, then the list at a fixed height. */
 @media(max-width:1100px) { [data-listening-desk-layout] { grid-template-columns:minmax(0,1fr); gap:12px; } [data-desk-rank] { position:static; display:inline-flex; margin:0 0 8px; } [data-listening-desk-tracks] { min-height:0; height:340px; } [data-radio-stage] { min-height:0; height:auto; } [data-radio-stage-body] { gap:16px; padding:16px; } [data-radio-stage-logo] { width:112px; height:112px; border-radius:16px; } [data-radio-stage-title] h3 { font-size:22px; } }
+[data-audio-studio-motion] [data-audio-lyrics] { top:8px; bottom:52px; }
+[data-audio-studio-fullscreen] [data-audio-studio-motion] [data-audio-lyrics] { bottom:64px; }
+[data-audio-studio-options] button[data-audio-lyrics-toggle] { opacity:.7; border-radius:8px; }
+[data-audio-studio-options] button[data-audio-lyrics-toggle][aria-pressed='true'] { opacity:1; background:rgba(255,255,255,.14); }
