@@ -1,6 +1,8 @@
 import { useTranslation as _useCopy } from 'react-i18next';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { BASE_POST_TEXT_CHARS } from '@/lib/post-text-limit';
+import { abbreviateUrl, countPostChars, sliceToPostLimit } from '@/lib/link-display';
+import { createLinkScanRegex, splitLeadingUrlBoundary } from '@/components/app/TranslatableText';
 import { cn } from '@/lib/utils';
 import { motion, AnimatePresence } from 'framer-motion';
 import { PostMediaPreview } from './PostMediaPreview';
@@ -85,25 +87,50 @@ interface PostContentAreaProps {
   draftVideo?: DraftVideoSnapshot | null;
 }
 
-// URL regex pattern - create fresh each time to avoid state issues with global flag
-const createUrlRegex = () => /(https?:\/\/[^\s<]+)/g;
+// Links the editor turns into chips: the same matcher the feed renders with
+// (so a bare `riftn.com` chips too), plus the `<url>` text form.
+type LinkMatch = { index: number; length: number; url: string; mode: 'icon' | 'text' };
+function findLinks(text: string): LinkMatch[] {
+  const out: LinkMatch[] = [];
+  const re = createLinkScanRegex();
+  let m: RegExpExecArray | null;
+  while ((m = re.exec(text)) !== null) {
+    const { leadingBoundary, url } = splitLeadingUrlBoundary(m[0]);
+    const start = m.index + leadingBoundary.length;
+    const wrapped = leadingBoundary.endsWith('<') && text[re.lastIndex] === '>';
+    if (wrapped) {
+      out.push({ index: start - 1, length: url.length + 2, url, mode: 'text' });
+      re.lastIndex += 1;
+    } else {
+      out.push({ index: start, length: url.length, url, mode: 'icon' });
+    }
+  }
+  return out;
+}
+const hasLinks = (text: string) => findLinks(text).length > 0;
 
 // Cashtag regex - matches $SYMBOL (1-20 uppercase/lowercase letters after $)
 const createCashtagRegex = () => /\$[a-zA-Z]{1,20}/g;
 
-// Create a link chip element
-function createLinkChip(url: string): HTMLSpanElement {
+// Create a link chip element. 'icon' shows 🔗; 'text' shows the address,
+// shortened in the middle, and is saved as `<url>` (see lib/link-display).
+// Backspace on an icon chip turns it into a text chip; again removes it.
+function createLinkChip(url: string, mode: 'icon' | 'text' = 'icon'): HTMLSpanElement {
   const chip = document.createElement('span');
   chip.setAttribute('data-link-chip', 'true');
   chip.setAttribute('data-url', url);
+  chip.setAttribute('data-link-mode', mode);
   chip.contentEditable = 'false';
-  chip.className = 'inline-flex items-center gap-1 px-2 py-0.5 mx-0.5 bg-white/10 text-white rounded-lg text-sm cursor-pointer hover:bg-white/20 transition-colors';
-  chip.innerHTML = `🔗`;
-  chip.title = url;
+  chip.className = mode === 'icon'
+    ? 'inline-flex items-center gap-1 px-2 py-0.5 mx-0.5 bg-white/10 text-white rounded-lg text-sm cursor-pointer hover:bg-white/20 transition-colors'
+    : 'inline mx-0.5 text-white underline underline-offset-2 decoration-white/40 cursor-pointer';
+  chip.textContent = mode === 'icon' ? '🔗' : abbreviateUrl(url);
+  chip.title = mode === 'icon' ? `${url} — Backspace to show the link` : url;
   chip.onclick = (e) => {
     e.preventDefault();
     e.stopPropagation();
-    window.open(url, '_blank', 'noopener,noreferrer');
+    const href = /^https?:\/\//i.test(url) ? url : `https://${url}`;
+    window.open(href, '_blank', 'noopener,noreferrer');
   };
   return chip;
 }
@@ -211,7 +238,8 @@ export function PostContentArea({
     assetPicker.isOpen,
   );
 
-  const charCount = text.length;
+  // Links are free: they do not count toward the post's character limit.
+  const charCount = countPostChars(text);
 
   // Save and restore cursor position
   const saveCursorPosition = useCallback(() => {
@@ -273,7 +301,7 @@ export function PostContentArea({
     chips.forEach(chip => chip.remove());
     const textWithoutChips = tempDiv.textContent || '';
     
-    const hasUrls = createUrlRegex().test(textWithoutChips);
+    const hasUrls = hasLinks(textWithoutChips);
     const hasCashtags = createCashtagRegex().test(textWithoutChips);
     
     if (!hasUrls && !hasCashtags) return;
@@ -296,12 +324,12 @@ export function PostContentArea({
       }
     );
 
-    const nodesToProcess: { node: Text; urlMatches: RegExpMatchArray[]; cashtagMatches: RegExpMatchArray[] }[] = [];
+    const nodesToProcess: { node: Text; urlMatches: LinkMatch[]; cashtagMatches: RegExpMatchArray[] }[] = [];
     
     while (walker.nextNode()) {
       const textNode = walker.currentNode as Text;
       const nodeText = textNode.textContent || '';
-      const urlMatches = [...nodeText.matchAll(createUrlRegex())];
+      const urlMatches = findLinks(nodeText);
       const cashtagMatches = [...nodeText.matchAll(createCashtagRegex())];
       
       if (urlMatches.length > 0 || cashtagMatches.length > 0) {
@@ -315,16 +343,16 @@ export function PostContentArea({
       const nodeText = node.textContent || '';
       
       // Merge all matches and sort by index
-      const allMatches: { index: number; length: number; type: 'url' | 'cashtag'; text: string }[] = [];
+      const allMatches: { index: number; length: number; type: 'url' | 'cashtag'; text: string; mode?: 'icon' | 'text' }[] = [];
       for (const m of urlMatches) {
         // Skip community URLs - they get a card embed below instead of a chip
-        if (/\/app\/communities\/[a-zA-Z0-9_-]+/.test(m[0])) continue;
-        allMatches.push({ index: m.index!, length: m[0].length, type: 'url', text: m[0] });
+        if (/\/app\/communities\/[a-zA-Z0-9_-]+/.test(m.url)) continue;
+        allMatches.push({ index: m.index, length: m.length, type: 'url', text: m.url, mode: m.mode });
       }
       for (const m of cashtagMatches) {
         // Skip cashtags that fall inside a URL match
         const idx = m.index!;
-        const insideUrl = urlMatches.some(u => idx >= u.index! && idx < u.index! + u[0].length);
+        const insideUrl = urlMatches.some(u => idx >= u.index && idx < u.index + u.length);
         if (!insideUrl) {
           allMatches.push({ index: idx, length: m[0].length, type: 'cashtag', text: m[0] });
         }
@@ -342,7 +370,7 @@ export function PostContentArea({
         }
         
         if (match.type === 'url') {
-          fragment.appendChild(createLinkChip(match.text));
+          fragment.appendChild(createLinkChip(match.text, match.mode));
         } else {
           fragment.appendChild(createCashtagChip(match.text));
         }
@@ -388,7 +416,8 @@ export function PostContentArea({
         
         // Handle link chips specially - skip their children
         if (el.hasAttribute('data-link-chip')) {
-          plainText += el.getAttribute('data-url') || '';
+          const url = el.getAttribute('data-url') || '';
+          plainText += el.getAttribute('data-link-mode') === 'text' ? `<${url}>` : url;
           return;
         }
         
@@ -426,9 +455,9 @@ export function PostContentArea({
       first = false;
     }
     
-    // Enforce the tier's character limit on the post text
-    if (plainText.length > maxChars) {
-      plainText = plainText.slice(0, maxChars);
+    // Enforce the tier's character limit on the post text. Links are free.
+    if (countPostChars(plainText) > maxChars) {
+      plainText = sliceToPostLimit(plainText, maxChars);
       if (editor) {
         editor.textContent = plainText;
         // Move cursor to end
@@ -471,54 +500,13 @@ export function PostContentArea({
 
     if (!pastedText) return;
     
-    const urlRegex = createUrlRegex();
-    const hasUrls = urlRegex.test(pastedText);
-    
-    if (hasUrls) {
-      // Process URLs in pasted text and insert with chips
-      const fragment = document.createDocumentFragment();
-      let lastIndex = 0;
-      
-      // Reset regex and find all matches
-      const matches = [...pastedText.matchAll(createUrlRegex())];
-      
-      for (const match of matches) {
-        const url = match[0];
-        const index = match.index!;
-        
-        // Text before the URL
-        if (index > lastIndex) {
-          fragment.appendChild(document.createTextNode(pastedText.substring(lastIndex, index)));
-        }
-        
-        // Create link chip
-        fragment.appendChild(createLinkChip(url));
-        lastIndex = index + url.length;
-      }
-      
-      // Text after the last URL
-      if (lastIndex < pastedText.length) {
-        fragment.appendChild(document.createTextNode(pastedText.substring(lastIndex)));
-      }
-      
-      // Insert at cursor
-      const selection = window.getSelection();
-      if (selection && selection.rangeCount > 0) {
-        const range = selection.getRangeAt(0);
-        range.deleteContents();
-        range.insertNode(fragment);
-        range.collapse(false);
-        selection.removeAllRanges();
-        selection.addRange(range);
-      }
-    } else {
-      // No URLs, just insert plain text
-      document.execCommand('insertText', false, pastedText);
-    }
-    
+    document.execCommand('insertText', false, pastedText);
+    // Chip pasted links straight away rather than after the typing pause.
+    if (hasLinks(pastedText)) setTimeout(processLinks, 0);
+
     // Update state
     handleInput();
-  }, [handleInput, onFileDrop]);
+  }, [handleInput, onFileDrop, processLinks]);
 
   // Handle drag and drop
   const handleDragEnter = useCallback((e: React.DragEvent) => {
@@ -751,6 +739,39 @@ export function PostContentArea({
                 }
               }}
               onKeyDown={(e) => {
+                // Backspace right after a link chip: 🔗 turns into the link's
+                // text; a text link is removed. One keypress each, like
+                // deleting a character.
+                if (e.key === 'Backspace' && !e.metaKey && !e.ctrlKey && !e.altKey) {
+                  const sel = window.getSelection();
+                  if (sel && sel.isCollapsed && sel.rangeCount > 0) {
+                    const { startContainer, startOffset } = sel.getRangeAt(0);
+                    let prev: Node | null = null;
+                    if (startContainer.nodeType === Node.TEXT_NODE) {
+                      if (startOffset === 0) prev = startContainer.previousSibling;
+                    } else {
+                      prev = startContainer.childNodes[startOffset - 1] ?? null;
+                    }
+                    const chip = prev instanceof HTMLElement && prev.hasAttribute('data-link-chip') ? prev : null;
+                    if (chip) {
+                      e.preventDefault();
+                      const url = chip.getAttribute('data-url') || '';
+                      if (chip.getAttribute('data-link-mode') === 'text') {
+                        chip.remove();
+                      } else {
+                        const textChip = createLinkChip(url, 'text');
+                        chip.replaceWith(textChip);
+                        const range = document.createRange();
+                        range.setStartAfter(textChip);
+                        range.collapse(true);
+                        sel.removeAllRanges();
+                        sel.addRange(range);
+                      }
+                      handleInput();
+                      return;
+                    }
+                  }
+                }
                 // Ticker picker first: it only claims a key while its own
                 // dropdown is open, and the two cannot both be open — `@` and
                 // `$` are different triggers at the same caret.
