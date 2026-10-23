@@ -10,11 +10,12 @@ import {
   useGovernanceUserVotes,
   useVoteGovernanceProposal,
   useSelfVoteWeight,
+  useExplainCannotVote,
   type GovernanceProposal,
 } from '@/hooks/use-governance';
 import { useAuth } from '@/contexts/AuthContext';
 import { useTranslation } from 'react-i18next';
-import { useCallback, useEffect, useRef } from 'react';
+import { lazy, Suspense, useCallback, useEffect, useRef, useState } from 'react';
 import { KitButton, PageBody, PageEmpty, PageIsland } from '@/components/app/page-kit/PageKit';
 import { toast } from 'sonner';
 import { SEOHead } from '@/components/SEOHead';
@@ -26,6 +27,13 @@ import { useProfileAvatar } from '@/hooks/use-profile-avatar-cache';
 import { DeHubPageLoader } from '@/components/app/DeHubLoader';
 import { ProposalVerdictLabel, verdictOf, votingTimeLeft, isVotingClosed } from '@/components/app/governance/ProposalVerdict';
 import { ProposalDiscussion } from '@/components/app/governance/ProposalDiscussion';
+import { ProposalMedia } from '@/components/app/governance/ProposalMedia';
+import { useProposalRepost } from '@/hooks/use-proposal-repost';
+import { dehubLinkFor } from '@/lib/dehub-links';
+
+// Quoting a proposal is posting its link: the composer cards it up, and the
+// post carries the proposal card into followers' feeds.
+const PostModal = lazy(() => import('@/features/post').then((m) => ({ default: m.PostModal })));
 
 function formatTimeAgo(dateStr: string, t: (key: string, opts?: any) => string): string {
   const seconds = Math.floor((Date.now() - new Date(dateStr).getTime()) / 1000);
@@ -51,13 +59,31 @@ export default function GovernanceProposalPage() {
   // `?comment=` the post page and the features board read.
   const focusedCommentId = searchParams.get('comment');
   const { t } = useTranslation();
-  const { isAuthenticated, openLoginModal } = useAuth();
+  const { isAuthenticated, openLoginModal, walletAddress } = useAuth();
 
   const { data: proposal, isLoading } = useGovernanceProposal(proposalId);
   const { data: userVotes } = useGovernanceUserVotes();
   const voteMutation = useVoteGovernanceProposal();
 
-  const { weight: userWeight, badgeName: userBadge } = useSelfVoteWeight();
+  const { weight: userWeight, badgeName: userBadge, lent: userLent } = useSelfVoteWeight();
+  const explainCannotVote = useExplainCannotVote();
+  const repost = useProposalRepost(proposal, walletAddress);
+  const [quoteOpen, setQuoteOpen] = useState(false);
+  const proposalUrl = proposalId ? dehubLinkFor.proposal(proposalId) : '';
+  const handleRepost = useCallback(() => {
+    if (!isAuthenticated) {
+      openLoginModal();
+      return Promise.reject(new Error('Sign in to repost'));
+    }
+    return repost.toggle().catch((error: unknown) => {
+      toast.error(_copy("copy.7527dc6722fc", { defaultValue: "Failed to repost" }));
+      throw error;
+    });
+  }, [isAuthenticated, openLoginModal, repost, _copy]);
+  const handleQuote = useCallback(() => {
+    if (!isAuthenticated) { openLoginModal(); return; }
+    setQuoteOpen(true);
+  }, [isAuthenticated, openLoginModal]);
 
   // The discussion panel sits under the card; the comment action and a
   // comment deep link both bring it into view.
@@ -77,10 +103,10 @@ export default function GovernanceProposalPage() {
     (voteType: 1 | -1) => {
       if (!isAuthenticated) { openLoginModal(); return; }
       if (!proposalId) return;
-      if (userWeight === 0) { toast.error(t('governance.mustHoldTokens')); return; }
+      if (userWeight === 0) { explainCannotVote(userLent); return; }
       voteMutation.mutate({ proposalId, voteType, currentVote, voteWeight: userWeight, badgeName: userBadge });
     },
-    [isAuthenticated, openLoginModal, proposalId, currentVote, voteMutation, userWeight, userBadge, t]
+    [isAuthenticated, openLoginModal, proposalId, currentVote, voteMutation, userWeight, userBadge, userLent, explainCannotVote]
   );
 
   if (isLoading) {
@@ -123,7 +149,7 @@ export default function GovernanceProposalPage() {
 
   return (
     <div className="min-h-screen max-w-2xl mx-auto">
-      <SEOHead title={_copy("copy.c1cd85f576ed", { defaultValue: "{{value1}} — DeHub Governance", value1: proposal.title })} description={(proposal.description || _copy("copy.2f33a51e3171", { defaultValue: "DeHub governance proposal — vote and discuss." })).slice(0, 155)} url={`https://dehub.io/app/governance/${proposalId}`} type="article" />
+      <SEOHead title={_copy("copy.c1cd85f576ed", { defaultValue: "{{value1}} — DeHub Governance", value1: proposal.title })} description={(proposal.description || _copy("copy.2f33a51e3171", { defaultValue: "DeHub governance proposal — vote and discuss." })).slice(0, 155)} url={`https://dehub.io/app/governance/${proposalId}`} type="article" {...(proposal.media_type === 'image' && proposal.media_url ? { image: proposal.media_url } : {})} />
       <PageIsland
         back
         onBack={() => navigate('/app/governance')}
@@ -164,6 +190,7 @@ export default function GovernanceProposalPage() {
 
         <TranslatableText publicContent text={proposal.title} className="text-white font-semibold text-base leading-tight mb-2" as="h1" hideControls />
         <TranslatableText publicContent text={proposal.description} className="text-zinc-400 text-sm leading-relaxed mb-4" as="p" />
+        <ProposalMedia url={proposal.media_url} type={proposal.media_type} alt={proposal.title} className="mb-4" />
 
         {/* Vote ratio bar */}
         <div className="space-y-1 mb-3">
@@ -196,6 +223,11 @@ export default function GovernanceProposalPage() {
           commentCount={proposal.comment_count}
           voteWeight={userWeight}
           disabled={voteMutation.isPending || isVotingClosed(proposal)}
+          shareUrl={proposalUrl}
+          onRepost={handleRepost}
+          onQuote={handleQuote}
+          repostCount={repost.count}
+          isReposted={repost.reposted}
         />
       </div>
 
@@ -210,6 +242,11 @@ export default function GovernanceProposalPage() {
         />
       </div>
       </PageBody>
+      {quoteOpen && (
+        <Suspense fallback={null}>
+          <PostModal isOpen={quoteOpen} onClose={() => setQuoteOpen(false)} initialText={proposalUrl} />
+        </Suspense>
+      )}
     </div>
   );
 }

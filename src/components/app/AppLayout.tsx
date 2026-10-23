@@ -75,6 +75,8 @@ const PostModal = React.lazy(() =>
 const RadioMiniPlayer = React.lazy(() =>
   import('@/components/app/radio/RadioMiniPlayer').then(m => ({ default: m.RadioMiniPlayer }))
 );
+// Only fetched once a video post is actually being prepared.
+const PostProcessingDock = React.lazy(() => import('@/components/app/PostProcessingDock'));
 import { StageMiniPlayer } from '@/components/app/spaces/StageMiniPlayer';
 import { StageRecordingMiniPlayer } from '@/components/app/stages/StageRecordingMiniPlayer';
 import { useAudioPostPoppedOut } from '@/lib/audio-post-popout';
@@ -508,6 +510,11 @@ function AppLayoutContent({ children }: AppLayoutContentProps) {
       </Suspense>
       <StageMiniPlayer />
       <StageRecordingMiniPlayer />
+      {/* Mounted always but lazily: it renders nothing until a video post is
+          being prepared, and keeps its store off the boot path. */}
+      <Suspense fallback={null}>
+        <PostProcessingDock />
+      </Suspense>
       {hasPoppedOutAudio && (
         <Suspense fallback={null}>
           <AudioPostMiniPlayer />

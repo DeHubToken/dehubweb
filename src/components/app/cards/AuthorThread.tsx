@@ -47,6 +47,8 @@ import {
   reactionMeta,
   reconcileReactionCounts,
   resolveThumbReaction,
+  resolveThumbCount,
+  dislikesOutnumberLikes,
   type PostReaction,
   type ReactionCounts,
 } from '@/lib/reactions';
@@ -114,7 +116,10 @@ function ThreadEntry({
   const heldReaction = isOwn
     ? null
     : state.myReaction ?? (state.isDisliked ? 'dislike' : null);
-  const leadReaction = isOwn ? null : resolveThumbReaction(state.reactionCounts, heldReaction);
+  const leadReaction = isOwn
+    ? (dislikesOutnumberLikes(state.reactionCounts) ? 'dislike' : null)
+    : resolveThumbReaction(state.reactionCounts, heldReaction);
+  const thumbCount = resolveThumbCount(state.likes, state.dislikes ?? 0, leadReaction);
 
   if (removed) return null;
 
@@ -318,7 +323,7 @@ function ThreadEntry({
               ) : (
                 <ThumbsUp className={cn('w-3.5 h-3.5', !isOwn && state.isLiked && 'fill-current')} />
               )}
-              {(state.likes > 0 || isOwn) && <span className="text-xs">{state.likes}</span>}
+              {(thumbCount > 0 || isOwn) && <span className="text-xs">{thumbCount}</span>}
             </button>
           </span>
           <button

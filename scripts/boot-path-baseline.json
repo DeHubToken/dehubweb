@@ -1,6 +1,6 @@
 {
-  "modules": 618,
-  "sourceBytes": 3819709,
+  "modules": 621,
+  "sourceBytes": 3857070,
   "files": [
     "server/public-page-locales.js",
     "src/App.tsx",
@@ -439,6 +439,7 @@
     "src/lib/attachments.ts",
     "src/lib/audio-handoff.ts",
     "src/lib/audio-post-popout.ts",
+    "src/lib/audio-session.ts",
     "src/lib/auth-trace.ts",
     "src/lib/auto-translate-setting.ts",
     "src/lib/autoplay-pause-prompt.ts",
@@ -512,6 +513,7 @@
     "src/lib/kids-mode-lock.ts",
     "src/lib/lazy-with-retry.ts",
     "src/lib/leaderboard-rules.ts",
+    "src/lib/link-display.ts",
     "src/lib/live-counts.ts",
     "src/lib/live-ingest.ts",
     "src/lib/live-replay.ts",
@@ -581,6 +583,7 @@
     "src/lib/stage-pitch-shifter.ts",
     "src/lib/stage-playback.ts",
     "src/lib/stage-radio.ts",
+    "src/lib/stage-recording-mix.ts",
     "src/lib/stage-recording-toast.tsx",
     "src/lib/staking-badge-rules.ts",
     "src/lib/staking-badges.ts",

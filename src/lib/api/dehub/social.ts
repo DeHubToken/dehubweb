@@ -569,6 +569,66 @@ export async function repostPost(tokenId: number): Promise<{ result: boolean }> 
   });
 }
 
+// ─── Governance proposal reposts ─────────────────────────────────────
+//
+// Proposals live in Supabase and have no tokenId, so their reposts have
+// their own endpoints, keyed by the proposal's uuid.
+
+export interface ProposalRepostState {
+  count: number;
+  reposted: boolean;
+}
+
+/** Repost or un-repost a governance proposal. */
+export async function toggleProposalRepost(
+  proposalId: string,
+  hint?: { title?: string; author?: string },
+): Promise<{ reposted: boolean; repostCount: number }> {
+  return apiCall<{ reposted: boolean; repostCount: number }>("/api/repost/proposal", {
+    method: "POST",
+    body: { proposalId, title: hint?.title, author: hint?.author },
+    requiresAuth: true,
+  });
+}
+
+/** How many times a proposal was reposted, and whether the viewer did. */
+export async function getProposalRepostState(proposalId: string): Promise<ProposalRepostState> {
+  const res = await apiCall<{ count?: number; reposted?: boolean }>("/api/repost/proposal", {
+    params: { proposalId },
+  });
+  return { count: Number(res?.count) || 0, reposted: !!res?.reposted };
+}
+
+/** Who reposted a proposal. */
+export async function getProposalReposters(
+  proposalId: string,
+  page: number = 1,
+  limit: number = 50,
+): Promise<{ items: FollowListItem[]; pagination?: any }> {
+  const res = await apiCall<any>("/api/repost/proposal/users", { params: { proposalId, page, limit } });
+  return { items: (res?.result ?? []).map(normalizeReposter), pagination: res?.pagination };
+}
+
+export interface UserProposalRepost {
+  proposalId: string;
+  proposalTitle?: string;
+  proposalAuthor?: string;
+  repostedAt: string;
+  repostedBy: string;
+}
+
+/** Proposals a user reposted, newest first. */
+export async function getUserProposalReposts(
+  address: string,
+  page: number = 1,
+  limit: number = 50,
+): Promise<UserProposalRepost[]> {
+  const res = await apiCall<{ result?: UserProposalRepost[] }>("/api/reposts/proposals", {
+    params: { address, page, limit },
+  });
+  return Array.isArray(res?.result) ? res.result : [];
+}
+
 export interface QuotePostMintResponse {
   r: string;
   s: string;

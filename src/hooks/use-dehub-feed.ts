@@ -172,7 +172,7 @@ export function mapNFTToVideoItem(nft: DeHubNFT, index: number): VideoItem {
   // Map content access fields from API
   const isPPV = nft.is_ppv ?? false;
   const ppvPrice = nft.ppv_price;
-  const ppvCurrency = nft.ppv_currency || 'USDC';
+  const ppvCurrency = nft.ppv_currency || nft.streamInfo?.payPerViewTokenSymbol || 'DHB';
   const isW2E = nft.is_w2e || nft.streamInfo?.isAddBounty || false;
   const isLocked = nft.is_locked ?? false;
   const lockedPrice = nft.locked_price;
@@ -340,7 +340,7 @@ export function mapNFTToImagePost(nft: DeHubNFT, index: number): ImagePost {
     // PPV/Bounty/Locked fields
     isPPV: nft.is_ppv || nft.streamInfo?.isPayPerView || false,
     ppvPrice: nft.ppv_price || nft.streamInfo?.payPerViewAmount,
-    ppvCurrency: nft.ppv_currency || 'DHB',
+    ppvCurrency: nft.ppv_currency || nft.streamInfo?.payPerViewTokenSymbol || 'DHB',
     isW2E: nft.is_w2e || nft.streamInfo?.isAddBounty || false,
     isLocked: nft.is_locked || nft.streamInfo?.isLockContent || false,
     lockedPrice: nft.locked_price || nft.streamInfo?.lockContentAmount,
