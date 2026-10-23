@@ -2419,6 +2419,84 @@
     <xhtml:link rel="alternate" hreflang="x-default" href="https://dehub.io/depin"/>
   </url>
   <url>
+    <loc>https://dehub.io/dehub-app</loc>
+    <lastmod>2026-10-22</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+    <xhtml:link rel="alternate" hreflang="ar" href="https://dehub.io/dehub-app?hl=ar"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://dehub.io/dehub-app"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://dehub.io/dehub-app?hl=es"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://dehub.io/dehub-app?hl=fr"/>
+    <xhtml:link rel="alternate" hreflang="nl" href="https://dehub.io/dehub-app?hl=nl"/>
+    <xhtml:link rel="alternate" hreflang="tr" href="https://dehub.io/dehub-app?hl=tr"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://dehub.io/dehub-app"/>
+  </url>
+  <url>
+    <loc>https://dehub.io/dehub-app?hl=ar</loc>
+    <lastmod>2026-10-22</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+    <xhtml:link rel="alternate" hreflang="ar" href="https://dehub.io/dehub-app?hl=ar"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://dehub.io/dehub-app"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://dehub.io/dehub-app?hl=es"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://dehub.io/dehub-app?hl=fr"/>
+    <xhtml:link rel="alternate" hreflang="nl" href="https://dehub.io/dehub-app?hl=nl"/>
+    <xhtml:link rel="alternate" hreflang="tr" href="https://dehub.io/dehub-app?hl=tr"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://dehub.io/dehub-app"/>
+  </url>
+  <url>
+    <loc>https://dehub.io/dehub-app?hl=es</loc>
+    <lastmod>2026-10-22</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+    <xhtml:link rel="alternate" hreflang="ar" href="https://dehub.io/dehub-app?hl=ar"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://dehub.io/dehub-app"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://dehub.io/dehub-app?hl=es"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://dehub.io/dehub-app?hl=fr"/>
+    <xhtml:link rel="alternate" hreflang="nl" href="https://dehub.io/dehub-app?hl=nl"/>
+    <xhtml:link rel="alternate" hreflang="tr" href="https://dehub.io/dehub-app?hl=tr"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://dehub.io/dehub-app"/>
+  </url>
+  <url>
+    <loc>https://dehub.io/dehub-app?hl=fr</loc>
+    <lastmod>2026-10-22</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+    <xhtml:link rel="alternate" hreflang="ar" href="https://dehub.io/dehub-app?hl=ar"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://dehub.io/dehub-app"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://dehub.io/dehub-app?hl=es"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://dehub.io/dehub-app?hl=fr"/>
+    <xhtml:link rel="alternate" hreflang="nl" href="https://dehub.io/dehub-app?hl=nl"/>
+    <xhtml:link rel="alternate" hreflang="tr" href="https://dehub.io/dehub-app?hl=tr"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://dehub.io/dehub-app"/>
+  </url>
+  <url>
+    <loc>https://dehub.io/dehub-app?hl=nl</loc>
+    <lastmod>2026-10-22</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+    <xhtml:link rel="alternate" hreflang="ar" href="https://dehub.io/dehub-app?hl=ar"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://dehub.io/dehub-app"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://dehub.io/dehub-app?hl=es"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://dehub.io/dehub-app?hl=fr"/>
+    <xhtml:link rel="alternate" hreflang="nl" href="https://dehub.io/dehub-app?hl=nl"/>
+    <xhtml:link rel="alternate" hreflang="tr" href="https://dehub.io/dehub-app?hl=tr"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://dehub.io/dehub-app"/>
+  </url>
+  <url>
+    <loc>https://dehub.io/dehub-app?hl=tr</loc>
+    <lastmod>2026-10-22</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+    <xhtml:link rel="alternate" hreflang="ar" href="https://dehub.io/dehub-app?hl=ar"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://dehub.io/dehub-app"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://dehub.io/dehub-app?hl=es"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://dehub.io/dehub-app?hl=fr"/>
+    <xhtml:link rel="alternate" hreflang="nl" href="https://dehub.io/dehub-app?hl=nl"/>
+    <xhtml:link rel="alternate" hreflang="tr" href="https://dehub.io/dehub-app?hl=tr"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://dehub.io/dehub-app"/>
+  </url>
+  <url>
     <loc>https://dehub.io/apk</loc>
     <lastmod>2026-08-11T00:00:00.000Z</lastmod>
     <changefreq>weekly</changefreq>

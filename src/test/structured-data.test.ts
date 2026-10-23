@@ -181,6 +181,63 @@ describe('edge-rendered pages', () => {
     expect(meta(body, 'og:image:width')).toBe('1200');
   });
 
+  it('marks a post FAQ section up as FAQPage, and nothing else', async () => {
+    network({});
+    const content = (slug: string) => readFileSync(resolve(ROOT, `public/blog-content/${slug}.json`), 'utf8');
+    const withContent = {
+      ASSETS: {
+        fetch: async (input: Request | URL | string) => {
+          const url = new URL(typeof input === 'string' ? input : input instanceof URL ? input : input.url);
+          const m = url.pathname.match(/^\/blog-content\/(.+)\.json$/);
+          if (m) return new Response(content(m[1]), { headers: { 'Content-Type': 'application/json' } });
+          return env.ASSETS.fetch(input);
+        },
+      },
+    };
+    const get = async (slug: string) => {
+      const res = await worker.fetch(new Request(`https://dehub.io/guides/${slug}`, { headers: { 'User-Agent': GOOGLEBOT } }), withContent, { waitUntil: () => {} });
+      return res.text();
+    };
+    const body = await get('what-is-watch-to-earn');
+    const graph = jsonLd(body)[0]['@graph'] as Ld[];
+    const faq = graph.find((n) => n['@type'] === 'FAQPage') as { mainEntity: { name: string; acceptedAnswer: { text: string } }[] };
+    expect(faq).toBeDefined();
+    const questions = (JSON.parse(content('what-is-watch-to-earn')).html as string)
+      .split(/<h2>Frequently asked questions<\/h2>/)[1].split('<h2>')[0].match(/<h3>/g)!.length;
+    expect(faq.mainEntity).toHaveLength(questions);
+    for (const q of faq.mainEntity) {
+      expect(q.name).not.toMatch(/[<>]/);
+      expect(q.acceptedAnswer.text.length).toBeGreaterThan(20);
+    }
+    // A post with no FAQ section gets none.
+    const plain = await get('1-year-review-a-quick-look-back');
+    expect(types(plain)).not.toContain('FAQPage');
+  });
+
+  it('renders /dehub-app with its cards and its FAQ, without an app rich-result type', async () => {
+    network({});
+    const { res, body } = await crawl('/dehub-app');
+    expect(res.status).toBe(200);
+    expect(body).toContain('<link rel="canonical" href="https://dehub.io/dehub-app">');
+    expect(meta(body, 'og:title')).toContain('DeHub App');
+    expect(meta(body, 'og:description')).toBeTruthy();
+    expect(meta(body, 'twitter:title')).toBe(meta(body, 'og:title'));
+    expect(meta(body, 'og:image')).toBe('https://dehub.io/og/dehub-social-share.png');
+    expect(meta(body, 'twitter:card')).toBe('summary_large_image');
+    const all = nodes(jsonLd(body));
+    for (const t of APP_TYPES) expect(types(body)).not.toContain(t);
+    expect(types(body)).toEqual(expect.arrayContaining(['WebPage', 'Organization']));
+    const faq = all.find((n) => n['@type'] === 'FAQPage') as { mainEntity: { name: string }[] };
+    expect(faq.mainEntity.map((q) => q.name)).toContain('Is DeHub the DePaul University app?');
+    for (const q of faq.mainEntity) expect(body).toContain(`<h3>${q.name}</h3>`);
+    for (const href of [
+      'https://play.google.com/store/apps/details?id=io.dehub.mobile',
+      'https://apps.apple.com/app/id6770382811',
+      'https://dehub.io/apk',
+    ]) expect(body).toContain(`href="${href}"`);
+    expectValidTrail(body, 'https://dehub.io/dehub-app');
+  });
+
   it('never emits a SearchAction or a non-square logo', async () => {
     network({});
     const { body } = await crawl('/pricing');
@@ -402,6 +459,21 @@ describe('proxied pages', () => {
     expect(site).toMatchObject({ name: 'DeHub', url: 'https://dehub.io' });
     expect(site.potentialAction).toBeUndefined();
     expect(all.find((n) => n['@type'] === 'Organization')!.logo).toMatchObject({ '@type': 'ImageObject', width: 512, height: 512 });
+    // The money guides are linked from the homepage, not only from /docs/blog.
+    const guides = body.match(/<nav aria-label="DeHub guides">[\s\S]*?<\/nav>/)![0];
+    const links = [...guides.matchAll(/href="([^"]+)"/g)].map((m) => m[1]);
+    expect(links.length).toBeGreaterThanOrEqual(6);
+    for (const slug of [
+      'what-is-watch-to-earn',
+      'best-watch-to-earn-platforms-2026',
+      'dehub-vs-cheelee-theta-xcad-watch-to-earn',
+      'web3-live-streaming-decentralised-twitch-alternative',
+      'best-decentralised-social-media-platforms-2026',
+      'dehub-vs-depaul-dehub-vs-rowan-dehub',
+    ]) {
+      expect(links).toContain(`https://dehub.io/guides/${slug}`);
+      expect(readFileSync(resolve(ROOT, `public/blog-content/${slug}.json`), 'utf8'), slug).toBeTruthy();
+    }
   });
 });
 
