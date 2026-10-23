@@ -171,6 +171,7 @@ function toVideoItem(nft: DeHubNFT): VideoItem {
     spoilerText: nft.spoilerText,
     quotePolicy: nft.quotePolicy,
     quoteRevoked: nft.quoteRevoked,
+    replyPolicy: nft.replyPolicy,
     shopLinks: (nft as any).shopLinks,
     shopListingCount: (nft as any).shopListingCount,
     type: 'video',
@@ -261,6 +262,7 @@ function toImagePost(nft: DeHubNFT): ImagePost {
     spoilerText: nft.spoilerText,
     quotePolicy: nft.quotePolicy,
     quoteRevoked: nft.quoteRevoked,
+    replyPolicy: nft.replyPolicy,
     shopLinks: (nft as any).shopLinks,
     shopListingCount: (nft as any).shopListingCount,
     type: 'image',
@@ -343,6 +345,7 @@ function toTextPost(nft: DeHubNFT): TextPost {
     spoilerText: nft.spoilerText,
     quotePolicy: nft.quotePolicy,
     quoteRevoked: nft.quoteRevoked,
+    replyPolicy: nft.replyPolicy,
     shopLinks: (nft as any).shopLinks,
     shopListingCount: (nft as any).shopListingCount,
     type: 'post',
@@ -462,6 +465,7 @@ function toLiveStream(nft: DeHubNFT): LiveStream {
     spoilerText: nft.spoilerText,
     quotePolicy: nft.quotePolicy,
     quoteRevoked: nft.quoteRevoked,
+    replyPolicy: nft.replyPolicy,
     // The Shop board rides straight through to LiveStreamCard, which is what
     // renders the player here — the button lives inside it.
     shopLinks: (nft as any).shopLinks,
@@ -1197,6 +1201,7 @@ function SinglePostPageContent({ inOverlay = false, overrideId }: SinglePostPage
       tokenId={String(id)}
       initialTab={pageCommentsInitialTab}
       commentsDisabled={!!(post as { commentsDisabled?: boolean }).commentsDisabled}
+      replyPolicy={(post as { replyPolicy?: import('@/lib/api/dehub/types').ReplyPolicy }).replyPolicy}
       forKids={!!(post as { forKids?: boolean }).forKids}
       postAuthorAddress={isTextPost ? post.minter : undefined}
       forceInline
@@ -1245,6 +1250,7 @@ function SinglePostPageContent({ inOverlay = false, overrideId }: SinglePostPage
               tokenId={String(id)}
               initialTab={pageCommentsInitialTab}
               commentsDisabled={!!(post as { commentsDisabled?: boolean }).commentsDisabled}
+              replyPolicy={(post as { replyPolicy?: import('@/lib/api/dehub/types').ReplyPolicy }).replyPolicy}
               forKids={!!(post as { forKids?: boolean }).forKids}
               postAuthorAddress={isText ? post.minter : undefined}
               forceInline
@@ -1444,6 +1450,7 @@ function SinglePostPageContent({ inOverlay = false, overrideId }: SinglePostPage
           currentContentRating={videoData.contentRating}
           currentSpoilerText={videoData.spoilerText}
           currentQuotePolicy={videoData.quotePolicy}
+          currentReplyPolicy={videoData.replyPolicy}
           currentShopLinks={videoData.shopLinks}
           onSuccess={(edited) => {
             applyOptimisticEdit(queryClient, id || '', edited);

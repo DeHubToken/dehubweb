@@ -137,6 +137,7 @@ import { CoachSuggestions } from './CoachSuggestions';
 import { CommonGroundSheet } from './CommonGroundSheet';
 import { viewerShareUrl } from '@/lib/share-url';
 import { trackShare } from '@/lib/analytics';
+import type { ReplyPolicy } from '@/lib/api/dehub/types';
 
 // The comment data shape and its API mapper live in @/lib/comment-mapper so
 // non-component consumers can share them. Re-exported here for the surfaces
@@ -156,6 +157,8 @@ interface CommentsSectionProps {
    *  existing comments stay listed — the server refuses new ones either way
    *  (requestCommentFunc), so this is presentation, not the enforcement. */
   commentsDisabled?: boolean;
+  /** Who may reply, when replies are on; shown above the composer. */
+  replyPolicy?: ReplyPolicy;
   /**
    * The post is published for children, so its thread is a Kids Mode room:
    * only a Kids Mode session may write in it. Presentation only — the server
@@ -946,7 +949,7 @@ const CommentItem = memo(function CommentItem({ comment, tokenId, onLike, onShow
 // MAIN COMPONENT
 // ============================================================================
 
-function CommentsSectionForAccount({ tokenId, onClose, initialTab, embedded = false, commentsDisabled = false, forKids = false, postAuthorAddress, onDirtyChange, page = false, stage = false, stageCount, onStageTabChange }: CommentsSectionProps) {
+function CommentsSectionForAccount({ tokenId, onClose, initialTab, embedded = false, commentsDisabled = false, replyPolicy, forKids = false, postAuthorAddress, onDirtyChange, page = false, stage = false, stageCount, onStageTabChange }: CommentsSectionProps) {
   // A kids post's thread is open to Kids Mode only. The post's own author is
   // exempt server-side, but they are also the one person who can always reach
   // it, so there is nothing to show them here.
@@ -2815,6 +2818,17 @@ function CommentsSectionForAccount({ tokenId, onClose, initialTab, embedded = fa
         )}
       </div>
 
+        {/* Who may reply, when the author narrowed it. Said up front, so a
+            refused reply is never the first anybody hears of it. */}
+        {!commentsDisabled && replyPolicy && replyPolicy !== 'public' && (
+          <p data-reply-policy={replyPolicy} className="px-1 pt-2 text-xs text-zinc-500">
+            {replyPolicy === 'followers'
+              ? t('replyPolicy.noticeFollowers')
+              : replyPolicy === 'following'
+                ? t('replyPolicy.noticeFollowing')
+                : t('replyPolicy.noticeMentioned')}
+          </p>
+        )}
         {/* Composer, or a notice in its place when the creator turned replies
             off. The list above stays as-is on purpose: disabling comments hides
             no history, it only stops new ones. */}

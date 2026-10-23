@@ -5,8 +5,8 @@ import { DIRECT_TIP_TOKENS } from '@/lib/direct-tip-tokens';
 import { useState, useEffect, useMemo } from 'react';
 import { DhbAmount, DhbCoin } from '@/components/app/DhbAmount';
 import { useTranslation as useI18n } from 'react-i18next';
-import { Ticket, Shield, Hash, Save, Type, ShoppingBag, Baby, Quote } from "lucide-react";
-import type { QuotePolicy } from "@/lib/api/dehub/types";
+import { Ticket, Shield, Hash, Save, Type, ShoppingBag, Baby, Quote, MessageSquareReply } from "lucide-react";
+import type { QuotePolicy, ReplyPolicy } from "@/lib/api/dehub/types";
 import Gift from "@/components/ui/cut-icons/gifts";
 import Eye from "@/components/ui/cut-icons/visibility";
 import EyeOff from "@/components/ui/cut-icons/hidden";
@@ -87,6 +87,9 @@ interface PostAccessTogglesProps {
   /** Who may quote the post. The row is left out where this is not passed (a live stream). */
   quotePolicy?: QuotePolicy;
   setQuotePolicy?: (value: QuotePolicy) => void;
+  /** Who may reply. Left out, like quotes, where this is not passed. */
+  replyPolicy?: ReplyPolicy;
+  setReplyPolicy?: (value: ReplyPolicy) => void;
   isForKids: boolean;
   setIsForKids: (value: boolean) => void;
   /**
@@ -164,6 +167,8 @@ export function PostAccessToggles({
   setIsMature,
   quotePolicy = 'public',
   setQuotePolicy,
+  replyPolicy = 'public',
+  setReplyPolicy,
   isForKids,
   setIsForKids,
   shopLinks,
@@ -733,6 +738,28 @@ export function PostAccessToggles({
             <option value="public">{t('quotePolicy.public')}</option>
             <option value="followers">{t('quotePolicy.followers')}</option>
             <option value="nobody">{t('quotePolicy.nobody')}</option>
+          </select>
+        </label>
+        )}
+
+        {/* Who may reply — narrower than "comments on", wider than "off". */}
+        {setReplyPolicy && (
+        <label className="flex items-center justify-between py-0.5 gap-3">
+          <div className="flex items-center gap-2 min-w-0">
+            <MessageSquareReply className="w-4 h-4 text-white shrink-0" />
+            <span className="text-sm text-white">{t('replyPolicy.label')}</span>
+          </div>
+          <select
+            value={replyPolicy}
+            onChange={(e) => setReplyPolicy(e.target.value as ReplyPolicy)}
+            onClick={e => e.stopPropagation()}
+            aria-label={t('replyPolicy.label')}
+            className="rounded-lg border border-white/15 bg-black/40 px-2 py-1 text-xs text-white outline-none"
+          >
+            <option value="public">{t('replyPolicy.public')}</option>
+            <option value="followers">{t('replyPolicy.followers')}</option>
+            <option value="following">{t('replyPolicy.following')}</option>
+            <option value="mentioned">{t('replyPolicy.mentioned')}</option>
           </select>
         </label>
         )}

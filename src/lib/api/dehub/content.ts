@@ -1,6 +1,6 @@
 import { apiCall, authedUpload } from './core';
 import { ResumableUnsupportedError, resumableUpload } from './resumable-upload';
-import type { ContentRating, QuotePolicy, ShopLink } from './types';
+import type { ContentRating, QuotePolicy, ReplyPolicy, ShopLink } from './types';
 
 export interface StreamInfo {
   isLockContent?: boolean;
@@ -117,6 +117,8 @@ export interface MintPostParams {
   spoilerText?: string;
   /** Who may quote it. Only sent when it is not the default, anyone. */
   quotePolicy?: QuotePolicy;
+  /** Who may reply. Only sent when it is not the default, anyone. */
+  replyPolicy?: ReplyPolicy;
 }
 
 export interface MintResponse {
@@ -263,6 +265,10 @@ export async function mintPost(
 
   if (params.quotePolicy && params.quotePolicy !== 'public') {
     formData.append('quotePolicy', params.quotePolicy);
+  }
+
+  if (params.replyPolicy && params.replyPolicy !== 'public') {
+    formData.append('replyPolicy', params.replyPolicy);
   }
 
   // Only sent when there is a board. An empty array would be a valid "clear
@@ -446,6 +452,8 @@ export interface EditPostParams {
   spoilerText?: string;
   /** Who may quote it from now on. Quotes already made stay. */
   quotePolicy?: QuotePolicy;
+  /** Who may reply from now on. Replies already made stay. */
+  replyPolicy?: ReplyPolicy;
 }
 
 /**
