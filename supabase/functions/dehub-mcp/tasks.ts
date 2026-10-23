@@ -1,6 +1,6 @@
 import { aiChat } from "../_shared/ai-chat.ts";
 import { requireDeHubAuth } from "../_shared/auth.ts";
-import { recordPostViews } from "./post-views.ts";
+import { PostViewsRateLimit, recordPostViews } from "./post-views.ts";
 import { correctActivity } from "./activity-edit.ts";
 import { handleLifeTick, lifeStatus, setSentient } from "./life.ts";
 import { agentOwnerAllowed, explicitTaskPlan, LIVE_WINDOW_MAX_DAYS, LIVE_WINDOW_RECHECK_MINUTES, nextScheduledRun, readableTime, parseTaskPlan, PLAN_TOOL, taskPlanSchema, windowSteps, type TaskPlan, type TaskStep } from "./task-plan.ts";
@@ -291,7 +291,12 @@ export async function runTask(context: Context, req: Request, task: any) {
     }
     if (!task.cursor.targets || task.cursor.index >= task.cursor.targets.length) {
       if (task.cursor.done) { nextStep(); await save(); continue; }
-      await loadTargets(step, task, token, ownedWallets);
+      try { await loadTargets(step, task, token, ownedWallets); }
+      catch (error) {
+        if (!(error instanceof PostViewsRateLimit)) throw error;
+        await save({ status: 'queued', next_run_at: error.retryAt, message: error.message });
+        break;
+      }
       // Views were recorded while loading the page; log one action per post viewed.
       if (step.tool === "dehub_view" && step.audience !== "single" && task.cursor.targets.length) {
         checked(await db.from("ai_agent_task_actions").upsert(task.cursor.targets.map((target: string) => ({ task_id: task.id, cycle: task.cycle,
@@ -377,7 +382,7 @@ export async function runTask(context: Context, req: Request, task: any) {
     if (result.isError) {
       if (payload.reset_at) {
         checked(await db.from("ai_agent_task_actions").delete().eq("id", action.id));
-        await save({ next_run_at: payload.reset_at, message: step.tool === "dehub_post_create" ? "Waiting until the next shared post slot." : "Waiting for the agent's action limit to reset." });
+        await save({ next_run_at: payload.reset_at, message: payload.retry_reason === 'public_views' ? String(payload.error) : step.tool === "dehub_post_create" ? "Waiting until the next shared post slot." : "Waiting for the agent's action limit to reset." });
       } else {
         checked(await db.from("ai_agent_task_actions").update({ status: "uncertain", result: { ...payload, arguments: args } }).eq("id", action.id));
         await save({ status: "paused", needs_review: true, message: String(payload.error ?? "Action failed. Review before continuing.").slice(0, 1000) });
