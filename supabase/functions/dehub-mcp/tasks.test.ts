@@ -84,7 +84,8 @@ Deno.test('rate limits defer the same target without recording a completed actio
   assert((test.task as any).next_run_at === reset, 'lost the reset time');
 });
 
-Deno.test('a throttled view page waits and resumes its saved cursor before reacting', async () => {
+Deno.test('throttled feed and view pages wait and resume their saved cursor before reacting', async () => {
+  for (const limitedRoute of ['feed', 'views']) {
   const test = fixture();
   Object.assign(test.task.plan.steps[0], { audience: 'posts', from: '2026-10-01T00:00:00Z', to: '2026-10-02T00:00:00Z' });
   Object.assign(test.task.cursor, { afterTime: '2026-10-01T13:00:00Z', afterToken: '124' });
@@ -94,6 +95,7 @@ Deno.test('a throttled view page waits and resumes its saved cursor before react
     if (String(url).includes('/api/feed?')) {
       const parsed = new URL(String(url));
       assert(parsed.searchParams.get('cursor_token') === '124', 'lost the last saved page');
+      if (limited && limitedRoute === 'feed') return new Response('', { status: 429, headers: { 'Retry-After': '120' } });
       return Response.json({ result: [{ tokenId: 123, createdAt: '2026-10-01T12:00:00Z' }], pagination: { next_cursor: null } });
     }
     assert(String(url) === 'https://api.dehub.io/api/view/batch', 'unexpected network request');
@@ -110,6 +112,7 @@ Deno.test('a throttled view page waits and resumes its saved cursor before react
     await test.run();
     assert(test.task.status === 'completed' && test.calls() === 1 && test.rows.ai_agent_task_actions[0].target === '123', 'did not resume the same target');
   } finally { globalThis.fetch = originalFetch; }
+  }
 });
 Deno.test('pausing during an in-flight action preserves both the receipt and pause', async () => {
   const test = fixture(); test.onCall(async () => { test.task.status = 'paused'; return { structuredContent: { success: true } }; }); await test.run();
