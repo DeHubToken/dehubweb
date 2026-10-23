@@ -1,4 +1,15 @@
 {
+  "profileFields": {
+    "title": "Profil alanları",
+    "description": "Profiline dört satıra kadar ek bilgi ekle; örneğin bir web sitesi ya da zamirlerin.",
+    "label": "Etiket",
+    "content": "İçerik",
+    "save": "Alanları kaydet",
+    "saved": "Profil alanları kaydedildi",
+    "failed": "Kaydedilmedi. Tekrar dene.",
+    "verified": "Doğrulanmış bağlantı",
+    "verifyHint": "Bir bağlantıyı doğrulamak için bunu o sayfaya ekle, sonra yeniden kaydet: {{snippet}}"
+  },
   "followedTags": {
     "follow": "#{{tag}} takip et",
     "following": "Takip ediliyor",

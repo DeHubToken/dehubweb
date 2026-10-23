@@ -1,4 +1,15 @@
 {
+  "profileFields": {
+    "title": "Profilfelter",
+    "description": "Op til fire ekstra linjer på din profil, fx et website eller dine pronomener.",
+    "label": "Etiket",
+    "content": "Indhold",
+    "save": "Gem felter",
+    "saved": "Profilfelter gemt",
+    "failed": "Det blev ikke gemt. Prøv igen.",
+    "verified": "Bekræftet link",
+    "verifyHint": "For at bekræfte et link skal du tilføje dette på den side og gemme igen: {{snippet}}"
+  },
   "followedTags": {
     "follow": "Følg #{{tag}}",
     "following": "Følger",

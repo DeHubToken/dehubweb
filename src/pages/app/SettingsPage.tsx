@@ -273,6 +273,7 @@ import { useScrollFadeMask } from '@/components/app/feeds/useScrollFadeMask';
 import { ThemePreviewCard } from '@/components/app/settings/ThemePreviewCard';
 import { KeywordFiltersSection } from '@/components/app/settings/KeywordFiltersSection';
 import { NotificationFiltersSetting } from '@/components/app/settings/NotificationFiltersSetting';
+import { ProfileFieldsSetting } from '@/components/app/settings/ProfileFieldsSetting';
 
 export default function SettingsPage() {
   const { t: _copy } = _useCopy();
@@ -1122,6 +1123,9 @@ function ProfileSettings() {
           className="min-h-[100px] rounded-xl border-zinc-700 bg-zinc-800 text-white placeholder:text-zinc-500"
         />
       </div>
+
+      {/* Profile fields — label/value lines under the bio, links verified by rel="me" */}
+      <ProfileFieldsSetting />
 
       {/* Links */}
       <div className="space-y-6">
