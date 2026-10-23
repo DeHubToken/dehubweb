@@ -1,4 +1,23 @@
 {
+  "contentWarning": {
+    "label": "Mazmun barada duýduryş",
+    "placeholder": "Duýduryşyňyzy şu ýere ýazyň",
+    "add": "Mazmun barada duýduryş goş",
+    "remove": "Mazmun barada duýduryşy aýyr",
+    "show": "Ýazgyny görkez"
+  },
+  "altText": {
+    "badge": "ALT",
+    "add": "Düşündiriş goş",
+    "edit": "Düşündirişi üýtget",
+    "titleImage": "Bu suraty beýan ediň",
+    "titleVideo": "Bu wideony beýan ediň",
+    "help": "Ony görüp bilmeýän adamlar üçin. Ekran okaýjylary ony sesli okaýar.",
+    "placeholder": "Ol näme görkezýär? Içindäki islendik teksti hem ýazyň.",
+    "show": "Düşündirişi görkez",
+    "saved": "Düşündiriş ýatda saklandy",
+    "saveFailed": "Düşündirişi ýatda saklap bolmady"
+  },
   "liveRecap": {
     "title": "Stream Recap",
     "justEnded": "Seniň gaýdyp gelmegiň",
@@ -239,6 +258,11 @@
       "hintDeny": "Bu habary berjaý edýän AI sistemasy we krawler ses, sanat we ýazgylaryňyzda tälim bermezligi haýyş edýärler. Sinyaly äsgermezlik edýän krawler ony saklamaýarlar.",
       "saved": "Öwrenme terjimesi halas boldy"
     },
+    "defaultFeed": "Deslapky lenta",
+    "defaultFeedDesc": "DeHub-y her açanyňyzda haýsy lentanyň açyljakdygyny saýlaň",
+    "feedToggles": "Lenta süzgüçlerini täzeden düzmek",
+    "feedTogglesDesc": "Lentada açan süzgüçleriňiz täzeden düzýänçäňiz deslapky bolup galýar",
+    "feedTogglesCleared": "Lenta süzgüçleri täzeden düzüldi",
     "defaultProfileTab": "Adaty profil bukjasy",
     "defaultProfileTabDesc": "Myhmanlaryň profiliňizde ilki görjek bukjasyny saýlaň",
     "public": "Açyk",
@@ -630,6 +654,10 @@
     "dmSent": "{{name}}-a {{amount}} tokenler iberildi!"
   },
   "postOptions": {
+    "embed": "Goýmak",
+    "copyEmbedCode": "Goýma koduny göçür",
+    "embedCodeCopied": "Goýma kody göçürildi",
+    "copyFailed": "Baglanyşygy göçürip bolmady",
     "options": "Saýlawlar",
     "aiOverview": "Görüş",
     "sendTip": "Sylag iber",
@@ -1958,6 +1986,8 @@
     "copyFailed": "Göçirip bolmady"
   },
   "profileOptions": {
+    "copyRssFeed": "RSS lenta baglanyşygyny göçür",
+    "rssFeedCopied": "RSS lenta baglanyşygy göçürildi",
     "copyProfileUrl": "Profil URL-ni göçür",
     "copyUsername": "Ulanyjy adyny göçür",
     "copyAddress": "Salgy göçür",
@@ -5277,6 +5307,8 @@
     }
   },
   "goLive": {
+    "bigEvent": "Uly çäre",
+    "bigEventHint": "Köp tomaşaçy üçin: tomaşaçylar takmynan 20 sekunt gijikme bilen, emma az kesilme bilen görýärler.",
     "goLive": "Go Live",
     "youAreLive": "Siz Canlı Siziz",
     "streamReady": "Stream Taýyn",
@@ -6076,7 +6108,10 @@
     "play": "Oynat",
     "pause": "Galanlar",
     "listens_one": "{{count}} gulak asyň",
-    "listens_other": "{{count}} listens"
+    "listens_other": "{{count}} listens",
+    "lyrics": "Aýdymyň sözleri",
+    "lyricsLoading": "Sözler gözlenýär…",
+    "lyricsNone": "Söz tapylmady"
   },
   "converter": {
     "seoTitle": "Konwerter — DeHub-a wideo import et",

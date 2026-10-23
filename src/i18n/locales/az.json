@@ -1,4 +1,23 @@
 {
+  "contentWarning": {
+    "label": "Məzmun xəbərdarlığı",
+    "placeholder": "Xəbərdarlığınızı buraya yazın",
+    "add": "Məzmun xəbərdarlığı əlavə et",
+    "remove": "Məzmun xəbərdarlığını sil",
+    "show": "Paylaşımı göstər"
+  },
+  "altText": {
+    "badge": "ALT",
+    "add": "Təsvir əlavə et",
+    "edit": "Təsviri redaktə et",
+    "titleImage": "Bu şəkli təsvir edin",
+    "titleVideo": "Bu videonu təsvir edin",
+    "help": "Onu görə bilməyən insanlar üçün. Ekran oxuyucuları onu səsli oxuyur.",
+    "placeholder": "Nəyi göstərir? İçindəki istənilən mətni də yazın.",
+    "show": "Təsviri göstər",
+    "saved": "Təsvir saxlanıldı",
+    "saveFailed": "Təsviri saxlamaq mümkün olmadı"
+  },
   "liveRecap": {
     "title": "Axının xülasəsi",
     "justEnded": "Axınının xülasəsi",
@@ -239,6 +258,11 @@
       "hintDeny": "Bu siqnala hörmət edən AI sistemləri və tarayıcılardan audio, incəsənət və yazı üzərində məşq etməmələri xahiş olunur. Siqnala məhəl qoymayan sürünənlər bununla bloklanmır.",
       "saved": "AI təlimi tərcihləri yaddaşda saxlanıldı"
     },
+    "defaultFeed": "Defolt lent",
+    "defaultFeedDesc": "DeHub-u hər açanda hansı lentin açılacağını seçin",
+    "feedToggles": "Lent filtrlərini sıfırla",
+    "feedTogglesDesc": "Lentdə yandırdığınız filtrlər sıfırlayana qədər defoltunuz olaraq qalır",
+    "feedTogglesCleared": "Lent filtrləri sıfırlandı",
     "defaultProfileTab": "Standart profil vərəqi",
     "defaultProfileTabDesc": "Ziyarətçilərin profilinizdə ilk hansı vərəqi görəcəyini seçin",
     "public": "Açıq",
@@ -630,6 +654,10 @@
     "dmSent": "{{amount}} tokenlər {{name}} üçün göndərildi!"
   },
   "postOptions": {
+    "embed": "Yerləşdir",
+    "copyEmbedCode": "Yerləşdirmə kodunu kopyala",
+    "embedCodeCopied": "Yerləşdirmə kodu kopyalandı",
+    "copyFailed": "Linki kopyalamaq mümkün olmadı",
     "options": "Seçimlər",
     "aiOverview": "AI icmalı",
     "sendTip": "Bəxşiş Göndər",
@@ -1968,6 +1996,8 @@
     "copyFailed": "Kopyalana bilmədi"
   },
   "profileOptions": {
+    "copyRssFeed": "RSS lent linkini kopyala",
+    "rssFeedCopied": "RSS lent linki kopyalandı",
     "copyProfileUrl": "Profil URL-ni kopyala",
     "copyUsername": "İstifadəçi adını kopyala",
     "copyAddress": "Ünvanı kopyala",
@@ -5276,6 +5306,8 @@
     }
   },
   "goLive": {
+    "bigEvent": "Böyük tədbir",
+    "bigEventHint": "Böyük auditoriya üçün: izləyicilər yayımı təxminən 20 saniyə gecikmə ilə, daha az fasilə ilə izləyir.",
     "goLive": "Canlı Yayına Keçin",
     "youAreLive": "Siz Canlı Yayımsınız",
     "streamReady": "Yayım Hazır",
@@ -6022,7 +6054,10 @@
     "play": "Oxut",
     "pause": "Fasilə ver",
     "listens_one": "{{count}} dinlə",
-    "listens_other": "{{count}} dinləyir"
+    "listens_other": "{{count}} dinləyir",
+    "lyrics": "Mahnı sözləri",
+    "lyricsLoading": "Sözlər axtarılır…",
+    "lyricsNone": "Söz tapılmadı"
   },
   "converter": {
     "seoTitle": "Converter — DeHub-a video idxal edin",

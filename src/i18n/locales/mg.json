@@ -1,4 +1,23 @@
 {
+  "contentWarning": {
+    "label": "Fampitandremana momba ny votoaty",
+    "placeholder": "Soraty eto ny fampitandremanao",
+    "add": "Hanampy fampitandremana momba ny votoaty",
+    "remove": "Esory ny fampitandremana momba ny votoaty",
+    "show": "Asehoy ny lahatsoratra"
+  },
+  "altText": {
+    "badge": "ALT",
+    "add": "Hanampy famaritana",
+    "edit": "Hanova ny famaritana",
+    "titleImage": "Fariteo ity sary ity",
+    "titleVideo": "Fariteo ity horonantsary ity",
+    "help": "Ho an'ireo tsy mahita azy. Vakian'ny mpamaky efijery mafy izany.",
+    "placeholder": "Inona no asehony? Ampidiro koa izay soratra ao aminy.",
+    "show": "Asehoy ny famaritana",
+    "saved": "Voatahiry ny famaritana",
+    "saveFailed": "Tsy afaka nitahiry ny famaritana"
+  },
   "liveRecap": {
     "title": "Avereno alefa",
     "justEnded": "Famerenana ny tosakao",
@@ -239,6 +258,11 @@
       "hintDeny": "Ny rafitra AI sy ny mpitsikilo izay manaja ity mari-pamantarana ity dia angatahana tsy hampiofana ny feo, ny zavakanto ary ny soratra. Tsy voasakana ireo mpidoroka tsy miraharaha ny fanairana.",
       "saved": "AI fiofanana voatahiry"
     },
+    "defaultFeed": "Feed mahazatra",
+    "defaultFeedDesc": "Safidio izay feed hisokatra isaky ny manokatra DeHub ianao",
+    "feedToggles": "Avereno ny sivana feed",
+    "feedTogglesDesc": "Ny sivana alefanao ao amin'ny feed dia mijanona ho mahazatra mandra-pamerinao azy",
+    "feedTogglesCleared": "Naverina ny sivana feed",
     "defaultProfileTab": "Vakizoro mombamomba mahazatra",
     "defaultProfileTabDesc": "Fidio hoe vakizoro inona no hitan'ny mpitsidika voalohany ao amin'ny mombamomba anao",
     "public": "Ho an'ny rehetra",
@@ -630,6 +654,10 @@
     "dmSent": "Nandefa {{amount}} tokens ho an'i {{name}}!"
   },
   "postOptions": {
+    "embed": "Ampidiro",
+    "copyEmbedCode": "Adikao ny kaody fampidirana",
+    "embedCodeCopied": "Voadika ny kaody fampidirana",
+    "copyFailed": "Tsy afaka nandika ny rohy",
     "options": "Safidy",
     "aiOverview": "MANDRAKIZAY",
     "sendTip": "Handefa fanomezana",
@@ -1995,6 +2023,8 @@
     "copyFailed": "Tsy nahafaka naka"
   },
   "profileOptions": {
+    "copyRssFeed": "Adikao ny rohy RSS feed",
+    "rssFeedCopied": "Voadika ny rohy RSS feed",
     "copyProfileUrl": "Adikao ny URL profil",
     "copyUsername": "Adikao ny anarana mpampiasa",
     "copyAddress": "Adikao ny adiresy",
@@ -5377,6 +5407,8 @@
     }
   },
   "goLive": {
+    "bigEvent": "Hetsika lehibe",
+    "bigEventHint": "Ho an'ny mpijery maro: mijery tara eo amin'ny 20 segondra eo ho eo ny mpijery, saingy vitsy kokoa ny fahatapahana.",
     "goLive": "Mivoaka Mivantana",
     "youAreLive": "Mivoaka Mivantana Ianao",
     "streamReady": "Handa ny Stream",
@@ -6177,7 +6209,10 @@
     "play": "Mamaky",
     "pause": "Miato",
     "listens_one": "{{count}} mihaino",
-    "listens_other": "{{count}} сонсens"
+    "listens_other": "{{count}} сонсens",
+    "lyrics": "Tononkira",
+    "lyricsLoading": "Mitady tononkira…",
+    "lyricsNone": "Tsy nahitana tononkira"
   },
   "converter": {
     "seoTitle": "Converter — mamindra video ao DeHub",

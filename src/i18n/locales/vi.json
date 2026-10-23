@@ -1,4 +1,23 @@
 {
+  "contentWarning": {
+    "label": "Cảnh báo nội dung",
+    "placeholder": "Viết cảnh báo của bạn ở đây",
+    "add": "Thêm cảnh báo nội dung",
+    "remove": "Xóa cảnh báo nội dung",
+    "show": "Hiện bài đăng"
+  },
+  "altText": {
+    "badge": "ALT",
+    "add": "Thêm mô tả",
+    "edit": "Sửa mô tả",
+    "titleImage": "Mô tả hình ảnh này",
+    "titleVideo": "Mô tả video này",
+    "help": "Dành cho người không thể nhìn thấy. Trình đọc màn hình sẽ đọc to nội dung này.",
+    "placeholder": "Nó hiển thị gì? Ghi cả chữ có trong đó.",
+    "show": "Hiện mô tả",
+    "saved": "Đã lưu mô tả",
+    "saveFailed": "Không thể lưu mô tả"
+  },
   "liveRecap": {
     "title": "Tóm tắt luồng",
     "justEnded": "Bản tóm tắt luồng của bạn",
@@ -241,6 +260,11 @@
       "hintDeny": "Các hệ thống AI và trình thu thập thông tin tôn trọng tín hiệu này được yêu cầu không đào tạo về âm thanh, tác phẩm nghệ thuật và văn bản của bạn. Trình thu thập thông tin bỏ qua tín hiệu không bị chặn bởi nó.",
       "saved": "Đã lưu tùy chọn đào tạo AI"
     },
+    "defaultFeed": "Bảng tin mặc định",
+    "defaultFeedDesc": "Chọn bảng tin mở ra mỗi khi bạn mở DeHub",
+    "feedToggles": "Đặt lại bộ lọc bảng tin",
+    "feedTogglesDesc": "Bộ lọc bạn bật trong bảng tin sẽ là mặc định cho đến khi bạn đặt lại",
+    "feedTogglesCleared": "Đã đặt lại bộ lọc bảng tin",
     "defaultProfileTab": "Tab hồ sơ mặc định",
     "defaultProfileTabDesc": "Chọn tab mà khách xem đầu tiên trên hồ sơ của bạn",
     "public": "Public",
@@ -648,6 +672,10 @@
     "dmSent": "Đã gửi {{amount}} token cho {{name}}!"
   },
   "postOptions": {
+    "embed": "Nhúng",
+    "copyEmbedCode": "Sao chép mã nhúng",
+    "embedCodeCopied": "Đã sao chép mã nhúng",
+    "copyFailed": "Không thể sao chép liên kết",
     "options": "Options",
     "aiOverview": "Tổng quan về AI",
     "sendTip": "Send Tip",
@@ -1994,6 +2022,8 @@
     "copyFailed": "Không thể sao chép"
   },
   "profileOptions": {
+    "copyRssFeed": "Sao chép liên kết nguồn cấp RSS",
+    "rssFeedCopied": "Đã sao chép liên kết nguồn cấp RSS",
     "copyProfileUrl": "Sao chép URL hồ sơ",
     "copyUsername": "Sao chép tên người dùng",
     "copyAddress": "Sao chép địa chỉ",
@@ -5391,6 +5421,8 @@
     }
   },
   "goLive": {
+    "bigEvent": "Sự kiện lớn",
+    "bigEventHint": "Dành cho lượng người xem lớn: người xem sẽ xem chậm khoảng 20 giây nhưng ít bị gián đoạn hơn.",
     "goLive": "Phát Trực Tiếp",
     "youAreLive": "Bạn Đang Phát Trực Tiếp",
     "streamReady": "Luồng Sẵn Sàng",
@@ -6195,7 +6227,10 @@
     "play": "Phát",
     "pause": "Tạm dừng",
     "listens_one": "{{count}} lượt nghe",
-    "listens_other": "{{count}} lượt nghe"
+    "listens_other": "{{count}} lượt nghe",
+    "lyrics": "Lời bài hát",
+    "lyricsLoading": "Đang tìm lời bài hát…",
+    "lyricsNone": "Không tìm thấy lời"
   },
   "converter": {
     "seoTitle": "Converter — nhập video vào DeHub",

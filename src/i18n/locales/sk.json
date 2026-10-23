@@ -1,4 +1,23 @@
 {
+  "contentWarning": {
+    "label": "Upozornenie na obsah",
+    "placeholder": "Sem napíšte upozornenie",
+    "add": "Pridať upozornenie na obsah",
+    "remove": "Odstrániť upozornenie na obsah",
+    "show": "Zobraziť príspevok"
+  },
+  "altText": {
+    "badge": "ALT",
+    "add": "Pridať popis",
+    "edit": "Upraviť popis",
+    "titleImage": "Opíšte tento obrázok",
+    "titleVideo": "Opíšte toto video",
+    "help": "Pre ľudí, ktorí ho nevidia. Čítačky obrazovky ho prečítajú nahlas.",
+    "placeholder": "Čo zobrazuje? Uveďte aj text, ktorý obsahuje.",
+    "show": "Zobraziť popis",
+    "saved": "Popis uložený",
+    "saveFailed": "Popis sa nepodarilo uložiť"
+  },
   "liveRecap": {
     "title": "Rekapitulácia streamu",
     "justEnded": "Rekapitulácia vášho streamu",
@@ -243,6 +262,11 @@
       "hintDeny": "UI systémy a crawlery, ktoré rešpektujú tento signál, sú požiadané, aby sa netrénovali na vašom audiu, umeleckých dielach a písaní. Crawlery, ktoré ignorujú signál, nie sú blokované.",
       "saved": "Predvoľba školenia AI uložená"
     },
+    "defaultFeed": "Predvolený kanál",
+    "defaultFeedDesc": "Vyberte, ktorý kanál sa otvorí vždy, keď otvoríte DeHub",
+    "feedToggles": "Obnoviť filtre kanála",
+    "feedTogglesDesc": "Filtre, ktoré v kanáli zapnete, zostanú predvolené, kým ich neobnovíte",
+    "feedTogglesCleared": "Filtre kanála obnovené",
     "defaultProfileTab": "Predvolená karta profilu",
     "defaultProfileTabDesc": "Vyber, ktorú kartu uvidia návštevníci na tvojom profile ako prvú",
     "public": "Verejné",
@@ -656,6 +680,10 @@
     "dmSent": "Odoslané {{amount}} tokenov používateľovi {{name}}!"
   },
   "postOptions": {
+    "embed": "Vložiť",
+    "copyEmbedCode": "Kopírovať kód na vloženie",
+    "embedCodeCopied": "Kód na vloženie skopírovaný",
+    "copyFailed": "Odkaz sa nepodarilo skopírovať",
     "options": "Možnosti",
     "aiOverview": "Prehľad AI",
     "sendTip": "Poslať tip",
@@ -2088,6 +2116,8 @@
     "copyFailed": "Nepodarilo sa skopírovať"
   },
   "profileOptions": {
+    "copyRssFeed": "Kopírovať odkaz na RSS kanál",
+    "rssFeedCopied": "Odkaz na RSS kanál skopírovaný",
     "copyProfileUrl": "Kopírovať URL profilu",
     "copyUsername": "Kopírovať meno používateľa",
     "copyAddress": "Kopírovať adresu",
@@ -5488,6 +5518,8 @@
     }
   },
   "goLive": {
+    "bigEvent": "Veľká udalosť",
+    "bigEventHint": "Pre veľké publikum: diváci sledujú približne s 20-sekundovým oneskorením, ale s menej výpadkami.",
     "goLive": "Prejsť do priameho vysielania",
     "youAreLive": "Ste v priamom vysielaní",
     "streamReady": "Vysielanie je pripravené",
@@ -6292,7 +6324,10 @@
     "play": "Prehrať",
     "pause": "Pozastaviť",
     "listens_one": "{{count}} počúvajte",
-    "listens_other": "{{count}} počúva"
+    "listens_other": "{{count}} počúva",
+    "lyrics": "Text piesne",
+    "lyricsLoading": "Hľadáme text…",
+    "lyricsNone": "Text sa nenašiel"
   },
   "converter": {
     "seoTitle": "Konvertor — importovať video do DeHub",

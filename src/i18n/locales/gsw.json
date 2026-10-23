@@ -1,4 +1,23 @@
 {
+  "contentWarning": {
+    "label": "Inhaltswarnig",
+    "placeholder": "Schriib dini Warnig da",
+    "add": "Inhaltswarnig hinzuefüege",
+    "remove": "Inhaltswarnig entferne",
+    "show": "Biitrag aazeige"
+  },
+  "altText": {
+    "badge": "ALT",
+    "add": "Beschriibig hinzuefüege",
+    "edit": "Beschriibig bearbeite",
+    "titleImage": "Beschriib das Bild",
+    "titleVideo": "Beschriib das Video",
+    "help": "Für Lüüt, wo s nöd chönd gseh. Screenreader läsed s luut vor.",
+    "placeholder": "Was zeigt s? Schriib au de Text drin uf.",
+    "show": "Beschriibig aazeige",
+    "saved": "Beschriibig gspeicheret",
+    "saveFailed": "D Beschriibig het nöd chöne gspeicheret werde"
+  },
   "liveRecap": {
     "title": "Stream-Rückblick",
     "justEnded": "De Stream-Zusammenfassung.",
@@ -239,6 +258,11 @@
       "hintDeny": "AI-System und Crawler, wo das Signal respektiered, werded gfroged, nöd uf dim Audio, Kunst und Text z'trainiere. Crawler, wo s'Signal ignoriere, werded nöd druch's blockiert.",
       "saved": "AI-Training-Präferenz gspeichered"
     },
+    "defaultFeed": "Standard-Feed",
+    "defaultFeedDesc": "Wähle, welcher Feed sich bei jedem Öffnen von DeHub zeigt",
+    "feedToggles": "Feed-Filter zurücksetzen",
+    "feedTogglesDesc": "Filter, die du in einem Feed einschaltest, bleiben deine Standards, bis du sie zurücksetzt",
+    "feedTogglesCleared": "Feed-Filter zurückgesetzt",
     "defaultProfileTab": "Standard-Profiltab",
     "defaultProfileTabDesc": "Wähl, wele Tab Bsucher zersch uf dim Profil gseh",
     "public": "Öffentlech",
@@ -629,6 +653,10 @@
     "dmSent": "{{amount}} Tokens a {{name}} gschickt!"
   },
   "postOptions": {
+    "embed": "Iibette",
+    "copyEmbedCode": "Iibettigscode kopiere",
+    "embedCodeCopied": "Iibettigscode kopiert",
+    "copyFailed": "Link het nöd chöne kopiert werde",
     "options": "Optione",
     "aiOverview": "KI Übersicht",
     "sendTip": "Trinkgäld schicke",
@@ -2003,6 +2031,8 @@
     "copyFailed": "Konnt nöd kopiere"
   },
   "profileOptions": {
+    "copyRssFeed": "RSS-Feed-Link kopiere",
+    "rssFeedCopied": "RSS-Feed-Link kopiert",
     "copyProfileUrl": "Profil-URL kopiere",
     "copyUsername": "Benutzername kopiere",
     "copyAddress": "Adrässe kopiere",
@@ -5354,6 +5384,8 @@
     }
   },
   "goLive": {
+    "bigEvent": "Grosse Event",
+    "bigEventHint": "Für es grosses Publikum: d Zuschauer gsehnd öppe 20 Sekunde verzögeret, defür mit weniger Unterbrüch.",
     "goLive": "Go Live",
     "youAreLive": "Du bisch Live",
     "streamReady": "Stream Ready",
@@ -6125,7 +6157,10 @@
     "play": "Spiele",
     "pause": "Pausiere",
     "listens_one": "{{count}} höre",
-    "listens_other": "{{count}} höört"
+    "listens_other": "{{count}} höört",
+    "lyrics": "Songtext",
+    "lyricsLoading": "Songtext wird gsuecht…",
+    "lyricsNone": "Kei Songtext gfunde"
   },
   "converter": {
     "seoTitle": "Converter — importiere ein Video zu DeHub",

@@ -1,4 +1,23 @@
 {
+  "contentWarning": {
+    "label": "Avviso sui contenuti",
+    "placeholder": "Scrivi qui il tuo avviso",
+    "add": "Aggiungi avviso sui contenuti",
+    "remove": "Rimuovi avviso sui contenuti",
+    "show": "Mostra post"
+  },
+  "altText": {
+    "badge": "ALT",
+    "add": "Aggiungi una descrizione",
+    "edit": "Modifica descrizione",
+    "titleImage": "Descrivi questa immagine",
+    "titleVideo": "Descrivi questo video",
+    "help": "Per chi non può vederla. Gli screen reader la leggono ad alta voce.",
+    "placeholder": "Cosa mostra? Includi l'eventuale testo presente.",
+    "show": "Mostra descrizione",
+    "saved": "Descrizione salvata",
+    "saveFailed": "Impossibile salvare la descrizione"
+  },
   "liveRecap": {
     "title": "Stream recap",
     "justEnded": "Riepilogo del tuo stream",
@@ -241,6 +260,11 @@
       "hintDeny": "Ai sistemi di intelligenza artificiale e ai crawler che rispettano questo segnale viene chiesto di non allenarsi su audio, grafica e scrittura. I cingoli che ignorano il segnale non vengono bloccati da esso.",
       "saved": "Preferenze di addestramento AI salvate"
     },
+    "defaultFeed": "Feed predefinito",
+    "defaultFeedDesc": "Scegli quale feed si apre ogni volta che apri DeHub",
+    "feedToggles": "Reimposta i filtri del feed",
+    "feedTogglesDesc": "I filtri che attivi in un feed restano predefiniti finché non li reimposti",
+    "feedTogglesCleared": "Filtri del feed reimpostati",
     "defaultProfileTab": "Scheda profilo predefinita",
     "defaultProfileTabDesc": "Scegli quale scheda vedono per prima i visitatori sul tuo profilo",
     "public": "Pubblico",
@@ -634,6 +658,10 @@
     "dmSent": "Inviati {{amount}} token a {{name}}!"
   },
   "postOptions": {
+    "embed": "Incorpora",
+    "copyEmbedCode": "Copia codice di incorporamento",
+    "embedCodeCopied": "Codice di incorporamento copiato",
+    "copyFailed": "Impossibile copiare il link",
     "options": "Opzioni",
     "aiOverview": "Panoramica AI",
     "sendTip": "Invia mancia",
@@ -1983,6 +2011,8 @@
     "copyFailed": "Impossibile copiare"
   },
   "profileOptions": {
+    "copyRssFeed": "Copia link del feed RSS",
+    "rssFeedCopied": "Link del feed RSS copiato",
     "copyProfileUrl": "Copia URL profilo",
     "copyUsername": "Copia nome utente",
     "copyAddress": "Copia indirizzo",
@@ -5376,6 +5406,8 @@
     }
   },
   "goLive": {
+    "bigEvent": "Grande evento",
+    "bigEventHint": "Per un grande pubblico: gli spettatori guardano con circa 20 secondi di ritardo, con meno interruzioni.",
     "goLive": "Vai in diretta",
     "youAreLive": "Sei in diretta",
     "streamReady": "Stream pronto",
@@ -6181,7 +6213,10 @@
     "play": "Riproduci",
     "pause": "Pausa",
     "listens_one": "{{count}} ascolto",
-    "listens_other": "{{count}} ascolti"
+    "listens_other": "{{count}} ascolti",
+    "lyrics": "Testo",
+    "lyricsLoading": "Cerco il testo…",
+    "lyricsNone": "Nessun testo trovato"
   },
   "converter": {
     "seoTitle": "Convertitore — importa un video su DeHub",

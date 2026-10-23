@@ -23,6 +23,10 @@ import Moon from "@/components/ui/cut-icons/appearance";
 import Lock from "@/components/ui/cut-icons/privacy";
 import Filter from "@/components/ui/cut-icons/filter";
 import LayoutGrid from "@/components/ui/cut-icons/apps";
+import HomeCutIcon from "@/components/ui/cut-icons/home";
+import FilterCutIcon from "@/components/ui/cut-icons/filter";
+import { FEED_TABS } from "@/constants/app.constants";
+import { FEED_DEFAULTS_CHANGED_EVENT, hasFeedToggles, parseDefaultFeedTab, readDefaultFeedTab, resetFeedToggles, setDefaultFeedTab, type FeedTabValue } from "@/lib/feed-defaults";
 import VolumeX from "@/components/ui/cut-icons/mute";
 import Sparkles from "@/components/ui/cut-icons/assistant";
 import MapPin from "@/components/ui/cut-icons/location";
@@ -2646,6 +2650,8 @@ function AppearanceSettings({ theme, themeChoice, setTheme }: { theme: string; t
               ]}
             />}
           />
+          <DefaultFeedSetting />
+          <FeedTogglesSetting />
           <SettingsRow
             icon={<LayoutGrid />}
             anchor="default-profile-tab"
@@ -2679,6 +2685,65 @@ function AppearanceSettings({ theme, themeChoice, setTheme }: { theme: string; t
       </div>
 
     </div>
+  );
+}
+
+/** Settings > Appearance > Layout: the feed a new session opens on. */
+function DefaultFeedSetting() {
+  const { t } = useTranslation();
+  const [tab, setTab] = useState<FeedTabValue>(() => readDefaultFeedTab());
+  return (
+    <SettingsRow
+      icon={<HomeCutIcon />}
+      anchor="default-feed"
+      title={t('settings.defaultFeed', 'Default feed')}
+      description={t('settings.defaultFeedDesc', 'Choose which feed opens every time you open DeHub')}
+      action={<SettingDrawerSelect
+        value={tab}
+        onValueChange={(value) => {
+          const next = parseDefaultFeedTab(value);
+          setTab(next);
+          setDefaultFeedTab(next);
+        }}
+        title={t('settings.defaultFeed', 'Default feed')}
+        options={FEED_TABS.map((o) => ({ value: o.value, label: t(`feed.${o.value}`, o.label) }))}
+      />}
+    />
+  );
+}
+
+/**
+ * Filter toggles a viewer turns on in any feed stay on as their defaults
+ * (lib/feed-defaults). This is the one place that puts them all back.
+ */
+function FeedTogglesSetting() {
+  const { t } = useTranslation();
+  const [saved, setSaved] = useState(() => hasFeedToggles());
+  useEffect(() => {
+    const sync = () => setSaved(hasFeedToggles());
+    window.addEventListener(FEED_DEFAULTS_CHANGED_EVENT, sync);
+    return () => window.removeEventListener(FEED_DEFAULTS_CHANGED_EVENT, sync);
+  }, []);
+  return (
+    <SettingsRow
+      icon={<FilterCutIcon />}
+      anchor="feed-toggles"
+      title={t('settings.feedToggles', 'Reset feed toggles')}
+      description={t('settings.feedTogglesDesc', 'Filters you turn on in a feed stay on as your defaults until you reset them')}
+      action={
+        <Button
+          variant="outline"
+          size="sm"
+          disabled={!saved}
+          onClick={() => {
+            resetFeedToggles();
+            toast.success(t('settings.feedTogglesCleared', 'Feed toggles reset'));
+          }}
+        >
+          {t('settings.reset', 'Reset')}
+        </Button>
+      }
+    />
   );
 }
 

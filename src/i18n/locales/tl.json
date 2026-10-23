@@ -1,4 +1,23 @@
 {
+  "contentWarning": {
+    "label": "Babala sa nilalaman",
+    "placeholder": "Isulat dito ang iyong babala",
+    "add": "Magdagdag ng babala sa nilalaman",
+    "remove": "Alisin ang babala sa nilalaman",
+    "show": "Ipakita ang post"
+  },
+  "altText": {
+    "badge": "ALT",
+    "add": "Magdagdag ng paglalarawan",
+    "edit": "I-edit ang paglalarawan",
+    "titleImage": "Ilarawan ang larawang ito",
+    "titleVideo": "Ilarawan ang video na ito",
+    "help": "Para sa mga taong hindi ito nakikita. Binabasa ito nang malakas ng mga screen reader.",
+    "placeholder": "Ano ang ipinapakita nito? Isama ang anumang teksto rito.",
+    "show": "Ipakita ang paglalarawan",
+    "saved": "Na-save ang paglalarawan",
+    "saveFailed": "Hindi ma-save ang paglalarawan"
+  },
   "liveRecap": {
     "title": "I - recap ang stream",
     "justEnded": "I - recap ang iyong stream",
@@ -241,6 +260,11 @@
       "hintDeny": "Ang mga sistema ng AI at mga crawler na iginagalang ang signal na ito ay hinihiling na huwag sanayin sa iyong audio, likhang sining at pagsulat. Crawlers na huwag pansinin ang signal ay hindi hinarangan ng mga ito.",
       "saved": "Na - save ang preperensiya sa pagsasanay ng AI"
     },
+    "defaultFeed": "Default na feed",
+    "defaultFeedDesc": "Piliin kung aling feed ang bubukas tuwing bubuksan mo ang DeHub",
+    "feedToggles": "I-reset ang mga filter ng feed",
+    "feedTogglesDesc": "Ang mga filter na binuksan mo sa feed ay mananatiling default hanggang i-reset mo",
+    "feedTogglesCleared": "Na-reset ang mga filter ng feed",
     "defaultProfileTab": "Default na tab ng profile",
     "defaultProfileTabDesc": "Piliin kung aling tab ang unang makikita ng mga bisita sa profile mo",
     "public": "Pampubliko",
@@ -677,6 +701,10 @@
     "dmSent": "Naipadala ang {{amount}} tokens kay {{name}}!"
   },
   "postOptions": {
+    "embed": "I-embed",
+    "copyEmbedCode": "Kopyahin ang embed code",
+    "embedCodeCopied": "Nakopya ang embed code",
+    "copyFailed": "Hindi makopya ang link",
     "options": "Mga Opsyon",
     "aiOverview": "Pangkalahatang - ideya ng AI",
     "sendTip": "Magpadala ng Tip",
@@ -2028,6 +2056,8 @@
     "copyFailed": "Hindi makopya"
   },
   "profileOptions": {
+    "copyRssFeed": "Kopyahin ang link ng RSS feed",
+    "rssFeedCopied": "Nakopya ang link ng RSS feed",
     "copyProfileUrl": "Kopyahin ang URL ng profile",
     "copyUsername": "Kopyahin ang username",
     "copyAddress": "Kopyahin ang address",
@@ -5424,6 +5454,8 @@
     }
   },
   "goLive": {
+    "bigEvent": "Malaking event",
+    "bigEventHint": "Para sa malalaking audience: mga 20 segundong huli ang panonood ng mga manonood, pero mas kaunti ang pagkaputol.",
     "goLive": "Mag-Live",
     "youAreLive": "Ikaw ay Live",
     "streamReady": "Stream Ready",
@@ -6227,7 +6259,10 @@
     "play": "Maglaro",
     "pause": "I - pause",
     "listens_one": "{{count}} pakinggan",
-    "listens_other": "{{count}} listens"
+    "listens_other": "{{count}} listens",
+    "lyrics": "Liriko",
+    "lyricsLoading": "Hinahanap ang liriko…",
+    "lyricsNone": "Walang nakitang liriko"
   },
   "converter": {
     "seoTitle": "Converter — mag-import ng video sa DeHub",

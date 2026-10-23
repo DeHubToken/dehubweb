@@ -1,4 +1,23 @@
 {
+  "contentWarning": {
+    "label": "Whakatūpato ihirangi",
+    "placeholder": "Tuhia tō whakatūpato ki konei",
+    "add": "Tāpiritia he whakatūpato ihirangi",
+    "remove": "Tangohia te whakatūpato ihirangi",
+    "show": "Whakaatu i te pānui"
+  },
+  "altText": {
+    "badge": "ALT",
+    "add": "Tāpiritia he whakaahuatanga",
+    "edit": "Whakatika i te whakaahuatanga",
+    "titleImage": "Whakaahuatia tēnei pikitia",
+    "titleVideo": "Whakaahuatia tēnei ataata",
+    "help": "Mō te hunga kāore e kite. Ka pānuitia e ngā pūpānui mata ki te reo.",
+    "placeholder": "He aha e whakaaturia ana? Whakaurua anō ngā kupu kei roto.",
+    "show": "Whakaatu i te whakaahuatanga",
+    "saved": "Kua tiakina te whakaahuatanga",
+    "saveFailed": "Kāore i taea te tiaki i te whakaahuatanga"
+  },
   "liveRecap": {
     "title": "Te whakahoutanga o te awa",
     "justEnded": "Te whakarāpopototanga o tō pāho",
@@ -239,6 +258,11 @@
       "hintDeny": "Ko nga punaha AI me nga kaiwhaiwhai e whakaute ana i tenei tohu ka tonoa kia kaua e whakangungu i runga i to ororongo, mahi toi me te tuhi. Ko nga kaiwhaiwhai e kore e aro ki te tohu kaore i te aukati i a ia.",
       "saved": "Ko te hiahia o te whakangungu AI e ora ana"
     },
+    "defaultFeed": "Whāngai taunoa",
+    "defaultFeedDesc": "Kōwhiria te whāngai ka tuwhera i ia wā ka huaki koe i a DeHub",
+    "feedToggles": "Tautuhi anō ngā tātari whāngai",
+    "feedTogglesDesc": "Ka noho ngā tātari ka whakakāhia e koe hei taunoa mōu kia tautuhi anō rā anō",
+    "feedTogglesCleared": "Kua tautuhia anōtia ngā tātari whāngai",
     "defaultProfileTab": "Ripa kōtaha taunoa",
     "defaultProfileTabDesc": "Tīpakohia ko tēhea ripa ka kite tuatahi ngā manuhiri i tō kōtaha",
     "public": "Tūmatanui",
@@ -629,6 +653,10 @@
     "dmSent": "Kua tukuna te {{amount}} tohu ki a {{name}}!"
   },
   "postOptions": {
+    "embed": "Tāmau",
+    "copyEmbedCode": "Tāruatia te waehere tāmau",
+    "embedCodeCopied": "Kua tāruatia te waehere tāmau",
+    "copyFailed": "Kāore i taea te tārua i te hono",
     "options": "Kōwhiringa",
     "aiOverview": "Te tirohanga whānui o te AI",
     "sendTip": "Tukuna koha",
@@ -1974,6 +2002,8 @@
     "copyFailed": "Kāore i taea te kōpi"
   },
   "profileOptions": {
+    "copyRssFeed": "Tāruatia te hono whāngai RSS",
+    "rssFeedCopied": "Kua tāruatia te hono whāngai RSS",
     "copyProfileUrl": "Tārua URL kōnae",
     "copyUsername": "Tārua ingoa kaiwhakamahi",
     "copyAddress": "Tārua wāhitau",
@@ -5344,6 +5374,8 @@
     }
   },
   "goLive": {
+    "bigEvent": "Takunetanga nui",
+    "bigEventHint": "Mō te hunga mātakitaki tini: ka mātakitaki rātou i muri tata ki te 20 hēkona, he iti iho ngā haukotinga.",
     "goLive": "Haere Tūtuki",
     "youAreLive": "Kei te Tūtuki",
     "streamReady": "Tūtuki Handa",
@@ -6144,7 +6176,10 @@
     "play": "Play",
     "pause": "Pause",
     "listens_one": "{{count}} whakarongo",
-    "listens_other": "{{count}} whakarongo"
+    "listens_other": "{{count}} whakarongo",
+    "lyrics": "Kupu waiata",
+    "lyricsLoading": "E rapu ana i ngā kupu…",
+    "lyricsNone": "Kāore he kupu i kitea"
   },
   "converter": {
     "seoTitle": "Converter — kawekawe he ataata ki DeHub",

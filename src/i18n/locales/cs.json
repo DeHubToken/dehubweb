@@ -1,4 +1,23 @@
 {
+  "contentWarning": {
+    "label": "Upozornění na obsah",
+    "placeholder": "Sem napište upozornění",
+    "add": "Přidat upozornění na obsah",
+    "remove": "Odebrat upozornění na obsah",
+    "show": "Zobrazit příspěvek"
+  },
+  "altText": {
+    "badge": "ALT",
+    "add": "Přidat popis",
+    "edit": "Upravit popis",
+    "titleImage": "Popište tento obrázek",
+    "titleVideo": "Popište toto video",
+    "help": "Pro lidi, kteří ho nevidí. Čtečky obrazovky ho přečtou nahlas.",
+    "placeholder": "Co zobrazuje? Uveďte i text, který obsahuje.",
+    "show": "Zobrazit popis",
+    "saved": "Popis uložen",
+    "saveFailed": "Popis se nepodařilo uložit"
+  },
   "liveRecap": {
     "title": "Rekapitulace streamu",
     "justEnded": "Rekapitulace vašeho streamu",
@@ -241,6 +260,11 @@
       "hintDeny": "Umělá inteligence a prohledávače, které respektují tento signál, jsou žádány, aby netrénovaly na vašem zvuku, uměleckých dílech a psaní. Prohledávače, které ignorují signál, nejsou blokovány.",
       "saved": "Předvolba školení AI uložena"
     },
+    "defaultFeed": "Výchozí kanál",
+    "defaultFeedDesc": "Vyberte, který kanál se otevře pokaždé, když otevřete DeHub",
+    "feedToggles": "Obnovit filtry kanálu",
+    "feedTogglesDesc": "Filtry, které v kanálu zapnete, zůstanou výchozí, dokud je neobnovíte",
+    "feedTogglesCleared": "Filtry kanálu obnoveny",
     "defaultProfileTab": "Výchozí karta profilu",
     "defaultProfileTabDesc": "Vyber, kterou kartu uvidí návštěvníci na tvém profilu jako první",
     "public": "Veřejné",
@@ -632,6 +656,10 @@
     "dmSent": "Odesláno {{amount}} tokenů uživateli {{name}}!"
   },
   "postOptions": {
+    "embed": "Vložit",
+    "copyEmbedCode": "Kopírovat kód pro vložení",
+    "embedCodeCopied": "Kód pro vložení zkopírován",
+    "copyFailed": "Odkaz se nepodařilo zkopírovat",
     "options": "Možnosti",
     "aiOverview": "Přehled AI",
     "sendTip": "Poslat spropitné",
@@ -1975,6 +2003,8 @@
     "copyFailed": "Nelze zkopírovat"
   },
   "profileOptions": {
+    "copyRssFeed": "Kopírovat odkaz na RSS kanál",
+    "rssFeedCopied": "Odkaz na RSS kanál zkopírován",
     "copyProfileUrl": "Kopírovat URL profilu",
     "copyUsername": "Kopírovat uživatelské jméno",
     "copyAddress": "Kopírovat adresu",
@@ -5312,6 +5342,8 @@
     }
   },
   "goLive": {
+    "bigEvent": "Velká událost",
+    "bigEventHint": "Pro velké publikum: diváci sledují zhruba se 20sekundovým zpožděním, ale s menším sekáním.",
     "goLive": "Jít naživo",
     "youAreLive": "Jsi naživo",
     "streamReady": "Stream připraven",
@@ -6064,7 +6096,10 @@
     "play": "Hrát",
     "pause": "Pozastavit",
     "listens_one": "{{count}} naslouchat",
-    "listens_other": "{{count}} naslouchá"
+    "listens_other": "{{count}} naslouchá",
+    "lyrics": "Text písně",
+    "lyricsLoading": "Hledáme text…",
+    "lyricsNone": "Text nenalezen"
   },
   "converter": {
     "seoTitle": "Konvertor — import videa do DeHub",

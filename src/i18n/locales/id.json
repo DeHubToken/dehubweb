@@ -1,4 +1,23 @@
 {
+  "contentWarning": {
+    "label": "Peringatan konten",
+    "placeholder": "Tulis peringatan Anda di sini",
+    "add": "Tambahkan peringatan konten",
+    "remove": "Hapus peringatan konten",
+    "show": "Tampilkan postingan"
+  },
+  "altText": {
+    "badge": "ALT",
+    "add": "Tambahkan deskripsi",
+    "edit": "Edit deskripsi",
+    "titleImage": "Jelaskan gambar ini",
+    "titleVideo": "Jelaskan video ini",
+    "help": "Untuk orang yang tidak bisa melihatnya. Pembaca layar membacakannya dengan keras.",
+    "placeholder": "Apa yang ditampilkan? Sertakan teks apa pun di dalamnya.",
+    "show": "Tampilkan deskripsi",
+    "saved": "Deskripsi disimpan",
+    "saveFailed": "Tidak dapat menyimpan deskripsi"
+  },
   "liveRecap": {
     "title": "Rekap streaming",
     "justEnded": "Rekap streaming Anda",
@@ -241,6 +260,11 @@
       "hintDeny": "Sistem AI dan perayap yang menghormati sinyal ini diminta untuk tidak melatih audio, karya seni, dan tulisan Anda. Perayap yang mengabaikan sinyal tidak terhalang olehnya.",
       "saved": "Preferensi pelatihan AI disimpan"
     },
+    "defaultFeed": "Feed default",
+    "defaultFeedDesc": "Pilih feed yang terbuka setiap kali kamu membuka DeHub",
+    "feedToggles": "Atur ulang filter feed",
+    "feedTogglesDesc": "Filter yang kamu aktifkan di feed tetap menjadi default sampai kamu mengatur ulang",
+    "feedTogglesCleared": "Filter feed diatur ulang",
     "defaultProfileTab": "Tab profil bawaan",
     "defaultProfileTabDesc": "Pilih tab mana yang pertama dilihat pengunjung di profil Anda",
     "public": "Publik",
@@ -634,6 +658,10 @@
     "dmSent": "Terkirim {{amount}} token ke {{name}}!"
   },
   "postOptions": {
+    "embed": "Sematkan",
+    "copyEmbedCode": "Salin kode sematan",
+    "embedCodeCopied": "Kode sematan disalin",
+    "copyFailed": "Tidak dapat menyalin tautan",
     "options": "Opsi",
     "aiOverview": "Ikhtisar AI",
     "sendTip": "Kirim Tip",
@@ -1983,6 +2011,8 @@
     "copyFailed": "Tidak dapat disalin"
   },
   "profileOptions": {
+    "copyRssFeed": "Salin tautan feed RSS",
+    "rssFeedCopied": "Tautan feed RSS disalin",
     "copyProfileUrl": "Salin URL profil",
     "copyUsername": "Salin nama pengguna",
     "copyAddress": "Salin alamat",
@@ -5381,6 +5411,8 @@
     }
   },
   "goLive": {
+    "bigEvent": "Acara besar",
+    "bigEventHint": "Untuk penonton besar: penonton menonton sekitar 20 detik tertinggal, dengan lebih sedikit gangguan.",
     "goLive": "Siaran langsung",
     "youAreLive": "Anda sedang siaran",
     "streamReady": "Siaran siap",
@@ -6186,7 +6218,10 @@
     "play": "Putar",
     "pause": "Jeda",
     "listens_one": "{{count}} kali didengar",
-    "listens_other": "{{count}} kali didengar"
+    "listens_other": "{{count}} kali didengar",
+    "lyrics": "Lirik",
+    "lyricsLoading": "Mencari lirik…",
+    "lyricsNone": "Lirik tidak ditemukan"
   },
   "converter": {
     "seoTitle": "Konverter — impor video ke DeHub",

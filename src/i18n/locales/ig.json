@@ -1,4 +1,23 @@
 {
+  "contentWarning": {
+    "label": "Ịdọ aka ná ntị maka ọdịnaya",
+    "placeholder": "Dee ịdọ aka ná ntị gị ebe a",
+    "add": "Tinye ịdọ aka ná ntị maka ọdịnaya",
+    "remove": "Wepụ ịdọ aka ná ntị maka ọdịnaya",
+    "show": "Gosi ozi"
+  },
+  "altText": {
+    "badge": "ALT",
+    "add": "Tinye nkọwa",
+    "edit": "Dezie nkọwa",
+    "titleImage": "Kọwaa foto a",
+    "titleVideo": "Kọwaa vidiyo a",
+    "help": "Maka ndị na-enweghị ike ịhụ ya. Ndị na-agụ ihuenyo na-agụpụta ya n'olu dara ụda.",
+    "placeholder": "Gịnị ka ọ na-egosi? Tinye ederede ọ bụla dị n'ime ya.",
+    "show": "Gosi nkọwa",
+    "saved": "Echekwala nkọwa",
+    "saveFailed": "Enweghị ike ịchekwa nkọwa ahụ"
+  },
   "liveRecap": {
     "title": "Stream recap",
     "justEnded": "Gị iyi recap",
@@ -239,6 +258,11 @@
       "hintDeny": "AI usoro na crawlers na-akwanyere mgbaàmà a na-jụrụ ghara ịzụ na gị audio, artwork na ide. A naghị egbochi ndị na-agbagharị agbagharị na-eleghara ihe mgbaàmà ahụ anya.",
       "saved": "AI ọzụzụ mmasị echekwara"
     },
+    "defaultFeed": "Feed ndabara",
+    "defaultFeedDesc": "Họrọ feed ga-emeghe oge ọ bụla ị meghere DeHub",
+    "feedToggles": "Tọgharịa nzacha feed",
+    "feedTogglesDesc": "Nzacha ị gbanyere na feed ga-anọgide dị ka ndabara gị ruo mgbe ị tọgharịrị ha",
+    "feedTogglesCleared": "Etọgharịala nzacha feed",
     "defaultProfileTab": "Tab profaịlụ ndabara",
     "defaultProfileTabDesc": "Họrọ tab ndị ọbịa na-ahụ na mbụ na profaịlụ gị",
     "public": "Ọha",
@@ -630,6 +654,10 @@
     "dmSent": "E zigara {{name}} {{amount}} tokens!"
   },
   "postOptions": {
+    "embed": "Tinye n'ime",
+    "copyEmbedCode": "Detụọ koodu ntinye",
+    "embedCodeCopied": "Edepụtala koodu ntinye",
+    "copyFailed": "Enweghị ike idetụọ njikọ ahụ",
     "options": "Nhọrọ",
     "aiOverview": "AI Nchịkọta",
     "sendTip": "Ziga Onyinye",
@@ -1969,6 +1997,8 @@
     "copyFailed": "E nweghị ike idetuo ya"
   },
   "profileOptions": {
+    "copyRssFeed": "Detụọ njikọ feed RSS",
+    "rssFeedCopied": "Edepụtala njikọ feed RSS",
     "copyProfileUrl": "Detụọ URL profaịlụ",
     "copyUsername": "Detụọ aha onye ọrụ",
     "copyAddress": "Detụọ adreesị",
@@ -5313,6 +5343,8 @@
     }
   },
   "goLive": {
+    "bigEvent": "Nnukwu mmemme",
+    "bigEventHint": "Maka ọtụtụ ndị na-ekiri: ndị na-ekiri ga-ahụ ya ihe dị ka sekọnd 20 azụ, na nkwụsị ole na ole.",
     "goLive": "Gaa Live",
     "youAreLive": "Ị nọ Live",
     "streamReady": "Stream Ready",
@@ -6100,7 +6132,10 @@
     "play": "Gwuo",
     "pause": "Kwụsị",
     "listens_one": "{{count}} gee ntị",
-    "listens_other": "{{count}} na-ege ntị"
+    "listens_other": "{{count}} na-ege ntị",
+    "lyrics": "Okwu abụ",
+    "lyricsLoading": "Na-achọ okwu abụ…",
+    "lyricsNone": "Ahụghị okwu abụ"
   },
   "converter": {
     "seoTitle": "Converter — webụ vidio na DeHub",

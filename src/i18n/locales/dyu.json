@@ -1,4 +1,23 @@
 {
+  "contentWarning": {
+    "label": "Kɔnɔkow lasɔmini",
+    "placeholder": "I ka lasɔmini sɛbɛn yan",
+    "add": "Kɔnɔkow lasɔmini fara a kan",
+    "remove": "Kɔnɔkow lasɔmini bɔ",
+    "show": "Post jira"
+  },
+  "altText": {
+    "badge": "ALT",
+    "add": "Ɲɛfɔli fara a kan",
+    "edit": "Ɲɛfɔli yɛlɛma",
+    "titleImage": "Nin ja ɲɛfɔ",
+    "titleVideo": "Nin videwo ɲɛfɔ",
+    "help": "Mɔgɔ minnu tɛ se k'a ye, olu ye. Ekran kalanbagaw b'a kalan kan na.",
+    "placeholder": "A bɛ mun jira? Sɛbɛn o sɛbɛn b'a kɔnɔ, o fana sɛbɛn.",
+    "show": "Ɲɛfɔli jira",
+    "saved": "Ɲɛfɔli maralen don",
+    "saveFailed": "A ma se ka ɲɛfɔli mara"
+  },
   "liveRecap": {
     "title": "O kɔ, a ye n' ka soow lɔ.",
     "justEnded": "Récapitulatif de votre flux",
@@ -238,6 +257,11 @@
       "hintDeny": "O la, aw ka kan ka aw ka kumakanw, aw ka dɔnkiliw ani aw ka sɛbɛri kɛcogow degi. Mɔgɔ minw tɛ sɔn ka kuma, olu tɛ se ka kuma.",
       "saved": "Kalan min ka di mɔgɔ ye"
     },
+    "defaultFeed": "Feed bɛnnen",
+    "defaultFeedDesc": "A sugandi feed min bɛ dayɛlɛ tuma o tuma i ye DeHub dayɛlɛ",
+    "feedToggles": "Feed filtrew segin u nɔ na",
+    "feedTogglesDesc": "Filtre minw i ye u dayɛlɛ feed kɔnɔ, olu bɛ to i ka bɛnnenw ye fo i k'u segin",
+    "feedTogglesCleared": "Feed filtrew seginna u nɔ na",
     "defaultProfileTab": "Sɛbɛn tabu bɛnnen",
     "defaultProfileTabDesc": "Tabu min ka kan ka jira taalabagaw ɲɛ i ka sɛbɛn kan, o sugandi",
     "public": "Kɔrɔbɔ",
@@ -619,6 +643,10 @@
     "dmSent": "{{amount}} o ye koo ɲuman ye. cira {{name}} ma!"
   },
   "postOptions": {
+    "embed": "Don kɔnɔ",
+    "copyEmbedCode": "Don-kɔnɔ kode kopi",
+    "embedCodeCopied": "Don-kɔnɔ kode kopira",
+    "copyFailed": "A ma se ka lien kopi",
     "options": "Kɔrɔbɔ",
     "aiOverview": "A filɛ, a ye min fɔ",
     "sendTip": "Kɔrɔbɔ",
@@ -1942,6 +1970,8 @@
     "copyFailed": "A tun tɛ se ka kopi kɛ"
   },
   "profileOptions": {
+    "copyRssFeed": "RSS feed lien kopi",
+    "rssFeedCopied": "RSS feed lien kopira",
     "copyProfileUrl": "Profil URL kopi",
     "copyUsername": "Tɔgɔ kopi",
     "copyAddress": "Adirɛsi kopi",
@@ -5207,6 +5237,8 @@
     }
   },
   "goLive": {
+    "bigEvent": "Ko belebele",
+    "bigEventHint": "Mɔgɔ caman ye: lajɛbagaw bɛ a filɛ sɛgɔn 20 ɲɔgɔn kɔfɛ, tigɛli ka dɔgɔ.",
     "goLive": "Go Live",
     "youAreLive": "You're Live",
     "streamReady": "Stream Ready",
@@ -5981,7 +6013,10 @@
     "creator": "Danbaga",
     "play": "A be to ka to ka to",
     "pause": "N' ye n' ka baara dabila",
-    "listens_other": "{{count}} listens"
+    "listens_other": "{{count}} listens",
+    "lyrics": "Dɔnkili kumaw",
+    "lyricsLoading": "Dɔnkili kumaw bɛ ɲinina…",
+    "lyricsNone": "Dɔnkili kuma si ma sɔrɔ"
   },
   "converter": {
     "seoTitle": "Converter — video la DeHub la sɛbɛn",

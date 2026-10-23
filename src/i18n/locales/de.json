@@ -1,4 +1,23 @@
 {
+  "contentWarning": {
+    "label": "Inhaltswarnung",
+    "placeholder": "Schreib deine Warnung hier",
+    "add": "Inhaltswarnung hinzufügen",
+    "remove": "Inhaltswarnung entfernen",
+    "show": "Beitrag anzeigen"
+  },
+  "altText": {
+    "badge": "ALT",
+    "add": "Beschreibung hinzufügen",
+    "edit": "Beschreibung bearbeiten",
+    "titleImage": "Beschreibe dieses Bild",
+    "titleVideo": "Beschreibe dieses Video",
+    "help": "Für Menschen, die es nicht sehen können. Screenreader lesen es laut vor.",
+    "placeholder": "Was zeigt es? Gib auch Text darin wieder.",
+    "show": "Beschreibung anzeigen",
+    "saved": "Beschreibung gespeichert",
+    "saveFailed": "Beschreibung konnte nicht gespeichert werden"
+  },
   "liveRecap": {
     "title": "Stream-Zusammenfassung",
     "justEnded": "Ihre Stream-Zusammenfassung",
@@ -285,6 +304,11 @@
       "hintDeny": "KI-Systeme und Crawler, die dieses Signal respektieren, werden gebeten, nicht mit Ihrem Audio, Ihren Grafiken und Ihrem Schreiben zu trainieren. Crawler, die das Signal ignorieren, werden dadurch nicht blockiert.",
       "saved": "KI-Schulungspräferenz gespeichert"
     },
+    "defaultFeed": "Standard-Feed",
+    "defaultFeedDesc": "Wähle, welcher Feed sich bei jedem Öffnen von DeHub zeigt",
+    "feedToggles": "Feed-Filter zurücksetzen",
+    "feedTogglesDesc": "Filter, die du in einem Feed einschaltest, bleiben deine Standards, bis du sie zurücksetzt",
+    "feedTogglesCleared": "Feed-Filter zurückgesetzt",
     "defaultProfileTab": "Standard-Profiltab",
     "defaultProfileTabDesc": "Wähle, welchen Tab Besucher auf deinem Profil zuerst sehen",
     "public": "Öffentlich",
@@ -678,6 +702,10 @@
     "dmSent": "{{amount}} Tokens an {{name}} gesendet!"
   },
   "postOptions": {
+    "embed": "Einbetten",
+    "copyEmbedCode": "Einbettungscode kopieren",
+    "embedCodeCopied": "Einbettungscode kopiert",
+    "copyFailed": "Link konnte nicht kopiert werden",
     "options": "Optionen",
     "aiOverview": "KI-Übersicht",
     "sendTip": "Trinkgeld senden",
@@ -2031,6 +2059,8 @@
     "copyFailed": "Konnte nicht kopiert werden"
   },
   "profileOptions": {
+    "copyRssFeed": "RSS-Feed-Link kopieren",
+    "rssFeedCopied": "RSS-Feed-Link kopiert",
     "copyProfileUrl": "Profil-URL kopieren",
     "copyUsername": "Benutzername kopieren",
     "copyAddress": "Adresse kopieren",
@@ -5422,6 +5452,8 @@
     }
   },
   "goLive": {
+    "bigEvent": "Großes Event",
+    "bigEventHint": "Für ein großes Publikum: Zuschauer sehen etwa 20 Sekunden zeitversetzt, dafür mit weniger Aussetzern.",
     "goLive": "Live gehen",
     "youAreLive": "Du bist Live",
     "streamReady": "Stream bereit",
@@ -6227,7 +6259,10 @@
     "play": "Abspielen",
     "pause": "Pause",
     "listens_one": "{{count}} Wiedergabe",
-    "listens_other": "{{count}} Wiedergaben"
+    "listens_other": "{{count}} Wiedergaben",
+    "lyrics": "Songtext",
+    "lyricsLoading": "Songtext wird gesucht…",
+    "lyricsNone": "Kein Songtext gefunden"
   },
   "converter": {
     "seoTitle": "Converter — importiere ein Video zu DeHub",

@@ -1,4 +1,23 @@
 {
+  "contentWarning": {
+    "label": "Kontent haqida ogohlantirish",
+    "placeholder": "Ogohlantirishingizni shu yerga yozing",
+    "add": "Kontent haqida ogohlantirish qoʻshish",
+    "remove": "Kontent haqidagi ogohlantirishni olib tashlash",
+    "show": "Postni koʻrsatish"
+  },
+  "altText": {
+    "badge": "ALT",
+    "add": "Tavsif qoʻshish",
+    "edit": "Tavsifni tahrirlash",
+    "titleImage": "Bu rasmni tavsiflang",
+    "titleVideo": "Bu videoni tavsiflang",
+    "help": "Uni koʻra olmaydigan odamlar uchun. Ekran oʻquvchilari uni ovoz chiqarib oʻqiydi.",
+    "placeholder": "Unda nima koʻrsatilgan? Undagi har qanday matnni ham yozing.",
+    "show": "Tavsifni koʻrsatish",
+    "saved": "Tavsif saqlandi",
+    "saveFailed": "Tavsifni saqlab boʻlmadi"
+  },
   "liveRecap": {
     "title": "Strim xulosasi",
     "justEnded": "Strimingiz xulosasi",
@@ -239,6 +258,11 @@
       "hintDeny": "Ushbu signalga rioya qiladigan sun'iy intellekt tizimlari va qidiruv tizimlaridan sizning audio, badiiy asaringiz va yozuvlaringiz ustida mashq qilmaslik so'raladi. Signalni e'tiborsiz qoldiradigan qidiruv tizimlari u tomonidan bloklanmaydi.",
       "saved": "Sun'iy intellekt bo'yicha o'qitish afzalligi saqlandi"
     },
+    "defaultFeed": "Standart lenta",
+    "defaultFeedDesc": "DeHub'ni har ochganingizda qaysi lenta ochilishini tanlang",
+    "feedToggles": "Lenta filtrlarini tiklash",
+    "feedTogglesDesc": "Lentada yoqqan filtrlaringiz tiklamaguningizcha standart bo'lib qoladi",
+    "feedTogglesCleared": "Lenta filtrlari tiklandi",
     "defaultProfileTab": "Standart profil varag'i",
     "defaultProfileTabDesc": "Tashrif buyuruvchilar profilingizda birinchi qaysi varaqni ko'rishini tanlang",
     "public": "Ommaviy",
@@ -630,6 +654,10 @@
     "dmSent": "{{name}} ga {{amount}} tokenlar yuborildi!"
   },
   "postOptions": {
+    "embed": "Joylashtirish",
+    "copyEmbedCode": "Joylashtirish kodini nusxalash",
+    "embedCodeCopied": "Joylashtirish kodi nusxalandi",
+    "copyFailed": "Havolani nusxalab boʻlmadi",
     "options": "Parametrlar",
     "aiOverview": "Sun'iy intellektga umumiy nuqtai nazar",
     "sendTip": "Tip yuborish",
@@ -1992,6 +2020,8 @@
     "copyFailed": "Nusxalash mumkin emas"
   },
   "profileOptions": {
+    "copyRssFeed": "RSS lenta havolasini nusxalash",
+    "rssFeedCopied": "RSS lenta havolasi nusxalandi",
     "copyProfileUrl": "Profil URL nusxalash",
     "copyUsername": "Foydalanuvchi nomini nusxalash",
     "copyAddress": "Manzilni nusxalash",
@@ -5395,6 +5425,8 @@
     }
   },
   "goLive": {
+    "bigEvent": "Katta tadbir",
+    "bigEventHint": "Katta auditoriya uchun: tomoshabinlar taxminan 20 soniya kechikish bilan, lekin kamroq uzilishlar bilan tomosha qiladi.",
     "goLive": "Go Live",
     "youAreLive": "Siz jonli efirdasiz",
     "streamReady": "Stream tayyor",
@@ -6199,7 +6231,10 @@
     "play": "Oʻynash",
     "pause": "Pausekeyboard label",
     "listens_one": "{{count}} eshit",
-    "listens_other": "{{count}} tinglaydi"
+    "listens_other": "{{count}} tinglaydi",
+    "lyrics": "Qoʻshiq matni",
+    "lyricsLoading": "Matn qidirilmoqda…",
+    "lyricsNone": "Matn topilmadi"
   },
   "converter": {
     "seoTitle": "Konvertor — DeHub-ga video import qiling",

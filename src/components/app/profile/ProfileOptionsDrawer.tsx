@@ -1,6 +1,6 @@
 import { useTranslation as _useCopy } from 'react-i18next';
 import { useState } from 'react';
-import { AtSign, Handshake, UserMinus, Loader2, Award } from "lucide-react";
+import { AtSign, Handshake, UserMinus, Loader2, Award, Rss } from "lucide-react";
 import Copy from "@/components/ui/cut-icons/copy";
 import Wallet from "@/components/ui/cut-icons/wallet";
 import Gift from "@/components/ui/cut-icons/gifts";
@@ -22,6 +22,7 @@ import type { ProfileData } from '@/hooks/use-dehub-profile';
 import { LendBadgeRows } from './LendBadgeRows';
 import { viewerShareUrl } from '@/lib/share-url';
 import { trackShare } from '@/lib/analytics';
+import { profileFeedUrl } from '@/lib/profile-feed-url';
 
 interface ProfileOptionsDrawerProps {
   profile: ProfileData;
@@ -64,6 +65,14 @@ export function ProfileOptionsContent({
   const handleCopyUsername = () => {
     navigator.clipboard.writeText(profile.handle);
     toast.success(t('profileOptions.usernameCopied'));
+    setShareSheetOpen(false);
+  };
+
+  // A private account has no feed: the worker answers its .rss with a 404.
+  const handleCopyRssFeed = () => {
+    navigator.clipboard.writeText(profileFeedUrl(profile.handle));
+    trackShare('copy_link', { kind: 'profile_rss' });
+    toast.success(t('profileOptions.rssFeedCopied'));
     setShareSheetOpen(false);
   };
 
@@ -112,6 +121,17 @@ export function ProfileOptionsContent({
         </div>
         <span className="text-white font-medium">{t('profileOptions.copyUsername')}</span>
       </button>
+      {!profile.isPrivate && (
+        <button
+          onClick={handleCopyRssFeed}
+          className="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl bg-white/5 backdrop-blur-md border border-white/10 hover:bg-white/10 active:scale-[0.98] transition-[background-color,transform] text-left"
+        >
+          <div className="w-8 h-8 rounded-xl bg-white/10 backdrop-blur-sm flex items-center justify-center">
+            <Rss className="w-4 h-4 text-white" />
+          </div>
+          <span className="text-white font-medium">{t('profileOptions.copyRssFeed')}</span>
+        </button>
+      )}
       {isViewingOwnProfile && (
         <button
           onClick={() => {

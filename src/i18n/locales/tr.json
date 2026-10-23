@@ -1,4 +1,23 @@
 {
+  "contentWarning": {
+    "label": "İçerik uyarısı",
+    "placeholder": "Uyarınızı buraya yazın",
+    "add": "İçerik uyarısı ekle",
+    "remove": "İçerik uyarısını kaldır",
+    "show": "Gönderiyi göster"
+  },
+  "altText": {
+    "badge": "ALT",
+    "add": "Açıklama ekle",
+    "edit": "Açıklamayı düzenle",
+    "titleImage": "Bu görseli açıklayın",
+    "titleVideo": "Bu videoyu açıklayın",
+    "help": "Onu göremeyen insanlar için. Ekran okuyucular onu sesli okur.",
+    "placeholder": "Ne gösteriyor? İçindeki herhangi bir metni de ekleyin.",
+    "show": "Açıklamayı göster",
+    "saved": "Açıklama kaydedildi",
+    "saveFailed": "Açıklama kaydedilemedi"
+  },
   "liveRecap": {
     "title": "Akış özeti",
     "justEnded": "Akış özetiniz",
@@ -356,6 +375,11 @@
       "hintDeny": "Bu sinyale saygı duyan yapay zeka sistemleri ve tarayıcılardan ses, sanat eseriniz ve yazınız üzerinde eğitim almamaları istenir. Sinyali görmezden gelen tarayıcılar sinyal tarafından engellenmez.",
       "saved": "Yapay zeka eğitim tercihi kaydedildi"
     },
+    "defaultFeed": "Varsayılan akış",
+    "defaultFeedDesc": "DeHub'ı her açtığında hangi akışın açılacağını seç",
+    "feedToggles": "Akış filtrelerini sıfırla",
+    "feedTogglesDesc": "Bir akışta açtığın filtreler sen sıfırlayana kadar varsayılanın olarak kalır",
+    "feedTogglesCleared": "Akış filtreleri sıfırlandı",
     "defaultProfileTab": "Varsayılan profil sekmesi",
     "defaultProfileTabDesc": "Ziyaretçilerin profilinizde ilk hangi sekmeyi göreceğini seçin",
     "public": "Herkese Açık",
@@ -861,6 +885,9 @@
     "dmSent": "{{name}} adlı kişiye {{amount}} jeton gönderildi!"
   },
   "postOptions": {
+    "embed": "Yerleştir",
+    "copyEmbedCode": "Yerleştirme kodunu kopyala",
+    "embedCodeCopied": "Yerleştirme kodu kopyalandı",
     "options": "Seçenekler",
     "aiOverview": "Yapay zekaya genel bakış",
     "sendTip": "Bahşiş Gönder",
@@ -1721,7 +1748,19 @@
     "mostViewed": "En çok izlenen",
     "trendingWeek": "Bu hafta trend",
     "newest": "En yeni",
-    "videoChartOrder": "Müzik video listesi sıralaması"
+    "videoChartOrder": "Müzik video listesi sıralaması",
+    "country": "Ülke",
+    "quality": "Kalite",
+    "votes": "Oylar",
+    "plays": "Dinlenme",
+    "onAir": "Yayında",
+    "liveRadio": "Canlı radyo",
+    "pause": "Duraklat",
+    "listenLive": "Canlı dinle",
+    "nextStation": "Sonraki istasyon",
+    "shareStation": "İstasyonu paylaş",
+    "shareStationTitle": "DeHub Radio’da {{name}}",
+    "linkCopied": "Bağlantı kopyalandı"
   },
   "notFound": {
     "title": "Sayfa Bulunamadı",
@@ -2468,6 +2507,8 @@
     "copyFailed": "Kopyalanamadı"
   },
   "profileOptions": {
+    "copyRssFeed": "RSS akışı bağlantısını kopyala",
+    "rssFeedCopied": "RSS akışı bağlantısı kopyalandı",
     "copyProfileUrl": "Profil URL'sini kopyala",
     "copyUsername": "Kullanıcı adını kopyala",
     "copyAddress": "Adresi kopyala",
@@ -6462,6 +6503,8 @@
     }
   },
   "goLive": {
+    "bigEvent": "Büyük etkinlik",
+    "bigEventHint": "Büyük kitleler için: izleyiciler yayını yaklaşık 20 saniye geriden, daha az kesintiyle izler.",
     "goLive": "Canlı yayına geç",
     "youAreLive": "Yayındasınız",
     "streamReady": "Yayın hazır",
@@ -7276,7 +7319,10 @@
     "pause": "Duraklat",
     "listens_one": "{{count}} dinlenme",
     "listens_other": "{{count}} dinlenme",
-    "visualizerColour": "Görselleştirici rengi"
+    "visualizerColour": "Görselleştirici rengi",
+    "lyrics": "Şarkı sözleri",
+    "lyricsLoading": "Sözler aranıyor…",
+    "lyricsNone": "Söz bulunamadı"
   },
   "converter": {
     "seoTitle": "Dönüştürücü — DeHub'a video aktarın",
@@ -10861,6 +10907,7 @@
     "f45e06965f93": "Henüz takip önerisi yok",
     "34f5da2599fa": "Yeni hesap önerileri burada görünecek.",
     "bac527bf9a36": "Takip Önerileri",
+    "036cfd952896": "Kimi takip etmeli",
     "e139251e4f5b": "Gönderiyi Sil",
     "b3661ad568df": "Bu eylem geri alınamaz. Paylaşımınız kalıcı olarak silinecek.",
     "685ecb984ac2": "Siliniyor...",

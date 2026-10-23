@@ -1,4 +1,23 @@
 {
+  "contentWarning": {
+    "label": "Inhoudwaarskuwing",
+    "placeholder": "Skryf jou waarskuwing hier",
+    "add": "Voeg inhoudwaarskuwing by",
+    "remove": "Verwyder inhoudwaarskuwing",
+    "show": "Wys plasing"
+  },
+  "altText": {
+    "badge": "ALT",
+    "add": "Voeg 'n beskrywing by",
+    "edit": "Wysig beskrywing",
+    "titleImage": "Beskryf hierdie prent",
+    "titleVideo": "Beskryf hierdie video",
+    "help": "Vir mense wat dit nie kan sien nie. Skermlesers lees dit hardop voor.",
+    "placeholder": "Wat wys dit? Sluit enige teks daarin in.",
+    "show": "Wys beskrywing",
+    "saved": "Beskrywing gestoor",
+    "saveFailed": "Kon nie die beskrywing stoor nie"
+  },
   "liveRecap": {
     "title": "Stroom oorskakeling",
     "justEnded": "Jou stroomherhaling",
@@ -239,6 +258,11 @@
       "hintDeny": "AI-stelsels en kruipers wat hierdie sein respekteer, word gevra om nie op u klank-, kunswerk- en skryfwerk op te lei nie. Kruipers wat die sein ignoreer, word nie daardeur geblokkeer nie.",
       "saved": "AI-opleidingsvoorkeur gestoor"
     },
+    "defaultFeed": "Verstek-voer",
+    "defaultFeedDesc": "Kies watter voer oopmaak elke keer as jy DeHub oopmaak",
+    "feedToggles": "Stel voerfilters terug",
+    "feedTogglesDesc": "Filters wat jy in 'n voer aanskakel, bly jou verstek totdat jy dit terugstel",
+    "feedTogglesCleared": "Voerfilters teruggestel",
     "defaultProfileTab": "Verstek profieloortjie",
     "defaultProfileTabDesc": "Kies watter oortjie besoekers eerste op jou profiel sien",
     "public": "Publiek",
@@ -632,6 +656,10 @@
     "dmSent": "{{amount}} tokens aan {{name}} gestuur!"
   },
   "postOptions": {
+    "embed": "Inbed",
+    "copyEmbedCode": "Kopieer inbedkode",
+    "embedCodeCopied": "Inbedkode gekopieer",
+    "copyFailed": "Kon nie skakel kopieer nie",
     "options": "Opsies",
     "aiOverview": "AI-oorsig",
     "sendTip": "Stuur fooi",
@@ -2009,6 +2037,8 @@
     "copyFailed": "Kon nie kopieer nie"
   },
   "profileOptions": {
+    "copyRssFeed": "Kopieer RSS-voerskakel",
+    "rssFeedCopied": "RSS-voerskakel gekopieer",
     "copyProfileUrl": "Kopieer profiel-URL",
     "copyUsername": "Kopieer gebruikersnaam",
     "copyAddress": "Kopieer adres",
@@ -5404,6 +5434,8 @@
     }
   },
   "goLive": {
+    "bigEvent": "Groot geleentheid",
+    "bigEventHint": "Vir groot gehore: kykers kyk sowat 20 sekondes agter, met minder onderbrekings.",
     "goLive": "Gaan Regstreeks",
     "youAreLive": "Jy is Regstreeks",
     "streamReady": "Stroom Gereed",
@@ -6207,7 +6239,10 @@
     "play": "Speel",
     "pause": "Pouseer",
     "listens_one": "{{count}} luister",
-    "listens_other": "{{count}} luisteraars"
+    "listens_other": "{{count}} luisteraars",
+    "lyrics": "Lirieke",
+    "lyricsLoading": "Soek lirieke…",
+    "lyricsNone": "Geen lirieke gevind nie"
   },
   "converter": {
     "seoTitle": "Omskakelaar — voer 'n video in DeHub in",

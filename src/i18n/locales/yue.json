@@ -1,4 +1,23 @@
 {
+  "contentWarning": {
+    "label": "內容警告",
+    "placeholder": "喺度寫你嘅警告",
+    "add": "加入內容警告",
+    "remove": "移除內容警告",
+    "show": "顯示帖子"
+  },
+  "altText": {
+    "badge": "ALT",
+    "add": "加入描述",
+    "edit": "編輯描述",
+    "titleImage": "描述呢張圖片",
+    "titleVideo": "描述呢條片",
+    "help": "畀睇唔到嘅人用。螢幕閱讀器會讀出嚟。",
+    "placeholder": "入面有啲咩？圖入面嘅字都寫埋。",
+    "show": "顯示描述",
+    "saved": "已儲存描述",
+    "saveFailed": "儲存唔到描述"
+  },
   "liveRecap": {
     "title": "串流總結",
     "justEnded": "你嘅串流總結",
@@ -239,6 +258,11 @@
       "hintDeny": "尊重呢個訊號嘅人工智能系統同爬蟲程式被要求唔好訓練你嘅音頻、藝術品同寫作。忽略訊號嘅爬蟲程式唔會被佢阻擋。",
       "saved": "儲存咗 AI 訓練偏好設定"
     },
+    "defaultFeed": "預設動態",
+    "defaultFeedDesc": "揀選每次打開 DeHub 時顯示嘅動態",
+    "feedToggles": "重設動態篩選",
+    "feedTogglesDesc": "你喺動態開咗嘅篩選會保留做預設，直到你重設為止",
+    "feedTogglesCleared": "動態篩選已重設",
     "defaultProfileTab": "預設檔案分頁",
     "defaultProfileTabDesc": "揀訪客喺你檔案上最先睇到邊個分頁",
     "public": "公開",
@@ -630,6 +654,10 @@
     "dmSent": "已經傳送 {{amount}} 代幣 畀 {{name}}！"
   },
   "postOptions": {
+    "embed": "嵌入",
+    "copyEmbedCode": "複製嵌入代碼",
+    "embedCodeCopied": "已複製嵌入代碼",
+    "copyFailed": "複製唔到連結",
     "options": "選項",
     "aiOverview": "人工智能概覽",
     "sendTip": "送禮物",
@@ -1975,6 +2003,8 @@
     "copyFailed": "無法複製"
   },
   "profileOptions": {
+    "copyRssFeed": "複製 RSS 訂閱連結",
+    "rssFeedCopied": "已複製 RSS 訂閱連結",
     "copyProfileUrl": "複製個人資料連結",
     "copyUsername": "複製用戶名",
     "copyAddress": "複製地址",
@@ -5366,6 +5396,8 @@
     }
   },
   "goLive": {
+    "bigEvent": "大型活動",
+    "bigEventHint": "啱大量觀眾：觀眾會遲大約 20 秒睇，但冇咁易斷。",
     "goLive": "去直播",
     "youAreLive": "你正在直播",
     "streamReady": "串流已準備好",
@@ -6170,7 +6202,10 @@
     "play": "玩",
     "pause": "暫停",
     "listens_one": "{{count}} 聽",
-    "listens_other": "{{count}} 聽緊"
+    "listens_other": "{{count}} 聽緊",
+    "lyrics": "歌詞",
+    "lyricsLoading": "搵緊歌詞…",
+    "lyricsNone": "搵唔到歌詞"
   },
   "converter": {
     "seoTitle": "轉換器 — 匯入影片到 DeHub",

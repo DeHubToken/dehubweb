@@ -1,4 +1,23 @@
 {
+  "contentWarning": {
+    "label": "Ukhunmanta willakuy",
+    "placeholder": "Kaypi willakuyniykita qillqay",
+    "add": "Ukhunmanta willakuyta yapay",
+    "remove": "Ukhunmanta willakuyta qichuy",
+    "show": "Qillqata rikuchiy"
+  },
+  "altText": {
+    "badge": "ALT",
+    "add": "Willakuyta yapay",
+    "edit": "Willakuyta allichay",
+    "titleImage": "Kay siq'ita willay",
+    "titleVideo": "Kay videota willay",
+    "help": "Mana rikuyta atiqkunapaq. Pantalla ñawinchaqkunam kunkawan ñawinchanku.",
+    "placeholder": "¿Imatataq rikuchin? Ukhunpi ima qillqapas kaptin, chaytapas qillqay.",
+    "show": "Willakuyta rikuchiy",
+    "saved": "Willakuyqa waqaychasqañam",
+    "saveFailed": "Manam willakuyta waqaychayta atikurqanchu"
+  },
   "liveRecap": {
     "title": "Stream recap nisqa",
     "justEnded": "Qampa mayu recap",
@@ -239,6 +258,11 @@
       "hintDeny": "Sistemas AI kaqmanta chaymanta rastreadores kaqmanta kay señalta respetakuq mañasqa kanku ama audioykipi, arte ruwasqaykipi chaymanta qillqaykipi yachachinankupaq. Chay señalta mana uyariq rastreadorkunaqa manam chaywan harkasqachu.",
       "saved": "AI yachachiy munasqa waqaychasqa"
     },
+    "defaultFeed": "Ñawpaq feed",
+    "defaultFeedDesc": "Akllay mayqin feed kichakunanta sapa DeHub kichaptiyki",
+    "feedToggles": "Feed filtrokunata musuqmanta churay",
+    "feedTogglesDesc": "Feedpi hap'ichisqayki filtrokunaqa ñawpaqniykipaq qhepakun musuqmanta churanaykikama",
+    "feedTogglesCleared": "Feed filtrokuna musuqmanta churasqa",
     "defaultProfileTab": "Ñawpaq willakuy pestaña",
     "defaultProfileTabDesc": "Willakuyniykipi, watukuqkuna mayqin pestañata ñawpaqta rikunanta akllay",
     "public": "Tukuypaq",
@@ -630,6 +654,10 @@
     "dmSent": "{{amount}} fichas nisqakuna {{name}}-man apachisqa!"
   },
   "postOptions": {
+    "embed": "Churay",
+    "copyEmbedCode": "Churana kodigota copiay",
+    "embedCodeCopied": "Churana kodigoqa copiasqañam",
+    "copyFailed": "Manam tinkiyta copiayta atikurqanchu",
     "options": "Akllakuna",
     "aiOverview": "AI nisqamanta qhawariy",
     "sendTip": "Propina apachiy",
@@ -2006,6 +2034,8 @@
     "copyFailed": "Mana kopiayta atirqachu"
   },
   "profileOptions": {
+    "copyRssFeed": "RSS feed tinkiyta copiay",
+    "rssFeedCopied": "RSS feed tinkiyqa copiasqañam",
     "copyProfileUrl": "Profilpa URL nisqanta copiay",
     "copyUsername": "Sutita copiay",
     "copyAddress": "Ñanta copiay",
@@ -5382,6 +5412,8 @@
     }
   },
   "goLive": {
+    "bigEvent": "Hatun raymi",
+    "bigEventHint": "Achka qhawaqkunapaq: qhawaqkunaqa yaqa 20 sikundu qhipallata qhawanqaku, pisi sayaykunawan.",
     "goLive": "Ama Kawsay",
     "youAreLive": "Kawsayña Kachkan",
     "streamReady": "Stream Lispu",
@@ -6185,7 +6217,10 @@
     "play": "Pukllay",
     "pause": "keyboard label",
     "listens_one": "{{count}} uyariychik",
-    "listens_other": "{{count}} uyarin"
+    "listens_other": "{{count}} uyarin",
+    "lyrics": "Takiy simikuna",
+    "lyricsLoading": "Simikunata maskachkan…",
+    "lyricsNone": "Mana simikuna tarikunchu"
   },
   "converter": {
     "seoTitle": "Convertidor — ama video DeHub-man apachiy",

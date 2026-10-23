@@ -1,4 +1,23 @@
 {
+  "contentWarning": {
+    "label": "Innholdsadvarsel",
+    "placeholder": "Skriv advarselen din her",
+    "add": "Legg til innholdsadvarsel",
+    "remove": "Fjern innholdsadvarsel",
+    "show": "Vis innlegg"
+  },
+  "altText": {
+    "badge": "ALT",
+    "add": "Legg til en beskrivelse",
+    "edit": "Rediger beskrivelse",
+    "titleImage": "Beskriv dette bildet",
+    "titleVideo": "Beskriv denne videoen",
+    "help": "For folk som ikke kan se det. Skjermlesere leser det høyt.",
+    "placeholder": "Hva viser det? Ta med eventuell tekst i det.",
+    "show": "Vis beskrivelse",
+    "saved": "Beskrivelse lagret",
+    "saveFailed": "Kunne ikke lagre beskrivelsen"
+  },
   "liveRecap": {
     "title": "Strømmeoppsummering",
     "justEnded": "Oppsummeringen av strømmen din",
@@ -241,6 +260,11 @@
       "hintDeny": "AI-systemer og robotsøkere som respekterer dette signalet blir bedt om ikke å trene på lyd, grafikk og tekst. Robotsøkere som ignorerer signalet blokkeres ikke av det.",
       "saved": "AI-opplæringspreferanser lagret"
     },
+    "defaultFeed": "Standardfeed",
+    "defaultFeedDesc": "Velg hvilken feed som åpnes hver gang du åpner DeHub",
+    "feedToggles": "Tilbakestill feedfiltre",
+    "feedTogglesDesc": "Filtre du slår på i en feed, forblir standardene dine til du tilbakestiller dem",
+    "feedTogglesCleared": "Feedfiltre tilbakestilt",
     "defaultProfileTab": "Standardfane på profilen",
     "defaultProfileTabDesc": "Velg hvilken fane besøkende ser først på profilen din",
     "public": "Offentlig",
@@ -632,6 +656,10 @@
     "dmSent": "Sendte {{amount}} tokens til {{name}}!"
   },
   "postOptions": {
+    "embed": "Bygg inn",
+    "copyEmbedCode": "Kopier innbyggingskode",
+    "embedCodeCopied": "Innbyggingskode kopiert",
+    "copyFailed": "Kunne ikke kopiere lenken",
     "options": "Alternativer",
     "aiOverview": "AI-oversikt",
     "sendTip": "Send tips",
@@ -1979,6 +2007,8 @@
     "copyFailed": "Kunne ikke kopiere"
   },
   "profileOptions": {
+    "copyRssFeed": "Kopier lenke til RSS-feed",
+    "rssFeedCopied": "Lenke til RSS-feed kopiert",
     "copyProfileUrl": "Kopier profil-URL",
     "copyUsername": "Kopier brukernavn",
     "copyAddress": "Kopier adresse",
@@ -5361,6 +5391,8 @@
     }
   },
   "goLive": {
+    "bigEvent": "Stort arrangement",
+    "bigEventHint": "For et stort publikum: seerne ser omtrent 20 sekunder forsinket, med færre avbrudd.",
     "goLive": "Gå Live",
     "youAreLive": "Du er Live",
     "streamReady": "Stream Klar",
@@ -6165,7 +6197,10 @@
     "play": "Spill",
     "pause": "Pause",
     "listens_one": "{{count}} hør",
-    "listens_other": "{{count}} lytter"
+    "listens_other": "{{count}} lytter",
+    "lyrics": "Sangtekst",
+    "lyricsLoading": "Finner sangtekst…",
+    "lyricsNone": "Fant ingen sangtekst"
   },
   "converter": {
     "seoTitle": "Konverter — importer en video til DeHub",

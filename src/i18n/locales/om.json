@@ -1,4 +1,23 @@
 {
+  "contentWarning": {
+    "label": "Akeekkachiisa qabiyyee",
+    "placeholder": "Akeekkachiisa kee asitti barreessi",
+    "add": "Akeekkachiisa qabiyyee dabali",
+    "remove": "Akeekkachiisa qabiyyee haqi",
+    "show": "Maxxansa agarsiisi"
+  },
+  "altText": {
+    "badge": "ALT",
+    "add": "Ibsa dabali",
+    "edit": "Ibsa gulaali",
+    "titleImage": "Suuraa kana ibsi",
+    "titleVideo": "Viidiyoo kana ibsi",
+    "help": "Namoota arguu hin dandeenyeef. Dubbistoonni iskiriinii sagaleedhaan dubbisu.",
+    "placeholder": "Maal agarsiisa? Barreeffama keessa jiru kamiyyuu itti dabali.",
+    "show": "Ibsa agarsiisi",
+    "saved": "Ibsi olkaa'ameera",
+    "saveFailed": "Ibsa olkaa'uun hin danda'amne"
+  },
   "liveRecap": {
     "title": "Cuunfaa tamsaasaa",
     "justEnded": "Irra deebiin yaa'aa keessan",
@@ -239,6 +258,11 @@
       "hintDeny": "Sirnoonni AI fi crawlers mallattoo kana kabajan sagalee, hojii aartii fi barreeffama keessan irratti akka hin leenjifamne gaafatamna. Crawlers kanneen mallattoo tuffatan ittiin hin ugguraman.",
       "saved": "Filannoon leenjii AI qusatameera"
     },
+    "defaultFeed": "Feed durtii",
+    "defaultFeedDesc": "Yeroo DeHub banattu hunda feed kam akka banamu filadhu",
+    "feedToggles": "Calleessitoota feed haaromsi",
+    "feedTogglesDesc": "Calleessitoonni feed keessatti banattu hanga haaromsitutti durtii kee ta'anii turu",
+    "feedTogglesCleared": "Calleessitoonni feed haaromfamaniiru",
     "defaultProfileTab": "Tab profaayilii durtii",
     "defaultProfileTabDesc": "Daawwattoonni profaayilii kee irratti tab kam jalqaba akka arganu filadhu",
     "public": "Ummataa",
@@ -630,6 +654,10 @@
     "dmSent": "{{amount}} mallattoolee {{name}}-f ergame!"
   },
   "postOptions": {
+    "embed": "Keessa galchi",
+    "copyEmbedCode": "Koodii keessa galchuu waraabi",
+    "embedCodeCopied": "Koodiin keessa galchuu waraabame",
+    "copyFailed": "Liinkii waraabuun hin danda'amne",
     "options": "Filannoowwan",
     "aiOverview": "Haala waliigalaa AI",
     "sendTip": "Tiippii Ergi",
@@ -1985,6 +2013,8 @@
     "copyFailed": "Kopi godhamuu hin dandeenye"
   },
   "profileOptions": {
+    "copyRssFeed": "Liinkii RSS feed waraabi",
+    "rssFeedCopied": "Liinkiin RSS feed waraabame",
     "copyProfileUrl": "URL piroofaayilii waraabi",
     "copyUsername": "Maqaa fayyadamaa waraabi",
     "copyAddress": "Teessoo waraabi",
@@ -5327,6 +5357,8 @@
     }
   },
   "goLive": {
+    "bigEvent": "Taatee guddaa",
+    "bigEventHint": "Daawwattoota baay'eef: daawwattoonni gara sekondii 20 booda ilaalu, addaan citiinsi xiqqaa ta'a.",
     "goLive": "Go Live",
     "youAreLive": "Jira Jirta",
     "streamReady": "Stream Ready",
@@ -6122,7 +6154,10 @@
     "play": "taphachuu",
     "pause": "Gidduutti dhaabuu",
     "listens_one": "{{count}} dhaggeeffadhaa",
-    "listens_other": "{{count}} dhaggeeffata"
+    "listens_other": "{{count}} dhaggeeffata",
+    "lyrics": "Jechoota sirbaa",
+    "lyricsLoading": "Jechoota barbaadaa jira…",
+    "lyricsNone": "Jechoonni hin argamne"
   },
   "converter": {
     "seoTitle": "Converter — video gara DeHub galchuu",

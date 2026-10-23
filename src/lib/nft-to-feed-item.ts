@@ -2,11 +2,12 @@
  * Shared NFT → FeedItem mapper
  * Used by bookmarks, notifications, and anywhere we need to convert raw DeHubNFT to renderable feed cards.
  */
-import { buildAvatarUrl, buildImageUrl, buildVideoUrl, buildFeedImageUrls } from '@/lib/media-url';
+import { buildAvatarUrl, buildImageUrl, buildVideoUrl, buildHlsUrl, buildFeedImageUrls } from '@/lib/media-url';
 import { formatDuration, formatViews, formatTimeAgo } from '@/lib/feed-utils';
 import type { DeHubNFT } from '@/lib/api/dehub';
 import { resolveDislikeCount, resolveLikeCount, resolveMyReaction, resolveReactionCounts, resolveViewCount } from '@/lib/engagement';
 import type { VideoItem, ImagePost, TextPost, FeedItem } from '@/types/feed.types';
+import { toStoryboard } from '@/lib/storyboard';
 
 function detectPostType(nft: DeHubNFT): 'video' | 'image' | 'text' {
   const postType = (nft.postType || nft.media_type) as string | undefined;
@@ -28,11 +29,15 @@ function mapNFTToVideoItem(nft: DeHubNFT): VideoItem {
     id,
     type: 'video',
     contentRating: nft.contentRating,
+    mediaDescriptions: nft.mediaDescriptions,
+    spoilerText: nft.spoilerText,
     shopLinks: (nft as any).shopLinks,
     shopListingCount: (nft as any).shopListingCount,
     thumbnail,
     videoUrl: videoUrl || nft.videoUrl || undefined,
+    hlsUrl: buildHlsUrl(nft.hlsUrl),
     transcodingStatus: nft.transcodingStatus,
+    storyboard: toStoryboard(nft.storyboard),
     duration: formatDuration(nft.videoDuration || nft.duration),
     title: nft.name || nft.title || nft.description?.split('\n')[0] || '',
     description: nft.description || undefined,
@@ -80,6 +85,8 @@ function mapNFTToImagePost(nft: DeHubNFT): ImagePost {
     id,
     type: 'image',
     contentRating: nft.contentRating,
+    mediaDescriptions: nft.mediaDescriptions,
+    spoilerText: nft.spoilerText,
     shopLinks: (nft as any).shopLinks,
     shopListingCount: (nft as any).shopListingCount,
     username: nft.minterUsername || nft.mintername || nft.minterDisplayName || 'unknown',
@@ -135,6 +142,8 @@ function mapNFTToTextPost(nft: DeHubNFT): TextPost {
     articleBody: nft.articleBody,
     articleImageUrl: nft.articleImageUrl ? buildFeedImageUrls([nft.articleImageUrl])?.[0] : undefined,
     contentRating: nft.contentRating,
+    mediaDescriptions: nft.mediaDescriptions,
+    spoilerText: nft.spoilerText,
     shopLinks: (nft as any).shopLinks,
     shopListingCount: (nft as any).shopListingCount,
     author: {

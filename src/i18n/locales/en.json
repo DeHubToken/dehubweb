@@ -1,4 +1,23 @@
 {
+  "contentWarning": {
+    "label": "Content warning",
+    "placeholder": "Write your warning here",
+    "add": "Add content warning",
+    "remove": "Remove content warning",
+    "show": "Show post"
+  },
+  "altText": {
+    "badge": "ALT",
+    "add": "Add a description",
+    "edit": "Edit description",
+    "titleImage": "Describe this image",
+    "titleVideo": "Describe this video",
+    "help": "For people who can't see it. Screen readers read it aloud.",
+    "placeholder": "What does it show? Include any text in it.",
+    "show": "Show description",
+    "saved": "Description saved",
+    "saveFailed": "Could not save the description"
+  },
   "liveRecap": {
     "title": "Stream recap",
     "justEnded": "Your stream recap",
@@ -319,6 +338,11 @@
       "hintDeny": "AI systems and crawlers that respect this signal are asked not to train on your audio, artwork and writing. Crawlers that ignore the signal are not blocked by it.",
       "saved": "AI training preference saved"
     },
+    "defaultFeed": "Default feed",
+    "defaultFeedDesc": "Choose which feed opens every time you open DeHub",
+    "feedToggles": "Reset feed toggles",
+    "feedTogglesDesc": "Filters you turn on in a feed stay on as your defaults until you reset them",
+    "feedTogglesCleared": "Feed toggles reset",
     "defaultProfileTab": "Default profile tab",
     "defaultProfileTabDesc": "Choose which tab visitors see first on your profile",
     "public": "Public",
@@ -824,6 +848,9 @@
     "dmSent": "Sent {{amount}} tokens to {{name}}!"
   },
   "postOptions": {
+    "embed": "Embed",
+    "copyEmbedCode": "Copy embed code",
+    "embedCodeCopied": "Embed code copied",
     "options": "Options",
     "aiOverview": "AI overview",
     "sendTip": "Send Tip",
@@ -1684,7 +1711,19 @@
     "mostViewed": "Most viewed",
     "trendingWeek": "Trending this week",
     "newest": "Newest",
-    "videoChartOrder": "Music video chart order"
+    "videoChartOrder": "Music video chart order",
+    "country": "Country",
+    "quality": "Quality",
+    "votes": "Votes",
+    "plays": "Plays",
+    "onAir": "On air",
+    "liveRadio": "Live radio",
+    "pause": "Pause",
+    "listenLive": "Listen live",
+    "nextStation": "Next station",
+    "shareStation": "Share station",
+    "shareStationTitle": "{{name}} on DeHub Radio",
+    "linkCopied": "Link copied"
   },
   "notFound": {
     "title": "Page Not Found",
@@ -2421,6 +2460,8 @@
     "copyFailed": "Could not copy"
   },
   "profileOptions": {
+    "copyRssFeed": "Copy RSS feed link",
+    "rssFeedCopied": "RSS feed link copied",
     "copyProfileUrl": "Copy profile URL",
     "copyUsername": "Copy username",
     "copyAddress": "Copy address",
@@ -6414,6 +6455,8 @@
     }
   },
   "goLive": {
+    "bigEvent": "Big event",
+    "bigEventHint": "For big audiences: viewers watch about 20 seconds behind, with fewer interruptions.",
     "goLive": "Go Live",
     "youAreLive": "You're Live",
     "streamReady": "Stream Ready",
@@ -7228,7 +7271,10 @@
     "pause": "Pause",
     "listens_one": "{{count}} listen",
     "listens_other": "{{count}} listens",
-    "visualizerColour": "Visualizer colour"
+    "visualizerColour": "Visualizer colour",
+    "lyrics": "Lyrics",
+    "lyricsLoading": "Finding lyrics…",
+    "lyricsNone": "No lyrics found"
   },
   "converter": {
     "seoTitle": "Converter — import a video to DeHub",
@@ -10813,6 +10859,7 @@
     "f45e06965f93": "No follow suggestions yet",
     "34f5da2599fa": "New account suggestions will appear here.",
     "bac527bf9a36": "Follow Suggestions",
+    "036cfd952896": "Who to follow",
     "e139251e4f5b": "Delete Post",
     "b3661ad568df": "This action cannot be undone. Your post will be permanently removed.",
     "685ecb984ac2": "Deleting...",

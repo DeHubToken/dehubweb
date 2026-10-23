@@ -168,6 +168,8 @@ export interface DeHubNFT {
   imageUrl: string;
   imageUrls?: string[];
   videoUrl?: string;
+  /** HLS master playlist key, on public posts with a rendition ready. See buildHlsUrl. */
+  hlsUrl?: string;
   media_url?: string;
   thumbnail_url?: string;
   postType: "video" | "image" | "audio";
@@ -274,6 +276,19 @@ export interface DeHubNFT {
   /** Async video transcode state, written optimistically before the CDN file
    *  exists. Absent on posts predating this field — treat as 'done'. */
   transcodingStatus?: 'pending' | 'on' | 'done' | 'failed';
+  /**
+   * Seek-preview sprite sheet as the API sends it: `url` is a bucket key, and
+   * `private` marks a paid post's sheet. Read it through toStoryboard.
+   */
+  storyboard?: {
+    url: string;
+    spriteWidth: number;
+    spriteHeight: number;
+    spriteCount: number;
+    spriteDuration: number;
+    columns: number;
+    private?: boolean;
+  };
   audioUrl?: string;
   audioDuration?: number;
 
@@ -291,6 +306,10 @@ export interface DeHubNFT {
   isDeleted?: boolean;
   /** Absent means safe — the API stores nothing for the default. */
   contentRating?: ContentRating;
+  /** Alt text, one per piece of media in display order (gallery images by position, a video first). */
+  mediaDescriptions?: string[];
+  /** Content warning: the post opens collapsed behind this one line. */
+  spoilerText?: string;
   /**
    * The creator published this for children — the Kids Mode allowlist.
    *

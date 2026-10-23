@@ -1,4 +1,23 @@
 {
+  "contentWarning": {
+    "label": "Digniinta waxa ku jira",
+    "placeholder": "Halkan ku qor digniintaada",
+    "add": "Ku dar digniinta waxa ku jira",
+    "remove": "Ka saar digniinta waxa ku jira",
+    "show": "Muuji qoraalka"
+  },
+  "altText": {
+    "badge": "ALT",
+    "add": "Ku dar sharraxaad",
+    "edit": "Wax ka beddel sharraxaadda",
+    "titleImage": "Sharax sawirkan",
+    "titleVideo": "Sharax muuqaalkan",
+    "help": "Dadka aan arki karin. Akhristayaasha shaashaddu kor ayay u akhriyaan.",
+    "placeholder": "Maxay muujinaysaa? Ku dar qoraal kasta oo ku jira.",
+    "show": "Muuji sharraxaadda",
+    "saved": "Sharraxaadda waa la keydiyay",
+    "saveFailed": "Lama keydin karin sharraxaadda"
+  },
   "liveRecap": {
     "title": "Dib-u-cusboonaysiinta qulqulka",
     "justEnded": "Dib u soo celi durdurkaaga",
@@ -239,6 +258,11 @@
       "hintDeny": "Nidaamyada AI iyo crawlers ixtiraamaya calaamadan waxaa laga codsanayaa inaysan ku tababarin maqalkaaga, farshaxankaaga iyo qoraaga. Crawlers oo iska indho tiraya calaamadda looma xannibo.",
       "saved": "Doorbididda tababarka AI ee la badbaadiyay"
     },
+    "defaultFeed": "Feed-ka caadiga ah",
+    "defaultFeedDesc": "Dooro feed-ka furmaya mar kasta oo aad furto DeHub",
+    "feedToggles": "Dib u deji shaandhooyinka feed-ka",
+    "feedTogglesDesc": "Shaandhooyinka aad ka shiddo feed-ka waxay ahaanayaan kuwa caadiga ah ilaa aad dib u dejiso",
+    "feedTogglesCleared": "Shaandhooyinka feed-ka dib ayaa loo dejiyay",
     "defaultProfileTab": "Tabka profilka caadiga ah",
     "defaultProfileTabDesc": "Dooro tabka ay booqdayaashu marka hore arkaan profilkaaga",
     "public": "Dadweyne",
@@ -630,6 +654,10 @@
     "dmSent": "{{amount}} tokens ayaa loo diray {{name}}!"
   },
   "postOptions": {
+    "embed": "Ku dhex rid",
+    "copyEmbedCode": "Koobi koodka ku dhex ridista",
+    "embedCodeCopied": "Koodka ku dhex ridista waa la koobiyay",
+    "copyFailed": "Lama koobiyi karin xiriirka",
     "options": "Ikhtiyaarada",
     "aiOverview": "Aragtida guud ee AI",
     "sendTip": "Dir Bakhshiish",
@@ -1973,6 +2001,8 @@
     "copyFailed": "Waan ku guuldareystay inaan nuqul ka sameeyo"
   },
   "profileOptions": {
+    "copyRssFeed": "Koobi xiriirka quudinta RSS",
+    "rssFeedCopied": "Xiriirka quudinta RSS waa la koobiyay",
     "copyProfileUrl": "Koobi URL-ka profile-ka",
     "copyUsername": "Koobi magaca isticmaalaha",
     "copyAddress": "Koobi cinwaanka",
@@ -5286,6 +5316,8 @@
     }
   },
   "goLive": {
+    "bigEvent": "Dhacdo weyn",
+    "bigEventHint": "Daawadayaal badan: daawadayaashu waxay daawadaan qiyaastii 20 ilbiriqsi dib, iyadoo kala go'yadu ay yar yihiin.",
     "goLive": "Go Live",
     "youAreLive": "Waxaa Live ah",
     "streamReady": "Stream Ready",
@@ -6080,7 +6112,10 @@
     "play": "Ciyaar",
     "pause": "Jooji",
     "listens_one": "{{count}} dhageyso",
-    "listens_other": "{{count}} dhagaystayaasha"
+    "listens_other": "{{count}} dhagaystayaasha",
+    "lyrics": "Erayada heesta",
+    "lyricsLoading": "Waxaa la raadinayaa erayada…",
+    "lyricsNone": "Erayo lama helin"
   },
   "converter": {
     "seoTitle": "Converter — soo dejiso video in DeHub",

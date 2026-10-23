@@ -1,4 +1,23 @@
 {
+  "contentWarning": {
+    "label": "Tartalmi figyelmeztetés",
+    "placeholder": "Írd ide a figyelmeztetést",
+    "add": "Tartalmi figyelmeztetés hozzáadása",
+    "remove": "Tartalmi figyelmeztetés eltávolítása",
+    "show": "Bejegyzés megjelenítése"
+  },
+  "altText": {
+    "badge": "ALT",
+    "add": "Leírás hozzáadása",
+    "edit": "Leírás szerkesztése",
+    "titleImage": "Írd le ezt a képet",
+    "titleVideo": "Írd le ezt a videót",
+    "help": "Azoknak, akik nem látják. A képernyőolvasók felolvassák.",
+    "placeholder": "Mit ábrázol? Írd le a rajta lévő szöveget is.",
+    "show": "Leírás megjelenítése",
+    "saved": "Leírás mentve",
+    "saveFailed": "Nem sikerült menteni a leírást"
+  },
   "liveRecap": {
     "title": "Adatfolyam-összefoglaló",
     "justEnded": "Adatfolyam-összefoglalód",
@@ -241,6 +260,11 @@
       "hintDeny": "Azokat az MI-rendszereket és robotokat, amelyek tiszteletben tartják ezt a jelet, arra kérjük, hogy ne gyakoroljanak a hangra, a műalkotásokra és az írásra. Azok a lánctalpasok, amelyek figyelmen kívül hagyják a jelet, nem blokkolják azt.",
       "saved": "AI képzési preferencia mentve"
     },
+    "defaultFeed": "Alapértelmezett hírfolyam",
+    "defaultFeedDesc": "Válaszd ki, melyik hírfolyam nyíljon meg a DeHub minden megnyitásakor",
+    "feedToggles": "Hírfolyam-szűrők visszaállítása",
+    "feedTogglesDesc": "A hírfolyamban bekapcsolt szűrők alapértelmezettek maradnak, amíg vissza nem állítod őket",
+    "feedTogglesCleared": "Hírfolyam-szűrők visszaállítva",
     "defaultProfileTab": "Alapértelmezett profillap",
     "defaultProfileTabDesc": "Válaszd ki, melyik lapot lássák először a látogatók a profilodon",
     "public": "Nyilvános",
@@ -632,6 +656,10 @@
     "dmSent": "{{amount}} tokenek elküldve neki: {{name}}!"
   },
   "postOptions": {
+    "embed": "Beágyazás",
+    "copyEmbedCode": "Beágyazási kód másolása",
+    "embedCodeCopied": "Beágyazási kód másolva",
+    "copyFailed": "Nem sikerült a linket másolni",
     "options": "Lehetőségek",
     "aiOverview": "AI áttekintés",
     "sendTip": "Borravaló küldése",
@@ -1975,6 +2003,8 @@
     "copyFailed": "Nem sikerült másolni"
   },
   "profileOptions": {
+    "copyRssFeed": "RSS-hírcsatorna linkjének másolása",
+    "rssFeedCopied": "RSS-hírcsatorna linkje másolva",
     "copyProfileUrl": "Profil URL másolása",
     "copyUsername": "Felhasználónév másolása",
     "copyAddress": "Cím másolása",
@@ -5312,6 +5342,8 @@
     }
   },
   "goLive": {
+    "bigEvent": "Nagy esemény",
+    "bigEventHint": "Nagy közönségnek: a nézők nagyjából 20 másodperces késéssel, de kevesebb akadással látják.",
     "goLive": "Élő közvetítés",
     "youAreLive": "Élő vagy",
     "streamReady": "Stream kész",
@@ -6065,7 +6097,10 @@
     "play": "Játék",
     "pause": "Szüneteltetés",
     "listens_one": "{{count}} figyelj",
-    "listens_other": "{{count}} figyel"
+    "listens_other": "{{count}} figyel",
+    "lyrics": "Dalszöveg",
+    "lyricsLoading": "Dalszöveg keresése…",
+    "lyricsNone": "Nincs dalszöveg"
   },
   "converter": {
     "seoTitle": "Konverter — videó importálása a DeHubra",

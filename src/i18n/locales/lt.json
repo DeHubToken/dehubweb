@@ -1,4 +1,23 @@
 {
+  "contentWarning": {
+    "label": "Įspėjimas dėl turinio",
+    "placeholder": "Įspėjimą parašykite čia",
+    "add": "Pridėti įspėjimą dėl turinio",
+    "remove": "Pašalinti įspėjimą dėl turinio",
+    "show": "Rodyti įrašą"
+  },
+  "altText": {
+    "badge": "ALT",
+    "add": "Pridėti aprašymą",
+    "edit": "Redaguoti aprašymą",
+    "titleImage": "Aprašykite šį vaizdą",
+    "titleVideo": "Aprašykite šį vaizdo įrašą",
+    "help": "Žmonėms, kurie jo nemato. Ekrano skaitytuvai jį perskaito garsiai.",
+    "placeholder": "Ką jis rodo? Įtraukite ir jame esantį tekstą.",
+    "show": "Rodyti aprašymą",
+    "saved": "Aprašymas išsaugotas",
+    "saveFailed": "Nepavyko išsaugoti aprašymo"
+  },
   "liveRecap": {
     "title": "Srauto apibendrinimas",
     "justEnded": "Srauto apibendrinimas",
@@ -239,6 +258,11 @@
       "hintDeny": "Dirbtinio intelekto sistemų ir skaitytuvų, kurie atsižvelgia į šį signalą, prašoma nesitreniruoti garso, meno kūrinių ir rašymo srityse. Šliaužiklių, kurie ignoruoja signalą, jis neblokuoja.",
       "saved": "Dirbtinio intelekto mokymo nuostata išsaugota"
     },
+    "defaultFeed": "Numatytasis srautas",
+    "defaultFeedDesc": "Pasirinkite, kuris srautas atsidarys kaskart atidarius DeHub",
+    "feedToggles": "Atkurti srauto filtrus",
+    "feedTogglesDesc": "Sraute įjungti filtrai lieka numatytieji, kol jų neatkursite",
+    "feedTogglesCleared": "Srauto filtrai atkurti",
     "defaultProfileTab": "Numatytoji profilio kortelė",
     "defaultProfileTabDesc": "Pasirinkite, kurią kortelę lankytojai jūsų profilyje mato pirmiausia",
     "public": "Viešas",
@@ -628,6 +652,10 @@
     "dmSent": "{{name}} išsiųsta {{amount}} žetonų!"
   },
   "postOptions": {
+    "embed": "Įterpti",
+    "copyEmbedCode": "Kopijuoti įterpimo kodą",
+    "embedCodeCopied": "Įterpimo kodas nukopijuotas",
+    "copyFailed": "Nepavyko nukopijuoti nuorodos",
     "options": "Parinktys",
     "aiOverview": "DI apžvalga",
     "sendTip": "Siųsti arbatpinigius",
@@ -1973,6 +2001,8 @@
     "copyFailed": "Nepavyko nukopijuoti"
   },
   "profileOptions": {
+    "copyRssFeed": "Kopijuoti RSS srauto nuorodą",
+    "rssFeedCopied": "RSS srauto nuoroda nukopijuota",
     "copyProfileUrl": "Kopijuoti profilio URL",
     "copyUsername": "Kopijuoti vartotojo vardą",
     "copyAddress": "Kopijuoti adresą",
@@ -5368,6 +5398,8 @@
     }
   },
   "goLive": {
+    "bigEvent": "Didelis renginys",
+    "bigEventHint": "Didelei auditorijai: žiūrovai mato maždaug 20 sekundžių vėliau, bet su mažiau trikdžių.",
     "goLive": "Tiesioginis transliavimas",
     "youAreLive": "Jūs transliuojate",
     "streamReady": "Transliavimas paruoštas",
@@ -6172,7 +6204,10 @@
     "play": "Paleisti",
     "pause": "Pristabdyti",
     "listens_one": "{{count}} klausytis",
-    "listens_other": "{{count}} klauso"
+    "listens_other": "{{count}} klauso",
+    "lyrics": "Žodžiai",
+    "lyricsLoading": "Ieškome žodžių…",
+    "lyricsNone": "Žodžių nerasta"
   },
   "converter": {
     "seoTitle": "Konverteris — importuokite vaizdo įrašą į DeHub",

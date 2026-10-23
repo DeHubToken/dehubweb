@@ -1,4 +1,23 @@
 {
+  "contentWarning": {
+    "label": "የይዘት ማስጠንቀቂያ",
+    "placeholder": "ማስጠንቀቂያዎን እዚህ ይጻፉ",
+    "add": "የይዘት ማስጠንቀቂያ ያክሉ",
+    "remove": "የይዘት ማስጠንቀቂያን ያስወግዱ",
+    "show": "ልጥፉን አሳይ"
+  },
+  "altText": {
+    "badge": "ALT",
+    "add": "መግለጫ ያክሉ",
+    "edit": "መግለጫን ያርትዑ",
+    "titleImage": "ይህን ምስል ይግለጹ",
+    "titleVideo": "ይህን ቪዲዮ ይግለጹ",
+    "help": "ማየት ለማይችሉ ሰዎች። የማያ ገጽ አንባቢዎች ጮክ ብለው ያነቡታል።",
+    "placeholder": "ምን ያሳያል? በውስጡ ያለውን ማንኛውንም ጽሑፍ ያካትቱ።",
+    "show": "መግለጫውን አሳይ",
+    "saved": "መግለጫው ተቀምጧል",
+    "saveFailed": "መግለጫውን ማስቀመጥ አልተቻለም"
+  },
   "liveRecap": {
     "title": "ዥረት ዳግም አስጀምር",
     "justEnded": "የእርስዎ ዥረት recap",
@@ -239,6 +258,11 @@
       "hintDeny": "ይህንን ምልክት የሚያከብሩ የአይ ሲስተሞች እና ተንሸራታቾች በድምጽዎ ፣ በኪነ-ጥበባትዎ እና በጽሑፍዎ ላይ እንዳያሰለጥኑ ይጠየቃሉ ። ምልክቱን ችላ የሚሉ ተንኮለኞች አይከለከሉም ።",
       "saved": "የአይአይ ስልጠና ምርጫ ተቀምጧል"
     },
+    "defaultFeed": "ነባሪ ፊድ",
+    "defaultFeedDesc": "DeHubን በከፈቱ ቁጥር የትኛው ፊድ እንደሚከፈት ይምረጡ",
+    "feedToggles": "የፊድ ማጣሪያዎችን ዳግም አስጀምር",
+    "feedTogglesDesc": "በፊድ ውስጥ ያበሩዋቸው ማጣሪያዎች ዳግም እስኪያስጀምሩ ድረስ ነባሪዎ ሆነው ይቆያሉ",
+    "feedTogglesCleared": "የፊድ ማጣሪያዎች ዳግም ተጀምረዋል",
     "defaultProfileTab": "ነባሪ የመገለጫ ትር",
     "defaultProfileTabDesc": "ጎብኚዎች በመገለጫዎ ላይ መጀመሪያ የሚያዩትን ትር ይምረጡ",
     "public": "ይፋ",
@@ -630,6 +654,10 @@
     "dmSent": "{{amount}} ቶከኖች ለ{{name}} ተልኳል!"
   },
   "postOptions": {
+    "embed": "አካትት",
+    "copyEmbedCode": "የማካተቻ ኮድ ቅዳ",
+    "embedCodeCopied": "የማካተቻ ኮድ ተቀድቷል",
+    "copyFailed": "አገናኙን መቅዳት አልተቻለም",
     "options": "አማራጮች",
     "aiOverview": "የአይአይ አጠቃላይ እይታ",
     "sendTip": "ጥቆማ ላክ",
@@ -2002,6 +2030,8 @@
     "copyFailed": "መቅዳት አልተቻለም"
   },
   "profileOptions": {
+    "copyRssFeed": "የRSS ምግብ አገናኝ ቅዳ",
+    "rssFeedCopied": "የRSS ምግብ አገናኝ ተቀድቷል",
     "copyProfileUrl": "የመገለጫ URL ቅዳ",
     "copyUsername": "የተጠቃሚ ስም ቅዳ",
     "copyAddress": "አድራሻ ቅዳ",
@@ -5362,6 +5392,8 @@
     }
   },
   "goLive": {
+    "bigEvent": "ትልቅ ዝግጅት",
+    "bigEventHint": "ለብዙ ተመልካቾች፦ ተመልካቾች ወደ 20 ሰከንድ ያህል ዘግይተው ይመለከታሉ፣ መቆራረጡም ያነሰ ነው።",
     "goLive": "በቀጥታ ሂድ",
     "youAreLive": "አንተ ህያው ነህ",
     "streamReady": "ዥረት ዝግጁ",
@@ -6157,7 +6189,10 @@
     "play": "አጫውት",
     "pause": "እረፍት",
     "listens_one": "{{count}} ያዳምጡ",
-    "listens_other": "{{count}} ያዳምጡ"
+    "listens_other": "{{count}} ያዳምጡ",
+    "lyrics": "የዘፈን ግጥም",
+    "lyricsLoading": "ግጥም በመፈለግ ላይ…",
+    "lyricsNone": "ምንም ግጥም አልተገኘም"
   },
   "converter": {
     "seoTitle": "ኮንቬርተር — ቪዲዮ ወደ DeHub ያስገቡ",

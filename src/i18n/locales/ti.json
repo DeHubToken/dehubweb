@@ -1,4 +1,23 @@
 {
+  "contentWarning": {
+    "label": "ናይ ትሕዝቶ መጠንቀቕታ",
+    "placeholder": "መጠንቀቕታኻ ኣብዚ ጽሓፍ",
+    "add": "ናይ ትሕዝቶ መጠንቀቕታ ወስኽ",
+    "remove": "ናይ ትሕዝቶ መጠንቀቕታ ኣልግስ",
+    "show": "ጽሑፍ ኣርኢ"
+  },
+  "altText": {
+    "badge": "ALT",
+    "add": "መግለጺ ወስኽ",
+    "edit": "መግለጺ ኣመሓይሽ",
+    "titleImage": "ነዚ ስእሊ ግለጾ",
+    "titleVideo": "ነዚ ቪድዮ ግለጾ",
+    "help": "ንዘይርእዩ ሰባት። ኣንበብቲ ስክሪን ብዓው ኢሎም የንብብዎ።",
+    "placeholder": "እንታይ የርኢ? ኣብኡ ዘሎ ዝኾነ ጽሑፍ እውን ኣእቱ።",
+    "show": "መግለጺ ኣርኢ",
+    "saved": "መግለጺ ተዓቂቡ",
+    "saveFailed": "መግለጺ ክዕቀብ ኣይተኻእለን"
+  },
   "liveRecap": {
     "title": "ናይ ዥረት ዳግመ-ምግቢ",
     "justEnded": "እቲ ዥረትካ እንደገና ይዕምብብብ",
@@ -239,6 +258,11 @@
       "hintDeny": "ነዚ ምልክታ እዚ ዚኽብር ስርዓታትን ኣሰጋገርትን AI ፡ ኣብ ድምጺኻ ፡ ኣብ ስነጥበባዊ ስራሕን ኣብ ምጽሓፍካን ከይሰልጠኑ ይሓትቱ እዮም ። እቶም ነቲ ምልክታ ዘይሓልፉ ፡ ብኡ ኣይዓግቱን እዮም ።",
       "saved": "ናይ AI ስልጠና ምርጫ ተድሕን"
     },
+    "defaultFeed": "ናይ ቀደም ፊድ",
+    "defaultFeedDesc": "DeHub ኣብ ዝኸፈትካሉ ግዜ ኩሉ ኣየናይ ፊድ ከምዝኽፈት ምረጽ",
+    "feedToggles": "ናይ ፊድ መጻረዪታት ዳግም ኣቐምጥ",
+    "feedTogglesDesc": "ኣብ ፊድ ዘበራኽዎም መጻረዪታት ክሳብ ዳግም ተቐምጦም ናይ ቀደም ኮይኖም ይጸንሑ",
+    "feedTogglesCleared": "ናይ ፊድ መጻረዪታት ዳግም ተቐሚጦም",
     "defaultProfileTab": "ቀዋሚ ናይ መለለዪ ታብ",
     "defaultProfileTabDesc": "በጻሕቲ ኣብ መለለዪኻ ቀዳማይ እትርእዮም ታብ ምረጽ",
     "public": "ህዝባዊ",
@@ -622,6 +646,10 @@
     "dmSent": "{{amount}} ምልክታት ን{{name}} ተሰዲዱ!"
   },
   "postOptions": {
+    "embed": "ኣእቱ",
+    "copyEmbedCode": "ናይ ምእታው ኮድ ቅዳሕ",
+    "embedCodeCopied": "ናይ ምእታው ኮድ ተቐዲሑ",
+    "copyFailed": "መላግቦ ክቕዳሕ ኣይተኻእለን",
     "options": "ምርጫታት",
     "aiOverview": "ሓፈሻዊ ኣመለኻኽታ AI",
     "sendTip": "ሽልማት ስደድ",
@@ -1940,6 +1968,8 @@
     "copyFailed": "ክቅዳሕ ኣይከኣለን"
   },
   "profileOptions": {
+    "copyRssFeed": "ናይ RSS ፊድ መላግቦ ቅዳሕ",
+    "rssFeedCopied": "ናይ RSS ፊድ መላግቦ ተቐዲሑ",
     "copyProfileUrl": "ናይ ፕሮፋይል URL ቅዳሕ",
     "copyUsername": "ናይ ተጠቃሚ ስም ቅዳሕ",
     "copyAddress": "ኣድራሻ ቅዳሕ",
@@ -5255,6 +5285,8 @@
     }
   },
   "goLive": {
+    "bigEvent": "ዓቢ ኩነት",
+    "bigEventHint": "ንብዙሓት ተዓዘብቲ፦ ተዓዘብቲ ብ20 ካልኢት ዝኣክል ደንጕዮም ይርእዩ፣ ምቍራጽ ግን ይውሕድ።",
     "goLive": "ህያው ኩን",
     "youAreLive": "ንስኻ ህያው ኢኻ",
     "streamReady": "ዥረት ተዳልዩ",
@@ -6043,7 +6075,10 @@
     "creator": "DeHub ፈጣሪ",
     "play": "ተጻወት",
     "pause": "ዕረፍቲ",
-    "listens_one": "{{count}} ስማዕ"
+    "listens_one": "{{count}} ስማዕ",
+    "lyrics": "ግጥሚ",
+    "lyricsLoading": "ግጥሚ ይድለ ኣሎ…",
+    "lyricsNone": "ግጥሚ ኣይተረኽበን"
   },
   "converter": {
     "seoTitle": "መለወጢ — ቪድዮ ናብ DeHub ኣምጽእ",

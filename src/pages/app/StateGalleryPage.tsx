@@ -10,6 +10,7 @@ import { toast } from 'sonner';
 import { showUpdateToast } from '@/components/app/NewVersionToast';
 import type { BuildVersion } from '@/lib/version-check';
 import { useSearchParams } from 'react-router-dom';
+import { transcriptKey } from '@/hooks/use-transcript';
 import { AppState } from '@/components/app/AppState';
 import { LiveRipple } from '@/components/app/LiveRipple';
 import { CaptureCardSetup } from '@/components/app/live/CaptureCardSetup';
@@ -66,6 +67,44 @@ import galleryCover from '@/assets/banners/agent-marco_v.png';
 import galleryAvatar from '@/assets/avatars/marco_v.png';
 import galleryCommunityArt from '@/assets/banners/agent-vrgl.png';
 import galleryCommunityLogo from '@/assets/avatars/vrgl.png';
+import followAvatarEllaverse from '@/assets/avatars/ellaverse.png';
+import followAvatarKai from '@/assets/avatars/0xkai.png';
+import followAvatarLuna from '@/assets/avatars/xluna.png';
+import followAvatarRio from '@/assets/avatars/riooo.png';
+import followCoverEllaverse from '@/assets/banners/agent-ellaverse.png';
+import followCoverLuna from '@/assets/banners/agent-xluna.png';
+import { FollowCoverCard } from '@/components/app/FollowCoverCard';
+import type { SuggestedAccount } from '@/lib/api/dehub';
+
+/**
+ * Who to follow cover cards in every state they ship in: a cover, no cover
+ * (the avatar wash), mutual friends, follows you, no bio, and the moment after
+ * Follow is tapped. Laid out bare, as the feed and Explore carry them, so each
+ * theme's own card surface (or none, in System) is what shows.
+ */
+function FollowCardsGallery() {
+  const { t: _copy } = _useCopy();
+  const abs = (src: string) => new URL(src, window.location.origin).href;
+  const users: SuggestedAccount[] = [
+    { address: '0x1111111111111111111111111111111111111111', username: 'ellaverse', displayName: 'Ella Verse', avatarImageUrl: abs(followAvatarEllaverse), coverImageUrl: abs(followCoverEllaverse), aboutMe: 'Film photographer. Golden hour every day, no filters, no regrets.', followers: 12400, badgeBalance: 2_000_000, reason: 'followed_by_people_you_know', mutualConnections: [{ address: '0x2222222222222222222222222222222222222222', displayName: 'Kai', avatarImageUrl: abs(followAvatarKai) }, { address: '0x3333333333333333333333333333333333333333', displayName: 'Luna', avatarImageUrl: abs(followAvatarLuna) }] },
+    { address: '0x2222222222222222222222222222222222222222', username: '0xkai', displayName: '0xKai', avatarImageUrl: abs(followAvatarKai), aboutMe: 'Lo-fi beats and late night streams. Live most Fridays.', followers: 3100, badgeBalance: 0, reason: 'follows_you', followsYou: true },
+    { address: '0x3333333333333333333333333333333333333333', username: 'xluna', displayName: 'Luna', avatarImageUrl: abs(followAvatarLuna), coverImageUrl: abs(followCoverLuna), aboutMe: '', followers: 51200, badgeBalance: 600_000, reason: 'suggested' },
+    { address: '0x4444444444444444444444444444444444444444', username: 'riooo', displayName: 'Rio', avatarImageUrl: abs(followAvatarRio), aboutMe: 'Travel shorts from 40 countries and counting.', followers: 890, badgeBalance: 0, reason: 'engagement_overlap' },
+  ];
+  const noop = () => {};
+  return (
+    <section data-follow-cards-gallery className="mb-5">
+      <h2 className="mb-3 text-sm font-semibold">{_copy("copy.036cfd952896", { defaultValue: "Who to follow" })}</h2>
+      <div data-follow-cards className="-mx-4">
+        <div className="fc-rail flex overflow-x-auto scrollbar-hide px-4 pb-2">
+          {users.map((user, i) => (
+            <FollowCoverCard key={user.address} user={user} followed={i === 3} onOpen={noop} onFollow={noop} onDismiss={noop} />
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}
 
 function PredictionGallery() {
   const { t: _copy } = _useCopy();
@@ -226,9 +265,24 @@ function CaptureCardGallery() {
  * Audio post player with its animation style chips: the selected style wears
  * the profile tabs' "Beam" (glowing line, idle chips dimmed), never a pill.
  */
+const GALLERY_LYRICS_TRACK = { tokenId: 'state-gallery-lyrics', audioUrl: '', title: 'Late night lo-fi', artist: 'juno' };
+
 function AudioGallery() {
   const { t: _copy } = _useCopy();
+  const { t } = useTranslation();
   const [playing, setPlaying] = useState(false);
+  const queryClient = useQueryClient();
+  // A finished transcript for the lyrics tile, so it shows lines without a real post.
+  useState(() => queryClient.setQueryData(transcriptKey('audio', GALLERY_LYRICS_TRACK.tokenId), {
+    id: 'state-gallery-lyrics', source_kind: 'audio', source_ref: GALLERY_LYRICS_TRACK.tokenId, status: 'ready',
+    provider: 'deepgram', source_lang: 'en', duration_seconds: 184,
+    segments: [
+      { start: 0, end: 4, text: 'City lights are fading out tonight' },
+      { start: 4, end: 8, text: 'I keep the radio low and drive' },
+    ],
+    full_text: null, vtt: null, summary: null, summary_status: 'none', chapters: [], speaker_map: {}, speaker_overrides: {},
+    visibility: 'public', attempts: 1, error: null, updated_at: new Date(0).toISOString(),
+  }));
   return (
     <section data-page-bento data-audio-gallery className="mb-5 rounded-3xl border border-white/10 bg-white/[0.04] p-4">
       <h2 className="mb-3 text-sm font-semibold">{_copy("copy.bc1b88907d3b", { defaultValue: "Audio" })}</h2>
@@ -242,6 +296,21 @@ function AudioGallery() {
           seed="state-gallery"
           decodeEnabled={false}
           durationHint={184}
+        />
+      </div>
+      <p className="mt-4 mb-2 text-xs opacity-70">{t('audioPost.lyrics')}</p>
+      <div className="relative h-56 overflow-hidden rounded-2xl bg-black/60 backdrop-blur-[24px] border border-white/10">
+        <AudioVisualizer
+          audioUrl=""
+          isPlaying={false}
+          onPlayPause={() => undefined}
+          className="w-full h-full"
+          showStylePicker
+          seed="state-gallery-lyrics"
+          decodeEnabled={false}
+          durationHint={184}
+          popoutTrack={GALLERY_LYRICS_TRACK}
+          initialShowLyrics
         />
       </div>
     </section>
@@ -573,6 +642,8 @@ export default function StateGalleryPage() {
         <VideoProcessingGallery
           docked={(['processing', 'done', 'failed'] as const).find((phase) => phase === params.get('dock')) ?? null}
         />
+
+        <FollowCardsGallery />
 
         <StreamerArtworkGallery />
 

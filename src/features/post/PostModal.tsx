@@ -248,6 +248,9 @@ function PostModalForAccount({ isOpen, onClose, initialFiles, onFilesProcessed, 
         onClearCrop={actions.clearCropFromMedia}
         onApplyTrim={actions.applyTrimToMedia}
         onReplaceImage={actions.replaceImageFile}
+        onSetMediaDescription={actions.setMediaDescription}
+        contentWarning={state.contentWarning}
+        onContentWarningChange={actions.setContentWarning}
         liveMode={state.liveMode}
         canPost={computed.canPost}
         destinations={computed.destinations}
@@ -399,6 +402,8 @@ function PostModalForAccount({ isOpen, onClose, initialFiles, onFilesProcessed, 
         onCloseModal={handleClose}
         onTogglePoll={handleTogglePoll}
         hasPoll={!!state.poll}
+        onToggleContentWarning={() => actions.setContentWarning(state.contentWarning === null ? '' : null)}
+        hasContentWarning={state.contentWarning !== null}
       />
       </>
       )}

@@ -1,4 +1,23 @@
 {
+  "contentWarning": {
+    "label": "Innehållsvarning",
+    "placeholder": "Skriv din varning här",
+    "add": "Lägg till innehållsvarning",
+    "remove": "Ta bort innehållsvarning",
+    "show": "Visa inlägg"
+  },
+  "altText": {
+    "badge": "ALT",
+    "add": "Lägg till en beskrivning",
+    "edit": "Redigera beskrivning",
+    "titleImage": "Beskriv den här bilden",
+    "titleVideo": "Beskriv den här videon",
+    "help": "För personer som inte kan se den. Skärmläsare läser upp den.",
+    "placeholder": "Vad visar den? Ta med eventuell text i den.",
+    "show": "Visa beskrivning",
+    "saved": "Beskrivningen sparades",
+    "saveFailed": "Det gick inte att spara beskrivningen"
+  },
   "liveRecap": {
     "title": "Stream recap",
     "justEnded": "Sammanfattning av ditt flöde",
@@ -241,6 +260,11 @@
       "hintDeny": "AI-system och sökrobotar som respekterar denna signal ombeds att inte träna på ditt ljud, konstverk och skrivande. Crawlers som ignorerar signalen blockeras inte av den.",
       "saved": "AI-utbildningspreferens sparad"
     },
+    "defaultFeed": "Standardflöde",
+    "defaultFeedDesc": "Välj vilket flöde som öppnas varje gång du öppnar DeHub",
+    "feedToggles": "Återställ flödesfilter",
+    "feedTogglesDesc": "Filter du slår på i ett flöde förblir dina standarder tills du återställer dem",
+    "feedTogglesCleared": "Flödesfilter återställda",
     "defaultProfileTab": "Standardflik på profilen",
     "defaultProfileTabDesc": "Välj vilken flik besökare ser först på din profil",
     "public": "Offentlig",
@@ -632,6 +656,10 @@
     "dmSent": "Skickade {{amount}} tokens till {{name}}!"
   },
   "postOptions": {
+    "embed": "Bädda in",
+    "copyEmbedCode": "Kopiera inbäddningskod",
+    "embedCodeCopied": "Inbäddningskod kopierad",
+    "copyFailed": "Det gick inte att kopiera länken",
     "options": "Alternativ",
     "aiOverview": "AI-översikt",
     "sendTip": "Skicka dricks",
@@ -1979,6 +2007,8 @@
     "copyFailed": "Kunde inte kopiera"
   },
   "profileOptions": {
+    "copyRssFeed": "Kopiera länk till RSS-flöde",
+    "rssFeedCopied": "Länk till RSS-flöde kopierad",
     "copyProfileUrl": "Kopiera profil-URL",
     "copyUsername": "Kopiera användarnamn",
     "copyAddress": "Kopiera adress",
@@ -5314,6 +5344,8 @@
     }
   },
   "goLive": {
+    "bigEvent": "Stort evenemang",
+    "bigEventHint": "För stor publik: tittarna ser sändningen cirka 20 sekunder fördröjd, med färre avbrott.",
     "goLive": "Gå Live",
     "youAreLive": "Du är Live",
     "streamReady": "Stream Klar",
@@ -6066,7 +6098,10 @@
     "play": "Spela",
     "pause": "Pausa",
     "listens_one": "{{count}} lyssna",
-    "listens_other": "{{count}} lyssnar"
+    "listens_other": "{{count}} lyssnar",
+    "lyrics": "Låttext",
+    "lyricsLoading": "Hämtar låttext…",
+    "lyricsNone": "Ingen låttext hittades"
   },
   "converter": {
     "seoTitle": "Konverterare — importera en video till DeHub",

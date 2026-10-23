@@ -1,4 +1,23 @@
 {
+  "contentWarning": {
+    "label": "Avertisment de conținut",
+    "placeholder": "Scrie avertismentul aici",
+    "add": "Adaugă avertisment de conținut",
+    "remove": "Elimină avertismentul de conținut",
+    "show": "Arată postarea"
+  },
+  "altText": {
+    "badge": "ALT",
+    "add": "Adaugă o descriere",
+    "edit": "Editează descrierea",
+    "titleImage": "Descrie această imagine",
+    "titleVideo": "Descrie acest videoclip",
+    "help": "Pentru persoanele care nu o pot vedea. Cititoarele de ecran o citesc cu voce tare.",
+    "placeholder": "Ce arată? Include orice text pe care îl conține.",
+    "show": "Arată descrierea",
+    "saved": "Descriere salvată",
+    "saveFailed": "Descrierea nu a putut fi salvată"
+  },
   "liveRecap": {
     "title": "Recapitulare flux",
     "justEnded": "Recapitularea fluxului tău",
@@ -241,6 +260,11 @@
       "hintDeny": "Sistemele AI și crawlerele care respectă acest semnal sunt rugate să nu se instruiască cu privire la audio, grafică și scriere. Șenilele care ignoră semnalul nu sunt blocate de acesta.",
       "saved": "Preferința de instruire AI salvată"
     },
+    "defaultFeed": "Flux implicit",
+    "defaultFeedDesc": "Alege ce flux se deschide de fiecare dată când deschizi DeHub",
+    "feedToggles": "Resetează filtrele fluxului",
+    "feedTogglesDesc": "Filtrele pe care le activezi într-un flux rămân implicite până le resetezi",
+    "feedTogglesCleared": "Filtrele fluxului au fost resetate",
     "defaultProfileTab": "Fila implicită a profilului",
     "defaultProfileTabDesc": "Alege ce filă văd prima vizitatorii pe profilul tău",
     "public": "Public",
@@ -632,6 +656,10 @@
     "dmSent": "Ați trimis {{amount}} tokenuri către {{name}}!"
   },
   "postOptions": {
+    "embed": "Încorporează",
+    "copyEmbedCode": "Copiază codul de încorporare",
+    "embedCodeCopied": "Codul de încorporare a fost copiat",
+    "copyFailed": "Linkul nu a putut fi copiat",
     "options": "Opțiuni",
     "aiOverview": "Prezentare generală AI",
     "sendTip": "Trimite bacșiș",
@@ -1977,6 +2005,8 @@
     "copyFailed": "Nu s-a putut copia"
   },
   "profileOptions": {
+    "copyRssFeed": "Copiază linkul fluxului RSS",
+    "rssFeedCopied": "Linkul fluxului RSS a fost copiat",
     "copyProfileUrl": "Copiază URL-ul profilului",
     "copyUsername": "Copiază numele de utilizator",
     "copyAddress": "Copiază adresa",
@@ -5373,6 +5403,8 @@
     }
   },
   "goLive": {
+    "bigEvent": "Eveniment mare",
+    "bigEventHint": "Pentru public numeros: spectatorii urmăresc cu o întârziere de circa 20 de secunde, dar cu mai puține întreruperi.",
     "goLive": "Transmite în Direct",
     "youAreLive": "Ești în Direct",
     "streamReady": "Flux Gata",
@@ -6177,7 +6209,10 @@
     "play": "Redare",
     "pause": "Pauză",
     "listens_one": "{{count}} ascultă",
-    "listens_other": "{{count}} ascultări"
+    "listens_other": "{{count}} ascultări",
+    "lyrics": "Versuri",
+    "lyricsLoading": "Căutăm versurile…",
+    "lyricsNone": "Nu am găsit versuri"
   },
   "converter": {
     "seoTitle": "Converter — importă un videoclip în DeHub",

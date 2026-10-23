@@ -1,4 +1,23 @@
 {
+  "contentWarning": {
+    "label": "Upozorenje o sadržaju",
+    "placeholder": "Ovdje napišite upozorenje",
+    "add": "Dodaj upozorenje o sadržaju",
+    "remove": "Ukloni upozorenje o sadržaju",
+    "show": "Prikaži objavu"
+  },
+  "altText": {
+    "badge": "ALT",
+    "add": "Dodaj opis",
+    "edit": "Uredi opis",
+    "titleImage": "Opišite ovu sliku",
+    "titleVideo": "Opišite ovaj videozapis",
+    "help": "Za ljude koji je ne mogu vidjeti. Čitači zaslona čitaju ga naglas.",
+    "placeholder": "Što prikazuje? Uključite i tekst koji sadrži.",
+    "show": "Prikaži opis",
+    "saved": "Opis je spremljen",
+    "saveFailed": "Opis nije moguće spremiti"
+  },
   "liveRecap": {
     "title": "Rekapitulacija streama",
     "justEnded": "Sažetak vašeg streama",
@@ -239,6 +258,11 @@
       "hintDeny": "Od sustava umjetne inteligencije i indeksirača koji poštuju ovaj signal traži se da ne vježbaju na vašem zvuku, umjetničkim djelima i pisanju. Alati za indeksiranje koji zanemaruju signal nisu njime blokirani.",
       "saved": "Postavka umjetne inteligencije za obuku je spremljena"
     },
+    "defaultFeed": "Zadani feed",
+    "defaultFeedDesc": "Odaberite koji se feed otvara svaki put kad otvorite DeHub",
+    "feedToggles": "Poništi filtre feeda",
+    "feedTogglesDesc": "Filtri koje uključite u feedu ostaju vaši zadani dok ih ne poništite",
+    "feedTogglesCleared": "Filtri feeda poništeni",
     "defaultProfileTab": "Zadana kartica profila",
     "defaultProfileTabDesc": "Odaberite koju karticu posjetitelji prvo vide na vašem profilu",
     "public": "Javno",
@@ -630,6 +654,10 @@
     "dmSent": "Poslano {{amount}} tokena korisniku {{name}}!"
   },
   "postOptions": {
+    "embed": "Ugradi",
+    "copyEmbedCode": "Kopiraj kod za ugradnju",
+    "embedCodeCopied": "Kod za ugradnju kopiran",
+    "copyFailed": "Poveznicu nije moguće kopirati",
     "options": "Mogućnosti",
     "aiOverview": "AI pregled",
     "sendTip": "Pošalji napojnicu",
@@ -1971,6 +1999,8 @@
     "copyFailed": "Nije moguće kopirati"
   },
   "profileOptions": {
+    "copyRssFeed": "Kopiraj poveznicu RSS feeda",
+    "rssFeedCopied": "Poveznica RSS feeda kopirana",
     "copyProfileUrl": "Kopiraj URL profila",
     "copyUsername": "Kopiraj korisničko ime",
     "copyAddress": "Kopiraj adresu",
@@ -5311,6 +5341,8 @@
     }
   },
   "goLive": {
+    "bigEvent": "Veliki događaj",
+    "bigEventHint": "Za veliku publiku: gledatelji gledaju s kašnjenjem od oko 20 sekundi, uz manje prekida.",
     "goLive": "Kreni Uživo",
     "youAreLive": "Uživo ste",
     "streamReady": "Emisija je spremna",
@@ -6064,7 +6096,10 @@
     "play": "Pokreni",
     "pause": "Pauziraj",
     "listens_one": "{{count}} slušaj",
-    "listens_other": "{{count}} sluša"
+    "listens_other": "{{count}} sluša",
+    "lyrics": "Tekst pjesme",
+    "lyricsLoading": "Tražimo tekst…",
+    "lyricsNone": "Tekst nije pronađen"
   },
   "converter": {
     "seoTitle": "Konverter — uvezi video u DeHub",

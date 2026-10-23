@@ -1,4 +1,23 @@
 {
+  "contentWarning": {
+    "label": "내용 경고",
+    "placeholder": "여기에 경고 문구를 쓰세요",
+    "add": "내용 경고 추가",
+    "remove": "내용 경고 삭제",
+    "show": "게시물 보기"
+  },
+  "altText": {
+    "badge": "ALT",
+    "add": "설명 추가",
+    "edit": "설명 편집",
+    "titleImage": "이 이미지를 설명하세요",
+    "titleVideo": "이 동영상을 설명하세요",
+    "help": "볼 수 없는 사람들을 위한 것입니다. 스크린 리더가 소리 내어 읽어 줍니다.",
+    "placeholder": "무엇이 보이나요? 들어 있는 글자도 함께 적어 주세요.",
+    "show": "설명 보기",
+    "saved": "설명이 저장되었습니다",
+    "saveFailed": "설명을 저장할 수 없습니다"
+  },
   "liveRecap": {
     "title": "스트림 요약",
     "justEnded": "스트림 요약",
@@ -241,6 +260,11 @@
       "hintDeny": "이 신호를 존중하는 AI 시스템 및 크롤러는 오디오, 아트워크 및 글쓰기에 대한 교육을 받지 않도록 요청받습니다. 신호를 무시하는 크롤러는 신호에 의해 차단되지 않습니다.",
       "saved": "AI 교육 기본 설정 저장됨"
     },
+    "defaultFeed": "기본 피드",
+    "defaultFeedDesc": "DeHub를 열 때마다 표시할 피드를 선택하세요",
+    "feedToggles": "피드 필터 초기화",
+    "feedTogglesDesc": "피드에서 켠 필터는 초기화할 때까지 기본값으로 유지됩니다",
+    "feedTogglesCleared": "피드 필터가 초기화되었습니다",
     "defaultProfileTab": "기본 프로필 탭",
     "defaultProfileTabDesc": "방문자가 프로필에서 가장 먼저 보게 될 탭을 선택하세요",
     "public": "공개",
@@ -634,6 +658,10 @@
     "dmSent": "{{name}}님에게 {{amount}} DHB를 보냈어요!"
   },
   "postOptions": {
+    "embed": "퍼가기",
+    "copyEmbedCode": "퍼가기 코드 복사",
+    "embedCodeCopied": "퍼가기 코드가 복사되었습니다",
+    "copyFailed": "링크를 복사할 수 없습니다",
     "options": "옵션",
     "aiOverview": "AI 개요",
     "sendTip": "팁 보내기",
@@ -1984,6 +2012,8 @@
     "copyFailed": "복사할 수 없음"
   },
   "profileOptions": {
+    "copyRssFeed": "RSS 피드 링크 복사",
+    "rssFeedCopied": "RSS 피드 링크가 복사되었습니다",
     "copyProfileUrl": "프로필 URL 복사",
     "copyUsername": "사용자 이름 복사",
     "copyAddress": "주소 복사",
@@ -5374,6 +5404,8 @@
     }
   },
   "goLive": {
+    "bigEvent": "대규모 이벤트",
+    "bigEventHint": "많은 시청자용: 시청자는 약 20초 늦게 보지만 끊김이 줄어듭니다.",
     "goLive": "라이브 시작",
     "youAreLive": "라이브 중",
     "streamReady": "스트림 준비 완료",
@@ -6178,7 +6210,10 @@
     "play": "재생",
     "pause": "일시정지",
     "listens_one": "{{count}}회 재생",
-    "listens_other": "{{count}}회 재생"
+    "listens_other": "{{count}}회 재생",
+    "lyrics": "가사",
+    "lyricsLoading": "가사를 찾는 중…",
+    "lyricsNone": "가사가 없습니다"
   },
   "converter": {
     "seoTitle": "컨버터 — DeHub으로 비디오 가져오기",

@@ -1,4 +1,23 @@
 {
+  "contentWarning": {
+    "label": "閲覧注意",
+    "placeholder": "ここに注意書きを入力",
+    "add": "閲覧注意を追加",
+    "remove": "閲覧注意を削除",
+    "show": "投稿を表示"
+  },
+  "altText": {
+    "badge": "ALT",
+    "add": "説明を追加",
+    "edit": "説明を編集",
+    "titleImage": "この画像を説明",
+    "titleVideo": "この動画を説明",
+    "help": "見ることができない人のために。スクリーンリーダーが読み上げます。",
+    "placeholder": "何が写っていますか？含まれている文字も書いてください。",
+    "show": "説明を表示",
+    "saved": "説明を保存しました",
+    "saveFailed": "説明を保存できませんでした"
+  },
   "liveRecap": {
     "title": "ストリームのまとめ",
     "justEnded": "ストリームのまとめ",
@@ -240,6 +259,11 @@
       "hintDeny": "この信号を尊重するAIシステムとクローラーは、オーディオ、アートワーク、ライティングのトレーニングをしないように求められます。 シグナルを無視するクローラは、シグナルによってブロックされません。",
       "saved": "AIトレーニングの設定が保存されました"
     },
+    "defaultFeed": "デフォルトのフィード",
+    "defaultFeedDesc": "DeHubを開くたびに表示するフィードを選択",
+    "feedToggles": "フィードのフィルターをリセット",
+    "feedTogglesDesc": "フィードでオンにしたフィルターは、リセットするまでデフォルトとして残ります",
+    "feedTogglesCleared": "フィードのフィルターをリセットしました",
     "defaultProfileTab": "既定のプロフィールタブ",
     "defaultProfileTabDesc": "訪問者がプロフィールで最初に見るタブを選びます",
     "public": "公開",
@@ -633,6 +657,10 @@
     "dmSent": "{{name}}に{{amount}} DHBを送りました！"
   },
   "postOptions": {
+    "embed": "埋め込み",
+    "copyEmbedCode": "埋め込みコードをコピー",
+    "embedCodeCopied": "埋め込みコードをコピーしました",
+    "copyFailed": "リンクをコピーできませんでした",
     "options": "オプション",
     "aiOverview": "AIの概要",
     "sendTip": "チップを送る",
@@ -1982,6 +2010,8 @@
     "copyFailed": "コピーできませんでした"
   },
   "profileOptions": {
+    "copyRssFeed": "RSSフィードのリンクをコピー",
+    "rssFeedCopied": "RSSフィードのリンクをコピーしました",
     "copyProfileUrl": "プロフィールURLをコピー",
     "copyUsername": "ユーザー名をコピー",
     "copyAddress": "アドレスをコピー",
@@ -5370,6 +5400,8 @@
     }
   },
   "goLive": {
+    "bigEvent": "大規模イベント",
+    "bigEventHint": "大勢の視聴者向け：約20秒遅れで再生されますが、途切れにくくなります。",
     "goLive": "ライブ配信を開始",
     "youAreLive": "ライブ配信中",
     "streamReady": "ストリーム準備完了",
@@ -6173,7 +6205,10 @@
     "play": "再生",
     "pause": "一時停止",
     "listens_one": "{{count}}回再生",
-    "listens_other": "{{count}}回再生"
+    "listens_other": "{{count}}回再生",
+    "lyrics": "歌詞",
+    "lyricsLoading": "歌詞を取得中…",
+    "lyricsNone": "歌詞が見つかりません"
   },
   "converter": {
     "seoTitle": "コンバーター — DeHubに動画をインポート",

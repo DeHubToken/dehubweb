@@ -6,6 +6,8 @@ import { applyPostShareImage, applyProfileShareImage } from './server/post-share
 import { handleFinanceRequest } from './server/finance-stats.js';
 import { handleCreatorMotionSource } from './server/creator-motion-source.js';
 import { handleAccountMcp, isAccountMcpRoute } from './server/account-mcp.js';
+import { handleRssFeed, profileFeedUrl, rssFeedRoute } from './server/rss-feeds.js';
+import { embedRoute, handleEmbedPage, handleOembed, oembedLinkTag } from './server/post-embed.js';
 export { AccountMcpAuth } from './server/account-mcp-auth.js';
 export { EditorPresenceRoom } from './server/editor-presence.ts';
 
@@ -3899,7 +3901,7 @@ const SYSTEM_ROUTES = new Set([
 // AI fetchers (the `*-User/1.0` agents, matched on `-user/`). Each of them unfurled
 // every DeHub link as the homepage card. Naver's Yeti and Yahoo's Slurp are
 // search crawlers that do not run the SPA.
-const BOT_UA_PATTERN = /bot|crawl|spider|facebook|twitter|linkedin|whatsapp|telegram|slack|discord|facebot|oggrabber|google-inspectiontool|googleother|apis-google|feedfetcher|curl|wget|python-requests|python-urllib|axios|node-fetch|got |okhttp|go-http-client|java\/|libwww-perl|ruby|postmanruntime|insomnia|httpie|cardyb|bluesky|mastodon|http\.rb|skypeuripreview|embedly|iframely|vkshare|yeti|slurp|-user\/|google \(\+https/i;
+const BOT_UA_PATTERN = /bot|crawl|spider|wordpress|facebook|twitter|linkedin|whatsapp|telegram|slack|discord|facebot|oggrabber|google-inspectiontool|googleother|apis-google|feedfetcher|curl|wget|python-requests|python-urllib|axios|node-fetch|got |okhttp|go-http-client|java\/|libwww-perl|ruby|postmanruntime|insomnia|httpie|cardyb|bluesky|mastodon|http\.rb|skypeuripreview|embedly|iframely|vkshare|yeti|slurp|-user\/|google \(\+https/i;
 
 // Search engines, as opposed to link previewers. When the data behind a page
 // cannot be read, a search engine should be told to come back (503) rather
@@ -5730,6 +5732,34 @@ async function handleRequest(request, env, ctx) {
     return handleStatsRequest(request, env, pathname.endsWith('/raw'));
   }
 
+  // RSS for every profile and hashtag (server/rss-feeds.js). Every UA, and
+  // ahead of the file-path 404 further down, which would otherwise claim the
+  // `.rss` extension.
+  const rssRoute = rssFeedRoute(pathname, (segment) => couldBeProfileSegment(segment, SYSTEM_ROUTES));
+  if (rssRoute) {
+    return handleRssFeed(request, ctx, rssRoute, {
+      appUrl: APP_URL,
+      fetchAccount: fetchAccountInfo,
+      fetchRows: fetchFeedRowsOrNull,
+      labelOf: postLabel,
+      imageOf: postSitemapImage,
+      mediaUrl: (raw) => (/^https?:\/\//i.test(raw) ? raw : `${CDN_ORIGIN}/${String(raw).replace(/^\/+/, '')}`),
+    });
+  }
+
+  // Embeddable posts (server/post-embed.js): the iframe page and oEmbed.
+  const embedPostId = embedRoute(pathname);
+  if (embedPostId || pathname === '/api/oembed') {
+    const embedDeps = {
+      appUrl: APP_URL,
+      fetchPost: fetchPostRecord,
+      labelOf: postLabel,
+      imageOf: postSitemapImage,
+      mediaUrl: (raw) => (/^https?:\/\//i.test(raw) ? raw : `${CDN_ORIGIN}/${String(raw).replace(/^\/+/, '')}`),
+    };
+    return embedPostId ? handleEmbedPage(request, embedPostId, embedDeps) : handleOembed(request, embedDeps);
+  }
+
   // URL-space hygiene (all UAs — these paths have no content in the SPA
   // either): bare /guides has no route, /app twins of the blog duplicate it.
   const trimmedPath = pathname.replace(/\/+$/, '') || '/';
@@ -6987,6 +7017,10 @@ async function handleRequest(request, env, ctx) {
       const record = await fetchPostRecord(proxiedPostId);
       postShareRecord = record;
       html = enrichPostMeta(html, proxiedPostId, record);
+      // oEmbed discovery: WordPress, Ghost, Iframely, Embedly and Mastodon's
+      // link cards turn a pasted post link into the embedded post.
+      const oembedTag = oembedLinkTag(APP_URL, record);
+      if (oembedTag) html = html.replace('</head>', `${oembedTag}</head>`);
       // The VideoObject is repaired first, while it is still its own node;
       // socialPostingLd then nests it under the post as it stands.
       html = enrichVideoPost(html, record);
@@ -7011,6 +7045,14 @@ async function handleRequest(request, env, ctx) {
       const account = await fetchAccountInfo(proxiedHandle);
       profileShareAccount = account;
       html = enrichProfileMeta(html, proxiedHandle, account && account.displayName);
+      // Feed readers find the profile's RSS from the page itself.
+      if (account && !account.isPrivate) {
+        const feedHandle = String(account.username || proxiedHandle);
+        html = html.replace(
+          '</head>',
+          `<link rel="alternate" type="application/rss+xml" title="${escHtml(`${account.displayName || feedHandle} on DeHub`)}" href="${escHtml(profileFeedUrl(APP_URL, feedHandle))}"></head>`,
+        );
+      }
       const address = String((account && account.address) || '').toLowerCase() || profileAddressOf(html);
       const rows = address ? await fetchFeedRowsOrNull(`minter=${address}`) : null;
       html = injectBeforeCta(html, postListHtml('Recent posts', rows || [], { author: false }));

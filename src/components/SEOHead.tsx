@@ -6,7 +6,7 @@ import { useContext, useEffect } from 'react';
 import { Helmet } from 'react-helmet-async';
 import { useTranslation } from 'react-i18next';
 import { CachedPageActiveContext } from '@/contexts/CachedPageActiveContext';
-import { removeCanonical, upsertCanonical, upsertMeta, upsertSocialMeta, setRobots, setJsonLd, setTdmReservation } from '@/lib/head-meta';
+import { removeCanonical, upsertCanonical, upsertMeta, upsertSocialMeta, setRobots, setJsonLd, setTdmReservation, setFeedLink } from '@/lib/head-meta';
 import { HUB_ROUTE_META, SHARE_IMAGE, SITE_URL, canonicalUrl as toCanonicalUrl } from '@/lib/seo/route-meta';
 import type { AiScrapingPreference } from '@/lib/ai-scraping';
 
@@ -32,6 +32,9 @@ interface SEOHeadProps {
    * asserted as one.
    */
   aiScraping?: AiScrapingPreference;
+  /** The page's RSS feed (a profile's), advertised for feed readers. Titled
+   *  with the page title unless given one. */
+  feed?: { url: string; title?: string };
 }
 
 export function SEOHead({
@@ -44,6 +47,7 @@ export function SEOHead({
   noindex = false,
   noCanonical = false,
   aiScraping,
+  feed,
 }: SEOHeadProps) {
   const { t } = useTranslation();
   const location = useLocation();
@@ -76,6 +80,8 @@ export function SEOHead({
   // active page may write — with ~30 pages held mounted by PersistentPageCache,
   // hidden ones would otherwise stomp the real tags.
   const jsonLdString = ld ? JSON.stringify(ld) : null;
+  const feedUrl = feed?.url;
+  const feedTitle = feed?.title;
   useEffect(() => {
     if (!isActivePage) return;
     document.title = fullTitle;
@@ -87,7 +93,8 @@ export function SEOHead({
     setRobots(noindex, aiScraping === 'deny' ? 'noai, noimageai' : undefined);
     setTdmReservation(aiScraping === undefined ? null : aiScraping === 'deny' ? '1' : '0');
     setJsonLd(jsonLdString);
-  }, [isActivePage, fullTitle, canonicalUrl, noCanonical, desc, image, type, noindex, jsonLdString, aiScraping, page.route, page.language]);
+    setFeedLink(feedUrl ? { href: feedUrl, title: feedTitle || fullTitle } : null);
+  }, [isActivePage, fullTitle, canonicalUrl, noCanonical, desc, image, type, noindex, jsonLdString, aiScraping, page.route, page.language, feedUrl, feedTitle]);
 
   if (!isActivePage) return null;
 

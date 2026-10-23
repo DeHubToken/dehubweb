@@ -11,6 +11,7 @@ import type { User } from './app.types';
 import type { PostReaction, ReactionCounts } from '@/lib/reactions';
 import type { ContentRating, ShopLink } from '@/lib/api/dehub/types';
 import type { SubscriberPlan } from '@/lib/content-gate';
+import type { Storyboard } from '@/lib/storyboard';
 
 /**
  * Content type badge variants for universal card headers
@@ -43,6 +44,10 @@ export interface BaseFeedItem {
    * shared link.
    */
   contentRating?: ContentRating;
+  /** Alt text, one per piece of media in display order (gallery images by position, a video first). */
+  mediaDescriptions?: string[];
+  /** Content warning: the post opens collapsed behind this one line. */
+  spoilerText?: string;
   /**
    * The creator published this for children — the Kids Mode allowlist.
    *
@@ -149,6 +154,8 @@ export interface VideoItem extends BaseFeedItem {
   type: 'video';
   thumbnail: string;
   videoUrl?: string;
+  /** Full HLS master playlist URL; plays instead of videoUrl where it can (lib/hls-vod). */
+  hlsUrl?: string;
   /** Formatted duration string (e.g., "1:23") */
   duration: string;
   /** Raw duration in seconds for caching/filtering */
@@ -166,6 +173,8 @@ export interface VideoItem extends BaseFeedItem {
   /** Async video transcode state, written optimistically before the CDN file
    *  exists. Absent on posts predating this field — treat as 'done'. */
   transcodingStatus?: 'pending' | 'on' | 'done' | 'failed';
+  /** Seek-preview sprite sheet — see lib/storyboard. */
+  storyboard?: Storyboard;
   /** Off-chain slug — the post presents as /newpost/<newPostId> until minted. */
   newPostId?: number;
   /** Creator's user ID for navigation */
@@ -473,9 +482,18 @@ export interface ShortVideo extends BaseFeedItem {
   dislikes?: number;
   thumbnail: string;
   videoUrl: string;
+  /**
+   * Pay-per-view, hold-gated or subscriber-only. The file is private, so the
+   * viewer plays a signed URL from the access endpoint instead of `videoUrl`.
+   */
+  gated?: boolean;
+  /** Full HLS master playlist URL; plays instead of videoUrl where it can (lib/hls-vod). */
+  hlsUrl?: string;
   /** Async video transcode state, written optimistically before the CDN file
    *  exists. Absent on posts predating this field — treat as 'done'. */
   transcodingStatus?: 'pending' | 'on' | 'done' | 'failed';
+  /** Seek-preview sprite sheet — see lib/storyboard. */
+  storyboard?: Storyboard;
   /**
    * The post's own title, kept apart from `description`.
    *

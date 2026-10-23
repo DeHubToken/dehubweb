@@ -1,4 +1,23 @@
 {
+  "contentWarning": {
+    "label": "Inhoudswaarschuwing",
+    "placeholder": "Schrijf hier je waarschuwing",
+    "add": "Inhoudswaarschuwing toevoegen",
+    "remove": "Inhoudswaarschuwing verwijderen",
+    "show": "Bericht tonen"
+  },
+  "altText": {
+    "badge": "ALT",
+    "add": "Beschrijving toevoegen",
+    "edit": "Beschrijving bewerken",
+    "titleImage": "Beschrijf deze afbeelding",
+    "titleVideo": "Beschrijf deze video",
+    "help": "Voor mensen die het niet kunnen zien. Schermlezers lezen het voor.",
+    "placeholder": "Wat is er te zien? Neem ook eventuele tekst erin over.",
+    "show": "Beschrijving tonen",
+    "saved": "Beschrijving opgeslagen",
+    "saveFailed": "Kan de beschrijving niet opslaan"
+  },
   "liveRecap": {
     "title": "Stream recap",
     "justEnded": "Je streamoverzicht",
@@ -356,6 +375,11 @@
       "hintDeny": "AI-systemen en crawlers die dit signaal respecteren, wordt gevraagd om niet te trainen op je audio, artwork en schrijven. Crawlers die het signaal negeren, worden er niet door geblokkeerd.",
       "saved": "AI-trainingsvoorkeur opgeslagen"
     },
+    "defaultFeed": "Standaardfeed",
+    "defaultFeedDesc": "Kies welke feed opent elke keer dat je DeHub opent",
+    "feedToggles": "Feedfilters resetten",
+    "feedTogglesDesc": "Filters die je in een feed aanzet, blijven je standaard tot je ze reset",
+    "feedTogglesCleared": "Feedfilters gereset",
     "defaultProfileTab": "Standaard profieltabblad",
     "defaultProfileTabDesc": "Kies welk tabblad bezoekers als eerste zien op je profiel",
     "public": "Openbaar",
@@ -1054,6 +1078,9 @@
     "dmSent": "{{amount}} tokens verzonden naar {{name}}!"
   },
   "postOptions": {
+    "embed": "Insluiten",
+    "copyEmbedCode": "Insluitcode kopiëren",
+    "embedCodeCopied": "Insluitcode gekopieerd",
     "options": "Opties",
     "aiOverview": "AI-overzicht",
     "sendTip": "Fooi sturen",
@@ -1914,7 +1941,19 @@
     "mostViewed": "Meest bekeken",
     "trendingWeek": "Trending deze week",
     "newest": "Nieuwste",
-    "videoChartOrder": "Volgorde van de muziekvideolijst"
+    "videoChartOrder": "Volgorde van de muziekvideolijst",
+    "country": "Land",
+    "quality": "Kwaliteit",
+    "votes": "Stemmen",
+    "plays": "Keer beluisterd",
+    "onAir": "In de lucht",
+    "liveRadio": "Live radio",
+    "pause": "Pauze",
+    "listenLive": "Live luisteren",
+    "nextStation": "Volgende zender",
+    "shareStation": "Zender delen",
+    "shareStationTitle": "{{name}} op DeHub Radio",
+    "linkCopied": "Link gekopieerd"
   },
   "notFound": {
     "title": "Pagina niet gevonden",
@@ -2661,6 +2700,8 @@
     "copyFailed": "Kon niet kopiëren"
   },
   "profileOptions": {
+    "copyRssFeed": "RSS-feedlink kopiëren",
+    "rssFeedCopied": "RSS-feedlink gekopieerd",
     "copyProfileUrl": "Profiel-URL kopiëren",
     "copyUsername": "Gebruikersnaam kopiëren",
     "copyAddress": "Adres kopiëren",
@@ -6655,6 +6696,8 @@
     }
   },
   "goLive": {
+    "bigEvent": "Groot evenement",
+    "bigEventHint": "Voor een groot publiek: kijkers zien het ongeveer 20 seconden later, met minder onderbrekingen.",
     "goLive": "Live gaan",
     "youAreLive": "Je bent Live",
     "streamReady": "Stream Gereed",
@@ -7469,7 +7512,10 @@
     "pause": "Pauzeren",
     "listens_one": "{{count}} keer beluisterd",
     "listens_other": "{{count}} keer beluisterd",
-    "visualizerColour": "Kleur van de visualisatie"
+    "visualizerColour": "Kleur van de visualisatie",
+    "lyrics": "Songtekst",
+    "lyricsLoading": "Songtekst zoeken…",
+    "lyricsNone": "Geen songtekst gevonden"
   },
   "converter": {
     "seoTitle": "Converter — importeer een video naar DeHub",
@@ -11113,6 +11159,7 @@
     "f45e06965f93": "Geen suggesties voor volgen nog niet",
     "34f5da2599fa": "Nieuwe account-suggesties zullen hier verschijnen.",
     "bac527bf9a36": "Volgsuggesties",
+    "036cfd952896": "Wie volgen",
     "e139251e4f5b": "Bericht verwijderen",
     "b3661ad568df": "Dit actie kan niet ongedaan worden gemaakt. Je bericht zal permanent verwijderd worden.",
     "685ecb984ac2": "Verwijderen...",

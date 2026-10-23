@@ -1,4 +1,23 @@
 {
+  "contentWarning": {
+    "label": "Satura brīdinājums",
+    "placeholder": "Uzrakstiet savu brīdinājumu šeit",
+    "add": "Pievienot satura brīdinājumu",
+    "remove": "Noņemt satura brīdinājumu",
+    "show": "Rādīt ziņu"
+  },
+  "altText": {
+    "badge": "ALT",
+    "add": "Pievienot aprakstu",
+    "edit": "Rediģēt aprakstu",
+    "titleImage": "Aprakstiet šo attēlu",
+    "titleVideo": "Aprakstiet šo video",
+    "help": "Cilvēkiem, kuri to nevar redzēt. Ekrāna lasītāji to nolasa skaļi.",
+    "placeholder": "Ko tas rāda? Iekļaujiet arī tajā esošo tekstu.",
+    "show": "Rādīt aprakstu",
+    "saved": "Apraksts saglabāts",
+    "saveFailed": "Neizdevās saglabāt aprakstu"
+  },
   "liveRecap": {
     "title": "Straumes kopsavilkums",
     "justEnded": "Jūsu straumes kopsavilkums",
@@ -239,6 +258,11 @@
       "hintDeny": "AI sistēmas un rāpuļprogrammas, kas respektē šo signālu, tiek lūgtas neapmācīt jūsu audio, mākslas darbus un rakstīšanu. Rāpuļprogrammas, kas ignorē signālu, ar to netiek bloķētas.",
       "saved": "MI apmācības preference ir saglabāta"
     },
+    "defaultFeed": "Noklusējuma plūsma",
+    "defaultFeedDesc": "Izvēlieties, kura plūsma atveras katru reizi, kad atverat DeHub",
+    "feedToggles": "Atiestatīt plūsmas filtrus",
+    "feedTogglesDesc": "Plūsmā ieslēgtie filtri paliek kā jūsu noklusējums, līdz tos atiestatāt",
+    "feedTogglesCleared": "Plūsmas filtri atiestatīti",
     "defaultProfileTab": "Noklusējuma profila cilne",
     "defaultProfileTabDesc": "Izvēlieties, kuru cilni apmeklētāji jūsu profilā redz vispirms",
     "public": "Publisks",
@@ -616,6 +640,10 @@
     "dmSent": "{{name}} nosūtīti {{amount}} žetoni!"
   },
   "postOptions": {
+    "embed": "Iegult",
+    "copyEmbedCode": "Kopēt iegulšanas kodu",
+    "embedCodeCopied": "Iegulšanas kods nokopēts",
+    "copyFailed": "Neizdevās nokopēt saiti",
     "options": "Opcijas",
     "aiOverview": "MI pārskats",
     "sendTip": "Sūtīt dzeramnaudu",
@@ -1959,6 +1987,8 @@
     "copyFailed": "Neizdevās kopēt"
   },
   "profileOptions": {
+    "copyRssFeed": "Kopēt RSS plūsmas saiti",
+    "rssFeedCopied": "RSS plūsmas saite nokopēta",
     "copyProfileUrl": "Kopēt profila URL",
     "copyUsername": "Kopēt lietotājvārdu",
     "copyAddress": "Kopēt adresi",
@@ -5348,6 +5378,8 @@
     }
   },
   "goLive": {
+    "bigEvent": "Liels pasākums",
+    "bigEventHint": "Lielai auditorijai: skatītāji skatās ar aptuveni 20 sekunžu aizkavi, bet ar mazāk pārtraukumiem.",
     "goLive": "Tiešraide",
     "youAreLive": "Jūs esat tiešraidē",
     "streamReady": "Tiešraide ir gatava",
@@ -6152,7 +6184,10 @@
     "play": "Atskaņot",
     "pause": "Apturēt",
     "listens_one": "{{count}} klausīties",
-    "listens_other": "{{count}} klausās"
+    "listens_other": "{{count}} klausās",
+    "lyrics": "Dziesmas vārdi",
+    "lyricsLoading": "Meklējam vārdus…",
+    "lyricsNone": "Vārdi nav atrasti"
   },
   "converter": {
     "seoTitle": "Konvertors — importējiet video uz DeHub",

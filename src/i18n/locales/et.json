@@ -1,4 +1,23 @@
 {
+  "contentWarning": {
+    "label": "Sisuhoiatus",
+    "placeholder": "Kirjuta oma hoiatus siia",
+    "add": "Lisa sisuhoiatus",
+    "remove": "Eemalda sisuhoiatus",
+    "show": "Näita postitust"
+  },
+  "altText": {
+    "badge": "ALT",
+    "add": "Lisa kirjeldus",
+    "edit": "Muuda kirjeldust",
+    "titleImage": "Kirjelda seda pilti",
+    "titleVideo": "Kirjelda seda videot",
+    "help": "Inimestele, kes seda ei näe. Ekraanilugejad loevad selle ette.",
+    "placeholder": "Mida see näitab? Lisa ka selles olev tekst.",
+    "show": "Näita kirjeldust",
+    "saved": "Kirjeldus salvestatud",
+    "saveFailed": "Kirjeldust ei õnnestunud salvestada"
+  },
   "liveRecap": {
     "title": "Voo kokkuvõte",
     "justEnded": "Sinu voo kokkuvõte",
@@ -239,6 +258,11 @@
       "hintDeny": "Seda signaali austavatel tehisintellektisüsteemidel ja roomikutel palutakse mitte treenida teie heli, kunstiteoseid ja kirjutamist. See ei blokeeri signaali eiravaid roomikuid.",
       "saved": "Tehisintellekti koolituse eelistus on salv"
     },
+    "defaultFeed": "Vaikevoog",
+    "defaultFeedDesc": "Vali, milline voog avaneb iga kord, kui DeHubi avad",
+    "feedToggles": "Lähtesta voo filtrid",
+    "feedTogglesDesc": "Voos sisse lülitatud filtrid jäävad sinu vaikeväärtusteks, kuni need lähtestad",
+    "feedTogglesCleared": "Voo filtrid lähtestatud",
     "defaultProfileTab": "Profiili vaikevahekaart",
     "defaultProfileTabDesc": "Vali, millist vahekaarti külastajad sinu profiilil esimesena näevad",
     "public": "Avalik",
@@ -630,6 +654,10 @@
     "dmSent": "{{amount}} žetooni saadetud saajale {{name}}!"
   },
   "postOptions": {
+    "embed": "Manusta",
+    "copyEmbedCode": "Kopeeri manustamiskood",
+    "embedCodeCopied": "Manustamiskood kopeeritud",
+    "copyFailed": "Linki ei õnnestunud kopeerida",
     "options": "Valikud",
     "aiOverview": "Tehisintellekti ülevaade",
     "sendTip": "Saada jootraha",
@@ -1975,6 +2003,8 @@
     "copyFailed": "Ei õnnestunud kopeerida"
   },
   "profileOptions": {
+    "copyRssFeed": "Kopeeri RSS-voo link",
+    "rssFeedCopied": "RSS-voo link kopeeritud",
     "copyProfileUrl": "Kopeeri profiili URL",
     "copyUsername": "Kopeeri kasutajanimi",
     "copyAddress": "Kopeeri aadress",
@@ -5355,6 +5385,8 @@
     }
   },
   "goLive": {
+    "bigEvent": "Suursündmus",
+    "bigEventHint": "Suurele publikule: vaatajad näevad umbes 20-sekundilise viivitusega, kuid vähemate katkestustega.",
     "goLive": "Mine otse",
     "youAreLive": "Olete Otse",
     "streamReady": "Voog on valmis",
@@ -6139,7 +6171,10 @@
     "play": "Esita",
     "pause": "Peata",
     "listens_one": "{{count}} kuula",
-    "listens_other": "{{count}} kuulab"
+    "listens_other": "{{count}} kuulab",
+    "lyrics": "Laulusõnad",
+    "lyricsLoading": "Otsin laulusõnu…",
+    "lyricsNone": "Laulusõnu ei leitud"
   },
   "converter": {
     "seoTitle": "Teisendaja — video importimine DeHubi",

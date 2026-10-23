@@ -1,4 +1,23 @@
 {
+  "contentWarning": {
+    "label": "Ìkìlọ̀ àkóónú",
+    "placeholder": "Kọ ìkìlọ̀ rẹ síbí",
+    "add": "Ṣafikun ìkìlọ̀ àkóónú",
+    "remove": "Yọ ìkìlọ̀ àkóónú kúrò",
+    "show": "Fi ifiweranṣẹ han"
+  },
+  "altText": {
+    "badge": "ALT",
+    "add": "Ṣafikun apejuwe",
+    "edit": "Ṣatunkọ apejuwe",
+    "titleImage": "Ṣapejuwe aworan yii",
+    "titleVideo": "Ṣapejuwe fidio yii",
+    "help": "Fun awọn eniyan ti ko le ri i. Awọn oluka iboju n ka a soke.",
+    "placeholder": "Kini o fihan? Fi eyikeyi ọrọ ti o wa ninu rẹ kun.",
+    "show": "Fi apejuwe han",
+    "saved": "A ti fi apejuwe pamọ",
+    "saveFailed": "Ko ṣee ṣe lati fi apejuwe pamọ"
+  },
   "liveRecap": {
     "title": "Stream recap",
     "justEnded": "Recap ṣiṣan rẹ",
@@ -239,6 +258,11 @@
       "hintDeny": "Wọ́n ní kí àwọn ètò AI àti àwọn aṣàwákiri tí wọ́n bọ̀wọ̀ fún àmì yìí má ṣe kọ́ni lórí ohùn rẹ, iṣẹ́ ọnà àti kíkọ. Àwọn alátakò tí kò gbójú fo àmì náà kò ní dí i lọ́wọ́.",
       "saved": "Ìfẹ́ ìdálẹ́kọ̀ọ́ AI ti wà ní ìpamọ́"
     },
+    "defaultFeed": "Fíìdì àìyípadà",
+    "defaultFeedDesc": "Yan fíìdì tí yóò ṣí nígbàkígbà tí o bá ṣí DeHub",
+    "feedToggles": "Tún àwọn àlẹ̀mọ́ fíìdì ṣe",
+    "feedTogglesDesc": "Àwọn àlẹ̀mọ́ tí o tàn nínú fíìdì máa wà gẹ́gẹ́ bí àìyípadà rẹ títí o fi tún wọn ṣe",
+    "feedTogglesCleared": "A ti tún àwọn àlẹ̀mọ́ fíìdì ṣe",
     "defaultProfileTab": "Táàbù profáìlì àbùdá",
     "defaultProfileTabDesc": "Yan táàbù tí àwọn àlejò yóò kọ́kọ́ rí lórí profáìlì rẹ",
     "public": "Gbangba",
@@ -628,6 +652,10 @@
     "dmSent": "A ti fi {{amount}} àmì ránṣẹ́ sí {{name}}!"
   },
   "postOptions": {
+    "embed": "Fi sinu",
+    "copyEmbedCode": "Daakọ koodu ifisinu",
+    "embedCodeCopied": "A ti daakọ koodu ifisinu",
+    "copyFailed": "Ko ṣee ṣe lati daakọ ọna asopọ naa",
     "options": "Àwọn àṣàyàn",
     "aiOverview": "Àkíyèsí AI",
     "sendTip": "Fi Ẹ̀bùn Ránṣẹ́",
@@ -1968,6 +1996,8 @@
     "copyFailed": "Ko le daakọ"
   },
   "profileOptions": {
+    "copyRssFeed": "Daakọ ọna asopọ RSS feed",
+    "rssFeedCopied": "A ti daakọ ọna asopọ RSS feed",
     "copyProfileUrl": "Daakọ URL profaili",
     "copyUsername": "Daakọ orukọ olumulo",
     "copyAddress": "Daakọ adirẹsi",
@@ -5279,6 +5309,8 @@
     }
   },
   "goLive": {
+    "bigEvent": "Ìṣẹ̀lẹ̀ ńlá",
+    "bigEventHint": "Fún ọ̀pọ̀ òǹwòran: àwọn òǹwòran yóò máa wò ó ní nǹkan bí ìṣẹ́jú-àáyá 20 sẹ́yìn, pẹ̀lú ìdádúró díẹ̀.",
     "goLive": "Lọ Gbe",
     "youAreLive": "O wà láàyè",
     "streamReady": "Ṣetan ṣiṣan",
@@ -6065,7 +6097,10 @@
     "play": "Play",
     "pause": "Duro",
     "listens_one": "{{count}} gbọ",
-    "listens_other": "{{count}} tẹ́tí sí"
+    "listens_other": "{{count}} tẹ́tí sí",
+    "lyrics": "Ọ̀rọ̀ orin",
+    "lyricsLoading": "À ń wá ọ̀rọ̀ orin…",
+    "lyricsNone": "A kò rí ọ̀rọ̀ orin"
   },
   "converter": {
     "seoTitle": "Converter — tun fidio sinu DeHub",

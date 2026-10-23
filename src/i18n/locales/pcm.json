@@ -1,4 +1,23 @@
 {
+  "contentWarning": {
+    "label": "Content warning",
+    "placeholder": "Write your warning for here",
+    "add": "Add content warning",
+    "remove": "Comot content warning",
+    "show": "Show di post"
+  },
+  "altText": {
+    "badge": "ALT",
+    "add": "Add description",
+    "edit": "Change description",
+    "titleImage": "Describe dis picture",
+    "titleVideo": "Describe dis video",
+    "help": "For people wey no fit see am. Screen reader go read am out loud.",
+    "placeholder": "Wetin e dey show? Put any writing wey dey inside am.",
+    "show": "Show description",
+    "saved": "Description don save",
+    "saveFailed": "We no fit save di description"
+  },
   "liveRecap": {
     "title": "Stream recap",
     "justEnded": "Your stream recap",
@@ -232,6 +251,11 @@
       "hintDeny": "AI system and crawler like dem dat respect dis signal, wey dey ask dem no go train on your audio, artwork and writing. Crawler like dem dat ignore dis signal, no go block dem by dis.",
       "saved": "AI training preference saved"
     },
+    "defaultFeed": "Default feed",
+    "defaultFeedDesc": "Choose which feed go open every time wey you open DeHub",
+    "feedToggles": "Reset feed filters",
+    "feedTogglesDesc": "Filters wey you on for feed go stay as your default until you reset dem",
+    "feedTogglesCleared": "Feed filters don reset",
     "defaultProfileTab": "Default profile tab",
     "defaultProfileTabDesc": "Choose which tab visitors go see first for your profile",
     "public": "Everybody",
@@ -562,6 +586,10 @@
     "dmSent": "Don send {{amount}} tokens give {{name}}!"
   },
   "postOptions": {
+    "embed": "Embed",
+    "copyEmbedCode": "Copy embed code",
+    "embedCodeCopied": "Embed code don copy",
+    "copyFailed": "We no fit copy di link",
     "options": "Option Dem",
     "aiOverview": "AI overview",
     "sendTip": "Send Tip",
@@ -1807,6 +1835,8 @@
     "copyFailed": "E no fit copy"
   },
   "profileOptions": {
+    "copyRssFeed": "Copy RSS feed link",
+    "rssFeedCopied": "RSS feed link don copy",
     "copyProfileUrl": "Copy profile URL",
     "copyUsername": "Copy username",
     "copyAddress": "Copy address",
@@ -4646,6 +4676,8 @@
     }
   },
   "goLive": {
+    "bigEvent": "Big event",
+    "bigEventHint": "For plenty viewers: people go dey watch about 20 seconds behind, but e no go dey cut too much.",
     "goLive": "Go Live",
     "youAreLive": "You're Live",
     "streamReady": "Stream Ready",
@@ -5185,7 +5217,10 @@
     "play": "Play",
     "pause": "Pause",
     "listens_one": "{{count}} listen",
-    "listens_other": "{{count}} listens"
+    "listens_other": "{{count}} listens",
+    "lyrics": "Song words",
+    "lyricsLoading": "Dey find song words…",
+    "lyricsNone": "No song words dey"
   },
   "converter": {
     "title": "Import a video",

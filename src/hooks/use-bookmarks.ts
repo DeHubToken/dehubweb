@@ -5,7 +5,7 @@ import { getSavedPosts, getLikedPosts, getWatchHistory, clearWatchHistory, toggl
 import { useAuth } from '@/contexts/AuthContext';
 import { toast } from 'sonner';
 import { supabase } from '@/integrations/supabase/client';
-import { buildAvatarUrl, buildImageUrl, buildVideoUrl, buildFeedImageUrls } from '@/lib/media-url';
+import { buildAvatarUrl, buildImageUrl, buildVideoUrl, buildHlsUrl, buildFeedImageUrls } from '@/lib/media-url';
 import { formatDuration, formatViews, formatTimeAgo } from '@/lib/feed-utils';
 import { resolveViewCount } from '@/lib/engagement';
 import type { VideoItem, ImagePost, TextPost, FeedItem } from '@/types/feed.types';
@@ -44,8 +44,11 @@ function mapNFTToVideoItem(nft: DeHubNFT): VideoItem {
     id,
     type: 'video',
     contentRating: nft.contentRating,
+    mediaDescriptions: nft.mediaDescriptions,
+    spoilerText: nft.spoilerText,
     thumbnail,
     videoUrl: videoUrl || nft.videoUrl,
+    hlsUrl: buildHlsUrl(nft.hlsUrl),
     duration: formatDuration(nft.videoDuration || nft.duration),
     title: nft.name || nft.title || nft.description?.split('\n')[0] || '',
     channel: nft.minterDisplayName || nft.mintername || 'Unknown Creator',
@@ -94,6 +97,8 @@ function mapNFTToImagePost(nft: DeHubNFT): ImagePost {
     id,
     type: 'image',
     contentRating: nft.contentRating,
+    mediaDescriptions: nft.mediaDescriptions,
+    spoilerText: nft.spoilerText,
     username: nft.mintername || nft.minterDisplayName || 'unknown',
     verified: false,
     avatar,
@@ -143,6 +148,8 @@ function mapNFTToTextPost(nft: DeHubNFT): TextPost {
     id,
     type: 'post',
     contentRating: nft.contentRating,
+    mediaDescriptions: nft.mediaDescriptions,
+    spoilerText: nft.spoilerText,
     author: {
       id: nft.minter,
       name: nft.minterDisplayName || nft.mintername || 'Unknown',

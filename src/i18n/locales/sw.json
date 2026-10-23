@@ -1,4 +1,23 @@
 {
+  "contentWarning": {
+    "label": "Onyo la maudhui",
+    "placeholder": "Andika onyo lako hapa",
+    "add": "Ongeza onyo la maudhui",
+    "remove": "Ondoa onyo la maudhui",
+    "show": "Onyesha chapisho"
+  },
+  "altText": {
+    "badge": "ALT",
+    "add": "Ongeza maelezo",
+    "edit": "Hariri maelezo",
+    "titleImage": "Eleza picha hii",
+    "titleVideo": "Eleza video hii",
+    "help": "Kwa watu wasioweza kuiona. Visomaji skrini huisoma kwa sauti.",
+    "placeholder": "Inaonyesha nini? Jumuisha maandishi yoyote yaliyomo.",
+    "show": "Onyesha maelezo",
+    "saved": "Maelezo yamehifadhiwa",
+    "saveFailed": "Imeshindwa kuhifadhi maelezo"
+  },
   "liveRecap": {
     "title": "Muhtasari wa mkondo",
     "justEnded": "Muhtasari wa mkondo wako",
@@ -241,6 +260,11 @@
       "hintDeny": "Mifumo ya AI na watambaaji wanaoheshimu ishara hii wanaombwa kutofundisha juu ya sauti, sanaa na uandishi wako. Matambaa yanayopuuza ishara hayazuiliwi nayo.",
       "saved": "Upendeleo wa mafunzo ya AI umehifadhiwa"
     },
+    "defaultFeed": "Mlisho chaguo-msingi",
+    "defaultFeedDesc": "Chagua mlisho unaofunguka kila unapofungua DeHub",
+    "feedToggles": "Weka upya vichujio vya mlisho",
+    "feedTogglesDesc": "Vichujio unavyowasha kwenye mlisho hubaki kuwa chaguo-msingi lako hadi uviweke upya",
+    "feedTogglesCleared": "Vichujio vya mlisho vimewekwa upya",
     "defaultProfileTab": "Kichupo chaguo-msingi cha wasifu",
     "defaultProfileTabDesc": "Chagua kichupo ambacho wageni huona kwanza kwenye wasifu wako",
     "public": "Umma",
@@ -632,6 +656,10 @@
     "dmSent": "Umetuma {{amount}} tokeni kwa {{name}}!"
   },
   "postOptions": {
+    "embed": "Pachika",
+    "copyEmbedCode": "Nakili msimbo wa kupachika",
+    "embedCodeCopied": "Msimbo wa kupachika umenakiliwa",
+    "copyFailed": "Imeshindwa kunakili kiungo",
     "options": "Chaguzi",
     "aiOverview": "Muhtasari wa AI",
     "sendTip": "Tuma Kidokezo",
@@ -1979,6 +2007,8 @@
     "copyFailed": "Imeshindwa kunakili"
   },
   "profileOptions": {
+    "copyRssFeed": "Nakili kiungo cha mlisho wa RSS",
+    "rssFeedCopied": "Kiungo cha mlisho wa RSS kimenakiliwa",
     "copyProfileUrl": "Nakili URL ya wasifu",
     "copyUsername": "Nakili jina la mtumiaji",
     "copyAddress": "Nakili anwani",
@@ -5372,6 +5402,8 @@
     }
   },
   "goLive": {
+    "bigEvent": "Tukio kubwa",
+    "bigEventHint": "Kwa hadhira kubwa: watazamaji hutazama nyuma kwa takriban sekunde 20, na kukatika kidogo.",
     "goLive": "Jifanya Mwenyeji",
     "youAreLive": "Wewe ni Mwenyeji",
     "streamReady": "Mkondo Umehanda",
@@ -6156,7 +6188,10 @@
     "play": "Cheza",
     "pause": "Sitisha",
     "listens_one": "{{count}} sikiliza",
-    "listens_other": "{{count}} anasikiliza"
+    "listens_other": "{{count}} anasikiliza",
+    "lyrics": "Maneno ya wimbo",
+    "lyricsLoading": "Inatafuta maneno…",
+    "lyricsNone": "Hakuna maneno yaliyopatikana"
   },
   "converter": {
     "seoTitle": "Kibadilishi — ingiza video kwenye DeHub",

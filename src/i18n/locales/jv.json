@@ -1,4 +1,23 @@
 {
+  "contentWarning": {
+    "label": "Pènget isi",
+    "placeholder": "Tulisen pènget ing kéné",
+    "add": "Tambahake pènget isi",
+    "remove": "Busak pènget isi",
+    "show": "Tampilake kiriman"
+  },
+  "altText": {
+    "badge": "ALT",
+    "add": "Tambahake katrangan",
+    "edit": "Owahi katrangan",
+    "titleImage": "Terangna gambar iki",
+    "titleVideo": "Terangna video iki",
+    "help": "Kanggo wong sing ora bisa ndeleng. Pamaca layar maca kanthi banter.",
+    "placeholder": "Apa sing ditampilake? Tulisen uga teks sing ana ing kono.",
+    "show": "Tampilake katrangan",
+    "saved": "Katrangan wis disimpen",
+    "saveFailed": "Ora bisa nyimpen katrangan"
+  },
   "liveRecap": {
     "title": "Rekap streaming",
     "justEnded": "Ringkesan aliran mu",
@@ -239,6 +258,11 @@
       "hintDeny": "Sistem lan crawler AI sing ngurmati sinyal iki dijaluk supaya ora nglatih audio, karya seni, lan tulisanmu. Crawler sing nglirwakake sinyal ora diblokir dening iku.",
       "saved": "Preferensi latihan AI disimpen"
     },
+    "defaultFeed": "Feed gawan",
+    "defaultFeedDesc": "Pilih feed sing dibukak saben sampeyan mbukak DeHub",
+    "feedToggles": "Reset saringan feed",
+    "feedTogglesDesc": "Saringan sing sampeyan uripake ing feed tetep dadi gawan nganti sampeyan reset",
+    "feedTogglesCleared": "Saringan feed wis direset",
     "defaultProfileTab": "Tab profil gawan",
     "defaultProfileTabDesc": "Pilih tab endi sing dideleng dhisik dening tamu ing profilmu",
     "public": "Umum",
@@ -630,6 +654,10 @@
     "dmSent": "Ngirim {{amount}} token menyang {{name}}!"
   },
   "postOptions": {
+    "embed": "Lebokake",
+    "copyEmbedCode": "Salin kode lebokan",
+    "embedCodeCopied": "Kode lebokan wis disalin",
+    "copyFailed": "Ora bisa nyalin pranala",
     "options": "Opsi",
     "aiOverview": "Ringkesan AI",
     "sendTip": "Kirim Hadiah",
@@ -1975,6 +2003,8 @@
     "copyFailed": "Ora bisa disalin"
   },
   "profileOptions": {
+    "copyRssFeed": "Salin pranala feed RSS",
+    "rssFeedCopied": "Pranala feed RSS wis disalin",
     "copyProfileUrl": "Salin URL profil",
     "copyUsername": "Salin jeneng pangguna",
     "copyAddress": "Salin alamat",
@@ -5164,6 +5194,8 @@
     }
   },
   "goLive": {
+    "bigEvent": "Acara gedhe",
+    "bigEventHint": "Kanggo penonton akèh: penonton nonton kira-kira 20 detik telat, kanthi gangguan luwih sithik.",
     "goLive": "Dadi Live",
     "youAreLive": "Sampeyan Live",
     "streamReady": "Stream Siap",
@@ -5913,7 +5945,10 @@
     "play": "Mainake",
     "pause": "Pause",
     "listens_one": "{{count}} ngrungokake",
-    "listens_other": "{{count}} ngrungokake"
+    "listens_other": "{{count}} ngrungokake",
+    "lyrics": "Lirik",
+    "lyricsLoading": "Nggoleki lirik…",
+    "lyricsNone": "Lirik ora ketemu"
   },
   "converter": {
     "seoTitle": "Converter — impor video menyang DeHub",

@@ -1,4 +1,23 @@
 {
+  "contentWarning": {
+    "label": "Gargaɗin abun ciki",
+    "placeholder": "Rubuta gargaɗinka a nan",
+    "add": "Ƙara gargaɗin abun ciki",
+    "remove": "Cire gargaɗin abun ciki",
+    "show": "Nuna rubutu"
+  },
+  "altText": {
+    "badge": "ALT",
+    "add": "Ƙara bayani",
+    "edit": "Gyara bayani",
+    "titleImage": "Bayyana wannan hoton",
+    "titleVideo": "Bayyana wannan bidiyon",
+    "help": "Ga mutanen da ba sa iya ganinsa. Masu karanta allo suna karanta shi da babbar murya.",
+    "placeholder": "Me yake nunawa? Haɗa duk wani rubutu da ke ciki.",
+    "show": "Nuna bayani",
+    "saved": "An adana bayani",
+    "saveFailed": "Ba a iya adana bayanin ba"
+  },
   "liveRecap": {
     "title": "Stream sake kunnawa",
     "justEnded": "Your rafi recap",
@@ -239,6 +258,11 @@
       "hintDeny": "AI tsarin da crawlers da ke girmama wannan siginar ana tambayar su kada su horar da sauti, zane-zane da rubutu. Crawlers da suka yi watsi da siginar ba a toshe shi ba.",
       "saved": "AI horo fifiko ceto"
     },
+    "defaultFeed": "Ciyarwa ta asali",
+    "defaultFeedDesc": "Zaɓi wace ciyarwa za ta buɗe duk lokacin da ka buɗe DeHub",
+    "feedToggles": "Sake saita matatun ciyarwa",
+    "feedTogglesDesc": "Matatun da ka kunna a ciyarwa suna zama na asali har sai ka sake saita su",
+    "feedTogglesCleared": "An sake saita matatun ciyarwa",
     "defaultProfileTab": "Shafin bayanan martaba na asali",
     "defaultProfileTabDesc": "Zaɓi wane shafi baƙi za su fara gani a bayanan martabarka",
     "public": "Jama'a",
@@ -630,6 +654,10 @@
     "dmSent": "An aika {{amount}} tokens ga {{name}}!"
   },
   "postOptions": {
+    "embed": "Saka",
+    "copyEmbedCode": "Kwafi lambar sakawa",
+    "embedCodeCopied": "An kwafi lambar sakawa",
+    "copyFailed": "Ba a iya kwafi hanyar haɗin ba",
     "options": "Zaɓuɓɓuka",
     "aiOverview": "AI bayyani",
     "sendTip": "Aika Kyauta",
@@ -1975,6 +2003,8 @@
     "copyFailed": "An kasa kwafa"
   },
   "profileOptions": {
+    "copyRssFeed": "Kwafi hanyar haɗin ciyarwar RSS",
+    "rssFeedCopied": "An kwafi hanyar haɗin ciyarwar RSS",
     "copyProfileUrl": "Kwafi URL ɗin bayanai",
     "copyUsername": "Kwafi sunan mai amfani",
     "copyAddress": "Kwafi adireshin",
@@ -5286,6 +5316,8 @@
     }
   },
   "goLive": {
+    "bigEvent": "Babban taro",
+    "bigEventHint": "Don masu kallo da yawa: masu kallo za su gani da jinkirin kusan daƙiƙa 20, tare da ƙarancin katsewa.",
     "goLive": "Tafi Live",
     "youAreLive": "Kana Live",
     "streamReady": "Stream Ready",
@@ -6064,7 +6096,10 @@
     "play": "Yi wasa",
     "pause": "Dakatar da",
     "listens_one": "{{count}} saurare",
-    "listens_other": "{{count}} sauraro"
+    "listens_other": "{{count}} sauraro",
+    "lyrics": "Kalmomin waƙa",
+    "lyricsLoading": "Ana neman kalmomi…",
+    "lyricsNone": "Ba a sami kalmomi ba"
   },
   "converter": {
     "seoTitle": "Converter — shigo da bidiyo zuwa DeHub",

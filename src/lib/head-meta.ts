@@ -29,6 +29,25 @@ export function upsertCanonical(href: string): void {
   link.href = href;
 }
 
+/**
+ * The page's own RSS feed, or none. Marked so it never touches a site-wide
+ * feed link index.html may carry, and removed on the next page that has none.
+ */
+export function setFeedLink(feed: { href: string; title: string } | null): void {
+  const existing = document.head.querySelector<HTMLLinkElement>('link[data-page-feed]');
+  if (!feed) {
+    existing?.remove();
+    return;
+  }
+  const link = existing ?? document.createElement('link');
+  link.rel = 'alternate';
+  link.type = 'application/rss+xml';
+  link.title = feed.title;
+  link.href = feed.href;
+  link.setAttribute('data-page-feed', '');
+  if (!existing) document.head.appendChild(link);
+}
+
 /** Drop the canonical (and og:url) — for a page that is not a real URL. */
 export function removeCanonical(): void {
   document.head.querySelector('link[rel="canonical"]')?.remove();

@@ -1,4 +1,23 @@
 {
+  "contentWarning": {
+    "label": "ئاگاداری ناوەڕۆک",
+    "placeholder": "ئاگادارییەکەت لێرە بنووسە",
+    "add": "ئاگاداری ناوەڕۆک زیاد بکە",
+    "remove": "ئاگاداری ناوەڕۆک لابە",
+    "show": "پۆست پیشان بدە"
+  },
+  "altText": {
+    "badge": "ALT",
+    "add": "وەسف زیاد بکە",
+    "edit": "وەسف دەستکاری بکە",
+    "titleImage": "ئەم وێنەیە وەسف بکە",
+    "titleVideo": "ئەم ڤیدیۆیە وەسف بکە",
+    "help": "بۆ ئەو کەسانەی ناتوانن بیبینن. خوێنەرەکانی شاشە بە دەنگی بەرز دەیخوێننەوە.",
+    "placeholder": "چی پیشان دەدات؟ هەر دەقێکیش تێیدایە بینووسە.",
+    "show": "وەسف پیشان بدە",
+    "saved": "وەسف پاشەکەوت کرا",
+    "saveFailed": "نەتوانرا وەسفەکە پاشەکەوت بکرێت"
+  },
   "liveRecap": {
     "title": "Kurteya weşanê",
     "justEnded": "Kurteya weşana te",
@@ -229,6 +248,11 @@
     "aiScraping": {
       "hintAllow": "سیستەمەکان و گەڕۆکەکانی زیرەکی دەستکرد کە ئەم نیشانە ڕێز دەگرن، دەتوانن لەسەر دەنگ، هونەر و نووسینەکانی تۆ مەشق بکەن."
     },
+    "defaultFeed": "Feeda xwerû",
+    "defaultFeedDesc": "Hilbijêre ku her carê DeHub vedikî kîjan feed vebe",
+    "feedToggles": "Parzûnên feedê ji nû ve saz bike",
+    "feedTogglesDesc": "Parzûnên ku tu di feedê de vedikî heta ku tu wan ji nû ve saz nekî xwerû dimînin",
+    "feedTogglesCleared": "Parzûnên feedê ji nû ve hatin sazkirin",
     "defaultProfileTab": "Taba profîla xwerû",
     "defaultProfileTabDesc": "Hilbijêre bê serdanker di profîla te de pêşî kîjan tabê dibînin",
     "public": "Giştî",
@@ -511,6 +535,10 @@
     "dmSent": "{{amount}} توکن ji {{name}} re hat şandin!"
   },
   "postOptions": {
+    "embed": "تێخستن",
+    "copyEmbedCode": "کۆدی تێخستن کۆپی بکە",
+    "embedCodeCopied": "کۆدی تێخستن کۆپی کرا",
+    "copyFailed": "نەتوانرا بەستەرەکە کۆپی بکرێت",
     "options": "Vebijêrk",
     "sendTip": "Bexşîş Bişîne",
     "queue": "Rêz",
@@ -1773,6 +1801,8 @@
     "copyFailed": "نەکرا کۆپی بکرێت"
   },
   "profileOptions": {
+    "copyRssFeed": "بەستەری فیدی RSS کۆپی بکە",
+    "rssFeedCopied": "بەستەری فیدی RSS کۆپی کرا",
     "copyProfileUrl": "لینکی پرۆفایل کۆپی بکە",
     "copyUsername": "ناوی بەکارهێنەر کۆپی بکە",
     "copyAddress": "ناونیشان کۆپی بکە",
@@ -4605,6 +4635,8 @@
     }
   },
   "goLive": {
+    "bigEvent": "Bûyera mezin",
+    "bigEventHint": "Ji bo temaşevanên zêde: temaşevan bi qasî 20 çirkeyan paşve temaşe dikin, bi kêmtir navberan.",
     "goLive": "بکەوەرە ستریم",
     "youAreLive": "تۆ لایڤیت",
     "streamReady": "ستریم ئامادەیە",
@@ -5274,7 +5306,10 @@
   "audioPost": {
     "popOut": "پاپ ئاوت — لە کاتی گەڕاندا گوێ بگرە",
     "listens_one": "{{count}} گوێ بگرە",
-    "listens_other": "{{count}} گوێ دەگرێت"
+    "listens_other": "{{count}} گوێ دەگرێت",
+    "lyrics": "Gotinên stranê",
+    "lyricsLoading": "Gotin tên lêgerîn…",
+    "lyricsNone": "Gotin nehatin dîtin"
   },
   "converter": {
     "ownership": "Ez xwediyê vê naverokê me, an jî destûra xwediyê mafan heye ku ez wê li ser DeHub biweşînim.",

@@ -1,4 +1,23 @@
 {
+  "contentWarning": {
+    "label": "Isexwayiso sokuqukethwe",
+    "placeholder": "Bhala isexwayiso sakho lapha",
+    "add": "Engeza isexwayiso sokuqukethwe",
+    "remove": "Susa isexwayiso sokuqukethwe",
+    "show": "Bonisa okuthunyelwe"
+  },
+  "altText": {
+    "badge": "ALT",
+    "add": "Engeza incazelo",
+    "edit": "Hlela incazelo",
+    "titleImage": "Chaza lesi sithombe",
+    "titleVideo": "Chaza le vidiyo",
+    "help": "Kubantu abangakwazi ukuyibona. Abafundi besikrini bayifunda ngokuzwakalayo.",
+    "placeholder": "Ibonisani? Faka noma imuphi umbhalo okuyo.",
+    "show": "Bonisa incazelo",
+    "saved": "Incazelo igciniwe",
+    "saveFailed": "Ayikwazanga ukugcina incazelo"
+  },
   "liveRecap": {
     "title": "Ukudlala kabusha kokusakaza",
     "justEnded": "Ukubuyekezwa kokusakaza kwakho",
@@ -239,6 +258,11 @@
       "hintDeny": "Amasistimu we-AI nabakhasa abahlonipha lesi siginali bacelwa ukuba bangaqeqeshi umsindo, ubuciko nokubhala kwakho. Ama-crawlers angayinaki isignali awavinjwa yiyo.",
       "saved": "Okuthandwa ukuqeqeshwa kwe-AI kugciniwe"
     },
+    "defaultFeed": "Okuphakelayo okuzenzakalelayo",
+    "defaultFeedDesc": "Khetha ukuthi yikuphi okuphakelayo okuvuleka njalo uma uvula i-DeHub",
+    "feedToggles": "Setha kabusha izihlungi zokuphakelayo",
+    "feedTogglesDesc": "Izihlungi ozivulayo kokuphakelayo zihlala zingezakho ezizenzakalelayo uze uzisethe kabusha",
+    "feedTogglesCleared": "Izihlungi zokuphakelayo zisethwe kabusha",
     "defaultProfileTab": "Ithebhu yephrofayela ezenzakalelayo",
     "defaultProfileTabDesc": "Khetha ukuthi iyiphi ithebhu izivakashi ezizoyibona kuqala kuphrofayela yakho",
     "public": "Umphakathi",
@@ -630,6 +654,10 @@
     "dmSent": "Kuthunyelwe u-{{amount}} tokens ku-{{name}}!"
   },
   "postOptions": {
+    "embed": "Shumeka",
+    "copyEmbedCode": "Kopisha ikhodi yokushumeka",
+    "embedCodeCopied": "Ikhodi yokushumeka ikopishiwe",
+    "copyFailed": "Akukwazanga ukukopisha isixhumanisi",
     "options": "Izinketho",
     "aiOverview": "Isifinyezo se-AI",
     "sendTip": "Thumela Ithiphu",
@@ -2004,6 +2032,8 @@
     "copyFailed": "Ayikwazanga ukukopisha"
   },
   "profileOptions": {
+    "copyRssFeed": "Kopisha isixhumanisi sokuphakelayo kwe-RSS",
+    "rssFeedCopied": "Isixhumanisi sokuphakelayo kwe-RSS sikopishiwe",
     "copyProfileUrl": "Kopisha i-URL yephrofayela",
     "copyUsername": "Kopisha igama lomsebenzisi",
     "copyAddress": "Kopisha ikheli",
@@ -5375,6 +5405,8 @@
     }
   },
   "goLive": {
+    "bigEvent": "Umcimbi omkhulu",
+    "bigEventHint": "Ezilalelini ezinkulu: ababukeli babuka bephuze cishe imizuzwana engama-20, kodwa kuphazamiseka kancane.",
     "goLive": "Yiya Live",
     "youAreLive": "Ukhona Live",
     "streamReady": "Stream Ready",
@@ -6177,7 +6209,10 @@
     "play": "Dlala",
     "pause": "Misa okwesikhashana",
     "listens_one": "{{count}} lalela",
-    "listens_other": "{{count}} uyalalela"
+    "listens_other": "{{count}} uyalalela",
+    "lyrics": "Amazwi engoma",
+    "lyricsLoading": "Kufunwa amazwi…",
+    "lyricsNone": "Awekho amazwi atholakele"
   },
   "converter": {
     "seoTitle": "I-Converter — kufaka i-video ku-DeHub",

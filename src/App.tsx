@@ -18,6 +18,7 @@ import { ConnectLinkedWalletModal } from "@/components/app/wallet-setup/ConnectL
 import { SelfBadgeSync } from "@/components/app/SelfBadgeSync";
 import { BadgeShowcaseHost } from "@/components/app/badge-showcase/BadgeShowcaseHost";
 import { ViewingPreferencesSync } from "@/components/app/ViewingPreferencesSync";
+import { FeedDefaultsSync } from "@/components/app/FeedDefaultsSync";
 import { useAuth } from "@/contexts/AuthContext";
 import { usePreloadIcons } from "@/hooks/use-preload-icons";
 import { useNotificationClickRouting } from "@/hooks/use-notification-click-routing";
@@ -440,6 +441,7 @@ function AppContent() {
       <QuickActionsHost />
       <BadgeShowcaseHost />
       <ViewingPreferencesSync />
+      <FeedDefaultsSync />
       <GiveawayPrizeModal />
       <ConnectLinkedWalletModal />
       {/* Always mounted, and closed it costs nothing: ui/drawer keeps vaul's

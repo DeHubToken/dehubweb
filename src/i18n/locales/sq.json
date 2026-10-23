@@ -1,4 +1,23 @@
 {
+  "contentWarning": {
+    "label": "Paralajërim për përmbajtjen",
+    "placeholder": "Shkruaj paralajërimin këtu",
+    "add": "Shto paralajërim për përmbajtjen",
+    "remove": "Hiq paralajërimin për përmbajtjen",
+    "show": "Shfaq postimin"
+  },
+  "altText": {
+    "badge": "ALT",
+    "add": "Shto një përshkrim",
+    "edit": "Ndrysho përshkrimin",
+    "titleImage": "Përshkruaj këtë imazh",
+    "titleVideo": "Përshkruaj këtë video",
+    "help": "Për njerëzit që nuk mund ta shohin. Lexuesit e ekranit e lexojnë me zë.",
+    "placeholder": "Çfarë tregon? Përfshi çdo tekst që ka.",
+    "show": "Shfaq përshkrimin",
+    "saved": "Përshkrimi u ruajt",
+    "saveFailed": "Përshkrimi nuk mund të ruhej"
+  },
   "liveRecap": {
     "title": "Përmbledhje e rrjedhës",
     "justEnded": "Përmbledhja jote e rrjedhës",
@@ -239,6 +258,11 @@
       "hintDeny": "Sistemet AI dhe zvarritësit që respektojnë këtë sinjal u kërkohet të mos trajnohen në audio, vepra arti dhe shkrime. Zvarritësit që injorojnë sinjalin nuk bllokohen prej tij.",
       "saved": "Preferenca e trajnimit të AI u ruajt"
     },
+    "defaultFeed": "Furnizimi i parazgjedhur",
+    "defaultFeedDesc": "Zgjidh cili furnizim hapet sa herë që hap DeHub",
+    "feedToggles": "Rivendos filtrat e furnizimit",
+    "feedTogglesDesc": "Filtrat që aktivizon në një furnizim mbeten të parazgjedhurit e tu derisa t'i rivendosësh",
+    "feedTogglesCleared": "Filtrat e furnizimit u rivendosën",
     "defaultProfileTab": "Skeda e parazgjedhur e profilit",
     "defaultProfileTabDesc": "Zgjidh cilën skedë shohin të parën vizitorët në profilin tënd",
     "public": "Publik",
@@ -630,6 +654,10 @@
     "dmSent": "U dërguan {{amount}} tokena te {{name}}!"
   },
   "postOptions": {
+    "embed": "Ngulit",
+    "copyEmbedCode": "Kopjo kodin e ngulitjes",
+    "embedCodeCopied": "Kodi i ngulitjes u kopjua",
+    "copyFailed": "Lidhja nuk mund të kopjohej",
     "options": "Opsionet",
     "aiOverview": "Përmbledhje e AI",
     "sendTip": "Dërgo Bakshish",
@@ -1975,6 +2003,8 @@
     "copyFailed": "Nuk u kopjua dot"
   },
   "profileOptions": {
+    "copyRssFeed": "Kopjo lidhjen e burimit RSS",
+    "rssFeedCopied": "Lidhja e burimit RSS u kopjua",
     "copyProfileUrl": "Kopjo URL-në e profilit",
     "copyUsername": "Kopjo emrin e përdoruesit",
     "copyAddress": "Kopjo adresën",
@@ -5363,6 +5393,8 @@
     }
   },
   "goLive": {
+    "bigEvent": "Ngjarje e madhe",
+    "bigEventHint": "Për audienca të mëdha: shikuesit e shohin me rreth 20 sekonda vonesë, me më pak ndërprerje.",
     "goLive": "Shko Live",
     "youAreLive": "Jeni Live",
     "streamReady": "Stream Gati",
@@ -6165,7 +6197,10 @@
     "play": "Luaj",
     "pause": "Ndalo",
     "listens_one": "{{count}} dëgjo",
-    "listens_other": "{{count}} listens"
+    "listens_other": "{{count}} listens",
+    "lyrics": "Teksti i këngës",
+    "lyricsLoading": "Po kërkojmë tekstin…",
+    "lyricsNone": "Nuk u gjet tekst"
   },
   "converter": {
     "seoTitle": "Konvertuesi — importo një video në DeHub",
