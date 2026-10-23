@@ -1954,6 +1954,8 @@
     "copyFailed": "कॉपी नहीं हो सका"
   },
   "profileOptions": {
+    "copyRssFeed": "RSS फीड लिंक कॉपी करव",
+    "rssFeedCopied": "RSS फीड लिंक कॉपी हो गे",
     "copyProfileUrl": "प्रोफाइल URL कॉपी करव",
     "copyUsername": "यूजरनेम कॉपी करव",
     "copyAddress": "पता कॉपी करव",

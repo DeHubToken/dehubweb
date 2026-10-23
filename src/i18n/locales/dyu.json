@@ -1942,6 +1942,8 @@
     "copyFailed": "A tun tɛ se ka kopi kɛ"
   },
   "profileOptions": {
+    "copyRssFeed": "RSS feed lien kopi",
+    "rssFeedCopied": "RSS feed lien kopira",
     "copyProfileUrl": "Profil URL kopi",
     "copyUsername": "Tɔgɔ kopi",
     "copyAddress": "Adirɛsi kopi",

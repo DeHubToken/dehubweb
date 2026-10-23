@@ -1979,6 +1979,8 @@
     "copyFailed": "Kunde inte kopiera"
   },
   "profileOptions": {
+    "copyRssFeed": "Kopiera länk till RSS-flöde",
+    "rssFeedCopied": "Länk till RSS-flöde kopierad",
     "copyProfileUrl": "Kopiera profil-URL",
     "copyUsername": "Kopiera användarnamn",
     "copyAddress": "Kopiera adress",

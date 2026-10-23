@@ -2007,6 +2007,8 @@
     "copyFailed": "کپی نشد"
   },
   "profileOptions": {
+    "copyRssFeed": "کپی لینک خوراک RSS",
+    "rssFeedCopied": "لینک خوراک RSS کپی شد",
     "copyProfileUrl": "کپی لینک پروفایل",
     "copyUsername": "کپی نام کاربری",
     "copyAddress": "کپی آدرس",

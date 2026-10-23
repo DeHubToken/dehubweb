@@ -1975,6 +1975,8 @@
     "copyFailed": "No s'ha pogut copiar"
   },
   "profileOptions": {
+    "copyRssFeed": "Copia l'enllaç del canal RSS",
+    "rssFeedCopied": "Enllaç del canal RSS copiat",
     "copyProfileUrl": "Copia l'URL del perfil",
     "copyUsername": "Copia el nom d'usuari",
     "copyAddress": "Copia l'adreça",

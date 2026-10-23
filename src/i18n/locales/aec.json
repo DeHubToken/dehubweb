@@ -1928,6 +1928,8 @@
     "copyFailed": "لم يتم النسخ"
   },
   "profileOptions": {
+    "copyRssFeed": "نسخ رابط خلاصة RSS",
+    "rssFeedCopied": "تم نسخ رابط خلاصة RSS",
     "copyProfileUrl": "نسخ رابط الملف الشخصي",
     "copyUsername": "نسخ اسم المستخدم",
     "copyAddress": "نسخ العنوان",

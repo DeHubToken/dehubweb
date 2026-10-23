@@ -1984,6 +1984,8 @@
     "copyFailed": "복사할 수 없음"
   },
   "profileOptions": {
+    "copyRssFeed": "RSS 피드 링크 복사",
+    "rssFeedCopied": "RSS 피드 링크가 복사되었습니다",
     "copyProfileUrl": "프로필 URL 복사",
     "copyUsername": "사용자 이름 복사",
     "copyAddress": "주소 복사",

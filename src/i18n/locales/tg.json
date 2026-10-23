@@ -1960,6 +1960,8 @@
     "copyFailed": "Нусхабардорӣ карда нашуд"
   },
   "profileOptions": {
+    "copyRssFeed": "Нусхабардории пайванди тасмаи RSS",
+    "rssFeedCopied": "Пайванди тасмаи RSS нусхабардорӣ шуд",
     "copyProfileUrl": "Нусхабардории URL профил",
     "copyUsername": "Нусхабардории номи корбар",
     "copyAddress": "Нусхабардории суроға",

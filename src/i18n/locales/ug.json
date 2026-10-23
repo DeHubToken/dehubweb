@@ -1968,6 +1968,8 @@
     "copyFailed": "نۇسخىسىنى ئېلىش مۇمكىن بولمىدى"
   },
   "profileOptions": {
+    "copyRssFeed": "RSS ئۇچۇر ئېقىمى ئۇلىنىشىنى كۆچۈرۈش",
+    "rssFeedCopied": "RSS ئۇچۇر ئېقىمى ئۇلىنىشى كۆچۈرۈلدى",
     "copyProfileUrl": "ئارخىپ URL نى كۆچۈرۈش",
     "copyUsername": "ئىشلەتكۈچى نامىنى كۆچۈرۈش",
     "copyAddress": "ئادرېسنى كۆچۈرۈش",

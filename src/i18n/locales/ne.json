@@ -1982,6 +1982,8 @@
     "copyFailed": "प्रतिलिपि गर्न सकिएन"
   },
   "profileOptions": {
+    "copyRssFeed": "RSS फिड लिङ्क कपि गर्नुहोस्",
+    "rssFeedCopied": "RSS फिड लिङ्क कपि भयो",
     "copyProfileUrl": "प्रोफाइल URL कपि गर्नुहोस्",
     "copyUsername": "प्रयोगकर्ता नाम कपि गर्नुहोस्",
     "copyAddress": "ठेगाना कपि गर्नुहोस्",

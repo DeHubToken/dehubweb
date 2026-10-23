@@ -1970,6 +1970,8 @@
     "copyFailed": "ບໍ່ສາມາດສຳເນົາໄດ້"
   },
   "profileOptions": {
+    "copyRssFeed": "ຄັດລອກລິ້ງ RSS feed",
+    "rssFeedCopied": "ຄັດລອກລິ້ງ RSS feed ແລ້ວ",
     "copyProfileUrl": "ຄັດລອກ URL ໂປຣໄຟລ໌",
     "copyUsername": "ຄັດລອກຊື່ຜູ້ໃຊ້",
     "copyAddress": "ຄັດລອກທີ່ຢູ່",

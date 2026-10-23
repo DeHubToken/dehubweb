@@ -1990,6 +1990,8 @@
     "copyFailed": "कॉपी नहीं हो सका"
   },
   "profileOptions": {
+    "copyRssFeed": "RSS फ़ीड लिंक कॉपी करें",
+    "rssFeedCopied": "RSS फ़ीड लिंक कॉपी हो गया",
     "copyProfileUrl": "प्रोफ़ाइल URL कॉपी करें",
     "copyUsername": "उपयोगकर्ता नाम कॉपी करें",
     "copyAddress": "पता कॉपी करें",

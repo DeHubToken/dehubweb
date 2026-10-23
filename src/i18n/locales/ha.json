@@ -1975,6 +1975,8 @@
     "copyFailed": "An kasa kwafa"
   },
   "profileOptions": {
+    "copyRssFeed": "Kwafi hanyar haɗin ciyarwar RSS",
+    "rssFeedCopied": "An kwafi hanyar haɗin ciyarwar RSS",
     "copyProfileUrl": "Kwafi URL ɗin bayanai",
     "copyUsername": "Kwafi sunan mai amfani",
     "copyAddress": "Kwafi adireshin",

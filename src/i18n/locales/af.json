@@ -2009,6 +2009,8 @@
     "copyFailed": "Kon nie kopieer nie"
   },
   "profileOptions": {
+    "copyRssFeed": "Kopieer RSS-voerskakel",
+    "rssFeedCopied": "RSS-voerskakel gekopieer",
     "copyProfileUrl": "Kopieer profiel-URL",
     "copyUsername": "Kopieer gebruikersnaam",
     "copyAddress": "Kopieer adres",

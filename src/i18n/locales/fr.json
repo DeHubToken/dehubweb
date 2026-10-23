@@ -2472,6 +2472,8 @@
     "copyFailed": "Impossible de copier"
   },
   "profileOptions": {
+    "copyRssFeed": "Copier le lien du flux RSS",
+    "rssFeedCopied": "Lien du flux RSS copié",
     "copyProfileUrl": "Copier l'URL du profil",
     "copyUsername": "Copier le nom d'utilisateur",
     "copyAddress": "Copier l'adresse",

@@ -2076,6 +2076,8 @@
     "copyFailed": "কপি করা যায় নি"
   },
   "profileOptions": {
+    "copyRssFeed": "RSS ফিড লিংক কপি গরো",
+    "rssFeedCopied": "RSS ফিড লিংক কপি অইছে",
     "copyProfileUrl": "প্রোফাইল লিংক কপি গরো",
     "copyUsername": "ইউজারনেম কপি গরো",
     "copyAddress": "ঠিকানা কপি গরো",

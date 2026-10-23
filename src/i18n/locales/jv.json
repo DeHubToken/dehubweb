@@ -1975,6 +1975,8 @@
     "copyFailed": "Ora bisa disalin"
   },
   "profileOptions": {
+    "copyRssFeed": "Salin pranala feed RSS",
+    "rssFeedCopied": "Pranala feed RSS wis disalin",
     "copyProfileUrl": "Salin URL profil",
     "copyUsername": "Salin jeneng pangguna",
     "copyAddress": "Salin alamat",

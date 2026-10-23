@@ -1983,6 +1983,8 @@
     "copyFailed": "Не атрымалася скапіяваць"
   },
   "profileOptions": {
+    "copyRssFeed": "Капіяваць спасылку на RSS-стужку",
+    "rssFeedCopied": "Спасылка на RSS-стужку скапіявана",
     "copyProfileUrl": "Капіяваць URL профілю",
     "copyUsername": "Капіяваць імя карыстальніка",
     "copyAddress": "Капіяваць адрас",

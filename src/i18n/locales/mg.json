@@ -1995,6 +1995,8 @@
     "copyFailed": "Tsy nahafaka naka"
   },
   "profileOptions": {
+    "copyRssFeed": "Adikao ny rohy RSS feed",
+    "rssFeedCopied": "Voadika ny rohy RSS feed",
     "copyProfileUrl": "Adikao ny URL profil",
     "copyUsername": "Adikao ny anarana mpampiasa",
     "copyAddress": "Adikao ny adiresy",

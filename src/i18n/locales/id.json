@@ -1983,6 +1983,8 @@
     "copyFailed": "Tidak dapat disalin"
   },
   "profileOptions": {
+    "copyRssFeed": "Salin tautan feed RSS",
+    "rssFeedCopied": "Tautan feed RSS disalin",
     "copyProfileUrl": "Salin URL profil",
     "copyUsername": "Salin nama pengguna",
     "copyAddress": "Salin alamat",

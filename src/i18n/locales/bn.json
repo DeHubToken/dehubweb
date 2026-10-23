@@ -1979,6 +1979,8 @@
     "copyFailed": "কপি করা যায়নি"
   },
   "profileOptions": {
+    "copyRssFeed": "RSS ফিড লিংক কপি করুন",
+    "rssFeedCopied": "RSS ফিড লিংক কপি হয়েছে",
     "copyProfileUrl": "প্রোফাইল URL কপি করুন",
     "copyUsername": "ব্যবহারকারীর নাম কপি করুন",
     "copyAddress": "ঠিকানা কপি করুন",

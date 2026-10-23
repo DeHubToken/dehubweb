@@ -2006,6 +2006,8 @@
     "copyFailed": "คัดลอกไม่สำเร็จ"
   },
   "profileOptions": {
+    "copyRssFeed": "คัดลอกลิงก์ฟีด RSS",
+    "rssFeedCopied": "คัดลอกลิงก์ฟีด RSS แล้ว",
     "copyProfileUrl": "คัดลอก URL โปรไฟล์",
     "copyUsername": "คัดลอกชื่อผู้ใช้",
     "copyAddress": "คัดลอกที่อยู่",

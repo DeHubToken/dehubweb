@@ -1973,6 +1973,8 @@
     "copyFailed": "Waan ku guuldareystay inaan nuqul ka sameeyo"
   },
   "profileOptions": {
+    "copyRssFeed": "Koobi xiriirka quudinta RSS",
+    "rssFeedCopied": "Xiriirka quudinta RSS waa la koobiyay",
     "copyProfileUrl": "Koobi URL-ka profile-ka",
     "copyUsername": "Koobi magaca isticmaalaha",
     "copyAddress": "Koobi cinwaanka",
