@@ -2,7 +2,7 @@ import { useTranslation as _useCopy } from 'react-i18next';
 import { useState, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
-import { Loader2, SpellCheck, Palette, ChevronLeft, Type, Hash, BarChart2, MonitorPlay, Cable } from "lucide-react";
+import { Loader2, SpellCheck, Palette, ChevronLeft, Type, Hash, BarChart2, MonitorPlay, Cable, AlertTriangle } from "lucide-react";
 import Paperclip from "@/components/ui/cut-icons/attach";
 import Calendar from "@/components/ui/cut-icons/events";
 import Radio from "@/components/ui/cut-icons/live";
@@ -74,6 +74,9 @@ interface PostActionBarProps {
   onClearSound?: () => void;
   onTogglePoll?: () => void;
   hasPoll?: boolean;
+  /** Add or take off a content warning. */
+  onToggleContentWarning?: () => void;
+  hasContentWarning?: boolean;
   /** One more toolbar control after the emoji picker — the cross-post icon. */
   extraTool?: React.ReactNode;
   /** No Go Live control — a quote cannot be a livestream. */
@@ -114,6 +117,8 @@ export function PostActionBar({
   attachedSound,
   onClearSound,
   onTogglePoll,
+  onToggleContentWarning,
+  hasContentWarning,
   hasPoll,
   extraTool,
   hideLive = false,
@@ -562,6 +567,24 @@ export function PostActionBar({
               </button>
             </TooltipTrigger>
             <TooltipContent>{hasPoll ? _copy("copy.03ed4421a6d5", { defaultValue: "Remove poll" }) : _copy("copy.1dd3d9f671d4", { defaultValue: "Add poll" })}</TooltipContent>
+          </Tooltip>
+        )}
+
+        {/* Content warning — a live stream opens straight to the stream, so it has none. */}
+        {!isLive && onToggleContentWarning && (
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <button
+                type="button"
+                onClick={onToggleContentWarning}
+                aria-pressed={!!hasContentWarning}
+                aria-label={hasContentWarning ? _copy('contentWarning.remove') : _copy('contentWarning.add')}
+                className={cn('p-2 hover:bg-white/10 rounded-xl transition-colors', hasContentWarning && 'bg-white/20')}
+              >
+                <AlertTriangle className="w-5 h-5 text-white" />
+              </button>
+            </TooltipTrigger>
+            <TooltipContent>{hasContentWarning ? _copy('contentWarning.remove') : _copy('contentWarning.add')}</TooltipContent>
           </Tooltip>
         )}
 

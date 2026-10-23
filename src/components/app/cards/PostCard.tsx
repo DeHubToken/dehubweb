@@ -42,6 +42,7 @@ import { cn } from '@/lib/utils';
 import { CardHeader } from './CardHeader';
 import { PostHeaderOptionsButton } from './PostHeaderOptionsButton';
 import { MatureContentGate, useMatureGate } from './MatureContentGate';
+import { ContentWarningGate, useContentWarning } from './ContentWarningGate';
 import { ActionBar } from './ActionBar';
 import { ShopBoardLazy } from '../live/ShopBoardLazy';
 import { CommentsWrapper } from './CommentsWrapper';
@@ -219,6 +220,7 @@ export const PostCard = memo(function PostCard({ post, threadSlot, onOpenComment
   // The warning is for whoever is looking at the screen, so it covers the
   // author's own post too.
   const matureGate = useMatureGate(post.contentRating);
+  const contentWarning = useContentWarning(post.spoilerText);
 
   // Two independent gates, and they are not the same question. `isLocked` is a
   // holdings gate — own N of a token, which any stranger can go and buy.
@@ -654,7 +656,9 @@ export const PostCard = memo(function PostCard({ post, threadSlot, onOpenComment
         {/* A text post's body is its content, so the warning covers the text
             and its embeds. Metadata and the action bar stay below it, so the
             post can still be reported or opened without being read first. */}
-        {matureGate.isGated ? (
+        {contentWarning.hidden ? (
+        <ContentWarningGate text={contentWarning.text} onReveal={contentWarning.reveal} />
+        ) : matureGate.isGated ? (
         <MatureContentGate
           onReveal={matureGate.reveal}
           description={_copy("copy.5ca2fd8dd3f8", { defaultValue: "The creator marked this post as adult or graphic." })}
@@ -1063,6 +1067,7 @@ export const PostCard = memo(function PostCard({ post, threadSlot, onOpenComment
             currentArticleBody={post.articleBody}
             currentCategories={post.categories ?? []}
             currentContentRating={post.contentRating}
+            currentSpoilerText={post.spoilerText}
             currentForKids={post.forKids}
             currentShopLinks={post.shopLinks}
             onSuccess={(edited) => {

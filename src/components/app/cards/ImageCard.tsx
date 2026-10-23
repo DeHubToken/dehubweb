@@ -58,6 +58,7 @@ import dehubCoin from '@/assets/dehub-coin.png';
 import { CardHeader } from './CardHeader';
 import { PostHeaderOptionsButton } from './PostHeaderOptionsButton';
 import { MatureContentGate, useMatureGate } from './MatureContentGate';
+import { ContentWarningGate, useContentWarning } from './ContentWarningGate';
 import { ActionBar } from './ActionBar';
 import { ShopBoardLazy } from '../live/ShopBoardLazy';
 import { CommentsWrapper } from './CommentsWrapper';
@@ -791,6 +792,7 @@ export const ImageCard = memo(function ImageCard({ post, aboveFold = false, onOp
   // pay-per-view, and the creator's own post is warned about too — the warning
   // is for whoever is looking at the screen.
   const matureGate = useMatureGate(post.contentRating);
+  const contentWarning = useContentWarning(post.spoilerText);
   // PPV/Lock badges are redundant with the centered overlay, so only show bounty here
   const hasBadges = isW2E;
 
@@ -1132,7 +1134,9 @@ export const ImageCard = memo(function ImageCard({ post, aboveFold = false, onOp
         {/* Mature warning sits outermost: revealing it falls through to
             whatever gate the post actually has (PPV, holdings), rather than
             replacing it. */}
-        {matureGate.isGated ? (
+        {contentWarning.hidden ? (
+          <ContentWarningGate text={contentWarning.text} onReveal={contentWarning.reveal} className={isImmersive ? 'mx-3' : undefined} />
+        ) : matureGate.isGated ? (
           <MatureContentGate preview={images[0]} onReveal={matureGate.reveal} />
         ) : isComboLocked ? (
           <>
@@ -1329,6 +1333,7 @@ export const ImageCard = memo(function ImageCard({ post, aboveFold = false, onOp
       <div data-card-info className={cn('pt-3 space-y-2', isImmersive && 'px-3')}>
         {isImmersive && headerRow}
         {/* Title & Description */}
+        {!contentWarning.hidden && (
         <FeedDescription 
           postId={post.id}
           onOpen={openPost}
@@ -1339,6 +1344,7 @@ export const ImageCard = memo(function ImageCard({ post, aboveFold = false, onOp
           translatedText={translatedText}
           stage={!!stage}
         />
+        )}
 
         {/* Quoted post embed (Twitter-style) */}
         {post.isQuotePost && post.quotedPost && (
@@ -1529,6 +1535,7 @@ export const ImageCard = memo(function ImageCard({ post, aboveFold = false, onOp
             currentDescription={editDescription}
             currentCategories={post.categories ?? []}
             currentContentRating={post.contentRating}
+            currentSpoilerText={post.spoilerText}
             currentForKids={post.forKids}
             currentShopLinks={post.shopLinks}
             onSuccess={(edited) => {

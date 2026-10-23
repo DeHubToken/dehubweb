@@ -84,6 +84,8 @@ export interface UnifiedFeedItem {
   contentRating?: ContentRating;
   /** Alt text, one per piece of media in display order (gallery images by position, a video first). */
   mediaDescriptions?: string[];
+  /** Content warning: the post opens collapsed behind this one line. */
+  spoilerText?: string;
   /** Published for children — see the field on BaseFeedItem. */
   forKids?: boolean;
   /** Signed-in viewers only — read totalViews via resolveViewCount instead. */
@@ -325,6 +327,7 @@ function mapVideoItem(item: UnifiedFeedItem, index: number): VideoItem {
     categories: Array.isArray(item.category) ? item.category : item.category ? [item.category] : [],
     contentRating: item.contentRating,
     mediaDescriptions: item.mediaDescriptions,
+    spoilerText: item.spoilerText,
     forKids: item.forKids,
     isLivePost: item.postType === 'live',
     liveStatus: item.stream?.status,
@@ -418,6 +421,7 @@ function mapImagePost(item: UnifiedFeedItem, index: number): ImagePost {
     categories: Array.isArray(item.category) ? item.category : item.category ? [item.category] : [],
     contentRating: item.contentRating,
     mediaDescriptions: item.mediaDescriptions,
+    spoilerText: item.spoilerText,
     forKids: item.forKids,
     isQuotePost: !!(item as any).isQuotePost,
     quotedPost: (item as any).quotedPost || null,
@@ -484,6 +488,7 @@ function mapTextPost(item: UnifiedFeedItem, index: number): TextPost {
     categories: Array.isArray(item.category) ? item.category : item.category ? [item.category] : [],
     contentRating: item.contentRating,
     mediaDescriptions: item.mediaDescriptions,
+    spoilerText: item.spoilerText,
     forKids: item.forKids,
     communityAlertPending: (item as any).communityAlertStatus === 'pending',
     isLocked: item.streamInfo?.isLockContent ?? false,

@@ -40,6 +40,7 @@ import { EditPostImages } from './EditPostImages';
 import { EditPostCover } from './EditPostCover';
 import { useTranslation } from 'react-i18next';
 import { normalizeCategoryName } from '@/lib/category-names';
+import { CONTENT_WARNING_MAX } from '@/components/app/cards/ContentWarningGate';
 
 export interface EditPostResult {
   name: string;
@@ -51,9 +52,12 @@ export interface EditPostResult {
   forKids: boolean;
   shopLinks: ShopLink[];
   shopListingCount: number;
+  spoilerText: string;
 }
 
 interface EditPostModalProps {
+  /** The post's content warning, if it has one. */
+  currentSpoilerText?: string;
   open: boolean;
   onOpenChange: (open: boolean) => void;
   tokenId: number | string;
@@ -84,6 +88,7 @@ export function EditPostModal({
   currentContentRating,
   currentForKids,
   currentShopLinks,
+  currentSpoilerText = '',
   canReplaceVideo = false,
   onSuccess,
 }: EditPostModalProps) {
@@ -95,6 +100,7 @@ export function EditPostModal({
   const [name, setName] = useDraftState(`post:edit:${tokenId}` + ":name", currentTitle);
   const [description, setDescription] = useDraftState(`post:edit:${tokenId}` + ":description", currentDescription);
   const [articleBody, setArticleBody] = useDraftState(`post:edit:${tokenId}` + ":articleBody", currentArticleBody ?? '');
+  const [spoilerText, setSpoilerText] = useState(currentSpoilerText);
   // Text cap scales with the badge tier; only read once the modal opens,
   // because every feed card mounts this component.
   const [tierTextMax, setTierTextMax] = useState(BASE_POST_TEXT_CHARS);
@@ -195,6 +201,7 @@ export function EditPostModal({
     if (currentArticleBody !== undefined && articleBody.trim() !== currentArticleBody) params.articleBody = articleBody.trim();
     if (JSON.stringify(categories) !== JSON.stringify(currentCategories)) params.category = categories;
     if (commentsDisabled !== currentCommentsDisabled) params.commentsDisabled = commentsDisabled;
+    if (spoilerText.trim() !== currentSpoilerText.trim()) params.spoilerText = spoilerText.trim();
     const nextRating: ContentRating = isMature ? 'mature' : 'safe';
     // The API stores nothing for a safe post, so an unrated one arrives as
     // undefined — compare against the rating it means rather than the field.
@@ -269,7 +276,7 @@ export function EditPostModal({
       setArticleBody.complete(articleBody, articleBody);
       setCategories.complete(categories, categories);
       setShopLinks.complete(shopLinks, shopLinks);
-      onSuccess?.({ name: name.trim(), description: description.trim(), articleBody: currentArticleBody !== undefined ? articleBody.trim() : undefined, categories, commentsDisabled, contentRating: nextRating, forKids: isForKids, shopLinks, shopListingCount: pickedListingIds.length });
+      onSuccess?.({ name: name.trim(), description: description.trim(), articleBody: currentArticleBody !== undefined ? articleBody.trim() : undefined, categories, commentsDisabled, contentRating: nextRating, forKids: isForKids, shopLinks, shopListingCount: pickedListingIds.length, spoilerText: spoilerText.trim() });
         onOpenChange(false);
       } else {
         toast.error(_copy("copy.3cd8b962fe5d", { defaultValue: "Failed to update post" }));
@@ -311,6 +318,19 @@ export function EditPostModal({
               placeholder={_copy("copy.c45dcb7f09b3", { defaultValue: "Post title" })}
             />
             <p className="text-xs text-zinc-500 text-right">{name.length}/140</p>
+          </div>
+
+          {/* Content warning — the post opens collapsed behind it. Empty takes it off. */}
+          <div className="space-y-2">
+            <Label htmlFor="edit-content-warning" className="text-sm font-medium text-zinc-300">{t('contentWarning.label')}</Label>
+            <Input
+              id="edit-content-warning"
+              value={spoilerText}
+              onChange={(e) => setSpoilerText(e.target.value)}
+              className="bg-white/5 border-white/10 text-white rounded-xl"
+              maxLength={CONTENT_WARNING_MAX}
+              placeholder={t('contentWarning.placeholder')}
+            />
           </div>
 
           {/* Description */}

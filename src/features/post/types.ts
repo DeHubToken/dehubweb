@@ -80,6 +80,8 @@ export interface PostFormState {
   tokenAmount: string;
   liveMode: LiveMode;
   poll: PollData | null;
+  /** The content warning being written; null when the post has none. */
+  contentWarning: string | null;
   isEnhancing: boolean;
   isPosting: boolean;
   uploadProgress: number; // 0–100 stage-based progress
@@ -106,6 +108,7 @@ export interface PostFormActions {
   setTokenAmount: (value: string) => void;
   setLiveMode: (value: LiveMode) => void;
   setPoll: import('@/hooks/use-draft-state').DraftSetter<PollData | null>;
+  setContentWarning: (value: string | null) => void;
   handleImageSelect: (e: React.ChangeEvent<HTMLInputElement>) => void;
   handleVideoSelect: (e: React.ChangeEvent<HTMLInputElement>) => Promise<void>;
   handleAudioSelect: (e: React.ChangeEvent<HTMLInputElement>) => void;

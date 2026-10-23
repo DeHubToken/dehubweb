@@ -30,6 +30,7 @@ function mapNFTToVideoItem(nft: DeHubNFT): VideoItem {
     type: 'video',
     contentRating: nft.contentRating,
     mediaDescriptions: nft.mediaDescriptions,
+    spoilerText: nft.spoilerText,
     shopLinks: (nft as any).shopLinks,
     shopListingCount: (nft as any).shopListingCount,
     thumbnail,
@@ -85,6 +86,7 @@ function mapNFTToImagePost(nft: DeHubNFT): ImagePost {
     type: 'image',
     contentRating: nft.contentRating,
     mediaDescriptions: nft.mediaDescriptions,
+    spoilerText: nft.spoilerText,
     shopLinks: (nft as any).shopLinks,
     shopListingCount: (nft as any).shopListingCount,
     username: nft.minterUsername || nft.mintername || nft.minterDisplayName || 'unknown',
@@ -141,6 +143,7 @@ function mapNFTToTextPost(nft: DeHubNFT): TextPost {
     articleImageUrl: nft.articleImageUrl ? buildFeedImageUrls([nft.articleImageUrl])?.[0] : undefined,
     contentRating: nft.contentRating,
     mediaDescriptions: nft.mediaDescriptions,
+    spoilerText: nft.spoilerText,
     shopLinks: (nft as any).shopLinks,
     shopListingCount: (nft as any).shopListingCount,
     author: {
