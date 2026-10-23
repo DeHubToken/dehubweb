@@ -102,7 +102,7 @@ export function ProfileFieldsSetting() {
 }
 
 function padRows(fields: ProfileField[]): ProfileField[] {
-  const rows = fields.slice(0, ROWS).map((f) => ({ name: f.name || '', value: f.value || '', verifiedAt: f.verifiedAt ?? null }));
+  const rows: ProfileField[] = fields.slice(0, ROWS).map((f) => ({ name: f.name || '', value: f.value || '', verifiedAt: f.verifiedAt ?? null }));
   while (rows.length < ROWS) rows.push(blank());
   return rows;
 }
