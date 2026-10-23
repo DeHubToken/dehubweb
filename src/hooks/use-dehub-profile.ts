@@ -36,6 +36,11 @@ export interface ProfileData {
   ensName?: string;
   verified: boolean;
   bio: string;
+  /**
+   * Up to four label/value lines (dehub-stream-backend src/profile-fields). A
+   * link with `verifiedAt` was proven to link back to this profile by rel="me".
+   */
+  profileFields?: Array<{ name: string; value: string; verifiedAt?: string | null }>;
   avatarUrl?: string;
   coverUrl?: string;
   joinedDate: string;
@@ -135,6 +140,7 @@ export function mapUserToProfile(user: DeHubUser): ProfileData {
     ensName: user.ensName || undefined,
     verified: user.isVerified || user.is_verified || false,
     bio: user.bio || user.aboutMe || '',
+    profileFields: Array.isArray((user as any).profileFields) ? (user as any).profileFields : undefined,
     avatarUrl,
     coverUrl,
     joinedDate: joinDate,

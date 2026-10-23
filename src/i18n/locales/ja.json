@@ -1,4 +1,15 @@
 {
+  "profileFields": {
+    "title": "プロフィール項目",
+    "description": "ウェブサイトや代名詞など、プロフィールに最大4行まで追加できます。",
+    "label": "ラベル",
+    "content": "内容",
+    "save": "項目を保存",
+    "saved": "プロフィール項目を保存しました",
+    "failed": "保存できませんでした。もう一度お試しください。",
+    "verified": "認証済みリンク",
+    "verifyHint": "リンクを認証するには、そのページにこれを追加してからもう一度保存してください：{{snippet}}"
+  },
   "followedTags": {
     "follow": "#{{tag}} をフォロー",
     "following": "フォロー中",

@@ -1,4 +1,15 @@
 {
+  "profileFields": {
+    "title": "Champs du profil",
+    "description": "Jusqu'à quatre lignes en plus sur votre profil, comme un site web ou vos pronoms.",
+    "label": "Libellé",
+    "content": "Contenu",
+    "save": "Enregistrer les champs",
+    "saved": "Champs du profil enregistrés",
+    "failed": "Ça n'a pas été enregistré. Réessayez.",
+    "verified": "Lien vérifié",
+    "verifyHint": "Pour vérifier un lien, ajoutez ceci à cette page, puis enregistrez à nouveau : {{snippet}}"
+  },
   "followedTags": {
     "follow": "Suivre #{{tag}}",
     "following": "Suivi",

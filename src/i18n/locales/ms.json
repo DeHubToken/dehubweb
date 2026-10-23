@@ -1,4 +1,15 @@
 {
+  "profileFields": {
+    "title": "Medan profil",
+    "description": "Sehingga empat baris tambahan pada profil anda, seperti laman web atau kata ganti nama anda.",
+    "label": "Label",
+    "content": "Kandungan",
+    "save": "Simpan medan",
+    "saved": "Medan profil disimpan",
+    "failed": "Tidak disimpan. Cuba lagi.",
+    "verified": "Pautan disahkan",
+    "verifyHint": "Untuk mengesahkan pautan, tambah ini pada halaman itu, kemudian simpan semula: {{snippet}}"
+  },
   "followedTags": {
     "follow": "Ikuti #{{tag}}",
     "following": "Mengikuti",
