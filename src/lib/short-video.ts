@@ -13,6 +13,7 @@ import { buildAvatarUrl } from '@/lib/media-url';
 import { resolveViewCount } from '@/lib/engagement';
 import { shortsPhotoMedia } from '@/lib/shorts-photos';
 import type { ShortVideo, VideoItem } from '@/types/feed.types';
+import { videoNeedsAccess } from '@/lib/api/dehub/video-access';
 
 export function formatLikes(count: number): string {
   if (count >= 1000000) return `${(count / 1000000).toFixed(1)}M`;
@@ -61,6 +62,12 @@ export function mapToShortVideo(nft: any, index: number): ShortVideo & { duratio
     thumbnail: getMediaUrl(nft.imageUrl) || getMediaUrl(nft.thumbnail_url) || '',
     videoUrl: getMediaUrl(nft.videoUrl) || getMediaUrl(nft.media_url) || (id ? `https://dehubcdn.ams3.cdn.digitaloceanspaces.com/videos/${id}.mp4` : ''),
     transcodingStatus: nft.transcodingStatus,
+    gated: videoNeedsAccess({
+      isPPV: nft.streamInfo?.isPayPerView,
+      isLocked: nft.streamInfo?.isLockContent,
+      lockedPrice: nft.streamInfo?.lockContentAmount ?? nft.streamInfo?.lockAmount,
+      subscriberPlans: nft.plansDetails ?? nft.plans,
+    }),
     // Title and body separately, and both are rendered: the caption usually
     // lives in the title, but a short that has both used to show only one.
     title: nft.name || nft.title || '',
@@ -97,6 +104,7 @@ export function videoItemToShort(video: VideoItem): ShortVideo {
     thumbnail: video.thumbnail,
     videoUrl: video.videoUrl || '',
     transcodingStatus: video.transcodingStatus,
+    gated: videoNeedsAccess(video),
     title: video.title || '',
     description: video.description || '',
     sound: 'Original Sound',

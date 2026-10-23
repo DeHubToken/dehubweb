@@ -473,6 +473,11 @@ export interface ShortVideo extends BaseFeedItem {
   dislikes?: number;
   thumbnail: string;
   videoUrl: string;
+  /**
+   * Pay-per-view, hold-gated or subscriber-only. The file is private, so the
+   * viewer plays a signed URL from the access endpoint instead of `videoUrl`.
+   */
+  gated?: boolean;
   /** Async video transcode state, written optimistically before the CDN file
    *  exists. Absent on posts predating this field — treat as 'done'. */
   transcodingStatus?: 'pending' | 'on' | 'done' | 'failed';
