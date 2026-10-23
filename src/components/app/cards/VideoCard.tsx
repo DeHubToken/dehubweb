@@ -2189,6 +2189,7 @@ export const VideoCard = memo(function VideoCard({ video, postPage = false, onBa
         <div data-card-head={headerAboveMedia ? 'plain' : ''} className="flex items-start justify-between">
           <CardHeader
             username={video.channel}
+            visibility={video.visibility}
             handle={video.creatorUsername}
             avatarSeed={video.channelAvatar}
             verified={video.verified}
@@ -3215,6 +3216,7 @@ export const VideoCard = memo(function VideoCard({ video, postPage = false, onBa
               tokenId={parseInt(video.id, 10) || undefined}
               isOwnPost={!!isOwnPost}
               quotePolicy={video.quotePolicy}
+              visibility={video.visibility}
               stage={stage}
               utilityDesktopAnchor
               className="p-0"
@@ -3409,7 +3411,7 @@ export const VideoCard = memo(function VideoCard({ video, postPage = false, onBa
             >
               <Link2 className="w-5 h-5" /> {t('postOptions.copyLink')}
             </button>
-            {!isContentGated && /^\d+$/.test(String(video.id)) && (
+            {!isContentGated && (!video.visibility || video.visibility === 'public') && /^\d+$/.test(String(video.id)) && (
               <button
                 onClick={() => { copyPostEmbedCode(video.id, t); setShowOptionsDrawer(false); }}
                 className="flex items-center gap-3 px-4 py-3 text-white hover:bg-white/10 rounded-xl transition-colors text-left"

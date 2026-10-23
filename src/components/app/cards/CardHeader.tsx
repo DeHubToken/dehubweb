@@ -11,7 +11,7 @@ import { LiveRipple } from '@/components/app/LiveRipple';
  */
 
 import { useState } from 'react';
-import { CheckCircle } from 'lucide-react';
+import { AtSign, CheckCircle, Lock } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { useQueryClient } from '@tanstack/react-query';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
@@ -25,6 +25,7 @@ import { useTranslation } from 'react-i18next';
 
 import type { ContentType } from '@/types/feed.types';
 import type { BadgeLock } from '@/lib/staking-badges';
+import type { PostVisibility } from '@/lib/api/dehub/types';
 
 interface CardHeaderProps {
   /** Display name or username */
@@ -45,6 +46,8 @@ interface CardHeaderProps {
   creatorUsername?: string;
   /** Timestamp to show next to username (e.g., "2h") */
   timestamp?: string;
+  /** Who may see the post; a followers-only or direct one is marked beside the time. */
+  visibility?: PostVisibility;
   /** View count to show next to timestamp. Already includes signed-out viewers. */
   viewCount?: string | number;
   /** Post token id. */
@@ -85,6 +88,7 @@ export function CardHeader({
   creatorId,
   creatorUsername,
   timestamp,
+  visibility,
   viewCount,
   tokenId,
   badgeBalance,
@@ -97,6 +101,8 @@ export function CardHeader({
   const { walletAddress: viewerAddress } = useAuth();
   const [imageError, setImageError] = useState(false);
   const badge = CONTENT_BADGES[contentType];
+  const visibilityLabel =
+    visibility === 'followers' ? t('postVisibility.followers') : visibility === 'direct' ? t('postVisibility.direct') : null;
 
   // Use feed-provided avatar directly — no extra API call needed
   const agentFallback = getAgentAvatarFallback(creatorId);
@@ -183,7 +189,7 @@ export function CardHeader({
           </button>
           {verified && <CheckCircle className="w-3.5 h-3.5 text-white shrink-0 self-end" />}
         </div>
-        {(formattedHandle || timestamp) && (
+        {(formattedHandle || timestamp || visibilityLabel) && (
           <div className="flex items-center gap-1 min-w-0 max-w-full">
             {formattedHandle && (
               <button
@@ -201,6 +207,15 @@ export function CardHeader({
               <>
                 <span className="text-zinc-600 text-[13px] leading-4">·</span>
                 <span className="text-zinc-500 text-[13px] leading-4 shrink-0">{timestamp}</span>
+              </>
+            )}
+            {visibilityLabel && (
+              <>
+                <span className="text-zinc-600 text-[13px] leading-4">·</span>
+                <span className="flex items-center gap-0.5 text-zinc-500 text-[13px] leading-4 shrink-0" title={visibilityLabel}>
+                  {visibility === 'direct' ? <AtSign className="w-3 h-3" aria-hidden /> : <Lock className="w-3 h-3" aria-hidden />}
+                  {visibilityLabel}
+                </span>
               </>
             )}
           </div>

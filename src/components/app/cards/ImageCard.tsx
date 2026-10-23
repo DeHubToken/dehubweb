@@ -965,6 +965,7 @@ export const ImageCard = memo(function ImageCard({ post, aboveFold = false, onOp
       ) : (
       <CardHeader
         username={post.username}
+        visibility={post.visibility}
         handle={post.creatorUsername}
         avatarSeed={post.avatar}
         verified={post.verified}
@@ -1377,6 +1378,7 @@ export const ImageCard = memo(function ImageCard({ post, aboveFold = false, onOp
           tokenId={parseInt(post.id, 10) || undefined}
           isOwnPost={!!isOwnPost}
           quotePolicy={post.quotePolicy}
+          visibility={post.visibility}
           stage={stage}
           utilityDesktopAnchor
           className="p-0"

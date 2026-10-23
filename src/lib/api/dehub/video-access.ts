@@ -1,10 +1,11 @@
 /**
  * Gated video playback
  * ====================
- * A pay-per-view, hold-gated or subscriber-only post's video is stored
- * private, so the CDN URL built from its token id is refused. Once the viewer
- * is through the gate, the player asks the API for a short-lived signed URL
- * and plays that instead. Open posts never call this.
+ * A pay-per-view, hold-gated, subscriber-only, followers-only or direct
+ * post's video is stored private, so the CDN URL built from its token id
+ * is refused. Once the viewer is through the gate, the player asks the API
+ * for a short-lived signed URL and plays that instead. Open posts never call
+ * this.
  */
 import { useLayoutEffect, useRef, type RefObject } from 'react';
 import { useQuery } from '@tanstack/react-query';
@@ -31,8 +32,10 @@ export function videoNeedsAccess(post: {
   isLocked?: boolean;
   lockedPrice?: number | string | null;
   subscriberPlans?: unknown[] | null;
+  /** A followers-only or direct post's video is stored private as well. */
+  visibility?: string | null;
 }): boolean {
-  return !!post.isPPV || isHoldGated(post.isLocked, post.lockedPrice) || !!post.subscriberPlans?.length;
+  return (!!post.visibility && post.visibility !== 'public') || !!post.isPPV || isHoldGated(post.isLocked, post.lockedPrice) || !!post.subscriberPlans?.length;
 }
 
 export function fetchVideoAccess(tokenId: string): Promise<VideoAccess> {

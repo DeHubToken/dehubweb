@@ -449,6 +449,7 @@ export const PostCard = memo(function PostCard({ post, threadSlot, onOpenComment
       ) : (
       <CardHeader
         username={post.author.name}
+        visibility={post.visibility}
         handle={post.author.handle}
         avatarSeed={post.author.avatarSeed}
         verified={post.author.verified}
@@ -814,6 +815,7 @@ export const PostCard = memo(function PostCard({ post, threadSlot, onOpenComment
             tokenId={parseInt(post.id, 10) || undefined}
             isOwnPost={!!isOwnPost}
             quotePolicy={post.quotePolicy}
+            visibility={post.visibility}
             stage={stage}
             utilityDesktopAnchor
             className="p-0"
