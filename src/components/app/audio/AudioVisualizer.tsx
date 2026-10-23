@@ -623,6 +623,7 @@ export function AudioVisualizer({
     const analyser = analyserRef.current;
     let frequencyData = idleFrequency;
     let timeData = idleTime;
+    let liveSignal = false;
     if (analyser && isPlayingRef.current) {
       // Allocate and fill in one step: annotating these as `Uint8Array` widens
       // the buffer to ArrayBufferLike and CI rejects the analyser call, while
@@ -634,6 +635,7 @@ export function AudioVisualizer({
       // Muted media and unavailable analysis can return an all-zero spectrum.
       // Keep the selected visual alive without changing audio output.
       const hasSignal = freq.some(value => value > 0);
+      liveSignal = hasSignal;
       if (hasSignal) {
         frequencyData = freq;
         timeData = time;
@@ -652,7 +654,8 @@ export function AudioVisualizer({
       const played = audio && audio.duration ? audio.currentTime / audio.duration : 0;
       const progress = scrubRatioRef.current ?? played;
       const now = performance.now() / 1000;
-      if (analyser && isPlayingRef.current) listener.fromAnalyser(frequencyData, timeData, now, progress, idleShape);
+      if (isPlayingRef.current && liveSignal) listener.fromAnalyser(frequencyData, timeData, now, progress, idleShape);
+      else if (isPlayingRef.current) listener.fromSynth(now, progress, idleShape, .65);
       else listener.hold(now, progress, idleShape);
       const cssW = canvas.clientWidth || width;
       const scale = width / cssW;
@@ -1004,7 +1007,7 @@ export function AudioVisualizer({
   if (theme === 'glass' || (theme === 'system' && !isLightTheme)) return (
     <div data-no-swipe data-video-controls data-audio-player data-audio-studio data-material={theme} className={className} onClick={stopBubble}>
       <div data-audio-studio-title>
-        {artworkUrl && <img data-audio-studio-cover src={artworkUrl} alt="" loading="lazy" />}
+        {artworkUrl && <img data-audio-studio-cover src={artworkUrl} alt="" loading="lazy" onError={event => { event.currentTarget.hidden = true; }} />}
         <div><strong>{displayTitle || popoutTrack?.title || t('audioPost.untitled')}</strong>
         <span>{popoutTrack?.artist || t('audioPost.creator')}</span></div>
       </div>
