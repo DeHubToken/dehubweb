@@ -1,6 +1,6 @@
 import { aiChat } from "../_shared/ai-chat.ts";
 import { requireDeHubAuth } from "../_shared/auth.ts";
-import { PostViewsRateLimit, recordPostViews } from "./post-views.ts";
+import { PublicReadRateLimit, recordPostViews } from "./post-views.ts";
 import { correctActivity } from "./activity-edit.ts";
 import { handleLifeTick, lifeStatus, setSentient } from "./life.ts";
 import { agentOwnerAllowed, explicitTaskPlan, LIVE_WINDOW_MAX_DAYS, LIVE_WINDOW_RECHECK_MINUTES, nextScheduledRun, readableTime, parseTaskPlan, PLAN_TOOL, taskPlanSchema, windowSteps, type TaskPlan, type TaskStep } from "./task-plan.ts";
@@ -146,6 +146,7 @@ async function api(path: string, token: string, params: Record<string, unknown>)
   const url = new URL(`https://api.dehub.io/api/${path}`);
   for (const [key, value] of Object.entries(params)) if (value !== null && value !== undefined) url.searchParams.set(key, String(value));
   const response = await fetch(url, { headers: { Authorization: `Bearer ${token}` }, signal: AbortSignal.timeout(15000) });
+  if (response.status === 429) throw new PublicReadRateLimit(response.headers.get('retry-after'), Date.now(), path === 'feed' ? 'post feed' : 'directory');
   if (!response.ok) throw new Error(`Could not read ${path} (${response.status}).`);
   return response.json();
 }
@@ -293,7 +294,7 @@ export async function runTask(context: Context, req: Request, task: any) {
       if (task.cursor.done) { nextStep(); await save(); continue; }
       try { await loadTargets(step, task, token, ownedWallets); }
       catch (error) {
-        if (!(error instanceof PostViewsRateLimit)) throw error;
+        if (!(error instanceof PublicReadRateLimit)) throw error;
         await save({ status: 'queued', next_run_at: error.retryAt, message: error.message });
         break;
       }

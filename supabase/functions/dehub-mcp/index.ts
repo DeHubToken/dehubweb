@@ -7,7 +7,7 @@ import { Interface, JsonRpcProvider, Wallet, formatEther } from "ethers";
 import { requireDeHubAuth } from "../_shared/auth.ts";
 import { agentOwnerAllowed } from "./task-plan.ts";
 import { handleTaskRequest, type TaskTool, type ProfileImages } from "./tasks.ts";
-import { anonymousViewerId, PostViewsRateLimit, recordPostViews } from "./post-views.ts";
+import { anonymousViewerId, PublicReadRateLimit, recordPostViews } from "./post-views.ts";
 import { resolveVoteWeight } from "../_shared/badge-weight.ts";
 import { agentCapForBadgeWeight } from "./agent-cap.ts";
 import { agentPostType } from "./post-type.ts";
@@ -393,7 +393,7 @@ function rateLimited(action: string, resetAt: Date): ToolResult {
 
 function publicViewFailure(error: unknown, fallback: string): ToolResult {
   const result = fail(error instanceof Error ? error.message : fallback);
-  if (error instanceof PostViewsRateLimit) {
+  if (error instanceof PublicReadRateLimit) {
     result.structuredContent.reset_at = error.retryAt;
     result.structuredContent.retry_reason = 'public_views';
     result.content[0].text = JSON.stringify(result.structuredContent);
