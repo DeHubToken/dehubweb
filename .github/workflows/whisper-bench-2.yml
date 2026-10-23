@@ -18,11 +18,15 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        embedding:
-          - 3dspeaker_speech_eres2net_base_sv_zh-cn_3dspeaker_16k.onnx
-          - 3dspeaker_speech_campplus_sv_en_voxceleb_16k.onnx
-          - wespeaker_en_voxceleb_resnet34.onnx
-        threshold: ['0.6', '0.75', '0.9']
+        include:
+          - { embedding: 3dspeaker_speech_campplus_sv_en_voxceleb_16k.onnx, threshold: '0.8' }
+          - { embedding: 3dspeaker_speech_campplus_sv_en_voxceleb_16k.onnx, threshold: '0.9' }
+          - { embedding: 3dspeaker_speech_campplus_sv_en_voxceleb_16k.onnx, threshold: '0.95' }
+          - { embedding: wespeaker_en_voxceleb_resnet34.onnx, threshold: '0.75' }
+          - { embedding: wespeaker_en_voxceleb_resnet34.onnx, threshold: '0.85' }
+          - { embedding: wespeaker_en_voxceleb_resnet34.onnx, threshold: '0.9' }
+          - { embedding: 3dspeaker_speech_eres2net_base_sv_zh-cn_3dspeaker_16k.onnx, threshold: '0.9' }
+          - { embedding: 3dspeaker_speech_eres2net_base_sv_zh-cn_3dspeaker_16k.onnx, threshold: '0.95' }
     env:
       WHISPER_MODELS_DIR: ${{ github.workspace }}/models
       DIARIZE_EMBEDDING: ${{ matrix.embedding }}
@@ -43,7 +47,7 @@ jobs:
           name: bench-small
           run-id: ${{ env.SOURCE_RUN }}
           github-token: ${{ secrets.GITHUB_TOKEN }}
-      - run: python services/whisper/bench.py diarize --source small.json --out diarize-${{ strategy.job-index }}.json
+      - run: python services/whisper/bench.py diarize --source small.json --refs 16ad83ec-1472-4d1f-82dc-dc00fe36c9e6,6326,5636 --out diarize-${{ strategy.job-index }}.json
       - uses: actions/upload-artifact@v4
         with:
           name: diarize-${{ strategy.job-index }}
@@ -74,9 +78,9 @@ jobs:
         run: |
           python services/whisper/bench.py combine runs/small.json runs/medium.json runs/small-novad.json runs/large-v3-turbo.json > report.md
           echo >> report.md
-          echo '| embedding | threshold | diarize s | speakers found | Scribe speakers | agreement with Scribe |' >> report.md
-          echo '|---|---|---|---|---|---|' >> report.md
-          for f in diarize/*.json; do python -c "import json,sys; d=json.load(open(sys.argv[1])); print(f\"| {d['embedding']} | {d['threshold']} | {d['diarize_s']} | {d['speakers']} | {d['reference_speakers']} | {d['agreement']} |\")" "$f" >> report.md; done
+          echo '| embedding | threshold | source | audio s | diarize s | speakers found | reference speakers | agreement |' >> report.md
+          echo '|---|---|---|---|---|---|---|---|' >> report.md
+          for f in diarize/*.json; do python -c "import json,sys; d=json.load(open(sys.argv[1])); [print(f\"| {d['embedding']} | {d['threshold']} | {r['ref']} | {r['audio_s']} | {r['diarize_s']} | {r['speakers']} | {r['reference_speakers']} | {r['agreement']} |\") for r in d['results']]" "$f" >> report.md; done
           cat report.md >> "$GITHUB_STEP_SUMMARY"
       - uses: actions/upload-artifact@v4
         with:

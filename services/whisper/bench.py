@@ -157,9 +157,10 @@ def edit_rate(hyp: list[str], ref: list[str]) -> float | None:
 
 
 def speaker_agreement(segments: list[dict], reference: list[dict]) -> float | None:
-    """Share of reference speech time whose speaker maps to the same whisper
-    speaker, after mapping each whisper label to the reference label it
-    overlaps most."""
+    """Share of the time both engines heard speech on which they agree who
+    spoke, under the best one-to-one pairing of their labels. Splitting one
+    voice into several, or merging two into one, both cost: a label left over
+    after pairing counts as wrong."""
     if not segments or not reference:
         return None
     step = 0.25
@@ -168,24 +169,30 @@ def speaker_agreement(segments: list[dict], reference: list[dict]) -> float | No
     def at(segs, t):
         for s in segs:
             if float(s["start"]) <= t < float(s["end"]):
-                return s.get("speaker")
+                return s.get("speaker") or "none"
         return None
 
     pairs = []
     t = 0.0
     while t < end:
         r = at(reference, t)
-        if r is not None:
-            pairs.append((at(segments, t), r))
+        h = at(segments, t) if r is not None else None
+        if h is not None:
+            pairs.append((h, r))
         t += step
     if not pairs:
         return None
     counts: dict = {}
     for h, r in pairs:
-        counts.setdefault(h, {}).setdefault(r, 0)
-        counts[h][r] += 1
-    mapping = {h: max(rs, key=rs.get) for h, rs in counts.items()}
-    return round(sum(1 for h, r in pairs if h is not None and mapping[h] == r) / len(pairs), 3)
+        counts[(h, r)] = counts.get((h, r), 0) + 1
+    used_h, used_r, matched = set(), set(), 0
+    for (h, r), n in sorted(counts.items(), key=lambda kv: -kv[1]):
+        if h in used_h or r in used_r:
+            continue
+        used_h.add(h)
+        used_r.add(r)
+        matched += n
+    return round(matched / len(pairs), 3)
 
 
 def combine(paths: list[str]) -> None:
@@ -248,29 +255,39 @@ def diarize_sweep(args) -> None:
     from handler import download
 
     previous = json.load(open(args.source, encoding="utf-8"))
-    row = next(x for x in previous["rows"] if x["kind"] == "stage")
-    with tempfile.TemporaryDirectory() as tmp:
-        path = os.path.join(tmp, "media")
-        download(stage_recording(row["ref"]), path)
-        audio = engine.load_audio(path)
-    t0 = time.time()
-    turns = engine.diarize(audio)
-    took = time.time() - t0
-    # Each stored line stands in for its words: enough to score who spoke it.
-    lines = [{"start": s["start"], "end": s["end"], "word": s["text"], "segment": i} for i, s in enumerate(row["segments"])]
-    engine.assign_speakers(lines, turns)
-    segments = [{"start": x["start"], "end": x["end"], "text": x["word"], "speaker": x.get("speaker")} for x in lines]
-    agree = speaker_agreement(segments, row["reference_segments"])
-    out = {
-        "embedding": os.environ.get("DIARIZE_EMBEDDING"),
-        "threshold": os.environ.get("DIARIZE_THRESHOLD"),
-        "audio_s": round(len(audio) / engine.SR, 1),
-        "diarize_s": round(took, 1),
-        "speakers": len({t[2] for t in turns}),
-        "reference_speakers": len({s.get("speaker") for s in row["reference_segments"]}),
-        "agreement": agree,
-    }
-    print(json.dumps(out))
+    wanted = set(args.refs.split(","))
+    results = []
+    for row in previous["rows"]:
+        if row["ref"] not in wanted:
+            continue
+        url = stage_recording(row["ref"]) if row["kind"] == "stage" else f"{CDN}videos/{row['ref']}.mp4"
+        with tempfile.TemporaryDirectory() as tmp:
+            path = os.path.join(tmp, "media")
+            download(url, path)
+            audio = engine.load_audio(path)
+        t0 = time.time()
+        turns = engine.diarize(audio)
+        took = time.time() - t0
+        # Each stored line stands in for its words: enough to score who spoke it.
+        lines = [{"start": s["start"], "end": s["end"], "word": s["text"], "segment": i} for i, s in enumerate(row["segments"])]
+        engine.assign_speakers(lines, turns)
+        segments = [{"start": x["start"], "end": x["end"], "text": x["word"], "speaker": x.get("speaker")} for x in lines]
+        reference = row["reference_segments"]
+        ref_time: dict = {}
+        for s in reference:
+            ref_time[s.get("speaker")] = ref_time.get(s.get("speaker"), 0) + float(s["end"]) - float(s["start"])
+        results.append({
+            "ref": row["ref"],
+            "audio_s": round(len(audio) / engine.SR, 1),
+            "diarize_s": round(took, 1),
+            "speakers": len({t[2] for t in turns}),
+            # Voices holding at least 5% of the reference's speech, so a lone
+            # "Oh." does not count as a second person.
+            "reference_speakers": sum(1 for v in ref_time.values() if v >= 0.05 * sum(ref_time.values())),
+            "agreement": speaker_agreement(segments, reference),
+        })
+        print(json.dumps(results[-1]), flush=True)
+    out = {"embedding": os.environ.get("DIARIZE_EMBEDDING"), "threshold": os.environ.get("DIARIZE_THRESHOLD"), "results": results}
     with open(args.out, "w", encoding="utf-8") as f:
         json.dump(out, f)
 
@@ -291,6 +308,7 @@ def main() -> None:
     d = sub.add_parser("diarize")
     d.add_argument("--source", required=True)
     d.add_argument("--out", required=True)
+    d.add_argument("--refs", required=True)
     args = p.parse_args()
     if args.cmd == "run":
         os.environ["WHISPER_MODEL"] = args.model
