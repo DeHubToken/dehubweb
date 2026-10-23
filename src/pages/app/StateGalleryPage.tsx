@@ -255,9 +255,9 @@ function AudioGallery() {
  */
 const GALLERY_STAGES = [
   { id: 'gallery-stage-1', title: 'Town Hall: what ships next', host_username: 'maldoteth', scheduled_at: '2026-10-23T19:00:00Z' },
-  { id: 'gallery-stage-2', title: 'Late night lo-fi', host_username: 'juno', started_at: '2026-10-24T23:30:00Z' },
+  { id: 'gallery-stage-2', title: 'Late night lo-fi', host_username: 'juno', started_at: '2026-10-24T23:30:00Z', status: 'live' },
   { id: 'gallery-stage-3', title: 'Creators AMA: growing from zero to your first thousand fans on DeHub', host_username: 'kira', scheduled_at: '2026-11-02T17:00:00Z' },
-  { id: 'gallery-stage-4', title: 'Market open', host_wallet_address: '0x8f3a00000000000000000000000000000000c0de', started_at: '2026-10-30T08:00:00Z' },
+  { id: 'gallery-stage-4', title: 'Market open', host_wallet_address: '0x8f3a00000000000000000000000000000000c0de', started_at: '2026-10-30T08:00:00Z', ended_at: '2026-10-30T08:52:00Z', status: 'ended' },
 ];
 
 function StageCoversGallery() {
