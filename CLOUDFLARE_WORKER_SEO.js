@@ -1,7 +1,7 @@
 import { localizePublicChrome, localizeStructuredData } from './server/public-page-locales.js';
 import { handleWorkReceipt } from './server/work-receipts.ts';
 import { handleEditorPresence } from './server/editor-presence.ts';
-import { applyTextPostImage } from './server/post-share-card.js';
+import { applyPostShareImage, applyProfileShareImage } from './server/post-share-card.js';
 import { handleFinanceRequest } from './server/finance-stats.js';
 import { handleCreatorMotionSource } from './server/creator-motion-source.js';
 import { handleAccountMcp, isAccountMcpRoute } from './server/account-mcp.js';
@@ -6103,6 +6103,11 @@ async function handleRequest(request, env, ctx) {
       price: fetchShareBadgePrice,
     });
   }
+  const profileCard = pathname.match(/^\/_og\/profile\/v1\/([A-Za-z0-9_][A-Za-z0-9_.-]{0,63})\.png$/);
+  if (profileCard) {
+    const { handleProfileShareImage } = await import('./server/post-share-image.js');
+    return handleProfileShareImage(request, env, ctx, profileCard[1], fetchAccountInfo);
+  }
   if (pathname.startsWith(OG_SOURCE_PREFIX)) return ogSourceResponse(request, env, pathname);
 
   // Skip static assets immediately.
@@ -6841,6 +6846,7 @@ async function handleRequest(request, env, ctx) {
         ? ((html.match(/<link rel="canonical" href="https:\/\/dehub\.io\/([^"/?#]+)">/) || [])[1] || proxiedSegments[0])
         : '';
     let postShareRecord = null;
+    let profileShareAccount = null;
     if (proxiedPostId) {
       // Every post, not just a bodyless one: the title work in enrichPostMeta
       // has to reach the posts that DO have body text, because those are
@@ -6879,6 +6885,7 @@ async function handleRequest(request, env, ctx) {
       // the avatar URL is only a fallback for the wallet (a profile with no
       // avatar has none, and its posts were never listed).
       const account = await fetchAccountInfo(proxiedHandle);
+      profileShareAccount = account;
       html = enrichProfileMeta(html, proxiedHandle, account && account.displayName);
       const address = String((account && account.address) || '').toLowerCase() || profileAddressOf(html);
       const rows = address ? await fetchFeedRowsOrNull(`minter=${address}`) : null;
@@ -6918,13 +6925,16 @@ async function handleRequest(request, env, ctx) {
     if (proxiedHandle) {
       html = profileBannerCard(html);
       html = logoCardDimensions(html);
+      // The rendered card when the account read succeeded; the padded avatar
+      // above stays as the fallback when it did not.
+      html = applyProfileShareImage(html, profileShareAccount);
     }
     // Structured data and cards on the rest of the fn's entity pages: a
     // profile as ProfilePage, a community as a page rather than a rival brand
     // Organization, and post/community images as true 1200x630 cards.
     const proxiedCommunity = !proxiedPostId && /^\/app\/communities\/[^/?#]+/.test(ssrPath);
     if (proxiedPostId) {
-      html = applyTextPostImage(dropTwitterPlayer(cardProxiedImage(html)), postShareRecord);
+      html = applyPostShareImage(dropTwitterPlayer(cardProxiedImage(html)), postShareRecord);
     } else if (proxiedHandle) {
       html = rewriteJsonLd(html, (ld) => profilePageLd(ld, proxiedHandle));
     } else if (proxiedCommunity) {
