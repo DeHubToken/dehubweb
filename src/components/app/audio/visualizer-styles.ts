@@ -359,7 +359,8 @@ export function drawSpectrum(
     );
   }
   bctx.fillStyle = col;
-  bctx.fillRect(width - step, 0, step, height);
+  // Start with a readable spectrum before a scrolling history exists.
+  bctx.fillRect(fresh ? 0 : width - step, 0, fresh ? width : step, height);
 
   ctx.clearRect(0, 0, width, height);
   ctx.drawImage(spectrumBuf, 0, 0);

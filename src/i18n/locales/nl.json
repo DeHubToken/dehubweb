@@ -1889,7 +1889,11 @@
     "radio": "Radio",
     "trendingTracks": "Populaire nummers",
     "moreVideos": "Meer video's",
-    "newReleases": "Nieuwe releases"
+    "newReleases": "Nieuwe releases",
+    "mostPlayed": "Meest afgespeeld",
+    "mostLiked": "Meest geliket",
+    "mostRecent": "Meest recent",
+    "chartOrder": "Volgorde van de audiolijst"
   },
   "notFound": {
     "title": "Pagina niet gevonden",
@@ -7441,7 +7445,8 @@
     "play": "Afspelen",
     "pause": "Pauzeren",
     "listens_one": "{{count}} keer beluisterd",
-    "listens_other": "{{count}} keer beluisterd"
+    "listens_other": "{{count}} keer beluisterd",
+    "visualizerColour": "Kleur van de visualisatie"
   },
   "converter": {
     "seoTitle": "Converter — importeer een video naar DeHub",
@@ -14386,5 +14391,8 @@
     "posted": "Geplaatst",
     "view": "Bekijken",
     "failed": "De video kon niet worden verwerkt"
+  },
+  "player": {
+    "volume": "Volume"
   }
 }
