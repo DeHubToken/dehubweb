@@ -44,6 +44,8 @@ export interface BaseFeedItem {
    * shared link.
    */
   contentRating?: ContentRating;
+  /** Alt text, one per piece of media in display order (gallery images by position, a video first). */
+  mediaDescriptions?: string[];
   /**
    * The creator published this for children — the Kids Mode allowlist.
    *

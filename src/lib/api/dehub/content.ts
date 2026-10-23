@@ -111,6 +111,8 @@ export interface MintPostParams {
    * is nothing to attach to before then.
    */
   shopListingCount?: number;
+  /** Alt text, one per uploaded image or video in file order. */
+  mediaDescriptions?: string[];
 }
 
 export interface MintResponse {
@@ -245,6 +247,10 @@ export async function mintPost(
   // false would store a second representation of the same state.
   if (params.forKids === true) {
     formData.append('forKids', 'true');
+  }
+
+  if (params.mediaDescriptions?.some(Boolean)) {
+    formData.append('mediaDescriptions', JSON.stringify(params.mediaDescriptions));
   }
 
   // Only sent when there is a board. An empty array would be a valid "clear
@@ -422,6 +428,8 @@ export interface EditPostParams {
    * cards read, so 0 is meaningful — it says the listings came off.
    */
   shopListingCount?: number;
+  /** Replace the post's alt text, one per piece of media in display order. `[]` clears it. */
+  mediaDescriptions?: string[];
 }
 
 export interface EditPostResponse {

@@ -1061,6 +1061,11 @@ export function usePostForm(
     }));
   }, [_copy]);
 
+  /** Alt text for one attached image or video; blank clears it. */
+  const setMediaDescription = useCallback((index: number, description: string) => {
+    setMedia(prev => prev.map((m, i) => (i === index ? { ...m, description: description.trim() || undefined } : m)));
+  }, []);
+
   const handleAudioSelect = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
     const files = e.target.files;
     if (!files || files.length === 0) return;
@@ -1953,6 +1958,11 @@ export function usePostForm(
         // land a moment later — see the attach step below.
         shopListingCount: shopListingIds.length || undefined,
         plans: subscriberPlanIds,
+        // Alt text in the order the files upload, which is the order the post
+        // shows them. Audio has nothing to see, so it takes no slot.
+        mediaDescriptions: media.some(m => m.description)
+          ? media.filter(m => m.type !== 'audio').map(m => m.description || '')
+          : undefined,
       };
       const uploadWithFile = (percent: number) => setUploadProgress(Math.round(percent * 0.6)); // XHR bytes map to 0-60%
 
@@ -2766,6 +2776,7 @@ export function usePostForm(
       clearCropFromMedia,
       applyTrimToMedia,
       replaceImageFile,
+      setMediaDescription,
       handleEnhanceWithAI,
       insertFormatting,
       handlePost,

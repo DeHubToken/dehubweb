@@ -433,6 +433,7 @@ export function mapNFTToLiveStream(nft: DeHubNFT, index: number): LiveStream {
     lockedChainId: nft.streamInfo?.lockContentChainIds?.[0],
     subscriberPlans: (nft as any).plansDetails,
     contentRating: nft.contentRating,
+    mediaDescriptions: nft.mediaDescriptions,
     shopLinks: nft.shopLinks,
     shopListingCount: nft.shopListingCount,
     isOwner: nft.isOwner ?? false,

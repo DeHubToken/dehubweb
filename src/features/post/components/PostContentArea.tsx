@@ -52,6 +52,7 @@ interface PostContentAreaProps {
   onClearCrop: (index: number) => void;
   onApplyTrim: (index: number, trimStart: number, trimEnd: number) => void;
   onReplaceImage: (index: number, file: File) => void;
+  onSetMediaDescription?: (index: number, description: string) => void;
   liveMode: LiveMode;
   canPost: boolean;
   destinations: string[];
@@ -165,6 +166,7 @@ export function PostContentArea({
   onClearCrop,
   onApplyTrim,
   onReplaceImage,
+  onSetMediaDescription,
   liveMode,
   canPost,
   destinations,
@@ -809,6 +811,7 @@ export function PostContentArea({
             onClearCrop={onClearCrop}
             onApplyTrim={onApplyTrim}
             onReplaceImage={onReplaceImage}
+            onSetDescription={onSetMediaDescription}
             onFullscreenChange={onMediaFullscreenChange}
             draftVideo={draftVideo}
           />
