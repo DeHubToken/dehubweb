@@ -55,6 +55,8 @@ import type { Community, PinnedCommunity } from '@/hooks/use-communities';
 import { DraftVideoProgress } from '@/features/post/components/DraftVideoProgress';
 import { PostProcessingPill } from '@/components/app/PostProcessingDock';
 import type { PostProcessingPhase } from '@/store/postProcessingStore';
+import { ProposalLinkEmbed } from '@/components/app/governance/ProposalLinkEmbed';
+import type { GovernanceProposal } from '@/hooks/use-governance';
 import galleryCover from '@/assets/banners/agent-marco_v.png';
 import galleryAvatar from '@/assets/avatars/marco_v.png';
 import galleryCommunityArt from '@/assets/banners/agent-vrgl.png';
@@ -496,6 +498,7 @@ export default function StateGalleryPage() {
         <PinnedProfileGallery />
 
         <PollGallery />
+        <ProposalCardGallery />
         <LiveViewerGallery />
 
         <section data-page-bento data-badge-gallery className="mb-5 rounded-3xl border border-white/10 bg-white/[0.04] p-4">
@@ -898,6 +901,42 @@ function PageKitGallery() {
           <KitButton variant="quiet">{_copy("copy.c0ebb7d6b693", { defaultValue: "Quiet" })}</KitButton>
         </div>
         <PageEmpty icon="stores" title={_copy("copy.38975ad4e835", { defaultValue: "No listings yet" })} body="Be the first to sell something." />
+      </div>
+    </section>
+  );
+}
+
+/** Sample proposals for the proposal card a quoted or reposted proposal shows as. */
+const GALLERY_PROPOSALS: GovernanceProposal[] = (() => {
+  const day = 86_400_000;
+  const base = {
+    author_wallet_address: '0x1111111111111111111111111111111111111111',
+    author_username: 'marco_v',
+    author_avatar: null,
+    vote_count: 0,
+    comment_count: 4,
+    created_at: new Date(Date.now() - 2 * day).toISOString(),
+    updated_at: new Date(Date.now() - day).toISOString(),
+  };
+  return [
+    { ...base, id: '00000000-0000-4000-8000-000000000001', status: 'open', title: 'Add a creator fund paid from 1% of tips', description: 'Each month, 1% of all tips goes into a pool split between the ten most-watched new creators.', like_count: 4200, dislike_count: 1300, voting_ends_at: new Date(Date.now() + 3 * day).toISOString() },
+    { ...base, id: '00000000-0000-4000-8000-000000000002', status: 'passed', title: 'Weekly community stage for governance Q&A', description: 'A recorded stage every Friday where proposers answer questions before votes close.', like_count: 9100, dislike_count: 700, voting_ends_at: new Date(Date.now() - day).toISOString() },
+    { ...base, id: '00000000-0000-4000-8000-000000000003', status: 'rejected', title: 'Remove mature content from search', description: '', like_count: 900, dislike_count: 5600, voting_ends_at: new Date(Date.now() - day).toISOString() },
+  ] as GovernanceProposal[];
+})();
+
+function ProposalCardGallery() {
+  const { t } = useTranslation();
+  const queryClient = useQueryClient();
+  // Seed before the cards mount so they render the samples, never fetch.
+  useState(() => GALLERY_PROPOSALS.forEach((p) => queryClient.setQueryData(['governance-proposal', p.id], p)));
+  return (
+    <section data-page-bento data-proposal-gallery className="mb-5 rounded-3xl border border-white/10 bg-white/[0.04] p-4">
+      <h2 className="mb-3 text-sm font-semibold">{t('governance.title', 'Governance')}</h2>
+      <div className="grid gap-4 md:grid-cols-3">
+        {GALLERY_PROPOSALS.map((p) => (
+          <ProposalLinkEmbed key={p.id} proposalId={p.id} path="/app/state-gallery" />
+        ))}
       </div>
     </section>
   );
