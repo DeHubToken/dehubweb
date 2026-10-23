@@ -52,6 +52,7 @@ import { VideoCard } from '@/components/app/cards/VideoCard';
 import { searchNFTs, getNFTInfo, getBlockList, type DeHubNFT } from '@/lib/api/dehub';
 import { MANUAL_MUSIC_TOKEN_IDS } from '@/constants/music.constants';
 import { isBlockedCreator, mapNFTToVideoItem } from '@/lib/music-feed-items';
+import { resolveLikeCount, resolveViewCount } from '@/lib/engagement';
 import { getCuratedCarouselStations, type RadioStation } from '@/lib/api/radio-browser';
 import { useAuth } from '@/contexts/AuthContext';
 import { videoPlaybackManager } from '@/lib/video-playback-manager';
@@ -420,7 +421,8 @@ function MusicVideosCarousel({ videos, totalCount, isLoading, onSeeAll }: {
   );
 }
 
-function AudioUploadsCarousel({ audioItems, isLoading }: { audioItems: VideoItem[]; isLoading: boolean }) {
+type AudioChartSort = 'trending' | 'popular' | 'new';
+function AudioUploadsCarousel({ audioItems, isLoading, chartSort, onChartSort }: { audioItems: VideoItem[]; isLoading: boolean; chartSort: AudioChartSort; onChartSort: (sort: AudioChartSort) => void }) {
   const { t: _copy } = _useCopy();
   const [selectedId, setSelectedId] = useState<string | null>(null);
   const selected = audioItems.find(item => item.id === selectedId) || audioItems[0];
@@ -441,6 +443,9 @@ function AudioUploadsCarousel({ audioItems, isLoading }: { audioItems: VideoItem
   return (
     <div data-listening-desk>
       <SectionHeader icon={Disc3} title={_copy("copy.302b4ce5c73d", { defaultValue: "Audio Uploads" })} count={audioItems.length} />
+      <div data-audio-chart-sort role="group" aria-label={_copy('music.chartOrder', { defaultValue: 'Audio chart order' })}>
+        {(['trending', 'popular', 'new'] as const).map(sort => <button key={sort} type="button" aria-pressed={chartSort === sort} onClick={() => onChartSort(sort)}>{sort === 'trending' ? _copy('music.mostPlayed', { defaultValue: 'Most played' }) : sort === 'popular' ? _copy('music.mostLiked', { defaultValue: 'Most liked' }) : _copy('music.mostRecent', { defaultValue: 'Most recent' })}</button>)}
+      </div>
       {isLoading ? (
         <div className="flex gap-3 overflow-hidden pr-8">
           {Array.from({ length: 3 }).map((_, i) => (
@@ -499,6 +504,8 @@ function AllSection({
   isLoadingVideos,
   audioUploads,
   isLoadingAudio,
+  chartSort,
+  onChartSort,
   onGoToRadio,
   onGoToVideos,
   onOpenStages,
@@ -509,6 +516,8 @@ function AllSection({
   isLoadingVideos: boolean;
   audioUploads: VideoItem[];
   isLoadingAudio: boolean;
+  chartSort: AudioChartSort;
+  onChartSort: (sort: AudioChartSort) => void;
   onGoToRadio: () => void;
   onGoToVideos: () => void;
   onOpenStages: () => void;
@@ -520,7 +529,7 @@ function AllSection({
 
   return (
     <div className="space-y-4 pb-32">
-      <AudioUploadsCarousel audioItems={audioUploads} isLoading={isLoadingAudio} />
+      <AudioUploadsCarousel audioItems={audioUploads} isLoading={isLoadingAudio} chartSort={chartSort} onChartSort={onChartSort} />
       <MusicVideosCarousel videos={musicVideos} totalCount={totalVideoCount} isLoading={isLoadingVideos} onSeeAll={onGoToVideos} />
       <RadioCarousel stations={radioStations} onSeeAll={onGoToRadio} />
       <StagesCarousel onOpenStages={onOpenStages} />
@@ -645,6 +654,7 @@ interface MusicFeedProps {
 
 export function MusicFeed({ showFilters = false, isRefreshing = false }: MusicFeedProps) {
   const [activeSubTab, setActiveSubTab] = useState<MusicSubTab>('all');
+  const [chartSort, setChartSort] = useState<AudioChartSort>('trending');
   const musicSubIsDraggingRef = useRef(false);
   const { layerRef: musicSubTabLayerRef, setRef: setMusicSubTabRef, rect: musicSubTabRect, onScroll: onMusicSubTabScroll } = useTabIndicator(activeSubTab, undefined, musicSubIsDraggingRef);
 
@@ -706,11 +716,11 @@ export function MusicFeed({ showFilters = false, isRefreshing = false }: MusicFe
 
   // Fetch audio uploads for carousel (try both postType values)
   const { data: audioUploadsData, isLoading: isLoadingAudio } = useQuery({
-    queryKey: ['music-audio-uploads', walletAddress],
+    queryKey: ['music-audio-uploads', walletAddress, chartSort],
     queryFn: async () => {
       const [audioRes, feedAudioRes] = await Promise.all([
-        searchNFTs({ postType: 'audio', unit: CAROUSEL_PAGE_SIZE, sortMode: 'new' }).catch(() => ({ data: [] })),
-        searchNFTs({ postType: 'feed-audio', unit: CAROUSEL_PAGE_SIZE, sortMode: 'new' }).catch(() => ({ data: [] })),
+        searchNFTs({ postType: 'audio', unit: CAROUSEL_PAGE_SIZE, sortMode: chartSort }).catch(() => ({ data: [] })),
+        searchNFTs({ postType: 'feed-audio', unit: CAROUSEL_PAGE_SIZE, sortMode: chartSort }).catch(() => ({ data: [] })),
       ]);
       // Merge and dedupe by tokenId. Blocked creators are filtered on render.
       const seen = new Set<string | number>();
@@ -721,7 +731,10 @@ export function MusicFeed({ showFilters = false, isRefreshing = false }: MusicFe
         seen.add(tid);
         merged.push(nft);
       }
-      return merged;
+      return merged.sort((a, b) => chartSort === 'trending'
+        ? resolveViewCount(b) - resolveViewCount(a)
+        : chartSort === 'popular' ? resolveLikeCount(b) - resolveLikeCount(a)
+        : Date.parse(b.createdAt || b.created_at || '') - Date.parse(a.createdAt || a.created_at || ''));
     },
     staleTime: 5 * 60 * 1000,
   });
@@ -798,6 +811,8 @@ export function MusicFeed({ showFilters = false, isRefreshing = false }: MusicFe
             isLoadingVideos={isLoadingCarouselVideos}
             audioUploads={audioUploads}
             isLoadingAudio={isLoadingAudio}
+            chartSort={chartSort}
+            onChartSort={setChartSort}
             onGoToRadio={() => setActiveSubTab('radio')}
             onGoToVideos={() => setActiveSubTab('videos')}
             onOpenStages={() => openStageModal('browse')}

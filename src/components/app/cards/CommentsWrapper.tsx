@@ -514,8 +514,9 @@ export function CommentsWrapper({ open, onOpenChange, tokenId, initialTab, immer
             // viewport height and let the section scroll internally. Desktop
             // keeps the grow-to-content behaviour (CommentsSection carries its
             // own min-h-[400px]).
-            className={`bg-black/60 backdrop-blur-2xl rounded-2xl border border-white/10 mt-3 ${inlineWindowClass} ${
-              isCompact ? 'px-2 pb-2 pt-1 md:max-h-[40vh] text-sm' : 'px-4 pb-4 pt-2'
+            data-comments-inline
+            className={`rounded-2xl border border-white/10 mt-3 ${inlineWindowClass} ${
+              isCompact ? 'md:max-h-[40vh] text-sm' : ''
             }`}
           >
             <Suspense fallback={null}>
