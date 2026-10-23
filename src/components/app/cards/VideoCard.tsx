@@ -1874,14 +1874,15 @@ export const VideoCard = memo(function VideoCard({ video, postPage = false, onBa
    */
   const tapGestures = useTapGestures({
     postId: video.id,
+    reactionArea: isImmersive || isFullscreen ? 'surface' : 'center',
     // A gated card (PPV, holdings/subscriber lock, mature warning) draws no
     // burst — TapReactionBurst lives inside the isContentGated block further
     // down — so a cast there would react, invisibly, to a post you cannot
     // see. On gated media the tap belongs to the unlock overlay. ImageCard
     // already behaves this way: its gate branch replaces the carousel that
     // carries the gesture, so this only brings video into line.
-    disabled: hideActions || !!video.isAudio || isContentGated || feedPreview || liveFeedPreview,
-    onSingleTap: isImmersive ? () => {
+    disabled: hideActions || !!video.isAudio || isContentGated || liveFeedPreview,
+    onSingleTap: feedPreview ? openPreviewInShorts : isImmersive ? () => {
       showControlsBriefly();
       handlePlayClick();
     } : undefined,
@@ -1892,6 +1893,7 @@ export const VideoCard = memo(function VideoCard({ video, postPage = false, onBa
   // the card; two and three taps still react. Links and "See more" keep theirs.
   const captionTapGestures = useTapGestures({
     postId: video.id,
+    reactionArea: 'center',
     disabled: hideActions || isContentGated,
     enableLongPress: false,
     onSingleTap: (event) => {
@@ -1906,10 +1908,7 @@ export const VideoCard = memo(function VideoCard({ video, postPage = false, onBa
   // Playback and reactions run from pointer events above. The compatibility
   // click only keeps the visible controls awake; it must never toggle twice.
   const handleVideoAreaClick = useCallback(() => {
-    if (feedPreview) {
-      openPreviewInShorts();
-      return;
-    }
+    if (feedPreview) return; // Pointer gestures own preview navigation.
     if (liveFeedPreview) {
       openPost();
       return;
@@ -1974,8 +1973,8 @@ export const VideoCard = memo(function VideoCard({ video, postPage = false, onBa
     }
 
     if (feedPreview) {
+      // Pointer gestures open immediately outside the central reaction area.
       e.preventDefault();
-      openPreviewInShorts();
       return;
     }
 
