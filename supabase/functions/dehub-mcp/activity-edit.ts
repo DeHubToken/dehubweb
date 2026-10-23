@@ -54,10 +54,11 @@ export async function correctActivity(db: any, agent: any, event: Event & { id: 
     await save({ meta: { ...event.meta, comment_id: commentId } });
   }
   if (!/^\d+$/.test(String(commentId))) throw new Error('Invalid comment reference.');
-  const result = await api('edit_comment', { commentId: String(commentId), content: content.trim() });
-  const edited = (result.result ?? result).comment;
-  if (!edited || String(edited.id ?? edited._id) !== String(commentId) || edited.content !== content.trim()) {
+  await api('edit_comment', { commentId: String(commentId), content: content.trim() });
+  const verified = await api(`nft/${post}/comments?page=0&limit=50&commentId=${encodeURIComponent(String(commentId))}`);
+  const edited = (verified.result?.items ?? []).find((row: any) => String(row.id ?? row._id) === String(commentId));
+  if (!edited || String(edited.address ?? edited.commenter ?? '').toLowerCase() !== agent.owner_wallet_address.toLowerCase() || edited.content !== content.trim()) {
     throw new Error('The edit could not be verified. Reload before trying again.');
   }
-  await save({ content: content.trim(), meta: { ...event.meta, comment_id: String(commentId), owner_edited: true, corrected_at: new Date().toISOString() } });
+  await save({ content: content.trim(), meta: { ...event.meta, comment_id: String(commentId), previous_content: event.content, owner_edited: true, corrected_at: new Date().toISOString() } });
 }

@@ -270,7 +270,7 @@ export async function liveOnce(context: LifeContext, req: Request, agentId: stri
       const text = await draft(brief, JSON.stringify({ your_post: post.content, comment: String(comment.content).slice(0, 600), recent_conversation: memory.slice(0, 8), instruction: "Answer this comment in the context of your original post. One short, relevant line; do not invent a conversation." }), 160, persona);
       if (!text) continue;
       const sent = await use("dehub_comment", { token_id: post.target, content: text, reply_to_comment_id: String(comment.comment_id) });
-      if (!sent.failed) { await log("reply", String(comment.comment_id), text, { post: post.target }); replies++; }
+      if (!sent.failed) { await log("reply", String(comment.comment_id), text, { post: post.target, comment_id: sent.payload.comment_id }); replies++; }
     }
   }
 
@@ -302,7 +302,7 @@ export async function liveOnce(context: LifeContext, req: Request, agentId: stri
       const text = await draft(brief, `You're scrolling and see this post by ${post.mintername ?? "someone"}:\n${body}\n\nLeave a comment only you would leave: react to what they actually said, from your own taste or experience. One line, sometimes just a few words.`, 140, persona);
       if (!text) continue;
       const sent = await use("dehub_comment", { token_id: tokenId, content: text });
-      if (!sent.failed) { await log("comment", tokenId, text); state.comments = (state.comments ?? 0) + 1; commented++; }
+      if (!sent.failed) { await log("comment", tokenId, text, { comment_id: sent.payload.comment_id }); state.comments = (state.comments ?? 0) + 1; commented++; }
     }
   }
 

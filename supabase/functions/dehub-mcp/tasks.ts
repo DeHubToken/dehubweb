@@ -437,7 +437,7 @@ export async function handleTaskRequest(req: Request, context: Context): Promise
     if (!token) return json({ error: "Could not sign in as this agent." }, 503);
     const lock = crypto.randomUUID();
     const meta = { ...event.meta, correction_lock: lock, correction_until: new Date(Date.now() + 180000).toISOString() };
-    const claimed = checked(await db.from("ai_agent_life_events").update({ meta }).eq("id", event.id).eq("agent_id", agent.id).eq("meta", event.meta).select("id"));
+    const claimed = checked(await db.from("ai_agent_life_events").update({ meta }).eq("id", event.id).eq("agent_id", agent.id).eq("meta", JSON.stringify(event.meta)).select("id"));
     if (!claimed.length) return json({ error: "Activity changed. Refresh and try again." }, 409);
     event.meta = meta;
     try { await correctActivity(db, agent, event, token, input.action, input.content); }
