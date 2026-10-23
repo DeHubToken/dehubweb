@@ -68,9 +68,11 @@ html[data-theme='glass'] [data-post-modal] {
   box-shadow: var(--glass-edge) !important;
   border-color: transparent; backdrop-filter: var(--glass-blur);
 }
-html[data-theme='glass'] :is([data-glass-loading-surface], [data-kit-section]) {
-  background: var(--glass-highlight), var(--theme-control-fill);
-  box-shadow: var(--glass-edge);
+html[data-theme='glass'][data-theme] #app-root :is([data-glass-loading-surface], [data-kit-section]):not(#_):not(#_) {
+  background: var(--glass-highlight), var(--theme-control-fill) !important;
+  box-shadow: var(--glass-edge) !important;
+  border-color: transparent !important;
+  backdrop-filter: var(--glass-blur) !important;
 }
 html[data-theme='glass'] [data-notification-row] { background-color: transparent !important; }
 html[data-theme='glass'] [data-arcade-card] { padding:10px; border-radius:28px; background:var(--glass-highlight),rgb(8 38 47 / .32) !important; box-shadow:inset 0 1px 1px #e1ffff80,inset 0 0 0 1px #d9ffff26,0 16px 36px -24px #0008; }
