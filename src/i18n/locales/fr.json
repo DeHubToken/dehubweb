@@ -1,4 +1,16 @@
 {
+  "altText": {
+    "badge": "ALT",
+    "add": "Ajouter une description",
+    "edit": "Modifier la description",
+    "titleImage": "Décrivez cette image",
+    "titleVideo": "Décrivez cette vidéo",
+    "help": "Pour les personnes qui ne peuvent pas la voir. Les lecteurs d'écran la lisent à voix haute.",
+    "placeholder": "Que montre-t-elle ? Reprenez tout texte qu'elle contient.",
+    "show": "Afficher la description",
+    "saved": "Description enregistrée",
+    "saveFailed": "Impossible d'enregistrer la description"
+  },
   "liveRecap": {
     "title": "Récapitulatif du flux",
     "justEnded": "Récapitulatif de votre flux",

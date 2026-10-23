@@ -167,6 +167,7 @@ function toVideoItem(nft: DeHubNFT): VideoItem {
   return {
     id: String(nft.tokenId),
     contentRating: nft.contentRating,
+    mediaDescriptions: nft.mediaDescriptions,
     shopLinks: (nft as any).shopLinks,
     shopListingCount: (nft as any).shopListingCount,
     type: 'video',
@@ -253,6 +254,7 @@ function toImagePost(nft: DeHubNFT): ImagePost {
   return {
     id: String(nft.tokenId),
     contentRating: nft.contentRating,
+    mediaDescriptions: nft.mediaDescriptions,
     shopLinks: (nft as any).shopLinks,
     shopListingCount: (nft as any).shopListingCount,
     type: 'image',
@@ -331,6 +333,7 @@ function toTextPost(nft: DeHubNFT): TextPost {
   return {
     id: String(nft.tokenId),
     contentRating: nft.contentRating,
+    mediaDescriptions: nft.mediaDescriptions,
     shopLinks: (nft as any).shopLinks,
     shopListingCount: (nft as any).shopListingCount,
     type: 'post',
@@ -446,6 +449,7 @@ function toLiveStream(nft: DeHubNFT): LiveStream {
   return {
     id: String(nft.tokenId),
     contentRating: nft.contentRating,
+    mediaDescriptions: nft.mediaDescriptions,
     // The Shop board rides straight through to LiveStreamCard, which is what
     // renders the player here — the button lives inside it.
     shopLinks: (nft as any).shopLinks,

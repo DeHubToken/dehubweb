@@ -4,7 +4,8 @@ import { useQueryClient } from '@tanstack/react-query';
 import { Loader2 } from "lucide-react";
 import Upload from "@/components/ui/cut-icons/upload";
 
-import { getNFTInfo, replacePostImage, addPostImages, getPostImageAllowance } from '@/lib/api/dehub';
+import { getNFTInfo, replacePostImage, addPostImages, getPostImageAllowance, editPost } from '@/lib/api/dehub';
+import { AltTextButton, AltTextDialog } from '@/features/post/components/AltTextEditor';
 import { buildFeedImageUrls } from '@/lib/media-url';
 import { applyImageReplacement } from '@/lib/optimistic-edit';
 import { toast } from 'sonner';
@@ -16,6 +17,8 @@ export function EditPostImages({ tokenId, disabled, onBusyChange }: {
   const { t: _copy } = _useCopy();
   const queryClient = useQueryClient();
   const [images, setImages] = useState<string[]>([]);
+  const [descriptions, setDescriptions] = useState<string[]>([]);
+  const [altIndex, setAltIndex] = useState<number | null>(null);
   const [imageLimit, setImageLimit] = useState<number | null>(null);
   const addInput = useRef<HTMLInputElement>(null);
   const [loading, setLoading] = useState(true);
@@ -33,7 +36,10 @@ export function EditPostImages({ tokenId, disabled, onBusyChange }: {
       if (active) setImageLimit(imageLimit);
     }).catch(() => { /* Replacement remains available if allowance cannot load. */ });
     getNFTInfo(String(tokenId)).then(post => {
-      if (active) setImages(['feed-images', 'image'].includes(post.postType) ? post.imageUrls ?? [] : []);
+      if (active) {
+        setImages(['feed-images', 'image'].includes(post.postType) ? post.imageUrls ?? [] : []);
+        setDescriptions(post.mediaDescriptions ?? []);
+      }
     }).catch(() => { if (active) setFailed(true); })
       .finally(() => { if (active) setLoading(false); });
     return () => { active = false; };
@@ -90,6 +96,23 @@ export function EditPostImages({ tokenId, disabled, onBusyChange }: {
     }
   };
 
+  // Saves straight away, like replacing an image does: the whole list goes
+  // up, positions following the images.
+  const saveDescription = async (index: number, text: string) => {
+    const next = images.map((_, i) => (i === index ? text.trim() : descriptions[i] || ''));
+    while (next.length && !next[next.length - 1]) next.pop();
+    const previous = descriptions;
+    setDescriptions(next);
+    try {
+      await editPost(tokenId, { mediaDescriptions: next });
+      void queryClient.invalidateQueries({ queryKey: ['unified-feed'] });
+      toast.success(_copy('altText.saved'));
+    } catch {
+      setDescriptions(previous);
+      toast.error(_copy('altText.saveFailed'));
+    }
+  };
+
   if (loading) return <p className="text-sm text-zinc-400">{_copy("copy.0adcf927c8a1", { defaultValue: "Loading post images…" })}</p>;
   if (failed) return <button type="button" className="text-sm text-zinc-300" onClick={() => setAttempt(value => value + 1)}>{_copy("copy.868ffd193290", { defaultValue: "Could not load post images. Retry" })}</button>;
   if (!images.length) return null;
@@ -114,15 +137,28 @@ export function EditPostImages({ tokenId, disabled, onBusyChange }: {
       if (file) void replace(file);
     }} />
     <div className="grid grid-cols-2 gap-3">
-      {previews.map((src, index) => <button key={index} type="button" disabled={busy || disabled}
-        onClick={() => { position.current = index; input.current?.click(); }}
-        className="overflow-hidden rounded-xl border border-white/10 bg-white/5 text-white disabled:opacity-50">
-        <img src={src} alt={_copy("copy.5e0cb5ae157b", { defaultValue: "Image {{value1}}", value1: index + 1 })} className="h-28 w-full object-contain" />
-        <span className="flex items-center justify-center gap-2 p-2 text-sm">
-          {busy && position.current === index ? <Loader2 className="h-4 w-4 animate-spin" /> : <Upload className="h-4 w-4" />}
-          {busy && position.current === index ? _copy("copy.44207eb29645", { defaultValue: "Replacing…" }) : _copy("copy.cd9939b6aa1a", { defaultValue: "Replace image {{value1}}", value1: index + 1 })}
-        </span>
-      </button>)}
+      {previews.map((src, index) => <div key={index} className="relative">
+        <button type="button" disabled={busy || disabled}
+          onClick={() => { position.current = index; input.current?.click(); }}
+          className="w-full overflow-hidden rounded-xl border border-white/10 bg-white/5 text-white disabled:opacity-50">
+          <img src={src} alt={descriptions[index] || _copy("copy.5e0cb5ae157b", { defaultValue: "Image {{value1}}", value1: index + 1 })} className="h-28 w-full object-contain" />
+          <span className="flex items-center justify-center gap-2 p-2 text-sm">
+            {busy && position.current === index ? <Loader2 className="h-4 w-4 animate-spin" /> : <Upload className="h-4 w-4" />}
+            {busy && position.current === index ? _copy("copy.44207eb29645", { defaultValue: "Replacing…" }) : _copy("copy.cd9939b6aa1a", { defaultValue: "Replace image {{value1}}", value1: index + 1 })}
+          </span>
+        </button>
+        <AltTextButton hasText={!!descriptions[index]} onClick={() => setAltIndex(index)} className="absolute right-2 top-2" />
+      </div>)}
     </div>
+    {altIndex !== null && (
+      <AltTextDialog
+        open
+        onOpenChange={(open) => { if (!open) setAltIndex(null); }}
+        kind="image"
+        previewSrc={previews[altIndex]}
+        initial={descriptions[altIndex]}
+        onSave={(text) => { void saveDescription(altIndex, text); }}
+      />
+    )}
   </section>;
 }

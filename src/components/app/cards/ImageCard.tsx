@@ -174,6 +174,7 @@ interface ImageCardProps {
  */
 import { createMediaAspectCache } from '@/lib/media-aspect-cache';
 import { viewerShareUrl } from '@/lib/share-url';
+import { AltTextBadge } from './AltTextBadge';
 const imageAspectRatioCache = createMediaAspectCache(
   () => localStorage.getItem('media-aspects-v1'), value => localStorage.setItem('media-aspects-v1', value),
 );
@@ -202,6 +203,7 @@ const BITMAP_RELEASE_DELAY_MS = 15_000;
 
 function ImageSlide({
   img,
+  description,
   idx,
   aboveFold,
   postId,
@@ -212,6 +214,7 @@ function ImageSlide({
 }: {
   pinned?: boolean;
   img: string;
+  description?: string;
   idx: number;
   aboveFold: boolean;
   postId?: string;
@@ -286,6 +289,7 @@ function ImageSlide({
       {...tapGestures}
     >
       <TapReactionBurst postId={postId} />
+      <AltTextBadge text={description} className="absolute left-2 top-2" />
       {/* The image sizes itself: fills the card width when it's wide enough,
           otherwise caps at 600px tall and shrinks its own width — so a narrow /
           portrait image is just the image, hugged to the left, with no blurred
@@ -293,6 +297,7 @@ function ImageSlide({
           up front so there's no layout shift on load. */}
       <HandoffImage
         mediaKey={`${postId ?? img}:${idx}`}
+        alt={description}
         priority={immersive ? 1 : 0}
         fixedFrame={!immersive}
         src={retainBitmap && horizontalBitmap ? img : undefined}
@@ -331,6 +336,7 @@ function ImageSlide({
  */
 function ImageCarousel({
   images,
+  descriptions,
   onImageClick,
   onIndexChange,
   aboveFold = false,
@@ -340,6 +346,8 @@ function ImageCarousel({
   soundPlaying = false,
 }: {
   images: string[];
+  /** Alt text per image, by position. */
+  descriptions?: string[];
   onImageClick: (index: number) => void;
   onIndexChange?: (index: number) => void;
   aboveFold?: boolean;
@@ -486,6 +494,7 @@ function ImageCarousel({
           >
             <ImageSlide
               img={img}
+              description={descriptions?.[idx]}
               idx={idx}
               aboveFold={aboveFold}
               postId={postId}
@@ -1280,6 +1289,7 @@ export const ImageCard = memo(function ImageCard({ post, aboveFold = false, onOp
           <SwipeableCarousel>
             <ImageCarousel
               images={images}
+              descriptions={post.mediaDescriptions}
               onImageClick={handleImageClick}
               onIndexChange={setActiveImageIndex}
               aboveFold={aboveFold}
