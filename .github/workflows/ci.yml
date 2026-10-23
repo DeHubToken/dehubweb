@@ -359,6 +359,9 @@ jobs:
       - name: Empty transcription fallback
         run: node --experimental-strip-types --test supabase/functions/_shared/transcription-fallback.test.ts
 
+      - name: Whisper dispatch and results
+        run: node --experimental-strip-types --test supabase/functions/_shared/whisper.test.ts
+
       - name: Bounded visual highlight requests
         run: node --experimental-strip-types --test supabase/functions/editor-visual-highlights/handler.test.ts supabase/functions/editor-visual-highlights/completion.test.ts
 
