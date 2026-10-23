@@ -437,6 +437,7 @@ function nftToFeedItem(pinnedPost: any): FeedItemType {
         mediaDescriptions: pinnedPost.mediaDescriptions,
         spoilerText: pinnedPost.spoilerText,
         quotePolicy: pinnedPost.quotePolicy,
+        visibility: pinnedPost.visibility,
         quoteRevoked: pinnedPost.quoteRevoked,
         replyPolicy: pinnedPost.replyPolicy,
         username: pinnedPost.minterDisplayName || pinnedPost.mintername || 'unknown',
@@ -473,6 +474,7 @@ function nftToFeedItem(pinnedPost: any): FeedItemType {
         mediaDescriptions: pinnedPost.mediaDescriptions,
         spoilerText: pinnedPost.spoilerText,
         quotePolicy: pinnedPost.quotePolicy,
+        visibility: pinnedPost.visibility,
         quoteRevoked: pinnedPost.quoteRevoked,
         replyPolicy: pinnedPost.replyPolicy,
         thumbnail,
@@ -514,6 +516,7 @@ function nftToFeedItem(pinnedPost: any): FeedItemType {
         mediaDescriptions: pinnedPost.mediaDescriptions,
         spoilerText: pinnedPost.spoilerText,
         quotePolicy: pinnedPost.quotePolicy,
+        visibility: pinnedPost.visibility,
         quoteRevoked: pinnedPost.quoteRevoked,
         replyPolicy: pinnedPost.replyPolicy,
         author: {

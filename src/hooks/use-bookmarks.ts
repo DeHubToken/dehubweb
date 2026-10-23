@@ -47,6 +47,7 @@ function mapNFTToVideoItem(nft: DeHubNFT): VideoItem {
     mediaDescriptions: nft.mediaDescriptions,
     spoilerText: nft.spoilerText,
     quotePolicy: nft.quotePolicy,
+    visibility: nft.visibility,
     quoteRevoked: nft.quoteRevoked,
     replyPolicy: nft.replyPolicy,
     thumbnail,
@@ -103,6 +104,7 @@ function mapNFTToImagePost(nft: DeHubNFT): ImagePost {
     mediaDescriptions: nft.mediaDescriptions,
     spoilerText: nft.spoilerText,
     quotePolicy: nft.quotePolicy,
+    visibility: nft.visibility,
     quoteRevoked: nft.quoteRevoked,
     replyPolicy: nft.replyPolicy,
     username: nft.mintername || nft.minterDisplayName || 'unknown',
@@ -157,6 +159,7 @@ function mapNFTToTextPost(nft: DeHubNFT): TextPost {
     mediaDescriptions: nft.mediaDescriptions,
     spoilerText: nft.spoilerText,
     quotePolicy: nft.quotePolicy,
+    visibility: nft.visibility,
     quoteRevoked: nft.quoteRevoked,
     replyPolicy: nft.replyPolicy,
     author: {

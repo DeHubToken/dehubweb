@@ -6,7 +6,7 @@ import { useState, useEffect, useMemo } from 'react';
 import { DhbAmount, DhbCoin } from '@/components/app/DhbAmount';
 import { useTranslation as useI18n } from 'react-i18next';
 import { Ticket, Shield, Hash, Save, Type, ShoppingBag, Baby, Quote, MessageSquareReply } from "lucide-react";
-import type { QuotePolicy, ReplyPolicy } from "@/lib/api/dehub/types";
+import type { PostVisibility, QuotePolicy, ReplyPolicy } from "@/lib/api/dehub/types";
 import Gift from "@/components/ui/cut-icons/gifts";
 import Eye from "@/components/ui/cut-icons/visibility";
 import EyeOff from "@/components/ui/cut-icons/hidden";
@@ -90,6 +90,9 @@ interface PostAccessTogglesProps {
   /** Who may reply. Left out, like quotes, where this is not passed. */
   replyPolicy?: ReplyPolicy;
   setReplyPolicy?: (value: ReplyPolicy) => void;
+  /** Who may see the post. Left out for a quote or a livestream, which are always public. */
+  visibility?: PostVisibility;
+  setVisibility?: (value: PostVisibility) => void;
   isForKids: boolean;
   setIsForKids: (value: boolean) => void;
   /**
@@ -169,6 +172,8 @@ export function PostAccessToggles({
   setQuotePolicy,
   replyPolicy = 'public',
   setReplyPolicy,
+  visibility = 'public',
+  setVisibility,
   isForKids,
   setIsForKids,
   shopLinks,
@@ -721,8 +726,36 @@ export function PostAccessToggles({
         </label>
         )}
 
+        {/* Who may see the post — everyone, followers, or only the people it
+            mentions. First of the three, because it decides the other two:
+            a post nobody else can see is not one anybody else can quote. */}
+        {setVisibility && (
+        <div className="py-0.5">
+          <label className="flex items-center justify-between gap-3">
+            <div className="flex items-center gap-2 min-w-0">
+              <Eye className="w-4 h-4 text-white shrink-0" />
+              <span className="text-sm text-white">{t('postVisibility.label')}</span>
+            </div>
+            <select
+              value={visibility}
+              onChange={(e) => setVisibility(e.target.value as PostVisibility)}
+              onClick={e => e.stopPropagation()}
+              aria-label={t('postVisibility.label')}
+              className="rounded-lg border border-white/15 bg-black/40 px-2 py-1 text-xs text-white outline-none"
+            >
+              <option value="public">{t('postVisibility.public')}</option>
+              <option value="followers">{t('postVisibility.followers')}</option>
+              <option value="direct">{t('postVisibility.direct')}</option>
+            </select>
+          </label>
+          {visibility === 'direct' && (
+            <p className="mt-1 pl-6 text-xs text-white/60">{t('postVisibility.directHint')}</p>
+          )}
+        </div>
+        )}
+
         {/* Who may quote the post — anyone, followers, or only the creator. */}
-        {setQuotePolicy && (
+        {setQuotePolicy && visibility === 'public' && (
         <label className="flex items-center justify-between py-0.5 gap-3">
           <div className="flex items-center gap-2 min-w-0">
             <Quote className="w-4 h-4 text-white shrink-0" />

@@ -20,6 +20,9 @@ export type QuotePolicy = 'public' | 'followers' | 'nobody';
 /** Who may reply to a post (dehub-stream-backend src/reaction/reply-policy). Absent means anyone. */
 export type ReplyPolicy = 'public' | 'followers' | 'following' | 'mentioned';
 
+/** Who may see a post (dehub-stream-backend common/util/post-visibility). Absent means everyone. */
+export type PostVisibility = 'public' | 'followers' | 'direct';
+
 // Types based on DeHub API response (supports both API field naming conventions)
 export interface DeHubUser {
   _id?: string;
@@ -322,6 +325,8 @@ export interface DeHubNFT {
   quoteRevoked?: boolean;
   /** Who may reply; absent means anyone. */
   replyPolicy?: 'public' | 'followers' | 'following' | 'mentioned';
+  /** Who may see it; absent means everyone. */
+  visibility?: 'public' | 'followers' | 'direct';
   /**
    * The creator published this for children — the Kids Mode allowlist.
    *

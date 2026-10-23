@@ -92,6 +92,8 @@ export interface UnifiedFeedItem {
   quoteRevoked?: boolean;
   /** Who may reply; absent means anyone. */
   replyPolicy?: 'public' | 'followers' | 'following' | 'mentioned';
+  /** Who may see it; absent means everyone. */
+  visibility?: 'public' | 'followers' | 'direct';
   /** Published for children — see the field on BaseFeedItem. */
   forKids?: boolean;
   /** Signed-in viewers only — read totalViews via resolveViewCount instead. */
@@ -335,6 +337,7 @@ function mapVideoItem(item: UnifiedFeedItem, index: number): VideoItem {
     mediaDescriptions: item.mediaDescriptions,
     spoilerText: item.spoilerText,
     quotePolicy: item.quotePolicy,
+    visibility: item.visibility,
     quoteRevoked: item.quoteRevoked,
     replyPolicy: item.replyPolicy,
     forKids: item.forKids,
@@ -432,6 +435,7 @@ function mapImagePost(item: UnifiedFeedItem, index: number): ImagePost {
     mediaDescriptions: item.mediaDescriptions,
     spoilerText: item.spoilerText,
     quotePolicy: item.quotePolicy,
+    visibility: item.visibility,
     quoteRevoked: item.quoteRevoked,
     replyPolicy: item.replyPolicy,
     forKids: item.forKids,
@@ -502,6 +506,7 @@ function mapTextPost(item: UnifiedFeedItem, index: number): TextPost {
     mediaDescriptions: item.mediaDescriptions,
     spoilerText: item.spoilerText,
     quotePolicy: item.quotePolicy,
+    visibility: item.visibility,
     quoteRevoked: item.quoteRevoked,
     replyPolicy: item.replyPolicy,
     forKids: item.forKids,
