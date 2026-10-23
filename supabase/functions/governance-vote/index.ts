@@ -90,9 +90,15 @@ Deno.serve(async (req) => {
     return jsonResponse({ success: true, action: "removed", weight: 0, badgeName: null });
   }
 
-  const { weight, badgeName } = await resolveVoteWeight(wallet);
+  const { weight, badgeName, lent } = await resolveVoteWeight(wallet, false, { ownOnly: true });
   if (weight <= 0) {
-    return jsonResponse({ error: "You need a staking badge to vote. Hold DHB to earn one." }, 403);
+    // `code` lets the apps swap in their own wording and a Buy DHB button.
+    return lent
+      ? jsonResponse({
+        error: "Your badge is lent to you, and lent badges can't vote. Buy DHB to earn your own badge.",
+        code: "LENT_BADGE",
+      }, 403)
+      : jsonResponse({ error: "You need a staking badge to vote. Buy DHB to earn one.", code: "NO_BADGE" }, 403);
   }
 
   const { error } = await supabase

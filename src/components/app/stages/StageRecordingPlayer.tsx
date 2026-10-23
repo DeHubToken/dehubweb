@@ -127,6 +127,7 @@ export function StageRecordingPlayer({
 
   return (
     <div
+      data-glass-playback-surface
       data-no-navigate
       role="group"
       aria-label={t('stages.stageRecording')}
@@ -138,6 +139,7 @@ export function StageRecordingPlayer({
       )}
     >
       <span
+        data-glass-playback-control
         role="button"
         tabIndex={0}
         aria-label={isPlaying ? t('stages.pauseRecording') : t('stages.playRecording')}
@@ -190,6 +192,7 @@ export function StageRecordingPlayer({
       </div>
 
       <span
+        data-glass-playback-control
         role="button"
         tabIndex={0}
         aria-label={isLoaded && popout ? t('stages.closeCornerPlayer') : t('stages.popOutPlayer')}

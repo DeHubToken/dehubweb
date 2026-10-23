@@ -31,6 +31,7 @@ import usdtLogo from '@/assets/usdt-logo.png';
 import btcLogo from '@/assets/btc-logo.png';
 import solLogo from '@/assets/icons/solana-logo.png';
 import bnbLogo from '@/assets/bnb-logo.png';
+import { DHB_SALES_PAUSED } from '@/lib/dhb-sales';
 
 const tokenLogos: Record<string, string> = { ETH: ethLogo, USDC: usdcLogo, USDT: usdtLogo, BTC: btcLogo, SOL: solLogo, BNB: bnbLogo };
 
@@ -126,6 +127,7 @@ export function NearIntentBuy({ tokensToReceive, active, onDelivered }: { tokens
   const begin = async () => {
     picker.lockSelection();
     if (!quote) return flow.price();
+    if (DHB_SALES_PAUSED) return;
     const saved = await flow.create();
     if (saved?.route === 'direct' && saved.amountInFormatted === quote.amountInFormatted) await flow.pay(saved, sendPayment);
   };
@@ -199,7 +201,7 @@ export function NearIntentBuy({ tokensToReceive, active, onDelivered }: { tokens
         {quote && <div className="space-y-1 text-xs text-zinc-500"><p>{t('nearBuy.gasReserve', { amount: (quote.gasReserveUsd || 0).toFixed(4) })}</p>{estimate}</div>}
         {quote && <label className="flex gap-2 text-xs text-zinc-300"><input type="checkbox" checked={agreed} disabled={busy === 'create'} onChange={e => setAgreed(e.target.checked)} /><span>{t('nearBuy.acceptTerms')} <a href="/docs/terms-of-service" target="_blank" rel="noreferrer" className="underline">{t('nearBuy.terms')}</a></span></label>}
         {needsSolana && <Button variant="glass" className="w-full" disabled={connectingSolana} onClick={connectSolana}>{t(connectingSolana ? 'nearBuy.loading' : 'nearBuy.connectSolana')}</Button>}
-        {!needsSolana && <Button variant="glass" className="w-full" disabled={flow.loading || flow.historyFailed || !!busy || !validDhbAmount(amount) || (!!quote && (!flow.refund.trim() || !agreed))} onClick={begin}>{busy ? t('nearBuy.loading') : quote ? t(direct ? 'nearBuy.pay' : 'nearBuy.paymentAction') : t('nearBuy.getQuote')}</Button>}
+        {!needsSolana && <Button variant="glass" className="w-full" disabled={flow.loading || flow.historyFailed || !!busy || !validDhbAmount(amount) || (!!quote && (DHB_SALES_PAUSED || !flow.refund.trim() || !agreed))} onClick={begin}>{busy ? t('nearBuy.loading') : quote && DHB_SALES_PAUSED ? t('stores.soldOutButton') : quote ? t(direct ? 'nearBuy.pay' : 'nearBuy.paymentAction') : t('nearBuy.getQuote')}</Button>}
       </>}
     </>}
     {flow.error && <p role="alert" className="text-sm text-red-400">{flow.error}</p>}

@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { avcDecoderConfig, splitAnnexB, splitLengthPrefixed, toLengthPrefixed, videoDecoderConfigFixer } from "./videoDecoderConfig";
+import { avcDecoderConfig, cleanDecoderConfig, splitAnnexB, splitLengthPrefixed, toLengthPrefixed, videoDecoderConfigFixer } from "./videoDecoderConfig";
 
 const sps = new Uint8Array([0x67, 0x42, 0xe0, 0x28, 0xda, 0x01]);
 const pps = new Uint8Array([0x68, 0xce, 0x3c, 0x80]);
@@ -51,7 +51,28 @@ describe("video decoder config", () => {
     const c = chunk("key", toLengthPrefixed([idr]));
     const out = fix(c, { decoderConfig });
     expect(out.chunk).toBe(c);
-    expect(out.meta?.decoderConfig).toBe(decoderConfig);
+    expect(out.meta?.decoderConfig).toEqual(decoderConfig);
+  });
+
+  it("keeps the first avcC when a later config arrives without one", () => {
+    const fix = videoDecoderConfigFixer(options, make);
+    fix(chunk("key", annexB(sps, pps, idr)), undefined);
+    const later = fix(chunk("key", annexB(sps, pps, idr), 1_000_000), { decoderConfig: { codec: "avc1.42E028", description: undefined, colorSpace: { primaries: null, transfer: null, matrix: null, fullRange: null } } as unknown as VideoDecoderConfig });
+    expect(later.meta?.decoderConfig).toBeUndefined();
+    expect(fix.hasConfig()).toBe(true);
+  });
+
+  it("drops a browser config that has no avcC and cannot be rebuilt", () => {
+    const fix = videoDecoderConfigFixer(options, make);
+    const out = fix(chunk("key", toLengthPrefixed([idr])), { decoderConfig: { codec: "avc1.42E028" } });
+    expect(out.meta?.decoderConfig).toBeUndefined();
+    expect(fix.hasConfig()).toBe(false);
+  });
+
+  it("cleans empty fields and fills a partial colour space", () => {
+    const clean = cleanDecoderConfig({ codec: "mp4a.40.2", description: undefined, colorSpace: { primaries: "bt709", transfer: null, matrix: null, fullRange: null } } as unknown as VideoDecoderConfig);
+    expect("description" in clean).toBe(false);
+    expect(clean.colorSpace).toEqual({ primaries: "bt709", transfer: "bt709", matrix: "bt709", fullRange: false });
   });
 
   it("gives VP9 a colour space and a config when none arrives", () => {

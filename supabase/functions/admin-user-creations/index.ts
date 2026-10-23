@@ -102,7 +102,7 @@ Deno.serve(async (req) => {
     for (const res of [payments, jobs, generations, exports, projects]) if (res.error) throw res.error;
 
     const generationLinks = await signAll(db, 'creator-assets',
-      (generations.data ?? []).map((g: { storage_path: string | null }) => g.storage_path).filter(Boolean));
+      (generations.data ?? []).map((g: { storage_path: string | null }) => g.storage_path).filter((p): p is string => !!p));
     const exportLinks = await signAll(db, 'editor-assets',
       (exports.data ?? []).map((e: { storage_path: string }) => e.storage_path));
 

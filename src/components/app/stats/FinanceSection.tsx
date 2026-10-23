@@ -121,20 +121,20 @@ function FinanceTooltip({
   const row = payload[0].payload;
   const totals = row.month ?? row;
   return (
-    <div data-keep-dark className="rounded-xl bg-zinc-900 border border-zinc-700 px-3 py-2 shadow-lg">
-      <div className="text-[11px] text-zinc-400 mb-1">
+    <div data-glass-tooltip className="rounded-xl px-3 py-2">
+      <div className="text-[11px] opacity-80 mb-1">
         {row.month
           ? t('stats.money.tooltipMonth', '{{month}} · {{days}} days', { month: row.when, days: row.month.days })
           : row.when}
       </div>
-      <div className="text-xs text-white tabular-nums">
-        {formatUsd(totals.revenue)} <span className="text-zinc-400">{revenueLabel}</span>
+      <div className="text-xs tabular-nums">
+        {formatUsd(totals.revenue)} <span className="opacity-80">{revenueLabel}</span>
       </div>
-      <div className="text-xs text-white tabular-nums">
-        {formatUsd(totals.costs)} <span className="text-zinc-400">{costsLabel}</span>
+      <div className="text-xs tabular-nums">
+        {formatUsd(totals.costs)} <span className="opacity-80">{costsLabel}</span>
       </div>
       {row.month && (
-        <div className="text-[11px] text-zinc-500 tabular-nums mt-1">
+        <div className="text-[11px] opacity-80 tabular-nums mt-1">
           {t('stats.money.tooltipPerDay', '{{revenue}} / {{costs}} a day', {
             revenue: formatUsd(row.revenue),
             costs: formatUsd(row.costs),
@@ -505,7 +505,7 @@ export function FinanceSection({ range }: { range: Range }) {
         ) : (
           <div className="text-white">
             <ResponsiveContainer width="100%" height={180}>
-              <LineChart data={view.chart} margin={{ top: 4, right: 4, left: -14, bottom: 0 }}>
+              <LineChart data={view.chart} margin={{ top: 4, right: 4, left: 0, bottom: 0 }}>
                 <XAxis
                   dataKey="label"
                   tick={{ fontSize: 10, fill: 'currentColor', opacity: 0.45 }}

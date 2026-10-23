@@ -35,7 +35,7 @@ html:is([data-theme='hazy'], [data-theme='swarms'], [data-theme='lavalamp'], [da
 html[data-theme='light'] {
   --kit-hairline: rgb(0 0 0 / 0.08);
   --kit-chip-bg: rgb(0 0 0 / 0.05);
-  --kit-chip-ink: rgb(0 0 0 / 0.62);
+  --kit-chip-ink: rgb(0 0 0 / 0.74); /* AAA 7:1+ on paper */
   --kit-chip-active-bg: #111114;
   --kit-chip-active-ink: #fff;
   --kit-square-bg: rgb(0 0 0 / 0.05);
@@ -45,7 +45,7 @@ html[data-theme='light'] {
 html[data-system-tone="light"] {
   --kit-hairline: rgb(0 0 0 / 0.08);
   --kit-chip-bg: rgb(0 0 0 / 0.05);
-  --kit-chip-ink: rgb(0 0 0 / 0.62);
+  --kit-chip-ink: rgb(0 0 0 / 0.74); /* AAA 7:1+ on paper */
   --kit-chip-active-bg: #111114;
   --kit-chip-active-ink: #fff;
   --kit-square-bg: rgb(0 0 0 / 0.05);

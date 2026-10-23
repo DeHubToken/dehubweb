@@ -399,6 +399,7 @@ export function DesktopSidebar({ onPostClick }: DesktopSidebarProps) {
             </button>
             <button
               onClick={handleLogoClick}
+              data-glass-bare-action
               className={cn(
                 "cursor-pointer flex items-center justify-center overflow-hidden",
                 // Compact width HUGS the 22px mark rather than padding it to 28.

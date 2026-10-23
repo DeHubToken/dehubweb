@@ -7,20 +7,24 @@
  * (scripts/check-entry-bundle.mjs).
  */
 import { useEffect, useRef } from 'react';
-import type { StreamGiftBroadcast } from '@/lib/api/dehub/stream-presence';
+import type { StreamGiftBroadcast, StreamPaidGift } from '@/lib/api/dehub/stream-presence';
 
 export function useStreamGifts(
   streamId: string | undefined | null,
   enabled: boolean,
   onGift: (gift: StreamGiftBroadcast) => void,
+  /** The same tip once the chain has paid it. See watchStreamGifts. */
+  onPaid?: (gift: StreamPaidGift) => void,
 ) {
   // Callers pass an inline closure. Re-subscribing the socket on every render
   // of a live card would churn the room join, so the handler is read through a
   // ref and the subscription keys only on the stream.
   const handler = useRef(onGift);
+  const paidHandler = useRef(onPaid);
   useEffect(() => {
     handler.current = onGift;
-  }, [onGift]);
+    paidHandler.current = onPaid;
+  }, [onGift, onPaid]);
 
   useEffect(() => {
     if (!streamId || !enabled) return;
@@ -33,9 +37,15 @@ export function useStreamGifts(
         // The card may have unmounted while the chunk was in flight; the
         // cleanup below has already run by then.
         if (cancelled) return;
-        sub = watchStreamGifts(streamId, (gift) => {
-          if (!cancelled) handler.current(gift);
-        });
+        sub = watchStreamGifts(
+          streamId,
+          (gift) => {
+            if (!cancelled) handler.current(gift);
+          },
+          (paid) => {
+            if (!cancelled) paidHandler.current?.(paid);
+          },
+        );
       })
       .catch(() => undefined);
 

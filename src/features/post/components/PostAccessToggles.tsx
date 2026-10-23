@@ -1,6 +1,7 @@
 import { useTranslation as _useCopy } from 'react-i18next';
 import { useSurfaceDraft } from '@/hooks/use-surface-draft';
 import { tokenLabel } from '@/lib/token-label';
+import { DIRECT_TIP_TOKENS } from '@/lib/direct-tip-tokens';
 import { useState, useEffect, useMemo } from 'react';
 import { DhbAmount, DhbCoin } from '@/components/app/DhbAmount';
 import { useTranslation as useI18n } from 'react-i18next';
@@ -227,8 +228,8 @@ export function PostAccessToggles({
     () =>
       solanaChain
         ? (lockTokens.map((t) => t.symbol) as Currency[])
-        : (['DHB'] as Currency[]),
-    [solanaChain, lockTokens],
+        : (['DHB', ...DIRECT_TIP_TOKENS.filter((tk) => tk.chainId === postChainId).map((tk) => tk.symbol)] as Currency[]),
+    [solanaChain, lockTokens, postChainId],
   );
 
   // Category state
@@ -983,7 +984,7 @@ export function PostAccessToggles({
             <div className="flex items-center gap-2 p-3 rounded-lg bg-zinc-800/30 border border-white/10">
               <Info className="w-4 h-4 text-white/50 shrink-0" />
               <span className="text-xs text-white/50">
-                {tempPpvCurrency === 'DHB' ? t('drawers.ppvDhbInfo') : t('drawers.ppvUsdInfo')}
+                {tempPpvCurrency === 'DHB' ? t('drawers.ppvDhbInfo') : t('drawers.ppvStableInfo', { symbol: tempPpvCurrency })}
               </span>
             </div>
           </div>
