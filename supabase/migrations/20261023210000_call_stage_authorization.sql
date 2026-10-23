@@ -1,5 +1,21 @@
 -- Apply after the signed call clients are published on web and mobile.
 -- No rows are rewritten or removed. Legacy identity remains unchanged elsewhere.
+CREATE OR REPLACE FUNCTION public.touch_stage_speech(space_id uuid)
+RETURNS boolean LANGUAGE plpgsql SECURITY DEFINER SET search_path=public AS $$
+DECLARE w text:=public.get_signed_request_wallet_address();
+BEGIN
+  IF w IS NULL OR w='' THEN RETURN false; END IF;
+  UPDATE public.audio_spaces s SET last_speech_at=now()
+  WHERE s.id=touch_stage_speech.space_id AND s.status='live'
+    AND (s.last_speech_at IS NULL OR s.last_speech_at<now()-interval '60 seconds')
+    AND (lower(s.host_wallet_address)=w OR EXISTS (
+      SELECT 1 FROM public.space_participants p WHERE p.space_id=s.id
+        AND lower(p.wallet_address)=w AND p.left_at IS NULL AND p.role IN ('host','speaker')));
+  RETURN FOUND;
+END $$;
+REVOKE ALL ON FUNCTION public.touch_stage_speech(uuid) FROM PUBLIC;
+GRANT EXECUTE ON FUNCTION public.touch_stage_speech(uuid) TO anon, authenticated, service_role;
+
 CREATE OR REPLACE FUNCTION public.is_signed_stage_host(p_space_id uuid)
 RETURNS boolean LANGUAGE sql STABLE SECURITY DEFINER SET search_path = public AS $$
   SELECT EXISTS (SELECT 1 FROM public.audio_spaces s WHERE s.id = p_space_id

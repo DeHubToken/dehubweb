@@ -3,12 +3,16 @@ SET LOCAL ROLE anon;
 SELECT public.test_dub_session('0x1111111111111111111111111111111111111111');
 INSERT INTO public.audio_spaces(id,channel_name,title,host_wallet_address) VALUES('11111111-1111-1111-1111-111111111111','fixture','Fixture','0x1111111111111111111111111111111111111111');
 INSERT INTO public.space_participants(space_id,wallet_address,role) VALUES('11111111-1111-1111-1111-111111111111','0x1111111111111111111111111111111111111111','host');
+UPDATE public.audio_spaces SET status='live';
+SELECT public.assert_true(public.touch_stage_speech('11111111-1111-1111-1111-111111111111'),'signed host speech');
+UPDATE public.audio_spaces SET last_speech_at=NULL;
 INSERT INTO public.call_sessions(id,caller_address,recipient_address,call_type,status) VALUES('22222222-2222-2222-2222-222222222222','0x1111111111111111111111111111111111111111','0x2222222222222222222222222222222222222222','audio','ringing');
 INSERT INTO public.callback_requests(id,requester_address,recipient_address,call_type) VALUES('33333333-3333-3333-3333-333333333333','0x1111111111111111111111111111111111111111','0x2222222222222222222222222222222222222222','audio');
 SELECT public.assert_denied($q$UPDATE public.call_sessions SET status='connected'$q$);
 
 -- An address header without a signature proves nothing.
 SELECT public.test_dub_session('0x1111111111111111111111111111111111111111',false);
+SELECT public.assert_true(NOT public.touch_stage_speech('11111111-1111-1111-1111-111111111111'),'forged host cannot extend stage');
 SELECT public.assert_true((SELECT count(*)=0 FROM public.call_sessions),'anonymous call privacy');
 SELECT public.assert_true((SELECT count(*)=0 FROM public.callback_requests),'anonymous callback privacy');
 SELECT public.assert_denied($q$INSERT INTO public.call_sessions(caller_address,recipient_address,call_type,status) VALUES('0x1111111111111111111111111111111111111111','0x2222222222222222222222222222222222222222','audio','ringing')$q$);
@@ -24,6 +28,7 @@ WITH changed AS (UPDATE public.audio_spaces SET title='forged' RETURNING id) SEL
 -- Listener joins, raises/lowers their hand, leaves; cannot promote themselves.
 SELECT public.test_dub_session('0x2222222222222222222222222222222222222222');
 INSERT INTO public.space_participants(space_id,wallet_address) VALUES('11111111-1111-1111-1111-111111111111','0x2222222222222222222222222222222222222222');
+SELECT public.assert_true(NOT public.touch_stage_speech('11111111-1111-1111-1111-111111111111'),'listener cannot extend stage');
 SELECT public.assert_denied($q$UPDATE public.space_participants SET role='speaker' WHERE wallet_address='0x2222222222222222222222222222222222222222'$q$);
 SELECT public.assert_denied($q$UPDATE public.space_participants SET role='host' WHERE wallet_address='0x2222222222222222222222222222222222222222'$q$);
 SELECT public.assert_denied($q$UPDATE public.space_participants SET wallet_address='0x3333333333333333333333333333333333333333' WHERE wallet_address='0x2222222222222222222222222222222222222222'$q$);
