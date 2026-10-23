@@ -79,7 +79,7 @@ const BoostModal = lazy(() =>
 );
 import { applyOptimisticEdit } from '@/lib/optimistic-edit';
 import { QuotePostModalLazy } from '../modals/QuotePostModalLazy';
-import { QuotedPostEmbed } from './QuotedPostEmbed';
+import { QuotedPostEmbed, RemovedQuoteNotice } from './QuotedPostEmbed';
 import { TipModal } from '../modals/TipModal';
 import { SwipeableCarousel } from '../SwipeableCarousel';
 import { usePostTipCount } from '@/hooks/use-post-tip-count';
@@ -1348,8 +1348,9 @@ export const ImageCard = memo(function ImageCard({ post, aboveFold = false, onOp
 
         {/* Quoted post embed (Twitter-style) */}
         {post.isQuotePost && post.quotedPost && (
-          <QuotedPostEmbed quotedPost={post.quotedPost} className="mt-2" />
+          <QuotedPostEmbed quotedPost={post.quotedPost} quoteTokenId={post.id} className="mt-2" />
         )}
+        {post.isQuotePost && post.quoteRevoked && <RemovedQuoteNotice className="mt-2" />}
         
         {/* Metadata: timestamp and views */}
         <PostMetadata 
@@ -1375,6 +1376,7 @@ export const ImageCard = memo(function ImageCard({ post, aboveFold = false, onOp
           newPostSlug={post.status === 'signed' ? post.newPostId ?? null : null}
           tokenId={parseInt(post.id, 10) || undefined}
           isOwnPost={!!isOwnPost}
+          quotePolicy={post.quotePolicy}
           stage={stage}
           utilityDesktopAnchor
           className="p-0"
@@ -1536,6 +1538,7 @@ export const ImageCard = memo(function ImageCard({ post, aboveFold = false, onOp
             currentCategories={post.categories ?? []}
             currentContentRating={post.contentRating}
             currentSpoilerText={post.spoilerText}
+            currentQuotePolicy={post.quotePolicy}
             currentForKids={post.forKids}
             currentShopLinks={post.shopLinks}
             onSuccess={(edited) => {

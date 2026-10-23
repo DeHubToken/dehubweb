@@ -3214,6 +3214,7 @@ export const VideoCard = memo(function VideoCard({ video, postPage = false, onBa
               newPostSlug={video.status === 'signed' ? video.newPostId ?? null : null}
               tokenId={parseInt(video.id, 10) || undefined}
               isOwnPost={!!isOwnPost}
+              quotePolicy={video.quotePolicy}
               stage={stage}
               utilityDesktopAnchor
               className="p-0"
@@ -3503,6 +3504,7 @@ export const VideoCard = memo(function VideoCard({ video, postPage = false, onBa
             currentCategories={video.categories ?? []}
             currentContentRating={video.contentRating}
             currentSpoilerText={video.spoilerText}
+            currentQuotePolicy={video.quotePolicy}
             currentForKids={video.forKids}
             currentShopLinks={video.shopLinks}
             onSuccess={(edited) => {

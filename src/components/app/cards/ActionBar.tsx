@@ -20,6 +20,7 @@ import { useState, useCallback, useEffect, useRef, lazy, Suspense } from 'react'
 import { useQueryClient } from '@tanstack/react-query';
 import { Code, ImageDown } from "lucide-react";
 import { copyPostEmbedCode } from '@/lib/post-embed-code';
+import type { QuotePolicy } from '@/lib/api/dehub/types';
 import ThumbsDown from "@/components/ui/cut-icons/dislike";
 import Quote from "@/components/ui/cut-icons/quote";
 import Link from "@/components/ui/cut-icons/link";
@@ -186,6 +187,12 @@ interface ActionBarProps {
    * alone (the API enforces the same rule).
    */
   isOwnPost?: boolean;
+  /**
+   * Who the author lets quote this post. 'nobody' takes the Quote action away
+   * from everyone else; 'followers' leaves it, and the server answers anyone
+   * who does not follow with a refusal the composer shows.
+   */
+  quotePolicy?: QuotePolicy;
   /**
    * Listen for double-tap-to-like events for this post (default true).
    * Set false on secondary instances of the same post (e.g. a copy of the bar
@@ -380,6 +387,7 @@ export function ActionBar({
   disabled: externalDisabled = false,
   tokenId,
   isOwnPost = false,
+  quotePolicy,
   enableDoubleTapLike = true,
   quickRepost = false,
   centered = false,
@@ -891,6 +899,9 @@ export function ActionBar({
     setSheetOpen(false);
   };
 
+  // The author turned quotes off for everyone but themselves.
+  const canQuote = quotePolicy !== 'nobody' || isOwnPost;
+
   const handleQuote = () => {
     if (onQuote) {
       onQuote();
@@ -929,6 +940,7 @@ export function ActionBar({
           <span className="font-medium"><TranslationText name="copy.f4fd9adb8f2d" fallback={"Repost"} /></span>
         </button>
       )}
+      {canQuote && (
       <button
         onClick={(e) => { e.stopPropagation(); handleQuote(); }}
         className="flex items-center gap-3 w-full p-4 text-zinc-200 hover:text-white hover:bg-white/10 rounded-xl transition-all duration-200"
@@ -936,6 +948,7 @@ export function ActionBar({
         <Quote className="w-5 h-5" />
         <span className="font-medium"><TranslationText name="copy.eb4cdebd82bf" fallback={"Quote"} /></span>
       </button>
+      )}
       {onShareAsImage && (
         <button
           onClick={handleShareAsImage}
@@ -1163,6 +1176,7 @@ export function ActionBar({
           onRepost={handleRepost}
           onUndoRepost={handleUndoRepost}
           onQuote={handleQuote}
+          canQuote={canQuote}
           shareUrl={viewerShareUrl(shareUrlForPost())}
           onCopyLink={handleCopyLink}
           quoteCount={stage.quoteCount}
