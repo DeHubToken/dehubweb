@@ -29,6 +29,7 @@ import { useLiveSpaces, useStage } from '@/contexts/StageContext';
 import { SwipeableCarousel } from '@/components/app/SwipeableCarousel';
 import { StageHostLink } from '@/components/app/stages/StageHostLink';
 import { PastStageCard } from '@/components/app/stages/PastStageCard';
+import { StageCoverArt } from '@/components/app/stages/StageCoverArt';
 import { BadgedName } from '@/components/app/BadgedName';
 import { cn } from '@/lib/utils';
 import { supabase } from '@/integrations/supabase/client';
@@ -57,8 +58,11 @@ function StageCard({ space, onClick }: { space: AudioSpace; onClick: () => void 
   return (
     <button
       onClick={onClick}
-      className="flex-shrink-0 w-[260px] rounded-xl border border-white/[0.12] bg-white/[0.03] backdrop-blur-[24px] p-3 text-left hover:border-white/20 transition-all group"
+      className="flex-shrink-0 w-[260px] self-start rounded-xl border border-white/[0.12] bg-white/[0.03] backdrop-blur-[24px] overflow-hidden text-left hover:border-white/20 transition-all group"
     >
+      {/* The host's cover, or the stage's generated poster when there is none. */}
+      <StageCoverArt src={space.cover_image_url} title={space.title} stage={space} />
+      <div className="p-3">
       {/* Live badge and listeners */}
       <div className="flex items-center justify-between mb-3">
         <div className="flex items-center gap-1.5 px-2 py-1 bg-red-500/20 rounded-lg">
@@ -116,6 +120,7 @@ function StageCard({ space, onClick }: { space: AudioSpace; onClick: () => void 
           {space.description}
         </p>
       )}
+      </div>
     </button>
   );
 }

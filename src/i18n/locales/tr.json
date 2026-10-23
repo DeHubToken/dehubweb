@@ -1696,7 +1696,11 @@
     "radio": "Radyo",
     "trendingTracks": "Trend Parçalar",
     "moreVideos": "Daha Fazla Video",
-    "newReleases": "Yeni Çıkanlar"
+    "newReleases": "Yeni Çıkanlar",
+    "mostPlayed": "En çok çalınanlar",
+    "mostLiked": "En çok beğenilenler",
+    "mostRecent": "En yeniler",
+    "chartOrder": "Ses sıralaması"
   },
   "notFound": {
     "title": "Sayfa Bulunamadı",
@@ -1894,6 +1898,20 @@
       "comment": "Yorum",
       "profile": "Profil güncellemesi",
       "window": {
+        "authorAll": "Tüm üreticiler",
+        "authorChoose": "Üretici seç",
+        "categoryAll": "Tüm kategoriler",
+        "categoryChoose": "Kategori seç",
+        "categoryHint": "Virgülle ayrılmış en fazla 20 kategori ekleyin. Herhangi biri eşleşebilir. Tümü için boş bırakın.",
+        "last1h": "Son saat",
+        "last30d": "Son 30 gün",
+        "allTime": "Tüm zamanlar",
+        "dislike": "Beğenme",
+        "author": "Yazar (isteğe bağlı)",
+        "category": "Kategori (isteğe bağlı)",
+        "authorPlaceholder": "@kullanıcıadı veya cüzdan",
+        "categoryPlaceholder": "Tam kategori adı",
+        "filterHelp": "Tüm gönderiler için filtreleri boş bırakın. İkisi de seçilirse ikisi de eşleşmelidir. Aynı tepkiler korunur; karşıt tepki seçmek mevcut tepkiyi değiştirir.",
         "mode": "Görev türü",
         "write": "Talimat yaz",
         "title": "Bir zaman aralığındaki her gönderi",
@@ -3829,6 +3847,7 @@
     "shopAllowanceUsed": "{{allowance}} / {{allowance}} kullanıldı. Daha yüksek bir rozet ve başka bir yuva için daha fazla DeHub jetonu stake edin."
   },
   "stages": {
+    "allStages": "Tüm sesli odalar",
     "title": "Sesli odalar",
     "tabLive": "Canlı",
     "tabUpcoming": "Yaklaşan",
@@ -7233,7 +7252,8 @@
     "play": "Oynat",
     "pause": "Duraklat",
     "listens_one": "{{count}} dinlenme",
-    "listens_other": "{{count}} dinlenme"
+    "listens_other": "{{count}} dinlenme",
+    "visualizerColour": "Görselleştirici rengi"
   },
   "converter": {
     "seoTitle": "Dönüştürücü — DeHub'a video aktarın",
@@ -9940,6 +9960,11 @@
     "reminderLater": "Şimdi değil"
   },
   "copy": {
+    "b3412a3b86de": "Yayıncıları davet et",
+    "8c91325d901b": "Bu mesajla yayıncıları DeHub yayın sayfasına gönder. Bağlantın, onlar sayfaya ulaşmadan önce onları sana atar.",
+    "cc96aaa18cf2": "Benimle DeHub'da yayın yap. Bahşişler zincir üstünde doğrudan cüzdanına gelir, kitlen sana aittir ve tek adımda TikTok'a ve diğer her yere paylaşmaya devam edebilirsin. Buradan kaydol: {{link}}",
+    "77db95ebd737": " Mesajı kopyala",
+    "846d8244b7d8": "Davet mesajı kopyalandı",
     "7af023c43013": "Belgeler",
     "090940e73258": "İnşaatçı",
     "c3d4759d35d0": "Oluşturucu önizlemesi",
@@ -14114,5 +14139,8 @@
     "posted": "Paylaşıldı",
     "view": "Görüntüle",
     "failed": "Video işlenemedi"
+  },
+  "player": {
+    "volume": "Ses düzeyi"
   }
 }

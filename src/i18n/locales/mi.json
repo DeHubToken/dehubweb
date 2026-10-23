@@ -3044,6 +3044,7 @@
     "shopAllowanceUsed": "{{allowance}} o {{allowance}} kua whakamahia. Whakapau atu ngā tohu DeHub mō tētahi tohu teitei ake me tētahi atu mokowā."
   },
   "stages": {
+    "allStages": "Ngā rūma ororongo katoa",
     "title": "Ngā rūma ororongo",
     "tabLive": "Ora",
     "tabUpcoming": "Tērā ka tū",

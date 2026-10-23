@@ -2896,6 +2896,7 @@
     "shopAllowanceUsed": "{{allowance}} of {{allowance}} use wey. Stake more DeHub token fo’ higher badge na slot tori."
   },
   "stages": {
+    "allStages": "All Audio room dem",
     "title": "Audio room dem",
     "tabLive": "Live",
     "tabUpcoming": "Upcoming",

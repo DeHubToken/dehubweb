@@ -3068,6 +3068,7 @@
     "shopAllowanceUsed": "{{allowance}} ከ {{allowance}} ጥቅም ላይ ውሏል። ለከፍተኛ ባጅ እና ለሌላ ቦታ ተጨማሪ DeHub ቶከኖችን ይቆልፉ።"
   },
   "stages": {
+    "allStages": "ሁሉም የድምፅ ክፍሎች",
     "title": "የድምፅ ክፍሎች",
     "tabLive": "በቀጥታ",
     "tabUpcoming": "መጪ",

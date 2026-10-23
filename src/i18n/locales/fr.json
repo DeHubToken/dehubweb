@@ -1696,7 +1696,11 @@
     "radio": "Radio",
     "trendingTracks": "Pistes tendance",
     "moreVideos": "Plus de vidéos",
-    "newReleases": "Nouveautés"
+    "newReleases": "Nouveautés",
+    "mostPlayed": "Les plus écoutés",
+    "mostLiked": "Les plus aimés",
+    "mostRecent": "Les plus récents",
+    "chartOrder": "Ordre du classement audio"
   },
   "notFound": {
     "title": "Page non trouvée",
@@ -1894,6 +1898,20 @@
       "comment": "Commentaire",
       "profile": "Mise à jour du profil",
       "window": {
+        "authorAll": "Tous les créateurs",
+        "authorChoose": "Choisir un créateur",
+        "categoryAll": "Toutes les catégories",
+        "categoryChoose": "Choisir des catégories",
+        "categoryHint": "Ajoutez jusqu\u0027à 20 catégories séparées par des virgules. Une seule correspondance suffit. Laissez vide pour toutes.",
+        "last1h": "Dernière heure",
+        "last30d": "30 derniers jours",
+        "allTime": "Depuis le début",
+        "dislike": "Je n\u0027aime pas",
+        "author": "Auteur (facultatif)",
+        "category": "Catégorie (facultative)",
+        "authorPlaceholder": "@pseudo ou portefeuille",
+        "categoryPlaceholder": "Nom exact de la catégorie",
+        "filterHelp": "Laissez les filtres vides pour toutes les publications. Si les deux sont définis, les deux doivent correspondre. Les réactions identiques sont conservées ; une réaction opposée les remplace.",
         "mode": "Type de tâche",
         "write": "Écrire des instructions",
         "title": "Chaque publication sur une période",
@@ -3833,6 +3851,7 @@
     "shopAllowanceUsed": "{{allowance}} sur {{allowance}} utilisés. Staké plus de jetons DeHub pour un badge supérieur et un emplacement supplémentaire."
   },
   "stages": {
+    "allStages": "Tous les salons audio",
     "title": "Salons audio",
     "tabLive": "En direct",
     "tabUpcoming": "À venir",
@@ -7237,7 +7256,8 @@
     "play": "Lecture",
     "pause": "Pause",
     "listens_one": "{{count}} écoute",
-    "listens_other": "{{count}} écoutes"
+    "listens_other": "{{count}} écoutes",
+    "visualizerColour": "Couleur de la visualisation"
   },
   "converter": {
     "seoTitle": "Convertisseur — importer une vidéo vers DeHub",
@@ -9944,6 +9964,11 @@
     "reminderLater": "Pas maintenant"
   },
   "copy": {
+    "b3412a3b86de": "Invitez des streamers",
+    "8c91325d901b": "Envoyez des streamers vers la page streaming de DeHub avec ce message. Votre lien vous les attribue avant même qu’ils arrivent.",
+    "cc96aaa18cf2": "Viens streamer sur DeHub avec moi. Les pourboires arrivent on-chain directement dans ton portefeuille, ton audience t’appartient et tu peux continuer à publier sur TikTok et partout ailleurs en une seule étape. Inscris-toi ici : {{link}}",
+    "77db95ebd737": " Copier le message",
+    "846d8244b7d8": "Message d’invitation copié",
     "7af023c43013": "Documentation",
     "090940e73258": "Constructeur",
     "c3d4759d35d0": "Aperçu du constructeur",
@@ -14118,5 +14143,8 @@
     "posted": "Publié",
     "view": "Voir",
     "failed": "La vidéo n'a pas pu être traitée"
+  },
+  "player": {
+    "volume": "Volume"
   }
 }

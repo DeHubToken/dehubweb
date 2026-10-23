@@ -1,5 +1,8 @@
 {
-  "revision": 11,
+  "revision": 12,
+  "vectorThemes": {
+    "glass": { "material": "liquid-prism", "extension": "svg" }
+  },
   "themes": [
     "system",
     "minimal",

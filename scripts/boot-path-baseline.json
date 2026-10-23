@@ -1,6 +1,6 @@
 {
   "modules": 621,
-  "sourceBytes": 3860520,
+  "sourceBytes": 3860667,
   "files": [
     "server/public-page-locales.js",
     "src/App.tsx",

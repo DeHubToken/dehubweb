@@ -3035,6 +3035,7 @@
     "shopAllowanceUsed": "{{allowance}} ຂອງ {{allowance}} ໃຊ້ແລ້ວ. ສະເຕກຫຼາຍ DeHub tokens ສໍາລັບປ້າຍທີ່ສູງຂຶ້ນແລະສະລັອດຕິງອື່ນ."
   },
   "stages": {
+    "allStages": "ຫ້ອງສຽງທັງໝົດ",
     "title": "ຫ້ອງສຽງ",
     "tabLive": "ຖ່າຍທອດສົດ",
     "tabUpcoming": "ກຳລັງຈະມາເຖິງ",

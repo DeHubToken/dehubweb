@@ -2991,6 +2991,7 @@
     "shopAllowanceUsed": "{{allowance}} av {{allowance}} använda. Staka fler DeHub-tokens för en högre badge och en plats till."
   },
   "stages": {
+    "allStages": "Alla ljudrum",
     "title": "Ljudrum",
     "tabLive": "Live",
     "tabUpcoming": "Kommande",

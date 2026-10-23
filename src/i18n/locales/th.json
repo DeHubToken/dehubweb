@@ -3068,6 +3068,7 @@
     "shopAllowanceUsed": "ใช้ {{allowance}} จาก {{allowance}} วางเดิมพันโทเค็น DeHub เพิ่มเติมเพื่อรับบัตรที่สูงขึ้นและช่องเพิ่มเติม"
   },
   "stages": {
+    "allStages": "ห้องเสียงทั้งหมด",
     "title": "ห้องเสียง",
     "tabLive": "สด",
     "tabUpcoming": "ที่กำลังจะมาถึง",

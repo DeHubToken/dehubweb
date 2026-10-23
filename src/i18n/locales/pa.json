@@ -3048,6 +3048,7 @@
     "shopAllowanceUsed": "{{allowance}} ਵਿੱਚੋਂ {{allowance}} ਵਰਤਿਆ ਗਿਆ। ਉੱਚ ਬੈਜ ਅਤੇ ਇੱਕ ਹੋਰ ਸਲਾਟ ਲਈ ਹੋਰ DeHub ਟੋਕਨ ਸਟੇਕ ਕਰੋ।"
   },
   "stages": {
+    "allStages": "ਸਾਰੇ ਆਡੀਓ ਰੂਮ",
     "title": "ਆਡੀਓ ਰੂਮ",
     "tabLive": "ਲਾਈਵ",
     "tabUpcoming": "ਆਗਾਮੀ",

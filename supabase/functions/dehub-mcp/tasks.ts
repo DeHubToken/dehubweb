@@ -93,7 +93,7 @@ async function planPrompt(prompt: string, timezone: string, registry: Registry):
 Act as the selected agent, never as the human owner. Only the six tools below are available. Unsupported requests, unspecified targets/time windows or ambiguous counts must return clarification, never a guessed action.
 Tools:
 dehub_follow: {target_wallet: 0x address or exact username, action: follow|unfollow}. Named users are resolved before queueing. all_users follows the public directory; post_authors follows unique creators of posts in a specified window.
-dehub_vote: {token_id: string, vote_type: like|dislike}. audience posts selects EVERY post across ALL categories in a time window, with no keyword requirement and no three-like total cap. For "like every post today", use posts with local midnight to now. For "like every post in the last day", use posts with now minus 24 hours to now. Never ask for categories or keywords for an explicit all-post request. The 1-3 limit below applies ONLY to selective topic likes. audience selected_posts likes at most recent_limit (1-3) posts from the last 24 hours whose title, description or category matches one of recent_keywords (1-6 interests). Leave from and to null for selected_posts. The runner preserves existing matching votes.
+dehub_vote: {token_id: string, vote_type: like|dislike}. audience posts selects EVERY matching post in a time window. Optional author is an exact username or wallet; optional category is an exact category name, never a title keyword. Both filters intersect. Omit both for all authors and categories. For all-time requests use 1970-01-01T00:00:00Z to now. Hour/day/week/month mean the last 1 hour/24 hours/7 days/30 days unless calendar dates are specified. Like and dislike are supported, with no keyword requirement and no three-like total cap. For "like every post today", use posts with local midnight to now. For "like every post in the last day", use posts with now minus 24 hours to now. Never ask for categories or keywords for an explicit all-post request. The 1-3 limit below applies ONLY to selective topic likes. audience selected_posts likes at most recent_limit (1-3) posts from the last 24 hours whose title, description or category matches one of recent_keywords (1-6 interests). Leave from and to null for selected_posts. The runner preserves existing matching votes.
 dehub_comment: {token_id: string, content: string, reply_to_comment_id?: string}. Use literal requested comment text. For a reply written to each post in a time window (audience posts), leave content out and set topic to the owner's reply instructions; a reply is then written from each post's own text. Never invent replies otherwise.
 dehub_view: {token_id: string}. Views a post; the view counts in its public view total. audience posts views every post in a fixed time window. Every like and comment also views its post, so add a view step only when views are requested on their own or explicitly.
 dehub_update_profile: {username?:string,bio?:string,display_name?:string,avatar_url?:string,banner_url?:string}.
@@ -113,6 +113,12 @@ Keep the summary explicit about agent actions, time window and cadence.` },
     throw new Error("A time window that ends in the future can only be combined with other actions on posts in a window.");
   }
   for (const step of plan.steps) {
+    if (step.author && !/^0x[0-9a-f]{40}$/i.test(step.author)) {
+      const profile = await registry.get('dehub_profile')!.call({ user: step.author.replace(/^@/, '') });
+      const wallet = profile.structuredContent?.profile?.wallet;
+      if (profile.isError || typeof wallet !== 'string' || !/^0x[0-9a-f]{40}$/i.test(wallet)) throw new Error('That author could not be found. Specify their exact username or wallet.');
+      step.author = wallet.toLowerCase();
+    }
     if (step.to && Date.parse(step.to) > liveLimit) throw new Error(`The post time window can end at most ${LIVE_WINDOW_MAX_DAYS} days from now.`);
     const tool = registry.get(step.tool);
     if (!tool) throw new Error("That action is not available.");
@@ -153,6 +159,14 @@ export function postText(post: any): string {
 /** A written reply must be short, plain and free of links, tags and mentions. */
 export function replyBreaksRules(reply: string): boolean {
   return reply.length < 2 || reply.length > 220 || /https?:\/\/|www\.|#\w|@\w/i.test(reply) || /^["'“]/.test(reply);
+}
+
+/** Match exact metadata, never words in the title or description. Both filters must match. */
+export function matchesPostFilters(post: any, step: Pick<TaskStep, 'author' | 'category' | 'categories'>): boolean {
+  if (step.author && String(post.minter ?? '').toLowerCase() !== step.author.toLowerCase()) return false;
+  const categories = Array.isArray(post.category) ? post.category : [post.category];
+  const selected = step.categories ?? (step.category ? [step.category] : []);
+  return selected.length === 0 || categories.some((value: unknown) => typeof value === 'string' && selected.some(category => value.trim().toLowerCase() === category.trim().toLowerCase()));
 }
 
 async function loadTargets(step: TaskStep, task: any, token: string, ownedWallets: Set<string>): Promise<void> {
@@ -207,7 +221,8 @@ async function loadTargets(step: TaskStep, task: any, token: string, ownedWallet
     await recordPostViews(posts.map((post: any) => post.tokenId), { token, agent: true });
     const replying = step.tool === "dehub_comment" && !!step.topic;
     // Written replies skip the owner's own agents and posts with nothing to reply to.
-    const eligible = replying ? posts.filter((post: any) => !ownedWallets.has(String(post.minter ?? "").toLowerCase()) && postText(post)) : posts;
+    const matching = posts.filter((post: any) => matchesPostFilters(post, step));
+    const eligible = replying ? matching.filter((post: any) => !ownedWallets.has(String(post.minter ?? "").toLowerCase()) && postText(post)) : matching;
     cursor.targets = eligible.map((post: any) => step.audience === "post_authors" ? post.minter?.toLowerCase() : String(post.tokenId)).filter(Boolean);
     cursor.posts = replying ? Object.fromEntries(eligible.map((post: any) => [String(post.tokenId), { text: postText(post), author: post.mintername ?? post.minterDisplayName ?? null }])) : undefined;
     cursor.afterTime = data.pagination.next_cursor?.created_at;

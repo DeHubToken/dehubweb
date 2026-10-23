@@ -3061,6 +3061,7 @@
     "shopAllowanceUsed": "{{allowance}} amin'ny {{allowance}} nampiasaina. Ampiakaro ny tapaho DeHub mba hahazoana mari-pahaizana ambony kokoa sy toerana hafa."
   },
   "stages": {
+    "allStages": "Ireo efitrano feo rehetra",
     "title": "Efitrano feo",
     "tabLive": "Mivantana",
     "tabUpcoming": "Ho avy",

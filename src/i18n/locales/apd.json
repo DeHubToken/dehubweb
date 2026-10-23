@@ -2935,6 +2935,7 @@
     "shopAllowanceUsed": "{{allowance}} من {{allowance}} مستخدمة. قم بتخزين المزيد من توكنات DeHub للحصول على شارة أعلى وفتحة أخرى."
   },
   "stages": {
+    "allStages": "كل الغرف الصوتية",
     "title": "الغرف الصوتية",
     "tabLive": "حالي",
     "tabUpcoming": "قادم",

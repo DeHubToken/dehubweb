@@ -26,6 +26,8 @@ import Maximize from "@/components/ui/cut-icons/fullscreen";
 import MoreHorizontal from "@/components/ui/cut-icons/more";
 import PictureInPicture2 from "@/components/ui/cut-icons/picture-in-picture";
 import { VIEWER_CONTROL } from '@/lib/viewer-chrome';
+import { useAppTheme } from '@/contexts/ThemeContext';
+import { GlassBackground } from '@/components/app/GlassBackground';
 import Eye from "@/components/ui/cut-icons/visibility";
 import Info from "@/components/ui/cut-icons/information";
 import Flag from "@/components/ui/cut-icons/report";
@@ -352,6 +354,7 @@ const CORNER_CONTROL =
 export function ShortsViewer({ shorts, initialIndex, onClose, onLoadMore, hasMore, isLoadingMore, reuseInitialVideo = false }: ShortsViewerProps) {
   const { t: _copy } = _useCopy();
   const { t } = useI18n();
+  const { theme } = useAppTheme();
   const instanceId = useId();
   useEffect(() => {
     const paused = Array.from(document.querySelectorAll<HTMLElement>('[data-cached-page]'))
@@ -1394,6 +1397,7 @@ export function ShortsViewer({ shorts, initialIndex, onClose, onLoadMore, hasMor
       onTouchMove={handleTouchMove}
       onTouchEnd={handleTouchEnd}
     >
+      {theme === 'glass' && !isMobile && <GlassBackground />}
       {/* Desktop Layout with Side Panels */}
       <div className={cn("relative flex h-full", isMobile ? "w-full flex-col" : "items-center justify-center gap-4 px-4")}>
         
@@ -1766,6 +1770,7 @@ export function ShortsViewer({ shorts, initialIndex, onClose, onLoadMore, hasMor
                 {showComments && currentShort?.id && (
                   <motion.div
                     key="fullscreen-comments"
+                    data-shorts-panel
                     data-shorts-scrollable
                     initial={{ x: '100%', opacity: 0 }}
                     animate={{ x: 0, opacity: 1 }}
@@ -1989,6 +1994,7 @@ export function ShortsViewer({ shorts, initialIndex, onClose, onLoadMore, hasMor
             {showComments && currentShort?.id && (
               <motion.div
                 key="mobile-comments-split"
+                data-shorts-panel
                 {...commentsPullDismiss}
                 data-shorts-scrollable
                 initial={{ y: '100%' }}
@@ -2049,7 +2055,7 @@ export function ShortsViewer({ shorts, initialIndex, onClose, onLoadMore, hasMor
         {!isMobile && !isFullscreen && (
           <div className="w-[268px] lg:w-[320px] h-full py-4 flex flex-col">
             {/* Creator Info - Top */}
-            <div className="bg-zinc-900/50 rounded-2xl p-3 lg:p-4 mb-3 relative">
+            <div data-shorts-panel className="bg-zinc-900/50 rounded-2xl p-3 lg:p-4 mb-3 relative">
               <div className="absolute top-3 right-3 lg:top-4 lg:right-4 flex items-center gap-1.5">
                 <motion.button
                   onClick={() => toggleBookmark()}
@@ -2100,6 +2106,7 @@ export function ShortsViewer({ shorts, initialIndex, onClose, onLoadMore, hasMor
 
             {/* Desktop: Inline comments */}
             <div
+              data-shorts-panel
               data-shorts-scrollable
               className="flex-1 bg-zinc-900/50 rounded-2xl p-3 lg:p-4 flex flex-col min-h-0 overflow-hidden"
             >

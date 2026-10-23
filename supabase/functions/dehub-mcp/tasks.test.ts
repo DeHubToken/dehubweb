@@ -1,7 +1,17 @@
-import { handleTaskRequest, postBreaksGroundingRules, postText, replyBreaksRules, runTask, type TaskTool, type ProfileImages } from './tasks.ts';
+import { handleTaskRequest, matchesPostFilters, postBreaksGroundingRules, postText, replyBreaksRules, runTask, type TaskTool, type ProfileImages } from './tasks.ts';
 import { AGENT_OWNER } from './task-plan.ts';
 
 const assert = (value: unknown, description: string) => { if (!value) throw new Error(description); };
+Deno.test('post filters intersect exact author and category without title keyword leakage', () => {
+  const scope = { author: '0xABC', category: 'Music' };
+  assert(matchesPostFilters({ minter: '0xabc', category: ['Art', 'music'] }, scope), 'case-insensitive array category rejected');
+  assert(!matchesPostFilters({ minter: '0xdef', category: 'Music' }, scope), 'wrong author included');
+  assert(!matchesPostFilters({ minter: '0xabc', category: 'Music videos', name: 'Music' }, scope), 'partial category included');
+  assert(!matchesPostFilters({ minter: '0xabc', name: 'Music' }, scope), 'title substituted for category');
+  assert(matchesPostFilters({}, {}), 'unfiltered task excluded a post');
+  assert(matchesPostFilters({ minter: '0xabc', category: ['Art'] }, { author: '0xabc', categories: ['Music', 'Art'] }), 'multiple categories must match any selected category');
+  assert(!matchesPostFilters({ minter: '0xdef', category: ['Art'] }, { author: '0xabc', categories: ['Music', 'Art'] }), 'multiple categories bypassed author');
+});
 Deno.test('post drafts keep concrete opinions but reject invented scenes and generic filler', () => {
   assert(!postBreaksGroundingRules("Basil leaves going yellow? I'd check the pot before adding water.", 100, 'yellow basil leaves'), 'rejected a grounded opinion');
   assert(postBreaksGroundingRules('Just whispered to my basil—turns out it prefers silence.', 100, 'yellow basil leaves'), 'allowed an invented action');
@@ -131,6 +141,33 @@ Deno.test('profile uploads preserve both image files and intentional empty bio',
   assert(result.call?.args.username === 'community_news', 'username was lost');
   assert(await result.call?.images?.avatar?.text() === 'avatar bytes', 'avatar bytes changed');
   assert(await result.call?.images?.banner?.text() === 'banner bytes', 'banner bytes changed');
+});
+
+Deno.test('filtered bulk reactions continue past a page with no matches and preserve the requested vote', async () => {
+  const test = fixture();
+  Object.assign(test.task.plan.steps[0], { audience: 'posts', from: '2026-10-01T00:00:00Z', to: '2026-10-02T00:00:00Z', author: AGENT_OWNER, category: 'music', arguments: { vote_type: 'dislike' } });
+  const originalFetch = globalThis.fetch;
+  const votes: Record<string, unknown>[] = [];
+  let pages = 0;
+  test.registry.set('dehub_vote', { description: 'Vote', validate: args => args, call: async args => { votes.push(args); return { structuredContent: { success: true } }; } });
+  globalThis.fetch = async input => {
+    const url = new URL(String(input));
+    if (url.pathname === '/api/view/batch') return Response.json({ success: true });
+    assert(url.pathname === '/api/feed', 'unexpected network request');
+    pages++;
+    if (pages === 1) return Response.json({ result: [{ tokenId: 123, minter: AGENT_OWNER, category: ['sports'], createdAt: '2026-10-01T12:00:00Z' }], pagination: { next_cursor: { created_at: '2026-10-01T12:00:00Z', token_id: 123 } } });
+    assert(pages === 2 && url.searchParams.get('cursor_token') === '123', 'lost feed cursor after an excluded page');
+    return Response.json({ result: [
+      { tokenId: 122, minter: AGENT_OWNER, category: ['music'], createdAt: '2026-10-01T11:00:00Z' },
+      { tokenId: 121, minter: '0x1111111111111111111111111111111111111111', category: ['music'], createdAt: '2026-10-01T10:00:00Z' },
+    ], pagination: { next_cursor: null } });
+  };
+  try {
+    await test.run();
+    assert(pages === 2 && votes.length === 1, 'missed or broadened the filtered scope');
+    assert(votes[0].token_id === '122' && votes[0].vote_type === 'dislike' && votes[0].ensure === true, 'changed the reaction or lost idempotency');
+    assert(test.task.status === 'completed', 'did not finish the filtered window');
+  } finally { globalThis.fetch = originalFetch; }
 });
 
 Deno.test('bulk post reads record public views before the cursor advances or actions run', async () => {

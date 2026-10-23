@@ -3005,6 +3005,7 @@
     "shopAllowanceUsed": "{{allowance}} म ले {{allowance}} उपयोग हो गे हावय। अउर बैज अउर स्लॉट बर अउर DeHub टोकन स्टेक कर।"
   },
   "stages": {
+    "allStages": "सबो ऑडियो रूम",
     "title": "ऑडियो रूम",
     "tabLive": "लाइव",
     "tabUpcoming": "आगू",

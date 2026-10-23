@@ -31,10 +31,10 @@ import { useTranslation as _useCopy } from 'react-i18next';
  * shared link lands on a living page rather than a lone card in empty space.
  */
 
-import { BrandIcon } from '@/components/app/war/WarHudIcon';
+import { BrandIcon, ThemedIcon } from '@/components/app/war/WarHudIcon';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { useParams, useNavigate } from 'react-router-dom';
+import { Link, useParams, useNavigate } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
 import { format, formatDistanceToNowStrict } from 'date-fns';
 import { CalendarPlus, Loader2, BellRing, Headphones, Square, Clock, PictureInPicture2, FileText } from "lucide-react";
@@ -257,16 +257,17 @@ export default function StageDeepLinkPage() {
           noindex
         />
 
-        <div className="relative w-full rounded-2xl overflow-hidden border border-white/10">
-          {stage.cover_image_url && (
-            <StageCoverArt src={stage.cover_image_url} title={stage.title} />
-          )}
-          <div className="relative p-6 bg-zinc-900">
-            <div className="inline-flex items-center gap-1.5 px-2 py-1 rounded-lg bg-white/10 mb-3">
-              <CalendarDays className="w-3 h-3 text-zinc-300" />
-              <span className="text-zinc-300 text-[11px] font-medium">
-                {isOverdue ? _copy("copy.c1c8f6c1d828", { defaultValue: "STARTING SOON" }) : _copy("copy.2f7e24392d9c", { defaultValue: "UPCOMING STAGE" })}
-              </span>
+        <div data-stage-surface className="relative w-full rounded-2xl overflow-hidden border border-white/10">
+          <StageCoverArt src={stage.cover_image_url} title={stage.title} stage={stage} />
+          <div data-stage-body className="relative p-6 bg-zinc-900">
+            <div className="flex items-center justify-between gap-2 mb-3">
+              <div className="inline-flex items-center gap-1.5 px-2 py-1 rounded-lg bg-white/10">
+                <CalendarDays className="w-3 h-3 text-zinc-300" />
+                <span className="text-zinc-300 text-[11px] font-medium">
+                  {isOverdue ? _copy("copy.c1c8f6c1d828", { defaultValue: "STARTING SOON" }) : _copy("copy.2f7e24392d9c", { defaultValue: "UPCOMING STAGE" })}
+                </span>
+              </div>
+              <AllStagesLink />
             </div>
 
             <h1 className="text-white text-xl font-semibold">{stage.title}</h1>
@@ -417,14 +418,15 @@ export default function StageDeepLinkPage() {
           noindex
         />
 
-        <div className="relative w-full rounded-2xl overflow-hidden border border-white/10">
-          {stage.cover_image_url && (
-            <StageCoverArt src={stage.cover_image_url} title={stage.title} />
-          )}
-          <div className="relative p-6 bg-zinc-900">
-            <div className="inline-flex items-center gap-1.5 px-2 py-1 rounded-lg bg-white/10 mb-3">
-              <Clock className="w-3 h-3 text-zinc-400" />
-              <span className="text-zinc-400 text-[11px] font-medium">{t('stages.ended')}</span>
+        <div data-stage-surface className="relative w-full rounded-2xl overflow-hidden border border-white/10">
+          <StageCoverArt src={stage.cover_image_url} title={stage.title} stage={stage} />
+          <div data-stage-body className="relative p-6 bg-zinc-900">
+            <div className="flex items-center justify-between gap-2 mb-3">
+              <div className="inline-flex items-center gap-1.5 px-2 py-1 rounded-lg bg-white/10">
+                <Clock className="w-3 h-3 text-zinc-400" />
+                <span className="text-zinc-400 text-[11px] font-medium">{t('stages.ended')}</span>
+              </div>
+              <AllStagesLink />
             </div>
 
             <h1 className="text-white text-xl font-semibold">{stage.title}</h1>
@@ -610,11 +612,9 @@ export default function StageDeepLinkPage() {
           noindex
         />
 
-        <div className="relative w-full rounded-2xl overflow-hidden border border-white/10">
-          {stage.cover_image_url && (
-            <StageCoverArt src={stage.cover_image_url} title={stage.title} />
-          )}
-          <div className="relative p-6 bg-zinc-900">
+        <div data-stage-surface className="relative w-full rounded-2xl overflow-hidden border border-white/10">
+          <StageCoverArt src={stage.cover_image_url} title={stage.title} stage={stage} />
+          <div data-stage-body className="relative p-6 bg-zinc-900">
             <div className="flex items-center justify-between mb-3">
               <div className="inline-flex items-center gap-1.5 px-2 py-1 rounded-lg bg-red-500/20">
                 <span className="relative flex h-2 w-2">
@@ -623,10 +623,13 @@ export default function StageDeepLinkPage() {
                 </span>
                 <span className="text-red-400 text-[11px] font-medium">{t('stages.liveNowBadge')}</span>
               </div>
-              <span className="flex items-center gap-1 text-zinc-400 text-xs">
-                <Users className="w-3.5 h-3.5" />
-                {inRoom}
-              </span>
+              <div className="flex items-center gap-3">
+                <span className="flex items-center gap-1 text-zinc-400 text-xs">
+                  <Users className="w-3.5 h-3.5" />
+                  {inRoom}
+                </span>
+                <AllStagesLink />
+              </div>
             </div>
 
             <h1 className="text-white text-xl font-semibold">{stage.title}</h1>
@@ -768,5 +771,20 @@ export default function StageDeepLinkPage() {
       <BrandIcon src={stagesMicIcon} alt="" className="w-16 h-16 object-contain opacity-80" />
       <DeHubPageLoader size={48} minHeight="0" label={t('stages.joiningStage')} />
     </div>
+  );
+}
+
+/** Top-right pill on the stage card: back to the full Stages list. */
+function AllStagesLink() {
+  const { t } = useTranslation();
+  return (
+    <Link
+      to="/stages"
+      data-all-stages-link
+      className="shrink-0 inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-white/10 hover:bg-white/20 text-zinc-300 hover:text-white text-[11px] font-medium transition-colors"
+    >
+      <ThemedIcon icon="stages" alt="" className="w-4 h-4 object-contain" />
+      {t('stages.allStages')}
+    </Link>
   );
 }

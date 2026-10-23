@@ -3049,6 +3049,7 @@
     "shopAllowanceUsed": "{{allowance}} от {{allowance}} използвани. Стейкнете повече DeHub токени за по-висока значка и още едно място."
   },
   "stages": {
+    "allStages": "Всички аудио стаи",
     "title": "Аудио стаи",
     "tabLive": "На живо",
     "tabUpcoming": "Предстоящи",

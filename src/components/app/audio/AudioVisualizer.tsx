@@ -81,6 +81,7 @@ interface AudioVisualizerProps {
   onPlayPause: () => void;
   className?: string;
   displayTitle?: string;
+  artworkUrl?: string;
   showStylePicker?: boolean;
   /** When true the audio output is muted (visualizer still animates). */
   muted?: boolean;
@@ -188,6 +189,7 @@ export function AudioVisualizer({
   onPlayPause,
   className = '',
   displayTitle,
+  artworkUrl,
   showStylePicker = true,
   muted = false,
   seed = 'default',
@@ -621,6 +623,7 @@ export function AudioVisualizer({
     const analyser = analyserRef.current;
     let frequencyData = idleFrequency;
     let timeData = idleTime;
+    let liveSignal = false;
     if (analyser && isPlayingRef.current) {
       // Allocate and fill in one step: annotating these as `Uint8Array` widens
       // the buffer to ArrayBufferLike and CI rejects the analyser call, while
@@ -629,8 +632,20 @@ export function AudioVisualizer({
       const time = new Uint8Array(analyser.frequencyBinCount);
       analyser.getByteFrequencyData(freq);
       analyser.getByteTimeDomainData(time);
-      frequencyData = freq;
-      timeData = time;
+      // Muted media and unavailable analysis can return an all-zero spectrum.
+      // Keep the selected visual alive without changing audio output.
+      const hasSignal = freq.some(value => value > 0);
+      liveSignal = hasSignal;
+      if (hasSignal) {
+        frequencyData = freq;
+        timeData = time;
+      } else {
+        const phase = performance.now() / 850;
+        frequencyData = Uint8Array.from(idleFrequency, (value, index) =>
+          Math.round(value * (.55 + .45 * Math.sin(phase + index * .13) ** 2)));
+        timeData = Uint8Array.from(idleTime, (value, index) =>
+          Math.round(128 + (value - 128) * Math.sin(phase + index * .04)));
+      }
     }
 
     if (isExtraStyle(style)) {
@@ -639,7 +654,8 @@ export function AudioVisualizer({
       const played = audio && audio.duration ? audio.currentTime / audio.duration : 0;
       const progress = scrubRatioRef.current ?? played;
       const now = performance.now() / 1000;
-      if (analyser && isPlayingRef.current) listener.fromAnalyser(frequencyData, timeData, now, progress, idleShape);
+      if (isPlayingRef.current && liveSignal) listener.fromAnalyser(frequencyData, timeData, now, progress, idleShape);
+      else if (isPlayingRef.current) listener.fromSynth(now, progress, idleShape, .65);
       else listener.hold(now, progress, idleShape);
       const cssW = canvas.clientWidth || width;
       const scale = width / cssW;
@@ -991,8 +1007,9 @@ export function AudioVisualizer({
   if (theme === 'glass' || (theme === 'system' && !isLightTheme)) return (
     <div data-no-swipe data-video-controls data-audio-player data-audio-studio data-material={theme} className={className} onClick={stopBubble}>
       <div data-audio-studio-title>
-        <strong>{displayTitle || popoutTrack?.title || t('audioPost.untitled')}</strong>
-        <span>{popoutTrack?.artist || t('audioPost.creator')}</span>
+        {artworkUrl && !artworkUrl.split('?')[0].endsWith('/placeholder.svg') && <img data-audio-studio-cover src={artworkUrl} alt="" loading="lazy" onError={event => { event.currentTarget.hidden = true; }} />}
+        <div><strong>{displayTitle || popoutTrack?.title || t('audioPost.untitled')}</strong>
+        <span>{popoutTrack?.artist || t('audioPost.creator')}</span></div>
       </div>
       <div data-audio-studio-motion>
       <canvas ref={canvasRef} width={canvasSize.w} height={canvasSize.h}
@@ -1022,7 +1039,7 @@ export function AudioVisualizer({
       <div data-audio-studio-options>
           {showStylePicker && <select aria-label={t('nav.settings')} value={style} onChange={e => setStyle(e.target.value as AnyStyle)}>{STYLES.map(s => <option key={s.value} value={s.value}>{s.label}</option>)}</select>}
           {popoutTrack && <button type="button" aria-label={isPoppedOut ? t('audioPost.closeCornerPlayer') : t('audioPost.popOut')} onClick={handlePopOut}><PictureInPicture2 /></button>}
-          {showVolume && <button type="button" aria-label={isEffectivelyMuted ? _copy('copy.ce4ee4efc5e3', { defaultValue: 'Unmute' }) : _copy('copy.8dd6857baf02', { defaultValue: 'Mute' })} onClick={() => { const next = !isEffectivelyMuted; setSelfMuted(next); videoPlaybackManager.globalMuted = next; onMuteChange?.(next); }}><Volume2 /></button>}
+          {showVolume && <button type="button" aria-label={isEffectivelyMuted ? _copy('copy.ce4ee4efc5e3', { defaultValue: 'Unmute' }) : _copy('copy.8dd6857baf02', { defaultValue: 'Mute' })} onClick={() => { const next = !isEffectivelyMuted; if (!next && volume === 0) setVolume(.8); setSelfMuted(next); videoPlaybackManager.globalMuted = next; onMuteChange?.(next); }}><Volume2 /></button>}
           {showVolume && <input aria-label={_copy('copy.b10fb966d720', { defaultValue: 'Volume' })} type="range" min="0" max="100" value={isEffectivelyMuted ? 0 : Math.round(volume * 100)} onChange={e => { const value = Number(e.target.value); setVolume(value / 100); setSelfMuted(value === 0); videoPlaybackManager.globalMuted = value === 0; onMuteChange?.(value === 0); }} />}
           {showStylePicker && <input type="range" min="0" max="360" value={hue} aria-label={_copy('copy.89a167dad6da', { defaultValue: 'Visualizer colour' })} onChange={e => setHue(Number(e.target.value))} data-audio-hue />}
           {onFullscreen && <button type="button" aria-label={isFullscreen ? _copy('copy.37fd4e355ba3', { defaultValue: 'Exit fullscreen' }) : _copy('copy.c461dbb2bab7', { defaultValue: 'Fullscreen' })} onClick={onFullscreen}><Maximize /></button>}

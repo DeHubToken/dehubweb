@@ -33,6 +33,7 @@ import Users from "@/components/ui/cut-icons/communities";
 import type { ReactNode } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { buildAvatarUrl, buildAvatarCdnFallbackUrl } from '@/lib/media-url';
+import { GeneratedStageCover } from '@/components/app/stages/GeneratedStageCover';
 import { cn } from '@/lib/utils';
 import { BadgedName } from '@/components/app/BadgedName';
 import { StageRecordingPlayer } from '@/components/app/stages/StageRecordingPlayer';
@@ -104,7 +105,7 @@ export function StageLinkEmbed({ stageId, stageShortId, fallback = null }: Stage
           same treatment StageCoverArt uses on the stage page. Very tall
           uploads are capped so one card cannot swallow the feed.
           aria-hidden because the heading below already names the stage. */}
-      {hasCover && (
+      {hasCover ? (
         <div aria-hidden className="w-full">
           <img
             src={stage.cover_image_url!}
@@ -112,6 +113,10 @@ export function StageLinkEmbed({ stageId, stageShortId, fallback = null }: Stage
             loading="lazy"
             className="block w-full h-auto max-h-[70vh] object-cover"
           />
+        </div>
+      ) : (
+        <div aria-hidden>
+          <GeneratedStageCover stage={stage} />
         </div>
       )}
 

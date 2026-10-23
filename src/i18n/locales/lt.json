@@ -3045,6 +3045,7 @@
     "shopAllowanceUsed": "Naudota {{allowance}} iš {{allowance}}. Statykite daugiau DeHub žetonų, kad gautumėte aukštesnį ženklelį ir papildomą vietą."
   },
   "stages": {
+    "allStages": "Visi garso kambariai",
     "title": "Garso kambariai",
     "tabLive": "Tiesiogiai",
     "tabUpcoming": "Būsimi",

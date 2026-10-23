@@ -3033,6 +3033,7 @@
     "shopAllowanceUsed": "{{allowance}} oo ah {{allowance}} ayaa la isticmaalay. Ku kaydi DeHub tokens badan dallad sare iyo meel kale."
   },
   "stages": {
+    "allStages": "Dhammaan qolalka codka",
     "title": "Qolalka codka",
     "tabLive": "Ku noolow",
     "tabUpcoming": "Soo socda",

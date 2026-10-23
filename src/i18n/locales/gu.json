@@ -3040,6 +3040,7 @@
     "shopAllowanceUsed": "{{allowance}} માંથી {{allowance}} વપરાયેલ. ઉચ્ચ બેજ અને અન્ય સ્લોટ માટે વધુ DeHub ટોકન્સ સ્ટેક કરો."
   },
   "stages": {
+    "allStages": "બધા ઑડિયો રૂમ",
     "title": "ઑડિયો રૂમ",
     "tabLive": "જીવંત",
     "tabUpcoming": "આગામી",
