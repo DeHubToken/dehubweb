@@ -1,8 +1,10 @@
 import { z } from 'zod';
-export const WRITE_TOOLS = ['dehub_post_create', 'dehub_comment', 'dehub_vote', 'dehub_follow', 'dehub_update_profile'] as const;
+import { alertWebhook, deliverAlert } from './workspace-actions.ts';
+export const WRITE_TOOLS = ['dehub_post_create', 'dehub_comment', 'dehub_vote', 'dehub_follow', 'dehub_update_profile', 'dehub_stream_timeout'] as const;
 export const settingsSchema = z.object({
   mode: z.enum(['autonomous', 'approval', 'draft']).default('autonomous'),
-  permissions: z.array(z.enum(WRITE_TOOLS)).max(5).default([...WRITE_TOOLS]),
+  permissions: z.array(z.enum(WRITE_TOOLS)).max(6).default(WRITE_TOOLS.filter(tool => tool !== 'dehub_stream_timeout')),
+  alert_webhook: alertWebhook.default(''),
   voice: z.string().max(1000).default(''),
   knowledge: z.string().max(12000).default(''),
   blocked_topics: z.array(z.string().trim().min(1).max(80)).max(30).default([]),
@@ -28,7 +30,7 @@ const result = (value: Record<string, unknown>, isError = false) => ({ isError, 
 const canonical = (value: any): string => JSON.stringify(value, (_key, item) => item && typeof item === 'object' && !Array.isArray(item) ? Object.fromEntries(Object.entries(item).sort(([a], [b]) => a.localeCompare(b))) : item);
 
 /** Applied once at the tool boundary for both MCP and internal runners. */
-export async function controlledAction(db: any, agent: { id: string }, tool: string, args: Record<string, unknown>, call: () => Promise<any>, approvedId?: string) {
+export async function controlledAction(db: any, agent: { id: string }, tool: string, args: Record<string, unknown>, call: () => Promise<any>, approvedId?: string, prepare?: () => Promise<unknown>) {
   const settings = await agentSettings(db, agent.id);
   const reason = blockedReason(settings, tool, args);
   if (reason) {
@@ -47,14 +49,23 @@ export async function controlledAction(db: any, agent: { id: string }, tool: str
     if ((count.count ?? 0) >= 100) return result({ error: 'Review existing drafts before adding more (100 pending drafts).' }, true);
   }
   const receipt = approvedId ? { id: approvedId } : checked(await db.from('ai_agent_receipts').insert({ agent_id: agent.id, tool, arguments: args, status }).select('id').single());
-  if (status !== 'executing') return result({ skipped: true, approval_id: receipt.id, message: status === 'draft' ? 'Saved as a draft. Nothing was published.' : 'Waiting for owner approval. Nothing was published.' });
+  const alert = async (state: string) => { try { await deliverAlert(db, agent.id, settings.alert_webhook, receipt.id, state); } catch { /* Do not repeat actions after an alert failure. */ } };
+  if (status !== 'executing') {
+    if (status === 'approval') await alert(status);
+    return result({ skipped: true, approval_id: receipt.id, message: status === 'draft' ? 'Saved as a draft. Nothing was published.' : 'Waiting for owner approval. Nothing was published.' });
+  }
   let output: any;
-  try { output = await call(); }
+  try {
+    if (prepare) checked(await db.from('ai_agent_receipts').update({ undo: await prepare() }).eq('id', receipt.id));
+    output = await call();
+  }
   catch (error) {
     checked(await db.from('ai_agent_receipts').update({ status: 'uncertain', result: { error: error instanceof Error ? error.message : 'Connection ended during the action. Check before retrying.' }, updated_at: new Date().toISOString() }).eq('id', receipt.id));
+    await alert('uncertain');
     throw error;
   }
   const payload = output.structuredContent ?? {};
   checked(await db.from('ai_agent_receipts').update({ status: output.isError ? 'failed' : 'succeeded', result: payload, updated_at: new Date().toISOString() }).eq('id', receipt.id));
+  if (output.isError) await alert('failed');
   return output;
 }

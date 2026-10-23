@@ -2,6 +2,7 @@ import { type Context, planPrompt } from './tasks.ts';
 import { agentSettings, blockedReason, checked, settingsSchema, writingContext } from './controls.ts';
 import { currentNews, newsReaction, newsTopicsFor } from './news.ts';
 import { aiChat } from '../_shared/ai-chat.ts';
+import { reversalLabel, reverseReceipt } from './workspace-actions.ts';
 
 const STARTERS = [
   { id: 'daily', name: 'Daily poster', prompt: 'Post once per day about music with a conversational voice.' },
@@ -25,7 +26,7 @@ export async function handleWorkspace(req: Request, context: Context, wallet: st
   if (input.operation === 'workspace_overview') {
     const agents = checked(await db.from('ai_agents').select('id,name,is_active,last_active_at').eq('human_owner_wallet', wallet));
     const ids = agents.map((agent: any) => agent.id);
-    const receipts = ids.length ? checked(await db.from('ai_agent_receipts').select('id,agent_id,tool,arguments,status,result,created_at').in('agent_id', ids).order('created_at', { ascending: false }).limit(100)) : [];
+    const receipts = ids.length ? checked(await db.from('ai_agent_receipts').select('id,agent_id,tool,arguments,status,result,created_at,undo,rollback_status,alert_delivery').in('agent_id', ids).order('created_at', { ascending: false }).limit(100)).map((row: any) => ({ ...row, reversal: reversalLabel(row), undo: undefined })) : [];
     const tasks = checked(await db.from('ai_agent_tasks').select('id,agent_id,status,next_run_at,message,needs_review,workspace_template_id').eq('owner_wallet', wallet).order('created_at', { ascending: false }).limit(200));
     const templates = checked(await db.from('ai_agent_templates').select('id,name,prompt,published,owner_wallet,evaluation').or(`owner_wallet.eq.${wallet},published.eq.true`).order('created_at', { ascending: false }).limit(100));
     const alerts = [
@@ -54,8 +55,26 @@ export async function handleWorkspace(req: Request, context: Context, wallet: st
     return Response.json({ template });
   }
   if (!uuid(input.agent_id)) return error('Select an agent.');
-  const agent = checked(await db.from('ai_agents').select('id,name,api_key,is_active,description').eq('id', input.agent_id).eq('human_owner_wallet', wallet).maybeSingle());
+  const agent = checked(await db.from('ai_agents').select('id,name,api_key,is_active,description,owner_wallet_address,wallet_private_key').eq('id', input.agent_id).eq('human_owner_wallet', wallet).maybeSingle());
   if (!agent) return error('Agent not found.', 404);
+  if (input.operation === 'workspace_moderate') {
+    if (!agent.is_active) return error('Activate the moderator first.', 409);
+    try {
+      const tool = context.tools(agent.api_key, req).get('dehub_stream_timeout')!;
+      tool.validate(input.arguments);
+      const result = await tool.call(input.arguments);
+      return Response.json(result.structuredContent, { status: result.isError ? 422 : 200 });
+    } catch { return error('Moderation could not be confirmed. Check the audit log before retrying.', 409); }
+  }
+  if (input.operation === 'workspace_reverse') {
+    if (!uuid(input.receipt_id)) return error('Select an action.');
+    const receipt = checked(await db.from('ai_agent_receipts').select('*').eq('id', input.receipt_id).eq('agent_id', agent.id).maybeSingle());
+    if (!receipt || !reversalLabel(receipt)) return error('This action cannot be reversed automatically.', 409);
+    const token = await context.token(agent);
+    if (!token) return error('Could not authenticate the owner correction.', 503);
+    try { await reverseReceipt(db, token, receipt); return Response.json({ reversed: true }); }
+    catch { return error('The correction could not be confirmed. Check the audit log and public activity; it will not be retried automatically.', 409); }
+  }
   if (input.operation === 'workspace_report') {
     const previous = checked(await db.from('ai_agent_receipts').select('result,created_at').eq('agent_id', agent.id).eq('tool', 'growth_report').eq('status', 'succeeded').order('created_at', { ascending: false }).limit(1));
     const result = await context.tools(agent.api_key, req).get('dehub_profile')!.call({ user: agent.name });

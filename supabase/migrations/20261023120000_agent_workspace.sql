@@ -2,6 +2,7 @@
 CREATE TABLE public.ai_agent_controls (
   agent_id uuid PRIMARY KEY REFERENCES public.ai_agents(id) ON DELETE CASCADE,
   settings jsonb NOT NULL DEFAULT '{}'::jsonb,
+  last_alert_at timestamptz,
   updated_at timestamptz NOT NULL DEFAULT now()
 );
 CREATE TABLE public.ai_agent_receipts (
@@ -11,6 +12,9 @@ CREATE TABLE public.ai_agent_receipts (
   arguments jsonb NOT NULL,
   status text NOT NULL CHECK (status IN ('draft','approval','executing','succeeded','failed','uncertain','rejected','blocked')),
   result jsonb,
+  undo jsonb,
+  rollback_status text CHECK (rollback_status IN ('executing','succeeded','uncertain')),
+  alert_delivery text CHECK (alert_delivery IN ('delivered','failed')),
   created_at timestamptz NOT NULL DEFAULT now(),
   updated_at timestamptz NOT NULL DEFAULT now()
 );
