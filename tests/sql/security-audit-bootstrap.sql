@@ -2,6 +2,7 @@
 CREATE ROLE service_role BYPASSRLS;
 CREATE PUBLICATION supabase_realtime;
 \ir ../../supabase/migrations/20260202080422_e795f1e7-33e0-493f-871a-60db529bddbe.sql
+ALTER TABLE public.audio_spaces ADD COLUMN last_speech_at timestamptz;
 \ir ../../supabase/migrations/20260406174859_0d4431c2-d19a-47ed-8fb7-a121f9ae1507.sql
 CREATE TABLE public.stage_reminders(id uuid PRIMARY KEY DEFAULT gen_random_uuid(),space_id uuid,wallet_address text);
 ALTER TABLE public.stage_reminders ENABLE ROW LEVEL SECURITY;
