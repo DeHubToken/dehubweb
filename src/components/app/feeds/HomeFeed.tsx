@@ -438,6 +438,7 @@ function nftToFeedItem(pinnedPost: any): FeedItemType {
         spoilerText: pinnedPost.spoilerText,
         quotePolicy: pinnedPost.quotePolicy,
         quoteRevoked: pinnedPost.quoteRevoked,
+        replyPolicy: pinnedPost.replyPolicy,
         username: pinnedPost.minterDisplayName || pinnedPost.mintername || 'unknown',
         verified: false,
         avatar,
@@ -473,6 +474,7 @@ function nftToFeedItem(pinnedPost: any): FeedItemType {
         spoilerText: pinnedPost.spoilerText,
         quotePolicy: pinnedPost.quotePolicy,
         quoteRevoked: pinnedPost.quoteRevoked,
+        replyPolicy: pinnedPost.replyPolicy,
         thumbnail,
         videoUrl,
         hlsUrl: buildHlsUrl(pinnedPost.hlsUrl),
@@ -513,6 +515,7 @@ function nftToFeedItem(pinnedPost: any): FeedItemType {
         spoilerText: pinnedPost.spoilerText,
         quotePolicy: pinnedPost.quotePolicy,
         quoteRevoked: pinnedPost.quoteRevoked,
+        replyPolicy: pinnedPost.replyPolicy,
         author: {
           id: pinnedPost.minter,
           name: pinnedPost.minterDisplayName || pinnedPost.mintername || 'Unknown',

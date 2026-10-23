@@ -52,6 +52,8 @@ export interface BaseFeedItem {
   quotePolicy?: 'public' | 'followers' | 'nobody';
   /** A quote whose quoted author took their post back out of it. */
   quoteRevoked?: boolean;
+  /** Who may reply; absent means anyone. */
+  replyPolicy?: 'public' | 'followers' | 'following' | 'mentioned';
   /**
    * The creator published this for children — the Kids Mode allowlist.
    *
