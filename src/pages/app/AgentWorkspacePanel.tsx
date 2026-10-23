@@ -5,6 +5,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { agentTaskRequest } from '@/lib/agent-tasks';
+import type { GrowthReport } from '@/lib/agent-workspace';
 import { PERMISSIONS, NEWS_TOPICS, BUILDER_ACTIONS, buildAgentPrompt, workspaceCounts, type BuilderAction, type AgentSettings, type WorkspaceOverview, type PlanPreview } from '@/lib/agent-workspace';
 
 function Settings({ wallet, agentId }: { wallet: string; agentId: string }) {
@@ -47,6 +48,7 @@ export function AgentWorkspacePanel({ wallet }: { wallet: string }) {
   const overview = useQuery({ queryKey: ['agent-workspace', wallet], queryFn: () => agentTaskRequest<WorkspaceOverview>(wallet, { operation: 'workspace_overview' }) });
   const agentId = overview.data?.agents.some(agent => agent.id === selected) ? selected : overview.data?.agents[0]?.id;
   const counts = workspaceCounts(overview.data);
+  const report = useMutation({ mutationFn: () => agentTaskRequest<GrowthReport>(wallet, { operation: 'workspace_report', agent_id: agentId }) });
   const refresh = () => { void overview.refetch(); client.invalidateQueries({ queryKey: ['agent-tasks', wallet] }); };
   const preview = useMutation({ mutationFn: () => agentTaskRequest<PlanPreview>(wallet, { operation: 'workspace_preview', agent_id: agentId, prompt, timezone: Intl.DateTimeFormat().resolvedOptions().timeZone }) });
   const run = useMutation({ mutationFn: () => agentTaskRequest(wallet, { operation: 'create', agent_id: agentId, prompt, request_id: requestId, timezone: Intl.DateTimeFormat().resolvedOptions().timeZone }), onSuccess: refresh });
@@ -61,8 +63,11 @@ export function AgentWorkspacePanel({ wallet }: { wallet: string }) {
     {overview.data?.alerts.length ? <details open><summary>{t('agents.workspace.alerts', 'Needs attention')} ({overview.data.alerts.length})</summary>{overview.data.alerts.map(alert => <p key={alert.id} role="alert" className="py-1 text-sm">{alert.message}</p>)}</details> : null}
     <label className="block text-sm">{t('agents.workspace.agent', 'Agent')}<select className="mt-1 block w-full rounded-lg border border-white/20 bg-black p-3" value={agentId ?? ''} onChange={event => { setSelected(event.target.value); preview.reset(); run.reset(); setRequestId(crypto.randomUUID()); }}>{overview.data?.agents.map(agent => <option key={agent.id} value={agent.id}>@{agent.name}</option>)}</select></label>
     {agentId && <Settings key={agentId} wallet={wallet} agentId={agentId} />}
+    <Button variant="outline" size="sm" disabled={!agentId || report.isPending} onClick={() => report.mutate()}>{t('agents.workspace.growth', 'Capture growth report')}</Button>
+    {report.data && <p className="text-sm">{t('agents.workspace.growthResult', { defaultValue: '{{followers}} followers · {{following}} following', ...report.data })} · {report.data.follower_change === null ? t('agents.workspace.baseline', 'First snapshot; capture another later to compare.') : t('agents.workspace.growthChange', { defaultValue: 'Follower change: {{count}} since {{time}}', count: report.data.follower_change, time: new Date(report.data.previous_at!).toLocaleString() })}</p>}
+    {report.error && <p role="alert">{report.error.message}</p>}
     <details className="space-y-3" open><summary className="cursor-pointer font-medium">{t('agents.workspace.library', 'Templates and task builder')}</summary>
-      <div className="flex flex-wrap gap-2">{overview.data?.templates.map(item => <Button key={item.id} size="sm" variant="outline" onClick={() => changePrompt(item.prompt)}>{item.name}{item.published ? ' · Shared' : ''}</Button>)}</div>
+      <div className="flex flex-wrap gap-2">{overview.data?.templates.filter(item => item.id !== 'growth').map(item => <Button key={item.id} size="sm" variant="outline" onClick={() => changePrompt(item.prompt)}>{item.name}{item.published ? ' · Shared' : ''}</Button>)}</div>
       <div className="grid gap-3 sm:grid-cols-3">
         <label className="text-sm">{t('agents.workspace.action', 'Action')}<select className="block w-full rounded-lg bg-black p-3" value={action} onChange={event => setAction(event.target.value as BuilderAction)}>{BUILDER_ACTIONS.map(item => <option key={item} value={item}>{t(`agents.workspace.builder.${item}`, { defaultValue: item === 'news' ? 'React to news' : item === 'reply' ? 'Reply to recent posts' : item === 'curate' ? 'Like relevant posts' : 'Write a post' })}</option>)}</select></label>
         <label className="text-sm">{t('agents.workspace.subject', 'Topic or reply style')}<Input value={topic} maxLength={500} onChange={event => setTopic(event.target.value)} /></label>

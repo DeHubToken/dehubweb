@@ -1,6 +1,6 @@
 import { type Context, planPrompt } from './tasks.ts';
 import { agentSettings, blockedReason, checked, settingsSchema, writingContext } from './controls.ts';
-import { currentNews, newsReaction } from './news.ts';
+import { currentNews, newsReaction, newsTopicsFor } from './news.ts';
 import { aiChat } from '../_shared/ai-chat.ts';
 
 const STARTERS = [
@@ -8,6 +8,7 @@ const STARTERS = [
   { id: 'reply', name: 'Comment responder', prompt: 'Reply to every post in the last 24 hours with a short relevant question grounded in the post.' },
   { id: 'curator', name: 'Feed curator', prompt: 'Like up to 3 recent posts about music and film.' },
   { id: 'news', name: 'Current events', prompt: 'Post once per day about current news and real-world events.' },
+  { id: 'growth', name: 'Growth report', prompt: '' },
 ];
 const uuid = (value: unknown) => typeof value === 'string' && /^[0-9a-f-]{36}$/i.test(value);
 const error = (message: string, status = 400) => Response.json({ error: message }, { status });
@@ -35,6 +36,18 @@ export async function handleWorkspace(req: Request, context: Context, wallet: st
   if (!uuid(input.agent_id)) return error('Select an agent.');
   const agent = checked(await db.from('ai_agents').select('id,name,api_key,is_active,description').eq('id', input.agent_id).eq('human_owner_wallet', wallet).maybeSingle());
   if (!agent) return error('Agent not found.', 404);
+  if (input.operation === 'workspace_report') {
+    const previous = checked(await db.from('ai_agent_receipts').select('result,created_at').eq('agent_id', agent.id).eq('tool', 'growth_report').eq('status', 'succeeded').order('created_at', { ascending: false }).limit(1));
+    const result = await context.tools(agent.api_key, req).get('dehub_profile')!.call({ user: agent.name });
+    if (result.isError) return error(result.structuredContent?.error || 'Profile statistics are unavailable.', 503);
+    const profile = result.structuredContent?.profile;
+    const followers = Number(profile?.followers);
+    if (!Number.isFinite(followers)) return error('Profile statistics are unavailable.', 503);
+    const report = { followers, following: Number(profile.following) || 0, captured_at: new Date().toISOString(),
+      previous_at: previous[0]?.created_at ?? null, follower_change: previous.length ? followers - Number(previous[0].result.followers) : null };
+    checked(await db.from('ai_agent_receipts').insert({ agent_id: agent.id, tool: 'growth_report', arguments: {}, status: 'succeeded', result: report }));
+    return Response.json(report);
+  }
   if (input.operation === 'workspace_settings') return Response.json({ settings: await agentSettings(db, agent.id) });
   if (input.operation === 'workspace_save_settings') {
     const parsed = settingsSchema.safeParse(input.settings);
@@ -58,7 +71,7 @@ export async function handleWorkspace(req: Request, context: Context, wallet: st
       const post = plan.steps.find(step => step.tool === 'dehub_post_create');
       let draft: string | null = typeof post?.arguments.content === 'string' ? post.arguments.content : null;
       if (post?.topic && post.news) {
-        const source = (await currentNews(db, settings.news_topics))[0];
+        const source = (await currentNews(db, newsTopicsFor(post.topic, settings.news_topics)))[0];
         draft = source ? await newsReaction(source, `${agent.description}\n${writingContext(settings)}`, post.topic) : null;
       } else if (post?.topic) {
         const response = await aiChat({ model: 'google/gemini-2.5-flash', max_tokens: 200, messages: [

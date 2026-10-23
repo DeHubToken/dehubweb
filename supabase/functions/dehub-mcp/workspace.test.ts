@@ -1,6 +1,6 @@
 import { assert, assertEquals } from 'jsr:@std/assert@1';
 import { blockedReason, controlledAction, settingsSchema } from './controls.ts';
-import { freshStory, parseNews } from './news.ts';
+import { freshStory, parseNews, newsTopicsFor, relevantNews } from './news.ts';
 
 Deno.test('news drops stale, undated, future and off-publisher stories', () => {
   const now = Date.parse('2026-10-23T12:00:00Z');
@@ -16,6 +16,13 @@ Deno.test('permissions and blocked terms reject writes regardless of approval mo
   assert(blockedReason(settings, 'dehub_post_create', { content: 'Hello' }));
   assert(blockedReason(settings, 'dehub_comment', { content: 'GIVEAWAY now' }));
   assertEquals(blockedReason(settings, 'dehub_comment', { content: 'Interesting point' }), null);
+});
+Deno.test('news follows requested interests and unrelated comments get no source', () => {
+  assertEquals(newsTopicsFor('Current news about football', ['world']), ['sport']);
+  assertEquals(newsTopicsFor('Current news about music and technology', ['world']), ['technology', 'culture']);
+  const stories = parseNews(`<item><title>Football stadium renovation</title><description>Stadium renovation starts</description><link>https://www.bbc.com/news/articles/example</link><pubDate>${new Date().toUTCString()}</pubDate></item>`);
+  assertEquals(relevantNews(stories, 'Coffee tastes different'), undefined);
+  assertEquals(relevantNews(stories, 'Football stadium work'), stories[0]);
 });
 
 function fixture(mode: 'draft' | 'approval' | 'autonomous') {
