@@ -426,6 +426,24 @@ export async function handleTaskRequest(req: Request, context: Context): Promise
     const payload = result.structuredContent ?? JSON.parse(result.content?.[0]?.text ?? '{}');
     return json(payload, result.isError ? 422 : 200);
   }
+  if (input.operation === "queue_post") {
+    if (typeof input.content !== 'string' || !input.content.trim() || input.content.trim().length > 500 || !/^[0-9a-f-]{36}$/i.test(input.request_id ?? '')) return json({ error: 'Enter a post between 1 and 500 characters.' }, 400);
+    const agent = checked(await db.from('ai_agents').select('id,api_key').eq('id', input.agent_id).eq('human_owner_wallet', auth.wallet).eq('is_active', true).maybeSingle());
+    if (!agent) return json({ error: 'Select an active agent you own.' }, 403);
+    const existing = checked(await db.from('ai_agent_tasks').select('id').eq('owner_wallet', auth.wallet).eq('request_id', input.request_id).maybeSingle());
+    if (existing) return json({ task: existing });
+    const args = { content: input.content.trim(), mint: false, ...(input.image_url ? { media_url: input.image_url, media_type: 'image' } : {}) };
+    try { context.tools(agent.api_key, req).get('dehub_post_create')!.validate(args); }
+    catch { return json({ error: 'Check the post text and image URL.' }, 400); }
+    const plan = { summary: 'Publish your written post once.', interval_minutes: null, steps: [{ tool: 'dehub_post_create', arguments: args, audience: 'single', from: null, to: null, topic: null }] };
+    const result = await db.from('ai_agent_tasks').insert({ agent_id: agent.id, owner_wallet: auth.wallet, request_id: input.request_id, prompt: 'Publish this written post once.', plan }).select('id').single();
+    if (result.error) {
+      const retry = checked(await db.from('ai_agent_tasks').select('id').eq('owner_wallet', auth.wallet).eq('request_id', input.request_id).maybeSingle());
+      if (retry) return json({ task: retry });
+      return json({ error: 'Could not queue the post. Try again.' }, 409);
+    }
+    return json({ task: result.data });
+  }
   if (input.operation === "correct_activity") {
     const agent = checked(await db.from("ai_agents").select("id,owner_wallet_address,wallet_private_key").eq("id", input.agent_id).eq("human_owner_wallet", auth.wallet).eq("is_active", true).maybeSingle());
     if (!agent) return json({ error: "Select an active agent you own." }, 403);
