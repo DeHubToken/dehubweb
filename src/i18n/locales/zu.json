@@ -752,7 +752,6 @@
     "embed": "Shumeka",
     "copyEmbedCode": "Kopisha ikhodi yokushumeka",
     "embedCodeCopied": "Ikhodi yokushumeka ikopishiwe",
-    "copyFailed": "Akukwazanga ukukopisha isixhumanisi",
     "options": "Izinketho",
     "aiOverview": "Isifinyezo se-AI",
     "sendTip": "Thumela Ithiphu",
@@ -780,7 +779,8 @@
     "unpinPost": "Khipha kuphrofayili yakho",
     "postPinned": "Kuphinwe kuphrofayili yakho",
     "postUnpinned": "Kukhishwe kuphrofayili yakho",
-    "pinFailed": "Ayikwazanga ukufaka iphini noma ukususa le phosti"
+    "pinFailed": "Ayikwazanga ukufaka iphini noma ukususa le phosti",
+    "copyFailed": "Akukwazanga ukukopisha isixhumanisi"
   },
   "filters": {
     "sort": "Hlela",
@@ -2465,6 +2465,30 @@
     "addDescription": "Engeza incazelo...",
     "communityDescription": "Incazelo yomphakathi...",
     "posts": "Okuthunyelwe",
+    "chat": {
+      "intervalHour": "Ihora elilodwa",
+      "intervalHours": "{{count}} amahora",
+      "intervalMinute": "Umzuzu ongu-1",
+      "intervalMinutes": "{{count}} imizuzu",
+      "intervalSecond": "Umzuzwana owodwa",
+      "intervalSeconds": "{{count}} imizuzwana",
+      "muted": "Uhlutshiwe",
+      "mutedUntil": "Uyadidiyelwa kuze kube ngu- {{until}}",
+      "postingDisabled": "Ukuphosta kukhutshaziwe kumalungu alapha",
+      "pinnedGif": "I-GIF",
+      "pinnedMedia": "Abezindaba",
+      "jumpToPinned": "Yeqela emyalezweni obekiwe",
+      "pinnedMessage": "Umlayezo ophiniwe",
+      "unpin": "Khipha i-pin",
+      "pin": "I-PIN",
+      "delete": "Susa",
+      "slowMode": "Imodi ehamba kancane: umyalezo owodwa njalo {{interval}}",
+      "slowModeWait": "Imodi ehamba kancane — linda {{time}}",
+      "send": "Thumela",
+      "deleteMessageTitle": "Susa lo mlayezo?",
+      "deleteMessageBody": "Lokhu akukwazi ukuhlehliswa.",
+      "cancel": "Khansela"
+    },
     "membersTab": "Amalungu ({{count}})",
     "about": "Mayelana",
     "backToCommunities": "Imiphakathi",
@@ -7047,7 +7071,14 @@
     }
   },
   "editor": {
-    "video": { "tFade": "Ukuxubana", "none": "Lutho", "transition": "Ushintsho", "speed": "Isivinini", "sound": "Umsindo","video": "Ividiyo"},
+    "video": {
+      "tFade": "Ukuxubana",
+      "none": "Lutho",
+      "transition": "Ushintsho",
+      "speed": "Isivinini",
+      "sound": "Umsindo",
+      "video": "Ividiyo"
+    },
     "review": {
       "title": "Ukubuyekezwa kwephrojekthi",
       "shared": "Kwabelwane nawe",

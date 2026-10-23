@@ -748,7 +748,6 @@
     "embed": "ಎಂಬೆಡ್",
     "copyEmbedCode": "ಎಂಬೆಡ್ ಕೋಡ್ ನಕಲಿಸಿ",
     "embedCodeCopied": "ಎಂಬೆಡ್ ಕೋಡ್ ನಕಲಾಗಿದೆ",
-    "copyFailed": "ಲಿಂಕ್ ನಕಲಿಸಲು ಸಾಧ್ಯವಾಗಲಿಲ್ಲ",
     "options": "ಆಯ್ಕೆಗಳು",
     "aiOverview": "AI ಅವಲೋಕನ",
     "sendTip": "ಉಡುಗೊರೆ ಕಳುಹಿಸಿ",
@@ -776,7 +775,8 @@
     "unpinPost": "ನಿಮ್ಮ ಪ್ರೊಫೈಲ್‌ನಿಂದ ಅನ್‌ಪಿನ್ ಮಾಡಿ",
     "postPinned": "ನಿಮ್ಮ ಪ್ರೊಫೈಲ್‌ಗೆ ಪಿನ್ ಮಾಡಲಾಗಿದೆ",
     "postUnpinned": "ನಿಮ್ಮ ಪ್ರೊಫೈಲ್‌ನಿಂದ ಅನ್‌ಪಿನ್ ಮಾಡಲಾಗಿದೆ",
-    "pinFailed": "ಈ ಪೋಸ್ಟ್ ಅನ್ನು ಪಿನ್ ಮಾಡಲು ಅಥವಾ ಅನ್‌ಪಿನ್ ಮಾಡಲು ಸಾಧ್ಯವಾಗಲಿಲ್ಲ"
+    "pinFailed": "ಈ ಪೋಸ್ಟ್ ಅನ್ನು ಪಿನ್ ಮಾಡಲು ಅಥವಾ ಅನ್‌ಪಿನ್ ಮಾಡಲು ಸಾಧ್ಯವಾಗಲಿಲ್ಲ",
+    "copyFailed": "ಲಿಂಕ್ ನಕಲಿಸಲು ಸಾಧ್ಯವಾಗಲಿಲ್ಲ"
   },
   "filters": {
     "sort": "ವಿಂಗಡಿಸಿ",
@@ -2427,6 +2427,30 @@
     "addDescription": "ವಿವರಣೆ ಸೇರಿಸಿ...",
     "communityDescription": "ಸಮುದಾಯ ವಿವರಣೆ...",
     "posts": "ಪೋಸ್ಟ್‌ಗಳು",
+    "chat": {
+      "intervalHour": "1 ಗಂಟೆ",
+      "intervalHours": "{{count}} ಗಂಟೆಗಳು",
+      "intervalMinute": "1 ನಿಮಿಷ",
+      "intervalMinutes": "{{count}} ನಿಮಿಷಗಳು",
+      "intervalSecond": "1 ಸೆಕೆಂಡ್",
+      "intervalSeconds": "{{count}} ಸೆಕೆಂಡುಗಳು",
+      "muted": "ನಿಮ್ಮನ್ನು ಮ್ಯೂಟ್ ಮಾಡಲಾಗಿದೆ",
+      "mutedUntil": "{{until}} ವರೆಗೆ ನಿಮ್ಮನ್ನು ಮ್ಯೂಟ್ ಮಾಡಲಾಗಿದೆ",
+      "postingDisabled": "ಸದಸ್ಯರಿಗೆ ಇಲ್ಲಿ ಪೋಸ್ಟ್ ಮಾಡುವುದನ್ನು ನಿಷ್ಕ್ರಿಯಗೊಳಿಸಲಾಗಿದೆ",
+      "pinnedGif": "ಜಿಐಎಫ್",
+      "pinnedMedia": "ಮಾಧ್ಯಮ",
+      "jumpToPinned": "ಪಿನ್ ಮಾಡಿದ ಸಂದೇಶಕ್ಕೆ ಜಿಗಿಯಿರಿ",
+      "pinnedMessage": "ಪಿನ್ ಮಾಡಿದ ಸಂದೇಶ",
+      "unpin": "ಅನ್‌ಪಿನ್ ಮಾಡಿ",
+      "pin": "ಪಿನ್",
+      "delete": "ಅಳಿಸಿ",
+      "slowMode": "ನಿಧಾನ ಮೋಡ್: ಪ್ರತಿ {{interval}} ಒಂದು ಸಂದೇಶ",
+      "slowModeWait": "ನಿಧಾನ ಮೋಡ್ — {{time}} ಕಾಯಿರಿ",
+      "send": "ಕಳುಹಿಸಿ",
+      "deleteMessageTitle": "ಈ ಸಂದೇಶವನ್ನು ಅಳಿಸುವುದೇ?",
+      "deleteMessageBody": "ಇದನ್ನು ರದ್ದುಗೊಳಿಸಲಾಗುವುದಿಲ್ಲ.",
+      "cancel": "ರದ್ದುಗೊಳಿಸಿ"
+    },
     "membersTab": "ಸದಸ್ಯರು ({{count}})",
     "about": "ಕುರಿತು",
     "backToCommunities": "ಸಮುದಾಯಗಳು",
@@ -7028,7 +7052,14 @@
     }
   },
   "editor": {
-    "video": { "tFade": "ಕ್ರಾಸ್-ಡಿಸಾಲ್ವ್", "none": "ಯಾವುದೂ ಇಲ್ಲ", "transition": "ಪರಿವರ್ತನೆ", "speed": "ವೇಗ", "sound": "ಧ್ವನಿ","video": "ವೀಡಿಯೊ"},
+    "video": {
+      "tFade": "ಕ್ರಾಸ್-ಡಿಸಾಲ್ವ್",
+      "none": "ಯಾವುದೂ ಇಲ್ಲ",
+      "transition": "ಪರಿವರ್ತನೆ",
+      "speed": "ವೇಗ",
+      "sound": "ಧ್ವನಿ",
+      "video": "ವೀಡಿಯೊ"
+    },
     "review": {
       "title": "ಪ್ರಾಜೆಕ್ಟ್ ಪರಿಶೀಲನೆ",
       "shared": "ನಿಮ್ಮೊಂದಿಗೆ ಹಂಚಿಕೊಳ್ಳಲಾಗಿದೆ",

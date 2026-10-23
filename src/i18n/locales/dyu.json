@@ -741,7 +741,6 @@
     "embed": "Don kɔnɔ",
     "copyEmbedCode": "Don-kɔnɔ kode kopi",
     "embedCodeCopied": "Don-kɔnɔ kode kopira",
-    "copyFailed": "A ma se ka lien kopi",
     "options": "Kɔrɔbɔ",
     "aiOverview": "A filɛ, a ye min fɔ",
     "sendTip": "Kɔrɔbɔ",
@@ -769,7 +768,8 @@
     "unpinPost": "Ka bɔ i ka sɛbɛ kɔnɔ",
     "postPinned": "I ka kunnafoniw lajɛ",
     "postUnpinned": "Ka bɔ i ka sɛbɛ kɔnɔ",
-    "pinFailed": "Ne tɛ se ka n yɛrɛ tanga o ma"
+    "pinFailed": "Ne tɛ se ka n yɛrɛ tanga o ma",
+    "copyFailed": "A ma se ka lien kopi"
   },
   "filters": {
     "sort": "Kɔrɔbɔ",
@@ -2397,6 +2397,28 @@
     "addDescription": "Add a description...",
     "communityDescription": "Jɛkulu ɲɛfɔli...",
     "posts": "Posts",
+    "chat": {
+      "intervalHour": "Dɔɔni: lɛri kelen.",
+      "intervalHours": "{{count}} hours",
+      "intervalMinute": "Dakun fɔlɔ",
+      "intervalMinutes": "{{count}} min",
+      "intervalSecond": "Dɔɔni fɔlɔ",
+      "intervalSeconds": "{{count}} segɔn",
+      "muted": "I be to ka to ka kuma",
+      "postingDisabled": "O kama, an ka ɲi k'an seko bɛɛ kɛ ka mɔgɔw dɛmɛ u ka se ka Jehova bato.",
+      "pinnedGif": "GIF ka koo",
+      "pinnedMedia": "Kunnafonidilaw",
+      "jumpToPinned": "Aw ye taga a fɔ a ye ko a ka na ni a ye.",
+      "pinnedMessage": "O ye kumajugu ye",
+      "unpin": "O ye kooba ye.",
+      "pin": "O ye pikiri ye",
+      "delete": "A tun banna",
+      "slowModeWait": "Slo mode — fɔlɔ {{time}}",
+      "send": "I ka kan ka min fɔ",
+      "deleteMessageTitle": "Yala i be se k'o kumaw bɛɛ bɔ yen wa?",
+      "deleteMessageBody": "O tɛ se ka ban.",
+      "cancel": "Kanali"
+    },
     "membersTab": "Tɔndenw ({{count}})",
     "about": "A kan",
     "backToCommunities": "Communities",
@@ -6829,7 +6851,14 @@
     }
   },
   "editor": {
-    "video": { "tFade": "Ɲɔgɔn kɔnɔ tɛmɛ", "none": "Foyi", "transition": "Tɛmɛni", "speed": "Teliya", "sound": "Mankan","video": "Video"},
+    "video": {
+      "tFade": "Ɲɔgɔn kɔnɔ tɛmɛ",
+      "none": "Foyi",
+      "transition": "Tɛmɛni",
+      "speed": "Teliya",
+      "sound": "Mankan",
+      "video": "Video"
+    },
     "review": {
       "title": "Porozɛ lajɛ",
       "shared": "I fɛ tila",

@@ -750,7 +750,6 @@
     "embed": "Įterpti",
     "copyEmbedCode": "Kopijuoti įterpimo kodą",
     "embedCodeCopied": "Įterpimo kodas nukopijuotas",
-    "copyFailed": "Nepavyko nukopijuoti nuorodos",
     "options": "Parinktys",
     "aiOverview": "DI apžvalga",
     "sendTip": "Siųsti arbatpinigius",
@@ -778,7 +777,8 @@
     "unpinPost": "Atsekti nuo savo profilio",
     "postPinned": "Prisegta prie jūsų profilio",
     "postUnpinned": "Atsegta nuo jūsų profilio",
-    "pinFailed": "Nepavyko prisegti arba atsegti šio įrašo"
+    "pinFailed": "Nepavyko prisegti arba atsegti šio įrašo",
+    "copyFailed": "Nepavyko nukopijuoti nuorodos"
   },
   "filters": {
     "sort": "Rūšiuoti",
@@ -2434,6 +2434,30 @@
     "addDescription": "Pridėti aprašymą...",
     "communityDescription": "Bendruomenės aprašymas...",
     "posts": "Įrašai",
+    "chat": {
+      "intervalHour": "1 val.",
+      "intervalHours": "{{count}} val.",
+      "intervalMinute": "1 minutė",
+      "intervalMinutes": "{{count}} min.",
+      "intervalSecond": "1 sekundė",
+      "intervalSeconds": "{{count}} sekundės",
+      "muted": "Esate nutildyti",
+      "mutedUntil": "Esate nutildyti iki {{until}}",
+      "postingDisabled": "Narių skelbimas čia išjungtas",
+      "pinnedGif": "GIF",
+      "pinnedMedia": "Žiniasklaida",
+      "jumpToPinned": "Pereiti prie prisegtos žinutės",
+      "pinnedMessage": "Prisegta žinutė",
+      "unpin": "Atsegti",
+      "pin": "Kaištis",
+      "delete": "Ištrinti",
+      "slowMode": "Lėtas režimas: viena žinutė kas {{interval}}",
+      "slowModeWait": "Lėtas režimas — palaukite {{time}}",
+      "send": "Siųsti",
+      "deleteMessageTitle": "Ištrinti šią žinutę?",
+      "deleteMessageBody": "Tai negali būti anuliuota.",
+      "cancel": "Atšaukti"
+    },
     "membersTab": "Nariai ({{count}})",
     "about": "Apie",
     "backToCommunities": "Bendruomenės",
@@ -7041,7 +7065,14 @@
     }
   },
   "editor": {
-    "video": { "tFade": "Persiliejimas", "none": "Nėra", "transition": "Perėjimas", "speed": "Greitis", "sound": "Garsas","video": "Vaizdo įrašas"},
+    "video": {
+      "tFade": "Persiliejimas",
+      "none": "Nėra",
+      "transition": "Perėjimas",
+      "speed": "Greitis",
+      "sound": "Garsas",
+      "video": "Vaizdo įrašas"
+    },
     "review": {
       "title": "Projekto peržiūra",
       "shared": "Bendrinama su jumis",

@@ -754,7 +754,6 @@
     "embed": "Inbed",
     "copyEmbedCode": "Kopieer inbedkode",
     "embedCodeCopied": "Inbedkode gekopieer",
-    "copyFailed": "Kon nie skakel kopieer nie",
     "options": "Opsies",
     "aiOverview": "AI-oorsig",
     "sendTip": "Stuur fooi",
@@ -782,7 +781,8 @@
     "unpinPost": "Ontkoppel van jou profiel",
     "postPinned": "Vasgepen op jou profiel",
     "postUnpinned": "Ongestemd van jou profiel",
-    "pinFailed": "Kon nie hierdie plasing vaspen of ontgin nie"
+    "pinFailed": "Kon nie hierdie plasing vaspen of ontgin nie",
+    "copyFailed": "Kon nie skakel kopieer nie"
   },
   "filters": {
     "sort": "Sorteer",
@@ -2469,6 +2469,30 @@
     "addDescription": "Voeg 'n beskrywing by...",
     "communityDescription": "Gemeenskapsbeskrywing...",
     "posts": "Plasings",
+    "chat": {
+      "intervalHour": "1 uur",
+      "intervalHours": "{{count}} ure",
+      "intervalMinute": "1 minuut",
+      "intervalMinutes": "{{count}} minute",
+      "intervalSecond": "1 sekonde",
+      "intervalSeconds": "{{count}} sekondes",
+      "muted": "Jy is gedemp",
+      "mutedUntil": "Jy is gedemp tot {{until}}",
+      "postingDisabled": "Plasing is gedeaktiveer vir lede hier",
+      "pinnedGif": "GIF",
+      "pinnedMedia": "Media",
+      "jumpToPinned": "Spring na die vasgepen boodskap",
+      "pinnedMessage": "Vasgepen boodskap",
+      "unpin": "Onspeld",
+      "pin": "Speld",
+      "delete": "Skrap",
+      "slowMode": "Stadige modus: een boodskap elke {{interval}}",
+      "slowModeWait": "Stadige modus — wag {{time}}",
+      "send": "Stuur",
+      "deleteMessageTitle": "Skrap hierdie boodskap?",
+      "deleteMessageBody": "Dit kan nie ongedaan gemaak word nie.",
+      "cancel": "Kanselleer"
+    },
     "membersTab": "Lede ({{count}})",
     "about": "Meer oor",
     "backToCommunities": "Gemeenskappe",
@@ -7106,7 +7130,14 @@
     }
   },
   "editor": {
-    "video": { "tFade": "Oorvloei", "none": "Geen", "transition": "Oorgang", "speed": "Spoed", "sound": "Klank","video": "Video"},
+    "video": {
+      "tFade": "Oorvloei",
+      "none": "Geen",
+      "transition": "Oorgang",
+      "speed": "Spoed",
+      "sound": "Klank",
+      "video": "Video"
+    },
     "review": {
       "title": "Projekhersiening",
       "shared": "Met jou gedeel",

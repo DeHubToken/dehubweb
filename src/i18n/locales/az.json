@@ -752,7 +752,6 @@
     "embed": "Yerləşdir",
     "copyEmbedCode": "Yerləşdirmə kodunu kopyala",
     "embedCodeCopied": "Yerləşdirmə kodu kopyalandı",
-    "copyFailed": "Linki kopyalamaq mümkün olmadı",
     "options": "Seçimlər",
     "aiOverview": "AI icmalı",
     "sendTip": "Bəxşiş Göndər",
@@ -780,7 +779,8 @@
     "unpinPost": "Profilinizdən silin",
     "postPinned": "Profilinizə bərkidilib",
     "postUnpinned": "Profilinizdən silinmədi",
-    "pinFailed": "Bu yazını sancmaq və ya açmaq mümkün olmadı"
+    "pinFailed": "Bu yazını sancmaq və ya açmaq mümkün olmadı",
+    "copyFailed": "Linki kopyalamaq mümkün olmadı"
   },
   "filters": {
     "sort": "Sırala",
@@ -2380,6 +2380,30 @@
     "addDescription": "Təsvir əlavə edin...",
     "communityDescription": "İcma təsviri...",
     "posts": "Paylaşımlar",
+    "chat": {
+      "intervalHour": "1 saat",
+      "intervalHours": "{{count}} saat",
+      "intervalMinute": "1 dəqiqə",
+      "intervalMinutes": "{{count}} dəqiqə",
+      "intervalSecond": "1 saniyə",
+      "intervalSeconds": "{{count}} saniyə",
+      "muted": "Siz mutasiyaya məruz qalmısınız",
+      "mutedUntil": "{{until}} tarixinə qədər dəyişmisiniz",
+      "postingDisabled": "Buradakı üzvlər üçün poçt qeyri-aktiv edilib",
+      "pinnedGif": "GIF",
+      "pinnedMedia": "Media",
+      "jumpToPinned": "Sancılmış mesaja keçin",
+      "pinnedMessage": "Sancaqlanmış mesaj",
+      "unpin": "Sancağı ləğv et",
+      "pin": "PİN kod",
+      "delete": "Sil",
+      "slowMode": "Yavaş rejim: hər {{interval}} üçün bir mesaj",
+      "slowModeWait": "Yavaş rejim — {{time}} gözləyin",
+      "send": "Göndər",
+      "deleteMessageTitle": "Bu mesaj silinsin?",
+      "deleteMessageBody": "Bunu geri qaytarmaq mümkün deyil.",
+      "cancel": "Ləğv et"
+    },
     "membersTab": "Üzvlər ({{count}})",
     "about": "Haqqında",
     "backToCommunities": "İcmalar",
@@ -6890,7 +6914,14 @@
     }
   },
   "editor": {
-    "video": { "tFade": "Qarışıq keçid", "none": "Heç biri", "transition": "Keçid", "speed": "Sürət", "sound": "Səs","video": "Video"},
+    "video": {
+      "tFade": "Qarışıq keçid",
+      "none": "Heç biri",
+      "transition": "Keçid",
+      "speed": "Sürət",
+      "sound": "Səs",
+      "video": "Video"
+    },
     "review": {
       "title": "Layihə baxışı",
       "shared": "Sizinlə paylaşılanlar",

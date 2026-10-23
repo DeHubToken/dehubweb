@@ -734,7 +734,6 @@
     "embed": "تضمين",
     "copyEmbedCode": "نسخ كود التضمين",
     "embedCodeCopied": "تم نسخ كود التضمين",
-    "copyFailed": "ما قدرنا ننسخ الرابط",
     "options": "خيارات",
     "sendTip": "أرسل إكرامية",
     "queue": "قائمة الانتظار",
@@ -761,7 +760,8 @@
     "unpinPost": "إلغاء التثبيت من ملفك الشخصي",
     "postPinned": "تم التثبيت على ملفك الشخصي",
     "postUnpinned": "تم إلغاء التثبيت من ملفك الشخصي",
-    "pinFailed": "تعذر تثبيت هذا المنشور أو إلغاء تثبيته"
+    "pinFailed": "تعذر تثبيت هذا المنشور أو إلغاء تثبيته",
+    "copyFailed": "ما قدرنا ننسخ الرابط"
   },
   "filters": {
     "sort": "ترتيب",
@@ -2411,6 +2411,29 @@
     "addDescription": "أضف وصف...",
     "communityDescription": "وصف المجتمع...",
     "posts": "مايكتبات",
+    "chat": {
+      "intervalHour": "ساعة وحدة",
+      "intervalHours": "{{count}} ساعات",
+      "intervalMinute": "دقيقة وحدة",
+      "intervalMinutes": "{{count}} دقائق",
+      "intervalSecond": "ثانية وحدة",
+      "intervalSeconds": "{{count}} ثواني",
+      "muted": "انت مكتوم",
+      "mutedUntil": "انت مكتوم لحد {{until}}",
+      "postingDisabled": "النشر معطل للأعضاء هون",
+      "pinnedMedia": "ميديا",
+      "jumpToPinned": "إنتقل للرسالة المثبتة",
+      "pinnedMessage": "رسالة مثبتة",
+      "unpin": "فك التثبيت",
+      "pin": "ثبت",
+      "delete": "احذف",
+      "slowMode": "وضع بطيء: رسالة كل {{interval}}",
+      "slowModeWait": "وضع بطيء — استنى {{time}}",
+      "send": "إرسل",
+      "deleteMessageTitle": "احذف هالرسالة؟",
+      "deleteMessageBody": "ما فيك ترجّع هالشي.",
+      "cancel": "إلغاء"
+    },
     "membersTab": "الأعضاء ({{count}})",
     "about": "عن",
     "backToCommunities": "المجتمعات",
@@ -6416,7 +6439,14 @@
     }
   },
   "editor": {
-    "video": { "tFade": "تلاشٍ متداخل", "none": "بدون", "transition": "انتقال", "speed": "السرعة", "sound": "صوت","video": "فيديو"},
+    "video": {
+      "tFade": "تلاشٍ متداخل",
+      "none": "بدون",
+      "transition": "انتقال",
+      "speed": "السرعة",
+      "sound": "صوت",
+      "video": "فيديو"
+    },
     "review": {
       "title": "مراجعة المشروع",
       "shared": "تمت مشاركته معك",

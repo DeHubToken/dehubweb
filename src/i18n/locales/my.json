@@ -751,7 +751,6 @@
     "embed": "ထည့်သွင်းရန်",
     "copyEmbedCode": "ထည့်သွင်းကုဒ်ကို ကူးယူရန်",
     "embedCodeCopied": "ထည့်သွင်းကုဒ်ကို ကူးယူပြီးပါပြီ",
-    "copyFailed": "လင့်ခ်ကို ကူးယူ၍ မရပါ",
     "options": "ရွေးချယ်စရာများ",
     "aiOverview": "AI ခြုံငုံသုံးသပ်ချက်",
     "sendTip": "အကူအညီပေးရန်",
@@ -779,7 +778,8 @@
     "unpinPost": "သင် ၏ ပရိုဖိုင်မှ PIN ကိုဖြုတ်ပါ",
     "postPinned": "သင် ၏ ပရိုဖိုင်သို့ Pinned",
     "postUnpinned": "သင် ၏ ပရိုဖိုင်မှ မထည့်သွင်းရသေးပါ",
-    "pinFailed": "ဤပို့စ်ကို PIN သို့မဟုတ် ဖြုတ် ၍ မရပါ"
+    "pinFailed": "ဤပို့စ်ကို PIN သို့မဟုတ် ဖြုတ် ၍ မရပါ",
+    "copyFailed": "လင့်ခ်ကို ကူးယူ၍ မရပါ"
   },
   "filters": {
     "sort": "စီရန်",
@@ -2443,6 +2443,29 @@
     "addDescription": "အတိုင်းအတာကို ထည့်ပါ။",
     "communityDescription": "အသိုက်အဝန်း ဖော်ပြချက်...",
     "posts": "ပို့ချများ",
+    "chat": {
+      "intervalHour": "၁ နာရီ",
+      "intervalHours": "{{count}} နာရီများ",
+      "intervalMinute": "၁ မိနစ်",
+      "intervalMinutes": "{{count}} မိနစ်များ",
+      "intervalSecond": "၁ စက္ကန့်",
+      "intervalSeconds": "{{count}} စက္ကန့်များ",
+      "muted": "သင္က တိတ္ဆိတ္ေနသည္",
+      "mutedUntil": "{{until}} မတိုင်မီ သင်သည်နှုတ်ပိတ်ထားသည်",
+      "postingDisabled": "ဤနေရာတွင် အဖွဲ့ဝင်များအတွက် ပို့စ်တင်ခြင်းကို ပိတ်ထားသည်",
+      "pinnedMedia": "မီဒီယာ",
+      "jumpToPinned": "PINED မက်ဆေ့ချ်သို့ ခုန်ပါ",
+      "pinnedMessage": "Pinned မက်ဆေ့ခ်ျ",
+      "unpin": "PIN ကိုဖြုတ်ပါ",
+      "pin": "ပင်နံပါတ်",
+      "delete": "ပယ်ဖျက်ပါ",
+      "slowMode": "နှေးကွေး mode ကို: တစ်ခုချင်းစီကို {{interval}}",
+      "slowModeWait": "နှေးကွေး mode ကို — စောင့်ဆိုင်း {{time}}",
+      "send": "ပို့မည်",
+      "deleteMessageTitle": "ဤမက်ဆေ့ခ်ျကို ဖျက်မည်လား ။",
+      "deleteMessageBody": "ဤအရာကို ပြန်ဖြုတ် ၍ မရပါ ။",
+      "cancel": "ပယ်ဖျက်မည်"
+    },
     "membersTab": "အဖွဲ့ဝင်များ ({{count}})",
     "about": "အကြောင်း",
     "backToCommunities": "အသင်းများ",
@@ -6986,7 +7009,14 @@
     }
   },
   "editor": {
-    "video": { "tFade": "ရောနှောကူးပြောင်း", "none": "မရှိ", "transition": "အကူးအပြောင်း", "speed": "အမြန်နှုန်း", "sound": "အသံ","video": "ဗီဒီယို"},
+    "video": {
+      "tFade": "ရောနှောကူးပြောင်း",
+      "none": "မရှိ",
+      "transition": "အကူးအပြောင်း",
+      "speed": "အမြန်နှုန်း",
+      "sound": "အသံ",
+      "video": "ဗီဒီယို"
+    },
     "review": {
       "title": "ပရောဂျက် သုံးသပ်ချက်",
       "shared": "သင့်နှင့် မျှဝေထားသည်",

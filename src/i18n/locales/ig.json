@@ -752,7 +752,6 @@
     "embed": "Tinye n'ime",
     "copyEmbedCode": "Detụọ koodu ntinye",
     "embedCodeCopied": "Edepụtala koodu ntinye",
-    "copyFailed": "Enweghị ike idetụọ njikọ ahụ",
     "options": "Nhọrọ",
     "aiOverview": "AI Nchịkọta",
     "sendTip": "Ziga Onyinye",
@@ -780,7 +779,8 @@
     "unpinPost": "Wepụ site na profaịlụ gị",
     "postPinned": "Pinned na profaịlụ gị",
     "postUnpinned": "Ewepụghị na profaịlụ gị",
-    "pinFailed": "Agaghị enwenwu PIN ma ọ bụ wepu ọkwa a"
+    "pinFailed": "Agaghị enwenwu PIN ma ọ bụ wepu ọkwa a",
+    "copyFailed": "Enweghị ike idetụọ njikọ ahụ"
   },
   "filters": {
     "sort": "Hazie",
@@ -2429,6 +2429,30 @@
     "addDescription": "Tinye nkọwa...",
     "communityDescription": "Nkọwa obodo...",
     "posts": "Post",
+    "chat": {
+      "intervalHour": "1 hour",
+      "intervalHours": "{{count}} awa",
+      "intervalMinute": "1 nkeji",
+      "intervalMinutes": "{{count}} nkeji",
+      "intervalSecond": "1 nke abụọ",
+      "intervalSeconds": "{{count}} sekọnd",
+      "muted": "Ị na-muted",
+      "mutedUntil": "Ị na-muted ruo mgbe {{until}}",
+      "postingDisabled": "Posting bụ nkwarụ n 'ihi na òtù ebe a",
+      "pinnedGif": "GIF",
+      "pinnedMedia": "Media",
+      "jumpToPinned": "Gaa n 'ozi pinned",
+      "pinnedMessage": "Pinned ozi",
+      "unpin": "Unpin",
+      "pin": "Pin",
+      "delete": "Hichaa",
+      "slowMode": "Ọnọdụ nwayọ: otu ozi ọ bụla {{interval}}",
+      "slowModeWait": "Ọnọdụ nwayọ — chere {{time}}",
+      "send": "Ziga",
+      "deleteMessageTitle": "Hichaa ozi a?",
+      "deleteMessageBody": "Agaghị emezigharị ihe a.",
+      "cancel": "Kagbuo"
+    },
     "membersTab": "Ndị Otu ({{count}})",
     "about": "Gbasara",
     "backToCommunities": "Obodo",
@@ -6969,7 +6993,14 @@
     }
   },
   "editor": {
-    "video": { "tFade": "Ngwakọta nwayọọ", "none": "Ọ dịghị", "transition": "Mgbanwe", "speed": "Ọsọ", "sound": "Ụda","video": "Vidio"},
+    "video": {
+      "tFade": "Ngwakọta nwayọọ",
+      "none": "Ọ dịghị",
+      "transition": "Mgbanwe",
+      "speed": "Ọsọ",
+      "sound": "Ụda",
+      "video": "Vidio"
+    },
     "review": {
       "title": "Nyocha ọrụ",
       "shared": "Ekekọrịtara gị",

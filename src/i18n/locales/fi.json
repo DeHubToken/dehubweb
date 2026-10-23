@@ -227,11 +227,11 @@
   },
   "settings": {
     "usernameTaken": "Käyttäjänimi on varattu",
-    "showDislikesDesc": "Kuka tahansa voi avata profiilisi En tykkää -välilehden. Kun tämä on pois päältä, vain sinä näet sen.",
-    "showDislikes": "Näytä en tykkää -merkintäni kaikille",
     "postingChain": "Julkaisujen lohkoketju",
     "showOnline": "Näytä, kun olen online-tilassa",
     "showOnlineDesc": "Viestisi näkevät vihreän pisteen nimesi vieressä, kun käytät DeHubia",
+    "showDislikes": "Näytä en tykkää -merkintäni kaikille",
+    "showDislikesDesc": "Kuka tahansa voi avata profiilisi En tykkää -välilehden. Kun tämä on pois päältä, vain sinä näet sen.",
     "smartReplies": "Ehdotetut vastaukset",
     "smartRepliesDesc": "Luonnostelee kaksi vastausta, joita voit napauttaa keskustelussa. Ehdotusten × poistaa tämän käytöstä.",
     "title": "Asetukset",
@@ -754,7 +754,6 @@
     "embed": "Upota",
     "copyEmbedCode": "Kopioi upotuskoodi",
     "embedCodeCopied": "Upotuskoodi kopioitu",
-    "copyFailed": "Linkkiä ei voitu kopioida",
     "options": "Vaihtoehdot",
     "aiOverview": "Tekoälyn yleiskatsa",
     "sendTip": "Lähetä tippi",
@@ -782,7 +781,8 @@
     "unpinPost": "Poista kiinnitys profiilistasi",
     "postPinned": "Kiinnitetty profiiliisi",
     "postUnpinned": "Profiilisi kiinnitys poistettu",
-    "pinFailed": "Tätä julkaisua ei voitu kiinnittää tai poistaa"
+    "pinFailed": "Tätä julkaisua ei voitu kiinnittää tai poistaa",
+    "copyFailed": "Linkkiä ei voitu kopioida"
   },
   "filters": {
     "sort": "Lajittele",
@@ -1516,7 +1516,6 @@
     "returnHome": "Palaa etusivulle"
   },
   "profile": {
-    "dislikes": { "loadMore": "Lataa lisää", "privateDesc": "Tämä tili pitää en tykkää -merkintänsä omana tietonaan.", "privateTitle": "En tykkää -merkinnät ovat yksityisiä", "emptyOther": "Ei vielä mitään.", "emptyOwn": "Julkaisut, joista et tykkää, poistuvat syötteistäsi ja näkyvät täällä. Peru merkintä palauttaaksesi julkaisun.", "emptyTitle": "Ei vielä en tykkää -merkintöjä" },
     "back": "Takaisin",
     "usernameAvailable": "Käyttäjätunnus on saatavilla!",
     "signUpToClaim": "Rekisteröidy tänään varataksesi",
@@ -1544,8 +1543,16 @@
       "commentUnavailable": "Tämä kommentti ei ole enää saatavilla"
     },
     "tabs": {
-      "dislikes": "En tykkää",
-      "playlists": "Soittolistat"
+      "playlists": "Soittolistat",
+      "dislikes": "En tykkää"
+    },
+    "dislikes": {
+      "emptyTitle": "Ei vielä en tykkää -merkintöjä",
+      "emptyOwn": "Julkaisut, joista et tykkää, poistuvat syötteistäsi ja näkyvät täällä. Peru merkintä palauttaaksesi julkaisun.",
+      "emptyOther": "Ei vielä mitään.",
+      "privateTitle": "En tykkää -merkinnät ovat yksityisiä",
+      "privateDesc": "Tämä tili pitää en tykkää -merkintänsä omana tietonaan.",
+      "loadMore": "Lataa lisää"
     },
     "offerWorthNow": "Noin {{amount}} rahakketta nykyisellä kurssilla",
     "offerNotePlaceholder": "Lisää viesti (valinnainen)",
@@ -2387,6 +2394,30 @@
     "addDescription": "Lisää kuvaus...",
     "communityDescription": "Yhteisön kuvaus...",
     "posts": "Julkaisut",
+    "chat": {
+      "intervalHour": "1 tunti",
+      "intervalHours": "{{count}} tuntia",
+      "intervalMinute": "1 minuutti",
+      "intervalMinutes": "{{count}} minuuttia",
+      "intervalSecond": "1 sekunti",
+      "intervalSeconds": "{{count}} sekuntia",
+      "muted": "Sinut on mykistetty",
+      "mutedUntil": "Sinut mykistetään {{until}}asti",
+      "postingDisabled": "Julkaiseminen on poistettu käytöstä jäseniltä täällä",
+      "pinnedGif": "GIF",
+      "pinnedMedia": "Media",
+      "jumpToPinned": "Siirry kiinnitettyyn viestiin",
+      "pinnedMessage": "Kiinnitetty viesti",
+      "unpin": "Poista kiinnitys",
+      "pin": "PIN",
+      "delete": "Poista",
+      "slowMode": "Hidas tila: yksi viesti {{interval}} välein",
+      "slowModeWait": "Hidas tila — odota {{time}}",
+      "send": "Lähetä",
+      "deleteMessageTitle": "Poistetaanko tämä viesti?",
+      "deleteMessageBody": "Tätä ei voi kumota.",
+      "cancel": "Peruuta"
+    },
     "membersTab": "Jäsenet ({{count}})",
     "about": "Tietoa",
     "backToCommunities": "Yhteisöt",
@@ -6934,7 +6965,14 @@
     }
   },
   "editor": {
-    "video": { "tFade": "Ristihäivytys", "none": "Ei mitään", "transition": "Siirtymä", "speed": "Nopeus", "sound": "Ääni","video": "Video"},
+    "video": {
+      "tFade": "Ristihäivytys",
+      "none": "Ei mitään",
+      "transition": "Siirtymä",
+      "speed": "Nopeus",
+      "sound": "Ääni",
+      "video": "Video"
+    },
     "review": {
       "title": "Projektin tarkistus",
       "shared": "Jaettu kanssasi",

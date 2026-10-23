@@ -752,7 +752,6 @@
     "embed": "Manusta",
     "copyEmbedCode": "Kopeeri manustamiskood",
     "embedCodeCopied": "Manustamiskood kopeeritud",
-    "copyFailed": "Linki ei õnnestunud kopeerida",
     "options": "Valikud",
     "aiOverview": "Tehisintellekti ülevaade",
     "sendTip": "Saada jootraha",
@@ -780,7 +779,8 @@
     "unpinPost": "Tühista oma profiili kinnitamine",
     "postPinned": "Kinnitatud sinu profiilile",
     "postUnpinned": "Sinu profiili kinnitamine on tühistatud",
-    "pinFailed": "Seda postitust ei saanud kinnitada või eemaldada"
+    "pinFailed": "Seda postitust ei saanud kinnitada või eemaldada",
+    "copyFailed": "Linki ei õnnestunud kopeerida"
   },
   "filters": {
     "sort": "Sorteeri",
@@ -2422,6 +2422,30 @@
     "addDescription": "Lisa kirjeldus...",
     "communityDescription": "Kogukonna kirjeldus...",
     "posts": "Postitused",
+    "chat": {
+      "intervalHour": "1 tund",
+      "intervalHours": "{{count}} tundi",
+      "intervalMinute": "1 minut",
+      "intervalMinutes": "{{count}} minutit",
+      "intervalSecond": "1 sekund",
+      "intervalSeconds": "{{count}} sekundit",
+      "muted": "Oled vaigistatud",
+      "mutedUntil": "Oled vaigistatud kuni {{until}}",
+      "postingDisabled": "Sisestamine on liikmetele siin keelatud",
+      "pinnedGif": "GIF",
+      "pinnedMedia": "Meedia",
+      "jumpToPinned": "Hüppa kinnitatud sõnumi juurde",
+      "pinnedMessage": "Kinnitatud sõnum",
+      "unpin": "Tühista kinnitamine",
+      "pin": "PIN",
+      "delete": "Kustuta",
+      "slowMode": "Aeglane režiim: üks teade iga {{interval}} järel",
+      "slowModeWait": "Aeglane režiim — oodake {{time}}",
+      "send": "Saada",
+      "deleteMessageTitle": "Kas kustutada see sõnum?",
+      "deleteMessageBody": "Seda ei saa tagasi võtta.",
+      "cancel": "Tühista"
+    },
     "membersTab": "Liikmed ({{count}})",
     "about": "Teave",
     "backToCommunities": "Kogukonnad",
@@ -7009,7 +7033,14 @@
     }
   },
   "editor": {
-    "video": { "tFade": "Ristsulandus", "none": "Puudub", "transition": "Üleminek", "speed": "Kiirus", "sound": "Heli","video": "Video"},
+    "video": {
+      "tFade": "Ristsulandus",
+      "none": "Puudub",
+      "transition": "Üleminek",
+      "speed": "Kiirus",
+      "sound": "Heli",
+      "video": "Video"
+    },
     "review": {
       "title": "Projekti ülevaatus",
       "shared": "Sinuga jagatud",

@@ -752,7 +752,6 @@
     "embed": "એમ્બેડ",
     "copyEmbedCode": "એમ્બેડ કોડ કૉપિ કરો",
     "embedCodeCopied": "એમ્બેડ કોડ કૉપિ થયો",
-    "copyFailed": "લિંક કૉપિ થઈ શકી નહીં",
     "options": "વિકલ્પો",
     "aiOverview": "AI વિહંગાવલોકન",
     "sendTip": "ટિપ મોકલો",
@@ -780,7 +779,8 @@
     "unpinPost": "તમારી પ્રોફાઇલમાંથી અનપિન કરો",
     "postPinned": "તમારી પ્રોફાઇલ પર પિન કરેલ",
     "postUnpinned": "તમારી પ્રોફાઇલમાંથી અનપિન કરેલ",
-    "pinFailed": "આ પોસ્ટને પિન અથવા અનપિન કરી શકાતી નથી"
+    "pinFailed": "આ પોસ્ટને પિન અથવા અનપિન કરી શકાતી નથી",
+    "copyFailed": "લિંક કૉપિ થઈ શકી નહીં"
   },
   "filters": {
     "sort": "ક્રમ",
@@ -2435,6 +2435,30 @@
     "addDescription": "વર્ણન ઉમેરો...",
     "communityDescription": "સમુદાયનું વર્ણન...",
     "posts": "પોસ્ટ્સ",
+    "chat": {
+      "intervalHour": "1 કલાક",
+      "intervalHours": "{{count}} કલાક",
+      "intervalMinute": "1 મિનિટ",
+      "intervalMinutes": "{{count}} મિનિટ",
+      "intervalSecond": "1 સેકન્ડ",
+      "intervalSeconds": "{{count}} સેકંડ",
+      "muted": "તમે મૌન છો",
+      "mutedUntil": "તમે {{until}} સુધી મૌન છો",
+      "postingDisabled": "અહીં સભ્યો માટે પોસ્ટિંગ અક્ષમ છે",
+      "pinnedGif": "જીઐએફ",
+      "pinnedMedia": "મીડિયા",
+      "jumpToPinned": "પિન કરેલા સંદેશ પર જાઓ",
+      "pinnedMessage": "પિન કરેલો સંદેશ",
+      "unpin": "અનપિન કરો",
+      "pin": "પિન",
+      "delete": "કાઢી નાખો",
+      "slowMode": "ધીમો મોડ: દરેક {{interval}} પર એક સંદેશ",
+      "slowModeWait": "ધીમી સ્થિતિ — {{time}} રાહ જુઓ",
+      "send": "મોકલો",
+      "deleteMessageTitle": "આ સંદેશ કાઢી નાખો?",
+      "deleteMessageBody": "આને પૂર્વવત્ કરી શકાતું નથી.",
+      "cancel": "રદ કરો"
+    },
     "membersTab": "સભ્યો ({{count}})",
     "about": "વિશે",
     "backToCommunities": "સમુદાયો",
@@ -7013,7 +7037,14 @@
     }
   },
   "editor": {
-    "video": { "tFade": "ક્રોસ-ડિઝોલ્વ", "none": "કોઈ નહીં", "transition": "ટ્રાન્ઝિશન", "speed": "ઝડપ", "sound": "અવાજ","video": "વીડિયો"},
+    "video": {
+      "tFade": "ક્રોસ-ડિઝોલ્વ",
+      "none": "કોઈ નહીં",
+      "transition": "ટ્રાન્ઝિશન",
+      "speed": "ઝડપ",
+      "sound": "અવાજ",
+      "video": "વીડિયો"
+    },
     "review": {
       "title": "પ્રોજેક્ટ સમીક્ષા",
       "shared": "તમારી સાથે શેર કરેલું",

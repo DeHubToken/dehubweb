@@ -752,7 +752,6 @@
     "embed": "Saka",
     "copyEmbedCode": "Kwafi lambar sakawa",
     "embedCodeCopied": "An kwafi lambar sakawa",
-    "copyFailed": "Ba a iya kwafi hanyar haɗin ba",
     "options": "Zaɓuɓɓuka",
     "aiOverview": "AI bayyani",
     "sendTip": "Aika Kyauta",
@@ -780,7 +779,8 @@
     "unpinPost": "Unpin daga bayaninka",
     "postPinned": "Pinned zuwa bayaninka",
     "postUnpinned": "Unpinned daga bayanin martaba",
-    "pinFailed": "Ba zai iya PIN ko unpin wannan post"
+    "pinFailed": "Ba zai iya PIN ko unpin wannan post",
+    "copyFailed": "Ba a iya kwafi hanyar haɗin ba"
   },
   "filters": {
     "sort": "Tsara",
@@ -2436,6 +2436,28 @@
     "addDescription": "Ƙara bayani...",
     "communityDescription": "Bayanin al'umma...",
     "posts": "Wallafe-wallafe",
+    "chat": {
+      "intervalHour": "1 awa",
+      "intervalHours": "{{count}} awanni",
+      "intervalMinute": "Dakika 1",
+      "intervalMinutes": "{{count}} mintuna",
+      "intervalSecond": "1 na biyu",
+      "intervalSeconds": "{{count}} dakika",
+      "muted": "Kuna da muted",
+      "mutedUntil": "Kuna da muted har {{until}}",
+      "postingDisabled": "Posting yana da nakasa ga membobi a nan",
+      "pinnedMedia": "Kafofin watsa labarai",
+      "jumpToPinned": "Tsallake zuwa sakon pinned",
+      "pinnedMessage": "Pinned sakon",
+      "pin": "Pin",
+      "delete": "Share",
+      "slowMode": "Yanayin Slow: saƙo ɗaya kowane {{interval}}",
+      "slowModeWait": "Yanayin Slow — jira {{time}}",
+      "send": "Aika",
+      "deleteMessageTitle": "Share wannan sakon?",
+      "deleteMessageBody": "Ba za a iya cire wannan ba.",
+      "cancel": "Cancel"
+    },
     "membersTab": "Membobi ({{count}})",
     "about": "Game da",
     "backToCommunities": "Al'ummomi",
@@ -6932,7 +6954,14 @@
     }
   },
   "editor": {
-    "video": { "tFade": "Haɗuwa a hankali", "none": "Babu", "transition": "Sauyawa", "speed": "Gudu", "sound": "Sauti","video": "Bidiyo"},
+    "video": {
+      "tFade": "Haɗuwa a hankali",
+      "none": "Babu",
+      "transition": "Sauyawa",
+      "speed": "Gudu",
+      "sound": "Sauti",
+      "video": "Bidiyo"
+    },
     "review": {
       "title": "Bitar aiki",
       "shared": "An raba tare da kai",

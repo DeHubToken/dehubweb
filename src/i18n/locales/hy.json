@@ -752,7 +752,6 @@
     "embed": "Ներդնել",
     "copyEmbedCode": "Պատճենել ներդրման կոդը",
     "embedCodeCopied": "Ներդրման կոդը պատճենվեց",
-    "copyFailed": "Չհաջողվեց պատճենել հղումը",
     "options": "Entrankhner",
     "aiOverview": "ԱԻ ընդհանուր նկարագրություն",
     "sendTip": "Ougharkuhr tsoug",
@@ -780,7 +779,8 @@
     "unpinPost": "Հանեք ձեր պրոֆիլից",
     "postPinned": "Կցված է ձեր պրոֆիլին",
     "postUnpinned": "Հանվել է ձեր պրոֆիլից",
-    "pinFailed": "Չհաջողվեց կապել կամ անջատել այս գրառումը"
+    "pinFailed": "Չհաջողվեց կապել կամ անջատել այս գրառումը",
+    "copyFailed": "Չհաջողվեց պատճենել հղումը"
   },
   "filters": {
     "sort": "Dasavorel",
@@ -2436,6 +2436,30 @@
     "addDescription": "Ավելացրեք նկարագրություն...",
     "communityDescription": "Համայնքի նկարագրություն...",
     "posts": "Գրառումներ",
+    "chat": {
+      "intervalHour": "1 ժամ",
+      "intervalHours": "{{count}} ժամ",
+      "intervalMinute": "1 րոպե",
+      "intervalMinutes": "{{count}} րոպե",
+      "intervalSecond": "1 վայրկյան",
+      "intervalSeconds": "{{count}} վայրկյան",
+      "muted": "Դուք լռում եք",
+      "mutedUntil": "Դուք լռում եք մինչև {{until}}",
+      "postingDisabled": "Տեղադրումն անջատված է այստեղի անդամների համար",
+      "pinnedGif": "GIF",
+      "pinnedMedia": "Լրատվամիջոցներ",
+      "jumpToPinned": "Անցնել կապակցված հաղորդագրությանը",
+      "pinnedMessage": "Կապակցված հաղորդագրություն",
+      "unpin": "Ապամոնտաժել",
+      "pin": "PIN",
+      "delete": "Ջնջել",
+      "slowMode": "Դանդաղ ռեժիմ. մեկ հաղորդագրություն յուրաքանչյուր {{interval}}",
+      "slowModeWait": "Դանդաղ ռեժիմ — սպասեք {{time}}",
+      "send": "Ուղարկել",
+      "deleteMessageTitle": "Ջնջե ՞ լ այս հաղորդագրությունը",
+      "deleteMessageBody": "Սա չի կարող հետաձգվել:",
+      "cancel": "Չեղարկել"
+    },
     "membersTab": "Անդամներ ({{count}})",
     "about": "Մասին",
     "backToCommunities": "Համայնքներ",
@@ -7040,7 +7064,14 @@
     }
   },
   "editor": {
-    "video": { "tFade": "Խաչաձև մարում", "none": "Ոչ մեկը", "transition": "Անցում", "speed": "Արագություն", "sound": "Ձայն","video": "Տեսանյութ"},
+    "video": {
+      "tFade": "Խաչաձև մարում",
+      "none": "Ոչ մեկը",
+      "transition": "Անցում",
+      "speed": "Արագություն",
+      "sound": "Ձայն",
+      "video": "Տեսանյութ"
+    },
     "review": {
       "title": "Նախագծի վերանայում",
       "shared": "Ձեզ հետ համօգտագործված",

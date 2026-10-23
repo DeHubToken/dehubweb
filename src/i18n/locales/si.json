@@ -750,7 +750,6 @@
     "embed": "කාවැද්දීම",
     "copyEmbedCode": "කාවැද්දීමේ කේතය පිටපත් කරන්න",
     "embedCodeCopied": "කාවැද්දීමේ කේතය පිටපත් විය",
-    "copyFailed": "සබැඳිය පිටපත් කළ නොහැකි විය",
     "options": "විකල්ප",
     "aiOverview": "AI දළ විශ්ලේෂණය",
     "sendTip": "ටිප් එවන්න",
@@ -778,7 +777,8 @@
     "unpinPost": "ඔබේ පැතිකඩෙන් අස්ථාපනය කරන්න",
     "postPinned": "ඔබේ පැතිකඩට Pin කර ඇත",
     "postUnpinned": "ඔබේ පැතිකඩෙන් අහුරා නැත",
-    "pinFailed": "මෙම තනතුර සලකුණු කිරීමට හෝ අස්ථාපනය කිරීමට නොහැකි විය"
+    "pinFailed": "මෙම තනතුර සලකුණු කිරීමට හෝ අස්ථාපනය කිරීමට නොහැකි විය",
+    "copyFailed": "සබැඳිය පිටපත් කළ නොහැකි විය"
   },
   "filters": {
     "sort": "වර්ග කරන්න",
@@ -2429,6 +2429,29 @@
     "addDescription": "විස්තරයක් එක් කරන්න...",
     "communityDescription": "ප්‍රජා විස්තරය...",
     "posts": "පළකිරීම්",
+    "chat": {
+      "intervalHour": "පැය 1",
+      "intervalHours": "{{count}} පැය",
+      "intervalMinute": "මිනිත්තු 1",
+      "intervalMinutes": "{{count}} මිනිත්තු",
+      "intervalSecond": "තත්පර 1",
+      "intervalSeconds": "{{count}} තප්පර",
+      "muted": "ඔබ නිශ්ශබ්දයි",
+      "mutedUntil": "ඔබ {{until}} තෙක් නිශ්ශබ්ද වේ",
+      "postingDisabled": "මෙහි සාමාජිකයින් සඳහා තැපැල් කිරීම අක් ‍ රීය කර ඇත",
+      "pinnedMedia": "මාධ් ‍ ය",
+      "jumpToPinned": "PINED පණිවුඩය වෙත යන්න",
+      "pinnedMessage": "සලකුණු කළ පණිවිඩය",
+      "unpin": "අනන් ‍ ය කරන්න",
+      "pin": "PIN අංකය",
+      "delete": "මකන්න",
+      "slowMode": "හෙමින් මාදිලිය: එක් පණිවුඩයක් සෑම {{interval}}",
+      "slowModeWait": "සෙමින් මාදිලිය — {{time}} රැඳී සිටින්න",
+      "send": "යවන්න",
+      "deleteMessageTitle": "මෙම පණිවිඩය මකන්නද?",
+      "deleteMessageBody": "මෙය ආපසු හැරවිය නොහැක.",
+      "cancel": "අවලංගු කරන්න"
+    },
     "membersTab": "සාමාජිකයන් ({{count}})",
     "about": "පිළිබඳව",
     "backToCommunities": "ප්‍රජාවන්",
@@ -6974,7 +6997,14 @@
     }
   },
   "editor": {
-    "video": { "tFade": "මිශ්‍ර වී මැකීම", "none": "කිසිවක් නැත", "transition": "සංක්‍රාන්තිය", "speed": "වේගය", "sound": "ශබ්දය","video": "වීඩියෝ"},
+    "video": {
+      "tFade": "මිශ්‍ර වී මැකීම",
+      "none": "කිසිවක් නැත",
+      "transition": "සංක්‍රාන්තිය",
+      "speed": "වේගය",
+      "sound": "ශබ්දය",
+      "video": "වීඩියෝ"
+    },
     "review": {
       "title": "ව්‍යාපෘති සමාලෝචනය",
       "shared": "ඔබ සමඟ බෙදාගත්",

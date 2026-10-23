@@ -752,7 +752,6 @@
     "embed": "አካትት",
     "copyEmbedCode": "የማካተቻ ኮድ ቅዳ",
     "embedCodeCopied": "የማካተቻ ኮድ ተቀድቷል",
-    "copyFailed": "አገናኙን መቅዳት አልተቻለም",
     "options": "አማራጮች",
     "aiOverview": "የአይአይ አጠቃላይ እይታ",
     "sendTip": "ጥቆማ ላክ",
@@ -780,7 +779,8 @@
     "unpinPost": "ከመገለጫዎ ያስወግዱ",
     "postPinned": "ወደ መገለጫዎ ተጣብቋል",
     "postUnpinned": "ከመገለጫዎ ያልታሸገ",
-    "pinFailed": "ይህንን ልኡክ ጽሁፍ ማንሸራተት ወይም ማንሸራተት አልተቻለም"
+    "pinFailed": "ይህንን ልኡክ ጽሁፍ ማንሸራተት ወይም ማንሸራተት አልተቻለም",
+    "copyFailed": "አገናኙን መቅዳት አልተቻለም"
   },
   "filters": {
     "sort": "ደርድር",
@@ -2463,6 +2463,29 @@
     "addDescription": "መግለጫ ያክሉ...",
     "communityDescription": "የማህበረሰብ መግለጫ...",
     "posts": "ልጥፎች",
+    "chat": {
+      "intervalHour": "1 ሰዓት",
+      "intervalHours": "{{count}} ሰዓቶች",
+      "intervalMinute": "1 ደቂቃ",
+      "intervalMinutes": "{{count}} ደቂቃዎች",
+      "intervalSecond": "1 ሰከንድ",
+      "intervalSeconds": "{{count}} ሰከንዶች",
+      "muted": "አንተ ተለውጠሃል",
+      "mutedUntil": "እስከ {{until}} ድረስ ተለውጠዋል",
+      "postingDisabled": "መለጠፍ እዚህ ለአባላት ተሰናክሏል",
+      "pinnedMedia": "ሚዲያ",
+      "jumpToPinned": "ወደ የተንጠለጠለው መልእክት ዝለል",
+      "pinnedMessage": "Pinned መልዕክት",
+      "unpin": "አልተለጠፈም",
+      "pin": "ፒን",
+      "delete": "ሰርዝ",
+      "slowMode": "ቀርፋፋ ሁነታ: አንድ መልዕክት እያንዳንዱ {{interval}}",
+      "slowModeWait": "የዘገየ ሁነታ — ይጠብቁ {{time}}",
+      "send": "ላክ",
+      "deleteMessageTitle": "ይህን መልዕክት ሰርዝ?",
+      "deleteMessageBody": "ይህ ሊወገድ አይችልም ።",
+      "cancel": "ሰርዝ"
+    },
     "membersTab": "አባላት ({{count}})",
     "about": "ስለ",
     "backToCommunities": "ማህበረሰቦች",
@@ -7023,7 +7046,14 @@
     }
   },
   "editor": {
-    "video": { "tFade": "ደብዝዞ መቀላቀል", "none": "ምንም", "transition": "ሽግግር", "speed": "ፍጥነት", "sound": "ድምፅ","video": "ቪዲዮ"},
+    "video": {
+      "tFade": "ደብዝዞ መቀላቀል",
+      "none": "ምንም",
+      "transition": "ሽግግር",
+      "speed": "ፍጥነት",
+      "sound": "ድምፅ",
+      "video": "ቪዲዮ"
+    },
     "review": {
       "title": "የፕሮጀክት ግምገማ",
       "shared": "ለእርስዎ የተጋሩ",

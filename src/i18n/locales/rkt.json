@@ -743,7 +743,6 @@
     "embed": "এমবেড",
     "copyEmbedCode": "এমবেড কোড কপি করো",
     "embedCodeCopied": "এমবেড কোড কপি হইছে",
-    "copyFailed": "লিংক কপি করা গেইল না",
     "options": "অপশন",
     "aiOverview": "AI পর্যালোচনা",
     "sendTip": "টিপ পাঠাও",
@@ -766,6 +765,7 @@
     "postUrlCopied": "পোস্টের URL ক্লিপবোর্ডোত কপি হইছে",
     "boostPost": "পোস্ট Boost করেন",
     "postUnpinned": "তোমার প্রোফাইল থেকে আনপিন করা হয়েছে।",
+    "copyFailed": "লিংক কপি করা গেইল না",
     "reportPost": "পোস্ট রিপোর্ট করো",
     "muteConversation": "কথা মিউট করো"
   },
@@ -2508,6 +2508,18 @@
     "addDescription": "অ্যাড এ ডিসক্রিপশন...",
     "communityDescription": "সম্প্রদায়ের বিবরণ...",
     "posts": "পোস্টস",
+    "chat": {
+      "intervalHour": "১ ঘন্টা",
+      "intervalMinute": "১ মিনিট",
+      "intervalSecond": "১ সেকেন্ড",
+      "intervalSeconds": "{{count}} সেকেন্ড",
+      "muted": "আপনি নীরব আছেন",
+      "postingDisabled": "এখানে সদস্যদের জন্য পোস্টিং নিষ্ক্রিয় আছে",
+      "slowModeWait": "স্লো মোড — অপেক্ষা করো {{time}}",
+      "send": "পাঠাও",
+      "deleteMessageTitle": "এই বার্তা মুছবেন?",
+      "deleteMessageBody": "এটা ফিরিয়ে নেওয়া যায় না।"
+    },
     "membersTab": "সদস্য ({{count}})",
     "about": "পরিচিতি",
     "backToCommunities": "কমিউনিটিজ",
@@ -6353,7 +6365,14 @@
     }
   },
   "editor": {
-    "video": { "tFade": "মিশি যাওয়া", "none": "কিছু না", "transition": "ট্রানজিশন", "speed": "গতি", "sound": "শব্দ","video": "ভিডিও"},
+    "video": {
+      "tFade": "মিশি যাওয়া",
+      "none": "কিছু না",
+      "transition": "ট্রানজিশন",
+      "speed": "গতি",
+      "sound": "শব্দ",
+      "video": "ভিডিও"
+    },
     "review": {
       "title": "প্রকল্প পর্যালোচনা",
       "shared": "আপনার সাথে শেয়ার করা",

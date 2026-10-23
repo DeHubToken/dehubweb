@@ -227,11 +227,11 @@
   },
   "settings": {
     "usernameTaken": "یوزرنیم لیا جا چکا ہے",
-    "showDislikesDesc": "کوئی بھی آپ کی پروفائل پر ناپسند ٹیب کھول سکتا ہے۔ بند ہونے پر صرف آپ اسے دیکھ سکتے ہیں۔",
-    "showDislikes": "میری ناپسندیدگیاں سب کو دکھائیں",
     "postingChain": "پوسٹ کی بلاک چین",
     "showOnline": "جب میں آن لائن ہوں تو دکھائیں",
     "showOnlineDesc": "جن لوگوں کو آپ میسج کرتے ہیں انہیں DeHub استعمال کرتے وقت آپ کے نام کے ساتھ ایک سبز نقطہ نظر نظر آتا ہے",
+    "showDislikes": "میری ناپسندیدگیاں سب کو دکھائیں",
+    "showDislikesDesc": "کوئی بھی آپ کی پروفائل پر ناپسند ٹیب کھول سکتا ہے۔ بند ہونے پر صرف آپ اسے دیکھ سکتے ہیں۔",
     "smartReplies": "تجویز کردہ جوابات",
     "smartRepliesDesc": "دو جوابات تیار کرتا ہے جنہیں آپ چیٹ میں ٹیپ کر سکتے ہیں۔ تجاویز پر × اسے بند کر دیتا ہے۔",
     "title": "ترتیبات",
@@ -754,7 +754,6 @@
     "embed": "ایمبیڈ",
     "copyEmbedCode": "ایمبیڈ کوڈ کاپی کریں",
     "embedCodeCopied": "ایمبیڈ کوڈ کاپی ہو گیا",
-    "copyFailed": "لنک کاپی نہیں ہو سکا",
     "options": "اختیارات",
     "aiOverview": "AI کا مجموعی جائزہ",
     "sendTip": "ٹپ بھیجیں",
@@ -782,7 +781,8 @@
     "unpinPost": "اپنی پروفائل سے ان پن کریں",
     "postPinned": "آپ کے پروفائل پر پن کر دیا گیا ہے",
     "postUnpinned": "آپ کے پروفائل سے انپنڈ",
-    "pinFailed": "اس پوسٹ کو پن یا ان پن نہیں کیا جا سکا"
+    "pinFailed": "اس پوسٹ کو پن یا ان پن نہیں کیا جا سکا",
+    "copyFailed": "لنک کاپی نہیں ہو سکا"
   },
   "filters": {
     "sort": "ترتیب",
@@ -1520,7 +1520,6 @@
     "returnHome": "ہوم پر واپس جائیں"
   },
   "profile": {
-    "dislikes": { "loadMore": "مزید لوڈ کریں", "privateDesc": "یہ اکاؤنٹ اپنی ناپسندیدگیاں اپنے پاس رکھتا ہے۔", "privateTitle": "ناپسند نجی ہیں", "emptyOther": "ابھی کچھ نہیں۔", "emptyOwn": "جو پوسٹس آپ ناپسند کرتے ہیں وہ آپ کی فیڈ سے ہٹ جاتی ہیں اور یہاں دکھائی دیتی ہیں۔ پوسٹ واپس لانے کے لیے ناپسند ختم کریں۔", "emptyTitle": "ابھی کوئی ناپسند نہیں" },
     "back": "واپس",
     "usernameAvailable": "صارف نام دستیاب ہے!",
     "signUpToClaim": "حاصل کرنے کے لیے سائن اپ کریں",
@@ -1548,8 +1547,16 @@
       "commentUnavailable": "یہ تبصرہ اب دستیاب نہیں ہے"
     },
     "tabs": {
-      "dislikes": "ناپسند",
-      "playlists": "پلے لسٹس"
+      "playlists": "پلے لسٹس",
+      "dislikes": "ناپسند"
+    },
+    "dislikes": {
+      "emptyTitle": "ابھی کوئی ناپسند نہیں",
+      "emptyOwn": "جو پوسٹس آپ ناپسند کرتے ہیں وہ آپ کی فیڈ سے ہٹ جاتی ہیں اور یہاں دکھائی دیتی ہیں۔ پوسٹ واپس لانے کے لیے ناپسند ختم کریں۔",
+      "emptyOther": "ابھی کچھ نہیں۔",
+      "privateTitle": "ناپسند نجی ہیں",
+      "privateDesc": "یہ اکاؤنٹ اپنی ناپسندیدگیاں اپنے پاس رکھتا ہے۔",
+      "loadMore": "مزید لوڈ کریں"
     },
     "offerWorthNow": "موجودہ شرح پر تقریباً {{amount}} ٹوکن",
     "offerNotePlaceholder": "نوٹ شامل کریں (اختیاری)",
@@ -2444,6 +2451,29 @@
     "addDescription": "تفصیل شامل کریں...",
     "communityDescription": "کمیونٹی کی تفصیل...",
     "posts": "پوسٹس",
+    "chat": {
+      "intervalHour": "1 گھنٹہ",
+      "intervalHours": "{{count}} گھنٹے",
+      "intervalMinute": "1 منٹ",
+      "intervalMinutes": "{{count}} منٹ",
+      "intervalSecond": "1 سیکنڈ",
+      "intervalSeconds": "{{count}} سیکنڈز",
+      "muted": "آپ خاموش ہیں",
+      "mutedUntil": "آپ {{until}} تک خاموش ہیں",
+      "postingDisabled": "یہاں اراکین کے لیے پوسٹنگ غیر فعال ہے",
+      "pinnedMedia": "میڈیا",
+      "jumpToPinned": "پن کیے گئے پیغام پر جائیں",
+      "pinnedMessage": "پن شدہ پیغام",
+      "unpin": "ان پن کریں",
+      "pin": "پن",
+      "delete": "حذف کریں",
+      "slowMode": "سست موڈ: ہر {{interval}} پر ایک پیغام",
+      "slowModeWait": "سست موڈ — {{time}} کا انتظار کریں",
+      "send": "بھیجیں",
+      "deleteMessageTitle": "یہ پیغام حذف کریں ؟",
+      "deleteMessageBody": "اسے کالعدم نہیں کیا جا سکتا ۔",
+      "cancel": "منسوخ کریں"
+    },
     "membersTab": "اراکین ({{count}})",
     "about": "تعارف",
     "backToCommunities": "کمیونٹیز",
@@ -7044,7 +7074,14 @@
     }
   },
   "editor": {
-    "video": { "tFade": "گھل کر بدلنا", "none": "کوئی نہیں", "transition": "ٹرانزیشن", "speed": "رفتار", "sound": "آواز","video": "ویڈیو"},
+    "video": {
+      "tFade": "گھل کر بدلنا",
+      "none": "کوئی نہیں",
+      "transition": "ٹرانزیشن",
+      "speed": "رفتار",
+      "sound": "آواز",
+      "video": "ویڈیو"
+    },
     "review": {
       "title": "پروجیکٹ کا جائزہ",
       "shared": "آپ کے ساتھ اشتراک کردہ",

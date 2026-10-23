@@ -684,7 +684,6 @@
     "embed": "Embed",
     "copyEmbedCode": "Copy embed code",
     "embedCodeCopied": "Embed code don copy",
-    "copyFailed": "We no fit copy di link",
     "options": "Option Dem",
     "aiOverview": "AI overview",
     "sendTip": "Send Tip",
@@ -707,7 +706,8 @@
     "postUrlCopied": "Post URL don copy to clipboard",
     "boostPost": "Boost post",
     "bookmark": "Bookmark",
-    "removeBookmark": "Remove bookmark"
+    "removeBookmark": "Remove bookmark",
+    "copyFailed": "We no fit copy di link"
   },
   "filters": {
     "sort": "Arrange Am",
@@ -2264,6 +2264,27 @@
     "addDescription": "Add a description...",
     "communityDescription": "Community description...",
     "posts": "Posts",
+    "chat": {
+      "intervalHour": "1 hour",
+      "intervalHours": "{{count}} hours",
+      "intervalMinute": "1 minute",
+      "intervalMinutes": "{{count}} minutes",
+      "intervalSecond": "1 second",
+      "intervalSeconds": "{{count}} seconds",
+      "muted": "You dey mute",
+      "mutedUntil": "You dey mute till {{until}}",
+      "pinnedGif": "GIF",
+      "pinnedMedia": "Media",
+      "pinnedMessage": "Pinned message",
+      "unpin": "Unpin",
+      "pin": "Pin",
+      "delete": "Delete",
+      "slowMode": "Slow mode: one message every {{interval}}",
+      "slowModeWait": "Slow mode — wait {{time}}",
+      "send": "Send",
+      "deleteMessageBody": "Dis no fit be undone.",
+      "cancel": "Cancel"
+    },
     "membersTab": "Members ({{count}})",
     "about": "About",
     "backToCommunities": "Communities",
@@ -5913,7 +5934,14 @@
     }
   },
   "editor": {
-    "video": { "tFade": "Blend enter", "none": "Nothing", "transition": "Transition", "speed": "Speed", "sound": "Sound","video": "Video"},
+    "video": {
+      "tFade": "Blend enter",
+      "none": "Nothing",
+      "transition": "Transition",
+      "speed": "Speed",
+      "sound": "Sound",
+      "video": "Video"
+    },
     "review": {
       "title": "Check project",
       "shared": "Dem share am with you",

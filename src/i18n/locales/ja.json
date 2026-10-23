@@ -226,11 +226,11 @@
   },
   "settings": {
     "usernameTaken": "このユーザー名は使用済みです",
-    "showDislikesDesc": "誰でもプロフィールの「よくないね」タブを開けます。オフのときは自分だけが見られます。",
-    "showDislikes": "自分の「よくないね」を全員に表示",
     "postingChain": "投稿用ブロックチェーン",
     "showOnline": "オンライン中に表示する",
     "showOnlineDesc": "DeHubを使用している間、メッセージを送る相手に名前の横に緑色の点が表示されます",
+    "showDislikes": "自分の「よくないね」を全員に表示",
+    "showDislikesDesc": "誰でもプロフィールの「よくないね」タブを開けます。オフのときは自分だけが見られます。",
     "smartReplies": "返信の候補",
     "smartRepliesDesc": "チャットでタップできる返信を2つ用意します。候補の × でオフになります。",
     "title": "設定",
@@ -755,7 +755,6 @@
     "embed": "埋め込み",
     "copyEmbedCode": "埋め込みコードをコピー",
     "embedCodeCopied": "埋め込みコードをコピーしました",
-    "copyFailed": "リンクをコピーできませんでした",
     "options": "オプション",
     "aiOverview": "AIの概要",
     "sendTip": "チップを送る",
@@ -783,7 +782,8 @@
     "unpinPost": "プロフィールからピンを外す",
     "postPinned": "プロフィールにピン留めされました",
     "postUnpinned": "プロフィールからピンを外しました",
-    "pinFailed": "この投稿をピン留めまたはピン留め解除できませんでした"
+    "pinFailed": "この投稿をピン留めまたはピン留め解除できませんでした",
+    "copyFailed": "リンクをコピーできませんでした"
   },
   "filters": {
     "sort": "並べ替え",
@@ -1522,7 +1522,6 @@
     "returnHome": "ホームに戻る"
   },
   "profile": {
-    "dislikes": { "loadMore": "さらに読み込む", "privateDesc": "このアカウントは「よくないね」を公開していません。", "privateTitle": "「よくないね」は非公開です", "emptyOther": "まだ何もありません。", "emptyOwn": "「よくないね」した投稿はフィードから消え、ここに表示されます。取り消すと投稿が戻ります。", "emptyTitle": "まだ「よくないね」はありません" },
     "back": "戻る",
     "usernameAvailable": "ユーザー名が利用可能です！",
     "signUpToClaim": "登録して取得",
@@ -1550,8 +1549,16 @@
       "commentUnavailable": "このコメントはもう利用できません"
     },
     "tabs": {
-      "dislikes": "よくないね",
-      "playlists": "プレイリスト"
+      "playlists": "プレイリスト",
+      "dislikes": "よくないね"
+    },
+    "dislikes": {
+      "emptyTitle": "まだ「よくないね」はありません",
+      "emptyOwn": "「よくないね」した投稿はフィードから消え、ここに表示されます。取り消すと投稿が戻ります。",
+      "emptyOther": "まだ何もありません。",
+      "privateTitle": "「よくないね」は非公開です",
+      "privateDesc": "このアカウントは「よくないね」を公開していません。",
+      "loadMore": "さらに読み込む"
     },
     "offerWorthNow": "現在のレートで約 {{amount}} トークン",
     "offerNotePlaceholder": "メモを追加（任意）",
@@ -2443,6 +2450,29 @@
     "addDescription": "説明を追加...",
     "communityDescription": "コミュニティの説明...",
     "posts": "投稿",
+    "chat": {
+      "intervalHour": "1時間",
+      "intervalHours": "{{count}}時間",
+      "intervalMinute": "1分",
+      "intervalMinutes": "{{count}}分",
+      "intervalSecond": "1秒",
+      "intervalSeconds": "{{count}}秒",
+      "muted": "ミュートされています",
+      "mutedUntil": "{{until}}までミュートされています",
+      "postingDisabled": "ここのメンバーの投稿は無効になっています",
+      "pinnedMedia": "メディア",
+      "jumpToPinned": "ピン留めされたメッセージにジャンプ",
+      "pinnedMessage": "ピン留めされたメッセージ",
+      "unpin": "ピン留めを外す",
+      "pin": "ピン",
+      "delete": "削除",
+      "slowMode": "スローモード：{{interval}}ごとに1件のメッセージ",
+      "slowModeWait": "スローモード—待機{{time}}",
+      "send": "送信",
+      "deleteMessageTitle": "このメッセージを削除しますか？",
+      "deleteMessageBody": "これは元に戻せません。",
+      "cancel": "キャンセル"
+    },
     "membersTab": "メンバー（{{count}}）",
     "about": "概要",
     "backToCommunities": "コミュニティ",
@@ -7043,7 +7073,14 @@
     }
   },
   "editor": {
-    "video": { "tFade": "クロスディゾルブ", "none": "なし", "transition": "トランジション", "speed": "速度", "sound": "サウンド","video": "動画"},
+    "video": {
+      "tFade": "クロスディゾルブ",
+      "none": "なし",
+      "transition": "トランジション",
+      "speed": "速度",
+      "sound": "サウンド",
+      "video": "動画"
+    },
     "review": {
       "title": "プロジェクトレビュー",
       "shared": "あなたと共有",
