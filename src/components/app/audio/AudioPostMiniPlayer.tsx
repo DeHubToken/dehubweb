@@ -62,7 +62,7 @@ export function AudioPostMiniPlayer() {
       <div data-glass-mini-audio className="bg-black/60 backdrop-blur-[24px] border border-white/10 rounded-2xl shadow-2xl p-3">
         <div className="flex items-center gap-3">
           <div className="shrink-0 w-9 h-9 rounded-xl overflow-hidden bg-white/10 flex items-center justify-center">
-            {track.artworkUrl ? (
+            {track.artworkUrl && !track.artworkUrl.split('?')[0].endsWith('/placeholder.svg') ? (
               <img src={track.artworkUrl} alt="" className="w-full h-full object-cover" />
             ) : (
               <AudioLines className="w-4 h-4 text-white/60" />
