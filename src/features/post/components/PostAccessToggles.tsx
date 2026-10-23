@@ -5,7 +5,8 @@ import { DIRECT_TIP_TOKENS } from '@/lib/direct-tip-tokens';
 import { useState, useEffect, useMemo } from 'react';
 import { DhbAmount, DhbCoin } from '@/components/app/DhbAmount';
 import { useTranslation as useI18n } from 'react-i18next';
-import { Ticket, Shield, Hash, Save, Type, ShoppingBag, Baby } from "lucide-react";
+import { Ticket, Shield, Hash, Save, Type, ShoppingBag, Baby, Quote } from "lucide-react";
+import type { QuotePolicy } from "@/lib/api/dehub/types";
 import Gift from "@/components/ui/cut-icons/gifts";
 import Eye from "@/components/ui/cut-icons/visibility";
 import EyeOff from "@/components/ui/cut-icons/hidden";
@@ -83,6 +84,9 @@ interface PostAccessTogglesProps {
   /** Marks the post adult or graphic — see the row's copy for what that costs. */
   isMature: boolean;
   setIsMature: (value: boolean) => void;
+  /** Who may quote the post. The row is left out where this is not passed (a live stream). */
+  quotePolicy?: QuotePolicy;
+  setQuotePolicy?: (value: QuotePolicy) => void;
   isForKids: boolean;
   setIsForKids: (value: boolean) => void;
   /**
@@ -158,6 +162,8 @@ export function PostAccessToggles({
   setShowTitle,
   isMature,
   setIsMature,
+  quotePolicy = 'public',
+  setQuotePolicy,
   isForKids,
   setIsForKids,
   shopLinks,
@@ -707,6 +713,27 @@ export function PostAccessToggles({
             className="data-[state=checked]:bg-white scale-75"
             onClick={e => e.stopPropagation()}
           />
+        </label>
+        )}
+
+        {/* Who may quote the post — anyone, followers, or only the creator. */}
+        {setQuotePolicy && (
+        <label className="flex items-center justify-between py-0.5 gap-3">
+          <div className="flex items-center gap-2 min-w-0">
+            <Quote className="w-4 h-4 text-white shrink-0" />
+            <span className="text-sm text-white">{t('quotePolicy.label')}</span>
+          </div>
+          <select
+            value={quotePolicy}
+            onChange={(e) => setQuotePolicy(e.target.value as QuotePolicy)}
+            onClick={e => e.stopPropagation()}
+            aria-label={t('quotePolicy.label')}
+            className="rounded-lg border border-white/15 bg-black/40 px-2 py-1 text-xs text-white outline-none"
+          >
+            <option value="public">{t('quotePolicy.public')}</option>
+            <option value="followers">{t('quotePolicy.followers')}</option>
+            <option value="nobody">{t('quotePolicy.nobody')}</option>
+          </select>
         </label>
         )}
 
