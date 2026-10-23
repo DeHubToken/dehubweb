@@ -1790,6 +1790,8 @@
     "monthsAgo": "{{count}} k tagasi",
     "forLabel": "Kasutamine",
     "againstLabel": "vastu",
+    "lentBadgeCantVote": "Sinu erimärk on sulle laenatud ja laenatud erimärgid ei saa hääletada. Osta DHB, et teenida endale erimärk.",
+    "buyDhb": "Osta DHB",
     "discussion": {
       "title": "Arutelu",
       "intro": "Esita enne hääletamist täiendavaid küsimusi või aruta ettepanekut.",
@@ -4786,10 +4788,6 @@
     "creatorEarnsDirect": "Tellijad maksavad DeHubi žetoonides. Sinu osa jõuab Sinu rahakotti kohe, kui nad tellimuse tellivad, millest on maha arvatud platvormi tasu Sinu erimärgi taseme eest."
   },
   "liveOverlay": {
-    "level": "Tase {{level}}",
-    "streak_one": "{{count}}nädala triip",
-    "streak_other": "{{count}}nädala triip",
-    "tipJar": "Kinkepurk",
     "someone": "Keegi",
     "newFollower": "Uus jälgija: {{name}}",
     "newSubscriber": "Uus abonent: {{name}}",
@@ -4807,6 +4805,10 @@
     "pointsTitle": "Tõeliselt lojaalsed vaatajad",
     "points_one": "{{formatted}} punkt",
     "points_other": "{{formatted}} punkti",
+    "level": "Tase {{level}}",
+    "streak_one": "{{count}}nädala triip",
+    "streak_other": "{{count}}nädala triip",
+    "tipJar": "Kinkepurk",
     "poll": {
       "closed": "Hääletus lõppes",
       "voteFor": "Hääleta {{option}}",
@@ -4974,8 +4976,6 @@
       "join": "Liitu"
     },
     "kinds": {
-      "streamer_level": "Voogedastaja tase",
-      "tip_jar": "Kinkepurk",
       "tip_alert": "Jootraha hoiatus",
       "follow_alert": "Jälgi teadet",
       "subscribe_alert": "Abonendi hoiatus",
@@ -4995,11 +4995,11 @@
       "poll": "Küsitlus",
       "spin_wheel": "Tsentrifuugiratas",
       "subathon_timer": "Subathon kountdowntimer",
-      "points_board": "Tõeliselt lojaalsed vaatajad"
+      "points_board": "Tõeliselt lojaalsed vaatajad",
+      "streamer_level": "Voogedastaja tase",
+      "tip_jar": "Kinkepurk"
     },
     "hints": {
-      "streamer_level": "Sinu voogedastaja tase ja iganädalane triip sinu profiililt",
-      "tip_jar": "Purk, mis täidetakse, kui saabuvad tasulised kingitused",
       "tip_alert": "Tähistab igat oma tasemele vastavat jootraha",
       "follow_alert": "Kuvab iga uue jälgija",
       "subscribe_alert": "Kuvab iga uue tellija",
@@ -5019,14 +5019,16 @@
       "poll": "Sinu reaalajas küsitlus, hääletusnupp iga valiku jaoks",
       "spin_wheel": "Kus sinu reeglite rattad pöörlevad",
       "subathon_timer": "Kountdownt, mille lahutused, järgimised ja abonendid tagasi lükavad",
-      "points_board": "Teie parimad vaatajad punktide järgi vaatamisest ja lahutamisest"
+      "points_board": "Teie parimad vaatajad punktide järgi vaatamisest ja lahutamisest",
+      "streamer_level": "Sinu voogedastaja tase ja iganädalane triip sinu profiililt",
+      "tip_jar": "Purk, mis täidetakse, kui saabuvad tasulised kingitused"
     },
     "fields": {
-      "showStreak": "Kuva iganädalane triip",
       "style": "Stiil",
       "celebration": "Tähistamine",
       "banner": "Bänner",
       "minAmount": "Väikseim näpunäide (DHB)",
+      "showStreak": "Kuva iganädalane triip",
       "showMessage": "Näita jootraha sõnumit",
       "confirmedOnly": "Alles pärast makse kinnitamist",
       "confirmedOnlyHint": "Ootab paar sekundit keti jaoks, nii et jootraha, mida kunagi ei maksta, ei ilmu kunagi.",

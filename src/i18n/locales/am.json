@@ -1787,6 +1787,8 @@
     "monthsAgo": "ከ{{count}}ወ በፊት",
     "forLabel": "ለ",
     "againstLabel": "ተቃራኒ",
+    "lentBadgeCantVote": "ባጅዎ ለእርስዎ ተበድሯል ፣ እና የብድር ባጆች ድምጽ መስጠት አይችሉም ። የራስዎን ባጅ ለማግኘት DHB ን ይግዙ ።",
+    "buyDhb": "DHB ይግዙ",
     "discussion": {
       "title": "ውይይት",
       "intro": "የተከታታይ ጥያቄዎችን ይጠይቁ ወይም ከመምረጥዎ በፊት ሀሳቡን ይወያዩ ።",
@@ -4796,10 +4798,6 @@
     "creatorEarnsDirect": "ተመዝጋቢዎች በ DeHub ምልክቶች ውስጥ ይከፍላሉ ። የእርስዎ ድርሻ መሬቶች በኪስ ቦርሳዎ ውስጥ በሚመዘገቡበት ቅጽበት ፣ ለባጅ ደረጃዎ የመድረክ ክፍያ ያነሰ ።"
   },
   "liveOverlay": {
-    "streak_one": "የ{{count}} ሳምንት ተከታታይ",
-    "streak_other": "የ{{count}} ሳምንታት ተከታታይ",
-    "level": "ደረጃ {{level}}",
-    "tipJar": "የስጦታ ማሰሮ",
     "someone": "የሆነ ሰው",
     "newFollower": "አዲስ ተከታይ: {{name}}",
     "newSubscriber": "አዲስ ተመዝጋቢ: {{name}}",
@@ -4817,6 +4815,10 @@
     "pointsTitle": "በጣም ታማኝ ተመልካቾች",
     "points_one": "{{formatted}} ነጥብ",
     "points_other": "{{formatted}} ነጥቦች",
+    "level": "ደረጃ {{level}}",
+    "streak_one": "የ{{count}} ሳምንት ተከታታይ",
+    "streak_other": "የ{{count}} ሳምንታት ተከታታይ",
+    "tipJar": "የስጦታ ማሰሮ",
     "poll": {
       "closed": "ድምጽ ማሰማት ተዘግቷል",
       "voteFor": "ለ {{option}} ድምጽ ይስጡ",
@@ -4982,8 +4984,6 @@
       "join": "ይቀላቀሉ"
     },
     "kinds": {
-      "streamer_level": "የዥረት ደረጃ",
-      "tip_jar": "የስጦታ ማሰሮ",
       "tip_alert": "ጠቃሚ ምክር ማንቂያ",
       "follow_alert": "ማንቂያ ይከተሉ",
       "subscribe_alert": "የደንበኝነት ምዝገባ ማንቂያ",
@@ -5003,11 +5003,11 @@
       "poll": "ድምጽ",
       "spin_wheel": "መንኮራኩር ያሽከርክሩ",
       "subathon_timer": "Subathon ታይመር",
-      "points_board": "ታማኝ ተመልካቾች"
+      "points_board": "ታማኝ ተመልካቾች",
+      "streamer_level": "የዥረት ደረጃ",
+      "tip_jar": "የስጦታ ማሰሮ"
     },
     "hints": {
-      "streamer_level": "የእርስዎ ዥረት ደረጃ እና ሳምንታዊ ቁልል ፣ ከመገለጫዎ",
-      "tip_jar": "የተከፈለ ስጦታዎች ሲገቡ የሚሞላ ማሰሮ",
       "tip_alert": "እያንዳንዱን ጠቃሚ ምክር ያከብራል ፣ ወደ ደረጃው ይደርሳል",
       "follow_alert": "እያንዳንዱን አዲስ ተከታይ ያሳያል",
       "subscribe_alert": "እያንዳንዱን አዲስ ተመዝጋቢ ያሳያል",
@@ -5027,14 +5027,16 @@
       "poll": "የእርስዎ የቀጥታ ምርጫ, ለእያንዳንዱ አማራጭ የድምጽ አዝራር ጋር",
       "spin_wheel": "በእርስዎ ደንቦች ውስጥ ጎማዎች የሚሽከረከሩበት ቦታ",
       "subathon_timer": "ስጦታ፣ ተከታይ እና ምዝገባ ወደ ኋላ የሚገፋ ቆጠራ",
-      "points_board": "ከመመልከት እና ከስጦታ ነጥቦች ሊሉ ከፍተኛ ተመልካቾች"
+      "points_board": "ከመመልከት እና ከስጦታ ነጥቦች ሊሉ ከፍተኛ ተመልካቾች",
+      "streamer_level": "የእርስዎ ዥረት ደረጃ እና ሳምንታዊ ቁልል ፣ ከመገለጫዎ",
+      "tip_jar": "የተከፈለ ስጦታዎች ሲገቡ የሚሞላ ማሰሮ"
     },
     "fields": {
-      "showStreak": "የሳምንቱን ስክሪፕት አሳይ",
       "style": "ቅጥ",
       "celebration": "ክብረ በዓል",
       "banner": "ሰንደቅ",
       "minAmount": "ለማሳየት ትንሹ ጠቃሚ ምክር (DHB)",
+      "showStreak": "የሳምንቱን ስክሪፕት አሳይ",
       "showMessage": "ጠቃሚ መልዕክት አሳይ",
       "confirmedOnly": "ክፍያው ካረጋገጠ በኋላ ብቻ",
       "confirmedOnlyHint": "ለሰንሰለት ጥቂት ሰከንዶች ይጠብቃል ፣ ስለሆነም በጭራሽ የማይከፈልበት ጠቃሚ ምክር በጭራሽ አይታይም ።",

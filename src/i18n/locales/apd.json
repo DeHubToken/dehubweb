@@ -1759,6 +1759,8 @@
     "monthsAgo": "قبل {{count}}ش",
     "forLabel": "لـ",
     "againstLabel": "ضد",
+    "lentBadgeCantVote": "البادج بتاعك مُستعار ليك، والبادجات المستعارة ما بتقدر تصوت بيها. إشتري DHB عشان تكسب بادجك الخاص.",
+    "buyDhb": "اشتري DHB",
     "discussion": {
       "title": "مناقشة",
       "intro": "اسأل أسئلة متابعة أو ناقش الاقتراح قبل أن تصوت.",
@@ -4287,10 +4289,6 @@
     "creatorEarnsDirect": "المشتركين بيدفعوا برموز DeHub. نصيبك بيوصل لمحفظتك أول ما يشتركوا، بعد خصم رسوم المنصة حسب مستوى شارتك."
   },
   "liveOverlay": {
-    "level": "نiveau {{level}}",
-    "streak_one": "{{count}}-سنة متتالية",
-    "streak_other": "{{count}}-سنة متتالية",
-    "tipJar": "صندوق الهدايا",
     "someone": "مَن",
     "newSubscriber": "مشترك جديد: {{name}}",
     "subscribedTo": "{{name}} اشترك في {{plan}}",
@@ -4302,6 +4300,10 @@
     "pointsTitle": "أكثر المشاهدين وفاءً",
     "points_one": "{{formatted}} نقطة",
     "points_other": "{{formatted}} نقاط",
+    "level": "نiveau {{level}}",
+    "streak_one": "{{count}}-سنة متتالية",
+    "streak_other": "{{count}}-سنة متتالية",
+    "tipJar": "صندوق الهدايا",
     "poll": {
       "closed": "التصويت مغلق",
       "voteFor": "تصويت على {{option}}",
@@ -4455,8 +4457,6 @@
       "follow": "تابع"
     },
     "kinds": {
-      "streamer_level": "مستوى البث",
-      "tip_jar": "صندوق الهدايا",
       "tip_alert": "تنبيه نصي",
       "follow_alert": "تابع التحذير",
       "share_alert": "تنبيه المشاركة",
@@ -4468,11 +4468,11 @@
       "poll": "الاستطلاع",
       "spin_wheel": "عجلة الدوران",
       "subathon_timer": "عداد سباثون",
-      "points_board": "المشاهدين الوفيين"
+      "points_board": "المشاهدين الوفيين",
+      "streamer_level": "مستوى البث",
+      "tip_jar": "صندوق الهدايا"
     },
     "hints": {
-      "streamer_level": "مستوى البث و streak الأسبوعي من ملفك الشخصي",
-      "tip_jar": "صندوق يملأ مع كل هدية مدفوعة تاتي",
       "tip_alert": "بيحتفل بكل إكرامية، بحجمها حسب الفئة",
       "follow_alert": "بيعرض كل متابع جديد",
       "subscribe_alert": "بيعرض كل مشترك جديد",
@@ -4488,13 +4488,15 @@
       "poll": "استطلاعك المباشر، مع زر تصويت لكل خيار",
       "spin_wheel": "أين تدور العجلات في قواعدك",
       "subathon_timer": "تعداد تنازلي اللي الهدايا، المتابعات، والاشتراكات بتمدّه",
-      "points_board": "أعلى المشاهدين عندك حسب النقاط من المشاهدة والهدايا"
+      "points_board": "أعلى المشاهدين عندك حسب النقاط من المشاهدة والهدايا",
+      "streamer_level": "مستوى البث و streak الأسبوعي من ملفك الشخصي",
+      "tip_jar": "صندوق يملأ مع كل هدية مدفوعة تاتي"
     },
     "fields": {
-      "showStreak": "يظهر streak الأسبوعي",
       "celebration": "احتفال",
       "banner": "بَانِر",
       "minAmount": "أصغر نصيحة عشان تبين (DHB)",
+      "showStreak": "يظهر streak الأسبوعي",
       "showMessage": "ورِّي رسالة النصيحة",
       "confirmedOnly": "بس بعد ما الدفع يتأكد",
       "duration": "ثواني على الشاشة",

@@ -1790,6 +1790,8 @@
     "monthsAgo": "miezi {{count}} iliyopita",
     "forLabel": "Kwa",
     "againstLabel": "Dhidi ya",
+    "lentBadgeCantVote": "Beji yako imekopeshwa kwako, na beji za mkopo haziwezi kupiga kura. Nunua DHB ili upate beji yako mwenyewe.",
+    "buyDhb": "Nunua DHB",
     "discussion": {
       "title": "Majadiliano",
       "intro": "Uliza maswali ya kufuatilia au jadili pendekezo kabla ya kupiga kura.",
@@ -4800,10 +4802,6 @@
     "creatorEarnsDirect": "Wasajili hulipa kwa ishara za DeHub. Gawio lako linatua kwenye mkoba wako pindi wanapojisajili, punguza ada ya tovuti ya kiwango cha beji yako."
   },
   "liveOverlay": {
-    "level": "Ngazi {{level}}",
-    "streak_one": "{{count}}-week streak",
-    "streak_other": "{{count}}-week streak",
-    "tipJar": "Chombo cha zawadi",
     "someone": "Mtu",
     "newFollower": "Mfuasi mpya: {{name}}",
     "newSubscriber": "Mteja mpya: {{name}}",
@@ -4821,6 +4819,10 @@
     "pointsTitle": "Wakusudi wa watazamaji wakuu",
     "points_one": "{{formatted}} pointi",
     "points_other": "{{formatted}} pointi",
+    "level": "Ngazi {{level}}",
+    "streak_one": "{{count}}-week streak",
+    "streak_other": "{{count}}-week streak",
+    "tipJar": "Chombo cha zawadi",
     "poll": {
       "closed": "Kura imefungwa",
       "voteFor": "Piga kura kwa {{option}}",
@@ -4988,8 +4990,6 @@
       "join": "Jiunge"
     },
     "kinds": {
-      "streamer_level": "Kiwango cha mtiririko",
-      "tip_jar": "Chombo cha zawadi",
       "tip_alert": "Arifa ya kidokezi",
       "follow_alert": "Fuata arifa",
       "subscribe_alert": "Arifa ya msajili",
@@ -5009,11 +5009,11 @@
       "poll": "Kura",
       "spin_wheel": "Gurudumu la mzunguko",
       "subathon_timer": "Miongozo ya Subathon",
-      "points_board": "Wakusudi wa watazamaji"
+      "points_board": "Wakusudi wa watazamaji",
+      "streamer_level": "Kiwango cha mtiririko",
+      "tip_jar": "Chombo cha zawadi"
     },
     "hints": {
-      "streamer_level": "Kiwango chako cha mtiririko na mfululizo wa kila wiki, kutoka kwenye wasifu wako",
-      "tip_jar": "Chupa inayojaza kama zawadi zinazolipwa zinaingia",
       "tip_alert": "Husherehekea kila kiinua mgongo, kulingana na kiwango chake",
       "follow_alert": "Inaonyesha kila mfuasi mpya",
       "subscribe_alert": "Inaonyesha kila msajili mpya",
@@ -5032,14 +5032,16 @@
       "poll": "Kura yako ya moja kwa moja, ikiwa na kitufe cha kupiga kura kwa kila chaguo",
       "spin_wheel": "Ambapo magurudumu katika sheria zako huzunguka",
       "subathon_timer": "Kutaja ambayo hiba, kufuata na usajili wa msaada unazidi muda",
-      "points_board": "Watazamaji wenu bora kwa nafasi kutokana na kuwatazama na kuhiba"
+      "points_board": "Watazamaji wenu bora kwa nafasi kutokana na kuwatazama na kuhiba",
+      "streamer_level": "Kiwango chako cha mtiririko na mfululizo wa kila wiki, kutoka kwenye wasifu wako",
+      "tip_jar": "Chupa inayojaza kama zawadi zinazolipwa zinaingia"
     },
     "fields": {
-      "showStreak": "Onyesha safu ya kila wiki",
       "style": "Mtindo",
       "celebration": "Sherehe",
       "banner": "Bango",
       "minAmount": "Kidokezi kidogo zaidi cha kuonyesha (DHB)",
+      "showStreak": "Onyesha safu ya kila wiki",
       "showMessage": "Onyesha ujumbe wa kiinua mgongo",
       "confirmedOnly": "Ni baada tu ya malipo kuthibitisha",
       "confirmedOnlyHint": "Inasubiri sekunde chache kwa mnyororo, kwa hivyo bakshishi ambayo hailipwi kamwe haionekani.",

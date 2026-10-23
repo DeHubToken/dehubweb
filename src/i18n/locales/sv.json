@@ -1793,6 +1793,8 @@
     "monthsAgo": "{{count}} månader sedan",
     "forLabel": "För",
     "againstLabel": "Antal röster emot:",
+    "lentBadgeCantVote": "Din badge är utlånad till dig, och utlånade badges kan inte rösta. Köp DHB för att tjäna ditt eget märke.",
+    "buyDhb": "Köp DHB",
     "discussion": {
       "title": "Diskussion",
       "intro": "Ställ följdfrågor eller diskutera förslaget innan du röstar.",
@@ -4741,10 +4743,6 @@
     "creatorEarnsDirect": "Prenumeranter betalar i DeHub-tokens. Din andel hamnar i din plånbok så fort de prenumererar, minus plattformsavgiften för din märkesnivå."
   },
   "liveOverlay": {
-    "level": "Nivå {{level}}",
-    "streak_one": "{{count}}-veckor",
-    "streak_other": "{{count}}-veckor",
-    "tipJar": "Presentburk",
     "someone": "Någon",
     "newFollower": "Ny följare: {{name}}",
     "newSubscriber": "Ny prenumerant: {{name}}",
@@ -4762,6 +4760,10 @@
     "pointsTitle": "De mest lojala tittarna",
     "points_one": "{{formatted}} poäng",
     "points_other": "{{formatted}} poäng",
+    "level": "Nivå {{level}}",
+    "streak_one": "{{count}}-veckor",
+    "streak_other": "{{count}}-veckor",
+    "tipJar": "Presentburk",
     "poll": {
       "closed": "Röstningen är avslutad",
       "voteFor": "Rösta på {{option}}",
@@ -4929,8 +4931,6 @@
       "join": "Gå med"
     },
     "kinds": {
-      "streamer_level": "Streamernivå",
-      "tip_jar": "Presentburk",
       "tip_alert": "Dricksvarning",
       "follow_alert": "Följ varning",
       "subscribe_alert": "Prenumerantvarning",
@@ -4950,11 +4950,11 @@
       "poll": "Omröstning",
       "spin_wheel": "Spinnhjul",
       "subathon_timer": "Subathon-timer",
-      "points_board": "Lojala tittare"
+      "points_board": "Lojala tittare",
+      "streamer_level": "Streamernivå",
+      "tip_jar": "Presentburk"
     },
     "hints": {
-      "streamer_level": "Din streamernivå och veckosträcka, från din profil",
-      "tip_jar": "En burk som fylls när betalda gåvor kommer in",
       "tip_alert": "Firar varje dricks, storleksanpassad till sin nivå",
       "follow_alert": "Visar varje ny följare",
       "subscribe_alert": "Visar varje ny prenumerant",
@@ -4974,14 +4974,16 @@
       "poll": "Din live-omröstning, med en röstknapp för varje alternativ",
       "spin_wheel": "Där hjulen i dina regler snurrar",
       "subathon_timer": "En nedräkning som gåvor, följare och prenumerationer skjuter tillbaka",
-      "points_board": "Dina främsta tittare baserat på poäng från tittande och givande"
+      "points_board": "Dina främsta tittare baserat på poäng från tittande och givande",
+      "streamer_level": "Din streamernivå och veckosträcka, från din profil",
+      "tip_jar": "En burk som fylls när betalda gåvor kommer in"
     },
     "fields": {
-      "showStreak": "Visa veckosträckan",
       "style": "Stil",
       "celebration": "Firande",
       "banner": "Banner",
       "minAmount": "Minsta spets att visa (DHB)",
+      "showStreak": "Visa veckosträckan",
       "showMessage": "Visa TIP-meddelandet",
       "confirmedOnly": "Först efter att betalningen bekräftats",
       "confirmedOnlyHint": "Väntar några sekunder på kedjan, så ett tips som aldrig betalas visas aldrig.",

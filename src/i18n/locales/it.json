@@ -1794,6 +1794,8 @@
     "monthsAgo": "{{count}}me fa",
     "forLabel": "Per",
     "againstLabel": "Contro",
+    "lentBadgeCantVote": "Il tuo badge ti viene prestato e i badge prestati non possono votare. Acquista DHB per ottenere il tuo badge.",
+    "buyDhb": "Acquista DHB",
     "discussion": {
       "title": "Discussione",
       "intro": "Poni domande di follow-up o discuti la proposta prima di votare.",
@@ -4804,10 +4806,6 @@
     "creatorEarnsDirect": "Gli abbonati pagano in token DeHub. La tua quota arriva nel tuo portafoglio nel momento in cui si iscrivono, meno la commissione della piattaforma per il tuo livello di badge."
   },
   "liveOverlay": {
-    "level": "Livello {{level}}",
-    "streak_one": "{{count}}-seriedi settimane",
-    "streak_other": "{{count}}-seriedi settimane",
-    "tipJar": "Vaso regalo",
     "someone": "Qualcuno",
     "newFollower": "Nuovo follower: {{name}}",
     "newSubscriber": "Nuovo abbonato: {{name}}",
@@ -4825,6 +4823,10 @@
     "pointsTitle": "I tuoi spettatori più fedeli",
     "points_one": "{{formatted}} punto",
     "points_other": "{{formatted}} punti",
+    "level": "Livello {{level}}",
+    "streak_one": "{{count}}-seriedi settimane",
+    "streak_other": "{{count}}-seriedi settimane",
+    "tipJar": "Vaso regalo",
     "poll": {
       "closed": "Votazione chiusa",
       "voteFor": "Vota per {{option}}",
@@ -4991,8 +4993,6 @@
       "join": "Unisciti"
     },
     "kinds": {
-      "streamer_level": "Livello streamer",
-      "tip_jar": "Vaso regalo",
       "tip_alert": "Avviso mancia",
       "follow_alert": "Avviso follow",
       "subscribe_alert": "Avviso abbonato",
@@ -5012,11 +5012,11 @@
       "poll": "Sondaggio",
       "spin_wheel": "Ruota girevole",
       "subathon_timer": "Timer Subathon",
-      "points_board": "Spettatori fedeli"
+      "points_board": "Spettatori fedeli",
+      "streamer_level": "Livello streamer",
+      "tip_jar": "Vaso regalo"
     },
     "hints": {
-      "streamer_level": "Il tuo livello di streamer e la tua serie settimanale, dal tuo profilo",
-      "tip_jar": "Un barattolo che si riempie quando arrivano i regali pagati",
       "tip_alert": "Celebra ogni mancia, dimensionata al suo livello",
       "follow_alert": "Mostra ogni nuovo follower",
       "subscribe_alert": "Mostra ogni nuovo abbonato",
@@ -5036,14 +5036,16 @@
       "poll": "Il tuo sondaggio dal vivo, con un pulsante di voto per ogni opzione",
       "spin_wheel": "Dove girano le ruote nelle tue regole",
       "subathon_timer": "Un countdown che i doni, i follow e le iscrizioni fanno avanzare",
-      "points_board": "I tuoi primi spettatori per punti ottenuti guardando e donando"
+      "points_board": "I tuoi primi spettatori per punti ottenuti guardando e donando",
+      "streamer_level": "Il tuo livello di streamer e la tua serie settimanale, dal tuo profilo",
+      "tip_jar": "Un barattolo che si riempie quando arrivano i regali pagati"
     },
     "fields": {
-      "showStreak": "Mostra la serie settimanale",
       "style": "Stile",
       "celebration": "Celebrazione",
       "banner": "Banner",
       "minAmount": "Punta più piccola da mostrare (DHB)",
+      "showStreak": "Mostra la serie settimanale",
       "showMessage": "Mostra il messaggio della mancia",
       "confirmedOnly": "Solo dopo la conferma del pagamento",
       "confirmedOnlyHint": "Attende qualche secondo la catena, quindi non compare mai una mancia che non viene mai pagata.",

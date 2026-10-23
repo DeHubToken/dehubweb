@@ -1788,6 +1788,8 @@
     "monthsAgo": "{{count}}mo ago",
     "forLabel": "Pentru,",
     "againstLabel": "împotriva",
+    "lentBadgeCantVote": "Insigna dvs. vă este împrumutată, iar insignele împrumutate nu pot vota. Cumpărați DHB pentru a vă câștiga propria insignă.",
+    "buyDhb": "Cumpărați DHB",
     "discussion": {
       "title": "Discuție",
       "intro": "Puneți întrebări ulterioare sau discutați propunerea înainte de a vota.",
@@ -4800,10 +4802,6 @@
     "creatorEarnsDirect": "Abonații plătesc în jetoane DeHub. Cota ta ajunge în portofel în momentul în care se abonează, mai puțin taxa de platformă pentru nivelul insignei."
   },
   "liveOverlay": {
-    "level": "Nivel {{level}}",
-    "streak_one": "{{count}}-seară de streak",
-    "streak_other": "{{count}}-seară de streak",
-    "tipJar": "Pahar de cadouri",
     "someone": "Cineva",
     "newFollower": "Urmăritor nou: {{name}}",
     "newSubscriber": "Abonat nou: {{name}}",
@@ -4821,6 +4819,10 @@
     "pointsTitle": "Cele mai loiale vizionare",
     "points_one": "{{formatted}} punct",
     "points_other": "{{formatted}} puncte",
+    "level": "Nivel {{level}}",
+    "streak_one": "{{count}}-seară de streak",
+    "streak_other": "{{count}}-seară de streak",
+    "tipJar": "Pahar de cadouri",
     "poll": {
       "closed": "Votare închisă",
       "voteFor": "Vote pentru {{option}}",
@@ -4988,8 +4990,6 @@
       "join": "Alătură-te"
     },
     "kinds": {
-      "streamer_level": "Nivelul streamerului",
-      "tip_jar": "Pahar de cadouri",
       "tip_alert": "Alertă de sugestie",
       "follow_alert": "Alertă de urmărire",
       "subscribe_alert": "Alertă de abonat",
@@ -5009,11 +5009,11 @@
       "poll": "Sondaj",
       "spin_wheel": "Roată de rotire",
       "subathon_timer": "Timer Subathon",
-      "points_board": "Vizionari loiali"
+      "points_board": "Vizionari loiali",
+      "streamer_level": "Nivelul streamerului",
+      "tip_jar": "Pahar de cadouri"
     },
     "hints": {
-      "streamer_level": "Nivelul tău de streamer și streak-ul săptămânal, din profilul tău",
-      "tip_jar": "Un pahar care se umple pe măsură ce cadouri plătite sosesc",
       "tip_alert": "Celebrează fiecare sugestie, dimensionată în funcție de nivelul său",
       "follow_alert": "Afișează fiecare nou urmăritor",
       "subscribe_alert": "Afișează fiecare nou abonat",
@@ -5033,14 +5033,16 @@
       "poll": "Sondajul dvs. live, cu un buton de vot pentru fiecare opțiune",
       "spin_wheel": "Unde se învârt roțile din regulile tale",
       "subathon_timer": "O countdown pe care darurile, urmăririle și abonamentele le respinge",
-      "points_board": "Topul vizionarilor tăi după puncte obținute prin privire și dăruire"
+      "points_board": "Topul vizionarilor tăi după puncte obținute prin privire și dăruire",
+      "streamer_level": "Nivelul tău de streamer și streak-ul săptămânal, din profilul tău",
+      "tip_jar": "Un pahar care se umple pe măsură ce cadouri plătite sosesc"
     },
     "fields": {
-      "showStreak": "Arată streak-ul săptămânal",
       "style": "Stil",
       "celebration": "Celebration",
       "banner": "Banner",
       "minAmount": "Cel mai mic banchet (DHB)",
+      "showStreak": "Arată streak-ul săptămânal",
       "showMessage": "Arată mesajul banchetului",
       "confirmedOnly": "Doar după confirmarea plății",
       "confirmedOnlyHint": "Așteaptă câteva secunde pentru a se finaliza tranzacția, astfel încât un banchet care nu este niciodată plătit să nu apară niciodată.",
@@ -8560,12 +8562,6 @@
     "like": "Îmi place",
     "unlike": "Elimină aprecierile"
   },
-  "footer": {
-    "about": "Despre noi",
-    "contact": "Contact",
-    "privacy": "Politica de confidențialitate",
-    "terms": "Termeni și condiții"
-  },
   "postProcessing": {
     "uploading": "Se încarcă…",
     "preparing": "Se pregătește…",
@@ -8574,5 +8570,11 @@
     "posted": "Publicat",
     "view": "Vezi",
     "failed": "Videoclipul nu a putut fi procesat"
+  },
+  "footer": {
+    "about": "Despre noi",
+    "contact": "Contact",
+    "privacy": "Politica de confidențialitate",
+    "terms": "Termeni și condiții"
   }
 }
