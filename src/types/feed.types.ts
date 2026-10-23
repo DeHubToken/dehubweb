@@ -11,6 +11,7 @@ import type { User } from './app.types';
 import type { PostReaction, ReactionCounts } from '@/lib/reactions';
 import type { ContentRating, ShopLink } from '@/lib/api/dehub/types';
 import type { SubscriberPlan } from '@/lib/content-gate';
+import type { Storyboard } from '@/lib/storyboard';
 
 /**
  * Content type badge variants for universal card headers
@@ -166,6 +167,8 @@ export interface VideoItem extends BaseFeedItem {
   /** Async video transcode state, written optimistically before the CDN file
    *  exists. Absent on posts predating this field — treat as 'done'. */
   transcodingStatus?: 'pending' | 'on' | 'done' | 'failed';
+  /** Seek-preview sprite sheet — see lib/storyboard. */
+  storyboard?: Storyboard;
   /** Off-chain slug — the post presents as /newpost/<newPostId> until minted. */
   newPostId?: number;
   /** Creator's user ID for navigation */
@@ -481,6 +484,8 @@ export interface ShortVideo extends BaseFeedItem {
   /** Async video transcode state, written optimistically before the CDN file
    *  exists. Absent on posts predating this field — treat as 'done'. */
   transcodingStatus?: 'pending' | 'on' | 'done' | 'failed';
+  /** Seek-preview sprite sheet — see lib/storyboard. */
+  storyboard?: Storyboard;
   /**
    * The post's own title, kept apart from `description`.
    *

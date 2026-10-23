@@ -38,6 +38,7 @@ import { useIsMobile } from '@/hooks/use-mobile';
 import { videoItemToShort } from '@/lib/short-video';
 import { useTapGestures } from '@/hooks/use-tap-gestures';
 import { useVideoScrubZone } from '@/hooks/use-video-scrub-zone';
+import { StoryboardPreview } from '@/components/app/video/StoryboardPreview';
 import { TapReactionBurst } from '@/components/app/cards/TapReactionBurst';
 import { useIsWatchedVideo } from '@/hooks/use-watched-videos';
 import { useVideoProcessingStatus } from '@/hooks/use-video-processing-status';
@@ -908,6 +909,8 @@ export const VideoCard = memo(function VideoCard({ video, postPage = false, onBa
   const transcodingStatus = useVideoProcessingStatus(video.id, video.transcodingStatus, surfaceActive && playbackAllowed, containerRef);
   const controlsTimerRef = useRef<NodeJS.Timeout | null>(null);
   const scrubbingRef = useRef(false);
+  /** Mirrors scrubbingRef for render: the storyboard tile shows while it is true. */
+  const [scrubbing, setScrubbing] = useState(false);
   const isHoveringRef = useRef(false);
   
   // View tracking - fires view after watching threshold
@@ -1867,6 +1870,7 @@ export const VideoCard = memo(function VideoCard({ video, postPage = false, onBa
 
   const finishScrubbing = useCallback(() => {
     scrubbingRef.current = false;
+    setScrubbing(false);
     hiddenScrubStart.current = null;
     if (controlsTimerRef.current) clearTimeout(controlsTimerRef.current);
     controlsTimerRef.current = setTimeout(() => setShowControls(false), CONTROLS_HIDE_MS);
@@ -1880,6 +1884,7 @@ export const VideoCard = memo(function VideoCard({ video, postPage = false, onBa
     duration,
     onStart: () => {
       scrubbingRef.current = true;
+      setScrubbing(true);
       setShowControls(true);
       if (controlsTimerRef.current) clearTimeout(controlsTimerRef.current);
     },
@@ -2776,6 +2781,14 @@ export const VideoCard = memo(function VideoCard({ video, postPage = false, onBa
 
             {bareControls && <div data-video-scrub-surface className="absolute bottom-0 left-0 right-0 h-16 touch-pan-y" />}
 
+            <StoryboardPreview
+              storyboard={isContentGated ? undefined : video.storyboard}
+              fraction={currentTime / (duration || 1)}
+              duration={duration}
+              visible={scrubbing}
+              armed={showControls}
+            />
+
             <div data-video-button-row className="flex items-center justify-between gap-1 px-2">
               <div data-video-transport className="flex items-center gap-1">
                 {splitControls && <button data-video-bare type="button"
@@ -2910,6 +2923,7 @@ export const VideoCard = memo(function VideoCard({ video, postPage = false, onBa
                   if (bareControls) return;
                   event.stopPropagation();
                   scrubbingRef.current = true;
+                  setScrubbing(true);
                   hiddenScrubStart.current = controlsVisible ? null : { x: event.clientX, y: event.clientY };
                   if (controlsTimerRef.current) clearTimeout(controlsTimerRef.current);
                 }}

@@ -7,6 +7,7 @@ import { formatDuration, formatViews, formatTimeAgo } from '@/lib/feed-utils';
 import type { DeHubNFT } from '@/lib/api/dehub';
 import { resolveDislikeCount, resolveLikeCount, resolveMyReaction, resolveReactionCounts, resolveViewCount } from '@/lib/engagement';
 import type { VideoItem, ImagePost, TextPost, FeedItem } from '@/types/feed.types';
+import { toStoryboard } from '@/lib/storyboard';
 
 function detectPostType(nft: DeHubNFT): 'video' | 'image' | 'text' {
   const postType = (nft.postType || nft.media_type) as string | undefined;
@@ -33,6 +34,7 @@ function mapNFTToVideoItem(nft: DeHubNFT): VideoItem {
     thumbnail,
     videoUrl: videoUrl || nft.videoUrl || undefined,
     transcodingStatus: nft.transcodingStatus,
+    storyboard: toStoryboard(nft.storyboard),
     duration: formatDuration(nft.videoDuration || nft.duration),
     title: nft.name || nft.title || nft.description?.split('\n')[0] || '',
     description: nft.description || undefined,

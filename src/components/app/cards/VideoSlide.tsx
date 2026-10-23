@@ -28,6 +28,7 @@ import { useResolvedThumbnail } from '@/lib/thumbnail-fallback';
 import { useTapGestures } from '@/hooks/use-tap-gestures';
 import { useTranslation } from 'react-i18next';
 import { TapReactionBurst } from '@/components/app/cards/TapReactionBurst';
+import { StoryboardPreview } from '@/components/app/video/StoryboardPreview';
 const TranscodeRetry = lazy(() => import('./TranscodeRetry').then(m => ({ default: m.TranscodeRetry })));
 import { useVideoProcessingStatus } from '@/hooks/use-video-processing-status';
 import { useHandoffVideo } from '@/hooks/use-handoff-video';
@@ -446,6 +447,14 @@ const VideoSlideBody = memo(function VideoSlideBody({
       <div
         className="absolute inset-0 origin-left bg-white/80"
         style={{ transform: `scaleX(${Math.min(1, Math.max(0, progress))})` }}
+      />
+      {/* Read only while a scrub is re-rendering this on every move. */}
+      <StoryboardPreview
+        storyboard={short.storyboard}
+        fraction={progress}
+        duration={isSeeking ? videoRef.current?.duration || 0 : 0}
+        visible={isSeeking}
+        armed={isActive}
       />
     </div>
   );
