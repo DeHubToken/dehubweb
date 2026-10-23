@@ -270,7 +270,7 @@ function InlineVideoCard({ video, onSeeAll }: { video: VideoItem; onSeeAll: () =
   };
 
   return (
-    <div className="flex-shrink-0 w-[280px] text-left group rounded-xl border border-white/[0.12] bg-white/[0.03] p-2">
+    <div data-glass-media-card className="flex-shrink-0 w-[280px] text-left group rounded-xl border border-white/[0.12] bg-white/[0.03] p-2">
       <div 
         onClick={handleContainerClick}
         className="aspect-video rounded-xl overflow-hidden bg-zinc-800 mb-2 relative cursor-pointer"
@@ -459,7 +459,7 @@ function AudioUploadsCarousel({ audioItems, isLoading }: { audioItems: VideoItem
             className="flex gap-3 overflow-x-auto scrollbar-hide pr-8"
           >
             {visibleItems.map((item) => (
-              <div key={item.id} className="flex-shrink-0 w-[280px] rounded-xl border border-white/[0.12] bg-white/[0.03] p-2">
+              <div data-glass-audio-tile key={item.id} className="flex-shrink-0 w-[280px] rounded-xl border border-white/[0.12] bg-white/[0.03] p-2">
                 <VideoCard video={item} hideActions />
               </div>
             ))}

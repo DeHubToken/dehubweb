@@ -41,6 +41,7 @@ import { supabase } from '@/integrations/supabase/client';
 import { useEffect, useState } from 'react';
 import { toast } from 'sonner';
 import { PLAYBACK_RATES } from '@/lib/video-preferences';
+import { requestPlaybackAudioSession } from '@/lib/audio-session';
 import {
   claimMediaSession,
   releaseMediaSession,
@@ -190,6 +191,27 @@ let forcingDuration = false;
 /** A scrub that arrived before a duration was known, applied once one is. */
 let pendingSeekRatio: number | null = null;
 
+/** Stages already asked about this session, so a replay does not ask again. */
+const playableCopyRequested = new Set<string>();
+
+/**
+ * Recordings made before the server started filing them as MP4 are still
+ * WebM, which iPhone apps cannot play at all. Playing one here asks for its
+ * MP4 copy; the function converts it once, repoints the stage at it, and
+ * every later listener on any device gets the MP4. Fire and forget: this play
+ * carries on with the WebM, which browsers handle fine.
+ */
+function requestPlayableCopy(stageId: string, url: string) {
+  if (!/\.webm(\?|$)/i.test(url) || playableCopyRequested.has(stageId)) return;
+  playableCopyRequested.add(stageId);
+  void supabase.functions
+    .invoke('finalize-stage-recording', { body: { stageId, transcribe: false } })
+    .then(({ error }) => {
+      // The next play asks again.
+      if (error) playableCopyRequested.delete(stageId);
+    }, () => playableCopyRequested.delete(stageId));
+}
+
 function ensureAudio(): HTMLAudioElement {
   if (audioEl) return audioEl;
   const el = new Audio();
@@ -223,6 +245,10 @@ function ensureGraph(el: HTMLAudioElement) {
     return;
   }
   try {
+    // The recording plays through Web Audio (for the level meter), and iPhone
+    // Safari mutes Web Audio on the ring switch unless the page asks for a
+    // playback session.
+    requestPlaybackAudioSession();
     const ctx = new AudioContext();
     const source = ctx.createMediaElementSource(el);
     const node = ctx.createAnalyser();
@@ -416,6 +442,7 @@ export function playStageRecording(space: StagePlayable, seekRatio?: number) {
   lastVolumeAt = 0;
 
   el.src = space.recording_url;
+  requestPlayableCopy(space.id, space.recording_url);
   // A fresh source keeps a previously-set rate on the element, but reapply
   // anyway: the preference may have changed while another recording played.
   applyRateToElement();

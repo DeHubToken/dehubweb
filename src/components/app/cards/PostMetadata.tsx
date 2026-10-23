@@ -8,6 +8,7 @@ import { useTranslation as _useCopy } from 'react-i18next';
 import { watchedLabel } from '@/i18n/watched-label';
 import { Headphones, RotateCcw, Loader2 } from "lucide-react";
 import Eye from "@/components/ui/cut-icons/visibility";
+import Clock from "@/components/ui/cut-icons/clock";
 import Languages from "@/components/ui/cut-icons/language";
 
 import { useTranslation } from 'react-i18next';
@@ -112,22 +113,23 @@ export function PostMetadata({ className, timestamp, viewCount, tokenId, isAd, i
   if (!hasMetadata && !translateControl && !isAd) return null;
 
   return (
-    <div data-post-metadata className={cn("flex items-center gap-2 text-zinc-500 text-xs flex-wrap", className)}>
+    <div data-post-metadata className={cn("flex items-center gap-x-3 gap-y-1 text-zinc-500 text-xs flex-wrap", className)}>
       {isAd && (
         <span className="px-1.5 py-0.5 bg-yellow-500 text-black text-xs font-bold rounded">{_copy("copy.c7bf4bbdbcd8", { defaultValue: "AD" })}</span>
       )}
-      {isAd && hasMetadata && <span>•</span>}
-      {formattedTimestamp && <span>{formattedTimestamp}</span>}
-      {formattedTimestamp && hasViews && <span>•</span>}
+      {formattedTimestamp && (
+        <span className="flex items-center gap-1">
+          <Clock className="w-3 h-3" />
+          <span>{formattedTimestamp}</span>
+        </span>
+      )}
       {hasViews && (
         <span className="flex items-center gap-1">
           {isAudio ? <Headphones className="w-3 h-3" /> : <Eye className="w-3 h-3" />}
-          <span>{displayedCount}{watched ? watchedLabel(i18n.resolvedLanguage ?? i18n.language) : ''}</span>
+          <span className="tabular-nums">{displayedCount}{watched ? watchedLabel(i18n.resolvedLanguage ?? i18n.language) : ''}</span>
         </span>
       )}
-      {hasMetadata && translateControl && <span>•</span>}
       {renderTranslateControl()}
-
     </div>
   );
 }

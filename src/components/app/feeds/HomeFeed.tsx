@@ -1366,16 +1366,40 @@ export function HomeFeed({ active = true, shuffleKey, isRefreshing, showFilters 
     scrollFeed.isError, scrollFeed.fetchNextPage, scrollPhotosFeed.hasNextPage, scrollPhotosFeed.isFetching,
     scrollPhotosFeed.isError, scrollPhotosFeed.fetchNextPage]);
 
-  // Auto-remove optimistic posts once their real counterpart appears in the feed
+  const feedItemId = (item: FeedItemType) => String((item.data as { id?: string | number } | undefined)?.id);
+  // Swap an optimistic post for its real counterpart once the feed has it.
+  //
+  // Except a video still transcoding: the server's copy has nothing to play
+  // yet, so swapping would turn the creator's own video, playing from the local
+  // file, back into "Processing". The local copy stays (and the server's is
+  // kept out of the list below) until the transcode is done or has failed — a
+  // copy restored from storage has lost its blob, so it goes straight away.
+  const heldOptimisticIds = useMemo(() => {
+    const held = new Set<string>();
+    if (optimisticPosts.length === 0 || items.length === 0) return held;
+    const feedById = new Map(items.map(item => [feedItemId(item), item]));
+    optimisticPosts.forEach(op => {
+      const server = feedById.get(op.id);
+      if (!server || op.type !== 'video' || op.mediaExpired || server.type !== 'video') return;
+      const status = queryClient.getQueryData<string>(['video-processing', op.id])
+        ?? (server.data as VideoItem).transcodingStatus;
+      if (status === 'pending' || status === 'on') held.add(op.id);
+    });
+    return held;
+  }, [items, optimisticPosts, queryClient]);
   useEffect(() => {
     if (optimisticPosts.length === 0 || items.length === 0) return;
-    const feedIds = new Set(items.map(item => String((item.data as any)?.id)));
+    const feedIds = new Set(items.map(item => feedItemId(item)));
     optimisticPosts.forEach(op => {
-      if (feedIds.has(op.id)) {
+      if (feedIds.has(op.id) && !heldOptimisticIds.has(op.id)) {
         removeOptimisticPost(op.id);
       }
     });
-  }, [items, optimisticPosts, removeOptimisticPost]);
+  }, [items, optimisticPosts, removeOptimisticPost, heldOptimisticIds]);
+  const listedItems = useMemo(
+    () => heldOptimisticIds.size ? items.filter(item => !heldOptimisticIds.has(feedItemId(item))) : items,
+    [items, heldOptimisticIds],
+  );
 
   // ============================================================================
   // INFINITE SCROLL
@@ -1630,7 +1654,7 @@ export function HomeFeed({ active = true, shuffleKey, isRefreshing, showFilters 
     const segments: Segment[] = [];
     let posts = 0;
     let start = 0;
-    items.forEach((item, index) => {
+    listedItems.forEach((item, index) => {
       if (item.type === 'ad') return;
       posts++;
       const inserts: ReactElement[] = [];
@@ -1665,11 +1689,11 @@ export function HomeFeed({ active = true, shuffleKey, isRefreshing, showFilters 
         if (posts === LEADERBOARD_INSERT_AFTER) inserts.push(<LeaderboardCarousel key="leaderboard" />);
       }
       if (inserts.length) {
-        segments.push({ items: items.slice(start, index + 1), start, inserts, shorts: hasShorts });
+        segments.push({ items: listedItems.slice(start, index + 1), start, inserts, shorts: hasShorts });
         start = index + 1;
       }
     });
-    if (start < items.length) segments.push({ items: items.slice(start), start, inserts: [], shorts: false });
+    if (start < listedItems.length) segments.push({ items: listedItems.slice(start), start, inserts: [], shorts: false });
     return <>{segments.flatMap((segment, index) => [
       <div key={`feed-segment-${segment.start}`} className="mb-3">
         {renderMasonryGrid(

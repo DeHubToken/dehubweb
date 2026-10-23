@@ -30,6 +30,7 @@ import { expandEmojiTokens } from '@/components/app/emoji/EmojiText';
 
 export { LANGUAGE_NAMES };
 import { cn } from '@/lib/utils';
+import { abbreviateUrl } from '@/lib/link-display';
 
 
 // URL regex pattern for detecting links (with or without protocol)
@@ -54,7 +55,12 @@ const URL_REGEX = new RegExp(`(?:${WWW_URL_CORE_REGEX_SRC})|(?:${TLD_URL_CORE_RE
 const URL_WITH_BOUNDARY_REGEX = new RegExp(`(?:${URL_BOUNDARY_REGEX_SRC})(?:${URL_REGEX.source})`, 'gi');
 const URL_LEADING_BOUNDARY_REGEX = /^[\s(\[<"']+/;
 
-function splitLeadingUrlBoundary(match: string) {
+/** A fresh copy of the matcher the feed renders with, for editors that chip links. */
+export function createLinkScanRegex(): RegExp {
+  return new RegExp(URL_WITH_BOUNDARY_REGEX.source, 'gi');
+}
+
+export function splitLeadingUrlBoundary(match: string) {
   const leadingBoundary = match.match(URL_LEADING_BOUNDARY_REGEX)?.[0] ?? '';
   return {
     leadingBoundary,
@@ -67,8 +73,12 @@ function splitLeadingUrlBoundary(match: string) {
  * Returns the transformed text.
  */
 export function replaceLinksWithEmoji(text: string): string {
-  return text.replace(URL_WITH_BOUNDARY_REGEX, (match) => {
-    const { leadingBoundary } = splitLeadingUrlBoundary(match);
+  return text.replace(URL_WITH_BOUNDARY_REGEX, (match, offset: number, whole: string) => {
+    const { leadingBoundary, url } = splitLeadingUrlBoundary(match);
+    // `<url>` is shown as text by choice — keep it.
+    if (leadingBoundary.endsWith('<') && whole[offset + match.length] === '>') {
+      return `${leadingBoundary}${url}`;
+    }
     return `${leadingBoundary}🔗`;
   });
 }
@@ -240,10 +250,43 @@ export function renderTextWithLinks(text: string, opts?: { flagged?: boolean }):
         </a>
       );
     } else {
-      // URL — render as link emoji
+      // URL — render as link emoji, or as its text when written `<url>`
       const { leadingBoundary, url } = splitLeadingUrlBoundary(fullMatch);
-      if (leadingBoundary) {
-        parts.push(leadingBoundary);
+      // `<url>` is the author choosing to show the link itself (see
+      // lib/link-display): drop the brackets and print the address, shortened
+      // in the middle when long.
+      const showAsText = leadingBoundary.endsWith('<') && text[combinedRegex.lastIndex] === '>';
+      const boundary = showAsText ? leadingBoundary.slice(0, -1) : leadingBoundary;
+      if (boundary) {
+        parts.push(boundary);
+      }
+      if (showAsText) {
+        const dehub = parseDehubLink(url);
+        const target = dehub ? dehub.path : url.match(/^https?:\/\//i) ? url : `https://${url}`;
+        parts.push(
+          <a
+            key={`text-link-${match.index}`}
+            href={target}
+            target={dehub ? undefined : '_blank'}
+            rel={dehub ? undefined : 'noopener noreferrer'}
+            className="underline underline-offset-2 decoration-white/40 hover:decoration-white text-white relative z-10"
+            onClick={(e) => {
+              e.preventDefault();
+              e.stopPropagation();
+              if (dehub) clientNavigate(dehub.path);
+              else window.open(target, '_blank', 'noopener,noreferrer');
+            }}
+            onPointerDown={(e) => e.stopPropagation()}
+            onMouseDown={(e) => e.stopPropagation()}
+            title={url}
+            data-no-navigate="true"
+          >
+            {abbreviateUrl(url)}
+          </a>
+        );
+        combinedRegex.lastIndex += 1; // consume the closing '>'
+        lastIndex = combinedRegex.lastIndex;
+        continue;
       }
 
       // A link to something inside DeHub stays inside DeHub: same 🔗 affordance,
@@ -348,9 +391,14 @@ export function renderChatTextWithLinks(text: string): ReactNode[] {
     }
 
     const { leadingBoundary, url } = splitLeadingUrlBoundary(match[0]);
-    if (leadingBoundary) {
-      parts.push(leadingBoundary);
+    // `<url>` already means "show the link" — here it always is, so just drop
+    // the brackets.
+    const wrapped = leadingBoundary.endsWith('<') && text[urlRegex.lastIndex] === '>';
+    const boundary = wrapped ? leadingBoundary.slice(0, -1) : leadingBoundary;
+    if (boundary) {
+      parts.push(boundary);
     }
+    if (wrapped) urlRegex.lastIndex += 1;
 
     const dehubLink = parseDehubLink(url);
     const href = dehubLink

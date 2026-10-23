@@ -55,6 +55,7 @@ const FullWalletPage = lazyWithRetry(() => import('@/pages/app/FullWalletPage'))
 const CareersPage = lazyWithRetry(() => import('@/pages/app/CareersPage'));
 const GlossaryPage = lazyWithRetry(() => import('@/pages/app/GlossaryPage'));
 const StatsPage = lazyWithRetry(() => import('@/pages/app/StatsPage'));
+const LiveStudioPage = lazyWithRetry(() => import('@/pages/app/LiveStudioPage'));
 const FeedbackPage = lazyWithRetry(() => import('@/pages/app/FeedbackPage'));
 const StakingPage = lazyWithRetry(() => import('@/pages/app/StakingPage'));
 const BridgePage = lazyWithRetry(() => import('@/pages/app/BridgePage'));
@@ -110,6 +111,7 @@ const CACHED_PAGES: CachedPageConfig[] = [
   { key: 'careers', path: ['/app/jobs', '/jobs'], component: CareersPage, skeleton: GenericPageSkeleton },
   { key: 'glossary', path: ['/app/glossary', '/glossary'], component: GlossaryPage, skeleton: GenericPageSkeleton },
   { key: 'stats', path: ['/stats', '/app/stats'], component: StatsPage, skeleton: GenericPageSkeleton },
+  { key: 'live-studio', path: ['/live-studio', '/app/live-studio'], component: LiveStudioPage, skeleton: GenericPageSkeleton },
   { key: 'feedback', path: ['/feedback', '/app/feedback'], component: FeedbackPage, skeleton: GenericPageSkeleton },
   { key: 'stake', path: ['/app/stake', '/stake'], component: StakingPage, skeleton: GenericPageSkeleton },
   { key: 'bridge', path: ['/app/bridge', '/bridge'], component: BridgePage, skeleton: GenericPageSkeleton },
@@ -174,25 +176,12 @@ const CachedPage = memo(function CachedPage({
   // tab bar remains at the top — this is what makes the transition feel seamless.
   const shouldStayVisible = isActive || forceVisible;
 
-  // A hidden page is still MOUNTED, and `visibility: hidden` does not pause
-  // media — only removal from the document does, and a cached page is never
-  // removed. So a clip playing here carried on with full audio after navigating
-  // away, invisible, with no player left on screen to stop it from. Doing this
-  // on the way out catches every page at once; gating each media component on
-  // the route would have to be repeated for every surface added later.
-  //
-  // The overlay is the awkward middle case. Home stays VISIBLE under an open
-  // post, so the first test alone let an audio post carry on playing in the feed
-  // behind it — the loudest version of this bug, because the post the user is
-  // looking at is the very track they cannot pause. It cannot simply pause
-  // everything either: opening a video hands the `<video>` element itself up to
-  // the post page (lib/video-handoff), and stopping it here would kill the clip
-  // the user just opened. Off-document players have no hand-off, so they are
-  // exactly the set that has to stop.
-  //
-  // Scoped to this subtree by design: the radio and stage-recording mini players
-  // are mounted in AppLayout, OUTSIDE the cache, precisely so they DO survive
-  // navigation — see lib/media-session.ts. They are untouched by this.
+  // A hidden page stays MOUNTED and `visibility: hidden` does not pause media,
+  // so media is stopped on the way out — once, here, for every page. Home stays
+  // visible under an open post, so off-document players stop too; an opened
+  // video's own element is handed to the post page (lib/video-handoff) and is
+  // left alone. Radio and stage mini players live in AppLayout, outside this
+  // subtree, so they survive navigation (lib/media-session.ts).
   const pageRef = useRef<HTMLDivElement | null>(null);
   const resumeRef = useRef<HTMLMediaElement[]>([]);
   useEffect(() => {
@@ -220,20 +209,12 @@ const CachedPage = memo(function CachedPage({
       style={
         shouldStayVisible
           ? undefined
-          // A normal display toggle rebuilds the clipped composer's paint
-          // layers on return while keeping its React state and draft mounted.
-          : config.key === 'features'
-          ? { display: 'none' as const }
-          : {
-              visibility: 'hidden' as const,
-              height: 0,
-              overflow: 'hidden',
-              position: 'absolute' as const,
-              // Skip style/layout for the whole hidden subtree — with ~30
-              // pages cached, this is the difference between the browser
-              // laying out one page or all of them on every style change.
-              contentVisibility: 'hidden' as const,
-            }
+          // Retire the hidden page's paint layers, not its React state. Keeping
+          // a skipped subtree inside a zero-width absolute box shrinks its
+          // glass headers to their padding width and retains those backdrop
+          // surfaces for reuse on return. Use the same normal display toggle
+          // for every route so glass and scroll clips rebuild at the live size.
+          : { display: 'none' as const }
       }
     >
       {/* Contained boundary: every page is mounted forever and all re-render
@@ -287,19 +268,9 @@ export function PersistentPageCache({
   // Find which cached page matches current path
   const activeCachedPage = CACHED_PAGES.find(p => matchesPath(p, pathname));
 
-  // Render the destination in the SAME pass that saw the new pathname.
-  //
-  // Mounting only from the effect below cost a whole render cycle before
-  // React.lazy was even asked for the page's chunk: click -> render (the page
-  // is not in `mountedPages`, so nothing of it is rendered) -> effect ->
-  // setState -> render -> lazy() -> network. On a main thread still busy
-  // settling the feed that gap measured ~1s before the chunk request even
-  // left the browser, and the visitor spent all of it on the skeleton — which
-  // on the profile reads as a real profile that has lost its avatar and
-  // username rather than as a page still loading.
-  //
-  // `mountedPages` still does the job it was added for: keeping every page the
-  // visitor has already opened mounted after they navigate away from it.
+  // Render the destination in the SAME pass that saw the new pathname: waiting
+  // for the effect below cost a render cycle (~1s on a busy thread) before the
+  // page's chunk was even requested. `mountedPages` keeps visited pages mounted.
   const renderedPages = useMemo(() => {
     if (!activeCachedPage || mountedPages.has(activeCachedPage.key)) return mountedPages;
     return new Set(mountedPages).add(activeCachedPage.key);
