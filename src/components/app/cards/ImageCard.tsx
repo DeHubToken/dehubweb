@@ -1424,6 +1424,7 @@ export const ImageCard = memo(function ImageCard({ post, aboveFold = false, onOp
             tokenId={post.id}
             initialTab={commentsInitialTab}
             commentsDisabled={!!(post as { commentsDisabled?: boolean }).commentsDisabled}
+            replyPolicy={post.replyPolicy}
             forKids={!!post.forKids}
           />
         )}
@@ -1539,6 +1540,7 @@ export const ImageCard = memo(function ImageCard({ post, aboveFold = false, onOp
             currentContentRating={post.contentRating}
             currentSpoilerText={post.spoilerText}
             currentQuotePolicy={post.quotePolicy}
+            currentReplyPolicy={post.replyPolicy}
             currentForKids={post.forKids}
             currentShopLinks={post.shopLinks}
             onSuccess={(edited) => {

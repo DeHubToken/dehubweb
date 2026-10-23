@@ -84,6 +84,8 @@ export interface PostFormState {
   contentWarning: string | null;
   /** Who may quote the post. */
   quotePolicy: import('@/lib/api/dehub/types').QuotePolicy;
+  /** Who may reply to the post. */
+  replyPolicy: import('@/lib/api/dehub/types').ReplyPolicy;
   isEnhancing: boolean;
   isPosting: boolean;
   uploadProgress: number; // 0–100 stage-based progress
@@ -112,6 +114,7 @@ export interface PostFormActions {
   setPoll: import('@/hooks/use-draft-state').DraftSetter<PollData | null>;
   setContentWarning: (value: string | null) => void;
   setQuotePolicy: (value: import('@/lib/api/dehub/types').QuotePolicy) => void;
+  setReplyPolicy: (value: import('@/lib/api/dehub/types').ReplyPolicy) => void;
   handleImageSelect: (e: React.ChangeEvent<HTMLInputElement>) => void;
   handleVideoSelect: (e: React.ChangeEvent<HTMLInputElement>) => Promise<void>;
   handleAudioSelect: (e: React.ChangeEvent<HTMLInputElement>) => void;

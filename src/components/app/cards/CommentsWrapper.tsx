@@ -20,6 +20,7 @@ import { lockBodyScroll } from '@/lib/body-scroll-lock';
 import { dismissKeyboard, useKeyboardSafeSheet } from '@/hooks/use-keyboard-open';
 import { lazy, Suspense, useState, useEffect, useRef, useCallback, type PointerEvent as ReactPointerEvent } from 'react';
 import { useTranslation } from 'react-i18next';
+import type { ReplyPolicy } from '@/lib/api/dehub/types';
 
 // The thread itself is a lazy chunk. This wrapper sits inside every feed card,
 // so CommentsSection (the composer, reactions, likers drawer, translation…)
@@ -42,6 +43,8 @@ interface CommentsWrapperProps {
   immersive?: boolean;
   /** Creator turned replies off — swaps the composer for a notice. */
   commentsDisabled?: boolean;
+  /** Who may reply, when replies are on; shown above the composer. */
+  replyPolicy?: ReplyPolicy;
   /** The post is published for children — see CommentsSection. */
   forKids?: boolean;
   /**
@@ -288,7 +291,7 @@ function DiscardGuard({ onKeepWriting, onDiscard }: { onKeepWriting: () => void;
   );
 }
 
-export function CommentsWrapper({ open, onOpenChange, tokenId, initialTab, immersive = false, commentsDisabled = false, forKids = false, postAuthorAddress, forceInline = false, stage = false, stageCount, onStageTabChange }: CommentsWrapperProps) {
+export function CommentsWrapper({ open, onOpenChange, tokenId, initialTab, immersive = false, commentsDisabled = false, replyPolicy, forKids = false, postAuthorAddress, forceInline = false, stage = false, stageCount, onStageTabChange }: CommentsWrapperProps) {
   const isTabletOrMobile = useIsTabletOrMobile();
   const isPhone = useIsPhone();
   const adaptiveDrawerHeight = useAdaptiveDrawerHeight(isTabletOrMobile && immersive);
@@ -386,6 +389,7 @@ export function CommentsWrapper({ open, onOpenChange, tokenId, initialTab, immer
                 onClose={guard.requestClose}
                 initialTab={initialTab}
                 commentsDisabled={commentsDisabled}
+                replyPolicy={replyPolicy}
                 forKids={forKids}
                 postAuthorAddress={postAuthorAddress}
                 onDirtyChange={guard.onDirtyChange}
@@ -444,6 +448,7 @@ export function CommentsWrapper({ open, onOpenChange, tokenId, initialTab, immer
                 onClose={guard.requestClose}
                 initialTab={initialTab}
                 commentsDisabled={commentsDisabled}
+                replyPolicy={replyPolicy}
                 forKids={forKids}
                 postAuthorAddress={postAuthorAddress}
                 onDirtyChange={guard.onDirtyChange}
@@ -475,6 +480,7 @@ export function CommentsWrapper({ open, onOpenChange, tokenId, initialTab, immer
             onClose={() => onOpenChange(false)}
             initialTab={initialTab}
             commentsDisabled={commentsDisabled}
+            replyPolicy={replyPolicy}
             forKids={forKids}
             postAuthorAddress={postAuthorAddress}
             page
@@ -526,6 +532,7 @@ export function CommentsWrapper({ open, onOpenChange, tokenId, initialTab, immer
                 onClose={() => onOpenChange(false)}
                 initialTab={initialTab}
                 commentsDisabled={commentsDisabled}
+                replyPolicy={replyPolicy}
                 forKids={forKids}
                 postAuthorAddress={postAuthorAddress}
               />

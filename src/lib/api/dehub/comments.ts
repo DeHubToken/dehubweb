@@ -1,6 +1,7 @@
 import { apiCall, DEHUB_API_BASE, authedUpload } from './core';
 import { voiceRecordingFilename } from '@/lib/voice-recording';
 import type { DeHubUser } from './types';
+import i18n from 'i18next';
 
 // API comment response from /api/nft/{tokenId}/comments
 export interface ApiCommentResponse {
@@ -110,6 +111,12 @@ export interface EditCommentResponse {
  */
 function assertCommentAccepted(response: unknown, fallback = 'Could not post comment'): void {
   if (response && typeof response === 'object' && (response as { result?: unknown }).result === false) {
+    // The author's reply controls refused this account
+    // (dehub-stream-backend src/reaction/reply-policy). Said in the reader's
+    // language rather than the server's English sentence.
+    if ((response as { code?: string }).code === 'REPLY_NOT_ALLOWED') {
+      throw new Error(i18n.t('replyPolicy.refused'));
+    }
     const message = (response as { error?: string }).error;
     throw new Error(message || fallback);
   }

@@ -90,6 +90,8 @@ export interface UnifiedFeedItem {
   quotePolicy?: 'public' | 'followers' | 'nobody';
   /** A quote whose quoted author took their post back out of it. */
   quoteRevoked?: boolean;
+  /** Who may reply; absent means anyone. */
+  replyPolicy?: 'public' | 'followers' | 'following' | 'mentioned';
   /** Published for children — see the field on BaseFeedItem. */
   forKids?: boolean;
   /** Signed-in viewers only — read totalViews via resolveViewCount instead. */
@@ -334,6 +336,7 @@ function mapVideoItem(item: UnifiedFeedItem, index: number): VideoItem {
     spoilerText: item.spoilerText,
     quotePolicy: item.quotePolicy,
     quoteRevoked: item.quoteRevoked,
+    replyPolicy: item.replyPolicy,
     forKids: item.forKids,
     isLivePost: item.postType === 'live',
     liveStatus: item.stream?.status,
@@ -430,6 +433,7 @@ function mapImagePost(item: UnifiedFeedItem, index: number): ImagePost {
     spoilerText: item.spoilerText,
     quotePolicy: item.quotePolicy,
     quoteRevoked: item.quoteRevoked,
+    replyPolicy: item.replyPolicy,
     forKids: item.forKids,
     isQuotePost: !!(item as any).isQuotePost,
     quotedPost: (item as any).quotedPost || null,
@@ -499,6 +503,7 @@ function mapTextPost(item: UnifiedFeedItem, index: number): TextPost {
     spoilerText: item.spoilerText,
     quotePolicy: item.quotePolicy,
     quoteRevoked: item.quoteRevoked,
+    replyPolicy: item.replyPolicy,
     forKids: item.forKids,
     communityAlertPending: (item as any).communityAlertStatus === 'pending',
     isLocked: item.streamInfo?.isLockContent ?? false,
