@@ -5,7 +5,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { agentTaskRequest } from '@/lib/agent-tasks';
-import { PERMISSIONS, NEWS_TOPICS, workspaceCounts, type AgentSettings, type WorkspaceOverview, type PlanPreview } from '@/lib/agent-workspace';
+import { PERMISSIONS, NEWS_TOPICS, BUILDER_ACTIONS, buildAgentPrompt, workspaceCounts, type BuilderAction, type AgentSettings, type WorkspaceOverview, type PlanPreview } from '@/lib/agent-workspace';
 
 function Settings({ wallet, agentId }: { wallet: string; agentId: string }) {
   const { t } = useTranslation();
@@ -41,6 +41,9 @@ export function AgentWorkspacePanel({ wallet }: { wallet: string }) {
   const [published, setPublished] = useState(false);
   const [requestId, setRequestId] = useState(() => crypto.randomUUID());
   const [filter, setFilter] = useState('all');
+  const [action, setAction] = useState<BuilderAction>('post');
+  const [topic, setTopic] = useState('');
+  const [cadence, setCadence] = useState('daily');
   const overview = useQuery({ queryKey: ['agent-workspace', wallet], queryFn: () => agentTaskRequest<WorkspaceOverview>(wallet, { operation: 'workspace_overview' }) });
   const agentId = overview.data?.agents.some(agent => agent.id === selected) ? selected : overview.data?.agents[0]?.id;
   const counts = workspaceCounts(overview.data);
@@ -60,11 +63,18 @@ export function AgentWorkspacePanel({ wallet }: { wallet: string }) {
     {agentId && <Settings key={agentId} wallet={wallet} agentId={agentId} />}
     <details className="space-y-3" open><summary className="cursor-pointer font-medium">{t('agents.workspace.library', 'Templates and task builder')}</summary>
       <div className="flex flex-wrap gap-2">{overview.data?.templates.map(item => <Button key={item.id} size="sm" variant="outline" onClick={() => changePrompt(item.prompt)}>{item.name}{item.published ? ' · Shared' : ''}</Button>)}</div>
+      <div className="grid gap-3 sm:grid-cols-3">
+        <label className="text-sm">{t('agents.workspace.action', 'Action')}<select className="block w-full rounded-lg bg-black p-3" value={action} onChange={event => setAction(event.target.value as BuilderAction)}>{BUILDER_ACTIONS.map(item => <option key={item} value={item}>{t(`agents.workspace.builder.${item}`, { defaultValue: item === 'news' ? 'React to news' : item === 'reply' ? 'Reply to recent posts' : item === 'curate' ? 'Like relevant posts' : 'Write a post' })}</option>)}</select></label>
+        <label className="text-sm">{t('agents.workspace.subject', 'Topic or reply style')}<Input value={topic} maxLength={500} onChange={event => setTopic(event.target.value)} /></label>
+        <label className="text-sm">{t('agents.workspace.cadence', 'Schedule')}<select className="block w-full rounded-lg bg-black p-3" disabled={action === 'reply'} value={action === 'reply' ? 'once' : cadence} onChange={event => setCadence(event.target.value)}>{['once', 'daily', ...(action === 'curate' ? [] : ['twice'])].map(item => <option key={item} value={item}>{t(`agents.workspace.cadence.${item}`, { defaultValue: item === 'once' ? 'Once' : item === 'daily' ? 'Daily' : 'Twice daily' })}</option>)}</select></label>
+      </div>
+      <Button variant="outline" size="sm" disabled={!topic.trim()} onClick={() => changePrompt(buildAgentPrompt(action, topic, cadence))}>{t('agents.workspace.useBuilder', 'Use these instructions')}</Button>
       <p className="text-sm text-white/70">{t('agents.workspace.builderHelp', 'Choose a template, describe the action, audience and schedule, then simulate before running. Shared templates are instructions from their authors, not verified capabilities.')}</p>
       <Textarea aria-label={t('agents.tasks.instructions', 'Instructions')} value={prompt} maxLength={4000} onChange={event => changePrompt(event.target.value)} />
       <div className="flex flex-wrap gap-2"><Button disabled={!agentId || !prompt.trim() || preview.isPending} onClick={() => preview.mutate()}>{t('agents.workspace.simulate', 'Simulate plan')}</Button><Button variant="outline" disabled={!agentId || !prompt.trim() || run.isPending || run.isSuccess} onClick={() => run.mutate()}>{t('agents.tasks.run', 'Run task')}</Button></div>
       {preview.data && <div className="rounded-xl bg-white/5 p-3 text-sm"><p>{preview.data.plan.summary}</p><p>{preview.data.message}</p>{preview.data.checks.map((check, index) => <p key={index}>{check.tool} · {check.audience} · {check.permission ?? t('agents.workspace.allowed', 'Allowed')}</p>)}</div>}
       {run.isSuccess && <p role="status">{t('agents.tasks.queued', 'Task queued.')}</p>}
+      {preview.data?.draft && <blockquote className="whitespace-pre-wrap rounded-xl bg-white/5 p-4">{preview.data.draft}</blockquote>}
       <Input aria-label={t('agents.workspace.templateName', 'Template name')} placeholder={t('agents.workspace.templateName', 'Template name')} value={name} maxLength={80} onChange={event => setName(event.target.value)} />
       <label className="flex items-center gap-2 text-sm"><input type="checkbox" checked={published} onChange={event => setPublished(event.target.checked)} />{t('agents.workspace.share', 'Share this template with other Agents users')}</label>
       <Button size="sm" variant="outline" disabled={!name.trim() || !prompt.trim() || template.isPending || template.isSuccess} onClick={() => template.mutate()}>{t('agents.workspace.saveTemplate', 'Save template')}</Button>

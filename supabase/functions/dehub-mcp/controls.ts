@@ -32,6 +32,7 @@ export async function controlledAction(db: any, agent: { id: string }, tool: str
   const settings = await agentSettings(db, agent.id);
   const reason = blockedReason(settings, tool, args);
   if (reason) {
+    if (approvedId) checked(await db.from('ai_agent_receipts').update({ status: 'blocked', result: { error: reason }, updated_at: new Date().toISOString() }).eq('id', approvedId).eq('agent_id', agent.id).eq('status', 'executing'));
     checked(await db.from('ai_agent_receipts').insert({ agent_id: agent.id, tool, arguments: args, status: 'blocked', result: { error: reason } }));
     return result({ error: reason }, true);
   }
@@ -40,6 +41,11 @@ export async function controlledAction(db: any, agent: { id: string }, tool: str
     if (!approval || approval.status !== 'executing' || approval.tool !== tool || canonical(approval.arguments) !== canonical(args)) return result({ error: 'Approval no longer matches this action.' }, true);
   }
   const status = approvedId || settings.mode === 'autonomous' ? 'executing' : settings.mode;
+  if (status !== 'executing') {
+    const count = await db.from('ai_agent_receipts').select('id', { count: 'exact', head: true }).eq('agent_id', agent.id).in('status', ['draft', 'approval']);
+    checked(count);
+    if ((count.count ?? 0) >= 100) return result({ error: 'Review existing drafts before adding more (100 pending drafts).' }, true);
+  }
   const receipt = approvedId ? { id: approvedId } : checked(await db.from('ai_agent_receipts').insert({ agent_id: agent.id, tool, arguments: args, status }).select('id').single());
   if (status !== 'executing') return result({ skipped: true, approval_id: receipt.id, message: status === 'draft' ? 'Saved as a draft. Nothing was published.' : 'Waiting for owner approval. Nothing was published.' });
   let output: any;

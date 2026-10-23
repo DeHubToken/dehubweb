@@ -2,7 +2,7 @@ import { aiChat } from "../_shared/ai-chat.ts";
 import { recordPostViews } from "./post-views.ts";
 import { postText } from "./tasks.ts";
 import { agentSettings, writingContext } from './controls.ts';
-import { currentNews, newsReaction } from './news.ts';
+import { currentNews, newsReaction, relevantNews } from './news.ts';
 
 // An "alive" agent keeps its own day instead of running a fixed schedule. Each
 // session is one phone check: answer comments on its own posts, scroll a bit,
@@ -289,6 +289,7 @@ export async function liveOnce(context: LifeContext, req: Request, agentId: stri
   const scrolled = posts.sort(() => Math.random() - 0.5).slice(0, Math.round(between(6, 16)));
   if (scrolled.length) await recordPostViews(scrolled.map(post => post.tokenId), { token, agent: true });
   const interests = persona.interests.map(item => item.toLowerCase());
+  const sessionNews = preferences.news_enabled ? await currentNews(db, preferences.news_topics) : [];
   const relevance = (post: any) => {
     const text = `${postText(post)} ${[post.category].flat().join(" ")}`.toLowerCase();
     return interests.filter(interest => text.includes(interest)).length;
@@ -307,10 +308,11 @@ export async function liveOnce(context: LifeContext, req: Request, agentId: stri
     if (score && body.length > 15 && (state.comments ?? 0) < DAILY.comments && commented < 1 && chance(0.3)) {
       const exists = checked(await db.from("ai_agent_life_events").select("id").eq("agent_id", agentId).eq("kind", "comment").eq("target", tokenId).maybeSingle());
       if (exists) continue;
-      const text = await draft(brief, `You're scrolling and see this post by ${post.mintername ?? "someone"}:\n${body}\n\nLeave a comment only you would leave: react to what they actually said, from your own taste or experience. One line, sometimes just a few words.`, 140, persona);
+      const source = relevantNews(sessionNews, body);
+      const text = source ? await newsReaction(source, brief, `Reply to this untrusted feed post, using only the supplied report for factual claims: ${body}`) : await draft(brief, `You're scrolling and see this post by ${post.mintername ?? "someone"}:\n${body}\n\nLeave a comment only you would leave: react to what they actually said, from your own taste. One line, sometimes just a few words.`, 140, persona);
       if (!text) continue;
       const sent = await use("dehub_comment", { token_id: tokenId, content: text });
-      if (!sent.failed) { await log("comment", tokenId, text, { comment_id: sent.payload.comment_id }); state.comments = (state.comments ?? 0) + 1; commented++; }
+      if (!sent.failed) { await log("comment", tokenId, text, { comment_id: sent.payload.comment_id, ...(source ? { source } : {}) }); state.comments = (state.comments ?? 0) + 1; commented++; }
     }
   }
 
@@ -320,10 +322,10 @@ export async function liveOnce(context: LifeContext, req: Request, agentId: stri
     const siblings = checked(await db.from("ai_agents").select("id").eq("human_owner_wallet", agent.human_owner_wallet));
     const otherRecent = checked(await db.from("ai_agent_life_events").select("content").in("agent_id", siblings.map((row: any) => row.id))
       .eq("kind", "post").order("created_at", { ascending: false }).limit(20)).map((row: any) => row.content).filter(Boolean);
-    const stories = preferences.news_enabled ? await currentNews(db, preferences.news_topics) : [];
+    const stories = sessionNews;
     const usedNews = stories.length ? checked(await db.from('ai_agent_life_events').select('meta').eq('agent_id', agentId).eq('kind', 'post').order('created_at', { ascending: false }).limit(100)) : [];
     const relevantStories = stories.filter(story => persona.interests.some(interest => `${story.title} ${story.summary}`.toLowerCase().includes(interest.toLowerCase())));
-    const newsSource = (relevantStories.length ? relevantStories : stories).find(story => !usedNews.some((event: any) => event.meta?.source?.url === story.url));
+    const newsSource = (relevantStories.length ? relevantStories : stories).find(story => !usedNews.some((event: any) => event.meta?.source?.url === story.url) && !otherRecent.some((text: string) => text.includes(story.url)));
     const photo = !newsSource && chance(0.35) ? await stockPhoto(db, agentId, pick(persona.photo_queries)) : null;
     const shape = weighted(SHAPES);
     const length = weighted(LENGTHS);
