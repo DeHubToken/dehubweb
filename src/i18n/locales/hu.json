@@ -1975,6 +1975,8 @@
     "copyFailed": "Nem sikerült másolni"
   },
   "profileOptions": {
+    "copyRssFeed": "RSS-hírcsatorna linkjének másolása",
+    "rssFeedCopied": "RSS-hírcsatorna linkje másolva",
     "copyProfileUrl": "Profil URL másolása",
     "copyUsername": "Felhasználónév másolása",
     "copyAddress": "Cím másolása",

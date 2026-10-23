@@ -1974,6 +1974,8 @@
     "copyFailed": "Kāore i taea te kōpi"
   },
   "profileOptions": {
+    "copyRssFeed": "Tāruatia te hono whāngai RSS",
+    "rssFeedCopied": "Kua tāruatia te hono whāngai RSS",
     "copyProfileUrl": "Tārua URL kōnae",
     "copyUsername": "Tārua ingoa kaiwhakamahi",
     "copyAddress": "Tārua wāhitau",

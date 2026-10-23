@@ -1969,6 +1969,8 @@
     "copyFailed": "පිටපත් කිරීමට නොහැකි විය"
   },
   "profileOptions": {
+    "copyRssFeed": "RSS සංග්‍රහ සබැඳිය පිටපත් කරන්න",
+    "rssFeedCopied": "RSS සංග්‍රහ සබැඳිය පිටපත් විය",
     "copyProfileUrl": "පැතිකඩ URL පිටපත් කරන්න",
     "copyUsername": "පරිශීලක නම පිටපත් කරන්න",
     "copyAddress": "ලිපිනය පිටපත් කරන්න",

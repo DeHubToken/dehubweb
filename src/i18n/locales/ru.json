@@ -1984,6 +1984,8 @@
     "copyFailed": "Не удалось скопировать"
   },
   "profileOptions": {
+    "copyRssFeed": "Копировать ссылку на RSS-ленту",
+    "rssFeedCopied": "Ссылка на RSS-ленту скопирована",
     "copyProfileUrl": "Копировать URL профиля",
     "copyUsername": "Копировать имя пользователя",
     "copyAddress": "Копировать адрес",

@@ -2028,6 +2028,8 @@
     "copyFailed": "Hindi makopya"
   },
   "profileOptions": {
+    "copyRssFeed": "Kopyahin ang link ng RSS feed",
+    "rssFeedCopied": "Nakopya ang link ng RSS feed",
     "copyProfileUrl": "Kopyahin ang URL ng profile",
     "copyUsername": "Kopyahin ang username",
     "copyAddress": "Kopyahin ang address",

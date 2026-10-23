@@ -2004,6 +2004,8 @@
     "copyFailed": "تعذر النسخ"
   },
   "profileOptions": {
+    "copyRssFeed": "نسخ رابط خلاصة RSS",
+    "rssFeedCopied": "تنسخ رابط خلاصة RSS",
     "copyProfileUrl": "نسخ رابط الملف الشخصي",
     "copyUsername": "نسخ اسم المستخدم",
     "copyAddress": "نسخ العنوان",

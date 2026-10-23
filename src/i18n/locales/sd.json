@@ -1971,6 +1971,8 @@
     "copyFailed": "ڪاپي نه ٿي سگهيو"
   },
   "profileOptions": {
+    "copyRssFeed": "RSS فيڊ لنڪ ڪاپي ڪريو",
+    "rssFeedCopied": "RSS فيڊ لنڪ ڪاپي ٿي وئي",
     "copyProfileUrl": "پروفائل URL ڪاپي ڪريو",
     "copyUsername": "يوزرنيم ڪاپي ڪريو",
     "copyAddress": "ايڊريس ڪاپي ڪريو",

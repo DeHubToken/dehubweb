@@ -1979,6 +1979,8 @@
     "copyFailed": "Kunne ikke kopiere"
   },
   "profileOptions": {
+    "copyRssFeed": "Kopier lenke til RSS-feed",
+    "rssFeedCopied": "Lenke til RSS-feed kopiert",
     "copyProfileUrl": "Kopier profil-URL",
     "copyUsername": "Kopier brukernavn",
     "copyAddress": "Kopier adresse",

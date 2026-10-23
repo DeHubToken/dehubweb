@@ -1987,6 +1987,8 @@
     "copyFailed": "Көшіру мүмкін емес"
   },
   "profileOptions": {
+    "copyRssFeed": "RSS арнасының сілтемесін көшіру",
+    "rssFeedCopied": "RSS арнасының сілтемесі көшірілді",
     "copyProfileUrl": "Профиль URL көшіру",
     "copyUsername": "Пайдаланушы атын көшіру",
     "copyAddress": "Мекенжайды көшіру",

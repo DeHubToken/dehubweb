@@ -1974,6 +1974,8 @@
     "copyFailed": "நகலெடுக்க முடியவில்லை"
   },
   "profileOptions": {
+    "copyRssFeed": "RSS ஊட்ட இணைப்பை நகலெடு",
+    "rssFeedCopied": "RSS ஊட்ட இணைப்பு நகலெடுக்கப்பட்டது",
     "copyProfileUrl": "சுயவிவர URL நகலெடு",
     "copyUsername": "பயனர்பெயர் நகலெடு",
     "copyAddress": "முகவரி நகலெடு",

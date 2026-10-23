@@ -1992,6 +1992,8 @@
     "copyFailed": "Nusxalash mumkin emas"
   },
   "profileOptions": {
+    "copyRssFeed": "RSS lenta havolasini nusxalash",
+    "rssFeedCopied": "RSS lenta havolasi nusxalandi",
     "copyProfileUrl": "Profil URL nusxalash",
     "copyUsername": "Foydalanuvchi nomini nusxalash",
     "copyAddress": "Manzilni nusxalash",

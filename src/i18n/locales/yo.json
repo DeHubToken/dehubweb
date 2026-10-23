@@ -1968,6 +1968,8 @@
     "copyFailed": "Ko le daakọ"
   },
   "profileOptions": {
+    "copyRssFeed": "Daakọ ọna asopọ RSS feed",
+    "rssFeedCopied": "A ti daakọ ọna asopọ RSS feed",
     "copyProfileUrl": "Daakọ URL profaili",
     "copyUsername": "Daakọ orukọ olumulo",
     "copyAddress": "Daakọ adirẹsi",

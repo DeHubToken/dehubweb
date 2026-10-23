@@ -2003,6 +2003,8 @@
     "copyFailed": "Konnt nöd kopiere"
   },
   "profileOptions": {
+    "copyRssFeed": "RSS-Feed-Link kopiere",
+    "rssFeedCopied": "RSS-Feed-Link kopiert",
     "copyProfileUrl": "Profil-URL kopiere",
     "copyUsername": "Benutzername kopiere",
     "copyAddress": "Adrässe kopiere",

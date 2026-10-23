@@ -1979,6 +1979,8 @@
     "copyFailed": "Није могло да се копира"
   },
   "profileOptions": {
+    "copyRssFeed": "Копирај линк RSS фида",
+    "rssFeedCopied": "Линк RSS фида је копиран",
     "copyProfileUrl": "Копирај URL профила",
     "copyUsername": "Копирај корисничко име",
     "copyAddress": "Копирај адресу",

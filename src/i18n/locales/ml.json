@@ -1971,6 +1971,8 @@
     "copyFailed": "കോപ്പി ചെയ്യാൻ കഴിഞ്ഞില്ല"
   },
   "profileOptions": {
+    "copyRssFeed": "RSS ഫീഡ് ലിങ്ക് പകർത്തുക",
+    "rssFeedCopied": "RSS ഫീഡ് ലിങ്ക് പകർത്തി",
     "copyProfileUrl": "പ്രൊഫൈൽ URL പകർത്തുക",
     "copyUsername": "ഉപയോക്തൃനാമം പകർത്തുക",
     "copyAddress": "വിലാസം പകർത്തുക",

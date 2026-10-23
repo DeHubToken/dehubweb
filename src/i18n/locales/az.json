@@ -1968,6 +1968,8 @@
     "copyFailed": "Kopyalana bilmədi"
   },
   "profileOptions": {
+    "copyRssFeed": "RSS lent linkini kopyala",
+    "rssFeedCopied": "RSS lent linki kopyalandı",
     "copyProfileUrl": "Profil URL-ni kopyala",
     "copyUsername": "İstifadəçi adını kopyala",
     "copyAddress": "Ünvanı kopyala",

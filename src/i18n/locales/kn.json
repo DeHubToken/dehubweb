@@ -1966,6 +1966,8 @@
     "copyFailed": "ನಕಲಿಸಲು ಸಾಧ್ಯವಾಗಲಿಲ್ಲ"
   },
   "profileOptions": {
+    "copyRssFeed": "RSS ಫೀಡ್ ಲಿಂಕ್ ನಕಲಿಸಿ",
+    "rssFeedCopied": "RSS ಫೀಡ್ ಲಿಂಕ್ ನಕಲಾಗಿದೆ",
     "copyProfileUrl": "ಪ್ರೊಫೈಲ್ URL ನಕಲಿಸಿ",
     "copyUsername": "ಬಳಕೆದಾರ ಹೆಸರು ನಕಲಿಸಿ",
     "copyAddress": "ವಿಳಾಸ ನಕಲಿಸಿ",

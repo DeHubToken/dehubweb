@@ -1939,6 +1939,8 @@
     "copyFailed": "کاپي نشو شو"
   },
   "profileOptions": {
+    "copyRssFeed": "RSS فیڈ لنک کاپی کرو",
+    "rssFeedCopied": "RSS فیڈ لنک کاپی ہو گیا",
     "copyProfileUrl": "پروفائل URL کاپی کرو",
     "copyUsername": "یوزرنیم کاپی کرو",
     "copyAddress": "پتہ کاپی کرو",

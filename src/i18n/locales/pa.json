@@ -1978,6 +1978,8 @@
     "copyFailed": "ਕਾਪੀ ਨਹੀਂ ਹੋ ਸਕਿਆ"
   },
   "profileOptions": {
+    "copyRssFeed": "RSS ਫੀਡ ਲਿੰਕ ਕਾਪੀ ਕਰੋ",
+    "rssFeedCopied": "RSS ਫੀਡ ਲਿੰਕ ਕਾਪੀ ਹੋ ਗਿਆ",
     "copyProfileUrl": "ਪ੍ਰੋਫਾਈਲ URL ਕਾਪੀ ਕਰੋ",
     "copyUsername": "ਯੂਜ਼ਰਨੇਮ ਕਾਪੀ ਕਰੋ",
     "copyAddress": "ਪਤਾ ਕਾਪੀ ਕਰੋ",

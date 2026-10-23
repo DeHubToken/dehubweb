@@ -2003,6 +2003,8 @@
     "copyFailed": "Αδυναμία αντιγραφής"
   },
   "profileOptions": {
+    "copyRssFeed": "Αντιγραφή συνδέσμου ροής RSS",
+    "rssFeedCopied": "Ο σύνδεσμος ροής RSS αντιγράφηκε",
     "copyProfileUrl": "Αντιγραφή URL προφίλ",
     "copyUsername": "Αντιγραφή ονόματος χρήστη",
     "copyAddress": "Αντιγραφή διεύθυνσης",

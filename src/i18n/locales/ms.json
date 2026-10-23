@@ -2241,6 +2241,8 @@
     "copyFailed": "Tidak dapat disalin"
   },
   "profileOptions": {
+    "copyRssFeed": "Salin pautan suapan RSS",
+    "rssFeedCopied": "Pautan suapan RSS disalin",
     "copyProfileUrl": "Salin URL profil",
     "copyUsername": "Salin nama pengguna",
     "copyAddress": "Salin alamat",
