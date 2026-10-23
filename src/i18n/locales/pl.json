@@ -5384,6 +5384,8 @@
     }
   },
   "goLive": {
+    "bigEvent": "Duże wydarzenie",
+    "bigEventHint": "Dla dużej widowni: widzowie oglądają z około 20-sekundowym opóźnieniem, ale z mniejszą liczbą przerw.",
     "goLive": "Transmituj na żywo",
     "youAreLive": "Transmitujesz na żywo",
     "streamReady": "Stream gotowy",

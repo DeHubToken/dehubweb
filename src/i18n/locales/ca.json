@@ -5316,6 +5316,8 @@
     }
   },
   "goLive": {
+    "bigEvent": "Gran esdeveniment",
+    "bigEventHint": "Per a grans audiències: els espectadors ho veuen uns 20 segons endarrere, amb menys interrupcions.",
     "goLive": "Anar en directe",
     "youAreLive": "Estàs en directe",
     "streamReady": "Transmissió llesta",

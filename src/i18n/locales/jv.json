@@ -5170,6 +5170,8 @@
     }
   },
   "goLive": {
+    "bigEvent": "Acara gedhe",
+    "bigEventHint": "Kanggo penonton akèh: penonton nonton kira-kira 20 detik telat, kanthi gangguan luwih sithik.",
     "goLive": "Dadi Live",
     "youAreLive": "Sampeyan Live",
     "streamReady": "Stream Siap",

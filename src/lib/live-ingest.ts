@@ -275,14 +275,93 @@ export function fetchTurnServers(): Promise<RTCIceServer[]> {
   return turnServersPromise;
 }
 
+/**
+ * The self-hosted server's AAC copy of a stream: `{playbackId}-aac`.
+ *
+ * The ingest forwards the broadcaster's Opus audio untouched, and Safari plays
+ * Opus in HLS at no layer — natively or through Media Source. On Safari a
+ * self-hosted stream therefore had no HLS route at all, where Livepeer's
+ * transcoded ladder always had one. The server makes this copy on demand
+ * (audio re-encoded, video untouched) and only while someone reads it.
+ */
+const AAC_COPY_SUFFIX = '-aac';
+
+let opusHlsVerdict: boolean | undefined;
+
+/**
+ * Whether this browser can play the Opus audio in a self-hosted HLS ladder.
+ * hls.js plays through Media Source Extensions; where they take Opus in MP4
+ * (Chrome, Firefox, Edge) the original ladder plays. Where they do not, or
+ * there is no Media Source at all (older iOS), only the AAC copy will.
+ */
+function hlsPlaysOpus(): boolean {
+  if (opusHlsVerdict !== undefined) return opusHlsVerdict;
+  try {
+    const w = globalThis as any;
+    const sources = [w.MediaSource, w.ManagedMediaSource].filter(Boolean);
+    opusHlsVerdict = sources.some((ms: any) => ms.isTypeSupported?.('audio/mp4; codecs="opus"'));
+  } catch {
+    opusHlsVerdict = false;
+  }
+  return opusHlsVerdict;
+}
+
+/** True for a URL on the server's AAC copy — which, unlike the original, native HLS can play. */
+export function isAacCopyUrl(url: string | undefined): boolean {
+  return !!url && new RegExp(`/[^/]+${AAC_COPY_SUFFIX}/[^/]+\\.m3u8`).test(url);
+}
+
 /** HLS ladder — the fallback WHEP drops to, and what non-WebRTC clients get. */
 export function hlsUrlFor(stream: LiveStreamRef): string | undefined {
   const playbackId = stream?.playbackId;
   if (!playbackId) return undefined;
-  return liveProviderOf(stream) === 'mediamtx'
+  if (liveProviderOf(stream) !== 'mediamtx') {
+    return `https://livepeercdn.studio/hls/${playbackId}/index.m3u8`;
+  }
+  return hlsPlaysOpus()
     ? `https://${MEDIAMTX_HOST}/${playbackId}/index.m3u8`
-    : `https://livepeercdn.studio/hls/${playbackId}/index.m3u8`;
+    : `https://${MEDIAMTX_HOST}/${playbackId}${AAC_COPY_SUFFIX}/index.m3u8`;
 }
+
+/**
+ * Broadcasts the creator marked as a big event, by playbackId.
+ *
+ * A big event plays over HLS from about ten segments behind live, never over
+ * WebRTC: the ingest serves an HLS crowd from one muxer however many are
+ * watching, and the deep buffer rides out a bad network instead of stalling.
+ *
+ * The feed threads one playback value through its mappers — the HLS URL — so
+ * rather than add a field to every mapper and card, the mappers note the mode
+ * here as they build that URL and the players ask by URL. The app does the
+ * same in libs/sharedLivePlayer.ts.
+ */
+const bigEventPlaybackIds = new Set<string>();
+
+export function noteLatencyMode(
+  stream: (LiveStreamRef & { settings?: { latencyMode?: string } | null }) | null | undefined,
+): void {
+  const id = stream?.playbackId;
+  if (!id) return;
+  if (stream?.settings?.latencyMode === 'event') bigEventPlaybackIds.add(id);
+  else bigEventPlaybackIds.delete(id);
+}
+
+/** Whether the stream behind this HLS URL is a big event. */
+export function isBigEventPlayback(url: string | undefined): boolean {
+  const id = liveSourceFromHlsUrl(url)?.playbackId;
+  return !!id && bigEventPlaybackIds.has(id);
+}
+
+/**
+ * hls.js settings for a big event: no low-latency parts, and a live sync point
+ * about ten segments back (PeerTube's high-latency mode does the same), with
+ * room to drift to twenty before it jumps forward.
+ */
+export const BIG_EVENT_HLS_CONFIG = {
+  lowLatencyMode: false,
+  liveSyncDurationCount: 10,
+  liveMaxLatencyDurationCount: 20,
+} as const;
 
 /**
  * Poster frame. Livepeer renders one; MediaMTX does not, so a self-hosted
@@ -321,7 +400,12 @@ export function liveSourceFromHlsUrl(
     try {
       const parsed = new URL(url);
       if (parsed.host === MEDIAMTX_HOST) {
-        const id = parsed.pathname.split('/').filter(Boolean)[0];
+        const segment = parsed.pathname.split('/').filter(Boolean)[0];
+        // The AAC copy is the same broadcast; WebRTC and everything else keyed
+        // by playbackId want the original path.
+        const id = segment?.endsWith(AAC_COPY_SUFFIX)
+          ? segment.slice(0, -AAC_COPY_SUFFIX.length)
+          : segment;
         if (id) return { provider: 'mediamtx', playbackId: id };
       }
     } catch {

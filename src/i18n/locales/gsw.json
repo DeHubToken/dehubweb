@@ -5360,6 +5360,8 @@
     }
   },
   "goLive": {
+    "bigEvent": "Grosse Event",
+    "bigEventHint": "Für es grosses Publikum: d Zuschauer gsehnd öppe 20 Sekunde verzögeret, defür mit weniger Unterbrüch.",
     "goLive": "Go Live",
     "youAreLive": "Du bisch Live",
     "streamReady": "Stream Ready",

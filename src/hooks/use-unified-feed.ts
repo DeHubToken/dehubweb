@@ -14,7 +14,7 @@ import { buildAvatarUrl, buildImageUrl, buildVideoUrl, buildHlsUrl, buildFeedIma
 import { formatDuration, formatViews, formatTimeAgo } from '@/lib/feed-utils';
 import { resolveLikeCount, resolveDislikeCount, resolveMyReaction, resolveReactionCounts, resolveViewCount } from '@/lib/engagement';
 import { mergeLiveCounts, type RawFeedRow } from '@/lib/live-counts';
-import { hlsUrlFor, liveProviderOf } from '@/lib/live-ingest';
+import { hlsUrlFor, liveProviderOf, noteLatencyMode } from '@/lib/live-ingest';
 import { extractReplayUrl } from '@/lib/live-replay';
 import type { VideoItem, ImagePost, TextPost } from '@/types/feed.types';
 import type { ContentRating } from '@/lib/api/dehub/types';
@@ -333,6 +333,7 @@ function mapVideoItem(item: UnifiedFeedItem, index: number): VideoItem {
     // way the post page does — otherwise the card falls back to a poster and
     // the stream only appears after a click-through.
     livePlaybackUrls: (() => {
+      noteLatencyMode(item.stream as any);
       const hls = hlsUrlFor(item.stream as any);
       if (!hls) return item.stream?.playbackUrl ? [item.stream.playbackUrl] : undefined;
       return liveProviderOf(item.stream as any) === 'mediamtx'

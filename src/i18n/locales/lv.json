@@ -5354,6 +5354,8 @@
     }
   },
   "goLive": {
+    "bigEvent": "Liels pasākums",
+    "bigEventHint": "Lielai auditorijai: skatītāji skatās ar aptuveni 20 sekunžu aizkavi, bet ar mazāk pārtraukumiem.",
     "goLive": "Tiešraide",
     "youAreLive": "Jūs esat tiešraidē",
     "streamReady": "Tiešraide ir gatava",

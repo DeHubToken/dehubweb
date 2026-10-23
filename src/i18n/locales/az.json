@@ -5282,6 +5282,8 @@
     }
   },
   "goLive": {
+    "bigEvent": "Böyük tədbir",
+    "bigEventHint": "Böyük auditoriya üçün: izləyicilər yayımı təxminən 20 saniyə gecikmə ilə, daha az fasilə ilə izləyir.",
     "goLive": "Canlı Yayına Keçin",
     "youAreLive": "Siz Canlı Yayımsınız",
     "streamReady": "Yayım Hazır",

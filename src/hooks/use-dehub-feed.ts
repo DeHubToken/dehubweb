@@ -30,7 +30,7 @@ import { extractReplayUrl, isReplayTruncated } from '@/lib/live-replay';
 import { isStreamLive } from '@/lib/live-status';
 import { BLOCKED_POST_IDS } from '@/constants/post.constants';
 import { useAuth } from '@/contexts/AuthContext';
-import { hlsUrlFor, liveProviderOf, liveThumbnailFor } from '@/lib/live-ingest';
+import { hlsUrlFor, liveProviderOf, liveThumbnailFor, noteLatencyMode } from '@/lib/live-ingest';
 import { toStoryboard } from '@/lib/storyboard';
 
 // Fallback thumbnails for when API doesn't return one
@@ -248,6 +248,7 @@ export function mapNFTToVideoItem(nft: DeHubNFT, index: number): VideoItem {
     livePlaybackId: (nft as any).stream?.playbackId,
     livePlaybackUrl: (nft as any).stream?.playbackUrl,
     livePlaybackUrls: (() => {
+      noteLatencyMode((nft as any).stream);
       const hls = hlsUrlFor((nft as any).stream);
       if (!hls) return (nft as any).stream?.playbackUrl ? [(nft as any).stream.playbackUrl] : undefined;
       return liveProviderOf((nft as any).stream) === 'mediamtx'

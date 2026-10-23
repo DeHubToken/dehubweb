@@ -6467,6 +6467,8 @@
     }
   },
   "goLive": {
+    "bigEvent": "Gran evento",
+    "bigEventHint": "Para grandes audiencias: los espectadores lo ven unos 20 segundos por detrás, con menos interrupciones.",
     "goLive": "Emitir en directo",
     "youAreLive": "Estás en directo",
     "streamReady": "Retransmisión lista",

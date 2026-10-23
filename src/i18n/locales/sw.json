@@ -5378,6 +5378,8 @@
     }
   },
   "goLive": {
+    "bigEvent": "Tukio kubwa",
+    "bigEventHint": "Kwa hadhira kubwa: watazamaji hutazama nyuma kwa takriban sekunde 20, na kukatika kidogo.",
     "goLive": "Jifanya Mwenyeji",
     "youAreLive": "Wewe ni Mwenyeji",
     "streamReady": "Mkondo Umehanda",

@@ -4611,6 +4611,8 @@
     }
   },
   "goLive": {
+    "bigEvent": "Bûyera mezin",
+    "bigEventHint": "Ji bo temaşevanên zêde: temaşevan bi qasî 20 çirkeyan paşve temaşe dikin, bi kêmtir navberan.",
     "goLive": "بکەوەرە ستریم",
     "youAreLive": "تۆ لایڤیت",
     "streamReady": "ستریم ئامادەیە",

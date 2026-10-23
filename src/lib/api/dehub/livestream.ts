@@ -229,6 +229,26 @@ export async function getStreamIngestUrl(streamId: string): Promise<{ result: { 
   return { result: { ingestUrl: unwrap(res).ingestUrl || '' } };
 }
 
+/**
+ * Move a stream that never got on air off the self-hosted ingest and onto
+ * Livepeer, keeping its post (owner only). The broadcaster calls this when
+ * every route to the self-hosted server has failed before any media flowed,
+ * and publishes with what comes back instead of showing an error.
+ */
+export async function fallBackToLivepeer(streamId: string): Promise<{
+  provider: string;
+  playbackId: string;
+  streamKey: string;
+  livepeerId?: string;
+  ingestUrl?: string;
+}> {
+  const res = await apiCall<any>(`/api/live/${streamId}/ingest-fallback`, {
+    method: 'POST',
+    requiresAuth: true,
+  });
+  return unwrap(res) as any;
+}
+
 export async function updateStreamSettings(
   streamId: string,
   settings: Record<string, unknown>
