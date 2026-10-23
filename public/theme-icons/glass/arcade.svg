@@ -1,19 +1,53 @@
 <!-- @license lucide-static v0.468.0 - ISC -->
-<svg
-  class="lucide lucide-gamepad-2"
-  xmlns="http://www.w3.org/2000/svg"
-  width="24"
-  height="24"
-  viewBox="0 0 24 24"
-  fill="none"
-  stroke="#e2ffff"
-  stroke-width="1.5"
-  stroke-linecap="round"
-  stroke-linejoin="round"
->
-  <line x1="6" x2="10" y1="11" y2="11" />
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="128" height="128" viewBox="-2 -2 28 28" fill="none" stroke-linecap="round" stroke-linejoin="round" data-material="liquid-prism">
+  <defs>
+    <g id="prism-shape"><line x1="6" x2="10" y1="11" y2="11" />
   <line x1="8" x2="8" y1="9" y2="13" />
   <line x1="15" x2="15.01" y1="12" y2="12" />
   <line x1="18" x2="18.01" y1="10" y2="10" />
-  <path d="M17.32 5H6.68a4 4 0 0 0-3.978 3.59c-.006.052-.01.101-.017.152C2.604 9.416 2 14.456 2 16a3 3 0 0 0 3 3c1 0 1.5-.5 2-1l1.414-1.414A2 2 0 0 1 9.828 16h4.344a2 2 0 0 1 1.414.586L17 18c.5.5 1 1 2 1a3 3 0 0 0 3-3c0-1.545-.604-6.584-.685-7.258-.007-.05-.011-.1-.017-.151A4 4 0 0 0 17.32 5z" />
+  <path d="M17.32 5H6.68a4 4 0 0 0-3.978 3.59c-.006.052-.01.101-.017.152C2.604 9.416 2 14.456 2 16a3 3 0 0 0 3 3c1 0 1.5-.5 2-1l1.414-1.414A2 2 0 0 1 9.828 16h4.344a2 2 0 0 1 1.414.586L17 18c.5.5 1 1 2 1a3 3 0 0 0 3-3c0-1.545-.604-6.584-.685-7.258-.007-.05-.011-.1-.017-.151A4 4 0 0 0 17.32 5z" /></g>
+    <linearGradient id="prism-rim" x1="2" y1="1" x2="21" y2="23" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#ffffff"/>
+      <stop offset=".15" stop-color="#d3efff"/>
+      <stop offset=".29" stop-color="#6ea6d9"/>
+      <stop offset=".39" stop-color="#f8ffff"/>
+      <stop offset=".52" stop-color="#b4c8e9"/>
+      <stop offset=".65" stop-color="#526b93"/>
+      <stop offset=".78" stop-color="#f3ffff"/>
+      <stop offset=".9" stop-color="#a8dce7"/>
+      <stop offset="1" stop-color="#ffffff"/>
+    </linearGradient>
+    <linearGradient id="prism-spectrum" x1="2" y1="20" x2="22" y2="3" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#83edff"/>
+      <stop offset=".16" stop-color="#88aaff"/>
+      <stop offset=".3" stop-color="#cca7f8"/>
+      <stop offset=".42" stop-color="#ffe4b0"/>
+      <stop offset=".52" stop-color="#f9ffff"/>
+      <stop offset=".65" stop-color="#8eeaff"/>
+      <stop offset=".78" stop-color="#b7c8ff"/>
+      <stop offset=".9" stop-color="#ffc9de"/>
+      <stop offset="1" stop-color="#fff2cb"/>
+    </linearGradient>
+    <linearGradient id="prism-core" x1="5" y1="2" x2="18" y2="23" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#efffff" stop-opacity=".9"/>
+      <stop offset=".25" stop-color="#a8cddc" stop-opacity=".38"/>
+      <stop offset=".48" stop-color="#163d55" stop-opacity=".66"/>
+      <stop offset=".7" stop-color="#c7f5ff" stop-opacity=".58"/>
+      <stop offset="1" stop-color="#ffffff" stop-opacity=".92"/>
+    </linearGradient>
+    <linearGradient id="prism-glint" x1="4" y1="2" x2="16" y2="22" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#ffffff"/>
+      <stop offset=".27" stop-color="#ffffff" stop-opacity=".95"/>
+      <stop offset=".45" stop-color="#ffffff" stop-opacity="0"/>
+      <stop offset=".68" stop-color="#ffffff" stop-opacity=".12"/>
+      <stop offset=".86" stop-color="#ffffff" stop-opacity=".85"/>
+      <stop offset="1" stop-color="#ffffff" stop-opacity=".3"/>
+    </linearGradient>
+  </defs>
+  <use xlink:href="#prism-shape" stroke="#061820" stroke-width="3.15" opacity=".42" transform="translate(0 .65)"/>
+  <use xlink:href="#prism-shape" stroke="url(#prism-rim)" stroke-width="2.9"/>
+  <use xlink:href="#prism-shape" stroke="url(#prism-spectrum)" stroke-width="2.28" opacity=".86"/>
+  <use xlink:href="#prism-shape" stroke="url(#prism-core)" stroke-width="1.55"/>
+  <use xlink:href="#prism-shape" stroke="url(#prism-glint)" stroke-width=".42" transform="translate(-.32 -.48)"/>
+  <use xlink:href="#prism-shape" stroke="url(#prism-spectrum)" stroke-width=".28" opacity=".7" transform="translate(.45 .5)"/>
 </svg>
