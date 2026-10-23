@@ -15,5 +15,5 @@ BEGIN
   RETURNING r.count,r.window_start INTO v_count,v_start;
   RETURN QUERY SELECT v_count<=p_limit,greatest(p_limit-v_count,0),v_start+v_window;
 END $$;
-REVOKE ALL ON FUNCTION public.consume_edge_rate_limit(text,text,integer,bigint) FROM PUBLIC;
+REVOKE ALL ON FUNCTION public.consume_edge_rate_limit(text,text,integer,bigint) FROM PUBLIC, anon, authenticated;
 GRANT EXECUTE ON FUNCTION public.consume_edge_rate_limit(text,text,integer,bigint) TO service_role;

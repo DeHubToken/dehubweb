@@ -1,5 +1,6 @@
 \ir video-dub-tip-bootstrap.sql
 CREATE ROLE service_role BYPASSRLS;
+ALTER DEFAULT PRIVILEGES IN SCHEMA public GRANT EXECUTE ON FUNCTIONS TO anon, authenticated, service_role;
 CREATE PUBLICATION supabase_realtime;
 \ir ../../supabase/migrations/20260202080422_e795f1e7-33e0-493f-871a-60db529bddbe.sql
 ALTER TABLE public.audio_spaces ADD COLUMN last_speech_at timestamptz;
