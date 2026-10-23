@@ -2,10 +2,9 @@ import { useEffect, useId, useRef } from 'react';
 import { isBackgroundPaused, subscribeBackgroundPaused } from '@/lib/background-gate';
 
 const crystalRibbons = [
-  'M-240 910C160 160 500 1240 920 520S1420-80 1850 180L1810 225C1430-15 1290 920 890 600S210 300-200 960Z',
-  'M-150 110C390 750 540-160 1060 240S1490 1080 1810 680L1840 730C1440 1210 1370 630 1010 330S340 860-190 145Z',
-  'M160-230C950 120 80 690 760 1000L710 1080C-70 790 820 130 120-170Z',
-  'M1130-200C500 240 1710 470 1120 1120L1190 1170C1810 510 680 220 1200-170Z',
+  'M-260 1270C160 500 550 1100 920 430S1420-180 1850-160L1850 130C1390 30 1280 380 1030 700S210 650-100 1360Z',
+  'M-220 520C300 1100 690 570 1010 240S1480-100 1840 110L1850 330C1430 30 1260 200 1080 430S370 1320-260 710Z',
+  'M260-180C660 200 560 360 1020 350S1360 650 1770 620L1780 770C1240 750 1300 430 960 470S540 360 180-120Z',
 ];
 
 export function GlassBackground() {
@@ -47,12 +46,12 @@ export function GlassBackground() {
   return <div ref={ref} data-glass-background data-glass-crystal aria-hidden="true"><div data-glass-parallax>
     <svg data-glass-crystal-sculpture viewBox="0 0 1600 1000" preserveAspectRatio="xMidYMid slice" fill="none">
       <defs>
-        <linearGradient id={`${id}face`} x1=".1" y1="0" x2=".9" y2="1">
-          <stop stopColor="#edffff" stopOpacity=".02"/><stop offset=".24" stopColor="#eaffff" stopOpacity=".2"/><stop offset=".28" stopColor="#fff" stopOpacity=".55"/><stop offset=".31" stopColor="currentColor" stopOpacity=".04"/><stop offset=".65" stopColor="currentColor" stopOpacity=".16"/><stop offset=".92" stopColor="#fff" stopOpacity=".3"/><stop offset="1" stopColor="#fff" stopOpacity=".04"/>
+        <linearGradient id={`${id}face`} x1="0" y1="0" x2=".75" y2="1">
+          <stop stopColor="currentColor" stopOpacity="0"/><stop offset=".18" stopColor="currentColor" stopOpacity=".03"/><stop offset=".37" stopColor="currentColor" stopOpacity=".14"/><stop offset=".48" stopColor="#b8f5ff" stopOpacity=".27"/><stop offset=".53" stopColor="#e2fbff" stopOpacity=".36"/><stop offset=".57" stopColor="currentColor" stopOpacity=".18"/><stop offset=".72" stopColor="currentColor" stopOpacity=".05"/><stop offset="1" stopColor="currentColor" stopOpacity="0"/>
         </linearGradient>
         <linearGradient id={`${id}edge`} x2="1" y2="1"><stop stopColor="#fff" stopOpacity=".7"/><stop offset=".3" stopColor="#fff" stopOpacity=".08"/><stop offset=".65" stopColor="#eaffff" stopOpacity=".5"/><stop offset="1" stopColor="#fff" stopOpacity=".08"/></linearGradient>
       </defs>
-      {crystalRibbons.map((d, i) => <path key={i} d={d} fill={`url(#${id}face)`} stroke={`url(#${id}edge)`} strokeWidth="1.2" />)}
+      {crystalRibbons.map((d, i) => <path key={i} d={d} fill={`url(#${id}face)`} opacity={i === 2 ? .45 : 1} />)}
     </svg>
   </div></div>;
 }
