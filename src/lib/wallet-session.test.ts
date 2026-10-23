@@ -77,6 +77,16 @@ describe('wallet session fetch', () => {
     expect(sentHeaders().get('x-wallet-session')).toBeNull();
   });
 
+  it.each(['call_sessions', 'callback_requests', 'audio_spaces', 'space_participants', 'raise_hand_requests', 'stage_reminders'])('blocks unsigned %s requests on direct and relay routes', async (table) => {
+    mocks.invoke.mockResolvedValue({ data: null, error: new Error('signed out') });
+    await setup();
+    for (const base of ['https://aigxuutjaqsywioxjefr.supabase.co', 'https://dehub.io/_sb']) {
+      const response = await window.fetch(`${base}/rest/v1/${table}?select=*`, { headers: { 'x-wallet-address': WALLET } });
+      expect(response.status).toBe(401);
+    }
+    expect(mocks.base).not.toHaveBeenCalled();
+  });
+
   it('reports the first unsigned request once, with the server refusal', async () => {
     mocks.invoke.mockResolvedValue({
       data: null,

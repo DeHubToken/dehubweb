@@ -14,8 +14,8 @@ jobs:
       - uses: denoland/setup-deno@v2
         with:
           deno-version: v2.x
-      - run: deno test --allow-net supabase/functions/fetch-link-preview/public-page.test.ts
-      - run: deno check supabase/functions/fetch-link-preview/index.ts
+      - run: deno test --node-modules-dir=none --allow-net supabase/functions/fetch-link-preview/public-page.test.ts
+      - run: deno check --node-modules-dir=none supabase/functions/fetch-link-preview/index.ts
   authorization:
     runs-on: ubuntu-latest
     timeout-minutes: 10
