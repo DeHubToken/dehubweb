@@ -15,6 +15,9 @@ export function GlassBackground() {
     if (!canvas) return;
     const context = canvas.getContext('2d');
     if (!context) return;
+    const lightCanvas = document.createElement('canvas');
+    const lightContext = lightCanvas.getContext('2d');
+    if (!lightContext) return;
     const paths = crystalRibbons.map(path => new Path2D(path));
     let resizeFrame = 0;
     const paint = () => {
@@ -23,6 +26,8 @@ export function GlassBackground() {
       const ratio = Math.min(window.devicePixelRatio || 1, 2);
       canvas.width = Math.round(width * ratio);
       canvas.height = Math.round(height * ratio);
+      lightCanvas.width = canvas.width;
+      lightCanvas.height = canvas.height;
       context.fillStyle = '#021018';
       context.fillRect(0, 0, canvas.width, canvas.height);
       context.fillStyle = getComputedStyle(canvas).getPropertyValue('--tint-accent').trim() || '#00d2e6';
@@ -34,6 +39,8 @@ export function GlassBackground() {
       const scale = Math.max(width / 1600, height / 1000);
       context.setTransform(ratio * scale, 0, 0, ratio * scale,
         ratio * (width - 1600 * scale) / 2, ratio * (height - 1000 * scale) / 2);
+      lightContext.setTransform(ratio * scale, 0, 0, ratio * scale,
+        ratio * (width - 1600 * scale) / 2, ratio * (height - 1000 * scale) / 2);
       const sky = context.createRadialGradient(1600, 0, 0, 1600, 0, 1500);
       sky.addColorStop(0, mix([17, 69, 82], .31));
       sky.addColorStop(1, 'transparent');
@@ -44,21 +51,22 @@ export function GlassBackground() {
       floor.addColorStop(1, 'transparent');
       context.fillStyle = floor;
       context.fillRect(-1600, -1000, 4800, 3000);
-      const light = context.createLinearGradient(0, 0, 1600, 1000);
+      const light = lightContext.createLinearGradient(0, 0, 1600, 1000);
       light.addColorStop(0, 'rgba(255,255,255,.7)');
       light.addColorStop(.3, 'rgba(255,255,255,.08)');
       light.addColorStop(.65, 'rgba(234,255,255,.5)');
       light.addColorStop(1, 'rgba(255,255,255,.08)');
-      context.strokeStyle = light;
-      context.lineCap = 'round';
+      lightContext.strokeStyle = light;
+      lightContext.lineCap = 'round';
       paths.forEach((path, index) => {
         for (let layer = 0; layer < 64; layer++) {
-          context.lineWidth = 300 * (1 - layer / 64);
-          context.globalAlpha = (.003 + layer * .000125) * (index === 2 ? .3 : 1);
-          context.stroke(path);
+          lightContext.lineWidth = 300 * (1 - layer / 64);
+          lightContext.globalAlpha = (.003 + layer * .000125) * (index === 2 ? .3 : 1);
+          lightContext.stroke(path);
         }
       });
-      context.globalAlpha = 1;
+      context.setTransform(1, 0, 0, 1, 0, 0);
+      context.drawImage(lightCanvas, 0, 0);
     };
     // Paint once per size change. Pointer response and the slow light loop
     // move this single surface instead of compositing translucent SVG layers.
@@ -70,7 +78,7 @@ export function GlassBackground() {
     const colourObserver = new MutationObserver(paint);
     colourObserver.observe(document.documentElement, { attributes: true, attributeFilter: ['style'] });
     paint();
-    return () => { observer.disconnect(); colourObserver.disconnect(); cancelAnimationFrame(resizeFrame); };
+    return () => { observer.disconnect(); colourObserver.disconnect(); cancelAnimationFrame(resizeFrame); lightCanvas.width = 0; lightCanvas.height = 0; };
   }, []);
   useEffect(() => {
     const root = ref.current;
