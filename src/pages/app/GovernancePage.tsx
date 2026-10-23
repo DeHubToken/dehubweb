@@ -522,69 +522,90 @@ function InfiniteScrollSentinel({ onIntersect, isFetching }: { onIntersect: () =
 // ──────────────────────────────────────────────────
 // Vote Weight Info Panel
 // ──────────────────────────────────────────────────
-function VoteWeightInfo({ badgeBalance, username }: { badgeBalance: number | undefined; username: string | null | undefined }) {
+/**
+ * Vote weight, as a chip that sits on the tab row so the island stays slim.
+ * The tier table opens under that row from the info button.
+ */
+function VoteWeightChip({
+  badgeBalance,
+  username,
+  showTiers,
+  onToggleTiers,
+}: {
+  badgeBalance: number | undefined;
+  username: string | null | undefined;
+  showTiers: boolean;
+  onToggleTiers: () => void;
+}) {
   const { t } = useTranslation();
   const { weight, badgeName, lent } = useSelfVoteWeight();
   const navigate = useNavigate();
   const badgeImageUrl = getBadgeUrl(badgeBalance, username);
-  const [showTiers, setShowTiers] = useState(false);
 
   return (
-    <div className="bg-zinc-800/50 rounded-xl p-3">
-      <div className="flex items-center justify-between">
-        <div className="flex items-center gap-2">
-          {badgeImageUrl && <BadgeIcon badgeBalance={badgeBalance} username={username} className="w-5 h-5" />}
-          <span className="text-zinc-300 text-xs font-medium">
-            {weight > 0 ? (
-              <>{t('governance.yourVoteWeight')} <span className="text-white font-bold">{weight}×</span> ({badgeName})</>
-            ) : (
-              <span className="text-zinc-500">
-                {lent
-                  ? t('governance.lentBadgeCantVote')
-                  : t('governance.holdTokensToVote')}{' '}
-                <button
-                  type="button"
-                  onClick={() => navigate('/app/buy')}
-                  className="text-white font-semibold underline underline-offset-2"
-                >
-                  {t('governance.buyDhb', { defaultValue: 'Buy DHB' })}
-                </button>
-              </span>
-            )}
+    <div
+      // On phones the info icon is hidden, so the chip itself opens the tiers.
+      onClick={(event) => { if (!(event.target as HTMLElement).closest('button')) onToggleTiers(); }}
+      className="flex min-w-0 max-w-full cursor-pointer items-center gap-1.5 rounded-full bg-zinc-800/50 px-2 py-1 sm:pl-2.5 sm:pr-1.5"
+    >
+      {weight > 0 && badgeImageUrl && <BadgeIcon badgeBalance={badgeBalance} username={username} className="h-4 w-4 shrink-0" />}
+      <span className="min-w-0 truncate text-xs font-medium text-zinc-300">
+        {weight > 0 ? (
+          // Phones keep just the multiplier so the chip fits beside the tabs.
+          <><span className="hidden sm:inline">{t('governance.yourVoteWeight')} </span><span className="font-bold text-white">{weight}×</span><span className="hidden sm:inline"> ({badgeName})</span></>
+        ) : (
+          <span className="text-zinc-500">
+            {lent ? t('governance.lentBadgeCantVote') : t('governance.holdTokensToVote')}
           </span>
-        </div>
+        )}
+      </span>
+      {weight === 0 && (
         <button
           type="button"
-          onClick={() => setShowTiers(!showTiers)}
-          className="text-zinc-500 hover:text-zinc-300 transition-colors"
+          onClick={() => navigate('/app/buy')}
+          className="shrink-0 text-xs font-semibold text-white underline underline-offset-2"
         >
-          <Info className="w-3.5 h-3.5" />
+          {t('governance.buyDhb', { defaultValue: 'Buy DHB' })}
         </button>
-      </div>
-      
-      <AnimatePresence>
-        {showTiers && (
-          <motion.div
-            initial={{ height: 0, opacity: 0 }}
-            animate={{ height: 'auto', opacity: 1 }}
-            exit={{ height: 0, opacity: 0 }}
-            transition={{ duration: 0.2 }}
-            className="overflow-hidden"
-          >
-            <div className="mt-3 pt-3 border-t border-white/5 grid grid-cols-2 gap-1">
-              {Object.entries(BADGE_VOTE_WEIGHT).map(([name, w]) => (
-                <div key={name} className={`flex items-center justify-between px-2 py-1 rounded-lg text-[10px] ${
-                  name === badgeName ? 'bg-white/10 text-white' : 'text-zinc-500'
-                }`}>
-                  <span>{name}</span>
-                  <span className="font-bold">{w}×</span>
-                </div>
-              ))}
-            </div>
-          </motion.div>
-        )}
-      </AnimatePresence>
+      )}
+      <button
+        type="button"
+        onClick={onToggleTiers}
+        aria-expanded={showTiers}
+        aria-label={t('governance.yourVoteWeight')}
+        className={`shrink-0 p-0.5 text-zinc-500 transition-colors hover:text-zinc-300 ${weight > 0 ? 'hidden sm:block' : ''}`}
+      >
+        <Info className="h-3.5 w-3.5" />
+      </button>
     </div>
+  );
+}
+
+function VoteWeightTiers({ open }: { open: boolean }) {
+  const { badgeName } = useSelfVoteWeight();
+  return (
+    <AnimatePresence>
+      {open && (
+        <motion.div
+          initial={{ height: 0, opacity: 0 }}
+          animate={{ height: 'auto', opacity: 1 }}
+          exit={{ height: 0, opacity: 0 }}
+          transition={{ duration: 0.2 }}
+          className="overflow-hidden"
+        >
+          <div className="grid grid-cols-2 gap-1 rounded-xl bg-zinc-800/50 p-2">
+            {Object.entries(BADGE_VOTE_WEIGHT).map(([name, w]) => (
+              <div key={name} className={`flex items-center justify-between px-2 py-1 rounded-lg text-[10px] ${
+                name === badgeName ? 'bg-white/10 text-white' : 'text-zinc-500'
+              }`}>
+                <span>{name}</span>
+                <span className="font-bold">{w}×</span>
+              </div>
+            ))}
+          </div>
+        </motion.div>
+      )}
+    </AnimatePresence>
   );
 }
 
@@ -597,6 +618,7 @@ export default function GovernancePage() {
   const { isAuthenticated, openLoginModal, user } = useAuth();
   const [activeTab, setActiveTab] = useState<PageTab>('proposals');
   const [sort, setSort] = useState<GovernanceSort>('most_voted');
+  const [showTiers, setShowTiers] = useState(false);
   const [searchInput, setSearchInput] = useSurfaceDraft("pages/app/GovernancePage.tsx:searchInput", '');
   const search = useDebouncedValue(searchInput, 300);
   const [drawerOpen, setDrawerOpen] = useState(false);
@@ -662,35 +684,47 @@ export default function GovernancePage() {
           </IslandAction>
         }
         tabs={
-          <PageTabs
-            value={activeTab}
-            onChange={setActiveTab}
-            tabs={[
-              { id: 'proposals', label: t('governance.proposals') },
-              { id: 'passed', label: t('governance.passed'), icon: <CheckCircle2 className="h-3.5 w-3.5" />, count: passedCount > 0 ? passedCount : undefined },
-              { id: 'rejected', label: t('governance.rejected'), icon: <X className="h-3.5 w-3.5" />, count: rejectedCount > 0 ? rejectedCount : undefined },
-            ]}
-          />
+          // Vote weight shares the tab row; when the row is too narrow it
+          // wraps under the tabs rather than squeezing them.
+          <div className="flex flex-wrap items-center gap-x-2 gap-y-2">
+            <PageTabs
+              className="min-w-0"
+              value={activeTab}
+              onChange={setActiveTab}
+              tabs={[
+                { id: 'proposals', label: t('governance.proposals') },
+                { id: 'passed', label: t('governance.passed'), icon: <CheckCircle2 className="h-3.5 w-3.5" />, count: passedCount > 0 ? passedCount : undefined },
+                { id: 'rejected', label: t('governance.rejected'), icon: <X className="h-3.5 w-3.5" />, count: rejectedCount > 0 ? rejectedCount : undefined },
+              ]}
+            />
+            {isAuthenticated && (
+              <div className="ml-auto min-w-0 max-w-full">
+                <VoteWeightChip
+                  badgeBalance={userBadgeBalance}
+                  username={username}
+                  showTiers={showTiers}
+                  onToggleTiers={() => setShowTiers((open) => !open)}
+                />
+              </div>
+            )}
+          </div>
         }
       >
-        {/* Vote weight info */}
-        {isAuthenticated && (
-          <VoteWeightInfo badgeBalance={userBadgeBalance} username={username} />
-        )}
+        {isAuthenticated && <VoteWeightTiers open={showTiers} />}
 
-        {/* Search */}
-        <div className="relative">
-          <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-zinc-500" />
-          <Input
-            placeholder={t('governance.searchProposals')}
-            value={searchInput}
-            onChange={(e) => setSearchInput(e.target.value)}
-            className="pl-10 bg-zinc-800 border-zinc-700 text-white placeholder:text-zinc-500 rounded-xl"
-          />
+        {/* Search, with the sort on its right */}
+        <div className="flex items-center gap-2">
+          <div className="relative min-w-0 flex-1">
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-zinc-500" />
+            <Input
+              placeholder={t('governance.searchProposals')}
+              value={searchInput}
+              onChange={(e) => setSearchInput(e.target.value)}
+              className="pl-10 bg-zinc-800 border-zinc-700 text-white placeholder:text-zinc-500 rounded-xl"
+            />
+          </div>
+          <PageTabs size="sm" className="shrink-0" value={sort} onChange={setSort} tabs={SORTS} />
         </div>
-
-        {/* Sort */}
-        <PageTabs size="sm" value={sort} onChange={setSort} tabs={SORTS} />
       </PageIsland>
 
       {/* Content */}
