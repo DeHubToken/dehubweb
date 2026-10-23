@@ -15,7 +15,7 @@ jobs:
       - name: Prepare isolated browser
         run: |
           npm install --prefix "$RUNNER_TEMP/governance-browser" --no-save --no-package-lock --ignore-scripts playwright@1.64.0
-          "$RUNNER_TEMP/governance-browser/node_modules/.bin/playwright" install --with-deps chromium
+          google-chrome --version
       - name: Check production guard and toast
         env:
           GOVERNANCE_BROWSER_ROOT: ${{ runner.temp }}/governance-browser

@@ -30,7 +30,7 @@ for (const base of ['https://aigxuutjaqsywioxjefr.supabase.co', 'https://dehub.i
 }
 
 // Exercise the shipped UI's rejection handling without a real account or write.
-const browser = await chromium.launch({ headless: true });
+const browser = await chromium.launch({ headless: true, channel: 'chrome' });
 const context = await browser.newContext({ viewport: { width: 1280, height: 900 }, locale: 'en-GB' });
 const user = { address: wallet, walletAddress: wallet, username: 'governance_check', displayName: 'Governance verification', badgeBalance: 0, ownBadgeBalance: 0, badgeLock: null };
 await context.addInitScript(({ wallet, token, user, cacheVersion }) => {
