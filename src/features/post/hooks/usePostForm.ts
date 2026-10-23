@@ -15,7 +15,9 @@ import { createLogger } from '@/lib/logger';
 
 const mintLogger = createLogger('PostForm.handlePost');
 import { useCreatorPlansLite } from '@/hooks/use-creator-plans';
-import { mintPost, createPoll, getMintFee, getPostQuota, quotePostCharge, keepPostOffChain, AuthenticationError, PaymentRequiredError, type MintFeeQuoteResponse, type PostQuotaStatus, type ShopLink } from '@/lib/api/dehub';
+import { mintPost, createPoll, getMintFee, getPostQuota, quotePostCharge, keepPostOffChain, AuthenticationError, PaymentRequiredError, UploadHttpError, type MintFeeQuoteResponse, type MintResponse, type PostQuotaStatus, type ShopLink } from '@/lib/api/dehub';
+import { startDraftVideo, isDraftUsable, type DraftVideoUpload, type DraftVideoSnapshot } from '../lib/draft-video';
+import { usePostProcessingStore } from '@/store/postProcessingStore';
 // Cheap localStorage reads, no wallet stack — safe to import statically even
 // though the mint helpers below cannot be (see the note under this import).
 import { isSmartWalletSession } from '@/lib/connection-source';
@@ -262,6 +264,8 @@ interface UsePostFormReturn {
     isForKids: boolean;
     shopLinks: ShopLink[];
     shopListingIds: string[];
+    /** The attached video's early upload, or null when there is none. */
+    draftVideo: DraftVideoSnapshot | null;
   };
   actions: PostFormActions & {
     setScheduledDate: (date: Date | null) => void;
@@ -545,6 +549,33 @@ export function usePostForm(
   }, [user?.address]);
 
   const [isGeneratingThumbnail, setIsGeneratingThumbnail] = useState(false);
+
+  /**
+   * The attached video, already on its way to the server — see
+   * lib/draft-video. Keyed on the file itself, so removing or replacing the
+   * video, or the composer going away, aborts it; closing the sheet with the
+   * video still attached does not, because the composer stays mounted and the
+   * video is still there on the next open. Quotes keep the old flow.
+   */
+  const draftVideoRef = useRef<DraftVideoUpload | null>(null);
+  const [draftVideo, setDraftVideo] = useState<DraftVideoSnapshot | null>(null);
+  const attachedVideoFile = media.find((m) => m.type === 'video')?.file ?? null;
+  const signedInForDraft = !!user?.address;
+  useEffect(() => {
+    if (!attachedVideoFile || isQuoting || !signedInForDraft) return;
+    const upload = startDraftVideo(attachedVideoFile, 'video', {
+      onRejected: (message) => toast.error(message),
+    });
+    draftVideoRef.current = upload;
+    setDraftVideo(upload.getSnapshot());
+    const unsubscribe = upload.subscribe(setDraftVideo);
+    return () => {
+      unsubscribe();
+      upload.abort();
+      if (draftVideoRef.current === upload) draftVideoRef.current = null;
+      setDraftVideo(null);
+    };
+  }, [attachedVideoFile, isQuoting, signedInForDraft]);
 
   // Auto-save active draft to localStorage whenever text fields change.
   // Debounced: JSON.stringify + synchronous localStorage.setItem on EVERY
@@ -1889,40 +1920,77 @@ export function usePostForm(
         };
       }
 
-      const mintResponse = await mintPost(
-        {
-          name: submittedTitle,
-          description: submittedDescription,
-          quotedTokenId: isQuoting ? Number(quotedPost!.tokenId) : undefined,
-          articleBody: isQuoting ? undefined : extra?.articleBody,
-          articleImage: extra?.articleImage,
-          socialImage: extra?.socialImage,
-          postType,
-          chainId,
-          category: mergedCategories,
-          streamInfo,
-          files: files.length > 0 ? files : undefined,
-          thumbnail,
-          minterAddress,
-          mintOptOut: !mintingThisPost,
-          scheduledAt: !liveMode && !isQuoting && scheduledDate ? scheduledDate.toISOString() : undefined,
-          scheduledFor: liveMode === 'video' && scheduledDate ? scheduledDate.toISOString() : undefined,
-          idempotencyKey: postAttemptRef.current.key,
-          contentRating: isMature ? 'mature' : undefined,
-          // Only ever sent as true — absent is what "not kids content" means, so
-          // a false would store a second representation of the same state.
-          forKids: isForKids ? true : undefined,
-          // Sent with the mint rather than PATCHed after it, so a live post is
-          // already carrying its board when the stream comes up.
-          shopLinks: shopLinks.length ? shopLinks : undefined,
-          // What we are ABOUT to attach. The attach itself needs the tokenId
-          // this call returns, so the count goes on the token now and the rows
-          // land a moment later — see the attach step below.
-          shopListingCount: shopListingIds.length || undefined,
-          plans: subscriberPlanIds,
-        },
-        (percent) => setUploadProgress(Math.round(percent * 0.6)) // XHR bytes map to 0-60%
-      );
+      const mintParams: Parameters<typeof mintPost>[0] = {
+        name: submittedTitle,
+        description: submittedDescription,
+        quotedTokenId: isQuoting ? Number(quotedPost!.tokenId) : undefined,
+        articleBody: isQuoting ? undefined : extra?.articleBody,
+        articleImage: extra?.articleImage,
+        socialImage: extra?.socialImage,
+        postType,
+        chainId,
+        category: mergedCategories,
+        streamInfo,
+        files: files.length > 0 ? files : undefined,
+        thumbnail,
+        minterAddress,
+        mintOptOut: !mintingThisPost,
+        scheduledAt: !liveMode && !isQuoting && scheduledDate ? scheduledDate.toISOString() : undefined,
+        scheduledFor: liveMode === 'video' && scheduledDate ? scheduledDate.toISOString() : undefined,
+        idempotencyKey: postAttemptRef.current.key,
+        contentRating: isMature ? 'mature' : undefined,
+        // Only ever sent as true — absent is what "not kids content" means, so
+        // a false would store a second representation of the same state.
+        forKids: isForKids ? true : undefined,
+        // Sent with the mint rather than PATCHed after it, so a live post is
+        // already carrying its board when the stream comes up.
+        shopLinks: shopLinks.length ? shopLinks : undefined,
+        // What we are ABOUT to attach. The attach itself needs the tokenId
+        // this call returns, so the count goes on the token now and the rows
+        // land a moment later — see the attach step below.
+        shopListingCount: shopListingIds.length || undefined,
+        plans: subscriberPlanIds,
+      };
+      const uploadWithFile = (percent: number) => setUploadProgress(Math.round(percent * 0.6)); // XHR bytes map to 0-60%
+
+      /**
+       * The video went up as a draft while the caption was being written. Wait
+       * for its bytes (usually long done), then mint with only the thumbnail.
+       * A draft the server has lost or already spent comes back 409
+       * DRAFT_UNAVAILABLE and the post goes again the old way, file and all.
+       */
+      const draft = postType === 'video' && !isQuoting && media[0]?.type === 'video'
+        && draftVideoRef.current?.file === media[0].file ? draftVideoRef.current : null;
+      let draftVideoId: string | null = null;
+      if (draft && isDraftUsable(draft.getSnapshot())) {
+        const showDraftUpload = (snapshot: DraftVideoSnapshot) =>
+          setUploadProgress(Math.max(5, Math.round(snapshot.uploadPercent * 0.6)));
+        showDraftUpload(draft.getSnapshot());
+        const stopShowing = draft.subscribe(showDraftUpload);
+        try {
+          draftVideoId = await draft.uploaded;
+        } finally {
+          stopShowing();
+        }
+        if (draftVideoId && !isDraftUsable(draft.getSnapshot())) draftVideoId = null;
+      }
+
+      let mintResponse: MintResponse;
+      if (draftVideoId) {
+        try {
+          mintResponse = await mintPost(
+            { ...mintParams, files: undefined, draftVideoId },
+            (percent) => setUploadProgress(Math.max(55, Math.round(percent * 0.6))),
+          );
+        } catch (err) {
+          if (!(err instanceof UploadHttpError && err.status === 409 && err.code === 'DRAFT_UNAVAILABLE')) throw err;
+          console.warn('[Mint] Draft video unavailable — uploading the file with the post');
+          setUploadProgress(5);
+          mintResponse = await mintPost(mintParams, uploadWithFile);
+        }
+      } else {
+        mintResponse = await mintPost(mintParams, uploadWithFile);
+      }
 
       console.log('[Mint] API response:', JSON.stringify(mintResponse, null, 2));
 
@@ -2332,6 +2400,14 @@ export function usePostForm(
           isOptimistic: true,
         };
         addOptimisticPost({ id: optimisticId, type: 'video', data: videoPost, createdAt: new Date() });
+        // The post is up; its transcode is not. The dock follows it from here,
+        // wherever the creator goes next.
+        if (!liveMode) {
+          usePostProcessingStore.getState().start({
+            tokenId: optimisticId,
+            thumbnail: media[0].thumbnail || undefined,
+          });
+        }
       } else if (hasImage && media[0]) {
         // Image post
         const imagePost: ImagePost = {
@@ -2634,6 +2710,7 @@ export function usePostForm(
       isEnhancing,
       isPosting,
       uploadProgress,
+      draftVideo,
       mintAwaitingWallet,
 
       scheduledDate,

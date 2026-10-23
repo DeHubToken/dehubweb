@@ -57,6 +57,7 @@ import { StageRadioPanel } from './StageRadioPanel';
 import { StageRadioNowPlaying } from './StageRadioNowPlaying';
 import { StageTTS } from './StageTTS';
 import { VoiceEffectSelector } from '@/components/app/stages/VoiceEffectSelector';
+import { StageAvatar } from '@/components/app/stages/StageAvatar';
 import { ScheduleStagePanel } from '@/components/app/stages/ScheduleStagePanel';
 import { StaticWaveform } from '@/components/app/audio/StaticWaveform';
 import { StageRateButton } from '@/components/app/stages/StageRateButton';
@@ -486,17 +487,13 @@ export function AudioSpacesModalBody() {
                             <h4 className="font-medium text-white text-sm truncate">{space.title}</h4>
                             <div className="flex items-center gap-3 mt-1 text-xs text-white/40 whitespace-nowrap">
                               <span className="flex items-center gap-1">
-                                {(() => {
-                                  const avatar = buildAvatarUrl(space.host_wallet_address || '', space.host_avatar)
-                                    || buildAvatarCdnFallbackUrl(space.host_wallet_address || '');
-                                  return avatar ? (
-                                    <img src={avatar} alt="" className="w-4 h-4 rounded-md object-cover" onError={(e) => { e.currentTarget.style.display = 'none'; }} />
-                                  ) : (
-                                    <span className="w-4 h-4 rounded-md bg-zinc-700 flex items-center justify-center text-[8px] text-white font-medium">
-                                      {(space.host_username || 'A').charAt(0).toUpperCase()}
-                                    </span>
-                                  );
-                                })()}
+                                <StageAvatar
+                                  address={space.host_wallet_address}
+                                  avatar={space.host_avatar}
+                                  name={space.host_username}
+                                  size={16}
+                                  className="w-4 h-4 rounded-md text-[8px]"
+                                />
                                 <BadgedName lookupId={space.host_username || space.host_wallet_address}>
                                   @{space.host_username || t('stages.anonymous')}
                                 </BadgedName>
@@ -1173,17 +1170,13 @@ function StageCard({
       )}
       <div className="flex items-center gap-3 mt-2 text-sm text-white/50">
         <span className="flex items-center gap-1">
-          {(() => {
-            const avatar = buildAvatarUrl(space.host_wallet_address || '', space.host_avatar)
-              || buildAvatarCdnFallbackUrl(space.host_wallet_address || '');
-            return avatar ? (
-              <img src={avatar} alt="" className="w-4 h-4 rounded-md object-cover" onError={(e) => { e.currentTarget.style.display = 'none'; }} />
-            ) : (
-              <span className="w-4 h-4 rounded-md bg-zinc-700 flex items-center justify-center text-[8px] text-white font-medium">
-                {(space.host_username || 'A').charAt(0).toUpperCase()}
-              </span>
-            );
-          })()}
+          <StageAvatar
+            address={space.host_wallet_address}
+            avatar={space.host_avatar}
+            name={space.host_username}
+            size={16}
+            className="w-4 h-4 rounded-md text-[8px]"
+          />
           <BadgedName lookupId={space.host_username || space.host_wallet_address}>
             @{space.host_username || t('stages.anonymous')}
           </BadgedName>
@@ -1387,12 +1380,16 @@ function HandRequestItem({
   return (
     <div className="flex items-center justify-between gap-2 p-2 bg-white/5 rounded-xl">
       <div className="flex items-center gap-2">
-        <Avatar className="w-8 h-8">
-          <AvatarImage src={request.avatar || undefined} />
-          <AvatarFallback className="bg-white/10 text-white text-xs">
-            {request.username?.[0]?.toUpperCase() || '?'}
-          </AvatarFallback>
-        </Avatar>
+        {/* The stored value is a CDN path, not a URL; handed to <img> raw it
+            resolved against the page and 404d, so every raised hand showed an
+            initial even for people with a picture. */}
+        <StageAvatar
+          address={request.wallet_address}
+          avatar={request.avatar}
+          name={request.username}
+          size={32}
+          className="w-8 h-8 rounded-lg bg-white/10 text-xs"
+        />
         <span className="text-sm text-white">{request.username || t('stages.anonymous')}</span>
       </div>
       <Button onClick={onApprove} size="sm" className="bg-white/10 hover:bg-white/20 text-white border-0 rounded-xl">{_copy("copy.6007acbe30b2", { defaultValue: "Approve" })}</Button>

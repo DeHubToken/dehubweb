@@ -40,7 +40,7 @@ import {
   DrawerTitle,
 } from '@/components/ui/drawer';
 import { getChainById, type ChainId } from '@/components/app/ChainSelector';
-import { useTipPayment, MIN_TIP_DHB, MAX_TIP_DHB } from '@/hooks/use-tip-payment';
+import { useTipPayment, MIN_TIP_DHB, MAX_TIP_DHB, MIN_DIRECT_TIP, DIRECT_QUICK_AMOUNTS } from '@/hooks/use-tip-payment';
 import { useTipNetwork } from '@/hooks/use-tip-network';
 import { useAuth } from '@/contexts/AuthContext';
 // NOTE: stream-controller and pay-chain reach wallet/contract code (wagmi +
@@ -53,6 +53,8 @@ import { getAccountInfo } from '@/lib/api/dehub';
 import { toast } from 'sonner';
 import { fundTipFromSource } from '@/lib/tip-funding-run';
 import type { TipFundingSource } from '@/lib/tip-funding';
+import usdcLogo from '@/assets/usdc-logo.png';
+import usdtLogo from '@/assets/usdt-logo.png';
 
 // Reads wallet balances (wallet stack), so it loads with the open drawer.
 const TipPayWith = lazy(() => import('@/components/app/tips/TipPayWith'));
@@ -99,11 +101,24 @@ export function TipModal({
   // Base first, so the tip itself always leaves from Base.
   const [payWith, setPayWith] = useState<TipFundingSource | null>(null);
   const [funding, setFunding] = useState(false);
+  // Each open starts in DHB, so a saved DHB draft is never read as USDC.
+  useEffect(() => { if (open) setPayWith(null); }, [open]);
   const sendInFlight = useRef(false);
   const [preparing, setPreparing] = useState(false);
 
+  // USDC/USDT: paid as is to the creator; the typed amount is in that token.
+  const directToken = payWith?.direct ?? null;
+  const directLogo = directToken?.symbol === 'USDT' ? usdtLogo : usdcLogo;
+  const directBalance = directToken && payWith ? Number(payWith.balance) / 10 ** payWith.decimals : null;
+  const changePayWith = (source: TipFundingSource | null) => {
+    // 5,000 DHB is not 5,000 USDC: a new unit clears the amount.
+    if (source?.direct || directToken) setAmount('');
+    setPayWith(source);
+  };
+
   const parsedAmount = parseAbbreviatedAmount(amount);
-  const isValidAmount = !Number.isNaN(parsedAmount) && parsedAmount >= MIN_TIP_DHB;
+  const isValidAmount = !Number.isNaN(parsedAmount) && parsedAmount >= (directToken ? MIN_DIRECT_TIP : MIN_TIP_DHB)
+    && (directBalance == null || parsedAmount <= directBalance);
 
   // Base first, then BNB, then Base again as the place to fail — it is the one
   // chain the tipper can actually top up in-app. A pinned setting wins outright:
@@ -210,6 +225,11 @@ export function TipModal({
         toast.error(_copy("copy.babd987b2954", { defaultValue: "Could not verify the recipient privacy setting. No tip was sent." }));
         return;
       }
+      if (directToken) {
+        lastTipAmount.current = 0;
+        await tip(parsedAmount, directToken);
+        return;
+      }
       if (payWith) {
         if (!walletAddress) return;
         setFunding(true);
@@ -227,6 +247,10 @@ export function TipModal({
   const handleQuickAmount = (val: number) => setAmount(String(val));
 
   const handleAll = () => {
+    if (directBalance != null) {
+      if (directBalance >= MIN_DIRECT_TIP) setAmount(String(Math.floor(directBalance * 100) / 100));
+      return;
+    }
     if (dhbBalance != null && dhbBalance >= MIN_TIP_DHB) {
       setAmount(String(Math.floor(dhbBalance)));
     }
@@ -272,7 +296,7 @@ export function TipModal({
           <div>
             <p className="text-white/60 text-xs mb-2">{t('tip.quickAmounts', 'Quick amounts')}</p>
             <div className="flex flex-wrap gap-2">
-              {QUICK_AMOUNTS.map((val) => (
+              {(directToken ? DIRECT_QUICK_AMOUNTS : QUICK_AMOUNTS).map((val) => (
                 <button
                   key={val}
                   type="button"
@@ -285,7 +309,7 @@ export function TipModal({
                 >
                   <span className="inline-flex items-center gap-1">
                     {val.toLocaleString()}{' '}
-                    <img src={dehubCoin} alt={tokenLabel()} className="w-4 h-4" style={{ marginTop: '-1px' }} />
+                    <img src={directToken ? directLogo : dehubCoin} alt={directToken?.symbol ?? tokenLabel()} className="w-4 h-4" style={{ marginTop: '-1px' }} />
                   </span>
                 </button>
               ))}
@@ -295,7 +319,11 @@ export function TipModal({
           <div>
             <div className="flex items-center justify-between mb-2">
               <p className="text-white/60 text-xs">{t('tip.customAmount', 'Or enter amount')}</p>
-              {dhbBalance != null && (
+              {directToken && directBalance != null ? (
+                <p className="text-white/30 text-xs">
+                  {directBalance.toLocaleString(undefined, { maximumFractionDigits: 2 })} {directToken.symbol}
+                </p>
+              ) : dhbBalance != null && (
                 <p className="text-white/30 text-xs">
                   {dhbBalance.toLocaleString()} <DhbCoin />{_copy("copy.9b15afcf73c5", { defaultValue: " · via " })}{chainName}
                 </p>
@@ -303,11 +331,11 @@ export function TipModal({
             </div>
             <div className="relative flex items-center gap-2">
               <div className="relative flex-1">
-                <img src={dehubCoin} alt={tokenLabel()} className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5" />
+                <img src={directToken ? directLogo : dehubCoin} alt={directToken?.symbol ?? tokenLabel()} className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5" />
                 <Input
                   type="text"
                   inputMode="decimal"
-                  placeholder="e.g. 500, 1.5k, 2m"
+                  placeholder={directToken ? 'e.g. 5' : 'e.g. 500, 1.5k, 2m'}
                   value={amount}
                   onChange={(e) => setAmount(e.target.value)}
                   className="pl-11 bg-white/5 border-white/10 text-white placeholder:text-white/40 h-12 rounded-xl"
@@ -316,7 +344,7 @@ export function TipModal({
               <button
                 type="button"
                 onClick={handleAll}
-                disabled={dhbBalance == null || dhbBalance < MIN_TIP_DHB}
+                disabled={directToken ? (directBalance ?? 0) < MIN_DIRECT_TIP : dhbBalance == null || dhbBalance < MIN_TIP_DHB}
                 className="h-12 px-4 rounded-xl bg-white/5 border border-white/10 text-white/60 hover:text-white hover:bg-white/10 text-sm font-medium transition-colors disabled:opacity-30 disabled:cursor-not-allowed"
               >{_copy("copy.a52ace420f21", { defaultValue: "All" })}</button>
             </div>
@@ -324,7 +352,7 @@ export function TipModal({
 
           {open && walletAddress && !recipientPrivate ? (
             <Suspense fallback={null}>
-              <TipPayWith amountDhb={isValidAmount ? parsedAmount : 0} value={payWith} onChange={setPayWith} />
+              <TipPayWith amountDhb={isValidAmount && !directToken ? parsedAmount : 0} value={payWith} onChange={changePayWith} direct recipientName={creatorName} />
             </Suspense>
           ) : null}
 

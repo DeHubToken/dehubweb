@@ -5,6 +5,7 @@
  */
 
 import { rejectCardPayment } from './card-payment';
+import { DHB_SALES_PAUSED, DHB_SALES_PAUSED_MESSAGE } from '@/lib/dhb-sales';
 import { getAuthToken } from './dehub';
 
 const DEHUB_API_BASE = "https://api.dehub.io";
@@ -239,6 +240,7 @@ export async function getAvailableTokens(): Promise<DPayToken[]> {
  * below does without it — waves through a purchase the checkout then 406s.
  */
 export async function getTokenAvailableSupply(tokenSymbol: string, chainId?: number): Promise<number> {
+  if (DHB_SALES_PAUSED) return 0;
   console.log('[DPay API] Checking available supply for:', tokenSymbol, chainId ?? '(all chains)');
   try {
     const response = await fetch(
@@ -825,6 +827,7 @@ export async function createCryptoIntent(params: {
   refundTo: string;
   termsAndServicesAccepted: boolean;
 }): Promise<CryptoIntent> {
+  if (DHB_SALES_PAUSED) throw new Error(DHB_SALES_PAUSED_MESSAGE);
   const token = getAuthToken();
   if (!token) throw new Error('Authentication required');
   const response = await fetch(`${DEHUB_API_BASE}/api/dpay/crypto/intent`, {
@@ -878,6 +881,7 @@ export async function createDirectIntent(params: {
   receiverAddress: string;
   termsAndServicesAccepted: boolean;
 }): Promise<CryptoIntent> {
+  if (DHB_SALES_PAUSED) throw new Error(DHB_SALES_PAUSED_MESSAGE);
   const token = getAuthToken();
   if (!token) throw new Error('Authentication required');
   const response = await fetch(`${DEHUB_API_BASE}/api/dpay/crypto/direct/intent`, {
