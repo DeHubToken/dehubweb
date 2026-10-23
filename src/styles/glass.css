@@ -192,7 +192,7 @@ html[data-theme='glass'] .docs-root :is(
   position: fixed; inset: 0; z-index: 0; overflow: hidden; pointer-events: none;
   background: radial-gradient(ellipse at 45% 25%, color-mix(in srgb, var(--tint-accent) 42%, #002c31), color-mix(in srgb, var(--tint-accent) 18%, #001b20));
 }
-[data-glass-background][data-glass-crystal] { background:radial-gradient(ellipse at 28% 14%,color-mix(in srgb,var(--tint-accent) 23%,#0b252c),color-mix(in srgb,var(--tint-accent) 6%,#030b11) 78%); }
+[data-glass-background][data-glass-crystal] { background:radial-gradient(ellipse at 100% 0%,color-mix(in srgb,var(--tint-accent) 31%,#114552),transparent 58%),radial-gradient(ellipse at 20% 100%,color-mix(in srgb,var(--tint-accent) 13%,#082c38),transparent 60%),#021018; }
 [data-glass-parallax] { position:absolute; inset:-5%; transform:translate3d(var(--glass-pointer-x,0px),var(--glass-pointer-y,0px),0) rotate(var(--glass-pointer-r,0deg)); transition:transform 650ms cubic-bezier(.2,.7,.2,1); }
 [data-glass-crystal-sculpture] { width:100%; height:100%; color:var(--tint-accent); animation:glass-crystal-drift 32s ease-in-out infinite alternate; }
 [data-glass-background][data-paused='true'] [data-glass-crystal-sculpture] { animation-play-state:paused; }
