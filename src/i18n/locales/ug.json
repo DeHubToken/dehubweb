@@ -6119,7 +6119,10 @@
     "play": "قويۇش",
     "pause": "توختىتىش",
     "listens_one": "{{count}} Listen",
-    "listens_other": "{{count}} listens"
+    "listens_other": "{{count}} listens",
+    "lyrics": "ناخشا تېكىستى",
+    "lyricsLoading": "تېكىست ئىزدەۋاتىدۇ…",
+    "lyricsNone": "تېكىست تېپىلمىدى"
   },
   "converter": {
     "seoTitle": "Converter — DeHub'ga video import qilish",

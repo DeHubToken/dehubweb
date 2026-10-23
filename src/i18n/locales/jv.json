@@ -5945,7 +5945,10 @@
     "play": "Mainake",
     "pause": "Pause",
     "listens_one": "{{count}} ngrungokake",
-    "listens_other": "{{count}} ngrungokake"
+    "listens_other": "{{count}} ngrungokake",
+    "lyrics": "Lirik",
+    "lyricsLoading": "Nggoleki lirik…",
+    "lyricsNone": "Lirik ora ketemu"
   },
   "converter": {
     "seoTitle": "Converter — impor video menyang DeHub",

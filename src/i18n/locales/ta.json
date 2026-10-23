@@ -6189,7 +6189,10 @@
     "play": "இயக்கு",
     "pause": "இடைநிறுத்து",
     "listens_one": "{{count}} கேளுங்கள்",
-    "listens_other": "{{count}} கேட்கிறார்"
+    "listens_other": "{{count}} கேட்கிறார்",
+    "lyrics": "பாடல் வரிகள்",
+    "lyricsLoading": "வரிகளைத் தேடுகிறது…",
+    "lyricsNone": "வரிகள் இல்லை"
   },
   "converter": {
     "seoTitle": "கன்வர্টர் — DeHub-க்கு வீடியோ இறக்குமதி செய்யவும்",

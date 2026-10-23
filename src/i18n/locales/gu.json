@@ -6178,7 +6178,10 @@
     "creator": "DeHub ક્રિએટર",
     "play": "રમો",
     "pause": "થોભો",
-    "listens_one": "{{count}} સાંભળો"
+    "listens_one": "{{count}} સાંભળો",
+    "lyrics": "ગીતના બોલ",
+    "lyricsLoading": "બોલ શોધી રહ્યા છીએ…",
+    "lyricsNone": "કોઈ બોલ મળ્યા નથી"
   },
   "converter": {
     "seoTitle": "કનવર્ટર — DeHub માં વીડિયો આયાત કરો",

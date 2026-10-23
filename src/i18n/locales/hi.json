@@ -6225,7 +6225,10 @@
     "play": "चलाएं",
     "pause": "रोकें",
     "listens_one": "{{count}} बार सुना गया",
-    "listens_other": "{{count}} बार सुना गया"
+    "listens_other": "{{count}} बार सुना गया",
+    "lyrics": "गीत के बोल",
+    "lyricsLoading": "बोल ढूँढ रहे हैं…",
+    "lyricsNone": "कोई बोल नहीं मिले"
   },
   "converter": {
     "seoTitle": "कनवर्टर — DeHub में वीडियो आयात करें",

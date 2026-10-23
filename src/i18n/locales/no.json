@@ -6197,7 +6197,10 @@
     "play": "Spill",
     "pause": "Pause",
     "listens_one": "{{count}} hør",
-    "listens_other": "{{count}} lytter"
+    "listens_other": "{{count}} lytter",
+    "lyrics": "Sangtekst",
+    "lyricsLoading": "Finner sangtekst…",
+    "lyricsNone": "Fant ingen sangtekst"
   },
   "converter": {
     "seoTitle": "Konverter — importer en video til DeHub",

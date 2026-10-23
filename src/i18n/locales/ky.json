@@ -6197,7 +6197,10 @@
     "play": "Ойнотуу",
     "pause": "Пауза",
     "listens_one": "{{count}} угуу",
-    "listens_other": "{{count}} listens"
+    "listens_other": "{{count}} listens",
+    "lyrics": "Ыр сөздөрү",
+    "lyricsLoading": "Сөздөр изделүүдө…",
+    "lyricsNone": "Сөздөр табылган жок"
   },
   "converter": {
     "seoTitle": "Конвертер — видеону DeHub-га импорттоо",

@@ -6202,7 +6202,10 @@
     "play": "玩",
     "pause": "暫停",
     "listens_one": "{{count}} 聽",
-    "listens_other": "{{count}} 聽緊"
+    "listens_other": "{{count}} 聽緊",
+    "lyrics": "歌詞",
+    "lyricsLoading": "搵緊歌詞…",
+    "lyricsNone": "搵唔到歌詞"
   },
   "converter": {
     "seoTitle": "轉換器 — 匯入影片到 DeHub",

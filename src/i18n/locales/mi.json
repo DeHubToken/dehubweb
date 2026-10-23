@@ -6176,7 +6176,10 @@
     "play": "Play",
     "pause": "Pause",
     "listens_one": "{{count}} whakarongo",
-    "listens_other": "{{count}} whakarongo"
+    "listens_other": "{{count}} whakarongo",
+    "lyrics": "Kupu waiata",
+    "lyricsLoading": "E rapu ana i ngā kupu…",
+    "lyricsNone": "Kāore he kupu i kitea"
   },
   "converter": {
     "seoTitle": "Converter — kawekawe he ataata ki DeHub",

@@ -6097,7 +6097,10 @@
     "play": "Játék",
     "pause": "Szüneteltetés",
     "listens_one": "{{count}} figyelj",
-    "listens_other": "{{count}} figyel"
+    "listens_other": "{{count}} figyel",
+    "lyrics": "Dalszöveg",
+    "lyricsLoading": "Dalszöveg keresése…",
+    "lyricsNone": "Nincs dalszöveg"
   },
   "converter": {
     "seoTitle": "Konverter — videó importálása a DeHubra",

@@ -6227,7 +6227,10 @@
     "play": "Phát",
     "pause": "Tạm dừng",
     "listens_one": "{{count}} lượt nghe",
-    "listens_other": "{{count}} lượt nghe"
+    "listens_other": "{{count}} lượt nghe",
+    "lyrics": "Lời bài hát",
+    "lyricsLoading": "Đang tìm lời bài hát…",
+    "lyricsNone": "Không tìm thấy lời"
   },
   "converter": {
     "seoTitle": "Converter — nhập video vào DeHub",

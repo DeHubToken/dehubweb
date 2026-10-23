@@ -6112,7 +6112,10 @@
     "play": "Ciyaar",
     "pause": "Jooji",
     "listens_one": "{{count}} dhageyso",
-    "listens_other": "{{count}} dhagaystayaasha"
+    "listens_other": "{{count}} dhagaystayaasha",
+    "lyrics": "Erayada heesta",
+    "lyricsLoading": "Waxaa la raadinayaa erayada…",
+    "lyricsNone": "Erayo lama helin"
   },
   "converter": {
     "seoTitle": "Converter — soo dejiso video in DeHub",

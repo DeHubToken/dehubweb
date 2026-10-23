@@ -6203,7 +6203,10 @@
     "play": "Ойнату",
     "pause": "Пауза",
     "listens_one": "{{count}} тыңдаңыз",
-    "listens_other": "{{count}} тығынады"
+    "listens_other": "{{count}} тығынады",
+    "lyrics": "Ән мәтіні",
+    "lyricsLoading": "Мәтін ізделуде…",
+    "lyricsNone": "Мәтін табылмады"
   },
   "converter": {
     "seoTitle": "Конвертер — видеоны DeHub-қа импорттау",

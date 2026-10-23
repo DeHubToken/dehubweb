@@ -6040,7 +6040,10 @@
     "play": "वाद्यताम्",
     "pause": "विरामः",
     "listens_one": "{{count}} सुनें",
-    "listens_other": "{{count}} सुनता है"
+    "listens_other": "{{count}} सुनता है",
+    "lyrics": "गीतशब्दाः",
+    "lyricsLoading": "शब्दाः अन्विष्यन्ते…",
+    "lyricsNone": "शब्दाः न लब्धाः"
   },
   "converter": {
     "seoTitle": "कनवर्टर — DeHub में वीडियो आयात करें",
