@@ -113,6 +113,8 @@
     "heading": "Shorts ng DeHub"
   },
   "settings": {
+    "showDislikesDesc": "Kahit sino ay puwedeng magbukas ng tab na Ayaw sa profile mo. Kapag naka-off, ikaw lang ang makakakita.",
+    "showDislikes": "Ipakita sa lahat ang mga ayaw ko",
     "postingChain": "Blockchain para sa mga post",
     "showOnline": "Ipakita kapag ako ay online",
     "showOnlineDesc": "Nakakakita ang mga taong pinadalhan mo ng mensahe ng berdeng tuldok sa tabi ng iyong pangalan habang gumagamit ka ng DeHub",
@@ -1445,6 +1447,7 @@
     "returnHome": "Return Home"
   },
   "profile": {
+    "dislikes": { "loadMore": "Mag-load pa", "privateDesc": "Itinatago ng account na ito ang mga ayaw nito.", "privateTitle": "Pribado ang mga ayaw", "emptyOther": "Wala pang ayaw.", "emptyOwn": "Ang mga post na ayaw mo ay aalis sa mga feed mo at lalabas dito. I-undo ang ayaw para ibalik ang post.", "emptyTitle": "Wala pang ayaw" },
     "back": "Back",
     "usernameAvailable": "Username available!",
     "signUpToClaim": "Mag-sign up ngayon upang i-claim",
@@ -1472,6 +1475,7 @@
       "commentUnavailable": "Hindi na available ang komentong ito"
     },
     "tabs": {
+      "dislikes": "Ayaw",
       "playlists": "Mga Playlist"
     },
     "offerWorthNow": "Tinatayang {{amount}} na token sa kasalukuyang rate",

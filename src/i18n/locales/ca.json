@@ -113,6 +113,8 @@
     "heading": "Curts de DeHub"
   },
   "settings": {
+    "showDislikesDesc": "Qualsevol pot obrir la pestanya «No m'agrada» del teu perfil. Si està desactivat, només tu la pots veure.",
+    "showDislikes": "Mostra a tothom els meus «no m'agrada»",
     "postingChain": "Cadena de blocs de les publicacions",
     "showOnline": "Mostra quan estic en línia",
     "showOnlineDesc": "Les persones a les quals enviïs missatges veuen un punt verd al costat del teu nom mentre utilitzes DeHub",
@@ -1391,6 +1393,7 @@
     "returnHome": "Tornar a l'inici"
   },
   "profile": {
+    "dislikes": { "loadMore": "Carrega'n més", "privateDesc": "Aquest compte es guarda els seus «no m'agrada».", "privateTitle": "Els «no m'agrada» són privats", "emptyOther": "Encara res.", "emptyOwn": "Les publicacions que no t'agraden surten dels teus feeds i apareixen aquí. Desfés el «no m'agrada» per recuperar la publicació.", "emptyTitle": "Encara cap «no m'agrada»" },
     "back": "Enrere",
     "usernameAvailable": "Nom d'usuari disponible!",
     "signUpToClaim": "Registra't avui per reclamar",
@@ -1418,6 +1421,7 @@
       "commentUnavailable": "Aquest comentari ja no està disponible"
     },
     "tabs": {
+      "dislikes": "No m'agrada",
       "playlists": "Llista de reproducció"
     },
     "offerWorthNow": "Aproximadament {{amount}} tokens al tipus actual",

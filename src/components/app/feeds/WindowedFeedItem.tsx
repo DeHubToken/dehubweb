@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState, type HTMLAttributes } from 'react';
+import { useDislikeVanish } from '@/hooks/use-dislike-vanish';
 
 type Subscription = { intersect: (entry: IntersectionObserverEntry) => void; resize: (entry: ResizeObserverEntry) => void };
 const subscriptions = new Map<Element, Subscription>();
@@ -27,8 +28,12 @@ function observe(element: HTMLElement, subscription: Subscription) {
 }
 
 /** Keep the scroll runway, but release distant cards' media, effects and DOM. */
-export function WindowedFeedItem({ children, estimatedHeight, eager = false, style, ...props }:
-  HTMLAttributes<HTMLDivElement> & { estimatedHeight: number; eager?: boolean }) {
+export function WindowedFeedItem({ children, estimatedHeight, eager = false, style, vanishOnDislike, ...props }:
+  HTMLAttributes<HTMLDivElement> & {
+    estimatedHeight: number; eager?: boolean;
+    /** The post in this slot. The slot folds away when the viewer dislikes it. */
+    vanishOnDislike?: string | number | null;
+  }) {
   const supported = typeof IntersectionObserver !== 'undefined' && typeof ResizeObserver !== 'undefined';
   const [mounted, setMounted] = useState(eager || !supported);
   const root = useRef<HTMLDivElement>(null);
@@ -55,6 +60,9 @@ export function WindowedFeedItem({ children, estimatedHeight, eager = false, sty
       },
     });
   }, [supported]);
+
+  const vanished = useDislikeVanish(vanishOnDislike, root);
+  if (vanished) return null;
 
   return <div {...props} ref={root} data-feed-mounted={mounted ? 'true' : 'false'}
     style={mounted ? style : { ...style, height: height.current, boxSizing: 'border-box', overflow: 'hidden' }}>

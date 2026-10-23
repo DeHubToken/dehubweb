@@ -896,6 +896,7 @@ export function VideosFeed({ showFilters = false, isRefreshing = false, refreshK
                   data-cinematic-first={index === 0 ? '' : undefined}
                   className="rounded-xl border border-white/[0.12] bg-white/[0.03] backdrop-blur-[24px] p-3"
                   eager={index < 3} estimatedHeight={520}
+                  vanishOnDislike={video.id}
                 >
                   <VideoCard video={video} />
                 </WindowedFeedItem>

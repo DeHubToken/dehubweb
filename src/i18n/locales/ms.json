@@ -113,6 +113,8 @@
     "heading": "DeHub Shorts"
   },
   "settings": {
+    "showDislikesDesc": "Sesiapa boleh membuka tab Tidak Suka pada profil anda. Apabila dimatikan, hanya anda yang boleh melihatnya.",
+    "showDislikes": "Tunjukkan tidak suka saya kepada semua",
     "postingChain": "Rantaian blok siaran",
     "showOnline": "Tunjukkan apabila saya berada dalam talian",
     "showOnlineDesc": "Orang yang anda mesej melihat titik hijau di sebelah nama anda semasa anda menggunakan DeHub",
@@ -1658,6 +1660,7 @@
     "returnHome": "Return Home"
   },
   "profile": {
+    "dislikes": { "loadMore": "Muat lagi", "privateDesc": "Akaun ini menyimpan tidak sukanya sendiri.", "privateTitle": "Tidak suka adalah peribadi", "emptyOther": "Belum ada apa-apa.", "emptyOwn": "Siaran yang anda tidak suka keluar dari suapan anda dan dipaparkan di sini. Batalkan tidak suka untuk mengembalikan siaran.", "emptyTitle": "Belum ada tidak suka" },
     "back": "Back",
     "usernameAvailable": "Username available!",
     "signUpToClaim": "Daftar hari ini untuk menuntut",
@@ -1685,6 +1688,7 @@
       "commentUnavailable": "Komen ini tidak lagi tersedia"
     },
     "tabs": {
+      "dislikes": "Tidak Suka",
       "playlists": "Senarai main"
     },
     "offerWorthNow": "Kira-kira {{amount}} token pada kadar semasa",

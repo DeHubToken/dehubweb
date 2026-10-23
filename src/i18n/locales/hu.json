@@ -113,6 +113,8 @@
     "heading": "DeHub Shorts"
   },
   "settings": {
+    "showDislikesDesc": "Bárki megnyithatja a profilod Nemtetszések lapját. Ha ki van kapcsolva, csak te látod.",
+    "showDislikes": "Nemtetszéseim megjelenítése mindenkinek",
     "postingChain": "Bejegyzések blokklánca",
     "showOnline": "Megjelenítés, amikor online vagyok",
     "showOnlineDesc": "Azok a személyek, akiknek üzenetet küldesz, egy zöld pontot látnak a neved mellett, miközben a DeHubot használod",
@@ -1390,6 +1392,7 @@
     "returnHome": "Vissza a kezdőlapra"
   },
   "profile": {
+    "dislikes": { "loadMore": "Továbbiak betöltése", "privateDesc": "Ez a fiók megtartja magának a nemtetszéseit.", "privateTitle": "A nemtetszések privátak", "emptyOther": "Még semmi.", "emptyOwn": "A nem tetsző bejegyzések eltűnnek a hírfolyamaidból, és itt jelennek meg. Vond vissza a nemtetszést, hogy visszahozd a bejegyzést.", "emptyTitle": "Még nincs nemtetszés" },
     "back": "Vissza",
     "usernameAvailable": "Felhasználónév elérhető!",
     "signUpToClaim": "Regisztráljon és foglalja le",
@@ -1417,6 +1420,7 @@
       "commentUnavailable": "Ez a megjegyzés már nem érhető el"
     },
     "tabs": {
+      "dislikes": "Nemtetszések",
       "playlists": "Játéklisták"
     },
     "offerWorthNow": "Körülbelül {{amount}} token a jelenlegi árfolyamon",

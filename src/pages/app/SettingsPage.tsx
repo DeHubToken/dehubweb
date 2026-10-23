@@ -91,7 +91,7 @@ import { useAuth as useAuthContext } from '@/contexts/AuthContext';
 import { useMatureContent } from '@/hooks/use-mature-content';
 import { useKidsMode } from '@/hooks/use-kids-mode';
 import { KidsModeDrawer } from '@/components/app/settings/KidsModeDrawer';
-import { Baby, RectangleHorizontal } from 'lucide-react';
+import { Baby, RectangleHorizontal, ThumbsDown } from 'lucide-react';
 import { JungleMoodToggle } from '@/components/app/jungle/JungleMoodToggle';
 import { useJungleMood } from '@/lib/jungle-mood';
 import { useHideWatched } from '@/hooks/use-watched-videos';
@@ -1642,7 +1642,7 @@ function QuietHoursSection() {
 function PrivacySettings() {
   const { t: _copy } = _useCopy();
   const { t } = useTranslation();
-  const { showFollowersFollowing, hideFollowerCounts, isPrivate, hideBadgeAndBalance, defaultPostVisibility, aiScraping, showOnline, updateSettings, isUpdating, isLoading } = usePrivacySettings();
+  const { showFollowersFollowing, hideFollowerCounts, isPrivate, hideBadgeAndBalance, defaultPostVisibility, aiScraping, showOnline, showDislikes, updateSettings, isUpdating, isLoading } = usePrivacySettings();
   const { whoCanMessage, doNotDisturb, isUpdating: isDmUpdating, updateWhoCanMessage, updateDoNotDisturb } = useDmSettings();
   const { option: walletUnlockInterval, setOption: setWalletUnlockInterval } = useWalletUnlockInterval();
   const [isUpdatingVisibility, setIsUpdatingVisibility] = useState(false);
@@ -1811,6 +1811,15 @@ function PrivacySettings() {
             description={t('settings.showOnlineDesc')}
             defaultChecked={showOnline}
             onCheckedChange={(checked) => updateSettings({ show_online: checked })}
+            disabled={isUpdating || isLoading}
+          />
+          <SettingToggle
+            icon={ThumbsDown}
+            anchor="show-dislikes"
+            title={t('settings.showDislikes')}
+            description={t('settings.showDislikesDesc')}
+            defaultChecked={showDislikes}
+            onCheckedChange={(checked) => updateSettings({ show_dislikes: checked })}
             disabled={isUpdating || isLoading}
           />
           {/* Only rendered while it still does something. Outside the 30-day
