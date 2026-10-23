@@ -271,6 +271,7 @@ import { DeHubPageLoader, ButtonLoader } from '@/components/app/DeHubLoader';
 import { usePendingAction } from '@/hooks/use-pending-action';
 import { useScrollFadeMask } from '@/components/app/feeds/useScrollFadeMask';
 import { ThemePreviewCard } from '@/components/app/settings/ThemePreviewCard';
+import { KeywordFiltersSection } from '@/components/app/settings/KeywordFiltersSection';
 
 export default function SettingsPage() {
   const { t: _copy } = _useCopy();
@@ -2031,6 +2032,11 @@ function PrivacySettings() {
       {/* Blocked Users */}
       <div data-setting-anchor="blocked-users">
         <BlockedUsersSection />
+      </div>
+
+      {/* Muted words — keyword filters */}
+      <div data-setting-anchor="muted-words">
+        <KeywordFiltersSection />
       </div>
 
       {/* Geo-Blocking */}

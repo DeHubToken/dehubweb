@@ -176,6 +176,7 @@ interface ImageCardProps {
 import { createMediaAspectCache } from '@/lib/media-aspect-cache';
 import { viewerShareUrl } from '@/lib/share-url';
 import { AltTextBadge } from './AltTextBadge';
+import { KeywordFilterGate } from './KeywordFilterGate';
 const imageAspectRatioCache = createMediaAspectCache(
   () => localStorage.getItem('media-aspects-v1'), value => localStorage.setItem('media-aspects-v1', value),
 );
@@ -686,7 +687,7 @@ function FeedDescription({
   );
 }
 
-export const ImageCard = memo(function ImageCard({ post, aboveFold = false, onOpenComments, isImmersive = false, postPage = false }: ImageCardProps) {
+const ImageCardBody = memo(function ImageCard({ post, aboveFold = false, onOpenComments, isImmersive = false, postPage = false }: ImageCardProps) {
   const { t: _copy } = _useCopy();
   const [showComments, setShowComments] = useState(false);
   const [commentsInitialTab, setCommentsInitialTab] = useState<'replies' | 'quotes' | 'reposts' | 'search' | undefined>(undefined);
@@ -1781,5 +1782,18 @@ export const ImageCard = memo(function ImageCard({ post, aboveFold = false, onOp
         </DrawerContent>
       </Drawer>
     </div>
+  );
+});
+
+/** Every post passes the viewer's keyword filters first — see KeywordFilterGate. */
+export const ImageCard = memo(function FilteredImageCard(props: ImageCardProps) {
+  const { post } = props;
+  return (
+    <KeywordFilterGate
+      texts={[post.title, post.description, post.caption, post.spoilerText, ...(post.mediaDescriptions ?? [])]}
+      authorId={post.creatorId}
+    >
+      <ImageCardBody {...props} />
+    </KeywordFilterGate>
   );
 });
