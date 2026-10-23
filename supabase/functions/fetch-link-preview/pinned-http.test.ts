@@ -69,7 +69,7 @@ Deno.test('native TLS pins the IP, preserves Host and verifies the original cert
             let sent = 0;
             while (sent < wire.length) sent += await conn.write(wire.subarray(sent));
           } catch (error) {
-            if (error instanceof Deno.errors.InvalidData || error instanceof Deno.errors.BadResource || error instanceof Deno.errors.ConnectionReset || error instanceof Deno.errors.UnexpectedEof) return;
+            if (error instanceof Deno.errors.InvalidData || error instanceof Deno.errors.BadResource || error instanceof Deno.errors.Interrupted || error instanceof Deno.errors.ConnectionReset || error instanceof Deno.errors.UnexpectedEof) return;
             throw error;
           } finally { connections.delete(conn); try { conn.close(); } catch { /* closed */ } }
         })());
