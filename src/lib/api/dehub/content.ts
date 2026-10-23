@@ -1,6 +1,6 @@
 import { apiCall, authedUpload } from './core';
 import { ResumableUnsupportedError, resumableUpload } from './resumable-upload';
-import type { ContentRating, QuotePolicy, ReplyPolicy, ShopLink } from './types';
+import type { ContentRating, PostVisibility, QuotePolicy, ReplyPolicy, ShopLink } from './types';
 
 export interface StreamInfo {
   isLockContent?: boolean;
@@ -119,6 +119,8 @@ export interface MintPostParams {
   quotePolicy?: QuotePolicy;
   /** Who may reply. Only sent when it is not the default, anyone. */
   replyPolicy?: ReplyPolicy;
+  /** Who may see it. Only sent when it is not the default, everyone. Fixed once posted. */
+  visibility?: PostVisibility;
 }
 
 export interface MintResponse {
@@ -269,6 +271,10 @@ export async function mintPost(
 
   if (params.replyPolicy && params.replyPolicy !== 'public') {
     formData.append('replyPolicy', params.replyPolicy);
+  }
+
+  if (params.visibility && params.visibility !== 'public') {
+    formData.append('visibility', params.visibility);
   }
 
   // Only sent when there is a board. An empty array would be a valid "clear

@@ -170,6 +170,7 @@ function toVideoItem(nft: DeHubNFT): VideoItem {
     mediaDescriptions: nft.mediaDescriptions,
     spoilerText: nft.spoilerText,
     quotePolicy: nft.quotePolicy,
+    visibility: nft.visibility,
     quoteRevoked: nft.quoteRevoked,
     replyPolicy: nft.replyPolicy,
     shopLinks: (nft as any).shopLinks,
@@ -261,6 +262,7 @@ function toImagePost(nft: DeHubNFT): ImagePost {
     mediaDescriptions: nft.mediaDescriptions,
     spoilerText: nft.spoilerText,
     quotePolicy: nft.quotePolicy,
+    visibility: nft.visibility,
     quoteRevoked: nft.quoteRevoked,
     replyPolicy: nft.replyPolicy,
     shopLinks: (nft as any).shopLinks,
@@ -344,6 +346,7 @@ function toTextPost(nft: DeHubNFT): TextPost {
     mediaDescriptions: nft.mediaDescriptions,
     spoilerText: nft.spoilerText,
     quotePolicy: nft.quotePolicy,
+    visibility: nft.visibility,
     quoteRevoked: nft.quoteRevoked,
     replyPolicy: nft.replyPolicy,
     shopLinks: (nft as any).shopLinks,
@@ -464,6 +467,7 @@ function toLiveStream(nft: DeHubNFT): LiveStream {
     mediaDescriptions: nft.mediaDescriptions,
     spoilerText: nft.spoilerText,
     quotePolicy: nft.quotePolicy,
+    visibility: nft.visibility,
     quoteRevoked: nft.quoteRevoked,
     replyPolicy: nft.replyPolicy,
     // The Shop board rides straight through to LiveStreamCard, which is what
@@ -1409,7 +1413,7 @@ function SinglePostPageContent({ inOverlay = false, overrideId }: SinglePostPage
               >
                 <Link2 className="w-5 h-5" /> {t('postOptions.copyLink')}
               </button>
-              {id && /^\d+$/.test(id) && (
+              {id && /^\d+$/.test(id) && (!(post as any)?.visibility || (post as any).visibility === 'public') && (
                 <button
                   onClick={() => { copyPostEmbedCode(id, t); setShowDesktopOptionsDrawer(false); }}
                   className="flex items-center gap-3 px-4 py-3 text-white hover:bg-white/10 rounded-xl transition-colors text-left"
