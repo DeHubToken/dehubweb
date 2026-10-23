@@ -11,14 +11,18 @@ export function GlassBackground() {
     const context = canvas.getContext('2d');
     if (!context) return;
     let resizeFrame = 0;
+    let painted = '';
     const paint = () => {
-      const { width, height } = canvas.getBoundingClientRect();
+      const width = canvas.clientWidth, height = canvas.clientHeight;
       if (!width || !height) return;
-      const ratio = Math.min(window.devicePixelRatio || 1, 1.5, Math.sqrt(1_500_000 / (width * height)));
-      canvas.width = Math.round(width * ratio);
-      canvas.height = Math.round(height * ratio);
       context.fillStyle = getComputedStyle(canvas).getPropertyValue('--tint-accent').trim() || '#00d2e6';
       const colour = context.fillStyle;
+      const key = `${width}:${height}:${colour}`;
+      if (key === painted) return;
+      painted = key;
+      const ratio = Math.min(window.devicePixelRatio || 1, 1.5, Math.sqrt(1_000_000 / (width * height)));
+      canvas.width = Math.round(width * ratio);
+      canvas.height = Math.round(height * ratio);
       const channels = /^#[\da-f]{6}$/i.test(colour)
         ? [1, 3, 5].map(offset => parseInt(colour.slice(offset, offset + 2), 16))
         : [0, 210, 230];
@@ -39,14 +43,15 @@ export function GlassBackground() {
     };
     // Paint once per size change. Pointer response and the slow light loop
     // move this single smooth field without repainting it on every frame.
-    const observer = new ResizeObserver(() => {
+    const queuePaint = () => {
       cancelAnimationFrame(resizeFrame);
       resizeFrame = requestAnimationFrame(paint);
-    });
+    };
+    const observer = new ResizeObserver(queuePaint);
     observer.observe(canvas);
-    const colourObserver = new MutationObserver(paint);
+    const colourObserver = new MutationObserver(queuePaint);
     colourObserver.observe(document.documentElement, { attributes: true, attributeFilter: ['style'] });
-    paint();
+    queuePaint();
     return () => { observer.disconnect(); colourObserver.disconnect(); cancelAnimationFrame(resizeFrame); };
   }, []);
   useEffect(() => {
