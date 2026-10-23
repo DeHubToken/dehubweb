@@ -272,19 +272,40 @@ export function reactionForTap(
 }
 
 /**
+ * True when a post's dislikes outnumber every positive reaction combined.
+ * A tie stays with the likes.
+ */
+export function dislikesOutnumberLikes(counts: ReactionCounts | null | undefined): boolean {
+  if (!counts) return false;
+  let likes = 0;
+  let dislikes = 0;
+  for (const key of POST_REACTIONS) {
+    const value = Math.max(0, counts[key] ?? 0);
+    if (isPositiveReaction(key)) likes += value;
+    else dislikes += value;
+  }
+  return dislikes > likes;
+}
+
+/**
  * The glyph a thumbs-up wears when it is the only vote control on the row.
  *
  * Posts and comments no longer carry a separate thumbs-DOWN: 👎 sits at the
  * end of the thumbs-up's tray. So a viewer who disliked something has to see
  * that on the one thumb left, or the vote would be invisible and impossible to
- * take back. A negative reaction of your own wins; otherwise it is the same
- * pick as `resolveLeadReaction` (and still never the crowd's 👎).
+ * take back. Your own reaction always wins. Without one, a post whose dislikes
+ * outnumber its likes wears 👎 (and `resolveThumbCount` shows the dislike
+ * total); otherwise it is the same pick as `resolveLeadReaction`.
+ *
+ * A tap is unaffected: with nothing held it still casts the positive lead, see
+ * `reactionForThumbTap`.
  */
 export function resolveThumbReaction(
   counts: ReactionCounts | null | undefined,
   myReaction?: PostReaction | null,
 ): PostReaction | null {
   if (myReaction && !isPositiveReaction(myReaction)) return myReaction;
+  if (!myReaction && dislikesOutnumberLikes(counts)) return DEFAULT_NEGATIVE_REACTION;
   return resolveLeadReaction(counts, myReaction);
 }
 

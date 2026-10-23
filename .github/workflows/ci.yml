@@ -363,6 +363,9 @@ jobs:
       - name: Complete editor scene descriptions
         run: node --experimental-strip-types --test supabase/functions/editor-agent/scene.test.ts supabase/functions/editor-agent/answer.test.ts supabase/functions/editor-agent/generation.test.ts
 
+      - name: Brand autopost text fits every platform
+        run: node --experimental-strip-types --test supabase/functions/growth-autopost/posts.test.ts
+
   boot-path:
     name: Boot path
     runs-on: ubuntu-latest

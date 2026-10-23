@@ -33,6 +33,7 @@
     "tokenPayments",
     "postingAllowance",
     "postComposer",
+    "postProcessing",
     "notifications",
     "wallet",
     "subscriptions",

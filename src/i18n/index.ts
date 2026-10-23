@@ -1,3 +1,4 @@
+import { pruneStaleLocalePacks } from '@/lib/storage-quota-guard';
 import { applyDateLocale } from './date-locale';
 import manifest from './locale-manifest.json';
 /**
@@ -174,6 +175,9 @@ export const preferredLanguage = defaultLang;
 const packOrigin = '';
 const readPackCache = async (key: string) => { try { return localStorage.getItem(`locale-pack:${key}`); } catch { return null; } };
 const writePackCache = async (key: string, value: string) => { try { localStorage.setItem(`locale-pack:${key}`, value); } catch {} };
+// Packs are cached per build version; drop older builds' copies so they don't
+// pile up (~100KB each) until localStorage is full.
+pruneStaleLocalePacks(manifest.version);
 
 const loadedPacks = new Set<string>([`${manifest.version}:en:core`]);
 const retryAfter = new Map<string, number>();

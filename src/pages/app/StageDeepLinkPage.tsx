@@ -83,6 +83,7 @@ import stagesMicIcon from '@/assets/icons/stages-mic-icon.webp';
 import { DeHubPageLoader } from '@/components/app/DeHubLoader';
 import { RelatedPostsFeed } from '@/components/app/feeds/RelatedPostsFeed';
 import type { AudioSpace } from '@/types/audio-spaces.types';
+import { StageAvatar } from '@/components/app/stages/StageAvatar';
 
 export default function StageDeepLinkPage() {
   const { t: _copy } = _useCopy();
@@ -290,9 +291,13 @@ export default function StageDeepLinkPage() {
                 avatarUrl={avatar || undefined}
                 className="group/host flex items-center gap-2 min-w-0"
               >
-                <div className="w-7 h-7 rounded-lg overflow-hidden shrink-0 bg-zinc-700">
-                  {avatar && <img src={avatar} alt="" className="w-full h-full object-cover" />}
-                </div>
+                <StageAvatar
+                  address={stage.host_wallet_address}
+                  avatar={stage.host_avatar}
+                  name={stage.host_username}
+                  size={28}
+                  className="w-7 h-7 rounded-lg text-xs"
+                />
                 <BadgedName
                   lookupId={stage.host_username || stage.host_wallet_address}
                   className="text-sm text-zinc-400 group-hover/host:text-white transition-colors"
@@ -457,9 +462,13 @@ export default function StageDeepLinkPage() {
                 avatarUrl={avatar || undefined}
                 className="group/host flex items-center gap-2 min-w-0"
               >
-                <div className="w-7 h-7 rounded-lg overflow-hidden shrink-0 bg-zinc-700">
-                  {avatar && <img src={avatar} alt="" className="w-full h-full object-cover" />}
-                </div>
+                <StageAvatar
+                  address={stage.host_wallet_address}
+                  avatar={stage.host_avatar}
+                  name={stage.host_username}
+                  size={28}
+                  className="w-7 h-7 rounded-lg text-xs"
+                />
                 <BadgedName
                   lookupId={stage.host_username || stage.host_wallet_address}
                   className="text-sm text-zinc-400 group-hover/host:text-white transition-colors"
@@ -656,9 +665,13 @@ export default function StageDeepLinkPage() {
                 avatarUrl={avatar || undefined}
                 className="group/host flex items-center gap-2 min-w-0"
               >
-                <div className="w-7 h-7 rounded-lg overflow-hidden shrink-0 bg-zinc-700">
-                  {avatar && <img src={avatar} alt="" className="w-full h-full object-cover" />}
-                </div>
+                <StageAvatar
+                  address={stage.host_wallet_address}
+                  avatar={stage.host_avatar}
+                  name={stage.host_username}
+                  size={28}
+                  className="w-7 h-7 rounded-lg text-xs"
+                />
                 <BadgedName
                   lookupId={stage.host_username || stage.host_wallet_address}
                   className="text-sm text-zinc-400 group-hover/host:text-white transition-colors"

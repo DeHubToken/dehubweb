@@ -61,6 +61,7 @@ describe('apple-app-site-association', () => {
       '/communities/dehub', '/communities/join/abc',
       '/stores/abc123', '/events/3',
       '/stages', '/stages/12',
+      '/r/MAL123', '/r/MAL123/stream',
     ]) {
       expect(opensApp(path), path).toBe(true);
     }

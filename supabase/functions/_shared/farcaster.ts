@@ -5,6 +5,7 @@
 // approves it in the Farcaster app via the returned approval URL.
 
 import { Wallet } from 'https://esm.sh/ethers@6.13.4';
+import { clipCastText } from './social-text.ts';
 
 const NEYNAR = 'https://api.neynar.com/v2/farcaster';
 
@@ -82,15 +83,6 @@ export async function getUsername(fid: number): Promise<string> {
   return String(res.data?.users?.[0]?.username ?? '');
 }
 
-/** Farcaster's standard cast limit is 320 bytes; links travel as embeds instead. */
-export function clipCastText(text: string, maxBytes = 320): string {
-  const enc = new TextEncoder();
-  if (enc.encode(text).length <= maxBytes) return text;
-  let out = text;
-  while (enc.encode(out + '…').length > maxBytes) out = out.slice(0, -1);
-  return out.trimEnd() + '…';
-}
-
 export async function publishCast(
   signerUuid: string,
   text: string,
@@ -107,4 +99,14 @@ export async function publishCast(
   });
   if (res.status >= 300 || !res.data?.cast?.hash) return { ok: false, error: res.data?.message || 'Farcaster rejected the cast.' };
   return { ok: true, hash: res.data.cast.hash };
+}
+
+/**
+ * dehub's own Farcaster account, for brand posts. An approved Neynar signer for
+ * the brand FID, created once by hand; null when Farcaster or the signer is not
+ * configured.
+ */
+export function brandSignerUuid(): string | null {
+  const signer = Deno.env.get('FARCASTER_BRAND_SIGNER_UUID');
+  return signer && Deno.env.get('NEYNAR_API_KEY') ? signer : null;
 }
