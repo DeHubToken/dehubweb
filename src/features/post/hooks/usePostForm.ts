@@ -48,7 +48,7 @@ import type { MediaFile, Currency, PostFormState, PostFormActions, PostFormCompu
 import type { FilterSettings, CropSettings } from '../types/filters';
 import type { Draft } from '../components/DraftsSheet';
 import type { TextPost, ImagePost, VideoItem } from '@/types/feed.types';
-import type { DeHubNFT } from '@/lib/api/dehub/types';
+import type { DeHubNFT, QuotePolicy } from '@/lib/api/dehub/types';
 import type { PostChainId } from '@/components/app/ChainSelector';
 import { normalizeCategoryList } from '@/lib/category-names';
 import { trackFirstPost } from '@/lib/analytics';
@@ -357,6 +357,8 @@ export function usePostForm(
   const [poll, setPoll] = useDraftState<PollData | null>(draftScope + ":poll", d?.poll ?? null);
   // The content warning being written: null is "none", '' is "toggled on, still empty".
   const [contentWarning, setContentWarning] = useState<string | null>(null);
+  // Who may quote the post. Anyone, unless the creator narrows it.
+  const [quotePolicy, setQuotePolicy] = useState<QuotePolicy>('public');
   const [isEnhancing, setIsEnhancing] = useState(false);
   const [isPosting, setIsPosting] = useState(false);
   const [uploadProgress, setUploadProgress] = useState(0);
@@ -1213,6 +1215,7 @@ export function usePostForm(
     setLiveMode(null);
     setPoll.complete(poll, null);
     setContentWarning(null);
+    setQuotePolicy('public');
     setScheduledDate(null);
     setTitleText.complete(titleText, '');
     // Cleared per post, deliberately. A board is usually specific to what was
@@ -1969,6 +1972,7 @@ export function usePostForm(
           ? media.filter(m => m.type !== 'audio').map(m => m.description || '')
           : undefined,
         spoilerText: contentWarning?.trim() || undefined,
+        quotePolicy,
       };
       const uploadWithFile = (percent: number) => setUploadProgress(Math.round(percent * 0.6)); // XHR bytes map to 0-60%
 
@@ -2594,7 +2598,15 @@ export function usePostForm(
         errorMsg.toLowerCase().includes('gas required exceeds allowance')
       );
 
-      if (error instanceof PaymentRequiredError) {
+      // The quoted post's author does not let this account quote it
+      // (dehub-stream-backend src/repost/quote-policy). Nothing to retry.
+      const isQuoteRefused = isQuoting && (
+        errorMsg.includes('can quote this post') || errorMsg.includes('does not allow quotes')
+      );
+
+      if (isQuoteRefused) {
+        toast.error(t('quotePolicy.refused'));
+      } else if (error instanceof PaymentRequiredError) {
         // The allowance turned this post down. The server writes this sentence
         // for the creator, so it is shown verbatim — and the only useful next
         // step is DHB, not "try again".
@@ -2693,7 +2705,7 @@ export function usePostForm(
     effectiveShouldMint, mintFee, isMature, isForKids,
     selectedCategory, shopLinks, shopListingIds, myPlanIds,
     postQuota?.outstandingDhb, refreshPostQuota, onLiveStreamReady,
-    isQuoting, quotedPost, contentWarning,
+    isQuoting, quotedPost, contentWarning, quotePolicy,
     , _copy
   ]);
 
@@ -2727,6 +2739,7 @@ export function usePostForm(
       liveMode,
       poll,
       contentWarning,
+      quotePolicy,
       isEnhancing,
       isPosting,
       uploadProgress,
@@ -2767,6 +2780,7 @@ export function usePostForm(
       setLiveMode,
       setPoll,
       setContentWarning,
+      setQuotePolicy,
       handleImageSelect,
       handleVideoSelect,
       handleFileDrop,

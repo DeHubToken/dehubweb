@@ -380,6 +380,8 @@ function PostModalForAccount({ isOpen, onClose, initialFiles, onFilesProcessed, 
         setShowTitle={actions.setShowTitle}
         isMature={state.isMature}
         setIsMature={actions.setIsMature}
+        quotePolicy={state.quotePolicy}
+        setQuotePolicy={actions.setQuotePolicy}
         isForKids={state.isForKids}
         setIsForKids={actions.setIsForKids}
         shopLinks={state.shopLinks}

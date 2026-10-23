@@ -1,6 +1,6 @@
 import { apiCall, authedUpload } from './core';
 import { ResumableUnsupportedError, resumableUpload } from './resumable-upload';
-import type { ContentRating, ShopLink } from './types';
+import type { ContentRating, QuotePolicy, ShopLink } from './types';
 
 export interface StreamInfo {
   isLockContent?: boolean;
@@ -115,6 +115,8 @@ export interface MintPostParams {
   mediaDescriptions?: string[];
   /** Content warning: one line shown in place of the post until a viewer opens it. */
   spoilerText?: string;
+  /** Who may quote it. Only sent when it is not the default, anyone. */
+  quotePolicy?: QuotePolicy;
 }
 
 export interface MintResponse {
@@ -257,6 +259,10 @@ export async function mintPost(
 
   if (params.spoilerText?.trim()) {
     formData.append('spoilerText', params.spoilerText.trim());
+  }
+
+  if (params.quotePolicy && params.quotePolicy !== 'public') {
+    formData.append('quotePolicy', params.quotePolicy);
   }
 
   // Only sent when there is a board. An empty array would be a valid "clear
@@ -438,6 +444,19 @@ export interface EditPostParams {
   mediaDescriptions?: string[];
   /** Replace the content warning. `''` takes it off. */
   spoilerText?: string;
+  /** Who may quote it from now on. Quotes already made stay. */
+  quotePolicy?: QuotePolicy;
+}
+
+/**
+ * Take your post back out of somebody else's quote. Only the quoted post's
+ * author may; the quote stays up and its embed of your post reads as removed.
+ */
+export async function revokeQuote(quoteTokenId: number | string): Promise<{ result: boolean }> {
+  return apiCall<{ result: boolean }>(`/api/quotes/${encodeURIComponent(String(quoteTokenId))}/revoke`, {
+    method: 'POST',
+    requiresAuth: true,
+  });
 }
 
 export interface EditPostResponse {

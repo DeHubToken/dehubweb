@@ -36,6 +36,8 @@ interface RepostShareSheetProps {
   onRepost: () => void;
   onUndoRepost: () => void;
   onQuote: () => void;
+  /** False when the author lets nobody else quote this post: the tile stays, disabled, saying so. */
+  canQuote?: boolean;
   shareUrl: string;
   shareTitle?: string;
   onCopyLink: () => void;
@@ -81,6 +83,7 @@ export function RepostShareSheet({
   onRepost,
   onUndoRepost,
   onQuote,
+  canQuote = true,
   shareUrl,
   shareTitle,
   onCopyLink,
@@ -190,13 +193,15 @@ export function RepostShareSheet({
             type="button"
             data-stage-sheet-tile="quote"
             onClick={onQuote}
+            disabled={!canQuote}
+            aria-disabled={!canQuote}
             className="flex flex-col items-start gap-0.5 rounded-xl px-3.5 py-3 text-left"
           >
             <span className="flex items-center gap-2 text-[15px] font-bold">
               <Quote className="h-5 w-5" />
               {t('postStage.quote', 'Quote')}
             </span>
-            <span data-stage-muted className="text-xs">{t('postStage.quoteHint', 'Add your own words')}</span>
+            <span data-stage-muted className="text-xs">{canQuote ? t('postStage.quoteHint', 'Add your own words') : t('quotePolicy.off')}</span>
           </button>
         </div>
 
