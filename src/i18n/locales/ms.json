@@ -5639,6 +5639,8 @@
     }
   },
   "goLive": {
+    "bigEvent": "Acara besar",
+    "bigEventHint": "Untuk penonton ramai: penonton menonton kira-kira 20 saat ketinggalan, dengan kurang gangguan.",
     "goLive": "Siaran Langsung",
     "youAreLive": "Anda Sedang Siaran Langsung",
     "streamReady": "Siaran Sedia",

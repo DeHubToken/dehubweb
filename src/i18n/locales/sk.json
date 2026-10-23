@@ -5494,6 +5494,8 @@
     }
   },
   "goLive": {
+    "bigEvent": "Veľká udalosť",
+    "bigEventHint": "Pre veľké publikum: diváci sledujú približne s 20-sekundovým oneskorením, ale s menej výpadkami.",
     "goLive": "Prejsť do priameho vysielania",
     "youAreLive": "Ste v priamom vysielaní",
     "streamReady": "Vysielanie je pripravené",

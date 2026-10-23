@@ -5428,6 +5428,8 @@
     }
   },
   "goLive": {
+    "bigEvent": "Großes Event",
+    "bigEventHint": "Für ein großes Publikum: Zuschauer sehen etwa 20 Sekunden zeitversetzt, dafür mit weniger Aussetzern.",
     "goLive": "Live gehen",
     "youAreLive": "Du bist Live",
     "streamReady": "Stream bereit",

@@ -5382,6 +5382,8 @@
     }
   },
   "goLive": {
+    "bigEvent": "Grande evento",
+    "bigEventHint": "Per un grande pubblico: gli spettatori guardano con circa 20 secondi di ritardo, con meno interruzioni.",
     "goLive": "Vai in diretta",
     "youAreLive": "Sei in diretta",
     "streamReady": "Stream pronto",

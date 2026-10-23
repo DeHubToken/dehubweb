@@ -5380,6 +5380,8 @@
     }
   },
   "goLive": {
+    "bigEvent": "대규모 이벤트",
+    "bigEventHint": "많은 시청자용: 시청자는 약 20초 늦게 보지만 끊김이 줄어듭니다.",
     "goLive": "라이브 시작",
     "youAreLive": "라이브 중",
     "streamReady": "스트림 준비 완료",

@@ -5350,6 +5350,8 @@
     }
   },
   "goLive": {
+    "bigEvent": "Takunetanga nui",
+    "bigEventHint": "Mō te hunga mātakitaki tini: ka mātakitaki rātou i muri tata ki te 20 hēkona, he iti iho ngā haukotinga.",
     "goLive": "Haere Tūtuki",
     "youAreLive": "Kei te Tūtuki",
     "streamReady": "Tūtuki Handa",

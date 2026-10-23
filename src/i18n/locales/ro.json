@@ -5379,6 +5379,8 @@
     }
   },
   "goLive": {
+    "bigEvent": "Eveniment mare",
+    "bigEventHint": "Pentru public numeros: spectatorii urmăresc cu o întârziere de circa 20 de secunde, dar cu mai puține întreruperi.",
     "goLive": "Transmite în Direct",
     "youAreLive": "Ești în Direct",
     "streamReady": "Flux Gata",

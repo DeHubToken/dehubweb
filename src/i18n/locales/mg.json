@@ -5383,6 +5383,8 @@
     }
   },
   "goLive": {
+    "bigEvent": "Hetsika lehibe",
+    "bigEventHint": "Ho an'ny mpijery maro: mijery tara eo amin'ny 20 segondra eo ho eo ny mpijery, saingy vitsy kokoa ny fahatapahana.",
     "goLive": "Mivoaka Mivantana",
     "youAreLive": "Mivoaka Mivantana Ianao",
     "streamReady": "Handa ny Stream",

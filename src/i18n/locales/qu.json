@@ -5388,6 +5388,8 @@
     }
   },
   "goLive": {
+    "bigEvent": "Hatun raymi",
+    "bigEventHint": "Achka qhawaqkunapaq: qhawaqkunaqa yaqa 20 sikundu qhipallata qhawanqaku, pisi sayaykunawan.",
     "goLive": "Ama Kawsay",
     "youAreLive": "Kawsayña Kachkan",
     "streamReady": "Stream Lispu",

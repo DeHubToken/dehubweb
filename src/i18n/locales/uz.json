@@ -5401,6 +5401,8 @@
     }
   },
   "goLive": {
+    "bigEvent": "Katta tadbir",
+    "bigEventHint": "Katta auditoriya uchun: tomoshabinlar taxminan 20 soniya kechikish bilan, lekin kamroq uzilishlar bilan tomosha qiladi.",
     "goLive": "Go Live",
     "youAreLive": "Siz jonli efirdasiz",
     "streamReady": "Stream tayyor",

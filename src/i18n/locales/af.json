@@ -5410,6 +5410,8 @@
     }
   },
   "goLive": {
+    "bigEvent": "Groot geleentheid",
+    "bigEventHint": "Vir groot gehore: kykers kyk sowat 20 sekondes agter, met minder onderbrekings.",
     "goLive": "Gaan Regstreeks",
     "youAreLive": "Jy is Regstreeks",
     "streamReady": "Stroom Gereed",

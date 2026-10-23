@@ -5333,6 +5333,8 @@
     }
   },
   "goLive": {
+    "bigEvent": "Taatee guddaa",
+    "bigEventHint": "Daawwattoota baay'eef: daawwattoonni gara sekondii 20 booda ilaalu, addaan citiinsi xiqqaa ta'a.",
     "goLive": "Go Live",
     "youAreLive": "Jira Jirta",
     "streamReady": "Stream Ready",

@@ -5318,6 +5318,8 @@
     }
   },
   "goLive": {
+    "bigEvent": "Nagy esemény",
+    "bigEventHint": "Nagy közönségnek: a nézők nagyjából 20 másodperces késéssel, de kevesebb akadással látják.",
     "goLive": "Élő közvetítés",
     "youAreLive": "Élő vagy",
     "streamReady": "Stream kész",

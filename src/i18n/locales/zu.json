@@ -5381,6 +5381,8 @@
     }
   },
   "goLive": {
+    "bigEvent": "Umcimbi omkhulu",
+    "bigEventHint": "Ezilalelini ezinkulu: ababukeli babuka bephuze cishe imizuzwana engama-20, kodwa kuphazamiseka kancane.",
     "goLive": "Yiya Live",
     "youAreLive": "Ukhona Live",
     "streamReady": "Stream Ready",

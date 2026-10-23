@@ -4954,6 +4954,8 @@
     }
   },
   "goLive": {
+    "bigEvent": "大型活动",
+    "bigEventHint": "适合大量观众：观众会延迟约 20 秒观看，卡顿更少。",
     "goLive": "去直播",
     "youAreLive": "你正在直播",
     "streamReady": "直播准备就绪",

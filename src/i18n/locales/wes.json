@@ -4914,6 +4914,8 @@
     }
   },
   "goLive": {
+    "bigEvent": "Big event",
+    "bigEventHint": "For plenty pipul: viewers go di watch like 20 seconds behind, but e no go di cut plenty.",
     "goLive": "Go Live",
     "youAreLive": "You're Live",
     "streamReady": "Stream Ready",

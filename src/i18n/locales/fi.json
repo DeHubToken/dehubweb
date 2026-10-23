@@ -5317,6 +5317,8 @@
     }
   },
   "goLive": {
+    "bigEvent": "Suurtapahtuma",
+    "bigEventHint": "Suurelle yleisölle: katsojat näkevät lähetyksen noin 20 sekuntia jäljessä, mutta vähemmillä katkoksilla.",
     "goLive": "Siirry suorana",
     "youAreLive": "Olet suorassa",
     "streamReady": "Stream valmis",

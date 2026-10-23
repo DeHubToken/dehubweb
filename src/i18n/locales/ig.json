@@ -5319,6 +5319,8 @@
     }
   },
   "goLive": {
+    "bigEvent": "Nnukwu mmemme",
+    "bigEventHint": "Maka ọtụtụ ndị na-ekiri: ndị na-ekiri ga-ahụ ya ihe dị ka sekọnd 20 azụ, na nkwụsị ole na ole.",
     "goLive": "Gaa Live",
     "youAreLive": "Ị nọ Live",
     "streamReady": "Stream Ready",

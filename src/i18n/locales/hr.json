@@ -5317,6 +5317,8 @@
     }
   },
   "goLive": {
+    "bigEvent": "Veliki događaj",
+    "bigEventHint": "Za veliku publiku: gledatelji gledaju s kašnjenjem od oko 20 sekundi, uz manje prekida.",
     "goLive": "Kreni Uživo",
     "youAreLive": "Uživo ste",
     "streamReady": "Emisija je spremna",

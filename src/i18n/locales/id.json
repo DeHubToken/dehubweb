@@ -5387,6 +5387,8 @@
     }
   },
   "goLive": {
+    "bigEvent": "Acara besar",
+    "bigEventHint": "Untuk penonton besar: penonton menonton sekitar 20 detik tertinggal, dengan lebih sedikit gangguan.",
     "goLive": "Siaran langsung",
     "youAreLive": "Anda sedang siaran",
     "streamReady": "Siaran siap",

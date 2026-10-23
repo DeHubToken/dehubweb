@@ -5376,6 +5376,8 @@
     }
   },
   "goLive": {
+    "bigEvent": "大規模イベント",
+    "bigEventHint": "大勢の視聴者向け：約20秒遅れで再生されますが、途切れにくくなります。",
     "goLive": "ライブ配信を開始",
     "youAreLive": "ライブ配信中",
     "streamReady": "ストリーム準備完了",
