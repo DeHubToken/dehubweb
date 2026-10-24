@@ -1,4 +1,14 @@
 {
+  "stageCover": {
+    "admitOne": "حسناً",
+    "live": "حاضر",
+    "minutes": "{{minutes}} دقيقة",
+    "onAir": "في الهواء",
+    "recorded": "مُسجل",
+    "replay": "إعادة لعب",
+    "stage": "المرحلة",
+    "upcoming": "قادم"
+  },
   "mastodonApps": {
     "authTitle": "دخل بـ DeHub",
     "authWants": "{{app}} بغا يستعمل الحساب ديالك ف DeHub",
@@ -1543,6 +1553,8 @@
     "deleteConversationFailed": "تعذّر حذف المحادثة"
   },
   "music": {
+    "listeningCount_one": "{{count}} سمع",
+    "listeningCount_other": "{{count}} سمع",
     "all": "كلشي",
     "tracks": "تراكات",
     "videos": "فيديوهات",
@@ -1908,7 +1920,15 @@
     "offerToBuyTokens": "عرض لشراء رموز DeHub",
     "tokenAmount": "المبلغ المميز",
     "pricePerTokenUsd": "السعر لكل عملة رمزية (بالدولار الأمريكي)",
-    "votingPowerNote": "يستمر التصويت 7 أيام. قوة التصويت هي المساهمة الرمزية التراكمية لكل مساهم عند فتح هذا الاقتراح. يجب أن يشارك 10 ٪ على الأقل ويجب أن يتفوق القبول على الرفض."
+    "votingPowerNote": "يستمر التصويت 7 أيام. قوة التصويت هي المساهمة الرمزية التراكمية لكل مساهم عند فتح هذا الاقتراح. يجب أن يشارك 10 ٪ على الأقل ويجب أن يتفوق القبول على الرفض.",
+    "status": {
+      "open": "مفتوح",
+      "accepted": "مقبول",
+      "rejected": "مرفوض",
+      "completed": "مكتمل",
+      "expired": "منتهي",
+      "cancelled": "مؤجل"
+    }
   },
   "governance": {
     "title": "الحكامة",
@@ -8735,6 +8755,10 @@
     "backToMedia": "العودة إلى المنشور",
     "like": "إعجاب",
     "unlike": "إزالة الإعجاب"
+  },
+  "copy": {
+    "2971f9103f78": "شكراً على مساعدتك في تحسين DeHub — شيء طلبتَهُ الآن حصل:",
+    "905392fbed15": "شكراً على مساعدتك في تحسين DeHub — {{value1}} أشياء طلبتَهُنّ الآن حصلت:"
   },
   "postProcessing": {
     "uploading": "كيتطلع…",

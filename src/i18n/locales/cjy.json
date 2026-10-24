@@ -1,4 +1,13 @@
 {
+  "stageCover": {
+    "live": "直播",
+    "minutes": "{{minutes}} 分钟",
+    "onAir": "正在直播",
+    "recorded": "已录制",
+    "replay": "回放",
+    "stage": "舞台",
+    "upcoming": "即将上线"
+  },
   "mastodonApps": {
     "authTitle": "用 DeHub 登录",
     "authWants": "{{app}} 想使用你的 DeHub 账号",
@@ -1541,6 +1550,8 @@
     "deleteConversationFailed": "无法删除对话"
   },
   "music": {
+    "listeningCount_one": "{{count}} 正在聆听",
+    "listeningCount_other": "{{count}} 正在聆听",
     "all": "全部",
     "tracks": "歌曲",
     "videos": "视频",
@@ -1905,7 +1916,15 @@
     "offerToBuyTokens": "提供购买 DeHub 代币",
     "tokenAmount": "代币数量",
     "pricePerTokenUsd": "每代币价格（美元）",
-    "votingPowerNote": "投票持续 7 天。投票权是该提案开放时每位贡献者的累计代币贡献。至少需要 10% 的参与率，并且“接受”票数必须超过“拒绝”票数。"
+    "votingPowerNote": "投票持续 7 天。投票权是该提案开放时每位贡献者的累计代币贡献。至少需要 10% 的参与率，并且“接受”票数必须超过“拒绝”票数。",
+    "status": {
+      "open": "打开",
+      "accepted": "已接受",
+      "rejected": "已拒绝",
+      "completed": "已完成",
+      "expired": "已过期",
+      "cancelled": "已取消"
+    }
   },
   "governance": {
     "title": "治理",
@@ -8682,6 +8701,10 @@
     "backToMedia": "返回帖子",
     "like": "点赞",
     "unlike": "移除点赞"
+  },
+  "copy": {
+    "2971f9103f78": "感谢您帮助改进DeHub —— 您请求的功能现在上线了：",
+    "905392fbed15": "感谢您帮助改进DeHub —— {{value1}} 项您请求的功能现在上线了："
   },
   "postProcessing": {
     "uploading": "上传中…",

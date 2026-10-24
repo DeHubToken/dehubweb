@@ -1,4 +1,14 @@
 {
+  "stageCover": {
+    "admitOne": "Gba ọkan",
+    "live": "lIVE",
+    "minutes": "{{minutes}} min",
+    "onAir": "NÍ ÀWỌN ÀWỌN",
+    "recorded": "Ti gba silẹ",
+    "replay": "replay",
+    "stage": "ipele",
+    "upcoming": "tí ń bọ̀"
+  },
   "mastodonApps": {
     "authTitle": "Wọlé pẹ̀lú DeHub",
     "authWants": "{{app}} fẹ́ lo àkọọ́lẹ̀ DeHub rẹ",
@@ -1540,6 +1550,8 @@
     "deleteConversationFailed": "N kò lè pa ọ̀rọ̀ náà rẹ́."
   },
   "music": {
+    "listeningCount_one": "{{count}} gbigbọ",
+    "listeningCount_other": "{{count}} gbigbọ",
     "all": "Gbogbo",
     "tracks": "Orin",
     "videos": "Fídíò",
@@ -1904,7 +1916,15 @@
     "offerToBuyTokens": "Pese lati ra awọn ami DeHub",
     "tokenAmount": "Iye tí a fi àmì hàn",
     "pricePerTokenUsd": "Iye owo fun ami (USD)",
-    "votingPowerNote": "Ìbò máa ń gba ọjọ́ 7. Agbára ìbò ni ìfowópamọ́ àkójọpọ̀ àwọn olùpínlẹ̀ kọ̀ọ̀kan nígbà tí àbá yìí bá ṣí sílẹ̀. Ó kéré tán 10% gbọdọ̀ kópa kí wọ́n sì gbà á gbọdọ̀ ṣẹ́gun Reject."
+    "votingPowerNote": "Ìbò máa ń gba ọjọ́ 7. Agbára ìbò ni ìfowópamọ́ àkójọpọ̀ àwọn olùpínlẹ̀ kọ̀ọ̀kan nígbà tí àbá yìí bá ṣí sílẹ̀. Ó kéré tán 10% gbọdọ̀ kópa kí wọ́n sì gbà á gbọdọ̀ ṣẹ́gun Reject.",
+    "status": {
+      "open": "Ṣii",
+      "accepted": "Gba",
+      "rejected": "Wọ́n kọ̀ ọ́",
+      "completed": "Ti pari",
+      "expired": "Ti pari",
+      "cancelled": "Ti fagile"
+    }
   },
   "governance": {
     "title": "Ìṣàkóso",
@@ -8649,6 +8669,10 @@
     "backToMedia": "Pada sí ìfìkún",
     "like": "Fẹ́ràn",
     "unlike": "Yọfẹ́ràn"
+  },
+  "copy": {
+    "2971f9103f78": "O ṣeun fún ìrànlọ́wọ́ láti mú kí DeHub dára — ohun tí o béèrè ti wà láàyè báyìí:",
+    "905392fbed15": "O ṣeun fún ìrànlọ́wọ́ láti mú kí DeHub dára sí i — {{value1}} àwọn nǹkan tí o béèrè ti wà láàyè báyìí:"
   },
   "postProcessing": {
     "uploading": "Ń gbé sókè…",

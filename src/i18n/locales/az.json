@@ -1,4 +1,14 @@
 {
+  "stageCover": {
+    "admitOne": "BİRİNİ QƏBUL ET",
+    "live": "yaşamaq",
+    "minutes": "{{minutes}} dəq",
+    "onAir": "HAVADA",
+    "recorded": "QEYDƏ ALINIB",
+    "replay": "replay",
+    "stage": "mərhələ",
+    "upcoming": "qarşıdan gələn"
+  },
   "mastodonApps": {
     "authTitle": "DeHub ilə daxil ol",
     "authWants": "{{app}} DeHub hesabınızdan istifadə etmək istəyir",
@@ -1538,6 +1548,8 @@
     "deleteConversationFailed": "Söhbəti silmək mümkün olmadı"
   },
   "music": {
+    "listeningCount_one": "{{count}} dinləmək",
+    "listeningCount_other": "{{count}} dinləmək",
     "all": "Hamısı",
     "tracks": "Mahnılar",
     "videos": "Videolar",
@@ -1902,7 +1914,15 @@
     "offerToBuyTokens": "DeHub tokenləri almağı təklif edin",
     "tokenAmount": "Token miqdarı",
     "pricePerTokenUsd": "Token başına qiymət (USD)",
-    "votingPowerNote": "Səsvermə 7 gün davam edir. Səsvermə gücü, bu təklif açıldıqda hər bir kontribyutorun ümumi token töhfəsidir. Minimum 10% iştirak etməli və Qəbul Rəddi üstələməlidir."
+    "votingPowerNote": "Səsvermə 7 gün davam edir. Səsvermə gücü, bu təklif açıldıqda hər bir kontribyutorun ümumi token töhfəsidir. Minimum 10% iştirak etməli və Qəbul Rəddi üstələməlidir.",
+    "status": {
+      "open": "Aç",
+      "accepted": "Qəbul edildi",
+      "rejected": "Rədd edildi",
+      "completed": "Tamamlanıb",
+      "expired": "Müddəti bitib",
+      "cancelled": "Ləğv edildi"
+    }
   },
   "governance": {
     "title": "İdarəetmə",
@@ -8612,6 +8632,10 @@
     "backToMedia": "Yazıya qayıt",
     "like": "Bəyən",
     "unlike": "Kimi sil"
+  },
+  "copy": {
+    "2971f9103f78": "DeHub-ı daha da yaxşılaşdırmağa kömək etdiyiniz üçün təşəkkür edirik. Soruşduğunuz bir şey artıq dərc edilib:",
+    "905392fbed15": "DeHub-ın daha yaxşı olmasına yardım etdiyiniz üçün təşəkkür edirik — {{value1}} üçün soruşduğunuz şeylər artıq dərc edilib:"
   },
   "postProcessing": {
     "uploading": "Yüklənir…",

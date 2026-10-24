@@ -1,4 +1,14 @@
 {
+  "stageCover": {
+    "admitOne": "Whakaaetia tetahi",
+    "live": "ora",
+    "minutes": "{{minutes}} min",
+    "onAir": "I runga i te rangi",
+    "recorded": "Rēhita",
+    "replay": "whakahoki",
+    "stage": "atamira",
+    "upcoming": "kei te haere mai"
+  },
   "mastodonApps": {
     "authTitle": "Takiuru mā DeHub",
     "authWants": "E hiahia ana a {{app}} ki te whakamahi i tō pūkete DeHub",
@@ -1543,6 +1553,8 @@
     "deleteConversationFailed": "Kaore e taea te whakakore i te korerorero"
   },
   "music": {
+    "listeningCount_one": "{{count}} whakarongo",
+    "listeningCount_other": "{{count}} whakarongo",
     "all": "Katoa",
     "tracks": "Waiata",
     "videos": "Ataata",
@@ -1908,7 +1920,15 @@
     "offerToBuyTokens": "Tukua kia hoko DeHub tohu",
     "tokenAmount": "Te nui o te tohu",
     "pricePerTokenUsd": "Utu mo ia tohu (USD)",
-    "votingPowerNote": "E 7 nga ra te roa o te pooti. Ko te mana pooti ko te kohinga tohu a ia kaituku i te whakatuwheratanga o tenei tono. Me 10% te iti rawa o te hunga ka uru, me te whakaae kia nui ake i te paopao."
+    "votingPowerNote": "E 7 nga ra te roa o te pooti. Ko te mana pooti ko te kohinga tohu a ia kaituku i te whakatuwheratanga o tenei tono. Me 10% te iti rawa o te hunga ka uru, me te whakaae kia nui ake i te paopao.",
+    "status": {
+      "open": "Whakatuwherahia",
+      "accepted": "Whakauru",
+      "rejected": "Whakakorea",
+      "completed": "Kua oti",
+      "expired": "Kua roa",
+      "cancelled": "Whakakorea"
+    }
   },
   "governance": {
     "title": "Kāwanatanga",
@@ -8735,6 +8755,10 @@
     "backToMedia": "Hoki ki te pou",
     "like": "Pāheko",
     "unlike": "Mukua te pāheko"
+  },
+  "copy": {
+    "2971f9103f78": "Mauruuru koe mo te awhina i a DeHub kia pai ake — ko te mea i tonoa e koe inaianei ko te ora:",
+    "905392fbed15": "Mauruuru koe mo te awhina i a DeHub kia pai ake — {{value1}} mea i tonoa e koe kei te ora inaianei:"
   },
   "postProcessing": {
     "uploading": "E tuku ana…",

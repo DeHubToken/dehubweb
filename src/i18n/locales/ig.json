@@ -1,4 +1,14 @@
 {
+  "stageCover": {
+    "admitOne": "Ekweta otu",
+    "live": "ndụ",
+    "minutes": "{{minutes}} min",
+    "onAir": "ON AIR",
+    "recorded": "E dekọrọ",
+    "replay": "ntughari",
+    "stage": "ogbo",
+    "upcoming": "ọbịbịa"
+  },
   "mastodonApps": {
     "authTitle": "Banye na DeHub",
     "authWants": "{{app}} chọrọ iji akaụntụ DeHub gị",
@@ -1540,6 +1550,8 @@
     "deleteConversationFailed": "Agaghị enwenwu ike ihicha mkparịtaụka ahụ"
   },
   "music": {
+    "listeningCount_one": "{{count}} na-ege ntị",
+    "listeningCount_other": "{{count}} na-ege ntị",
     "all": "Niile",
     "tracks": "Egwu",
     "videos": "Vidio",
@@ -1903,7 +1915,15 @@
     "offerToBuyTokens": "Nye iji zụta DeHub tokens",
     "tokenAmount": "Ego token",
     "pricePerTokenUsd": "Ọnụahịa kwa token (USD)",
-    "votingPowerNote": "Ihe omume ntuli aka na-ewe ụbọchị 7. Ike ntuli aka bụ nchikota ntinye token nke onye ọ bụla nyere aka mgbe aro a meghere. Opekempe 10% ga-esonye ma Nabata ga-emerịrị Reject."
+    "votingPowerNote": "Ihe omume ntuli aka na-ewe ụbọchị 7. Ike ntuli aka bụ nchikota ntinye token nke onye ọ bụla nyere aka mgbe aro a meghere. Opekempe 10% ga-esonye ma Nabata ga-emerịrị Reject.",
+    "status": {
+      "open": "Mepee",
+      "accepted": "Anabatara",
+      "rejected": "Jụrụ",
+      "completed": "Emechara",
+      "expired": "Emebiela",
+      "cancelled": "Akagbuola"
+    }
   },
   "governance": {
     "title": "Ọchịchị",
@@ -8678,6 +8698,10 @@
     "backToMedia": "Laghachi na post",
     "like": "Dị ka",
     "unlike": "Wepụ dị ka"
+  },
+  "copy": {
+    "2971f9103f78": "Daalụ maka inye aka mee ka DeHub ka mma — ihe ị rịọrọ dị ndụ ugbu a:",
+    "905392fbed15": "Daalụ maka inye aka mee ka DeHub ka mma — {{value1}} ihe ị rịọrọ ugbu a:"
   },
   "postProcessing": {
     "uploading": "Na-ebugo…",

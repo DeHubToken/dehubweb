@@ -1,4 +1,14 @@
 {
+  "stageCover": {
+    "admitOne": "ሓደ ሰብ ይኣቱ",
+    "live": "ቀጥታ",
+    "minutes": "{{minutes}} ደቒቕ",
+    "onAir": "ኣየር ላይ",
+    "recorded": "ተቐሪጹ",
+    "replay": "ደጊምካ ምርኣይ",
+    "stage": "መድረኽ",
+    "upcoming": "ዝመጽእ"
+  },
   "mastodonApps": {
     "authTitle": "ብDeHub እቶ",
     "authWants": "{{app}} ሕሳብኩም ናይ DeHub ክጥቀም ይደሊ",
@@ -1516,6 +1526,8 @@
     "deleteConversationFailed": "ነቲ ዝርርብ ክሰርሖ ኣይከኣልኩን ።"
   },
   "music": {
+    "listeningCount_one": "{{count}} ሰባት ይሰምዑ ኣለዉ",
+    "listeningCount_other": "{{count}} ሰባት ይሰምዑ ኣለዉ",
     "all": "ኩሉ",
     "tracks": "ትራኻት",
     "videos": "ቪድዮታት",
@@ -1876,7 +1888,15 @@
     "offerToBuyTokens": "DeHub ቶከንስ ንምግዛእ",
     "tokenAmount": "ክፍሊት ቶክን",
     "pricePerTokenUsd": "ዋጋ ናይ ነፍሲ ወከፍ ምልክት (USD)",
-    "votingPowerNote": "እቲ ድምጺ 7 መዓልታት ይወስድ ። እቲ ናይ ድምጺ ሓይሊ ፡ እዚ ሓሳብ እዚ ምስ ዚኽፈት ፡ ናይ ነፍሲ ወከፍ ወሃቢ ናይ ምትእኽኻብ ምልክት ኣበርክቶ እዩ ። ብውሕዱ 10% ክሳተፉን ክነጽግዎን ኣለዎም ።"
+    "votingPowerNote": "እቲ ድምጺ 7 መዓልታት ይወስድ ። እቲ ናይ ድምጺ ሓይሊ ፡ እዚ ሓሳብ እዚ ምስ ዚኽፈት ፡ ናይ ነፍሲ ወከፍ ወሃቢ ናይ ምትእኽኻብ ምልክት ኣበርክቶ እዩ ። ብውሕዱ 10% ክሳተፉን ክነጽግዎን ኣለዎም ።",
+    "status": {
+      "open": "ክፉት",
+      "accepted": "ተቐቢልናዮ",
+      "rejected": "ተነጺጉ",
+      "completed": "ተዛዚሙ",
+      "expired": "ጊዜኡ ሓሊፉ",
+      "cancelled": "ተሰሪዙ"
+    }
   },
   "governance": {
     "title": "ምሕደራ",
@@ -6235,6 +6255,7 @@
     "play": "ተጻወት",
     "pause": "ዕረፍቲ",
     "listens_one": "{{count}} ስማዕ",
+    "listens_other": "{{count}} ሰባት ሰሚዖምዎ",
     "lyrics": "ግጥሚ",
     "lyricsLoading": "ግጥሚ ይድለ ኣሎ…",
     "lyricsNone": "ግጥሚ ኣይተረኽበን"
@@ -8613,6 +8634,10 @@
     "backToMedia": "ናብ'ቲ ልኡኽ ተመለስ",
     "like": "ከም",
     "unlike": "ከም"
+  },
+  "copy": {
+    "2971f9103f78": "DeHub ንምምሕያሽ ስለ ዝሓገዝካና አመስግን — ዝሓተትካዮ ነገር ሕጂ ቀጥታ ኣሎ፡",
+    "905392fbed15": "DeHub ንምምሕያሽ ስለ ዝሓገዝካና አመስግን — ዝሓተትካዮም {{value1}} ነገራት ሕጂ ቀጥታ ኣለዉ፡"
   },
   "postProcessing": {
     "uploading": "ይጽዓን ኣሎ…",

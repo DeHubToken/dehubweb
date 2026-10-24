@@ -1,4 +1,13 @@
 {
+  "stageCover": {
+    "admitOne": "יש להודות באחד",
+    "live": "שידור חי",
+    "minutes": "{{minutes}} דק '",
+    "recorded": "הוקלט",
+    "replay": "הפעלה חוזרת",
+    "stage": "שלב",
+    "upcoming": "מתוכננת"
+  },
   "mastodonApps": {
     "authTitle": "התחברות עם DeHub",
     "authWants": "{{app}} רוצה להשתמש בחשבון DeHub שלך",
@@ -1543,6 +1552,8 @@
     "deleteConversationFailed": "לא ניתן למחוק את השיחה"
   },
   "music": {
+    "listeningCount_one": "{{count}} האזנה",
+    "listeningCount_other": "{{count}} האזנה",
     "all": "הכל",
     "tracks": "רצועות",
     "videos": "סרטונים",
@@ -1921,7 +1932,15 @@
     "offerToBuyTokens": "הצע לרכוש אסימוני DeHub",
     "tokenAmount": "כמות אסימונים",
     "pricePerTokenUsd": "מחיר לאסימון (USD)",
-    "votingPowerNote": "ההצבעה נמשכת 7 ימים. כוח ההצבעה הוא תרומת האסימונים המצטברת של כל תורם כאשר הצעה זו נפתחת. לפחות 10% חייבים להשתתף ו\"אשר\" חייב לנצח את \"דחה\"."
+    "votingPowerNote": "ההצבעה נמשכת 7 ימים. כוח ההצבעה הוא תרומת האסימונים המצטברת של כל תורם כאשר הצעה זו נפתחת. לפחות 10% חייבים להשתתף ו\"אשר\" חייב לנצח את \"דחה\".",
+    "status": {
+      "open": "פתיחה",
+      "accepted": "אושרה",
+      "rejected": "נדחה",
+      "completed": "הושלם",
+      "expired": "לא בתוקף",
+      "cancelled": "בוטל"
+    }
   },
   "governance": {
     "title": "ממשל",
@@ -8773,6 +8792,10 @@
     "backToMedia": "חזרה לפוסט",
     "like": "אהבתי",
     "unlike": "הסרת סימון 'אהבתי'"
+  },
+  "copy": {
+    "2971f9103f78": "תודה שעזרת לשפר את DeHub — משהו שביקשת נמצא עכשיו בשידור חי:",
+    "905392fbed15": "תודה שעזרת לשפר את DeHub — {{value1}} דברים שביקשתם זמינים כעת:"
   },
   "postProcessing": {
     "uploading": "מעלה…",

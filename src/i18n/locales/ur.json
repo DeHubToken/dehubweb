@@ -1,4 +1,14 @@
 {
+  "stageCover": {
+    "admitOne": "ایک کا اعتراف کریں",
+    "live": "لائیو",
+    "minutes": "{{minutes}} منٹ",
+    "onAir": "آن ایئر",
+    "recorded": "ریکارڈ شدہ",
+    "replay": "دوبارہ چلائیں",
+    "stage": "مرحلہ",
+    "upcoming": "آئندہ"
+  },
   "mastodonApps": {
     "authTitle": "DeHub سے سائن ان کریں",
     "authWants": "{{app}} آپ کا DeHub اکاؤنٹ استعمال کرنا چاہتا ہے",
@@ -1546,6 +1556,8 @@
     "deleteConversationFailed": "گفتگو حذف نہیں ہو سکی"
   },
   "music": {
+    "listeningCount_one": "{{count}} سننا",
+    "listeningCount_other": "{{count}} سننا",
     "all": "سب",
     "tracks": "ٹریکس",
     "videos": "ویڈیوز",
@@ -1924,7 +1936,15 @@
     "offerToBuyTokens": "DeHub ٹوکن خریدنے کی پیشکش کریں",
     "tokenAmount": "ٹوکن کی رقم",
     "pricePerTokenUsd": "فی ٹوکن قیمت (USD)",
-    "votingPowerNote": "ووٹنگ 7 دن تک جاری رہتی ہے۔ ووٹنگ پاور اس تجویز کے کھلنے پر ہر تعاون کنندہ کا مجموعی ٹوکن تعاون ہے۔ کم از کم 10% کو حصہ لینا چاہیے اور Accept کو Reject کو شکست دینی چاہیے۔"
+    "votingPowerNote": "ووٹنگ 7 دن تک جاری رہتی ہے۔ ووٹنگ پاور اس تجویز کے کھلنے پر ہر تعاون کنندہ کا مجموعی ٹوکن تعاون ہے۔ کم از کم 10% کو حصہ لینا چاہیے اور Accept کو Reject کو شکست دینی چاہیے۔",
+    "status": {
+      "open": "کھولیں",
+      "accepted": "قبول کر لیا گیا",
+      "rejected": "مسترد شدہ",
+      "completed": "مکمل شدہ",
+      "expired": "میعاد ختم ہو گئی",
+      "cancelled": "منسوخ شدہ"
+    }
   },
   "governance": {
     "title": "گورننس",
@@ -8773,6 +8793,10 @@
     "backToMedia": "پوسٹ پر واپس جائیں",
     "like": "پسند کریں",
     "unlike": "اس طرح ہٹائیں"
+  },
+  "copy": {
+    "2971f9103f78": "DeHub کو بہتر بنانے میں مدد کرنے کا شکریہ — جو چیز آپ نے مانگی تھی وہ اب لائیو ہے:",
+    "905392fbed15": "DeHub کو بہتر بنانے میں مدد کرنے کا شکریہ — {{value1}} آپ کی درخواست کردہ چیزیں اب لائیو ہیں:"
   },
   "postProcessing": {
     "uploading": "اپ لوڈ ہو رہا ہے…",

@@ -1,4 +1,14 @@
 {
+  "stageCover": {
+    "admitOne": "PRIIMTI VIENĄ",
+    "live": "gyvai",
+    "minutes": "{{minutes}} min.",
+    "onAir": "ORE",
+    "recorded": "ĮRAŠYTA",
+    "replay": "pakartoti",
+    "stage": "etapas",
+    "upcoming": "artėja"
+  },
   "mastodonApps": {
     "authTitle": "Prisijungti su DeHub",
     "authWants": "{{app}} nori naudoti jūsų DeHub paskyrą",
@@ -1542,6 +1552,8 @@
     "deleteConversationFailed": "Nepavyko ištrinti pokalbio"
   },
   "music": {
+    "listeningCount_one": "{{count}} klausymasis",
+    "listeningCount_other": "{{count}} klausymasis",
     "all": "Visos",
     "tracks": "Takeliai",
     "videos": "Vaizdo įrašai",
@@ -1907,7 +1919,15 @@
     "offerToBuyTokens": "Pasiūlymas pirkti „DeHub“ žetonus",
     "tokenAmount": "Žetonų kiekis",
     "pricePerTokenUsd": "Kaina už žetoną (USD)",
-    "votingPowerNote": "Balsavimas trunka 7 dienas. Balsavimo galia yra kiekvieno prisidėjusiojo sukauptas žetonų indėlis, kai šis pasiūlymas atidaromas. Mažiausiai 10% turi dalyvauti, o „Priimti“ turi nugalėti „Atmesti“."
+    "votingPowerNote": "Balsavimas trunka 7 dienas. Balsavimo galia yra kiekvieno prisidėjusiojo sukauptas žetonų indėlis, kai šis pasiūlymas atidaromas. Mažiausiai 10% turi dalyvauti, o „Priimti“ turi nugalėti „Atmesti“.",
+    "status": {
+      "open": "Atidaryti",
+      "accepted": "Priimta",
+      "rejected": "Atmesta",
+      "completed": "Atlikta",
+      "expired": "Nebegalioja",
+      "cancelled": "Atšaukta"
+    }
   },
   "governance": {
     "title": "Valdymas",
@@ -8765,6 +8785,10 @@
     "backToMedia": "Grįžti į įrašą",
     "like": "Patinka",
     "unlike": "Pašalinti „Patinka“"
+  },
+  "copy": {
+    "2971f9103f78": "Dėkojame, kad padedate padaryti „DeHub“ geresnį — jūsų paprašyta informacija dabar yra aktyvi:",
+    "905392fbed15": "Dėkojame, kad padedate tobulinti „DeHub“ — {{value1}} dalykai, kurių prašėte, dabar yra aktyvūs:"
   },
   "postProcessing": {
     "uploading": "Įkeliama…",

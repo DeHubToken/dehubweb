@@ -1,4 +1,14 @@
 {
+  "stageCover": {
+    "admitOne": "ADMIT ONE",
+    "live": "live",
+    "minutes": "{{minutes}} min",
+    "onAir": "ON AIR",
+    "recorded": "RECORDED",
+    "replay": "replay",
+    "stage": "stage",
+    "upcoming": "upcoming"
+  },
   "mastodonApps": {
     "authTitle": "DeHub سے سائن ان کر",
     "authWants": "{{app}} تومر DeHub کھاتا استعمال کرے چاہےلا",
@@ -1505,6 +1515,8 @@
     "deleteConversationFailed": "बातचीत डिलीट नईं कर सक्या"
   },
   "music": {
+    "listeningCount_one": "{{count}} listening",
+    "listeningCount_other": "{{count}} listening",
     "all": "سب",
     "tracks": "ٹریک",
     "videos": "ویڈیو",
@@ -1873,7 +1885,15 @@
     "offerToBuyTokens": "ئافرەت بۆ کڕینی دراوی DeHub",
     "tokenAmount": "بڕی دراو",
     "pricePerTokenUsd": "نرخی هەر دراوێک (دۆلار)",
-    "votingPowerNote": "دەنگدان ٧ ڕۆژ دەخایەنێت. هێزی دەنگدان کۆی پشکی دراوی هەر بەشداربوویەکە کاتێک ئەم پێشنیارە کراوەتەوە. لانی کەم ١٠٪ دەبێت بەشداری بکات و قبوڵکردن دەبێت لە ڕەتکردنەوە زیاتر بێت."
+    "votingPowerNote": "دەنگدان ٧ ڕۆژ دەخایەنێت. هێزی دەنگدان کۆی پشکی دراوی هەر بەشداربوویەکە کاتێک ئەم پێشنیارە کراوەتەوە. لانی کەم ١٠٪ دەبێت بەشداری بکات و قبوڵکردن دەبێت لە ڕەتکردنەوە زیاتر بێت.",
+    "status": {
+      "open": "Open",
+      "accepted": "Accepted",
+      "rejected": "Rejected",
+      "completed": "Completed",
+      "expired": "Expired",
+      "cancelled": "Cancelled"
+    }
   },
   "governance": {
     "title": "حکمرانی",
@@ -8215,6 +8235,10 @@
     "backToMedia": "पोस्ट पर पाछा जाउ",
     "like": "लाईक",
     "unlike": "लाईक हटाउ"
+  },
+  "copy": {
+    "2971f9103f78": "شكراً لجهودك في تحسين DeHub — ما طلبتَهُ الآن متوفر الآن:",
+    "905392fbed15": "شكراً على مساعدتك في تحسين DeHub — {{value1}} من الأشياء التي طلبتها الآن تعمل:"
   },
   "postProcessing": {
     "uploading": "اپلوڈ ہوت ہے…",

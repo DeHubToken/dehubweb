@@ -1,4 +1,13 @@
 {
+  "stageCover": {
+    "admitOne": "INNLIV ÉN",
+    "minutes": "{{minutes}} minutter",
+    "onAir": "I AIR",
+    "recorded": "INNSPILLT",
+    "replay": "reprise",
+    "stage": "scene",
+    "upcoming": "kommanderende"
+  },
   "mastodonApps": {
     "authTitle": "Logg inn med DeHub",
     "authWants": "{{app}} vil bruke DeHub-kontoen din",
@@ -1546,6 +1555,8 @@
     "deleteConversationFailed": "Kunne ikke slette samtalen"
   },
   "music": {
+    "listeningCount_one": "{{count}} lytting",
+    "listeningCount_other": "{{count}} lytting",
     "all": "Alle",
     "tracks": "Spor",
     "videos": "Videoer",
@@ -1920,7 +1931,15 @@
     "offerToBuyTokens": "Tilby å kjøpe DeHub-tokens",
     "tokenAmount": "Token-beløp",
     "pricePerTokenUsd": "Pris per token (USD)",
-    "votingPowerNote": "Avstemningen varer i 7 dager. Stemmekraft er hver bidragsyters kumulative token-bidrag når dette forslaget åpnes. Minst 10 % må delta, og Godta må slå Avvis."
+    "votingPowerNote": "Avstemningen varer i 7 dager. Stemmekraft er hver bidragsyters kumulative token-bidrag når dette forslaget åpnes. Minst 10 % må delta, og Godta må slå Avvis.",
+    "status": {
+      "open": "Åpne",
+      "accepted": "Godkjent",
+      "rejected": "Avvist",
+      "completed": "Fullført",
+      "expired": "Utløpt",
+      "cancelled": "Avlyst"
+    }
   },
   "governance": {
     "title": "Styring",
@@ -8768,6 +8787,10 @@
     "backToMedia": "Tilbake til innlegget",
     "like": "Lik",
     "unlike": "Fjern liker"
+  },
+  "copy": {
+    "2971f9103f78": "Takk for at du hjelper med å gjøre DeHub bedre – noe du ba om er nå tilgjengelig:",
+    "905392fbed15": "Takk for at du hjelper til med å gjøre DeHub bedre – {{value1}} tingene du ba om er nå tilgjengelige:"
   },
   "postProcessing": {
     "uploading": "Laster opp…",

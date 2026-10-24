@@ -1,4 +1,14 @@
 {
+  "stageCover": {
+    "admitOne": "AKUI SATU",
+    "live": "secara langsung",
+    "minutes": "{{minutes}} min",
+    "onAir": "ON AIR",
+    "recorded": "DIRAKAM",
+    "replay": "main semula",
+    "stage": "peringkat",
+    "upcoming": "akan datang"
+  },
   "mastodonApps": {
     "authTitle": "Log masuk dengan DeHub",
     "authWants": "{{app}} mahu menggunakan akaun DeHub anda",
@@ -714,6 +724,7 @@
     "solanaUnlinkFailed": "Tidak dapat memutuskan sambungan dompet itu"
   },
   "common": {
+    "confirm": "Sahkan",
     "save": "Simpan",
     "cancel": "Batal",
     "delete": "Padam",
@@ -739,7 +750,6 @@
     "refresh": "Segar semula",
     "yes": "Ya",
     "no": "Tidak",
-    "confirm": "Sahkan",
     "next": "Seterusnya",
     "previous": "Sebelumnya",
     "submit": "Hantar",
@@ -1809,6 +1819,8 @@
     "deleteConversationFailed": "Tidak dapat menghapuskan perbualan"
   },
   "music": {
+    "listeningCount_one": "{{count}} mendengar",
+    "listeningCount_other": "{{count}} mendengar",
     "all": "All",
     "tracks": "Tracks",
     "videos": "Videos",
@@ -2183,7 +2195,15 @@
     "offerToBuyTokens": "Tawarkan untuk membeli token DeHub",
     "tokenAmount": "Jumlah token",
     "pricePerTokenUsd": "Harga setiap token (USD)",
-    "votingPowerNote": "Undian berlangsung selama 7 hari. Kuasa mengundi ialah sumbangan token kumulatif setiap penyumbang apabila cadangan ini dibuka. Sekurang-kurangnya 10% mesti mengambil bahagian dan Terima mesti mengatasi Tolak."
+    "votingPowerNote": "Undian berlangsung selama 7 hari. Kuasa mengundi ialah sumbangan token kumulatif setiap penyumbang apabila cadangan ini dibuka. Sekurang-kurangnya 10% mesti mengambil bahagian dan Terima mesti mengatasi Tolak.",
+    "status": {
+      "open": "Buka",
+      "accepted": "Diterima",
+      "rejected": "Ditolak",
+      "completed": "Selesai",
+      "expired": "Tamat tempoh",
+      "cancelled": "Dibatalkan"
+    }
   },
   "governance": {
     "title": "Governance",
@@ -9019,6 +9039,10 @@
     "backToMedia": "Kembali ke hantaran",
     "like": "Suka",
     "unlike": "Buang suka"
+  },
+  "copy": {
+    "2971f9103f78": "Terima kasih kerana membantu menjadikan DeHub lebih baik — sesuatu yang anda minta kini disiarkan:",
+    "905392fbed15": "Terima kasih kerana membantu menjadikan DeHub lebih baik — {{value1}} perkara yang anda minta kini disiarkan:"
   },
   "postProcessing": {
     "uploading": "Memuat naik…",

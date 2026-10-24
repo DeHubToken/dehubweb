@@ -1,4 +1,12 @@
 {
+  "stageCover": {
+    "minutes": "{{minutes}} دقائة",
+    "onAir": "علي الهواء",
+    "recorded": "سجلت",
+    "replay": "إعادة عرض",
+    "stage": "المنصة",
+    "upcoming": "القادم"
+  },
   "mastodonApps": {
     "authTitle": "سجّل دخول بـ DeHub",
     "authWants": "{{app}} بدّه يستخدم حسابك على DeHub",
@@ -1522,6 +1530,8 @@
     "deleteConversationFailed": "ما قدرت أحذف المحادثة"
   },
   "music": {
+    "listeningCount_one": "{{count}} مستمعين",
+    "listeningCount_other": "{{count}} مستمعين",
     "all": "الكل",
     "tracks": "مقاطع",
     "videos": "فيديوهات",
@@ -1885,7 +1895,15 @@
     "offerToBuyTokens": "عرض لشراء توكنز DeHub",
     "tokenAmount": "كمية التوكنز",
     "pricePerTokenUsd": "السعر لكل توكن (بالدولار الأمريكي)",
-    "votingPowerNote": "التصويت بيستمر 7 أيام. قوة التصويت هي مساهمة التوكنز التراكمية لكل مساهم وقت فتح الاقتراح. لازم يشارك 10% على الأقل، ولازم \"قبول\" يتفوق على \"رفض\"."
+    "votingPowerNote": "التصويت بيستمر 7 أيام. قوة التصويت هي مساهمة التوكنز التراكمية لكل مساهم وقت فتح الاقتراح. لازم يشارك 10% على الأقل، ولازم \"قبول\" يتفوق على \"رفض\".",
+    "status": {
+      "open": "فتح",
+      "accepted": "قبول",
+      "rejected": "رفض",
+      "completed": "مكتمل",
+      "expired": "مستحق",
+      "cancelled": "إلغاء"
+    }
   },
   "governance": {
     "title": "الحوكمة",
@@ -8106,6 +8124,10 @@
     "backToMedia": "الرجوع للمنشور",
     "like": "إعجاب",
     "unlike": "إزالة الإعجاب"
+  },
+  "copy": {
+    "2971f9103f78": "شكرا على مساعدتك في تحسين DeHub — ما طلبته هو الآن حيا:",
+    "905392fbed15": "شكرا على مساعدتك في تحسين DeHub — {{value1}} شيّ ما طلبته هو الآن حيا:"
   },
   "postProcessing": {
     "uploading": "عم يرفع…",

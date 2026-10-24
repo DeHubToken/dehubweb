@@ -1,4 +1,14 @@
 {
+  "stageCover": {
+    "admitOne": "Ekeo ny iray",
+    "live": "mivantana",
+    "minutes": "{{minutes}} min",
+    "onAir": "ON RIVOTRA",
+    "recorded": "Voarakitra",
+    "replay": "mamerina",
+    "stage": "sehatra",
+    "upcoming": "ho avy"
+  },
   "mastodonApps": {
     "authTitle": "Midira amin'ny DeHub",
     "authWants": "Te hampiasa ny kaontinao DeHub i {{app}}",
@@ -1930,7 +1940,15 @@
     "offerToBuyTokens": "Manolotra hividy DeHub tokens",
     "tokenAmount": "Habetsaky ny token",
     "pricePerTokenUsd": "Vidin'ny token iray (USD)",
-    "votingPowerNote": "Ny latsa-bato dia maharitra 7 andro. Ny hery hifidianana dia ny fandraisan'anjaran'ny token isaky ny mpandray anjara rehefa misokatra ity tolo-kevitra ity. Farafahakeliny 10% no tsy maintsy mandray anjara ary ny Eny dia tsy maintsy mihoatra ny Tsia."
+    "votingPowerNote": "Ny latsa-bato dia maharitra 7 andro. Ny hery hifidianana dia ny fandraisan'anjaran'ny token isaky ny mpandray anjara rehefa misokatra ity tolo-kevitra ity. Farafahakeliny 10% no tsy maintsy mandray anjara ary ny Eny dia tsy maintsy mihoatra ny Tsia.",
+    "status": {
+      "open": "Hanokatra",
+      "accepted": "Ekena",
+      "rejected": "Nolavina",
+      "completed": "Vita",
+      "expired": "Anierdna",
+      "cancelled": "Nofoanana"
+    }
   },
   "governance": {
     "title": "Fitondrana",
@@ -8764,6 +8782,10 @@
     "backToMedia": "Miverina amin'ny lahatsoratra",
     "like": "Toy ny",
     "unlike": "Esory toy ny"
+  },
+  "copy": {
+    "2971f9103f78": "Misaotra ny fanampiana hampivoatra ny DeHub — ny zavatra nangatahinao dia izao velona:",
+    "905392fbed15": "Misaotra nanampy tamin'ny fanatsarana an'i DeHub — {{value1}} zavatra nangatahinao izao mba ho velona:"
   },
   "postProcessing": {
     "uploading": "Mampakatra…",

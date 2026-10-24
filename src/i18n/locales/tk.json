@@ -1,4 +1,14 @@
 {
+  "stageCover": {
+    "admitOne": "Birini kabul ediň",
+    "live": "ýaşaýyş",
+    "minutes": "{{minutes}} min",
+    "onAir": "Haýda",
+    "recorded": "Saýlan",
+    "replay": "gaýtalap oýna",
+    "stage": "sahna",
+    "upcoming": "gelejek"
+  },
   "mastodonApps": {
     "authTitle": "DeHub bilen gir",
     "authWants": "{{app}} DeHub hasabyňyzy ulanmak isleýär",
@@ -1892,7 +1902,15 @@
     "offerToBuyTokens": "DeHub tokenlerini satyn almagy teklip ediň",
     "tokenAmount": "Token mukdary",
     "pricePerTokenUsd": "Token üçin bahasy (USD)",
-    "votingPowerNote": "Ses bermek 7 gün dowam edýär. Ses bermek güýji, bu teklip açylanda her gatnaşyjynyň jemlenen token goşandy. Iň az 10% gatnaşmaly we \"Kabul et\" \"Ýok\"dan köp bolmaly."
+    "votingPowerNote": "Ses bermek 7 gün dowam edýär. Ses bermek güýji, bu teklip açylanda her gatnaşyjynyň jemlenen token goşandy. Iň az 10% gatnaşmaly we \"Kabul et\" \"Ýok\"dan köp bolmaly.",
+    "status": {
+      "open": "Aç",
+      "accepted": "Kabul edilen",
+      "rejected": "Rad edilen",
+      "completed": "Bitir",
+      "expired": "Ötdi",
+      "cancelled": "Gaýd edilen"
+    }
   },
   "governance": {
     "title": "Dolandyryş",
@@ -8665,6 +8683,9 @@
     "backToMedia": "Posta dolanmak",
     "like": "Hoşgeldin",
     "unlike": "Gaýdyny aýyr"
+  },
+  "copy": {
+    "2971f9103f78": "DeHub-y has gowy etmäge kömek edendigiňiz üçin minnetdar — indi siz soran bir zat diridir:"
   },
   "postProcessing": {
     "uploading": "Ýüklenýär…",

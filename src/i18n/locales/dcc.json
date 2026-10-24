@@ -1,4 +1,14 @@
 {
+  "stageCover": {
+    "admitOne": "صرف ایک کو داخلہ",
+    "live": "لائیو",
+    "minutes": "{{minutes}} منٹ",
+    "onAir": "آن ایئر",
+    "recorded": "ریکارڈ شدہ",
+    "replay": "ری پلے",
+    "stage": "اسٹیج",
+    "upcoming": "آنے والا"
+  },
   "mastodonApps": {
     "authTitle": "DeHub سے سائن ان کرو",
     "authWants": "{{app}} تمہارا DeHub اکاؤنٹ استعمال کرنا چاہتا",
@@ -1466,6 +1476,8 @@
     "deleteConversationFailed": "بات چیت ڈیلیٹ نئیں ہوئی"
   },
   "music": {
+    "listeningCount_one": "{{count}} سن رہے ہیں",
+    "listeningCount_other": "{{count}} سن رہے ہیں",
     "all": "سب",
     "tracks": "ٹریک",
     "videos": "ویڈیو",
@@ -1810,7 +1822,15 @@
     "transferCount_other": "{{count}} ٹرانسفر",
     "power": "طاقت",
     "tokenAmount": "टोकन मात्रा",
-    "pricePerTokenUsd": "قیمت فی ٹوکن (ڈالر)"
+    "pricePerTokenUsd": "قیمت فی ٹوکن (ڈالر)",
+    "status": {
+      "open": "کھلا",
+      "accepted": "قبول کر لیا گیا",
+      "rejected": "مسترد کر دیا گیا",
+      "completed": "مکمل ہو گیا",
+      "expired": "میعاد ختم ہو گئی",
+      "cancelled": "منسوخ کر دیا گیا"
+    }
   },
   "governance": {
     "title": "گورننس",
@@ -7345,6 +7365,10 @@
     "backToMedia": "بیک ٹو دی پوسٹ",
     "like": "لائک",
     "unlike": "ریموو لائک"
+  },
+  "copy": {
+    "2971f9103f78": "DeHub کو بہتر بنانے میں مدد کرنے کا شکریہ — آپ کی مانگی ہوئی چیز اب لائیو ہو گئی ہے:",
+    "905392fbed15": "DeHub کو بہتر بنانے میں مدد کرنے کا شکریہ — آپ کی مانگی ہوئی {{value1}} چیزیں اب لائیو ہو گئی ہیں:"
   },
   "postProcessing": {
     "uploading": "اپلوڈ ہو رہا…",

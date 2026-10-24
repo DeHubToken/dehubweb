@@ -724,6 +724,7 @@
     "subscribersOnly": "শুধু সাবস্ক্রাইবার"
   },
   "common": {
+    "confirm": "নিশ্চিত গরো",
     "save": "সেভ গরো",
     "cancel": "বাতিল",
     "delete": "মিটাও",
@@ -745,7 +746,6 @@
     "copied": "কপি অইছে",
     "back": "পিছু",
     "error": "ভুল",
-    "confirm": "নিশ্চিত গরো",
     "next": "পরের",
     "previous": "আগের",
     "filter": "ফিল্টার",
@@ -1618,6 +1618,8 @@
     "lastSeen": "শেষ দেখা"
   },
   "music": {
+    "listeningCount_one": "{{count}} শুনছো কি?",
+    "listeningCount_other": "{{count}} শুনছো কি?",
     "all": "সব",
     "tracks": "গান",
     "videos": "ভিডিও",
@@ -2010,7 +2012,10 @@
     "offerToBuyTokens": "DeHub টোকেন কিননর অফার",
     "tokenAmount": "টোকেনর পরিমাণ",
     "pricePerTokenUsd": "প্রতি টোকেনর দাম (USD)",
-    "votingPowerNote": "ভোট ৭ দিন চলব। ভোটের ক্ষমতা হইলো প্রস্তাব খোলার সময় প্রত্যেক কন্ট্রিবিউটরর জমা টোকেনর পরিমাণ। কমপক্ষে ১০% অংশগ্রহণ করন লাগব আর Reject-র চেয়ে Accept বেশি অইব লাগব।"
+    "votingPowerNote": "ভোট ৭ দিন চলব। ভোটের ক্ষমতা হইলো প্রস্তাব খোলার সময় প্রত্যেক কন্ট্রিবিউটরর জমা টোকেনর পরিমাণ। কমপক্ষে ১০% অংশগ্রহণ করন লাগব আর Reject-র চেয়ে Accept বেশি অইব লাগব।",
+    "status": {
+      "accepted": "মঞ্জুর অইছে"
+    }
   },
   "governance": {
     "title": "শাসন",

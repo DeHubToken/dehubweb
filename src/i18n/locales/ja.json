@@ -1,4 +1,14 @@
 {
+  "stageCover": {
+    "admitOne": "1つ承認する",
+    "live": "ライブ",
+    "minutes": "{{minutes}}分",
+    "onAir": "オンエア",
+    "recorded": "録画済み",
+    "replay": "リプレイ",
+    "stage": "ステージ",
+    "upcoming": "今後の予定"
+  },
   "mastodonApps": {
     "authTitle": "DeHub でログイン",
     "authWants": "{{app}} があなたの DeHub アカウントを使おうとしています",
@@ -1548,6 +1558,8 @@
     "deleteConversationFailed": "会話を削除できませんでした"
   },
   "music": {
+    "listeningCount_one": "{{count}}リスニング",
+    "listeningCount_other": "{{count}}リスニング",
     "all": "すべて",
     "tracks": "トラック",
     "videos": "動画",
@@ -1923,7 +1935,15 @@
     "offerToBuyTokens": "DeHubトークンを購入するオファー",
     "tokenAmount": "トークン量",
     "pricePerTokenUsd": "トークンあたりの価格（USD）",
-    "votingPowerNote": "投票は7日間続きます。投票権は、この提案が開始された時点での各貢献者の累積トークン貢献度です。少なくとも10％が参加し、承認が拒否を上回る必要があります。"
+    "votingPowerNote": "投票は7日間続きます。投票権は、この提案が開始された時点での各貢献者の累積トークン貢献度です。少なくとも10％が参加し、承認が拒否を上回る必要があります。",
+    "status": {
+      "open": "開く",
+      "accepted": "承認済み",
+      "rejected": "却下済み",
+      "completed": "完了",
+      "expired": "期限切れ",
+      "cancelled": "キャンセル済み"
+    }
   },
   "governance": {
     "title": "ガバナンス",
@@ -8884,6 +8904,10 @@
     "backToMedia": "投稿に戻る",
     "like": "いいね",
     "unlike": "いいねを削除"
+  },
+  "copy": {
+    "2971f9103f78": "DeHubの改善にご協力いただきありがとうございます。ご依頼いただいたものが公開されました。",
+    "905392fbed15": "DeHubの改善にご協力いただきありがとうございます。{{value1}}リクエストしたものが公開されました。"
   },
   "postProcessing": {
     "uploading": "アップロード中…",

@@ -1,4 +1,14 @@
 {
+  "stageCover": {
+    "admitOne": "ADMIT daya",
+    "live": "raye raye",
+    "minutes": "{{minutes}} min",
+    "onAir": "A kan iska",
+    "recorded": "An rubuta",
+    "replay": "sake",
+    "stage": "mataki",
+    "upcoming": "gabba gabba"
+  },
   "mastodonApps": {
     "authTitle": "Shiga da DeHub",
     "authWants": "{{app}} yana son amfani da asusunka na DeHub",
@@ -1544,6 +1554,8 @@
     "deleteConversationFailed": "Ba za a iya share tattaunawar ba"
   },
   "music": {
+    "listeningCount_one": "{{count}} sauraron",
+    "listeningCount_other": "{{count}} sauraron",
     "all": "Duka",
     "tracks": "Waƙoƙi",
     "videos": "Bidiyo",
@@ -1909,7 +1921,15 @@
     "offerToBuyTokens": "Bayar da siyan DeHub tokens",
     "tokenAmount": "Adadin Token",
     "pricePerTokenUsd": "Farashi a kowace token (USD)",
-    "votingPowerNote": "Ƙididdigar jefa ƙuri'a tana ɗaukar kwanaki 7. Ƙarfin jefa ƙuri'a shine gudummawar token da aka tara na kowane mai ba da gudummawa lokacin da wannan tayin ya buɗe. Dole ne aƙalla 10% su shiga kuma Karɓa ya yi nasara akan Ƙi."
+    "votingPowerNote": "Ƙididdigar jefa ƙuri'a tana ɗaukar kwanaki 7. Ƙarfin jefa ƙuri'a shine gudummawar token da aka tara na kowane mai ba da gudummawa lokacin da wannan tayin ya buɗe. Dole ne aƙalla 10% su shiga kuma Karɓa ya yi nasara akan Ƙi.",
+    "status": {
+      "open": "Bude",
+      "accepted": "An karɓa",
+      "rejected": "An ƙi",
+      "completed": "An kammala",
+      "expired": "Ya ƙare",
+      "cancelled": "An soke"
+    }
   },
   "governance": {
     "title": "Mulki",
@@ -8650,6 +8670,10 @@
     "backToMedia": "Komawa zuwa post",
     "like": "Kamar",
     "unlike": "Cire kamar"
+  },
+  "copy": {
+    "2971f9103f78": "Godiya ga taimaka wajen sa DeHub ya fi kyau — wani abu da kuka nema yanzu yana da rai:",
+    "905392fbed15": "Godiya ga taimaka wajen sa DeHub ya fi kyau — {{value1}} abubuwan da kuka nema yanzu suna rayuwa:"
   },
   "postProcessing": {
     "uploading": "Ana lodawa…",

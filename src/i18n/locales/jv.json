@@ -1,4 +1,12 @@
 {
+  "stageCover": {
+    "admitOne": "SAJI SITI SETUNGGAL",
+    "live": "nyuwun",
+    "minutes": "{{minutes}} min",
+    "replay": "ngembul",
+    "stage": "stage",
+    "upcoming": "ngelmuji"
+  },
   "mastodonApps": {
     "authTitle": "Mlebu nganggo DeHub",
     "authWants": "{{app}} kepengin nganggo akun DeHub sampeyan",
@@ -1544,6 +1552,8 @@
     "deleteConversationFailed": "Ora bisa mbusak obrolan"
   },
   "music": {
+    "listeningCount_one": "{{count}} ngelakoni",
+    "listeningCount_other": "{{count}} ngelakoni",
     "all": "Kabeh",
     "tracks": "Lagu",
     "videos": "Video",
@@ -1909,7 +1919,12 @@
     "offerToBuyTokens": "Tawaran kanggo tuku token DeHub",
     "tokenAmount": "Jumlah token",
     "pricePerTokenUsd": "Regane saben token (USD)",
-    "votingPowerNote": "Voting tahan 7 dina. Kekuwatan voting minangka kontribusi token kumulatif saben kontributor nalika proposal iki dibukak. Minimal 10% kudu melu lan Nampa kudu ngalahake Nolak."
+    "votingPowerNote": "Voting tahan 7 dina. Kekuwatan voting minangka kontribusi token kumulatif saben kontributor nalika proposal iki dibukak. Minimal 10% kudu melu lan Nampa kudu ngalahake Nolak.",
+    "status": {
+      "open": "Buka",
+      "accepted": "Diterima",
+      "completed": "Selesai"
+    }
   },
   "governance": {
     "title": "Tata Kelola",
@@ -8505,6 +8520,9 @@
     "backToMedia": "Mbalik menyang kiriman",
     "like": "Senengi",
     "unlike": "Copot seneng"
+  },
+  "copy": {
+    "905392fbed15": "Kang ngerti gweh ngarani DeHub ngarani lebih baik — {{value1}} hal yang kang minta udah jadi ngarani nyuwun:"
   },
   "postProcessing": {
     "uploading": "Ngunggah…",

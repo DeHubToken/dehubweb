@@ -1,4 +1,14 @@
 {
+  "stageCover": {
+    "admitOne": "GEBEN SIE EINE ZU",
+    "live": "live",
+    "minutes": "{{minutes}} min",
+    "onAir": "ON AIR",
+    "recorded": "AUFGEZEICHNET",
+    "replay": "wiederholung",
+    "stage": "stufe",
+    "upcoming": "bevorstehend"
+  },
   "mastodonApps": {
     "authTitle": "Mit DeHub anmelden",
     "authWants": "{{app}} möchte dein DeHub-Konto verwenden",
@@ -1598,6 +1608,8 @@
     "deleteConversationFailed": "Konversation konnte nicht gelöscht werden"
   },
   "music": {
+    "listeningCount_one": "{{count}} zuhören",
+    "listeningCount_other": "{{count}} zuhören",
     "all": "Alle",
     "tracks": "Tracks",
     "videos": "Videos",
@@ -1972,7 +1984,15 @@
     "offerToBuyTokens": "Angebot zum Kauf von DeHub-Tokens",
     "tokenAmount": "Token-Betrag",
     "pricePerTokenUsd": "Preis pro Token (USD)",
-    "votingPowerNote": "Die Abstimmung dauert 7 Tage. Die Stimmkraft ist der kumulative Token-Beitrag jedes Teilnehmers, wenn dieser Vorschlag geöffnet wird. Mindestens 10 % müssen teilnehmen und Akzeptieren muss Ablehnen schlagen."
+    "votingPowerNote": "Die Abstimmung dauert 7 Tage. Die Stimmkraft ist der kumulative Token-Beitrag jedes Teilnehmers, wenn dieser Vorschlag geöffnet wird. Mindestens 10 % müssen teilnehmen und Akzeptieren muss Ablehnen schlagen.",
+    "status": {
+      "open": "Offen",
+      "accepted": "Akzeptiert",
+      "rejected": "Abgelehnt",
+      "completed": "Abgeschlossen",
+      "expired": "Abgelaufen",
+      "cancelled": "Abgebrochen"
+    }
   },
   "governance": {
     "title": "Verwaltung",
@@ -8963,6 +8983,10 @@
     "phraseLoadFailed": "Deine Wiederherstellungsphrase konnte nicht geladen werden. Versuche es erneut oder öffne DeHub auf deinem ursprünglichen Gerät.",
     "noPhrase": "Diese Wallet wurde mit einem privaten Schlüssel gespeichert. DeHub hat daher keine Wiederherstellungsphrase zum Anzeigen. Sichere diesen Schlüssel, um dieselbe Wallet wiederherzustellen.",
     "keyWarning": "Wer diesen Schlüssel besitzt, kann deine Wallet kontrollieren. Bewahre ihn sicher auf und teile ihn niemals."
+  },
+  "copy": {
+    "2971f9103f78": "Vielen Dank, dass Sie dazu beigetragen haben, DeHub zu verbessern — etwas, um das Sie gebeten haben, ist jetzt live:",
+    "905392fbed15": "Danke, dass du geholfen hast, DeHub besser zu machen — {{value1}} Dinge, nach denen du gefragt hast, sind jetzt live:"
   },
   "postProcessing": {
     "uploading": "Wird hochgeladen…",

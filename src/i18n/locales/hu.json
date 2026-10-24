@@ -1,4 +1,14 @@
 {
+  "stageCover": {
+    "admitOne": "ADMIT ONE",
+    "live": "élő",
+    "minutes": "{{minutes}} perc",
+    "onAir": "LEVEGŐN",
+    "recorded": "RÖGZÍTVE",
+    "replay": "visszajátszás",
+    "stage": "színpad",
+    "upcoming": "közelgő"
+  },
   "mastodonApps": {
     "authTitle": "Bejelentkezés DeHubbal",
     "authWants": "A(z) {{app}} használni szeretné a DeHub-fiókodat",
@@ -1541,6 +1551,8 @@
     "deleteConversationFailed": "Nem sikerült törölni a beszélgetést"
   },
   "music": {
+    "listeningCount_one": "{{count}} odafigyelés",
+    "listeningCount_other": "{{count}} odafigyelés",
     "all": "Összes",
     "tracks": "Számok",
     "videos": "Videók",
@@ -1916,7 +1928,15 @@
     "offerToBuyTokens": "Ajánlat DeHub tokenek vásárlására",
     "tokenAmount": "Token összege",
     "pricePerTokenUsd": "Tokenenkénti ár (USD)",
-    "votingPowerNote": "A szavazás 7 napig tart. A szavazati jog az egyes közreműködők összesített token-hozzájárulása az ajánlat megnyitásakor. Legalább 10% -nak részt kell vennie, és az Elfogadásnak meg kell előznie az Elutasítást."
+    "votingPowerNote": "A szavazás 7 napig tart. A szavazati jog az egyes közreműködők összesített token-hozzájárulása az ajánlat megnyitásakor. Legalább 10% -nak részt kell vennie, és az Elfogadásnak meg kell előznie az Elutasítást.",
+    "status": {
+      "open": "Megnyitás",
+      "accepted": "Elfogadva",
+      "rejected": "Elutasítva",
+      "completed": "Befejezve",
+      "expired": "Lejárt",
+      "cancelled": "Törölve"
+    }
   },
   "governance": {
     "title": "Irányítás",
@@ -8666,6 +8686,10 @@
     "backToMedia": "Vissza a bejegyzéshez",
     "like": "Tetszik",
     "unlike": "Kedvelések eltávolítása"
+  },
+  "copy": {
+    "2971f9103f78": "Köszönjük, hogy segítettél a DeHub jobbá tételében — amit kértél, mostantól elérhető:",
+    "905392fbed15": "Köszönjük, hogy segítettél jobbá tenni a DeHubot — {{value1}} az általad kért dolgok mostantól elérhetők:"
   },
   "postProcessing": {
     "uploading": "Feltöltés…",

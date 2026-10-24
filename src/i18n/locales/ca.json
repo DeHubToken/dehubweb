@@ -1,4 +1,14 @@
 {
+  "stageCover": {
+    "admitOne": "ADMET-NE UNA",
+    "live": "en directe",
+    "minutes": "{{minutes}} min",
+    "onAir": "A L'AIRE",
+    "recorded": "ENREGISTRAT",
+    "replay": "tornar a reproduir",
+    "stage": "etapa",
+    "upcoming": "properes"
+  },
   "mastodonApps": {
     "authTitle": "Inicia la sessió amb DeHub",
     "authWants": "{{app}} vol fer servir el teu compte de DeHub",
@@ -1542,6 +1552,8 @@
     "deleteConversationFailed": "No s'ha pogut eliminar la conversa"
   },
   "music": {
+    "listeningCount_one": "{{count}} escoltant",
+    "listeningCount_other": "{{count}} escoltant",
     "all": "Tot",
     "tracks": "Pistes",
     "videos": "Vídeos",
@@ -1916,7 +1928,15 @@
     "offerToBuyTokens": "Oferta per comprar fitxes DeHub",
     "tokenAmount": "Quantitat de fitxes",
     "pricePerTokenUsd": "Preu per fitxa (USD)",
-    "votingPowerNote": "La votació dura 7 dies. El poder de vot és la contribució acumulada de fitxes de cada col·laborador quan s'obre aquesta proposta. Almenys el 10% ha de participar i Acceptar ha de guanyar a Rebutjar."
+    "votingPowerNote": "La votació dura 7 dies. El poder de vot és la contribució acumulada de fitxes de cada col·laborador quan s'obre aquesta proposta. Almenys el 10% ha de participar i Acceptar ha de guanyar a Rebutjar.",
+    "status": {
+      "open": "Obre",
+      "accepted": "Acceptada",
+      "rejected": "Rebutjat",
+      "completed": "Completat",
+      "expired": "Caducat",
+      "cancelled": "Cancel·lada"
+    }
   },
   "governance": {
     "title": "Governança",
@@ -8664,6 +8684,10 @@
     "backToMedia": "Torna a l'entrada",
     "like": "M'agrada",
     "unlike": "Elimina els \"m'agrada\""
+  },
+  "copy": {
+    "2971f9103f78": "Gràcies per ajudar a millorar DeHub: una cosa que has demanat ja està disponible:",
+    "905392fbed15": "Gràcies per ajudar a millorar DeHub: {{value1}} les coses que has demanat ja estan disponibles:"
   },
   "postProcessing": {
     "uploading": "Pujant…",

@@ -1,4 +1,8 @@
 {
+  "stageCover": {
+    "minutes": "{{minutes}} مين",
+    "stage": "المسرح"
+  },
   "mastodonApps": {
     "authTitle": "سجّل الدخول بـ DeHub",
     "authWants": "{{app}} يشتي يستخدم حسابك في DeHub",

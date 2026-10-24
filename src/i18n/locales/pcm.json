@@ -1,4 +1,14 @@
 {
+  "stageCover": {
+    "admitOne": "ADMIT ONE",
+    "live": "live",
+    "minutes": "{{minutes}} min",
+    "onAir": "ON AIR",
+    "recorded": "RECORDED",
+    "replay": "replay",
+    "stage": "stage",
+    "upcoming": "upcoming"
+  },
   "mastodonApps": {
     "authTitle": "Sign in with DeHub",
     "authWants": "{{app}} wan use your DeHub account",
@@ -1430,6 +1440,8 @@
     "deleteConversationFailed": "We no fit delete the conversation"
   },
   "music": {
+    "listeningCount_one": "{{count}} listening",
+    "listeningCount_other": "{{count}} listening",
     "all": "All",
     "tracks": "Tracks",
     "videos": "Videos",
@@ -1753,7 +1765,15 @@
     "power": "power",
     "tokenAmount": "Token amount",
     "pricePerTokenUsd": "Price per token (USD)",
-    "votingPowerNote": "Voting dey last for 7 days. Power of voting be each contributor’s total token dey contribute when dis proposal open. At least 10% must join in, and \"Accept\" must win more than \"Reject\"."
+    "votingPowerNote": "Voting dey last for 7 days. Power of voting be each contributor’s total token dey contribute when dis proposal open. At least 10% must join in, and \"Accept\" must win more than \"Reject\".",
+    "status": {
+      "open": "Open",
+      "accepted": "Accepted",
+      "rejected": "Rejected",
+      "completed": "Completed",
+      "expired": "Expired",
+      "cancelled": "Cancelled"
+    }
   },
   "governance": {
     "title": "Rul Dem",

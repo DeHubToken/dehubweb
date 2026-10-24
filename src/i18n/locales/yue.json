@@ -1,4 +1,14 @@
 {
+  "stageCover": {
+    "admitOne": "認一個",
+    "live": "生活",
+    "minutes": "{{minutes}} 分鐘",
+    "onAir": "喺度播緊",
+    "recorded": "錄咗",
+    "replay": "重播",
+    "stage": "階段",
+    "upcoming": "嚟緊"
+  },
   "mastodonApps": {
     "authTitle": "用 DeHub 登入",
     "authWants": "{{app}} 想用你嘅 DeHub 帳戶",
@@ -1544,6 +1554,8 @@
     "deleteConversationFailed": "刪除唔到對話"
   },
   "music": {
+    "listeningCount_one": "{{count}} 聽緊",
+    "listeningCount_other": "{{count}} 聽緊",
     "all": "全部",
     "tracks": "歌曲",
     "videos": "影片",
@@ -1909,7 +1921,14 @@
     "offerToBuyTokens": "提供購買 DeHub 代幣",
     "tokenAmount": "代幣數量",
     "pricePerTokenUsd": "每個代幣價格 (美元)",
-    "votingPowerNote": "投票期為 7 日。投票權係喺呢個提案開啟時，每個貢獻者累積嘅代幣貢獻。至少要有 10% 參與，並且「接受」必須多於「拒絕」。"
+    "votingPowerNote": "投票期為 7 日。投票權係喺呢個提案開啟時，每個貢獻者累積嘅代幣貢獻。至少要有 10% 參與，並且「接受」必須多於「拒絕」。",
+    "status": {
+      "open": "打開",
+      "rejected": "拒絕咗",
+      "completed": "完成咗",
+      "expired": "過咗期",
+      "cancelled": "取消咗"
+    }
   },
   "governance": {
     "title": "治理",
@@ -8764,6 +8783,10 @@
     "backToMedia": "返去個帖子",
     "like": "似",
     "unlike": "移除鍾意"
+  },
+  "copy": {
+    "2971f9103f78": "多謝你幫手令 DeHub 更好 — 你要求嘅嘢而家開始直播喇：",
+    "905392fbed15": "多謝你幫手令 DeHub 變得更好 — {{value1}} 你要求嘅嘢而家開始直播喇："
   },
   "postProcessing": {
     "uploading": "上傳緊…",

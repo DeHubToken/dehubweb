@@ -1,4 +1,14 @@
 {
+  "stageCover": {
+    "admitOne": "HYVÄKSY YKSI",
+    "live": "live",
+    "minutes": "{{minutes}} min",
+    "onAir": "ILMASSA",
+    "recorded": "NAUHOITETTU",
+    "replay": "toista",
+    "stage": "vaihe",
+    "upcoming": "tuleva"
+  },
   "mastodonApps": {
     "authTitle": "Kirjaudu DeHubilla",
     "authWants": "{{app}} haluaa käyttää DeHub-tiliäsi",
@@ -1542,6 +1552,8 @@
     "deleteConversationFailed": "Keskustelua ei voitu poistaa"
   },
   "music": {
+    "listeningCount_one": "{{count}} kuuntelee",
+    "listeningCount_other": "{{count}} kuuntelee",
     "all": "Kaikki",
     "tracks": "Kappaleet",
     "videos": "Videot",
@@ -1916,7 +1928,15 @@
     "offerToBuyTokens": "Tarjoudu ostamaan DeHub-tokeneita",
     "tokenAmount": "Token-määrä",
     "pricePerTokenUsd": "Hinta per token (USD)",
-    "votingPowerNote": "Äänestys kestää 7 päivää. Äänestysvalta on kunkin osallistujan kumulatiivinen token-panos, kun tämä ehdotus avautuu. Vähintään 10 % on osallistuttava ja Hyväksy-äänten on voitettava Hylkää-äänet."
+    "votingPowerNote": "Äänestys kestää 7 päivää. Äänestysvalta on kunkin osallistujan kumulatiivinen token-panos, kun tämä ehdotus avautuu. Vähintään 10 % on osallistuttava ja Hyväksy-äänten on voitettava Hylkää-äänet.",
+    "status": {
+      "open": "Avaa",
+      "accepted": "Hyväksytty",
+      "rejected": "Hylätty",
+      "completed": "Valmis",
+      "expired": "Vanhentunut",
+      "cancelled": "Peruutettu"
+    }
   },
   "governance": {
     "title": "Hallinto",
@@ -8665,6 +8685,10 @@
     "backToMedia": "Takaisin postaukseen",
     "like": "Tykkää",
     "unlike": "Poista tykkäys"
+  },
+  "copy": {
+    "2971f9103f78": "Kiitos, että autat tekemään DeHubista paremman — jotain pyytämääsi on nyt julkaistu:",
+    "905392fbed15": "Kiitos, että autat tekemään DeHubista paremman — {{value1}} pyytämäsi asiat ovat nyt saatavilla:"
   },
   "postProcessing": {
     "uploading": "Ladataan…",

@@ -1,4 +1,14 @@
 {
+  "stageCover": {
+    "admitOne": "PRANO NJË",
+    "live": "drejtpërsëdrejti",
+    "minutes": "{{minutes}} min",
+    "onAir": "NË AJËR",
+    "recorded": "REGJISTRUAR",
+    "replay": "ripërsërit",
+    "stage": "fazë",
+    "upcoming": "i ardhshëm"
+  },
   "mastodonApps": {
     "authTitle": "Hyr me DeHub",
     "authWants": "{{app}} do të përdorë llogarinë tënde DeHub",
@@ -1544,6 +1554,8 @@
     "deleteConversationFailed": "Biseda nuk mund të fshihej"
   },
   "music": {
+    "listeningCount_one": "{{count}} duke dëgjuar",
+    "listeningCount_other": "{{count}} duke dëgjuar",
     "all": "Të gjitha",
     "tracks": "Këngë",
     "videos": "Video",
@@ -1909,7 +1921,15 @@
     "offerToBuyTokens": "Ofertë për të blerë tokena DeHub",
     "tokenAmount": "Sasia e tokenave",
     "pricePerTokenUsd": "Çmimi për token (USD)",
-    "votingPowerNote": "Votimi zgjat 7 ditë. Fuqia e votimit është kontributi kumulativ i tokenave të secilit kontribues kur hapet kjo propozim. Të paktën 10% duhet të marrin pjesë dhe Prano duhet të tejkalojë Refuzo."
+    "votingPowerNote": "Votimi zgjat 7 ditë. Fuqia e votimit është kontributi kumulativ i tokenave të secilit kontribues kur hapet kjo propozim. Të paktën 10% duhet të marrin pjesë dhe Prano duhet të tejkalojë Refuzo.",
+    "status": {
+      "open": "Hap",
+      "accepted": "Pranuar",
+      "rejected": "Refuzuar",
+      "completed": "Përfundoi",
+      "expired": "Skadoi",
+      "cancelled": "Anuluar"
+    }
   },
   "governance": {
     "title": "Qeverisja",
@@ -8757,6 +8777,10 @@
     "backToMedia": "Kthehu te postimi",
     "like": "Më pëlqen",
     "unlike": "Hiq pëlqimin"
+  },
+  "copy": {
+    "2971f9103f78": "Faleminderit që ndihmove DeHub të përmirësohet — diçka që kërkove tani është live:",
+    "905392fbed15": "Faleminderit që ndihmove për ta bërë DeHub më të mirë — {{value1}} gjërat që kërkove tani janë live:"
   },
   "postProcessing": {
     "uploading": "Po ngarkohet…",

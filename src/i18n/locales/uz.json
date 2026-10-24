@@ -1,4 +1,13 @@
 {
+  "stageCover": {
+    "live": "jonli",
+    "minutes": "{{minutes}} daqiqa",
+    "onAir": "Efirda",
+    "recorded": "YOZIB OLINGAN",
+    "replay": "qayta ijro etish",
+    "stage": "sahna",
+    "upcoming": "yaqinlashib kelayotgan"
+  },
   "mastodonApps": {
     "authTitle": "DeHub orqali kirish",
     "authWants": "{{app}} DeHub akkauntingizdan foydalanmoqchi",
@@ -1561,6 +1570,8 @@
     "deleteConversationFailed": "Suhbatni o'chirib bo'lmadi"
   },
   "music": {
+    "listeningCount_one": "{{count}} tinglash",
+    "listeningCount_other": "{{count}} tinglash",
     "all": "Hammasi",
     "tracks": "Treklar",
     "videos": "Videolar",
@@ -1926,7 +1937,15 @@
     "offerToBuyTokens": "DeHub tokenlarini sotib olishni taklif qiling",
     "tokenAmount": "Token miqdori",
     "pricePerTokenUsd": "Token narxi (USD)",
-    "votingPowerNote": "Ovoz berish 7 kun davom etadi. Ovoz berish kuchi ushbu taklif ochilganda har bir ishtirokchining kumulyativ token hissasi hisoblanadi. Kamida 10% ishtirok etishi kerak va \"Qabul qilish\" \"Rad etish\"dan ustun bo'lishi kerak."
+    "votingPowerNote": "Ovoz berish 7 kun davom etadi. Ovoz berish kuchi ushbu taklif ochilganda har bir ishtirokchining kumulyativ token hissasi hisoblanadi. Kamida 10% ishtirok etishi kerak va \"Qabul qilish\" \"Rad etish\"dan ustun bo'lishi kerak.",
+    "status": {
+      "open": "Ochiq",
+      "accepted": "Qabul qilindi",
+      "rejected": "Rad etildi",
+      "completed": "Tugallandi",
+      "expired": "Muddati tugagan",
+      "cancelled": "Bekor qilindi"
+    }
   },
   "governance": {
     "title": "Boshqaruv",
@@ -8794,6 +8813,10 @@
     "backToMedia": "Xabarga qaytish",
     "like": "Yoqdi",
     "unlike": "Yoqtirishni olib tashlash"
+  },
+  "copy": {
+    "2971f9103f78": "DeHub’ni yaxshilashga yordam berganingiz uchun tashakkur — siz so‘ragan narsa endi ishga tushirildi:",
+    "905392fbed15": "DeHub’ni yaxshilashga yordam berganingiz uchun tashakkur — {{value1}} siz so‘ragan narsalar endi ishga tushirildi:"
   },
   "postProcessing": {
     "uploading": "Yuklanmoqda…",

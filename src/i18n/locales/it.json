@@ -1,4 +1,14 @@
 {
+  "stageCover": {
+    "admitOne": "AMMETTINE UNO",
+    "live": "live",
+    "minutes": "{{minutes}} min",
+    "onAir": "IN ONDA",
+    "recorded": "REGISTRATO",
+    "replay": "riproduci",
+    "stage": "fase",
+    "upcoming": "imminente"
+  },
   "mastodonApps": {
     "authTitle": "Accedi con DeHub",
     "authWants": "{{app}} vuole usare il tuo account DeHub",
@@ -1550,6 +1560,8 @@
     "deleteConversationFailed": "Impossibile eliminare la conversazione"
   },
   "music": {
+    "listeningCount_one": "{{count}} in ascolto",
+    "listeningCount_other": "{{count}} in ascolto",
     "all": "Tutto",
     "tracks": "Brani",
     "videos": "Video",
@@ -1924,7 +1936,15 @@
     "offerToBuyTokens": "Offerta per acquistare token DeHub",
     "tokenAmount": "Quantità di token",
     "pricePerTokenUsd": "Prezzo per token (USD)",
-    "votingPowerNote": "Il voto dura 7 giorni. Il potere di voto è il contributo cumulativo in token di ciascun contributore all'apertura di questa proposta. Almeno il 10% deve partecipare e Accetta deve prevalere su Rifiuta."
+    "votingPowerNote": "Il voto dura 7 giorni. Il potere di voto è il contributo cumulativo in token di ciascun contributore all'apertura di questa proposta. Almeno il 10% deve partecipare e Accetta deve prevalere su Rifiuta.",
+    "status": {
+      "open": "Apri",
+      "accepted": "Accettato",
+      "rejected": "Rifiutato",
+      "completed": "Completato",
+      "expired": "Scaduto",
+      "cancelled": "Annullato"
+    }
   },
   "governance": {
     "title": "Governanza",
@@ -8826,6 +8846,10 @@
     "phraseLoadFailed": "Impossibile caricare la frase di recupero. Riprova o apri DeHub sul dispositivo originale.",
     "noPhrase": "Questo portafoglio è stato salvato con una chiave privata, quindi DeHub non ha una frase di recupero da mostrare. Salva questa chiave per ripristinare lo stesso portafoglio.",
     "keyWarning": "Chiunque possieda questa chiave può controllare il tuo portafoglio. Conservala al sicuro e non condividerla mai."
+  },
+  "copy": {
+    "2971f9103f78": "Grazie per aver contribuito a migliorare DeHub — qualcosa che hai chiesto è ora disponibile:",
+    "905392fbed15": "Grazie per aver contribuito a migliorare DeHub: {{value1}} le cose che hai chiesto sono ora disponibili:"
   },
   "postProcessing": {
     "uploading": "Caricamento…",

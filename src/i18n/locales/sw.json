@@ -1,4 +1,14 @@
 {
+  "stageCover": {
+    "admitOne": "KUBALI MOJA",
+    "live": "moja kwa moja",
+    "minutes": "{{minutes}} dakika",
+    "onAir": "KWENYE HEWA",
+    "recorded": "ILIYOREKODIWA",
+    "replay": "cheza tena",
+    "stage": "hatua",
+    "upcoming": "ijayo"
+  },
   "mastodonApps": {
     "authTitle": "Ingia ukitumia DeHub",
     "authWants": "{{app}} inataka kutumia akaunti yako ya DeHub",
@@ -1547,6 +1557,8 @@
     "deleteConversationFailed": "Imeshindwa kufuta mazungumzo"
   },
   "music": {
+    "listeningCount_one": "{{count}} akisikiliza",
+    "listeningCount_other": "{{count}} akisikiliza",
     "all": "Zote",
     "tracks": "Nyimbo",
     "videos": "Video",
@@ -1920,7 +1932,15 @@
     "offerToBuyTokens": "Toa ofa ya kununua tokeni za DeHub",
     "tokenAmount": "Kiasi cha tokeni",
     "pricePerTokenUsd": "Bei kwa tokeni (USD)",
-    "votingPowerNote": "Kupiga kura hudumu kwa siku 7. Nguvu ya kupiga kura ni mchango wa tokeni wa kila mchangiaji wakati pendekezo hili linafunguliwa. Angalau 10% lazima washiriki na Kubali lazima ipite Kukataa."
+    "votingPowerNote": "Kupiga kura hudumu kwa siku 7. Nguvu ya kupiga kura ni mchango wa tokeni wa kila mchangiaji wakati pendekezo hili linafunguliwa. Angalau 10% lazima washiriki na Kubali lazima ipite Kukataa.",
+    "status": {
+      "open": "Fungua",
+      "accepted": "Imekubaliwa",
+      "rejected": "Imekataliwa",
+      "completed": "Imekamilika",
+      "expired": "Muda wake umekwisha",
+      "cancelled": "Imeghairiwa"
+    }
   },
   "governance": {
     "title": "Utawala",
@@ -8756,6 +8776,10 @@
     "backToMedia": "Rudi kwenye chapisho",
     "like": "Penda",
     "unlike": "Ondoa kama"
+  },
+  "copy": {
+    "2971f9103f78": "Asante kwa kusaidia kuboresha DeHub — jambo uliloomba sasa linapatikana moja kwa moja:",
+    "905392fbed15": "Asante kwa kusaidia kuboresha DeHub — {{value1}} mambo uliyoomba sasa yanaonekana:"
   },
   "postProcessing": {
     "uploading": "Inapakia…",

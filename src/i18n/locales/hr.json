@@ -1,4 +1,14 @@
 {
+  "stageCover": {
+    "admitOne": "PRIZNAJTE JEDAN",
+    "live": "uživo",
+    "minutes": "{{minutes}} min",
+    "onAir": "U ETERU",
+    "recorded": "SNIMLJENO",
+    "replay": "ponovna reprodukcija",
+    "stage": "faza",
+    "upcoming": "nadolazeće"
+  },
   "mastodonApps": {
     "authTitle": "Prijava putem DeHuba",
     "authWants": "{{app}} želi koristiti tvoj DeHub račun",
@@ -1540,6 +1550,8 @@
     "deleteConversationFailed": "Brisanje razgovora nije uspjelo"
   },
   "music": {
+    "listeningCount_one": "{{count}} slušanje",
+    "listeningCount_other": "{{count}} slušanje",
     "all": "Sve",
     "tracks": "Pjesme",
     "videos": "Videozapisi",
@@ -1905,7 +1917,15 @@
     "offerToBuyTokens": "Ponuda za kupnju DeHub tokena",
     "tokenAmount": "Iznos tokena",
     "pricePerTokenUsd": "Cijena po tokenu (USD)",
-    "votingPowerNote": "Glasovanje traje 7 dana. Snaga glasovanja je kumulativni doprinos tokena svakog suradnika kada se ovaj prijedlog otvori. Najmanje 10% mora sudjelovati, a Prihvati mora pobijediti Odbij."
+    "votingPowerNote": "Glasovanje traje 7 dana. Snaga glasovanja je kumulativni doprinos tokena svakog suradnika kada se ovaj prijedlog otvori. Najmanje 10% mora sudjelovati, a Prihvati mora pobijediti Odbij.",
+    "status": {
+      "open": "Otvori",
+      "accepted": "Prihvaćeno",
+      "rejected": "Odbijeno",
+      "completed": "Dovršeno",
+      "expired": "Isteklo",
+      "cancelled": "Otkazano"
+    }
   },
   "governance": {
     "title": "Upravljanje",
@@ -8658,6 +8678,10 @@
     "backToMedia": "Natrag na objavu",
     "like": "Sviđa mi se",
     "unlike": "Ukloni lajk"
+  },
+  "copy": {
+    "2971f9103f78": "Hvala ti što pomažeš da DeHub bude bolji — nešto što si tražio sada je objavljeno:",
+    "905392fbed15": "Hvala vam što pomažete poboljšati DeHub — {{value1}} stvari koje ste zatražili sada su objavljene:"
   },
   "postProcessing": {
     "uploading": "Prijenos…",

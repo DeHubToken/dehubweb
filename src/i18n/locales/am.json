@@ -1,4 +1,14 @@
 {
+  "stageCover": {
+    "admitOne": "አንዱን ያስተዋውቁ",
+    "live": "በቀጥታ",
+    "minutes": "{{minutes}} ደቂቃ",
+    "onAir": "በአየር ላይ",
+    "recorded": "የተመዘገበ",
+    "replay": "እንደገና ይመልሱ",
+    "stage": "ደረጃ",
+    "upcoming": "መጪ"
+  },
   "mastodonApps": {
     "authTitle": "በDeHub ይግቡ",
     "authWants": "{{app}} የDeHub መለያዎን መጠቀም ይፈልጋል",
@@ -1541,6 +1551,8 @@
     "deleteConversationFailed": "ውይይቱን መሰረዝ አልተቻለም"
   },
   "music": {
+    "listeningCount_one": "{{count}} ማዳመጥ",
+    "listeningCount_other": "{{count}} ማዳመጥ",
     "all": "ሁሉም",
     "tracks": "ትራኮች",
     "videos": "ቪዲዮዎች",
@@ -1906,7 +1918,15 @@
     "offerToBuyTokens": "DeHub ቶከኖችን ለመግዛት ይስጡ",
     "tokenAmount": "የቶከን መጠን",
     "pricePerTokenUsd": "ለቶከን ዋጋ (USD)",
-    "votingPowerNote": "ድምጽ መስጠት ለ7 ቀናት ይቆያል። የድምጽ መስጫ ሃይል የዚህን ጥያቄ ሲከፈት የያንዳንዱ አስተዋፅዖ አድራጊ ድምር የቶከን አስተዋፅኦ ነው። ቢያንስ 10% መሳተፍ ይኖርበታል እና ተቀባይነት (Accept) ከውድቅ (Reject) በላይ መሆን አለበት።"
+    "votingPowerNote": "ድምጽ መስጠት ለ7 ቀናት ይቆያል። የድምጽ መስጫ ሃይል የዚህን ጥያቄ ሲከፈት የያንዳንዱ አስተዋፅዖ አድራጊ ድምር የቶከን አስተዋፅኦ ነው። ቢያንስ 10% መሳተፍ ይኖርበታል እና ተቀባይነት (Accept) ከውድቅ (Reject) በላይ መሆን አለበት።",
+    "status": {
+      "open": "ክፈት",
+      "accepted": "ተቀባይነት አግኝቷል",
+      "rejected": "ተከልክሏል",
+      "completed": "ተጠናቅቋል",
+      "expired": "ጊዜው አልፏል",
+      "cancelled": "ተሰርዟል"
+    }
   },
   "governance": {
     "title": "አስተዳደር",
@@ -8736,6 +8756,10 @@
     "backToMedia": "ወደ ልኡክ ጽሁፍ ተመለስ",
     "like": "እንደ",
     "unlike": "እንደ አስወግድ"
+  },
+  "copy": {
+    "2971f9103f78": "DeHub ን የተሻለ ለማድረግ ስለረዱ እናመሰግናለን — የጠየቁት ነገር አሁን በቀጥታ ነው-",
+    "905392fbed15": "DeHub ን ለማሻሻል ስለረዱ እናመሰግናለን — {{value1}} የጠየቋቸው ነገሮች አሁን በቀጥታ ናቸው-"
   },
   "postProcessing": {
     "uploading": "በመስቀል ላይ…",

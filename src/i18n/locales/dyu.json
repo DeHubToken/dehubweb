@@ -1,4 +1,14 @@
 {
+  "stageCover": {
+    "admitOne": "Ne b'a fɔ aw ye ko aw ka sɔn",
+    "live": "ka to ka ɲɛnamaya kɛ",
+    "minutes": "{{minutes}} min",
+    "onAir": "Fanga be fɔɲɔ la",
+    "recorded": "Ka to ka sɛbɛri kɛ",
+    "replay": "ka segi ka baara kɛ",
+    "stage": "o ye ɲɛyirali ɲuman ye",
+    "upcoming": "o kɔ, a bena na."
+  },
   "mastodonApps": {
     "authTitle": "Don ni DeHub ye",
     "authWants": "{{app}} b'a fɛ ka i ka DeHub jatebila baara",
@@ -1875,7 +1885,15 @@
     "offerToBuyTokens": "O kɔ, a ye dɔ fara a ka baara kan.",
     "tokenAmount": "Fɛɛn min be se ka kɛ",
     "pricePerTokenUsd": "O wari be se ka kɛ wari ye min be se ka kɛ wari ye.",
-    "votingPowerNote": "O kama, u ye vote kɛ tile 7 kɔnɔ. O kama, a ka ɲi ka kɛ ni miiriya ɲuman ye. Ni mɔgɔ dɔ ye mɔgɔ dɔ ye, a ka kan ka sɔn a ma."
+    "votingPowerNote": "O kama, u ye vote kɛ tile 7 kɔnɔ. O kama, a ka ɲi ka kɛ ni miiriya ɲuman ye. Ni mɔgɔ dɔ ye mɔgɔ dɔ ye, a ka kan ka sɔn a ma.",
+    "status": {
+      "open": "Ka yɛlɛ",
+      "accepted": "Ka sɔn",
+      "rejected": "Ka ban",
+      "completed": "Ka ban",
+      "expired": "O bɛɛ banna.",
+      "cancelled": "Ka to ka to ka baara kɛ"
+    }
   },
   "governance": {
     "title": "Kɔrɔbɔ",
@@ -8530,6 +8548,9 @@
     "backToMedia": "An ka segi o koo kan",
     "like": "O cogo la,",
     "unlike": "A tun be i ko"
+  },
+  "copy": {
+    "2971f9103f78": "Ne b'i fo i ka dɛmɛ kosɔn ka DeHub fisaya — i ye fɛɛn min deli, o be to niin na sisan:"
   },
   "postProcessing": {
     "uploading": "A bɛ ka bila…",

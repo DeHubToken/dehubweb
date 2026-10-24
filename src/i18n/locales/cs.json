@@ -1,4 +1,14 @@
 {
+  "stageCover": {
+    "admitOne": "PŘIZNAT JEDEN",
+    "live": "živě",
+    "minutes": "{{minutes}} min",
+    "onAir": "ON AIR",
+    "recorded": "NAHRÁNO",
+    "replay": "přehrát znovu",
+    "stage": "stupeň",
+    "upcoming": "nadcházející"
+  },
   "mastodonApps": {
     "authTitle": "Přihlásit se přes DeHub",
     "authWants": "{{app}} chce používat váš účet DeHub",
@@ -1541,6 +1551,8 @@
     "deleteConversationFailed": "Konverzaci se nepodařilo smazat"
   },
   "music": {
+    "listeningCount_one": "{{count}} naslouchání",
+    "listeningCount_other": "{{count}} naslouchání",
     "all": "Vše",
     "tracks": "Skladby",
     "videos": "Videa",
@@ -1916,7 +1928,15 @@
     "offerToBuyTokens": "Nabídka nákupu tokenů DeHub",
     "tokenAmount": "Množství tokenů",
     "pricePerTokenUsd": "Cena za token (USD)",
-    "votingPowerNote": "Hlasování trvá 7 dní. Hlasovací síla je kumulativní příspěvek tokenů každého přispěvatele, když se tento návrh otevře. Musí se zúčastnit alespoň 10 % a Přijmout musí převážit Odmítnout."
+    "votingPowerNote": "Hlasování trvá 7 dní. Hlasovací síla je kumulativní příspěvek tokenů každého přispěvatele, když se tento návrh otevře. Musí se zúčastnit alespoň 10 % a Přijmout musí převážit Odmítnout.",
+    "status": {
+      "open": "Otevřít",
+      "accepted": "Přijato",
+      "rejected": "Zamítnuto",
+      "completed": "Dokončeno",
+      "expired": "Vypršelo",
+      "cancelled": "Zrušeno"
+    }
   },
   "governance": {
     "title": "Správa",
@@ -8665,6 +8685,10 @@
     "backToMedia": "Zpět na příspěvek",
     "like": "Líbí se",
     "unlike": "Odebrat lajk"
+  },
+  "copy": {
+    "2971f9103f78": "Děkujeme, že pomáháte zlepšovat DeHub — něco, o co jste požádali, je nyní zveřejněno:",
+    "905392fbed15": "Děkujeme, že pomáháte zlepšovat DeHub — {{value1}} věci, o které jste požádali, jsou nyní v provozu:"
   },
   "postProcessing": {
     "uploading": "Nahrávání…",

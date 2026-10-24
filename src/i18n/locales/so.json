@@ -1,4 +1,14 @@
 {
+  "stageCover": {
+    "admitOne": "Qaado mid ka mid ah",
+    "live": "noolow",
+    "minutes": "{{minutes}} min",
+    "onAir": "ON hawo",
+    "recorded": "Diiwaangashan",
+    "replay": "soo noqnoqda",
+    "stage": "marxaladda",
+    "upcoming": "soo socda"
+  },
   "mastodonApps": {
     "authTitle": "Ku gal DeHub",
     "authWants": "{{app}} wuxuu rabaa inuu isticmaalo akoonkaaga DeHub",
@@ -1544,6 +1554,8 @@
     "deleteConversationFailed": "Wadahadalka ma tirtiri karo"
   },
   "music": {
+    "listeningCount_one": "{{count}} maqsood",
+    "listeningCount_other": "{{count}} maqsood",
     "all": "Dhammaan",
     "tracks": "Heesaha",
     "videos": "Fiidiyowyada",
@@ -1908,7 +1920,15 @@
     "offerToBuyTokens": "U soo bandhig inaad iibsato DeHub tokens",
     "tokenAmount": "Qadarka Token",
     "pricePerTokenUsd": "Qiimaha halkii token (USD)",
-    "votingPowerNote": "Codbixintu waxay socotaa 7 maalmood. Awoodda codbixinta waa wax ku darsiga token-ka ee isku dhafka ah ee qof kasta oo wax ku darsada marka hindisahan furmo. Ugu yaraan 10% waa inay ka qayb qaataan, oo Aqbal waa inuu ka guuleystaa Diidmo."
+    "votingPowerNote": "Codbixintu waxay socotaa 7 maalmood. Awoodda codbixinta waa wax ku darsiga token-ka ee isku dhafka ah ee qof kasta oo wax ku darsada marka hindisahan furmo. Ugu yaraan 10% waa inay ka qayb qaataan, oo Aqbal waa inuu ka guuleystaa Diidmo.",
+    "status": {
+      "open": "Furan",
+      "accepted": "Aqbalay",
+      "rejected": "Diiday",
+      "completed": "Dhammaystiray",
+      "expired": "Wakhtigeedii dhamaaday",
+      "cancelled": "Waa la joojiyay"
+    }
   },
   "governance": {
     "title": "Maamulidda",
@@ -8669,6 +8689,10 @@
     "backToMedia": "Ku noqo boostada",
     "like": "Sida",
     "unlike": "Ka saar sida"
+  },
+  "copy": {
+    "2971f9103f78": "Waad ku mahadsan tahay caawinta DeHub si fiican — wax aad weydiisatay hadda waa nool yahay:",
+    "905392fbed15": "Waad ku mahadsan tahay caawinta DeHub si fiican — {{value1}} waxyaabaha aad codsatay hadda waa nool yihiin:"
   },
   "postProcessing": {
     "uploading": "Waa la soo gelinayaa…",

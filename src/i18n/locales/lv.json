@@ -1,4 +1,14 @@
 {
+  "stageCover": {
+    "admitOne": "UZŅEMT VIENU",
+    "live": "tiešraidē",
+    "minutes": "{{minutes}} min",
+    "onAir": "GAISĀ",
+    "recorded": "IERAKSTĪTS",
+    "replay": "atkārtot",
+    "stage": "posms",
+    "upcoming": "gaidāms"
+  },
   "mastodonApps": {
     "authTitle": "Pierakstīties ar DeHub",
     "authWants": "{{app}} vēlas izmantot tavu DeHub kontu",
@@ -1528,6 +1538,8 @@
     "deleteConversationFailed": "Nevarēja izdzēst sarunu"
   },
   "music": {
+    "listeningCount_one": "{{count}} klausīšanās",
+    "listeningCount_other": "{{count}} klausīšanās",
     "all": "Visas",
     "tracks": "Ieraksti",
     "videos": "Video",
@@ -1893,7 +1905,15 @@
     "offerToBuyTokens": "Piedāvājums iegādāties DeHub žetonus",
     "tokenAmount": "Žetonu daudzums",
     "pricePerTokenUsd": "Cena par žetonu (USD)",
-    "votingPowerNote": "Balsošana ilgst 7 dienas. Balsošanas spēks ir katra dalībnieka kumulatīvais žetonu ieguldījums, kad šis priekšlikums tiek atvērts. Vismaz 10% ir jāpiedalās, un \"Pieņemt\" ir jāpārspēj \"Noraidīt\"."
+    "votingPowerNote": "Balsošana ilgst 7 dienas. Balsošanas spēks ir katra dalībnieka kumulatīvais žetonu ieguldījums, kad šis priekšlikums tiek atvērts. Vismaz 10% ir jāpiedalās, un \"Pieņemt\" ir jāpārspēj \"Noraidīt\".",
+    "status": {
+      "open": "Atvērts",
+      "accepted": "Apstiprināts",
+      "rejected": "Noraidīts",
+      "completed": "Pabeigts",
+      "expired": "Beidzies termiņš",
+      "cancelled": "Atcelts"
+    }
   },
   "governance": {
     "title": "Pārvaldība",
@@ -8746,6 +8766,10 @@
     "backToMedia": "Atpakaļ uz ziņu",
     "like": "Patīk",
     "unlike": "Noņemt atzīmi \"Patīk"
+  },
+  "copy": {
+    "2971f9103f78": "Paldies, ka palīdzat uzlabot DeHub — tas, ko lūdzāt, tagad ir pieejams tiešsaistē:",
+    "905392fbed15": "Paldies, ka palīdzat uzlabot DeHub — {{value1}} jūsu pieprasītās lietas tagad ir pieejamas tiešsaistē:"
   },
   "postProcessing": {
     "uploading": "Augšupielādē…",

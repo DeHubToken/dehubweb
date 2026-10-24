@@ -1,4 +1,14 @@
 {
+  "stageCover": {
+    "admitOne": "ERKÄNNA EN",
+    "live": "live",
+    "minutes": "{{minutes}} min",
+    "onAir": "PÅ LUFT",
+    "recorded": "INSPELAD",
+    "replay": "spela upp igen",
+    "stage": "steg",
+    "upcoming": "kommande"
+  },
   "mastodonApps": {
     "authTitle": "Logga in med DeHub",
     "authWants": "{{app}} vill använda ditt DeHub-konto",
@@ -1546,6 +1556,8 @@
     "deleteConversationFailed": "Det gick inte att ta bort konversationen"
   },
   "music": {
+    "listeningCount_one": "{{count}} lyssnar",
+    "listeningCount_other": "{{count}} lyssnar",
     "all": "Alla",
     "tracks": "Spår",
     "videos": "Videor",
@@ -1923,7 +1935,15 @@
     "offerToBuyTokens": "Erbjudande att köpa DeHub-tokens",
     "tokenAmount": "Tokenbelopp",
     "pricePerTokenUsd": "Pris per token (USD)",
-    "votingPowerNote": "Omröstningen varar i 7 dagar. Röstningskraft är varje bidragsgivares kumulativa tokenbidrag när denna förfrågan öppnas. Minst 10 % måste delta och Godkänn måste slå Avvisa."
+    "votingPowerNote": "Omröstningen varar i 7 dagar. Röstningskraft är varje bidragsgivares kumulativa tokenbidrag när denna förfrågan öppnas. Minst 10 % måste delta och Godkänn måste slå Avvisa.",
+    "status": {
+      "open": "Öppna",
+      "accepted": "Accepterad",
+      "rejected": "Avvisad",
+      "completed": "Slutförd",
+      "expired": "Förfallen",
+      "cancelled": "Avbruten"
+    }
   },
   "governance": {
     "title": "Styrning",
@@ -8667,6 +8687,10 @@
     "backToMedia": "Tillbaka till inlägget",
     "like": "Gilla",
     "unlike": "Ta bort gilla"
+  },
+  "copy": {
+    "2971f9103f78": "Tack för att du hjälper till att göra DeHub bättre — något du bad om är nu live:",
+    "905392fbed15": "Tack för att du hjälper till att göra DeHub bättre — {{value1}} saker du bad om är nu live:"
   },
   "postProcessing": {
     "uploading": "Laddar upp…",

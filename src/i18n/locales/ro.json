@@ -1,4 +1,14 @@
 {
+  "stageCover": {
+    "admitOne": "ADMITEȚI UNUL",
+    "live": "live",
+    "minutes": "{{minutes}} min",
+    "onAir": "ÎN DIRECT",
+    "recorded": "ÎNREGISTRAT",
+    "replay": "reluare",
+    "stage": "etapă",
+    "upcoming": "în curând"
+  },
   "mastodonApps": {
     "authTitle": "Conectează-te cu DeHub",
     "authWants": "{{app}} vrea să folosească contul tău DeHub",
@@ -1545,6 +1555,8 @@
     "deleteConversationFailed": "Conversația nu a putut fi ștearsă"
   },
   "music": {
+    "listeningCount_one": "{{count}} ascultare",
+    "listeningCount_other": "{{count}} ascultare",
     "all": "All",
     "tracks": "Tracks",
     "videos": "Videos",
@@ -1918,7 +1930,15 @@
     "offerToBuyTokens": "Oferă-te să cumperi tokenuri DeHub",
     "tokenAmount": "Cantitate de tokenuri",
     "pricePerTokenUsd": "Preț per token (USD)",
-    "votingPowerNote": "Votarea durează 7 zile. Puterea de vot este contribuția cumulativă de tokenuri a fiecărui contributor atunci când această propunere se deschide. Cel puțin 10% trebuie să participe și Accept trebuie să învingă Reject."
+    "votingPowerNote": "Votarea durează 7 zile. Puterea de vot este contribuția cumulativă de tokenuri a fiecărui contributor atunci când această propunere se deschide. Cel puțin 10% trebuie să participe și Accept trebuie să învingă Reject.",
+    "status": {
+      "open": "Deschide",
+      "accepted": "Acceptat",
+      "rejected": "Respins",
+      "completed": "Finalizat",
+      "expired": "Expirat",
+      "cancelled": "Anulat"
+    }
   },
   "governance": {
     "title": "Governance",
@@ -8777,6 +8797,10 @@
     "backToMedia": "Înapoi la postare",
     "like": "Îmi place",
     "unlike": "Elimină aprecierile"
+  },
+  "copy": {
+    "2971f9103f78": "Îți mulțumim că ne-ai ajutat să îmbunătățim DeHub — ceva ce ai cerut este acum live:",
+    "905392fbed15": "Îți mulțumim că ne-ai ajutat să îmbunătățim DeHub — {{value1}} lucrurile pe care le-ai cerut sunt acum live:"
   },
   "postProcessing": {
     "uploading": "Se încarcă…",

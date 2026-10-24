@@ -1,4 +1,14 @@
 {
+  "stageCover": {
+    "admitOne": "ADMITIR UM",
+    "live": "ao vivo",
+    "minutes": "{{minutes}} min",
+    "onAir": "NO AR",
+    "recorded": "GRAVADO",
+    "replay": "repetir",
+    "stage": "etapa",
+    "upcoming": "próxima"
+  },
   "mastodonApps": {
     "authTitle": "Entrar com DeHub",
     "authWants": "{{app}} quer usar sua conta DeHub",
@@ -1550,6 +1560,8 @@
     "deleteConversationFailed": "Não foi possível excluir a conversa"
   },
   "music": {
+    "listeningCount_one": "{{count}} ouvir",
+    "listeningCount_other": "{{count}} ouvir",
     "all": "Tudo",
     "tracks": "Faixas",
     "videos": "Vídeos",
@@ -1928,7 +1940,15 @@
     "offerToBuyTokens": "Oferecer para comprar tokens DeHub",
     "tokenAmount": "Quantidade de tokens",
     "pricePerTokenUsd": "Preço por token (USD)",
-    "votingPowerNote": "A votação dura 7 dias. O poder de voto é a contribuição cumulativa de tokens de cada colaborador quando esta proposta é aberta. Pelo menos 10% devem participar e Aceitar deve superar Rejeitar."
+    "votingPowerNote": "A votação dura 7 dias. O poder de voto é a contribuição cumulativa de tokens de cada colaborador quando esta proposta é aberta. Pelo menos 10% devem participar e Aceitar deve superar Rejeitar.",
+    "status": {
+      "open": "Abrir",
+      "accepted": "Aceito",
+      "rejected": "Rejeitado",
+      "completed": "Concluído",
+      "expired": "Expirado",
+      "cancelled": "Cancelado"
+    }
   },
   "governance": {
     "title": "Governança",
@@ -8915,6 +8935,10 @@
     "phraseLoadFailed": "Não foi possível carregar a frase de recuperação. Tenta novamente ou abre o DeHub no dispositivo original.",
     "noPhrase": "Esta carteira foi guardada com uma chave privada, por isso o DeHub não tem uma frase de recuperação para mostrar. Guarda esta chave para restaurar a mesma carteira.",
     "keyWarning": "Qualquer pessoa com esta chave pode controlar a tua carteira. Guarda-a num local seguro e nunca a partilhes."
+  },
+  "copy": {
+    "2971f9103f78": "Obrigado por ajudar a melhorar o DeHub — algo que você pediu agora está no ar:",
+    "905392fbed15": "Obrigado por ajudar a melhorar o DeHub. {{value1}} as coisas que você pediu já estão disponíveis:"
   },
   "postProcessing": {
     "uploading": "Enviando…",

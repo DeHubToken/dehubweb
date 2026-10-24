@@ -1,4 +1,14 @@
 {
+  "stageCover": {
+    "admitOne": "PRZYZNAJ SIĘ",
+    "live": "na żywo",
+    "minutes": "{{minutes}} min",
+    "onAir": "ON AIR",
+    "recorded": "ZAREJESTROWANE",
+    "replay": "powtórka",
+    "stage": "etap",
+    "upcoming": "nadchodzące"
+  },
   "mastodonApps": {
     "authTitle": "Zaloguj się przez DeHub",
     "authWants": "{{app}} chce korzystać z twojego konta DeHub",
@@ -1550,6 +1560,8 @@
     "deleteConversationFailed": "Nie można usunąć konwersacji"
   },
   "music": {
+    "listeningCount_one": "{{count}} słucha",
+    "listeningCount_other": "{{count}} słucha",
     "all": "Wszystko",
     "tracks": "Utwory",
     "videos": "Filmy",
@@ -1924,7 +1936,15 @@
     "offerToBuyTokens": "Oferta zakupu tokenów DeHub",
     "tokenAmount": "Ilość tokenów",
     "pricePerTokenUsd": "Cena za token (USD)",
-    "votingPowerNote": "Głosowanie trwa 7 dni. Siła głosu to skumulowany wkład tokenów każdego uczestnika w momencie otwarcia tego wniosku. Musi wziąć udział co najmniej 10%, a Akceptacja musi przewyższyć Odrzucenie."
+    "votingPowerNote": "Głosowanie trwa 7 dni. Siła głosu to skumulowany wkład tokenów każdego uczestnika w momencie otwarcia tego wniosku. Musi wziąć udział co najmniej 10%, a Akceptacja musi przewyższyć Odrzucenie.",
+    "status": {
+      "open": "Otwórz",
+      "accepted": "Zaakceptowane",
+      "rejected": "Odrzucono",
+      "completed": "Ukończono",
+      "expired": "Wygasła",
+      "cancelled": "Anulowano"
+    }
   },
   "governance": {
     "title": "Zarządzanie",
@@ -8807,6 +8827,10 @@
     "backToMedia": "Powrót do posta",
     "like": "Polub",
     "unlike": "Usuń polubienie"
+  },
+  "copy": {
+    "2971f9103f78": "Dziękujemy za pomoc w ulepszaniu DeHub — coś, o co prosiłeś, jest już dostępne:",
+    "905392fbed15": "Dziękujemy za pomoc w ulepszaniu DeHub — {{value1}} rzeczy, o które prosiłeś, są już dostępne:"
   },
   "postProcessing": {
     "uploading": "Przesyłanie…",

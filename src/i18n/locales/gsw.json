@@ -1,4 +1,14 @@
 {
+  "stageCover": {
+    "admitOne": "ADMIT ONE",
+    "live": "live",
+    "minutes": "{{minutes}} min",
+    "onAir": "ON AIR",
+    "recorded": "RECORDED",
+    "replay": "replay",
+    "stage": "stage",
+    "upcoming": "upcoming"
+  },
   "mastodonApps": {
     "authTitle": "Mit DeHub aamälde",
     "authWants": "{{app}} wott dis DeHub-Konto bruuche",
@@ -1543,6 +1553,8 @@
     "deleteConversationFailed": "Han d'Konversation nöd chönne lösche"
   },
   "music": {
+    "listeningCount_one": "{{count}} Zuhörende",
+    "listeningCount_other": "{{count}} Zuhörende",
     "all": "Alli",
     "tracks": "Tracks",
     "videos": "Videos",
@@ -1907,7 +1919,15 @@
     "offerToBuyTokens": "Aagebot zum DeHub Tokens choufe",
     "tokenAmount": "Token-Betrag",
     "pricePerTokenUsd": "Priis pro Token (USD)",
-    "votingPowerNote": "Abstimmige dauert 7 Tag. D Abstimmigskraft isch jede Biitragende sini kumulativi Token-Biitrag, wenn die Vorschlag uuftut. Mindeschtens 10% müend mitmache und \"Aanää\" muess \"Ablehne\" überbiete."
+    "votingPowerNote": "Abstimmige dauert 7 Tag. D Abstimmigskraft isch jede Biitragende sini kumulativi Token-Biitrag, wenn die Vorschlag uuftut. Mindeschtens 10% müend mitmache und \"Aanää\" muess \"Ablehne\" überbiete.",
+    "status": {
+      "open": "Open",
+      "accepted": "Angenommen",
+      "rejected": "Abgelehnt",
+      "completed": "Abgeschlossen",
+      "expired": "Abgelaufen",
+      "cancelled": "Storniert"
+    }
   },
   "governance": {
     "title": "Verwaltig",
@@ -8714,6 +8734,10 @@
     "backToMedia": "Zrugg zum Post",
     "like": "Gefällt mir",
     "unlike": "Like entferne"
+  },
+  "copy": {
+    "2971f9103f78": "Vilei fürs Mithelfen, dass DeHub besser wird — was ihr euch gewünscht habt, isch nu live:",
+    "905392fbed15": "Vilei fürs Mithelfen, dass DeHub besser wird — {{value1}} Sachen, die ihr euch gewünscht habt, sinch nu live:"
   },
   "postProcessing": {
     "uploading": "Am Uelade…",

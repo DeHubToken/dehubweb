@@ -1,4 +1,14 @@
 {
+  "stageCover": {
+    "admitOne": "INDRØM EN",
+    "live": "live",
+    "minutes": "{{minutes}} min",
+    "onAir": "I LUFTEN",
+    "recorded": "OPTAGET",
+    "replay": "afspil igen",
+    "stage": "fase",
+    "upcoming": "kommende"
+  },
   "mastodonApps": {
     "authTitle": "Log ind med DeHub",
     "authWants": "{{app}} vil bruge din DeHub-konto",
@@ -1546,6 +1556,8 @@
     "deleteConversationFailed": "Kunne ikke slette samtalen"
   },
   "music": {
+    "listeningCount_one": "{{count}} listening",
+    "listeningCount_other": "{{count}} listening",
     "all": "Alle",
     "tracks": "Numre",
     "videos": "Videoer",
@@ -1924,7 +1936,15 @@
     "offerToBuyTokens": "Tilbud om at købe DeHub tokens",
     "tokenAmount": "Tokenbeløb",
     "pricePerTokenUsd": "Pris pr. token (USD)",
-    "votingPowerNote": "Afstemning varer 7 dage. Stemmekraft er hver bidragyders kumulative tokenbidrag, når dette forslag åbner. Mindst 10% skal deltage, og Accept skal slå Reject."
+    "votingPowerNote": "Afstemning varer 7 dage. Stemmekraft er hver bidragyders kumulative tokenbidrag, når dette forslag åbner. Mindst 10% skal deltage, og Accept skal slå Reject.",
+    "status": {
+      "open": "Åbn",
+      "accepted": "Accepteret",
+      "rejected": "Afvist",
+      "completed": "Gennemført",
+      "expired": "Udløbet",
+      "cancelled": "Annulleret"
+    }
   },
   "governance": {
     "title": "Governance",
@@ -8693,6 +8713,10 @@
     "backToMedia": "Tilbage til indlægget",
     "like": "Synes godt om",
     "unlike": "Fjern som"
+  },
+  "copy": {
+    "2971f9103f78": "Tak, fordi du hjælper med at gøre DeHub bedre — noget, du bad om, er nu live:",
+    "905392fbed15": "Tak, fordi du hjælper med at gøre DeHub bedre —{{value1}} ting, du har bedt om, er nu live:"
   },
   "postProcessing": {
     "uploading": "Uploader…",

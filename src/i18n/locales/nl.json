@@ -1,4 +1,14 @@
 {
+  "stageCover": {
+    "admitOne": "GEEF ER EEN TOE",
+    "live": "live",
+    "minutes": "{{minutes}} min",
+    "onAir": "ON AIR",
+    "recorded": "GEREGISTREERD",
+    "replay": "opnieuw afspelen",
+    "stage": "fase",
+    "upcoming": "aankomend"
+  },
   "mastodonApps": {
     "authTitle": "Inloggen met DeHub",
     "authWants": "{{app}} wil je DeHub-account gebruiken",
@@ -376,11 +386,11 @@
   },
   "settings": {
     "usernameTaken": "Gebruikersnaam is bezet",
-    "showDislikesDesc": "Iedereen kan het tabblad Dislikes op je profiel openen. Staat dit uit, dan zie alleen jij het.",
-    "showDislikes": "Mijn dislikes aan iedereen tonen",
     "postingChain": "Blockchain voor berichten",
     "showOnline": "Laat zien wanneer ik online ben",
     "showOnlineDesc": "Mensen die je een bericht stuurt, zien een groene stip naast je naam terwijl je DeHub gebruikt",
+    "showDislikes": "Mijn dislikes aan iedereen tonen",
+    "showDislikesDesc": "Iedereen kan het tabblad Dislikes op je profiel openen. Staat dit uit, dan zie alleen jij het.",
     "smartReplies": "Voorgestelde antwoorden",
     "smartRepliesDesc": "Stelt twee antwoorden op die je in een chat kunt aantikken. De × bij de suggesties zet dit uit.",
     "title": "Instellingen",
@@ -936,6 +946,7 @@
     "automatic": "Automatisch"
   },
   "common": {
+    "confirm": "Bevestigen",
     "save": "Opslaan",
     "cancel": "Annuleren",
     "delete": "Verwijderen",
@@ -964,7 +975,6 @@
     "yes": "Ja",
     "no": "Nee",
     "ok": "OK",
-    "confirm": "Bevestigen",
     "copy": "Kopiëren",
     "paste": "Plakken",
     "pasted": "Geplakt",
@@ -2046,6 +2056,8 @@
     "noConversationsYet": "Nog geen gesprekken"
   },
   "music": {
+    "listeningCount_one": "{{count}} luisteren",
+    "listeningCount_other": "{{count}} luisteren",
     "all": "Alles",
     "tracks": "Nummers",
     "videos": "Video's",
@@ -2093,7 +2105,6 @@
     "returnHome": "Terug naar home"
   },
   "profile": {
-    "dislikes": { "loadMore": "Meer laden", "privateDesc": "Dit account houdt zijn dislikes voor zichzelf.", "privateTitle": "Dislikes zijn privé", "emptyOther": "Nog niets gedisliket.", "emptyOwn": "Berichten die je disliket verdwijnen uit je feeds en verschijnen hier. Maak een dislike ongedaan om het bericht terug te halen.", "emptyTitle": "Nog geen dislikes" },
     "back": "Terug",
     "usernameAvailable": "Gebruikersnaam beschikbaar!",
     "signUpToClaim": "Meld je vandaag aan om te claimen",
@@ -2121,8 +2132,16 @@
       "commentUnavailable": "Deze reactie is niet meer beschikbaar"
     },
     "tabs": {
-      "dislikes": "Dislikes",
-      "playlists": "Afspeellijsten"
+      "playlists": "Afspeellijsten",
+      "dislikes": "Dislikes"
+    },
+    "dislikes": {
+      "emptyTitle": "Nog geen dislikes",
+      "emptyOwn": "Berichten die je disliket verdwijnen uit je feeds en verschijnen hier. Maak een dislike ongedaan om het bericht terug te halen.",
+      "emptyOther": "Nog niets gedisliket.",
+      "privateTitle": "Dislikes zijn privé",
+      "privateDesc": "Dit account houdt zijn dislikes voor zichzelf.",
+      "loadMore": "Meer laden"
     },
     "offerWorthNow": "Ongeveer {{amount}} tokens tegen de huidige koers",
     "offerNotePlaceholder": "Voeg een notitie toe (optioneel)",
@@ -2254,7 +2273,29 @@
       "oneAgent": "Eén agent",
       "swarm": "Zwerm",
       "swarmChoose": "Kies agenten",
-      "selectAll": "Alle agents selecteren", "clearSelection": "Selectie wissen", "selectedCount": "{{count}} van {{total}} geselecteerd", "distribution": "Hoe agents de instructie uitvoeren", "eachMode": "Elke agent doet dit", "sharedMode": "Werk verdelen", "eachHelp": "Stuur deze instructies naar elke geselecteerde agent. Elke agent voert de volledige taak uit volgens het gevraagde schema. Gedeelde publicatielimieten blijven gelden.", "allCategories": "Alle berichten in alle categorieën. Geen trefwoordfilter en geen limiet van drie likes per taak.", "windowLimits": "Alle overeenkomende berichten worden in de wachtrij gezet. Actielimieten bepalen het tempo; ze beperken de taak niet tot drie berichten. Antwoorden schrijven kan credits kosten.", "promptLimits": "Verzoeken voor alle berichten omvatten alle categorieën. Selectieve likes op onderwerp zijn beperkt tot drie per uitvoering. Alle agents delen het publicatie-interval; schrijven kan credits kosten.", "pauseSwarm": "Zwerm pauzeren", "resumeSwarm": "Beschikbare agents hervatten", "cancelSwarm": "Zwerm annuleren", "cancelTask": "Taak annuleren", "actionsProcessed": "acties verwerkt", "reviewMembers": "Taken met onzekere acties vereisen individuele controle voordat ze worden hervat. Een lopende actie kan na pauzeren of annuleren worden afgerond.", "controlUpdated": "{{count}} taken bijgewerkt", "enabled": "Ingeschakeld · activiteit", "enabledHelp": "Ingeschakeld betekent dat deze agent beschikbaar is. De taakstatussen hieronder tonen of de agent werkt, wacht, gepauzeerd is of een fout heeft.", "lastActive": "Laatst actief", "noActivity": "Geen activiteit vastgelegd", "noTasks": "Deze agent heeft nog geen taken.", "swarmHelp": "Eén opdracht, gedeeld werk. Doelen worden verdeeld en geplande berichten wisselen tussen agenten.",
+      "selectAll": "Alle agents selecteren",
+      "clearSelection": "Selectie wissen",
+      "selectedCount": "{{count}} van {{total}} geselecteerd",
+      "distribution": "Hoe agents de instructie uitvoeren",
+      "eachMode": "Elke agent doet dit",
+      "sharedMode": "Werk verdelen",
+      "eachHelp": "Stuur deze instructies naar elke geselecteerde agent. Elke agent voert de volledige taak uit volgens het gevraagde schema. Gedeelde publicatielimieten blijven gelden.",
+      "allCategories": "Alle berichten in alle categorieën. Geen trefwoordfilter en geen limiet van drie likes per taak.",
+      "windowLimits": "Alle overeenkomende berichten worden in de wachtrij gezet. Actielimieten bepalen het tempo; ze beperken de taak niet tot drie berichten. Antwoorden schrijven kan credits kosten.",
+      "promptLimits": "Verzoeken voor alle berichten omvatten alle categorieën. Selectieve likes op onderwerp zijn beperkt tot drie per uitvoering. Alle agents delen het publicatie-interval; schrijven kan credits kosten.",
+      "pauseSwarm": "Zwerm pauzeren",
+      "resumeSwarm": "Beschikbare agents hervatten",
+      "cancelSwarm": "Zwerm annuleren",
+      "cancelTask": "Taak annuleren",
+      "actionsProcessed": "acties verwerkt",
+      "reviewMembers": "Taken met onzekere acties vereisen individuele controle voordat ze worden hervat. Een lopende actie kan na pauzeren of annuleren worden afgerond.",
+      "controlUpdated": "{{count}} taken bijgewerkt",
+      "enabled": "Ingeschakeld · activiteit",
+      "enabledHelp": "Ingeschakeld betekent dat deze agent beschikbaar is. De taakstatussen hieronder tonen of de agent werkt, wacht, gepauzeerd is of een fout heeft.",
+      "lastActive": "Laatst actief",
+      "noActivity": "Geen activiteit vastgelegd",
+      "noTasks": "Deze agent heeft nog geen taken.",
+      "swarmHelp": "Eén opdracht, gedeeld werk. Doelen worden verdeeld en geplande berichten wisselen tussen agenten.",
       "swarmMember": "Zwermagent {{index}} van {{total}}",
       "runSwarm": "Start zwerm",
       "description": "Acties worden uitgevoerd als de geselecteerde agent. Geplande taken gaan door wanneer de app gesloten is.",
@@ -2290,7 +2331,7 @@
         "authorChoose": "Kies maker",
         "categoryAll": "Alle categorieën",
         "categoryChoose": "Kies categorieën",
-        "categoryHint": "Voeg maximaal 20 categorieën toe, gescheiden door komma\u0027s. Eén overeenkomst is genoeg. Laat leeg voor alles.",
+        "categoryHint": "Voeg maximaal 20 categorieën toe, gescheiden door komma's. Eén overeenkomst is genoeg. Laat leeg voor alles.",
         "last1h": "Afgelopen uur",
         "last30d": "Afgelopen 30 dagen",
         "allTime": "Altijd",
@@ -8394,7 +8435,14 @@
     "priceChartCleared": "Prijsgrafiek is geleegd. Referentieprijs is vastgesteld op $0.0001. Uitvoeringsprijzen zijn afhankelijk van beschikbare orders."
   },
   "editor": {
-    "video": { "tFade": "Overvloeien", "none": "Geen", "transition": "Overgang", "speed": "Snelheid", "sound": "Geluid","video": "Video"},
+    "video": {
+      "tFade": "Overvloeien",
+      "none": "Geen",
+      "transition": "Overgang",
+      "speed": "Snelheid",
+      "sound": "Geluid",
+      "video": "Video"
+    },
     "review": {
       "title": "Projectbeoordeling",
       "shared": "Met jou gedeeld",
@@ -10418,6 +10466,8 @@
     "reminderLater": "Niet nu"
   },
   "copy": {
+    "2971f9103f78": "Bedankt voor je hulp om DeHub beter te maken — iets waar je om hebt gevraagd is nu live:",
+    "905392fbed15": "Bedankt voor je hulp om DeHub beter te maken — {{value1}} dingen waar je om hebt gevraagd zijn nu live:",
     "b3412a3b86de": "Nodig streamers uit",
     "8c91325d901b": "Stuur streamers met dit bericht naar de DeHub-streamingpagina. Je link schrijft ze aan jou toe voordat ze aankomen.",
     "cc96aaa18cf2": "Kom met mij streamen op DeHub. Fooien komen on-chain rechtstreeks in je wallet, je publiek is van jou en je kunt in één stap blijven posten op TikTok en overal elders. Meld je hier aan: {{link}}",

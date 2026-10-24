@@ -1,4 +1,14 @@
 {
+  "stageCover": {
+    "admitOne": "REGISTREERI ÜKS",
+    "live": "reaalajas",
+    "minutes": "{{minutes}} min",
+    "onAir": "ÕHUS",
+    "recorded": "SALVESTATUD",
+    "replay": "kordus",
+    "stage": "etapp",
+    "upcoming": "eelseisev"
+  },
   "mastodonApps": {
     "authTitle": "Logi sisse DeHubiga",
     "authWants": "{{app}} soovib kasutada sinu DeHubi kontot",
@@ -1544,6 +1554,8 @@
     "deleteConversationFailed": "Vestlust ei saanud kustutada"
   },
   "music": {
+    "listeningCount_one": "{{count}} kuulamine",
+    "listeningCount_other": "{{count}} kuulamine",
     "all": "Kõik",
     "tracks": "Lood",
     "videos": "Videod",
@@ -1909,7 +1921,15 @@
     "offerToBuyTokens": "Pakkumine DeHubi žetoonide ostmiseks",
     "tokenAmount": "Žetoonide kogus",
     "pricePerTokenUsd": "Hind žetooni kohta (USD)",
-    "votingPowerNote": "Hääletamine kestab 7 päeva. Hääletusõigus on iga kaastöötaja kumulatiivne žetoonide panus, kui see ettepanek avatakse. Vähemalt 10% peab osalema ja \"Nõustun\" peab olema \"Keeldun\" ees."
+    "votingPowerNote": "Hääletamine kestab 7 päeva. Hääletusõigus on iga kaastöötaja kumulatiivne žetoonide panus, kui see ettepanek avatakse. Vähemalt 10% peab osalema ja \"Nõustun\" peab olema \"Keeldun\" ees.",
+    "status": {
+      "open": "Ava",
+      "accepted": "Kinnitatud",
+      "rejected": "Tagasi lükatud",
+      "completed": "Valmis",
+      "expired": "Aegunud",
+      "cancelled": "Tühistatud"
+    }
   },
   "governance": {
     "title": "Valitsemine",
@@ -8710,6 +8730,10 @@
     "backToMedia": "Tagasi postituse juurde",
     "like": "Meeldib",
     "unlike": "Eemalda meeldimine"
+  },
+  "copy": {
+    "2971f9103f78": "Aitäh, et aitasid DeHubi paremaks muuta — midagi, mida palusid, on nüüd saadaval:",
+    "905392fbed15": "Aitäh, et aitasid DeHubi paremaks muuta — {{value1}} asjad, mida palusid, on nüüd avatud:"
   },
   "postProcessing": {
     "uploading": "Üleslaadimine…",

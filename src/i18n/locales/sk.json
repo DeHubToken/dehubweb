@@ -1,4 +1,14 @@
 {
+  "stageCover": {
+    "admitOne": "PRIZNAŤ JEDEN",
+    "live": "live",
+    "minutes": "{{minutes}} min",
+    "onAir": "ON AIR",
+    "recorded": "ZAZNAMENANÉ",
+    "replay": "prehrať",
+    "stage": "stupeň",
+    "upcoming": "nadchádzajúce"
+  },
   "mastodonApps": {
     "authTitle": "Prihlásiť sa cez DeHub",
     "authWants": "{{app}} chce používať váš účet DeHub",
@@ -716,6 +726,7 @@
     "solanaUnlinkFailed": "Túto peňaženku sa nepodarilo odpojiť"
   },
   "common": {
+    "confirm": "Potvrdiť",
     "save": "Uložiť",
     "cancel": "Zrušiť",
     "delete": "Vymazať",
@@ -737,7 +748,6 @@
     "copied": "Skopírované",
     "back": "Späť",
     "error": "Chyba",
-    "confirm": "Potvrdiť",
     "next": "Ďalej",
     "previous": "Predchádzajúce",
     "filter": "Filtrovať",
@@ -1613,6 +1623,8 @@
     "lastSeen": "Naposledy videný"
   },
   "music": {
+    "listeningCount_one": "{{count}} počúvanie",
+    "listeningCount_other": "{{count}} počúvanie",
     "all": "All",
     "tracks": "Skladby",
     "videos": "Videá",
@@ -2008,7 +2020,15 @@
     "offerToBuyTokens": "Ponuka na kúpu tokenov DeHub",
     "tokenAmount": "Počet tokenov",
     "pricePerTokenUsd": "Cena za token (USD)",
-    "votingPowerNote": "Hlasovanie trvá 7 dní. Hlasovacia sila je kumulatívny príspevok tokenov každého prispievateľa v čase otvorenia tohto návrhu. Musí sa zúčastniť najmenej 10 % a „Prijať“ musí prevážiť nad „Odmietnuť“."
+    "votingPowerNote": "Hlasovanie trvá 7 dní. Hlasovacia sila je kumulatívny príspevok tokenov každého prispievateľa v čase otvorenia tohto návrhu. Musí sa zúčastniť najmenej 10 % a „Prijať“ musí prevážiť nad „Odmietnuť“.",
+    "status": {
+      "open": "Otvoriť",
+      "accepted": "Prijaté",
+      "rejected": "Zamietnuté",
+      "completed": "Dokončené",
+      "expired": "Platnosť vypršala",
+      "cancelled": "Zrušené"
+    }
   },
   "governance": {
     "title": "Správa",
@@ -8886,6 +8906,10 @@
     "backToMedia": "Späť na príspevok",
     "like": "Páči sa mi to",
     "unlike": "Odstrániť Páči sa mi to"
+  },
+  "copy": {
+    "2971f9103f78": "Ďakujeme, že ste pomohli zlepšiť DeHub — niečo, o čo ste požiadali, je teraz živé:",
+    "905392fbed15": "Ďakujeme, že ste pomohli zlepšiť DeHub — {{value1}} veci, o ktoré ste požiadali, sú teraz v prevádzke:"
   },
   "postProcessing": {
     "uploading": "Nahráva sa…",

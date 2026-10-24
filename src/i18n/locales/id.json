@@ -1,4 +1,14 @@
 {
+  "stageCover": {
+    "admitOne": "AKUI SATU",
+    "live": "langsung",
+    "minutes": "{{minutes}} menit",
+    "onAir": "ON AIR",
+    "recorded": "DIREKAM",
+    "replay": "putar ulang",
+    "stage": "tahap",
+    "upcoming": "mendatang"
+  },
   "mastodonApps": {
     "authTitle": "Masuk dengan DeHub",
     "authWants": "{{app}} ingin memakai akun DeHub-mu",
@@ -1550,6 +1560,8 @@
     "deleteConversationFailed": "Tidak dapat menghapus percakapan"
   },
   "music": {
+    "listeningCount_one": "{{count}} mendengarkan",
+    "listeningCount_other": "{{count}} mendengarkan",
     "all": "Semua",
     "tracks": "Lagu",
     "videos": "Video",
@@ -1924,7 +1936,15 @@
     "offerToBuyTokens": "Tawarkan untuk membeli token DeHub",
     "tokenAmount": "Jumlah token",
     "pricePerTokenUsd": "Harga per token (USD)",
-    "votingPowerNote": "Pemungutan suara berlangsung selama 7 hari. Kekuatan pemungutan suara adalah kontribusi token kumulatif setiap kontributor saat proposal ini dibuka. Setidaknya 10% harus berpartisipasi dan Terima harus mengalahkan Tolak."
+    "votingPowerNote": "Pemungutan suara berlangsung selama 7 hari. Kekuatan pemungutan suara adalah kontribusi token kumulatif setiap kontributor saat proposal ini dibuka. Setidaknya 10% harus berpartisipasi dan Terima harus mengalahkan Tolak.",
+    "status": {
+      "open": "Buka",
+      "accepted": "Disetujui",
+      "rejected": "Ditolak",
+      "completed": "Selesai",
+      "expired": "Kedaluwarsa",
+      "cancelled": "Dibatalkan"
+    }
   },
   "governance": {
     "title": "Tata Kelola",
@@ -8788,6 +8808,10 @@
     "backToMedia": "Kembali ke postingan",
     "like": "Suka",
     "unlike": "Hapus suka"
+  },
+  "copy": {
+    "2971f9103f78": "Terima kasih telah membantu menjadikan DeHub lebih baik — sesuatu yang Anda minta kini ditayangkan:",
+    "905392fbed15": "Terima kasih telah membantu menjadikan DeHub lebih baik — {{value1}} hal - hal yang Anda minta kini ditayangkan:"
   },
   "postProcessing": {
     "uploading": "Mengunggah…",

@@ -1,4 +1,14 @@
 {
+  "stageCover": {
+    "admitOne": "CHẤP NHẬN MỘT",
+    "live": "trực tiếp",
+    "minutes": "{{minutes}} phút",
+    "onAir": "ON AIR",
+    "recorded": "ĐÃ GHI",
+    "replay": "phát lại",
+    "stage": "giai đoạn",
+    "upcoming": "sắp tới"
+  },
   "mastodonApps": {
     "authTitle": "Đăng nhập bằng DeHub",
     "authWants": "{{app}} muốn dùng tài khoản DeHub của bạn",
@@ -714,6 +724,7 @@
     "solanaUnlinkFailed": "Không thể ngắt kết nối ví đó"
   },
   "common": {
+    "confirm": "Xác nhận",
     "save": "Lưu",
     "cancel": "Hủy",
     "delete": "Xóa",
@@ -741,7 +752,6 @@
     "optional": "Tùy chọn",
     "next": "Tiếp theo",
     "previous": "Trước",
-    "confirm": "Xác nhận",
     "error": "Lỗi",
     "success": "Thành công",
     "warning": "Cảnh báo",
@@ -1564,6 +1574,8 @@
     "deleteConversationFailed": "Không thể xóa cuộc trò chuyện"
   },
   "music": {
+    "listeningCount_one": "{{count}} đang nghe",
+    "listeningCount_other": "{{count}} đang nghe",
     "all": "All",
     "tracks": "Tracks",
     "videos": "Videos",
@@ -1935,7 +1947,15 @@
     "offerToBuyTokens": "Đề nghị mua token DeHub",
     "tokenAmount": "Số lượng token",
     "pricePerTokenUsd": "Giá mỗi token (USD)",
-    "votingPowerNote": "Thời gian bỏ phiếu là 7 ngày. Sức mạnh bỏ phiếu là sự đóng góp token tích lũy của mỗi người đóng góp khi đề xuất này mở ra. Ít nhất 10% phải tham gia và Chấp nhận phải thắng Từ chối."
+    "votingPowerNote": "Thời gian bỏ phiếu là 7 ngày. Sức mạnh bỏ phiếu là sự đóng góp token tích lũy của mỗi người đóng góp khi đề xuất này mở ra. Ít nhất 10% phải tham gia và Chấp nhận phải thắng Từ chối.",
+    "status": {
+      "open": "Mở",
+      "accepted": "Đã chấp nhận",
+      "rejected": "Bị từ chối",
+      "completed": "Đã hoàn thành",
+      "expired": "Đã hết hạn",
+      "cancelled": "Đã hủy"
+    }
   },
   "governance": {
     "title": "Governance",
@@ -8869,6 +8889,10 @@
     "backToMedia": "Quay lại bài đăng",
     "like": "Thích",
     "unlike": "Xóa lượt thích"
+  },
+  "copy": {
+    "2971f9103f78": "Cảm ơn bạn đã giúp cải thiện DeHub — nội dung bạn yêu cầu hiện đã được đăng:",
+    "905392fbed15": "Cảm ơn bạn đã giúp cải thiện DeHub — {{value1}} những điều bạn yêu cầu hiện đã được đăng:"
   },
   "postProcessing": {
     "uploading": "Đang tải lên…",

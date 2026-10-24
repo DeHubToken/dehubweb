@@ -1,4 +1,11 @@
 {
+  "stageCover": {
+    "admitOne": "承认",
+    "live": "直播",
+    "replay": "重播",
+    "stage": "舞台",
+    "upcoming": "即将上线"
+  },
   "mastodonApps": {
     "authTitle": "用 DeHub 登录",
     "authWants": "{{app}} 想使用你的 DeHub 账号",
@@ -1886,7 +1893,15 @@
     "offerToBuyTokens": "提供購買 DeHub 代幣",
     "tokenAmount": "代幣數量",
     "pricePerTokenUsd": "每代幣價格（美元）",
-    "votingPowerNote": "投票持續 7 天。投票權是該提案開啟時，每位貢獻者的累計代幣貢獻。至少 10% 的人必須參與，並且接受票數必須超過拒絕票數。"
+    "votingPowerNote": "投票持續 7 天。投票權是該提案開啟時，每位貢獻者的累計代幣貢獻。至少 10% 的人必須參與，並且接受票數必須超過拒絕票數。",
+    "status": {
+      "open": "开放",
+      "accepted": "已接受",
+      "rejected": "已拒绝",
+      "completed": "已完成",
+      "expired": "已过期",
+      "cancelled": "已取消"
+    }
   },
   "governance": {
     "title": "治理",
@@ -7981,6 +7996,10 @@
     "backToMedia": "返回帖子",
     "like": "点赞",
     "unlike": "取消点赞"
+  },
+  "copy": {
+    "2971f9103f78": "感谢您帮助 DeHub 得到改进 —— 您要求的东西现在已经上线：",
+    "905392fbed15": "感谢您帮助 DeHub 得到改进 —— {{value1}} 件您要求的东西现在已经上线："
   },
   "postProcessing": {
     "uploading": "上传中…",

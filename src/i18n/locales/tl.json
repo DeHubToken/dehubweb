@@ -1,4 +1,14 @@
 {
+  "stageCover": {
+    "admitOne": "AMININ ANG ISANG",
+    "live": "live",
+    "minutes": "{{minutes}}min",
+    "onAir": "ON AIR",
+    "recorded": "NAITALA",
+    "replay": "i - replay",
+    "stage": "entablado",
+    "upcoming": "nalalapit"
+  },
   "mastodonApps": {
     "authTitle": "Mag-sign in gamit ang DeHub",
     "authWants": "Gustong gamitin ng {{app}} ang DeHub account mo",
@@ -714,6 +724,7 @@
     "solanaUnlinkFailed": "Hindi madiskonekta ang wallet na iyon"
   },
   "common": {
+    "confirm": "Kumpirmahin",
     "save": "I-save",
     "cancel": "Kanselahin",
     "delete": "Burahin",
@@ -753,7 +764,6 @@
     "unknown": "Hindi alam",
     "congratulations": "Binabati kita!",
     "complete": "Kumpleto",
-    "confirm": "Kumpirmahin",
     "share": "Ibahagi",
     "twitter": "Twitter",
     "telegram": "Telegram",
@@ -1596,6 +1606,8 @@
     "deleteConversationFailed": "Hindi matanggal ang pag - uusap"
   },
   "music": {
+    "listeningCount_one": "{{count}} nakikinig",
+    "listeningCount_other": "{{count}} nakikinig",
     "all": "All",
     "tracks": "Tracks",
     "videos": "Videos",
@@ -1969,7 +1981,15 @@
     "offerToBuyTokens": "Mag-alok na bumili ng DeHub tokens",
     "tokenAmount": "Dami ng token",
     "pricePerTokenUsd": "Presyo bawat token (USD)",
-    "votingPowerNote": "Ang pagboto ay tumatagal ng 7 araw. Ang kapangyarihan sa pagboto ay ang pinagsama-samang kontribusyon ng token ng bawat kontribyutor kapag nagbukas ang panukalang ito. Hindi bababa sa 10% ang dapat lumahok at ang Pabor ay dapat talunin ang Tutol."
+    "votingPowerNote": "Ang pagboto ay tumatagal ng 7 araw. Ang kapangyarihan sa pagboto ay ang pinagsama-samang kontribusyon ng token ng bawat kontribyutor kapag nagbukas ang panukalang ito. Hindi bababa sa 10% ang dapat lumahok at ang Pabor ay dapat talunin ang Tutol.",
+    "status": {
+      "open": "Buksan",
+      "accepted": "Tinanggap",
+      "rejected": "Tinanggihan",
+      "completed": "Tapos na",
+      "expired": "Nag - expire na",
+      "cancelled": "Kinansela"
+    }
   },
   "governance": {
     "title": "Governance",
@@ -8904,6 +8924,10 @@
     "backToMedia": "Bumalik sa post",
     "like": "I - like",
     "unlike": "Alisin ang like"
+  },
+  "copy": {
+    "2971f9103f78": "Salamat sa pagtulong na gawing mas mahusay ang DeHub — isang bagay na iyong hiniling ay nakatira na ngayon:",
+    "905392fbed15": "Salamat sa pagtulong na mapabuti ang DeHub — {{value1}} mga bagay na hiniling mo ay live na ngayon:"
   },
   "postProcessing": {
     "uploading": "Ina-upload…",

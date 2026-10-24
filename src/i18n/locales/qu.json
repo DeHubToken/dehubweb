@@ -1,4 +1,12 @@
 {
+  "stageCover": {
+    "minutes": "{{minutes}} minutokuna",
+    "onAir": "EN AIR",
+    "recorded": "GRABADO",
+    "replay": "yapamanta pukllay",
+    "stage": "escenario",
+    "upcoming": "hamuq"
+  },
   "mastodonApps": {
     "authTitle": "DeHubwan yaykuy",
     "authWants": "{{app}} DeHub yupayniykita llamk'achiyta munan",
@@ -1545,6 +1553,8 @@
     "deleteConversationFailed": "Mana rimanakuyta qulluyta atirqanchu"
   },
   "music": {
+    "listeningCount_one": "{{count}} uyarispa",
+    "listeningCount_other": "{{count}} uyarispa",
     "all": "Llapan",
     "tracks": "Takiykuna",
     "videos": "Videokuna",
@@ -1910,7 +1920,15 @@
     "offerToBuyTokens": "DeHub tokenkuna rantiyta quy",
     "tokenAmount": "Token nisqa qullqi",
     "pricePerTokenUsd": "Sapa tokenpa chanin (USD) .",
-    "votingPowerNote": "Votacionqa 7 punchawmi. Votacion atiyqa sapa yanapakuqpa token qullqi qusqanmi kay propuesta kicharikuptin. Al menos 10% participananku tiyan chaymanta Aceptar atipanan tiyan Rejetar."
+    "votingPowerNote": "Votacionqa 7 punchawmi. Votacion atiyqa sapa yanapakuqpa token qullqi qusqanmi kay propuesta kicharikuptin. Al menos 10% participananku tiyan chaymanta Aceptar atipanan tiyan Rejetar.",
+    "status": {
+      "open": "Kichasqa",
+      "accepted": "Chaskisqa",
+      "rejected": "Rechazasqa",
+      "completed": "Tukuchisqa",
+      "expired": "Tukusqa",
+      "cancelled": "Cancelado"
+    }
   },
   "governance": {
     "title": "Kamachiy",
@@ -8774,6 +8792,10 @@
     "backToMedia": "Post nisqaman kutiy",
     "like": "Munasqa",
     "unlike": "Saqiy imayna"
+  },
+  "copy": {
+    "2971f9103f78": "Gracias DeHub aswan allin kananpaq yanapasqaykimanta — imapas mañakusqayki kunan kawsachkan:",
+    "905392fbed15": "Gracias DeHub aswan allin kananpaq yanapasqaykimanta — {{value1}} imakuna mañakusqayki kunan kawsachkan:"
   },
   "postProcessing": {
     "uploading": "Qatichkan…",

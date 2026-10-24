@@ -1,4 +1,14 @@
 {
+  "stageCover": {
+    "admitOne": "Erken een",
+    "live": "live",
+    "minutes": "{{minutes}} min",
+    "onAir": "ON AIR",
+    "recorded": "Opgeneem",
+    "replay": "herhaling",
+    "stage": "stadium",
+    "upcoming": "opkomende"
+  },
   "mastodonApps": {
     "authTitle": "Meld aan met DeHub",
     "authWants": "{{app}} wil jou DeHub-rekening gebruik",
@@ -1568,6 +1578,8 @@
     "deleteConversationFailed": "Kon nie die gesprek uitvee nie"
   },
   "music": {
+    "listeningCount_one": "{{count}} luister",
+    "listeningCount_other": "{{count}} luister",
     "all": "All",
     "tracks": "Tracks",
     "videos": "Videos",
@@ -1941,7 +1953,15 @@
     "offerToBuyTokens": "Bied aan om DeHub-tokens te koop",
     "tokenAmount": "Token bedrag",
     "pricePerTokenUsd": "Prys per token (USD)",
-    "votingPowerNote": "Stemming duur 7 dae. Stemkrag is elke bydraer se kumulatiewe tokenbydrae wanneer hierdie voorstel oopmaak. Ten minste 10% moet deelneem en Aanvaar moet Wen bo Verwerp."
+    "votingPowerNote": "Stemming duur 7 dae. Stemkrag is elke bydraer se kumulatiewe tokenbydrae wanneer hierdie voorstel oopmaak. Ten minste 10% moet deelneem en Aanvaar moet Wen bo Verwerp.",
+    "status": {
+      "open": "Open",
+      "accepted": "Aanvaar",
+      "rejected": "Verwerp",
+      "completed": "Voltooid",
+      "expired": "Verval",
+      "cancelled": "Gekanselleer"
+    }
   },
   "governance": {
     "title": "Bestuur",
@@ -8848,6 +8868,10 @@
     "backToMedia": "Terug na die pos",
     "like": "Hou van",
     "unlike": "Verwyder soos"
+  },
+  "copy": {
+    "2971f9103f78": "Dankie dat jy help om DeHub beter te maak — iets waarvoor jy gevra het, is nou lewendig:",
+    "905392fbed15": "Dankie dat jy help om DeHub beter te maak — {{value1}} dinge waarvoor jy gevra het, is nou lewendig:"
   },
   "postProcessing": {
     "uploading": "Laai op…",

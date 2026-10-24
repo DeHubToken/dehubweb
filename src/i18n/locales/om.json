@@ -1,4 +1,12 @@
 {
+  "stageCover": {
+    "admitOne": "TOKKO ADMIT",
+    "live": "jiraachuu",
+    "minutes": "{{minutes}} daqiiqaa",
+    "recorded": "GALMEESSE",
+    "replay": "irra deebi’anii taphachuu",
+    "stage": "waltajjii"
+  },
   "mastodonApps": {
     "authTitle": "DeHub'n seeni",
     "authWants": "{{app}} herrega kee DeHub fayyadamuu barbaada",
@@ -1556,6 +1564,8 @@
     "deleteConversationFailed": "Haasaa sana haquu hin dandeenye"
   },
   "music": {
+    "listeningCount_one": "{{count}} dhaggeeffachaa",
+    "listeningCount_other": "{{count}} dhaggeeffachaa",
     "all": "Hundaa",
     "tracks": "Tiraakii",
     "videos": "Viidiyoo",
@@ -1919,7 +1929,15 @@
     "offerToBuyTokens": "Tookiin DeHub bitachuuf dhiyeessii",
     "tokenAmount": "Hanga mallattoo",
     "pricePerTokenUsd": "Gatiin mallattoo tokkoof (USD) .",
-    "votingPowerNote": "Sagalee kennuunis guyyaa 7 fudhata. Aangoon sagalee kennuu gumaacha mallattoo kuufamaa tokkoon tokkoon gumaachaa yeroo yaadni kun banamudha. Yoo xiqqaate %10 hirmaachuu qaba, Fudhachuun immoo Diduu mo'achuu qaba."
+    "votingPowerNote": "Sagalee kennuunis guyyaa 7 fudhata. Aangoon sagalee kennuu gumaacha mallattoo kuufamaa tokkoon tokkoon gumaachaa yeroo yaadni kun banamudha. Yoo xiqqaate %10 hirmaachuu qaba, Fudhachuun immoo Diduu mo'achuu qaba.",
+    "status": {
+      "open": "Banaa",
+      "accepted": "Fudhatama qaba",
+      "rejected": "Dide",
+      "completed": "Xumurameera",
+      "expired": "Kan yeroon faayidaa kennu irra darbe",
+      "cancelled": "Haqameera"
+    }
   },
   "governance": {
     "title": "Bulchiinsa",
@@ -8716,6 +8734,10 @@
     "backToMedia": "Gara barreeffamaatti deebi'a",
     "like": "Akka",
     "unlike": "Akka balleessi"
+  },
+  "copy": {
+    "2971f9103f78": "DeHub akka fooyya&#39;u gargaaruu keessaniif galatoomaa — wanti isin gaafattan amma live:",
+    "905392fbed15": "DeHub akka fooyya&#39;u gargaaruu keessaniif galatoomaa — {{value1}} wantootni isin gaafattan amma kallattiin jiru:"
   },
   "postProcessing": {
     "uploading": "Olkaa'aa jira…",
