@@ -471,6 +471,7 @@ export function DesktopSidebar({ onPostClick }: DesktopSidebarProps) {
                 <>
                   <img
                     src={isLightTheme ? dehubMarkBlack : dehubLogoCompact}
+                    data-logo-ink={isLightTheme || undefined}
                     alt="dehub"
                     className={cn("h-[22px] w-[22px] object-contain", !renderCompactLogo && "hidden")}
                     decoding="async"
