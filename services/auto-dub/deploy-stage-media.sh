@@ -11,6 +11,10 @@ if systemctl is-active --quiet dehub-stage-media; then
   echo 'Stage media is already running; drain its jobs before replacing it.' >&2
   exit 1
 fi
+if ss -H -lnt 'sport = :7862' | grep -q .; then
+  echo 'Stage media port 7862 is already occupied.' >&2
+  exit 1
+fi
 release="/srv/dehub-stage-media/releases/$revision"
 install -d "$release"
 tar -xf "$archive" --strip-components=2 -C "$release"
@@ -26,5 +30,7 @@ fi
 nginx -t
 systemctl daemon-reload
 systemctl enable --now dehub-stage-media
+curl --fail --silent --show-error --retry-connrefused --retry 10 --retry-delay 1 --retry-max-time 15 http://127.0.0.1:7862/ \
+  | python3 -c 'import json,sys; assert json.load(sys.stdin).get("service") == "stage-media"'
 systemctl reload nginx
 echo "Stage media deployed from $revision"
