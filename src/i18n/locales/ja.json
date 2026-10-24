@@ -1,4 +1,18 @@
 {
+  "desktopWordmark": {
+    "pageTitle": "デスクトップのロゴプレビュー",
+    "heading": "DeHubデスクトップのロゴ",
+    "day": "{{day}}日目",
+    "replay": "イントロをもう一度再生する",
+    "enlarge": "拡大",
+    "actualSize": "実際のサイズ",
+    "reassemble": "ロゴを組み立て直す",
+    "loading": "読み込み中",
+    "ready": "準備完了",
+    "interrupted": "グラフィックが応答を停止しました",
+    "unavailable": "3 Dプレビューを読み込めませんでした",
+    "hint": "ロゴは2秒間全体に留まり、その後バラバラになります。 その上にカーソルを置くか、選択して元に戻します。"
+  },
   "mastodonApps": {
     "authTitle": "DeHub でログイン",
     "authWants": "{{app}} があなたの DeHub アカウントを使おうとしています",

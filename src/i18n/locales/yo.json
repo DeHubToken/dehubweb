@@ -1,4 +1,18 @@
 {
+  "desktopWordmark": {
+    "pageTitle": "Àwòtẹ́lẹ̀ àmì tábìlì",
+    "heading": "Àmì tábìlì DeHub",
+    "day": "Ọjọ́ {{day}}",
+    "replay": "Tún ìfáárà náà ṣe",
+    "enlarge": "Ìmúgbòòrò",
+    "actualSize": "Iwọn gangan",
+    "reassemble": "Tún àmì náà kó papọ̀",
+    "loading": "Ó ń gbéwọlé",
+    "ready": "Ṣetan",
+    "interrupted": "Àwọn àwòrán náà ò fèsì mọ́.",
+    "unavailable": "Kò lè gba àfihàn 3D náà.",
+    "hint": "Àmì náà máa ń wà ní pípé fún ìṣẹ́jú-àáyá méjì, lẹ́yìn náà ó máa fọ́ sí wẹ́wẹ́. Gbé kọ́sọ̀ sórí rẹ̀ tàbí yàn án láti tún kó o papọ̀."
+  },
   "mastodonApps": {
     "authTitle": "Wọlé pẹ̀lú DeHub",
     "authWants": "{{app}} fẹ́ lo àkọọ́lẹ̀ DeHub rẹ",

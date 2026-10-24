@@ -1,4 +1,18 @@
 {
+  "desktopWordmark": {
+    "pageTitle": "Samfotin tambarin kwamfuta",
+    "heading": "Tambarin DeHub na kwamfuta",
+    "day": "Ranar {{day}}",
+    "replay": "Sake kunna gabatarwa",
+    "enlarge": "Ƙarawa",
+    "actualSize": "Ainihin girma",
+    "reassemble": "Sake tattara tambarin",
+    "loading": "Ana lodawa",
+    "ready": "A shirye",
+    "interrupted": "Hotuna sun daina amsawa",
+    "unavailable": "Ba za a iya ɗora samfoti na 3D ba",
+    "hint": "Tambarin yana zama cikakke na daƙiƙa biyu, sannan ya farfashe. Kai siginan kwamfuta a kansa ko ka zaɓe shi don sake haɗa shi."
+  },
   "mastodonApps": {
     "authTitle": "Shiga da DeHub",
     "authWants": "{{app}} yana son amfani da asusunka na DeHub",

@@ -1,4 +1,18 @@
 {
+  "desktopWordmark": {
+    "pageTitle": "Ukubuka kuqala ilogo yedeskithophu",
+    "heading": "Ilogo yedeskithophu ye-DeHub",
+    "day": "Usuku {{day}}",
+    "replay": "Phinda udlale isethulo",
+    "enlarge": "Nweba",
+    "actualSize": "Usayizi wangempela",
+    "reassemble": "Hlanganisa kabusha ilogo",
+    "loading": "Iyalayisha",
+    "ready": "Ukulungele",
+    "interrupted": "Imidwebo iyekile ukuphendula",
+    "unavailable": "Ayikwazanga ukulayisha ukubuka kuqala kwe-3D",
+    "hint": "Ilogo ihlala yonke imizuzwana emibili, bese iyahlukana. Hambisa phezu kwalo noma ulikhethe ukuze ulibuyisele ndawonye."
+  },
   "mastodonApps": {
     "authTitle": "Ngena nge-DeHub",
     "authWants": "I-{{app}} ifuna ukusebenzisa i-akhawunti yakho ye-DeHub",

@@ -1,4 +1,18 @@
 {
+  "desktopWordmark": {
+    "pageTitle": "Topi-maso ny logo amin'ny solosaina",
+    "heading": "Logo DeHub amin'ny solosaina",
+    "day": "Andro {{day}}",
+    "replay": "Avereno alefa ny fampidirana",
+    "enlarge": "Hanalehibe",
+    "actualSize": "Habe tena izy",
+    "reassemble": "Ampitambaro indray ny logo",
+    "loading": "Mampiditra",
+    "ready": "Vonona",
+    "interrupted": "Tsy mamaly intsony ny sary",
+    "unavailable": "Tsy nahomby ny fampidirana ny topi-maso 3D",
+    "hint": "Mijanona ho feno mandritra ny segondra roa ny logo, avy eo dia mirava. Ataovy eo amboniny ny tondro na fidio izy mba hampitambarana azy indray."
+  },
   "mastodonApps": {
     "authTitle": "Midira amin'ny DeHub",
     "authWants": "Te hampiasa ny kaontinao DeHub i {{app}}",

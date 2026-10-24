@@ -1,4 +1,18 @@
 {
+  "desktopWordmark": {
+    "pageTitle": "Aperçu du logo du bureau",
+    "heading": "Logo de bureau DeHub",
+    "day": "Jour {{day}}",
+    "replay": "Rejouer l'intro",
+    "enlarge": "Agrandir",
+    "actualSize": "Taille réelle",
+    "reassemble": "Réassembler le logo",
+    "loading": "Chargement",
+    "ready": "Prêt",
+    "interrupted": "Les graphiques ont cessé de répondre",
+    "unavailable": "Impossible de charger l'aperçu 3D",
+    "hint": "Le logo reste entier pendant deux secondes, puis se brise. Passez le curseur dessus ou sélectionnez-le pour le reconstituer."
+  },
   "mastodonApps": {
     "authTitle": "Se connecter avec DeHub",
     "authWants": "{{app}} veut utiliser votre compte DeHub",

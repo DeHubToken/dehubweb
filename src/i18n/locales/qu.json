@@ -1,4 +1,18 @@
 {
+  "desktopWordmark": {
+    "pageTitle": "Escritorio logo qhawarina",
+    "heading": "DeHub escritorio logo",
+    "day": "P'unchaw {{day}}",
+    "replay": "Qallariyta wakmanta pukllachiy",
+    "enlarge": "Hatunyachiy",
+    "actualSize": "Chiqap sayaynin",
+    "reassemble": "Logota wakmanta huñuy",
+    "loading": "Cargachkan",
+    "ready": "Wakichisqa",
+    "interrupted": "Siq'ikuna manaña kutichinchu",
+    "unavailable": "3D qhawarinata mana cargayta atikurqanchu",
+    "hint": "Logoqa iskay segundo hunt'asqa kachkan, chaymantataq p'akikun. Wakmanta huñunaykipaq hawanman cursorta apay utaq akllay."
+  },
   "mastodonApps": {
     "authTitle": "DeHubwan yaykuy",
     "authWants": "{{app}} DeHub yupayniykita llamk'achiyta munan",
