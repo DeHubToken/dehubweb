@@ -395,6 +395,7 @@ export function DesktopSidebar({ onPostClick }: DesktopSidebarProps) {
           left when opening docs and slides back IN when returning. Desktop-only
           (`hidden lg:flex`), so the x-transform never affects mobile. */}
       <motion.aside
+        data-desktop-left-rail
         variants={leftRailVariants}
         className={cn(
         // items-stretch in BOTH modes: the nav bento and the post/login button

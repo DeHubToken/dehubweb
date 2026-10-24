@@ -17,7 +17,7 @@ function historyIndex(): number {
   return typeof history.state?.idx === 'number' ? history.state.idx : 0;
 }
 
-/** Snapshot the middle column rather than transforming its live glass/scroll layers. */
+/** Snapshot the viewport rather than transforming live glass/scroll layers. */
 export function useAppRouteMotion(location: Location, reducedMotion: boolean | null): Location {
   const [displayed, setDisplayed] = useState(location);
   const previousIndex = useRef(historyIndex());
