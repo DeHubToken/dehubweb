@@ -12,7 +12,9 @@ export async function archiveGeneration(wallet: string, id: string, metadata: Re
       const parsed = new URL(url);
       // Only provider-owned asset hosts; never fetch a caller's internal URL.
       const hosts = ['fal.media', 'replicate.delivery', 'kie.ai', 'kieai.red', 'kieai.net', 'tempfile.ai', 'storage.googleapis.com', 'replicate.com'];
-      if (parsed.protocol !== 'https:' || !hosts.some((host) => parsed.hostname === host || parsed.hostname.endsWith(`.${host}`))) {
+      const ownVeniceOutput = parsed.origin === new URL(Deno.env.get('SUPABASE_URL')!).origin
+        && parsed.pathname.startsWith('/storage/v1/object/sign/creator-assets/');
+      if (parsed.protocol !== 'https:' || (!ownVeniceOutput && !hosts.some((host) => parsed.hostname === host || parsed.hostname.endsWith(`.${host}`)))) {
         throw new Error('Provider asset needs saving through the client');
       }
     }
