@@ -27,7 +27,7 @@ import Trash2 from "@/components/ui/cut-icons/delete";
 
 import Send from "@/components/ui/cut-icons/send";
 import X from "@/components/ui/cut-icons/close";
-import MessageSquare from "@/components/ui/cut-icons/messages";
+import MessageSquare from "@/components/ui/cut-icons/message-envelope";
 
 import { BadgeIcon } from '@/components/app/BadgeIcon';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';

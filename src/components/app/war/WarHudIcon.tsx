@@ -26,7 +26,7 @@ import Bookmark from "@/components/ui/cut-icons/save";
 import Home from "@/components/ui/cut-icons/home";
 import MessageSquare from "@/components/ui/cut-icons/messages";
 import Bell from "@/components/ui/cut-icons/alerts";
-import MessageCircle from "@/components/ui/cut-icons/messages";
+import MessageEnvelope from "@/components/ui/cut-icons/message-envelope";
 import Mic from "@/components/ui/cut-icons/mic";
 import Settings from "@/components/ui/cut-icons/settings";
 import User from "@/components/ui/cut-icons/profile";
@@ -84,9 +84,9 @@ const GLYPHS: ReadonlyArray<readonly [string, LucideIcon]> = [
   // Page titles
   ['bookmark-3d-icon', Bookmark],
   ['bookmark-icon', Bookmark],
-  ['messages-3d-icon', Mail],
-  ['messages-icon', Mail],
-  ['chat-bubble', MessageCircle],
+  ['messages-3d-icon', MessageEnvelope],
+  ['messages-icon', MessageEnvelope],
+  ['chat-bubble', MessageEnvelope],
   ['notifications-icon', Bell],
   ['settings-icon', Settings],
   ['profile-icon', User],
@@ -227,7 +227,7 @@ const THEME_KEY_GLYPHS: Record<ThemeIconKey, LucideIcon> = {
   fractions: Layers,
   pinned: Star,
   search: Crosshair,
-  messages: Mail,
+  messages: MessageEnvelope,
   bookmarks: Bookmark,
   wand: Wand2,
   paint: Palette,

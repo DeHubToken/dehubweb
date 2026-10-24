@@ -5,7 +5,7 @@ import { useTranslation as _useCopy } from 'react-i18next';
  * Modal for starting a new conversation. DeHub supports 1:1 DMs only.
  */
 
-import MessageCircle from "@/components/ui/cut-icons/messages";
+import MessageCircle from "@/components/ui/cut-icons/message-envelope";
 
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
