@@ -1,4 +1,18 @@
 {
+  "desktopWordmark": {
+    "pageTitle": "Preview ng logo ng desktop",
+    "heading": "Desktop logo ng DeHub",
+    "day": "Araw {{day}}",
+    "replay": "I-play muli ang intro",
+    "enlarge": "Palakihin",
+    "actualSize": "Aktwal na laki",
+    "reassemble": "Muling itipon ang logo",
+    "loading": "Naglo-load",
+    "ready": "Handa na",
+    "interrupted": "Hindi na tumutugon ang mga graphics",
+    "unavailable": "Hindi ma-load ang 3D preview",
+    "hint": "Buo ang logo sa loob ng dalawang segundo, pagkatapos ay magkakawatak-watak. I-hover ito o piliin ito para mabuo itong muli."
+  },
   "mastodonApps": {
     "authTitle": "Mag-sign in gamit ang DeHub",
     "authWants": "Gustong gamitin ng {{app}} ang DeHub account mo",

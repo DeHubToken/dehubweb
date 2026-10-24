@@ -1,4 +1,18 @@
 {
+  "desktopWordmark": {
+    "pageTitle": "Vista prèvia del logotip de l'escriptori",
+    "heading": "Logotip d'escriptori DeHub",
+    "day": "Dia {{day}}",
+    "replay": "Torna a reproduir la introducció",
+    "enlarge": "Amplia",
+    "actualSize": "Mida real",
+    "reassemble": "Torna a muntar el logotip",
+    "loading": "S'està carregant",
+    "ready": "A punt",
+    "interrupted": "Els gràfics han deixat de respondre",
+    "unavailable": "No s'ha pogut carregar la vista prèvia en 3D",
+    "hint": "El logotip roman sencer durant dos segons i després es trenca. Col·loca el cursor sobre ell o selecciona'l per tornar-lo a armar."
+  },
   "mastodonApps": {
     "authTitle": "Inicia la sessió amb DeHub",
     "authWants": "{{app}} vol fer servir el teu compte de DeHub",

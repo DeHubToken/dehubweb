@@ -1,4 +1,18 @@
 {
+  "desktopWordmark": {
+    "pageTitle": "Voorbeeld van desktoplogo",
+    "heading": "DeHub-desktoplogo",
+    "day": "Dag {{day}}",
+    "replay": "Speel de intro opnieuw",
+    "enlarge": "Vergroten",
+    "actualSize": "Werkelijke grootte",
+    "reassemble": "Monteer het logo opnieuw",
+    "loading": "Laden",
+    "ready": "Gereed",
+    "interrupted": "De grafische weergave reageert niet meer",
+    "unavailable": "Kon het 3D-voorbeeld niet laden",
+    "hint": "Het logo blijft twee seconden heel en breekt dan uit elkaar. Beweeg de muis erover of selecteer het om het weer in elkaar te zetten."
+  },
   "mastodonApps": {
     "authTitle": "Inloggen met DeHub",
     "authWants": "{{app}} wil je DeHub-account gebruiken",

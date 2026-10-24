@@ -1,4 +1,18 @@
 {
+  "desktopWordmark": {
+    "pageTitle": "Pregled logotipa radne površine",
+    "heading": "DeHub logotip radne površine",
+    "day": "Dan {{day}}",
+    "replay": "Ponovno reproducirajte uvod",
+    "enlarge": "Povećaj",
+    "actualSize": "Stvarna veličina",
+    "reassemble": "Ponovno sastavite logotip",
+    "loading": "Učitavanje",
+    "ready": "Spremno",
+    "interrupted": "Grafika je prestala odgovarati",
+    "unavailable": "Učitavanje 3D pregleda nije uspjelo",
+    "hint": "Logotip ostaje cijeli dvije sekunde, a zatim se raspada. Zadržite pokazivač miša iznad njega ili ga odaberite kako biste ga ponovno sastavili."
+  },
   "mastodonApps": {
     "authTitle": "Prijava putem DeHuba",
     "authWants": "{{app}} želi koristiti tvoj DeHub račun",

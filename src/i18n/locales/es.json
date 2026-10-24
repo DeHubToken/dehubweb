@@ -1,4 +1,18 @@
 {
+  "desktopWordmark": {
+    "pageTitle": "Vista previa del logotipo de escritorio",
+    "heading": "Logotipo de escritorio de DeHub",
+    "day": "Día {{day}}",
+    "replay": "Reproducir la introducción de nuevo",
+    "enlarge": "Ampliar",
+    "actualSize": "Tamaño real",
+    "reassemble": "Volver a montar el logotipo",
+    "loading": "Cargando",
+    "ready": "Listo",
+    "interrupted": "Los gráficos dejaron de responder",
+    "unavailable": "No se ha podido cargar la vista previa 3D",
+    "hint": "El logotipo permanece entero durante dos segundos y luego se rompe. Coloca el cursor sobre él o selecciónalo para volver a armarlo."
+  },
   "mastodonApps": {
     "authTitle": "Inicia sesión con DeHub",
     "authWants": "{{app}} quiere usar tu cuenta de DeHub",

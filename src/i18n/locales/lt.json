@@ -1,4 +1,18 @@
 {
+  "desktopWordmark": {
+    "pageTitle": "Darbalaukio logotipo peržiūra",
+    "heading": "DeHub darbalaukio logotipas",
+    "day": "Diena {{day}}",
+    "replay": "Dar kartą paleiskite įžangą",
+    "enlarge": "Padidinti",
+    "actualSize": "Faktinis dydis",
+    "reassemble": "Surinkite logotipą",
+    "loading": "Įkeliama",
+    "ready": "Paruošta",
+    "interrupted": "Grafika nustojo reaguoti",
+    "unavailable": "Nepavyko įkelti 3D peržiūros",
+    "hint": "Logotipas išlieka sveikas dvi sekundes, tada suyra. Virš jo užveskite žymeklį arba pasirinkite, kad jį vėl sujungtumėte."
+  },
   "mastodonApps": {
     "authTitle": "Prisijungti su DeHub",
     "authWants": "{{app}} nori naudoti jūsų DeHub paskyrą",

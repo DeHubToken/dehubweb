@@ -1,4 +1,18 @@
 {
+  "desktopWordmark": {
+    "pageTitle": "Pré-visualização do logótipo para computador",
+    "heading": "Logótipo do DeHub para computador",
+    "day": "Dia {{day}}",
+    "replay": "Reproduzir a introdução novamente",
+    "enlarge": "Ampliar",
+    "actualSize": "Tamanho real",
+    "reassemble": "Voltar a montar o logótipo",
+    "loading": "A carregar",
+    "ready": "Pronto",
+    "interrupted": "Os gráficos pararam de responder",
+    "unavailable": "Não foi possível carregar a pré-visualização 3D",
+    "hint": "O logótipo mantém-se inteiro durante dois segundos e depois desfaz-se. Passe o cursor por cima ou selecione-o para o voltar a montar."
+  },
   "mastodonApps": {
     "authTitle": "Entrar com DeHub",
     "authWants": "{{app}} quer usar sua conta DeHub",
