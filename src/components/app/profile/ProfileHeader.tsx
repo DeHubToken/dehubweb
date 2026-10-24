@@ -186,7 +186,7 @@ export function ProfileHeader({
   const [pinPickerOpen, setPinPickerOpen] = useState(false);
 
   return (
-    <div data-profile-header className="rounded-xl border border-white/[0.12] bg-white/[0.03] backdrop-blur-[24px] overflow-hidden relative">
+    <div data-profile-header data-profile-art={featuredCommunity ? true : undefined} data-keep-dark={featuredCommunity ? true : undefined} className="rounded-xl border border-white/[0.12] bg-white/[0.03] backdrop-blur-[24px] overflow-hidden relative">
       {/* Cover Photo */}
       {isFetchingProfile && !profile.coverUrl ? (
         <Skeleton data-profile-cover className="aspect-[3/1] w-full bg-white/[0.06] rounded-none" />
