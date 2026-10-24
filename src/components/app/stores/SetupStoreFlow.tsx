@@ -83,7 +83,7 @@ export function SetupStoreFlow({ onComplete, onCancel }: SetupStoreFlowProps) {
       )}
 
       {/* Banner upload */}
-      <div>
+      <div className="w-full">
         <Label className="text-zinc-300 text-xs mb-1.5 block">{t('stores.bannerImage')}</Label>
         <div
           onClick={() => bannerRef.current?.click()}
