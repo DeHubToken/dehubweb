@@ -77,9 +77,18 @@ it('never turns multi-reference edits or vectors into incompatible backup jobs',
 
 it('stops at a gateway safety block instead of trying another provider', async () => {
   const { resilientImage, ImageProviderError } = await import('../../supabase/functions/_shared/image-provider-fallback');
-  respond = () => Response.json({ choices: [{ finish_reason: 'IMAGE_SAFETY' }] });
+  respond = () => Response.json({ choices: [{ finish_reason: 'stop', native_finish_reason: 'IMAGE_SAFETY' }] });
   await expect(resilientImage(request, { provider: 'fal', model: 'edit',
     generate: async () => { throw new ImageProviderError(403, 'TOP_UP'); } })).rejects.toMatchObject({ safetyBlocked: true });
+  expect(requests).toHaveLength(1);
+});
+
+it('accepts complete synchronous Replicate output while its metrics are still processing', async () => {
+  delete env.LOVABLE_API_KEY;
+  const { resilientImage, ImageProviderError } = await import('../../supabase/functions/_shared/image-provider-fallback');
+  respond = () => Response.json({ status: 'processing', output: 'https://output.invalid/complete.png' });
+  await expect(resilientImage(request, { provider: 'fal', model: 'edit',
+    generate: async () => { throw new ImageProviderError(402, 'credits exhausted'); } })).resolves.toMatchObject({ imageUrl: 'https://output.invalid/complete.png' });
   expect(requests).toHaveLength(1);
 });
 

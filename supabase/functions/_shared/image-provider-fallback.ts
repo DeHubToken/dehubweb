@@ -56,7 +56,7 @@ export async function gatewayImage(request: ImageRequest, signal: AbortSignal, m
   if (!response.ok) throw new ImageProviderError(response.status, await response.text());
   const payload = await response.json();
   const choice = payload.choices?.[0];
-  if (choice?.error || /safety|content_filter/i.test(choice?.finish_reason ?? choice?.native_finish_reason ?? '')) {
+  if (choice?.error || /safety|content_filter/i.test(`${choice?.finish_reason ?? ''} ${choice?.native_finish_reason ?? ''}`)) {
     throw new ImageProviderError(400, 'content policy');
   }
   const imageUrl = choice?.message?.images?.[0]?.image_url?.url;
@@ -80,7 +80,10 @@ async function replicateImage(request: ImageRequest, signal: AbortSignal): Promi
   if (!response.ok) throw new ImageProviderError(response.status, await response.text());
   const prediction = await response.json();
   const imageUrl = Array.isArray(prediction.output) ? prediction.output[0] : prediction.output;
-  if (prediction.status === 'succeeded' && typeof imageUrl === 'string') return { imageUrl, provider: 'replicate', model };
+  // Sync file predictions can return complete output before metrics settle.
+  if (['succeeded', 'processing'].includes(prediction.status) && typeof imageUrl === 'string') {
+    return { imageUrl, provider: 'replicate', model };
+  }
   // Never submit another generation after Replicate accepted this one. Its
   // server-side deadline also bounds work if the connection is interrupted.
   if (['starting', 'processing'].includes(prediction.status) && /^[a-z0-9]+$/i.test(prediction.id ?? '')) {
