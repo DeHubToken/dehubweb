@@ -969,6 +969,7 @@ function ProfileSettings() {
       {/* Cover Image */}
       <div 
         data-setting-anchor="cover-image"
+        data-keep-dark
         className="relative aspect-[3/1] bg-zinc-800 rounded-xl overflow-hidden group"
         onDragOver={(e) => { e.preventDefault(); e.stopPropagation(); }}
         onDragEnter={(e) => { e.preventDefault(); e.stopPropagation(); }}
