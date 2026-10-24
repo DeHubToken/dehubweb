@@ -97,7 +97,7 @@ export function ShareEntityDrawer({
   const [reposting, setReposting] = useState(false);
 
   const link = parseDehubLink(url);
-  const noun = link ? dehubLinkLabel(link.kind) : 'link';
+  const noun = dehubLinkLabel(link ? link.kind : 'link');
 
   // navigator.share is the right primitive on a phone and absent on most
   // desktops; offered as an extra rather than as a replacement, so the explicit
@@ -145,7 +145,7 @@ export function ShareEntityDrawer({
             <ShareAction
               icon={<Link2 className="w-5 h-5 text-zinc-300" />}
               label={_copy("copy.dbf362d4f210", { defaultValue: "Copy link" })}
-              detail={`Copy the ${noun} link to your clipboard`}
+              detail={_copy('dehubLinks.copyLinkDetail', { item: noun })}
               onClick={handleCopy}
             />
             <ShareAction

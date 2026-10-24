@@ -34,7 +34,7 @@ export function useFeedSwallowClip(
   containerRef: RefObject<HTMLElement | null>,
   cutSelector: string,
   deps: unknown[] = [],
-  opts: { allThemes?: boolean; off?: boolean; edge?: 'top' | 'bottom' } = {},
+  opts: { allThemes?: boolean; off?: boolean; edge?: 'top' | 'bottom'; frameOnly?: boolean } = {},
 ) {
   const isActivePage = useContext(CachedPageActiveContext);
   useLayoutEffect(() => {
@@ -42,7 +42,7 @@ export function useFeedSwallowClip(
     const el = containerRef.current;
     if (!el) return;
     const pageScope = el.closest<HTMLElement>('[data-cached-page]');
-    const Timeline = (window as unknown as { ScrollTimeline?: TimelineConstructor }).ScrollTimeline;
+    const Timeline = opts.frameOnly ? undefined : (window as unknown as { ScrollTimeline?: TimelineConstructor }).ScrollTimeline;
     let frame: number | null = null;
     let cut: HTMLElement | null = null;
     let source: HTMLElement | null = null;
@@ -243,5 +243,5 @@ export function useFeedSwallowClip(
       if (bounds) bounds.style.overflow = originalOverflow;
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [containerRef, cutSelector, opts.allThemes, opts.off, opts.edge, isActivePage, ...deps]);
+  }, [containerRef, cutSelector, opts.allThemes, opts.off, opts.edge, opts.frameOnly, isActivePage, ...deps]);
 }

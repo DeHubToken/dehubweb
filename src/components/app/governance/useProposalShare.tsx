@@ -19,7 +19,7 @@ export function useProposalShare(proposal: GovernanceProposal | null | undefined
   const { isAuthenticated, openLoginModal, walletAddress } = useAuth();
   const repost = useProposalRepost(proposal, walletAddress);
   const [quoteOpen, setQuoteOpen] = useState(false);
-  const proposalUrl = proposal ? dehubLinkFor.proposal(proposal.id) : '';
+  const proposalUrl = proposal ? dehubLinkFor.proposal(proposal) : '';
 
   const onRepost = useCallback(() => {
     if (!isAuthenticated) {

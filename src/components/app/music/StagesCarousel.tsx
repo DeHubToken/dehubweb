@@ -292,9 +292,9 @@ export function StagesChart(_props: StagesCarouselProps) {
 
   const subtitle = (space: AudioSpace) => {
     const host = space.host_username ? `@${space.host_username}` : space.host_wallet_address?.slice(0, 6) || '';
-    if (sort === 'live') return `${host} · ${(space.speaker_count || 1) + (space.listener_count || 0)} ${_copy('music.listening', { defaultValue: 'listening' })}`;
+    if (sort === 'live') return `${host} · ${_copy('music.listeningCount', { count: (space.speaker_count || 1) + (space.listener_count || 0) })}`;
     if (sort === 'upcoming' && space.scheduled_at) return `${host} · ${new Date(space.scheduled_at).toLocaleDateString(undefined, { day: 'numeric', month: 'short' })}`;
-    return space.total_listens ? `${host} · ${space.total_listens} ${_copy('music.listens', { defaultValue: 'listens' })}` : host;
+    return space.total_listens ? `${host} · ${_copy('audioPost.listens', { count: space.total_listens })}` : host;
   };
 
   return (

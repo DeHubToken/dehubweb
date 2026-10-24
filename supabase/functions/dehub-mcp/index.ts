@@ -12,6 +12,8 @@ import { anonymousViewerId, PublicReadRateLimit, recordPostViews } from "./post-
 import { resolveVoteWeight } from "../_shared/badge-weight.ts";
 import { agentCapForBadgeWeight } from "./agent-cap.ts";
 import { agentPostType } from "./post-type.ts";
+import { agentSettings, controlledAction, WRITE_TOOLS } from './controls.ts';
+import { captureUndo, moderationSchema, workspaceApi } from './workspace-actions.ts';
 
 const DEHUB_API_BASE = "https://api.dehub.io";
 const SUPABASE_URL = Deno.env.get("SUPABASE_URL")!;
@@ -654,11 +656,27 @@ function buildServer(apiKey: string | null, req: Request, registry?: Map<string,
   }, callback: (args: z.infer<z.ZodObject<Shape>>) => Promise<ToolResult>) => {
     // Give the SDK a concrete raw-shape type; its conditional callback type
     // cannot resolve our generic Shape. Validation still uses the exact schema.
-    server.registerTool<z.ZodRawShape, z.ZodRawShape>(name, config, async (args: unknown) => callback(z.object(config.inputSchema).strict().parse(args)));
+    const invoke = async (input: Record<string, unknown>, approvalId?: string): Promise<ToolResult> => {
+      const args = z.object(config.inputSchema).strict().parse(input);
+      if (!WRITE_TOOLS.includes(name as typeof WRITE_TOOLS[number])) return callback(args);
+      const store = db();
+      const agent = await getAgentFromApiKey(apiKey, store);
+      if (!agent || !agent.is_active) return fail('Agent access is unavailable.');
+      if (name === 'dehub_update_profile' && (profileImages.avatar || profileImages.banner) && (await agentSettings(store, agent.id)).mode !== 'autonomous') {
+        return fail('Image uploads cannot be saved as drafts. Use hosted image URLs for approval, or choose autonomous mode before uploading.');
+      }
+      return controlledAction(store, agent, name, args, () => callback(args), approvalId,
+        (['dehub_vote', 'dehub_follow'].includes(name) || name === 'dehub_update_profile' && !profileImages.avatar && !profileImages.banner) ? async () => {
+          const token = await getAgentToken(agent);
+          if (!token) throw new Error('Could not authenticate before capturing the prior state.');
+          return captureUndo(token, name, args, agent.owner_wallet_address);
+        } : undefined);
+    };
+    server.registerTool<z.ZodRawShape, z.ZodRawShape>(name, config, async (args: unknown) => invoke(args as Record<string, unknown>));
     registry?.set(name, {
       description: config.description,
       validate: (args) => z.object(config.inputSchema).strict().parse(args),
-      call: async (args) => callback(z.object(config.inputSchema).strict().parse(args)),
+      call: invoke,
     });
   };
 
@@ -1153,6 +1171,22 @@ function buildServer(apiKey: string | null, req: Request, registry?: Map<string,
         posts_remaining_this_hour: check.remaining,
         message: `${agent.name} published post ${voucher.createdTokenId}`,
       });
+    },
+  );
+
+  register(
+    "dehub_stream_timeout",
+    { title: 'Time out a stream participant', description: 'Temporarily time out a participant for 30–3600 seconds. Requires creator or moderator rights in that stream, plus explicit permission in workspace controls.', inputSchema: moderationSchema, annotations: WRITE },
+    async ({ token_id, target_wallet, seconds }) => {
+      const store = db();
+      const resolved = await requireAgent(apiKey, store, { needsWallet: true });
+      if ('error' in resolved) return resolved.error;
+      const limit = await checkRateLimit(store, resolved.agent.id, 'default');
+      if (!limit.allowed) return rateLimited('moderation', limit.resetAt);
+      const token = await getAgentToken(resolved.agent);
+      if (!token) return fail('Could not authenticate the stream moderator.');
+      await workspaceApi(token, `/api/livechat/stream/${token_id}/timeout`, 'POST', { address: target_wallet.toLowerCase(), seconds });
+      return ok({ success: true, message: `Participant timed out for ${seconds} seconds. This restriction expires automatically.` });
     },
   );
 

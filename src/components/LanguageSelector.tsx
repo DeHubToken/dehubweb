@@ -5,7 +5,7 @@ import Check from "@/components/ui/cut-icons/check";
 
 import Search from "@/components/ui/cut-icons/search";
 
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import {
   Drawer,
   DrawerContent,
@@ -13,7 +13,10 @@ import {
   DrawerTitle,
   DrawerTrigger,
 } from "@/components/ui/drawer";
-import { useLanguage, languages } from "@/contexts/LanguageContext";
+import { useLanguage, languages, type LanguageOption } from "@/contexts/LanguageContext";
+
+// Intl names the two Chinese scripts, not the bundle codes.
+const INTL_CODE: Partial<Record<string, string>> = { zh: 'zh-Hans', zh_tw: 'zh-Hant' };
 
 export function LanguageSelector() {
   const { t: _copy } = _useCopy();
@@ -22,10 +25,34 @@ export function LanguageSelector() {
   const [search, setSearch] = useSurfaceDraft("components/LanguageSelector.tsx:search", "");
   const current = languages.find(l => l.code === language);
 
+  // The line under each endonym names the language in the reader's language.
+  // English keeps the hand-written labels, and so does any name Intl cannot
+  // give: it is missing on older WebViews, and a reader language the runtime
+  // has no data for resolves to some other default, not to this reader's.
+  const displayNames = useMemo(() => {
+    if (language === 'en') return null;
+    const tag = language.replace('_', '-');
+    try {
+      const names = new Intl.DisplayNames([tag], { type: 'language', fallback: 'none' });
+      const resolved = names.resolvedOptions().locale.split('-')[0].toLowerCase();
+      return resolved === tag.split('-')[0] ? names : null;
+    } catch {
+      return null;
+    }
+  }, [language]);
+  const nameOf = (lang: LanguageOption) => {
+    try {
+      return displayNames?.of(INTL_CODE[lang.code] ?? lang.code) || lang.label;
+    } catch {
+      return lang.label;
+    }
+  };
+
   const filtered = languages.filter(
     (lang) =>
       lang.nativeLabel.toLowerCase().includes(search.toLowerCase()) ||
-      lang.label.toLowerCase().includes(search.toLowerCase())
+      lang.label.toLowerCase().includes(search.toLowerCase()) ||
+      nameOf(lang).toLowerCase().includes(search.toLowerCase())
   );
 
   return (
@@ -79,7 +106,7 @@ export function LanguageSelector() {
               >
                 <div className="flex flex-col">
                   <span className="text-sm font-medium">{lang.nativeLabel}</span>
-                  <span className="text-xs text-white/40">{lang.label}</span>
+                  <span className="text-xs text-white/40">{nameOf(lang)}</span>
                 </div>
                 {lang.code === language && (
                   <Check className="w-4 h-4 text-white" />

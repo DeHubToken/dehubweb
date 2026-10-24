@@ -8,6 +8,16 @@ import * as streamerPage from '../src/lib/streamer-page.js';
 import * as dehubAppPage from '../src/lib/dehub-app-page.js';
 
 export const PRIORITY_LOCALES = ['ar', 'es', 'fr', 'nl', 'tr'];
+/**
+ * Languages a single page may also go out in. Unlike the priority five, which
+ * every public page must carry, a page is served in one of these only when
+ * its dictionary translates that page through and through; anything short of
+ * that stays English rather than shipping a half-translated duplicate. Keeps
+ * a high-value guide reachable in more markets without translating the whole
+ * site. Two-letter codes only: the crawler reads ?hl= as [a-z]{2}.
+ */
+export const EXTRA_LOCALES = ['de', 'ha', 'hi', 'id', 'it', 'ja', 'ko', 'pl', 'pt', 'ru', 'th', 'tl', 'vi', 'zh'];
+const MISSING_COPY = / missing (?:translation|HTML text|accessible text): /;
 const readJson = file => JSON.parse(fs.readFileSync(file, 'utf8'));
 const digest = value => createHash('sha256').update(JSON.stringify(value)).digest('hex').slice(0, 16);
 const decodeHtml = value => value.replace(/&#(\d+);/g, (_, n) => String.fromCodePoint(Number(n))).replaceAll('&quot;', '"').replaceAll('&#39;', "'").replaceAll('&apos;', "'").replaceAll('&rsquo;', '’').replaceAll('&lt;', '<').replaceAll('&gt;', '>').replaceAll('&amp;', '&').replaceAll('&nbsp;', ' ');
@@ -145,53 +155,61 @@ export function validatePageTranslation(source, translated) {
 
 export function buildPublicLocales(root) {
   const sources = collectPublicSources(root);
-  const dictionaries = Object.fromEntries(PRIORITY_LOCALES.map(lang => [lang, readJson(path.join(root, `scripts/public-page-translations/${lang}.json`))]));
-  const normalizedDictionaries = Object.fromEntries(PRIORITY_LOCALES.map(lang => [lang, Object.fromEntries(Object.entries(dictionaries[lang]).map(([source, target]) => [normalizeCopy(source), target]))]));
+  const extras = EXTRA_LOCALES.filter(lang => fs.existsSync(path.join(root, `scripts/public-page-translations/${lang}.json`)));
+  const languages = [...PRIORITY_LOCALES, ...extras];
+  const dictionaries = Object.fromEntries(languages.map(lang => [lang, readJson(path.join(root, `scripts/public-page-translations/${lang}.json`))]));
+  const normalizedDictionaries = Object.fromEntries(languages.map(lang => [lang, Object.fromEntries(Object.entries(dictionaries[lang]).map(([source, target]) => [normalizeCopy(source), target]))]));
   const version = digest({ sources, dictionaries });
   const table = {}, assets = {}, routes = {};
   for (const [route, source] of Object.entries(sources)) {
     table[route] = { en: { title: source.title, description: source.description, h1: source.h1 } };
-    routes[route] = PRIORITY_LOCALES;
-    for (const lang of PRIORITY_LOCALES) {
-      const dictionary = dictionaries[lang];
-      const translate = text => {
-        if (!text || neutralCopy(normalizeCopy(text)) || !/[A-Za-z]{2}/.test(text.replace(/<[^>]*>/g, ''))) return text;
-        const translated = dictionary[text] || normalizedDictionaries[lang][normalizeCopy(text)];
-        if (typeof translated === 'string' && translated.trim()) return validatePageTranslation(text, translated);
-        if (/<[a-zA-Z/]/.test(text)) {
-          const body = text.split(/(<code\b[^>]*>[\s\S]*?<\/code>|<[^>]*>)/i).map(part => {
-            if (part.startsWith('<')) return part;
-            const source = normalizeCopy(part);
-            if (!source || neutralCopy(source) || !/[A-Za-z]{2}/.test(source)) return part;
-            const target = normalizedDictionaries[lang][source];
-            if (!target) throw new Error(route + ':' + lang + ' missing HTML text: ' + source.slice(0,100));
-            return part.match(/^\s*/)[0] + escapeHtml(target.trim()) + part.match(/\s*$/)[0];
-          }).join('');
-          return validatePageTranslation(text, body);
-        }
-        throw new Error(route + ':' + lang + ' missing translation: ' + text.slice(0,100));
-      };
-      const translatedMd = source.md?.split(/(\n\s*\n)/).map(text => !text.trim() || /^\s*```/.test(text) ? text : translate(text)).join('');
-      const md = translatedMd ? localizeHtmlAttributes(source.md, localizeHtmlImages(source.md, localizeMarkdownImages(source.md, translatedMd, normalizedDictionaries[lang], route, lang), normalizedDictionaries[lang], route, lang), normalizedDictionaries[lang], route, lang) : undefined;
-      const untranslatedAltsBody = md ? mdToHtml(md) : source.body.split(/(?<=<\/(?:p|li|h[1-6]|blockquote|table|div|section)>)/i).map(translate).join('');
-      const sourceBody = md ? mdToHtml(source.md) : source.body;
-      const body = localizeHtmlAttributes(sourceBody, localizeHtmlImages(sourceBody, untranslatedAltsBody, normalizedDictionaries[lang], route, lang), normalizedDictionaries[lang], route, lang);
-      const page = { title: translate(source.title), description: translate(source.description), h1: translate(source.h1), body, ...(md ? { md } : {}), ...(source.lede ? { lede: translate(source.lede) } : {}) };
-      const bodyHeading = body.match(/<h1[^>]*>([\s\S]*?)<\/h1>/i)?.[1];
-      if (bodyHeading) page.h1 = bodyHeading.replace(/<[^>]*>/g, '').replaceAll('&amp;', '&').replaceAll('&quot;', '"').replaceAll('&#39;', "'");
-      const asset = `/locale-pages/${version}/${lang}/${route === '/' ? 'index' : route.slice(1)}.json`;
-      assets[asset] = page;
-      table[route][lang] = { title: page.title, description: page.description, h1: page.h1, asset };
+    routes[route] = [...PRIORITY_LOCALES];
+    for (const lang of languages) {
+      const extra = !PRIORITY_LOCALES.includes(lang);
+      try {
+        const dictionary = dictionaries[lang];
+        const translate = text => {
+          if (!text || neutralCopy(normalizeCopy(text)) || !/[A-Za-z]{2}/.test(text.replace(/<[^>]*>/g, ''))) return text;
+          const translated = dictionary[text] || normalizedDictionaries[lang][normalizeCopy(text)];
+          if (typeof translated === 'string' && translated.trim()) return validatePageTranslation(text, translated);
+          if (/<[a-zA-Z/]/.test(text)) {
+            const body = text.split(/(<code\b[^>]*>[\s\S]*?<\/code>|<[^>]*>)/i).map(part => {
+              if (part.startsWith('<')) return part;
+              const source = normalizeCopy(part);
+              if (!source || neutralCopy(source) || !/[A-Za-z]{2}/.test(source)) return part;
+              const target = normalizedDictionaries[lang][source];
+              if (!target) throw new Error(route + ':' + lang + ' missing HTML text: ' + source.slice(0,100));
+              return part.match(/^\s*/)[0] + escapeHtml(target.trim()) + part.match(/\s*$/)[0];
+            }).join('');
+            return validatePageTranslation(text, body);
+          }
+          throw new Error(route + ':' + lang + ' missing translation: ' + text.slice(0,100));
+        };
+        const translatedMd = source.md?.split(/(\n\s*\n)/).map(text => !text.trim() || /^\s*```/.test(text) ? text : translate(text)).join('');
+        const md = translatedMd ? localizeHtmlAttributes(source.md, localizeHtmlImages(source.md, localizeMarkdownImages(source.md, translatedMd, normalizedDictionaries[lang], route, lang), normalizedDictionaries[lang], route, lang), normalizedDictionaries[lang], route, lang) : undefined;
+        const untranslatedAltsBody = md ? mdToHtml(md) : source.body.split(/(?<=<\/(?:p|li|h[1-6]|blockquote|table|div|section)>)/i).map(translate).join('');
+        const sourceBody = md ? mdToHtml(source.md) : source.body;
+        const body = localizeHtmlAttributes(sourceBody, localizeHtmlImages(sourceBody, untranslatedAltsBody, normalizedDictionaries[lang], route, lang), normalizedDictionaries[lang], route, lang);
+        const page = { title: translate(source.title), description: translate(source.description), h1: translate(source.h1), body, ...(md ? { md } : {}), ...(source.lede ? { lede: translate(source.lede) } : {}) };
+        const bodyHeading = body.match(/<h1[^>]*>([\s\S]*?)<\/h1>/i)?.[1];
+        if (bodyHeading) page.h1 = bodyHeading.replace(/<[^>]*>/g, '').replaceAll('&amp;', '&').replaceAll('&quot;', '"').replaceAll('&#39;', "'");
+        const asset = `/locale-pages/${version}/${lang}/${route === '/' ? 'index' : route.slice(1)}.json`;
+        assets[asset] = page;
+        table[route][lang] = { title: page.title, description: page.description, h1: page.h1, asset };
+        if (extra) routes[route].push(lang);
+      } catch (error) {
+        if (!extra || !MISSING_COPY.test(error.message)) throw error;
+      }
     }
   }
-  for (const lang of PRIORITY_LOCALES) {
+  for (const lang of languages) {
     const metadata = {};
     for (const [route, source] of Object.entries(sources)) {
-      if (!source.md || !route.startsWith('/guides/')) continue;
+      if (!source.md || !route.startsWith('/guides/') || !table[route][lang]) continue;
       const page = assets[table[route][lang].asset];
       metadata[route.slice(8)] = { title: page.h1, seoTitle: page.title, seoDescription: page.description, excerpt: page.description, bannerImageAlt: page.h1 };
     }
-    assets[`/locale-pages/${version}/${lang}/blog-metadata.json`] = metadata;
+    if (Object.keys(metadata).length || !extras.includes(lang)) assets[`/locale-pages/${version}/${lang}/blog-metadata.json`] = metadata;
   }
   return { manifest: { version, routes }, table, assets };
 }

@@ -30,7 +30,7 @@ export function writeLanguageAlternates(pathname: string, lang: string, indexabl
   document.head.querySelectorAll('link[rel="alternate"][hreflang]').forEach(node => node.remove());
   document.head.querySelectorAll('meta[property="og:locale:alternate"]').forEach(node => node.remove());
   const languages = indexable ? publicPageLanguages(pathname) : [];
-  const territory: Record<string, string> = { en: 'en_US', ar: 'ar_AR', es: 'es_ES', fr: 'fr_FR', nl: 'nl_NL', tr: 'tr_TR' };
+  const territory: Record<string, string> = { en: 'en_US', ar: 'ar_AR', es: 'es_ES', fr: 'fr_FR', nl: 'nl_NL', tr: 'tr_TR', de: 'de_DE', ha: 'ha_NG', hi: 'hi_IN', id: 'id_ID', it: 'it_IT', ja: 'ja_JP', ko: 'ko_KR', pl: 'pl_PL', pt: 'pt_BR', ru: 'ru_RU', th: 'th_TH', tl: 'tl_PH', vi: 'vi_VN', zh: 'zh_CN' };
   let locale = document.head.querySelector<HTMLMetaElement>('meta[property="og:locale"]');
   if (!locale) { locale = document.createElement('meta'); locale.setAttribute('property', 'og:locale'); document.head.appendChild(locale); }
   locale.content = territory[lang] || lang;

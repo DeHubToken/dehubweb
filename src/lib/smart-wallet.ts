@@ -155,7 +155,10 @@ async function getPimlicoConfig(): Promise<{ bundlerUrl: string; paymasterUrl: s
   if (cachedPimlicoConfig) return cachedPimlicoConfig;
 
   const stored = sessionStorage.getItem("dehub_pimlico_config");
-  if (stored) {
+  // A tab opened before the relay shipped still holds Pimlico's own URLs with
+  // the old key in them. That key is being rotated, so refetch rather than
+  // keep using it.
+  if (stored && !stored.includes("apikey=")) {
     try {
       cachedPimlicoConfig = JSON.parse(stored);
       return cachedPimlicoConfig!;
@@ -178,7 +181,7 @@ async function getPimlicoConfig(): Promise<{ bundlerUrl: string; paymasterUrl: s
 }
 
 function derivePimlicoUrlForChain(baseUrl: string, targetChainId: number): string {
-  // Pimlico format: https://api.pimlico.io/v2/8453/rpc?apikey=xxx → replace chain ID
+  // Relay format: .../functions/v1/pimlico-rpc/v2/8453/rpc → replace chain ID
   return baseUrl.replace(/\/\d+\/rpc/, `/${targetChainId}/rpc`);
 }
 

@@ -40,9 +40,13 @@ const mf = new Miniflare(convertV4MiniflareOptions({
     if (pathname === '/api/account_info/maldoteth') return failDetails ? new WorkerResponse('Unavailable', { status: 503 }) : json({ status: true, result: profile });
     if (pathname === '/api/poll/6501') return poll ? json({ status: true, result: poll }) : new WorkerResponse('Poll not found', { status: 404 });
     if (pathname.startsWith('/api/live/creator/')) return json(progress);
-    if (pathname.startsWith('/images/')) {
-      assert.equal(new URL(request.url).origin, 'https://dehubcdn.ams3.digitaloceanspaces.com');
+    if (pathname.startsWith('/images/') || pathname.startsWith('/feed-images/')) {
+      // The zone's image transform only accepts the CDN host and hands back a
+      // JPEG; the bare Spaces host serves the stored file (WebP stays WebP).
+      const origin = new URL(request.url).origin;
+      assert.ok(['https://dehubcdn.ams3.cdn.digitaloceanspaces.com', 'https://dehubcdn.ams3.digitaloceanspaces.com'].includes(origin));
       if (pathname.endsWith('/missing.jpg')) return new WorkerResponse('Missing poster', { status: 404 });
+      if (pathname.endsWith('.webp') && origin === 'https://dehubcdn.ams3.digitaloceanspaces.com') return new WorkerResponse(new Uint8Array([82, 73, 70, 70, 0, 0, 0, 0, 87, 69, 66, 80]), { headers: { 'Content-Type': 'image/webp' } });
       return new WorkerResponse(readFileSync(new URL('../public/og/apps.jpg', import.meta.url)), { headers: { 'Content-Type': 'image/jpeg' } });
     }
     if (new URL(request.url).pathname.startsWith('/avatars/')) {
@@ -105,6 +109,12 @@ try {
   assert.equal(video.headers.get('X-DeHub-Post-Media'), 'video');
   assert.ok(video.headers.get('Cache-Control').startsWith('public,'));
   writeFileSync('post-card-checks/worker-video-post.png', Buffer.from(await video.arrayBuffer()));
+  post = { ...original, postType: 'feed-images', imageUrls: ['nfts/images/6501-1.webp'] };
+  const webp = await dispatch(url);
+  assert.equal(webp.headers.get('X-DeHub-Post-Media'), 'image', 'a WebP photo is drawn through the CDN host transform');
+  assert.ok(outboundUrls.includes('https://dehubcdn.ams3.cdn.digitaloceanspaces.com/feed-images/6501-1.webp'));
+  await webp.arrayBuffer();
+  post = { ...original, postType: 'video', videoUrl: 'videos/6501.mp4', thumbnail_url: 'images/6501.jpg', totalTips: 3100 };
   post = { ...post, contentRating: 'mature' };
   const posterReads = outboundUrls.filter((u) => u.includes('/images/')).length;
   const mature = await dispatch(url);

@@ -1,42 +1,28 @@
-import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
-
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
   'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type, x-wallet-address, x-dehub-token, x-supabase-client-platform, x-supabase-client-platform-version, x-supabase-client-runtime, x-supabase-client-runtime-version, x-request-id, prefer',
 };
 
-serve(async (req) => {
-  // Handle CORS preflight requests
+// The URLs point at pimlico-rpc, which holds the key and relays to Pimlico.
+// They used to be Pimlico's own URLs with `?apikey=` on the end, which handed
+// the key to every visitor. The `/v2/{chainId}/rpc` tail is kept because both
+// apps rewrite the chain id in place to reach the other chains.
+Deno.serve((req) => {
   if (req.method === 'OPTIONS') {
     return new Response(null, { headers: corsHeaders });
   }
 
-  try {
-    const apiKey = Deno.env.get('PIMLICO_API_KEY');
-    
-    if (!apiKey) {
-      console.error('[Pimlico Config] API key not configured');
-      return new Response(
-        JSON.stringify({ error: 'Pimlico API key not configured' }),
-        { status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
-      );
-    }
-
-    console.log('[Pimlico Config] Successfully retrieved API key');
-    
+  if (!Deno.env.get('PIMLICO_API_KEY')) {
+    console.error('[Pimlico Config] API key not configured');
     return new Response(
-      JSON.stringify({ 
-        bundlerUrl: `https://api.pimlico.io/v2/8453/rpc?apikey=${apiKey}`,
-        paymasterUrl: `https://api.pimlico.io/v2/8453/rpc?apikey=${apiKey}`,
-      }),
-      { status: 200, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
-    );
-  } catch (error: unknown) {
-    console.error('[Pimlico Config] Error:', error);
-    const message = error instanceof Error ? error.message : 'Internal server error';
-    return new Response(
-      JSON.stringify({ error: message }),
+      JSON.stringify({ error: 'Pimlico API key not configured' }),
       { status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
     );
   }
+
+  const relay = `${Deno.env.get('SUPABASE_URL')}/functions/v1/pimlico-rpc/v2/8453/rpc`;
+  return new Response(
+    JSON.stringify({ bundlerUrl: relay, paymasterUrl: relay }),
+    { status: 200, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+  );
 });

@@ -64,10 +64,10 @@ export function GeneratedStageCover({
 }) {
   const { t: _copy } = _useCopy();
   const m = useMemo(
-    () => buildStageCover(stage),
+    () => buildStageCover(stage, _copy),
     // Only the fields the poster reads.
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    [stage.id, stage.title, stage.host_username, stage.host_wallet_address, stage.scheduled_at, stage.started_at, stage.created_at, stage.ended_at, stage.status],
+    [stage.id, stage.title, stage.host_username, stage.host_wallet_address, stage.scheduled_at, stage.started_at, stage.created_at, stage.ended_at, stage.status, _copy],
   );
   const titleSize = stageCoverTitleScale(m.title) * 100;
   const barW = 1000 / m.bars.length;
@@ -128,7 +128,7 @@ export function GeneratedStageCover({
         <span className="relative font-bold" style={{ padding: '0.5cqw 1.2cqw', fontFamily: MONO, fontSize: '1.35cqw', color: 'rgba(255,255,255,0.78)' }}>
           <span style={corner({ left: 0, top: 0, borderLeftWidth: '0.12cqw', borderTopWidth: '0.12cqw' })} />
           <span style={corner({ right: 0, bottom: 0, borderRightWidth: '0.12cqw', borderBottomWidth: '0.12cqw' })} />
-          {'// type = "stage"'}
+          {`// type = "${_copy('stageCover.stage')}"`}
         </span>
       </div>
 

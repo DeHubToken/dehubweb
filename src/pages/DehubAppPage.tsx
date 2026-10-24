@@ -1,4 +1,5 @@
 import { Link } from "react-router-dom";
+import { Trans, useTranslation } from "react-i18next";
 import Download from "@/components/ui/cut-icons/download";
 import ArrowLeft from "@/components/ui/cut-icons/back";
 
@@ -31,20 +32,29 @@ const JSON_LD = {
 };
 
 const STORES = [
-  { href: DEHUB_APP_LINKS.googlePlay, label: "Get it on Google Play", note: "Android", external: true },
-  { href: DEHUB_APP_LINKS.appStore, label: "Download on the App Store", note: "iPhone", external: true },
+  { href: DEHUB_APP_LINKS.googlePlay, labelKey: "dehubAppPage.googlePlay", noteKey: "dehubAppPage.android" },
+  { href: DEHUB_APP_LINKS.appStore, labelKey: "dehubAppPage.appStore", noteKey: "dehubAppPage.iphone" },
 ];
 
 /**
  * /dehub-app — the landing page for people searching for the app by name.
- * Copy lives in src/lib/dehub-app-page.js, shared with the crawler HTML.
+ * The crawler HTML renders the English in src/lib/dehub-app-page.js; this page
+ * renders the same copy from the locale files (en.json is held equal to the
+ * module by src/test/landing-pages-i18n.test.ts).
  */
 export default function DehubAppPage() {
+  const { t } = useTranslation();
+  const intro = [t("dehubAppPage.intro1"), t("dehubAppPage.intro2")];
+  const faq = DEHUB_APP_PAGE.faq.map((_, i) => ({
+    q: t(`dehubAppPage.faq.q${i + 1}`),
+    a: t(`dehubAppPage.faq.a${i + 1}`),
+  }));
+
   return (
     <div data-glass-page className="relative min-h-[100dvh] w-full bg-black text-white">
       <SEOHead
-        title={DEHUB_APP_PAGE.title}
-        description={DEHUB_APP_PAGE.description}
+        title={t("dehubAppPage.seoTitle")}
+        description={t("dehubAppPage.seoDescription")}
         url={PAGE_URL}
         image={SHARE_IMAGE}
         jsonLd={JSON_LD}
@@ -62,16 +72,16 @@ export default function DehubAppPage() {
         <img src={dehubWordmark} alt="DeHub" className="h-7 w-auto self-start object-contain opacity-90" />
 
         <h1 className="mt-8 text-4xl font-black italic leading-[0.95] tracking-tight sm:text-5xl">
-          {DEHUB_APP_PAGE.heading}
+          {t("dehubAppPage.heading")}
         </h1>
 
-        {DEHUB_APP_PAGE.intro.map((p) => (
+        {intro.map((p) => (
           <p key={p} className="mt-5 text-base leading-relaxed text-white/70">
             {p}
           </p>
         ))}
 
-        <h2 className="mt-12 text-xl font-bold">Download DeHub</h2>
+        <h2 className="mt-12 text-xl font-bold">{t("dehubAppPage.downloadTitle")}</h2>
         <div className="mt-5 grid gap-3 sm:grid-cols-2">
           {STORES.map((s) => (
             <a
@@ -83,24 +93,24 @@ export default function DehubAppPage() {
             >
               <Download className="h-5 w-5 shrink-0" />
               <span className="flex flex-col">
-                <span>{s.label}</span>
-                <span className="text-xs font-normal text-white/50">{s.note}</span>
+                <span>{t(s.labelKey)}</span>
+                <span className="text-xs font-normal text-white/50">{t(s.noteKey)}</span>
               </span>
             </a>
           ))}
         </div>
         <div className="mt-4 flex flex-wrap gap-x-5 gap-y-2 text-sm">
           <Link to="/" className="text-white/70 underline underline-offset-4 hover:text-white">
-            Open DeHub in your browser
+            {t("dehubAppPage.openInBrowser")}
           </Link>
           <Link to="/apk" className="text-white/70 underline underline-offset-4 hover:text-white">
-            Download the APK (Android without Google Play)
+            {t("dehubAppPage.downloadApk")}
           </Link>
         </div>
 
-        <h2 className="mt-14 text-xl font-bold">Frequently asked questions</h2>
+        <h2 className="mt-14 text-xl font-bold">{t("dehubAppPage.faqTitle")}</h2>
         <div className="mt-2 divide-y divide-white/10">
-          {DEHUB_APP_PAGE.faq.map(({ q, a }) => (
+          {faq.map(({ q, a }) => (
             <div key={q} className="py-5">
               <h3 className="font-semibold">{q}</h3>
               <p className="mt-2 text-sm leading-relaxed text-white/65">{a}</p>
@@ -109,15 +119,13 @@ export default function DehubAppPage() {
         </div>
 
         <p className="mt-8 text-sm leading-relaxed text-white/60">
-          Still not sure which DeHub you need?{" "}
-          <Link to="/guides/dehub-vs-depaul-dehub-vs-rowan-dehub" className="underline underline-offset-4 hover:text-white">
-            DeHub vs DePaul DeHUB vs Rowan DEHub
-          </Link>{" "}
-          sorts it out, and{" "}
-          <Link to="/guides/what-is-dehub" className="underline underline-offset-4 hover:text-white">
-            What is DeHub?
-          </Link>{" "}
-          covers the platform in depth.
+          <Trans
+            i18nKey="dehubAppPage.notSure"
+            components={{
+              compare: <Link to="/guides/dehub-vs-depaul-dehub-vs-rowan-dehub" className="underline underline-offset-4 hover:text-white" />,
+              guide: <Link to="/guides/what-is-dehub" className="underline underline-offset-4 hover:text-white" />,
+            }}
+          />
         </p>
       </main>
     </div>

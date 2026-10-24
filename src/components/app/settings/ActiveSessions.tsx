@@ -100,7 +100,7 @@ export function ActiveSessions() {
       toast.success(
         count === 1
           ? t('settings.sessionsRevokedOne', '1 device signed out')
-          : t('settings.sessionsRevokedMany', `${count} devices signed out`),
+          : t('settings.sessionsRevokedMany', { count }),
       );
     } catch {
       toast.error(t('settings.sessionsRevokeAllFailed', 'Could not sign out the other devices'));

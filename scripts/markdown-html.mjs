@@ -16,6 +16,12 @@ function inlineMd(text) {
   // images first (so their alt/src aren't re-parsed as links)
   s = s.replace(/!\[([^\]]*)\]\(([^)\s]+)\)/g, (_, alt, src) => {
     const cleanAlt = alt.split('|')[0].trim(); // "Name|avatar" convention
+    // `![Caption|/poster.jpg](/clip.mp4)` embeds a video; the part after the
+    // bar is its poster frame.
+    if (/\.(?:mp4|webm)$/i.test(unesc(src))) {
+      const poster = (alt.split('|')[1] || '').trim();
+      return `<video src="${escHtml(absolutize(unesc(src)))}"${poster.startsWith('/') ? ` poster="${escHtml(absolutize(unesc(poster)))}"` : ''} controls muted playsinline preload="metadata" title="${escHtml(unesc(cleanAlt))}" style="max-width:100%"></video>`;
+    }
     return `<img src="${escHtml(absolutize(unesc(src)))}" alt="${escHtml(unesc(cleanAlt))}" loading="lazy" style="max-width:100%">`;
   });
   s = s.replace(/\[([^\]]+)\]\(([^)\s]+)\)/g, (_, txt, href) =>

@@ -86,7 +86,7 @@ export function ShippedFeatureNotificationModal() {
 
           <div className="px-5 pt-3 pb-5">
             <h2 className="text-white font-bold text-lg mb-1.5">{_copy("copy.8f3dc69e83c4", { defaultValue: "Your feedback shipped!" })}</h2>
-            <p className="text-zinc-400 text-sm leading-relaxed mb-4">{_copy("copy.1164d7bbddd1", { defaultValue: "Thanks for helping make DeHub better — " })}{isPlural ? _copy("copy.b96359f1f31b", { defaultValue: "{{value1}} things you asked for are", value1: shippedItems.length }) : _copy("copy.622c73f8d79f", { defaultValue: "something you asked for is" })}{_copy("copy.3b8d0bc452b6", { defaultValue: " now live:" })}</p>
+            <p className="text-zinc-400 text-sm leading-relaxed mb-4">{isPlural ? _copy("copy.905392fbed15", { defaultValue: "Thanks for helping make DeHub better — {{value1}} things you asked for are now live:", value1: shippedItems.length }) : _copy("copy.2971f9103f78", { defaultValue: "Thanks for helping make DeHub better — something you asked for is now live:" })}</p>
 
             <div className="flex flex-col gap-2 mb-5 max-h-48 overflow-y-auto">
               {shippedItems.map((item) => (

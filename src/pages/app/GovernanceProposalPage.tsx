@@ -1,10 +1,10 @@
 import { useTranslation as _useCopy } from 'react-i18next';
 /**
  * Single Governance Proposal Page
- * Route: /app/governance/:proposalId
+ * Route: /app/governance/:proposalKey — the public number, or a legacy uuid
  */
 
-import { useParams, useNavigate, useSearchParams } from 'react-router-dom';
+import { useParams, useNavigate, useSearchParams, useLocation } from 'react-router-dom';
 import { useGovernanceProposal } from '@/hooks/use-governance-proposal';
 import {
   useGovernanceUserVotes,
@@ -29,7 +29,7 @@ import { ProposalVerdictLabel, verdictOf, votingTimeLeft, isVotingClosed } from 
 import { ProposalDiscussion } from '@/components/app/governance/ProposalDiscussion';
 import { ProposalMedia } from '@/components/app/governance/ProposalMedia';
 import { useProposalRepost } from '@/hooks/use-proposal-repost';
-import { dehubLinkFor } from '@/lib/dehub-links';
+import { dehubLinkFor, proposalPath } from '@/lib/dehub-links';
 
 // Quoting a proposal is posting its link: the composer cards it up, and the
 // post carries the proposal card into followers' feeds.
@@ -52,7 +52,7 @@ function formatTimeAgo(dateStr: string, t: (key: string, opts?: any) => string):
 
 export default function GovernanceProposalPage() {
   const { t: _copy } = _useCopy();
-  const { proposalId } = useParams<{ proposalId: string }>();
+  const { proposalId: proposalKey } = useParams<{ proposalId: string }>();
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
   // A comment notification lands on the comment it was about — the same
@@ -61,7 +61,10 @@ export default function GovernanceProposalPage() {
   const { t } = useTranslation();
   const { isAuthenticated, openLoginModal, walletAddress } = useAuth();
 
-  const { data: proposal, isLoading } = useGovernanceProposal(proposalId);
+  const { data: proposal, isLoading } = useGovernanceProposal(proposalKey);
+  // Votes, discussion and caches are all keyed by the uuid, whichever form
+  // the address bar holds.
+  const proposalId = proposal?.id;
   const { data: userVotes } = useGovernanceUserVotes();
   const voteMutation = useVoteGovernanceProposal();
 
@@ -69,7 +72,15 @@ export default function GovernanceProposalPage() {
   const explainCannotVote = useExplainCannotVote();
   const repost = useProposalRepost(proposal, walletAddress);
   const [quoteOpen, setQuoteOpen] = useState(false);
-  const proposalUrl = proposalId ? dehubLinkFor.proposal(proposalId) : '';
+  const proposalUrl = proposal ? dehubLinkFor.proposal(proposal) : '';
+
+  // A legacy uuid link swaps to the short number once the row is known, so
+  // whatever gets copied from the address bar is the short form.
+  const { pathname, search, hash } = useLocation();
+  useEffect(() => {
+    if (!proposal?.proposal_number || proposalKey === String(proposal.proposal_number)) return;
+    navigate(`${pathname.replace(/[^/]+\/?$/, String(proposal.proposal_number))}${search}${hash}`, { replace: true });
+  }, [proposal?.proposal_number, proposalKey, pathname, search, hash, navigate]);
   const handleRepost = useCallback(() => {
     if (!isAuthenticated) {
       openLoginModal();
@@ -149,7 +160,7 @@ export default function GovernanceProposalPage() {
 
   return (
     <div className="min-h-screen max-w-2xl mx-auto">
-      <SEOHead title={_copy("copy.c1cd85f576ed", { defaultValue: "{{value1}} — DeHub Governance", value1: proposal.title })} description={(proposal.description || _copy("copy.2f33a51e3171", { defaultValue: "DeHub governance proposal — vote and discuss." })).slice(0, 155)} url={`https://dehub.io/app/governance/${proposalId}`} type="article" {...(proposal.media_type === 'image' && proposal.media_url ? { image: proposal.media_url } : {})} />
+      <SEOHead title={_copy("copy.c1cd85f576ed", { defaultValue: "{{value1}} — DeHub Governance", value1: proposal.title })} description={(proposal.description || _copy("copy.2f33a51e3171", { defaultValue: "DeHub governance proposal — vote and discuss." })).slice(0, 155)} url={`https://dehub.io${proposalPath(proposal)}`} type="article" {...(proposal.media_type === 'image' && proposal.media_url ? { image: proposal.media_url } : {})} />
       <PageIsland
         back
         onBack={() => navigate('/app/governance')}

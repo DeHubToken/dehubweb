@@ -27,7 +27,7 @@ function PageDuration({ seconds, onApply }: { seconds: number; onApply: (seconds
   useEffect(() => setValue(String(Number(seconds.toFixed(2)))), [seconds]);
   return <form className="flex shrink-0 items-center gap-1.5" onSubmit={e => { e.preventDefault(); onApply(Number(value)); }}>
     <label className="text-[11px] text-white/60">{t("editor.pages.duration", { defaultValue: "Page duration" })}<input type="number" min={0.1} max={3600} step={0.1} required value={value} onChange={e => setValue(e.target.value)} className="ml-2 h-8 w-16 rounded-md border border-white/20 bg-white/5 px-2 text-xs text-white" /></label><span className="text-xs text-white/45">s</span>
-    <button type="submit" className="h-8 rounded-md border border-white/15 px-2 text-xs text-white/75 hover:bg-white/10">{t("editor.pages.applyDuration", { defaultValue: "Apply" })}</button>
+    <button type="submit" className="h-8 rounded-md border border-white/15 px-2 text-xs text-white/75 hover:bg-white/10">{t("common.apply", { defaultValue: "Apply" })}</button>
   </form>;
 }
 

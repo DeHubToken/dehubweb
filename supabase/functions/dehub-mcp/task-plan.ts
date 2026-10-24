@@ -20,6 +20,7 @@ export const taskStepSchema = z.object({
   category: z.string().trim().min(1).max(100).regex(/^[^\r\n]+$/).nullable().optional(),
   categories: z.array(z.string().trim().min(1).max(100).regex(/^[^\r\n]+$/)).min(1).max(20).nullable().optional(),
   topic: z.string().max(2000).nullable().default(null),
+  news: z.boolean().optional(),
   recent_keywords: z.array(z.string().trim().min(2).max(40)).min(1).max(6).nullable().default(null),
   recent_limit: z.number().int().min(1).max(3).nullable().default(null),
   media_pool: z.array(z.object({ url: z.string().url(), type: z.enum(["image", "video"]), subject: z.string().min(3).max(200), caption: z.string().trim().min(1).max(480).optional(), thumbnail_url: z.string().url().optional() }).strict()).max(12).nullable().default(null),
@@ -33,6 +34,7 @@ export const taskPlanSchema = z.object({
     const invalid = (message: string) => ctx.addIssue({ code: "custom", message, path: ["steps", index] });
     if ((step.author || step.category || step.categories) && !windowSteps(step)) invalid("Author and category filters require a post window.");
     if (step.category && step.categories) invalid("Use one category filter format.");
+    if (step.news && (step.tool !== 'dehub_post_create' || !step.topic)) invalid('News requires a generated post.');
     if (step.audience === "all_users" && step.tool !== "dehub_follow") invalid("All users supports following only.");
     if (step.audience === "post_authors" && step.tool !== "dehub_follow") invalid("Post authors supports following only.");
     if (step.audience === "posts" && !["dehub_vote", "dehub_comment", "dehub_view"].includes(step.tool)) invalid("Posts supports views, reactions and comments only.");
@@ -61,6 +63,9 @@ export type TaskStep = z.infer<typeof taskStepSchema>;
 /** Exact commands need no model round trip; other wording uses the planner. */
 export function explicitTaskPlan(prompt: string, now = new Date(), timezone = "UTC"): TaskPlan | null {
   const text = prompt.trim();
+  const simplePost = text.match(/^Post (once|once per day|twice per day) about (.+?)\.?$/i);
+  if (simplePost) return taskPlanSchema.parse({ summary: text, interval_minutes: simplePost[1].toLowerCase() === 'once' ? null : simplePost[1].toLowerCase() === 'once per day' ? 1440 : 720,
+    steps: [{ tool: 'dehub_post_create', arguments: {}, audience: 'single', topic: simplePost[2], news: /\b(?:news|current events|real.world events|headlines)\b/i.test(simplePost[2]) }] });
   // Universal likes are a time-window task, never a keyword-limited selection.
   const universal = text.toLowerCase().replace(/[.!]+$/, '').replace(/\s+/g, ' ').match(
     /^(like|dislike|view) (?:all|every) posts? (?:from |in |for |over |during )?(?:the )?(today|last hour|past hour|last 24 hours|past 24 hours|last day|past day|last 7 days|past 7 days|last week|past week|last month|past month|last 30 days|past 30 days|today in last day)(?: (?:in |across )?(?:all|every) categor(?:y|ies|hy))?$/,

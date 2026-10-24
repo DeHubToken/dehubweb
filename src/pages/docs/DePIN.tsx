@@ -24,20 +24,20 @@ const DePIN = () => {
             <div className="bg-muted p-6 rounded-lg font-mono text-sm mb-6 overflow-x-auto">
               <pre className="whitespace-pre text-muted-foreground">
               {`----------------------        -----------------
-|  DeHub Application |        |   End Users   |   - Start of data flow
+|  DeHub Application |        |   End Users   |   - ${t('depin.diagramDataFlowStart')}
 ----------------------        -----------------
          ⬇ ⬆                       ⬇ ⬆                                     
 ----------------------------------------------
-|              DePIN Coordinator             |    - Tasking, encryption + decryption
+|              DePIN Coordinator             |    - ${t('depin.diagramCoordinatorRole')}
 ----------------------------------------------
      ⬇                ⬇                ⬇                              
 ----------        -----------       -----------
-| Mobile |        | PC/GC   |       | Server  |   - That provide computing power
-| Miners |        | Miners  |       | Miners  |   - in exchange for DeHub tokens
+| Mobile |        | PC/GC   |       | Server  |   - ${t('depin.diagramMinersRole1')}
+| Miners |        | Miners  |       | Miners  |   - ${t('depin.diagramMinersRole2')}
 ----------        -----------       -----------
     ⬇        ↙        ⬇       ↙↙ ↘     ⬇
 -----------       -------------     ------------
-| Hosting |       | Transcode |     | Deliver  |  - Content delivery network
+| Hosting |       | Transcode |     | Deliver  |  - ${t('depin.diagramCdn')}
 -----------       -------------     ------------`}
               </pre>
             </div>

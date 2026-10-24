@@ -25,6 +25,7 @@
  *    still lands where it pointed even though the card is chosen by `kind`.
  */
 
+import i18n from 'i18next';
 import { RESERVED_LINK_SEGMENTS } from '@/lib/reserved-usernames';
 import { cutFromText } from '@/lib/cut-from-text';
 
@@ -74,7 +75,7 @@ export interface DehubLinkMatch {
   bountyJobKey?: string;
   /** `/apps/<slug>` — a mini app in the store. */
   appSlug?: string;
-  /** `/app/governance/<uuid>` — a governance proposal. */
+  /** `/app/governance/<n>` or the legacy `/app/governance/<uuid>` — a governance proposal. */
   proposalId?: string;
 }
 
@@ -248,11 +249,13 @@ export function parseDehubLink(input: string): DehubLinkMatch | null {
     return { ...base, kind: 'event', eventNumber: scoped[1] };
   }
 
-  // ── /app/governance/:uuid — one governance proposal ──
+  // ── /app/governance/:n — one governance proposal ──
   //
   // Both /app/governance/... and the top-level /governance/... are routed.
-  // Bare /governance is the board and stays a plain link.
+  // Bare /governance is the board and stays a plain link. The short number is
+  // the share form; the uuid is the legacy one and still resolves.
   if (scoped[0] === 'governance' && scoped[1] && !scoped[2]) {
+    if (/^\d{1,9}$/.test(scoped[1])) return { ...base, kind: 'proposal', proposalId: scoped[1] };
     if (!/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(scoped[1])) return null;
     return { ...base, kind: 'proposal', proposalId: scoped[1].toLowerCase() };
   }
@@ -463,23 +466,20 @@ export const dehubLinkFor = {
   film: (objectType: 'movie' | 'show', id: string | number) =>
     `${shareOrigin()}/cinema/${objectType === 'show' ? 'series' : 'film'}/${encodeURIComponent(String(id))}`,
   bounty: (jobNumber: string | number) => `${shareOrigin()}/bounty/${jobNumber}`,
-  proposal: (proposalId: string) => `${shareOrigin()}/app/governance/${proposalId}`,
+  proposal: (proposal: string | { id: string; proposal_number?: number | null }) =>
+    `${shareOrigin()}${proposalPath(proposal)}`,
 };
 
+/**
+ * In-app path for a proposal: the short number when the row has one, the uuid
+ * otherwise (or when only an id string is to hand).
+ */
+export function proposalPath(proposal: string | { id: string; proposal_number?: number | null }): string {
+  if (typeof proposal === 'string') return `/app/governance/${proposal}`;
+  return `/app/governance/${proposal.proposal_number ?? proposal.id}`;
+}
+
 /** Human label for a link kind — used by share sheets and fallback chips. */
-export function dehubLinkLabel(kind: DehubLinkKind): string {
-  switch (kind) {
-    case 'post': return 'post';
-    case 'profile': return 'profile';
-    case 'community': return 'community';
-    case 'communityInvite': return 'community invite';
-    case 'store': return 'store';
-    case 'listing': return 'item';
-    case 'event': return 'event';
-    case 'stage': return 'stage';
-    case 'film': return 'title';
-    case 'bounty': return 'bounty';
-    case 'app': return 'app';
-    case 'proposal': return 'proposal';
-  }
+export function dehubLinkLabel(kind: DehubLinkKind | 'link'): string {
+  return i18n.t(`dehubLinks.kind.${kind}`);
 }

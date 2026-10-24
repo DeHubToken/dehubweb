@@ -112,11 +112,11 @@ const E2EEncryption = () => {
               <div className="bg-muted/50 p-4 rounded-lg border">
                 <h4 className="font-semibold text-foreground mb-2">{t('e2ee.privateKeyGen')}</h4>
                 <pre className="bg-muted text-foreground p-4 rounded-lg text-xs overflow-x-auto font-mono">
-                {`Your Wallet Signature
-     ↓ [SHA-256 hash]
-32-byte seed
-     ↓ [HKDF derivation]
-Your Private Key (32 bytes)`}
+                {`${t('e2ee.flowWalletSignature')}
+     ↓ [${t('e2ee.flowSha256Hash')}]
+${t('e2ee.flowSeed')}
+     ↓ [${t('e2ee.flowHkdfDerivation')}]
+${t('e2ee.flowYourPrivateKey')}`}
                 </pre>
                 <ul className="text-muted-foreground space-y-1 ml-4 list-disc text-sm mt-3">
                   <li>{t('e2ee.privateKey1')}</li>
@@ -127,11 +127,11 @@ Your Private Key (32 bytes)`}
               <div className="bg-muted/50 p-4 rounded-lg border">
                 <h4 className="font-semibold text-foreground mb-2">{t('e2ee.publicKeyCreation')}</h4>
                 <pre className="bg-muted text-foreground p-4 rounded-lg text-xs overflow-x-auto font-mono">
-                {`Private Key
-     ↓ [X25519 operation]
-Public Key (32 bytes)
-     ↓ [Base64 encoding]
-Uploaded to DeHub database`}
+                {`${t('e2ee.flowPrivateKey')}
+     ↓ [${t('e2ee.flowX25519Operation')}]
+${t('e2ee.flowPublicKey')}
+     ↓ [${t('e2ee.flowBase64Encoding')}]
+${t('e2ee.flowUploaded')}`}
                 </pre>
                 <ul className="text-muted-foreground space-y-1 ml-4 list-disc text-sm mt-3">
                   <li>{t('e2ee.publicKey1')}</li>
@@ -154,13 +154,13 @@ Uploaded to DeHub database`}
             <h3 className="text-xl font-semibold text-foreground mb-4">{t('e2ee.phase2Title')}</h3>
             <p className="text-muted-foreground mb-4">{t('e2ee.phase2Desc')}</p>
             <pre className="bg-muted text-foreground p-4 rounded-lg text-sm overflow-x-auto font-mono">
-            {`Your Private Key (from your device)
+            {`${t('e2ee.flowYourPrivateKeyDevice')}
     +
-Their Public Key (from DeHub database)
-    ↓ [X25519 ECDH Magic]
-Shared Secret (32 bytes)
-    ↓ [HKDF with conversation context]
-Session Key (32 bytes)`}
+${t('e2ee.flowTheirPublicKey')}
+    ↓ [${t('e2ee.flowEcdh')}]
+${t('e2ee.flowSharedSecret')}
+    ↓ [${t('e2ee.flowHkdfContext')}]
+${t('e2ee.flowSessionKey32')}`}
             </pre>
             <div className="docs-glass p-4 rounded-lg mt-4">
               <h4 className="font-semibold text-foreground mb-2">{t('e2ee.keyFeatures')}</h4>
@@ -181,22 +181,22 @@ Session Key (32 bytes)`}
                 <h4 className="font-semibold text-foreground mb-2">{t('e2ee.msgPrep')}</h4>
                 <pre className="bg-muted text-foreground p-4 rounded-lg text-xs overflow-x-auto font-mono">
                 {`"Hello, world!"
-    ↓ [UTF-8 encoding]
-Plaintext bytes: [72, 101, 108, 108, 111, ...]`}
+    ↓ [${t('e2ee.flowUtf8Encoding')}]
+${t('e2ee.flowPlaintextBytes')}: [72, 101, 108, 108, 111, ...]`}
                 </pre>
               </div>
               <div className="bg-muted/50 p-4 rounded-lg border">
                 <h4 className="font-semibold text-foreground mb-2">{t('e2ee.encryption')}</h4>
                 <pre className="bg-muted text-foreground p-4 rounded-lg text-xs overflow-x-auto font-mono">
-                {`Plaintext bytes
+                {`${t('e2ee.flowPlaintextBytes')}
     +
-Session Key
+${t('e2ee.flowSessionKey')}
     +
-Random Nonce (24 bytes, freshly generated)
-    ↓ [XChaCha20-Poly1305 encryption]
-Ciphertext + Authentication Tag (16 bytes)
-    ↓ [Base64 encoding]
-Ready for DeHub servers`}
+${t('e2ee.flowRandomNonce')}
+    ↓ [${t('e2ee.flowEncrypt')}]
+${t('e2ee.flowCiphertextTag16')}
+    ↓ [${t('e2ee.flowBase64Encoding')}]
+${t('e2ee.flowReadyForServers')}`}
                 </pre>
               </div>
               <div className="docs-glass p-4 rounded-lg">
@@ -231,23 +231,23 @@ Ready for DeHub servers`}
               <div className="bg-muted/50 p-4 rounded-lg border">
                 <h4 className="font-semibold text-foreground mb-2">{t('e2ee.sessionKeyRetrieval')}</h4>
                 <pre className="bg-muted text-foreground p-4 rounded-lg text-xs overflow-x-auto font-mono">
-                {`Check cache → If found, use it
-             ↓ If not found
-Derive fresh session key using ECDH (same as Phase 2)`}
+                {`${t('e2ee.flowCheckCache')} → ${t('e2ee.flowIfFound')}
+             ↓ ${t('e2ee.flowIfNotFound')}
+${t('e2ee.flowDeriveFresh')}`}
                 </pre>
               </div>
               <div className="bg-muted/50 p-4 rounded-lg border">
                 <h4 className="font-semibold text-foreground mb-2">{t('e2ee.decryption')}</h4>
                 <pre className="bg-muted text-foreground p-4 rounded-lg text-xs overflow-x-auto font-mono">
-                {`Ciphertext + Authentication Tag
+                {`${t('e2ee.flowCiphertextTag')}
     +
-Nonce
+${t('e2ee.flowNonce')}
     +
-Session Key
-    ↓ [XChaCha20-Poly1305 decryption]
-Plaintext bytes (authentication verified!)
-    ↓ [UTF-8 decoding]
-"Hello, world!" appears on your screen`}
+${t('e2ee.flowSessionKey')}
+    ↓ [${t('e2ee.flowDecrypt')}]
+${t('e2ee.flowPlaintextVerified')}
+    ↓ [${t('e2ee.flowUtf8Decoding')}]
+${t('e2ee.flowAppearsOnScreen').replace('{message}', '"Hello, world!"')}`}
                 </pre>
               </div>
               <div className="docs-glass p-4 rounded-lg">

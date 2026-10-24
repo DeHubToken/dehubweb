@@ -5,10 +5,12 @@ import { Button } from '@/components/ui/button';
 import { Newspaper } from "lucide-react";
 import ExternalLink from "@/components/ui/cut-icons/open-externally";
 import Quote from "@/components/ui/cut-icons/quote";
+import { useLanguage } from '@/contexts/LanguageContext';
 
 
 type PressFeature = {
   outlet: string;
+  /** reach, headline and blurb are docs translation keys (src/i18n/en.ts featuredIn). */
   reach: string;
   headline: string;
   blurb: string;
@@ -23,23 +25,21 @@ type PressFeature = {
 const features: PressFeature[] = [
   {
     outlet: 'US Weekly',
-    reach: '50M+ readers',
-    headline: 'Meet the Companies Driving the Blue Ocean Frontier of Blockchain',
-    blurb:
-      'The celebrity and entertainment magazine featured DeHub among the companies pioneering the next frontier of blockchain — reaching a mainstream, off-chain audience most crypto projects never touch.',
+    reach: 'featuredIn.usWeeklyReach',
+    headline: 'featuredIn.usWeeklyHeadline',
+    blurb: 'featuredIn.usWeeklyBlurb',
     url: 'https://www.usmagazine.com/celebrity-news/news/meet-the-companies-driving-the-blue-ocean-frontier-of-blockchain/',
   },
   {
     outlet: 'Yahoo Finance',
-    reach: "World's largest business news platform",
-    headline: 'DeHub Launching Portal to the Metaverse',
-    blurb:
-      "A piece introducing DeHub's plans to build a portal to the metaverse and reshape entertainment, published on the world's largest business news platform.",
+    reach: 'featuredIn.yahooFinanceReach',
+    headline: 'featuredIn.yahooFinanceHeadline',
+    blurb: 'featuredIn.yahooFinanceBlurb',
     url: 'https://finance.yahoo.com/news/dehub-launching-portal-metaverse-022300594.html',
   },
   {
     outlet: 'Entrepreneur',
-    reach: '20M+ monthly users',
+    reach: 'featuredIn.entrepreneurReach',
     // Entrepreneur has since pulled the piece — entrepreneur.com/article/420564
     // now 404s, so this pointed at a dead page. The article itself is intact in
     // the Wayback Machine (three captures, Feb–Jul 2022), which is a real,
@@ -51,24 +51,23 @@ const features: PressFeature[] = [
     // for Entrepreneur Asia Pacific (25 Feb 2022) and carries Entrepreneur's
     // "Opinions expressed by Entrepreneur contributors are their own" notice —
     // it is contributor coverage, not the founder interview this claimed.
-    headline: 'A User-Centric Entertainment EcoSystem that Empowers Creators and Consumers',
-    blurb:
-      'Entrepreneur Asia Pacific covered DeHub’s vision for a creator-owned entertainment economy — VR-ready sport, film, music and gaming built on NFT infrastructure, bootstrapped since 2021.',
+    headline: 'featuredIn.entrepreneurHeadline',
+    blurb: 'featuredIn.entrepreneurBlurb',
     url: 'https://web.archive.org/web/20220702152228/https://www.entrepreneur.com/article/420564',
     archived: true,
   },
   {
     outlet: 'Investing.com',
-    reach: '46M+ monthly users',
-    headline: "DeHub's Portal to the Metaverse Set to Disrupt Entertainment & Lifestyle",
-    blurb:
-      'One of the most visited financial platforms in the world named DeHub a project of interest in the metaverse goldrush, set to disrupt the entertainment and lifestyle industries.',
+    reach: 'featuredIn.investingReach',
+    headline: 'featuredIn.investingHeadline',
+    blurb: 'featuredIn.investingBlurb',
     url: 'https://www.investing.com/news/cryptocurrency-news/dehubs-portal-to-the-metaverse-set-to-disrupt-the-entertainment-and-lifestyle-industry-2684073',
   },
 ];
 
 const FeaturedIn = () => {
   const { t: _copy } = _useCopy();
+  const { t } = useLanguage();
   return (
     <div className="space-y-8">
       <div className="space-y-4">
@@ -86,15 +85,15 @@ const FeaturedIn = () => {
                   <Newspaper className="w-5 h-5 shrink-0" />
                   {f.outlet}
                 </CardTitle>
-                <span className="text-xs bg-muted px-2 py-1 rounded whitespace-nowrap">{f.reach}</span>
+                <span className="text-xs bg-muted px-2 py-1 rounded whitespace-nowrap">{t(f.reach)}</span>
               </div>
               <CardDescription className="pt-2 text-base font-medium text-foreground/90 flex gap-2">
                 <Quote className="w-4 h-4 shrink-0 mt-1 text-muted-foreground" />
-                {f.headline}
+                {t(f.headline)}
               </CardDescription>
             </CardHeader>
             <CardContent className="flex flex-col flex-1 justify-between gap-4">
-              <p className="text-sm text-muted-foreground leading-relaxed">{f.blurb}</p>
+              <p className="text-sm text-muted-foreground leading-relaxed">{t(f.blurb)}</p>
               <div className="flex flex-col gap-2 items-start">
                 <Button asChild size="sm" className="w-full sm:w-auto self-start">
                   <a href={f.url} target="_blank" rel="noopener noreferrer" className="flex items-center gap-2">

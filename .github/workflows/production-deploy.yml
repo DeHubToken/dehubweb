@@ -54,6 +54,9 @@ jobs:
         run: |
           git fetch origin main
           test "$(git rev-parse origin/main)" = "$EXPECTED_REVISION"
+      - name: Save the live sitemap for IndexNow
+        continue-on-error: true
+        run: curl --fail --silent --show-error https://dehub.io/sitemap-static.xml --output /tmp/live-sitemap-static.xml
       - name: Deploy production worker and assets
         run: pnpm exec wrangler deploy --config wrangler.jsonc
       - name: Verify production serves this commit
@@ -67,3 +70,6 @@ jobs:
           if (version.id !== process.env.EXPECTED_REVISION.slice(0, 8)) throw new Error('Production serves a different commit: ' + JSON.stringify(version));
           console.log('Production serves ' + process.env.EXPECTED_REVISION);
           JS
+      - name: Ping search engines about changed pages
+        continue-on-error: true
+        run: node scripts/indexnow-submit.mjs dist/sitemap-static.xml --previous /tmp/live-sitemap-static.xml

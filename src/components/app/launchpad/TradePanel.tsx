@@ -23,7 +23,7 @@ export function TradePanel({ token }: { token: LaunchpadToken }) {
     if (!(n > 0)) { toast.error(t('launchpad.enterAmount')); return; }
     setBusy(true);
     try {
-      await mockTrade({ tokenId: token.id, side, amount: n, traderAddress: walletAddress });
+      await mockTrade({ tokenId: token.id, side, amount: n });
       setAmount.complete(amount, '');
       toast.success(t(side === 'buy' ? 'launchpad.boughtMock' : 'launchpad.soldMock', { symbol: token.symbol }));
     } catch (e) {

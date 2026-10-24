@@ -9,7 +9,7 @@
  * as ours.
  */
 import { describe, it, expect } from 'vitest';
-import { findDehubLinks, parseDehubLink } from '@/lib/dehub-links';
+import { dehubLinkFor, findDehubLinks, parseDehubLink, proposalPath } from '@/lib/dehub-links';
 
 describe('findDehubLinks /posts short form', () => {
   it('cards the bare short post link', () => {
@@ -224,8 +224,22 @@ describe('governance proposal links', () => {
 
   it('leaves the board, bad ids and foreign hosts alone', () => {
     expect(parseDehubLink('https://dehub.io/app/governance')).toBeNull();
-    expect(parseDehubLink('https://dehub.io/app/governance/123')).toBeNull();
+    expect(parseDehubLink('https://dehub.io/app/governance/abc')).toBeNull();
     expect(parseDehubLink(`https://evil.example/app/governance/${id}`)).toBeNull();
+  });
+
+  it('cards the short /app/governance/<n> form', () => {
+    for (const url of ['https://dehub.io/app/governance/2', 'https://dehub.io/governance/2', '/app/governance/2']) {
+      const m = parseDehubLink(url);
+      expect(m?.kind).toBe('proposal');
+      expect(m?.proposalId).toBe('2');
+    }
+  });
+
+  it('builds share links from the number when the row has one', () => {
+    expect(proposalPath({ id, proposal_number: 2 })).toBe('/app/governance/2');
+    expect(proposalPath({ id })).toBe(`/app/governance/${id}`);
+    expect(dehubLinkFor.proposal({ id, proposal_number: 7 })).toMatch(/\/app\/governance\/7$/);
   });
 
   it('finds a proposal link in post text', () => {

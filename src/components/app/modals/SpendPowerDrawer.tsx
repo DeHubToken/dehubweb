@@ -566,8 +566,8 @@ export function SpendPowerDrawer({ power, onOpenChange }: SpendPowerDrawerProps)
               ? isMegalodon
                 ? _copy("copy.8e4b97ca7c6e", { defaultValue: "Signal Flare to everyone" })
                 : t('superpowers.signalFlareTo', {
-                    people: signalFlarePeople ?? 0,
-                    defaultValue: `Signal Flare to ${(signalFlarePeople ?? 0).toLocaleString()} people`,
+                    people: (signalFlarePeople ?? 0).toLocaleString(),
+                    defaultValue: 'Signal Flare to {{people}} people',
                   })
               : t('superpowers.spendFor', {
                   power: power?.label ?? '',

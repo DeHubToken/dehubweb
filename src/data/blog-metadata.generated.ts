@@ -8,6 +8,66 @@ import type { BlogPost } from '@/types/blog';
 // getPublishedPosts() corpus: overrides applied, published only, newest first.
 export const blogPostsMetadata: BlogPost[] = [
   {
+    "id": "how-does-higgsfield-genjutsu-work",
+    "slug": "how-does-higgsfield-genjutsu-work",
+    "title": "How Does Higgsfield Genjutsu Work? And How Maboroshi Does the Same Job for Less (2026)",
+    "excerpt": "Genjutsu looks like magic, but it is a chain of eight well-known steps. Here is every step in detail, with real frames from each one, plus how to change any scene with Remake and Kling O3, what it all costs, and where the finished clip goes next.",
+    "content": "",
+    "bannerImage": "/media/maboroshi-how-genjutsu-works-banner.jpg",
+    "bannerImageAlt": "How Higgsfield Genjutsu works, and how DeHub Maboroshi does the same job for less",
+    "author": {
+      "name": "DeHub Team"
+    },
+    "publishedAt": "2026-10-24T06:00:00.000Z",
+    "tags": [
+      "AI",
+      "AI video",
+      "Creator Studio",
+      "Higgsfield",
+      "Genjutsu",
+      "Katana",
+      "Maboroshi",
+      "Kling",
+      "Seedance",
+      "Video editor",
+      "Pricing"
+    ],
+    "readingTime": 11,
+    "featured": true,
+    "status": "published",
+    "seoTitle": "How Does Higgsfield Genjutsu Work? Step by Step, and a Cheaper Way | DeHub",
+    "seoDescription": "Genjutsu explained step by step: depth, masks, face mesh, render and original audio, with real frames from each step. Plus Katana-style scene changes and a cheaper per-clip way to do it."
+  },
+  {
+    "id": "higgsfield-genjutsu-alternative",
+    "slug": "higgsfield-genjutsu-alternative",
+    "title": "Higgsfield Genjutsu Alternative: Maboroshi Prices Compared, and How We Rebuilt It (2026)",
+    "excerpt": "Swap anyone in a real video, keep the original audio, and pay per clip with no subscription. Here is what Genjutsu-style editing costs on Higgsfield and on DeHub Maboroshi, plus the full pipeline behind it.",
+    "content": "",
+    "bannerImage": "/media/maboroshi-genjutsu-alternative-banner.jpg",
+    "bannerImageAlt": "Maboroshi, the Higgsfield Genjutsu alternative on DeHub: swap anyone in a real video, with no subscription",
+    "author": {
+      "name": "DeHub Team"
+    },
+    "publishedAt": "2026-10-24T03:00:00.000Z",
+    "tags": [
+      "AI",
+      "AI video",
+      "Creator Studio",
+      "Higgsfield",
+      "Genjutsu",
+      "Maboroshi",
+      "Kling",
+      "Seedance",
+      "Pricing"
+    ],
+    "readingTime": 9,
+    "featured": true,
+    "status": "published",
+    "seoTitle": "Higgsfield Genjutsu Alternative 2026: Prices Compared + How It Works | DeHub",
+    "seoDescription": "Swap anyone in a real video from $1.75, keep the original audio, no subscription. Higgsfield Genjutsu vs DeHub Maboroshi prices, plus the full pipeline behind it."
+  },
+  {
     "id": "ready-to-debate-your-side-bring-it-to-dehub",
     "slug": "ready-to-debate-your-side-bring-it-to-dehub",
     "title": "Ready to Debate Your Side? Bring It to DeHub.",
@@ -3468,29 +3528,35 @@ export const newPostsMetadata: BlogPost[] = [
 
 // getLatestPost() result — docs home hero.
 export const latestPostMetadata: BlogPost | undefined = {
-  "id": "dehub-next-chapter-riftn-bnb-recovery-relaunch",
-  "slug": "dehub-next-chapter-riftn-bnb-recovery-relaunch",
-  "title": "DeHub’s next chapter: Riftn, BNB recovery and the road to relaunch",
-  "excerpt": "Our proposed move to Riftn, the push for a proper assessment of our stuck BNB, and the plan to get DeHub relaunched and trading.",
+  "id": "how-does-higgsfield-genjutsu-work",
+  "slug": "how-does-higgsfield-genjutsu-work",
+  "title": "How Does Higgsfield Genjutsu Work? And How Maboroshi Does the Same Job for Less (2026)",
+  "excerpt": "Genjutsu looks like magic, but it is a chain of eight well-known steps. Here is every step in detail, with real frames from each one, plus how to change any scene with Remake and Kling O3, what it all costs, and where the finished clip goes next.",
   "content": "",
-  "bannerImage": "/media/dehub-to-riftn-transition.png",
-  "bannerImageAlt": "DeHub to Riftn — the next chapter",
+  "bannerImage": "/media/maboroshi-how-genjutsu-works-banner.jpg",
+  "bannerImageAlt": "How Higgsfield Genjutsu works, and how DeHub Maboroshi does the same job for less",
   "author": {
     "name": "DeHub Team"
   },
-  "publishedAt": "2026-10-22T18:00:00.000Z",
+  "publishedAt": "2026-10-24T06:00:00.000Z",
   "tags": [
-    "DeHub",
-    "Riftn",
-    "BNB",
-    "Community",
-    "Relaunch"
+    "AI",
+    "AI video",
+    "Creator Studio",
+    "Higgsfield",
+    "Genjutsu",
+    "Katana",
+    "Maboroshi",
+    "Kling",
+    "Seedance",
+    "Video editor",
+    "Pricing"
   ],
-  "readingTime": 6,
+  "readingTime": 11,
   "featured": true,
   "status": "published",
-  "seoTitle": "DeHub’s next chapter: Riftn, BNB recovery and relaunch",
-  "seoDescription": "DeHub proposes the Riftn name, a renewed focus on BNB, a public recovery campaign, and a relaunch timetable. Recovery remains subject to Binance’s assessment."
+  "seoTitle": "How Does Higgsfield Genjutsu Work? Step by Step, and a Cheaper Way | DeHub",
+  "seoDescription": "Genjutsu explained step by step: depth, masks, face mesh, render and original audio, with real frames from each step. Plus Katana-style scene changes and a cheaper per-clip way to do it."
 };
 
 export const excludedTitles: string[] = [

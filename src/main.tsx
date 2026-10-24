@@ -7,6 +7,7 @@ import { ErrorBoundary } from "./components/ErrorBoundary";
 import { recoverFromChunkError } from "./lib/lazy-with-retry";
 import { registerServiceWorker } from "./lib/register-sw";
 import { installScrollFreezeWatchdog } from "./lib/scroll-freeze-watchdog";
+import { installTapPendingLogo } from "./lib/tap-pending-logo";
 import { installSupabaseInterceptor } from "./lib/supabase-interceptor";
 import { installImageOriginFallback } from "./lib/image-origin-fallback";
 import { installWalletSessionFetch } from "./lib/wallet-session";
@@ -121,3 +122,7 @@ registerServiceWorker();
 // stuck overlay — report what caused it and put it back on desktop and touch.
 // See lib/scroll-freeze-watchdog.ts.
 installScrollFreezeWatchdog();
+
+// Press a profile, post, link or Back and the logo is ready before the page
+// builds. See lib/tap-pending-logo.ts.
+installTapPendingLogo();

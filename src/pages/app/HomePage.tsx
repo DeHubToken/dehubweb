@@ -49,6 +49,8 @@ import { useTranslation } from 'react-i18next';
 import { HUB_ROUTE_META } from '@/lib/seo/route-meta';
 import { HomeIntro } from '@/components/app/HomeIntro';
 import { useGlobalFeedNav } from '@/contexts/GlobalFeedNavContext';
+import { preloadRoute } from '@/lib/route-preload';
+import { warmPostPage } from '@/lib/preload-post-page';
 
 
 // Feed components. HomeFeed is the tab every visit opens on, so it stays a
@@ -145,6 +147,20 @@ export default function HomePage() {
     const check = () => setIsMobile(window.innerWidth < 1024);
     window.addEventListener('resize', check, { passive: true });
     return () => window.removeEventListener('resize', check);
+  }, []);
+
+  // The two pages a feed tap opens, profile and post, load their code while
+  // the feed sits idle, so the first tap shows the page at once instead of
+  // waiting on a chunk download after the click.
+  useEffect(() => {
+    const warm = () => { preloadRoute('/app/profile'); warmPostPage(); };
+    const idle = (window as Window & { requestIdleCallback?: (cb: () => void, opts?: { timeout: number }) => number }).requestIdleCallback;
+    if (idle) {
+      const id = idle(warm, { timeout: 4000 });
+      return () => window.cancelIdleCallback?.(id);
+    }
+    const timer = window.setTimeout(warm, 2500);
+    return () => window.clearTimeout(timer);
   }, []);
 
   // Detect back navigation for tab-change scroll logic

@@ -139,7 +139,7 @@ export function useSubmitProposalComment() {
     },
     onError: (error) => {
       if (error.message === 'Badge holders only') {
-        toast.error('Badge holders only');
+        toast.error(_copy('governance.badgeHoldersOnly'));
         return;
       }
       toast.error(_copy("copy.791ab06be905", { defaultValue: "Failed to post comment" }));
@@ -171,7 +171,7 @@ export function useEditProposalComment() {
     },
     onError: (error) => {
       if (error.message === 'Badge holders only') {
-        toast.error('Badge holders only');
+        toast.error(_copy('governance.badgeHoldersOnly'));
         return;
       }
       toast.error(_copy("copy.78443791af16", { defaultValue: "Failed to save comment" }));

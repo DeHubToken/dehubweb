@@ -2354,7 +2354,7 @@ export default function NotificationsPage({ inDrawer = false }: { inDrawer?: boo
       </div>
 
       {/* Notifications List */}
-      <PageBody>
+      <PageBody frameClip={inDrawer}>
         <div data-page-bento data-kit-section className="bg-zinc-900 overflow-hidden">
           {isLoading ? (
             // Row skeletons that mirror the real list layout — a lone spinner
