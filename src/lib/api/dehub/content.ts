@@ -1,5 +1,6 @@
 import { apiCall, authedUpload } from './core';
-import type { ContentRating, ShopLink } from './types';
+import { ResumableUnsupportedError, resumableUpload } from './resumable-upload';
+import type { ContentRating, PostVisibility, QuotePolicy, ReplyPolicy, ShopLink } from './types';
 
 export interface StreamInfo {
   isLockContent?: boolean;
@@ -45,6 +46,12 @@ export interface MintPostParams {
    * droplet's bare IP), so the server should create the stream on Livepeer.
    */
   ingestPreference?: 'livepeer';
+  /**
+   * Live posts only. 'event' marks a big event: viewers play HLS from about
+   * twenty seconds behind live instead of a WebRTC session each. Sent as the
+   * stream's `settings.latencyMode`.
+   */
+  latencyMode?: 'event';
   /**
    * Publish without minting on-chain. The post lands in feeds as soon as this
    * call returns and the client skips the contract step entirely.
@@ -104,6 +111,16 @@ export interface MintPostParams {
    * is nothing to attach to before then.
    */
   shopListingCount?: number;
+  /** Alt text, one per uploaded image or video in file order. */
+  mediaDescriptions?: string[];
+  /** Content warning: one line shown in place of the post until a viewer opens it. */
+  spoilerText?: string;
+  /** Who may quote it. Only sent when it is not the default, anyone. */
+  quotePolicy?: QuotePolicy;
+  /** Who may reply. Only sent when it is not the default, anyone. */
+  replyPolicy?: ReplyPolicy;
+  /** Who may see it. Only sent when it is not the default, everyone. Fixed once posted. */
+  visibility?: PostVisibility;
 }
 
 export interface MintResponse {
@@ -207,6 +224,12 @@ export async function mintPost(
     formData.append('ingestPreference', params.ingestPreference);
   }
 
+  // Only the field that differs from the server's defaults: chat stays on and
+  // the minimum tip stays where it is.
+  if (params.latencyMode === 'event') {
+    formData.append('settings', JSON.stringify({ latencyMode: 'event' }));
+  }
+
   if (params.idempotencyKey) {
     formData.append('idempotencyKey', params.idempotencyKey);
   }
@@ -232,6 +255,26 @@ export async function mintPost(
   // false would store a second representation of the same state.
   if (params.forKids === true) {
     formData.append('forKids', 'true');
+  }
+
+  if (params.mediaDescriptions?.some(Boolean)) {
+    formData.append('mediaDescriptions', JSON.stringify(params.mediaDescriptions));
+  }
+
+  if (params.spoilerText?.trim()) {
+    formData.append('spoilerText', params.spoilerText.trim());
+  }
+
+  if (params.quotePolicy && params.quotePolicy !== 'public') {
+    formData.append('quotePolicy', params.quotePolicy);
+  }
+
+  if (params.replyPolicy && params.replyPolicy !== 'public') {
+    formData.append('replyPolicy', params.replyPolicy);
+  }
+
+  if (params.visibility && params.visibility !== 'public') {
+    formData.append('visibility', params.visibility);
   }
 
   // Only sent when there is a board. An empty array would be a valid "clear
@@ -409,6 +452,25 @@ export interface EditPostParams {
    * cards read, so 0 is meaningful — it says the listings came off.
    */
   shopListingCount?: number;
+  /** Replace the post's alt text, one per piece of media in display order. `[]` clears it. */
+  mediaDescriptions?: string[];
+  /** Replace the content warning. `''` takes it off. */
+  spoilerText?: string;
+  /** Who may quote it from now on. Quotes already made stay. */
+  quotePolicy?: QuotePolicy;
+  /** Who may reply from now on. Replies already made stay. */
+  replyPolicy?: ReplyPolicy;
+}
+
+/**
+ * Take your post back out of somebody else's quote. Only the quoted post's
+ * author may; the quote stays up and its embed of your post reads as removed.
+ */
+export async function revokeQuote(quoteTokenId: number | string): Promise<{ result: boolean }> {
+  return apiCall<{ result: boolean }>(`/api/quotes/${encodeURIComponent(String(quoteTokenId))}/revoke`, {
+    method: 'POST',
+    requiresAuth: true,
+  });
 }
 
 export interface EditPostResponse {
@@ -739,12 +801,25 @@ export interface DraftVideoInfo {
  * Upload a video as a draft. Rejects with UploadHttpError on an error status
  * (413 over the tier's size, 400 unreadable, 404/503 when the server has no
  * drafts) and with an AbortError when `signal` fires.
+ *
+ * Sent in resumable chunks, so a dropped connection or a token refresh
+ * carries on from the last chunk the server holds. An API without the
+ * resumable endpoint gets the single multipart request it always did.
  */
-export function createDraftVideo(
+export async function createDraftVideo(
   file: File,
   postType: 'video' | 'short',
   options: { onProgress?: (percent: number) => void; signal?: AbortSignal } = {},
 ): Promise<{ draftId: string; status: DraftVideoStatus }> {
+  try {
+    return await resumableUpload<{ draftId: string; status: DraftVideoStatus }>('/api/draft_video/resumable', file, {
+      metadata: { postType },
+      onProgress: options.onProgress,
+      signal: options.signal,
+    });
+  } catch (error) {
+    if (!(error instanceof ResumableUnsupportedError)) throw error;
+  }
   const formData = new FormData();
   formData.append('postType', postType);
   formData.append('file', file);

@@ -1,4 +1,151 @@
 {
+  "mastodonApps": {
+    "authTitle": "DeHub로 로그인",
+    "authWants": "{{app}}에서 DeHub 계정을 사용하려고 해요",
+    "authSignedInAs": "{{name}}(으)로 로그인됨",
+    "authSignIn": "계속하려면 로그인하세요",
+    "allow": "허용",
+    "cancel": "취소",
+    "scopeRead": "타임라인, 게시물, 알림, 북마크 보기",
+    "scopeWrite": "나 대신 게시, 답글, 좋아요, 부스트, 북마크하기",
+    "scopeFollow": "계정 팔로우, 언팔로우, 차단, 뮤트하기",
+    "scopePush": "알림 보내기",
+    "scopeProfile": "프로필 보기",
+    "invalid": "이 로그인 링크는 유효하지 않아요. 앱으로 돌아가서 다시 시도하세요.",
+    "failed": "잘 안 됐어요. 다시 시도하세요.",
+    "codeTitle": "로그인을 마치려면 이 코드를 앱에 복사하세요.",
+    "copy": "복사",
+    "copied": "복사했어요",
+    "seoDescription": "마스토돈 앱이 DeHub 계정을 사용하도록 허용하세요.",
+    "redirecting": "{{app}}(으)로 돌아가는 중…",
+    "connectedTitle": "연결된 앱",
+    "connectedDescription": "이 계정으로 로그인한 마스토돈 앱이에요. 앱을 삭제하면 로그아웃돼요.",
+    "connectedEmpty": "아직 연결된 앱이 없어요.",
+    "lastUsed": "마지막 사용 {{date}}",
+    "remove": "삭제",
+    "removed": "앱을 삭제했어요"
+  },
+  "fediverse": {
+    "title": "연합우주",
+    "description": "마스토돈 등 연합우주 앱 사용자가 이 주소로 나를 찾아 팔로우할 수 있어요. 새 공개 게시물은 그곳에도 전해져요.",
+    "copy": "복사",
+    "copied": "복사했어요",
+    "privateNote": "비공개 계정은 연합우주에 표시되지 않아요.",
+    "noUsername": "연합우주 주소를 받으려면 사용자 이름을 정하세요."
+  },
+  "profileFields": {
+    "title": "프로필 항목",
+    "description": "프로필에 웹사이트나 대명사 같은 줄을 최대 4개까지 추가해요.",
+    "label": "라벨",
+    "content": "내용",
+    "save": "항목 저장",
+    "saved": "프로필 항목을 저장했어요",
+    "failed": "저장하지 못했어요. 다시 시도해 주세요.",
+    "verified": "인증된 링크",
+    "verifyHint": "링크를 인증하려면 그 페이지에 이걸 넣고 다시 저장하세요: {{snippet}}"
+  },
+  "followedTags": {
+    "follow": "#{{tag}} 팔로우",
+    "following": "팔로우 중",
+    "unfollow": "#{{tag}} 팔로우 취소",
+    "followed": "이제 #{{tag}}을(를) 팔로우해요. 관련 게시물이 팔로잉 피드에 표시돼요.",
+    "unfollowed": "#{{tag}} 팔로우를 취소했어요",
+    "failed": "저장하지 못했어요. 다시 시도해 주세요.",
+    "clear": "지우기"
+  },
+  "notificationFilters": {
+    "title": "알림 필터 대상",
+    "description": "내 주변 사람이 아닌 누군가가 반응했을 때 어떻게 할지 고르세요. 필터된 알림은 배지나 푸시 없이 '필터됨'에 보관돼요.",
+    "notFollowing": "내가 팔로우하지 않는 사람",
+    "notFollowers": "나를 팔로우하지 않는 사람",
+    "newAccounts": "새 계정(30일 미만)",
+    "accept": "알림 받기",
+    "filter": "필터",
+    "drop": "완전히 숨기기",
+    "filteredTitle": "필터된 알림",
+    "filteredEmpty": "필터된 알림이 없어요.",
+    "failed": "저장하지 못했어요. 다시 시도해 주세요."
+  },
+  "keywordFilters": {
+    "title": "뮤트한 단어",
+    "description": "이 단어가 들어간 게시물과 댓글을 숨기거나 경고 뒤로 접어 둡니다. 이 목록은 나만 볼 수 있어요.",
+    "placeholder": "단어 또는 문구",
+    "add": "뮤트",
+    "added": "뮤트함: {{phrase}}",
+    "wholeWord": "단어 전체만",
+    "whenMatches": "게시물이 일치하면",
+    "warn": "경고 표시",
+    "hide": "숨기기",
+    "howLong": "기간",
+    "forever": "직접 삭제할 때까지",
+    "duration1h": "1시간",
+    "duration1d": "1일",
+    "duration7d": "7일",
+    "duration30d": "30일",
+    "where": "적용 위치",
+    "home": "홈",
+    "public": "탐색 및 검색",
+    "profile": "프로필",
+    "thread": "대화",
+    "notifications": "알림",
+    "empty": "뮤트한 단어가 없어요.",
+    "remove": "뮤트 해제",
+    "until": "{{date}}까지",
+    "filtered": "필터됨: {{phrase}}",
+    "showAnyway": "그래도 보기",
+    "failed": "저장하지 못했어요. 다시 시도해 주세요."
+  },
+  "postVisibility": {
+    "label": "공개 범위",
+    "public": "전체 공개",
+    "followers": "팔로워만",
+    "direct": "언급한 사람만",
+    "noRepost": "공개 게시물만 리포스트할 수 있어요",
+    "directHint": "@로 언급한 사람만 이 게시물을 볼 수 있어요",
+    "needsMention": "언급한 사람에게만 게시하려면 @로 한 명 이상 언급하세요"
+  },
+  "replyPolicy": {
+    "label": "답글을 달 수 있는 사람",
+    "public": "모두",
+    "followers": "내 팔로워",
+    "following": "내가 팔로우하는 사람",
+    "mentioned": "언급된 사람만",
+    "noticeFollowers": "작성자의 팔로워만 답글을 달 수 있습니다",
+    "noticeFollowing": "작성자가 팔로우하는 사람만 답글을 달 수 있습니다",
+    "noticeMentioned": "게시물에서 언급된 사람만 답글을 달 수 있습니다",
+    "refused": "작성자가 이 게시물에 답글을 달 수 있는 사람을 제한했습니다"
+  },
+  "quotePolicy": {
+    "label": "인용 가능한 사람",
+    "public": "모두",
+    "followers": "팔로워",
+    "nobody": "나만",
+    "off": "작성자가 인용을 껐습니다",
+    "removed": "작성자가 이 인용에서 게시물을 삭제했습니다",
+    "remove": "삭제",
+    "removedToast": "이 인용에서 내 게시물이 삭제되었습니다",
+    "removeFailed": "인용에서 내 게시물을 삭제할 수 없습니다",
+    "refused": "작성자가 이 게시물의 인용을 허용하지 않습니다"
+  },
+  "contentWarning": {
+    "label": "내용 경고",
+    "placeholder": "여기에 경고 문구를 쓰세요",
+    "add": "내용 경고 추가",
+    "remove": "내용 경고 삭제",
+    "show": "게시물 보기"
+  },
+  "altText": {
+    "badge": "ALT",
+    "add": "설명 추가",
+    "edit": "설명 편집",
+    "titleImage": "이 이미지를 설명하세요",
+    "titleVideo": "이 동영상을 설명하세요",
+    "help": "볼 수 없는 사람들을 위한 것입니다. 스크린 리더가 소리 내어 읽어 줍니다.",
+    "placeholder": "무엇이 보이나요? 들어 있는 글자도 함께 적어 주세요.",
+    "show": "설명 보기",
+    "saved": "설명이 저장되었습니다",
+    "saveFailed": "설명을 저장할 수 없습니다"
+  },
   "liveRecap": {
     "title": "스트림 요약",
     "justEnded": "스트림 요약",
@@ -113,11 +260,12 @@
     "heading": "DeHub 쇼츠"
   },
   "settings": {
-    "showDislikesDesc": "누구나 내 프로필의 싫어요 탭을 열 수 있습니다. 끄면 나만 볼 수 있습니다.",
-    "showDislikes": "내 싫어요를 모두에게 공개",
+    "usernameTaken": "이미 사용 중인 사용자 이름입니다",
     "postingChain": "게시물 블록체인",
     "showOnline": "온라인 상태일 때 표시",
     "showOnlineDesc": "DeHub를 사용하는 동안 내가 메시지를 보내는 사람들에게 내 이름 옆에 초록색 점이 표시됩니다.",
+    "showDislikes": "내 싫어요를 모두에게 공개",
+    "showDislikesDesc": "누구나 내 프로필의 싫어요 탭을 열 수 있습니다. 끄면 나만 볼 수 있습니다.",
     "smartReplies": "추천 답장",
     "smartRepliesDesc": "채팅에서 탭할 수 있는 답장 두 개를 만들어 줍니다. 추천의 × 를 누르면 꺼집니다.",
     "title": "설정",
@@ -241,6 +389,11 @@
       "hintDeny": "이 신호를 존중하는 AI 시스템 및 크롤러는 오디오, 아트워크 및 글쓰기에 대한 교육을 받지 않도록 요청받습니다. 신호를 무시하는 크롤러는 신호에 의해 차단되지 않습니다.",
       "saved": "AI 교육 기본 설정 저장됨"
     },
+    "defaultFeed": "기본 피드",
+    "defaultFeedDesc": "DeHub를 열 때마다 표시할 피드를 선택하세요",
+    "feedToggles": "피드 필터 초기화",
+    "feedTogglesDesc": "피드에서 켠 필터는 초기화할 때까지 기본값으로 유지됩니다",
+    "feedTogglesCleared": "피드 필터가 초기화되었습니다",
     "defaultProfileTab": "기본 프로필 탭",
     "defaultProfileTabDesc": "방문자가 프로필에서 가장 먼저 보게 될 탭을 선택하세요",
     "public": "공개",
@@ -634,6 +787,9 @@
     "dmSent": "{{name}}님에게 {{amount}} DHB를 보냈어요!"
   },
   "postOptions": {
+    "embed": "퍼가기",
+    "copyEmbedCode": "퍼가기 코드 복사",
+    "embedCodeCopied": "퍼가기 코드가 복사되었습니다",
     "options": "옵션",
     "aiOverview": "AI 개요",
     "sendTip": "팁 보내기",
@@ -661,7 +817,8 @@
     "unpinPost": "프로필에서 고정 해제하기",
     "postPinned": "프로필에 고정됨",
     "postUnpinned": "프로필에서 고정 해제됨",
-    "pinFailed": "이 포스트를 고정하거나 고정 해제할 수 없습니다."
+    "pinFailed": "이 포스트를 고정하거나 고정 해제할 수 없습니다.",
+    "copyFailed": "링크를 복사할 수 없습니다"
   },
   "filters": {
     "sort": "정렬",
@@ -1400,7 +1557,6 @@
     "returnHome": "홈으로 돌아가기"
   },
   "profile": {
-    "dislikes": { "loadMore": "더 보기", "privateDesc": "이 계정은 싫어요를 공개하지 않습니다.", "privateTitle": "싫어요는 비공개입니다", "emptyOther": "아직 아무것도 없습니다.", "emptyOwn": "싫어요를 누른 게시물은 피드에서 사라지고 여기에 표시됩니다. 싫어요를 취소하면 게시물이 돌아옵니다.", "emptyTitle": "아직 싫어요가 없습니다" },
     "back": "뒤로",
     "usernameAvailable": "사용 가능한 사용자명!",
     "signUpToClaim": "가입하여 획득",
@@ -1428,8 +1584,16 @@
       "commentUnavailable": "이 댓글은 더 이상 사용할 수 없습니다"
     },
     "tabs": {
-      "dislikes": "싫어요",
-      "playlists": "재생 목록"
+      "playlists": "재생 목록",
+      "dislikes": "싫어요"
+    },
+    "dislikes": {
+      "emptyTitle": "아직 싫어요가 없습니다",
+      "emptyOwn": "싫어요를 누른 게시물은 피드에서 사라지고 여기에 표시됩니다. 싫어요를 취소하면 게시물이 돌아옵니다.",
+      "emptyOther": "아직 아무것도 없습니다.",
+      "privateTitle": "싫어요는 비공개입니다",
+      "privateDesc": "이 계정은 싫어요를 공개하지 않습니다.",
+      "loadMore": "더 보기"
     },
     "offerWorthNow": "현재 환율로 약 {{amount}}개의 토큰",
     "offerNotePlaceholder": "메모 추가 (선택)",
@@ -1984,6 +2148,8 @@
     "copyFailed": "복사할 수 없음"
   },
   "profileOptions": {
+    "copyRssFeed": "RSS 피드 링크 복사",
+    "rssFeedCopied": "RSS 피드 링크가 복사되었습니다",
     "copyProfileUrl": "프로필 URL 복사",
     "copyUsername": "사용자 이름 복사",
     "copyAddress": "주소 복사",
@@ -2284,6 +2450,7 @@
     "pendingSubmitted": "{{amount}} 토큰이 제출되었습니다. 확인 중입니다. 다시 보내지 마세요."
   },
   "communities": {
+    "chatTab": "채팅",
     "title": "커뮤니티",
     "create": "만들기",
     "searchPlaceholder": "커뮤니티 검색...",
@@ -2318,7 +2485,29 @@
     "addDescription": "설명을 추가하세요...",
     "communityDescription": "커뮤니티 설명...",
     "posts": "게시물",
-    "chat": "채팅",
+    "chat": {
+      "intervalHour": "1시간",
+      "intervalHours": "{{count}} 시간",
+      "intervalMinute": "1분",
+      "intervalMinutes": "{{count}} 분",
+      "intervalSecond": "1초",
+      "intervalSeconds": "{{count}} 초",
+      "muted": "음소거 상태입니다",
+      "mutedUntil": "{{until}} 까지 음소거됩니다",
+      "postingDisabled": "여기에서 회원 게시를 사용할 수 없습니다.",
+      "pinnedMedia": "미디어",
+      "jumpToPinned": "고정된 메시지로 이동",
+      "pinnedMessage": "고정된 메시지",
+      "unpin": "고정 해제",
+      "pin": "PIN 번호",
+      "delete": "삭제",
+      "slowMode": "느린 모드: {{interval}} 마다 하나의 메시지",
+      "slowModeWait": "느린 모드 — {{time}} 대기",
+      "send": "보내기",
+      "deleteMessageTitle": "이 메시지를 삭제하시겠어요?",
+      "deleteMessageBody": "이 작업은 취소할 수 없습니다.",
+      "cancel": "취소"
+    },
     "membersTab": "멤버 ({{count}})",
     "about": "소개",
     "backToCommunities": "커뮤니티",
@@ -3784,6 +3973,7 @@
     "sellYourFractions": "분수 판매 ({{held}} 보유)"
   },
   "creator": {
+    "libraryEmpty": "저장한 생성물이 여기에 표시됩니다.",
     "whatToCreate": "만들 항목",
     "startCreatingWith": "{{model}}로 만들기 시작",
     "studioSubtitle": "장면, 캐릭터, 분위기 또는 스타일을 설명하세요. 결과는 아래에 표시되고 편집기로 바로 이동합니다.",
@@ -5374,6 +5564,8 @@
     }
   },
   "goLive": {
+    "bigEvent": "대규모 이벤트",
+    "bigEventHint": "많은 시청자용: 시청자는 약 20초 늦게 보지만 끊김이 줄어듭니다.",
     "goLive": "라이브 시작",
     "youAreLive": "라이브 중",
     "streamReady": "스트림 준비 완료",
@@ -6178,7 +6370,10 @@
     "play": "재생",
     "pause": "일시정지",
     "listens_one": "{{count}}회 재생",
-    "listens_other": "{{count}}회 재생"
+    "listens_other": "{{count}}회 재생",
+    "lyrics": "가사",
+    "lyricsLoading": "가사를 찾는 중…",
+    "lyricsNone": "가사가 없습니다"
   },
   "converter": {
     "seoTitle": "컨버터 — DeHub으로 비디오 가져오기",
@@ -6694,6 +6889,7 @@
     "seoDescription": "DeHub 공식 문서: 플랫폼 개요, dApp, 토큰 토큰 이코노미, 스테이킹, 게임, 로드맵, FAQ 등."
   },
   "dex": {
+    "title": "토큰 / USD",
     "seoTitle": "DEX — DHB를 원하는 가격에 거래하세요",
     "seoDescription": "Base 또는 BNB Chain에서 Uniswap v4 지정가 주문으로 토큰 매수 또는 매도 가격을 설정하세요. 실시간 주문 장부, 시장 깊이, 하나의 통합 USD 가격을 제공합니다.",
     "venue": "네트워크",
@@ -6916,6 +7112,14 @@
     }
   },
   "editor": {
+    "video": {
+      "tFade": "크로스 디졸브",
+      "none": "없음",
+      "transition": "전환",
+      "speed": "속도",
+      "sound": "사운드",
+      "video": "동영상"
+    },
     "review": {
       "title": "프로젝트 검토",
       "shared": "나와 공유됨",
@@ -8609,5 +8813,15 @@
     "posted": "게시됨",
     "view": "보기",
     "failed": "동영상을 처리할 수 없습니다"
+  },
+  "loginStack": {
+    "tip": "DHB 팁",
+    "headlineTop": "모든 것을 소유하고",
+    "headlineAccent": "행복해질 거예요.",
+    "orContinueWith": "또는 다음으로 계속",
+    "phone": "전화",
+    "fingerprint": "지문",
+    "exploreFirst": "먼저 둘러보기",
+    "codeNote": "이메일로 코드를 보내드려요. 비밀번호는 필요 없어요."
   }
 }

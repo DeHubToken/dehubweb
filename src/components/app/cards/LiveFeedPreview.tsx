@@ -34,7 +34,13 @@ import { useLocation } from 'react-router-dom';
 import type Hls from 'hls.js';
 import { LiveEndedMedia } from './LiveEndedMedia';
 import { ButtonLoader } from '../DeHubLoader';
-import { liveSourceFromHlsUrl, whepEndpointFor } from '@/lib/live-ingest';
+import {
+  liveSourceFromHlsUrl,
+  whepEndpointFor,
+  isAacCopyUrl,
+  isBigEventPlayback,
+  BIG_EVENT_HLS_CONFIG,
+} from '@/lib/live-ingest';
 import type { WhepSubscription } from '@/lib/livepeer/whep';
 import { stashLiveSession } from '@/lib/live-handoff';
 import { Minimize, PictureInPicture2 } from "lucide-react";
@@ -133,11 +139,14 @@ export function LiveFeedPreview({ urls, thumbnail, className, fallbackLabel = 'L
   const src = urls.find((u): u is string => !!u && u.includes('.m3u8'));
   const source = useMemo(() => liveSourceFromHlsUrl(src), [src]);
   const selfHosted = source?.provider === 'mediamtx';
+  // A big event is HLS everywhere, the feed included — a WebRTC session per
+  // card is the per-viewer cost that mode exists to avoid.
+  const bigEvent = isBigEventPlayback(src);
 
   // One WebRTC attempt per card: the transport only ever moves whep → hls, so
   // a failure cannot trade the element back and forth with the ladder.
   const [transport, setTransport] = useState<'whep' | 'hls'>(
-    typeof RTCPeerConnection !== 'undefined' && !!source ? 'whep' : 'hls',
+    !bigEvent && typeof RTCPeerConnection !== 'undefined' && !!source ? 'whep' : 'hls',
   );
 
   // Only attach while the card is on screen. A feed can hold dozens of live
@@ -235,10 +244,11 @@ export function LiveFeedPreview({ urls, thumbnail, className, fallbackLabel = 'L
 
     const attach = async () => {
       // Native HLS is Safari's path, and it is the right one for a Livepeer
-      // stream (AAC audio). It is the WRONG one for the self-hosted ingest,
-      // whose ladder carries Opus: Safari cannot decode it and paints garbage
-      // rather than failing, so that combination is never attempted.
-      if (!selfHosted && el.canPlayType('application/vnd.apple.mpegurl')) {
+      // stream (AAC audio). It is the WRONG one for the self-hosted ingest's
+      // original ladder, which carries Opus: Safari cannot decode it and
+      // paints garbage rather than failing. The server's AAC copy — what a
+      // browser without Opus is handed — plays natively like Livepeer's.
+      if ((!selfHosted || isAacCopyUrl(src)) && el.canPlayType('application/vnd.apple.mpegurl')) {
         el.src = src;
       } else {
         const { default: HlsCtor } = await import('hls.js');
@@ -248,7 +258,11 @@ export function LiveFeedPreview({ urls, thumbnail, className, fallbackLabel = 'L
           if (!cancelled) setFailed(true);
           return;
         }
-        const hls = new HlsCtor({ lowLatencyMode: true, backBufferLength: 10 });
+        const hls = new HlsCtor({
+          lowLatencyMode: true,
+          backBufferLength: 10,
+          ...(bigEvent ? BIG_EVENT_HLS_CONFIG : {}),
+        });
         hlsRef.current = hls;
         hls.on(HlsCtor.Events.ERROR, (_, data) => {
           if (!data.fatal) return;
@@ -278,7 +292,7 @@ export function LiveFeedPreview({ urls, thumbnail, className, fallbackLabel = 'L
         el.load();
       });
     };
-  }, [transport, src, visible, postOpen, failed, selfHosted]);
+  }, [transport, src, visible, postOpen, failed, selfHosted, bigEvent]);
 
   if (!src) {
     return <LiveEndedMedia thumbnail={thumbnail} label={fallbackLabel} />;

@@ -1,4 +1,151 @@
 {
+  "mastodonApps": {
+    "authTitle": "Hyr me DeHub",
+    "authWants": "{{app}} do të përdorë llogarinë tënde DeHub",
+    "authSignedInAs": "I hyrë si {{name}}",
+    "authSignIn": "Hyr për të vazhduar",
+    "allow": "Lejo",
+    "cancel": "Anulo",
+    "scopeRead": "Të shohë kronologjitë, postimet, njoftimet dhe faqeshënuesit e tu",
+    "scopeWrite": "Të postojë, përgjigjet, pëlqejë, shpërndajë dhe ruajë në emrin tënd",
+    "scopeFollow": "Të ndjekë, ndalojë ndjekjen, bllokojë dhe heshtë llogari",
+    "scopePush": "Të të dërgojë njoftime",
+    "scopeProfile": "Të shohë profilin tënd",
+    "invalid": "Kjo lidhje hyrjeje nuk është e vlefshme. Kthehu te aplikacioni dhe provo sërish.",
+    "failed": "Nuk funksionoi. Provo sërish.",
+    "codeTitle": "Kopjo këtë kod në aplikacion për të përfunduar hyrjen.",
+    "copy": "Kopjo",
+    "copied": "U kopjua",
+    "seoDescription": "Lejo një aplikacion Mastodon të përdorë llogarinë tënde DeHub.",
+    "redirecting": "Po të kthejmë te {{app}}…",
+    "connectedTitle": "Aplikacionet e lidhura",
+    "connectedDescription": "Aplikacionet Mastodon ku ke hyrë me këtë llogari. Hiq një për ta nxjerrë.",
+    "connectedEmpty": "Ende nuk ka aplikacione të lidhura.",
+    "lastUsed": "Përdorur së fundi {{date}}",
+    "remove": "Hiq",
+    "removed": "Aplikacioni u hoq"
+  },
+  "fediverse": {
+    "title": "Fediverse",
+    "description": "Njerëzit në Mastodon dhe aplikacione të tjera fediverse mund të të gjejnë dhe të ndjekin në këtë adresë. Postimet e tua të reja publike u arrijnë atje.",
+    "copy": "Kopjo",
+    "copied": "U kopjua",
+    "privateNote": "Llogaritë private nuk shfaqen në fediverse.",
+    "noUsername": "Zgjidh një emër përdoruesi për të marrë një adresë fediverse."
+  },
+  "profileFields": {
+    "title": "Fushat e profilit",
+    "description": "Deri në katër rreshta shtesë në profilin tënd, si një faqe interneti ose përemrat e tu.",
+    "label": "Etiketa",
+    "content": "Përmbajtja",
+    "save": "Ruaj fushat",
+    "saved": "Fushat e profilit u ruajtën",
+    "failed": "Nuk u ruajt. Provo përsëri.",
+    "verified": "Lidhje e verifikuar",
+    "verifyHint": "Për të verifikuar një lidhje, shto këtë në atë faqe, pastaj ruaje përsëri: {{snippet}}"
+  },
+  "followedTags": {
+    "follow": "Ndiq #{{tag}}",
+    "following": "E ndjek",
+    "unfollow": "Mos e ndiq më #{{tag}}",
+    "followed": "Tani e ndjek #{{tag}}. Postimet e tij do të shfaqen te prurja Të ndjekurit.",
+    "unfollowed": "Nuk e ndjek më #{{tag}}",
+    "failed": "Nuk u ruajt. Provo përsëri.",
+    "clear": "Pastro"
+  },
+  "notificationFilters": {
+    "title": "Filtro njoftimet nga",
+    "description": "Zgjidh çfarë ndodh kur dikush jashtë rrethit tënd ndërvepron me ty. Njoftimet e filtruara presin te Të filtruara, pa distinktiv dhe pa njoftim push.",
+    "notFollowing": "Njerëz që nuk i ndjek",
+    "notFollowers": "Njerëz që nuk të ndjekin",
+    "newAccounts": "Llogari të reja (nën 30 ditë)",
+    "accept": "Më njofto",
+    "filter": "Filtro",
+    "drop": "Fshih plotësisht",
+    "filteredTitle": "Njoftime të filtruara",
+    "filteredEmpty": "Asgjë nuk është filtruar.",
+    "failed": "Nuk u ruajt. Provo përsëri."
+  },
+  "keywordFilters": {
+    "title": "Fjalë të heshtura",
+    "description": "Fshih postimet dhe komentet që përmbajnë këto fjalë, ose palosi pas një paralajmërimi. Vetëm ti e sheh këtë listë.",
+    "placeholder": "Fjalë ose frazë",
+    "add": "Hesht",
+    "added": "U hesht: {{phrase}}",
+    "wholeWord": "Vetëm fjala e plotë",
+    "whenMatches": "Kur një postim përputhet",
+    "warn": "Shfaq një paralajmërim",
+    "hide": "Fshihe",
+    "howLong": "Për sa kohë",
+    "forever": "Derisa ta heq",
+    "duration1h": "Për 1 orë",
+    "duration1d": "Për 1 ditë",
+    "duration7d": "Për 7 ditë",
+    "duration30d": "Për 30 ditë",
+    "where": "Ku",
+    "home": "Kreu",
+    "public": "Eksploro dhe kërko",
+    "profile": "Profilet",
+    "thread": "Bisedat",
+    "notifications": "Njoftimet",
+    "empty": "Nuk ke heshtur asnjë fjalë.",
+    "remove": "Hiq heshtjen",
+    "until": "Deri më {{date}}",
+    "filtered": "U filtrua: {{phrase}}",
+    "showAnyway": "Shfaqe gjithsesi",
+    "failed": "Nuk u ruajt. Provo përsëri."
+  },
+  "postVisibility": {
+    "label": "Kush mund ta shohë këtë",
+    "public": "Të gjithë",
+    "followers": "Vetëm ndjekësit",
+    "direct": "Vetëm personat e përmendur",
+    "noRepost": "Vetëm postimet publike mund të ripostohen",
+    "directHint": "Vetëm personat që përmend me @ do ta shohin këtë postim",
+    "needsMention": "Përmend të paktën një person me @ për të postuar vetëm për të përmendurit"
+  },
+  "replyPolicy": {
+    "label": "Kush mund të përgjigjet",
+    "public": "Kushdo",
+    "followers": "Ndjekësit e tu",
+    "following": "Njerëzit që ndjek",
+    "mentioned": "Vetëm të përmendurit",
+    "noticeFollowers": "Vetëm ndjekësit e autorit mund të përgjigjen",
+    "noticeFollowing": "Vetëm njerëzit që ndjek autori mund të përgjigjen",
+    "noticeMentioned": "Vetëm të përmendurit në postim mund të përgjigjen",
+    "refused": "Autori ka kufizuar se kush mund t'i përgjigjet këtij postimi"
+  },
+  "quotePolicy": {
+    "label": "Kush mund të citojë",
+    "public": "Kushdo",
+    "followers": "Ndjekësit",
+    "nobody": "Vetëm unë",
+    "off": "Autori i ka çaktivizuar citimet",
+    "removed": "Autori e hoqi postimin e tij nga ky citim",
+    "remove": "Hiq",
+    "removedToast": "Postimi yt u hoq nga ky citim",
+    "removeFailed": "Postimi yt nuk mund të hiqej nga citimi",
+    "refused": "Autori nuk të lejon ta citosh këtë postim"
+  },
+  "contentWarning": {
+    "label": "Paralajërim për përmbajtjen",
+    "placeholder": "Shkruaj paralajërimin këtu",
+    "add": "Shto paralajërim për përmbajtjen",
+    "remove": "Hiq paralajërimin për përmbajtjen",
+    "show": "Shfaq postimin"
+  },
+  "altText": {
+    "badge": "ALT",
+    "add": "Shto një përshkrim",
+    "edit": "Ndrysho përshkrimin",
+    "titleImage": "Përshkruaj këtë imazh",
+    "titleVideo": "Përshkruaj këtë video",
+    "help": "Për njerëzit që nuk mund ta shohin. Lexuesit e ekranit e lexojnë me zë.",
+    "placeholder": "Çfarë tregon? Përfshi çdo tekst që ka.",
+    "show": "Shfaq përshkrimin",
+    "saved": "Përshkrimi u ruajt",
+    "saveFailed": "Përshkrimi nuk mund të ruhej"
+  },
   "liveRecap": {
     "title": "Përmbledhje e rrjedhës",
     "justEnded": "Përmbledhja jote e rrjedhës",
@@ -113,6 +260,7 @@
     "heading": "Shkurtimëtra DeHub"
   },
   "settings": {
+    "usernameTaken": "Emri i përdoruesit është i zënë",
     "postingChain": "Blockchain për postimet",
     "showOnline": "Shfaq kur jam online",
     "showOnlineDesc": "Njerëzve që u dërgon mesazhe u shfaqet një pikë e gjelbër pranë emrit tënd ndërsa përdor DeHub",
@@ -239,6 +387,11 @@
       "hintDeny": "Sistemet AI dhe zvarritësit që respektojnë këtë sinjal u kërkohet të mos trajnohen në audio, vepra arti dhe shkrime. Zvarritësit që injorojnë sinjalin nuk bllokohen prej tij.",
       "saved": "Preferenca e trajnimit të AI u ruajt"
     },
+    "defaultFeed": "Furnizimi i parazgjedhur",
+    "defaultFeedDesc": "Zgjidh cili furnizim hapet sa herë që hap DeHub",
+    "feedToggles": "Rivendos filtrat e furnizimit",
+    "feedTogglesDesc": "Filtrat që aktivizon në një furnizim mbeten të parazgjedhurit e tu derisa t'i rivendosësh",
+    "feedTogglesCleared": "Filtrat e furnizimit u rivendosën",
     "defaultProfileTab": "Skeda e parazgjedhur e profilit",
     "defaultProfileTabDesc": "Zgjidh cilën skedë shohin të parën vizitorët në profilin tënd",
     "public": "Publik",
@@ -630,6 +783,9 @@
     "dmSent": "U dërguan {{amount}} tokena te {{name}}!"
   },
   "postOptions": {
+    "embed": "Ngulit",
+    "copyEmbedCode": "Kopjo kodin e ngulitjes",
+    "embedCodeCopied": "Kodi i ngulitjes u kopjua",
     "options": "Opsionet",
     "aiOverview": "Përmbledhje e AI",
     "sendTip": "Dërgo Bakshish",
@@ -657,7 +813,8 @@
     "unpinPost": "Hiqe nga profili yt",
     "postPinned": "Pinned në profilin tënd",
     "postUnpinned": "Shkëputur nga profili yt",
-    "pinFailed": "Nuk mund ta shënjoj ose çaktivizoj këtë postim"
+    "pinFailed": "Nuk mund ta shënjoj ose çaktivizoj këtë postim",
+    "copyFailed": "Lidhja nuk mund të kopjohej"
   },
   "filters": {
     "sort": "Rendit",
@@ -1975,6 +2132,8 @@
     "copyFailed": "Nuk u kopjua dot"
   },
   "profileOptions": {
+    "copyRssFeed": "Kopjo lidhjen e burimit RSS",
+    "rssFeedCopied": "Lidhja e burimit RSS u kopjua",
     "copyProfileUrl": "Kopjo URL-në e profilit",
     "copyUsername": "Kopjo emrin e përdoruesit",
     "copyAddress": "Kopjo adresën",
@@ -2276,6 +2435,7 @@
     "pendingSubmitted": "{{amount}} token të dorëzuar. Konfirmimi ende po kontrollohet. Mos e dërgoni përsëri."
   },
   "communities": {
+    "chatTab": "Biseda",
     "title": "Komunitetet",
     "create": "Krijo",
     "searchPlaceholder": "Kërko komunitete...",
@@ -2310,7 +2470,30 @@
     "addDescription": "Shto një përshkrim...",
     "communityDescription": "Përshkrimi i komunitetit...",
     "posts": "Postimet",
-    "chat": "Biseda",
+    "chat": {
+      "intervalHour": "1 orë",
+      "intervalHours": "{{count}} orë",
+      "intervalMinute": "1 minutë",
+      "intervalMinutes": "{{count}} minuta",
+      "intervalSecond": "1 sekondë",
+      "intervalSeconds": "{{count}} sekonda",
+      "muted": "Je i heshtur",
+      "mutedUntil": "Je i heshtur deri në {{until}}",
+      "postingDisabled": "Postimi është çaktivizuar për anëtarët këtu",
+      "pinnedGif": "GIF",
+      "pinnedMedia": "Media",
+      "jumpToPinned": "Kalo te mesazhi i mbërthyer",
+      "pinnedMessage": "Mesazh i koduar",
+      "unpin": "Çaktivizo",
+      "pin": "PIN",
+      "delete": "Fshi",
+      "slowMode": "Modaliteti i ngadaltë: një mesazh çdo {{interval}}",
+      "slowModeWait": "Modaliteti i ngadaltë — prit {{time}}",
+      "send": "Dërgo",
+      "deleteMessageTitle": "Dëshiron ta fshish këtë mesazh?",
+      "deleteMessageBody": "Kjo nuk mund të zhbëhet.",
+      "cancel": "Anulo"
+    },
     "membersTab": "Anëtarët ({{count}})",
     "about": "Rreth",
     "backToCommunities": "Komunitetet",
@@ -3774,6 +3957,7 @@
     "sellYourFractions": "Shitni fraksionet tuaja ({{held}} mbeten)"
   },
   "creator": {
+    "libraryEmpty": "Gjenerimet tuaja të ruajtura do të shfaqen këtu.",
     "whatToCreate": "Cfarë të krijoni",
     "startCreatingWith": "Fillo të krijosh me {{model}}",
     "studioSubtitle": "Përshkruaj një skenë, karakter, gjendje shpirtërore ose stil. Rezultatet ulen më poshtë dhe mbarten direkt në redaktor.",
@@ -5363,6 +5547,8 @@
     }
   },
   "goLive": {
+    "bigEvent": "Ngjarje e madhe",
+    "bigEventHint": "Për audienca të mëdha: shikuesit e shohin me rreth 20 sekonda vonesë, me më pak ndërprerje.",
     "goLive": "Shko Live",
     "youAreLive": "Jeni Live",
     "streamReady": "Stream Gati",
@@ -6165,7 +6351,10 @@
     "play": "Luaj",
     "pause": "Ndalo",
     "listens_one": "{{count}} dëgjo",
-    "listens_other": "{{count}} listens"
+    "listens_other": "{{count}} listens",
+    "lyrics": "Teksti i këngës",
+    "lyricsLoading": "Po kërkojmë tekstin…",
+    "lyricsNone": "Nuk u gjet tekst"
   },
   "converter": {
     "seoTitle": "Konvertuesi — importo një video në DeHub",
@@ -6681,6 +6870,7 @@
     "seoDescription": "Dokumentacioni zyrtar i DeHub: përmbledhje e platformës, dApps, ekonomia e tokenit tokena, staking, lojëra, plani i zhvillimit, pyetje të shpeshta dhe më shumë."
   },
   "dex": {
+    "title": "tokena / USD",
     "seoTitle": "DEX — Tregtoh tokena me çmimin tuaj",
     "seoDescription": "Vendosni çmimin tuaj të blerjes ose shitjes së tokena me një urdhër kufitar Uniswap v4 në Base ose BNB Chain. Libër urdhrash i drejtpërdrejtë, thellësi tregu dhe një çmim i përbashkët USD.",
     "venue": "Rrjeti",
@@ -6901,6 +7091,14 @@
     }
   },
   "editor": {
+    "video": {
+      "tFade": "Shkrirje",
+      "none": "Asnjë",
+      "transition": "Kalim",
+      "speed": "Shpejtësia",
+      "sound": "Tingull",
+      "video": "Video"
+    },
     "review": {
       "title": "Shqyrtimi i projektit",
       "shared": "Ndarë me ju",

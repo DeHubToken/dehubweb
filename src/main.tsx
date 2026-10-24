@@ -1,6 +1,7 @@
 import "./lib/storage-quota-guard"; // Must run first: keeps localStorage writable when it fills up.
 import "./lib/canvas-polyfills"; // Must run before any canvas usage (Safari 15 compat)
 import "./lib/media-session"; // Install page-close cleanup before any player mounts.
+import { seedDefaultFeedTab } from "./lib/feed-defaults";
 import { createRoot } from "react-dom/client";
 import { ErrorBoundary } from "./components/ErrorBoundary";
 import { recoverFromChunkError } from "./lib/lazy-with-retry";
@@ -96,6 +97,9 @@ window.addEventListener('vite:preloadError', () => {
 //   and its download is kicked at App's module evaluation, so this wait is
 //   normally a few milliseconds; a failure still renders (the retry / reload
 //   handling inside lazyWithRetry and the ErrorBoundary take it from there).
+// A fresh session opens on the viewer's default feed tab (Settings > Appearance).
+seedDefaultFeedTab();
+
 const render = () => {
   createRoot(document.getElementById("root")!).render(
     <ErrorBoundary>

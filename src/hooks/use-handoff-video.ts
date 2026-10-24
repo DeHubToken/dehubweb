@@ -8,6 +8,7 @@ import {
   subscribeHandoffVideo,
   takeHandoffVideo,
 } from '@/lib/video-handoff';
+import { clearVideoSource, setVideoSource, syncVideoLoad, videoSourceOf } from '@/lib/hls-vod';
 
 /**
  * Binds a card to the shared `<video>` element for a post (see lib/video-handoff).
@@ -25,6 +26,13 @@ export interface UseHandoffVideoOptions {
   handoffKey: string;
   /** Left undefined until the card decides the media may load. */
   src?: string;
+  /**
+   * The post's HLS master playlist, when it has one. Played instead of `src`
+   * where the browser can (lib/hls-vod), with `src` as the fallback.
+   */
+  hlsSrc?: string;
+  /** Start the ladder on its lowest rung: feed cards. */
+  startLow?: boolean;
   poster?: string;
   muted: boolean;
   loop: boolean;
@@ -43,6 +51,8 @@ export function useHandoffVideo({
   videoRef,
   handoffKey,
   src,
+  hlsSrc,
+  startLow = false,
   poster,
   muted,
   loop,
@@ -174,7 +184,9 @@ export function useHandoffVideo({
     syncedClaimRef.current = claimRef.current?.token ?? null;
 
     if (el.className !== className) el.className = className;
-    const adoptingLoaded = firstSync && !!el.getAttribute('src');
+    // "Has media" means what the card asked for — on an HLS ladder the src
+    // attribute is a blob: MediaSource, or absent while hls.js loads.
+    const adoptingLoaded = firstSync && !!videoSourceOf(el);
     if (!adoptingLoaded && el.muted !== muted) el.muted = muted;
     if (!adoptingLoaded && el.loop !== loop) el.loop = loop;
     if (el.preload !== preload) el.preload = preload;
@@ -184,16 +196,18 @@ export function useHandoffVideo({
       el.removeAttribute('poster');
     }
     if (src) {
-      if (el.getAttribute('src') !== src) el.src = src;
-    } else if (!firstSync && el.hasAttribute('src') && el.paused) {
+      // A no-op when the element already has this post's media; the hand-off
+      // must never restart a download.
+      setVideoSource(el, { src, hls: hlsSrc, startLow });
+      syncVideoLoad(el);
+    } else if (!firstSync && videoSourceOf(el) && el.paused) {
       // The card has scrolled out of range and wants the media detached again.
       // Only reachable while this card holds the element, so a post page reading
       // the same clip can never have the source pulled out from under it — and
       // dropping the attribute alone does not free the decoder, the load() does.
-      el.removeAttribute('src');
-      el.load();
+      clearVideoSource(el);
     }
-  }, [videoRef, handoffKey, className, muted, loop, preload, poster, src, claimVersion]);
+  }, [videoRef, handoffKey, className, muted, loop, preload, poster, src, hlsSrc, startLow, claimVersion]);
 
   /**
    * Take the element back from another card showing the same post. Points the

@@ -4,6 +4,7 @@ import { tokenLabel } from '@/lib/token-label';
 import { useState, useMemo, useRef, useCallback, useEffect } from 'react';
 import { SEOHead } from '@/components/SEOHead';
 import { getAiScrapingPreference } from '@/lib/ai-scraping';
+import { profileFeedUrl } from '@/lib/profile-feed-url';
 import { useTranslation } from 'react-i18next';
 
 import { Loader2 } from 'lucide-react';
@@ -39,7 +40,7 @@ import { ImageCard } from '@/components/app/cards/ImageCard';
 import { VideoCard } from '@/components/app/cards/VideoCard';
 import { formatTimeAgo, formatViews } from '@/lib/feed-utils';
 import { resolveViewCount } from '@/lib/engagement';
-import { buildAvatarUrl, extractAvatarPath, buildImageUrl, buildFeedImageUrls, buildVideoUrl } from '@/lib/media-url';
+import { buildAvatarUrl, extractAvatarPath, buildImageUrl, buildFeedImageUrls, buildVideoUrl, buildHlsUrl } from '@/lib/media-url';
 import { ProfileHeader } from '@/components/app/profile/ProfileHeader';
 import { ProfileTabContent } from '@/components/app/profile/ProfileTabContent';
 import { ProfileContentToolbar } from '@/components/app/profile/ProfileContentToolbar';
@@ -154,6 +155,7 @@ function PinnedPostItem({ pin }: { pin: any }) {
           id: String(post.tokenId), type: 'video',
           thumbnail: buildImageUrl(post.tokenId, post.imageUrl) || '/placeholder.svg',
           videoUrl: buildVideoUrl(post.tokenId),
+          hlsUrl: buildHlsUrl(post.hlsUrl),
           title: post.title || post.name || '',
           channel: post.minterDisplayName || post.minterUsername || creatorObj?.display_name || 'Unknown',
           channelAvatar: avatar, verified: false,
@@ -568,6 +570,7 @@ export default function ProfilePage() {
         description={data.profile?.bio || _copy("copy.11ef7a60f50a", { defaultValue: "View {{value1}} on DeHub", value1: data.profile?.name || data.profile?.handle || _copy("copy.f119e4acc42e", { defaultValue: "this profile" }) })}
         url={`https://dehub.io/${(data.profile?.handle || '').replace(/^@/, '')}`}
         aiScraping={data.profile ? getAiScrapingPreference(data.profile.customs) : undefined}
+        feed={data.profile?.handle && !data.isTargetPrivate ? { url: profileFeedUrl(data.profile.handle) } : undefined}
         jsonLd={{
           '@context': 'https://schema.org',
           '@type': 'Person',

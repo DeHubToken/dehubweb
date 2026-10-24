@@ -1,12 +1,12 @@
 // Simple call notification system - bypass all the complex polling
-import { supabase } from '@/integrations/supabase/client';
+import { walletScopedClient } from '@/lib/supabase-wallet-client';
 
 export const simpleCallCheck = async (userAddress: string) => {
   
   try {
     // Check for any ringing calls for this user. Stored addresses are
     // lower-case and the wallet can arrive checksummed, so lower it here.
-    const { data: calls, error } = await supabase
+    const { data: calls, error } = await walletScopedClient(userAddress)
       .from('call_sessions')
       .select('id,caller_address,recipient_address,status,call_type,created_at')
       .eq('recipient_address', userAddress.toLowerCase())
@@ -47,11 +47,11 @@ export const testCallDetection = async (userAddress: string) => {
 };
 
 // Function to check all recent call sessions
-export const debugAllCalls = async () => {
+export const debugAllCalls = async (userAddress: string) => {
   console.log('🔍 Debugging all call sessions...');
   
   try {
-    const { data: allCalls, error } = await supabase
+    const { data: allCalls, error } = await walletScopedClient(userAddress)
       .from('call_sessions')
       .select('*')
       .order('created_at', { ascending: false })

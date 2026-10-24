@@ -1,4 +1,151 @@
 {
+  "mastodonApps": {
+    "authTitle": "Entrar com DeHub",
+    "authWants": "{{app}} quer usar sua conta DeHub",
+    "authSignedInAs": "Conectado como {{name}}",
+    "authSignIn": "Entre para continuar",
+    "allow": "Permitir",
+    "cancel": "Cancelar",
+    "scopeRead": "Ver suas linhas do tempo, publicações, notificações e itens salvos",
+    "scopeWrite": "Publicar, responder, curtir, impulsionar e salvar em seu nome",
+    "scopeFollow": "Seguir, deixar de seguir, bloquear e silenciar contas",
+    "scopePush": "Enviar notificações para você",
+    "scopeProfile": "Ver seu perfil",
+    "invalid": "Este link de entrada não é válido. Volte ao app e tente de novo.",
+    "failed": "Não deu certo. Tente de novo.",
+    "codeTitle": "Copie este código no app para terminar de entrar.",
+    "copy": "Copiar",
+    "copied": "Copiado",
+    "seoDescription": "Deixe um app do Mastodon usar sua conta DeHub.",
+    "redirecting": "Levando você de volta para {{app}}…",
+    "connectedTitle": "Apps conectados",
+    "connectedDescription": "Apps do Mastodon em que você entrou com esta conta. Remova um para desconectá-lo.",
+    "connectedEmpty": "Nenhum app conectado ainda.",
+    "lastUsed": "Último uso {{date}}",
+    "remove": "Remover",
+    "removed": "App removido"
+  },
+  "fediverse": {
+    "title": "Fediverso",
+    "description": "Pessoas no Mastodon e em outros apps do fediverso podem encontrar e seguir você neste endereço. Suas novas publicações públicas chegam a elas lá.",
+    "copy": "Copiar",
+    "copied": "Copiado",
+    "privateNote": "Contas privadas não aparecem no fediverso.",
+    "noUsername": "Escolha um nome de usuário para ter um endereço no fediverso."
+  },
+  "profileFields": {
+    "title": "Campos do perfil",
+    "description": "Até quatro linhas extras no seu perfil, como um site ou seus pronomes.",
+    "label": "Rótulo",
+    "content": "Conteúdo",
+    "save": "Salvar campos",
+    "saved": "Campos do perfil salvos",
+    "failed": "Não foi salvo. Tente de novo.",
+    "verified": "Link verificado",
+    "verifyHint": "Para verificar um link, adicione isto àquela página e salve de novo: {{snippet}}"
+  },
+  "followedTags": {
+    "follow": "Seguir #{{tag}}",
+    "following": "Seguindo",
+    "unfollow": "Deixar de seguir #{{tag}}",
+    "followed": "Agora você segue #{{tag}}. As publicações aparecerão no seu feed Seguindo.",
+    "unfollowed": "Você deixou de seguir #{{tag}}",
+    "failed": "Não foi salvo. Tente de novo.",
+    "clear": "Limpar"
+  },
+  "notificationFilters": {
+    "title": "Filtrar notificações de",
+    "description": "Escolha o que acontece quando alguém fora do seu círculo interage com você. As notificações filtradas ficam em Filtradas, sem selo e sem notificação push.",
+    "notFollowing": "Pessoas que você não segue",
+    "notFollowers": "Pessoas que não seguem você",
+    "newAccounts": "Contas novas (menos de 30 dias)",
+    "accept": "Me avisar",
+    "filter": "Filtrar",
+    "drop": "Ocultar totalmente",
+    "filteredTitle": "Notificações filtradas",
+    "filteredEmpty": "Nada foi filtrado.",
+    "failed": "Não foi salvo. Tente de novo."
+  },
+  "keywordFilters": {
+    "title": "Palavras silenciadas",
+    "description": "Oculte publicações e comentários com estas palavras ou dobre-os atrás de um aviso. Só você vê esta lista.",
+    "placeholder": "Palavra ou frase",
+    "add": "Silenciar",
+    "added": "Silenciada: {{phrase}}",
+    "wholeWord": "Só a palavra inteira",
+    "whenMatches": "Quando uma publicação corresponde",
+    "warn": "Mostrar um aviso",
+    "hide": "Ocultar",
+    "howLong": "Por quanto tempo",
+    "forever": "Até eu remover",
+    "duration1h": "Por 1 hora",
+    "duration1d": "Por 1 dia",
+    "duration7d": "Por 7 dias",
+    "duration30d": "Por 30 dias",
+    "where": "Onde",
+    "home": "Início",
+    "public": "Explorar e pesquisar",
+    "profile": "Perfis",
+    "thread": "Conversas",
+    "notifications": "Notificações",
+    "empty": "Você não silenciou nenhuma palavra.",
+    "remove": "Deixar de silenciar",
+    "until": "Até {{date}}",
+    "filtered": "Filtrado: {{phrase}}",
+    "showAnyway": "Mostrar mesmo assim",
+    "failed": "Não foi salvo. Tente de novo."
+  },
+  "postVisibility": {
+    "label": "Quem pode ver isto",
+    "public": "Todos",
+    "followers": "Só seguidores",
+    "direct": "Só pessoas mencionadas",
+    "noRepost": "Só publicações públicas podem ser republicadas",
+    "directHint": "Só as pessoas que você mencionar com @ verão esta publicação",
+    "needsMention": "Mencione pelo menos uma pessoa com @ para publicar só para as pessoas mencionadas"
+  },
+  "replyPolicy": {
+    "label": "Quem pode responder",
+    "public": "Qualquer pessoa",
+    "followers": "Seus seguidores",
+    "following": "Pessoas que você segue",
+    "mentioned": "Só mencionados",
+    "noticeFollowers": "Só seguidores do autor podem responder",
+    "noticeFollowing": "Só pessoas que o autor segue podem responder",
+    "noticeMentioned": "Só pessoas mencionadas na publicação podem responder",
+    "refused": "O autor limitou quem pode responder a esta publicação"
+  },
+  "quotePolicy": {
+    "label": "Quem pode citar",
+    "public": "Qualquer pessoa",
+    "followers": "Seguidores",
+    "nobody": "Só eu",
+    "off": "O autor desativou as citações",
+    "removed": "O autor removeu a publicação desta citação",
+    "remove": "Remover",
+    "removedToast": "Sua publicação foi removida desta citação",
+    "removeFailed": "Não foi possível remover sua publicação da citação",
+    "refused": "O autor não permite que você cite esta publicação"
+  },
+  "contentWarning": {
+    "label": "Aviso de conteúdo",
+    "placeholder": "Escreva seu aviso aqui",
+    "add": "Adicionar aviso de conteúdo",
+    "remove": "Remover aviso de conteúdo",
+    "show": "Mostrar publicação"
+  },
+  "altText": {
+    "badge": "ALT",
+    "add": "Adicionar descrição",
+    "edit": "Editar descrição",
+    "titleImage": "Descreva esta imagem",
+    "titleVideo": "Descreva este vídeo",
+    "help": "Para quem não consegue vê-la. Leitores de tela a leem em voz alta.",
+    "placeholder": "O que ela mostra? Inclua qualquer texto que apareça.",
+    "show": "Mostrar descrição",
+    "saved": "Descrição salva",
+    "saveFailed": "Não foi possível salvar a descrição"
+  },
   "liveRecap": {
     "title": "Recapitulação do fluxo",
     "justEnded": "Recapitulação da sua transmissão",
@@ -113,11 +260,12 @@
     "heading": "Curtas do DeHub"
   },
   "settings": {
-    "showDislikesDesc": "Qualquer pessoa pode abrir a aba «Não gostei» do seu perfil. Desativado, só você pode ver.",
-    "showDislikes": "Mostrar meus «não gostei» para todos",
+    "usernameTaken": "Nome de usuário em uso",
     "postingChain": "Blockchain das publicações",
     "showOnline": "Mostrar quando estou online",
     "showOnlineDesc": "As pessoas que você envia mensagens veem um ponto verde ao lado do seu nome enquanto usa o DeHub",
+    "showDislikes": "Mostrar meus «não gostei» para todos",
+    "showDislikesDesc": "Qualquer pessoa pode abrir a aba «Não gostei» do seu perfil. Desativado, só você pode ver.",
     "smartReplies": "Respostas sugeridas",
     "smartRepliesDesc": "Escreve duas respostas em que podes tocar num chat. O × nas sugestões desativa isto.",
     "title": "Configurações",
@@ -241,6 +389,11 @@
       "hintDeny": "Os sistemas de IA e rastreadores que respeitam esse sinal são solicitados a não treinar em seu áudio, arte e escrita. Os rastreadores que ignoram o sinal não são bloqueados por ele.",
       "saved": "Preferência de formação em IA guardada"
     },
+    "defaultFeed": "Feed padrão",
+    "defaultFeedDesc": "Escolha qual feed abre sempre que você abrir o DeHub",
+    "feedToggles": "Redefinir filtros do feed",
+    "feedTogglesDesc": "Os filtros que você ativa em um feed ficam como padrão até você redefini-los",
+    "feedTogglesCleared": "Filtros do feed redefinidos",
     "defaultProfileTab": "Separador de perfil padrão",
     "defaultProfileTabDesc": "Escolha que separador os visitantes veem primeiro no seu perfil",
     "public": "Público",
@@ -634,6 +787,9 @@
     "dmSent": "{{amount}} tokens enviados para {{name}}!"
   },
   "postOptions": {
+    "embed": "Incorporar",
+    "copyEmbedCode": "Copiar código de incorporação",
+    "embedCodeCopied": "Código de incorporação copiado",
     "options": "Opções",
     "aiOverview": "AI overview",
     "sendTip": "Enviar gorjeta",
@@ -661,7 +817,8 @@
     "unpinPost": "Desafixar do seu perfil",
     "postPinned": "Fixado no seu perfil",
     "postUnpinned": "Desafixado do seu perfil",
-    "pinFailed": "Não foi possível fixar ou desafixar este post"
+    "pinFailed": "Não foi possível fixar ou desafixar este post",
+    "copyFailed": "Não foi possível copiar o link"
   },
   "filters": {
     "sort": "Ordenar",
@@ -1401,7 +1558,6 @@
     "returnHome": "Voltar ao início"
   },
   "profile": {
-    "dislikes": { "loadMore": "Carregar mais", "privateDesc": "Esta conta mantém seus «não gostei» só para si.", "privateTitle": "Os «não gostei» são privados", "emptyOther": "Nada marcado com «não gostei» ainda.", "emptyOwn": "Publicações de que você não gosta saem dos seus feeds e aparecem aqui. Desfaça o «não gostei» para trazer a publicação de volta.", "emptyTitle": "Nenhum «não gostei» ainda" },
     "back": "Voltar",
     "usernameAvailable": "Nome disponível!",
     "signUpToClaim": "Cadastre-se para reivindicar",
@@ -1429,8 +1585,16 @@
       "commentUnavailable": "Este comentário já não está disponível"
     },
     "tabs": {
-      "dislikes": "Não gostei",
-      "playlists": "Playlists"
+      "playlists": "Playlists",
+      "dislikes": "Não gostei"
+    },
+    "dislikes": {
+      "emptyTitle": "Nenhum «não gostei» ainda",
+      "emptyOwn": "Publicações de que você não gosta saem dos seus feeds e aparecem aqui. Desfaça o «não gostei» para trazer a publicação de volta.",
+      "emptyOther": "Nada marcado com «não gostei» ainda.",
+      "privateTitle": "Os «não gostei» são privados",
+      "privateDesc": "Esta conta mantém seus «não gostei» só para si.",
+      "loadMore": "Carregar mais"
     },
     "offerWorthNow": "Cerca de {{amount}} tokens na taxa atual",
     "offerNotePlaceholder": "Adiciona uma nota (opcional)",
@@ -1987,6 +2151,8 @@
     "copyFailed": "Não foi possível copiar"
   },
   "profileOptions": {
+    "copyRssFeed": "Copiar link do feed RSS",
+    "rssFeedCopied": "Link do feed RSS copiado",
     "copyProfileUrl": "Copiar URL do perfil",
     "copyUsername": "Copiar nome de utilizador",
     "copyAddress": "Copiar endereço",
@@ -2288,6 +2454,7 @@
     "pendingSubmitted": "{{amount}} tokens enviados. A confirmação ainda está sendo verificada. Não envie novamente."
   },
   "communities": {
+    "chatTab": "Chat",
     "title": "Comunidades",
     "create": "Criar",
     "searchPlaceholder": "Buscar comunidades...",
@@ -2322,7 +2489,30 @@
     "addDescription": "Adicione uma descrição...",
     "communityDescription": "Descrição da comunidade...",
     "posts": "Publicações",
-    "chat": "Chat",
+    "chat": {
+      "intervalHour": "1 hora",
+      "intervalHours": "{{count}} horas",
+      "intervalMinute": "1 minuto",
+      "intervalMinutes": "{{count}} minutos",
+      "intervalSecond": "1 segundo",
+      "intervalSeconds": "{{count}} segundos",
+      "muted": "Está silenciado",
+      "mutedUntil": "Está silenciado até {{until}}",
+      "postingDisabled": "A publicação está desativada para membros aqui",
+      "pinnedGif": "GIF",
+      "pinnedMedia": "Media",
+      "jumpToPinned": "Ir para a mensagem fixada",
+      "pinnedMessage": "Mensagem fixada",
+      "unpin": "Desafixar",
+      "pin": "PIN",
+      "delete": "Eliminar",
+      "slowMode": "Modo lento: uma mensagem a cada {{interval}}",
+      "slowModeWait": "Modo lento — aguarde {{time}}",
+      "send": "Enviar",
+      "deleteMessageTitle": "Excluir esta mensagem?",
+      "deleteMessageBody": "Isso não pode ser desfeito.",
+      "cancel": "Cancelar"
+    },
     "membersTab": "Membros ({{count}})",
     "about": "Sobre",
     "backToCommunities": "Comunidades",
@@ -3789,6 +3979,7 @@
     "sellYourFractions": "Venda suas frações ({{held}} mantidas)"
   },
   "creator": {
+    "libraryEmpty": "Suas gerações salvas aparecerão aqui.",
     "whatToCreate": "O que criar",
     "startCreatingWith": "Comece a criar com {{model}}",
     "studioSubtitle": "Descreva uma cena, personagem, clima ou estilo. Os resultados aparecem abaixo e vão direto para o editor.",
@@ -5383,6 +5574,8 @@
     }
   },
   "goLive": {
+    "bigEvent": "Grande evento",
+    "bigEventHint": "Para grandes públicos: os espectadores assistem com cerca de 20 segundos de atraso, com menos interrupções.",
     "goLive": "Ir ao Vivo",
     "youAreLive": "Você está ao Vivo",
     "streamReady": "Stream Pronto",
@@ -6188,7 +6381,10 @@
     "play": "Reproduzir",
     "pause": "Pausar",
     "listens_one": "{{count}} reprodução",
-    "listens_other": "{{count}} reproduções"
+    "listens_other": "{{count}} reproduções",
+    "lyrics": "Letra",
+    "lyricsLoading": "Buscando a letra…",
+    "lyricsNone": "Nenhuma letra encontrada"
   },
   "converter": {
     "seoTitle": "Conversor — importar um vídeo para DeHub",
@@ -6705,6 +6901,7 @@
     "seoDescription": "Documentação oficial do DeHub: visão geral da plataforma, dApps, economia do token tokens, staking, jogos, roteiro, FAQ e mais."
   },
   "dex": {
+    "title": "tokens / USD",
     "seoTitle": "DEX — Negocie tokens pelo seu preço",
     "seoDescription": "Defina seu preço de compra ou venda de tokens com uma ordem limite do Uniswap v4 na Base ou BNB Chain. Livro de ofertas ao vivo, profundidade de mercado e um preço compartilhado em USD.",
     "venue": "Rede",
@@ -6927,6 +7124,14 @@
     }
   },
   "editor": {
+    "video": {
+      "tFade": "Dissolver",
+      "none": "Nenhuma",
+      "transition": "Transição",
+      "speed": "Velocidade",
+      "sound": "Som",
+      "video": "Vídeo"
+    },
     "review": {
       "title": "Revisão do projeto",
       "shared": "Partilhado consigo",
@@ -8713,5 +8918,15 @@
     "posted": "Publicado",
     "view": "Ver",
     "failed": "Não foi possível processar o vídeo"
+  },
+  "loginStack": {
+    "tip": "Gorjeta em DHB",
+    "headlineTop": "Você vai ter tudo",
+    "headlineAccent": "e ser feliz.",
+    "orContinueWith": "ou continue com",
+    "phone": "Telefone",
+    "fingerprint": "Digital",
+    "exploreFirst": "Explorar primeiro",
+    "codeNote": "Enviamos um código por e-mail, sem senha."
   }
 }

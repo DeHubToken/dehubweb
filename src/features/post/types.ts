@@ -36,6 +36,8 @@ export interface MediaFile {
   cropSettings?: CropSettings;
   trimStart?: number;
   trimEnd?: number;
+  /** Alt text: what the image or video shows, for people who cannot see it. */
+  description?: string;
 }
 
 /**
@@ -78,6 +80,14 @@ export interface PostFormState {
   tokenAmount: string;
   liveMode: LiveMode;
   poll: PollData | null;
+  /** The content warning being written; null when the post has none. */
+  contentWarning: string | null;
+  /** Who may quote the post. */
+  quotePolicy: import('@/lib/api/dehub/types').QuotePolicy;
+  /** Who may reply to the post. */
+  replyPolicy: import('@/lib/api/dehub/types').ReplyPolicy;
+  /** Who may see the post. Fixed once it is posted. */
+  visibility: import('@/lib/api/dehub/types').PostVisibility;
   isEnhancing: boolean;
   isPosting: boolean;
   uploadProgress: number; // 0–100 stage-based progress
@@ -104,6 +114,10 @@ export interface PostFormActions {
   setTokenAmount: (value: string) => void;
   setLiveMode: (value: LiveMode) => void;
   setPoll: import('@/hooks/use-draft-state').DraftSetter<PollData | null>;
+  setContentWarning: (value: string | null) => void;
+  setQuotePolicy: (value: import('@/lib/api/dehub/types').QuotePolicy) => void;
+  setReplyPolicy: (value: import('@/lib/api/dehub/types').ReplyPolicy) => void;
+  setVisibility: (value: import('@/lib/api/dehub/types').PostVisibility) => void;
   handleImageSelect: (e: React.ChangeEvent<HTMLInputElement>) => void;
   handleVideoSelect: (e: React.ChangeEvent<HTMLInputElement>) => Promise<void>;
   handleAudioSelect: (e: React.ChangeEvent<HTMLInputElement>) => void;
@@ -121,6 +135,8 @@ export interface PostFormActions {
   clearCropFromMedia: (index: number) => void;
   applyTrimToMedia: (index: number, trimStart: number, trimEnd: number) => void;
   replaceImageFile: (index: number, file: File) => void;
+  /** Alt text for one attached image or video; blank clears it. */
+  setMediaDescription: (index: number, description: string) => void;
   handleEnhanceWithAI: (mode?: 'spellcheck' | 'grammar' | 'style', style?: string) => Promise<void>;
   insertFormatting: (format: 'bold' | 'italic' | 'mention') => void;
   handlePost: (extra?: { soundtrackTag?: string; articleBody?: string; articleImage?: File; socialImage?: File }) => void;

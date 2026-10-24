@@ -238,6 +238,24 @@ export interface AccountNotificationPreferences {
   smsScope?: string;
   inApp?: Partial<Record<NotificationKey, boolean>>;
   push?: Partial<Record<NotificationKey, boolean>>;
+  /**
+   * Who may reach the reader at all (dehub-stream-backend
+   * src/notification/notification-policy). Absent keys mean "accept".
+   */
+  policy?: Partial<Record<NotificationPolicyKey, NotificationPolicyValue>>;
+}
+
+export type NotificationPolicyKey = 'notFollowing' | 'notFollowers' | 'newAccounts';
+export type NotificationPolicyValue = 'accept' | 'filter' | 'drop';
+
+/** Set what happens to notifications from one group of accounts. */
+export async function updateNotificationPolicy(
+  key: NotificationPolicyKey,
+  value: NotificationPolicyValue,
+): Promise<{ result: boolean }> {
+  return updateProfile({
+    notificationPreferences: JSON.stringify({ policy: { [key]: value } }),
+  });
 }
 
 /**

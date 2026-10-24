@@ -1,4 +1,151 @@
 {
+  "mastodonApps": {
+    "authTitle": "Ku gal DeHub",
+    "authWants": "{{app}} wuxuu rabaa inuu isticmaalo akoonkaaga DeHub",
+    "authSignedInAs": "Waxaad u gashay sida {{name}}",
+    "authSignIn": "Gal si aad u sii wadato",
+    "allow": "Oggolow",
+    "cancel": "Jooji",
+    "scopeRead": "Arag jadwaladaada, qoraalladaada, ogeysiisyadaada iyo calaamadahaaga",
+    "scopeWrite": "Qoraal dhig, ka jawaab, jeclow, faafi oo calaamadee adiga oo kale",
+    "scopeFollow": "Raac, jooji raacitaanka, xannib oo aamusii akoonnada",
+    "scopePush": "Kuu dir ogeysiisyo",
+    "scopeProfile": "Arag astaantaada",
+    "invalid": "Xiriirkan galitaanku ma saxna. Ku noqo app-ka oo isku day mar kale.",
+    "failed": "Ma shaqayn. Isku day mar kale.",
+    "codeTitle": "Koobi koodhkan oo geli app-ka si aad u dhammaystirto galitaanka.",
+    "copy": "Koobbi",
+    "copied": "Waa la koobiyeeyay",
+    "seoDescription": "U oggolow app Mastodon ah inuu isticmaalo akoonkaaga DeHub.",
+    "redirecting": "Waxaan kugu celinaynaa {{app}}…",
+    "connectedTitle": "Apps-ka ku xiran",
+    "connectedDescription": "Apps-ka Mastodon ee aad ku gashay akoonkan. Ka saar mid si aad uga baxdo.",
+    "connectedEmpty": "Weli ma jiraan apps ku xiran.",
+    "lastUsed": "Markii ugu dambeysay la isticmaalay {{date}}",
+    "remove": "Ka saar",
+    "removed": "App-ka waa la saaray"
+  },
+  "fediverse": {
+    "title": "Fediverse",
+    "description": "Dadka ku jira Mastodon iyo apps-ka kale ee fediverse waxay kugu heli karaan oo ku raaci karaan cinwaankan. Qoraalladaada cusub ee guud halkaas ayay ku gaaraan.",
+    "copy": "Koobbi",
+    "copied": "Waa la koobiyeeyay",
+    "privateNote": "Akoonnada gaarka ah laguma muujiyo fediverse.",
+    "noUsername": "Dooro magac isticmaale si aad u hesho cinwaan fediverse."
+  },
+  "profileFields": {
+    "title": "Meelaha astaanta",
+    "description": "Ilaa afar sadar oo dheeraad ah oo astaantaada ku jira, sida bog internet ama magac-u-yaalladaada.",
+    "label": "Calaamad",
+    "content": "Nuxurka",
+    "save": "Kaydi meelaha",
+    "saved": "Meelaha astaanta waa la kaydiyay",
+    "failed": "Lama kaydin. Isku day mar kale.",
+    "verified": "Xiriir la xaqiijiyay",
+    "verifyHint": "Si aad u xaqiijiso xiriir, kan ku dar boggaas, kadibna mar kale kaydi: {{snippet}}"
+  },
+  "followedTags": {
+    "follow": "Raac #{{tag}}",
+    "following": "Waad raacaysaa",
+    "unfollow": "Jooji raacitaanka #{{tag}}",
+    "followed": "Hadda waxaad raacaysaa #{{tag}}. Qoraalladiisa waxay ka soo muuqan doonaan quudinta aad raacdo.",
+    "unfollowed": "Waad joojisay raacitaanka #{{tag}}",
+    "failed": "Lama kaydin. Isku day mar kale.",
+    "clear": "Nadiifi"
+  },
+  "notificationFilters": {
+    "title": "Ka sifee ogeysiisyada",
+    "description": "Dooro waxa dhacaya marka qof ka baxsan goobaabintaada uu kula macaamilo. Ogeysiisyada la sifeeyay waxay sugaan \"La sifeeyay\" hoostiisa, calaamad iyo riixid la'aan.",
+    "notFollowing": "Dadka aadan raacin",
+    "notFollowers": "Dadka aan ku raacin",
+    "newAccounts": "Akoonnada cusub (ka yar 30 maalmood)",
+    "accept": "I ogeysii",
+    "filter": "Sifee",
+    "drop": "Gebi ahaanba qari",
+    "filteredTitle": "Ogeysiisyada la sifeeyay",
+    "filteredEmpty": "Waxba lama sifeyn.",
+    "failed": "Lama kaydin. Isku day mar kale."
+  },
+  "keywordFilters": {
+    "title": "Erayada la aamusiyay",
+    "description": "Qari qoraallada iyo faallooyinka ay ku jiraan erayadan, ama ku laab digniin gadaasheed. Adiga keliya ayaa arka liiskan.",
+    "placeholder": "Eray ama weedh",
+    "add": "Aamusi",
+    "added": "La aamusiyay: {{phrase}}",
+    "wholeWord": "Eray dhammaystiran oo keliya",
+    "whenMatches": "Marka qoraal uu u dhigmo",
+    "warn": "Tus digniin",
+    "hide": "Qari",
+    "howLong": "Muddo intee le'eg",
+    "forever": "Ilaa aan ka saaro",
+    "duration1h": "Muddo 1 saac ah",
+    "duration1d": "Muddo 1 maalin ah",
+    "duration7d": "Muddo 7 maalmood ah",
+    "duration30d": "Muddo 30 maalmood ah",
+    "where": "Xagee",
+    "home": "Hoyga",
+    "public": "Sahan iyo raadin",
+    "profile": "Astaamaha",
+    "thread": "Wada sheekaysiyada",
+    "notifications": "Ogeysiisyada",
+    "empty": "Wax eray ah ma aadan aamusin.",
+    "remove": "Ka qaad aamusinta",
+    "until": "Ilaa {{date}}",
+    "filtered": "La sifeeyay: {{phrase}}",
+    "showAnyway": "Tus si kastaba",
+    "failed": "Lama kaydin. Isku day mar kale."
+  },
+  "postVisibility": {
+    "label": "Yaa arki kara tan",
+    "public": "Qof walba",
+    "followers": "Kaliya kuwa ku raaca",
+    "direct": "Kaliya dadka la xusay",
+    "noRepost": "Kaliya qoraallada guud ayaa dib loo daabici karaa",
+    "directHint": "Kaliya dadka aad @ ku xusto ayaa arki doona qoraalkan",
+    "needsMention": "Ku xus ugu yaraan hal qof @ si aad ugu daabacdo dadka la xusay oo kaliya"
+  },
+  "replyPolicy": {
+    "label": "Yaa jawaabi kara",
+    "public": "Qof kasta",
+    "followers": "Kuwa ku raaca",
+    "following": "Dadka aad raacdo",
+    "mentioned": "Kuwa la xusay keliya",
+    "noticeFollowers": "Kuwa raaca qoraaga keliya ayaa jawaabi kara",
+    "noticeFollowing": "Dadka uu qoraagu raaco keliya ayaa jawaabi kara",
+    "noticeMentioned": "Dadka lagu xusay qoraalka keliya ayaa jawaabi kara",
+    "refused": "Qoraagu wuxuu xaddiday cidda ka jawaabi karta qoraalkan"
+  },
+  "quotePolicy": {
+    "label": "Yaa soo xigan kara",
+    "public": "Qof kasta",
+    "followers": "Kuwa ku raaca",
+    "nobody": "Aniga keliya",
+    "off": "Qoraagu wuu damiyay soo xigashada",
+    "removed": "Qoraagu wuxuu qoraalkiisa ka saaray soo xigashadan",
+    "remove": "Ka saar",
+    "removedToast": "Qoraalkaaga waa laga saaray soo xigashadan",
+    "removeFailed": "Lama saari karin qoraalkaaga soo xigashada",
+    "refused": "Qoraagu kuma oggola inaad soo xigato qoraalkan"
+  },
+  "contentWarning": {
+    "label": "Digniinta waxa ku jira",
+    "placeholder": "Halkan ku qor digniintaada",
+    "add": "Ku dar digniinta waxa ku jira",
+    "remove": "Ka saar digniinta waxa ku jira",
+    "show": "Muuji qoraalka"
+  },
+  "altText": {
+    "badge": "ALT",
+    "add": "Ku dar sharraxaad",
+    "edit": "Wax ka beddel sharraxaadda",
+    "titleImage": "Sharax sawirkan",
+    "titleVideo": "Sharax muuqaalkan",
+    "help": "Dadka aan arki karin. Akhristayaasha shaashaddu kor ayay u akhriyaan.",
+    "placeholder": "Maxay muujinaysaa? Ku dar qoraal kasta oo ku jira.",
+    "show": "Muuji sharraxaadda",
+    "saved": "Sharraxaadda waa la keydiyay",
+    "saveFailed": "Lama keydin karin sharraxaadda"
+  },
   "liveRecap": {
     "title": "Dib-u-cusboonaysiinta qulqulka",
     "justEnded": "Dib u soo celi durdurkaaga",
@@ -113,6 +260,7 @@
     "heading": "DeHub Gaagaaban"
   },
   "settings": {
+    "usernameTaken": "Magaca isticmaalaha waa la qaatay",
     "postingChain": "Blockchain-ka qoraallada",
     "showOnline": "Muuji marka aan ku jiro internetka",
     "showOnlineDesc": "Dadka aad fariin u aragto dhibic cagaaran oo ku xiga magacaaga inta aad isticmaaleyso DeHub",
@@ -239,6 +387,11 @@
       "hintDeny": "Nidaamyada AI iyo crawlers ixtiraamaya calaamadan waxaa laga codsanayaa inaysan ku tababarin maqalkaaga, farshaxankaaga iyo qoraaga. Crawlers oo iska indho tiraya calaamadda looma xannibo.",
       "saved": "Doorbididda tababarka AI ee la badbaadiyay"
     },
+    "defaultFeed": "Feed-ka caadiga ah",
+    "defaultFeedDesc": "Dooro feed-ka furmaya mar kasta oo aad furto DeHub",
+    "feedToggles": "Dib u deji shaandhooyinka feed-ka",
+    "feedTogglesDesc": "Shaandhooyinka aad ka shiddo feed-ka waxay ahaanayaan kuwa caadiga ah ilaa aad dib u dejiso",
+    "feedTogglesCleared": "Shaandhooyinka feed-ka dib ayaa loo dejiyay",
     "defaultProfileTab": "Tabka profilka caadiga ah",
     "defaultProfileTabDesc": "Dooro tabka ay booqdayaashu marka hore arkaan profilkaaga",
     "public": "Dadweyne",
@@ -630,6 +783,9 @@
     "dmSent": "{{amount}} tokens ayaa loo diray {{name}}!"
   },
   "postOptions": {
+    "embed": "Ku dhex rid",
+    "copyEmbedCode": "Koobi koodka ku dhex ridista",
+    "embedCodeCopied": "Koodka ku dhex ridista waa la koobiyay",
     "options": "Ikhtiyaarada",
     "aiOverview": "Aragtida guud ee AI",
     "sendTip": "Dir Bakhshiish",
@@ -657,7 +813,8 @@
     "unpinPost": "Ka saar astaantaada",
     "postPinned": "Ku dheji astaantaada",
     "postUnpinned": "La 'aan ka timid astaantaada",
-    "pinFailed": "Can 't pin or unpin this post"
+    "pinFailed": "Can 't pin or unpin this post",
+    "copyFailed": "Lama koobiyi karin xiriirka"
   },
   "filters": {
     "sort": "Kala sooc",
@@ -1973,6 +2130,8 @@
     "copyFailed": "Waan ku guuldareystay inaan nuqul ka sameeyo"
   },
   "profileOptions": {
+    "copyRssFeed": "Koobi xiriirka quudinta RSS",
+    "rssFeedCopied": "Xiriirka quudinta RSS waa la koobiyay",
     "copyProfileUrl": "Koobi URL-ka profile-ka",
     "copyUsername": "Koobi magaca isticmaalaha",
     "copyAddress": "Koobi cinwaanka",
@@ -2274,6 +2433,7 @@
     "pendingSubmitted": "{{amount}} token oo la soo gudbiyay. Xaqiijintu weli waa la hubinayaa. Ha u soo dirin mar kale."
   },
   "communities": {
+    "chatTab": "Sheekaysi",
     "title": "Bulshooyinka",
     "create": "Samee",
     "searchPlaceholder": "Raadi bulshooyinka...",
@@ -2308,7 +2468,30 @@
     "addDescription": "Ku dar sharaxaad...",
     "communityDescription": "Sharaxaadda bulshada...",
     "posts": "Qoraallada",
-    "chat": "Sheekaysi",
+    "chat": {
+      "intervalHour": "1 saac",
+      "intervalHours": "{{count}} Saacadaha",
+      "intervalMinute": "1 daqiiqo",
+      "intervalMinutes": "{{count}} Daqiiqadaha",
+      "intervalSecond": "1 labaad",
+      "intervalSeconds": "{{count}} seconds",
+      "muted": "Waxaad tahay mowduuc",
+      "mutedUntil": "Waxaad tahay muted ilaa {{until}}",
+      "postingDisabled": "Boostada ayaa naafo u ah xubnaha halkan",
+      "pinnedGif": "GIF",
+      "pinnedMedia": "Warbaahinta",
+      "jumpToPinned": "Ku bood farriinta qaawan ee loo yaqaan 'pinned message'",
+      "pinnedMessage": "Fariin Pinned ah",
+      "unpin": "Unpin",
+      "pin": "PIN",
+      "delete": "Tirtir",
+      "slowMode": "Qaabka gaabiska ah: hal fariin kasta {{interval}}",
+      "slowModeWait": "Qaabka gaabiska ah — sug {{time}}",
+      "send": "Dir",
+      "deleteMessageTitle": "Tirtir fariintan?",
+      "deleteMessageBody": "Tani ma noqon karto mid aan la baabi 'in karin.",
+      "cancel": "Jooji"
+    },
     "membersTab": "Xubnaha ({{count}})",
     "about": "Ku saabsan",
     "backToCommunities": "Bulshooyinka",
@@ -3734,6 +3917,7 @@
     "sellYourFractions": "Iibso jajabkaaga ({{held}} held)"
   },
   "creator": {
+    "libraryEmpty": "Waxyaabihii aad abuurtay ee la kaydiyay halkan ayay ka muuqan doonaan.",
     "whatToCreate": "Waxa la abuuro",
     "startCreatingWith": "Bilow abuurista {{model}}",
     "studioSubtitle": "Qeex muuqaal, dabeecad, niyadda ama qaabka. Natiijooyinka dhulka hoos ku qoran oo si toos ah u qaado tifaftiraha.",
@@ -5286,6 +5470,8 @@
     }
   },
   "goLive": {
+    "bigEvent": "Dhacdo weyn",
+    "bigEventHint": "Daawadayaal badan: daawadayaashu waxay daawadaan qiyaastii 20 ilbiriqsi dib, iyadoo kala go'yadu ay yar yihiin.",
     "goLive": "Go Live",
     "youAreLive": "Waxaa Live ah",
     "streamReady": "Stream Ready",
@@ -6080,7 +6266,10 @@
     "play": "Ciyaar",
     "pause": "Jooji",
     "listens_one": "{{count}} dhageyso",
-    "listens_other": "{{count}} dhagaystayaasha"
+    "listens_other": "{{count}} dhagaystayaasha",
+    "lyrics": "Erayada heesta",
+    "lyricsLoading": "Waxaa la raadinayaa erayada…",
+    "lyricsNone": "Erayo lama helin"
   },
   "converter": {
     "seoTitle": "Converter — soo dejiso video in DeHub",
@@ -6595,6 +6784,7 @@
     "seoDescription": "Dukumentiga rasmiga ah ee DeHub: guud ahaan barxadda, dApps, dhaqaalaha token-ka tokens, staking, ciyaaro, qorshaha mustaqbalka, su’aalaha badanaa la weydiiyo iyo wax kale."
   },
   "dex": {
+    "title": "tokens / USD",
     "seoTitle": "DEX — Ku ganacsada tokens qiimahaaga",
     "seoDescription": "U deji qiimahaaga iibka ama iibinta tokens adoo isticmaalaya Uniswap v4 limit order oo ku taal Base ama BNB Chain. Live order book, market depth iyo hal qiimo oo USD ah.",
     "venue": "Network",
@@ -6816,6 +7006,14 @@
     }
   },
   "editor": {
+    "video": {
+      "tFade": "Isku-dhex-milmid",
+      "none": "Midna",
+      "transition": "Kala-gudub",
+      "speed": "Xawaare",
+      "sound": "Cod",
+      "video": "Muuqaal"
+    },
     "review": {
       "title": "Dib u eegista mashruuca",
       "shared": "Lala wadaagay adiga",

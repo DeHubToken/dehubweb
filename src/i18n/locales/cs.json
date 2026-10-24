@@ -1,4 +1,151 @@
 {
+  "mastodonApps": {
+    "authTitle": "Přihlásit se přes DeHub",
+    "authWants": "{{app}} chce používat váš účet DeHub",
+    "authSignedInAs": "Přihlášeni jako {{name}}",
+    "authSignIn": "Pro pokračování se přihlaste",
+    "allow": "Povolit",
+    "cancel": "Zrušit",
+    "scopeRead": "Zobrazit vaše časové osy, příspěvky, oznámení a záložky",
+    "scopeWrite": "Psát příspěvky, odpovídat, dávat líbí se, sdílet a ukládat za vás",
+    "scopeFollow": "Sledovat, přestat sledovat, blokovat a ztlumit účty",
+    "scopePush": "Posílat vám oznámení",
+    "scopeProfile": "Zobrazit váš profil",
+    "invalid": "Tento přihlašovací odkaz není platný. Vraťte se do aplikace a zkuste to znovu.",
+    "failed": "Nepovedlo se. Zkuste to znovu.",
+    "codeTitle": "Zkopírujte tento kód do aplikace a dokončete přihlášení.",
+    "copy": "Kopírovat",
+    "copied": "Zkopírováno",
+    "seoDescription": "Povolte aplikaci pro Mastodon používat váš účet DeHub.",
+    "redirecting": "Vracíme vás do {{app}}…",
+    "connectedTitle": "Připojené aplikace",
+    "connectedDescription": "Aplikace pro Mastodon, do kterých jste se tímto účtem přihlásili. Odebráním aplikace se z ní odhlásíte.",
+    "connectedEmpty": "Zatím nejsou připojené žádné aplikace.",
+    "lastUsed": "Naposledy použito {{date}}",
+    "remove": "Odebrat",
+    "removed": "Aplikace odebrána"
+  },
+  "fediverse": {
+    "title": "Fediverse",
+    "description": "Lidé na Mastodonu a v dalších aplikacích fediverse vás na této adrese najdou a mohou vás sledovat. Vaše nové veřejné příspěvky k nim dorazí tam.",
+    "copy": "Kopírovat",
+    "copied": "Zkopírováno",
+    "privateNote": "Soukromé účty se ve fediverse nezobrazují.",
+    "noUsername": "Zvolte si uživatelské jméno, abyste získali adresu ve fediverse."
+  },
+  "profileFields": {
+    "title": "Pole profilu",
+    "description": "Až čtyři řádky navíc na vašem profilu, třeba web nebo vaše zájmena.",
+    "label": "Popisek",
+    "content": "Obsah",
+    "save": "Uložit pole",
+    "saved": "Pole profilu uložena",
+    "failed": "Neuložilo se. Zkuste to znovu.",
+    "verified": "Ověřený odkaz",
+    "verifyHint": "Chcete-li odkaz ověřit, přidejte toto na danou stránku a uložte znovu: {{snippet}}"
+  },
+  "followedTags": {
+    "follow": "Sledovat #{{tag}}",
+    "following": "Sledujete",
+    "unfollow": "Přestat sledovat #{{tag}}",
+    "followed": "Teď sledujete #{{tag}}. Jeho příspěvky se zobrazí ve vašem kanálu Sledované.",
+    "unfollowed": "Přestali jste sledovat #{{tag}}",
+    "failed": "Neuložilo se. Zkuste to znovu.",
+    "clear": "Vymazat"
+  },
+  "notificationFilters": {
+    "title": "Filtrovat oznámení od",
+    "description": "Vyberte, co se stane, když s vámi bude komunikovat někdo mimo váš okruh. Filtrovaná oznámení čekají ve složce Filtrováno, bez odznaku a bez push oznámení.",
+    "notFollowing": "Lidí, které nesledujete",
+    "notFollowers": "Lidí, kteří nesledují vás",
+    "newAccounts": "Nových účtů (mladších 30 dní)",
+    "accept": "Upozornit mě",
+    "filter": "Filtrovat",
+    "drop": "Úplně skrýt",
+    "filteredTitle": "Filtrovaná oznámení",
+    "filteredEmpty": "Nic nebylo odfiltrováno.",
+    "failed": "Neuložilo se. Zkuste to znovu."
+  },
+  "keywordFilters": {
+    "title": "Ztlumená slova",
+    "description": "Skryjte příspěvky a komentáře s těmito slovy, nebo je sbalte za varování. Tento seznam vidíte jen vy.",
+    "placeholder": "Slovo nebo fráze",
+    "add": "Ztlumit",
+    "added": "Ztlumeno: {{phrase}}",
+    "wholeWord": "Jen celé slovo",
+    "whenMatches": "Když příspěvek odpovídá",
+    "warn": "Zobrazit varování",
+    "hide": "Skrýt",
+    "howLong": "Jak dlouho",
+    "forever": "Dokud to neodstraním",
+    "duration1h": "Na 1 hodinu",
+    "duration1d": "Na 1 den",
+    "duration7d": "Na 7 dní",
+    "duration30d": "Na 30 dní",
+    "where": "Kde",
+    "home": "Domů",
+    "public": "Prozkoumat a hledat",
+    "profile": "Profily",
+    "thread": "Konverzace",
+    "notifications": "Oznámení",
+    "empty": "Nemáte ztlumená žádná slova.",
+    "remove": "Zrušit ztlumení",
+    "until": "Do {{date}}",
+    "filtered": "Filtrováno: {{phrase}}",
+    "showAnyway": "Přesto zobrazit",
+    "failed": "Neuložilo se. Zkuste to znovu."
+  },
+  "postVisibility": {
+    "label": "Kdo to může vidět",
+    "public": "Všichni",
+    "followers": "Jen sledující",
+    "direct": "Jen zmínění lidé",
+    "noRepost": "Znovu sdílet lze jen veřejné příspěvky",
+    "directHint": "Tento příspěvek uvidí jen lidé, které zmíníte pomocí @",
+    "needsMention": "Zmiňte pomocí @ aspoň jednoho člověka, abyste mohli publikovat jen pro zmíněné"
+  },
+  "replyPolicy": {
+    "label": "Kdo může odpovídat",
+    "public": "Kdokoli",
+    "followers": "Vaši sledující",
+    "following": "Lidé, které sledujete",
+    "mentioned": "Jen zmínění",
+    "noticeFollowers": "Odpovídat mohou jen sledující autora",
+    "noticeFollowing": "Odpovídat mohou jen lidé, které autor sleduje",
+    "noticeMentioned": "Odpovídat mohou jen lidé zmínění v příspěvku",
+    "refused": "Autor omezil, kdo může na tento příspěvek odpovídat"
+  },
+  "quotePolicy": {
+    "label": "Kdo může citovat",
+    "public": "Kdokoli",
+    "followers": "Sledující",
+    "nobody": "Jen já",
+    "off": "Autor vypnul citování",
+    "removed": "Autor odebral svůj příspěvek z této citace",
+    "remove": "Odebrat",
+    "removedToast": "Váš příspěvek byl odebrán z této citace",
+    "removeFailed": "Váš příspěvek se nepodařilo odebrat z citace",
+    "refused": "Autor vám nedovoluje tento příspěvek citovat"
+  },
+  "contentWarning": {
+    "label": "Upozornění na obsah",
+    "placeholder": "Sem napište upozornění",
+    "add": "Přidat upozornění na obsah",
+    "remove": "Odebrat upozornění na obsah",
+    "show": "Zobrazit příspěvek"
+  },
+  "altText": {
+    "badge": "ALT",
+    "add": "Přidat popis",
+    "edit": "Upravit popis",
+    "titleImage": "Popište tento obrázek",
+    "titleVideo": "Popište toto video",
+    "help": "Pro lidi, kteří ho nevidí. Čtečky obrazovky ho přečtou nahlas.",
+    "placeholder": "Co zobrazuje? Uveďte i text, který obsahuje.",
+    "show": "Zobrazit popis",
+    "saved": "Popis uložen",
+    "saveFailed": "Popis se nepodařilo uložit"
+  },
   "liveRecap": {
     "title": "Rekapitulace streamu",
     "justEnded": "Rekapitulace vašeho streamu",
@@ -113,11 +260,12 @@
     "heading": "DeHub Shorts"
   },
   "settings": {
-    "showDislikesDesc": "Kdokoli může otevřít kartu Nelíbí se na tvém profilu. Když je to vypnuté, vidíš ji jen ty.",
-    "showDislikes": "Zobrazit všem, co se mi nelíbí",
+    "usernameTaken": "Uživatelské jméno je obsazené",
     "postingChain": "Blockchain příspěvků",
     "showOnline": "Zobrazit, když jsem online",
     "showOnlineDesc": "Lidé, kterým posíláte zprávu, uvidí zelenou tečku vedle vašeho jména, když používáte službu DeHub",
+    "showDislikes": "Zobrazit všem, co se mi nelíbí",
+    "showDislikesDesc": "Kdokoli může otevřít kartu Nelíbí se na tvém profilu. Když je to vypnuté, vidíš ji jen ty.",
     "smartReplies": "Navrhované odpovědi",
     "smartRepliesDesc": "Připraví dvě odpovědi, na které v chatu klepneš. × u návrhů to vypne.",
     "title": "Nastavení",
@@ -241,6 +389,11 @@
       "hintDeny": "Umělá inteligence a prohledávače, které respektují tento signál, jsou žádány, aby netrénovaly na vašem zvuku, uměleckých dílech a psaní. Prohledávače, které ignorují signál, nejsou blokovány.",
       "saved": "Předvolba školení AI uložena"
     },
+    "defaultFeed": "Výchozí kanál",
+    "defaultFeedDesc": "Vyberte, který kanál se otevře pokaždé, když otevřete DeHub",
+    "feedToggles": "Obnovit filtry kanálu",
+    "feedTogglesDesc": "Filtry, které v kanálu zapnete, zůstanou výchozí, dokud je neobnovíte",
+    "feedTogglesCleared": "Filtry kanálu obnoveny",
     "defaultProfileTab": "Výchozí karta profilu",
     "defaultProfileTabDesc": "Vyber, kterou kartu uvidí návštěvníci na tvém profilu jako první",
     "public": "Veřejné",
@@ -632,6 +785,9 @@
     "dmSent": "Odesláno {{amount}} tokenů uživateli {{name}}!"
   },
   "postOptions": {
+    "embed": "Vložit",
+    "copyEmbedCode": "Kopírovat kód pro vložení",
+    "embedCodeCopied": "Kód pro vložení zkopírován",
     "options": "Možnosti",
     "aiOverview": "Přehled AI",
     "sendTip": "Poslat spropitné",
@@ -659,7 +815,8 @@
     "unpinPost": "Odpojit od profilu",
     "postPinned": "Připnuto k tvému profilu",
     "postUnpinned": "Odpojeno od tvého profilu",
-    "pinFailed": "Tento příspěvek se nepodařilo připnout nebo odepnout"
+    "pinFailed": "Tento příspěvek se nepodařilo připnout nebo odepnout",
+    "copyFailed": "Odkaz se nepodařilo zkopírovat"
   },
   "filters": {
     "sort": "Řadit",
@@ -1392,7 +1549,6 @@
     "returnHome": "Zpět na hlavní stránku"
   },
   "profile": {
-    "dislikes": { "loadMore": "Načíst další", "privateDesc": "Tento účet si svá nelíbí se nechává pro sebe.", "privateTitle": "Nelíbí se je soukromé", "emptyOther": "Zatím nic.", "emptyOwn": "Příspěvky, které se ti nelíbí, zmizí z tvých kanálů a objeví se tady. Zruš nelíbí se a příspěvek se vrátí.", "emptyTitle": "Zatím nic" },
     "back": "Zpět",
     "usernameAvailable": "Uživatelské jméno je dostupné!",
     "signUpToClaim": "Zaregistrujte se a získejte ho",
@@ -1420,8 +1576,16 @@
       "commentUnavailable": "Tento komentář již není k dispozici"
     },
     "tabs": {
-      "dislikes": "Nelíbí se",
-      "playlists": "Playlisty"
+      "playlists": "Playlisty",
+      "dislikes": "Nelíbí se"
+    },
+    "dislikes": {
+      "emptyTitle": "Zatím nic",
+      "emptyOwn": "Příspěvky, které se ti nelíbí, zmizí z tvých kanálů a objeví se tady. Zruš nelíbí se a příspěvek se vrátí.",
+      "emptyOther": "Zatím nic.",
+      "privateTitle": "Nelíbí se je soukromé",
+      "privateDesc": "Tento účet si svá nelíbí se nechává pro sebe.",
+      "loadMore": "Načíst další"
     },
     "offerWorthNow": "Přibližně {{amount}} tokenů při aktuálním kurzu",
     "offerNotePlaceholder": "Přidej poznámku (nepovinné)",
@@ -1975,6 +2139,8 @@
     "copyFailed": "Nelze zkopírovat"
   },
   "profileOptions": {
+    "copyRssFeed": "Kopírovat odkaz na RSS kanál",
+    "rssFeedCopied": "Odkaz na RSS kanál zkopírován",
     "copyProfileUrl": "Kopírovat URL profilu",
     "copyUsername": "Kopírovat uživatelské jméno",
     "copyAddress": "Kopírovat adresu",
@@ -2227,6 +2393,7 @@
     "pendingSubmitted": "{{amount}} tokenů odesláno. Potvrzení se stále kontroluje. Neodesílejte znovu."
   },
   "communities": {
+    "chatTab": "Chat",
     "title": "Komunity",
     "create": "Vytvořit",
     "searchPlaceholder": "Hledat komunity...",
@@ -2261,7 +2428,30 @@
     "addDescription": "Přidejte popis...",
     "communityDescription": "Popis komunity...",
     "posts": "Příspěvky",
-    "chat": "Chat",
+    "chat": {
+      "intervalHour": "1 hodina",
+      "intervalHours": "{{count}} hodin",
+      "intervalMinute": "1 minuta",
+      "intervalMinutes": "{{count}} minut",
+      "intervalSecond": "1 sekunda",
+      "intervalSeconds": "{{count}} sekund",
+      "muted": "Jste ztlumeni",
+      "mutedUntil": "Jste ztlumeni do {{until}}",
+      "postingDisabled": "Publikování je pro členy zakázáno zde",
+      "pinnedGif": "GIF",
+      "pinnedMedia": "Média",
+      "jumpToPinned": "Přejít na připnutou zprávu",
+      "pinnedMessage": "Připnutá zpráva",
+      "unpin": "Zrušit připnutí",
+      "pin": "PIN",
+      "delete": "Odstranit",
+      "slowMode": "Pomalý režim: jedna zpráva každých {{interval}}",
+      "slowModeWait": "Pomalý režim — počkejte {{time}}",
+      "send": "Odeslat",
+      "deleteMessageTitle": "Smazat tuto zprávu?",
+      "deleteMessageBody": "Tuto akci nelze vrátit zpět.",
+      "cancel": "Zrušit"
+    },
     "membersTab": "Členové ({{count}})",
     "about": "O komunitě",
     "backToCommunities": "Komunity",
@@ -3726,6 +3916,7 @@
     "sellYourFractions": "Prodej své zlomky ({{held}} drženo)"
   },
   "creator": {
+    "libraryEmpty": "Vaše uložené generace se zobrazí tady.",
     "whatToCreate": "Co vytvořit",
     "startCreatingWith": "Začni vytvářet s {{model}}",
     "studioSubtitle": "Popište scénu, postavu, náladu nebo styl. Výsledky se zobrazí níže a přejdou přímo do editoru.",
@@ -5312,6 +5503,8 @@
     }
   },
   "goLive": {
+    "bigEvent": "Velká událost",
+    "bigEventHint": "Pro velké publikum: diváci sledují zhruba se 20sekundovým zpožděním, ale s menším sekáním.",
     "goLive": "Jít naživo",
     "youAreLive": "Jsi naživo",
     "streamReady": "Stream připraven",
@@ -6064,7 +6257,10 @@
     "play": "Hrát",
     "pause": "Pozastavit",
     "listens_one": "{{count}} naslouchat",
-    "listens_other": "{{count}} naslouchá"
+    "listens_other": "{{count}} naslouchá",
+    "lyrics": "Text písně",
+    "lyricsLoading": "Hledáme text…",
+    "lyricsNone": "Text nenalezen"
   },
   "converter": {
     "seoTitle": "Konvertor — import videa do DeHub",
@@ -6580,6 +6776,7 @@
     "seoDescription": "Oficiální dokumentace DeHub: přehled platformy, dApps, ekonomika tokenu tokenů, staking, hry, plán vývoje, FAQ a další."
   },
   "dex": {
+    "title": "tokeny / USD",
     "seoTitle": "DEX — Obchodujte tokenů za vaši cenu",
     "seoDescription": "Nastavte si nákupní nebo prodejní cenu tokenů pomocí limitní objednávky Uniswap v4 na Base nebo BNB Chain. Živý kniha objednávek, hloubka trhu a jedna sdílená cena v USD.",
     "venue": "Síť",
@@ -6802,6 +6999,14 @@
     }
   },
   "editor": {
+    "video": {
+      "tFade": "Prolínání",
+      "none": "Žádný",
+      "transition": "Přechod",
+      "speed": "Rychlost",
+      "sound": "Zvuk",
+      "video": "Video"
+    },
     "review": {
       "title": "Kontrola projektu",
       "shared": "Sdíleno s vámi",
@@ -8463,5 +8668,15 @@
     "posted": "Zveřejněno",
     "view": "Zobrazit",
     "failed": "Video se nepodařilo zpracovat"
+  },
+  "loginStack": {
+    "tip": "Spropitné v DHB",
+    "headlineTop": "Budeš vlastnit všechno",
+    "headlineAccent": "a budeš šťastný.",
+    "orContinueWith": "nebo pokračuj přes",
+    "phone": "Telefon",
+    "fingerprint": "Otisk prstu",
+    "exploreFirst": "Nejdřív se rozhlédni",
+    "codeNote": "Pošleme ti kód e-mailem, bez hesla."
   }
 }

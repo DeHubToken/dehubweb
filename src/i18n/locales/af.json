@@ -1,4 +1,151 @@
 {
+  "mastodonApps": {
+    "authTitle": "Meld aan met DeHub",
+    "authWants": "{{app}} wil jou DeHub-rekening gebruik",
+    "authSignedInAs": "Aangemeld as {{name}}",
+    "authSignIn": "Meld aan om voort te gaan",
+    "allow": "Laat toe",
+    "cancel": "Kanselleer",
+    "scopeRead": "Sien jou tydlyne, plasings, kennisgewings en boekmerke",
+    "scopeWrite": "Plaas, antwoord, hou van, deel en boekmerk namens jou",
+    "scopeFollow": "Volg, ontvolg, blokkeer en demp rekeninge",
+    "scopePush": "Stuur vir jou kennisgewings",
+    "scopeProfile": "Sien jou profiel",
+    "invalid": "Hierdie aanmeldskakel is nie geldig nie. Gaan terug na die toep en probeer weer.",
+    "failed": "Dit het nie gewerk nie. Probeer weer.",
+    "codeTitle": "Kopieer hierdie kode in die toep om klaar aan te meld.",
+    "copy": "Kopieer",
+    "copied": "Gekopieer",
+    "seoDescription": "Laat 'n Mastodon-toep jou DeHub-rekening gebruik.",
+    "redirecting": "Neem jou terug na {{app}}…",
+    "connectedTitle": "Gekoppelde toepe",
+    "connectedDescription": "Mastodon-toepe waarby jy met hierdie rekening aangemeld het. Verwyder een om dit af te meld.",
+    "connectedEmpty": "Nog geen toepe gekoppel nie.",
+    "lastUsed": "Laas gebruik {{date}}",
+    "remove": "Verwyder",
+    "removed": "Toep verwyder"
+  },
+  "fediverse": {
+    "title": "Fediverse",
+    "description": "Mense op Mastodon en ander fediverse-toepassings kan jou by hierdie adres vind en volg. Jou nuwe openbare plasings bereik hulle daar.",
+    "copy": "Kopieer",
+    "copied": "Gekopieer",
+    "privateNote": "Privaat rekeninge word nie op die fediverse gewys nie.",
+    "noUsername": "Kies 'n gebruikersnaam om 'n fediverse-adres te kry."
+  },
+  "profileFields": {
+    "title": "Profielvelde",
+    "description": "Tot vier ekstra reëls op jou profiel, soos 'n webwerf of jou voornaamwoorde.",
+    "label": "Etiket",
+    "content": "Inhoud",
+    "save": "Stoor velde",
+    "saved": "Profielvelde gestoor",
+    "failed": "Dit is nie gestoor nie. Probeer weer.",
+    "verified": "Geverifieerde skakel",
+    "verifyHint": "Om 'n skakel te verifieer, voeg dit by daardie bladsy en stoor weer: {{snippet}}"
+  },
+  "followedTags": {
+    "follow": "Volg #{{tag}}",
+    "following": "Volg tans",
+    "unfollow": "Ontvolg #{{tag}}",
+    "followed": "Jy volg nou #{{tag}}. Sy plasings sal in jou Volg-voer wys.",
+    "unfollowed": "#{{tag}} ontvolg",
+    "failed": "Dit is nie gestoor nie. Probeer weer.",
+    "clear": "Maak skoon"
+  },
+  "notificationFilters": {
+    "title": "Filter kennisgewings van",
+    "description": "Kies wat gebeur wanneer iemand buite jou kring met jou in wisselwerking tree. Gefiltreerde kennisgewings wag onder Gefiltreer, sonder 'n kenteken of 'n stootkennisgewing.",
+    "notFollowing": "Mense wat jy nie volg nie",
+    "notFollowers": "Mense wat jou nie volg nie",
+    "newAccounts": "Nuwe rekeninge (jonger as 30 dae)",
+    "accept": "Laat my weet",
+    "filter": "Filtreer",
+    "drop": "Versteek heeltemal",
+    "filteredTitle": "Gefiltreerde kennisgewings",
+    "filteredEmpty": "Niks is gefiltreer nie.",
+    "failed": "Dit is nie gestoor nie. Probeer weer."
+  },
+  "keywordFilters": {
+    "title": "Gedempte woorde",
+    "description": "Versteek plasings en kommentaar wat hierdie woorde bevat, of vou hulle agter 'n waarskuwing. Net jy sien hierdie lys.",
+    "placeholder": "Woord of frase",
+    "add": "Demp",
+    "added": "Gedemp: {{phrase}}",
+    "wholeWord": "Net die hele woord",
+    "whenMatches": "Wanneer 'n plasing ooreenstem",
+    "warn": "Wys 'n waarskuwing",
+    "hide": "Versteek dit",
+    "howLong": "Hoe lank",
+    "forever": "Totdat ek dit verwyder",
+    "duration1h": "Vir 1 uur",
+    "duration1d": "Vir 1 dag",
+    "duration7d": "Vir 7 dae",
+    "duration30d": "Vir 30 dae",
+    "where": "Waar",
+    "home": "Tuis",
+    "public": "Verken en soek",
+    "profile": "Profiele",
+    "thread": "Gesprekke",
+    "notifications": "Kennisgewings",
+    "empty": "Jy het nog geen woorde gedemp nie.",
+    "remove": "Ontdemp",
+    "until": "Tot {{date}}",
+    "filtered": "Gefiltreer: {{phrase}}",
+    "showAnyway": "Wys tog",
+    "failed": "Dit is nie gestoor nie. Probeer weer."
+  },
+  "postVisibility": {
+    "label": "Wie kan dit sien",
+    "public": "Almal",
+    "followers": "Net volgers",
+    "direct": "Net genoemde mense",
+    "noRepost": "Net openbare plasings kan herplaas word",
+    "directHint": "Net die mense wat jy met @ noem, sal hierdie plasing sien",
+    "needsMention": "Noem ten minste een persoon met @ om net aan genoemde mense te plaas"
+  },
+  "replyPolicy": {
+    "label": "Wie kan antwoord",
+    "public": "Enigiemand",
+    "followers": "Jou volgers",
+    "following": "Mense wat jy volg",
+    "mentioned": "Net genoemdes",
+    "noticeFollowers": "Net die outeur se volgers kan antwoord",
+    "noticeFollowing": "Net mense wat die outeur volg, kan antwoord",
+    "noticeMentioned": "Net mense wat in die plasing genoem word, kan antwoord",
+    "refused": "Die outeur het beperk wie op hierdie plasing kan antwoord"
+  },
+  "quotePolicy": {
+    "label": "Wie kan aanhaal",
+    "public": "Enigiemand",
+    "followers": "Volgers",
+    "nobody": "Net ek",
+    "off": "Die outeur het aanhalings afgeskakel",
+    "removed": "Die outeur het hul plasing uit hierdie aanhaling verwyder",
+    "remove": "Verwyder",
+    "removedToast": "Jou plasing is uit hierdie aanhaling verwyder",
+    "removeFailed": "Kon nie jou plasing uit die aanhaling verwyder nie",
+    "refused": "Die outeur laat jou nie toe om hierdie plasing aan te haal nie"
+  },
+  "contentWarning": {
+    "label": "Inhoudwaarskuwing",
+    "placeholder": "Skryf jou waarskuwing hier",
+    "add": "Voeg inhoudwaarskuwing by",
+    "remove": "Verwyder inhoudwaarskuwing",
+    "show": "Wys plasing"
+  },
+  "altText": {
+    "badge": "ALT",
+    "add": "Voeg 'n beskrywing by",
+    "edit": "Wysig beskrywing",
+    "titleImage": "Beskryf hierdie prent",
+    "titleVideo": "Beskryf hierdie video",
+    "help": "Vir mense wat dit nie kan sien nie. Skermlesers lees dit hardop voor.",
+    "placeholder": "Wat wys dit? Sluit enige teks daarin in.",
+    "show": "Wys beskrywing",
+    "saved": "Beskrywing gestoor",
+    "saveFailed": "Kon nie die beskrywing stoor nie"
+  },
   "liveRecap": {
     "title": "Stroom oorskakeling",
     "justEnded": "Jou stroomherhaling",
@@ -113,6 +260,7 @@
     "heading": "DeHub Shorts"
   },
   "settings": {
+    "usernameTaken": "Gebruikersnaam is geneem",
     "postingChain": "Blokketting vir plasings",
     "showOnline": "Toon wanneer ik online kom",
     "showOnlineDesc": "Mense wat jy boodskap sien 'n groen kolletjie langs jou naam terwyl jy DeHub gebruik",
@@ -239,6 +387,11 @@
       "hintDeny": "AI-stelsels en kruipers wat hierdie sein respekteer, word gevra om nie op u klank-, kunswerk- en skryfwerk op te lei nie. Kruipers wat die sein ignoreer, word nie daardeur geblokkeer nie.",
       "saved": "AI-opleidingsvoorkeur gestoor"
     },
+    "defaultFeed": "Verstek-voer",
+    "defaultFeedDesc": "Kies watter voer oopmaak elke keer as jy DeHub oopmaak",
+    "feedToggles": "Stel voerfilters terug",
+    "feedTogglesDesc": "Filters wat jy in 'n voer aanskakel, bly jou verstek totdat jy dit terugstel",
+    "feedTogglesCleared": "Voerfilters teruggestel",
     "defaultProfileTab": "Verstek profieloortjie",
     "defaultProfileTabDesc": "Kies watter oortjie besoekers eerste op jou profiel sien",
     "public": "Publiek",
@@ -632,6 +785,9 @@
     "dmSent": "{{amount}} tokens aan {{name}} gestuur!"
   },
   "postOptions": {
+    "embed": "Inbed",
+    "copyEmbedCode": "Kopieer inbedkode",
+    "embedCodeCopied": "Inbedkode gekopieer",
     "options": "Opsies",
     "aiOverview": "AI-oorsig",
     "sendTip": "Stuur fooi",
@@ -659,7 +815,8 @@
     "unpinPost": "Ontkoppel van jou profiel",
     "postPinned": "Vasgepen op jou profiel",
     "postUnpinned": "Ongestemd van jou profiel",
-    "pinFailed": "Kon nie hierdie plasing vaspen of ontgin nie"
+    "pinFailed": "Kon nie hierdie plasing vaspen of ontgin nie",
+    "copyFailed": "Kon nie skakel kopieer nie"
   },
   "filters": {
     "sort": "Sorteer",
@@ -2009,6 +2166,8 @@
     "copyFailed": "Kon nie kopieer nie"
   },
   "profileOptions": {
+    "copyRssFeed": "Kopieer RSS-voerskakel",
+    "rssFeedCopied": "RSS-voerskakel gekopieer",
     "copyProfileUrl": "Kopieer profiel-URL",
     "copyUsername": "Kopieer gebruikersnaam",
     "copyAddress": "Kopieer adres",
@@ -2309,6 +2468,7 @@
     "pendingSubmitted": "{{amount}} tokens ingedien. Bevestiging word nog nagegaan. Moenie dit weer stuur nie."
   },
   "communities": {
+    "chatTab": "Klets",
     "title": "Gemeenskappe",
     "create": "Skep",
     "searchPlaceholder": "Soek gemeenskappe...",
@@ -2343,7 +2503,30 @@
     "addDescription": "Voeg 'n beskrywing by...",
     "communityDescription": "Gemeenskapsbeskrywing...",
     "posts": "Plasings",
-    "chat": "Klets",
+    "chat": {
+      "intervalHour": "1 uur",
+      "intervalHours": "{{count}} ure",
+      "intervalMinute": "1 minuut",
+      "intervalMinutes": "{{count}} minute",
+      "intervalSecond": "1 sekonde",
+      "intervalSeconds": "{{count}} sekondes",
+      "muted": "Jy is gedemp",
+      "mutedUntil": "Jy is gedemp tot {{until}}",
+      "postingDisabled": "Plasing is gedeaktiveer vir lede hier",
+      "pinnedGif": "GIF",
+      "pinnedMedia": "Media",
+      "jumpToPinned": "Spring na die vasgepen boodskap",
+      "pinnedMessage": "Vasgepen boodskap",
+      "unpin": "Onspeld",
+      "pin": "Speld",
+      "delete": "Skrap",
+      "slowMode": "Stadige modus: een boodskap elke {{interval}}",
+      "slowModeWait": "Stadige modus — wag {{time}}",
+      "send": "Stuur",
+      "deleteMessageTitle": "Skrap hierdie boodskap?",
+      "deleteMessageBody": "Dit kan nie ongedaan gemaak word nie.",
+      "cancel": "Kanselleer"
+    },
     "membersTab": "Lede ({{count}})",
     "about": "Meer oor",
     "backToCommunities": "Gemeenskappe",
@@ -3810,6 +3993,7 @@
     "sellYourFractions": "Verkoop jou fraksies ({{held}} gehou)"
   },
   "creator": {
+    "libraryEmpty": "Jou gestoorde generasies sal hier verskyn.",
     "whatToCreate": "Wat om te skep",
     "startCreatingWith": "Begin met skep met {{model}}",
     "studioSubtitle": "Beskryf 'n toneel, karakter, stemming of styl. Resultate verskyn hieronder en gaan direk in die redigeerder.",
@@ -5404,6 +5588,8 @@
     }
   },
   "goLive": {
+    "bigEvent": "Groot geleentheid",
+    "bigEventHint": "Vir groot gehore: kykers kyk sowat 20 sekondes agter, met minder onderbrekings.",
     "goLive": "Gaan Regstreeks",
     "youAreLive": "Jy is Regstreeks",
     "streamReady": "Stroom Gereed",
@@ -6207,7 +6393,10 @@
     "play": "Speel",
     "pause": "Pouseer",
     "listens_one": "{{count}} luister",
-    "listens_other": "{{count}} luisteraars"
+    "listens_other": "{{count}} luisteraars",
+    "lyrics": "Lirieke",
+    "lyricsLoading": "Soek lirieke…",
+    "lyricsNone": "Geen lirieke gevind nie"
   },
   "converter": {
     "seoTitle": "Omskakelaar — voer 'n video in DeHub in",
@@ -6752,6 +6941,7 @@
     "faq": "Gereelde vrae"
   },
   "dex": {
+    "title": "tokens / USD",
     "seoTitle": "DEX — Verhandel tokens teen jou prys",
     "seoDescription": "Stel jou tokens koop- of verkoop prys met 'n Uniswap v4 limiet order op Base of BNB Chain. Regstreekse orderboek, markdiepte en een gedeelde USD prys.",
     "venue": "Netwerk",
@@ -6974,6 +7164,14 @@
     }
   },
   "editor": {
+    "video": {
+      "tFade": "Oorvloei",
+      "none": "Geen",
+      "transition": "Oorgang",
+      "speed": "Spoed",
+      "sound": "Klank",
+      "video": "Video"
+    },
     "review": {
       "title": "Projekhersiening",
       "shared": "Met jou gedeel",

@@ -17,7 +17,6 @@ import Music from "@/components/ui/cut-icons/music";
 import Radio from "@/components/ui/cut-icons/live";
 
 import Play from "@/components/ui/cut-icons/play";
-import ChevronRight from "@/components/ui/cut-icons/next";
 
 import { AppState } from '@/components/app/AppState';
 import { AnimatePresence, motion } from 'framer-motion';
@@ -38,7 +37,8 @@ import { CinematicMusic } from '@/components/app/music/CinematicMusic';
 import { useCinematicPhone } from '@/hooks/use-cinematic-phone';
 import { openStageModal } from '@/contexts/StageContext';
 
-import { RadioStationCard } from '@/components/app/radio/RadioStationCard';
+import { RadioStage } from '@/components/app/music/RadioStage';
+import { useRadioPlayer } from '@/hooks/use-radio-player';
 import { VideoCard } from '@/components/app/cards/VideoCard';
 import { searchNFTs, getBlockList, type DeHubNFT } from '@/lib/api/dehub';
 import { isBlockedCreator, mapNFTToVideoItem } from '@/lib/music-feed-items';
@@ -48,6 +48,7 @@ import { getPrimaryTags, getTopStations } from '@/lib/api/radio-browser';
 import { getCuratedCarouselStations, type RadioStation } from '@/lib/api/radio-browser';
 import { useAuth } from '@/contexts/AuthContext';
 import type { VideoItem } from '@/types/feed.types';
+import { usePersistedFeedFilter } from '@/hooks/use-persisted-feed-filter';
 
 // ============================================================================
 // TYPES
@@ -90,29 +91,20 @@ function EmptyState({ type }: { type: string }) {
   );
 }
 
-function SectionHeader({ icon: Icon, title, count, onSeeAll }: { 
-  icon: typeof Music; 
-  title: string; 
+function SectionHeader({ icon: Icon, title, count }: {
+  icon: typeof Music;
+  title: string;
   count?: number;
-  onSeeAll?: () => void;
 }) {
-  const { t: _copy } = _useCopy();
   return (
     <div className="flex items-center justify-between mb-3">
-      <h3 className="font-bold text-white flex items-center gap-2">
+      <h3 className="font-bold text-white flex items-center gap-2 text-lg">
         <Icon className="w-5 h-5" />
         {title}
         {count !== undefined && count > 0 && (
           <span className="text-zinc-500 font-normal text-sm">({count})</span>
         )}
       </h3>
-      {onSeeAll && (
-        <button 
-          onClick={onSeeAll}
-          className="text-zinc-400 text-sm hover:text-white flex items-center gap-1"
-        >{_copy("copy.14c21c5e3ffe", { defaultValue: "See all " })}<ChevronRight className="w-4 h-4" />
-        </button>
-      )}
     </div>
   );
 }
@@ -153,11 +145,11 @@ function AudioChart({ items, isLoading, sort, onSort }: { items: VideoItem[]; is
   );
 }
 
-function MusicVideoChart({ items, isLoading, sort, onSort, onSeeAll }: { items: VideoItem[]; isLoading: boolean; sort: MusicVideoChartSort; onSort: (sort: MusicVideoChartSort) => void; onSeeAll: () => void }) {
+function MusicVideoChart({ items, isLoading, sort, onSort }: { items: VideoItem[]; isLoading: boolean; sort: MusicVideoChartSort; onSort: (sort: MusicVideoChartSort) => void }) {
   const { t: _copy } = _useCopy();
   return (
     <ChartDesk
-      header={<SectionHeader icon={Play} title={_copy("copy.ab4d6796dbbe", { defaultValue: "Music Videos" })} onSeeAll={items.length > 0 ? onSeeAll : undefined} />}
+      header={<SectionHeader icon={Play} title={_copy("copy.ab4d6796dbbe", { defaultValue: "Music Videos" })} />}
       sorts={MUSIC_VIDEO_CHART_SORTS}
       sort={sort}
       onSort={onSort}
@@ -171,8 +163,9 @@ function MusicVideoChart({ items, isLoading, sort, onSort, onSeeAll }: { items: 
   );
 }
 
-function RadioChart({ picks, onSeeAll }: { picks: RadioStation[]; onSeeAll: () => void }) {
+function RadioChart({ picks }: { picks: RadioStation[] }) {
   const { t: _copy } = _useCopy();
+  const { currentStation, isPlaying, play } = useRadioPlayer();
   const [sort, setSort] = useState<RadioChartSort>('picks');
   const { data: top = [], isLoading } = useQuery({
     queryKey: ['radio-chart-top'],
@@ -187,7 +180,7 @@ function RadioChart({ picks, onSeeAll }: { picks: RadioStation[]; onSeeAll: () =
   }, [sort, picks, top]);
   return (
     <ChartDesk
-      header={<SectionHeader icon={Radio} title={_copy("copy.42ee912bff23", { defaultValue: "Radio Stations" })} onSeeAll={onSeeAll} />}
+      header={<SectionHeader icon={Radio} title={_copy("copy.42ee912bff23", { defaultValue: "Radio Stations" })} />}
       sorts={[
         { value: 'picks', label: _copy('music.radioPicks', { defaultValue: 'Our picks' }) },
         { value: 'played', label: _copy('music.mostPlayed', { defaultValue: 'Most played' }) },
@@ -206,28 +199,18 @@ function RadioChart({ picks, onSeeAll }: { picks: RadioStation[]; onSeeAll: () =
       isLoading={sort === 'picks' ? picks.length === 0 : isLoading}
       thumbs="square"
       empty={{ icon: 'audio', title: _copy("copy.7c14e8607c11", { defaultValue: "Loading stations..." }) }}
-      renderSelected={id => { const station = stations.find(s => s.stationuuid === id); return station ? <RadioStationCard station={station} /> : null; }}
+      renderSelected={(id, { next }) => {
+        const index = stations.findIndex(s => s.stationuuid === id);
+        if (index < 0) return null;
+        const station = stations[index];
+        // Skipping while this station plays moves the music along with the chart.
+        const onNext = stations.length > 1 ? () => {
+          if (isPlaying && currentStation?.stationuuid === station.stationuuid) play(stations[(index + 1) % stations.length]);
+          next();
+        } : undefined;
+        return <RadioStage key={station.stationuuid} station={station} onNext={onNext} />;
+      }}
     />
-  );
-}
-
-function TracksCarousel() {
-  const { t: _copy } = _useCopy();
-  return (
-    <div>
-      <SectionHeader icon={Disc3} title={_copy("copy.88980154513d", { defaultValue: "Tracks" })} />
-      <AppState icon="audio" title={_copy("copy.367c65fc9b46", { defaultValue: "No tracks yet" })} size="compact" />
-    </div>
-  );
-}
-
-function PodcastsCarousel() {
-  const { t: _copy } = _useCopy();
-  return (
-    <div>
-      <SectionHeader icon={Mic2} title={_copy("copy.6ac749b31f9a", { defaultValue: "Podcasts" })} />
-      <AppState icon="stages" title={_copy("copy.729584c56940", { defaultValue: "No podcasts yet" })} size="compact" />
-    </div>
   );
 }
 
@@ -237,14 +220,12 @@ function AllSection({
   isLoading,
   audioChart,
   videoChart,
-  onGoToRadio,
   onOpenStages,
 }: {
   radioStations: RadioStation[];
   isLoading: boolean;
   audioChart: React.ReactNode;
   videoChart: React.ReactNode;
-  onGoToRadio: () => void;
   onOpenStages: () => void;
 }) {
   // Show full skeleton on initial load (no chart loaded yet and still fetching)
@@ -253,13 +234,11 @@ function AllSection({
   }
 
   return (
-    <div className="space-y-4 pb-32">
+    <div className="space-y-10 pb-32">
       {audioChart}
       {videoChart}
-      <RadioChart picks={radioStations} onSeeAll={onGoToRadio} />
+      <RadioChart picks={radioStations} />
       <StagesChart onOpenStages={onOpenStages} />
-      <TracksCarousel />
-      <PodcastsCarousel />
     </div>
   );
 }
@@ -379,8 +358,8 @@ interface MusicFeedProps {
 }
 
 export function MusicFeed({ showFilters = false, isRefreshing = false }: MusicFeedProps) {
-  const [activeSubTab, setActiveSubTab] = useState<MusicSubTab>('all');
-  const [chartSort, setChartSort] = useState<AudioChartSort>('trending');
+  const [activeSubTab, setActiveSubTab] = usePersistedFeedFilter<MusicSubTab>('music', 'subTab', 'all');
+  const [chartSort, setChartSort] = usePersistedFeedFilter<AudioChartSort>('music', 'chartSort', 'trending');
   const [videoChartSort, setVideoChartSort] = useState<MusicVideoChartSort>('views');
   const musicSubIsDraggingRef = useRef(false);
   const { layerRef: musicSubTabLayerRef, setRef: setMusicSubTabRef, rect: musicSubTabRect, onScroll: onMusicSubTabScroll } = useTabIndicator(activeSubTab, undefined, musicSubIsDraggingRef);
@@ -505,8 +484,7 @@ export function MusicFeed({ showFilters = false, isRefreshing = false }: MusicFe
             radioStations={radioStations}
             isLoading={isLoadingAudio && isLoadingVideoChart}
             audioChart={<AudioChart items={audioUploads} isLoading={isLoadingAudio} sort={chartSort} onSort={setChartSort} />}
-            videoChart={<MusicVideoChart items={videoChart} isLoading={isLoadingVideoChart} sort={videoChartSort} onSort={setVideoChartSort} onSeeAll={() => setActiveSubTab('videos')} />}
-            onGoToRadio={() => setActiveSubTab('radio')}
+            videoChart={<MusicVideoChart items={videoChart} isLoading={isLoadingVideoChart} sort={videoChartSort} onSort={setVideoChartSort} />}
             onOpenStages={() => openStageModal('browse')}
           />
         );

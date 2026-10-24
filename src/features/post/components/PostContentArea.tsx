@@ -12,7 +12,8 @@ import type { MediaFile, AudioFile, LiveMode, PollData } from '../types';
 import type { FilterSettings, CropSettings } from '../types/filters';
 import type { DraftVideoSnapshot } from '../lib/draft-video';
 import { useEffect, useCallback, useRef, useState } from 'react';
-import { Save, Clock, Square, Hash } from "lucide-react";
+import { Save, Clock, Square, Hash, AlertTriangle } from "lucide-react";
+import { CONTENT_WARNING_MAX } from '@/components/app/cards/ContentWarningGate';
 import Upload from "@/components/ui/cut-icons/upload";
 import Calendar from "@/components/ui/cut-icons/events";
 
@@ -52,6 +53,10 @@ interface PostContentAreaProps {
   onClearCrop: (index: number) => void;
   onApplyTrim: (index: number, trimStart: number, trimEnd: number) => void;
   onReplaceImage: (index: number, file: File) => void;
+  onSetMediaDescription?: (index: number, description: string) => void;
+  /** The content warning being written, or null when the post has none. */
+  contentWarning?: string | null;
+  onContentWarningChange?: (text: string) => void;
   liveMode: LiveMode;
   canPost: boolean;
   destinations: string[];
@@ -165,6 +170,9 @@ export function PostContentArea({
   onClearCrop,
   onApplyTrim,
   onReplaceImage,
+  onSetMediaDescription,
+  contentWarning,
+  onContentWarningChange,
   liveMode,
   canPost,
   destinations,
@@ -646,8 +654,8 @@ export function PostContentArea({
               >
                 <Save className="w-4 h-4 text-white" />
                 {drafts.length > 0 && (
-                  <span className="absolute -top-1 -right-1 w-4 h-4 rounded-full bg-white text-black text-[10px] font-bold flex items-center justify-center">
-                    {drafts.length}
+                  <span className="absolute -top-1 -right-1 min-w-4 h-4 px-[3px] rounded-full bg-white text-black text-[10px] font-bold flex items-center justify-center">
+                    {drafts.length > 9 ? '9+' : drafts.length}
                   </span>
                 )}
               </motion.button>
@@ -712,6 +720,22 @@ export function PostContentArea({
         </AnimatePresence>
         {/* One full-width editor below the avatar and control row. */}
         <div className="mt-3 min-w-0">
+            {/* Content warning: shown instead of the post until a viewer opens it. */}
+            {contentWarning !== null && contentWarning !== undefined && onContentWarningChange && (
+              <div className="mb-2 flex items-center gap-2 rounded-xl border border-amber-400/30 bg-amber-400/10 px-3 py-2">
+                <AlertTriangle className="h-4 w-4 shrink-0 text-amber-300" aria-hidden="true" />
+                <input
+                  type="text"
+                  value={contentWarning}
+                  onChange={(e) => onContentWarningChange(e.target.value)}
+                  placeholder={_copy('contentWarning.placeholder')}
+                  aria-label={_copy('contentWarning.label')}
+                  maxLength={CONTENT_WARNING_MAX}
+                  autoFocus
+                  className="w-full bg-transparent text-sm text-white outline-none placeholder:text-white/50"
+                />
+              </div>
+            )}
             {/* Title input - shown when title toggle is on OR video/audio */}
             {(showTitle || hasVideo || hasAudio) && (
               <input
@@ -809,6 +833,7 @@ export function PostContentArea({
             onClearCrop={onClearCrop}
             onApplyTrim={onApplyTrim}
             onReplaceImage={onReplaceImage}
+            onSetDescription={onSetMediaDescription}
             onFullscreenChange={onMediaFullscreenChange}
             draftVideo={draftVideo}
           />

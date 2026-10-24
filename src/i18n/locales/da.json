@@ -1,4 +1,151 @@
 {
+  "mastodonApps": {
+    "authTitle": "Log ind med DeHub",
+    "authWants": "{{app}} vil bruge din DeHub-konto",
+    "authSignedInAs": "Logget ind som {{name}}",
+    "authSignIn": "Log ind for at fortsætte",
+    "allow": "Tillad",
+    "cancel": "Annuller",
+    "scopeRead": "Se dine tidslinjer, opslag, notifikationer og bogmærker",
+    "scopeWrite": "Slå op, svare, synes godt om, booste og bogmærke som dig",
+    "scopeFollow": "Følge, stoppe med at følge, blokere og skjule konti",
+    "scopePush": "Sende dig notifikationer",
+    "scopeProfile": "Se din profil",
+    "invalid": "Dette login-link er ikke gyldigt. Gå tilbage til appen, og prøv igen.",
+    "failed": "Det virkede ikke. Prøv igen.",
+    "codeTitle": "Kopiér denne kode ind i appen for at gøre login færdigt.",
+    "copy": "Kopiér",
+    "copied": "Kopieret",
+    "seoDescription": "Lad en Mastodon-app bruge din DeHub-konto.",
+    "redirecting": "Sender dig tilbage til {{app}}…",
+    "connectedTitle": "Forbundne apps",
+    "connectedDescription": "Mastodon-apps, du har logget ind i med denne konto. Fjern en for at logge den ud.",
+    "connectedEmpty": "Ingen forbundne apps endnu.",
+    "lastUsed": "Sidst brugt {{date}}",
+    "remove": "Fjern",
+    "removed": "App fjernet"
+  },
+  "fediverse": {
+    "title": "Fediverset",
+    "description": "Folk på Mastodon og andre fediverse-apps kan finde og følge dig på denne adresse. Dine nye offentlige opslag når dem der.",
+    "copy": "Kopiér",
+    "copied": "Kopieret",
+    "privateNote": "Private konti vises ikke på fediverset.",
+    "noUsername": "Vælg et brugernavn for at få en fediverse-adresse."
+  },
+  "profileFields": {
+    "title": "Profilfelter",
+    "description": "Op til fire ekstra linjer på din profil, fx et website eller dine pronomener.",
+    "label": "Etiket",
+    "content": "Indhold",
+    "save": "Gem felter",
+    "saved": "Profilfelter gemt",
+    "failed": "Det blev ikke gemt. Prøv igen.",
+    "verified": "Bekræftet link",
+    "verifyHint": "For at bekræfte et link skal du tilføje dette på den side og gemme igen: {{snippet}}"
+  },
+  "followedTags": {
+    "follow": "Følg #{{tag}}",
+    "following": "Følger",
+    "unfollow": "Stop med at følge #{{tag}}",
+    "followed": "Du følger nu #{{tag}}. Opslag med det vises i dit Følger-feed.",
+    "unfollowed": "Du følger ikke længere #{{tag}}",
+    "failed": "Det blev ikke gemt. Prøv igen.",
+    "clear": "Ryd"
+  },
+  "notificationFilters": {
+    "title": "Filtrér notifikationer fra",
+    "description": "Vælg, hvad der sker, når nogen uden for din kreds interagerer med dig. Filtrerede notifikationer venter under Filtreret uden badge og uden push.",
+    "notFollowing": "Folk, du ikke følger",
+    "notFollowers": "Folk, der ikke følger dig",
+    "newAccounts": "Nye konti (under 30 dage)",
+    "accept": "Giv mig besked",
+    "filter": "Filtrér",
+    "drop": "Skjul helt",
+    "filteredTitle": "Filtrerede notifikationer",
+    "filteredEmpty": "Intet er blevet filtreret.",
+    "failed": "Det blev ikke gemt. Prøv igen."
+  },
+  "keywordFilters": {
+    "title": "Skjulte ord",
+    "description": "Skjul opslag og kommentarer, der indeholder disse ord, eller fold dem sammen bag en advarsel. Kun du kan se listen.",
+    "placeholder": "Ord eller sætning",
+    "add": "Skjul",
+    "added": "Skjult: {{phrase}}",
+    "wholeWord": "Kun hele ord",
+    "whenMatches": "Når et opslag matcher",
+    "warn": "Vis en advarsel",
+    "hide": "Skjul det",
+    "howLong": "Hvor længe",
+    "forever": "Indtil jeg fjerner det",
+    "duration1h": "I 1 time",
+    "duration1d": "I 1 dag",
+    "duration7d": "I 7 dage",
+    "duration30d": "I 30 dage",
+    "where": "Hvor",
+    "home": "Hjem",
+    "public": "Udforsk og søg",
+    "profile": "Profiler",
+    "thread": "Samtaler",
+    "notifications": "Notifikationer",
+    "empty": "Du har ikke skjult nogen ord.",
+    "remove": "Vis igen",
+    "until": "Indtil {{date}}",
+    "filtered": "Filtreret: {{phrase}}",
+    "showAnyway": "Vis alligevel",
+    "failed": "Det blev ikke gemt. Prøv igen."
+  },
+  "postVisibility": {
+    "label": "Hvem kan se dette",
+    "public": "Alle",
+    "followers": "Kun følgere",
+    "direct": "Kun nævnte personer",
+    "noRepost": "Kun offentlige opslag kan deles igen",
+    "directHint": "Kun de personer, du nævner med @, kan se dette opslag",
+    "needsMention": "Nævn mindst én person med @ for kun at dele med nævnte personer"
+  },
+  "replyPolicy": {
+    "label": "Hvem kan svare",
+    "public": "Alle",
+    "followers": "Dine følgere",
+    "following": "Folk du følger",
+    "mentioned": "Kun nævnte",
+    "noticeFollowers": "Kun forfatterens følgere kan svare",
+    "noticeFollowing": "Kun folk, forfatteren følger, kan svare",
+    "noticeMentioned": "Kun folk, der nævnes i opslaget, kan svare",
+    "refused": "Forfatteren har begrænset, hvem der kan svare på dette opslag"
+  },
+  "quotePolicy": {
+    "label": "Hvem kan citere",
+    "public": "Alle",
+    "followers": "Følgere",
+    "nobody": "Kun mig",
+    "off": "Forfatteren har slået citater fra",
+    "removed": "Forfatteren har fjernet sit opslag fra dette citat",
+    "remove": "Fjern",
+    "removedToast": "Dit opslag er fjernet fra dette citat",
+    "removeFailed": "Dit opslag kunne ikke fjernes fra citatet",
+    "refused": "Forfatteren tillader ikke, at du citerer dette opslag"
+  },
+  "contentWarning": {
+    "label": "Indholdsadvarsel",
+    "placeholder": "Skriv din advarsel her",
+    "add": "Tilføj indholdsadvarsel",
+    "remove": "Fjern indholdsadvarsel",
+    "show": "Vis opslag"
+  },
+  "altText": {
+    "badge": "ALT",
+    "add": "Tilføj en beskrivelse",
+    "edit": "Rediger beskrivelse",
+    "titleImage": "Beskriv dette billede",
+    "titleVideo": "Beskriv denne video",
+    "help": "Til folk, der ikke kan se det. Skærmlæsere læser det højt.",
+    "placeholder": "Hvad viser det? Medtag eventuel tekst i det.",
+    "show": "Vis beskrivelse",
+    "saved": "Beskrivelse gemt",
+    "saveFailed": "Beskrivelsen kunne ikke gemmes"
+  },
   "liveRecap": {
     "title": "Stream opsummering",
     "justEnded": "Opsummering af din stream",
@@ -113,11 +260,12 @@
     "heading": "DeHub Shorts"
   },
   "settings": {
-    "showDislikesDesc": "Alle kan åbne fanen Dislikes på din profil. Når dette er slået fra, kan kun du se den.",
-    "showDislikes": "Vis mine dislikes for alle",
+    "usernameTaken": "Brugernavnet er taget",
     "postingChain": "Blockchain til opslag",
     "showOnline": "Vis, når jeg er online",
     "showOnlineDesc": "Personer, du sender en besked til, ser en grøn prik ved siden af dit navn, mens du bruger DeHub",
+    "showDislikes": "Vis mine dislikes for alle",
+    "showDislikesDesc": "Alle kan åbne fanen Dislikes på din profil. Når dette er slået fra, kan kun du se den.",
     "smartReplies": "Foreslåede svar",
     "smartRepliesDesc": "Skriver to svar, du kan trykke på i en chat. × på forslagene slår det fra.",
     "title": "Indstillinger",
@@ -241,6 +389,11 @@
       "hintDeny": "AI-systemer og crawlere, der respekterer dette signal, bliver bedt om ikke at træne på din lyd, kunst og skrivning. Crawlere, der ignorerer signalet, blokeres ikke af det.",
       "saved": "AI-træningspræference gemt"
     },
+    "defaultFeed": "Standardfeed",
+    "defaultFeedDesc": "Vælg hvilket feed der åbner, hver gang du åbner DeHub",
+    "feedToggles": "Nulstil feedfiltre",
+    "feedTogglesDesc": "Filtre du slår til i et feed, forbliver dine standarder, indtil du nulstiller dem",
+    "feedTogglesCleared": "Feedfiltre nulstillet",
     "defaultProfileTab": "Standardfane på profilen",
     "defaultProfileTabDesc": "Vælg, hvilken fane besøgende ser først på din profil",
     "public": "Offentlig",
@@ -632,6 +785,9 @@
     "dmSent": "Sendte {{amount}} tokens til {{name}}!"
   },
   "postOptions": {
+    "embed": "Indlejr",
+    "copyEmbedCode": "Kopiér indlejringskode",
+    "embedCodeCopied": "Indlejringskode kopieret",
     "options": "Valgmuligheder",
     "aiOverview": "AI-overblik",
     "sendTip": "Send drikkepenge",
@@ -659,7 +815,8 @@
     "unpinPost": "Fjern fastgørelse fra din profil",
     "postPinned": "Fastgjort til din profil",
     "postUnpinned": "Ikke fastgjort fra din profil",
-    "pinFailed": "Kunne ikke fastgøre eller frigøre dette indlæg"
+    "pinFailed": "Kunne ikke fastgøre eller frigøre dette indlæg",
+    "copyFailed": "Linket kunne ikke kopieres"
   },
   "filters": {
     "sort": "Sorter",
@@ -1397,7 +1554,6 @@
     "returnHome": "Tilbage til forsiden"
   },
   "profile": {
-    "dislikes": { "loadMore": "Indlæs flere", "privateDesc": "Denne konto holder sine dislikes for sig selv.", "privateTitle": "Dislikes er private", "emptyOther": "Intet endnu.", "emptyOwn": "Opslag, du disliker, forsvinder fra dine feeds og vises her. Fortryd et dislike for at få opslaget tilbage.", "emptyTitle": "Ingen dislikes endnu" },
     "back": "Tilbage",
     "usernameAvailable": "Brugernavn er ledigt!",
     "signUpToClaim": "Tilmeld dig og gør krav på det",
@@ -1425,8 +1581,16 @@
       "commentUnavailable": "Denne kommentar er ikke længere tilgængelig"
     },
     "tabs": {
-      "dislikes": "Dislikes",
-      "playlists": "Spillelister"
+      "playlists": "Spillelister",
+      "dislikes": "Dislikes"
+    },
+    "dislikes": {
+      "emptyTitle": "Ingen dislikes endnu",
+      "emptyOwn": "Opslag, du disliker, forsvinder fra dine feeds og vises her. Fortryd et dislike for at få opslaget tilbage.",
+      "emptyOther": "Intet endnu.",
+      "privateTitle": "Dislikes er private",
+      "privateDesc": "Denne konto holder sine dislikes for sig selv.",
+      "loadMore": "Indlæs flere"
     },
     "offerWorthNow": "Cirka {{amount}} tokens til den aktuelle kurs",
     "offerNotePlaceholder": "Tilføj en note (valgfrit)",
@@ -1983,6 +2147,8 @@
     "copyFailed": "Kunne ikke kopiere"
   },
   "profileOptions": {
+    "copyRssFeed": "Kopiér link til RSS-feed",
+    "rssFeedCopied": "Link til RSS-feed kopieret",
     "copyProfileUrl": "Kopiér profil-URL",
     "copyUsername": "Kopiér brugernavn",
     "copyAddress": "Kopiér adresse",
@@ -2284,6 +2450,7 @@
     "pendingSubmitted": "{{amount}} tokens indsendt. Bekræftelse er stadig under kontrol. Send den ikke igen."
   },
   "communities": {
+    "chatTab": "Chat",
     "title": "Fællesskaber",
     "create": "Opret",
     "searchPlaceholder": "Søg fællesskaber...",
@@ -2318,7 +2485,30 @@
     "addDescription": "Tilføj en beskrivelse...",
     "communityDescription": "Fællesskabsbeskrivelse...",
     "posts": "Opslag",
-    "chat": "Chat",
+    "chat": {
+      "intervalHour": "1 time",
+      "intervalHours": "{{count}}timer",
+      "intervalMinute": "1 minut",
+      "intervalMinutes": "{{count}} minutter",
+      "intervalSecond": "1 sekund",
+      "intervalSeconds": "{{count}} sekunder",
+      "muted": "Du er slået fra",
+      "mutedUntil": "Du er slået fra indtil {{until}}",
+      "postingDisabled": "Opslag er deaktiveret for medlemmer her",
+      "pinnedGif": "GIF",
+      "pinnedMedia": "Medier",
+      "jumpToPinned": "Gå til den fastgjorte besked",
+      "pinnedMessage": "Fastgjort besked",
+      "unpin": "Fjern fastgørelse",
+      "pin": "Pin",
+      "delete": "Slet",
+      "slowMode": "Langsom tilstand: en besked hver {{interval}}",
+      "slowModeWait": "Langsom tilstand — vent {{time}}",
+      "send": "Send",
+      "deleteMessageTitle": "Vil du slette denne besked?",
+      "deleteMessageBody": "Dette kan ikke fortrydes.",
+      "cancel": "Annuller"
+    },
     "membersTab": "Medlemmer ({{count}})",
     "about": "Om",
     "backToCommunities": "Fællesskaber",
@@ -3785,6 +3975,7 @@
     "sellYourFractions": "Sælg dine brøkdele ({{held}} holdt)"
   },
   "creator": {
+    "libraryEmpty": "Dine gemte genereringer vises her.",
     "whatToCreate": "Hvad skal der oprettes",
     "startCreatingWith": "Start med at skabe med {{model}}",
     "studioSubtitle": "Beskriv en scene, karakter, stemning eller stil. Resultater vises nedenfor og går direkte ind i editoren.",
@@ -5357,6 +5548,8 @@
     }
   },
   "goLive": {
+    "bigEvent": "Stort event",
+    "bigEventHint": "Til store publikummer: seerne ser cirka 20 sekunder forsinket, men med færre afbrydelser.",
     "goLive": "Gå Live",
     "youAreLive": "Du er Live",
     "streamReady": "Stream Klar",
@@ -6092,7 +6285,10 @@
     "play": "Spil",
     "pause": "Sæt på pause",
     "listens_one": "{{count}} lyt",
-    "listens_other": "{{count}} listens"
+    "listens_other": "{{count}} listens",
+    "lyrics": "Sangtekst",
+    "lyricsLoading": "Finder sangtekst…",
+    "lyricsNone": "Ingen sangtekst fundet"
   },
   "converter": {
     "seoTitle": "Converter — importer en video til DeHub",
@@ -6608,6 +6804,7 @@
     "seoDescription": "Officiel DeHub-dokumentation: platformsoverblik, dApps, tokens-tokenøkonomi, staking, spil, roadmap, FAQ og mere."
   },
   "dex": {
+    "title": "tokens / USD",
     "seoTitle": "DEX — Handl tokens til din pris",
     "seoDescription": "Indstil din tokens købs- eller salgspris med en Uniswap v4 limit ordre på Base eller BNB Chain. Live ordrebog, markedsdybde og én delt USD-pris.",
     "venue": "Netværk",
@@ -6830,6 +7027,14 @@
     }
   },
   "editor": {
+    "video": {
+      "tFade": "Overtoning",
+      "none": "Ingen",
+      "transition": "Overgang",
+      "speed": "Hastighed",
+      "sound": "Lyd",
+      "video": "Video"
+    },
     "review": {
       "title": "Projektgennemgang",
       "shared": "Delt med dig",
@@ -8491,5 +8696,15 @@
     "posted": "Slået op",
     "view": "Vis",
     "failed": "Videoen kunne ikke behandles"
+  },
+  "loginStack": {
+    "tip": "Giv DHB-drikkepenge",
+    "headlineTop": "Du kommer til at eje alt",
+    "headlineAccent": "og være glad.",
+    "orContinueWith": "eller fortsæt med",
+    "phone": "Telefon",
+    "fingerprint": "Fingeraftryk",
+    "exploreFirst": "Udforsk først",
+    "codeNote": "Vi sender dig en kode på e-mail, ingen adgangskode."
   }
 }

@@ -137,7 +137,7 @@ export interface RateLimit {
 
 /**
  * Fixed-window rate limit keyed on (bucketKey, actionType) in public.edge_rate_limits.
- * Fails OPEN on any DB error — bookkeeping must never take a working feature down.
+ * Consumes the budget atomically. Unavailable bookkeeping fails closed.
  */
 export async function checkRateLimit(
   supabase: SupabaseClient,
@@ -145,44 +145,28 @@ export async function checkRateLimit(
   actionType: string,
   cfg: RateLimit,
 ): Promise<{ allowed: boolean; remaining: number; resetAt: Date }> {
-  const now = new Date();
-  const cutoff = new Date(now.getTime() - cfg.windowMs);
+  const unavailable = { allowed: false, remaining: 0, resetAt: new Date(Date.now() + 30_000) };
   try {
-    const { data } = await supabase
-      .from("edge_rate_limits")
-      .select("count, window_start")
-      .eq("bucket_key", bucketKey)
-      .eq("action_type", actionType)
-      .maybeSingle();
-
-    if (!data || new Date(data.window_start) < cutoff) {
-      await supabase.from("edge_rate_limits").upsert({
-        bucket_key: bucketKey,
-        action_type: actionType,
-        count: 1,
-        window_start: now.toISOString(),
-      });
-      return { allowed: true, remaining: cfg.limit - 1, resetAt: new Date(now.getTime() + cfg.windowMs) };
+    const { data, error } = await supabase.rpc("consume_edge_rate_limit", {
+      p_bucket_key: bucketKey, p_action_type: actionType,
+      p_limit: cfg.limit, p_window_ms: cfg.windowMs,
+    });
+    const row = data?.[0];
+    if (error || !row || typeof row.allowed !== 'boolean' || !Number.isFinite(Date.parse(row.reset_at))) {
+      console.error('Rate limit storage unavailable', { actionType, code: error?.code });
+      return unavailable;
     }
-
-    const resetAt = new Date(new Date(data.window_start).getTime() + cfg.windowMs);
-    if (data.count >= cfg.limit) return { allowed: false, remaining: 0, resetAt };
-
-    await supabase
-      .from("edge_rate_limits")
-      .update({ count: data.count + 1 })
-      .eq("bucket_key", bucketKey)
-      .eq("action_type", actionType);
-    return { allowed: true, remaining: cfg.limit - data.count - 1, resetAt };
+    return { allowed: row.allowed, remaining: row.remaining, resetAt: new Date(row.reset_at) };
   } catch {
-    return { allowed: true, remaining: cfg.limit, resetAt: new Date(now.getTime() + cfg.windowMs) };
+    console.error('Rate limit storage unavailable', { actionType });
+    return unavailable;
   }
 }
 
 /**
  * Per-IP rate limit for endpoints that must stay reachable without login (public or
  * paid endpoints the client invokes with only the anon key). Returns a ready 429
- * response when over the limit, or null to continue. Fails OPEN on any DB error.
+ * response when over the limit, or null to continue. Fails closed on any DB error.
  */
 export async function rateLimitByIp(
   req: Request,
