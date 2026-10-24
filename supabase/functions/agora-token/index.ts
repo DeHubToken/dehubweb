@@ -46,15 +46,16 @@ const corsHeaders = {
  * this costs nothing at the call sites.
  *
  * ── Rollout ──
- * Refusing outright would break every already-installed client that does not
- * yet send the header — every mobile build in the wild, and every browser tab
- * holding an older chunk. So the gate ships in report-only mode: it evaluates,
- * logs what it WOULD refuse, and issues the token anyway. Set
- * AGORA_PUBLISHER_GATE=enforce once the logs are quiet to turn it on, with no
- * redeploy needed to go back.
+ * The gate shipped in report-only mode in August 2026 so that installed
+ * clients which did not yet send the header kept working. Both apps have sent
+ * it since late August 2026, but report mode kept the hole open for as long
+ * as nobody set the flag: every caller still got a publisher token.
+ *
+ * It now enforces by default. AGORA_PUBLISHER_GATE=report is the off switch —
+ * it logs what it would refuse and issues the token anyway, with no redeploy.
  */
 function gateMode(): "enforce" | "report" {
-  return Deno.env.get("AGORA_PUBLISHER_GATE") === "enforce" ? "enforce" : "report";
+  return Deno.env.get("AGORA_PUBLISHER_GATE") === "report" ? "report" : "enforce";
 }
 
 /**
@@ -197,8 +198,8 @@ serve(async (req) => {
             { status: 403, headers: { ...corsHeaders, "Content-Type": "application/json" } },
           );
         }
-        // Report-only: this is what enforcing would have blocked. Quiet logs
-        // here are the signal that AGORA_PUBLISHER_GATE=enforce is safe.
+        // Report-only (AGORA_PUBLISHER_GATE=report): this is what enforcing
+        // would have blocked.
         console.warn(
           `[agora-token] would refuse publisher for ${channelName}: ${refusal} (gate=report)`,
         );
