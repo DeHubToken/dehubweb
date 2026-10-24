@@ -1113,6 +1113,7 @@ export const zh_tw = {
     diagramMinersRole2: '以 DeHub 代币交换',
   },
   e2ee: {
+    flowEcdh: 'X25519 ECDH 魔法',
     title: '端到端加密（E2EE）',
     howWorksTitle: 'DeHub的端到端加密是如何工作的',
     whatSecureTitle: '🛡️ 我们的E2EE为何安全？',
@@ -2092,6 +2093,9 @@ export const zh_tw = {
     resultMany: '{count} 结果',
   },
   docsSearchIndex: {
+    dappsTitle: '去中心化應用程式',
+    depinTitle: 'DePIN 網路',
+    faqTitle: '常見問題',
     adBadgeTargetingDesc: '根据用户徽章等级、每徽章 CPM 率进行目标广告定向，螃蟹、幽灵螃蟹、食人鱼、巨龟、王蛇、章鱼、鳄鱼、海豚的广告成本',
     adBadgeTargetingTitle: '徽章定向广告',
     advertiserDashboardDesc: '广告商仪表板，用于管理营销活动、分析、预算管理、广告表现、活动创建、ROI 跟踪',
@@ -2180,6 +2184,8 @@ export const zh_tw = {
     tokenUtilityDesc: 'DeHub令牌实用性、持有者利益、质押奖励、治理权、生态系统利益、徽章、打赏、内容创作、审核',
   },
   docsSeo: {
+    troubleshootingDesc: 'DeHub 常見問題、錯誤訊息及解決方法。',
+    webhooksTitle: 'Webhook — DeHub 文件',
     advertisingDesc: 'DeHub的POVR广告技术解释：证明观众和排名，抗欺诈广告活动和创作者的收入分享。',
     advertisingTitle: '广告 — DeHub 文档',
     appDesc: 'DeHub移动应用程序和桌面应用程序的使用指南。',

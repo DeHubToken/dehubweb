@@ -2648,6 +2648,8 @@ export const sv = {
     resultMany: '{count} resultat',
   },
   docsSearchIndex: {
+    bridgeTitle: 'Brygga',
+    tokenEconomicsTitle: 'Tokenekonomi och emission',
     adBadgeTargetingDesc: 'Rikta annonser baserat på användarmärkesnivåer, CPM-priser per märke, Crab Ghost Lobster Piranha Giant Tortoise King Cobra Octopus Crocodile Dolphin reklamkostnader',
     adBadgeTargetingTitle: 'Märkesbaserad annonsinriktning',
     advertiserDashboardDesc: 'Kontrollpanel för annonsörer för att hantera kampanjer, analyser, budgethantering, annonsresultat, kampanjskapande, ROI-spårning',
@@ -2737,6 +2739,8 @@ export const sv = {
     whereToBuyTitle: 'Var man kan köpa',
   },
   docsSeo: {
+    tokenEconomicsTitle: 'Tokenekonomi — DeHub-dokumentation',
+    tokenUtilityTitle: 'Tokennytta — DeHub-dokumentation',
     advertisingDesc: 'DeHubs POVR-annonsteknik förklarade: proof-of-view-and-rank, bedrägeriresistenta kampanjer och intäktsdelning för kreatörer.',
     advertisingTitle: 'Reklam — DeHub Docs',
     appDesc: 'Guider för DeHubs mobil- och datorprogram.',

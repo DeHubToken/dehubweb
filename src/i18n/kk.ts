@@ -1297,6 +1297,7 @@ export const kk = {
     diagramMinersRole2: 'deHub таңбашаларының орнына',
   },
   e2ee: {
+    flowEcdh: 'X25519 ECDH сиқыры',
     title: 'Шифрлауды аяқтау (E2EE)',
     howWorksTitle: 'DeHub шифрлауының соңы қалай жұмыс істейді',
     whatSecureTitle: 'Біздің E2EE қауіпсіздігімізді 🛡️ не қамтамасыз етеді?',
@@ -2436,6 +2437,8 @@ export const kk = {
     resultMany: '{count} Нәтижелер',
   },
   docsSearchIndex: {
+    dappsTitle: 'dApp қосымшасы',
+    depinTitle: 'DePIN желісі',
     adBadgeTargetingDesc: 'Пайдаланушы белгісі деңгейлеріне негізделген мақсатты жарнамалар, әр белгіге CPM тарифтері, Crab Ghost Lobster Piranha Giant Tortoise King Cobra Octopus Crocodile Dolphin жарнамалық шығындары',
     adBadgeTargetingTitle: 'Танымбелгіге негізделген жарнамалық бағыттау',
     advertiserDashboardDesc: 'Акцияларды, аналитиканы, бюджетті басқару, жарнамалық өнімділік, науқан жасау, зерттеу аймағын қадағалау үшін жарнама берушінің бақылау тақтасы',

@@ -2369,6 +2369,11 @@ export const ti = {
     title: 'ነቲ ዶክታት ድለዮ',
   },
   docsSearchIndex: {
+    badgesDesc: 'ስርዓት ባጅ፣ ደረጃታት ባጅ፣ Crab፣ Ghost Lobster፣ Piranha፣ Giant Tortoise፣ King Cobra፣ Octopus፣ Crocodile፣ Dolphin፣ Tiger Shark፣ Killer Whale፣ Great White፣ Blue Whale፣ Megalodon፣ ባጃት ዋናታት፣ ዝተታሕዙ ቶከናት፣ ደረጃታት ባጅ፣ ስርዓት ደረጃ፣ ሽልማት ባጅ',
+    dappsTitle: 'ዲኣፕ',
+    depinTitle: 'መርበብ DePIN',
+    gamesDesc: 'ስነ-ምህዳር ጸወታ ኣብ DeHub፣ ተጻወት እሞ ኣኽብ፣ ምትእስሳር NFT፣ መሰረተ-ልምዓት ጸወታ፣ ውድድራት፣ ዕጭ፣ ሎተሪ',
+    rewardsDesc: 'ኣብ DeHub ሽልማት ምርካብ፣ ሽልማት ትሕዝቶ፣ መኽሰብ ስተይኪንግ፣ ሽልማት ምዕዳም፣ ብዘይ ቀጻሊ ጻዕሪ ዝእቶ ኣታዊ',
     adBadgeTargetingDesc: 'ኣብ ናይ ተጠቀምቲ ባጅ ደረጃታት ፣ ኣብ ነፍሲ ወከፍ ባጅ CPM ተመኖች ፣ ክራብ Ghost Lobster Piranha Giant Tortoise King Cobra Octopus Crocodile Dolphin ናይ ኣስተዋጽኦ ወጻኢታት',
     adBadgeTargetingTitle: 'ኣብ ባጅ እተመስረተ ኣቃውማ ኣቃውማ',
     advertiserDashboardDesc: 'ናይ ኣስተዋጽኦ ዳሽቦርድ ንማሕደራ ዘመቻታት ፣ ትንታነ ፣ ናይ ባጀት ምሕደራ ፣ ናይ ኣስተዋጽኦ ኣፈፃፅማ ፣ ናይ ወፍሪ ምፍጣር ፣ ROI ትራኪንግ',
@@ -2455,6 +2460,10 @@ export const ti = {
     whereToBuyTitle: 'ኣበይ ክገዝእ',
   },
   docsSeo: {
+    faqTitle: 'ተደጋጋሚ ሕቶታት — ሰነዳት DeHub',
+    tokenTitle: 'ቶከናት DeHub — ሰነዳት DeHub',
+    tokenUtilityTitle: 'ጥቕሚ ቶከን — ሰነዳት DeHub',
+    webhooksTitle: 'ዌብሁክ — ሰነዳት DeHub',
     advertisingDesc: 'DeHub\'s POVR ad tech ገለጸ ፡ ናይ ምርኣይ-ን-ደረጃ ፡ ናይ ምትላል-ተጻዋርነት ዘመቻታትን ንፈጣሪያት ናይ ኣታዊ ምዝርጋሕን መርትዖታት ።',
     advertisingTitle: 'ኣስተዋጽኦ — DeHub Docs',
     appDesc: 'ናይ DeHub ሞባይልን ዴስክቶፕን መተግበሪታት መምርሒታት ።',

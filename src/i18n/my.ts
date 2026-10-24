@@ -2365,6 +2365,9 @@ export const my = {
     resultMany: '{count} ရလဒ်များ',
   },
   docsSearchIndex: {
+    blogTitle: 'အသိုင်းအဝိုင်း ဘလော့ဂ်',
+    dappsTitle: 'dApp အက်ပ်',
+    installationTitle: 'ထည့်သွင်းတပ်ဆင်ခြင်း',
     adBadgeTargetingDesc: 'အသုံးပြုသူတံဆိပ်အလွှာအပေါ်အခြေခံပြီးပစ်မှတ်ကြော်ငြာများ, တံဆိပ်နှုန်း CPM နှုန်းထားများ, Crab Ghost Lobster Piranha ဧရာမလိပ်ဘုရင်ကို Cobra Octopus Crocodile Dolphin ကြော်ငြာကုန်ကျစရိတ်',
     adBadgeTargetingTitle: 'တံဆိပ်အခြေပြု ကြော်ငြာ ပစ်မှတ်ထားခြင်း',
     advertiserDashboardDesc: 'မဲဆွယ်စည်းရုံးရေးစီမံခန့်ခွဲမှုအတွက် Advertiser ဒက်ရှ်ဘုတ်, ခွဲခြမ်းစိတ်ဖြာ, ဘတ်ဂျက်စီမံခန့်ခွဲမှု, ကြော်ငြာစွမ်းဆောင်ရည်, မဲဆွယ်စည်းရုံးရေးဖန်တီးမှု, ROI ကိုခြေရာခံ',

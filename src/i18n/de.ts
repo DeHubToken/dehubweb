@@ -2539,6 +2539,8 @@ export const de = {
     limitedSlots: 'Limited-Partnership-Slots für unseren offiziellen Start verfügbar',
   },
   docsSearchIndex: {
+    categoryBlog: 'Blogartikel',
+    categoryToken: 'Tokens',
     adBadgeTargetingDesc: 'Zielanzeigen basierend auf Benutzerabzeichenstufen, CPM-Raten pro Abzeichen, Crab Ghost Lobster Piranha Giant Tortoise King Cobra Octopus Crocodile Dolphin Werbekosten',
     adBadgeTargetingTitle: 'Ausweisbasiertes Anzeigen-Targeting',
     advertiserDashboardDesc: 'Dashboard für Werbetreibende zur Verwaltung von Kampagnen, Analysen, Budgetverwaltung, Anzeigenleistung, Kampagnenerstellung, ROI-Tracking',

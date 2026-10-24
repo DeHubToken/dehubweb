@@ -1330,6 +1330,7 @@ export const he = {
     diagramMinersRole2: 'בתמורה לטוקנים DeHub',
   },
   e2ee: {
+    flowNonce: 'נונס',
     title: 'הצפנה מקצה לקצה (E2EE)',
     howWorksTitle: 'איך ההצפנה מקצה לקצה של DeHub עובדת',
     whatSecureTitle: '🛡️ מה הופך את ה-E2EE שלנו למאובטח?',
@@ -2497,6 +2498,8 @@ export const he = {
     limitedSlots: 'מספר מקומות שותפות מוגבל לזמן השקיעה הרשמי',
   },
   docsSearchIndex: {
+    dappsTitle: 'אפליקציית dApp',
+    depinTitle: 'רשת DePIN',
     adBadgeTargetingDesc: 'פרסום מותאם לפי דרגות התג, קצב CPM לפי דרגה, Crab Ghost Lobster Piranha Giant Tortoise King Cobra Octopus Crocodile Dolphin עלות פרסום',
     adBadgeTargetingTitle: 'פרסום מבוסס על תגים',
     advertiserDashboardDesc: 'דפדפן המוציא לפועל קמפיינים, ניתוחים, ניהול תקציב, ביצועי פרסום, יצירת קמפיינים, עקיבת ROI',

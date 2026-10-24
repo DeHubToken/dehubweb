@@ -2368,6 +2368,8 @@ export const et = {
     limitedSlots: 'Piiratud partnerluse ajavahemikud on saadaval meie ametlikuks turuletoomiseks',
   },
   docsSearchIndex: {
+    categoryToken: 'Žetoonid',
+    privacyPolicyTitle: 'Privaatsuspoliitika',
     adBadgeTargetingDesc: 'Tarkvara reklami kasutajate lippude tasemete alusel, CPM-tase lippude kohta, Kani, Hirmukala, Hummer, Piranha, Jättkilekurg, Kuningaskober, Pöögiloom, Krokodill, Delfiin reklami kulud',
     adBadgeTargetingTitle: 'Lippude põhine reklami sihtimine',
     advertiserDashboardDesc: 'Reklaamija paneel kampaaniate juhtimiseks, analüütiliste andmete, budjeti juhtimiseks, reklami efektiivsuse, kampaaniate loomiseks, ROI jälgimiseks',
@@ -2457,6 +2459,8 @@ export const et = {
     whereToBuyTitle: 'Kust osta',
   },
   docsSeo: {
+    bestPracticesDesc: 'Soovitatud lähenemisviisid ja kodeerimisstandardid DeHubile ehitamiseks.',
+    dataModelsTitle: 'Andmemudelid — DeHubi dokumentatsioon',
     advertisingDesc: 'DeHubi POVR-reklaamitehnoloogia selgitas: vaatamise ja astme tõendamine, pettusekindlad kampaaniad ja tulude jagamine loojatele.',
     advertisingTitle: 'Reklaam — DeHub Docs',
     appDesc: 'Juhised DeHubi mobiil- ja töölauarakenduste jaoks.',

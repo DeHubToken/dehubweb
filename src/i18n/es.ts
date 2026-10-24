@@ -2413,6 +2413,7 @@ export const es = {
     contactText: 'Las preguntas sobre estas pautas, o los informes que necesitan atención urgente, pueden enviarse a dev@dehub.io.',
   },
   docsSearchIndex: {
+    categoryToken: 'Tokens',
     adBadgeTargetingDesc: 'Dirigir anuncios basados en niveles de tarjeta de usuario, tasas CPM por tarjeta, Crab Ghost Lobster Piranha Giant Tortoise King Cobra Octopus Crocodile Dolphin costos de publicidad',
     adBadgeTargetingTitle: 'Targeteo de anuncios basado en tarjetas',
     advertiserDashboardDesc: 'Panel de control para anunciantes para gestionar campañas, análisis, gestión de presupuesto, rendimiento de anuncios, creación de campañas, seguimiento de ROI',

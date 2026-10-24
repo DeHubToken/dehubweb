@@ -2429,6 +2429,10 @@ export const dyu = {
     limitedSlots: 'An ka baara daminɛ na, an be se ka baara kɛ ni ɲɔgɔn ye cogo nɔgɔman na',
   },
   docsSearchIndex: {
+    docsHomeDesc: 'Aw bisimila DeHub ka sɛbɛnw na. Aw ye an ka platforme min sigilen bɛ infrastrɛkitiri tilalen kan, token ka sɔrɔko, DePIN rezo ani baarakɛminanw lɔn.',
+    gamesDesc: 'Tulon siyaw DeHub kan, ka tulon kɛ ka wari sɔrɔ, NFT donni a la, tulon infrastrɛkitiri, tulon kɛnɛw, tɔmbola, lotori',
+    quickstartDesc: 'DeHub platforme daminɛ teliya gidi, ka daminɛ, sen fɔlɔw, labɛnni cikanw',
+    rewardsDesc: 'Ka sara sɔrɔ DeHub kan, fɛn dilannenw ka sara, staking tɔnɔ, mɔgɔ weelelenw ka sara, tɔnɔ min bɛ na a yɛrɛ ma',
     adBadgeTargetingDesc: 'Iklan sasaran berdasarkan tingkatan badge pengguna, CPM per badge, biaya iklan: Krab, Hantu Lobster, Piranha, Kura-Kura Raksasa, Ular Raja, Octopus, Buaya, Lumba-Lumba, Ikan Harimau, Paus Pembunuh, Paus Putih, Paus Biru, Megalodon',
     adBadgeTargetingTitle: 'Targeting Iklan Berdasarkan Badge',
     advertiserDashboardDesc: 'Dashboard pengiklan untuk mengelola kampanye, analisis, pengelolaan anggaran, kinerja iklan, pembuatan kampanye, pelacakan ROI',
@@ -2516,6 +2520,7 @@ export const dyu = {
     whereToBuyDesc: 'DeHub ka tagamasiyɛnw san wariw, jago kɛyɔrɔw, wari sɔrɔyɔrɔw, DEX, CEX sɛbɛninw, Uniswap, PancakeSwap',
   },
   docsSeo: {
+    overviewDesc: 'DeHub lajɛli bɛɛ lajɛlen: a ka laseli, a daminɛ ani sosiyali ekosistɛmu tilalen min ye a baarakɛlaw ta ye.',
     advertisingTitle: 'Advertising — DeHub Docs',
     appTitle: 'App Guide — DeHub Docs',
     architectureDesc: 'DeHub sistem kɔnfigirali, sarivisi ani on-chain infrastriki.',

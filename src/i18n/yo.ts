@@ -68,6 +68,9 @@ export const yo = {
     copyFailedDesc: 'Jọ̀wọ́ dà àdírẹ́sì fúnra rẹ.',
   },
   home: {
+    bannerAltAppFeed: 'Ìṣàn ìfiránṣẹ́ ápù DeHub tí a ṣe àtúnṣe',
+    bannerAltDhbScan: 'Àwọn ìwọ̀n DHBScan',
+    bannerAltHelicopter: 'Hẹlikóptà Last Chad Standing',
     welcomeTo: 'Ẹ kú àbọ̀ sí',
     ourDocs: 'Àkọsílẹ̀ Wa',
     heroDescription: 'Gbogbo ohun tí o nílò láti lo, ṣàpapọ̀, kọ́, àti mú pẹ̀lú pẹpẹ wa. Láti àwọn ìtọ́sọ́nà ìbẹ̀rẹ̀ yára sí àwọn ètò ìlànà gíga.',
@@ -1141,6 +1144,7 @@ export const yo = {
     diagramMinersRole2: 'ní pàṣípààrọ̀ fún àwọn àmì DeHub',
   },
   e2ee: {
+    flowEcdh: 'Idán X25519 ECDH',
     title: 'Ìparí To End Encryption (E2EE)',
     howWorksTitle: 'Bí ìforúkọsílẹ̀ òpin sí òpin DeHub ṣe ń ṣiṣẹ́.',
     whatSecureTitle: '🛡️ Kí ló mú kí E2EE wa wà ní ààbò?',
@@ -2153,6 +2157,11 @@ export const yo = {
     resultMany: '{count} abajade',
   },
   docsSearchIndex: {
+    advertiserDashboardTitle: 'Pátákó Ìṣàkóso Olùpolówó',
+    badgesDesc: 'Ètò àmì-ẹ̀yẹ, ìpele àmì-ẹ̀yẹ, Crab, Ghost Lobster, Piranha, Giant Tortoise, King Cobra, Octopus, Crocodile, Dolphin, Tiger Shark, Killer Whale, Great White, Blue Whale, Megalodon, àmì-ẹ̀yẹ olùdìmú, tọ́kẹ̀nì tí a ní, ìpele àmì-ẹ̀yẹ, ètò ìpele, èrè àmì-ẹ̀yẹ',
+    blogDesc: 'Búlọ́ọ̀gù àwùjọ DeHub, ìròyìn tuntun, àfikún, ìkéde, òye, ìtàn, àpilẹ̀kọ',
+    stakeTitle: 'Ìfipamọ́ Tọ́kẹ̀nì',
+    tippingTitle: 'Ètò Ẹ̀bùn Owó',
     adBadgeTargetingDesc: 'Ifojusi awọn ipolowo ti o da lori awọn ipele badge olumulo, awọn oṣuwọn CPM fun badge, Crab Ghost Lobster Piranha Giant Tortoise King Cobra Octopus Crocodile Dolphin iye owo ipolowo',
     adBadgeTargetingTitle: 'Ifojusi Ipolowo ti o da lori Badge',
     advertiserDashboardDesc: 'Dasibodu ipolowo fun ṣiṣakoso awọn ipolongo, awọn atupale, iṣakoso isuna, iṣẹ ipolowo, ẹda ipolongo, titele ROI',
@@ -2239,6 +2248,7 @@ export const yo = {
     whereToBuyTitle: 'Níbo Ló Ti Rà Á',
   },
   docsSeo: {
+    tokenOverviewDesc: 'Bí tọ́kẹ̀nì DeHub ṣe ń ṣiṣẹ́ nínú ápù: fífúnni ní ẹ̀bùn owó, ṣíṣí àkóónú, èrè, kírẹ́dítì AI, pínpín èrè àti ìdíyelé $0.001 nínú ápù.',
     advertisingDesc: 'Ìmọ̀-ẹ̀rọ ìpolówó POVR ti DeHub tí a ṣàlàyé: ẹ̀rí-ìwòran-àti-ìpò (proof-of-view-and-rank), àwọn ìpolówó tó kọjú ìjà sí ẹ̀tàn àti pípín èrè fún àwọn olùṣẹ̀dá.',
     advertisingTitle: 'Ìpolówó — DeHub Docs',
     appDesc: 'Àwọn ìtọ́sọ́nà fún àwọn àpílétò DeHub fún fóònù àti kọ̀ǹpútà.',

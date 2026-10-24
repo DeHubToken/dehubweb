@@ -1301,6 +1301,9 @@ export const sd = {
     diagramMinersRole2: 'ڊيھب ٽوکنز جو بدلے ۾',
   },
   e2ee: {
+    flowCiphertextTag: 'سائفر ٽيڪسٽ + تصديق ٽيگ',
+    flowCiphertextTag16: 'سائفر ٽيڪسٽ + تصديق ٽيگ (16 بائٽس)',
+    flowPlaintextBytes: 'سادي متن جا بائٽس',
     title: 'E2E انڪرپشن',
     description: 'DeHub سڀني نجي پيغامن لاءِ آخر کان آخر انڪرپشن لاڳو ڪري ٿو.',
     howItWorks: 'ڪيئن ڪم ڪري ٿو',
@@ -2504,6 +2507,7 @@ export const sd = {
     popularGovernance: 'گورننس',
   },
   docsSearchIndex: {
+    e2eeTitle: 'شروع کان آخر تائين انڪرپشن',
     adBadgeTargetingDesc: 'ڪسٽميرز کي ٽارگت ڪري، CPM ريتس پير Badge، Crab Ghost Lobster Piranha Giant Tortoise King Cobra Octopus Crocodile Dolphin اڪسپينس',
     adBadgeTargetingTitle: 'Badge-Based Ad ٽارگٽنگ',
     advertiserDashboardDesc: 'ڪسٽمير ڊيش بورڊ، کمپينز جو مينجمنٽ، آنالائٽڪس، بجٹ مينجمنٽ، اڪسپينس پرفارمنس، کمپينز جو تخليق، ROI ٽرڪنگ',
@@ -2594,6 +2598,7 @@ export const sd = {
     socialTitle: 'سماجي خصوصيتون',
   },
   docsSeo: {
+    endpointsTitle: 'API اينڊپوائنٽس — DeHub دستاويز',
     advertisingDesc: 'DeHub جي POVR اشتهار ٽيڪ وضاحت ڪئي: ثبوت جي نظرثاني ۽ درجه بندي، دوکي جي مزاحمتي مهم ۽ تخليق ڪندڙن لاءِ آمدني جي حصيداري.',
     advertisingTitle: 'اشتهارن — DeHub دستاويز',
     appDesc: 'DeHub موبائل ۽ ڊيسڪ ٽاپ ايپليڪيشنن لاءِ گائيڊ.',

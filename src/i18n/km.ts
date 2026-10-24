@@ -68,6 +68,7 @@ export const km = {
     copyFailedDesc: 'សូមចម្លងអាសយដ្ឋានដោយដៃ។',
   },
   home: {
+    bannerAltDhbScan: 'សូចនាករ DHBScan',
     welcomeTo: 'សូមស្វាគមន៍មកកាន់',
     ourDocs: 'ឯកសាររបស់យើង',
     heroDescription: 'អ្វីគ្រប់យ៉ាងដែលអ្នកត្រូវការដើម្បីប្រើ រួមបញ្ចូល សាងសង់ និងពង្រីកជាមួយវេទិការបស់យើង។ ពីមគ្គុទ្ទេសក៍ចាប់ផ្តើមរហ័សដល់ការកំណត់រចនាសម្ព័ន្ធកម្រិតខ្ពស់។',
@@ -2334,6 +2335,8 @@ export const km = {
     resultMany: '{count} លទ្ធផល',
   },
   docsSearchIndex: {
+    dappsTitle: 'កម្មវិធី dApp',
+    depinTitle: 'បណ្ដាញ DePIN',
     adBadgeTargetingDesc: 'ការផ្សាយពាណិជ្ជកម្មគោលដៅដោយផ្អែកលើកម្រិតផ្លាកសញ្ញាអ្នកប្រើប្រាស់ អត្រា CPM ក្នុងមួយផ្លាកសញ្ញា កង្កែប Ghost Lobster Piranha Giant Tortoise King Cobra Octopus Crocodile Dolphin តម្លៃផ្សាយពាណិជ្ជកម្ម',
     adBadgeTargetingTitle: 'ការកំណត់គោលដៅផ្សាយពាណិជ្ជកម្មផ្អែកលើផ្លាកសញ្ញា',
     advertiserDashboardDesc: 'ផ្ទាំងគ្រប់គ្រងការផ្សាយពាណិជ្ជកម្មសម្រាប់ការគ្រប់គ្រងយុទ្ធនាការ, វិភាគ, ការគ្រប់គ្រងថវិកា, ការសម្តែងការផ្សាយពាណិជ្ជកម្ម, ការបង្កើតយុទ្ធនាការ, ការតាមដាន ROI',

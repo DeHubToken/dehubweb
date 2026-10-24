@@ -3006,6 +3006,7 @@ export const ary = {
     installationTitle: 'التركيب',
   },
   docsSeo: {
+    webhooksTitle: 'Webhooks — دي هاب دكس',
     advertisingDesc: 'شرح تقنية DeHub لادverts: proof-of-view-and-rank، الحملات المقاومة للخداع وشاركة الإيرادات للمبدعين.',
     advertisingTitle: 'الإعلانات — DeHub Docs',
     appDesc: 'المبادئ التوجيهية لبرنامج DeHub للجوال والكمبيوتر.',

@@ -2470,6 +2470,8 @@ export const om = {
     whatHappensNextItem1: 'Qabiyyeen qajeelfama kana cabsu ni haqama',
   },
   docsSearchIndex: {
+    categoryBlog: 'Biloogii',
+    docsHomeDesc: 'Baga gara sanadoota DeHub dhuftan. Waa\'ee waltajjii bu\'uuraalee giddugaleessa hin qabne keenyaa, diinagdee tokenii, networkii DePIN fi meeshaalee misoomaa baradhaa.',
     adBadgeTargetingDesc: 'Beeksisa xiyyeeffannoo sadarkaa baajii fayyadamaa irratti hundaa’e, gatii CPM baajii tokkoof, baasii beeksisa Crab Ghost Lobster Piranha Giant Tortoise King Cobra Octopus Crocodile Dolphin',
     adBadgeTargetingTitle: 'Baajii Irratti Hundaa&#39;e Ad Targeting',
     advertiserDashboardDesc: 'Daashboordii beeksisa duula bulchuuf, xiinxala, bulchiinsa baajata, raawwii beeksisa, duula uumuu, hordoffii ROI',
@@ -2559,6 +2561,9 @@ export const om = {
     whereToBuyTitle: 'Bakka Bittaa',
   },
   docsSeo: {
+    appTitle: 'Qajeelfama Appii — Sanadoota DeHub',
+    brandGuidelinesDesc: 'Qajeelfama maqaa daldalaa DeHub kan seera qabeessa: eenyummaa, itti fayyadama loogoo fi istaandaardii dizaayinii michootaa fi miidiyaaf.',
+    contactTitle: 'Nu Quunnamaa — Sanadoota DeHub',
     advertisingDesc: 'DeHub&#39;s POVR ad tech akkas jechuun ibseera: ragaa ilaalchaa fi sadarkaa, duula hanna dandamachuu fi galii qooduun uumamtootaaf.',
     advertisingTitle: 'Beeksisa — DeHub Docs',
     appDesc: 'Qajeelfama aplikeeshiniiwwan mobaayilaa fi deeskitooppii DeHub.',

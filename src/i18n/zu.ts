@@ -2334,6 +2334,9 @@ export const zu = {
     title: 'Sesha amadokhumenti',
   },
   docsSearchIndex: {
+    contactTitle: 'Xhumana nathi',
+    donateDesc: 'Nikela kuphrojekthi ye-DeHub, sekela ukuthuthukiswa, iminikelo yomphakathi, uxhaso lwezimali, faka isandla',
+    securityDesc: 'Izinyathelo zokuphepha, ama-audit, ukuphepha kwezinkontileka ezihlakaniphile, ukuphepha kwenkundla, izindlela ezingcono kakhulu, ukuphepha kwamathokheni',
     adBadgeTargetingDesc: 'Izikhangiso ezihlosiwe ezisekelwe ebangeni lebheji lomsebenzisi, amanani e-CPM ebheji ngalinye, izindleko zokukhangisa ze-Crab Ghost Lobster Piranha Giant Tortoise King Cobra Octopus Crocodile Dolphin',
     adBadgeTargetingTitle: 'Ukukhomba Izikhangiso Ezisekelwe Kubheji',
     advertiserDashboardDesc: 'Ideshibhodi yomkhangisi yokumenenja imikhankaso, ukuhlaziywa, ukuphathwa kwebhajethi, ukusebenza kwezikhangiso, ukusungulwa komkhankaso, ukuland',

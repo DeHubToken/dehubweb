@@ -1368,6 +1368,8 @@ export const zh = {
     diagramMinersRole2: '以 DeHub 代币交换',
   },
   e2ee: {
+    flowEcdh: 'X25519 ECDH 魔法',
+    flowNonce: '一次性随机数',
     title: '端到端加密（E2EE）',
     howWorksTitle: 'DeHub的端到端加密是如何工作的',
     whatSecureTitle: '🛡️ 我们的E2EE为何安全？',
@@ -2415,6 +2417,8 @@ export const zh = {
     resultMany: '{count} 结果',
   },
   docsSearchIndex: {
+    dappsTitle: '去中心化应用',
+    depinTitle: 'DePIN 网络',
     adBadgeTargetingDesc: '根据用户徽章等级、每徽章 CPM 率进行目标广告定向，螃蟹、幽灵虾、食人鱼、巨龟、王蛇、章鱼、鳄鱼、海豚的广告成本',
     adBadgeTargetingTitle: '徽章定向广告',
     advertiserDashboardDesc: '广告主仪表盘，用于管理活动、分析、预算管理、广告表现、活动创建、ROI 跟踪',

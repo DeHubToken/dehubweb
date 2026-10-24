@@ -2538,6 +2538,8 @@ export const ko = {
     limitedSlots: '공식 출시에 사용할 수 있는 제한된 파트너십 슬롯',
   },
   docsSearchIndex: {
+    dappsTitle: '디앱',
+    depinTitle: 'DePIN 네트워크',
     adBadgeTargetingDesc: '사용자 배지 등급에 따른 타겟 광고, 배지당 CPM 비율, 게 유령 랍스터 피라냐 거대 거북왕 코브라 문어 악어 돌고래 광고 비용',
     adBadgeTargetingTitle: '배지 기반 광고 타겟팅',
     advertiserDashboardDesc: '광고주 대시보드: 캠페인 관리, 분석, 예산 관리, 광고 성능, 캠페인 생성, ROI 추적',

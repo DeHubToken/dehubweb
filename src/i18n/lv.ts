@@ -2367,6 +2367,7 @@ export const lv = {
     ctrRow: 'VKS:',
   },
   docsSearchIndex: {
+    donateDesc: 'Ziedojumi DeHub projektam, izstrādes atbalsts, kopienas ziedojumi, finansējums, ieguldījums',
     adBadgeTargetingDesc: 'Tīmekļa reklāma, balstīta uz lietotāja balvu līmeņiem, CPM cenas pēc balvu līmeņa, vēži, ķīļi, krabi, pīranhas, ģigantes krokodili, karaliskās cobras, oktopusi, krokodili, delfīni, reklāmas izmaksas',
     adBadgeTargetingTitle: 'Balvu balstīta reklāmas tīrīšana',
     advertiserDashboardDesc: 'Reklāmdevēja informācijas panelis kampaņu pārvaldībai, analīzei, budžeta pārvaldībai, reklāmu veiktspējai, kampaņu izveidei, ROI izsekošanai',
@@ -2457,6 +2458,7 @@ export const lv = {
     whereToBuyTitle: 'Kur nopirkt',
   },
   docsSeo: {
+    tokenUtilityDesc: 'Ko sniedz tokenu turēšana: pārvaldība, stakošanas atlīdzības, moderēšanas pilnvaras un tirgus priekšrocības visā DeHub.',
     advertisingDesc: 'DeHub POVR reklāmu tehnoloģijas paskaidroja: skata pārbaude un rangs, pret krāpšanu izturīgas kampaņas un ieņēmumu sadale radītājiem.',
     advertisingTitle: 'Advertising — DeHub Docs',
     appDesc: 'DeHub mobilo un datora lietojumprogrammu ceļveži.',

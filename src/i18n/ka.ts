@@ -2449,6 +2449,7 @@ export const ka = {
     resultMany: '{count} შედეგები',
   },
   docsSearchIndex: {
+    faqTitle: 'ხშირად დასმული კითხვები',
     adBadgeTargetingDesc: 'მიზნობრივი რეკლამები მომხმარებლის სამკერდე ნიშნების დონეების, თითო სამკერდე ნიშანზე CPM განაკვეთების, Crab Ghost Lobster Piranha Giant Tortoise King Cobra Octopus Crocodile Dolphin სარეკლამო ხარჯების მიხედვით',
     adBadgeTargetingTitle: 'სამკერდე ნიშნებზე დაფუძნებული რეკლამის მიზნობრივი ჩვენება',
     advertiserDashboardDesc: 'რეკლამის განმთავსებლის დაფა კამპანიების მართვისთვის, ანალიტიკა, ბიუჯეტის მართვა, რეკლამის ეფექტურობა, კამპანიის შექმნა, ROI-ის თვალყურის დევნება',

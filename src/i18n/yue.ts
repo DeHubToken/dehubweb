@@ -2440,6 +2440,7 @@ export const yue = {
     whereToBuyTitle: '喺邊度買',
   },
   docsSeo: {
+    termsDesc: 'DeHub 嘅法律免責聲明：平台同 DeHub 代幣嘅風險通知同使用條款。',
     advertisingDesc: 'DeHub 嘅 POVR 廣告技術解釋咗：為創作者提供觀看次數同排名證明、防欺詐廣告系列同埋收入分享。',
     advertisingTitle: '廣告 — DeHub 文件',
     appDesc: 'DeHub 流動同桌面應用程式嘅指南。',

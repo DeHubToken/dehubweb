@@ -2678,6 +2678,8 @@ export const pa = {
     resultMany: '{count} ਨਤੀਜੇ',
   },
   docsSearchIndex: {
+    dappsTitle: 'ਡੀਐਪ',
+    depinTitle: 'DePIN ਨੈੱਟਵਰਕ',
     adBadgeTargetingDesc: 'ਯੂਜ਼ਰ ਬੈਜ ਟੀਅਰਾਂ, ਪ੍ਰਤੀ ਬੈਜ CPM ਦਰਾਂ, ਕਰੈਬ ਗੋਸਟ ਲੋਬਸਟਰ ਪਿਰਾਣਾ ਜਾਇੰਟ ਟੋਰਟੋਇਜ਼ ਕਿੰਗ ਕੋਬਰਾ ਆਕਟੋਪਸ ਕਰੋਕੋਡਾਈਲ ਡੌਲਫਿਨ ਵਿਗਿਆਪਨ ਲਾਗਤਾਂ ਦੇ ਆਧਾਰ \'ਤੇ ਟਾਰਗੇਟ ਵਿਗਿਆਪਨ',
     adBadgeTargetingTitle: 'ਬੈਜ-ਆਧਾਰਿਤ ਵਿਗਿਆਪਨ ਟਾਰਗੇਟਿੰਗ',
     advertiserDashboardDesc: 'ਮੁਹਿੰਮਾਂ ਦੇ ਪ੍ਰਬੰਧਨ, ਵਿਸ਼ਲੇਸ਼ਣ, ਬਜਟ ਪ੍ਰਬੰਧਨ, ਵਿਗਿਆਪਨ ਪ੍ਰਦਰਸ਼ਨ, ਮੁਹਿੰਮ ਨਿਰਮਾਣ, ROI ਟਰੈਕਿੰਗ ਲਈ ਵਿਗਿਆਪਨਦਾਤਾ ਡੈਸ਼ਬੋਰਡ',

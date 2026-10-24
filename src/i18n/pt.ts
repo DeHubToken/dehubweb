@@ -2676,6 +2676,9 @@ export const pt = {
     resultMany: '{count} resultados',
   },
   docsSearchIndex: {
+    categoryBlog: 'Blogue',
+    categoryToken: 'Tokens',
+    faqTitle: 'Perguntas frequentes',
     adBadgeTargetingDesc: 'Segmentar anúncios com base nos níveis de crachá do usuário, taxas de CPM por crachá, Crab Ghost Lobster Piranha Giant Tortoise King Cobra Octopus Crocodile Dolphin custos de publicidade',
     adBadgeTargetingTitle: 'Segmentação de anúncios baseada em emblemas',
     advertiserDashboardDesc: 'Painel do anunciante para gestão de campanhas, análise, gestão de orçamento, desempenho de anúncios, criação de campanhas, acompanhamento de ROI',
@@ -2764,6 +2767,7 @@ export const pt = {
     whereToBuyTitle: 'Onde Comprar',
   },
   docsSeo: {
+    tokenEconomicsTitle: 'Economia do token — Documentação DeHub',
     advertisingDesc: 'A tecnologia de anúncios POVR da DeHub explicou: prova de visualização e classificação, campanhas resistentes a fraudes e compartilhamento de receita para criadores.',
     advertisingTitle: 'Publicidade — DeHub Docs',
     appDesc: 'Guias para as aplicações móveis e desktop DeHub.',
