@@ -69,7 +69,7 @@ export function ReviewSection({ listingId, sellerAddress }: ReviewSectionProps) 
       >
         <div className="flex items-center gap-2">
           <Star className="w-4 h-4 text-amber-400 fill-amber-400" />
-          <span className="text-sm font-semibold text-primary-foreground">{_copy("copy.84cb7871b741", { defaultValue: "Reviews" })}</span>
+          <span className="text-sm font-semibold text-foreground">{_copy("copy.84cb7871b741", { defaultValue: "Reviews" })}</span>
           <span className="text-xs text-zinc-500">({reviews.length})</span>
         </div>
         {expanded ? <ChevronUp className="w-4 h-4 text-zinc-500" /> : <ChevronDown className="w-4 h-4 text-zinc-500" />}
@@ -83,7 +83,7 @@ export function ReviewSection({ listingId, sellerAddress }: ReviewSectionProps) 
               <div className="flex gap-4 p-3">
                 {/* Big average */}
                 <div className="flex flex-col items-center justify-center min-w-[72px]">
-                  <span className="text-3xl font-bold text-primary-foreground">{avgRating.toFixed(1)}</span>
+                  <span className="text-3xl font-bold text-foreground">{avgRating.toFixed(1)}</span>
                   <StarRating value={avgRating} readonly size="sm" />
                   <span className="text-[10px] text-zinc-500 mt-0.5">{reviews.length}{_copy("copy.68338686d5cd", { defaultValue: " review" })}{reviews.length !== 1 ? 's' : ''}</span>
                 </div>
@@ -122,7 +122,7 @@ export function ReviewSection({ listingId, sellerAddress }: ReviewSectionProps) 
           {showForm && (
             <LiquidGlassBubble shimmer noBorder className="[&>div]:!rounded-xl">
               <div className="p-3 space-y-3">
-                <p className="text-xs font-medium text-primary-foreground">{t('stores.yourRating')}</p>
+                <p className="text-xs font-medium text-foreground">{t('stores.yourRating')}</p>
                 <div className="flex justify-center">
                   <StarRating value={rating} onChange={setRating} size="lg" />
                 </div>
@@ -172,7 +172,7 @@ export function ReviewSection({ listingId, sellerAddress }: ReviewSectionProps) 
                   <div className="p-3 space-y-1.5">
                     <div className="flex items-center justify-between">
                       <div className="flex items-center gap-2">
-                        <div className="w-6 h-6 rounded-full bg-white/10 flex items-center justify-center text-[10px] font-bold text-primary-foreground">
+                        <div className="w-6 h-6 rounded-full bg-white/10 flex items-center justify-center text-[10px] font-bold text-foreground">
                           {review.reviewer_address.slice(2, 4).toUpperCase()}
                         </div>
                         <span className="text-xs text-zinc-400 font-mono">
@@ -185,7 +185,7 @@ export function ReviewSection({ listingId, sellerAddress }: ReviewSectionProps) 
                     </div>
                     <StarRating value={review.rating} readonly size="sm" />
                     {review.comment && (
-                      <p className="text-sm text-primary-foreground leading-relaxed">{review.comment}</p>
+                      <p className="text-sm text-foreground leading-relaxed">{review.comment}</p>
                     )}
                     {review.seller_response && (
                       <div className="mt-2 pl-3 border-l-2 border-amber-400/30">
