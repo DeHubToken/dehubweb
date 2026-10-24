@@ -2376,8 +2376,8 @@
     "hoursAgo": "לפני {{count}} שעות",
     "daysAgo": "לפני {{count}} ימים",
     "monthsAgo": "לפני {{count}} חודשים",
-    "forLabel": "עבור",
-    "againstLabel": "מול",
+    "forLabel": "בעד",
+    "againstLabel": "נגד",
     "lentBadgeCantVote": "התג שלך מושאל לך, ותגי ההלוואה לא יכולים להצביע. קנו DHB כדי להרוויח תג משלכם.",
     "buyDhb": "קנה DHB",
     "discussion": {

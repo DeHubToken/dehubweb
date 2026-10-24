@@ -2390,7 +2390,7 @@
     "daysAgo": "пре {{count}} дана",
     "monthsAgo": "пре {{count}} месеци",
     "forLabel": "За",
-    "againstLabel": "Против:",
+    "againstLabel": "Против",
     "lentBadgeCantVote": "Значка вам је позајмљена, а позајмљене значке не могу да гласају. Купите DHB да бисте зарадили своју значку.",
     "buyDhb": "Купите DHB",
     "discussion": {

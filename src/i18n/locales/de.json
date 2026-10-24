@@ -2427,8 +2427,8 @@
     "hoursAgo": "vor {{count}}h",
     "daysAgo": "vor {{count}}T",
     "monthsAgo": "vor {{count}}Mo",
-    "forLabel": "Für",
-    "againstLabel": "Gegen",
+    "forLabel": "Dafür",
+    "againstLabel": "Dagegen",
     "lentBadgeCantVote": "Dein Abzeichen wird dir verliehen, und verliehene Abzeichen können nicht abstimmen. Kaufen Sie DHB, um Ihr eigenes Abzeichen zu erhalten.",
     "buyDhb": "DHB kaufen",
     "discussion": {

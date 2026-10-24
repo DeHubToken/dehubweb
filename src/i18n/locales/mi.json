@@ -2384,8 +2384,8 @@
     "hoursAgo": "{{count}} hāora ki muri",
     "daysAgo": "{{count}} rā ki muri",
     "monthsAgo": "{{count}} marama ki muri",
-    "forLabel": "ataahua te ra",
-    "againstLabel": "Ki te whawhai",
+    "forLabel": "Tautoko",
+    "againstLabel": "Whakahē",
     "lentBadgeCantVote": "Kei te hoatu e to koutou potae ki a koutou, a e kore e taea e nga potae potae te pōti. Hokona te DHB ki te whiwhi i to koutou ake tohu.",
     "buyDhb": "Hokona DHB",
     "discussion": {

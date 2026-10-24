@@ -2379,7 +2379,7 @@
     "hoursAgo": "{{count}} godz. temu",
     "daysAgo": "{{count}} dn. temu",
     "monthsAgo": "{{count}} mies. temu",
-    "forLabel": "Dla",
+    "forLabel": "Za",
     "againstLabel": "Przeciw",
     "lentBadgeCantVote": "Twoja odznaka jest Ci pożyczona, a pożyczone odznaki nie mogą głosować. Kup DHB, aby zdobyć własną odznakę.",
     "buyDhb": "Kup DHB",

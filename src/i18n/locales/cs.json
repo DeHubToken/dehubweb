@@ -2372,7 +2372,7 @@
     "daysAgo": "před {{count}} dny",
     "monthsAgo": "před {{count}} měsíci",
     "forLabel": "Pro",
-    "againstLabel": "Dožádaný stát",
+    "againstLabel": "Proti",
     "lentBadgeCantVote": "Váš odznak je vám zapůjčen a zapůjčené odznaky nemohou hlasovat. Kupte si DHB a získejte svůj vlastní odznak.",
     "buyDhb": "Koupit DHB",
     "discussion": {

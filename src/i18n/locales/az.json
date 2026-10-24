@@ -2377,8 +2377,8 @@
     "hoursAgo": "{{count}}s əvvəl",
     "daysAgo": "{{count}}g əvvəl",
     "monthsAgo": "{{count}}ay əvvəl",
-    "forLabel": "Elan Növü",
-    "againstLabel": "Qarşı",
+    "forLabel": "Lehinə",
+    "againstLabel": "Əleyhinə",
     "lentBadgeCantVote": "Nişanınız lentə alınır və mərc nişanları səs verə bilmir. Öz nişanınızı qazanmaq üçün DHB alın.",
     "buyDhb": "DHB-ni al",
     "discussion": {

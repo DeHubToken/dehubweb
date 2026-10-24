@@ -2378,8 +2378,8 @@
     "hoursAgo": "{{count}}時間前",
     "daysAgo": "{{count}}日前",
     "monthsAgo": "{{count}}ヶ月前",
-    "forLabel": "のために",
-    "againstLabel": "反する",
+    "forLabel": "賛成",
+    "againstLabel": "反対",
     "lentBadgeCantVote": "バッジは貸し出され、貸し出されたバッジは投票できません。DHBを購入して、自分のバッジを獲得しましょう。",
     "buyDhb": "DHBを購入",
     "discussion": {

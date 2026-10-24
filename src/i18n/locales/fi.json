@@ -2369,7 +2369,7 @@
     "hoursAgo": "{{count}} t sitten",
     "daysAgo": "{{count}} pv sitten",
     "monthsAgo": "{{count}} kk sitten",
-    "forLabel": "Tietoa",
+    "forLabel": "Puolesta",
     "againstLabel": "Vastaan",
     "lentBadgeCantVote": "Kunniamerkkisi on lainattu sinulle, eivätkä lainatut kunniamerkit voi äänestää. Osta DHB ja ansaitse oma erikoismerkkisi.",
     "buyDhb": "Osta DHB",

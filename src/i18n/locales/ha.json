@@ -2384,8 +2384,8 @@
     "hoursAgo": "{{count}}sa da suka wuce",
     "daysAgo": "{{count}}kw da suka wuce",
     "monthsAgo": "{{count}}wa da suka wuce",
-    "forLabel": "domin",
-    "againstLabel": "A kan",
+    "forLabel": "Goyon baya",
+    "againstLabel": "Adawa",
     "lentBadgeCantVote": "Alamar ku tana ba ku bashi, kuma alamu na bashi ba za su iya jefa kuri'a ba. Sayi DHB don samun alamar ku.",
     "buyDhb": "Sayi DHB",
     "discussion": {

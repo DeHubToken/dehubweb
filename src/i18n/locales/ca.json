@@ -2371,8 +2371,8 @@
     "hoursAgo": "fa {{count}}h",
     "daysAgo": "fa {{count}}d",
     "monthsAgo": "fa {{count}} mesos",
-    "forLabel": "Per",
-    "againstLabel": "contra",
+    "forLabel": "A favor",
+    "againstLabel": "En contra",
     "lentBadgeCantVote": "T'han prestat el distintiu i aquest no pot votar. Compra DHB per guanyar el teu propi distintiu.",
     "buyDhb": "Compra DHB",
     "discussion": {

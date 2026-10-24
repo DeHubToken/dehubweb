@@ -2369,8 +2369,8 @@
     "hoursAgo": "{{count}} ساعتونه مخکې",
     "daysAgo": "{{count}} ورځې مخکې",
     "monthsAgo": "{{count}} میاشتې مخکې",
-    "forLabel": "د دې لپاره",
-    "againstLabel": "په مقابل کې",
+    "forLabel": "پلوي",
+    "againstLabel": "مخالف",
     "lentBadgeCantVote": "ستاسو لوګو تاسو ته لیږل کیږي، او لیبلونه نشي کولی رایه ورکړي. د خپلې خوښې د ترلاسه کولو لپاره DHB واخلئ.",
     "buyDhb": "ته وليږي تر څو د پوښتنې DHB",
     "discussion": {

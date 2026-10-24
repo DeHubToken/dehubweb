@@ -2633,8 +2633,8 @@
     "hoursAgo": "{{count}}h ago",
     "daysAgo": "{{count}}d ago",
     "monthsAgo": "{{count}}mo ago",
-    "forLabel": "Misalnya,",
-    "againstLabel": "Disaster",
+    "forLabel": "Menyokong",
+    "againstLabel": "Menentang",
     "lentBadgeCantVote": "Lencana anda dipinjamkan kepada anda, dan lencana yang dipinjamkan tidak boleh mengundi. Beli DHB untuk mendapatkan lencana anda sendiri.",
     "buyDhb": "Beli DHB",
     "discussion": {

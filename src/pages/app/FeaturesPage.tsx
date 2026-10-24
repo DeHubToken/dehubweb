@@ -29,6 +29,7 @@ import Pencil from "@/components/ui/cut-icons/edit";
 import Search from "@/components/ui/cut-icons/search";
 import Plus from "@/components/ui/cut-icons/add";
 import X from "@/components/ui/cut-icons/close";
+import { ImageMarkupDialog } from '@/components/app/features/ImageMarkupDialog';
 
 import featuresLightbulb from '@/assets/features-lightbulb.png';
 import { TranslatableText, SharedTranslationProvider, useSharedTranslationControl } from '@/components/app/TranslatableText';
@@ -543,9 +544,18 @@ function PromptComposer({ initialCategory, focusRequest, onPosted }: { initialCa
     const accepted = valid.slice(0, room);
     setAttachments(prev => [...prev, ...accepted.map(file => ({ file, preview: URL.createObjectURL(file) }))]);
     setError(valid.length < picked.length
-      ? t('features.promptMediaError', 'Choose images or videos under 20MB each.')
+      ? t('features.promptMediaError', 'Choose images or videos under 50MB each.')
       : accepted.length < picked.length
         ? t('features.promptMediaLimit', 'Up to {{max}} attachments.', { max: MAX_FEATURE_ATTACHMENTS }) : '');
+  };
+  const [markupIndex, setMarkupIndex] = useState<number | null>(null);
+  const replaceAttachment = (index: number, file: File) => {
+    setAttachments(prev => prev.map((a, i) => {
+      if (i !== index) return a;
+      URL.revokeObjectURL(a.preview);
+      return { file, preview: URL.createObjectURL(file) };
+    }));
+    setMarkupIndex(null);
   };
   const removeAttachment = (index: number) => {
     URL.revokeObjectURL(attachments[index].preview);
@@ -600,9 +610,17 @@ function PromptComposer({ initialCategory, focusRequest, onPosted }: { initialCa
             <button type="button" disabled={submitMutation.isPending} onClick={() => removeAttachment(index)}
               aria-label={t('features.removePromptAttachment', 'Remove {{name}}', { name: attachment.file.name })}
               className="absolute right-1 top-1 w-6 h-6 rounded-full bg-black/80 text-white flex items-center justify-center"><X className="w-3.5 h-3.5" /></button>
+            {attachment.file.type.startsWith('image/') && <button type="button" disabled={submitMutation.isPending} onClick={() => setMarkupIndex(index)}
+              aria-label={t('editor.draw.heading', 'Draw')}
+              className="absolute left-1 top-1 w-6 h-6 rounded-full bg-black/80 text-white flex items-center justify-center"><Pencil className="w-3.5 h-3.5" /></button>}
             <p className="text-[10px] text-zinc-400 truncate mt-1">{attachment.file.name}</p>
           </div>)}
         </div>}
+        <ImageMarkupDialog
+          file={markupIndex !== null ? attachments[markupIndex]?.file ?? null : null}
+          onClose={() => setMarkupIndex(null)}
+          onSave={file => { if (markupIndex !== null) replaceAttachment(markupIndex, file); }}
+        />
         <div className="flex flex-wrap items-center gap-2 border-t border-white/10 pt-3 mt-2">
           <input ref={fileInputRef} type="file" accept="image/*,video/*" multiple className="hidden" onChange={e => { addFiles(Array.from(e.target.files ?? [])); e.target.value = ''; }} />
           <Button type="button" variant="ghost" size="sm" className="rounded-lg px-2" disabled={submitMutation.isPending || attachments.length >= MAX_FEATURE_ATTACHMENTS} onClick={() => fileInputRef.current?.click()}>

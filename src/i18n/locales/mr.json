@@ -2387,8 +2387,8 @@
     "hoursAgo": "{{count}} तासांपूर्वी",
     "daysAgo": "{{count}} दिवसांपूर्वी",
     "monthsAgo": "{{count}} महिन्यांपूर्वी",
-    "forLabel": "करीता",
-    "againstLabel": "विरुद्ध",
+    "forLabel": "बाजूने",
+    "againstLabel": "विरोधात",
     "lentBadgeCantVote": "तुमचा बिल्ला तुम्हाला धीमा आहे आणि लीजवर असलेले बिल्ले तुम्हाला मतदान करू शकत नाहीत. आपला स्वतःचा बॅज जिंकण्यासाठी DHB खरेदी करा.",
     "buyDhb": "DHB खरेदी करा",
     "discussion": {

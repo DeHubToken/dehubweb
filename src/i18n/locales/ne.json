@@ -2392,8 +2392,8 @@
     "hoursAgo": "{{count}} घण्टा अघि",
     "daysAgo": "{{count}} दिन अघि",
     "monthsAgo": "{{count}} महिना अघि",
-    "forLabel": "लागि",
-    "againstLabel": "विरुद्ध",
+    "forLabel": "पक्षमा",
+    "againstLabel": "विपक्षमा",
     "lentBadgeCantVote": "तपाईंको ब्याज तपाईंलाई उधारोमा दिइएको छ, र उधारो ब्याजले भोट दिन सक्दैन । तपाईंको आफ्नै ब्याज कमाउन DHB किन्नुहोस् ।",
     "buyDhb": "DHB किन्नुहोस्",
     "discussion": {

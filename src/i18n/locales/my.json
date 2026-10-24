@@ -2388,8 +2388,8 @@
     "hoursAgo": "လွန်ခဲ့သော {{count}} နာရီ",
     "daysAgo": "လွန်ခဲ့သော {{count}} ရက်",
     "monthsAgo": "လွန်ခဲ့သော {{count}} လ",
-    "forLabel": "ဥပမာ၊",
-    "againstLabel": "ဆန့်ကျင်",
+    "forLabel": "ထောက်ခံ",
+    "againstLabel": "ကန့်ကွက်",
     "lentBadgeCantVote": "သင့်တံဆိပ်သည် သင့်ထံသို့ လျော့ကျသွားပြီး ချေးထားသောတံဆိပ်များသည် မဲမပေးနိုင်ပါ ။ သင် ၏ ကိုယ်ပိုင်တံဆိပ်ရရန် DHB ကိုဝယ်ပါ ။",
     "buyDhb": "DHB ဝယ်ပါ",
     "discussion": {

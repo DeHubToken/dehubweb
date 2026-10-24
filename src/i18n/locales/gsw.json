@@ -2378,8 +2378,8 @@
     "hoursAgo": "vor {{count}}Std",
     "daysAgo": "vor {{count}}T",
     "monthsAgo": "vor {{count}}M",
-    "forLabel": "Für",
-    "againstLabel": "Gäge",
+    "forLabel": "Dafür",
+    "againstLabel": "Dägäge",
     "lentBadgeCantVote": "Dini Badge isch dir gläint, und gläinte Badges chönd nöd abstimme. Chauf DHB zum dini eige Badge z'ergän.",
     "buyDhb": "Chauf DHB",
     "discussion": {

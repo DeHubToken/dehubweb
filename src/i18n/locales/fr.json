@@ -1963,7 +1963,7 @@
     "promptDetails": "Détails facultatifs",
     "promptDevice": "Appareil et système (pour les bugs)",
     "promptFilters": "Filtrer par catégorie",
-    "promptMediaError": "Choisissez des images ou vidéos de moins de 20 Mo chacune.",
+    "promptMediaError": "Choisissez des images ou vidéos de moins de 50 Mo chacune.",
     "promptMediaLimit": "Jusqu’à {{max}} pièces jointes.",
     "removePromptAttachment": "Supprimer {{name}}",
     "promptAttachment": "Pièce jointe {{number}}",
