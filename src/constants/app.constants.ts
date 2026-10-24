@@ -41,6 +41,7 @@ import Home from "@/components/ui/cut-icons/home";
 import Search from "@/components/ui/cut-icons/search";
 import Bell from "@/components/ui/cut-icons/alerts";
 import MessageSquare from "@/components/ui/cut-icons/messages";
+import MessageEnvelope from "@/components/ui/cut-icons/message-envelope";
 import Bookmark from "@/components/ui/cut-icons/save";
 import Settings from "@/components/ui/cut-icons/settings-cog";
 import Creator from "@/components/ui/cut-icons/creator";
@@ -59,7 +60,7 @@ export const NAV_ITEMS: NavItem[] = [
   { icon: User, label: 'Profile', path: '/app/profile' },
   { icon: Search, label: 'Explore', path: '/app/explore' },
   { icon: Bell, label: 'Notifications', path: '/app/notifications' },
-  { icon: MessageSquare, label: 'Messages', path: '/app/messages' },
+  { icon: MessageEnvelope, label: 'Messages', path: '/app/messages' },
   { icon: Gamepad2, label: 'Arcade', path: '/arcade' },
   { icon: Users, label: 'Communities', path: '/app/communities' },
   { icon: Sparkles, label: 'Assistant', path: '/app/assistant' },

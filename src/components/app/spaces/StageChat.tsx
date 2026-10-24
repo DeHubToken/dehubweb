@@ -16,7 +16,7 @@
  * @module components/app/spaces/StageChat
  */
 
-import MessageSquare from "@/components/ui/cut-icons/messages";
+import MessageSquare from "@/components/ui/cut-icons/message-envelope";
 
 import { useCallback } from 'react';
 import { useTranslation } from 'react-i18next';

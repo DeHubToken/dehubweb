@@ -33,6 +33,7 @@ import Gamepad2 from "@/components/ui/cut-icons/arcade";
 
 import Home from "@/components/ui/cut-icons/home";
 import MessageSquare from "@/components/ui/cut-icons/messages";
+import MessageEnvelope from "@/components/ui/cut-icons/message-envelope";
 import Plus from "@/components/ui/cut-icons/add";
 import User from "@/components/ui/cut-icons/profile";
 import Search from "@/components/ui/cut-icons/search";
@@ -118,7 +119,7 @@ function kidsNav<T extends { path: string }>(items: T[]): T[] {
 // Left side: Home, Messages
 const LEFT_NAV_ITEMS = [
   { icon: Home, label: 'Home', path: '/app' },
-  { icon: MessageSquare, label: 'Messages', path: '/app/messages' },
+  { icon: MessageEnvelope, label: 'Messages', path: '/app/messages' },
 ];
 
 // Right side: AI link, Profile
