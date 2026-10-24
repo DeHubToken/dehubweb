@@ -125,7 +125,7 @@ export function SearchFilterPanel({ filters, onChange, onReset }: SearchFilterPa
         <div className="flex flex-col gap-2">
           <span className="text-xs text-zinc-500 uppercase tracking-wider">{t('filters.category')}</span>
           <input
-            type="text"
+            type="search"
             value={categorySearch}
             onChange={(e) => setCategorySearch(e.target.value)}
             placeholder={t('filters.searchCategories')}
