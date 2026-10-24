@@ -1393,7 +1393,7 @@ export function GoLiveBroadcaster({
                 } else if (state === 'reconnecting') setPhase('reconnecting');
                 else if (state === 'failed') {
                   setPhase('error');
-                  setErrorMessage(detail || 'The broadcast connection failed.');
+                  setErrorMessage(detail || t('goLive.connectionFailed'));
                   void teardown();
                 }
               },

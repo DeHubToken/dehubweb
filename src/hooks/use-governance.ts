@@ -85,14 +85,14 @@ export async function uploadProposalMedia(file: File, walletAddress: string): Pr
     : file.type.startsWith('video/')
       ? 'video'
       : null;
-  if (!type) throw new Error('Pick an image or a video.');
-  if (file.size > MAX_PROPOSAL_MEDIA_BYTES) throw new Error('Files must be 50 MB or smaller.');
+  if (!type) throw new Error(i18n.t('governance.mediaTypeInvalid'));
+  if (file.size > MAX_PROPOSAL_MEDIA_BYTES) throw new Error(i18n.t('governance.mediaTooLarge'));
   const ext = file.name.split('.').pop()?.toLowerCase().replace(/[^a-z0-9]/g, '') || (type === 'image' ? 'jpg' : 'mp4');
   const path = `${walletAddress.toLowerCase()}/governance-${Date.now()}.${ext}`;
   const { error } = await supabase.storage
     .from('feature-media')
     .upload(path, file, { contentType: file.type, upsert: false, cacheControl: '31536000' });
-  if (error) throw new Error(`Upload failed: ${error.message}`);
+  if (error) throw new Error(i18n.t('governance.uploadFailedDetail', { message: error.message }));
   const { data } = supabase.storage.from('feature-media').getPublicUrl(path);
   return { url: data.publicUrl, type };
 }
@@ -476,8 +476,8 @@ export function useSubmitGovernanceProposal() {
       toast.dismiss('governance-proposal-fee');
       // The drawer's fields are drafts persisted per account, so nothing typed
       // is lost — say so, otherwise a failure reads as "my proposal vanished".
-      toastTxError(err, err?.message || 'Failed to submit proposal', {
-        description: 'Your draft is saved — press Submit to retry.',
+      toastTxError(err, err?.message || i18n.t('governance.submitFailed'), {
+        description: i18n.t('governance.draftSavedRetry'),
       });
     },
   });
