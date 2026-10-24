@@ -2820,6 +2820,9 @@
       "wallTitle": "He aha te kōrero a te hunga",
       "wallNote": "i whakaputa i te whakaaetanga",
       "anonymous": "He mema DeHub"
+    },
+    "taxSplit": {
+      "grossFootnote": "Ka taea te tatauranga o te utu i runga i te pukapuka nei ki te whakawātea i te BNB i whakawātea ki ngā kaihoko me ngā kaiwhakapūtea. I whakawhitia ngā utu aroha, kāore i whakawātea e DeHub. Hei tāpapa wawe, ka taea te tatauranga o ngā wāhanga me te rōpū moni whakamutunga i tirohia i te pukapuka whakapapa."
     }
   },
   "superpowers": {
@@ -2957,7 +2960,8 @@
     },
     "buyTokensToUnlockBadge": "Ka whiwhi ngā kaipupuri tohu katoa i te SuperPowers. Hokona ngā tohu DeHub hei iriti i tētahi tohu — kāore e hiahiatia te whakapau.",
     "buyTokensToUnlock": "Hokona ngā tohu DeHub hei iriti i tētahi tohu me tōna SuperPowers. Ka whiwhi ngā kaipupuri tohu katoa — kāore e hiahiatia te whakapau.",
-    "goldenHourStarted": "Te haere o te haora koura mō {{minutes}} meneti — ka takirua ngā mea katoa e whakairia ana e koe i ēnei wā"
+    "goldenHourStarted": "Te haere o te haora koura mō {{minutes}} meneti — ka takirua ngā mea katoa e whakairia ana e koe i ēnei wā",
+    "signalFlareTo": "Tohu Tohu ki {{people}} iwi"
   },
   "work": {
     "integrity": {

@@ -2829,6 +2829,9 @@
       "wallTitle": "Namoonni maaliif jedhu",
       "wallNote": "eeyyama wajjin gabaasame",
       "anonymous": "DeHub miseensa tokko"
+    },
+    "taxSplit": {
+      "grossFootnote": "Waliigala galiin armaan olitti ibsame BNB abbootii qabeenyaa fi qooda fudhattoota waliin qooddate of keessatti qabata. Kaffaltiin kun kan raabsame malee DeHub&#39;n kan qabame miti. Deebi&#39;ee bituu adda ta&#39;ee hafa. Maallaqni fi maallaqni jalqabaa hundi galmee keessatti sakatta’amuu danda’a."
     }
   },
   "superpowers": {
@@ -2966,7 +2969,8 @@
     },
     "buyTokensToUnlockBadge": "Abbaan baajii kamiyyuu SuperPowers argata. Baajii banuuf mallattoo DeHub bitadhu — staking hin barbaachisu.",
     "buyTokensToUnlock": "Baajii fi SuperPowers isaa banuuf tokens DeHub bitadhaa. Abbaan baajii kamiyyuu isaan argata — staking hin barbaachisu.",
-    "goldenHourStarted": "Sa'aatii Warqee {{minutes}} daqiiqaa fiigachaa jira — amma wanti hundumaa maxxansituu lama siif ta'a"
+    "goldenHourStarted": "Sa'aatii Warqee {{minutes}} daqiiqaa fiigachaa jira — amma wanti hundumaa maxxansituu lama siif ta'a",
+    "signalFlareTo": "Signal Flare namoota {{people}} tti"
   },
   "work": {
     "integrity": {

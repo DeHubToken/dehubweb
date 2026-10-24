@@ -3565,7 +3565,8 @@
       "sharedDetail": "{{claims}} claims by {{wallets}} wallets",
       "open": "See every {{part}} line",
       "see": "See every line",
-      "footnote": "Only retained operating funds count as revenue above. Buybacks and shared rewards are recorded separately. Every amount and original currency can be inspected in the ledger."
+      "footnote": "Only retained operating funds count as revenue above. Buybacks and shared rewards are recorded separately. Every amount and original currency can be inspected in the ledger.",
+      "grossFootnote": "The revenue total above includes BNB shared with holders and stakers. These payments were distributed, not retained by DeHub. Buybacks remain separate. Every amount and original currency can be inspected in the ledger."
     },
     "taxLedger": {
       "title": "Token tax ledger",
@@ -3711,7 +3712,8 @@
     "buyTokensToUnlockBadge": "Any badge holder gets SuperPowers. Buy DeHub tokens to unlock a badge — staking is not required.",
     "buyTokensToUnlock": "Buy DeHub tokens to unlock a badge and its SuperPowers. Any badge holder gets them — staking is not required.",
     "currentIntro": "Badge holders get fresh boosts every fortnight. Team up is open to everyone: combine wallet power with up to seven others and every member gets the badge your total unlocks.",
-    "currentPowersHeading": "The twelve powers"
+    "currentPowersHeading": "The twelve powers",
+    "signalFlareTo": "Signal Flare to {{people}} people"
   },
   "work": {
     "integrity": {

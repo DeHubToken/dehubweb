@@ -2783,6 +2783,9 @@
       "wallTitle": "Vad folk säger",
       "wallNote": "publicerad med tillstånd",
       "anonymous": "En DeHub-medlem"
+    },
+    "taxSplit": {
+      "grossFootnote": "Ovanstående intäktssumma inkluderar BNB som delas med innehavare och stakers. Dessa betalningar distribuerades, behölls inte av DeHub. Återköp förblir separata. Varje belopp och originalvaluta kan inspekteras i huvudboken."
     }
   },
   "superpowers": {
@@ -2913,7 +2916,8 @@
       "openToEveryone": "Team up är öppet för alla konton; privata team godkänner vem som får gå med."
     },
     "buyTokensToUnlockBadge": "Alla badge-innehavare får SuperPowers. Köp DeHub-tokens för att låsa upp en badge — staking krävs inte.",
-    "buyTokensToUnlock": "Köp DeHub-tokens för att låsa upp en badge och dess SuperPowers. Alla badge-innehavare får dem — staking krävs inte."
+    "buyTokensToUnlock": "Köp DeHub-tokens för att låsa upp en badge och dess SuperPowers. Alla badge-innehavare får dem — staking krävs inte.",
+    "signalFlareTo": "Signalutbrott till {{people}} personer"
   },
   "work": {
     "integrity": {

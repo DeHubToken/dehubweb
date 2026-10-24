@@ -2836,6 +2836,9 @@
       "wallTitle": "Co mówią ludzie",
       "wallNote": "opublikowane za zgodą",
       "anonymous": "Członek DeHub"
+    },
+    "taxSplit": {
+      "grossFootnote": "Powyższa suma przychodów obejmuje BNB dzielone z posiadaczami i inwestorami. Płatności te zostały rozdzielone, a nie zatrzymane przez DeHub. Wykupy pozostają oddzielne. Każdą kwotę i oryginalną walutę można sprawdzić w księdze."
     }
   },
   "superpowers": {
@@ -2973,7 +2976,8 @@
     },
     "buyTokensToUnlockBadge": "Każdy posiadacz odznaki otrzymuje SuperMoce. Kup tokeny DeHub, aby odblokować odznakę — obstawianie nie jest wymagane.",
     "buyTokensToUnlock": "Kup tokeny DeHub, aby odblokować odznakę i jej SuperMoce. Każdy posiadacz odznaki je otrzymuje — obstawianie nie jest wymagane.",
-    "goldenHourStarted": "Golden Hour trwa {{minutes}} minut — wszystko, co teraz opublikujesz, liczy się podwójnie"
+    "goldenHourStarted": "Golden Hour trwa {{minutes}} minut — wszystko, co teraz opublikujesz, liczy się podwójnie",
+    "signalFlareTo": "Sygnał flary do {{people}} osób"
   },
   "work": {
     "integrity": {

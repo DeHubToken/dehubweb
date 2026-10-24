@@ -2840,6 +2840,9 @@
       "wallTitle": "O que as pessoas dizem",
       "wallNote": "publicado com permissão",
       "anonymous": "Um membro do DeHub"
+    },
+    "taxSplit": {
+      "grossFootnote": "O total da receita acima inclui o BNB compartilhado com detentores e stakers. Esses pagamentos foram distribuídos, não retidos pela DeHub. As recompras permanecem separadas. Cada valor e moeda original podem ser inspecionados no livro-razão."
     }
   },
   "superpowers": {
@@ -2977,7 +2980,8 @@
     },
     "buyTokensToUnlockBadge": "Qualquer portador de badge ganha Superpoderes. Compre tokens DeHub para desbloquear um badge — staking não é necessário.",
     "buyTokensToUnlock": "Compre tokens DeHub para desbloquear um badge e seus Superpoderes. Qualquer portador de badge os ganha — staking não é necessário.",
-    "goldenHourStarted": "Golden Hour a decorrer durante {{minutes}} minutos — tudo o que publicar agora conta a dobrar"
+    "goldenHourStarted": "Golden Hour a decorrer durante {{minutes}} minutos — tudo o que publicar agora conta a dobrar",
+    "signalFlareTo": "Sinalizar sinalizador para {{people}} pessoas"
   },
   "work": {
     "integrity": {

@@ -2836,6 +2836,9 @@
       "wallTitle": "Hvad folk siger",
       "wallNote": "udgivet med tilladelse",
       "anonymous": "Et DeHub-medlem"
+    },
+    "taxSplit": {
+      "grossFootnote": "Omsætningen ovenfor omfatter BNB delt med indehavere og stakers. Disse betalinger blev fordelt, ikke tilbageholdt af DeHub. Tilbagekøb forbliver separate. Hvert beløb og original valuta kan inspiceres i hovedbogen."
     }
   },
   "superpowers": {
@@ -2973,7 +2976,8 @@
     },
     "buyTokensToUnlockBadge": "Enhver badge-indehaver får SuperPowers. Køb DeHub tokens for at låse op for en badge — staking er ikke påkrævet.",
     "buyTokensToUnlock": "Køb DeHub tokens for at låse op for en badge og dens SuperPowers. Enhver badge-indehaver får dem — staking er ikke påkrævet.",
-    "goldenHourStarted": "Golden Hour kører i {{minutes}} minutter — alt, hvad du poster nu, tæller dobbelt"
+    "goldenHourStarted": "Golden Hour kører i {{minutes}} minutter — alt, hvad du poster nu, tæller dobbelt",
+    "signalFlareTo": "Signaludbrud til {{people}} personer"
   },
   "work": {
     "integrity": {

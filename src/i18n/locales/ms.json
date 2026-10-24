@@ -3090,6 +3090,9 @@
       "wallTitle": "Apa yang orang katakan",
       "wallNote": "diterbitkan dengan kebenaran",
       "anonymous": "Seorang ahli DeHub"
+    },
+    "taxSplit": {
+      "grossFootnote": "Jumlah pendapatan di atas termasuk BNB yang dikongsi dengan pemegang dan staker. Bayaran ini diagihkan, bukan dikekalkan oleh DeHub. Pembelian balik kekal berasingan. Setiap amaun dan mata wang asal boleh diperiksa dalam lejar."
     }
   },
   "superpowers": {
@@ -3227,7 +3230,8 @@
     },
     "buyTokensToUnlockBadge": "Pemegang lencana mana-mana pun mendapat Kuasa Super. Beli token DeHub untuk membuka kunci lencana — tiada pertaruhan diperlukan.",
     "buyTokensToUnlock": "Beli token DeHub untuk membuka kunci lencana dan Kuasa Supernya. Pemegang lencana mana-mana pun mendapatkannya — tiada pertaruhan diperlukan.",
-    "goldenHourStarted": "Golden Hour berjalan selama {{minutes}} minit — semua yang anda siarkan kini dikira berganda"
+    "goldenHourStarted": "Golden Hour berjalan selama {{minutes}} minit — semua yang anda siarkan kini dikira berganda",
+    "signalFlareTo": "Isyarat Flare kepada {{people}} orang"
   },
   "work": {
     "integrity": {

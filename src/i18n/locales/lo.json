@@ -2811,6 +2811,9 @@
       "wallTitle": "ປະຊາຊົນເວົ້າວ່າ",
       "wallNote": "ເຜີຍແພ່ໂດຍໄດ້ຮັບອະນຸມັດ",
       "anonymous": "ສະມາຊິກ DeHub"
+    },
+    "taxSplit": {
+      "grossFootnote": "ລາຍໄດ້ທັງ ຫມົດ ຂ້າງເທິງລວມມີ BnB ແບ່ງປັນກັບຜູ້ຖືຫຸ້ນແລະຜູ້ຖືຫຸ້ນ. ການຈ່າຍເງິນເຫຼົ່ານີ້ໄດ້ຖືກແຈກຢາຍ, ບໍ່ຖືກຮັກສາໄວ້ໂດຍ DeHub. Buybacks ຍັງຄົງແຍກຕ່າງຫາກ. ທຸກໆຈໍານວນເງິນ ແລະ ສະກຸນເງິນເດີມສາມາດກວດສອບໄດ້ໃນປື້ມບັນທຶກ."
     }
   },
   "superpowers": {
@@ -2946,7 +2949,8 @@
     },
     "buyTokensToUnlockBadge": "ຜູ້ຖືປ້າຍໃດກໍ່ໄດ້ຮັບ SuperPowers. ຊື້ DeHub tokens ເພື່ອປົດລັອກປ້າຍ — staking ບໍ່ ຈໍາ ເປັນ.",
     "buyTokensToUnlock": "ຊື້ DeHub tokens ເພື່ອປົດລັອກປ້າຍແລະ SuperPowers ຂອງມັນ. ຜູ້ຖືປ້າຍໃດໜຶ່ງໄດ້ຮັບພວກເຂົາ — ບໍ່ຈຳເປັນຕ້ອງຕິດສະຕິກເກີ.",
-    "goldenHourStarted": "Golden Hour ກຳລັງແລ່ນເປັນເວລາ {{minutes}} ນາທີ — ທຸກສິ່ງທີ່ທ່ານໂພສດຽວນີ້ຈະນັບເປັນສອງເທົ່າ"
+    "goldenHourStarted": "Golden Hour ກຳລັງແລ່ນເປັນເວລາ {{minutes}} ນາທີ — ທຸກສິ່ງທີ່ທ່ານໂພສດຽວນີ້ຈະນັບເປັນສອງເທົ່າ",
+    "signalFlareTo": "ສັນຍານ Flare ເຖິງ {{people}} ປະຊາຊົນ"
   },
   "work": {
     "integrity": {

@@ -2847,6 +2847,9 @@
       "wallTitle": "Abantu bani abathini",
       "wallNote": "kushicilelwe ngemvume",
       "anonymous": "Ilungu le-DeHub"
+    },
+    "taxSplit": {
+      "grossFootnote": "Ingqikithi yemali engenayo engenhla IHLANGANISA i-BNB eyabelwe abanikazi nabanikazi. Lezi zinkokhelo zasatshalaliswa, azigcinwanga yi-DeHub. Ama-Buybacks ahlala ehlukile. Yonke imali kanye nekharensi yasekuqaleni kungahlolwa kwileja."
     }
   },
   "superpowers": {
@@ -2984,7 +2987,8 @@
     },
     "buyTokensToUnlockBadge": "Noma yimuphi umnikazi webheji uthola i-SuperPowers. Thenga amathuluzi e-DeHub ukuze uvule ibheji — ukubeka akudingekile.",
     "buyTokensToUnlock": "Thenga amathuluzi e-DeHub ukuze uvule ibheji kanye ne-SuperPowers yayo. Noma yimuphi umnikazi webheji uyawathola — ukubeka akudingekile.",
-    "goldenHourStarted": "I-Golden Hour isebenza imizuzu engu-{{minutes}} — konke okuthunyelayo manje kubalwa kabili"
+    "goldenHourStarted": "I-Golden Hour isebenza imizuzu engu-{{minutes}} — konke okuthunyelayo manje kubalwa kabili",
+    "signalFlareTo": "Isignali Flare ku- {{people}} people"
   },
   "work": {
     "integrity": {

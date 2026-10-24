@@ -2756,6 +2756,9 @@
       "wallTitle": "人们怎么说",
       "wallNote": "已获得许可发布",
       "anonymous": "DeHub 成员"
+    },
+    "taxSplit": {
+      "grossFootnote": "收入總額包括與持有者和 staker 共享的 BNB。這些支付已分發，未保留於 DeHub。買回的金額與原始貨幣均可在記錄中查詢。"
     }
   },
   "superpowers": {

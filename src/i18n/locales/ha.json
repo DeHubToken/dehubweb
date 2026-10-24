@@ -2818,6 +2818,9 @@
       "wallTitle": "Abin da jama'a suke cewa",
       "wallNote": "an buga tare da izini",
       "anonymous": "Memba na DeHub"
+    },
+    "taxSplit": {
+      "grossFootnote": "Jimlar kudaden shiga da ke sama ya haɗa da BNB da aka raba tare da masu riƙewa da masu stakers. An rarraba waɗannan biyan kuɗi, ba DeHub ya riƙe su ba. Buybacks ci gaba da rabuwa. kowane adadin da asali kudin za a iya duba a cikin ledger."
     }
   },
   "superpowers": {
@@ -2955,7 +2958,8 @@
     },
     "buyTokensToUnlockBadge": "Duk wanda ke rike da badge yana samun SuperPowers. Sayan DeHub tokens don buɗe badge — ba a buƙatar yin fare.",
     "buyTokensToUnlock": "Sayan DeHub tokens don buɗe badge da SuperPowers ɗinsa. Duk wanda ke rike da badge yana samun su — ba a buƙatar yin fare.",
-    "goldenHourStarted": "Golden Hour yana gudana na tsawon mintuna {{minutes}} — duk abin da ka aika yanzu yana ƙididdigewa sau biyu"
+    "goldenHourStarted": "Golden Hour yana gudana na tsawon mintuna {{minutes}} — duk abin da ka aika yanzu yana ƙididdigewa sau biyu",
+    "signalFlareTo": "Signal Flare zuwa {{people}} mutane"
   },
   "work": {
     "integrity": {

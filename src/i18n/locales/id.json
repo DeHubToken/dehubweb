@@ -2836,6 +2836,9 @@
       "wallTitle": "Apa yang orang katakan",
       "wallNote": "dipublikasikan dengan izin",
       "anonymous": "Seorang anggota DeHub"
+    },
+    "taxSplit": {
+      "grossFootnote": "Total pendapatan di atas termasuk BNB yang dibagikan kepada pemegang dan staker. Pembayaran ini didistribusikan, tidak disimpan oleh DeHub. Pembelian kembali tetap terpisah. Setiap jumlah dan mata uang asli dapat diperiksa di buku besar."
     }
   },
   "superpowers": {
@@ -2973,7 +2976,8 @@
     },
     "buyTokensToUnlockBadge": "Pemegang lencana apa pun mendapatkan SuperPowers. Beli token DeHub untuk membuka lencana — staking tidak diperlukan.",
     "buyTokensToUnlock": "Beli token DeHub untuk membuka lencana dan SuperPowers-nya. Pemegang lencana apa pun mendapatkannya — staking tidak diperlukan.",
-    "goldenHourStarted": "Golden Hour berjalan selama {{minutes}} menit — semua yang Anda posting sekarang dihitung ganda"
+    "goldenHourStarted": "Golden Hour berjalan selama {{minutes}} menit — semua yang Anda posting sekarang dihitung ganda",
+    "signalFlareTo": "Sinyal Flare ke {{people}} orang"
   },
   "work": {
     "integrity": {

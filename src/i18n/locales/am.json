@@ -2846,6 +2846,9 @@
       "wallTitle": "ሰዎች ምን ይላሉ",
       "wallNote": "በፈቃድ ታትሞ",
       "anonymous": "DeHub አባል"
+    },
+    "taxSplit": {
+      "grossFootnote": "ከላይ የተጠቀሰው የገቢ ድምር ከባለአክሲዮኖች እና ከአሳታፊዎች ጋር የተጋራውን BNB ያካትታል ። እነዚህ ክፍያዎች የተከፋፈሉ እንጂ በዴሆብ የተያዙ አይደሉም ። ግዢዎች የተለዩ ሆነው ይቆያሉ. እያንዳንዱ መጠን እና ኦሪጅናል ምንዛሬ በ LEDger ውስጥ ሊመረመሩ ይችላሉ."
     }
   },
   "superpowers": {
@@ -2983,7 +2986,8 @@
     },
     "buyTokensToUnlockBadge": "ማንኛውም ባጅ ያዥ SuperPowers ያገኛል። ባጅ ለመክፈት DeHub ቶከኖችን ይግዙ — መቆለፍ አያስፈልግም።",
     "buyTokensToUnlock": "ባጅ እና SuperPowers ለመክፈት DeHub ቶከኖችን ይግዙ። ማንኛውም ባጅ ያዥ ያገኛቸዋል — መቆለፍ አያስፈልግም።",
-    "goldenHourStarted": "Golden Hour ለ {{minutes}} ደቂቃዎች እየሮጠ ነው — የምትለጥፈው ሁሉ አሁን በእጥፍ ይቆጠራል"
+    "goldenHourStarted": "Golden Hour ለ {{minutes}} ደቂቃዎች እየሮጠ ነው — የምትለጥፈው ሁሉ አሁን በእጥፍ ይቆጠራል",
+    "signalFlareTo": "የምልክት ፍሰት ወደ {{people}} ሰዎች"
   },
   "work": {
     "integrity": {

@@ -2815,6 +2815,9 @@
       "wallTitle": "人哋講乜",
       "wallNote": "喺得到許可嘅情況下發佈",
       "anonymous": "一個 DeHub 成員"
+    },
+    "taxSplit": {
+      "grossFootnote": "上面嘅收入總額包括同持有人同股東分享嘅 BNB 。呢啲款項係由 DeHub 分配，而唔係保留。回購仍然係分開嘅。每一個金額同原始貨幣都可以喺分帳入面檢查。"
     }
   },
   "superpowers": {
@@ -2952,7 +2955,8 @@
     },
     "buyTokensToUnlockBadge": "任何徽章持有者均可獲得超級能力。購買 DeHub 代幣以解鎖徽章 — 無需質押。",
     "buyTokensToUnlock": "購買 DeHub 代幣以解鎖徽章及其超級能力。任何徽章持有者均可獲得 — 無需質押。",
-    "goldenHourStarted": "Golden Hour 進行緊 {{minutes}} 分鐘 — 你而家發佈嘅所有內容都會計雙倍"
+    "goldenHourStarted": "Golden Hour 進行緊 {{minutes}} 分鐘 — 你而家發佈嘅所有內容都會計雙倍",
+    "signalFlareTo": "向 {{people}} 人發出訊號耀斑"
   },
   "work": {
     "integrity": {

@@ -2777,6 +2777,9 @@
       "wallTitle": "Mitä ihmiset sanovat",
       "wallNote": "julkaistu luvalla",
       "anonymous": "DeHubin jäsen"
+    },
+    "taxSplit": {
+      "grossFootnote": "Yllä oleva tulojen kokonaismäärä sisältää BNB: n, joka on jaettu haltijoiden ja stakerien kanssa. Nämä maksut jaettiin, eikä DeHub pidättänyt niitä. Takaisinostot pysyvät erillisinä. Jokainen summa ja alkuperäinen valuutta voidaan tarkastaa pääkirjasta."
     }
   },
   "superpowers": {
@@ -2914,7 +2917,8 @@
     },
     "buyTokensToUnlockBadge": "Kaikki merkin haltijat saavat Supervoimia. Osta DeHub-tokeneita avataksesi merkin — panostaminen ei ole pakollista.",
     "buyTokensToUnlock": "Osta DeHub-tokeneita avataksesi merkin ja sen Supervoimat. Kaikki merkin haltijat saavat ne — panostaminen ei ole pakollista.",
-    "goldenHourStarted": "Golden Hour käynnissä {{minutes}} minuuttia – kaikki julkaisemasi lasketaan nyt kaksinkertaisesti"
+    "goldenHourStarted": "Golden Hour käynnissä {{minutes}} minuuttia – kaikki julkaisemasi lasketaan nyt kaksinkertaisesti",
+    "signalFlareTo": "Signaalileima {{people}} ihmiselle"
   },
   "work": {
     "integrity": {

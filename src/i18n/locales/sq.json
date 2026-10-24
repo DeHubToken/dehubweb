@@ -2818,6 +2818,9 @@
       "wallTitle": "Çfarë thonë njerëzit",
       "wallNote": "botuar me leje",
       "anonymous": "Një anëtar i DeHub-it"
+    },
+    "taxSplit": {
+      "grossFootnote": "Totali i të ardhurave të mësipërme PËRFSHIN BNB-NË të ndarë me mbajtësit dhe aksionarët. Këto pagesa u shpërndanë, nuk u mbajtën nga DeHub. Rimbursimet mbeten të ndara. Çdo shumë dhe monedhë origjinale mund të kontrollohen në libër."
     }
   },
   "superpowers": {
@@ -2955,7 +2958,8 @@
     },
     "buyTokensToUnlockBadge": "Çdo mbajtës i medaljes merr SuperFuqi. Blini tokena DeHub për të zhbllokuar një medalje — staking nuk kërkohet.",
     "buyTokensToUnlock": "Bleni tokena DeHub për të zhbllokuar një medalje dhe SuperFuqitë e saj. Çdo mbajtës i medaljes i merr ato — staking nuk kërkohet.",
-    "goldenHourStarted": "Golden Hour po zgjat {{minutes}} minuta — çdo gjë që postoni tani numërohet dyfish"
+    "goldenHourStarted": "Golden Hour po zgjat {{minutes}} minuta — çdo gjë që postoni tani numërohet dyfish",
+    "signalFlareTo": "Shpërthimi i sinjalit në {{people}} njerëz"
   },
   "work": {
     "integrity": {

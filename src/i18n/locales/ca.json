@@ -2779,6 +2779,9 @@
       "wallTitle": "Què diuen les persones",
       "wallNote": "publicat amb permís",
       "anonymous": "Un membre de DeHub"
+    },
+    "taxSplit": {
+      "grossFootnote": "El total d'ingressos anterior inclou el BNB compartit amb els titulars i estacadors. Aquests pagaments van ser distribuïts, no retinguts per DeHub. Les recompres romanen separades. Cada quantitat i moneda original es poden inspeccionar al llibre major."
     }
   },
   "superpowers": {
@@ -2916,7 +2919,8 @@
     },
     "buyTokensToUnlockBadge": "Qualsevol titular de distintiu obté SuperPoders. Compra testimonis DeHub per desbloquejar un distintiu; no es requereix staking.",
     "buyTokensToUnlock": "Compra testimonis DeHub per desbloquejar un distintiu i els seus SuperPoders. Qualsevol titular de distintiu els obté; no es requereix staking.",
-    "goldenHourStarted": "Golden Hour en marxa durant {{minutes}} minuts: tot el que publiquis ara compta el doble"
+    "goldenHourStarted": "Golden Hour en marxa durant {{minutes}} minuts: tot el que publiquis ara compta el doble",
+    "signalFlareTo": "Flamar senyal a {{people}} persones"
   },
   "work": {
     "integrity": {

@@ -2818,6 +2818,9 @@
       "wallTitle": "Ką sako žmonės",
       "wallNote": "paskelbta su leidimu",
       "anonymous": "DeHub narys"
+    },
+    "taxSplit": {
+      "grossFootnote": "Į pirmiau nurodytą bendrą pajamų sumą įeina BNB, kuriuo dalijamasi su savininkais ir dalininkais. Šie mokėjimai buvo paskirstyti, o ne „DeHub“ užlaikyti. Atpirkimai išlieka atskiri. Kiekvieną sumą ir pradinę valiutą galima patikrinti DK."
     }
   },
   "superpowers": {
@@ -2955,7 +2958,8 @@
     },
     "buyTokensToUnlockBadge": "Bet kuris ženklelio turėtojas gauna Supergalias. Pirkite DeHub žetonus, kad atrakintumėte ženklelį – statymas neprivalomas.",
     "buyTokensToUnlock": "Pirkite DeHub žetonus, kad atrakintumėte ženklelį ir jo Supergalias. Bet kuris ženklelio turėtojas juos gauna – statymas neprivalomas.",
-    "goldenHourStarted": "„Golden Hour“ veikia {{minutes}} minutes – viskas, ką dabar skelbiate, skaičiuojama dvigubai"
+    "goldenHourStarted": "„Golden Hour“ veikia {{minutes}} minutes – viskas, ką dabar skelbiate, skaičiuojama dvigubai",
+    "signalFlareTo": "Signalo išryškinimas {{people}} žmonėms"
   },
   "work": {
     "integrity": {

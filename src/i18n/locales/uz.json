@@ -2836,6 +2836,9 @@
       "wallTitle": "Odamlar nima deyishadi",
       "wallNote": "ruxsat bilan nashr etilgan",
       "anonymous": "DeHub a'zosi"
+    },
+    "taxSplit": {
+      "grossFootnote": "Yuqoridagi daromadning umumiy miqdoriga egalar va stakerlar bilan birgalikda foydalaniladigan BNB kiradi. Ushbu to&#39;lovlar DeHub tomonidan ushlab qolinmagan, balki taqsimlangan. Qayta sotib olish alohida bo&#39;lib qoladi. Har bir miqdor va asl valyutani daftarda tekshirish mumkin."
     }
   },
   "superpowers": {
@@ -2973,7 +2976,8 @@
     },
     "buyTokensToUnlockBadge": "Har qanday medal egasi SuperKuchlarga ega bo'ladi. Medaldan foydalanish uchun DeHub tokenlarini sotib oling — stavka qilish shart emas.",
     "buyTokensToUnlock": "Medaldan foydalanish va uning SuperKuchlarini faollashtirish uchun DeHub tokenlarini sotib oling. Har qanday medal egasi ularga ega bo'ladi — stavka qilish shart emas.",
-    "goldenHourStarted": "Golden Hour {{minutes}} daqiqa davom etmoqda — hozirgi har bir postingiz ikki hisoblanadi"
+    "goldenHourStarted": "Golden Hour {{minutes}} daqiqa davom etmoqda — hozirgi har bir postingiz ikki hisoblanadi",
+    "signalFlareTo": "Signal chaqnashi {{people}} odamlarga"
   },
   "work": {
     "integrity": {

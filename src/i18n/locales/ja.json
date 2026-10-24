@@ -2834,6 +2834,9 @@
       "wallTitle": "人々の声",
       "wallNote": "許可を得て公開",
       "anonymous": "DeHubメンバー"
+    },
+    "taxSplit": {
+      "grossFootnote": "上記の収益合計には、ホルダーとステークホルダーと共有するBNBが含まれています。これらの支払いは分配され、DeHubによって保持されませんでした。買い戻しは別々のままです。すべての金額と元の通貨は元帳で検査できます。"
     }
   },
   "superpowers": {
@@ -2971,7 +2974,8 @@
     },
     "buyTokensToUnlockBadge": "バッジ所有者は誰でもスーパーパワーを得られます。バッジをアンロックするにはDeHubトークンを購入してください — ステーキングは不要です。",
     "buyTokensToUnlock": "バッジとそのスーパーパワーをアンロックするにはDeHubトークンを購入してください。バッジ所有者は誰でもそれらを得られます — ステーキングは不要です。",
-    "goldenHourStarted": "ゴールデンアワーが {{minutes}} 分間実行中 — 今投稿するすべてが2倍になります"
+    "goldenHourStarted": "ゴールデンアワーが {{minutes}} 分間実行中 — 今投稿するすべてが2倍になります",
+    "signalFlareTo": "{{people}}人にフレアを通知"
   },
   "work": {
     "integrity": {

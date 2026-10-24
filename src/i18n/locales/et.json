@@ -2805,6 +2805,9 @@
       "wallTitle": "Mida inimesed ütlevad",
       "wallNote": "avaldatud loal",
       "anonymous": "DeHubi liige"
+    },
+    "taxSplit": {
+      "grossFootnote": "Ülaltoodud tulu kogusumma sisaldab BNB-d, mida jagatakse omanike ja virnastajatega. DeHub jaotas need maksed, kuid ei pidanud neid kinni. Tagasiostud jäävad eraldi. Iga summat ja algset valuutat saab pearaamatus kontrollida."
     }
   },
   "superpowers": {
@@ -2942,7 +2945,8 @@
     },
     "buyTokensToUnlockBadge": "Iga märgi omanik saab SuperVõimeid. Ostke DeHub märke, et avada märk — panustamine pole vajalik.",
     "buyTokensToUnlock": "Ostke DeHub märke, et avada märk ja selle SuperVõimed. Iga märgi omanik saab need — panustamine pole vajalik.",
-    "goldenHourStarted": "Kuldne tund kestab {{minutes}} minutit – kõik, mida praegu postitate, loendatakse kahekordselt"
+    "goldenHourStarted": "Kuldne tund kestab {{minutes}} minutit – kõik, mida praegu postitate, loendatakse kahekordselt",
+    "signalFlareTo": "Signaalrakett {{people}} inimesele"
   },
   "work": {
     "integrity": {

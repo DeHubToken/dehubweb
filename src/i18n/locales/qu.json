@@ -2849,6 +2849,9 @@
       "wallTitle": "Runakunapa ima nisqanku",
       "wallNote": "permisowan lluqsichisqa",
       "anonymous": "Huk DeHub nisqapi kaq"
+    },
+    "taxSplit": {
+      "grossFootnote": "Hawa qullqi yaykuy tukuyninpiqa BNB titularkunawan chaymanta apuestadoreswan rakisqa kachkan. Kay qullqi quykuna rakisqa karqa, mana DeHub kaqwan waqaychasqachu. Kutichisqa rantiykunaqa sapaqchasqam qipan. Sapa qolqe, original qolqepas libro mayor nisqapin qhawarikunman."
     }
   },
   "superpowers": {
@@ -2986,7 +2989,8 @@
     },
     "buyTokensToUnlockBadge": "Mayqin insigniayuqpas SuperPowers nisqatam chaskikun. DeHub tokenkunata rantiy huk insignia kicharinapaq — apuesta mana necesariochu.",
     "buyTokensToUnlock": "DeHub tokenkunata rantiy huk insignia chaymanta SuperPowers nisqakunata kicharinaykipaq. Mayqin insigniayuqpas chaykunatam chaskikun — estacayqa manam necesariochu.",
-    "goldenHourStarted": "Golden Hourqa {{minutes}} minutokama purichkan — imaymana kaqniyki kunan iskaychayta atikun"
+    "goldenHourStarted": "Golden Hourqa {{minutes}} minutokama purichkan — imaymana kaqniyki kunan iskaychayta atikun",
+    "signalFlareTo": "Señal Llamayu {{people}} runakunaman"
   },
   "work": {
     "integrity": {

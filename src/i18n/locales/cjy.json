@@ -2810,6 +2810,9 @@
       "wallTitle": "人们怎么说",
       "wallNote": "已获得许可发布",
       "anonymous": "DeHub 成员"
+    },
+    "taxSplit": {
+      "grossFootnote": "收入总额包括与持有者和赌注者共享的BNB。这些支付是分发的，而不是被DeHub保留的。回购额仍然是单独的。每个金额和原始货币都可以在日志中检查。"
     }
   },
   "superpowers": {

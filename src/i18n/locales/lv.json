@@ -2805,6 +2805,9 @@
       "wallTitle": "Ko saka cilvēki",
       "wallNote": "publicēts ar atļauju",
       "anonymous": "DeHub biedrs"
+    },
+    "taxSplit": {
+      "grossFootnote": "Iespējamie ienākumi, kas parādīti virsā, iekļauj BNB, ko dalīts ar vācējiem un stājējiem. Šie apmaksas tika izplatīti, nevis saglabāti DeHub. Atpirkumi paliek atsevišķi. Viss, kas saistīts ar summām un oriģinālo valūtu, var tiek redzēts ledgērī."
     }
   },
   "superpowers": {
@@ -2942,7 +2945,8 @@
     },
     "buyTokensToUnlockBadge": "Jebkurš emblēmas turētājs saņem SuperPowers. Pērciet DeHub žetonus, lai atbloķētu emblēmu — likšana nav nepieciešama.",
     "buyTokensToUnlock": "Pērciet DeHub žetonus, lai atbloķētu emblēmu un tās SuperPowers. Jebkurš emblēmas turētājs tos saņem — likšana nav nepieciešama.",
-    "goldenHourStarted": "Zelta stunda norit {{minutes}} minūtes — viss, ko tagad publicē, skaitās dubultā"
+    "goldenHourStarted": "Zelta stunda norit {{minutes}} minūtes — viss, ko tagad publicē, skaitās dubultā",
+    "signalFlareTo": "Signāla uzliesmojums {{people}} cilvēkiem"
   },
   "work": {
     "integrity": {

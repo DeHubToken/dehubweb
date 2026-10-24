@@ -2844,6 +2844,9 @@
       "wallTitle": "Was Lüt säge",
       "wallNote": "veröffentlicht mit Erlaubnis",
       "anonymous": "E DeHub-Mitglid"
+    },
+    "taxSplit": {
+      "grossFootnote": "De Revenue totali obi drin gschäbe BNB, d’ an d’ Holder und d’ Staker ausbezahlt wärde. D’se Zahlungen wärde verteilt, net behalte von DeHub. Buybacks bliebe separat. Jeder Betrag und d’ Ursprungswährung kann im Ledger kontrolliert werde."
     }
   },
   "superpowers": {
@@ -2981,7 +2984,8 @@
     },
     "buyTokensToUnlockBadge": "Jeder Badge-Inhaber erhält Superkräfte. Kaufen Sie DeHub-Tokens, um einen Badge freizuschalten – Staking ist nicht erforderlich.",
     "buyTokensToUnlock": "Kaufen Sie DeHub-Tokens, um einen Badge und seine Superkräfte freizuschalten. Jeder Badge-Inhaber erhält sie – Staking ist nicht erforderlich.",
-    "goldenHourStarted": "Golden Hour lauft für {{minutes}} Minute — alles, wo du jetzt postisch, zählt dopplet"
+    "goldenHourStarted": "Golden Hour lauft für {{minutes}} Minute — alles, wo du jetzt postisch, zählt dopplet",
+    "signalFlareTo": "Signal Flare an {{people}} Leut"
   },
   "work": {
     "integrity": {
