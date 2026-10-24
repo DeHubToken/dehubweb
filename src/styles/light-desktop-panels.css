@@ -1,14 +1,14 @@
-/* Soft pearl is desktop chrome for Light and System Light. Keep phone feeds
+/* Soft pearl is desktop chrome for System Light. Keep Minimal Light, phone feeds
    and the other themes on their existing surface recipes. Extra specificity
    overrides the legacy paper flattening and shared search material rules. */
 @media (min-width: 1024px) {
-  html:is([data-theme='light'], [data-system-tone='light']) {
+  html[data-system-tone='light'] {
     --desktop-pearl-radius: 20px;
     --desktop-pearl-search-radius: 12px;
     --desktop-pearl-inset: 16px;
   }
 
-  html:is([data-theme='light'], [data-system-tone='light']):not(#_):not(#_):not(#_):not(#_):not(#_):not(#_):not(#_):not(#_) [data-desktop-right-rail] {
+  html[data-system-tone='light']:not(#_):not(#_):not(#_):not(#_):not(#_):not(#_):not(#_):not(#_) [data-desktop-right-rail] {
     background: transparent;
     border: 0;
     border-radius: 0 !important;
@@ -21,7 +21,7 @@
     --search-fill-focus: #e2e5e8;
   }
 
-  html:is([data-theme='light'], [data-system-tone='light']):not(#_):not(#_):not(#_):not(#_):not(#_):not(#_):not(#_):not(#_)
+  html[data-system-tone='light']:not(#_):not(#_):not(#_):not(#_):not(#_):not(#_):not(#_):not(#_)
     :is([data-desktop-right-rail] [data-side-panel]:not([data-search-bento]), [data-sidebar-glass-surface]) {
     background: #fbfbfc !important;
     border: 1px solid #fff !important;
@@ -30,12 +30,12 @@
     backdrop-filter: none !important;
   }
 
-  html:is([data-theme='light'], [data-system-tone='light']):not(#_):not(#_):not(#_):not(#_):not(#_):not(#_):not(#_):not(#_)
+  html[data-system-tone='light']:not(#_):not(#_):not(#_):not(#_):not(#_):not(#_):not(#_):not(#_)
     [data-desktop-right-rail] [data-side-panel]:not([data-search-bento]) {
     padding: var(--desktop-pearl-inset) !important;
   }
 
-  html:is([data-theme='light'], [data-system-tone='light']):not(#_):not(#_):not(#_):not(#_):not(#_):not(#_):not(#_):not(#_)
+  html[data-system-tone='light']:not(#_):not(#_):not(#_):not(#_):not(#_):not(#_):not(#_):not(#_)
     [data-desktop-right-rail] [data-search-bento] {
     border: 0 !important;
     padding: 0 !important;
@@ -43,20 +43,20 @@
     overflow: hidden;
   }
 
-  html:is([data-theme='light'], [data-system-tone='light']):not(#_):not(#_):not(#_):not(#_):not(#_):not(#_):not(#_):not(#_)
+  html[data-system-tone='light']:not(#_):not(#_):not(#_):not(#_):not(#_):not(#_):not(#_):not(#_)
     [data-desktop-right-rail] [data-search-bento] input {
     height: 44px;
     border-radius: var(--desktop-pearl-search-radius) !important;
   }
 
-  html:is([data-theme='light'], [data-system-tone='light']):not(#_):not(#_):not(#_):not(#_):not(#_):not(#_):not(#_):not(#_)
+  html[data-system-tone='light']:not(#_):not(#_):not(#_):not(#_):not(#_):not(#_):not(#_):not(#_)
     [data-desktop-right-rail] [data-side-panel-tabs] {
     gap: 8px;
     padding: 0 !important;
     background: transparent !important;
   }
 
-  html:is([data-theme='light'], [data-system-tone='light']):not(#_):not(#_):not(#_):not(#_):not(#_):not(#_):not(#_):not(#_)
+  html[data-system-tone='light']:not(#_):not(#_):not(#_):not(#_):not(#_):not(#_):not(#_):not(#_)
     [data-desktop-right-rail] [data-side-panel-tabs] [data-tab-btn] {
     min-width: 0;
     height: 44px;
@@ -67,54 +67,54 @@
     box-shadow: none !important;
   }
 
-  html:is([data-theme='light'], [data-system-tone='light']):not(#_):not(#_):not(#_):not(#_):not(#_):not(#_):not(#_):not(#_)
+  html[data-system-tone='light']:not(#_):not(#_):not(#_):not(#_):not(#_):not(#_):not(#_):not(#_)
     [data-desktop-right-rail] [data-side-panel-tabs] [data-tab-btn][data-tab-active='true'] {
     background: #fff !important;
     box-shadow: 0 1px 3px rgb(17 17 17 / 0.08) !important;
   }
 
-  html:is([data-theme='light'], [data-system-tone='light']):not(#_):not(#_):not(#_):not(#_):not(#_):not(#_):not(#_):not(#_)
+  html[data-system-tone='light']:not(#_):not(#_):not(#_):not(#_):not(#_):not(#_):not(#_):not(#_)
     [data-desktop-right-rail] [data-side-panel-tabs] [data-tab-btn]:hover {
     background: #f0f1f3 !important;
   }
 
-  html:is([data-theme='light'], [data-system-tone='light']):not(#_):not(#_):not(#_):not(#_):not(#_):not(#_):not(#_):not(#_)
+  html[data-system-tone='light']:not(#_):not(#_):not(#_):not(#_):not(#_):not(#_):not(#_):not(#_)
     [data-desktop-right-rail] [data-side-panel-tabs] [data-tab-btn]:focus-visible {
     outline: 2px solid #626974;
     outline-offset: 2px;
   }
 
-  html:is([data-theme='light'], [data-system-tone='light']):not(#_):not(#_):not(#_):not(#_):not(#_):not(#_):not(#_):not(#_)
+  html[data-system-tone='light']:not(#_):not(#_):not(#_):not(#_):not(#_):not(#_):not(#_):not(#_)
     [data-desktop-right-rail] :is([data-active-tab-indicator], .tab-hover-bg),
-  html:is([data-theme='light'], [data-system-tone='light']):not(#_):not(#_):not(#_):not(#_):not(#_):not(#_):not(#_):not(#_)
+  html[data-system-tone='light']:not(#_):not(#_):not(#_):not(#_):not(#_):not(#_):not(#_):not(#_)
     [data-desktop-right-rail] [data-side-panel-tabs]::after,
-  html:is([data-theme='light'], [data-system-tone='light']):not(#_):not(#_):not(#_):not(#_):not(#_):not(#_):not(#_):not(#_)
+  html[data-system-tone='light']:not(#_):not(#_):not(#_):not(#_):not(#_):not(#_):not(#_):not(#_)
     [data-desktop-right-rail] [data-side-panel-tabs] [data-tab-btn]::before {
     display: none !important;
   }
 
-  html:is([data-theme='light'], [data-system-tone='light']):not(#_):not(#_):not(#_):not(#_):not(#_):not(#_):not(#_):not(#_)
+  html[data-system-tone='light']:not(#_):not(#_):not(#_):not(#_):not(#_):not(#_):not(#_):not(#_)
     [data-desktop-right-rail] [data-side-panel-content] {
     padding: 16px 0 0 !important;
     background: transparent !important;
   }
 
-  html:is([data-theme='light'], [data-system-tone='light']):not(#_):not(#_):not(#_):not(#_):not(#_):not(#_):not(#_):not(#_)
+  html[data-system-tone='light']:not(#_):not(#_):not(#_):not(#_):not(#_):not(#_):not(#_):not(#_)
     [data-sidebar-glass-surface] {
     padding: 0 !important;
   }
 
-  html:is([data-theme='light'], [data-system-tone='light']):not(#_):not(#_):not(#_):not(#_):not(#_):not(#_):not(#_):not(#_)
+  html[data-system-tone='light']:not(#_):not(#_):not(#_):not(#_):not(#_):not(#_):not(#_):not(#_)
     [data-sidebar-glass-surface] [data-desktop-nav-list] {
     padding: var(--desktop-pearl-inset) !important;
   }
 
-  html:is([data-theme='light'], [data-system-tone='light']):not(#_):not(#_):not(#_):not(#_):not(#_):not(#_):not(#_):not(#_)
+  html[data-system-tone='light']:not(#_):not(#_):not(#_):not(#_):not(#_):not(#_):not(#_):not(#_)
     [data-sidebar-glass-surface][data-rail-collapsed='true'] [data-desktop-nav-list] {
     padding: 8px !important;
   }
 
-  html:is([data-theme='light'], [data-system-tone='light']):not(#_):not(#_):not(#_):not(#_):not(#_):not(#_):not(#_):not(#_)
+  html[data-system-tone='light']:not(#_):not(#_):not(#_):not(#_):not(#_):not(#_):not(#_):not(#_)
     [data-sidebar-fade] {
     background: linear-gradient(to top, #fbfbfc, rgb(251 251 252 / 0)) !important;
   }
