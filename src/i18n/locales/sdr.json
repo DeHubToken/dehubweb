@@ -1703,19 +1703,40 @@
       "runs": "{{runs}} اخیرین اجراها · {{completed}} تکمیل شده · {{failed}} شکست خورده",
       "draft": "Sirf draft",
       "count": {
-        "pending": "देखेक लेल ड्राफ्ट्स"
+        "pending": "देखेक लेल ड्राफ्ट्स",
+        "succeeded": "Recent successes",
+        "scheduled": "Scheduled tasks",
+        "active": "Active agents"
       },
       "builder": {
         "curate": "پست‌های مرتبط",
-        "post": "assistant can't help with that request."
+        "post": "assistant can't help with that request.",
+        "news": "React to news"
       },
       "news": {
         "technology": "Təxnoloji",
         "sport": "Spor",
-        "science": "علم"
+        "science": "علم",
+        "world": "World",
+        "culture": "Culture"
       },
       "agent": "اژانس",
-      "filter": "فیلتر فعالیت"
+      "filter": "فیلتر فعالیت",
+      "growthChange": "Follower badlao: {{count}} {{time}} se",
+      "approval": "Approve first",
+      "cadence": {
+        "once": "Once",
+        "daily": "Daily",
+        "twice": "Twice daily"
+      },
+      "dehub_post_create": "Publish posts",
+      "dehub_vote": "React to posts",
+      "dehub_follow": "Follow accounts",
+      "dehub_update_profile": "Edit profile",
+      "dehub_stream_timeout": "Moderate stream chat",
+      "alerts": "Needs attention",
+      "action": "Action",
+      "schedule": "Schedule"
     }
   },
   "hero": {
