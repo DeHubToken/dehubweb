@@ -38,6 +38,7 @@ import { isAssistantAddress } from '@/lib/assistant';
 import { useAssistantReplies, useAssistantReplyEngine } from '@/hooks/use-assistant-replies';
 import { dismissKeyboard } from '@/hooks/use-keyboard-open';
 import { AppState } from '@/components/app/AppState';
+import { translateCopy as _translateCopy } from '@/i18n/copy';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -54,7 +55,7 @@ function toLocalMessage(msg: SupabaseLiveChatMessage): Message {
   return {
     id: msg.id,
     userId: msg.sender_address || 'unknown',
-    userName: msg.sender_display_name || msg.sender_username || msg.sender_address?.slice(0, 8) || 'Anon',
+    userName: msg.sender_display_name || msg.sender_username || msg.sender_address?.slice(0, 8) || _translateCopy("copy.90395d452a30", { defaultValue: "Anon" }),
     userHandle: msg.sender_username || undefined,
     userAvatar: buildAvatarUrl(msg.sender_address || '', msg.sender_avatar_url) || undefined,
     badgeBalance: msg.sender_badge_balance,
@@ -295,13 +296,13 @@ export function PublicChat({ onBack }: PublicChatProps) {
       return;
     }
     try {
-      if (!selectedRoomId) throw new Error('No room selected');
+      if (!selectedRoomId) throw new Error(_copy("copy.4f3f0775de93", { defaultValue: "No room selected" }));
       await banLiveChatUser(selectedRoomId, userId);
-      toast.success(`${userName} has been banned`);
+      toast.success(_copy("copy.40d34517b8a0", { defaultValue: "{{value1}} has been banned", value1: userName }));
       refetch();
     } catch (err) {
       console.error('[PublicChat] Ban failed:', err);
-      toast.error(err instanceof Error ? err.message : 'Failed to ban user');
+      toast.error(err instanceof Error ? err.message : _copy("copy.d0cae9640dc7", { defaultValue: "Failed to ban user" }));
     }
   }, [selectedRoomId, isAuthenticated, refetch, _copy]);
 
@@ -311,13 +312,13 @@ export function PublicChat({ onBack }: PublicChatProps) {
       return;
     }
     try {
-      if (!selectedRoomId) throw new Error('No room selected');
+      if (!selectedRoomId) throw new Error(_copy("copy.4f3f0775de93", { defaultValue: "No room selected" }));
       await unbanLiveChatUser(selectedRoomId, userId);
-      toast.success(`${userName} has been unbanned`);
+      toast.success(_copy("copy.4715f5cd4252", { defaultValue: "{{value1}} has been unbanned", value1: userName }));
       refetch();
     } catch (err) {
       console.error('[PublicChat] Unban failed:', err);
-      toast.error(err instanceof Error ? err.message : 'Failed to unban user');
+      toast.error(err instanceof Error ? err.message : _copy("copy.29166786d637", { defaultValue: "Failed to unban user" }));
     }
   }, [selectedRoomId, isAuthenticated, refetch, _copy]);
 

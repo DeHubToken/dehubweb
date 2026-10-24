@@ -116,7 +116,7 @@ export function CoinBalanceMenu({ balance, variant, onAuthRequired }: CoinBalanc
 
   const handleStakeCoins = () => {
     if (!stakeAmount || Number(stakeAmount) <= 0) return;
-    toast.success(`Staked ${stakeAmount} coins`);
+    toast.success(_copy("copy.d9374ea70c62", { defaultValue: "Staked {{value1}} coins", value1: stakeAmount }));
     setIsOpen(false);
     setMenuView('main');
   };
@@ -287,7 +287,7 @@ export function CoinBalanceMenu({ balance, variant, onAuthRequired }: CoinBalanc
             className="pl-10 bg-white/5 border-white/10 text-white placeholder:text-zinc-400 [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none focus:ring-0 focus:border-white/10 focus-visible:ring-0 focus-visible:ring-offset-0"
           />
         </div>
-        <p className="text-xs text-zinc-400 mt-1">{_copy("copy.333771bad487", { defaultValue: "Available: " })}{balance.toLocaleString()}{_copy("copy.54358ea00495", { defaultValue: " coins" })}</p>
+        <p className="text-xs text-zinc-400 mt-1">{_copy("copy.01b4b7133070", { defaultValue: "Available: {{value1}} coins", value1: balance.toLocaleString() })}</p>
       </div>
       
       <div className="flex gap-2">
@@ -373,7 +373,7 @@ export function WalletMenuContent({ balance, onClose }: WalletMenuContentProps) 
 
   const handleStakeCoins = () => {
     if (!stakeAmount || Number(stakeAmount) <= 0) return;
-    toast.success(`Staked ${stakeAmount} coins`);
+    toast.success(_copy("copy.d9374ea70c62", { defaultValue: "Staked {{value1}} coins", value1: stakeAmount }));
     onClose?.();
   };
 
@@ -465,7 +465,7 @@ export function WalletMenuContent({ balance, onClose }: WalletMenuContentProps) 
               className="pl-10 bg-white/5 border-white/10 text-white placeholder:text-zinc-400 [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none focus:ring-0 focus:border-white/10 focus-visible:ring-0 focus-visible:ring-offset-0"
             />
           </div>
-          <p className="text-xs text-zinc-400 mt-1">{_copy("copy.333771bad487", { defaultValue: "Available: " })}{balance.toLocaleString()}{_copy("copy.54358ea00495", { defaultValue: " coins" })}</p>
+          <p className="text-xs text-zinc-400 mt-1">{_copy("copy.01b4b7133070", { defaultValue: "Available: {{value1}} coins", value1: balance.toLocaleString() })}</p>
         </div>
         
         <div className="flex gap-2">

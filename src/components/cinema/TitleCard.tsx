@@ -42,7 +42,7 @@ export function TitleCard({
 
         {title.ranks?.weekly?.rank != null && title.ranks.weekly.rank <= 10 && (
           <span className="absolute left-2 top-2 rounded-md bg-black/80 px-1.5 py-0.5 text-[11px] font-semibold text-white backdrop-blur-sm">
-            #{title.ranks.weekly.rank}{_copy("copy.8dbf30828264", { defaultValue: " this week" })}</span>
+            {_copy("copy.68a65692d2f4", { defaultValue: "#{{value1}} this week", value1: title.ranks.weekly.rank })}</span>
         )}
       </div>
 

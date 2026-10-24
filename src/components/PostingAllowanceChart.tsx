@@ -37,7 +37,7 @@ interface AllowanceTier {
 }
 
 const TIERS: AllowanceTier[] = [
-  { name: 'No badge', threshold: '< 10,000', postsPerDay: 10, gbPerDay: 1, dhbPerTextPost: 100, dhbPerGb: 2000, image: null },
+  { get name() { return _translateCopy("copy.a39a305fab8b", { defaultValue: "No badge" }); }, threshold: '< 10,000', postsPerDay: 10, gbPerDay: 1, dhbPerTextPost: 100, dhbPerGb: 2000, image: null },
   { name: 'Crab', threshold: '10,000+', postsPerDay: 11, gbPerDay: 1.1, dhbPerTextPost: 95, dhbPerGb: 1900, image: badgeImage('Crab') },
   { name: 'Ghost Lobster', threshold: '25k+', postsPerDay: 12, gbPerDay: 1.2, dhbPerTextPost: 93, dhbPerGb: 1860, image: badgeImage('Ghost Lobster') },
   { name: 'Piranha', threshold: '50k+', postsPerDay: 13, gbPerDay: 1.3, dhbPerTextPost: 91, dhbPerGb: 1820, image: badgeImage('Piranha') },

@@ -4,6 +4,7 @@ import type { TokenRefreshOutcome } from './core';
 import type { AuthResponse } from './types';
 import { deviceHeaders } from '@/lib/device-id';
 import { requestSession } from './session-request';
+import { translateCopy as _translateCopy } from '@/i18n/copy';
 
 export interface UsernameCheckResponse {
   status: boolean;
@@ -28,10 +29,8 @@ export const WALLET_SIGNUP_BLOCKED_CODE = 'WALLET_SIGNUP_REQUIRES_HISTORY';
  * drops the API's own explanation — the only place the alternatives are named.
  */
 export class WalletSignupBlockedError extends Error {
-  constructor(
-    message = 'To create an account with a wallet, that wallet needs some history on-chain — a balance, or a transaction it has sent before.',
-  ) {
-    super(message);
+  constructor(message?: string) {
+    super(message ?? _translateCopy("copy.0cb40ad83df4", { defaultValue: "To create an account with a wallet, that wallet needs some history on-chain — a balance, or a transaction it has sent before." }));
     this.name = 'WalletSignupBlockedError';
   }
 }
@@ -148,7 +147,7 @@ export async function authenticateWallet(
     if (errorData.code === WALLET_SIGNUP_BLOCKED_CODE) {
       throw new WalletSignupBlockedError(errorData.message || errorData.error_message);
     }
-    throw Object.assign(new Error(errorData.message || errorData.error || "Authentication failed"), { code: errorData.code, status: response.status });
+    throw Object.assign(new Error(errorData.message || errorData.error || _translateCopy("copy.93821eb7ce8c", { defaultValue: "Authentication failed" })), { code: errorData.code, status: response.status });
   }
 
   const data: AuthResponse = await response.json();
@@ -260,7 +259,7 @@ export async function rotateWallet(
       throw new WalletNotLinkedError((errorData.message as string) || undefined);
     }
     throw Object.assign(new Error(
-      (errorData.message as string) || (errorData.error as string) || 'Could not move the account',
+      (errorData.message as string) || (errorData.error as string) || _translateCopy("copy.2877ceb92688", { defaultValue: "Could not move the account" }),
     ), { code, status: response.status });
   }
 }
@@ -307,14 +306,14 @@ export async function authenticateWithSupabaseSession(
       throw new ProfileLinkMismatchError(errorData.message as string | undefined);
     }
     throw new Error(
-      (errorData.message as string) || (errorData.error as string) || 'Authentication failed',
+      (errorData.message as string) || (errorData.error as string) || _translateCopy("copy.93821eb7ce8c", { defaultValue: "Authentication failed" }),
     );
   }
 
   const data: AuthResponse = await response.json();
 
   if (!data.token || !/^0x[0-9a-f]{40}$/i.test(data.user?.address ?? '')) {
-    throw new Error('Could not finish signing in to your profile. Please try again.');
+    throw new Error(_translateCopy("copy.62dafb71c505", { defaultValue: "Could not finish signing in to your profile. Please try again." }));
   }
 
   // Check public addresses before adopting any credential. This never opens a wallet.

@@ -1,4 +1,5 @@
 import { useTranslation as _useCopy } from 'react-i18next';
+import { translateCopy as _translateCopy } from '@/i18n/copy';
 /**
  * Auth Provider (heavy implementation — loaded via the WalletProviders chunk)
  * ============
@@ -128,6 +129,27 @@ const loadWalletSecureFlow = () => import('@/lib/wallet-secure-flow');
 // listening for it loads nothing.
 const WALLET_SECURE_REQUIRED_EVENT = 'dehub:wallet-secure-required';
 
+/** A message this file has already put into the reader's language. */
+class AuthCopyError extends Error {}
+
+/**
+ * What to show for a failed sign-in step. Servers, wallets and libraries
+ * answer in English, so outside English the reader gets the translated
+ * fallback instead; messages raised here already in their language pass.
+ */
+function authErrorText(error: unknown, fallback: string): string {
+  const raw = (error as { message?: unknown } | null)?.message;
+  const message = typeof raw === 'string' ? raw.trim() : '';
+  if (!message) return fallback;
+  if (error instanceof AuthCopyError) return message;
+  return readsEnglish() ? message : fallback;
+}
+
+function readsEnglish(): boolean {
+  const language = i18n.resolvedLanguage || i18n.language || 'en';
+  return language === 'en' || language.startsWith('en-');
+}
+
 /**
  * The wallet of a brand-new account, made with no screen at all.
  *
@@ -203,9 +225,9 @@ const PENDING_LOGIN_FRESH_MS = 2 * 60 * 1000;
  */
 function reportWalletSignupBlocked(error: unknown): boolean {
   if (!(error instanceof WalletSignupBlockedError)) return false;
-  toast.error('This wallet cannot open a new account', {
+  toast.error(_translateCopy("copy.043e8d07a119", { defaultValue: "This wallet cannot open a new account" }), {
     id: 'wallet-signup-blocked',
-    description: error.message,
+    description: authErrorText(error, _translateCopy("copy.0cb40ad83df4", { defaultValue: "To create an account with a wallet, that wallet needs some history on-chain — a balance, or a transaction it has sent before." })),
     duration: 15000,
   });
   return true;
@@ -364,7 +386,7 @@ async function signWithProvider(
     if (accounts?.length) break;
     await new Promise(r => setTimeout(r, 50));
   }
-  if (!accounts?.length) throw new Error('No accounts available for signing');
+  if (!accounts?.length) throw new AuthCopyError(_translateCopy("copy.240e902a37c7", { defaultValue: "No accounts available for signing" }));
   const address = accounts[0].toLowerCase();
 
   const challenge = await fetchWalletChallenge(address, 8453, purpose);
@@ -656,10 +678,10 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         !!options?.forProfileId && saved.some((p) => p.id === options.forProfileId);
       const allowance = profileAllowance(saved);
       if (!alreadySaved && saved.length >= allowance.maxProfiles) {
-        toast.error(`You can keep ${allowance.maxProfiles} profiles on this device`, {
+        toast.error(_translateCopy("copy.440c9d2433f5", { count: allowance.maxProfiles, defaultValue: "You can keep {{count}} profiles on this device" }), {
           description: allowance.nextTierName
-            ? `${allowance.tierName} tier holds ${allowance.maxProfiles}. Stake for ${allowance.nextTierName} to add another.`
-            : 'Remove one from Settings → Profile to add a different account.',
+            ? _translateCopy("copy.b9ad04e957c4", { defaultValue: "{{value1}} tier holds {{value2}}. Stake for {{value3}} to add another.", value1: allowance.tierName, value2: allowance.maxProfiles, value3: allowance.nextTierName })
+            : _translateCopy("copy.86ae2bc7a2b4", { defaultValue: "Remove one from Settings → Profile to add a different account." }),
           duration: 8000,
         });
         return;
@@ -970,7 +992,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       }
       const { data: sessionData } = await supabase.auth.getSession();
       if (sessionData?.session?.user?.id !== userId) {
-        throw new Error('Your sign-in session expired. Please sign in again.');
+        throw new AuthCopyError(_translateCopy("copy.de1ad7135e96", { defaultValue: "Your sign-in session expired. Please sign in again." }));
       }
       const silentKey = await makeSilentSignupWallet(userId);
       if (silentKey) {
@@ -985,7 +1007,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       // The identity session is still good, so retry the exchange in place
       // rather than making the person go through Google or email again.
       setWalletPhase('none');
-      toast.error(e instanceof Error ? e.message : 'Could not sign in. Please try again.', {
+      toast.error(authErrorText(e, _translateCopy("copy.2d6970c5eea7", { defaultValue: "Could not sign in. Please try again." })), {
         action: {
           label: i18n.t('common.tryAgain', 'Try again'),
           onClick: () => { void proceedToWalletPhase(userId); },
@@ -1775,8 +1797,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
     toast.info(
       trigger === 'user'
-        ? 'Please sign the message in your wallet...'
-        : 'Your session expired — approve the signature in your wallet to stay signed in.',
+        ? _translateCopy("copy.08a41a32cf73", { defaultValue: "Please sign the message in your wallet..." })
+        : _translateCopy("copy.ee59b75ed2c7", { defaultValue: "Your session expired — approve the signature in your wallet to stay signed in." }),
     );
 
     // The wallet's connect approval popup takes a moment to close, and a
@@ -1959,14 +1981,15 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       } else if (rejected) {
         toast.error(
           trigger === 'user'
-            ? 'Signature rejected. Please try again.'
-            : 'Signature dismissed. Sign in again whenever you are ready.',
+            ? _translateCopy("copy.a79e08840e1e", { defaultValue: "Signature rejected. Please try again." })
+            : _translateCopy("copy.871525d440a7", { defaultValue: "Signature dismissed. Sign in again whenever you are ready." }),
         );
       } else {
         // Explicitly NOT called a rejection any more. This is the branch that
         // used to accuse people of declining a prompt that had failed on its own.
         toast.error(_copy("copy.3a949a35377e", { defaultValue: "Wallet signature failed. Please try again." }), {
-          description: described.shortMessage,
+          // The wallet's own words are English; only English readers get them.
+          description: readsEnglish() ? described.shortMessage : undefined,
         });
       }
       throw signError;
@@ -2000,7 +2023,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       // it) landing on a different address really is the silent switch this
       // guard was written for — refuse it.
       if (trigger !== 'user') {
-        throw new Error('Wallet address changed during session refresh. Please sign in again.');
+        throw new AuthCopyError(_translateCopy("copy.f3a63bfd3d49", { defaultValue: "Wallet address changed during session refresh. Please sign in again." }));
       }
       // A deliberate sign-in as a different wallet, just not through Settings →
       // Add profile. Nothing about it is silent, and refusing it was what sent
@@ -2375,12 +2398,12 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       const { data } = await supabase.auth.getSession();
       const accessToken = data?.session?.access_token;
       if (!accessToken) {
-        if (requiredWalletRotationRef.current) throw new Error('Sign in again to finish replacing your wallet');
+        if (requiredWalletRotationRef.current) throw new AuthCopyError(_translateCopy("copy.ddd5d5f8edff", { defaultValue: "Sign in again to finish replacing your wallet" }));
         return;
       }
       const sign = async () => {
         const proof = await signWithProvider(provider, 'WALLET-RECOVERY', 'rotate-wallet');
-        if (proof.address !== address.toLowerCase()) throw new Error('Wallet changed during recovery. Please try again.');
+        if (proof.address !== address.toLowerCase()) throw new AuthCopyError(_translateCopy("copy.d14ddd22f876", { defaultValue: "Wallet changed during recovery. Please try again." }));
         return proof;
       };
       await submitWalletProof(await sign(), sign, proof =>
@@ -2409,7 +2432,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     const BASE_CHAIN_ID = 8453;
 
     const eoaProvider = await restoreWalletSession();
-    if (!eoaProvider) throw new Error('Wallet is locked. Please unlock it first.');
+    if (!eoaProvider) throw new AuthCopyError(_translateCopy("copy.8dc01b0b0936", { defaultValue: "Wallet is locked. Please unlock it first." }));
     const ownerAddress = await addressFromProvider(eoaProvider);
     const pending = supabaseUserId ? await getPendingWalletReplacement(supabaseUserId, ownerAddress) : null;
     requiredWalletRotationRef.current = !!pending;
@@ -2425,7 +2448,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
     const signingProvider = aaProvider ?? eoaProvider;
     if (requiredWalletRotationRef.current && !aaProvider) {
-      throw new Error('Could not connect the new smart wallet. Try again to finish renewal.');
+      throw new AuthCopyError(_translateCopy("copy.060dd8c409d3", { defaultValue: "Could not connect the new smart wallet. Try again to finish renewal." }));
     }
     const flow = aaProvider ? 'SMART-SA' : 'SMART-EOA';
     const initialProof = await signWithProvider(signingProvider, flow);
@@ -2433,7 +2456,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
     // Address guard: prevent silent account switch during session refresh
     if (!requiredWalletRotationRef.current && walletAddress && walletAddress.toLowerCase() !== address.toLowerCase()) {
-      throw new Error('Wallet address changed during session refresh. Please sign in again.');
+      throw new AuthCopyError(_translateCopy("copy.f3a63bfd3d49", { defaultValue: "Wallet address changed during session refresh. Please sign in again." }));
     }
 
     const meta = await getSupabaseAuthMeta();
@@ -2442,7 +2465,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     await moveAccountToThisWallet(address, signingProvider, BASE_CHAIN_ID);
     const renewLogin = async () => {
       const proof = await signWithProvider(signingProvider, flow);
-      if (proof.address !== address) throw new Error('Wallet changed during sign-in. Please try again.');
+      if (proof.address !== address) throw new AuthCopyError(_translateCopy("copy.98ac971eff76", { defaultValue: "Wallet changed during sign-in. Please try again." }));
       return proof;
     };
     const authResponse = await submitWalletProof(initialProof, renewLogin, proof =>
@@ -2468,7 +2491,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
    * re-verify, and it works whether or not a live session exists yet.
    */
   const exportPrivateKey = async (password: string): Promise<WalletBackup> => {
-    if (!supabaseUserId) throw new Error('Not signed in');
+    if (!supabaseUserId) throw new AuthCopyError(_translateCopy("copy.491fc91cd76e", { defaultValue: "Not signed in" }));
     return (await import('@/lib/wallet-core/export')).exportWalletBackup(supabaseUserId, walletAddress ?? '', password);
   };
 
@@ -2479,7 +2502,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
    * password path always re-asks.
    */
   const exportPrivateKeyWithBiometrics = async (): Promise<WalletBackup> => {
-    if (!supabaseUserId) throw new Error('Not signed in');
+    if (!supabaseUserId) throw new AuthCopyError(_translateCopy("copy.491fc91cd76e", { defaultValue: "Not signed in" }));
     return (await import('@/lib/wallet-core/export')).exportWalletBackup(supabaseUserId, walletAddress ?? '');
   };
 
@@ -2497,7 +2520,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     password: string,
     expectedProfileAddress?: string,
   ) => {
-    if (!supabaseUserId) throw new Error('Not signed in');
+    if (!supabaseUserId) throw new AuthCopyError(_translateCopy("copy.491fc91cd76e", { defaultValue: "Not signed in" }));
     // Reaching a DIFFERENT account on purpose. Any drift recorded earlier in
     // this session must not turn that into a move of the account being left.
     driftedLinkRef.current = null;
@@ -2512,10 +2535,10 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         const matchesExpected =
           expected === derived.ethAddress.toLowerCase() || expected === predictedSafe;
         if (!matchesExpected) {
-          throw new Error(
+          throw new AuthCopyError(
             predictedSafe
-              ? 'This login recovered a different wallet from the selected DeHub profile. Nothing was changed.'
-              : 'We could not verify this wallet against the selected DeHub profile. Try the recovery again.',
+              ? _translateCopy("copy.258b822fbbb6", { defaultValue: "This login recovered a different wallet from the selected DeHub profile. Nothing was changed." })
+              : _translateCopy("copy.06157a92311c", { defaultValue: "We could not verify this wallet against the selected DeHub profile. Try the recovery again." }),
           );
         }
       }
@@ -2548,7 +2571,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       toast.success(_copy("copy.03736977d1b4", { defaultValue: "Switched to the other wallet" }), { id: toastId });
     } catch (err: any) {
       console.error('[Auth] Wallet switch failed:', err);
-      toast.error(err?.message || 'Failed to switch wallet', { id: toastId });
+      toast.error(authErrorText(err, _translateCopy("copy.a47169437cd2", { defaultValue: "Failed to switch wallet" })), { id: toastId });
       throw err;
     } finally {
       setIsConnecting(false);
@@ -2583,7 +2606,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
    * keys. The old encrypted wallet records are archived, never discarded.
    */
   const replaceLostWallet = async (password: string) => {
-    if (!supabaseUserId) throw new Error('Not signed in');
+    if (!supabaseUserId) throw new AuthCopyError(_translateCopy("copy.491fc91cd76e", { defaultValue: "Not signed in" }));
     const toastId = 'auth-replace-wallet';
     setIsConnecting(true);
     try {
@@ -2591,7 +2614,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       let pending = pendingReplacementRef.current;
       if (!pending || pending.userId !== supabaseUserId) {
         const previous = await fetchWallet(supabaseUserId);
-        if (!previous) throw new Error('No existing wallet to replace. Sign in again.');
+        if (!previous) throw new AuthCopyError(_translateCopy("copy.8d3f982c9756", { defaultValue: "No existing wallet to replace. Sign in again." }));
         pending = { userId: supabaseUserId, oldAddress: previous.ethAddress, secret: generateMnemonic12() };
         // Set before the network write: a dropped response must not mint
         // another wallet when the user presses retry.
@@ -2627,7 +2650,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       console.error('[Auth] Wallet replacement failed:', err);
       driftedLinkRef.current = null;
       if (!reportWalletSignupBlocked(err)) {
-        toast.error(err?.message || 'Could not set up a new wallet', { id: toastId });
+        toast.error(authErrorText(err, _translateCopy("copy.9c8c9e004293", { defaultValue: "Could not set up a new wallet" })), { id: toastId });
       }
       throw err;
     } finally {
@@ -2708,7 +2731,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       // Same wording as every other path — the generic title here read as a
       // transient failure over a message explaining a permanent one.
       if (!reportWalletSignupBlocked(err)) {
-        toast.error(err?.message || 'Authentication failed', { id: toastId });
+        toast.error(authErrorText(err, _translateCopy("copy.93821eb7ce8c", { defaultValue: "Authentication failed" })), { id: toastId });
       }
       throw err;
     } finally {
@@ -2725,7 +2748,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     authLogger.trace?.('identity-start');
     const supaProvider = mapSocialProvider(provider);
     if (!supaProvider) {
-      toast.error(`${provider} login is not available. Please use email or another provider.`);
+      toast.error(_translateCopy("copy.10fb79ab37be", { defaultValue: "{{value1}} login is not available. Please use email or another provider.", value1: provider }));
       return;
     }
 
@@ -2758,7 +2781,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     } catch (error: any) {
       console.error(`${provider} login error:`, error);
       authLogger.trace?.('identity-error', { reason: error?.message, code: error?.code });
-      toast.error(`Failed to connect with ${provider}. Please try again.`);
+      toast.error(_translateCopy("copy.25f00c6b6d7b", { defaultValue: "Failed to connect with {{value1}}. Please try again.", value1: provider }));
       localStorage.removeItem(SUPA_LOGIN_PENDING_KEY);
       localStorage.removeItem(SUPA_LOGIN_PENDING_AT_KEY);
       setConnectionSource(previousSource);
@@ -2852,7 +2875,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     } catch (error: any) {
       console.error('Email login error:', error);
       authLogger.trace?.('identity-error', { reason: error?.message, code: error?.code });
-      toast.error(error?.message || 'Failed to send magic link. Please try again.');
+      toast.error(authErrorText(error, _translateCopy("copy.75e9dee5b710", { defaultValue: "Failed to send magic link. Please try again." })));
       localStorage.removeItem(SUPA_LOGIN_PENDING_KEY);
       setConnectionSource(previousSource);
       restoreConnectionSource(previousSource);
@@ -2892,7 +2915,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       });
       if (error) throw error;
       const uid = data?.session?.user?.id ?? data?.user?.id;
-      if (!uid) throw new Error('Verification failed. Please try again.');
+      if (!uid) throw new AuthCopyError(_translateCopy("copy.3c8432b0c6a7", { defaultValue: "Verification failed. Please try again." }));
       // Hold "Signing you in…" over the sheet while the wallet row lookup and
       // session exchange run, rather than leaving the code form frozen.
       setIsProcessingRedirect(true);
@@ -2904,7 +2927,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     } catch (error: any) {
       console.error('OTP verification error:', error);
       authLogger.trace?.('otp-verify-error', { reason: error?.message, code: error?.code });
-      throw new Error(error?.message || 'Invalid code. Please try again.');
+      throw new AuthCopyError(authErrorText(error, _translateCopy("copy.d0a5eff9cf29", { defaultValue: "Invalid code. Please try again." })));
     } finally {
       supaLoginHandledRef.current = false;
       setIsConnecting(false);
@@ -2944,7 +2967,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     } catch (error: any) {
       console.error('Phone login error:', error);
       authLogger.trace?.('identity-error', { reason: error?.message, code: error?.code });
-      toast.error(error?.message || 'Failed to send verification code. Please try again.');
+      toast.error(authErrorText(error, _translateCopy("copy.3b81a18b3127", { defaultValue: "Failed to send verification code. Please try again." })));
       localStorage.removeItem(SUPA_LOGIN_PENDING_KEY);
       setConnectionSource(previousSource);
       restoreConnectionSource(previousSource);
@@ -2972,14 +2995,14 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       if (data?.error) throw new Error(data.error);
       const session = data?.session;
       if (!session?.access_token || !session?.refresh_token) {
-        throw new Error('Verification failed. Please try again.');
+        throw new AuthCopyError(_translateCopy("copy.3c8432b0c6a7", { defaultValue: "Verification failed. Please try again." }));
       }
       const { data: sessionData, error: sessionError } = await supabase.auth.setSession({
         access_token: session.access_token,
         refresh_token: session.refresh_token,
       });
       const uid = sessionData?.session?.user?.id;
-      if (sessionError || !uid) throw new Error(sessionError?.message || 'Verification failed. Please try again.');
+      if (sessionError || !uid) throw new AuthCopyError(authErrorText(sessionError, _translateCopy("copy.3c8432b0c6a7", { defaultValue: "Verification failed. Please try again." })));
       // Same as the email path: hold "Signing you in…" over the round trips.
       setIsProcessingRedirect(true);
       try {
@@ -2990,7 +3013,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     } catch (error: any) {
       console.error('Phone OTP verification error:', error);
       authLogger.trace?.('otp-verify-error', { reason: error?.message, code: error?.code });
-      throw new Error(error?.message || 'Invalid code. Please try again.');
+      throw new AuthCopyError(authErrorText(error, _translateCopy("copy.d0a5eff9cf29", { defaultValue: "Invalid code. Please try again." })));
     } finally {
       supaLoginHandledRef.current = false;
       setIsConnecting(false);
@@ -3016,14 +3039,14 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       const result = mode === 'signup' ? await signUpWithPasskey() : await signInWithPasskey();
       const session = result?.session;
       if (!session?.access_token || !session?.refresh_token) {
-        throw new Error('Passkey sign-in failed. Please try again.');
+        throw new AuthCopyError(_translateCopy("copy.42bb80d16005", { defaultValue: "Passkey sign-in failed. Please try again." }));
       }
       const { data: sessionData, error: sessionError } = await supabase.auth.setSession({
         access_token: session.access_token,
         refresh_token: session.refresh_token,
       });
       const uid = sessionData?.session?.user?.id;
-      if (sessionError || !uid) throw new Error(sessionError?.message || 'Passkey sign-in failed. Please try again.');
+      if (sessionError || !uid) throw new AuthCopyError(authErrorText(sessionError, _translateCopy("copy.42bb80d16005", { defaultValue: "Passkey sign-in failed. Please try again." })));
       setIsProcessingRedirect(true);
       try {
         await proceedToWalletPhase(uid);
@@ -3057,7 +3080,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
       const session = data?.session;
       if (!session?.access_token || !session?.refresh_token) {
-        throw new Error(i18n.t('toasts.telegram_signin_failed', 'Telegram sign-in failed. Please try again.'));
+        throw new AuthCopyError(i18n.t('toasts.telegram_signin_failed', 'Telegram sign-in failed. Please try again.'));
       }
       const { data: sessionData, error: sessionError } = await supabase.auth.setSession({
         access_token: session.access_token,
@@ -3065,8 +3088,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       });
       const uid = sessionData?.session?.user?.id;
       if (sessionError || !uid) {
-        throw new Error(
-          sessionError?.message || i18n.t('toasts.telegram_signin_failed', 'Telegram sign-in failed. Please try again.'),
+        throw new AuthCopyError(
+          authErrorText(sessionError, i18n.t('toasts.telegram_signin_failed', 'Telegram sign-in failed. Please try again.')),
         );
       }
       await proceedRef.current(uid);
@@ -3130,7 +3153,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       return true;
     } catch (error: any) {
       console.error('Telegram login error:', error);
-      toast.error(error?.message || i18n.t('toasts.telegram_connect_failed', 'Failed to connect with Telegram. Please try again.'));
+      toast.error(authErrorText(error, i18n.t('toasts.telegram_connect_failed', 'Failed to connect with Telegram. Please try again.')));
       localStorage.removeItem(SUPA_LOGIN_PENDING_KEY);
       setConnectionSource(previousSource);
       restoreConnectionSource(previousSource);
@@ -3160,7 +3183,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       } catch (err: any) {
         console.error('Telegram sign-in error:', err);
         localStorage.removeItem(SUPA_LOGIN_PENDING_KEY);
-        toast.error(err?.message || i18n.t('toasts.telegram_signin_failed', 'Telegram sign-in failed. Please try again.'));
+        toast.error(authErrorText(err, i18n.t('toasts.telegram_signin_failed', 'Telegram sign-in failed. Please try again.')));
       } finally {
         setIsProcessingRedirect(false);
         setIsConnecting(false);
@@ -3261,7 +3284,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       } else {
         const names: Record<string, string> = { metamask: 'MetaMask', phantom: 'Phantom', trust: 'Trust Wallet' };
         const discovered = connectors.find(c => c.id === wallet)?.name;
-        toast.error(`Failed to connect to ${names[wallet] || discovered || wallet}. Please try again.`);
+        toast.error(_translateCopy("copy.374b35677d82", { defaultValue: "Failed to connect to {{value1}}. Please try again.", value1: names[wallet] || discovered || wallet }));
       }
       return false;
     }
@@ -3511,7 +3534,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       if (authRecoveryInFlight.current) return;
       authRecoveryInFlight.current = true;
 
-      const toastId = toast.loading('Session expired — restoring…');
+      const toastId = toast.loading(_copy("copy.8430e6a7cb5c", { defaultValue: "Session expired — restoring…" }));
       try {
         // force: we are here because the server rejected a request, so the
         // local expiry arithmetic cannot be trusted to decide whether to try.

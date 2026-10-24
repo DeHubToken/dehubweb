@@ -9,6 +9,7 @@
  */
 import { supabase } from '@/integrations/supabase/client';
 import { dehubAuthHeaders } from '@/lib/ai-invoke';
+import { translateCopy as _translateCopy } from '@/i18n/copy';
 
 export interface SantaScore {
   wallet_address: string;
@@ -62,6 +63,6 @@ export async function submitSantaScore(params: {
 }
 
 export function shortWallet(addr?: string | null): string {
-  if (!addr) return 'anon';
+  if (!addr) return _translateCopy("copy.5430eeed859c", { defaultValue: "anon" });
   return addr.length > 12 ? `${addr.slice(0, 6)}…${addr.slice(-4)}` : addr;
 }

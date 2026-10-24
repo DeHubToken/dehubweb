@@ -123,7 +123,7 @@ export function NewMembersCarousel({
   // "New members" while the newest of them actually is new; otherwise this is
   // simply the latest people to join, and saying "new" would be a small lie
   // that ages badly.
-  const title = isWithinNewWindow(members[0].joinedAt) ? 'New members' : 'Latest members';
+  const title = isWithinNewWindow(members[0].joinedAt) ? _copy("copy.928d40b02992", { defaultValue: "New members" }) : _copy("copy.335e4a96e2dd", { defaultValue: "Latest members" });
 
   return (
     <div data-discovery-section className={cn('py-4 border-y border-zinc-800/50', className)}>
@@ -170,7 +170,7 @@ export function NewMembersCarousel({
                   className="w-[1em] h-[1em]"
                 />
               </span>
-              <span className="text-[10px] text-zinc-500 mb-1.5 truncate max-w-full">{_copy("copy.dbc44a64af92", { defaultValue: "joined " })}{joinedAgoLabel(member.joinedAt)}
+              <span className="text-[10px] text-zinc-500 mb-1.5 truncate max-w-full">{_copy("copy.8d8ddae8f050", { defaultValue: "joined {{value1}}", value1: joinedAgoLabel(member.joinedAt) })}
               </span>
               <Button
                 data-discovery-follow

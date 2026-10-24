@@ -143,7 +143,7 @@ export default function AgentsPage() {
       if (response.status === 401 || response.status === 403) throw new AuthenticationError();
       if (response.status === 503) throw new Error(t('agents.checkConnection'));
       const data = await response.json();
-      if (!response.ok) throw new Error(data.error ?? 'Registration failed');
+      if (!response.ok) throw new Error(data.error ?? _copy("copy.d40e3b08ef50", { defaultValue: "Registration failed" }));
       return data;
     },
     onSuccess: (data) => {
@@ -181,7 +181,7 @@ export default function AgentsPage() {
 
   const deleteAgentMutation = useMutation({
     mutationFn: async (agentId: string) => {
-      if (!walletAddress) throw new Error('Not connected');
+      if (!walletAddress) throw new Error(_copy("copy.0303e1824670", { defaultValue: "Not connected" }));
       if (!await ensureWalletSession(walletAddress)) throw new AuthenticationError();
       
       const query = supabase

@@ -752,6 +752,7 @@ function SinglePostPageContent({ inOverlay = false, overrideId }: SinglePostPage
   const { postId, tokenId, commentId } = useParams<{ postId?: string; tokenId?: string; commentId?: string }>();
   const navigate = useNavigate();
   const { t } = useI18n();
+  const { t: _copy } = _useCopy();
   const id = overrideId || postId || tokenId;
   const location = useLocation();
 
@@ -1278,8 +1279,8 @@ function SinglePostPageContent({ inOverlay = false, overrideId }: SinglePostPage
     const videoData = toVideoItem(post);
     // This branch returns before the shared SEOHead below — without its own,
     // shared video links get the generic app title and no OG tags.
-    const videoSeoTitle = post.title || post.name || 'Video';
-    const videoSeoDesc = post.description || 'Watch this video on DeHub';
+    const videoSeoTitle = post.title || post.name || _copy("copy.d534be829e32", { defaultValue: "Video" });
+    const videoSeoDesc = post.description || _copy("copy.6d9f96048ba4", { defaultValue: "Watch this video on DeHub" });
 
     return (
       <>
@@ -1482,8 +1483,8 @@ function SinglePostPageContent({ inOverlay = false, overrideId }: SinglePostPage
   }
 
   // Build SEO title/description from post data
-  const seoTitle = post?.title || post?.name || 'Post';
-  const seoDesc = post?.description || `View this post on DeHub`;
+  const seoTitle = post?.title || post?.name || _copy("copy.a5554622c655", { defaultValue: "Post" });
+  const seoDesc = post?.description || _copy("copy.4fa459932407", { defaultValue: "View this post on DeHub" });
 
   // Standard layout for other content types
   const isLivePost = contentType === 'live';

@@ -10,6 +10,7 @@ import { writeContractAA, writeBatchAA, getWalletAddress, parseTxError, switchCh
 import { BASE_CHAIN_ID, getChainConfig } from './dhb-token';
 import { isV3Chain } from '@/lib/chains/robinhood';
 import { createLogger } from '@/lib/logger';
+import { translateCopy as _translateCopy } from '@/i18n/copy';
 
 const mintChainLogger = createLogger('StreamCollection.mintOnChain');
 import type { ChainId } from '@/components/app/ChainSelector';
@@ -107,7 +108,7 @@ async function mintOnChainV3(
   chainConfig: ReturnType<typeof getChainConfig>,
 ): Promise<{ hash: string; confirmed: Promise<string> }> {
   if (!params.signature || !params.deadline) {
-    throw new Error('Mint authorisation is missing its signature — retry the upload.');
+    throw new Error(_translateCopy("copy.7839189a0942", { defaultValue: "Mint authorisation is missing its signature — retry the upload." }));
   }
 
   const tokenId = BigInt(params.tokenId);

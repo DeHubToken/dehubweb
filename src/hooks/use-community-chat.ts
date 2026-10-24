@@ -13,6 +13,7 @@ import { useAuth } from '@/contexts/AuthContext';
 import { withWalletHeader } from '@/lib/supabase-wallet-client';
 import { getAccountSummaries } from '@/lib/api/dehub';
 import { adminErrorMessage } from '@/hooks/use-community-admin';
+import { translateCopy as _translateCopy } from '@/i18n/copy';
 import { notifyCommunityMentions } from '@/lib/community-mention-notify';
 import { toast } from 'sonner';
 
@@ -172,8 +173,8 @@ export function useCommunityChat(
         ...msg,
         reply_to: {
           id: parent.id,
-          content: parent.content || (parent.message_type === 'gif' ? 'GIF' : 'Media'),
-          sender_name: parent.display_name || parent.username || 'User',
+          content: parent.content || (parent.message_type === 'gif' ? 'GIF' : _translateCopy("copy.d357175cfe89", { defaultValue: "Media" })),
+          sender_name: parent.display_name || parent.username || _translateCopy("copy.b512d97e7cbf", { defaultValue: "User" }),
         },
       };
     });
@@ -232,7 +233,7 @@ export function useCommunityChat(
     replyToId?: string,
     userProfile?: { username?: string; displayName?: string; avatarUrl?: string; badgeBalance?: number }
   ) => {
-    if (!communityId || !walletAddress) throw new Error('Sign in to send a message');
+    if (!communityId || !walletAddress) throw new Error(_translateCopy("copy.bc30560b2f21", { defaultValue: "Sign in to send a message" }));
 
     const msg = {
       community_id: communityId,
@@ -261,7 +262,7 @@ export function useCommunityChat(
       console.error('[CommunityChat] Send error:', error);
       // Slow mode, mute and revoked send rights all land here as raised
       // conditions -- say which one rather than a generic failure.
-      toast.error(adminErrorMessage(error, 'Failed to send message'));
+      toast.error(adminErrorMessage(error, _translateCopy("copy.66b8e077d85f", { defaultValue: "Failed to send message" })));
       throw error;
     }
 
@@ -307,7 +308,7 @@ export function useCommunityChat(
     );
 
     if (error) {
-      toast.error(adminErrorMessage(error, 'Failed to react'));
+      toast.error(adminErrorMessage(error, _translateCopy("copy.13931898084d", { defaultValue: "Failed to react" })));
       if (prev) queryClient.setQueryData(messagesKey, prev);
     }
   }, [rawMessages, walletAddress, communityId, queryClient]); // messagesKey derives from these
@@ -339,7 +340,7 @@ export function useCommunityChat(
     );
 
     if (error) {
-      toast.error(adminErrorMessage(error, 'Failed to remove reaction'));
+      toast.error(adminErrorMessage(error, _translateCopy("copy.bf206a215a1f", { defaultValue: "Failed to remove reaction" })));
       if (prev) queryClient.setQueryData(messagesKey, prev);
     }
   }, [rawMessages, walletAddress, communityId, queryClient]); // messagesKey derives from these
@@ -389,7 +390,7 @@ export function useCommunityChat(
     );
     if (error) {
       console.error('[CommunityChat] Delete error:', error);
-      toast.error(adminErrorMessage(error, 'Failed to delete message'));
+      toast.error(adminErrorMessage(error, _translateCopy("copy.5ce4aeba4357", { defaultValue: "Failed to delete message" })));
       if (prev) queryClient.setQueryData(messagesKey, prev);
     }
   }, [walletAddress, communityId, queryClient]);
@@ -402,7 +403,7 @@ export function useCommunityChat(
       walletAddress
     );
     if (error) {
-      toast.error(adminErrorMessage(error, pinned ? 'Failed to pin message' : 'Failed to unpin message'));
+      toast.error(adminErrorMessage(error, pinned ? _translateCopy("copy.675c5fe95089", { defaultValue: "Failed to pin message" }) : _translateCopy("copy.3b69de078742", { defaultValue: "Failed to unpin message" })));
       return;
     }
     queryClient.setQueryData<CommunityChatMessage[]>(
@@ -411,7 +412,7 @@ export function useCommunityChat(
         ? { ...m, pinned_at: pinned ? new Date().toISOString() : null, pinned_by: pinned ? walletAddress.toLowerCase() : null }
         : m),
     );
-    toast.success(pinned ? 'Message pinned' : 'Message unpinned');
+    toast.success(pinned ? _translateCopy("copy.480e61cdab71", { defaultValue: "Message pinned" }) : _translateCopy("copy.dc1e29e33dc7", { defaultValue: "Message unpinned" }));
   }, [walletAddress, communityId, queryClient]);
 
   // Newest pin wins, matching the single-pin banner the chat renders.

@@ -22,6 +22,7 @@ import { useAuth } from '@/contexts/AuthContext';
 import { withWalletHeader } from '@/lib/supabase-wallet-client';
 import type { RealtimeChatMessage } from '@/components/app/chat/RealtimeChatPanel';
 import { toast } from 'sonner';
+import { translateCopy as _translateCopy } from '@/i18n/copy';
 
 export interface StageChatMessage extends RealtimeChatMessage {
   space_id: string;
@@ -110,8 +111,8 @@ export function useStageChat(
           ...msg,
           reply_to: {
             id: parent.id,
-            content: parent.content || 'Media',
-            sender_name: parent.display_name || parent.username || 'User',
+            content: parent.content || _translateCopy("copy.d357175cfe89", { defaultValue: "Media" }),
+            sender_name: parent.display_name || parent.username || _translateCopy("copy.b512d97e7cbf", { defaultValue: "User" }),
           },
         };
       }),
@@ -196,7 +197,7 @@ export function useStageChat(
       if (error) {
         console.error('[StageChat] Send error:', error);
         toast.error(
-          isMissingTable(error) ? 'Stage chat is not set up yet' : 'Failed to send message',
+          isMissingTable(error) ? _translateCopy("copy.bdca14f3e1d4", { defaultValue: "Stage chat is not set up yet" }) : _translateCopy("copy.66b8e077d85f", { defaultValue: "Failed to send message" }),
         );
         throw error;
       }

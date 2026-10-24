@@ -22,6 +22,7 @@ import {
   dhbSolanaMint,
   solanaRpcUrl,
 } from '@/lib/chains/solana';
+import { translateCopy as _translateCopy } from '@/i18n/copy';
 
 const RPC_TIMEOUT_MS = 8000;
 
@@ -158,7 +159,7 @@ export async function getSolanaTokenBalances(
     tokens.push({
       address: info.mint,
       symbol: meta?.symbol ?? `${info.mint.slice(0, 4)}…${info.mint.slice(-4)}`,
-      name: meta?.name ?? 'Unknown token',
+      name: meta?.name ?? _translateCopy('copy.f1c0b580379d', { defaultValue: 'Unknown token' }),
       decimals,
       balance: raw,
       formattedBalance: formatUnits(raw, decimals),
@@ -215,5 +216,5 @@ export async function getSolanaTokenMetadata(
   if (!Number.isInteger(decimals)) throw new Error('Could not read SPL mint');
   const known = knownMints()[mint];
   const shortMint = `${mint.slice(0, 4)}…${mint.slice(-4)}`;
-  return { name: known?.name ?? `Solana token ${shortMint}`, symbol: known?.symbol ?? shortMint, decimals };
+  return { name: known?.name ?? _translateCopy('copy.30900bff610e', { defaultValue: 'Solana token {{value1}}', value1: shortMint }), symbol: known?.symbol ?? shortMint, decimals };
 }

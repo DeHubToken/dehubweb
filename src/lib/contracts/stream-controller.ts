@@ -21,6 +21,7 @@ import { isV3Chain } from '@/lib/chains/robinhood';
 import type { ChainId } from '@/components/app/ChainSelector';
 import { apiCall } from '@/lib/api/dehub/core';
 import { publishTipBadges, type TipBadgeAccount } from '@/lib/tip-badges';
+import { translateCopy as _translateCopy } from '@/i18n/copy';
 
 // StreamController contract address on Base Mainnet (default for backward compatibility)
 export const STREAM_CONTROLLER_ADDRESS = '0x4fa30dAef50c6dc8593470750F3c721CA3275581';
@@ -173,7 +174,7 @@ export async function sendTip(params: SendTipParams & { skipBalanceCheck?: boole
 
   // Prevent self-tipping
   if (signerAddress.toLowerCase() === params.to.toLowerCase()) {
-    throw new Error('You cannot tip yourself');
+    throw new Error(_translateCopy("copy.2fb2e77a83a4", { defaultValue: "You cannot tip yourself" }));
   }
 
   const tokenAddress = params.tokenAddress || chainConfig.dhbToken;
@@ -184,7 +185,7 @@ export async function sendTip(params: SendTipParams & { skipBalanceCheck?: boole
   // rides along with the call.
   if (isNative) {
     if (!isV3Chain(chainId)) {
-      throw new Error('Native tips are only supported on Robinhood Chain');
+      throw new Error(_translateCopy("copy.e4b12b9995b0", { defaultValue: "Native tips are only supported on Robinhood Chain" }));
     }
     const nativeResult = await writeContractAA(
       chainConfig.streamController,
@@ -224,7 +225,7 @@ export async function sendTip(params: SendTipParams & { skipBalanceCheck?: boole
     const held = Number(balance) / 10 ** decimals;
     throw new Error(
       params.tokenAddress
-        ? `Insufficient token balance. Need ${params.amount} but have ${held}`
+        ? _translateCopy("copy.2a05be36ad7b", { defaultValue: "Insufficient token balance. Need {{value1}} but have {{value2}}", value1: params.amount, value2: held })
         : i18n.t('tokenPayments.insufficientBalance', { needed: params.amount, held })
     );
   }
@@ -234,7 +235,7 @@ export async function sendTip(params: SendTipParams & { skipBalanceCheck?: boole
     const maxApproval = BigInt('0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff');
     const approval = await approveERC20(tokenAddress, chainConfig.streamController, maxApproval, chainId);
     const receipt = await approval.wait(1);
-    if (receipt.status !== 1) throw new Error('Token approval reverted. No tip was sent.');
+    if (receipt.status !== 1) throw new Error(_translateCopy("copy.90afcc8b945e", { defaultValue: "Token approval reverted. No tip was sent." }));
   }
   approvedChains.add(chainKey);
   persistApprovalCache();
@@ -279,7 +280,7 @@ export async function sendTip(params: SendTipParams & { skipBalanceCheck?: boole
 
 function confirmedTipHash(receipt: { status: number; hash: string }): string {
   if (receipt.status !== 1) {
-    throw Object.assign(new Error('Tip transaction reverted. No tip was sent.'), { code: 'TRANSACTION_REVERTED' });
+    throw Object.assign(new Error(_translateCopy("copy.960f33ba4751", { defaultValue: "Tip transaction reverted. No tip was sent." })), { code: 'TRANSACTION_REVERTED' });
   }
   return receipt.hash;
 }
@@ -314,7 +315,7 @@ export async function sendFundsForPPV(
   const signerAddress = params.signerAddress || await getWalletAddress();
 
   if (signerAddress.toLowerCase() === params.to.toLowerCase()) {
-    throw new Error('You cannot pay yourself');
+    throw new Error(_translateCopy("copy.629bb431e226", { defaultValue: "You cannot pay yourself" }));
   }
 
   const tokenAddress = params.tokenAddress || chainConfig.dhbToken;
@@ -337,7 +338,7 @@ export async function sendFundsForPPV(
     const maxApproval = BigInt('0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff');
     const approval = await approveERC20(tokenAddress, chainConfig.streamController, maxApproval, chainId);
     const receipt = await approval.wait(1);
-    if (receipt.status !== 1) throw new Error('Token approval reverted. Nothing was paid.');
+    if (receipt.status !== 1) throw new Error(_translateCopy("copy.8cd226d24372", { defaultValue: "Token approval reverted. Nothing was paid." }));
   }
   approvedChains.add(chainKey);
   persistApprovalCache();

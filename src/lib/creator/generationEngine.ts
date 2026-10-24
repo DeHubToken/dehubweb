@@ -15,6 +15,7 @@ import { invokeAi, dehubAuthHeaders } from '@/lib/ai-invoke';
 import { forgetPayment } from '@/lib/ai-payment';
 import { ensureFreshToken } from '@/lib/api/dehub/core';
 import { isImageProviderUnavailable } from '@/lib/image-provider-error';
+import { translateCopy as _translateCopy } from '@/i18n/copy';
 
 export type GenerationKind = 'image' | 'video' | 'audio' | 'model3d';
 
@@ -256,7 +257,7 @@ const MAX_CONSECUTIVE_POLL_ERRORS = 5;
 
 class AbortedError extends Error {
   constructor() {
-    super('Generation cancelled');
+    super(_translateCopy("copy.a40c8397bd8b", { defaultValue: "Generation cancelled" }));
     this.name = 'AbortedError';
   }
 }
@@ -323,7 +324,7 @@ async function describeInvokeError(
       /* body already consumed or unreadable */
     }
     if (response.status === 429) {
-      return 'Rate limit reached. Wait a few minutes and try again.';
+      return _translateCopy("copy.c53b311eae20", { defaultValue: "Rate limit reached. Wait a few minutes and try again." });
     }
   }
   return error?.message || fallback;
@@ -365,7 +366,7 @@ export async function hostDataUrl(dataUrl: string): Promise<string> {
     contentType: blob.type || 'image/png',
     upsert: false,
   });
-  if (error) throw new Error(`Could not stage the source image: ${error.message}`);
+  if (error) throw new Error(_translateCopy("copy.bd4934d15ab4", { defaultValue: "Could not stage the source image: {{value1}}", value1: error.message }));
   const { data } = supabase.storage.from('ai-media-uploads').getPublicUrl(path);
   return data.publicUrl;
 }
@@ -384,13 +385,13 @@ export async function generateImage(
   handlers: GenerationHandlers = {},
 ): Promise<string> {
   throwIfAborted(handlers.signal);
-  handlers.onStage?.(req.sourceImage ? 'Applying the edit' : 'Painting the frame');
+  handlers.onStage?.(req.sourceImage ? _translateCopy("copy.0b02fce19568", { defaultValue: "Applying the edit" }) : _translateCopy("copy.83d25f48207f", { defaultValue: "Painting the frame" }));
 
   // Same staging as the video path: a big attachment or a generated still
   // arrives as base64 and would otherwise be JSON-encoded into the request.
   let sourceImage = req.sourceImage;
   if (sourceImage?.startsWith('data:') && sourceImage.length > MAX_INLINE_SOURCE_IMAGE_CHARS) {
-    handlers.onStage?.('Preparing the reference');
+    handlers.onStage?.(_translateCopy("copy.c3bc61da3cd9", { defaultValue: "Preparing the reference" }));
     sourceImage = await hostDataUrl(sourceImage);
     throwIfAborted(handlers.signal);
   }
@@ -408,8 +409,8 @@ export async function generateImage(
     },
   });
 
-  const data = await unwrap<{ imageUrl?: string; error?: string }>(res, 'Image generation failed');
-  if (!data.imageUrl) throw new Error('The model returned no image');
+  const data = await unwrap<{ imageUrl?: string; error?: string }>(res, _translateCopy("copy.a89539ab0c26", { defaultValue: "Image generation failed" }));
+  if (!data.imageUrl) throw new Error(_translateCopy("copy.2d07d3c1da4b", { defaultValue: "The model returned no image" }));
   throwIfAborted(handlers.signal);
   return data.imageUrl;
 }
@@ -428,12 +429,12 @@ export async function generateVideo(
   // URL. Stage anything large in storage and send a link instead.
   let sourceImage = req.sourceImage;
   if (sourceImage?.startsWith('data:') && sourceImage.length > MAX_INLINE_SOURCE_IMAGE_CHARS) {
-    handlers.onStage?.('Preparing the first frame');
+    handlers.onStage?.(_translateCopy("copy.fb687738f132", { defaultValue: "Preparing the first frame" }));
     sourceImage = await hostDataUrl(sourceImage);
     throwIfAborted(handlers.signal);
   }
 
-  handlers.onStage?.('Queueing the render');
+  handlers.onStage?.(_translateCopy("copy.ad25474e4ea2", { defaultValue: "Queueing the render" }));
 
   const start = await invokeAi('generate-video', {
     body: {
@@ -461,11 +462,11 @@ export async function generateVideo(
     falAppId?: string;
     videoUrl?: string;
     error?: string;
-  }>(start, 'Video generation failed');
+  }>(start, _translateCopy("copy.7be25ed3b099", { defaultValue: "Video generation failed" }));
 
   // Some providers return synchronously.
   if (queued.videoUrl) return queued.videoUrl;
-  if (!queued.predictionId) throw new Error('The render was not queued');
+  if (!queued.predictionId) throw new Error(_translateCopy("copy.e8a23973cbc9", { defaultValue: "The render was not queued" }));
 
   const ticket: RenderTicket = {
     predictionId: queued.predictionId,
@@ -496,6 +497,8 @@ async function pollRender(
     /** Wording for the terminal-but-empty case. */
     emptyMessage: string;
     stageLabel: string;
+    /** Stage text with the seconds waited so far. */
+    elapsedStageLabel: (seconds: number) => string;
   },
 ): Promise<string> {
   throwIfAborted(handlers.signal);
@@ -533,7 +536,7 @@ async function pollRender(
       // bad poll is not a reason to throw it away. Back off and try again.
       consecutiveErrors += 1;
       if (consecutiveErrors >= MAX_CONSECUTIVE_POLL_ERRORS) {
-        throw new Error(await describeInvokeError(poll.error, 'Lost contact with the render'));
+        throw new Error(await describeInvokeError(poll.error, _translateCopy("copy.27e456ef598c", { defaultValue: "Lost contact with the render" })));
       }
       interval = Math.min(VIDEO_POLL_MAX_MS, Math.round(interval * 1.6));
       continue;
@@ -551,7 +554,13 @@ async function pollRender(
         }
       | null;
 
-    if (status && ['failed', 'canceled', 'cancelled'].includes(status.status ?? '')) throw new Error((status.error || 'The render failed') + (status.paymentRestored ? '. Your payment is available for another generation.' : ''));
+    if (status && ['failed', 'canceled', 'cancelled'].includes(status.status ?? '')) {
+      throw new Error(status.paymentRestored
+        ? status.error
+          ? _translateCopy("copy.62c53e45cc41", { defaultValue: "{{value1}}. Your payment is available for another generation.", value1: status.error })
+          : _translateCopy("copy.6e01e7e543f0", { defaultValue: "The render failed. Your payment is available for another generation." })
+        : status.error || _translateCopy("copy.3839b655fcee", { defaultValue: "The render failed" }));
+    }
     if (status?.status === 'succeeded') {
       if (status.previewImageUrl) handlers.onPreview?.(status.previewImageUrl);
       const url = status[config.resultKey];
@@ -565,10 +574,10 @@ async function pollRender(
     // Ease off as the wait grows; most renders land in the first minute or two.
     const elapsed = Math.round((Date.now() - began) / 1000);
     if (elapsed > 60) interval = VIDEO_POLL_MAX_MS;
-    handlers.onStage?.(`${config.stageLabel} (${elapsed}s)`);
+    handlers.onStage?.(config.elapsedStageLabel(elapsed));
   }
 
-  throw new Error('The render timed out. It may still finish at the provider.');
+  throw new Error(_translateCopy("copy.9d0b9e2a4ed0", { defaultValue: "The render timed out. It may still finish at the provider." }));
 }
 
 /**
@@ -583,8 +592,9 @@ export function pollVideo(
   return pollRender(ticket, handlers, {
     functionName: 'generate-video',
     resultKey: 'videoUrl',
-    emptyMessage: 'The render finished but returned no playable video.',
-    stageLabel: 'Rendering',
+    emptyMessage: _translateCopy("copy.10ee4759f502", { defaultValue: "The render finished but returned no playable video." }),
+    stageLabel: _translateCopy("copy.e2fe353986e6", { defaultValue: "Rendering" }),
+    elapsedStageLabel: (seconds) => _translateCopy("copy.3f349179806a", { defaultValue: "Rendering ({{value1}}s)", value1: seconds }),
   });
 }
 
@@ -593,8 +603,9 @@ export function poll3d(ticket: RenderTicket, handlers: GenerationHandlers = {}):
   return pollRender(ticket, handlers, {
     functionName: 'generate-3d',
     resultKey: 'modelUrl',
-    emptyMessage: 'The mesh finished but returned no downloadable model.',
-    stageLabel: 'Sculpting',
+    emptyMessage: _translateCopy("copy.dd2dbc8d350a", { defaultValue: "The mesh finished but returned no downloadable model." }),
+    stageLabel: _translateCopy("copy.1d6af9eb70fc", { defaultValue: "Sculpting" }),
+    elapsedStageLabel: (seconds) => _translateCopy("copy.c2e50d2e5470", { defaultValue: "Sculpting ({{value1}}s)", value1: seconds }),
   });
 }
 
@@ -615,12 +626,12 @@ export async function generate3d(
   // of size.
   let sourceImage = req.sourceImage;
   if (sourceImage?.startsWith('data:')) {
-    handlers.onStage?.('Preparing the reference');
+    handlers.onStage?.(_translateCopy("copy.c3bc61da3cd9", { defaultValue: "Preparing the reference" }));
     sourceImage = await hostDataUrl(sourceImage);
     throwIfAborted(handlers.signal);
   }
 
-  handlers.onStage?.('Queueing the mesh');
+  handlers.onStage?.(_translateCopy("copy.d3c855233e24", { defaultValue: "Queueing the mesh" }));
 
   const start = await invokeAi('generate-3d', {
     body: {
@@ -645,10 +656,10 @@ export async function generate3d(
     falAppId?: string;
     modelUrl?: string;
     error?: string;
-  }>(start, '3D generation failed');
+  }>(start, _translateCopy("copy.cd89d987ec84", { defaultValue: "3D generation failed" }));
 
   if (queued.modelUrl) return queued.modelUrl;
-  if (!queued.predictionId) throw new Error('The mesh was not queued');
+  if (!queued.predictionId) throw new Error(_translateCopy("copy.447d677ee341", { defaultValue: "The mesh was not queued" }));
 
   const ticket: RenderTicket = {
     predictionId: queued.predictionId,
@@ -676,7 +687,7 @@ export async function generateAudio(
   handlers: GenerationHandlers = {},
 ): Promise<{ blob: Blob }> {
   throwIfAborted(handlers.signal);
-  handlers.onStage?.('Synthesising the voice');
+  handlers.onStage?.(_translateCopy("copy.33fb92442699", { defaultValue: "Synthesising the voice" }));
 
   const blob = await callAudioFunction(
     'elevenlabs-tts',
@@ -690,7 +701,7 @@ export async function generateAudio(
       voiceSettings: req.voiceSettings,
     },
     handlers,
-    'Voice generation failed',
+    _translateCopy("copy.89d9351c964a", { defaultValue: "Voice generation failed" }),
   );
 
   throwIfAborted(handlers.signal);
@@ -753,7 +764,7 @@ async function callAudioFunction(
   if (!response.ok) throw new Error(await readFunctionError(response, fallbackError));
 
   const blob = await response.blob();
-  if (!blob.size) throw new Error('The audio service returned an empty clip');
+  if (!blob.size) throw new Error(_translateCopy("copy.e645a7fb7891", { defaultValue: "The audio service returned an empty clip" }));
   return blob;
 }
 
@@ -830,7 +841,7 @@ export async function pollDub(ticket: RenderTicket, handlers: GenerationHandlers
   for (;;) {
     throwIfAborted(handlers.signal);
     if (Date.now() - started > DUB_TIMEOUT_MS) {
-      throw new Error('The dub is taking longer than expected. Reconnect to collect it.');
+      throw new Error(_translateCopy("copy.efe1a2591d19", { defaultValue: "The dub is taking longer than expected. Reconnect to collect it." }));
     }
 
     await sleep(DUB_POLL_MS, handlers.signal);
@@ -841,7 +852,7 @@ export async function pollDub(ticket: RenderTicket, handlers: GenerationHandlers
         'elevenlabs-dub',
         { action: 'status', dubbingId: ticket.predictionId },
         handlers,
-        'Could not read the dub status',
+        _translateCopy("copy.60b8f16ece7f", { defaultValue: "Could not read the dub status" }),
       );
       consecutiveErrors = 0;
     } catch (e) {
@@ -853,19 +864,19 @@ export async function pollDub(ticket: RenderTicket, handlers: GenerationHandlers
     }
 
     if (status.status === 'failed') {
-      throw new Error(status.error || 'The dub failed at the provider.');
+      throw new Error(status.error || _translateCopy("copy.93772dd837ca", { defaultValue: "The dub failed at the provider." }));
     }
     if (status.status !== 'dubbed') {
-      handlers.onStage?.('Dubbing');
+      handlers.onStage?.(_translateCopy("copy.40e249af73aa", { defaultValue: "Dubbing" }));
       continue;
     }
 
-    handlers.onStage?.('Collecting the dub');
+    handlers.onStage?.(_translateCopy("copy.5074cb906865", { defaultValue: "Collecting the dub" }));
     const blob = await callAudioFunction(
       'elevenlabs-dub',
       { action: 'result', dubbingId: ticket.predictionId, targetLang },
       handlers,
-      'Could not fetch the dubbed audio',
+      _translateCopy("copy.12f82dd60ecd", { defaultValue: "Could not fetch the dubbed audio" }),
     );
     return URL.createObjectURL(blob);
   }
@@ -886,7 +897,7 @@ export async function runAudioTask(
 
   switch (req.task) {
     case 'dialogue': {
-      handlers.onStage?.('Performing the scene');
+      handlers.onStage?.(_translateCopy("copy.64091a94434d", { defaultValue: "Performing the scene" }));
       const blob = await callAudioFunction(
         'elevenlabs-dialogue',
         {
@@ -896,13 +907,13 @@ export async function runAudioTask(
           voiceSettings: req.voiceSettings,
         },
         handlers,
-        'Dialogue generation failed',
+        _translateCopy("copy.d43c4210a620", { defaultValue: "Dialogue generation failed" }),
       );
       return { url: URL.createObjectURL(blob) };
     }
 
     case 'sfx': {
-      handlers.onStage?.('Designing the sound');
+      handlers.onStage?.(_translateCopy("copy.33bbe9ed78bf", { defaultValue: "Designing the sound" }));
       const blob = await callAudioFunction(
         'elevenlabs-sound-effects',
         {
@@ -913,13 +924,13 @@ export async function runAudioTask(
           outputFormat: req.outputFormat,
         },
         handlers,
-        'Sound effect generation failed',
+        _translateCopy("copy.d6dd73c7725b", { defaultValue: "Sound effect generation failed" }),
       );
       return { url: URL.createObjectURL(blob) };
     }
 
     case 'music': {
-      handlers.onStage?.('Composing');
+      handlers.onStage?.(_translateCopy("copy.1eb8620dad3b", { defaultValue: "Composing" }));
       const blob = await spendingPayment(req.txHash, () =>
         callAudioFunction(
           'elevenlabs-music',
@@ -932,14 +943,14 @@ export async function runAudioTask(
             txHash: req.txHash,
           },
           handlers,
-          'Music generation failed',
+          _translateCopy("copy.4f07e6f28e3b", { defaultValue: "Music generation failed" }),
         ),
       );
       return { url: URL.createObjectURL(blob) };
     }
 
     case 'voice-changer': {
-      handlers.onStage?.('Re-performing the take');
+      handlers.onStage?.(_translateCopy("copy.85047a283815", { defaultValue: "Re-performing the take" }));
       const form = new FormData();
       form.append('file', req.file, req.file.name || 'input.mp3');
       form.append('voiceId', req.voiceId);
@@ -960,13 +971,13 @@ export async function runAudioTask(
         'elevenlabs-voice-changer',
         form,
         handlers,
-        'Voice conversion failed',
+        _translateCopy("copy.22334c3493c4", { defaultValue: "Voice conversion failed" }),
       );
       return { url: URL.createObjectURL(blob) };
     }
 
     case 'isolate': {
-      handlers.onStage?.('Cleaning the recording');
+      handlers.onStage?.(_translateCopy("copy.7f24d9626466", { defaultValue: "Cleaning the recording" }));
       const form = new FormData();
       form.append('file', req.file, req.file.name || 'input.mp3');
       if (req.outputFormat) form.append('outputFormat', req.outputFormat);
@@ -974,13 +985,13 @@ export async function runAudioTask(
         'elevenlabs-audio-isolation',
         form,
         handlers,
-        'Could not clean that recording',
+        _translateCopy("copy.55d1406f1f41", { defaultValue: "Could not clean that recording" }),
       );
       return { url: URL.createObjectURL(blob) };
     }
 
     case 'transcribe': {
-      handlers.onStage?.('Transcribing');
+      handlers.onStage?.(_translateCopy("copy.5561cf90d112", { defaultValue: "Transcribing" }));
       const form = new FormData();
       form.append('file', req.file, req.file.name || 'input.mp3');
       if (req.diarize === false) form.append('diarize', 'false');
@@ -989,15 +1000,15 @@ export async function runAudioTask(
       const data = await callAudioJson<{
         text?: string;
         segments?: { speaker: string | null; text: string; start: number | null }[];
-      }>('elevenlabs-transcribe', form, handlers, 'Transcription failed');
+      }>('elevenlabs-transcribe', form, handlers, _translateCopy("copy.ccb684944295", { defaultValue: "Transcription failed" }));
 
       const transcript = (data.text ?? '').trim();
-      if (!transcript) throw new Error('No speech was found in that recording.');
+      if (!transcript) throw new Error(_translateCopy("copy.a7f958e7a261", { defaultValue: "No speech was found in that recording." }));
       return { transcript, segments: data.segments ?? [] };
     }
 
     case 'dubbing': {
-      handlers.onStage?.('Uploading');
+      handlers.onStage?.(_translateCopy("copy.8b898ca34ce7", { defaultValue: "Uploading" }));
       const form = new FormData();
       form.append('file', req.file, req.file.name || 'input.mp4');
       form.append('targetLang', req.targetLang);
@@ -1008,9 +1019,9 @@ export async function runAudioTask(
         'elevenlabs-dub',
         form,
         handlers,
-        'Could not start the dub',
+        _translateCopy("copy.ef2723deeac7", { defaultValue: "Could not start the dub" }),
       );
-      if (!started.dubbingId) throw new Error('The dubbing service did not return a job id');
+      if (!started.dubbingId) throw new Error(_translateCopy("copy.7c94df40f193", { defaultValue: "The dubbing service did not return a job id" }));
 
       // Hand the ticket back before any polling, so a reload can rejoin a dub
       // that has already been charged for. `provider` carries the target
@@ -1021,7 +1032,7 @@ export async function runAudioTask(
         startedAt: Date.now(),
       };
       handlers.onQueued?.(ticket);
-      handlers.onStage?.('Dubbing');
+      handlers.onStage?.(_translateCopy("copy.40e249af73aa", { defaultValue: "Dubbing" }));
 
       return { url: await pollDub(ticket, handlers) };
     }
@@ -1053,7 +1064,7 @@ export async function designVoice(
     'elevenlabs-voice-design',
     { description, previewText },
     {},
-    'Voice design failed',
+    _translateCopy("copy.68b9f8ef8b88", { defaultValue: "Voice design failed" }),
   );
 
   return (data.previews ?? [])
@@ -1075,7 +1086,7 @@ export async function saveDesignedVoice(
     'elevenlabs-voice-design',
     { action: 'save', generatedVoiceId, name, description },
     {},
-    'Could not save that voice',
+    _translateCopy("copy.2ea7db624f30", { defaultValue: "Could not save that voice" }),
   );
 }
 
@@ -1115,7 +1126,7 @@ export async function enhancePrompt(
     body: { text: trimmed, mode: kind === 'video' ? 'prompt-video' : 'prompt-image' },
   });
 
-  if (error) throw new Error(await describeInvokeError(error, 'Could not enhance that prompt'));
+  if (error) throw new Error(await describeInvokeError(error, _translateCopy("copy.f76e490a2382", { defaultValue: "Could not enhance that prompt" })));
   const enhanced = (data as { enhancedText?: string; error?: string } | null)?.enhancedText;
   if ((data as { error?: string } | null)?.error) {
     throw new Error(String((data as { error: string }).error));

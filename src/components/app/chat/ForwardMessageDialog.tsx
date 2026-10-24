@@ -23,6 +23,7 @@ import { useConversations } from '@/hooks/use-messages';
 import { buildAvatarUrl } from '@/lib/media-url';
 import { AppState } from '@/components/app/AppState';
 import { BadgedName } from '@/components/app/BadgedName';
+import { translateCopy as _translateCopy } from '@/i18n/copy';
 import type { DeHubConversation } from '@/lib/api/dehub';
 
 interface ForwardMessageDialogProps {
@@ -35,13 +36,13 @@ interface ForwardMessageDialogProps {
 }
 
 function convName(conv: DeHubConversation): string {
-  if (conv.isGroup || conv.groupInfo) return conv.groupInfo?.name || 'Group';
+  if (conv.isGroup || conv.groupInfo) return conv.groupInfo?.name || _translateCopy("copy.34ca0e766088", { defaultValue: "Group" });
   const other = conv.otherUser || conv.participants?.[0];
   return (
     other?.displayName ||
     (other as any)?.display_name ||
     other?.username ||
-    (other?.address ? `${other.address.slice(0, 6)}...${other.address.slice(-4)}` : 'User')
+    (other?.address ? `${other.address.slice(0, 6)}...${other.address.slice(-4)}` : _translateCopy("copy.b512d97e7cbf", { defaultValue: "User" }))
   );
 }
 

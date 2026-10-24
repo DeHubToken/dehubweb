@@ -8,67 +8,67 @@ const TippingFlowchart = () => {
   const tippingTiers = [
     { 
       threshold: "0", 
-      effect: "No Live Display", 
+      effect: _copy("copy.892a2d378858", { defaultValue: "No Live Display" }), 
       description: _copy("copy.10d2fe3df4f9", { defaultValue: "No visual effects on screen" }),
       emoji: "❌"
     },
     { 
       threshold: "1,000-9,999", 
-      effect: "Love Heart Emoji Pop up on screen", 
+      effect: _copy("copy.7fc14812277c", { defaultValue: "Love Heart Emoji Pop up on screen" }), 
       description: _copy("copy.7b06ece76fdb", { defaultValue: "Love heart emoji appears on stream" }),
       emoji: "❤️"
     },
     { 
       threshold: "10,000-24,999", 
-      effect: "Box of Chocolate Emoji Pops Up on Screen", 
+      effect: _copy("copy.2a3a7fe87382", { defaultValue: "Box of Chocolate Emoji Pops Up on Screen" }), 
       description: _copy("copy.c7c0091104cf", { defaultValue: "Chocolate box emoji appears on stream" }),
       emoji: "🍫"
     },
     { 
       threshold: "25,000-49,999", 
-      effect: "Bouquet of Flowers Emoji Pops up on screen", 
+      effect: _copy("copy.34503f7c9d86", { defaultValue: "Bouquet of Flowers Emoji Pops up on screen" }), 
       description: _copy("copy.69354fad62aa", { defaultValue: "Flower bouquet emoji appears on stream" }),
       emoji: "💐"
     },
     { 
       threshold: "50,000-99,999", 
-      effect: "Crown Emoji Pops up on screen", 
+      effect: _copy("copy.03fafba9f470", { defaultValue: "Crown Emoji Pops up on screen" }), 
       description: _copy("copy.83f1384d68ba", { defaultValue: "Crown emoji appears on stream" }),
       emoji: "👑"
     },
     { 
       threshold: "100,000-199,999", 
-      effect: "Magic Ring Emoji Pops up on screen", 
+      effect: _copy("copy.d68e028464b3", { defaultValue: "Magic Ring Emoji Pops up on screen" }), 
       description: _copy("copy.b18479b5ea82", { defaultValue: "Magic ring emoji appears on screen" }),
       emoji: "💍"
     },
     { 
       threshold: "200,000-299,999", 
-      effect: "Spartans army run on screen", 
+      effect: _copy("copy.edecfb044e68", { defaultValue: "Spartans army run on screen" }), 
       description: _copy("copy.368808eaf27e", { defaultValue: "Spartan army animation plays" }),
       emoji: "⚔️"
     },
     { 
       threshold: "300,000-499,999", 
-      effect: "Party starts, confetti flies, disco balls spin", 
+      effect: _copy("copy.9adb2fadbcc4", { defaultValue: "Party starts, confetti flies, disco balls spin" }), 
       description: _copy("copy.25690b4e85fe", { defaultValue: "Full party animation with confetti and disco balls" }),
       emoji: "🎉"
     },
     { 
       threshold: "500,000-749,999", 
-      effect: "Screen goes gold and coins drop from sky with sirens (3 seconds)", 
+      effect: _copy("copy.d751a73590bd", { defaultValue: "Screen goes gold and coins drop from sky with sirens (3 seconds)" }), 
       description: _copy("copy.13da743a5959", { defaultValue: "Golden screen effect with falling coins and siren sounds" }),
       emoji: "🟡"
     },
     { 
       threshold: "750,000-999,999", 
-      effect: "Screen goes gold and coins drop from sky with sirens (10 seconds)", 
+      effect: _copy("copy.a9fea1c2b573", { defaultValue: "Screen goes gold and coins drop from sky with sirens (10 seconds)" }), 
       description: _copy("copy.acad2b08df0d", { defaultValue: "Extended golden screen effect with falling coins and siren sounds" }),
       emoji: "💰"
     },
     { 
       threshold: "1,000,000+", 
-      effect: "All previous emojis together with extra confetti and party music", 
+      effect: _copy("copy.84d88dc1232f", { defaultValue: "All previous emojis together with extra confetti and party music" }), 
       description: _copy("copy.81d471a5e9d4", { defaultValue: "Ultimate celebration with all effects combined plus extra confetti and party music" }),
       emoji: "🎊"
     }

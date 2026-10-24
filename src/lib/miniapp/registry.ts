@@ -8,6 +8,7 @@
 import { supabase } from '@/integrations/supabase/client';
 import { getAuthToken } from '@/lib/api/dehub';
 import { withWalletHeader } from '@/lib/supabase-wallet-client';
+import { translateCopy as _translateCopy } from '@/i18n/copy';
 
 const FUNCTIONS_URL = `${import.meta.env.VITE_SUPABASE_URL || 'https://aigxuutjaqsywioxjefr.supabase.co'}/functions/v1`;
 
@@ -81,7 +82,7 @@ export async function checkManifest(url: string): Promise<ManifestCheck> {
     body: JSON.stringify({ action: 'validate', url }),
   });
   const body = await res.json().catch(() => ({}));
-  if (!res.ok) return { ok: false, errors: [], warnings: [], error: body?.error || 'The check failed.' };
+  if (!res.ok) return { ok: false, errors: [], warnings: [], error: body?.error || _translateCopy('copy.d7fb3bcaac80', { defaultValue: 'The check failed.' }) };
   return body as ManifestCheck;
 }
 
@@ -109,7 +110,7 @@ async function registryCall<T>(body: Record<string, unknown>): Promise<T> {
     body: JSON.stringify(body),
   });
   const data = await res.json().catch(() => ({}));
-  if (!res.ok) throw Object.assign(new Error(data?.error || 'The request failed.'), { detail: data });
+  if (!res.ok) throw Object.assign(new Error(data?.error || _translateCopy('copy.db4fb44737e7', { defaultValue: 'The request failed.' })), { detail: data });
   return data as T;
 }
 
@@ -133,14 +134,14 @@ export async function fetchAppByDomain(domain: string): Promise<MiniAppListing |
 
 async function userCall<T>(body: Record<string, unknown>): Promise<T> {
   const session = getAuthToken();
-  if (!session) throw Object.assign(new Error('Sign in to DeHub first.'), { code: 'signin' });
+  if (!session) throw Object.assign(new Error(_translateCopy('copy.066d1daed191', { defaultValue: 'Sign in to DeHub first.' })), { code: 'signin' });
   const res = await fetch(`${FUNCTIONS_URL}/miniapp-user`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json', 'x-dehub-token': session },
     body: JSON.stringify(body),
   });
   const data = await res.json().catch(() => ({}));
-  if (!res.ok) throw Object.assign(new Error(data?.error || 'The request failed.'), { code: 'failed' });
+  if (!res.ok) throw Object.assign(new Error(data?.error || _translateCopy('copy.db4fb44737e7', { defaultValue: 'The request failed.' })), { code: 'failed' });
   return data as T;
 }
 

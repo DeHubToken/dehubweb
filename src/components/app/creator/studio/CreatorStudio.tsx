@@ -1366,7 +1366,7 @@ export const CreatorStudio = memo(function CreatorStudio({ onOpenEditor, stickyT
     try {
       await apiCall('/api/auth/verify', { requiresAuth: true });
     } catch (error) {
-      toast.error(error instanceof Error ? error.message : 'Could not verify your session.', error instanceof AuthenticationError ? { action: { label: _copy("copy.bfd402b2f6f3", { defaultValue: "Sign in" }), onClick: () => openLoginModal() } } : undefined);
+      toast.error(error instanceof Error ? error.message : _copy("copy.9be0cd68c471", { defaultValue: "Could not verify your session." }), error instanceof AuthenticationError ? { action: { label: _copy("copy.bfd402b2f6f3", { defaultValue: "Sign in" }), onClick: () => openLoginModal() } } : undefined);
       return;
     } finally { checkingSession.current = false; }
     if (mode === 'image' || mode === 'video') {
@@ -1597,7 +1597,7 @@ export const CreatorStudio = memo(function CreatorStudio({ onOpenEditor, stickyT
           value: m.id,
           label: m.name,
           detail: m.description,
-          meta: `${m.languages} langs`,
+          meta: t("copy.6e540fa3b850", { defaultValue: "{{count}} langs", count: m.languages }),
         }))
       : [{ value: 'remake', label: t('creator.toolRemake'), detail: t('creator.toolMaboroshiDesc') }, { value: 'maboroshi', label: t('creator.toolMaboroshi'), detail: t('creator.toolMaboroshiDesc') }, ...VIDEO_MODEL_OPTIONS.map((m) => {
           const needsImage = !m.supports.includes('text-to-video');

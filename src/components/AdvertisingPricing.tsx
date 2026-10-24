@@ -17,7 +17,7 @@ const AdvertisingPricing = () => {
   // CPMs mirror the live POVR rates in src/lib/ads/povr.ts — value-scaled to
   // verified holdings, anchored at Crab $100 and Megalodon $25,000.
   const pricingTiers = [
-    { threshold: "< 10,000", badge: "No Badge", cpm: "$10", multiplier: "1x", image: null, color: "bg-gray-300" },
+    { threshold: "< 10,000", badge: _copy("copy.6883cefe9094", { defaultValue: "No Badge" }), cpm: "$10", multiplier: "1x", image: null, color: "bg-gray-300" },
     { threshold: "10,000+", badge: "Crab Badge", cpm: "$100", multiplier: "10x", image: badgeImage('Crab'), color: "bg-orange-500" },
     { threshold: "25,000+", badge: "Ghost Lobster Badge", cpm: "$180", multiplier: "18x", image: badgeImage('Ghost Lobster'), color: "bg-red-500" },
     { threshold: "50,000+", badge: "Piranha Badge", cpm: "$285", multiplier: "28x", image: badgeImage('Piranha'), color: "bg-purple-500" },

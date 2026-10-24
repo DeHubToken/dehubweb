@@ -39,9 +39,11 @@ interface FeedFilterLoaderProps {
 }
 
 export function FeedFilterLoader({
-  label = 'Updating feed',
+  label: labelProp,
   className,
 }: FeedFilterLoaderProps) {
+  const { t: _copy } = _useCopy();
+  const label = labelProp ?? _copy("copy.ab24417e0ae4", { defaultValue: "Updating feed" });
   const { theme } = useAppTheme();
 
   if (theme === 'war') {

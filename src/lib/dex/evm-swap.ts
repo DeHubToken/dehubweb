@@ -17,6 +17,7 @@ import { getERC20Allowance, writeBatchAA, writeContractAA, type AABatchCall } fr
 import { isSmartWalletSession } from '@/lib/connection-source';
 import { BASE_CHAIN_ID, ETH_CHAIN_ID } from '@/lib/contracts/dhb-token';
 import { ROBINHOOD_CHAIN_ID } from '@/lib/chains/robinhood';
+import { translateCopy as _translateCopy } from '@/i18n/copy';
 import { readWithTimeout } from './read-timeout';
 
 /** Kyber's placeholder for the chain's native coin (ETH on all three chains here). */
@@ -47,7 +48,9 @@ async function kyber<T>(url: string, init?: RequestInit): Promise<T> {
   const res = await readWithTimeout(fetch(url, { ...init, headers: { 'x-client-id': CLIENT_ID, ...(init?.body ? { 'content-type': 'application/json' } : {}) } }), 'Swap route', 15000);
   const json = await res.json().catch(() => null) as { code?: number; message?: string; data?: T } | null;
   if (!res.ok || !json || (json.code != null && json.code !== 0) || !json.data) {
-    throw new Error(json?.message ? `No swap route: ${json.message}` : 'No swap route is available right now');
+    throw new Error(json?.message
+      ? _translateCopy("copy.8d3a859f545f", { defaultValue: "No swap route: {{value1}}", value1: json.message })
+      : _translateCopy("copy.4aeadee78066", { defaultValue: "No swap route is available right now" }));
   }
   return json.data;
 }
@@ -55,8 +58,8 @@ async function kyber<T>(url: string, init?: RequestInit): Promise<T> {
 /** `sources` narrows the route to named Kyber DEX ids, e.g. `uniswap-v4`. */
 export async function quoteSwap(input: { chainId: number; tokenIn: string; tokenOut: string; amountIn: bigint; recipient: string; slippageBps?: number; sources?: string }): Promise<SwapCall> {
   const slug = SLUGS[input.chainId];
-  if (!slug) throw new Error('Instant swaps are not available on this network');
-  if (input.amountIn <= 0n) throw new Error('Enter an amount');
+  if (!slug) throw new Error(_translateCopy("copy.33e4a6695d4d", { defaultValue: "Instant swaps are not available on this network" }));
+  if (input.amountIn <= 0n) throw new Error(_translateCopy("copy.d8a7700e1f88", { defaultValue: "Enter an amount" }));
   const tokenIn = isNative(input.tokenIn) ? NATIVE : input.tokenIn;
   const tokenOut = isNative(input.tokenOut) ? NATIVE : input.tokenOut;
   const params = new URLSearchParams({ tokenIn, tokenOut, amountIn: input.amountIn.toString(), gasInclude: 'true' });
@@ -85,16 +88,16 @@ export async function quoteSwap(input: { chainId: number; tokenIn: string; token
 }
 
 /** A contract write for a raw call, through whichever wallet is signed in. */
-async function sendRaw(chainId: number, to: string, data: `0x${string}`, value: BigNumberish, context: string): Promise<string> {
+async function sendRaw(chainId: number, to: string, data: `0x${string}`, value: BigNumberish, context: string, notConfirmed: () => string): Promise<string> {
   if (isSmartWalletSession()) {
     const tx = await writeBatchAA([{ to, data, value: BigInt(value) }], { chainId, context });
     const receipt = await tx.wait(1);
-    if (receipt.status !== 1) throw new Error(`${context} did not confirm`);
+    if (receipt.status !== 1) throw new Error(notConfirmed());
     return receipt.hash || tx.hash;
   }
   const hash = await sendTransaction(wagmiConfig, { to: to as `0x${string}`, data, value: BigInt(value), chainId: chainId as never });
   const receipt = await waitForTransactionReceipt(wagmiConfig, { hash, chainId: chainId as never });
-  if (receipt.status !== 'success') throw new Error(`${context} did not confirm`);
+  if (receipt.status !== 'success') throw new Error(notConfirmed());
   return hash;
 }
 
@@ -114,16 +117,18 @@ export async function runSwap(swap: SwapCall, walletAddress: string, followUp: A
     ];
     const tx = await writeBatchAA(calls, { chainId: swap.chainId, context: 'swap' });
     const receipt = await readWithTimeout(tx.wait(1), 'Swap confirmation', 120000);
-    if (receipt.status !== 1) throw new Error('The swap did not confirm. Nothing was spent.');
+    if (receipt.status !== 1) throw new Error(_translateCopy("copy.91fa12091516", { defaultValue: "The swap did not confirm. Nothing was spent." }));
     const hash = receipt.hash || tx.hash;
     return { hash, followUpHash: followUp.length ? hash : undefined };
   }
   if (needsApproval) {
     const approval = await writeContractAA(swap.tokenIn, erc20, 'approve', [swap.router, swap.amountIn], { chainId: swap.chainId, context: 'approve swap' });
-    if ((await readWithTimeout(approval.wait(1), 'Approval confirmation', 120000)).status !== 1) throw new Error('The approval did not confirm');
+    if ((await readWithTimeout(approval.wait(1), 'Approval confirmation', 120000)).status !== 1) throw new Error(_translateCopy("copy.42ba40dad71c", { defaultValue: "The approval did not confirm" }));
   }
-  const hash = await sendRaw(swap.chainId, swap.router, swap.data, swap.value, 'Swap');
+  const hash = await sendRaw(swap.chainId, swap.router, swap.data, swap.value, 'Swap',
+    () => _translateCopy("copy.27135cdc2328", { defaultValue: "Swap did not confirm" }));
   let followUpHash: string | undefined;
-  for (const call of followUp) followUpHash = await sendRaw(swap.chainId, call.to, call.data, call.value ?? 0n, 'Transfer');
+  for (const call of followUp) followUpHash = await sendRaw(swap.chainId, call.to, call.data, call.value ?? 0n, 'Transfer',
+    () => _translateCopy("copy.29cb0a90f7b2", { defaultValue: "Transfer did not confirm" }));
   return { hash, followUpHash };
 }

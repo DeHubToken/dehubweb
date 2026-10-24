@@ -40,7 +40,7 @@ export function CommunityTabEmptyState({ tab, isPendingApproval }: CommunityTabE
   return (
     <ProfileEmptyState
       iconSrc={details.iconSrc}
-      iconAlt={`${details.label} unavailable`}
+      iconAlt={_copy("copy.fe6f53060a4f", { defaultValue: "{{value1}} unavailable", value1: details.label })}
       title={isPendingApproval ? _copy("copy.e16b1a168ac5", { defaultValue: "Approval pending" }) : _copy("copy.a96b0564be6e", { defaultValue: "Join to view {{value1}}", value1: details.label })}
       subtitle={
         isPendingApproval

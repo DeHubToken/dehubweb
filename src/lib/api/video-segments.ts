@@ -10,6 +10,7 @@
  * working perfectly in curl.
  */
 import { getAuthToken } from '@/lib/api/dehub/core';
+import { translateCopy as _translateCopy } from '@/i18n/copy';
 
 const SUPABASE_URL =
   import.meta.env.VITE_SUPABASE_URL || 'https://aigxuutjaqsywioxjefr.supabase.co';
@@ -31,12 +32,12 @@ export const SEGMENT_CATEGORIES = [
 export type SegmentCategory = (typeof SEGMENT_CATEGORIES)[number];
 
 export const SEGMENT_LABELS: Record<SegmentCategory, string> = {
-  sponsor: 'Sponsor',
-  intro: 'Intro',
-  outro: 'Outro',
-  selfpromo: 'Self promo',
-  interaction: 'Like & subscribe',
-  filler: 'Filler',
+  get sponsor() { return _translateCopy("copy.fd6e874f43f8", { defaultValue: "Sponsor" }); },
+  get intro() { return _translateCopy("copy.24601bcaae6e", { defaultValue: "Intro" }); },
+  get outro() { return _translateCopy("copy.5ba3cea99095", { defaultValue: "Outro" }); },
+  get selfpromo() { return _translateCopy("copy.0aa57bb8d0f5", { defaultValue: "Self promo" }); },
+  get interaction() { return _translateCopy("copy.dba402806c8b", { defaultValue: "Like & subscribe" }); },
+  get filler() { return _translateCopy("copy.a57331d09c94", { defaultValue: "Filler" }); },
 };
 
 export interface VideoSegment {
@@ -54,7 +55,7 @@ export interface VideoSegment {
 /** Thrown when the function is not deployed yet — the UI treats it as "no segments". */
 export class SegmentsUnavailableError extends Error {
   constructor() {
-    super('Video segments are not available yet');
+    super(_translateCopy("copy.86951eef2de8", { defaultValue: "Video segments are not available yet" }));
     this.name = 'SegmentsUnavailableError';
   }
 }
@@ -105,7 +106,7 @@ export async function fetchVideoSegments(tokenId: string | number): Promise<Vide
 
 async function post(body: Record<string, unknown>): Promise<any> {
   const token = getAuthToken();
-  if (!token) throw new Error('Sign in first.');
+  if (!token) throw new Error(_translateCopy("copy.1ba0ae88fee7", { defaultValue: "Sign in first." }));
 
   const res = await reach(FN_URL, {
     method: 'POST',
@@ -114,7 +115,7 @@ async function post(body: Record<string, unknown>): Promise<any> {
   });
 
   const data = await res.json().catch(() => null);
-  if (!res.ok) throw new Error(data?.error ?? `Request failed (${res.status})`);
+  if (!res.ok) throw new Error(data?.error ?? _translateCopy("copy.94dd9f908316", { defaultValue: "Request failed ({{value1}})", value1: res.status }));
   return data;
 }
 

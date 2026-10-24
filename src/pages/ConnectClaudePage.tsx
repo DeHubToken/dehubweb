@@ -23,42 +23,42 @@ const OG_IMAGE = "https://dehub.io" + ogImage;
 const steps = [
   {
     get title() { return _translateCopy("copy.d2afb2d04c64", { defaultValue: "Open the DeHub connector in Claude" }); },
-    body: "Click the button below. Claude will open directly on the DeHub connector inside Settings → Connectors.",
+    get body() { return _translateCopy("copy.5493c4b8b7ef", { defaultValue: "Click the button below. Claude will open directly on the DeHub connector inside Settings → Connectors." }); },
   },
   {
     get title() { return _translateCopy("copy.ae7947534d62", { defaultValue: "Enable the connector" }); },
-    body: "Turn DeHub on and approve access. Claude will now be able to browse public DeHub posts, look up profiles and read trending topics.",
+    get body() { return _translateCopy("copy.0c21500d882f", { defaultValue: "Turn DeHub on and approve access. Claude will now be able to browse public DeHub posts, look up profiles and read trending topics." }); },
   },
   {
     get title() { return _translateCopy("copy.2f5962c2d543", { defaultValue: "Start a chat and prompt it" }); },
-    body: "Open a new conversation and mention DeHub in your message — Claude will call the connector automatically whenever it needs live DeHub context.",
+    get body() { return _translateCopy("copy.2b235e67df53", { defaultValue: "Open a new conversation and mention DeHub in your message — Claude will call the connector automatically whenever it needs live DeHub context." }); },
   },
 ];
 
-const examples = [
-  "Give me a briefing of the top posts on DeHub in the last 24 hours.",
-  "Search DeHub for posts about Ethereum staking and summarise the sentiment.",
-  "Pull the profile @satoshi from DeHub and describe their recent activity.",
-  "Draft three reply options to the top DeHub post about AI, in a concise tone.",
+const examples = () => [
+  _translateCopy("copy.3c8701908f73", { defaultValue: "Give me a briefing of the top posts on DeHub in the last 24 hours." }),
+  _translateCopy("copy.9b7200c0c085", { defaultValue: "Search DeHub for posts about Ethereum staking and summarise the sentiment." }),
+  _translateCopy("copy.b17c259bbce1", { defaultValue: "Pull the profile @satoshi from DeHub and describe their recent activity." }),
+  _translateCopy("copy.dc069b0cf511", { defaultValue: "Draft three reply options to the top DeHub post about AI, in a concise tone." }),
 ];
 
 const faqs: { q: string; a: string; aKey?: string }[] = [
   {
-    q: "Is the DeHub Claude connector free?",
-    a: "Yes. The connector itself is free to add. You need a Claude account on a plan that supports custom connectors (Claude Pro, Team or Enterprise).",
+    get q() { return _translateCopy("copy.6ece694556c3", { defaultValue: "Is the DeHub Claude connector free?" }); },
+    get a() { return _translateCopy("copy.ad2811b8e577", { defaultValue: "Yes. The connector itself is free to add. You need a Claude account on a plan that supports custom connectors (Claude Pro, Team or Enterprise)." }); },
   },
   {
-    q: "What can Claude do with DeHub?",
-    a: "Through MCP, Claude can browse public DeHub posts, search topics and look up creator profiles. It does not post on your behalf.",
+    get q() { return _translateCopy("copy.bf754664571e", { defaultValue: "What can Claude do with DeHub?" }); },
+    get a() { return _translateCopy("copy.b7e6642632f8", { defaultValue: "Through MCP, Claude can browse public DeHub posts, search topics and look up creator profiles. It does not post on your behalf." }); },
   },
   {
-    q: "Do I need a DeHub account to use it?",
-    a: "No. Reading public content works without an account. You only need a DeHub account to post, tip or hold tokens.",
+    get q() { return _translateCopy("copy.3d82c0d85307", { defaultValue: "Do I need a DeHub account to use it?" }); },
+    get a() { return _translateCopy("copy.fbc5cbf604e7", { defaultValue: "No. Reading public content works without an account. You only need a DeHub account to post, tip or hold tokens." }); },
     aKey: "connect.claudeFaqAccount",
   },
   {
-    q: "Which Claude models work with the connector?",
-    a: "Any Claude model that supports MCP connectors — including the current Claude Sonnet, Opus and Haiku families on Pro and Team plans.",
+    get q() { return _translateCopy("copy.0585927db9a9", { defaultValue: "Which Claude models work with the connector?" }); },
+    get a() { return _translateCopy("copy.629b8f0c31a1", { defaultValue: "Any Claude model that supports MCP connectors — including the current Claude Sonnet, Opus and Haiku families on Pro and Team plans." }); },
   },
 ];
 
@@ -70,7 +70,7 @@ export default function ConnectClaudePage() {
     "@graph": [
       {
         "@type": "HowTo",
-        name: "How to use DeHub inside Claude",
+        name: _copy("copy.a394cce9c396", { defaultValue: "How to use DeHub inside Claude" }),
         description:
           _copy("copy.66d89fc56a4e", { defaultValue: "Add the DeHub connector to Claude and let it browse posts, profiles and trends from the DeHub decentralized social network." }),
         image: OG_IMAGE,
@@ -166,7 +166,7 @@ export default function ConnectClaudePage() {
         <section className="mt-14">
           <h2 className="text-xl font-bold md:text-2xl">{_copy("copy.7887eb17f548", { defaultValue: "Prompts to try" })}</h2>
           <ul className="mt-6 space-y-2">
-            {examples.map((e) => (
+            {examples().map((e) => (
               <li
                 key={e}
                 className="flex items-start gap-3 rounded-xl border border-white/10 bg-white/[0.03] p-4 text-sm text-white/80"

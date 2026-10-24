@@ -12,6 +12,7 @@
  */
 import { getMediaUrl } from '@/lib/api/dehub/core';
 import { decryptMediaBytes, fileKeyOf, type MediaDescriptor } from './media';
+import { translateCopy as _translateCopy } from '@/i18n/copy';
 
 const MAX_ENTRIES = 60;
 const MAX_BYTES = 200 * 1024 * 1024;
@@ -79,7 +80,7 @@ export function getSeededMedia(messageId: string): string | undefined {
 async function fetchAndOpen(mediaUrl: string, descriptor: MediaDescriptor): Promise<string> {
   // The raw object, never the image resizer: it cannot read ciphertext.
   const res = await fetch(getMediaUrl(mediaUrl) || mediaUrl);
-  if (!res.ok) throw new Error(`Attachment download failed (${res.status})`);
+  if (!res.ok) throw new Error(_translateCopy("copy.cda423573b70", { defaultValue: "Attachment download failed ({{value1}})", value1: res.status }));
   const blob = new Uint8Array(await res.arrayBuffer());
   const plain = decryptMediaBytes(blob, fileKeyOf(descriptor));
   return put(mediaUrl, new Blob([plain as BlobPart], { type: descriptor.mime || 'application/octet-stream' }));

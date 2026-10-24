@@ -1,3 +1,4 @@
+import { translateCopy as _translateCopy } from '@/i18n/copy';
 import { useTranslation as _useCopy } from 'react-i18next';
 import { MobileStatusBar } from '../MobileStatusBar';
 import { MobileTopBar } from '../MobileTopBar';
@@ -10,16 +11,16 @@ import Search from "@/components/ui/cut-icons/search";
 
 
 const TRENDING = [
-  { tag: '#DeHubDAO', posts: '2.4K posts' },
-  { tag: '#Web3Social', posts: '1.8K posts' },
-  { tag: '#DHBStaking', posts: '956 posts' },
-  { tag: '#CreatorEconomy', posts: '743 posts' },
+  { tag: '#DeHubDAO', get posts() { return _translateCopy("copy.4f8701c79363", { defaultValue: "{{value1}} posts", value1: '2.4K' }); } },
+  { tag: '#Web3Social', get posts() { return _translateCopy("copy.4f8701c79363", { defaultValue: "{{value1}} posts", value1: '1.8K' }); } },
+  { tag: '#DHBStaking', get posts() { return _translateCopy("copy.4f8701c79363", { defaultValue: "{{value1}} posts", value1: '956' }); } },
+  { tag: '#CreatorEconomy', get posts() { return _translateCopy("copy.4f8701c79363", { defaultValue: "{{value1}} posts", value1: '743' }); } },
 ];
 
 const SUGGESTED_USERS = [
-  { name: 'nft_artist', bio: 'Digital artist & NFT creator' },
-  { name: 'alpha_trader', bio: 'On-chain analytics & alpha' },
-  { name: 'dao_builder', bio: 'Building governance tools' },
+  { name: 'nft_artist', get bio() { return _translateCopy("copy.6f2756678a97", { defaultValue: "Digital artist & NFT creator" }); } },
+  { name: 'alpha_trader', get bio() { return _translateCopy("copy.cf5bd352e50a", { defaultValue: "On-chain analytics & alpha" }); } },
+  { name: 'dao_builder', get bio() { return _translateCopy("copy.41c2fc68a79b", { defaultValue: "Building governance tools" }); } },
 ];
 
 export function ExploreScreen() {

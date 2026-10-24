@@ -124,7 +124,7 @@ export default function BridgePage() {
         return;
       }
 
-      loadingToastId = toast.loading('Switching to ' + sourceChainLabel + '...');
+      loadingToastId = toast.loading(_copy("copy.4b9b7fd3545c", { defaultValue: "Switching to {{value1}}...", value1: sourceChainLabel }));
 
       try {
         await switchChain(sourceChainId);
@@ -141,7 +141,7 @@ export default function BridgePage() {
         return;
       }
 
-      toast.loading('Confirming bridge transaction...', { id: loadingToastId });
+      toast.loading(_copy("copy.80184317b0f7", { defaultValue: "Confirming bridge transaction..." }), { id: loadingToastId });
 
       let result;
       try {
@@ -158,17 +158,17 @@ export default function BridgePage() {
           toast.error(_copy("copy.a827dc821293", { defaultValue: "Transaction cancelled" }), { description: _copy("copy.302133d06f9b", { defaultValue: "You rejected the transaction in your wallet." }) });
         } else if (msg.includes('gas') || msg.includes('aa21') || msg.includes('aa25') || msg.includes('aa31')) {
           toast.error(_copy("copy.5f7645a4d950", { defaultValue: "Gas fee issue" }), {
-            description: `You need native tokens (${sourceChainId === BNB_CHAIN_ID ? 'BNB' : 'ETH'}) on ${sourceChainLabel} to pay for gas.`,
+            description: _copy("copy.818864497053", { defaultValue: "You need native tokens ({{value1}}) on {{value2}} to pay for gas.", value1: sourceChainId === BNB_CHAIN_ID ? 'BNB' : 'ETH', value2: sourceChainLabel }),
           });
         } else if (msg.includes('session expired') || msg.includes('log in again')) {
           toast.error(_copy("copy.e5ee1e7e84aa", { defaultValue: "Session expired" }), { description: _copy("copy.6fb4051edeb9", { defaultValue: "Please log in again to complete this transaction." }) });
         } else {
-          toast.error(_copy("copy.d7d9932b0e5e", { defaultValue: "Bridge failed" }), { description: sendErr?.shortMessage || sendErr?.message?.slice(0, 120) || 'Transaction could not be sent.' });
+          toast.error(_copy("copy.d7d9932b0e5e", { defaultValue: "Bridge failed" }), { description: sendErr?.shortMessage || sendErr?.message?.slice(0, 120) || _copy("copy.5932f2500e5a", { defaultValue: "Transaction could not be sent." }) });
         }
         return;
       }
 
-      toast.loading('Waiting for confirmation...', { id: loadingToastId });
+      toast.loading(_copy("copy.03da1d7de496", { defaultValue: "Waiting for confirmation..." }), { id: loadingToastId });
 
       let receipt;
       try {
@@ -189,12 +189,12 @@ export default function BridgePage() {
         queryClient.invalidateQueries({ queryKey: ['wallet-tokens'] });
         invalidateSelfBadgeBalance(queryClient);
       } else {
-        toast.error(_copy("copy.d7d9932b0e5e", { defaultValue: "Bridge failed" }), { description: `Transaction reverted on ${sourceChainLabel}. Your tokens were not transferred.` });
+        toast.error(_copy("copy.d7d9932b0e5e", { defaultValue: "Bridge failed" }), { description: _copy("copy.85f96a7ac6ee", { defaultValue: "Transaction reverted on {{value1}}. Your tokens were not transferred.", value1: sourceChainLabel }) });
       }
     } catch (err: any) {
       console.error('[Bridge] Unexpected error:', err);
       if (loadingToastId) toast.dismiss(loadingToastId);
-      toast.error(_copy("copy.d7d9932b0e5e", { defaultValue: "Bridge failed" }), { description: err?.message?.slice(0, 120) || 'An unexpected error occurred.' });
+      toast.error(_copy("copy.d7d9932b0e5e", { defaultValue: "Bridge failed" }), { description: err?.message?.slice(0, 120) || _copy("copy.7053d12aceb5", { defaultValue: "An unexpected error occurred." }) });
     } finally {
       setIsBridging(false);
     }
@@ -319,8 +319,8 @@ export default function BridgePage() {
         <h3 className="text-sm font-semibold text-white/70 uppercase tracking-wider mb-3">{_copy("copy.9c870aa6e5e9", { defaultValue: "How it works" })}</h3>
         <div className="space-y-3">
           {[
-            { step: '1', text: 'Select the chain you want to bridge from and enter the amount.' },
-            { step: '2', text: 'Confirm the transaction in your wallet.' },
+            { step: '1', text: _copy("copy.2f4461648541", { defaultValue: "Select the chain you want to bridge from and enter the amount." }) },
+            { step: '2', text: _copy("copy.124802025d72", { defaultValue: "Confirm the transaction in your wallet." }) },
             { step: '3', text: t('bridge.step3') },
           ].map((item) => (
             <div key={item.step} className="flex items-start gap-3">

@@ -4,6 +4,8 @@
  * Streams tokens from the assistant persona (the prompt-crafter persona).
  * Works signed out; the function is IP-limited rather than wallet-gated.
  */
+import { translateCopy as _translateCopy } from '@/i18n/copy';
+
 const FN_URL = `${import.meta.env.VITE_SUPABASE_URL || 'https://aigxuutjaqsywioxjefr.supabase.co'}/functions/v1/creator-prompt-assistant`;
 const ANON_KEY =
   import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY ||
@@ -54,7 +56,7 @@ export async function streamAssistant({ messages, prompt, persona = 'craft', mod
   });
 
   if (!res.ok || !res.body) {
-    let message = 'The assistant is unavailable right now.';
+    let message = _translateCopy("copy.bc5a18595e74", { defaultValue: "The assistant is unavailable right now." });
     try {
       const j = await res.json();
       if (j?.error) message = String(j.error);

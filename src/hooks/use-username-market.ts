@@ -31,6 +31,7 @@ import { toast } from 'sonner';
 import i18n from 'i18next';
 import { useAuth } from '@/contexts/AuthContext';
 import { createLogger } from '@/lib/logger';
+import { translateCopy as _translateCopy } from '@/i18n/copy';
 import {
   activateUsernameHolding,
   browseUsernames,
@@ -133,6 +134,7 @@ function invalidateOwnUsername(qc: ReturnType<typeof useQueryClient>) {
 
 /** Wear one of the names you own. Free, and reversible by switching back. */
 export function useActivateUsernameHolding() {
+  const { t: _copy } = _useCopy();
   const qc = useQueryClient();
   const { refreshUser } = useAuth();
   return useMutation({
@@ -143,7 +145,7 @@ export function useActivateUsernameHolding() {
       // thing about an otherwise reversible action, and it only happens to the
       // free signup handle.
       if (result.releasedUsername) {
-        toast.info(`@${result.releasedUsername} was not a username you bought, so it is free again.`, {
+        toast.info(_copy("copy.3668da9bb960", { defaultValue: "@{{value1}} was not a username you bought, so it is free again.", value1: result.releasedUsername }), {
           duration: 10000,
         });
       }
@@ -156,11 +158,12 @@ export function useActivateUsernameHolding() {
 
 /** Give a held name back to the pool. There is no undo, so ask first. */
 export function useReleaseUsernameHolding() {
+  const { t: _copy } = _useCopy();
   const qc = useQueryClient();
   return useMutation({
     mutationFn: releaseUsernameHolding,
     onSuccess: (_result, username) => {
-      toast.success(`@${username} released`);
+      toast.success(_copy("copy.49b582fce4fe", { defaultValue: "@{{value1}} released", value1: username }));
       qc.invalidateQueries({ queryKey: ['username-holdings'] });
       qc.invalidateQueries({ queryKey: ['username-market-mine'] });
       qc.invalidateQueries({ queryKey: ['username-market-browse'] });
@@ -170,13 +173,14 @@ export function useReleaseUsernameHolding() {
 }
 
 export function useCreateUsernameListing() {
+  const { t: _copy } = _useCopy();
   const qc = useQueryClient();
   return useMutation({
     mutationFn: createUsernameListing,
     onSuccess: result => {
       qc.invalidateQueries({ queryKey: ['username-market-mine'] });
       qc.invalidateQueries({ queryKey: ['username-market-browse'] });
-      toast.success(`@${result.username} is on the market`);
+      toast.success(_copy("copy.134ed133424c", { defaultValue: "@{{value1}} is on the market", value1: result.username }));
     },
     onError: (err: Error) => toast.error(err.message),
   });
@@ -240,7 +244,7 @@ export function useBuyUsername() {
   const buy = useMutation({
     mutationFn: async (quote: UsernameQuote) => {
       if (!quote.quoteId || Date.parse(quote.expiresAt) < Date.now() + 30_000) {
-        throw new Error('Refresh the checkout price before paying.');
+        throw new Error(_translateCopy("copy.afeb474eaf8c", { defaultValue: "Refresh the checkout price before paying." }));
       }
       // Imported at call time: this hook is reachable from a cached page, and
       // scripts/check-entry-bundle.mjs fails the build if wagmi lands in the
@@ -269,13 +273,13 @@ export function useBuyUsername() {
         18,
         chainId,
       );
-      if (!sent?.hash) throw new Error('The payment was not submitted.');
+      if (!sent?.hash) throw new Error(_translateCopy("copy.f819def8e607", { defaultValue: "The payment was not submitted." }));
 
       // Past this line the buyer has paid. Giving up would strand a real
       // transfer with no handle behind it, so the loop runs to the end and
       // then hands them the hash rather than swallowing it.
       setStage('confirming');
-      let lastError = 'Could not confirm the payment';
+      let stillConfirming = false;
       for (let attempt = 0; attempt < CLAIM_ATTEMPTS; attempt++) {
         try {
           const result = await claimUsername({
@@ -285,18 +289,23 @@ export function useBuyUsername() {
             chainId,
           });
           if (!result.pending) return result;
-          lastError = 'The payment is still confirming on-chain';
+          stillConfirming = true;
         } catch (err: any) {
           // A refusal from the server is final — underpaid, wrong chain, sold
           // to somebody else. Only a missing receipt is worth waiting on.
           logger.warn('claim attempt failed', err?.message);
-          throw new Error(`${err?.message || lastError} (transaction ${sent.hash})`);
+          const lastError = stillConfirming
+            ? _translateCopy("copy.b59f0a649761", { defaultValue: "The payment is still confirming on-chain" })
+            : _translateCopy("copy.50c1bea5bfee", { defaultValue: "Could not confirm the payment" });
+          throw new Error(_translateCopy("copy.7df7a5aaeb96", { defaultValue: "{{value1}} (transaction {{value2}})", value1: err?.message || lastError, value2: sent.hash }));
         }
         await new Promise(resolve => setTimeout(resolve, CLAIM_INTERVAL_MS));
       }
 
       throw new Error(
-        `${lastError}. Your payment went through — reopen this listing in a minute to finish claiming it (transaction ${sent.hash}).`,
+        stillConfirming
+          ? _translateCopy("copy.f57eccb1b137", { defaultValue: "The payment is still confirming on-chain. Your payment went through — reopen this listing in a minute to finish claiming it (transaction {{value1}}).", value1: sent.hash })
+          : _translateCopy("copy.ec07d1c5ae3b", { defaultValue: "Could not confirm the payment. Your payment went through — reopen this listing in a minute to finish claiming it (transaction {{value1}}).", value1: sent.hash }),
       );
     },
     onSuccess: async result => {

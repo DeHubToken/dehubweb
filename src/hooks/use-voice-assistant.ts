@@ -408,12 +408,12 @@ export function useVoiceAssistant(options: UseVoiceAssistantOptions): UseVoiceAs
       sessionTxRef.current = await payForVoiceSession();
       setExchangesLeft(VOICE_SESSION_EXCHANGES);
       toast.success(
-        `Voice mode activated — ${VOICE_SESSION_EXCHANGES} exchanges paid for.`,
+        _copy("copy.1a19c3a9fe4b", { defaultValue: "Voice mode activated — {{value1}} exchanges paid for.", value1: VOICE_SESSION_EXCHANGES }),
         { id: 'voice-session' },
       );
     } catch (err) {
       toast.dismiss('voice-session');
-      toast.error(err instanceof Error ? err.message : 'Could not pay for a voice session.');
+      toast.error(err instanceof Error ? err.message : _copy("copy.0cf23e6e3094", { defaultValue: "Could not pay for a voice session." }));
       stream.getTracks().forEach((track) => track.stop());
       return;
     }

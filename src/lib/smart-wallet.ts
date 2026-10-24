@@ -35,6 +35,7 @@ import { ROBINHOOD_CHAIN_ID, ROBINHOOD_PUBLIC_RPC, ROBINHOOD_EXPLORER_URL } from
 import { ARC_CHAIN_ID, ARC_PUBLIC_RPC, ARC_EXPLORER_URL } from "@/lib/chains/arc";
 import { waitForWalletUnlock } from '@/lib/wallet-unlock-flow';
 import { pimlicoUserOperationFees } from '@/lib/pimlico-fees';
+import { translateCopy as _translateCopy } from '@/i18n/copy';
 
 const CHAIN_NAMESPACES = { EIP155: "eip155" } as const;
 
@@ -174,7 +175,7 @@ async function getPimlicoConfig(): Promise<{ bundlerUrl: string; paymasterUrl: s
       sessionStorage.setItem("dehub_pimlico_config", JSON.stringify(data));
       return cachedPimlicoConfig!;
     }
-    throw new Error(error?.message || "Pimlico config not configured");
+    throw new Error(error?.message || _translateCopy("copy.074f077eaae8", { defaultValue: "Pimlico config not configured" }));
   }, "get-pimlico-config").finally(() => { pendingPimlicoFetch = null; });
 
   return pendingPimlicoFetch;
@@ -189,7 +190,7 @@ function derivePimlicoUrlForChain(baseUrl: string, targetChainId: number): strin
 
 function normalizePrivKey(privKey: string): string {
   const hex = privKey.startsWith("0x") ? privKey.slice(2) : privKey;
-  if (!/^[0-9a-fA-F]{64}$/.test(hex)) throw new Error("Invalid private key");
+  if (!/^[0-9a-fA-F]{64}$/.test(hex)) throw new Error(_translateCopy("copy.ff64e49c2807", { defaultValue: "Invalid private key" }));
   return hex.toLowerCase();
 }
 
@@ -358,7 +359,7 @@ export async function signDerivedSolanaVersionedTransaction(
 export async function ensureWalletUnlocked(): Promise<void> {
   if (!isWalletUnlocked() && !(await restoreWalletSession()) && !(await unlockFromDeviceSeed())) {
     await waitForWalletUnlock();
-    if (!isWalletUnlocked()) throw new Error('Wallet unlock did not complete. Please try again.');
+    if (!isWalletUnlocked()) throw new Error(_translateCopy('copy.1edbb3e2e8bd', { defaultValue: 'Wallet unlock did not complete. Please try again.' }));
   }
   // A wallet made silently at sign-up is secured here, at the first action
   // that uses it, rather than at the door (see lib/wallet-secure-flow.ts).

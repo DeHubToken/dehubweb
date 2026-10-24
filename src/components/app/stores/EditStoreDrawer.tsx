@@ -145,7 +145,7 @@ export function EditStoreDrawer({ store, open, onClose }: Props) {
           <LiquidGlassBubble2
             label={t('stores.saveChanges')}
             loading={updateStore.isPending}
-            loadingLabel="Saving..."
+            loadingLabel={t("copy.dc85af8f2b1d", { defaultValue: "Saving..." })}
             disabled={!name.trim() || uploadingAvatar || uploadingBanner}
             onClick={handleSave}
             width="100%"

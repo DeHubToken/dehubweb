@@ -116,8 +116,8 @@ export function CashtagPriceCard({ pair, symbol, cmcData }: CashtagPriceCardProp
   const pairAge = pair.pairCreatedAt
     ? (() => {
         const days = Math.floor((Date.now() - pair.pairCreatedAt) / (1000 * 60 * 60 * 24));
-        if (days > 365) return `${Math.floor(days / 365)}y ${days % 365}d`;
-        return `${days}d`;
+        if (days > 365) return _copy("copy.cc9105d204ba", { defaultValue: "{{value1}}y {{value2}}d", value1: Math.floor(days / 365), value2: days % 365 });
+        return _copy("copy.42f90c931762", { defaultValue: "{{value1}}d", value1: days });
       })()
     : null;
 
@@ -241,7 +241,7 @@ export function CashtagPriceCard({ pair, symbol, cmcData }: CashtagPriceCardProp
       {/* Stats row */}
       <div className="px-4 py-3 flex items-center gap-4 text-xs border-t border-zinc-700/50">
         <div>
-          <span className="text-zinc-500">{_copy("copy.fb25999766b1", { defaultValue: "Market Cap" })}{cmcData?.marketCap ? '' : _copy("copy.6334c1d377c6", { defaultValue: " (DEX)" })}</span>
+          <span className="text-zinc-500">{cmcData?.marketCap ? _copy("copy.fb25999766b1", { defaultValue: "Market Cap" }) : _copy("copy.5f0d3a3a5bd7", { defaultValue: "Market Cap (DEX)" })}</span>
           <p className="text-white font-medium">{formatCompact(marketCap)}</p>
         </div>
         <div>
@@ -287,9 +287,9 @@ export function CashtagPriceCard({ pair, symbol, cmcData }: CashtagPriceCardProp
                 <div className="px-4 py-3 border-b border-zinc-700/30">
                   <p className="text-zinc-500 text-[10px] uppercase tracking-wider mb-2">{_copy("copy.7f7a5598a624", { defaultValue: "24h Transactions" })}</p>
                   <div className="flex items-center gap-3 mb-2">
-                    <span className="text-emerald-400 text-xs font-medium">{txns24h.buys}{_copy("copy.b0cd7f667b0a", { defaultValue: " buys" })}</span>
-                    <span className="text-red-400 text-xs font-medium">{txns24h.sells}{_copy("copy.898e5e9f7d29", { defaultValue: " sells" })}</span>
-                    <span className="text-zinc-400 text-xs ml-auto">{totalTxns24h}{_copy("copy.88c4fa961179", { defaultValue: " total" })}</span>
+                    <span className="text-emerald-400 text-xs font-medium">{_copy("copy.538c92e7efbe", { count: txns24h.buys, defaultValue_one: "{{count}} buy", defaultValue_other: "{{count}} buys", defaultValue: "{{count}} buys" })}</span>
+                    <span className="text-red-400 text-xs font-medium">{_copy("copy.760c004dd988", { count: txns24h.sells, defaultValue_one: "{{count}} sell", defaultValue_other: "{{count}} sells", defaultValue: "{{count}} sells" })}</span>
+                    <span className="text-zinc-400 text-xs ml-auto">{_copy("copy.ae832780ab5d", { defaultValue: "{{value1}} total", value1: totalTxns24h })}</span>
                   </div>
                   {buyRatio != null && (
                     <div className="w-full h-1.5 rounded-full bg-red-400/30 overflow-hidden">
@@ -411,7 +411,7 @@ export function CashtagPriceCard({ pair, symbol, cmcData }: CashtagPriceCardProp
                     ))}
                     {cmcData.tags.length > 10 && (
                       <span className="text-[10px] px-2 py-0.5 rounded-full bg-zinc-700/50 text-zinc-500">
-                        +{cmcData.tags.length - 10}{_copy("copy.226ba18bbcdb", { defaultValue: " more" })}</span>
+                        {_copy("copy.a40947644c97", { defaultValue: "+{{value1}} more", value1: cmcData.tags.length - 10 })}</span>
                     )}
                   </div>
                 </div>

@@ -44,6 +44,7 @@ import {
   type SuperPowerKey,
   type SuperPowerStatus,
 } from '@/lib/api/dehub/superpowers';
+import { translateCopy as _translateCopy } from '@/i18n/copy';
 
 /** How long a viewer keeps the boost they were dealt. See the note above. */
 const SLOT_ROTATION_MS = 5 * 60 * 1000;
@@ -456,11 +457,11 @@ export function spendablePowers(
       targeting: TARGETING[p.key] ?? 'none',
       enabled: !!p.unlocked && left(p.key) > 0,
       blockedReason: !p.unlocked
-        ? `Unlocks at ${p.tier}`
+        ? _translateCopy("copy.b7d596163a60", { defaultValue: "Unlocks at {{value1}}", value1: p.tier })
         : left(p.key) < 1
           ? SIGNALS.includes(p.key)
-            ? 'No Signal Flares left this cycle'
-            : 'No boosts left this cycle'
+            ? _translateCopy("copy.c97d91cc6850", { defaultValue: "No Signal Flares left this cycle" })
+            : _translateCopy("copy.06929641f3ed", { defaultValue: "No boosts left this cycle" })
           : '',
     }));
 }

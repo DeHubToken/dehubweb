@@ -1,11 +1,12 @@
 import { CHAIN_CONFIGS, ETH_CHAIN_ID, initChainRpcUrls } from '@/lib/contracts/dhb-token';
 import type { ChainId } from '@/components/app/ChainSelector';
+import { translateCopy as _translateCopy } from '@/i18n/copy';
 
 /** Wallet reads can recover when one RPC rejects requests or stops responding. */
 export async function walletRpc(chainId: ChainId, method: 'eth_getBalance' | 'eth_call', params: unknown[]): Promise<string> {
   await initChainRpcUrls();
   const configured = CHAIN_CONFIGS[chainId]?.rpcUrl;
-  if (!configured) throw new Error('Network unavailable');
+  if (!configured) throw new Error(_translateCopy('copy.5ad358dead59', { defaultValue: 'Network unavailable' }));
   const urls = [...new Set([configured, ...(chainId === ETH_CHAIN_ID ? [
     'https://ethereum-rpc.publicnode.com', 'https://eth.drpc.org',
   ] : [])])];
@@ -25,5 +26,5 @@ export async function walletRpc(chainId: ChainId, method: 'eth_getBalance' | 'et
     } catch { /* Continue to the next endpoint without turning a failed read into zero. */ }
     finally { clearTimeout(timer); }
   }
-  throw new Error('Balance unavailable');
+  throw new Error(_translateCopy('copy.23fe9ec0df0e', { defaultValue: 'Balance unavailable' }));
 }

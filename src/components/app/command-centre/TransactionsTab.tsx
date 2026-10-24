@@ -1,4 +1,5 @@
 import { useTranslation as _useCopy } from 'react-i18next';
+import { translateCopy as _translateCopy } from '@/i18n/copy';
 import { useState, useMemo } from 'react';
 import { GlassFilterRow } from '@/components/app/feeds/GlassFilterRow';
 import { TrendingUp, Loader2, AlertCircle } from "lucide-react";
@@ -73,7 +74,7 @@ function buildBreakdown(transactions: DPayTransaction[]) {
   
   transactions.forEach((tx) => {
     const t = tx.type as string;
-    const label = t === 'buy' ? 'Purchases' : t === 'sell' ? 'Sales' : t === 'ppv' ? 'PPV' : 'Transfers';
+    const label = t === 'buy' ? _translateCopy("copy.a0718ef8e427", { defaultValue: "Purchases" }) : t === 'sell' ? _translateCopy("copy.8de4e0ea7370", { defaultValue: "Sales" }) : t === 'ppv' ? 'PPV' : _translateCopy("copy.c417cb88e3fd", { defaultValue: "Transfers" });
     types[label] = (types[label] || 0) + tx.amount;
     total += tx.amount;
   });
@@ -202,7 +203,7 @@ export function TransactionsTab() {
           {/* Time Filters */}
           <div className="mb-4 w-fit">
             <GlassFilterRow
-              items={timeFilters.map((f) => ({ key: f, label: f }))}
+              items={timeFilters.map((f) => ({ key: f, label: f === 'Max' ? _copy("copy.a1a5936d3b0f", { defaultValue: "Max" }) : f }))}
               activeKey={activeFilter}
               onSelect={(key) => setActiveFilter(key)}
             />
@@ -235,7 +236,7 @@ export function TransactionsTab() {
                     }}
                     formatter={(value: number, name: string) => [
                       `${value.toLocaleString()} DeHub`, 
-                      name === 'income' ? 'Income' : 'Expenditure'
+                      name === 'income' ? _copy("copy.51595db91914", { defaultValue: "Income" }) : _copy("copy.d2309bfdb1af", { defaultValue: "Expenditure" })
                     ]}
                   />
                   <Area

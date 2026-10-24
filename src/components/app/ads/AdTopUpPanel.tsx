@@ -117,7 +117,7 @@ export function AdTopUpPanel({
   const runTopUp = useCallback(async () => {
     if (!dhbPrice) { toast.error(t('ads.priceUnavailable')); return; }
     if (costDhb <= 0 || effectiveUsd < minTopup) {
-      toast.error(`Minimum top-up is $${minTopup}`);
+      toast.error(_copy("copy.dc1c28cbaabc", { defaultValue: "Minimum top-up is ${{value1}}", value1: minTopup }));
       return;
     }
     setIsPaying(true);
@@ -185,7 +185,7 @@ export function AdTopUpPanel({
           const res = await topUp.mutateAsync(result.hash);
           credited = res.usdCredited;
         } catch (e) {
-          lastError = e instanceof Error ? e : new Error('verification failed');
+          lastError = e instanceof Error ? e : new Error(_copy("copy.ac0fc4e2c613", { defaultValue: "verification failed" }));
           if (lastError.message.includes('already credited')) { credited = effectiveUsd; break; }
           await new Promise((r) => setTimeout(r, 4000));
         }
@@ -203,7 +203,7 @@ export function AdTopUpPanel({
       setIsPaying(false);
       setPhase('idle');
     }
-  }, [costDhb, dhbPrice, effectiveUsd, minTopup, onCredited, topUp]);
+  }, [costDhb, dhbPrice, effectiveUsd, minTopup, onCredited, topUp, _copy]);
 
   // ---- funding step ------------------------------------------------------
   if (funding) {

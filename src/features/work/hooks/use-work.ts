@@ -1,4 +1,7 @@
 import { useTranslation as _useCopy } from 'react-i18next';
+import { translateCopy as _translateCopy } from '@/i18n/copy';
+import i18next from 'i18next';
+import { WorkCopyError } from '../types';
 import { workRpc, settleWorkPayment } from '../work-rpc';
 import { workEscrow, workSubmission, workJob } from '../work-escrow';
 import { getWorkConfig } from '@/lib/contracts/dehub-work';
@@ -21,6 +24,18 @@ const TBL_APPS = 'work_applications' as any;
 const TBL_SUBS = 'work_submissions' as any;
 const TBL_REVIEWS = 'work_reviews' as any;
 const TBL_DISPUTES = 'work_disputes' as any;
+
+/**
+ * Server, wallet and chain messages are English, so other readers get the
+ * translated fallback; messages raised here already in their language pass.
+ */
+function workErrorText(e: unknown, fallback: string): string {
+  const message = (e as { message?: unknown } | null)?.message;
+  if (typeof message !== 'string' || !message) return fallback;
+  if (e instanceof WorkCopyError) return message;
+  const language = i18next.resolvedLanguage || i18next.language || 'en';
+  return language === 'en' || language.startsWith('en-') ? message : fallback;
+}
 
 
 // ── Browse jobs ──────────────────────────────────────────────
@@ -180,7 +195,7 @@ export function useCreateJob() {
       max_units: number;
       deadline?: string;
     }) => {
-      if (!walletAddress) throw new Error('Not authenticated');
+      if (!walletAddress) throw new WorkCopyError(_translateCopy("copy.76d1efbeed2d", { defaultValue: "Not authenticated" }));
       const total = params.price_per_unit * params.max_units;
 
       const { data, error } = await withWalletHeader(
@@ -214,7 +229,7 @@ export function useCreateJob() {
       qc.invalidateQueries({ queryKey: ['work-my-posted'] });
       toast.success(_copy("copy.314844f99c7e", { defaultValue: "Bounty published" }));
     },
-    onError: (e: any) => toast.error(e.message || 'Failed to post job'),
+    onError: (e: any) => toast.error(workErrorText(e, _translateCopy("copy.4a9b1d39db85", { defaultValue: "Failed to post job" }))),
   });
 }
 
@@ -244,7 +259,7 @@ export function useUpdateJob() {
         max_units: number;
       };
     }) => {
-      if (!walletAddress) throw new Error('Not authenticated');
+      if (!walletAddress) throw new WorkCopyError(_translateCopy("copy.76d1efbeed2d", { defaultValue: "Not authenticated" }));
 
       const current=await workJob(params.id);
       const patch: Record<string, unknown> = {
@@ -268,7 +283,7 @@ export function useUpdateJob() {
       if (error) throw error;
       // RLS filters the row out rather than erroring when the wallet isn't the
       // poster, so an empty result is a permission failure, not a missing job.
-      if (!data) throw new Error('You can only edit bounties you posted');
+      if (!data) throw new WorkCopyError(_translateCopy("copy.90dfbf3cc4f0", { defaultValue: "You can only edit bounties you posted" }));
       return data as unknown as WorkJob;
     },
     onSuccess: (job) => {
@@ -286,7 +301,7 @@ export function useUpdateJob() {
       qc.invalidateQueries({ queryKey: ['work-my-posted'] });
       toast.success(_copy("copy.99e4e233be59", { defaultValue: "Bounty updated" }));
     },
-    onError: (e: any) => toast.error(e.message || 'Failed to update bounty'),
+    onError: (e: any) => toast.error(workErrorText(e, _translateCopy("copy.62deff71d074", { defaultValue: "Failed to update bounty" }))),
   });
 }
 
@@ -335,7 +350,7 @@ export function useApplyToJob() {
   const qc = useQueryClient();
   return useMutation({
     mutationFn: async (params: { job_id: string; cover_letter: string; proposed_amount?: number }) => {
-      if (!walletAddress) throw new Error('Not authenticated');
+      if (!walletAddress) throw new WorkCopyError(_translateCopy("copy.76d1efbeed2d", { defaultValue: "Not authenticated" }));
       const { data, error } = await withWalletHeader(
         supabase.from(TBL_APPS).insert({
           job_id: params.job_id,
@@ -352,7 +367,7 @@ export function useApplyToJob() {
       qc.invalidateQueries({ queryKey: ['work-apps', v.job_id] });
       toast.success(_copy("copy.f4e93d19a0fc", { defaultValue: "Application sent" }));
     },
-    onError: (e: any) => toast.error(e.message || 'Failed to apply'),
+    onError: (e: any) => toast.error(workErrorText(e, _translateCopy("copy.b3ec56659c25", { defaultValue: "Failed to apply" }))),
   });
 }
 
@@ -362,7 +377,7 @@ export function useAwardApplicant() {
   const qc = useQueryClient();
   return useMutation({
     mutationFn: async (params: { job_id: string; onchain_job_id?: number | null; application_id: string; worker_address: string }) => {
-      if (!walletAddress) throw new Error('Not authenticated');
+      if (!walletAddress) throw new WorkCopyError(_translateCopy("copy.76d1efbeed2d", { defaultValue: "Not authenticated" }));
       await workEscrow(walletAddress).action(params.job_id,'award',params.application_id,undefined,params.worker_address);
     },
     onSuccess: (_, v) => {
@@ -372,7 +387,7 @@ export function useAwardApplicant() {
       // nothing else. The money moves when the submission is approved and paid.
       toast.success(_copy("copy.3f0abb77152a", { defaultValue: "Awarded — they can start work" }));
     },
-    onError: (e: any) => toast.error(e.message || 'Failed to award'),
+    onError: (e: any) => toast.error(workErrorText(e, _translateCopy("copy.b979cda45ed2", { defaultValue: "Failed to award" }))),
   });
 }
 
@@ -396,7 +411,7 @@ export function useSubmitProof() {
   const qc = useQueryClient();
   return useMutation({
     mutationFn: async (params: { job_id: string; proof_url: string; proof_text?: string; platform?: WorkPlatform }) => {
-      if (!walletAddress) throw new Error('Not authenticated');
+      if (!walletAddress) throw new WorkCopyError(_translateCopy("copy.76d1efbeed2d", { defaultValue: "Not authenticated" }));
       await workEscrow(walletAddress).register(params.job_id,params.proof_url);
       const { data, error } = await withWalletHeader(
         supabase.from(TBL_SUBS).insert({
@@ -416,7 +431,7 @@ export function useSubmitProof() {
       qc.invalidateQueries({ queryKey: ['work-job'] });
       toast.success(_copy("copy.d48be1bf1414", { defaultValue: "Proof submitted" }));
     },
-    onError: (e: any) => toast.error(e.message || 'Failed to submit proof'),
+    onError: (e: any) => toast.error(workErrorText(e, _translateCopy("copy.5a10bd65eb3a", { defaultValue: "Failed to submit proof" }))),
   });
 }
 
@@ -446,7 +461,7 @@ export function useApproveSubmission() {
       evidence_url?: string;
       pay: boolean;
     }) => {
-      if (!walletAddress) throw new Error('Not authenticated');
+      if (!walletAddress) throw new WorkCopyError(_translateCopy("copy.76d1efbeed2d", { defaultValue: "Not authenticated" }));
       await workRpc(walletAddress, 'work_approve', {
         p_submission: params.submission_id, p_views: params.views ?? null, p_evidence: params.evidence_url ?? null,
       });
@@ -457,13 +472,13 @@ export function useApproveSubmission() {
       qc.invalidateQueries({ queryKey: ['work-subs', v.job_id] });
       qc.invalidateQueries({ queryKey: ['work-job'] });
       qc.invalidateQueries({ queryKey: ['work-my-submissions'] });
-      toast.success(result.paid ? 'Approved and paid' : result.pending ? 'Payment submitted — confirmation pending' : 'Approved — not paid yet');
+      toast.success(result.paid ? _translateCopy("copy.7a755d6e296a", { defaultValue: "Approved and paid" }) : result.pending ? _translateCopy("copy.918dd78b3f8b", { defaultValue: "Payment submitted — confirmation pending" }) : _translateCopy("copy.94ee5aa18bc4", { defaultValue: "Approved — not paid yet" }));
     },
     onSettled: (_result, _error, variables) => {
       qc.invalidateQueries({ queryKey: ['work-subs', variables.job_id] });
       qc.invalidateQueries({ queryKey: ['work-job'] });
     },
-    onError: (e: any) => toast.error(e.message || 'Failed to approve'),
+    onError: (e: any) => toast.error(workErrorText(e, _translateCopy("copy.de0c2e40fd7a", { defaultValue: "Failed to approve" }))),
   });
 }
 
@@ -494,7 +509,7 @@ export function usePaySubmission() {
       views?: number;
       evidence_url?: string;
     }) => {
-      if (!walletAddress) throw new Error('Not authenticated');
+      if (!walletAddress) throw new WorkCopyError(_translateCopy("copy.76d1efbeed2d", { defaultValue: "Not authenticated" }));
       return settleWorkPayment(walletAddress, params.submission_id, params.recovery_hash);
     },
     onSuccess: (_, v) => {
@@ -507,7 +522,7 @@ export function usePaySubmission() {
       qc.invalidateQueries({ queryKey: ['work-subs', variables.job_id] });
       qc.invalidateQueries({ queryKey: ['work-job'] });
     },
-    onError: (e: any) => toast.error(e.message || 'Payment failed'),
+    onError: (e: any) => toast.error(workErrorText(e, _translateCopy("copy.17aadc092fe6", { defaultValue: "Payment failed" }))),
   });
 }
 
@@ -518,7 +533,7 @@ export function useRejectSubmission() {
   const qc = useQueryClient();
   return useMutation({
     mutationFn: async (params: { submission_id: string; job_id: string; reason: string }) => {
-      if (!walletAddress) throw new Error('Not authenticated');
+      if (!walletAddress) throw new WorkCopyError(_translateCopy("copy.76d1efbeed2d", { defaultValue: "Not authenticated" }));
       const sub=await workSubmission(params.submission_id);
       await workEscrow(walletAddress).action(params.job_id,'reject',params.submission_id,params.reason,undefined,sub.proof_url);
     },
@@ -526,7 +541,7 @@ export function useRejectSubmission() {
       qc.invalidateQueries({ queryKey: ['work-subs', v.job_id] });
       toast.success(_copy("copy.be61c03c480e", { defaultValue: "Submission rejected" }));
     },
-    onError: (e: any) => toast.error(e.message || 'Failed to reject'),
+    onError: (e: any) => toast.error(workErrorText(e, _translateCopy("copy.46960413b9a8", { defaultValue: "Failed to reject" }))),
   });
 }
 
@@ -562,8 +577,8 @@ export function useLeaveReview() {
   const qc = useQueryClient();
   return useMutation({
     mutationFn: async (params: { job_id: string; reviewee_address: string; reviewer_role: 'poster' | 'worker'; rating: number; comment?: string }) => {
-      if (!walletAddress) throw new Error('Not authenticated');
-      if (params.rating < 1 || params.rating > 5) throw new Error('Rating must be 1-5');
+      if (!walletAddress) throw new WorkCopyError(_translateCopy("copy.76d1efbeed2d", { defaultValue: "Not authenticated" }));
+      if (params.rating < 1 || params.rating > 5) throw new WorkCopyError(_translateCopy("copy.169deb4a3965", { defaultValue: "Rating must be 1-5" }));
       const { error } = await withWalletHeader(
         supabase.from(TBL_REVIEWS).insert({
           job_id: params.job_id,
@@ -582,7 +597,7 @@ export function useLeaveReview() {
       qc.invalidateQueries({ queryKey: ['work-reviews-user', v.reviewee_address.toLowerCase()] });
       toast.success(_copy("copy.e3df893ed812", { defaultValue: "Review posted" }));
     },
-    onError: (e: any) => toast.error(e.message || 'Failed to leave review'),
+    onError: (e: any) => toast.error(workErrorText(e, _translateCopy("copy.843991d1d9b3", { defaultValue: "Failed to leave review" }))),
   });
 }
 
@@ -593,7 +608,7 @@ export function useOpenDispute() {
   const qc = useQueryClient();
   return useMutation({
     mutationFn: async (params: { job_id: string; onchain_job_id?: number | null; reason: string; evidence_url?: string }) => {
-      if (!walletAddress) throw new Error('Not authenticated');
+      if (!walletAddress) throw new WorkCopyError(_translateCopy("copy.76d1efbeed2d", { defaultValue: "Not authenticated" }));
       await workEscrow(walletAddress).action(params.job_id,'dispute',params.job_id,params.reason);
     },
     onSuccess: () => {
@@ -601,7 +616,7 @@ export function useOpenDispute() {
       qc.invalidateQueries({ queryKey: ['work-disputes-admin'] });
       toast.success(_copy("copy.ef16819dcd3e", { defaultValue: "Dispute opened — admin will review" }));
     },
-    onError: (e: any) => toast.error(e.message || 'Failed to open dispute'),
+    onError: (e: any) => toast.error(workErrorText(e, _translateCopy("copy.f3749b3c1a06", { defaultValue: "Failed to open dispute" }))),
   });
 }
 
@@ -645,7 +660,7 @@ export function useAdminResolveDispute() {
        */
       pay_worker?: boolean;
     }) => {
-      if (!walletAddress) throw new Error('Not authenticated');
+      if (!walletAddress) throw new WorkCopyError(_translateCopy("copy.76d1efbeed2d", { defaultValue: "Not authenticated" }));
       const {data:subs,error}=await supabase.from(TBL_SUBS).select('*').eq('job_id',params.job_id).in('approval_status',['pending','approved']).order('created_at');
       if(error) throw error;
       const selected=(subs as any[])?.find(s=>s.worker_address===params.worker_address.toLowerCase());
@@ -658,7 +673,7 @@ export function useAdminResolveDispute() {
       qc.invalidateQueries({queryKey:['work-subs']});
       qc.invalidateQueries({queryKey:['work-jobs-browse']});
     },
-    onError: (e: any) => toast.error(e.message || 'Failed to resolve'),
+    onError: (e: any) => toast.error(workErrorText(e, _translateCopy("copy.6aa460e0875d", { defaultValue: "Failed to resolve" }))),
   });
 }
 
@@ -669,7 +684,7 @@ export function useMarkComplete() {
   const qc = useQueryClient();
   return useMutation({
     mutationFn: async (jobId: string) => {
-      if (!walletAddress) throw new Error('Not authenticated');
+      if (!walletAddress) throw new WorkCopyError(_translateCopy("copy.76d1efbeed2d", { defaultValue: "Not authenticated" }));
       await workEscrow(walletAddress).action(jobId,'complete',jobId,undefined);
     },
     onSuccess: () => {
@@ -677,7 +692,7 @@ export function useMarkComplete() {
       qc.invalidateQueries({ queryKey: ['work-jobs-browse'] });
       toast.success(_copy("copy.db42881e01a7", { defaultValue: "Job marked complete" }));
     },
-    onError: (e: any) => toast.error(e.message || 'Failed'),
+    onError: (e: any) => toast.error(workErrorText(e, _translateCopy("copy.031a8f0f659d", { defaultValue: "Failed" }))),
   });
 }
 
@@ -688,30 +703,30 @@ export function usePublishJob() {
   const { t: _copy } = _useCopy();
  const {walletAddress}=useAuth(); const qc=useQueryClient();
  return useMutation({mutationFn:async(jobId:string)=>{
-  if(!walletAddress) throw new Error('Not authenticated');
+  if(!walletAddress) throw new WorkCopyError(_translateCopy("copy.76d1efbeed2d", { defaultValue: "Not authenticated" }));
   await workRpc(walletAddress,'work_publish',{p_job:jobId});
- },onSuccess:()=>{qc.invalidateQueries({queryKey:['work-job']});qc.invalidateQueries({queryKey:['work-my-posted']});qc.invalidateQueries({queryKey:['work-jobs-browse']});toast.success(_copy("copy.314844f99c7e", { defaultValue: "Bounty published" }));},onError:(e:any)=>toast.error(e.message)});
+ },onSuccess:()=>{qc.invalidateQueries({queryKey:['work-job']});qc.invalidateQueries({queryKey:['work-my-posted']});qc.invalidateQueries({queryKey:['work-jobs-browse']});toast.success(_copy("copy.314844f99c7e", { defaultValue: "Bounty published" }));},onError:(e:any)=>toast.error(workErrorText(e, _translateCopy("copy.ab827e3fe17d", { defaultValue: "Something went wrong" })))});
 }
 export function useFundJob() {
  const {walletAddress}=useAuth(); const qc=useQueryClient();
  return useMutation({mutationFn:async(params:{job_id:string;hash?:string;release?:boolean})=>{
-  if(!walletAddress) throw new Error('Not authenticated');
+  if(!walletAddress) throw new WorkCopyError(_translateCopy("copy.76d1efbeed2d", { defaultValue: "Not authenticated" }));
   if(params.release) {
-   if(localStorage.getItem('work-funding:'+params.job_id)) throw new Error('A funding transaction is saved. Check it first.');
+   if(localStorage.getItem('work-funding:'+params.job_id)) throw new WorkCopyError(_translateCopy("copy.41a5c185e1ba", { defaultValue: "A funding transaction is saved. Check it first." }));
    await workRpc(walletAddress,'work_record_funding',{p_job:params.job_id,p_cancel:true}); return 'released';
   }
   return workEscrow(walletAddress).fund(params.job_id,params.hash);
  },onSettled:()=>{qc.invalidateQueries({queryKey:['work-job']});qc.invalidateQueries({queryKey:['work-my-posted']});qc.invalidateQueries({queryKey:['work-jobs-browse']});},
- onSuccess:state=>toast.success(state==='confirmed'?'Bounty funded and published':state==='pending'?'Funding submitted — check confirmation':'Rejected signature released'),onError:(e:any)=>toast.error(e.message)});
+ onSuccess:state=>toast.success(state==='confirmed'?_translateCopy("copy.bc866701b504", { defaultValue: "Bounty funded and published" }):state==='pending'?_translateCopy("copy.3b50d3ec7fcc", { defaultValue: "Funding submitted — check confirmation" }):_translateCopy("copy.948ccc5bad7f", { defaultValue: "Rejected signature released" })),onError:(e:any)=>toast.error(workErrorText(e, _translateCopy("copy.ab827e3fe17d", { defaultValue: "Something went wrong" })))});
 }
 export function useReleasePayment() {
  const {walletAddress}=useAuth(); const qc=useQueryClient();
  return useMutation({mutationFn:async(submission:string)=>{
-  if(!walletAddress) throw new Error('Not authenticated');
+  if(!walletAddress) throw new WorkCopyError(_translateCopy("copy.76d1efbeed2d", { defaultValue: "Not authenticated" }));
   const {data,error}=await supabase.from('work_payment_intents' as any).select('id').eq('submission_id',submission).eq('state','signing').single();
   if(error) throw error;
   const id=(data as any).id;
-  if(localStorage.getItem('work-payment:'+id)) throw new Error('A payment transaction is saved. Check it first.');
+  if(localStorage.getItem('work-payment:'+id)) throw new WorkCopyError(_translateCopy("copy.097f795fdba3", { defaultValue: "A payment transaction is saved. Check it first." }));
   await workRpc(walletAddress,'work_cancel_signature',{p_intent:id});
- },onSettled:()=>qc.invalidateQueries({queryKey:['work-subs']}),onError:(e:any)=>toast.error(e.message)});
+ },onSettled:()=>qc.invalidateQueries({queryKey:['work-subs']}),onError:(e:any)=>toast.error(workErrorText(e, _translateCopy("copy.ab827e3fe17d", { defaultValue: "Something went wrong" })))});
 }

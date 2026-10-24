@@ -1,3 +1,4 @@
+import { translateCopy as _translateCopy } from '@/i18n/copy';
 /**
  * Creator Flow store.
  * ===================
@@ -209,7 +210,7 @@ export const useCreatorFlowStore = create<FlowState>()((set, get) => {
     // ── flows ────────────────────────────────────────────────────────────
 
     createFlow: (name, template) => {
-      const flow = makeFlow(name ?? `Flow ${get().flows.length + 1}`, template ? { ...template } : undefined);
+      const flow = makeFlow(name ?? _translateCopy("copy.ea9c71438535", { defaultValue: "Flow {{value1}}", value1: get().flows.length + 1 }), template ? { ...template } : undefined);
       commit((s) => ({
         flows: [...syncFlow(s.flows, s.activeFlowId, s.nodes, s.edges, s.nodeCounters), flow],
         activeFlowId: flow.id,
@@ -248,7 +249,7 @@ export const useCreatorFlowStore = create<FlowState>()((set, get) => {
       commit((s) => {
         const remaining = s.flows.filter((f) => f.id !== id);
         if (remaining.length === 0) {
-          const fresh = makeFlow('Flow 1');
+          const fresh = makeFlow(_translateCopy("copy.ea9c71438535", { defaultValue: "Flow {{value1}}", value1: 1 }));
           return { flows: [fresh], activeFlowId: fresh.id, nodes: [], edges: [], nodeCounters: {}, undoStack: [], redoStack: [] };
         }
         if (s.activeFlowId !== id) return { flows: remaining };
@@ -329,7 +330,7 @@ export const useCreatorFlowStore = create<FlowState>()((set, get) => {
       persist(get());
       storageKey = next;
       const loadedNext = loadPersisted();
-      const flows = loadedNext?.flows ?? [makeFlow('Flow 1')];
+      const flows = loadedNext?.flows ?? [makeFlow(_translateCopy("copy.ea9c71438535", { defaultValue: "Flow {{value1}}", value1: 1 }))];
       const activeId = loadedNext?.activeFlowId ?? flows[0].id;
       const activeFlow = flows.find((f) => f.id === activeId) ?? flows[0];
       set({
@@ -347,7 +348,7 @@ export const useCreatorFlowStore = create<FlowState>()((set, get) => {
     },
 
     clearLocalData: () => {
-      const fresh = makeFlow('Flow 1');
+      const fresh = makeFlow(_translateCopy("copy.ea9c71438535", { defaultValue: "Flow {{value1}}", value1: 1 }));
       commit(() => ({ flows: [fresh], activeFlowId: fresh.id, nodes: [], edges: [], nodeCounters: {}, undoStack: [], redoStack: [] }));
     },
 

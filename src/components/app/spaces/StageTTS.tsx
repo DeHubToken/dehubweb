@@ -181,7 +181,7 @@ export function StageTTS() {
         } catch {
           /* use raw */
         }
-        throw new Error(detail || `TTS failed (${response.status})`);
+        throw new Error(detail || _copy("copy.19c37423d4b4", { defaultValue: "TTS failed ({{value1}})", value1: response.status }));
       }
 
       const audioBlob = await response.blob();

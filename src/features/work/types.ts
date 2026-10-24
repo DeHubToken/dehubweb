@@ -1,3 +1,6 @@
+/** A bounty failure message already put into the reader's language. */
+export class WorkCopyError extends Error {}
+
 export type WorkJobType = 'shill' | 'clipping' | 'contract';
 export type WorkCurrency = 'DHB' | 'USDC';
 export type WorkPlatform = 'x' | 'youtube' | 'instagram' | 'tiktok' | 'facebook' | 'reddit' | 'other';

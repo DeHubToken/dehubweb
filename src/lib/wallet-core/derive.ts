@@ -4,6 +4,7 @@
 // Base/BNB/ETH so Solana derivation was dropped. Uses ethers v6's built-in
 // HD wallet (no bip39/Buffer polyfill needed in the Vite bundle).
 import { HDNodeWallet, Mnemonic, Wallet, randomBytes } from "ethers";
+import { translateCopy as _translateCopy } from '@/i18n/copy';
 
 export const ETH_PATH = "m/44'/60'/0'/0/0";
 
@@ -44,7 +45,7 @@ export function deriveFromSecret(rawSecret: string): DerivedWallet {
 
   const mnemonic = trimmed.replace(/\s+/g, ' ').toLowerCase();
   if (!Mnemonic.isValidMnemonic(mnemonic)) {
-    throw new Error("Invalid recovery phrase");
+    throw new Error(_translateCopy("copy.7be954e729be", { defaultValue: "Invalid recovery phrase" }));
   }
   const hd = HDNodeWallet.fromMnemonic(Mnemonic.fromPhrase(mnemonic), ETH_PATH);
   return { secret: mnemonic, ethAddress: hd.address, ethPrivateKey: hd.privateKey };
