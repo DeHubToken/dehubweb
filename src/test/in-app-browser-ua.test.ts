@@ -102,6 +102,8 @@ const CRAWLERS: Record<string, string> = {
   // DeHub link as the homepage card until it was listed.
   'Bluesky Cardyb': 'Mozilla/5.0 (compatible; Bluesky Cardyb/1.1; +mailto:support@bsky.app)',
   'Mastodon < 4.2': 'http.rb/5.1.1 (Mastodon/4.1.0; +https://mastodon.social/)',
+  // oEmbed discovery when a post link is pasted into the block editor.
+  WordPress: 'WordPress/6.6.2; https://example.com',
   SkypeUriPreview:
     'Mozilla/5.0 (Windows NT 6.1; WOW64) SkypeUriPreview Preview/0.5 skype-url-preview@microsoft.com',
   'SkypeUriPreview (WebKit)':

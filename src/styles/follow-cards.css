@@ -1,0 +1,334 @@
+/* Follow cover cards (components/app/FollowCoverCard.tsx).
+
+   Every colour is a token on [data-follow-cards], set per theme below, so the
+   card rules themselves never name a theme. Three families:
+   - BOXED (default + the canvas glass themes + Osaka, War, Hacker, Jungle):
+     a card with the theme's own surface and ring.
+   - FLAT (System, System Light, Minimal): no box at all, a
+     hairline between cards, the banner keeps a small radius as content does.
+   The cover banner is content, so it is never tinted. */
+
+[data-follow-cards] {
+  --fc-w: 232px;
+  --fc-bg: #18181b;
+  --fc-edge: inset 0 0 0 1px rgb(255 255 255 / 0.07);
+  --fc-edge-hover: inset 0 0 0 1px rgb(255 255 255 / 0.16);
+  --fc-blur: none;
+  --fc-radius: 20px;
+  --fc-cover-radius: 0px;
+  --fc-pad: 12px;
+  --fc-ink: #ffffff;
+  --fc-muted: rgb(255 255 255 / 0.62);
+  --fc-btn: #ffffff;
+  --fc-btn-ink: #09090b;
+  --fc-btn-glow: none;
+  --fc-btn-done: rgb(255 255 255 / 0.12);
+  --fc-btn-done-ink: #ffffff;
+  --fc-ring: #18181b;
+  --fc-ring-w: 3px;
+  --fc-avatar-fill: #3f3f46;
+  --fc-divider: transparent;
+  --fc-gap: 10px;
+  --fc-title: #ffffff;
+}
+
+/* Section header + rail */
+[data-follow-cards] [data-fc-head] {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 0 16px; margin-bottom: 12px;
+}
+[data-follow-cards] [data-fc-title] {
+  font-size: 1rem; font-weight: 700; letter-spacing: -0.01em; color: var(--fc-title);
+}
+[data-follow-cards] [data-fc-see-all] {
+  display: inline-flex; align-items: center; gap: 2px;
+  font-size: 0.8125rem; font-weight: 600; color: var(--fc-muted);
+  transition: color 150ms ease;
+}
+[data-follow-cards] [data-fc-see-all]:hover { color: var(--fc-ink); }
+[data-follow-cards] .fc-rail { gap: var(--fc-gap); }
+
+/* Card */
+[data-follow-card] {
+  position: relative;
+  flex: 0 0 var(--fc-w);
+  width: var(--fc-w);
+  display: flex; flex-direction: column;
+  overflow: hidden;
+  cursor: pointer;
+  border-radius: var(--fc-radius);
+  background: var(--fc-bg);
+  box-shadow: var(--fc-edge);
+  backdrop-filter: var(--fc-blur);
+  -webkit-backdrop-filter: var(--fc-blur);
+  color: var(--fc-ink);
+  transition: box-shadow 160ms ease, transform 160ms ease, opacity 220ms ease;
+  isolation: isolate;
+}
+@media (hover: hover) {
+  [data-follow-card]:hover { box-shadow: var(--fc-edge-hover); }
+}
+[data-follow-card][data-followed] { opacity: 0.72; }
+
+[data-follow-card] [data-fc-cover] {
+  position: relative; height: 76px; overflow: hidden;
+  border-radius: var(--fc-cover-radius);
+  background: linear-gradient(135deg, #3f3f46, #18181b);
+}
+[data-follow-card] [data-fc-cover] img {
+  width: 100%; height: 100%; object-fit: cover; display: block;
+}
+[data-follow-card] [data-fc-dismiss] {
+  position: absolute; top: 8px; right: 8px; z-index: 2;
+  width: 26px; height: 26px; border-radius: 999px;
+  display: grid; place-items: center;
+  color: #ffffff; background: rgb(0 0 0 / 0.42);
+  backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px);
+  transition: background-color 150ms ease;
+}
+[data-follow-card] [data-fc-dismiss]:hover { background: rgb(0 0 0 / 0.62); }
+[data-follow-card] [data-fc-dismiss]:focus-visible,
+[data-follow-card] [data-fc-follow]:focus-visible { outline: 2px solid var(--fc-ink); outline-offset: 2px; }
+
+[data-follow-card] [data-fc-avatar] {
+  margin: -28px 0 0 var(--fc-pad);
+  box-shadow: 0 0 0 var(--fc-ring-w) var(--fc-ring);
+  background: var(--fc-avatar-fill);
+  z-index: 1;
+}
+[data-follow-card] [data-fc-avatar-fallback] { background: var(--fc-avatar-fill); color: #ffffff; }
+
+[data-follow-card] [data-fc-body] {
+  display: flex; flex-direction: column; min-width: 0; flex: 1 1 auto;
+  padding: 8px var(--fc-pad) var(--fc-pad);
+}
+[data-follow-card] [data-fc-name] { font-size: 0.9375rem; font-weight: 700; color: var(--fc-ink); }
+[data-follow-card] [data-fc-handle] {
+  font-size: 0.8125rem; color: var(--fc-muted);
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+[data-follow-card] [data-fc-bio] {
+  margin: 6px 0 0; font-size: 0.8125rem; line-height: 1.35; color: var(--fc-ink);
+  display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;
+  min-height: calc(2 * 1.35em);
+  overflow-wrap: anywhere;
+}
+[data-follow-card] [data-fc-bio][data-empty] { color: var(--fc-muted); font-style: italic; }
+[data-follow-card] [data-fc-reason] {
+  display: flex; align-items: center; gap: 6px; min-height: 18px; margin-top: 8px;
+  font-size: 0.75rem; color: var(--fc-muted); min-width: 0;
+}
+[data-follow-card] [data-fc-mutuals] { display: inline-flex; flex: 0 0 auto; }
+[data-follow-card] [data-fc-mutuals] > * {
+  width: 18px; height: 18px; border-radius: 6px; object-fit: cover; display: block;
+  background: var(--fc-avatar-fill);
+  box-shadow: 0 0 0 1.5px var(--fc-ring);
+}
+[data-follow-card] [data-fc-mutuals] > * + * { margin-left: -5px; }
+[data-follow-card] [data-fc-foot] {
+  display: flex; align-items: center; justify-content: space-between; gap: 8px; margin-top: auto; padding-top: 10px;
+}
+[data-follow-card] [data-fc-count] {
+  font-size: 0.75rem; color: var(--fc-muted); font-variant-numeric: tabular-nums;
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis; min-width: 0;
+}
+[data-follow-card] [data-fc-follow] {
+  flex: 0 0 auto;
+  display: inline-flex; align-items: center; gap: 4px;
+  height: 32px; padding: 0 16px; border-radius: 999px;
+  font-size: 0.8125rem; font-weight: 700;
+  background: var(--fc-btn); color: var(--fc-btn-ink);
+  box-shadow: var(--fc-btn-glow);
+  transition: transform 120ms ease, filter 150ms ease;
+}
+[data-follow-card] [data-fc-follow]:hover:not(:disabled) { filter: brightness(1.08); }
+[data-follow-card] [data-fc-follow]:active:not(:disabled) { transform: scale(0.96); }
+[data-follow-card][data-followed] [data-fc-follow] {
+  background: var(--fc-btn-done); color: var(--fc-btn-done-ink); box-shadow: none; cursor: default;
+}
+
+/* ---------- FLAT: System, System Light, Minimal ---------- */
+html:is([data-theme='system'], [data-theme='immersive'], [data-theme='minimal']) [data-follow-cards] {
+  --fc-bg: transparent;
+  --fc-edge: none;
+  --fc-edge-hover: none;
+  --fc-radius: 0px;
+  --fc-cover-radius: 10px;
+  --fc-pad: 0px;
+  --fc-gap: 0px;
+  --fc-ring: #000000;
+  --fc-divider: rgb(255 255 255 / 0.1);
+}
+html:is([data-theme='system'], [data-theme='immersive'], [data-theme='minimal']) [data-follow-card] {
+  padding-right: 14px; margin-right: 14px;
+  border-right: 1px solid var(--fc-divider);
+  overflow: visible;
+}
+html:is([data-theme='system'], [data-theme='immersive'], [data-theme='minimal']) [data-follow-card]:last-child {
+  border-right: 0; margin-right: 0;
+}
+html:is([data-theme='system'], [data-theme='immersive'], [data-theme='minimal']) [data-follow-card] [data-fc-avatar] {
+  margin-left: 10px;
+}
+html[data-theme='minimal'] [data-follow-cards] { --fc-cover-radius: 0px; }
+html[data-theme='minimal'] [data-follow-card] [data-fc-follow] { border-radius: 0; }
+
+/* Light: ink on white. System Light is System with data-system-tone. */
+html[data-theme='system'][data-system-tone='light'] [data-follow-cards],
+html[data-theme='light'] [data-follow-cards] {
+  --fc-ink: #0b0b0d;
+  --fc-title: #0b0b0d;
+  --fc-muted: rgb(11 11 13 / 0.64);
+  --fc-btn: #0b0b0d;
+  --fc-btn-ink: #ffffff;
+  --fc-btn-done: rgb(11 11 13 / 0.07);
+  --fc-btn-done-ink: #0b0b0d;
+  --fc-ring: #ffffff;
+  --fc-avatar-fill: #d4d4d8;
+  --fc-divider: rgb(11 11 13 / 0.09);
+}
+/* Minimal Light keeps its white bentos. */
+html[data-theme='light'] [data-follow-cards] {
+  --fc-bg: #ffffff;
+  --fc-edge: inset 0 0 0 1px #e4e4e7;
+  --fc-edge-hover: inset 0 0 0 1px #a1a1aa;
+}
+
+/* ---------- Canvas glass: Cosmic, Hazy, Swarms, Lava Lamp, Winter, Island, Horror ---------- */
+html:is([data-theme='cosmic'], [data-theme='hazy'], [data-theme='swarms'], [data-theme='lavalamp'], [data-theme='winter'], [data-theme='island'], [data-theme='horror']) [data-follow-cards] {
+  --fc-bg: var(--glass-highlight), rgb(var(--glass-tint) / var(--glass-thin));
+  --fc-edge: var(--glass-edge-flat);
+  --fc-edge-hover: inset 0 0 0 1px rgb(255 255 255 / 0.22), inset 0 1.5px 0 rgb(255 255 255 / 0.12);
+  --fc-blur: var(--glass-blur);
+  --fc-ring: rgb(255 255 255 / 0.9);
+  --fc-ring-w: 2px;
+  --fc-avatar-fill: rgb(255 255 255 / 0.16);
+  --fc-btn-done: rgb(255 255 255 / 0.16);
+}
+html[data-theme='island'] [data-follow-cards] {
+  --fc-bg: linear-gradient(160deg, rgb(255 255 255 / 0.14), rgb(255 255 255 / 0.03)), rgb(14 28 54 / 0.72);
+  --fc-edge: inset 0 0 0 1px rgb(255 255 255 / 0.34), inset 0 1.5px 0 rgb(255 255 255 / 0.2);
+  --fc-btn: #ff7a8a;
+  --fc-btn-ink: #2a0a10;
+}
+html[data-theme='horror'] [data-follow-cards] {
+  --fc-radius: 14px;
+  --fc-btn: #ff2b2b;
+  --fc-btn-ink: #ffffff;
+}
+
+/* Glass (aqua) theme: its own tint tokens. */
+html[data-theme='glass'] [data-follow-cards] {
+  --fc-bg: linear-gradient(155deg, rgb(225 255 255 / 0.12), transparent 45%), color-mix(in srgb, var(--tint-mix) 64%, transparent);
+  --fc-edge: inset 0 0 0 1px rgb(225 255 255 / 0.32), inset 0 1px 1px rgb(255 255 255 / 0.7);
+  --fc-edge-hover: inset 0 0 0 1px rgb(225 255 255 / 0.65), inset 0 1px 1px #fff;
+  --fc-blur: var(--glass-blur);
+  --fc-ink: #f2ffff;
+  --fc-title: #f2ffff;
+  --fc-muted: rgb(215 255 255 / 0.72);
+  --fc-btn: #d7ffff;
+  --fc-btn-ink: #06343b;
+  --fc-ring: rgb(225 255 255 / 0.85);
+  --fc-ring-w: 2px;
+  --fc-avatar-fill: var(--theme-control-raised, rgb(255 255 255 / 0.18));
+  --fc-btn-done: rgb(225 255 255 / 0.18);
+  --fc-btn-done-ink: #f2ffff;
+}
+/* The shared discovery-row rules in glass.css size [data-discovery-follow];
+   this button keeps its own shape. */
+html[data-theme='glass'] [data-follow-card] [data-fc-follow] { width: auto; height: 32px; }
+
+/* ---------- Osaka: one neon accent, cyan stroke, nothing square ---------- */
+html[data-theme='osaka'] [data-follow-cards] {
+  --fc-bg: linear-gradient(180deg, rgb(var(--osaka-neon, 255 111 181) / 0.08), transparent 40%), rgb(17 14 28 / 0.78);
+  --fc-edge: inset 0 0 0 1px rgb(var(--osaka-cyan, 111 227 255) / 0.24), inset 0 -1px 0 rgb(var(--osaka-neon, 255 111 181) / 0.2);
+  --fc-edge-hover: inset 0 0 0 1px rgb(var(--osaka-cyan, 111 227 255) / 0.45), inset 0 -1px 0 rgb(var(--osaka-neon, 255 111 181) / 0.4);
+  --fc-blur: var(--glass-blur);
+  --fc-radius: 22px;
+  --fc-cover-radius: 0px;
+  --fc-ink: #f4f1ff;
+  --fc-title: #f4f1ff;
+  --fc-muted: rgb(225 222 255 / 0.7);
+  --fc-btn: rgb(var(--osaka-neon, 255 111 181));
+  --fc-btn-ink: #1a0614;
+  --fc-btn-glow: 0 0 16px rgb(var(--osaka-neon, 255 111 181) / 0.5);
+  --fc-btn-done: rgb(var(--osaka-cyan, 111 227 255) / 0.14);
+  --fc-btn-done-ink: rgb(var(--osaka-cyan, 111 227 255));
+  --fc-ring: rgb(var(--osaka-cyan, 111 227 255) / 0.7);
+  --fc-ring-w: 1.5px;
+  --fc-avatar-fill: rgb(255 111 181 / 0.2);
+}
+
+/* ---------- War: square HUD, cyan ring, mono labels ---------- */
+html[data-theme='war'] [data-follow-cards] {
+  --fc-bg: rgb(14 20 18 / 0.84);
+  --fc-edge: inset 0 0 0 1px rgb(79 227 224 / 0.4);
+  --fc-edge-hover: inset 0 0 0 1px rgb(79 227 224 / 0.75);
+  --fc-blur: var(--glass-blur);
+  --fc-radius: 0px;
+  --fc-ink: rgb(214 208 190);
+  --fc-title: rgb(214 208 190);
+  --fc-muted: rgb(214 208 190 / 0.66);
+  --fc-btn: #4fe3e0;
+  --fc-btn-ink: #041312;
+  --fc-btn-done: rgb(79 227 224 / 0.14);
+  --fc-btn-done-ink: #4fe3e0;
+  --fc-ring: rgb(79 227 224 / 0.7);
+  --fc-ring-w: 1.5px;
+  --fc-avatar-fill: rgb(79 227 224 / 0.16);
+}
+html:is([data-theme='war'], [data-theme='hacker']) [data-follow-card] :is([data-fc-avatar], [data-fc-avatar] *, [data-fc-follow], [data-fc-dismiss], [data-fc-mutuals] > *) {
+  border-radius: 0 !important;
+}
+html[data-theme='war'] [data-follow-card] :is([data-fc-handle], [data-fc-count], [data-fc-follow]) {
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace; letter-spacing: 0.02em;
+}
+/* Monospace runs wide: the count and button give up a little so neither clips. */
+html:is([data-theme='war'], [data-theme='hacker']) [data-follow-card] [data-fc-count] { font-size: 0.6875rem; }
+html:is([data-theme='war'], [data-theme='hacker']) [data-follow-card] [data-fc-follow] { padding: 0 12px; font-size: 0.75rem; }
+
+/* ---------- Hacker: terminal green ---------- */
+html[data-theme='hacker'] [data-follow-cards] {
+  --fc-bg: rgb(0 8 3 / 0.86);
+  --fc-edge: inset 0 0 0 1px rgb(57 255 136 / 0.35);
+  --fc-edge-hover: inset 0 0 0 1px rgb(57 255 136 / 0.7);
+  --fc-blur: var(--glass-blur);
+  --fc-radius: 0px;
+  --fc-ink: rgb(57 255 136);
+  --fc-title: rgb(57 255 136);
+  --fc-muted: rgb(57 255 136 / 0.66);
+  --fc-btn: rgb(57 255 136);
+  --fc-btn-ink: #001a09;
+  --fc-btn-done: rgb(57 255 136 / 0.14);
+  --fc-btn-done-ink: rgb(57 255 136);
+  --fc-ring: rgb(57 255 136 / 0.7);
+  --fc-ring-w: 1.5px;
+  --fc-avatar-fill: rgb(57 255 136 / 0.14);
+}
+html[data-theme='hacker'] [data-follow-card] :is([data-fc-name], [data-fc-handle], [data-fc-bio], [data-fc-reason], [data-fc-count], [data-fc-follow]) {
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+}
+
+/* ---------- Jungle: carved wood, brass button ---------- */
+html[data-theme='jungle'] [data-follow-cards] {
+  --fc-bg: rgb(38 28 19 / 0.88);
+  --fc-edge: inset 0 0 0 1px rgb(226 176 96 / 0.28);
+  --fc-edge-hover: inset 0 0 0 1px rgb(226 176 96 / 0.55);
+  --fc-radius: 18px;
+  --fc-ink: rgb(246 240 227);
+  --fc-title: rgb(246 240 227);
+  --fc-muted: rgb(246 240 227 / 0.66);
+  --fc-btn: #e2b060;
+  --fc-btn-ink: #22160a;
+  --fc-btn-done: rgb(226 176 96 / 0.16);
+  --fc-btn-done-ink: #e2b060;
+  --fc-ring: rgb(38 28 19);
+  --fc-avatar-fill: rgb(226 176 96 / 0.2);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  [data-follow-card], [data-follow-card] [data-fc-follow] { transition: none; }
+}
+
+/* Explore: the header sits with the page's other section titles. */
+[data-follow-cards][data-follow-surface='explore'] [data-fc-title] { font-size: 1.25rem; }

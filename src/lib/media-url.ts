@@ -503,6 +503,21 @@ export function buildVideoUrl(tokenId: number | string): string {
 }
 
 /**
+ * Build a post's HLS master playlist URL from the `hlsUrl` key the API sends
+ * (`videos/{tokenId}/hls/{rev}/master.m3u8`). The API only sends one for a
+ * public post with a rendition ready; everything else plays buildVideoUrl.
+ *
+ * Undefined for anything that is not a playlist on our own CDN, so a stray
+ * field can never become a video source. Already-built URLs pass through, so
+ * an item mapped once can be mapped again (lib/post-cache round-trips them).
+ */
+export function buildHlsUrl(path: string | null | undefined): string | undefined {
+  if (!path || !/\.m3u8$/i.test(path)) return undefined;
+  if (/^https?:\/\//i.test(path)) return path.startsWith(DEHUB_CDN_BASE) ? path : undefined;
+  return `${DEHUB_CDN_BASE}${path.replace(/^\/+/, '')}`;
+}
+
+/**
  * Build multi-image URLs: cdn/feed-images/{filename}
  * API returns array like ["feed-images/abc.jpg", "feed-images/def.png"]
  * We extract filename and build: https://dehubcdn.../feed-images/{filename}

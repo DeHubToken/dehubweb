@@ -1,0 +1,73 @@
+name: Security regression
+on:
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  link-preview:
+    strategy:
+      matrix:
+        include:
+          # Production predates lockfile v5; current Deno also checks the lock.
+          - deno: v2.1.4
+            lock: --no-lock
+          - deno: v2.x
+            lock: ''
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: denoland/setup-deno@v2
+        with:
+          deno-version: ${{ matrix.deno }}
+      - name: Create a local TLS fixture
+        run: |
+          openssl req -x509 -newkey rsa:2048 -nodes -days 1 -subj /CN=PreviewTestCA -keyout /tmp/preview-ca-key.pem -out /tmp/preview-ca.pem
+          openssl req -newkey rsa:2048 -nodes -subj /CN=localhost -keyout /tmp/preview-key.pem -out /tmp/preview.csr
+          openssl x509 -req -in /tmp/preview.csr -CA /tmp/preview-ca.pem -CAkey /tmp/preview-ca-key.pem -CAcreateserial -days 1 -out /tmp/preview-cert.pem -extfile <(printf 'basicConstraints=critical,CA:FALSE\nsubjectAltName=DNS:localhost\nextendedKeyUsage=serverAuth\n')
+      - run: deno test ${{ matrix.lock }} --node-modules-dir=none --allow-net --allow-env --allow-read supabase/functions/fetch-link-preview/public-page.test.ts supabase/functions/fetch-link-preview/pinned-http.test.ts supabase/functions/_shared/auth-rate-limit.test.ts
+        env:
+          DENO_CERT: /tmp/preview-ca.pem
+          PREVIEW_TLS_CERT: /tmp/preview-cert.pem
+          PREVIEW_TLS_KEY: /tmp/preview-key.pem
+      - run: deno check ${{ matrix.lock }} --node-modules-dir=none supabase/functions/fetch-link-preview/index.ts
+      - run: deno test ${{ matrix.lock }} --node-modules-dir=none supabase/functions/dehub-mcp/request-budget.test.ts
+      # The older compiler cannot resolve the SDK's npm declaration exports.
+      # Runtime transport tests above still run against the production version.
+      - if: matrix.deno == 'v2.x'
+        run: deno check --node-modules-dir=none --config supabase/functions/dehub-mcp/deno.json supabase/functions/dehub-mcp/index.ts
+  authorization:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    services:
+      postgres:
+        image: postgres:16
+        env:
+          POSTGRES_PASSWORD: fixture-only
+          POSTGRES_DB: security_test
+        ports: ['5432:5432']
+        options: --health-cmd pg_isready --health-interval 5s --health-timeout 5s --health-retries 10
+    env:
+      PGHOST: localhost
+      PGUSER: postgres
+      PGPASSWORD: fixture-only
+      PGDATABASE: security_test
+    steps:
+      - uses: actions/checkout@v4
+      - name: Check private calls and stage permissions
+        run: |
+          psql -v ON_ERROR_STOP=1 -f tests/sql/security-audit-bootstrap.sql
+          sed '/CREATE OR REPLACE FUNCTION public.get_my_agents/,$d' supabase/migrations/20260929093849_7f219ea4-80f1-4f9f-8809-1e8e709b55a9.sql | psql -v ON_ERROR_STOP=1
+          psql -v ON_ERROR_STOP=1 -f supabase/migrations/20261023210000_call_stage_authorization.sql
+          psql -v ON_ERROR_STOP=1 -f supabase/migrations/20261023210100_atomic_edge_rate_limit.sql
+          psql -v ON_ERROR_STOP=1 -f tests/sql/security-audit.sql
+      - name: Exactly one concurrent rate-limit winner
+        run: |
+          for client in $(seq 1 24); do
+            psql -v ON_ERROR_STOP=1 -Atc "SET ROLE service_role; SELECT allowed FROM public.consume_edge_rate_limit('race','audit',1,60000);" > "/tmp/rate-$client" &
+          done
+          wait
+          test "$(cat /tmp/rate-* | grep -c '^t$')" -eq 1
+          test "$(cat /tmp/rate-* | grep -c '^f$')" -eq 23

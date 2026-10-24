@@ -47,7 +47,7 @@ import { useHideWatched, useWatchedVideoIds } from '@/hooks/use-watched-videos';
 import { useAppTheme } from '@/contexts/ThemeContext';
 import { mapNFTToVideoItem } from '@/hooks/use-dehub-feed';
 import { getMediaUrl, getCategories, type DeHubCategory, type DeHubNFT } from '@/lib/api/dehub';
-import { buildAvatarUrl } from '@/lib/media-url';
+import { buildAvatarUrl, buildHlsUrl } from '@/lib/media-url';
 import { SwipeableCarousel } from '@/components/app/SwipeableCarousel';
 import { SORT_OPTIONS, DEFAULT_FEED_SORT, DATE_FILTER_OPTIONS, CONTENT_TYPE_FILTERS, type SortOption, type DateFilterOption, type ContentTypeFilters, type SortValue } from '@/lib/feed-utils';
 import { usePersistedFeedFilter, usePersistedContentFilters } from '@/hooks/use-persisted-feed-filter';
@@ -63,6 +63,7 @@ import leagueCategory from '@/assets/league-category.png';
 import apexCategory from '@/assets/apex-category.png';
 import justchattingCategory from '@/assets/justchatting-category.png';
 import { resolveViewCount } from '@/lib/engagement';
+import { toStoryboard } from '@/lib/storyboard';
 
 // ============================================================================
 // TYPES
@@ -475,10 +476,10 @@ export function VideosFeed({ showFilters = false, isRefreshing = false, refreshK
   const activeFilterClass = useActiveFilterClass();
   
   // Sort is now client-side - default to "Latest" for instant loading - persisted to sessionStorage
-  const [selectedSort, setSelectedSort] = usePersistedFeedFilter<SortOption>('videos', 'sort', DEFAULT_FEED_SORT);
+  const [selectedSort, setSelectedSort] = usePersistedFeedFilter<SortOption>('videos', 'sort', DEFAULT_FEED_SORT, SORT_OPTIONS);
   // Duration and upload date are client-side filters - persisted
-  const [selectedDuration, setSelectedDuration] = usePersistedFeedFilter<typeof DURATION_FILTERS[number]>('videos', 'duration', DURATION_FILTERS[0]);
-  const [selectedUploadDate, setSelectedUploadDate] = usePersistedFeedFilter<DateFilterOption>('videos', 'date', DATE_FILTER_OPTIONS[0]);
+  const [selectedDuration, setSelectedDuration] = usePersistedFeedFilter<typeof DURATION_FILTERS[number]>('videos', 'duration', DURATION_FILTERS[0], DURATION_FILTERS);
+  const [selectedUploadDate, setSelectedUploadDate] = usePersistedFeedFilter<DateFilterOption>('videos', 'date', DATE_FILTER_OPTIONS[0], DATE_FILTER_OPTIONS);
   const [selectedCategory, setSelectedCategory] = usePersistedFeedFilter<string | null>('videos', 'category', null);
   const [contentFilters, toggleContentFilter, resetContentFilters] = usePersistedContentFilters('videos');
   // Hide watched sticks across sessions (localStorage, not the session-scoped
@@ -718,7 +719,9 @@ export function VideosFeed({ showFilters = false, isRefreshing = false, refreshK
         videoUrl: item.videoUrl
           ? (item.videoUrl.startsWith('http') ? item.videoUrl : `https://dehubcdn.ams3.cdn.digitaloceanspaces.com/${item.videoUrl}`)
           : `https://dehubcdn.ams3.cdn.digitaloceanspaces.com/videos/${id}.mp4`,
+        hlsUrl: buildHlsUrl(item.hlsUrl),
         transcodingStatus: item.transcodingStatus,
+        storyboard: toStoryboard(item.storyboard),
         // Both, not one: the caption usually lives in the title, and a short
         // that carried a title AND a description only ever showed the second.
         title: item.name || '',

@@ -30,7 +30,8 @@ import { getAiScrapingPreference } from '@/lib/ai-scraping';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { useLayoutEffect, useEffect, useState, useRef, useCallback, useMemo, Suspense } from 'react';
 import { lazyWithRetry } from '@/lib/lazy-with-retry';
-import { Clock } from "lucide-react";
+import { Clock, Code } from "lucide-react";
+import { copyPostEmbedCode } from '@/lib/post-embed-code';
 import Sparkles from "@/components/ui/cut-icons/assistant";
 import Flag from "@/components/ui/cut-icons/report";
 import Link2 from "@/components/ui/cut-icons/link";
@@ -50,7 +51,7 @@ import { parseSoundtrackTag, findCachedFeedPost } from '@/hooks/use-unified-feed
 import { PollCard } from '@/components/app/cards/PollCard';
 import { useStreamLiveStatus } from '@/hooks/use-stream-live-status';
 
-import { buildAvatarUrl, extractAvatarPath, buildImageUrl, buildFeedImageUrls, buildVideoUrl } from '@/lib/media-url';
+import { buildAvatarUrl, extractAvatarPath, buildImageUrl, buildFeedImageUrls, buildVideoUrl, buildHlsUrl } from '@/lib/media-url';
 import { extractReplayUrl, isReplayTruncated } from '@/lib/live-replay';
 import { hasStreamEnded, isStreamLive, streamRefreshInterval } from '@/lib/live-status';
 import { PageHeader } from '@/components/app/PageHeader';
@@ -84,7 +85,7 @@ import { useAuth } from '@/contexts/AuthContext';
 import { VideoCardSkeleton, ImageCardSkeleton, PostCardSkeleton } from '@/components/app/feeds/FeedSkeletons';
 import { useFeedSwallowClip } from '@/hooks/use-feed-swallow-clip';
 import type { VideoItem, ImagePost, TextPost, LiveStream } from '@/types/feed.types';
-import { hlsUrlFor, liveProviderOf } from '@/lib/live-ingest';
+import { hlsUrlFor, liveProviderOf, noteLatencyMode } from '@/lib/live-ingest';
 import { FocusCommentProvider } from '@/lib/focus-comment';
 import { canonicalUrl } from '@/lib/seo/route-meta';
 import { usePostStagePhone } from '@/hooks/use-post-stage-phone';
@@ -93,6 +94,7 @@ import { PostStagePhone } from '@/components/app/post-stage/PostStagePhone';
 import type { PostStageValue } from '@/components/app/post-stage/post-stage-context';
 import { viewerShareUrl } from '@/lib/share-url';
 import { trackShare } from '@/lib/analytics';
+import { toStoryboard } from '@/lib/storyboard';
 
 /*
  * Only a live post ever renders this, and a live post is a small minority of
@@ -165,11 +167,18 @@ function toVideoItem(nft: DeHubNFT): VideoItem {
   return {
     id: String(nft.tokenId),
     contentRating: nft.contentRating,
+    mediaDescriptions: nft.mediaDescriptions,
+    spoilerText: nft.spoilerText,
+    quotePolicy: nft.quotePolicy,
+    visibility: nft.visibility,
+    quoteRevoked: nft.quoteRevoked,
+    replyPolicy: nft.replyPolicy,
     shopLinks: (nft as any).shopLinks,
     shopListingCount: (nft as any).shopListingCount,
     type: 'video',
     thumbnail: buildImageUrl(nft.tokenId, nft.imageUrl) || '/placeholder.svg',
     videoUrl: isAudioPost ? undefined : (nft.tokenId ? buildVideoUrl(nft.tokenId) : undefined),
+    hlsUrl: isAudioPost ? undefined : buildHlsUrl(nft.hlsUrl),
     audioUrl,
     audioDuration: isAudioPost ? (typeof durationSeconds === 'number' ? durationSeconds : 0) : undefined,
     isAudio: isAudioPost,
@@ -184,6 +193,7 @@ function toVideoItem(nft: DeHubNFT): VideoItem {
     uploadedAgo: formatTimeAgo(timestamp),
     status: nft.status,
     transcodingStatus: nft.transcodingStatus,
+    storyboard: toStoryboard(nft.storyboard),
     creatorId: resolvedAddress,
     creatorUsername: nft.minterUsername || nft.mintername || creatorObj?.username || ownerObj?.username,
     // Same source the feed normalizer reads (use-unified-feed). Without it the
@@ -249,6 +259,12 @@ function toImagePost(nft: DeHubNFT): ImagePost {
   return {
     id: String(nft.tokenId),
     contentRating: nft.contentRating,
+    mediaDescriptions: nft.mediaDescriptions,
+    spoilerText: nft.spoilerText,
+    quotePolicy: nft.quotePolicy,
+    visibility: nft.visibility,
+    quoteRevoked: nft.quoteRevoked,
+    replyPolicy: nft.replyPolicy,
     shopLinks: (nft as any).shopLinks,
     shopListingCount: (nft as any).shopListingCount,
     type: 'image',
@@ -327,6 +343,12 @@ function toTextPost(nft: DeHubNFT): TextPost {
   return {
     id: String(nft.tokenId),
     contentRating: nft.contentRating,
+    mediaDescriptions: nft.mediaDescriptions,
+    spoilerText: nft.spoilerText,
+    quotePolicy: nft.quotePolicy,
+    visibility: nft.visibility,
+    quoteRevoked: nft.quoteRevoked,
+    replyPolicy: nft.replyPolicy,
     shopLinks: (nft as any).shopLinks,
     shopListingCount: (nft as any).shopListingCount,
     type: 'post',
@@ -406,6 +428,7 @@ function buildLivePlaybackUrl(nft: DeHubNFT): string | undefined {
 /** Build all possible playback URLs for fallback (different Livepeer CDNs) */
 function buildLivePlaybackUrls(nft: DeHubNFT): string[] {
   const stream = (nft as any).stream;
+  noteLatencyMode(stream);
   const playbackId = stream?.playbackId;
   if (!playbackId) return [];
   // Only Livepeer has a second CDN to fall back to; a self-hosted stream is
@@ -441,6 +464,12 @@ function toLiveStream(nft: DeHubNFT): LiveStream {
   return {
     id: String(nft.tokenId),
     contentRating: nft.contentRating,
+    mediaDescriptions: nft.mediaDescriptions,
+    spoilerText: nft.spoilerText,
+    quotePolicy: nft.quotePolicy,
+    visibility: nft.visibility,
+    quoteRevoked: nft.quoteRevoked,
+    replyPolicy: nft.replyPolicy,
     // The Shop board rides straight through to LiveStreamCard, which is what
     // renders the player here — the button lives inside it.
     shopLinks: (nft as any).shopLinks,
@@ -1176,6 +1205,7 @@ function SinglePostPageContent({ inOverlay = false, overrideId }: SinglePostPage
       tokenId={String(id)}
       initialTab={pageCommentsInitialTab}
       commentsDisabled={!!(post as { commentsDisabled?: boolean }).commentsDisabled}
+      replyPolicy={(post as { replyPolicy?: import('@/lib/api/dehub/types').ReplyPolicy }).replyPolicy}
       forKids={!!(post as { forKids?: boolean }).forKids}
       postAuthorAddress={isTextPost ? post.minter : undefined}
       forceInline
@@ -1224,6 +1254,7 @@ function SinglePostPageContent({ inOverlay = false, overrideId }: SinglePostPage
               tokenId={String(id)}
               initialTab={pageCommentsInitialTab}
               commentsDisabled={!!(post as { commentsDisabled?: boolean }).commentsDisabled}
+              replyPolicy={(post as { replyPolicy?: import('@/lib/api/dehub/types').ReplyPolicy }).replyPolicy}
               forKids={!!(post as { forKids?: boolean }).forKids}
               postAuthorAddress={isText ? post.minter : undefined}
               forceInline
@@ -1382,6 +1413,14 @@ function SinglePostPageContent({ inOverlay = false, overrideId }: SinglePostPage
               >
                 <Link2 className="w-5 h-5" /> {t('postOptions.copyLink')}
               </button>
+              {id && /^\d+$/.test(id) && (!(post as any)?.visibility || (post as any).visibility === 'public') && (
+                <button
+                  onClick={() => { copyPostEmbedCode(id, t); setShowDesktopOptionsDrawer(false); }}
+                  className="flex items-center gap-3 px-4 py-3 text-white hover:bg-white/10 rounded-xl transition-colors text-left"
+                >
+                  <Code className="w-5 h-5" /> {t('postOptions.copyEmbedCode')}
+                </button>
+              )}
               {/* Block Creator removed until implemented — dead button. */}
               {walletAddress && videoData.creatorId?.toLowerCase() === walletAddress.toLowerCase() && (
                 <>
@@ -1413,6 +1452,9 @@ function SinglePostPageContent({ inOverlay = false, overrideId }: SinglePostPage
           currentTitle={videoData.title}
           currentDescription={videoData.description}
           currentContentRating={videoData.contentRating}
+          currentSpoilerText={videoData.spoilerText}
+          currentQuotePolicy={videoData.quotePolicy}
+          currentReplyPolicy={videoData.replyPolicy}
           currentShopLinks={videoData.shopLinks}
           onSuccess={(edited) => {
             applyOptimisticEdit(queryClient, id || '', edited);

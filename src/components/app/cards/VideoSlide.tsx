@@ -8,7 +8,7 @@ import { useTranslation as _useCopy } from 'react-i18next';
  * @module components/app/cards/VideoSlide
  */
 
-import { useRef, useEffect, useState, useCallback, memo, lazy, Suspense, useId } from 'react';
+import { useRef, useEffect, useState, useCallback, useContext, memo, lazy, Suspense, useId } from 'react';
 import { useFeedPlaybackAllowed } from '@/lib/visual-activity';
 import { usePlaybackRecovery } from '@/hooks/use-playback-recovery';
 import { requestVideoPlayback } from '@/lib/video-start';
@@ -28,9 +28,12 @@ import { useResolvedThumbnail } from '@/lib/thumbnail-fallback';
 import { useTapGestures } from '@/hooks/use-tap-gestures';
 import { useTranslation } from 'react-i18next';
 import { TapReactionBurst } from '@/components/app/cards/TapReactionBurst';
+import { StoryboardPreview } from '@/components/app/video/StoryboardPreview';
 const TranscodeRetry = lazy(() => import('./TranscodeRetry').then(m => ({ default: m.TranscodeRetry })));
 import { useVideoProcessingStatus } from '@/hooks/use-video-processing-status';
 import { useHandoffVideo } from '@/hooks/use-handoff-video';
+import { AuthContext } from '@/contexts/AuthContext';
+import { isVideoAccessExpiring, useResumeAcrossRefresh, useVideoAccess } from '@/lib/api/dehub/video-access';
 import { useMediaLooping } from '@/lib/video-preferences';
 
 interface VideoSlideProps {
@@ -83,9 +86,16 @@ interface VideoSlideProps {
    * zone as well would park a 15%-tall target on top of the action buttons.
    */
   progressLayer?: HTMLElement | null;
+  /**
+   * What to play instead of `short.videoUrl`: a signed URL for a gated short,
+   * `null` while it is fetched or when the viewer is refused one.
+   */
+  playbackSrc?: string | null;
+  /** Called when playback fails for good, so a lapsed signature can be renewed. */
+  onPlaybackFailed?: () => void;
 }
 
-export const VideoSlide = memo(function VideoSlide({
+const VideoSlideBody = memo(function VideoSlideBody({
   short,
   isActive: activeSlide,
   handoffKey,
@@ -101,6 +111,8 @@ export const VideoSlide = memo(function VideoSlide({
   preload,
   isFullscreen = false,
   progressLayer = null,
+  playbackSrc,
+  onPlaybackFailed,
 }: VideoSlideProps) {
   const { t: _copy } = _useCopy();
   const isLooping = useMediaLooping();
@@ -119,10 +131,14 @@ export const VideoSlide = memo(function VideoSlide({
   // images/{id}.jpg — resolve to whichever exists so the poster isn't a 403.
   const thumbnail = useResolvedThumbnail(short.thumbnail);
   const [videoAspect, setVideoAspect] = useState<'portrait' | 'landscape' | 'square'>('portrait');
-  const playbackPhase = usePlaybackRecovery(videoRef, short.soundtrackUrl || short.videoUrl, isActive, {
+  const playableSrc = short.soundtrackUrl || (playbackSrc !== undefined ? playbackSrc || undefined : short.videoUrl);
+  const playbackPhase = usePlaybackRecovery(videoRef, playableSrc, isActive, {
     component: 'ShortsViewer', postId: short.id,
     allowed: () => isActiveRef.current && !visualActivity.isCallBusy(),
   });
+  useEffect(() => {
+    if (playbackPhase === 'failed') onPlaybackFailed?.();
+  }, [playbackPhase, onPlaybackFailed]);
   const [progress, setProgress] = useState(0);
   const [isSeeking, setIsSeeking] = useState(false);
   const progressBarRef = useRef<HTMLDivElement>(null);
@@ -226,10 +242,15 @@ export const VideoSlide = memo(function VideoSlide({
   const fitWhole = letterbox || videoAspect !== 'portrait';
   // Photo slides sit on a plain theme backdrop: tall photos fill the screen, wide ones letterbox.
   const isPhotoSlide = !!short.imageUrls?.length;
+  // Before the handoff assigns `src`, so a refreshed signature resumes in place.
+  useResumeAcrossRefresh(videoRef, playableSrc || undefined);
   const { attachSlot } = useHandoffVideo({
     videoRef,
     handoffKey: handoffKey ?? `shorts:${slideId}`,
-    src: short.soundtrackUrl || short.videoUrl || undefined,
+    src: playableSrc || undefined,
+    // A photo short's src is its soundtrack, and a gated short plays a signed
+    // file; neither has a ladder.
+    hlsSrc: short.soundtrackUrl || playbackSrc !== undefined ? undefined : short.hlsUrl,
     poster: thumbnail,
     muted: isMuted,
     loop: isLooping,
@@ -430,6 +451,14 @@ export const VideoSlide = memo(function VideoSlide({
         className="absolute inset-0 origin-left bg-white/80"
         style={{ transform: `scaleX(${Math.min(1, Math.max(0, progress))})` }}
       />
+      {/* Read only while a scrub is re-rendering this on every move. */}
+      <StoryboardPreview
+        storyboard={short.storyboard}
+        fraction={progress}
+        duration={isSeeking ? videoRef.current?.duration || 0 : 0}
+        visible={isSeeking}
+        armed={isActive}
+      />
     </div>
   );
 
@@ -575,6 +604,25 @@ export const VideoSlide = memo(function VideoSlide({
       {progressLayer && createPortal(progressBar, progressLayer)}
     </div>
   );
+});
+
+/**
+ * A gated short's file is private: an entitled viewer plays a signed URL, and
+ * anyone else is refused one and keeps the poster.
+ */
+function SignedVideoSlide(props: VideoSlideProps) {
+  const viewer = useContext(AuthContext)?.walletAddress;
+  const { data, refetch } = useVideoAccess(props.short.id, true, viewer);
+  const onPlaybackFailed = useCallback(() => {
+    if (data?.private && isVideoAccessExpiring(data)) void refetch();
+  }, [data, refetch]);
+  return <VideoSlideBody {...props} playbackSrc={data?.url ?? null} onPlaybackFailed={onPlaybackFailed} />;
+}
+
+export const VideoSlide = memo(function VideoSlide(props: VideoSlideProps) {
+  return props.short.gated && !props.short.soundtrackUrl
+    ? <SignedVideoSlide {...props} />
+    : <VideoSlideBody {...props} />;
 });
 
 export default VideoSlide;

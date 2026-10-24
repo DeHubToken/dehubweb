@@ -1,4 +1,151 @@
 {
+  "mastodonApps": {
+    "authTitle": "Logi sisse DeHubiga",
+    "authWants": "{{app}} soovib kasutada sinu DeHubi kontot",
+    "authSignedInAs": "Sisse logitud kui {{name}}",
+    "authSignIn": "Jätkamiseks logi sisse",
+    "allow": "Luba",
+    "cancel": "Tühista",
+    "scopeRead": "Näha sinu ajajooni, postitusi, teavitusi ja järjehoidjaid",
+    "scopeWrite": "Postitada, vastata, meeldida, jagada ja järjehoidjasse lisada sinu nimel",
+    "scopeFollow": "Jälgida, jälgimist lõpetada, blokeerida ja vaigistada kontosid",
+    "scopePush": "Saata sulle teavitusi",
+    "scopeProfile": "Näha sinu profiili",
+    "invalid": "See sisselogimislink ei kehti. Mine tagasi rakendusse ja proovi uuesti.",
+    "failed": "See ei õnnestunud. Proovi uuesti.",
+    "codeTitle": "Kopeeri see kood rakendusse, et sisselogimine lõpetada.",
+    "copy": "Kopeeri",
+    "copied": "Kopeeritud",
+    "seoDescription": "Luba Mastodoni rakendusel kasutada sinu DeHubi kontot.",
+    "redirecting": "Viime sind tagasi rakendusse {{app}}…",
+    "connectedTitle": "Ühendatud rakendused",
+    "connectedDescription": "Mastodoni rakendused, kuhu oled selle kontoga sisse loginud. Eemalda mõni, et sellest välja logida.",
+    "connectedEmpty": "Ühendatud rakendusi veel pole.",
+    "lastUsed": "Viimati kasutatud {{date}}",
+    "remove": "Eemalda",
+    "removed": "Rakendus eemaldatud"
+  },
+  "fediverse": {
+    "title": "Födiversum",
+    "description": "Mastodoni ja teiste födiversumi rakenduste inimesed leiavad sind sellelt aadressilt ja saavad sind jälgida. Sinu uued avalikud postitused jõuavad neini seal.",
+    "copy": "Kopeeri",
+    "copied": "Kopeeritud",
+    "privateNote": "Privaatkontosid födiversumis ei näidata.",
+    "noUsername": "Vali kasutajanimi, et saada födiversumi aadress."
+  },
+  "profileFields": {
+    "title": "Profiiliväljad",
+    "description": "Kuni neli lisarida sinu profiilil, näiteks veebisait või sinu asesõnad.",
+    "label": "Silt",
+    "content": "Sisu",
+    "save": "Salvesta väljad",
+    "saved": "Profiiliväljad salvestatud",
+    "failed": "Ei salvestunud. Proovi uuesti.",
+    "verified": "Kinnitatud link",
+    "verifyHint": "Lingi kinnitamiseks lisa see sellele lehele ja salvesta uuesti: {{snippet}}"
+  },
+  "followedTags": {
+    "follow": "Jälgi #{{tag}}",
+    "following": "Jälgid",
+    "unfollow": "Lõpeta #{{tag}} jälgimine",
+    "followed": "Jälgid nüüd #{{tag}}. Selle postitused ilmuvad sinu Jälgitavate voos.",
+    "unfollowed": "Lõpetasid #{{tag}} jälgimise",
+    "failed": "Ei salvestunud. Proovi uuesti.",
+    "clear": "Tühjenda"
+  },
+  "notificationFilters": {
+    "title": "Filtreeri teavitusi",
+    "description": "Vali, mis juhtub, kui keegi väljastpoolt sinu ringi sinuga suhtleb. Filtreeritud teavitused ootavad jaotises Filtreeritud, ilma märgi ja tõuketeateta.",
+    "notFollowing": "Inimestelt, keda sa ei jälgi",
+    "notFollowers": "Inimestelt, kes sind ei jälgi",
+    "newAccounts": "Uutelt kontodelt (alla 30 päeva)",
+    "accept": "Teavita mind",
+    "filter": "Filtreeri",
+    "drop": "Peida täielikult",
+    "filteredTitle": "Filtreeritud teavitused",
+    "filteredEmpty": "Midagi pole filtreeritud.",
+    "failed": "Ei salvestunud. Proovi uuesti."
+  },
+  "keywordFilters": {
+    "title": "Vaigistatud sõnad",
+    "description": "Peida neid sõnu sisaldavad postitused ja kommentaarid või voldi need hoiatuse taha. Seda loendit näed ainult sina.",
+    "placeholder": "Sõna või fraas",
+    "add": "Vaigista",
+    "added": "Vaigistatud: {{phrase}}",
+    "wholeWord": "Ainult terve sõna",
+    "whenMatches": "Kui postitus sobib",
+    "warn": "Näita hoiatust",
+    "hide": "Peida",
+    "howLong": "Kui kauaks",
+    "forever": "Kuni ma selle eemaldan",
+    "duration1h": "1 tunniks",
+    "duration1d": "1 päevaks",
+    "duration7d": "7 päevaks",
+    "duration30d": "30 päevaks",
+    "where": "Kus",
+    "home": "Avaleht",
+    "public": "Avasta ja otsi",
+    "profile": "Profiilid",
+    "thread": "Vestlused",
+    "notifications": "Teavitused",
+    "empty": "Sa pole ühtegi sõna vaigistanud.",
+    "remove": "Tühista vaigistus",
+    "until": "Kuni {{date}}",
+    "filtered": "Filtreeritud: {{phrase}}",
+    "showAnyway": "Näita ikkagi",
+    "failed": "Ei salvestunud. Proovi uuesti."
+  },
+  "postVisibility": {
+    "label": "Kes seda näha saab",
+    "public": "Kõik",
+    "followers": "Ainult jälgijad",
+    "direct": "Ainult mainitud inimesed",
+    "noRepost": "Uuesti jagada saab ainult avalikke postitusi",
+    "directHint": "Seda postitust näevad ainult need, keda mainid @-iga",
+    "needsMention": "Maini @-iga vähemalt ühte inimest, et postitada ainult mainitutele"
+  },
+  "replyPolicy": {
+    "label": "Kes saab vastata",
+    "public": "Igaüks",
+    "followers": "Sinu jälgijad",
+    "following": "Inimesed, keda jälgid",
+    "mentioned": "Ainult mainitud",
+    "noticeFollowers": "Vastata saavad ainult autori jälgijad",
+    "noticeFollowing": "Vastata saavad ainult inimesed, keda autor jälgib",
+    "noticeMentioned": "Vastata saavad ainult postituses mainitud inimesed",
+    "refused": "Autor piiras, kes saab sellele postitusele vastata"
+  },
+  "quotePolicy": {
+    "label": "Kes saab tsiteerida",
+    "public": "Igaüks",
+    "followers": "Jälgijad",
+    "nobody": "Ainult mina",
+    "off": "Autor lülitas tsiteerimise välja",
+    "removed": "Autor eemaldas oma postituse sellest tsitaadist",
+    "remove": "Eemalda",
+    "removedToast": "Sinu postitus eemaldati sellest tsitaadist",
+    "removeFailed": "Sinu postitust ei õnnestunud tsitaadist eemaldada",
+    "refused": "Autor ei luba sul seda postitust tsiteerida"
+  },
+  "contentWarning": {
+    "label": "Sisuhoiatus",
+    "placeholder": "Kirjuta oma hoiatus siia",
+    "add": "Lisa sisuhoiatus",
+    "remove": "Eemalda sisuhoiatus",
+    "show": "Näita postitust"
+  },
+  "altText": {
+    "badge": "ALT",
+    "add": "Lisa kirjeldus",
+    "edit": "Muuda kirjeldust",
+    "titleImage": "Kirjelda seda pilti",
+    "titleVideo": "Kirjelda seda videot",
+    "help": "Inimestele, kes seda ei näe. Ekraanilugejad loevad selle ette.",
+    "placeholder": "Mida see näitab? Lisa ka selles olev tekst.",
+    "show": "Näita kirjeldust",
+    "saved": "Kirjeldus salvestatud",
+    "saveFailed": "Kirjeldust ei õnnestunud salvestada"
+  },
   "liveRecap": {
     "title": "Voo kokkuvõte",
     "justEnded": "Sinu voo kokkuvõte",
@@ -113,6 +260,7 @@
     "heading": "DeHubi lühivideod"
   },
   "settings": {
+    "usernameTaken": "Kasutajanimi on võetud",
     "postingChain": "Postituste plokiahel",
     "showOnline": "Näita, kui ma olen võrgus",
     "showOnlineDesc": "Inimesed, kellele sõnumi saadad, näevad DeHubi kasutamise ajal sinu nime kõrval rohelist täppi",
@@ -239,6 +387,11 @@
       "hintDeny": "Seda signaali austavatel tehisintellektisüsteemidel ja roomikutel palutakse mitte treenida teie heli, kunstiteoseid ja kirjutamist. See ei blokeeri signaali eiravaid roomikuid.",
       "saved": "Tehisintellekti koolituse eelistus on salv"
     },
+    "defaultFeed": "Vaikevoog",
+    "defaultFeedDesc": "Vali, milline voog avaneb iga kord, kui DeHubi avad",
+    "feedToggles": "Lähtesta voo filtrid",
+    "feedTogglesDesc": "Voos sisse lülitatud filtrid jäävad sinu vaikeväärtusteks, kuni need lähtestad",
+    "feedTogglesCleared": "Voo filtrid lähtestatud",
     "defaultProfileTab": "Profiili vaikevahekaart",
     "defaultProfileTabDesc": "Vali, millist vahekaarti külastajad sinu profiilil esimesena näevad",
     "public": "Avalik",
@@ -630,6 +783,9 @@
     "dmSent": "{{amount}} žetooni saadetud saajale {{name}}!"
   },
   "postOptions": {
+    "embed": "Manusta",
+    "copyEmbedCode": "Kopeeri manustamiskood",
+    "embedCodeCopied": "Manustamiskood kopeeritud",
     "options": "Valikud",
     "aiOverview": "Tehisintellekti ülevaade",
     "sendTip": "Saada jootraha",
@@ -657,7 +813,8 @@
     "unpinPost": "Tühista oma profiili kinnitamine",
     "postPinned": "Kinnitatud sinu profiilile",
     "postUnpinned": "Sinu profiili kinnitamine on tühistatud",
-    "pinFailed": "Seda postitust ei saanud kinnitada või eemaldada"
+    "pinFailed": "Seda postitust ei saanud kinnitada või eemaldada",
+    "copyFailed": "Linki ei õnnestunud kopeerida"
   },
   "filters": {
     "sort": "Sorteeri",
@@ -1975,6 +2132,8 @@
     "copyFailed": "Ei õnnestunud kopeerida"
   },
   "profileOptions": {
+    "copyRssFeed": "Kopeeri RSS-voo link",
+    "rssFeedCopied": "RSS-voo link kopeeritud",
     "copyProfileUrl": "Kopeeri profiili URL",
     "copyUsername": "Kopeeri kasutajanimi",
     "copyAddress": "Kopeeri aadress",
@@ -2262,6 +2421,7 @@
     "pendingSubmitted": "{{amount}} märk on esitatud. Kinnitust kontrollitakse endiselt. Ärge saatke seda uuesti."
   },
   "communities": {
+    "chatTab": "Vestlus",
     "title": "Kogukonnad",
     "create": "Loo",
     "searchPlaceholder": "Otsi kogukondi...",
@@ -2296,7 +2456,30 @@
     "addDescription": "Lisa kirjeldus...",
     "communityDescription": "Kogukonna kirjeldus...",
     "posts": "Postitused",
-    "chat": "Vestlus",
+    "chat": {
+      "intervalHour": "1 tund",
+      "intervalHours": "{{count}} tundi",
+      "intervalMinute": "1 minut",
+      "intervalMinutes": "{{count}} minutit",
+      "intervalSecond": "1 sekund",
+      "intervalSeconds": "{{count}} sekundit",
+      "muted": "Oled vaigistatud",
+      "mutedUntil": "Oled vaigistatud kuni {{until}}",
+      "postingDisabled": "Sisestamine on liikmetele siin keelatud",
+      "pinnedGif": "GIF",
+      "pinnedMedia": "Meedia",
+      "jumpToPinned": "Hüppa kinnitatud sõnumi juurde",
+      "pinnedMessage": "Kinnitatud sõnum",
+      "unpin": "Tühista kinnitamine",
+      "pin": "PIN",
+      "delete": "Kustuta",
+      "slowMode": "Aeglane režiim: üks teade iga {{interval}} järel",
+      "slowModeWait": "Aeglane režiim — oodake {{time}}",
+      "send": "Saada",
+      "deleteMessageTitle": "Kas kustutada see sõnum?",
+      "deleteMessageBody": "Seda ei saa tagasi võtta.",
+      "cancel": "Tühista"
+    },
     "membersTab": "Liikmed ({{count}})",
     "about": "Teave",
     "backToCommunities": "Kogukonnad",
@@ -3762,6 +3945,7 @@
     "sellYourFractions": "Müüge oma fraktsioonid ({{held}} hoitud)"
   },
   "creator": {
+    "libraryEmpty": "Sinu salvestatud genereeringud ilmuvad siia.",
     "whatToCreate": "Mida luua",
     "startCreatingWith": "Alusta loomisega {{model}}",
     "studioSubtitle": "Kirjelda stseeni, tegelast, meeleolu või stiili. Tulemused ilmuvad allpool ja jätkavad otse redaktorisse.",
@@ -5355,6 +5539,8 @@
     }
   },
   "goLive": {
+    "bigEvent": "Suursündmus",
+    "bigEventHint": "Suurele publikule: vaatajad näevad umbes 20-sekundilise viivitusega, kuid vähemate katkestustega.",
     "goLive": "Mine otse",
     "youAreLive": "Olete Otse",
     "streamReady": "Voog on valmis",
@@ -6139,7 +6325,10 @@
     "play": "Esita",
     "pause": "Peata",
     "listens_one": "{{count}} kuula",
-    "listens_other": "{{count}} kuulab"
+    "listens_other": "{{count}} kuulab",
+    "lyrics": "Laulusõnad",
+    "lyricsLoading": "Otsin laulusõnu…",
+    "lyricsNone": "Laulusõnu ei leitud"
   },
   "converter": {
     "seoTitle": "Teisendaja — video importimine DeHubi",
@@ -6655,6 +6844,7 @@
     "seoDescription": "DeHubi ametlik dokumentatsioon: platvormi ülevaade, dAppid, žetooni tokeni majandus, staking, mängud, teekaart, KKK ja muu."
   },
   "dex": {
+    "title": "märki / USD",
     "seoTitle": "DEX — Kaubelge žetooni-ga oma hinnaga",
     "seoDescription": "Määrake oma žetooni ostu- või müügihind Uniswap v4 limiitkorraldusega Base'is või BNB Chainis. Reaalajas tellimuste raamat, turu sügavus ja üks ühine USD hind.",
     "venue": "Võrk",
@@ -6877,6 +7067,14 @@
     }
   },
   "editor": {
+    "video": {
+      "tFade": "Ristsulandus",
+      "none": "Puudub",
+      "transition": "Üleminek",
+      "speed": "Kiirus",
+      "sound": "Heli",
+      "video": "Video"
+    },
     "review": {
       "title": "Projekti ülevaatus",
       "shared": "Sinuga jagatud",

@@ -78,6 +78,9 @@ import {
   whepEndpointFor,
   edgeWhepEndpointFor,
   fetchTurnServers,
+  isAacCopyUrl,
+  isBigEventPlayback,
+  BIG_EVENT_HLS_CONFIG,
 } from '@/lib/live-ingest';
 import type { WhepState, WhepSubscription } from '@/lib/livepeer/whep';
 import { peekLiveSession, takeLiveSession } from '@/lib/live-handoff';
@@ -254,10 +257,13 @@ export function LiveStreamCard({ stream, chatSlot, immersive = false }: LiveStre
     [liveNow, urlsToTry]
   );
   const whepPlaybackId = whepSource?.playbackId ?? null;
+  // A big event never opens a WebRTC session: one per viewer is exactly the
+  // load that mode exists to avoid. It plays HLS from deep behind live.
+  const bigEvent = isBigEventPlayback(urlsToTry[0]);
   // A handed-over session is already delivering frames, which answers the
   // Android worry below — keep it rather than dropping to HLS.
   const [transport, setTransport] = useState<'whep' | 'hls'>(
-    (handoff || !preferAndroidHls()) && typeof RTCPeerConnection !== 'undefined' && !!whepPlaybackId ? 'whep' : 'hls'
+    !bigEvent && (handoff || !preferAndroidHls()) && typeof RTCPeerConnection !== 'undefined' && !!whepPlaybackId ? 'whep' : 'hls'
   );
   // A source swap pauses the element; keep the viewer's intent through fallback.
   const playbackRequestedRef = useRef(true);
@@ -501,8 +507,8 @@ export function LiveStreamCard({ stream, chatSlot, immersive = false }: LiveStre
   // A handed-over session also overrides the Android HLS preference, since it
   // is already delivering frames.
   useEffect(() => {
-    if (whepPlaybackId && (handoff || !preferAndroidHls()) && !whepFailedRef.current) setTransport('whep');
-  }, [whepPlaybackId, handoff]);
+    if (!bigEvent && whepPlaybackId && (handoff || !preferAndroidHls()) && !whepFailedRef.current) setTransport('whep');
+  }, [whepPlaybackId, handoff, bigEvent]);
 
   // Fetch DHB balance when gift drawer opens
   useEffect(() => {
@@ -671,10 +677,11 @@ export function LiveStreamCard({ stream, chatSlot, immersive = false }: LiveStre
     };
 
     // Native HLS where the browser has it (Safari, iOS): cooler than hls.js
-    // and skips its download. Not for self-hosted ladders, which may carry
-    // Opus that a positive native probe does not promise to play.
+    // and skips its download. Not for a self-hosted ladder carrying Opus,
+    // which a positive native probe does not promise to play — the server's
+    // AAC copy, which is what such a browser is handed, is fine.
     const selfHosted = liveSourceFromHlsUrl(currentUrl())?.provider === 'mediamtx';
-    if (!selfHosted && video.canPlayType('application/vnd.apple.mpegurl')) {
+    if ((!selfHosted || isAacCopyUrl(currentUrl())) && video.canPlayType('application/vnd.apple.mpegurl')) {
       // Native playback has none of hls.js's built-in resilience, so re-create
       // the essentials here: multi-CDN failover through urlsToTry, bounded
       // reconnect attempts for live streams, and the error overlay.
@@ -749,6 +756,7 @@ export function LiveStreamCard({ stream, chatSlot, immersive = false }: LiveStre
         enableWorker: true,
         lowLatencyMode: true,
         backBufferLength: 60,
+        ...(bigEvent ? BIG_EVENT_HLS_CONFIG : {}),
       });
 
       const tryLoad = () => {
@@ -860,7 +868,7 @@ export function LiveStreamCard({ stream, chatSlot, immersive = false }: LiveStre
     // is false, and when the late-isLive resync clears the latch this effect
     // must run again on the re-render that mounts the element — the isLive
     // flip alone fires it one render too early, against a null videoRef.
-  }, [stream.isLive, stream.thumbnail, videoId, hasPlaybackUrl, urlsToTry, streamEnded, transport]);
+  }, [stream.isLive, stream.thumbnail, videoId, hasPlaybackUrl, urlsToTry, streamEnded, transport, bigEvent]);
 
   const togglePlay = useCallback(() => {
     if (!visualActivity.isFeedPlaybackAllowed()) return;

@@ -10,11 +10,11 @@
 import { useEffect, useMemo, useState } from 'react';
 import { useInfiniteQuery, useQuery, useQueryClient, keepPreviousData, type QueryClient } from '@tanstack/react-query';
 import { getAuthToken, isTokenExpired, ensureFreshToken, DEHUB_CDN_BASE, getMediaUrl, type DeHubNFT, getBlockList, getNFTInfo } from '@/lib/api/dehub';
-import { buildAvatarUrl, buildImageUrl, buildVideoUrl, buildFeedImageUrls, extractAvatarPath } from '@/lib/media-url';
+import { buildAvatarUrl, buildImageUrl, buildVideoUrl, buildHlsUrl, buildFeedImageUrls, extractAvatarPath } from '@/lib/media-url';
 import { formatDuration, formatViews, formatTimeAgo } from '@/lib/feed-utils';
 import { resolveLikeCount, resolveDislikeCount, resolveMyReaction, resolveReactionCounts, resolveViewCount } from '@/lib/engagement';
 import { mergeLiveCounts, type RawFeedRow } from '@/lib/live-counts';
-import { hlsUrlFor, liveProviderOf } from '@/lib/live-ingest';
+import { hlsUrlFor, liveProviderOf, noteLatencyMode } from '@/lib/live-ingest';
 import { extractReplayUrl } from '@/lib/live-replay';
 import type { VideoItem, ImagePost, TextPost } from '@/types/feed.types';
 import type { ContentRating } from '@/lib/api/dehub/types';
@@ -27,6 +27,7 @@ import { isAnonymousFeedResponse } from '@/lib/feed-response-auth';
 const DEHUB_API_BASE = "https://api.dehub.io";
 
 import { parseSoundtrackTag } from '@/lib/soundtrack';
+import { toStoryboard } from '@/lib/storyboard';
 export { parseSoundtrackTag } from '@/lib/soundtrack';
 
 // ===========================================================================
@@ -67,6 +68,8 @@ export interface UnifiedFeedItem {
   imageUrl: string;
   imageUrls?: string[];
   videoUrl?: string;
+  /** HLS master playlist key, on public posts with a rendition ready. */
+  hlsUrl?: string;
   minter: string;
   owner?: string;
   postType: 'video' | 'feed-images' | 'feed-simple' | 'live' | 'audio' | 'feed-audio';
@@ -74,9 +77,23 @@ export interface UnifiedFeedItem {
   /** Async video transcode state, written optimistically before the CDN file
    *  exists. Absent on posts predating this field — treat as 'done'. */
   transcodingStatus?: 'pending' | 'on' | 'done' | 'failed';
+  /** Seek-preview sprite sheet, raw — read through toStoryboard. */
+  storyboard?: unknown;
   category?: string[];
   /** Absent means safe — see ContentRating. */
   contentRating?: ContentRating;
+  /** Alt text, one per piece of media in display order (gallery images by position, a video first). */
+  mediaDescriptions?: string[];
+  /** Content warning: the post opens collapsed behind this one line. */
+  spoilerText?: string;
+  /** Who may quote it; absent means anyone. */
+  quotePolicy?: 'public' | 'followers' | 'nobody';
+  /** A quote whose quoted author took their post back out of it. */
+  quoteRevoked?: boolean;
+  /** Who may reply; absent means anyone. */
+  replyPolicy?: 'public' | 'followers' | 'following' | 'mentioned';
+  /** Who may see it; absent means everyone. */
+  visibility?: 'public' | 'followers' | 'direct';
   /** Published for children — see the field on BaseFeedItem. */
   forKids?: boolean;
   /** Signed-in viewers only — read totalViews via resolveViewCount instead. */
@@ -267,6 +284,7 @@ function mapVideoItem(item: UnifiedFeedItem, index: number): VideoItem {
     type: 'video',
     thumbnail,
     videoUrl,
+    hlsUrl: buildHlsUrl(item.hlsUrl),
     audioUrl,
     audioDuration: isAudioPost ? item.audioDuration : undefined,
     isAudio: isAudioPost,
@@ -281,6 +299,7 @@ function mapVideoItem(item: UnifiedFeedItem, index: number): VideoItem {
     uploadedAgo: formatTimeAgo(item.createdAt),
     status: item.status,
     transcodingStatus: item.transcodingStatus,
+    storyboard: toStoryboard(item.storyboard),
     newPostId: (item as any).newPostId,
     creatorId: item.minter,
     creatorUsername: item.minterUsername || item.mintername,
@@ -315,6 +334,12 @@ function mapVideoItem(item: UnifiedFeedItem, index: number): VideoItem {
     isReposted: item.isReposted ?? false,
     categories: Array.isArray(item.category) ? item.category : item.category ? [item.category] : [],
     contentRating: item.contentRating,
+    mediaDescriptions: item.mediaDescriptions,
+    spoilerText: item.spoilerText,
+    quotePolicy: item.quotePolicy,
+    visibility: item.visibility,
+    quoteRevoked: item.quoteRevoked,
+    replyPolicy: item.replyPolicy,
     forKids: item.forKids,
     isLivePost: item.postType === 'live',
     liveStatus: item.stream?.status,
@@ -326,6 +351,7 @@ function mapVideoItem(item: UnifiedFeedItem, index: number): VideoItem {
     // way the post page does — otherwise the card falls back to a poster and
     // the stream only appears after a click-through.
     livePlaybackUrls: (() => {
+      noteLatencyMode(item.stream as any);
       const hls = hlsUrlFor(item.stream as any);
       if (!hls) return item.stream?.playbackUrl ? [item.stream.playbackUrl] : undefined;
       return liveProviderOf(item.stream as any) === 'mediamtx'
@@ -406,6 +432,12 @@ function mapImagePost(item: UnifiedFeedItem, index: number): ImagePost {
     isReposted: item.isReposted ?? false,
     categories: Array.isArray(item.category) ? item.category : item.category ? [item.category] : [],
     contentRating: item.contentRating,
+    mediaDescriptions: item.mediaDescriptions,
+    spoilerText: item.spoilerText,
+    quotePolicy: item.quotePolicy,
+    visibility: item.visibility,
+    quoteRevoked: item.quoteRevoked,
+    replyPolicy: item.replyPolicy,
     forKids: item.forKids,
     isQuotePost: !!(item as any).isQuotePost,
     quotedPost: (item as any).quotedPost || null,
@@ -471,6 +503,12 @@ function mapTextPost(item: UnifiedFeedItem, index: number): TextPost {
     quotedPost: (item as any).quotedPost || null,
     categories: Array.isArray(item.category) ? item.category : item.category ? [item.category] : [],
     contentRating: item.contentRating,
+    mediaDescriptions: item.mediaDescriptions,
+    spoilerText: item.spoilerText,
+    quotePolicy: item.quotePolicy,
+    visibility: item.visibility,
+    quoteRevoked: item.quoteRevoked,
+    replyPolicy: item.replyPolicy,
     forKids: item.forKids,
     communityAlertPending: (item as any).communityAlertStatus === 'pending',
     isLocked: item.streamInfo?.isLockContent ?? false,

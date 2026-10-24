@@ -14,6 +14,15 @@
  */
 export type ContentRating = 'safe' | 'mature' | 'blocked' | 'pending';
 
+/** Who may quote a post (dehub-stream-backend src/repost/quote-policy). Absent means anyone. */
+export type QuotePolicy = 'public' | 'followers' | 'nobody';
+
+/** Who may reply to a post (dehub-stream-backend src/reaction/reply-policy). Absent means anyone. */
+export type ReplyPolicy = 'public' | 'followers' | 'following' | 'mentioned';
+
+/** Who may see a post (dehub-stream-backend common/util/post-visibility). Absent means everyone. */
+export type PostVisibility = 'public' | 'followers' | 'direct';
+
 // Types based on DeHub API response (supports both API field naming conventions)
 export interface DeHubUser {
   _id?: string;
@@ -168,6 +177,8 @@ export interface DeHubNFT {
   imageUrl: string;
   imageUrls?: string[];
   videoUrl?: string;
+  /** HLS master playlist key, on public posts with a rendition ready. See buildHlsUrl. */
+  hlsUrl?: string;
   media_url?: string;
   thumbnail_url?: string;
   postType: "video" | "image" | "audio";
@@ -274,6 +285,19 @@ export interface DeHubNFT {
   /** Async video transcode state, written optimistically before the CDN file
    *  exists. Absent on posts predating this field — treat as 'done'. */
   transcodingStatus?: 'pending' | 'on' | 'done' | 'failed';
+  /**
+   * Seek-preview sprite sheet as the API sends it: `url` is a bucket key, and
+   * `private` marks a paid post's sheet. Read it through toStoryboard.
+   */
+  storyboard?: {
+    url: string;
+    spriteWidth: number;
+    spriteHeight: number;
+    spriteCount: number;
+    spriteDuration: number;
+    columns: number;
+    private?: boolean;
+  };
   audioUrl?: string;
   audioDuration?: number;
 
@@ -291,6 +315,18 @@ export interface DeHubNFT {
   isDeleted?: boolean;
   /** Absent means safe — the API stores nothing for the default. */
   contentRating?: ContentRating;
+  /** Alt text, one per piece of media in display order (gallery images by position, a video first). */
+  mediaDescriptions?: string[];
+  /** Content warning: the post opens collapsed behind this one line. */
+  spoilerText?: string;
+  /** Who may quote it; absent means anyone. */
+  quotePolicy?: 'public' | 'followers' | 'nobody';
+  /** A quote whose quoted author took their post back out of it. */
+  quoteRevoked?: boolean;
+  /** Who may reply; absent means anyone. */
+  replyPolicy?: 'public' | 'followers' | 'following' | 'mentioned';
+  /** Who may see it; absent means everyone. */
+  visibility?: 'public' | 'followers' | 'direct';
   /**
    * The creator published this for children — the Kids Mode allowlist.
    *

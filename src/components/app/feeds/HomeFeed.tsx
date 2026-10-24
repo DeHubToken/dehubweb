@@ -96,7 +96,7 @@ import { getMediaUrl, getNFTInfo, getCategories } from '@/lib/api/dehub';
 import { useBoostQueue } from '@/hooks/use-superpowers';
 import type { DeHubCategory } from '@/lib/api/dehub';
 import { getCuratedCarouselStations, type RadioStation } from '@/lib/api/radio-browser';
-import { buildAvatarUrl, buildImageUrl, buildVideoUrl, buildFeedImageUrls } from '@/lib/media-url';
+import { buildAvatarUrl, buildImageUrl, buildVideoUrl, buildHlsUrl, buildFeedImageUrls } from '@/lib/media-url';
 import { useAuth } from '@/contexts/AuthContext';
 import { useKidsModeLock } from '@/hooks/use-kids-mode';
 import { useHideWatched, useWatchedVideoIds } from '@/hooks/use-watched-videos';
@@ -115,6 +115,8 @@ import type { VideoItem, ImagePost, TextPost, ShortVideo } from '@/types/feed.ty
 import type { ServedAd } from '@/lib/ads/povr';
 import { useServedAds } from '@/hooks/use-ad-serving';
 import { SponsoredAdCard } from '@/components/app/cards/SponsoredAdCard';
+import { toStoryboard } from '@/lib/storyboard';
+import { FollowTagBar } from './FollowTagBar';
 
 // ============================================================================
 // TYPES & CONSTANTS
@@ -433,6 +435,12 @@ function nftToFeedItem(pinnedPost: any): FeedItemType {
         // at the top of the feed for a viewer who never opted in. The video
         // and text branches below carry it; this one did not.
         contentRating: pinnedPost.contentRating,
+        mediaDescriptions: pinnedPost.mediaDescriptions,
+        spoilerText: pinnedPost.spoilerText,
+        quotePolicy: pinnedPost.quotePolicy,
+        visibility: pinnedPost.visibility,
+        quoteRevoked: pinnedPost.quoteRevoked,
+        replyPolicy: pinnedPost.replyPolicy,
         username: pinnedPost.minterDisplayName || pinnedPost.mintername || 'unknown',
         verified: false,
         avatar,
@@ -464,8 +472,15 @@ function nftToFeedItem(pinnedPost: any): FeedItemType {
         id,
         type: 'video',
         contentRating: pinnedPost.contentRating,
+        mediaDescriptions: pinnedPost.mediaDescriptions,
+        spoilerText: pinnedPost.spoilerText,
+        quotePolicy: pinnedPost.quotePolicy,
+        visibility: pinnedPost.visibility,
+        quoteRevoked: pinnedPost.quoteRevoked,
+        replyPolicy: pinnedPost.replyPolicy,
         thumbnail,
         videoUrl,
+        hlsUrl: buildHlsUrl(pinnedPost.hlsUrl),
         duration: formatDuration(pinnedPost.videoDuration || pinnedPost.duration || 0),
         title: pinnedPost.name || pinnedPost.description?.split('\n')[0] || '',
         channel: pinnedPost.minterDisplayName || pinnedPost.mintername || 'Unknown Creator',
@@ -499,6 +514,12 @@ function nftToFeedItem(pinnedPost: any): FeedItemType {
         id,
         type: 'post',
         contentRating: pinnedPost.contentRating,
+        mediaDescriptions: pinnedPost.mediaDescriptions,
+        spoilerText: pinnedPost.spoilerText,
+        quotePolicy: pinnedPost.quotePolicy,
+        visibility: pinnedPost.visibility,
+        quoteRevoked: pinnedPost.quoteRevoked,
+        replyPolicy: pinnedPost.replyPolicy,
         author: {
           id: pinnedPost.minter,
           name: pinnedPost.minterDisplayName || pinnedPost.mintername || 'Unknown',
@@ -591,8 +612,8 @@ export function HomeFeed({ active = true, shuffleKey, isRefreshing, showFilters 
   const isFetchingRef = useRef(false);
   
   // Default to Latest (chronological) — persisted to sessionStorage. "For You" remains a filter option.
-  const [selectedSort, setSelectedSortRaw] = usePersistedFeedFilter<SortOption>('home', 'sort', DEFAULT_HOME_SORT);
-  const [selectedDate, setSelectedDateRaw] = usePersistedFeedFilter<DateFilterOption>('home', 'date', DATE_FILTER_OPTIONS[0]);
+  const [selectedSort, setSelectedSortRaw] = usePersistedFeedFilter<SortOption>('home', 'sort', DEFAULT_HOME_SORT, SORT_OPTIONS);
+  const [selectedDate, setSelectedDateRaw] = usePersistedFeedFilter<DateFilterOption>('home', 'date', DATE_FILTER_OPTIONS[0], DATE_FILTER_OPTIONS);
   const [selectedPostType, setSelectedPostTypeRaw] = usePersistedFeedFilter<PostTypeFilterValue>('home', 'postType', 'all');
   const [contentFilters, toggleContentFilterRaw, resetContentFiltersRaw] = usePersistedContentFilters('home');
   const [selectedCategories, setSelectedCategoriesRaw] = usePersistedFeedFilter<string[]>('home', 'categories', []);
@@ -1048,7 +1069,9 @@ export function HomeFeed({ active = true, shuffleKey, isRefreshing, showFilters 
         videoUrl: item.videoUrl
           ? (item.videoUrl.startsWith('http') ? item.videoUrl : `https://dehubcdn.ams3.cdn.digitaloceanspaces.com/${item.videoUrl}`)
           : `https://dehubcdn.ams3.cdn.digitaloceanspaces.com/videos/${id}.mp4`,
+        hlsUrl: buildHlsUrl(item.hlsUrl),
         transcodingStatus: item.transcodingStatus,
+        storyboard: toStoryboard(item.storyboard),
         // Both, not one: the caption usually lives in the title, and a short
         // that carried a title AND a description only ever showed the second.
         title: item.name || '',
@@ -2001,6 +2024,11 @@ export function HomeFeed({ active = true, shuffleKey, isRefreshing, showFilters 
                 buttonClassName="px-3 py-1.5 rounded-xl text-xs"
               />
             </div>
+          )}
+
+          {/* One hashtag picked — where a tapped #tag lands: offer to follow it. */}
+          {selectedCategories.length === 1 && (
+            <FollowTagBar tag={selectedCategories[0]} onClear={() => setSelectedCategories([])} />
           )}
 
           {/*

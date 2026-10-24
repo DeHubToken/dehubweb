@@ -23,6 +23,10 @@ import Moon from "@/components/ui/cut-icons/appearance";
 import Lock from "@/components/ui/cut-icons/privacy";
 import Filter from "@/components/ui/cut-icons/filter";
 import LayoutGrid from "@/components/ui/cut-icons/apps";
+import HomeCutIcon from "@/components/ui/cut-icons/home";
+import FilterCutIcon from "@/components/ui/cut-icons/filter";
+import { FEED_TABS } from "@/constants/app.constants";
+import { FEED_DEFAULTS_CHANGED_EVENT, hasFeedToggles, parseDefaultFeedTab, readDefaultFeedTab, resetFeedToggles, setDefaultFeedTab, type FeedTabValue } from "@/lib/feed-defaults";
 import VolumeX from "@/components/ui/cut-icons/mute";
 import Sparkles from "@/components/ui/cut-icons/assistant";
 import MapPin from "@/components/ui/cut-icons/location";
@@ -267,6 +271,11 @@ import { DeHubPageLoader, ButtonLoader } from '@/components/app/DeHubLoader';
 import { usePendingAction } from '@/hooks/use-pending-action';
 import { useScrollFadeMask } from '@/components/app/feeds/useScrollFadeMask';
 import { ThemePreviewCard } from '@/components/app/settings/ThemePreviewCard';
+import { KeywordFiltersSection } from '@/components/app/settings/KeywordFiltersSection';
+import { NotificationFiltersSetting } from '@/components/app/settings/NotificationFiltersSetting';
+import { ProfileFieldsSetting } from '@/components/app/settings/ProfileFieldsSetting';
+import { FediverseHandleSetting } from '@/components/app/settings/FediverseHandleSetting';
+import { ConnectedAppsSetting } from '@/components/app/settings/ConnectedAppsSetting';
 
 export default function SettingsPage() {
   const { t: _copy } = _useCopy();
@@ -1117,6 +1126,15 @@ function ProfileSettings() {
         />
       </div>
 
+      {/* Profile fields — label/value lines under the bio, links verified by rel="me" */}
+      <ProfileFieldsSetting />
+
+      {/* Fediverse — the @username@dehub.io address Mastodon can follow */}
+      <FediverseHandleSetting />
+
+      {/* Connected apps — Mastodon apps signed in to this account */}
+      <ConnectedAppsSetting />
+
       {/* Links */}
       <div className="space-y-6">
         {/* Only the social rows collapse — there are seven of them and most
@@ -1408,6 +1426,9 @@ function NotificationSettings() {
           </div>
         </div>
       </div>
+
+      {/* Who may reach you at all — Mastodon's notification filters */}
+      <NotificationFiltersSetting />
 
       {/* Activity */}
       <div>
@@ -2029,6 +2050,11 @@ function PrivacySettings() {
         <BlockedUsersSection />
       </div>
 
+      {/* Muted words — keyword filters */}
+      <div data-setting-anchor="muted-words">
+        <KeywordFiltersSection />
+      </div>
+
       {/* Geo-Blocking */}
       <div data-setting-anchor="geo-blocking">
         <h3 className={SETTINGS_HEADING_CLASS}>{t('settings.geoBlocking')}</h3>
@@ -2646,6 +2672,8 @@ function AppearanceSettings({ theme, themeChoice, setTheme }: { theme: string; t
               ]}
             />}
           />
+          <DefaultFeedSetting />
+          <FeedTogglesSetting />
           <SettingsRow
             icon={<LayoutGrid />}
             anchor="default-profile-tab"
@@ -2679,6 +2707,65 @@ function AppearanceSettings({ theme, themeChoice, setTheme }: { theme: string; t
       </div>
 
     </div>
+  );
+}
+
+/** Settings > Appearance > Layout: the feed a new session opens on. */
+function DefaultFeedSetting() {
+  const { t } = useTranslation();
+  const [tab, setTab] = useState<FeedTabValue>(() => readDefaultFeedTab());
+  return (
+    <SettingsRow
+      icon={<HomeCutIcon />}
+      anchor="default-feed"
+      title={t('settings.defaultFeed', 'Default feed')}
+      description={t('settings.defaultFeedDesc', 'Choose which feed opens every time you open DeHub')}
+      action={<SettingDrawerSelect
+        value={tab}
+        onValueChange={(value) => {
+          const next = parseDefaultFeedTab(value);
+          setTab(next);
+          setDefaultFeedTab(next);
+        }}
+        title={t('settings.defaultFeed', 'Default feed')}
+        options={FEED_TABS.map((o) => ({ value: o.value, label: t(`feed.${o.value}`, o.label) }))}
+      />}
+    />
+  );
+}
+
+/**
+ * Filter toggles a viewer turns on in any feed stay on as their defaults
+ * (lib/feed-defaults). This is the one place that puts them all back.
+ */
+function FeedTogglesSetting() {
+  const { t } = useTranslation();
+  const [saved, setSaved] = useState(() => hasFeedToggles());
+  useEffect(() => {
+    const sync = () => setSaved(hasFeedToggles());
+    window.addEventListener(FEED_DEFAULTS_CHANGED_EVENT, sync);
+    return () => window.removeEventListener(FEED_DEFAULTS_CHANGED_EVENT, sync);
+  }, []);
+  return (
+    <SettingsRow
+      icon={<FilterCutIcon />}
+      anchor="feed-toggles"
+      title={t('settings.feedToggles', 'Reset feed toggles')}
+      description={t('settings.feedTogglesDesc', 'Filters you turn on in a feed stay on as your defaults until you reset them')}
+      action={
+        <Button
+          variant="outline"
+          size="sm"
+          disabled={!saved}
+          onClick={() => {
+            resetFeedToggles();
+            toast.success(t('settings.feedTogglesCleared', 'Feed toggles reset'));
+          }}
+        >
+          {t('settings.reset', 'Reset')}
+        </Button>
+      }
+    />
   );
 }
 

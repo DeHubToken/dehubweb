@@ -137,6 +137,8 @@ import { CoachSuggestions } from './CoachSuggestions';
 import { CommonGroundSheet } from './CommonGroundSheet';
 import { viewerShareUrl } from '@/lib/share-url';
 import { trackShare } from '@/lib/analytics';
+import type { ReplyPolicy } from '@/lib/api/dehub/types';
+import { KeywordFilterGate } from './KeywordFilterGate';
 
 // The comment data shape and its API mapper live in @/lib/comment-mapper so
 // non-component consumers can share them. Re-exported here for the surfaces
@@ -156,6 +158,8 @@ interface CommentsSectionProps {
    *  existing comments stay listed — the server refuses new ones either way
    *  (requestCommentFunc), so this is presentation, not the enforcement. */
   commentsDisabled?: boolean;
+  /** Who may reply, when replies are on; shown above the composer. */
+  replyPolicy?: ReplyPolicy;
   /**
    * The post is published for children, so its thread is a Kids Mode room:
    * only a Kids Mode session may write in it. Presentation only — the server
@@ -439,7 +443,7 @@ const PostCreatorContext = createContext<{
  * module constant, and the per-row figures (tip total, tipped, highlighted) as
  * primitives. A new inline function here would quietly undo all of it.
  */
-const CommentItem = memo(function CommentItem({ comment, tokenId, onLike, onShowLikers, onReact, onReply, onShare, onEdit, onDelete, onTip, tipTotal, viewerTipped, onUserPress, isReply, threadLineAbove, threadLineBelow, isOwnComment, isThreadEntry, onAnchor, onPin, highlighted, onReport }: CommentItemProps) {
+const CommentItemBody = memo(function CommentItem({ comment, tokenId, onLike, onShowLikers, onReact, onReply, onShare, onEdit, onDelete, onTip, tipTotal, viewerTipped, onUserPress, isReply, threadLineAbove, threadLineBelow, isOwnComment, isThreadEntry, onAnchor, onPin, highlighted, onReport }: CommentItemProps) {
   const [isEditing, setIsEditing] = useState(false);
   // Bumps each time this viewer tips this comment, replaying the gem swirl.
   const [tipBurst, setTipBurst] = useState(0);
@@ -942,11 +946,20 @@ const CommentItem = memo(function CommentItem({ comment, tokenId, onLike, onShow
   );
 });
 
+/** Comments pass the viewer's keyword filters too, under Conversations. */
+const CommentItem = memo(function FilteredCommentItem(props: CommentItemProps) {
+  return (
+    <KeywordFilterGate texts={[props.comment.text]} own={props.isOwnComment} context="thread" className="my-1">
+      <CommentItemBody {...props} />
+    </KeywordFilterGate>
+  );
+});
+
 // ============================================================================
 // MAIN COMPONENT
 // ============================================================================
 
-function CommentsSectionForAccount({ tokenId, onClose, initialTab, embedded = false, commentsDisabled = false, forKids = false, postAuthorAddress, onDirtyChange, page = false, stage = false, stageCount, onStageTabChange }: CommentsSectionProps) {
+function CommentsSectionForAccount({ tokenId, onClose, initialTab, embedded = false, commentsDisabled = false, replyPolicy, forKids = false, postAuthorAddress, onDirtyChange, page = false, stage = false, stageCount, onStageTabChange }: CommentsSectionProps) {
   // A kids post's thread is open to Kids Mode only. The post's own author is
   // exempt server-side, but they are also the one person who can always reach
   // it, so there is nothing to show them here.
@@ -2815,6 +2828,17 @@ function CommentsSectionForAccount({ tokenId, onClose, initialTab, embedded = fa
         )}
       </div>
 
+        {/* Who may reply, when the author narrowed it. Said up front, so a
+            refused reply is never the first anybody hears of it. */}
+        {!commentsDisabled && replyPolicy && replyPolicy !== 'public' && (
+          <p data-reply-policy={replyPolicy} className="px-1 pt-2 text-xs text-zinc-500">
+            {replyPolicy === 'followers'
+              ? t('replyPolicy.noticeFollowers')
+              : replyPolicy === 'following'
+                ? t('replyPolicy.noticeFollowing')
+                : t('replyPolicy.noticeMentioned')}
+          </p>
+        )}
         {/* Composer, or a notice in its place when the creator turned replies
             off. The list above stays as-is on purpose: disabling comments hides
             no history, it only stops new ones. */}

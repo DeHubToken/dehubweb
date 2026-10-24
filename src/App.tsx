@@ -18,6 +18,7 @@ import { ConnectLinkedWalletModal } from "@/components/app/wallet-setup/ConnectL
 import { SelfBadgeSync } from "@/components/app/SelfBadgeSync";
 import { BadgeShowcaseHost } from "@/components/app/badge-showcase/BadgeShowcaseHost";
 import { ViewingPreferencesSync } from "@/components/app/ViewingPreferencesSync";
+import { FeedDefaultsSync } from "@/components/app/FeedDefaultsSync";
 import { useAuth } from "@/contexts/AuthContext";
 import { usePreloadIcons } from "@/hooks/use-preload-icons";
 import { useNotificationClickRouting } from "@/hooks/use-notification-click-routing";
@@ -180,6 +181,7 @@ const MaintenancePage = React.lazy(() => import('./pages/MaintenancePage'));
 const ObsOverlayPage = React.lazy(() => import('./pages/ObsOverlayPage'));
 const AuthConfirm = React.lazy(() => import("./pages/AuthConfirm"));
 const TelegramAuth = React.lazy(() => import("./pages/TelegramAuth"));
+const OAuthAuthorizePage = React.lazy(() => import("./pages/OAuthAuthorizePage"));
 const CreatorsPage = React.lazy(() => import("./pages/app/CreatorsPage"));
 const SkillPage = React.lazy(() => import("./pages/SkillPage"));
 const NotFound = React.lazy(() => import("./pages/NotFound"));
@@ -440,6 +442,7 @@ function AppContent() {
       <QuickActionsHost />
       <BadgeShowcaseHost />
       <ViewingPreferencesSync />
+      <FeedDefaultsSync />
       <GiveawayPrizeModal />
       <ConnectLinkedWalletModal />
       {/* Always mounted, and closed it costs nothing: ui/drawer keeps vaul's
@@ -533,6 +536,9 @@ function AppContent() {
               stay on this exact path — it is registered against the bot, and
               the mobile app builds the same URL with ?app=1. */}
           <Route path="/auth/telegram" element={<Suspense fallback={<PageLoader />}><TelegramAuth /></Suspense>} />
+          {/* Where Mastodon apps send someone signing in to dehub.io. The token
+              endpoints beside it are relayed to the API by the Worker. */}
+          <Route path="/oauth/authorize" element={<Suspense fallback={<PageLoader />}><OAuthAuthorizePage /></Suspense>} />
 
           {/*
             /admin used to live here — a second admin frontend on the public

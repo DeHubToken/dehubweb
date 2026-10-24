@@ -51,6 +51,11 @@ function videoItemToNFT(video: VideoItem): Partial<DeHubNFT> {
     description: soundtrack ? `${description}\n${soundtrack}` : description,
     imageUrl: video.thumbnail || undefined,
     videoUrl: isLivePost ? undefined : video.videoUrl,
+    // Already absolute; toStoryboard passes a full URL straight through.
+    storyboard: video.storyboard,
+    // Survives the round trip so the post page keeps the feed card's ladder
+    // (buildHlsUrl passes the already-built URL through).
+    hlsUrl: isLivePost ? undefined : video.hlsUrl,
     audioUrl: video.audioUrl,
     audioDuration: video.audioDuration,
     videoDuration: video.durationSeconds || parseDurationToSeconds(video.duration),

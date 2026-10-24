@@ -10,6 +10,7 @@ import { BadgedName } from '@/components/app/BadgedName';
 import { SwipeableCarousel } from '@/components/app/SwipeableCarousel';
 import { WhatsHappening } from '@/components/app/WhatsHappening';
 import { NewMembersBento } from '@/components/app/NewMembersBento';
+import { MobileWhoToFollowCarousel } from '@/components/app/mobile';
 import { PageBody, PageIsland, PageTabs } from '@/components/app/page-kit/PageKit';
 import { useDebouncedValue } from '@/hooks/use-debounced-value';
 import { useTranslation } from 'react-i18next';
@@ -1154,6 +1155,11 @@ export default function ExplorePage() {
                       <p className="text-zinc-500 text-sm">{t('explorePage.noRecentSearches')}</p>
                     )}
                   </div>
+
+                  {/* People to follow, as cover cards, the same row the feed
+                      carries. Nothing renders while it loads or when there is
+                      nobody left to suggest. */}
+                  <MobileWhoToFollowCarousel surface="explore" />
 
                   {/* Trending Bento — same component as sidebar */}
                   <WhatsHappening showCountrySelector surface="explore" />

@@ -74,6 +74,153 @@
   "agents.workspace.action": "Action",
   "agents.workspace.cadence": "Calendrier",
   "agents.workspace.filter": "Filtrer l’activité",
+  "mastodonApps": {
+    "authTitle": "Se connecter avec DeHub",
+    "authWants": "{{app}} veut utiliser votre compte DeHub",
+    "authSignedInAs": "Connecté en tant que {{name}}",
+    "authSignIn": "Connectez-vous pour continuer",
+    "allow": "Autoriser",
+    "cancel": "Annuler",
+    "scopeRead": "Voir vos fils, publications, notifications et signets",
+    "scopeWrite": "Publier, répondre, aimer, partager et ajouter aux signets en votre nom",
+    "scopeFollow": "Suivre, ne plus suivre, bloquer et masquer des comptes",
+    "scopePush": "Vous envoyer des notifications",
+    "scopeProfile": "Voir votre profil",
+    "invalid": "Ce lien de connexion n'est pas valide. Retournez dans l'appli et réessayez.",
+    "failed": "Ça n'a pas marché. Réessayez.",
+    "codeTitle": "Copiez ce code dans l'appli pour finir de vous connecter.",
+    "copy": "Copier",
+    "copied": "Copié",
+    "seoDescription": "Laissez une appli Mastodon utiliser votre compte DeHub.",
+    "redirecting": "Retour à {{app}}…",
+    "connectedTitle": "Applis connectées",
+    "connectedDescription": "Les applis Mastodon auxquelles vous vous êtes connecté avec ce compte. Retirez-en une pour la déconnecter.",
+    "connectedEmpty": "Aucune appli connectée pour l'instant.",
+    "lastUsed": "Dernière utilisation {{date}}",
+    "remove": "Retirer",
+    "removed": "Appli retirée"
+  },
+  "fediverse": {
+    "title": "Fédivers",
+    "description": "Les personnes sur Mastodon et les autres applis du fédivers peuvent vous trouver et vous suivre à cette adresse. Vos nouvelles publications publiques les y rejoignent.",
+    "copy": "Copier",
+    "copied": "Copié",
+    "privateNote": "Les comptes privés ne sont pas visibles dans le fédivers.",
+    "noUsername": "Choisissez un nom d'utilisateur pour obtenir une adresse fédivers."
+  },
+  "profileFields": {
+    "title": "Champs du profil",
+    "description": "Jusqu'à quatre lignes en plus sur votre profil, comme un site web ou vos pronoms.",
+    "label": "Libellé",
+    "content": "Contenu",
+    "save": "Enregistrer les champs",
+    "saved": "Champs du profil enregistrés",
+    "failed": "Ça n'a pas été enregistré. Réessayez.",
+    "verified": "Lien vérifié",
+    "verifyHint": "Pour vérifier un lien, ajoutez ceci à cette page, puis enregistrez à nouveau : {{snippet}}"
+  },
+  "followedTags": {
+    "follow": "Suivre #{{tag}}",
+    "following": "Suivi",
+    "unfollow": "Ne plus suivre #{{tag}}",
+    "followed": "Vous suivez maintenant #{{tag}}. Ses publications apparaîtront dans votre fil Abonnements.",
+    "unfollowed": "Vous ne suivez plus #{{tag}}",
+    "failed": "Ça n'a pas été enregistré. Réessayez.",
+    "clear": "Effacer"
+  },
+  "notificationFilters": {
+    "title": "Filtrer les notifications de",
+    "description": "Choisissez ce qui se passe quand quelqu'un hors de votre cercle interagit avec vous. Les notifications filtrées attendent dans Filtrées, sans badge ni notification push.",
+    "notFollowing": "Personnes que vous ne suivez pas",
+    "notFollowers": "Personnes qui ne vous suivent pas",
+    "newAccounts": "Nouveaux comptes (moins de 30 jours)",
+    "accept": "Me notifier",
+    "filter": "Filtrer",
+    "drop": "Masquer complètement",
+    "filteredTitle": "Notifications filtrées",
+    "filteredEmpty": "Rien n'a été filtré.",
+    "failed": "Ça n'a pas été enregistré. Réessayez."
+  },
+  "keywordFilters": {
+    "title": "Mots masqués",
+    "description": "Masquez les publications et commentaires qui contiennent ces mots, ou repliez-les derrière un avertissement. Vous seul voyez cette liste.",
+    "placeholder": "Mot ou expression",
+    "add": "Masquer",
+    "added": "Masqué : {{phrase}}",
+    "wholeWord": "Mot entier uniquement",
+    "whenMatches": "Quand une publication correspond",
+    "warn": "Afficher un avertissement",
+    "hide": "La masquer",
+    "howLong": "Pendant combien de temps",
+    "forever": "Jusqu'à ce que je le retire",
+    "duration1h": "Pendant 1 heure",
+    "duration1d": "Pendant 1 jour",
+    "duration7d": "Pendant 7 jours",
+    "duration30d": "Pendant 30 jours",
+    "where": "Où",
+    "home": "Accueil",
+    "public": "Explorer et rechercher",
+    "profile": "Profils",
+    "thread": "Conversations",
+    "notifications": "Notifications",
+    "empty": "Vous n'avez masqué aucun mot.",
+    "remove": "Ne plus masquer",
+    "until": "Jusqu'au {{date}}",
+    "filtered": "Filtré : {{phrase}}",
+    "showAnyway": "Afficher quand même",
+    "failed": "Ça n'a pas été enregistré. Réessayez."
+  },
+  "postVisibility": {
+    "label": "Qui peut voir ceci",
+    "public": "Tout le monde",
+    "followers": "Abonnés uniquement",
+    "direct": "Personnes mentionnées uniquement",
+    "noRepost": "Seules les publications publiques peuvent être republiées",
+    "directHint": "Seules les personnes que vous mentionnez avec @ verront cette publication",
+    "needsMention": "Mentionnez au moins une personne avec @ pour publier uniquement pour les personnes mentionnées"
+  },
+  "replyPolicy": {
+    "label": "Qui peut répondre",
+    "public": "Tout le monde",
+    "followers": "Vos abonnés",
+    "following": "Les personnes que vous suivez",
+    "mentioned": "Mentionnés uniquement",
+    "noticeFollowers": "Seuls les abonnés de l'auteur peuvent répondre",
+    "noticeFollowing": "Seules les personnes que l'auteur suit peuvent répondre",
+    "noticeMentioned": "Seules les personnes mentionnées dans la publication peuvent répondre",
+    "refused": "L'auteur a limité qui peut répondre à cette publication"
+  },
+  "quotePolicy": {
+    "label": "Qui peut citer",
+    "public": "Tout le monde",
+    "followers": "Abonnés",
+    "nobody": "Moi uniquement",
+    "off": "L'auteur a désactivé les citations",
+    "removed": "L'auteur a retiré sa publication de cette citation",
+    "remove": "Retirer",
+    "removedToast": "Votre publication a été retirée de cette citation",
+    "removeFailed": "Impossible de retirer votre publication de la citation",
+    "refused": "L'auteur ne vous autorise pas à citer cette publication"
+  },
+  "contentWarning": {
+    "label": "Avertissement de contenu",
+    "placeholder": "Écrivez votre avertissement ici",
+    "add": "Ajouter un avertissement de contenu",
+    "remove": "Retirer l'avertissement de contenu",
+    "show": "Afficher la publication"
+  },
+  "altText": {
+    "badge": "ALT",
+    "add": "Ajouter une description",
+    "edit": "Modifier la description",
+    "titleImage": "Décrivez cette image",
+    "titleVideo": "Décrivez cette vidéo",
+    "help": "Pour les personnes qui ne peuvent pas la voir. Les lecteurs d'écran la lisent à voix haute.",
+    "placeholder": "Que montre-t-elle ? Reprenez tout texte qu'elle contient.",
+    "show": "Afficher la description",
+    "saved": "Description enregistrée",
+    "saveFailed": "Impossible d'enregistrer la description"
+  },
   "liveRecap": {
     "title": "Récapitulatif du flux",
     "justEnded": "Récapitulatif de votre flux",
@@ -303,6 +450,7 @@
     "heading": "Courts DeHub"
   },
   "settings": {
+    "usernameTaken": "Nom d'utilisateur déjà pris",
     "showDislikesDesc": "Tout le monde peut ouvrir l'onglet « Je n'aime pas » de votre profil. Désactivé, vous seul pouvez le voir.",
     "showDislikes": "Montrer mes « je n'aime pas » à tout le monde",
     "postingChain": "Blockchain des publications",
@@ -431,6 +579,11 @@
       "hintDeny": "Les systèmes d'IA et les robots qui respectent ce signal sont priés de ne pas s'entraîner à l'audio, à l'art et à l'écriture. Les chenilles qui ignorent le signal ne sont pas bloquées par celui-ci.",
       "saved": "Préférence de formation à l'IA enregistrée"
     },
+    "defaultFeed": "Fil par défaut",
+    "defaultFeedDesc": "Choisissez le fil qui s'ouvre chaque fois que vous ouvrez DeHub",
+    "feedToggles": "Réinitialiser les filtres du fil",
+    "feedTogglesDesc": "Les filtres que vous activez dans un fil restent vos réglages par défaut jusqu'à ce que vous les réinitialisiez",
+    "feedTogglesCleared": "Filtres du fil réinitialisés",
     "defaultProfileTab": "Onglet de profil par défaut",
     "defaultProfileTabDesc": "Choisissez l'onglet que les visiteurs voient en premier sur votre profil",
     "public": "Public",
@@ -936,6 +1089,9 @@
     "dmSent": "{{amount}} jetons envoyés à {{name}} !"
   },
   "postOptions": {
+    "embed": "Intégrer",
+    "copyEmbedCode": "Copier le code d'intégration",
+    "embedCodeCopied": "Code d'intégration copié",
     "options": "Options",
     "aiOverview": "Vue d'ensemble de l'IA",
     "sendTip": "Envoyer un pourboire",
@@ -1752,6 +1908,13 @@
     "encryptionSetupFailed": "La configuration du chiffrement a échoué. Veuillez réessayer.",
     "encryptionTurnOn": "Activer",
     "cannotDecrypt": "Message chiffré — impossible à ouvrir sur cet appareil",
+    "lockedTitle": "Déverrouillez pour lire vos messages",
+    "lockedBody": "Votre discussion avec {{name}} est chiffrée de bout en bout. Déverrouillez votre portefeuille sur cet appareil pour l'ouvrir.",
+    "lockedUnlock": "Déverrouiller le portefeuille",
+    "lockedTryAgain": "Réessayer",
+    "lockedPrivate": "Vous seul pouvez les lire",
+    "undecryptableRun_one": "{{count}} message ne peut pas être ouvert sur cet appareil",
+    "undecryptableRun_other": "{{count}} messages ne peuvent pas être ouverts sur cet appareil",
     "title": "Messages",
     "searchConversations": "Rechercher des conversations...",
     "failedToLoad": "Échec du chargement des conversations",
@@ -1796,7 +1959,19 @@
     "mostViewed": "Les plus vus",
     "trendingWeek": "Tendances de la semaine",
     "newest": "Nouveautés",
-    "videoChartOrder": "Ordre du classement des clips"
+    "videoChartOrder": "Ordre du classement des clips",
+    "country": "Pays",
+    "quality": "Qualité",
+    "votes": "Votes",
+    "plays": "Écoutes",
+    "onAir": "À l’antenne",
+    "liveRadio": "Radio en direct",
+    "pause": "Pause",
+    "listenLive": "Écouter en direct",
+    "nextStation": "Station suivante",
+    "shareStation": "Partager la station",
+    "shareStationTitle": "{{name}} sur DeHub Radio",
+    "linkCopied": "Lien copié"
   },
   "notFound": {
     "title": "Page non trouvée",
@@ -2547,6 +2722,8 @@
     "copyFailed": "Impossible de copier"
   },
   "profileOptions": {
+    "copyRssFeed": "Copier le lien du flux RSS",
+    "rssFeedCopied": "Lien du flux RSS copié",
     "copyProfileUrl": "Copier l'URL du profil",
     "copyUsername": "Copier le nom d'utilisateur",
     "copyAddress": "Copier l'adresse",
@@ -2849,6 +3026,7 @@
     "statsLoadFailed": "Impossible de charger les statistiques de staking"
   },
   "communities": {
+    "chatTab": "Discussion",
     "followerInvites": {
       "title": "Inviter des abonnés",
       "detail": "Choisissez jusqu’à 50 abonnés par lot. Les messages privés payants ou fermés sont ignorés. Vérifiez dans le chat les envois non confirmés avant de réessayer.",
@@ -4681,6 +4859,7 @@
     "sellYourFractions": "Vendez vos fractions ({{held}} détenus)"
   },
   "creator": {
+    "libraryEmpty": "Vos générations enregistrées apparaîtront ici.",
     "toolRemake": "Remake",
     "toolMaboroshi": "Maboroshi",
     "toolMaboroshiDesc": "Remplacez des personnages et des objets, vérifiez un brouillon, puis exportez avec votre bande-son originale.",
@@ -6541,6 +6720,8 @@
     }
   },
   "goLive": {
+    "bigEvent": "Grand événement",
+    "bigEventHint": "Pour un large public : les spectateurs regardent avec environ 20 secondes de décalage, avec moins de coupures.",
     "goLive": "Aller en direct",
     "youAreLive": "Vous êtes en direct",
     "streamReady": "Flux prêt",
@@ -7355,7 +7536,10 @@
     "pause": "Pause",
     "listens_one": "{{count}} écoute",
     "listens_other": "{{count}} écoutes",
-    "visualizerColour": "Couleur de la visualisation"
+    "visualizerColour": "Couleur de la visualisation",
+    "lyrics": "Paroles",
+    "lyricsLoading": "Recherche des paroles…",
+    "lyricsNone": "Aucune parole trouvée"
   },
   "converter": {
     "seoTitle": "Convertisseur — importer une vidéo vers DeHub",
@@ -7872,6 +8056,7 @@
     "seoDescription": "Documentation officielle de DeHub : présentation de la plateforme, dApps, économie du token jetons, staking, jeux, feuille de route, FAQ et plus encore."
   },
   "dex": {
+    "title": "jetons / USD",
     "seoTitle": "DEX — Échangez du jetons à votre prix",
     "seoDescription": "Définissez votre prix d'achat ou de vente de jetons avec un ordre limite Uniswap v4 sur Base ou BNB Chain. Carnet d'ordres en direct, profondeur du marché et un prix USD partagé.",
     "venue": "Réseau",
@@ -8096,6 +8281,7 @@
     "priceChartCleared": "Graphe des prix effacé. Prix de référence corrigé : $0.0001. Les prix d'exécution dépendent des ordres disponibles."
   },
   "editor": {
+    "video": { "tFade": "Fondu enchaîné", "none": "Aucune", "transition": "Transition", "speed": "Vitesse", "sound": "Son","video": "Vidéo"},
     "review": {
       "title": "Révision du projet",
       "shared": "Partagé avec vous",
@@ -10940,6 +11126,8 @@
     "f45e06965f93": "Aucune suggestion de suivi pour le moment",
     "34f5da2599fa": "Les nouvelles suggestions de compte apparaîtront ici.",
     "bac527bf9a36": "Suggestions à suivre",
+    "036cfd952896": "Qui suivre",
+    "0c820caf16c0": "Pas encore de bio",
     "e139251e4f5b": "Supprimer le post",
     "b3661ad568df": "Cette action ne peut pas être annulée. Votre publication sera supprimée définitivement.",
     "685ecb984ac2": "Suppression...",
@@ -14244,5 +14432,15 @@
   },
   "player": {
     "volume": "Volume"
+  },
+  "loginStack": {
+    "tip": "Pourboire en DHB",
+    "headlineTop": "Tu posséderas tout",
+    "headlineAccent": "et tu seras heureux.",
+    "orContinueWith": "ou continuer avec",
+    "phone": "Téléphone",
+    "fingerprint": "Empreinte",
+    "exploreFirst": "Explorer d'abord",
+    "codeNote": "On t'envoie un code par e-mail, sans mot de passe."
   }
 }

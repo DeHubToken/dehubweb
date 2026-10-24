@@ -42,7 +42,7 @@ import { useProfileDislikes } from '@/hooks/use-profile-dislikes';
 import { mapNFTToFeedItem } from '@/lib/nft-to-feed-item';
 import { usePublicPlaylists, usePublicPlaylistItems } from '@/hooks/use-bookmark-folders';
 import type { PublicPlaylist } from '@/lib/api/dehub';
-import { buildImageUrl, buildFeedImageUrls, buildAvatarUrl, extractAvatarPath, buildVideoUrl } from '@/lib/media-url';
+import { buildImageUrl, buildFeedImageUrls, buildAvatarUrl, extractAvatarPath, buildVideoUrl, buildHlsUrl } from '@/lib/media-url';
 import { formatTimeAgo, formatViews } from '@/lib/feed-utils';
 import { resolveViewCount } from '@/lib/engagement';
 import type { TextPost, ImagePost, VideoItem } from '@/types/feed.types';
@@ -65,6 +65,7 @@ import imageFrame3dIcon from '@/assets/icons/image-frame-3d-icon.webp';
 import lock3dIcon from '@/assets/lock-3d.webp';
 import home3dIcon from '@/assets/icons/home-3d-icon.webp';
 import comment3dIcon from '@/assets/icons/comment-3d-icon.webp';
+import { toStoryboard } from '@/lib/storyboard';
 
 /** Empty-state copy when the channel toolbar's sort/search is what emptied the tab. */
 const NO_MATCHES_COPY = {
@@ -1050,7 +1051,9 @@ function PinnedPostCard({ pin }: { pin: any }) {
           id: String(post.tokenId), type: 'video', contentRating: post.contentRating,
           thumbnail: buildImageUrl(post.tokenId, post.imageUrl) || '/placeholder.svg',
           videoUrl: buildVideoUrl(post.tokenId),
+          hlsUrl: buildHlsUrl(post.hlsUrl),
           transcodingStatus: post.transcodingStatus,
+          storyboard: toStoryboard((post as { storyboard?: unknown }).storyboard),
           title: post.title || post.name || '',
           channel: post.minterDisplayName || post.minterUsername || creatorObj?.display_name || 'Unknown',
           channelAvatar: avatar, verified: false,

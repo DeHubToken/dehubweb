@@ -1,4 +1,151 @@
 {
+  "mastodonApps": {
+    "authTitle": "Inicia la sessió amb DeHub",
+    "authWants": "{{app}} vol fer servir el teu compte de DeHub",
+    "authSignedInAs": "Has iniciat la sessió com a {{name}}",
+    "authSignIn": "Inicia la sessió per continuar",
+    "allow": "Permet",
+    "cancel": "Cancel·la",
+    "scopeRead": "Veure les teves cronologies, publicacions, notificacions i desats",
+    "scopeWrite": "Publicar, respondre, fer m'agrada, impulsar i desar en nom teu",
+    "scopeFollow": "Seguir, deixar de seguir, bloquejar i silenciar comptes",
+    "scopePush": "Enviar-te notificacions",
+    "scopeProfile": "Veure el teu perfil",
+    "invalid": "Aquest enllaç d'inici de sessió no és vàlid. Torna a l'app i torna-ho a provar.",
+    "failed": "No ha funcionat. Torna-ho a provar.",
+    "codeTitle": "Copia aquest codi a l'app per acabar d'iniciar la sessió.",
+    "copy": "Copia",
+    "copied": "Copiat",
+    "seoDescription": "Deixa que una app de Mastodon faci servir el teu compte de DeHub.",
+    "redirecting": "Et tornem a {{app}}…",
+    "connectedTitle": "Apps connectades",
+    "connectedDescription": "Apps de Mastodon on has iniciat la sessió amb aquest compte. Treu-ne una per tancar-hi la sessió.",
+    "connectedEmpty": "Encara no hi ha cap app connectada.",
+    "lastUsed": "Últim ús {{date}}",
+    "remove": "Treu",
+    "removed": "App treta"
+  },
+  "fediverse": {
+    "title": "Fedivers",
+    "description": "La gent de Mastodon i d'altres apps del fedivers et pot trobar i seguir en aquesta adreça. Les teves noves publicacions públiques els arriben allà.",
+    "copy": "Copia",
+    "copied": "Copiat",
+    "privateNote": "Els comptes privats no es mostren al fedivers.",
+    "noUsername": "Tria un nom d'usuari per tenir una adreça al fedivers."
+  },
+  "profileFields": {
+    "title": "Camps del perfil",
+    "description": "Fins a quatre línies més al teu perfil, com un lloc web o els teus pronoms.",
+    "label": "Etiqueta",
+    "content": "Contingut",
+    "save": "Desa els camps",
+    "saved": "S'han desat els camps del perfil",
+    "failed": "No s'ha desat. Torna-ho a provar.",
+    "verified": "Enllaç verificat",
+    "verifyHint": "Per verificar un enllaç, afegeix això a aquella pàgina i desa de nou: {{snippet}}"
+  },
+  "followedTags": {
+    "follow": "Segueix #{{tag}}",
+    "following": "Seguint",
+    "unfollow": "Deixa de seguir #{{tag}}",
+    "followed": "Ara segueixes #{{tag}}. Les seves publicacions sortiran al teu feed de Seguint.",
+    "unfollowed": "Has deixat de seguir #{{tag}}",
+    "failed": "No s'ha desat. Torna-ho a provar.",
+    "clear": "Esborra"
+  },
+  "notificationFilters": {
+    "title": "Filtra les notificacions de",
+    "description": "Tria què passa quan algú de fora del teu cercle interactua amb tu. Les notificacions filtrades esperen a Filtrades, sense indicador ni avís push.",
+    "notFollowing": "Gent que no segueixes",
+    "notFollowers": "Gent que no et segueix",
+    "newAccounts": "Comptes nous (menys de 30 dies)",
+    "accept": "Avisa'm",
+    "filter": "Filtra",
+    "drop": "Amaga del tot",
+    "filteredTitle": "Notificacions filtrades",
+    "filteredEmpty": "No s'ha filtrat res.",
+    "failed": "No s'ha desat. Torna-ho a provar."
+  },
+  "keywordFilters": {
+    "title": "Paraules silenciades",
+    "description": "Amaga les publicacions i els comentaris que continguin aquestes paraules, o plega'ls darrere d'un avís. Només tu veus aquesta llista.",
+    "placeholder": "Paraula o frase",
+    "add": "Silencia",
+    "added": "Silenciat: {{phrase}}",
+    "wholeWord": "Només la paraula sencera",
+    "whenMatches": "Quan una publicació coincideix",
+    "warn": "Mostra un avís",
+    "hide": "Amaga-la",
+    "howLong": "Quant de temps",
+    "forever": "Fins que la tregui",
+    "duration1h": "Durant 1 hora",
+    "duration1d": "Durant 1 dia",
+    "duration7d": "Durant 7 dies",
+    "duration30d": "Durant 30 dies",
+    "where": "On",
+    "home": "Inici",
+    "public": "Explora i cerca",
+    "profile": "Perfils",
+    "thread": "Converses",
+    "notifications": "Notificacions",
+    "empty": "No has silenciat cap paraula.",
+    "remove": "Deixa de silenciar",
+    "until": "Fins al {{date}}",
+    "filtered": "Filtrat: {{phrase}}",
+    "showAnyway": "Mostra igualment",
+    "failed": "No s'ha desat. Torna-ho a provar."
+  },
+  "postVisibility": {
+    "label": "Qui pot veure això",
+    "public": "Tothom",
+    "followers": "Només seguidors",
+    "direct": "Només persones esmentades",
+    "noRepost": "Només es poden republicar les publicacions públiques",
+    "directHint": "Només les persones que esmentis amb @ veuran aquesta publicació",
+    "needsMention": "Esmenta almenys una persona amb @ per publicar només per a les persones esmentades"
+  },
+  "replyPolicy": {
+    "label": "Qui pot respondre",
+    "public": "Qualsevol",
+    "followers": "Els teus seguidors",
+    "following": "Gent que segueixes",
+    "mentioned": "Només mencionats",
+    "noticeFollowers": "Només els seguidors de l'autor poden respondre",
+    "noticeFollowing": "Només la gent que segueix l'autor pot respondre",
+    "noticeMentioned": "Només la gent mencionada a la publicació pot respondre",
+    "refused": "L'autor ha limitat qui pot respondre a aquesta publicació"
+  },
+  "quotePolicy": {
+    "label": "Qui pot citar",
+    "public": "Qualsevol",
+    "followers": "Seguidors",
+    "nobody": "Només jo",
+    "off": "L'autor ha desactivat les cites",
+    "removed": "L'autor ha retirat la seva publicació d'aquesta cita",
+    "remove": "Treu",
+    "removedToast": "La teva publicació s'ha retirat d'aquesta cita",
+    "removeFailed": "No s'ha pogut retirar la teva publicació de la cita",
+    "refused": "L'autor no et permet citar aquesta publicació"
+  },
+  "contentWarning": {
+    "label": "Avís de contingut",
+    "placeholder": "Escriu l'avís aquí",
+    "add": "Afegeix un avís de contingut",
+    "remove": "Treu l'avís de contingut",
+    "show": "Mostra la publicació"
+  },
+  "altText": {
+    "badge": "ALT",
+    "add": "Afegeix una descripció",
+    "edit": "Edita la descripció",
+    "titleImage": "Descriu aquesta imatge",
+    "titleVideo": "Descriu aquest vídeo",
+    "help": "Per a les persones que no la poden veure. Els lectors de pantalla la llegeixen en veu alta.",
+    "placeholder": "Què mostra? Inclou qualsevol text que hi aparegui.",
+    "show": "Mostra la descripció",
+    "saved": "Descripció desada",
+    "saveFailed": "No s'ha pogut desar la descripció"
+  },
   "liveRecap": {
     "title": "Resum de la transmissió",
     "justEnded": "Resum de la teva transmissió",
@@ -113,11 +260,12 @@
     "heading": "Curts de DeHub"
   },
   "settings": {
-    "showDislikesDesc": "Qualsevol pot obrir la pestanya «No m'agrada» del teu perfil. Si està desactivat, només tu la pots veure.",
-    "showDislikes": "Mostra a tothom els meus «no m'agrada»",
+    "usernameTaken": "Nom d'usuari ocupat",
     "postingChain": "Cadena de blocs de les publicacions",
     "showOnline": "Mostra quan estic en línia",
     "showOnlineDesc": "Les persones a les quals enviïs missatges veuen un punt verd al costat del teu nom mentre utilitzes DeHub",
+    "showDislikes": "Mostra a tothom els meus «no m'agrada»",
+    "showDislikesDesc": "Qualsevol pot obrir la pestanya «No m'agrada» del teu perfil. Si està desactivat, només tu la pots veure.",
     "smartReplies": "Respostes suggerides",
     "smartRepliesDesc": "Redacta dues respostes que pots tocar en un xat. La × dels suggeriments ho desactiva.",
     "title": "Configuració",
@@ -241,6 +389,11 @@
       "hintDeny": "Es demana als sistemes d'intel·ligència artificial i als rastrejadors que respectin aquest senyal que no entrenin en el teu àudio, obres d'art i escriptura. Els rastrejadors que ignoren el senyal no queden bloquejats per aquest.",
       "saved": "Preferència d'entrenament d'IA desada"
     },
+    "defaultFeed": "Feed predeterminat",
+    "defaultFeedDesc": "Tria quin feed s'obre cada vegada que obres DeHub",
+    "feedToggles": "Restableix els filtres del feed",
+    "feedTogglesDesc": "Els filtres que activis en un feed es mantenen com a predeterminats fins que els restableixis",
+    "feedTogglesCleared": "Filtres del feed restablerts",
     "defaultProfileTab": "Pestanya de perfil per defecte",
     "defaultProfileTabDesc": "Tria quina pestanya veuen primer els visitants al teu perfil",
     "public": "Públic",
@@ -632,6 +785,9 @@
     "dmSent": "S'han enviat {{amount}} fitxes a {{name}}!"
   },
   "postOptions": {
+    "embed": "Insereix",
+    "copyEmbedCode": "Copia el codi d'inserció",
+    "embedCodeCopied": "Codi d'inserció copiat",
     "options": "Opcions",
     "aiOverview": "Resum de la IA",
     "sendTip": "Enviar propina",
@@ -659,7 +815,8 @@
     "unpinPost": "Desenllaça el teu perfil",
     "postPinned": "S'ha fixat al teu perfil",
     "postUnpinned": "S'ha desvinculat del teu perfil",
-    "pinFailed": "No s'ha pogut fixar ni desanclar aquesta publicació"
+    "pinFailed": "No s'ha pogut fixar ni desanclar aquesta publicació",
+    "copyFailed": "No s'ha pogut copiar l'enllaç"
   },
   "filters": {
     "sort": "Ordenar",
@@ -1393,7 +1550,6 @@
     "returnHome": "Tornar a l'inici"
   },
   "profile": {
-    "dislikes": { "loadMore": "Carrega'n més", "privateDesc": "Aquest compte es guarda els seus «no m'agrada».", "privateTitle": "Els «no m'agrada» són privats", "emptyOther": "Encara res.", "emptyOwn": "Les publicacions que no t'agraden surten dels teus feeds i apareixen aquí. Desfés el «no m'agrada» per recuperar la publicació.", "emptyTitle": "Encara cap «no m'agrada»" },
     "back": "Enrere",
     "usernameAvailable": "Nom d'usuari disponible!",
     "signUpToClaim": "Registra't avui per reclamar",
@@ -1421,8 +1577,16 @@
       "commentUnavailable": "Aquest comentari ja no està disponible"
     },
     "tabs": {
-      "dislikes": "No m'agrada",
-      "playlists": "Llista de reproducció"
+      "playlists": "Llista de reproducció",
+      "dislikes": "No m'agrada"
+    },
+    "dislikes": {
+      "emptyTitle": "Encara cap «no m'agrada»",
+      "emptyOwn": "Les publicacions que no t'agraden surten dels teus feeds i apareixen aquí. Desfés el «no m'agrada» per recuperar la publicació.",
+      "emptyOther": "Encara res.",
+      "privateTitle": "Els «no m'agrada» són privats",
+      "privateDesc": "Aquest compte es guarda els seus «no m'agrada».",
+      "loadMore": "Carrega'n més"
     },
     "offerWorthNow": "Aproximadament {{amount}} tokens al tipus actual",
     "offerNotePlaceholder": "Afegeix una nota (opcional)",
@@ -1975,6 +2139,8 @@
     "copyFailed": "No s'ha pogut copiar"
   },
   "profileOptions": {
+    "copyRssFeed": "Copia l'enllaç del canal RSS",
+    "rssFeedCopied": "Enllaç del canal RSS copiat",
     "copyProfileUrl": "Copia l'URL del perfil",
     "copyUsername": "Copia el nom d'usuari",
     "copyAddress": "Copia l'adreça",
@@ -2227,6 +2393,7 @@
     "pendingSubmitted": "{{amount}} testimonis enviats. La confirmació encara s'està comprovant. No l'enviïs de nou."
   },
   "communities": {
+    "chatTab": "Xat",
     "title": "Comunitats",
     "create": "Crea",
     "searchPlaceholder": "Cerca comunitats...",
@@ -2261,7 +2428,30 @@
     "addDescription": "Afegeix una descripció...",
     "communityDescription": "Descripció de la comunitat...",
     "posts": "Publicacions",
-    "chat": "Xat",
+    "chat": {
+      "intervalHour": "1 hora",
+      "intervalHours": "{{count}} hores",
+      "intervalMinute": "1 minut",
+      "intervalMinutes": "{{count}} minuts",
+      "intervalSecond": "1 segon",
+      "intervalSeconds": "{{count}} segons",
+      "muted": "Estàs silenciat",
+      "mutedUntil": "Estàs silenciat fins a les {{until}}",
+      "postingDisabled": "La publicació està desactivada per als membres aquí",
+      "pinnedGif": "GIF",
+      "pinnedMedia": "Mitjans de comunic",
+      "jumpToPinned": "Vés al missatge fixat",
+      "pinnedMessage": "Missatge fixat",
+      "unpin": "Desancla",
+      "pin": "PIN",
+      "delete": "Elimina",
+      "slowMode": "Mode lent: un missatge cada {{interval}}",
+      "slowModeWait": "Mode lent: espera {{time}}",
+      "send": "Envia",
+      "deleteMessageTitle": "Vols eliminar aquest missatge?",
+      "deleteMessageBody": "Això no es pot desfer.",
+      "cancel": "Cancel·la"
+    },
     "membersTab": "Membres ({{count}})",
     "about": "Quant a",
     "backToCommunities": "Comunitats",
@@ -3726,6 +3916,7 @@
     "sellYourFractions": "Vendre les teves fraccions ({{held}} retingudes)"
   },
   "creator": {
+    "libraryEmpty": "Les teves generacions desades apareixeran aquí.",
     "whatToCreate": "Què crear",
     "startCreatingWith": "Comença a crear amb {{model}}",
     "studioSubtitle": "Descriu una escena, personatge, estat d'ànim o estil. Els resultats apareixen a continuació i van directament a l'editor.",
@@ -5310,6 +5501,8 @@
     }
   },
   "goLive": {
+    "bigEvent": "Gran esdeveniment",
+    "bigEventHint": "Per a grans audiències: els espectadors ho veuen uns 20 segons endarrere, amb menys interrupcions.",
     "goLive": "Anar en directe",
     "youAreLive": "Estàs en directe",
     "streamReady": "Transmissió llesta",
@@ -6063,7 +6256,10 @@
     "play": "Jugar",
     "pause": "Pausa",
     "listens_one": "{{count}} escolta",
-    "listens_other": "{{count}} escolta"
+    "listens_other": "{{count}} escolta",
+    "lyrics": "Lletra",
+    "lyricsLoading": "Cercant la lletra…",
+    "lyricsNone": "No s'ha trobat la lletra"
   },
   "converter": {
     "seoTitle": "Convertidor — importa un vídeo a DeHub",
@@ -6579,6 +6775,7 @@
     "seoDescription": "Documentació oficial de DeHub: visió general de la plataforma, dApps, economia del token fitxes, staking, jocs, full de ruta, preguntes freqüents i més."
   },
   "dex": {
+    "title": "tokens / USD",
     "seoTitle": "DEX — Intercanvia fitxes al teu preu",
     "seoDescription": "Estableix el teu preu de compra o venda de fitxes amb una ordre límit de Uniswap v4 a Base o BNB Chain. Llibre d'ordres en directe, profunditat de mercat i un preu compartit en USD.",
     "venue": "Xarxa",
@@ -6801,6 +6998,14 @@
     }
   },
   "editor": {
+    "video": {
+      "tFade": "Fos encadenat",
+      "none": "Cap",
+      "transition": "Transició",
+      "speed": "Velocitat",
+      "sound": "So",
+      "video": "Vídeo"
+    },
     "review": {
       "title": "Revisió del projecte",
       "shared": "Compartit amb tu",
@@ -8462,5 +8667,15 @@
     "posted": "Publicat",
     "view": "Mostra",
     "failed": "No s'ha pogut processar el vídeo"
+  },
+  "loginStack": {
+    "tip": "Propina en DHB",
+    "headlineTop": "Ho tindràs tot",
+    "headlineAccent": "i seràs feliç.",
+    "orContinueWith": "o continua amb",
+    "phone": "Telèfon",
+    "fingerprint": "Empremta",
+    "exploreFirst": "Explora primer",
+    "codeNote": "T'enviem un codi per correu, sense contrasenya."
   }
 }

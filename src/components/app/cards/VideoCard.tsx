@@ -38,6 +38,7 @@ import { useIsMobile } from '@/hooks/use-mobile';
 import { videoItemToShort } from '@/lib/short-video';
 import { useTapGestures } from '@/hooks/use-tap-gestures';
 import { useVideoScrubZone } from '@/hooks/use-video-scrub-zone';
+import { StoryboardPreview } from '@/components/app/video/StoryboardPreview';
 import { TapReactionBurst } from '@/components/app/cards/TapReactionBurst';
 import { useIsWatchedVideo } from '@/hooks/use-watched-videos';
 import { useVideoProcessingStatus } from '@/hooks/use-video-processing-status';
@@ -53,7 +54,9 @@ const SegmentMarkerDrawer = lazy(() =>
 import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
 import { useQueryClient } from '@tanstack/react-query';
 import MoreVertical from '@/components/ui/cut-icons/morevertical';
-import { ListPlus, Clock, Zap, Ticket, Star, Loader2 } from "lucide-react";
+import { ListPlus, Clock, Zap, Ticket, Star, Loader2, Code } from "lucide-react";
+import { copyPostEmbedCode } from '@/lib/post-embed-code';
+import { AltTextBadge } from './AltTextBadge';
 import Eye from "@/components/ui/cut-icons/visibility";
 import Flag from "@/components/ui/cut-icons/report";
 import Ban from "@/components/ui/cut-icons/blocked";
@@ -89,6 +92,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { CardHeader } from './CardHeader';
 import { PostHeaderOptionsButton } from './PostHeaderOptionsButton';
 import { MatureContentGate, useMatureGate } from './MatureContentGate';
+import { ContentWarningGate, useContentWarning } from './ContentWarningGate';
 import { BadgedName } from '@/components/app/BadgedName';
 import { ActionBar } from './ActionBar';
 import { useLiveReaction } from '@/hooks/use-live-reaction';
@@ -148,6 +152,7 @@ import { repostPost } from '@/lib/api/dehub';
 import { useSyncedAudio } from '@/hooks/use-synced-audio';
 import { handoffAudioFor } from '@/lib/audio-handoff';
 import { isHoldGated, isSubscriberGated, cheapestSubscriberPlan, subscriberPlanPrice } from '@/lib/content-gate';
+import { isVideoAccessExpiring, useResumeAcrossRefresh, useVideoAccess, videoNeedsAccess } from '@/lib/api/dehub/video-access';
 
 /** Lazy: PlanCard reaches the subscription contracts, and this card boots. */
 const SubscriberGateDrawer = lazy(() =>
@@ -193,10 +198,12 @@ const DubMenuItem = lazy(() =>
 );
 import { VideoGlitchLoader } from '@/components/app/video/VideoGlitchLoaderLazy';
 import { cancelVideoPlayback, requestVideoPlayback } from '@/lib/video-start';
+import { isLadderPlayback, setVideoSource, syncVideoLoad, videoSourceOf } from '@/lib/hls-vod';
 import { usePlaybackRecovery } from '@/hooks/use-playback-recovery';
 import { usePostStage } from '@/components/app/post-stage/post-stage-context';
 import { StageCreatorRow } from '@/components/app/post-stage/StageCreatorRow';
 import { viewerShareUrl } from '@/lib/share-url';
+import { KeywordFilterGate } from './KeywordFilterGate';
 
 /**
  * How far a touch may travel and still count as a tap on the player. Matches the
@@ -763,7 +770,7 @@ interface VideoCardProps {
   firstFeedPost?: boolean;
 }
 
-export const VideoCard = memo(function VideoCard({ video, postPage = false, onBack, isImmersive = false, disableAutoplay = false, hideActions = false, aboveFold = false, firstFeedPost = false, onOpenComments }: VideoCardProps) {
+const VideoCardBody = memo(function VideoCard({ video, postPage = false, onBack, isImmersive = false, disableAutoplay = false, hideActions = false, aboveFold = false, firstFeedPost = false, onOpenComments }: VideoCardProps) {
   const { t: _copy } = _useCopy();
   const playbackAllowed = useFeedPlaybackAllowed();
   const playbackAllowedRef = useRef(playbackAllowed);
@@ -906,6 +913,8 @@ export const VideoCard = memo(function VideoCard({ video, postPage = false, onBa
   const transcodingStatus = useVideoProcessingStatus(video.id, video.transcodingStatus, surfaceActive && playbackAllowed, containerRef);
   const controlsTimerRef = useRef<NodeJS.Timeout | null>(null);
   const scrubbingRef = useRef(false);
+  /** Mirrors scrubbingRef for render: the storyboard tile shows while it is true. */
+  const [scrubbing, setScrubbing] = useState(false);
   const isHoveringRef = useRef(false);
   
   // View tracking - fires view after watching threshold
@@ -1075,7 +1084,7 @@ export const VideoCard = memo(function VideoCard({ video, postPage = false, onBa
   useEffect(() => {
     if (mediaAttached) return;
     const vid = videoRef.current;
-    if (vid && !vid.getAttribute('src')) {
+    if (vid && !videoSourceOf(vid)) {
       try { vid.load(); } catch { /* noop */ }
     }
   }, [mediaAttached]);
@@ -1127,7 +1136,7 @@ export const VideoCard = memo(function VideoCard({ video, postPage = false, onBa
               // Fast fling race: the media-attach state may not have
               // re-rendered yet — attach the src imperatively before play()
               // (React reconciles to the same value on the next render).
-              if (!vid.getAttribute('src') && video.videoUrl) vid.src = video.videoUrl;
+              attachPostMedia(vid);
               // Only the clip that is actually on screen may take the sound;
               // one peeking in at the bottom of the window plays silently.
               const prominent = isProminent(containerRef.current);
@@ -1253,16 +1262,42 @@ export const VideoCard = memo(function VideoCard({ video, postPage = false, onBa
   // pay-per-view, and the creator's own post is warned about too — the warning
   // is for whoever is looking at the screen.
   const matureGate = useMatureGate(video.contentRating);
+  const contentWarning = useContentWarning(video.spoilerText);
   // Folded into isContentGated so the warning gets the behaviour a locked post
   // already has: no autoplay, no controls, no poster fallback painted over it.
   const isContentGated = isPPVLocked || isBountyLocked || isHoldingsLocked || isSubGated || matureGate.isGated;
+  // A gated post's file is private: once the viewer is through the gate it
+  // plays from a signed URL the API hands out. An open post whose file fails
+  // is asked about once too, in case its gate was just removed and the file is
+  // not public again yet.
+  const requiresVideoAccess = !video.isAudio && !!video.videoUrl && !(video.isLivePost && video.isLiveNow) && videoNeedsAccess(video);
+  const [accessFallback, setAccessFallback] = useState(false);
+  const videoAccess = useVideoAccess(video.id, (requiresVideoAccess && !isContentGated) || accessFallback, walletAddress);
+  const playableVideoUrl = requiresVideoAccess || accessFallback
+    ? videoAccess.data?.url ?? (requiresVideoAccess ? undefined : video.videoUrl)
+    : video.videoUrl;
+  const accessFailed = requiresVideoAccess && !isContentGated && videoAccess.isError;
+  // An open post's HLS ladder. A gated one plays its signed file and never has
+  // one: a playlist would hand out every rendition by public URL.
+  const ladderUrl = requiresVideoAccess || accessFallback ? undefined : video.hlsUrl;
+  // Feed cards are small and there are many of them, so their ladder starts on
+  // the lowest rung and climbs; the post page starts where the connection
+  // allows. Without a ladder the file plays as before.
+  const ladderStartsLow = !postPage && !isImmersive;
+  /** Imperative attach for paths that can beat the render that sets src. */
+  const attachPostMedia = (vid: HTMLVideoElement) => {
+    if (!videoSourceOf(vid) && playableVideoUrl) {
+      setVideoSource(vid, { src: playableVideoUrl, hls: ladderUrl, startLow: ladderStartsLow });
+    }
+  };
   const downloadVideo = useVideoDownload();
   const handleDownloadVideo = useCallback(async () => {
     if (isContentGated || !video.videoUrl) return;
     setShowOptionsDrawer(false);
     if (!video.isAudio) {
+      if (!playableVideoUrl) return;
       videoRef.current?.pause();
-      await downloadVideo({ url: video.videoUrl, title: video.title || String(video.id), username: video.creatorUsername });
+      await downloadVideo({ url: playableVideoUrl, title: video.title || String(video.id), username: video.creatorUsername });
       return;
     }
     try {
@@ -1274,7 +1309,7 @@ export const VideoCard = memo(function VideoCard({ video, postPage = false, onBa
       a.href = url; a.download = (video.title || String(video.id)) + (blob.type.includes("mpeg") ? ".mp3" : blob.type.includes("wav") ? ".wav" : blob.type.includes("ogg") ? ".ogg" : ".m4a"); a.click();
       setTimeout(() => URL.revokeObjectURL(url), 30000);
     } catch { toast.error(t("editor.export.failed")); }
-  }, [isContentGated, video.videoUrl, video.isAudio, video.title, video.id, video.creatorUsername, downloadVideo, t]);
+  }, [isContentGated, video.videoUrl, playableVideoUrl, video.isAudio, video.title, video.id, video.creatorUsername, downloadVideo, t]);
 
 
 
@@ -1315,7 +1350,11 @@ export const VideoCard = memo(function VideoCard({ video, postPage = false, onBa
       return;
     }
     
-    if (!video.videoUrl || isContentGated || isVideoNotReady) return;
+    if (requiresVideoAccess && !playableVideoUrl && !isContentGated) {
+      void videoAccess.refetch({ cancelRefetch: false });
+      return;
+    }
+    if (!playableVideoUrl || isContentGated || isVideoNotReady) return;
 
     if (isPlaying) {
       if (autoStartedRef.current && !isImmersive) recordPause();
@@ -1349,7 +1388,7 @@ export const VideoCard = memo(function VideoCard({ video, postPage = false, onBa
       // Attach src imperatively if the media-release gate detached it and the
       // re-render hasn't landed yet (tap can beat the render).
       const vidEl = videoRef.current;
-      if (vidEl && !vidEl.getAttribute('src') && video.videoUrl) vidEl.src = video.videoUrl;
+      if (vidEl) attachPostMedia(vidEl);
       setHasError(false);
       if (!vidEl) { setIsLoading(false); return; }
       requestVideoPlayback(vidEl).then(() => {
@@ -1371,7 +1410,7 @@ export const VideoCard = memo(function VideoCard({ video, postPage = false, onBa
         videoPlaybackManager.stop(instanceId);
       });
     }
-  }, [isPlaying, video.videoUrl, video.isAudio, video.id, instanceId, showControlsBriefly, isContentGated, isVideoNotReady, isImmersive, recordPause, cancelPause]);
+  }, [isPlaying, playableVideoUrl, requiresVideoAccess, videoAccess.refetch, video.isAudio, video.id, instanceId, showControlsBriefly, isContentGated, isVideoNotReady, isImmersive, recordPause, cancelPause]);
 
   const toggleMute = useCallback((e: React.MouseEvent) => {
     e.stopPropagation();
@@ -1505,16 +1544,19 @@ export const VideoCard = memo(function VideoCard({ video, postPage = false, onBa
   // profile had none. Asking for the media as soon as the controls come up
   // costs one small range request and only for the card being looked at.
   useEffect(() => {
-    if (!controlsVisible || (!nearViewport && !showControls) || duration > 0 || video.isAudio || !video.videoUrl) return;
+    if (!controlsVisible || (!nearViewport && !showControls) || duration > 0 || video.isAudio || !playableVideoUrl) return;
     setNearViewport(true);
     const vid = videoRef.current;
     if (!vid) return;
-    if (!vid.getAttribute('src')) vid.src = video.videoUrl;
+    attachPostMedia(vid);
     if (vid.preload === 'none') vid.preload = 'metadata';
-    if (vid.readyState === 0) {
+    if (isLadderPlayback(vid)) {
+      // hls.js loads its first segment itself; load() would detach it.
+      syncVideoLoad(vid);
+    } else if (vid.readyState === 0) {
       try { vid.load(); } catch { /* noop */ }
     }
-  }, [controlsVisible, nearViewport, showControls, duration, video.isAudio, video.videoUrl]);
+  }, [controlsVisible, nearViewport, showControls, duration, video.isAudio, playableVideoUrl]);
 
   // The saved volume only ever reached the element through an explicit
   // adjustment, so a viewer who had turned a video down got full volume back on
@@ -1723,12 +1765,17 @@ export const VideoCard = memo(function VideoCard({ video, postPage = false, onBa
   const feedVideoShape = useFeedVideoShape();
   const feedFrameAspect = Math.max(mediaAspect, FEED_VIDEO_MIN_ASPECT[feedVideoShape]);
 
+  // Before the handoff assigns `src`, so a refreshed signature resumes in place.
+  useResumeAcrossRefresh(videoRef, mediaAttached && !isVideoNotReady ? playableVideoUrl : undefined);
+
   // Claims the shared <video> for this post into the slot rendered below, and
   // keeps this card's props on it while this card is the one showing it.
   const { attachSlot: attachVideoSlot, isActive: ownsVideoElement, takeOver: takeVideoElement } = useHandoffVideo({
     videoRef,
     handoffKey: video.id,
-    src: mediaAttached && !isVideoNotReady ? video.videoUrl : undefined,
+    src: mediaAttached && !isVideoNotReady ? playableVideoUrl : undefined,
+    hlsSrc: ladderUrl,
+    startLow: ladderStartsLow,
     poster: thumbnail || undefined,
     muted: isMuted,
     loop: !!(video.isAd || isLooping),
@@ -1739,7 +1786,7 @@ export const VideoCard = memo(function VideoCard({ video, postPage = false, onBa
     onTimeUpdate: handleTimeUpdate,
     onLoadedMetadata: handleLoadedMetadata,
     onAdopt: (el) => {
-      if (!el.getAttribute('src')) return;
+      if (!videoSourceOf(el)) return;
       setNearViewport(true);
       isPlayingRef.current = !el.paused;
       setIsPlaying(!el.paused);
@@ -1766,7 +1813,7 @@ export const VideoCard = memo(function VideoCard({ video, postPage = false, onBa
   }, [ownsVideoElement, instanceId]);
 
   takeVideoRef.current = takeVideoElement;
-  const playbackPhase = usePlaybackRecovery(videoRef, video.videoUrl, ownsVideoElement, {
+  const playbackPhase = usePlaybackRecovery(videoRef, playableVideoUrl, ownsVideoElement, {
     component: 'VideoCard', postId: video.id,
     allowed: () => !!videoRef.current && videoRef.current.dataset.userPaused !== 'true' &&
       !visualActivity.isCallBusy() && ((playbackAllowedRef.current && surfaceActiveRef.current &&
@@ -1785,6 +1832,22 @@ export const VideoCard = memo(function VideoCard({ video, postPage = false, onBa
       videoPlaybackManager.stop(instanceId);
     }
   }, [playbackPhase, instanceId]);
+
+  // A signed URL that lapsed mid-session fails like a broken file: fetch a
+  // fresh one and pick up where it stopped. An open post that fails gets one
+  // access check.
+  const refetchVideoAccess = videoAccess.refetch;
+  useEffect(() => {
+    if (playbackPhase !== 'failed') return;
+    if (videoAccess.data?.private) {
+      if (isVideoAccessExpiring(videoAccess.data)) void refetchVideoAccess();
+    } else if (!requiresVideoAccess && !video.isAudio && walletAddress) {
+      setAccessFallback(true);
+    }
+  }, [playbackPhase, videoAccess.data, refetchVideoAccess, requiresVideoAccess, video.isAudio, walletAddress]);
+  useEffect(() => {
+    if (accessFailed) setHasError(true);
+  }, [accessFailed]);
 
   // Play state follows the element itself while this card holds it, and is
   // off while it doesn't. The element changes hands and gets paused or resumed
@@ -1830,6 +1893,7 @@ export const VideoCard = memo(function VideoCard({ video, postPage = false, onBa
 
   const finishScrubbing = useCallback(() => {
     scrubbingRef.current = false;
+    setScrubbing(false);
     hiddenScrubStart.current = null;
     if (controlsTimerRef.current) clearTimeout(controlsTimerRef.current);
     controlsTimerRef.current = setTimeout(() => setShowControls(false), CONTROLS_HIDE_MS);
@@ -1843,6 +1907,7 @@ export const VideoCard = memo(function VideoCard({ video, postPage = false, onBa
     duration,
     onStart: () => {
       scrubbingRef.current = true;
+      setScrubbing(true);
       setShowControls(true);
       if (controlsTimerRef.current) clearTimeout(controlsTimerRef.current);
     },
@@ -2125,6 +2190,7 @@ export const VideoCard = memo(function VideoCard({ video, postPage = false, onBa
         <div data-card-head={headerAboveMedia ? 'plain' : ''} className="flex items-start justify-between">
           <CardHeader
             username={video.channel}
+            visibility={video.visibility}
             handle={video.creatorUsername}
             avatarSeed={video.channelAvatar}
             verified={video.verified}
@@ -2246,7 +2312,11 @@ export const VideoCard = memo(function VideoCard({ video, postPage = false, onBa
         <div data-video-picture className={splitControls ? "absolute inset-x-0 top-0 bottom-[47px]" : "contents"}>
         {/* Mature warning sits outermost: revealing it falls through to
             whatever gate the post actually has, rather than replacing it. */}
-        {matureGate.isGated ? (
+        {contentWarning.hidden ? (
+          <div className="flex w-full h-full min-h-[180px] items-center justify-center rounded-lg bg-zinc-900 p-4">
+            <ContentWarningGate text={contentWarning.text} onReveal={contentWarning.reveal} className="w-full" />
+          </div>
+        ) : matureGate.isGated ? (
           <MatureContentGate
             preview={thumbnail}
             onReveal={matureGate.reveal}
@@ -2491,6 +2561,7 @@ export const VideoCard = memo(function VideoCard({ video, postPage = false, onBa
                   />
                 )}
                 <div ref={attachVideoSlot} className={cn("absolute inset-0 w-full h-full", hasError && "invisible")} />
+                <AltTextBadge text={video.mediaDescriptions?.[0]} className="absolute left-2 top-2" />
               </>
             ) : video.isLivePost && video.isLiveNow ? (
               /* On air: play the stream right here. The feed used to show only
@@ -2739,6 +2810,14 @@ export const VideoCard = memo(function VideoCard({ video, postPage = false, onBa
 
             {bareControls && <div data-video-scrub-surface className="absolute bottom-0 left-0 right-0 h-16 touch-pan-y" />}
 
+            <StoryboardPreview
+              storyboard={isContentGated ? undefined : video.storyboard}
+              fraction={currentTime / (duration || 1)}
+              duration={duration}
+              visible={scrubbing}
+              armed={showControls}
+            />
+
             <div data-video-button-row className="flex items-center justify-between gap-1 px-2">
               <div data-video-transport className="flex items-center gap-1">
                 {splitControls && <button data-video-bare type="button"
@@ -2873,6 +2952,7 @@ export const VideoCard = memo(function VideoCard({ video, postPage = false, onBa
                   if (bareControls) return;
                   event.stopPropagation();
                   scrubbingRef.current = true;
+                  setScrubbing(true);
                   hiddenScrubStart.current = controlsVisible ? null : { x: event.clientX, y: event.clientY };
                   if (controlsTimerRef.current) clearTimeout(controlsTimerRef.current);
                 }}
@@ -3072,6 +3152,8 @@ export const VideoCard = memo(function VideoCard({ video, postPage = false, onBa
 
             return (
               <>
+                {/* Behind a content warning, the caption opens with the post. */}
+                {!contentWarning.hidden && (<>
                 {/* auto={false}: the card's own useTranslation above already
                     translated this text and hands the result down. Left on, this
                     asked the edge function to translate the translation. */}
@@ -3085,6 +3167,7 @@ export const VideoCard = memo(function VideoCard({ video, postPage = false, onBa
                     clampLines={stage ? (shownTitle ? 2 : 3) : 4}
                   />
                 )}
+                </>)}
               </>
             );
           })()}
@@ -3133,6 +3216,8 @@ export const VideoCard = memo(function VideoCard({ video, postPage = false, onBa
               newPostSlug={video.status === 'signed' ? video.newPostId ?? null : null}
               tokenId={parseInt(video.id, 10) || undefined}
               isOwnPost={!!isOwnPost}
+              quotePolicy={video.quotePolicy}
+              visibility={video.visibility}
               stage={stage}
               utilityDesktopAnchor
               className="p-0"
@@ -3194,6 +3279,7 @@ export const VideoCard = memo(function VideoCard({ video, postPage = false, onBa
                 tokenId={video.id}
                 initialTab={commentsInitialTab}
                 commentsDisabled={!!(video as { commentsDisabled?: boolean }).commentsDisabled}
+                replyPolicy={video.replyPolicy}
                 forKids={!!video.forKids}
                 immersive={isImmersive}
               />
@@ -3212,7 +3298,7 @@ export const VideoCard = memo(function VideoCard({ video, postPage = false, onBa
           author: video.channel,
           title: video.title,
           imageUrl: thumbnail,
-          videoUrl: video.videoUrl,
+          videoUrl: playableVideoUrl ?? video.videoUrl,
         }}
       />
 
@@ -3326,6 +3412,14 @@ export const VideoCard = memo(function VideoCard({ video, postPage = false, onBa
             >
               <Link2 className="w-5 h-5" /> {t('postOptions.copyLink')}
             </button>
+            {!isContentGated && (!video.visibility || video.visibility === 'public') && /^\d+$/.test(String(video.id)) && (
+              <button
+                onClick={() => { copyPostEmbedCode(video.id, t); setShowOptionsDrawer(false); }}
+                className="flex items-center gap-3 px-4 py-3 text-white hover:bg-white/10 rounded-xl transition-colors text-left"
+              >
+                <Code className="w-5 h-5" /> {t('postOptions.copyEmbedCode')}
+              </button>
+            )}
             {!isOwnPost && (
               <button onClick={handleMuteCreator} className="flex items-center gap-3 px-4 py-3 text-white hover:bg-white/10 rounded-xl transition-colors text-left">
                 <VolumeX className="w-5 h-5" /> {t('postOptions.muteCreator')}
@@ -3413,6 +3507,9 @@ export const VideoCard = memo(function VideoCard({ video, postPage = false, onBa
             currentDescription={video.description ?? ''}
             currentCategories={video.categories ?? []}
             currentContentRating={video.contentRating}
+            currentSpoilerText={video.spoilerText}
+            currentQuotePolicy={video.quotePolicy}
+            currentReplyPolicy={video.replyPolicy}
             currentForKids={video.forKids}
             currentShopLinks={video.shopLinks}
             onSuccess={(edited) => {
@@ -3609,5 +3706,18 @@ export const VideoCard = memo(function VideoCard({ video, postPage = false, onBa
         quotedPost={videoAsNFT as any}
       />
     </div>
+  );
+});
+
+/** Every post passes the viewer's keyword filters first — see KeywordFilterGate. */
+export const VideoCard = memo(function FilteredVideoCard(props: VideoCardProps) {
+  const { video } = props;
+  return (
+    <KeywordFilterGate
+      texts={[video.title, video.description, video.spoilerText, ...(video.mediaDescriptions ?? [])]}
+      authorId={video.creatorId}
+    >
+      <VideoCardBody {...props} />
+    </KeywordFilterGate>
   );
 });

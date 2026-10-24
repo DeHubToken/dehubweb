@@ -6,7 +6,11 @@ import { useTranslation as _useCopy } from 'react-i18next';
  * Shows inside a bordered card with author info, content preview, and optional media thumbnail.
  */
 
-import { memo } from 'react';
+import { memo, useState } from 'react';
+import { useTranslation } from 'react-i18next';
+import { toast } from 'sonner';
+import { useAuth } from '@/contexts/AuthContext';
+import { revokeQuote } from '@/lib/api/dehub';
 import { usePoll } from '@/hooks/use-polls';
 import { useNavigate } from 'react-router-dom';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
@@ -160,11 +164,50 @@ function QuotedPollPreview({ tokenId }: { tokenId: number }) {
 interface QuotedPostEmbedProps {
   quotedPost: DeHubNFT;
   className?: string;
+  /**
+   * The quote this embed sits in. Given, the quoted post's author sees a
+   * Remove action that takes their post back out of the quote.
+   */
+  quoteTokenId?: string | number;
 }
 
-export const QuotedPostEmbed = memo(function QuotedPostEmbed({ quotedPost, className }: QuotedPostEmbedProps) {
+/** What a quote shows once the quoted author has taken their post back out of it. */
+export function RemovedQuoteNotice({ className }: { className?: string }) {
+  const { t } = useTranslation();
+  return (
+    <div data-glass-embed className={`rounded-2xl border border-zinc-700/60 px-3 py-3 text-sm text-zinc-400 ${className || ''}`}>
+      {t('quotePolicy.removed')}
+    </div>
+  );
+}
+
+export const QuotedPostEmbed = memo(function QuotedPostEmbed({ quotedPost, className, quoteTokenId }: QuotedPostEmbedProps) {
   const { t: _copy } = _useCopy();
+  const { t } = useTranslation();
   const navigate = useNavigate();
+  const { walletAddress } = useAuth();
+  const [removed, setRemoved] = useState(false);
+  const [removing, setRemoving] = useState(false);
+  const isQuotedAuthor =
+    !!walletAddress && !!quoteTokenId &&
+    (quotedPost.minter || quotedPost.minterUser?.address || '').toLowerCase() === walletAddress.toLowerCase();
+
+  const handleRemove = async (e: React.MouseEvent) => {
+    e.stopPropagation();
+    if (!quoteTokenId || removing) return;
+    setRemoving(true);
+    try {
+      await revokeQuote(quoteTokenId);
+      setRemoved(true);
+      toast.success(t('quotePolicy.removedToast'));
+    } catch {
+      toast.error(t('quotePolicy.removeFailed'));
+    } finally {
+      setRemoving(false);
+    }
+  };
+
+  if (removed) return <RemovedQuoteNotice className={className} />;
 
   // Avatars must go through buildAvatarUrl, not getMediaUrl. getMediaUrl just
   // prefixes the CDN base, which is wrong for the older upload format: the API
@@ -232,6 +275,17 @@ export const QuotedPostEmbed = memo(function QuotedPostEmbed({ quotedPost, class
           <NewMemberChip address={avatarAddress || undefined} />
           <CheckCircle className="w-3.5 h-3.5 text-white shrink-0 hidden" />
           <span className="text-[13px] leading-5 text-zinc-500 truncate">@{handle}</span>
+          {isQuotedAuthor && (
+            <button
+              type="button"
+              data-no-navigate
+              onClick={handleRemove}
+              disabled={removing}
+              className="ml-auto shrink-0 rounded-full border border-white/15 px-2.5 py-0.5 text-xs text-zinc-300 hover:bg-white/10 disabled:opacity-50"
+            >
+              {t('quotePolicy.remove')}
+            </button>
+          )}
         </div>
 
         {/* Text content */}

@@ -58,6 +58,7 @@ import dehubCoin from '@/assets/dehub-coin.png';
 import { CardHeader } from './CardHeader';
 import { PostHeaderOptionsButton } from './PostHeaderOptionsButton';
 import { MatureContentGate, useMatureGate } from './MatureContentGate';
+import { ContentWarningGate, useContentWarning } from './ContentWarningGate';
 import { ActionBar } from './ActionBar';
 import { ShopBoardLazy } from '../live/ShopBoardLazy';
 import { CommentsWrapper } from './CommentsWrapper';
@@ -78,7 +79,7 @@ const BoostModal = lazy(() =>
 );
 import { applyOptimisticEdit } from '@/lib/optimistic-edit';
 import { QuotePostModalLazy } from '../modals/QuotePostModalLazy';
-import { QuotedPostEmbed } from './QuotedPostEmbed';
+import { QuotedPostEmbed, RemovedQuoteNotice } from './QuotedPostEmbed';
 import { TipModal } from '../modals/TipModal';
 import { SwipeableCarousel } from '../SwipeableCarousel';
 import { usePostTipCount } from '@/hooks/use-post-tip-count';
@@ -174,6 +175,8 @@ interface ImageCardProps {
  */
 import { createMediaAspectCache } from '@/lib/media-aspect-cache';
 import { viewerShareUrl } from '@/lib/share-url';
+import { AltTextBadge } from './AltTextBadge';
+import { KeywordFilterGate } from './KeywordFilterGate';
 const imageAspectRatioCache = createMediaAspectCache(
   () => localStorage.getItem('media-aspects-v1'), value => localStorage.setItem('media-aspects-v1', value),
 );
@@ -202,6 +205,7 @@ const BITMAP_RELEASE_DELAY_MS = 15_000;
 
 function ImageSlide({
   img,
+  description,
   idx,
   aboveFold,
   postId,
@@ -212,6 +216,7 @@ function ImageSlide({
 }: {
   pinned?: boolean;
   img: string;
+  description?: string;
   idx: number;
   aboveFold: boolean;
   postId?: string;
@@ -286,6 +291,7 @@ function ImageSlide({
       {...tapGestures}
     >
       <TapReactionBurst postId={postId} />
+      <AltTextBadge text={description} className="absolute left-2 top-2" />
       {/* The image sizes itself: fills the card width when it's wide enough,
           otherwise caps at 600px tall and shrinks its own width — so a narrow /
           portrait image is just the image, hugged to the left, with no blurred
@@ -293,6 +299,7 @@ function ImageSlide({
           up front so there's no layout shift on load. */}
       <HandoffImage
         mediaKey={`${postId ?? img}:${idx}`}
+        alt={description}
         priority={immersive ? 1 : 0}
         fixedFrame={!immersive}
         src={retainBitmap && horizontalBitmap ? img : undefined}
@@ -331,6 +338,7 @@ function ImageSlide({
  */
 function ImageCarousel({
   images,
+  descriptions,
   onImageClick,
   onIndexChange,
   aboveFold = false,
@@ -340,6 +348,8 @@ function ImageCarousel({
   soundPlaying = false,
 }: {
   images: string[];
+  /** Alt text per image, by position. */
+  descriptions?: string[];
   onImageClick: (index: number) => void;
   onIndexChange?: (index: number) => void;
   aboveFold?: boolean;
@@ -486,6 +496,7 @@ function ImageCarousel({
           >
             <ImageSlide
               img={img}
+              description={descriptions?.[idx]}
               idx={idx}
               aboveFold={aboveFold}
               postId={postId}
@@ -676,7 +687,7 @@ function FeedDescription({
   );
 }
 
-export const ImageCard = memo(function ImageCard({ post, aboveFold = false, onOpenComments, isImmersive = false, postPage = false }: ImageCardProps) {
+const ImageCardBody = memo(function ImageCard({ post, aboveFold = false, onOpenComments, isImmersive = false, postPage = false }: ImageCardProps) {
   const { t: _copy } = _useCopy();
   const [showComments, setShowComments] = useState(false);
   const [commentsInitialTab, setCommentsInitialTab] = useState<'replies' | 'quotes' | 'reposts' | 'search' | undefined>(undefined);
@@ -782,6 +793,7 @@ export const ImageCard = memo(function ImageCard({ post, aboveFold = false, onOp
   // pay-per-view, and the creator's own post is warned about too — the warning
   // is for whoever is looking at the screen.
   const matureGate = useMatureGate(post.contentRating);
+  const contentWarning = useContentWarning(post.spoilerText);
   // PPV/Lock badges are redundant with the centered overlay, so only show bounty here
   const hasBadges = isW2E;
 
@@ -954,6 +966,7 @@ export const ImageCard = memo(function ImageCard({ post, aboveFold = false, onOp
       ) : (
       <CardHeader
         username={post.username}
+        visibility={post.visibility}
         handle={post.creatorUsername}
         avatarSeed={post.avatar}
         verified={post.verified}
@@ -1123,7 +1136,9 @@ export const ImageCard = memo(function ImageCard({ post, aboveFold = false, onOp
         {/* Mature warning sits outermost: revealing it falls through to
             whatever gate the post actually has (PPV, holdings), rather than
             replacing it. */}
-        {matureGate.isGated ? (
+        {contentWarning.hidden ? (
+          <ContentWarningGate text={contentWarning.text} onReveal={contentWarning.reveal} className={isImmersive ? 'mx-3' : undefined} />
+        ) : matureGate.isGated ? (
           <MatureContentGate preview={images[0]} onReveal={matureGate.reveal} />
         ) : isComboLocked ? (
           <>
@@ -1280,6 +1295,7 @@ export const ImageCard = memo(function ImageCard({ post, aboveFold = false, onOp
           <SwipeableCarousel>
             <ImageCarousel
               images={images}
+              descriptions={post.mediaDescriptions}
               onImageClick={handleImageClick}
               onIndexChange={setActiveImageIndex}
               aboveFold={aboveFold}
@@ -1319,6 +1335,7 @@ export const ImageCard = memo(function ImageCard({ post, aboveFold = false, onOp
       <div data-card-info className={cn('pt-3 space-y-2', isImmersive && 'px-3')}>
         {isImmersive && headerRow}
         {/* Title & Description */}
+        {!contentWarning.hidden && (
         <FeedDescription 
           postId={post.id}
           onOpen={openPost}
@@ -1329,11 +1346,13 @@ export const ImageCard = memo(function ImageCard({ post, aboveFold = false, onOp
           translatedText={translatedText}
           stage={!!stage}
         />
+        )}
 
         {/* Quoted post embed (Twitter-style) */}
         {post.isQuotePost && post.quotedPost && (
-          <QuotedPostEmbed quotedPost={post.quotedPost} className="mt-2" />
+          <QuotedPostEmbed quotedPost={post.quotedPost} quoteTokenId={post.id} className="mt-2" />
         )}
+        {post.isQuotePost && post.quoteRevoked && <RemovedQuoteNotice className="mt-2" />}
         
         {/* Metadata: timestamp and views */}
         <PostMetadata 
@@ -1359,6 +1378,8 @@ export const ImageCard = memo(function ImageCard({ post, aboveFold = false, onOp
           newPostSlug={post.status === 'signed' ? post.newPostId ?? null : null}
           tokenId={parseInt(post.id, 10) || undefined}
           isOwnPost={!!isOwnPost}
+          quotePolicy={post.quotePolicy}
+          visibility={post.visibility}
           stage={stage}
           utilityDesktopAnchor
           className="p-0"
@@ -1406,6 +1427,7 @@ export const ImageCard = memo(function ImageCard({ post, aboveFold = false, onOp
             tokenId={post.id}
             initialTab={commentsInitialTab}
             commentsDisabled={!!(post as { commentsDisabled?: boolean }).commentsDisabled}
+            replyPolicy={post.replyPolicy}
             forKids={!!post.forKids}
           />
         )}
@@ -1519,6 +1541,9 @@ export const ImageCard = memo(function ImageCard({ post, aboveFold = false, onOp
             currentDescription={editDescription}
             currentCategories={post.categories ?? []}
             currentContentRating={post.contentRating}
+            currentSpoilerText={post.spoilerText}
+            currentQuotePolicy={post.quotePolicy}
+            currentReplyPolicy={post.replyPolicy}
             currentForKids={post.forKids}
             currentShopLinks={post.shopLinks}
             onSuccess={(edited) => {
@@ -1757,5 +1782,18 @@ export const ImageCard = memo(function ImageCard({ post, aboveFold = false, onOp
         </DrawerContent>
       </Drawer>
     </div>
+  );
+});
+
+/** Every post passes the viewer's keyword filters first — see KeywordFilterGate. */
+export const ImageCard = memo(function FilteredImageCard(props: ImageCardProps) {
+  const { post } = props;
+  return (
+    <KeywordFilterGate
+      texts={[post.title, post.description, post.caption, post.spoilerText, ...(post.mediaDescriptions ?? [])]}
+      authorId={post.creatorId}
+    >
+      <ImageCardBody {...props} />
+    </KeywordFilterGate>
   );
 });

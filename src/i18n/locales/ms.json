@@ -1,4 +1,151 @@
 {
+  "mastodonApps": {
+    "authTitle": "Log masuk dengan DeHub",
+    "authWants": "{{app}} mahu menggunakan akaun DeHub anda",
+    "authSignedInAs": "Log masuk sebagai {{name}}",
+    "authSignIn": "Log masuk untuk teruskan",
+    "allow": "Benarkan",
+    "cancel": "Batal",
+    "scopeRead": "Melihat garis masa, siaran, pemberitahuan dan penanda buku anda",
+    "scopeWrite": "Menyiar, membalas, menyukai, menggalakkan dan menanda buku bagi pihak anda",
+    "scopeFollow": "Mengikuti, berhenti mengikuti, menyekat dan membisukan akaun",
+    "scopePush": "Menghantar pemberitahuan kepada anda",
+    "scopeProfile": "Melihat profil anda",
+    "invalid": "Pautan log masuk ini tidak sah. Kembali ke aplikasi dan cuba lagi.",
+    "failed": "Tidak berjaya. Cuba lagi.",
+    "codeTitle": "Salin kod ini ke dalam aplikasi untuk selesai log masuk.",
+    "copy": "Salin",
+    "copied": "Disalin",
+    "seoDescription": "Benarkan aplikasi Mastodon menggunakan akaun DeHub anda.",
+    "redirecting": "Membawa anda kembali ke {{app}}…",
+    "connectedTitle": "Aplikasi bersambung",
+    "connectedDescription": "Aplikasi Mastodon yang anda log masuk dengan akaun ini. Alih keluar satu untuk log keluar daripadanya.",
+    "connectedEmpty": "Belum ada aplikasi bersambung.",
+    "lastUsed": "Kali terakhir digunakan {{date}}",
+    "remove": "Alih keluar",
+    "removed": "Aplikasi dialih keluar"
+  },
+  "fediverse": {
+    "title": "Fediverse",
+    "description": "Orang di Mastodon dan aplikasi fediverse lain boleh mencari dan mengikuti anda di alamat ini. Siaran awam baharu anda sampai kepada mereka di sana.",
+    "copy": "Salin",
+    "copied": "Disalin",
+    "privateNote": "Akaun peribadi tidak dipaparkan di fediverse.",
+    "noUsername": "Pilih nama pengguna untuk mendapatkan alamat fediverse."
+  },
+  "profileFields": {
+    "title": "Medan profil",
+    "description": "Sehingga empat baris tambahan pada profil anda, seperti laman web atau kata ganti nama anda.",
+    "label": "Label",
+    "content": "Kandungan",
+    "save": "Simpan medan",
+    "saved": "Medan profil disimpan",
+    "failed": "Tidak disimpan. Cuba lagi.",
+    "verified": "Pautan disahkan",
+    "verifyHint": "Untuk mengesahkan pautan, tambah ini pada halaman itu, kemudian simpan semula: {{snippet}}"
+  },
+  "followedTags": {
+    "follow": "Ikuti #{{tag}}",
+    "following": "Mengikuti",
+    "unfollow": "Nyahikut #{{tag}}",
+    "followed": "Anda kini mengikuti #{{tag}}. Siarannya akan muncul dalam suapan Mengikuti anda.",
+    "unfollowed": "Berhenti mengikuti #{{tag}}",
+    "failed": "Tidak disimpan. Cuba lagi.",
+    "clear": "Kosongkan"
+  },
+  "notificationFilters": {
+    "title": "Tapis pemberitahuan daripada",
+    "description": "Pilih apa yang berlaku apabila seseorang di luar bulatan anda berinteraksi dengan anda. Pemberitahuan yang ditapis menunggu di bawah Ditapis, tanpa lencana dan tanpa push.",
+    "notFollowing": "Orang yang anda tidak ikuti",
+    "notFollowers": "Orang yang tidak mengikuti anda",
+    "newAccounts": "Akaun baharu (kurang 30 hari)",
+    "accept": "Beritahu saya",
+    "filter": "Tapis",
+    "drop": "Sembunyikan sepenuhnya",
+    "filteredTitle": "Pemberitahuan yang ditapis",
+    "filteredEmpty": "Tiada apa yang ditapis.",
+    "failed": "Tidak disimpan. Cuba lagi."
+  },
+  "keywordFilters": {
+    "title": "Perkataan yang dibisukan",
+    "description": "Sembunyikan siaran dan komen yang mengandungi perkataan ini, atau lipat di sebalik amaran. Hanya anda yang melihat senarai ini.",
+    "placeholder": "Perkataan atau frasa",
+    "add": "Bisukan",
+    "added": "Dibisukan: {{phrase}}",
+    "wholeWord": "Perkataan penuh sahaja",
+    "whenMatches": "Apabila siaran sepadan",
+    "warn": "Tunjukkan amaran",
+    "hide": "Sembunyikan",
+    "howLong": "Berapa lama",
+    "forever": "Sehingga saya buang",
+    "duration1h": "Selama 1 jam",
+    "duration1d": "Selama 1 hari",
+    "duration7d": "Selama 7 hari",
+    "duration30d": "Selama 30 hari",
+    "where": "Di mana",
+    "home": "Laman utama",
+    "public": "Teroka dan cari",
+    "profile": "Profil",
+    "thread": "Perbualan",
+    "notifications": "Pemberitahuan",
+    "empty": "Anda belum membisukan sebarang perkataan.",
+    "remove": "Nyahbisu",
+    "until": "Sehingga {{date}}",
+    "filtered": "Ditapis: {{phrase}}",
+    "showAnyway": "Tunjukkan juga",
+    "failed": "Tidak disimpan. Cuba lagi."
+  },
+  "postVisibility": {
+    "label": "Siapa boleh melihat ini",
+    "public": "Semua orang",
+    "followers": "Pengikut sahaja",
+    "direct": "Orang yang disebut sahaja",
+    "noRepost": "Hanya siaran awam boleh disiarkan semula",
+    "directHint": "Hanya orang yang anda sebut dengan @ akan melihat siaran ini",
+    "needsMention": "Sebut sekurang-kurangnya seorang dengan @ untuk menyiarkan kepada orang yang disebut sahaja"
+  },
+  "replyPolicy": {
+    "label": "Siapa boleh membalas",
+    "public": "Sesiapa",
+    "followers": "Pengikut anda",
+    "following": "Orang yang anda ikuti",
+    "mentioned": "Yang disebut sahaja",
+    "noticeFollowers": "Hanya pengikut penulis boleh membalas",
+    "noticeFollowing": "Hanya orang yang diikuti penulis boleh membalas",
+    "noticeMentioned": "Hanya orang yang disebut dalam siaran boleh membalas",
+    "refused": "Penulis telah mengehadkan siapa boleh membalas siaran ini"
+  },
+  "quotePolicy": {
+    "label": "Siapa boleh memetik",
+    "public": "Sesiapa",
+    "followers": "Pengikut",
+    "nobody": "Saya sahaja",
+    "off": "Penulis telah mematikan petikan",
+    "removed": "Penulis telah membuang siarannya daripada petikan ini",
+    "remove": "Buang",
+    "removedToast": "Siaran anda telah dibuang daripada petikan ini",
+    "removeFailed": "Tidak dapat membuang siaran anda daripada petikan",
+    "refused": "Penulis tidak membenarkan anda memetik siaran ini"
+  },
+  "contentWarning": {
+    "label": "Amaran kandungan",
+    "placeholder": "Tulis amaran anda di sini",
+    "add": "Tambah amaran kandungan",
+    "remove": "Buang amaran kandungan",
+    "show": "Tunjukkan siaran"
+  },
+  "altText": {
+    "badge": "ALT",
+    "add": "Tambah penerangan",
+    "edit": "Sunting penerangan",
+    "titleImage": "Terangkan imej ini",
+    "titleVideo": "Terangkan video ini",
+    "help": "Untuk orang yang tidak dapat melihatnya. Pembaca skrin membacanya dengan kuat.",
+    "placeholder": "Apa yang ditunjukkannya? Sertakan sebarang teks di dalamnya.",
+    "show": "Tunjukkan penerangan",
+    "saved": "Penerangan disimpan",
+    "saveFailed": "Tidak dapat menyimpan penerangan"
+  },
   "liveRecap": {
     "title": "Ringkasan strim",
     "justEnded": "Ringkasan strim anda",
@@ -113,11 +260,12 @@
     "heading": "DeHub Shorts"
   },
   "settings": {
-    "showDislikesDesc": "Sesiapa boleh membuka tab Tidak Suka pada profil anda. Apabila dimatikan, hanya anda yang boleh melihatnya.",
-    "showDislikes": "Tunjukkan tidak suka saya kepada semua",
+    "usernameTaken": "Nama pengguna telah diambil",
     "postingChain": "Rantaian blok siaran",
     "showOnline": "Tunjukkan apabila saya berada dalam talian",
     "showOnlineDesc": "Orang yang anda mesej melihat titik hijau di sebelah nama anda semasa anda menggunakan DeHub",
+    "showDislikes": "Tunjukkan tidak suka saya kepada semua",
+    "showDislikesDesc": "Sesiapa boleh membuka tab Tidak Suka pada profil anda. Apabila dimatikan, hanya anda yang boleh melihatnya.",
     "smartReplies": "Balasan yang dicadangkan",
     "smartRepliesDesc": "Menyediakan dua balasan yang boleh anda ketik dalam sembang. Tanda × pada cadangan akan mematikannya.",
     "title": "Tetapan",
@@ -241,6 +389,11 @@
       "hintDeny": "Sistem AI dan perayap yang menghormati isyarat ini diminta untuk tidak melatih audio, karya seni dan tulisan anda. Perayap yang mengabaikan isyarat tidak disekat olehnya.",
       "saved": "Pilihan latihan AI disimpan"
     },
+    "defaultFeed": "Suapan lalai",
+    "defaultFeedDesc": "Pilih suapan yang dibuka setiap kali anda membuka DeHub",
+    "feedToggles": "Tetapkan semula penapis suapan",
+    "feedTogglesDesc": "Penapis yang anda hidupkan dalam suapan kekal sebagai lalai sehingga anda menetapkannya semula",
+    "feedTogglesCleared": "Penapis suapan ditetapkan semula",
     "defaultProfileTab": "Tab profil lalai",
     "defaultProfileTabDesc": "Pilih tab yang pelawat lihat dahulu pada profil anda",
     "public": "Awam",
@@ -897,6 +1050,9 @@
     "dmSent": "{{amount}} token dihantar kepada {{name}}!"
   },
   "postOptions": {
+    "embed": "Benamkan",
+    "copyEmbedCode": "Salin kod benam",
+    "embedCodeCopied": "Kod benam disalin",
     "options": "Pilihan",
     "aiOverview": "Gambaran keseluruhan AI",
     "sendTip": "Hantar Tip",
@@ -924,7 +1080,8 @@
     "unpinPost": "Buang sematan daripada profil anda",
     "postPinned": "Disematkan pada profil anda",
     "postUnpinned": "Tidak disematkan daripada profil anda",
-    "pinFailed": "Tidak dapat menyematkan atau membatalkan pin hantaran ini"
+    "pinFailed": "Tidak dapat menyematkan atau membatalkan pin hantaran ini",
+    "copyFailed": "Tidak dapat menyalin pautan"
   },
   "filters": {
     "sort": "Isih",
@@ -1660,7 +1817,6 @@
     "returnHome": "Return Home"
   },
   "profile": {
-    "dislikes": { "loadMore": "Muat lagi", "privateDesc": "Akaun ini menyimpan tidak sukanya sendiri.", "privateTitle": "Tidak suka adalah peribadi", "emptyOther": "Belum ada apa-apa.", "emptyOwn": "Siaran yang anda tidak suka keluar dari suapan anda dan dipaparkan di sini. Batalkan tidak suka untuk mengembalikan siaran.", "emptyTitle": "Belum ada tidak suka" },
     "back": "Back",
     "usernameAvailable": "Username available!",
     "signUpToClaim": "Daftar hari ini untuk menuntut",
@@ -1688,8 +1844,16 @@
       "commentUnavailable": "Komen ini tidak lagi tersedia"
     },
     "tabs": {
-      "dislikes": "Tidak Suka",
-      "playlists": "Senarai main"
+      "playlists": "Senarai main",
+      "dislikes": "Tidak Suka"
+    },
+    "dislikes": {
+      "emptyTitle": "Belum ada tidak suka",
+      "emptyOwn": "Siaran yang anda tidak suka keluar dari suapan anda dan dipaparkan di sini. Batalkan tidak suka untuk mengembalikan siaran.",
+      "emptyOther": "Belum ada apa-apa.",
+      "privateTitle": "Tidak suka adalah peribadi",
+      "privateDesc": "Akaun ini menyimpan tidak sukanya sendiri.",
+      "loadMore": "Muat lagi"
     },
     "offerWorthNow": "Kira-kira {{amount}} token pada kadar semasa",
     "offerNotePlaceholder": "Tambah nota (pilihan)",
@@ -2241,6 +2405,8 @@
     "copyFailed": "Tidak dapat disalin"
   },
   "profileOptions": {
+    "copyRssFeed": "Salin pautan suapan RSS",
+    "rssFeedCopied": "Pautan suapan RSS disalin",
     "copyProfileUrl": "Salin URL profil",
     "copyUsername": "Salin nama pengguna",
     "copyAddress": "Salin alamat",
@@ -2542,6 +2708,7 @@
     "pendingSubmitted": "{{amount}} token diserahkan. Pengesahan masih disemak. Jangan hantar semula."
   },
   "communities": {
+    "chatTab": "Sembang",
     "title": "Komuniti",
     "create": "Cipta",
     "searchPlaceholder": "Cari komuniti...",
@@ -2576,7 +2743,30 @@
     "addDescription": "Tambah keterangan...",
     "communityDescription": "Keterangan komuniti...",
     "posts": "Siaran",
-    "chat": "Sembang",
+    "chat": {
+      "intervalHour": "1 jam",
+      "intervalHours": "{{count}} jam",
+      "intervalMinute": "1 minit",
+      "intervalMinutes": "{{count}} minit",
+      "intervalSecond": "1 saat",
+      "intervalSeconds": "{{count}} saat",
+      "muted": "Anda diredam",
+      "mutedUntil": "Anda diredam sehingga {{until}}",
+      "postingDisabled": "Penyiaran dinyahdayakan untuk ahli di sini",
+      "pinnedGif": "GIF",
+      "pinnedMedia": "Media",
+      "jumpToPinned": "Lompat ke mesej yang disematkan",
+      "pinnedMessage": "Mesej yang disematkan",
+      "unpin": "Buka pin",
+      "pin": "Pin",
+      "delete": "Hapus",
+      "slowMode": "Mod perlahan: satu mesej setiap {{interval}}",
+      "slowModeWait": "Mod perlahan — tunggu {{time}}",
+      "send": "Hantar",
+      "deleteMessageTitle": "Hapuskan mesej ini?",
+      "deleteMessageBody": "Ini tidak boleh dibuat asal.",
+      "cancel": "Batal"
+    },
     "membersTab": "Ahli ({{count}})",
     "about": "Perihal",
     "backToCommunities": "Komuniti",
@@ -4042,6 +4232,7 @@
     "sellYourFractions": "Jual pecahan anda ({{held}} dipegang)"
   },
   "creator": {
+    "libraryEmpty": "Hasil janaan anda yang disimpan akan dipaparkan di sini.",
     "whatToCreate": "Apa yang hendak dibuat",
     "startCreatingWith": "Mulai membuat dengan {{model}}",
     "studioSubtitle": "Terangkan pemandangan, watak, suasana atau gaya. Hasil muncul di bawah dan terus ke editor.",
@@ -5633,6 +5824,8 @@
     }
   },
   "goLive": {
+    "bigEvent": "Acara besar",
+    "bigEventHint": "Untuk penonton ramai: penonton menonton kira-kira 20 saat ketinggalan, dengan kurang gangguan.",
     "goLive": "Siaran Langsung",
     "youAreLive": "Anda Sedang Siaran Langsung",
     "streamReady": "Siaran Sedia",
@@ -6418,7 +6611,10 @@
     "play": "Main",
     "pause": "Jeda",
     "listens_one": "{{count}} dengar",
-    "listens_other": "{{count}} mendengar"
+    "listens_other": "{{count}} mendengar",
+    "lyrics": "Lirik",
+    "lyricsLoading": "Mencari lirik…",
+    "lyricsNone": "Tiada lirik ditemui"
   },
   "converter": {
     "seoTitle": "Penukar — import video ke DeHub",
@@ -6934,6 +7130,7 @@
     "seoDescription": "Dokumentasi rasmi DeHub: gambaran platform, dApps, ekonomi token token, staking, permainan, peta jalan, soalan lazim dan lain-lain."
   },
   "dex": {
+    "title": "token / USD",
     "seoTitle": "DEX — Dagangkan token pada harga anda",
     "seoDescription": "Tetapkan harga beli atau jual token anda dengan pesanan had Uniswap v4 pada Base atau BNB Chain. Buku pesanan langsung, kedalaman pasaran dan satu harga USD perkongsian.",
     "venue": "Rangkaian",
@@ -7156,6 +7353,14 @@
     }
   },
   "editor": {
+    "video": {
+      "tFade": "Larut silang",
+      "none": "Tiada",
+      "transition": "Peralihan",
+      "speed": "Kelajuan",
+      "sound": "Bunyi",
+      "video": "Video"
+    },
     "review": {
       "title": "Semakan projek",
       "shared": "Dikongsi dengan anda",
@@ -8817,5 +9022,15 @@
     "posted": "Disiarkan",
     "view": "Lihat",
     "failed": "Video tidak dapat diproses"
+  },
+  "loginStack": {
+    "tip": "Tip DHB",
+    "headlineTop": "Anda akan memiliki segalanya",
+    "headlineAccent": "dan gembira.",
+    "orContinueWith": "atau teruskan dengan",
+    "phone": "Telefon",
+    "fingerprint": "Cap jari",
+    "exploreFirst": "Teroka dahulu",
+    "codeNote": "Kami e-melkan kod kepada anda, tanpa kata laluan."
   }
 }

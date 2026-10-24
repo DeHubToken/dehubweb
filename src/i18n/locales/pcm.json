@@ -1,4 +1,151 @@
 {
+  "mastodonApps": {
+    "authTitle": "Sign in with DeHub",
+    "authWants": "{{app}} wan use your DeHub account",
+    "authSignedInAs": "You don sign in as {{name}}",
+    "authSignIn": "Sign in make you continue",
+    "allow": "Allow",
+    "cancel": "Cancel",
+    "scopeRead": "See your timelines, posts, notifications and bookmarks",
+    "scopeWrite": "Post, reply, like, boost and bookmark for your side",
+    "scopeFollow": "Follow, unfollow, block and mute accounts",
+    "scopePush": "Send you notifications",
+    "scopeProfile": "See your profile",
+    "invalid": "Dis sign-in link no correct. Go back to the app come try again.",
+    "failed": "E no work. Try again.",
+    "codeTitle": "Copy dis code put for the app make you finish sign in.",
+    "copy": "Copy",
+    "copied": "E don copy",
+    "seoDescription": "Make Mastodon app use your DeHub account.",
+    "redirecting": "We dey carry you go back to {{app}}…",
+    "connectedTitle": "Connected apps",
+    "connectedDescription": "Mastodon apps wey you don sign in with dis account. Remove one make e sign out.",
+    "connectedEmpty": "No app don connect yet.",
+    "lastUsed": "Last use {{date}}",
+    "remove": "Remove",
+    "removed": "App don comot"
+  },
+  "fediverse": {
+    "title": "Fediverse",
+    "description": "People wey dey Mastodon and other fediverse apps fit find you and follow you for dis address. Your new public posts go reach dem dere.",
+    "copy": "Copy",
+    "copied": "E don copy",
+    "privateNote": "Private accounts no dey show for fediverse.",
+    "noUsername": "Choose username make you get fediverse address."
+  },
+  "profileFields": {
+    "title": "Profile fields",
+    "description": "Up to four extra lines for your profile, like website or your pronouns.",
+    "label": "Label",
+    "content": "Content",
+    "save": "Save fields",
+    "saved": "Profile fields don save",
+    "failed": "E no save. Try again.",
+    "verified": "Verified link",
+    "verifyHint": "To verify link, add dis one for dat page, then save again: {{snippet}}"
+  },
+  "followedTags": {
+    "follow": "Follow #{{tag}}",
+    "following": "You dey follow",
+    "unfollow": "Unfollow #{{tag}}",
+    "followed": "You don dey follow #{{tag}}. Im posts go show for your Following feed.",
+    "unfollowed": "You don unfollow #{{tag}}",
+    "failed": "E no save. Try again.",
+    "clear": "Clear am"
+  },
+  "notificationFilters": {
+    "title": "Filter notifications from",
+    "description": "Choose wetin go happen when person wey no dey your circle interact with you. Filtered notifications go wait under Filtered, no badge and no push.",
+    "notFollowing": "People wey you no follow",
+    "notFollowers": "People wey no follow you",
+    "newAccounts": "New accounts (under 30 days)",
+    "accept": "Tell me",
+    "filter": "Filter",
+    "drop": "Hide am finish",
+    "filteredTitle": "Filtered notifications",
+    "filteredEmpty": "Nothing don filter.",
+    "failed": "E no save. Try again."
+  },
+  "keywordFilters": {
+    "title": "Words wey you mute",
+    "description": "Hide posts and comments wey get these words, or fold dem behind warning. Na only you dey see dis list.",
+    "placeholder": "Word or phrase",
+    "add": "Mute",
+    "added": "Don mute: {{phrase}}",
+    "wholeWord": "Only di full word",
+    "whenMatches": "When post match",
+    "warn": "Show warning",
+    "hide": "Hide am",
+    "howLong": "How long",
+    "forever": "Until I remove am",
+    "duration1h": "For 1 hour",
+    "duration1d": "For 1 day",
+    "duration7d": "For 7 days",
+    "duration30d": "For 30 days",
+    "where": "Where",
+    "home": "Home",
+    "public": "Explore and search",
+    "profile": "Profiles",
+    "thread": "Conversations",
+    "notifications": "Notifications",
+    "empty": "You never mute any word.",
+    "remove": "Unmute",
+    "until": "Until {{date}}",
+    "filtered": "Don filter: {{phrase}}",
+    "showAnyway": "Show am anyway",
+    "failed": "E no save. Try again."
+  },
+  "postVisibility": {
+    "label": "Who fit see dis",
+    "public": "Everybody",
+    "followers": "Na only followers",
+    "direct": "Na only people wey you mention",
+    "noRepost": "Na only public post fit repost",
+    "directHint": "Na only di people wey you mention with @ go see dis post",
+    "needsMention": "Mention at least one person with @ to post am for only di people wey you mention"
+  },
+  "replyPolicy": {
+    "label": "Who fit reply",
+    "public": "Anybody",
+    "followers": "Your followers",
+    "following": "People wey you dey follow",
+    "mentioned": "Na only people wey dem mention",
+    "noticeFollowers": "Na only di person followers fit reply",
+    "noticeFollowing": "Na only people wey di person dey follow fit reply",
+    "noticeMentioned": "Na only people wey dem mention for di post fit reply",
+    "refused": "Di person wey post am don limit who fit reply dis post"
+  },
+  "quotePolicy": {
+    "label": "Who fit quote",
+    "public": "Anybody",
+    "followers": "Followers",
+    "nobody": "Na only me",
+    "off": "Di person wey post am don off quote",
+    "removed": "Di person wey post am don comot im post from dis quote",
+    "remove": "Comot am",
+    "removedToast": "Your post don comot from dis quote",
+    "removeFailed": "We no fit comot your post from di quote",
+    "refused": "Di person wey post am no gree make you quote dis post"
+  },
+  "contentWarning": {
+    "label": "Content warning",
+    "placeholder": "Write your warning for here",
+    "add": "Add content warning",
+    "remove": "Comot content warning",
+    "show": "Show di post"
+  },
+  "altText": {
+    "badge": "ALT",
+    "add": "Add description",
+    "edit": "Change description",
+    "titleImage": "Describe dis picture",
+    "titleVideo": "Describe dis video",
+    "help": "For people wey no fit see am. Screen reader go read am out loud.",
+    "placeholder": "Wetin e dey show? Put any writing wey dey inside am.",
+    "show": "Show description",
+    "saved": "Description don save",
+    "saveFailed": "We no fit save di description"
+  },
   "liveRecap": {
     "title": "Stream recap",
     "justEnded": "Your stream recap",
@@ -113,6 +260,7 @@
     "heading": "Di DeHub Shorts"
   },
   "settings": {
+    "usernameTaken": "Dem don take dis username",
     "postingChain": "Blockchain wey you go use post",
     "showOnline": "Wen yu dey online.",
     "showOnlineDesc": "Pipo wey dey message you go see green dot for beside your name while you dey use DeHub.",
@@ -232,6 +380,11 @@
       "hintDeny": "AI system and crawler like dem dat respect dis signal, wey dey ask dem no go train on your audio, artwork and writing. Crawler like dem dat ignore dis signal, no go block dem by dis.",
       "saved": "AI training preference saved"
     },
+    "defaultFeed": "Default feed",
+    "defaultFeedDesc": "Choose which feed go open every time wey you open DeHub",
+    "feedToggles": "Reset feed filters",
+    "feedTogglesDesc": "Filters wey you on for feed go stay as your default until you reset dem",
+    "feedTogglesCleared": "Feed filters don reset",
     "defaultProfileTab": "Default profile tab",
     "defaultProfileTabDesc": "Choose which tab visitors go see first for your profile",
     "public": "Everybody",
@@ -562,6 +715,9 @@
     "dmSent": "Don send {{amount}} tokens give {{name}}!"
   },
   "postOptions": {
+    "embed": "Embed",
+    "copyEmbedCode": "Copy embed code",
+    "embedCodeCopied": "Embed code don copy",
     "options": "Option Dem",
     "aiOverview": "AI overview",
     "sendTip": "Send Tip",
@@ -584,7 +740,8 @@
     "postUrlCopied": "Post URL don copy to clipboard",
     "boostPost": "Boost post",
     "bookmark": "Bookmark",
-    "removeBookmark": "Remove bookmark"
+    "removeBookmark": "Remove bookmark",
+    "copyFailed": "We no fit copy di link"
   },
   "filters": {
     "sort": "Arrange Am",
@@ -1807,6 +1964,8 @@
     "copyFailed": "E no fit copy"
   },
   "profileOptions": {
+    "copyRssFeed": "Copy RSS feed link",
+    "rssFeedCopied": "RSS feed link don copy",
     "copyProfileUrl": "Copy profile URL",
     "copyUsername": "Copy username",
     "copyAddress": "Copy address",
@@ -2106,6 +2265,7 @@
     "pendingSubmitted": "{{amount}} tokens wey send na still dey check for confirmation. No go send again."
   },
   "communities": {
+    "chatTab": "Chat",
     "title": "Communities",
     "create": "Create",
     "searchPlaceholder": "Search communities...",
@@ -2138,7 +2298,27 @@
     "addDescription": "Add a description...",
     "communityDescription": "Community description...",
     "posts": "Posts",
-    "chat": "Chat",
+    "chat": {
+      "intervalHour": "1 hour",
+      "intervalHours": "{{count}} hours",
+      "intervalMinute": "1 minute",
+      "intervalMinutes": "{{count}} minutes",
+      "intervalSecond": "1 second",
+      "intervalSeconds": "{{count}} seconds",
+      "muted": "You dey mute",
+      "mutedUntil": "You dey mute till {{until}}",
+      "pinnedGif": "GIF",
+      "pinnedMedia": "Media",
+      "pinnedMessage": "Pinned message",
+      "unpin": "Unpin",
+      "pin": "Pin",
+      "delete": "Delete",
+      "slowMode": "Slow mode: one message every {{interval}}",
+      "slowModeWait": "Slow mode — wait {{time}}",
+      "send": "Send",
+      "deleteMessageBody": "Dis no fit be undone.",
+      "cancel": "Cancel"
+    },
     "membersTab": "Members ({{count}})",
     "about": "About",
     "backToCommunities": "Communities",
@@ -3339,6 +3519,7 @@
     "needsYouHold": "Wan go for {{needed}}, you dey hold {{held}}"
   },
   "creator": {
+    "libraryEmpty": "Your saved generations go show for here.",
     "whatToCreate": "What to create",
     "countRunning_one": "{{count}} running",
     "countRunning_other": "{{count}} running",
@@ -4646,6 +4827,8 @@
     }
   },
   "goLive": {
+    "bigEvent": "Big event",
+    "bigEventHint": "For plenty viewers: people go dey watch about 20 seconds behind, but e no go dey cut too much.",
     "goLive": "Go Live",
     "youAreLive": "You're Live",
     "streamReady": "Stream Ready",
@@ -5185,7 +5368,10 @@
     "play": "Play",
     "pause": "Pause",
     "listens_one": "{{count}} listen",
-    "listens_other": "{{count}} listens"
+    "listens_other": "{{count}} listens",
+    "lyrics": "Song words",
+    "lyricsLoading": "Dey find song words…",
+    "lyricsNone": "No song words dey"
   },
   "converter": {
     "title": "Import a video",
@@ -5599,6 +5785,7 @@
     "seoDescription": "Official DeHub documentation: platform overview, dApps, tokens token economics, staking, games, roadmap, FAQ and more."
   },
   "dex": {
+    "title": "tokens / USD",
     "venue": "Network",
     "marketPrice": "Market price · USD",
     "bookPrice": "{{chain}} book price · USD",
@@ -5781,6 +5968,14 @@
     }
   },
   "editor": {
+    "video": {
+      "tFade": "Blend enter",
+      "none": "Nothing",
+      "transition": "Transition",
+      "speed": "Speed",
+      "sound": "Sound",
+      "video": "Video"
+    },
     "review": {
       "title": "Check project",
       "shared": "Dem share am with you",

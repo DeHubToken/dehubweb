@@ -3,7 +3,8 @@ import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import i18n from '@/i18n';
 import { useFormDraft } from '@/hooks/use-form-draft';
-import { Loader2, ImagePlus, MonitorPlay, ScreenShare, Cable } from "lucide-react";
+import { Loader2, ImagePlus, MonitorPlay, ScreenShare, Cable, Users } from "lucide-react";
+import { Switch } from "@/components/ui/switch";
 import Radio from "@/components/ui/cut-icons/live";
 import Copy from "@/components/ui/cut-icons/copy";
 import Check from "@/components/ui/cut-icons/check";
@@ -51,7 +52,7 @@ import type { Currency } from '@/features/post/types';
 import type { PostChainId } from '@/components/app/ChainSelector';
 import { useCreatorPlansLite } from '@/hooks/use-creator-plans';
 import { getNFTInfo } from '@/lib/api/dehub/feed';
-import { getStreamIngestUrl, startLiveStream, endLiveStream, getEncoderCredentials, type EncoderCredentials } from '@/lib/api/dehub/livestream';
+import { getStreamIngestUrl, startLiveStream, endLiveStream, getEncoderCredentials, fallBackToLivepeer, type EncoderCredentials } from '@/lib/api/dehub/livestream';
 import { createLogger } from '@/lib/logger';
 import { supabase } from '@/integrations/supabase/client';
 import { getAuthToken } from '@/lib/api/dehub/core';
@@ -237,6 +238,9 @@ export function GoLiveModal({ isOpen, onClose, initialSource, initialStream }: G
   const [tokenSymbol, setTokenSymbol] = useState('');
   const [tokenAmount, setTokenAmount] = useState('');
   const [isMature, setIsMature] = useState(false);
+  // A big event plays to viewers over HLS from about twenty seconds behind
+  // live instead of a WebRTC session each — the creator's call, never a default.
+  const [isBigEvent, setIsBigEvent] = useState(false);
   /** The Shop board this stream goes on air with. Empty means no Shop button. */
   const [shopLinks, setShopLinks] = useState<ShopLink[]>([]);
   /** Own store listings picked for the board, attached once the mint returns. */
@@ -310,6 +314,7 @@ export function GoLiveModal({ isOpen, onClose, initialSource, initialStream }: G
       tokenSymbol,
       tokenAmount,
       isMature,
+      isBigEvent,
       shopLinks,
       shopListingIds,
     },
@@ -334,6 +339,7 @@ export function GoLiveModal({ isOpen, onClose, initialSource, initialStream }: G
       if (saved.tokenSymbol !== undefined) setTokenSymbol(saved.tokenSymbol);
       if (saved.tokenAmount !== undefined) setTokenAmount(saved.tokenAmount);
       if (saved.isMature) setIsMature(true);
+      if (saved.isBigEvent) setIsBigEvent(true);
       // Restored on the same truthy rule, and worth more than the switches:
       // these are URLs somebody typed by hand.
       if (Array.isArray(saved.shopLinks) && saved.shopLinks.length) setShopLinks(saved.shopLinks);
@@ -868,6 +874,7 @@ export function GoLiveModal({ isOpen, onClose, initialSource, initialStream }: G
           ((await turnServers).length > 0 && !hadRecentRelayFailure())
             ? undefined
             : 'livepeer',
+        latencyMode: isBigEvent ? 'event' : undefined,
         streamInfo: access.streamInfo,
         plans: access.subscriberPlanIds,
         contentRating: isMature ? 'mature' : undefined,
@@ -1453,6 +1460,23 @@ export function GoLiveModal({ isOpen, onClose, initialSource, initialStream }: G
                 </button>
               </div>
 
+              {/* Big event: HLS from deep behind live for every viewer, which
+                  costs latency and buys a crowd that does not stall. */}
+              <label className="flex items-center justify-between gap-3 py-0.5 cursor-pointer">
+                <div className="flex items-start gap-2 min-w-0">
+                  <Users className="w-4 h-4 text-white shrink-0 mt-0.5" />
+                  <div className="min-w-0">
+                    <span className="block text-sm text-white">{t('goLive.bigEvent')}</span>
+                    <span className="block text-xs text-white/50">{t('goLive.bigEventHint')}</span>
+                  </div>
+                </div>
+                <Switch
+                  checked={isBigEvent}
+                  onCheckedChange={setIsBigEvent}
+                  className="data-[state=checked]:bg-white scale-75 shrink-0"
+                />
+              </label>
+
               {/* The composer's own switches — minting, subscribers, PPV,
                   bounty, token gate, category, community, rating — so a
                   stream can be sold or gated exactly like any other post.
@@ -1530,6 +1554,15 @@ export function GoLiveModal({ isOpen, onClose, initialSource, initialStream }: G
                     tokenId={String(streamData.tokenId)}
                     onEnd={handleEndStream}
                     onLive={() => { wentLiveRef.current = true; }}
+                    // Every self-hosted route failed before any media: the
+                    // same stream moves to Livepeer and the broadcaster
+                    // publishes there. The props above are left alone on
+                    // purpose — changing the key would restart the capture.
+                    onSelfHostedUnreachable={
+                      streamData.streamId
+                        ? () => fallBackToLivepeer(String(streamData.streamId))
+                        : undefined
+                    }
                   />
                 </Suspense>
               </BroadcasterBoundary>

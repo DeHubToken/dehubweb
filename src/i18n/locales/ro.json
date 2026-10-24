@@ -1,4 +1,151 @@
 {
+  "mastodonApps": {
+    "authTitle": "Conectează-te cu DeHub",
+    "authWants": "{{app}} vrea să folosească contul tău DeHub",
+    "authSignedInAs": "Conectat ca {{name}}",
+    "authSignIn": "Conectează-te ca să continui",
+    "allow": "Permite",
+    "cancel": "Anulează",
+    "scopeRead": "Să vadă cronologiile, postările, notificările și marcajele tale",
+    "scopeWrite": "Să posteze, să răspundă, să aprecieze, să distribuie și să salveze în numele tău",
+    "scopeFollow": "Să urmărească, să nu mai urmărească, să blocheze și să ignore conturi",
+    "scopePush": "Să îți trimită notificări",
+    "scopeProfile": "Să vadă profilul tău",
+    "invalid": "Acest link de conectare nu este valid. Întoarce-te în aplicație și încearcă din nou.",
+    "failed": "N-a mers. Încearcă din nou.",
+    "codeTitle": "Copiază acest cod în aplicație ca să termini conectarea.",
+    "copy": "Copiază",
+    "copied": "Copiat",
+    "seoDescription": "Lasă o aplicație Mastodon să folosească contul tău DeHub.",
+    "redirecting": "Te ducem înapoi la {{app}}…",
+    "connectedTitle": "Aplicații conectate",
+    "connectedDescription": "Aplicațiile Mastodon în care te-ai conectat cu acest cont. Elimină una ca să o deconectezi.",
+    "connectedEmpty": "Nicio aplicație conectată încă.",
+    "lastUsed": "Folosită ultima dată {{date}}",
+    "remove": "Elimină",
+    "removed": "Aplicație eliminată"
+  },
+  "fediverse": {
+    "title": "Fediverse",
+    "description": "Oamenii de pe Mastodon și din alte aplicații fediverse te pot găsi și urmări la această adresă. Postările tale publice noi ajung la ei acolo.",
+    "copy": "Copiază",
+    "copied": "Copiat",
+    "privateNote": "Conturile private nu apar în fediverse.",
+    "noUsername": "Alege un nume de utilizator ca să ai o adresă fediverse."
+  },
+  "profileFields": {
+    "title": "Câmpuri de profil",
+    "description": "Până la patru rânduri în plus pe profilul tău, cum ar fi un site web sau pronumele tale.",
+    "label": "Etichetă",
+    "content": "Conținut",
+    "save": "Salvează câmpurile",
+    "saved": "Câmpurile de profil au fost salvate",
+    "failed": "Nu s-a salvat. Încearcă din nou.",
+    "verified": "Link verificat",
+    "verifyHint": "Ca să verifici un link, adaugă asta pe acea pagină, apoi salvează din nou: {{snippet}}"
+  },
+  "followedTags": {
+    "follow": "Urmărește #{{tag}}",
+    "following": "Urmărești",
+    "unfollow": "Nu mai urmări #{{tag}}",
+    "followed": "Acum urmărești #{{tag}}. Postările lui vor apărea în fluxul Urmăriți.",
+    "unfollowed": "Nu mai urmărești #{{tag}}",
+    "failed": "Nu s-a salvat. Încearcă din nou.",
+    "clear": "Șterge"
+  },
+  "notificationFilters": {
+    "title": "Filtrează notificările de la",
+    "description": "Alege ce se întâmplă când cineva din afara cercului tău interacționează cu tine. Notificările filtrate așteaptă la Filtrate, fără insignă și fără notificare push.",
+    "notFollowing": "Persoane pe care nu le urmărești",
+    "notFollowers": "Persoane care nu te urmăresc",
+    "newAccounts": "Conturi noi (sub 30 de zile)",
+    "accept": "Anunță-mă",
+    "filter": "Filtrează",
+    "drop": "Ascunde complet",
+    "filteredTitle": "Notificări filtrate",
+    "filteredEmpty": "Nu s-a filtrat nimic.",
+    "failed": "Nu s-a salvat. Încearcă din nou."
+  },
+  "keywordFilters": {
+    "title": "Cuvinte ascunse",
+    "description": "Ascunde postările și comentariile care conțin aceste cuvinte sau pliază-le în spatele unui avertisment. Doar tu vezi această listă.",
+    "placeholder": "Cuvânt sau expresie",
+    "add": "Ascunde",
+    "added": "Ascuns: {{phrase}}",
+    "wholeWord": "Doar cuvântul întreg",
+    "whenMatches": "Când o postare se potrivește",
+    "warn": "Arată un avertisment",
+    "hide": "Ascunde-o",
+    "howLong": "Cât timp",
+    "forever": "Până îl elimin",
+    "duration1h": "Pentru 1 oră",
+    "duration1d": "Pentru 1 zi",
+    "duration7d": "Pentru 7 zile",
+    "duration30d": "Pentru 30 de zile",
+    "where": "Unde",
+    "home": "Acasă",
+    "public": "Explorează și caută",
+    "profile": "Profiluri",
+    "thread": "Conversații",
+    "notifications": "Notificări",
+    "empty": "Nu ai ascuns niciun cuvânt.",
+    "remove": "Nu mai ascunde",
+    "until": "Până la {{date}}",
+    "filtered": "Filtrat: {{phrase}}",
+    "showAnyway": "Arată oricum",
+    "failed": "Nu s-a salvat. Încearcă din nou."
+  },
+  "postVisibility": {
+    "label": "Cine poate vedea asta",
+    "public": "Toată lumea",
+    "followers": "Doar urmăritorii",
+    "direct": "Doar persoanele menționate",
+    "noRepost": "Doar postările publice pot fi repostate",
+    "directHint": "Doar persoanele pe care le menționezi cu @ vor vedea această postare",
+    "needsMention": "Menționează cel puțin o persoană cu @ ca să postezi doar pentru persoanele menționate"
+  },
+  "replyPolicy": {
+    "label": "Cine poate răspunde",
+    "public": "Oricine",
+    "followers": "Urmăritorii tăi",
+    "following": "Oameni pe care îi urmărești",
+    "mentioned": "Doar cei menționați",
+    "noticeFollowers": "Doar urmăritorii autorului pot răspunde",
+    "noticeFollowing": "Doar oamenii pe care îi urmărește autorul pot răspunde",
+    "noticeMentioned": "Doar cei menționați în postare pot răspunde",
+    "refused": "Autorul a limitat cine poate răspunde la această postare"
+  },
+  "quotePolicy": {
+    "label": "Cine poate cita",
+    "public": "Oricine",
+    "followers": "Urmăritori",
+    "nobody": "Doar eu",
+    "off": "Autorul a dezactivat citările",
+    "removed": "Autorul și-a retras postarea din această citare",
+    "remove": "Elimină",
+    "removedToast": "Postarea ta a fost eliminată din această citare",
+    "removeFailed": "Postarea ta nu a putut fi eliminată din citare",
+    "refused": "Autorul nu îți permite să citezi această postare"
+  },
+  "contentWarning": {
+    "label": "Avertisment de conținut",
+    "placeholder": "Scrie avertismentul aici",
+    "add": "Adaugă avertisment de conținut",
+    "remove": "Elimină avertismentul de conținut",
+    "show": "Arată postarea"
+  },
+  "altText": {
+    "badge": "ALT",
+    "add": "Adaugă o descriere",
+    "edit": "Editează descrierea",
+    "titleImage": "Descrie această imagine",
+    "titleVideo": "Descrie acest videoclip",
+    "help": "Pentru persoanele care nu o pot vedea. Cititoarele de ecran o citesc cu voce tare.",
+    "placeholder": "Ce arată? Include orice text pe care îl conține.",
+    "show": "Arată descrierea",
+    "saved": "Descriere salvată",
+    "saveFailed": "Descrierea nu a putut fi salvată"
+  },
   "liveRecap": {
     "title": "Recapitulare flux",
     "justEnded": "Recapitularea fluxului tău",
@@ -113,11 +260,12 @@
     "heading": "Shorts pe DeHub"
   },
   "settings": {
-    "showDislikesDesc": "Oricine poate deschide fila Nu-mi place din profilul tău. Când e dezactivat, doar tu o vezi.",
-    "showDislikes": "Arată tuturor ce nu-mi place",
+    "usernameTaken": "Numele de utilizator este ocupat",
     "postingChain": "Blockchain pentru postări",
     "showOnline": "Afișează când sunt online",
     "showOnlineDesc": "Persoanele cărora le trimiți mesaje văd un punct verde lângă numele tău în timp ce folosești DeHub",
+    "showDislikes": "Arată tuturor ce nu-mi place",
+    "showDislikesDesc": "Oricine poate deschide fila Nu-mi place din profilul tău. Când e dezactivat, doar tu o vezi.",
     "smartReplies": "Răspunsuri sugerate",
     "smartRepliesDesc": "Redactează două răspunsuri pe care le poți atinge într-un chat. × de pe sugestii dezactivează asta.",
     "title": "Setări",
@@ -241,6 +389,11 @@
       "hintDeny": "Sistemele AI și crawlerele care respectă acest semnal sunt rugate să nu se instruiască cu privire la audio, grafică și scriere. Șenilele care ignoră semnalul nu sunt blocate de acesta.",
       "saved": "Preferința de instruire AI salvată"
     },
+    "defaultFeed": "Flux implicit",
+    "defaultFeedDesc": "Alege ce flux se deschide de fiecare dată când deschizi DeHub",
+    "feedToggles": "Resetează filtrele fluxului",
+    "feedTogglesDesc": "Filtrele pe care le activezi într-un flux rămân implicite până le resetezi",
+    "feedTogglesCleared": "Filtrele fluxului au fost resetate",
     "defaultProfileTab": "Fila implicită a profilului",
     "defaultProfileTabDesc": "Alege ce filă văd prima vizitatorii pe profilul tău",
     "public": "Public",
@@ -632,6 +785,9 @@
     "dmSent": "Ați trimis {{amount}} tokenuri către {{name}}!"
   },
   "postOptions": {
+    "embed": "Încorporează",
+    "copyEmbedCode": "Copiază codul de încorporare",
+    "embedCodeCopied": "Codul de încorporare a fost copiat",
     "options": "Opțiuni",
     "aiOverview": "Prezentare generală AI",
     "sendTip": "Trimite bacșiș",
@@ -659,7 +815,8 @@
     "unpinPost": "Anulează fixarea din profilul tău",
     "postPinned": "Fixat la profilul tău",
     "postUnpinned": "S-a deconectat de la profilul tău",
-    "pinFailed": "Nu s-a putut fixa sau anula fixarea acestei postări"
+    "pinFailed": "Nu s-a putut fixa sau anula fixarea acestei postări",
+    "copyFailed": "Linkul nu a putut fi copiat"
   },
   "filters": {
     "sort": "Sortare",
@@ -1396,7 +1553,6 @@
     "returnHome": "Return Home"
   },
   "profile": {
-    "dislikes": { "loadMore": "Încarcă mai multe", "privateDesc": "Acest cont își păstrează nu-mi place-urile pentru sine.", "privateTitle": "Nu-mi place este privat", "emptyOther": "Încă nimic.", "emptyOwn": "Postările care nu-ți plac dispar din fluxurile tale și apar aici. Anulează nu-mi place pentru a aduce postarea înapoi.", "emptyTitle": "Încă nimic" },
     "back": "Back",
     "usernameAvailable": "Username available!",
     "signUpToClaim": "Înscrie-te astăzi pentru a revendica",
@@ -1424,8 +1580,16 @@
       "commentUnavailable": "Acest comentariu nu mai este disponibil"
     },
     "tabs": {
-      "dislikes": "Nu-mi place",
-      "playlists": "Liste de redare"
+      "playlists": "Liste de redare",
+      "dislikes": "Nu-mi place"
+    },
+    "dislikes": {
+      "emptyTitle": "Încă nimic",
+      "emptyOwn": "Postările care nu-ți plac dispar din fluxurile tale și apar aici. Anulează nu-mi place pentru a aduce postarea înapoi.",
+      "emptyOther": "Încă nimic.",
+      "privateTitle": "Nu-mi place este privat",
+      "privateDesc": "Acest cont își păstrează nu-mi place-urile pentru sine.",
+      "loadMore": "Încarcă mai multe"
     },
     "offerWorthNow": "Aproximativ {{amount}} tokenuri la cursul actual",
     "offerNotePlaceholder": "Adaugă o notă (opțional)",
@@ -1977,6 +2141,8 @@
     "copyFailed": "Nu s-a putut copia"
   },
   "profileOptions": {
+    "copyRssFeed": "Copiază linkul fluxului RSS",
+    "rssFeedCopied": "Linkul fluxului RSS a fost copiat",
     "copyProfileUrl": "Copiază URL-ul profilului",
     "copyUsername": "Copiază numele de utilizator",
     "copyAddress": "Copiază adresa",
@@ -2277,6 +2443,7 @@
     "pendingSubmitted": "{{amount}} token-uri trimise. Confirmarea este încă în curs de verificare. Nu-l trimite din nou."
   },
   "communities": {
+    "chatTab": "Chat",
     "title": "Comunități",
     "create": "Creează",
     "searchPlaceholder": "Caută comunități...",
@@ -2311,7 +2478,30 @@
     "addDescription": "Adaugă o descriere...",
     "communityDescription": "Descrierea comunității...",
     "posts": "Postări",
-    "chat": "Chat",
+    "chat": {
+      "intervalHour": "1 oră",
+      "intervalHours": "{{count}} ore",
+      "intervalMinute": "1 minut",
+      "intervalMinutes": "{{count}} minute",
+      "intervalSecond": "1 secundă",
+      "intervalSeconds": "{{count}} secunde",
+      "muted": "Sunteți dezactivat (ă)",
+      "mutedUntil": "Sunteți dezactivat (ă) până la{{until}}",
+      "postingDisabled": "Postarea este dezactivată pentru membrii de aici",
+      "pinnedGif": "GIF",
+      "pinnedMedia": "Media",
+      "jumpToPinned": "Salt la mesajul fixat",
+      "pinnedMessage": "Mesaj fixat",
+      "unpin": "Anulați fixarea",
+      "pin": "Știft",
+      "delete": "Șterge",
+      "slowMode": "Mod lent: un mesaj la fiecare {{interval}}",
+      "slowModeWait": "Mod lent — așteptați {{time}}",
+      "send": "Trimite",
+      "deleteMessageTitle": "Ștergeți acest mesaj?",
+      "deleteMessageBody": "Acest lucru nu poate fi anulat.",
+      "cancel": "Anulează"
+    },
     "membersTab": "Membri ({{count}})",
     "about": "Despre",
     "backToCommunities": "Comunități",
@@ -3778,6 +3968,7 @@
     "sellYourFractions": "Vinde-ți fracțiunile ({{held}} deținute)"
   },
   "creator": {
+    "libraryEmpty": "Generările tale salvate vor apărea aici.",
     "whatToCreate": "Ce să creezi",
     "startCreatingWith": "Începeți să creați cu {{model}}",
     "studioSubtitle": "Descrieți o scenă, personaj, stare de spirit sau stil. Rezultatele apar mai jos și se duc direct în editor.",
@@ -5373,6 +5564,8 @@
     }
   },
   "goLive": {
+    "bigEvent": "Eveniment mare",
+    "bigEventHint": "Pentru public numeros: spectatorii urmăresc cu o întârziere de circa 20 de secunde, dar cu mai puține întreruperi.",
     "goLive": "Transmite în Direct",
     "youAreLive": "Ești în Direct",
     "streamReady": "Flux Gata",
@@ -6177,7 +6370,10 @@
     "play": "Redare",
     "pause": "Pauză",
     "listens_one": "{{count}} ascultă",
-    "listens_other": "{{count}} ascultări"
+    "listens_other": "{{count}} ascultări",
+    "lyrics": "Versuri",
+    "lyricsLoading": "Căutăm versurile…",
+    "lyricsNone": "Nu am găsit versuri"
   },
   "converter": {
     "seoTitle": "Converter — importă un videoclip în DeHub",
@@ -6693,6 +6889,7 @@
     "seoDescription": "Documentația oficială DeHub: prezentare generală a platformei, dApps, economia tokenului tokenuri, staking, jocuri, foaie de parcurs, întrebări frecvente și altele."
   },
   "dex": {
+    "title": "tokenuri / USD",
     "seoTitle": "DEX — Tranzacționează tokenuri la prețul tău",
     "seoDescription": "Setează prețul de cumpărare sau vânzare al tokenuri cu o comandă limită Uniswap v4 pe Base sau BNB Chain. Cartea de ordine live, profunzimea pieței și un preț USD comun.",
     "venue": "Rețea",
@@ -6915,6 +7112,14 @@
     }
   },
   "editor": {
+    "video": {
+      "tFade": "Dizolvare",
+      "none": "Niciuna",
+      "transition": "Tranziție",
+      "speed": "Viteză",
+      "sound": "Sunet",
+      "video": "Video"
+    },
     "review": {
       "title": "Revizuirea proiectului",
       "shared": "Partajat cu tine",
@@ -8575,6 +8780,16 @@
     "posted": "Publicat",
     "view": "Vezi",
     "failed": "Videoclipul nu a putut fi procesat"
+  },
+  "loginStack": {
+    "tip": "Bacșiș în DHB",
+    "headlineTop": "Vei deține totul",
+    "headlineAccent": "și vei fi fericit.",
+    "orContinueWith": "sau continuă cu",
+    "phone": "Telefon",
+    "fingerprint": "Amprentă",
+    "exploreFirst": "Explorează mai întâi",
+    "codeNote": "Îți trimitem un cod pe e-mail, fără parolă."
   },
   "footer": {
     "about": "Despre noi",

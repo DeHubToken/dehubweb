@@ -74,6 +74,153 @@
   "agents.workspace.action": "Action",
   "agents.workspace.cadence": "Schedule",
   "agents.workspace.filter": "Filter activity",
+  "mastodonApps": {
+    "authTitle": "Sign in with DeHub",
+    "authWants": "{{app}} wants to use your DeHub account",
+    "authSignedInAs": "Signed in as {{name}}",
+    "authSignIn": "Sign in to continue",
+    "allow": "Allow",
+    "cancel": "Cancel",
+    "scopeRead": "See your timelines, posts, notifications and bookmarks",
+    "scopeWrite": "Post, reply, like, boost and bookmark as you",
+    "scopeFollow": "Follow, unfollow, block and mute accounts",
+    "scopePush": "Send you notifications",
+    "scopeProfile": "See your profile",
+    "invalid": "This sign-in link isn't valid. Go back to the app and try again.",
+    "failed": "That didn't work. Try again.",
+    "codeTitle": "Copy this code into the app to finish signing in.",
+    "copy": "Copy",
+    "copied": "Copied",
+    "seoDescription": "Let a Mastodon app use your DeHub account.",
+    "redirecting": "Taking you back to {{app}}…",
+    "connectedTitle": "Connected apps",
+    "connectedDescription": "Mastodon apps you signed in to with this account. Remove one to sign it out.",
+    "connectedEmpty": "No apps connected yet.",
+    "lastUsed": "Last used {{date}}",
+    "remove": "Remove",
+    "removed": "App removed"
+  },
+  "fediverse": {
+    "title": "Fediverse",
+    "description": "People on Mastodon and other fediverse apps can find and follow you at this address. Your new public posts reach them there.",
+    "copy": "Copy",
+    "copied": "Copied",
+    "privateNote": "Private accounts are not shown on the fediverse.",
+    "noUsername": "Choose a username to get a fediverse address."
+  },
+  "profileFields": {
+    "title": "Profile fields",
+    "description": "Up to four extra lines on your profile, such as a website or your pronouns.",
+    "label": "Label",
+    "content": "Content",
+    "save": "Save fields",
+    "saved": "Profile fields saved",
+    "failed": "That didn't save. Try again.",
+    "verified": "Verified link",
+    "verifyHint": "To verify a link, add this to that page, then save again: {{snippet}}"
+  },
+  "followedTags": {
+    "follow": "Follow #{{tag}}",
+    "following": "Following",
+    "unfollow": "Unfollow #{{tag}}",
+    "followed": "Following #{{tag}}. Its posts will show in your Following feed.",
+    "unfollowed": "Unfollowed #{{tag}}",
+    "failed": "That didn't save. Try again.",
+    "clear": "Clear"
+  },
+  "notificationFilters": {
+    "title": "Filter notifications from",
+    "description": "Choose what happens when someone outside your circle interacts with you. Filtered notifications wait under Filtered, with no badge and no push.",
+    "notFollowing": "People you don't follow",
+    "notFollowers": "People who don't follow you",
+    "newAccounts": "New accounts (under 30 days)",
+    "accept": "Notify me",
+    "filter": "Filter",
+    "drop": "Hide completely",
+    "filteredTitle": "Filtered notifications",
+    "filteredEmpty": "Nothing has been filtered.",
+    "failed": "That didn't save. Try again."
+  },
+  "keywordFilters": {
+    "title": "Muted words",
+    "description": "Hide posts and comments that contain these words, or fold them behind a warning. Only you see this list.",
+    "placeholder": "Word or phrase",
+    "add": "Mute",
+    "added": "Muted: {{phrase}}",
+    "wholeWord": "Whole word only",
+    "whenMatches": "When a post matches",
+    "warn": "Show a warning",
+    "hide": "Hide it",
+    "howLong": "How long",
+    "forever": "Until I remove it",
+    "duration1h": "For 1 hour",
+    "duration1d": "For 1 day",
+    "duration7d": "For 7 days",
+    "duration30d": "For 30 days",
+    "where": "Where",
+    "home": "Home",
+    "public": "Explore and search",
+    "profile": "Profiles",
+    "thread": "Conversations",
+    "notifications": "Notifications",
+    "empty": "You haven't muted any words.",
+    "remove": "Unmute",
+    "until": "Until {{date}}",
+    "filtered": "Filtered: {{phrase}}",
+    "showAnyway": "Show anyway",
+    "failed": "That didn't save. Try again."
+  },
+  "postVisibility": {
+    "label": "Who can see this",
+    "public": "Everyone",
+    "followers": "Followers only",
+    "direct": "Mentioned people only",
+    "noRepost": "Only public posts can be reposted",
+    "directHint": "Only the people you @mention will see this post",
+    "needsMention": "Mention at least one person with @ to post to mentioned people only"
+  },
+  "replyPolicy": {
+    "label": "Who can reply",
+    "public": "Anyone",
+    "followers": "Your followers",
+    "following": "People you follow",
+    "mentioned": "Mentioned only",
+    "noticeFollowers": "Only the author's followers can reply",
+    "noticeFollowing": "Only people the author follows can reply",
+    "noticeMentioned": "Only people mentioned in the post can reply",
+    "refused": "The author limited who can reply to this post"
+  },
+  "quotePolicy": {
+    "label": "Who can quote",
+    "public": "Anyone",
+    "followers": "Followers",
+    "nobody": "Only me",
+    "off": "The author turned off quotes",
+    "removed": "The author removed their post from this quote",
+    "remove": "Remove",
+    "removedToast": "Your post was removed from this quote",
+    "removeFailed": "Could not remove your post from the quote",
+    "refused": "The author doesn't let you quote this post"
+  },
+  "contentWarning": {
+    "label": "Content warning",
+    "placeholder": "Write your warning here",
+    "add": "Add content warning",
+    "remove": "Remove content warning",
+    "show": "Show post"
+  },
+  "altText": {
+    "badge": "ALT",
+    "add": "Add a description",
+    "edit": "Edit description",
+    "titleImage": "Describe this image",
+    "titleVideo": "Describe this video",
+    "help": "For people who can't see it. Screen readers read it aloud.",
+    "placeholder": "What does it show? Include any text in it.",
+    "show": "Show description",
+    "saved": "Description saved",
+    "saveFailed": "Could not save the description"
+  },
   "liveRecap": {
     "title": "Stream recap",
     "justEnded": "Your stream recap",
@@ -266,6 +413,7 @@
     "heading": "DeHub Shorts"
   },
   "settings": {
+    "usernameTaken": "Username taken",
     "postingChain": "Posting chain",
     "showOnline": "Show when I'm online",
     "showOnlineDesc": "People you message see a green dot next to your name while you're using DeHub",
@@ -394,6 +542,11 @@
       "hintDeny": "AI systems and crawlers that respect this signal are asked not to train on your audio, artwork and writing. Crawlers that ignore the signal are not blocked by it.",
       "saved": "AI training preference saved"
     },
+    "defaultFeed": "Default feed",
+    "defaultFeedDesc": "Choose which feed opens every time you open DeHub",
+    "feedToggles": "Reset feed toggles",
+    "feedTogglesDesc": "Filters you turn on in a feed stay on as your defaults until you reset them",
+    "feedTogglesCleared": "Feed toggles reset",
     "defaultProfileTab": "Default profile tab",
     "defaultProfileTabDesc": "Choose which tab visitors see first on your profile",
     "public": "Public",
@@ -899,6 +1052,9 @@
     "dmSent": "Sent {{amount}} tokens to {{name}}!"
   },
   "postOptions": {
+    "embed": "Embed",
+    "copyEmbedCode": "Copy embed code",
+    "embedCodeCopied": "Embed code copied",
     "options": "Options",
     "aiOverview": "AI overview",
     "sendTip": "Send Tip",
@@ -1715,6 +1871,13 @@
     "encryptionSetupFailed": "Encryption setup failed. Please try again.",
     "encryptionTurnOn": "Turn on",
     "cannotDecrypt": "Encrypted message — can't be opened on this device",
+    "lockedTitle": "Unlock to read your messages",
+    "lockedBody": "Your chat with {{name}} is end-to-end encrypted. Unlock your wallet on this device to open it.",
+    "lockedUnlock": "Unlock wallet",
+    "lockedTryAgain": "Try again",
+    "lockedPrivate": "Only you can read them",
+    "undecryptableRun_one": "{{count}} message can't be opened on this device",
+    "undecryptableRun_other": "{{count}} messages can't be opened on this device",
     "title": "Messages",
     "searchConversations": "Search conversations...",
     "failedToLoad": "Failed to load conversations",
@@ -1759,7 +1922,19 @@
     "mostViewed": "Most viewed",
     "trendingWeek": "Trending this week",
     "newest": "Newest",
-    "videoChartOrder": "Music video chart order"
+    "videoChartOrder": "Music video chart order",
+    "country": "Country",
+    "quality": "Quality",
+    "votes": "Votes",
+    "plays": "Plays",
+    "onAir": "On air",
+    "liveRadio": "Live radio",
+    "pause": "Pause",
+    "listenLive": "Listen live",
+    "nextStation": "Next station",
+    "shareStation": "Share station",
+    "shareStationTitle": "{{name}} on DeHub Radio",
+    "linkCopied": "Link copied"
   },
   "notFound": {
     "title": "Page Not Found",
@@ -2496,6 +2671,8 @@
     "copyFailed": "Could not copy"
   },
   "profileOptions": {
+    "copyRssFeed": "Copy RSS feed link",
+    "rssFeedCopied": "RSS feed link copied",
     "copyProfileUrl": "Copy profile URL",
     "copyUsername": "Copy username",
     "copyAddress": "Copy address",
@@ -2798,6 +2975,7 @@
     "statsLoadFailed": "Couldn't load staking stats"
   },
   "communities": {
+    "chatTab": "Chat",
     "followerInvites": {
       "title": "Invite followers",
       "detail": "Choose up to 50 followers per batch. Paid or closed DMs are skipped. Check the chat for unconfirmed sends before trying again.",
@@ -4629,6 +4807,7 @@
     "sellYourFractions": "Sell your fractions ({{held}} held)"
   },
   "creator": {
+    "libraryEmpty": "Your saved generations will appear here.",
     "toolRemake": "Remake",
     "toolMaboroshi": "Maboroshi",
     "toolMaboroshiDesc": "Replace characters and objects, review a draft, then export with your original soundtrack.",
@@ -6489,6 +6668,8 @@
     }
   },
   "goLive": {
+    "bigEvent": "Big event",
+    "bigEventHint": "For big audiences: viewers watch about 20 seconds behind, with fewer interruptions.",
     "goLive": "Go Live",
     "youAreLive": "You're Live",
     "streamReady": "Stream Ready",
@@ -7303,7 +7484,10 @@
     "pause": "Pause",
     "listens_one": "{{count}} listen",
     "listens_other": "{{count}} listens",
-    "visualizerColour": "Visualizer colour"
+    "visualizerColour": "Visualizer colour",
+    "lyrics": "Lyrics",
+    "lyricsLoading": "Finding lyrics…",
+    "lyricsNone": "No lyrics found"
   },
   "converter": {
     "seoTitle": "Converter — import a video to DeHub",
@@ -7820,6 +8004,7 @@
     "seoDescription": "Official DeHub documentation: platform overview, dApps, token economics, staking, games, roadmap, FAQ and more."
   },
   "dex": {
+    "title": "Tokens / USD",
     "seoTitle": "DEX — Trade tokens at your price",
     "seoDescription": "Set your token buy or sell price with a Uniswap v4 limit order on Base or BNB Chain. Live order book, market depth and one shared USD price.",
     "venue": "Network",
@@ -8044,6 +8229,7 @@
     "priceChartCleared": "Price chart cleared. Fixed reference price: $0.0001. Execution prices depend on available orders."
   },
   "editor": {
+    "video": { "tFade": "Cross-dissolve", "none": "None", "transition": "Transition", "speed": "Speed", "sound": "Sound","video": "Video"},
     "review": {
       "title": "Project review",
       "shared": "Shared with you",
@@ -10888,6 +11074,8 @@
     "f45e06965f93": "No follow suggestions yet",
     "34f5da2599fa": "New account suggestions will appear here.",
     "bac527bf9a36": "Follow Suggestions",
+    "036cfd952896": "Who to follow",
+    "0c820caf16c0": "No bio yet",
     "e139251e4f5b": "Delete Post",
     "b3661ad568df": "This action cannot be undone. Your post will be permanently removed.",
     "685ecb984ac2": "Deleting...",
@@ -14164,5 +14352,15 @@
   },
   "player": {
     "volume": "Volume level"
+  },
+  "loginStack": {
+    "tip": "Tip DHB",
+    "headlineTop": "You will own everything",
+    "headlineAccent": "and be happy.",
+    "orContinueWith": "or continue with",
+    "phone": "Phone",
+    "fingerprint": "Fingerprint",
+    "exploreFirst": "Explore first",
+    "codeNote": "We email you a code, no password needed."
   }
 }

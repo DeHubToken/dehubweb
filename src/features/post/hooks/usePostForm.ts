@@ -48,7 +48,7 @@ import type { MediaFile, Currency, PostFormState, PostFormActions, PostFormCompu
 import type { FilterSettings, CropSettings } from '../types/filters';
 import type { Draft } from '../components/DraftsSheet';
 import type { TextPost, ImagePost, VideoItem } from '@/types/feed.types';
-import type { DeHubNFT } from '@/lib/api/dehub/types';
+import type { DeHubNFT, PostVisibility, QuotePolicy, ReplyPolicy } from '@/lib/api/dehub/types';
 import type { PostChainId } from '@/components/app/ChainSelector';
 import { normalizeCategoryList } from '@/lib/category-names';
 import { trackFirstPost } from '@/lib/analytics';
@@ -270,7 +270,7 @@ interface UsePostFormReturn {
   };
   actions: PostFormActions & {
     setScheduledDate: (date: Date | null) => void;
-    saveDraft: (article?: { body: string; title: string; imageData?: string; socialData?: string }) => void;
+    saveDraft: (article?: { body: string; title: string; imageData?: string; socialData?: string }, replaceId?: string) => void;
     loadDraft: (draft: Draft) => void;
     deleteDraft: (id: string) => void;
     startRecording: () => void;
@@ -355,6 +355,14 @@ export function usePostForm(
   const [tokenAmount, setTokenAmount] = useDraftState(draftScope + ":tokenAmount", d?.tokenAmount ?? '');
   const [liveMode, setLiveMode] = useState<LiveMode>(null);
   const [poll, setPoll] = useDraftState<PollData | null>(draftScope + ":poll", d?.poll ?? null);
+  // The content warning being written: null is "none", '' is "toggled on, still empty".
+  const [contentWarning, setContentWarning] = useState<string | null>(null);
+  // Who may quote the post. Anyone, unless the creator narrows it.
+  const [quotePolicy, setQuotePolicy] = useState<QuotePolicy>('public');
+  // Who may reply. Anyone, unless the creator narrows it.
+  const [replyPolicy, setReplyPolicy] = useState<ReplyPolicy>('public');
+  // Who may see the post. Everyone, unless the creator narrows it; fixed once posted.
+  const [visibility, setVisibility] = useState<PostVisibility>('public');
   const [isEnhancing, setIsEnhancing] = useState(false);
   const [isPosting, setIsPosting] = useState(false);
   const [uploadProgress, setUploadProgress] = useState(0);
@@ -1061,6 +1069,11 @@ export function usePostForm(
     }));
   }, [_copy]);
 
+  /** Alt text for one attached image or video; blank clears it. */
+  const setMediaDescription = useCallback((index: number, description: string) => {
+    setMedia(prev => prev.map((m, i) => (i === index ? { ...m, description: description.trim() || undefined } : m)));
+  }, []);
+
   const handleAudioSelect = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
     const files = e.target.files;
     if (!files || files.length === 0) return;
@@ -1205,6 +1218,10 @@ export function usePostForm(
     setTokenAmount.complete(tokenAmount, '');
     setLiveMode(null);
     setPoll.complete(poll, null);
+    setContentWarning(null);
+    setQuotePolicy('public');
+    setReplyPolicy('public');
+    setVisibility('public');
     setScheduledDate(null);
     setTitleText.complete(titleText, '');
     // Cleared per post, deliberately. A board is usually specific to what was
@@ -1252,7 +1269,8 @@ export function usePostForm(
   }, [user?.address]);
 
   // Drafts actions
-  const saveDraft = useCallback((article?: { body: string; title: string; imageData?: string; socialData?: string }) => {
+  // replaceId swaps an opened draft for its edited copy instead of keeping both.
+  const saveDraft = useCallback((article?: { body: string; title: string; imageData?: string; socialData?: string }, replaceId?: string) => {
     const newDraft: Draft = {
       id: Date.now().toString(),
       text,
@@ -1276,11 +1294,12 @@ export function usePostForm(
         shopListingIds,
       },
     };
-    const updatedDrafts = [newDraft, ...drafts].slice(0, 10);
+    const updatedDrafts = [newDraft, ...drafts.filter(d => d.id !== replaceId)].slice(0, 10);
     setDrafts(updatedDrafts);
     saveDraftsLocal(draftsKey, updatedDrafts);
     // Persist to DB
     if (user?.address) {
+      if (replaceId) deleteDraftFromDb(replaceId, user.address);
       saveDraftToDb(user.address, newDraft).then((dbId) => {
         if (dbId) {
           // Update local draft with DB id for proper deletion later
@@ -1426,6 +1445,13 @@ export function usePostForm(
     // Validate required fields
     if (!text.trim() && media.length === 0 && !liveMode && !pollIsValid) {
       toast.error(_copy("copy.26fc0b87a364", { defaultValue: "Add some content first" }));
+      return;
+    }
+
+    // A post for mentioned people only needs somebody mentioned. The server
+    // refuses one without (VISIBILITY_NEEDS_MENTION); say so before uploading.
+    if (visibility === 'direct' && !liveMode && !isQuoting && !/@[a-zA-Z0-9_]{1,30}\b/.test(text)) {
+      toast.error(t('postVisibility.needsMention'));
       return;
     }
 
@@ -1953,6 +1979,16 @@ export function usePostForm(
         // land a moment later — see the attach step below.
         shopListingCount: shopListingIds.length || undefined,
         plans: subscriberPlanIds,
+        // Alt text in the order the files upload, which is the order the post
+        // shows them. Audio has nothing to see, so it takes no slot.
+        mediaDescriptions: media.some(m => m.description)
+          ? media.filter(m => m.type !== 'audio').map(m => m.description || '')
+          : undefined,
+        spoilerText: contentWarning?.trim() || undefined,
+        quotePolicy,
+        replyPolicy,
+        // A livestream and a quote are always public.
+        visibility: liveMode || isQuoting ? undefined : visibility,
       };
       const uploadWithFile = (percent: number) => setUploadProgress(Math.round(percent * 0.6)); // XHR bytes map to 0-60%
 
@@ -2030,7 +2066,9 @@ export function usePostForm(
           });
       }
 
-      if (!mintResponse.duplicate && !liveMode && !isQuoting) {
+      // Never for a followers-only or direct post: another network would publish
+      // it to everyone there.
+      if (!mintResponse.duplicate && !liveMode && !isQuoting && visibility === 'public') {
         void crossPost({
           text: [submittedTitle, submittedDescription].filter(Boolean).join('\n\n'),
           files: files.filter((f): f is File => f instanceof File),
@@ -2578,7 +2616,15 @@ export function usePostForm(
         errorMsg.toLowerCase().includes('gas required exceeds allowance')
       );
 
-      if (error instanceof PaymentRequiredError) {
+      // The quoted post's author does not let this account quote it
+      // (dehub-stream-backend src/repost/quote-policy). Nothing to retry.
+      const isQuoteRefused = isQuoting && (
+        errorMsg.includes('can quote this post') || errorMsg.includes('does not allow quotes')
+      );
+
+      if (isQuoteRefused) {
+        toast.error(t('quotePolicy.refused'));
+      } else if (error instanceof PaymentRequiredError) {
         // The allowance turned this post down. The server writes this sentence
         // for the creator, so it is shown verbatim — and the only useful next
         // step is DHB, not "try again".
@@ -2677,7 +2723,7 @@ export function usePostForm(
     effectiveShouldMint, mintFee, isMature, isForKids,
     selectedCategory, shopLinks, shopListingIds, myPlanIds,
     postQuota?.outstandingDhb, refreshPostQuota, onLiveStreamReady,
-    isQuoting, quotedPost,
+    isQuoting, quotedPost, contentWarning, quotePolicy, replyPolicy, visibility,
     , _copy
   ]);
 
@@ -2710,6 +2756,10 @@ export function usePostForm(
       tokenAmount,
       liveMode,
       poll,
+      contentWarning,
+      quotePolicy,
+      replyPolicy,
+      visibility,
       isEnhancing,
       isPosting,
       uploadProgress,
@@ -2749,6 +2799,10 @@ export function usePostForm(
       setTokenAmount,
       setLiveMode,
       setPoll,
+      setContentWarning,
+      setQuotePolicy,
+      setReplyPolicy,
+      setVisibility,
       handleImageSelect,
       handleVideoSelect,
       handleFileDrop,
@@ -2766,6 +2820,7 @@ export function usePostForm(
       clearCropFromMedia,
       applyTrimToMedia,
       replaceImageFile,
+      setMediaDescription,
       handleEnhanceWithAI,
       insertFormatting,
       handlePost,

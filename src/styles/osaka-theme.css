@@ -2189,3 +2189,10 @@ html[data-theme='osaka'] #app-root
   [class*=':bg-white']:hover:not([data-keep-dark]):not([data-primary-cta]) {
   background-color: rgb(var(--osaka-mist) / 0.12) !important;
 }
+
+/* Locked DM thread: the unlock badge wears the one accent. */
+html[data-theme="osaka"] [data-dm-locked-badge] {
+  background: rgb(var(--osaka-neon)) !important;
+  color: rgb(var(--osaka-void)) !important;
+  box-shadow: 0 0 0 6px rgb(var(--osaka-neon) / 0.08), 0 0 24px rgb(var(--osaka-neon) / 0.45) !important;
+}

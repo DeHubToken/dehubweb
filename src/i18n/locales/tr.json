@@ -74,6 +74,153 @@
   "agents.workspace.action": "İşlem",
   "agents.workspace.cadence": "Zamanlama",
   "agents.workspace.filter": "Etkinliği filtrele",
+  "mastodonApps": {
+    "authTitle": "DeHub ile giriş yap",
+    "authWants": "{{app}} DeHub hesabını kullanmak istiyor",
+    "authSignedInAs": "{{name}} olarak giriş yapıldı",
+    "authSignIn": "Devam etmek için giriş yap",
+    "allow": "İzin ver",
+    "cancel": "İptal",
+    "scopeRead": "Zaman akışlarını, gönderilerini, bildirimlerini ve yer işaretlerini görmek",
+    "scopeWrite": "Senin adına gönderi paylaşmak, yanıtlamak, beğenmek, yükseltmek ve yer işaretine eklemek",
+    "scopeFollow": "Hesapları takip etmek, takibi bırakmak, engellemek ve sessize almak",
+    "scopePush": "Sana bildirim göndermek",
+    "scopeProfile": "Profilini görmek",
+    "invalid": "Bu giriş bağlantısı geçerli değil. Uygulamaya dön ve tekrar dene.",
+    "failed": "Olmadı. Tekrar dene.",
+    "codeTitle": "Girişi bitirmek için bu kodu uygulamaya kopyala.",
+    "copy": "Kopyala",
+    "copied": "Kopyalandı",
+    "seoDescription": "Bir Mastodon uygulamasının DeHub hesabını kullanmasına izin ver.",
+    "redirecting": "Seni {{app}} uygulamasına geri götürüyoruz…",
+    "connectedTitle": "Bağlı uygulamalar",
+    "connectedDescription": "Bu hesapla giriş yaptığın Mastodon uygulamaları. Oturumunu kapatmak için birini kaldır.",
+    "connectedEmpty": "Henüz bağlı uygulama yok.",
+    "lastUsed": "Son kullanım {{date}}",
+    "remove": "Kaldır",
+    "removed": "Uygulama kaldırıldı"
+  },
+  "fediverse": {
+    "title": "Fediverse",
+    "description": "Mastodon ve diğer fediverse uygulamalarındaki kişiler seni bu adreste bulup takip edebilir. Yeni herkese açık gönderilerin onlara orada ulaşır.",
+    "copy": "Kopyala",
+    "copied": "Kopyalandı",
+    "privateNote": "Gizli hesaplar fediverse'te gösterilmez.",
+    "noUsername": "Fediverse adresi almak için bir kullanıcı adı seç."
+  },
+  "profileFields": {
+    "title": "Profil alanları",
+    "description": "Profiline dört satıra kadar ek bilgi ekle; örneğin bir web sitesi ya da zamirlerin.",
+    "label": "Etiket",
+    "content": "İçerik",
+    "save": "Alanları kaydet",
+    "saved": "Profil alanları kaydedildi",
+    "failed": "Kaydedilmedi. Tekrar dene.",
+    "verified": "Doğrulanmış bağlantı",
+    "verifyHint": "Bir bağlantıyı doğrulamak için bunu o sayfaya ekle, sonra yeniden kaydet: {{snippet}}"
+  },
+  "followedTags": {
+    "follow": "#{{tag}} takip et",
+    "following": "Takip ediliyor",
+    "unfollow": "#{{tag}} takibi bırak",
+    "followed": "Artık #{{tag}} takip ediyorsun. Gönderileri Takip Edilenler akışında görünecek.",
+    "unfollowed": "#{{tag}} takibi bırakıldı",
+    "failed": "Kaydedilmedi. Tekrar dene.",
+    "clear": "Temizle"
+  },
+  "notificationFilters": {
+    "title": "Bildirimleri filtrele",
+    "description": "Çevren dışından biri seninle etkileşime girdiğinde ne olacağını seç. Filtrelenen bildirimler rozet ve anlık bildirim olmadan Filtrelenenler altında bekler.",
+    "notFollowing": "Takip etmediğin kişiler",
+    "notFollowers": "Seni takip etmeyen kişiler",
+    "newAccounts": "Yeni hesaplar (30 günden yeni)",
+    "accept": "Bana bildir",
+    "filter": "Filtrele",
+    "drop": "Tamamen gizle",
+    "filteredTitle": "Filtrelenen bildirimler",
+    "filteredEmpty": "Hiçbir şey filtrelenmedi.",
+    "failed": "Kaydedilmedi. Tekrar dene."
+  },
+  "keywordFilters": {
+    "title": "Sessize alınan kelimeler",
+    "description": "Bu kelimeleri içeren gönderileri ve yorumları gizle ya da bir uyarının arkasına katla. Bu listeyi yalnızca sen görürsün.",
+    "placeholder": "Kelime veya ifade",
+    "add": "Sessize al",
+    "added": "Sessize alındı: {{phrase}}",
+    "wholeWord": "Yalnızca tam kelime",
+    "whenMatches": "Bir gönderi eşleştiğinde",
+    "warn": "Uyarı göster",
+    "hide": "Gizle",
+    "howLong": "Ne kadar süre",
+    "forever": "Ben kaldırana kadar",
+    "duration1h": "1 saat",
+    "duration1d": "1 gün",
+    "duration7d": "7 gün",
+    "duration30d": "30 gün",
+    "where": "Nerede",
+    "home": "Ana sayfa",
+    "public": "Keşfet ve ara",
+    "profile": "Profiller",
+    "thread": "Sohbetler",
+    "notifications": "Bildirimler",
+    "empty": "Hiç kelimeyi sessize almadın.",
+    "remove": "Sesi aç",
+    "until": "{{date}} tarihine kadar",
+    "filtered": "Filtrelendi: {{phrase}}",
+    "showAnyway": "Yine de göster",
+    "failed": "Kaydedilmedi. Tekrar dene."
+  },
+  "postVisibility": {
+    "label": "Bunu kimler görebilir",
+    "public": "Herkes",
+    "followers": "Yalnızca takipçiler",
+    "direct": "Yalnızca bahsedilenler",
+    "noRepost": "Yalnızca herkese açık gönderiler yeniden paylaşılabilir",
+    "directHint": "Bu gönderiyi yalnızca @ ile bahsettiğin kişiler görecek",
+    "needsMention": "Yalnızca bahsedilenlere göndermek için en az bir kişiden @ ile bahset"
+  },
+  "replyPolicy": {
+    "label": "Kimler yanıtlayabilir",
+    "public": "Herkes",
+    "followers": "Takipçilerin",
+    "following": "Takip ettiklerin",
+    "mentioned": "Yalnızca bahsedilenler",
+    "noticeFollowers": "Yalnızca yazarın takipçileri yanıtlayabilir",
+    "noticeFollowing": "Yalnızca yazarın takip ettiği kişiler yanıtlayabilir",
+    "noticeMentioned": "Yalnızca gönderide bahsedilen kişiler yanıtlayabilir",
+    "refused": "Yazar bu gönderiyi kimlerin yanıtlayabileceğini sınırladı"
+  },
+  "quotePolicy": {
+    "label": "Kimler alıntılayabilir",
+    "public": "Herkes",
+    "followers": "Takipçiler",
+    "nobody": "Yalnızca ben",
+    "off": "Yazar alıntılamayı kapattı",
+    "removed": "Yazar gönderisini bu alıntıdan kaldırdı",
+    "remove": "Kaldır",
+    "removedToast": "Gönderin bu alıntıdan kaldırıldı",
+    "removeFailed": "Gönderin alıntıdan kaldırılamadı",
+    "refused": "Yazar bu gönderiyi alıntılamana izin vermiyor"
+  },
+  "contentWarning": {
+    "label": "İçerik uyarısı",
+    "placeholder": "Uyarınızı buraya yazın",
+    "add": "İçerik uyarısı ekle",
+    "remove": "İçerik uyarısını kaldır",
+    "show": "Gönderiyi göster"
+  },
+  "altText": {
+    "badge": "ALT",
+    "add": "Açıklama ekle",
+    "edit": "Açıklamayı düzenle",
+    "titleImage": "Bu görseli açıklayın",
+    "titleVideo": "Bu videoyu açıklayın",
+    "help": "Onu göremeyen insanlar için. Ekran okuyucular onu sesli okur.",
+    "placeholder": "Ne gösteriyor? İçindeki herhangi bir metni de ekleyin.",
+    "show": "Açıklamayı göster",
+    "saved": "Açıklama kaydedildi",
+    "saveFailed": "Açıklama kaydedilemedi"
+  },
   "liveRecap": {
     "title": "Akış özeti",
     "justEnded": "Akış özetiniz",
@@ -303,6 +450,7 @@
     "heading": "DeHub Kısa Videolar"
   },
   "settings": {
+    "usernameTaken": "Kullanıcı adı alınmış",
     "showDislikesDesc": "Herkes profilindeki Beğenilmeyenler sekmesini açabilir. Bu kapalıyken yalnızca sen görebilirsin.",
     "showDislikes": "Beğenmediklerimi herkese göster",
     "postingChain": "Gönderi blokzinciri",
@@ -431,6 +579,11 @@
       "hintDeny": "Bu sinyale saygı duyan yapay zeka sistemleri ve tarayıcılardan ses, sanat eseriniz ve yazınız üzerinde eğitim almamaları istenir. Sinyali görmezden gelen tarayıcılar sinyal tarafından engellenmez.",
       "saved": "Yapay zeka eğitim tercihi kaydedildi"
     },
+    "defaultFeed": "Varsayılan akış",
+    "defaultFeedDesc": "DeHub'ı her açtığında hangi akışın açılacağını seç",
+    "feedToggles": "Akış filtrelerini sıfırla",
+    "feedTogglesDesc": "Bir akışta açtığın filtreler sen sıfırlayana kadar varsayılanın olarak kalır",
+    "feedTogglesCleared": "Akış filtreleri sıfırlandı",
     "defaultProfileTab": "Varsayılan profil sekmesi",
     "defaultProfileTabDesc": "Ziyaretçilerin profilinizde ilk hangi sekmeyi göreceğini seçin",
     "public": "Herkese Açık",
@@ -936,6 +1089,9 @@
     "dmSent": "{{name}} adlı kişiye {{amount}} jeton gönderildi!"
   },
   "postOptions": {
+    "embed": "Yerleştir",
+    "copyEmbedCode": "Yerleştirme kodunu kopyala",
+    "embedCodeCopied": "Yerleştirme kodu kopyalandı",
     "options": "Seçenekler",
     "aiOverview": "Yapay zekaya genel bakış",
     "sendTip": "Bahşiş Gönder",
@@ -1752,6 +1908,13 @@
     "encryptionSetupFailed": "Şifreleme ayarı başarısız oldu. Lütfen tekrar deneyin.",
     "encryptionTurnOn": "Aç",
     "cannotDecrypt": "Şifreli mesaj — bu cihazda açılamıyor",
+    "lockedTitle": "Mesajlarını okumak için kilidi aç",
+    "lockedBody": "{{name}} ile sohbetin uçtan uca şifreli. Açmak için bu cihazda cüzdanının kilidini aç.",
+    "lockedUnlock": "Cüzdanın kilidini aç",
+    "lockedTryAgain": "Tekrar dene",
+    "lockedPrivate": "Bunları yalnızca sen okuyabilirsin",
+    "undecryptableRun_one": "{{count}} mesaj bu cihazda açılamıyor",
+    "undecryptableRun_other": "{{count}} mesaj bu cihazda açılamıyor",
     "title": "Mesajlar",
     "searchConversations": "Sohbetlerde ara...",
     "failedToLoad": "Sohbetler yüklenemedi",
@@ -1796,7 +1959,19 @@
     "mostViewed": "En çok izlenen",
     "trendingWeek": "Bu hafta trend",
     "newest": "En yeni",
-    "videoChartOrder": "Müzik video listesi sıralaması"
+    "videoChartOrder": "Müzik video listesi sıralaması",
+    "country": "Ülke",
+    "quality": "Kalite",
+    "votes": "Oylar",
+    "plays": "Dinlenme",
+    "onAir": "Yayında",
+    "liveRadio": "Canlı radyo",
+    "pause": "Duraklat",
+    "listenLive": "Canlı dinle",
+    "nextStation": "Sonraki istasyon",
+    "shareStation": "İstasyonu paylaş",
+    "shareStationTitle": "DeHub Radio’da {{name}}",
+    "linkCopied": "Bağlantı kopyalandı"
   },
   "notFound": {
     "title": "Sayfa Bulunamadı",
@@ -2543,6 +2718,8 @@
     "copyFailed": "Kopyalanamadı"
   },
   "profileOptions": {
+    "copyRssFeed": "RSS akışı bağlantısını kopyala",
+    "rssFeedCopied": "RSS akışı bağlantısı kopyalandı",
     "copyProfileUrl": "Profil URL'sini kopyala",
     "copyUsername": "Kullanıcı adını kopyala",
     "copyAddress": "Adresi kopyala",
@@ -2845,6 +3022,7 @@
     "statsLoadFailed": "Staking istatistikleri yüklenemedi"
   },
   "communities": {
+    "chatTab": "Sohbet",
     "followerInvites": {
       "title": "Takipçileri davet et",
       "detail": "Her grupta en fazla 50 takipçi seçin. Ücretli veya kapalı özel mesajlar atlanır. Tekrar denemeden önce onaylanmamış gönderileri sohbette kontrol edin.",
@@ -4677,6 +4855,7 @@
     "sellYourFractions": "Paylarınızı satın ({{held}} adet)"
   },
   "creator": {
+    "libraryEmpty": "Kayıtlı üretimleriniz burada görünecek.",
     "toolRemake": "Remake",
     "toolMaboroshi": "Maboroshi",
     "toolMaboroshiDesc": "Karakterleri ve nesneleri değiştirin, bir taslağı gözden geçirin, ardından orijinal film müziğinizle dışa aktarın.",
@@ -6537,6 +6716,8 @@
     }
   },
   "goLive": {
+    "bigEvent": "Büyük etkinlik",
+    "bigEventHint": "Büyük kitleler için: izleyiciler yayını yaklaşık 20 saniye geriden, daha az kesintiyle izler.",
     "goLive": "Canlı yayına geç",
     "youAreLive": "Yayındasınız",
     "streamReady": "Yayın hazır",
@@ -7351,7 +7532,10 @@
     "pause": "Duraklat",
     "listens_one": "{{count}} dinlenme",
     "listens_other": "{{count}} dinlenme",
-    "visualizerColour": "Görselleştirici rengi"
+    "visualizerColour": "Görselleştirici rengi",
+    "lyrics": "Şarkı sözleri",
+    "lyricsLoading": "Sözler aranıyor…",
+    "lyricsNone": "Söz bulunamadı"
   },
   "converter": {
     "seoTitle": "Dönüştürücü — DeHub'a video aktarın",
@@ -7868,6 +8052,7 @@
     "seoDescription": "Resmî DeHub dokümantasyonu: platforma genel bakış, dApp’ler, jeton token ekonomisi, staking, oyunlar, yol haritası, SSS ve daha fazlası."
   },
   "dex": {
+    "title": "token / USD",
     "seoTitle": "DEX — jeton'yi kendi fiyatınızla takas edin",
     "seoDescription": "Base veya BNB Chain'de Uniswap v4 limit emriyle jeton alım veya satım fiyatınızı belirleyin. Canlı emir defteri, piyasa derinliği ve tek bir paylaşılan USD fiyatı.",
     "venue": "Ağ",
@@ -8092,6 +8277,7 @@
     "priceChartCleared": "Fiyat grafiği temizlendi. Sabit referans fiyatı: 0.0001 $. Uygulama fiyatları mevcut siparişlere bağlıdır."
   },
   "editor": {
+    "video": { "tFade": "Çapraz geçiş", "none": "Yok", "transition": "Geçiş", "speed": "Hız", "sound": "Ses","video": "Video"},
     "review": {
       "title": "Proje incelemesi",
       "shared": "Sizinle paylaşılan",
@@ -10936,6 +11122,8 @@
     "f45e06965f93": "Henüz takip önerisi yok",
     "34f5da2599fa": "Yeni hesap önerileri burada görünecek.",
     "bac527bf9a36": "Takip Önerileri",
+    "036cfd952896": "Kimi takip etmeli",
+    "0c820caf16c0": "Henüz biyografi yok",
     "e139251e4f5b": "Gönderiyi Sil",
     "b3661ad568df": "Bu eylem geri alınamaz. Paylaşımınız kalıcı olarak silinecek.",
     "685ecb984ac2": "Siliniyor...",
@@ -14240,5 +14428,15 @@
   },
   "player": {
     "volume": "Ses düzeyi"
+  },
+  "loginStack": {
+    "tip": "DHB bahşiş",
+    "headlineTop": "Her şeye sahip olacaksın",
+    "headlineAccent": "ve mutlu olacaksın.",
+    "orContinueWith": "veya şununla devam et",
+    "phone": "Telefon",
+    "fingerprint": "Parmak izi",
+    "exploreFirst": "Önce keşfet",
+    "codeNote": "E-postana bir kod göndeririz, şifre gerekmez."
   }
 }

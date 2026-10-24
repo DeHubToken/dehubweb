@@ -22,7 +22,7 @@ import {
   type LiveStream as ApiLiveStream,
 } from '@/lib/api/dehub';
 import { resolveDislikeCount, resolveLikeCount, resolveMyReaction, resolveReactionCounts, resolveViewCount } from '@/lib/engagement';
-import { buildAvatarUrl, buildFeedImageUrls } from '@/lib/media-url';
+import { buildAvatarUrl, buildFeedImageUrls, buildHlsUrl } from '@/lib/media-url';
 import { parseSoundtrackTag, getFeedViewer } from '@/hooks/use-unified-feed';
 import { formatDuration, formatViews, formatTimeAgo } from '@/lib/feed-utils';
 import type { VideoItem, ImagePost, LiveStream } from '@/types/feed.types';
@@ -30,7 +30,8 @@ import { extractReplayUrl, isReplayTruncated } from '@/lib/live-replay';
 import { isStreamLive } from '@/lib/live-status';
 import { BLOCKED_POST_IDS } from '@/constants/post.constants';
 import { useAuth } from '@/contexts/AuthContext';
-import { hlsUrlFor, liveProviderOf, liveThumbnailFor } from '@/lib/live-ingest';
+import { hlsUrlFor, liveProviderOf, liveThumbnailFor, noteLatencyMode } from '@/lib/live-ingest';
+import { toStoryboard } from '@/lib/storyboard';
 
 // Fallback thumbnails for when API doesn't return one
 const FALLBACK_THUMBNAILS = [
@@ -196,7 +197,9 @@ export function mapNFTToVideoItem(nft: DeHubNFT, index: number): VideoItem {
     shopListingCount: (nft as any).shopListingCount,
     thumbnail,
     videoUrl,
+    hlsUrl: isLivePost ? undefined : buildHlsUrl(nft.hlsUrl),
     transcodingStatus: nft.transcodingStatus,
+    storyboard: toStoryboard(nft.storyboard),
     audioUrl,
     audioDuration: isAudioPost ? (typeof duration === 'number' ? duration : 0) : undefined,
     isAudio: isAudioPost,
@@ -245,6 +248,7 @@ export function mapNFTToVideoItem(nft: DeHubNFT, index: number): VideoItem {
     livePlaybackId: (nft as any).stream?.playbackId,
     livePlaybackUrl: (nft as any).stream?.playbackUrl,
     livePlaybackUrls: (() => {
+      noteLatencyMode((nft as any).stream);
       const hls = hlsUrlFor((nft as any).stream);
       if (!hls) return (nft as any).stream?.playbackUrl ? [(nft as any).stream.playbackUrl] : undefined;
       return liveProviderOf((nft as any).stream) === 'mediamtx'
@@ -429,6 +433,12 @@ export function mapNFTToLiveStream(nft: DeHubNFT, index: number): LiveStream {
     lockedChainId: nft.streamInfo?.lockContentChainIds?.[0],
     subscriberPlans: (nft as any).plansDetails,
     contentRating: nft.contentRating,
+    mediaDescriptions: nft.mediaDescriptions,
+    spoilerText: nft.spoilerText,
+    quotePolicy: nft.quotePolicy,
+    visibility: nft.visibility,
+    quoteRevoked: nft.quoteRevoked,
+    replyPolicy: nft.replyPolicy,
     shopLinks: nft.shopLinks,
     shopListingCount: nft.shopListingCount,
     isOwner: nft.isOwner ?? false,
