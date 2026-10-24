@@ -7541,6 +7541,15 @@
     "highlights": {
       "visual": "רגעים חזותיים בולטים",
       "visualPrivacy": "שליחת פריימים נבחרים לניתוח חזותי."
+    },
+    "charts": {
+      "hierarchySample": "אירופה, צרפת, 35"
+    },
+    "dataImport": {
+      "sampleCategory": "קטגוריה",
+      "sampleNorth": "צפון",
+      "sampleSouth": "דרום",
+      "sampleValue": "ערך"
     }
   },
   "jungleMood": {

@@ -7534,6 +7534,15 @@
     "highlights": {
       "visual": "Visuelle høydepunkter",
       "visualPrivacy": "Send utvalgte bilder til visuell analyse."
+    },
+    "charts": {
+      "hierarchySample": "Europa, Frankrike, 35"
+    },
+    "dataImport": {
+      "sampleCategory": "Kategori",
+      "sampleNorth": "Nord",
+      "sampleSouth": "Sør",
+      "sampleValue": "Verdi"
     }
   },
   "jungleMood": {

@@ -7347,6 +7347,15 @@
     "highlights": {
       "visual": "वीडियो के खास पल",
       "visualPrivacy": "देख के विश्लेषण करे ला चुनल फ्रेम भेजथिन।"
+    },
+    "charts": {
+      "hierarchySample": "कोपेनहेगन, कोपेनहेगन,35"
+    },
+    "dataImport": {
+      "sampleCategory": "श्रेणीःखेल जोड़ल गेल",
+      "sampleNorth": "उत्तर हल, जबाव, उत्तर",
+      "sampleSouth": "पूर्वा पूर्व दिशा, पू",
+      "sampleValue": "मानहीन, मानहीन"
     }
   },
   "jungleMood": {

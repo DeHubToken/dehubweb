@@ -6794,6 +6794,15 @@
     "highlights": {
       "visual": "Video fine moments",
       "visualPrivacy": "Send frames wey you choose make we check wetin dey show."
+    },
+    "charts": {
+      "hierarchySample": "Europe, France, 35"
+    },
+    "dataImport": {
+      "sampleCategory": "Category",
+      "sampleNorth": "North",
+      "sampleSouth": "South",
+      "sampleValue": "Value"
     }
   },
   "jungleMood": {

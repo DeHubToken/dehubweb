@@ -7444,6 +7444,15 @@
     "highlights": {
       "visual": "كۆرۈنۈشتىكى مۇھىم پەيتلەر",
       "visualPrivacy": "كۆرۈنۈش تەھلىلى ئۈچۈن تاللانغان كادىرلارنى ئەۋەتىڭ."
+    },
+    "charts": {
+      "hierarchySample": "ياۋروپا،فىرانسىيە، 35"
+    },
+    "dataImport": {
+      "sampleCategory": "Category",
+      "sampleNorth": "North",
+      "sampleSouth": "جەنۇب",
+      "sampleValue": "قىممىتى"
     }
   },
   "jungleMood": {

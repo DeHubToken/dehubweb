@@ -734,14 +734,14 @@
     "continue": "Tiếp tục",
     "undo": "Hoàn tác",
     "back": "Quay lại",
+    "next": "Tiếp theo",
+    "previous": "Trước",
     "yes": "Có",
     "no": "Không",
     "update": "Cập nhật",
     "reset": "Đặt lại",
     "submit": "Gửi",
     "optional": "Tùy chọn",
-    "next": "Tiếp theo",
-    "previous": "Trước",
     "confirm": "Xác nhận",
     "error": "Lỗi",
     "success": "Thành công",
@@ -7564,6 +7564,15 @@
     "highlights": {
       "visual": "Khoảnh khắc hình ảnh nổi bật",
       "visualPrivacy": "Gửi các khung hình đã chọn để phân tích hình ảnh."
+    },
+    "charts": {
+      "hierarchySample": "Châu Âu,Pháp,35"
+    },
+    "dataImport": {
+      "sampleCategory": "Danh mục",
+      "sampleNorth": "Bắc",
+      "sampleSouth": "Nam",
+      "sampleValue": "Giá trị"
     }
   },
   "jungleMood": {

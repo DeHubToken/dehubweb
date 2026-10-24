@@ -7520,6 +7520,15 @@
     "highlights": {
       "visual": "ದೃಶ್ಯದ ವಿಶೇಷ ಕ್ಷಣಗಳು",
       "visualPrivacy": "ದೃಶ್ಯ ವಿಶ್ಲೇಷಣೆಗಾಗಿ ಆಯ್ದ ಫ್ರೇಮ್‌ಗಳನ್ನು ಕಳುಹಿಸಿ."
+    },
+    "charts": {
+      "hierarchySample": "ಯುರೋಪ್,ಫ್ರಾನ್ಸ್, 35"
+    },
+    "dataImport": {
+      "sampleCategory": "ವರ್ಗ",
+      "sampleNorth": "ಉತ್ತರ",
+      "sampleSouth": "ದಕ್ಷಿಣ",
+      "sampleValue": "ಮೌಲ್ಯ"
     }
   },
   "jungleMood": {

@@ -7465,6 +7465,15 @@
     "highlights": {
       "visual": "بصري اهم لمحا",
       "visualPrivacy": "بصري تجزيي لاءِ چونڊيل فريم موڪليو."
+    },
+    "charts": {
+      "hierarchySample": "يورپ،فرانس، 35"
+    },
+    "dataImport": {
+      "sampleCategory": "ڪيٽيگري",
+      "sampleNorth": "شمالي",
+      "sampleSouth": "جنوبي",
+      "sampleValue": "قدر"
     }
   },
   "jungleMood": {

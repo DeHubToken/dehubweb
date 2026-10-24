@@ -7533,6 +7533,15 @@
     "highlights": {
       "visual": "Көрнекі маңызды сәттер",
       "visualPrivacy": "Таңдалған кадрларды көрнекі талдауға жіберу."
+    },
+    "charts": {
+      "hierarchySample": "Еуропа,Франция, 35"
+    },
+    "dataImport": {
+      "sampleCategory": "Категория",
+      "sampleNorth": "Солтүстік",
+      "sampleSouth": "Оңтүстік",
+      "sampleValue": "Мән"
     }
   },
   "jungleMood": {

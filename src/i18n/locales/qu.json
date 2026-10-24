@@ -7545,6 +7545,15 @@
     "highlights": {
       "visual": "Videopi aswan allin pachakuna",
       "visualPrivacy": "Akllasqa videopa rikch'ayninkunata qhawarinapaq apachiy."
+    },
+    "charts": {
+      "hierarchySample": "Europa,Francia,35"
+    },
+    "dataImport": {
+      "sampleCategory": "Ñiqichana",
+      "sampleNorth": "Chincha",
+      "sampleSouth": "Qulla",
+      "sampleValue": "Chanin"
     }
   },
   "jungleMood": {

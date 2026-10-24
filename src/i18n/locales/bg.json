@@ -7543,6 +7543,15 @@
     "highlights": {
       "visual": "Визуални акценти",
       "visualPrivacy": "Изпращане на избрани кадри за визуален анализ."
+    },
+    "charts": {
+      "hierarchySample": "Европа,Франция,35"
+    },
+    "dataImport": {
+      "sampleCategory": "Категория",
+      "sampleNorth": "Север",
+      "sampleSouth": "Юг",
+      "sampleValue": "Стойност"
     }
   },
   "jungleMood": {

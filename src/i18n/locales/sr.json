@@ -7538,6 +7538,15 @@
     "highlights": {
       "visual": "Визуелни најважнији тренуци",
       "visualPrivacy": "Пошаљите изабране кадрове за визуелну анализу."
+    },
+    "charts": {
+      "hierarchySample": "Европа,Француска,35"
+    },
+    "dataImport": {
+      "sampleCategory": "Категорија",
+      "sampleNorth": "Север",
+      "sampleSouth": "Југ",
+      "sampleValue": "Вредност"
     }
   },
   "jungleMood": {

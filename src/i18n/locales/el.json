@@ -7544,6 +7544,15 @@
     "highlights": {
       "visual": "Οπτικά στιγμιότυπα",
       "visualPrivacy": "Στείλτε επιλεγμένα καρέ για οπτική ανάλυση."
+    },
+    "charts": {
+      "hierarchySample": "Ευρώπη,Γαλλία,35"
+    },
+    "dataImport": {
+      "sampleCategory": "Κατηγορία",
+      "sampleNorth": "Βόρεια",
+      "sampleSouth": "Νότια",
+      "sampleValue": "Τιμή"
     }
   },
   "jungleMood": {

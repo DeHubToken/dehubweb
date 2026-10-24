@@ -7526,6 +7526,15 @@
     "highlights": {
       "visual": "Көрүнүктүү маанилүү учурлар",
       "visualPrivacy": "Тандалган кадрларды визуалдык талдоо үчүн жөнөтүү."
+    },
+    "charts": {
+      "hierarchySample": "Европа, Франция, 35"
+    },
+    "dataImport": {
+      "sampleCategory": "Категория",
+      "sampleNorth": "Түндүк",
+      "sampleSouth": "Түштүк",
+      "sampleValue": "Мүлкү"
     }
   },
   "jungleMood": {

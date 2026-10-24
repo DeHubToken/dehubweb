@@ -7362,6 +7362,15 @@
     "highlights": {
       "visual": "दृश्यविशेषक्षणाः",
       "visualPrivacy": "दृश्यविश्लेषणार्थं चयनितानि चित्राणि प्रेषयतु।"
+    },
+    "charts": {
+      "hierarchySample": "संयुक्त राज्य अमेरिका,स्पेन, 35"
+    },
+    "dataImport": {
+      "sampleCategory": "वर्गः",
+      "sampleNorth": "उत्तरम्",
+      "sampleSouth": "दक्षिणा",
+      "sampleValue": "मानम्"
     }
   },
   "jungleMood": {

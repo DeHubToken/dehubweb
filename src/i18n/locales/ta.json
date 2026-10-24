@@ -7519,6 +7519,15 @@
     "highlights": {
       "visual": "காட்சியின் சிறந்த தருணங்கள்",
       "visualPrivacy": "காட்சி ஆய்விற்குத் தேர்ந்தெடுத்த சட்டகங்களை அனுப்பவும்."
+    },
+    "charts": {
+      "hierarchySample": "ஐரோப்பா,பிரான்ஸ், 35"
+    },
+    "dataImport": {
+      "sampleCategory": "வகை",
+      "sampleNorth": "வடக்கு",
+      "sampleSouth": "தெற்கு",
+      "sampleValue": "மதிப்பு"
     }
   },
   "jungleMood": {

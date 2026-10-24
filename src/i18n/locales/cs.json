@@ -7433,6 +7433,15 @@
     "highlights": {
       "visual": "Vizuální zajímavosti",
       "visualPrivacy": "Odeslat vybrané snímky k vizuální analýze."
+    },
+    "charts": {
+      "hierarchySample": "Evropa,Francie,35"
+    },
+    "dataImport": {
+      "sampleCategory": "Kategorie",
+      "sampleNorth": "Sever",
+      "sampleSouth": "Jih",
+      "sampleValue": "Hodnota"
     }
   },
   "jungleMood": {

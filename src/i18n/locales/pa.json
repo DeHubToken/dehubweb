@@ -7529,6 +7529,15 @@
     "highlights": {
       "visual": "ਦ੍ਰਿਸ਼ ਦੇ ਖ਼ਾਸ ਪਲ",
       "visualPrivacy": "ਦ੍ਰਿਸ਼ ਵਿਸ਼ਲੇਸ਼ਣ ਲਈ ਚੁਣੇ ਹੋਏ ਫ੍ਰੇਮ ਭੇਜੋ।"
+    },
+    "charts": {
+      "hierarchySample": "ਯੂਰਪ,ਫਰਾਂਸ,35"
+    },
+    "dataImport": {
+      "sampleCategory": "ਸ਼੍ਰੇਣੀ",
+      "sampleNorth": "ਉੱਤਰ",
+      "sampleSouth": "ਦੱਖਣ",
+      "sampleValue": "ਮੁੱਲ"
     }
   },
   "jungleMood": {

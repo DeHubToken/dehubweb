@@ -6708,6 +6708,15 @@
     "highlights": {
       "visual": "ویڈیو دے خاص لمحے",
       "visualPrivacy": "بصری تجزیے واسطے چُݨے ہوئے فریم بھیڄو۔"
+    },
+    "charts": {
+      "hierarchySample": "یورپ، فرانس، 35"
+    },
+    "dataImport": {
+      "sampleCategory": "کٹیگری",
+      "sampleNorth": "شمال",
+      "sampleSouth": "دکھن",
+      "sampleValue": "مقدار"
     }
   },
   "jungleMood": {

@@ -7434,6 +7434,15 @@
     "highlights": {
       "visual": "Vizuális csúcspontok",
       "visualPrivacy": "Kiválasztott képkockák küldése vizuális elemzéshez."
+    },
+    "charts": {
+      "hierarchySample": "Európa,Franciaország, 35"
+    },
+    "dataImport": {
+      "sampleCategory": "Kategória",
+      "sampleNorth": "Észak",
+      "sampleSouth": "Dél",
+      "sampleValue": "Érték"
     }
   },
   "jungleMood": {

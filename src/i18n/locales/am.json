@@ -7514,6 +7514,15 @@
     "highlights": {
       "visual": "የምስል ድምቀቶች",
       "visualPrivacy": "የተመረጡ ፍሬሞችን ለምስል ትንተና ላክ።"
+    },
+    "charts": {
+      "hierarchySample": "አውሮፓ,ፈረንሳይ,35"
+    },
+    "dataImport": {
+      "sampleCategory": "ምድብ",
+      "sampleNorth": "ሰሜን",
+      "sampleSouth": "ደቡብ",
+      "sampleValue": "ዋጋ"
     }
   },
   "jungleMood": {

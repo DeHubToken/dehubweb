@@ -7422,6 +7422,15 @@
     "highlights": {
       "visual": "Muhimman lokutan gani",
       "visualPrivacy": "Aika zaɓaɓɓun firam don nazarin hoto."
+    },
+    "charts": {
+      "hierarchySample": "Turai,Faransa, 35"
+    },
+    "dataImport": {
+      "sampleCategory": "Kategorien",
+      "sampleNorth": "Arewa",
+      "sampleSouth": "Kudancin Kudu",
+      "sampleValue": "Darajar"
     }
   },
   "jungleMood": {

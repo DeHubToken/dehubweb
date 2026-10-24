@@ -7556,6 +7556,15 @@
     "highlights": {
       "visual": "Sorotan visual",
       "visualPrivacy": "Kirim bingkai terpilih untuk analisis visual."
+    },
+    "charts": {
+      "hierarchySample": "Eropa,Prancis,35"
+    },
+    "dataImport": {
+      "sampleCategory": "Kategori",
+      "sampleNorth": "Utara",
+      "sampleSouth": "Selatan",
+      "sampleValue": "Nilai"
     }
   },
   "jungleMood": {

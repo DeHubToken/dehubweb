@@ -7598,6 +7598,15 @@
     "highlights": {
       "visual": "Visuele hoogtepunte",
       "visualPrivacy": "Stuur gekose rame vir visuele ontleding."
+    },
+    "charts": {
+      "hierarchySample": "Europa,Frankryk, 35"
+    },
+    "dataImport": {
+      "sampleCategory": "Kategorie",
+      "sampleNorth": "Noord",
+      "sampleSouth": "Suid",
+      "sampleValue": "Waarde"
     }
   },
   "jungleMood": {

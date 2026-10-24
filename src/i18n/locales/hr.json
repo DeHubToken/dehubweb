@@ -7426,6 +7426,15 @@
     "highlights": {
       "visual": "Vizualni vrhunci",
       "visualPrivacy": "Pošaljite odabrane kadrove za vizualnu analizu."
+    },
+    "charts": {
+      "hierarchySample": "Europa,Francuska, 35"
+    },
+    "dataImport": {
+      "sampleCategory": "Kategorija",
+      "sampleNorth": "Sjever",
+      "sampleSouth": "Jug",
+      "sampleValue": "Vrijednost"
     }
   },
   "jungleMood": {

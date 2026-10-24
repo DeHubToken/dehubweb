@@ -7440,6 +7440,14 @@
     "highlights": {
       "visual": "Daqiiqadaha muuqaalka ugu fiican",
       "visualPrivacy": "Dir xargaha la doortay si muuqaalka loo falanqeeyo."
+    },
+    "charts": {
+      "hierarchySample": "Yurub,Faransiiska, 35"
+    },
+    "dataImport": {
+      "sampleCategory": "Qeybta",
+      "sampleNorth": "Waqooyi",
+      "sampleSouth": "Koonfurta"
     }
   },
   "jungleMood": {

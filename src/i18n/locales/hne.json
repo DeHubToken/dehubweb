@@ -7399,6 +7399,15 @@
     "highlights": {
       "visual": "वीडियो के खास पल",
       "visualPrivacy": "देखे के विश्लेषण बर चुने फ्रेम भेजव।"
+    },
+    "charts": {
+      "hierarchySample": "कैलिफोर्निया, पुर्तगाल, 35"
+    },
+    "dataImport": {
+      "sampleCategory": "स्रेनी",
+      "sampleNorth": "उत्तर",
+      "sampleSouth": "दक्छिनी",
+      "sampleValue": "मान"
     }
   },
   "jungleMood": {

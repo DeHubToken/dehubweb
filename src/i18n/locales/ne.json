@@ -7408,6 +7408,15 @@
     "highlights": {
       "visual": "दृश्यका विशेष क्षणहरू",
       "visualPrivacy": "दृश्य विश्लेषणका लागि छानिएका फ्रेमहरू पठाउनुहोस्।"
+    },
+    "charts": {
+      "hierarchySample": "युरोप,फ्रान्स, ३५"
+    },
+    "dataImport": {
+      "sampleCategory": "श्रेणी",
+      "sampleNorth": "उत्तर",
+      "sampleSouth": "दक्षिण",
+      "sampleValue": "मान"
     }
   },
   "jungleMood": {

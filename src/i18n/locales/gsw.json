@@ -7486,6 +7486,15 @@
     "highlights": {
       "visual": "Visuelli Höchepünkt",
       "visualPrivacy": "Usgewählti Einzelbilder für d visuelli Analyse schicke."
+    },
+    "charts": {
+      "hierarchySample": "Europe,Frankreich,35"
+    },
+    "dataImport": {
+      "sampleCategory": "Kategorie",
+      "sampleNorth": "Nord",
+      "sampleSouth": "Süd",
+      "sampleValue": "Wert"
     }
   },
   "jungleMood": {

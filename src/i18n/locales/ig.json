@@ -7461,6 +7461,13 @@
     "highlights": {
       "visual": "Oge ọhụụ pụtara ìhè",
       "visualPrivacy": "Ziga frem ahọpụtara maka nyocha ọhụụ."
+    },
+    "charts": {
+      "hierarchySample": "Europe,France, 35"
+    },
+    "dataImport": {
+      "sampleCategory": "Udi",
+      "sampleValue": "Uru"
     }
   },
   "jungleMood": {

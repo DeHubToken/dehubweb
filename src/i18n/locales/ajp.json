@@ -6907,6 +6907,9 @@
     "highlights": {
       "visual": "أبرز اللحظات المرئية",
       "visualPrivacy": "أرسل إطارات مختارة للتحليل البصري."
+    },
+    "charts": {
+      "hierarchySample": "Europe,فرنسا,35"
     }
   },
   "jungleMood": {

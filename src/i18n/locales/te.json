@@ -7524,6 +7524,15 @@
     "highlights": {
       "visual": "దృశ్యంలోని ముఖ్య క్షణాలు",
       "visualPrivacy": "దృశ్య విశ్లేషణ కోసం ఎంచుకున్న ఫ్రేమ్‌లను పంపండి."
+    },
+    "charts": {
+      "hierarchySample": "యూరప్,ఫ్రాన్స్, 35"
+    },
+    "dataImport": {
+      "sampleCategory": "వర్గం",
+      "sampleNorth": "ఉత్తరం",
+      "sampleSouth": "దక్షిణం",
+      "sampleValue": "విలువ"
     }
   },
   "jungleMood": {

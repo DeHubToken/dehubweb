@@ -7475,6 +7475,15 @@
     "highlights": {
       "visual": "Дүрсний онцлох мөчүүд",
       "visualPrivacy": "Сонгосон кадруудыг дүрсний шинжилгээнд илгээх."
+    },
+    "charts": {
+      "hierarchySample": "Европ,Франц, 35"
+    },
+    "dataImport": {
+      "sampleCategory": "Ангилал",
+      "sampleNorth": "Умард",
+      "sampleSouth": "Урд",
+      "sampleValue": "Утга"
     }
   },
   "jungleMood": {

@@ -7515,6 +7515,15 @@
     "highlights": {
       "visual": "ពេលវេលាលេចធ្លោក្នុងរូបភាព",
       "visualPrivacy": "ផ្ញើស៊ុមដែលបានជ្រើសរើសសម្រាប់ការវិភាគរូបភាព។"
+    },
+    "charts": {
+      "hierarchySample": "អឺរ៉ុប,បារាំង, 35"
+    },
+    "dataImport": {
+      "sampleCategory": "ប្រភេទ",
+      "sampleNorth": "ខាងជើង",
+      "sampleSouth": "ខាងត្បូង",
+      "sampleValue": "តម្លៃ"
     }
   },
   "jungleMood": {

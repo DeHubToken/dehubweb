@@ -7512,6 +7512,15 @@
     "highlights": {
       "visual": "ദൃശ്യത്തിലെ മികച്ച നിമിഷങ്ങൾ",
       "visualPrivacy": "ദൃശ്യ വിശകലനത്തിനായി തിരഞ്ഞെടുത്ത ഫ്രെയിമുകൾ അയയ്ക്കുക."
+    },
+    "charts": {
+      "hierarchySample": "യൂറോപ്പ്,ഫ്രാന്‍സ്, 35"
+    },
+    "dataImport": {
+      "sampleCategory": "വിഭാഗം",
+      "sampleNorth": "വടക്ക്",
+      "sampleSouth": "തെക്ക്",
+      "sampleValue": "മൂല്യം"
     }
   },
   "jungleMood": {

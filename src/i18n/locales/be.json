@@ -7536,6 +7536,15 @@
     "highlights": {
       "visual": "Візуальныя моманты",
       "visualPrivacy": "Адправіць выбраныя кадры для візуальнага аналізу."
+    },
+    "charts": {
+      "hierarchySample": "Еўропа,Францыя, 35"
+    },
+    "dataImport": {
+      "sampleCategory": "Катэгорыя",
+      "sampleNorth": "Поўнач",
+      "sampleSouth": "Поўдзень",
+      "sampleValue": "Значэнне"
     }
   },
   "jungleMood": {

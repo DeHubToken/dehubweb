@@ -737,10 +737,10 @@
     "undo": "Vrátiť späť",
     "copied": "Skopírované",
     "back": "Späť",
-    "error": "Chyba",
-    "confirm": "Potvrdiť",
     "next": "Ďalej",
     "previous": "Predchádzajúce",
+    "error": "Chyba",
+    "confirm": "Potvrdiť",
     "filter": "Filtrovať",
     "sort": "Zoradiť",
     "more": "Viac",
@@ -7654,6 +7654,15 @@
     "highlights": {
       "visual": "Vizuálne zaujímavosti",
       "visualPrivacy": "Odoslať vybrané snímky na vizuálnu analýzu."
+    },
+    "charts": {
+      "hierarchySample": "Európa,Francúzsko,35"
+    },
+    "dataImport": {
+      "sampleCategory": "Kategória",
+      "sampleNorth": "Sever",
+      "sampleSouth": "Juh",
+      "sampleValue": "Hodnota"
     }
   },
   "jungleMood": {

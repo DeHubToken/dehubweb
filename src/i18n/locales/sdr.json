@@ -7017,6 +7017,15 @@
     "highlights": {
       "visual": "वीडियो कर खास पल",
       "visualPrivacy": "देख के विश्लेषण करे ले चुनल फ्रेम भेजू।"
+    },
+    "charts": {
+      "hierarchySample": "Europe,France,35"
+    },
+    "dataImport": {
+      "sampleCategory": "Category",
+      "sampleNorth": "شمال",
+      "sampleSouth": "جنوب",
+      "sampleValue": "ارزش"
     }
   },
   "jungleMood": {

@@ -7398,6 +7398,15 @@
     "highlights": {
       "visual": "ፍሉያት ህሞታት ምስሊ",
       "visualPrivacy": "ንትንተና ምስሊ ዝተመርጹ ፍሬማት ስደድ።"
+    },
+    "charts": {
+      "hierarchySample": "ኤውሮጳ ፣ፈረንሳ ፣ 35"
+    },
+    "dataImport": {
+      "sampleCategory": "ምድብ",
+      "sampleNorth": "ሰሜናዊ",
+      "sampleSouth": "ደቡብ",
+      "sampleValue": "ዋጋ"
     }
   },
   "jungleMood": {
