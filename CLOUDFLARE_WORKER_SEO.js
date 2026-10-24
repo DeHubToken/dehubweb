@@ -754,6 +754,31 @@ function postFaqLd(contentHtml) {
   return mainEntity.length >= 2 ? { '@type': 'FAQPage', mainEntity } : null;
 }
 
+/**
+ * VideoObject for the first video embedded in a post body, so the guide can
+ * appear in video results. Null when the post has no video or no poster frame
+ * (Google requires a thumbnail).
+ */
+function postVideoLd(contentHtml, post) {
+  const tag = /<video\b[^>]*>/i.exec(contentHtml || '');
+  if (!tag) return null;
+  const attr = (name) => {
+    const m = new RegExp(`\\s${name}="([^"]*)"`, 'i').exec(tag[0]);
+    return m ? m[1].replace(/&amp;/g, '&') : '';
+  };
+  const contentUrl = attr('src');
+  const thumbnailUrl = attr('poster');
+  if (!contentUrl || !thumbnailUrl) return null;
+  return {
+    '@type': 'VideoObject',
+    name: attr('title') || post.title,
+    description: (post.seoDescription || post.excerpt || post.title).slice(0, 280),
+    thumbnailUrl,
+    contentUrl,
+    ...(post.publishedAt ? { uploadDate: post.publishedAt } : {}),
+  };
+}
+
 function buildBlogHtml(post, canonicalUrl, contentHtml, manifest) {
   const image = buildBlogShareImage(post);
   const title = post.seoTitle || `${post.title} — DeHub Blog`;
@@ -782,6 +807,8 @@ function buildBlogHtml(post, canonicalUrl, contentHtml, manifest) {
   };
   const faq = postFaqLd(contentHtml);
   if (faq) jsonLd['@graph'].push({ ...faq, '@id': `${canonicalUrl}#faq` });
+  const video = postVideoLd(contentHtml, post);
+  if (video) jsonLd['@graph'].push({ ...video, '@id': `${canonicalUrl}#video` });
   return `<!DOCTYPE html>
 <html lang="en">
 <head>
@@ -903,6 +930,8 @@ const HOME_GUIDE_LINKS = [
   ['/guides/dehub-vs-cheelee-theta-xcad-watch-to-earn', 'Cheelee alternative: DeHub vs Cheelee, Theta.tv and XCAD'],
   ['/guides/web3-live-streaming-decentralised-twitch-alternative', 'Web3 live streaming: a decentralised Twitch alternative'],
   ['/guides/best-decentralised-social-media-platforms-2026', 'Best decentralised social media platforms 2026'],
+  ['/guides/higgsfield-genjutsu-alternative', 'Higgsfield Genjutsu alternative: swap anyone in a video'],
+  ['/guides/how-does-higgsfield-genjutsu-work', 'How does Higgsfield Genjutsu work? Step by step'],
   ['/guides/dehub-vs-depaul-dehub-vs-rowan-dehub', 'DeHub vs DePaul DeHUB vs Rowan DEHub'],
   ['/dehub-app', 'Get the DeHub app'],
 ];
@@ -2410,7 +2439,7 @@ function unservedLocaleRedirect(url, route, table) {
 }
 
 /** og:locale values, in the territory form Facebook's own locale list uses. */
-const OG_LOCALES = { en: 'en_US', ar: 'ar_AR', es: 'es_ES', fr: 'fr_FR', nl: 'nl_NL', tr: 'tr_TR' };
+const OG_LOCALES = { en: 'en_US', ar: 'ar_AR', es: 'es_ES', fr: 'fr_FR', nl: 'nl_NL', tr: 'tr_TR', ha: 'ha_NG', hi: 'hi_IN', ja: 'ja_JP', ko: 'ko_KR', pt: 'pt_BR', tl: 'tl_PH', vi: 'vi_VN', zh: 'zh_CN' };
 function ogLocale(lang) {
   return OG_LOCALES[lang] || `${lang}_${lang.toUpperCase()}`;
 }
@@ -2840,7 +2869,7 @@ function cardProxiedImage(html) {
     out = out.replace(/(<meta property="og:image" content="[^"]*">)/, '$1\n<meta property="og:image:width" content="1200">\n<meta property="og:image:height" content="630">');
   }
   if (!/name="twitter:image"/.test(out)) {
-    out = out.replace('</head>', `<meta name="twitter:image" content="${attr}"></head>`);
+    out = out.replace('</head>', () => `<meta name="twitter:image" content="${attr}"></head>`);
   }
   return out;
 }
@@ -3079,7 +3108,7 @@ function profileBannerCard(html) {
     .replace(/(<meta property="og:image:type" content=")[^"]*(">)/g, '$1image/jpeg$2')
     .replace(/(<meta name="twitter:card" content=")[^"]*(">)/g, '$1summary_large_image$2');
   if (!/name="twitter:image"/.test(out)) {
-    out = out.replace('</head>', `<meta name="twitter:image" content="${card}"></head>`);
+    out = out.replace('</head>', () => `<meta name="twitter:image" content="${card}"></head>`);
   }
   return out;
 }
@@ -4077,7 +4106,7 @@ export function stylePrerendered(html) {
   if (typeof html !== 'string') return html;
   if (!html.includes('</head>') || !html.includes('</body>')) return html;
   if (html.includes('class="dh-main"')) return html;
-  return stripInlineStyles(normalizePrerenderedHead(html).replace('</head>', `${PRERENDER_STYLE}</head>`))
+  return stripInlineStyles(normalizePrerenderedHead(html).replace('</head>', () => `${PRERENDER_STYLE}</head>`))
     .replace(/<body[^>]*>/i, `<body>${PRERENDER_HEADER}`)
     .replace('</body>', `${PRERENDER_FOOTER}</body>`);
 }
@@ -4164,7 +4193,7 @@ export function setPageUrl(html, pageUrl) {
     `<meta property="og:url" content="${pageUrl}">`,
     ...(hadTwitterUrl ? [`<meta name="twitter:url" content="${pageUrl}">`] : []),
   ].join('\n');
-  return out.replace('</head>', `${tags}\n</head>`);
+  return out.replace('</head>', () => `${tags}\n</head>`);
 }
 
 /** Exact <title> strings the deployed Supabase fn emits when an entity
@@ -6965,7 +6994,7 @@ async function handleRequest(request, env, ctx) {
     );
 
     if (!html.includes('og:locale')) {
-      html = html.replace('</head>', `${ogLocaleTag()}</head>`);
+      html = html.replace('</head>', () => `${ogLocaleTag()}</head>`);
     }
 
     // Canonical: SSR pages historically had none, letting ?param URLs and
@@ -6986,7 +7015,7 @@ async function handleRequest(request, env, ctx) {
     const canonicalUrl = `${APP_URL}${canonicalizePath(pathname)}`;
     if (isReferral) {
       if (!html.includes('og:url')) {
-        html = html.replace('</head>', `<meta property="og:url" content="${request.url}"></head>`);
+        html = html.replace('</head>', () => `<meta property="og:url" content="${request.url}"></head>`);
       }
       html = html.replace(/<link rel="canonical"[^>]*>/gi, '');
     } else {
@@ -7039,7 +7068,7 @@ async function handleRequest(request, env, ctx) {
       // oEmbed discovery: WordPress, Ghost, Iframely, Embedly and Mastodon's
       // link cards turn a pasted post link into the embedded post.
       const oembedTag = oembedLinkTag(APP_URL, record);
-      if (oembedTag) html = html.replace('</head>', `${oembedTag}</head>`);
+      if (oembedTag) html = html.replace('</head>', () => `${oembedTag}</head>`);
       // The VideoObject is repaired first, while it is still its own node;
       // socialPostingLd then nests it under the post as it stands.
       html = enrichVideoPost(html, record);
@@ -7067,16 +7096,18 @@ async function handleRequest(request, env, ctx) {
       // Feed readers find the profile's RSS from the page itself.
       if (account && !account.isPrivate) {
         const feedHandle = String(account.username || proxiedHandle);
+        // A function replacer: the display name is user text, and a `$&` or
+        // `` $` `` in a plain replacement string would splice the page in.
         html = html.replace(
           '</head>',
-          `<link rel="alternate" type="application/rss+xml" title="${escHtml(`${account.displayName || feedHandle} on DeHub`)}" href="${escHtml(profileFeedUrl(APP_URL, feedHandle))}"></head>`,
+          () => `<link rel="alternate" type="application/rss+xml" title="${escHtml(`${account.displayName || feedHandle} on DeHub`)}" href="${escHtml(profileFeedUrl(APP_URL, feedHandle))}"></head>`,
         );
       }
       // rel="me" for each link in the profile fields, so another site — a
       // Mastodon profile, a personal page — can prove this DeHub profile
       // links back to it. Those checks read the HTML and run no script.
       const relMe = profileFieldLinks(account).map((href) => `<link rel="me" href="${escHtml(href)}">`).join('');
-      if (relMe) html = html.replace('</head>', `${relMe}</head>`);
+      if (relMe) html = html.replace('</head>', () => `${relMe}</head>`);
       const address = String((account && account.address) || '').toLowerCase() || profileAddressOf(html);
       const rows = address ? await fetchFeedRowsOrNull(`minter=${address}`) : null;
       html = injectBeforeCta(html, postListHtml('Recent posts', rows || [], { author: false }));
@@ -7195,7 +7226,7 @@ async function handleRequest(request, env, ctx) {
       // (Google-InspectionTool) already renders this HTML, so the tag is
       // missing from the one view used to debug indexing.
       if (!html.includes('google-site-verification')) {
-        html = html.replace('</head>', `<meta name="google-site-verification" content="${GOOGLE_SITE_VERIFICATION}"></head>`);
+        html = html.replace('</head>', () => `<meta name="google-site-verification" content="${GOOGLE_SITE_VERIFICATION}"></head>`);
       }
       // Entity repair on the deployed fn's Organization JSON-LD: its only
       // sameAs pointed at a dead account, so Google couldn't reconcile the
@@ -7203,7 +7234,7 @@ async function handleRequest(request, env, ctx) {
       if (html.includes('"sameAs"')) {
         html = html.replace(/"sameAs":\s*\[[^\]]*\]/, JSON.stringify({ sameAs: ORG_SAME_AS }).slice(1, -1));
       } else {
-        html = html.replace('</head>', `<script type="application/ld+json">${jsonLdScript({ '@context': 'https://schema.org', ...ORG_JSONLD })}</script></head>`);
+        html = html.replace('</head>', () => `<script type="application/ld+json">${jsonLdScript({ '@context': 'https://schema.org', ...ORG_JSONLD })}</script></head>`);
       }
       // What DeHub IS, in prose. Injected before the nav so it is the first
       // body content a crawler reads — this is the copy the "dehub" brand term

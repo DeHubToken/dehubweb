@@ -35,10 +35,13 @@ export function mastodonRelayTarget(pathname) {
   return null;
 }
 
-/** What is passed on: the app's credentials and body type, and the path it called. */
+/**
+ * What is passed on: the app's credentials, its body's type and length, a
+ * byte range (a video preview seeking), and the path it called.
+ */
 export function mastodonRelayHeaders(request, url) {
   const headers = new Headers();
-  for (const name of ['accept', 'authorization', 'content-type', 'idempotency-key', 'user-agent']) {
+  for (const name of ['accept', 'authorization', 'content-type', 'content-length', 'idempotency-key', 'range', 'user-agent']) {
     const value = request.headers.get(name);
     if (value) headers.set(name, value);
   }
@@ -50,14 +53,25 @@ export async function handleMastodonRelay(request, target, apiOrigin) {
   if (request.method === 'OPTIONS') return new Response(null, { status: 204, headers: CORS });
   const url = new URL(request.url);
   const hasBody = !['GET', 'HEAD'].includes(request.method);
-  const upstream = await fetch(`${apiOrigin}${target}${url.search}`, {
-    method: request.method,
-    headers: mastodonRelayHeaders(request, url),
-    body: hasBody ? await request.arrayBuffer() : undefined,
-    redirect: 'manual',
-  });
+  let upstream;
+  try {
+    upstream = await fetch(`${apiOrigin}${target}${url.search}`, {
+      method: request.method,
+      headers: mastodonRelayHeaders(request, url),
+      // Streamed, not read into memory first: a media upload can be ~100 MB,
+      // near the Worker's whole memory, and the API writes it straight to disk.
+      body: hasBody ? request.body : undefined,
+      redirect: 'manual',
+    });
+  } catch {
+    // An unreachable API is a 502 to the client app, not a Worker crash.
+    return new Response(JSON.stringify({ error: 'Bad Gateway' }), {
+      status: 502,
+      headers: { ...CORS, 'content-type': 'application/json', 'cache-control': 'no-store' },
+    });
+  }
   const headers = new Headers(CORS);
-  for (const name of ['content-type', 'cache-control', 'link', 'location']) {
+  for (const name of ['content-type', 'content-length', 'content-range', 'accept-ranges', 'cache-control', 'link', 'location']) {
     const value = upstream.headers.get(name);
     if (value) headers.set(name, value);
   }

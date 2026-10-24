@@ -870,7 +870,7 @@ function LoginModalBodyInner({ open, step, setStep, layout = 'default' }: LoginM
         <Separator className="flex-1 bg-white/10" />
       </div>
 
-      <div className="flex justify-center gap-7">
+      <div className="flex justify-evenly">
         <button type="button" onClick={() => handleSocialLogin('google')} disabled={isConnecting} className={stackOptionClass} aria-label={t('loginModal.continueGoogle')}>
           <span className="login-stack-option__disc">{activeProvider === 'google' ? <Loader2 className="w-5 h-5 animate-spin" /> : <GoogleIcon />}</span>
           Google
@@ -889,6 +889,19 @@ function LoginModalBodyInner({ open, step, setStep, layout = 'default' }: LoginM
             {t('loginStack.fingerprint', 'Fingerprint')}
           </button>
         )}
+        {/* One way in for every wallet: connect one, or import a key from
+            the list it opens. */}
+        <button
+          type="button"
+          onClick={() => setStep('wallets')}
+          onPointerEnter={() => { void import('./LoginWalletsStep'); }}
+          disabled={isConnecting}
+          className={stackOptionClass}
+          aria-label={t('loginModal.connectWallet')}
+        >
+          <span className="login-stack-option__disc"><Wallet className="w-5 h-5" /></span>
+          {t('nav.wallet', 'Wallet')}
+        </button>
         {telegramEnabled && (
           <button type="button" onClick={handleTelegramLogin} disabled={isConnecting} className={stackOptionClass} aria-label={t('loginModal.continueTelegram', 'Continue with Telegram')}>
             <span className="login-stack-option__disc">{activeProvider === 'telegram' ? <Loader2 className="w-5 h-5 animate-spin" /> : <TelegramIcon />}</span>
@@ -897,35 +910,6 @@ function LoginModalBodyInner({ open, step, setStep, layout = 'default' }: LoginM
         )}
       </div>
 
-      <div className="flex flex-wrap items-center justify-center gap-x-4 text-sm font-semibold">
-        <button
-          type="button"
-          onClick={() => setStep('wallets')}
-          onPointerEnter={() => { void import('./LoginWalletsStep'); }}
-          disabled={isConnecting}
-          className="h-10 text-white underline underline-offset-4 decoration-white/30"
-        >
-          {t('loginModal.connectWallet')}
-        </button>
-        <button
-          type="button"
-          onClick={() => { chooseSetupIntent(null); setStep('import-wallet'); }}
-          disabled={isConnecting}
-          className="h-10 text-white underline underline-offset-4 decoration-white/30"
-        >
-          {t('copy.a865110e919b', 'Import wallet')}
-        </button>
-        {!setupIntent && (
-          <button
-            type="button"
-            onClick={() => chooseSetupIntent('migrate')}
-            disabled={isConnecting}
-            className="h-10 text-white underline underline-offset-4 decoration-white/30"
-          >
-            {t('loginModal.migrateAccount', 'Migrate account')}
-          </button>
-        )}
-      </div>
     </div>
   );
 
@@ -1174,6 +1158,7 @@ function LoginModalBodyInner({ open, step, setStep, layout = 'default' }: LoginM
             onWalletConnect={handleWalletConnect}
             onDiscoveredWalletConnect={handleDiscoveredWalletConnect}
             onWalletConnectConnect={handleWalletConnectConnect}
+            onImportWallet={layout === 'stack' ? () => { chooseSetupIntent(null); setStep('import-wallet'); } : undefined}
           />
         </React.Suspense>
       )}

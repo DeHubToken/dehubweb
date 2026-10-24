@@ -1,0 +1,21 @@
+name: IndexNow full submit
+
+# Sends every URL in the static sitemap to IndexNow. Deploys already send the
+# changed ones; run this by hand once to seed the engines, or after a big
+# content change.
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  submit:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - run: node scripts/indexnow-submit.mjs public/sitemap-static.xml

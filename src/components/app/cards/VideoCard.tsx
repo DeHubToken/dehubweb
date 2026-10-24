@@ -90,7 +90,7 @@ import ppvTicketIcon from '@/assets/ppv-ticket-icon.png';
 
 import { motion, AnimatePresence } from 'framer-motion';
 import { CardHeader } from './CardHeader';
-import { PostHeaderOptionsButton } from './PostHeaderOptionsButton';
+import { PostHeaderBoostButton, PostHeaderOptionsButton } from './PostHeaderOptionsButton';
 import { MatureContentGate, useMatureGate } from './MatureContentGate';
 import { ContentWarningGate, useContentWarning } from './ContentWarningGate';
 import { BadgedName } from '@/components/app/BadgedName';
@@ -527,6 +527,7 @@ function MobileCreatorInfo({
               </button>
             )}
             {onMenuClick && <PostHeaderOptionsButton
+              iconSize={23.5}
               corner={false}
               onClick={onMenuClick}
               style={{ marginTop: -4 }}
@@ -671,8 +672,8 @@ const CLAMP_CLASS = { 2: 'line-clamp-2', 3: 'line-clamp-3', 4: 'line-clamp-4' } 
 
 function ExpandableDescription({ description: rawDescription, isImmersive, clampLines = 4 }: ExpandableDescriptionProps) {
   const { t: _copy } = _useCopy();
-  // Normalize line breaks: unify \r\n → \n, then cap consecutive blank lines to max 1 (i.e. max 2 newlines)
-  const normalized = rawDescription.replace(/\r\n/g, '\n').replace(/\n{3,}/g, '\n\n').trim();
+  // Unify \r\n → \n only. Blank lines and spacing stay exactly as typed.
+  const normalized = rawDescription.replace(/\r\n/g, '\n').trim();
   // DeHub links render as cards below, so the URLs come out of the copy
   // (display-only — never sent back to the API).
   const { links: dehubLinks, displayText: linkFreeDescription } = useDehubLinks(normalized);
@@ -2201,16 +2202,11 @@ const VideoCardBody = memo(function VideoCard({ video, postPage = false, onBack,
           />
           {!postPage && <div className="flex items-center gap-1">
             {isOwnPost && (
-              <motion.button
-                data-head-boost
+              <PostHeaderBoostButton
+                rowGap={4}
                 onClick={() => setShowBoostModal(true)}
-                className="mr-[1.6px] text-zinc-400 hover:text-white transition-colors"
-                whileHover={{ scale: 1.1 }}
-                whileTap={{ scale: 0.95 }}
                 aria-label={t('postOptions.boostPost')}
-              >
-                <Zap className="w-[23.5px] h-[23.5px]" />
-              </motion.button>
+              />
             )}
             {/* Plain button, not DrawerTrigger — see PostCard: a trigger pins
                 vaul's Root (and its window scroll listener) into every card.
@@ -2478,7 +2474,7 @@ const VideoCardBody = memo(function VideoCard({ video, postPage = false, onBack,
                     <AudioVisualizer
                       tokenId={video.id}
                       viewerKey={walletAddress}
-                      requiresAccess={!!video.isPPV || isHoldGated(video.isLocked, video.lockedPrice) || !!video.subscriberPlans?.length}
+                      requiresAccess={!!video.isPPV || isHoldGated(video.isLocked, video.lockedPrice) || !!video.subscriberPlans?.length || (!!video.visibility && video.visibility !== 'public')}
                       audioUrl={video.audioUrl}
                       artworkUrl={thumbnail || undefined}
                       isPlaying={isPlaying}
