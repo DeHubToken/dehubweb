@@ -150,6 +150,7 @@ export function CommunityActivity({ community, notifications }: CommunityActivit
         <div className="relative mb-2">
           <Search className="w-3.5 h-3.5 text-zinc-500 absolute left-3 top-1/2 -translate-y-1/2 pointer-events-none" />
           <Input
+            type="search"
             value={query}
             onChange={(e) => { setQuery(e.target.value); setVisible(PAGE_SIZE); }}
             placeholder={t('communities.activitySearch', 'Search activity...')}

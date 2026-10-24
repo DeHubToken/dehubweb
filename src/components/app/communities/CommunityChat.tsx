@@ -651,10 +651,11 @@ export function CommunityChat({ communityId, community, membership, isMember }: 
         {/* Search bar */}
         <div className="px-1 pb-1 flex items-center gap-1">
           {showSearch ? (
-            <div className="flex items-center gap-1.5 flex-1 rounded-xl border border-white/[0.08] bg-white/[0.03] px-2.5 py-1.5">
+            <div data-search-surface className="flex items-center gap-1.5 flex-1 rounded-xl border border-white/[0.08] bg-white/[0.03] px-2.5 py-1.5">
               <Search className="w-3.5 h-3.5 text-zinc-500 flex-shrink-0" />
               <input
                 autoFocus
+                type="search"
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
                 placeholder={t('communities.searchMessages', 'Search messages')}
