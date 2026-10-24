@@ -90,7 +90,7 @@ import ppvTicketIcon from '@/assets/ppv-ticket-icon.png';
 
 import { motion, AnimatePresence } from 'framer-motion';
 import { CardHeader } from './CardHeader';
-import { PostHeaderOptionsButton } from './PostHeaderOptionsButton';
+import { PostHeaderBoostButton, PostHeaderOptionsButton } from './PostHeaderOptionsButton';
 import { MatureContentGate, useMatureGate } from './MatureContentGate';
 import { ContentWarningGate, useContentWarning } from './ContentWarningGate';
 import { BadgedName } from '@/components/app/BadgedName';
@@ -527,6 +527,7 @@ function MobileCreatorInfo({
               </button>
             )}
             {onMenuClick && <PostHeaderOptionsButton
+              iconSize={23.5}
               corner={false}
               onClick={onMenuClick}
               style={{ marginTop: -4 }}
@@ -2201,16 +2202,11 @@ const VideoCardBody = memo(function VideoCard({ video, postPage = false, onBack,
           />
           {!postPage && <div className="flex items-center gap-1">
             {isOwnPost && (
-              <motion.button
-                data-head-boost
+              <PostHeaderBoostButton
+                rowGap={4}
                 onClick={() => setShowBoostModal(true)}
-                className="mr-[1.6px] text-zinc-400 hover:text-white transition-colors"
-                whileHover={{ scale: 1.1 }}
-                whileTap={{ scale: 0.95 }}
                 aria-label={t('postOptions.boostPost')}
-              >
-                <Zap className="w-[23.5px] h-[23.5px]" />
-              </motion.button>
+              />
             )}
             {/* Plain button, not DrawerTrigger — see PostCard: a trigger pins
                 vaul's Root (and its window scroll listener) into every card.

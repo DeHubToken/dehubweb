@@ -43,6 +43,7 @@ import { Slider } from '@/components/ui/slider';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { Drawer, DrawerContent, DrawerTitle } from '@/components/ui/drawer';
 import { useIsMobile } from '@/hooks/use-mobile';
+import { StylePreview } from './StylePreview';
 import { useScrollFadeMask } from '@/components/app/feeds/useScrollFadeMask';
 import {
   VisualizerStyle,
@@ -166,11 +167,25 @@ const STYLES: { value: AnyStyle; label: string }[] = [
   ...EXTRA_STYLES,
 ];
 
-/** One pill on the System/Glass card shows the playing style; tapping it opens every style. */
-function StudioStylePicker({ style, onPick, title }: { style: AnyStyle; onPick: (s: AnyStyle) => void; title: string }) {
+/** Styles the picker adds per step as it scrolls; each brings a live preview. */
+const STYLE_PAGE = 9;
+
+/** One pill on the System/Glass card shows the playing style; tapping it opens every style, a page at a time, each with a small live example. */
+function StudioStylePicker({ style, onPick, title, hue, theme, seed }: { style: AnyStyle; onPick: (s: AnyStyle) => void; title: string; hue: number; theme: string; seed: string }) {
   const [open, setOpen] = useState(false);
+  const [shown, setShown] = useState(STYLE_PAGE);
   const isMobile = useIsMobile();
   const label = (v: AnyStyle) => STYLES.find(s => s.value === v)?.label ?? v;
+  // Next page when the end of the list scrolls into view. The marker remounts
+  // per page, so a page that still leaves it on screen asks for the next one.
+  const pageObserver = useRef<IntersectionObserver | null>(null);
+  const moreRef = useCallback((node: HTMLDivElement | null) => {
+    pageObserver.current?.disconnect();
+    pageObserver.current = null;
+    if (!node) return;
+    pageObserver.current = new IntersectionObserver(([entry]) => { if (entry.isIntersecting) setShown(n => Math.min(STYLES.length, n + STYLE_PAGE)); });
+    pageObserver.current.observe(node);
+  }, []);
   const pill = (
     <button type="button" data-audio-studio-pill aria-expanded={open} aria-haspopup="dialog" onClick={isMobile ? () => setOpen(true) : undefined}>
       {label(style)}<ChevronDown aria-hidden />
@@ -178,9 +193,13 @@ function StudioStylePicker({ style, onPick, title }: { style: AnyStyle; onPick: 
   );
   const grid = (
     <div data-audio-studio-style-menu role="group" aria-label={title}>
-      {STYLES.map(s => (
-        <button key={s.value} type="button" data-active={s.value === style || undefined} aria-pressed={s.value === style} onClick={() => { onPick(s.value); setOpen(false); }}>{s.label}</button>
+      {STYLES.slice(0, shown).map(s => (
+        <button key={s.value} type="button" data-active={s.value === style || undefined} aria-pressed={s.value === style} onClick={() => { onPick(s.value); setOpen(false); }}>
+          <StylePreview style={s.value} hue={hue} theme={theme} seed={seed} />
+          <span>{s.label}</span>
+        </button>
       ))}
+      {shown < STYLES.length && <div key={shown} ref={moreRef} data-audio-style-more aria-hidden />}
     </div>
   );
   if (isMobile) return (
@@ -1123,7 +1142,7 @@ export function AudioVisualizer({
         </div>
       </div>
       <div data-audio-studio-options>
-          {showStylePicker && <StudioStylePicker style={style} onPick={setStyle} title={t('creator.style')} />}
+          {showStylePicker && <StudioStylePicker style={style} onPick={setStyle} title={t('creator.style')} hue={hue} theme={theme} seed={seed} />}
           {popoutTrack && <button type="button" data-audio-lyrics-toggle aria-label={t('audioPost.lyrics')} aria-pressed={showLyrics} data-active={showLyrics || undefined} onClick={() => setShowLyrics(v => !v)}><MicVocal /></button>}
           {popoutTrack && <button type="button" aria-label={isPoppedOut ? t('audioPost.closeCornerPlayer') : t('audioPost.popOut')} onClick={handlePopOut}><PictureInPicture2 /></button>}
           {showVolume && <button type="button" aria-label={isEffectivelyMuted ? _copy('copy.ce4ee4efc5e3', { defaultValue: 'Unmute' }) : _copy('copy.8dd6857baf02', { defaultValue: 'Mute' })} onClick={() => { const next = !isEffectivelyMuted; if (!next && volume === 0) setVolume(.8); setSelfMuted(next); videoPlaybackManager.globalMuted = next; onMuteChange?.(next); }}><Volume2 /></button>}
