@@ -15,15 +15,13 @@
  * to Krio.
  */
 export const WIDGET_FALLBACK_LOCALES: readonly string[] = [
-  'acm', 'acw', 'aec', 'af', 'ajp', 'am', 'apd', 'ary', 'arz', 'ayn',
-  'az', 'be', 'bg', 'bho', 'bn', 'ca', 'cjy', 'cs', 'ctg', 'da',
-  'dcc', 'de', 'dyu', 'el', 'et', 'fa', 'fi', 'gsw', 'gu', 'ha',
-  'he', 'hi', 'hne', 'hr', 'hu', 'hy', 'id', 'ig', 'it', 'ja',
-  'jv', 'ka', 'kk', 'km', 'kn', 'ko', 'ku', 'ky', 'lo', 'lt',
-  'lv', 'mag', 'mg', 'mi', 'ml', 'mn', 'mnp', 'mr', 'ms', 'my',
-  'ne', 'no', 'om', 'or', 'pa', 'pbt', 'pcm', 'pl', 'pt', 'qu',
-  'rkt', 'ro', 'ru', 'sa', 'sd', 'sdr', 'si', 'sk', 'skr', 'so',
-  'sq', 'sr', 'sv', 'sw', 'syl', 'ta', 'te', 'tg', 'th', 'ti',
-  'tk', 'tl', 'tts', 'ug', 'uk', 'ur', 'uz', 'vi', 'wes', 'wuu',
-  'yo', 'yue', 'zh', 'zu',
+  'acm', 'acw', 'aec', 'af', 'ajp', 'am', 'apd', 'arz', 'ayn', 'az',
+  'be', 'bg', 'bho', 'bn', 'ca', 'cs', 'ctg', 'dcc', 'de', 'el',
+  'fa', 'ha', 'he', 'hi', 'hne', 'hr', 'hu', 'hy', 'id', 'it',
+  'ja', 'ka', 'km', 'kn', 'ko', 'ku', 'ky', 'lo', 'lt', 'lv',
+  'mag', 'mg', 'ml', 'mnp', 'mr', 'ms', 'my', 'ne', 'no', 'om',
+  'or', 'pa', 'pbt', 'pcm', 'pl', 'pt', 'qu', 'rkt', 'ro', 'sa',
+  'sd', 'sdr', 'si', 'sk', 'skr', 'so', 'sq', 'sr', 'sv', 'sw',
+  'syl', 'ta', 'te', 'tg', 'th', 'ti', 'tk', 'tl', 'tts', 'ug',
+  'uk', 'ur', 'uz', 'vi', 'wes', 'wuu', 'yo', 'yue', 'zh', 'zu',
 ];
