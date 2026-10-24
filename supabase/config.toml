@@ -371,7 +371,8 @@ project_id = "aigxuutjaqsywioxjefr"
   # Public, IP rate-limited.
   [functions.generate-lyrics]
     verify_jwt = false
-  # Mock launchpad trade with no chain interaction; no caller auth.
+  # Mock launchpad trade with no chain interaction; auth is the DeHub token in
+  # x-dehub-token, verified by requireDeHubAuth, and the trade is that wallet's.
   [functions.launchpad-mock-trade]
     verify_jwt = false
   # Public MCP endpoint that forwards tool calls to dehub-mcp.
