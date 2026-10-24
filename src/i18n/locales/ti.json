@@ -2066,8 +2066,6 @@
     "anonymousLikes_other": "ካብ ስሞም ዘይፍለጥ ወነንቲ ባጅ {{count}} ምፍታዋት"
   },
   "postInfo": {
-    "unavailable": "ኣይተረኽበን ።",
-    "ownersUnavailable": "እቶም ናይ ሕጂ ባለቤታት ኣብዚ እዋን እዚ ክነበብዎ ኣይክእሉን እዮም ።",
     "title": "ሓበሬታ ጽሑፍ",
     "tokenId": "ቶከን ID",
     "mintedOn": "ተፈጢሩ",
@@ -2079,6 +2077,8 @@
     "total": "ጠቕላላ {{count}}",
     "distribution": "ምዝርጋሕ",
     "loading": "ይጽዓን ኣሎ...",
+    "unavailable": "ኣይተረኽበን ።",
+    "ownersUnavailable": "እቶም ናይ ሕጂ ባለቤታት ኣብዚ እዋን እዚ ክነበብዎ ኣይክእሉን እዮም ።",
     "owner": "{{count}} owner",
     "owner_other": "{{count}} owners",
     "engagement": "ተሳትፎ",
@@ -2691,6 +2691,9 @@
       "wallTitle": "ሰዎች ምን ይላሉ",
       "wallNote": "በፈቃድ ታትሞ",
       "anonymous": "DeHub አባል"
+    },
+    "taxSplit": {
+      "grossFootnote": "እቲ ኣብ ላዕሊ ዝተጠቕሰ ሓፈሻዊ ኣታዊ BNB ምስ ነጋዶን ነጋዶን ዝተኸፍለ እዩ ። እዚ ክፍሊት እዚ ብዴሁብ ዘይተኸፍለ እዩ ነይሩ ። ናይ መግዛእቲ ተመላሽታት ዝተፈለየ ኮይኑ ይጸንሕ ። ነፍሲ ወከፍ መጠን ከምኡ'ውን ናይ መጀመርታ ገንዘብ ኣብ LEDger ክምርመር ይኽእል እዩ ።"
     }
   },
   "superpowers": {
@@ -2827,6 +2830,7 @@
     },
     "buyTokensToUnlockBadge": "ዝኾነ ኣካል ባጅ ዝህልዎ ሱፐር ሃይለታት ይረክብ። ባጅ ንምኽፋት DeHub ቶክን ግዛእ — ሰለፍቲ ኣይድለይን።",
     "buyTokensToUnlock": "ባጅን ሱፐር ሃይለታቱን ንምኽፋት DeHub ቶክን ግዛእ። ዝኾነ ባጅ ዝህልዎ ይረኽቦም — ሰለፍቲ ኣይድለይን።",
+    "signalFlareTo": "ናብ {{people}} ሰባት ምልክት ሓዊ (Signal Flare)",
     "goldenHourStarted": "Golden Hour ን {{minutes}} ደቓይቕ ይካየድ ኣሎ — እቲ ሎሚ እትጽሕፎ ኩሉ ክልተ እጽርፍ"
   },
   "work": {
@@ -5515,8 +5519,6 @@
     "notEnoughTokensForBounty": "ቶክን ኣይኣኽሉን። {{need}} ቶክን የድልየካ እዩ ግን {{have}} ኣሎካ።"
   },
   "events": {
-    "deleteConfirmTitle": "ነዚ ፍጻመ እዚ ትሰርሖዶ ፧",
-    "deleteConfirmBody": "እዚ ነቲ ፍጻመ ፡ ዝርዝር ኣጋይሽኡን ዝርርብኡን ንኹሉ የጥፍኦ ። ክጠፍእ ኣይክእልን እዩ ።",
     "seoTitle": "ፍጻመታት — Meetups & Community Events on DeHub",
     "seoDescription": "ኣብ ዝመጽእ ናይ DeHub ማሕበረሰብ ፍጻመታት ፡ RSVP ንናይ ገዛእ ርእስኻ ፍጻመታት ኣብ ዝተማእከለ ፡ ናይ ተጠቀምቲ ዝብሎም ማሕበራዊ መድረኽ ንምእካብን ንምቕራብን ።",
     "defaultSeoDescription": "ማሕበረሰባዊ ፍጻመ ኣብ ደሆብ ።",
@@ -5580,6 +5582,8 @@
     "requestAccessForChat": "ነቲ ቻት ከምኡ'ውን RSVP ንምርኣይ ክትረኽቦ ሓተተ",
     "edit": "ኣዐሪ",
     "delete": "ሰርዝ",
+    "deleteConfirmTitle": "ነዚ ፍጻመ እዚ ትሰርሖዶ ፧",
+    "deleteConfirmBody": "እዚ ነቲ ፍጻመ ፡ ዝርዝር ኣጋይሽኡን ዝርርብኡን ንኹሉ የጥፍኦ ። ክጠፍእ ኣይክእልን እዩ ።",
     "reply": "መልሲ",
     "react": "ምላሽ ምሃብ",
     "typeMessage": "መልእኽቲ ጽሓፍ...",

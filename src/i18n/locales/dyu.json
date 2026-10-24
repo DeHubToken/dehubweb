@@ -2067,8 +2067,6 @@
     "anonymousLikes_other": "Diyanye {{count}} ka bɔ badge tigi tɔgɔbaliw fɛ"
   },
   "postInfo": {
-    "unavailable": "A tɛ sɔrɔ",
-    "ownersUnavailable": "Sisan, a tigiw tɛ se ka kalan.",
     "title": "Post kunnafoni",
     "tokenId": "Token ID",
     "mintedOn": "Dabɔ",
@@ -2080,6 +2078,8 @@
     "total": "Bɛɛ {{count}}",
     "distribution": "Tila",
     "loading": "Ka don...",
+    "unavailable": "A tɛ sɔrɔ",
+    "ownersUnavailable": "Sisan, a tigiw tɛ se ka kalan.",
     "owner": "{{count}} tigi",
     "owner_other": "{{count}} tigi",
     "engagement": "Engagement",
@@ -2688,6 +2688,9 @@
       "wallTitle": "I ka mɔgɔw b'a fɔ min ye",
       "wallNote": "6. Ni n' ka sira di, n' ka sɛbɛ",
       "anonymous": "DeHub kɔ"
+    },
+    "taxSplit": {
+      "grossFootnote": "O wari bɛɛ ye BNB ye min be sɔrɔ a kɔnɔ. O wariw tun tilannin lo, nka DeHub tun tɛ u mara. O la, a ka ɲi ka kɛ ni wari ye min be se ka kɛ a ka wari ye."
     }
   },
   "superpowers": {
@@ -2825,6 +2828,7 @@
     },
     "buyTokensToUnlockBadge": "O bɛɛ n'a ta, a ka ɲi ka kɛ ni fanga ye. DeHub ka tagamasiɲɛw san walisa ka batɛmu dɔ yɛlɛ.",
     "buyTokensToUnlock": "DeHub ka tagamasiɲɛw san walisa ka batɛmu n'a ka setigiya yira. Mɔgɔ minw be batɛmu ta, olu mako t'a la u ka batɛmu ta.",
+    "signalFlareTo": "Mɔgɔ minw be weele ko {{people}}",
     "goldenHourStarted": "Golden Hour 跑 {{minutes}} 分钟 — 你现在发布的每一条内容都将获得双倍计数"
   },
   "work": {
@@ -5463,8 +5467,6 @@
     "encoderPermanentHint": "O la, a tun be se ka kɛ ko a tun be se ka kɛ cogo min na. I ka coder sigi siɲɛ kelen — siɲɛ wɛrɛ, i ka Start kan ani DeHub ka baara kɛ i ye."
   },
   "events": {
-    "deleteConfirmTitle": "I b'a fɛ ka nin ɲɔgɔnye in jɔsi wa?",
-    "deleteConfirmBody": "Nin bɛ ɲɔgɔnye ni a lajɛlibagaw ka tɔgɔlisi ani a baro bɔ mɔgɔ bɛɛ ye. A tɛ se ka segin kɔ.",
     "seoTitle": "Ɲɛnamayaw — Ɲɛnamayaw ni sigida koo minw be kɛra DeHub kan",
     "seoDescription": "DeHub ka sigida ka koo nataw lajɛ, RSVP ka lajɛnbaw kɛ ani k'i yɛrɛ ka koo dɔw kɛ sigida la min tɛ dan na, min ye mɔgɔ ka baara ye.",
     "defaultSeoDescription": "O ye Jehova ka Masaya kibaro diiman ye.",
@@ -5527,6 +5529,8 @@
     "requestAccessForChat": "N'i b'a fɛ ka baro kɛ ni mɔgɔ dɔ ye, i ka kan k'a ɲini k'a lɔn a be se ka min kɛ.",
     "edit": "Edit",
     "delete": "Delete",
+    "deleteConfirmTitle": "I b'a fɛ ka nin ɲɔgɔnye in jɔsi wa?",
+    "deleteConfirmBody": "Nin bɛ ɲɔgɔnye ni a lajɛlibagaw ka tɔgɔlisi ani a baro bɔ mɔgɔ bɛɛ ye. A tɛ se ka segin kɔ.",
     "reply": "An ka jaabiliw",
     "react": "Kɔrɔbɔli",
     "typeMessage": "A ye kuma dɔ fɔ...",

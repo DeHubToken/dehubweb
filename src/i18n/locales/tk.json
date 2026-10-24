@@ -2084,8 +2084,6 @@
     "anonymousLikes_other": "Anonim nyşan eýelerinden {{count}} halama"
   },
   "postInfo": {
-    "unavailable": "Elýeterli däl",
-    "ownersUnavailable": "Häzirki eýelerini häzir okap bolanok.",
     "title": "Ýazgy maglumaty",
     "tokenId": "Token ID",
     "mintedOn": "Döredilen",
@@ -2097,6 +2095,8 @@
     "total": "Jemi {{count}}",
     "distribution": "Distribution",
     "loading": "Ýüklenýär...",
+    "unavailable": "Elýeterli däl",
+    "ownersUnavailable": "Häzirki eýelerini häzir okap bolanok.",
     "owner": "{{count}} owner",
     "owner_other": "{{count}} owners",
     "engagement": "Gatnaşyk",
@@ -2712,6 +2712,9 @@
       "wallTitle": "Adamlar näme diýýärler",
       "wallNote": "6. rugsat bilen çap edilýär",
       "anonymous": "DeHub üýşümi"
+    },
+    "taxSplit": {
+      "grossFootnote": "Göreli gelirde BNB-yň halderler weýa stakerlerge bölünüp berilýän bolumlar dýaldy. Bu öýünler DeHubda saklanmady, yalnyz satýn alýýalar baýsýna kelýer. Barchy raqam weýa baþlangyç para birligi ledgerde tekserile biler."
     }
   },
   "superpowers": {
@@ -2849,6 +2852,7 @@
     },
     "buyTokensToUnlockBadge": "Her haýsy nyşan eýesi SuperPowers alýar. Nyşany açmak üçin DeHub sanly wagt satyn alyň — goýum gerek däl.",
     "buyTokensToUnlock": "Nyşany we onuň SuperPowers-ini açmak üçin DeHub sanly wagt satyn alyň. Her haýsy nyşan eýesi olary alýar — goýum gerek däl.",
+    "signalFlareTo": "Sinyal Flare to {{people}} people",
     "goldenHourStarted": "Altyn sagat {{minutes}} minut dowam edýär — indi goýýan her zadyňyz iki esse artar"
   },
   "work": {
@@ -5539,8 +5543,6 @@
     "notEnoughTokensForBounty": "Sanly wagt ýeterlik däl. {{need}} sanly wagt gerek, ýöne {{have}} bar."
   },
   "events": {
-    "deleteConfirmTitle": "Bu çäräni pozmalymy?",
-    "deleteConfirmBody": "Bu çäräni, onuň myhman sanawyny we söhbetdeşligini hemmeler üçin aýyrýar. Muny yzyna gaýtaryp bolmaýar.",
     "seoTitle": "DeHubda duşuşyklar we jemagat wakalary",
     "seoDescription": "DeHub jemgyýetiniň geljekki wakalaryny barlaň, RSVP duşuşyklary geçirmek we öz wakalaryňyzy merkezileşdirilen, ulanýan jemgyýet platformasynda geçirmek üçin.",
     "defaultSeoDescription": "DeHubda jemagatly waka.",
@@ -5605,6 +5607,8 @@
     "requestWasDenied": "Siziň haýyşyňyz inkär edildi",
     "requestAccessForChat": "Çat we RSVP görmäge rugsat sorap",
     "delete": "Ewez Et",
+    "deleteConfirmTitle": "Bu çäräni pozmalymy?",
+    "deleteConfirmBody": "Bu çäräni, onuň myhman sanawyny we söhbetdeşligini hemmeler üçin aýyrýar. Muny yzyna gaýtaryp bolmaýar.",
     "reply": "Jawap",
     "react": "Reaktsiya",
     "typeMessage": "Bir habar beriň...",

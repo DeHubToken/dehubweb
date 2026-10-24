@@ -2115,8 +2115,6 @@
     "anonymousLikes_other": "匿名のバッジ保有者からのいいね{{count}}件"
   },
   "postInfo": {
-    "unavailable": "利用できません",
-    "ownersUnavailable": "現在の所有者を今は読み取れません。",
     "title": "投稿情報",
     "tokenId": "トークンID",
     "mintedOn": "ミント日",
@@ -2128,6 +2126,8 @@
     "total": "合計{{count}}",
     "distribution": "分配",
     "loading": "読み込み中...",
+    "unavailable": "利用できません",
+    "ownersUnavailable": "現在の所有者を今は読み取れません。",
     "owner": "{{count}}人のオーナー",
     "owner_other": "{{count}}人のオーナー",
     "engagement": "エンゲージメント",
@@ -2743,6 +2743,9 @@
       "wallTitle": "人々の声",
       "wallNote": "許可を得て公開",
       "anonymous": "DeHubメンバー"
+    },
+    "taxSplit": {
+      "grossFootnote": "上記の収益合計には、ホルダーとステークホルダーと共有するBNBが含まれています。これらの支払いは分配され、DeHubによって保持されませんでした。買い戻しは別々のままです。すべての金額と元の通貨は元帳で検査できます。"
     }
   },
   "superpowers": {
@@ -2880,6 +2883,7 @@
     },
     "buyTokensToUnlockBadge": "バッジ所有者は誰でもスーパーパワーを得られます。バッジをアンロックするにはDeHubトークンを購入してください — ステーキングは不要です。",
     "buyTokensToUnlock": "バッジとそのスーパーパワーをアンロックするにはDeHubトークンを購入してください。バッジ所有者は誰でもそれらを得られます — ステーキングは不要です。",
+    "signalFlareTo": "{{people}}人にフレアを通知",
     "goldenHourStarted": "ゴールデンアワーが {{minutes}} 分間実行中 — 今投稿するすべてが2倍になります"
   },
   "work": {
@@ -5638,8 +5642,6 @@
     "notEnoughTokensForBounty": "トークンが不足しています。{{need}} トークン必要ですが、{{have}} しかありません。"
   },
   "events": {
-    "deleteConfirmTitle": "このイベントを削除しますか？",
-    "deleteConfirmBody": "これにより、イベント、ゲストリスト、全員のチャットが削除されます。元に戻すことはできません。",
     "seoTitle": "イベント — DeHubのミートアップ＆コミュニティイベント",
     "seoDescription": "DeHubの今後のコミュニティイベントを閲覧し、ミートアップにRSVPして、分散型ユーザー所有のソーシャルプラットフォームで独自のイベントをホストしてください。",
     "defaultSeoDescription": "DeHub上のコミュニティイベント。",
@@ -5705,6 +5707,8 @@
     "requestAccessForChat": "チャットを表示してRSVPするためにアクセスをリクエスト",
     "edit": "編集",
     "delete": "削除",
+    "deleteConfirmTitle": "このイベントを削除しますか？",
+    "deleteConfirmBody": "これにより、イベント、ゲストリスト、全員のチャットが削除されます。元に戻すことはできません。",
     "reply": "返信",
     "react": "リアクション",
     "typeMessage": "メッセージを入力...",

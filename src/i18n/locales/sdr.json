@@ -2065,8 +2065,6 @@
     "anonymousLikes_other": "گمنام بیج ہولڈرن سے {{count}} پسند"
   },
   "postInfo": {
-    "ownersUnavailable": "अभी मौजूदा मालिक मनके पढ़ल नी जाय सकेला।",
-    "unavailable": "उपलब्ध नखे",
     "title": "پوسٹ کی معلومات",
     "tokenId": "ٹوکن ID",
     "mintedOn": "بنایا گیا",
@@ -2078,6 +2076,8 @@
     "total": "کل {{count}}",
     "distribution": "Distribution",
     "loading": "لوڈ ہو رہا ہے...",
+    "unavailable": "उपलब्ध नखे",
+    "ownersUnavailable": "अभी मौजूदा मालिक मनके पढ़ल नी जाय सकेला।",
     "owner": "{{count}} owner",
     "owner_other": "{{count}} owners",
     "engagement": "شمولیت",
@@ -5251,8 +5251,6 @@
     "notEnoughTokensForBounty": "توکن کافی وجود ندارد. به {{need}} توکن نیاز دارید اما {{have}} دارید."
   },
   "events": {
-    "deleteConfirmBody": "ई इवेंट, एकर मेहमान सूची आउर एकर चैट सब कर ले हटाय देई। एके वापस नी करल जाय सकेला।",
-    "deleteConfirmTitle": "ई इवेंट के मिटाय देबा?",
     "seoTitle": "رویدادها — ملاقات‌ها و رویدادهای جامعه در DeHub",
     "seoDescription": "بررسی رویدادهای آینده DeHub، ثبت نام در گردهمایی‌ها و میزبانی رویدادهای خودتان در پلتفرم اجتماعی مالکیت کاربر، دسیترالیزه شده.",
     "defaultSeoDescription": "رویداد جامعه در DeHub.",
@@ -5299,6 +5297,8 @@
     "requestAccessForChat": "درخواست دسترسی برای مشاهده چت و ثبت نام",
     "edit": "ویرایش",
     "delete": "حذف",
+    "deleteConfirmTitle": "ई इवेंट के मिटाय देबा?",
+    "deleteConfirmBody": "ई इवेंट, एकर मेहमान सूची आउर एकर चैट सब कर ले हटाय देई। एके वापस नी करल जाय सकेला।",
     "reply": "پاسخ",
     "react": "تفاعل",
     "typeMessage": "پیام بنویسید...",

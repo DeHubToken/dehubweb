@@ -2128,8 +2128,6 @@
     "anonymousLikes_other": "ስም-አልባ ባጅ ካላቸው ሰዎች {{count}} መውደዶች"
   },
   "postInfo": {
-    "unavailable": "አይገኝም",
-    "ownersUnavailable": "አሁን ያሉት ባለአክሲዮኖች አሁን ሊነበቡ አይችሉም ።",
     "title": "የልጥፍ መረጃ",
     "tokenId": "ቶከን ID",
     "mintedOn": "የተፈጠረበት",
@@ -2141,6 +2139,8 @@
     "total": "ጠቅላላ {{count}}",
     "distribution": "ስርጭት",
     "loading": "በመጫን ላይ...",
+    "unavailable": "አይገኝም",
+    "ownersUnavailable": "አሁን ያሉት ባለአክሲዮኖች አሁን ሊነበቡ አይችሉም ።",
     "owner": "{{count}} ባለቤት",
     "owner_other": "{{count}} ባለቤቶች",
     "engagement": "ተሳትፎ",
@@ -2756,6 +2756,9 @@
       "wallTitle": "ሰዎች ምን ይላሉ",
       "wallNote": "በፈቃድ ታትሞ",
       "anonymous": "DeHub አባል"
+    },
+    "taxSplit": {
+      "grossFootnote": "ከላይ የተጠቀሰው የገቢ ድምር ከባለአክሲዮኖች እና ከአሳታፊዎች ጋር የተጋራውን BNB ያካትታል ። እነዚህ ክፍያዎች የተከፋፈሉ እንጂ በዴሆብ የተያዙ አይደሉም ። ግዢዎች የተለዩ ሆነው ይቆያሉ. እያንዳንዱ መጠን እና ኦሪጅናል ምንዛሬ በ LEDger ውስጥ ሊመረመሩ ይችላሉ."
     }
   },
   "superpowers": {
@@ -2893,6 +2896,7 @@
     },
     "buyTokensToUnlockBadge": "ማንኛውም ባጅ ያዥ SuperPowers ያገኛል። ባጅ ለመክፈት DeHub ቶከኖችን ይግዙ — መቆለፍ አያስፈልግም።",
     "buyTokensToUnlock": "ባጅ እና SuperPowers ለመክፈት DeHub ቶከኖችን ይግዙ። ማንኛውም ባጅ ያዥ ያገኛቸዋል — መቆለፍ አያስፈልግም።",
+    "signalFlareTo": "የምልክት ፍሰት ወደ {{people}} ሰዎች",
     "goldenHourStarted": "Golden Hour ለ {{minutes}} ደቂቃዎች እየሮጠ ነው — የምትለጥፈው ሁሉ አሁን በእጥፍ ይቆጠራል"
   },
   "work": {
@@ -5621,8 +5625,6 @@
     "notEnoughTokensForBounty": "በቂ ቶከኖች የሉም። {{need}} ቶከኖች ያስፈልጋሉ ነገር ግን {{have}} አለዎት።"
   },
   "events": {
-    "deleteConfirmTitle": "ይህን ክስተት ሰርዝ?",
-    "deleteConfirmBody": "ይህ ዝግጅቱን ፣ የእንግዳ ዝርዝሩን እና ለሁሉም ሰው ውይይቱን ያስወግዳል ። ሊወገድ አይችልም ።",
     "seoTitle": "ክስተቶች — በ DeHub ላይ Meetups & የማህበረሰብ ክስተቶች",
     "seoDescription": "መጪውን የ DeHub የማህበረሰብ ዝግጅቶችን ያስሱ ፣ RSVP ለማሟላት እና በተጠቃሚ ባለቤትነት ባላቸው ማህበራዊ መድረክ ላይ የራስዎን ዝግጅቶች ለማስተናገድ ።",
     "defaultSeoDescription": "በ DeHub ላይ የማህበረሰብ ክስተት ።",
@@ -5686,6 +5688,8 @@
     "requestAccessForChat": "የውይይት እና RSVP ለማየት መዳረሻ ይጠይቁ",
     "edit": "አርትዕ",
     "delete": "ሰርዝ",
+    "deleteConfirmTitle": "ይህን ክስተት ሰርዝ?",
+    "deleteConfirmBody": "ይህ ዝግጅቱን ፣ የእንግዳ ዝርዝሩን እና ለሁሉም ሰው ውይይቱን ያስወግዳል ። ሊወገድ አይችልም ።",
     "reply": "መልስ ይስጡ",
     "react": "ምላሽ ይስጡ",
     "typeMessage": "መልዕክት ይጻፉ...",

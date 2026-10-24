@@ -2113,8 +2113,6 @@
     "anonymousLikes_other": "{{count}} לייקים ממחזיקי תג אנונימיים"
   },
   "postInfo": {
-    "unavailable": "לא זמין",
-    "ownersUnavailable": "אי אפשר לקרוא את הבעלים הנוכחיים כרגע.",
     "title": "מידע על הפוסט",
     "tokenId": "מזהה טוקן",
     "mintedOn": "הוטבע ב",
@@ -2126,6 +2124,8 @@
     "total": "סה״כ {{count}}",
     "distribution": "חלוקה",
     "loading": "טוען...",
+    "unavailable": "לא זמין",
+    "ownersUnavailable": "אי אפשר לקרוא את הבעלים הנוכחיים כרגע.",
     "owner": "בעלים {{count}}",
     "owner_other": "{{count}} בעלים",
     "engagement": "מעורבות",
@@ -2741,6 +2741,9 @@
       "wallTitle": "מה אנשים אומרים",
       "wallNote": "פורסם בהסכמה",
       "anonymous": "חבר ב-DeHub"
+    },
+    "taxSplit": {
+      "grossFootnote": "סך ההכנסות לעיל כולל BNB משותף עם מחזיקי וסטייקרים. תשלומים אלה חולקו, לא נשמרו על ידי DeHub. הרכישות נשארות נפרדות. ניתן לבדוק כל סכום ומטבע מקורי בספר החשבונות."
     }
   },
   "superpowers": {
@@ -2878,6 +2881,7 @@
     },
     "buyTokensToUnlockBadge": "כל בעל תג מקבל כוחות-על. קנה אסימוני DeHub כדי לפתוח תג — אין צורך בהפקדה (סטייקינג).",
     "buyTokensToUnlock": "קנה אסימוני DeHub כדי לפתוח תג וכוחות-העל שלו. כל בעל תג מקבל אותם — אין צורך בהפקדה (סטייקינג).",
+    "signalFlareTo": "התלקחות אותות אל {{people}} אנשים",
     "goldenHourStarted": "Golden Hour רץ במשך {{minutes}} דקות — כל מה שתפרסם עכשיו נחשב כפול"
   },
   "work": {
@@ -5638,8 +5642,6 @@
     "notEnoughTokensForBounty": "אין מספיק אסימונים. נדרשים {{need}} אסימונים אך יש {{have}}."
   },
   "events": {
-    "deleteConfirmTitle": "מחק את האירוע הזה?",
-    "deleteConfirmBody": "פעולה זו מסירה את האירוע, את רשימת האורחים שלו ואת הצ'אט שלו לכולם. לא ניתן לבטל את הפעולה.",
     "seoTitle": "אירועים — מפגשים ואירועים קהילתיים בדהאב",
     "seoDescription": "עיין בקרוב באירועי קהילה של DeHub, RSVP למפגשים והנח את האירועים שלך בפלטפורמה חברתית מבוזרת ובבעלות משתמשים.",
     "defaultSeoDescription": "אירוע קהילתי ב - DeHub.",
@@ -5705,6 +5707,8 @@
     "requestAccessForChat": "בקשה גישה כדי לצפות בצ'אט ולהשיב",
     "edit": "עריכה",
     "delete": "מחיקה",
+    "deleteConfirmTitle": "מחק את האירוע הזה?",
+    "deleteConfirmBody": "פעולה זו מסירה את האירוע, את רשימת האורחים שלו ואת הצ'אט שלו לכולם. לא ניתן לבטל את הפעולה.",
     "reply": "תשובה",
     "react": "תגובה",
     "typeMessage": "הקלד הודעה...",

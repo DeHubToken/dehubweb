@@ -2054,8 +2054,6 @@
     "anonymousLikes_other": "{{count}} إعجابات من أصحاب شارات مجهولين"
   },
   "postInfo": {
-    "unavailable": "لا متوفر",
-    "ownersUnavailable": "لا يمكن قراءة المالكين الحاليين في الوقت الحالي.",
     "title": "معلومات المنشور",
     "tokenId": "رقم التوكن",
     "mintedOn": "اتعمل في",
@@ -2067,6 +2065,8 @@
     "total": "الإجمالي {{count}}",
     "distribution": "التوزيع",
     "loading": "بيحمّل...",
+    "unavailable": "لا متوفر",
+    "ownersUnavailable": "لا يمكن قراءة المالكين الحاليين في الوقت الحالي.",
     "owner": "{{count}} مالك",
     "owner_other": "{{count}} ملاك",
     "engagement": "التفاعل",
@@ -2665,6 +2665,9 @@
       "wallTitle": "إيش الناس بتقول",
       "wallNote": "منشور بإذن",
       "anonymous": "عضو في DeHub"
+    },
+    "taxSplit": {
+      "grossFootnote": "يحتوي الإيراد المذكور أعلاه على BNB المشتركة مع الملاك والمستثمرين. تمت هذه المبالغ بالتوزيع، وليس الاحتفاظ بها من قبل DeHub. البطاقات المباعة مستمرة. يمكن رؤية كل مبلغ والعملة الأصلية في دفتر الحسابات."
     }
   },
   "superpowers": {
@@ -4983,8 +4986,6 @@
     "notEnoughTokensForBounty": "مفيش توكنات كفاية. محتاج {{need}} توكن بس معاك {{have}}."
   },
   "events": {
-    "deleteConfirmTitle": "حذف هذا الحدث؟",
-    "deleteConfirmBody": "هذاً يزيل الحدث و قائمة الضيوف و المحادثة من الجميع. لا يمكن التراجع عنها.",
     "defaultSeoDescription": "حدث مجتمعي على ديهاب.",
     "noUpcoming": "ما فدش حدثش قادمهش بعد كده",
     "eventName": "إسم الحدث *",
@@ -4997,7 +4998,9 @@
     "requestSent": "الطلب مرفوع للصانع الحدث",
     "entryFeeCoins_one": "{{count}} رسوم دخول العملة",
     "entryFeeCoins_other": "{{count}} رسوم دخول العملة",
-    "requestWasDenied": "تطلبتك رفضت"
+    "requestWasDenied": "تطلبتك رفضت",
+    "deleteConfirmTitle": "حذف هذا الحدث؟",
+    "deleteConfirmBody": "هذاً يزيل الحدث و قائمة الضيوف و المحادثة من الجميع. لا يمكن التراجع عنها."
   },
   "referral": {
     "stats": {

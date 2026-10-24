@@ -2161,8 +2161,6 @@
     "anonymousLikes_other": "{{count}} like mula sa mga anonymous na badge holder"
   },
   "postInfo": {
-    "unavailable": "Hindi available",
-    "ownersUnavailable": "Hindi mabasa ang mga current owners ngayon.",
     "title": "Post Info",
     "tokenId": "Token ID",
     "mintedOn": "Minted On",
@@ -2174,6 +2172,8 @@
     "total": "{{count}} total",
     "distribution": "Distribution",
     "loading": "Loading...",
+    "unavailable": "Hindi available",
+    "ownersUnavailable": "Hindi mabasa ang mga current owners ngayon.",
     "owner": "{{count}} owner",
     "owner_other": "{{count}} owners",
     "engagement": "Engagement",
@@ -2790,6 +2790,9 @@
       "wallTitle": "Ano ang sinasabi ng mga tao",
       "wallNote": "inilabas na may pahintulot",
       "anonymous": "Isang miyembro ng DeHub"
+    },
+    "taxSplit": {
+      "grossFootnote": "Kabilang sa kabuuang kita sa itaas ang IBINAHAGI ng BNB sa mga may hawak at staker. Ang mga pagbabayad na ito ay ipinamamahagi, hindi pinanatili ng DeHub. Ang mga buyback ay nananatiling hiwalay. Ang bawat halaga at orihinal na pera ay maaaring suriin sa ledger."
     }
   },
   "superpowers": {
@@ -2927,6 +2930,7 @@
     },
     "buyTokensToUnlockBadge": "Ang sinumang may hawak na badge ay makakakuha ng SuperPowers. Bumili ng DeHub tokens para mag-unlock ng badge — hindi kailangan ang staking.",
     "buyTokensToUnlock": "Bumili ng DeHub tokens para mag-unlock ng badge at ng mga SuperPowers nito. Ang sinumang may hawak na badge ay makakakuha nito — hindi kailangan ang staking.",
+    "signalFlareTo": "Signal Flare sa {{people}} mga tao",
     "goldenHourStarted": "Golden Hour ay tumatakbo sa {{minutes}} minuto — lahat ng iyong ipo-post ngayon ay doble ang bilang"
   },
   "work": {
@@ -5693,8 +5697,6 @@
     "notEnoughTokensForBounty": "Hindi sapat ang mga tokens. Kailangan ng {{need}} tokens ngunit mayroon kang {{have}}."
   },
   "events": {
-    "deleteConfirmTitle": "Tanggalin ang kaganapang ito?",
-    "deleteConfirmBody": "Inaalis nito ang kaganapan, ang listahan ng bisita at ang chat nito para sa lahat. Hindi ito maaaring i-undo.",
     "seoTitle": "Kaganapan — Meetups at mga Kaganapan ng Komunidad sa DeHub",
     "seoDescription": "Tuklasin ang mga paparating na DeHub community events, RSVP sa meetups at mag-host ng iyong sariling events sa decentralized, user-owned social platform.",
     "defaultSeoDescription": "Kaganapan ng komunidad sa DeHub.",
@@ -5760,6 +5762,8 @@
     "requestAccessForChat": "Humiling ng access upang tingnan ang chat at RSVP",
     "edit": "I-edit",
     "delete": "Tanggalin",
+    "deleteConfirmTitle": "Tanggalin ang kaganapang ito?",
+    "deleteConfirmBody": "Inaalis nito ang kaganapan, ang listahan ng bisita at ang chat nito para sa lahat. Hindi ito maaaring i-undo.",
     "reply": "Sumagot",
     "react": "Tumugon",
     "typeMessage": "Mag-type ng mensahe...",

@@ -2101,8 +2101,6 @@
     "anonymousLikes_other": "So {{count}} daga masu riƙe da lamba da ba a sani ba"
   },
   "postInfo": {
-    "unavailable": "Ba a samu ba",
-    "ownersUnavailable": "Ba za a iya karanta masu mallakar yanzu ba a yanzu.",
     "title": "Bayanan bugu",
     "tokenId": "ID na Token",
     "mintedOn": "An ƙirƙira",
@@ -2114,6 +2112,8 @@
     "total": "Jimla {{count}}",
     "distribution": "Rarraba",
     "loading": "Ana loda...",
+    "unavailable": "Ba a samu ba",
+    "ownersUnavailable": "Ba za a iya karanta masu mallakar yanzu ba a yanzu.",
     "owner": "{{count}} mai mallaka",
     "owner_other": "{{count}} masu mallaka",
     "engagement": "Shiga",
@@ -2728,6 +2728,9 @@
       "wallTitle": "Abin da jama'a suke cewa",
       "wallNote": "an buga tare da izini",
       "anonymous": "Memba na DeHub"
+    },
+    "taxSplit": {
+      "grossFootnote": "Jimlar kudaden shiga da ke sama ya haɗa da BNB da aka raba tare da masu riƙewa da masu stakers. An rarraba waɗannan biyan kuɗi, ba DeHub ya riƙe su ba. Buybacks ci gaba da rabuwa. kowane adadin da asali kudin za a iya duba a cikin ledger."
     }
   },
   "superpowers": {
@@ -2865,6 +2868,7 @@
     },
     "buyTokensToUnlockBadge": "Duk wanda ke rike da badge yana samun SuperPowers. Sayan DeHub tokens don buɗe badge — ba a buƙatar yin fare.",
     "buyTokensToUnlock": "Sayan DeHub tokens don buɗe badge da SuperPowers ɗinsa. Duk wanda ke rike da badge yana samun su — ba a buƙatar yin fare.",
+    "signalFlareTo": "Signal Flare zuwa {{people}} mutane",
     "goldenHourStarted": "Golden Hour yana gudana na tsawon mintuna {{minutes}} — duk abin da ka aika yanzu yana ƙididdigewa sau biyu"
   },
   "work": {
@@ -5546,8 +5550,6 @@
     "notEnoughTokensForBounty": "Ba isassun tokens. Ana buƙatar tokens {{need}} amma kuna da {{have}}."
   },
   "events": {
-    "deleteConfirmTitle": "Share wannan taron?",
-    "deleteConfirmBody": "Wannan yana kawar da taron, jerin baƙi da tattaunawarsa ga kowa da kowa. Ba za a iya cire shi ba.",
     "seoTitle": "Abubuwan da suka faru — Meetups & Abubuwan Al'umma akan DeHub",
     "seoDescription": "Browse mai zuwa DeHub al'umma events, RSVP zuwa tarups da kuma dauki bakuncin your own events a kan decentralized, mai amfani mallakar zamantakewa dandali.",
     "title": "Abubuwan da suka faru",
@@ -5612,6 +5614,8 @@
     "requestAccessForChat": "Nemi damar shiga don duba tattaunawar da RSVP",
     "edit": "Gyara",
     "delete": "Share",
+    "deleteConfirmTitle": "Share wannan taron?",
+    "deleteConfirmBody": "Wannan yana kawar da taron, jerin baƙi da tattaunawarsa ga kowa da kowa. Ba za a iya cire shi ba.",
     "reply": "Amsa",
     "react": "Sake amsawa",
     "typeMessage": "Rubuta sako...",

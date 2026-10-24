@@ -2100,8 +2100,6 @@
     "anonymousLikes_other": "{{count}} pai mai i ngā kaipupuri tohu huna"
   },
   "postInfo": {
-    "unavailable": "Kāore e wātea",
-    "ownersUnavailable": "Kāore e taea te pānui i ngā rangatira o nāianei i tēnei wā.",
     "title": "Mōhiohio pou",
     "tokenId": "Token ID",
     "mintedOn": "I hangaia",
@@ -2113,6 +2111,8 @@
     "total": "Katoa {{count}}",
     "distribution": "Distribution",
     "loading": "E uta ana...",
+    "unavailable": "Kāore e wātea",
+    "ownersUnavailable": "Kāore e taea te pānui i ngā rangatira o nāianei i tēnei wā.",
     "owner": "{{count}} owner",
     "owner_other": "{{count}} owners",
     "engagement": "Whai wāhi",
@@ -2729,6 +2729,9 @@
       "wallTitle": "He aha te kōrero a te hunga",
       "wallNote": "i whakaputa i te whakaaetanga",
       "anonymous": "He mema DeHub"
+    },
+    "taxSplit": {
+      "grossFootnote": "Ka taea te tatauranga o te utu i runga i te pukapuka nei ki te whakawātea i te BNB i whakawātea ki ngā kaihoko me ngā kaiwhakapūtea. I whakawhitia ngā utu aroha, kāore i whakawātea e DeHub. Hei tāpapa wawe, ka taea te tatauranga o ngā wāhanga me te rōpū moni whakamutunga i tirohia i te pukapuka whakapapa."
     }
   },
   "superpowers": {
@@ -2866,6 +2869,7 @@
     },
     "buyTokensToUnlockBadge": "Ka whiwhi ngā kaipupuri tohu katoa i te SuperPowers. Hokona ngā tohu DeHub hei iriti i tētahi tohu — kāore e hiahiatia te whakapau.",
     "buyTokensToUnlock": "Hokona ngā tohu DeHub hei iriti i tētahi tohu me tōna SuperPowers. Ka whiwhi ngā kaipupuri tohu katoa — kāore e hiahiatia te whakapau.",
+    "signalFlareTo": "Tohu Tohu ki {{people}} iwi",
     "goldenHourStarted": "Te haere o te haora koura mō {{minutes}} meneti — ka takirua ngā mea katoa e whakairia ana e koe i ēnei wā"
   },
   "work": {
@@ -5606,8 +5610,6 @@
     "notEnoughTokensForBounty": "Kāore e nui ngā tohu. Me {{need}} tohu engari kei a koe {{have}}."
   },
   "events": {
-    "deleteConfirmTitle": "Ka whakakorea e koe tenei huihuinga?",
-    "deleteConfirmBody": "Ka tangohia e tenei te huihuinga, tona raarangi manuhiri me tona korerorero mo te katoa. Kaore e taea te whakakore.",
     "seoTitle": "Ngā huihuinga — Meetups & Community Events on DeHub",
     "seoDescription": "Browse ngā huihuinga hapori DeHub e haere mai ana, RSVP ki te hui me te manaaki i ō ake kaupapa i runga i te papaaho pāpori decentralized, e whai ana i te kaiwhakamahi.",
     "defaultSeoDescription": "He huihuinga hapori mo DeHub.",
@@ -5672,6 +5674,8 @@
     "requestAccessForChat": "E hiahia ana koe ki te uru ki te kite i te kōrerorero me te RSVP",
     "edit": "Whakatika",
     "delete": "Mukua",
+    "deleteConfirmTitle": "Ka whakakorea e koe tenei huihuinga?",
+    "deleteConfirmBody": "Ka tangohia e tenei te huihuinga, tona raarangi manuhiri me tona korerorero mo te katoa. Kaore e taea te whakakore.",
     "reply": "Whakautu",
     "react": "Whakautu",
     "typeMessage": "Tuhia he karere...",

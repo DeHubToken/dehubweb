@@ -2108,8 +2108,6 @@
     "anonymousLikes_other": "{{count}} tykkäystä nimettömiltä merkkien haltijoilta"
   },
   "postInfo": {
-    "unavailable": "Ei saatavilla",
-    "ownersUnavailable": "Nykyisiä omistajia ei voi lukea juuri nyt.",
     "title": "Julkaisun tiedot",
     "tokenId": "Token-ID",
     "mintedOn": "Luotu",
@@ -2121,6 +2119,8 @@
     "total": "Yhteensä {{count}}",
     "distribution": "Jakelu",
     "loading": "Ladataan...",
+    "unavailable": "Ei saatavilla",
+    "ownersUnavailable": "Nykyisiä omistajia ei voi lukea juuri nyt.",
     "owner": "{{count}} omistaja",
     "owner_other": "{{count}} omistajaa",
     "engagement": "Sitoutuminen",
@@ -2688,6 +2688,9 @@
       "wallTitle": "Mitä ihmiset sanovat",
       "wallNote": "julkaistu luvalla",
       "anonymous": "DeHubin jäsen"
+    },
+    "taxSplit": {
+      "grossFootnote": "Yllä oleva tulojen kokonaismäärä sisältää BNB: n, joka on jaettu haltijoiden ja stakerien kanssa. Nämä maksut jaettiin, eikä DeHub pidättänyt niitä. Takaisinostot pysyvät erillisinä. Jokainen summa ja alkuperäinen valuutta voidaan tarkastaa pääkirjasta."
     }
   },
   "superpowers": {
@@ -2825,6 +2828,7 @@
     },
     "buyTokensToUnlockBadge": "Kaikki merkin haltijat saavat Supervoimia. Osta DeHub-tokeneita avataksesi merkin — panostaminen ei ole pakollista.",
     "buyTokensToUnlock": "Osta DeHub-tokeneita avataksesi merkin ja sen Supervoimat. Kaikki merkin haltijat saavat ne — panostaminen ei ole pakollista.",
+    "signalFlareTo": "Signaalileima {{people}} ihmiselle",
     "goldenHourStarted": "Golden Hour käynnissä {{minutes}} minuuttia – kaikki julkaisemasi lasketaan nyt kaksinkertaisesti"
   },
   "work": {
@@ -5580,8 +5584,6 @@
     "notEnoughTokensForBounty": "Ei tarpeeksi tokeneita. Tarvitaan {{need}} tokenia, mutta sinulla on {{have}}."
   },
   "events": {
-    "deleteConfirmTitle": "Poistetaanko tämä tapahtuma?",
-    "deleteConfirmBody": "Tämä poistaa tapahtuman, sen vieraslistan ja chatin kaikilta. Sitä ei voi kumota.",
     "seoTitle": "Tapahtumat — Tapaamiset ja yhteisötapahtumat DeHubissa",
     "seoDescription": "Selaa tulevia DeHub-yhteisötapahtumia, vastaa tapaamisiin ja järjestä omia tapahtumia hajautetussa, käyttäjien omistamassa sosiaalisessa alustassa.",
     "defaultSeoDescription": "Yhteisötapahtuma DeHubissa.",
@@ -5647,6 +5649,8 @@
     "requestAccessForChat": "Pyydä pääsyä nähdäksesi chatin ja RSVP:n",
     "edit": "Muokkaa",
     "delete": "Poista",
+    "deleteConfirmTitle": "Poistetaanko tämä tapahtuma?",
+    "deleteConfirmBody": "Tämä poistaa tapahtuman, sen vieraslistan ja chatin kaikilta. Sitä ei voi kumota.",
     "reply": "Vastaa",
     "react": "Reagoi",
     "typeMessage": "Kirjoita viesti...",

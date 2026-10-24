@@ -2110,8 +2110,6 @@
     "anonymousLikes_other": "{{count}} aprecieri de la deținători anonimi de insigne"
   },
   "postInfo": {
-    "unavailable": "Indisponibil",
-    "ownersUnavailable": "Proprietarii actuali nu pot fi citiți chiar acum.",
     "title": "Post Info",
     "tokenId": "Token ID",
     "mintedOn": "Minted On",
@@ -2123,6 +2121,8 @@
     "total": "{{count}} total",
     "distribution": "Distribution",
     "loading": "Loading...",
+    "unavailable": "Indisponibil",
+    "ownersUnavailable": "Proprietarii actuali nu pot fi citiți chiar acum.",
     "owner": "{{count}} owner",
     "owner_other": "{{count}} owners",
     "engagement": "Engagement",
@@ -2738,6 +2738,9 @@
       "wallTitle": "Ce spun oamenii",
       "wallNote": "publicat cu permisiune",
       "anonymous": "Un membru DeHub"
+    },
+    "taxSplit": {
+      "grossFootnote": "Veniturile totale de mai sus includ BNB partajate cu deținătorii și stackerii. Aceste plăți au fost distribuite, nu reținute de DeHub. Răscumpărările rămân separate. Fiecare sumă și monedă originală pot fi inspectate în registru."
     }
   },
   "superpowers": {
@@ -2875,6 +2878,7 @@
     },
     "buyTokensToUnlockBadge": "Orice deținător de insignă primește SuperPuteri. Cumpără token-uri DeHub pentru a debloca o insignă — nu este necesară miză.",
     "buyTokensToUnlock": "Cumpără token-uri DeHub pentru a debloca o insignă și Superputerile acesteia. Orice deținător de insignă le primește — nu este necesară miză.",
+    "signalFlareTo": "Semnal luminos către {{people}} persoane",
     "goldenHourStarted": "Golden Hour rulează timp de {{minutes}} minute — tot ce postezi acum contează dublu"
   },
   "work": {
@@ -5642,8 +5646,6 @@
     "notEnoughTokensForBounty": "Nu sunt suficiente token-uri. Ai nevoie de {{need}} token-uri, dar ai {{have}}."
   },
   "events": {
-    "deleteConfirmTitle": "Ștergeți acest eveniment?",
-    "deleteConfirmBody": "Acest lucru elimină evenimentul, lista de invitați și chat-ul pentru toată lumea. Acțiunea nu poate fi anulată.",
     "seoTitle": "Evenimente — Întâlniri și evenimente comunitare pe DeHub",
     "seoDescription": "Răsfoiți evenimentele comunitare viitoare DeHub, RSVP la întâlniri și găzduiți-vă propriile evenimente pe platforma socială descentralizată, deținută de utilizatori.",
     "defaultSeoDescription": "Eveniment comunitar pe DeHub.",
@@ -5709,6 +5711,8 @@
     "requestAccessForChat": "Solicită acces pentru a vizualiza chat-ul și a confirma participarea",
     "edit": "Editează",
     "delete": "Șterge",
+    "deleteConfirmTitle": "Ștergeți acest eveniment?",
+    "deleteConfirmBody": "Acest lucru elimină evenimentul, lista de invitați și chat-ul pentru toată lumea. Acțiunea nu poate fi anulată.",
     "reply": "Răspunde",
     "react": "Reacționează",
     "typeMessage": "Tastează un mesaj...",

@@ -2100,8 +2100,6 @@
     "anonymousLikes_other": "{{count}} jeclaansho oo ka yimid haystayaasha calaamado qarsoon"
   },
   "postInfo": {
-    "unavailable": "Lama heli karo",
-    "ownersUnavailable": "Milkiilayaasha hadda jira hadda lama akhriyi karo.",
     "title": "Macluumaadka qoraalka",
     "tokenId": "Token ID",
     "mintedOn": "La sameeyey",
@@ -2113,6 +2111,8 @@
     "total": "Wadarta {{count}}",
     "distribution": "Distribution",
     "loading": "Soo dejinaya...",
+    "unavailable": "Lama heli karo",
+    "ownersUnavailable": "Milkiilayaasha hadda jira hadda lama akhriyi karo.",
     "owner": "{{count}} owner",
     "owner_other": "{{count}} owners",
     "engagement": "Ka qaybgalka",
@@ -2728,6 +2728,9 @@
       "wallTitle": "Waxaa dadku yidhaahda",
       "wallNote": "lagu daabacay oggolaansho",
       "anonymous": "A DeHub member"
+    },
+    "taxSplit": {
+      "grossFootnote": "Wadarta dakhliga ee kor ku xusan waxaa ka mid ah BnB la wadaago milkiilayaasha iyo stakers. Lacagahaasi waa la qaybiyay, ma hayn DeHub. Buybacks weli gooni ah. qadarka kasta iyo lacagta asalka ah waxaa lagu baari karaa ledger."
     }
   },
   "superpowers": {
@@ -5548,8 +5551,6 @@
     "notEnoughTokensForBounty": "Kama filna tokens. Waxaad u baahan tahay {{need}} tokens laakiin waxaad haysataa {{have}}."
   },
   "events": {
-    "deleteConfirmTitle": "Ka tirtir dhacdadan?",
-    "deleteConfirmBody": "Tani waxay meesha ka saaraysaa dhacdada, liiska martida iyo wada sheekaysiga qof walba. Lagama noqon karo.",
     "seoTitle": "Dhacdooyinka — Kulamada & Dhacdooyinka Bulshada ee DeHub",
     "seoDescription": "Browse dhacdooyinka bulshada DeHub ee soo socda, RSVP si aad ula kulanto oo aad u martigeliso dhacdooyinkaaga madal bulsho oo ay leedahay isticmaale.",
     "defaultSeoDescription": "Munaasabadda Jaaliyadda ee DeHub.",
@@ -5613,6 +5614,8 @@
     "requestAccessForChat": "Codso helitaanka si aad u aragto sheekada iyo RSVP",
     "edit": "Wax ka bedel",
     "delete": "Tirtir",
+    "deleteConfirmTitle": "Ka tirtir dhacdadan?",
+    "deleteConfirmBody": "Tani waxay meesha ka saaraysaa dhacdada, liiska martida iyo wada sheekaysiga qof walba. Lagama noqon karo.",
     "react": "Ka falcelinta",
     "typeMessage": "Ku qor fariin...",
     "logInToChat": "Gal si aad u sheekaysato",

@@ -2095,8 +2095,6 @@
     "anonymousLikes_other": "Mmasị {{count}} sitere n'aka ndị ji baajị na-amaghị aha"
   },
   "postInfo": {
-    "unavailable": "Agaghị adị",
-    "ownersUnavailable": "Enweghị ike ịgụ ndị nwe ya ugbu a.",
     "title": "Ozi banyere mbipụta",
     "tokenId": "Token ID",
     "mintedOn": "Emepụtara",
@@ -2108,6 +2106,8 @@
     "total": "Niile {{count}}",
     "distribution": "Nkesa",
     "loading": "Na-ebugo...",
+    "unavailable": "Agaghị adị",
+    "ownersUnavailable": "Enweghị ike ịgụ ndị nwe ya ugbu a.",
     "owner": "{{count}} onye nwe",
     "owner_other": "{{count}} ndị nwe",
     "engagement": "Ntinye aka",
@@ -2722,6 +2722,9 @@
       "wallTitle": "Ihe ndị mmadụ na-asị",
       "wallNote": "bipụtara n'ikike",
       "anonymous": "Onye otu DeHub"
+    },
+    "taxSplit": {
+      "grossFootnote": "Ngụkọta ego niile dị n 'elu gụnyere BNB kesara ndị njide na stakers. A kesara ụgwọ ndị a, DeHub ejighi ya. Buybacks nọgidere iche. Ọ bụla ego na mbụ ego nwere ike inyocha na ledger."
     }
   },
   "superpowers": {
@@ -2859,6 +2862,7 @@
     },
     "buyTokensToUnlockBadge": "Onye ọ bụla nwere akara ngosi ga-enweta SuperPowers. Zụta tokenịị DeHub iji meghee akara ngosi — anaghị achọ staking.",
     "buyTokensToUnlock": "Zụta tokenịị DeHub iji meghee akara ngosi na SuperPowers ya. Onye ọ bụla nwere akara ngosi ga-enweta ha — anaghị achọ staking.",
+    "signalFlareTo": "Ihe ịrịba ama Flare ka {{people}} ndị mmadụ",
     "goldenHourStarted": "Golden Hour na-agba maka {{minutes}} nkeji — ihe niile ị bipụtara ugbu a na-agụ okpukpu abụọ"
   },
   "work": {
@@ -5575,8 +5579,6 @@
     "notEnoughTokensForBounty": "Enweghị tokenịị zuru. Chọrọ {{need}} tokenịị mana nwere {{have}}."
   },
   "events": {
-    "deleteConfirmTitle": "Hichaa mmemme a?",
-    "deleteConfirmBody": "Nke a na-ewepụ ihe omume ahụ, ndepụta ndị ọbịa ya na nkata ya maka mmadụ niile. Agaghị emezigharị ya.",
     "seoTitle": "Ihe omume — Nzukọ & Ihe Omume Obodo na DeHub",
     "seoDescription": "Chọgharịa na-abịa DeHub obodo ihe, RSVP ka meetups na usu gị onwe gị ihe na decentralized, onye ọrụ-ekesịpde na-elekọta mmadụ n 'elu ikpo okwu.",
     "defaultSeoDescription": "Ihe omume obodo na DeHub.",
@@ -5642,6 +5644,8 @@
     "requestAccessForChat": "Rịọ ohere iji lee nkata na RSVP",
     "edit": "Dezie",
     "delete": "Hichaa",
+    "deleteConfirmTitle": "Hichaa mmemme a?",
+    "deleteConfirmBody": "Nke a na-ewepụ ihe omume ahụ, ndepụta ndị ọbịa ya na nkata ya maka mmadụ niile. Agaghị emezigharị ya.",
     "reply": "Zaghachi",
     "typeMessage": "Pịnye ozi...",
     "logInToChat": "Banye na nkata",

@@ -1933,8 +1933,6 @@
     "anonymousLikes_other": "{{count}} likes from anonymous badge holders"
   },
   "postInfo": {
-    "ownersUnavailable": "We no fit read who own am right now.",
-    "unavailable": "E no dey available",
     "title": "Post Info",
     "tokenId": "Token ID",
     "mintedOn": "Dem create am",
@@ -1946,6 +1944,8 @@
     "total": "Total {{count}}",
     "distribution": "Distribution",
     "loading": "E dey load...",
+    "unavailable": "E no dey available",
+    "ownersUnavailable": "We no fit read who own am right now.",
     "owner": "{{count}} owner",
     "owner_other": "{{count}} owners",
     "engagement": "Engagement",
@@ -2538,6 +2538,9 @@
       "sending": "Sending…",
       "thanks": "Got it — thanks. Anyfin you clear for promo use, dey go pass through a person first before dey show up anywhere.",
       "anonymous": "A DeHub member"
+    },
+    "taxSplit": {
+      "grossFootnote": "Revenue wey dey top dey include BNB wey dey share wit holders and stakers. Dis payments dey distributed, no be say dem dey retain am by DeHub. Buybacks dey separate. Every amount and original currency dey inspect for ledger."
     }
   },
   "superpowers": {
@@ -4886,8 +4889,6 @@
     "notEnoughTokensForBounty": "Token no dey enough. Need {{need}} token but only have {{have}}."
   },
   "events": {
-    "deleteConfirmBody": "E go remove di event, im guest list and im chat for everybody. You no fit undo am.",
-    "deleteConfirmTitle": "You wan delete dis event?",
     "title": "Events",
     "filterUpcoming": "Upcoming",
     "filterPast": "Past",
@@ -4937,6 +4938,8 @@
     "guests": "Guests",
     "edit": "Edit",
     "delete": "Delete",
+    "deleteConfirmTitle": "You wan delete dis event?",
+    "deleteConfirmBody": "E go remove di event, im guest list and im chat for everybody. You no fit undo am.",
     "reply": "Reply",
     "react": "React",
     "typeMessage": "Type a message...",

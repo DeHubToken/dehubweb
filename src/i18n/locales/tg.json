@@ -2086,8 +2086,6 @@
     "anonymousLikes_other": "{{count}} писанд аз дорандагони нишони беном"
   },
   "postInfo": {
-    "unavailable": "Дастнорас",
-    "ownersUnavailable": "Ҳоло соҳибони кунуниро хондан ғайриимкон аст.",
     "title": "Маълумоти пост",
     "tokenId": "Token ID",
     "mintedOn": "Сохта шуд",
@@ -2099,6 +2097,8 @@
     "total": "Ҳамагӣ {{count}}",
     "distribution": "Distribution",
     "loading": "Бор мешавад...",
+    "unavailable": "Дастнорас",
+    "ownersUnavailable": "Ҳоло соҳибони кунуниро хондан ғайриимкон аст.",
     "owner": "{{count}} owner",
     "owner_other": "{{count}} owners",
     "engagement": "Иштирок",
@@ -2713,6 +2713,9 @@
       "wallTitle": "Мардум чӣ мегӯянд",
       "wallNote": "бо иҷозаи муаллиф нашр шудааст",
       "anonymous": "Узви DeHub"
+    },
+    "taxSplit": {
+      "grossFootnote": "Ang kabuuang kita sa itaas ay naglalaman ng BNB na ibahagi sa mga holders at stakers. Ин пардохтҳо тақсим карда шуданд, аз ҷониби DeHub нигоҳ дошта нашуданд. Buybacks алоҳида боқӣ мемонад. Ҳар як миқдор ва асъори аслӣ метавонад дар дафтар тафтиш карда шавад."
     }
   },
   "superpowers": {
@@ -2850,6 +2853,7 @@
     },
     "buyTokensToUnlockBadge": "Ҳар як дорандаи нишон метавонад SuperPowers гирад. Токенҳои DeHub-ро харед, то нишонро кушоед — стейкинг лозим нест.",
     "buyTokensToUnlock": "Токенҳои DeHub-ро харед, то нишон ва SuperPowers-и онро кушоед. Ҳар як дорандаи нишон онҳоро мегирад — стейкинг лозим нест.",
+    "signalFlareTo": "{{people}} people",
     "goldenHourStarted": "Golden Hour барои {{minutes}} дақиқа давом мекунад — ҳама чизе, ки шумо ҳозир мегузоред, ду баробар ҳисоб мешавад"
   },
   "work": {
@@ -5580,8 +5584,6 @@
     "notEnoughTokensForBounty": "Токенҳо кофӣ нестанд. Ба шумо {{need}} токен лозим аст, аммо {{have}} доред."
   },
   "events": {
-    "deleteConfirmTitle": "Ин чорабиниро нест кунем?",
-    "deleteConfirmBody": "Ин чорабинӣ, рӯйхати меҳмонон ва чати онро барои ҳама нест мекунад. Онро барқарор кардан ғайриимкон аст.",
     "seoTitle": "Чорабиниҳо — Meetups & Чорабиниҳои ҷамъиятӣ дар DeHub",
     "seoDescription": "DeHub jamiyati voqealarini koʻring, meetupga roʻyxatdan oʻting va foydalanuvchilarga egalik qiladigan ijtimoiy platformada oʼzingizning voqeangizni oʻtkazing.",
     "defaultSeoDescription": "DeHubdagi jamiyat voqeasi.",
@@ -5646,6 +5648,8 @@
     "requestAccessForChat": "Дархости дастрасӣ барои дидани чат ва RSVP",
     "edit": "Таҳрир",
     "delete": "Tanggalin",
+    "deleteConfirmTitle": "Ин чорабиниро нест кунем?",
+    "deleteConfirmBody": "Ин чорабинӣ, рӯйхати меҳмонон ва чати онро барои ҳама нест мекунад. Онро барқарор кардан ғайриимкон аст.",
     "reply": "Ҷавоб",
     "logInToChat": "Mag-log in upang chat",
     "uploadingVoiceNote": "Nag-upload ng voice note...",

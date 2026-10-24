@@ -2118,8 +2118,6 @@
     "anonymousLikes_other": "Anonim nishon egalaridan {{count}} ta layk"
   },
   "postInfo": {
-    "unavailable": "Mavjud emas",
-    "ownersUnavailable": "Hozirgi egalarini hozir oʻqib boʻlmaydi.",
     "title": "Post ma'lumoti",
     "tokenId": "Token ID",
     "mintedOn": "Yaratilgan",
@@ -2131,6 +2129,8 @@
     "total": "Jami {{count}}",
     "distribution": "Distribution",
     "loading": "Yuklanmoqda...",
+    "unavailable": "Mavjud emas",
+    "ownersUnavailable": "Hozirgi egalarini hozir oʻqib boʻlmaydi.",
     "owner": "{{count}} owner",
     "owner_other": "{{count}} owners",
     "engagement": "Ishtirok",
@@ -2747,6 +2747,9 @@
       "wallTitle": "Odamlar nima deyishadi",
       "wallNote": "ruxsat bilan nashr etilgan",
       "anonymous": "DeHub a'zosi"
+    },
+    "taxSplit": {
+      "grossFootnote": "Yuqoridagi daromadning umumiy miqdoriga egalar va stakerlar bilan birgalikda foydalaniladigan BNB kiradi. Ushbu to&#39;lovlar DeHub tomonidan ushlab qolinmagan, balki taqsimlangan. Qayta sotib olish alohida bo&#39;lib qoladi. Har bir miqdor va asl valyutani daftarda tekshirish mumkin."
     }
   },
   "superpowers": {
@@ -2884,6 +2887,7 @@
     },
     "buyTokensToUnlockBadge": "Har qanday medal egasi SuperKuchlarga ega bo'ladi. Medaldan foydalanish uchun DeHub tokenlarini sotib oling — stavka qilish shart emas.",
     "buyTokensToUnlock": "Medaldan foydalanish va uning SuperKuchlarini faollashtirish uchun DeHub tokenlarini sotib oling. Har qanday medal egasi ularga ega bo'ladi — stavka qilish shart emas.",
+    "signalFlareTo": "Signal chaqnashi {{people}} odamlarga",
     "goldenHourStarted": "Golden Hour {{minutes}} daqiqa davom etmoqda — hozirgi har bir postingiz ikki hisoblanadi"
   },
   "work": {
@@ -5657,8 +5661,6 @@
     "notEnoughTokensForBounty": "Tokenlar yetarli emas. {{need}} token kerak, lekin {{have}} bor."
   },
   "events": {
-    "deleteConfirmTitle": "Bu tadbir oʻchirib tashlansinmi?",
-    "deleteConfirmBody": "Bu tadbirni, undagi mehmonlar roʻyxatini va chatni hamma uchun olib tashlaydi. Buni bekor qilib boʻlmaydi.",
     "seoTitle": "Voqealar — DeHubda Topshiriqlar va Jamiyat Voqealari",
     "seoDescription": "DeHub jamiyatining kelajakdagi voqealarini koʻring, topishirlarga roʻyxatdan oʻtish va foydalanuvchilar tomonidan boshqariladigan, foydalanuvchilar malikligidagi ijtimoiy platformada oʻz voqeangizni oʻtkazing.",
     "defaultSeoDescription": "DeHubdagi jamiyat voqeasi.",
@@ -5724,6 +5726,8 @@
     "requestAccessForChat": "Accessni so'rab chatni ko'rish va RSVP uchun",
     "edit": "Edit",
     "delete": "Delete",
+    "deleteConfirmTitle": "Bu tadbir oʻchirib tashlansinmi?",
+    "deleteConfirmBody": "Bu tadbirni, undagi mehmonlar roʻyxatini va chatni hamma uchun olib tashlaydi. Buni bekor qilib boʻlmaydi.",
     "reply": "Reply",
     "react": "React",
     "typeMessage": "Message yozing...",

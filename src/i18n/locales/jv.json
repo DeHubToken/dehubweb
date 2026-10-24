@@ -2101,8 +2101,6 @@
     "anonymousLikes_other": "{{count}} seneng saka pemegang lencana anonim"
   },
   "postInfo": {
-    "ownersUnavailable": "Pamilik saiki durung bisa diwaca.",
-    "unavailable": "Ora kasedhiya",
     "title": "Info Postingan",
     "tokenId": "Token ID",
     "mintedOn": "Digawe",
@@ -2114,6 +2112,8 @@
     "total": "Total {{count}}",
     "distribution": "Distribution",
     "loading": "Ngemot...",
+    "unavailable": "Ora kasedhiya",
+    "ownersUnavailable": "Pamilik saiki durung bisa diwaca.",
     "owner": "{{count}} owner",
     "owner_other": "{{count}} owners",
     "engagement": "Interaksi",
@@ -2724,6 +2724,9 @@
       "wallTitle": "Apa sing dikandhakake wong",
       "wallNote": "diterbitake kanthi ijin",
       "anonymous": "Anggota DeHub"
+    },
+    "taxSplit": {
+      "grossFootnote": "Sèluré total ingkang wonten ing atas kalebu BNB dipiyagi lan dipiyagi déning pemegang lan panyimpen. Pungutan-pungutan iku wis dipasrahaken, ora dipunggahaken déning DeHub. Pembelian balik tetep urip. Sèluré lan mata uang asli bisa dipanggil ing buku akun."
     }
   },
   "superpowers": {
@@ -2861,6 +2864,7 @@
     },
     "buyTokensToUnlockBadge": "Sapa wae sing duwe badge bakal entuk SuperPowers. Tuku token DeHub kanggo mbukak kunci badge — staking ora perlu.",
     "buyTokensToUnlock": "Tuku token DeHub kanggo mbukak kunci badge lan SuperPowers. Sapa wae sing duwe badge bakal entuk — staking ora perlu.",
+    "signalFlareTo": "Sinyal Flare kanggo {{people}} wong",
     "goldenHourStarted": "Golden Hour mlaku {{minutes}} menit — kabeh sing kok-post saiki dianggep tikel"
   },
   "work": {
@@ -5426,8 +5430,6 @@
     "notEnoughTokensForBounty": "Token ora cukup. Butuh {{need}} token nanging duwe {{have}}."
   },
   "events": {
-    "deleteConfirmTitle": "Busak acara iki?",
-    "deleteConfirmBody": "Iki bakal mbusak acara, dhaptar tamu, lan obrolane kanggo kabeh wong. Iki ora bisa dibatalake.",
     "seoTitle": "Kebajenan — Kumpul-Kumpulan & Acara Masyarakat di DeHub",
     "seoDescription": "Browse acara DeHub komunitas yang akan datang, daftar untuk pertemuan dan host acara sendiri di platform sosial yang dezentral dan dimiliki oleh pengguna.",
     "defaultSeoDescription": "Gemblèng komunitas di DeHub.",
@@ -5493,6 +5495,8 @@
     "requestAccessForChat": "Mintakan akses untuk nglihat obrolan dan konfirmasi hadir",
     "edit": "Edit",
     "delete": "Hapus",
+    "deleteConfirmTitle": "Busak acara iki?",
+    "deleteConfirmBody": "Iki bakal mbusak acara, dhaptar tamu, lan obrolane kanggo kabeh wong. Iki ora bisa dibatalake.",
     "reply": "Balas",
     "react": "Reaksi",
     "typeMessage": "Ketik pesan...",

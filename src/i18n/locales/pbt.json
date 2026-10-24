@@ -2088,8 +2088,6 @@
     "anonymousLikes_other": "له بې نومه بیج لرونکو {{count}} خوښې"
   },
   "postInfo": {
-    "unavailable": "شتون نه لري",
-    "ownersUnavailable": "اوسني مالکان اوس نه شي لوستل کېدای.",
     "title": "د پوسټ معلومات",
     "tokenId": "توکن ID",
     "mintedOn": "جوړ شوی",
@@ -2101,6 +2099,8 @@
     "total": "ټول {{count}}",
     "distribution": "وېشنيزې وېشنيزې",
     "loading": "لوډ کیږي...",
+    "unavailable": "شتون نه لري",
+    "ownersUnavailable": "اوسني مالکان اوس نه شي لوستل کېدای.",
     "owner": "{{count}} مالک",
     "owner_other": "{{count}} مالکین",
     "engagement": "برخه اخیستنه",
@@ -2711,6 +2711,9 @@
       "wallTitle": "خلک څه وايي",
       "wallNote": "د اجازت سره خپاره شوی",
       "anonymous": "DeHub غړی"
+    },
+    "taxSplit": {
+      "grossFootnote": "پورته ټول عواید د BNB لرونکي او سټیکرانو سره شریک شوي. دا پیسې وېشل شوي، نه د DeHub لخوا ساتل شوي. پیرودونه جلا پاتې دي. هر مقدار او اصلي اسعار په لیجر کې معاینه کیدی شي."
     }
   },
   "superpowers": {
@@ -5480,8 +5483,6 @@
     "notEnoughTokensForBounty": "کافي توکونه نشته. {{need}} توکونو ته اړتیا ده خو {{have}} لري."
   },
   "events": {
-    "deleteConfirmTitle": "دا پېښه حذف کړئ؟",
-    "deleteConfirmBody": "دا د پیښې، د هغې میلمنو لیست او د هرچا لپاره د هغې چیٹ لرې کوي. دا له مینځه وړل کیدی نشي.",
     "seoTitle": "خبرونه — په DeHub کې د ټولنې غونډې او پیښې",
     "seoDescription": "د راتلونکي DeHub ټولنې پیښې وپلټئ، RSVP د غونډو لپاره او په غیرمتمرکز، کارونکي ملکیت ټولنیز پلیټ فارم کې خپل پیښې کوربه کړئ.",
     "defaultSeoDescription": "په DeHub کې د ټولنې پیښه.",
@@ -5547,6 +5548,8 @@
     "requestAccessForChat": "د چت او RSVP لیدلو لپاره د لاسرسي غوښتنه وکړئ",
     "edit": "ایډیټ کړئ",
     "delete": "له منځه یوسئ",
+    "deleteConfirmTitle": "دا پېښه حذف کړئ؟",
+    "deleteConfirmBody": "دا د پیښې، د هغې میلمنو لیست او د هرچا لپاره د هغې چیٹ لرې کوي. دا له مینځه وړل کیدی نشي.",
     "reply": "ته ځواب ورکړئ",
     "react": "د عکس العمل په اړه",
     "typeMessage": "یو ډول پیغام...",

@@ -2097,8 +2097,6 @@
     "anonymousLikes_other": "{{count}} sviđanja od anonimnih nositelja znački"
   },
   "postInfo": {
-    "unavailable": "Nije dostupno",
-    "ownersUnavailable": "Trenutačni vlasnici trenutačno se ne mogu pročitati.",
     "title": "Informacije o objavi",
     "tokenId": "ID tokena",
     "mintedOn": "Kreirano",
@@ -2110,6 +2108,8 @@
     "total": "Ukupno {{count}}",
     "distribution": "Distribucija",
     "loading": "Učitavanje...",
+    "unavailable": "Nije dostupno",
+    "ownersUnavailable": "Trenutačni vlasnici trenutačno se ne mogu pročitati.",
     "owner": "{{count}} vlasnik",
     "owner_other": "{{count}} vlasnika",
     "engagement": "Angažiranost",
@@ -2677,6 +2677,9 @@
       "wallTitle": "Što ljudi kažu",
       "wallNote": "objavljeno sa dozvolom",
       "anonymous": "Član DeHuba"
+    },
+    "taxSplit": {
+      "grossFootnote": "Ukupni prihod iznad uključuje BNB podijeljen s vlasnicima i dioničarima. Ta su plaćanja distribuirana, a ne zadržana od strane DeHub-a. Otkupnine ostaju odvojene. Svaki iznos i izvorna valuta mogu se pregledati u glavnoj knjizi."
     }
   },
   "superpowers": {
@@ -2814,6 +2817,7 @@
     },
     "buyTokensToUnlockBadge": "Svaki vlasnik značke dobiva SuperMoći. Kupite DeHub tokene za otključavanje značke — nije potrebno ulaganje.",
     "buyTokensToUnlock": "Kupite DeHub tokene za otključavanje značke i njezinih SuperMoći. Svaki vlasnik značke ih dobiva — nije potrebno ulaganje.",
+    "signalFlareTo": "Signalna baklja za osobe {{people}}",
     "goldenHourStarted": "Zlatni sat traje {{minutes}} minuta — sve što sada objavite broji se dvostruko"
   },
   "work": {
@@ -5573,8 +5577,6 @@
     "notEnoughTokensForBounty": "Nema dovoljno tokena. Potrebno {{need}} tokena, a imate {{have}}."
   },
   "events": {
-    "deleteConfirmTitle": "Želite li izbrisati ovaj događaj?",
-    "deleteConfirmBody": "Time se događaj, popis gostiju i chat uklanjaju za sve sudionike. Ne može se poništiti.",
     "seoTitle": "Događaji — Susreti i događaji zajednice na DeHubu",
     "seoDescription": "Pregledajte nadolazeće događaje zajednice DeHub, odgovorite na pozive za susrete i organizirajte svoje događaje na decentraliziranoj, korisnički vlaštenoj društvenoj platformi.",
     "defaultSeoDescription": "Događaj zajednice na DeHubu.",
@@ -5640,6 +5642,8 @@
     "requestAccessForChat": "Zatraži pristup da vidiš chat i odazoveš se",
     "edit": "Uredi",
     "delete": "Obriši",
+    "deleteConfirmTitle": "Želite li izbrisati ovaj događaj?",
+    "deleteConfirmBody": "Time se događaj, popis gostiju i chat uklanjaju za sve sudionike. Ne može se poništiti.",
     "reply": "Odgovori",
     "react": "Reagiraj",
     "typeMessage": "Upiši poruku...",

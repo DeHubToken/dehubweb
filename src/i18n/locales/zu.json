@@ -2130,8 +2130,6 @@
     "anonymousLikes_other": "Ukuthanda okungu-{{count}} okuvela kubanikazi bamabheji abangaziwa"
   },
   "postInfo": {
-    "unavailable": "Ayitholakali",
-    "ownersUnavailable": "Abanikazi bamanje abakwazi ukufundwa njengamanje.",
     "title": "Ulwazi Lokuthunyelwe",
     "tokenId": "Token ID",
     "mintedOn": "Kwadalwa",
@@ -2143,6 +2141,8 @@
     "total": "Isamba {{count}}",
     "distribution": "Distribution",
     "loading": "Iyalayisha...",
+    "unavailable": "Ayitholakali",
+    "ownersUnavailable": "Abanikazi bamanje abakwazi ukufundwa njengamanje.",
     "owner": "{{count}} owner",
     "owner_other": "{{count}} owners",
     "engagement": "Ukubamba iqhaza",
@@ -2759,6 +2759,9 @@
       "wallTitle": "Abantu bani abathini",
       "wallNote": "kushicilelwe ngemvume",
       "anonymous": "Ilungu le-DeHub"
+    },
+    "taxSplit": {
+      "grossFootnote": "Ingqikithi yemali engenayo engenhla IHLANGANISA i-BNB eyabelwe abanikazi nabanikazi. Lezi zinkokhelo zasatshalaliswa, azigcinwanga yi-DeHub. Ama-Buybacks ahlala ehlukile. Yonke imali kanye nekharensi yasekuqaleni kungahlolwa kwileja."
     }
   },
   "superpowers": {
@@ -2896,6 +2899,7 @@
     },
     "buyTokensToUnlockBadge": "Noma yimuphi umnikazi webheji uthola i-SuperPowers. Thenga amathuluzi e-DeHub ukuze uvule ibheji — ukubeka akudingekile.",
     "buyTokensToUnlock": "Thenga amathuluzi e-DeHub ukuze uvule ibheji kanye ne-SuperPowers yayo. Noma yimuphi umnikazi webheji uyawathola — ukubeka akudingekile.",
+    "signalFlareTo": "Isignali Flare ku- {{people}} people",
     "goldenHourStarted": "I-Golden Hour isebenza imizuzu engu-{{minutes}} — konke okuthunyelayo manje kubalwa kabili"
   },
   "work": {
@@ -5637,8 +5641,6 @@
     "notEnoughTokensForBounty": "Awekho amathuluzi anele. Udinga amathuluzi angama-{{need}} kodwa unama-{{have}}."
   },
   "events": {
-    "deleteConfirmTitle": "Susa lo mcimbi?",
-    "deleteConfirmBody": "Lokhu kususa umcimbi, uhlu lwawo lwezivakashi kanye nengxoxo yawo yawo wonke umuntu. Ayikwazi ukuhlehliswa.",
     "seoTitle": "Imicimbi — Imihlangano Nemicimbi Yomphakathi ku-DeHub",
     "seoDescription": "Bhrawuza imicimbi yomphakathi ye-DeHub ezayo, i-RSVP ukuze uhlangane futhi ubungaze imicimbi yakho enkundleni yezenhlalo ehlukanisiwe, ephethwe ngumsebenzisi.",
     "defaultSeoDescription": "Umcimbi womphakathi ku-DeHub.",
@@ -5704,6 +5706,8 @@
     "requestAccessForChat": "Cela ukungena ukuze ubuke ingxoxo ne-RSVP",
     "edit": "Hlela",
     "delete": "Susa",
+    "deleteConfirmTitle": "Susa lo mcimbi?",
+    "deleteConfirmBody": "Lokhu kususa umcimbi, uhlu lwawo lwezivakashi kanye nengxoxo yawo yawo wonke umuntu. Ayikwazi ukuhlehliswa.",
     "reply": "Phendula",
     "react": "Phendula",
     "typeMessage": "Thayipha umyalezo...",

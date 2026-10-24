@@ -2112,8 +2112,6 @@
     "anonymousLikes_other": "Vipendwa {{count}} kutoka kwa wamiliki wa beji wasiojulikana"
   },
   "postInfo": {
-    "unavailable": "Haipatikani",
-    "ownersUnavailable": "Wamiliki wa sasa hawawezi kusomwa kwa sasa.",
     "title": "Taarifa ya chapisho",
     "tokenId": "Token ID",
     "mintedOn": "Iliundwa",
@@ -2125,6 +2123,8 @@
     "total": "Jumla {{count}}",
     "distribution": "Distribution",
     "loading": "Inapakia...",
+    "unavailable": "Haipatikani",
+    "ownersUnavailable": "Wamiliki wa sasa hawawezi kusomwa kwa sasa.",
     "owner": "{{count}} owner",
     "owner_other": "{{count}} owners",
     "engagement": "Ushiriki",
@@ -2741,6 +2741,9 @@
       "wallTitle": "Watu wanasema nini",
       "wallNote": "kuchapishwa kwa ruhusa",
       "anonymous": "Mwanachama wa DeHub"
+    },
+    "taxSplit": {
+      "grossFootnote": "Jumla ya mapato hapo juu ni pamoja na BNB inayoshirikiwa na wamiliki na stakers. Malipo haya yalisambazwa, hayakuhifadhiwa na DeHub. Ununuzi unabaki tofauti. Kila kiasi na sarafu ya awali inaweza kukaguliwa kwenye leja."
     }
   },
   "superpowers": {
@@ -2878,6 +2881,7 @@
     },
     "buyTokensToUnlockBadge": "Mwenye beji yeyote hupata SuperPowers. Nunua tokeni za DeHub ili kufungua beji — kuweka hisa hakuhitajiki.",
     "buyTokensToUnlock": "Nunua tokeni za DeHub ili kufungua beji na SuperPowers zake. Mwenye beji yeyote hupata hizo — kuweka hisa hakuhitajiki.",
+    "signalFlareTo": "Ishara Flare kwa {{people}} watu",
     "goldenHourStarted": "Saa ya Dhahabu inaendelea kwa dakika {{minutes}} — kila kitu unachochapisha sasa kinahesabiwa mara mbili"
   },
   "work": {
@@ -5641,8 +5645,6 @@
     "notEnoughTokensForBounty": "Tokeni hazitoshi. Unahitaji tokeni {{need}} lakini una {{have}}."
   },
   "events": {
-    "deleteConfirmTitle": "Ungependa kufuta tukio hili?",
-    "deleteConfirmBody": "Hii huondoa tukio, orodha yake ya wageni na gumzo lake kwa kila mtu. Haiwezi kutenguliwa.",
     "seoTitle": "Matukio — Mikutano & Matukio ya Jamii kwenye DeHub",
     "seoDescription": "Tembelea matukio yajayo ya jamii ya DeHub, RSVP kwa mikutano na jifanyie matukio yako kwenye jukwaa la kijamii linalomilikiwa na watumiaji, linalosambazwa.",
     "defaultSeoDescription": "Matukio ya jamii kwenye DeHub.",
@@ -5708,6 +5710,8 @@
     "requestAccessForChat": "Omba ufikaji ili kuona mazungumzo na RSVP",
     "edit": "Hariri",
     "delete": "Futa",
+    "deleteConfirmTitle": "Ungependa kufuta tukio hili?",
+    "deleteConfirmBody": "Hii huondoa tukio, orodha yake ya wageni na gumzo lake kwa kila mtu. Haiwezi kutenguliwa.",
     "reply": "Jibu",
     "react": "Jibu kwa hisia",
     "typeMessage": "Andika ujumbe...",

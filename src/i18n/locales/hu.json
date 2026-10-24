@@ -2108,8 +2108,6 @@
     "anonymousLikes_other": "{{count}} kedvelés névtelen jelvénytulajdonosoktól"
   },
   "postInfo": {
-    "unavailable": "Nem érhető el",
-    "ownersUnavailable": "A jelenlegi tulajdonosok jelenleg nem olvashatók.",
     "title": "Bejegyzés infó",
     "tokenId": "Token ID",
     "mintedOn": "Létrehozva",
@@ -2121,6 +2119,8 @@
     "total": "Összesen {{count}}",
     "distribution": "Elosztás",
     "loading": "Betöltés...",
+    "unavailable": "Nem érhető el",
+    "ownersUnavailable": "A jelenlegi tulajdonosok jelenleg nem olvashatók.",
     "owner": "{{count}} tulajdonos",
     "owner_other": "{{count}} tulajdonos",
     "engagement": "Elköteleződés",
@@ -2688,6 +2688,9 @@
       "wallTitle": "Mit mondanak az emberek",
       "wallNote": "engedéllyel közzétéve",
       "anonymous": "Egy DeHub tag"
+    },
+    "taxSplit": {
+      "grossFootnote": "A fenti teljes bevétel magában foglalja a BNB-T a tulajdonosokkal és a staker-ekkel megosztva. Ezeket a kifizetéseket a DeHub nem tartotta meg. A visszavásárlások külön maradnak. Minden összeg és eredeti pénznem ellenőrizhető a főkönyvben."
     }
   },
   "superpowers": {
@@ -2825,6 +2828,7 @@
     },
     "buyTokensToUnlockBadge": "Minden jelvénytulajdonos SuperPowers-t kap. Vásároljon DeHub tokeneket egy jelvény feloldásához – a staking nem szükséges.",
     "buyTokensToUnlock": "Vásároljon DeHub tokeneket egy jelvény és annak SuperPowers feloldásához. Minden jelvénytulajdonos megkapja őket – a staking nem szükséges.",
+    "signalFlareTo": "Jelzőtábla {{people}} személynek",
     "goldenHourStarted": "Golden Hour futtatása {{minutes}} percig — minden, amit most posztolsz, duplán számít"
   },
   "work": {
@@ -5581,8 +5585,6 @@
     "notEnoughTokensForBounty": "Nincs elég token. {{need}} token szükséges, de {{have}} van."
   },
   "events": {
-    "deleteConfirmTitle": "Törli ezt az eseményt?",
-    "deleteConfirmBody": "Ez eltávolítja az eseményt, a vendéglistát és a csevegést mindenki számára. Nem lehet visszavonni.",
     "seoTitle": "Események — Találkozók és közösségi események a DeHub-on",
     "seoDescription": "Böngésszen a közelgő DeHub közösségi események között, jelentkezzen be a találkozókra, és szervezzen saját eseményeket a decentralizált, felhasználó által tulajdonolt közösségi platformon.",
     "defaultSeoDescription": "Közösségi esemény a DeHub-on.",
@@ -5648,6 +5650,8 @@
     "requestAccessForChat": "Kérjen hozzáférést a csevegés megtekintéséhez és az RSVP-hez",
     "edit": "Szerkesztés",
     "delete": "Törlés",
+    "deleteConfirmTitle": "Törli ezt az eseményt?",
+    "deleteConfirmBody": "Ez eltávolítja az eseményt, a vendéglistát és a csevegést mindenki számára. Nem lehet visszavonni.",
     "reply": "Válasz",
     "react": "Reagálás",
     "typeMessage": "Írj egy üzenetet...",

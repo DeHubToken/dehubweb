@@ -2127,8 +2127,6 @@
     "anonymousLikes_other": "{{count}} lượt thích từ những người giữ huy hiệu ẩn danh"
   },
   "postInfo": {
-    "unavailable": "Không khả dụng",
-    "ownersUnavailable": "Các chủ sở hữu hiện tại không thể đọc được ngay bây giờ.",
     "title": "Post Info",
     "tokenId": "Token ID",
     "mintedOn": "Minted On",
@@ -2140,6 +2138,8 @@
     "total": "{{count}} total",
     "distribution": "Distribution",
     "loading": "Loading...",
+    "unavailable": "Không khả dụng",
+    "ownersUnavailable": "Các chủ sở hữu hiện tại không thể đọc được ngay bây giờ.",
     "owner": "{{count}} owner",
     "owner_other": "{{count}} owners",
     "engagement": "Engagement",
@@ -2756,6 +2756,9 @@
       "wallTitle": "Mọi người nói gì",
       "wallNote": "được công bố với sự cho phép",
       "anonymous": "Một thành viên DeHub"
+    },
+    "taxSplit": {
+      "grossFootnote": "Tổng doanh thu trên bao gồm BNB được chia sẻ với người nắm giữ và người staking. Những khoản thanh toán này đã được phân phối, không được giữ lại bởi DeHub. Mua lại vẫn còn riêng biệt. Mọi số tiền và tiền tệ gốc có thể được kiểm tra trong sổ cái."
     }
   },
   "superpowers": {
@@ -2893,6 +2896,7 @@
     },
     "buyTokensToUnlockBadge": "Bất kỳ người giữ huy hiệu nào cũng nhận được Siêu Năng Lực. Mua token DeHub để mở khóa huy hiệu — không yêu cầu staking.",
     "buyTokensToUnlock": "Mua token DeHub để mở khóa huy hiệu và Siêu Năng Lực của nó. Bất kỳ người giữ huy hiệu nào cũng nhận được chúng — không yêu cầu staking.",
+    "signalFlareTo": "Phát tín hiệu cho {{people}} người",
     "goldenHourStarted": "Golden Hour đang chạy trong {{minutes}} phút — mọi thứ bạn đăng bây giờ đều được tính gấp đôi"
   },
   "work": {
@@ -5660,8 +5664,6 @@
     "notEnoughTokensForBounty": "Không đủ token. Cần {{need}} token nhưng chỉ có {{have}}."
   },
   "events": {
-    "deleteConfirmTitle": "Xóa sự kiện này?",
-    "deleteConfirmBody": "Thao tác này sẽ xóa sự kiện, danh sách khách mời và cuộc trò chuyện cho tất cả mọi người. Không thể hoàn tác.",
     "seoTitle": "Sự kiện — Các Cuộc Gặp Gỡ & Sự Kiện Cộng Đồng trên DeHub",
     "seoDescription": "Duyệt các sự kiện cộng đồng sắp tới của DeHub, RSVP để tham dự các cuộc gặp gỡ và tổ chức các sự kiện của riêng bạn trên nền tảng xã hội phi tập trung, do người dùng sở hữu.",
     "defaultSeoDescription": "Sự kiện cộng đồng trên DeHub.",
@@ -5727,6 +5729,8 @@
     "requestAccessForChat": "Yêu cầu truy cập để xem trò chuyện và RSVP",
     "edit": "Chỉnh sửa",
     "delete": "Xóa",
+    "deleteConfirmTitle": "Xóa sự kiện này?",
+    "deleteConfirmBody": "Thao tác này sẽ xóa sự kiện, danh sách khách mời và cuộc trò chuyện cho tất cả mọi người. Không thể hoàn tác.",
     "reply": "Trả lời",
     "react": "Phản ứng",
     "typeMessage": "Nhập tin nhắn...",
