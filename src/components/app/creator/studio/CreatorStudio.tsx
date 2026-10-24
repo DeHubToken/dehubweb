@@ -1606,7 +1606,7 @@ export const CreatorStudio = memo(function CreatorStudio({ onOpenEditor, stickyT
             value: m.id,
             label: m.name,
             detail: m.description,
-            meta: `$${getVideoCostUsd(m, m.defaultDuration ?? 5).toFixed(2)}`,
+            meta: m.provider === 'venice' ? t('creator.liveQuote', { defaultValue: 'Live quote' }) : `$${getVideoCostUsd(m, m.defaultDuration ?? 5).toFixed(2)}`,
             disabled: (needsImage && !reference && !m.requiresVideoInput) || (rejectsImage && !!reference),
             disabledReason: t(needsImage ? 'creator.needsAttachedImage' : 'creator.cannotUseAttached'),
           };

@@ -415,12 +415,12 @@ export function VideoPaywallModal({
                         </div>
                         <div className="text-right shrink-0">
                           <p className="text-xs font-medium text-white">
-                            {optionModel.perSecondCostUsd 
+                            {optionModel.provider === 'venice' ? t('creator.liveQuote', { defaultValue: 'Live quote' }) : optionModel.perSecondCostUsd 
                               ? `$${(optionModel.perSecondCostUsd * 2).toFixed(2)}/s`
                               : `$${optionCostUsd.toFixed(2)}`
                             }
                           </p>
-                          <p className="text-[10px] text-zinc-500">{formatDhb(optionCostDhb)} <DhbCoin label={t('buyCoins.tokensUnit')} /></p>
+                          {optionModel.provider !== 'venice' && <p className="text-[10px] text-zinc-500">{formatDhb(optionCostDhb)} <DhbCoin label={t('buyCoins.tokensUnit')} /></p>}
                         </div>
                       </button>
                     );
