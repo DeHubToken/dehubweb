@@ -311,7 +311,7 @@ function SubmitProposalDrawer({
     try {
       setMedia(await uploadProposalMedia(file, walletAddress));
     } catch (err) {
-      toast.error(err instanceof Error ? err.message : 'Upload failed');
+      toast.error(err instanceof Error ? err.message : t('governance.uploadFailed'));
     } finally {
       setUploading(false);
       if (fileInputRef.current) fileInputRef.current.value = '';
@@ -405,7 +405,7 @@ function SubmitProposalDrawer({
             />
             {media ? (
               <div className="relative">
-                <ProposalMedia url={media.url} type={media.type} alt={title || 'Proposal attachment'} />
+                <ProposalMedia url={media.url} type={media.type} alt={title || t('governance.proposalAttachment')} />
                 <button
                   type="button"
                   onClick={() => setMedia(null)}
