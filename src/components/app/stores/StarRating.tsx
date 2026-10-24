@@ -62,7 +62,7 @@ export function StarRating({ value, onChange, size = 'md', readonly = false, sho
         })}
       </div>
       {showValue && (
-        <span className="text-sm font-medium text-primary-foreground ml-1">
+        <span className="text-sm font-medium text-foreground ml-1">
           {value.toFixed(1)}
         </span>
       )}
