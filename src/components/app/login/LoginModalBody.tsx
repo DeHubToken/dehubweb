@@ -634,7 +634,7 @@ function LoginModalBodyInner({ open, step, setStep, layout = 'default' }: LoginM
             className="w-full h-12 bg-white/10 hover:bg-white/15 text-white rounded-xl flex items-center justify-center gap-3 border border-white/10"
           >
             <Fingerprint className="w-5 h-5" />
-            <span>{t('loginModal.continuePasskey', 'Continue with fingerprint')}</span>
+            <span>{t('loginModal.continuePasskey', 'Continue with Bio')}</span>
           </Button>
         )}
 
@@ -748,7 +748,7 @@ function LoginModalBodyInner({ open, step, setStep, layout = 'default' }: LoginM
         ) : (
           <Fingerprint className="w-5 h-5" />
         )}
-        <span>{t('loginModal.passkeySignIn', 'Sign in with fingerprint')}</span>
+        <span>{t('loginModal.passkeySignIn', 'Sign in with Bio')}</span>
       </Button>
       <Button
         onClick={() => handlePasskey('signup')}
@@ -916,7 +916,7 @@ function LoginModalBodyInner({ open, step, setStep, layout = 'default' }: LoginM
         <Separator className="flex-1 bg-white/10" />
       </div>
 
-      <div className="flex justify-evenly">
+      <div className="flex gap-2">
         <button type="button" onClick={() => handleSocialLogin('google')} disabled={isConnecting} className={stackOptionClass} aria-label={t('loginModal.continueGoogle')}>
           <span className="login-stack-option__disc">{activeProvider === 'google' ? <Loader2 className="w-5 h-5 animate-spin" /> : <GoogleIcon />}</span>
           Google
@@ -930,9 +930,9 @@ function LoginModalBodyInner({ open, step, setStep, layout = 'default' }: LoginM
           {t('loginStack.phone', 'Phone')}
         </button>
         {passkeyAvailable && (
-          <button type="button" onClick={() => chooseInlineStep('passkey')} aria-pressed={step === 'passkey'} disabled={isConnecting} className={stackOptionClass} aria-label={t('loginModal.continuePasskey', 'Continue with fingerprint')}>
+          <button type="button" onClick={() => chooseInlineStep('passkey')} aria-pressed={step === 'passkey'} disabled={isConnecting} className={stackOptionClass} aria-label={t('loginModal.continuePasskey', 'Continue with Bio')}>
             <span className="login-stack-option__disc"><Fingerprint className="w-5 h-5" /></span>
-            {t('loginStack.fingerprint', 'Fingerprint')}
+            {t('loginStack.fingerprint', 'Bio')}
           </button>
         )}
         <button type="button" onClick={handleTelegramLogin} disabled={isConnecting} className={stackOptionClass} aria-label={t('loginModal.continueTelegram', 'Continue with Telegram')}>
