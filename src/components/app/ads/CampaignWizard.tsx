@@ -158,12 +158,12 @@ export function CampaignWizard({ open, onOpenChange, onCreated }: CampaignWizard
           const objectUrl = URL.createObjectURL(file);
           try {
             const duration = await new Promise<number>((resolve, reject) => {
-              const timer = window.setTimeout(() => reject(new Error('Could not read this video duration.')), 15000);
+              const timer = window.setTimeout(() => reject(new Error(_copy("copy.58eb81181fb4", { defaultValue: "Could not read this video duration." }))), 15000);
               video.onloadedmetadata = () => { window.clearTimeout(timer); resolve(video.duration); };
-              video.onerror = () => { window.clearTimeout(timer); reject(new Error('Could not read this video.')); };
+              video.onerror = () => { window.clearTimeout(timer); reject(new Error(_copy("copy.07aeaf44279c", { defaultValue: "Could not read this video." }))); };
               video.preload = 'metadata'; video.src = objectUrl;
             });
-            if (!Number.isFinite(duration) || duration <= 0) throw new Error('This video has no valid duration.');
+            if (!Number.isFinite(duration) || duration <= 0) throw new Error(_copy("copy.b165df757061", { defaultValue: "This video has no valid duration." }));
             setMediaDuration(duration);
           } finally { video.removeAttribute('src'); video.load(); URL.revokeObjectURL(objectUrl); }
         }
@@ -330,7 +330,7 @@ export function CampaignWizard({ open, onOpenChange, onCreated }: CampaignWizard
               <div>
                 <Label className="text-white">{t('ads.format')}</Label>
                 <div className="flex gap-2 mt-1">
-                  {([['image', ImageIcon, 'Image'], ['video', Film, 'Video'], ['text', Type, 'Text']] as const).map(([k, Icon, label]) => (
+                  {([['image', ImageIcon, _copy("copy.1aa4cb0bcca7", { defaultValue: "Image" })], ['video', Film, _copy("copy.d534be829e32", { defaultValue: "Video" })], ['text', Type, _copy("copy.71988c4d8e08", { defaultValue: "Text" })]] as const).map(([k, Icon, label]) => (
                     <button
                       key={k}
                       type="button"

@@ -84,7 +84,13 @@ function EmptyState({ type }: { type: string }) {
   return (
     <AppState
       icon="audio"
-      title={_copy("copy.a97a4b610ce0", { defaultValue: "No {{value1}} yet", value1: type })}
+      title={type === 'tracks'
+        ? _copy("copy.367c65fc9b46", { defaultValue: "No tracks yet" })
+        : type === 'music videos'
+          ? _copy("copy.26be785e21b7", { defaultValue: "No music videos yet" })
+          : type === 'podcasts'
+            ? _copy("copy.729584c56940", { defaultValue: "No podcasts yet" })
+            : _copy("copy.7ccec0972ee2", { defaultValue: "No music content yet" })}
       description={_copy("copy.b5d53e302645", { defaultValue: "Music content will appear here once creators start uploading." })}
       size="section"
     />

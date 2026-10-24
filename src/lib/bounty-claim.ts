@@ -4,6 +4,7 @@ import { getNFTInfo } from '@/lib/api/dehub/feed';
 import { writeContractAA } from '@/lib/contracts/aa-utils';
 import { getChainConfig } from '@/lib/contracts/dhb-token';
 import { isV3Chain } from '@/lib/chains/robinhood';
+import { translateCopy as _translateCopy } from '@/i18n/copy';
 import type { ChainId } from '@/components/app/ChainSelector';
 
 export interface BountySignature {
@@ -30,8 +31,8 @@ export async function getBountyEligibility(tokenId: string, authenticated = true
   try {
     const bounty = await new Contract(config.streamController,
       ['function bounties(uint256) view returns (uint256 totalAmount, uint256 reserveAmount, uint256 bountyAmount)'], provider).bounties(tokenId);
-    if (bounty.totalAmount === 0n) return { error: 'This bounty has not been funded. The creator must fund it before rewards can be claimed.' };
-    if (bounty.reserveAmount === 0n) return { error: 'This bounty has no rewards remaining.' };
+    if (bounty.totalAmount === 0n) return { error: _translateCopy("copy.32b061859359", { defaultValue: "This bounty has not been funded. The creator must fund it before rewards can be claimed." }) };
+    if (bounty.reserveAmount === 0n) return { error: _translateCopy("copy.9259f3ec5892", { defaultValue: "This bounty has no rewards remaining." }) };
   } finally { provider.destroy(); }
   return authenticated ? apiCall('/api/claim-bounty', { params: { tokenId }, requiresAuth: true }) : {};
 }
@@ -39,13 +40,13 @@ export async function getBountyEligibility(tokenId: string, authenticated = true
 export function bountyClaimCall(tokenId: string, type: 'viewer' | 'commentor', chainId: number, sig: BountySignature) {
   const bountyType = type === 'viewer' ? 0 : 1;
   if (isV3Chain(chainId)) {
-    if (!sig.signature || !sig.deadline) throw new Error('Missing bounty claim signature');
+    if (!sig.signature || !sig.deadline) throw new Error(_translateCopy("copy.89f65f3a1209", { defaultValue: "Missing bounty claim signature" }));
     return {
       abi: 'function claimBounty(uint256 tokenId, uint8 bountyType, uint256 deadline, bytes signature)',
       args: [BigInt(tokenId), bountyType, sig.deadline, sig.signature],
     };
   }
-  if (!sig.r || !sig.s || sig.v == null) throw new Error('Missing bounty claim signature');
+  if (!sig.r || !sig.s || sig.v == null) throw new Error(_translateCopy("copy.89f65f3a1209", { defaultValue: "Missing bounty claim signature" }));
   return {
     abi: 'function claimBounty(uint256 tokenId, bytes32 r, bytes32 s, uint8 v, uint8 bountyType)',
     args: [BigInt(tokenId), sig.r, sig.s, sig.v, bountyType],
@@ -58,7 +59,7 @@ export async function submitBountyClaim(tokenId: string, type: 'viewer' | 'comme
   const [post, eligibility] = await Promise.all([getNFTInfo(tokenId), getBountyEligibility(tokenId)]);
   const sig = eligibility.result?.[type];
   if (eligibility.error) throw new Error(String(eligibility.error));
-  if (eligibility.result?.[`${type}_claimed`] || !sig) throw new Error('Not Eligible');
+  if (eligibility.result?.[`${type}_claimed`] || !sig) throw new Error(_translateCopy("copy.5c2dfa1435f7", { defaultValue: "Not Eligible" }));
   const chainId = (post.chainId || 56) as ChainId;
   const config = getChainConfig(chainId);
   const call = bountyClaimCall(tokenId, type, chainId, sig);
@@ -66,6 +67,6 @@ export async function submitBountyClaim(tokenId: string, type: 'viewer' | 'comme
     chainId, context: 'claim bounty',
   });
   const receipt = await tx.wait(1);
-  if (receipt.status !== 1) throw new Error('Bounty claim transaction reverted');
+  if (receipt.status !== 1) throw new Error(_translateCopy("copy.c477b4ca4e30", { defaultValue: "Bounty claim transaction reverted" }));
   return tx.hash;
 }

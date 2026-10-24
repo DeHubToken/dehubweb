@@ -12,12 +12,12 @@ import Send from "@/components/ui/cut-icons/send";
 
 
 const mockMessages = (t: TFunction) => [
-  { id: '1', sender: 'bob_dev', content: 'Hey! Did you see the new governance proposal?', time: '10:23 AM', isMine: false },
-  { id: '2', sender: 'me', content: 'Yeah, I was just reading through it. The treasury allocation looks solid.', time: '10:25 AM', isMine: true },
-  { id: '3', sender: 'bob_dev', content: 'Right? I think we should vote yes. The dev grants will really help the ecosystem grow.', time: '10:26 AM', isMine: false },
+  { id: '1', sender: 'bob_dev', content: t("copy.580cbbdf4408", { defaultValue: "Hey! Did you see the new governance proposal?" }), time: '10:23 AM', isMine: false },
+  { id: '2', sender: 'me', content: t("copy.1e6ba3a3a49a", { defaultValue: "Yeah, I was just reading through it. The treasury allocation looks solid." }), time: '10:25 AM', isMine: true },
+  { id: '3', sender: 'bob_dev', content: t("copy.4e43e89c4a2a", { defaultValue: "Right? I think we should vote yes. The dev grants will really help the ecosystem grow." }), time: '10:26 AM', isMine: false },
   { id: '4', sender: 'me', content: t('mobilePreview.chat.stakedForVoting'), time: '10:28 AM', isMine: true },
-  { id: '5', sender: 'bob_dev', content: '25k staked. Should give me decent weight on the vote 💪', time: '10:29 AM', isMine: false },
-  { id: '6', sender: 'bob_dev', content: 'Also, check out the new proposal!', time: '10:30 AM', isMine: false },
+  { id: '5', sender: 'bob_dev', content: t("copy.02a359e4498b", { defaultValue: "25k staked. Should give me decent weight on the vote 💪" }), time: '10:29 AM', isMine: false },
+  { id: '6', sender: 'bob_dev', content: t("copy.8dc0c3a5fd89", { defaultValue: "Also, check out the new proposal!" }), time: '10:30 AM', isMine: false },
 ];
 
 export function ChatScreen() {

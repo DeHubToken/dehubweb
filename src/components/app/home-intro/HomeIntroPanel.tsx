@@ -41,7 +41,7 @@ export const SLIDES = [
     get subtitle() { return _translateCopy("copy.68f6e3b28a32", { defaultValue: "next generation" }); },
     artwork: 'globe',
     imageHeight: 471,
-    preview: 'Instantly monetize, never get deplatformed',
+    get preview() { return _translateCopy("copy.8183e3d8e4f4", { defaultValue: "Instantly monetize, never get deplatformed" }); },
     sub: 'never_deplatformed',
     extra: '99%_revenue',
     get description() { return _translateCopy("copy.00d9b35a823e", { defaultValue: "Instantly monetize, never get deplatformed, keep up to 99% of revenue and create free from censorship or platform manipulation." }); },
@@ -51,7 +51,7 @@ export const SLIDES = [
     get subtitle() { return _translateCopy("copy.64cfc8b92063", { defaultValue: "centralized authority" }); },
     artwork: 'thumb',
     imageHeight: 482,
-    preview: 'No algorithms that favor one side of the argument',
+    get preview() { return _translateCopy("copy.9a97a83b90f0", { defaultValue: "No algorithms that favor one side of the argument" }); },
     sub: 'open_source',
     extra: 'no_algorithm',
     get description() { return _translateCopy("copy.85330dcbaadd", { defaultValue: "No algorithms that favor one side of the argument. \nEveryone is amplified equally and fairly." }); },
@@ -61,15 +61,15 @@ export const SLIDES = [
     get subtitle() { return _translateCopy("copy.23a1c460ebfc", { defaultValue: "and be happy" }); },
     artwork: 'coin',
     imageHeight: 467,
-    preview: 'Your data, assets and audience are yours forever',
+    get preview() { return _translateCopy("copy.27dd6cafb16f", { defaultValue: "Your data, assets and audience are yours forever" }); },
     sub: 'ownership_economy',
     extra: 'user_owned = true',
     get description() { return _translateCopy("copy.6c6b4f33bb99", { defaultValue: "The ownership economy means your data, assets and audience are yours forever. Even the DeHub network is owned by its users, you." }); },
   },
 ] as const;
 
-const ENTITY_COPY =
-  'DeHub is an open-source, user owned entertainment platform offering full feature social media, gaming experiences, streaming services, content creation tools and a plethora of peer-to-peer utilities. Monetize without permission and from your first view, never fearing the algorithm again.';
+const entityCopy = () =>
+  _translateCopy("copy.a64c2e2ad08c", { defaultValue: "DeHub is an open-source, user owned entertainment platform offering full feature social media, gaming experiences, streaming services, content creation tools and a plethora of peer-to-peer utilities. Monetize without permission and from your first view, never fearing the algorithm again." });
 
 /* Docs lead, guides follow. The two /docs entries at the front are the pages
    that answer "what is this" outright — the guides are all downstream of that
@@ -110,24 +110,24 @@ const LINKS: { to: string; label: string }[] = [
 const PRESS = [
   {
     outlet: 'US Weekly',
-    reach: '50M+ readers',
+    get reach() { return _translateCopy("copy.fe176fc30792", { defaultValue: "50M+ readers" }); },
     url: 'https://www.usmagazine.com/celebrity-news/news/meet-the-companies-driving-the-blue-ocean-frontier-of-blockchain/',
   },
   {
     outlet: 'Yahoo Finance',
-    reach: "World's largest business news platform",
+    get reach() { return _translateCopy("copy.3bd6bc3bc98a", { defaultValue: "World's largest business news platform" }); },
     url: 'https://finance.yahoo.com/news/dehub-launching-portal-metaverse-022300594.html',
   },
   {
     /* Entrepreneur pulled the original page, so the Wayback capture is the
        live citation — same URL FeaturedIn.tsx uses. */
     outlet: 'Entrepreneur',
-    reach: '20M+ monthly users',
+    get reach() { return _translateCopy("copy.981a88282903", { defaultValue: "20M+ monthly users" }); },
     url: 'https://web.archive.org/web/20220702152228/https://www.entrepreneur.com/article/420564',
   },
   {
     outlet: 'Investing.com',
-    reach: '46M+ monthly users',
+    get reach() { return _translateCopy("copy.d1a9c0356cd6", { defaultValue: "46M+ monthly users" }); },
     url: 'https://www.investing.com/news/cryptocurrency-news/dehubs-portal-to-the-metaverse-set-to-disrupt-the-entertainment-and-lifestyle-industry-2684073',
   },
 ] as const;
@@ -422,7 +422,7 @@ export function HomeIntroPanel({
               texture, so a to-black fade rendered as a grey bar across it.
               Clamping to whole lines cuts cleanly and needs no scrim. */}
           <div className="text-[13px] leading-relaxed text-zinc-300">
-            <p className="dehub-intro-clamp">{ENTITY_COPY}</p>
+            <p className="dehub-intro-clamp">{entityCopy()}</p>
           </div>
         </div>
 

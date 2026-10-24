@@ -10,9 +10,9 @@ import Coins from "@/components/ui/cut-icons/coins";
 
 
 const stakingOptions = (t: TFunction) => [
-  { period: '7 Days', apy: '8.2%', minStake: t('mobilePreview.tokenAmount', { amount: '100' }), locked: t('mobilePreview.tokenAmount', { amount: '2.4M' }) },
-  { period: '30 Days', apy: '12.4%', minStake: t('mobilePreview.tokenAmount', { amount: '500' }), locked: t('mobilePreview.tokenAmount', { amount: '8.1M' }) },
-  { period: '90 Days', apy: '18.7%', minStake: t('mobilePreview.tokenAmount', { amount: '1,000' }), locked: t('mobilePreview.tokenAmount', { amount: '15.3M' }) },
+  { period: t("copy.17d13fe54794", { count: 7, defaultValue_one: "{{count}} Day", defaultValue_other: "{{count}} Days", defaultValue: "{{count}} Days" }), apy: '8.2%', minStake: t('mobilePreview.tokenAmount', { amount: '100' }), locked: t('mobilePreview.tokenAmount', { amount: '2.4M' }) },
+  { period: t("copy.17d13fe54794", { count: 30, defaultValue_one: "{{count}} Day", defaultValue_other: "{{count}} Days", defaultValue: "{{count}} Days" }), apy: '12.4%', minStake: t('mobilePreview.tokenAmount', { amount: '500' }), locked: t('mobilePreview.tokenAmount', { amount: '8.1M' }) },
+  { period: t("copy.17d13fe54794", { count: 90, defaultValue_one: "{{count}} Day", defaultValue_other: "{{count}} Days", defaultValue: "{{count}} Days" }), apy: '18.7%', minStake: t('mobilePreview.tokenAmount', { amount: '1,000' }), locked: t('mobilePreview.tokenAmount', { amount: '15.3M' }) },
 ];
 
 export function StakingScreen() {
@@ -29,7 +29,7 @@ export function StakingScreen() {
           { icon: Coins, label: _copy("copy.554d48467d84", { defaultValue: "Total Staked" }), value: t('mobilePreview.tokenAmount', { amount: '25.8M' }) },
           { icon: TrendingUp, label: _copy("copy.daa110b14379", { defaultValue: "Avg APY" }), value: '12.4%' },
           { icon: Lock, label: _copy("copy.0a6e9a7b8bc8", { defaultValue: "Your Staked" }), value: t('mobilePreview.tokenAmount', { amount: '10,000' }) },
-          { icon: Clock, label: _copy("copy.781513f8d423", { defaultValue: "Lock Remaining" }), value: '23 days' },
+          { icon: Clock, label: _copy("copy.781513f8d423", { defaultValue: "Lock Remaining" }), value: _copy("copy.ca4c4a68ebc9", { count: 23, defaultValue_one: "{{count}} day", defaultValue_other: "{{count}} days", defaultValue: "{{count}} days" }) },
         ].map((stat) => (
           <div key={stat.label} className="p-3 rounded-xl border border-white/[0.08] bg-white/[0.02]">
             <stat.icon className="w-4 h-4 text-zinc-400 mb-1.5" />
@@ -44,10 +44,10 @@ export function StakingScreen() {
         <h3 className="text-white text-sm font-semibold mb-3">{_copy("copy.4bca1baaede9", { defaultValue: "Your Position" })}</h3>
         <div className="space-y-2">
           {[
-            ['Staked Amount', t('mobilePreview.tokenAmount', { amount: '10,000' })],
-            ['Lock Period', '90 Days'],
-            ['Earned Rewards', t('mobilePreview.tokenAmount', { amount: '+461' })],
-            ['Current APY', '18.7%'],
+            [_copy("copy.1447ee86b9da", { defaultValue: "Staked Amount" }), t('mobilePreview.tokenAmount', { amount: '10,000' })],
+            [_copy("copy.366f4e9e348a", { defaultValue: "Lock Period" }), _copy("copy.17d13fe54794", { count: 90, defaultValue_one: "{{count}} Day", defaultValue_other: "{{count}} Days", defaultValue: "{{count}} Days" })],
+            [_copy("copy.1aa2317e134b", { defaultValue: "Earned Rewards" }), t('mobilePreview.tokenAmount', { amount: '+461' })],
+            [_copy("copy.3d43414ba2cb", { defaultValue: "Current APY" }), '18.7%'],
           ].map(([label, value]) => (
             <div key={label} className="flex justify-between">
               <span className="text-zinc-500 text-sm">{label}</span>
@@ -69,11 +69,11 @@ export function StakingScreen() {
               </div>
               <div className="flex-1">
                 <span className="text-white text-sm font-medium block">{opt.period}</span>
-                <span className="text-zinc-600 text-[11px]">{_copy("copy.1a00d8278b18", { defaultValue: "Min: " })}{opt.minStake}</span>
+                <span className="text-zinc-600 text-[11px]">{_copy("copy.e5fd266c0b5e", { defaultValue: "Min: {{value1}}", value1: opt.minStake })}</span>
               </div>
               <div className="text-right">
                 <span className="text-white text-sm font-bold block">{opt.apy}</span>
-                <span className="text-zinc-600 text-[10px]">{opt.locked}{_copy("copy.0b058a92a5a3", { defaultValue: " locked" })}</span>
+                <span className="text-zinc-600 text-[10px]">{_copy("copy.33902f042388", { defaultValue: "{{value1}} locked", value1: opt.locked })}</span>
               </div>
             </div>
           ))}

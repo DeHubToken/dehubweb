@@ -30,6 +30,7 @@ import {
   type MyUsernameOffers,
   type UsernameOffer,
 } from '@/lib/api/dehub/username-offers';
+import { translateCopy as _translateCopy } from '@/i18n/copy';
 
 /**
  * Write the server's answer into the list straight away, so the row flips
@@ -89,7 +90,7 @@ export function useCreateUsernameOffer() {
     mutationFn: createUsernameOffer,
     onSuccess: offer => {
       invalidateMarket(qc);
-      toast.success(`Offer sent for @${offer.username}`);
+      toast.success(_translateCopy("copy.66c7c36376a3", { defaultValue: "Offer sent for @{{value1}}", value1: offer.username }));
     },
     onError: (err: Error) => toast.error(err.message),
   });
@@ -105,7 +106,7 @@ export function useAcceptUsernameOffer() {
       invalidateMarket(qc);
       // Said as a next step rather than as a completion: the owner still holds
       // the handle, and will until the buyer actually pays for it.
-      toast.success(`Offer accepted — @${offer.username} is held for them until they pay`);
+      toast.success(_translateCopy("copy.6d5c9edde482", { defaultValue: "Offer accepted — @{{value1}} is held for them until they pay", value1: offer.username }));
     },
     onError: (err: Error) => toast.error(err.message),
   });

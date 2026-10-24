@@ -45,7 +45,7 @@ export function SettingDrawerSelect({
   const [search, setSearch] = useSurfaceDraft("components/app/settings/SettingDrawerSelect.tsx:search", '');
   
   const selectedOption = options.find(opt => opt.value === value);
-  const displayLabel = selectedOption?.label || 'Select...';
+  const displayLabel = selectedOption?.label || _copy("copy.1339bddc2b28", { defaultValue: "Select..." });
 
   const filteredOptions = useMemo(() => {
     if (!search.trim()) return options;

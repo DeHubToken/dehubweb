@@ -44,7 +44,7 @@ export function useMatureContent() {
       queryClient.invalidateQueries({ queryKey: ['dehub-profile'] });
       queryClient.invalidateQueries({ queryKey: ['unified-feed'] });
       queryClient.invalidateQueries({ queryKey: ['dehub-feed'] });
-      toast.success(enabled ? 'Mature content is on' : 'Mature content is off');
+      toast.success(enabled ? _copy("copy.0224adda1d2b", { defaultValue: "Mature content is on" }) : _copy("copy.9afc97f82510", { defaultValue: "Mature content is off" }));
     },
     onError: () => toast.error(_copy("copy.e0a91d4247fc", { defaultValue: "Could not save that. Try again." })),
   });

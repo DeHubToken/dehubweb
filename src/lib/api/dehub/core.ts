@@ -1,4 +1,5 @@
 import { isKidsModeLocked } from "@/lib/kids-mode-lock";
+import { translateCopy as _translateCopy } from '@/i18n/copy';
 
 // DeHub CDN base URL for media assets
 export const DEHUB_CDN_BASE = "https://dehubcdn.ams3.cdn.digitaloceanspaces.com/";
@@ -58,7 +59,7 @@ export class RequestTimeoutError extends Error {
   readonly url: string;
 
   constructor(url: string, ms: number) {
-    super(`Request timed out after ${ms}ms`);
+    super(_translateCopy("copy.9c59f9638ba5", { defaultValue: "Request timed out after {{value1}}ms", value1: ms }));
     this.name = 'RequestTimeoutError';
     this.url = url;
   }
@@ -451,7 +452,7 @@ export async function ensureFreshToken(): Promise<string> {
   if (outcome.ok) return outcome.tokens.accessToken;
 
   if (outcome.reason === 'transient' || outcome.reason === 'malformed') {
-    throw new Error('Could not verify your session — please check your connection and try again.');
+    throw new Error(_translateCopy("copy.ee689043636f", { defaultValue: "Could not verify your session — please check your connection and try again." }));
   }
   throw new AuthenticationError('Session expired. Please sign in again.');
 }
@@ -582,7 +583,7 @@ export async function apiCall<T>(
       // expired session — that wording pushes the user to sign out and back
       // in when simply retrying would have worked.
       if (outcome.reason === 'transient' || outcome.reason === 'malformed') {
-        throw new Error('Could not verify your session — please check your connection and try again.');
+        throw new Error(_translateCopy("copy.ee689043636f", { defaultValue: "Could not verify your session — please check your connection and try again." }));
       }
       throw new AuthenticationError('Session expired. Please sign in again.');
     }
@@ -603,7 +604,7 @@ export async function apiCall<T>(
     // Carry the HTTP status so callers that must branch on it (the account
     // marketplace claim treats a 409 as "retry to resume", not as failure)
     // can, without pattern-matching the message text.
-    const apiError = new Error(errorData.message || errorData.error || `API error: ${response.status}`) as Error & {
+    const apiError = new Error(errorData.message || errorData.error || _translateCopy("copy.99061eb5c49c", { defaultValue: "API error: {{value1}}", value1: response.status })) as Error & {
       httpStatus?: number;
       errorCode?: string;
     };
@@ -687,7 +688,7 @@ function sendAuthedXhr<T>(
             data: (opts.unwrapResult ? parsed.result ?? parsed : parsed) as T,
           });
         } catch {
-          reject(new Error("Invalid response from server"));
+          reject(new Error(_translateCopy("copy.19265efd1ad2", { defaultValue: "Invalid response from server" })));
         }
         return;
       }
@@ -697,13 +698,13 @@ function sendAuthedXhr<T>(
       resolve({
         ok: false,
         status: xhr.status,
-        message: errorData.message || errorData.error || "Unknown error",
+        message: errorData.message || errorData.error || _translateCopy("copy.27c2ccd962c2", { defaultValue: "Unknown error" }),
         code: errorData.code,
       });
     };
 
-    xhr.onerror = () => reject(new Error("Upload failed — please check your connection and try again"));
-    xhr.ontimeout = () => reject(new Error("Upload timed out — your file may be too large or your connection too slow"));
+    xhr.onerror = () => reject(new Error(_translateCopy("copy.580bfac1001b", { defaultValue: "Upload failed — please check your connection and try again" })));
+    xhr.ontimeout = () => reject(new Error(_translateCopy("copy.fdd793503950", { defaultValue: "Upload timed out — your file may be too large or your connection too slow" })));
 
     xhr.timeout = opts.timeoutMs;
     xhr.open(opts.method, url);
@@ -746,7 +747,7 @@ export async function authedUpload<T>(
     const outcome = await refreshTokenSharedDetailed();
     if (!outcome.ok) {
       if (outcome.reason === "transient" || outcome.reason === "malformed") {
-        throw new Error("Could not verify your session — please check your connection and try again.");
+        throw new Error(_translateCopy("copy.ee689043636f", { defaultValue: "Could not verify your session — please check your connection and try again." }));
       }
       throw new AuthenticationError("Session expired. Please sign in again.");
     }
@@ -772,11 +773,11 @@ export async function authedUpload<T>(
   // hold 500"), so it is carried through intact rather than wrapped in an HTTP
   // status the person reading it cannot act on.
   if (result.status === 402) {
-    throw new PaymentRequiredError(result.message || "This post needs DHB you do not have.");
+    throw new PaymentRequiredError(result.message || _translateCopy("copy.e6b09ed01f70", { defaultValue: "This post needs DHB you do not have." }));
   }
 
   throw new UploadHttpError(
-    `Upload failed (HTTP ${result.status}): ${result.message}`,
+    _translateCopy("copy.47107db53bda", { defaultValue: "Upload failed (HTTP {{value1}}): {{value2}}", value1: result.status, value2: result.message }),
     result.status,
     result.code,
     result.message,

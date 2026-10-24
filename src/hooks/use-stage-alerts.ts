@@ -62,6 +62,7 @@ import {
 import { buildAvatarUrl, buildAvatarCdnFallbackUrl } from '@/lib/media-url';
 import { watchStages } from '@/lib/stage-broadcast';
 import type { AudioSpace } from '@/types/audio-spaces.types';
+import { translateCopy as _translateCopy } from '@/i18n/copy';
 
 /**
  * How fresh `started_at` has to be for a live row to count as "just started".
@@ -136,7 +137,7 @@ export function useStageAlerts() {
       toast.success(args.sentence, {
         duration: 12_000,
         action: {
-          label: args.type === 'stage_live' ? 'Listen in' : 'View stage',
+          label: args.type === 'stage_live' ? _translateCopy("copy.6f00beb36c9b", { defaultValue: "Listen in" }) : _translateCopy("copy.2074fadab822", { defaultValue: "View stage" }),
           onClick: open,
         },
       });
@@ -175,11 +176,11 @@ export function useStageAlerts() {
       // leaving the badge to the poll.
       void queryClient.invalidateQueries({ queryKey: customNotificationKeys.all });
 
-      const actorName = space.host_username ? `@${space.host_username}` : 'Someone';
+      const actorName = space.host_username ? `@${space.host_username}` : _translateCopy("copy.864c855e3d64", { defaultValue: "Someone" });
       raise({
         type: 'stage_live',
         path,
-        heading: space.title || 'A stage is live',
+        heading: space.title || _translateCopy("copy.71adf1fb022d", { defaultValue: "A stage is live" }),
         sentence: stageLiveSentence(actorName, space.title),
         avatar:
           buildAvatarUrl(space.host_wallet_address || '', space.host_avatar) ||
@@ -231,7 +232,7 @@ export function useStageAlerts() {
         if (type !== 'stage_live' && type !== 'stage_reminder') continue;
 
         const path = stageNotificationPath(row.reference_id);
-        const actorName = row.actor_username ? `@${row.actor_username}` : 'Someone';
+        const actorName = row.actor_username ? `@${row.actor_username}` : _translateCopy("copy.864c855e3d64", { defaultValue: "Someone" });
         raise({
           type,
           path,

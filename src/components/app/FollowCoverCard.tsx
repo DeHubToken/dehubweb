@@ -60,7 +60,7 @@ function FollowCoverCardInner({ user, followed = false, onOpen, onFollow, onDism
   let reason: string | null = null;
   if (mutuals.length) {
     const names = mutuals.map((m) => m.displayName || m.username || `${m.address.slice(0, 6)}...`).join(', ');
-    reason = `${_copy('copy.d0f08798ff1a', { defaultValue: 'Followed by ' })}${names}`;
+    reason = _copy('copy.fef6a1a97127', { defaultValue: 'Followed by {{value1}}', value1: names });
   }
 
   return (

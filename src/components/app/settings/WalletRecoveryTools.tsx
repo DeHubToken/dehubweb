@@ -1,3 +1,4 @@
+import { translateCopy as _translateCopy } from '@/i18n/copy';
 import { useTranslation as _useCopy } from 'react-i18next';
 import { useSurfaceDraft } from '@/hooks/use-surface-draft';
 /**
@@ -87,7 +88,7 @@ function BackUpWalletDialog({ open, onOpenChange, onBackedUp }: { open: boolean;
       setBackup(result);
     } catch (err) {
       if (err instanceof PasskeyCancelledError) return;
-      setError(err instanceof Error ? err.message : 'Failed to export key');
+      setError(err instanceof Error ? err.message : _copy("copy.a7d4175ad6b1", { defaultValue: "Failed to export key" }));
     } finally {
       setBusy(false);
     }
@@ -186,7 +187,8 @@ function BackUpWalletDialog({ open, onOpenChange, onBackedUp }: { open: boolean;
 
 const OLD_LOGIN_LABELS: Record<string, string> = {
   google: 'Google', apple: 'Apple', twitter: 'X (Twitter)', discord: 'Discord',
-  email: 'Email', email_passwordless: 'Email',
+  get email() { return _translateCopy("copy.969ccbd3cf63", { defaultValue: "Email" }); },
+  get email_passwordless() { return _translateCopy("copy.969ccbd3cf63", { defaultValue: "Email" }); },
 };
 
 /**
@@ -273,7 +275,7 @@ export function SwitchOldAccountPanel({ open = true, onDone }: { open?: boolean;
   const handleLegacyLogin = async (provider: 'google' | 'twitter' | 'discord' | 'apple' | 'email_passwordless') => {
     setError(null);
     if (provider === 'email_passwordless' && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(migrateEmail)) {
-      setError('Enter the email you used on that old account');
+      setError(_copy("copy.856c0adf9c71", { defaultValue: "Enter the email you used on that old account" }));
       return;
     }
     setMigrateBusy(provider);
@@ -283,7 +285,7 @@ export function SwitchOldAccountPanel({ open = true, onDone }: { open?: boolean;
       deriveFromSecret(key);
       setMigratedKey(key);
     } catch (e) {
-      setError(e instanceof Error ? e.message : 'Could not retrieve that old wallet. Please try again.');
+      setError(e instanceof Error ? e.message : _copy("copy.c16071b5f2ff", { defaultValue: "Could not retrieve that old wallet. Please try again." }));
     } finally {
       setMigrateBusy(null);
     }
@@ -293,19 +295,19 @@ export function SwitchOldAccountPanel({ open = true, onDone }: { open?: boolean;
     if (!migratedKey) return;
     setError(null);
     if (profileMatchFailed || !targetProfileAddress) {
-      setError('This login did not recover either profile shown. Nothing was changed.');
+      setError(_copy("copy.899cec505009", { defaultValue: "This login did not recover either profile shown. Nothing was changed." }));
       return;
     }
-    if (password !== confirm) { setError("Passwords don't match"); return; }
+    if (password !== confirm) { setError(_copy("copy.ec5d490e7422", { defaultValue: "Passwords don't match" })); return; }
     setBusy(true);
     try {
       const assessment = await assessPassword(password);
       // Same wording as the meter above the field — see WalletCreateStep.
-      if (!assessment.acceptable) { setError(assessment.warnings[0] ?? 'Choose a stronger password'); return; }
+      if (!assessment.acceptable) { setError(assessment.warnings[0] ?? _copy("copy.701a69a12862", { defaultValue: "Choose a stronger password" })); return; }
       await switchActiveWallet(migratedKey, password, targetProfileAddress);
       close(false);
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Failed to switch wallet');
+      setError(err instanceof Error ? err.message : _copy("copy.a47169437cd2", { defaultValue: "Failed to switch wallet" }));
     } finally {
       setBusy(false);
     }
@@ -324,7 +326,7 @@ export function SwitchOldAccountPanel({ open = true, onDone }: { open?: boolean;
                   <Loader2 className="w-4 h-4 animate-spin" />{_copy("copy.8b3b208294c9", { defaultValue: " Loading your older profiles..." })}</p>
               ) : knownAccounts.length > 0 ? (
               <div className="space-y-2">
-                <p className="text-white/70 text-sm">{_copy("copy.cb75c6f3c889", { defaultValue: "We found " })}{knownAccounts.length}{_copy("copy.bd5a081ced3a", { defaultValue: " older profiles linked to this email. Different sign-ins could create separate profiles before login methods were linked." })}</p>
+                <p className="text-white/70 text-sm">{_copy("copy.4799a32213c6", { count: knownAccounts.length, defaultValue: "We found {{count}} older profiles linked to this email. Different sign-ins could create separate profiles before login methods were linked." })}</p>
                 <div className="space-y-1">
                   {knownAccounts.map((account, index) => (
                     <div key={account.ethAddress || index} className="flex items-center justify-between gap-3 rounded-lg bg-white/5 px-3 py-2 text-xs">
@@ -430,7 +432,7 @@ export function SwitchOldAccountPanel({ open = true, onDone }: { open?: boolean;
               <div className="rounded-xl border border-white/10 bg-white/5 p-3 text-xs text-white space-y-1">
                 <p className="text-white/50">{_copy("copy.e0012e751b11", { defaultValue: "Current active wallet" })}</p>
                 <p className="break-all">{walletAddress}</p>
-                <p className="text-white/50 pt-2">{_copy("copy.7c1b59f63339", { defaultValue: "Will switch to " })}{matchedAccount?.username ? `@${matchedAccount.username}` : _copy("copy.9b0822fb624d", { defaultValue: "recovered profile" })}
+                <p className="text-white/50 pt-2">{_copy("copy.9c93e8a672b9", { defaultValue: "Will switch to {{value1}}", value1: matchedAccount?.username ? `@${matchedAccount.username}` : _copy("copy.9b0822fb624d", { defaultValue: "recovered profile" }) })}
                 </p>
                 <p className="break-all text-green-300">{targetProfileAddress}</p>
               </div>

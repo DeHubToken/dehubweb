@@ -13,9 +13,9 @@ import Bookmark from "@/components/ui/cut-icons/save";
 
 const mockBookmarks = (t: TFunction) => [
   { id: '1', user: 'defi_whale', content: t('mobilePreview.bookmarks.stakingGuide'), likes: 342, time: '2d' },
-  { id: '2', user: 'crypto_sarah', content: 'The future of decentralized governance — why DAOs will replace traditional corporate structures.', likes: 189, time: '3d' },
-  { id: '3', user: 'bob_dev', content: 'New smart contract audit results are in. Everything passed with flying colors ✅', likes: 421, time: '5d' },
-  { id: '4', user: 'nft_artist', content: 'Behind the scenes of my latest digital art collection — process from sketch to mint.', likes: 567, time: '1w' },
+  { id: '2', user: 'crypto_sarah', content: t("copy.02fb0c3db46c", { defaultValue: "The future of decentralized governance — why DAOs will replace traditional corporate structures." }), likes: 189, time: '3d' },
+  { id: '3', user: 'bob_dev', content: t("copy.c76abc3bb925", { defaultValue: "New smart contract audit results are in. Everything passed with flying colors ✅" }), likes: 421, time: '5d' },
+  { id: '4', user: 'nft_artist', content: t("copy.baab4ef90c38", { defaultValue: "Behind the scenes of my latest digital art collection — process from sketch to mint." }), likes: 567, time: '1w' },
 ];
 
 export function BookmarksScreen() {

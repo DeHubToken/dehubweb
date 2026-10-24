@@ -1,3 +1,5 @@
+import { translateCopy as _translateCopy } from '@/i18n/copy';
+
 /**
  * stage-radio — bridge a live radio stream into a Stage's Agora channel
  * =====================================================================
@@ -123,7 +125,7 @@ function buildGraph(): { audio: HTMLAudioElement; ctx: AudioContext } {
   audio.addEventListener('playing', () => emit('live'));
   audio.addEventListener('waiting', () => emit('connecting'));
   audio.addEventListener('stalled', () => emit('connecting'));
-  audio.addEventListener('error', () => emit('error', 'Stream unavailable'));
+  audio.addEventListener('error', () => emit('error', _translateCopy('copy.a018e81b341d', { defaultValue: 'Stream unavailable' })));
   audio.addEventListener('ended', () => emit('ended'));
 
   audioEl = audio;
@@ -190,7 +192,7 @@ export async function playStageRadioStream(
     // It is the failure mode a set walking to its next clip on its own can
     // actually hit, so it has to be reported rather than swallowed.
     if ((err as { name?: string } | null)?.name === 'NotAllowedError') {
-      emit('error', 'The browser blocked playback — press play again');
+      emit('error', _translateCopy('copy.0f047e3971bf', { defaultValue: 'The browser blocked playback — press play again' }));
     }
   }
 }

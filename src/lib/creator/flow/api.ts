@@ -8,6 +8,7 @@
 import { supabase } from '@/integrations/supabase/client';
 import { getAuthToken } from '@/lib/api/dehub/core';
 import type { Flow, FlowEdge, FlowNode, Viewport } from './types';
+import { translateCopy as _translateCopy } from '@/i18n/copy';
 
 export interface PublicFlow {
   id: string;
@@ -56,7 +57,7 @@ async function readError(error: unknown, data: unknown): Promise<string> {
     if (payload?.error) return String(payload.error);
   }
   if ((data as { error?: string } | null)?.error) return String((data as { error: string }).error);
-  return (error as Error | null)?.message || 'Flow request failed';
+  return (error as Error | null)?.message || _translateCopy("copy.05ad6a692ad2", { defaultValue: "Flow request failed" });
 }
 
 async function invokeFlows<T>(body: Record<string, unknown>, { auth = true } = {}): Promise<T> {

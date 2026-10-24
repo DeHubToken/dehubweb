@@ -29,7 +29,14 @@ export function MusicScreen() {
 
       {/* Category pills */}
       <div className="flex gap-2 px-4 py-3.5 overflow-x-auto scrollbar-hide">
-        {['All', 'Music Videos', 'Radio', 'Tracks', 'Podcasts', 'Playlists'].map((cat, i) => (
+        {[
+          _copy("copy.a52ace420f21", { defaultValue: "All" }),
+          _copy("copy.ab4d6796dbbe", { defaultValue: "Music Videos" }),
+          _copy("copy.2a7dfeb2f2b0", { defaultValue: "Radio" }),
+          _copy("copy.88980154513d", { defaultValue: "Tracks" }),
+          _copy("copy.6ac749b31f9a", { defaultValue: "Podcasts" }),
+          _copy("copy.dcd0a4d2c65a", { defaultValue: "Playlists" }),
+        ].map((cat, i) => (
           <button
             key={cat}
             className={`px-3 py-1.5 rounded-lg text-xs font-medium flex-shrink-0 ${

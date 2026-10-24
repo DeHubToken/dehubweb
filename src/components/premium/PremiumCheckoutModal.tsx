@@ -61,7 +61,7 @@ export function PremiumCheckoutModal({
       const msg =
         invokeError?.message ||
         data?.error ||
-        "Failed to start checkout. Please try again.";
+        _copy("copy.56a2e2bf128b", { defaultValue: "Failed to start checkout. Please try again." });
       setError(msg);
       throw new Error(msg);
     }

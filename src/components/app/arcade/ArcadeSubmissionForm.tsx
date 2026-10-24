@@ -39,7 +39,7 @@ export function ArcadeSubmissionForm({ onClose }: Props) {
       setDraft.complete(draft, emptyDraft);
       setSubmitted(true);
     } catch {
-      setError('Could not send your game. Please check the links and try again.');
+      setError(_copy("copy.e4a042823376", { defaultValue: "Could not send your game. Please check the links and try again." }));
     } finally {
       setSubmitting(false);
     }

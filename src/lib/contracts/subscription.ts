@@ -19,6 +19,7 @@ import {
 } from './aa-utils';
 import { toWei, getChainConfig, BASE_CHAIN_ID, BNB_CHAIN_ID } from './dhb-token';
 import type { ChainId } from '@/components/app/ChainSelector';
+import { translateCopy as _translateCopy } from '@/i18n/copy';
 
 /** Chains where the subscription contract is deployed and initialised. */
 export const SUBSCRIPTION_CONTRACTS: Partial<Record<number, string>> = {
@@ -46,7 +47,7 @@ export function isSubscriptionChain(chainId: number): boolean {
 export function getSubscriptionContract(chainId: ChainId): string {
   const address = SUBSCRIPTION_CONTRACTS[chainId];
   if (!address) {
-    throw new Error(`Subscriptions are not available on ${getChainConfig(chainId)?.name || chainId}`);
+    throw new Error(_translateCopy("copy.df6e03dedbc0", { defaultValue: "Subscriptions are not available on {{value1}}", value1: getChainConfig(chainId)?.name || chainId }));
   }
   return address;
 }
@@ -144,7 +145,7 @@ export async function publishPlanOnChain(
 ): Promise<{ hash: string; confirmed: Promise<string> }> {
   const months = normaliseDuration(params.duration);
   if (months === null) {
-    throw new Error('Plan duration must be between 0 and 12 months (0 = lifetime)');
+    throw new Error(_translateCopy("copy.906f81627a6a", { defaultValue: "Plan duration must be between 0 and 12 months (0 = lifetime)" }));
   }
 
   const contract = getSubscriptionContract(params.chainId);

@@ -141,7 +141,7 @@ export function SoundtrackControl({ title, creator, playing, loading, error, tog
           aria-valuemin={0}
           aria-valuemax={Math.round(duration)}
           aria-valuenow={Math.round(scrub === null ? current : scrub * duration)}
-          aria-valuetext={`${clock(scrub === null ? current : scrub * duration)} of ${clock(duration)}`}
+          aria-valuetext={_copy("copy.a48c498b8725", { defaultValue: "{{value1}} of {{value2}}", value1: clock(scrub === null ? current : scrub * duration), value2: clock(duration) })}
           data-no-navigate
           data-no-swipe
           onPointerDown={onScrubDown}

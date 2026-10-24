@@ -58,6 +58,7 @@ function MediaThumbnail({ item, onSelect, pageAnchor }: {
   /** The node that says which page this row's sound belongs to — see below. */
   pageAnchor: () => Node | null;
 }) {
+  const { t: _copy } = _useCopy();
   const [isPlaying, setIsPlaying] = useState(false);
   const audioRef = useRef<HTMLAudioElement | null>(null);
   /**
@@ -98,7 +99,7 @@ function MediaThumbnail({ item, onSelect, pageAnchor }: {
   }, []);
 
   if (item.type === 'audio') {
-    const displayTitle = item.title || 'Untitled Song';
+    const displayTitle = item.title || _copy("copy.b7dd9cadc901", { defaultValue: "Untitled Song" });
     return (
       <button
         onClick={toggleAudio}

@@ -1,3 +1,4 @@
+import { useTranslation as _useCopy } from 'react-i18next';
 import { useTheme } from "next-themes";
 import { Toaster as Sonner, toast } from "sonner";
 import { useIsMobile } from "@/hooks/use-mobile";
@@ -35,6 +36,7 @@ type ToasterProps = React.ComponentProps<typeof Sonner>;
 const Toaster = ({ ...props }: ToasterProps) => {
   const { theme = "system" } = useTheme();
   const isMobile = useIsMobile();
+  const { t: _copy } = _useCopy();
 
   return (
     <Sonner
@@ -45,6 +47,7 @@ const Toaster = ({ ...props }: ToasterProps) => {
       duration={3000}
       visibleToasts={3}
       expand
+      containerAriaLabel={_copy("copy.788011833a5a", { defaultValue: "Notifications" })}
       icons={{ loading: <ButtonLoader size={16} /> }}
       toastOptions={{
         classNames: {

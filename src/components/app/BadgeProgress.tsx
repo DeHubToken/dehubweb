@@ -18,7 +18,7 @@ import { useTranslation as _useCopy } from 'react-i18next';
  */
 
 import { useContext, useMemo } from 'react';
-import { useTranslation } from 'react-i18next';
+import { Trans, useTranslation } from 'react-i18next';
 import { DhbAmount, DhbCoin } from '@/components/app/DhbAmount';
 import { motion, useReducedMotion } from 'framer-motion';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
@@ -163,7 +163,12 @@ export function BadgeProgress({ balance, username, lock, variant = 'full', class
           {standing.nextTier
             ? (
               <>
-                <DhbAmount amount={formatDhb(standing.remaining)} />{_copy("copy.87721689ee42", { defaultValue: " to " })}{standing.nextTier}
+                <Trans
+                  i18nKey="copy.6ed656c2254e"
+                  defaults="<amount></amount> to {{value1}}"
+                  values={{ value1: standing.nextTier }}
+                  components={{ amount: <DhbAmount amount={formatDhb(standing.remaining)} /> }}
+                />
               </>
             )
             : _copy("copy.a6be2efe5bce", { defaultValue: "Every tier unlocked" })}

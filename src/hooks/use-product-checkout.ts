@@ -32,6 +32,7 @@ import { getAuthToken } from '@/lib/api/dehub/core';
 import { toast } from 'sonner';
 import { createLogger } from '@/lib/logger';
 import type { ChainId } from '@/components/app/ChainSelector';
+import { translateCopy as _translateCopy } from '@/i18n/copy';
 
 const logger = createLogger('ProductCheckout');
 
@@ -69,7 +70,7 @@ export async function callFn<T>(
   // surfacing the server's message beats "Edge Function returned a non-2xx".
   if (error) {
     const detail = (data as { error?: string })?.error;
-    throw new Error(detail || error.message || 'Request failed');
+    throw new Error(detail || error.message || _translateCopy("copy.cfce761befa8", { defaultValue: "Request failed" }));
   }
   if ((data as { error?: string })?.error) throw new Error((data as { error: string }).error);
   return data as T;
@@ -113,12 +114,12 @@ export function useProductCheckout(tokenId: string | null) {
         18,
         quote.chainId as ChainId,
       );
-      if (!result?.hash) throw new Error('Transaction was not submitted');
+      if (!result?.hash) throw new Error(_copy("copy.1f204df4182c", { defaultValue: "Transaction was not submitted" }));
 
       // The receipt can lag the wallet's response, so a 202 means "ask again"
       // rather than "failed". The payment is already on-chain at this point —
       // giving up here would strand a real transfer with no order behind it.
-      let lastError = 'Could not confirm the payment';
+      let lastError = _copy("copy.50c1bea5bfee", { defaultValue: "Could not confirm the payment" });
       for (let attempt = 0; attempt < 10; attempt++) {
         try {
           return await callFn<{ success: boolean; order: unknown; warning?: string }>(
@@ -141,7 +142,7 @@ export function useProductCheckout(tokenId: string | null) {
       }
       logger.error('confirm timed out', { hash: result.hash });
       throw new Error(
-        `${lastError}. Your payment went through — send this transaction to the seller: ${result.hash}`,
+        _copy("copy.c683f074accd", { defaultValue: "{{value1}}. Your payment went through — send this transaction to the seller: {{value2}}", value1: lastError, value2: result.hash }),
       );
     },
     onSuccess: (data) => {

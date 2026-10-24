@@ -12,6 +12,7 @@
 import { supabase } from "@/integrations/supabase/client";
 import type { EncryptedPayload } from "./crypto";
 import type { PasskeyRef } from "./passkey";
+import { translateCopy as _translateCopy } from '@/i18n/copy';
 
 export interface PasskeyWrap extends PasskeyRef {
   payload: EncryptedPayload;
@@ -84,7 +85,7 @@ export async function fetchPasskeyWraps(userId: string): Promise<PasskeyWrap[]> 
     .select("credential_id, prf_salt, encrypted_seed, salt, iv, kdf_iterations, label, created_at, last_used_at, transports, backed_up")
     .eq("user_id", userId)
     .order("created_at", { ascending: false });
-  if (error) throw new Error(error.message || "Failed to load biometric unlock");
+  if (error) throw new Error(error.message || _translateCopy("copy.de4ab7c90a0a", { defaultValue: "Failed to load biometric unlock" }));
   const wraps = (data ?? []).map(rowToWrap).filter(isUsable);
   // Zero rows is ambiguous: it's also what an expired session gets, because
   // RLS hides the rows rather than erroring. Never let that wipe a populated
@@ -138,13 +139,13 @@ export async function savePasskeyWrap(
     },
     { onConflict: "user_id,credential_id" },
   ).select('user_id, credential_id, encrypted_seed, salt, iv, prf_salt').single();
-  if (error) throw new Error(error.message || "Failed to save biometric unlock");
+  if (error) throw new Error(error.message || _translateCopy("copy.4108d08574cf", { defaultValue: "Failed to save biometric unlock" }));
   if (
     data?.user_id !== userId || data?.credential_id !== wrap.credentialId ||
     data?.encrypted_seed !== wrap.payload.ciphertext || data?.salt !== wrap.payload.salt ||
     data?.iv !== wrap.payload.iv || data?.prf_salt !== wrap.prfSalt
   ) {
-    throw new Error('Biometric backup could not be verified. Keep this wallet open and try again.');
+    throw new Error(_translateCopy('copy.67554b1508d8', { defaultValue: 'Biometric backup could not be verified. Keep this wallet open and try again.' }));
   }
   clearPasskeyCache();
 }
@@ -155,7 +156,7 @@ export async function deletePasskeyWrap(userId: string, credentialId: string): P
     .delete()
     .eq("user_id", userId)
     .eq("credential_id", credentialId);
-  if (error) throw new Error(error.message || "Failed to remove biometric unlock");
+  if (error) throw new Error(error.message || _translateCopy("copy.8dd9e3eb3163", { defaultValue: "Failed to remove biometric unlock" }));
   clearPasskeyCache();
 }
 
@@ -166,7 +167,7 @@ export async function deletePasskeyWrap(userId: string, credentialId: string): P
  */
 export async function deleteAllPasskeyWraps(userId: string): Promise<void> {
   const { error } = await db().from("user_wallet_passkeys").delete().eq("user_id", userId);
-  if (error) throw new Error(error.message || "Failed to reset biometric unlock");
+  if (error) throw new Error(error.message || _translateCopy("copy.ec0cdd02ce43", { defaultValue: "Failed to reset biometric unlock" }));
   clearPasskeyCache();
 }
 

@@ -29,11 +29,11 @@ export default function PairTestPage() {
   };
 
   const label: Record<typeof status, string> = {
-    idle: 'Not connected',
-    queued: 'Looking for someone…',
-    matched: 'Matched — negotiating connection…',
-    connected: 'Connected',
-    error: 'Error',
+    idle: _copy("copy.0303e1824670", { defaultValue: "Not connected" }),
+    queued: _copy("copy.c1f50e66a0c3", { defaultValue: "Looking for someone…" }),
+    matched: _copy("copy.cf209bd1e1e0", { defaultValue: "Matched — negotiating connection…" }),
+    connected: _copy("copy.22965568d22a", { defaultValue: "Connected" }),
+    error: _copy("copy.54a0e8c17ebb", { defaultValue: "Error" }),
   };
 
   return (

@@ -1,3 +1,4 @@
+import { translateCopy as _translateCopy } from '@/i18n/copy';
 import { useTranslation as _useCopy } from 'react-i18next';
 /**
  * StageContext - Global context for Stages (audio spaces)
@@ -476,21 +477,30 @@ const stageLogger = createLogger('Stage');
  * being flattened into a generic one.
  */
 function describeStageFailure(err: unknown): string {
+  // Already worded for the reader (raised in this file, or described once on
+  // the way up), so it is not described a second time.
+  if (err instanceof StageCopyError) return err.message;
   const e = (err ?? {}) as { name?: string; message?: string };
   const name = e.name || '';
   const message = e.message || '';
 
   if (name === 'NotAllowedError' || name === 'PermissionDeniedError' || /permission denied/i.test(message)) {
-    return 'DeHub needs microphone access to put you on air — allow it for dehub.io and try again.';
+    return _translateCopy("copy.8cf2f5e1ffb4", { defaultValue: "DeHub needs microphone access to put you on air — allow it for dehub.io and try again." });
   }
   if (name === 'NotFoundError' || name === 'NotReadableError' || name === 'OverconstrainedError') {
-    return 'No microphone available. Check nothing else is using it and try again.';
+    return _translateCopy("copy.85494984469a", { defaultValue: "No microphone available. Check nothing else is using it and try again." });
   }
   if (isChunkLoadError(err)) {
-    return 'The app updated while this page was open. Refresh, then start the stage again.';
+    return _translateCopy("copy.a37318c6d6ab", { defaultValue: "The app updated while this page was open. Refresh, then start the stage again." });
   }
-  return message || 'Something went wrong';
+  // Anything else is a server, SDK or browser message, which is English.
+  const language = i18n.resolvedLanguage || i18n.language || 'en';
+  const readsEnglish = language === 'en' || language.startsWith('en-');
+  return (readsEnglish && message) || _translateCopy("copy.ab827e3fe17d", { defaultValue: "Something went wrong" });
 }
+
+/** A stage failure message already in the reader's language. */
+class StageCopyError extends Error {}
 
 // ─── Abandoned-launch guard ─────────────────────────────────────────────────
 //
@@ -1108,7 +1118,7 @@ export function StageProvider({ children }: { children: ReactNode }) {
       }
     } catch (err) {
       stageLogger.error('Stage token request failed', { channelName, role }, err);
-      throw new Error(describeStageFailure(err));
+      throw new StageCopyError(describeStageFailure(err));
     }
   };
 
@@ -1233,7 +1243,7 @@ export function StageProvider({ children }: { children: ReactNode }) {
         try { await client.leave(); } catch { /* already gone */ }
       }
       stageLogger.error('Stage audio connection failed', { role, channel: tokenData.channel }, err);
-      throw new Error(describeStageFailure(err));
+      throw new StageCopyError(describeStageFailure(err));
     }
   };
 
@@ -1283,7 +1293,7 @@ export function StageProvider({ children }: { children: ReactNode }) {
       if (!inRoom) return true;
       if (inRoom === nextSpaceId) return 'same';
       if (myRoleRef.current === 'host') {
-        toast.error("You're hosting a live stage", { description: 'End it before you join or start another.' });
+        toast.error(_translateCopy("copy.4aaeb7f8214b", { defaultValue: "You're hosting a live stage" }), { description: _translateCopy("copy.f4890c2e383b", { defaultValue: "End it before you join or start another." }) });
         return false;
       }
       await leaveSpaceRef.current();
@@ -1489,7 +1499,7 @@ export function StageProvider({ children }: { children: ReactNode }) {
           .select('*')
           .eq('id', spaceId)
           .single();
-        if (readErr || !existing) throw new Error('Stage not found');
+        if (readErr || !existing) throw new StageCopyError(_translateCopy("copy.166e42a8aa5b", { defaultValue: "Stage not found" }));
         // Compared case-insensitively, like every other host check (the deep
         // link page, the RLS policies). The auth layer hands us a lowercase
         // address today, but a row written by any other route with a
@@ -1594,7 +1604,7 @@ export function StageProvider({ children }: { children: ReactNode }) {
           .select('*')
           .eq('id', spaceId)
           .single();
-        if (spaceError || !space) throw new Error('Stage not found');
+        if (spaceError || !space) throw new StageCopyError(_translateCopy("copy.166e42a8aa5b", { defaultValue: "Stage not found" }));
         hostWallet = space.host_wallet_address ?? null;
 
         // A stage that is not live has no channel to join. Without this the
@@ -1604,8 +1614,8 @@ export function StageProvider({ children }: { children: ReactNode }) {
         if (space.status !== 'live') {
           toast.error(
             space.status === 'scheduled'
-              ? "This stage hasn't started yet"
-              : 'This stage has ended',
+              ? _translateCopy("copy.a7f251001b75", { defaultValue: "This stage hasn't started yet" })
+              : _translateCopy("copy.52a23af007ea", { defaultValue: "This stage has ended" }),
           );
           return false;
         }
@@ -1672,7 +1682,7 @@ export function StageProvider({ children }: { children: ReactNode }) {
         // mediaRecorderRef was null and stopAndUploadRecording returned
         // without uploading anything.
         if (isHost) startRecording(spaceId);
-        toast.success(isHost ? 'Rejoined as host!' : 'Joined the stage!');
+        toast.success(isHost ? _translateCopy("copy.0b3315d1d765", { defaultValue: "Rejoined as host!" }) : _translateCopy("copy.7c84d6dad54b", { defaultValue: "Joined the stage!" }));
         return true;
       } catch (err) {
         stageLogger.error('Stage join failed', { spaceId }, err);
@@ -1680,7 +1690,7 @@ export function StageProvider({ children }: { children: ReactNode }) {
           // A host who cannot get back into their own room is otherwise stuck
           // with it on air forever: End only exists inside the room.
           description: sameWallet(hostWallet, walletAddress)
-            ? 'You can close the stage from the End button on its card.'
+            ? _translateCopy("copy.f5ed97bf15f1", { defaultValue: "You can close the stage from the End button on its card." })
             : undefined,
         });
         return false;
@@ -1724,12 +1734,12 @@ export function StageProvider({ children }: { children: ReactNode }) {
           .select('*')
           .eq('id', spaceId)
           .single();
-        if (error || !space) throw new Error('Stage not found');
+        if (error || !space) throw new StageCopyError(_translateCopy("copy.166e42a8aa5b", { defaultValue: "Stage not found" }));
         if (space.status !== 'live') {
           toast.error(
             space.status === 'scheduled'
-              ? "This stage hasn't started yet"
-              : 'This stage has ended',
+              ? _translateCopy("copy.a7f251001b75", { defaultValue: "This stage hasn't started yet" })
+              : _translateCopy("copy.52a23af007ea", { defaultValue: "This stage has ended" }),
           );
           return false;
         }
@@ -1762,7 +1772,7 @@ export function StageProvider({ children }: { children: ReactNode }) {
           if (row?.status === 'ended') {
             if (endedForInactivity(row)) toastInactivityEnd(guestSpace.title);
             else toast.info(_copy("copy.bb29ba6e76c1", { defaultValue: "Stage ended" }), {
-              description: `The host ended "${guestSpace.title}".`,
+              description: _translateCopy("copy.f51af26b09ef", { defaultValue: "The host ended \"{{value1}}\".", value1: guestSpace.title }),
               duration: 6000,
             });
             void guestStopListening();
@@ -1916,7 +1926,7 @@ export function StageProvider({ children }: { children: ReactNode }) {
           .select('id, host_wallet_address, status')
           .eq('id', spaceId)
           .single();
-        if (readError || !space) throw new Error('Stage not found');
+        if (readError || !space) throw new StageCopyError(_translateCopy("copy.166e42a8aa5b", { defaultValue: "Stage not found" }));
         if (!sameWallet(space.host_wallet_address, walletAddress)) {
           toast.error(_copy("copy.2b8696f5ecf8", { defaultValue: "Only the host can end this stage" }));
           return false;
@@ -2286,11 +2296,11 @@ export function StageProvider({ children }: { children: ReactNode }) {
           // the set; a station falling silent is a stream that dropped.
           if (station.kind === 'track') { advanceRadio(station, 1, true); return; }
           setRadioStatus('error');
-          toast.error(`${station.name}: stream ended`);
+          toast.error(_translateCopy("copy.27843de49670", { defaultValue: "{{value1}}: stream ended", value1: station.name }));
           return;
         }
         setRadioStatus(status);
-        if (status === 'error') toast.error(`${station.name}: ${message || 'Stream unavailable'}`);
+        if (status === 'error') toast.error(`${station.name}: ${message || _translateCopy("copy.a018e81b341d", { defaultValue: "Stream unavailable" })}`);
       });
       if (stale()) settleStopped();
     } catch (err) {
@@ -2617,7 +2627,7 @@ export function StageProvider({ children }: { children: ReactNode }) {
               // Named and given room to be read: the room vanishing off the
               // screen is the only other signal a listener gets.
               toast.info(_copy("copy.bb29ba6e76c1", { defaultValue: "Stage ended" }), {
-                description: `The host ended "${updated.title}".`,
+                description: _translateCopy("copy.f51af26b09ef", { defaultValue: "The host ended \"{{value1}}\".", value1: updated.title }),
                 duration: 6000,
               });
             }
@@ -2654,7 +2664,7 @@ export function StageProvider({ children }: { children: ReactNode }) {
     const run = async () => {
       const track = localAudioTrackRef.current;
       if (!track) {
-        throw new Error('Not connected to a stage');
+        throw new Error(_translateCopy("copy.6f900045dd16", { defaultValue: "Not connected to a stage" }));
       }
 
       // The clip is mixed straight into the effect graph's MediaStreamDestination

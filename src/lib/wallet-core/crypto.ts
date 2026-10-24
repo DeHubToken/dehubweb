@@ -23,6 +23,7 @@
 
 import { argon2id } from "hash-wasm";
 import { validateArgon2Parameters, validatePbkdf2Iterations } from './kdf-limits';
+import { translateCopy as _translateCopy } from '@/i18n/copy';
 
 // PBKDF2 legacy default (OWASP 2023 baseline for SHA-256).
 const PBKDF2_ITERATIONS_DEFAULT = 600_000;
@@ -166,21 +167,21 @@ function parseCiphertext(ciphertext: string): { header: V2Header | null; body: s
   if (!ciphertext.startsWith(V2_PREFIX)) return { header: null, body: ciphertext };
   const rest = ciphertext.slice(V2_PREFIX.length);
   const idx = rest.indexOf(":");
-  if (idx <= 0) throw new Error("Corrupted wallet payload");
+  if (idx <= 0) throw new Error(_translateCopy("copy.f5f71428216b", { defaultValue: "Corrupted wallet payload" }));
   const headerB64 = rest.slice(0, idx);
   const body = rest.slice(idx + 1);
   let parsed: V2Header;
   try {
     parsed = JSON.parse(base64UrlDecode(headerB64)) as V2Header;
   } catch {
-    throw new Error("Corrupted wallet payload");
+    throw new Error(_translateCopy("copy.f5f71428216b", { defaultValue: "Corrupted wallet payload" }));
   }
   // A header we can parse but whose KDF we don't implement is a DIFFERENT
   // failure from corruption — most likely a payload written by a newer client.
   // Reporting it as corruption would send the user to a data-loss message for
   // an intact wallet, so keep the two distinguishable.
   if (parsed?.kdf !== "argon2id" && parsed?.kdf !== "hkdf") {
-    throw new Error("This wallet was saved by a newer version of DeHub. Please reload and try again.");
+    throw new Error(_translateCopy("copy.de9e2132fd4d", { defaultValue: "This wallet was saved by a newer version of DeHub. Please reload and try again." }));
   }
   return { header: parsed, body };
 }
@@ -254,7 +255,7 @@ export async function decryptString(payload: EncryptedPayload, password: string)
   if (header?.kdf === "hkdf") {
     // Passkey-wrapped payload handed to the password path — no password can
     // ever open it, so say so plainly instead of reporting a wrong password.
-    throw new Error("This wallet copy is unlocked with biometrics, not a password.");
+    throw new Error(_translateCopy("copy.56b37285d22c", { defaultValue: "This wallet copy is unlocked with biometrics, not a password." }));
   }
 
   // Explicit rather than relying on narrowing: no header at all means a legacy
@@ -267,7 +268,7 @@ export async function decryptString(payload: EncryptedPayload, password: string)
   try {
     return await aesDecrypt(key, iv, ct);
   } catch {
-    throw new Error("Incorrect password or corrupted data");
+    throw new Error(_translateCopy("copy.c1f60046661c", { defaultValue: "Incorrect password or corrupted data" }));
   }
 }
 
@@ -317,7 +318,7 @@ export async function decryptStringWithKeyMaterial(
     // Password-wrapped payload handed to the biometric path. This would
     // otherwise stretch the PRF bytes as if they were a password and fail with
     // a misleading "incorrect password".
-    throw new Error("This wallet copy is unlocked with a password, not biometrics.");
+    throw new Error(_translateCopy("copy.d22059721c27", { defaultValue: "This wallet copy is unlocked with a password, not biometrics." }));
   }
 
   const key = await deriveKeyHkdf(keyMaterial, salt);
@@ -326,7 +327,7 @@ export async function decryptStringWithKeyMaterial(
   } catch {
     // Deliberately says nothing about what to do next: only the caller knows
     // whether this wallet even has a password to fall back to.
-    throw new Error("This passkey can't unlock this wallet.");
+    throw new Error(_translateCopy("copy.db9ff07548c6", { defaultValue: "This passkey can't unlock this wallet." }));
   }
 }
 

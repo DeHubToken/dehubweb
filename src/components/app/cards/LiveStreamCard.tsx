@@ -144,6 +144,9 @@ const logger = createLogger('LiveStreamCard');
  */
 const WHEP_START_TIMEOUT_MS = 6000;
 
+/** What the player overlay says while playback is struggling; worded at render. */
+type PlaybackError = 'reconnecting' | 'alternateSource' | 'connecting' | 'unavailable' | 'playFailed';
+
 // Android's HLS path is the one used by the playing feed preview. Keep the
 // post on that path too: WHEP can attach a track without producing a frame.
 const preferAndroidHls = () =>
@@ -286,7 +289,7 @@ export function LiveStreamCard({ stream, chatSlot, immersive = false }: LiveStre
     }).catch(() => undefined);
   }, [stream.streamId, stream.isLive, streamEnded, liveReactionWeight]);
   const [confirmEnd, setConfirmEnd] = useState(false);
-  const [error, setError] = useState<string | null>(null);
+  const [error, setError] = useState<PlaybackError | null>(null);
   const [giftAmount, setGiftAmount] = useSurfaceDraft("components/app/cards/LiveStreamCard.tsx:giftAmount", '', draftIdentity(stream));
   const [giftMessage, setGiftMessage] = useSurfaceDraft("components/app/cards/LiveStreamCard.tsx:giftMessage", '', draftIdentity(stream));
   // USDC/USDT to pay the gift with, sent straight to the creator. The gift is
@@ -600,7 +603,7 @@ export function LiveStreamCard({ stream, chatSlot, immersive = false }: LiveStre
       const onStateChange = (state: WhepState, detail?: string) => {
         if (cancelled) return;
         if (state === 'playing') setError(null);
-        else if (state === 'reconnecting') setError('Reconnecting…');
+        else if (state === 'reconnecting') setError('reconnecting');
         else if (state === 'failed') void failOver(detail || 'connection failed');
       };
       try {
@@ -703,15 +706,15 @@ export function LiveStreamCard({ stream, chatSlot, immersive = false }: LiveStre
       const onNativeError = () => {
         if (nativeUrlIndex < urlsToTry.length - 1) {
           nativeUrlIndex++;
-          setError('Trying alternate source...');
+          setError('alternateSource');
           loadCurrent();
         } else if (stream.isLive && nativeRetries < 5) {
           nativeRetries++;
           nativeUrlIndex = 0;
-          setError('Reconnecting...');
+          setError('reconnecting');
           scheduleNative(loadCurrent, 3000 * nativeRetries);
         } else {
-          setError('Stream unavailable');
+          setError('unavailable');
           if (!stream.isLive) setStreamEnded(true);
         }
       };
@@ -784,7 +787,7 @@ export function LiveStreamCard({ stream, chatSlot, immersive = false }: LiveStre
               // usually only a beat away; a flat 3s made every miss cost a full wait.
               const delay = retryCount < 3 ? 1000 * (retryCount + 1) : retryCount < 10 ? 5000 : 10000;
               logger.info(`Network error, retrying in ${delay / 1000}s... (${retryCount + 1}/${maxRetriesPerUrl})`);
-              setError('Connecting to stream...');
+              setError('connecting');
               scheduleRetry(() => {
                 // Any manifest/level error = full source reload (not just resume)
                 // manifestParsingError: server returned non-HLS content (stream not ready yet)
@@ -807,18 +810,18 @@ export function LiveStreamCard({ stream, chatSlot, immersive = false }: LiveStre
               urlIndex++;
               (hls as any)._networkRetryCount = 0;
               logger.info('Trying alternate CDN URL...', { urlIndex, url: currentUrl() });
-              setError('Trying alternate source...');
+              setError('alternateSource');
               tryLoad();
             } else if (stream.isLive) {
               // Live stream: cycle back through all URLs and keep retrying — never give up
               urlIndex = 0;
               (hls as any)._networkRetryCount = 0;
               logger.info('All URLs exhausted on live stream, cycling back in 15s...');
-              setError('Reconnecting...');
+              setError('reconnecting');
               scheduleRetry(tryLoad, 15000);
             } else {
               // Ended/recording stream: give up
-              setError('Stream unavailable');
+              setError('unavailable');
               setStreamEnded(true);
             }
           } else if (data.type === Hls.ErrorTypes.MEDIA_ERROR) {
@@ -832,7 +835,7 @@ export function LiveStreamCard({ stream, chatSlot, immersive = false }: LiveStre
             } else {
               // For live streams, try reloading the source instead of ending
               logger.warn('Non-network fatal error on live stream, reloading source...');
-              setError('Reconnecting...');
+              setError('reconnecting');
               scheduleRetry(() => hls.loadSource(currentUrl()), 5000);
             }
           }
@@ -847,7 +850,7 @@ export function LiveStreamCard({ stream, chatSlot, immersive = false }: LiveStre
     }
     })().catch(() => {
       // hls.js chunk failed to load (flaky network / deploy skew)
-      if (!disposed) setError('Stream unavailable');
+      if (!disposed) setError('unavailable');
     });
 
     videoPlaybackManager.register(videoId, () => {
@@ -888,7 +891,7 @@ export function LiveStreamCard({ stream, chatSlot, immersive = false }: LiveStre
       video.play().catch(() => {
         setIsBuffering(false);
         setIsPlaying(false);
-        setError('Failed to play stream');
+        setError('playFailed');
       });
     }
   }, [isPlaying, isBuffering, videoId]);
@@ -906,7 +909,7 @@ export function LiveStreamCard({ stream, chatSlot, immersive = false }: LiveStre
     claimMediaSession(
       videoId,
       {
-        title: stream.title || "DeHub live",
+        title: stream.title || _copy("copy.fe1ed8de5976", { defaultValue: "DeHub live" }),
         artist: stream.streamer,
         artwork: stream.thumbnail || null,
       },
@@ -917,7 +920,7 @@ export function LiveStreamCard({ stream, chatSlot, immersive = false }: LiveStre
       },
     );
     setMediaSessionPlaying(videoId, true);
-  }, [isPlaying, isMuted, streamEnded, videoId, stream.title, stream.streamer, stream.thumbnail, togglePlay]);
+  }, [isPlaying, isMuted, streamEnded, videoId, stream.title, stream.streamer, stream.thumbnail, togglePlay, _copy]);
 
   // A card scrolled out of the virtualised feed, or a route change, must not
   // leave the OS holding a session for a player that is gone.
@@ -1035,7 +1038,7 @@ export function LiveStreamCard({ stream, chatSlot, immersive = false }: LiveStre
     }
     const amount = parseFloat(giftAmount);
     if (!amount || amount < MIN_TIP_DHB) {
-      toast.error(dhbText(`Minimum gift is ${MIN_TIP_DHB} DHB`));
+      toast.error(dhbText(_copy("copy.645b3cac6cc1", { defaultValue: "Minimum gift is {{value1}} DHB", value1: MIN_TIP_DHB })));
       return;
     }
     // The drawer goes away on the tap. The chain work runs behind it with
@@ -1100,6 +1103,16 @@ export function LiveStreamCard({ stream, chatSlot, immersive = false }: LiveStre
       toast.error(_copy("copy.567c78188a0c", { defaultValue: "Failed to end stream" }));
     }
   }, [stream.id, apiStreamId, isAuthenticated, end, walletAddress, _copy]);
+
+  const playbackErrorText = (code: PlaybackError) => {
+    switch (code) {
+      case 'reconnecting': return _copy("copy.27b80374e115", { defaultValue: "Reconnecting…" });
+      case 'alternateSource': return _copy("copy.664926fff019", { defaultValue: "Trying alternate source…" });
+      case 'connecting': return _copy("copy.fcdb7e76af21", { defaultValue: "Connecting to stream…" });
+      case 'unavailable': return _copy("copy.a018e81b341d", { defaultValue: "Stream unavailable" });
+      case 'playFailed': return _copy("copy.1b8ea5833a26", { defaultValue: "Failed to play stream" });
+    }
+  };
 
   const getActivityIcon = (type: string) => {
     switch (type) {
@@ -1422,10 +1435,10 @@ export function LiveStreamCard({ stream, chatSlot, immersive = false }: LiveStre
             )}
             {/* Playback feedback stays visible even when the controls are hidden. */}
             {(isBuffering || error || broadcastPaused) && (
-              <div role="status" aria-label={error || t('common.loading', 'Loading')} className="absolute inset-0 z-10 pointer-events-none flex items-center justify-center">
+              <div role="status" aria-label={error ? playbackErrorText(error) : t('common.loading', 'Loading')} className="absolute inset-0 z-10 pointer-events-none flex items-center justify-center">
                 <div className="flex flex-col items-center gap-2 text-center px-4">
-                  {!broadcastPaused && !waitingTooLong && error !== 'Stream unavailable' && error !== 'Failed to play stream' && <ButtonLoader size={40} className="!filter-none" />}
-                  {(broadcastPaused || waitingTooLong || error) && <p className="text-white/80 text-sm bg-black/60 rounded px-2 py-1">{broadcastPaused ? _copy("copy.91b75d1b48f9", { defaultValue: "Live paused" }) : waitingTooLong ? _copy("copy.510db6ad26be", { defaultValue: "Waiting for live video" }) : error}</p>}
+                  {!broadcastPaused && !waitingTooLong && error !== 'unavailable' && error !== 'playFailed' && <ButtonLoader size={40} className="!filter-none" />}
+                  {(broadcastPaused || waitingTooLong || error) && <p className="text-white/80 text-sm bg-black/60 rounded px-2 py-1">{broadcastPaused ? _copy("copy.91b75d1b48f9", { defaultValue: "Live paused" }) : waitingTooLong ? _copy("copy.510db6ad26be", { defaultValue: "Waiting for live video" }) : error && playbackErrorText(error)}</p>}
                 </div>
               </div>
             )}
@@ -1627,7 +1640,7 @@ export function LiveStreamCard({ stream, chatSlot, immersive = false }: LiveStre
           {!streamEnded && (
             // "Tuned in" is everyone who has ever opened this live, not the
             // room right now; the room is the "watching" figure in the chat.
-            <p className="font-semibold text-white text-sm">{stream.viewers}{_copy("copy.8bd95a29c9cb", { defaultValue: " tuned in" })}</p>
+            <p className="font-semibold text-white text-sm">{_copy("copy.34905eee7328", { defaultValue: "{{value1}} tuned in", value1: stream.viewers })}</p>
           )}
           <h3 className="text-white text-sm mt-1">{stream.title}</h3>
           <p className="text-zinc-500 text-xs mt-1">{stream.game}</p>

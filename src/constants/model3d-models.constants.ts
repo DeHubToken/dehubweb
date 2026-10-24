@@ -120,12 +120,14 @@ export const MODEL3D_MODELS: Record<string, Model3dModel> = {
     supportsNegativePrompt: true,
     maxReferenceImages: 1,
     typicalDuration: '1-3 min',
-    tips: [
-      '🗿 The safe default — clean topology and reliable texturing',
-      '🖼️ Attach an image for a much closer match than text alone',
-      '📐 Quad topology if you plan to edit the mesh in Blender',
-      '🎨 HD textures cost more but hold up close to camera',
-    ],
+    get tips() {
+      return [
+        _translateCopy("copy.17f0305abae4", { defaultValue: "🗿 The safe default — clean topology and reliable texturing" }),
+        _translateCopy("copy.4e4a6fee7170", { defaultValue: "🖼️ Attach an image for a much closer match than text alone" }),
+        _translateCopy("copy.3952ec2eadc0", { defaultValue: "📐 Quad topology if you plan to edit the mesh in Blender" }),
+        _translateCopy("copy.a2295359cbd3", { defaultValue: "🎨 HD textures cost more but hold up close to camera" }),
+      ];
+    },
   },
   'hunyuan3d-v2': {
     id: 'hunyuan3d-v2',
@@ -140,12 +142,14 @@ export const MODEL3D_MODELS: Record<string, Model3dModel> = {
     supportsSeed: true,
     maxReferenceImages: 1,
     typicalDuration: '1-2 min',
-    tips: [
-      '🌏 Strongest geometry for the price',
-      '🖼️ Needs an image — it has no text-to-3D path',
-      '⚪ Untextured is a third of the price; texture only when you need it',
-      '🔍 Higher octree resolution sharpens detail and costs render time',
-    ],
+    get tips() {
+      return [
+        _translateCopy("copy.29eb0bd604b2", { defaultValue: "🌏 Strongest geometry for the price" }),
+        _translateCopy("copy.2c5d0b0bb14a", { defaultValue: "🖼️ Needs an image — it has no text-to-3D path" }),
+        _translateCopy("copy.1ad2517b885e", { defaultValue: "⚪ Untextured is a third of the price; texture only when you need it" }),
+        _translateCopy("copy.8e0359a174a2", { defaultValue: "🔍 Higher octree resolution sharpens detail and costs render time" }),
+      ];
+    },
   },
   trellis: {
     id: 'trellis',
@@ -161,12 +165,14 @@ export const MODEL3D_MODELS: Record<string, Model3dModel> = {
     supportsSeed: true,
     maxReferenceImages: 1,
     typicalDuration: '30-60 s',
-    tips: [
-      '⚡ Fastest way to see whether an idea reads in 3D',
-      '🖼️ Image only — describe nothing, attach something',
-      '🔁 Pin a seed to compare settings on the same mesh',
-      '💡 Cheap enough to run three times and pick the best',
-    ],
+    get tips() {
+      return [
+        _translateCopy("copy.9f83d1d03403", { defaultValue: "⚡ Fastest way to see whether an idea reads in 3D" }),
+        _translateCopy("copy.180bf6efef31", { defaultValue: "🖼️ Image only — describe nothing, attach something" }),
+        _translateCopy("copy.ff4dc503a91d", { defaultValue: "🔁 Pin a seed to compare settings on the same mesh" }),
+        _translateCopy("copy.322eae865bed", { defaultValue: "💡 Cheap enough to run three times and pick the best" }),
+      ];
+    },
   },
   'rodin-hyper3d': {
     id: 'rodin-hyper3d',
@@ -184,12 +190,14 @@ export const MODEL3D_MODELS: Record<string, Model3dModel> = {
     usesPromptWithImage: true,
     exportFormats: ['glb', 'usdz', 'fbx', 'obj', 'stl'],
     typicalDuration: '2-5 min',
-    tips: [
-      '💎 The one to use when the mesh is going into a real pipeline',
-      '📦 Exports FBX, OBJ, USDZ and STL as well as GLB',
-      '✨ PBR materials react properly to scene lighting',
-      '🖼️ Works from a prompt, an image, or both together',
-    ],
+    get tips() {
+      return [
+        _translateCopy("copy.399f6c7158f3", { defaultValue: "💎 The one to use when the mesh is going into a real pipeline" }),
+        _translateCopy("copy.13bb81848781", { defaultValue: "📦 Exports FBX, OBJ, USDZ and STL as well as GLB" }),
+        _translateCopy("copy.beba774c16f6", { defaultValue: "✨ PBR materials react properly to scene lighting" }),
+        _translateCopy("copy.ccb72461e35d", { defaultValue: "🖼️ Works from a prompt, an image, or both together" }),
+      ];
+    },
   },
 };
 
@@ -202,8 +210,8 @@ export type TextureQuality = (typeof TEXTURE_QUALITIES)[number];
 
 /** Poly budgets, phrased by what they are for rather than by a raw number. */
 export const FACE_LIMIT_PRESETS: { value: number; label: string; detail: string }[] = [
-  { value: 10_000, get label() { return _translateCopy("copy.99a4c3f7f9da", { defaultValue: "Game-ready" }); }, detail: 'Light enough for realtime' },
-  { value: 30_000, get label() { return _translateCopy("copy.5386ea5db81c", { defaultValue: "Balanced" }); }, detail: 'Default — detail without bulk' },
-  { value: 100_000, get label() { return _translateCopy("copy.b6a3909630c4", { defaultValue: "High detail" }); }, detail: 'Close-up renders' },
-  { value: 300_000, get label() { return _translateCopy("copy.66c9ab177708", { defaultValue: "Maximum" }); }, detail: 'Largest file, slowest to load' },
+  { value: 10_000, get label() { return _translateCopy("copy.99a4c3f7f9da", { defaultValue: "Game-ready" }); }, get detail() { return _translateCopy("copy.427c17ea8cbe", { defaultValue: "Light enough for realtime" }); } },
+  { value: 30_000, get label() { return _translateCopy("copy.5386ea5db81c", { defaultValue: "Balanced" }); }, get detail() { return _translateCopy("copy.72773b8a1d40", { defaultValue: "Default — detail without bulk" }); } },
+  { value: 100_000, get label() { return _translateCopy("copy.b6a3909630c4", { defaultValue: "High detail" }); }, get detail() { return _translateCopy("copy.2130687fef99", { defaultValue: "Close-up renders" }); } },
+  { value: 300_000, get label() { return _translateCopy("copy.66c9ab177708", { defaultValue: "Maximum" }); }, get detail() { return _translateCopy("copy.bbdb618fd82c", { defaultValue: "Largest file, slowest to load" }); } },
 ];

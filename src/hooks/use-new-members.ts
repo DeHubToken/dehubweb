@@ -33,6 +33,7 @@ import { withWalletHeader } from '@/lib/supabase-wallet-client';
 import { getAuthToken } from '@/lib/api/dehub';
 import { buildAvatarUrl } from '@/lib/media-url';
 import { useAuth } from '@/contexts/AuthContext';
+import { translateCopy as _translateCopy } from '@/i18n/copy';
 
 /** How long an account counts as new. Mirrors WINDOW_DAYS in the edge function. */
 export const NEW_MEMBER_WINDOW_DAYS = 30;
@@ -98,10 +99,10 @@ function toNewMember(row: {
 export function joinedAgoLabel(joinedAt: string): string {
   const ms = Date.now() - new Date(joinedAt).getTime();
   const hours = Math.floor(ms / 3_600_000);
-  if (hours < 1) return 'just now';
-  if (hours < 24) return `${hours}h ago`;
+  if (hours < 1) return _translateCopy("copy.7ddb44d8a533", { defaultValue: "just now" });
+  if (hours < 24) return _translateCopy("copy.51452941c07c", { defaultValue: "{{value1}}h ago", value1: hours });
   const days = Math.floor(hours / 24);
-  return days === 1 ? 'yesterday' : `${days}d ago`;
+  return days === 1 ? _translateCopy("copy.9523d9fbe79b", { defaultValue: "yesterday" }) : _translateCopy("copy.0dc906eaa41d", { defaultValue: "{{value1}}d ago", value1: days });
 }
 
 /** Did this person join recently enough to count as new, rather than just latest? */

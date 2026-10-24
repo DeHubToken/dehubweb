@@ -48,10 +48,10 @@ export function FilmLinkEmbed({
   const streamCount = title.offers.filter((o) => o.monetizationType === 'flatrate').length;
 
   const summary = streamCount > 0
-    ? `Streaming on ${streamCount} service${streamCount === 1 ? '' : 's'}`
+    ? _copy("copy.4495a95e14a8", { count: streamCount, defaultValue_one: "Streaming on {{count}} service", defaultValue_other: "Streaming on {{count}} services", defaultValue: "Streaming on {{count}} services" })
     : cheapest
-      ? 'Available to rent or buy'
-      : 'See where to watch';
+      ? _copy("copy.a1a22c83ff90", { defaultValue: "Available to rent or buy" })
+      : _copy("copy.5e686d3c7a17", { defaultValue: "See where to watch" });
 
   return (
     <button

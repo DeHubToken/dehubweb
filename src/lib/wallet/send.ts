@@ -10,6 +10,7 @@ import { sendTransaction, waitForTransactionReceipt } from '@wagmi/core';
 import { wagmiConfig } from '@/lib/wagmi';
 import { initChainRpcUrls, BASE_CHAIN_ID } from '@/lib/contracts/dhb-token';
 import type { ChainId } from '@/components/app/ChainSelector';
+import { translateCopy as _translateCopy } from '@/i18n/copy';
 
 /**
  * Send native token (ETH / BNB) to an address
@@ -52,7 +53,7 @@ export async function sendNativeToken(
           } catch { /* not ready */ }
           await new Promise(r => setTimeout(r, 2000));
         }
-        throw new Error('Transaction not confirmed');
+        throw new Error(_translateCopy('copy.13d9c342073e', { defaultValue: 'Transaction not confirmed' }));
       },
     };
   }

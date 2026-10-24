@@ -28,6 +28,7 @@ const DEHUB_API_BASE = "https://api.dehub.io";
 
 import { parseSoundtrackTag } from '@/lib/soundtrack';
 import { toStoryboard } from '@/lib/storyboard';
+import { translateCopy as _translateCopy } from '@/i18n/copy';
 export { parseSoundtrackTag } from '@/lib/soundtrack';
 
 // ===========================================================================
@@ -292,7 +293,7 @@ function mapVideoItem(item: UnifiedFeedItem, index: number): VideoItem {
     durationSeconds: (isAudioPost ? item.audioDuration : (item.videoDuration ?? replayDurationSec)) || 0,
     title: displayPostTitle(item.name, item.description),
     description: item.description,
-    channel: item.minterDisplayName || item.minterUsername || item.mintername || 'Unknown Creator',
+    channel: item.minterDisplayName || item.minterUsername || item.mintername || _translateCopy("copy.056823642989", { defaultValue: "Unknown Creator" }),
     channelAvatar,
     verified: false,
     views: formatViews(resolveViewCount(item)),
@@ -472,7 +473,7 @@ function mapTextPost(item: UnifiedFeedItem, index: number): TextPost {
     type: 'post',
     author: {
       id: item.minter,
-      name: item.minterDisplayName || item.minterUsername || item.mintername || 'Unknown',
+      name: item.minterDisplayName || item.minterUsername || item.mintername || _translateCopy("copy.b764cdc0eab7", { defaultValue: "Unknown" }),
       handle: item.minterUsername || item.mintername || item.minter,
       avatarSeed: avatarUrl,
       verified: false,

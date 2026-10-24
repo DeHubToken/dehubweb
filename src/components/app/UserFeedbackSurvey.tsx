@@ -43,13 +43,20 @@ const SURVEY_VERSION = 3;
 /** Per-round, so a completed earlier round does not suppress this one. */
 const SURVEY_DISMISSED_KEY = `dehub_survey_completed_v${SURVEY_VERSION}`;
 
+interface SurveyOption {
+  /** Stored in `answers` as-is, so it stays English whatever the reader's language. */
+  value: string;
+  /** What the reader sees. */
+  readonly label: string;
+}
+
 interface SurveyQuestion {
   key: string;
-  question: string;
+  readonly question: string;
   /** 'select' renders the button list; 'text' renders a free-text textarea. */
   type: 'select' | 'text';
-  options?: string[];
-  placeholder?: string;
+  options?: SurveyOption[];
+  readonly placeholder?: string;
 }
 
 /**
@@ -61,27 +68,33 @@ interface SurveyQuestion {
 const QUESTIONS: SurveyQuestion[] = [
   {
     key: 'join_reason',
-    question: 'What made you join DeHub?',
+    get question() { return _translateCopy("copy.3fbc836e15fd", { defaultValue: "What made you join DeHub?" }); },
     type: 'text',
     get placeholder() { return _translateCopy("copy.2c82d66bf91b", { defaultValue: "In your own words…" }); },
   },
   {
     key: 'favourite_thing',
-    question: 'What do you like most about DeHub?',
+    get question() { return _translateCopy("copy.b31b23496638", { defaultValue: "What do you like most about DeHub?" }); },
     type: 'text',
     get placeholder() { return _translateCopy("copy.2c82d66bf91b", { defaultValue: "In your own words…" }); },
   },
   {
     key: 'consent_share',
-    question: "Are you ok if we shared your name and answers above in promotional materials, tweets, etc? No pressure if not.",
+    get question() { return _translateCopy("copy.6e154f84f8e5", { defaultValue: "Are you ok if we shared your name and answers above in promotional materials, tweets, etc? No pressure if not." }); },
     type: 'select',
-    options: ['Yes, go ahead', 'No, keep it private'],
+    options: [
+      { value: 'Yes, go ahead', get label() { return _translateCopy("copy.a61850c5c40a", { defaultValue: "Yes, go ahead" }); } },
+      { value: 'No, keep it private', get label() { return _translateCopy("copy.682e42ec9ed4", { defaultValue: "No, keep it private" }); } },
+    ],
   },
   {
     key: 'video_interview_interest',
-    question: 'Would you be open to a short video interview about why you joined / love DeHub, for us to share in promo videos?',
+    get question() { return _translateCopy("copy.69f6ce417f90", { defaultValue: "Would you be open to a short video interview about why you joined / love DeHub, for us to share in promo videos?" }); },
     type: 'select',
-    options: ["Yes, I'm interested", 'No, not for me'],
+    options: [
+      { value: "Yes, I'm interested", get label() { return _translateCopy("copy.e1da388d3206", { defaultValue: "Yes, I'm interested" }); } },
+      { value: 'No, not for me', get label() { return _translateCopy("copy.9499fb27b37a", { defaultValue: "No, not for me" }); } },
+    ],
   },
 ];
 
@@ -211,7 +224,7 @@ export function UserFeedbackSurvey() {
           <div className="flex items-center justify-between px-5 pt-5 pb-2">
             <div>
               <h2 className="text-white font-bold text-lg">{_copy("copy.b1bfab35b286", { defaultValue: "Quick Feedback" })}</h2>
-              <p className="text-zinc-500 text-xs mt-0.5">{_copy("copy.39821a754d34", { defaultValue: "Question " })}{step + 1}{_copy("copy.a4282e4b2298", { defaultValue: " of " })}{QUESTIONS.length}
+              <p className="text-zinc-500 text-xs mt-0.5">{_copy("copy.ed9f6630d4b5", { defaultValue: "Question {{value1}} of {{value2}}", value1: step + 1, value2: QUESTIONS.length })}
               </p>
             </div>
             <button
@@ -259,11 +272,11 @@ export function UserFeedbackSurvey() {
                 ) : (
                   <div className="flex flex-col gap-2">
                     {currentQuestion.options!.map(option => {
-                      const isSelected = answers[currentQuestion.key] === option;
+                      const isSelected = answers[currentQuestion.key] === option.value;
                       return (
                         <button
-                          key={option}
-                          onClick={() => handleAnswer(option)}
+                          key={option.value}
+                          onClick={() => handleAnswer(option.value)}
                           className={cn(
                             "w-full text-left px-4 py-3 rounded-xl border transition-all text-sm font-medium",
                             isSelected
@@ -271,7 +284,7 @@ export function UserFeedbackSurvey() {
                               : "bg-zinc-800/50 text-zinc-300 border-zinc-700/50 hover:bg-zinc-800 hover:border-zinc-600"
                           )}
                         >
-                          {option}
+                          {option.label}
                         </button>
                       );
                     })}

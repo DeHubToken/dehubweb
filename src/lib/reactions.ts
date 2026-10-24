@@ -25,6 +25,7 @@ import { Heart, Flame, type LucideIcon } from "lucide-react";
 import ThumbsDown from "@/components/ui/cut-icons/dislike";
 
 import ThumbsUp from "@/components/ui/cut-icons/like";
+import { translateCopy as _translateCopy } from "@/i18n/copy";
 
 
 /** Every reaction, in picker order — also the deterministic tiebreak order. */
@@ -72,16 +73,16 @@ export interface ReactionMeta {
 }
 
 const META: Record<PostReaction, ReactionMeta> = {
-  like:    { key: 'like',    label: 'Like',    emoji: '👍', icon: ThumbsUp,   positive: true },
-  love:    { key: 'love',    label: 'Love',    emoji: '❤️', icon: Heart,      positive: true },
-  respect: { key: 'respect', label: 'Respect', emoji: '✊',                    positive: true },
-  hot:     { key: 'hot',     label: 'Hot',     emoji: '🔥', icon: Flame,      positive: true },
-  hundred: { key: 'hundred', label: '100',     emoji: '💯',                    positive: true },
-  lol:     { key: 'lol',     label: 'LOL',     emoji: '😂',                    positive: true },
-  sad:     { key: 'sad',     label: 'Sad',     emoji: '😢',                    positive: true },
-  cry:     { key: 'cry',     label: 'Crying',  emoji: '😭',                    positive: true },
-  poo:     { key: 'poo',     label: 'Poo',     emoji: '💩',                    positive: true },
-  dislike: { key: 'dislike', label: 'Dislike', emoji: '👎', icon: ThumbsDown, positive: false },
+  like: { key: 'like', get label() { return _translateCopy('reactionInfo.labels.like', { defaultValue: 'Like' }); }, emoji: '👍', icon: ThumbsUp, positive: true },
+  love: { key: 'love', get label() { return _translateCopy('reactionInfo.labels.love', { defaultValue: 'Love' }); }, emoji: '❤️', icon: Heart, positive: true },
+  respect: { key: 'respect', get label() { return _translateCopy('reactionInfo.labels.respect', { defaultValue: 'Respect' }); }, emoji: '✊', positive: true },
+  hot: { key: 'hot', get label() { return _translateCopy('reactionInfo.labels.hot', { defaultValue: 'Hot' }); }, emoji: '🔥', icon: Flame, positive: true },
+  hundred: { key: 'hundred', get label() { return _translateCopy('reactionInfo.labels.hundred', { defaultValue: '100' }); }, emoji: '💯', positive: true },
+  lol: { key: 'lol', get label() { return _translateCopy('reactionInfo.labels.lol', { defaultValue: 'LOL' }); }, emoji: '😂', positive: true },
+  sad: { key: 'sad', get label() { return _translateCopy('reactionInfo.labels.sad', { defaultValue: 'Sad' }); }, emoji: '😢', positive: true },
+  cry: { key: 'cry', get label() { return _translateCopy('reactionInfo.labels.cry', { defaultValue: 'Crying' }); }, emoji: '😭', positive: true },
+  poo: { key: 'poo', get label() { return _translateCopy('reactionInfo.labels.poo', { defaultValue: 'Poo' }); }, emoji: '💩', positive: true },
+  dislike: { key: 'dislike', get label() { return _translateCopy('reactionInfo.labels.dislike', { defaultValue: 'Dislike' }); }, emoji: '👎', icon: ThumbsDown, positive: false },
 };
 
 /** Ordered metadata for the picker. */
@@ -123,8 +124,10 @@ export const HAS_NEGATIVE_TRAY = NEGATIVE_REACTION_LIST.length > 1;
 export function negativeThumbLabel(myReaction: PostReaction | null | undefined): string {
   const held =
     myReaction && !isPositiveReaction(myReaction) ? reactionMeta(myReaction).label : null;
-  if (!HAS_NEGATIVE_TRAY) return held ?? 'Dislike';
-  return held ? `${held} — hold to change your reaction` : 'Dislike — hold to react';
+  if (!HAS_NEGATIVE_TRAY) return held ?? META.dislike.label;
+  return held
+    ? _translateCopy('copy.a3156ed263d2', { defaultValue: '{{value1}} — hold to change your reaction', value1: held })
+    : _translateCopy('copy.12b91b0ac5dd', { defaultValue: '{{value1}} — hold to react', value1: META.dislike.label });
 }
 
 /**

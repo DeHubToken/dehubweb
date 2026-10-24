@@ -174,8 +174,8 @@ export function ScheduleStagePanel({
             // Pre-filled, not published: the composer still asks for the mint.
             openPostModal(
               at
-                ? `🎙️ ${scheduled.title} — live on Stages ${format(at, 'EEE d MMM')}, ${stageUtcClock(at)}\n\n${link}`
-                : `🎙️ ${scheduled.title} — live on Stages\n\n${link}`,
+                ? `${_copy("copy.fd21220300ea", { defaultValue: "🎙️ {{value1}} — live on Stages {{value2}}, {{value3}}", value1: scheduled.title, value2: format(at, 'EEE d MMM'), value3: stageUtcClock(at) })}\n\n${link}`
+                : `${_copy("copy.775b9e99d10c", { defaultValue: "🎙️ {{value1}} — live on Stages", value1: scheduled.title })}\n\n${link}`,
             );
             onDone();
           }}
@@ -248,7 +248,7 @@ export function ScheduleStagePanel({
         {/* The input is in the host's own timezone with nothing saying so —
             echo the UTC the audience will be told, while it can still be changed. */}
         {when && isValidTime && (
-          <p className="text-xs text-white/40">{_copy("copy.b1122c068ae9", { defaultValue: "Announced as " })}{stageUtcClock(new Date(when))}
+          <p className="text-xs text-white/40">{_copy("copy.e33206790b48", { defaultValue: "Announced as {{value1}}", value1: stageUtcClock(new Date(when)) })}
           </p>
         )}
       </div>

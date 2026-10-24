@@ -187,7 +187,7 @@ export function Model3dPaywallModal({
     } catch (err: unknown) {
       console.error('[Model3dPaywall] Generation setup failed:', err);
       toast.dismiss('model3d-gen-payment');
-      toast.error(err instanceof Error ? err.message : 'Could not start the generation.');
+      toast.error(err instanceof Error ? err.message : _copy("copy.91d7353c7fd3", { defaultValue: "Could not start the generation." }));
     } finally {
       setIsPaying(false);
     }

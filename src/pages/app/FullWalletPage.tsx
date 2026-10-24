@@ -1009,7 +1009,7 @@ function SendDialog({ open, onOpenChange, token, chainId, onSuccess, allTokens, 
             ) : (
               <div className="relative">
                 <Input
-                  placeholder={`@username or 0x...`}
+                  placeholder={_copy("copy.a686767dcb39", { defaultValue: "@username or 0x..." })}
                   value={usernameQuery || toAddress}
                   onChange={e => {
                     const val = e.target.value;
@@ -1143,7 +1143,7 @@ function ImportTokenDialog({ open, onOpenChange, chainId: initialChainId, onImpo
       ? /^[1-9A-HJ-NP-Za-km-z]{32,44}$/.test(trimmed)
       : /^0x[a-fA-F0-9]{40}$/.test(trimmed);
     if (!valid) {
-      toast.error(isSolana ? 'Enter a valid Solana mint address' : t('wallet.invalidContractAddress'));
+      toast.error(isSolana ? _copy("copy.c2291a9f191a", { defaultValue: "Enter a valid Solana mint address" }) : t('wallet.invalidContractAddress'));
       return;
     }
     setLoading(true);

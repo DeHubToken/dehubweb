@@ -8,6 +8,7 @@ import type { DeHubNFT } from '@/lib/api/dehub';
 import { resolveDislikeCount, resolveLikeCount, resolveMyReaction, resolveReactionCounts, resolveViewCount } from '@/lib/engagement';
 import type { VideoItem, ImagePost, TextPost, FeedItem } from '@/types/feed.types';
 import { toStoryboard } from '@/lib/storyboard';
+import { translateCopy as _translateCopy } from '@/i18n/copy';
 
 function detectPostType(nft: DeHubNFT): 'video' | 'image' | 'text' {
   const postType = (nft.postType || nft.media_type) as string | undefined;
@@ -160,7 +161,7 @@ function mapNFTToTextPost(nft: DeHubNFT): TextPost {
     shopListingCount: (nft as any).shopListingCount,
     author: {
       id: nft.minter,
-      name: nft.minterDisplayName || nft.minterUsername || nft.mintername || 'Unknown',
+      name: nft.minterDisplayName || nft.minterUsername || nft.mintername || _translateCopy('copy.b764cdc0eab7', { defaultValue: 'Unknown' }),
       handle: nft.minterUsername || nft.mintername || nft.minter,
       avatarSeed: avatarUrl,
       verified: false,

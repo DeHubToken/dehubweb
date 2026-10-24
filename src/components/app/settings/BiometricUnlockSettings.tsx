@@ -72,7 +72,7 @@ function EnrollDialog({
       close(false);
     } catch (err) {
       if (err instanceof PasskeyCancelledError) return;
-      setError(err instanceof Error ? err.message : 'Could not turn on biometric unlock');
+      setError(err instanceof Error ? err.message : _copy("copy.8e9a4bd17e64", { defaultValue: "Could not turn on biometric unlock" }));
     } finally {
       setBusy(false);
     }
@@ -106,7 +106,7 @@ function EnrollDialog({
                 disabled={busy || !password}
                 onClick={() => enroll(async () => {
                   const wallet = protection.wallet;
-                  if (!wallet?.payload) throw new Error('No wallet password is set for this account.');
+                  if (!wallet?.payload) throw new Error(_copy("copy.ce09a52308c0", { defaultValue: "No wallet password is set for this account." }));
                   return decryptString(wallet.payload, password);
                 })}
                 className="w-full h-12 bg-white hover:bg-white/90 text-black font-semibold rounded-xl"
@@ -162,16 +162,16 @@ function AddPasswordBackupDialog({
 
   const handleAdd = async () => {
     setError(null);
-    if (password !== confirm) { setError("Passwords don't match"); return; }
+    if (password !== confirm) { setError(_copy("copy.ec5d490e7422", { defaultValue: "Passwords don't match" })); return; }
     setBusy(true);
     try {
       const assessment = await assessPassword(password);
-      if (!assessment.longEnough) { setError(`Password must be at least ${MIN_PASSWORD_LENGTH} characters`); return; }
+      if (!assessment.longEnough) { setError(_copy("copy.68b4bdd219c5", { defaultValue: "Password must be at least {{value1}} characters", value1: MIN_PASSWORD_LENGTH })); return; }
       if (assessment.breached === true) {
-        setError('This password has appeared in a data breach — choose a different one');
+        setError(_copy("copy.200c70fe2782", { defaultValue: "This password has appeared in a data breach — choose a different one" }));
         return;
       }
-      if (!assessment.acceptable) { setError('Choose a stronger password (mix letters, numbers, and symbols)'); return; }
+      if (!assessment.acceptable) { setError(_copy("copy.1510dcb7d4c4", { defaultValue: "Choose a stronger password (mix letters, numbers, and symbols)" })); return; }
 
       const secret = await unlockWithBiometrics(userId, protection.wraps);
       const derived = deriveFromSecret(secret);
@@ -183,7 +183,7 @@ function AddPasswordBackupDialog({
       close(false);
     } catch (err) {
       if (err instanceof PasskeyCancelledError) return;
-      setError(err instanceof Error ? err.message : 'Could not add a password backup');
+      setError(err instanceof Error ? err.message : _copy("copy.1f9f7e2a2cfd", { defaultValue: "Could not add a password backup" }));
     } finally {
       setBusy(false);
     }
@@ -264,7 +264,7 @@ export function BiometricUnlockSettings() {
       toast.success(_copy("copy.15c9dcfa93a8", { defaultValue: "Device removed" }));
       await refresh();
     } catch (err) {
-      toast.error(err instanceof Error ? err.message : 'Could not remove that device');
+      toast.error(err instanceof Error ? err.message : _copy("copy.63a012b3ac1a", { defaultValue: "Could not remove that device" }));
     } finally {
       setRemoving(null);
     }

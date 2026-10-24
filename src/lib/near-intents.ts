@@ -1,3 +1,5 @@
+import { translateCopy as _translateCopy } from '@/i18n/copy';
+
 // NEAR Intents 1Click API - Asset mappings and types
 
 export const ONE_CLICK_API = 'https://1click.chaindefuser.com/v0';
@@ -16,11 +18,11 @@ export const ONE_CLICK_API = 'https://1click.chaindefuser.com/v0';
  * Base, so those buyers receive USDC and ETH and are told so.
  */
 export const DESTINATION_ASSETS: Record<string, { assetId: string; decimals: number; label: string; symbol: string }> = {
-  ETH: { assetId: 'nep141:base.omft.near', decimals: 18, label: 'ETH on Base', symbol: 'ETH' },
-  USDC: { assetId: 'nep141:base-0x833589fcd6edb6e08f4c7c32d4f71b54bda02913.omft.near', decimals: 6, label: 'USDC on Base', symbol: 'USDC' },
-  USDT: { assetId: 'nep141:base-0x833589fcd6edb6e08f4c7c32d4f71b54bda02913.omft.near', decimals: 6, label: 'USDC on Base', symbol: 'USDC' },
-  BTC: { assetId: 'nep141:base-0xcbb7c0000ab88b473b1f5afd9ef808440eed33bf.omft.near', decimals: 8, label: 'cbBTC on Base', symbol: 'cbBTC' },
-  BNB: { assetId: 'nep141:base.omft.near', decimals: 18, label: 'ETH on Base', symbol: 'ETH' },
+  ETH: { assetId: 'nep141:base.omft.near', decimals: 18, get label() { return _translateCopy('copy.def8968e92ae', { defaultValue: '{{value1}} on Base', value1: 'ETH' }); }, symbol: 'ETH' },
+  USDC: { assetId: 'nep141:base-0x833589fcd6edb6e08f4c7c32d4f71b54bda02913.omft.near', decimals: 6, get label() { return _translateCopy('copy.def8968e92ae', { defaultValue: '{{value1}} on Base', value1: 'USDC' }); }, symbol: 'USDC' },
+  USDT: { assetId: 'nep141:base-0x833589fcd6edb6e08f4c7c32d4f71b54bda02913.omft.near', decimals: 6, get label() { return _translateCopy('copy.def8968e92ae', { defaultValue: '{{value1}} on Base', value1: 'USDC' }); }, symbol: 'USDC' },
+  BTC: { assetId: 'nep141:base-0xcbb7c0000ab88b473b1f5afd9ef808440eed33bf.omft.near', decimals: 8, get label() { return _translateCopy('copy.def8968e92ae', { defaultValue: '{{value1}} on Base', value1: 'cbBTC' }); }, symbol: 'cbBTC' },
+  BNB: { assetId: 'nep141:base.omft.near', decimals: 18, get label() { return _translateCopy('copy.def8968e92ae', { defaultValue: '{{value1}} on Base', value1: 'ETH' }); }, symbol: 'ETH' },
 };
 
 export const DEFAULT_DESTINATION = DESTINATION_ASSETS.ETH;

@@ -71,7 +71,7 @@ export function VerifyUnlockButton({
 
       const gateToken = tokenAddress || getChainConfig(chainId as ChainId).dhbToken;
       if (!gateToken) {
-        setMessage('This post does not say which token it is gated on.');
+        setMessage(_copy("copy.98cb227936d7", { defaultValue: "This post does not say which token it is gated on." }));
         return;
       }
 
@@ -117,11 +117,11 @@ export function VerifyUnlockButton({
       }
 
       setMessage(
-        `You hold ${formatAmount(balance)} ${currency}. This post needs ${formatAmount(requiredAmount)}.`,
+        _copy("copy.7365d92b5455", { defaultValue: "You hold {{value1}} {{value2}}. This post needs {{value3}}.", value1: formatAmount(balance), value2: currency, value3: formatAmount(requiredAmount) }),
       );
     } catch (err) {
       console.error('[HoldGate] Balance check failed:', err);
-      setMessage('Could not read your balance just now.');
+      setMessage(_copy("copy.d52b98d76669", { defaultValue: "Could not read your balance just now." }));
     } finally {
       setIsChecking(false);
     }

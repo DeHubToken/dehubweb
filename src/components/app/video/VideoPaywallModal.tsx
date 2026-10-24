@@ -276,23 +276,23 @@ export function VideoPaywallModal({
         setIsUploading(true);
         try {
           if (referenceImages.length > 0) {
-            toast.loading('Uploading reference images...', { id: 'video-gen-payment' });
+            toast.loading(_copy("copy.89e6858f1b9a", { defaultValue: "Uploading reference images..." }), { id: 'video-gen-payment' });
             options.referenceImageUrls = await Promise.all(
               referenceImages.map((r) => uploadToStorage(r.file, 'video-ref-images')),
             );
           }
           if (endFrameFile) {
-            toast.loading('Uploading end frame...', { id: 'video-gen-payment' });
+            toast.loading(_copy("copy.ed6c51709397", { defaultValue: "Uploading end frame..." }), { id: 'video-gen-payment' });
             options.endFrameUrl = await uploadToStorage(endFrameFile.file, 'video-end-frames');
           }
           if (audioFiles.length > 0) {
-            toast.loading('Uploading audio...', { id: 'video-gen-payment' });
+            toast.loading(_copy("copy.12d3032e240b", { defaultValue: "Uploading audio..." }), { id: 'video-gen-payment' });
             options.audioUrls = await Promise.all(
               audioFiles.map((f) => uploadToStorage(f, 'video-audio')),
             );
           }
           if (videoFiles.length > 0) {
-            toast.loading('Uploading video references...', { id: 'video-gen-payment' });
+            toast.loading(_copy("copy.5392a62fda9b", { defaultValue: "Uploading video references..." }), { id: 'video-gen-payment' });
             options.videoUrls = await Promise.all(
               videoFiles.map((f) => uploadToStorage(f, 'video-refs')),
             );
@@ -327,7 +327,7 @@ export function VideoPaywallModal({
     } catch (err: unknown) {
       console.error('[VideoPaywall] Generation setup failed:', err);
       toast.dismiss('video-gen-payment');
-      toast.error(err instanceof Error ? err.message : 'Could not start the generation.');
+      toast.error(err instanceof Error ? err.message : _copy("copy.91d7353c7fd3", { defaultValue: "Could not start the generation." }));
     } finally {
       setIsPaying(false);
       setIsUploading(false);
@@ -512,7 +512,7 @@ export function VideoPaywallModal({
               <div className="bg-gradient-to-br from-blue-900/20 to-purple-900/20 rounded-xl p-3 border border-blue-500/10">
                 <div className="flex items-center gap-1.5 mb-1.5">
                   <Lightbulb className="w-3.5 h-3.5 text-yellow-400" />
-                  <span className="text-xs font-medium text-zinc-300">{_copy("copy.5336c950af39", { defaultValue: "Tips for " })}{model.name}</span>
+                  <span className="text-xs font-medium text-zinc-300">{_copy("copy.c6e2d44e31f0", { defaultValue: "Tips for {{value1}}", value1: model.name })}</span>
                 </div>
                 <div className="space-y-0.5">
                   {model.tips.map((tip, idx) => (
@@ -558,7 +558,13 @@ export function VideoPaywallModal({
                       <div>
                         <p className="text-sm text-zinc-300 font-medium flex items-center gap-1.5">
                           <Image className="w-3.5 h-3.5 text-blue-400" />{_copy("copy.1f218e788605", { defaultValue: "Reference Images" })}</p>
-                        <p className="text-[10px] text-zinc-500 mt-0.5">{_copy("copy.bb33dbdb2f21", { defaultValue: "Use " })}<code className="text-purple-400">{_copy("copy.f8440db475e2", { defaultValue: "@Image1" })}</code>–<code className="text-purple-400">{_copy("copy.a1bbfae0f460", { defaultValue: "@Image9" })}</code>{_copy("copy.c37206676570", { defaultValue: " in prompt" })}</p>
+                        <p className="text-[10px] text-zinc-500 mt-0.5">
+                          {/* The @Image tokens are what the model reads in the prompt, so they stay untranslated. */}
+                          {(() => {
+                            const [before, after] = _copy("copy.1bb9b6960e55", { defaultValue: "Use {{value1}} in prompt", value1: '\u0001' }).split('\u0001');
+                            return <>{before}<code className="text-purple-400">@Image1</code>–<code className="text-purple-400">@Image9</code>{after}</>;
+                          })()}
+                        </p>
                       </div>
                       {referenceImages.length < (model.maxReferenceImages || 9) && (
                         <button
@@ -588,7 +594,7 @@ export function VideoPaywallModal({
                                 <X className="w-3 h-3" />
                               </button>
                             </div>
-                            <span className="absolute bottom-0 left-0 right-0 text-center text-[7px] bg-black/70 text-purple-300 py-0.5">{_copy("copy.273a81e9b289", { defaultValue: "@Image" })}{idx + 1}
+                            <span className="absolute bottom-0 left-0 right-0 text-center text-[7px] bg-black/70 text-purple-300 py-0.5">@Image{idx + 1}
                             </span>
                           </div>
                         ))}

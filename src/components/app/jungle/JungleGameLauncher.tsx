@@ -1,4 +1,5 @@
 import { useTranslation as _useCopy } from 'react-i18next';
+import { translateCopy as _translateCopy } from '@/i18n/copy';
 import { lockBodyScroll } from '@/lib/body-scroll-lock';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { useAppTheme } from '@/contexts/ThemeContext';
@@ -256,9 +257,9 @@ function checkCapability(): Capability {
   if (!gpu.webgl) {
     return {
       ok: false,
-      reason: 'NO WEBGL',
+      reason: _translateCopy("copy.c87d62b143c8", { defaultValue: "NO WEBGL" }),
       detail:
-        'This browser is not giving any page a WebGL context. Hardware acceleration is most likely switched off in the browser settings.',
+        _translateCopy("copy.ec00487a8201", { defaultValue: "This browser is not giving any page a WebGL context. Hardware acceleration is most likely switched off in the browser settings." }),
     };
   }
 
@@ -266,8 +267,8 @@ function checkCapability(): Capability {
   if (gpu.software) {
     return {
       ok: false,
-      reason: 'SOFTWARE RENDERING',
-      detail: `The GPU is not being used (${gpu.renderer}). The walk would run at a few frames per second. Enable hardware acceleration in the browser settings, then restart it.`,
+      reason: _translateCopy("copy.54fc1b88ffd3", { defaultValue: "SOFTWARE RENDERING" }),
+      detail: _translateCopy("copy.3b14db60e41d", { defaultValue: "The GPU is not being used ({{value1}}). The walk would run at a few frames per second. Enable hardware acceleration in the browser settings, then restart it.", value1: gpu.renderer }),
     };
   }
 

@@ -1,3 +1,5 @@
+import { translateCopy as _translateCopy } from '@/i18n/copy';
+
 /**
  * Biometric wallet unlock via WebAuthn PRF.
  * =========================================
@@ -35,7 +37,7 @@ const WEBAUTHN_TIMEOUT_MS = 60_000;
 
 /** The authenticator can't do PRF — caller should fall back to the password. */
 export class PasskeyUnsupportedError extends Error {
-  constructor(message = "This device can't use biometrics to unlock your wallet.") {
+  constructor(message = _translateCopy("copy.dcaa47607b9e", { defaultValue: "This device can't use biometrics to unlock your wallet." })) {
     super(message);
     this.name = "PasskeyUnsupportedError";
   }
@@ -43,7 +45,7 @@ export class PasskeyUnsupportedError extends Error {
 
 /** User dismissed the biometric sheet (or it timed out). Not an error state. */
 export class PasskeyCancelledError extends Error {
-  constructor(message = "Biometric prompt cancelled.") {
+  constructor(message = _translateCopy("copy.d1a071e6cb7f", { defaultValue: "Biometric prompt cancelled." })) {
     super(message);
     this.name = "PasskeyCancelledError";
   }
@@ -130,7 +132,7 @@ function classifyWebAuthnError(err: unknown): Error {
   if (name === "NotSupportedError" || name === "SecurityError" || name === "InvalidStateError") {
     return new PasskeyUnsupportedError();
   }
-  return err instanceof Error ? err : new Error("Biometric unlock failed");
+  return err instanceof Error ? err : new Error(_translateCopy("copy.92ac34fc40b8", { defaultValue: "Biometric unlock failed" }));
 }
 
 // ── Capability ──────────────────────────────────────────────────────────────
@@ -325,7 +327,7 @@ export interface PrfEvaluation {
  * wrap row to open.
  */
 export async function evaluatePrf(refs: PasskeyRef[]): Promise<PrfEvaluation> {
-  if (!refs.length) throw new PasskeyUnsupportedError("No biometric unlock is set up for this account.");
+  if (!refs.length) throw new PasskeyUnsupportedError(_translateCopy("copy.8daf1c9ecc72", { defaultValue: "No biometric unlock is set up for this account." }));
   if (!window.PublicKeyCredential) throw new PasskeyUnsupportedError();
 
   const challenge = crypto.getRandomValues(new Uint8Array(32));
@@ -368,7 +370,7 @@ export async function evaluatePrf(refs: PasskeyRef[]): Promise<PrfEvaluation> {
   if (!keyMaterial) {
     // No fallback advice here — only the caller knows what this account has.
     throw new PasskeyUnsupportedError(
-      "This device unlocked the passkey but wouldn't release the wallet key.",
+      _translateCopy("copy.139e2b9b4707", { defaultValue: "This device unlocked the passkey but wouldn't release the wallet key." }),
     );
   }
 

@@ -107,7 +107,7 @@ export default function StoreDetailPage() {
 
   return (
     <div className="min-h-screen">
-      <SEOHead title={_copy("copy.9a01cfe1592a", { defaultValue: "{{value1}} — DeHub Stores", value1: store.name })} description={(store.description || `Shop ${store.name} on DeHub. Peer-to-peer commerce paid in tokens or USDC.`).slice(0, 155)} url={`https://dehub.io/app/stores/${store.id}`} />
+      <SEOHead title={_copy("copy.9a01cfe1592a", { defaultValue: "{{value1}} — DeHub Stores", value1: store.name })} description={(store.description || _copy("copy.6730e5a02d90", { defaultValue: "Shop {{value1}} on DeHub. Peer-to-peer commerce paid in tokens or USDC.", value1: store.name })).slice(0, 155)} url={`https://dehub.io/app/stores/${store.id}`} />
       <PageIsland
         back
         backFallback="/app/stores"

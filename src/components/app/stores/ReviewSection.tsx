@@ -146,7 +146,7 @@ export function ReviewSection({ listingId, sellerAddress }: ReviewSectionProps) 
                       label={t('stores.submit')}
                       icon={<Star className="w-3.5 h-3.5" />}
                       loading={createReview.isPending}
-                      loadingLabel="Posting..."
+                      loadingLabel={_copy("copy.e24da73ee953", { defaultValue: "Posting..." })}
                       disabled={rating === 0}
                       onClick={handleSubmit}
                       width="100px"

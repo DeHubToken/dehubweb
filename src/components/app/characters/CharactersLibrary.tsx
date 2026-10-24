@@ -54,16 +54,16 @@ export function CharactersLibrary() {
     navigator.clipboard.writeText(`@${slug}`);
     setCopiedId(id);
     setTimeout(() => setCopiedId(null), 1200);
-    toast.success(`Copied @${slug}`);
+    toast.success(_copy("copy.6d4890f47d49", { defaultValue: "Copied @{{value1}}", value1: slug }));
   };
 
   const handleDelete = async (c: UserCharacter) => {
-    if (!confirm(`Delete character "${c.name}"?`)) return;
+    if (!confirm(_copy("copy.1c00ceb37991", { defaultValue: "Delete character \"{{value1}}\"?", value1: c.name }))) return;
     try {
       await del.mutateAsync(c.id);
       toast.success(_copy("copy.05ac5243905f", { defaultValue: "Character deleted" }));
     } catch (err) {
-      toast.error(err instanceof Error ? err.message : 'Failed to delete');
+      toast.error(err instanceof Error ? err.message : _copy("copy.f625b14e1b2c", { defaultValue: "Failed to delete" }));
     }
   };
 
