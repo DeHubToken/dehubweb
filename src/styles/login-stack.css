@@ -26,7 +26,7 @@ html[data-system-tone="light"] .login-stack {
   position: relative;
   margin: 0 -14px;
   /* Leave room for email, alternative providers and legal copy on phones. */
-  height: clamp(260px, calc(100svh - 400px - env(safe-area-inset-bottom)), 480px);
+  height: clamp(260px, calc(100svh - 360px - env(safe-area-inset-bottom)), 520px);
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 8px;
@@ -106,6 +106,19 @@ html[data-system-tone="light"] .login-stack-corner {
 }
 .login-stack__accent { color: var(--ls-accent); }
 
+.login-stack-scroll > .login-stack {
+  flex: 1 0 200px;
+  width: 100%;
+}
+.login-stack-scroll .login-stack__lanes {
+  height: auto;
+  min-height: 0;
+  flex: 1;
+}
+.login-stack-scroll > .login-stack-form {
+  flex-shrink: 0;
+  width: 100%;
+}
 @media (min-width: 768px) {
   .login-stack-scroll > .login-stack,
   .login-stack-scroll > .login-stack-form {
@@ -113,9 +126,13 @@ html[data-system-tone="light"] .login-stack-corner {
     margin-left: auto;
     margin-right: auto;
   }
-  .login-stack-scroll .login-stack__lanes {
-    height: clamp(220px, calc(90dvh - 360px), 420px);
-  }
+}
+
+.login-stack-method {
+  min-height: 124px;
+  max-height: 240px;
+  overflow-y: auto;
+  overscroll-behavior: contain;
 }
 
 @keyframes ls-up {

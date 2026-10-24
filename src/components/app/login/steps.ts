@@ -34,6 +34,11 @@ export type LoginStep =
   | 'profile'
   | 'resuming';
 
+/** Identity choices share one form area; wallet security remains a focused step. */
+export function isInlineLoginStep(step: LoginStep): boolean {
+  return ['main', 'email', 'email-waiting', 'phone', 'phone-code', 'passkey', 'wallets', 'import-wallet'].includes(step);
+}
+
 /**
  * Which step a login already in progress belongs on, or null when nothing is in
  * progress and the caller should keep whatever step it is on.
