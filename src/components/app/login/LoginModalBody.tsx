@@ -216,23 +216,11 @@ function LoginModalBodyInner({ open, step, setStep, layout = 'default' }: LoginM
   // so the next tap is one of the ways in that work.
   const [walletSignupBlocked, setWalletSignupBlocked] = useState(false);
   /**
-   * Whether the Telegram row belongs on the sheet at all.
-   *
-   * The bot lives in the telegram-auth edge function's env, which deploys on
-   * its own track — so the button asks the function rather than a build-time
-   * flag, and stays off until a bot is actually configured. Starts false and
-   * only ever turns on, so an unconfigured project shows no row at all rather
-   * than one that fails when tapped.
-   *
-   * Whether this browser can do a passkey rides along with it (same pre-filter
-   * the wallet's biometric unlock uses; a definite "no" hides the row rather
-   * than offering a prompt that cannot appear). Both are asked as one in
-   * lib/login-probes, and the option list waits for the pair — two separate
-   * answers arriving separately is what made the sheet grow a row, then
-   * another, in front of the person reading it.
+   * Resolve device support before offering passkey sign-in. Telegram remains
+   * a stable option even if its background availability request fails; the
+   * sign-in action validates the current bot configuration itself.
    */
   const [probes, setProbes] = useState<LoginProbes | null>(() => loginProbesSnapshot());
-  const telegramEnabled = probes?.telegram ?? false;
   const passkeyAvailable = probes?.passkey ?? false;
   const [passkeyError, setPasskeyError] = useState('');
   // Set when a sign-in attempt found a passkey with no account behind it, so
@@ -685,7 +673,7 @@ function LoginModalBodyInner({ open, step, setStep, layout = 'default' }: LoginM
           <span>{t('loginModal.continueApple', 'Continue with Apple')}</span>
         </Button>
 
-        {telegramEnabled && (
+        {(
           <Button
             onClick={handleTelegramLogin}
             disabled={isConnecting}
@@ -889,6 +877,10 @@ function LoginModalBodyInner({ open, step, setStep, layout = 'default' }: LoginM
             {t('loginStack.fingerprint', 'Fingerprint')}
           </button>
         )}
+        <button type="button" onClick={handleTelegramLogin} disabled={isConnecting} className={stackOptionClass} aria-label={t('loginModal.continueTelegram', 'Continue with Telegram')}>
+          <span className="login-stack-option__disc">{activeProvider === 'telegram' ? <Loader2 className="w-5 h-5 animate-spin" /> : <TelegramIcon />}</span>
+          Telegram
+        </button>
         {/* One way in for every wallet: connect one, or import a key from
             the list it opens. */}
         <button
@@ -902,12 +894,6 @@ function LoginModalBodyInner({ open, step, setStep, layout = 'default' }: LoginM
           <span className="login-stack-option__disc"><Wallet className="w-5 h-5" /></span>
           {t('nav.wallet', 'Wallet')}
         </button>
-        {telegramEnabled && (
-          <button type="button" onClick={handleTelegramLogin} disabled={isConnecting} className={stackOptionClass} aria-label={t('loginModal.continueTelegram', 'Continue with Telegram')}>
-            <span className="login-stack-option__disc">{activeProvider === 'telegram' ? <Loader2 className="w-5 h-5 animate-spin" /> : <TelegramIcon />}</span>
-            Telegram
-          </button>
-        )}
       </div>
 
     </div>
