@@ -741,7 +741,7 @@ html[data-theme='osaka'] [cmdk-item][data-selected='true'] {
    system's `bg-background` field. */
 html[data-theme='osaka']
   :is([role='dialog'], [role='alertdialog'], [data-vaul-drawer], [data-radix-popper-content-wrapper])
-  :is(input, textarea, select):not([data-keep-dark]):not(
+  :is(input, textarea, select):not(:where([type='range'])):not([data-keep-dark]):not(
     :where(
       [class^='bg-transparent'], [class*=' bg-transparent'],
       /* A validity border is information, not decoration — neutralising it to
@@ -963,7 +963,7 @@ html[data-theme='osaka'] #app-root
 /* Text fields retain their resting bento edge while focused. The active neon
    ring made every search and comment box look like a separate square panel. */
 html[data-theme='osaka'] #app-root
-  :is(input, textarea, select):not([data-keep-dark]):not(:where([class^='bg-transparent'], [class*=' bg-transparent'])):is(:focus, :focus-visible) {
+  :is(input, textarea, select):not(:where([type='range'])):not([data-keep-dark]):not(:where([class^='bg-transparent'], [class*=' bg-transparent'])):is(:focus, :focus-visible) {
   outline: none !important;
   box-shadow: inset 0 0 0 1px rgb(var(--osaka-mist) / 0.1) !important;
 }
