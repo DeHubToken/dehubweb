@@ -159,11 +159,18 @@ export function setVideoSource(el: HTMLVideoElement, { src, hls, startLow = fals
     fallBackToFile(el, session, `media-${el.error?.code ?? 0}`);
   };
   const onPlay = () => applyLoadPolicy(el, session);
+  const onMetadata = () => {
+    void checkLadderShape(el).then((wrong) => {
+      if (wrong && !session.disposed) fallBackToFile(el, session, 'aspect-mismatch');
+    });
+  };
   el.addEventListener('error', onError, true);
   el.addEventListener('play', onPlay);
+  el.addEventListener('loadedmetadata', onMetadata);
   session.unbind = () => {
     el.removeEventListener('error', onError, true);
     el.removeEventListener('play', onPlay);
+    el.removeEventListener('loadedmetadata', onMetadata);
   };
 
   if (session.engine === 'native') {
@@ -244,6 +251,38 @@ function applyLoadPolicy(el: HTMLVideoElement, session: Session) {
 export function syncVideoLoad(el: HTMLVideoElement): void {
   const session = sessions.get(el);
   if (session) applyLoadPolicy(el, session);
+}
+
+/** How lopsided a frame must be before it counts as portrait or landscape. */
+const SHAPE_MARGIN = 1.2;
+
+function shapeOf(width: number, height: number): 'portrait' | 'landscape' | null {
+  if (!width || !height) return null;
+  if (height > width * SHAPE_MARGIN) return 'portrait';
+  if (width > height * SHAPE_MARGIN) return 'landscape';
+  return null;
+}
+
+/**
+ * Is the ladder's picture the wrong shape for the post? Ladders made before
+ * the backend sized rungs by the displayed size squeeze a phone video shot
+ * upright into a landscape frame. The post's thumbnail is cut from the MP4
+ * the right way up, so a ladder that is clearly landscape under a clearly
+ * portrait poster (or the other way round) is one of those.
+ */
+async function checkLadderShape(el: HTMLVideoElement): Promise<boolean> {
+  const video = shapeOf(el.videoWidth, el.videoHeight);
+  const poster = el.poster;
+  if (!video || !poster) return false;
+  const img = new Image();
+  img.src = poster;
+  try {
+    await img.decode();
+  } catch {
+    return false;
+  }
+  const expected = shapeOf(img.naturalWidth, img.naturalHeight);
+  return !!expected && expected !== video;
 }
 
 function fallBackToFile(el: HTMLVideoElement, session: Session, reason: string) {
