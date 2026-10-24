@@ -9,7 +9,15 @@
     <copyright>Copyright 2026 DeHub</copyright>
     <managingEditor>team@dehub.io (DeHub Team)</managingEditor>
     <webMaster>team@dehub.io (DeHub Team)</webMaster>
-    <lastBuildDate>Sat, 24 Oct 2026 03:00:00 GMT</lastBuildDate>
+    <lastBuildDate>Sat, 24 Oct 2026 06:00:00 GMT</lastBuildDate>
+    <item>
+      <title>How Does Higgsfield Genjutsu Work? And How Maboroshi Does the Same Job for Less (2026)</title>
+      <description>Genjutsu explained step by step: depth, masks, face mesh, render and original audio, with real frames from each step. Plus Katana-style scene changes and a cheaper per-clip way to do it.</description>
+      <link>https://dehub.io/guides/how-does-higgsfield-genjutsu-work</link>
+      <guid>https://dehub.io/guides/how-does-higgsfield-genjutsu-work</guid>
+      <pubDate>Sat, 24 Oct 2026 06:00:00 GMT</pubDate>
+      <dc:creator>DeHub Team</dc:creator>
+    </item>
     <item>
       <title>Higgsfield Genjutsu Alternative: Maboroshi Prices Compared, and How We Rebuilt It (2026)</title>
       <description>Swap anyone in a real video from $1.75, keep the original audio, no subscription. Higgsfield Genjutsu vs DeHub Maboroshi prices, plus the full pipeline behind it.</description>
@@ -160,14 +168,6 @@
       <link>https://dehub.io/guides/what-is-watch-to-earn</link>
       <guid>https://dehub.io/guides/what-is-watch-to-earn</guid>
       <pubDate>Fri, 12 Jun 2026 14:00:00 GMT</pubDate>
-      <dc:creator>DeHub Team</dc:creator>
-    </item>
-    <item>
-      <title>Best Watch-to-Earn Platforms 2026 (Honest, Tested for Real Payouts)</title>
-      <description>An honest ranking of the best watch to earn platforms 2026: which watch-to-earn apps pay real money, which have quietly pivoted, and which to avoid.</description>
-      <link>https://dehub.io/guides/best-watch-to-earn-platforms-2026</link>
-      <guid>https://dehub.io/guides/best-watch-to-earn-platforms-2026</guid>
-      <pubDate>Sun, 31 May 2026 09:45:00 GMT</pubDate>
       <dc:creator>DeHub Team</dc:creator>
     </item>
   </channel>
