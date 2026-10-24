@@ -104,6 +104,7 @@ export const az = {
     disclaimerText: 'DeHub tokenləri ekosistemimizdə fayda tokenləri kimi fəaliyyət göstərir.',
   },
   dapp: {
+    labelWatch2earn: 'İzlə və qazan:',
     title: 'Tam Ekosistem',
     subtitle: 'DeHub platforması hər şeyi bir yerdə birləşdirir.',
     weightedTipping: 'Çəkili Bəxşiş',
@@ -1386,6 +1387,7 @@ export const az = {
     disclaimerText: 'DeHub ayələr hər hansı bir in-oyun və ya in-app digital ayələr və ya valyuta və ciddi investisiya deyil ki, eyni şəkildə kommunal məqsədlər üçün ciddi var. Təvazökar həyatımız davam etdikcə əlavə kommunal xidmətlər, eləcə də təsdiqlənən şəffaflığın görünməmiş səviyyələrini təklif edə bilərik. Yuxarıdakı məlumatlar yalnız şəffaflıq, təhsil və informativ məqsədlər üçün tərtib edilib. DeHub və bütün filiallar buraxdığımız hər hansı bir token və ya NFT alınması nəticəsində yaranan maliyyə itkilərinə görə heç bir məsuliyyət daşımır. Bazarlar, xüsusilə də bizim kimi körpəlik dövründəki bazarlar olduqca dəyişkəndir. Hakerlik, kompetensiya çatışmazlığı və ya texniki xətaya görə bütün pulunuzu da itirə bilərsiniz. Buna görə də, yalnız itirmək üçün ödəyə biləcəyiniz məbləği daim xərcləməlisiniz.',
   },
   tokenBridge: {
+    bridgeToBnb: 'BASE-dən BNB-yə köçürmə',
     title: 'Körpü',
     subtitle: 'Tokenlləri müxtəlif zəncrlər arasında köçürün.',
     howToBridge: 'Necə Bridge Etmək Olar',
@@ -1878,6 +1880,8 @@ export const az = {
     baileyExp3: "Keçmiş peşəkar oyunçu, RickyBobby etiketi altında COD MW2-də qlobal top 3 və Warzone-da top 100-ə daxil oldu",
   },
   roadmap: {
+    q1_2021: '2021, I rüb',
+    q3_2021: '2021, III rüb',
     title: 'Yol Xəritəsi',
     subtitle: 'DeHub-un inkişaf planı.',
     completed: 'Tamamlanıb',
@@ -2883,6 +2887,7 @@ export const az = {
     contactText: 'Bu təlimatlarla bağlı suallar və ya təcili diqqət tələb edən hesabatlar dev@dehub.io ünvanına göndərilə bilər.',
   },
   adTools: {
+    vsLastWeek: 'keçən həftəyə nisbətən {delta}',
     budgetCalculatorTitle: 'Kampaniya Büdcə Kalkulyatoru',
     budgetCalculatorDesc: 'POVR reklam kampaniyanızı real xərclər smetası və auditoriyanın hədəflənməsi ilə planlaşdırın',
     dailyBudget: 'Gündəlik Büdcə ($)',

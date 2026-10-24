@@ -2040,6 +2040,7 @@ export const ro = {
     disclaimerText: 'Acest document nu constituie o ofertă sau invitație de a cumpăra sau vinde valori mobiliare în nicio jurisdicție.',
   },
   termsOfService: {
+    contact: 'Contactați-ne',
     title: 'Termeni și Condiții',
     lastUpdated: 'Ultima Actualizare',
     lastUpdatedDate: '15 Ianuarie 2025',
@@ -2165,6 +2166,7 @@ export const ro = {
     contactText: 'Pentru întrebări despre aceste Condiții de utilizare, vă rugăm să luați legătura cu canalele noastre de guvernanță comunitară sau să trimiteți propuneri prin mecanismul DAO.',
   },
   privacyPolicy: {
+    dataSovereigntyItem6: 'Îți poți șterge singur contul din Setări; profilul, încărcările și conținutul media stocat, inclusiv copiile de rezervă, sunt șterse',
     title: 'Politica de Confidențialitate',
     lastUpdated: 'Ultima Actualizare',
     effective: 'În vigoare',
@@ -2268,6 +2270,7 @@ export const ro = {
     dataSovereigntyItem5: 'Puteți alege dacă sistemele AI pot fi antrenate cu munca dvs. Aceasta este permisă până când o dezactivați în Setări, iar alegerea dvs. este publicată către crawlerele de pe paginile pe care le controlăm.',
   },
   contact: {
+    hindi: 'Limba hindi',
     title: 'Contactează-ne',
     subtitle: 'Ia Legătura',
     description: 'Există mai multe modalități de a ne contacta.',
@@ -2318,6 +2321,8 @@ export const ro = {
     joinDiscord: 'Alăturați-vă Discord',
   },
   faq: {
+    a28: 'Da. Aplicația Android este pe Google Play, iar cea mai recentă versiune este disponibilă și ca descărcare APK directă de pe dehub.io/apk. Aplicația web de la dehub.io se instalează pe ecranul de pornire pe orice dispozitiv. Contul, insigna și soldul tău sunt aceleași pe toate.',
+    q12: 'Care este oferta totală de tokenuri DeHub?',
     title: 'Întrebări Frecvente',
     subtitle: 'Găsește răspunsuri la întrebările frecvente despre DeHub',
     q1: 'Ce este DeHub?',
@@ -2481,6 +2486,7 @@ export const ro = {
     bugBounty: 'Premiul de bug',
   },
   communityGuidelines: {
+    contact: 'Contactați-ne',
     title: 'Regulile comunității',
     lastUpdated: 'Ultima actualizare:',
     lastUpdatedDate: '26 august 2026',
@@ -2600,6 +2606,7 @@ export const ro = {
     nextFaqDesc: 'Răspunsuri la cele mai frecvente întrebări',
   },
   apiEndpoints: {
+    type: 'Tip',
     title: 'Puncte finale API',
     subtitle: 'Referință completă pentru toate punctele finale API disponibile cu exemple și scheme de răspuns.',
     breadcrumbDocs: 'Documentație',

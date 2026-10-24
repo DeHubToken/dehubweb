@@ -2570,6 +2570,12 @@ export const qu = {
     efficient: 'Allin ruwaq paquete kamachiq',
   },
   quickStart: {
+    nextFaqTitle: 'Sapa kuti tapukuykuna',
+    nextStakeTitle: 'Tokenkunata waqaychay',
+    step3Desc: 'Ruway nisqata ñit\'iy. Huk qillqata qillqay, siq\'ikunata, videota utaq uyarinata yapay, hatun qillqanapaq Articulo nisqaman tikray, utaq kawsaypi rikhuriy. Sapa p\'unchaw huk saywakama qillqayqa mana qullqiyuqmi — mana badge nisqayuq kaspa p\'unchawpi chunka qillqa willakuykuna, huk gigabyte media nisqapas. Huk qillqata on-chain nisqapi mint ruwayqa munasqaykim, qhipatapas ruwakunmanmi.',
+    step4Title: 'Qhawaqniykikunamanta qullqita tariy',
+    step5Title: 'Badge nisqapaq tokenkunata hap\'iy',
+    step6Title: 'Billeteraykita llamk\'achiy',
     title: 'Utqaylla qallariypaq yanapakuy',
     breadcrumbDocs: 'Documentación nisqa',
     breadcrumbGettingStarted: 'Qallarinapaq',

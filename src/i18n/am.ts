@@ -104,6 +104,8 @@ export const am = {
     disclaimerText: "DeHub ቶከኖች በስነ-ምህዳራችን ውስጥ እንደ ጠቃሚ ቶከኖች ያገለግላሉ፣ ከጨዋታ ውስጥ ገንዘቦች ጋር ተመሳሳይ፣ እና የኢንቨስትመንት መሣሪያዎች አይደሉም።",
   },
   dapp: {
+    aiSuiteB5: '@assistant:',
+    tocDepin: 'DePIN',
     title: 'ሙሉ ስነ-ምህዳር',
     intro1: 'DeHub ሳንሱርን የሚቋቋም፣ ክፍት ምንጭ ያለው የቀድሞ ሚዲያ መድረኮች አማራጭ ነው። ማንኛውም ሰው ከመጀመሪያው እይታ ገንዘብ ማግኘት የሚችልበት ስነ-ምህዳር።',
     intro2: 'መተግበሪያው በያልተማከለ ማዕድን አውታረ መረብ ይመነጫል፣ ይዘትን ለማስተናገድ፣ ለመቀየር እና ለማድረስ የጋራ ኮምፒውቲንግ ኃይል ይሰጣል።',
@@ -1547,6 +1549,7 @@ export const am = {
     contentAnalysis: 'የይዘት ትንተና',
   },
   advertising: {
+    howItWorks: 'እንዴት እንደሚሰራ',
     title: 'ማስታወቂያ',
     subtitle: 'ያልተማከለ ማስታወቂያ መድረክ',
     adsManagerLiveDesc: 'ዘመቻዎችን ይፍጠሩ ፣ የባጅ ደረጃዎችን ዒላማ ያድርጉ ፣ በ DeHub ምልክቶች ፈንድ ያድርጉ እና በእውነተኛ ጊዜ ውጤቶችን ይከታተሉ ።',
@@ -2416,6 +2419,7 @@ export const am = {
     status: 'ሁኔታ',
   },
   docsSearch: {
+    popularDepin: 'DePIN',
     title: 'ዶኮቹን ይፈልጉ',
     placeholder: 'ዶክስን እና ጦማርን ይፈልጉ...',
     placeholderShort: 'ፈልግ...',
@@ -2465,6 +2469,9 @@ export const am = {
     disclaimer: 'ማስተባበያ',
   },
   adTools: {
+    cpmValue: '{amount} ለ1000 እይታዎች',
+    ctr: 'የጠቅታ መጠን',
+    ctrRow: 'የጠቅታ መጠን:',
     partnerTitle: 'ከDeHub ጋር በመሆን አፕልኬሽናችንን አስጀምር',
     reason_brandAssociationDesc: 'ብራንድህን ከላቁ የWeb3 ፈጠራ እና ቴክኖሎጂ ጋር አሰልፍ',
     reason_mutualGrowthDesc: 'በመስቀለኛ ማስተዋወቂያ እና በተጋሩ ታዳሚዎች አብራችሁ አድጉ',

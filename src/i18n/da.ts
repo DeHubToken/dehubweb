@@ -104,6 +104,11 @@ export const da = {
     disclaimerText: "DeHub-tokens fungerer som nyttetokens inden for vores økosystem, ligesom spilvalutaer, og er ikke investeringsinstrumenter. Selvom vores blockchain-infrastruktur giver hidtil uset gennemsigtighed og verificerbare on-chain-data til uddannelsesformål, indebærer alle markeder iboende risici. Du kan miste hele din investering på grund af markedsvolatilitet, tekniske problemer, sikkerhedsbrud eller uforudsete omstændigheder. Deltag kun med midler, du har råd til at miste helt. DeHub og dets tilknyttede selskaber påtager sig intet ansvar for eventuelle økonomiske tab.",
   },
   dapp: {
+    boostPower: '1) Løft',
+    moreB1: 'Vejledning:',
+    spMinShort: 'minutter',
+    spNameBoost: 'Løft',
+    spNameFlakJacket: 'Splintvest',
     title: 'Et komplet økosystem',
     intro1: 'DeHub er et censurresistent, open source alternativ til traditionelle medieplatforme, der betjener indholdsskabelse, streaming og spilindustrierne. Et økosystem, hvor alle kan monetisere fra den første visning, uden frygt for at blive deplatformet, skyggebannet, tavst eller manipuleret på nogen måde til at være andet end deres sande jeg. At tale og tænke frit, væk fra flokmentaliteten, udtrykke sig som ønsket.',
     intro2: 'Appen skaleres via et decentraliseret minernetværk, der leverer delt computerkraft til at hoste, transcode og levere indhold, der af design bør leve for evigt.',
@@ -1034,6 +1039,7 @@ export const da = {
     moreB3Desc: 'Live webstedsstatistik — besøgende, sidevisninger og fællesskabsnumre, efter dag, år eller hele tiden — offentliggøres snarere end holdes internt. Den samme side viser DeHubs indtægter og omkostninger, der er opbygget ud fra daglige indtægtstotaler og de omkostninger, vores udbydere faktisk registrerede, så økonomien er lige så offentlig som trafikken.',
   },
   games: {
+    trenchTitle: 'Chartopia',
     title: 'Spil',
     subtitle: 'I det evigt sammenvævede kryds mellem gaming og streaming.',
     intro1: 'Som et team fuld af gamere og streamere har vi bygget og udgivet en række sjove, gratis arkadespil og arbejder mod vores første flagskibsspil, Last Chad Standing, den første MMA Battle Royale nogensinde, med et team af udviklere fra blandt andet Ubisoft samt et grundlæggerteam dybt involveret med UFC, Oktagon og PFL-stjerner, der har filmet dokumentarer med mestre som Jorge Masvidal og trænet under Conor McGregors træner Kavannah. Dokumentarerne blev også filmet af Luke Barnatt, lederen af Andrew Tates War Room og tidligere UFC-fighter, på vegne af DeHub.',

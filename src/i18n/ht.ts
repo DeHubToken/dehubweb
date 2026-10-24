@@ -104,6 +104,22 @@ export const ht = {
     disclaimerText: 'Tokèn DeHub sèvi kòm tokèn itilite nan ekosistèm nou an, menm jan ak lajan nan jwèt, epi yo pa enstriman envestisman. Pandan enfrastrikti blockchain nou an bay transparans san parèy ak done sou chèn ki verifye nan objektif edikasyon, tout mache gen risk natirèl. Ou ta ka pèdi tout envestisman ou akòz volatilite mache, pwoblèm teknik, fay sekirite oswa sikonstans enprevi. Patisipe sèlman ak lajan ou ka pèmèt ou pèdi nèt.',
   },
   dapp: {
+    aiSuiteTitle: 'Pakèt Zouti AI',
+    allowanceUnpaidDesc: 'Pòs la rete pibliye. Montan ki pa peye a rete louvri sou kont ou epi li bloke pwochen pòs peye ou jiskaske li regle — men li pa janm bloke yon pòs gratis. Kèlkeswa sa alokasyon demen an ba ou, se pou ou li ye toujou, kit gen yon bagay ki rete pou peye kit pa genyen.',
+    appsB2: 'Sou Android:',
+    communitiesB1: 'Gade epi Antre:',
+    converterB3: 'Pòdkas:',
+    kidsTitle: 'Mòd Timoun',
+    miniAppsTitle: 'Mini Aplikasyon',
+    spNameHarpoon: 'Zagay',
+    spTierCobra: 'Wa Kobra',
+    spTierOctopus: 'Chatwouy',
+    storesB4: 'Machandiz ak tablo Boutik la:',
+    studioB9: 'Zouti Maboroshi:',
+    tocKids: 'Mòd Timoun',
+    tocMiniApps: 'Mini Aplikasyon',
+    walletHubB4: 'Bloke jeton ak Pon:',
+    walletHubB5: 'Solana:',
     title: 'Ekosistèm Konplè',
     intro1: 'DeHub se yon altènativ open source ki reziste kont sansir pou platfòm medya tradisyonèl ki sèvi endistri kreyasyon kontni, streaming ak gaming. Yon ekosistèm kote tout moun ka monetize depi premye vizit.',
     intro2: 'Aplikasyon an ap grandi atravè yon rezo desantralize minè, ki bay pouvwa enfòmatik pataje pou hébergement, transkodaj ak livrezon kontni.',
@@ -1023,6 +1039,9 @@ export const ht = {
     moreB3Desc: 'Estatistik sit ap viv — vizitè, opinyon paj ak nimewo kominote, pa jou, ane oswa tout tan — pibliye olye ke kenbe entèn. Menm paj la montre revni ak depans DeHub, ki bati nan total revni chak jou ak depans founisè nou yo aktyèlman anrejistre, kidonk finans yo piblik menm jan ak trafik la.',
   },
   games: {
+    dutyTitle: 'Claude of Duty',
+    jungleTitle: 'Chemen Forè a (Jungle Trail)',
+    trenchTitle: 'Chartopia',
     title: 'Jwèt',
     subtitle: 'Nan entèseksyon etènèl gaming ak streaming.',
     intro1: 'Kòm yon ekip plen gamer ak streamer, nou te konstwi ak pibliye yon seri jwèt akad gratis ki divertizan epi n ap travay sou premye jwèt anblèm nou an, Last Chad Standing.',
@@ -1576,6 +1595,8 @@ export const ht = {
     baileyExp3: "Ansyen jwè pwofesyonèl, li klase globalman nan top 3 COD MW2 ak top 100 sou Warzone anba etikèt RickyBobby",
   },
   roadmap: {
+    q1q2_2026: '1ye–2yèm trimès 2026',
+    y2025: '2025 - An dirèk & Entèaktif',
     title: 'Kat Wout',
     subtitle: 'Vwayaj devlopman nou ak plan pou lavni',
     selectYear: 'Chwazi ane',
@@ -1810,6 +1831,7 @@ export const ht = {
     ],
   },
   brandAssets: {
+    logoDownloads: 'Telechaje Logo',
     title: 'Aktif Mak',
     subtitle: 'Aktif mak ofisyèl DeHub ak gid',
     downloadGuidelines: 'Telechaje gid mak',
@@ -2260,6 +2282,7 @@ export const ht = {
     efficient: 'Jesyonè pakè efikas',
   },
   quickStart: {
+    nextFaqTitle: 'Kesyon yo poze souvan',
     title: 'Gid Rapid Kòmanse',
     breadcrumbDocs: 'Dokimantasyon',
     breadcrumbGettingStarted: 'Kòmanse',
@@ -2336,6 +2359,8 @@ export const ht = {
     serverError: 'Erè sèvè',
   },
   advertiserDashboard: {
+    avgCtr: 'To klik mwayen (CTR)',
+    roas: 'Randman sou depans piblisite (ROAS)',
     title: 'Tablo Bò Atizan',
     subtitle: 'Jere kanpay piblisite POVR ou',
     newCampaign: 'Nouvo kanpay',
@@ -2349,6 +2374,8 @@ export const ht = {
     status: 'Estati',
   },
   docsSearch: {
+    popularDepin: 'DePIN',
+    popularStaking: 'Bloke jeton',
     title: 'Chèche dokiman yo',
     placeholder: 'Chèche dokiman & blog...',
     placeholderShort: 'Chèche...',
@@ -2367,6 +2394,7 @@ export const ht = {
     resultMany: '{count} rezilta',
   },
   tokenOverview: {
+    pegTitle: 'Pri fiks ak lis sou DEX',
     useAiTitle: 'Jenerasyon AI',
     useAiDesc: 'Peye pou jenerasyon AI atravè Studio Kreyatè a — imaj, videyo, odyo ak 3D — nan token DeHub, nan yon pri yo site anvan chak travay kouri, olye pou yo kenbe yon abònman separe pou chak zouti.',
     title: 'Apèsi',
@@ -2431,6 +2459,9 @@ export const ht = {
     contactText: 'Kesyon sou direktiv sa yo, oswa rapò ki bezwen atansyon ijan, ka voye nan dev@dehub.io.',
   },
   adTools: {
+    cpmRow: 'Pri pou chak 1,000 afichaj (CPM):',
+    ctrRow: 'To klik (CTR):',
+    holdingsRow: 'Kantite ou kenbe:',
     budgetCalculatorTitle: 'Kalkilatris Bidjè Kanpay',
     budgetCalculatorDesc: 'Planifye kanpay piblisite POVR ou a ak estimasyon pri reyalis ak sib odyans',
     dailyBudget: 'Bidjè chak jou ($)',

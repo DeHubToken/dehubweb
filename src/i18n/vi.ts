@@ -104,6 +104,19 @@ export const vi = {
     disclaimerText: "Token DeHub hoạt động như token tiện ích trong hệ sinh thái của chúng tôi và không phải là công cụ đầu tư.",
   },
   dapp: {
+    altCommunities: 'Trang Cộng đồng, liệt kê các cộng đồng công khai cùng số thành viên của chúng.',
+    altConnect: 'Trang Kết nối, để liên kết DeHub với ChatGPT hoặc Claude qua MCP.',
+    altExplore: 'Trang Khám phá, tìm kiếm người dùng, bài đăng và nội dung đa phương tiện trên DeHub',
+    altStages: 'Trang Sân khấu, với các tab Trực tiếp và Đã ghi cùng nút để bắt đầu một sân khấu.',
+    altStores: 'Trang Cửa hàng, nơi nhà sáng tạo và doanh nghiệp vận hành cửa hàng riêng ngay trên nền tảng.',
+    appsB2: 'Ứng dụng Android:',
+    arcadeDesc: 'Arcade là một kệ trò chơi chạy ngay trong DeHub trên một tab trình duyệt. Không cần cài đặt, không cần mua, không cần tài khoản riêng: mở ra là chơi. Hiện có sáu tựa game — King\'s Gambit, trò chơi cờ vua 3D đậm chất điện ảnh với bảng xếp hạng Elo trực tuyến; Claude of Duty, game bắn súng tạo mọi lưới 3D, kết cấu và âm thanh ngay trên máy của bạn khi màn chơi tải; Jungle Trail, chuyến đi bộ góc nhìn thứ nhất xuyên qua khu rừng mưa được tạo theo thủ tục; Street Slayer, game đánh nhau màn hình cuộn ngang được làm riêng cho DeHub; Chartopia, một sàn giao dịch bạn có thể đi lại bên trong, với dữ liệu thị trường trực tiếp trên các màn hình bàn làm việc và chế độ VR qua WebXR; và God\'s Eye, quả địa cầu 3D trực tiếp nơi bạn có thể chọn đặt một vị trí gần đúng của mình giữa cộng đồng DeHub. Nhà phát triển có thể gửi trò chơi của riêng họ để được xét duyệt.',
+    converterB3: 'Chương trình podcast:',
+    daoB1Desc: 'Gửi token DeHub từ ví của bạn bằng nút Đóng góp. Mỗi token bạn thêm vào đều làm tăng phần của bạn.',
+    daoB3: 'Đề xuất:',
+    govLiveDesc: 'Thiết kế ở trên là mục đích của quản trị; trang Quản trị là nơi quản trị diễn ra. Các đề xuất được liệt kê trong các mục Đề xuất, Đã thông qua và Bị từ chối, mỗi đề xuất có tác giả, nội dung và tình trạng bỏ phiếu hiện tại. Mở một đề xuất tốn phí 10,000 token DeHub, được xác nhận trên chuỗi, và mỗi đề xuất có trang riêng với phần thảo luận theo luồng. Bỏ phiếu miễn phí: phiếu của bạn được tính trọng số theo huy hiệu, cuộc bỏ phiếu kéo dài bảy ngày, và một đề xuất được thông qua khi đạt đa số có trọng số với ít nhất mười ví khác nhau tham gia, để không một người nắm giữ nào có thể thông qua điều mà chẳng ai thấy.',
+    moreB1: 'Hướng dẫn:',
+    tocConverter: 'Trình chuyển đổi',
     title: 'Một hệ sinh thái hoàn chỉnh',
     intro1: 'DeHub là một giải pháp thay thế nguồn mở, chống kiểm duyệt cho các nền tảng truyền thông cũ phục vụ các ngành công nghiệp sáng tạo nội dung, phát trực tuyến và chơi game. Một hệ sinh thái mà bất cứ ai cũng có thể kiếm tiền từ cái nhìn đầu tiên, mà không sợ bị mất nền tảng, bóng tối bị cấm, im lặng hoặc bị thao túng để trở thành bất cứ điều gì ngoài con người thật của họ. Để nói và suy nghĩ tự do, tránh xa tâm trí tổ ong, hãy thể hiện như mong muốn.',
     intro2: 'Ứng dụng được mở rộng thông qua một mạng lưới khai thác phi tập trung, cung cấp sức mạnh tính toán được chia sẻ để lưu trữ, chuyển mã và cung cấp nội dung mà theo thiết kế, sẽ tồn tại mãi mãi.',
@@ -1024,6 +1037,8 @@ export const vi = {
     moreB3Desc: 'Thống kê trang web trực tiếp — khách truy cập, lượt xem trang và số cộng đồng, theo ngày, năm hoặc mọi lúc — được công bố thay vì giữ nội bộ. Cùng một trang cho thấy doanh thu và chi phí của DeHub, được xây dựng từ tổng doanh thu hàng ngày và chi phí mà các nhà cung cấp của chúng tôi thực sự ghi lại, vì vậy tài chính cũng công khai như lưu lượng truy cập.',
   },
   games: {
+    trenchTitle: 'Chartopia',
+    website: 'Trang web',
     title: 'Trò chơi',
     subtitle: 'Tại giao điểm ngày càng đan xen giữa chơi game và phát trực tuyến.',
     intro1: 'Là một nhóm gồm các game thủ và streamer, chúng tôi đã xây dựng và phát hành một số trò chơi arcade vui nhộn, miễn phí và đang hướng tới trò chơi hàng đầu đầu tiên của chúng tôi, Last Chad Standing, trò chơi Battle Royale MMA đầu tiên, với một nhóm các nhà phát triển từ Ubisoft cũng như một nhóm sáng lập tham gia rất nhiều vào các ngôi sao UFC, Oktagon và PFL, đã quay phim tài liệu với các nhà vô địch như Jorge Masvidal, và được huấn luyện bởi Huấn luyện viên Kavannah của Conor Mcgregor. Các bộ phim tài liệu cũng được quay bởi Luke Barnatt, người đứng đầu phòng Chiến tranh của Andrew Tate và cựu võ sĩ UFC, thay mặt DeHub.',
@@ -1154,6 +1169,7 @@ export const vi = {
     disclaimerText: 'Mã thông báo DeHub hoàn toàn dành cho các mục đích tiện ích giống như bất kỳ mã thông báo hoặc tiền tệ kỹ thuật số nào trong trò chơi hoặc trong ứng dụng và hoàn toàn không phải là một khoản đầu tư. Khi token của chúng tôi hoạt động trên chuỗi, chúng tôi có thể cung cấp tiện ích bổ sung cũng như mức độ minh bạch có thể xác minh chưa từng có. Dữ liệu trên chỉ được biên soạn cho mục đích minh bạch, giáo dục và cung cấp thông tin. DeHub và tất cả các chi nhánh không chịu trách nhiệm pháp lý đối với các tổn thất tài chính phát sinh từ việc mua bất kỳ token hoặc NFT nào mà chúng tôi phát hành. Thị trường rất biến động. Bạn cũng có thể mất tất cả tiền của mình do bất kỳ lỗi không lường trước nào như lỗi năng lực, lỗi kỹ thuật, hack, v.v. Do đó, bạn chỉ nên chi tiêu những gì bạn có thể đủ khả năng để mất.',
   },
   tokenStake: {
+    tier1: 'Cấp 1',
     stakeNow: 'Đặt cược ngay',
     introDesc: 'Đặt cược để truy cập các cấp câu lạc bộ khác nhau, các tính năng nâng cao trên tất cả các ứng dụng và cung cấp sức mạnh tính toán hoặc không gian lưu trữ của bạn chỉ từ một thiết bị di động để khai thác phần doanh thu giao thức của bạn.',
     introDesc2: 'Vì các khoản phân bổ tiếp theo sẽ linh hoạt, phụ thuộc vào phí giao thức, các chỉ định sẽ phải tuân theo các yêu cầu tại bất kỳ thời điểm nào để đảm bảo nhu cầu giao thức luôn được đặt lên hàng đầu. Giao thức staking hiện cũng đang được nâng cấp với việc sớm phát hành trên Base.',
@@ -1243,6 +1259,8 @@ export const vi = {
     disclaimerText: 'Mã thông báo DeHub hoàn toàn dành cho các mục đích tiện ích giống như bất kỳ mã thông báo hoặc tiền tệ kỹ thuật số nào trong trò chơi hoặc trong ứng dụng và hoàn toàn không phải là một khoản đầu tư. Khi token của chúng tôi hoạt động trên chuỗi, chúng tôi có thể cung cấp tiện ích bổ sung cũng như mức độ minh bạch có thể xác minh chưa từng có. Dữ liệu trên chỉ được biên soạn cho mục đích minh bạch, giáo dục và cung cấp thông tin. DeHub và tất cả các chi nhánh không chịu trách nhiệm pháp lý đối với các tổn thất tài chính phát sinh từ việc mua bất kỳ token hoặc NFT nào mà chúng tôi phát hành. Thị trường rất biến động. Bạn cũng có thể mất tất cả tiền của mình do bất kỳ lỗi không lường trước nào như lỗi năng lực, lỗi kỹ thuật, hack, v.v. Do đó, bạn chỉ nên chi tiêu những gì bạn có thể đủ khả năng để mất.',
   },
   depin: {
+    pcLaptops: 'Máy tính bàn/Máy tính xách tay',
+    title: 'DePIN',
     subtitle: 'Một mạng lưới cơ sở hạ tầng vật lý phi tập trung (DePIN) của sức mạnh tính toán chia sẻ cho sức đề kháng kiểm duyệt thực sự',
     abstract: 'Tóm tắt',
     abstractText: 'Sách trắng này giới thiệu Mạng lưới cơ sở hạ tầng vật lý phi tập trung (DePIN) được thiết kế để mở rộng và duy trì DeHub. Hệ thống tận dụng sức mạnh tính toán được chia sẻ từ một mạng lưới các thợ đào đóng góp tài nguyên để lưu trữ, chuyển mã và phân phối dữ liệu. Người khai thác được thưởng trực tiếp từ doanh thu ứng dụng và phí giao dịch mã thông báo, đảm bảo một mô hình bền vững, không lạm phát. Bài báo này phác thảo khuôn khổ kỹ thuật, các ưu đãi kinh tế và các chiến lược triển khai để triển khai DePIN này, cho phép đóng góp từ một thiết bị di động.',
@@ -1327,6 +1345,7 @@ export const vi = {
     diagramMinersRole2: 'trong trao đổi DeHub token',
   },
   e2ee: {
+    walletSig1: 'Bạn được yêu cầu ký một thông điệp cố định: "DeHub Messages — Sign to unlock end-to-end encrypted messages for <địa chỉ của bạn>"',
     title: 'Mã hóa từ đầu đến cuối (E2EE)',
     howWorksTitle: 'Mã hóa đầu cuối của DeHub hoạt động như thế nào',
     whatSecureTitle: '🛡️ Tại sao An toàn của Chúng Tôi về Mã hóa Đầu cuối Đầu cuối (E2EE) là như thế nào?',
