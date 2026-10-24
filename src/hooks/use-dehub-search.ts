@@ -21,6 +21,7 @@ import {
 } from '@/lib/api/dehub';
 import { buildAvatarUrl, extractAvatarPath } from '@/lib/media-url';
 import { useDebouncedValue } from './use-debounced-value';
+import { translateCopy as _translateCopy } from '@/i18n/copy';
 
 export interface SearchCreator {
   id: string;
@@ -116,7 +117,7 @@ export function mapAccountToCreator(account: SearchAccount): SearchCreator {
   
   return {
     id: account.address || account.id,
-    name: account.displayName || account.username || 'User',
+    name: account.displayName || account.username || _translateCopy("copy.b512d97e7cbf", { defaultValue: "User" }),
     handle: `@${account.username || account.address?.slice(0, 8)}`,
     avatar: rawAvatarPath 
       ? buildAvatarUrl(account.address, rawAvatarPath) 
@@ -152,7 +153,7 @@ export function extractUniqueCreators(nfts: DeHubNFT[]): SearchCreator[] {
 
     creatorMap.set(minterId, {
       id: minterId,
-      name: nft.minterDisplayName || username || 'User',
+      name: nft.minterDisplayName || username || _translateCopy("copy.b512d97e7cbf", { defaultValue: "User" }),
       handle: `@${username || minterId.slice(0, 8)}`,
       avatar: buildAvatarUrl(minterId, extractAvatarPath(nft)),
       badgeBalance: nft.minterUser?.hideBadgeAndBalance ? 0 : nft.minterUser?.badgeBalance,

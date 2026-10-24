@@ -47,7 +47,7 @@ export function ImageTranslationSheet({
 
   const sourceLangName = result?.sourceLang 
     ? LANGUAGE_NAMES[result.sourceLang] || result.sourceLang.toUpperCase()
-    : 'Unknown';
+    : _copy("copy.b764cdc0eab7", { defaultValue: "Unknown" });
 
   return (
     <Drawer open={isOpen} onOpenChange={(open) => !open && onClose()}>
@@ -94,7 +94,7 @@ export function ImageTranslationSheet({
             <>
               {/* Source Language Badge */}
               <div className="flex items-center gap-2">
-                <span className="px-2 py-1 rounded-lg bg-zinc-800 text-white text-xs">{_copy("copy.c83851d5858f", { defaultValue: "Translated from " })}{sourceLangName}
+                <span className="px-2 py-1 rounded-lg bg-zinc-800 text-white text-xs">{_copy("copy.6991865c05c9", { defaultValue: "Translated from {{value1}}", value1: sourceLangName })}
                 </span>
               </div>
 

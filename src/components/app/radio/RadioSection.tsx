@@ -105,10 +105,15 @@ export function RadioSection({ showFilters = false }: RadioSectionProps) {
         {/* Search Results Header */}
         {isSearching && (
           <div className="flex items-center gap-2 text-sm text-zinc-400">
-            <span>{_copy("copy.c218b3f4b9c9", { defaultValue: "Results for " })}{parsedQuery.name ? `"${parsedQuery.name}"` : _copy("copy.76acefd37961", { defaultValue: "all stations" })}
-              {parsedQuery.countryName && ` in ${parsedQuery.countryName}`}
+            <span>{parsedQuery.name
+              ? parsedQuery.countryName
+                ? _copy("copy.86d8609422b1", { defaultValue: 'Results for "{{value1}}" in {{value2}}', value1: parsedQuery.name, value2: parsedQuery.countryName })
+                : _copy("copy.f92a1d03d6c9", { defaultValue: 'Results for "{{value1}}"', value1: parsedQuery.name })
+              : parsedQuery.countryName
+                ? _copy("copy.e2dd3ae51d1d", { defaultValue: "Results for all stations in {{value1}}", value1: parsedQuery.countryName })
+                : _copy("copy.3ab4ef3270ba", { defaultValue: "Results for all stations" })}
             </span>
-            {!isLoading && <span>({stations.length}{_copy("copy.0830f7934855", { defaultValue: " stations)" })}</span>}
+            {!isLoading && <span>{_copy("copy.dbafc0816473", { defaultValue: "({{count}} stations)", count: stations.length })}</span>}
           </div>
         )}
       </div>

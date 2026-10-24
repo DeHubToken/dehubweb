@@ -14,8 +14,8 @@ import { cn } from '@/lib/utils';
 const MOCK_PROPOSALS = [
   { id: '1', get title() { return _translateCopy("copy.57d161bcad73", { defaultValue: "Treasury Allocation for Q2 Developer Grants" }); }, author: 'dao_voter', status: 'active', votesFor: 1240, votesAgainst: 320, comments: 45, timeLeft: '3d 12h' },
   { id: '2', get title() { return _translateCopy("copy.08bcace7a718", { defaultValue: "Implement Cross-Chain Bridge Integration" }); }, author: 'web3_dev', status: 'active', votesFor: 890, votesAgainst: 156, comments: 28, timeLeft: '5d 8h' },
-  { id: '3', get title() { return _translateCopy("copy.fe839bff9e97", { defaultValue: "Community Fund for Creator Onboarding" }); }, author: 'alice.eth', status: 'passed', votesFor: 2100, votesAgainst: 450, comments: 67, timeLeft: 'Ended' },
-  { id: '4', get title() { return _translateCopy("copy.ee050c2d8cdd", { defaultValue: "Reduce Minimum Stake for Governance Voting" }); }, author: 'defi_whale', status: 'rejected', votesFor: 600, votesAgainst: 1800, comments: 92, timeLeft: 'Ended' },
+  { id: '3', get title() { return _translateCopy("copy.fe839bff9e97", { defaultValue: "Community Fund for Creator Onboarding" }); }, author: 'alice.eth', status: 'passed', votesFor: 2100, votesAgainst: 450, comments: 67, get timeLeft() { return _translateCopy("copy.7cdc804e6996", { defaultValue: "Ended" }); } },
+  { id: '4', get title() { return _translateCopy("copy.ee050c2d8cdd", { defaultValue: "Reduce Minimum Stake for Governance Voting" }); }, author: 'defi_whale', status: 'rejected', votesFor: 600, votesAgainst: 1800, comments: 92, get timeLeft() { return _translateCopy("copy.7cdc804e6996", { defaultValue: "Ended" }); } },
 ];
 
 const STATUS_MAP = {
@@ -33,7 +33,12 @@ export function GovernanceScreen() {
 
       {/* Filter */}
       <div className="flex gap-1.5 px-4 py-3">
-        {['All', 'Active', 'Passed', 'Rejected'].map((tab, i) => (
+        {[
+          _copy("copy.a52ace420f21", { defaultValue: "All" }),
+          _copy("copy.92340695899b", { defaultValue: "Active" }),
+          _copy("copy.436fe71bb956", { defaultValue: "Passed" }),
+          _copy("copy.aea4a04a8042", { defaultValue: "Rejected" }),
+        ].map((tab, i) => (
           <button
             key={tab}
             className={`px-3 py-1.5 rounded-lg text-xs font-medium ${
@@ -73,7 +78,7 @@ export function GovernanceScreen() {
                 <div className="flex-1">
                   <h3 className="text-white text-sm font-semibold leading-snug">{proposal.title}</h3>
                   <div className="flex items-center gap-2 mt-1">
-                    <span className="text-zinc-600 text-[11px]">{_copy("copy.9155f2107df0", { defaultValue: "by " })}{proposal.author}</span>
+                    <span className="text-zinc-600 text-[11px]">{_copy("copy.227ec51b7d71", { defaultValue: "by {{value1}}", value1: proposal.author })}</span>
                     <div className={cn('flex items-center gap-1 px-1.5 py-0.5 rounded text-[10px]', status.classes)}>
                       <status.icon className="w-2.5 h-2.5" />
                       {status.label}

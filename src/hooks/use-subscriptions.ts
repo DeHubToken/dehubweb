@@ -25,6 +25,7 @@ import { toastTxError } from '@/lib/tx-error-toast';
 import { fundTipFromSource } from '@/lib/tip-funding-run';
 import type { TipFundingSource } from '@/lib/tip-funding';
 import i18n, { type TFunction } from 'i18next';
+import { translateCopy as _translateCopy } from '@/i18n/copy';
 
 /** Funding already showed its own error; the buy stops without a second toast. */
 const FUNDING_ABORTED = 'FUNDING_ABORTED';
@@ -43,12 +44,12 @@ export type ChainStage = 'idle' | 'preparing' | 'funding' | 'wallet' | 'confirmi
 
 export const STAGE_LABELS: Record<ChainStage, string> = {
   idle: '',
-  preparing: 'Preparing…',
-  funding: 'Funding with your wallet…',
-  wallet: 'Confirming',
-  confirming: 'Waiting for the transaction…',
-  recording: 'Finishing up…',
-  done: 'Done',
+  get preparing() { return _translateCopy("copy.5d1fa38bcf0d", { defaultValue: "Preparing…" }); },
+  get funding() { return _translateCopy("copy.0a9bbb5d3dc2", { defaultValue: "Funding with your wallet…" }); },
+  get wallet() { return _translateCopy("copy.d978a5522ce4", { defaultValue: "Confirming" }); },
+  get confirming() { return _translateCopy("copy.69114f6ee542", { defaultValue: "Waiting for the transaction…" }); },
+  get recording() { return _translateCopy("copy.4bc99680df20", { defaultValue: "Finishing up…" }); },
+  get done() { return _translateCopy("copy.11a6767d5674", { defaultValue: "Done" }); },
 };
 
 /**
@@ -157,14 +158,14 @@ export function usePublishPlan() {
   const mutation = useMutation({
     mutationFn: async ({ plan, chainId }: { plan: SubscriptionPlan; chainId?: ChainId }) => {
       const planId = plan.id || plan._id;
-      if (!planId) throw new Error('Plan is missing an id');
+      if (!planId) throw new Error(_translateCopy("copy.6eb84baaeabc", { defaultValue: "Plan is missing an id" }));
 
       const chainEntry = primaryPlanChain(plan);
       const targetChain = (chainId || chainEntry?.chainId || BASE_CHAIN_ID) as ChainId;
       const price = planPrice(plan);
-      if (!price) throw new Error('Plan is missing a price');
+      if (!price) throw new Error(_translateCopy("copy.b6ad75a5beb9", { defaultValue: "Plan is missing a price" }));
       const token = chainEntry?.token || plan.token;
-      if (!token) throw new Error('Plan is missing a payment token');
+      if (!token) throw new Error(_translateCopy("copy.4190c289a568", { defaultValue: "Plan is missing a payment token" }));
 
       setStage('wallet');
       const { confirmed } = await publishPlanOnChain({
@@ -192,7 +193,7 @@ export function usePublishPlan() {
     },
     onError: (error: Error) => {
       setStage('idle');
-      toastTxError(error, 'Could not publish plan', { context: 'publish plan' });
+      toastTxError(error, _copy("copy.65d1dd3386b4", { defaultValue: "Could not publish plan" }), { context: 'publish plan' });
     },
     onSettled: () => setStage('idle'),
   });
@@ -218,13 +219,13 @@ export function useCreatePlan() {
       chains: { chainId: number; token: string; price: number; currency?: string; decimals?: number }[];
     }) => {
       if (normaliseDuration(planData.duration) === null) {
-        throw new Error('Plan duration must be between 0 and 12 months (0 = lifetime)');
+        throw new Error(_translateCopy("copy.906f81627a6a", { defaultValue: "Plan duration must be between 0 and 12 months (0 = lifetime)" }));
       }
 
       setStage('preparing');
       const plan = await createPlan(planData);
       if (!plan?.id && !plan?._id) {
-        throw new Error('The plan was not created — please try again');
+        throw new Error(_translateCopy("copy.801658c8e591", { defaultValue: "The plan was not created — please try again" }));
       }
       const planId = plan.id || plan._id;
       const target = planData.chains[0];
@@ -259,7 +260,7 @@ export function useCreatePlan() {
       // The row may well exist even when the chain step failed, so the copy
       // has to point at Publish rather than implying nothing happened.
       invalidate();
-      toastTxError(error, 'Could not create plan', { context: 'create plan' });
+      toastTxError(error, _copy("copy.7c7f65c3e17f", { defaultValue: "Could not create plan" }), { context: 'create plan' });
     },
     onSettled: () => setStage('idle'),
   });
@@ -290,7 +291,7 @@ export function useUpdatePlan() {
       }>;
     }) => updatePlan(planId, data).then((plan) => {
       if (data.isPinned !== undefined && plan?.isPinned !== data.isPinned) {
-        throw new Error('Plan pin was not saved');
+        throw new Error(_translateCopy("copy.d3f74b46d00a", { defaultValue: "Plan pin was not saved" }));
       }
       return plan;
     }),
@@ -304,12 +305,12 @@ export function useUpdatePlan() {
         variables.data.duration !== undefined;
       toast.success(
         republishes
-          ? 'Plan updated — publish it again to make the new price live'
-          : 'Plan updated',
+          ? _translateCopy("copy.73502b515223", { defaultValue: "Plan updated — publish it again to make the new price live" })
+          : _translateCopy("copy.670b64743d66", { defaultValue: "Plan updated" }),
       );
     },
     onError: (error: Error) => {
-      toast.error(error.message || 'Failed to update plan');
+      toast.error(error.message || _translateCopy("copy.eabb5c136be4", { defaultValue: "Failed to update plan" }));
     },
   });
 }
@@ -329,12 +330,12 @@ export function useBuyPlan() {
       fundFrom?: { source: TipFundingSource; walletAddress: string; t: TFunction } | null;
     }) => {
       const planId = plan.id || plan._id;
-      if (!planId) throw new Error('Plan is missing an id');
+      if (!planId) throw new Error(_translateCopy("copy.6eb84baaeabc", { defaultValue: "Plan is missing an id" }));
 
       setStage('preparing');
       const intent = await buyPlan(String(planId), chainId);
       if (!intent?.id) {
-        throw new Error('Could not start the subscription — please try again');
+        throw new Error(_translateCopy("copy.c0a8bba560b1", { defaultValue: "Could not start the subscription — please try again" }));
       }
 
       const targetChain = (intent.chainId || chainId || BASE_CHAIN_ID) as ChainId;
@@ -390,7 +391,7 @@ export function useBuyPlan() {
       setStage('idle');
       invalidate();
       if (error.message === FUNDING_ABORTED) return;
-      toastTxError(error, 'Could not subscribe', { context: 'subscribe' });
+      toastTxError(error, _translateCopy("copy.f235711b36c4", { defaultValue: "Could not subscribe" }), { context: 'subscribe' });
     },
     onSettled: () => setStage('idle'),
   });

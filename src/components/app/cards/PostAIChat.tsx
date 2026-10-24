@@ -295,7 +295,7 @@ export function PostAIChat({ isOpen, onClose, postContext }: PostAIChatProps) {
       const assistantMessage: Message = {
         id: (Date.now() + 1).toString(),
         role: 'assistant',
-        content: data.response || 'I apologize, I couldn\'t generate a response.'
+        content: data.response || t('aiChat.noResponse')
       };
 
       setMessages(prev => [...prev, assistantMessage]);
@@ -304,7 +304,7 @@ export function PostAIChat({ isOpen, onClose, postContext }: PostAIChatProps) {
       setMessages(prev => [...prev, {
         id: (Date.now() + 1).toString(),
         role: 'assistant',
-        content: 'Sorry, I encountered an error. Please try again.'
+        content: t('aiChat.errorGeneric')
       }]);
     } finally {
       setIsLoading(false);
@@ -328,7 +328,12 @@ export function PostAIChat({ isOpen, onClose, postContext }: PostAIChatProps) {
   const handleMinimize = () => {
     addChat({
       id: chatId,
-      title: postContext.title || postContext.caption || `${postContext.type} by ${postContext.author}`,
+      title: postContext.title || postContext.caption || (
+        postContext.type === 'image' ? t("copy.43d38f4be87d", { defaultValue: "Image by {{value1}}", value1: postContext.author })
+        : postContext.type === 'video' ? t("copy.3201ff58f56c", { defaultValue: "Video by {{value1}}", value1: postContext.author })
+        : postContext.type === 'live' ? t("copy.76de69052cdf", { defaultValue: "Live stream by {{value1}}", value1: postContext.author })
+        : t("copy.609e1d0a3f25", { defaultValue: "Post by {{value1}}", value1: postContext.author })
+      ),
       type: postContext.type,
       author: postContext.author,
     });

@@ -19,6 +19,7 @@ import { connectSolanaWallet, getSolanaProvider } from './wallet';
 import { buildSolanaPayment, confirmSolanaPayment, type SolanaPaymentKind } from '@/lib/api/dehub/solana';
 import { SOLANA_MAINNET_CHAIN_ID, SOLANA_DEVNET_CHAIN_ID } from '@/lib/chains/constants';
 import { isSmartWalletSession } from '@/lib/connection-source';
+import { translateCopy as _translateCopy } from '@/i18n/copy';
 
 // Public mainnet-beta RPC forbids browser sendTransaction (403). Same
 // broadcast-friendly default and override as ./mint.ts.
@@ -50,7 +51,7 @@ export async function sendSolanaPayment(
   const provider = embedded ? null : getSolanaProvider();
   if (!embedded && !provider) {
     throw new Error(
-      'Phantom wallet required to pay on Solana. Install Phantom or open this page in the Phantom browser.',
+      _translateCopy('copy.d1163e137c89', { defaultValue: 'Phantom wallet required to pay on Solana. Install Phantom or open this page in the Phantom browser.' }),
     );
   }
 
@@ -71,7 +72,7 @@ export async function sendSolanaPayment(
   });
 
   if (!build?.transaction) {
-    throw new Error('Could not prepare the Solana payment. Please try again.');
+    throw new Error(_translateCopy('copy.92d19a8fe155', { defaultValue: 'Could not prepare the Solana payment. Please try again.' }));
   }
 
   const { Connection, Transaction: SolTransaction } = await import('@solana/web3.js');
@@ -83,7 +84,7 @@ export async function sendSolanaPayment(
     const raw = Uint8Array.from(atob(build.transaction), (c) => c.charCodeAt(0));
     tx = SolTransaction.from(raw);
   } catch {
-    throw new Error('Invalid payment transaction from server. Please try again.');
+    throw new Error(_translateCopy('copy.209d989eb7bf', { defaultValue: 'Invalid payment transaction from server. Please try again.' }));
   }
 
   // 2. Sign as payer + broadcast.
@@ -94,8 +95,8 @@ export async function sendSolanaPayment(
       : await provider!.signTransaction(tx);
   } catch (err: unknown) {
     const code = (err as { code?: number })?.code;
-    if (code === 4001) throw new Error('Payment was rejected');
-    throw new Error(err instanceof Error ? err.message : 'Failed to sign Solana transaction');
+    if (code === 4001) throw new Error(_translateCopy('copy.3d4886fba03b', { defaultValue: 'Payment was rejected' }));
+    throw new Error(err instanceof Error ? err.message : _translateCopy('copy.b397b6d54c82', { defaultValue: 'Failed to sign Solana transaction' }));
   }
 
   let signature: string;
@@ -109,12 +110,12 @@ export async function sendSolanaPayment(
     const lower = msg.toLowerCase();
     // 0x1 is the SPL transfer program's insufficient-funds custom error.
     if (lower.includes('insufficient') || lower.includes('0x1')) {
-      throw new Error('Insufficient balance — check the token amount and your SOL for fees.');
+      throw new Error(_translateCopy('copy.4272dfaea8ac', { defaultValue: 'Insufficient balance — check the token amount and your SOL for fees.' }));
     }
     if (lower.includes('blockhash') || lower.includes('expired') || lower.includes('timeout')) {
-      throw new Error('Solana transaction expired. Please try again.');
+      throw new Error(_translateCopy('copy.3e9abebf2d88', { defaultValue: 'Solana transaction expired. Please try again.' }));
     }
-    throw new Error(`Solana payment failed: ${msg}`);
+    throw new Error(_translateCopy('copy.d3b5f68b4641', { defaultValue: 'Solana payment failed: {{value1}}', value1: msg }));
   }
 
   try {

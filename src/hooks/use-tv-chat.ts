@@ -16,6 +16,7 @@ import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/contexts/AuthContext';
 import { withWalletHeader } from '@/lib/supabase-wallet-client';
 import { toast } from 'sonner';
+import { translateCopy as _translateCopy } from '@/i18n/copy';
 
 export interface TVChatMessage {
   id: string;
@@ -76,8 +77,8 @@ export function useTVChat(channelId: string | undefined, enabled = true) {
       ...msg,
       reply_to: {
         id: parent.id,
-        content: parent.content || (parent.message_type === 'gif' ? 'GIF' : 'Media'),
-        sender_name: parent.display_name || parent.username || 'User',
+        content: parent.content || (parent.message_type === 'gif' ? 'GIF' : _translateCopy("copy.d357175cfe89", { defaultValue: "Media" })),
+        sender_name: parent.display_name || parent.username || _translateCopy("copy.b512d97e7cbf", { defaultValue: "User" }),
       },
     };
   });

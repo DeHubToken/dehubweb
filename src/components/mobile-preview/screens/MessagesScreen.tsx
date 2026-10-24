@@ -1,3 +1,4 @@
+import { translateCopy as _translateCopy } from '@/i18n/copy';
 import { useTranslation as _useCopy } from 'react-i18next';
 import { MobileStatusBar } from '../MobileStatusBar';
 import { MobileTopBar } from '../MobileTopBar';
@@ -8,13 +9,13 @@ import Search from "@/components/ui/cut-icons/search";
 
 
 const MOCK_CONVERSATIONS = [
-  { id: '1', user: 'bob_dev', lastMessage: 'Hey, check out the new proposal!', time: '2m', unread: 3 },
-  { id: '2', user: 'crypto_sarah', lastMessage: 'Thanks for the tip! 🙏', time: '15m', unread: 0 },
-  { id: '3', user: 'defi_whale', lastMessage: 'Are you joining the AMA later?', time: '1h', unread: 1 },
-  { id: '4', user: 'nft_artist', lastMessage: 'Just sent you the artwork files', time: '3h', unread: 0 },
-  { id: '5', user: 'dao_voter', lastMessage: 'Vote passed! 🎉', time: '5h', unread: 0 },
-  { id: '6', user: 'music_prod', lastMessage: 'New track dropping next week', time: '1d', unread: 0 },
-  { id: '7', user: 'web3_dev', lastMessage: 'Smart contract is deployed', time: '2d', unread: 0 },
+  { id: '1', user: 'bob_dev', get lastMessage() { return _translateCopy("copy.bc0b0c59d2c0", { defaultValue: "Hey, check out the new proposal!" }); }, time: '2m', unread: 3 },
+  { id: '2', user: 'crypto_sarah', get lastMessage() { return _translateCopy("copy.2f2a6b57caaf", { defaultValue: "Thanks for the tip! 🙏" }); }, time: '15m', unread: 0 },
+  { id: '3', user: 'defi_whale', get lastMessage() { return _translateCopy("copy.11b982698507", { defaultValue: "Are you joining the AMA later?" }); }, time: '1h', unread: 1 },
+  { id: '4', user: 'nft_artist', get lastMessage() { return _translateCopy("copy.0713eb8bdbe3", { defaultValue: "Just sent you the artwork files" }); }, time: '3h', unread: 0 },
+  { id: '5', user: 'dao_voter', get lastMessage() { return _translateCopy("copy.a86001791d0c", { defaultValue: "Vote passed! 🎉" }); }, time: '5h', unread: 0 },
+  { id: '6', user: 'music_prod', get lastMessage() { return _translateCopy("copy.aa37b457a9c7", { defaultValue: "New track dropping next week" }); }, time: '1d', unread: 0 },
+  { id: '7', user: 'web3_dev', get lastMessage() { return _translateCopy("copy.543f6b066539", { defaultValue: "Smart contract is deployed" }); }, time: '2d', unread: 0 },
 ];
 
 export function MessagesScreen() {

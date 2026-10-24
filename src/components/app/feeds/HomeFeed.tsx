@@ -1,5 +1,6 @@
 import { WindowedFeedItem } from '@/components/app/feeds/WindowedFeedItem';
 import { useTranslation as _useCopy } from 'react-i18next';
+import { translateCopy as _translateCopy } from '@/i18n/copy';
 import { useSurfaceDraft } from '@/hooks/use-surface-draft';
 import { isFirstVisibleFeedCard } from '@/lib/feed-first-card';
 import { visibleFeedTokenIds } from '@/lib/feed-visible-counts';
@@ -416,7 +417,7 @@ function nftToFeedItem(pinnedPost: any): FeedItemType {
     
     const id = String(pinnedPost.tokenId);
     const views = resolveViewCount(pinnedPost);
-    const timeAgo = pinnedPost.createdAt ? formatTimeAgo(pinnedPost.createdAt) : 'Just now';
+    const timeAgo = pinnedPost.createdAt ? formatTimeAgo(pinnedPost.createdAt) : _translateCopy("copy.66f53417d3b7", { defaultValue: "Just now" });
     
     const nftPostType = pinnedPost.postType || 'video';
     
@@ -484,7 +485,7 @@ function nftToFeedItem(pinnedPost: any): FeedItemType {
         hlsUrl: buildHlsUrl(pinnedPost.hlsUrl),
         duration: formatDuration(pinnedPost.videoDuration || pinnedPost.duration || 0),
         title: pinnedPost.name || pinnedPost.description?.split('\n')[0] || '',
-        channel: pinnedPost.minterDisplayName || pinnedPost.mintername || 'Unknown Creator',
+        channel: pinnedPost.minterDisplayName || pinnedPost.mintername || _translateCopy("copy.056823642989", { defaultValue: "Unknown Creator" }),
         channelAvatar,
         verified: false,
         views: formatViews(views),
@@ -523,7 +524,7 @@ function nftToFeedItem(pinnedPost: any): FeedItemType {
         replyPolicy: pinnedPost.replyPolicy,
         author: {
           id: pinnedPost.minter,
-          name: pinnedPost.minterDisplayName || pinnedPost.mintername || 'Unknown',
+          name: pinnedPost.minterDisplayName || pinnedPost.mintername || _translateCopy("copy.b764cdc0eab7", { defaultValue: "Unknown" }),
           handle: pinnedPost.mintername || pinnedPost.minter,
           avatarSeed: avatarUrl,
           verified: false,
@@ -1073,7 +1074,7 @@ export function HomeFeed({ active = true, shuffleKey, isRefreshing, showFilters 
         // that carried a title AND a description only ever showed the second.
         title: item.name || '',
         description: item.description || '',
-        sound: 'Original Sound',
+        sound: _copy("copy.9ef6cdcd044c", { defaultValue: "Original Sound" }),
         ...shortsPhotoMedia(item),
         comments: formatCount(item.commentCount || 0),
         shares: '0',
@@ -1085,7 +1086,7 @@ export function HomeFeed({ active = true, shuffleKey, isRefreshing, showFilters 
         isLiked: (item as any).isLiked ?? voteType === 'for',
         isDisliked: (item as any).isDisliked ?? voteType === 'against',
       };
-  }, []);
+  }, [_copy]);
 
   // Fetch curated radio stations for carousel. The carousel sits several posts
   // down, so nobody sees it before scrolling; fetching at mount put a

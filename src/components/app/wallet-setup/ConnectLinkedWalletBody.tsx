@@ -120,7 +120,7 @@ function ConnectLinkedWalletBodyInner({ expectedAddress, onConnected }: ConnectL
           connector = liveConnectors.find((c) => c.id === 'injected');
         }
         if (!connector) {
-          throw new Error('That wallet was not detected in this browser.');
+          throw new Error(_copy("copy.cc5a243cd5bb", { defaultValue: "That wallet was not detected in this browser." }));
         }
         await connectAsync({ connector });
         // Verification happens in the address effect above.
@@ -128,7 +128,7 @@ function ConnectLinkedWalletBodyInner({ expectedAddress, onConnected }: ConnectL
         setActiveProvider(null);
         if (err?.name === 'ConnectorAlreadyConnectedError') return; // address effect has it
         if (isUserRejection(err)) return; // closing the popup is a "not now", not a failure
-        setError(err instanceof Error ? err.message : 'Could not connect — please try again.');
+        setError(err instanceof Error ? err.message : _copy("copy.964564355dd6", { defaultValue: "Could not connect — please try again." }));
       } finally {
         setBusy(false);
       }

@@ -279,14 +279,13 @@ export function GeneralAIChat({ isOpen, onClose }: GeneralAIChatProps) {
     } catch (error) {
       console.error('AI chat error:', error);
       toast.dismiss('chat-image-payment');
-      // Append the reason to the translated line rather than replacing it, so
-      // "not enough DHB" or "rate limited" reaches the user without needing a
-      // new key in all 110 locales.
+      // Carry the reason inside the translated line rather than replacing it,
+      // so "not enough DHB" or "rate limited" still reaches the user.
       const reason = error instanceof Error ? error.message : '';
       setMessages(prev => [...prev, {
         id: (Date.now() + 1).toString(),
         role: 'assistant',
-        content: reason ? `${t('aiChat.errorGeneric')} (${reason})` : t('aiChat.errorGeneric')
+        content: reason ? _copy("copy.e85262958f06", { defaultValue: "Sorry, I encountered an error ({{value1}}). Please try again.", value1: reason }) : t('aiChat.errorGeneric')
       }]);
     } finally {
       setIsLoading(false);

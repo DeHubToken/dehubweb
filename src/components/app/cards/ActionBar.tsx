@@ -405,6 +405,9 @@ export function ActionBar({
   stage = null,
 }: ActionBarProps) {
   const { t: _copy } = _useCopy();
+  /** A reaction's name in the viewer's language. */
+  const reactionLabel = (reaction: PostReaction) =>
+    _copy(`reactionInfo.labels.${reaction}`, { defaultValue: reactionMeta(reaction).label });
   // What one reaction from this viewer counts for. A badge multiplies the
   // reaction they already have; it never buys them a second one, so this only
   // ever scales the count, never the number of votes cast.
@@ -972,7 +975,7 @@ export function ActionBar({
           className="flex items-center gap-3 w-full p-4 text-zinc-200 hover:text-white hover:bg-white/10 rounded-xl transition-all duration-200 disabled:opacity-50"
         >
           <ImageDown className="w-5 h-5" />
-          <span className="font-medium">{isSharingImage ? 'Capturing...' : 'Share as Image'}</span>
+          <span className="font-medium">{isSharingImage ? _copy("copy.58c753bf3fe8", { defaultValue: "Capturing..." }) : _copy("copy.c431035b32d3", { defaultValue: "Share as Image" })}</span>
         </button>
       )}
       {onSeeEngagements && (
@@ -1062,7 +1065,7 @@ export function ActionBar({
         onClick={(e) => {
           e.stopPropagation();
           if (isOptimistic) {
-            toast.message('Post processing, click ⓘ for more info', {
+            toast.message(_copy("copy.9b2b21ee911e", { defaultValue: "Post processing, click ⓘ for more info" }), {
               icon: <Info className="w-4 h-4" />,
             });
           } else if (quickRepost) {
@@ -1142,8 +1145,8 @@ export function ActionBar({
           className={cn(THUMB_BUTTON_CLASS, compact && COMPACT_BUTTON_CLASS)}
           aria-label={
             myPositiveReaction || (reactionsEnabled && myNegativeReaction)
-              ? _copy("copy.a3156ed263d2", { defaultValue: "{{value1}} — hold to change your reaction", value1: reactionMeta((myPositiveReaction ?? myNegativeReaction)!).label })
-              : _copy("copy.12b91b0ac5dd", { defaultValue: "{{value1}} — hold to react", value1: reactionMeta(resolveLeadReaction(localReactionCounts, myReaction) ?? "like").label })
+              ? _copy("copy.a3156ed263d2", { defaultValue: "{{value1}} — hold to change your reaction", value1: reactionLabel((myPositiveReaction ?? myNegativeReaction)!) })
+              : _copy("copy.12b91b0ac5dd", { defaultValue: "{{value1}} — hold to react", value1: reactionLabel(resolveLeadReaction(localReactionCounts, myReaction) ?? "like") })
           }
           aria-haspopup={reactionsEnabled ? 'menu' : undefined}
           aria-expanded={reactionsEnabled ? likeTray.open : undefined}
@@ -1276,8 +1279,8 @@ export function ActionBar({
             className={STAGE_TILE_CLASS}
             aria-label={
               myPositiveReaction || (reactionsEnabled && myNegativeReaction)
-                ? _copy("copy.a3156ed263d2", { defaultValue: "{{value1}} — hold to change your reaction", value1: reactionMeta((myPositiveReaction ?? myNegativeReaction)!).label })
-                : _copy("copy.12b91b0ac5dd", { defaultValue: "{{value1}} — hold to react", value1: reactionMeta(resolveLeadReaction(localReactionCounts, myReaction) ?? "like").label })
+                ? _copy("copy.a3156ed263d2", { defaultValue: "{{value1}} — hold to change your reaction", value1: reactionLabel((myPositiveReaction ?? myNegativeReaction)!) })
+                : _copy("copy.12b91b0ac5dd", { defaultValue: "{{value1}} — hold to react", value1: reactionLabel(resolveLeadReaction(localReactionCounts, myReaction) ?? "like") })
             }
             aria-haspopup={reactionsEnabled ? 'menu' : undefined}
             aria-expanded={reactionsEnabled ? likeTray.open : undefined}
@@ -1316,7 +1319,7 @@ export function ActionBar({
           onClick={(e) => {
             e.stopPropagation();
             if (isOptimistic) {
-              toast.message('Post processing, click ⓘ for more info', { icon: <Info className="w-4 h-4" /> });
+              toast.message(_copy("copy.9b2b21ee911e", { defaultValue: "Post processing, click ⓘ for more info" }), { icon: <Info className="w-4 h-4" /> });
               return;
             }
             setSheetOpen(true);

@@ -9,6 +9,7 @@
  */
 
 import { supabase } from '@/integrations/supabase/client';
+import { translateCopy as _translateCopy } from '@/i18n/copy';
 
 // ============================================================================
 // TYPES
@@ -46,11 +47,12 @@ function cleanChannelName(name: string): string {
 
 /** Friendly display names for countries that need cleanup */
 const COUNTRY_DISPLAY_OVERRIDES: Record<string, string> = {
-  '日本 / Japan': 'Japan',
-  'News (AR)': 'News (Arabic)',
-  'News (ES)': 'News (Spanish)',
-  'Documentaries (EN)': 'Documentaries',
-  'North Macedonia': 'N. Macedonia',
+  get '日本 / Japan'() { return _translateCopy("copy.647294383b2c", { defaultValue: "Japan" }); },
+  get 'News (AR)'() { return _translateCopy("copy.9ac8958f9d72", { defaultValue: "News (Arabic)" }); },
+  get 'News (ES)'() { return _translateCopy("copy.2881d2874c5c", { defaultValue: "News (Spanish)" }); },
+  get 'Documentaries (EN)'() { return _translateCopy("copy.551b890d09d2", { defaultValue: "Documentaries" }); },
+  get 'North Macedonia'() { return _translateCopy("copy.8b99a0c06542", { defaultValue: "N. Macedonia" }); },
+  get Other() { return _translateCopy("copy.f97e9da0e3b8", { defaultValue: "Other" }); },
 };
 
 // ============================================================================
@@ -152,7 +154,7 @@ function parseM3U8Playlist(content: string): TVChannel[] {
         }
       }
       
-      const name = cleanChannelName(nameMatch?.[1] || titleMatch?.[1] || 'Unknown Channel');
+      const name = cleanChannelName(nameMatch?.[1] || titleMatch?.[1] || _translateCopy("copy.6b811e57fa85", { defaultValue: "Unknown Channel" }));
       
       if (!streamUrl || seenUrls.has(streamUrl)) continue;
       if (!isValidStream(streamUrl, name)) continue;

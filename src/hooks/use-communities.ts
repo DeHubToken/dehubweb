@@ -350,7 +350,7 @@ export function useUpdateCommunity() {
       qc.invalidateQueries({ queryKey: ['community'] });
       toast.success(_copy("copy.b9e94842367e", { defaultValue: "Community updated" }));
     },
-    onError: (error) => toast.error(adminErrorMessage(error, 'Failed to update community')),
+    onError: (error) => toast.error(adminErrorMessage(error, _copy("copy.1b97419f8a5c", { defaultValue: "Failed to update community" }))),
   });
 }
 
@@ -427,7 +427,7 @@ export function useJoinCommunity() {
       // Counts were patched optimistically — mark stale without refetching
       qc.invalidateQueries({ queryKey: ['communities', 'discover'], refetchType: 'none' });
       qc.invalidateQueries({ queryKey: ['communities', 'slug'], refetchType: 'none' });
-      toast.success(result?.isPrivate ? 'Join request sent!' : 'Joined community!');
+      toast.success(result?.isPrivate ? _copy("copy.f5b187df66bf", { defaultValue: "Join request sent!" }) : _copy("copy.bfd0987df65b", { defaultValue: "Joined community!" }));
     },
   });
 }

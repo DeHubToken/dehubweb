@@ -241,7 +241,7 @@ function SpeakerHeader({
           {entry.label || t('stages.aiVoice')}
         </span>
         <span className="text-[10px] uppercase tracking-wider px-1.5 py-0.5 rounded-md bg-white/10 text-white/70 border border-white/10">
-          AI
+          {t("copy.11fb682be0a0", { defaultValue: "AI" })}
         </span>
         {tsButton}
       </div>
@@ -619,7 +619,7 @@ export function StageTranscriptDrawer({ space, open, onOpenChange }: Props) {
     const ov = overrides[speakerId];
     if (ov?.username) return `@${ov.username}`;
     const entry = transcript?.speaker_map?.[speakerId];
-    if (entry?.type === 'ai') return entry.label || 'AI';
+    if (entry?.type === 'ai') return entry.label || t("copy.11fb682be0a0", { defaultValue: "AI" });
     if (entry?.type === 'user' && entry.wallet) return `${entry.wallet.slice(0, 6)}…${entry.wallet.slice(-4)}`;
     const idx = fallbackIndexMap.get(speakerId) ?? 0;
     return t('stages.speakerN', { n: idx + 1 });
@@ -665,7 +665,10 @@ export function StageTranscriptDrawer({ space, open, onOpenChange }: Props) {
   };
 
   const handleQuoteAsPost = (seg: Segment, text: string) => {
-    const quoted = `> "${text}"\n— ${speakerName(seg.speaker)} on ${space?.title || 'a stage'}\n${stageDeepLink(seg.start)}`;
+    const attribution = space?.title
+      ? t("copy.c027c6ac47af", { defaultValue: "— {{value1}} on {{value2}}", value1: speakerName(seg.speaker), value2: space.title })
+      : t("copy.4e9aaa863ddf", { defaultValue: "— {{value1}} on a stage", value1: speakerName(seg.speaker) });
+    const quoted = `> "${text}"\n${attribution}\n${stageDeepLink(seg.start)}`;
     sessionStorage.setItem('composer-prefill', quoted);
     toast.success(t('stages.openingComposer'));
     window.dispatchEvent(new CustomEvent('open-composer', { detail: { content: quoted } }));
@@ -716,7 +719,13 @@ export function StageTranscriptDrawer({ space, open, onOpenChange }: Props) {
       .eq('source_kind', 'stage')
       .eq('source_ref', stageId);
     if (error) toast.error(t('stages.couldNotUpdatePrivacy'));
-    else toast.success(`Transcript is now ${next}`);
+    else toast.success(
+      next === 'private'
+        ? t("copy.c637105c2e69", { defaultValue: "Transcript is now private" })
+        : next === 'members'
+          ? t("copy.fc9b2ae7af46", { defaultValue: "Transcript is now members" })
+          : t("copy.74997f60b937", { defaultValue: "Transcript is now public" }),
+    );
     queryClient.invalidateQueries({ queryKey: ['stage-transcript', stageId] });
   };
 

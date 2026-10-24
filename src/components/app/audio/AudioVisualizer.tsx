@@ -1136,9 +1136,9 @@ export function AudioVisualizer({
           aria-label={_copy('copy.67ae3405bcd4', { defaultValue: 'Seek' })}
           onChange={e => seekTo(Number(e.target.value) / 1000)} />
         <div data-audio-studio-transport>
-          <button type="button" aria-label="−10 s" onClick={() => seekTo(duration ? (currentTime - 10) / duration : 0)}><RotateCcw /><small>10</small></button>
+          <button type="button" aria-label={_copy("copy.3df2df39406e", { defaultValue: "−10 s" })} onClick={() => seekTo(duration ? (currentTime - 10) / duration : 0)}><RotateCcw /><small>10</small></button>
           <button type="button" data-audio-studio-play aria-label={isPlaying ? t('audioPost.pause') : t('audioPost.play')} onClick={handlePlayPause}>{isPlaying ? <GlassPause fill="currentColor" /> : <GlassPlay fill="currentColor" />}</button>
-          <button type="button" aria-label="+10 s" onClick={() => seekTo(duration ? (currentTime + 10) / duration : 0)}><RotateCw /><small>10</small></button>
+          <button type="button" aria-label={_copy("copy.71f45c5efe99", { defaultValue: "+10 s" })} onClick={() => seekTo(duration ? (currentTime + 10) / duration : 0)}><RotateCw /><small>10</small></button>
         </div>
       </div>
       <div data-audio-studio-options>
@@ -1442,7 +1442,7 @@ export function AudioVisualizer({
             aria-valuemin={0}
             aria-valuemax={Math.max(0, Math.round(duration))}
             aria-valuenow={Math.max(0, Math.round(displayTime))}
-            aria-valuetext={`${formatTime(displayTime)} of ${formatTime(duration)}`}
+            aria-valuetext={_copy("copy.a48c498b8725", { defaultValue: "{{value1}} of {{value2}}", value1: formatTime(displayTime), value2: formatTime(duration) })}
             className="absolute inset-x-0 bottom-0 h-3.5 cursor-pointer outline-none pointer-events-auto focus-visible:ring-2 focus-visible:ring-white"
             style={{ touchAction: 'none' }}
             onKeyDown={handleSeekKeyDown}

@@ -1,4 +1,5 @@
 import { useTranslation as _useCopy } from 'react-i18next';
+import { translateCopy as _translateCopy } from '@/i18n/copy';
 import { lockBodyScroll } from '@/lib/body-scroll-lock';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { useAppTheme } from '@/contexts/ThemeContext';
@@ -281,10 +282,10 @@ function checkCapability(): Capability {
   if (!gpu.webgl2) {
     return {
       ok: false,
-      reason: 'WEBGL2 UNAVAILABLE',
+      reason: _translateCopy("copy.752f425c6767", { defaultValue: "WEBGL2 UNAVAILABLE" }),
       detail: gpu.webgl
-        ? 'This browser reports WebGL 1 only. The game requires WebGL 2. Updating the browser or the graphics driver usually resolves it.'
-        : 'No WebGL context at all. Hardware acceleration is most likely disabled in the browser settings.',
+        ? _translateCopy("copy.95d655080861", { defaultValue: "This browser reports WebGL 1 only. The game requires WebGL 2. Updating the browser or the graphics driver usually resolves it." })
+        : _translateCopy("copy.2aabc130ed35", { defaultValue: "No WebGL context at all. Hardware acceleration is most likely disabled in the browser settings." }),
     };
   }
 
@@ -294,8 +295,8 @@ function checkCapability(): Capability {
   if (gpu.software) {
     return {
       ok: false,
-      reason: 'SOFTWARE RENDERING',
-      detail: `The GPU is not being used (${gpu.renderer}). The game would run at a few frames per second. Enable hardware acceleration in the browser settings, then restart it.`,
+      reason: _translateCopy("copy.54fc1b88ffd3", { defaultValue: "SOFTWARE RENDERING" }),
+      detail: _translateCopy("copy.64802dfe0ba7", { defaultValue: "The GPU is not being used ({{value1}}). The game would run at a few frames per second. Enable hardware acceleration in the browser settings, then restart it.", value1: gpu.renderer }),
     };
   }
 

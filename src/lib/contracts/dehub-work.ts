@@ -3,6 +3,7 @@ import { supabase } from '@/integrations/supabase/client';
 import { writeContractAA,approveERC20,getERC20Allowance,getERC20Balance,getWalletAddress,switchChain,rpcRequest } from './aa-utils';
 import { CHAIN_CONFIGS,BASE_CHAIN_ID } from './dhb-token';
 import { prepareWorkPayment } from '@/features/work/payment-flow';
+import { translateCopy as _translateCopy } from '@/i18n/copy';
 
 export const DEHUB_WORK_ABI=[
  'function createJob(address,uint8,uint256,uint256,uint256) returns (uint256)',
@@ -38,11 +39,11 @@ export async function prepareWorkFunding(address:string,currency:string,price:st
  const token=getCurrencyToken(currency);
  const amount=parseUnits(price,token.decimals)*BigInt(maxUnits);
  const owner=await getWalletAddress();
- if(await getERC20Balance(token.address,owner,BASE_CHAIN_ID)<amount) throw new Error('Not enough '+currency+' to fund this bounty');
+ if(await getERC20Balance(token.address,owner,BASE_CHAIN_ID)<amount) throw new Error(_translateCopy("copy.f8142c2356a2", { defaultValue: "Not enough {{value1}} to fund this bounty", value1: currency }));
  if(await getERC20Allowance(token.address,owner,address)<amount) {
   const sent=await approveERC20(token.address,address,amount,BASE_CHAIN_ID);
   const receipt=await sent.wait(2);
-  if(receipt.status!==1) throw new Error('Token approval reverted');
+  if(receipt.status!==1) throw new Error(_translateCopy("copy.1d29aa28129c", { defaultValue: "Token approval reverted" }));
  }
 }
 export async function payWorkerDirect(params:{currency:string;to:string;amount:number|string}) {
@@ -51,9 +52,9 @@ export async function payWorkerDirect(params:{currency:string;to:string;amount:n
   const token=getCurrencyToken(params.currency);
   const amount=parseUnits(String(params.amount),token.decimals);
   const from=await getWalletAddress();
-  if(from.toLowerCase()===params.to.toLowerCase()) throw new Error('Cannot pay your own wallet');
+  if(from.toLowerCase()===params.to.toLowerCase()) throw new Error(_translateCopy("copy.afe7994918e2", { defaultValue: "Cannot pay your own wallet" }));
   const balance=await getERC20Balance(token.address,from,BASE_CHAIN_ID);
-  if(balance<amount) throw new Error(`Not enough ${params.currency}: balance ${formatUnits(balance,token.decimals)}`);
+  if(balance<amount) throw new Error(_translateCopy("copy.81205b869813", { defaultValue: "Not enough {{value1}}: balance {{value2}}", value1: params.currency, value2: formatUnits(balance,token.decimals) }));
   return {token,amount};
  });
  return writeContractAA(token.address,new Interface(['function transfer(address,uint256) returns (bool)']),'transfer',[params.to,amount],{context:'bounty payout',chainId:BASE_CHAIN_ID});

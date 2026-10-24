@@ -80,18 +80,18 @@ const FILTERS: { key: LogFilter; i18nKey: string; fallback: string }[] = [
 
 /** Patch keys as they land in `detail`, mapped to something a human reads. */
 const SETTING_LABELS: Record<string, string> = {
-  name: 'name',
+  get name() { return _translateCopy("copy.82a3537ff0db", { defaultValue: "name" }); },
   get description() { return _translateCopy("copy.c9046f7a37ad", { defaultValue: "description" }); },
-  avatar_url: 'avatar',
-  banner_url: 'banner',
-  is_private: 'privacy',
-  rules: 'rules',
-  slow_mode_seconds: 'slow mode',
-  default_permissions: 'permissions',
-  ticker_symbol: 'ticker',
-  ticker_contract_address: 'ticker',
-  ticker_chain_id: 'ticker',
-  ticker_pair_address: 'ticker',
+  get avatar_url() { return _translateCopy("copy.87bbe879c7a5", { defaultValue: "avatar" }); },
+  get banner_url() { return _translateCopy("copy.8c7ed2d9be59", { defaultValue: "banner" }); },
+  get is_private() { return _translateCopy("copy.a4cc6bc01a92", { defaultValue: "privacy" }); },
+  get rules() { return _translateCopy("copy.6c621d1a0513", { defaultValue: "rules" }); },
+  get slow_mode_seconds() { return _translateCopy("copy.127f76178911", { defaultValue: "slow mode" }); },
+  get default_permissions() { return _translateCopy("copy.4fe3cdd404ea", { defaultValue: "permissions" }); },
+  get ticker_symbol() { return _translateCopy("copy.2c6bc1588bbd", { defaultValue: "ticker" }); },
+  get ticker_contract_address() { return _translateCopy("copy.2c6bc1588bbd", { defaultValue: "ticker" }); },
+  get ticker_chain_id() { return _translateCopy("copy.2c6bc1588bbd", { defaultValue: "ticker" }); },
+  get ticker_pair_address() { return _translateCopy("copy.2c6bc1588bbd", { defaultValue: "ticker" }); },
 };
 
 // ─── Formatting helpers ──────────────────────────────────────────────────────

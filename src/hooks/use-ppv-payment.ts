@@ -113,7 +113,7 @@ export function usePPVPayment({
     if (isSolanaChain(postChainId)) {
       setIsPaying(true);
       try {
-        toast.loading('Preparing your payment…', { id: 'ppv-payment', duration: Infinity });
+        toast.loading(_copy("copy.d73b25210d49", { defaultValue: "Preparing your payment…" }), { id: 'ppv-payment', duration: Infinity });
         const { sendSolanaPayment } = await import('@/lib/solana/payment');
         await sendSolanaPayment({ tokenId, kind: 'ppv', chainId: postChainId });
 
@@ -125,7 +125,7 @@ export function usePPVPayment({
       } catch (error: unknown) {
         console.error('[PPV] Solana payment failed:', error);
         toast.error(
-          error instanceof Error ? error.message : 'Solana payment failed',
+          error instanceof Error ? error.message : _copy("copy.326922d6f1f8", { defaultValue: "Solana payment failed" }),
           { id: 'ppv-payment' },
         );
       } finally {
@@ -213,7 +213,7 @@ export function usePPVPayment({
         return;
       }
 
-      toast.loading('Unlocking content...', { id: 'ppv-payment' });
+      toast.loading(_copy("copy.46d0718fb64a", { defaultValue: "Unlocking content..." }), { id: 'ppv-payment' });
       const ppvResult = await sendFundsForPPV({
         tokenId,
         amount: price,
@@ -243,10 +243,13 @@ export function usePPVPayment({
       // the chunk itself failed to load.
       const aa = await import('@/lib/contracts/aa-utils').catch(() => null);
       const message = aa ? aa.parseTxError(error) : '';
+      // parseTxError ends in "Failed to transaction: <raw error>" when it recognises nothing;
+      // that line is neither readable nor translated, so the viewer gets the plain failure instead.
+      const shown = message && !message.startsWith('Failed to transaction') ? message : _copy("copy.0aaf7b88565d", { defaultValue: "PPV payment failed" });
       // Locked wallet: the unlock sheet is already up with its own toast, and
       // nothing has failed — the payment goes through on the next tap.
       if (!aa || !aa.isWalletLockedError(error)) {
-        toast.error(message || 'PPV payment failed', { id: 'ppv-payment' });
+        toast.error(shown, { id: 'ppv-payment' });
       }
       if (message.toLowerCase().includes('session expired') || message.toLowerCase().includes('log in again')) {
         setTimeout(() => openLoginModal?.(), 1200);

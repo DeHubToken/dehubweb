@@ -133,7 +133,7 @@ export function CaptureCardSetup() {
           {!choice.videoId && <option value="">{_copy("copy.de6694f3ada3", { defaultValue: "Pick a device" })}</option>}
           {videos.map((d, i) => (
             <option key={d.deviceId} value={d.deviceId}>
-              {d.label || `Camera ${i + 1}`}
+              {d.label || _copy("copy.a325d495c22a", { defaultValue: "Camera {{value1}}", value1: i + 1 })}
               {isCaptureCardDevice(d) ? ' ★' : ''}
             </option>
           ))}
@@ -144,7 +144,7 @@ export function CaptureCardSetup() {
         <Select value={choice.audioId} onChange={(v) => update({ audioId: v, micId: choice.micId === v ? '' : choice.micId })}>
           <option value="">{_copy("copy.dc937b598926", { defaultValue: "None" })}</option>
           {audios.map((d, i) => (
-            <option key={d.deviceId} value={d.deviceId}>{d.label || `Input ${i + 1}`}</option>
+            <option key={d.deviceId} value={d.deviceId}>{d.label || _copy("copy.79a43ce28038", { defaultValue: "Input {{value1}}", value1: i + 1 })}</option>
           ))}
         </Select>
       </Field>
@@ -155,7 +155,7 @@ export function CaptureCardSetup() {
           {audios
             .filter((d) => d.deviceId !== choice.audioId)
             .map((d, i) => (
-              <option key={d.deviceId} value={d.deviceId}>{d.label || `Mic ${i + 1}`}</option>
+              <option key={d.deviceId} value={d.deviceId}>{d.label || _copy("copy.f8a983e2c25d", { defaultValue: "Mic {{value1}}", value1: i + 1 })}</option>
             ))}
         </Select>
       </Field>

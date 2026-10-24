@@ -2,6 +2,11 @@ import { beforeEach, afterEach, expect, it, vi } from 'vitest';
 import { cleanup, fireEvent, render, screen, waitFor } from '@testing-library/react';
 import { WalletUnlockStep } from '../WalletUnlockStep';
 
+vi.mock('react-i18next', () => ({ useTranslation: () => ({
+  t: (key: string, options?: { defaultValue?: string; [key: string]: unknown }) =>
+    (options?.defaultValue ?? key).replace(/\{\{(\w+)\}\}/g, (token, name) => String(options?.[name] ?? token)),
+}) }));
+
 const mocks = vi.hoisted(() => ({
   owner: '0x1111111111111111111111111111111111111111',
   safe: '0x2222222222222222222222222222222222222222',

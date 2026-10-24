@@ -1,4 +1,5 @@
 import { loadStripe, type Stripe } from "@stripe/stripe-js";
+import { translateCopy as _translateCopy } from '@/i18n/copy';
 
 export type StripeEnv = "sandbox" | "live";
 
@@ -10,7 +11,7 @@ function paymentsEnvironment(): StripeEnv {
   if (clientToken?.startsWith("pk_test_")) return "sandbox";
   if (clientToken?.startsWith("pk_live_")) return "live";
   throw new Error(
-    "Stripe payments are not configured for this build.",
+    _translateCopy("copy.f286f35da10d", { defaultValue: "Stripe payments are not configured for this build." }),
   );
 }
 

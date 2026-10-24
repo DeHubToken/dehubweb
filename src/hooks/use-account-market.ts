@@ -32,6 +32,7 @@ import { toast } from 'sonner';
 import i18n from 'i18next';
 import { useAuth } from '@/contexts/AuthContext';
 import { createLogger } from '@/lib/logger';
+import { translateCopy as _translateCopy } from '@/i18n/copy';
 import {
   browseAccounts,
   cancelAccountListing,
@@ -96,13 +97,14 @@ export function useMyAccountMarket() {
 }
 
 export function useCreateAccountListing() {
+  const { t: _copy } = _useCopy();
   const qc = useQueryClient();
   return useMutation({
     mutationFn: createAccountListing,
     onSuccess: result => {
       qc.invalidateQueries({ queryKey: ['account-market-mine'] });
       qc.invalidateQueries({ queryKey: ['account-market-browse'] });
-      toast.success(`@${result.username} is on the market`);
+      toast.success(_copy("copy.134ed133424c", { defaultValue: "@{{value1}} is on the market", value1: result.username }));
     },
     onError: (err: Error) => toast.error(err.message),
   });
@@ -153,35 +155,47 @@ async function runClaimLoop(input: {
   chainId: number;
   receiveAddress?: string;
 }): Promise<Extract<AccountClaimResult, { pending: false }>> {
-  let lastError = 'Could not confirm the payment';
+  let lastError: ClaimState = 'unconfirmed';
   let resumeBudget = CLAIM_RESUME_ATTEMPTS;
 
   for (let attempt = 0; attempt < CLAIM_ATTEMPTS + CLAIM_RESUME_ATTEMPTS; attempt++) {
     try {
       const result: AccountClaimResult = await claimAccount(input);
       if (result.pending === false) return result;
-      lastError = 'The payment is still confirming on-chain';
+      lastError = 'confirming';
     } catch (err: any) {
       // 409: the payment landed but the account transfer was interrupted.
       // Retrying the claim resumes the transfer server-side, so this is a
       // reason to continue, not to stop.
       if (err?.httpStatus === 409 && resumeBudget > 0) {
         resumeBudget--;
-        lastError = 'The transfer was interrupted and is being resumed';
+        lastError = 'resuming';
         logger.warn('claim hit 409, retrying to resume', err?.message);
       } else {
         // Any other refusal is final — underpaid, wrong chain, sold to
         // somebody else, or a 409 that would not clear.
         logger.warn('claim attempt failed', err?.message);
-        throw new Error(`${err?.message || lastError} (transaction ${input.txHash})`);
+        throw new Error(_translateCopy("copy.7df7a5aaeb96", { defaultValue: "{{value1}} (transaction {{value2}})", value1: err?.message || claimStateText(lastError), value2: input.txHash }));
       }
     }
     await new Promise(resolve => setTimeout(resolve, CLAIM_INTERVAL_MS));
   }
 
-  throw new Error(
-    `${lastError}. Your payment went through — reopen this listing in a minute to finish claiming it (transaction ${input.txHash}).`,
-  );
+  throw new Error(claimStrandedText(lastError, input.txHash));
+}
+
+type ClaimState = 'unconfirmed' | 'confirming' | 'resuming';
+
+function claimStateText(state: ClaimState): string {
+  if (state === 'confirming') return _translateCopy("copy.b59f0a649761", { defaultValue: "The payment is still confirming on-chain" });
+  if (state === 'resuming') return _translateCopy("copy.a664800e5f5a", { defaultValue: "The transfer was interrupted and is being resumed" });
+  return _translateCopy("copy.50c1bea5bfee", { defaultValue: "Could not confirm the payment" });
+}
+
+function claimStrandedText(state: ClaimState, txHash: string): string {
+  if (state === 'confirming') return _translateCopy("copy.f57eccb1b137", { defaultValue: "The payment is still confirming on-chain. Your payment went through — reopen this listing in a minute to finish claiming it (transaction {{value1}}).", value1: txHash });
+  if (state === 'resuming') return _translateCopy("copy.f2b3859fbf7f", { defaultValue: "The transfer was interrupted and is being resumed. Your payment went through — reopen this listing in a minute to finish claiming it (transaction {{value1}}).", value1: txHash });
+  return _translateCopy("copy.ec07d1c5ae3b", { defaultValue: "Could not confirm the payment. Your payment went through — reopen this listing in a minute to finish claiming it (transaction {{value1}}).", value1: txHash });
 }
 
 export type BuyAccountStage = 'idle' | 'quoting' | 'paying' | 'confirming' | 'done';
@@ -195,6 +209,7 @@ export type BuyAccountStage = 'idle' | 'quoting' | 'paying' | 'confirming' | 'do
  * confirming has already cost them the account's price.
  */
 export function useBuyAccount() {
+  const { t: _copy } = _useCopy();
   const qc = useQueryClient();
   const { refreshUser } = useAuth();
   const [stage, setStage] = useState<BuyAccountStage>('idle');
@@ -246,7 +261,7 @@ export function useBuyAccount() {
         18,
         chainId,
       );
-      if (!sent?.hash) throw new Error('The payment was not submitted.');
+      if (!sent?.hash) throw new Error(_copy("copy.f819def8e607", { defaultValue: "The payment was not submitted." }));
 
       // Past this line the buyer has paid. Giving up would strand a real
       // transfer with no account behind it, so the loop runs to the end and
@@ -261,7 +276,7 @@ export function useBuyAccount() {
     },
     onSuccess: async result => {
       setStage('done');
-      toast.success(`@${result.username} is yours — delivered to ${shortAddress(result.receiveAddress)}`);
+      toast.success(_copy("copy.c98b19605efc", { defaultValue: "@{{value1}} is yours — delivered to {{value2}}", value1: result.username, value2: shortAddress(result.receiveAddress) }));
 
       // If delivery went to the wallet that is signed in here, this session's
       // identity just changed wholesale — refresh it and drop every
@@ -290,12 +305,13 @@ export function useBuyAccount() {
  * txHash, chain and receive address — so this is the "Resume transfer" button.
  */
 export function useResumeAccountClaim() {
+  const { t: _copy } = _useCopy();
   const qc = useQueryClient();
   return useMutation({
     mutationFn: (input: { listingId: string; txHash: string; chainId: number; receiveAddress?: string }) =>
       runClaimLoop(input),
     onSuccess: result => {
-      toast.success(`@${result.username} delivered to ${shortAddress(result.receiveAddress)}`);
+      toast.success(_copy("copy.397a647c19dd", { defaultValue: "@{{value1}} delivered to {{value2}}", value1: result.username, value2: shortAddress(result.receiveAddress) }));
       qc.invalidateQueries({ queryKey: ['account-market-mine'] });
       qc.invalidateQueries({ queryKey: ['account-market-browse'] });
     },

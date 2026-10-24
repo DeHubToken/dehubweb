@@ -25,6 +25,7 @@
 
 import { useMemo, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useTranslation as _useCopy } from 'react-i18next';
 import { TrendingUp, TrendingDown, ClipboardCopy } from "lucide-react";
 import Check from "@/components/ui/cut-icons/check";
 
@@ -145,6 +146,7 @@ function AddressChip({ address }: { address: string }) {
 // ── Card ────────────────────────────────────────────────────────────────────
 
 function AssetCard({ asset }: { asset: ResolvedAsset }) {
+  const { t: _copy } = _useCopy();
   const navigate = useNavigate();
   // `isPending` gates the chart, not `series.length`: an asset whose series is
   // still in flight and one that will never have a series both arrive as an
@@ -158,8 +160,8 @@ function AssetCard({ asset }: { asset: ResolvedAsset }) {
       ? [asset.exchange, formatCompact(asset.marketCap)].filter(Boolean)
       : [
           asset.chainId?.toUpperCase(),
-          formatCompact(asset.marketCap) ? `MC ${formatCompact(asset.marketCap)}` : null,
-          formatCompact(asset.volume24h) ? `Vol ${formatCompact(asset.volume24h)}` : null,
+          formatCompact(asset.marketCap) ? _copy("copy.f9c8b16a4071", { defaultValue: "MC {{value1}}", value1: formatCompact(asset.marketCap) }) : null,
+          formatCompact(asset.volume24h) ? _copy("copy.62c8b95e8e5e", { defaultValue: "Vol {{value1}}", value1: formatCompact(asset.volume24h) }) : null,
         ].filter(Boolean);
 
   const explorer = asset.chainId && asset.address ? explorerUrlFor(asset.chainId, asset.address) : null;
@@ -234,7 +236,7 @@ function AssetCard({ asset }: { asset: ResolvedAsset }) {
           <div className="flex-1 min-w-0">
             <Sparkline points={series ?? []} positive={positive} />
           </div>
-          <span className="text-white/30 text-[10px] pb-1 shrink-0">24h</span>
+          <span className="text-white/30 text-[10px] pb-1 shrink-0">{_copy("copy.0b509e6d4c97", { defaultValue: "24h" })}</span>
         </div>
       )}
 

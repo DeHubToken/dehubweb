@@ -54,7 +54,7 @@ export function CharacterCreateModal({ open, onOpenChange, editing }: Props) {
     const files = Array.from(e.target.files ?? []);
     if (!files.length) return;
     if (refs.length + files.length > MAX_REFS) {
-      toast.error(`Max ${MAX_REFS} reference images`);
+      toast.error(_copy("copy.9fca41678ade", { defaultValue: "Max {{value1}} reference images", value1: MAX_REFS }));
       e.target.value = '';
       return;
     }
@@ -74,7 +74,7 @@ export function CharacterCreateModal({ open, onOpenChange, editing }: Props) {
         return next;
       });
     } catch (err) {
-      toast.error(err instanceof Error ? err.message : 'Upload failed');
+      toast.error(err instanceof Error ? err.message : _copy("copy.6efc5d27f30b", { defaultValue: "Upload failed" }));
     } finally {
       setUploading(false);
       e.target.value = '';
@@ -108,7 +108,7 @@ export function CharacterCreateModal({ open, onOpenChange, editing }: Props) {
       }
       onOpenChange(false);
     } catch (err) {
-      toast.error(err instanceof Error ? err.message : 'Failed to save');
+      toast.error(err instanceof Error ? err.message : _copy("copy.2c07997249ab", { defaultValue: "Failed to save" }));
     }
   };
 

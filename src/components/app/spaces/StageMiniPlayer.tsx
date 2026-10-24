@@ -100,7 +100,11 @@ export function StageMiniPlayer() {
               myRole === 'speaker' ? "text-blue-400" :
               "text-white/50"
             )}>
-              {myRole}
+              {myRole === 'host'
+                ? _copy("copy.4740ae6347b0", { defaultValue: "host" })
+                : myRole === 'speaker'
+                  ? _copy("copy.291ea5ef94df", { defaultValue: "speaker" })
+                  : _copy("copy.c4c05d40a8c3", { defaultValue: "listener" })}
             </span>
           )}
         </div>

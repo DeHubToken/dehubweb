@@ -142,11 +142,11 @@ export default function AffiliatePage() {
     [stats?.code, imgVersion],
   );
 
-  const copy = async (txt: string, label = "Copied") => {
+  const copy = async (txt: string, label?: string) => {
     try {
       await navigator.clipboard.writeText(txt);
       trackEvent("invite_link_copied", { method: "copy", deep_link: !txt.endsWith(`/r/${stats?.code}`) });
-      toast.success(label);
+      toast.success(label ?? _copy("copy.8d525e5f158b", { defaultValue: "Copied" }));
     }
     catch { toast.error(_copy("copy.5b50e7a693fe", { defaultValue: "Copy failed" })); }
   };
@@ -154,11 +154,11 @@ export default function AffiliatePage() {
   const nativeShare = () => {
     const nav = navigator as Navigator & { share?: (d: ShareData) => Promise<void> };
     if (nav.share) {
-      nav.share({ title: "DeHub", text: "Join me on DeHub.", url: shareUrl })
+      nav.share({ title: "DeHub", text: _copy("copy.f224cf8441cc", { defaultValue: "Join me on DeHub." }), url: shareUrl })
         .then(() => trackEvent("invite_link_copied", { method: "native", deep_link: false }))
         .catch(() => undefined);
     } else {
-      void copy(shareUrl, "Invite link copied");
+      void copy(shareUrl, _copy("copy.bd769dab6c4d", { defaultValue: "Invite link copied" }));
     }
   };
 
@@ -433,8 +433,8 @@ export default function AffiliatePage() {
           {/* How it works */}
           <Card data-kit-section className="border-white/10 bg-white/[0.03]">
             <CardContent className="p-5 md:p-6 grid grid-cols-1 md:grid-cols-4 gap-4">
-              <Step n={1} title={_copy("copy.486b75f1e0e1", { defaultValue: "Share your link" })} body="Drop your invite link into Discord, X, YouTube, your stream — anywhere." />
-              <Step n={2} title={_copy("copy.65683c287b13", { defaultValue: "They join DeHub" })} body="Anyone who lands via your link is permanently attributed to you (first-touch wins, 90-day cookie)." />
+              <Step n={1} title={_copy("copy.486b75f1e0e1", { defaultValue: "Share your link" })} body={_copy("copy.54f921da537d", { defaultValue: "Drop your invite link into Discord, X, YouTube, your stream — anywhere." })} />
+              <Step n={2} title={_copy("copy.65683c287b13", { defaultValue: "They join DeHub" })} body={_copy("copy.44255c58528d", { defaultValue: "Anyone who lands via your link is permanently attributed to you (first-touch wins, 90-day cookie)." })} />
               <Step n={3} title={_copy("copy.7e44b080227f", { defaultValue: "Earn {{value1}}% direct", value1: AFFILIATE_L1_COMMISSION_PCT })} body={`You receive ${AFFILIATE_L1_COMMISSION_PCT}% of every dollar of revenue your invites ever generate on DeHub.`} />
               <Step n={4} title={_copy("copy.2ed16d4204db", { defaultValue: "Earn {{value1}}% secondary", value1: AFFILIATE_L2_COMMISSION_PCT })} body={`When your invites invite their friends, you also earn ${AFFILIATE_L2_COMMISSION_PCT}% of their revenue. Recurring, lifetime.`} />
             </CardContent>
@@ -500,7 +500,7 @@ function DeepLinkBuilder({ code, onCopy }: { code: string; onCopy: (text: string
         />
         <Button
           variant="secondary"
-          onClick={() => onCopy(link, "Deep link copied")}
+          onClick={() => onCopy(link, _copy("copy.2ac0b6c71fa3", { defaultValue: "Deep link copied" }))}
           disabled={invalid}
           className="shrink-0"
         >

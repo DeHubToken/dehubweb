@@ -17,7 +17,8 @@
  * language:
  *   - `labelKey` — what the row actually renders, so a reader searching in
  *     their own language matches. Every key here is already used by the page,
- *     with the English label as its fallback, so this adds no new i18n keys.
+ *     with the English label as its fallback; a row without a named key uses
+ *     the shared `copy.*` key for its English label.
  *   - `label` — the English text, always matched too, so English terms keep
  *     working for readers on a translated UI.
  *   - `keywords` — what people type instead of the label ("dark mode" for
@@ -43,7 +44,7 @@ export interface SettingsSearchEntry {
 
 export const SETTINGS_SEARCH_INDEX: SettingsSearchEntry[] = [
   // Profile
-  { tab: 'profile', anchor: 'cover-image', label: 'Cover Image', keywords: 'banner header photo' },
+  { tab: 'profile', anchor: 'cover-image', label: 'Cover Image', labelKey: 'copy.f94183029020', keywords: 'banner header photo' },
   { tab: 'profile', anchor: 'profile-picture', label: 'Profile Picture', labelKey: 'settings.profilePicture', keywords: 'avatar photo pfp' },
   { tab: 'profile', anchor: 'display-name', label: 'Display Name', labelKey: 'settings.displayName', keywords: 'nickname rename' },
   { tab: 'profile', anchor: 'username', label: 'Username', labelKey: 'settings.username', keywords: 'handle rename @' },
@@ -56,7 +57,7 @@ export const SETTINGS_SEARCH_INDEX: SettingsSearchEntry[] = [
   { tab: 'profile', anchor: 'ens', label: 'ENS', labelKey: 'settings.ensSection', keywords: 'ens domain eth name verified handle' },
   { tab: 'profile', anchor: 'stream-key', label: 'Stream key', labelKey: 'settings.streamKey.section', keywords: 'obs encoder rtmp stream key ingest server xbox twitch aircast go live broadcast' },
   { tab: 'profile', anchor: 'twitch-mirror', label: 'Twitch mirroring', labelKey: 'twitchMirror.title', keywords: 'twitch mirror relay console xbox ps5 playstation aircast automatic stream broadcast' },
-  { tab: 'profile', anchor: 'badge-delegation', label: 'Badge delegation', keywords: 'badge lend borrow tier delegate' },
+  { tab: 'profile', anchor: 'badge-delegation', label: 'Badge delegation', labelKey: 'settings.badgeDelegation', keywords: 'badge lend borrow tier delegate' },
   { tab: 'profile', anchor: 'profiles', label: 'Profiles', labelKey: 'settings.profiles', keywords: 'accounts switch add account multiple' },
 
   // Appearance
@@ -83,17 +84,17 @@ export const SETTINGS_SEARCH_INDEX: SettingsSearchEntry[] = [
   { tab: 'notifications', anchor: 'notify-likes', label: 'Likes', labelKey: 'settings.likes', keywords: 'reactions hearts' },
   { tab: 'notifications', anchor: 'notify-comments', label: 'Comments', labelKey: 'settings.comments' },
   { tab: 'notifications', anchor: 'notify-new-followers', label: 'New Followers', labelKey: 'settings.newFollowers', keywords: 'follows' },
-  { tab: 'notifications', anchor: 'notify-comment-replies', label: 'Comment Replies', keywords: 'replies' },
-  { tab: 'notifications', anchor: 'notify-mentions', label: 'Mentions', keywords: 'tagged @' },
-  { tab: 'notifications', anchor: 'notify-tips', label: 'Tips Received', keywords: 'tips dhb earnings' },
-  { tab: 'notifications', anchor: 'notify-subscribers', label: 'New Subscribers', keywords: 'subscriptions plan' },
-  { tab: 'notifications', anchor: 'notify-ppv', label: 'PPV Purchases', keywords: 'pay per view purchases sales' },
-  { tab: 'notifications', anchor: 'notify-livestream', label: 'Livestream Start', keywords: 'live stream going live' },
-  { tab: 'notifications', anchor: 'notify-milestones', label: 'Milestones', keywords: 'achievements' },
-  { tab: 'notifications', anchor: 'notify-account-alerts', label: 'Account Alerts', keywords: 'security login alerts' },
-  { tab: 'notifications', anchor: 'notify-announcements', label: 'Announcements', keywords: 'platform updates news' },
+  { tab: 'notifications', anchor: 'notify-comment-replies', label: 'Comment Replies', labelKey: 'copy.68be60ea70c8', keywords: 'replies' },
+  { tab: 'notifications', anchor: 'notify-mentions', label: 'Mentions', labelKey: 'copy.6f32e692ede0', keywords: 'tagged @' },
+  { tab: 'notifications', anchor: 'notify-tips', label: 'Tips Received', labelKey: 'copy.b9c1fb1d8de8', keywords: 'tips dhb earnings' },
+  { tab: 'notifications', anchor: 'notify-subscribers', label: 'New Subscribers', labelKey: 'copy.a0ce07fbc726', keywords: 'subscriptions plan' },
+  { tab: 'notifications', anchor: 'notify-ppv', label: 'PPV Purchases', labelKey: 'copy.dbc6e9280cb5', keywords: 'pay per view purchases sales' },
+  { tab: 'notifications', anchor: 'notify-livestream', label: 'Livestream Start', labelKey: 'copy.36389cced6a5', keywords: 'live stream going live' },
+  { tab: 'notifications', anchor: 'notify-milestones', label: 'Milestones', labelKey: 'copy.39c33dc2375f', keywords: 'achievements' },
+  { tab: 'notifications', anchor: 'notify-account-alerts', label: 'Account Alerts', labelKey: 'copy.1d3358ba19cc', keywords: 'security login alerts' },
+  { tab: 'notifications', anchor: 'notify-announcements', label: 'Announcements', labelKey: 'copy.fe02680f2479', keywords: 'platform updates news' },
   { tab: 'notifications', anchor: 'public-chat-alerts', label: 'Public chat', labelKey: 'settings.publicChatAlerts', keywords: 'chat room global alerts rate limit per hour raid spam' },
-  { tab: 'notifications', anchor: 'buy-bot', label: 'Buy Bot Alerts', keywords: 'chat bot purchases hide' },
+  { tab: 'notifications', anchor: 'buy-bot', label: 'Buy Bot Alerts', labelKey: 'copy.62bdeec861d8', keywords: 'chat bot purchases hide' },
   { tab: 'notifications', anchor: 'quiet-hours', label: 'Quiet Hours', labelKey: 'settings.quietHours', keywords: 'silence mute schedule night' },
 
   // Privacy
@@ -108,11 +109,11 @@ export const SETTINGS_SEARCH_INDEX: SettingsSearchEntry[] = [
   { tab: 'privacy', anchor: 'ai-scraping', label: 'Allow AI training', labelKey: 'settings.aiScraping.label', keywords: 'ai scraping training llm crawler bot noai' },
   { tab: 'privacy', anchor: 'two-factor', label: 'Two-Factor Auth', labelKey: 'settings.twoFactorAuth', keywords: '2fa mfa authenticator security' },
   { tab: 'privacy', anchor: 'wallet-unlock', label: 'Wallet unlock prompt', labelKey: 'settings.walletUnlockInterval', keywords: 'password timeout lock wallet' },
-  { tab: 'privacy', anchor: 'biometric-unlock', label: 'Biometric unlock', keywords: 'fingerprint face id passkey' },
-  { tab: 'privacy', anchor: 'wallet-recovery', label: 'Back up wallet', keywords: 'backup recovery 12 words seed phrase mnemonic private key export old account' },
+  { tab: 'privacy', anchor: 'biometric-unlock', label: 'Biometric unlock', labelKey: 'copy.18e709a14cb1', keywords: 'fingerprint face id passkey' },
+  { tab: 'privacy', anchor: 'wallet-recovery', label: 'Back up wallet', labelKey: 'copy.ef9ec257e675', keywords: 'backup recovery 12 words seed phrase mnemonic private key export old account' },
   { tab: 'privacy', anchor: 'active-sessions', label: 'Active sessions', labelKey: 'settings.activeSessions', keywords: 'devices logged in sign out revoke' },
   { tab: 'privacy', anchor: 'your-data', label: 'Your Data', labelKey: 'settings.yourData', keywords: 'export download import gdpr' },
-  { tab: 'privacy', anchor: 'blocked-users', label: 'Blocked Users', keywords: 'block unblock mute' },
+  { tab: 'privacy', anchor: 'blocked-users', label: 'Blocked Users', labelKey: 'copy.34e1447eb1e2', keywords: 'block unblock mute' },
   { tab: 'privacy', anchor: 'muted-words', label: 'Muted words', labelKey: 'keywordFilters.title', keywords: 'filter keyword word phrase hide spoiler mute' },
   { tab: 'privacy', anchor: 'geo-blocking', label: 'Geo-blocking', labelKey: 'settings.geoBlocking', keywords: 'country region restrict' },
 
@@ -136,11 +137,11 @@ export const SETTINGS_SEARCH_INDEX: SettingsSearchEntry[] = [
   { tab: 'messages', anchor: 'e2e-encryption', label: 'End-to-End Encryption', labelKey: 'settings.e2eEncryption', keywords: 'encrypted secure' },
 
   // Assets
-  { tab: 'assets', anchor: 'wallet-address', label: 'Wallet Address', keywords: 'address copy 0x' },
+  { tab: 'assets', anchor: 'wallet-address', label: 'Wallet Address', labelKey: 'copy.f94ea474351a', keywords: 'address copy 0x' },
   { tab: 'assets', anchor: 'dhb-balance', label: 'Token Balance', labelKey: 'settings.tokenBalance', keywords: 'dhb tokens coins balance' },
-  { tab: 'assets', anchor: 'wallet', label: 'Wallet', keywords: 'wallet send receive' },
-  { tab: 'assets', anchor: 'gas-fees', label: 'Gas Fees', keywords: 'gas sponsored transaction fees' },
-  { tab: 'assets', anchor: 'tip-network', label: 'Tip network', keywords: 'tipping chain base bnb network' },
+  { tab: 'assets', anchor: 'wallet', label: 'Wallet', labelKey: 'copy.d1c9a01d57e9', keywords: 'wallet send receive' },
+  { tab: 'assets', anchor: 'gas-fees', label: 'Gas Fees', labelKey: 'copy.70f5f804b634', keywords: 'gas sponsored transaction fees' },
+  { tab: 'assets', anchor: 'tip-network', label: 'Tip network', labelKey: 'copy.39ea78d27b31', keywords: 'tipping chain base bnb network' },
   { tab: 'assets', anchor: 'fractions', label: 'Fractions', labelKey: 'settings.fractionsOwn', keywords: 'shares owned' },
   { tab: 'assets', anchor: 'owned-usernames', label: 'Owned Usernames', labelKey: 'settings.usernamesOwn', keywords: 'handles marketplace' },
   { tab: 'assets', anchor: 'offers-made', label: 'Offers Made', labelKey: 'settings.offersMade', keywords: 'bids offers' },

@@ -260,7 +260,7 @@ export function AudioSpacesModalBody() {
    * one you could never connect to in the first place.
    */
   const handleEndFromList = async (space: AudioSpace) => {
-    if (!confirm(`End "${space.title}"? It comes off the air for everyone.`)) return;
+    if (!confirm(_copy("copy.2996d70c40ce", { defaultValue: "End \"{{value1}}\"? It comes off the air for everyone.", value1: space.title }))) return;
     await endStageById(space.id);
   };
 
@@ -300,7 +300,7 @@ export function AudioSpacesModalBody() {
       { tokenId: 0, power: 'front_row', stageId: currentSpace.id },
       {
         onSuccess: booking =>
-          toast.success(`Front row for ${booking.minutes} minutes`),
+          toast.success(_copy("copy.110c1dbce04d", { count: booking.minutes, defaultValue: "Front row for {{count}} minutes" })),
         // The server writes these for a person to read.
         onError: (error: any) => toast.error(error?.message || t('stages.frontRowFailed')),
       },
@@ -314,7 +314,7 @@ export function AudioSpacesModalBody() {
     navigator.clipboard.writeText(url).then(() => {
       toast.success(t('stages.inviteLinkCopied'));
     }).catch(() => {
-      toast.info(`Share this link: ${url}`);
+      toast.info(_copy("copy.cbf6f8f402b2", { defaultValue: "Share this link: {{value1}}", value1: url }));
     });
   };
 
@@ -875,7 +875,7 @@ export function AudioSpacesModalBody() {
               {/* Speakers Section */}
               <div className="space-y-2">
                 <h3 className="text-sm font-medium text-white/60 flex items-center gap-2">
-                  <Volume2 className="w-4 h-4" />{_copy("copy.dfbfe41a7290", { defaultValue: "Speakers (" })}{speakers.length})
+                  <Volume2 className="w-4 h-4" />{_copy("copy.54d28b5e7550", { defaultValue: "Speakers ({{value1}})", value1: speakers.length })}
                 </h3>
                 <div className="flex flex-wrap gap-3">
                   {speakers.map((speaker) => (
@@ -895,7 +895,7 @@ export function AudioSpacesModalBody() {
               {myRole === 'host' && handRequests.length > 0 && (
                 <div className="space-y-2 p-3 bg-white/5 rounded-xl border border-white/10">
                   <h3 className="text-sm font-medium text-white flex items-center gap-2">
-                    <Hand className="w-4 h-4" />{_copy("copy.5cb7c3d33d8c", { defaultValue: "Requests to Speak (" })}{handRequests.length})
+                    <Hand className="w-4 h-4" />{_copy("copy.f829dbe0ed70", { defaultValue: "Requests to Speak ({{value1}})", value1: handRequests.length })}
                   </h3>
                   <div className="space-y-2">
                     {handRequests.map((request) => (
@@ -917,13 +917,13 @@ export function AudioSpacesModalBody() {
               {(listeners.length > 0 || waitingTotal > 0) && (
                 <div className="space-y-2">
                   <h3 className="text-sm font-medium text-white/60 flex items-center gap-2">
-                    <Users className="w-4 h-4" />{_copy("copy.a47c3cada20b", { defaultValue: "Listeners (" })}{listeners.length})
+                    <Users className="w-4 h-4" />{_copy("copy.bdf7c3345a42", { defaultValue: "Listeners ({{value1}})", value1: listeners.length })}
                     {waitingTotal > 0 && (
                       <span
                         className="text-[10px] text-white/40"
                         title={_copy("copy.dd3013799d07", { defaultValue: "Expected listeners who set a reminder: {{value1}}", value1: waitingTotal, value2: waitingTotal === 1 ? _copy("copy.fa51fd49abf6", { defaultValue: "is" }) : _copy("copy.ba78973ddcf9", { defaultValue: "are" }) })}
                       >
-                        · {waitingTotal}{_copy("copy.7a3c51cf5102", { defaultValue: " going" })}</span>
+                        · {_copy("copy.0a9693fcf6bc", { defaultValue: "{{value1}} going", value1: waitingTotal })}</span>
                     )}
                     {myRole === 'host' && (
                       <span className="text-[10px] text-white/30 ml-1">{_copy("copy.6bf856426149", { defaultValue: "(tap + to invite as speaker)" })}</span>

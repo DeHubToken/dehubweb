@@ -58,9 +58,9 @@ const LS_SIZE = 'video-subs:size';
 
 const SIZE_PRESETS = [
   { key: 'xs', get label() { return _translateCopy("copy.4e12aed95e4c", { defaultValue: "XS" }); }, px: 11 },
-  { key: 'sm', label: 'S', px: 13 },
-  { key: 'md', label: 'M', px: 15 },
-  { key: 'lg', label: 'L', px: 18 },
+  { key: 'sm', get label() { return _translateCopy("copy.8de0b3c47f11", { defaultValue: "S" }); }, px: 13 },
+  { key: 'md', get label() { return _translateCopy("copy.08f271887ce9", { defaultValue: "M" }); }, px: 15 },
+  { key: 'lg', get label() { return _translateCopy("copy.72dfcfb0c470", { defaultValue: "L" }); }, px: 18 },
   { key: 'xl', get label() { return _translateCopy("copy.f365705bb061", { defaultValue: "XL" }); }, px: 22 },
   { key: '2xl', get label() { return _translateCopy("copy.0a783b9b8a7d", { defaultValue: "XXL" }); }, px: 28 },
 ] as const;
@@ -106,6 +106,7 @@ function readSize(): SizeKey {
 
 export function VideoSubtitleOverlay({ tokenId, videoRef, buttonClassName, buttonVisible = true, plainButton = false, buttonPortalTarget, onMenuOpenChange, onDubAvailableChange }: Props) {
   const { i18n } = useTranslation();
+  const { t: _copy } = _useCopy();
   const numericId = useMemo(() => {
     const n = typeof tokenId === 'string' ? parseInt(tokenId, 10) : tokenId ?? 0;
     return Number.isFinite(n) && n > 0 ? Number(n) : 0;
@@ -467,7 +468,7 @@ export function VideoSubtitleOverlay({ tokenId, videoRef, buttonClassName, butto
   }, [query]);
 
   const langLabel =
-    SUBTITLE_LANGUAGES.find((l) => l.code === lang)?.name ?? 'Original';
+    SUBTITLE_LANGUAGES.find((l) => l.code === lang)?.name ?? _copy("copy.88d759ea02ce", { defaultValue: "Original" });
 
   const sizePx = SIZE_PRESETS.find((s) => s.key === size)?.px ?? 15;
 

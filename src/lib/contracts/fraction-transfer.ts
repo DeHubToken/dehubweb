@@ -20,6 +20,7 @@ import { Interface } from 'ethers';
 import { writeContractAA, type AAWriteResult } from './aa-utils';
 import { BASE_CHAIN_ID, getChainConfig } from './dhb-token';
 import type { ChainId } from '@/components/app/ChainSelector';
+import { translateCopy as _translateCopy } from '@/i18n/copy';
 
 const ERC1155_TRANSFER_ABI = [
   'function safeTransferFrom(address from, address to, uint256 id, uint256 amount, bytes data)',
@@ -40,7 +41,7 @@ const erc1155Interface = new Interface(ERC1155_TRANSFER_ABI);
 function collectionFor(chainId: ChainId): string {
   const address = getChainConfig(chainId).streamCollection;
   if (!address) {
-    throw new Error(`Fractions are not available on this chain yet (${chainId})`);
+    throw new Error(_translateCopy("copy.1a764a6e3fc1", { defaultValue: "Fractions are not available on this chain yet ({{value1}})", value1: chainId }));
   }
   return address;
 }

@@ -15,6 +15,7 @@ import { parseFormattedCount } from '@/lib/feed-utils';
 import { liveSourceFromHlsUrl } from '@/lib/live-ingest';
 import { warmPostPage } from '@/lib/preload-post-page';
 import { buildSoundtrackTag } from '@/lib/soundtrack';
+import { translateCopy as _translateCopy } from '@/i18n/copy';
 
 /**
  * Parse a duration string (e.g., "1:23" or "1:02:34") back to seconds
@@ -40,7 +41,7 @@ function videoItemToNFT(video: VideoItem): Partial<DeHubNFT> {
   const isLivePost = !!video.isLivePost;
   const description = video.description || video.title;
   const soundtrack = video.soundtrackUrl && !description.includes('[soundtrack:')
-    ? buildSoundtrackTag({ tokenId: video.soundtrackTokenId || video.id, title: video.soundtrackTitle || 'Sound', creator: video.soundtrackCreator || '', url: video.soundtrackUrl })
+    ? buildSoundtrackTag({ tokenId: video.soundtrackTokenId || video.id, title: video.soundtrackTitle || _translateCopy('copy.46124e023603', { defaultValue: 'Sound' }), creator: video.soundtrackCreator || '', url: video.soundtrackUrl })
     : '';
 
   return {
@@ -116,7 +117,7 @@ function videoItemToNFT(video: VideoItem): Partial<DeHubNFT> {
 function imagePostToNFT(post: ImagePost): Partial<DeHubNFT> {
   const description = post.description || post.caption || '';
   const soundtrack = post.soundtrackUrl && !description.includes('[soundtrack:')
-    ? buildSoundtrackTag({ tokenId: post.id, title: post.soundtrackTitle || 'Sound', creator: post.soundtrackCreator || '', url: post.soundtrackUrl })
+    ? buildSoundtrackTag({ tokenId: post.id, title: post.soundtrackTitle || _translateCopy('copy.46124e023603', { defaultValue: 'Sound' }), creator: post.soundtrackCreator || '', url: post.soundtrackUrl })
     : '';
   return {
     tokenId: parseInt(post.id) || 0,

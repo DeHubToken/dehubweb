@@ -67,13 +67,13 @@ export function AppealDrawer({
       const result = await appealModerationDecision({ notificationId, reason: trimmed });
       toast.success(
         result.duplicateOf
-          ? `You have already appealed this — reference ${result.duplicateOf}`
-          : `Appeal filed — reference ${result.ref}`,
+          ? _copy("copy.451d92e1a053", { defaultValue: "You have already appealed this — reference {{value1}}", value1: result.duplicateOf })
+          : _copy("copy.a81f575af757", { defaultValue: "Appeal filed — reference {{value1}}", value1: result.ref }),
       );
       onFiled?.(result.ref);
       onOpenChange(false);
     } catch (error) {
-      toast.error(error instanceof Error ? error.message : 'Could not file that appeal');
+      toast.error(error instanceof Error ? error.message : _copy("copy.5d932ffb8a72", { defaultValue: "Could not file that appeal" }));
     } finally {
       setIsSubmitting(false);
     }

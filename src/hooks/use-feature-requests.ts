@@ -15,6 +15,7 @@ import { getAccountInfo, getAccountByUsername } from '@/lib/api/dehub';
 import { extractAvatarPath } from '@/lib/media-url';
 import { escapeFilterValue } from '@/lib/postgrest-filter';
 import { MAX_FEATURE_ATTACHMENTS } from '@/lib/feature-attachments';
+import { translateCopy as _translateCopy } from '@/i18n/copy';
 
 /**
  * True when a write failed only because the column has not reached this
@@ -61,12 +62,12 @@ export interface FeatureRequestVote {
 }
 
 const CATEGORY_LABELS: Record<FeatureCategory, string> = {
-  ui_ux: 'UI/UX',
-  performance: 'Performance',
-  new_feature: 'New Feature',
-  bug_fix: 'Bug Fix',
-  integration: 'Integration',
-  other: 'Other',
+  get ui_ux() { return _translateCopy("copy.4599f843c38a", { defaultValue: "UI/UX" }); },
+  get performance() { return _translateCopy("copy.442aded87a55", { defaultValue: "Performance" }); },
+  get new_feature() { return _translateCopy("copy.badca3cc6ee9", { defaultValue: "New Feature" }); },
+  get bug_fix() { return _translateCopy("copy.f082d3499d2d", { defaultValue: "Bug Fix" }); },
+  get integration() { return _translateCopy("copy.9a42d40a3f31", { defaultValue: "Integration" }); },
+  get other() { return _translateCopy("copy.f97e9da0e3b8", { defaultValue: "Other" }); },
 };
 
 // Rows submitted before the category enum settled carried `feature`/`bug`.
@@ -96,13 +97,13 @@ function normalizeRows(rows: FeatureRequest[]): FeatureRequest[] {
 }
 
 const STATUS_LABELS: Record<FeatureStatus, string> = {
-  open: 'Open',
-  under_review: 'Under Review',
-  planned: 'Planned',
-  in_progress: 'In Progress',
-  completed: 'Shipped',
-  shipped: 'Shipped',
-  declined: 'Declined',
+  get open() { return _translateCopy("copy.ed077f3d8125", { defaultValue: "Open" }); },
+  get under_review() { return _translateCopy("copy.115fe4ba8ea9", { defaultValue: "Under Review" }); },
+  get planned() { return _translateCopy("copy.fb6f7c93e6bf", { defaultValue: "Planned" }); },
+  get in_progress() { return _translateCopy("copy.b4cc4b07c300", { defaultValue: "In Progress" }); },
+  get completed() { return _translateCopy("copy.d332dadf1646", { defaultValue: "Shipped" }); },
+  get shipped() { return _translateCopy("copy.d332dadf1646", { defaultValue: "Shipped" }); },
+  get declined() { return _translateCopy("copy.dce083a2c47f", { defaultValue: "Declined" }); },
 };
 
 export { CATEGORY_LABELS, STATUS_LABELS };
@@ -420,7 +421,7 @@ export function useSubmitFeatureRequest() {
 
   return useMutation({
     mutationFn: async ({ title, description, category, mediaFiles }: { title: string; description: string; category: FeatureCategory; mediaFiles?: File[] | null }) => {
-      if (!walletAddress) throw new Error('Not authenticated');
+      if (!walletAddress) throw new Error(_translateCopy("copy.76d1efbeed2d", { defaultValue: "Not authenticated" }));
 
       const files = (mediaFiles ?? []).slice(0, MAX_FEATURE_ATTACHMENTS);
       const imageUrls: string[] = [];
@@ -519,7 +520,7 @@ export function useVoteFeatureRequest() {
 
   return useMutation({
     mutationFn: async ({ featureRequestId, voteType, currentVote }: { featureRequestId: string; voteType: 1 | -1; currentVote: number | undefined }) => {
-      if (!walletAddress) throw new Error('Not authenticated');
+      if (!walletAddress) throw new Error(_translateCopy("copy.76d1efbeed2d", { defaultValue: "Not authenticated" }));
 
       const wallet = walletAddress.toLowerCase();
 
@@ -641,7 +642,7 @@ export function useEditFeatureRequest() {
 
   return useMutation({
     mutationFn: async ({ id, title, description, category }: { id: string; title: string; description: string; category: FeatureCategory }) => {
-      if (!walletAddress) throw new Error('Not authenticated');
+      if (!walletAddress) throw new Error(_translateCopy("copy.76d1efbeed2d", { defaultValue: "Not authenticated" }));
       const { data, error } = await supabase
         .from('feature_requests')
         .update({ title: title.trim(), description: description.trim(), category })
@@ -669,7 +670,7 @@ export function useDeleteFeatureRequest() {
 
   return useMutation({
     mutationFn: async (id: string) => {
-      if (!walletAddress) throw new Error('Not authenticated');
+      if (!walletAddress) throw new Error(_translateCopy("copy.76d1efbeed2d", { defaultValue: "Not authenticated" }));
       const { error } = await supabase
         .from('feature_requests')
         .delete()

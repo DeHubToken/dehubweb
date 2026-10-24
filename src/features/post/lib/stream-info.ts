@@ -1,3 +1,4 @@
+import { translateCopy as _translateCopy } from '@/i18n/copy';
 /**
  * Monetization → `streamInfo`
  * ===========================
@@ -106,15 +107,15 @@ export function buildStreamInfo(input: BuildStreamInfoInput): BuildStreamInfoRes
       let symbol = tokenSymbol.trim() || 'TOKEN';
       if (!contract) {
         const known = findLockToken(symbol, chainId);
-        if (!known) return { error: 'Select a valid token for token gating', streamInfo, bounty: null };
+        if (!known) return { error: _translateCopy("copy.b3cce73c7c54", { defaultValue: "Select a valid token for token gating" }), streamInfo, bounty: null };
         contract = known.address;
         symbol = known.symbol;
       } else if (onSolana) {
         if (!isValidSolanaAddress(contract)) {
-          return { error: 'Invalid Solana token mint address for token gating', streamInfo, bounty: null };
+          return { error: _translateCopy("copy.a922da43000a", { defaultValue: "Invalid Solana token mint address for token gating" }), streamInfo, bounty: null };
         }
       } else if (!isValidEvmAddress(contract)) {
-        return { error: 'Invalid token contract address for token gating', streamInfo, bounty: null };
+        return { error: _translateCopy("copy.17a570ff2a79", { defaultValue: "Invalid token contract address for token gating" }), streamInfo, bounty: null };
       }
       streamInfo.isLockContent = true;
       streamInfo.lockContentAmount = amount;
@@ -144,7 +145,7 @@ export function buildStreamInfo(input: BuildStreamInfoInput): BuildStreamInfoRes
         const splSymbol = ppvCurrency === 'USD' || ppvCurrency === 'DHB' ? 'SOL' : ppvCurrency;
         const splToken = findLockToken(splSymbol, chainId);
         if (!splToken) {
-          return { error: `${splSymbol} is not available for PPV on Solana`, streamInfo, bounty: null };
+          return { error: _translateCopy("copy.12077ff20db4", { defaultValue: "{{value1}} is not available for PPV on Solana", value1: splSymbol }), streamInfo, bounty: null };
         }
         streamInfo.payPerViewTokenSymbol = splToken.symbol;
         streamInfo.payPerViewContractAddress = splToken.address;
@@ -155,7 +156,7 @@ export function buildStreamInfo(input: BuildStreamInfoInput): BuildStreamInfoRes
         const stable = DIRECT_TIP_TOKENS.find((tk) => tk.chainId === chainId && tk.symbol === ppvCurrency);
         // Never quietly reprice 5 USDC as 5 DHB after a chain switch.
         if (!stable && (ppvCurrency === 'USDC' || ppvCurrency === 'USDT')) {
-          return { error: `${ppvCurrency} is not available for pay-per-view on this chain`, streamInfo, bounty: null };
+          return { error: _translateCopy("copy.9cb0364203a8", { defaultValue: "{{value1}} is not available for pay-per-view on this chain", value1: ppvCurrency }), streamInfo, bounty: null };
         }
         streamInfo.payPerViewTokenSymbol = stable?.symbol ?? 'DHB';
         if (stable) {

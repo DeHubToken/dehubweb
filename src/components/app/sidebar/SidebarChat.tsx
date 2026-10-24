@@ -300,14 +300,14 @@ export function SidebarChat({ isActive }: SidebarChatProps) {
   const handleVoiceRecordingComplete = useCallback(async (blob: Blob, _duration: number) => {
     if (!isAuthenticated) { openLoginModal(); return; }
     const toastId = 'sidebarchat-voice-upload';
-    toast.loading('Uploading voice note...', { id: toastId });
+    toast.loading(_copy("copy.97a0afff525e", { defaultValue: "Uploading voice note..." }), { id: toastId });
     try {
       const { url, duration } = await uploadLiveChatVoice(blob);
       await send('', 'audio', undefined, replyTo?.id, url, duration);
       toast.success(_copy("copy.690c816e9745", { defaultValue: "Voice note sent!" }), { id: toastId });
     } catch (err: any) {
       console.error('[SidebarChat] Voice upload failed:', err);
-      toast.error(err?.message || 'Failed to send voice note', { id: toastId });
+      toast.error(err?.message || _copy("copy.615d555f779c", { defaultValue: "Failed to send voice note" }), { id: toastId });
     }
   }, [isAuthenticated, openLoginModal, send, replyTo, _copy]);
 

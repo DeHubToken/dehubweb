@@ -6,6 +6,7 @@
  */
 
 import { useState, useRef, useCallback, useEffect } from 'react';
+import { translateCopy as _translateCopy } from '@/i18n/copy';
 
 interface UseVoiceChatOptions {
   onTranscript?: (transcript: string) => void;
@@ -197,11 +198,11 @@ export function useVoiceChat(options: UseVoiceChatOptions = {}): UseVoiceChatRet
       setIsRecording(false);
       
       if (event.error === 'not-allowed') {
-        onErrorRef.current?.('Microphone access denied. Please enable microphone permissions.');
+        onErrorRef.current?.(_translateCopy("copy.c1f3a7584b87", { defaultValue: "Microphone access denied. Please enable microphone permissions." }));
       } else if (event.error === 'no-speech') {
-        onErrorRef.current?.('No speech detected. Try again.');
+        onErrorRef.current?.(_translateCopy("copy.62f77314d47e", { defaultValue: "No speech detected. Try again." }));
       } else if (event.error !== 'aborted') {
-        onErrorRef.current?.(`Speech recognition error: ${event.error}`);
+        onErrorRef.current?.(_translateCopy("copy.ae3e029946d0", { defaultValue: "Speech recognition error: {{value1}}", value1: event.error }));
       }
     };
     
@@ -223,7 +224,7 @@ export function useVoiceChat(options: UseVoiceChatOptions = {}): UseVoiceChatRet
 
   const startRecording = useCallback(() => {
     if (!isSpeechRecognitionSupported()) {
-      onErrorRef.current?.('Speech recognition not supported in this browser');
+      onErrorRef.current?.(_translateCopy("copy.03affaa9751a", { defaultValue: "Speech recognition not supported in this browser" }));
       return;
     }
     
@@ -245,7 +246,7 @@ export function useVoiceChat(options: UseVoiceChatOptions = {}): UseVoiceChatRet
     // Create fresh instance (required for mobile - must be in user gesture context)
     const recognition = createRecognition();
     if (!recognition) {
-      onErrorRef.current?.('Failed to initialize speech recognition');
+      onErrorRef.current?.(_translateCopy("copy.54a5900a2c15", { defaultValue: "Failed to initialize speech recognition" }));
       return;
     }
     
@@ -258,7 +259,7 @@ export function useVoiceChat(options: UseVoiceChatOptions = {}): UseVoiceChatRet
     } catch (err) {
       console.error('Failed to start recording:', err);
       setIsRecording(false);
-      onErrorRef.current?.('Failed to start recording. Please try again.');
+      onErrorRef.current?.(_translateCopy("copy.8b8d7c6ebda3", { defaultValue: "Failed to start recording. Please try again." }));
     }
   }, [isSpeaking, createRecognition]);
 
@@ -271,7 +272,7 @@ export function useVoiceChat(options: UseVoiceChatOptions = {}): UseVoiceChatRet
 
   const speak = useCallback((text: string) => {
     if (!isSpeechSynthesisSupported()) {
-      onError?.('Text-to-speech not supported');
+      onError?.(_translateCopy("copy.672000d925c3", { defaultValue: "Text-to-speech not supported" }));
       return;
     }
     

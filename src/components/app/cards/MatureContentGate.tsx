@@ -57,7 +57,7 @@ interface MatureContentGateProps {
 export function MatureContentGate({
   preview,
   onReveal,
-  description = 'The creator marked this post as adult or graphic.',
+  description,
   className,
 }: MatureContentGateProps) {
   const { t: _copy } = _useCopy();
@@ -79,7 +79,7 @@ export function MatureContentGate({
           <EyeOff className="h-7 w-7 text-white" />
         </div>
         <p className="text-white font-semibold text-sm mb-1">{_copy("copy.9b8b53102e77", { defaultValue: "Mature content" })}</p>
-        <p className="text-white/70 text-xs mb-3 max-w-xs">{description}</p>
+        <p className="text-white/70 text-xs mb-3 max-w-xs">{description ?? _copy("copy.5ca2fd8dd3f8", { defaultValue: "The creator marked this post as adult or graphic." })}</p>
         <button
           type="button"
           data-no-navigate

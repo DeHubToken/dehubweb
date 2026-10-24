@@ -1,3 +1,4 @@
+import { translateCopy as _translateCopy } from '@/i18n/copy';
 import { duplicateDesignPageSelection } from "@/lib/editor/designClone";
 import { reportDesignClipboard } from "@/lib/editor/designClipboard";
 import { projectEditGate, type ProjectEditLease } from "@/lib/editor/projectEditGate";
@@ -256,7 +257,7 @@ export const useEditorStore = create<EditorState>((set, get) => {
       editing: false,
       scopeVersion: get().scopeVersion+1,
       projectId: nanoid(10),
-      projectTitle: "Untitled project",
+      projectTitle: _translateCopy("copy.1b5a65c3cdba", { defaultValue: "Untitled project" }),
       tracks: defaultTracks(),
       clips: [],
       settings: { ...DEFAULT_SETTINGS },
@@ -497,7 +498,7 @@ export const useEditorStore = create<EditorState>((set, get) => {
       start: placedStart,
       duration,
       trimIn: 0,
-      text: "New text",
+      text: _translateCopy("copy.85c4a159c7b0", { defaultValue: "New text" }),
       fontFamily: "Inter, ui-sans-serif, system-ui, sans-serif",
       fontSize: 72,
       fontWeight: 700,

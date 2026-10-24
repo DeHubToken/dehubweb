@@ -17,10 +17,10 @@ import { JustWatchAttribution } from './JustWatchAttribution';
  *  viewer first. A title included with a subscription they already hold beats
  *  a rental, so `flatrate` leads. */
 const SECTIONS: { key: string; label: string; hint: string }[] = [
-  { key: 'flatrate', get label() { return _translateCopy("copy.1eec3071dd26", { defaultValue: "Stream" }); }, hint: 'Included with a subscription' },
-  { key: 'free', get label() { return _translateCopy("copy.f411a1fb6275", { defaultValue: "Free" }); }, hint: 'Free to watch, usually with ads' },
-  { key: 'rent', get label() { return _translateCopy("copy.f0268cb9100a", { defaultValue: "Rent" }); }, hint: 'Time-limited rental' },
-  { key: 'buy', get label() { return _translateCopy("copy.64e3cb0e4960", { defaultValue: "Buy" }); }, hint: 'Keep it permanently' },
+  { key: 'flatrate', get label() { return _translateCopy("copy.1eec3071dd26", { defaultValue: "Stream" }); }, get hint() { return _translateCopy("copy.e81645128295", { defaultValue: "Included with a subscription" }); } },
+  { key: 'free', get label() { return _translateCopy("copy.f411a1fb6275", { defaultValue: "Free" }); }, get hint() { return _translateCopy("copy.9b325ff02c3d", { defaultValue: "Free to watch, usually with ads" }); } },
+  { key: 'rent', get label() { return _translateCopy("copy.f0268cb9100a", { defaultValue: "Rent" }); }, get hint() { return _translateCopy("copy.6029dc35dfe1", { defaultValue: "Time-limited rental" }); } },
+  { key: 'buy', get label() { return _translateCopy("copy.64e3cb0e4960", { defaultValue: "Buy" }); }, get hint() { return _translateCopy("copy.d0fe54356750", { defaultValue: "Keep it permanently" }); } },
 ];
 
 const QUALITY_RANK: Record<string, number> = { sd: 0, hd: 1, '4k': 2, uhd: 2 };

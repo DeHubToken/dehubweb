@@ -244,7 +244,7 @@ export function LiveCard({ stream }: LiveCardProps) {
           dislikeCount={stream.dislikeCount}
           commentCount={stream.commentCount}
         />
-        <p className="font-semibold text-white text-sm">{stream.viewers}{_copy("copy.8bd95a29c9cb", { defaultValue: " tuned in" })}</p>
+        <p className="font-semibold text-white text-sm">{_copy("copy.34905eee7328", { defaultValue: "{{value1}} tuned in", value1: stream.viewers })}</p>
         <h3 className="text-white text-sm mt-1">{stream.title}</h3>
         <p className="text-zinc-500 text-xs mt-1">{stream.game}</p>
       </div>

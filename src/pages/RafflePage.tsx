@@ -30,8 +30,8 @@ import { useTranslation } from 'react-i18next';
 import { SEOHead } from '@/components/SEOHead';
 import dehubLogo from '@/assets/dehub-logo-white.png';
 
-const pageDescription =
-  'DeHub prize draws hand out tokens, hardware and NFT prizes to the community. Entries are earned by taking part, and every winner is drawn on-chain.';
+const pageDescription = () =>
+  _translateCopy("copy.4883563fdbe1", { defaultValue: "DeHub prize draws hand out tokens, hardware and NFT prizes to the community. Entries are earned by taking part, and every winner is drawn on-chain." });
 
 function Reveal({
   children,
@@ -72,83 +72,77 @@ const steps = [
   {
     icon: ScrollText,
     get title() { return _translateCopy("copy.9ee0c33ce682", { defaultValue: "A draw is announced" }); },
-    body: 'Every draw opens with its prize, its closing time and the exact ways to earn an entry, posted in the app and pinned to the feed.',
+    get body() { return _translateCopy("copy.4fe3045bc30f", { defaultValue: "Every draw opens with its prize, its closing time and the exact ways to earn an entry, posted in the app and pinned to the feed." }); },
   },
   {
     icon: Ticket,
     get title() { return _translateCopy("copy.4421a7fc1a47", { defaultValue: "You collect entries" }); },
-    body: 'Entries are earned by doing things you already do on DeHub. The announcement lists which actions count for that draw and how many entries each is worth.',
+    get body() { return _translateCopy("copy.15e724bd7efe", { defaultValue: "Entries are earned by doing things you already do on DeHub. The announcement lists which actions count for that draw and how many entries each is worth." }); },
   },
   {
     icon: Dice5,
     get title() { return _translateCopy("copy.824aa76a3c5b", { defaultValue: "The draw is run" }); },
-    body: 'At the closing time the entry list is snapshotted and the winning index is drawn from an on-chain source of randomness — not from a spreadsheet.',
+    get body() { return _translateCopy("copy.aa706a587eeb", { defaultValue: "At the closing time the entry list is snapshotted and the winning index is drawn from an on-chain source of randomness — not from a spreadsheet." }); },
   },
   {
     icon: Trophy,
     get title() { return _translateCopy("copy.2bb86501f564", { defaultValue: "The result is published" }); },
-    body: 'The snapshot, the transaction and the winning entry all go up together, so anyone can re-check the result rather than take our word for it.',
+    get body() { return _translateCopy("copy.1f79129ca709", { defaultValue: "The snapshot, the transaction and the winning entry all go up together, so anyone can re-check the result rather than take our word for it." }); },
   },
 ];
 
 const entryRoutes = [
-  { icon: PenLine, get title() { return _translateCopy("copy.2cb38f414419", { defaultValue: "Post and engage" }); }, body: 'Original posts, videos and comments count towards draws that name them.' },
-  { icon: Coins, get title() { return _translateCopy("copy.976d2eedb273", { defaultValue: "Stake tokens" }); }, titleKey: 'raffle.stakeTitle', body: 'An open staking position earns entries for the draws that weight it.', to: '/stake' },
-  { icon: Gamepad2, get title() { return _translateCopy("copy.1fd5bacb3230", { defaultValue: "Play the arcade" }); }, body: 'Arcade sessions and leaderboard placings feed draws built around games.', to: '/arcade' },
-  { icon: Mic, get title() { return _translateCopy("copy.6187be8f1d9c", { defaultValue: "Join a stage" }); }, body: 'Turning up to live audio stages counts, whether you speak or listen.', to: '/stages' },
-  { icon: Ticket, get title() { return _translateCopy("copy.8f1e95313a14", { defaultValue: "Buy a ticket" }); }, body: 'Some draws also sell a token ticket. Where they do, the price and the per-wallet cap are published up front.', bodyKey: 'raffle.ticketBody' },
-  { icon: Boxes, get title() { return _translateCopy("copy.bcc9000c9751", { defaultValue: "Hold a collectible" }); }, body: 'Selected NFT collections carry standing entries into draws that name them.' },
+  { icon: PenLine, get title() { return _translateCopy("copy.2cb38f414419", { defaultValue: "Post and engage" }); }, get body() { return _translateCopy("copy.3cce984f2403", { defaultValue: "Original posts, videos and comments count towards draws that name them." }); } },
+  { icon: Coins, get title() { return _translateCopy("copy.976d2eedb273", { defaultValue: "Stake tokens" }); }, titleKey: 'raffle.stakeTitle', get body() { return _translateCopy("copy.b3eafb80f775", { defaultValue: "An open staking position earns entries for the draws that weight it." }); }, to: '/stake' },
+  { icon: Gamepad2, get title() { return _translateCopy("copy.1fd5bacb3230", { defaultValue: "Play the arcade" }); }, get body() { return _translateCopy("copy.c5e5c4543f00", { defaultValue: "Arcade sessions and leaderboard placings feed draws built around games." }); }, to: '/arcade' },
+  { icon: Mic, get title() { return _translateCopy("copy.6187be8f1d9c", { defaultValue: "Join a stage" }); }, get body() { return _translateCopy("copy.a7bbd0187b6f", { defaultValue: "Turning up to live audio stages counts, whether you speak or listen." }); }, to: '/stages' },
+  { icon: Ticket, get title() { return _translateCopy("copy.8f1e95313a14", { defaultValue: "Buy a ticket" }); }, get body() { return _translateCopy("copy.f1244f375661", { defaultValue: "Some draws also sell a token ticket. Where they do, the price and the per-wallet cap are published up front." }); }, bodyKey: 'raffle.ticketBody' },
+  { icon: Boxes, get title() { return _translateCopy("copy.bcc9000c9751", { defaultValue: "Hold a collectible" }); }, get body() { return _translateCopy("copy.bf6c632a4b3c", { defaultValue: "Selected NFT collections carry standing entries into draws that name them." }); } },
 ];
 
 const fairness = [
   {
     icon: Timer,
     get title() { return _translateCopy("copy.4363d1d9deed", { defaultValue: "The list is frozen first" }); },
-    body: 'The entry list is snapshotted at the stated closing time and published before the draw runs. Nothing can be added to it afterwards, including by us.',
+    get body() { return _translateCopy("copy.ffd00f323789", { defaultValue: "The entry list is snapshotted at the stated closing time and published before the draw runs. Nothing can be added to it afterwards, including by us." }); },
   },
   {
     icon: Dice5,
     get title() { return _translateCopy("copy.251de59d8a37", { defaultValue: "Randomness comes from the chain" }); },
-    body: 'The winning index is derived on-chain, so the number that decides the draw exists in a public transaction rather than in an internal tool.',
+    get body() { return _translateCopy("copy.777c40f2354b", { defaultValue: "The winning index is derived on-chain, so the number that decides the draw exists in a public transaction rather than in an internal tool." }); },
   },
   {
     icon: ShieldCheck,
     get title() { return _translateCopy("copy.b90da6a8778f", { defaultValue: "The whole result is checkable" }); },
-    body: 'Snapshot, transaction hash and winning entry are published as one set. Re-running the arithmetic from public data has to reach the same winner.',
+    get body() { return _translateCopy("copy.630766dc19d2", { defaultValue: "Snapshot, transaction hash and winning entry are published as one set. Re-running the arithmetic from public data has to reach the same winner." }); },
   },
 ];
 
 const faqItems = [
   {
-    question: 'Do I have to buy anything to enter a DeHub prize draw?',
-    answer:
-      'No. Every draw carries at least one free entry route, earned by taking part on DeHub. Some draws additionally sell a token ticket, but a ticket is never the only way in.',
+    get question() { return _translateCopy("copy.8a7dab8cbe5b", { defaultValue: "Do I have to buy anything to enter a DeHub prize draw?" }); },
+    get answer() { return _translateCopy("copy.62953bc91936", { defaultValue: "No. Every draw carries at least one free entry route, earned by taking part on DeHub. Some draws additionally sell a token ticket, but a ticket is never the only way in." }); },
     answerKey: 'raffle.faqPurchaseAnswer',
   },
   {
-    question: 'How do I know the draw was not fixed?',
-    answer:
-      'The entry list is snapshotted and published before the draw runs, and the winning index is drawn from an on-chain source of randomness. The snapshot, the transaction and the winning entry are published together so the result can be recomputed by anyone.',
+    get question() { return _translateCopy("copy.2b758e52dcd0", { defaultValue: "How do I know the draw was not fixed?" }); },
+    get answer() { return _translateCopy("copy.4e522361ec4f", { defaultValue: "The entry list is snapshotted and published before the draw runs, and the winning index is drawn from an on-chain source of randomness. The snapshot, the transaction and the winning entry are published together so the result can be recomputed by anyone." }); },
   },
   {
-    question: 'How are winners notified?',
-    answer:
-      'Winners are notified in the app and named in the result post. There is no email asking for a payment, a seed phrase or a wallet signature — DeHub will never ask for any of those to release a prize.',
+    get question() { return _translateCopy("copy.d9998563e1f1", { defaultValue: "How are winners notified?" }); },
+    get answer() { return _translateCopy("copy.1fe16b6365aa", { defaultValue: "Winners are notified in the app and named in the result post. There is no email asking for a payment, a seed phrase or a wallet signature — DeHub will never ask for any of those to release a prize." }); },
   },
   {
-    question: 'How long do I have to claim?',
-    answer:
-      'Fourteen days from the result being published. Token prizes settle to the winner’s DeHub wallet on Base. Physical prizes are arranged directly with the team, and shipping is covered where we can legally ship.',
+    get question() { return _translateCopy("copy.fd85ca1f018e", { defaultValue: "How long do I have to claim?" }); },
+    get answer() { return _translateCopy("copy.05467bd0cc71", { defaultValue: "Fourteen days from the result being published. Token prizes settle to the winner’s DeHub wallet on Base. Physical prizes are arranged directly with the team, and shipping is covered where we can legally ship." }); },
   },
   {
-    question: 'Who is eligible?',
-    answer:
-      'Anyone with a DeHub account who is over 18 and lives somewhere the draw is lawful. DeHub staff, contractors and their households are not eligible, and draws are void where local law prohibits them.',
+    get question() { return _translateCopy("copy.20a3cfd2ee63", { defaultValue: "Who is eligible?" }); },
+    get answer() { return _translateCopy("copy.a424d0cc4ec7", { defaultValue: "Anyone with a DeHub account who is over 18 and lives somewhere the draw is lawful. DeHub staff, contractors and their households are not eligible, and draws are void where local law prohibits them." }); },
   },
   {
-    question: 'How often do draws run?',
-    answer:
-      'There is no fixed schedule. Draws are tied to launches, milestones and partner campaigns, and each is announced in the app when it opens.',
+    get question() { return _translateCopy("copy.b58e28adfd7f", { defaultValue: "How often do draws run?" }); },
+    get answer() { return _translateCopy("copy.024625f15255", { defaultValue: "There is no fixed schedule. Draws are tied to launches, milestones and partner campaigns, and each is announced in the app when it opens." }); },
   },
 ];
 
@@ -161,7 +155,7 @@ export default function RafflePage() {
     <>
       <SEOHead
         title={_copy("copy.61a267af92e3", { defaultValue: "Prize Draws — Win tokens, Hardware and NFTs on DeHub" })}
-        description={pageDescription}
+        description={pageDescription()}
         image="https://dehub.io/og/raffle.jpg"
         url="https://dehub.io/raffle"
         jsonLd={{
@@ -169,9 +163,9 @@ export default function RafflePage() {
           '@graph': [
             {
               '@type': 'WebPage',
-              name: 'DeHub Prize Draws',
+              name: _copy("copy.42478a42211c", { defaultValue: "DeHub Prize Draws" }),
               url: 'https://dehub.io/raffle',
-              description: pageDescription,
+              description: pageDescription(),
               isPartOf: {
                 '@type': 'WebSite',
                 name: 'DeHub',
@@ -259,12 +253,12 @@ export default function RafflePage() {
                   <p className="text-xs font-semibold uppercase tracking-[0.18em] text-zinc-500">{_copy("copy.99310ccb97ff", { defaultValue: "Anatomy of a draw" })}</p>
                   <dl className="mt-6 space-y-5">
                     {[
-                      ['Prize', 'Stated when the draw opens. Never changed afterwards.'],
-                      ['Entry routes', 'Listed in full, with the weight each one carries.'],
-                      ['Closing time', 'A fixed timestamp, not "when we get round to it".'],
-                      ['Snapshot', 'Published before the draw is run.'],
-                      ['Randomness', 'Drawn on-chain, in a transaction you can open.'],
-                      ['Claim window', '14 days from the published result.'],
+                      [_copy("copy.0a489d848c5a", { defaultValue: "Prize" }), _copy("copy.faad0a0c8426", { defaultValue: "Stated when the draw opens. Never changed afterwards." })],
+                      [_copy("copy.0974c4de9d07", { defaultValue: "Entry routes" }), _copy("copy.3c14e0a8be68", { defaultValue: "Listed in full, with the weight each one carries." })],
+                      [_copy("copy.43894b0babe9", { defaultValue: "Closing time" }), _copy("copy.ad4c5db4ac02", { defaultValue: "A fixed timestamp, not \"when we get round to it\"." })],
+                      [_copy("copy.6ad27bd4ec33", { defaultValue: "Snapshot" }), _copy("copy.4d35444fabcf", { defaultValue: "Published before the draw is run." })],
+                      [_copy("copy.64afedc44de8", { defaultValue: "Randomness" }), _copy("copy.61edf5d25d08", { defaultValue: "Drawn on-chain, in a transaction you can open." })],
+                      [_copy("copy.61862f07e956", { defaultValue: "Claim window" }), _copy("copy.128910cec32d", { defaultValue: "14 days from the published result." })],
                     ].map(([term, detail]) => (
                       <div key={term} className="border-b border-white/10 pb-5 last:border-b-0 last:pb-0">
                         <dt className="text-sm font-semibold text-white">{term}</dt>
@@ -282,7 +276,7 @@ export default function RafflePage() {
               <Reveal>
                 <SectionHeading
                   title={_copy("copy.f7c0e941ca42", { defaultValue: "How a draw works" })}
-                  body="Four steps, in the same order, every time. The parts that decide who wins happen in public."
+                  body={_copy("copy.b08a32d9eda9", { defaultValue: "Four steps, in the same order, every time. The parts that decide who wins happen in public." })}
                 />
               </Reveal>
               <div className="mt-12 grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
@@ -306,7 +300,7 @@ export default function RafflePage() {
               <Reveal>
                 <SectionHeading
                   title={_copy("copy.05ed765615c5", { defaultValue: "Entries are earned, not bought" })}
-                  body="Draws are weighted towards people who use DeHub. Each announcement names the routes that count for it — these are the ones draws are usually built from."
+                  body={_copy("copy.e2c592b3cd95", { defaultValue: "Draws are weighted towards people who use DeHub. Each announcement names the routes that count for it — these are the ones draws are usually built from." })}
                 />
               </Reveal>
               <div className="mt-12 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
@@ -337,7 +331,7 @@ export default function RafflePage() {
               <Reveal>
                 <SectionHeading
                   title={_copy("copy.bc5281a40c17", { defaultValue: "Why the result can be trusted" })}
-                  body="A raffle is only worth entering if the operator cannot quietly pick the winner. Three things make that true here."
+                  body={_copy("copy.afa0226bfe44", { defaultValue: "A raffle is only worth entering if the operator cannot quietly pick the winner. Three things make that true here." })}
                 />
               </Reveal>
               <div className="mt-12 grid gap-5 lg:grid-cols-3">
@@ -367,7 +361,7 @@ export default function RafflePage() {
               <Reveal>
                 <SectionHeading
                   title={_copy("copy.9a72221a2747", { defaultValue: "Questions" })}
-                  body="The ones we get asked most often about draws, entries and prizes."
+                  body={_copy("copy.8f1b3a38a34c", { defaultValue: "The ones we get asked most often about draws, entries and prizes." })}
                 />
               </Reveal>
               <div className="mt-12 grid gap-5 lg:grid-cols-2">
@@ -390,7 +384,7 @@ export default function RafflePage() {
               <Reveal>
                 <SectionHeading
                   title={_copy("copy.205af87306b5", { defaultValue: "Draws run inside DeHub" })}
-                  body="Open the app to see whatever is live now, and turn on notifications so the next one does not pass you by."
+                  body={_copy("copy.3da323657e3c", { defaultValue: "Open the app to see whatever is live now, and turn on notifications so the next one does not pass you by." })}
                 />
               </Reveal>
               <Reveal delay={0.08}>

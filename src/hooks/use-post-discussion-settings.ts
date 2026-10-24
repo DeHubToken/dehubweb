@@ -17,6 +17,7 @@ import {
   COMMON_GROUND_DONE_PREFIX,
   type DiscussionSettingsRow,
 } from '@/lib/discussion-settings';
+import { translateCopy as _translateCopy } from '@/i18n/copy';
 
 const queryKeyFor = (tokenId: string | number | null | undefined) =>
   ['post-discussion-settings', String(tokenId ?? '')] as const;
@@ -66,8 +67,8 @@ export function useSetCommonGround(tokenId: string | number | null | undefined) 
 
   return useMutation({
     mutationFn: async (on: boolean) => {
-      if (id === null) throw new Error('No post to save settings for');
-      if (!walletAddress) throw new Error('Connect a wallet to change this');
+      if (id === null) throw new Error(_translateCopy("copy.5e91bd0e0b95", { defaultValue: "No post to save settings for" }));
+      if (!walletAddress) throw new Error(_translateCopy("copy.8b3ca201a335", { defaultValue: "Connect a wallet to change this" }));
       const addr = walletAddress.toLowerCase();
       const { error } = await withWalletHeader(
         supabase

@@ -13,11 +13,11 @@ import Send from "@/components/ui/cut-icons/send";
 
 
 const mockTransactions = (t: TFunction) => [
-  { id: '1', type: 'received', user: 'bob_dev', amount: t('mobilePreview.tokenAmount', { amount: '+50' }), time: '2h ago' },
-  { id: '2', type: 'sent', user: 'crypto_sarah', amount: t('mobilePreview.tokenAmount', { amount: '-25' }), time: '5h ago' },
-  { id: '3', type: 'received', user: 'defi_whale', amount: t('mobilePreview.tokenAmount', { amount: '+100' }), time: '1d ago' },
-  { id: '4', type: 'staking', user: 'Staking Reward', amount: t('mobilePreview.tokenAmount', { amount: '+12.4' }), time: '1d ago' },
-  { id: '5', type: 'sent', user: 'nft_artist', amount: t('mobilePreview.tokenAmount', { amount: '-200' }), time: '3d ago' },
+  { id: '1', type: 'received', user: 'bob_dev', amount: t('mobilePreview.tokenAmount', { amount: '+50' }), time: t("copy.51452941c07c", { defaultValue: "{{value1}}h ago", value1: 2 }) },
+  { id: '2', type: 'sent', user: 'crypto_sarah', amount: t('mobilePreview.tokenAmount', { amount: '-25' }), time: t("copy.51452941c07c", { defaultValue: "{{value1}}h ago", value1: 5 }) },
+  { id: '3', type: 'received', user: 'defi_whale', amount: t('mobilePreview.tokenAmount', { amount: '+100' }), time: t("copy.0dc906eaa41d", { defaultValue: "{{value1}}d ago", value1: 1 }) },
+  { id: '4', type: 'staking', user: t("copy.fcf8ba37dae3", { defaultValue: "Staking Reward" }), amount: t('mobilePreview.tokenAmount', { amount: '+12.4' }), time: t("copy.0dc906eaa41d", { defaultValue: "{{value1}}d ago", value1: 1 }) },
+  { id: '5', type: 'sent', user: 'nft_artist', amount: t('mobilePreview.tokenAmount', { amount: '-200' }), time: t("copy.0dc906eaa41d", { defaultValue: "{{value1}}d ago", value1: 3 }) },
 ];
 
 export function WalletScreen() {

@@ -14,31 +14,32 @@ import { supabase } from '@/integrations/supabase/client';
 import { withWalletHeader } from '@/lib/supabase-wallet-client';
 import { useAuth } from '@/contexts/AuthContext';
 import { toast } from 'sonner';
+import { translateCopy as _translateCopy } from '@/i18n/copy';
 import type { Community, CommunityMember } from '@/hooks/use-communities';
 
 // ─── Rights ──────────────────────────────────────────────────────────────────
 
 export const ADMIN_RIGHTS = [
-  { key: 'change_info',      label: 'Change community info', hint: 'Name, description, avatar, banner and ticker' },
-  { key: 'delete_messages',  label: 'Delete messages',       hint: 'Remove any message from the chat' },
-  { key: 'restrict_members', label: 'Ban users',             hint: 'Approve, mute, ban and remove members' },
-  { key: 'invite_users',     label: 'Invite users via link', hint: 'Create and revoke invite links' },
-  { key: 'pin_messages',     label: 'Pin messages',          hint: 'Pin a message to the top of the chat' },
-  { key: 'manage_events',    label: 'Manage events',         hint: 'Edit and remove community events' },
-  { key: 'add_admins',       label: 'Add new admins',        hint: 'Promote members to admin. Only the owner can demote one' },
-  { key: 'remain_anonymous', label: 'Remain anonymous',      hint: 'Hide the admin badge on this account' },
+  { key: 'change_info',      get label() { return _translateCopy("copy.e1cf4fb834a7", { defaultValue: "Change community info" }); }, get hint() { return _translateCopy("copy.6efa129ffc5d", { defaultValue: "Name, description, avatar, banner and ticker" }); } },
+  { key: 'delete_messages',  get label() { return _translateCopy("copy.708b60941566", { defaultValue: "Delete messages" }); }, get hint() { return _translateCopy("copy.2471878adf9f", { defaultValue: "Remove any message from the chat" }); } },
+  { key: 'restrict_members', get label() { return _translateCopy("copy.6e0921c6c48a", { defaultValue: "Ban users" }); }, get hint() { return _translateCopy("copy.042fe48cc94f", { defaultValue: "Approve, mute, ban and remove members" }); } },
+  { key: 'invite_users',     get label() { return _translateCopy("copy.32bb1a843217", { defaultValue: "Invite users via link" }); }, get hint() { return _translateCopy("copy.7739af962ec9", { defaultValue: "Create and revoke invite links" }); } },
+  { key: 'pin_messages',     get label() { return _translateCopy("copy.d25966790478", { defaultValue: "Pin messages" }); }, get hint() { return _translateCopy("copy.3c4ea43f652c", { defaultValue: "Pin a message to the top of the chat" }); } },
+  { key: 'manage_events',    get label() { return _translateCopy("copy.9d0aa070ff87", { defaultValue: "Manage events" }); }, get hint() { return _translateCopy("copy.f2a819b334db", { defaultValue: "Edit and remove community events" }); } },
+  { key: 'add_admins',       get label() { return _translateCopy("copy.58287b1ebe9e", { defaultValue: "Add new admins" }); }, get hint() { return _translateCopy("copy.712c5cee22ab", { defaultValue: "Promote members to admin. Only the owner can demote one" }); } },
+  { key: 'remain_anonymous', get label() { return _translateCopy("copy.f31a396d38f6", { defaultValue: "Remain anonymous" }); }, get hint() { return _translateCopy("copy.8e8d20d6c719", { defaultValue: "Hide the admin badge on this account" }); } },
 ] as const;
 
 export type AdminRight = (typeof ADMIN_RIGHTS)[number]['key'];
 
 export const MEMBER_RIGHTS = [
-  { key: 'send_messages', label: 'Send messages',    hint: 'Post in the community chat' },
-  { key: 'send_media',    label: 'Send media',       hint: 'Attach images and GIFs' },
-  { key: 'embed_links',   label: 'Embed links',      hint: 'Show link previews' },
-  { key: 'add_members',   label: 'Add members',      hint: 'Share the community with others' },
-  { key: 'create_events', label: 'Create events',    hint: 'Schedule community events' },
-  { key: 'pin_messages',  label: 'Pin messages',     hint: 'Pin a message to the top of the chat' },
-  { key: 'change_info',   label: 'Change info',      hint: 'Edit the community name and description' },
+  { key: 'send_messages', get label() { return _translateCopy("copy.27a3f5335350", { defaultValue: "Send messages" }); }, get hint() { return _translateCopy("copy.de36d7d2949b", { defaultValue: "Post in the community chat" }); } },
+  { key: 'send_media',    get label() { return _translateCopy("copy.708d98ff019c", { defaultValue: "Send media" }); }, get hint() { return _translateCopy("copy.bd438e587ff4", { defaultValue: "Attach images and GIFs" }); } },
+  { key: 'embed_links',   get label() { return _translateCopy("copy.2737af7ac8aa", { defaultValue: "Embed links" }); }, get hint() { return _translateCopy("copy.1a1dd5fb913d", { defaultValue: "Show link previews" }); } },
+  { key: 'add_members',   get label() { return _translateCopy("copy.d600b9239ea2", { defaultValue: "Add members" }); }, get hint() { return _translateCopy("copy.bf7584afb7c5", { defaultValue: "Share the community with others" }); } },
+  { key: 'create_events', get label() { return _translateCopy("copy.dfb39b614c22", { defaultValue: "Create events" }); }, get hint() { return _translateCopy("copy.149eedd00eb1", { defaultValue: "Schedule community events" }); } },
+  { key: 'pin_messages',  get label() { return _translateCopy("copy.d25966790478", { defaultValue: "Pin messages" }); }, get hint() { return _translateCopy("copy.3c4ea43f652c", { defaultValue: "Pin a message to the top of the chat" }); } },
+  { key: 'change_info',   get label() { return _translateCopy("copy.44937f6efcbb", { defaultValue: "Change info" }); }, get hint() { return _translateCopy("copy.9cf5ecd7bb2e", { defaultValue: "Edit the community name and description" }); } },
 ] as const;
 
 export type MemberRight = (typeof MEMBER_RIGHTS)[number]['key'];
@@ -201,39 +202,51 @@ export async function callRpc<T = unknown>(
   return data as T;
 }
 
-const ERROR_COPY: Record<string, string> = {
-  not_authenticated: 'Connect your wallet first',
-  cannot_moderate_yourself: 'You cannot do that to yourself',
-  cannot_moderate_the_owner: 'The owner cannot be moderated',
-  only_the_owner_can_moderate_an_admin: 'Only the owner can moderate another admin',
-  only_the_owner_can_transfer_ownership: 'Only the owner can transfer ownership',
-  only_the_owner_can_delete_a_community: 'Only the owner can delete this community',
-  new_owner_must_be_an_active_member: 'Pick an active member to hand the community to',
-  member_not_found: 'That member is no longer here',
-  member_is_not_active: 'That member is not active',
-  member_is_not_banned: 'That member is not banned',
-  no_pending_request: 'That request is no longer pending',
-  message_not_found: 'That message is already gone',
-  role_must_be_admin_or_member: 'Unsupported role',
-  already_the_owner: 'They already own this community',
-  membership_updates_require_rpc: 'That change is no longer allowed directly',
-  cannot_join_on_behalf_of_another_wallet: 'You can only join with your own wallet',
-  cannot_post_as_another_wallet: 'You can only post as yourself',
-  cannot_edit_another_members_message: 'You can only edit your own messages',
-  you_cannot_post_in_this_community: 'You do not have permission to post here',
-  you_cannot_send_media_in_this_community: 'You do not have permission to send media here',
-  you_are_banned_from_this_community: 'You are banned from this community',
-  invite_not_found: 'That invite link does not exist',
-  invite_revoked: 'That invite link was revoked',
-  invite_expired: 'That invite link has expired',
-  invite_exhausted: 'That invite link has reached its limit',
-  invite_used: 'Invite accepted',
+const ERROR_COPY: Record<string, () => string> = {
+  not_authenticated: () => _translateCopy("copy.d4eb6104ebd9", { defaultValue: "Connect your wallet first" }),
+  cannot_moderate_yourself: () => _translateCopy("copy.018c5aecd6c3", { defaultValue: "You cannot do that to yourself" }),
+  cannot_moderate_the_owner: () => _translateCopy("copy.04fcef5b5b26", { defaultValue: "The owner cannot be moderated" }),
+  only_the_owner_can_moderate_an_admin: () => _translateCopy("copy.c0cafd3f4fda", { defaultValue: "Only the owner can moderate another admin" }),
+  only_the_owner_can_transfer_ownership: () => _translateCopy("copy.2264da39007c", { defaultValue: "Only the owner can transfer ownership" }),
+  only_the_owner_can_delete_a_community: () => _translateCopy("copy.82226ff838ca", { defaultValue: "Only the owner can delete this community" }),
+  new_owner_must_be_an_active_member: () => _translateCopy("copy.f0c575ccd7be", { defaultValue: "Pick an active member to hand the community to" }),
+  member_not_found: () => _translateCopy("copy.8202e88f9b4a", { defaultValue: "That member is no longer here" }),
+  member_is_not_active: () => _translateCopy("copy.55d25bbc9a7c", { defaultValue: "That member is not active" }),
+  member_is_not_banned: () => _translateCopy("copy.cbb2315229e5", { defaultValue: "That member is not banned" }),
+  no_pending_request: () => _translateCopy("copy.9db7738dd45c", { defaultValue: "That request is no longer pending" }),
+  message_not_found: () => _translateCopy("copy.9a064ac60abe", { defaultValue: "That message is already gone" }),
+  role_must_be_admin_or_member: () => _translateCopy("copy.5e2c9b601cf1", { defaultValue: "Unsupported role" }),
+  already_the_owner: () => _translateCopy("copy.c833a76e8f1a", { defaultValue: "They already own this community" }),
+  membership_updates_require_rpc: () => _translateCopy("copy.68024bd2022b", { defaultValue: "That change is no longer allowed directly" }),
+  cannot_join_on_behalf_of_another_wallet: () => _translateCopy("copy.07fac032f756", { defaultValue: "You can only join with your own wallet" }),
+  cannot_post_as_another_wallet: () => _translateCopy("copy.e490c5f0bcb9", { defaultValue: "You can only post as yourself" }),
+  cannot_edit_another_members_message: () => _translateCopy("copy.50164dfe3302", { defaultValue: "You can only edit your own messages" }),
+  you_cannot_post_in_this_community: () => _translateCopy("copy.fa864aef958f", { defaultValue: "You do not have permission to post here" }),
+  you_cannot_send_media_in_this_community: () => _translateCopy("copy.462380995d63", { defaultValue: "You do not have permission to send media here" }),
+  you_are_banned_from_this_community: () => _translateCopy("copy.46ffd9568a13", { defaultValue: "You are banned from this community" }),
+  invite_not_found: () => _translateCopy("copy.bf38732f4aad", { defaultValue: "That invite link does not exist" }),
+  invite_revoked: () => _translateCopy("copy.1957c0d6df16", { defaultValue: "That invite link was revoked" }),
+  invite_expired: () => _translateCopy("copy.817a32289f0a", { defaultValue: "That invite link has expired" }),
+  invite_exhausted: () => _translateCopy("copy.b064bd1adffd", { defaultValue: "That invite link has reached its limit" }),
+  invite_used: () => _translateCopy("copy.cde7a4affb8d", { defaultValue: "Invite accepted" }),
 };
 
-const RIGHT_LABEL = new Map<string, string>([
-  ...ADMIN_RIGHTS.map(r => [r.key, r.label] as [string, string]),
-  ...MEMBER_RIGHTS.map(r => [r.key, r.label] as [string, string]),
-]);
+/** One whole sentence per right, so no language has to splice a label into "You do not have permission to …". */
+const PERMISSION_DENIED_COPY: Record<string, () => string> = {
+  change_info: () => _translateCopy("copy.105a7bda34ff", { defaultValue: "You do not have permission to change info" }),
+  delete_messages: () => _translateCopy("copy.fe7e45703caf", { defaultValue: "You do not have permission to delete messages" }),
+  restrict_members: () => _translateCopy("copy.76ae16eb8065", { defaultValue: "You do not have permission to ban users" }),
+  invite_users: () => _translateCopy("copy.d835fb6c743c", { defaultValue: "You do not have permission to invite users via link" }),
+  pin_messages: () => _translateCopy("copy.7813733a02b3", { defaultValue: "You do not have permission to pin messages" }),
+  manage_events: () => _translateCopy("copy.002286513398", { defaultValue: "You do not have permission to manage events" }),
+  add_admins: () => _translateCopy("copy.045c8cd3aa81", { defaultValue: "You do not have permission to add new admins" }),
+  remain_anonymous: () => _translateCopy("copy.b31ff2d0eb1a", { defaultValue: "You do not have permission to remain anonymous" }),
+  send_messages: () => _translateCopy("copy.26073cdcaa76", { defaultValue: "You do not have permission to send messages" }),
+  send_media: () => _translateCopy("copy.deeab29dde62", { defaultValue: "You do not have permission to send media" }),
+  embed_links: () => _translateCopy("copy.90c724915b1b", { defaultValue: "You do not have permission to embed links" }),
+  add_members: () => _translateCopy("copy.b05480861091", { defaultValue: "You do not have permission to add members" }),
+  create_events: () => _translateCopy("copy.6741361174ce", { defaultValue: "You do not have permission to create events" }),
+};
 
 /** Turns a raised Postgres condition into something worth showing a human. */
 export function adminErrorMessage(error: unknown, fallback: string): string {
@@ -242,20 +255,22 @@ export function adminErrorMessage(error: unknown, fallback: string): string {
 
   const permission = raw.match(/permission_denied:(\w+)/);
   if (permission) {
-    const label = RIGHT_LABEL.get(permission[1]) ?? permission[1].replace(/_/g, ' ');
-    return `You do not have permission to ${label.toLowerCase()}`;
+    const denied = PERMISSION_DENIED_COPY[permission[1]];
+    return denied
+      ? denied()
+      : _translateCopy("copy.7b2d32bd2e67", { defaultValue: "You do not have permission to {{value1}}", value1: permission[1].replace(/_/g, ' ') });
   }
 
   const slow = raw.match(/slow_mode_active:(\d+)/);
   if (slow) {
     const seconds = Number(slow[1]);
     return seconds >= 60
-      ? `Slow mode is on — one message every ${Math.round(seconds / 60)} min`
-      : `Slow mode is on — one message every ${seconds}s`;
+      ? _translateCopy("copy.014892720459", { defaultValue: "Slow mode is on — one message every {{value1}} min", value1: Math.round(seconds / 60) })
+      : _translateCopy("copy.52c789c095cf", { defaultValue: "Slow mode is on — one message every {{value1}}s", value1: seconds });
   }
 
   for (const [code, copy] of Object.entries(ERROR_COPY)) {
-    if (raw.includes(code)) return copy;
+    if (raw.includes(code)) return copy();
   }
   return fallback;
 }
@@ -282,7 +297,7 @@ interface TargetVars {
 function useModerationMutation<V extends { communityId: string }>(
   build: (vars: V) => { fn: string; args: Record<string, unknown> },
   success: (vars: V) => string,
-  failure: string,
+  failure: () => string,
 ) {
   const { walletAddress } = useAuth();
   const qc = useQueryClient();
@@ -296,7 +311,7 @@ function useModerationMutation<V extends { communityId: string }>(
       invalidateCommunity(qc, vars.communityId);
       toast.success(success(vars));
     },
-    onError: (error) => toast.error(adminErrorMessage(error, failure)),
+    onError: (error) => toast.error(adminErrorMessage(error, failure())),
   });
 }
 
@@ -305,24 +320,28 @@ function useModerationMutation<V extends { communityId: string }>(
 export function useApproveMember() {
   return useModerationMutation<TargetVars>(
     v => ({ fn: 'community_approve_member', args: { _community_id: v.communityId, _target: v.wallet } }),
-    v => `${v.displayName ?? 'Member'} approved`,
-    'Failed to approve',
+    v => (v.displayName
+      ? _translateCopy("copy.b4923ce2de2c", { defaultValue: "{{value1}} approved", value1: v.displayName })
+      : _translateCopy("copy.6c28a74c6e1d", { defaultValue: "Member approved" })),
+    () => _translateCopy("copy.de0c2e40fd7a", { defaultValue: "Failed to approve" }),
   );
 }
 
 export function useRejectMember() {
   return useModerationMutation<TargetVars>(
     v => ({ fn: 'community_reject_member', args: { _community_id: v.communityId, _target: v.wallet } }),
-    () => 'Request rejected',
-    'Failed to reject',
+    () => _translateCopy("copy.21b36b609f86", { defaultValue: "Request rejected" }),
+    () => _translateCopy("copy.46960413b9a8", { defaultValue: "Failed to reject" }),
   );
 }
 
 export function useKickMember() {
   return useModerationMutation<TargetVars>(
     v => ({ fn: 'community_kick_member', args: { _community_id: v.communityId, _target: v.wallet } }),
-    v => `${v.displayName ?? 'Member'} removed`,
-    'Failed to remove member',
+    v => (v.displayName
+      ? _translateCopy("copy.50f8429f0d7c", { defaultValue: "{{value1}} removed", value1: v.displayName })
+      : _translateCopy("copy.5dcec1a428cd", { defaultValue: "Member removed" })),
+    () => _translateCopy("copy.1cff79b7eb0b", { defaultValue: "Failed to remove member" }),
   );
 }
 
@@ -337,16 +356,20 @@ export function useBanMember() {
         _until: v.until ?? null,
       },
     }),
-    v => `${v.displayName ?? 'Member'} banned`,
-    'Failed to ban member',
+    v => (v.displayName
+      ? _translateCopy("copy.69117b59817b", { defaultValue: "{{value1}} banned", value1: v.displayName })
+      : _translateCopy("copy.8fd51b2a8403", { defaultValue: "Member banned" })),
+    () => _translateCopy("copy.3e127b875965", { defaultValue: "Failed to ban member" }),
   );
 }
 
 export function useUnbanMember() {
   return useModerationMutation<TargetVars>(
     v => ({ fn: 'community_unban_member', args: { _community_id: v.communityId, _target: v.wallet } }),
-    v => `${v.displayName ?? 'Member'} unbanned`,
-    'Failed to unban member',
+    v => (v.displayName
+      ? _translateCopy("copy.af707a1ddd84", { defaultValue: "{{value1}} unbanned", value1: v.displayName })
+      : _translateCopy("copy.1471e79421ff", { defaultValue: "Member unbanned" })),
+    () => _translateCopy("copy.fa3f8b4f0df9", { defaultValue: "Failed to unban member" }),
   );
 }
 
@@ -356,16 +379,27 @@ export function useMuteMember() {
       fn: 'community_mute_member',
       args: { _community_id: v.communityId, _target: v.wallet, _until: v.until ?? null },
     }),
-    v => (v.until ? `${v.displayName ?? 'Member'} muted` : `${v.displayName ?? 'Member'} muted indefinitely`),
-    'Failed to mute member',
+    v => {
+      if (v.until) {
+        return v.displayName
+          ? _translateCopy("copy.99f61cc51979", { defaultValue: "{{value1}} muted", value1: v.displayName })
+          : _translateCopy("copy.12e4a9a87c73", { defaultValue: "Member muted" });
+      }
+      return v.displayName
+        ? _translateCopy("copy.76ffa3511068", { defaultValue: "{{value1}} muted indefinitely", value1: v.displayName })
+        : _translateCopy("copy.31405b373d83", { defaultValue: "Member muted indefinitely" });
+    },
+    () => _translateCopy("copy.193a04ac4a9c", { defaultValue: "Failed to mute member" }),
   );
 }
 
 export function useUnmuteMember() {
   return useModerationMutation<TargetVars>(
     v => ({ fn: 'community_unmute_member', args: { _community_id: v.communityId, _target: v.wallet } }),
-    v => `${v.displayName ?? 'Member'} unmuted`,
-    'Failed to unmute member',
+    v => (v.displayName
+      ? _translateCopy("copy.47ad279da2d8", { defaultValue: "{{value1}} unmuted", value1: v.displayName })
+      : _translateCopy("copy.5df3c2e740a8", { defaultValue: "Member unmuted" })),
+    () => _translateCopy("copy.2f3648d86b9d", { defaultValue: "Failed to unmute member" }),
   );
 }
 
@@ -383,16 +417,27 @@ export function useSetMemberRole() {
         _custom_title: v.role === 'admin' ? (v.customTitle?.trim() || null) : null,
       },
     }),
-    v => (v.role === 'admin' ? `${v.displayName ?? 'Member'} is now an admin` : `${v.displayName ?? 'Member'} is no longer an admin`),
-    'Failed to update role',
+    v => {
+      if (v.role === 'admin') {
+        return v.displayName
+          ? _translateCopy("copy.795f6f567483", { defaultValue: "{{value1}} is now an admin", value1: v.displayName })
+          : _translateCopy("copy.8295e7c45852", { defaultValue: "Member is now an admin" });
+      }
+      return v.displayName
+        ? _translateCopy("copy.c7fbcf193b1d", { defaultValue: "{{value1}} is no longer an admin", value1: v.displayName })
+        : _translateCopy("copy.1fa6b2294d22", { defaultValue: "Member is no longer an admin" });
+    },
+    () => _translateCopy("copy.e4143613f121", { defaultValue: "Failed to update role" }),
   );
 }
 
 export function useTransferOwnership() {
   return useModerationMutation<TargetVars>(
     v => ({ fn: 'community_transfer_ownership', args: { _community_id: v.communityId, _new_owner: v.wallet } }),
-    v => `${v.displayName ?? 'Member'} now owns this community`,
-    'Failed to transfer ownership',
+    v => (v.displayName
+      ? _translateCopy("copy.e7028443a798", { defaultValue: "{{value1}} now owns this community", value1: v.displayName })
+      : _translateCopy("copy.64a81dd4c9bb", { defaultValue: "Member now owns this community" })),
+    () => _translateCopy("copy.b37288814357", { defaultValue: "Failed to transfer ownership" }),
   );
 }
 
@@ -409,9 +454,11 @@ export function usePurgeMemberMessages() {
     onSuccess: (removed, vars) => {
       qc.invalidateQueries({ queryKey: ['community-chat-messages', vars.communityId] });
       qc.invalidateQueries({ queryKey: ['communities', 'admin-log', vars.communityId] });
-      toast.success(removed ? `Deleted ${removed} message${removed === 1 ? '' : 's'}` : 'No messages to delete');
+      toast.success(removed
+        ? _translateCopy("copy.ac929101ae36", { defaultValue: "Deleted {{count}} messages", count: removed })
+        : _translateCopy("copy.890e0324b85b", { defaultValue: "No messages to delete" }));
     },
-    onError: (error) => toast.error(adminErrorMessage(error, 'Failed to delete messages')),
+    onError: (error) => toast.error(adminErrorMessage(error, _translateCopy("copy.b9442cc89e40", { defaultValue: "Failed to delete messages" }))),
   });
 }
 
@@ -448,7 +495,7 @@ export function useUpdateCommunitySettings() {
       qc.invalidateQueries({ queryKey: ['communities', 'pending-members', communityId] });
       qc.invalidateQueries({ queryKey: ['communities', 'members', communityId] });
     },
-    onError: (error) => toast.error(adminErrorMessage(error, 'Failed to update community')),
+    onError: (error) => toast.error(adminErrorMessage(error, _translateCopy("copy.1b97419f8a5c", { defaultValue: "Failed to update community" }))),
   });
 }
 
@@ -464,7 +511,7 @@ export function useDeleteCommunity() {
       qc.invalidateQueries({ queryKey: ['communities'] });
       toast.success(_copy("copy.7793fc7ea486", { defaultValue: "Community deleted" }));
     },
-    onError: (error) => toast.error(adminErrorMessage(error, 'Failed to delete community')),
+    onError: (error) => toast.error(adminErrorMessage(error, _copy("copy.cd9a989be4a3", { defaultValue: "Failed to delete community" }))),
   });
 }
 
@@ -538,7 +585,7 @@ export function useCreateInvite() {
       qc.invalidateQueries({ queryKey: ['communities', 'admin-log', vars.communityId] });
       toast.success(_copy("copy.f2661a2edcee", { defaultValue: "Invite link created" }));
     },
-    onError: (error) => toast.error(adminErrorMessage(error, 'Failed to create invite link')),
+    onError: (error) => toast.error(adminErrorMessage(error, _copy("copy.7d400b75a897", { defaultValue: "Failed to create invite link" }))),
   });
 }
 
@@ -554,7 +601,7 @@ export function useRevokeInvite() {
       qc.invalidateQueries({ queryKey: ['communities', 'invites', communityId] });
       toast.success(_copy("copy.0727efedeb3b", { defaultValue: "Invite link revoked" }));
     },
-    onError: (error) => toast.error(adminErrorMessage(error, 'Failed to revoke invite link')),
+    onError: (error) => toast.error(adminErrorMessage(error, _copy("copy.e7c82bd74723", { defaultValue: "Failed to revoke invite link" }))),
   });
 }
 
@@ -595,9 +642,9 @@ export function useJoinViaInvite() {
       callRpc<string>('community_join_via_invite', { _code: code }, walletAddress),
     onSuccess: (status) => {
       qc.invalidateQueries({ queryKey: ['communities'] });
-      toast.success(status === 'pending' ? 'Join request sent' : 'Joined community');
+      toast.success(status === 'pending' ? _translateCopy("copy.2b01b19485cc", { defaultValue: "Join request sent" }) : _translateCopy("copy.c63f7d3830bc", { defaultValue: "Joined community" }));
     },
-    onError: (error) => toast.error(adminErrorMessage(error, 'Failed to join')),
+    onError: (error) => toast.error(adminErrorMessage(error, _translateCopy("copy.6d163522af89", { defaultValue: "Failed to join" }))),
   });
 }
 
@@ -615,24 +662,24 @@ export interface CommunityAdminLogEntry {
 }
 
 export const ADMIN_LOG_COPY: Record<string, string> = {
-  promote_admin: 'promoted',
-  demote_admin: 'demoted',
-  transfer_ownership: 'transferred ownership to',
-  ban_member: 'banned',
-  unban_member: 'unbanned',
-  kick_member: 'removed',
-  mute_member: 'muted',
-  unmute_member: 'unmuted',
-  approve_member: 'approved',
-  reject_member: 'rejected',
-  delete_message: 'deleted a message from',
-  purge_messages: 'deleted all messages from',
-  pin_message: 'pinned a message from',
-  unpin_message: 'unpinned a message from',
-  update_settings: 'updated the community settings',
-  create_invite: 'created an invite link',
-  revoke_invite: 'revoked an invite link',
-  invite_used: 'invited',
+  get promote_admin() { return _translateCopy("copy.348f71b67f2d", { defaultValue: "promoted" }); },
+  get demote_admin() { return _translateCopy("copy.5d385507c387", { defaultValue: "demoted" }); },
+  get transfer_ownership() { return _translateCopy("copy.6b841731162b", { defaultValue: "transferred ownership to" }); },
+  get ban_member() { return _translateCopy("copy.7b412527489f", { defaultValue: "banned" }); },
+  get unban_member() { return _translateCopy("copy.f615e0086898", { defaultValue: "unbanned" }); },
+  get kick_member() { return _translateCopy("copy.e1f79758cc42", { defaultValue: "removed" }); },
+  get mute_member() { return _translateCopy("copy.8fdb32ddbb0c", { defaultValue: "muted" }); },
+  get unmute_member() { return _translateCopy("copy.d2369defa3c7", { defaultValue: "unmuted" }); },
+  get approve_member() { return _translateCopy("copy.2687f86ed678", { defaultValue: "approved" }); },
+  get reject_member() { return _translateCopy("copy.20cd938a2ea6", { defaultValue: "rejected" }); },
+  get delete_message() { return _translateCopy("copy.9564f9fff0cc", { defaultValue: "deleted a message from" }); },
+  get purge_messages() { return _translateCopy("copy.240cdf8267f9", { defaultValue: "deleted all messages from" }); },
+  get pin_message() { return _translateCopy("copy.4ba98173e7bc", { defaultValue: "pinned a message from" }); },
+  get unpin_message() { return _translateCopy("copy.f0fc69d9c8d5", { defaultValue: "unpinned a message from" }); },
+  get update_settings() { return _translateCopy("copy.5f11177256ed", { defaultValue: "updated the community settings" }); },
+  get create_invite() { return _translateCopy("copy.faea15f280ea", { defaultValue: "created an invite link" }); },
+  get revoke_invite() { return _translateCopy("copy.e66b354a3e12", { defaultValue: "revoked an invite link" }); },
+  get invite_used() { return _translateCopy("copy.307128ff4d35", { defaultValue: "invited" }); },
 };
 
 export function useCommunityAdminLog(communityId: string | undefined, enabled: boolean) {
@@ -661,11 +708,11 @@ export function useCommunityAdminLog(communityId: string | undefined, enabled: b
 // ─── Durations shared by the mute/ban pickers ────────────────────────────────
 
 export const RESTRICTION_DURATIONS = [
-  { label: '1 hour',  seconds: 60 * 60 },
-  { label: '8 hours', seconds: 60 * 60 * 8 },
-  { label: '1 day',   seconds: 60 * 60 * 24 },
-  { label: '1 week',  seconds: 60 * 60 * 24 * 7 },
-  { label: 'Forever', seconds: null },
+  { get label() { return _translateCopy("copy.f8b8883f0c9d", { defaultValue: "1 hour" }); },  seconds: 60 * 60 },
+  { get label() { return _translateCopy("copy.1ee36a42394f", { defaultValue: "8 hours" }); }, seconds: 60 * 60 * 8 },
+  { get label() { return _translateCopy("copy.fa665d95d29e", { defaultValue: "1 day" }); },   seconds: 60 * 60 * 24 },
+  { get label() { return _translateCopy("copy.c8cc522340b9", { defaultValue: "1 week" }); },  seconds: 60 * 60 * 24 * 7 },
+  { get label() { return _translateCopy("copy.55f980cf8c92", { defaultValue: "Forever" }); }, seconds: null },
 ] as const;
 
 export function durationToTimestamp(seconds: number | null): string | null {
@@ -674,11 +721,11 @@ export function durationToTimestamp(seconds: number | null): string | null {
 }
 
 export const SLOW_MODE_OPTIONS = [
-  { label: 'Off',    seconds: 0 },
-  { label: '10s',    seconds: 10 },
-  { label: '30s',    seconds: 30 },
-  { label: '1 min',  seconds: 60 },
-  { label: '5 min',  seconds: 300 },
-  { label: '15 min', seconds: 900 },
-  { label: '1 hour', seconds: 3600 },
+  { get label() { return _translateCopy("copy.ca7981b46ecf", { defaultValue: "Off" }); },    seconds: 0 },
+  { get label() { return _translateCopy("copy.7819f63beefe", { defaultValue: "10s" }); },    seconds: 10 },
+  { get label() { return _translateCopy("copy.d3382a4f0e03", { defaultValue: "30s" }); },    seconds: 30 },
+  { get label() { return _translateCopy("copy.75adbad9edb8", { defaultValue: "1 min" }); },  seconds: 60 },
+  { get label() { return _translateCopy("copy.53bc57cdb692", { defaultValue: "5 min" }); },  seconds: 300 },
+  { get label() { return _translateCopy("copy.8d616d350961", { defaultValue: "15 min" }); }, seconds: 900 },
+  { get label() { return _translateCopy("copy.f8b8883f0c9d", { defaultValue: "1 hour" }); }, seconds: 3600 },
 ] as const;

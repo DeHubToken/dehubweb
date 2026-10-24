@@ -1,3 +1,4 @@
+import { translateCopy as _translateCopy } from '@/i18n/copy';
 import DOMPurify from 'dompurify';
 import { usePublicPageLocale } from '@/hooks/usePublicPageLocale';
 import { useTranslation as _useCopy } from 'react-i18next';
@@ -19,129 +20,153 @@ import { SEOHead } from '@/components/SEOHead';
 const platforms = [
   {
     name: 'DeHub',
-    network: 'Base, BNB, Robinhood Chain + Solana',
+    get network() { return _translateCopy("copy.9f5a55e28454", { defaultValue: "Base, BNB, Robinhood Chain + Solana" }); },
     launched: '2021',
-    model: 'User-owned media platform — video, live, audio, posts',
-    monetization: 'Real-time tips, pay-per-view, subscriptions, token gating, 20% affiliate share',
-    strengths: [
-      'Tips land as they are sent — no payout threshold, no monthly cycle, yours to spend or cash out immediately',
-      'Live production built in: voice changers, a sound-effects board, camera looks and screen share — no plugins',
-      'AI creator studio for image, video, music and poster generation',
-      'Live, video-on-demand, audio rooms and shorts in one app',
-      'Email or social login — a wallet is optional, not a gate',
-      'Streams can be minted on-chain or published off-chain entirely',
-    ],
-    weaknesses: [
-      'Smaller audience than the Web2 platforms it replaces',
-    ],
-    bestFor: 'Creators who want Twitch-style streaming plus on-chain ownership and payments in one place.',
+    get model() { return _translateCopy("copy.1ff5c5a7dd89", { defaultValue: "User-owned media platform — video, live, audio, posts" }); },
+    get monetization() { return _translateCopy("copy.8594d99a685c", { defaultValue: "Real-time tips, pay-per-view, subscriptions, token gating, 20% affiliate share" }); },
+    get strengths() {
+      return [
+        _translateCopy("copy.6552763aabe1", { defaultValue: "Tips land as they are sent — no payout threshold, no monthly cycle, yours to spend or cash out immediately" }),
+        _translateCopy("copy.6d090e0ffa44", { defaultValue: "Live production built in: voice changers, a sound-effects board, camera looks and screen share — no plugins" }),
+        _translateCopy("copy.0726da879c2c", { defaultValue: "AI creator studio for image, video, music and poster generation" }),
+        _translateCopy("copy.2bc8bdef22f0", { defaultValue: "Live, video-on-demand, audio rooms and shorts in one app" }),
+        _translateCopy("copy.067c3e938fe0", { defaultValue: "Email or social login — a wallet is optional, not a gate" }),
+        _translateCopy("copy.5c435fbb6c1c", { defaultValue: "Streams can be minted on-chain or published off-chain entirely" }),
+      ];
+    },
+    get weaknesses() {
+      return [
+        _translateCopy("copy.4860f8d7cf70", { defaultValue: "Smaller audience than the Web2 platforms it replaces" }),
+      ];
+    },
+    get bestFor() { return _translateCopy("copy.a06bf732351e", { defaultValue: "Creators who want Twitch-style streaming plus on-chain ownership and payments in one place." }); },
   },
   {
     name: 'Streamplace',
-    network: 'AT Protocol (the Bluesky network)',
+    get network() { return _translateCopy("copy.0eb34f866630", { defaultValue: "AT Protocol (the Bluesky network)" }); },
     launched: '2024',
-    model: 'Open-source live video layer for AT Protocol',
-    monetization: 'None built in yet',
-    strengths: [
-      'Your Bluesky handle is your streaming identity — no separate account',
-      'Fully open source, self-hostable',
-      'Signs every stream segment for provenance, so clips can be traced to source',
-    ],
-    weaknesses: [
-      'Very early — typically a dozen or so concurrent streams',
-      'No creator payments yet',
-    ],
-    bestFor: 'Bluesky users who want to go live to the followers they already have.',
+    get model() { return _translateCopy("copy.d5ba1f3887fa", { defaultValue: "Open-source live video layer for AT Protocol" }); },
+    get monetization() { return _translateCopy("copy.fcae01a703a4", { defaultValue: "None built in yet" }); },
+    get strengths() {
+      return [
+        _translateCopy("copy.37068b9d1d1f", { defaultValue: "Your Bluesky handle is your streaming identity — no separate account" }),
+        _translateCopy("copy.a2bae105fbb1", { defaultValue: "Fully open source, self-hostable" }),
+        _translateCopy("copy.f66fd5b412f4", { defaultValue: "Signs every stream segment for provenance, so clips can be traced to source" }),
+      ];
+    },
+    get weaknesses() {
+      return [
+        _translateCopy("copy.a6f884deb7a7", { defaultValue: "Very early — typically a dozen or so concurrent streams" }),
+        _translateCopy("copy.7731d4d703bd", { defaultValue: "No creator payments yet" }),
+      ];
+    },
+    get bestFor() { return _translateCopy("copy.8560c9de7520", { defaultValue: "Bluesky users who want to go live to the followers they already have." }); },
   },
   {
     name: 'Odysee',
-    network: 'LBRY protocol',
+    get network() { return _translateCopy("copy.9a4c9d318205", { defaultValue: "LBRY protocol" }); },
     launched: '2020',
-    model: 'Video-first platform with livestreaming on a content-addressed protocol',
-    monetization: 'Tips and boosts in LBC',
-    strengths: [
-      'By far the largest audience of any platform on this list',
-      'Deep back catalogue — a genuine YouTube alternative, not a demo',
-      'Content addressing means videos survive independently of the front end',
-    ],
-    weaknesses: [
-      'Livestreaming is secondary to uploaded video',
-      'Moderation reputation is a real consideration for brand-safe creators',
-    ],
-    bestFor: 'Creators who want reach today and treat live as a supplement to uploads.',
+    get model() { return _translateCopy("copy.dc4039863560", { defaultValue: "Video-first platform with livestreaming on a content-addressed protocol" }); },
+    get monetization() { return _translateCopy("copy.49ea50938e00", { defaultValue: "Tips and boosts in LBC" }); },
+    get strengths() {
+      return [
+        _translateCopy("copy.83556005fdcf", { defaultValue: "By far the largest audience of any platform on this list" }),
+        _translateCopy("copy.6b5096f9a728", { defaultValue: "Deep back catalogue — a genuine YouTube alternative, not a demo" }),
+        _translateCopy("copy.5dfd52b0e769", { defaultValue: "Content addressing means videos survive independently of the front end" }),
+      ];
+    },
+    get weaknesses() {
+      return [
+        _translateCopy("copy.f9dd20553217", { defaultValue: "Livestreaming is secondary to uploaded video" }),
+        _translateCopy("copy.0b94536e63ba", { defaultValue: "Moderation reputation is a real consideration for brand-safe creators" }),
+      ];
+    },
+    get bestFor() { return _translateCopy("copy.49342b5c6b2a", { defaultValue: "Creators who want reach today and treat live as a supplement to uploads." }); },
   },
   {
     name: '3Speak',
-    network: 'Hive',
+    get network() { return _translateCopy("copy.af48338f0994", { defaultValue: "Hive" }); },
     launched: '2019',
-    model: 'Video and live built on the Hive social blockchain',
-    monetization: 'Hive post rewards, paid out from the chain itself',
-    strengths: [
-      'Earnings come from the protocol, not from advertisers',
-      'Established, genuinely active creator community',
-      'Your account is a Hive account, portable across every Hive app',
-    ],
-    weaknesses: [
-      'Audience is largely the existing Hive community',
-      'Rewards fluctuate with the token',
-    ],
-    bestFor: 'Creators already in the Hive ecosystem, or anyone who wants chain-funded rewards.',
+    get model() { return _translateCopy("copy.9c5a20ebdec2", { defaultValue: "Video and live built on the Hive social blockchain" }); },
+    get monetization() { return _translateCopy("copy.72656f38cb64", { defaultValue: "Hive post rewards, paid out from the chain itself" }); },
+    get strengths() {
+      return [
+        _translateCopy("copy.3b7296571a00", { defaultValue: "Earnings come from the protocol, not from advertisers" }),
+        _translateCopy("copy.2ced877b1780", { defaultValue: "Established, genuinely active creator community" }),
+        _translateCopy("copy.7f7935d3ea6f", { defaultValue: "Your account is a Hive account, portable across every Hive app" }),
+      ];
+    },
+    get weaknesses() {
+      return [
+        _translateCopy("copy.bf4009809984", { defaultValue: "Audience is largely the existing Hive community" }),
+        _translateCopy("copy.662235972632", { defaultValue: "Rewards fluctuate with the token" }),
+      ];
+    },
+    get bestFor() { return _translateCopy("copy.5bb9de87001b", { defaultValue: "Creators already in the Hive ecosystem, or anyone who wants chain-funded rewards." }); },
   },
   {
     name: 'zap.stream',
-    network: 'Nostr + Bitcoin Lightning',
+    get network() { return _translateCopy("copy.63acfab9c9a3", { defaultValue: "Nostr + Bitcoin Lightning" }); },
     launched: '2023',
-    model: 'Live streaming published as Nostr events, paid in sats',
-    monetization: 'Lightning zaps straight to the creator',
-    strengths: [
-      'Tips settle instantly in Bitcoin, with no platform cut taken from them',
-      'No account to create — your Nostr key is your identity',
-      'Streams are discoverable in any Nostr client that supports live events',
-    ],
-    weaknesses: [
-      'Costs the streamer sats per minute to broadcast',
-      'Small audience — single-digit viewer counts are normal',
-    ],
-    bestFor: 'Bitcoiners who want to be paid in sats with no intermediary.',
+    get model() { return _translateCopy("copy.f58e87f94f3e", { defaultValue: "Live streaming published as Nostr events, paid in sats" }); },
+    get monetization() { return _translateCopy("copy.90f503f88af8", { defaultValue: "Lightning zaps straight to the creator" }); },
+    get strengths() {
+      return [
+        _translateCopy("copy.c7babcce15f1", { defaultValue: "Tips settle instantly in Bitcoin, with no platform cut taken from them" }),
+        _translateCopy("copy.b5c781a0f8e1", { defaultValue: "No account to create — your Nostr key is your identity" }),
+        _translateCopy("copy.a22b3f1b66a6", { defaultValue: "Streams are discoverable in any Nostr client that supports live events" }),
+      ];
+    },
+    get weaknesses() {
+      return [
+        _translateCopy("copy.32a7f30dd810", { defaultValue: "Costs the streamer sats per minute to broadcast" }),
+        _translateCopy("copy.359e0370947c", { defaultValue: "Small audience — single-digit viewer counts are normal" }),
+      ];
+    },
+    get bestFor() { return _translateCopy("copy.182776d50439", { defaultValue: "Bitcoiners who want to be paid in sats with no intermediary." }); },
   },
   {
     name: 'Audius',
-    network: 'Solana',
+    get network() { return _translateCopy("copy.be4b0c384393", { defaultValue: "Solana" }); },
     launched: '2019',
-    model: 'Decentralized music streaming',
-    monetization: 'Artist tokens, tipping, paid tracks',
-    strengths: [
-      'The largest user base of any decentralized streaming app',
-      'Genuinely good listening experience — it competes on UX, not ideology',
-      'Direct artist-to-fan payments',
-    ],
-    weaknesses: [
-      'Music only — no video or live video',
-    ],
-    bestFor: 'Musicians who want distribution without a label or a streaming middleman.',
+    get model() { return _translateCopy("copy.d42c9db42c77", { defaultValue: "Decentralized music streaming" }); },
+    get monetization() { return _translateCopy("copy.5a184faf0435", { defaultValue: "Artist tokens, tipping, paid tracks" }); },
+    get strengths() {
+      return [
+        _translateCopy("copy.fa1fc0994cb9", { defaultValue: "The largest user base of any decentralized streaming app" }),
+        _translateCopy("copy.73e9ff9aa4db", { defaultValue: "Genuinely good listening experience — it competes on UX, not ideology" }),
+        _translateCopy("copy.880ebaca3ba5", { defaultValue: "Direct artist-to-fan payments" }),
+      ];
+    },
+    get weaknesses() {
+      return [
+        _translateCopy("copy.94aec3f9d756", { defaultValue: "Music only — no video or live video" }),
+      ];
+    },
+    get bestFor() { return _translateCopy("copy.d68ef13a49c4", { defaultValue: "Musicians who want distribution without a label or a streaming middleman." }); },
   },
 ];
 
 const FAQ_ITEMS: { q: string; a: string }[] = [
   {
-    q: 'Why are Theta and Livepeer not on this list?',
-    a: "Because neither is a place you watch anything. Theta and Livepeer are decentralized video infrastructure — networks that handle transcoding and delivery underneath other apps. They are genuinely important, and several platforms on this list run on them, but you cannot open Livepeer and find a stream. This guide only covers apps with an audience and a front door.",
+    get q() { return _translateCopy("copy.b77c1e3b9b89", { defaultValue: "Why are Theta and Livepeer not on this list?" }); },
+    get a() { return _translateCopy("copy.2fb3a8c51b56", { defaultValue: "Because neither is a place you watch anything. Theta and Livepeer are decentralized video infrastructure — networks that handle transcoding and delivery underneath other apps. They are genuinely important, and several platforms on this list run on them, but you cannot open Livepeer and find a stream. This guide only covers apps with an audience and a front door." }); },
   },
   {
-    q: 'What happened to DLive?',
-    a: 'DLive shut down in April 2026 after eight years. It is still listed as a live option on most comparison pages, which is a reasonable way to judge how current any given list is. Its closure is also the clearest illustration of the risk in this space: a decentralized platform with a centralized company behind it can still switch off.',
+    get q() { return _translateCopy("copy.4b566fa7c492", { defaultValue: "What happened to DLive?" }); },
+    get a() { return _translateCopy("copy.dbb74ed3b856", { defaultValue: "DLive shut down in April 2026 after eight years. It is still listed as a live option on most comparison pages, which is a reasonable way to judge how current any given list is. Its closure is also the clearest illustration of the risk in this space: a decentralized platform with a centralized company behind it can still switch off." }); },
   },
   {
-    q: 'Is decentralized streaming actually usable in 2026?',
-    a: 'For uploaded video and music, yes — Odysee and Audius both have real audiences and mature apps. For live video the honest answer is that audiences are still small; the drawcards are ownership, payments that are not gated behind follower counts, and the fact that nobody can demonetize you unilaterally.',
+    get q() { return _translateCopy("copy.3d33e16c77ef", { defaultValue: "Is decentralized streaming actually usable in 2026?" }); },
+    get a() { return _translateCopy("copy.80cec636e2ea", { defaultValue: "For uploaded video and music, yes — Odysee and Audius both have real audiences and mature apps. For live video the honest answer is that audiences are still small; the drawcards are ownership, payments that are not gated behind follower counts, and the fact that nobody can demonetize you unilaterally." }); },
   },
   {
-    q: 'How quickly do tips actually reach the creator?',
-    a: 'On DeHub a tip settles on-chain to your own wallet as it is sent, during the stream. There is no payout threshold to clear, no monthly payout date and no holding period, so the balance is yours to spend, swap or cash out straight away. That is the practical difference from an ad-funded platform, where the same money reaches you weeks later and only once you have cleared a minimum.',
+    get q() { return _translateCopy("copy.1a7f6dcad752", { defaultValue: "How quickly do tips actually reach the creator?" }); },
+    get a() { return _translateCopy("copy.9bbf96f13cc8", { defaultValue: "On DeHub a tip settles on-chain to your own wallet as it is sent, during the stream. There is no payout threshold to clear, no monthly payout date and no holding period, so the balance is yours to spend, swap or cash out straight away. That is the practical difference from an ad-funded platform, where the same money reaches you weeks later and only once you have cleared a minimum." }); },
   },
   {
-    q: 'Do I need crypto to start streaming on DeHub?',
-    a: 'No. You can sign in with email or a social account, go live without a wallet, and publish off-chain if you prefer. Minting a stream on-chain is an option rather than a requirement, and there is no gas cost to the creator when you take that route.',
+    get q() { return _translateCopy("copy.0342e0eaa827", { defaultValue: "Do I need crypto to start streaming on DeHub?" }); },
+    get a() { return _translateCopy("copy.f03fe31d8277", { defaultValue: "No. You can sign in with email or a social account, go live without a wallet, and publish off-chain if you prefer. Minting a stream on-chain is an option rather than a requirement, and there is no gas cost to the creator when you take that route." }); },
   },
 ];
 

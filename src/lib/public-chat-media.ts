@@ -1,3 +1,5 @@
+import { translateCopy as _translateCopy } from '@/i18n/copy';
+
 /**
  * What a picture or file attached in Public Chat has to be to get posted.
  *
@@ -27,17 +29,17 @@ export function validatePublicChatMedia(file: Pick<File, 'type' | 'size' | 'name
   if (!type.startsWith('image/')) {
     return {
       ok: false,
-      error: 'Files can only be shared in direct messages. Public Chat accepts photos (JPG, PNG, GIF, WebP).',
+      error: _translateCopy('copy.71ba503b40e2', { defaultValue: 'Files can only be shared in direct messages. Public Chat accepts photos (JPG, PNG, GIF, WebP).' }),
     };
   }
   if (!(PUBLIC_CHAT_IMAGE_TYPES as readonly string[]).includes(type)) {
     return {
       ok: false,
-      error: 'That image format isn’t supported in Public Chat. Use JPG, PNG, GIF or WebP.',
+      error: _translateCopy('copy.4f164f8f6f98', { defaultValue: 'That image format isn’t supported in Public Chat. Use JPG, PNG, GIF or WebP.' }),
     };
   }
   if (file.size > PUBLIC_CHAT_IMAGE_MAX_SIZE) {
-    return { ok: false, error: 'Image must be less than 10MB' };
+    return { ok: false, error: _translateCopy('copy.61247515dbaa', { defaultValue: 'Image must be less than 10MB' }) };
   }
   return { ok: true };
 }

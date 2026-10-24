@@ -201,7 +201,7 @@ export function TipModal({
     return num;
   }
 
-  const chainName = getChainById(tipChainId)?.name ?? 'chain';
+  const chainName = getChainById(tipChainId)?.name ?? _copy("copy.9414886b1ebf", { defaultValue: "chain" });
   // What "All" can actually send: the bigger of the two, since either is
   // reachable without the tipper doing anything.
   const dhbBalance = balances
@@ -325,7 +325,7 @@ export function TipModal({
                 </p>
               ) : dhbBalance != null && (
                 <p className="text-white/30 text-xs">
-                  {dhbBalance.toLocaleString()} <DhbCoin />{_copy("copy.9b15afcf73c5", { defaultValue: " · via " })}{chainName}
+                  {dhbBalance.toLocaleString()} <DhbCoin />{_copy("copy.73cd2a424191", { defaultValue: " · via {{value1}}", value1: chainName })}
                 </p>
               )}
             </div>
@@ -335,7 +335,7 @@ export function TipModal({
                 <Input
                   type="text"
                   inputMode="decimal"
-                  placeholder={directToken ? 'e.g. 5' : 'e.g. 500, 1.5k, 2m'}
+                  placeholder={directToken ? _copy("copy.e6d53f2e5db0", { defaultValue: "e.g. 5" }) : _copy("copy.ecc6cfdd0163", { defaultValue: "e.g. 500, 1.5k, 2m" })}
                   value={amount}
                   onChange={(e) => setAmount(e.target.value)}
                   className="pl-11 bg-white/5 border-white/10 text-white placeholder:text-white/40 h-12 rounded-xl"

@@ -244,12 +244,12 @@ export function SpendPowerDrawer({ power, onOpenChange }: SpendPowerDrawerProps)
           if (power.key === 'signal_flare' || power.key === 'harpoon') {
             const label = power.key === 'harpoon' ? 'Harpoon' : 'Signal Flare';
             toast.promise(waitForSignalFlareReceipt(booking.id), {
-              loading: `${label} sent. Counting notifications...`,
+              loading: _copy("copy.6310c4498df1", { defaultValue: "{{value1}} sent. Counting notifications...", value1: label }),
               success: recipients =>
                 recipients === null
-                  ? `${label} sent. The final count will appear in Past usage.`
-                  : `${label} notified ${recipients} ${recipients === 1 ? 'person' : 'people'}`,
-              error: `${label} sent. The final count will appear in Past usage.`,
+                  ? _copy("copy.f56abda33b4f", { defaultValue: "{{value1}} sent. The final count will appear in Past usage.", value1: label })
+                  : _copy("copy.465e9ba799d1", { defaultValue: "{{value1}} notified {{count}} people", value1: label, count: recipients }),
+              error: _copy("copy.f56abda33b4f", { defaultValue: "{{value1}} sent. The final count will appear in Past usage.", value1: label }),
             });
           } else {
             toast.success(
@@ -492,7 +492,13 @@ export function SpendPowerDrawer({ power, onOpenChange }: SpendPowerDrawerProps)
                   >
                     <div className="min-w-0 flex-1">
                       <p className="text-sm text-white truncate">{stage.title}</p>
-                      <p className="text-[11px] text-zinc-500">{stage.status}</p>
+                      <p className="text-[11px] text-zinc-500">
+                        {stage.status === 'live'
+                          ? _copy("copy.b64ac05f17e6", { defaultValue: "Live" })
+                          : stage.status === 'scheduled'
+                            ? _copy("copy.4724f344c1c0", { defaultValue: "Scheduled" })
+                            : stage.status}
+                      </p>
                     </div>
                     {picked && <Check className="w-4 h-4 text-green-400 shrink-0" />}
                   </button>
