@@ -2839,6 +2839,9 @@
       "wallTitle": "Mọi người nói gì",
       "wallNote": "được công bố với sự cho phép",
       "anonymous": "Một thành viên DeHub"
+    },
+    "taxSplit": {
+      "grossFootnote": "Tổng doanh thu trên bao gồm BNB được chia sẻ với người nắm giữ và người staking. Những khoản thanh toán này đã được phân phối, không được giữ lại bởi DeHub. Mua lại vẫn còn riêng biệt. Mọi số tiền và tiền tệ gốc có thể được kiểm tra trong sổ cái."
     }
   },
   "superpowers": {
@@ -2976,7 +2979,8 @@
     },
     "buyTokensToUnlockBadge": "Bất kỳ người giữ huy hiệu nào cũng nhận được Siêu Năng Lực. Mua token DeHub để mở khóa huy hiệu — không yêu cầu staking.",
     "buyTokensToUnlock": "Mua token DeHub để mở khóa huy hiệu và Siêu Năng Lực của nó. Bất kỳ người giữ huy hiệu nào cũng nhận được chúng — không yêu cầu staking.",
-    "goldenHourStarted": "Golden Hour đang chạy trong {{minutes}} phút — mọi thứ bạn đăng bây giờ đều được tính gấp đôi"
+    "goldenHourStarted": "Golden Hour đang chạy trong {{minutes}} phút — mọi thứ bạn đăng bây giờ đều được tính gấp đôi",
+    "signalFlareTo": "Phát tín hiệu cho {{people}} người"
   },
   "work": {
     "integrity": {

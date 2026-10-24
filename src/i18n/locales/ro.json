@@ -2823,6 +2823,9 @@
       "wallTitle": "Ce spun oamenii",
       "wallNote": "publicat cu permisiune",
       "anonymous": "Un membru DeHub"
+    },
+    "taxSplit": {
+      "grossFootnote": "Veniturile totale de mai sus includ BNB partajate cu deținătorii și stackerii. Aceste plăți au fost distribuite, nu reținute de DeHub. Răscumpărările rămân separate. Fiecare sumă și monedă originală pot fi inspectate în registru."
     }
   },
   "superpowers": {
@@ -2960,7 +2963,8 @@
     },
     "buyTokensToUnlockBadge": "Orice deținător de insignă primește SuperPuteri. Cumpără token-uri DeHub pentru a debloca o insignă — nu este necesară miză.",
     "buyTokensToUnlock": "Cumpără token-uri DeHub pentru a debloca o insignă și Superputerile acesteia. Orice deținător de insignă le primește — nu este necesară miză.",
-    "goldenHourStarted": "Golden Hour rulează timp de {{minutes}} minute — tot ce postezi acum contează dublu"
+    "goldenHourStarted": "Golden Hour rulează timp de {{minutes}} minute — tot ce postezi acum contează dublu",
+    "signalFlareTo": "Semnal luminos către {{people}} persoane"
   },
   "work": {
     "integrity": {

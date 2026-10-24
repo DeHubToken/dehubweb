@@ -2758,6 +2758,9 @@
       "wallTitle": "İnsanlar nə deyir",
       "wallNote": "icazə ilə dərc edilmişdir",
       "anonymous": "DeHub üzvü"
+    },
+    "taxSplit": {
+      "grossFootnote": "Gösterilən gəlir cəmi BNB-nin sahiplər və stakerlərə paylanmış hissəsini də əhatə edir. Bu ödənişlər DeHub tərəfindən saxlanılmadı, paylandı. Alış-satışlar ayrı qalır. Her hansısa məbləğ və orijinal valyutanın hər birini ledjerdə araşdırmaq mümkündür."
     }
   },
   "superpowers": {
@@ -2895,7 +2898,8 @@
     },
     "buyTokensToUnlockBadge": "Hər hansı bir nişan sahibi SuperGüclər əldə edir. Nişanı aktivləşdirmək üçün DeHub tokenləri alın — steykinq tələb olunmur.",
     "buyTokensToUnlock": "Nişanı və onun SuperGüclərini aktivləşdirmək üçün DeHub tokenləri alın. Hər hansı bir nişan sahibi onları əldə edir — steykinq tələb olunmur.",
-    "goldenHourStarted": "Golden Hour {{minutes}} dəqiqə davam edir — indi yazdığınız hər şey ikiqat sayılır"
+    "goldenHourStarted": "Golden Hour {{minutes}} dəqiqə davam edir — indi yazdığınız hər şey ikiqat sayılır",
+    "signalFlareTo": "{{people}} nəfər üçün siqnal parıltısı"
   },
   "work": {
     "integrity": {

@@ -2769,6 +2769,9 @@
       "wallTitle": "I ka mɔgɔw b'a fɔ min ye",
       "wallNote": "6. Ni n' ka sira di, n' ka sɛbɛ",
       "anonymous": "DeHub kɔ"
+    },
+    "taxSplit": {
+      "grossFootnote": "O wari bɛɛ ye BNB ye min be sɔrɔ a kɔnɔ. O wariw tun tilannin lo, nka DeHub tun tɛ u mara. O la, a ka ɲi ka kɛ ni wari ye min be se ka kɛ a ka wari ye."
     }
   },
   "superpowers": {
@@ -2906,7 +2909,8 @@
     },
     "buyTokensToUnlockBadge": "O bɛɛ n'a ta, a ka ɲi ka kɛ ni fanga ye. DeHub ka tagamasiɲɛw san walisa ka batɛmu dɔ yɛlɛ.",
     "buyTokensToUnlock": "DeHub ka tagamasiɲɛw san walisa ka batɛmu n'a ka setigiya yira. Mɔgɔ minw be batɛmu ta, olu mako t'a la u ka batɛmu ta.",
-    "goldenHourStarted": "Golden Hour 跑 {{minutes}} 分钟 — 你现在发布的每一条内容都将获得双倍计数"
+    "goldenHourStarted": "Golden Hour 跑 {{minutes}} 分钟 — 你现在发布的每一条内容都将获得双倍计数",
+    "signalFlareTo": "Mɔgɔ minw be weele ko {{people}}"
   },
   "work": {
     "integrity": {

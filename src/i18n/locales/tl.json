@@ -2874,6 +2874,9 @@
       "wallTitle": "Ano ang sinasabi ng mga tao",
       "wallNote": "inilabas na may pahintulot",
       "anonymous": "Isang miyembro ng DeHub"
+    },
+    "taxSplit": {
+      "grossFootnote": "Kabilang sa kabuuang kita sa itaas ang IBINAHAGI ng BNB sa mga may hawak at staker. Ang mga pagbabayad na ito ay ipinamamahagi, hindi pinanatili ng DeHub. Ang mga buyback ay nananatiling hiwalay. Ang bawat halaga at orihinal na pera ay maaaring suriin sa ledger."
     }
   },
   "superpowers": {
@@ -3011,7 +3014,8 @@
     },
     "buyTokensToUnlockBadge": "Ang sinumang may hawak na badge ay makakakuha ng SuperPowers. Bumili ng DeHub tokens para mag-unlock ng badge — hindi kailangan ang staking.",
     "buyTokensToUnlock": "Bumili ng DeHub tokens para mag-unlock ng badge at ng mga SuperPowers nito. Ang sinumang may hawak na badge ay makakakuha nito — hindi kailangan ang staking.",
-    "goldenHourStarted": "Golden Hour ay tumatakbo sa {{minutes}} minuto — lahat ng iyong ipo-post ngayon ay doble ang bilang"
+    "goldenHourStarted": "Golden Hour ay tumatakbo sa {{minutes}} minuto — lahat ng iyong ipo-post ngayon ay doble ang bilang",
+    "signalFlareTo": "Signal Flare sa {{people}} mga tao"
   },
   "work": {
     "integrity": {

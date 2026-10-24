@@ -2775,6 +2775,9 @@
       "wallTitle": "ሰዎች ምን ይላሉ",
       "wallNote": "በፈቃድ ታትሞ",
       "anonymous": "DeHub አባል"
+    },
+    "taxSplit": {
+      "grossFootnote": "እቲ ኣብ ላዕሊ ዝተጠቕሰ ሓፈሻዊ ኣታዊ BNB ምስ ነጋዶን ነጋዶን ዝተኸፍለ እዩ ። እዚ ክፍሊት እዚ ብዴሁብ ዘይተኸፍለ እዩ ነይሩ ። ናይ መግዛእቲ ተመላሽታት ዝተፈለየ ኮይኑ ይጸንሕ ። ነፍሲ ወከፍ መጠን ከምኡ'ውን ናይ መጀመርታ ገንዘብ ኣብ LEDger ክምርመር ይኽእል እዩ ።"
     }
   },
   "superpowers": {
@@ -2911,7 +2914,8 @@
     },
     "buyTokensToUnlockBadge": "ዝኾነ ኣካል ባጅ ዝህልዎ ሱፐር ሃይለታት ይረክብ። ባጅ ንምኽፋት DeHub ቶክን ግዛእ — ሰለፍቲ ኣይድለይን።",
     "buyTokensToUnlock": "ባጅን ሱፐር ሃይለታቱን ንምኽፋት DeHub ቶክን ግዛእ። ዝኾነ ባጅ ዝህልዎ ይረኽቦም — ሰለፍቲ ኣይድለይን።",
-    "goldenHourStarted": "Golden Hour ን {{minutes}} ደቓይቕ ይካየድ ኣሎ — እቲ ሎሚ እትጽሕፎ ኩሉ ክልተ እጽርፍ"
+    "goldenHourStarted": "Golden Hour ን {{minutes}} ደቓይቕ ይካየድ ኣሎ — እቲ ሎሚ እትጽሕፎ ኩሉ ክልተ እጽርፍ",
+    "signalFlareTo": "ናብ {{people}} ሰባት ምልክት ሓዊ (Signal Flare)"
   },
   "work": {
     "integrity": {

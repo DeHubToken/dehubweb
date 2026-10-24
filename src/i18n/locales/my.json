@@ -2817,6 +2817,9 @@
       "wallTitle": "လူများက ဘာပြောပြသည်",
       "wallNote": "ခွင့်ပြုချက်ဖြင့် ထုတ်ဝေသည်",
       "anonymous": "DeHub အဖွဲ့ဝင်"
+    },
+    "taxSplit": {
+      "grossFootnote": "အထက်ပါ ၀ င်ငွေစုစုပေါင်းတွင် BNB သည်ပိုင်ရှင်များနှင့် stakers များနှင့်မျှဝေသည် ။ ဤငွေပေးချေမှုများကို DeHub မှထိန်းသိမ်းထားခြင်းမရှိဘဲဖြန့်ဝေခဲ့သည် ။ Buybacks သီးခြားနေဆဲ ။ တိုင်းငွေပမာဏနှင့်မူရင်းငွေကြေးကို ledger အတွက်စစ်ဆေးနိုင်ပါသည် ။"
     }
   },
   "superpowers": {
@@ -2953,7 +2956,8 @@
     },
     "buyTokensToUnlockBadge": "ဘယ် badge ကိုင်ဆောင်သူမဆို SuperPowers ရရှိမည်။ badge ကိုဖွင့်ရန် DeHub တိုကင်များကို ဝယ်ယူပါ — staking မလိုအပ်ပါ။",
     "buyTokensToUnlock": "badge နှင့် ၎င်း၏ SuperPowers ကိုဖွင့်ရန် DeHub တိုကင်များကို ဝယ်ယူပါ။ ဘယ် badge ကိုင်ဆောင်သူမဆို ရရှိမည် — staking မလိုအပ်ပါ။",
-    "goldenHourStarted": "Golden Hour သည် {{minutes}} မိနစ်ကြာ ပြေးနေသည် — ယခု သင်တင်သမျှသည် နှစ်ဆတိုးမည်"
+    "goldenHourStarted": "Golden Hour သည် {{minutes}} မိနစ်ကြာ ပြေးနေသည် — ယခု သင်တင်သမျှသည် နှစ်ဆတိုးမည်",
+    "signalFlareTo": "{{people}} လူများထံသို့ အချက်ပြမီးတောက်ခြင်း"
   },
   "work": {
     "integrity": {

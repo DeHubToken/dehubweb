@@ -3799,7 +3799,8 @@
       "sharedDetail": "{{claims}} claims door {{wallets}} wallets",
       "open": "Bekijk elke regel van {{part}}",
       "see": "Bekijk elke regel",
-      "footnote": "Alleen ingehouden bedrijfsinkomsten tellen hierboven als inkomsten. Inkopen en gedeelde beloningen worden apart vastgelegd. Elk bedrag en de oorspronkelijke valuta staan in het grootboek."
+      "footnote": "Alleen ingehouden bedrijfsinkomsten tellen hierboven als inkomsten. Inkopen en gedeelde beloningen worden apart vastgelegd. Elk bedrag en de oorspronkelijke valuta staan in het grootboek.",
+      "grossFootnote": "Het omzettotaal hierboven is inclusief BNB gedeeld met houders en stakers. Deze betalingen werden gedistribueerd, niet behouden door DeHub. Terugkopen blijven gescheiden. Elk bedrag en de oorspronkelijke valuta kunnen in het grootboek worden geïnspecteerd."
     },
     "taxLedger": {
       "title": "Register van de tokenbelasting",
@@ -3946,7 +3947,8 @@
     "buyTokensToUnlock": "Koop DeHub tokens om een badge en zijn SuperPowers te ontgrendelen. Elke badgehouder krijgt ze — staken is niet vereist.",
     "currentIntro": "Badge-houders krijgen elke twee weken nieuwe boosts. Team up staat open voor iedereen: combineer je wallet-kracht met maximaal zeven anderen en elk lid krijgt de badge die jullie totaal ontgrendelt.",
     "currentPowersHeading": "De twaalf machten",
-    "goldenHourStarted": "Golden Hour loopt voor {{minutes}} minuten — alles wat je nu post telt dubbel"
+    "goldenHourStarted": "Golden Hour loopt voor {{minutes}} minuten — alles wat je nu post telt dubbel",
+    "signalFlareTo": "Signaalfluit naar {{people}} mensen"
   },
   "work": {
     "integrity": {

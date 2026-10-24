@@ -3606,7 +3606,8 @@
       "sharedDetail": "{{claims}} reclamaciones de {{wallets}} carteras",
       "open": "Ver cada línea de {{part}}",
       "see": "Ver cada línea",
-      "footnote": "Solo los fondos operativos retenidos cuentan como ingresos arriba. Las recompras y las recompensas compartidas se registran por separado. Todos los importes y monedas originales se pueden consultar en el registro."
+      "footnote": "Solo los fondos operativos retenidos cuentan como ingresos arriba. Las recompras y las recompensas compartidas se registran por separado. Todos los importes y monedas originales se pueden consultar en el registro.",
+      "grossFootnote": "El total de ingresos anterior incluye BNB compartido con tenedores y stakers. Estos pagos fueron distribuidos, no retenidos por DeHub. Las recompras permanecen separadas. Cada cantidad y moneda original se pueden inspeccionar en el libro mayor."
     },
     "taxLedger": {
       "title": "Libro del impuesto del token",
@@ -3753,7 +3754,8 @@
     "buyTokensToUnlock": "Compra tokens DeHub para desbloquear una insignia y sus Superpoderes. Cualquier poseedor de insignia los obtiene; no se requiere staking.",
     "currentIntro": "Los titulares de insignia reciben nuevos impulsos cada quince días. Team up está abierto a todos: combina la potencia de tu cartera con hasta otras siete personas y cada miembro recibe la insignia que desbloquea el total.",
     "currentPowersHeading": "Las doce facultades",
-    "goldenHourStarted": "Golden Hour en curso durante {{minutes}} minutos — todo lo que publiques ahora cuenta el doble"
+    "goldenHourStarted": "Golden Hour en curso durante {{minutes}} minutos — todo lo que publiques ahora cuenta el doble",
+    "signalFlareTo": "Llamarada de señal a {{people}} personas"
   },
   "work": {
     "integrity": {
