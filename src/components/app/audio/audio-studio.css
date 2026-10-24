@@ -99,7 +99,7 @@ html:is([data-theme='system'],[data-theme='glass']) [data-audio-frame][data-vide
 [data-audio-frame][data-video-fullscreen] [data-audio-studio] { max-width:760px; }
 /* Fullscreen shows the animation edge to edge; the card around it steps aside. */
 [data-audio-frame][data-video-fullscreen]:has([data-audio-studio-fullscreen]) [data-audio-backdrop] > .absolute:not(#_) { padding:0; }
-[data-audio-studio][data-audio-studio-fullscreen]:not(#_) { position:absolute; inset:0; max-width:none; width:100%; height:100%; padding:0; border:0; border-radius:0; background:#000; box-shadow:none; }
+[data-audio-studio][data-audio-studio-fullscreen]:not(#_) { --studio-ink:#f3f5f6; position:absolute; inset:0; max-width:none; width:100%; height:100%; padding:0; border:0; border-radius:0; background:#000; box-shadow:none; }
 [data-audio-studio-fullscreen] :is([data-audio-studio-title],[data-audio-studio-deck],[data-audio-studio-options]) { display:none; }
 [data-audio-studio-fullscreen] [data-audio-studio-motion] { position:absolute; inset:0; margin:0; border-radius:0; box-shadow:none; }
 [data-audio-studio-fullscreen] [data-audio-studio-motion] canvas { height:100% !important; border-radius:0; }
