@@ -140,17 +140,17 @@ export default function StoreDetailPage() {
                 alt={store.name || ''}
               />
             ) : (
-              <div className="w-20 h-20 sm:w-24 sm:h-24 rounded-[10px] bg-white/10 flex items-center justify-center text-xl sm:text-2xl font-bold text-primary-foreground">
+              <div className="w-20 h-20 sm:w-24 sm:h-24 rounded-[10px] bg-white/10 flex items-center justify-center text-xl sm:text-2xl font-bold text-foreground">
                 {storeInitial}
               </div>
             )}
           </div>
 
           <div className="mt-3">
-            <h2 className="text-lg sm:text-xl font-bold text-primary-foreground">{store.name || t('stores.store')}</h2>
+            <h2 className="text-lg sm:text-xl font-bold text-foreground">{store.name || t('stores.store')}</h2>
             <p className="text-xs text-muted-foreground">{t('stores.listingCount', { count: listings.length })}</p>
             {store.description && (
-              <p className="mt-2 text-sm text-primary-foreground/80">{store.description}</p>
+              <p className="mt-2 text-sm text-foreground/80">{store.description}</p>
             )}
           </div>
         </div>
@@ -158,7 +158,7 @@ export default function StoreDetailPage() {
 
       {/* Listings grid */}
       <div className="px-2 sm:px-1">
-        <h2 className="text-sm font-semibold text-primary-foreground mb-3">{t('stores.listings')}</h2>
+        <h2 className="text-sm font-semibold text-foreground mb-3">{t('stores.listings')}</h2>
         {listingsLoading ? (
           <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
             {Array.from({ length: 4 }).map((_, i) => (
