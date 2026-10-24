@@ -654,7 +654,7 @@ export function FollowersListDrawer({
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               placeholder={t('follow.searchPlaceholder')}
-              className="w-full h-9 pl-9 pr-8 rounded-lg bg-white/5 border border-white/10 text-white text-sm placeholder:text-zinc-500 focus:outline-none focus:ring-1 focus:ring-white/20"
+              className="w-full h-9 pl-9 pr-8 rounded-lg bg-white/5 border border-white/10 text-white text-sm placeholder:text-zinc-500 focus:outline-none focus:ring-1 focus:ring-white/20 [&::-webkit-search-cancel-button]:hidden"
             />
             {searchQuery && (
               <button
