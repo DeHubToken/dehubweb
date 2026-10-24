@@ -330,6 +330,9 @@ export function GlobalFeedNav({ postPage = false, profilePage = false, compactPr
                   data-feed-tab={tab.value}
                   data-feed-tab-btn
                   data-active={isActive ? 'true' : undefined}
+                  aria-label={tab.label}
+                  aria-current={isActive ? 'page' : undefined}
+                  title={tab.label}
                   ref={(el) => {
                     setRef(tab.value)(el);
                     tabButtonPositions.current[tab.value] = el;
