@@ -36,11 +36,24 @@
 [data-audio-studio-transport] [data-audio-studio-play] svg { width:23px; height:23px; }
 [data-material='glass'] [data-audio-studio-transport] [data-audio-studio-play] { color:#efffff; background:linear-gradient(150deg,#e1ffff35,#a4ecec08); box-shadow:inset 0 1px 1px #ffffffe0,inset 0 0 0 1px #d7ffff66,0 3px 12px #0003; }
 [data-audio-studio-options] { display:flex; flex-wrap:wrap; align-items:center; gap:14px 12px; padding:14px 4px 4px; }
-[data-audio-studio-options] select { min-width:0; flex:1; max-width:170px; border:1px solid var(--studio-edge); border-radius:10px; padding:7px 8px; background:#080b0ed9; color:inherit; font-size:11px; }
-[data-material='glass'] [data-audio-studio-options] select { background:#05262ed9; }
-[data-audio-studio-options] button { width:26px; height:28px; flex:none; }
-[data-audio-studio-options] button svg { width:16px; height:16px; }
-[data-audio-studio-options] select + button { margin-inline-start:auto; }
+[data-audio-studio-options] > button { width:26px; height:28px; flex:none; }
+[data-audio-studio-options] > button svg { width:16px; height:16px; }
+[data-audio-studio-styles] + button { margin-inline-start:auto; }
+/* Style picker: a few quick picks, the rest behind More. Selected = the profile Beam. */
+[data-audio-studio-styles] { display:flex; align-items:center; gap:4px; flex:none; }
+[data-audio-studio-styles] button, [data-audio-studio-style-menu] button { position:relative; display:inline-flex; align-items:center; justify-content:center; gap:3px; flex:none; height:28px; padding:0 10px; border-radius:999px; border:0; background:transparent; color:inherit; font-size:11px; font-weight:500; white-space:nowrap; opacity:.6; cursor:pointer; transition:opacity .2s; }
+[data-audio-studio-styles] button:hover, [data-audio-studio-style-menu] button:hover { opacity:.9; }
+:is([data-audio-studio-styles],[data-audio-studio-style-menu]) button[data-active] { opacity:1; }
+:is([data-audio-studio-styles],[data-audio-studio-style-menu]) button[data-active]::after { content:''; position:absolute; left:50%; bottom:3px; width:40%; min-width:10px; height:2px; transform:translateX(-50%); border-radius:2px; background:currentColor; box-shadow:0 0 8px currentColor,0 0 2px currentColor; }
+[data-audio-studio-styles] [data-audio-studio-more] { opacity:.85; box-shadow:inset 0 0 0 1px var(--studio-edge); padding:0 8px 0 10px; }
+[data-audio-studio-styles] [data-audio-studio-more] svg { width:12px; height:12px; opacity:.7; transform:rotate(180deg); }
+[data-audio-studio-style-menu] { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:2px; max-height:min(320px,60vh); overflow-y:auto; }
+[data-audio-studio-style-menu] button { width:100%; overflow:hidden; text-overflow:ellipsis; padding:0 6px; }
+/* Narrow cards drop a quick pick, never the playing one. */
+@container (max-width:260px) {
+  [data-audio-studio-styles] > button:nth-child(3):not([data-active]),
+  [data-audio-studio-styles]:has(> button:nth-child(3)[data-active]) > button:nth-child(2) { display:none; }
+}
 [data-audio-studio-levels] { display:flex; align-items:center; gap:12px; flex:0 0 100%; min-width:0; }
 [data-audio-studio-options] input { min-width:0; width:calc(50% - 6px); flex:1 1 calc(50% - 6px); accent-color:#dce4e7; height:18px; cursor:pointer; }
 [data-audio-studio-options] [data-audio-hue] { appearance:none; background:linear-gradient(90deg,#fff 0%,#f66 7%,#ffdc60 22%,#75e88a 38%,#68dfe9 52%,#6a8ff5 68%,#ca7af2 83%,#f66 100%); height:8px; border-radius:99px; }
