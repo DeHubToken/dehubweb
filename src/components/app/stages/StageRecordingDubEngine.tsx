@@ -29,8 +29,8 @@ export function StageRecordingDubEngine() {
     const current = getStagePlaybackState();
     setStageRecordingDubStatus(id, language, language === 'original' ? 'original' : ready ? 'ready' : failed || translation.translation?.status === 'failed' || translation.isError ? 'failed' : 'preparing');
     if (!ready && !current.paused) { waiting.current = id; pauseStageRecording(); }
-    if (ready && waiting.current === id) { waiting.current = null; resumeStageRecording(); }
-  }, [playback.spaceId, language, translation.translation?.status, translation.isError]);
+    if (ready && waiting.current === id && !current.loading) { waiting.current = null; resumeStageRecording(); }
+  }, [playback.spaceId, playback.loading, language, translation.translation?.status, translation.isError]);
   if (!playback.spaceId) return null;
   return <div hidden><StageReplayDub audioRef={audioRef} transcriptId={transcript?.id ?? ''} language={dubLanguage}
     segments={translation.translation?.status === 'ready' ? translation.translation.segments : null} onReady={onReady} /></div>;
