@@ -16,6 +16,8 @@ import { supabase } from '@/integrations/supabase/client';
 import { getAuthToken } from '@/lib/api/dehub';
 import { ensureFreshToken } from '@/lib/api/dehub/core';
 import { forgetPayment } from '@/lib/ai-payment';
+import i18next from 'i18next';
+import { isImageProviderUnavailable } from '@/lib/image-provider-error';
 
 /** Headers the paid AI functions authenticate against. Empty when signed out. */
 export function dehubAuthHeaders(): Record<string, string> {
@@ -114,14 +116,16 @@ export async function readFunctionError(error: unknown, data?: unknown): Promise
   // A 2xx that carries `{ error }` in the body — the functions do this for
   // soft failures like a safety block — is already readable.
   const inline = (data as { error?: string } | null)?.error;
-  if (inline) return inline;
+  if (inline) return isImageProviderUnavailable(inline, (data as { code?: string })?.code)
+    ? i18next.t('assistant.errorGeneric', { defaultValue: 'Sorry, I encountered an error. Please try again.' }) : inline;
 
   const context = (error as { context?: unknown })?.context;
   if (context instanceof Response) {
     try {
       const body = await context.clone().json();
       const message = (body as { error?: string })?.error;
-      if (message) return message;
+      if (message) return isImageProviderUnavailable(message, body?.code)
+        ? i18next.t('assistant.errorGeneric', { defaultValue: 'Sorry, I encountered an error. Please try again.' }) : message;
     } catch {
       // Not JSON, or already consumed. Fall through to the generic message.
     }

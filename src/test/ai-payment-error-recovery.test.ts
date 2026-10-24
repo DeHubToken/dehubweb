@@ -13,6 +13,16 @@ import { readFunctionError } from '@/lib/ai-invoke';
  *    so the DHB was gone with no handle left to retry it.
  */
 describe('paid AI error recovery', () => {
+  it('hides upstream billing locks without treating the customer payment as exhausted', async () => {
+    const error = Object.assign(new Error('non-2xx'), { context: new Response(JSON.stringify({
+      error: 'Image generation failed (403). {"detail":"User is locked. Reason: TOP_UP"}',
+    }), { status: 500 }) });
+    const message = await readFunctionError(error);
+    expect(message).not.toMatch(/TOP_UP|locked|403/);
+    const { isPaymentRequired } = await import('@/lib/ai-invoke');
+    expect(isPaymentRequired(new Error(message))).toBe(false);
+  });
+
   it('reads the reason out of the response body, not the wrapper', async () => {
     const error = Object.assign(new Error('Edge Function returned a non-2xx status code'), {
       context: new Response(JSON.stringify({ error: 'That payment has already been used up.' }), {

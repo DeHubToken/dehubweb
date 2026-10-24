@@ -9,7 +9,7 @@ async function saveOutput(job: any, result: Record<string, any>): Promise<void> 
   try {
     await archiveGeneration(job.wallet_address, job.id, {
       id: job.id, kind: job.kind === 'tool' ? (result.audioUrl ? 'audio' : 'image') : job.kind === '3d' ? 'model3d' : job.kind,
-      model: job.model, modelName: job.model, prompt: job.metadata?.prompt || job.model,
+      model: result.model || job.model, modelName: result.model || job.model, prompt: job.metadata?.prompt || job.model,
       resolvedPrompt: job.metadata?.prompt || '', aspect: job.metadata?.aspectRatio || '',
       createdAt: new Date(job.created_at).getTime(), finishedAt: Date.now(),
       ...(result.text ? { transcript: result.text } : {}),
