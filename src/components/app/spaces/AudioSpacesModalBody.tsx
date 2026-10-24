@@ -40,6 +40,7 @@ import Play from "@/components/ui/cut-icons/play";
 import Pause from "@/components/ui/cut-icons/pause";
 
 import { StageTranscriptDrawer } from './StageTranscriptDrawer';
+import { StageRecordingLanguage } from '../stages/StageRecordingLanguage';
 import { StageScreenShare } from './StageScreenShare';
 import { Drawer, DrawerContent, DrawerHeader, DrawerTitle } from '@/components/ui/drawer';
 import { LiquidGlassBubble2 } from '@/components/ui/liquid-glass-bubble-2';
@@ -589,6 +590,7 @@ export function AudioSpacesModalBody() {
                           </button>
                         )}
                         {/* Transcript button — visible to everyone if recording exists */}
+                        {space.recording_url && <StageRecordingLanguage space={space} className="max-w-44" />}
                         {space.recording_url && (
                           <button
                             onClick={(e) => {

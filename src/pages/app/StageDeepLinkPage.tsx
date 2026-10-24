@@ -65,6 +65,7 @@ import { StageScreenShare } from '@/components/app/spaces/StageScreenShare';
 import { StageRadioNowPlaying } from '@/components/app/spaces/StageRadioNowPlaying';
 import { StageChat } from '@/components/app/spaces/StageChat';
 import { StageTranscriptDrawer } from '@/components/app/spaces/StageTranscriptDrawer';
+import { StageRecordingLanguage } from '@/components/app/stages/StageRecordingLanguage';
 import { StaticWaveform } from '@/components/app/audio/StaticWaveform';
 import { StageRateButton } from '@/components/app/stages/StageRateButton';
 import { StageCaptionsButton, StageCaptionsOverlay } from '@/components/app/spaces/StageCaptions';
@@ -539,6 +540,7 @@ export default function StageDeepLinkPage() {
                 </div>
 
                 <div className="flex gap-2 mt-4">
+                  <StageRecordingLanguage space={stage} />
                   <button
                     onClick={() => setTranscriptOpen(true)}
                     className="flex-1 inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl bg-white/10 hover:bg-white/20 text-white text-sm font-medium transition-colors"

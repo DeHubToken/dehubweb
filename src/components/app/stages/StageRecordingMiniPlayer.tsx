@@ -25,7 +25,7 @@
  * @module components/app/stages/StageRecordingMiniPlayer
  */
 
-import { useEffect } from 'react';
+import { lazy, Suspense, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useLocation } from 'react-router-dom';
 import { Loader2 } from "lucide-react";
@@ -36,6 +36,8 @@ import X from "@/components/ui/cut-icons/close";
 import { cn } from '@/lib/utils';
 import { StaticWaveform } from '@/components/app/audio/StaticWaveform';
 import { StageRateButton } from '@/components/app/stages/StageRateButton';
+const StageRecordingDubEngine = lazy(() => import('./StageRecordingDubEngine').then(module => ({ default: module.StageRecordingDubEngine })));
+const StageRecordingLanguage = lazy(() => import('./StageRecordingLanguage').then(module => ({ default: module.StageRecordingLanguage })));
 
 import {
   scrubStageRecording,
@@ -63,9 +65,9 @@ export function StageRecordingMiniPlayer() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [pathname]);
 
-  if (!spaceId || !popout) return null;
-
   return (
+    <><Suspense fallback={null}>{spaceId && <StageRecordingDubEngine />}</Suspense>
+    {spaceId && popout && (
     <div
       className={cn(
         'fixed left-4 bottom-20 md:bottom-4 z-50 select-none',
@@ -132,8 +134,9 @@ export function StageRecordingMiniPlayer() {
 
           <StageRateButton />
         </div>
+        <div className="mt-2"><Suspense fallback={null}><StageRecordingLanguage space={{ id: spaceId }} /></Suspense></div>
       </div>
-    </div>
+    </div>)}</>
   );
 }
 

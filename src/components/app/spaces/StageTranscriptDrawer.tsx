@@ -62,13 +62,10 @@ import { toast } from 'sonner';
 import type { AudioSpace } from '@/types/audio-spaces.types';
 import { formatTimestamp, formatTxt, formatSrt, downloadFile } from '@/lib/transcript-format';
 import { useAuth } from '@/contexts/AuthContext';
-import { PLAYBACK_RATES } from '@/lib/video-preferences';
-import { getStagePlaybackState } from '@/lib/stage-playback';
-import { stopStageRecording } from '@/lib/stage-playback';
-import { playableStageRecording } from '@/lib/stage-recording-source';
-import { StageReplayDub } from './StageReplayDub';
+import { useStagePlayback, seekStageRecordingToTime } from '@/lib/stage-playback';
+import { useStageRecordingLanguage, setStageRecordingLanguage } from '@/lib/stage-recording-language';
+import { StageRecordingPlayer } from '../stages/StageRecordingPlayer';
 import { primeSpeech } from '@/hooks/dub-preference';
-import { formatStageRate } from '@/components/app/stages/StageRateButton';
 import { usePendingAction } from '@/hooks/use-pending-action';
 import { viewerShareUrl } from '@/lib/share-url';
 import { trackShare } from '@/lib/analytics';
@@ -291,156 +288,24 @@ function SpeakerHeader({
 
 /* ────────────────────────────── Inline Player ────────────────────────────── */
 
-function InlinePlayer({
-  src,
-  audioRef,
-  currentTime,
-  stageId,
-  transcriptId,
-  language,
-  segments,
-}: {
-  src: string;
-  audioRef: React.RefObject<HTMLAudioElement>;
-  currentTime: number;
-  stageId: string;
-  transcriptId: string;
-  language: string | null;
-  segments: Segment[] | null;
-}) {
-  const { t: _copy } = _useCopy();
-  const [playing, setPlaying] = useState(false);
-  const [duration, setDuration] = useState(0);
-  const [source, setSource] = useState<string | null>(null);
-  const [sourceFailed, setSourceFailed] = useState(false);
-  const [dubReady, setDubReady] = useState(!language);
-  useEffect(() => {
-    let alive = true;
-    setSource(null);
-    setSourceFailed(false);
-    void playableStageRecording(stageId, src).then((url) => {
-      if (alive) setSource(url);
-    }).catch(() => { if (alive) setSourceFailed(true); });
-    return () => { alive = false; };
-  }, [stageId, src]);
-  // This drawer keeps its own <audio> (the transcript follows its currentTime
-  // directly), so speed is local to it — but it reads the same persisted
-  // ladder and starts from the shared engine's last-used rate.
-  const [rate, setRate] = useState(() => getStagePlaybackState().rate);
-
-  useEffect(() => {
-    const a = audioRef.current;
-    if (!a) return;
-    a.playbackRate = rate;
-  }, [rate, source]);
-
-  const cycleRate = () => {
-    setRate((r) => {
-      const idx = PLAYBACK_RATES.indexOf(r as (typeof PLAYBACK_RATES)[number]);
-      return PLAYBACK_RATES[(idx + 1) % PLAYBACK_RATES.length];
-    });
-  };
-
-  useEffect(() => {
-    const a = audioRef.current;
-    if (!a) return;
-    const onPlay = () => setPlaying(true);
-    const onPause = () => setPlaying(false);
-    const onMeta = () => setDuration(a.duration || 0);
-    a.addEventListener('play', onPlay);
-    a.addEventListener('pause', onPause);
-    a.addEventListener('loadedmetadata', onMeta);
-    return () => {
-      a.removeEventListener('play', onPlay);
-      a.removeEventListener('pause', onPause);
-      a.removeEventListener('loadedmetadata', onMeta);
-    };
-  }, [audioRef, source]);
-
-  const toggle = () => {
-    const a = audioRef.current;
-    if (!a) return;
-    primeSpeech();
-    stopStageRecording();
-    if (a.paused) a.play().catch(() => { setSourceFailed(true); });
-    else a.pause();
-  };
-
-  const onSeek = (e: React.MouseEvent<HTMLDivElement>) => {
-    const a = audioRef.current;
-    if (!a || !duration) return;
-    const rect = e.currentTarget.getBoundingClientRect();
-    const pct = (e.clientX - rect.left) / rect.width;
-    a.currentTime = Math.max(0, Math.min(duration, pct * duration));
-  };
-
-  const pct = duration ? (currentTime / duration) * 100 : 0;
-
-  return (
-    <div>
-    <div className="bg-white/5 backdrop-blur-[24px] border border-white/10 rounded-xl p-3 flex items-center gap-3">
-      <audio ref={audioRef} src={source ?? undefined} preload="metadata" onError={() => setSourceFailed(true)} />
-      <Button
-        size="icon"
-        onClick={toggle}
-        disabled={!source || !dubReady || sourceFailed}
-        aria-label={_copy(playing ? 'common.pause' : 'common.play')}
-        className="h-9 w-9 rounded-lg bg-white/10 hover:bg-white/20 text-white border border-white/10"
-      >
-        {playing ? <Pause className="w-4 h-4" /> : <Play className="w-4 h-4" />}
-      </Button>
-      <div
-        onClick={onSeek}
-        className="flex-1 h-1.5 rounded-full bg-white/10 cursor-pointer relative overflow-hidden"
-      >
-        <div
-          className="absolute inset-y-0 left-0 bg-white/80 rounded-full"
-          style={{ width: `${pct}%` }}
-        />
-      </div>
-      <span className="text-[11px] font-mono text-white/60 tabular-nums">
-        {formatTimestamp(currentTime)} / {formatTimestamp(duration)}
-      </span>
-      <button
-        type="button"
-        onClick={cycleRate}
-        title={_copy("copy.0f4db8b5e198", { defaultValue: "Playback speed {{value1}}x", value1: rate })}
-        aria-label={_copy("copy.0f4db8b5e198", { defaultValue: "Playback speed {{value1}}x", value1: rate })}
-        className={cn(
-          'shrink-0 h-7 min-w-9 px-2 rounded-lg flex items-center justify-center',
-          'text-[10px] font-mono font-bold leading-none transition-colors',
-          rate !== 1
-            ? 'bg-white/20 text-white'
-            : 'text-white/50 hover:text-white hover:bg-white/10',
-        )}
-      >
-        {formatStageRate(rate)}x
-      </button>
-    </div>
-    {sourceFailed && <p role="alert" className="text-xs text-white/60">{_copy('stages.noRecording')}</p>}
-    {!source && !sourceFailed && <p role="status" className="text-xs text-white/60">{_copy('common.loading')}</p>}
-    <StageReplayDub audioRef={audioRef} transcriptId={transcriptId} language={language} segments={segments} onReady={setDubReady} />
-    </div>
-  );
-}
-
-/* ────────────────────────────── Main Drawer ────────────────────────────── */
-
 export function StageTranscriptDrawer({ space, open, onOpenChange }: Props) {
   const { t } = useTranslation();
   const queryClient = useQueryClient();
   const { walletAddress } = useAuth();
-  const audioRef = useRef<HTMLAudioElement>(null);
+
 
   const [requesting, setRequesting] = useState(false);
   const [search, setSearch] = useSurfaceDraft("components/app/spaces/StageTranscriptDrawer.tsx:search", '');
-  const [language, setLanguage] = useState<string>('original');
-  const [currentTime, setCurrentTime] = useState(0);
+  const { language } = useStageRecordingLanguage(space?.id);
+  const setLanguage = (value: string) => { if (space) setStageRecordingLanguage(space.id, value); };
+
   const [renamingFor, setRenamingFor] = useState<string | null>(null);
   const [renameValue, setRenameValue] = useSurfaceDraft("components/app/spaces/StageTranscriptDrawer.tsx:renameValue", '');
   const [quoteFor, setQuoteFor] = useState<{ seg: Segment; text: string } | null>(null);
 
   const stageId = space?.id;
+  const playback = useStagePlayback();
+  const currentTime = playback.spaceId === stageId ? playback.position : 0;
   const isHost = !!walletAddress && !!space?.host_wallet_address &&
     walletAddress.toLowerCase() === space.host_wallet_address.toLowerCase();
 
@@ -533,13 +398,6 @@ export function StageTranscriptDrawer({ space, open, onOpenChange }: Props) {
   }, [open, stageId, transcriptId, queryClient]);
 
   /* ────── audio current time tracking ────── */
-  useEffect(() => {
-    const a = audioRef.current;
-    if (!a) return;
-    const onTime = () => setCurrentTime(a.currentTime);
-    a.addEventListener('timeupdate', onTime);
-    return () => a.removeEventListener('timeupdate', onTime);
-  }, [open, transcript]);
 
   // No `force`. It skipped the attempt ceiling and the backoff on a paid
   // transcriber, and the server now takes it only from the service key.
@@ -584,10 +442,9 @@ export function StageTranscriptDrawer({ space, open, onOpenChange }: Props) {
     if (!open) {
       setRequesting(false);
       setSearch.initialize('');
-      setLanguage('original');
-      setCurrentTime(0);
+
       setQuoteFor(null);
-      audioRef.current?.pause();
+
     }
   }, [open, setSearch]);
 
@@ -627,10 +484,7 @@ export function StageTranscriptDrawer({ space, open, onOpenChange }: Props) {
 
   /* ────── seek helpers ────── */
   const seekTo = (t: number) => {
-    const a = audioRef.current;
-    if (!a) return;
-    a.currentTime = Math.max(0, t);
-    a.play().catch(() => {});
+    if (space) seekStageRecordingToTime(space, t);
   };
 
   const activeSegmentIndex = useMemo(() => {
@@ -824,15 +678,7 @@ export function StageTranscriptDrawer({ space, open, onOpenChange }: Props) {
           ) : (
             <>
               {/* Inline player */}
-              <InlinePlayer
-                src={space.recording_url!}
-                audioRef={audioRef}
-                currentTime={currentTime}
-                stageId={stageId!}
-                transcriptId={transcriptId!}
-                language={language === 'original' || language === transcript.source_language ? null : language}
-                segments={useTranslated ? translation!.segments : null}
-              />
+              <StageRecordingPlayer spaceId={space.id} recordingUrl={space.recording_url} title={space.title} startedAt={space.started_at} endedAt={space.ended_at} />
 
               {/* AI Summary + chapters */}
               {(summary || chapters.length > 0 || transcript.summary_status === 'processing') && (
