@@ -1893,6 +1893,8 @@
     "anonymousLikes_other": "{{count}} ecibandin ji xwediyên nîşanan ên bênav"
   },
   "postInfo": {
+    "ownersUnavailable": "ئێستا ناتوانرێت خاوەنە ئێستاییەکان بخوێنرێنەوە.",
+    "unavailable": "بەردەست نییە",
     "title": "Agahiya postê",
     "tokenId": "Token ID",
     "mintedOn": "Hatiye çêkirin",
@@ -4835,6 +4837,8 @@
     "notEnoughTokensForBounty": "توکن کافی نیست. به {{need}} توکن نیاز دارید اما {{have}} دارید."
   },
   "events": {
+    "deleteConfirmBody": "ئەمە ڕووداوەکە و لیستی میوانەکانی و چاتەکەی بۆ هەمووان دەسڕێتەوە. ناتوانرێت پاشگەز بکرێتەوە.",
+    "deleteConfirmTitle": "ئەم ڕووداوە بسڕیتەوە؟",
     "seoTitle": "ڕووداوەکان  —  کۆبوونەوەکان و ڕووداوەکانی کۆمەڵگا لە DeHub",
     "seoDescription": "ڕووداوەکانی داهاتووی کۆمەڵگای DeHub بگەڕێ، بۆ کۆبوونەوەکان ناونووس بکە و ڕووداوی خۆت لەسەر پلاتفۆرمی کۆمەڵایەتی بڵاوبووەوە، کە خاوەندارێتی بەکارهێنەرە، میوانداری بکە.",
     "defaultSeoDescription": "ڕووداوی کۆمەڵگا لە DeHub.",

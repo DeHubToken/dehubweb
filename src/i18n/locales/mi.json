@@ -2100,6 +2100,8 @@
     "anonymousLikes_other": "{{count}} pai mai i ngā kaipupuri tohu huna"
   },
   "postInfo": {
+    "unavailable": "Kāore e wātea",
+    "ownersUnavailable": "Kāore e taea te pānui i ngā rangatira o nāianei i tēnei wā.",
     "title": "Mōhiohio pou",
     "tokenId": "Token ID",
     "mintedOn": "I hangaia",
@@ -5604,6 +5606,8 @@
     "notEnoughTokensForBounty": "Kāore e nui ngā tohu. Me {{need}} tohu engari kei a koe {{have}}."
   },
   "events": {
+    "deleteConfirmTitle": "Ka whakakorea e koe tenei huihuinga?",
+    "deleteConfirmBody": "Ka tangohia e tenei te huihuinga, tona raarangi manuhiri me tona korerorero mo te katoa. Kaore e taea te whakakore.",
     "seoTitle": "Ngā huihuinga — Meetups & Community Events on DeHub",
     "seoDescription": "Browse ngā huihuinga hapori DeHub e haere mai ana, RSVP ki te hui me te manaaki i ō ake kaupapa i runga i te papaaho pāpori decentralized, e whai ana i te kaiwhakamahi.",
     "defaultSeoDescription": "He huihuinga hapori mo DeHub.",

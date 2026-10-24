@@ -2605,6 +2605,8 @@
     "anonymousLikes_other": "{{count}} me gusta de titulares de insignias anónimos"
   },
   "postInfo": {
+    "unavailable": "No disponible",
+    "ownersUnavailable": "Los propietarios actuales no se pueden leer en este momento.",
     "title": "Info del Post",
     "tokenId": "Id. de token",
     "mintedOn": "Acuñado el",
@@ -6710,6 +6712,8 @@
     "notEnoughTokensForBounty": "Tokens insuficientes. Necesitas {{need}} tokens pero tienes {{have}}."
   },
   "events": {
+    "deleteConfirmTitle": "¿Eliminar este evento?",
+    "deleteConfirmBody": "Esto elimina el evento, su lista de invitados y su chat para todos. No se puede deshacer.",
     "seoTitle": "Eventos — Quedadas y eventos de la comunidad en DeHub",
     "seoDescription": "Explora los próximos eventos de la comunidad de DeHub, confirma tu asistencia a quedadas y organiza los tuyos en la plataforma social descentralizada y de sus usuarios.",
     "defaultSeoDescription": "Evento de la comunidad en DeHub.",

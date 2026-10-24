@@ -599,6 +599,7 @@ export function ShortsFeed({ showFilters = false, isRefreshing = false, refreshK
                   {short.videoUrl ? (
                     <AutoplayVideo
                       src={short.videoUrl}
+                      hlsSrc={short.hlsUrl}
                       poster={short.thumbnail}
                       className="w-full h-full object-cover"
                       disabled={viewerOpen}

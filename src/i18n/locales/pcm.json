@@ -1933,6 +1933,8 @@
     "anonymousLikes_other": "{{count}} likes from anonymous badge holders"
   },
   "postInfo": {
+    "ownersUnavailable": "We no fit read who own am right now.",
+    "unavailable": "E no dey available",
     "title": "Post Info",
     "tokenId": "Token ID",
     "mintedOn": "Dem create am",
@@ -4884,6 +4886,8 @@
     "notEnoughTokensForBounty": "Token no dey enough. Need {{need}} token but only have {{have}}."
   },
   "events": {
+    "deleteConfirmBody": "E go remove di event, im guest list and im chat for everybody. You no fit undo am.",
+    "deleteConfirmTitle": "You wan delete dis event?",
     "title": "Events",
     "filterUpcoming": "Upcoming",
     "filterPast": "Past",

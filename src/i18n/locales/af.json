@@ -2135,6 +2135,8 @@
     "anonymousLikes_other": "{{count}} laaiks van anonieme badgehouers"
   },
   "postInfo": {
+    "unavailable": "Onbeskikbaar",
+    "ownersUnavailable": "Die huidige eienaars kan nie nou gelees word nie.",
     "title": "Post Info",
     "tokenId": "Token ID",
     "mintedOn": "Minted On",
@@ -5664,6 +5666,8 @@
     "notEnoughTokensForBounty": "Nie genoeg tokens nie. Benodig {{need}} tokens maar het {{have}}."
   },
   "events": {
+    "deleteConfirmTitle": "Skrap hierdie okkasie?",
+    "deleteConfirmBody": "Dit verwyder die geleentheid, sy gaste lys en sy chat vir almal. Dit kan nie ongedaan gemaak word nie.",
     "seoTitle": "Gebeurtenisse — Byeenkomste & Gemeenskapsevenementen op DeHub",
     "seoDescription": "Blaai deur komende DeHub-gemeenskapsevenementen, RSVP tot byeenkomste en gasheer jou eie gebeurtenisse op die desentraliseerde, gebruiker-eiendom sosiale platform.",
     "defaultSeoDescription": "Gemeenskapsevenement op DeHub.",

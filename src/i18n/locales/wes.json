@@ -2006,6 +2006,8 @@
     "anonymousLikes_other": "{{count}} like dem from badge holder dem weh no show demsef"
   },
   "postInfo": {
+    "unavailable": "E no dey",
+    "ownersUnavailable": "E current owner no dey fit read a go now.",
     "title": "Post Info",
     "tokenId": "Token ID",
     "mintedOn": "Dem create am",
@@ -5150,6 +5152,8 @@
     "notEnoughTokensForBounty": "No get enough token. Need {{need}} token but get {{have}}."
   },
   "events": {
+    "deleteConfirmTitle": "You want delete dis event?",
+    "deleteConfirmBody": "Dis one go remove di event, ihn guest list and ihn chat for everybody. You no fit undo am.",
     "seoDescription": "Browse akoming DeHub komyuni event, RSVP fo meetup, an host yu own event on dis dezentralize, yu-own social platform.",
     "title": "Efis",
     "filterUpcoming": "Na go",
