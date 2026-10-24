@@ -1,3 +1,4 @@
+import { fetchStageRecordings, hasStageRecording } from '@/lib/stage-recordings';
 import { useTranslation as _useCopy } from 'react-i18next';
 /**
  * Stages Carousel for Music Feed
@@ -33,7 +34,6 @@ import { PastStageCard } from '@/components/app/stages/PastStageCard';
 import { StageCoverArt } from '@/components/app/stages/StageCoverArt';
 import { BadgedName } from '@/components/app/BadgedName';
 import { cn } from '@/lib/utils';
-import { supabase } from '@/integrations/supabase/client';
 import { buildAvatarUrl, buildAvatarCdnFallbackUrl } from '@/lib/media-url';
 import type { AudioSpace } from '@/types/audio-spaces.types';
 
@@ -150,15 +150,8 @@ export function StagesCarousel({ onOpenStages }: StagesCarouselProps) {
   const { data: pastSpaces = [] } = useQuery({
     queryKey: ['past-stages'],
     enabled: liveSpaces.length === 0,
-    queryFn: async () => {
-      const { data } = await supabase
-        .from('audio_spaces')
-        .select('*')
-        .eq('status', 'ended')
-        .order('ended_at', { ascending: false })
-        .limit(20);
-      return (data as AudioSpace[]) || [];
-    },
+    queryFn: () => fetchStageRecordings(),
+    select: (stages: AudioSpace[]) => stages.filter(hasStageRecording),
     staleTime: 5 * 60_000,
   });
 
@@ -233,15 +226,8 @@ function usePastStages(order: 'total_listens' | 'ended_at', enabled: boolean) {
     // 'recent' shares ['past-stages'] with the /stages page and the carousel.
     queryKey: order === 'ended_at' ? ['past-stages'] : ['past-stages', order],
     enabled,
-    queryFn: async () => {
-      const { data } = await supabase
-        .from('audio_spaces')
-        .select('*')
-        .eq('status', 'ended')
-        .order(order, { ascending: false, nullsFirst: false })
-        .limit(20);
-      return (data as AudioSpace[]) || [];
-    },
+    queryFn: () => fetchStageRecordings(order),
+    select: (stages: AudioSpace[]) => stages.filter(hasStageRecording),
     staleTime: 5 * 60_000,
   });
 }
