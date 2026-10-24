@@ -4,11 +4,11 @@ import { useTranslation } from 'react-i18next';
 import type { NewPostAuthor } from '@/hooks/use-unified-feed';
 import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
 
-const SHOULDER = 8;
-const HEIGHT = 28;
-const CORNER = 12;
-const FACE = 18;
-const FACE_OVERLAP = 6;
+const SHOULDER = 10;
+const HEIGHT = 34;
+const CORNER = 14;
+const FACE = 22;
+const FACE_OVERLAP = 7;
 
 /** The bead's outline: concave shoulders off the bar's bottom edge, then a
  *  rounded tab. `open` leaves the top unstroked so it joins the bar's rim. */
@@ -41,12 +41,12 @@ export function NewPostsBead({ count, authors, square, host, onShow }: {
   const f = square ? 0 : SHOULDER;
   // Size the tab to its contents, then draw the outline around it.
   const contentRef = useRef<HTMLSpanElement>(null);
-  const [contentWidth, setContentWidth] = useState(56);
+  const [contentWidth, setContentWidth] = useState(72);
   useLayoutEffect(() => {
     const node = contentRef.current;
     if (node) setContentWidth(Math.ceil(node.offsetWidth));
   }, [label, faces.length]);
-  const width = f * 2 + contentWidth + 18;
+  const width = f * 2 + contentWidth + 24;
   useLayoutEffect(() => {
     if (!host) return;
     host.setAttribute('data-new-posts-open', '');
@@ -80,21 +80,21 @@ export function NewPostsBead({ count, authors, square, host, onShow }: {
         type="button"
         onClick={onShow}
         aria-label={t('feed.newPosts', { defaultValue: '{{count}} new posts', count })}
-        className="pointer-events-auto absolute top-0 flex items-center justify-center text-xs font-bold tabular-nums"
+        className="pointer-events-auto absolute top-0 flex items-center justify-center text-sm font-bold tabular-nums"
         style={{ left: f, width: width - f * 2, height: HEIGHT, color: 'var(--bead-ink)' }}
       >
-        <span ref={contentRef} className="flex items-center gap-[5px]">
+        <span ref={contentRef} className="flex items-center gap-[6px]">
         {faces.length > 0 && (
           <span className="flex">
             {faces.map((author, i) => (
               <Avatar
                 key={author.address}
                 data-feed-new-posts-face
-                className="block shrink-0 overflow-hidden rounded-[6px]"
+                className="block shrink-0 overflow-hidden rounded-[7px]"
                 style={{ width: FACE, height: FACE, marginLeft: i ? -FACE_OVERLAP : 0, zIndex: 3 - i, boxShadow: '0 0 0 1.5px var(--bead-face-ring)' }}
               >
                 <AvatarImage src={author.avatarUrl} alt="" className="h-full w-full object-cover" />
-                <AvatarFallback className="rounded-[6px] text-[9px] font-bold uppercase">{author.name.slice(0, 1)}</AvatarFallback>
+                <AvatarFallback className="rounded-[7px] text-[10px] font-bold uppercase">{author.name.slice(0, 1)}</AvatarFallback>
               </Avatar>
             ))}
           </span>

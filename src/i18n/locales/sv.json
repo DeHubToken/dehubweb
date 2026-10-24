@@ -1,4 +1,132 @@
 {
+  "mastodonApps": {
+    "authTitle": "Logga in med DeHub",
+    "authWants": "{{app}} vill använda ditt DeHub-konto",
+    "authSignedInAs": "Inloggad som {{name}}",
+    "authSignIn": "Logga in för att fortsätta",
+    "allow": "Tillåt",
+    "cancel": "Avbryt",
+    "scopeRead": "Se dina tidslinjer, inlägg, aviseringar och bokmärken",
+    "scopeWrite": "Publicera, svara, gilla, boosta och bokmärka åt dig",
+    "scopeFollow": "Följa, sluta följa, blockera och tysta konton",
+    "scopePush": "Skicka aviseringar till dig",
+    "scopeProfile": "Se din profil",
+    "invalid": "Den här inloggningslänken är inte giltig. Gå tillbaka till appen och försök igen.",
+    "failed": "Det fungerade inte. Försök igen.",
+    "codeTitle": "Kopiera den här koden till appen för att slutföra inloggningen.",
+    "copy": "Kopiera",
+    "copied": "Kopierat",
+    "seoDescription": "Låt en Mastodon-app använda ditt DeHub-konto.",
+    "redirecting": "Tar dig tillbaka till {{app}}…",
+    "connectedTitle": "Anslutna appar",
+    "connectedDescription": "Mastodon-appar du har loggat in i med det här kontot. Ta bort en för att logga ut den.",
+    "connectedEmpty": "Inga anslutna appar än.",
+    "lastUsed": "Senast använd {{date}}",
+    "remove": "Ta bort",
+    "removed": "Appen togs bort"
+  },
+  "fediverse": {
+    "title": "Fediversum",
+    "description": "Folk på Mastodon och andra fediversum-appar kan hitta och följa dig på den här adressen. Dina nya offentliga inlägg når dem där.",
+    "copy": "Kopiera",
+    "copied": "Kopierat",
+    "privateNote": "Privata konton visas inte i fediversum.",
+    "noUsername": "Välj ett användarnamn för att få en fediversum-adress."
+  },
+  "profileFields": {
+    "title": "Profilfält",
+    "description": "Upp till fyra extra rader på din profil, till exempel en webbplats eller dina pronomen.",
+    "label": "Etikett",
+    "content": "Innehåll",
+    "save": "Spara fält",
+    "saved": "Profilfälten sparades",
+    "failed": "Det sparades inte. Försök igen.",
+    "verified": "Verifierad länk",
+    "verifyHint": "För att verifiera en länk lägger du till det här på den sidan och sparar igen: {{snippet}}"
+  },
+  "followedTags": {
+    "follow": "Följ #{{tag}}",
+    "following": "Följer",
+    "unfollow": "Sluta följa #{{tag}}",
+    "followed": "Du följer nu #{{tag}}. Inlägg med den visas i ditt Följer-flöde.",
+    "unfollowed": "Du följer inte längre #{{tag}}",
+    "failed": "Det sparades inte. Försök igen.",
+    "clear": "Rensa"
+  },
+  "notificationFilters": {
+    "title": "Filtrera aviseringar från",
+    "description": "Välj vad som händer när någon utanför din krets interagerar med dig. Filtrerade aviseringar väntar under Filtrerat, utan märke och utan push.",
+    "notFollowing": "Personer du inte följer",
+    "notFollowers": "Personer som inte följer dig",
+    "newAccounts": "Nya konton (under 30 dagar)",
+    "accept": "Meddela mig",
+    "filter": "Filtrera",
+    "drop": "Dölj helt",
+    "filteredTitle": "Filtrerade aviseringar",
+    "filteredEmpty": "Inget har filtrerats.",
+    "failed": "Det sparades inte. Försök igen."
+  },
+  "keywordFilters": {
+    "title": "Tystade ord",
+    "description": "Dölj inlägg och kommentarer som innehåller de här orden, eller vik ihop dem bakom en varning. Bara du ser listan.",
+    "placeholder": "Ord eller fras",
+    "add": "Tysta",
+    "added": "Tystat: {{phrase}}",
+    "wholeWord": "Bara hela ord",
+    "whenMatches": "När ett inlägg matchar",
+    "warn": "Visa en varning",
+    "hide": "Dölj det",
+    "howLong": "Hur länge",
+    "forever": "Tills jag tar bort det",
+    "duration1h": "I 1 timme",
+    "duration1d": "I 1 dag",
+    "duration7d": "I 7 dagar",
+    "duration30d": "I 30 dagar",
+    "where": "Var",
+    "home": "Hem",
+    "public": "Utforska och sök",
+    "profile": "Profiler",
+    "thread": "Konversationer",
+    "notifications": "Aviseringar",
+    "empty": "Du har inte tystat några ord.",
+    "remove": "Sluta tysta",
+    "until": "Till {{date}}",
+    "filtered": "Filtrerat: {{phrase}}",
+    "showAnyway": "Visa ändå",
+    "failed": "Det sparades inte. Försök igen."
+  },
+  "postVisibility": {
+    "label": "Vem kan se det här",
+    "public": "Alla",
+    "followers": "Bara följare",
+    "direct": "Bara nämnda personer",
+    "noRepost": "Bara offentliga inlägg kan delas vidare",
+    "directHint": "Bara de personer du nämner med @ ser det här inlägget",
+    "needsMention": "Nämn minst en person med @ för att bara publicera för nämnda personer"
+  },
+  "replyPolicy": {
+    "label": "Vem kan svara",
+    "public": "Alla",
+    "followers": "Dina följare",
+    "following": "Personer du följer",
+    "mentioned": "Bara nämnda",
+    "noticeFollowers": "Bara skaparens följare kan svara",
+    "noticeFollowing": "Bara personer som skaparen följer kan svara",
+    "noticeMentioned": "Bara personer som nämns i inlägget kan svara",
+    "refused": "Skaparen har begränsat vem som kan svara på det här inlägget"
+  },
+  "quotePolicy": {
+    "label": "Vem kan citera",
+    "public": "Alla",
+    "followers": "Följare",
+    "nobody": "Bara jag",
+    "off": "Skaparen har stängt av citat",
+    "removed": "Skaparen har tagit bort sitt inlägg från det här citatet",
+    "remove": "Ta bort",
+    "removedToast": "Ditt inlägg togs bort från det här citatet",
+    "removeFailed": "Det gick inte att ta bort ditt inlägg från citatet",
+    "refused": "Skaparen låter dig inte citera det här inlägget"
+  },
   "contentWarning": {
     "label": "Innehållsvarning",
     "placeholder": "Skriv din varning här",
@@ -132,11 +260,12 @@
     "heading": "Shorts på DeHub"
   },
   "settings": {
-    "showDislikesDesc": "Vem som helst kan öppna fliken Ogillanden på din profil. När detta är av kan bara du se den.",
-    "showDislikes": "Visa mina ogillanden för alla",
+    "usernameTaken": "Användarnamnet är upptaget",
     "postingChain": "Blockkedja för inlägg",
     "showOnline": "Visa när jag är online",
     "showOnlineDesc": "Personer du skickar meddelanden till ser en grön prick bredvid ditt namn när du använder DeHub",
+    "showDislikes": "Visa mina ogillanden för alla",
+    "showDislikesDesc": "Vem som helst kan öppna fliken Ogillanden på din profil. När detta är av kan bara du se den.",
     "smartReplies": "Föreslagna svar",
     "smartRepliesDesc": "Skriver två svar som du kan trycka på i en chatt. × på förslagen stänger av det.",
     "title": "Inställningar",
@@ -659,7 +788,6 @@
     "embed": "Bädda in",
     "copyEmbedCode": "Kopiera inbäddningskod",
     "embedCodeCopied": "Inbäddningskod kopierad",
-    "copyFailed": "Det gick inte att kopiera länken",
     "options": "Alternativ",
     "aiOverview": "AI-översikt",
     "sendTip": "Skicka dricks",
@@ -687,7 +815,8 @@
     "unpinPost": "Ta bort fästet från din profil",
     "postPinned": "Fäst i din profil",
     "postUnpinned": "Frigjord från din profil",
-    "pinFailed": "Det gick inte att fästa eller ta bort det här inlägget"
+    "pinFailed": "Det gick inte att fästa eller ta bort det här inlägget",
+    "copyFailed": "Det gick inte att kopiera länken"
   },
   "filters": {
     "sort": "Sortera",
@@ -1425,7 +1554,6 @@
     "returnHome": "Tillbaka till startsidan"
   },
   "profile": {
-    "dislikes": { "loadMore": "Läs in fler", "privateDesc": "Det här kontot håller sina ogillanden för sig själv.", "privateTitle": "Ogillanden är privata", "emptyOther": "Inget ogillat än.", "emptyOwn": "Inlägg du ogillar försvinner från dina flöden och visas här. Ångra ogillandet för att få tillbaka inlägget.", "emptyTitle": "Inga ogillanden än" },
     "back": "Tillbaka",
     "usernameAvailable": "Användarnamnet är tillgängligt!",
     "signUpToClaim": "Registrera dig för att ta det",
@@ -1453,8 +1581,16 @@
       "commentUnavailable": "Den här kommentaren är inte längre tillgänglig"
     },
     "tabs": {
-      "dislikes": "Ogillanden",
-      "playlists": "Spellistor"
+      "playlists": "Spellistor",
+      "dislikes": "Ogillanden"
+    },
+    "dislikes": {
+      "emptyTitle": "Inga ogillanden än",
+      "emptyOwn": "Inlägg du ogillar försvinner från dina flöden och visas här. Ångra ogillandet för att få tillbaka inlägget.",
+      "emptyOther": "Inget ogillat än.",
+      "privateTitle": "Ogillanden är privata",
+      "privateDesc": "Det här kontot håller sina ogillanden för sig själv.",
+      "loadMore": "Läs in fler"
     },
     "offerWorthNow": "Cirka {{amount}} tokens till nuvarande kurs",
     "offerNotePlaceholder": "Lägg till en notering (valfritt)",
@@ -2261,6 +2397,7 @@
     "pendingSubmitted": "{{amount}} tokens inskickade. Bekräftelse kontrolleras fortfarande. Skicka inte igen."
   },
   "communities": {
+    "chatTab": "Chatt",
     "title": "Communities",
     "create": "Skapa",
     "searchPlaceholder": "Sök communities...",
@@ -2295,7 +2432,30 @@
     "addDescription": "Lägg till en beskrivning...",
     "communityDescription": "Communitybeskrivning...",
     "posts": "Inlägg",
-    "chat": "Chatt",
+    "chat": {
+      "intervalHour": "1 timme",
+      "intervalHours": "{{count}} timmar",
+      "intervalMinute": "1 minut",
+      "intervalMinutes": "{{count}} minuter",
+      "intervalSecond": "1 sekund",
+      "intervalSeconds": "{{count}} sekunder",
+      "muted": "Du är avstängd",
+      "mutedUntil": "Du är avstängd tills {{until}}",
+      "postingDisabled": "Inlägg är inaktiverat för medlemmar här",
+      "pinnedGif": "GIF",
+      "pinnedMedia": "Media",
+      "jumpToPinned": "Hoppa till det fastnålade meddelandet",
+      "pinnedMessage": "Fäst meddelande",
+      "unpin": "Lossa fästet",
+      "pin": "Pin",
+      "delete": "Radera",
+      "slowMode": "Långsamt läge: ett meddelande var {{interval}}",
+      "slowModeWait": "Långsamt läge — vänta {{time}}",
+      "send": "Skicka",
+      "deleteMessageTitle": "Ta bort det här meddelandet?",
+      "deleteMessageBody": "Detta kan inte ångras.",
+      "cancel": "Avbryt"
+    },
     "membersTab": "Medlemmar ({{count}})",
     "about": "Om",
     "backToCommunities": "Communities",
@@ -3755,6 +3915,7 @@
     "sellYourFractions": "Sälj dina fraktioner ({{held}} innehålls)"
   },
   "creator": {
+    "libraryEmpty": "Dina sparade genereringar visas här.",
     "whatToCreate": "Vad ska skapas",
     "startCreatingWith": "Börja skapa med {{model}}",
     "studioSubtitle": "Beskriv en scen, karaktär, stämning eller stil. Resultaten visas nedan och går direkt in i redigeraren.",
@@ -6098,7 +6259,10 @@
     "play": "Spela",
     "pause": "Pausa",
     "listens_one": "{{count}} lyssna",
-    "listens_other": "{{count}} lyssnar"
+    "listens_other": "{{count}} lyssnar",
+    "lyrics": "Låttext",
+    "lyricsLoading": "Hämtar låttext…",
+    "lyricsNone": "Ingen låttext hittades"
   },
   "converter": {
     "seoTitle": "Konverterare — importera en video till DeHub",
@@ -6614,6 +6778,7 @@
     "seoDescription": "Officiell DeHub-dokumentation: plattformsöversikt, dApps, tokens-tokenekonomi, staking, spel, färdplan, FAQ och mer."
   },
   "dex": {
+    "title": "tokens / USD",
     "seoTitle": "DEX — Handla tokens till ditt pris",
     "seoDescription": "Ställ in ditt tokens-köp- eller säljpris med en Uniswap v4-limitorder på Base eller BNB Chain. Live orderbok, marknadsdjup och ett gemensamt USD-pris.",
     "venue": "Nätverk",
@@ -6836,6 +7001,14 @@
     }
   },
   "editor": {
+    "video": {
+      "tFade": "Övertoning",
+      "none": "Ingen",
+      "transition": "Övergång",
+      "speed": "Hastighet",
+      "sound": "Ljud",
+      "video": "Video"
+    },
     "review": {
       "title": "Projektgranskning",
       "shared": "Delat med dig",
@@ -8497,5 +8670,15 @@
     "posted": "Publicerad",
     "view": "Visa",
     "failed": "Videon kunde inte bearbetas"
+  },
+  "loginStack": {
+    "tip": "Ge DHB-dricks",
+    "headlineTop": "Du kommer att äga allt",
+    "headlineAccent": "och vara lycklig.",
+    "orContinueWith": "eller fortsätt med",
+    "phone": "Telefon",
+    "fingerprint": "Fingeravtryck",
+    "exploreFirst": "Utforska först",
+    "codeNote": "Vi mejlar dig en kod, inget lösenord behövs."
   }
 }

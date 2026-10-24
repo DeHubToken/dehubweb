@@ -224,7 +224,7 @@ export function FeedbackSection({ source }: { source?: 'converter' | 'migration'
           </div>
           <div role="status" className="text-xs text-zinc-400">
             {feedback.isPending ? t('common.loading') : null}
-            {!feedback.isPending && !feedback.isError && approved.length === 0 ? t('search.noResults') : null}
+            {!feedback.isPending && !feedback.isError && approved.length === 0 ? t('explorePage.noResults') : null}
             {feedback.isError ? t('common.failedToLoad') : null}
           </div>
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-2 sm:gap-3">

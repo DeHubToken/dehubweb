@@ -1,4 +1,132 @@
 {
+  "mastodonApps": {
+    "authTitle": "Бо DeHub ворид шавед",
+    "authWants": "{{app}} мехоҳад ҳисоби DeHub-и шуморо истифода барад",
+    "authSignedInAs": "Ҳамчун {{name}} ворид шудаед",
+    "authSignIn": "Барои идома ворид шавед",
+    "allow": "Иҷозат додан",
+    "cancel": "Бекор кардан",
+    "scopeRead": "Дидани навори вақт, постҳо, огоҳиҳо ва хатбаракҳои шумо",
+    "scopeWrite": "Аз номи шумо нашр кардан, ҷавоб додан, писандидан, паҳн кардан ва хатбарак гузоштан",
+    "scopeFollow": "Обуна шудан, бекор кардани обуна, басатан ва хомӯш кардани ҳисобҳо",
+    "scopePush": "Ба шумо огоҳӣ фиристодан",
+    "scopeProfile": "Дидани профили шумо",
+    "invalid": "Ин пайванди воридшавӣ дуруст нест. Ба барнома баргардед ва бори дигар кӯшиш кунед.",
+    "failed": "Нашуд. Бори дигар кӯшиш кунед.",
+    "codeTitle": "Барои анҷом додани воридшавӣ ин рамзро ба барнома нусха кунед.",
+    "copy": "Нусха бардоштан",
+    "copied": "Нусха бардошта шуд",
+    "seoDescription": "Ба барномаи Mastodon иҷозат диҳед, ки ҳисоби DeHub-и шуморо истифода барад.",
+    "redirecting": "Шуморо ба {{app}} бармегардонем…",
+    "connectedTitle": "Барномаҳои пайвастшуда",
+    "connectedDescription": "Барномаҳои Mastodon, ки бо ин ҳисоб ба онҳо ворид шудаед. Барои баромадан якеро хориҷ кунед.",
+    "connectedEmpty": "Ҳоло ягон барнома пайваст нашудааст.",
+    "lastUsed": "Охирин истифода {{date}}",
+    "remove": "Хориҷ кардан",
+    "removed": "Барнома хориҷ шуд"
+  },
+  "fediverse": {
+    "title": "Федиверс",
+    "description": "Одамон дар Mastodon ва дигар барномаҳои федиверс метавонанд шуморо бо ин суроға ёбанд ва пайгирӣ кунанд. Постҳои нави оммавии шумо он ҷо ба онҳо мерасанд.",
+    "copy": "Нусха бардоштан",
+    "copied": "Нусха бардошта шуд",
+    "privateNote": "Ҳисобҳои хусусӣ дар федиверс нишон дода намешаванд.",
+    "noUsername": "Барои гирифтани суроғаи федиверс номи корбарро интихоб кунед."
+  },
+  "profileFields": {
+    "title": "Майдонҳои профил",
+    "description": "То чор сатри иловагӣ дар профили шумо, масалан вебсайт ё ҷонишинҳои шумо.",
+    "label": "Тамға",
+    "content": "Мундариҷа",
+    "save": "Майдонҳоро захира кардан",
+    "saved": "Майдонҳои профил захира шуданд",
+    "failed": "Захира нашуд. Боз кӯшиш кунед.",
+    "verified": "Пайванди тасдиқшуда",
+    "verifyHint": "Барои тасдиқи пайванд инро ба он саҳифа илова кунед ва боз захира кунед: {{snippet}}"
+  },
+  "followedTags": {
+    "follow": "#{{tag}}-ро пайгирӣ кардан",
+    "following": "Пайгирӣ мекунед",
+    "unfollow": "Пайгирии #{{tag}}-ро бас кардан",
+    "followed": "Акнун шумо #{{tag}}-ро пайгирӣ мекунед. Постҳои он дар лентаи пайгирӣ пайдо мешаванд.",
+    "unfollowed": "Пайгирии #{{tag}} бас шуд",
+    "failed": "Захира нашуд. Боз кӯшиш кунед.",
+    "clear": "Тоза кардан"
+  },
+  "notificationFilters": {
+    "title": "Филтри огоҳиномаҳо аз",
+    "description": "Интихоб кунед, ки вақте касе берун аз доираи шумо бо шумо ҳамкорӣ мекунад, чӣ мешавад. Огоҳиномаҳои филтршуда бе нишона ва бе push дар «Филтршуда» интизор мешаванд.",
+    "notFollowing": "Одамоне, ки шумо онҳоро пайгирӣ намекунед",
+    "notFollowers": "Одамоне, ки шуморо пайгирӣ намекунанд",
+    "newAccounts": "Ҳисобҳои нав (камтар аз 30 рӯз)",
+    "accept": "Ба ман хабар диҳед",
+    "filter": "Филтр",
+    "drop": "Пурра пинҳон",
+    "filteredTitle": "Огоҳиномаҳои филтршуда",
+    "filteredEmpty": "Ҳеҷ чиз филтр нашудааст.",
+    "failed": "Захира нашуд. Боз кӯшиш кунед."
+  },
+  "keywordFilters": {
+    "title": "Калимаҳои хомӯшшуда",
+    "description": "Постҳо ва шарҳҳоеро, ки ин калимаҳоро доранд, пинҳон кунед ё онҳоро паси огоҳӣ печонед. Ин рӯйхатро танҳо шумо мебинед.",
+    "placeholder": "Калима ё ибора",
+    "add": "Хомӯш кардан",
+    "added": "Хомӯш шуд: {{phrase}}",
+    "wholeWord": "Танҳо калимаи пурра",
+    "whenMatches": "Вақте ки пост мувофиқ меояд",
+    "warn": "Огоҳӣ нишон додан",
+    "hide": "Пинҳон кардан",
+    "howLong": "Чӣ қадар",
+    "forever": "То он даме ки ман нест кунам",
+    "duration1h": "Барои 1 соат",
+    "duration1d": "Барои 1 рӯз",
+    "duration7d": "Барои 7 рӯз",
+    "duration30d": "Барои 30 рӯз",
+    "where": "Дар куҷо",
+    "home": "Асосӣ",
+    "public": "Кашф ва ҷустуҷӯ",
+    "profile": "Профилҳо",
+    "thread": "Гуфтугӯҳо",
+    "notifications": "Огоҳиномаҳо",
+    "empty": "Шумо ягон калимаро хомӯш накардаед.",
+    "remove": "Бекор кардани хомӯшӣ",
+    "until": "То {{date}}",
+    "filtered": "Филтр шуд: {{phrase}}",
+    "showAnyway": "Ба ҳар ҳол нишон додан",
+    "failed": "Захира нашуд. Боз кӯшиш кунед."
+  },
+  "postVisibility": {
+    "label": "Инро кӣ дида метавонад",
+    "public": "Ҳама",
+    "followers": "Танҳо пайравон",
+    "direct": "Танҳо одамони зикршуда",
+    "noRepost": "Танҳо постҳои оммавиро дубора нашр кардан мумкин аст",
+    "directHint": "Ин постро танҳо одамоне мебинанд, ки шумо онҳоро бо @ зикр мекунед",
+    "needsMention": "Барои нашр танҳо барои зикршудагон ҳадди ақал як нафарро бо @ зикр кунед"
+  },
+  "replyPolicy": {
+    "label": "Кӣ метавонад ҷавоб диҳад",
+    "public": "Ҳар кас",
+    "followers": "Обуначиёни шумо",
+    "following": "Одамоне, ки шумо пайгирӣ мекунед",
+    "mentioned": "Танҳо зикршудагон",
+    "noticeFollowers": "Танҳо обуначиёни муаллиф метавонанд ҷавоб диҳанд",
+    "noticeFollowing": "Танҳо одамоне, ки муаллиф пайгирӣ мекунад, метавонанд ҷавоб диҳанд",
+    "noticeMentioned": "Танҳо зикршудагони нашрия метавонанд ҷавоб диҳанд",
+    "refused": "Муаллиф маҳдуд кардааст, ки кӣ ба ин нашрия ҷавоб дода метавонад"
+  },
+  "quotePolicy": {
+    "label": "Кӣ метавонад иқтибос орад",
+    "public": "Ҳар кас",
+    "followers": "Обуначиён",
+    "nobody": "Танҳо ман",
+    "off": "Муаллиф иқтибосро хомӯш кардааст",
+    "removed": "Муаллиф нашрияи худро аз ин иқтибос хориҷ кард",
+    "remove": "Хориҷ кардан",
+    "removedToast": "Нашрияи шумо аз ин иқтибос хориҷ карда шуд",
+    "removeFailed": "Нашрияи шуморо аз иқтибос хориҷ кардан муяссар нашуд",
+    "refused": "Муаллиф ба шумо иҷозат намедиҳад, ки аз ин нашрия иқтибос оред"
+  },
   "contentWarning": {
     "label": "Огоҳӣ дар бораи мундариҷа",
     "placeholder": "Огоҳии худро ин ҷо нависед",
@@ -132,6 +260,7 @@
     "heading": "Кӯтоҳҳои DeHub"
   },
   "settings": {
+    "usernameTaken": "Ин ном гирифта шудааст",
     "postingChain": "Блокчейни нашрҳо",
     "showOnline": "Ipakita kapag ako online",
     "showOnlineDesc": "Ang mga tao na iyong mensahe ay makita ng isang green dot sa tabi ng iyong pangalan habang gumagamit",
@@ -656,7 +785,6 @@
     "embed": "Ҷойгир кардан",
     "copyEmbedCode": "Нусхабардории коди ҷойгиркунӣ",
     "embedCodeCopied": "Коди ҷойгиркунӣ нусхабардорӣ шуд",
-    "copyFailed": "Пайвандро нусхабардорӣ кардан муяссар нашуд",
     "options": "Имконот",
     "aiOverview": "Pangkalahatang-ideya",
     "sendTip": "Фиристодани инъом",
@@ -684,7 +812,8 @@
     "unpinPost": "I-unpin mula sa iyong profile",
     "postPinned": "Ipinapakita sa iyong profile",
     "postUnpinned": "Hindi nagpinapakita mula sa iyong profile",
-    "pinFailed": "Наметавонам ин постро PIN кунам ё ғайри фаъол созам"
+    "pinFailed": "Наметавонам ин постро PIN кунам ё ғайри фаъол созам",
+    "copyFailed": "Пайвандро нусхабардорӣ кардан муяссар нашуд"
   },
   "filters": {
     "sort": "Мураттаб",
@@ -2290,6 +2419,7 @@
     "pendingSubmitted": "{{amount}} токен фиристода шуд. Тасдиқ то ҳол тафтиш карда мешавад. Онро дубора фиристед."
   },
   "communities": {
+    "chatTab": "Чат",
     "title": "Ҷамоатҳо",
     "create": "Эҷод",
     "searchPlaceholder": "Ҷустуҷӯи ҷамоатҳо...",
@@ -2324,7 +2454,29 @@
     "addDescription": "Тавсиф илова кунед...",
     "communityDescription": "Тавсифи ҷамоат...",
     "posts": "Постҳо",
-    "chat": "Чат",
+    "chat": {
+      "intervalHour": "1 соат",
+      "intervalHours": "{{count}} info: whatsthis",
+      "intervalMinute": "1 дақиқа",
+      "intervalMinutes": "{{count}} дақиқаҳо",
+      "intervalSecond": "1 дақиқа",
+      "muted": "Шумо хомӯш карда шудаед",
+      "mutedUntil": "Шумо хомӯш карда шудаед то {{until}}",
+      "postingDisabled": "Ang pagpapa-post ay hindi pinagana para sa mga",
+      "pinnedGif": "GIF",
+      "pinnedMedia": "Медиа",
+      "jumpToPinned": "Гузаштан ба иттилооти пинҳонӣ",
+      "pinnedMessage": "Иттилооти пинҳонӣ",
+      "unpin": "Unpin",
+      "pin": "PIN",
+      "delete": "Tanggalin",
+      "slowMode": "Ҳолати суст: як паём ҳар {{interval}}",
+      "slowModeWait": "Ҳолати суст — интизор {{time}}",
+      "send": "Фиристодан",
+      "deleteMessageTitle": "Tanggalin ang mensahe na ito?",
+      "deleteMessageBody": "Ин наметавонад барҳам дода шавад.",
+      "cancel": "Бекор кардан"
+    },
     "membersTab": "Аъзоён ({{count}})",
     "about": "Дар бораи",
     "backToCommunities": "Ҷамоатҳо",
@@ -3760,6 +3912,7 @@
     "sellYourFractions": "Fraksioné siz ro sarf konid ({{held}} darid)"
   },
   "creator": {
+    "libraryEmpty": "Тавлидҳои нигоҳдоштаи шумо дар ин ҷо пайдо мешаванд.",
     "whatToCreate": "Chand ro ta'min konid",
     "startCreatingWith": "Ba ta'minoti {{model}} boqé shurod",
     "studioSubtitle": "Тасвир кардани манзара, аломат, кайфият ё услуб. Mga resulta ng land sa ibaba at naglalapat nang direktang sa editor.",
@@ -6139,7 +6292,10 @@
     "play": "Бозикунӣ",
     "pause": "Таваққуф",
     "listens_one": "{{count}} info: whatsthis",
-    "listens_other": "{{count}} info: whatsthis"
+    "listens_other": "{{count}} info: whatsthis",
+    "lyrics": "Матни суруд",
+    "lyricsLoading": "Матн ҷустуҷӯ мешавад…",
+    "lyricsNone": "Матн ёфт нашуд"
   },
   "converter": {
     "seoTitle": "Табдилкунанда — видеоро ба DeHub ворид кунед",
@@ -6654,6 +6810,7 @@
     "seoDescription": "Ҳуҷҷатҳои расмии DeHub: шарҳи платформа, dApps, иқтисоди токени нишонаҳо, стейкинг, бозиҳо, нақшаи роҳ, саволҳои маъмул ва ғайра."
   },
   "dex": {
+    "title": "Доллари Сотидонаи Амрико",
     "seoTitle": "DEX — нишонаҳо-ро бо нархи худ савдо кунед",
     "seoDescription": "Бо фармоиши маҳдуди Uniswap v4 дар Base ё BNB Chain нархи харид ё фурӯши нишонаҳо-и худро муқаррар кунед. Китоби фармоишии зинда, умқи бозор ва як нархи муштараки долларӣ.",
     "venue": "Шабака",
@@ -6871,6 +7028,14 @@
     }
   },
   "editor": {
+    "video": {
+      "tFade": "Омехташавӣ",
+      "none": "Ҳеҷ",
+      "transition": "Гузариш",
+      "speed": "Суръат",
+      "sound": "Садо",
+      "video": "Видео"
+    },
     "review": {
       "title": "Баррасии лоиҳа",
       "shared": "Бо шумо мубодила шудааст",

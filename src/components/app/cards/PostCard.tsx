@@ -52,7 +52,7 @@ import { ArticleFeedCover } from '@/components/app/article/ArticleFeedCoverLazy'
 const ArticleReader = lazy(() =>
   import('@/components/app/article/ArticleReader').then((m) => ({ default: m.ArticleReader }))
 );
-import { QuotedPostEmbed } from './QuotedPostEmbed';
+import { QuotedPostEmbed, RemovedQuoteNotice } from './QuotedPostEmbed';
 import { FeedLinkPreviews } from './FeedLinkPreviews';
 import { DehubLinkEmbeds, useDehubLinks } from '@/components/app/cards/DehubLinkEmbedsLazy';
 import { AssetRefCards, useAssetRefsInText } from '@/components/app/cards/AssetRefCards';
@@ -99,6 +99,7 @@ import { usePostStage } from '@/components/app/post-stage/post-stage-context';
 import { StageMediaChrome } from '@/components/app/post-stage/StageMediaChrome';
 import { StageCreatorRow } from '@/components/app/post-stage/StageCreatorRow';
 import { viewerShareUrl } from '@/lib/share-url';
+import { KeywordFilterGate } from './KeywordFilterGate';
 
 /**
  * Lazy, and only mounted while open.
@@ -150,7 +151,7 @@ interface PostCardProps {
   threadSlot?: ReactNode;
 }
 
-export const PostCard = memo(function PostCard({ post, threadSlot, onOpenComments }: PostCardProps) {
+const PostCardBody = memo(function PostCard({ post, threadSlot, onOpenComments }: PostCardProps) {
   const { t: _copy } = _useCopy();
   const [showComments, setShowComments] = useState(false);
   const [commentsInitialTab, setCommentsInitialTab] = useState<'replies' | 'quotes' | 'reposts' | 'search' | undefined>(undefined);
@@ -449,6 +450,7 @@ export const PostCard = memo(function PostCard({ post, threadSlot, onOpenComment
       ) : (
       <CardHeader
         username={post.author.name}
+        visibility={post.visibility}
         handle={post.author.handle}
         avatarSeed={post.author.avatarSeed}
         verified={post.author.verified}
@@ -769,8 +771,9 @@ export const PostCard = memo(function PostCard({ post, threadSlot, onOpenComment
 
         {/* Quoted post embed (Twitter-style) */}
         {post.isQuotePost && post.quotedPost && (
-          <QuotedPostEmbed quotedPost={post.quotedPost} className="mt-2" />
+          <QuotedPostEmbed quotedPost={post.quotedPost} quoteTokenId={post.id} className="mt-2" />
         )}
+        {post.isQuotePost && post.quoteRevoked && <RemovedQuoteNotice className="mt-2" />}
 
         {/* DeHub entity cards — post, profile, community, invite, store, item, event */}
         <DehubLinkEmbeds links={dehubLinks} />
@@ -812,6 +815,8 @@ export const PostCard = memo(function PostCard({ post, threadSlot, onOpenComment
             newPostSlug={post.status === 'signed' ? post.newPostId ?? null : null}
             tokenId={parseInt(post.id, 10) || undefined}
             isOwnPost={!!isOwnPost}
+            quotePolicy={post.quotePolicy}
+            visibility={post.visibility}
             stage={stage}
             utilityDesktopAnchor
             className="p-0"
@@ -861,6 +866,7 @@ export const PostCard = memo(function PostCard({ post, threadSlot, onOpenComment
             tokenId={post.id}
             initialTab={commentsInitialTab}
             commentsDisabled={!!(post as { commentsDisabled?: boolean }).commentsDisabled}
+            replyPolicy={post.replyPolicy}
             forKids={!!post.forKids}
             postAuthorAddress={threadSlot ? post.author.id : undefined}
           />
@@ -1068,6 +1074,8 @@ export const PostCard = memo(function PostCard({ post, threadSlot, onOpenComment
             currentCategories={post.categories ?? []}
             currentContentRating={post.contentRating}
             currentSpoilerText={post.spoilerText}
+            currentQuotePolicy={post.quotePolicy}
+            currentReplyPolicy={post.replyPolicy}
             currentForKids={post.forKids}
             currentShopLinks={post.shopLinks}
             onSuccess={(edited) => {
@@ -1107,5 +1115,18 @@ export const PostCard = memo(function PostCard({ post, threadSlot, onOpenComment
       />
 
     </div>
+  );
+});
+
+/** Every post passes the viewer's keyword filters first — see KeywordFilterGate. */
+export const PostCard = memo(function FilteredPostCard(props: PostCardProps) {
+  const { post } = props;
+  return (
+    <KeywordFilterGate
+      texts={[post.title, post.content, post.articleBody, post.spoilerText, ...(post.mediaDescriptions ?? [])]}
+      authorId={post.author?.id}
+    >
+      <PostCardBody {...props} />
+    </KeywordFilterGate>
   );
 });

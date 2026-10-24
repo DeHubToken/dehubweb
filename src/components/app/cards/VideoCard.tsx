@@ -203,6 +203,7 @@ import { usePlaybackRecovery } from '@/hooks/use-playback-recovery';
 import { usePostStage } from '@/components/app/post-stage/post-stage-context';
 import { StageCreatorRow } from '@/components/app/post-stage/StageCreatorRow';
 import { viewerShareUrl } from '@/lib/share-url';
+import { KeywordFilterGate } from './KeywordFilterGate';
 
 /**
  * How far a touch may travel and still count as a tap on the player. Matches the
@@ -769,7 +770,7 @@ interface VideoCardProps {
   firstFeedPost?: boolean;
 }
 
-export const VideoCard = memo(function VideoCard({ video, postPage = false, onBack, isImmersive = false, disableAutoplay = false, hideActions = false, aboveFold = false, firstFeedPost = false, onOpenComments }: VideoCardProps) {
+const VideoCardBody = memo(function VideoCard({ video, postPage = false, onBack, isImmersive = false, disableAutoplay = false, hideActions = false, aboveFold = false, firstFeedPost = false, onOpenComments }: VideoCardProps) {
   const { t: _copy } = _useCopy();
   const playbackAllowed = useFeedPlaybackAllowed();
   const playbackAllowedRef = useRef(playbackAllowed);
@@ -2189,6 +2190,7 @@ export const VideoCard = memo(function VideoCard({ video, postPage = false, onBa
         <div data-card-head={headerAboveMedia ? 'plain' : ''} className="flex items-start justify-between">
           <CardHeader
             username={video.channel}
+            visibility={video.visibility}
             handle={video.creatorUsername}
             avatarSeed={video.channelAvatar}
             verified={video.verified}
@@ -3214,6 +3216,8 @@ export const VideoCard = memo(function VideoCard({ video, postPage = false, onBa
               newPostSlug={video.status === 'signed' ? video.newPostId ?? null : null}
               tokenId={parseInt(video.id, 10) || undefined}
               isOwnPost={!!isOwnPost}
+              quotePolicy={video.quotePolicy}
+              visibility={video.visibility}
               stage={stage}
               utilityDesktopAnchor
               className="p-0"
@@ -3275,6 +3279,7 @@ export const VideoCard = memo(function VideoCard({ video, postPage = false, onBa
                 tokenId={video.id}
                 initialTab={commentsInitialTab}
                 commentsDisabled={!!(video as { commentsDisabled?: boolean }).commentsDisabled}
+                replyPolicy={video.replyPolicy}
                 forKids={!!video.forKids}
                 immersive={isImmersive}
               />
@@ -3407,7 +3412,7 @@ export const VideoCard = memo(function VideoCard({ video, postPage = false, onBa
             >
               <Link2 className="w-5 h-5" /> {t('postOptions.copyLink')}
             </button>
-            {!isContentGated && /^\d+$/.test(String(video.id)) && (
+            {!isContentGated && (!video.visibility || video.visibility === 'public') && /^\d+$/.test(String(video.id)) && (
               <button
                 onClick={() => { copyPostEmbedCode(video.id, t); setShowOptionsDrawer(false); }}
                 className="flex items-center gap-3 px-4 py-3 text-white hover:bg-white/10 rounded-xl transition-colors text-left"
@@ -3503,6 +3508,8 @@ export const VideoCard = memo(function VideoCard({ video, postPage = false, onBa
             currentCategories={video.categories ?? []}
             currentContentRating={video.contentRating}
             currentSpoilerText={video.spoilerText}
+            currentQuotePolicy={video.quotePolicy}
+            currentReplyPolicy={video.replyPolicy}
             currentForKids={video.forKids}
             currentShopLinks={video.shopLinks}
             onSuccess={(edited) => {
@@ -3699,5 +3706,18 @@ export const VideoCard = memo(function VideoCard({ video, postPage = false, onBa
         quotedPost={videoAsNFT as any}
       />
     </div>
+  );
+});
+
+/** Every post passes the viewer's keyword filters first — see KeywordFilterGate. */
+export const VideoCard = memo(function FilteredVideoCard(props: VideoCardProps) {
+  const { video } = props;
+  return (
+    <KeywordFilterGate
+      texts={[video.title, video.description, video.spoilerText, ...(video.mediaDescriptions ?? [])]}
+      authorId={video.creatorId}
+    >
+      <VideoCardBody {...props} />
+    </KeywordFilterGate>
   );
 });

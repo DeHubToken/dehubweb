@@ -5,7 +5,8 @@ import { DIRECT_TIP_TOKENS } from '@/lib/direct-tip-tokens';
 import { useState, useEffect, useMemo } from 'react';
 import { DhbAmount, DhbCoin } from '@/components/app/DhbAmount';
 import { useTranslation as useI18n } from 'react-i18next';
-import { Ticket, Shield, Hash, Save, Type, ShoppingBag, Baby } from "lucide-react";
+import { Ticket, Shield, Hash, Save, Type, ShoppingBag, Baby, Quote, MessageSquareReply } from "lucide-react";
+import type { PostVisibility, QuotePolicy, ReplyPolicy } from "@/lib/api/dehub/types";
 import Gift from "@/components/ui/cut-icons/gifts";
 import Eye from "@/components/ui/cut-icons/visibility";
 import EyeOff from "@/components/ui/cut-icons/hidden";
@@ -83,6 +84,15 @@ interface PostAccessTogglesProps {
   /** Marks the post adult or graphic — see the row's copy for what that costs. */
   isMature: boolean;
   setIsMature: (value: boolean) => void;
+  /** Who may quote the post. The row is left out where this is not passed (a live stream). */
+  quotePolicy?: QuotePolicy;
+  setQuotePolicy?: (value: QuotePolicy) => void;
+  /** Who may reply. Left out, like quotes, where this is not passed. */
+  replyPolicy?: ReplyPolicy;
+  setReplyPolicy?: (value: ReplyPolicy) => void;
+  /** Who may see the post. Left out for a quote or a livestream, which are always public. */
+  visibility?: PostVisibility;
+  setVisibility?: (value: PostVisibility) => void;
   isForKids: boolean;
   setIsForKids: (value: boolean) => void;
   /**
@@ -158,6 +168,12 @@ export function PostAccessToggles({
   setShowTitle,
   isMature,
   setIsMature,
+  quotePolicy = 'public',
+  setQuotePolicy,
+  replyPolicy = 'public',
+  setReplyPolicy,
+  visibility = 'public',
+  setVisibility,
   isForKids,
   setIsForKids,
   shopLinks,
@@ -707,6 +723,77 @@ export function PostAccessToggles({
             className="data-[state=checked]:bg-white scale-75"
             onClick={e => e.stopPropagation()}
           />
+        </label>
+        )}
+
+        {/* Who may see the post — everyone, followers, or only the people it
+            mentions. First of the three, because it decides the other two:
+            a post nobody else can see is not one anybody else can quote. */}
+        {setVisibility && (
+        <div className="py-0.5">
+          <label className="flex items-center justify-between gap-3">
+            <div className="flex items-center gap-2 min-w-0">
+              <Eye className="w-4 h-4 text-white shrink-0" />
+              <span className="text-sm text-white">{t('postVisibility.label')}</span>
+            </div>
+            <select
+              value={visibility}
+              onChange={(e) => setVisibility(e.target.value as PostVisibility)}
+              onClick={e => e.stopPropagation()}
+              aria-label={t('postVisibility.label')}
+              className="rounded-lg border border-white/15 bg-black/40 px-2 py-1 text-xs text-white outline-none"
+            >
+              <option value="public">{t('postVisibility.public')}</option>
+              <option value="followers">{t('postVisibility.followers')}</option>
+              <option value="direct">{t('postVisibility.direct')}</option>
+            </select>
+          </label>
+          {visibility === 'direct' && (
+            <p className="mt-1 pl-6 text-xs text-white/60">{t('postVisibility.directHint')}</p>
+          )}
+        </div>
+        )}
+
+        {/* Who may quote the post — anyone, followers, or only the creator. */}
+        {setQuotePolicy && visibility === 'public' && (
+        <label className="flex items-center justify-between py-0.5 gap-3">
+          <div className="flex items-center gap-2 min-w-0">
+            <Quote className="w-4 h-4 text-white shrink-0" />
+            <span className="text-sm text-white">{t('quotePolicy.label')}</span>
+          </div>
+          <select
+            value={quotePolicy}
+            onChange={(e) => setQuotePolicy(e.target.value as QuotePolicy)}
+            onClick={e => e.stopPropagation()}
+            aria-label={t('quotePolicy.label')}
+            className="rounded-lg border border-white/15 bg-black/40 px-2 py-1 text-xs text-white outline-none"
+          >
+            <option value="public">{t('quotePolicy.public')}</option>
+            <option value="followers">{t('quotePolicy.followers')}</option>
+            <option value="nobody">{t('quotePolicy.nobody')}</option>
+          </select>
+        </label>
+        )}
+
+        {/* Who may reply — narrower than "comments on", wider than "off". */}
+        {setReplyPolicy && (
+        <label className="flex items-center justify-between py-0.5 gap-3">
+          <div className="flex items-center gap-2 min-w-0">
+            <MessageSquareReply className="w-4 h-4 text-white shrink-0" />
+            <span className="text-sm text-white">{t('replyPolicy.label')}</span>
+          </div>
+          <select
+            value={replyPolicy}
+            onChange={(e) => setReplyPolicy(e.target.value as ReplyPolicy)}
+            onClick={e => e.stopPropagation()}
+            aria-label={t('replyPolicy.label')}
+            className="rounded-lg border border-white/15 bg-black/40 px-2 py-1 text-xs text-white outline-none"
+          >
+            <option value="public">{t('replyPolicy.public')}</option>
+            <option value="followers">{t('replyPolicy.followers')}</option>
+            <option value="following">{t('replyPolicy.following')}</option>
+            <option value="mentioned">{t('replyPolicy.mentioned')}</option>
+          </select>
         </label>
         )}
 

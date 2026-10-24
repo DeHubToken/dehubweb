@@ -342,6 +342,15 @@ export interface SuggestedAccount {
   isFollowing?: boolean;
   badgeBalance?: number;
   hideBadgeAndBalance?: boolean;
+  /** Profile banner path, as the profile API returns it. */
+  coverImageUrl?: string | null;
+  aboutMe?: string | null;
+  uploads?: number;
+  followsYou?: boolean;
+  /** Why the server picked this account. */
+  reason?: 'follows_you' | 'followed_by_people_you_know' | 'engagement_overlap' | 'suggested';
+  /** Up to two people you follow who follow them. */
+  mutualConnections?: { address: string; username?: string; displayName?: string; avatarImageUrl?: string }[];
 }
 
 export async function getSuggestedAccounts(limit: number = 10, page: number = 1): Promise<{ items: SuggestedAccount[]; hasMore: boolean }> {
@@ -385,6 +394,29 @@ export async function getSuggestedAccounts(limit: number = 10, page: number = 1)
   
   console.warn('[Suggestions] Unexpected response shape:', JSON.stringify(response).slice(0, 200));
   return { items: [], hasMore: false };
+}
+
+/**
+ * The endless Who to follow list: every account you don't follow, a page at a
+ * time. `active` (feed) puts recently active, complete profiles first;
+ * `newest` (Explore) the newest sign-ups. Empty profiles come last on both.
+ * `nextCursor` is null once everyone has been shown.
+ */
+export async function getRankedSuggestions(
+  sort: 'active' | 'newest',
+  cursor?: string | null,
+  limit: number = 10,
+): Promise<{ items: SuggestedAccount[]; nextCursor: string | null }> {
+  const response = await apiCall<any>("/api/suggested-accounts", {
+    params: { sort, limit, ...(cursor ? { cursor } : {}) },
+    requiresAuth: true,
+  });
+  const result = response && typeof response === 'object' && 'result' in response ? response.result : response;
+  const items = Array.isArray(result?.items) ? result.items : [];
+  return {
+    items: items.map((i: SuggestedAccount) => ({ ...i, badgeBalance: i.badgeBalance ?? 0 })),
+    nextCursor: typeof result?.nextCursor === 'string' ? result.nextCursor : null,
+  };
 }
 
 /**

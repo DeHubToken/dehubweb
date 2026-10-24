@@ -1,4 +1,132 @@
 {
+  "mastodonApps": {
+    "authTitle": "سجّل الدخول بـ DeHub",
+    "authWants": "{{app}} يشتي يستخدم حسابك في DeHub",
+    "authSignedInAs": "داخل باسم {{name}}",
+    "authSignIn": "سجّل الدخول عشان تكمّل",
+    "allow": "اسمح",
+    "cancel": "إلغاء",
+    "scopeRead": "يشوف الخط الزمني ومنشوراتك وإشعاراتك والمحفوظات",
+    "scopeWrite": "ينشر ويرد ويعجب ويعيد النشر ويحفظ باسمك",
+    "scopeFollow": "يتابع ويلغي المتابعة ويحظر ويكتم الحسابات",
+    "scopePush": "يرسل لك إشعارات",
+    "scopeProfile": "يشوف ملفك الشخصي",
+    "invalid": "رابط الدخول هذا مش صالح. ارجع للتطبيق وجرّب مرة ثانية.",
+    "failed": "ما ضبطت. جرّب مرة ثانية.",
+    "codeTitle": "انسخ هذا الرمز في التطبيق عشان تكمّل الدخول.",
+    "copy": "نسخ",
+    "copied": "انتسخ",
+    "seoDescription": "خلّي تطبيق Mastodon يستخدم حسابك في DeHub.",
+    "redirecting": "بانرجّعك لـ {{app}}…",
+    "connectedTitle": "التطبيقات المتصلة",
+    "connectedDescription": "تطبيقات Mastodon اللي دخلتها بهذا الحساب. احذف واحد عشان تخرج منه.",
+    "connectedEmpty": "ما فيش تطبيقات متصلة لسا.",
+    "lastUsed": "آخر استخدام {{date}}",
+    "remove": "احذف",
+    "removed": "انحذف التطبيق"
+  },
+  "fediverse": {
+    "title": "الفيديفيرس",
+    "description": "الناس على ماستودون وتطبيقات الفيديفيرس الثانية يقدروا يلاقوك ويتابعوك على هذا العنوان. منشوراتك العامة الجديدة توصلهم هناك.",
+    "copy": "نسخ",
+    "copied": "انتسخ",
+    "privateNote": "الحسابات الخاصة ما تظهر على الفيديفيرس.",
+    "noUsername": "اختار اسم مستخدم عشان يكون عندك عنوان فيديفيرس."
+  },
+  "profileFields": {
+    "title": "حقول الملف الشخصي",
+    "description": "لما أربعة أسطر زيادة في ملفك، مثل موقع أو ضمائرك.",
+    "label": "التسمية",
+    "content": "المحتوى",
+    "save": "احفظ الحقول",
+    "saved": "انحفظت حقول الملف",
+    "failed": "ما انحفظ. جرب مرة ثانية.",
+    "verified": "رابط موثّق",
+    "verifyHint": "عشان توثّق رابط، أضف هذا للصفحة وبعدين احفظ مرة ثانية: {{snippet}}"
+  },
+  "followedTags": {
+    "follow": "تابع #{{tag}}",
+    "following": "تتابعه",
+    "unfollow": "إلغاء متابعة #{{tag}}",
+    "followed": "صرت تتابع #{{tag}}. منشوراته بتظهر في خلاصة المتابَعين.",
+    "unfollowed": "ألغيت متابعة #{{tag}}",
+    "failed": "ما انحفظ. جرب مرة ثانية.",
+    "clear": "مسح"
+  },
+  "notificationFilters": {
+    "title": "فلترة الإشعارات من",
+    "description": "اختار إيش يصير لما أحد من برّا دائرتك يتفاعل معك. الإشعارات المفلترة تنتظر تحت \"المفلترة\" بدون عداد ولا تنبيه.",
+    "notFollowing": "ناس ما تتابعهم",
+    "notFollowers": "ناس ما يتابعوك",
+    "newAccounts": "حسابات جديدة (أقل من 30 يوم)",
+    "accept": "بلّغني",
+    "filter": "فلتر",
+    "drop": "اخفيها كليًا",
+    "filteredTitle": "الإشعارات المفلترة",
+    "filteredEmpty": "ما انفلتر شي.",
+    "failed": "ما انحفظ. جرب مرة ثانية."
+  },
+  "keywordFilters": {
+    "title": "الكلمات المكتومة",
+    "description": "اخفِ المنشورات والتعليقات اللي فيها هذي الكلمات، أو خليها ورا تحذير. أنت بس اللي تشوف هذي القائمة.",
+    "placeholder": "كلمة أو عبارة",
+    "add": "اكتم",
+    "added": "انكتمت: {{phrase}}",
+    "wholeWord": "الكلمة كاملة بس",
+    "whenMatches": "لما يطابق منشور",
+    "warn": "اعرض تحذير",
+    "hide": "اخفيه",
+    "howLong": "كم المدة",
+    "forever": "لما أشيلها",
+    "duration1h": "لمدة ساعة",
+    "duration1d": "لمدة يوم",
+    "duration7d": "لمدة 7 أيام",
+    "duration30d": "لمدة 30 يوم",
+    "where": "فين",
+    "home": "الرئيسية",
+    "public": "الاستكشاف والبحث",
+    "profile": "الملفات الشخصية",
+    "thread": "المحادثات",
+    "notifications": "الإشعارات",
+    "empty": "ما كتمت أي كلمة.",
+    "remove": "إلغاء الكتم",
+    "until": "لما {{date}}",
+    "filtered": "مفلتر: {{phrase}}",
+    "showAnyway": "اعرضه على كل حال",
+    "failed": "ما انحفظ. جرب مرة ثانية."
+  },
+  "postVisibility": {
+    "label": "من يقدر يشوف هذا",
+    "public": "الكل",
+    "followers": "المتابعين بس",
+    "direct": "المذكورين بس",
+    "noRepost": "بس المنشورات العامة تقدر تعيد نشرها",
+    "directHint": "بس الناس اللي تذكرهم بـ@ بيشوفوا هذا المنشور",
+    "needsMention": "اذكر شخص واحد على الأقل بـ@ عشان تنشر للمذكورين بس"
+  },
+  "replyPolicy": {
+    "label": "من يقدر يرد",
+    "public": "أي واحد",
+    "followers": "متابعينك",
+    "following": "اللي تتابعهم",
+    "mentioned": "المذكورين بس",
+    "noticeFollowers": "بس متابعين صاحب المنشور يقدروا يردوا",
+    "noticeFollowing": "بس اللي يتابعهم صاحب المنشور يقدروا يردوا",
+    "noticeMentioned": "بس المذكورين في المنشور يقدروا يردوا",
+    "refused": "صاحب المنشور حدد من يقدر يرد على هذا المنشور"
+  },
+  "quotePolicy": {
+    "label": "من يقدر يقتبس",
+    "public": "أي واحد",
+    "followers": "المتابعين",
+    "nobody": "أنا بس",
+    "off": "صاحب المنشور قفّل الاقتباس",
+    "removed": "صاحب المنشور شال منشوره من هذا الاقتباس",
+    "remove": "شيل",
+    "removedToast": "انشال منشورك من هذا الاقتباس",
+    "removeFailed": "تعذّر نشيل منشورك من الاقتباس",
+    "refused": "صاحب المنشور ما يسمح لك تقتبس هذا المنشور"
+  },
   "contentWarning": {
     "label": "تحذير المحتوى",
     "placeholder": "اكتب التحذير هنا",
@@ -131,6 +259,7 @@
     "heading": "فيديوهات DeHub القصيرة"
   },
   "settings": {
+    "usernameTaken": "الاسم مأخوذ",
     "postingChain": "شبكة النشر",
     "showOnline": "فرّج لي متى أنا أونلاين",
     "showOnlineDesc": "الناس اللي تبعث لهم رسائل يشوفوا نقطة خضرا جنب اسمك وإنت تستخدم DeHub",
@@ -638,7 +767,6 @@
     "embed": "تضمين",
     "copyEmbedCode": "نسخ رمز التضمين",
     "embedCodeCopied": "تم نسخ رمز التضمين",
-    "copyFailed": "تعذّر نسخ الرابط",
     "options": "خيارات",
     "sendTip": "أرسل إكرامية",
     "queue": "قائمة الانتظار",
@@ -665,7 +793,8 @@
     "unpinPost": "ألغِ التثبيت من ملفك الشخصي",
     "postPinned": "مثبّت في ملفك الشخصي",
     "postUnpinned": "تم إلغاء التثبيت من ملفك الشخصي",
-    "pinFailed": "تعذّر تثبيت هذا المنشور أو إلغاء تثبيته"
+    "pinFailed": "تعذّر تثبيت هذا المنشور أو إلغاء تثبيته",
+    "copyFailed": "تعذّر نسخ الرابط"
   },
   "filters": {
     "sort": "ترتيب",
@@ -2273,6 +2402,7 @@
     "pendingSubmitted": "تم إرسال {{amount}} توكن. لا يزال التأكيد قيد الفحص. لا ترسلها مرة أخرى."
   },
   "communities": {
+    "chatTab": "دردشة",
     "title": "مجتمعات",
     "create": "أنشئ",
     "searchPlaceholder": "دوّر على مجتمعات...",
@@ -2300,7 +2430,29 @@
     "ticker": "التيكر",
     "assignTicker": "عيّن رسم التيكر",
     "communityDescription": "وصف المجتمع...",
-    "chat": "دردشة",
+    "chat": {
+      "intervalHour": "ساعة وحدة",
+      "intervalHours": "{{count}} ساعات",
+      "intervalMinute": "دقيقة وحدة",
+      "intervalMinutes": "{{count}} دقائق",
+      "intervalSecond": "ثانية وحدة",
+      "intervalSeconds": "{{count}} ثواني",
+      "muted": "أنت مكتوم",
+      "mutedUntil": "أنت مكتوم لحد {{until}}",
+      "postingDisabled": "النشر معطل للأعضاء هنا",
+      "pinnedMedia": "ميديا",
+      "jumpToPinned": "إنتقل للرسالة المثبتة",
+      "pinnedMessage": "رسالة مثبتة",
+      "unpin": "فك التثبيت",
+      "pin": "ثبت",
+      "delete": "احذف",
+      "slowMode": "الوضع البطيء: رسالة كل {{interval}}",
+      "slowModeWait": "الوضع البطيء — انتظر {{time}}",
+      "send": "أرسل",
+      "deleteMessageTitle": "تحذف هذي الرسالة؟",
+      "deleteMessageBody": "ما تقدر ترجّعها.",
+      "cancel": "إلغاء"
+    },
     "membersTab": "الأعضاء ({{count}})",
     "about": "عن",
     "backToCommunities": "مجتمعات",
@@ -3556,6 +3708,7 @@
     "needsYouHold": "حاجت ل{{needed}}، انت بتحتفظ ب{{held}}"
   },
   "creator": {
+    "libraryEmpty": "توليداتك المحفوظة بتظهر هنا.",
     "startCreatingWith": "بِدَايَةِ خَلْقِكْ مَعَ {{model}}",
     "countRunning_one": "{{count}} يجري",
     "countRunning_other": "{{count}} يجري",
@@ -5527,7 +5680,10 @@
     "play": "شغل",
     "pause": "إيقاف مؤقت",
     "listens_one": "{{count}} استمع",
-    "listens_other": "{{count}} يستمع"
+    "listens_other": "{{count}} يستمع",
+    "lyrics": "كلمات الأغنية",
+    "lyricsLoading": "جارٍ جلب الكلمات…",
+    "lyricsNone": "لا توجد كلمات"
   },
   "converter": {
     "seoTitle": "محول — استيراد فيديو إلى DeHub",
@@ -6041,6 +6197,7 @@
     "seoDescription": "الوثائق الرسمية لـ DeHub: نظرة عامة على المنصة، التطبيقات اللامركزية، اقتصاد توكن توكنز، التخزين، الألعاب، خارطة الطريق، الأسئلة الشائعة والمزيد."
   },
   "dex": {
+    "title": "دولار جنوب أفريقيا / دولار أمريكي",
     "seoTitle": "DEX — تداول توكنز بالسعر اللي تبيه",
     "seoDescription": "حدد سعر شراء أو بيع توكنز حقك بأمر محدد من Uniswap v4 على Base أو BNB Chain. دفتر أوامر مباشر، عمق السوق وسعر موحد بالدولار.",
     "venue": "الشبكة",
@@ -6263,6 +6420,14 @@
     }
   },
   "editor": {
+    "video": {
+      "tFade": "تلاشٍ متداخل",
+      "none": "بدون",
+      "transition": "انتقال",
+      "speed": "السرعة",
+      "sound": "صوت",
+      "video": "فيديو"
+    },
     "review": {
       "title": "مراجعة المشروع",
       "shared": "تمت مشاركته معك",

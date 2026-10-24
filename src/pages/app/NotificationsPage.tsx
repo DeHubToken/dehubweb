@@ -8,7 +8,7 @@ import { motion, useReducedMotion } from 'framer-motion';
 import { IslandAction, PageBody, PageIsland, PageTabs } from '@/components/app/page-kit/PageKit';
 import { useTranslation } from 'react-i18next';
 import { AppealDrawer } from '@/components/app/notifications/AppealDrawer';
-import { AtSign, Loader2, AlertTriangle, Zap, MailOpen, Mail, Star, ShoppingBag, Scale, Siren, Award } from "lucide-react";
+import { AtSign, Loader2, AlertTriangle, Zap, MailOpen, Mail, Star, ShoppingBag, Scale, Siren, Award, ChevronDown, Filter as FilterIcon } from "lucide-react";
 import MessageSquareText from "@/components/ui/cut-icons/messages";
 import Users from "@/components/ui/cut-icons/communities";
 import Check from "@/components/ui/cut-icons/check";
@@ -1600,6 +1600,78 @@ const NotificationItem = memo(function NotificationItem({
   );
 });
 
+/**
+ * What the reader's notification filters held back (Settings → Notifications
+ * → Filter notifications from). Collapsed until opened, and only fetched then,
+ * so a reader without filters pays nothing for it.
+ */
+function FilteredNotificationsSection({
+  onMarkAsRead,
+  markingNotificationId,
+  enrichedAvatars,
+}: {
+  onMarkAsRead: (id: string) => void;
+  markingNotificationId: string | null;
+  enrichedAvatars: Map<string, EnrichedAvatar>;
+}) {
+  const { t } = useTranslation();
+  const [open, setOpen] = useState(false);
+  const { notifications, isLoading, hasNextPage, fetchNextPage, isFetchingNextPage } = useNotifications(undefined, undefined, {
+    filtered: true,
+    enabled: open,
+    notifyOnNew: false,
+  });
+  const bundles = useMemo(
+    () => bundleNotifications(notifications.filter(n => n && n.id), enrichedAvatars),
+    [notifications, enrichedAvatars],
+  );
+
+  return (
+    <div data-filtered-notifications className="mt-3 overflow-hidden rounded-2xl border border-white/5 bg-zinc-900">
+      <button
+        type="button"
+        onClick={() => setOpen(v => !v)}
+        aria-expanded={open}
+        className="flex w-full items-center justify-between gap-3 px-4 py-3 text-sm text-zinc-400 hover:text-white"
+      >
+        <span className="flex items-center gap-2">
+          <FilterIcon className="h-4 w-4" aria-hidden="true" />
+          {t('notificationFilters.filteredTitle')}
+        </span>
+        <ChevronDown className={`h-4 w-4 transition-transform ${open ? 'rotate-180' : ''}`} aria-hidden="true" />
+      </button>
+      {open && (
+        isLoading ? (
+          <div className="flex justify-center p-4"><Loader2 className="h-4 w-4 animate-spin text-zinc-500" /></div>
+        ) : bundles.length === 0 ? (
+          <p className="px-4 pb-4 text-sm text-zinc-500">{t('notificationFilters.filteredEmpty')}</p>
+        ) : (
+          <div className="divide-y divide-zinc-800 border-t border-zinc-800">
+            {bundles.map(bundle => (
+              <NotificationItem
+                key={bundle.primary.id}
+                notification={bundle.primary}
+                bundle={bundle}
+                onMarkAsRead={onMarkAsRead}
+                isMarkingAsRead={bundle.allIds.includes(markingNotificationId || '')}
+                enrichedAvatars={enrichedAvatars}
+              />
+            ))}
+            {hasNextPage && (
+              <div className="flex justify-center p-3">
+                <Button variant="ghost" onClick={() => fetchNextPage()} disabled={isFetchingNextPage} className="text-zinc-400 hover:text-white">
+                  {isFetchingNextPage ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : null}
+                  {t('notifications.loadMore')}
+                </Button>
+              </div>
+            )}
+          </div>
+        )
+      )}
+    </div>
+  );
+}
+
 export default function NotificationsPage({ inDrawer = false }: { inDrawer?: boolean } = {}) {
   const { t: _copy } = _useCopy();
   const { t } = useTranslation();
@@ -2345,6 +2417,13 @@ export default function NotificationsPage({ inDrawer = false }: { inDrawer?: boo
             </div>
           )}
         </div>
+        {!inDrawer && isAuthenticated && (
+          <FilteredNotificationsSection
+            onMarkAsRead={handleMarkAsRead}
+            markingNotificationId={markingNotificationId}
+            enrichedAvatars={enrichedAvatars}
+          />
+        )}
       </PageBody>
       {/* Followers drawer - opened inline from aggregated follow notifications */}
       {pageWalletAddress && (

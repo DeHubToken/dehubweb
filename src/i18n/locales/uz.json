@@ -1,4 +1,132 @@
 {
+  "mastodonApps": {
+    "authTitle": "DeHub orqali kirish",
+    "authWants": "{{app}} DeHub akkauntingizdan foydalanmoqchi",
+    "authSignedInAs": "{{name}} sifatida kirgansiz",
+    "authSignIn": "Davom etish uchun kiring",
+    "allow": "Ruxsat berish",
+    "cancel": "Bekor qilish",
+    "scopeRead": "Lentalaringiz, postlaringiz, bildirishnomalaringiz va xatchoʻplaringizni koʻrish",
+    "scopeWrite": "Siz nomingizdan joylash, javob berish, yoqtirish, ulashish va xatchoʻpga qoʻshish",
+    "scopeFollow": "Akkauntlarga obuna boʻlish, obunani bekor qilish, bloklash va ovozsiz qilish",
+    "scopePush": "Sizga bildirishnoma yuborish",
+    "scopeProfile": "Profilingizni koʻrish",
+    "invalid": "Bu kirish havolasi yaroqsiz. Ilovaga qayting va qayta urinib koʻring.",
+    "failed": "Boʻlmadi. Qayta urinib koʻring.",
+    "codeTitle": "Kirishni tugatish uchun bu kodni ilovaga nusxalang.",
+    "copy": "Nusxalash",
+    "copied": "Nusxalandi",
+    "seoDescription": "Mastodon ilovasiga DeHub akkauntingizdan foydalanishga ruxsat bering.",
+    "redirecting": "Sizni {{app}} ilovasiga qaytarmoqdamiz…",
+    "connectedTitle": "Ulangan ilovalar",
+    "connectedDescription": "Bu akkaunt bilan kirgan Mastodon ilovalaringiz. Chiqish uchun birini olib tashlang.",
+    "connectedEmpty": "Hali ulangan ilova yoʻq.",
+    "lastUsed": "Oxirgi marta ishlatilgan {{date}}",
+    "remove": "Olib tashlash",
+    "removed": "Ilova olib tashlandi"
+  },
+  "fediverse": {
+    "title": "Fediverse",
+    "description": "Mastodon va boshqa fediverse ilovalaridagi odamlar sizni shu manzil orqali topib, kuzata oladi. Yangi ommaviy postlaringiz u yerda ularga yetib boradi.",
+    "copy": "Nusxalash",
+    "copied": "Nusxalandi",
+    "privateNote": "Shaxsiy akkauntlar fediverse'da ko'rsatilmaydi.",
+    "noUsername": "Fediverse manzilini olish uchun foydalanuvchi nomini tanlang."
+  },
+  "profileFields": {
+    "title": "Profil maydonlari",
+    "description": "Profilingizda to'rttagacha qo'shimcha qator, masalan veb-sayt yoki olmoshlaringiz.",
+    "label": "Yorliq",
+    "content": "Mazmun",
+    "save": "Maydonlarni saqlash",
+    "saved": "Profil maydonlari saqlandi",
+    "failed": "Saqlanmadi. Qayta urinib ko'ring.",
+    "verified": "Tasdiqlangan havola",
+    "verifyHint": "Havolani tasdiqlash uchun buni o'sha sahifaga qo'shing, so'ng qayta saqlang: {{snippet}}"
+  },
+  "followedTags": {
+    "follow": "#{{tag}} ni kuzatish",
+    "following": "Kuzatyapsiz",
+    "unfollow": "#{{tag}} ni kuzatishni to'xtatish",
+    "followed": "Endi #{{tag}} ni kuzatyapsiz. Uning postlari Kuzatuvlar lentangizda chiqadi.",
+    "unfollowed": "#{{tag}} kuzatilmaydi",
+    "failed": "Saqlanmadi. Qayta urinib ko'ring.",
+    "clear": "Tozalash"
+  },
+  "notificationFilters": {
+    "title": "Bildirishnomalarni filtrlash",
+    "description": "Doirangizdan tashqaridagi kimdir siz bilan muloqot qilganda nima bo'lishini tanlang. Filtrlangan bildirishnomalar belgi va push'siz «Filtrlangan» bo'limida kutadi.",
+    "notFollowing": "Siz kuzatmaydigan odamlar",
+    "notFollowers": "Sizni kuzatmaydigan odamlar",
+    "newAccounts": "Yangi akkauntlar (30 kundan kam)",
+    "accept": "Menga xabar bering",
+    "filter": "Filtrlash",
+    "drop": "To'liq yashirish",
+    "filteredTitle": "Filtrlangan bildirishnomalar",
+    "filteredEmpty": "Hech narsa filtrlanmagan.",
+    "failed": "Saqlanmadi. Qayta urinib ko'ring."
+  },
+  "keywordFilters": {
+    "title": "Ovozi o'chirilgan so'zlar",
+    "description": "Bu so'zlar bor post va izohlarni yashiring yoki ogohlantirish ortiga yig'ing. Bu ro'yxatni faqat siz ko'rasiz.",
+    "placeholder": "So'z yoki ibora",
+    "add": "Ovozini o'chirish",
+    "added": "Ovozi o'chirildi: {{phrase}}",
+    "wholeWord": "Faqat to'liq so'z",
+    "whenMatches": "Post mos kelganda",
+    "warn": "Ogohlantirish ko'rsatish",
+    "hide": "Yashirish",
+    "howLong": "Qancha muddat",
+    "forever": "Men o'chirgunimcha",
+    "duration1h": "1 soatga",
+    "duration1d": "1 kunga",
+    "duration7d": "7 kunga",
+    "duration30d": "30 kunga",
+    "where": "Qayerda",
+    "home": "Bosh sahifa",
+    "public": "Kashf etish va qidirish",
+    "profile": "Profillar",
+    "thread": "Suhbatlar",
+    "notifications": "Bildirishnomalar",
+    "empty": "Siz hech qanday so'z ovozini o'chirmagansiz.",
+    "remove": "Ovozini yoqish",
+    "until": "{{date}} gacha",
+    "filtered": "Filtrlandi: {{phrase}}",
+    "showAnyway": "Baribir ko'rsatish",
+    "failed": "Saqlanmadi. Qayta urinib ko'ring."
+  },
+  "postVisibility": {
+    "label": "Buni kim ko'ra oladi",
+    "public": "Hamma",
+    "followers": "Faqat obunachilar",
+    "direct": "Faqat tilga olinganlar",
+    "noRepost": "Faqat ommaviy postlarni qayta joylash mumkin",
+    "directHint": "Bu postni faqat siz @ bilan tilga olgan odamlar ko'radi",
+    "needsMention": "Faqat tilga olinganlarga joylash uchun kamida bir kishini @ bilan tilga oling"
+  },
+  "replyPolicy": {
+    "label": "Kim javob bera oladi",
+    "public": "Har kim",
+    "followers": "Obunachilaringiz",
+    "following": "Siz kuzatadigan odamlar",
+    "mentioned": "Faqat eslatilganlar",
+    "noticeFollowers": "Faqat muallifning obunachilari javob bera oladi",
+    "noticeFollowing": "Faqat muallif kuzatadigan odamlar javob bera oladi",
+    "noticeMentioned": "Faqat postda eslatilganlar javob bera oladi",
+    "refused": "Muallif bu postga kim javob bera olishini cheklagan"
+  },
+  "quotePolicy": {
+    "label": "Kim iqtibos keltira oladi",
+    "public": "Har kim",
+    "followers": "Obunachilar",
+    "nobody": "Faqat men",
+    "off": "Muallif iqtibos keltirishni oʻchirib qoʻygan",
+    "removed": "Muallif postini bu iqtibosdan olib tashladi",
+    "remove": "Olib tashlash",
+    "removedToast": "Postingiz bu iqtibosdan olib tashlandi",
+    "removeFailed": "Postingizni iqtibosdan olib tashlab boʻlmadi",
+    "refused": "Muallif bu postdan iqtibos keltirishingizga ruxsat bermaydi"
+  },
   "contentWarning": {
     "label": "Kontent haqida ogohlantirish",
     "placeholder": "Ogohlantirishingizni shu yerga yozing",
@@ -132,6 +260,7 @@
     "heading": "DeHub qisqa videolari"
   },
   "settings": {
+    "usernameTaken": "Bu foydalanuvchi nomi band",
     "postingChain": "Postlar blokcheyni",
     "showOnline": "Onlayn bo'lganimda ko'rsatilsin",
     "showOnlineDesc": "DeHub’dan foydalanayotganingizda xabar yuborgan odamlaringiz ismingiz yonida yashil nuqta ko‘rishadi",
@@ -657,7 +786,6 @@
     "embed": "Joylashtirish",
     "copyEmbedCode": "Joylashtirish kodini nusxalash",
     "embedCodeCopied": "Joylashtirish kodi nusxalandi",
-    "copyFailed": "Havolani nusxalab boʻlmadi",
     "options": "Parametrlar",
     "aiOverview": "Sun'iy intellektga umumiy nuqtai nazar",
     "sendTip": "Tip yuborish",
@@ -685,7 +813,8 @@
     "unpinPost": "Profilingizdan olib tashlash",
     "postPinned": "Profilingizga mahkamlandi",
     "postUnpinned": "Profilingizdan olib tashlandi",
-    "pinFailed": "Bu postni mahkamlab yoki olib tashlab bo'lmadi"
+    "pinFailed": "Bu postni mahkamlab yoki olib tashlab bo'lmadi",
+    "copyFailed": "Havolani nusxalab boʻlmadi"
   },
   "filters": {
     "sort": "Saralash",
@@ -2323,6 +2452,7 @@
     "pendingSubmitted": "{{amount}} ta token yuborildi. Tasdiqlash hali tekshirilmoqda. Uni qayta yubormang."
   },
   "communities": {
+    "chatTab": "Chat",
     "title": "Jamoalar",
     "create": "Yaratish",
     "searchPlaceholder": "Jamoalarni qidirish...",
@@ -2357,7 +2487,30 @@
     "addDescription": "Tavsif qo'shing...",
     "communityDescription": "Jamoa tavsifi...",
     "posts": "Postlar",
-    "chat": "Chat",
+    "chat": {
+      "intervalHour": "1 soat",
+      "intervalHours": "{{count}} soat",
+      "intervalMinute": "1 daqiqa",
+      "intervalMinutes": "{{count}} daqiqa",
+      "intervalSecond": "1 soniya",
+      "intervalSeconds": "{{count}} soniya",
+      "muted": "Siz ovozsizsiz",
+      "mutedUntil": "Siz {{until}} gacha ovozsiz holatdasiz",
+      "postingDisabled": "Bu yerdagi a&#39;zolar uchun post qoldirish o&#39;chirib qo&#39;yilgan",
+      "pinnedGif": "GIF",
+      "pinnedMedia": "Media",
+      "jumpToPinned": "Qadalgan xabarga o&#39;tish",
+      "pinnedMessage": "Qadalgan xabar",
+      "unpin": "Olib tashlash",
+      "pin": "Pin",
+      "delete": "O&#39;chirish",
+      "slowMode": "Sekin rejim: har {{interval}} da bitta xabar",
+      "slowModeWait": "Sekin rejim — kuting {{time}}",
+      "send": "Yuborish",
+      "deleteMessageTitle": "Bu xabar oʻchirilsinmi?",
+      "deleteMessageBody": "Buni bekor qilib bo&#39;lmaydi.",
+      "cancel": "Bekor qilish"
+    },
     "membersTab": "A'zolar ({{count}})",
     "about": "Haqida",
     "backToCommunities": "Jamoalar",
@@ -3822,6 +3975,7 @@
     "sellYourFractions": "Kasrlaringizni soting ({{held}} ushlab turilgan)"
   },
   "creator": {
+    "libraryEmpty": "Saqlangan generatsiyalaringiz shu yerda paydo bo‘ladi.",
     "whatToCreate": "Nima yaratish kerak",
     "startCreatingWith": "{{model}} bilan yaratishni boshlang",
     "studioSubtitle": "Sahna, personaj, kayfiyat yoki uslubni tasvirlab bering. Natijalar quyida keltirilgan va to'g'ridan-to'g'ri muharrirga uzatiladi.",
@@ -6231,7 +6385,10 @@
     "play": "Oʻynash",
     "pause": "Pausekeyboard label",
     "listens_one": "{{count}} eshit",
-    "listens_other": "{{count}} tinglaydi"
+    "listens_other": "{{count}} tinglaydi",
+    "lyrics": "Qoʻshiq matni",
+    "lyricsLoading": "Matn qidirilmoqda…",
+    "lyricsNone": "Matn topilmadi"
   },
   "converter": {
     "seoTitle": "Konvertor — DeHub-ga video import qiling",
@@ -6747,6 +6904,7 @@
     "seoDescription": "DeHub rasmiy hujjatlari: platforma sharhi, dApps, tokenlar token iqtisodiyoti, staking, oʻyinlar, yoʻl xaritasi, koʻp beriladigan savollar va boshqalar."
   },
   "dex": {
+    "title": "tokenlar / USD",
     "seoTitle": "DEX — tokenlar ni oʻzingiz belgilagan narxda savdo qiling",
     "seoDescription": "Base yoki BNB Chain’da Uniswap v4 limit buyurtmasi bilan tokenlar sotib olish yoki sotish narxini belgilang. Jonli buyurtmalar kitobi, bozor chuqurligi va bitta umumiy AQSh dollari narxi.",
     "venue": "Tarmoq",
@@ -6969,6 +7127,14 @@
     }
   },
   "editor": {
+    "video": {
+      "tFade": "Aralash o‘tish",
+      "none": "Yo‘q",
+      "transition": "O‘tish",
+      "speed": "Tezlik",
+      "sound": "Ovoz",
+      "video": "Video"
+    },
     "review": {
       "title": "Loyihani ko‘rib chiqish",
       "shared": "Siz bilan ulashilgan",

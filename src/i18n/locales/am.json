@@ -1,4 +1,132 @@
 {
+  "mastodonApps": {
+    "authTitle": "በDeHub ይግቡ",
+    "authWants": "{{app}} የDeHub መለያዎን መጠቀም ይፈልጋል",
+    "authSignedInAs": "እንደ {{name}} ገብተዋል",
+    "authSignIn": "ለመቀጠል ይግቡ",
+    "allow": "ፍቀድ",
+    "cancel": "ሰርዝ",
+    "scopeRead": "የጊዜ መስመሮችዎን፣ ልጥፎችዎን፣ ማሳወቂያዎችዎን እና ዕልባቶችዎን ማየት",
+    "scopeWrite": "በእርስዎ ስም መለጠፍ፣ መመለስ፣ መውደድ፣ ማጋራት እና ዕልባት ማድረግ",
+    "scopeFollow": "መለያዎችን መከተል፣ አለመከተል፣ ማገድ እና ድምጸ-ከል ማድረግ",
+    "scopePush": "ማሳወቂያዎችን መላክ",
+    "scopeProfile": "መገለጫዎን ማየት",
+    "invalid": "ይህ የመግቢያ አገናኝ ትክክል አይደለም። ወደ መተግበሪያው ተመልሰው እንደገና ይሞክሩ።",
+    "failed": "አልሰራም። እንደገና ይሞክሩ።",
+    "codeTitle": "መግባቱን ለመጨረስ ይህን ኮድ ወደ መተግበሪያው ይቅዱ።",
+    "copy": "ቅዳ",
+    "copied": "ተቀድቷል",
+    "seoDescription": "የMastodon መተግበሪያ የDeHub መለያዎን እንዲጠቀም ይፍቀዱ።",
+    "redirecting": "ወደ {{app}} እየመለስንዎት ነው…",
+    "connectedTitle": "የተገናኙ መተግበሪያዎች",
+    "connectedDescription": "በዚህ መለያ የገቡባቸው የMastodon መተግበሪያዎች። ለማስወጣት አንዱን ያስወግዱ።",
+    "connectedEmpty": "እስካሁን የተገናኘ መተግበሪያ የለም።",
+    "lastUsed": "ለመጨረሻ ጊዜ የተጠቀሙት {{date}}",
+    "remove": "አስወግድ",
+    "removed": "መተግበሪያው ተወግዷል"
+  },
+  "fediverse": {
+    "title": "ፌዲቨርስ",
+    "description": "በማስቶዶን እና በሌሎች የፌዲቨርስ መተግበሪያዎች ያሉ ሰዎች በዚህ አድራሻ ሊያገኙዎትና ሊከተሉዎት ይችላሉ። አዲሶቹ ይፋዊ ልጥፎችዎ እዚያ ይደርሷቸዋል።",
+    "copy": "ቅዳ",
+    "copied": "ተቀድቷል",
+    "privateNote": "የግል መለያዎች በፌዲቨርስ ላይ አይታዩም።",
+    "noUsername": "የፌዲቨርስ አድራሻ ለማግኘት የተጠቃሚ ስም ይምረጡ።"
+  },
+  "profileFields": {
+    "title": "የመገለጫ መስኮች",
+    "description": "በመገለጫዎ ላይ እስከ አራት ተጨማሪ መስመሮች፣ ለምሳሌ ድረ-ገጽ ወይም ተውላጠ ስሞችዎ።",
+    "label": "መለያ",
+    "content": "ይዘት",
+    "save": "መስኮችን አስቀምጥ",
+    "saved": "የመገለጫ መስኮች ተቀምጠዋል",
+    "failed": "አልተቀመጠም። እንደገና ይሞክሩ።",
+    "verified": "የተረጋገጠ አገናኝ",
+    "verifyHint": "አገናኝን ለማረጋገጥ ይህን በዚያ ገጽ ላይ ያክሉ፣ ከዚያ እንደገና ያስቀምጡ፦ {{snippet}}"
+  },
+  "followedTags": {
+    "follow": "#{{tag}}ን ተከተል",
+    "following": "እየተከተሉ ነው",
+    "unfollow": "#{{tag}}ን አትከተል",
+    "followed": "አሁን #{{tag}}ን እየተከተሉ ነው። ልጥፎቹ በሚከተሏቸው ምግብ ውስጥ ይታያሉ።",
+    "unfollowed": "#{{tag}}ን መከተል አቁመዋል",
+    "failed": "አልተቀመጠም። እንደገና ይሞክሩ።",
+    "clear": "አጽዳ"
+  },
+  "notificationFilters": {
+    "title": "ማሳወቂያዎችን አጣራ ከ",
+    "description": "ከክበብዎ ውጪ ያለ ሰው ከእርስዎ ጋር ሲገናኝ ምን እንደሚሆን ይምረጡ። የተጣሩ ማሳወቂያዎች ያለ ምልክትና ያለ ግፊት ማሳወቂያ በ«የተጣሩ» ስር ይጠብቃሉ።",
+    "notFollowing": "የማይከተሏቸው ሰዎች",
+    "notFollowers": "የማይከተሉዎ ሰዎች",
+    "newAccounts": "አዲስ መለያዎች (ከ30 ቀን በታች)",
+    "accept": "አሳውቀኝ",
+    "filter": "አጣራ",
+    "drop": "ሙሉ በሙሉ ደብቅ",
+    "filteredTitle": "የተጣሩ ማሳወቂያዎች",
+    "filteredEmpty": "ምንም አልተጣራም።",
+    "failed": "አልተቀመጠም። እንደገና ይሞክሩ።"
+  },
+  "keywordFilters": {
+    "title": "የተዘጉ ቃላት",
+    "description": "እነዚህን ቃላት የያዙ ልጥፎችንና አስተያየቶችን ደብቅ ወይም ከማስጠንቀቂያ ጀርባ አጥፋቸው። ይህን ዝርዝር የሚያዩት እርስዎ ብቻ ነዎት።",
+    "placeholder": "ቃል ወይም ሐረግ",
+    "add": "ዝጋ",
+    "added": "ተዘግቷል፦ {{phrase}}",
+    "wholeWord": "ሙሉ ቃል ብቻ",
+    "whenMatches": "ልጥፍ ሲዛመድ",
+    "warn": "ማስጠንቀቂያ አሳይ",
+    "hide": "ደብቀው",
+    "howLong": "ለምን ያህል ጊዜ",
+    "forever": "እስካስወግደው ድረስ",
+    "duration1h": "ለ1 ሰዓት",
+    "duration1d": "ለ1 ቀን",
+    "duration7d": "ለ7 ቀናት",
+    "duration30d": "ለ30 ቀናት",
+    "where": "የት",
+    "home": "መነሻ",
+    "public": "ያስሱ እና ይፈልጉ",
+    "profile": "መገለጫዎች",
+    "thread": "ውይይቶች",
+    "notifications": "ማሳወቂያዎች",
+    "empty": "ምንም ቃል አልዘጉም።",
+    "remove": "ክፈት",
+    "until": "እስከ {{date}}",
+    "filtered": "ተጣርቷል፦ {{phrase}}",
+    "showAnyway": "ለማንኛውም አሳይ",
+    "failed": "አልተቀመጠም። እንደገና ይሞክሩ።"
+  },
+  "postVisibility": {
+    "label": "ይህን ማን ማየት ይችላል",
+    "public": "ሁሉም",
+    "followers": "ተከታዮች ብቻ",
+    "direct": "የተጠቀሱ ሰዎች ብቻ",
+    "noRepost": "እንደገና ሊለጠፉ የሚችሉት ይፋዊ ልጥፎች ብቻ ናቸው",
+    "directHint": "ይህን ልጥፍ የሚያዩት በ@ የጠቀሷቸው ሰዎች ብቻ ናቸው",
+    "needsMention": "ለተጠቀሱ ሰዎች ብቻ ለመለጠፍ ቢያንስ አንድ ሰው በ@ ይጥቀሱ"
+  },
+  "replyPolicy": {
+    "label": "ማን መልስ መስጠት ይችላል",
+    "public": "ማንኛውም ሰው",
+    "followers": "የእርስዎ ተከታዮች",
+    "following": "የሚከተሏቸው ሰዎች",
+    "mentioned": "የተጠቀሱ ብቻ",
+    "noticeFollowers": "የደራሲው ተከታዮች ብቻ መልስ መስጠት ይችላሉ",
+    "noticeFollowing": "ደራሲው የሚከተላቸው ሰዎች ብቻ መልስ መስጠት ይችላሉ",
+    "noticeMentioned": "በልጥፉ የተጠቀሱ ሰዎች ብቻ መልስ መስጠት ይችላሉ",
+    "refused": "ደራሲው በዚህ ልጥፍ ላይ ማን መልስ መስጠት እንደሚችል ገድቧል"
+  },
+  "quotePolicy": {
+    "label": "ማን መጥቀስ ይችላል",
+    "public": "ማንኛውም ሰው",
+    "followers": "ተከታዮች",
+    "nobody": "እኔ ብቻ",
+    "off": "ደራሲው መጥቀስን አጥፍቷል",
+    "removed": "ደራሲው ልጥፋቸውን ከዚህ ጥቅስ አስወግደዋል",
+    "remove": "አስወግድ",
+    "removedToast": "ልጥፍዎ ከዚህ ጥቅስ ተወግዷል",
+    "removeFailed": "ልጥፍዎን ከጥቅሱ ማስወገድ አልተቻለም",
+    "refused": "ደራሲው ይህን ልጥፍ እንዲጠቅሱ አይፈቅድልዎትም"
+  },
   "contentWarning": {
     "label": "የይዘት ማስጠንቀቂያ",
     "placeholder": "ማስጠንቀቂያዎን እዚህ ይጻፉ",
@@ -132,6 +260,7 @@
     "heading": "DeHub ሾርትስ"
   },
   "settings": {
+    "usernameTaken": "የተጠቃሚ ስሙ ተይዟል",
     "postingChain": "የልጥፍ ብሎክቼይን",
     "showOnline": "በመስመር ላይ ስሆን አሳይ",
     "showOnlineDesc": "እርስዎ የሚያስተላልፉት ሰዎች DeHub በሚጠቀሙበት ጊዜ ከስምዎ አጠገብ አረንጓዴ ነጥብ ያያሉ",
@@ -657,7 +786,6 @@
     "embed": "አካትት",
     "copyEmbedCode": "የማካተቻ ኮድ ቅዳ",
     "embedCodeCopied": "የማካተቻ ኮድ ተቀድቷል",
-    "copyFailed": "አገናኙን መቅዳት አልተቻለም",
     "options": "አማራጮች",
     "aiOverview": "የአይአይ አጠቃላይ እይታ",
     "sendTip": "ጥቆማ ላክ",
@@ -685,7 +813,8 @@
     "unpinPost": "ከመገለጫዎ ያስወግዱ",
     "postPinned": "ወደ መገለጫዎ ተጣብቋል",
     "postUnpinned": "ከመገለጫዎ ያልታሸገ",
-    "pinFailed": "ይህንን ልኡክ ጽሁፍ ማንሸራተት ወይም ማንሸራተት አልተቻለም"
+    "pinFailed": "ይህንን ልኡክ ጽሁፍ ማንሸራተት ወይም ማንሸራተት አልተቻለም",
+    "copyFailed": "አገናኙን መቅዳት አልተቻለም"
   },
   "filters": {
     "sort": "ደርድር",
@@ -2333,6 +2462,7 @@
     "pendingSubmitted": "{{amount}} ቶከኖች ተልከዋል። ማረጋገጫው ገና እየተጣራ ነው። እንደገና አይላኩት።"
   },
   "communities": {
+    "chatTab": "ውይይት",
     "title": "ማህበረሰቦች",
     "create": "ፍጠር",
     "searchPlaceholder": "ማህበረሰቦችን ፈልግ...",
@@ -2367,7 +2497,29 @@
     "addDescription": "መግለጫ ያክሉ...",
     "communityDescription": "የማህበረሰብ መግለጫ...",
     "posts": "ልጥፎች",
-    "chat": "ውይይት",
+    "chat": {
+      "intervalHour": "1 ሰዓት",
+      "intervalHours": "{{count}} ሰዓቶች",
+      "intervalMinute": "1 ደቂቃ",
+      "intervalMinutes": "{{count}} ደቂቃዎች",
+      "intervalSecond": "1 ሰከንድ",
+      "intervalSeconds": "{{count}} ሰከንዶች",
+      "muted": "አንተ ተለውጠሃል",
+      "mutedUntil": "እስከ {{until}} ድረስ ተለውጠዋል",
+      "postingDisabled": "መለጠፍ እዚህ ለአባላት ተሰናክሏል",
+      "pinnedMedia": "ሚዲያ",
+      "jumpToPinned": "ወደ የተንጠለጠለው መልእክት ዝለል",
+      "pinnedMessage": "Pinned መልዕክት",
+      "unpin": "አልተለጠፈም",
+      "pin": "ፒን",
+      "delete": "ሰርዝ",
+      "slowMode": "ቀርፋፋ ሁነታ: አንድ መልዕክት እያንዳንዱ {{interval}}",
+      "slowModeWait": "የዘገየ ሁነታ — ይጠብቁ {{time}}",
+      "send": "ላክ",
+      "deleteMessageTitle": "ይህን መልዕክት ሰርዝ?",
+      "deleteMessageBody": "ይህ ሊወገድ አይችልም ።",
+      "cancel": "ሰርዝ"
+    },
     "membersTab": "አባላት ({{count}})",
     "about": "ስለ",
     "backToCommunities": "ማህበረሰቦች",
@@ -3820,6 +3972,7 @@
     "sellYourFractions": "ክፍልፍሎችዎን ይሽጡ ({{held}} የተያዘ)"
   },
   "creator": {
+    "libraryEmpty": "የተቀመጡ ፈጠራዎችዎ እዚህ ይታያሉ።",
     "whatToCreate": "ምን ለመፍጠር",
     "startCreatingWith": "መፍጠር ይጀምሩ {{model}}",
     "studioSubtitle": "አንድ ትዕይንት, ገጸ-ባህሪ, ስሜት ወይም ዘይቤ ግለጽ. ከታች ያለውን ውጤት መሬት እና በቀጥታ ወደ አርታኢ ተሸክመው.",
@@ -6189,7 +6342,10 @@
     "play": "አጫውት",
     "pause": "እረፍት",
     "listens_one": "{{count}} ያዳምጡ",
-    "listens_other": "{{count}} ያዳምጡ"
+    "listens_other": "{{count}} ያዳምጡ",
+    "lyrics": "የዘፈን ግጥም",
+    "lyricsLoading": "ግጥም በመፈለግ ላይ…",
+    "lyricsNone": "ምንም ግጥም አልተገኘም"
   },
   "converter": {
     "seoTitle": "ኮንቬርተር — ቪዲዮ ወደ DeHub ያስገቡ",
@@ -6238,7 +6394,7 @@
     "kindImage": "ሙዚቃ",
     "tileSourceKind": "{{source}} · {{kind}}",
     "reviewTitle": "ከመለጠፍዎ በፊት ይገምግሙ",
-    "reviewSubtitle": "ከ {{source}} ፣ እንደ {{kind}}} ። የሚወዱትን ማንኛውንም ነገር ያርትዑ — የመጀመሪያውን ለማቆየት ርዕሱን ባዶ ይተው ።",
+    "reviewSubtitle": "ከ {{source}} ፣ እንደ {{kind}} ። የሚወዱትን ማንኛውንም ነገር ያርትዑ — የመጀመሪያውን ለማቆየት ርዕሱን ባዶ ይተው ።",
     "reviewName": "ርዕስ",
     "reviewNamePlaceholder": "የመጀመሪያውን ርዕስ ለማቆየት ባዶ ይተው",
     "reviewDescription": "መግለጫ",
@@ -6702,6 +6858,7 @@
     "seoDescription": "ኦፊሴላዊ የDeHub ሰነዶች፦ የመድረክ አጠቃላይ እይታ፣ dApps፣ የDHB ቶከን ኢኮኖሚ፣ ስቴኪንግ፣ ጨዋታዎች፣ የመንገድ ካርታ፣ ተደጋጋሚ ጥያቄዎች እና ተጨማሪ።"
   },
   "dex": {
+    "title": "ዳህብ / USD",
     "seoTitle": "DEX — ቶከኖች ን በዋጋዎ ይገበያዩ",
     "seoDescription": "በBase ወይም BNB Chain ላይ በUniswap v4 limit order የDHBዎን የመግዣ ወይም የመሸጫ ዋጋ ያዘጋጁ። የቀጥታ የትዕዛዝ ደብተር፣ የገበያ ጥልቀት እና አንድ የተጋራ የአሜሪካን ዶላር ዋጋ።",
     "venue": "ኔትወርክ",
@@ -6923,6 +7080,14 @@
     }
   },
   "editor": {
+    "video": {
+      "tFade": "ደብዝዞ መቀላቀል",
+      "none": "ምንም",
+      "transition": "ሽግግር",
+      "speed": "ፍጥነት",
+      "sound": "ድምፅ",
+      "video": "ቪዲዮ"
+    },
     "review": {
       "title": "የፕሮጀክት ግምገማ",
       "shared": "ለእርስዎ የተጋሩ",

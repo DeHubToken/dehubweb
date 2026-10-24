@@ -45,6 +45,7 @@ import dehubCoin from '@/assets/dehub-coin.png';
 import { Button } from '@/components/ui/button';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { ChatInput, type ChatInputSendArgs } from './ChatInput';
+import { DmLockedState, DmUndecryptableRun } from './DmLockedState';
 import { DehubLinkEmbed } from '@/components/app/cards/DehubLinkEmbed';
 import { AssetRefCards, useAssetRefsInText } from '@/components/app/cards/AssetRefCards';
 import { findDehubLinks, stripDehubLinkMatches } from '@/lib/dehub-links';
@@ -1417,6 +1418,11 @@ export function DirectMessageChat({ conversation, onBack, initialComposerText, d
   // useCallback dep list would break the bubble-level memoization documented
   // above MessageBubble (every bubble's onSaveEdit prop would change identity
   // on every new message, not just the one being edited).
+  // No key yet and the thread holds lines only a key can open: show one
+  // unlock screen instead of the same "can't be opened" pill on every line.
+  const showLockedState = encryptionStatus !== 'ready'
+    && messages.some(m => m.undecryptable && !m.isDeleted);
+
   const messagesRef = useRef(messages);
   useEffect(() => { messagesRef.current = messages; }, [messages]);
 
@@ -2317,7 +2323,7 @@ export function DirectMessageChat({ conversation, onBack, initialComposerText, d
 
       {/* No key on this device. Says so, instead of quietly sending in the
           clear and rendering the other side's lines as unopenable. */}
-      {(encryptionStatus === 'pending' || encryptionStatus === 'locked' || encryptionStatus === 'error') && (
+      {!showLockedState && (encryptionStatus === 'pending' || encryptionStatus === 'locked' || encryptionStatus === 'error') && (
         <div className="px-4 py-2 text-xs flex items-center gap-2 bg-white/5 text-zinc-300 border-b border-white/10">
           <Unlock className="w-3 h-3 flex-shrink-0 text-current" />
           <span role="status" className="flex-1">
@@ -2352,6 +2358,14 @@ export function DirectMessageChat({ conversation, onBack, initialComposerText, d
           <Button variant="glass" size="sm" onClick={() => refetchMessages()}>
             <RefreshCw className="w-3 h-3 mr-2" />{_copy("copy.df0fe9e00d35", { defaultValue: "Try Again" })}</Button>
         </div>
+      ) : showLockedState ? (
+        <DmLockedState
+          status={encryptionStatus}
+          needsWalletConnection={encryptionNeedsWalletConnection}
+          peerName={displayName}
+          peerAvatarUrl={avatarUrl}
+          onUnlock={() => { void retryEncryption(); }}
+        />
       ) : (
         <div
           ref={scrollContainerRef}
@@ -2401,7 +2415,15 @@ export function DirectMessageChat({ conversation, onBack, initialComposerText, d
               );
             }
 
-            return filtered.map((message) => {
+            return filtered.map((message, index) => {
+              // Lines encrypted for another device collapse into one row per run.
+              if (message.undecryptable && !message.isDeleted) {
+                const prev = filtered[index - 1];
+                if (prev?.undecryptable && !prev.isDeleted) return null;
+                let count = 1;
+                while (filtered[index + count]?.undecryptable && !filtered[index + count].isDeleted) count++;
+                return <DmUndecryptableRun key={message._id} count={count} />;
+              }
               const senderAddress = message.sender?.address?.toLowerCase();
               const senderId = message.sender?._id;
               const ownAddress = walletAddress?.toLowerCase();
@@ -2478,8 +2500,9 @@ export function DirectMessageChat({ conversation, onBack, initialComposerText, d
         </div>
       )}
 
-      {/* Chat Input — always shown, disabled send when insufficient balance */}
-      <ChatInput
+      {/* Chat Input — disabled send when insufficient balance; hidden while
+          the thread is locked, since anything typed would go out in the clear */}
+      {!showLockedState && <ChatInput
         initialText={initialComposerText}
         draftKey={draftScope}
         thread={smartReplyThread}
@@ -2502,7 +2525,7 @@ export function DirectMessageChat({ conversation, onBack, initialComposerText, d
         isSendingFee={isSendingFee}
         feeAmount={feeRequired ? activeFee : undefined}
         confirmBeforeSend={feeRequired ? confirmFeeSend : undefined}
-      />
+      />}
 
       {/* Delete confirmation dialog */}
       <AlertDialog open={showDeleteDialog} onOpenChange={setShowDeleteDialog}>

@@ -1,4 +1,132 @@
 {
+  "mastodonApps": {
+    "authTitle": "Midira amin'ny DeHub",
+    "authWants": "Te hampiasa ny kaontinao DeHub i {{app}}",
+    "authSignedInAs": "Niditra ho {{name}}",
+    "authSignIn": "Midira mba hanohizana",
+    "allow": "Avelao",
+    "cancel": "Foano",
+    "scopeRead": "Mahita ny fizotry ny fotoananao, ny lahatsoratrao, ny fampandrenesana ary ny marika",
+    "scopeWrite": "Mandefa lahatsoratra, mamaly, mankasitraka, mampiely ary manamarika ho anao",
+    "scopeFollow": "Manaraka, mitsahatra manaraka, manakana ary mampangina kaonty",
+    "scopePush": "Mandefa fampandrenesana aminao",
+    "scopeProfile": "Mahita ny mombamomba anao",
+    "invalid": "Tsy manan-kery ity rohy fidirana ity. Miverena any amin'ny rindranasa dia andramo indray.",
+    "failed": "Tsy nety izany. Andramo indray.",
+    "codeTitle": "Adikao ao amin'ny rindranasa ity kaody ity mba hamitana ny fidirana.",
+    "copy": "Adikao",
+    "copied": "Voadika",
+    "seoDescription": "Avelao ny rindranasa Mastodon hampiasa ny kaontinao DeHub.",
+    "redirecting": "Mamerina anao any amin'ny {{app}}…",
+    "connectedTitle": "Rindranasa mifandray",
+    "connectedDescription": "Rindranasa Mastodon nidiranao tamin'ity kaonty ity. Esory ny iray mba hivoahana aminy.",
+    "connectedEmpty": "Mbola tsy misy rindranasa mifandray.",
+    "lastUsed": "Nampiasaina farany {{date}}",
+    "remove": "Esory",
+    "removed": "Voaesotra ny rindranasa"
+  },
+  "fediverse": {
+    "title": "Fediverse",
+    "description": "Ny olona ao amin'ny Mastodon sy ireo rindranasa fediverse hafa dia afaka mahita sy manaraka anao amin'ity adiresy ity. Tonga any aminy ireo lahatsoratrao vaovao ho an'ny daholobe.",
+    "copy": "Adikao",
+    "copied": "Voadika",
+    "privateNote": "Tsy aseho ao amin'ny fediverse ny kaonty tsy miankina.",
+    "noUsername": "Misafidiana anarana mpampiasa mba hahazoana adiresy fediverse."
+  },
+  "profileFields": {
+    "title": "Saha ao amin'ny mombamomba",
+    "description": "Andalana efatra fanampiny ao amin'ny mombamombanao, toy ny tranonkala na ny mpisolo anaranao.",
+    "label": "Marika",
+    "content": "Votoaty",
+    "save": "Tehirizo ny saha",
+    "saved": "Voatahiry ny sahan'ny mombamomba",
+    "failed": "Tsy voatahiry. Andramo indray.",
+    "verified": "Rohy voamarina",
+    "verifyHint": "Mba hanamarinana rohy, ampio ity amin'io pejy io, dia tehirizo indray: {{snippet}}"
+  },
+  "followedTags": {
+    "follow": "Araho #{{tag}}",
+    "following": "Manaraka",
+    "unfollow": "Aza manaraka #{{tag}} intsony",
+    "followed": "Manaraka #{{tag}} ianao izao. Hiseho ao amin'ny lahatsoratra arahinao ireo lahatsorany.",
+    "unfollowed": "Tsy manaraka #{{tag}} intsony ianao",
+    "failed": "Tsy voatahiry. Andramo indray.",
+    "clear": "Fafao"
+  },
+  "notificationFilters": {
+    "title": "Sivano ny fampandrenesana avy amin'ny",
+    "description": "Safidio izay hitranga rehefa misy olona ivelan'ny faribolanao mifandray aminao. Miandry ao amin'ny \"Voasivana\" ireo fampandrenesana voasivana, tsy misy marika na fampandrenesana tampoka.",
+    "notFollowing": "Olona tsy arahinao",
+    "notFollowers": "Olona tsy manaraka anao",
+    "newAccounts": "Kaonty vaovao (latsaky ny 30 andro)",
+    "accept": "Ampahafantaro aho",
+    "filter": "Sivano",
+    "drop": "Afeno tanteraka",
+    "filteredTitle": "Fampandrenesana voasivana",
+    "filteredEmpty": "Tsy misy voasivana.",
+    "failed": "Tsy voatahiry. Andramo indray."
+  },
+  "keywordFilters": {
+    "title": "Teny nampanginina",
+    "description": "Afeno ny lahatsoratra sy fanehoan-kevitra misy ireo teny ireo, na aforony ao ambadiky ny fampitandremana. Ianao ihany no mahita ity lisitra ity.",
+    "placeholder": "Teny na andian-teny",
+    "add": "Ampanginina",
+    "added": "Nampanginina: {{phrase}}",
+    "wholeWord": "Teny feno ihany",
+    "whenMatches": "Rehefa mifanaraka ny lahatsoratra",
+    "warn": "Asehoy fampitandremana",
+    "hide": "Afeno",
+    "howLong": "Mandritra ny ohatrinona",
+    "forever": "Mandra-panaisotro azy",
+    "duration1h": "Mandritra ny 1 ora",
+    "duration1d": "Mandritra ny 1 andro",
+    "duration7d": "Mandritra ny 7 andro",
+    "duration30d": "Mandritra ny 30 andro",
+    "where": "Aiza",
+    "home": "Fandraisana",
+    "public": "Hikaroka sy hijery",
+    "profile": "Mombamomba",
+    "thread": "Resaka",
+    "notifications": "Fampandrenesana",
+    "empty": "Tsy mbola nampangina teny ianao.",
+    "remove": "Esory ny fampanginana",
+    "until": "Hatramin'ny {{date}}",
+    "filtered": "Voasivana: {{phrase}}",
+    "showAnyway": "Asehoy ihany",
+    "failed": "Tsy voatahiry. Andramo indray."
+  },
+  "postVisibility": {
+    "label": "Iza no afaka mahita an'ity",
+    "public": "Ny rehetra",
+    "followers": "Mpanaraka ihany",
+    "direct": "Olona voatonona ihany",
+    "noRepost": "Ny lahatsoratra ho an'ny daholobe ihany no azo averina zaraina",
+    "directHint": "Ny olona tononinao amin'ny @ ihany no hahita ity lahatsoratra ity",
+    "needsMention": "Tonony amin'ny @ olona iray farafahakeliny raha hamoaka ho an'ny olona voatonona ihany"
+  },
+  "replyPolicy": {
+    "label": "Iza no afaka mamaly",
+    "public": "Na iza na iza",
+    "followers": "Ireo mpanaraka anao",
+    "following": "Ireo arahinao",
+    "mentioned": "Ireo voatonona ihany",
+    "noticeFollowers": "Ireo mpanaraka ny mpanoratra ihany no afaka mamaly",
+    "noticeFollowing": "Ireo arahin'ny mpanoratra ihany no afaka mamaly",
+    "noticeMentioned": "Ireo voatonona ao amin'ny lahatsoratra ihany no afaka mamaly",
+    "refused": "Noferan'ny mpanoratra izay afaka mamaly ity lahatsoratra ity"
+  },
+  "quotePolicy": {
+    "label": "Iza no afaka manonona",
+    "public": "Na iza na iza",
+    "followers": "Mpanaraka",
+    "nobody": "Izaho ihany",
+    "off": "Novonoin'ny mpanoratra ny fanononana",
+    "removed": "Nesorin'ny mpanoratra tamin'ity fanononana ity ny lahatsorany",
+    "remove": "Esory",
+    "removedToast": "Nesorina tamin'ity fanononana ity ny lahatsoratrao",
+    "removeFailed": "Tsy afaka nanala ny lahatsoratrao tamin'ny fanononana",
+    "refused": "Tsy mamela anao hanonona ity lahatsoratra ity ny mpanoratra"
+  },
   "contentWarning": {
     "label": "Fampitandremana momba ny votoaty",
     "placeholder": "Soraty eto ny fampitandremanao",
@@ -132,6 +260,7 @@
     "heading": "DeHub Fohy"
   },
   "settings": {
+    "usernameTaken": "Efa misy mampiasa io anarana io",
     "postingChain": "Blockchain ho an’ny lahatsoratra",
     "showOnline": "Asehoy rehefa an-tserasera aho",
     "showOnlineDesc": "Ny olona izay alefanao dia mahita teboka maitso eo akaikin'ny anaranao raha mampiasa DeHub ianao",
@@ -657,7 +786,6 @@
     "embed": "Ampidiro",
     "copyEmbedCode": "Adikao ny kaody fampidirana",
     "embedCodeCopied": "Voadika ny kaody fampidirana",
-    "copyFailed": "Tsy afaka nandika ny rohy",
     "options": "Safidy",
     "aiOverview": "MANDRAKIZAY",
     "sendTip": "Handefa fanomezana",
@@ -685,7 +813,8 @@
     "unpinPost": "Unpin avy amin'ny mombamomba anao",
     "postPinned": "Nafotaka tamin'ny mombamomba anao",
     "postUnpinned": "Tsy tafalatsaka amin'ny mombamomba anao",
-    "pinFailed": "Tsy nahafaritra na nangeja ity lahatsoratra ity"
+    "pinFailed": "Tsy nahafaritra na nangeja ity lahatsoratra ity",
+    "copyFailed": "Tsy afaka nandika ny rohy"
   },
   "filters": {
     "sort": "Alamino",
@@ -2326,6 +2455,7 @@
     "pendingSubmitted": "{{amount}} tapaho nalefa. Mbola hojerena ny fanamafisana. Aza alefa indray."
   },
   "communities": {
+    "chatTab": "Resaka",
     "title": "Vondrom-piarahamonina",
     "create": "Mamorona",
     "searchPlaceholder": "Hikaroka vondrom-piarahamonina...",
@@ -2360,7 +2490,28 @@
     "addDescription": "Ampio famaritana...",
     "communityDescription": "Famaritana ny vondrom-piarahamonina...",
     "posts": "Lahatsoratra",
-    "chat": "Resaka",
+    "chat": {
+      "intervalHour": "ora 1",
+      "intervalHours": "{{count}} hours",
+      "intervalMinute": "minitra",
+      "intervalMinutes": "{{count}} minutes",
+      "intervalSecond": "1 faharoa",
+      "intervalSeconds": "{{count}} segondra",
+      "muted": "Hiantsehatra ianao",
+      "postingDisabled": "Ny fangatahana ho an'ny fakan-tena ambony dia tsy maintsy atao amin'ny mpikambana",
+      "pinnedGif": "GIF",
+      "pinnedMedia": "Haino aman-jery",
+      "jumpToPinned": "Alefaso any amin'ilay hafatra voapetraka",
+      "pinnedMessage": "Hafatra voapetraka",
+      "unpin": "Unpin",
+      "pin": "PIN",
+      "delete": "Hamafa",
+      "slowMode": "Slow mode: hafatra iray isaky ny {{interval}}",
+      "send": "Ambakireny",
+      "deleteMessageTitle": "Fafao io hafatra io?",
+      "deleteMessageBody": "Voavaha io taratasin-tadidy io.",
+      "cancel": "Ajanona"
+    },
     "membersTab": "Mpikambana ({{count}})",
     "about": "Mombamomba",
     "backToCommunities": "Vondrom-piarahamonina",
@@ -3817,6 +3968,7 @@
     "sellYourFractions": "Amidio ny tombotsoa azo avy aminao ({{held}} FOTSINY)"
   },
   "creator": {
+    "libraryEmpty": "Hiseho eto ireo zavatra noforoninao voatahiry.",
     "whatToCreate": "Inona no mamorona",
     "startCreatingWith": "Manomboka amin'ny {{model}}",
     "studioSubtitle": "Lazalazao ny sehatra, ny toetra, ny toe-po na ny fomba. Eto ambany eto ny fizotry ny valim-pifidianana ary miditra avy hatrany ao amin'ny sehatry ny mpamoaka lahatsoratra.",
@@ -6209,7 +6361,10 @@
     "play": "Mamaky",
     "pause": "Miato",
     "listens_one": "{{count}} mihaino",
-    "listens_other": "{{count}} сонсens"
+    "listens_other": "{{count}} сонсens",
+    "lyrics": "Tononkira",
+    "lyricsLoading": "Mitady tononkira…",
+    "lyricsNone": "Tsy nahitana tononkira"
   },
   "converter": {
     "seoTitle": "Converter — mamindra video ao DeHub",
@@ -6725,6 +6880,7 @@
     "seoDescription": "Antontan-taratasy ofisialin’ny DeHub: topi-maso ny sehatra, dApps, toekarena token tokens, staking, lalao, drafitra, FAQ sy ny maro hafa."
   },
   "dex": {
+    "title": "marika / USD",
     "seoTitle": "DEX — Varotra tokens amin'ny vidiny tianao",
     "seoDescription": "Mametraha ny vidin'ny fividianana na fivarotana tokens miaraka amin'ny famandrihana fetra Uniswap v4 ao amin'ny Base na BNB Chain. Boky famandrihana mivantana, halaliny ny tsoka ary vidiny USD iray iombonana.",
     "venue": "Tambajotra",
@@ -6946,6 +7102,14 @@
     }
   },
   "editor": {
+    "video": {
+      "tFade": "Fifangaroana",
+      "none": "Tsy misy",
+      "transition": "Tetezamita",
+      "speed": "Hafainganana",
+      "sound": "Feo",
+      "video": "Horonan-tsary"
+    },
     "review": {
       "title": "Famerenana tetikasa",
       "shared": "Nozaraina taminao",

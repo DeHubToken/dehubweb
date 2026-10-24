@@ -1,4 +1,132 @@
 {
+  "mastodonApps": {
+    "authTitle": "Kirjaudu DeHubilla",
+    "authWants": "{{app}} haluaa käyttää DeHub-tiliäsi",
+    "authSignedInAs": "Kirjautuneena nimellä {{name}}",
+    "authSignIn": "Jatka kirjautumalla sisään",
+    "allow": "Salli",
+    "cancel": "Peruuta",
+    "scopeRead": "Nähdä aikajanasi, julkaisusi, ilmoituksesi ja kirjanmerkkisi",
+    "scopeWrite": "Julkaista, vastata, tykätä, jakaa ja lisätä kirjanmerkkejä puolestasi",
+    "scopeFollow": "Seurata, lopettaa seuraamisen, estää ja mykistää tilejä",
+    "scopePush": "Lähettää sinulle ilmoituksia",
+    "scopeProfile": "Nähdä profiilisi",
+    "invalid": "Tämä kirjautumislinkki ei kelpaa. Palaa sovellukseen ja yritä uudelleen.",
+    "failed": "Se ei onnistunut. Yritä uudelleen.",
+    "codeTitle": "Kopioi tämä koodi sovellukseen viimeistelläksesi kirjautumisen.",
+    "copy": "Kopioi",
+    "copied": "Kopioitu",
+    "seoDescription": "Anna Mastodon-sovelluksen käyttää DeHub-tiliäsi.",
+    "redirecting": "Viedään sinut takaisin sovellukseen {{app}}…",
+    "connectedTitle": "Yhdistetyt sovellukset",
+    "connectedDescription": "Mastodon-sovellukset, joihin olet kirjautunut tällä tilillä. Poista sovellus kirjautuaksesi siitä ulos.",
+    "connectedEmpty": "Ei vielä yhdistettyjä sovelluksia.",
+    "lastUsed": "Viimeksi käytetty {{date}}",
+    "remove": "Poista",
+    "removed": "Sovellus poistettu"
+  },
+  "fediverse": {
+    "title": "Fediversumi",
+    "description": "Mastodonin ja muiden fediversumin sovellusten käyttäjät voivat löytää ja seurata sinua tästä osoitteesta. Uudet julkiset julkaisusi tavoittavat heidät siellä.",
+    "copy": "Kopioi",
+    "copied": "Kopioitu",
+    "privateNote": "Yksityisiä tilejä ei näytetä fediversumissa.",
+    "noUsername": "Valitse käyttäjänimi saadaksesi fediversumiosoitteen."
+  },
+  "profileFields": {
+    "title": "Profiilikentät",
+    "description": "Enintään neljä lisäriviä profiiliisi, kuten verkkosivusto tai pronominisi.",
+    "label": "Nimi",
+    "content": "Sisältö",
+    "save": "Tallenna kentät",
+    "saved": "Profiilikentät tallennettu",
+    "failed": "Tallennus ei onnistunut. Yritä uudelleen.",
+    "verified": "Vahvistettu linkki",
+    "verifyHint": "Vahvista linkki lisäämällä tämä sille sivulle ja tallentamalla uudelleen: {{snippet}}"
+  },
+  "followedTags": {
+    "follow": "Seuraa #{{tag}}",
+    "following": "Seuraat",
+    "unfollow": "Lopeta #{{tag}} seuraaminen",
+    "followed": "Seuraat nyt tunnistetta #{{tag}}. Sen julkaisut näkyvät Seuratut-syötteessäsi.",
+    "unfollowed": "Lopetit tunnisteen #{{tag}} seuraamisen",
+    "failed": "Tallennus ei onnistunut. Yritä uudelleen.",
+    "clear": "Tyhjennä"
+  },
+  "notificationFilters": {
+    "title": "Suodata ilmoitukset",
+    "description": "Valitse, mitä tapahtuu, kun joku piirisi ulkopuolelta on vuorovaikutuksessa kanssasi. Suodatetut ilmoitukset odottavat kohdassa Suodatetut ilman merkkiä ja push-ilmoitusta.",
+    "notFollowing": "Ihmisiltä, joita et seuraa",
+    "notFollowers": "Ihmisiltä, jotka eivät seuraa sinua",
+    "newAccounts": "Uusilta tileiltä (alle 30 päivää)",
+    "accept": "Ilmoita minulle",
+    "filter": "Suodata",
+    "drop": "Piilota kokonaan",
+    "filteredTitle": "Suodatetut ilmoitukset",
+    "filteredEmpty": "Mitään ei ole suodatettu.",
+    "failed": "Tallennus ei onnistunut. Yritä uudelleen."
+  },
+  "keywordFilters": {
+    "title": "Mykistetyt sanat",
+    "description": "Piilota julkaisut ja kommentit, joissa on näitä sanoja, tai taita ne varoituksen taakse. Vain sinä näet tämän listan.",
+    "placeholder": "Sana tai lause",
+    "add": "Mykistä",
+    "added": "Mykistetty: {{phrase}}",
+    "wholeWord": "Vain koko sana",
+    "whenMatches": "Kun julkaisu osuu",
+    "warn": "Näytä varoitus",
+    "hide": "Piilota",
+    "howLong": "Kuinka pitkäksi aikaa",
+    "forever": "Kunnes poistan sen",
+    "duration1h": "1 tunniksi",
+    "duration1d": "1 päiväksi",
+    "duration7d": "7 päiväksi",
+    "duration30d": "30 päiväksi",
+    "where": "Missä",
+    "home": "Koti",
+    "public": "Tutki ja hae",
+    "profile": "Profiilit",
+    "thread": "Keskustelut",
+    "notifications": "Ilmoitukset",
+    "empty": "Et ole mykistänyt yhtään sanaa.",
+    "remove": "Poista mykistys",
+    "until": "{{date}} asti",
+    "filtered": "Suodatettu: {{phrase}}",
+    "showAnyway": "Näytä silti",
+    "failed": "Tallennus ei onnistunut. Yritä uudelleen."
+  },
+  "postVisibility": {
+    "label": "Kuka voi nähdä tämän",
+    "public": "Kaikki",
+    "followers": "Vain seuraajat",
+    "direct": "Vain mainitut henkilöt",
+    "noRepost": "Vain julkisia julkaisuja voi jakaa uudelleen",
+    "directHint": "Vain @-merkillä mainitsemasi henkilöt näkevät tämän julkaisun",
+    "needsMention": "Mainitse vähintään yksi henkilö @-merkillä, jotta voit julkaista vain mainituille"
+  },
+  "replyPolicy": {
+    "label": "Kuka voi vastata",
+    "public": "Kuka tahansa",
+    "followers": "Seuraajasi",
+    "following": "Seuraamasi ihmiset",
+    "mentioned": "Vain mainitut",
+    "noticeFollowers": "Vain tekijän seuraajat voivat vastata",
+    "noticeFollowing": "Vain tekijän seuraamat ihmiset voivat vastata",
+    "noticeMentioned": "Vain julkaisussa mainitut voivat vastata",
+    "refused": "Tekijä on rajannut, kuka voi vastata tähän julkaisuun"
+  },
+  "quotePolicy": {
+    "label": "Kuka voi lainata",
+    "public": "Kuka tahansa",
+    "followers": "Seuraajat",
+    "nobody": "Vain minä",
+    "off": "Tekijä on poistanut lainaukset käytöstä",
+    "removed": "Tekijä poisti julkaisunsa tästä lainauksesta",
+    "remove": "Poista",
+    "removedToast": "Julkaisusi poistettiin tästä lainauksesta",
+    "removeFailed": "Julkaisuasi ei voitu poistaa lainauksesta",
+    "refused": "Tekijä ei salli sinun lainata tätä julkaisua"
+  },
   "contentWarning": {
     "label": "Sisältövaroitus",
     "placeholder": "Kirjoita varoitus tähän",
@@ -132,11 +260,12 @@
     "heading": "DeHub Lyhyet"
   },
   "settings": {
-    "showDislikesDesc": "Kuka tahansa voi avata profiilisi En tykkää -välilehden. Kun tämä on pois päältä, vain sinä näet sen.",
-    "showDislikes": "Näytä en tykkää -merkintäni kaikille",
+    "usernameTaken": "Käyttäjänimi on varattu",
     "postingChain": "Julkaisujen lohkoketju",
     "showOnline": "Näytä, kun olen online-tilassa",
     "showOnlineDesc": "Viestisi näkevät vihreän pisteen nimesi vieressä, kun käytät DeHubia",
+    "showDislikes": "Näytä en tykkää -merkintäni kaikille",
+    "showDislikesDesc": "Kuka tahansa voi avata profiilisi En tykkää -välilehden. Kun tämä on pois päältä, vain sinä näet sen.",
     "smartReplies": "Ehdotetut vastaukset",
     "smartRepliesDesc": "Luonnostelee kaksi vastausta, joita voit napauttaa keskustelussa. Ehdotusten × poistaa tämän käytöstä.",
     "title": "Asetukset",
@@ -659,7 +788,6 @@
     "embed": "Upota",
     "copyEmbedCode": "Kopioi upotuskoodi",
     "embedCodeCopied": "Upotuskoodi kopioitu",
-    "copyFailed": "Linkkiä ei voitu kopioida",
     "options": "Vaihtoehdot",
     "aiOverview": "Tekoälyn yleiskatsa",
     "sendTip": "Lähetä tippi",
@@ -687,7 +815,8 @@
     "unpinPost": "Poista kiinnitys profiilistasi",
     "postPinned": "Kiinnitetty profiiliisi",
     "postUnpinned": "Profiilisi kiinnitys poistettu",
-    "pinFailed": "Tätä julkaisua ei voitu kiinnittää tai poistaa"
+    "pinFailed": "Tätä julkaisua ei voitu kiinnittää tai poistaa",
+    "copyFailed": "Linkkiä ei voitu kopioida"
   },
   "filters": {
     "sort": "Lajittele",
@@ -1421,7 +1550,6 @@
     "returnHome": "Palaa etusivulle"
   },
   "profile": {
-    "dislikes": { "loadMore": "Lataa lisää", "privateDesc": "Tämä tili pitää en tykkää -merkintänsä omana tietonaan.", "privateTitle": "En tykkää -merkinnät ovat yksityisiä", "emptyOther": "Ei vielä mitään.", "emptyOwn": "Julkaisut, joista et tykkää, poistuvat syötteistäsi ja näkyvät täällä. Peru merkintä palauttaaksesi julkaisun.", "emptyTitle": "Ei vielä en tykkää -merkintöjä" },
     "back": "Takaisin",
     "usernameAvailable": "Käyttäjätunnus on saatavilla!",
     "signUpToClaim": "Rekisteröidy tänään varataksesi",
@@ -1449,8 +1577,16 @@
       "commentUnavailable": "Tämä kommentti ei ole enää saatavilla"
     },
     "tabs": {
-      "dislikes": "En tykkää",
-      "playlists": "Soittolistat"
+      "playlists": "Soittolistat",
+      "dislikes": "En tykkää"
+    },
+    "dislikes": {
+      "emptyTitle": "Ei vielä en tykkää -merkintöjä",
+      "emptyOwn": "Julkaisut, joista et tykkää, poistuvat syötteistäsi ja näkyvät täällä. Peru merkintä palauttaaksesi julkaisun.",
+      "emptyOther": "Ei vielä mitään.",
+      "privateTitle": "En tykkää -merkinnät ovat yksityisiä",
+      "privateDesc": "Tämä tili pitää en tykkää -merkintänsä omana tietonaan.",
+      "loadMore": "Lataa lisää"
     },
     "offerWorthNow": "Noin {{amount}} rahakketta nykyisellä kurssilla",
     "offerNotePlaceholder": "Lisää viesti (valinnainen)",
@@ -2257,6 +2393,7 @@
     "pendingSubmitted": "{{amount}} tokenia lähetetty. Vahvistusta tarkistetaan vielä. Älä lähetä uudelleen."
   },
   "communities": {
+    "chatTab": "Chat",
     "title": "Yhteisöt",
     "create": "Luo",
     "searchPlaceholder": "Etsi yhteisöjä...",
@@ -2291,7 +2428,30 @@
     "addDescription": "Lisää kuvaus...",
     "communityDescription": "Yhteisön kuvaus...",
     "posts": "Julkaisut",
-    "chat": "Chat",
+    "chat": {
+      "intervalHour": "1 tunti",
+      "intervalHours": "{{count}} tuntia",
+      "intervalMinute": "1 minuutti",
+      "intervalMinutes": "{{count}} minuuttia",
+      "intervalSecond": "1 sekunti",
+      "intervalSeconds": "{{count}} sekuntia",
+      "muted": "Sinut on mykistetty",
+      "mutedUntil": "Sinut mykistetään {{until}}asti",
+      "postingDisabled": "Julkaiseminen on poistettu käytöstä jäseniltä täällä",
+      "pinnedGif": "GIF",
+      "pinnedMedia": "Media",
+      "jumpToPinned": "Siirry kiinnitettyyn viestiin",
+      "pinnedMessage": "Kiinnitetty viesti",
+      "unpin": "Poista kiinnitys",
+      "pin": "PIN",
+      "delete": "Poista",
+      "slowMode": "Hidas tila: yksi viesti {{interval}} välein",
+      "slowModeWait": "Hidas tila — odota {{time}}",
+      "send": "Lähetä",
+      "deleteMessageTitle": "Poistetaanko tämä viesti?",
+      "deleteMessageBody": "Tätä ei voi kumota.",
+      "cancel": "Peruuta"
+    },
     "membersTab": "Jäsenet ({{count}})",
     "about": "Tietoa",
     "backToCommunities": "Yhteisöt",
@@ -3754,6 +3914,7 @@
     "sellYourFractions": "Myy fraktioitasi ({{held}} hallussasi)"
   },
   "creator": {
+    "libraryEmpty": "Tallennetut generointisi näkyvät täällä.",
     "whatToCreate": "Mitä luoda",
     "startCreatingWith": "Aloita luominen {{model}}:lla",
     "studioSubtitle": "Kuvaile kohtaus, hahmo, tunnelma tai tyyli. Tulokset näkyvät alla ja siirtyvät suoraan editoriin.",
@@ -6096,7 +6257,10 @@
     "play": "Toista",
     "pause": "Keskeytä",
     "listens_one": "{{count}} kuuntele",
-    "listens_other": "{{count}} kuuntelee"
+    "listens_other": "{{count}} kuuntelee",
+    "lyrics": "Sanat",
+    "lyricsLoading": "Haetaan sanoja…",
+    "lyricsNone": "Sanoja ei löytynyt"
   },
   "converter": {
     "seoTitle": "Muunnin — tuo video DeHubiin",
@@ -6612,6 +6776,7 @@
     "seoDescription": "DeHubin virallinen dokumentaatio: alustan yleiskatsaus, dApps, tokenia-tokenin talous, staking, pelit, tiekartta, UKK ja muuta."
   },
   "dex": {
+    "title": "tokenia / USD",
     "seoTitle": "DEX — Käy kauppaa tokenia:llä omalla hinnallasi",
     "seoDescription": "Aseta tokenia:n osto- tai myyntihinta Uniswap v4 -rajatoimeksiannolla Base- tai BNB-ketjussa. Reaaliaikainen tilauskirja, markkinasyvyys ja yksi jaettu USD-hinta.",
     "venue": "Verkko",
@@ -6834,6 +6999,14 @@
     }
   },
   "editor": {
+    "video": {
+      "tFade": "Ristihäivytys",
+      "none": "Ei mitään",
+      "transition": "Siirtymä",
+      "speed": "Nopeus",
+      "sound": "Ääni",
+      "video": "Video"
+    },
     "review": {
       "title": "Projektin tarkistus",
       "shared": "Jaettu kanssasi",
@@ -8495,5 +8668,15 @@
     "posted": "Julkaistu",
     "view": "Näytä",
     "failed": "Videota ei voitu käsitellä"
+  },
+  "loginStack": {
+    "tip": "Anna DHB-tippi",
+    "headlineTop": "Omistat kaiken",
+    "headlineAccent": "ja olet onnellinen.",
+    "orContinueWith": "tai jatka käyttäen",
+    "phone": "Puhelin",
+    "fingerprint": "Sormenjälki",
+    "exploreFirst": "Tutustu ensin",
+    "codeNote": "Lähetämme sinulle koodin sähköpostilla, ilman salasanaa."
   }
 }

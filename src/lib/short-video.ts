@@ -69,6 +69,7 @@ export function mapToShortVideo(nft: any, index: number): ShortVideo & { duratio
       isLocked: nft.streamInfo?.isLockContent,
       lockedPrice: nft.streamInfo?.lockContentAmount ?? nft.streamInfo?.lockAmount,
       subscriberPlans: nft.plansDetails ?? nft.plans,
+      visibility: nft.visibility,
     }),
     storyboard: toStoryboard(nft.storyboard),
     // Title and body separately, and both are rendered: the caption usually

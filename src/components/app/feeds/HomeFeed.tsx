@@ -116,6 +116,7 @@ import type { ServedAd } from '@/lib/ads/povr';
 import { useServedAds } from '@/hooks/use-ad-serving';
 import { SponsoredAdCard } from '@/components/app/cards/SponsoredAdCard';
 import { toStoryboard } from '@/lib/storyboard';
+import { FollowTagBar } from './FollowTagBar';
 
 // ============================================================================
 // TYPES & CONSTANTS
@@ -436,6 +437,10 @@ function nftToFeedItem(pinnedPost: any): FeedItemType {
         contentRating: pinnedPost.contentRating,
         mediaDescriptions: pinnedPost.mediaDescriptions,
         spoilerText: pinnedPost.spoilerText,
+        quotePolicy: pinnedPost.quotePolicy,
+        visibility: pinnedPost.visibility,
+        quoteRevoked: pinnedPost.quoteRevoked,
+        replyPolicy: pinnedPost.replyPolicy,
         username: pinnedPost.minterDisplayName || pinnedPost.mintername || 'unknown',
         verified: false,
         avatar,
@@ -469,6 +474,10 @@ function nftToFeedItem(pinnedPost: any): FeedItemType {
         contentRating: pinnedPost.contentRating,
         mediaDescriptions: pinnedPost.mediaDescriptions,
         spoilerText: pinnedPost.spoilerText,
+        quotePolicy: pinnedPost.quotePolicy,
+        visibility: pinnedPost.visibility,
+        quoteRevoked: pinnedPost.quoteRevoked,
+        replyPolicy: pinnedPost.replyPolicy,
         thumbnail,
         videoUrl,
         hlsUrl: buildHlsUrl(pinnedPost.hlsUrl),
@@ -507,6 +516,10 @@ function nftToFeedItem(pinnedPost: any): FeedItemType {
         contentRating: pinnedPost.contentRating,
         mediaDescriptions: pinnedPost.mediaDescriptions,
         spoilerText: pinnedPost.spoilerText,
+        quotePolicy: pinnedPost.quotePolicy,
+        visibility: pinnedPost.visibility,
+        quoteRevoked: pinnedPost.quoteRevoked,
+        replyPolicy: pinnedPost.replyPolicy,
         author: {
           id: pinnedPost.minter,
           name: pinnedPost.minterDisplayName || pinnedPost.mintername || 'Unknown',
@@ -2011,6 +2024,11 @@ export function HomeFeed({ active = true, shuffleKey, isRefreshing, showFilters 
                 buttonClassName="px-3 py-1.5 rounded-xl text-xs"
               />
             </div>
+          )}
+
+          {/* One hashtag picked — where a tapped #tag lands: offer to follow it. */}
+          {selectedCategories.length === 1 && (
+            <FollowTagBar tag={selectedCategories[0]} onClear={() => setSelectedCategories([])} />
           )}
 
           {/*

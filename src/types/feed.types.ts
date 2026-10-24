@@ -48,6 +48,14 @@ export interface BaseFeedItem {
   mediaDescriptions?: string[];
   /** Content warning: the post opens collapsed behind this one line. */
   spoilerText?: string;
+  /** Who may quote it; absent means anyone. */
+  quotePolicy?: 'public' | 'followers' | 'nobody';
+  /** A quote whose quoted author took their post back out of it. */
+  quoteRevoked?: boolean;
+  /** Who may reply; absent means anyone. */
+  replyPolicy?: 'public' | 'followers' | 'following' | 'mentioned';
+  /** Who may see it; absent means everyone. */
+  visibility?: 'public' | 'followers' | 'direct';
   /**
    * The creator published this for children — the Kids Mode allowlist.
    *

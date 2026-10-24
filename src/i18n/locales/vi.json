@@ -1,4 +1,132 @@
 {
+  "mastodonApps": {
+    "authTitle": "Đăng nhập bằng DeHub",
+    "authWants": "{{app}} muốn dùng tài khoản DeHub của bạn",
+    "authSignedInAs": "Đã đăng nhập với tên {{name}}",
+    "authSignIn": "Đăng nhập để tiếp tục",
+    "allow": "Cho phép",
+    "cancel": "Hủy",
+    "scopeRead": "Xem dòng thời gian, bài đăng, thông báo và dấu trang của bạn",
+    "scopeWrite": "Đăng bài, trả lời, thích, đăng lại và lưu thay bạn",
+    "scopeFollow": "Theo dõi, bỏ theo dõi, chặn và ẩn tài khoản",
+    "scopePush": "Gửi thông báo cho bạn",
+    "scopeProfile": "Xem hồ sơ của bạn",
+    "invalid": "Liên kết đăng nhập này không hợp lệ. Hãy quay lại ứng dụng và thử lại.",
+    "failed": "Không được. Hãy thử lại.",
+    "codeTitle": "Sao chép mã này vào ứng dụng để hoàn tất đăng nhập.",
+    "copy": "Sao chép",
+    "copied": "Đã sao chép",
+    "seoDescription": "Cho phép một ứng dụng Mastodon dùng tài khoản DeHub của bạn.",
+    "redirecting": "Đang đưa bạn trở lại {{app}}…",
+    "connectedTitle": "Ứng dụng đã kết nối",
+    "connectedDescription": "Các ứng dụng Mastodon bạn đã đăng nhập bằng tài khoản này. Gỡ một ứng dụng để đăng xuất khỏi nó.",
+    "connectedEmpty": "Chưa có ứng dụng nào được kết nối.",
+    "lastUsed": "Dùng lần cuối {{date}}",
+    "remove": "Gỡ",
+    "removed": "Đã gỡ ứng dụng"
+  },
+  "fediverse": {
+    "title": "Fediverse",
+    "description": "Mọi người trên Mastodon và các ứng dụng fediverse khác có thể tìm và theo dõi bạn ở địa chỉ này. Bài đăng công khai mới của bạn sẽ đến với họ ở đó.",
+    "copy": "Sao chép",
+    "copied": "Đã sao chép",
+    "privateNote": "Tài khoản riêng tư không hiển thị trên fediverse.",
+    "noUsername": "Hãy chọn tên người dùng để có địa chỉ fediverse."
+  },
+  "profileFields": {
+    "title": "Trường hồ sơ",
+    "description": "Tối đa bốn dòng thêm trên hồ sơ của bạn, như trang web hoặc đại từ nhân xưng.",
+    "label": "Nhãn",
+    "content": "Nội dung",
+    "save": "Lưu các trường",
+    "saved": "Đã lưu các trường hồ sơ",
+    "failed": "Chưa lưu được. Hãy thử lại.",
+    "verified": "Liên kết đã xác minh",
+    "verifyHint": "Để xác minh liên kết, hãy thêm đoạn này vào trang đó rồi lưu lại: {{snippet}}"
+  },
+  "followedTags": {
+    "follow": "Theo dõi #{{tag}}",
+    "following": "Đang theo dõi",
+    "unfollow": "Bỏ theo dõi #{{tag}}",
+    "followed": "Bạn đang theo dõi #{{tag}}. Bài đăng của thẻ này sẽ hiện trong bảng tin Đang theo dõi.",
+    "unfollowed": "Đã bỏ theo dõi #{{tag}}",
+    "failed": "Chưa lưu được. Hãy thử lại.",
+    "clear": "Xóa"
+  },
+  "notificationFilters": {
+    "title": "Lọc thông báo từ",
+    "description": "Chọn điều sẽ xảy ra khi ai đó ngoài vòng của bạn tương tác với bạn. Thông báo đã lọc nằm trong mục Đã lọc, không có huy hiệu và không đẩy thông báo.",
+    "notFollowing": "Người bạn không theo dõi",
+    "notFollowers": "Người không theo dõi bạn",
+    "newAccounts": "Tài khoản mới (dưới 30 ngày)",
+    "accept": "Báo cho tôi",
+    "filter": "Lọc",
+    "drop": "Ẩn hoàn toàn",
+    "filteredTitle": "Thông báo đã lọc",
+    "filteredEmpty": "Chưa có gì bị lọc.",
+    "failed": "Chưa lưu được. Hãy thử lại."
+  },
+  "keywordFilters": {
+    "title": "Từ đã tắt tiếng",
+    "description": "Ẩn bài đăng và bình luận chứa những từ này, hoặc gập chúng sau một cảnh báo. Chỉ bạn thấy danh sách này.",
+    "placeholder": "Từ hoặc cụm từ",
+    "add": "Tắt tiếng",
+    "added": "Đã tắt tiếng: {{phrase}}",
+    "wholeWord": "Chỉ nguyên từ",
+    "whenMatches": "Khi bài đăng khớp",
+    "warn": "Hiện cảnh báo",
+    "hide": "Ẩn đi",
+    "howLong": "Trong bao lâu",
+    "forever": "Cho đến khi tôi xóa",
+    "duration1h": "Trong 1 giờ",
+    "duration1d": "Trong 1 ngày",
+    "duration7d": "Trong 7 ngày",
+    "duration30d": "Trong 30 ngày",
+    "where": "Ở đâu",
+    "home": "Trang chủ",
+    "public": "Khám phá và tìm kiếm",
+    "profile": "Hồ sơ",
+    "thread": "Cuộc trò chuyện",
+    "notifications": "Thông báo",
+    "empty": "Bạn chưa tắt tiếng từ nào.",
+    "remove": "Bật tiếng",
+    "until": "Đến {{date}}",
+    "filtered": "Đã lọc: {{phrase}}",
+    "showAnyway": "Vẫn hiện",
+    "failed": "Chưa lưu được. Hãy thử lại."
+  },
+  "postVisibility": {
+    "label": "Ai có thể xem",
+    "public": "Mọi người",
+    "followers": "Chỉ người theo dõi",
+    "direct": "Chỉ người được nhắc đến",
+    "noRepost": "Chỉ bài đăng công khai mới đăng lại được",
+    "directHint": "Chỉ những người bạn nhắc đến bằng @ mới thấy bài đăng này",
+    "needsMention": "Nhắc đến ít nhất một người bằng @ để chỉ đăng cho những người được nhắc đến"
+  },
+  "replyPolicy": {
+    "label": "Ai có thể trả lời",
+    "public": "Mọi người",
+    "followers": "Người theo dõi bạn",
+    "following": "Người bạn theo dõi",
+    "mentioned": "Chỉ người được nhắc đến",
+    "noticeFollowers": "Chỉ người theo dõi tác giả mới có thể trả lời",
+    "noticeFollowing": "Chỉ người được tác giả theo dõi mới có thể trả lời",
+    "noticeMentioned": "Chỉ người được nhắc đến trong bài mới có thể trả lời",
+    "refused": "Tác giả đã giới hạn người có thể trả lời bài đăng này"
+  },
+  "quotePolicy": {
+    "label": "Ai có thể trích dẫn",
+    "public": "Mọi người",
+    "followers": "Người theo dõi",
+    "nobody": "Chỉ mình tôi",
+    "off": "Tác giả đã tắt trích dẫn",
+    "removed": "Tác giả đã gỡ bài đăng của họ khỏi trích dẫn này",
+    "remove": "Gỡ",
+    "removedToast": "Bài đăng của bạn đã được gỡ khỏi trích dẫn này",
+    "removeFailed": "Không thể gỡ bài đăng của bạn khỏi trích dẫn",
+    "refused": "Tác giả không cho phép bạn trích dẫn bài đăng này"
+  },
   "contentWarning": {
     "label": "Cảnh báo nội dung",
     "placeholder": "Viết cảnh báo của bạn ở đây",
@@ -132,11 +260,12 @@
     "heading": "Video ngắn DeHub"
   },
   "settings": {
-    "showDislikesDesc": "Ai cũng có thể mở tab Không thích trên hồ sơ của bạn. Khi tắt, chỉ bạn xem được.",
-    "showDislikes": "Hiển thị lượt không thích của tôi cho mọi người",
+    "usernameTaken": "Tên người dùng đã có người dùng",
     "postingChain": "Chuỗi khối đăng bài",
     "showOnline": "Hiển thị khi tôi trực tuyến",
     "showOnlineDesc": "Những người bạn nhắn tin thấy một dấu chấm màu xanh lá cây bên cạnh tên của bạn trong khi bạn đang sử dụng DeHub",
+    "showDislikes": "Hiển thị lượt không thích của tôi cho mọi người",
+    "showDislikesDesc": "Ai cũng có thể mở tab Không thích trên hồ sơ của bạn. Khi tắt, chỉ bạn xem được.",
     "smartReplies": "Câu trả lời gợi ý",
     "smartRepliesDesc": "Soạn hai câu trả lời bạn có thể chạm trong cuộc trò chuyện. Dấu × trên các gợi ý sẽ tắt tính năng này.",
     "title": "Settings",
@@ -675,7 +804,6 @@
     "embed": "Nhúng",
     "copyEmbedCode": "Sao chép mã nhúng",
     "embedCodeCopied": "Đã sao chép mã nhúng",
-    "copyFailed": "Không thể sao chép liên kết",
     "options": "Options",
     "aiOverview": "Tổng quan về AI",
     "sendTip": "Send Tip",
@@ -703,7 +831,8 @@
     "unpinPost": "Bỏ ghim khỏi hồ sơ của bạn",
     "postPinned": "Đã ghim vào hồ sơ của bạn",
     "postUnpinned": "Đã bỏ ghim khỏi hồ sơ của bạn",
-    "pinFailed": "Không thể ghim hoặc bỏ ghim bài đăng này"
+    "pinFailed": "Không thể ghim hoặc bỏ ghim bài đăng này",
+    "copyFailed": "Không thể sao chép liên kết"
   },
   "filters": {
     "sort": "Sort",
@@ -1443,7 +1572,6 @@
     "returnHome": "Return Home"
   },
   "profile": {
-    "dislikes": { "loadMore": "Tải thêm", "privateDesc": "Tài khoản này giữ kín lượt không thích.", "privateTitle": "Lượt không thích là riêng tư", "emptyOther": "Chưa có gì.", "emptyOwn": "Bài bạn không thích sẽ rời khỏi bảng tin và hiện ở đây. Hủy không thích để đưa bài trở lại.", "emptyTitle": "Chưa có lượt không thích" },
     "back": "Back",
     "usernameAvailable": "Username available!",
     "signUpToClaim": "Đăng ký hôm nay để nhận",
@@ -1471,8 +1599,16 @@
       "commentUnavailable": "Bình luận này không còn khả dụng"
     },
     "tabs": {
-      "dislikes": "Không thích",
-      "playlists": "Danh sách phát"
+      "playlists": "Danh sách phát",
+      "dislikes": "Không thích"
+    },
+    "dislikes": {
+      "emptyTitle": "Chưa có lượt không thích",
+      "emptyOwn": "Bài bạn không thích sẽ rời khỏi bảng tin và hiện ở đây. Hủy không thích để đưa bài trở lại.",
+      "emptyOther": "Chưa có gì.",
+      "privateTitle": "Lượt không thích là riêng tư",
+      "privateDesc": "Tài khoản này giữ kín lượt không thích.",
+      "loadMore": "Tải thêm"
     },
     "offerWorthNow": "Khoảng {{amount}} token với tỷ giá hiện tại",
     "offerNotePlaceholder": "Thêm ghi chú (không bắt buộc)",
@@ -2325,6 +2461,7 @@
     "pendingSubmitted": "{{amount}} token đã được gửi. Việc xác nhận vẫn đang được kiểm tra. Vui lòng không gửi lại."
   },
   "communities": {
+    "chatTab": "Trò chuyện",
     "title": "Cộng đồng",
     "create": "Tạo",
     "searchPlaceholder": "Tìm kiếm cộng đồng...",
@@ -2359,7 +2496,30 @@
     "addDescription": "Thêm mô tả...",
     "communityDescription": "Mô tả cộng đồng...",
     "posts": "Bài viết",
-    "chat": "Trò chuyện",
+    "chat": {
+      "intervalHour": "1 giờ",
+      "intervalHours": "{{count}} giờ",
+      "intervalMinute": "1 phút",
+      "intervalMinutes": "{{count}} phút",
+      "intervalSecond": "1 giây",
+      "intervalSeconds": "{{count}} giây",
+      "muted": "Bạn đã bị tắt tiếng",
+      "mutedUntil": "Bạn sẽ bị tắt tiếng cho đến {{until}}",
+      "postingDisabled": "Đăng bài bị vô hiệu hóa cho các thành viên ở đây",
+      "pinnedGif": "GIF",
+      "pinnedMedia": "Truyền thông",
+      "jumpToPinned": "Chuyển đến tin nhắn đã ghim",
+      "pinnedMessage": "Tin nhắn đã ghim",
+      "unpin": "Bỏ ghim",
+      "pin": "Mã PIN",
+      "delete": "Xóa",
+      "slowMode": "Chế độ chậm: một tin nhắn mỗi {{interval}}",
+      "slowModeWait": "Chế độ chậm — chờ {{time}}",
+      "send": "Gửi",
+      "deleteMessageTitle": "Xóa tin nhắn này?",
+      "deleteMessageBody": "Không thể hoàn tác thao tác này.",
+      "cancel": "Hủy"
+    },
     "membersTab": "Thành viên ({{count}})",
     "about": "Giới thiệu",
     "backToCommunities": "Cộng đồng",
@@ -3826,6 +3986,7 @@
     "sellYourFractions": "Bán các phần của bạn ({{held}} được giữ)"
   },
   "creator": {
+    "libraryEmpty": "Các nội dung đã tạo bạn lưu sẽ xuất hiện ở đây.",
     "whatToCreate": "Cái gì để tạo",
     "startCreatingWith": "Bắt đầu tạo với {{model}}",
     "studioSubtitle": "Mô tả một cảnh, nhân vật, tâm trạng hoặc phong cách. Kết quả xuất hiện dưới đây và đi thẳng vào trình chỉnh sửa.",
@@ -6227,7 +6388,10 @@
     "play": "Phát",
     "pause": "Tạm dừng",
     "listens_one": "{{count}} lượt nghe",
-    "listens_other": "{{count}} lượt nghe"
+    "listens_other": "{{count}} lượt nghe",
+    "lyrics": "Lời bài hát",
+    "lyricsLoading": "Đang tìm lời bài hát…",
+    "lyricsNone": "Không tìm thấy lời"
   },
   "converter": {
     "seoTitle": "Converter — nhập video vào DeHub",
@@ -6744,6 +6908,7 @@
     "seoDescription": "Tài liệu chính thức của DeHub: tổng quan nền tảng, dApp, kinh tế token token, staking, trò chơi, lộ trình, FAQ và hơn thế nữa."
   },
   "dex": {
+    "title": "token / USD",
     "seoTitle": "DEX — Giao dịch token theo giá của bạn",
     "seoDescription": "Đặt giá mua hoặc bán token của bạn với lệnh giới hạn Uniswap v4 trên Base hoặc BNB Chain. Sổ lệnh trực tiếp, độ sâu thị trường và một mức giá USD chung.",
     "venue": "Mạng",
@@ -6965,6 +7130,14 @@
     }
   },
   "editor": {
+    "video": {
+      "tFade": "Hòa tan",
+      "none": "Không có",
+      "transition": "Chuyển cảnh",
+      "speed": "Tốc độ",
+      "sound": "Âm thanh",
+      "video": "Video"
+    },
     "review": {
       "title": "Đánh giá dự án",
       "shared": "Được chia sẻ với bạn",
@@ -8699,5 +8872,15 @@
     "posted": "Đã đăng",
     "view": "Xem",
     "failed": "Không thể xử lý video"
+  },
+  "loginStack": {
+    "tip": "Tip DHB",
+    "headlineTop": "Bạn sẽ sở hữu mọi thứ",
+    "headlineAccent": "và hạnh phúc.",
+    "orContinueWith": "hoặc tiếp tục với",
+    "phone": "Điện thoại",
+    "fingerprint": "Vân tay",
+    "exploreFirst": "Khám phá trước",
+    "codeNote": "Chúng tôi gửi mã qua email, không cần mật khẩu."
   }
 }
