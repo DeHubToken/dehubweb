@@ -2734,7 +2734,7 @@
     "hoursAgo": "{{count}}год тому",
     "daysAgo": "{{count}}днів тому",
     "monthsAgo": "{{count}}місяців тому",
-    "forLabel": "Для",
+    "forLabel": "За",
     "againstLabel": "Проти",
     "lentBadgeCantVote": "Ваш значок надано вам, і надані значки не можуть голосувати. Придбайте DHB, щоб отримати власний значок.",
     "buyDhb": "Купити DHB",

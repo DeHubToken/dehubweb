@@ -2375,8 +2375,8 @@
     "hoursAgo": "{{count}}ঘ আগে",
     "daysAgo": "{{count}}দি আগে",
     "monthsAgo": "{{count}}মা আগে",
-    "forLabel": "জন্য",
-    "againstLabel": "সংরক্ষিত।",
+    "forLabel": "পক্ষে",
+    "againstLabel": "বিপক্ষে",
     "lentBadgeCantVote": "আপনার ব্যাজটি আপনার কাছে ধার করা আছে এবং লেন্ট ব্যাজগুলি ভোট দিতে পারে না । নিজের ব্যাজ উপার্জন করতে DHB কিনুন ।",
     "buyDhb": "DHB কিনুন",
     "discussion": {

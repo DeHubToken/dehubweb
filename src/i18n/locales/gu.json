@@ -2381,8 +2381,8 @@
     "hoursAgo": "{{count}} કલાક પહેલાં",
     "daysAgo": "{{count}} દિવસ પહેલાં",
     "monthsAgo": "{{count}} મહિના પહેલાં",
-    "forLabel": "માટે",
-    "againstLabel": "વિરુદ્ધ",
+    "forLabel": "તરફેણમાં",
+    "againstLabel": "વિરોધમાં",
     "lentBadgeCantVote": "તમારો બેજ તમને ઉધાર આપવામાં આવ્યો છે, અને ઉધાર બેજો મત આપી શકતા નથી. તમારો પોતાનો બેજ મેળવવા માટે DHB ખરીદો.",
     "buyDhb": "DHB ખરીદો",
     "discussion": {

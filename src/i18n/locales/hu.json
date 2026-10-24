@@ -2370,7 +2370,7 @@
     "hoursAgo": "{{count}} órája",
     "daysAgo": "{{count}} napja",
     "monthsAgo": "{{count}} hónapja",
-    "forLabel": "->",
+    "forLabel": "Mellette",
     "againstLabel": "Ellene",
     "lentBadgeCantVote": "A jelvényedet kölcsönadtuk neked, és a kölcsönadott jelvények nem szavazhatnak. Vásárolj DHB-t, hogy megszerezd a saját jelvényedet.",
     "buyDhb": "Vásároljon DHB-t",

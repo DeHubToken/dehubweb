@@ -2378,8 +2378,8 @@
     "hoursAgo": "{{count}} سائەت بۇرۇن",
     "daysAgo": "{{count}} كۈن بۇرۇن",
     "monthsAgo": "{{count}} ئاي بۇرۇن",
-    "forLabel": "ئۈچۈن",
-    "againstLabel": "قارشىلىق",
+    "forLabel": "قوللايمەن",
+    "againstLabel": "قارشى",
     "lentBadgeCantVote": "بەلگىڭىز سىزگە يۈكلەنگەن، يۈكلەنگەن بەلگىلەر ئاۋاز چىقىرالمايدۇ. ئۆز بەلگىڭىزنى تېپىش ئۈچۈن DHB نى سېتىۋېلىڭ.",
     "buyDhb": "DHB نى سېتىۋېلىڭ",
     "discussion": {

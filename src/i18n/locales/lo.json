@@ -2378,8 +2378,8 @@
     "hoursAgo": "{{count}} ຊົ່ວໂມງກ່ອນ",
     "daysAgo": "{{count}} ວັນກ່ອນ",
     "monthsAgo": "{{count}} ເດືອນກ່ອນ",
-    "forLabel": "ສຳລັບ",
-    "againstLabel": "ຕໍ່ຕ້ານ",
+    "forLabel": "ເຫັນດີ",
+    "againstLabel": "ບໍ່ເຫັນດີ",
     "lentBadgeCantVote": "ເຄື່ອງໝາຍຂອງເຈົ້າຖືກກູ້ຢືມໃຫ້ເຈົ້າ, ແລະ ເຄື່ອງໝາຍທີ່ກູ້ຢືມບໍ່ສາມາດລົງຄະແນນສຽງໄດ້. ຊື້ DHB ເພື່ອໄດ້ຮັບປ້າຍຂອງທ່ານເອງ.",
     "buyDhb": "ຊື້ DHB",
     "discussion": {

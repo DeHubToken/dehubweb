@@ -2380,7 +2380,7 @@
     "hoursAgo": "{{count}}ч назад",
     "daysAgo": "{{count}}д назад",
     "monthsAgo": "{{count}}мес назад",
-    "forLabel": "От",
+    "forLabel": "За",
     "againstLabel": "Против",
     "lentBadgeCantVote": "Ваш значок одолжен вам, и одолженные значки не могут голосовать. Купите DHB, чтобы получить свой собственный значок.",
     "buyDhb": "Купить DHB",

@@ -2360,8 +2360,8 @@
     "hoursAgo": "{{count}} घंटा पहिले",
     "daysAgo": "{{count}} दिन पहिले",
     "monthsAgo": "{{count}} महीना पहिले",
-    "forLabel": "बर",
-    "againstLabel": "विरोधाभास",
+    "forLabel": "पक्ष में",
+    "againstLabel": "विरोध में",
     "lentBadgeCantVote": "रहिमन दाबे न दबै, जानत सकल जहान । अपन खुद के बैज कमाय बर डीएचबी खरीदव ।",
     "buyDhb": "डीएचबी खरीदव",
     "discussion": {

@@ -2384,8 +2384,8 @@
     "hoursAgo": "{{count}}hora ñawpaq",
     "daysAgo": "{{count}}p'unchay ñawpaq",
     "monthsAgo": "{{count}}killa ñawpaq",
-    "forLabel": "napaq...",
-    "againstLabel": "Contrapi",
+    "forLabel": "Arí",
+    "againstLabel": "Mana",
     "lentBadgeCantVote": "Insigniaykiqa prestasqam kachkan, prestasqa insigniakunapas manam votayta atinkuchu. DHB rantiy kikiykipa insigniaykita gananaykipaq.",
     "buyDhb": "DHB nisqa rantiy",
     "discussion": {

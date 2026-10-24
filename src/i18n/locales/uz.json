@@ -2400,7 +2400,7 @@
     "hoursAgo": "{{count}}h ago",
     "daysAgo": "{{count}}d ago",
     "monthsAgo": "{{count}}mo ago",
-    "forLabel": "Quyidagi uchun",
+    "forLabel": "Yoqlab",
     "againstLabel": "Qarshi",
     "lentBadgeCantVote": "Nishoningiz sizga qarzga berilgan va qarzga berilgan nishonlar ovoz bera olmaydi. O&#39;z nishoningizni olish uchun DHB sotib oling.",
     "buyDhb": "DHB sotib oling",

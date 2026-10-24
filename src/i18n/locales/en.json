@@ -1926,7 +1926,7 @@
     "promptDetails": "Optional details",
     "promptDevice": "Device \u0026 OS (for bugs)",
     "promptFilters": "Filter by category",
-    "promptMediaError": "Choose images or videos under 20MB each.",
+    "promptMediaError": "Choose images or videos under 50MB each.",
     "promptMediaLimit": "Up to {{max}} attachments.",
     "removePromptAttachment": "Remove {{name}}",
     "promptAttachment": "Attachment {{number}}",

@@ -2372,8 +2372,8 @@
     "hoursAgo": "{{count}}h ago",
     "daysAgo": "{{count}}d ago",
     "monthsAgo": "{{count}}mo ago",
-    "forLabel": "Pentru,",
-    "againstLabel": "împotriva",
+    "forLabel": "Pentru",
+    "againstLabel": "Împotrivă",
     "lentBadgeCantVote": "Insigna dvs. vă este împrumutată, iar insignele împrumutate nu pot vota. Cumpărați DHB pentru a vă câștiga propria insignă.",
     "buyDhb": "Cumpărați DHB",
     "discussion": {

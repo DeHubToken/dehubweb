@@ -2402,8 +2402,8 @@
     "hoursAgo": "{{count}} საათი წინ",
     "daysAgo": "{{count}} დღე წინ",
     "monthsAgo": "{{count}} თვე წინ",
-    "forLabel": "სთვის",
-    "againstLabel": "წინააღმდეგ:",
+    "forLabel": "მომხრე",
+    "againstLabel": "წინააღმდეგი",
     "lentBadgeCantVote": "თქვენს სამკერდე ნიშანს მიავლინებთ, ხოლო სამკერდე ნიშნები ხმას ვერ იღებენ. შეიძინეთ DHB საკუთარი ნიშნის მოსაპოვებლად.",
     "buyDhb": "DHB-ის შეძენა",
     "discussion": {

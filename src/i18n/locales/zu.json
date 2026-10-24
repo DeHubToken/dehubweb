@@ -2381,8 +2381,8 @@
     "hoursAgo": "{{count}}hr edlule",
     "daysAgo": "{{count}}d edlule",
     "monthsAgo": "{{count}}m edlule",
-    "forLabel": "recurrpage",
-    "againstLabel": "Ngokumelene",
+    "forLabel": "Ngiyavuma",
+    "againstLabel": "Angivumi",
     "lentBadgeCantVote": "Ubolekwe ibheji lakho, futhi amabheji abolekisiwe awakwazi ukuvota. Thenga i-DHB ukuze uzitholele ibheji lakho.",
     "buyDhb": "Thenga i-DHB",
     "discussion": {

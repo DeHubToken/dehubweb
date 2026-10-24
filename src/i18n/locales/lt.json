@@ -2382,8 +2382,8 @@
     "hoursAgo": "prieš {{count}} val.",
     "daysAgo": "prieš {{count}} d.",
     "monthsAgo": "prieš {{count}} mėn.",
-    "forLabel": "„Durų",
-    "againstLabel": "„Prieš\"_____",
+    "forLabel": "Už",
+    "againstLabel": "Prieš",
     "lentBadgeCantVote": "Tavo ženklelis tau paskolintas, o paskolinti ženkleliai negali balsuoti. Įsigykite DHB ir užsidirbkite savo ženklelį.",
     "buyDhb": "Pirkti DHB",
     "discussion": {

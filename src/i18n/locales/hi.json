@@ -2386,8 +2386,8 @@
     "hoursAgo": "{{count}}घं पहले",
     "daysAgo": "{{count}}दि पहले",
     "monthsAgo": "{{count}}मा पहले",
-    "forLabel": "के लिए...",
-    "againstLabel": "विरुद्ध:",
+    "forLabel": "पक्ष में",
+    "againstLabel": "विपक्ष में",
     "lentBadgeCantVote": "आपका बैज आपको उधार दिया गया है, और उधार दिए गए बैज वोट नहीं कर सकते। अपना खुद का बैज पाने के लिए DHB खरीदें।",
     "buyDhb": "DHB खरीदें",
     "discussion": {

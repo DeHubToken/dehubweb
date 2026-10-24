@@ -2369,8 +2369,8 @@
     "hoursAgo": "pirms {{count}} st.",
     "daysAgo": "pirms {{count}} d.",
     "monthsAgo": "pirms {{count}} mēn.",
-    "forLabel": "Paredzēts",
-    "againstLabel": "Balsis “pret”",
+    "forLabel": "Par",
+    "againstLabel": "Pret",
     "lentBadgeCantVote": "Jūsu nozīmīte ir aizdota jums, un aizdotās nozīmītes nevar balsot. Iegādājieties DHB, lai nopelnītu savu nozīmīti.",
     "buyDhb": "Pirkt DHB",
     "discussion": {

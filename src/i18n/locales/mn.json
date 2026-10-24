@@ -2379,8 +2379,8 @@
     "hoursAgo": "{{count}}ц өмнө",
     "daysAgo": "{{count}}ө өмнө",
     "monthsAgo": "{{count}}с өмнө",
-    "forLabel": "...зориулсан",
-    "againstLabel": "Эсрэг",
+    "forLabel": "Дэмжсэн",
+    "againstLabel": "Эсэргүүцсэн",
     "lentBadgeCantVote": "Таны тэмдэг танд зээлдүүлж, тэмдэг суух боломжгүй. Өөрийн тэмдэгтээ олохын тулд DHB худалдаж аваарай.",
     "buyDhb": "DHB худалдаж авах",
     "discussion": {
