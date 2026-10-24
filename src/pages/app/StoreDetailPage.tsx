@@ -21,6 +21,7 @@ import { SEOHead } from '@/components/SEOHead';
 import { IslandAction, KitButton, PageBody, PageEmpty, PageIsland } from '@/components/app/page-kit/PageKit';
 import { storageImage, deviceWidth, isMdUp } from '@/lib/media-url';
 import { AppState } from '@/components/app/AppState';
+import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
 
 export default function StoreDetailPage() {
   const { t: _copy } = _useCopy();
@@ -38,6 +39,7 @@ export default function StoreDetailPage() {
   const { data: listings = [], isLoading: listingsLoading } = useStoreListings(storeId);
   const [selectedListing, setSelectedListing] = useState<any>(null);
   const [shareOpen, setShareOpen] = useState(false);
+  const [failedBanner, setFailedBanner] = useState<string | null>(null);
 
   // Open drawer when ?listing=<id> is present (e.g. from a shared post embed).
   const linkedListingId = searchParams.get('listing');
@@ -123,34 +125,27 @@ export default function StoreDetailPage() {
 
       <PageBody>
       <section className="rounded-xl border border-white/[0.12] bg-white/[0.03] backdrop-blur-[24px] overflow-hidden relative">
-        <div className="aspect-[3/1] w-full bg-zinc-900">
-          {store.banner_url ? (
-            <img src={storageImage(store.banner_url, deviceWidth(isMdUp() ? 600 : 430))} className="w-full h-full object-cover" alt="" fetchPriority="high" />
-          ) : (
-            <div className="w-full h-full bg-gradient-to-br from-primary/20 to-primary/5" />
+        <div className="aspect-[3/1] w-full bg-gradient-to-br from-primary/20 to-primary/5">
+          {store.banner_url && failedBanner !== store.banner_url && (
+            <img src={storageImage(store.banner_url, deviceWidth(isMdUp() ? 600 : 430))} className="w-full h-full object-cover" alt="" fetchPriority="high" onError={() => setFailedBanner(store.banner_url)} />
           )}
         </div>
 
         <div className="px-4 sm:px-6 pb-4">
           <div className="relative -mt-10 sm:-mt-12">
-            {store.avatar_url ? (
-              <img
-                src={store.avatar_url}
-                className="w-20 h-20 sm:w-24 sm:h-24 rounded-[10px] object-cover bg-zinc-900"
-                alt={store.name || ''}
-              />
-            ) : (
-              <div className="w-20 h-20 sm:w-24 sm:h-24 rounded-[10px] bg-white/10 flex items-center justify-center text-xl sm:text-2xl font-bold text-primary-foreground">
+            <Avatar className="w-20 h-20 sm:w-24 sm:h-24 rounded-[10px]">
+              <AvatarImage src={store.avatar_url || undefined} alt={store.name || ''} className="object-cover" />
+              <AvatarFallback className="rounded-[10px] bg-white/10 text-xl sm:text-2xl font-bold text-foreground">
                 {storeInitial}
-              </div>
-            )}
+              </AvatarFallback>
+            </Avatar>
           </div>
 
           <div className="mt-3">
-            <h2 className="text-lg sm:text-xl font-bold text-primary-foreground">{store.name || t('stores.store')}</h2>
+            <h2 className="text-lg sm:text-xl font-bold text-foreground">{store.name || t('stores.store')}</h2>
             <p className="text-xs text-muted-foreground">{t('stores.listingCount', { count: listings.length })}</p>
             {store.description && (
-              <p className="mt-2 text-sm text-primary-foreground/80">{store.description}</p>
+              <p className="mt-2 text-sm text-foreground/80">{store.description}</p>
             )}
           </div>
         </div>
@@ -158,7 +153,7 @@ export default function StoreDetailPage() {
 
       {/* Listings grid */}
       <div className="px-2 sm:px-1">
-        <h2 className="text-sm font-semibold text-primary-foreground mb-3">{t('stores.listings')}</h2>
+        <h2 className="text-sm font-semibold text-foreground mb-3">{t('stores.listings')}</h2>
         {listingsLoading ? (
           <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
             {Array.from({ length: 4 }).map((_, i) => (
