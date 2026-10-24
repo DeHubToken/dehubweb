@@ -95,7 +95,7 @@ html[data-system-tone="light"] .login-stack-corner {
 .login-stack__headline {
   position: relative;
   margin: -64px 0 0;
-  text-align: left;
+  text-align: center;
   font-size: 30px;
   line-height: 1.05;
   font-weight: 900;
