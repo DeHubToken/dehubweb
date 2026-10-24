@@ -93,6 +93,7 @@ export function BrowseTab() {
       <div className="relative">
         <ThemedIcon icon="search" alt="" className="absolute left-2.5 top-1/2 -translate-y-1/2 w-5 h-5 object-contain opacity-60 z-10" />
         <Input
+          type="search"
           value={search}
           onChange={e => setSearch(e.target.value)}
           placeholder={t('stores.searchListings')}
