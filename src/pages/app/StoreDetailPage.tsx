@@ -39,6 +39,7 @@ export default function StoreDetailPage() {
   const { data: listings = [], isLoading: listingsLoading } = useStoreListings(storeId);
   const [selectedListing, setSelectedListing] = useState<any>(null);
   const [shareOpen, setShareOpen] = useState(false);
+  const [failedBanner, setFailedBanner] = useState<string | null>(null);
 
   // Open drawer when ?listing=<id> is present (e.g. from a shared post embed).
   const linkedListingId = searchParams.get('listing');
@@ -124,11 +125,9 @@ export default function StoreDetailPage() {
 
       <PageBody>
       <section className="rounded-xl border border-white/[0.12] bg-white/[0.03] backdrop-blur-[24px] overflow-hidden relative">
-        <div className="aspect-[3/1] w-full bg-zinc-900">
-          {store.banner_url ? (
-            <img src={storageImage(store.banner_url, deviceWidth(isMdUp() ? 600 : 430))} className="w-full h-full object-cover" alt="" fetchPriority="high" />
-          ) : (
-            <div className="w-full h-full bg-gradient-to-br from-primary/20 to-primary/5" />
+        <div className="aspect-[3/1] w-full bg-gradient-to-br from-primary/20 to-primary/5">
+          {store.banner_url && failedBanner !== store.banner_url && (
+            <img src={storageImage(store.banner_url, deviceWidth(isMdUp() ? 600 : 430))} className="w-full h-full object-cover" alt="" fetchPriority="high" onError={() => setFailedBanner(store.banner_url)} />
           )}
         </div>
 
