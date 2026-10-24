@@ -13,7 +13,6 @@ import React, { Suspense, useState, useEffect, useMemo, useRef, memo } from 'rea
 import { useLocation, useParams } from 'react-router-dom';
 import { BUY_PATHS } from '@/lib/buy-route';
 import { useSidebarCollapse } from '@/contexts/SidebarCollapseContext';
-import { cn } from '@/lib/utils';
 import { lazyWithRetry } from '@/lib/lazy-with-retry';
 import { ErrorBoundary } from '@/components/ErrorBoundary';
 import { CachedPageActiveContext } from '@/contexts/CachedPageActiveContext';
@@ -157,18 +156,6 @@ const CachedPage = memo(function CachedPage({
   const SkeletonComponent = config.skeleton;
   const { isCollapsed } = useSidebarCollapse();
 
-  // Only animate fade-in on the very first activation, not on every revisit.
-  // Skip the fade for the home page so it swaps directly from the boot/HTML
-  // skeleton into the real feed without a visible cross-fade.
-  const hasBeenActiveRef = useRef(false);
-  const shouldAnimate = isActive && !hasBeenActiveRef.current && config.key !== 'home';
-
-  useEffect(() => {
-    if (isActive && !hasBeenActiveRef.current) {
-      hasBeenActiveRef.current = true;
-    }
-  }, [isActive]);
-
   // Apply top spacing in collapsed mode for all pages except home (which handles it internally)
   const needsCollapsedSpacing = isCollapsed && isActive && config.key !== 'home';
 
@@ -205,7 +192,6 @@ const CachedPage = memo(function CachedPage({
     <div
       ref={pageRef}
       data-cached-page={config.key}
-      className={cn(shouldAnimate ? 'animate-fade-in' : '')}
       style={
         shouldStayVisible
           ? undefined

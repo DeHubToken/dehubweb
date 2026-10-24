@@ -21,6 +21,7 @@ import App, { preloadWalletProviders } from "./App.tsx";
 import { loadThemeCss } from "./lib/theme-css";
 import "./i18n";
 import "./index.css";
+import "./styles/app-route-motion.css";
 import "./styles/theme-controls.css";
 import "./styles/media-controls.css";
 import "./styles/glass-surfaces.css";

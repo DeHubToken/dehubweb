@@ -50,29 +50,39 @@ export function GlassFilterRow<T extends string>({
     if (!layer || !btn) return;
     const lr = layer.getBoundingClientRect();
     const br = btn.getBoundingClientRect();
-    setRect({
+    const next = {
       x: br.left - lr.left,
       y: br.top - lr.top,
       width: br.width,
       height: br.height,
       ready: true,
-    });
+    };
+    setRect((previous) => (
+      previous.x === next.x && previous.y === next.y &&
+      previous.width === next.width && previous.height === next.height &&
+      previous.ready === next.ready
+    ) ? previous : next);
   }, [indicatorKey]);
 
   useLayoutEffect(() => { update(); }, [update]);
 
   useEffect(() => {
-    const handler = () => requestAnimationFrame(update);
-    window.addEventListener('resize', handler);
-    return () => window.removeEventListener('resize', handler);
-  }, [update]);
-
-  useEffect(() => {
     const el = scrollRef.current;
-    if (!el) return;
-    const handler = () => requestAnimationFrame(update);
-    el.addEventListener('scroll', handler, { passive: true });
-    return () => el.removeEventListener('scroll', handler);
+    let frame: number | null = null;
+    const schedule = () => {
+      if (frame !== null) return;
+      frame = requestAnimationFrame(() => {
+        frame = null;
+        update();
+      });
+    };
+    window.addEventListener('resize', schedule);
+    el?.addEventListener('scroll', schedule, { passive: true });
+    return () => {
+      window.removeEventListener('resize', schedule);
+      el?.removeEventListener('scroll', schedule);
+      if (frame !== null) cancelAnimationFrame(frame);
+    };
   }, [update]);
 
   return (

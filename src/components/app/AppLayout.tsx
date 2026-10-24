@@ -80,6 +80,7 @@ const PostProcessingDock = React.lazy(() => import('@/components/app/PostProcess
 import { StageMiniPlayer } from '@/components/app/spaces/StageMiniPlayer';
 import { StageRecordingMiniPlayer } from '@/components/app/stages/StageRecordingMiniPlayer';
 import { useAudioPostPoppedOut } from '@/lib/audio-post-popout';
+import { loadPostPage } from '@/lib/preload-post-page';
 
 // Mounted app-wide so a popped-out track survives navigation, but it renders
 // nothing until somebody pops one out — and until then its panel and waveform
@@ -107,7 +108,7 @@ import { cn } from '@/lib/utils';
 import { KidsModeGate } from '@/components/app/KidsModeGate';
 // Lazy: only rendered as the post overlay when a post is opened from home —
 // a whole page's worth of code that shouldn't ride in the entry bundle.
-const SinglePostPage = React.lazy(() => import('@/pages/app/SinglePostPage'));
+const SinglePostPage = React.lazy(loadPostPage);
 // "Show when I'm online" presence — mounted for the whole session so the
 // green dot on Messages is right wherever this person is. Lazy: nothing on
 // first paint needs it.
@@ -136,6 +137,21 @@ const POST_OVERLAY_ORIGIN_KEY = 'post-overlay-origin';
 // CSS vars published below — the same ones the login modal centers against.
 const POST_LAYER_LEFT = 'var(--app-main-left, 0px)';
 const POST_LAYER_WIDTH = 'var(--app-main-width, 100%)';
+
+function PostOverlayEffects({
+  overlayRef,
+  postId,
+}: {
+  overlayRef: React.RefObject<HTMLDivElement>;
+  postId: string | null;
+}) {
+  // This commits with the lazy post, so the ref is live even on a cold load.
+  useFeedSwallowClip(overlayRef, '[data-feed-nav]', []);
+  useLayoutEffect(() => {
+    if (overlayRef.current) overlayRef.current.scrollTop = 0;
+  }, [overlayRef, postId]);
+  return null;
+}
 
 function AppLayoutContent({ children }: AppLayoutContentProps) {
   const { t: _copy } = _useCopy();
@@ -368,16 +384,12 @@ function AppLayoutContent({ children }: AppLayoutContentProps) {
   // the overlay mounts/unmounts. No-op when no pill is visible (mobile drawer /
   // standalone post route).
   const postOverlayRef = useRef<HTMLDivElement>(null);
-  useFeedSwallowClip(postOverlayRef, '[data-feed-nav]', [showHomePagePersisted]);
 
   // The overlay is its own scroll container, so it opens at the top by
   // construction — no scroll-to-top race, and the feed's own scroll offset is
   // never touched. Post → post (a related video, a quoted post) reuses the same
   // layer, so reset it explicitly there, before paint.
   const overlayPostId = postMatch?.params.postId ?? videoMatch?.params.tokenId ?? null;
-  useLayoutEffect(() => {
-    if (postOverlayRef.current) postOverlayRef.current.scrollTop = 0;
-  }, [overlayPostId, showHomePagePersisted]);
 
   const isCached = isCachedPageRoute(location.pathname);
   // An open DM hides the mobile bottom nav, so <main> must drop the pb-16
@@ -462,7 +474,8 @@ function AppLayoutContent({ children }: AppLayoutContentProps) {
               content below the nav pill, and scrolling slides it under the glass
               exactly like the feed does. */}
           {showHomePagePersisted && (
-            <>
+            <Suspense fallback={null}>
+              <PostOverlayEffects overlayRef={postOverlayRef} postId={overlayPostId} />
               {/* Backing for the post layer, deliberately a separate element from
                   the scroller: the swallow clip cuts the scroller at the nav
                   pill's top edge, and a clipped background takes its fill with
@@ -509,12 +522,10 @@ function AppLayoutContent({ children }: AppLayoutContentProps) {
                 }}
               >
                 <ErrorBoundary compact resetKey={location.pathname} label={_copy("copy.a5554622c655", { defaultValue: "Post" })}>
-                  <Suspense fallback={null}>
-                    <SinglePostPage inOverlay />
-                  </Suspense>
+                  <SinglePostPage inOverlay />
                 </ErrorBoundary>
               </div>
-            </>
+            </Suspense>
           )}
 
           {/* Dynamic routes (post pages, username profiles, etc.) use Outlet.
