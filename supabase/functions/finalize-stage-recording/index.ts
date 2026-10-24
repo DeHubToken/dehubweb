@@ -44,7 +44,7 @@ const BUCKET = 'stage-recordings';
 /** Objects this function itself produces — seeing one means the work is done. */
 // recording.indexed.webm is deliberately not here any more: a WebM that was
 // only indexed still cannot play on an iPhone, so it is taken on to MP4.
-const FINALIZED = ['recording.m4a', 'recording.mp4'];
+const FINALIZED = ['recording.m4a'];
 
 const json = (body: unknown, status = 200) =>
   new Response(JSON.stringify(body), {

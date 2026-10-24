@@ -101,7 +101,7 @@ async function submit(db: any, row: DubRow, worker: WorkerConfig): Promise<Submi
 
   const { data: t } = await db
     .from('transcripts')
-    .select('id, source_kind, source_ref, status, source_lang, duration_seconds, segments, visibility')
+    .select('id, source_kind, source_ref, status, source_lang, duration_seconds, segments, visibility, speaker_map')
     .eq('id', row.transcript_id)
     .maybeSingle();
   if (!t || t.status !== 'ready' || t.visibility !== 'public' || !['video', 'stage'].includes(t.source_kind)) {
@@ -110,10 +110,18 @@ async function submit(db: any, row: DubRow, worker: WorkerConfig): Promise<Submi
   }
 
   let sourceUrl = `${DEHUB_CDN_BASE}videos/${t.source_ref}.mp4`;
+  const cloneSpeakers: string[] = [];
   if (t.source_kind === 'stage') {
     const { data: stage } = await db.from('audio_spaces').select('recording_url, status').eq('id', t.source_ref).maybeSingle();
     if (!stage?.recording_url || stage.status !== 'ended') return 'skipped';
     sourceUrl = stage.recording_url;
+    const entries = Object.entries(t.speaker_map ?? {}) as [string, { wallet?: string }][];
+    const wallets = entries.map(([, entry]) => entry.wallet?.toLowerCase()).filter(Boolean);
+    if (wallets.length) {
+      const { data: voices } = await db.from('custom_voices').select('wallet_address').eq('is_stage_voice', true).in('wallet_address', wallets);
+      const consented = new Set((voices ?? []).map((voice: { wallet_address: string }) => voice.wallet_address.toLowerCase()));
+      cloneSpeakers.push(...entries.filter(([, entry]) => entry.wallet && consented.has(entry.wallet.toLowerCase())).map(([id]) => id));
+    }
   }
 
   const { data: tr } = await db
@@ -155,6 +163,7 @@ async function submit(db: any, row: DubRow, worker: WorkerConfig): Promise<Submi
     sourceLang: normalizeLang(t.source_lang) ?? 'en',
     videoUrl: sourceUrl,
     sourceKind: t.source_kind,
+    cloneSpeakers,
     segments: tr.segments ?? [],
     sourceSegments: t.segments ?? [],
     uploadUrl: signed.signedUrl,

@@ -277,6 +277,9 @@ def process(job: dict) -> dict:
         refs = {}
         cloned = False
         for speaker in {str(s.get("speaker") or "0") for s in segments}:
+            if job.get('sourceKind') == 'stage' and speaker not in job.get('cloneSpeakers', []):
+                refs[speaker] = None
+                continue
             sample_lines = [s for s in source_segments if str(s.get("speaker") or "0") == speaker]
             ref, kind = build_reference(orig, sample_lines, tmp)
             refs[speaker] = ref
