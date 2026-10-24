@@ -16,6 +16,7 @@ import {
 } from '@/lib/audio-post-playback';
 import { ChevronDown, MicVocal, Minimize, PictureInPicture2, RotateCcw, RotateCw, Play as GlassPlay, Pause as GlassPause } from "lucide-react";
 import { AudioLyrics } from "./AudioLyrics";
+import { VolumeSoundCue } from "./VolumeSoundCue";
 import Volume2 from "@/components/ui/cut-icons/volume";
 import VolumeX from "@/components/ui/cut-icons/mute";
 import Maximize from "@/components/ui/cut-icons/fullscreen";
@@ -1129,7 +1130,10 @@ export function AudioVisualizer({
           {onFullscreen && <button type="button" aria-label={isFullscreen ? _copy('copy.37fd4e355ba3', { defaultValue: 'Exit fullscreen' }) : _copy('copy.c461dbb2bab7', { defaultValue: 'Fullscreen' })} onClick={onFullscreen}><Maximize /></button>}
           {(showVolume || showStylePicker) && <div data-audio-studio-levels>
             {showStylePicker && <input type="range" min="0" max="360" value={hue} aria-label={_copy('copy.89a167dad6da', { defaultValue: 'Visualizer colour' })} onChange={e => setHue(Number(e.target.value))} data-audio-hue />}
-            {showVolume && <input aria-label={_copy('copy.b10fb966d720', { defaultValue: 'Volume' })} type="range" min="0" max="100" value={isEffectivelyMuted ? 0 : Math.round(volume * 100)} onChange={e => { const value = Number(e.target.value); setVolume(value / 100); setSelfMuted(value === 0); videoPlaybackManager.globalMuted = value === 0; onMuteChange?.(value === 0); }} />}
+            {showVolume && <div data-audio-studio-volume style={{ '--volume-fill': isEffectivelyMuted ? 0 : volume } as React.CSSProperties}>
+              <input aria-label={_copy('copy.b10fb966d720', { defaultValue: 'Volume' })} type="range" min="0" max="100" value={isEffectivelyMuted ? 0 : Math.round(volume * 100)} onChange={e => { const value = Number(e.target.value); setVolume(value / 100); setSelfMuted(value === 0); videoPlaybackManager.globalMuted = value === 0; onMuteChange?.(value === 0); }} />
+              <VolumeSoundCue level={isEffectivelyMuted ? 0 : volume} active={isPlaying && !isEffectivelyMuted} trackHeight={8} thumbRadius={7.5} />
+            </div>}
           </div>}
       </div>
     </div>
@@ -1254,6 +1258,7 @@ export function AudioVisualizer({
                       '[&_[data-slider-thumb]]:shadow-[0_1px_4px_rgba(0,0,0,0.45)]',
                     )}
                   />
+                  <VolumeSoundCue level={isEffectivelyMuted ? 0 : volume} active={isPlaying && !isEffectivelyMuted} trackHeight={6} thumbRadius={6} />
                 </div>
               </div>
               )}
