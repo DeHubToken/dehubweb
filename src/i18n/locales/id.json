@@ -1,4 +1,18 @@
 {
+  "desktopWordmark": {
+    "pageTitle": "Pratinjau logo desktop",
+    "heading": "Logo desktop DeHub",
+    "day": "Hari {{day}}",
+    "replay": "Putar pengantar lagi",
+    "enlarge": "Perbesar",
+    "actualSize": "Ukuran sebenarnya",
+    "reassemble": "Pasang kembali logo",
+    "loading": "Memuat",
+    "ready": "Siap",
+    "interrupted": "Grafik berhenti merespons",
+    "unavailable": "Tidak dapat memuat pratinjau 3D",
+    "hint": "Logo tetap utuh selama dua detik, lalu pecah. Arahkan kursor ke atasnya atau pilih untuk menyatukannya kembali."
+  },
   "mastodonApps": {
     "authTitle": "Masuk dengan DeHub",
     "authWants": "{{app}} ingin memakai akun DeHub-mu",
@@ -2187,6 +2201,8 @@
     "anonymousLikes_other": "{{count}} suka dari pemegang lencana anonim"
   },
   "postInfo": {
+    "unavailable": "Tidak tersedia",
+    "ownersUnavailable": "Pemilik saat ini tidak dapat dibaca saat ini.",
     "title": "Info Postingan",
     "tokenId": "Token ID",
     "mintedOn": "Dicetak pada",
@@ -5719,6 +5735,8 @@
     "notEnoughTokensForBounty": "Token tidak cukup. Membutuhkan {{need}} token tetapi memiliki {{have}}."
   },
   "events": {
+    "deleteConfirmTitle": "Hapus acara ini?",
+    "deleteConfirmBody": "Ini akan menghapus acara, daftar tamunya, dan obrolan untuk semua orang. Itu tidak bisa dibatalkan.",
     "seoTitle": "Acara — Meetup dan acara komunitas di DeHub",
     "seoDescription": "Jelajahi acara komunitas DeHub yang akan datang, konfirmasi kehadiran di meetup, dan adakan acara Anda sendiri di platform sosial terdesentralisasi yang dimiliki penggunanya.",
     "defaultSeoDescription": "Acara komunitas di DeHub.",

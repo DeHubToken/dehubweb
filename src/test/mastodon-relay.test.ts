@@ -27,4 +27,16 @@ describe('Mastodon relay routes', () => {
     expect(headers.get('x-mastodon-path')).toBe('/api/v1/timelines/home?limit=20');
     expect(headers.get('cookie')).toBeNull();
   });
+
+  it('passes an upload’s length and a preview’s byte range through', () => {
+    const request = new Request('https://dehub.io/api/v2/media', {
+      method: 'POST',
+      headers: { 'content-type': 'multipart/form-data; boundary=x', 'content-length': '1234', range: 'bytes=0-99' },
+      body: 'x'.repeat(1234),
+    });
+    const headers = mastodonRelayHeaders(request, new URL(request.url));
+    expect(headers.get('content-type')).toBe('multipart/form-data; boundary=x');
+    expect(headers.get('content-length')).toBe('1234');
+    expect(headers.get('range')).toBe('bytes=0-99');
+  });
 });

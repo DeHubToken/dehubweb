@@ -1,4 +1,18 @@
 {
+  "desktopWordmark": {
+    "pageTitle": "ڊيسڪٽاپ لوگو ڏيک",
+    "heading": "DeHub ڊيسڪٽاپ لوگو",
+    "day": "ڏينهن {{day}}",
+    "replay": "تعارف ٻيهر هلايو",
+    "enlarge": "وڏو",
+    "actualSize": "اصل سائيز",
+    "reassemble": "لوگو کي ٻيهر گڏ ڪريو",
+    "loading": "لوڊ ڪندي",
+    "ready": "تيار",
+    "interrupted": "گرافڪس جواب ڏيڻ بند ڪري ڇڏيو",
+    "unavailable": "3D ڏيک لوڊ نه ڪري سگھيو",
+    "hint": "لوگو ٻن سيڪنڊن تائين پورو رهي ٿو، پوءِ ٽٽي ٽڪرا ٿي وڃي ٿو. ان کي ٻيهر جوڙڻ لاءِ ان مٿان ڪرسر آڻيو يا ان کي چونڊيو."
+  },
   "mastodonApps": {
     "authTitle": "DeHub سان سائن ان ڪريو",
     "authWants": "{{app}} توهان جو DeHub کاتو استعمال ڪرڻ چاهي ٿو",
@@ -2168,6 +2182,8 @@
     "anonymousLikes_other": "گمنام بيج هولڊرز کان {{count}} پسنديون"
   },
   "postInfo": {
+    "unavailable": "غير موجود",
+    "ownersUnavailable": "موجوده مالڪن کي في الحال پڙهي نه ٿو سگهجي.",
     "title": "پوسٽ معلومات",
     "tokenId": "ٽوڪن ID",
     "mintedOn": "ٺاهيل",
@@ -5641,6 +5657,8 @@
     "notEnoughTokensForBounty": "ڪافي ٽوڪن ناهن. {{need}} ٽوڪن گهربل آهن پر {{have}} آهن."
   },
   "events": {
+    "deleteConfirmTitle": "ھي واقعو ڊليٽ ڪريو ؟",
+    "deleteConfirmBody": "هي واقعي کي ختم ڪري ٿو، ان جي مهمانن جي فهرست ۽ هر ڪنهن لاءِ ان جي چيٽ. ان کي رد نه ٿو ڪري سگھجي.",
     "seoTitle": "واقعا — DeHub تي Meetups & ڪميونٽي واقعا",
     "seoDescription": "ايندڙ DeHub ڪميونٽي واقعن کي براؤز ڪريو، RSVP ملن ۽ پنهنجي واقعن کي غير مرڪزي، صارف جي ملڪيت واري سماجي پليٽ فارم تي ميزبان ڪرڻ.",
     "defaultSeoDescription": "DeHub تي ڪميونٽي واقعي.",

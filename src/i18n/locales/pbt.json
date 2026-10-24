@@ -1,4 +1,18 @@
 {
+  "desktopWordmark": {
+    "pageTitle": "د ډیسکټاپ لوګو مخکتنه",
+    "heading": "د DeHub ډیسکټاپ لوګو",
+    "day": "ورځ {{day}}",
+    "replay": "پیل بیا وغږوئ",
+    "enlarge": "لوی کړئ",
+    "actualSize": "اصلي اندازه",
+    "reassemble": "لوګو بیا سره یوځای کړئ",
+    "loading": "لوډ کیږي",
+    "ready": "چمتو",
+    "interrupted": "ګرافیک ځواب ورکول بند کړل",
+    "unavailable": "د 3D مخکتنه لوډ نه شوه",
+    "hint": "لوګو دوه ثانیې بشپړ پاتې کیږي، بیا ټوټې ټوټې کیږي. د بیا یوځای کولو لپاره کرسر یې پر سر یوسئ یا یې وټاکئ."
+  },
   "mastodonApps": {
     "authTitle": "د DeHub سره ننوځئ",
     "authWants": "{{app}} غواړي ستاسو د DeHub حساب وکاروي",
@@ -2154,6 +2168,8 @@
     "anonymousLikes_other": "له بې نومه بیج لرونکو {{count}} خوښې"
   },
   "postInfo": {
+    "unavailable": "شتون نه لري",
+    "ownersUnavailable": "اوسني مالکان اوس نه شي لوستل کېدای.",
     "title": "د پوسټ معلومات",
     "tokenId": "توکن ID",
     "mintedOn": "جوړ شوی",
@@ -5544,6 +5560,8 @@
     "notEnoughTokensForBounty": "کافي توکونه نشته. {{need}} توکونو ته اړتیا ده خو {{have}} لري."
   },
   "events": {
+    "deleteConfirmTitle": "دا پېښه حذف کړئ؟",
+    "deleteConfirmBody": "دا د پیښې، د هغې میلمنو لیست او د هرچا لپاره د هغې چیٹ لرې کوي. دا له مینځه وړل کیدی نشي.",
     "seoTitle": "خبرونه — په DeHub کې د ټولنې غونډې او پیښې",
     "seoDescription": "د راتلونکي DeHub ټولنې پیښې وپلټئ، RSVP د غونډو لپاره او په غیرمتمرکز، کارونکي ملکیت ټولنیز پلیټ فارم کې خپل پیښې کوربه کړئ.",
     "defaultSeoDescription": "په DeHub کې د ټولنې پیښه.",

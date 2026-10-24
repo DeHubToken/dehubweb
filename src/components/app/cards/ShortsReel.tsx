@@ -109,6 +109,7 @@ export function ShortsReel({ shorts }: ShortsReelProps) {
                 {short.videoUrl ? (
                   <AutoplayVideo
                     src={short.videoUrl}
+                    hlsSrc={short.hlsUrl}
                     poster={short.thumbnail}
                     disabled={viewerOpen}
                     /* This reel sits in the first viewport of the home page;

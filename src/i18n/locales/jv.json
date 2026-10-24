@@ -1,4 +1,18 @@
 {
+  "desktopWordmark": {
+    "pageTitle": "Pratinjau logo desktop",
+    "heading": "Logo desktop DeHub",
+    "day": "Dina {{day}}",
+    "replay": "Puter maneh intro",
+    "enlarge": "Gedhekake",
+    "actualSize": "Ukuran asli",
+    "reassemble": "Rakit maneh logo",
+    "loading": "Lagi ngemot",
+    "ready": "Siap",
+    "interrupted": "Grafis mandheg nanggapi",
+    "unavailable": "Ora bisa ngemot pratinjau 3D",
+    "hint": "Logo tetep wutuh suwene rong detik, banjur pecah. Arahake kursor ing ndhuwure utawa pilih supaya nyawiji maneh."
+  },
   "mastodonApps": {
     "authTitle": "Mlebu nganggo DeHub",
     "authWants": "{{app}} kepengin nganggo akun DeHub sampeyan",
@@ -2166,6 +2180,8 @@
     "anonymousLikes_other": "{{count}} seneng saka pemegang lencana anonim"
   },
   "postInfo": {
+    "ownersUnavailable": "Pamilik saiki durung bisa diwaca.",
+    "unavailable": "Ora kasedhiya",
     "title": "Info Postingan",
     "tokenId": "Token ID",
     "mintedOn": "Digawe",
@@ -5489,6 +5505,8 @@
     "notEnoughTokensForBounty": "Token ora cukup. Butuh {{need}} token nanging duwe {{have}}."
   },
   "events": {
+    "deleteConfirmTitle": "Busak acara iki?",
+    "deleteConfirmBody": "Iki bakal mbusak acara, dhaptar tamu, lan obrolane kanggo kabeh wong. Iki ora bisa dibatalake.",
     "seoTitle": "Kebajenan — Kumpul-Kumpulan & Acara Masyarakat di DeHub",
     "seoDescription": "Browse acara DeHub komunitas yang akan datang, daftar untuk pertemuan dan host acara sendiri di platform sosial yang dezentral dan dimiliki oleh pengguna.",
     "defaultSeoDescription": "Gemblèng komunitas di DeHub.",

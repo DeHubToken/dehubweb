@@ -1,4 +1,18 @@
 {
+  "desktopWordmark": {
+    "pageTitle": "Iş stoly logosynyň deslapky görnüşi",
+    "heading": "DeHub iş stoly logosy",
+    "day": "Gün {{day}}",
+    "replay": "Girişi täzeden oýnat",
+    "enlarge": "Ulyla",
+    "actualSize": "Hakyky ululygy",
+    "reassemble": "Logony täzeden jemle",
+    "loading": "Ýüklenýär",
+    "ready": "Taýýar",
+    "interrupted": "Grafika jogap bermegi bes etdi",
+    "unavailable": "3D öňünden görmegi ýükläp bolmady",
+    "hint": "Logo iki sekunt bitin durýar, soňra bölek-bölek bolýar. Ony täzeden jemlemek üçin kursory üstüne getiriň ýa-da ony saýlaň."
+  },
   "mastodonApps": {
     "authTitle": "DeHub bilen gir",
     "authWants": "{{app}} DeHub hasabyňyzy ulanmak isleýär",
@@ -2153,6 +2167,8 @@
     "anonymousLikes_other": "Anonim nyşan eýelerinden {{count}} halama"
   },
   "postInfo": {
+    "unavailable": "Elýeterli däl",
+    "ownersUnavailable": "Häzirki eýelerini häzir okap bolanok.",
     "title": "Ýazgy maglumaty",
     "tokenId": "Token ID",
     "mintedOn": "Döredilen",
@@ -5606,6 +5622,8 @@
     "notEnoughTokensForBounty": "Sanly wagt ýeterlik däl. {{need}} sanly wagt gerek, ýöne {{have}} bar."
   },
   "events": {
+    "deleteConfirmTitle": "Bu çäräni pozmalymy?",
+    "deleteConfirmBody": "Bu çäräni, onuň myhman sanawyny we söhbetdeşligini hemmeler üçin aýyrýar. Muny yzyna gaýtaryp bolmaýar.",
     "seoTitle": "DeHubda duşuşyklar we jemagat wakalary",
     "seoDescription": "DeHub jemgyýetiniň geljekki wakalaryny barlaň, RSVP duşuşyklary geçirmek we öz wakalaryňyzy merkezileşdirilen, ulanýan jemgyýet platformasynda geçirmek üçin.",
     "defaultSeoDescription": "DeHubda jemagatly waka.",

@@ -476,6 +476,9 @@ function ImageCarousel({
   }, [images.length]);
   
   const hasMultiple = images.length > 1;
+  // Centre the arrows on the photo in view, not on the strip: a lazy neighbour
+  // can make the strip taller than a wide photo and leave them in the gap.
+  const arrowTop = activeHeight ? { top: activeHeight / 2 } : undefined;
   
   return (
     <div ref={rootRef} data-media-full data-sound-playing={soundPlaying || undefined} className={cn('relative overflow-hidden', immersive ? 'rounded-none' : 'rounded-2xl')} onWheel={handleWheel} data-no-navigate data-no-swipe={hasMultiple ? true : undefined}>
@@ -515,7 +518,10 @@ function ImageCarousel({
           {currentIndex > 0 && (
             <button
               onClick={scrollPrev}
-              className="hidden lg:flex absolute left-2 top-1/2 -translate-y-1/2 w-10 h-10 rounded-xl bg-black/40 backdrop-blur-[24px] saturate-[180%] border border-white/10 items-center justify-center text-white hover:bg-black/60 transition-colors"
+              data-on-media
+              data-keep-dark
+              style={arrowTop}
+              className="hidden lg:flex absolute left-2 top-1/2 -translate-y-1/2 w-10 h-10 rounded-xl bg-black/55 backdrop-blur-[24px] saturate-[180%] border border-white/25 shadow-[0_2px_12px_rgba(0,0,0,0.35)] items-center justify-center text-white hover:bg-black/70 transition-colors"
               aria-label={_copy("copy.f0a859a7ecd7", { defaultValue: "Previous image" })}
             >
               <ChevronLeft className="w-5 h-5" />
@@ -524,7 +530,10 @@ function ImageCarousel({
           {currentIndex < images.length - 1 && (
             <button
               onClick={scrollNext}
-              className="hidden lg:flex absolute right-2 top-1/2 -translate-y-1/2 w-10 h-10 rounded-xl bg-black/40 backdrop-blur-[24px] saturate-[180%] border border-white/10 items-center justify-center text-white hover:bg-black/60 transition-colors"
+              data-on-media
+              data-keep-dark
+              style={arrowTop}
+              className="hidden lg:flex absolute right-2 top-1/2 -translate-y-1/2 w-10 h-10 rounded-xl bg-black/55 backdrop-blur-[24px] saturate-[180%] border border-white/25 shadow-[0_2px_12px_rgba(0,0,0,0.35)] items-center justify-center text-white hover:bg-black/70 transition-colors"
               aria-label={_copy("copy.a4903f732746", { defaultValue: "Next image" })}
             >
               <ChevronRight className="w-5 h-5" />

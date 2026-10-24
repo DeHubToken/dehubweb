@@ -1,4 +1,18 @@
 {
+  "desktopWordmark": {
+    "pageTitle": "Anteprima logo desktop",
+    "heading": "Logo desktop DeHub",
+    "day": "Giorno {{day}}",
+    "replay": "Riproduci di nuovo l'introduzione",
+    "enlarge": "Ingrandisci",
+    "actualSize": "Dimensioni effettive",
+    "reassemble": "Ricomponi il logo",
+    "loading": "Caricamento",
+    "ready": "Pronto",
+    "interrupted": "La grafica ha smesso di rispondere",
+    "unavailable": "Impossibile caricare l'anteprima 3D",
+    "hint": "Il logo rimane intero per due secondi, poi si rompe. Passa il mouse sopra di esso o selezionalo per rimetterlo insieme."
+  },
   "mastodonApps": {
     "authTitle": "Accedi con DeHub",
     "authWants": "{{app}} vuole usare il tuo account DeHub",
@@ -2187,6 +2201,8 @@
     "anonymousLikes_other": "{{count}} Mi piace da titolari di badge anonimi"
   },
   "postInfo": {
+    "unavailable": "Non disponibile",
+    "ownersUnavailable": "Al momento non è possibile leggere gli attuali proprietari.",
     "title": "Info Post",
     "tokenId": "Token ID",
     "mintedOn": "Coniato il",
@@ -5714,6 +5730,8 @@
     "notEnoughTokensForBounty": "Token insufficienti. Necessari {{need}} token ma ne hai {{have}}."
   },
   "events": {
+    "deleteConfirmTitle": "Eliminare questo evento?",
+    "deleteConfirmBody": "Questo rimuove l'evento, la sua lista degli ospiti e la sua chat per tutti. Non può essere annullato.",
     "seoTitle": "Eventi — Meetup ed eventi della comunità su DeHub",
     "seoDescription": "Sfoglia i prossimi eventi della comunità DeHub, rispondi ai meetup e ospita i tuoi eventi sulla piattaforma social decentralizzata e di proprietà degli utenti.",
     "defaultSeoDescription": "Evento della comunità su DeHub.",

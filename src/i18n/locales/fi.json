@@ -1,4 +1,18 @@
 {
+  "desktopWordmark": {
+    "pageTitle": "Työpöydän logon esikatselu",
+    "heading": "DeHub-työpöytälogo",
+    "day": "Päivä {{day}}",
+    "replay": "Toista esittely uudelleen",
+    "enlarge": "Suurenna",
+    "actualSize": "Todellinen koko",
+    "reassemble": "Kokoa logo uudelleen",
+    "loading": "Ladataan",
+    "ready": "Valmis",
+    "interrupted": "Grafiikka lakkasi vastaamasta",
+    "unavailable": "3D-esikatselua ei voitu ladata",
+    "hint": "Logo pysyy kokonaisena kahden sekunnin ajan ja hajoaa sitten. Siirrä osoitin sen päälle tai valitse se kootaksesi sen uudelleen."
+  },
   "mastodonApps": {
     "authTitle": "Kirjaudu DeHubilla",
     "authWants": "{{app}} haluaa käyttää DeHub-tiliäsi",
@@ -2178,6 +2192,8 @@
     "anonymousLikes_other": "{{count}} tykkäystä nimettömiltä merkkien haltijoilta"
   },
   "postInfo": {
+    "unavailable": "Ei saatavilla",
+    "ownersUnavailable": "Nykyisiä omistajia ei voi lukea juuri nyt.",
     "title": "Julkaisun tiedot",
     "tokenId": "Token-ID",
     "mintedOn": "Luotu",
@@ -5648,6 +5664,8 @@
     "notEnoughTokensForBounty": "Ei tarpeeksi tokeneita. Tarvitaan {{need}} tokenia, mutta sinulla on {{have}}."
   },
   "events": {
+    "deleteConfirmTitle": "Poistetaanko tämä tapahtuma?",
+    "deleteConfirmBody": "Tämä poistaa tapahtuman, sen vieraslistan ja chatin kaikilta. Sitä ei voi kumota.",
     "seoTitle": "Tapahtumat — Tapaamiset ja yhteisötapahtumat DeHubissa",
     "seoDescription": "Selaa tulevia DeHub-yhteisötapahtumia, vastaa tapaamisiin ja järjestä omia tapahtumia hajautetussa, käyttäjien omistamassa sosiaalisessa alustassa.",
     "defaultSeoDescription": "Yhteisötapahtuma DeHubissa.",

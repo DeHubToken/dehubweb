@@ -74,6 +74,20 @@
   "agents.workspace.action": "İşlem",
   "agents.workspace.schedule": "Zamanlama",
   "agents.workspace.filter": "Etkinliği filtrele",
+  "desktopWordmark": {
+    "pageTitle": "Masaüstü logo önizleme",
+    "heading": "DeHub masaüstü logosu",
+    "day": "Gün {{day}}",
+    "replay": "Tanıtımı tekrar oynat",
+    "enlarge": "Büyüt",
+    "actualSize": "Gerçek boyut",
+    "reassemble": "Logoyu yeniden birleştirin",
+    "loading": "Yükleniyor",
+    "ready": "Hazır",
+    "interrupted": "Grafikler yanıt vermeyi durdurdu",
+    "unavailable": "3D önizleme yüklenemedi",
+    "hint": "Logo iki saniye boyunca bütün kalır, sonra parçalanır. Üzerine gelin veya tekrar bir araya getirmek için seçin."
+  },
   "mastodonApps": {
     "authTitle": "DeHub ile giriş yap",
     "authWants": "{{app}} DeHub hesabını kullanmak istiyor",
@@ -2666,6 +2680,8 @@
     "anonymousLikes_other": "Anonim rozet sahiplerinden {{count}} beğeni"
   },
   "postInfo": {
+    "unavailable": "Uygun değil",
+    "ownersUnavailable": "Mevcut sahipler şu anda okunamıyor.",
     "title": "Gönderi Bilgisi",
     "tokenId": "Token Kimliği",
     "mintedOn": "Basım Tarihi",
@@ -6771,6 +6787,8 @@
     "notEnoughTokensForBounty": "Yeterli jeton yok. {{need}} jetona ihtiyacınız var ancak {{have}} var."
   },
   "events": {
+    "deleteConfirmTitle": "Bu etkinlik silinsin mi?",
+    "deleteConfirmBody": "Bu, etkinliği, davetli listesini ve sohbeti herkes için kaldırır. Geri alınamaz.",
     "seoTitle": "Etkinlikler — DeHub'da buluşmalar ve topluluk etkinlikleri",
     "seoDescription": "DeHub'ın yaklaşan topluluk etkinliklerine göz atın, buluşmalara katılacağınızı bildirin ve merkeziyetsiz, kullanıcılarının sahip olduğu bu sosyal platformda kendi etkinliğinizi düzenleyin.",
     "defaultSeoDescription": "DeHub'da bir topluluk etkinliği.",

@@ -1,4 +1,18 @@
 {
+  "desktopWordmark": {
+    "pageTitle": "Пешнамоиши логотипи мизи корӣ",
+    "heading": "Логотипи мизи кории DeHub",
+    "day": "Рӯзи {{day}}",
+    "replay": "Муқаддимаро аз нав намоиш додан",
+    "enlarge": "Калон кардан",
+    "actualSize": "Андозаи аслӣ",
+    "reassemble": "Логотипро аз нав ҷамъ кардан",
+    "loading": "Бор мешавад",
+    "ready": "Омода",
+    "interrupted": "Графика ҷавоб доданро бас кард",
+    "unavailable": "Пешнамоиши 3D бор карда нашуд",
+    "hint": "Логотип ду сония пурра мемонад, баъд пора-пора мешавад. Барои аз нав ҷамъ кардан курсорро болояш баред ё онро интихоб кунед."
+  },
   "mastodonApps": {
     "authTitle": "Бо DeHub ворид шавед",
     "authWants": "{{app}} мехоҳад ҳисоби DeHub-и шуморо истифода барад",
@@ -2157,6 +2171,8 @@
     "anonymousLikes_other": "{{count}} писанд аз дорандагони нишони беном"
   },
   "postInfo": {
+    "unavailable": "Дастнорас",
+    "ownersUnavailable": "Ҳоло соҳибони кунуниро хондан ғайриимкон аст.",
     "title": "Маълумоти пост",
     "tokenId": "Token ID",
     "mintedOn": "Сохта шуд",
@@ -5649,6 +5665,8 @@
     "notEnoughTokensForBounty": "Токенҳо кофӣ нестанд. Ба шумо {{need}} токен лозим аст, аммо {{have}} доред."
   },
   "events": {
+    "deleteConfirmTitle": "Ин чорабиниро нест кунем?",
+    "deleteConfirmBody": "Ин чорабинӣ, рӯйхати меҳмонон ва чати онро барои ҳама нест мекунад. Онро барқарор кардан ғайриимкон аст.",
     "seoTitle": "Чорабиниҳо — Meetups & Чорабиниҳои ҷамъиятӣ дар DeHub",
     "seoDescription": "DeHub jamiyati voqealarini koʻring, meetupga roʻyxatdan oʻting va foydalanuvchilarga egalik qiladigan ijtimoiy platformada oʼzingizning voqeangizni oʻtkazing.",
     "defaultSeoDescription": "DeHubdagi jamiyat voqeasi.",

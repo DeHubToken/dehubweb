@@ -1,4 +1,18 @@
 {
+  "desktopWordmark": {
+    "pageTitle": "Werkskerm logo voorskou",
+    "heading": "DeHub-lessenaarlogo",
+    "day": "Dag {{day}}",
+    "replay": "Speel die intro weer",
+    "enlarge": "Vergroot",
+    "actualSize": "Werklike grootte",
+    "reassemble": "Stel die logo weer saam",
+    "loading": "Laai tans",
+    "ready": "Gereed",
+    "interrupted": "Die grafika reageer nie meer nie",
+    "unavailable": "Kon nie die 3D-voorskou laai nie",
+    "hint": "Die logo bly twee sekondes lank heel en breek dan uitmekaar. Beweeg die wyser daaroor of kies dit om dit weer saam te stel."
+  },
   "mastodonApps": {
     "authTitle": "Meld aan met DeHub",
     "authWants": "{{app}} wil jou DeHub-rekening gebruik",
@@ -2206,6 +2220,8 @@
     "anonymousLikes_other": "{{count}} laaiks van anonieme badgehouers"
   },
   "postInfo": {
+    "unavailable": "Onbeskikbaar",
+    "ownersUnavailable": "Die huidige eienaars kan nie nou gelees word nie.",
     "title": "Post Info",
     "tokenId": "Token ID",
     "mintedOn": "Minted On",
@@ -5735,6 +5751,8 @@
     "notEnoughTokensForBounty": "Nie genoeg tokens nie. Benodig {{need}} tokens maar het {{have}}."
   },
   "events": {
+    "deleteConfirmTitle": "Skrap hierdie okkasie?",
+    "deleteConfirmBody": "Dit verwyder die geleentheid, sy gaste lys en sy chat vir almal. Dit kan nie ongedaan gemaak word nie.",
     "seoTitle": "Gebeurtenisse — Byeenkomste & Gemeenskapsevenementen op DeHub",
     "seoDescription": "Blaai deur komende DeHub-gemeenskapsevenementen, RSVP tot byeenkomste en gasheer jou eie gebeurtenisse op die desentraliseerde, gebruiker-eiendom sosiale platform.",
     "defaultSeoDescription": "Gemeenskapsevenement op DeHub.",

@@ -1,4 +1,18 @@
 {
+  "desktopWordmark": {
+    "pageTitle": "Podgląd logo na pulpicie",
+    "heading": "Logo komputera stacjonarnego DeHub",
+    "day": "Dzień {{day}}",
+    "replay": "Odtwórz ponownie wstęp",
+    "enlarge": "Powiększ",
+    "actualSize": "Rzeczywisty rozmiar",
+    "reassemble": "Ponownie zmontuj logo",
+    "loading": "Ładowanie",
+    "ready": "Gotowe",
+    "interrupted": "Grafika przestała odpowiadać",
+    "unavailable": "Nie można załadować podglądu 3D",
+    "hint": "Logo pozostaje całe przez dwie sekundy, a następnie rozpada się. Najedź na niego kursorem lub wybierz go, aby złożyć go z powrotem."
+  },
   "mastodonApps": {
     "authTitle": "Zaloguj się przez DeHub",
     "authWants": "{{app}} chce korzystać z twojego konta DeHub",
@@ -2187,6 +2201,8 @@
     "anonymousLikes_other": "Polubienia od anonimowych posiadaczy odznak: {{count}}"
   },
   "postInfo": {
+    "unavailable": "Niedostępne",
+    "ownersUnavailable": "Obecnych właścicieli nie można teraz odczytać.",
     "title": "Informacje o poście",
     "tokenId": "Token ID",
     "mintedOn": "Wytworzony",
@@ -5716,6 +5732,8 @@
     "notEnoughTokensForBounty": "Za mało tokenów. Potrzeba {{need}} tokenów, a masz {{have}}."
   },
   "events": {
+    "deleteConfirmTitle": "Usunąć to wydarzenie?",
+    "deleteConfirmBody": "Spowoduje to usunięcie wydarzenia, listy gości i czatu dla wszystkich. Tego nie da się cofnąć.",
     "seoTitle": "Wydarzenia — Spotkania i wydarzenia społeczności na DeHub",
     "seoDescription": "Przeglądaj nadchodzące wydarzenia społeczności DeHub, potwierdź uczestnictwo w spotkaniach i organizuj własne wydarzenia na zdecentralizowanej, należącej do użytkowników platformie społecznej.",
     "defaultSeoDescription": "Wydarzenie społeczności na DeHub.",

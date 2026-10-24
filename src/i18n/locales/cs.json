@@ -1,4 +1,18 @@
 {
+  "desktopWordmark": {
+    "pageTitle": "Náhled loga pro počítač",
+    "heading": "Logo DeHub pro počítač",
+    "day": "Den {{day}}",
+    "replay": "Přehrát úvod znovu",
+    "enlarge": "Zvětšit",
+    "actualSize": "Skutečná velikost",
+    "reassemble": "Znovu složit logo",
+    "loading": "Načítání",
+    "ready": "Připraveno",
+    "interrupted": "Grafika přestala reagovat",
+    "unavailable": "Nelze načíst 3D náhled",
+    "hint": "Logo zůstane dvě sekundy celé a pak se rozpadne. Najeďte na něj myší nebo ho vyberte a znovu se složí."
+  },
   "mastodonApps": {
     "authTitle": "Přihlásit se přes DeHub",
     "authWants": "{{app}} chce používat váš účet DeHub",
@@ -2179,6 +2193,8 @@
     "anonymousLikes_other": "{{count}} lajků od anonymních držitelů odznaků"
   },
   "postInfo": {
+    "unavailable": "Nedostupné",
+    "ownersUnavailable": "Aktuální vlastníci se zatím nedají přečíst.",
     "title": "Informace o příspěvku",
     "tokenId": "ID tokenu",
     "mintedOn": "Vytvořeno",
@@ -5650,6 +5666,8 @@
     "notEnoughTokensForBounty": "Nedostatek tokenů. Potřebujete {{need}} tokenů, ale máte {{have}}."
   },
   "events": {
+    "deleteConfirmTitle": "Smazat tuto událost?",
+    "deleteConfirmBody": "Tím se odstraní událost, seznam hostů a chat pro všechny. Nelze ji vrátit zpět.",
     "seoTitle": "Události — Setkání a komunitní akce na DeHub",
     "seoDescription": "Procházejte nadcházející komunitní akce DeHub, RSVP na setkání a pořádejte své vlastní akce na decentralizované, uživatelem vlastněné sociální platformě.",
     "defaultSeoDescription": "Komunitní akce na DeHub.",

@@ -1,4 +1,18 @@
 {
+  "desktopWordmark": {
+    "pageTitle": "Masaüstü loqo önizləməsi",
+    "heading": "DeHub masaüstü loqosu",
+    "day": "Gün {{day}}",
+    "replay": "Girişi yenidən oynat",
+    "enlarge": "Genişləndir",
+    "actualSize": "Faktiki ölçü",
+    "reassemble": "Loqonu yenidən yığ",
+    "loading": "Yüklənir",
+    "ready": "Hazırdır",
+    "interrupted": "Qrafika cavab verməyi dayandırdı",
+    "unavailable": "3D önizləməni yükləmək mümkün olmadı",
+    "hint": "Loqo iki saniyə bütöv qalır, sonra parçalanır. Yenidən birləşdirmək üçün kursoru üzərinə gətirin və ya onu seçin."
+  },
   "mastodonApps": {
     "authTitle": "DeHub ilə daxil ol",
     "authWants": "{{app}} DeHub hesabınızdan istifadə etmək istəyir",
@@ -2164,6 +2178,8 @@
     "anonymousLikes_other": "Anonim nişan sahiblərindən {{count}} bəyənmə"
   },
   "postInfo": {
+    "unavailable": "Əlçatan deyil",
+    "ownersUnavailable": "Hazırda mövcud sahibləri oxumaq mümkün deyil.",
     "title": "Paylaşım məlumatı",
     "tokenId": "Token ID",
     "mintedOn": "Yaradılıb",
@@ -5606,6 +5622,8 @@
     "notEnoughTokensForBounty": "Kifayət qədər token yoxdur. {{need}} token lazımdır, lakin {{have}} var."
   },
   "events": {
+    "deleteConfirmTitle": "Bu tədbir silinsin?",
+    "deleteConfirmBody": "Bu, tədbiri, onun qonaq siyahısını və söhbətini hər kəs üçün silir. Geri qaytarmaq mümkün deyil.",
     "seoTitle": "Tədbirlər — DeHub-da Görüşlər və Cəmiyyət Tədbirləri",
     "seoDescription": "DeHub cəmiyyət tədbirlərini araşdırın, görüşlərə cavab verin və mərkəzləşdirilməmiş, istifadəçiyə məxsus sosial platformada öz tədbirlərinizi keçirin.",
     "defaultSeoDescription": "DeHub-da cəmiyyət tədbirləri.",

@@ -1,4 +1,18 @@
 {
+  "desktopWordmark": {
+    "pageTitle": "Preview ng logo ng desktop",
+    "heading": "Desktop logo ng DeHub",
+    "day": "Araw {{day}}",
+    "replay": "I-play muli ang intro",
+    "enlarge": "Palakihin",
+    "actualSize": "Aktwal na laki",
+    "reassemble": "Muling itipon ang logo",
+    "loading": "Naglo-load",
+    "ready": "Handa na",
+    "interrupted": "Hindi na tumutugon ang mga graphics",
+    "unavailable": "Hindi ma-load ang 3D preview",
+    "hint": "Buo ang logo sa loob ng dalawang segundo, pagkatapos ay magkakawatak-watak. I-hover ito o piliin ito para mabuo itong muli."
+  },
   "mastodonApps": {
     "authTitle": "Mag-sign in gamit ang DeHub",
     "authWants": "Gustong gamitin ng {{app}} ang DeHub account mo",
@@ -2231,6 +2245,8 @@
     "anonymousLikes_other": "{{count}} like mula sa mga anonymous na badge holder"
   },
   "postInfo": {
+    "unavailable": "Hindi available",
+    "ownersUnavailable": "Hindi mabasa ang mga current owners ngayon.",
     "title": "Post Info",
     "tokenId": "Token ID",
     "mintedOn": "Minted On",
@@ -5761,6 +5777,8 @@
     "notEnoughTokensForBounty": "Hindi sapat ang mga tokens. Kailangan ng {{need}} tokens ngunit mayroon kang {{have}}."
   },
   "events": {
+    "deleteConfirmTitle": "Tanggalin ang kaganapang ito?",
+    "deleteConfirmBody": "Inaalis nito ang kaganapan, ang listahan ng bisita at ang chat nito para sa lahat. Hindi ito maaaring i-undo.",
     "seoTitle": "Kaganapan — Meetups at mga Kaganapan ng Komunidad sa DeHub",
     "seoDescription": "Tuklasin ang mga paparating na DeHub community events, RSVP sa meetups at mag-host ng iyong sariling events sa decentralized, user-owned social platform.",
     "defaultSeoDescription": "Kaganapan ng komunidad sa DeHub.",

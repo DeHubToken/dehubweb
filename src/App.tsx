@@ -44,6 +44,7 @@ import { lazyWithRetry } from "@/lib/lazy-with-retry";
 
 import { CONSOLIDATED_GUIDES } from "@/lib/blog-redirects.js";
 const DexPage = React.lazy(() => import("@/pages/app/DexPage"));
+const DesktopWordmarkPreview = React.lazy(() => import("@/pages/DesktopWordmarkPreview"));
 const DexPoolPage = React.lazy(() => import("@/pages/app/DexPoolPage"));
 import { ErrorBoundary } from "@/components/ErrorBoundary";
 import { SurfaceTransition } from "@/components/transitions/SurfaceTransition";
@@ -461,6 +462,7 @@ function AppContent() {
           {(loc) => (
         <Routes location={loc}>
           <Route path="/mobile-preview" element={<MobilePreview />} />
+        <Route path="/desktop-logo-preview" element={<Suspense fallback={<PageLoader />}><DesktopWordmarkPreview /></Suspense>} />
           <Route path="/guide" element={<GuidePage />} />
           {/* Hand-built static guide pages — higher route rank than the
               /guides/* splat below, so they always win. */}

@@ -1,4 +1,18 @@
 {
+  "desktopWordmark": {
+    "pageTitle": "Uhakiki wa nembo ya kompyuta ya mezani",
+    "heading": "Nembo ya Desktop ya DeHub",
+    "day": "Siku {{day}}",
+    "replay": "Cheza utangulizi tena",
+    "enlarge": "Panua",
+    "actualSize": "Ukubwa halisi",
+    "reassemble": "Unganisha tena nembo",
+    "loading": "Inapakia",
+    "ready": "Tayari",
+    "interrupted": "Michoro iliacha kujibu",
+    "unavailable": "Haikuweza kupakia hakikisho la 3D",
+    "hint": "Nembo hukaa nzima kwa sekunde mbili, kisha huvunjika. Sogeza juu yake au uichague ili kuirudisha pamoja."
+  },
   "mastodonApps": {
     "authTitle": "Ingia ukitumia DeHub",
     "authWants": "{{app}} inataka kutumia akaunti yako ya DeHub",
@@ -2183,6 +2197,8 @@
     "anonymousLikes_other": "Vipendwa {{count}} kutoka kwa wamiliki wa beji wasiojulikana"
   },
   "postInfo": {
+    "unavailable": "Haipatikani",
+    "ownersUnavailable": "Wamiliki wa sasa hawawezi kusomwa kwa sasa.",
     "title": "Taarifa ya chapisho",
     "tokenId": "Token ID",
     "mintedOn": "Iliundwa",
@@ -5710,6 +5726,8 @@
     "notEnoughTokensForBounty": "Tokeni hazitoshi. Unahitaji tokeni {{need}} lakini una {{have}}."
   },
   "events": {
+    "deleteConfirmTitle": "Ungependa kufuta tukio hili?",
+    "deleteConfirmBody": "Hii huondoa tukio, orodha yake ya wageni na gumzo lake kwa kila mtu. Haiwezi kutenguliwa.",
     "seoTitle": "Matukio — Mikutano & Matukio ya Jamii kwenye DeHub",
     "seoDescription": "Tembelea matukio yajayo ya jamii ya DeHub, RSVP kwa mikutano na jifanyie matukio yako kwenye jukwaa la kijamii linalomilikiwa na watumiaji, linalosambazwa.",
     "defaultSeoDescription": "Matukio ya jamii kwenye DeHub.",

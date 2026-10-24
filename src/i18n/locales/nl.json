@@ -74,6 +74,20 @@
   "agents.workspace.action": "Actie",
   "agents.workspace.schedule": "Planning",
   "agents.workspace.filter": "Activiteit filteren",
+  "desktopWordmark": {
+    "pageTitle": "Voorbeeld van desktoplogo",
+    "heading": "DeHub-desktoplogo",
+    "day": "Dag {{day}}",
+    "replay": "Speel de intro opnieuw",
+    "enlarge": "Vergroten",
+    "actualSize": "Werkelijke grootte",
+    "reassemble": "Monteer het logo opnieuw",
+    "loading": "Laden",
+    "ready": "Gereed",
+    "interrupted": "De grafische weergave reageert niet meer",
+    "unavailable": "Kon het 3D-voorbeeld niet laden",
+    "hint": "Het logo blijft twee seconden heel en breekt dan uit elkaar. Beweeg de muis erover of selecteer het om het weer in elkaar te zetten."
+  },
   "mastodonApps": {
     "authTitle": "Inloggen met DeHub",
     "authWants": "{{app}} wil je DeHub-account gebruiken",
@@ -2859,6 +2873,8 @@
     "anonymousLikes_other": "{{count}} likes van anonieme badgehouders"
   },
   "postInfo": {
+    "unavailable": "Niet beschikbaar",
+    "ownersUnavailable": "De huidige eigenaren kunnen nu niet worden gelezen.",
     "title": "Berichtinfo",
     "tokenId": "Token-ID",
     "mintedOn": "Gemint op",
@@ -6964,6 +6980,8 @@
     "notEnoughTokensForBounty": "Niet genoeg tokens. Nodig {{need}} tokens maar heb {{have}}."
   },
   "events": {
+    "deleteConfirmTitle": "Dit evenement verwijderen?",
+    "deleteConfirmBody": "Dit verwijdert het evenement, de gastenlijst en de chat voor iedereen. Het kan niet ongedaan worden gemaakt.",
     "seoTitle": "Evenementen — bijeenkomsten en community-evenementen op DeHub",
     "seoDescription": "Bekijk aankomende DeHub-evenementen, meld je aan voor bijeenkomsten en organiseer zelf evenementen op het gedecentraliseerde sociale platform van gebruikers.",
     "defaultSeoDescription": "Communitygebeurtenis op DeHub.",
