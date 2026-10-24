@@ -1,4 +1,18 @@
 {
+  "desktopWordmark": {
+    "pageTitle": "Dekstop wòmàk pwinsi",
+    "heading": "Dekstop DEHUB wòmàk",
+    "day": "Dei {{day}}",
+    "replay": "Pwinsai entri",
+    "enlarge": "Enlàj",
+    "actualSize": "Aktuel hedè saiz",
+    "reassemble": "Pwinsai wòmàk afo dekstop",
+    "loading": "Loadi",
+    "ready": "Redi",
+    "interrupted": "Grafik kontekst intap",
+    "unavailable": "No go loadi 3D pwinsi",
+    "hint": "Tùu sekond hòld, den kòmbl. Hòvò o fòkùs fo pwinsai wòmàk afo."
+  },
   "mastodonApps": {
     "authTitle": "Sign in with DeHub",
     "authWants": "{{app}} want use your DeHub account",

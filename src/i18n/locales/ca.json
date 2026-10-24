@@ -1,4 +1,18 @@
 {
+  "desktopWordmark": {
+    "pageTitle": "Vista prèvia de la marca denominativa de l'escriptori",
+    "heading": "Marca denominativa DEHUB d'escriptori",
+    "day": "Dia {{day}}",
+    "replay": "Reprodueix l'entrada",
+    "enlarge": "Amplia",
+    "actualSize": "Mida real de la capçalera",
+    "reassemble": "Torna a muntar la marca denominativa de l'escriptori",
+    "loading": "S'està carregant",
+    "ready": "A punt",
+    "interrupted": "Context gràfic interromput",
+    "unavailable": "No s'ha pogut carregar la vista prèvia en 3D",
+    "hint": "Aguanta dos segons i després es desmorona. Desplaça el cursor o enfoca per tornar a muntar."
+  },
   "mastodonApps": {
     "authTitle": "Inicia la sessió amb DeHub",
     "authWants": "{{app}} vol fer servir el teu compte de DeHub",

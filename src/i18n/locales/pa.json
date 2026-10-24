@@ -1,4 +1,18 @@
 {
+  "desktopWordmark": {
+    "pageTitle": "ਡੈਸਕਟਾਪ ਵਰਡਮਾਰਕ ਝਲਕ",
+    "heading": "ਡੈਸਕਟਾਪ DEHUB ਵਰਡਮਾਰਕ",
+    "day": "ਦਿਨ {{day}}",
+    "replay": "ਐਂਟਰੀ ਮੁੜ ਚਲਾਓ",
+    "enlarge": "ਵੱਡਾ",
+    "actualSize": "ਅਸਲੀ ਹੈੱਡਰ ਸਾਈਜ਼",
+    "reassemble": "ਡੈਸਕਟਾਪ ਵਰਡਮਾਰਕ ਮੁੜ- ਇਕੱਠਾ ਕਰੋ",
+    "loading": "ਲੋਡ ਕੀਤਾ ਜਾ ਰਿਹਾ ਹੈ",
+    "ready": "ਤਿਆਰ",
+    "interrupted": "ਗਰਾਫਿਕਸ ਪਰਸੰਗ ਰੁਕਾਵਟ",
+    "unavailable": "3D ਝਲਕ ਲੋਡ ਕਰਨ ਲਈ ਅਸਮਰੱਥ",
+    "hint": "ਦੋ ਸੈਕਿੰਡ ਹੋਲਡ ਕਰੋ, ਫਿਰ ਕੁਚਲੋ. ਮੁੜ ਇਕੱਠਾ ਕਰਨ ਲਈ ਹੋਵਰ ਜਾਂ ਫੋਕਸ."
+  },
   "mastodonApps": {
     "authTitle": "DeHub ਨਾਲ ਸਾਈਨ ਇਨ ਕਰੋ",
     "authWants": "{{app}} ਤੁਹਾਡਾ DeHub ਖਾਤਾ ਵਰਤਣਾ ਚਾਹੁੰਦਾ ਹੈ",

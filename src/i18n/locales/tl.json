@@ -1,4 +1,18 @@
 {
+  "desktopWordmark": {
+    "pageTitle": "Preview ng wordmark sa desktop",
+    "heading": "Desktop DEHUB wordmark",
+    "day": "Araw {{day}}",
+    "replay": "I - replay ang entry",
+    "enlarge": "Palakihin",
+    "actualSize": "Aktwal na laki ng header",
+    "reassemble": "Muling tipunin ang desktop wordmark",
+    "loading": "Naglo - load",
+    "ready": "Handa na",
+    "interrupted": "Naantala ang konteksto ng grapika",
+    "unavailable": "Hindi ma - load ang 3D preview",
+    "hint": "Dalawang segundong hawakan, pagkatapos ay gumuho. Mag - hover o mag - focus upang muling magtipon."
+  },
   "mastodonApps": {
     "authTitle": "Mag-sign in gamit ang DeHub",
     "authWants": "Gustong gamitin ng {{app}} ang DeHub account mo",

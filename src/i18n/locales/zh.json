@@ -1,4 +1,18 @@
 {
+  "desktopWordmark": {
+    "pageTitle": "桌面文字商标预览",
+    "heading": "桌面DEHUB文字商标",
+    "day": "第{{day}}天",
+    "replay": "重播条目",
+    "enlarge": "放大",
+    "actualSize": "实际页眉大小",
+    "reassemble": "重新组装桌面文字商标",
+    "loading": "正在加载",
+    "ready": "准备就绪",
+    "interrupted": "图形上下文已中断",
+    "unavailable": "无法加载3D预览",
+    "hint": "保持两秒钟，然后崩溃。 悬停或聚焦以重新组装。"
+  },
   "mastodonApps": {
     "authTitle": "使用 DeHub 登录",
     "authWants": "{{app}} 想使用你的 DeHub 账号",

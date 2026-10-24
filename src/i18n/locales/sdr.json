@@ -1,4 +1,17 @@
 {
+  "desktopWordmark": {
+    "pageTitle": "Desktop wordmark preview",
+    "heading": "Desktop DEHUB wordmark",
+    "day": "Day {{day}}",
+    "replay": "Replay entry",
+    "enlarge": "Enlarge",
+    "actualSize": "Actual header size",
+    "reassemble": "डेस्कटॉप शब्दचिन्ह पुनः संयोजित करें",
+    "loading": "Loading",
+    "ready": "Ready",
+    "interrupted": "Graphics context interrupted",
+    "unavailable": "نمی‌توانید پیش‌نگاه سه‌بعدی را بارگذاری کنید"
+  },
   "mastodonApps": {
     "authTitle": "DeHub سے سائن ان کر",
     "authWants": "{{app}} تومر DeHub کھاتا استعمال کرے چاہےلا",

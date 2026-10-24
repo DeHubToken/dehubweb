@@ -1,4 +1,18 @@
 {
+  "desktopWordmark": {
+    "pageTitle": "Pretpregled verbalnog znaka na radnoj površini",
+    "heading": "Desktop DEHUB verbalni žig",
+    "day": "Dan {{day}}",
+    "replay": "Ponovno reproduciraj unos",
+    "enlarge": "Povećaj",
+    "actualSize": "Stvarna veličina zaglavlja",
+    "reassemble": "Ponovno sastavite tekstualni žig radne površine",
+    "loading": "Učitavanje",
+    "ready": "Spremno",
+    "interrupted": "Grafički kontekst je prekinut",
+    "unavailable": "3D pregled nije moguće učitati",
+    "hint": "Zadržavanje od dvije sekunde, a zatim drobljenje. Zadržite pokazivač miša ili izoštrite za ponovno sastavljanje."
+  },
   "mastodonApps": {
     "authTitle": "Prijava putem DeHuba",
     "authWants": "{{app}} želi koristiti tvoj DeHub račun",

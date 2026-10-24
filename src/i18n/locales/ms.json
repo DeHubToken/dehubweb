@@ -1,4 +1,18 @@
 {
+  "desktopWordmark": {
+    "pageTitle": "Pratonton tanda perkataan desktop",
+    "heading": "Tanda kata DEHUB desktop",
+    "day": "Hari {{day}}",
+    "replay": "Kemasukan main semula",
+    "enlarge": "Besarkan",
+    "actualSize": "Saiz pengepala sebenar",
+    "reassemble": "Kumpulkan semula tanda perkataan desktop",
+    "loading": "Memuatkan",
+    "ready": "Sedia",
+    "interrupted": "Konteks grafik terganggu",
+    "unavailable": "Tidak dapat memuat pratonton 3D",
+    "hint": "Pegangan dua saat, kemudian runtuh. Arahkan kursor atau fokus untuk memasang semula."
+  },
   "mastodonApps": {
     "authTitle": "Log masuk dengan DeHub",
     "authWants": "{{app}} mahu menggunakan akaun DeHub anda",

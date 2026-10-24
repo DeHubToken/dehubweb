@@ -1,4 +1,18 @@
 {
+  "desktopWordmark": {
+    "pageTitle": "O kɔrɔ ko: \"Fɛɛn min be se ka kɛ, o ye fɛɛn min ye,",
+    "heading": "Desktop DEHUB ka kumaden tagamasiɲɛ",
+    "day": "O ye {{day}}",
+    "replay": "Ka donyɔrɔ yɛlɛma",
+    "enlarge": "Ka dɔ fara a kan",
+    "actualSize": "O kɔrɔ ko: \"Fɛɛn min be se ka kɛ, o ye fɛɛn min",
+    "reassemble": "Ka baara kɛ ni desiki ye",
+    "loading": "Fɛɛn minw be se ka kɛ",
+    "ready": "Aw ye aw yɛrɛ labɛn.",
+    "interrupted": "Fanga min be mɔgɔ la, o ye ka mɔgɔ lafili",
+    "unavailable": ". A ka nɔgɔ ka baara kɛ ni 3D pikirizan bɛnnin ye.",
+    "hint": "O kɔ, a ye dɔ fara a ka fanga kan. A be se ka kɛ ko a be segi ka na, walima a be segi ka na."
+  },
   "mastodonApps": {
     "authTitle": "Don ni DeHub ye",
     "authWants": "{{app}} b'a fɛ ka i ka DeHub jatebila baara",

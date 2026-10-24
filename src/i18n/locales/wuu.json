@@ -1,4 +1,16 @@
 {
+  "desktopWordmark": {
+    "day": "日子 {{day}}",
+    "replay": "重播",
+    "enlarge": "放大",
+    "actualSize": "實際標題大小",
+    "reassemble": "重組桌面詞標",
+    "loading": "載入中",
+    "ready": "準備好",
+    "interrupted": "圖形上下文中斷",
+    "unavailable": "無法載入 3D 預覽",
+    "hint": "按住兩秒後碎裂。游標或聚焦重組。"
+  },
   "mastodonApps": {
     "authTitle": "用 DeHub 登录",
     "authWants": "{{app}} 想用侬个 DeHub 账号",

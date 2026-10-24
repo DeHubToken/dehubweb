@@ -1,4 +1,18 @@
 {
+  "desktopWordmark": {
+    "pageTitle": "Desktop wordmark preview",
+    "heading": "Desktop DEHUB wordmark",
+    "day": "Day {{day}}",
+    "replay": "Replay entry",
+    "enlarge": "Enlarge",
+    "actualSize": "Actual header size",
+    "reassemble": "Zuewiderbaut de Desktop-Wortmarke",
+    "loading": "Loading",
+    "ready": "Ready",
+    "interrupted": "Graphics context interrupted",
+    "unavailable": "3D-Vorschau kann nöd lädä",
+    "hint": "Zwei Sekunde Halt, denn zerbröckle. Hover oder Fokus zum wieder zämäfüege."
+  },
   "mastodonApps": {
     "authTitle": "Mit DeHub aamälde",
     "authWants": "{{app}} wott dis DeHub-Konto bruuche",

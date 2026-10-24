@@ -1,4 +1,18 @@
 {
+  "desktopWordmark": {
+    "pageTitle": "Ngosi ndozi desktọ́ọ̀pụ̀",
+    "heading": "Desktọ́ọ̀pụ̀ DEHUB wordmark",
+    "day": "Ụbọchị {{day}}",
+    "replay": "Tinyegharịa ndenye",
+    "enlarge": "Mụbaa",
+    "actualSize": "Ụhara nkụnye eji isi mee n 'ezie",
+    "reassemble": "Kpọkọtakwa wọ́kspēèsì wọ́kspēès",
+    "loading": "Na-edebata",
+    "ready": "Dịrị njikere",
+    "interrupted": "Ngosi ndịna-emepụtagharị",
+    "unavailable": "Enwenwughị ike ibubata nhụchalụ 3D",
+    "hint": "Ebe ahụ ka otu onye nchụàjà Jehova aha ya bụ Zekaraya bi. Gaa ma ọ bụ lekwasị anya ka ị gbakọta."
+  },
   "mastodonApps": {
     "authTitle": "Banye na DeHub",
     "authWants": "{{app}} chọrọ iji akaụntụ DeHub gị",

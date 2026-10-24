@@ -1,4 +1,18 @@
 {
+  "desktopWordmark": {
+    "pageTitle": "Xem trước nhãn từ trên máy tính để bàn",
+    "heading": "Nhãn từ DEHUB trên máy tính để bàn",
+    "day": "Ngày {{day}}",
+    "replay": "Mục nhập phát lại",
+    "enlarge": "Phóng to",
+    "actualSize": "Kích thước tiêu đề thực tế",
+    "reassemble": "Lắp ráp lại nhãn từ máy tính để bàn",
+    "loading": "Đang tải",
+    "ready": "Sẵn sàng",
+    "interrupted": "Bối cảnh đồ họa bị gián đoạn",
+    "unavailable": "Không thể tải bản xem trước 3D",
+    "hint": "Giữ hai giây, sau đó sụp đổ. Di chuột hoặc tập trung để lắp ráp lại."
+  },
   "mastodonApps": {
     "authTitle": "Đăng nhập bằng DeHub",
     "authWants": "{{app}} muốn dùng tài khoản DeHub của bạn",

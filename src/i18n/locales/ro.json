@@ -1,4 +1,18 @@
 {
+  "desktopWordmark": {
+    "pageTitle": "Previzualizare wordmark desktop",
+    "heading": "Wordmark DEHUB pentru desktop",
+    "day": "Ziua {{day}}",
+    "replay": "Redați din nou intrarea",
+    "enlarge": "Mărește",
+    "actualSize": "Dimensiunea reală a antetului",
+    "reassemble": "Reasamblați Wordmark-ul desktop-ului",
+    "loading": "Se încarcă",
+    "ready": "Gata",
+    "interrupted": "Contextul grafic întrerupt",
+    "unavailable": "Previzualizarea 3D nu poate fi încărcată",
+    "hint": "Două secunde de așteptare, apoi se sfărâmă. Treceți cu mouse-ul sau focalizați pentru a reasambla."
+  },
   "mastodonApps": {
     "authTitle": "Conectează-te cu DeHub",
     "authWants": "{{app}} vrea să folosească contul tău DeHub",

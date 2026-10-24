@@ -1,4 +1,18 @@
 {
+  "desktopWordmark": {
+    "pageTitle": "Asztali szóvédjegy előnézete",
+    "heading": "Asztali DEHUB szóvédjegy",
+    "day": "Nap {{day}}",
+    "replay": "Bejegyzés újrajátszása",
+    "enlarge": "Nagyítás",
+    "actualSize": "Aktuális fejlécméret",
+    "reassemble": "Szerelje össze újra az asztali szóvédjegyet",
+    "loading": "Betöltés",
+    "ready": "Készen áll",
+    "interrupted": "Grafikus kontextus megszakítva",
+    "unavailable": "Nem sikerült betölteni a 3D-s előnézetet",
+    "hint": "Két másodperces tartás, majd morzsolás. Mozgassa vagy fókuszáljon az összeszereléshez."
+  },
   "mastodonApps": {
     "authTitle": "Bejelentkezés DeHubbal",
     "authWants": "A(z) {{app}} használni szeretné a DeHub-fiókodat",

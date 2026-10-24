@@ -1,4 +1,18 @@
 {
+  "desktopWordmark": {
+    "pageTitle": "Anteprima wordmark desktop",
+    "heading": "Wordmark DEHUB desktop",
+    "day": "Giorno {{day}}",
+    "replay": "Riproduci voce",
+    "enlarge": "Ingrandisci",
+    "actualSize": "Dimensioni effettive dell'intestazione",
+    "reassemble": "Rimontare il wordmark del desktop",
+    "loading": "Caricamento",
+    "ready": "Pronto",
+    "interrupted": "Contesto grafico interrotto",
+    "unavailable": "Impossibile caricare l'anteprima 3D",
+    "hint": "Due secondi di attesa, poi si sbriciolano. Passa il mouse o concentrati per riassemblare."
+  },
   "mastodonApps": {
     "authTitle": "Accedi con DeHub",
     "authWants": "{{app}} vuole usare il tuo account DeHub",

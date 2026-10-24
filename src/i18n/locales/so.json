@@ -1,4 +1,18 @@
 {
+  "desktopWordmark": {
+    "pageTitle": "Horudhaca ereyga Desktop",
+    "heading": "Desktop DEHUB wordmark",
+    "day": "Day {{day}}",
+    "replay": "Dib u ciyaar gelitaanka",
+    "enlarge": "Kordhinta",
+    "actualSize": "Cabbirka madaxa dhabta ah",
+    "reassemble": "Dib u soo uruurinta ereyga desktop-ka",
+    "loading": "Goynta",
+    "ready": "Diyaar",
+    "interrupted": "Xaaladda garaafyada oo la joojiyay",
+    "unavailable": "Awood u lahayn in ay ku raraan horudhaca 3D",
+    "hint": "Laba ilbiriqsi oo xaji, ka dibna crumble. Fiiro gaar ah u yeelo ama dib u soo ceshano."
+  },
   "mastodonApps": {
     "authTitle": "Ku gal DeHub",
     "authWants": "{{app}} wuxuu rabaa inuu isticmaalo akoonkaaga DeHub",

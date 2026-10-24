@@ -1,4 +1,18 @@
 {
+  "desktopWordmark": {
+    "pageTitle": "Darbalaukio žodinio ženklo peržiūra",
+    "heading": "Darbalaukio DEHUB žodinis ženklas",
+    "day": "Diena {{day}}",
+    "replay": "Paleisti įrašą iš naujo",
+    "enlarge": "Padidinti",
+    "actualSize": "Faktinis antraštės dydis",
+    "reassemble": "Iš naujo surinkite darbalaukio žodinį ženklą",
+    "loading": "Įkeliama",
+    "ready": "Paruošta",
+    "interrupted": "Grafikos kontekstas pertrauktas",
+    "unavailable": "Nepavyksta įkelti 3D peržiūros",
+    "hint": "Dvi sekundes palaikykite, tada trupinkite. Užveskite pelės žymeklį arba sufokusuokite, kad surinktumėte."
+  },
   "mastodonApps": {
     "authTitle": "Prisijungti su DeHub",
     "authWants": "{{app}} nori naudoti jūsų DeHub paskyrą",

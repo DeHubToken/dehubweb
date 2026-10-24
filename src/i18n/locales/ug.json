@@ -1,4 +1,18 @@
 {
+  "desktopWordmark": {
+    "pageTitle": "ئۈستەلئۈستىدىكى سۆز ماركىسىنى ئالدىن كۆرۈش پروگراممىسى",
+    "heading": "ئۈستەلئۈستى DEHUB سۆز بەلگىسى",
+    "day": "كۈندە {{day}}",
+    "replay": "Replay entry",
+    "enlarge": "Enlarge",
+    "actualSize": "Actual header size",
+    "reassemble": "Desktop wordmarkni to'liq qilib oling",
+    "loading": "Loading",
+    "ready": "Ready",
+    "interrupted": "Graphics context interrupted",
+    "unavailable": "3D previewni yuklashga mumkin emas",
+    "hint": "Ikki sekund saqlap, so'ngra parchalanadi. Hover yoki focus qilib to'liq qilib oling."
+  },
   "mastodonApps": {
     "authTitle": "DeHub ئارقىلىق كىرىش",
     "authWants": "{{app}} DeHub ھېساباتىڭىزنى ئىشلەتمەكچى",

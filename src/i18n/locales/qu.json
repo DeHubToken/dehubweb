@@ -1,4 +1,18 @@
 {
+  "desktopWordmark": {
+    "pageTitle": "Escritorio simipa marcan ñawpaq qhaway",
+    "heading": "Escritorio DEHUB simipa markan",
+    "day": "P&#39;unchaw {{day}}",
+    "replay": "Yaykuchiyta yapamanta pukllay",
+    "enlarge": "Hatunchay",
+    "actualSize": "Chiqap umalliqpa sayaynin",
+    "reassemble": "Escritoriopi simip chimpunta wakmanta huñuy",
+    "loading": "Cargando",
+    "ready": "Ñam",
+    "interrupted": "Gráfico contexto interrumpido nisqa",
+    "unavailable": "3D qhawana p'anqataqa manam kichayta atinichu",
+    "hint": "Iskay iskay ñiqin hap’iy, chaymantataq ñut’uy. Wakmanta huñunaykipaqqa hover otaq enfoqueta churay."
+  },
   "mastodonApps": {
     "authTitle": "DeHubwan yaykuy",
     "authWants": "{{app}} DeHub yupayniykita llamk'achiyta munan",

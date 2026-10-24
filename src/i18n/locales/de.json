@@ -1,4 +1,18 @@
 {
+  "desktopWordmark": {
+    "pageTitle": "Desktop-Wortmarkenvorschau",
+    "heading": "Desktop DEHUB-Wortmarke",
+    "day": "Tag {{day}}",
+    "replay": "Wiederholungseintrag",
+    "enlarge": "Vergrößern",
+    "actualSize": "Tatsächliche Kopfzeilengröße",
+    "reassemble": "Bringen Sie die Desktop-Wortmarke wieder zusammen",
+    "loading": "Wird geladen",
+    "ready": "Bereit",
+    "interrupted": "Grafikkontext unterbrochen",
+    "unavailable": "3D-Vorschau kann nicht geladen werden",
+    "hint": "Zwei Sekunden halten, dann zerbröckeln. Bewegen Sie den Mauszeiger oder konzentrieren Sie sich, um wieder zusammenzusetzen."
+  },
   "mastodonApps": {
     "authTitle": "Mit DeHub anmelden",
     "authWants": "{{app}} möchte dein DeHub-Konto verwenden",

@@ -1,4 +1,17 @@
 {
+  "desktopWordmark": {
+    "pageTitle": "Topy mason'ny teny fanalahidin'ny sehatr'asa",
+    "heading": "Teny baiko DEHUB eo amin'ny sehatr'asa",
+    "replay": "Anaran-drakitry ny famakiana indray",
+    "enlarge": "Alehibiazo",
+    "actualSize": "Haben'ny lohapejy araka ny tokony ho izy",
+    "reassemble": "Mampiray ny teny fanalahidin'ny desktop",
+    "loading": "Mizaha",
+    "ready": "Vonona",
+    "interrupted": "Najanona ny seha-kevitry ny kisary",
+    "unavailable": "Tsy afaka maka ny topy mason'ny 3D",
+    "hint": "Jobily roa sosona, dia mirodana. Hover na hifantoka amin'ny indray."
+  },
   "mastodonApps": {
     "authTitle": "Midira amin'ny DeHub",
     "authWants": "Te hampiasa ny kaontinao DeHub i {{app}}",

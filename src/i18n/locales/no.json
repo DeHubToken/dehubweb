@@ -1,4 +1,18 @@
 {
+  "desktopWordmark": {
+    "pageTitle": "Forhåndsvisning av ordmerke for skrivebord",
+    "heading": "Desktop DEHUB-ordmerke",
+    "day": "Dag {{day}}",
+    "replay": "Spill av innlegget på nytt",
+    "enlarge": "Forstørr",
+    "actualSize": "Faktisk overskriftsstørrelse",
+    "reassemble": "Sett sammen skrivebordsordmerket igjen",
+    "loading": "Laster",
+    "ready": "Ferdig",
+    "interrupted": "Grafikkkontekst avbrutt",
+    "unavailable": "Kan ikke laste inn 3D-forhåndsvisningen",
+    "hint": "Hold i to sekunder, og smuldre deretter opp. Hold musepekeren over eller fokuser for å sette den sammen igjen."
+  },
   "mastodonApps": {
     "authTitle": "Logg inn med DeHub",
     "authWants": "{{app}} vil bruke DeHub-kontoen din",

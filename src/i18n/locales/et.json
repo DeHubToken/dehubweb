@@ -1,4 +1,18 @@
 {
+  "desktopWordmark": {
+    "pageTitle": "Töölaua sõnamärgi eelvaade",
+    "heading": "Töölaua DEHUB sõnamärk",
+    "day": "Päev {{day}}",
+    "replay": "Esita kirje uuesti",
+    "enlarge": "Suurenda",
+    "actualSize": "Päise tegelik suurus",
+    "reassemble": "Koosta töölaua sõnamärk uuesti",
+    "loading": "Laadimine",
+    "ready": "Valmis",
+    "interrupted": "Graafika kontekst katkes",
+    "unavailable": "3D eelvaadet ei saa laadida",
+    "hint": "Hoia kaks sekundit ja siis murene. Hõljutage või fokuseerige uuesti kokkupanekuks."
+  },
   "mastodonApps": {
     "authTitle": "Logi sisse DeHubiga",
     "authWants": "{{app}} soovib kasutada sinu DeHubi kontot",

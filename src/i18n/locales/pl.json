@@ -1,4 +1,18 @@
 {
+  "desktopWordmark": {
+    "pageTitle": "Podgląd logotypu na pulpicie",
+    "heading": "Logo na pulpicie DEHUB",
+    "day": "Dzień {{day}}",
+    "replay": "Odtwórz ponownie wpis",
+    "enlarge": "Powiększ",
+    "actualSize": "Rzeczywisty rozmiar nagłówka",
+    "reassemble": "Ponownie zmontuj logotyp na pulpicie",
+    "loading": "Ładowanie",
+    "ready": "Gotowe",
+    "interrupted": "Kontekst grafiki przerwany",
+    "unavailable": "Nie można załadować podglądu 3D",
+    "hint": "Przytrzymaj przez dwie sekundy, a następnie krusz się. Najedź kursorem lub ustaw ostrość, aby ponownie złożyć."
+  },
   "mastodonApps": {
     "authTitle": "Zaloguj się przez DeHub",
     "authWants": "{{app}} chce korzystać z twojego konta DeHub",

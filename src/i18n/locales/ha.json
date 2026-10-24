@@ -1,4 +1,18 @@
 {
+  "desktopWordmark": {
+    "pageTitle": "Desktop wordmark samfoti",
+    "heading": "Desktop DEHUB alamar kalma",
+    "day": "Ranar {{day}}",
+    "replay": "Sake kunna shigarwa",
+    "enlarge": "Ƙarawa",
+    "actualSize": "Actual header size",
+    "reassemble": "Sake tattara alamar kalma ta tebur",
+    "loading": "Loading",
+    "ready": "Tayyar Tayyar",
+    "interrupted": "Graphics mahallin katse",
+    "unavailable": "Ba za a iya ɗora samfoti na 3D ba",
+    "hint": "Biyu dakika riƙe, sa'an nan kuma crumble. Hover ko mayar da hankali don sake tattarawa."
+  },
   "mastodonApps": {
     "authTitle": "Shiga da DeHub",
     "authWants": "{{app}} yana son amfani da asusunka na DeHub",

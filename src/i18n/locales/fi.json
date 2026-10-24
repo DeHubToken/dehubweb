@@ -1,4 +1,18 @@
 {
+  "desktopWordmark": {
+    "pageTitle": "Työpöydän sanamerkkien esikatselu",
+    "heading": "Työpöydän DEHUB-sanamerkki",
+    "day": "Päivä {{day}}",
+    "replay": "Toista merkintä uudelleen",
+    "enlarge": "Suurenna",
+    "actualSize": "Otsikon todellinen koko",
+    "reassemble": "Kokoa työpöydän sanamerkki uudelleen",
+    "loading": "Ladataan",
+    "ready": "Valmis",
+    "interrupted": "Grafiikan konteksti keskeytetty",
+    "unavailable": "3D-esikatselua ei voida ladata",
+    "hint": "Pidä kaksi sekuntia ja murene sitten. Vie hiiren osoitin tai tarkenna kokoamista varten."
+  },
   "mastodonApps": {
     "authTitle": "Kirjaudu DeHubilla",
     "authWants": "{{app}} haluaa käyttää DeHub-tiliäsi",
