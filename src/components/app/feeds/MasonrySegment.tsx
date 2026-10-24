@@ -40,6 +40,7 @@ export const MasonrySegment = ({
   beforeShorts = false,
   afterShorts = false,
 }: MasonrySegmentProps) => {
+  const columns = Math.min(colCount, Math.max(1, items.length));
   const containerRef = useRef<HTMLDivElement | null>(null);
   const itemRefs = useRef<(HTMLElement | null)[]>([]);
   const [width, setWidth] = useState(0);
@@ -109,12 +110,12 @@ export const MasonrySegment = ({
   }, [items.length, colCount]);
 
   const layout = useMemo(() => {
-    const colW = width > 0 ? (width - gap * (colCount - 1)) / colCount : 0;
-    const colH = new Array(colCount).fill(0);
+    const colW = width > 0 ? (width - gap * (columns - 1)) / columns : 0;
+    const colH = new Array(columns).fill(0);
 
     const pos = items.map((_, i) => {
       let c = 0;
-      for (let k = 1; k < colCount; k++) if (colH[k] < colH[c]) c = k;
+      for (let k = 1; k < columns; k++) if (colH[k] < colH[c]) c = k;
       const h = measured[i] ?? estimates[i] ?? 320;
       const p = { x: c * (colW + gap), y: colH[c] };
       colH[c] += h + gap;
@@ -129,7 +130,7 @@ export const MasonrySegment = ({
     const ads: { x: number; y: number; w: number; h: number }[] = [];
     if (padEnd && width > 0) {
       let c = 0;
-      while (c < colCount) {
+      while (c < columns) {
         if (maxH - bottoms[c] < MIN_AD_PX) {
           c++;
           continue;
@@ -139,7 +140,7 @@ export const MasonrySegment = ({
         let end = c;
         let runMax = bottoms[c];
         let runMin = bottoms[c];
-        while (end + 1 < colCount && maxH - bottoms[end + 1] >= MIN_AD_PX) {
+        while (end + 1 < columns && maxH - bottoms[end + 1] >= MIN_AD_PX) {
           const nMax = Math.max(runMax, bottoms[end + 1]);
           const nMin = Math.min(runMin, bottoms[end + 1]);
           if (nMax - nMin > MERGE_TOL_PX) break;
@@ -162,7 +163,7 @@ export const MasonrySegment = ({
     }
 
     return { colW, pos, height: maxH, ads };
-  }, [items, estimates, measured, width, colCount, gap, padEnd]);
+  }, [items, estimates, measured, width, columns, gap, padEnd]);
 
   return (
     <div
@@ -182,7 +183,7 @@ export const MasonrySegment = ({
           style={{
             width: layout.colW > 0
               ? layout.colW
-              : `calc((100% - ${gap * (colCount - 1)}px) / ${colCount})`,
+              : `calc((100% - ${gap * (columns - 1)}px) / ${columns})`,
             transform: `translate(${layout.pos[i].x}px, ${layout.pos[i].y}px)`,
           }}
         >
