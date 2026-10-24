@@ -1,4 +1,18 @@
 {
+  "desktopWordmark": {
+    "pageTitle": "Shafin Farko na Logo na Desktop",
+    "heading": "Alamar tebur ta DeHub",
+    "day": "Ranar {{day}}",
+    "replay": "Play da intro kuma",
+    "enlarge": "Ƙarawa",
+    "actualSize": "Girman aiki",
+    "reassemble": "Sake tattara tambarin",
+    "loading": "Loading",
+    "ready": "Tayyar Tayyar",
+    "interrupted": "Hotuna sun daina amsawa",
+    "unavailable": "Ba za a iya ɗora samfoti na 3D ba",
+    "hint": "Alamar ta kasance gaba ɗaya na dakika biyu, sa'an nan kuma ya rabu. Hover a kan shi ko zabi shi don mayar da shi tare."
+  },
   "mastodonApps": {
     "authTitle": "Shiga da DeHub",
     "authWants": "{{app}} yana son amfani da asusunka na DeHub",

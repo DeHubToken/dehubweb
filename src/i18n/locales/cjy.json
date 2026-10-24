@@ -1,4 +1,18 @@
 {
+  "desktopWordmark": {
+    "pageTitle": "桌面徽标预览",
+    "heading": "DeHub 桌面徽标",
+    "day": "日 {{day}}",
+    "replay": "重播开场动画",
+    "enlarge": "放大",
+    "actualSize": "实际大小",
+    "reassemble": "重组徽标",
+    "loading": "加载中",
+    "ready": "准备好",
+    "interrupted": "图形响应中断",
+    "unavailable": "无法加载3D预览",
+    "hint": "徽标完整两秒后，然后分解。悬停或选择它以重新组合。"
+  },
   "mastodonApps": {
     "authTitle": "用 DeHub 登录",
     "authWants": "{{app}} 想使用你的 DeHub 账号",

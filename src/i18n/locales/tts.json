@@ -1,4 +1,18 @@
 {
+  "desktopWordmark": {
+    "pageTitle": "Desktop logo preview",
+    "heading": "DeHub desktop logo",
+    "day": "วัน {{day}}",
+    "replay": "เล่น intro อีกครั้ง",
+    "enlarge": "ขยาย",
+    "actualSize": "ขนาดปกติ",
+    "reassemble": "ประกอบรูปภาพใหม่",
+    "loading": "กำลังโหลด",
+    "ready": "พร้อม",
+    "interrupted": "กราฟฟิกหยุดทำงาน",
+    "unavailable": "ไม่สามารถโหลด 3D preview ได้",
+    "hint": "รูปภาพจะอยู่เป็นภาพเดียวเป็นเวลา 2 วินาที แล้วแตกออก  เมื่อเคลื่อนเมื่อยกเลือกเพื่อรวมกัน"
+  },
   "mastodonApps": {
     "authTitle": "เข้าสู่ระบบด้วย DeHub",
     "authWants": "{{app}} อยากใช้บัญชี DeHub ของเจ้า",

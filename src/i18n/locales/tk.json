@@ -1,4 +1,18 @@
 {
+  "desktopWordmark": {
+    "pageTitle": "Desktap logosyny öňünden gör",
+    "heading": "Desktop logo",
+    "day": "Gün {{day}}",
+    "replay": "Gaýtalaň",
+    "enlarge": "Ulyla",
+    "actualSize": "Hakyky ululygy",
+    "reassemble": "Logoy gaýtaryp beriň",
+    "loading": "Ýükle",
+    "ready": "Taýyndy",
+    "interrupted": "Grafika jogap bermegi bes etdi",
+    "unavailable": "3D öňünden görmegi ýükläp bolmady",
+    "hint": "Logo iki saniýede doly galýar, soňra aýrylyşýar. Ony bir ýere goýuň ýa-da ony bir ýere goýmaga saýlaň."
+  },
   "mastodonApps": {
     "authTitle": "DeHub bilen gir",
     "authWants": "{{app}} DeHub hasabyňyzy ulanmak isleýär",

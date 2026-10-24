@@ -1,4 +1,18 @@
 {
+  "desktopWordmark": {
+    "pageTitle": "O ye ɲɛyirali ɲuman ye.",
+    "heading": "O ye baara kɛyɔrɔ ye.",
+    "day": "O ye {{day}}",
+    "replay": "O kɔ, a ye dɔ fara a ka fɔta kan.",
+    "enlarge": "Ka dɔ fara a kan",
+    "actualSize": "Fɛɛn min be yen sisan",
+    "reassemble": "Logo ka ɲɛsin",
+    "loading": "Fɛɛn minw be se ka kɛ",
+    "ready": "Aw ye aw yɛrɛ labɛn.",
+    "interrupted": "O kɔ, u y'a daminɛ ka kuma",
+    "unavailable": "Aw ye a ye, 3D sɛbɛrikɛla ye ɲɛnamaya kura di an ma.",
+    "hint": "O tagamasiɲɛ be to ka kɛ fɛɛn bɛɛ ye miniti fila kɔnɔ, o kɔ, a be faran ka bɔ ɲɔgɔn na. A ka kan ka kɛ i ko a tun fɔra cogo min na."
+  },
   "mastodonApps": {
     "authTitle": "Don ni DeHub ye",
     "authWants": "{{app}} b'a fɛ ka i ka DeHub jatebila baara",

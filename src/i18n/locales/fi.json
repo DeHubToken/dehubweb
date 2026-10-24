@@ -1,4 +1,18 @@
 {
+  "desktopWordmark": {
+    "pageTitle": "Työpöydän logon esikatselu",
+    "heading": "DeHub-työpöytälogo",
+    "day": "Päivä {{day}}",
+    "replay": "Toista esittely uudelleen",
+    "enlarge": "Suurenna",
+    "actualSize": "Todellinen koko",
+    "reassemble": "Kokoa logo uudelleen",
+    "loading": "Ladataan",
+    "ready": "Valmis",
+    "interrupted": "Grafiikka lakkasi vastaamasta",
+    "unavailable": "3D-esikatselua ei voitu ladata",
+    "hint": "Logo pysyy kokonaisena kahden sekunnin ajan ja hajoaa sitten. Siirrä osoitin sen päälle tai valitse se kootaksesi sen uudelleen."
+  },
   "mastodonApps": {
     "authTitle": "Kirjaudu DeHubilla",
     "authWants": "{{app}} haluaa käyttää DeHub-tiliäsi",

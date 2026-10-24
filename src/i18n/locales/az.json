@@ -1,4 +1,17 @@
 {
+  "desktopWordmark": {
+    "pageTitle": "Masaüstü loqotipə önbaxış",
+    "heading": "DeHub masaüstü loqosu",
+    "replay": "Təqdimatı yenidən oynayın",
+    "enlarge": "Genişləndir",
+    "actualSize": "Faktiki ölçü",
+    "reassemble": "Loqonu yenidən yığmaq",
+    "loading": "Yüklənir",
+    "ready": "Hazırdır",
+    "interrupted": "Qrafika cavab verməyi dayandırdı",
+    "unavailable": "3D önbaxışı yüklənmədi",
+    "hint": "Loqo iki saniyə bütöv qalır, sonra aralanır. Üstünü örtün və ya yenidən yerləşdirmək üçün seçin."
+  },
   "mastodonApps": {
     "authTitle": "DeHub ilə daxil ol",
     "authWants": "{{app}} DeHub hesabınızdan istifadə etmək istəyir",

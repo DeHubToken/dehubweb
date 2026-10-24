@@ -1,4 +1,18 @@
 {
+  "desktopWordmark": {
+    "pageTitle": "Previzualizare logo desktop",
+    "heading": "Logo desktop DeHub",
+    "day": "Ziua {{day}}",
+    "replay": "Redă din nou introducerea",
+    "enlarge": "Mărește",
+    "actualSize": "Dimensiune reală",
+    "reassemble": "Reasamblați sigla",
+    "loading": "Se încarcă",
+    "ready": "Gata",
+    "interrupted": "Grafica a încetat să mai răspundă",
+    "unavailable": "Previzualizarea 3D nu a putut fi încărcată",
+    "hint": "Logo-ul rămâne întreg timp de două secunde, apoi se descompune. Treceți cu mouse-ul peste el sau selectați-l pentru a-l reasambla."
+  },
   "mastodonApps": {
     "authTitle": "Conectează-te cu DeHub",
     "authWants": "{{app}} vrea să folosească contul tău DeHub",

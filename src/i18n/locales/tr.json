@@ -1,4 +1,18 @@
 {
+  "desktopWordmark": {
+    "pageTitle": "Masaüstü logo önizleme",
+    "heading": "DeHub masaüstü logosu",
+    "day": "Gün {{day}}",
+    "replay": "Tanıtımı tekrar oynat",
+    "enlarge": "Büyüt",
+    "actualSize": "Gerçek boyut",
+    "reassemble": "Logoyu yeniden birleştirin",
+    "loading": "Yükleniyor",
+    "ready": "Hazır",
+    "interrupted": "Grafikler yanıt vermeyi durdurdu",
+    "unavailable": "3D önizleme yüklenemedi",
+    "hint": "Logo iki saniye boyunca bütün kalır, sonra parçalanır. Üzerine gelin veya tekrar bir araya getirmek için seçin."
+  },
   "mastodonApps": {
     "authTitle": "DeHub ile giriş yap",
     "authWants": "{{app}} DeHub hesabını kullanmak istiyor",
@@ -376,11 +390,11 @@
   },
   "settings": {
     "usernameTaken": "Kullanıcı adı alınmış",
-    "showDislikesDesc": "Herkes profilindeki Beğenilmeyenler sekmesini açabilir. Bu kapalıyken yalnızca sen görebilirsin.",
-    "showDislikes": "Beğenmediklerimi herkese göster",
     "postingChain": "Gönderi blokzinciri",
     "showOnline": "Çevrimiçi olduğumda göster",
     "showOnlineDesc": "Mesaj gönderdiğiniz kişiler, DeHub'ı kullanırken adınızın yanında yeşil bir nokta görür",
+    "showDislikes": "Beğenmediklerimi herkese göster",
+    "showDislikesDesc": "Herkes profilindeki Beğenilmeyenler sekmesini açabilir. Bu kapalıyken yalnızca sen görebilirsin.",
     "smartReplies": "Önerilen yanıtlar",
     "smartRepliesDesc": "Sohbette dokunabileceğin iki yanıt hazırlar. Önerilerdeki × bunu kapatır.",
     "title": "Ayarlar",
@@ -1903,7 +1917,6 @@
     "returnHome": "Ana Sayfaya Dön"
   },
   "profile": {
-    "dislikes": { "loadMore": "Daha fazla yükle", "privateDesc": "Bu hesap beğenmediklerini kendine saklıyor.", "privateTitle": "Beğenilmeyenler gizli", "emptyOther": "Henüz beğenilmeyen bir şey yok.", "emptyOwn": "Beğenmediğin gönderiler akışlarından çıkar ve burada görünür. Gönderiyi geri getirmek için beğenmemeyi geri al.", "emptyTitle": "Henüz beğenmediğin bir şey yok" },
     "back": "Geri",
     "usernameAvailable": "Kullanıcı adı mevcut!",
     "signUpToClaim": "Almak için bugün kaydolun",
@@ -1931,8 +1944,16 @@
       "commentUnavailable": "Bu yorum artık mevcut değil"
     },
     "tabs": {
-      "dislikes": "Beğenilmeyenler",
-      "playlists": "Oynatma Listeleri"
+      "playlists": "Oynatma Listeleri",
+      "dislikes": "Beğenilmeyenler"
+    },
+    "dislikes": {
+      "emptyTitle": "Henüz beğenmediğin bir şey yok",
+      "emptyOwn": "Beğenmediğin gönderiler akışlarından çıkar ve burada görünür. Gönderiyi geri getirmek için beğenmemeyi geri al.",
+      "emptyOther": "Henüz beğenilmeyen bir şey yok.",
+      "privateTitle": "Beğenilmeyenler gizli",
+      "privateDesc": "Bu hesap beğenmediklerini kendine saklıyor.",
+      "loadMore": "Daha fazla yükle"
     },
     "offerWorthNow": "Mevcut kurdan yaklaşık {{amount}} jeton",
     "offerNotePlaceholder": "Bir not ekle (isteğe bağlı)",
@@ -2064,7 +2085,29 @@
       "oneAgent": "Tek ajan",
       "swarm": "Sürü",
       "swarmChoose": "Ajanları seç",
-      "selectAll": "Tüm aracıları seç", "clearSelection": "Seçimi temizle", "selectedCount": "{{total}} aracıdan {{count}} seçildi", "distribution": "Aracıların talimatı yürütme şekli", "eachMode": "Her aracı bunu yapsın", "sharedMode": "İşi paylaş", "eachHelp": "Bu talimatları seçilen her aracıya gönderin. Her aracı görevin tamamını istenen sıklıkta gerçekleştirir. Ortak paylaşım sınırları geçerlidir.", "allCategories": "Tüm kategorilerdeki tüm gönderiler. Anahtar kelime filtresi ve görev başına üç beğeni sınırı yoktur.", "windowLimits": "Eşleşen tüm gönderiler kuyruğa alınır. İşlem sınırları hızı düzenler; görevi üç gönderiyle sınırlamaz. Yanıt yazmak kredi kullanabilir.", "promptLimits": "Tüm gönderi istekleri tüm kategorileri kapsar. Konuya göre seçilen beğeniler yürütme başına üç ile sınırlıdır. Tüm aracılar ortak paylaşım aralığını kullanır; yazmak kredi kullanabilir.", "pauseSwarm": "Sürüyü duraklat", "resumeSwarm": "Uygun aracıları sürdür", "cancelSwarm": "Sürüyü iptal et", "cancelTask": "Görevi iptal et", "actionsProcessed": "işlem işlendi", "reviewMembers": "Belirsiz işlemleri olan görevler sürdürülmeden önce tek tek incelenmelidir. Devam eden bir işlem duraklatma veya iptalden sonra tamamlanabilir.", "controlUpdated": "{{count}} görev güncellendi", "enabled": "Etkin · etkinlik", "enabledHelp": "Etkin, bu aracının kullanılabilir olduğu anlamına gelir. Aşağıdaki görev durumları çalıştığını, beklediğini, duraklatıldığını veya başarısız olduğunu gösterir.", "lastActive": "Son etkinlik", "noActivity": "Kayıtlı etkinlik yok", "noTasks": "Bu aracının henüz görevi yok.", "swarmHelp": "Tek komut, paylaşılan iş. Hedefler ajanlar arasında bölünür; zamanlanmış gönderiler sırayla paylaşılır.",
+      "selectAll": "Tüm aracıları seç",
+      "clearSelection": "Seçimi temizle",
+      "selectedCount": "{{total}} aracıdan {{count}} seçildi",
+      "distribution": "Aracıların talimatı yürütme şekli",
+      "eachMode": "Her aracı bunu yapsın",
+      "sharedMode": "İşi paylaş",
+      "eachHelp": "Bu talimatları seçilen her aracıya gönderin. Her aracı görevin tamamını istenen sıklıkta gerçekleştirir. Ortak paylaşım sınırları geçerlidir.",
+      "allCategories": "Tüm kategorilerdeki tüm gönderiler. Anahtar kelime filtresi ve görev başına üç beğeni sınırı yoktur.",
+      "windowLimits": "Eşleşen tüm gönderiler kuyruğa alınır. İşlem sınırları hızı düzenler; görevi üç gönderiyle sınırlamaz. Yanıt yazmak kredi kullanabilir.",
+      "promptLimits": "Tüm gönderi istekleri tüm kategorileri kapsar. Konuya göre seçilen beğeniler yürütme başına üç ile sınırlıdır. Tüm aracılar ortak paylaşım aralığını kullanır; yazmak kredi kullanabilir.",
+      "pauseSwarm": "Sürüyü duraklat",
+      "resumeSwarm": "Uygun aracıları sürdür",
+      "cancelSwarm": "Sürüyü iptal et",
+      "cancelTask": "Görevi iptal et",
+      "actionsProcessed": "işlem işlendi",
+      "reviewMembers": "Belirsiz işlemleri olan görevler sürdürülmeden önce tek tek incelenmelidir. Devam eden bir işlem duraklatma veya iptalden sonra tamamlanabilir.",
+      "controlUpdated": "{{count}} görev güncellendi",
+      "enabled": "Etkin · etkinlik",
+      "enabledHelp": "Etkin, bu aracının kullanılabilir olduğu anlamına gelir. Aşağıdaki görev durumları çalıştığını, beklediğini, duraklatıldığını veya başarısız olduğunu gösterir.",
+      "lastActive": "Son etkinlik",
+      "noActivity": "Kayıtlı etkinlik yok",
+      "noTasks": "Bu aracının henüz görevi yok.",
+      "swarmHelp": "Tek komut, paylaşılan iş. Hedefler ajanlar arasında bölünür; zamanlanmış gönderiler sırayla paylaşılır.",
       "swarmMember": "Sürü ajanı {{index}} / {{total}}",
       "runSwarm": "Sürüyü başlat",
       "description": "İşlemler seçilen ajan adına yapılır. Zamanlanmış görevler uygulama kapalıyken de devam eder.",
@@ -8202,7 +8245,14 @@
     "priceChartCleared": "Fiyat grafiği temizlendi. Sabit referans fiyatı: 0.0001 $. Uygulama fiyatları mevcut siparişlere bağlıdır."
   },
   "editor": {
-    "video": { "tFade": "Çapraz geçiş", "none": "Yok", "transition": "Geçiş", "speed": "Hız", "sound": "Ses","video": "Video"},
+    "video": {
+      "tFade": "Çapraz geçiş",
+      "none": "Yok",
+      "transition": "Geçiş",
+      "speed": "Hız",
+      "sound": "Ses",
+      "video": "Video"
+    },
     "review": {
       "title": "Proje incelemesi",
       "shared": "Sizinle paylaşılan",

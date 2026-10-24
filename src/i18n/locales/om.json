@@ -1,4 +1,16 @@
 {
+  "desktopWordmark": {
+    "pageTitle": "Durargii asxaa deeskitooppii",
+    "heading": "Asxaa deeskitooppii DeHub",
+    "day": "Guyyaa {{day}}",
+    "enlarge": "Guddisuu",
+    "actualSize": "Akkamittiin qabsoo fi qorannoo",
+    "reassemble": "Asxaa sana irra deebi&#39;ii walitti qabaa",
+    "loading": "Fe&#39;amaa jira",
+    "ready": "Qophaa&#39;aa",
+    "interrupted": "Giraafiksiin deebii kennuu dhaabe",
+    "hint": "Asxaan kun sekondii lamaaf guutuu ta&#39;ee tura, achiis addaan ba&#39;a. Irra harka kaa&#39;i ykn walitti deebi&#39;uuf filadhu."
+  },
   "mastodonApps": {
     "authTitle": "DeHub'n seeni",
     "authWants": "{{app}} herrega kee DeHub fayyadamuu barbaada",

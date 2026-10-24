@@ -1,4 +1,18 @@
 {
+  "desktopWordmark": {
+    "pageTitle": "Pratinjau logo desktop",
+    "heading": "Logo desktop DeHub",
+    "day": "Hari {{day}}",
+    "replay": "Putar pengantar lagi",
+    "enlarge": "Perbesar",
+    "actualSize": "Ukuran sebenarnya",
+    "reassemble": "Pasang kembali logo",
+    "loading": "Memuat",
+    "ready": "Siap",
+    "interrupted": "Grafik berhenti merespons",
+    "unavailable": "Tidak dapat memuat pratinjau 3D",
+    "hint": "Logo tetap utuh selama dua detik, lalu pecah. Arahkan kursor ke atasnya atau pilih untuk menyatukannya kembali."
+  },
   "mastodonApps": {
     "authTitle": "Masuk dengan DeHub",
     "authWants": "{{app}} ingin memakai akun DeHub-mu",

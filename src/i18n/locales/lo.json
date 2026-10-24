@@ -1,4 +1,18 @@
 {
+  "desktopWordmark": {
+    "pageTitle": "ການເບິ່ງລ່ວງໜ້າໂລໂກ້ຂອງ Desktop",
+    "heading": "ໂລໂກ້ DeHub desktop",
+    "day": "ມື້ {{day}}",
+    "replay": "ຫຼິ້ນ Intro ອີກເທື່ອຫນຶ່ງ",
+    "enlarge": "ຂະຫຍາຍ",
+    "actualSize": "ຂະໜາດຕົວຈິງ",
+    "reassemble": "Reassemble ໂລໂກ້",
+    "loading": "ກໍາລັງໂຫລດ",
+    "ready": "ພ້ອມ",
+    "interrupted": "ກາຟິກຢຸດການຕອບສະ ຫນອງ",
+    "unavailable": "ບໍ່ສາມາດໂຫຼດການເບິ່ງລ່ວງໜ້າ 3D ໄດ້",
+    "hint": "ໂລໂກ້ຍັງຄົງຢູ່ຢ່າງເຕັມທີ່ສໍາລັບສອງວິນາທີ, ຫຼັງຈາກນັ້ນແຍກອອກ. ໃຫ້ຄລິກໃສ່ມັນຫຼືເລືອກເອົາມັນກັບຄືນໄປບ່ອນ."
+  },
   "mastodonApps": {
     "authTitle": "ເຂົ້າສູ່ລະບົບດ້ວຍ DeHub",
     "authWants": "{{app}} ຕ້ອງການໃຊ້ບັນຊີ DeHub ຂອງທ່ານ",

@@ -1,4 +1,18 @@
 {
+  "desktopWordmark": {
+    "pageTitle": "ڈیسٹاپ لوگو پریویو",
+    "heading": "DeHub ڈیسٹاپ لوگو",
+    "day": "دین {{day}}",
+    "replay": "پلی انٹرو دوبارہ",
+    "enlarge": "بڑھا کر دکھاو",
+    "actualSize": "اصل سائز",
+    "reassemble": "لوگو دوبارہ جوڑو",
+    "loading": "لود کر رہی ہے",
+    "ready": "پریپ",
+    "interrupted": "گرافکس رسپانڈ نہیں کر رہی",
+    "unavailable": "3D پریویو لود نہیں ہو سکی",
+    "hint": "لوگو دو سیکنڈ تک ٹوٹا رہتا ہے، اس پر ہاتھ لگا کر یا سلیکٹ کر دوبارہ جوڑو۔"
+  },
   "mastodonApps": {
     "authTitle": "DeHub نال سائن ان کرو",
     "authWants": "{{app}} تہاݙا DeHub اکاؤنٹ ورتݨ چاہندا اے",

@@ -1,4 +1,18 @@
 {
+  "desktopWordmark": {
+    "pageTitle": "Náhľad loga pracovnej plochy",
+    "heading": "Logo DeHub pre stolné počítače",
+    "day": "Deň {{day}}",
+    "replay": "Prehrať úvod znova",
+    "enlarge": "Zväčšiť",
+    "actualSize": "Skutočná veľkosť",
+    "reassemble": "Znovu zostavte logo",
+    "loading": "Načítava sa",
+    "ready": "Pripravené",
+    "interrupted": "Grafika prestala reagovať",
+    "unavailable": "Nepodarilo sa načítať 3D náhľad",
+    "hint": "Logo zostane celé dve sekundy, potom sa rozpadne. Umiestnite kurzor myši na ňu alebo ju vyberte, aby ste ju opäť spojili."
+  },
   "mastodonApps": {
     "authTitle": "Prihlásiť sa cez DeHub",
     "authWants": "{{app}} chce používať váš účet DeHub",
