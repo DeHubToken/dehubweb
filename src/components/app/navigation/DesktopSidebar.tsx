@@ -413,7 +413,22 @@ export function DesktopSidebar({ onPostClick }: DesktopSidebarProps) {
                 renderCompactLogo ? "w-[22px] h-[24px]" : "w-[135px] h-[42px]"
               )}
             >
-              <CrumblingLogo>{isWarTheme ? (
+              <CrumblingLogo still={isWarTheme ? (
+                <>
+                  <img
+                    src={dehubLogoCompact}
+                    alt="dehub"
+                    className={cn("h-[22px] w-[22px]", !renderCompactLogo && "hidden")}
+                    decoding="async"
+                  />
+                  <img
+                    src="/dehub-header-logo.png"
+                    alt="dehub"
+                    className={cn("h-[40.6px] w-[135px] relative -top-[3px]", renderCompactLogo && "hidden")}
+                    decoding="async"
+                  />
+                </>
+              ) : undefined}>{isWarTheme ? (
                 <>
                   <WarLogo
                     src={dehubLogoCompact}
