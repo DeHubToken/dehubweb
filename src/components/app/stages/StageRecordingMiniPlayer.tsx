@@ -36,6 +36,8 @@ import X from "@/components/ui/cut-icons/close";
 import { cn } from '@/lib/utils';
 import { StaticWaveform } from '@/components/app/audio/StaticWaveform';
 import { StageRateButton } from '@/components/app/stages/StageRateButton';
+import { StageRecordingDubEngine } from './StageRecordingDubEngine';
+import { StageRecordingLanguage } from './StageRecordingLanguage';
 
 import {
   scrubStageRecording,
@@ -63,9 +65,9 @@ export function StageRecordingMiniPlayer() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [pathname]);
 
-  if (!spaceId || !popout) return null;
-
   return (
+    <><StageRecordingDubEngine />
+    {spaceId && popout && (
     <div
       className={cn(
         'fixed left-4 bottom-20 md:bottom-4 z-50 select-none',
@@ -132,8 +134,9 @@ export function StageRecordingMiniPlayer() {
 
           <StageRateButton />
         </div>
+        <div className="mt-2"><StageRecordingLanguage space={{ id: spaceId }} /></div>
       </div>
-    </div>
+    </div>)}</>
   );
 }
 

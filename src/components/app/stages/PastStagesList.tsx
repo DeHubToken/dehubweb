@@ -35,6 +35,7 @@ import { StaticWaveform } from '@/components/app/audio/StaticWaveform';
 import { ProfileHoverCard } from '@/components/app/ProfileHoverCard';
 import { BadgedName } from '@/components/app/BadgedName';
 import { StageTranscriptDrawer } from '@/components/app/spaces/StageTranscriptDrawer';
+import { StageRecordingLanguage } from './StageRecordingLanguage';
 import { StageChat } from '@/components/app/spaces/StageChat';
 import { StageRateButton } from '@/components/app/stages/StageRateButton';
 import { StageCoverArt } from '@/components/app/stages/StageCoverArt';
@@ -338,6 +339,7 @@ export function PastStagesList({
                   {/* Comments and transcript sit under the details on wide
                       screens, so the player row below is all bar. */}
                   <div className="hidden sm:flex items-center gap-1 mt-auto pt-1">
+                    {space.recording_url && <StageRecordingLanguage space={space} className="max-w-44" />}
                     <button
                       onClick={() => setCommentsFor((id) => (id === space.id ? null : space.id))}
                       aria-expanded={commentsFor === space.id}
@@ -450,6 +452,7 @@ export function PastStagesList({
 
               {/* Phones: comments and transcript under the player. */}
               <div className="flex sm:hidden items-center gap-1 -mt-1">
+                {space.recording_url && <StageRecordingLanguage space={space} />}
                 <button
                   onClick={() => setCommentsFor((id) => (id === space.id ? null : space.id))}
                   aria-expanded={commentsFor === space.id}
