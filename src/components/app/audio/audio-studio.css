@@ -13,6 +13,30 @@
   backdrop-filter: blur(3px) saturate(120%);
   box-shadow: inset 0 1px 1px rgb(255 255 255 / .5), inset 0 0 0 1px var(--studio-edge), 0 16px 32px -24px #0009;
 }
+[data-audio-studio][data-material='light'] {
+  --studio-edge: rgb(20 30 40 / .14); --studio-ink: #172129;
+  background: linear-gradient(145deg,#fff,#e7ebef 70%);
+  box-shadow: inset 0 1px 0 #fff, inset 0 0 0 1px var(--studio-edge);
+}
+[data-material='light'] [data-audio-studio-motion] { background:#030405; }
+[data-material='light'] [data-audio-studio-deck] {
+  background:linear-gradient(180deg,rgb(245 248 250 / .12),rgb(238 243 247 / .72) 40%,#e9eef3f2);
+  box-shadow:inset 0 1px 0 #fff9,inset 0 -1px 0 #14202a16;
+}
+[data-material='light'] [data-audio-studio-transport] button {
+  background:linear-gradient(150deg,#fff9,#b7c3ce40);
+  box-shadow:inset 0 1px 1px #fff,inset 0 0 0 1px #14202a20;
+}
+[data-material='light'] [data-audio-studio-transport] [data-audio-studio-play] {
+  color:#fff; background:linear-gradient(145deg,#39434c,#101820);
+  box-shadow:inset 0 1px 1px #ffffff40,0 3px 12px #14202a26;
+}
+[data-material='light'] [data-audio-studio-pill]:not(#_) { background:#14202a08; box-shadow:inset 0 1px 0 #fff,inset 0 0 0 1px var(--studio-edge); }
+[data-material='light'] [data-audio-studio-options] [data-audio-studio-volume] input {
+  background:linear-gradient(90deg,#394955 calc(7.5px + var(--volume-fill) * (100% - 15px)),#14202a26 0);
+}
+[data-material='light'] [data-audio-studio-volume] input::-webkit-slider-thumb { background:#394955; box-shadow:0 1px 3px #14202a33; }
+[data-material='light'] [data-audio-studio-volume] input::-moz-range-thumb { background:#394955; box-shadow:0 1px 3px #14202a33; }
 [data-audio-studio-title] { display:flex; align-items:center; gap:14px; padding:4px 8px 16px; text-align:left; }
 [data-audio-studio-title] > div { display:grid; gap:4px; min-width:0; }
 [data-audio-studio-cover] { width:54px; height:54px; object-fit:cover; border-radius:10px; flex:none; box-shadow:0 2px 8px #0004; }
@@ -47,6 +71,7 @@
 [data-audio-studio-pill][aria-expanded='true'] svg { transform:rotate(180deg); }
 [data-audio-studio-style-menu] { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:2px; max-height:min(320px,60vh); overflow-y:auto; }
 [data-audio-studio-style-drawer] { color:#eef4f6; }
+html:is([data-theme='light'],[data-system-tone='light']) [data-audio-studio-style-drawer] { color:#172129; }
 [data-audio-studio-style-drawer] :is(h2,button) { color:inherit !important; }
 [data-audio-studio-style-drawer] [data-audio-studio-style-menu] { max-height:55dvh; padding:6px 12px calc(16px + env(safe-area-inset-bottom)); gap:4px; }
 [data-audio-studio-style-menu] button { position:relative; display:flex; flex-direction:column; align-items:stretch; justify-content:flex-start; gap:4px; width:100%; min-width:0; padding:6px 6px 10px; border-radius:12px; border:0; background:transparent; color:inherit; font-size:12px; font-weight:500; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; opacity:.6; cursor:pointer; transition:opacity .2s,background .2s; }
@@ -66,15 +91,15 @@
 [data-audio-studio-options] [data-audio-hue] { appearance:none; background:linear-gradient(90deg,#fff 0%,#f66 7%,#ffdc60 22%,#75e88a 38%,#68dfe9 52%,#6a8ff5 68%,#ca7af2 83%,#f66 100%); height:8px; border-radius:99px; }
 [data-audio-hue]::-webkit-slider-thumb { appearance:none; width:15px; height:15px; border-radius:50%; background:transparent; border:2px solid white; box-shadow:0 1px 4px #0009; }
 [data-audio-hue]::-moz-range-thumb { width:12px; height:12px; border-radius:50%; background:transparent; border:2px solid white; box-shadow:0 1px 4px #0009; }
-html:is([data-theme='system'],[data-theme='glass']) [data-audio-frame]:has([data-audio-studio]):not([data-video-fullscreen]):not(#_):not(#_) { height:auto !important; min-height:0; aspect-ratio:auto !important; width:100% !important; background:transparent !important; }
-html:is([data-theme='system'],[data-theme='glass']) [data-audio-backdrop]:has([data-audio-studio]):not(#_):not(#_) { background:transparent !important; border:0; border-radius:28px; backdrop-filter:none !important; }
+html:is([data-theme='system'],[data-theme='glass'],[data-theme='light']) [data-audio-frame]:has([data-audio-studio]):not([data-video-fullscreen]):not(#_):not(#_) { height:auto !important; min-height:0; aspect-ratio:auto !important; width:100% !important; background:transparent !important; }
+html:is([data-theme='system'],[data-theme='glass'],[data-theme='light']) [data-audio-backdrop]:has([data-audio-studio]):not(#_):not(#_) { background:transparent !important; border:0; border-radius:28px; backdrop-filter:none !important; }
 [data-audio-backdrop]:has([data-audio-studio]) > .absolute { position:relative; }
 html:is([data-theme='system'],[data-theme='glass']) [data-audio-frame][data-video-fullscreen]:has([data-audio-studio]):not(#_):not(#_) { border-radius:0; background:rgb(3 9 12 / .96) !important; }
 [data-audio-frame][data-video-fullscreen]:has([data-audio-studio]) [data-audio-backdrop] > .absolute { height:100%; display:flex; align-items:center; justify-content:center; padding:24px; }
 [data-audio-frame][data-video-fullscreen] [data-audio-studio] { max-width:760px; }
 /* Fullscreen shows the animation edge to edge; the card around it steps aside. */
 [data-audio-frame][data-video-fullscreen]:has([data-audio-studio-fullscreen]) [data-audio-backdrop] > .absolute:not(#_) { padding:0; }
-[data-audio-studio][data-audio-studio-fullscreen]:not(#_) { position:absolute; inset:0; max-width:none; width:100%; height:100%; padding:0; border:0; border-radius:0; background:#000; box-shadow:none; }
+[data-audio-studio][data-audio-studio-fullscreen]:not(#_) { --studio-ink:#f3f5f6; position:absolute; inset:0; max-width:none; width:100%; height:100%; padding:0; border:0; border-radius:0; background:#000; box-shadow:none; }
 [data-audio-studio-fullscreen] :is([data-audio-studio-title],[data-audio-studio-deck],[data-audio-studio-options]) { display:none; }
 [data-audio-studio-fullscreen] [data-audio-studio-motion] { position:absolute; inset:0; margin:0; border-radius:0; box-shadow:none; }
 [data-audio-studio-fullscreen] [data-audio-studio-motion] canvas { height:100% !important; border-radius:0; }
