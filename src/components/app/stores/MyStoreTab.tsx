@@ -212,7 +212,7 @@ export function MyStoreTab({ createListingOpen = false, onCreateListingClose, cr
                   {(l.images as string[])?.[0] && <img src={(l.images as string[])[0]} className="w-full h-full object-cover" alt="" />}
                 </div>
                 <div className="flex-1 min-w-0">
-                  <p className="text-sm font-medium truncate text-primary-foreground">{l.title}</p>
+                  <p className="text-sm font-medium truncate text-foreground">{l.title}</p>
                   <p className="text-xs text-muted-foreground flex items-center gap-1">
                     {(() => {
                       const usd = Number(l.price);
@@ -305,7 +305,7 @@ function OrderRow({ order, type, onUpdateStatus }: { order: any; type: 'buyer' |
         {(listing?.images as string[])?.[0] && <img src={(listing.images as string[])[0]} className="w-full h-full object-cover" alt="" />}
       </div>
       <div className="flex-1 min-w-0">
-        <p className="text-sm font-medium truncate text-primary-foreground">{listing?.title || t('stores.listing')}</p>
+        <p className="text-sm font-medium truncate text-foreground">{listing?.title || t('stores.listing')}</p>
         <p className="text-xs text-muted-foreground">{Number(order.amount).toLocaleString()} <DhbCoin /></p>
       </div>
       <span className={`text-[10px] px-2 py-0.5 rounded-full capitalize ${statusColors[order.status] || 'bg-white/10 text-muted-foreground'}`}>
