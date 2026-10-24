@@ -1,4 +1,197 @@
 {
+  "copy": {
+    "036cfd952896": "Kê bişopînî",
+    "05d0e1b9a76e": "Karta girtinê bidomîne",
+    "0c820caf16c0": "Hê biyografî tune",
+    "0f3dd376ee85": "Li karta te ya girtinê tê gerîn…",
+    "12b91b0ac5dd": "{{value1}} — ji bo bertekê pê bigire",
+    "150d73bf85e7": "Elgato, AVerMedia… bê OBS",
+    "1929290e09aa": "Sazkirina karta girtinê veke (destûra kamerayê dixwaze)",
+    "1b2c08a8733d": "Kalîte",
+    "26be785e21b7": "Hê vîdyoyên muzîkê tune ne",
+    "2971f9103f78": "Spas ji bo alîkariya te ku DeHub baştir bibe — tiştek ku te xwestibû niha çalak e:",
+    "2f33a51e3171": "Pêşniyara rêveberiya DeHub — deng bide û nîqaş bike.",
+    "2f7e24392d9c": "SAHNEYA NÊZÎK",
+    "302b4ce5c73d": "Barkirinên Dengî",
+    "344b4271ca01": "Şopandin",
+    "36cffc7912e4": "Mîkrofona te (ji bo axaftinê di dema lîstikê de)",
+    "37fd4e355ba3": "Ji ekrana tije derkeve",
+    "3a17aa4e4abb": "Sahne",
+    "3b59e95daada": "Niha sahneyên zindî tune ne",
+    "42484309dc66": "{{value1}} — ji bo nîşandana girêdanê Backspace bike",
+    "42ee912bff23": "Îstasyonên Radyoyê",
+    "44207eb29645": "Tê guhertin…",
+    "44c9d36485b7": "Hemûyan Bibîne",
+    "4a1bd4a3aaf3": "Karta girtinê",
+    "506ff3946215": "Siyaseta Nepeniyê",
+    "594bea9c9448": "Karta girtinê nehat dîtin. Bi USB ve girê bide, paşê li jêr hilbijêre.",
+    "5e0cb5ae157b": "Wêne {{value1}}",
+    "641d1ef657bd": "Bişopîne",
+    "67004337fb60": "Ev amûr nayê vekirin. OBS an Elgato Studio bigire (di carekê de tenê sepanek dikare wê bi kar bîne).",
+    "6a40edf1fc87": "واتسئاپ",
+    "7527dc6722fc": "Ji nû ve parvekirin bi ser neket",
+    "77db95ebd737": " Peyamê kopî bike",
+    "7bb6682e5826": "Daxwaza nû ya lêvegerandina bangê",
+    "7c14e8607c11": "Îstasyon tên barkirin...",
+    "846d8244b7d8": "Peyama vexwendinê hat kopîkirin",
+    "89a167dad6da": "Rengê vîzualîzerê",
+    "8bb1dbd60bce": "Dema tu zindî yî, vê tabê vekirî bihêle.",
+    "8c91325d901b": "Bi vê peyamê weşangeran bişîne rûpela weşanê ya DeHub. Girêdana te berî ku ew bigihîjin wan bi te ve girê dide.",
+    "8dd6857baf02": "Bêdeng bike",
+    "905392fbed15": "Spas ji bo alîkariya te ku DeHub baştir bibe — {{value1}} tiştên ku te xwestibûn niha çalak in:",
+    "96882965394f": "Dengê lîstikê",
+    "99ca327a47b5": "Grafîka bergê ji bo {{value1}}",
+    "a2838b66518a": "Otomatîk (ya herî baş ku karta te dikare)",
+    "a3156ed263d2": "{{value1}} — ji bo guhertina bertekê pê bigire",
+    "a865110e919b": "Berîkê îthal bike",
+    "ab4d6796dbbe": "Vîdyoyên Muzîkê",
+    "b10fb966d720": "Asta deng",
+    "b3412a3b86de": "Weşangeran vexwîne",
+    "b5f64aac226f": "Bi domandinê, tu razî dibî bi",
+    "b8643d1cc81a": "1080p 60 nêzîkî 9 Mbps barkirinê dixwaze. Li ser Wi‑Fi ya hêdî 720p hilbijêre.",
+    "c1c8f6c1d828": "بە زوویی دەست پێ دەکات",
+    "c1cd85f576ed": "{{value1}} — بەڕێوەبردنی DeHub",
+    "c7ce89b32897": "Karta girtinê rawestîne",
+    "cc96aaa18cf2": "Were bi min re li ser DeHub weşanê bike. Bexşîş li ser zincîrê (on-chain) rasterast dikevin berîka te, temaşevanên te yên te ne, û tu dikarî bi gavekê li TikTok û her derê din jî parve bikî. Li vir tomar bibe: {{link}}",
+    "cccec0619e2d": "Hê barkirinên dengî tune ne",
+    "cd9939b6aa1a": "Wêneyê {{value1}} biguherîne",
+    "ce4ee4efc5e3": "Deng veke",
+    "d0f08798ff1a": "Tê şopandin ji aliyê ",
+    "d7038cc95b8e": "Li ser TV-ya xwe bi rêya passthrough a kartê bilîze, ne bi vê pêşdîtinê. Ev hinekî paş dimîne.",
+    "de6694f3ada3": "Amûrekê hilbijêre",
+    "e3ee915a8e8c": " û ",
+    "ede548996483": "Merc",
+    "fedc5cda305d": "Girtin hat rawestandin"
+  },
+  "dehubAppPage": {
+    "android": "Android",
+    "appStore": "Ji App Store daxe",
+    "downloadApk": "APK daxe (Android bê Google Play)",
+    "downloadTitle": "DeHub daxe",
+    "faq": {
+      "a1": "Na. DeHub li dehub.io platformeke medyaya civakî ya serbixwe û çavkaniya vekirî ye. Portala xwendekaran DeHUB a Zanîngeha DePaul, DEHub a Rowan û sepana ketina deriyan deHUB Access berhemên bê têkilî ne ku tenê heman navî parve dikin.",
+      "a2": "Erê. DeHub ji Google Play û App Store belaş tê daxistin, û di gerokê de li dehub.io belaş tê bikaranîn.",
+      "a3": "تەلەفۆنەکانی ئەندرۆید لە ڕێگەی گوگڵ پلەی یان دابەزاندنی ڕاستەوخۆی APK، ئایفۆن لە ڕێگەی ئەپ ستۆر، و هەر وێبگەڕێکی مۆدێرنی کۆمپیوتەر یان مۆبایل لە dehub.io.",
+      "a4": "بەڵێ. نوێترین وەشانی ئەندرۆید لەلایەن DeHub-ەوە وەک دابەزاندنی ڕاستەوخۆی APK لە dehub.io/apk بڵاوکراوەتەوە، بۆ ئەندرۆید 8 و سەرووتر.",
+      "a5": "پۆستکردن لە فیدێکی کاتیدا، پەخشی ڕاستەوخۆ یان سەیرکردنی پەخشی ڕاستەوخۆ، نامەناردن بۆ هاوڕێیان بە کۆدکردنی کۆتایی بۆ کۆتایی (end-to-end encryption)، بەشداریکردن و بەڕێوەبردنی کۆمەڵگەکان، هەڵگرتنی تۆکنەکان لە جزدانێکی فرە-زنجیرەیی ناوخۆیی و بەدەستهێنانی پاداشت لە بەرامبەر سەیرکردن.",
+      "q1": "Gelo DeHub sepana Zanîngeha DePaul e?",
+      "q2": "Gelo sepana DeHub belaş e?",
+      "q3": "DeHub li ser kîjan amûran dixebite?",
+      "q4": "ئایا دەتوانم DeHub لەسەر ئەندرۆید بەبێ گوگڵ پلەی دابمەزرێنم؟",
+      "q5": "چی دەتوانم لە ئەپی DeHub بکەم؟"
+    },
+    "faqTitle": "Pirsên pir tên pirsîn",
+    "googlePlay": "Ji Google Play bistîne",
+    "heading": "Sepana DeHub",
+    "intro1": "DeHub tora civakî û sepana mobîl a nenavendî ye ku ji sala 2021an ve tê pêşxistin, li wir şandî dikarin li ser zincîrê bên mintkirin û afirîner temaşevan, naverok û dahata xwe diparêzin.",
+    "intro2": "Ew herikîneke li gorî demê, weşana zindî, peyamên bi şîfrekirina ji serî heta dawiyê, civakên ku ji aliyê bikarhêneran ve tên birêvebirin, berîkeke pir-zincîr û xelatên temaşe-bike-qezenc-bike yên bi tokenan tên dayîn li hev dicivîne. Heman hesab li ser Android, iPhone û di her gerokeke nûjen de dixebite.",
+    "iphone": "iPhone",
+    "notSure": "هێشتا دڵنیا نیت کام DeHub-ت پێویستە؟ <compare>DeHub vs DePaul DeHUB vs Rowan DEHub</compare> ئەمە ڕووندەکاتەوە، و <guide>What is DeHub?</guide> بە وردی باسی پلاتفۆرمەکە دەکات.",
+    "openInBrowser": "DeHub di geroka xwe de veke",
+    "seoDescription": "Sepana DeHub bistîne: medyaya civakî ya çavkaniya vekirî û ya bikarhêneran, bi weşana zindî, peyamên şîfrekirî û temaşe-bike-qezenc-bike. Li Google Play, App Store û webê belaş e.",
+    "seoTitle": "Sepana DeHub — Ji bo Android, iPhone û Webê daxe"
+  },
+  "dehubLinks": {
+    "copyLinkDetail": "Girêdana {{item}} li panoya xwe kopî bike",
+    "kind": {
+      "app": "sepan",
+      "bounty": "xelat",
+      "community": "civak",
+      "communityInvite": "vexwendina civakê",
+      "event": "bûyer",
+      "film": "berhem",
+      "link": "girêdan",
+      "listing": "tişt",
+      "post": "şandî",
+      "profile": "profîl",
+      "proposal": "pêşniyar",
+      "stage": "sahne",
+      "store": "firoşgeh"
+    },
+    "recipientChat": "sohbet",
+    "recipientUser": "bikarhêner",
+    "sendFailed": "Şandina {{item}} bi ser neket",
+    "sentTo": "{{item}} ji {{name}} re hat şandin"
+  },
+  "loginStack": {
+    "aiRestyle": "Şêwaza nû bi AI",
+    "codeNote": "Em kodekê bi e-nameyê ji te re dişînin, şîfre ne pêwîst e.",
+    "exploreFirst": "Pêşî bigere",
+    "fingerprint": "Şopa tiliyê",
+    "headlineAccent": "û kêfxweş be.",
+    "headlineTop": "Tu yê bibî xwediyê her tiştî",
+    "orContinueWith": "an bidomîne bi",
+    "phone": "Telefon"
+  },
+  "player": {
+    "volume": "Asta deng"
+  },
+  "postStage": {
+    "more": "Zêdetir",
+    "quoteHint": "وشەی تایبەت بە خۆت زیاد بکە",
+    "repostHint": "بە خێرایی، بۆ شوێنکەوتووەکانت",
+    "undoRepostHint": "لەسەر پڕۆفایلەکەت لای بەبە"
+  },
+  "quickActions": {
+    "question": "چی لەم پەڕەیە هەڵەیە؟",
+    "title": "بژاردەکانی پەڕە"
+  },
+  "stageCover": {
+    "admitOne": "BILÊTA YEK KESÎ",
+    "live": "zindî",
+    "minutes": "{{minutes}} deq",
+    "onAir": "LI SER WEŞANÊ",
+    "recorded": "TOMARKIRÎ",
+    "replay": "dubare",
+    "stage": "sahne",
+    "upcoming": "nêzîk"
+  },
+  "streamPage": {
+    "eyebrow": "//JI_BO_WEŞANGERAN",
+    "faq": {
+      "a1": "Erê. Tevlîbûna DeHub û şandin belaş in, û mintkirina weşanekê li ser zincîrê bijarte ye. Îthalkirina kanalekê bi pere ye, û bihayê wê berî ku tu bidî tê nîşandan.",
+      "a2": "Na. Li cihê ku temaşevanên te îro lê ne weşanê bidomîne û li kêleka wê li ser DeHub ava bike. Ji edîtora DeHub li gelek platforman bi hev re parve bike, da ku her platforma ku tu niha bi kar tînî vegere ser temaşevanên ku yên te ne.",
+      "a3": "Erê. Dema ku tu zindî dibî OBS hilbijêre û DeHub ji bo OBS, Streamlabs an her kodkerê RTMP mifteyeke weşanê ya daîmî dide te. Tu dikarî rasterast ji telefona xwe, geroka xwe an karta girtinê jî zindî bibî.",
+      "a4": "Temaşevan di dema weşana te de bexşîş û diyariyan dişînin, û ew li ser zincîrê bi tokenên DeHub rasterast dikevin berîka te. Barkirin dikarin belaş, bi pere ji bo her temaşekirinê an jî bi tokenê girtî bin.",
+      "a5": "Rûpela hevkariyê (affiliate) veke da ku girêdana xwe bistînî. Her kesê ku bi rêya wê tevlî dibe bi te ve tê girêdan, û tu %20 ji çalakiya wan û %5 ya domdar ji kesên ku ew vedixwînin qezenc dikî, bi tokenên DeHub tê dayîn.",
+      "q1": "Gelo weşan li ser DeHub belaş e?",
+      "q2": "Gelo divê ez dev ji weşana li ser TikTok an Twitch berdim?",
+      "q3": "Ez dikarim bi OBS weşanê bikim?",
+      "q4": "Ez çawa pere distînim?",
+      "q5": "Girêdana min a vexwendinê çawa dixebite?"
+    },
+    "faqTitle": "Pirsên pir tên pirsîn",
+    "heading": "پەخش لەسەر DeHub",
+    "howToStart": "خۆت تۆمار بکە، ئامادەکاری پۆست بکەرەوە و کرتە لە Go live بکە — لە کامێراکەتەوە، OBS یان کارتی وێنەگرتن.",
+    "importYoutube": "کەناڵی یوتیوبەکەت هاوردە بکە",
+    "intro": "بینەرە ڕاستەوخۆکانت بهێنە بۆ پلاتفۆرمێک کە خۆت خاوەنی بیت. لە مۆبایلەکەت، وێبگەڕەکەت یان OBS-ەوە پەخشی ڕاستەوخۆ بکە، لە کاتی پەخشکردندا تێبینییەکان (tips) بە شێوەی on-chain وەربگرە، و ئەو بینەرانەی دروستیان دەکەیت بۆ خۆت بهێڵەرەوە. DeHub لەلایەن ئەو تیمەوە دروستکراوە کە لە پشت First Class Agency-ن، کە ژمارە یەکی بریکاری فەرمی TikTok LIVE-ە لە بەریتانیا، بە زیاتر لە 1,000 پەخشکەری ڕاستەوخۆ.",
+    "inviteLink": "لینکی بانگهێشتەکەت وەربگرە",
+    "moreGuides": "Ji TikTok tê? <tiktok>Rêbera afirînerên Keyaniya Yekbûyî ji bo terikandina TikTok</tiktok> û <live>Weşana zindî ya Web3: alternatîfeke nenavendî ya Twitch</live> bixwîne.",
+    "proof": {
+      "label1": "بینەری هاوکات لە پەخشی ڕاستەوخۆی DeHub",
+      "label2": "کاتژمێری کارکردن لە سەرانسەری خزمەتگوزارییەکانی پەخش",
+      "label3": "دواکەوتنی جیهانی (latency) لەسەر CDN-ی تایبەتی DeHub",
+      "value3": "کەمتر لە 200 میلی چرکە"
+    },
+    "reasons": {
+      "body1": "بینەران لە کاتی پەخشی ڕاستەوخۆدا تێبینی دەنێرن و دیاری پێشکەش دەکەن، لەگەڵ ئەنیمەیشنی دیارییە پلەبەندی کراوەکان و پەیامی تێبینییەکان کە بە دەنگ لە پەخشەکەدا دەخوێنرێنەوە. تێبینییەکان بە شێوەی on-chain بە تۆکنەکانی DeHub یەکلایی دەبنەوە و ڕاستەوخۆ دەچنە ناو جزدانەکەتەوە نەک ئەوەی لە ڕێگادا لێیان ببڕدرێت.",
+      "body2": "فۆڵۆوەرەکانت ڕیزێک نین لە بنکەدراوەی کەسێکی تردا. پەخشەکان و بارکراوەکان دەتوانرێت بە شێوەی on-chain بۆ جزدانەکەت مێنت (mint) بکرێن، فیدەکە کاتییە، و کۆدەکە سەرچاوە کراوەیە، بۆیە کەس بە بێدەنگی یاساکان ناگۆڕێت.",
+      "body3": "لینکی بانگهێشتەکەت 20%ی چالاکییەکانی هەر کەسێک کە لە ڕێگەیەوە بەشدار دەبێت پێت دەدات، لەگەڵ 5%ی بەردەوام لەو کەسانەی کە ئەوان بانگهێشتیان دەکەن، بە تۆکنەکانی DeHub دەدرێت.",
+      "body4": "میوانداری قۆناغەکانی دەنگی ڕاستەوخۆ بکە بۆ پرسیار، هاوکاری و ئاهەنگی سەیرکردن. پێشوەختە یەکێکیان ڕابگەیەنە بە کارتێک کە بینەرەکەت بتوانن هاوبەشی پێ بکەن، و گوێ لەوانەی تۆمارکراون بگرەرەوە.",
+      "body5": "هەژمارەکانی تری خۆت بەیەکجار ببەستەرەوە و لە ڕێگەی ئامادەکاری DeHub-ەوە لە X، ئینستاگرام، یوتیوب، تیکتۆک، فارکاستەر و هەشت پلاتفۆرمی تر بڵاویان بکەرەوە. تیکتۆک وەک بزوێنەری دۆزینەوەی خۆت بهێڵەرەوە لە کاتێکدا بینەرێک دروست دەکەیت کە خاوەندارێتی دەکەیت.",
+      "body6": "Kanaleke YouTube a tevahî, an profîleke TikTok, Vimeo an SoundCloud, bi carekê îthal bike. Bihayê rast berî ku tu bidî bi tokenên DeHub tê nîşandan.",
+      "title1": "تێبینییەکان (tips) کە دەچنە ناو جزدانەکەتەوە",
+      "title2": "بینەرێک کە خاوەندارێتی دەکەیت",
+      "title3": "لە هەر کەسێک کە دەیانهێنیت پارە پەیدا بکە",
+      "title4": "قۆناغەکانی پەخشی ڕاستەوخۆ (Live stages)",
+      "title5": "لە هەموو شوێنێک بەیەکجار پۆست بکە",
+      "title6": "Kanala xwe bi xwe re bîne"
+    },
+    "seoDescription": "بڕۆ پەخشی ڕاستەوخۆ لەسەر DeHub: تێبینییەکان (tips) لەسەر زنجیرە (on-chain) کە ڕاستەوخۆ دەچنە ناو جزدانەکەتەوە، بینەرێک کە خاوەندارێتی دەکەیت، پۆستکردن بۆ پلاتفۆرمەکانی تری خۆت بە یەک هەنگاو، و 20% لە هەر کەسێک کە بانگهێشتی دەکەیت.",
+    "seoTitle": "پەخش لەسەر DeHub — پەخشی ڕاستەوخۆ بۆ دروستکەرانی TikTok و Twitch",
+    "startStreaming": "دەست بە پەخشکردن بکە",
+    "whyTitle": "بۆچی لەسەر DeHub پەخش بکەیت"
+  },
   "desktopWordmark": {
     "pageTitle": "پێشبینینی لۆگۆی دێسکتۆپ",
     "heading": "لۆگۆی دێسکتۆپی DeHub",
@@ -277,6 +470,11 @@
     "heading": "DeHub Kurt"
   },
   "settings": {
+    "glass": "Camî",
+    "reset": "سفرکردنەوە",
+    "sessionsRevokedMany": "{{count}} ئامێر دەرچوون",
+    "showDislikes": "پیشاندانی دڵنەویستەکانم بۆ هەمووان",
+    "showDislikesDesc": "هەموو کەسێک دەتوانێت تابی دڵنەویستەکان لەسەر پرۆفایلەکەت بکاتەوە. کاتێک ئەمە کوژاوە بێت، تەنها خۆت دەتوانیت بیبینیت.",
     "usernameTaken": "Navê bikarhêner hatiye girtin",
     "postingChain": "Blokzincîra weşanê",
     "showOnline": "Dema ku ez serhêl im nîşan bide",
@@ -638,9 +836,9 @@
     "reset": "سفرکردنەوە"
   },
   "common": {
+    "confirm": "پشتڕاستکردنەوە",
     "mute": "بێدەنگکردن",
     "unmute": "دەنگدانەوە",
-    "confirm": "پشتڕاستکردنەوە",
     "save": "Tomar bike",
     "cancel": "Betal bike",
     "delete": "Jê bibe",
@@ -1367,6 +1565,13 @@
     "loginRequired": "Têketin pêwîst e"
   },
   "messages": {
+    "lockedBody": "چاتەکەت لەگەڵ {{name}} بە کۆدکردنی کۆتایی بۆ کۆتایی پارێزراوە. جزدانەکەت لەم ئامێرەدا بکەرەوە بۆ ئەوەی بیکەیتەوە.",
+    "lockedPrivate": "تەنها خۆت دەتوانیت بیانخوێنیتەوە",
+    "lockedTitle": "بیکەرەوە بۆ خوێندنەوەی نامەکانت",
+    "lockedTryAgain": "دیسان هەوڵ بدەرەوە",
+    "lockedUnlock": "کردنەوەی جزدان",
+    "undecryptableRun_one": "{{count}} نامە ناکرێتەوە لەم ئامێرەدا",
+    "undecryptableRun_other": "{{count}} نامە ناکرێنەوە لەم ئامێرەدا",
     "reply": "Bersiv bide",
     "react": "Bertek",
     "edit": "Biguherîne",
@@ -1400,6 +1605,41 @@
     "deleteConversationFailed": "Axaftin nehat jêbirin"
   },
   "music": {
+    "chartOrder": "ڕیزبەندی خشتەی دەنگ",
+    "chartVideos": "Vîdyoyên muzîkê",
+    "country": "Welat",
+    "linkCopied": "Girêdan hat kopîkirin",
+    "listenLive": "Zindî guhdarî bike",
+    "listeningCount_one": "{{count}} guhdarî dike",
+    "listeningCount_other": "{{count}} guhdarî dikin",
+    "liveCount": "zindî",
+    "liveRadio": "Radyoya zindî",
+    "mostLiked": "زۆرترین دڵخواز",
+    "mostListened": "زۆرترین گوێلێگیراو",
+    "mostPlayed": "زۆرترین لێدراو",
+    "mostRecent": "نوێترین",
+    "mostViewed": "Herî zêde hatine temaşekirin",
+    "mostVoted": "زۆرترین دەنگدراو",
+    "newest": "Herî nû",
+    "nextStation": "Îstasyona din",
+    "noStages": "Hê li vir sahne tune ne",
+    "onAir": "Li ser weşanê",
+    "pause": "Rawestîne",
+    "plays": "Lêdan",
+    "quality": "Kalîte",
+    "radioChartOrder": "ڕیزبەندی خشتەی ڕادیۆ",
+    "radioPicks": "هەڵبژاردەکانی ئێمە",
+    "recentStages": "کۆتا",
+    "shareStation": "Îstasyonê parve bike",
+    "shareStationTitle": "{{name}} li ser Radyoya DeHub",
+    "stagesChartOrder": "ڕیزبەندی خشتەی سەیجەکان",
+    "stagesLive": "ئێستا ڕاستەوخۆ",
+    "trending": "باو",
+    "trendingWeek": "Vê hefteyê populer",
+    "upcoming": "دێن",
+    "videoChartOrder": "Rêza lîsteya vîdyoyên muzîkê",
+    "videoCharts": "Lîsteyên Vîdyoyên Muzîkê",
+    "votes": "Deng",
     "all": "Hemû",
     "tracks": "Stran",
     "videos": "Vîdyo",
@@ -1427,6 +1667,17 @@
     "returnHome": "Vegere Malê"
   },
   "profile": {
+    "dislikes": {
+      "emptyOther": "Hê tiştek nehatiye nehezkirin.",
+      "emptyOwn": "Şandiyên ku tu jê hez nakî ji herikînên te derdikevin û li vir xuya dibin. Nehezkirinê betal bike da ku şandî vegere.",
+      "emptyTitle": "Hê nehezkirin tune ne",
+      "loadMore": "Zêdetir bar bike",
+      "privateDesc": "Ev hesab nehezkirinên xwe ji xwe re dihêle.",
+      "privateTitle": "Nehezkirin taybet in"
+    },
+    "tabs": {
+      "dislikes": "Nehezkirin"
+    },
     "back": "Paş",
     "usernameAvailable": "Navê bikarhêner peyda ye!",
     "signUpToClaim": "Îro qeyd bibin ku bidest bixin",
@@ -1540,69 +1791,70 @@
   "agents": {
     "life": {
       "compose": "وەک ئەم بریکارە بڵاوی بکەرەوە",
-      "postText": "دەقی بڵاوکراوە",
+      "daily": "Şandiyên îro: {{posts}} · Armanca rojane: {{target}}",
+      "editComment": "دەستکاریکردنی کۆمێنت",
       "imageUrl": "بەستەری وێنە (ئارەزوومەندانە)",
+      "less": "کەمتر نیشان بدە",
+      "more": "چالاکیی زیاتر نیشان بدە",
+      "postQueued": "بڵاوکراوەکە خرایە ڕیزەوە. لە بەشی ئەرکەکان لە سەرەوە چاودێری بکە.",
+      "postText": "دەقی بڵاوکراوە",
       "queueHelp": "دەقەکەت بە وردی بڵاودەکاتەوە. ماوەی ٢٠ خولەک نێوان بڵاوکردنەوەکان جێبەجێ دەبێت. هیچ دروستکردنێک (minting) نییە.",
       "queuePost": "خستنە ڕیزەی بڵاوکراوە",
-      "postQueued": "بڵاوکراوەکە خرایە ڕیزەوە. لە بەشی ئەرکەکان لە سەرەوە چاودێری بکە.",
-      "viewPost": "بینینی بڵاوکراوە",
       "unlike": "لایک نەکردن",
       "unliked": "لایک نەکرا",
-      "editComment": "دەستکاریکردنی کۆمێنت",
-      "more": "چالاکیی زیاتر نیشان بدە",
-      "less": "کەمتر نیشان بدە"
+      "viewPost": "بینینی بڵاوکراوە"
     },
     "tasks": {
-      "oneAgent": "یەک بریکار",
-      "swarm": "کۆمەڵە (Swarm)",
-      "selectAll": "هەموو بریکارەکان هەڵبژێرە",
-      "clearSelection": "پاککردنەوەی هەڵبژاردن",
-      "selectedCount": "{{count}} لە {{total}} هەڵبژێردراوە",
-      "distribution": "بریکارەکان چۆن فەرمانەکە جێبەجێ دەکەن",
-      "eachMode": "هەموو بریکارێک ئەمە دەکات",
-      "sharedMode": "بەشداریکردن لە کارەکە",
-      "eachHelp": "ئەم ڕێنماییانە بۆ هەموو بریکارە هەڵبژێردراوەکان بنێرە. هەر بریکارێک ئەرکەکە بە تەواوی لەو کاتەی داواکراوە جێبەجێ دەکات. سنووردارکردنی هاوبەشی بڵاوکردنەوە هەر بەردەوام دەبێت.",
+      "actionsProcessed": "کردارەکان جێبەجێ کران",
       "allCategories": "هەموو بڵاوکراوەکان لە هەموو پۆلەکاندا. هیچ پاڵێوەرێکی وشەی کلیل و سنووردارکردنی سێ لایک بۆ هەر ئەرکێک نییە.",
-      "windowLimits": "هەموو بڵاوکراوە گونجاوەکان دەخرێنە ڕیزەوە. سنووردارکردنی کردارەکان خێرایی جێبەجێکردن دیاری دەکات؛ ئەرکەکە بۆ سێ بڵاوکراوە کەم ناکاتەوە. نووسینی وەڵامەکان ڕەنگە کرێدیت بەکاربهێنێت.",
-      "promptLimits": "داواکارییەکان بۆ هەموو بڵاوکراوەیەک هەموو پۆلەکان بەکاردەهێنن. لایککردنی هەڵبژێردراو بەپێی بابەت بۆ هەر خولێک بە سێ لایک سنووردار کراوە. هەموو بریکارەکان بەشدارن لە ماوەی نێوان بڵاوکردنەوەکان؛ نووسین ڕەنگە کرێدیت بەکاربهێنێت.",
-      "pauseSwarm": "وەستاندنی کۆمەڵە",
-      "resumeSwarm": "دەستپێکردنەوەی بریکارە شیاوەکان",
       "cancelSwarm": "هەڵوەشاندنەوەی کۆمەڵە",
       "cancelTask": "هەڵوەشاندنەوەی ئەرک",
-      "actionsProcessed": "کردارەکان جێبەجێ کران",
-      "reviewMembers": "ئەو ئەرکانەی کردارەکانیان نادیارە پێویستیان بە پێداچوونەوەی تاکەکەسی هەیە پێش دەستپێکردنەوە. کردارێک کە پێشتر دەستی پێکردبێت ڕەنگە دوای وەستاندن یان هەڵوەشاندنەوە تەواو بێت.",
+      "clearSelection": "پاککردنەوەی هەڵبژاردن",
       "controlUpdated": "ئەركەکانی {{count}} نوێکرانەوە",
+      "distribution": "بریکارەکان چۆن فەرمانەکە جێبەجێ دەکەن",
+      "eachHelp": "ئەم ڕێنماییانە بۆ هەموو بریکارە هەڵبژێردراوەکان بنێرە. هەر بریکارێک ئەرکەکە بە تەواوی لەو کاتەی داواکراوە جێبەجێ دەکات. سنووردارکردنی هاوبەشی بڵاوکردنەوە هەر بەردەوام دەبێت.",
+      "eachMode": "هەموو بریکارێک ئەمە دەکات",
       "enabled": "چالاککرا · چالاکی",
       "enabledHelp": "چالاککرا واتە ئەم بریکارە بەردەستە. ئەرکەکانی خوارەوە نیشان دەدەن کە ئایا کاردەکات، چاوەڕێ دەکات، وەستاوە یان شکستی هێناوە.",
       "lastActive": "دواین چالاکی",
-      "noActivity": "هیچ چالاکییەک تۆمار نەکراوە",
-      "noTasks": "هێشتا هیچ ئەرکێک بۆ ئەم بریکارە نییە.",
-      "runSwarm": "جێبەجێکردنی کۆمەڵە",
-      "preparing": "ئامادەکردنی ئەرک…",
-      "run": "جێبەجێکردنی داواکاری",
       "list": "ئەرکەکان",
       "loading": "بارکردنی ئەرکەکان…",
+      "noActivity": "هیچ چالاکییەک تۆمار نەکراوە",
+      "noTasks": "هێشتا هیچ ئەرکێک بۆ ئەم بریکارە نییە.",
+      "oneAgent": "یەک بریکار",
       "pause": "وەستان",
+      "pauseSwarm": "وەستاندنی کۆمەڵە",
+      "preparing": "ئامادەکردنی ئەرک…",
+      "promptLimits": "داواکارییەکان بۆ هەموو بڵاوکراوەیەک هەموو پۆلەکان بەکاردەهێنن. لایککردنی هەڵبژێردراو بەپێی بابەت بۆ هەر خولێک بە سێ لایک سنووردار کراوە. هەموو بریکارەکان بەشدارن لە ماوەی نێوان بڵاوکردنەوەکان؛ نووسین ڕەنگە کرێدیت بەکاربهێنێت.",
       "resume": "درێژەدان",
+      "resumeSwarm": "دەستپێکردنەوەی بریکارە شیاوەکان",
+      "reviewMembers": "ئەو ئەرکانەی کردارەکانیان نادیارە پێویستیان بە پێداچوونەوەی تاکەکەسی هەیە پێش دەستپێکردنەوە. کردارێک کە پێشتر دەستی پێکردبێت ڕەنگە دوای وەستاندن یان هەڵوەشاندنەوە تەواو بێت.",
+      "run": "جێبەجێکردنی داواکاری",
+      "runSwarm": "جێبەجێکردنی کۆمەڵە",
+      "selectAll": "هەموو بریکارەکان هەڵبژێرە",
+      "selectedCount": "{{count}} لە {{total}} هەڵبژێردراوە",
+      "sharedMode": "بەشداریکردن لە کارەکە",
       "skip": "پاشگوێخستنی کرداری پشتڕاستنەکراو و درێژەدان",
+      "swarm": "کۆمەڵە (Swarm)",
       "window": {
+        "allTime": "هەموو کاتێک",
+        "author": "نووسەر (ئارەزوومەندانە)",
         "authorAll": "هەموو دروستکەرەکان",
         "authorChoose": "دروستکەرێک هەڵبژێرە",
+        "authorPlaceholder": "@username یان هاوسەنگی",
+        "category": "پۆل (ئارەزوومەندانە)",
         "categoryAll": "هەموو پۆلەکان",
         "categoryChoose": "پۆلەکان هەڵبژێرە",
         "categoryHint": "هەر ناوێکی پۆل زیاد بکە بە جیاکردنەوەیان بە کۆما، تاوەکو ٢٠ ناو. پۆستێک دەتوانێت لەگەڵ هەر پۆلێکی هەڵبژێردراو بگونجێت. بۆ هەمووی بە بەتاڵی جێی بهێڵە.",
+        "categoryPlaceholder": "ناوی تەواوی پۆل",
+        "dislike": "دڵنەخواز",
+        "filterHelp": "پاڵێوەرەکان بە بەتاڵی جێبهێڵە بۆ هەموو پۆستەکان. کاتێک هەردووکیان دیاری کران، دەبێت هەردووکیان بگونجێن. کاردانەوەکانی پێشوو دەپارێزرێن؛ هەڵبژاردنی کاردانەوەی پێچەوانە دەیگۆڕێت.",
         "last1h": "کاتژمێری ڕابردوو",
         "last30d": "٣٠ ڕۆژی ڕابردوو",
-        "allTime": "هەموو کاتێک",
-        "dislike": "دڵنەخواز",
-        "author": "نووسەر (ئارەزوومەندانە)",
-        "category": "پۆل (ئارەزوومەندانە)",
-        "authorPlaceholder": "@username یان هاوسەنگی",
-        "categoryPlaceholder": "ناوی تەواوی پۆل",
-        "filterHelp": "پاڵێوەرەکان بە بەتاڵی جێبهێڵە بۆ هەموو پۆستەکان. کاتێک هەردووکیان دیاری کران، دەبێت هەردووکیان بگونجێن. کاردانەوەکانی پێشوو دەپارێزرێن؛ هەڵبژاردنی کاردانەوەی پێچەوانە دەیگۆڕێت.",
-        "write": "ڕێنماییەکان بنووسە",
-        "title": "هەموو پۆستێک لە ماوەیەکی دیاریکراوی کاتدا"
-      }
+        "title": "هەموو پۆستێک لە ماوەیەکی دیاریکراوی کاتدا",
+        "write": "ڕێنماییەکان بنووسە"
+      },
+      "windowLimits": "هەموو بڵاوکراوە گونجاوەکان دەخرێنە ڕیزەوە. سنووردارکردنی کردارەکان خێرایی جێبەجێکردن دیاری دەکات؛ ئەرکەکە بۆ سێ بڵاوکراوە کەم ناکاتەوە. نووسینی وەڵامەکان ڕەنگە کرێدیت بەکاربهێنێت."
     },
     "title": "Ajanên AI",
     "connectToManage": "Ji bo Birêvebirina Ajanên AI Girêbidin",
@@ -1678,6 +1930,7 @@
     "failedSubmit": "Şandina serlêdanê têkçû. Ji kerema xwe dîsa biceribînin."
   },
   "loginModal": {
+    "continuePhone": "بەردەوام بە لە ڕێگەی تەلەفۆنەوە",
     "unlockBiometricContinue": "بۆ بەردەوامبوون، ئامێری خۆت بە پەنجەمۆر یان ڕوخسار بکەرەوە.",
     "unlockPasswordSignIn": "بۆ کردنەوەی جانتاییەکەت و چوونەژوورەوە، وشەی نهێنی جانتاییەکەت بنووسە.",
     "welcomeBack": "بەخێربێیتەوە — ئەم ژمێریارییە هێشتا هی تۆیە. بە ژمێریاری کۆنەکەت لە خوارەوە بچۆ ژوورەوە بۆ ئەوەی بیگەڕێنیتەوە، لەگەڵ پۆستەکانت، شوێنکەوتووانت و باڵانسەکەت.",
@@ -1797,6 +2050,14 @@
     "applicationFailed": "Şandin têkçû. Ji kerema xwe dîsa biceribînin."
   },
   "dao": {
+    "status": {
+      "accepted": "Hat pejirandin",
+      "cancelled": "Hat betalkirin",
+      "completed": "Temam bû",
+      "expired": "Dema wê derbas bû",
+      "open": "Vekirî",
+      "rejected": "Hat redkirin"
+    },
     "title": "Xezîneya DAO",
     "subtitle": "Yek berîk, ji aliyê civakê ve tê dagirtin, bi dengê wê tê xerckirin",
     "contribute": "Beşdarî bike",
@@ -1837,6 +2098,22 @@
     "votingPowerNote": "دەنگدانەکە ٧ ڕۆژ دەخایەنێت. هێزی دەنگدان کۆی بەشداری توکنی هەر بەشدارێکە کاتێک ئەم پێشنیارە کراوەتەوە. لایەنی کەم ١٠% دەبێت بەشداری بکات و پەسەندکردن دەبێت لە ڕەتکردنەکان زیاتر بێت."
   },
   "governance": {
+    "addMedia": "زیادکردنی وێنە یان ڤیدیۆ",
+    "badgeHoldersOnly": "تەنها بۆ خاوەن نیشانەکان",
+    "buyDhb": "کڕینی DHB",
+    "decidedInTabs": "پێشنیارە یەکلاییکراوەکان لە خشتەکانی پەسەندکراو و ڕەتکراوەدان.",
+    "draftSavedRetry": "ڕەشنووسەکەت پاشەکەوت کرا — بۆ دووبارە هەوڵدانەوە پەنجە بنێ بە ناردن.",
+    "freeForBadgeHolders": "بێ بەرامبەر بۆ خاوەن نیشانەکان. ڕەشنووسەکەت لەگەڵ نووسیندا پاشەکەوت دەبێت.",
+    "lentBadgeCantVote": "نیشانەکەت بە قەرز دراوە پێت، و نیشانە قەرزکراوەکان ناتوانن دەنگ بدەن. DHB بکڕە بۆ بەدەستهێنانی نیشانەی تایبەت بە خۆت.",
+    "mediaTooLarge": "پێویستە قەبارەی فایلەکان ٥٠ مێگابایت یان کەمتر بێت.",
+    "mediaTypeInvalid": "وێنەیەک یان ڤیدیۆیەک هەڵبژێرە.",
+    "noOpenProposals": "هیچ پێشنیارێکی کراوە لە ئێستادا نییە",
+    "proposalAttachment": "هاوپێچی پێشنیار",
+    "proposalFeeNote": "تێچووی پێشنیارەکان ١٠,٠٠٠ DHB یە بەبێ نیشانەی ستەیکینگ. ڕەشنووسەکەت لەگەڵ نووسیندا پاشەکەوت دەبێت.",
+    "removeMedia": "سڕینەوەی هاوپێچ",
+    "submitFailed": "ناردنی پێشنیار سەرکەوتوو نەبوو",
+    "uploadFailed": "بارکردن سەرکەوتوو نەبوو",
+    "uploadFailedDetail": "بارکردن سەرکەوتوو نەبوو: {{message}}",
     "title": "Rêvebirî",
     "proposalCount": "{{count}} pêşniyar hat şandin",
     "proposalCount_other": "{{count}} pêşniyar hatin şandin",
@@ -1903,6 +2180,7 @@
     "draftSavedRetry": "ڕەشنووسەکەت پاشەکەوت کرا — بۆ دووبارە هەوڵدانەوە پەنجە بنێ بە ناردن."
   },
   "sidebar": {
+    "switchAccount": "گۆڕینی ئەکاونت",
     "talkOfTheTown": "Gotina Bajêr",
     "nothingTrending": "Hîn tiştek ne trend e",
     "posts": "Babetan",
@@ -2469,6 +2747,10 @@
     "chessOnlineIntro": "دوئل‌های زنده در برابر سایر بازیکنان. شرط‌بندی در توکن‌های DeHub در راه است."
   },
   "stats": {
+    "money": {
+      "estimatedOperations": "کردارە مەزەندەکراوەکان",
+      "operationsGroup": "کردارەکان"
+    },
     "community": {
       "title": "Civak",
       "members": "Endam",
@@ -4905,6 +5187,7 @@
     }
   },
   "goLive": {
+    "connectionFailed": "پەیوەندی پەخشکردنەکە سەرکەوتوو نەبوو.",
     "bigEvent": "Bûyera mezin",
     "bigEventHint": "Ji bo temaşevanên zêde: temaşevan bi qasî 20 çirkeyan paşve temaşe dikin, bi kêmtir navberan.",
     "goLive": "بکەوەرە ستریم",
@@ -5577,6 +5860,11 @@
     "newMessage": "{{name}} نامەیەکی بۆ ناردیت"
   },
   "audioPost": {
+    "creator": "دروستکەری DeHub",
+    "pause": "وەستان",
+    "play": "لێدان",
+    "untitled": "پۆستی دەنگی",
+    "visualizerColour": "ڕەنگی بینراو",
     "popOut": "پاپ ئاوت — لە کاتی گەڕاندا گوێ بگرە",
     "untitled": "پۆستی دەنگی",
     "creator": "دروستکەری DeHub",
@@ -6509,7 +6797,8 @@
       "label": "پەڕەکان",
       "allZip": "هەموو {{count}} پەڕەکە (ZIP)",
       "thisPage": "تەنها ئەم پەڕەیە",
-      "exporting": "ئامادەکردنی پەڕەی {{current}} لە {{total}}…"
+      "exporting": "ئامادەکردنی پەڕەی {{current}} لە {{total}}…",
+      "go": "Ajotin"
     },
     "audioTools": {
       "normalize": "ئاستی دەنگ هاوسەنگ بکە",
@@ -6621,6 +6910,253 @@
     "highlights": {
       "visual": "Xalên girîng ên dîtbarî",
       "visualPrivacy": "Çarçoveyên bijartî ji bo analîza dîtbarî bişînin."
+    },
+    "charts": {
+      "bubbleSingleColumn": "چالاککردنی زنجیرەی داتای فرە بۆ هەڵبژاردنی ستوونەکانی Y و قەبارەی جیاواز. داتای تاک-زنجیرەیی قەبارەی بڵقێکی یەکسان بەکاردەهێنێت."
+    },
+    "connectors": {
+      "preview": "پێشبینیی پەیوەندیکەر"
+    },
+    "dataCells": {
+      "go": "Ajotin"
+    },
+    "designTools": {
+      "copyStyle": "شێوازەکە لەبەر بگرەوە"
+    },
+    "document": {
+      "numbersApplied": "ژمارەی پەڕەکان دانرا",
+      "numbersRemoved": "ژمارەی پەڕە کراوەکان لابران",
+      "position": "شوێن",
+      "prefix": "پێشگر",
+      "removeNumbers": "لابردنی ژمارەی پەڕەکان",
+      "repeat": "کۆپیکردنی هەڵبژاردە بۆ پەڕەکانی تر",
+      "repeatHint": "سەرپەڕ، بنپەڕ، لۆگۆ یان هونەرکارییەکی جێگیر هەڵبژێرە بۆ ئەوەی لە هەمان شوێندا بۆ پەڕە هەڵبژێردراوەکان کۆپی بکرێت. هەر کۆپییەک بە سەربەخۆیی دەستکاریکراو دەمێنێتەوە.",
+      "repeatPages": "دووبارەکردنەوەی هونەرکاری لەسەر",
+      "repeatRange": "ژمارەی پەڕەکانی مەبەست",
+      "repeatScopeHint": "ژمارەی پەڕەکانی بەڵگەنامەکە بەکاردەهێنێت. پەڕەی ئێستا هەمیشە لێدەر دەکرێت.",
+      "repeated": "توخمە هەڵبژێردراوەکان بۆ پەڕە دیاریکراوەکان کۆپی کران",
+      "size": "قەبارەی دەق",
+      "skipCover": "شاردنەوە لە پەڕەی یەکەمدا",
+      "start": "دەستپێکردن لە",
+      "suffix": "پاشگر",
+      "title": "ژمارەی پەڕەکان و توخمە دووبارەبووەکان",
+      "total": "پیشاندانی کۆی پەڕەکان"
+    },
+    "fills": {
+      "angle": "گۆشە",
+      "apply": "پڕکردنەوە جێبەجێ بکە",
+      "applySolid": "ڕەنگی یەکەم وەک ڕەنگێکی ڕەق جێبەجێ بکە",
+      "background": "وەک پاشبنەمای پەڕە بەکاری بهێنە",
+      "heading": "پڕکردنەوەکان و پاشبنەماکان",
+      "hint": "گرادێنتێک بۆ دەق یان شێوە هەڵبژێردراوەکان جێبەجێ بکە، یان لە پشت ئەم پەڕەوە زیادیکە.",
+      "lockedBackground": "پاشبنەمای پەڕەکە بکەرەوە پێش ئەوەی بیگۆڕیت.",
+      "resetBackground": "ڕێکخستنەوەی پاشبنەمای پەڕە",
+      "solid": "گەڕاندنەوەی پڕکردنەوەی ڕەق",
+      "solidBackground": "ڕەنگی یەکەم وەک پاشبنەمای پەڕە بەکاربهێنە"
+    },
+    "filters": {
+      "strength": "هێزی پاڵێوەر: {{value}}%"
+    },
+    "fonts": {
+      "graphicCoverage": "چینەکانی دەق، خشتەکان و چارته‌کان لەخۆ دەگرێت. چینە قفڵکراوەکان فۆنتەکانیان دەپارێزن.",
+      "replaceDesign": "فۆنتێک لە سەرانسەری ئەم دیزاینەدا بگۆڕە",
+      "source": "فۆنت بۆ گۆڕین",
+      "target": "فۆنتی جێگرەوە"
+    },
+    "frames": {
+      "title": "چوارچێوەی وێنە"
+    },
+    "gradients": {
+      "add": "زیادکردنی خاڵ",
+      "applyImportedStyle": "جێبەجێکردنی ستایل لەسەر ڕەشنووس",
+      "brandPaletteHint": "ڕەنگەکانی پاڵێتەکە دەخاتە ناو ڕەشنووسی گرادیێنتەکەوە بە خاڵی ناڕوون و بە یەکسانی دابەشکراو. گرادیێنتەکان تا هەشت ڕەنگ بەکاردەهێنن؛ پاڵێتە گەورەکان خاڵە کۆتاییەکانیان دەپارێزن و ڕەنگەکانی نێوانیان وەردەگرن.",
+      "brandPalettes": "پاڵێتە هەڵگیراوەکان و ڕەنگەکانی گرادیێنت",
+      "colour": "ڕەنگی خاڵ",
+      "downloadSvg": "داگرتنی گرادیێنت وەک SVG",
+      "even": "بە یەکسانی دابەشکردنی خاڵەکان",
+      "exportStyle": "هەناردەکردنی ستایلی ئێستا",
+      "importStyle": "هاوردەکردنی فایلی ستایل",
+      "invalid": "بۆ هەر خاڵێک ڕەنگی هێکسای شەش ژمارەیی تەواو بەکاربهێنە.",
+      "noBrandPalettes": "پاڵێتێک بە لایەنی کەمەوە دوو ڕەنگ لە ستایلەکانی براند هەڵبگرە بۆ ئەوەی لێرە بەکاریبهێنیت.",
+      "opacity": "ناڕوونی",
+      "position": "شوێن",
+      "preview": "پێشبینی گرادیێنت",
+      "remove": "سڕینەوەی خاڵ",
+      "reverse": "پێچەوانەکردنەوە",
+      "spread": "بڵاوکردنەوە",
+      "stop": "خاڵی {{number}} لە {{position}}%",
+      "styleFileHint": "ڕەنگەکانی گرادیێنت، شوێنەکان، شەفافییەت، گۆشە و ڕێکخستنە تیشکییەکان لە نێوان ئامێرەکاندا دەگوازێتەوە. هاوردەکردن ڕەشنووسەکە بار دەکات؛ جێبەجێی بکە بۆ نوێکردنەوەی دیزاینەکە.",
+      "styleFiles": "گواستنەوەی ستایلەکانی گرادیێنت",
+      "styleLoaded": "ستایلەکە خرایە ناو ڕەشنووسەکەوە",
+      "svgHint": "ئەم گرادیێنتە بە قەبارەی پەڕەکە هەناردە دەکات، لەگەڵ شوێنی خاڵەکان و شەفافییەت. بە جیا جێبەجێی بکە بۆ ئەوەی لە دیزاینەکەدا بەکاریبهێنیت."
+    },
+    "graphicDraftHistory": {
+      "local": "ڕەشنووسی گرافیک",
+      "redo": "دووبارەکردنەوەی گۆڕانکاری ڕەشنووس",
+      "undo": "پاشگەزبوونەوە لە گۆڕانکاری ڕەشنووس"
+    },
+    "grids": {
+      "addPhoto": "وێنەیەک بۆ ئەم چوارچێوەیە هەڵبژێرە",
+      "frame": "چوارچێوەی وێنە"
+    },
+    "groups": {
+      "resize": "گۆڕینی قەبارەی هەڵبژاردە"
+    },
+    "guides": {
+      "applyGrid": "تۆڕ بەکاربهێنە"
+    },
+    "help": {
+      "search": "قەدبڕەکانی گەڕان و یارمەتیی دەستکاریکەر"
+    },
+    "mockups": {
+      "noPalettes": "پالێتێک لە ستایلەکانی براند پاشەکەوت بکە بۆ ئەوەی لێرە بەکاری بهێنیت.",
+      "paletteHint": "سێ ڕەنگی یەکەم ماددەی چوارچێوە، وردەکارییەکان و پاشبنەمای شاشەکە دیاری دەکەن. ئەو ڕەنگانەی دیاری نەکراون بەهای ئێستای خۆیان دەپارێزن. پاشەکەوتکردنی پالێت، ئەم ڕەنگانەی چوارچێوەیە لە ستایلەکانی برانددا هەڵدەگرێت.",
+      "palettes": "پالێتە پاشەکەوتکراوەکانی چوارچێوە",
+      "placementHint": "تەواوی مۆکئاپەکە بەیەکەوە دەسوڕێتەوە و لەناو ئەم ڕێژەی سەدییەی پەڕەکەدا جێگیر دەبێت. شێوەکان، وێنە و ناونیشانەکەی وەک گروپێک دەمێننەوە و دەستکاری دەکرێن.",
+      "preview": "پێشبینی مۆکئاپ",
+      "previewAlt": "ڕەشنووسی دیزاینی مۆکئاپ",
+      "previewHint": "پێشبینییەکە مۆکئاپەکە بەبێ هیچ کارێکی هونەری دیکە نیشان دەدات. زیادکردنی، چینە دەستکاریکراوەکان بۆ پەڕەی ئێستا زیاد دەکات.",
+      "previewNeedsData": "ڕەنگەکانی چوارچێوە تەواو بکە بۆ ئەوەی پێشبینییەکە ببینیت.",
+      "previewUnavailable": "پێشبینییەکە بەردەست نییە. ڕێکخستنەکانی چوارچێوەکە هەر دەستکاریکراو دەمێننەوە.",
+      "previewUpdating": "نوێکردنەوەی پێشبینی مۆکئاپ...",
+      "resetPlacement": "سفرکردنەوەی جێگیرکردن",
+      "rotation": "سوڕانەوەی مۆکئاپ",
+      "size": "قەبارە لەناو پەڕەکەدا",
+      "title": "مۆکئاپەکانی ئامێر و چاپ",
+      "usePhoto": "پڕکردنەوە بە کۆپییەکی وێنەی هەڵبژێردراو"
+    },
+    "notes": {
+      "changed": "ئەم پەڕەیە گۆڕاوە. پێش پاشەکەوتکردن تێبینییەکان بکەرەوە.",
+      "hint": "ناوەکان و تێبینییەکان لەگەڵ ئەم دیزاینە پاشەکەوت دەکرێن. ئەوان لە هەناردەکردنی وێنە، ڤیدیۆ یان PDF دا دەرناکەون.",
+      "name": "ناوی پەڕە",
+      "presenter": "تێبینییەکانی پێشکەشکار",
+      "save": "پاشەکەوتکردنی تێبینییەکانی پەڕە",
+      "saved": "تێبینییەکانی پەڕە پاشەکەوت کران",
+      "title": "تێبینییەکانی پەڕە"
+    },
+    "orientation": {
+      "angle": "گۆشەی ڕەها",
+      "hint": "هەر چینێکی هەڵبژێردراو هەمان گۆشەی لە شوێنی ئێستای خۆیدا پێ دەگات. سوڕانەوەی ڕێژەیی لە خوارەوە هەڵبژاردنەکە بەیەکەوە دەسوڕێنێتەوە.",
+      "setAngle": "دانانی هەموو چینێک",
+      "title": "دانانی ئاراستەی چین",
+      "unflip": "لابردنی هەڵگەڕانەوەکان",
+      "upright": "ڕاست"
+    },
+    "outline": {
+      "applyPattern": "جێبەجێکردنی نەخش",
+      "border": "چوارچێوەی وێنە"
+    },
+    "present": {
+      "goToPage": "Ajotin",
+      "noNotes": "هیچ تێبینییەک بۆ ئەم پەڕەیە نییە",
+      "notes": "تێبینییەکانی پێشکەشکار",
+      "notesCopied": "تێبینییەکان کۆپی کران",
+      "notesCopyFailed": "نەتوانرا تێبینییەکان کۆپی بکرێن",
+      "notesLarger": "گەورەکردنی قەبارەی دەقی تێبینییەکان",
+      "notesScrollSpeed": "خێرایی خلیسکاندن",
+      "notesSmaller": "بچووککردنەوەی قەبارەی دەقی تێبینییەکان",
+      "pagePickerShortcut": "گەڕان بەناو پەڕەکاندا (G)",
+      "pageProgress": "پێشکەوتنی پەڕە",
+      "previous": "پێشوو",
+      "recordingTimings": "کاتی پەڕەکان",
+      "rehearsal": "مەشقکردن لەسەر کاتەکان",
+      "rehearsalHint": "سەردانەکان بۆ هەر پەڕەیەک کۆ دەبنەوە. کاتەکە دەوەستێت کاتێک ئەپەکە لە پشتەوە کار دەکات، پەڕەکان بار دەبن، یان هەڵبژێردەری پەڕە کراوەیە. پێش جێبەجێکردن ڕایبگرە؛ ماوەی ئەو پەڕانەی سەردان نەکراون وەک خۆیان دەمێننەوە.",
+      "resetClock": "سفرکردنەوەی کاتژمێر",
+      "resetRehearsal": "سفرکردنەوەی کاتەکان",
+      "saveRehearsal": "جێبەجێکردنی کاتەکان و داخستن",
+      "setTimer": "دانانی ژمێرەری پێچەوانە",
+      "temporaryInk": "نیشانەکان کاتێک پەڕەکە دەگۆڕیت دەسڕێنەوە",
+      "timeUp": "کات تەواو بوو",
+      "timedPages": "{{count}} پەڕە کاتەکەیان دیاری کراوە",
+      "timerMinutes": "خولەک",
+      "title": "پێشکەشکردنی پەڕەکان",
+      "undoMark": "هەڵوەشاندنەوەی نیشانە",
+      "upNext": "دواتر",
+      "usePageTiming": "بەکارهێنانی ماوەی پەڕەکان",
+      "whiteScreen": "شاشەی سپی",
+      "whiteScreenShortcut": "شاشەی سپی (W)"
+    },
+    "qr": {
+      "background": "پاشبنەما",
+      "brandPaletteHint": "ڕەنگێکی پێشینەی تۆخ و پاشبنەمایەکی ڕوون لە پەلێتەکە هەڵدەبژێرێت، بەکارهێنانی ڕەش یان سپی کاتێک پێویستی بە دژایەتی زیاترە. پاشەکەوتکردنی پەلێت ڕەنگەکانی ئێستای QR هەڵدەگرێت؛ ناوەڕۆکی کۆدکراو وەک خۆی دەمێنێتەوە.",
+      "brandPalettes": "پەلێتە پاشەکەوتکراوەکان و ڕەنگەکانی QR",
+      "calendarAllDay": "چالاکیی هەموو ڕۆژەکە",
+      "calendarHint": "چالاکییە کاتدارەکان UTC بەکاردەهێنن؛ ئەپەکانی ڕۆژژمێر بەپێی ناوچەی کاتی وەرگر نیشانیان دەدەن. ڕێکەوتەکانی هەموو ڕۆژەکە ڕۆژی کۆتاییش دەگرێتەوە. پشتگیری سکانەر جیاوازە؛ فایلی ڕۆژژمێرەکە دەکرێت ڕاستەوخۆ هاوردە بکرێت.",
+      "contactHint": "پەیوەندییەکی vCard دروست دەکات. سکانکردن ڕەنگە پێشنیاری پاشەکەوتکردنی ئەم وردەکارییانە بکات؛ ڕەفتارەکە بەپێی سکانەرەکە دەگۆڕێت.",
+      "content": "لینک یان دەق",
+      "contentBuilderTypes": "دروستکردنی ناوەڕۆکی QR",
+      "contentCopied": "ناوەڕۆکی QR لەبەرگیرا",
+      "copyContent": "لەبەرگرتنەوەی ناوەڕۆکی QR",
+      "copyFailed": "نەتوانرا ناوەڕۆکی QR لەبەر بگیرێت",
+      "correction": "ڕاستکردنەوەی هەڵە",
+      "downloadCalendar": "داگرتنی چالاکیی ڕۆژژمێر (.ics)",
+      "downloadCalendarHint": "هەمان چالاکی وەک فایلێکی ڕۆژژمێری شیاوی هاوردەکردن پاشەکەوت بکە.",
+      "downloadContact": "داگرتنی پەیوەندی (.vcf)",
+      "downloadContactHint": "هەمان وردەکارییەکانی پەیوەندی وەک فایلێک بۆ کتێبی ناونیشانەکانت پاشەکەوت بکە.",
+      "downloadSvg": "داگرتنی QR وەک SVG",
+      "failed": "دەقی کورتتر و دوو ڕەنگی جیاوازی هێکس بەکاربهێنە.",
+      "foreground": "ڕەنگی پێشەوە",
+      "hiddenNetwork": "تۆڕی شاراوە",
+      "hint": "کۆدێکی QR بۆ لینک یان دەق دروست بکە. جیاوازییەکی بەهێز لە نێوان ڕەنگی پێشەوە و پاشبنەمادا بهێڵەرەوە.",
+      "networkSecurity": "ئاسایشی تۆڕ",
+      "noBrandPalettes": "پالێتێکی ڕەنگ لە ستایلەکانی براند پاشەکەوت بکە بۆ ئەوەی لێرە بەکاری بهێنیت.",
+      "openNetwork": "تۆڕی کراوە",
+      "preview": "پێشبینی کۆدی QR",
+      "quietZone": "ناوچەی بێدەنگ (مۆدیولەکان)",
+      "resetDraft": "سفرکردنەوەی ڕەشنووسی QR",
+      "smsHint": "ڕەشنووسێکی نامە لەسەر ئامێرە پشتگیریکراوەکان دەکاتەوە. پشتگیری وەرگر و پەیامی پێشوەختە پڕکراوە بەپێی ئەپەکە دەگۆڕێت.",
+      "title": "کۆدی QR",
+      "useDetails": "ئەم وردەکارییانە بەکاربهێنە",
+      "vectorHint": "ڕەشنووسی ئێستای QR لەگەڵ ڕەنگەکان و ناوچەی بێدەنگی بە شێوەی هونەری ڤێکتەری گونجاو هەناردە دەکات.",
+      "wifiContentHint": "ناوەڕۆکی QR-ی دروستکراو تێپەڕەوشەی تۆڕەکەی تێدایە."
+    },
+    "repeat": {
+      "allowOverflow": "ڕێگەدان بە هونەر لە دەرەوەی پەڕەکە"
+    },
+    "selection": {
+      "count": "{{count}} هەڵبژێردرا",
+      "mixedStyles": "چینە هەڵبژێردراوەکان شێوازی تێکەڵیان هەیە. دانانی بەهایەک، ئەو بەهایە بۆ هەموو چینە گونجاوەکان دادەنێت.",
+      "precise": "قەبارە و شوێنی ورد",
+      "readBounds": "خوێندنەوەی پێوانە ئێستاکان",
+      "sameHint": "هاوتاکردنی یەکەم چینی هەڵبژێردراو لەم پەڕەیەدا. گرووپەکان پێکەوە دەمێننەوە؛ چینە شاردراوەکان، پاشبنەماکان و گرووپە قفڵکراوەکان پشتگوێ دەخرێن.",
+      "waitForBounds": "چاوەڕێ بکە تا چینە هەڵبژێردراوەکان لەسەر کەنڤاسەکە دەردەکەون."
+    },
+    "selectionShadows": {
+      "apply": "سێبەر دابنێ",
+      "colour": "ڕەنگی سێبەر",
+      "hint": "بۆ هونەرکاری پێشینەی هەڵبژێردراو لە یەک دەستکاریکردندا جێبەجێ دەبێت. لێڵبوون و لادانەکان پێوەرەی 1080pی دەستکاریکەرەکە بەکاردەهێنن.",
+      "mixed": "چینە هەڵبژێردراوەکان سێبەری جیاوازیان هەیە.",
+      "remove": "سڕینەوەی سێبەرەکان",
+      "title": "سێبەرەکان بۆ هەڵبژاردە ({{count}})"
+    },
+    "stroke": {
+      "ends": "کۆتایی هێڵەکان",
+      "joins": "گۆشەکانی دەورە"
+    },
+    "svgPath": {
+      "chooseFile": "پەڕگەی SVG هەڵبژێرە",
+      "colour": "ڕەنگی ڕێڕەو",
+      "data": "نیشانەی SVG یان داتای ڕێڕەو (d)",
+      "detail": "وردەکاری چەماوە",
+      "filled": "ئەندازەی داخراوی پڕکراو",
+      "hint": "داتای ڕێڕەوی d یان نیشانەی سەرەتایی SVG لەگەڵ ڕێڕەو، لاکێشە، بازنە، هێلکەیی، هێڵ و فرەگۆشەکان لکێنە. فەرمانەکانی جووڵە، هێڵ، سێگۆشەیی، چوارگۆشەیی، نەرم و کەوانەیی پشتگیری دەکرێن. گۆڕانکارییەکانی ماتریکسی SVG، گواستنەوە، پێوەر، سووڕانەوە و لاربوونەوە ئەندازەکەیان دەپارێزن. ئەندازەکە ڕەنگی هەڵبژێردراوی تۆ بەکاردەهێنێت؛ بۆیە ڕەسەنەکان، هێڵەکان و پەراوێزەکانی دیمەن هاوردە ناکرێن. چەماوەکان دەبنە خاڵی کێشانی نموونەیی. ڕێڕەوێک بە Z دابخە بۆ پڕکردنەوەی. توخمە داخراوەکانی SVG دەکرێت پێکەوە پڕ بکرێنەوە. بەشە فرەکان دەبنە چینێکی گرووپکراوی دەستکاریکراو؛ کونە تێکەڵەکان پشتگیری ناکرێن.",
+      "insert": "دانانی ئەندازەی دەستکاریکراو",
+      "name": "ناوی چین",
+      "preview": "پێشبینی ڕێڕەوی ڤێکتۆر",
+      "title": "هاوردەکردنی ئەندازەی SVGی دەستکاریکراو",
+      "weight": "کێشی هێڵ"
+    },
+    "symbols": {
+      "colour": "ڕەنگ",
+      "downloadSvg": "داگرتنی هێما وەک SVG",
+      "hint": "هێماکان بە دەستکاریکراوی دەمێننەوە. بە بەکارهێنانی کۆنتڕۆڵەکانی چین، ڕەنگەکەی بگۆڕە، قەبارەکەی بگۆڕە، بیسووڕێنە، گرووپی بکە، یان کاریگەری بۆ زیاد بکە.",
+      "next": "هێماکانی داهاتوو",
+      "noResults": "هیچ هێمایەکی گونجاو نییە. ناو یان پۆلێکی تر تاقی بکەرەوە."
+    },
+    "tables": {
+      "duplicateTrim": "لە ڕۆژی ڕەشەوارە ڕۆژی ڕەشەوارەیەک لە ڕۆژھەڵاتی ناوەڕاستی نەتەوەیی کوردستان لە ڕۆژھەڵاتی کوردستان بەڕێوەچوو.",
+      "equalSize": "ئه‌رێژەیەکانی چالاکەرەوەیەکانی بۆ ئەوەی کە چەندەرەکان بێتەوە بە یەکدەست",
+      "undoRowCleanup": "هەڵوەشاندنەوەی پاککردنەوەی ڕیز"
     }
   },
   "jungleMood": {

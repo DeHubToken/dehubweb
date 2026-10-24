@@ -2,6 +2,7 @@ import React, { createContext, useContext, useState, useEffect, useMemo, useCall
 import Fuse from 'fuse.js';
 import { useNavigate } from 'react-router-dom';
 import { getAllBlogListPosts } from '@/utils/blogUtils';
+import { useLanguage } from '@/contexts/LanguageContext';
 
 export interface SearchResult {
   id: string;
@@ -436,6 +437,13 @@ const createSearchIndex = (): SearchIndex[] => {
 
 const MAX_RESULTS = 50;
 
+// Doc pages are indexed (and matched) in English, the language the keywords
+// are written in. What the dialog shows is the reader's language: each page's
+// title and description live in src/i18n/en.ts under docsSearchIndex, keyed by
+// the camelCased id ('token-overview' -> tokenOverviewTitle / tokenOverviewDesc).
+// Change the English here and there together. Blog posts keep their own titles.
+const indexKey = (id: string) => id.replace(/-(\w)/g, (_, c: string) => c.toUpperCase());
+
 export const SearchProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [query, setQuery] = useState('');
@@ -443,6 +451,7 @@ export const SearchProvider: React.FC<{ children: React.ReactNode }> = ({ childr
   const [recentSearches, setRecentSearches] = useState<string[]>([]);
 
   const navigate = useNavigate();
+  const { t, language } = useLanguage();
 
   // Initialize search index
   const searchIndex = useMemo(() => createSearchIndex(), []);
@@ -491,12 +500,20 @@ export const SearchProvider: React.FC<{ children: React.ReactNode }> = ({ childr
       return;
     }
 
+    const shown = (item: SearchIndex, field: 'Title' | 'Desc', english: string) => {
+      // Posts come from createBlogIndex (ids `blog-<slug>`); the 'blog' page entry is translated.
+      if (language === 'en' || item.id.startsWith('blog-')) return english;
+      const key = `docsSearchIndex.${indexKey(item.id)}${field}`;
+      const value = t(key);
+      return value === key ? english : value;
+    };
+
     const searchResults = fuse.search(deferredQuery, { limit: MAX_RESULTS });
     setResults(
       searchResults.map(result => ({
         id: result.item.id,
-        title: result.item.title,
-        content: result.item.content,
+        title: shown(result.item, 'Title', result.item.title),
+        content: shown(result.item, 'Desc', result.item.content),
         path: result.item.path,
         category: result.item.category,
         type: result.item.type,
@@ -504,7 +521,7 @@ export const SearchProvider: React.FC<{ children: React.ReactNode }> = ({ childr
         score: result.score
       }))
     );
-  }, [deferredQuery, fuse]);
+  }, [deferredQuery, fuse, t, language]);
 
   // Save search to recent searches
   const saveRecentSearch = useCallback((searchTerm: string) => {

@@ -931,6 +931,7 @@ const HOME_GUIDE_LINKS = [
   ['/guides/web3-live-streaming-decentralised-twitch-alternative', 'Web3 live streaming: a decentralised Twitch alternative'],
   ['/guides/best-decentralised-social-media-platforms-2026', 'Best decentralised social media platforms 2026'],
   ['/guides/higgsfield-genjutsu-alternative', 'Higgsfield Genjutsu alternative: swap anyone in a video'],
+  ['/guides/how-does-higgsfield-genjutsu-work', 'How does Higgsfield Genjutsu work? Step by step'],
   ['/guides/dehub-vs-depaul-dehub-vs-rowan-dehub', 'DeHub vs DePaul DeHUB vs Rowan DEHub'],
   ['/dehub-app', 'Get the DeHub app'],
 ];
