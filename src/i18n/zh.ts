@@ -2500,6 +2500,8 @@ export const zh = {
     walletTitle: '钱包和控股',
     whereToBuyDesc: '在交易所、交易对、流动性池、DEX、CEX上市、Uniswap、PancakeSwap上购买DeHub代币',
     whereToBuyTitle: '在哪里购买',
+    faqTitle: '常见问题',
+    tokenUtilityDesc: 'DeHub代币实用程序、持有人权益、质押奖励、治理权、生态系统权益、徽章、小费、内容创建、审核',
   },
   docsSeo: {
     advertisingDesc: 'DeHub的POVR广告技术解释说：观看和排名证明、防欺诈活动和创作者的收入分享。',

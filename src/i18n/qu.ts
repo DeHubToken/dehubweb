@@ -2699,6 +2699,12 @@ export const qu = {
     walletTitle: 'Wallet & Holdings',
     whereToBuyDesc: 'Kamaykuy DeHub tokennin q\'illaykunapi, k\'ancha k\'aykuna, q\'illaykuna, DEX, CEX q\'illaykuna, Uniswap, PancakeSwap',
     whereToBuyTitle: 'Where to Buy',
+    brandAssetsDesc: 'DeHub markap imayaykuna, unanchakuna, rikuykuna, marka kamachiykuna, qhatuy yanapakuykuna, uraykachiykuna',
+    categoryToken: 'Token',
+    e2eeDesc: 'Qallariymanta puchukaykama k\'uyuy (E2EE), E2EE, amachasqa willanakuy, kikin kawsay amachay, k\'uyusqa willanakuy, willañiqita amachay, k\'uyuy yachay',
+    faqTitle: 'FAQ',
+    stakeTitle: 'Stake',
+    termsTitle: 'Kamachiykuna',
   },
   docsSeo: {
     advertisingDesc: 'DeHub kaqpa POVR willakuy tecnologia sut&#39;incharqa: prueba-rikuy-hinallataq-ranki, pantayman hark&#39;aq campañakuna chaymanta qullqi qunakuy ruwaqkunapaq.',
@@ -2781,6 +2787,10 @@ export const qu = {
     websiteTitle: 'Web kitipi yanapakuy — DeHub Docs',
     xDesc: 'X cuenta yikiykita t\'inkiy, hinallataq DeHub nisqawan willaykunata mast\'ariy.',
     xTitle: 'X Integration — DeHub Docs',
+    configurationDesc: 'DeHub llamk\'anakunata, edge functions nisqakunata, chanta wiñachiqpa llamk\'anankunata wakichiy.',
+    endpointsDesc: 'DeHub API t\'inkiy qallariy — hunt\'a, versionniyuq API qillqakunaqa ruwakushallanmi.',
+    tokenUtilityDesc: 'Tokenniyuq kay imakunata kichan: kamachiy, staking suñaykuna, kamachiy atiyniyuq kay, chanta qhatupi allinkuna DeHub ukhupi.',
+    tokenUtilityTitle: 'Token Utility — DeHub Docs',
   },
   featuredIn: {
     entrepreneurBlurb: 'Empresario Asia Pacifico DeHubpa rikuyninta qatarqa huk kamaqpa kapuynin kusirikuy economía kaqpaq — VR-listo pukllay, pelicula, taki chaymanta pukllay NFT infraestructura kaqpi ruwasqa, 2021 watamantapacha bootstrapped.',

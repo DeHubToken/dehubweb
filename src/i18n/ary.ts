@@ -1666,6 +1666,8 @@ export const ary = {
     flowX25519Operation: 'عملية X25519',
     flowYourPrivateKey: 'مفتاحك الخاص (32 بايت)',
     flowYourPrivateKeyDevice: 'مفتاحك الخاص (من جهازك)',
+    flowReadyForServers: 'جاهز لخوادم DeHub',
+    flowSessionKey: 'مفتاح الجلسة',
   },
   aiToolkits: {
     title: 'أدوات الذكاء الاصطناعي',
@@ -2999,6 +3001,9 @@ export const ary = {
     walletTitle: 'محفظة و holdings',
     whereToBuyDesc: 'شراء عملة DeHub في البورصات، pairs للتداول، pools للliquidity، DEX، CEX listings، Uniswap، PancakeSwap',
     whereToBuyTitle: 'أين يمكن شراء العملة',
+    brandAssetsTitle: 'أصول العلامة التجارية',
+    categoryBlog: 'المدونة',
+    installationTitle: 'التركيب',
   },
   docsSeo: {
     advertisingDesc: 'شرح تقنية DeHub لادverts: proof-of-view-and-rank، الحملات المقاومة للخداع وشاركة الإيرادات للمبدعين.',
@@ -3076,6 +3081,14 @@ export const ary = {
     websiteTitle: 'دليل موقع الويب — مستندات DeHub',
     xDesc: 'اربط حساب X الخاص بك والمحتوى المتقاطع مع DeHub.',
     xTitle: 'التكامل - مستندات DeHub',
+    dehubTitle: 'منصة DeHub — مستندات DeHub',
+    donateTitle: 'تبرع — مستندات DeHub',
+    endpointsTitle: 'نقاط نهاية واجهة برمجة التطبيقات — مستندات DeHub',
+    faqTitle: 'الأسئلة الشائعة — مستندات DeHub',
+    instagramDesc: 'اربط Instagram بـ DeHub لتوزيع المحتوى عبر الأنظمة الأساسية.',
+    overviewTitle: 'نظرة عامة — مستندات DeHub',
+    tokenOverviewDesc: 'كيف تعمل رموز في التطبيق: تقديم الإكراميات، وفتح المحتوى، والمكافآت، وأرصدة الذكاء الاصطناعي، وحصة الأرباح، والربط داخل التطبيق بقيمة 0.001 $.',
+    websiteDesc: 'تعرف على ميزات موقع DeHub على الويب وكيفية التنقل في المنصة.',
   },
   featuredIn: {
     entrepreneurBlurb: 'غطى رائد الأعمال آسيا والمحيط الهادئ رؤية DeHub لاقتصاد ترفيهي مملوك للمبدعين — رياضة وأفلام وموسيقى وألعاب جاهزة للواقع الافتراضي مبنية على البنية التحتية للرموز غير القابلة للاستبدال، والتي تم تشغيلها منذ عام 2021.',

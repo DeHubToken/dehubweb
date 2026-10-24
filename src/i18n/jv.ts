@@ -86,6 +86,9 @@ export const jv = {
     bannerAltCoinbase: 'Kélo logo Coinbase di perangkat mobile dadi ngarani kanthi grafik trading di latar belakang.',
     bannerAltHelicopter: 'Sedulur ingkang kaping pungkasan ingkang asalipun saking Chad',
     bannerAltHelmet: 'Piyambaké Chad Pungkasan',
+    bannerAltAppFeed: 'Feed Aplikasi DeHub sing Dianyari',
+    bannerAltDhbScan: 'Metrik DHBScan',
+    bannerAltFundraise: 'Penggalangan Dana $1,000,000',
   },
   overview: {
     title: 'DeHub: Alternatif desentralisasi kanggo aplikasi media tradisional.',
@@ -2041,6 +2044,8 @@ export const jv = {
     websiteDesc: 'Kajengin ngisor-ngisor fitur laman web DeHub lan cara ngelakuin platform ini.',
     xDesc: 'Ngubungake akunmu lan ngubungake kontenmu karo DeHub.',
     xTitle: 'X Integration — DeHub Docs',
+    troubleshootingDesc: 'Masalah umum DeHub, pesen error, lan cara ngatasi.',
+    websiteTitle: 'Pandhuan Situs Web — Dokumen DeHub',
   },
   featuredIn: {
     entrepreneurBlurb: 'Pangéran Asia Pasifik ngrunuk visi DeHub kanggo ékonomi kreatif sing dimiliki déning wong-wong, ya iku VR-ready olahraga, filem, musik lan permainan kang dibangun ing infrastruktur NFT, dipunggahaken saka 2021.',
@@ -2053,5 +2058,7 @@ export const jv = {
     usWeeklyReach: '50 juta+ pembaca',
     yahooFinanceHeadline: 'Kanggo Ngelancarin Situs DeHub Ke Metaverse',
     yahooFinanceReach: 'Platform berita bisnis paling gedhe ing donya',
+    investingHeadline: 'Portal DeHub menyang Metaverse Siap Ngganggu Hiburan & Gaya Urip',
+    yahooFinanceBlurb: 'Artikel sing ngenalake rencana DeHub kanggo mbangun portal menyang metaverse lan mbentuk maneh hiburan, diterbitake ing platform warta bisnis paling gedhe ing donya.',
   },
 };

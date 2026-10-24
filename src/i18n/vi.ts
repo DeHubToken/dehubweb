@@ -1413,6 +1413,8 @@ export const vi = {
     flowX25519Operation: 'X25519 hoạt động',
     flowYourPrivateKey: 'Chìa khóa riêng của bạn (32 byte)',
     flowYourPrivateKeyDevice: 'Chìa khóa riêng của bạn (từ thiết bị của bạn)',
+    flowEcdh: 'X25519 ECDH Magic',
+    flowHkdfDerivation: 'Dẫn xuất HKDF',
   },
   aiToolkits: {
     title: 'Đó là một bộ công cụ',
@@ -2450,6 +2452,9 @@ export const vi = {
     walletTitle: 'Túi tiền & Tài sản',
     whereToBuyDesc: 'Mua DeHub token trên các sàn giao dịch, pairs giao dịch, các hồ chứa thanh khoản, DEX, CEX, Uniswap, PancakeSwap',
     whereToBuyTitle: 'Mua ở đâu',
+    depinTitle: 'DePIN',
+    stakeTitle: 'Stake',
+    tokenEconomicsTitle: 'Kinh tế học Token & Phát thải',
   },
   docsSeo: {
     advertisingDesc: 'Công nghệ quảng cáo POVR của DeHub giải thích: bằng chứng xem và xếp hạng, chiến dịch chống gian lận và chia sẻ doanh thu cho người sáng tạo.',
@@ -2532,6 +2537,10 @@ export const vi = {
     websiteTitle: 'Trang Hướng dẫn — Tài liệu DeHub',
     xDesc: 'Kết nối tài khoản X của bạn và nội dung bài đăng chéo với DeHub.',
     xTitle: 'Tích hợp X — Tài liệu DeHub',
+    endpointsDesc: 'Tham chiếu điểm cuối API DeHub — tài liệu API đầy đủ, được phiên bản đang được tiến hành.',
+    termsTitle: 'Tuyên bố miễn trừ trách nhiệm pháp lý — Tài liệu DeHub',
+    tokenOverviewDesc: 'Cách thức hoạt động của mã thông báo DeHub trong ứng dụng: trả tiền boa, mở khóa nội dung, phần thưởng, tín dụng AI, chia sẻ lợi nhuận và chốt $ 0,001 trong ứng dụng.',
+    troubleshootingDesc: 'Các sự cố DeHub thường gặp, thông báo lỗi và cách giải quyết.',
   },
   featuredIn: {
     entrepreneurBlurb: 'Entrepreneur Asia Pacific đã đề cập đến tầm nhìn của DeHub cho một nền kinh tế giải trí do sáng tạo sở hữu - thể thao VR sẵn sàng, phim, âm nhạc và trò chơi được xây dựng trên cơ sở hạ tầng NFT, khởi nghiệp từ năm 2021.',
