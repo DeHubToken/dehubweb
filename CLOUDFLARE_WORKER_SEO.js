@@ -3692,11 +3692,11 @@ function buildCreatorPackHtml(pack) {
 }
 
 /**
- * A single DAO proposal, /app/governance/<uuid>. An attached image is the
- * share card; otherwise the governance card stands in.
+ * A single DAO proposal, /app/governance/<n> (or the legacy uuid). An attached
+ * image is the share card; otherwise the governance card stands in.
  */
 function buildProposalHtml(proposal) {
-  const canonicalUrl = `${APP_URL}/app/governance/${proposal.id}`;
+  const canonicalUrl = `${APP_URL}/app/governance/${proposal.proposal_number ?? proposal.id}`;
   const name = proposal.title || 'Proposal';
   const author = proposal.author_username
     ? `@${proposal.author_username}`
@@ -4600,7 +4600,7 @@ function shouldServeSSR(pathname) {
   if (/^\/(?:app\/)?stores\/[^/]+/.test(pathname)) return true;
   if (/^\/(?:app\/)?events\/\d+/.test(pathname)) return true;
   // A single governance proposal, rendered from PostgREST below.
-  if (/^\/(?:app\/)?governance\/[0-9a-fA-F-]{8,}\/?$/.test(pathname)) return true;
+  if (/^\/(?:app\/)?governance\/(?:\d{1,9}|[0-9a-fA-F-]{8,})\/?$/.test(pathname)) return true;
   // A shared Creator Flow, /creator/flow/<id>. `creator` is a reserved
   // ROUTE_SEGMENT, so without this rule the share link unfurls as the SPA
   // shell — the flow renderer below would never run.
@@ -5342,9 +5342,9 @@ const ENTITY_SITEMAPS = {
       : null),
   }],
   proposals: [{
-    query: () => 'governance_proposals?select=id,title,description,updated_at&order=created_at.asc&limit=5000',
+    query: () => 'governance_proposals?select=*&order=created_at.asc&limit=5000',
     entry: (p) => (substantiveLength(`${p.title || ''} ${p.description || ''}`) >= ENTITY_SITEMAP_MIN_TEXT
-      ? { loc: `${APP_URL}/app/governance/${p.id}`, lastmod: p.updated_at, changefreq: 'weekly', priority: '0.5' }
+      ? { loc: `${APP_URL}/app/governance/${p.proposal_number ?? p.id}`, lastmod: p.updated_at, changefreq: 'weekly', priority: '0.5' }
       : null),
   }],
   features: [{
@@ -6749,10 +6749,13 @@ async function handleRequest(request, env, ctx) {
     return entityMiss(pack);
   }
 
-  const proposalMatch = cleanPath.match(/^\/(?:app\/)?governance\/([0-9a-fA-F-]{8,})$/);
+  // /app/governance/<n> is the share form; the uuid is the legacy one.
+  const proposalMatch = cleanPath.match(/^\/(?:app\/)?governance\/(\d{1,9}|[0-9a-fA-F-]{8,})$/);
   if (proposalMatch) {
     const proposal = await supabaseLookup(
-      `governance_proposals?id=eq.${encodeURIComponent(proposalMatch[1])}&select=*&limit=1`,
+      /^\d+$/.test(proposalMatch[1])
+        ? `governance_proposals?proposal_number=eq.${proposalMatch[1]}&select=*&limit=1`
+        : `governance_proposals?id=eq.${encodeURIComponent(proposalMatch[1])}&select=*&limit=1`,
     );
     if (proposal) {
       return guard(new Response(buildProposalHtml(proposal), { status: 200, headers: blogHeaders }));
