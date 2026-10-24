@@ -14,9 +14,11 @@
  * plain `useState` in each surface leaves the settings switch showing "on"
  * after the rail has just been dismissed behind it.
  *
- * Absent means ON. Only "off" is ever stored, so a reader who never touches
- * this gets the feature, and clearing site data restores the default rather
- * than silently keeping it switched off.
+ * Absent means OFF. Only "on" is stored ('true'), so a reader who never
+ * touches this does not get the feature, and clearing site data restores the
+ * default. The old scheme stored only 'false' and removed the key for "on",
+ * so a missing key cannot tell "never set" from "turned back on"; everyone
+ * without an explicit 'true' starts off.
  *
  * dehub-mobile mirrors this under the same key name — see its
  * `hooks/useAppPrefs.ts` (`smartReplies`).
@@ -30,18 +32,18 @@ const CHANGE_EVENT = 'dehub:smart-replies-changed';
 
 export function getSmartRepliesEnabled(): boolean {
   try {
-    return localStorage.getItem(STORAGE_KEY) !== 'false';
+    return localStorage.getItem(STORAGE_KEY) === 'true';
   } catch {
-    return true;
+    return false;
   }
 }
 
 export function setSmartRepliesEnabled(enabled: boolean): void {
   try {
     if (enabled) {
-      localStorage.removeItem(STORAGE_KEY);
+      localStorage.setItem(STORAGE_KEY, 'true');
     } else {
-      localStorage.setItem(STORAGE_KEY, 'false');
+      localStorage.removeItem(STORAGE_KEY);
     }
   } catch {}
 
@@ -60,7 +62,6 @@ function subscribe(onChange: () => void): () => void {
 }
 
 export function useSmartRepliesEnabled(): boolean {
-  // Server snapshot is `true` so the rail is not marked hidden during SSR/
-  // prerender and then flipped on at hydration.
-  return useSyncExternalStore(subscribe, getSmartRepliesEnabled, () => true);
+  // Server snapshot matches the default (off) so prerender and hydration agree.
+  return useSyncExternalStore(subscribe, getSmartRepliesEnabled, () => false);
 }
