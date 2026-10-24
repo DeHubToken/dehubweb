@@ -37,6 +37,18 @@
 }
 [data-material='light'] [data-audio-studio-volume] input::-webkit-slider-thumb { background:#394955; box-shadow:0 1px 3px #14202a33; }
 [data-material='light'] [data-audio-studio-volume] input::-moz-range-thumb { background:#394955; box-shadow:0 1px 3px #14202a33; }
+/* The surrounding media frame protects video ink with !important. The pale
+   studio chrome owns its ink; the animation and fullscreen remain media. */
+html:is([data-theme='light'],[data-system-tone='light']):not(#_):not(#_):not(#_):not(#_):not(#_) [data-audio-studio][data-material='light']:not([data-audio-studio-fullscreen]) {
+  color:var(--studio-ink) !important;
+}
+html:is([data-theme='light'],[data-system-tone='light']):not(#_):not(#_):not(#_):not(#_):not(#_) [data-audio-studio][data-material='light']:not([data-audio-studio-fullscreen]) :is([data-audio-studio-title],[data-audio-studio-deck],[data-audio-studio-options]),
+html:is([data-theme='light'],[data-system-tone='light']):not(#_):not(#_):not(#_):not(#_):not(#_) [data-audio-studio][data-material='light']:not([data-audio-studio-fullscreen]) :is([data-audio-studio-title],[data-audio-studio-deck],[data-audio-studio-options]) * {
+  color:inherit !important;
+}
+html:is([data-theme='light'],[data-system-tone='light']):not(#_):not(#_):not(#_):not(#_):not(#_) [data-audio-studio][data-material='light']:not([data-audio-studio-fullscreen]) [data-audio-studio-play] {
+  color:#fff !important;
+}
 [data-audio-studio-title] { display:flex; align-items:center; gap:14px; padding:4px 8px 16px; text-align:left; }
 [data-audio-studio-title] > div { display:grid; gap:4px; min-width:0; }
 [data-audio-studio-cover] { width:54px; height:54px; object-fit:cover; border-radius:10px; flex:none; box-shadow:0 2px 8px #0004; }
@@ -91,10 +103,10 @@ html:is([data-theme='light'],[data-system-tone='light']) [data-audio-studio-styl
 [data-audio-studio-options] [data-audio-hue] { appearance:none; background:linear-gradient(90deg,#fff 0%,#f66 7%,#ffdc60 22%,#75e88a 38%,#68dfe9 52%,#6a8ff5 68%,#ca7af2 83%,#f66 100%); height:8px; border-radius:99px; }
 [data-audio-hue]::-webkit-slider-thumb { appearance:none; width:15px; height:15px; border-radius:50%; background:transparent; border:2px solid white; box-shadow:0 1px 4px #0009; }
 [data-audio-hue]::-moz-range-thumb { width:12px; height:12px; border-radius:50%; background:transparent; border:2px solid white; box-shadow:0 1px 4px #0009; }
-html:is([data-theme='system'],[data-theme='glass'],[data-theme='light']) [data-audio-frame]:has([data-audio-studio]):not([data-video-fullscreen]):not(#_):not(#_) { height:auto !important; min-height:0; aspect-ratio:auto !important; width:100% !important; background:transparent !important; }
-html:is([data-theme='system'],[data-theme='glass'],[data-theme='light']) [data-audio-backdrop]:has([data-audio-studio]):not(#_):not(#_) { background:transparent !important; border:0; border-radius:28px; backdrop-filter:none !important; }
+html[data-theme] [data-audio-frame]:has([data-audio-studio]):not([data-video-fullscreen]):not(#_):not(#_) { height:auto !important; min-height:0; aspect-ratio:auto !important; width:100% !important; background:transparent !important; }
+html[data-theme] [data-audio-backdrop]:has([data-audio-studio]):not(#_):not(#_) { background:transparent !important; border:0; border-radius:28px; backdrop-filter:none !important; }
 [data-audio-backdrop]:has([data-audio-studio]) > .absolute { position:relative; }
-html:is([data-theme='system'],[data-theme='glass']) [data-audio-frame][data-video-fullscreen]:has([data-audio-studio]):not(#_):not(#_) { border-radius:0; background:rgb(3 9 12 / .96) !important; }
+html[data-theme] [data-audio-frame][data-video-fullscreen]:has([data-audio-studio]):not(#_):not(#_) { border-radius:0; background:rgb(3 9 12 / .96) !important; }
 [data-audio-frame][data-video-fullscreen]:has([data-audio-studio]) [data-audio-backdrop] > .absolute { height:100%; display:flex; align-items:center; justify-content:center; padding:24px; }
 [data-audio-frame][data-video-fullscreen] [data-audio-studio] { max-width:760px; }
 /* Fullscreen shows the animation edge to edge; the card around it steps aside. */
