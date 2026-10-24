@@ -60,7 +60,7 @@ export function ViralTemplateShowcase({ onPick }: { onPick: (effect: ViralTempla
     {!expanded ? <div ref={rail} role="region" aria-roledescription="carousel" aria-label={t('viralTemplates.title')} tabIndex={0}
       className="flex snap-x snap-mandatory gap-4 overflow-x-auto overscroll-x-contain pb-3 [scrollbar-width:thin]">{featured.map(effect => card(effect, true))}</div>
       : <div id="viral-template-library">
-        <label className="mb-4 flex min-h-12 items-center gap-3 rounded-xl border border-white/20 px-4"><Search className="h-4 w-4 text-white/50" aria-hidden />
+        <label data-search-surface className="mb-4 flex min-h-12 items-center gap-3 rounded-xl px-4"><Search className="h-4 w-4 text-white/50" aria-hidden />
           <input value={query} onChange={event => { setQuery(event.target.value); setLimit(24); setPlaying(null); }} placeholder={t('viralTemplates.search')}
             aria-label={t('viralTemplates.search')} className="min-w-0 flex-1 bg-transparent py-3 text-sm outline-none" />
         </label>

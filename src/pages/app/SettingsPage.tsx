@@ -386,6 +386,7 @@ export default function SettingsPage() {
         <div className="relative">
           <Search className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-zinc-500" />
           <Input
+            data-search-surface
             value={settingsSearch}
             onChange={(e) => { setSettingsSearch(e.target.value); setSearchCursor(0); }}
             onFocus={() => setSettingsSearchFocused(true)}
