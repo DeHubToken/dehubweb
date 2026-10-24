@@ -1,3 +1,4 @@
+import { translateCopy as _translateCopy } from '@/i18n/copy';
 /**
  * Generation queue.
  * =================
@@ -263,7 +264,7 @@ function loadPersisted(): GenerationJob[] {
         if (r.status === 'cancelled') return { ...r, status: 'cancelled' as const, stage: '' };
         // Anything else with a live ticket comes back as running so it gets
         // rejoined rather than presented as a dead failure.
-        return { ...r, status: 'running' as const, stage: 'Reconnecting' };
+        return { ...r, status: 'running' as const, stage: _translateCopy("copy.afb118fcb16c", { defaultValue: "Reconnecting" }) };
       });
   } catch {
     return [];
@@ -400,7 +401,7 @@ export const useGenerationStore = create<GenerationState>((set, get) => {
       presetId: meta.presetId,
       aspect: meta.aspect,
       status: 'running',
-      stage: 'Starting',
+      stage: _translateCopy("copy.aeed4d26bb5f", { defaultValue: "Starting" }),
       createdAt: Date.now(),
       sourceImage,
     };
@@ -427,7 +428,7 @@ export const useGenerationStore = create<GenerationState>((set, get) => {
     run
       .then(async (url) => {
         if (scope !== storageKey) return;
-        patch(id, { url, stage: 'Saving your generation' });
+        patch(id, { url, stage: _translateCopy("copy.f4dad8d20bbe", { defaultValue: "Saving your generation" }) });
         const job = get().jobs.find((j) => j.id === id);
         if (!job) return;
         try { await cacheGeneration(scope, { ...job, status: 'done' }); } catch { /* Still attempt cloud saving. */ }
@@ -437,10 +438,10 @@ export const useGenerationStore = create<GenerationState>((set, get) => {
       })
       .catch((e: unknown) => {
         if (isAborted(e)) {
-          settle(id, { status: 'cancelled', error: 'Cancelled' });
+          settle(id, { status: 'cancelled', error: _translateCopy("copy.d353a99eb455", { defaultValue: "Cancelled" }) });
           return;
         }
-        const message = e instanceof Error ? e.message : 'Generation failed';
+        const message = e instanceof Error ? e.message : _translateCopy("copy.78257562583c", { defaultValue: "Generation failed" });
         console.error('[creator] generation failed', e);
         settle(id, { status: 'failed', error: message });
       });
@@ -460,7 +461,7 @@ export const useGenerationStore = create<GenerationState>((set, get) => {
         if (scope === storageKey) patch(id, { cloudSaved: true, saveError: undefined });
         await removeCachedGeneration(scope, id).catch(() => {});
       } catch {
-        if (scope === storageKey) patch(id, { cloudSaved: false, saveError: 'Cloud save pending. Retry saving' });
+        if (scope === storageKey) patch(id, { cloudSaved: false, saveError: _translateCopy("copy.472d4637d255", { defaultValue: "Cloud save pending. Retry saving" }) });
       }
     },
 
@@ -573,7 +574,7 @@ export const useGenerationStore = create<GenerationState>((set, get) => {
         if (job.status !== 'running' || !job.ticket || controllers.has(job.id)) continue;
         // Another tab is already waiting on this render.
         if (!claimRender(job.ticket.predictionId)) {
-          patch(job.id, { stage: 'Rendering in another tab' });
+          patch(job.id, { stage: _translateCopy("copy.ac37261c8711", { defaultValue: "Rendering in another tab" }) });
           continue;
         }
         const ctrl = new AbortController();
@@ -600,7 +601,7 @@ export const useGenerationStore = create<GenerationState>((set, get) => {
       claimRender(ticket.predictionId);
       const ctrl = new AbortController();
       controllers.set(id, ctrl);
-      patch(id, { status: 'running', stage: 'Reconnecting', error: undefined });
+      patch(id, { status: 'running', stage: _translateCopy("copy.afb118fcb16c", { defaultValue: "Reconnecting" }), error: undefined });
       finish(
         id,
         pollerFor(job.kind)(ticket, {

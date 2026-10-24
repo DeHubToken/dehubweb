@@ -20,6 +20,7 @@
 import { xchacha20poly1305 } from '@noble/ciphers/chacha';
 import { randomBytes, utf8ToBytes } from '@noble/hashes/utils';
 import { fromBase64, toBase64 } from './crypto';
+import { translateCopy as _translateCopy } from '@/i18n/copy';
 
 export const MEDIA_PREFIX = 'dm-media:1:';
 const MAGIC = utf8ToBytes('DHM1');
@@ -100,9 +101,9 @@ export function encryptMediaBytes(plain: Uint8Array, fileKey: Uint8Array): Uint8
 
 /** Throws on a wrong key, a tampered or a truncated blob. */
 export function decryptMediaBytes(blob: Uint8Array, fileKey: Uint8Array): Uint8Array {
-  if (blob.length < HEADER_BYTES + TAG_BYTES) throw new Error('Encrypted file too short');
+  if (blob.length < HEADER_BYTES + TAG_BYTES) throw new Error(_translateCopy("copy.55db2c9d4a2e", { defaultValue: "Encrypted file too short" }));
   for (let i = 0; i < MAGIC.length; i++) {
-    if (blob[i] !== MAGIC[i]) throw new Error('Not an encrypted DM file');
+    if (blob[i] !== MAGIC[i]) throw new Error(_translateCopy("copy.792012d795ef", { defaultValue: "Not an encrypted DM file" }));
   }
   const prefix = blob.subarray(MAGIC.length, HEADER_BYTES);
   const body = blob.length - HEADER_BYTES;

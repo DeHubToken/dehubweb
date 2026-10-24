@@ -14,6 +14,7 @@
  * what replaces the old empty/black placeholder that live posts used to show.
  */
 import { useEffect, useRef, useState } from 'react';
+import { useTranslation as _useCopy } from 'react-i18next';
 import Radio from "@/components/ui/cut-icons/live";
 
 import { cn } from '@/lib/utils';
@@ -96,11 +97,13 @@ function TvStatic({ label }: { label: string }) {
 
 export function LiveEndedMedia({
   thumbnail,
-  label = 'Live ended',
+  label: labelProp,
   className,
   rounded = 'rounded-lg',
   hideBadge = false,
 }: LiveEndedMediaProps) {
+  const { t: _copy } = _useCopy();
+  const label = labelProp ?? _copy("copy.b8b7b20faac9", { defaultValue: "Live ended" });
   const [imgFailed, setImgFailed] = useState(false);
   useEffect(() => setImgFailed(false), [thumbnail]);
 

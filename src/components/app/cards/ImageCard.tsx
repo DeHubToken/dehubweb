@@ -906,7 +906,7 @@ const ImageCardBody = memo(function ImageCard({ post, aboveFold = false, onOpenC
     setShowOptionsDrawer(false);
     setIsDownloading(true);
     const toastId = `image-download-${post.id}`;
-    toast.loading('Preparing download...', { id: toastId });
+    toast.loading(_copy("copy.757726036c1c", { defaultValue: "Preparing download..." }), { id: toastId });
     try {
       await downloadMedia(source, imageDownloadName(source, post.id, activeImageIndex));
       toast.success(_copy("copy.efece5dd1933", { defaultValue: "Download started" }), { id: toastId });
@@ -1165,7 +1165,7 @@ const ImageCardBody = memo(function ImageCard({ post, aboveFold = false, onOpenC
                       try {
                         await updateTokenVisibility(post.id, next);
                         setVisibility(next);
-                        toast.success(`Post set to ${next}`);
+                        toast.success(next === 'private' ? _copy("copy.bc3aabd76a18", { defaultValue: "Post set to private" }) : _copy("copy.30a9e349befb", { defaultValue: "Post set to public" }));
                       } catch { toast.error(_copy("copy.67ca6fcb8233", { defaultValue: "Failed to update visibility" })); }
                     }}
                     className="flex items-center gap-3 px-4 py-3 text-white hover:bg-white/10 rounded-xl transition-colors text-left"
@@ -1271,7 +1271,7 @@ const ImageCardBody = memo(function ImageCard({ post, aboveFold = false, onOpenC
                   <Ticket className="h-7 w-7 text-white" />
                 </div>
                 <p className="text-white font-semibold text-sm mb-1">{_copy("copy.48e072480fc5", { defaultValue: "Pay-Per-View Content" })}</p>
-                <p className="text-white/70 text-xs">{_copy("copy.0249799121f4", { defaultValue: "Unlock for " })}{formatCompact(Number(post.ppvPrice))} {post.ppvCurrency || 'USDC'}
+                <p className="text-white/70 text-xs">{_copy("copy.f298ff07e69b", { defaultValue: "Unlock for {{value1}} {{value2}}", value1: formatCompact(Number(post.ppvPrice)), value2: post.ppvCurrency || 'USDC' })}
                 </p>
                 
               </div>

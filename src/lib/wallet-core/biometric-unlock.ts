@@ -21,6 +21,7 @@ import {
   type PasskeyWrap,
 } from "./passkey-store";
 import { createLogger } from "@/lib/logger";
+import { translateCopy as _translateCopy } from '@/i18n/copy';
 
 const biometricLogger = createLogger("WalletBiometrics");
 
@@ -96,7 +97,7 @@ export async function unlockWithBiometrics(
 ): Promise<string> {
   const wraps = knownWraps?.length ? knownWraps : await loadPasskeyWraps(userId);
   if (!wraps.length) {
-    throw new PasskeyUnsupportedError("Biometric unlock isn't set up for this account yet.");
+    throw new PasskeyUnsupportedError(_translateCopy("copy.fca08f397dbb", { defaultValue: "Biometric unlock isn't set up for this account yet." }));
   }
 
   const refs: PasskeyRef[] = wraps.map((w) => ({ credentialId: w.credentialId, prfSalt: w.prfSalt, transports: w.transports }));
@@ -121,7 +122,7 @@ export async function unlockWithBiometrics(
     }
     throw lastError instanceof Error
       ? lastError
-      : new Error("Biometric unlock failed. Try your password instead.");
+      : new Error(_translateCopy("copy.4cbbe22ff94d", { defaultValue: "Biometric unlock failed. Try your password instead." }));
   } finally {
     keyMaterial.fill(0);
   }

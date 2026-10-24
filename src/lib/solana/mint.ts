@@ -9,6 +9,7 @@ import type { Transaction } from '@solana/web3.js';
 import { connectSolanaWallet, getSolanaProvider } from './wallet';
 import { confirmSolanaMint } from '@/lib/api/dehub/solana';
 import { SOLANA_MAINNET_CHAIN_ID } from '@/lib/chains/constants';
+import { translateCopy as _translateCopy } from '@/i18n/copy';
 
 // Public mainnet-beta RPC forbids browser sendTransaction (403). Use a
 // broadcast-friendly RPC; override via VITE_SOLANA_MAINNET_RPC (e.g. Alchemy/Helius).
@@ -38,7 +39,7 @@ export interface SolanaMintResult {
 export async function broadcastSolanaMint(params: SolanaMintParams): Promise<SolanaMintResult> {
   const provider = getSolanaProvider();
   if (!provider) {
-    throw new Error('Phantom wallet required for Solana posts. Please install Phantom.');
+    throw new Error(_translateCopy('copy.edf7a2e01496', { defaultValue: 'Phantom wallet required for Solana posts. Please install Phantom.' }));
   }
 
   const { Connection, Transaction } = await import('@solana/web3.js');
@@ -54,7 +55,7 @@ export async function broadcastSolanaMint(params: SolanaMintParams): Promise<Sol
     const raw = Uint8Array.from(atob(params.transactionBase64), (c) => c.charCodeAt(0));
     tx = Transaction.from(raw);
   } catch {
-    throw new Error('Invalid mint transaction from server. Please try again.');
+    throw new Error(_translateCopy('copy.1666243e94f1', { defaultValue: 'Invalid mint transaction from server. Please try again.' }));
   }
 
   let signed: Transaction;
@@ -62,8 +63,8 @@ export async function broadcastSolanaMint(params: SolanaMintParams): Promise<Sol
     signed = await provider.signTransaction(tx);
   } catch (err: unknown) {
     const code = (err as { code?: number })?.code;
-    if (code === 4001) throw new Error('Transaction signing was rejected');
-    throw new Error(err instanceof Error ? err.message : 'Failed to sign Solana transaction');
+    if (code === 4001) throw new Error(_translateCopy('copy.3f035aa59f46', { defaultValue: 'Transaction signing was rejected' }));
+    throw new Error(err instanceof Error ? err.message : _translateCopy('copy.b397b6d54c82', { defaultValue: 'Failed to sign Solana transaction' }));
   }
 
   let signature: string;
@@ -76,12 +77,12 @@ export async function broadcastSolanaMint(params: SolanaMintParams): Promise<Sol
     const msg = err instanceof Error ? err.message : String(err);
     const lower = msg.toLowerCase();
     if (lower.includes('insufficient')) {
-      throw new Error('Insufficient SOL for transaction fees. Add SOL to your Phantom wallet.');
+      throw new Error(_translateCopy('copy.83ff243820f8', { defaultValue: 'Insufficient SOL for transaction fees. Add SOL to your Phantom wallet.' }));
     }
     if (lower.includes('blockhash') || lower.includes('expired') || lower.includes('timeout')) {
-      throw new Error('Solana transaction expired. Please try posting again.');
+      throw new Error(_translateCopy('copy.10f35f8e47ce', { defaultValue: 'Solana transaction expired. Please try posting again.' }));
     }
-    throw new Error(`Solana broadcast failed: ${msg}`);
+    throw new Error(_translateCopy('copy.51386f3a6a6a', { defaultValue: 'Solana broadcast failed: {{value1}}', value1: msg }));
   }
 
   try {
@@ -102,7 +103,7 @@ export async function broadcastSolanaMint(params: SolanaMintParams): Promise<Sol
       signature,
       mintAddress: params.mintAddress,
       confirmWarning:
-        'Posted on-chain but server sync is delayed. Your post may take a few minutes to appear in the feed.',
+        _translateCopy('copy.218e3819eee0', { defaultValue: 'Posted on-chain but server sync is delayed. Your post may take a few minutes to appear in the feed.' }),
     };
   }
 

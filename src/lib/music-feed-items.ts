@@ -10,6 +10,7 @@ import { buildAvatarUrl, buildImageUrl, buildVideoUrl, buildHlsUrl, extractAvata
 import { formatDuration, formatViews, formatTimeAgo } from '@/lib/feed-utils';
 import { resolveViewCount } from '@/lib/engagement';
 import type { VideoItem } from '@/types/feed.types';
+import { translateCopy as _translateCopy } from '@/i18n/copy';
 
 /** Hardcoded fallback usernames/display names to filter out from feeds */
 const BLOCKED_CREATORS_FALLBACK = [
@@ -67,7 +68,7 @@ export function mapNFTToVideoItem(nft: DeHubNFT, index: number): VideoItem {
     type: 'video',
     thumbnail: buildImageUrl(tokenId, nft.imageUrl) || buildImageUrl(tokenId, nft.thumbnail_url) || '',
     title: nft.name || nft.title || nft.description?.split('\n')[0] || '',
-    channel: nft.minterDisplayName || nft.mintername || nft.creator?.username || 'Anonymous',
+    channel: nft.minterDisplayName || nft.mintername || nft.creator?.username || _translateCopy('copy.e7a8aa2df7e5', { defaultValue: 'Anonymous' }),
     verified: nft.creator?.is_verified || false,
     channelAvatar: avatarUrl || undefined,
     views: formatViews(resolveViewCount(nft)),

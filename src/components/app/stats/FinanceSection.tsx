@@ -410,7 +410,7 @@ export function FinanceSection({ range }: { range: Range }) {
   const revenueSources = stats.sources.filter((s) => s.kind === 'revenue');
   const costSources: FinanceSource[] = stats.sources.filter((s) => s.kind === 'cost' && (s.id !== 'operations_reinvestment' || view.costs.has(s.id))).map(source => source.id === 'operations_reinvestment' ? {
       ...source,
-      label: t('stats.money.estimatedOperations', 'Estimated operations'),
+      label: t("copy.f9b6484cf356", { defaultValue: "Estimated operations" }),
       note: source.note,
     } : source);
   const unavailable = stats.sources.filter((s) => s.status === 'unavailable');
@@ -446,7 +446,7 @@ export function FinanceSection({ range }: { range: Range }) {
     ai_tools: t('stats.money.group.aiTools', 'AI tools'),
     infrastructure: t('stats.money.group.infrastructure', 'Droplet'),
     payments: t('stats.money.group.payments', 'Payment fees'),
-    operations: t('stats.money.operationsGroup', 'Operations'),
+    operations: t("copy.358cc201f87d", { defaultValue: "Operations" }),
   };
 
   return (

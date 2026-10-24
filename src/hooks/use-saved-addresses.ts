@@ -4,6 +4,7 @@ import { supabase } from '@/integrations/supabase/client';
 import { withWalletHeader } from '@/lib/supabase-wallet-client';
 import { useAuth } from '@/contexts/AuthContext';
 import { toast } from 'sonner';
+import { translateCopy as _translateCopy } from '@/i18n/copy';
 
 export interface SavedAddress {
   id: string;
@@ -41,7 +42,7 @@ export function useSaveAddress() {
   const qc = useQueryClient();
   return useMutation({
     mutationFn: async (params: Omit<SavedAddress, 'id' | 'wallet_address'>) => {
-      if (!walletAddress) throw new Error('Not authenticated');
+      if (!walletAddress) throw new Error(_translateCopy("copy.76d1efbeed2d", { defaultValue: "Not authenticated" }));
       // If setting as default, unset others first
       if (params.is_default) {
         await withWalletHeader(
@@ -73,7 +74,7 @@ export function useDeleteAddress() {
   const qc = useQueryClient();
   return useMutation({
     mutationFn: async (id: string) => {
-      if (!walletAddress) throw new Error('Not authenticated');
+      if (!walletAddress) throw new Error(_translateCopy("copy.76d1efbeed2d", { defaultValue: "Not authenticated" }));
       const { error } = await withWalletHeader(
         supabase.from('saved_addresses').delete().eq('id', id),
         walletAddress

@@ -42,7 +42,7 @@ export function useMintExistingPost() {
       const commenters = Number(info?.addBountyFirstXComments ?? 0);
       if (hasBounty && (!(bountyAmount > 0) || !Number.isFinite(bountyAmount) ||
         !Number.isInteger(viewers) || viewers < 0 || !Number.isInteger(commenters) || commenters < 0 || viewers + commenters === 0 ||
-        info?.addBountyTokenSymbol !== 'DHB')) throw new Error('Invalid bounty terms. Funding cannot be skipped.');
+        info?.addBountyTokenSymbol !== 'DHB')) throw new Error(_copy("copy.038a8e5ff421", { defaultValue: "Invalid bounty terms. Funding cannot be skipped." }));
 
       const [{ mintOnChainWithFee }, { getDHBBalance, mintWithBounty }, { getERC20Balance }] = await Promise.all([
         import('@/lib/contracts/stream-collection'),
@@ -69,7 +69,7 @@ export function useMintExistingPost() {
             BigInt(1e6);
           if (balance < needed) {
             toast.error(t('postComposer.notEnoughTokensToMint'), {
-              description: `Minting this post costs ${fee.amount} ${fee.symbol}.`,
+              description: _copy("copy.ec486a9f842c", { defaultValue: "Minting this post costs {{value1}} {{value2}}.", value1: fee.amount, value2: fee.symbol }),
               action: { label: t('postComposer.getTokens'), onClick: () => navigate('/app/buy') },
               duration: 10000,
             });
@@ -78,7 +78,7 @@ export function useMintExistingPost() {
         }
       }
 
-      toast.loading('Minting post', { id: toastId, duration: Infinity });
+      toast.loading(_copy("copy.ef478f3aaf43", { defaultValue: "Minting post" }), { id: toastId, duration: Infinity });
 
       const sig = await mintExistingPost(tokenId);
       // A retry must fund the saved reward pool, just like the original composer.
@@ -111,7 +111,10 @@ export function useMintExistingPost() {
       return true;
     } catch (err: any) {
       console.error('[MintExisting] failed:', err);
-      toast.error(err?.message || 'Could not mint this post', { id: toastId });
+      // The reason comes from the API or the wallet stack and is not always in
+      // the reader's language, so the headline is ours and the reason sits under it.
+      const reason = typeof err?.message === 'string' ? err.message : '';
+      toast.error(_copy("copy.af3e311c0946", { defaultValue: "Could not mint this post" }), { id: toastId, ...(reason ? { description: reason } : {}) });
       return false;
     } finally {
       setIsMinting(false);

@@ -305,7 +305,7 @@ export default function StakingPage() {
       // Locked wallet: the unlock sheet and its toast are already up, and
       // nothing failed — this would just tell them to stop.
       if (!isWalletLockedError(err)) {
-        toast.error(t('toasts.failed_to_cancel'), { description: err?.message || 'Unknown error' });
+        toast.error(t('toasts.failed_to_cancel'), { description: err?.message || _copy("copy.27c2ccd962c2", { defaultValue: "Unknown error" }) });
       }
     } finally {
       setCancellingTx(null);
@@ -647,7 +647,7 @@ export default function StakingPage() {
           description: t('toasts.not_enough_gas_token', { token: 'BNB' }),
         });
       } else {
-        toast.error(t('toasts.unstake_failed'), { description: err?.message || 'Unknown error' });
+        toast.error(t('toasts.unstake_failed'), { description: err?.message || _copy("copy.27c2ccd962c2", { defaultValue: "Unknown error" }) });
       }
     } finally {
       setIsUnstaking(false);
@@ -681,7 +681,7 @@ export default function StakingPage() {
       // Locked wallet: the unlock sheet and its toast are already up, and
       // nothing failed — this would just tell them to stop.
       if (!isWalletLockedError(err)) {
-        toast.error(t('toasts.claim_failed'), { description: err?.message || 'Unknown error' });
+        toast.error(t('toasts.claim_failed'), { description: err?.message || _copy("copy.27c2ccd962c2", { defaultValue: "Unknown error" }) });
       }
     } finally {
       setIsClaiming(false);

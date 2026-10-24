@@ -1,6 +1,7 @@
 import { apiCall, authedUpload } from './core';
 import { ResumableUnsupportedError, resumableUpload } from './resumable-upload';
 import type { ContentRating, PostVisibility, QuotePolicy, ReplyPolicy, ShopLink } from './types';
+import { translateCopy as _translateCopy } from '@/i18n/copy';
 
 export interface StreamInfo {
   isLockContent?: boolean;
@@ -603,7 +604,7 @@ export async function addPostImages(tokenId: number | string, files: File[]) {
   const response = await authedUpload<{ result: boolean; data: { imageUrls: string[] } }>(
     `/api/nft/${tokenId}/images`, formData,
   );
-  if (!response.result || !Array.isArray(response.data?.imageUrls)) throw new Error('Could not add those images');
+  if (!response.result || !Array.isArray(response.data?.imageUrls)) throw new Error(_translateCopy("copy.0b6b539f3e91", { defaultValue: "Could not add those images" }));
   return response.data.imageUrls;
 }
 
@@ -613,7 +614,7 @@ export async function replacePostImage(tokenId: number | string, index: number, 
   const response = await authedUpload<{ result: boolean; data: { imageUrls: string[] } }>(
     `/api/nft/${tokenId}/images/${index}`, formData,
   );
-  if (!response.result || !Array.isArray(response.data?.imageUrls)) throw new Error('Could not replace that image');
+  if (!response.result || !Array.isArray(response.data?.imageUrls)) throw new Error(_translateCopy("copy.4d8a0bff64c5", { defaultValue: "Could not replace that image" }));
   return response.data.imageUrls;
 }
 
@@ -624,7 +625,7 @@ export async function replaceVideoCover(tokenId: number | string, image: Blob) {
   const response = await authedUpload<{ result: boolean; data?: { imageUrl: string }; error?: string }>(
     `/api/nft/${tokenId}/thumbnail`, formData,
   );
-  if (!response.result || !response.data?.imageUrl) throw new Error(response.error || 'Could not change the cover');
+  if (!response.result || !response.data?.imageUrl) throw new Error(response.error || _translateCopy("copy.787bcf985c06", { defaultValue: "Could not change the cover" }));
   return response.data.imageUrl;
 }
 

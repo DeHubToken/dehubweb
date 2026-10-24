@@ -188,7 +188,7 @@ export function CinematicLive({ streams, isLoading, tvChannels, emptyState, show
 
       <SectionTitle
         title={game ? game.name : _copy("copy.74fbbb0cdb03", { defaultValue: "Live streams" })}
-        meta={game ? 'Show all' : liveCount > 0 ? `${liveCount} ${liveCount === 1 ? 'stream' : 'streams'}` : undefined}
+        meta={game ? _copy("copy.2150d8df37e4", { defaultValue: "Show all" }) : liveCount > 0 ? _copy("copy.c9898602a83e", { count: liveCount, defaultValue: "{{count}} streams" }) : undefined}
         onMeta={game ? () => setGameId(null) : undefined}
       />
       {isLoading ? (
@@ -222,7 +222,7 @@ export function CinematicLive({ streams, isLoading, tvChannels, emptyState, show
 
       {tvChannels.length > 0 && (
         <div className="mt-2">
-          <SectionTitle title="TV" meta="Show all" onMeta={() => navigate('/app/tv')} />
+          <SectionTitle title="TV" meta={_copy("copy.2150d8df37e4", { defaultValue: "Show all" })} onMeta={() => navigate('/app/tv')} />
           <SwipeableCarousel>
             <div className="-mx-2 flex gap-3 overflow-x-auto px-3.5 scrollbar-hide">
               {tvChannels.map((channel) => (

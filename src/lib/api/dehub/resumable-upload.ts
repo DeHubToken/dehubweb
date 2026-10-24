@@ -18,6 +18,7 @@ import {
   ensureFreshToken,
   refreshTokenSharedDetailed,
 } from './core';
+import { translateCopy as _translateCopy } from '@/i18n/copy';
 
 /** Server has no resumable endpoint (an older API). Send the file the old way instead. */
 export class ResumableUnsupportedError extends Error {
@@ -170,7 +171,7 @@ function errorFrom(reply: Reply): UploadHttpError {
   } catch {
     /* not JSON */
   }
-  const message = [body.message, body.error].find((v): v is string => typeof v === 'string') || 'Unknown error';
+  const message = [body.message, body.error].find((v): v is string => typeof v === 'string') || _translateCopy("copy.27c2ccd962c2", { defaultValue: "Unknown error" });
   return new UploadHttpError(
     `Upload failed (HTTP ${reply.status}): ${message}`,
     reply.status,

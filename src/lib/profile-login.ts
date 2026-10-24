@@ -2,6 +2,7 @@ import { supabase } from '@/integrations/supabase/client';
 import { authenticateWithSupabaseSession } from '@/lib/api/dehub/auth';
 import { fetchWallet } from '@/lib/wallet-core/store';
 import { createLogger } from './logger';
+import { translateCopy as _translateCopy } from '@/i18n/copy';
 
 const log = createLogger('ProfileLogin');
 
@@ -12,7 +13,7 @@ const log = createLogger('ProfileLogin');
  */
 export class SupabaseSessionMissingError extends Error {
   constructor() {
-    super('Your sign-in session expired. Please sign in again.');
+    super(_translateCopy('copy.de1ad7135e96', { defaultValue: 'Your sign-in session expired. Please sign in again.' }));
     this.name = 'SupabaseSessionMissingError';
   }
 }

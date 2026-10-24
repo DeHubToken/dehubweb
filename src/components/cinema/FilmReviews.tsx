@@ -125,9 +125,9 @@ export function FilmReviews({
         poster: title.poster,
         year: title.year,
       });
-      toast.success(mine ? 'Review updated' : 'Review posted');
+      toast.success(mine ? _copy("copy.b4088bb10508", { defaultValue: "Review updated" }) : _copy("copy.e3df893ed812", { defaultValue: "Review posted" }));
     } catch (e) {
-      toast.error(e instanceof Error ? e.message : 'Could not save your review');
+      toast.error(e instanceof Error ? e.message : _copy("copy.6f92cd127d1f", { defaultValue: "Could not save your review" }));
     }
   }
 
@@ -138,7 +138,7 @@ export function FilmReviews({
       setBody.complete(body, '');
       toast.success(_copy("copy.19c7963529d9", { defaultValue: "Review removed" }));
     } catch (e) {
-      toast.error(e instanceof Error ? e.message : 'Could not remove your review');
+      toast.error(e instanceof Error ? e.message : _copy("copy.55bac799a16b", { defaultValue: "Could not remove your review" }));
     }
   }
 
@@ -149,7 +149,7 @@ export function FilmReviews({
         {summary?.count ? (
           <span className="flex items-center gap-2 text-xs text-zinc-500">
             <Stars value={summary.average ?? 0} />
-            {summary.average} · {summary.count}{_copy("copy.68338686d5cd", { defaultValue: " review" })}{summary.count === 1 ? '' : 's'}
+            {summary.average} · {_copy("copy.7cc1cd3adf40", { count: summary.count, defaultValue_one: "{{count}} review", defaultValue_other: "{{count}} reviews", defaultValue: "{{count}} reviews" })}
           </span>
         ) : null}
       </div>

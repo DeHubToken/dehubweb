@@ -1,3 +1,4 @@
+import { translateCopy as _translateCopy } from '@/i18n/copy';
 import { tokenLabel } from '@/lib/token-label';
 import { lazy, Suspense, useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -50,7 +51,7 @@ interface PlanCardProps {
 }
 
 function formatAmount(value: number | undefined, maximumFractionDigits = 4): string {
-  if (value === undefined || value === null || Number.isNaN(value)) return 'Unavailable';
+  if (value === undefined || value === null || Number.isNaN(value)) return _translateCopy("copy.ca1844969742", { defaultValue: "Unavailable" });
   return value.toLocaleString(undefined, { maximumFractionDigits });
 }
 

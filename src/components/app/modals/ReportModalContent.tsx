@@ -185,11 +185,11 @@ export function ReportModal({
     } catch (error: any) {
       console.error('[ReportModal] Submit error:', error);
       if (error.message?.includes('already reported')) {
-        toast.error(reportType === 'comment' ? t('comments.reportCommentAlready') : 'You have already reported this');
+        toast.error(reportType === 'comment' ? t('comments.reportCommentAlready') : _copy("copy.76fc61b3541c", { defaultValue: "You have already reported this" }));
       } else if (error.message?.includes('Unauthorized')) {
         toast.error(_copy("copy.c5934c28976f", { defaultValue: "Please log in to submit a report" }));
       } else {
-        toast.error(error.message || 'Failed to submit report');
+        toast.error(error.message || _copy("copy.4fd65ff8fec4", { defaultValue: "Failed to submit report" }));
       }
     } finally {
       setIsSubmitting(false);
@@ -203,13 +203,19 @@ export function ReportModal({
   };
 
   const title = reportType === 'user'
-    ? 'Report User'
+    ? _copy("copy.ae89cfa0886b", { defaultValue: "Report User" })
     : reportType === 'comment'
       ? t('comments.reportCommentTitle')
-      : `Report ${contentType}`;
+      : contentType === 'video'
+        ? _copy("copy.c4c52572fc84", { defaultValue: "Report video" })
+        : contentType === 'image'
+          ? _copy("copy.3d95f16d4173", { defaultValue: "Report image" })
+          : contentType === 'audio'
+            ? _copy("copy.ad43e4e07cae", { defaultValue: "Report audio" })
+            : _copy("copy.fb773b3a7af8", { defaultValue: "Report post" });
   const subtitle = reportType === 'comment'
     ? t('comments.reportCommentDescription')
-    : "Help us understand what's wrong";
+    : _copy("copy.3d6ca7a63a8f", { defaultValue: "Help us understand what's wrong" });
 
   return (
     <Drawer open={open} onOpenChange={handleClose}>

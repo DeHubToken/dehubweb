@@ -1,4 +1,5 @@
 import { useTranslation as _useCopy } from 'react-i18next';
+import { translateCopy as _translateCopy } from '@/i18n/copy';
 /**
  * Voice Assistant Overlay
  * =======================
@@ -26,11 +27,11 @@ interface VoiceAssistantOverlayProps {
 
 const STATUS_LABELS: Record<VoiceStatus, string> = {
   idle: '',
-  listening: 'Listening...',
-  transcribing: 'Transcribing...',
-  thinking: 'Thinking...',
-  speaking: 'Speaking...',
-  error: 'Error',
+  get listening() { return _translateCopy("copy.2efa9bd92658", { defaultValue: "Listening..." }); },
+  get transcribing() { return _translateCopy("copy.4e9a93669648", { defaultValue: "Transcribing..." }); },
+  get thinking() { return _translateCopy("copy.b4739a4f0865", { defaultValue: "Thinking..." }); },
+  get speaking() { return _translateCopy("copy.f2ef1cac7f88", { defaultValue: "Speaking..." }); },
+  get error() { return _translateCopy("copy.54a0e8c17ebb", { defaultValue: "Error" }); },
 };
 
 function PulsingWaveform({ status }: { status: VoiceStatus }) {

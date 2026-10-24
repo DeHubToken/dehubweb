@@ -1,3 +1,4 @@
+import { translateCopy as _translateCopy } from '@/i18n/copy';
 import FileText from "@/components/ui/cut-icons/blog";
 import FileTextIcon from "@/components/ui/cut-icons/blog";
 import Film from "@/components/ui/cut-icons/editor";
@@ -144,22 +145,22 @@ export function isKidsModePath(pathname: string): boolean {
 }
 
 export const FEED_TABS: SearchTab[] = [
-  { icon: Home, label: 'Home', value: 'home' },
-  { icon: Shorts, label: 'Shorts', value: 'shorts' },
-  { icon: Image, label: 'Images', value: 'images' },
-  { icon: Video, label: 'Videos', value: 'videos' },
-  { icon: Mic, label: 'Music', value: 'music' },
-  { icon: Radio, label: 'Live', value: 'live' },
+  { icon: Home, get label() { return _translateCopy("copy.3a78695388b3", { defaultValue: "Home" }); }, value: 'home' },
+  { icon: Shorts, get label() { return _translateCopy("copy.3c784a16cf27", { defaultValue: "Shorts" }); }, value: 'shorts' },
+  { icon: Image, get label() { return _translateCopy("copy.be7e2f201293", { defaultValue: "Images" }); }, value: 'images' },
+  { icon: Video, get label() { return _translateCopy("copy.c9a9639463c2", { defaultValue: "Videos" }); }, value: 'videos' },
+  { icon: Mic, get label() { return _translateCopy("copy.6eb00b4b2614", { defaultValue: "Music" }); }, value: 'music' },
+  { icon: Radio, get label() { return _translateCopy("copy.b64ac05f17e6", { defaultValue: "Live" }); }, value: 'live' },
 ];
 
 export const EXPLORE_TABS: SearchTab[] = [
-  { icon: Search, label: 'All', value: 'all' },
-  { icon: Users, label: 'People', value: 'people' },
-  { icon: FileTextIcon, label: 'Posts', value: 'posts' },
-  { icon: Image, label: 'Images', value: 'images' },
-  { icon: Video, label: 'Videos', value: 'videos' },
-  { icon: Play, label: 'Music', value: 'music' },
-  { icon: Radio, label: 'Live', value: 'live' },
+  { icon: Search, get label() { return _translateCopy("copy.a52ace420f21", { defaultValue: "All" }); }, value: 'all' },
+  { icon: Users, get label() { return _translateCopy("copy.7db20897053b", { defaultValue: "People" }); }, value: 'people' },
+  { icon: FileTextIcon, get label() { return _translateCopy("copy.a80811cf6889", { defaultValue: "Posts" }); }, value: 'posts' },
+  { icon: Image, get label() { return _translateCopy("copy.be7e2f201293", { defaultValue: "Images" }); }, value: 'images' },
+  { icon: Video, get label() { return _translateCopy("copy.c9a9639463c2", { defaultValue: "Videos" }); }, value: 'videos' },
+  { icon: Play, get label() { return _translateCopy("copy.6eb00b4b2614", { defaultValue: "Music" }); }, value: 'music' },
+  { icon: Radio, get label() { return _translateCopy("copy.b64ac05f17e6", { defaultValue: "Live" }); }, value: 'live' },
 ];
 
 export const SUGGESTED_USERS: UserType[] = [

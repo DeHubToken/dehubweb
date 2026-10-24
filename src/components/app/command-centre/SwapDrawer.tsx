@@ -110,7 +110,7 @@ export function SwapDrawer({ open, onOpenChange }: SwapDrawerProps) {
       setStep('success');
       toast.success(_copy("copy.821e0843b5d2", { defaultValue: "Swap completed!" }));
     } catch (err: any) {
-      const msg = err?.message || 'Swap failed';
+      const msg = err?.message || _copy("copy.09d8a776b907", { defaultValue: "Swap failed" });
       setErrorMsg(msg.length > 120 ? msg.slice(0, 120) + '…' : msg);
       setStep('error');
       toast.error(_copy("copy.09d8a776b907", { defaultValue: "Swap failed" }));
@@ -153,7 +153,7 @@ export function SwapDrawer({ open, onOpenChange }: SwapDrawerProps) {
                   type="number"
                   min="0"
                   step="any"
-                  placeholder="e.g. 100"
+                  placeholder={_copy("copy.d4f0af4eced7", { defaultValue: "e.g. {{value1}}", value1: 100 })}
                   value={dhbAmount}
                   onChange={(e) => setDhbAmount(e.target.value)}
                   className="bg-white/[0.06] border-white/10 text-white backdrop-blur-sm text-lg font-mono"

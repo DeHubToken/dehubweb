@@ -123,19 +123,19 @@ export function LoginProfileStep() {
 
     if (usernameToCheck.length > 30) {
       setUsernameAvailable(false);
-      setUsernameError('Username must be 30 characters or less');
+      setUsernameError(_copy("copy.6cfdbd27009d", { defaultValue: "Username must be 30 characters or less" }));
       return;
     }
 
     if (!/^[a-z0-9_]+$/.test(usernameToCheck)) {
       setUsernameAvailable(false);
-      setUsernameError('Only letters, numbers, and underscores allowed');
+      setUsernameError(_copy("copy.ec63b97d594b", { defaultValue: "Only letters, numbers, and underscores allowed" }));
       return;
     }
 
     if (isReservedUsername(usernameToCheck)) {
       setUsernameAvailable(false);
-      setUsernameError('This username is reserved');
+      setUsernameError(_copy("copy.71bfd7fdb453", { defaultValue: "This username is reserved" }));
       return;
     }
 
@@ -150,17 +150,17 @@ export function LoginProfileStep() {
         setUsernameError(null);
       } else {
         setUsernameAvailable(false);
-        setUsernameError('Username is already taken');
+        setUsernameError(_copy("copy.34141f3f22aa", { defaultValue: "Username is already taken" }));
       }
     } catch (err) {
       console.error('Username check failed:', err);
-      const errorMessage = err instanceof Error ? err.message : 'Failed to check username';
+      const errorMessage = err instanceof Error ? err.message : _copy("copy.c8e20022262b", { defaultValue: "Failed to check username" });
       setUsernameAvailable(false);
       setUsernameError(errorMessage);
     } finally {
       setIsCheckingUsername(false);
     }
-  }, []);
+  }, [_copy]);
 
   // Check username when debounced value changes
   useEffect(() => {
@@ -227,35 +227,35 @@ export function LoginProfileStep() {
 
     // Validate username
     if (!trimmedUsername) {
-      setError('Username is required');
+      setError(_copy("copy.d18de1563a61", { defaultValue: "Username is required" }));
       return;
     }
 
     if (trimmedUsername.length > 30) {
-      setError('Username must be 30 characters or less');
+      setError(_copy("copy.6cfdbd27009d", { defaultValue: "Username must be 30 characters or less" }));
       return;
     }
 
     // Hyphens included: the API has always accepted them, and rejecting them
     // here made the two sides disagree about which names are even legal.
     if (!/^[a-z0-9_-]+$/.test(trimmedUsername)) {
-      setError('Username can only contain letters, numbers, hyphens and underscores');
+      setError(_copy("copy.ef9ec9824090", { defaultValue: "Username can only contain letters, numbers, hyphens and underscores" }));
       return;
     }
 
     if (isReservedUsername(trimmedUsername)) {
-      setError('This username is reserved');
+      setError(_copy("copy.71bfd7fdb453", { defaultValue: "This username is reserved" }));
       return;
     }
 
     // Ensure username is available
     if (!usernameAvailable) {
-      setError('Please choose an available username');
+      setError(_copy("copy.394c42f9308f", { defaultValue: "Please choose an available username" }));
       return;
     }
 
     if (trimmedDisplayName.length > 50) {
-      setError('Display name must be less than 50 characters');
+      setError(_copy("copy.b84576d9462b", { defaultValue: "Display name must be less than 50 characters" }));
       return;
     }
 
@@ -309,10 +309,10 @@ export function LoginProfileStep() {
     } catch (err) {
       console.error('Failed to update profile:', err);
       signupLog.trace?.('profile-save-error', { reason: err instanceof Error ? err.message : String(err) });
-      const errorMessage = err instanceof Error ? err.message : 'Failed to save profile';
+      const errorMessage = err instanceof Error ? err.message : _copy("copy.b689d74cef45", { defaultValue: "Failed to save profile" });
 
       if (errorMessage.toLowerCase().includes('taken') || errorMessage.toLowerCase().includes('exists')) {
-        setError('This username is already taken. Please choose another.');
+        setError(_copy("copy.1c8d76a789fd", { defaultValue: "This username is already taken. Please choose another." }));
         setUsernameAvailable(false);
       } else {
         setError(errorMessage);

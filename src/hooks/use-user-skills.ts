@@ -1,6 +1,7 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/contexts/AuthContext';
+import { translateCopy as _translateCopy } from '@/i18n/copy';
 
 export interface UserSkill {
   id: string;
@@ -55,7 +56,7 @@ export function useCreateSkill() {
   const qc = useQueryClient();
   return useMutation({
     mutationFn: async (input: NewSkillInput): Promise<UserSkill> => {
-      if (!walletAddress) throw new Error('Connect your wallet to create skills.');
+      if (!walletAddress) throw new Error(_translateCopy("copy.2c16b97ffc50", { defaultValue: "Connect your wallet to create skills." }));
       const wallet = walletAddress.toLowerCase();
       const baseSlug = input.slug ? slugify(input.slug) : slugify(input.name);
       let slug = baseSlug;
@@ -95,7 +96,7 @@ export function useUpdateSkill() {
   const qc = useQueryClient();
   return useMutation({
     mutationFn: async ({ id, patch }: { id: string; patch: Partial<NewSkillInput> }) => {
-      if (!walletAddress) throw new Error('Not authenticated');
+      if (!walletAddress) throw new Error(_translateCopy("copy.76d1efbeed2d", { defaultValue: "Not authenticated" }));
       const wallet = walletAddress.toLowerCase();
       const { error } = await supabase
         .from('user_skills')
@@ -113,7 +114,7 @@ export function useDeleteSkill() {
   const qc = useQueryClient();
   return useMutation({
     mutationFn: async (id: string) => {
-      if (!walletAddress) throw new Error('Not authenticated');
+      if (!walletAddress) throw new Error(_translateCopy("copy.76d1efbeed2d", { defaultValue: "Not authenticated" }));
       const wallet = walletAddress.toLowerCase();
       const { error } = await supabase
         .from('user_skills')

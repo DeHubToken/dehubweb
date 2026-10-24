@@ -7,6 +7,7 @@
  * allow GET, POST and OPTIONS only.
  */
 import { getAuthToken } from '@/lib/api/dehub/core';
+import { translateCopy as _translateCopy } from '@/i18n/copy';
 
 const SUPABASE_URL =
   import.meta.env.VITE_SUPABASE_URL || 'https://aigxuutjaqsywioxjefr.supabase.co';
@@ -33,7 +34,7 @@ export interface TranscriptCorrection {
 /** Thrown when the function is not deployed yet — treated as "no corrections". */
 export class CorrectionsUnavailableError extends Error {
   constructor() {
-    super('Caption corrections are not available yet');
+    super(_translateCopy("copy.a9a351ec2f31", { defaultValue: "Caption corrections are not available yet" }));
     this.name = 'CorrectionsUnavailableError';
   }
 }
@@ -78,7 +79,7 @@ export async function fetchTranscriptCorrections(transcriptId: string): Promise<
 
 async function post(body: Record<string, unknown>): Promise<any> {
   const token = getAuthToken();
-  if (!token) throw new Error('Sign in first.');
+  if (!token) throw new Error(_translateCopy("copy.1ba0ae88fee7", { defaultValue: "Sign in first." }));
 
   const res = await reach(FN_URL, {
     method: 'POST',
@@ -87,7 +88,7 @@ async function post(body: Record<string, unknown>): Promise<any> {
   });
 
   const data = await res.json().catch(() => null);
-  if (!res.ok) throw new Error(data?.error ?? `Request failed (${res.status})`);
+  if (!res.ok) throw new Error(data?.error ?? _translateCopy("copy.94dd9f908316", { defaultValue: "Request failed ({{value1}})", value1: res.status }));
   return data;
 }
 

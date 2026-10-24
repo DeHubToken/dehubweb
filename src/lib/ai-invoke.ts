@@ -16,6 +16,7 @@ import { supabase } from '@/integrations/supabase/client';
 import { getAuthToken } from '@/lib/api/dehub';
 import { ensureFreshToken } from '@/lib/api/dehub/core';
 import { forgetPayment } from '@/lib/ai-payment';
+import { translateCopy as _translateCopy } from '@/i18n/copy';
 
 /** Headers the paid AI functions authenticate against. Empty when signed out. */
 export function dehubAuthHeaders(): Record<string, string> {
@@ -127,5 +128,5 @@ export async function readFunctionError(error: unknown, data?: unknown): Promise
     }
   }
 
-  return error instanceof Error ? error.message : String(error ?? 'Request failed.');
+  return error instanceof Error ? error.message : String(error ?? _translateCopy("copy.e6c5c7ec5c6b", { defaultValue: "Request failed." }));
 }

@@ -1,3 +1,4 @@
+import { translateCopy as _translateCopy } from '@/i18n/copy';
 import { useTranslation as _useCopy } from 'react-i18next';
 import { MobileStatusBar } from '../MobileStatusBar';
 import { MobileTopBar } from '../MobileTopBar';
@@ -9,33 +10,40 @@ import ChevronRight from "@/components/ui/cut-icons/next";
 
 
 const MOCK_CHANNELS = [
-  { name: 'CryptoTV Live', category: 'Crypto', country: '🇺🇸', viewers: '12.4K' },
-  { name: 'DeFi Daily', category: 'Finance', country: '🇬🇧', viewers: '8.2K' },
-  { name: 'Web3 News', category: 'News', country: '🇩🇪', viewers: '5.1K' },
-  { name: 'NFT Showcase', category: 'Art', country: '🇯🇵', viewers: '3.7K' },
-  { name: 'Blockchain 101', category: 'Education', country: '🇫🇷', viewers: '2.9K' },
-  { name: 'DAO Radio', category: 'Music', country: '🇧🇷', viewers: '1.5K' },
+  { name: 'CryptoTV Live', get category() { return _translateCopy("copy.df12b8f89b61", { defaultValue: "Crypto" }); }, country: '🇺🇸', viewers: '12.4K' },
+  { name: 'DeFi Daily', get category() { return _translateCopy("copy.b696d75511dc", { defaultValue: "Finance" }); }, country: '🇬🇧', viewers: '8.2K' },
+  { name: 'Web3 News', get category() { return _translateCopy("copy.69752f2313b2", { defaultValue: "News" }); }, country: '🇩🇪', viewers: '5.1K' },
+  { name: 'NFT Showcase', get category() { return _translateCopy("copy.75df3579c730", { defaultValue: "Art" }); }, country: '🇯🇵', viewers: '3.7K' },
+  { name: 'Blockchain 101', get category() { return _translateCopy("copy.512ab3c6b986", { defaultValue: "Education" }); }, country: '🇫🇷', viewers: '2.9K' },
+  { name: 'DAO Radio', get category() { return _translateCopy("copy.6eb00b4b2614", { defaultValue: "Music" }); }, country: '🇧🇷', viewers: '1.5K' },
 ];
 
-const CATEGORIES = ['All', 'Crypto', 'News', 'Finance', 'Music', 'Education'];
+const CATEGORIES = [
+  { id: 'all', get label() { return _translateCopy("copy.a52ace420f21", { defaultValue: "All" }); } },
+  { id: 'crypto', get label() { return _translateCopy("copy.df12b8f89b61", { defaultValue: "Crypto" }); } },
+  { id: 'news', get label() { return _translateCopy("copy.69752f2313b2", { defaultValue: "News" }); } },
+  { id: 'finance', get label() { return _translateCopy("copy.b696d75511dc", { defaultValue: "Finance" }); } },
+  { id: 'music', get label() { return _translateCopy("copy.6eb00b4b2614", { defaultValue: "Music" }); } },
+  { id: 'education', get label() { return _translateCopy("copy.512ab3c6b986", { defaultValue: "Education" }); } },
+];
 
 export function TVScreen() {
   const { t: _copy } = _useCopy();
   return (
     <div className="min-h-full bg-black flex flex-col">
       <MobileStatusBar />
-      <MobileTopBar title="TV" />
+      <MobileTopBar title={_copy("copy.ca62d5e073f5", { defaultValue: "TV" })} />
 
       {/* Categories */}
       <div className="flex gap-2 px-4 py-3 overflow-x-auto scrollbar-hide">
         {CATEGORIES.map((cat, i) => (
           <button
-            key={cat}
+            key={cat.id}
             className={`px-3 py-1.5 rounded-lg text-xs font-medium flex-shrink-0 ${
               i === 0 ? 'bg-white/10 text-white border border-white/20' : 'text-zinc-500'
             }`}
           >
-            {cat}
+            {cat.label}
           </button>
         ))}
       </div>

@@ -4,6 +4,7 @@ import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { useAuth } from '@/contexts/AuthContext';
 import { apiCall } from '@/lib/api/dehub/core';
 import { toast } from 'sonner';
+import { translateCopy as _translateCopy } from '@/i18n/copy';
 
 /**
  * The three states the DM API actually models, matching mobile's
@@ -91,7 +92,7 @@ export function useDmSettings() {
   // Update DM status (who can message)
   const updateMutation = useMutation({
     mutationFn: async (payload: { status: string; action: string }) => {
-      if (!walletAddress) throw new Error('Not authenticated');
+      if (!walletAddress) throw new Error(_translateCopy("copy.76d1efbeed2d", { defaultValue: "Not authenticated" }));
       await apiCall<any>(`/api/dm/user-status/${walletAddress.toLowerCase()}`, {
         method: 'POST',
         body: payload,
@@ -111,7 +112,7 @@ export function useDmSettings() {
   // Update fee — API requires status+action in every POST. Include current DM access state.
   const updateFeeMutation = useMutation({
     mutationFn: async (fee: number) => {
-      if (!walletAddress) throw new Error('Not authenticated');
+      if (!walletAddress) throw new Error(_translateCopy("copy.76d1efbeed2d", { defaultValue: "Not authenticated" }));
       const payload = toStatusPayload(whoCanMessage);
       await apiCall<any>(`/api/dm/user-status/${walletAddress.toLowerCase()}`, {
         method: 'POST',

@@ -32,7 +32,7 @@ export function useReauthHandler() {
   const handleApiError = async (error: unknown, fallbackMessage: string): Promise<boolean> => {
     if (error instanceof AuthenticationError) {
       // Try seamless refresh first
-      const toastId = toast.loading('Refreshing session...');
+      const toastId = toast.loading(_copy("copy.8c713dac5e4b", { defaultValue: "Refreshing session..." }));
       
       // force: the server just rejected this request, so the local expiry
       // check cannot be trusted to decide whether a refresh is needed.

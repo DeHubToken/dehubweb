@@ -1,3 +1,4 @@
+import { translateCopy as _translateCopy } from '@/i18n/copy';
 import { FeedSwallowMotion } from '@/components/app/feeds/FeedSwallowMotion';
 import { useTranslation as _useCopy } from 'react-i18next';
 import i18n from '@/i18n';
@@ -74,9 +75,10 @@ import { z } from 'zod';
 import { FeatureRequestComments } from '@/components/app/features/FeatureRequestComments';
 import { SEOHead } from '@/components/SEOHead';
 
-const featureSchema = z.object({
-  title: z.string().trim().min(1, 'Title is required').max(100, 'Title must be under 100 characters'),
-  description: z.string().trim().min(1, 'Description is required').max(1000, 'Description must be under 1,000 characters'),
+// Built per use so its messages are read in the reader's language at the time.
+const featureSchema = () => z.object({
+  title: z.string().trim().min(1, _translateCopy("copy.d5b06872b556", { defaultValue: "Title is required" })).max(100, _translateCopy("copy.8b4f83e9c989", { defaultValue: "Title must be under 100 characters" })),
+  description: z.string().trim().min(1, _translateCopy("copy.032d33c52dda", { defaultValue: "Description is required" })).max(1000, _translateCopy("copy.d69c0b196525", { defaultValue: "Description must be under 1,000 characters" })),
   category: z.enum(['ui_ux', 'performance', 'new_feature', 'bug_fix', 'integration', 'other']),
 });
 
@@ -556,7 +558,7 @@ function PromptComposer({ initialCategory, focusRequest, onPosted }: { initialCa
     if (!description.trim() || submitMutation.isPending) return;
     if (!isAuthenticated) { openLoginModal(); return; }
     const prompt = description.trim();
-    const result = featureSchema.safeParse({
+    const result = featureSchema().safeParse({
       title: featurePromptFields(prompt, title).title,
       description: prompt, category,
     });

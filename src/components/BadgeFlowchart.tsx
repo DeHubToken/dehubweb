@@ -61,7 +61,7 @@ const BadgeFlowchart = () => {
               <div className="text-right shrink-0">
                 <span className="text-sm font-mono text-foreground">{badge.usd}</span>
                 <span className="block text-xs font-mono text-muted-foreground">
-                  <DhbAmount amount={badge.threshold} iconClassName="w-3 h-3" /> · ×{index + 2}{_copy("copy.dcbb8c138058", { defaultValue: " weight" })}</span>
+                  <DhbAmount amount={badge.threshold} iconClassName="w-3 h-3" />{_copy("copy.b1452e410b70", { defaultValue: " · ×{{value1}} weight", value1: index + 2 })}</span>
               </div>
             </div>
           ))}

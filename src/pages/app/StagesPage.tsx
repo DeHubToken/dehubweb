@@ -470,7 +470,7 @@ export default function StagesPage() {
     currentSpace?.id !== space.id;
 
   const handleEndLive = async (space: AudioSpace) => {
-    if (!confirm(`End "${space.title}"? It comes off the air for everyone.`)) return;
+    if (!confirm(_copy("copy.2996d70c40ce", { defaultValue: "End \"{{value1}}\"? It comes off the air for everyone.", value1: space.title }))) return;
     // The Hosting tab is its own query, so the context's own refresh does not
     // reach it — the row would sit there still labelled LIVE.
     if (await endStageById(space.id)) {
@@ -501,7 +501,7 @@ export default function StagesPage() {
   };
 
   const handleCancelScheduled = async (space: AudioSpace) => {
-    if (!confirm(`Cancel "${space.title}"? The link stops working.`)) return;
+    if (!confirm(_copy("copy.becca700f302", { defaultValue: "Cancel \"{{value1}}\"? The link stops working.", value1: space.title }))) return;
     setBusyScheduledId(space.id);
     try {
       await cancelScheduledSpace(space.id);

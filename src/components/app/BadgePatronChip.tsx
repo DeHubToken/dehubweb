@@ -53,7 +53,7 @@ export function BadgePatronChip({ lookupId, className }: BadgePatronChipProps) {
   const { grantor, tier } = data;
   const handle = grantor.username || grantor.displayName || null;
   const src = badgeImage(tier);
-  const who = handle ? `@${handle}` : 'another holder';
+  const who = handle ? `@${handle}` : _copy("copy.cc93556c65ad", { defaultValue: "another holder" });
 
   return (
     <span
@@ -71,7 +71,7 @@ export function BadgePatronChip({ lookupId, className }: BadgePatronChipProps) {
         className,
       )}
     >
-      {src ? <img src={src} alt="" className="size-3 shrink-0" /> : null}{_copy("copy.407d8f7e8ded", { defaultValue: "Lent by " })}{who}
+      {src ? <img src={src} alt="" className="size-3 shrink-0" /> : null}{_copy("copy.b16e7d5bea3b", { defaultValue: "Lent by {{value1}}", value1: who })}
     </span>
   );
 }

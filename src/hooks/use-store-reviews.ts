@@ -8,6 +8,7 @@ import { supabase } from '@/integrations/supabase/client';
 import { withWalletHeader } from '@/lib/supabase-wallet-client';
 import { useAuth } from '@/contexts/AuthContext';
 import { toast } from 'sonner';
+import { translateCopy as _translateCopy } from '@/i18n/copy';
 
 export function useListingReviews(listingId: string | undefined) {
   return useQuery({
@@ -52,7 +53,7 @@ export function useCreateReview() {
   const qc = useQueryClient();
   return useMutation({
     mutationFn: async (params: { listing_id: string; rating: number; comment?: string }) => {
-      if (!walletAddress) throw new Error('Not authenticated');
+      if (!walletAddress) throw new Error(_translateCopy("copy.76d1efbeed2d", { defaultValue: "Not authenticated" }));
       const { data, error } = await withWalletHeader(
         supabase.from('store_reviews').insert({
           listing_id: params.listing_id,
@@ -69,7 +70,7 @@ export function useCreateReview() {
       qc.invalidateQueries({ queryKey: ['store-reviews', vars.listing_id] });
       toast.success(_copy("copy.b0dd0a526e86", { defaultValue: "Review submitted!" }));
     },
-    onError: (e: any) => toast.error(e.message || 'Failed to submit review'),
+    onError: (e: any) => toast.error(e.message || _copy("copy.31696badc2ca", { defaultValue: "Failed to submit review" })),
   });
 }
 

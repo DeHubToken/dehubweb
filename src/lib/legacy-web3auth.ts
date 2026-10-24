@@ -16,6 +16,7 @@
 
 import { supabase } from "@/integrations/supabase/client";
 import { isMobileDevice } from "@/lib/web3auth";
+import { translateCopy as _translateCopy } from '@/i18n/copy';
 
 export type LegacyProvider = "google" | "twitter" | "discord" | "apple" | "email_passwordless" | "sms_passwordless";
 
@@ -47,7 +48,7 @@ async function getClientId(): Promise<string> {
   }
   const { data, error } = await supabase.functions.invoke("get-web3auth-config");
   if (error || !data?.clientId) {
-    throw new Error(error?.message || "Web3Auth client ID not configured");
+    throw new Error(error?.message || _translateCopy("copy.0f175a807a6f", { defaultValue: "Web3Auth client ID not configured" }));
   }
   cachedClientId = data.clientId;
   sessionStorage.setItem("dehub_web3auth_client_id", data.clientId);
@@ -113,7 +114,7 @@ async function initLegacyWeb3Auth(): Promise<any> {
   await Promise.race([
     instance.init(),
     new Promise<never>((_, reject) =>
-      setTimeout(() => reject(new Error("Web3Auth init timed out after 30s")), 30000)
+      setTimeout(() => reject(new Error(_translateCopy("copy.7cf27c1444e5", { defaultValue: "Web3Auth init timed out after 30s" }))), 30000)
     ),
   ]);
 
@@ -127,7 +128,7 @@ async function initLegacyWeb3Auth(): Promise<any> {
     }
   }
   if (instance.status === "not_ready") {
-    throw new Error("Web3Auth is taking too long to start. Please try again.");
+    throw new Error(_translateCopy("copy.4ff8bca4e935", { defaultValue: "Web3Auth is taking too long to start. Please try again." }));
   }
   return instance;
 }
@@ -256,7 +257,7 @@ export async function startLegacyMigration(
       const redirectParams = buildConnectParams(provider, loginHint, true);
       await web3auth.connectTo(AUTH_CONNECTOR, redirectParams);
       // Unreachable in practice (page navigates), but keep TS happy:
-      throw new Error("Redirecting to complete login…");
+      throw new Error(_translateCopy("copy.566f8c130f9b", { defaultValue: "Redirecting to complete login…" }));
     }
   }
 
@@ -267,7 +268,7 @@ export async function startLegacyMigration(
   if (!key) {
     throw connectError instanceof Error
       ? connectError
-      : new Error("Could not retrieve your old wallet key. Please try again.");
+      : new Error(_translateCopy("copy.c7b7e6c88a41", { defaultValue: "Could not retrieve your old wallet key. Please try again." }));
   }
   return key.startsWith("0x") ? key : `0x${key}`;
 }
@@ -286,7 +287,7 @@ export async function resumeLegacyMigration(): Promise<string | null> {
     web3auth = await initLegacyWeb3Auth();
     const provider = web3auth.connected ? web3auth.provider : null;
     const key = await extractKey(web3auth, provider);
-    if (!key) throw new Error("Could not retrieve your old wallet key. Please try again.");
+    if (!key) throw new Error(_translateCopy("copy.c7b7e6c88a41", { defaultValue: "Could not retrieve your old wallet key. Please try again." }));
     return key.startsWith("0x") ? key : `0x${key}`;
   } finally {
     await cleanupLegacySession(web3auth);

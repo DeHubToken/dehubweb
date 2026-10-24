@@ -33,6 +33,7 @@ import {
 } from '@/lib/asset-refs';
 import { correctDhbMarketCap } from '@/lib/market/dhb-market-cap';
 import type { PricePoint } from '@/hooks/use-token-chart';
+import { translateCopy as _translateCopy } from '@/i18n/copy';
 
 const DEXSCREENER = 'https://api.dexscreener.com';
 const GECKOTERMINAL = 'https://api.geckoterminal.com/api/v2';
@@ -431,9 +432,9 @@ const MAJORS: Array<{ symbol: string; name: string; assetClass: AssetClass }> = 
   { symbol: 'NFLX', name: 'Netflix', assetClass: 'stock' },
   { symbol: 'SPY', name: 'SPDR S&P 500 ETF', assetClass: 'stock' },
   { symbol: 'QQQ', name: 'Invesco QQQ Trust', assetClass: 'stock' },
-  { symbol: 'GC=F', name: 'Gold', assetClass: 'stock' },
-  { symbol: 'SI=F', name: 'Silver', assetClass: 'stock' },
-  { symbol: 'CL=F', name: 'Crude Oil', assetClass: 'stock' },
+  { symbol: 'GC=F', get name() { return _translateCopy("copy.6249df4367d0", { defaultValue: "Gold" }); }, assetClass: 'stock' },
+  { symbol: 'SI=F', get name() { return _translateCopy("copy.a0b43df06f52", { defaultValue: "Silver" }); }, assetClass: 'stock' },
+  { symbol: 'CL=F', get name() { return _translateCopy("copy.04826b42f752", { defaultValue: "Crude Oil" }); }, assetClass: 'stock' },
 ];
 
 interface SearchHit {

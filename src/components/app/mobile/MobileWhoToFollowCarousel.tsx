@@ -166,7 +166,7 @@ export function MobileWhoToFollowCarousel({ surface = 'feed' }: MobileWhoToFollo
         lingerTimers.current.delete(user.address);
         setFollowedFlag(user.address, false);
         unmarkFollowed(user.address);
-        if (!info.handled) handleApiError(error, 'Failed to follow user');
+        if (!info.handled) handleApiError(error, _copy("copy.f5a7643bdaac", { defaultValue: "Failed to follow user" }));
       },
     });
   };

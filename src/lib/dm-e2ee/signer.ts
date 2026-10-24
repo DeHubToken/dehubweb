@@ -14,10 +14,11 @@ import { getEoaProvider, restoreWalletSession } from '@/lib/smart-wallet';
 import { resolveSigningAccount } from '@/lib/wallet-accounts';
 import { ensureWalletRuntime } from '@/lib/wallet-runtime';
 import { prepareWalletRelay, waitForWalletSignature } from '@/lib/wallet-relay';
+import { translateCopy as _translateCopy } from '@/i18n/copy';
 
 export class WalletLockedError extends Error {
   constructor() {
-    super('Unlock your wallet to enable encrypted messages');
+    super(_translateCopy("copy.23b26b97cc25", { defaultValue: "Unlock your wallet to enable encrypted messages" }));
     this.name = 'WalletLockedError';
   }
 }
@@ -26,7 +27,7 @@ type ConnectionSource = 'web3auth' | 'wagmi' | null;
 
 export class WalletConnectionError extends Error {
   constructor() {
-    super('Reconnect your wallet to turn on encryption.');
+    super(_translateCopy("copy.14f88a20e2be", { defaultValue: "Reconnect your wallet to turn on encryption." }));
     this.name = 'WalletConnectionError';
   }
 }

@@ -3,6 +3,7 @@ import { apiCall, getAuthToken, authedUpload, ensureFreshToken } from './core';
 import { getAccountSummaries, type AccountSummary } from './users';
 import type { DeHubUser, DeHubNFT } from './types';
 import type { MediaDescriptor, MediaKind } from '@/lib/dm-e2ee/media';
+import { translateCopy as _translateCopy } from '@/i18n/copy';
 
 // ─── Legacy types (kept for backward compat with GroupSettingsDrawer etc.) ────
 
@@ -651,7 +652,7 @@ export async function forwardDmMessage(
     body: { conversationId, messageId, ...(content ? { content } : {}) },
     requiresAuth: true,
   });
-  if (res?.status === false || !res?.result) throw new Error(res?.message || 'Could not forward the message.');
+  if (res?.status === false || !res?.result) throw new Error(res?.message || _translateCopy("copy.60761edbfeb6", { defaultValue: "Could not forward the message." }));
   const myAddress = localStorage.getItem('dehub_wallet')?.toLowerCase() || '';
   return parseDmMessage(res.result, myAddress);
 }
@@ -797,40 +798,40 @@ export async function unblockConversation(conversationId: string): Promise<{ suc
 // Note: DeHub backend does not support group DMs (chat-system.md: "All DMs are 1:1 only").
 // These functions fail gracefully with a clear error.
 
-const GROUP_NOT_SUPPORTED = 'Group chat is not supported. DeHub DMs are 1:1 only.';
+const groupNotSupported = () => _translateCopy("copy.6522198fff85", { defaultValue: "Group chat is not supported. DeHub DMs are 1:1 only." });
 
 export async function createGroup(
   _name: string,
   _memberAddresses: string[],
   _description?: string
 ): Promise<DeHubConversation> {
-  throw new Error(GROUP_NOT_SUPPORTED);
+  throw new Error(groupNotSupported());
 }
 
 export async function getGroupInfo(_groupId: string): Promise<GroupInfo> {
-  throw new Error(GROUP_NOT_SUPPORTED);
+  throw new Error(groupNotSupported());
 }
 
 export async function joinGroup(_groupId: string): Promise<{ success: boolean }> {
-  throw new Error(GROUP_NOT_SUPPORTED);
+  throw new Error(groupNotSupported());
 }
 
 export async function updateGroup(
   _groupId: string,
   _updates: { name?: string; description?: string; avatarUrl?: string }
 ): Promise<GroupInfo> {
-  throw new Error(GROUP_NOT_SUPPORTED);
+  throw new Error(groupNotSupported());
 }
 
 export async function leaveGroup(_groupId: string): Promise<{ success: boolean }> {
-  throw new Error(GROUP_NOT_SUPPORTED);
+  throw new Error(groupNotSupported());
 }
 
 export async function blockUserInGroup(
   _groupId: string,
   _userAddress: string
 ): Promise<{ success: boolean }> {
-  throw new Error(GROUP_NOT_SUPPORTED);
+  throw new Error(groupNotSupported());
 }
 
 // ─── User Status ──────────────────────────────────────────────────────────────

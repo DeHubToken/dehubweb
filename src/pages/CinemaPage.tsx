@@ -1,3 +1,4 @@
+import { translateCopy as _translateCopy } from '@/i18n/copy';
 import { useTranslation as _useCopy } from 'react-i18next';
 import { useSurfaceDraft } from '@/hooks/use-surface-draft';
 import { useEffect, useMemo, useState } from 'react';
@@ -34,8 +35,8 @@ import {
 import { dehubLinkFor } from '@/lib/dehub-links';
 import type { ObjectType } from '@/lib/api/justwatch';
 
-const pageDescription =
-  'Find out where to stream, rent or buy any film or series, with live prices for your country. DeHub Cinema covers every major service in 140+ countries.';
+const pageDescription = () =>
+  _translateCopy("copy.9c1b6df8777f", { defaultValue: "Find out where to stream, rent or buy any film or series, with live prices for your country. DeHub Cinema covers every major service in 140+ countries." });
 
 /** Debounce keeps a burst of keystrokes from becoming a burst of upstream
  *  calls — partner API quota is per-account, not per-visitor. */
@@ -101,7 +102,7 @@ export default function CinemaPage() {
       }
     : {
         title: _copy("copy.06ce40d90680", { defaultValue: "Cinema | Where to Stream, Rent or Buy Any Film | DeHub" }),
-        description: pageDescription,
+        description: pageDescription(),
         url: 'https://dehub.io/cinema',
       };
 
@@ -115,14 +116,14 @@ export default function CinemaPage() {
           url: 'https://dehub.io/cinema',
           applicationCategory: 'EntertainmentApplication',
           operatingSystem: 'Web',
-          description: pageDescription,
+          description: pageDescription(),
           offers: { '@type': 'Offer', price: '0', priceCurrency: 'USD' },
         },
         {
           '@type': 'WebPage',
           name: 'DeHub Cinema',
           url: 'https://dehub.io/cinema',
-          description: pageDescription,
+          description: pageDescription(),
           isPartOf: { '@type': 'WebSite', name: 'DeHub', url: 'https://dehub.io' },
         },
       ],
@@ -330,7 +331,7 @@ export default function CinemaPage() {
           open={shareOpen}
           onOpenChange={setShareOpen}
           url={shareUrl}
-          shareTitle={openTitle ? `${openTitle.title} — where to watch` : 'Where to watch'}
+          shareTitle={openTitle ? _copy("copy.1d4bb4e535d7", { defaultValue: "{{value1}} — where to watch", value1: openTitle.title }) : _copy("copy.842e10fb4af2", { defaultValue: "Where to watch" })}
         />
       )}
     </>

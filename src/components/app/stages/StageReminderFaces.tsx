@@ -25,6 +25,7 @@
 import Bell from "@/components/ui/cut-icons/alerts";
 
 import { useNavigate } from 'react-router-dom';
+import { useTranslation as _useCopy } from 'react-i18next';
 import { cn } from '@/lib/utils';
 import { useStageReminderFaces } from '@/hooks/use-stage-reminders';
 import { StageAvatar } from './StageAvatar';
@@ -39,6 +40,7 @@ export function StageReminderFaces({
   /** Wording only — "set a reminder" before the stage starts, "coming" after. */
   state?: 'upcoming' | 'live';
 }) {
+  const { t: _copy } = _useCopy();
   const navigate = useNavigate();
   const { faces, total } = useStageReminderFaces(spaceId);
 
@@ -50,8 +52,8 @@ export function StageReminderFaces({
 
   const tooltip =
     state === 'live'
-      ? `${total} ${total === 1 ? 'person said they were' : 'people said they were'} coming`
-      : `${total} ${total === 1 ? 'person has' : 'people have'} set a reminder`;
+      ? _copy("copy.abbf88d1cafa", { count: total, defaultValue: "{{count}} people said they were coming" })
+      : _copy("copy.ec280c7818c9", { count: total, defaultValue: "{{count}} people have set a reminder" });
 
   return (
     <div className={cn('flex items-center gap-2', className)} title={tooltip}>
@@ -70,7 +72,7 @@ export function StageReminderFaces({
                 key={face.address}
                 role="link"
                 tabIndex={0}
-                aria-label={`View @${handle || face.address.slice(0, 6)}'s profile`}
+                aria-label={_copy("copy.648c99c43631", { defaultValue: "View {{value1}}'s profile", value1: `@${handle || face.address.slice(0, 6)}` })}
                 title={handle ? `@${handle}` : undefined}
                 onClick={openProfile}
                 onKeyDown={(e) => {

@@ -51,7 +51,7 @@ function formatDPayTx(tx: DPayTransaction, t: (key: string, opts?: any) => strin
   let isCredit = false;
   switch (tx.type) {
     case 'buy':
-      description = `Coin Purchase: $${amount}`;
+      description = t("copy.419168a04ceb", { defaultValue: "Coin Purchase: ${{value1}}", value1: amount });
       isCredit = true;
       break;
     case 'sell':
@@ -287,7 +287,7 @@ export function RecentTransactions() {
     tipNotifications.forEach(noti => {
       const amount = noti.amount || 0;
       const actorName = noti.actorUsername || noti.actor?.username || 
-        (noti.actorAddress ? `${noti.actorAddress.slice(0, 6)}...${noti.actorAddress.slice(-4)}` : 'Someone');
+        (noti.actorAddress ? `${noti.actorAddress.slice(0, 6)}...${noti.actorAddress.slice(-4)}` : _copy("copy.864c855e3d64", { defaultValue: "Someone" }));
       const amountStr = amount > 0 ? amount.toLocaleString(undefined, { maximumFractionDigits: 0 }) : '';
       
       // Deduplicate: skip if we already have a tip_record or on-chain entry with same amount at ~same time
@@ -309,7 +309,7 @@ export function RecentTransactions() {
           ? isDhb(noti.currency)
             ? t('commandCentre.txTipReceived', { name: `@${actorName}`, amount: amountStr })
             : _copy("copy.29beacb7d918", { defaultValue: "@{{value1}} tipped you {{value2}} {{value3}}", value1: actorName, value2: amountStr, value3: noti.currency })
-          : `@${actorName} tipped you`,
+          : _copy("copy.9f71977c7878", { defaultValue: "@{{value1}} tipped you", value1: actorName }),
         counterpartyAddress: noti.actorAddress,
         counterpartyUsername: actorName,
       });
@@ -340,7 +340,7 @@ export function RecentTransactions() {
       {/* Time Filters */}
       <div className="mb-4 w-fit">
         <GlassFilterRow
-          items={timeFilters.map((f) => ({ key: f, label: f }))}
+          items={timeFilters.map((f) => ({ key: f, label: f === 'Max' ? _copy("copy.a1a5936d3b0f", { defaultValue: "Max" }) : f }))}
           activeKey={activeFilter}
           onSelect={(key) => setActiveFilter(key)}
         />

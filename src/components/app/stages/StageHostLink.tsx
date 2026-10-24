@@ -13,6 +13,7 @@
  */
 
 import { useNavigate } from 'react-router-dom';
+import { useTranslation as _useCopy } from 'react-i18next';
 import { ProfileHoverCard } from '@/components/app/ProfileHoverCard';
 import { cn } from '@/lib/utils';
 import type { AudioSpace } from '@/types/audio-spaces.types';
@@ -34,6 +35,7 @@ export function StageHostLink({
   className,
   children,
 }: StageHostLinkProps) {
+  const { t: _copy } = _useCopy();
   const navigate = useNavigate();
   const handle = space.host_username?.replace('@', '');
 
@@ -48,7 +50,7 @@ export function StageHostLink({
     else navigate(`/app/profile?id=${space.host_wallet_address}`);
   };
 
-  const label = `View @${handle || space.host_wallet_address?.slice(0, 6)}'s profile`;
+  const label = _copy("copy.648c99c43631", { defaultValue: "View {{value1}}'s profile", value1: `@${handle || space.host_wallet_address?.slice(0, 6)}` });
 
   return (
     <ProfileHoverCard

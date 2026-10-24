@@ -60,7 +60,9 @@ export function useCallbackRequests(): UseCallbackRequestsReturn {
           for (const request of requests) {
             if (!seenRequests.current.ids.has(request.id)) {
               toast.info(_copy("copy.7bb6682e5826", { defaultValue: "New callback request" }), {
-                description: `${request.call_type === 'video' ? 'Video' : 'Voice'} call request from ${request.requester_address.slice(0, 6)}...`,
+                description: request.call_type === 'video'
+                  ? _copy("copy.56caea65bb4d", { defaultValue: "Video call request from {{value1}}...", value1: request.requester_address.slice(0, 6) })
+                  : _copy("copy.10eca0ea6544", { defaultValue: "Voice call request from {{value1}}...", value1: request.requester_address.slice(0, 6) }),
               });
             }
           }
@@ -110,7 +112,9 @@ export function useCallbackRequests(): UseCallbackRequestsReturn {
         }
 
         toast.success(_copy("copy.b550c225bba9", { defaultValue: "Callback request sent" }), {
-          description: `${callType === 'video' ? 'Video' : 'Voice'} call request sent successfully.`,
+          description: callType === 'video'
+            ? _copy("copy.4ed6f31d93e4", { defaultValue: "Video call request sent successfully." })
+            : _copy("copy.a9dbc9f9b44a", { defaultValue: "Voice call request sent successfully." }),
         });
 
         await fetchRequests();

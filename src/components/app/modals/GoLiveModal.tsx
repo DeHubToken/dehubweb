@@ -913,7 +913,7 @@ export function GoLiveModal({ isOpen, onClose, initialSource, initialStream }: G
       // way, so nothing about the broadcast waits on a transaction.
       if (mintingThisStream) {
         if (!mintResponse.v || !mintResponse.r || !mintResponse.s) {
-          throw new Error('Invalid signature data from backend');
+          throw new Error(t("copy.846b108641a7", { defaultValue: "Invalid signature data from backend" }));
         }
 
         logger.info('Executing on-chain mint...', { tokenId });
@@ -1009,7 +1009,7 @@ export function GoLiveModal({ isOpen, onClose, initialSource, initialStream }: G
 
       if (wasDismissed()) return;
       if (!streamKey) {
-        throw new Error('Stream key not available yet. The backend may still be provisioning your stream. Please try again in a moment.');
+        throw new Error(t("copy.a0bc0ef4d39e", { defaultValue: "Stream key not available yet. The backend may still be provisioning your stream. Please try again in a moment." }));
       }
 
       // Step 5: Activate stream in DeHub backend + get ingest URL

@@ -4,6 +4,7 @@ import type { SupabaseClient } from '@supabase/supabase-js';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/contexts/AuthContext';
 import { dehubAuthHeaders } from '@/lib/ai-invoke';
+import { translateCopy as _translateCopy } from '@/i18n/copy';
 
 export type DaoProposalKind = 'spend' | 'buy';
 export type DaoProposalStatus =
@@ -104,7 +105,7 @@ async function callDao<T>(body: Record<string, unknown>): Promise<T> {
         // Use the SDK error below when an upstream response is not JSON.
       }
     }
-    throw new Error(detail || error.message || 'DAO request failed');
+    throw new Error(detail || error.message || _translateCopy("copy.146be30badd2", { defaultValue: "DAO request failed" }));
   }
   if ((data as { error?: string })?.error) throw new Error((data as { error: string }).error);
   return data as T;

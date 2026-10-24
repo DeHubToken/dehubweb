@@ -103,6 +103,9 @@ function ThreadEntry({
   const [confirmingDelete, setConfirmingDelete] = useState(false);
   const queryClient = useQueryClient();
   const { t } = useTranslation();
+  /** A reaction's name in the viewer's language. */
+  const reactionName = (reaction: PostReaction) =>
+    t(`reactionInfo.labels.${reaction}`, { defaultValue: reactionMeta(reaction).label });
 
   const state = { ...entry, ...votes };
   const bodyText = state.text || '';
@@ -312,7 +315,7 @@ function ThreadEntry({
               )}
               aria-label={isOwn
                 ? t('postInfo.likes')
-                : t('comments.holdToReact', { reaction: reactionMeta(reactionForThumbTap(heldReaction, state.reactionCounts)).label })}
+                : t('comments.holdToReact', { reaction: reactionName(reactionForThumbTap(heldReaction, state.reactionCounts)) })}
               aria-haspopup={isOwn ? undefined : 'menu'}
               aria-expanded={isOwn ? undefined : likeTray.open}
             >

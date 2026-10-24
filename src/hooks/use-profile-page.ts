@@ -507,13 +507,18 @@ export function useProfilePage({ activeTab = 'home' }: UseProfilePageOptions = {
     if (!apiProfile?.walletAddress || isBlockLoading) return;
     setIsBlockLoading(true);
     const newBlocked = !isBlocked;
+    const who = apiProfile.name || apiProfile.handle;
     try {
       if (isBlocked) {
         await unblockUser(apiProfile.walletAddress);
-        toast.success(`Unblocked ${apiProfile.name || apiProfile.handle || 'user'}`);
+        toast.success(who
+          ? _copy("copy.ebfaa387fdce", { defaultValue: "Unblocked {{value1}}", value1: who })
+          : _copy("copy.3a964f319e8c", { defaultValue: "Unblocked user" }));
       } else {
         await blockUser(apiProfile.walletAddress);
-        toast.success(`Blocked ${apiProfile.name || apiProfile.handle || 'user'}`);
+        toast.success(who
+          ? _copy("copy.158312be3ce0", { defaultValue: "Blocked {{value1}}", value1: who })
+          : _copy("copy.890879a6be14", { defaultValue: "Blocked user" }));
       }
       // Optimistic: set block status immediately so UI updates
       queryClient.setQueryData(['block-status', apiProfile.walletAddress], {
@@ -529,11 +534,11 @@ export function useProfilePage({ activeTab = 'home' }: UseProfilePageOptions = {
         isBlocked: isBlocked,
         isBlockedBy: isBlockedBy,
       });
-      handleApiError(error, `Failed to ${isBlocked ? 'unblock' : 'block'} user`);
+      handleApiError(error, isBlocked ? _copy("copy.91509428edaa", { defaultValue: "Failed to unblock user" }) : _copy("copy.d2b91e7b896f", { defaultValue: "Failed to block user" }));
     } finally {
       setIsBlockLoading(false);
     }
-  }, [apiProfile, isBlocked, isBlockedBy, isBlockLoading, queryClient, handleApiError]);
+  }, [apiProfile, isBlocked, isBlockedBy, isBlockLoading, queryClient, handleApiError, _copy]);
   // Pull-to-refresh
   const triggerRefresh = useCallback(() => {
     if (isRefreshing) return;

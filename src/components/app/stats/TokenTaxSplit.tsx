@@ -122,10 +122,7 @@ export function TokenTaxSplit({ split, onOpen }: { split: TaxSplit; onOpen: (sou
       </div>
 
       <p className="text-[11px] text-zinc-500 leading-relaxed mt-3 pt-3 border-t border-zinc-800">
-        {t(
-          'stats.taxSplit.grossFootnote',
-          'The revenue total above includes BNB shared with holders and stakers. These payments were distributed, not retained by DeHub. Buybacks remain separate. Every amount and original currency can be inspected in the ledger.',
-        )}
+        {t("copy.61623e0ccd12", { defaultValue: "The revenue total above includes BNB shared with holders and stakers. These payments were distributed, not retained by DeHub. Buybacks remain separate. Every amount and original currency can be inspected in the ledger." })}
       </p>
     </div>
   );

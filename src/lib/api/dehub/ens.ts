@@ -22,6 +22,7 @@
  */
 
 import { apiCall } from './core';
+import { translateCopy as _translateCopy } from '@/i18n/copy';
 
 export interface EnsPreview {
   /** Canonical, ENSIP-15 normalised form — not necessarily what was typed. */
@@ -69,7 +70,7 @@ export class EnsApiError extends Error {
 }
 
 function unwrap<T>(res: Envelope<T>): T {
-  if (!res?.status) throw new EnsApiError(res?.error || 'Something went wrong', res?.code);
+  if (!res?.status) throw new EnsApiError(res?.error || _translateCopy("copy.ab827e3fe17d", { defaultValue: "Something went wrong" }), res?.code);
   return res.result;
 }
 

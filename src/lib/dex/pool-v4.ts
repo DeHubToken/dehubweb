@@ -18,6 +18,7 @@ import { encodeSqrtRatioX96, TickMath } from '@uniswap/v3-sdk';
 import { getActiveProvider, writeContractAA } from '@/lib/contracts/aa-utils';
 import { BASE_CHAIN_ID, CHAIN_CONFIGS, ETH_CHAIN_ID } from '@/lib/contracts/dhb-token';
 import { ROBINHOOD_CHAIN_ID } from '@/lib/chains/robinhood';
+import { translateCopy as _translateCopy } from '@/i18n/copy';
 import { readWithTimeout, type OrderStage } from './read-timeout';
 import type { BookPosition } from './orderbook';
 import { POOL_CHAIN_INFO, type DexPool, type PoolChain } from './pools';
@@ -114,14 +115,14 @@ function tickRange(m: EvmMarket, floor: number, ceiling: number): [number, numbe
   // Keep the actual range inside the stated price bounds.
   const lower = Math.ceil(Math.min(a, b)), upper = Math.floor(Math.max(a, b));
   if (lower < TickMath.MIN_TICK || upper > TickMath.MAX_TICK || lower >= upper) {
-    throw new Error('The selected price range is too narrow or outside Uniswap limits');
+    throw new Error(_translateCopy("copy.97df334a4cf1", { defaultValue: "The selected price range is too narrow or outside Uniswap limits" }));
   }
   return [lower, upper];
 }
 
 function initialSqrtPrice(m: EvmMarket, usd: string): ReturnType<typeof encodeSqrtRatioX96> {
   const priceUnits = parseUnits(usd, PRICE_DECIMALS);
-  if (priceUnits <= 0n) throw new Error('Enter a positive price');
+  if (priceUnits <= 0n) throw new Error(_translateCopy("copy.38506cde9f80", { defaultValue: "Enter a positive price" }));
   const tokenOne = 10n ** BigInt(m.token.decimals) * 10n ** BigInt(PRICE_DECIMALS);
   const usdcFor = priceUnits * 10n ** BigInt(m.usdc.decimals);
   // sqrt(amount1 / amount0), in base units.
@@ -153,7 +154,7 @@ export async function quoteEvmOrder(m: EvmMarket, input: EvmOrderInput): Promise
   const amountIn = parseUnits(input.amount, deposit.decimals);
   const floor = Number(input.minPrice), ceiling = Number(input.maxPrice);
   if (amountIn <= 0n || !(floor > 0) || !(ceiling > floor) || !priceString(input.minPrice) || !priceString(input.maxPrice)) {
-    throw new Error('Enter a valid amount and price range');
+    throw new Error(_translateCopy("copy.f0f02abf8ee2", { defaultValue: "Enter a valid amount and price range" }));
   }
   const [tickLower, tickUpper] = tickRange(m, floor, ceiling);
   const state = await readPool(m);
@@ -166,8 +167,8 @@ export async function quoteEvmOrder(m: EvmMarket, input: EvmOrderInput): Promise
   const belowMarket = m.usdcIs0 ? currentTick <= tickLower : currentTick >= tickUpper;
   if (input.side === 'sell' ? !aboveMarket : !belowMarket) {
     throw new Error(input.side === 'sell'
-      ? `This range overlaps the pool price. Move it above the market to list ${m.token.symbol} alone.`
-      : 'This range overlaps the pool price. Move it below the market to list USDC alone.');
+      ? _translateCopy("copy.0fe1584296d9", { defaultValue: "This range overlaps the pool price. Move it above the market to list {{value1}} alone.", value1: m.token.symbol })
+      : _translateCopy("copy.2ebb0f82beec", { defaultValue: "This range overlaps the pool price. Move it below the market to list USDC alone." }));
   }
   const pool = new Pool(m.token, m.usdc, FEE, TICK_SPACING, ZeroAddress, sqrtPriceX96, willCreatePool ? '0' : state.liquidity.toString(), currentTick);
   const depositIs0 = deposit.sortsBefore(input.side === 'sell' ? m.usdc : m.token);
@@ -177,10 +178,10 @@ export async function quoteEvmOrder(m: EvmMarket, input: EvmOrderInput): Promise
     amount1: depositIs0 ? '0' : amountIn.toString(),
     useFullPrecision: true,
   });
-  if (position.liquidity.toString() === '0') throw new Error('Amount is too small for this range');
+  if (position.liquidity.toString() === '0') throw new Error(_translateCopy("copy.4dc5f1795260", { defaultValue: "Amount is too small for this range" }));
   const { amount0, amount1 } = position.mintAmounts;
   const [used, other] = depositIs0 ? [amount0, amount1] : [amount1, amount0];
-  if (BigInt(other.toString()) !== 0n || BigInt(used.toString()) > amountIn) throw new Error('The position would require more tokens than requested');
+  if (BigInt(other.toString()) !== 0n || BigInt(used.toString()) > amountIn) throw new Error(_translateCopy("copy.f922f863a383", { defaultValue: "The position would require more tokens than requested" }));
   const { calldata, value } = V4PositionManager.addCallParameters(position, {
     recipient: input.walletAddress, slippageTolerance: new Percent(0, 1),
     deadline: Math.floor(Date.now() / 1000) + 1200, hookData: '0x',
@@ -193,21 +194,21 @@ async function assertWallet(chainId: number, expected: string) {
   const { provider } = await readWithTimeout(getActiveProvider(chainId), 'Wallet connection', 60000);
   if (!provider) return;
   const [actual] = await readWithTimeout(provider.request({ method: 'eth_accounts' }) as Promise<string[]>, 'Wallet account');
-  if (actual?.toLowerCase() !== expected.toLowerCase()) throw new Error('Connect the wallet holding this balance');
+  if (actual?.toLowerCase() !== expected.toLowerCase()) throw new Error(_translateCopy("copy.f84697f9ab15", { defaultValue: "Connect the wallet holding this balance" }));
 }
 
 async function ensureApproval(m: EvmMarket, input: EvmOrderInput, amount: bigint, progress: (stage: OrderStage) => void) {
-  if (amount > MAX_UINT160) throw new Error('Amount exceeds Permit2 limits');
+  if (amount > MAX_UINT160) throw new Error(_translateCopy("copy.9042c1f7b36e", { defaultValue: "Amount exceeds Permit2 limits" }));
   const deposit = input.side === 'sell' ? m.token : m.usdc;
   const provider = poolProvider(m.chain);
   const token = new Contract(deposit.address, ERC20, provider);
   progress('balance');
   const balance = await readWithTimeout(token.balanceOf(input.walletAddress) as Promise<bigint>, 'Token balance');
-  if (balance < amount) throw new Error(`Insufficient ${deposit.symbol} on ${POOL_CHAIN_INFO[m.chain].name}`);
+  if (balance < amount) throw new Error(_translateCopy("copy.b45f6c4496f7", { defaultValue: "Insufficient {{value1}} on {{value2}}", value1: deposit.symbol, value2: POOL_CHAIN_INFO[m.chain].name }));
   if (await readWithTimeout(token.allowance(input.walletAddress, PERMIT2) as Promise<bigint>, 'Token allowance') < amount) {
     progress('tokenApproval');
     const tx = await writeContractAA(deposit.address, ERC20, 'approve', [PERMIT2, amount], { chainId: m.chainId, context: `approve ${deposit.symbol}` });
-    if ((await readWithTimeout(tx.wait(), 'Approval confirmation', 120000)).status !== 1) throw new Error(`${deposit.symbol} approval did not confirm`);
+    if ((await readWithTimeout(tx.wait(), 'Approval confirmation', 120000)).status !== 1) throw new Error(_translateCopy("copy.e9301bb3bd6c", { defaultValue: "{{value1}} approval did not confirm", value1: deposit.symbol }));
   }
   const permit = new Contract(PERMIT2, PERMIT, provider);
   const [permitted, expiration] = await readWithTimeout(permit.allowance(input.walletAddress, deposit.address, m.positionManager) as Promise<[bigint, bigint, bigint]>, 'Position allowance');
@@ -215,7 +216,7 @@ async function ensureApproval(m: EvmMarket, input: EvmOrderInput, amount: bigint
     progress('permitApproval');
     const tx = await writeContractAA(PERMIT2, PERMIT, 'approve', [deposit.address, m.positionManager, amount, Math.floor(Date.now() / 1000) + 86400],
       { chainId: m.chainId, context: `approve ${deposit.symbol} for the position manager` });
-    if ((await readWithTimeout(tx.wait(), 'Approval confirmation', 120000)).status !== 1) throw new Error('Position approval did not confirm');
+    if ((await readWithTimeout(tx.wait(), 'Approval confirmation', 120000)).status !== 1) throw new Error(_translateCopy("copy.2592c9cec433", { defaultValue: "Position approval did not confirm" }));
   }
 }
 
@@ -229,17 +230,17 @@ export async function placeEvmOrder(m: EvmMarket, input: EvmOrderInput, progress
   // Approvals take time; the pool may have moved.
   quote = await quoteEvmOrder(m, input);
   const parsed = POSITION.parseTransaction({ data: quote.calldata });
-  if (!parsed) throw new Error('Could not prepare the Uniswap position transaction');
+  if (!parsed) throw new Error(_translateCopy("copy.4129edfefaa7", { defaultValue: "Could not prepare the Uniswap position transaction" }));
   progress('submit');
   const tx = await writeContractAA(m.positionManager, POSITION, parsed.name, Array.from(parsed.args),
     { chainId: m.chainId, value: quote.value, context: `create ${m.token.symbol} order` });
   progress('confirm');
   const receipt = await readWithTimeout(tx.wait(), 'Order confirmation', 120000);
-  if (receipt.status !== 1) throw new Error('The order transaction reverted. No order was created.');
+  if (receipt.status !== 1) throw new Error(_translateCopy("copy.71488e7dcdcd", { defaultValue: "The order transaction reverted. No order was created." }));
   const full = await poolProvider(m.chain).getTransactionReceipt(receipt.hash || tx.hash);
   const mint = full?.logs.find((log) => log.address.toLowerCase() === m.positionManager.toLowerCase() && log.topics[0] === TRANSFER_TOPIC &&
     log.topics[1] === `0x${'0'.repeat(64)}` && log.topics[2]?.toLowerCase() === `0x${input.walletAddress.slice(2).toLowerCase().padStart(64, '0')}`);
-  if (!mint?.topics[3]) throw new Error('Order placed but its position could not be identified yet. Refresh in a minute.');
+  if (!mint?.topics[3]) throw new Error(_translateCopy("copy.6b03092e3456", { defaultValue: "Order placed but its position could not be identified yet. Refresh in a minute." }));
   return { tokenId: BigInt(mint.topics[3]).toString(), txHash: receipt.hash || tx.hash };
 }
 
@@ -299,8 +300,8 @@ export async function readEvmOrders(m: EvmMarket, rows: { order_ref: string; sid
 
 export async function withdrawEvmOrder(m: EvmMarket, order: EvmOrder, walletAddress: string): Promise<string> {
   const fresh = await readEvmOrder(m, order.tokenId, order.side);
-  if (!fresh) throw new Error('This order has already been withdrawn');
-  if (fresh.owner.toLowerCase() !== walletAddress.toLowerCase()) throw new Error('Only the order owner can withdraw');
+  if (!fresh) throw new Error(_translateCopy("copy.ec7a209392d9", { defaultValue: "This order has already been withdrawn" }));
+  if (fresh.owner.toLowerCase() !== walletAddress.toLowerCase()) throw new Error(_translateCopy("copy.bff349990f40", { defaultValue: "Only the order owner can withdraw" }));
   await assertWallet(m.chainId, walletAddress);
   const state = await readPool(m);
   const pool = new Pool(m.token, m.usdc, FEE, TICK_SPACING, ZeroAddress, state.sqrtPriceX96.toString(), state.liquidity.toString(), state.tick);
@@ -310,9 +311,9 @@ export async function withdrawEvmOrder(m: EvmMarket, order: EvmOrder, walletAddr
     deadline: Math.floor(Date.now() / 1000) + 1200, burnToken: true,
   });
   const parsed = POSITION.parseTransaction({ data: call.calldata });
-  if (!parsed) throw new Error('Could not prepare the withdrawal transaction');
+  if (!parsed) throw new Error(_translateCopy("copy.0bd84ea477d0", { defaultValue: "Could not prepare the withdrawal transaction" }));
   const tx = await writeContractAA(m.positionManager, POSITION, parsed.name, Array.from(parsed.args), { chainId: m.chainId, value: call.value, context: 'withdraw order' });
   const receipt = await readWithTimeout(tx.wait(), 'Withdrawal confirmation', 120000);
-  if (receipt.status !== 1) throw new Error('Withdrawal did not confirm');
+  if (receipt.status !== 1) throw new Error(_translateCopy("copy.d04b32e3ec44", { defaultValue: "Withdrawal did not confirm" }));
   return receipt.hash;
 }

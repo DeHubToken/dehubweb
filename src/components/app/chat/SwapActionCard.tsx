@@ -64,7 +64,7 @@ export function SwapActionCard({ action, autoQuote = false }: SwapActionCardProp
 
   const handleGetQuote = useCallback(async () => {
     if (!isAutoSwapSupported(BASE_CHAIN_ID)) {
-      setError('Swaps are only supported on Base chain');
+      setError(_copy("copy.8e0207be7d62", { defaultValue: "Swaps are only supported on Base chain" }));
       setStatus('error');
       return;
     }
@@ -78,7 +78,7 @@ export function SwapActionCard({ action, autoQuote = false }: SwapActionCardProp
 
       const result = await getSwapQuote(amountOutWei, action.tokenIn, action.tokenOut);
       if (!result) {
-        setError('No liquidity found for this pair');
+        setError(_copy("copy.7fd8114299cd", { defaultValue: "No liquidity found for this pair" }));
         setStatus('error');
         return;
       }
@@ -87,10 +87,10 @@ export function SwapActionCard({ action, autoQuote = false }: SwapActionCardProp
       setStatus('quoted');
     } catch (err: any) {
       console.error('[SwapCard] Quote error:', err);
-      setError(err?.message || 'Failed to get quote');
+      setError(err?.message || _copy("copy.37bcfc8af381", { defaultValue: "Failed to get quote" }));
       setStatus('error');
     }
-  }, [action]);
+  }, [action, _copy]);
 
   const handleConfirmSwap = useCallback(async () => {
     if (!quote || !walletAddress) return;
@@ -116,10 +116,10 @@ export function SwapActionCard({ action, autoQuote = false }: SwapActionCardProp
       setStatus('success');
     } catch (err: any) {
       console.error('[SwapCard] Swap error:', err);
-      setError(err?.message || 'Swap failed');
+      setError(err?.message || _copy("copy.09d8a776b907", { defaultValue: "Swap failed" }));
       setStatus('error');
     }
-  }, [quote, walletAddress, action]);
+  }, [quote, walletAddress, action, _copy]);
 
   const inDecimals = getDecimals(action.tokenIn);
 
