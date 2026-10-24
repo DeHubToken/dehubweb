@@ -88,6 +88,20 @@ describe('embed page', () => {
     expect(html).toContain('href="https://dehub.io/app/post/12"');
   });
 
+  it('folds a content-warned post behind its warning, and keeps it out of the title', async () => {
+    stubApi({ 14: { ...videoPost, tokenId: 14, spoilerText: 'Flashing lights' } });
+    const html = await (await get('https://dehub.io/app/post/14/embed')).text();
+    expect(html).toContain('<details class="cw"><summary>Flashing lights</summary>');
+    expect(html).toContain('<title>Flashing lights — Akçil on DeHub</title>');
+  });
+
+  it('shows nothing of a post that is not public, whatever else it says', async () => {
+    stubApi({ 15: { ...videoPost, tokenId: 15, visibility: 'followers' } });
+    const html = await (await get('https://dehub.io/app/post/15/embed')).text();
+    expect(html).toContain('class="locked"');
+    expect(html).not.toContain('First line');
+  });
+
   it('shows a gated post as its author and a link, nothing more', async () => {
     stubApi({ 13: gated });
     const html = await (await get('https://dehub.io/app/post/13/embed')).text();
