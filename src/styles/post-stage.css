@@ -199,13 +199,21 @@ html[data-theme='horror'] {
 }
 
 /* The post owns the screen: no logo bar, no feed pill, no bottom nav (the
-   docked composer takes the bottom nav's place). */
+   docked composer takes the bottom nav's place).
+
+   Audio posts keep the logo bar and feed pill: the audio card has no media
+   to float a Back button on, so the pill's settings slot is the way back,
+   same as every post on tablet and desktop. The bottom nav still makes way
+   for the composer. */
 @media (max-width: 639px) {
-  body.post-stage-mode :is([data-mobile-header], [data-feed-nav], [data-feed-nav-outer], [data-home-tabs], [data-bottom-nav]) {
+  body.post-stage-mode:not(.post-stage-keep-nav) :is([data-mobile-header], [data-feed-nav], [data-feed-nav-outer], [data-home-tabs]),
+  body.post-stage-mode [data-bottom-nav] {
     display: none !important;
   }
-  body.post-stage-mode main {
+  body.post-stage-mode:not(.post-stage-keep-nav) main {
     padding-top: 0 !important;
+  }
+  body.post-stage-mode main {
     padding-bottom: 0 !important;
   }
 }
