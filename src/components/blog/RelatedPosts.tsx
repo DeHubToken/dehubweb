@@ -21,13 +21,13 @@ const RelatedPostCard: React.FC<{ post: BlogPost }> = ({ post }) => {
       to={url.pathname + url.search}
       className="group bg-plain-white rounded-lg shadow-sm hover:shadow-md transition-all duration-200 overflow-hidden border border-sky-blue/10"
     >
-      <div className="h-20 overflow-hidden">
+      <div className="aspect-[40/21] overflow-hidden">
         <OptimizedImage
           src={mediaImage(post.bannerImage, { width: 480 })}
           srcSet={mediaImageSrcSet(post.bannerImage, [360, 480, 736])}
           sizes="(min-width: 768px) 300px, 100vw"
           alt={translatedPage.data?.h1 || post.bannerImageAlt}
-          className="w-full h-full object-cover object-bottom group-hover:scale-105 transition-transform duration-200"
+          className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-200"
         />
       </div>
       <div className="p-4">
