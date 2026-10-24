@@ -16,7 +16,6 @@
  * listening — a stage with five thousand listeners costs the same as one with
  * five.
  *
-import i18n from 'i18next';
  * Lines ride a Supabase Realtime **broadcast** channel, the same mechanism
  * StageReactions uses. Broadcast, not a table: an hour of live captions is
  * thousands of interim updates that are worthless ten seconds later, and none
@@ -26,6 +25,7 @@ import i18n from 'i18next';
  */
 
 import { useSyncExternalStore } from 'react';
+import i18n from 'i18next';
 
 /** One caption channel per stage, separate from reactions so their rates are independent. */
 export function stageCaptionChannel(spaceId: string): string {
