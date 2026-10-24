@@ -2611,6 +2611,7 @@ function CommentsSectionForAccount({ tokenId, onClose, initialTab, embedded = fa
       {/* Search Input - always rendered but hidden when not on search tab to maintain consistent height */}
       <div className={`mb-3 ${activeTab === 'search' ? 'visible' : 'invisible h-0 mb-0 overflow-hidden'}`}>
         <Input
+          type="search"
           placeholder={t('comments.searchPlaceholder')}
           value={searchQuery}
           onChange={(e) => setSearchQuery(e.target.value)}
