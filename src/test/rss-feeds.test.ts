@@ -2,7 +2,7 @@ import { readFileSync } from 'node:fs';
 import { resolve } from 'node:path';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import worker from '../../CLOUDFLARE_WORKER_SEO.js';
-import { rssFeedRoute, rssRowIsPublic, profileFeedUrl } from '../../server/rss-feeds.js';
+import { rssFeedRoute, rssItemXml, rssRowIsPublic, profileFeedUrl } from '../../server/rss-feeds.js';
 
 const ROOT = resolve(__dirname, '../..');
 const WORKER = readFileSync(resolve(ROOT, 'CLOUDFLARE_WORKER_SEO.js'), 'utf8');
@@ -87,6 +87,18 @@ describe('what a feed carries', () => {
     expect(rssRowIsPublic(row(5, { streamInfo: { isLockContent: true } }))).toBe(false);
     expect(rssRowIsPublic(row(6, { contentRating: 'mature' }))).toBe(false);
     expect(rssRowIsPublic(row(7, { minterUser: { isPrivate: true } }))).toBe(false);
+    expect(rssRowIsPublic(row(8, { visibility: 'followers' }))).toBe(false);
+    expect(rssRowIsPublic(row(9, { visibility: 'direct' }))).toBe(false);
+    expect(rssRowIsPublic(row(10, { visibility: 'public' }))).toBe(true);
+  });
+
+  it('carries a content-warned post as its warning and link only', () => {
+    const deps = { appUrl: 'https://dehub.io', imageOf: () => 'https://cdn.example/i.jpg', mediaUrl: (p: string) => p, labelOf: () => 'Label' };
+    const item = rssItemXml(row(11, { spoilerText: 'Spoilers', videoUrl: 'videos/11.mp4' }), deps);
+    expect(item).toContain('<title>Spoilers</title>');
+    expect(item).not.toContain('caption long enough');
+    expect(item).not.toContain('videos/11.mp4');
+    expect(item).not.toContain('i.jpg');
   });
 });
 

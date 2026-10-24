@@ -34,10 +34,21 @@ Deno.test('rejects ambiguous, truncated, compressed and oversized responses', as
     'Transfer-Encoding: chunked\r\n\r\n100001\r\n',
     'Transfer-Encoding: chunked\r\n\r\n1\r\nxBAD\r\n0\r\n\r\n',
     'X-Large: ' + 'x'.repeat(8193) + '\r\n\r\n',
-    '\r\n' + 'x'.repeat(1048577),
   ]) await assertRejects(() => readHtmlResponse(response(headers + suffix, 8192)));
   await assertRejects(() => readHtmlResponse(response('HTTP/1.1 101 Switching Protocols\r\n\r\n')));
   await assertRejects(() => readHtmlResponse(response('HTTP/1.1 200 OK\nContent-Type: text/html\n\n')));
+});
+Deno.test('cuts a page longer than the budget instead of refusing it', async () => {
+  const head = '<html><head><title>Big page</title></head><body>';
+  for (const suffix of [
+    '\r\n' + head + 'x'.repeat(1048577),
+    `Content-Length: ${head.length + 2000000}\r\n\r\n` + head + 'x'.repeat(2000000),
+    'Transfer-Encoding: chunked\r\n\r\n' + (head.length + 1048577).toString(16) + '\r\n' + head + 'x'.repeat(1048577) + '\r\n0\r\n\r\n',
+  ]) {
+    const { html } = await readHtmlResponse(response(headers + suffix, 8192));
+    assertEquals(html.length, 1048576);
+    assertEquals(html.startsWith(head), true);
+  }
 });
 Deno.test('redirects return before reading a potentially unbounded body', async () => {
   const result = await readHtmlResponse(response('HTTP/1.1 302 Found\r\nLocation: https://example.com/next\r\n\r\n'));

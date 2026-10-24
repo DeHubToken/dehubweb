@@ -17,7 +17,7 @@ import { useTranslation as _useCopy } from 'react-i18next';
  */
 import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Loader2 } from "lucide-react";
+import { KeyRound, Loader2 } from "lucide-react";
 import ChevronRight from "@/components/ui/cut-icons/next";
 
 import { WalletButton, RainbowKitProvider, darkTheme } from '@rainbow-me/rainbowkit';
@@ -75,6 +75,8 @@ interface LoginWalletsStepProps {
   onWalletConnect: (wallet: WalletId, connect: () => void) => void;
   onDiscoveredWalletConnect?: (connectorId: string) => void;
   onWalletConnectConnect: (connect: () => void) => void;
+  /** Phone sheet: importing a key lives here, under the one Wallet button. */
+  onImportWallet?: () => void;
 }
 
 const shortenAddress = (address: string) =>
@@ -93,6 +95,7 @@ export function LoginWalletsStep({
   onWalletConnect,
   onDiscoveredWalletConnect,
   onWalletConnectConnect,
+  onImportWallet,
 }: LoginWalletsStepProps) {
   const { t: _copy } = _useCopy();
   const { t } = useTranslation();
@@ -316,6 +319,18 @@ export function LoginWalletsStep({
           )}
         </WalletButton.Custom>
         {chipFor('walletconnect')}
+
+        {onImportWallet && (
+          <Button
+            disabled={isConnecting}
+            onClick={onImportWallet}
+            className={walletButtonClass}
+          >
+            <KeyRound className="w-5 h-5 flex-shrink-0" />
+            <span className="flex-1 text-left">{_copy('copy.a865110e919b', { defaultValue: 'Import wallet' })}</span>
+            <ChevronRight className="w-4 h-4 text-white/40" />
+          </Button>
+        )}
 
         {/* A connection through something not listed above — a wallet's own
             in-app browser reaches us as the generic injected connector — still
