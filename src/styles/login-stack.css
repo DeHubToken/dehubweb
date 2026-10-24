@@ -106,6 +106,18 @@ html[data-system-tone="light"] .login-stack-corner {
 }
 .login-stack__accent { color: var(--ls-accent); }
 
+@media (min-width: 768px) {
+  .login-stack-scroll > .login-stack,
+  .login-stack-scroll > .login-stack-form {
+    max-width: 480px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+  .login-stack-scroll .login-stack__lanes {
+    height: clamp(220px, calc(90dvh - 360px), 420px);
+  }
+}
+
 @keyframes ls-up {
   from { transform: translateY(0); }
   to { transform: translateY(-50%); }
