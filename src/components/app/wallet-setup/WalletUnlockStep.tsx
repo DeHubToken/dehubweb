@@ -920,6 +920,7 @@ export function WalletUnlockStep({ userId, onComplete, onLogout }: WalletUnlockS
           <Button
             type="submit"
             disabled={busy || !password}
+            data-contrast-solid={!canUseBiometrics || undefined}
             className={
               canUseBiometrics
                 ? 'w-full h-12 bg-white/10 hover:bg-white/15 text-white rounded-xl border border-white/10'

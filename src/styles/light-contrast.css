@@ -1,0 +1,46 @@
+/* Portals live outside #app-root. Pair their neutral surfaces and ink here
+   rather than relying on dark-theme utility colours or a parent page. */
+html:is([data-theme='light'], [data-system-tone='light']):not(#_):not(#_):not(#_):not(#_):not(#_):not(#_)
+  :is([role='dialog'], [role='alertdialog'], [role='menu'], [role='listbox'], [data-glass-tooltip], [data-sonner-toast]):not([data-keep-dark]):not([data-keep-dark] *) {
+  color: #242428 !important;
+}
+
+html:is([data-theme='light'], [data-system-tone='light']):not(#_):not(#_):not(#_)
+  :is([role='dialog'], [role='alertdialog'], [role='menu'], [role='listbox'], [data-glass-tooltip], [data-sonner-toast])
+  :is(.text-white, [class~='!text-white'], [class*='text-white/'], .text-zinc-50, .text-zinc-100, .text-zinc-200, .text-zinc-300, .text-zinc-400, .text-zinc-500, .text-muted-foreground):not(:where([data-keep-dark], [data-keep-dark] *, [data-on-media], [data-on-media] *, [data-media-full] *, [data-primary-cta], [data-primary-cta] *, [data-contrast-solid], [data-contrast-solid] *, [data-button-variant='destructive'], [data-button-variant='destructive'] *)) {
+  color: #3f3f46 !important;
+}
+
+/* Recessed neutral controls keep ink labels, including a busy label nested
+   in the wallet unlock button. Coloured and explicit dark keys keep theirs. */
+html:is([data-theme='light'], [data-system-tone='light']):not(#_):not(#_):not(#_):not(#_):not(#_):not(#_)
+  :is([role='dialog'], [role='alertdialog'], [role='menu'], [data-sonner-toast])
+  :is(button, a[role='button']):is([class*='bg-white/'], [class*='bg-zinc-'], [data-button]):not([data-primary-cta]):not([data-contrast-solid]):not([data-keep-dark]):not([data-keep-dark] *):not([data-on-media] *) {
+  color: #242428 !important;
+  background: #eeeef1 !important;
+}
+
+html:is([data-theme='light'], [data-system-tone='light']):not(#_):not(#_):not(#_):not(#_):not(#_):not(#_):not(#_)
+  :is([data-login-modal] button.bg-white, [data-contrast-solid], [data-sonner-toast] [data-description] :is(button, a):first-child) {
+  background: #111114 !important;
+  color: #fff !important;
+}
+html:is([data-theme='light'], [data-system-tone='light']):not(#_):not(#_):not(#_):not(#_):not(#_):not(#_):not(#_)
+  :is([data-login-modal] button.bg-white, [data-contrast-solid], [data-sonner-toast] [data-description] :is(button, a):first-child) :is(span, svg) {
+  color: #fff !important;
+}
+
+html:is([data-theme='light'], [data-system-tone='light']):not(#_):not(#_):not(#_):not(#_):not(#_):not(#_)
+  [data-sidebar-chat-actions] {
+  background: #fbfbfc !important;
+  color: #3f3f46 !important;
+}
+html:is([data-theme='light'], [data-system-tone='light']):not(#_):not(#_):not(#_):not(#_):not(#_):not(#_)
+  :is([data-sidebar-chat-actions] :is(button, svg), [data-sidebar-chat-composer] :is(button, svg)) {
+  color: #3f3f46 !important;
+}
+html:is([data-theme='light'], [data-system-tone='light']):not(#_):not(#_):not(#_):not(#_):not(#_):not(#_)
+  [data-sidebar-chat-actions] button:hover {
+  background: #e4e4e7 !important;
+  color: #18181b !important;
+}
