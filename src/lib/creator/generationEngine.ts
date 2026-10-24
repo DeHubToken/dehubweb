@@ -14,6 +14,7 @@ import { supabase } from '@/integrations/supabase/client';
 import { invokeAi, dehubAuthHeaders } from '@/lib/ai-invoke';
 import { forgetPayment } from '@/lib/ai-payment';
 import { ensureFreshToken } from '@/lib/api/dehub/core';
+import { isImageProviderUnavailable } from '@/lib/image-provider-error';
 
 export type GenerationKind = 'image' | 'video' | 'audio' | 'model3d';
 
@@ -311,9 +312,9 @@ async function describeInvokeError(
       const text = await response.clone().text();
       if (text) {
         try {
-          const parsed = JSON.parse(text) as { error?: string; message?: string };
+          const parsed = JSON.parse(text) as { error?: string; message?: string; code?: string };
           const message = parsed.error || parsed.message;
-          if (message) return message;
+          if (message) return isImageProviderUnavailable(message, parsed.code) ? fallback : message;
         } catch {
           return text.slice(0, 300);
         }
@@ -335,7 +336,8 @@ async function unwrap<T extends { error?: string }>(
 ): Promise<T> {
   if (res.error) throw new Error(await describeInvokeError(res.error, fallback));
   if (!res.data) throw new Error(fallback);
-  if (res.data.error) throw new Error(res.data.error);
+  if (res.data.error) throw new Error(isImageProviderUnavailable(res.data.error, (res.data as { code?: string }).code)
+    ? fallback : res.data.error);
   return res.data;
 }
 

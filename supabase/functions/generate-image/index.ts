@@ -9,6 +9,7 @@ import { recordGeneration } from '../_shared/generation-jobs.ts';
 import { publishFreePoster } from '../_shared/creator-gallery.ts';
 import { chargeForJob } from '../_shared/ai-payment-guard.ts';
 import { aiChat } from '../_shared/ai-chat.ts';
+import { gatewayImage, resilientImage, ImageProviderError, IMAGE_UNAVAILABLE } from '../_shared/image-provider-fallback.ts';
 import { CREATOR_FAL_IMAGE_MODELS } from '../_shared/creator-fal-catalog.ts';
 import { buildCreatorFalImageRequest } from '../_shared/creator-fal-input.ts';
 // The shared list — the only one that names x-wallet-address and x-dehub-token,
@@ -296,9 +297,10 @@ async function generateWithFal(
   bannerFormat?: string,
   aspectRatio?: string,
   referenceImageUrls?: string[],
+  signal?: AbortSignal,
 ): Promise<string> {
   const FAL_KEY = Deno.env.get('FAL_KEY');
-  if (!FAL_KEY) throw new Error('FAL_KEY is not configured');
+  if (!FAL_KEY) throw new ImageProviderError(503, 'Fal not configured', true);
 
   const config = FAL_IMAGE_MODELS[model];
   if (!config) throw new Error(`Unknown fal image model: ${model}`);
@@ -337,12 +339,13 @@ async function generateWithFal(
     method: 'POST',
     headers: { Authorization: `Key ${FAL_KEY}`, 'Content-Type': 'application/json' },
     body: JSON.stringify(prepared?.input ?? input),
+    signal,
   });
 
   if (!res.ok) {
     const text = await res.text();
     console.error('[fal-image] error', res.status, text.substring(0, 500));
-    throw new Error(`Image generation failed (${res.status}). ${text.substring(0, 200)}`);
+    throw new ImageProviderError(res.status, text);
   }
 
   const data = (await res.json()) as { images?: { url?: string }[] };
@@ -752,251 +755,71 @@ ART DIRECTION: ${enhancedUserRequest}`;
       contextualPrompt = `${contextualPrompt}\n\nFRAMING: ${ASPECT_FRAMING[aspectRatio]}`;
     }
 
-    const userContent = sourceImage ? [
-      { type: 'image_url', image_url: { url: sourceImage } },
-      { type: 'text', text: contextualPrompt }
-    ] : contextualPrompt;
-
-    // ── kie.ai catalogue ──────────────────────────────────────────────────
-    // The cheap lane for the models kie also serves — the price tables in
-    // _shared/ai-pricing.ts assume these jobs land here. kie fetches inputs
-    // by URL, so a data: source image stays on fal, and a kie failure falls
-    // straight through to the fal path below rather than failing a job the
-    // creator has already paid for.
-    if (KIE_IMAGE_MODELS[model] && kieKey() && kieUsableUrl(sourceImage)) {
-      try {
-        const kieResult = await generateWithKie(
-          model,
-          contextualPrompt,
-          sourceImage,
-          bannerFormat,
-          aspectRatio,
-        );
-        return new Response(
-          JSON.stringify({ imageUrl: kieResult, text: '', success: true }),
-          { headers: { ...corsHeaders, 'Content-Type': 'application/json' } },
-        );
-      } catch (e) {
-        console.warn('[kie-image] failed, falling back to fal:', (e as Error).message);
-      }
-    }
-
-    // ── fal.ai catalogue ──────────────────────────────────────────────────
-    // Everything the Lovable gateway and xAI do not serve. These run on fal's
-    // synchronous endpoint rather than its queue: an image lands in seconds, so
-    // blocking keeps generateImage's contract (one call, one imageUrl) instead
-    // of forcing the whole image path to become polled like video.
-    if (FAL_IMAGE_MODELS[model]) {
-      const falResult = await generateWithFal(
-        model,
-        contextualPrompt,
-        sourceImage,
-        bannerFormat,
-        aspectRatio,
-        referenceImageUrls,
-      );
-      return new Response(
-        JSON.stringify({ imageUrl: falResult, text: '', success: true }),
-        { headers: { ...corsHeaders, 'Content-Type': 'application/json' } },
-      );
-    }
-
-    // Use Grok Aurora for image generation if selected (but NOT for image editing)
-    // Grok's grok-2-image API only supports text-to-image, not image editing
-    let usedFallbackForGrok = false;
-    
-    if (isGrokModel && xaiApiKey && !sourceImage) {
-      console.log('Using Grok Aurora for image generation');
-      
-      const response = await fetch('https://api.x.ai/v1/images/generations', {
-        method: 'POST',
-        headers: {
-          'Authorization': `Bearer ${xaiApiKey}`,
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          model: 'grok-2-image',
-          prompt: contextualPrompt,
-          n: 1,
-          response_format: 'url',
-        }),
-      });
-
-      if (!response.ok) {
-        const errorText = await response.text();
-        console.error('Grok image API error:', response.status, errorText);
-        throw new Error(`Grok image generation failed: ${response.status}`);
-      }
-
-      const data = await response.json();
-      const imageUrl = data.data?.[0]?.url;
-
-      if (!imageUrl) {
-        console.error('No image in Grok response:', JSON.stringify(data).substring(0, 500));
-        throw new Error('Grok did not return an image');
-      }
-
-      console.log('Grok image generated successfully');
-      return new Response(
-        JSON.stringify({ imageUrl, text: '', success: true }),
-        { headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
-      );
-    }
-    
-    // If Grok was selected but has a source image, fall back to Gemini
-    if (isGrokModel && sourceImage) {
-      console.log('Grok selected with source image - falling back to Gemini (Grok does not support image editing)');
-      usedFallbackForGrok = true;
-    }
-
-    // Fall back to Lovable AI Gateway
-    if (!lovableApiKey) {
-      throw new Error('LOVABLE_API_KEY not configured');
-    }
-
-    // Map model to Lovable AI model path
-    let apiModel = 'google/gemini-2.5-flash-image-preview';
-    if (model === 'gemini-3.1-flash-image') {
-      apiModel = 'google/gemini-3.1-flash-image';
-    } else if (model === 'gemini-3-pro-image') {
-      apiModel = 'google/gemini-3-pro-image-preview';
-    } else if (model === 'gpt-5') {
-      apiModel = 'openai/gpt-5';
-    }
-
-    const messages = sourceImage ? [
-      { role: 'user', content: userContent }
-    ] : [
-      { role: 'user', content: contextualPrompt }
-    ];
-
-    const response = await fetch('https://ai.gateway.lovable.dev/v1/chat/completions', {
-      method: 'POST',
-      headers: {
-        'Authorization': `Bearer ${lovableApiKey}`,
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        model: apiModel,
-        messages,
-        modalities: ['image', 'text']
-      }),
-    });
-
-    if (!response.ok) {
-      const errorText = await response.text();
-      console.error('Image generation API error:', response.status, errorText);
-      
-      if (response.status === 429) {
-        return new Response(
-          JSON.stringify({ error: 'Rate limit exceeded. Please try again in a moment.' }),
-          { status: 429, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
-        );
-      }
-      if (response.status === 402) {
-        return new Response(
-          JSON.stringify({ error: 'AI credits exhausted. Please try again later.' }),
-          { status: 402, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
-        );
-      }
-      
-      throw new Error(`Image generation failed: ${response.status}`);
-    }
-
-    const data = await response.json();
-    console.log('Image generation response received');
-
-    // Check for PROHIBITED_CONTENT error from Google
-    const choiceError = data.choices?.[0]?.error;
-    if (choiceError?.message === 'PROHIBITED_CONTENT') {
-      console.log('Content blocked by Google safety filter (PROHIBITED_CONTENT)');
-      return new Response(
-        JSON.stringify({ 
-          error: 'DeHub is a family friendly platform, for adult requests refer to our adult partner fan.site',
-          safetyBlocked: true,
-          clearHistory: true // Signal frontend to clear conversation history
-        }),
-        { status: 400, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
-      );
-    }
-
-    // Check for safety filter - return family-friendly message
-    const finishReason = data.choices?.[0]?.native_finish_reason || data.choices?.[0]?.finish_reason;
-    if (finishReason === 'IMAGE_SAFETY') {
-      console.log('Content blocked by safety filter');
-      return new Response(
-        JSON.stringify({ 
-          error: 'DeHub is a family friendly platform, for adult requests refer to our adult partner fan.site',
-          safetyBlocked: true,
-          clearHistory: true
-        }),
-        { status: 400, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
-      );
-    }
-
-    // Extract the generated image
-    const imageUrl = data.choices?.[0]?.message?.images?.[0]?.image_url?.url;
-    const textResponse = data.choices?.[0]?.message?.content || '';
-
-    if (!imageUrl) {
-      console.error('No image in response:', JSON.stringify(data).substring(0, 500));
-      
-      // Check if AI refused due to content policy
-      const refusalPhrases = [
-        'cannot create', 'cannot fulfill', 'cannot generate', 'cannot provide',
-        'i cannot', "i'm unable", 'not able to', 'inappropriate', 
-        'sexually explicit', 'harmful', 'cannot make', 'unable to create',
-        'cannot produce', 'refuse', 'not appropriate'
-      ];
-      
-      const lowerTextResponse = textResponse.toLowerCase();
-      const isContentRefusal = refusalPhrases.some(phrase => 
-        lowerTextResponse.includes(phrase)
-      );
-      
-      if (isContentRefusal) {
-        console.log('Content refusal detected in AI response');
-        return new Response(
-          JSON.stringify({ 
-            error: 'DeHub is a family friendly platform, for adult requests refer to our adult partner fan.site',
-            safetyBlocked: true,
-            clearHistory: true // Signal frontend to clear conversation history
-          }),
-          { status: 400, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
-        );
-      }
-      
-      // For other failures, return the AI's response or a generic message
-      return new Response(
-        JSON.stringify({ 
-          error: textResponse || 'Could not generate image. Try a different description.',
-        }),
-        { status: 400, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
-      );
-    }
-
-    // Return image directly without server-side watermarking (moved to client)
-    console.log('Image generated successfully, returning to client');
-
-    // Add note if we fell back from Grok to Gemini for image editing
-    const finalText = usedFallbackForGrok 
-      ? (textResponse ? `${textResponse}\n\n_(Used Gemini for image editing - Grok only supports new image generation)_` : '_(Used Gemini for image editing - Grok only supports new image generation)_')
-      : textResponse;
-
-    return new Response(
-      JSON.stringify({ 
-        imageUrl: imageUrl, 
-        text: finalText,
-        success: true 
-      }),
-      { headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+    const imageRequest = {
+      requestedModel: model, prompt: contextualPrompt, sourceImage, referenceImageUrls,
+      aspectRatio: aspectRatio ?? (bannerFormat === 'landscape' ? '16:9' : bannerFormat === 'portrait' ? '9:16' : undefined),
+      vector: model.includes('vector'),
+    };
+    const success = (result: Record<string, unknown>) => new Response(
+      JSON.stringify({ ...result, text: result.text ?? '', success: true }),
+      { headers: { ...corsHeaders, 'Content-Type': 'application/json' } },
     );
+
+    // Keep the cheaper configured route, without dropping multi-image inputs.
+    if (KIE_IMAGE_MODELS[model] && kieKey() && kieUsableUrl(sourceImage) && !referenceImageUrls?.length) {
+      try {
+        const imageUrl = await generateWithKie(model, contextualPrompt, sourceImage, bannerFormat, aspectRatio);
+        return success({ imageUrl, provider: 'kie', model, requestedModel: model });
+      } catch (error) {
+        const rejection = new ImageProviderError(502, String(error));
+        if (rejection.safetyBlocked) throw rejection;
+        // A timeout may leave an accepted job running; do not submit twice.
+        if (/timed out|fetch failed|network/i.test(String(error))) throw rejection;
+        console.warn('[kie-image] rejected, trying compatible backup');
+      }
+    }
+
+    if (FAL_IMAGE_MODELS[model]) {
+      const appId = sourceImage ? FAL_IMAGE_MODELS[model].edit! : FAL_IMAGE_MODELS[model].text;
+      return success(await resilientImage(imageRequest, {
+        provider: 'fal', model: appId,
+        generate: async signal => ({ imageUrl: await generateWithFal(model, contextualPrompt, sourceImage,
+          bannerFormat, aspectRatio, referenceImageUrls, signal), provider: 'fal', model: appId }),
+      }));
+    }
+
+    if (isGrokModel && !sourceImage && !referenceImageUrls?.length) {
+      return success(await resilientImage(imageRequest, {
+        provider: 'xai', model: 'grok-2-image',
+        generate: async signal => {
+          if (!xaiApiKey) throw new ImageProviderError(503, 'xAI not configured', true);
+          const response = await fetch('https://api.x.ai/v1/images/generations', {
+            method: 'POST', signal,
+            headers: { Authorization: `Bearer ${xaiApiKey}`, 'Content-Type': 'application/json' },
+            body: JSON.stringify({ model: 'grok-2-image', prompt: contextualPrompt, n: 1, response_format: 'url' }),
+          });
+          if (!response.ok) throw new ImageProviderError(response.status, await response.text());
+          const data = await response.json();
+          const imageUrl = data.data?.[0]?.url;
+          if (!imageUrl) throw new ImageProviderError(502, 'No image returned');
+          return { imageUrl, provider: 'xai', model: 'grok-2-image' };
+        },
+      }));
+    }
+
+    const apiModel = model === 'gemini-3-pro-image' ? 'google/gemini-3-pro-image-preview'
+      : model === 'gpt-5' ? 'openai/gpt-5' : 'google/gemini-3.1-flash-image';
+    return success(await resilientImage(imageRequest, {
+      provider: 'lovable', model: apiModel,
+      generate: signal => gatewayImage(imageRequest, signal, apiModel),
+    }));
   } catch (error) {
     console.error('Error in generate-image:', error);
-    const errorMessage = error instanceof Error ? error.message : 'Unknown error';
+    const providerFailure = error instanceof ImageProviderError;
+    const errorMessage = providerFailure ? error.message : (error instanceof Error ? error.message : IMAGE_UNAVAILABLE);
     return new Response(
-      JSON.stringify({ error: errorMessage }),
-      { status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+      JSON.stringify({ error: errorMessage, ...(providerFailure ? { code: error.safetyBlocked ? 'IMAGE_SAFETY_BLOCKED' : 'IMAGE_PROVIDER_UNAVAILABLE', safetyBlocked: error.safetyBlocked } : {}) }),
+      { status: providerFailure ? (error.safetyBlocked ? 400 : 503) : 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
     );
   }
 };
