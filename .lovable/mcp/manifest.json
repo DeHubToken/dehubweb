@@ -22,40 +22,40 @@
           "openWorldHint": true
         },
         "inputSchema": {
+          "$schema": "http://json-schema.org/draft-07/schema#",
           "type": "object",
           "properties": {
             "sort": {
+              "description": "new = latest, hot = most liked, trending = most viewed, discussed = most commented",
               "type": "string",
               "enum": [
                 "new",
                 "hot",
                 "trending",
                 "discussed"
-              ],
-              "description": "new = latest, hot = most liked, trending = most viewed, discussed = most commented"
+              ]
             },
             "category": {
-              "type": "string",
-              "description": "Optional category filter"
+              "description": "Optional category filter",
+              "type": "string"
             },
             "search": {
-              "type": "string",
-              "description": "Keyword to match against post titles and descriptions"
+              "description": "Keyword to match against post titles and descriptions",
+              "type": "string"
             },
             "limit": {
+              "description": "Max posts (1-50)",
               "type": "integer",
               "minimum": 1,
-              "maximum": 50,
-              "description": "Max posts (1-50)"
+              "maximum": 50
             },
             "offset": {
+              "description": "Pagination offset",
               "type": "integer",
               "minimum": 0,
-              "description": "Pagination offset"
+              "maximum": 9007199254740991
             }
-          },
-          "additionalProperties": false,
-          "$schema": "http://json-schema.org/draft-07/schema#"
+          }
         },
         "outputSchema": null
       },
@@ -69,6 +69,7 @@
           "openWorldHint": true
         },
         "inputSchema": {
+          "$schema": "http://json-schema.org/draft-07/schema#",
           "type": "object",
           "properties": {
             "token_id": {
@@ -79,9 +80,7 @@
           },
           "required": [
             "token_id"
-          ],
-          "additionalProperties": false,
-          "$schema": "http://json-schema.org/draft-07/schema#"
+          ]
         },
         "outputSchema": null
       },
@@ -95,6 +94,7 @@
           "openWorldHint": true
         },
         "inputSchema": {
+          "$schema": "http://json-schema.org/draft-07/schema#",
           "type": "object",
           "properties": {
             "token_id": {
@@ -103,22 +103,21 @@
               "description": "The post's token ID"
             },
             "limit": {
+              "description": "Max comments (1-50)",
               "type": "integer",
               "minimum": 1,
-              "maximum": 50,
-              "description": "Max comments (1-50)"
+              "maximum": 50
             },
             "page": {
+              "description": "Zero-based page number",
               "type": "integer",
               "minimum": 0,
-              "description": "Zero-based page number"
+              "maximum": 9007199254740991
             }
           },
           "required": [
             "token_id"
-          ],
-          "additionalProperties": false,
-          "$schema": "http://json-schema.org/draft-07/schema#"
+          ]
         },
         "outputSchema": null
       },
@@ -132,6 +131,7 @@
           "openWorldHint": true
         },
         "inputSchema": {
+          "$schema": "http://json-schema.org/draft-07/schema#",
           "type": "object",
           "properties": {
             "query": {
@@ -140,26 +140,24 @@
               "description": "Search query"
             },
             "type": {
+              "description": "Restrict results to posts or users",
               "type": "string",
               "enum": [
                 "all",
                 "posts",
                 "users"
-              ],
-              "description": "Restrict results to posts or users"
+              ]
             },
             "limit": {
+              "description": "Max results per section (1-50)",
               "type": "integer",
               "minimum": 1,
-              "maximum": 50,
-              "description": "Max results per section (1-50)"
+              "maximum": 50
             }
           },
           "required": [
             "query"
-          ],
-          "additionalProperties": false,
-          "$schema": "http://json-schema.org/draft-07/schema#"
+          ]
         },
         "outputSchema": null
       },
@@ -173,6 +171,7 @@
           "openWorldHint": true
         },
         "inputSchema": {
+          "$schema": "http://json-schema.org/draft-07/schema#",
           "type": "object",
           "properties": {
             "user": {
@@ -183,9 +182,7 @@
           },
           "required": [
             "user"
-          ],
-          "additionalProperties": false,
-          "$schema": "http://json-schema.org/draft-07/schema#"
+          ]
         },
         "outputSchema": null
       }
