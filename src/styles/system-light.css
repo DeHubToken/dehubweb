@@ -92,7 +92,7 @@ html[data-theme="system"][data-system-tone="light"]:not(#_):not(#_):not(#_) [dat
 html[data-theme="system"][data-system-tone="light"]:not(#_):not(#_):not(#_) [data-feed-nav] button:not([aria-selected="true"]):not([data-active="true"]) svg { opacity: .55; }
 html[data-theme="system"][data-system-tone="light"]:not(#_):not(#_):not(#_) [data-feed-item] { box-shadow: 0 1px 0 rgba(0,0,0,.02) !important; }
 /* Desktop rails */
-html[data-theme="system"][data-system-tone="light"]:not(#_):not(#_):not(#_):not(#_) img[src*="header-logo"], html[data-theme="system"][data-system-tone="light"]:not(#_):not(#_):not(#_):not(#_) img[alt="dehub"] { filter: invert(1) !important; }
+html[data-theme="system"][data-system-tone="light"]:not(#_):not(#_):not(#_):not(#_) img[src*="header-logo"], html[data-theme="system"][data-system-tone="light"]:not(#_):not(#_):not(#_):not(#_) img[alt="dehub"]:not([data-logo-ink]) { filter: invert(1) !important; }
 html[data-theme="system"][data-system-tone="light"]:not(#_):not(#_):not(#_):not(#_) [data-sidebar-fade] { background-image: linear-gradient(to top, #fff, rgba(255,255,255,0)) !important; }
 html[data-theme="system"][data-system-tone="light"]:not(#_):not(#_):not(#_):not(#_) :is([data-sidebar-active-indicator], [data-theme-control-surface]):not([data-media-full] *) { background: #fff !important; background-image: none !important; border-color: rgba(11,11,13,.08) !important; box-shadow: 0 2px 10px rgba(0,0,0,.07) !important; }
 html[data-theme="system"][data-system-tone="light"]:not(#_):not(#_):not(#_):not(#_):not(#_):not(#_):not(#_) [data-primary-cta] { background: #0b0b0d !important; background-image: none !important; color: #fff !important; }
