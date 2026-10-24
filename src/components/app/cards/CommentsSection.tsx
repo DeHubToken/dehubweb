@@ -2203,8 +2203,7 @@ function CommentsSectionForAccount({ tokenId, onClose, initialTab, embedded = fa
       timeAgo: t('comments.justNow'),
       createdAt: new Date(),
       voiceNote: voiceNote || undefined,
-      imageUrl: commentImagePreview || undefined,
-      gifUrl: commentGifUrl || undefined,
+      imageUrl: commentImagePreview || commentGifUrl || undefined,
       replyToId: replyTo?.id,
       address: userAddress,
     };
