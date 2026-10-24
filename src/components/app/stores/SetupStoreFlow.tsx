@@ -122,7 +122,7 @@ export function SetupStoreFlow({ onComplete, onCancel }: SetupStoreFlowProps) {
       <input ref={fileRef} type="file" accept="image/*" className="hidden" onChange={e => e.target.files?.[0] && handleAvatarUpload(e.target.files[0])} />
 
       <div className="text-center space-y-2">
-        <h2 className="text-xl font-bold text-primary-foreground">{onCancel ? t('stores.createNewStore') : t('stores.setUpYourStore')}</h2>
+        <h2 className="text-xl font-bold text-foreground">{onCancel ? t('stores.createNewStore') : t('stores.setUpYourStore')}</h2>
         <p className="text-sm text-zinc-400">{t('stores.createStoreBlurb')}</p>
       </div>
       <div className="w-full space-y-3">
