@@ -1801,6 +1801,13 @@ export const ht = {
       'Agrikilti LP ak pwodiksyon kominotè',
       'Lanse fonctionnalités fiat off-ramp pou konvèsyon siy pou lajan kach san pwoblèm',
     ],
+    q3_2021_items: [
+      'Rebranded to DeHub',
+      'Te kòmanse rebati app konplè lè l sèvi avèk React Native pou pi bon sipò kwa-platfòm',
+      'Airdropped tout moun ki gen yo otomatikman',
+      'Vulnérabilités sekirite adrese apati v1 ak Odit konplè Certik',
+      'Ekip elaji a 15 manm atravè 3 zòn tan',
+    ],
   },
   brandAssets: {
     title: 'Aktif Mak',

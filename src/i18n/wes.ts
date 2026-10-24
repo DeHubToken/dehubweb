@@ -1294,6 +1294,32 @@ export const wes = {
     q1_2021: 'Q1 2021',
     q2_2021: 'Q2 2021',
     latestUpdateDesc: 'Q4 2026 start wit full speed — pass 1,150 change dem don merge for inside web app, mobile app, backend, and admin tool dem for de first half of October alone. Dis write-up group every distinct work wit de pull request beside am, and de Q3 overview still dey for de quarter wey pass.',
+    q2_2022_items: [
+      'App wey go stream video, support 4K content, na 99.9% time wey go stay online, no crash.',
+      'Jorji Masvidal, Brad Piket, na wan oda pipo wey dey tok for documentary wey dey tok about am',
+      'Genesis wey dey mint for Chad wey dey kollek',
+      'Wey dey register for SEC wey dey goment of Philippines for real estate, konstrukshon, na brokerage servis',
+      'Implement video kompresion wey dey reduce bandwidth kos by 60%',
+      'Baut NFT market wey dey pay royalty',
+    ],
+    q2_2023_items: [
+      'Win most innovativ kompani award for UK wey Corporate Livewire dey give, wey dem dey kompet wit 900+ kompani for vote wey Sony, Samsung, na oda industry big boys dey back am.',
+      'Feature for major tech pablikeshun including TechCrunch na VentureBeat',
+      'Patent aplikeshun start for core streaming teknoloji na watch2earn mechanics',
+    ],
+    q2_2024_items: [
+      'List SDHB for Base L2',
+      'Dubai event expand Middle East presence',
+      'Ko-Founda Mike Hales na Indi Cammish Open TikTok agency for partnership wit TikTok execs after dem dey successful top UK stream chart wey dem dey earn 1k per day',
+      'Establish creator partnership for 15 kontri',
+    ],
+    q2_2025_items: [
+      'Launsh UGC ambassadorship program wey dey look for 50 vacancy',
+      'Implement comprehensive creator edukashun kurikulum',
+      'Launsh dhbscan.com wey user dey track activity for all DeHub token kontrak',
+      'Revamp main app feed, reveal audio reply na live talk space',
+      'Final snapshot for Last Chad Standing game airdrop, for both holder na staker',
+    ],
   },
   brandAssets: {
     title: 'Brand Assets',
