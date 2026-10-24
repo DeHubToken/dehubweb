@@ -124,6 +124,7 @@ import { toast } from 'sonner';
 import { createVoiceRecorder, voiceRecordingBlob, VOICE_RECORDING_SECONDS } from '@/lib/voice-recording';
 import { emitCommentsDeleted } from '@/lib/comment-count-events';
 import { deliverReply, replyIdOf, useReplyDelivery } from '@/lib/reply-delivery';
+import { useCommentCount } from '@/lib/comment-count-store';
 import { useMention } from '@/hooks/use-mention';
 import { useAssistantPendingReply } from '@/hooks/use-assistant-pending-reply';
 import { ASSISTANT_AVATAR, mentionsAssistant, isAssistantAddress } from '@/lib/assistant';
@@ -976,6 +977,7 @@ const CommentItem = memo(function FilteredCommentItem(props: CommentItemProps) {
 // ============================================================================
 
 function CommentsSectionForAccount({ tokenId, onClose, initialTab, embedded = false, commentsDisabled = false, replyPolicy, forKids = false, postAuthorAddress, onDirtyChange, page = false, stage = false, stageCount, onStageTabChange }: CommentsSectionProps) {
+  const displayStageCount = useCommentCount(stage ? tokenId : undefined, stageCount ?? 0);
   // A kids post's thread is open to Kids Mode only. The post's own author is
   // exempt server-side, but they are also the one person who can always reach
   // it, so there is nothing to show them here.
@@ -2490,7 +2492,7 @@ function CommentsSectionForAccount({ tokenId, onClose, initialTab, embedded = fa
             <h2 data-stage-ink className="text-[17px] font-bold">
               {t('postStage.comments', 'Comments')}
               {typeof stageCount === 'number' && (
-                <span data-stage-muted className="ml-1.5 font-semibold tabular-nums">{stageCount}</span>
+                <span data-stage-muted className="ml-1.5 font-semibold tabular-nums">{displayStageCount}</span>
               )}
             </h2>
           )}
