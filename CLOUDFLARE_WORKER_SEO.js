@@ -2438,7 +2438,7 @@ function unservedLocaleRedirect(url, route, table) {
 }
 
 /** og:locale values, in the territory form Facebook's own locale list uses. */
-const OG_LOCALES = { en: 'en_US', ar: 'ar_AR', es: 'es_ES', fr: 'fr_FR', nl: 'nl_NL', tr: 'tr_TR' };
+const OG_LOCALES = { en: 'en_US', ar: 'ar_AR', es: 'es_ES', fr: 'fr_FR', nl: 'nl_NL', tr: 'tr_TR', ha: 'ha_NG', hi: 'hi_IN', ja: 'ja_JP', ko: 'ko_KR', pt: 'pt_BR', tl: 'tl_PH', vi: 'vi_VN', zh: 'zh_CN' };
 function ogLocale(lang) {
   return OG_LOCALES[lang] || `${lang}_${lang.toUpperCase()}`;
 }
