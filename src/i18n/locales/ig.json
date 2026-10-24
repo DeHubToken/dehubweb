@@ -2095,6 +2095,8 @@
     "anonymousLikes_other": "Mmasị {{count}} sitere n'aka ndị ji baajị na-amaghị aha"
   },
   "postInfo": {
+    "unavailable": "Agaghị adị",
+    "ownersUnavailable": "Enweghị ike ịgụ ndị nwe ya ugbu a.",
     "title": "Ozi banyere mbipụta",
     "tokenId": "Token ID",
     "mintedOn": "Emepụtara",
@@ -5573,6 +5575,8 @@
     "notEnoughTokensForBounty": "Enweghị tokenịị zuru. Chọrọ {{need}} tokenịị mana nwere {{have}}."
   },
   "events": {
+    "deleteConfirmTitle": "Hichaa mmemme a?",
+    "deleteConfirmBody": "Nke a na-ewepụ ihe omume ahụ, ndepụta ndị ọbịa ya na nkata ya maka mmadụ niile. Agaghị emezigharị ya.",
     "seoTitle": "Ihe omume — Nzukọ & Ihe Omume Obodo na DeHub",
     "seoDescription": "Chọgharịa na-abịa DeHub obodo ihe, RSVP ka meetups na usu gị onwe gị ihe na decentralized, onye ọrụ-ekesịpde na-elekọta mmadụ n 'elu ikpo okwu.",
     "defaultSeoDescription": "Ihe omume obodo na DeHub.",

@@ -2112,6 +2112,8 @@
     "anonymousLikes_other": "{{count}} likerklikk fra anonyme merkeinnehavere"
   },
   "postInfo": {
+    "unavailable": "Utilgjengelig",
+    "ownersUnavailable": "De nåværende eierne kan ikke leses akkurat nå.",
     "title": "Innleggsinformasjon",
     "tokenId": "Token-ID",
     "mintedOn": "Opprettet",
@@ -5628,6 +5630,8 @@
     "notEnoughTokensForBounty": "Ikke nok tokens. Trenger {{need}} tokens, men har {{have}}."
   },
   "events": {
+    "deleteConfirmTitle": "Slette denne hendelsen?",
+    "deleteConfirmBody": "Dette fjerner arrangementet, gjestelisten og chatten for alle. Det kan ikke angres.",
     "seoTitle": "Hendelser – Møter & Samfunnshendelser på DeHub",
     "seoDescription": "Gjennomgå kommende DeHub-samfunnshendelser, meld deg på møter og arrangér dine egne hendelser på den de sentraliserte, bruker-eide sosiale plattformen.",
     "defaultSeoDescription": "Samfunnshendelse på DeHub.",

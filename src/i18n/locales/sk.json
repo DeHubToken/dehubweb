@@ -2214,6 +2214,8 @@
     "anonymousLikes_other": "{{count}} lajkov od anonymných držiteľov odznakov"
   },
   "postInfo": {
+    "unavailable": "Nedostupné",
+    "ownersUnavailable": "Aktuálnych vlastníkov momentálne nie je možné prečítať.",
     "title": "Informácie o príspevku",
     "tokenId": "ID tokenu",
     "mintedOn": "Vytvorené",
@@ -5748,6 +5750,8 @@
     "notEnoughTokensForBounty": "Nedostatok tokenov. Potrebujete {{need}} tokenov, ale máte {{have}}."
   },
   "events": {
+    "deleteConfirmTitle": "Odstrániť túto udalosť?",
+    "deleteConfirmBody": "Tým sa odstráni udalosť, jej zoznam hostí a chat pre všetkých. Nedá sa vrátiť späť.",
     "seoTitle": "Události — Setkania & Komunitné Události na DeHub",
     "seoDescription": "Prehľad nadchádzajúcich komunitných udalostí na DeHub, prihláste sa na setkania a hostujte svoje vlastné udalosti na decentralizovanej, užívateľovlastnej sociálnej platforme.",
     "defaultSeoDescription": "Komunitná udalosť na DeHub.",
