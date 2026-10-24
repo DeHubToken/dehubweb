@@ -671,8 +671,8 @@ const CLAMP_CLASS = { 2: 'line-clamp-2', 3: 'line-clamp-3', 4: 'line-clamp-4' } 
 
 function ExpandableDescription({ description: rawDescription, isImmersive, clampLines = 4 }: ExpandableDescriptionProps) {
   const { t: _copy } = _useCopy();
-  // Normalize line breaks: unify \r\n → \n, then cap consecutive blank lines to max 1 (i.e. max 2 newlines)
-  const normalized = rawDescription.replace(/\r\n/g, '\n').replace(/\n{3,}/g, '\n\n').trim();
+  // Unify \r\n → \n only. Blank lines and spacing stay exactly as typed.
+  const normalized = rawDescription.replace(/\r\n/g, '\n').trim();
   // DeHub links render as cards below, so the URLs come out of the copy
   // (display-only — never sent back to the API).
   const { links: dehubLinks, displayText: linkFreeDescription } = useDehubLinks(normalized);

@@ -30,6 +30,8 @@
  *    to a copyable address chip.
  */
 
+import { cutFromText } from '@/lib/cut-from-text';
+
 export type AssetRefKind = 'address' | 'ticker';
 
 export interface AssetRef {
@@ -179,15 +181,7 @@ export function findAssetRef(text?: string | null): AssetRef | null {
  */
 export function stripAssetRefs(text: string | null | undefined, refs: AssetRef[]): string {
   if (!text) return text ?? '';
-  let out = text;
-  for (const ref of refs) {
-    if (!ref.strip) continue;
-    out = out.split(ref.raw).join('');
-  }
-  return out
-    .replace(/[ \t]{2,}/g, ' ')
-    .replace(/\n{3,}/g, '\n\n')
-    .trim();
+  return cutFromText(text, refs.filter(ref => ref.strip).map(ref => ref.raw));
 }
 
 // ── Chains ──────────────────────────────────────────────────────────────────

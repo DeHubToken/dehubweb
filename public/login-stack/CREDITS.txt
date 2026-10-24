@@ -1,0 +1,16 @@
+Sign-in screen clips
+
+restyle.mp4 is DeHub's own creator page video.
+
+The other clips are short audio-removed excerpts from the YouTube UGC dataset
+(https://media.withyoutube.com/), licensed under CC BY 4.0
+(https://creativecommons.org/licenses/by/4.0/). They were cropped to 9:16,
+shortened and re-encoded.
+
+concert.mp4  'PUMPKIN 2015 - The forgotten Path -- Korsakoff II' by Andre Zydowitz
+street.mp4   'Dos Vlog #104' by Dos Blog
+bass.mp4     'Cró! - concierto banda invitada 29 Villa de Bilbao' by StereoZona Television
+drums.mp4    'Cró! - concierto banda invitada 29 Villa de Bilbao' by StereoZona Television
+skate.mp4    'Cadence Kid - Hold on Me' by NFMLA
+friends.mp4  'vlog part 2' by Chaz&Finn Advice4All
+vlog.mp4     'Welcome to my NEW Crib VLOG!!' by Warriors Gaming

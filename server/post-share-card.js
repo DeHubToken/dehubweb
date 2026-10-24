@@ -107,7 +107,7 @@ function setShareTags(html, tags) {
   for (const [name, value] of Object.entries(tags)) {
     const tag = `<meta ${name.startsWith('twitter:') ? 'name' : 'property'}="${name}" content="${escape(value)}">`;
     const re = new RegExp(`<meta (?:property|name)="${name}"[^>]*>`, 'g');
-    out = re.test(out) ? out.replace(re, () => tag) : out.replace('</head>', `${tag}\n</head>`);
+    out = re.test(out) ? out.replace(re, () => tag) : out.replace('</head>', () => `${tag}\n</head>`);
   }
   return out;
 }

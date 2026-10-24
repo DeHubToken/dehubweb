@@ -73,6 +73,10 @@ export function profileFeedUrl(appUrl, handle) {
 /** True when a feed row is something a signed-out visitor can already see. */
 export function rssRowIsPublic(row) {
   if (!row || row.isHidden || row.isPrivate) return false;
+  // The API already leaves followers-only and direct posts out of what reaches
+  // here; RSS, the embed page and oEmbed all lean on this check, so it holds
+  // the line itself too.
+  if (row.visibility && row.visibility !== 'public') return false;
   if (!Number.isFinite(Number(row.tokenId))) return false;
   if (Array.isArray(row.plansDetails) && row.plansDetails.length) return false;
   const lock = row.streamInfo || {};
@@ -105,15 +109,24 @@ function rfc822(value) {
   return Number.isNaN(d.getTime()) ? '' : d.toUTCString();
 }
 
+/** A post's content warning, or '' — the author folded the post behind it. */
+export function warningOf(row) {
+  return String((row && row.spoilerText) || '').trim();
+}
+
 /** One `<item>`. Exported for its tests. */
 export function rssItemXml(row, deps) {
   const link = `${deps.appUrl}/app/post/${Number(row.tokenId)}`;
-  const text = String(row.description || '').trim();
-  const image = deps.imageOf(row);
-  const video = row.videoUrl ? deps.mediaUrl(row.videoUrl) : '';
-  const audio = row.audioUrl ? deps.mediaUrl(row.audioUrl) : '';
+  // A feed reader cannot fold anything, so a warned post is its warning and
+  // its link: no body, no media.
+  const warning = warningOf(row);
+  const text = warning ? '' : String(row.description || '').trim();
+  const image = warning ? '' : deps.imageOf(row);
+  const video = !warning && row.videoUrl ? deps.mediaUrl(row.videoUrl) : '';
+  const audio = !warning && row.audioUrl ? deps.mediaUrl(row.audioUrl) : '';
 
   const body = [
+    warning && `<p>${html(warning)}</p><p><a href="${html(link)}">${html(link)}</a></p>`,
     text && text.split(/\n{2,}/).map((p) => `<p>${html(p).replace(/\n/g, '<br>')}</p>`).join(''),
     image && `<p><a href="${html(link)}"><img src="${html(image)}" alt=""></a></p>`,
   ].filter(Boolean).join('');
@@ -138,7 +151,7 @@ export function rssItemXml(row, deps) {
   const author = String(row.minterDisplayName || row.minterUsername || row.mintername || '').trim();
   return [
     '<item>',
-    `<title>${xml(deps.labelOf(row))}</title>`,
+    `<title>${xml(warning || deps.labelOf(row))}</title>`,
     `<link>${xml(link)}</link>`,
     `<guid isPermaLink="true">${xml(link)}</guid>`,
     pubDate && `<pubDate>${pubDate}</pubDate>`,

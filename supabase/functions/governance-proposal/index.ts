@@ -62,8 +62,10 @@ Deno.serve(async (req) => {
   const supabase = serviceClient();
 
   // Badge holders skip the fee. A failed badge lookup falls back to the fee
-  // rather than letting the proposal through free.
-  const { weight } = await resolveVoteWeight(wallet);
+  // rather than letting the proposal through free. Lent badges do not count,
+  // the same rule as voting and the one the app uses to decide whether to
+  // charge — otherwise a lent-badge holder pays a fee this then ignores.
+  const { weight } = await resolveVoteWeight(wallet, false, { ownOnly: true });
   let feeHash: string | null = null;
   if (weight <= 0) {
     if (!txHash) {

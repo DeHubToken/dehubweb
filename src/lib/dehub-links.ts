@@ -26,6 +26,7 @@
  */
 
 import { RESERVED_LINK_SEGMENTS } from '@/lib/reserved-usernames';
+import { cutFromText } from '@/lib/cut-from-text';
 
 export type DehubLinkKind =
   | 'post'
@@ -402,14 +403,7 @@ export function hasDehubLink(text?: string | null): boolean {
  */
 export function stripDehubLinkMatches(text: string | null | undefined, matches: DehubLinkMatch[]): string {
   if (!text) return text ?? '';
-  let out = text;
-  for (const match of matches) {
-    out = out.split(match.raw).join('');
-  }
-  return out
-    .replace(/[ \t]{2,}/g, ' ')
-    .replace(/\n{3,}/g, '\n\n')
-    .trim();
+  return cutFromText(text, matches.map(match => match.raw));
 }
 
 /** Remove every DeHub entity URL from text for display. */

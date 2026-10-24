@@ -20,7 +20,7 @@
  * the media and a date the viewer's browser formats. It shows up on sites in
  * every language and has no way to know which one the reader speaks.
  */
-import { rssRowIsPublic } from './rss-feeds.js';
+import { rssRowIsPublic, warningOf } from './rss-feeds.js';
 
 export const EMBED_WIDTH = 550;
 const MIN_WIDTH = 250;
@@ -111,6 +111,7 @@ a{color:inherit;text-decoration:none}
 .media{margin-top:10px;border-radius:12px;overflow:hidden;background:#000}
 .media video,.media img{display:block;width:100%;max-height:70vh;object-fit:contain;background:#000}
 .media audio{display:block;width:100%}
+.cw{margin-top:10px}.cw summary{cursor:pointer;font-weight:600;overflow-wrap:anywhere}
 .audio{background:var(--well);padding:8px}
 .locked{margin-top:10px;display:flex;align-items:center;justify-content:center;gap:8px;padding:28px 0;border-radius:12px;background:var(--well);color:var(--muted)}
 .foot{display:flex;align-items:center;justify-content:space-between;margin-top:10px;color:var(--muted);font-size:13px}
@@ -165,6 +166,7 @@ export function renderEmbedPage(record, deps) {
   if (!isPublic) {
     content = `<a class="locked" href="${esc(postUrl)}" target="_blank" rel="noopener">${LOCK_ICON}</a>`;
   } else {
+    const warning = warningOf(record);
     const text = String(record.description || '').trim();
     if (text) {
       content += `<div class="text">${text.split(/\n{2,}/).map((p) => `<p>${esc(p)}</p>`).join('')}</div>`;
@@ -181,6 +183,9 @@ export function renderEmbedPage(record, deps) {
     } else if (image) {
       content += `<a class="media" href="${esc(postUrl)}" target="_blank" rel="noopener"><img src="${esc(image)}" alt="" loading="lazy"></a>`;
     }
+    // Folded behind its warning, as on DeHub. <details> opens without script,
+    // and the warning itself is the label, so there is nothing to translate.
+    if (warning) content = `<details class="cw"><summary>${esc(warning)}</summary>${content}</details>`;
   }
 
   const created = new Date(record.createdAt);
@@ -193,7 +198,7 @@ export function renderEmbedPage(record, deps) {
     ? record.detectedLanguage
     : 'und';
   return page({
-    title: `${deps.labelOf(record)} — ${name} on DeHub`,
+    title: `${warningOf(record) || deps.labelOf(record)} — ${name} on DeHub`,
     canonical: postUrl,
     lang,
     body: `<article class="card">${head}${content}${foot}</article>`,
@@ -256,7 +261,7 @@ export async function handleOembed(request, deps) {
     type: mediaKind(record) === 'video' ? 'video' : 'rich',
     provider_name: 'DeHub',
     provider_url: deps.appUrl,
-    title: deps.labelOf(record),
+    title: warningOf(record) || deps.labelOf(record),
     ...(name ? { author_name: name } : {}),
     ...(handle ? { author_url: `${deps.appUrl}/${encodeURIComponent(handle)}` } : {}),
     html: embedSnippet(deps.appUrl, id, size),
