@@ -81,7 +81,7 @@ function ListingEmbed({ listingId, fallback }: { listingId: string; fallback?: R
           <ThemedIcon icon="images" alt="" className="w-10 h-10 object-contain opacity-70" />
         )}
         {listing.stock_quantity === 0 && (
-          <div className="absolute inset-0 bg-black/60 flex items-center justify-center">
+          <div data-keep-dark className="absolute inset-0 bg-black/60 flex items-center justify-center">
             <span className="text-[10px] font-bold text-white/80">{t('stores.soldOut')}</span>
           </div>
         )}

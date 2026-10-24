@@ -47,12 +47,12 @@ export const StoreListingCard = memo(function StoreListingCard({ listing, onClic
           <span className="absolute top-2 left-2 text-[10px] font-semibold bg-primary/80 text-primary-foreground px-1.5 py-0.5 rounded">{t('stores.digital')}</span>
         )}
         {listing.external_url && (
-          <span className="absolute top-2 right-2 text-[10px] font-semibold bg-black/70 text-white px-1.5 py-0.5 rounded">
+          <span data-keep-dark className="absolute top-2 right-2 text-[10px] font-semibold bg-black/70 text-white px-1.5 py-0.5 rounded">
             {podProviderLabel(listing.pod_provider) ?? t('stores.podBadge')}
           </span>
         )}
         {listing.stock_quantity === 0 && (
-          <div className="absolute inset-0 bg-black/60 flex items-center justify-center">
+          <div data-keep-dark className="absolute inset-0 bg-black/60 flex items-center justify-center">
             <span className="text-xs font-bold text-white/80">{t('stores.soldOut')}</span>
           </div>
         )}
