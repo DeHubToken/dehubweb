@@ -64,7 +64,8 @@ export function thumbUrl(url: string, width = 480): string {
  * assistive tech.
  */
 export function CreatorHeroWall() {
-  const { theme } = useAppTheme();
+  const { theme, themeChoice } = useAppTheme();
+  const isLightTheme = theme === 'light' || themeChoice === 'system-light';
   const [phone] = useState(() => typeof window !== 'undefined' && window.matchMedia('(max-width: 639px)').matches);
   const [still] = useState(() => typeof window !== 'undefined' && window.matchMedia('(prefers-reduced-motion: reduce)').matches);
   const cut = phone ? '9x16' : '16x9';
@@ -96,8 +97,10 @@ export function CreatorHeroWall() {
           <source src={`/creator-hero/hero-${cut}.mp4`} type="video/mp4" />
         </video>
       )}
-      {/* Dims the video so the headline and composer stay readable. */}
-      <div className="absolute inset-0" style={{ background: 'radial-gradient(ellipse at 50% 40%, rgba(9,10,11,0.5), rgba(9,10,11,0.88) 75%)' }} />
+      {/* Match the scrim to the foreground's theme ink. */}
+      <div className="absolute inset-0" style={{ background: isLightTheme
+        ? 'radial-gradient(ellipse at 50% 40%, rgba(255,255,255,0.88), rgba(255,255,255,0.96) 75%)'
+        : 'radial-gradient(ellipse at 50% 40%, rgba(9,10,11,0.5), rgba(9,10,11,0.88) 75%)' }} />
     </div>
   );
 }
