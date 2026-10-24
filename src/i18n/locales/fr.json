@@ -17843,7 +17843,18 @@
     "24601bcaae6e": "Introduction",
     "2975132481a7": "Chaque semaine",
     "5ef2449f06cb": "{{value1}} : ce n’est pas un fichier audio",
-    "d0a91a881f01": "Arabe égyptien saïdi"
+    "d0a91a881f01": "Arabe égyptien saïdi",
+    "0f8f49bd32e6": "🔥 Un pourboire de {{value1}} <coin></coin> vous placera plus haut dans la boîte de réception de {{value2}}",
+    "1e488da3dfa7": "Les messages envoyés à {{value1}} sont payants et coûtent <amount>{{value2}}</amount> <coin></coin> chacun. Voulez-vous vraiment continuer ?",
+    "253ffa81cd88": "{{value1}} demande un pourboire minimum de <amount>{{value2}} <coin></coin></amount> pour démarrer une conversation.",
+    "338524eabcce": "🔥 Un pourboire de {{value1}} <coin></coin> par message vous placera plus haut dans la boîte de réception de {{value2}}",
+    "39958a403593": "Vous avez gagné un <prize>prix de 200 $</prize> lors de notre concours de la Coupe du monde sur Twitter. Vos jetons ont été crédités sur votre compte et seront transférés lorsque le contrat sera actif.",
+    "5d486dd87845": "En continuant, vous acceptez nos <terms>Conditions</terms> et notre <privacy>Politique de confidentialité</privacy>",
+    "6ed656c2254e": "<amount></amount> pour atteindre {{value1}}",
+    "70d1cca2aba3": "{{value1}} demande un pourboire minimum de <amount>{{value2}} <coin></coin></amount> par message. Ce montant sera déduit pour chaque message envoyé.",
+    "825123b7470b": "Votre solde : {{value1}} <coin></coin>",
+    "9f11cad12bdd": "Solde insuffisant pour un pourboire de {{value1}} <coin></coin>",
+    "a5b214ef27ab": "Solde insuffisant. Vous avez {{value1}} <coin></coin>, mais il vous faut {{value2}} <coin></coin>."
   },
   "articles": {
     "cardLabel": "Article · {{count}} min de lecture",
