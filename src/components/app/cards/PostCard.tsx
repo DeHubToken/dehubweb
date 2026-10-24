@@ -16,7 +16,7 @@ import { DhbAmount } from '@/components/app/DhbAmount';
 import { useAutoOpenComments } from '@/hooks/use-auto-open-comments';
 import { useNavigate } from 'react-router-dom';
 import { useQueryClient } from '@tanstack/react-query';
-import { Zap, Globe, UserCheck, BarChart2, Star } from "lucide-react";
+import { Globe, UserCheck, BarChart2, Star } from "lucide-react";
 import Link2 from "@/components/ui/cut-icons/link";
 import Flag from "@/components/ui/cut-icons/report";
 import Ban from "@/components/ui/cut-icons/blocked";
@@ -40,7 +40,7 @@ import { useSuperpowers } from '@/hooks/use-superpowers';
 import { toast } from 'sonner';
 import { cn } from '@/lib/utils';
 import { CardHeader } from './CardHeader';
-import { PostHeaderOptionsButton } from './PostHeaderOptionsButton';
+import { PostHeaderBoostButton, PostHeaderOptionsButton } from './PostHeaderOptionsButton';
 import { MatureContentGate, useMatureGate } from './MatureContentGate';
 import { ContentWarningGate, useContentWarning } from './ContentWarningGate';
 import { ActionBar } from './ActionBar';
@@ -471,14 +471,12 @@ const PostCardBody = memo(function PostCard({ post, threadSlot, onOpenComments }
           stays mounted here for them. */}
       <div className={stage ? 'hidden' : 'z-10 flex shrink-0 items-start gap-2'}>
         {isOwnPost && (
-          <button
+          <PostHeaderBoostButton
+            rowGap={8}
             onClick={() => setShowBoostModal(true)}
             disabled={!postTokenId}
-            className="mr-[3.2px] text-zinc-400 hover:text-white transition-colors active:scale-95 disabled:opacity-40"
             aria-label={t('postOptions.boostPost')}
-          >
-            <Zap className="w-[23.5px] h-[23.5px]" />
-          </button>
+          />
         )}
         
         <Drawer open={showOptionsDrawer} onOpenChange={setShowOptionsDrawer}>
