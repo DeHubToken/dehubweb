@@ -16,14 +16,12 @@
  */
 export const WIDGET_FALLBACK_LOCALES: readonly string[] = [
   'acm', 'acw', 'aec', 'af', 'ajp', 'am', 'apd', 'ary', 'arz', 'ayn',
-  'az', 'be', 'bg', 'bho', 'bn', 'ca', 'cjy', 'cs', 'ctg', 'da',
-  'dcc', 'de', 'dyu', 'el', 'et', 'fa', 'fi', 'gsw', 'gu', 'ha',
-  'he', 'hi', 'hne', 'hr', 'hu', 'hy', 'id', 'ig', 'it', 'ja',
-  'jv', 'ka', 'kk', 'km', 'kn', 'ko', 'ku', 'ky', 'lo', 'lt',
-  'lv', 'mag', 'mg', 'mi', 'ml', 'mn', 'mnp', 'mr', 'ms', 'my',
-  'ne', 'no', 'om', 'or', 'pa', 'pbt', 'pcm', 'pl', 'pt', 'qu',
-  'rkt', 'ro', 'ru', 'sa', 'sd', 'sdr', 'si', 'sk', 'skr', 'so',
-  'sq', 'sr', 'sv', 'sw', 'syl', 'ta', 'te', 'tg', 'th', 'ti',
-  'tk', 'tl', 'tts', 'ug', 'uk', 'ur', 'uz', 'vi', 'wes', 'wuu',
-  'yo', 'yue', 'zh', 'zu',
+  'be', 'bg', 'bn', 'cjy', 'ctg', 'da', 'dcc', 'de', 'dyu', 'el',
+  'et', 'fa', 'fi', 'gsw', 'gu', 'he', 'hi', 'hy', 'id', 'ig',
+  'it', 'ja', 'jv', 'ka', 'kk', 'km', 'kn', 'ko', 'ku', 'ky',
+  'lo', 'lt', 'lv', 'mg', 'mi', 'ml', 'mn', 'mnp', 'mr', 'ms',
+  'my', 'no', 'om', 'pa', 'pcm', 'pl', 'pt', 'qu', 'rkt', 'ro',
+  'ru', 'sd', 'sdr', 'sk', 'skr', 'sq', 'sr', 'sw', 'syl', 'ta',
+  'te', 'tg', 'th', 'ti', 'tl', 'tts', 'uk', 'ur', 'uz', 'vi',
+  'wes', 'wuu', 'yue', 'zh', 'zu',
 ];
