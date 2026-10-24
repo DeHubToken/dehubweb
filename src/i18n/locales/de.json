@@ -7720,6 +7720,15 @@
       "matchDuration": "Die passenden Aufnahmen sind kürzer als das gewünschte Video. Verkürze die Dauer oder wähle weitere Medien.",
       "matchFailed": "Die Szenensuche ist nicht verfügbar. Deine ausgewählten Clips und Zeiten bleiben unverändert. Du kannst sie manuell prüfen.",
       "reviewManually": "Clips manuell prüfen"
+    },
+    "charts": {
+      "hierarchySample": "Europe, Frankreich, 35"
+    },
+    "dataImport": {
+      "sampleCategory": "Kategorie",
+      "sampleNorth": "Nord",
+      "sampleSouth": "Süd",
+      "sampleValue": "Wert"
     }
   },
   "jungleMood": {

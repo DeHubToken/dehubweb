@@ -7433,6 +7433,15 @@
     "highlights": {
       "visual": "Visuaaliset kohokohdat",
       "visualPrivacy": "Lähetä valitut ruudut visuaalista analyysia varten."
+    },
+    "charts": {
+      "hierarchySample": "Eurooppa,Ranska,35"
+    },
+    "dataImport": {
+      "sampleCategory": "Kategoria",
+      "sampleNorth": "Pohjoinen",
+      "sampleSouth": "Etelä",
+      "sampleValue": "Arvo"
     }
   },
   "jungleMood": {

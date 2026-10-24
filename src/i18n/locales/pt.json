@@ -7672,6 +7672,15 @@
       "retryRecovery": "Tentar recuperação novamente",
       "personalCopy": "Salvar uma cópia pessoal",
       "privateHint": "Entrar não envia suas alterações. Compartilhar ao vivo envia novas fontes privadas; Salvar cria uma versão permanente."
+    },
+    "charts": {
+      "hierarchySample": "Europa, França, 35"
+    },
+    "dataImport": {
+      "sampleCategory": "Categorias",
+      "sampleNorth": "Norte",
+      "sampleSouth": "Sul",
+      "sampleValue": "Valor"
     }
   },
   "jungleMood": {

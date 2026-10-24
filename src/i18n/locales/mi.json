@@ -7506,6 +7506,15 @@
     "highlights": {
       "visual": "Ngā wā ataata whakahirahira",
       "visualPrivacy": "Tukuna ngā tāpare kua tīpakohia hei tātari ā-ataata."
+    },
+    "charts": {
+      "hierarchySample": "Europe,France, 35"
+    },
+    "dataImport": {
+      "sampleCategory": "Kāwai",
+      "sampleNorth": "Te Tai Tokerau",
+      "sampleSouth": "Te tonga",
+      "sampleValue": "Uara"
     }
   },
   "jungleMood": {

@@ -7435,6 +7435,15 @@
     "highlights": {
       "visual": "Visuella höjdpunkter",
       "visualPrivacy": "Skicka utvalda bildrutor för visuell analys."
+    },
+    "charts": {
+      "hierarchySample": "Europe,Frankrike,35"
+    },
+    "dataImport": {
+      "sampleCategory": "Kategori",
+      "sampleNorth": "Nord",
+      "sampleSouth": "Syd",
+      "sampleValue": "Värde"
     }
   },
   "jungleMood": {

@@ -7578,6 +7578,15 @@
       "retryRecovery": "복구 다시 시도",
       "personalCopy": "개인 사본 저장",
       "privateHint": "참여만으로 편집 내용이 업로드되지는 않습니다. 실시간 공유는 새 비공개 소스를 업로드하며, 저장은 영구 버전을 만듭니다."
+    },
+    "charts": {
+      "hierarchySample": "유럽, 프랑스, 35"
+    },
+    "dataImport": {
+      "sampleCategory": "카테고리",
+      "sampleNorth": "북쪽",
+      "sampleSouth": "남쪽",
+      "sampleValue": "값"
     }
   },
   "jungleMood": {

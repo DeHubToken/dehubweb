@@ -6258,6 +6258,13 @@
     "highlights": {
       "visual": "أبرز اللحظات المرئية",
       "visualPrivacy": "أرسل إطارات مختارة للتحليل البصري."
+    },
+    "charts": {
+      "hierarchySample": "یورپ،فرانس،35"
+    },
+    "dataImport": {
+      "sampleCategory": "کَٹیگری",
+      "sampleValue": "قیمت"
     }
   },
   "jungleMood": {

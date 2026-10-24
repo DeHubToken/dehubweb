@@ -740,6 +740,7 @@
     "undo": "เลิกทำ",
     "copied": "คัดลอกแล้ว",
     "back": "ย้อนกลับ",
+    "next": "ถัดไป",
     "yes": "ใช่",
     "no": "ไม่",
     "error": "เกิดข้อผิดพลาด",
@@ -747,7 +748,6 @@
     "warning": "คำเตือน",
     "info": "ข้อมูล",
     "confirm": "ยืนยัน",
-    "next": "ถัดไป",
     "submit": "ส่ง",
     "optional": "ไม่บังคับ",
     "required": "จำเป็น",
@@ -7552,6 +7552,15 @@
     "highlights": {
       "visual": "ช่วงเด่นของภาพ",
       "visualPrivacy": "ส่งเฟรมที่เลือกเพื่อวิเคราะห์ภาพ"
+    },
+    "charts": {
+      "hierarchySample": "ยุโรปฝรั่งเศส 35"
+    },
+    "dataImport": {
+      "sampleCategory": "หมวดหมู่",
+      "sampleNorth": "ทิศเหนือ",
+      "sampleSouth": "ใต้",
+      "sampleValue": "ความคุ้มค่า"
     }
   },
   "jungleMood": {

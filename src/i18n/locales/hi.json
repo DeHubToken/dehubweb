@@ -7581,6 +7581,15 @@
     "highlights": {
       "visual": "दृश्य के खास पल",
       "visualPrivacy": "दृश्य विश्लेषण के लिए चुने हुए फ़्रेम भेजें।"
+    },
+    "charts": {
+      "hierarchySample": "यूरोप, फ्रांस, 35"
+    },
+    "dataImport": {
+      "sampleCategory": "वर्गीकरण",
+      "sampleNorth": "उत्तर",
+      "sampleSouth": "दक्षिण",
+      "sampleValue": "मूल्य"
     }
   },
   "jungleMood": {

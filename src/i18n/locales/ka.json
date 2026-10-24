@@ -7553,6 +7553,15 @@
     "highlights": {
       "visual": "ვიზუალური მნიშვნელოვანი მომენტები",
       "visualPrivacy": "გაგზავნეთ შერჩეული კადრები ვიზუალური ანალიზისთვის."
+    },
+    "charts": {
+      "hierarchySample": "ევროპა,საფრანგეთი,35"
+    },
+    "dataImport": {
+      "sampleCategory": "კატეგორია",
+      "sampleNorth": "ჩრდილოეთი",
+      "sampleSouth": "სამხრეთი",
+      "sampleValue": "ღირებულება"
     }
   },
   "jungleMood": {

@@ -7462,6 +7462,15 @@
     "highlights": {
       "visual": "Лаҳзаҳои муҳими тасвирӣ",
       "visualPrivacy": "Кадрҳои интихобшударо барои таҳлили тасвирӣ фиристед."
+    },
+    "charts": {
+      "hierarchySample": "Аврупо,Фаронса,35"
+    },
+    "dataImport": {
+      "sampleCategory": "Категория",
+      "sampleNorth": "Шимол",
+      "sampleSouth": "Ҷануб",
+      "sampleValue": "Қимат"
     }
   },
   "jungleMood": {

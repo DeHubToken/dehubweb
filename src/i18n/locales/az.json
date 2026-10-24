@@ -7382,6 +7382,15 @@
     "highlights": {
       "visual": "Vizual məqamlar",
       "visualPrivacy": "Vizual təhlil üçün seçilmiş kadrları göndərin."
+    },
+    "charts": {
+      "hierarchySample": "Avropa,Fransa,35"
+    },
+    "dataImport": {
+      "sampleCategory": "Kateqoriya",
+      "sampleNorth": "Şimal",
+      "sampleSouth": "Cənub",
+      "sampleValue": "Dəyər"
     }
   },
   "jungleMood": {

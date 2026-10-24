@@ -7031,6 +7031,15 @@
     "highlights": {
       "visual": "ช่วงเด่นของภาพ",
       "visualPrivacy": "ส่งเฟรมที่เลือกเพื่อวิเคราะห์ภาพ"
+    },
+    "charts": {
+      "hierarchySample": "อีโรป,ฝรั่งเศส,สามสิบห้า"
+    },
+    "dataImport": {
+      "sampleCategory": "หมวดหมู่",
+      "sampleNorth": "เหนือ",
+      "sampleSouth": "ใต้",
+      "sampleValue": "ค่าตัว"
     }
   },
   "jungleMood": {

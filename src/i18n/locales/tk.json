@@ -7436,6 +7436,15 @@
     "highlights": {
       "visual": "Wizual möhüm pursatlar",
       "visualPrivacy": "Wizual seljerme üçin saýlanan kadrlary iberiň."
+    },
+    "charts": {
+      "hierarchySample": "Ýeropa,Fransiýa, 35"
+    },
+    "dataImport": {
+      "sampleCategory": "Kategoriýa",
+      "sampleNorth": "Şimal",
+      "sampleSouth": "Günorta",
+      "sampleValue": "Deger"
     }
   },
   "jungleMood": {

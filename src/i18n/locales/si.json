@@ -7463,6 +7463,15 @@
     "highlights": {
       "visual": "දෘශ්‍ය විශේෂ අවස්ථා",
       "visualPrivacy": "දෘශ්‍ය විශ්ලේෂණය සඳහා තෝරාගත් රාමු යවන්න."
+    },
+    "charts": {
+      "hierarchySample": "යුරෝපය,ප් ‍ රංශය, 35"
+    },
+    "dataImport": {
+      "sampleCategory": "කාණ්ඩය",
+      "sampleNorth": "උතුර",
+      "sampleSouth": "දකුණ",
+      "sampleValue": "අගය"
     }
   },
   "jungleMood": {

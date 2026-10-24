@@ -7498,6 +7498,15 @@
     "highlights": {
       "visual": "ຊ່ວງເດັ່ນຂອງພາບ",
       "visualPrivacy": "ສົ່ງເຟຣມທີ່ເລືອກເພື່ອວິເຄາະພາບ."
+    },
+    "charts": {
+      "hierarchySample": "ເອີຣົບ,ປະເທດຝຣັ່ງ, 35"
+    },
+    "dataImport": {
+      "sampleCategory": "ປະເພດ",
+      "sampleNorth": "ພາກເໜືອ",
+      "sampleSouth": "ພາກໃຕ້",
+      "sampleValue": "ມູນຄ່າ"
     }
   },
   "jungleMood": {

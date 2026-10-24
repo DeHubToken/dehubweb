@@ -7512,6 +7512,15 @@
     "highlights": {
       "visual": "दृश्यातील खास क्षण",
       "visualPrivacy": "दृश्य विश्लेषणासाठी निवडलेल्या फ्रेम पाठवा."
+    },
+    "charts": {
+      "hierarchySample": "युरोप,फ्रान्स, 35"
+    },
+    "dataImport": {
+      "sampleCategory": "वर्गवारी",
+      "sampleNorth": "उत्तर",
+      "sampleSouth": "दक्षिण",
+      "sampleValue": "मूल्य"
     }
   },
   "jungleMood": {

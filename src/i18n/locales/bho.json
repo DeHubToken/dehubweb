@@ -7369,6 +7369,15 @@
     "highlights": {
       "visual": "वीडियो के खास पल",
       "visualPrivacy": "देख के विश्लेषण करे खातिर चुनल फ्रेम भेजीं।"
+    },
+    "charts": {
+      "hierarchySample": "करेलियन - 35"
+    },
+    "dataImport": {
+      "sampleCategory": "श्रेणीःलेख जिनहन में",
+      "sampleNorth": "पूरब पश्चिम साथे",
+      "sampleSouth": "पूरब पश्चिम साथे",
+      "sampleValue": "मान की खातिर"
     }
   },
   "jungleMood": {

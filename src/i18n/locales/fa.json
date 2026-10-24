@@ -7534,6 +7534,15 @@
     "highlights": {
       "visual": "لحظات برجستهٔ تصویری",
       "visualPrivacy": "فریم‌های منتخب را برای تحلیل تصویری ارسال کنید."
+    },
+    "charts": {
+      "hierarchySample": "اروپا، فرانسه، 35"
+    },
+    "dataImport": {
+      "sampleCategory": "دسته بندی",
+      "sampleNorth": "شمال",
+      "sampleSouth": "جنوب",
+      "sampleValue": "ارزش"
     }
   },
   "jungleMood": {

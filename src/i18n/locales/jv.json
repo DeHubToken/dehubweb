@@ -7275,6 +7275,15 @@
     "highlights": {
       "visual": "Sorotan visual",
       "visualPrivacy": "Kirim pigura sing dipilih kanggo analisis visual."
+    },
+    "charts": {
+      "hierarchySample": "Europe,Pransya,35"
+    },
+    "dataImport": {
+      "sampleCategory": "Kategori",
+      "sampleNorth": "Kulon",
+      "sampleSouth": "Kene",
+      "sampleValue": "Nila"
     }
   },
   "jungleMood": {

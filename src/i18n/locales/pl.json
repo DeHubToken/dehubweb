@@ -7509,6 +7509,15 @@
     "highlights": {
       "visual": "Wizualne najważniejsze momenty",
       "visualPrivacy": "Wyślij wybrane klatki do analizy wizualnej."
+    },
+    "charts": {
+      "hierarchySample": "Europa,Francja,35"
+    },
+    "dataImport": {
+      "sampleCategory": "Kategoria",
+      "sampleNorth": "Północ",
+      "sampleSouth": "Południe",
+      "sampleValue": "Wartość"
     }
   },
   "jungleMood": {

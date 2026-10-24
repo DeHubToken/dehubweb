@@ -7502,6 +7502,15 @@
     "highlights": {
       "visual": "Визуальные яркие моменты",
       "visualPrivacy": "Отправить выбранные кадры для визуального анализа."
+    },
+    "charts": {
+      "hierarchySample": "Европа,Франция,35"
+    },
+    "dataImport": {
+      "sampleCategory": "Категория",
+      "sampleNorth": "Север",
+      "sampleSouth": "Юг",
+      "sampleValue": "Значение"
     }
   },
   "jungleMood": {

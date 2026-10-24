@@ -7484,6 +7484,15 @@
     "highlights": {
       "visual": "Yeroowwan mul'ataa addaa",
       "visualPrivacy": "Fureemota filataman xiinxala mul'ataaf ergi."
+    },
+    "charts": {
+      "hierarchySample": "Awurooppaa,Faransaay,35"
+    },
+    "dataImport": {
+      "sampleCategory": "Ramaddii",
+      "sampleNorth": "Kaaba",
+      "sampleSouth": "Gosha",
+      "sampleValue": "Waliigalaa"
     }
   },
   "jungleMood": {

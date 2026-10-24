@@ -7525,6 +7525,15 @@
     "highlights": {
       "visual": "Momentet pamore kryesore",
       "visualPrivacy": "Dërgo kuadrot e zgjedhura për analizë pamore."
+    },
+    "charts": {
+      "hierarchySample": "Europe,Francë,35"
+    },
+    "dataImport": {
+      "sampleCategory": "Kategoria",
+      "sampleNorth": "Veri",
+      "sampleSouth": "Jug",
+      "sampleValue": "Vlerë"
     }
   },
   "jungleMood": {

@@ -7514,6 +7514,15 @@
     "highlights": {
       "visual": "Vizuāli spilgtākie mirkļi",
       "visualPrivacy": "Nosūtīt atlasītos kadrus vizuālai analīzei."
+    },
+    "charts": {
+      "hierarchySample": "Eiropa,Francija,35"
+    },
+    "dataImport": {
+      "sampleCategory": "Kategorija",
+      "sampleNorth": "Ziemeļi",
+      "sampleSouth": "Dienvidi",
+      "sampleValue": "Vērtība"
     }
   },
   "jungleMood": {

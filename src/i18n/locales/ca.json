@@ -7432,6 +7432,15 @@
     "highlights": {
       "visual": "Moments visuals destacats",
       "visualPrivacy": "Envia fotogrames seleccionats per a l'anàlisi visual."
+    },
+    "charts": {
+      "hierarchySample": "Europa,França,35"
+    },
+    "dataImport": {
+      "sampleCategory": "Categoria",
+      "sampleNorth": "Nord",
+      "sampleSouth": "Sud",
+      "sampleValue": "Valor"
     }
   },
   "jungleMood": {

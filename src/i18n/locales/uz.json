@@ -7561,6 +7561,15 @@
     "highlights": {
       "visual": "Vizual muhim lahzalar",
       "visualPrivacy": "Vizual tahlil uchun tanlangan kadrlarni yuboring."
+    },
+    "charts": {
+      "hierarchySample": "Yevropa, Fransiya, 35"
+    },
+    "dataImport": {
+      "sampleCategory": "Kategoriya",
+      "sampleNorth": "Shimol",
+      "sampleSouth": "Janub",
+      "sampleValue": "Qimati"
     }
   },
   "jungleMood": {

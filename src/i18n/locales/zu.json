@@ -7539,6 +7539,15 @@
     "highlights": {
       "visual": "Izikhathi ezigqamile ezibonwayo",
       "visualPrivacy": "Thumela amafreyimu akhethiwe ukuze kuhlaziywe izithombe."
+    },
+    "charts": {
+      "hierarchySample": "I-Europe,i-France,35"
+    },
+    "dataImport": {
+      "sampleCategory": "Isigaba",
+      "sampleNorth": "Enyakatho",
+      "sampleSouth": "ENingizimu",
+      "sampleValue": "Inani"
     }
   },
   "jungleMood": {

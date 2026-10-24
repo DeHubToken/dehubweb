@@ -7542,6 +7542,15 @@
     "highlights": {
       "visual": "منظر کے نمایاں لمحات",
       "visualPrivacy": "بصری تجزیے کے لیے منتخب فریم بھیجیں۔"
+    },
+    "charts": {
+      "hierarchySample": "یورپ،فرانس، 35"
+    },
+    "dataImport": {
+      "sampleCategory": "زمرہ",
+      "sampleNorth": "شمال",
+      "sampleSouth": "جنوب",
+      "sampleValue": "قدر"
     }
   },
   "jungleMood": {

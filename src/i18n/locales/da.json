@@ -7461,6 +7461,15 @@
     "highlights": {
       "visual": "Visuelle højdepunkter",
       "visualPrivacy": "Send udvalgte billeder til visuel analyse."
+    },
+    "charts": {
+      "hierarchySample": "Europa,Frankrig,35"
+    },
+    "dataImport": {
+      "sampleCategory": "Kategori",
+      "sampleNorth": "Nord",
+      "sampleSouth": "Syd",
+      "sampleValue": "Værdi"
     }
   },
   "jungleMood": {

@@ -736,6 +736,7 @@
     "clear": "I-clear",
     "copied": "Kinopya!",
     "back": "Bumalik",
+    "apply": "Ilapat",
     "okay": "Sige",
     "submit": "Ipasa",
     "copy": "Kopyahin",
@@ -763,7 +764,6 @@
     "pending": "Nakabinbin",
     "failed": "Bigo",
     "filters": "Mga Filter",
-    "apply": "Ilapat",
     "sortBy": "Pagbukud-bukurin Ayon sa",
     "reset": "I-reset",
     "viewAll": "Tingnan Lahat",
@@ -7592,6 +7592,15 @@
     "highlights": {
       "visual": "Mga tampok na biswal",
       "visualPrivacy": "Ipadala ang napiling mga frame para sa biswal na pagsusuri."
+    },
+    "charts": {
+      "hierarchySample": "Europa,Pransya, 35"
+    },
+    "dataImport": {
+      "sampleCategory": "Kategorya",
+      "sampleNorth": "Hilaga",
+      "sampleSouth": "Timog",
+      "sampleValue": "Halaga"
     }
   },
   "jungleMood": {

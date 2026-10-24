@@ -6399,6 +6399,15 @@
     "highlights": {
       "visual": "Video better moments",
       "visualPrivacy": "Send selected frames make we analyse wetin dey show."
+    },
+    "charts": {
+      "hierarchySample": "Europe,France,35"
+    },
+    "dataImport": {
+      "sampleCategory": "Category",
+      "sampleNorth": "North",
+      "sampleSouth": "South",
+      "sampleValue": "Value"
     }
   },
   "jungleMood": {

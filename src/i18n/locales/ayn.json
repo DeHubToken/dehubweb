@@ -6854,6 +6854,15 @@
     "highlights": {
       "visual": "أبرز اللحظات المرئية",
       "visualPrivacy": "أرسل إطارات مختارة للتحليل البصري."
+    },
+    "charts": {
+      "hierarchySample": "أوروبا، فرنسا، 35"
+    },
+    "dataImport": {
+      "sampleCategory": "فئة",
+      "sampleNorth": "الشمال",
+      "sampleSouth": "جنوب",
+      "sampleValue": "قيمة"
     }
   },
   "jungleMood": {

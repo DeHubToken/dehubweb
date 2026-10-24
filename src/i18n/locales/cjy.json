@@ -7450,6 +7450,15 @@
     "highlights": {
       "visual": "画面精彩片段",
       "visualPrivacy": "发送选取的帧进行画面分析。"
+    },
+    "charts": {
+      "hierarchySample": "欧洲，法国，35"
+    },
+    "dataImport": {
+      "sampleCategory": "类别",
+      "sampleNorth": "北部",
+      "sampleSouth": "南部",
+      "sampleValue": "价值"
     }
   },
   "jungleMood": {

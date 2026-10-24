@@ -7532,6 +7532,15 @@
     "highlights": {
       "visual": "Տեսողական կարևոր պահեր",
       "visualPrivacy": "Ուղարկել ընտրված կադրերը տեսողական վերլուծության համար։"
+    },
+    "charts": {
+      "hierarchySample": "Եվրոպա,Ֆրանսիա,35"
+    },
+    "dataImport": {
+      "sampleCategory": "Կատեգորիա",
+      "sampleNorth": "Հյուսիս",
+      "sampleSouth": "Հարավ",
+      "sampleValue": "Արժեք"
     }
   },
   "jungleMood": {

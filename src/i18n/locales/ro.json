@@ -7546,6 +7546,15 @@
     "highlights": {
       "visual": "Momente vizuale importante",
       "visualPrivacy": "Trimite cadrele selectate pentru analiză vizuală."
+    },
+    "charts": {
+      "hierarchySample": "Europa,Franța,35"
+    },
+    "dataImport": {
+      "sampleCategory": "Categorie",
+      "sampleNorth": "Nord",
+      "sampleSouth": "Sud",
+      "sampleValue": "Valoare"
     }
   },
   "jungleMood": {

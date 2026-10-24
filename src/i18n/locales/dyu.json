@@ -7318,6 +7318,14 @@
     "highlights": {
       "visual": "Filimu jaa yɔrɔbaaw",
       "visualPrivacy": "Filimu jaa sugandilenw ci ka u sɛgɛsɛgɛ."
+    },
+    "charts": {
+      "hierarchySample": "Itali,Faransi, saan 35"
+    },
+    "dataImport": {
+      "sampleCategory": "Yɔrɔ dɔw",
+      "sampleNorth": "Ne be kɔgɔdugu ɲafan fɛ",
+      "sampleSouth": "Kɔgɔdugu ɲafan ka league"
     }
   },
   "jungleMood": {

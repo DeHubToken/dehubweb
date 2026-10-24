@@ -738,11 +738,12 @@
     "done": "Selesai",
     "back": "Kembali",
     "refresh": "Segar semula",
+    "next": "Seterusnya",
+    "previous": "Sebelumnya",
+    "redo": "Ulang",
     "yes": "Ya",
     "no": "Tidak",
     "confirm": "Sahkan",
-    "next": "Seterusnya",
-    "previous": "Sebelumnya",
     "submit": "Hantar",
     "optional": "Pilihan",
     "error": "Ralat",
@@ -772,7 +773,6 @@
     "upload": "Muat naik",
     "download": "Muat turun",
     "copy": "Salin",
-    "redo": "Ulang",
     "filter": "Tapis",
     "sort": "Susun",
     "ascending": "Menaik",
@@ -7787,6 +7787,15 @@
     "highlights": {
       "visual": "Sorotan visual",
       "visualPrivacy": "Hantar bingkai terpilih untuk analisis visual."
+    },
+    "charts": {
+      "hierarchySample": "Eropah,Perancis, 35"
+    },
+    "dataImport": {
+      "sampleCategory": "Kategori",
+      "sampleNorth": "Utara",
+      "sampleSouth": "Selatan",
+      "sampleValue": "Nilai"
     }
   },
   "jungleMood": {

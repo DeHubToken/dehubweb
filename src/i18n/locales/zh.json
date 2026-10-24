@@ -7671,6 +7671,15 @@
       "retryRecovery": "重试恢复",
       "personalCopy": "保存个人副本",
       "privateHint": "加入不会上传你的编辑内容。实时共享会上传新的私有素材；保存会创建永久版本。"
+    },
+    "charts": {
+      "hierarchySample": "欧洲，法国， 35"
+    },
+    "dataImport": {
+      "sampleCategory": "类别",
+      "sampleNorth": "北",
+      "sampleSouth": "南",
+      "sampleValue": "值"
     }
   },
   "jungleMood": {

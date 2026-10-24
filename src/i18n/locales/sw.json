@@ -7525,6 +7525,15 @@
     "highlights": {
       "visual": "Matukio bora ya picha",
       "visualPrivacy": "Tuma fremu zilizochaguliwa kwa uchambuzi wa picha."
+    },
+    "charts": {
+      "hierarchySample": "Europe, Ufaransa, 35"
+    },
+    "dataImport": {
+      "sampleCategory": "Aina",
+      "sampleNorth": "Kaskazini",
+      "sampleSouth": "Kusini",
+      "sampleValue": "Thamani"
     }
   },
   "jungleMood": {

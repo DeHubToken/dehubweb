@@ -7501,6 +7501,15 @@
     "highlights": {
       "visual": "Visuaalsed tipphetked",
       "visualPrivacy": "Saada valitud kaadrid visuaalseks analüüsiks."
+    },
+    "charts": {
+      "hierarchySample": "Euroopa,Prantsusmaa,35"
+    },
+    "dataImport": {
+      "sampleCategory": "Kategooria",
+      "sampleNorth": "Põhi",
+      "sampleSouth": "Lõuna",
+      "sampleValue": "Väärtus"
     }
   },
   "jungleMood": {

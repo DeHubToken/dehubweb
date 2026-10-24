@@ -7476,6 +7476,15 @@
     "highlights": {
       "visual": "ရုပ်ပုံ၏ ထင်ရှားသောအခိုက်အတန့်များ",
       "visualPrivacy": "ရုပ်ပုံခွဲခြမ်းစိတ်ဖြာရန် ရွေးချယ်ထားသောဖရိမ်များကို ပို့ပါ။"
+    },
+    "charts": {
+      "hierarchySample": "ဥရောပ,ပြင်သစ်, 35"
+    },
+    "dataImport": {
+      "sampleCategory": "အမျိုးအစား",
+      "sampleNorth": "မြောက်",
+      "sampleSouth": "တောင်ဘက်",
+      "sampleValue": "တန်ဖိုး"
     }
   },
   "jungleMood": {

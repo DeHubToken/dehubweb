@@ -7426,6 +7426,15 @@
     "highlights": {
       "visual": "Àwọn ìṣẹ̀lẹ̀ àwòrán pàtàkì",
       "visualPrivacy": "Fi àwọn férémù tí a yàn ránṣẹ́ fún ìtúpalẹ̀ àwòrán."
+    },
+    "charts": {
+      "hierarchySample": "Europe,France, 35"
+    },
+    "dataImport": {
+      "sampleCategory": "Ẹ̀ka",
+      "sampleNorth": "Àríwá",
+      "sampleSouth": "Gúúsù",
+      "sampleValue": "Iye"
     }
   },
   "jungleMood": {
