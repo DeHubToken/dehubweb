@@ -39,6 +39,7 @@ import { useNavigate } from 'react-router-dom';
 import { openDmDock } from '@/hooks/use-dm-dock';
 import { GLASS_STYLES } from '@/constants/app.constants';
 import { ReviewSection } from './ReviewSection';
+import { ThemedIcon } from '@/components/app/war/WarHudIcon';
 import { podProviderLabel, parsePodUrl } from '@/lib/pod-providers';
 
 interface Props {
@@ -72,6 +73,7 @@ export function ListingDetailDrawer({ listing, open, onClose }: Props) {
   const [quote, setQuote] = useState<ProductQuote | null>(null);
   const [quoteError, setQuoteError] = useState<string | null>(null);
   const [imgIdx, setImgIdx] = useState(0);
+  const [failedImage, setFailedImage] = useState<string | null>(null);
   const [shippingAddress, setShippingAddress] = useState('');
   const [notes, setNotes] = useSurfaceDraft("components/app/stores/ListingDetailDrawer.tsx:notes", '', draftIdentity(listing));
   const [shareOpen, setShareOpen] = useState(false);
@@ -158,7 +160,13 @@ export function ListingDetailDrawer({ listing, open, onClose }: Props) {
           {/* Image carousel */}
           {images.length > 0 && (
             <div className="relative aspect-square rounded-xl overflow-hidden bg-white/5 max-h-[40vh]">
-              <img src={images[imgIdx]} alt={listing.title} className="w-full h-full object-cover" />
+              {images[imgIdx] && images[imgIdx] !== failedImage ? (
+                <img src={images[imgIdx]} alt={listing.title} className="w-full h-full object-cover" onError={() => setFailedImage(images[imgIdx])} />
+              ) : (
+                <div className="w-full h-full flex items-center justify-center text-muted-foreground">
+                  <ThemedIcon icon="images" alt="" className="w-14 h-14 object-contain opacity-70" />
+                </div>
+              )}
               {images.length > 1 && (
                 <>
                   <button onClick={() => setImgIdx(i => (i - 1 + images.length) % images.length)} className="absolute left-2 top-1/2 -translate-y-1/2 bg-black/50 rounded-full p-1">
