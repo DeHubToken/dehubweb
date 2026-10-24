@@ -158,6 +158,7 @@ export function CommunityMembers({ members, community, membership, onManage }: C
 
       {members.length > PAGE_SIZE && (
         <Input
+          type="search"
           value={query}
           onChange={e => { setQuery(e.target.value); setVisible(PAGE_SIZE); }}
           placeholder={t('communities.searchMembers', { defaultValue: 'Search by wallet address...' })}
