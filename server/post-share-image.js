@@ -27,15 +27,27 @@ async function loadCdnImage(url, { folder, limit, timeout, resize }) {
   try {
     const source = new URL(url);
     if (source.origin !== 'https://dehubcdn.ams3.cdn.digitaloceanspaces.com' || (folder && !source.pathname.startsWith(folder))) return '';
-    // Read the public object directly: the CDN's browser challenge can reject
-    // a server-side request even though the same avatar loads in the app.
+    // `resize` asks the zone's image transform for a small JPEG, which also
+    // turns WebP and GIF uploads into something the renderer decodes. The
+    // transform only accepts the CDN host (its allowed source; the bare
+    // Spaces host answers 9401), so it keeps that host.
+    if (resize) {
+      const resized = await readImage(source.href, { limit, timeout, cf: { image: resize } });
+      if (resized) return resized;
+    }
+    // Otherwise read the public object directly: the CDN's browser challenge
+    // can reject a server-side request even though the same avatar loads in the app.
     source.hostname = 'dehubcdn.ams3.digitaloceanspaces.com';
+    return await readImage(source.href, { limit, timeout });
+  } catch { return ''; }
+}
+
+async function readImage(href, { limit, timeout, cf }) {
+  try {
     // Workers supports manual/follow, not redirect:error. Reject redirects
     // through response.ok so an avatar cannot move the request to another host.
-    // `resize` asks the zone's image transform for a small JPEG, which also
-    // turns WebP and GIF uploads into something the renderer decodes.
-    const response = await fetch(source.href, { signal: AbortSignal.timeout(timeout), redirect: 'manual', ...(resize ? { cf: { image: resize } } : {}) });
-    if (!response.ok || Number(response.headers.get('Content-Length')) > limit) return '';
+    const response = await fetch(href, { signal: AbortSignal.timeout(timeout), redirect: 'manual', ...(cf ? { cf } : {}) });
+    if (!response.ok || Number(response.headers.get('Content-Length')) > limit) { await response.body?.cancel(); return ''; }
     const bytes = new Uint8Array(await response.arrayBuffer());
     if (bytes.length > limit) return '';
     const type = bytes[0] === 137 && bytes[1] === 80 ? 'image/png' : bytes[0] === 255 && bytes[1] === 216 ? 'image/jpeg' : '';
