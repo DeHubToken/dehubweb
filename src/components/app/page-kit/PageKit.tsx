@@ -155,7 +155,11 @@ export function PageTabs<T extends string>({
     <div
       role="tablist"
       data-kit-tabs
-      className={cn('scrollbar-hide -mx-0.5 flex items-center gap-1.5 overflow-x-auto px-0.5', className)}
+      // `relative` keeps icon-only tabs' sr-only labels (position: absolute)
+      // inside this scroller. Without it they escape to the nearest scroll
+      // container — the bell drawer — and widen it, so the whole drawer pans
+      // sideways on iPhone.
+      className={cn('scrollbar-hide relative -mx-0.5 flex items-center gap-1.5 overflow-x-auto px-0.5', className)}
     >
       {tabs.map((tab) => {
         const active = tab.id === value;
@@ -194,14 +198,19 @@ export function PageBody({
   children,
   className,
   measure,
+  frameClip,
 }: {
   children: ReactNode;
   className?: string;
   /** Keep a readable width (forms, articles) instead of filling the column. */
   measure?: boolean;
+  /** Cut under the island with a per-scroll clip instead of scroll-driven
+   *  transforms. For bodies inside their own scroller (the bell drawer),
+   *  where iOS WebKit leaves the transformed layers unpainted. */
+  frameClip?: boolean;
 }) {
   const ref = useRef<HTMLDivElement>(null);
-  useFeedSwallowClip(ref, '[data-kit-island-outer] > [data-page-bento]', [], { allThemes: true });
+  useFeedSwallowClip(ref, '[data-kit-island-outer] > [data-page-bento]', [], { allThemes: true, frameOnly: frameClip });
   return (
     <div data-feed-swallow-bounds className="w-full">
     <div ref={ref} data-kit-body className={cn('w-full pb-28 pt-3', measure && 'max-w-2xl', className)}>
