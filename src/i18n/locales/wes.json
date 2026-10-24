@@ -1,4 +1,18 @@
 {
+  "desktopWordmark": {
+    "pageTitle": "Preview for desktop logo",
+    "heading": "Di DeHub desktop logo",
+    "day": "Dei {{day}}",
+    "replay": "Play di intro again",
+    "enlarge": "Mek am big",
+    "actualSize": "Di real size",
+    "reassemble": "Join di logo back",
+    "loading": "E di load",
+    "ready": "E don ready",
+    "interrupted": "Di graphics no di answer again",
+    "unavailable": "We no fit load di 3D preview",
+    "hint": "Di logo go stay whole for two second, den e go broke for piece. Put mouse for top am or choose am make e join back."
+  },
   "mastodonApps": {
     "authTitle": "Sign in with DeHub",
     "authWants": "{{app}} want use your DeHub account",
@@ -1642,7 +1656,79 @@
     "revealFailed": "We no fit show di key. Try again.",
     "signInAgain": "Sign in again",
     "createSignIn": "Sign in again for create agent",
-    "checkConnection": "Check connection yu, den try again."
+    "checkConnection": "Check connection yu, den try again.",
+    "workspace": {
+      "moderation": "Stream moderation",
+      "moderationHelp": "Enable moderation permission first. Dem account must be dem stream creator or dem one dem assign as moderator. Approval and draft mode still dey apply. Timeout dey expire by demself.",
+      "streamId": "Stream post ID",
+      "participant": "Participant wallet",
+      "participantHint": "Participant wallet (0x…)",
+      "timeout": "Timeout seconds",
+      "submitTimeout": "Submit timeout",
+      "webhook": "Discord alert webhook (optional)",
+      "webhookHelp": "Approval requests an wey wey fail to act, dem send one generic alert, no more dan one time per hour. No draft text or wallet details wey dem send. Leave blank if you no want; wey dem deliver, dem show in audit log.",
+      "confirmCorrection": "Dis changes de published activity. Delete comment no go back. No undo.",
+      "correction": "Correction",
+      "alert": "Alert",
+      "shared": "Shared",
+      "scope": "Dey controls fit for shedule work, free life, and connect assistant. Drafts stay private till you say \"okay\" fi dem.",
+      "knowledge": "Reference material",
+      "blocked": "Blocked topics, separated by commas",
+      "liveNews": "Dey follow wetin di happen for ground as life di waka by einsef.",
+      "newsHelp": "Wahin naa three topik a choose. Report a publisher a last 24 hour a cache for 15 minute. News reaction include link a source; news a no dey fit or old, no go skip.",
+      "saved": "Settings saved.",
+      "title": "Agent workspace",
+      "growth": "Capture growth report",
+      "library": "Dem template wit task builder",
+      "useBuilder": "Use these instructions",
+      "planValidated": "Plan validated",
+      "simulate": "Simulate plan",
+      "allowed": "Allowed",
+      "templateName": "Template name",
+      "saveTemplate": "Save template",
+      "templateSaved": "Template saved.",
+      "empty": "Wetin no fit match yet.",
+      "reject": "Reject",
+      "growthResult": "{{followers}} followers · {{following}} following",
+      "growthChange": "Follower change: {{count}} since {{time}}",
+      "runs": "{{runs}} recent runs · {{completed}} completed · {{failed}} failed",
+      "autonomous": "Autonomous",
+      "approval": "Approve first",
+      "draft": "Draft only",
+      "count": {
+        "pending": "Drafts to review",
+        "succeeded": "Recent successes",
+        "scheduled": "Scheduled tasks",
+        "active": "Active agents"
+      },
+      "builder": {
+        "news": "React to news",
+        "curate": "Like relevant posts",
+        "post": "Write a post"
+      },
+      "cadence": {
+        "once": "Once",
+        "daily": "Daily",
+        "twice": "Twice daily"
+      },
+      "dehub_post_create": "Publish posts",
+      "dehub_vote": "React to posts",
+      "dehub_follow": "Follow accounts",
+      "dehub_update_profile": "Edit profile",
+      "dehub_stream_timeout": "Moderate stream chat",
+      "news": {
+        "world": "World",
+        "technology": "Technology",
+        "culture": "Culture",
+        "sport": "Sport",
+        "science": "Science"
+      },
+      "alerts": "Needs attention",
+      "agent": "Agent",
+      "action": "Action",
+      "schedule": "Schedule",
+      "filter": "Filter activity"
+    }
   },
   "hero": {
     "title": "Welcome To",
@@ -1992,6 +2078,8 @@
     "anonymousLikes_other": "{{count}} like dem from badge holder dem weh no show demsef"
   },
   "postInfo": {
+    "unavailable": "E no dey",
+    "ownersUnavailable": "E current owner no dey fit read a go now.",
     "title": "Post Info",
     "tokenId": "Token ID",
     "mintedOn": "Dem create am",
@@ -5136,6 +5224,8 @@
     "notEnoughTokensForBounty": "No get enough token. Need {{need}} token but get {{have}}."
   },
   "events": {
+    "deleteConfirmTitle": "You want delete dis event?",
+    "deleteConfirmBody": "Dis one go remove di event, ihn guest list and ihn chat for everybody. You no fit undo am.",
     "seoDescription": "Browse akoming DeHub komyuni event, RSVP fo meetup, an host yu own event on dis dezentralize, yu-own social platform.",
     "title": "Efis",
     "filterUpcoming": "Na go",

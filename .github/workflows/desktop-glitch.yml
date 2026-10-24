@@ -1,0 +1,34 @@
+name: Desktop logo glitch
+on:
+  pull_request:
+    paths:
+      - 'src/components/app/navigation/DesktopGlitchWordmark.tsx'
+      - 'src/components/app/navigation/DesktopSidebar.tsx'
+      - 'src/components/app/navigation/desktop-wordmark-glitch.js'
+      - 'src/assets/riftn-wordmark-source.png'
+      - 'scripts/verify-desktop-glitch.cjs'
+      - 'tests/fixtures/desktop-logo-glitch-preview.html'
+      - '.github/workflows/desktop-glitch.yml'
+jobs:
+  render:
+    name: Desktop glitch preview parity
+    runs-on: ubuntu-latest
+    timeout-minutes: 6
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Install isolated browser test dependencies
+        run: |
+          npm install --prefix "$RUNNER_TEMP/glitch" --no-package-lock --ignore-scripts esbuild@0.25.11 playwright@1.56.1
+          "$RUNNER_TEMP/glitch/node_modules/.bin/playwright" install --with-deps chromium
+      - name: Compare actual canvas pixels with approved preview
+        env:
+          NODE_PATH: ${{ runner.temp }}/glitch/node_modules
+        run: node scripts/verify-desktop-glitch.cjs
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: desktop-glitch-evidence
+          path: glitch-evidence/

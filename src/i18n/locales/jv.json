@@ -1,4 +1,18 @@
 {
+  "desktopWordmark": {
+    "pageTitle": "Pratinjau logo desktop",
+    "heading": "Logo desktop DeHub",
+    "day": "Dina {{day}}",
+    "replay": "Puter maneh intro",
+    "enlarge": "Gedhekake",
+    "actualSize": "Ukuran asli",
+    "reassemble": "Rakit maneh logo",
+    "loading": "Lagi ngemot",
+    "ready": "Siap",
+    "interrupted": "Grafis mandheg nanggapi",
+    "unavailable": "Ora bisa ngemot pratinjau 3D",
+    "hint": "Logo tetep wutuh suwene rong detik, banjur pecah. Arahake kursor ing ndhuwure utawa pilih supaya nyawiji maneh."
+  },
   "mastodonApps": {
     "authTitle": "Mlebu nganggo DeHub",
     "authWants": "{{app}} kepengin nganggo akun DeHub sampeyan",
@@ -1717,7 +1731,86 @@
     "revealFailed": "Ora bisa nampilake kunci. Coba maneh.",
     "signInAgain": "Mlebu maneh",
     "createSignIn": "Mlebu maneh kanggo nggawe agen",
-    "checkConnection": "Priksa sambungan sampeyan banjur coba maneh."
+    "checkConnection": "Priksa sambungan sampeyan banjur coba maneh.",
+    "workspace": {
+      "moderation": "Moderasi aliran (stream)",
+      "moderationHelp": "Manggawe wewenang moderasi dhuwur dhuwur. Akun ingkang udah jadi sang pencipta stream ingkang, atawa moderator ingkang udah ditugaskan. Modus persetujuan ingkang, atawa draft, ingkang masih berlaku. Timeout ingkang udah habis otomatis.",
+      "streamId": "Stream post ID",
+      "participant": "Peserta dompet",
+      "participantHint": "Peserta dompet (0x…)",
+      "timeout": "Waktu timeout detik",
+      "submitTimeout": "Kirim wektu entek",
+      "handled": "Selesai diproses. Lihat log audit.",
+      "webhook": "Discord alert webhook (optional)",
+      "reversalHelp": "Reversals ngendhok post, ngelakoni hapus komentar siji-siji, ngembalikeun reaksi, teks profil, atau ngembalikeun follow baru. Views, notifikasi yang udah dikirim, transaksi minting, gambar profil, dan timeout yang udah kadaluwarsa gak bisa dihilangin. Post yang ngendhok bisa ditangkap lagi lewat pengontrolan kelihatan-nya.",
+      "alert": "Peringatan",
+      "controls": "Kosong",
+      "scope": "Iki karo kontrol-kontrol kanggo tugas-tugas kang wis dijadwalaké, kehidupan mandiri lan asisten sing terhubung. Rancangan tetep privat nganti kau setujui.",
+      "voice": "Wacan lan swara",
+      "knowledge": "Bahan Rujukan",
+      "blocked": "Topik sing dilarang, dipisahake karo koma",
+      "liveNews": "Kasus Koronavirus (COVID-19) sajeroning wong lanang lan wong wadon wis ngadeg ing donya. Ing wong lanang, kasus iki wis ngadeg ing 1.000.000 lan ing wong wadon 900.000.",
+      "newsHelp": "Pilih saking tiga tema nganggo. Laporan penerbitan saking 24 jam kebeneran dicache saking 15 menit. Reaksi berita ngandung link sumber; berita yang ga bisa diakses atau sudah ketinggalan zaman dilewati.",
+      "saved": "Tulisan pengaturan udah disimpen.",
+      "sample": "Aktivitas lanang lan alert ngandika akeh-100 aksi lan 200 tugas. Angka-angka iku ora wujud total hidup utawa penggunaan billing.",
+      "growth": "Kanggo ngarani laporan pertumbuhan",
+      "library": "Templat saka ngendhok-ngendhok saka task builder",
+      "subject": "Topik utawa gaya wangsulan",
+      "useBuilder": "Gunakake instruksi iki",
+      "planValidated": "Rencana wis divalidasi",
+      "builderHelp": "Pilih cithakan, jlentrehake tumindak, pamirsa lan jadwal, banjur simulasi sadurunge mbukak. Cithakan sing dituduhake yaiku instruksi saka panganggite, dudu kapabilitas sing wis diverifikasi.",
+      "simulate": "Simulasi rencana",
+      "allowed": "Diidini",
+      "templateName": "Jeneng cithakan",
+      "share": "Nuduhake cithakan iki karo pangguna Agen liyane",
+      "saveTemplate": "Simpen cithakan",
+      "templateSaved": "Cithakan wis disimpen.",
+      "history": "Kotak mlebu draf lan log audit",
+      "empty": "Durung ana aktivitas sing cocog.",
+      "approve": "Setujoni lan eksekusi",
+      "reject": "Tolak",
+      "growthResult": "{{followers}} pengikut · {{following}} sing ngetutake",
+      "growthChange": "Owah-owahan pengikut: {{count}} wiwit {{time}}",
+      "runs": "{{runs}} mlaku anyar · {{completed}} rampung · {{failed}} gagal",
+      "autonomous": "Otonom",
+      "approval": "Setujoni dhisik",
+      "draft": "Draf wae",
+      "count": {
+        "pending": "Draf sing kudu ditinjau",
+        "succeeded": "Sukses anyar",
+        "scheduled": "Tugas sing dijadwalake",
+        "active": "Agen aktif"
+      },
+      "builder": {
+        "news": "Nanggapi warta",
+        "reply": "Wangsulan kiriman anyar",
+        "curate": "Seneng kiriman sing relevan",
+        "post": "Nulis kiriman"
+      },
+      "cadence": {
+        "once": "Sepisan",
+        "daily": "Saben dina",
+        "twice": "Ping pindho saben dina"
+      },
+      "dehub_post_create": "Publikasi kiriman",
+      "dehub_comment": "Kasih balasan dan komentar",
+      "dehub_vote": "Reaksi ke postingan",
+      "dehub_follow": "Ikuti akun",
+      "dehub_update_profile": "Edit profil",
+      "dehub_stream_timeout": "Moderasi obrolan stream",
+      "news": {
+        "world": "Dunia",
+        "technology": "Teknologi",
+        "culture": "Budaya",
+        "sport": "Olahraga",
+        "science": "Ilmu Pengetahuan"
+      },
+      "alerts": "Butuh perhatian",
+      "agent": "Agensi",
+      "action": "Aksi",
+      "schedule": "Jadwal",
+      "filter": "Saring aktivitas"
+    }
   },
   "hero": {
     "title": "Sugeng Rawuh",
@@ -2087,6 +2180,8 @@
     "anonymousLikes_other": "{{count}} seneng saka pemegang lencana anonim"
   },
   "postInfo": {
+    "ownersUnavailable": "Pamilik saiki durung bisa diwaca.",
+    "unavailable": "Ora kasedhiya",
     "title": "Info Postingan",
     "tokenId": "Token ID",
     "mintedOn": "Digawe",
@@ -5410,6 +5505,8 @@
     "notEnoughTokensForBounty": "Token ora cukup. Butuh {{need}} token nanging duwe {{have}}."
   },
   "events": {
+    "deleteConfirmTitle": "Busak acara iki?",
+    "deleteConfirmBody": "Iki bakal mbusak acara, dhaptar tamu, lan obrolane kanggo kabeh wong. Iki ora bisa dibatalake.",
     "seoTitle": "Kebajenan — Kumpul-Kumpulan & Acara Masyarakat di DeHub",
     "seoDescription": "Browse acara DeHub komunitas yang akan datang, daftar untuk pertemuan dan host acara sendiri di platform sosial yang dezentral dan dimiliki oleh pengguna.",
     "defaultSeoDescription": "Gemblèng komunitas di DeHub.",

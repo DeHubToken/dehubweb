@@ -1639,10 +1639,15 @@ export function DirectMessageChat({ conversation, onBack, initialComposerText, d
     setReplyTarget(message);
   }, [setReplyTarget]);
 
-  // A quote left open in one thread must not ride along into the next.
+  // A quote left open in one thread must not ride along into the next. Runs
+  // only when the thread changes: keyed on replyTarget it cleared every quote
+  // the instant Reply set it, so Reply did nothing.
+  const replyTargetRef = useRef(replyTarget);
+  replyTargetRef.current = replyTarget;
   useEffect(() => {
-    setReplyTarget.complete(replyTarget, null);
-  }, [draftScope, replyTarget, setReplyTarget]);
+    if (replyTargetRef.current) setReplyTarget.complete(replyTargetRef.current, null);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [draftScope]);
 
   /*
    * The composer is shared with Public Chat and speaks its Message shape, so

@@ -16,6 +16,7 @@ import {
 } from '@/lib/audio-post-playback';
 import { ChevronDown, MicVocal, Minimize, PictureInPicture2, RotateCcw, RotateCw, Play as GlassPlay, Pause as GlassPause } from "lucide-react";
 import { AudioLyrics } from "./AudioLyrics";
+import { VolumeSoundCue } from "./VolumeSoundCue";
 import Volume2 from "@/components/ui/cut-icons/volume";
 import VolumeX from "@/components/ui/cut-icons/mute";
 import Maximize from "@/components/ui/cut-icons/fullscreen";
@@ -40,6 +41,9 @@ import {
 } from '@/lib/audio-handoff';
 import { Slider } from '@/components/ui/slider';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
+import { Drawer, DrawerContent, DrawerTitle } from '@/components/ui/drawer';
+import { useIsMobile } from '@/hooks/use-mobile';
+import { StylePreview } from './StylePreview';
 import { useScrollFadeMask } from '@/components/app/feeds/useScrollFadeMask';
 import {
   VisualizerStyle,
@@ -163,27 +167,58 @@ const STYLES: { value: AnyStyle; label: string }[] = [
   ...EXTRA_STYLES,
 ];
 
-/** Quick picks on the System/Glass card; everything else sits behind More. */
-const QUICK_STYLES: AnyStyle[] = ['bars', 'waveform', 'circular'];
+/** Styles the picker adds per step as it scrolls; each brings a live preview. */
+const STYLE_PAGE = 9;
 
-function StudioStylePicker({ style, onPick, moreLabel }: { style: AnyStyle; onPick: (s: AnyStyle) => void; moreLabel: string }) {
+/** One pill on the System/Glass card shows the playing style; tapping it opens every style, a page at a time, each with a small live example. */
+function StudioStylePicker({ style, onPick, title, hue, theme, seed }: { style: AnyStyle; onPick: (s: AnyStyle) => void; title: string; hue: number; theme: string; seed: string }) {
   const [open, setOpen] = useState(false);
-  // The playing style always shows, taking the last quick slot when it isn't one.
-  const quick = QUICK_STYLES.includes(style) ? QUICK_STYLES : [...QUICK_STYLES.slice(0, -1), style];
+  const [shown, setShown] = useState(STYLE_PAGE);
+  const isMobile = useIsMobile();
   const label = (v: AnyStyle) => STYLES.find(s => s.value === v)?.label ?? v;
-  return (
-    <div data-audio-studio-styles role="group">
-      {quick.map(v => (
-        <button key={v} type="button" data-active={v === style || undefined} aria-pressed={v === style} onClick={() => onPick(v)}>{label(v)}</button>
+  // Next page when the end of the list scrolls into view. The marker remounts
+  // per page, so a page that still leaves it on screen asks for the next one.
+  const pageObserver = useRef<IntersectionObserver | null>(null);
+  const moreRef = useCallback((node: HTMLDivElement | null) => {
+    pageObserver.current?.disconnect();
+    pageObserver.current = null;
+    if (!node) return;
+    pageObserver.current = new IntersectionObserver(([entry]) => { if (entry.isIntersecting) setShown(n => Math.min(STYLES.length, n + STYLE_PAGE)); });
+    pageObserver.current.observe(node);
+  }, []);
+  const pill = (
+    <button type="button" data-audio-studio-pill aria-expanded={open} aria-haspopup="dialog" onClick={isMobile ? () => setOpen(true) : undefined}>
+      {label(style)}<ChevronDown aria-hidden />
+    </button>
+  );
+  const grid = (
+    <div data-audio-studio-style-menu role="group" aria-label={title}>
+      {STYLES.slice(0, shown).map(s => (
+        <button key={s.value} type="button" data-active={s.value === style || undefined} aria-pressed={s.value === style} onClick={() => { onPick(s.value); setOpen(false); }}>
+          <StylePreview style={s.value} hue={hue} theme={theme} seed={seed} />
+          <span>{s.label}</span>
+        </button>
       ))}
+      {shown < STYLES.length && <div key={shown} ref={moreRef} data-audio-style-more aria-hidden />}
+    </div>
+  );
+  if (isMobile) return (
+    <div data-audio-studio-styles onClick={e => e.stopPropagation()}>
+      {pill}
+      <Drawer open={open} onOpenChange={setOpen}>
+        <DrawerContent glass column hideHandle={false} data-audio-studio-style-drawer>
+          <DrawerTitle className="px-5 pt-3 pb-1 text-sm font-semibold">{title}</DrawerTitle>
+          {grid}
+        </DrawerContent>
+      </Drawer>
+    </div>
+  );
+  return (
+    <div data-audio-studio-styles onClick={e => e.stopPropagation()}>
       <Popover open={open} onOpenChange={setOpen}>
-        <PopoverTrigger asChild>
-          <button type="button" data-audio-studio-more aria-expanded={open}>{moreLabel}<ChevronDown aria-hidden /></button>
-        </PopoverTrigger>
-        <PopoverContent data-glass-menu data-audio-studio-style-menu side="top" align="start" collisionPadding={12} className="w-[min(320px,calc(100vw-24px))] p-2" onClick={e => e.stopPropagation()}>
-          {STYLES.map(s => (
-            <button key={s.value} type="button" data-active={s.value === style || undefined} aria-pressed={s.value === style} onClick={() => { onPick(s.value); setOpen(false); }}>{s.label}</button>
-          ))}
+        <PopoverTrigger asChild>{pill}</PopoverTrigger>
+        <PopoverContent data-glass-menu side="top" align="start" collisionPadding={12} className="w-[min(320px,calc(100vw-24px))] p-2" onClick={e => e.stopPropagation()}>
+          {grid}
         </PopoverContent>
       </Popover>
     </div>
@@ -1107,14 +1142,17 @@ export function AudioVisualizer({
         </div>
       </div>
       <div data-audio-studio-options>
-          {showStylePicker && <StudioStylePicker style={style} onPick={setStyle} moreLabel={t('postStage.more')} />}
+          {showStylePicker && <StudioStylePicker style={style} onPick={setStyle} title={t('creator.style')} hue={hue} theme={theme} seed={seed} />}
           {popoutTrack && <button type="button" data-audio-lyrics-toggle aria-label={t('audioPost.lyrics')} aria-pressed={showLyrics} data-active={showLyrics || undefined} onClick={() => setShowLyrics(v => !v)}><MicVocal /></button>}
           {popoutTrack && <button type="button" aria-label={isPoppedOut ? t('audioPost.closeCornerPlayer') : t('audioPost.popOut')} onClick={handlePopOut}><PictureInPicture2 /></button>}
           {showVolume && <button type="button" aria-label={isEffectivelyMuted ? _copy('copy.ce4ee4efc5e3', { defaultValue: 'Unmute' }) : _copy('copy.8dd6857baf02', { defaultValue: 'Mute' })} onClick={() => { const next = !isEffectivelyMuted; if (!next && volume === 0) setVolume(.8); setSelfMuted(next); videoPlaybackManager.globalMuted = next; onMuteChange?.(next); }}><Volume2 /></button>}
           {onFullscreen && <button type="button" aria-label={isFullscreen ? _copy('copy.37fd4e355ba3', { defaultValue: 'Exit fullscreen' }) : _copy('copy.c461dbb2bab7', { defaultValue: 'Fullscreen' })} onClick={onFullscreen}><Maximize /></button>}
           {(showVolume || showStylePicker) && <div data-audio-studio-levels>
             {showStylePicker && <input type="range" min="0" max="360" value={hue} aria-label={_copy('copy.89a167dad6da', { defaultValue: 'Visualizer colour' })} onChange={e => setHue(Number(e.target.value))} data-audio-hue />}
-            {showVolume && <input aria-label={_copy('copy.b10fb966d720', { defaultValue: 'Volume' })} type="range" min="0" max="100" value={isEffectivelyMuted ? 0 : Math.round(volume * 100)} onChange={e => { const value = Number(e.target.value); setVolume(value / 100); setSelfMuted(value === 0); videoPlaybackManager.globalMuted = value === 0; onMuteChange?.(value === 0); }} />}
+            {showVolume && <div data-audio-studio-volume style={{ '--volume-fill': isEffectivelyMuted ? 0 : volume } as React.CSSProperties}>
+              <input aria-label={_copy('copy.b10fb966d720', { defaultValue: 'Volume' })} type="range" min="0" max="100" value={isEffectivelyMuted ? 0 : Math.round(volume * 100)} onChange={e => { const value = Number(e.target.value); setVolume(value / 100); setSelfMuted(value === 0); videoPlaybackManager.globalMuted = value === 0; onMuteChange?.(value === 0); }} />
+              <VolumeSoundCue level={isEffectivelyMuted ? 0 : volume} active={isPlaying && !isEffectivelyMuted} trackHeight={8} thumbRadius={7.5} />
+            </div>}
           </div>}
       </div>
     </div>
@@ -1239,6 +1277,7 @@ export function AudioVisualizer({
                       '[&_[data-slider-thumb]]:shadow-[0_1px_4px_rgba(0,0,0,0.45)]',
                     )}
                   />
+                  <VolumeSoundCue level={isEffectivelyMuted ? 0 : volume} active={isPlaying && !isEffectivelyMuted} trackHeight={6} thumbRadius={6} />
                 </div>
               </div>
               )}

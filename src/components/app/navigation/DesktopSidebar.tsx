@@ -63,6 +63,31 @@ import { warmLoginSheet } from '@/components/app/LoginModal';
  */
 const LOGOUT_ITEM: NavItem = { icon: LogOut, label: "Log out", path: '', action: 'logout' };
 
+/**
+ * The animated wordmark is reached lazily so neither it nor its renderer sits
+ * on the boot path. Until its chunk lands, the fallback is the same flat PNG the
+ * component shows before its first frame, in the same box, so nothing shifts.
+ */
+const STATIC_WORDMARK = (
+  <span className="inline-block relative w-[135px] h-[40.6px] -top-[3px]">
+    <img
+      src="/dehub-header-logo.png"
+      alt="dehub"
+      width={135}
+      height={40.6}
+      className="h-[40.6px] w-[135px] object-contain"
+      fetchPriority="high"
+      decoding="async"
+    />
+  </span>
+);
+const DesktopGlitchWordmark = React.lazy<React.ComponentType<{ light?: boolean }>>(() =>
+  import('./DesktopGlitchWordmark')
+    .then((m) => ({ default: m.DesktopGlitchWordmark }))
+    // A chunk that fails to load leaves the flat mark, not the rail's error boundary.
+    .catch(() => ({ default: () => STATIC_WORDMARK })),
+);
+
 interface DesktopSidebarProps {
   onPostClick: () => void;
 }
@@ -402,7 +427,8 @@ export function DesktopSidebar({ onPostClick }: DesktopSidebarProps) {
               onClick={handleLogoClick}
               data-glass-bare-action
               className={cn(
-                "cursor-pointer flex items-center justify-center overflow-hidden",
+                "cursor-pointer flex items-center justify-center",
+                renderCompactLogo ? "overflow-hidden" : "overflow-visible",
                 // Compact width HUGS the 22px mark rather than padding it to 28.
                 // The row is mx-auto inside the rail's 44px content box, and
                 // margin:auto silently resolves to 0 the moment the row is wider
@@ -413,7 +439,22 @@ export function DesktopSidebar({ onPostClick }: DesktopSidebarProps) {
                 renderCompactLogo ? "w-[22px] h-[24px]" : "w-[135px] h-[42px]"
               )}
             >
-              <CrumblingLogo>{isWarTheme ? (
+              {!renderCompactLogo ? <React.Suspense fallback={STATIC_WORDMARK}><DesktopGlitchWordmark light={isLightTheme} /></React.Suspense> : <CrumblingLogo still={isWarTheme ? (
+                <>
+                  <img
+                    src={dehubLogoCompact}
+                    alt="dehub"
+                    className={cn("h-[22px] w-[22px]", !renderCompactLogo && "hidden")}
+                    decoding="async"
+                  />
+                  <img
+                    src="/dehub-header-logo.png"
+                    alt="dehub"
+                    className={cn("h-[40.6px] w-[135px] relative -top-[3px]", renderCompactLogo && "hidden")}
+                    decoding="async"
+                  />
+                </>
+              ) : undefined}>{isWarTheme ? (
                 <>
                   <WarLogo
                     src={dehubLogoCompact}
@@ -443,7 +484,7 @@ export function DesktopSidebar({ onPostClick }: DesktopSidebarProps) {
                     onError={() => setRenderCompactLogo(true)}
                   />
                 </>
-              )}</CrumblingLogo>
+              )}</CrumblingLogo>}
             </button>
             {isCollapsed && (
               <button

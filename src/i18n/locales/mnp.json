@@ -1,4 +1,18 @@
 {
+  "desktopWordmark": {
+    "pageTitle": "桌面标志预览",
+    "heading": "DeHub 桌面标志",
+    "day": "第 {{day}} 日",
+    "replay": "再播放一遍开场",
+    "enlarge": "放大",
+    "actualSize": "实际大小",
+    "reassemble": "重新拼合标志",
+    "loading": "加载中",
+    "ready": "好了",
+    "interrupted": "图形冇反应了",
+    "unavailable": "3D 预览加载不了",
+    "hint": "标志会完整保持两秒，然后碎开。把鼠标移到上面或者选中它，就会重新拼合。"
+  },
   "mastodonApps": {
     "authTitle": "用 DeHub 登录",
     "authWants": "{{app}} 想使用你的 DeHub 账号",
@@ -1699,7 +1713,34 @@
     "revealFailed": "顯示不了密鑰。再試一下。",
     "signInAgain": "重新登錄",
     "createSignIn": "重新登錄才能創建代理",
-    "checkConnection": "檢查一下連接，再試一下。"
+    "checkConnection": "檢查一下連接，再試一下。",
+    "workspace": {
+      "moderation": "直播管理",
+      "participant": "參加者錢包",
+      "participantHint": "參加者錢包 (0x…)",
+      "timeout": "超時秒數",
+      "controls": "声音、权限和新闻",
+      "scope": "这些控制适用于预定任务、自主生活和连接助手。草稿直到您批准为止保持私密。",
+      "voice": "声调和语气",
+      "saved": "設定儲存囉。",
+      "allowed": "允许",
+      "saveTemplate": "保存模板",
+      "empty": "吾家目前还没有合适的活动喔。",
+      "reject": "拒绝",
+      "growthResult": "{{followers}} 追蹤者 · {{following}} 追蹤著",
+      "runs": "{{runs}} 最近執行 · {{completed}} 完成 · {{failed}} 失敗",
+      "cadence": {
+        "once": "一回",
+        "daily": "每日",
+        "twice": "兩次一天"
+      },
+      "dehub_post_create": "發布帖子",
+      "dehub_comment": "回复和评论",
+      "dehub_update_profile": "編輯個人資料",
+      "dehub_stream_timeout": "管理直播间聊天室",
+      "action": "动作",
+      "schedule": "日程表"
+    }
   },
   "hero": {
     "title": "欢迎来到",
@@ -2063,6 +2104,8 @@
     "anonymousLikes_other": "{{count}} 个来自匿名徽章持有者的赞"
   },
   "postInfo": {
+    "ownersUnavailable": "現在讀不到當前個所有者。",
+    "unavailable": "不可用",
     "title": "帖子信息",
     "tokenId": "代币ID",
     "mintedOn": "铸造于",
@@ -5192,6 +5235,8 @@
     "notEnoughTokensForBounty": "代币不足。需要 {{need}} 个代币但只有 {{have}} 个。"
   },
   "events": {
+    "deleteConfirmBody": "這樣會幫所有人刪除活動、來賓名單和聊天，無法撤銷。",
+    "deleteConfirmTitle": "刪除這隻活動？",
     "seoDescription": "瀏覽 DeHub 社群即將到來的活動，報名聚會或在去中心化、用戶擁有的社交平台上舉辦你自己的活動。",
     "defaultSeoDescription": "DeHub 上的社群活動。",
     "title": "活動",
