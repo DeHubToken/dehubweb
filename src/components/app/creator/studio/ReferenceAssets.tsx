@@ -46,7 +46,7 @@ export const ReferenceAssets = memo(function ReferenceAssets({ assets, onAdd, on
     </div>
     {assets.length > 0 && <p className="mt-1 text-xs text-white/50">{t(singleImage ? 'creator.referenceSingle' : 'creator.referenceHint')}</p>}
     <Dialog open={libraryOpen} onOpenChange={onLibraryOpenChange}>
-      <DialogContent className="max-h-[80dvh] overflow-y-auto border-white/15 bg-[#111214] text-white">
+      <DialogContent data-creator-library-panel className="max-h-[80dvh] overflow-y-auto border-white/15 bg-[#111214] text-white">
         <DialogTitle>{t('creator.referenceLibrary')}</DialogTitle>
         {!library.length && <p className="text-sm text-white/60">{t('creator.libraryEmpty')}</p>}
         <div className="grid grid-cols-2 gap-3">
