@@ -94,7 +94,7 @@ export function MotionLibraryShowcase({ onPick, onMaboroshi }: { onPick: (clip: 
       </div>
     </>}
     <Dialog open={library || !!preview} onOpenChange={open => { if (!open) { setLibrary(false); setPreview(null); } }}>
-      <DialogContent className="max-h-[90dvh] max-w-6xl overflow-y-auto border-white/15 bg-[#111214] p-4 text-white sm:p-6">
+      <DialogContent className="max-h-[90dvh] sm:max-w-6xl overflow-y-auto border-white/15 bg-[#111214] p-4 text-white sm:p-6">
         <DialogTitle className="pr-10 text-xl font-bold">{preview?.name ?? t('motionLibrary.title')}</DialogTitle>
         {preview ? <><ClipPlayer key={preview.id} clip={preview} />{actions(preview)}<button type="button" onClick={() => { setPreview(null); setLibrary(true); }} className="min-h-11 text-sm underline">{t('motionLibrary.back')}</button></> : <>
           <input type="search" value={query} onChange={event => { setQuery(event.target.value); setLimit(24); }} placeholder={t('motionLibrary.search')} aria-label={t('motionLibrary.search')} className="min-h-12 rounded-xl border border-white/20 bg-transparent px-4 text-white placeholder:text-white/55" />
