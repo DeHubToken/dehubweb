@@ -2363,7 +2363,6 @@ export function DirectMessageChat({ conversation, onBack, initialComposerText, d
           status={encryptionStatus}
           needsWalletConnection={encryptionNeedsWalletConnection}
           peerName={displayName}
-          peerAvatarUrl={avatarUrl}
           onUnlock={() => { void retryEncryption(); }}
         />
       ) : (
