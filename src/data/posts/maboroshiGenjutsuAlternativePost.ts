@@ -21,6 +21,8 @@ There are two flavours:
 - **Subject swap.** Keep the shot, the motion and the background. Replace the person (or animal, or product) with a new character from a reference image.
 - **Motion transfer.** Take the movement from the clip and give it to a new character in a new scene.
 
+![A person crossing the street becomes a fluffy cat, with the same steps on the same crossing|/media/maboroshi/cat-crosswalk.jpg](/media/maboroshi/cat-crosswalk.mp4)
+
 Because the motion comes from real footage, the result moves like real footage. That is why these clips look so much better than pure text-to-video, and why they spread so fast.
 
 ## Higgsfield Genjutsu vs DeHub Maboroshi at a glance
@@ -35,6 +37,8 @@ Because the motion comes from real footage, the result moves like real footage. 
 - **Failed jobs:** on Maboroshi, a job that fails before it starts is refunded automatically.
 
 ## The price comparison
+
+![Pay per clip with no subscription on DeHub Maboroshi](/media/maboroshi/fig-pay-per-clip.jpg)
 
 Higgsfield only publishes Genjutsu prices for a 15-second clip, so that is the length we compare on. Its figures come from its own Genjutsu launch page, checked September 2026, where it converts credits to dollars at about 5 cents a credit. DeHub's figures come straight from the Maboroshi price list.
 
@@ -67,6 +71,8 @@ A comparison that only shows the flattering rows is an advert, so here are the u
 
 Higgsfield does not publish how Genjutsu works. The open-source community worked it out anyway. Our starting point was the MIT-licensed **Genjutsu Open Source Workflow** by Sirio Berati, which showed that the effect is not one magic model. It is a chain of well-known open models feeding a reference-to-video model. We took that workflow, kept the parts that matter, replaced the parts that were not safe to run for real users, and turned it into a hosted product with payments, review steps and recovery.
 
+![Open the box: the open model chain behind Genjutsu-style editing](/media/maboroshi/fig-open-the-box.jpg)
+
 Here is the chain, in the order a clip goes through it.
 
 ### 1. Normalise the clip
@@ -85,9 +91,13 @@ The soundtrack is separated with **Demucs**, an open model that splits vocals fr
 
 **SAM 3 Video** (Meta's Segment Anything) finds the subject you named, for example "person", and draws a clean mask around it in every frame. Small fragments at the edges are cleaned up automatically so the model is not confused by stray pixels.
 
+![A man walking through Times Square becomes an animated character while the street, the cabs and the camera stay the same|/media/maboroshi/times-square.jpg](/media/maboroshi/times-square.mp4)
+
 ### 5. Track the face
 
 **MediaPipe Face Landmarker** traces a mesh over the face. That is what keeps expressions, head turns and lip movement in step with the original performance.
+
+![A handheld selfie on a train platform with the subject swapped and the camera shake kept|/media/maboroshi/subway-selfie.jpg](/media/maboroshi/subway-selfie.mp4)
 
 ### 6. You review the mask
 
@@ -103,7 +113,11 @@ On the Kling route, the original clip and one or two character images go to **Kl
 
 Both routes finish by restoring the **complete original audio track**, copied over untouched rather than re-encoded. The voice, the beat and the timing are exactly as you filmed them. This is the detail people notice first when they compare outputs.
 
+![Keep the sound: the original audio goes back on untouched](/media/maboroshi/fig-keep-the-sound.jpg)
+
 ### What we changed from the open-source version
+
+![Your clips only: private jobs and signed links that expire](/media/maboroshi/fig-your-clips-only.jpg)
 
 - **No public upload hosts.** The original workflow sent media through temporary public file hosts. Maboroshi keeps every file on DeHub and hands the models expiring signed links instead.
 - **Your clips are private.** Every job belongs to the account that made it. Nobody else can list it, see it or download it.
@@ -112,6 +126,8 @@ Both routes finish by restoring the **complete original audio track**, copied ov
 
 ## How to make your first swap
 
+![Make your first swap in DeHub Creator](/media/maboroshi/fig-first-swap.jpg)
+
 1. Open [dehub.io/creator/maboroshi](/creator/maboroshi), or pick Maboroshi in the video model search inside [DeHub Creator](/creator).
 2. Browse the 180 looks if you want a starting direction. You can search and filter them before you even sign in.
 3. Upload a short clip with sound. For the Kling route, use 3–15 seconds with at least 720 pixels on each side.
@@ -119,6 +135,8 @@ Both routes finish by restoring the **complete original audio track**, copied ov
 5. Check the price, confirm, and download your clip. Then post it straight to your DeHub feed, where it can earn [tips and watch-to-earn rewards](/guides/what-is-watch-to-earn) instead of sitting in a downloads folder.
 
 Each account can upload ten source clips a day and keep up to four jobs waiting at once.
+
+![A tracking shot of a rider on a galloping horse with the rider swapped and the dust and camera move kept|/media/maboroshi/horse.jpg](/media/maboroshi/horse.mp4)
 
 ## Frequently asked questions
 
