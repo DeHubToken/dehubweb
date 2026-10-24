@@ -1,5 +1,5 @@
 {
-  "version": "5744f5c773e5cfa3",
+  "version": "232026aa40e0b8b4",
   "routes": {
     "/": [
       "ar",
@@ -877,6 +877,13 @@
       "tr"
     ],
     "/guides/google-play-store-listing-confirmed": [
+      "ar",
+      "es",
+      "fr",
+      "nl",
+      "tr"
+    ],
+    "/guides/higgsfield-genjutsu-alternative": [
       "ar",
       "es",
       "fr",

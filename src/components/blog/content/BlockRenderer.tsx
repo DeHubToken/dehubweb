@@ -81,6 +81,24 @@ export const BlockRenderer: React.FC<BlockRendererProps> = ({ block, index }) =>
       const parts = altAndStyle.split('|');
       const alt = parts[0].trim();
       const style = parts.length > 1 ? parts[1].trim() : 'default';
+      if (/\.(?:mp4|webm)$/i.test(src)) {
+        // `![Caption|/poster.jpg](/clip.mp4)`: the part after the bar is the poster.
+        return (
+          <video
+            key={index}
+            src={src}
+            poster={style.startsWith('/') ? style : undefined}
+            title={alt}
+            aria-label={alt}
+            controls
+            muted
+            loop
+            playsInline
+            preload="metadata"
+            className="w-full h-auto rounded-2xl my-8 shadow-md"
+          />
+        );
+      }
       if (style === 'avatar') {
         return <img key={index} src={src} alt={alt} className="w-24 h-24 rounded-full object-cover my-6 mx-auto block shadow-md" />;
       }
