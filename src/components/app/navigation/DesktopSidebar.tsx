@@ -607,6 +607,7 @@ export function DesktopSidebar({ onPostClick }: DesktopSidebarProps) {
           )}
           <div
             ref={scrollRef}
+            data-desktop-nav-list
             data-fade-mask-bottom={isCollapsed && !navQuery && !navAtBottom ? "" : undefined}
             className={cn(
               // overscroll-contain: without it, reaching the end of the nav list

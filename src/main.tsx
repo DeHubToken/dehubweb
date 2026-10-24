@@ -30,6 +30,7 @@ import "./styles/post-stage.css";
 import "./styles/live-audience.css";
 import "./styles/system-immersive.css";
 import "./styles/system-light.css";
+import "./styles/light-desktop-panels.css";
 import "./styles/text-readability.css";
 import "./styles/pinned-community-stage.css";
 // Canvas-theme chrome (war / osaka / jungle) is NOT imported here: each theme
