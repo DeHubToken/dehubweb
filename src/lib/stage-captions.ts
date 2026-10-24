@@ -246,7 +246,7 @@ const isCaptionLanguage = (code: string | null | undefined): code is string =>
  * room saw English captions and took translation for broken.
  */
 function uiLanguage(): string | null {
-  const code = (i18n.language || '').split('-')[0].toLowerCase();
+  const code = (i18n.language || '').split(/[-_]/)[0].toLowerCase();
   return isCaptionLanguage(code) ? code : null;
 }
 
@@ -280,13 +280,14 @@ export function useCaptionLanguage(): string | null {
 }
 
 export function setCaptionLanguage(value: string | null) {
+  if (value !== null && !isCaptionLanguage(value)) return;
   pickedLanguage = value;
-  if (captionLanguage === value) return;
+  const changed = captionLanguage !== value;
   captionLanguage = value;
   try {
     window.localStorage.setItem(LANG_KEY, value ?? SOURCE_PREF);
   } catch {
     /* private mode — the choice just does not survive the tab */
   }
-  emit();
+  if (changed) emit();
 }
