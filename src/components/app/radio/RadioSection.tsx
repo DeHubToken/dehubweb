@@ -86,7 +86,7 @@ export function RadioSection({ showFilters = false }: RadioSectionProps) {
         <div className="relative">
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-zinc-500" />
           <Input
-            type="text"
+            type="search"
             placeholder={_copy("copy.fa98312bf4cb", { defaultValue: "Search 50,000+ radio stations..." })}
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
