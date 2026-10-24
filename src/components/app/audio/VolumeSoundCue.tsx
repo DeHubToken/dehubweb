@@ -1,8 +1,8 @@
 import { useEffect, useRef, useState } from 'react';
 
 /**
- * While a track is audible the volume bar shows it: faint notes flow through
- * the filled part toward the handle, and a thin arc slides out of the handle
+ * While a track is audible the volume bar shows it: a loose swarm of notes
+ * floats up out of the filled part toward the handle, and a thin arc slides out of the handle
  * on each beat. Drawn over the slider with touches passing through; still and
  * empty when paused, muted or with reduced motion on.
  *
@@ -16,6 +16,24 @@ const NOTE_PARTS = [
   ['M1 9.4a2.6 2 0 1 0 5.2 0a2.6 2 0 1 0-5.2 0z', 'M5.4 1h1v8.4h-1z', 'M6.4 1c1.6.8 3.2 2 2.8 4.8c-.4-1.4-1.4-2.2-2.8-2.4z'],
   ['M.6 9.8a2.2 1.7 0 1 0 4.4 0a2.2 1.7 0 1 0-4.4 0z', 'M6.6 8.6a2.2 1.7 0 1 0 4.4 0a2.2 1.7 0 1 0-4.4 0z', 'M4.2 2.4h.8v7.4h-.8z', 'M10.2 1.2h.8v7.4h-.8z', 'M4.2 2.4L11 1.2V3L4.2 4.2z'],
 ];
+
+const NOTE_SLOTS = 9;
+const rand = (n: number) => { const v = Math.sin(n * 12.9898) * 43758.5453; return v - Math.floor(v); };
+
+/** Where note slot `i` is at time `t`: every cycle it reappears at a new random spot. */
+function noteAt(i: number, t: number, level: number, fillEnd: number, cy: number, trackHeight: number) {
+  const lift = trackHeight / 8;
+  const duration = (1.8 + 1.6 * rand(i + 0.13)) / (0.75 + 0.5 * level);
+  const phase = t / duration + rand(i + 0.71);
+  const cycle = Math.floor(phase);
+  const p = phase - cycle;
+  const r = (j: number) => rand(i * 31.7 + cycle * 7.3 + j);
+  const x = r(1) * fillEnd * 0.85 + p * (18 + 30 * r(2));
+  const y = cy + (r(3) - 0.5) * trackHeight * 0.8 - p * (5 + 10 * r(4)) * lift
+    + Math.sin(p * Math.PI * 2 * (0.6 + r(5)) + r(6) * Math.PI * 2) * 2 * lift;
+  const alpha = Math.pow(Math.sin(Math.PI * p), 0.8) * Math.max(0, Math.min(1, (fillEnd + 14 - x) / 10));
+  return { x, y, alpha, scale: 0.75 + 0.6 * r(7), rot: (r(8) - 0.5) * 0.7, glyph: i % 2 };
+}
 
 interface VolumeSoundCueProps {
   /** 0..1, the slider's value. */
@@ -48,7 +66,7 @@ export function VolumeSoundCue({ level, active, trackHeight, thumbRadius }: Volu
     const ctx = canvas.getContext('2d');
     if (!ctx) return;
     const reach = thumbRadius + 18;
-    const height = Math.max(trackHeight, (thumbRadius + 16) * 2);
+    const height = Math.max(trackHeight, (thumbRadius + 16) * 2, (trackHeight / 8) * 30 + 24);
     let width = 0;
     let frame = 0;
     let fade = 0;
@@ -80,29 +98,26 @@ export function VolumeSoundCue({ level, active, trackHeight, thumbRadius }: Volu
         const thumbX = thumbRadius + value * (width - thumbRadius * 2);
         const fillEnd = thumbX - thumbRadius;
 
-        // Notes inside the fill, left to right, fading in and out.
-        const note = Math.max(5, trackHeight - 1.5);
-        const scale = note / 12;
-        const count = Math.max(1, Math.min(4, Math.round(fillEnd / 40)));
-        const span = Math.max(fillEnd, note * 2);
-        const speed = 10 + 14 * value;
-        if (fillEnd > note * 1.5) {
-          ctx.save();
-          ctx.beginPath();
-          ctx.roundRect(0, cy - trackHeight / 2, thumbX, trackHeight, trackHeight / 2);
-          ctx.clip();
-          ctx.fillStyle = '#0a141a';
+        // A loose swarm of notes: each pops up somewhere along the fill and
+        // floats off up and to the right on its own path, then fades.
+        const note = Math.max(6, trackHeight + 1);
+        const lift = trackHeight / 8;
+        const count = Math.max(2, Math.min(NOTE_SLOTS, Math.round(fillEnd / 18)));
+        if (fillEnd > note) {
+          ctx.lineJoin = 'round';
           for (let i = 0; i < count; i++) {
-            const p = ((t * speed) / span + i / count) % 1;
-            const x = p * span - note / 2;
-            const alpha = 0.5 * fade * Math.sin(Math.PI * p) * Math.max(0, Math.min(1, (fillEnd - x - note) / note));
+            const n = noteAt(i, t, value, fillEnd, cy, trackHeight);
+            const alpha = 0.75 * fade * n.alpha;
             if (alpha <= 0.01) continue;
+            const scale = (note * n.scale) / 12;
             ctx.globalAlpha = alpha;
-            ctx.setTransform(dpr * scale, 0, 0, dpr * scale, dpr * x, dpr * (cy - note / 2));
-            shapes[i % 2].forEach(part => ctx.fill(part));
-            ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+            ctx.setTransform(dpr * scale * Math.cos(n.rot), dpr * scale * Math.sin(n.rot), -dpr * scale * Math.sin(n.rot), dpr * scale * Math.cos(n.rot), dpr * n.x, dpr * (n.y - (note * n.scale) / 2));
+            ctx.fillStyle = '#f4fbfc';
+            ctx.strokeStyle = 'rgba(10,20,26,.5)';
+            ctx.lineWidth = 1 / Math.max(lift, .75);
+            shapes[n.glyph].forEach(part => { ctx.stroke(part); ctx.fill(part); });
           }
-          ctx.restore();
+          ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
         }
 
         // One thin arc out of the handle per beat.
