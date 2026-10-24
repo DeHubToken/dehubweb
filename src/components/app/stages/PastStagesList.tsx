@@ -1,3 +1,4 @@
+import { fetchStageRecordings, hasStageRecording } from '@/lib/stage-recordings';
 /**
  * PastStagesList — recorded (ended) stages with inline playback
  * =============================================================
@@ -121,20 +122,13 @@ export function PastStagesList({
   const { data: fetched = [], isLoading: isFetching } = useQuery({
     enabled: !spaces,
     queryKey: ['past-stages'],
-    queryFn: async () => {
-      const { data } = await supabase
-        .from('audio_spaces')
-        .select('*')
-        .eq('status', 'ended')
-        .order('ended_at', { ascending: false })
-        .limit(20);
-      return (data as AudioSpace[]) || [];
-    },
+    queryFn: () => fetchStageRecordings(),
+    select: (stages: AudioSpace[]) => stages.filter(hasStageRecording),
     // 5 min like the app default — 30s meant most tab returns refetched.
     staleTime: 5 * 60_000,
   });
 
-  const pastStages = spaces ?? fetched;
+  const pastStages = (spaces ?? fetched).filter(hasStageRecording);
   const isLoadingStages = spaces ? !!isLoadingProp : isFetching;
 
   // Playback used to stop when you navigated away from /stages, because there
