@@ -1,5 +1,5 @@
 {
-  "version": "4d0b4035f4fe1e49",
+  "version": "f99230df98adb1d9",
   "routes": {
     "/": [
       "ar",
@@ -910,6 +910,27 @@
       "fr",
       "nl",
       "tr"
+    ],
+    "/guides/how-does-higgsfield-genjutsu-work": [
+      "ar",
+      "es",
+      "fr",
+      "nl",
+      "tr",
+      "de",
+      "ha",
+      "hi",
+      "id",
+      "it",
+      "ja",
+      "ko",
+      "pl",
+      "pt",
+      "ru",
+      "th",
+      "tl",
+      "vi",
+      "zh"
     ],
     "/guides/how-monetization-works-on-social-media-apps": [
       "ar",
