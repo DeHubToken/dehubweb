@@ -4,7 +4,7 @@
  * Wraps the router's `<Routes>` and plays the choreographed app↔docs slide.
  *
  * Keyed by SURFACE (see getSurface), so only crossing the app↔docs boundary
- * animates; navigation within a surface stays instant. `mode="wait"` holds the
+ * animates the shell; app navigation uses middle-column snapshots. `mode="wait"` holds the
  * outgoing surface mounted through its exit (panels slide off + shell fades),
  * THEN mounts the incoming one (docs panel slides in) — the "slide off, then
  * slide in after" sequence.
@@ -19,6 +19,7 @@
 import { type ReactNode } from 'react';
 import { useLocation, type Location } from 'react-router-dom';
 import { AnimatePresence, motion, useReducedMotion } from 'framer-motion';
+import { useAppRouteMotion } from '@/hooks/use-app-route-motion';
 import {
   getSurface,
   surfaceWrapperVariants,
@@ -34,6 +35,7 @@ interface SurfaceTransitionProps {
 export function SurfaceTransition({ children }: SurfaceTransitionProps) {
   const location = useLocation();
   const reduceMotion = useReducedMotion();
+  const displayedLocation = useAppRouteMotion(location, reduceMotion);
   const surface = getSurface(location.pathname);
 
   // Respect reduced-motion: render the live tree with no presence animation.
@@ -54,7 +56,7 @@ export function SurfaceTransition({ children }: SurfaceTransitionProps) {
         // containing block for the fixed background canvas or mini-players.
         style={{ transformOrigin: 'center top' }}
       >
-        {children(location)}
+        {children(displayedLocation)}
       </motion.div>
     </AnimatePresence>
   );
