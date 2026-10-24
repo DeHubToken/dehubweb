@@ -1,4 +1,5 @@
 import { translateCopy as _translateCopy } from '@/i18n/copy';
+import { DmLockedState, DmUndecryptableRun } from '@/components/app/chat/DmLockedState';
 import { useTranslation as _useCopy } from 'react-i18next';
 import { lazy, Suspense, useEffect, useId, useState } from 'react';
 import { createPortal } from 'react-dom';
@@ -650,6 +651,7 @@ export default function StateGalleryPage() {
         <PinnedProfileGallery />
 
         <PollGallery />
+        <LockedChatGallery />
         <ProposalCardGallery />
         <LiveViewerGallery />
 
@@ -1002,6 +1004,23 @@ function PollGallery() {
           ))}
         </div>
       </AuthContext.Provider>
+    </section>
+  );
+}
+
+function LockedChatGallery() {
+  const { t } = useTranslation();
+  return (
+    <section data-page-bento data-locked-chat-gallery className="mb-5 rounded-3xl border border-white/10 bg-white/[0.04] p-4">
+      <h2 className="mb-3 text-sm font-semibold">{t('messages.title', 'Messages')}</h2>
+      <div className="grid gap-4 md:grid-cols-2">
+        <div className="flex min-h-[420px] flex-col rounded-2xl border border-white/10">
+          <DmLockedState status="locked" needsWalletConnection={false} peerName="Tad" onUnlock={() => {}} />
+        </div>
+        <div className="flex flex-col justify-center rounded-2xl border border-white/10 px-4">
+          <DmUndecryptableRun count={3} />
+        </div>
+      </div>
     </section>
   );
 }
