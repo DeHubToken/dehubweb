@@ -749,7 +749,7 @@ const CommentItemBody = memo(function CommentItem({ comment, tokenId, onLike, on
                 )}
                 aria-label={isOwnComment
                   ? i18n.t('comments.seeWhoLiked')
-                  : i18n.t('comments.holdToReact', { reaction: reactionMeta(leadReaction ?? "like").label })}
+                  : i18n.t('comments.holdToReact', { reaction: reactionMeta(reactionForThumbTap(myHeldReaction, comment.reactionCounts)).label })}
                 aria-haspopup={isOwnComment ? undefined : 'menu'}
                 aria-expanded={isOwnComment ? undefined : likeTray.open}
               >

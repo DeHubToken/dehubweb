@@ -97,7 +97,7 @@ import { DmDockMount } from '@/components/app/chat/DmDockMount';
 import { PersistentPageCache, isCachedPageRoute } from './PersistentPageCache';
 import { ErrorBoundary } from '@/components/ErrorBoundary';
 import { isHomeFeedRoute } from '@/lib/home-routes';
-import { scrollDocumentTo } from '@/lib/document-scroll';
+import { getDocumentScrollTop, scrollDocumentTo } from '@/lib/document-scroll';
 import { GlobalFeedNav } from './GlobalFeedNav';
 import { GlobalFeedNavProvider } from '@/contexts/GlobalFeedNavContext';
 import { useFeedSwallowClip } from '@/hooks/use-feed-swallow-clip';
@@ -310,6 +310,39 @@ function AppLayoutContent({ children }: AppLayoutContentProps) {
   // page rendered one frame at the outgoing page's scroll offset and only then
   // snapped to the top. That single frame is the lurch people read as the app
   // stuttering on every navigation.
+  // The feed hides with display:none behind a profile or any other page, so
+  // the document loses its height and the scroll offset goes with it. Back
+  // used to land at the top of the feed. Keep the last offset the reader
+  // scrolled to and put it back, before paint, when the feed shows again.
+  // (A post opened from the feed is an overlay over a still-visible feed and
+  // never touches this offset.)
+  const onHomeFeed = isHomeFeedRoute(location.pathname);
+  const homeScrollTopRef = useRef(0);
+  useEffect(() => {
+    if (!onHomeFeed) return;
+    // The URL moves on the tap, before this listener is removed, and the page
+    // that replaces the feed can clamp the scroll on its way in.
+    const save = () => {
+      if (isHomeFeedRoute(window.location.pathname)) homeScrollTopRef.current = getDocumentScrollTop();
+    };
+    document.addEventListener('scroll', save, { capture: true, passive: true });
+    return () => document.removeEventListener('scroll', save, { capture: true });
+  }, [onHomeFeed]);
+  const prevHomePathRef = useRef(location.pathname);
+  useLayoutEffect(() => {
+    const prev = prevHomePathRef.current;
+    prevHomePathRef.current = location.pathname;
+    if (!onHomeFeed || isHomeFeedRoute(prev) || isPostRoute) return;
+    if (/^\/(app\/)?(post|video)\//.test(prev)) return;
+    const top = homeScrollTopRef.current;
+    if (top <= 0) return;
+    scrollDocumentTo(top);
+    // Again a frame later, in case the first write landed while the revealed
+    // feed was still settling its height and came back clamped.
+    const frame = requestAnimationFrame(() => scrollDocumentTo(top));
+    return () => cancelAnimationFrame(frame);
+  }, [location.pathname, onHomeFeed, isPostRoute]);
+
   const prevCachedPathRef = useRef(location.pathname);
   useLayoutEffect(() => {
     const prev = prevCachedPathRef.current;

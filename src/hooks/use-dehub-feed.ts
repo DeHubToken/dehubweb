@@ -646,6 +646,9 @@ export function mapApiLiveStreamToLocal(stream: ApiLiveStream, index: number): L
   const rawThumbnail = (stream as any).thumbnail || stream.thumbnailUrl;
   const playbackId = (stream as any).playbackId;
   const livepeerThumb = liveThumbnailFor(stream as any) ?? null;
+  // The Live tab and live rows read big-event mode from here too, so a big
+  // event's viewers get the shared HLS feed instead of a WebRTC session each.
+  noteLatencyMode(stream as any);
   const hlsUrl = hlsUrlFor(stream as any);
   // Empty, not a stock photo, when a stream has no cover of its own. That is
   // the common case — the self-hosted ingest renders no thumbnail — and a

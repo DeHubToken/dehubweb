@@ -1,4 +1,5 @@
 import type { PostQuotaStatus } from '@/lib/api/dehub';
+import type { PostVisibility, QuotePolicy, ReplyPolicy } from '@/lib/api/dehub/types';
 import type { FilterSettings, CropSettings } from './types/filters';
 
 export interface AudioFile {
@@ -215,4 +216,10 @@ export interface DraftPayload {
   chainId?: number;
   shopLinks?: unknown[];
   shopListingIds?: string[];
+  // Who may see, quote and reply, and the content warning. A draft without
+  // them must not reopen as a public post.
+  visibility?: PostVisibility;
+  contentWarning?: string | null;
+  quotePolicy?: QuotePolicy;
+  replyPolicy?: ReplyPolicy;
 }

@@ -24,6 +24,7 @@ import { useAuth } from '@/contexts/AuthContext';
 import { useTranslation } from 'react-i18next';
 
 import type { ContentType } from '@/types/feed.types';
+import { preloadRoute } from '@/lib/route-preload';
 import type { BadgeLock } from '@/lib/staking-badges';
 import type { PostVisibility } from '@/lib/api/dehub/types';
 
@@ -142,6 +143,9 @@ export function CardHeader({
   const handleProfileMouseDown = (e: React.MouseEvent) => {
     e.preventDefault();
   };
+  // Profile page code starts loading as the pointer arrives or the finger
+  // lands, so the click shows the page instead of waiting on a download.
+  const warmProfilePage = () => preloadRoute('/app/profile');
 
   return (
     <div className={`flex items-center gap-3 pr-3 flex-1 min-w-0 ${contentType === 'image' ? 'pb-2' : 'pb-3'}`}>
@@ -156,6 +160,9 @@ export function CardHeader({
         <button
           onClick={handleProfileClick}
           onMouseDown={handleProfileMouseDown}
+          onPointerEnter={warmProfilePage}
+          onPointerDown={warmProfilePage}
+          data-opens-page
           disabled={!isClickable}
           /* The avatar inside has no alt (it is decorative beside the name),
              so the button needs a name of its own — one per card on the feed,
@@ -180,6 +187,9 @@ export function CardHeader({
             type="button"
             onClick={handleProfileClick}
             onMouseDown={handleProfileMouseDown}
+          onPointerEnter={warmProfilePage}
+          onPointerDown={warmProfilePage}
+          data-opens-page
             disabled={!isClickable}
             className={`inline-flex items-baseline gap-1 shrink min-w-0 max-w-full text-base leading-5 text-left ${isClickable ? 'cursor-pointer' : 'cursor-default'}`}
           >
@@ -196,6 +206,9 @@ export function CardHeader({
                 type="button"
                 onClick={handleProfileClick}
                 onMouseDown={handleProfileMouseDown}
+          onPointerEnter={warmProfilePage}
+          onPointerDown={warmProfilePage}
+          data-opens-page
                 disabled={!isClickable}
                 tabIndex={-1}
                 className={`text-zinc-500 text-sm truncate min-w-0 leading-4 text-left ${isClickable ? 'cursor-pointer' : 'cursor-default'}`}
