@@ -1,3 +1,4 @@
+import { fetchStageRecordings, hasStageRecording } from '@/lib/stage-recordings';
 import { useTranslation as _useCopy } from 'react-i18next';
 import i18n from '@/i18n';
 import { formatRelativeTime } from '@/i18n/date-locale';
@@ -164,15 +165,8 @@ export function AudioSpacesModalBody() {
   // Fetch past (ended) stages for browse view
   const { data: pastStages = [] } = useQuery({
     queryKey: ['past-stages'],
-    queryFn: async () => {
-      const { data } = await supabase
-        .from('audio_spaces')
-        .select('*')
-        .eq('status', 'ended')
-        .order('ended_at', { ascending: false })
-        .limit(20);
-      return (data as AudioSpace[]) || [];
-    },
+    queryFn: () => fetchStageRecordings(),
+    select: (stages: AudioSpace[]) => stages.filter(hasStageRecording),
     enabled: isModalOpen && !currentSpace,
     staleTime: 30_000,
   });
