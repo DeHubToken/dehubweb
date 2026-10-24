@@ -184,7 +184,10 @@ function PostModalForAccount({ isOpen, onClose, initialFiles, onFilesProcessed, 
     const opened = openedDraftRef.current;
     openedDraftRef.current = null;
     const words = countWords(articleMode ? `${state.titleText} ${stripTags(articleBody)}` : `${state.titleText} ${state.text}`);
-    if (isQuoting || liveStream || state.liveMode !== null || state.isPosting || words <= AUTO_DRAFT_MIN_WORDS) {
+    // Attached photos, video and audio (and their alt text) cannot go into a
+    // draft, so a post carrying them stays in the composer as it was.
+    const hasMedia = computed.hasImage || computed.hasVideo || computed.hasAudio;
+    if (isQuoting || liveStream || state.liveMode !== null || state.isPosting || hasMedia || words <= AUTO_DRAFT_MIN_WORDS) {
       handleClose();
       return;
     }

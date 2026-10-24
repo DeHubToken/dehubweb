@@ -67,19 +67,22 @@ export async function readHtmlResponse(conn: Pick<Deno.Conn, 'read'>) {
   if ((length !== null && transfer !== null) || (transfer !== null && transfer.toLowerCase() !== 'chunked')) {
     throw new Error('Ambiguous or unsupported HTTP framing');
   }
-  if (length !== null && (!/^\d+$/.test(length) || Number(length) > MAX_BODY)) {
-    throw new Error('Preview page is too large or has invalid length');
+  if (length !== null && !/^\d+$/.test(length)) {
+    throw new Error('Preview page has an invalid length');
   }
   const body = new Uint8Array(MAX_BODY);
   let size = 0;
-  async function take(count: number) {
-    if (count > MAX_BODY - size) throw new Error('Preview page is too large');
+  // A preview only needs the head of the page, so a long page is cut at
+  // MAX_BODY instead of refused. False once the budget is spent: stop reading.
+  async function take(count: number): Promise<boolean> {
     while (count > 0) {
+      if (size === MAX_BODY) return false;
       if (start === end && !await fill()) throw new Error('Truncated HTTP body');
-      const n = Math.min(count, end - start);
+      const n = Math.min(count, end - start, MAX_BODY - size);
       body.set(buffer.subarray(start, start + n), size);
       start += n; size += n; count -= n;
     }
+    return size < MAX_BODY;
   }
   if (transfer !== null) {
     for (;;) {
@@ -92,13 +95,15 @@ export async function readHtmlResponse(conn: Pick<Deno.Conn, 'read'>) {
         while (await headerLine()) { /* bounded by the shared header budget */ }
         break;
       }
-      await take(count);
+      if (!await take(count)) break;
       if (await line(1) !== '') throw new Error('Invalid HTTP chunk ending');
     }
   } else if (length !== null) {
     await take(Number(length));
   } else {
-    while (start !== end || await fill()) await take(end - start);
+    while (start !== end || await fill()) {
+      if (!await take(end - start)) break;
+    }
   }
   return { status, html: new TextDecoder().decode(body.subarray(0, size)) };
 }

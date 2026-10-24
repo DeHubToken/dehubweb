@@ -250,6 +250,25 @@ describe('resumableUpload', () => {
     expect(server.held).toBe(size);
   });
 
+  it('hands over to the single-request upload when the server keeps erroring, instead of holding Post', async () => {
+    const fetchSpy = vi.spyOn(globalThis, 'fetch').mockResolvedValue(new Response(null, { status: 204 }));
+    server.faults = [503, 500, 502, 500];
+
+    await expect(
+      resumableUpload('/api/draft_video/resumable', file(3 * FIRST_CHUNK_BYTES), { retryBaseMs: 1 }),
+    ).rejects.toBeInstanceOf(ResumableUnsupportedError);
+    expect(chunkPuts()).toHaveLength(4);
+    expect(fetchSpy).toHaveBeenCalledWith(expect.stringContaining('upload_id=s1'), expect.objectContaining({ method: 'DELETE' }));
+  });
+
+  it('keeps going through server errors that are not back to back', async () => {
+    server.faults = [503, 500, 502, undefined, 500, 500, 500];
+
+    await expect(
+      resumableUpload('/api/draft_video/resumable', file(3 * FIRST_CHUNK_BYTES), { retryBaseMs: 1 }),
+    ).resolves.toMatchObject({ draftId: 'draft-1' });
+  });
+
   it('says so when the API has no resumable endpoint, so the caller can send it the old way', async () => {
     server.createStatus = 404;
     await expect(resumableUpload('/api/draft_video/resumable', file(1000))).rejects.toBeInstanceOf(

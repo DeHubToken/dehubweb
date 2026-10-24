@@ -317,8 +317,13 @@ const PostCardBody = memo(function PostCard({ post, threadSlot, onOpenComments }
     postId: post.id,
     reactionArea: 'center',
     enableLongPress: false,
-    onSingleTap: () => {
+    onSingleTap: (event) => {
       if (wasDrawerJustDismissed() || window.getSelection()?.toString().length) return;
+      // A quoted post opens itself; the tap must not open this one 360ms later.
+      if ((event.target as HTMLElement | null)?.closest?.('[data-glass-embed], [data-no-navigate]')) return;
+      // Already on this post's own page: another push only adds a Back step.
+      const path = window.location.pathname;
+      if (path === `/app/post/${post.id}` || (post.newPostId && path === `/newpost/${post.newPostId}`)) return;
       cacheTextPostForNavigation(queryClient, post);
       navigate(`/app/post/${post.id}`, { state: { fromFeed: true } });
     },
