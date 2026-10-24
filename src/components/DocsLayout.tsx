@@ -350,6 +350,15 @@ const DocsLayoutContent = () => {
   }, [sidebarOpen, isDesktop]);
 
   useEffect(() => {
+    if (!sidebarOpen || isDesktop) return;
+    const closeOnEscape = (event: KeyboardEvent) => {
+      if (event.key === 'Escape') setSidebarOpen(false);
+    };
+    window.addEventListener('keydown', closeOnEscape);
+    return () => window.removeEventListener('keydown', closeOnEscape);
+  }, [sidebarOpen, isDesktop]);
+
+  useEffect(() => {
     if (window.parent !== window) {
       window.parent.postMessage(
         { type: 'docs-route-change', path: location.pathname },
@@ -389,14 +398,14 @@ const DocsLayoutContent = () => {
 
   return <div className="docs-root min-h-screen bg-background">
       {/* Header */}
-      <header data-docs-header data-clear-top-bar className="bg-card/90 backdrop-blur-sm border-b border-border sticky top-0 z-40">
+      <header data-docs-header className="bg-background backdrop-blur-sm border-b border-border sticky top-0 z-40">
         <div className="flex items-center justify-between px-4 h-16">
           {/* Mobile Layout */}
           <div className="flex items-center lg:hidden w-full">
             {/* Left: Hamburger Menu */}
             <div className="flex items-center">
-              <button onClick={() => setSidebarOpen(!sidebarOpen)} aria-label={t('nav.docsMenuOpen')} aria-expanded={sidebarOpen} className="p-2 rounded-md hover:bg-muted transition-colors">
-                <Menu className="w-5 h-5 text-foreground" />
+              <button onClick={() => setSidebarOpen(!sidebarOpen)} aria-label={t(sidebarOpen ? 'nav.docsMenuClose' : 'nav.docsMenuOpen')} aria-expanded={sidebarOpen} aria-controls="docs-navigation" className="p-2 rounded-md hover:bg-muted transition-colors">
+                {sidebarOpen ? <X className="w-5 h-5 text-foreground" /> : <Menu className="w-5 h-5 text-foreground" />}
               </button>
             </div>
             
@@ -442,10 +451,12 @@ const DocsLayoutContent = () => {
             double-animating. On mobile it stays the class-driven hamburger
             drawer (framer only touches opacity — see docsAsideVariants). */}
         <motion.aside
+          id="docs-navigation"
           data-docs-sidebar
+          aria-hidden={!isDesktop && !sidebarOpen}
           variants={asideVariants}
           className={`
-          fixed lg:sticky lg:top-16 inset-y-0 lg:inset-y-auto left-0 z-30 w-64 h-screen lg:h-[calc(100vh-4rem)] bg-card/95 backdrop-blur-sm border-r border-border
+          fixed top-16 bottom-0 lg:sticky lg:top-16 lg:bottom-auto left-0 z-30 w-64 h-[calc(100dvh-4rem)] lg:h-[calc(100vh-4rem)] bg-card/95 backdrop-blur-sm border-r border-border
           ${isDesktop ? '' : `transform transition-transform duration-300 ease-in-out ${sidebarOpen ? 'translate-x-0' : '-translate-x-full'}`}
         `}>
           <div className="h-full flex flex-col">
