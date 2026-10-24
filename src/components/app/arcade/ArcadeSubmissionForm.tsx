@@ -48,8 +48,9 @@ export function ArcadeSubmissionForm({ onClose }: Props) {
   const field = 'w-full rounded-lg border border-white/10 bg-zinc-800 px-3 py-2.5 text-sm text-white placeholder:text-zinc-500 focus:border-white/40 focus:outline-none';
 
   return (
-    <div className="fixed inset-0 z-[100] overflow-y-auto bg-black/80 px-3 py-8" role="dialog" aria-modal="true" aria-labelledby="arcade-submit-title">
-      <div className="mx-auto max-w-lg rounded-2xl border border-white/10 bg-zinc-900 p-5 shadow-2xl">
+    <div className="fixed inset-0 z-[100] overflow-y-auto px-3 py-8">
+      <div data-keep-dark aria-hidden="true" className="fixed inset-0 bg-black/80" />
+      <div className="relative mx-auto max-w-lg rounded-2xl border border-white/10 bg-zinc-900 p-5 shadow-2xl" role="dialog" aria-modal="true" aria-labelledby="arcade-submit-title">
         <div className="mb-4 flex items-start justify-between gap-4">
           <div>
             <h2 id="arcade-submit-title" className="text-xl font-semibold text-white">{_copy("copy.3bb8f2fe14a5", { defaultValue: "Submit a game" })}</h2>
