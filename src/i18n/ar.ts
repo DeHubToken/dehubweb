@@ -1346,6 +1346,7 @@ export const ar = {
     diagramMinersRole2: "مقابل عملات DeHub الرمزية",
   },
   e2ee: {
+    flowEcdh: 'سحر X25519 ECDH',
     title: "التشفير من طرف إلى طرف (E2EE)",
     howWorksTitle: "كيف يعمل التشفير من طرف إلى طرف في DeHub",
     whatSecureTitle: "🛡️ ما الذي يجعل تشفيرنا آمناً؟",

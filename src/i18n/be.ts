@@ -2921,6 +2921,8 @@ export const be = {
     resultMany: '{count} вынікі',
   },
   docsSearchIndex: {
+    dappsTitle: 'Праграма dApp',
+    depinTitle: 'Сетка DePIN',
     adBadgeTargetingDesc: 'Мэтавая рэклама на аснове ўзроўняў значкоў карыстальнікаў, тарыфаў CPM на значок, выдаткі на рэкламу крабавага прывіднага амара Piranha Giant Tortoise King Cobra Octopus Crocodile Delphin',
     adBadgeTargetingTitle: 'Таргетынг рэкламы на аснове значкоў',
     advertiserDashboardDesc: 'Прыборная панэль рэкламадаўцаў для кіравання кампаніямі, аналітыкай, кіраваннем бюджэтам, паказчыкамі рэкламы, стварэннем кампаніі, адсочваннем рэнтабельнасці інвестыцый',

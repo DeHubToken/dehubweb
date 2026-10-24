@@ -68,6 +68,8 @@ export const ht = {
     copyFailedDesc: 'Tanpri kopye adrès la manyèlman.',
   },
   home: {
+    bannerAltAppFeed: 'Fil aplikasyon DeHub ki renouvle a',
+    bannerAltDhbScan: 'Estatistik DHBScan',
     welcomeTo: 'Byenveni nan',
     ourDocs: 'Dokimantasyon Nou',
     heroDescription: 'Tout sa ou bezwen pou itilize, entegre, konstwi ak platfòm nou an. Depi gid rapid kòmanse jiska konfigirasyon avanse.',
@@ -1269,6 +1271,10 @@ export const ht = {
     diagramMinersRole2: 'an echanj pou marqueur DeHub/an echanj pou marqueur DeH',
   },
   e2ee: {
+    flowCiphertextTag16: 'Tèks chifre + Etikèt Otantifikasyon (16 okte)',
+    flowEcdh: 'Maji X25519 ECDH',
+    flowNonce: 'Nonce (nimewo inik)',
+    flowPlaintextBytes: 'Okte tèks klè',
     title: 'Chifraj Bout an Bout (E2EE)',
     howWorksTitle: 'Kijan Chifraj Bout an Bout DeHub Mache',
     whatSecureTitle: '🛡️ Kisa ki Fè E2EE Nou An Sekirize?',
@@ -2447,6 +2453,12 @@ export const ht = {
     limitedSlots: 'Fant patenarya limite ki disponib pou lansman ofisyèl nou an',
   },
   docsSearchIndex: {
+    categoryBlog: 'Blòg',
+    categoryLegal: 'Jiridik',
+    categoryMain: 'Prensipal',
+    depinTitle: 'Rezo DePIN',
+    faqTitle: 'Kesyon yo poze souvan',
+    quickstartTitle: 'Kòmanse Rapid',
     adBadgeTargetingDesc: 'Ajoute sib ki baze sou nivo badj itilizatè yo, pousantaj CPM pou chak badj, Crab Ghost Lobster Piranha Giant Tortoise King Cobra Octopus Crocodile Dolphin depans piblisite',
     adBadgeTargetingTitle: 'Objektif Ajoute ki Baze sou Badj',
     advertiserDashboardDesc: 'Piblisite tablodbò pou jere kanpay, analytics, jesyon bidjè, pèfòmans anons, kreyasyon kanpay, ROI swiv',
@@ -2532,6 +2544,10 @@ export const ht = {
     whereToBuyTitle: 'Ki kote pou achte',
   },
   docsSeo: {
+    dappsTitle: 'dApp DeHub la — Gid Konplè sou Fonksyonalite yo',
+    roadmapTitle: 'Kat Wout — Dokiman DeHub',
+    tokenBridgeTitle: 'Pon Token — Dokiman DeHub',
+    webhooksTitle: 'Webhook — Dokiman DeHub',
     advertisingDesc: 'Teknoloji piblisite POVR DeHub eksplike: prèv-wè-ak-rank, kanpay ki reziste fwod ak pataje revni pou kreyatè yo.',
     advertisingTitle: 'Piblisite — DeHub Docs',
     appDesc: 'Gid pou aplikasyon mobil ak Desktop DeHub yo.',

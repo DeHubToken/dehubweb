@@ -2509,6 +2509,9 @@ export const nl = {
     resultMany: '{count} resultaten',
   },
   docsSearchIndex: {
+    categoryBlog: 'Blogberichten',
+    categoryToken: 'Tokens',
+    contactTitle: 'Contact opnemen',
     adBadgeTargetingDesc: 'Doelgerichte advertenties gebaseerd op gebruikersbadge-niveaus, CPM-tarieven per badge, krab, geestkrab, lobster, piranha, reuzenschildpad, koningsslang, octopus, krokodil, delfiin – advertentiekosten',
     adBadgeTargetingTitle: 'Op badges gebaseerde advertentietargeting',
     advertiserDashboardDesc: 'Adverteerdersdashboard voor het beheren van campagnes, analyses, budgetbeheer, advertentieprestaties, het maken van campagnes, het bijhouden van de ROI',
@@ -2597,6 +2600,7 @@ export const nl = {
     whereToBuyTitle: 'Waar te koop',
   },
   docsSeo: {
+    endpointsDesc: 'Referentie voor DeHub API-endpoints — volledige, geversioneerde API-documentatie is in de maak.',
     advertisingDesc: 'POVR-advertentietechnologie van DeHub uitgelegd: proof-of-view-and-rank, fraudebestendige campagnes en het delen van inkomsten voor makers.',
     advertisingTitle: 'Adverteren — DeHub Docs',
     appDesc: 'Gidsen voor de DeHub mobiele en desktopapplicaties.',

@@ -2511,6 +2511,9 @@ export const da = {
     limitedSlots: 'Pladser med begrænset partnerskab til rådighed for vores officielle lancering',
   },
   docsSearchIndex: {
+    categoryBrand: 'Varemærke',
+    categorySupport: 'Hjælp',
+    faqTitle: 'Ofte stillede spørgsmål',
     adBadgeTargetingDesc: 'Målads på brugerbadge-niveauer, CPM-priser per badge, Crab Ghost Lobster Piranha Giant Tortoise King Cobra Octopus Crocodile Dolphin reklameomkostninger',
     adBadgeTargetingTitle: 'Badge-baseret målrettet annoncere',
     advertiserDashboardDesc: 'Annoncer dashboard for at administrere kampagner, analyser, budgetstyring, annonceres performance, kampagneoprettelse, ROI-følgelse',

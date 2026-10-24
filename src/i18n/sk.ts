@@ -2686,6 +2686,8 @@ export const sk = {
     blogPost: 'Blogový príspevok',
   },
   docsSearchIndex: {
+    categoryBlog: 'Blogové príspevky',
+    tokenEconomicsTitle: 'Tokenomika a emisie',
     adBadgeTargetingDesc: 'Cielené reklamy na základe úrovní odznakov používateľov, sadzby CPM za odznak, náklady na reklamu na krabího ducha homára Piranha Giant Tortoise King Cobra Octopus Crocodile Dolphin',
     adBadgeTargetingTitle: 'Zacielenie reklamy na základe odznaku',
     advertiserDashboardDesc: 'Informačný panel inzerenta na správu kampaní, analýzu, správu rozpočtu, výkonnosť reklamy, vytváranie kampaní, sledovanie návratnosti investícií',

@@ -2600,6 +2600,9 @@ export const fr = {
     limitedSlots: 'Un nombre limité de places de partenariat disponibles pour notre lancement officiel',
   },
   docsSearchIndex: {
+    categoryBlog: 'Blogue',
+    contactTitle: 'Nous contacter',
+    faqTitle: 'Foire aux questions',
     adBadgeTargetingDesc: 'Publicités ciblées basées sur les niveaux de badge d\'utilisateur, les taux de CPM par badge, les coûts de publicité de Crab Ghost Lobster Piranha Giant Tortoise King Cobra Octopus Crocodile Dolphin',
     adBadgeTargetingTitle: 'Ciblage publicitaire basé sur les badges',
     advertiserDashboardDesc: 'Tableau de bord des annonceurs pour la gestion des campagnes, l\'analyse, la gestion du budget, la performance des annonces, la création de campagnes, le suivi du retour sur investissement',

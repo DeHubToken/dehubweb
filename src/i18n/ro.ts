@@ -2756,6 +2756,7 @@ export const ro = {
     whereToBuyTitle: 'De unde să cumpărați',
   },
   docsSeo: {
+    termsTitle: 'Declinarea responsabilității — Documentația DeHub',
     advertisingDesc: 'Tehnologia publicitară POVR de la DeHub a explicat: campanii de tip proof-of-view-and-rank, campanii rezistente la fraudă și distribuirea veniturilor pentru creatori.',
     advertisingTitle: 'Publicitate — DeHub Docs',
     appDesc: 'Ghiduri pentru aplicațiile mobile și desktop DeHub.',

@@ -2652,6 +2652,7 @@ export const sw = {
     popularWatchToEarn: 'Tazama ili Ujipatie Mapato',
   },
   docsSearchIndex: {
+    faqTitle: 'Maswali Yanayoulizwa Mara kwa Mara',
     adBadgeTargetingDesc: 'Matangazo lengwa kulingana na viwango vya beji ya mtumiaji, viwango vya CPM kwa beji, Kaa Ghost Lobster Piranha Kobe Mkuu Mfalme Cobra Octopus Crocodile Dolphin gharama za matangazo',
     adBadgeTargetingTitle: 'Ulengaji wa Matangazo kulingana na Beji',
     advertiserDashboardDesc: 'Dashibodi ya mtangazaji ya kusimamia kampeni, uchanganuzi, usimamizi wa bajeti, utendaji wa matangazo, uundaji wa kampeni, ufuatiliaji wa ROI',

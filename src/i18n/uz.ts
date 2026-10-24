@@ -1276,6 +1276,7 @@ export const uz = {
     diagramMinersRole2: 'DeHub tokenlari evaziga',
   },
   e2ee: {
+    flowEcdh: 'X25519 ECDH sehri',
     title: 'Boshidan oxirigacha shifrlash (E2EE)',
     howWorksTitle: 'DeHub’ning boshidan oxirigacha shifrlash qanday ishlaydi',
     whatSecureTitle: '🛡️ Bizning E2EE xavfsizligimizni nima ta&#39;minlaydi?',
@@ -2380,6 +2381,8 @@ export const uz = {
     resultMany: '{count} natijalari',
   },
   docsSearchIndex: {
+    adBadgeTargetingDesc: 'Foydalanuvchi nishon darajalari asosida reklamani yoʻnaltirish, har bir nishon uchun CPM narxlari, Crab Ghost Lobster Piranha Giant Tortoise King Cobra Octopus Crocodile Dolphin reklama xarajatlari',
+    categoryToken: 'Tokenlar',
     adBadgeTargetingTitle: 'Nishonga asoslangan reklamalarni maqsadli yo&#39;naltirish',
     advertiserDashboardDesc: 'Advertiser paneli uchun kampaniyalar, analytics, byudjet boshqaruvi, reklamning natijalari, kampaniya yaratish, ROI monitoringi',
     advertiserDashboardTitle: 'Reklama beruvchi boshqaruv paneli',

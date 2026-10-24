@@ -1373,6 +1373,7 @@ export const ru = {
     diagramMinersRole2: 'в обмен на токены DeHub',
   },
   e2ee: {
+    flowEcdh: 'Магия X25519 ECDH',
     title: 'Сквозное шифрование',
     description: 'DeHub реализует сквозное шифрование для всех личных сообщений.',
     howItWorks: 'Как это работает',
@@ -2670,6 +2671,9 @@ export const ru = {
     resultMany: '{count} результатов',
   },
   docsSearchIndex: {
+    apiEndpointsTitle: 'Конечные точки API',
+    dappsTitle: 'Приложение dApp',
+    depinTitle: 'Сеть DePIN',
     adBadgeTargetingDesc: 'Таргетированная реклама на основе уровней пользовательских значков, ставок CPM за значок, расходов на рекламу Crab Ghost Lobster Piranha Giant Tortoise King Cobra Octopus Crocodile Dolphin',
     adBadgeTargetingTitle: 'Таргетинг объявлений на основе значков',
     advertiserDashboardDesc: 'Дашборд рекламодателя для управления кампаниями, аналитики, управления бюджетом, эффективности рекламы, создания кампании, отслеживания рентабельности инвестиций',

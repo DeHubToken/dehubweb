@@ -2524,6 +2524,8 @@ export const am = {
     whatHappensNextItem1: 'እነዚህን መመሪያዎች የሚጥስ ይዘት ይወገዳል',
   },
   docsSearchIndex: {
+    dappsTitle: 'ዲአፕ',
+    depinTitle: 'የDePIN አውታረ መረብ',
     adBadgeTargetingDesc: 'በተጠቃሚ ባጅ ደረጃዎች፣ በባጅ የ CPM ተመኖች፣ የክራብ፣ የጋስት፣ የሎብስተር፣ የፒራንሃ፣ የጃይንት ቶርቶይስ፣ የኪንግ ኮብራ፣ ኦክቶፐስ፣ ክሮኮዳይል፣ ዶልፊን የማስታወቂያ ወጪዎች ላይ የተመሰረቱ የታለሙ ማስታወቂያዎች',
     adBadgeTargetingTitle: 'በባጅ ላይ የተመሰረተ የማስታወቂያ ኢላማ',
     advertiserDashboardDesc: 'ለዘመቻዎች አስተዳደር፣ ትንታኔዎች፣ የበጀት አስተዳደር፣ የማስታወቂያ አፈጻጸም፣ የዘመቻ ፈጠራ፣ የ ROI ክትትል የአስተዋዋቂ ዳሽቦርድ',

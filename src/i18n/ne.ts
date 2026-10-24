@@ -1286,6 +1286,7 @@ export const ne = {
     diagramMinersRole2: 'deHub टोकनको बदलामा',
   },
   e2ee: {
+    flowNonce: 'नन्स',
     title: 'End-to-End इन्क्रिप्सन',
     privateKey1: 'तपाईंको वालेट हस्ताक्षरबाट उत्पन्न',
     privateKey2: 'तपाईंको उपकरणमा मात्र भण्डारण गरिन्छ',
@@ -2361,6 +2362,8 @@ export const ne = {
     limitedSlots: 'हाम्रो आधिकारिक प्रक्षेपणको लागि सीमित साझेदारी स्लटहरू उपलब्ध छन्',
   },
   docsSearchIndex: {
+    dappsTitle: 'डीएप',
+    faqTitle: 'बारम्बार सोधिने प्रश्नहरू',
     adBadgeTargetingDesc: 'प्रयोगकर्ता ब्याज टियरहरूमा आधारित लक्षित विज्ञापनहरू, प्रति ब्याज CPM दरहरू, Crab Ghost Lobster Piranha Giant Tortoise King Cobra Octopus Crocodile Dolphin विज्ञापन लागतहरू',
     adBadgeTargetingTitle: 'ब्याज - आधारित विज्ञापन लक्ष्यीकरण',
     advertiserDashboardDesc: 'अभियान व्यवस्थापन, विश्लेषण, बजेट व्यवस्थापन, विज्ञापन प्रदर्शन, अभियान सिर्जना, ROI ट्र्याकिङको लागि विज्ञापनदाता ड्यासबोर्ड',

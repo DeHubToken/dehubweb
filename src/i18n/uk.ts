@@ -1281,6 +1281,7 @@ export const uk = {
     diagramMinersRole2: 'в обмін на токени DeHub',
   },
   e2ee: {
+    flowEcdh: 'Магія X25519 ECDH',
     title: 'Наскрізне шифрування (E2EE)',
     howWorksTitle: 'Як працює наскрізне шифрування DeHub',
     whatSecureTitle: '🛡️ Що робить наш E2EE безпечним?',
@@ -2421,6 +2422,9 @@ export const uk = {
     resultMany: '{count} результати',
   },
   docsSearchIndex: {
+    dappsTitle: 'Застосунок dApp',
+    depinTitle: 'Мережа DePIN',
+    faqTitle: 'Часті запитання',
     adBadgeTargetingDesc: 'Цільова реклама на основі рівнів користувацьких значків, ставок CPM за значок, витрат на рекламу Crab Ghost Lobster Piranha Giant Tortoise King Cobra Octopus Crocodile Dolphin',
     adBadgeTargetingTitle: 'Таргетинг оголошень на основі значків',
     advertiserDashboardDesc: 'Інформаційна панель рекламодавця для керування кампаніями, аналітики, управління бюджетом, ефективності реклами, створення кампанії, відстеження рентабельності інвестицій',

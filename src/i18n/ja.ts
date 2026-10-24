@@ -2554,6 +2554,8 @@ export const ja = {
     limitedSlots: 'リミテッドパートナーシップスロットを公式リリースにご利用いただけます',
   },
   docsSearchIndex: {
+    dappsTitle: '分散型アプリ（dApp）',
+    depinTitle: 'DePINネットワーク',
     adBadgeTargetingDesc: 'ユーザーバッジティア、バッジあたりのCPMレート、カニゴーストロブスターピラニアジャイアントトータスキングコブラオクトパスクロコダイルドルフィン広告費用に基づくターゲット広告',
     adBadgeTargetingTitle: 'バッジベースの広告ターゲティング',
     advertiserDashboardDesc: 'キャンペーン、分析、予算管理、広告パフォーマンス、キャンペーン作成、ROIトラッキングを管理するための広告主ダッシュボード',
@@ -2643,6 +2645,7 @@ export const ja = {
     whereToBuyTitle: '購入場所',
   },
   docsSeo: {
+    webhooksTitle: 'Webhook — DeHub ドキュメント',
     advertisingDesc: 'DeHubのPOVR広告技術の説明：視聴証明とランク付け、不正防止キャンペーン、クリエイターの収益分配。',
     advertisingTitle: '広告— DeHub Docs',
     appDesc: 'DeHubモバイルおよびデスクトップアプリケーションのガイド。',

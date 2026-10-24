@@ -2541,6 +2541,7 @@ export const ca = {
     limitedSlots: 'Espais per a socis limitats disponibles per al nostre llançament oficial',
   },
   docsSearchIndex: {
+    categoryToken: 'Tokens',
     adBadgeTargetingDesc: 'Objectiu anuncis basats en nivells de target de l\'usuari, tarifes CPM per nivell de target, Crab Ghost Lobster Piranha Tortuga gegant Cobra rei Octopus Cocodril Dofí preus publicitaris',
     adBadgeTargetingTitle: 'Targetització basada en target de target',
     advertiserDashboardDesc: 'Pantalla de control per als anunciadors per gestionar les campanyes, anàlisi, gestió de pressupost, rendiment de les anuncis, creació de campanyes, seguiment de la rendibilitat',
@@ -2631,6 +2632,7 @@ export const ca = {
     whereToBuyTitle: 'On comprar',
   },
   docsSeo: {
+    termsTitle: 'Avís legal — Documentació de DeHub',
     advertisingDesc: 'La tecnologia d\'anuncis POVR de DeHub va explicar: prova de visualització i rànquing, campanyes resistents al frau i repartiment d\'ingressos per als creadors.',
     advertisingTitle: 'Publicitat — DeHub Docs',
     appDesc: 'Guies per a les aplicacions mòbils i d\'escriptori DeHub.',

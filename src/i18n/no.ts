@@ -2359,6 +2359,7 @@ export const no = {
     whyPartnerNow: 'Hvorfor samarbeide nå?',
   },
   docsSearchIndex: {
+    governanceTitle: 'Styring',
     adBadgeTargetingDesc: 'Målrettet reklame basert på brukerbadge-nivåer, CPM-rater per badge, kreps, spøkelse, hummer, piranha, gigantisk skilpadde, kongekobra, blekksprut, krokodille, delfin – reklamekostnader',
     adBadgeTargetingTitle: 'Badge-basert målretting av reklame',
     advertiserDashboardDesc: 'Reklamøverlegge for å administrere kampanjer, analyser, budsjettstyring, reklameytelse, kampanjeskapelse, ROI-overvåking',

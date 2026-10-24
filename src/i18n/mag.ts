@@ -2349,6 +2349,7 @@ export const mag = {
     resultOne: '1 परिणाम के रूप में हल्का',
   },
   docsSearchIndex: {
+    advertisingTitle: 'विज्ञापन',
     adBadgeTargetingDesc: 'उपयोगकर्ता बैज स्तर के आधार पर लक्ष्य विज्ञापन, प्रति बैज सीपीएम दरें, Crab Ghost Lobster Piranha Giant Tortoise King Cobra Octopus Crocodile Dolphin विज्ञापन लागत',
     adBadgeTargetingTitle: 'पूर्वनिर्धारित पूर्वनिर्धारित लक्ष्य',
     advertiserDashboardDesc: 'अभियान, विश्लेषण, बजट प्रबंधन, विज्ञापन प्रदर्शन, अभियान निर्माण, ROI ट्रैकिंग के लिए विज्ञापनदाता डैशबोर्ड',
@@ -2439,6 +2440,10 @@ export const mag = {
     whereToBuyTitle: 'केडीई लाइसेन्स को उपयोग गर्न को',
   },
   docsSeo: {
+    faqTitle: 'FAQ — DeHub डॉक्स',
+    gamesTitle: 'गेम्स — DeHub डॉक्स',
+    tokenTitle: 'DeHub टोकन — DeHub डॉक्स',
+    websiteTitle: 'वेबसाइट गाइड — DeHub डॉक्स',
     advertisingDesc: 'DeHub के POVR विज्ञापन प्रौद्योगिकी समझायाः प्रूफ - ऑफ - व्यू - एंड - रैंक, धोखाधड़ी - प्रतिरोधी अभियान और निर्माताओं के लिए राजस्व साझा करना ।',
     advertisingTitle: 'उच्चारण रेकार्ड करे dehub doc [de] उच्चारण अप',
     appDesc: 'डेस्कटॉप और मोबाइल अनुप्रयोगों के लिए कैलकुलेटर.',

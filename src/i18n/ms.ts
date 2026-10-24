@@ -2294,6 +2294,10 @@ export const ms = {
     limitedSlots: 'Slot perkongsian terhad tersedia untuk pelancaran rasmi kami',
   },
   docsSearchIndex: {
+    categoryToken: 'Token Digital',
+    faqTitle: 'Soalan Lazim',
+    stakeTitle: 'Pertaruhan Token',
+    termsTitle: 'Terma',
     adBadgeTargetingDesc: 'Iklan sasaran berdasarkan pangkat badge pengguna, kadar CPM mengikut badge, kos iklan: Crab, Ghost Lobster, Piranha, Giant Tortoise, King Cobra, Octopus, Crocodile, Dolphin',
     adBadgeTargetingTitle: 'Pemilihan Iklan Berasaskan Badge',
     advertiserDashboardDesc: 'Paparan pengiklan untuk mengurus kampanye, analisis, pengurusan anggaran, kinerja iklan, pembuatan kampanye, melacarkan ROI',

@@ -2474,6 +2474,8 @@ export const th = {
     resultMany: '{count} ผลลัพธ์',
   },
   docsSearchIndex: {
+    dappsTitle: 'ดีแอป',
+    depinTitle: 'เครือข่าย DePIN',
     adBadgeTargetingDesc: 'เป้าหมายโฆษณาตามระดับแท็กผู้ใช้, อัตราค่า CPM ตามแท็ก, ค่าโฆษณา Crab Ghost Lobster Piranha Giant Tortoise King Cobra Octopus Crocodile Dolphin',
     adBadgeTargetingTitle: 'การกำหนดเป้าหมายโฆษณาตามแบดจ์',
     advertiserDashboardDesc: 'แดชบอร์ดผู้โฆษณาเพื่อจัดการแคมเปญ, วิเคราะห์ข้อมูล, การจัดการงบประมาณ, ประสิทธิภาพโฆษณา, สร้างแคมเปญ, ติดตาม ROI',

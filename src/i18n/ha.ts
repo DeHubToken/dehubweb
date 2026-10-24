@@ -2382,6 +2382,11 @@ export const ha = {
     whatHappensNextItem1: 'Abubuwan da ke karya waɗannan jagororin an cire su',
   },
   docsSearchIndex: {
+    nftTitle: 'NFT da Kadarorin Dijital',
+    stakeTitle: 'Ajiye Token',
+    teamTitle: 'Ƙungiya',
+    tokenEconomicsTitle: 'Tattalin Arzikin Token da Fitar da Shi',
+    walletTitle: 'Walat da Abubuwan da Ka Mallaka',
     adBadgeTargetingDesc: 'Tallace-tallacen da aka yi niyya bisa matakan tambarin mai amfani, ƙimar CPM a kowane tambari, farashin tallace-tallace na Crab Ghost Lobster Piranha Giant Tortoise King Cobra Octopus Crocodile Dolphin',
     adBadgeTargetingTitle: 'Tallace-tallacen da aka yi niyya bisa Tambari',
     advertiserDashboardDesc: 'Dashboard na mai talla don sarrafa yaƙin neman zaɓe, nazari, sarrafa kasafin kuɗi, aikin talla, ƙirƙirar yaƙin neman zaɓe, bin diddigin ROI',
@@ -2468,6 +2473,8 @@ export const ha = {
     whereToBuyTitle: 'Inda za a Sayi',
   },
   docsSeo: {
+    donateTitle: 'Ba da Gudummawa — Takardun DeHub',
+    teamTitle: 'Ƙungiya — Takardun DeHub',
     advertisingDesc: 'DeHub ta POVR ad tech bayyana: hujja na-view-and-rank, zamba-resistant kamfen da kuma kudaden shiga sharing ga masu halitta.',
     advertisingTitle: 'Talla — DeHub Docs',
     appDesc: 'Jagororin don aikace-aikacen wayar hannu da tebur na DeHub.',

@@ -2486,6 +2486,7 @@ export const id = {
     whatHappensNextItem1: 'Konten yang melanggar panduan ini dihapus',
   },
   docsSearchIndex: {
+    stakeTitle: 'Penguncian Token (Staking)',
     adBadgeTargetingDesc: 'Target iklan berdasarkan tingkat badge pengguna, CPM per badge, Crab Ghost Lobster Piranha Giant Tortoise King Cobra Octopus Crocodile Dolphin biaya iklan',
     adBadgeTargetingTitle: 'Target Iklan Berdasarkan Badge',
     advertiserDashboardDesc: 'Dashboard penayang untuk mengelola kampanye, analisis, pengelolaan anggaran, kinerja iklan, pembuatan kampanye, pengukuran ROI',

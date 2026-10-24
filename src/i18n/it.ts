@@ -2545,6 +2545,9 @@ export const it = {
     limitedSlots: 'Poche slot di partnership disponibili per il nostro lancio ufficiale',
   },
   docsSearchIndex: {
+    categoryBlog: 'Articoli del blog',
+    categoryToken: 'Token digitali',
+    faqTitle: 'Domande frequenti',
     adBadgeTargetingDesc: 'Annunci mirati in base ai livelli di badge utente, alle tariffe CPM per badge, ai costi pubblicitari di Crab Ghost Lobster Piranha Giant Tortoise King Cobra Octopus Crocodile Dolphin',
     adBadgeTargetingTitle: 'Targeting pubblicitario basato su badge',
     advertiserDashboardDesc: 'Dashboard dell\'inserzionista per la gestione di campagne, analisi, gestione del budget, prestazioni degli annunci, creazione di campagne, monitoraggio del ROI',

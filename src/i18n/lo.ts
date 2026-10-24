@@ -1215,6 +1215,8 @@ export const lo = {
     diagramMinersRole2: 'ການແລກປ່ຽນ DeHub Tokens',
   },
   e2ee: {
+    flowNonce: 'ຄ່າ Nonce (ໃຊ້ຄັ້ງດຽວ)',
+    flowSha256Hash: 'ຄ່າແຮຊ SHA-256',
     title: 'ການເຂົ້າລະຫັດ End-to-End',
     privateKey1: 'ສ້າງຈາກ wallet signature ຂອງທ່ານ',
     privateKey2: 'ເກັບໄວ້ໃນ device ຂອງທ່ານເທົ່ານັ້ນ',
@@ -2241,6 +2243,11 @@ export const lo = {
     whatHappensNextItem1: 'ເນື້ອຫາທີ່ລະເມີດ ຄໍາ ແນະ ນໍາ ເຫຼົ່ານີ້ຖືກລຶບອອກ',
   },
   docsSearchIndex: {
+    advertiserDashboardTitle: 'ແຜງຄວບຄຸມຜູ້ລົງໂຄສະນາ',
+    apiEndpointsTitle: 'ຈຸດເຊື່ອມຕໍ່ API',
+    blogTitle: 'ບລັອກຊຸມຊົນ',
+    dappsTitle: 'ແອັບ dApp',
+    depinTitle: 'ເຄືອຂ່າຍ DePIN',
     adBadgeTargetingDesc: 'ໂຄສະນາເປົ້າຫມາຍໂດຍອີງໃສ່ລະດັບປ້າຍຜູ້ໃຊ້, ອັດຕາ CPM ຕໍ່ປ້າຍ, Crab Ghost Lobster Piranha Giant Tortoise King Cobra Octopus Crocodile Dolphin ຄ່າໃຊ້ຈ່າຍໃນການໂຄສະນາ',
     adBadgeTargetingTitle: 'ການຕັ້ງເປົ້າໝາຍໂດຍອີງໃສ່ປ້າຍໂຄສະນາ',
     advertiserDashboardDesc: 'Dashboard Advertiser ສໍາ ລັບການຄຸ້ມຄອງແຄມເປນ, ການວິເຄາະ, ການຄຸ້ມຄອງງົບປະມານ, ການປະຕິບັດໂຄສະນາ, ການສ້າງແຄມເປນ, ການຕິດຕາມ ROI',
@@ -2327,6 +2334,8 @@ export const lo = {
     whereToBuyTitle: 'ຊື້ໄດ້ທີ່ໃດ',
   },
   docsSeo: {
+    gamesDesc: 'ຄົ້ນພົບເກມ Web3 ແລະ ປະສົບການຫຼິ້ນເພື່ອຮັບລາງວັນໃນ DeHub.',
+    webhooksTitle: 'Webhook — ເອກະສານ DeHub',
     advertisingDesc: 'ເຕັກໂນໂລຊີໂຄສະນາ POVR ຂອງ DeHub ທີ່ອະທິບາຍໄວ້: proof-of-view-and-rank, ແຄມເປນທີ່ປ້ອງກັນການສໍ້ໂກງ ແລະ ການແບ່ງປັນລາຍໄດ້ໃຫ້ກັບຜູ້ສ້າງຄອນເທັ້ນ.',
     advertisingTitle: 'ການໂຄສະນາ — DeHub Docs',
     appDesc: 'ຄູ່ມືສຳລັບແອັບພລິເຄຊັນ DeHub ທັງໃນມືຖື ແລະ ເດັສທັອບ.',
