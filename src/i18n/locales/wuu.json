@@ -1,4 +1,126 @@
 {
+  "stageCover": {
+    "admitOne": "承認",
+    "live": "直播",
+    "minutes": "{{minutes}} 分鐘",
+    "recorded": "記錄",
+    "replay": "重播",
+    "stage": "舞台",
+    "upcoming": "即將上演"
+  },
+  "copy": {
+    "2971f9103f78": "感謝您幫助 DeHub 更好 —— 您要求的東西現在已經上線：",
+    "905392fbed15": "感謝您幫助 DeHub 更好 —— {{value1}} 件您要求的東西現在已經上線：",
+    "12b91b0ac5dd": "{{value1}} — 按鈕按住",
+    "150d73bf85e7": "Elgato, AVerMedia… 咱家OBS喔",
+    "1b2c08a8733d": "品質",
+    "2f33a51e3171": "DeHub治理提案 — 投票與討論。",
+    "2f7e24392d9c": "將來的舞台",
+    "344b4271ca01": "正在追蹤",
+    "36cffc7912e4": "你的麥克風（用來說話）",
+    "37fd4e355ba3": "退出全屏",
+    "42484309dc66": "{{value1}} — 回退鍵顯示連結",
+    "42ee912bff23": "電台頻道",
+    "44207eb29645": "更換…",
+    "44c9d36485b7": "查看所有",
+    "4a1bd4a3aaf3": "捕捉卡",
+    "506ff3946215": "隱私政策",
+    "594bea9c9448": "沒找到捕捉卡。用USB插上，再從下面選擇。",
+    "641d1ef657bd": "追蹤",
+    "67004337fb60": "無法開啓此裝置。關閉OBS或Elgato Studio（一次只能用一個程式）。",
+    "6a40edf1fc87": "微信",
+    "77db95ebd737": "複製訊息",
+    "7bb6682e5826": "新回调请求",
+    "7c14e8607c11": "載入頻道中...",
+    "846d8244b7d8": "已複製邀請訊息",
+    "89a167dad6da": "視覺化顏色",
+    "8bb1dbd60bce": "直播時請保持此頁面開啓。",
+    "8c91325d901b": "將主播發送到 DeHub 流動頁面，附帶這個訊息。您的連結將他們歸屬於您之前他們抵達。",
+    "96882965394f": "遊戲音效",
+    "a2838b66518a": "自動（盡可能好）",
+    "a3156ed263d2": "{{value1}} — 按鈕按一下更改你的反應",
+    "a865110e919b": "导入钱包",
+    "b10fb966d720": "音量",
+    "b3412a3b86de": "邀請主播",
+    "b5f64aac226f": "繼續進行，表示您同意",
+    "b8643d1cc81a": "1080p 60需約9 Mbps上傳速度。慢Wi-Fi時請選擇720p。",
+    "c1c8f6c1d828": "即將開始",
+    "c1cd85f576ed": "{{value1}} — DeHub 管理",
+    "c7ce89b32897": "暫停捕捉卡",
+    "cc96aaa18cf2": "來 DeHub 和我一起直播。Tips 直接在您的錢包中，您擁有您的觀眾，並且可以在一步中在 TikTok 和其他地方發布。註冊： {{link}}",
+    "d0f08798ff1a": "随后",
+    "d7038cc95b8e": "用卡的通過模式在電視上播放，不是這個預覽。會稍微遲一點。",
+    "de6694f3ada3": "選擇裝置",
+    "e3ee915a8e8c": "和",
+    "ede548996483": "條款",
+    "fedc5cda305d": "捕捉暫停中"
+  },
+  "dehubAppPage": {
+    "faq": {
+      "a1": "No. DeHub 於 dehub.io 係一個獨立開源社交媒體平台。德保大學的 DeHUB 學生門戶、羅漢大學的 DEHub 以及 deHUB 通行門禁手機應用係無關聯產品，剛好名字相同。",
+      "a3": "安卓手機可在Google Play或直接下載APK，iPhone可在App Store，任何現代桌面或手機瀏覽器都可以在dehub.io。"
+    },
+    "heading": "德胡比應用程式",
+    "intro1": "DeHub是一個去中心化的社交網絡和行動應用程式，自2021年開發起，使用者可以在鏈上發布帖子，創作者可以保留觀眾、內容和收入。",
+    "intro2": "佢合并了時間線式的feed、實時直播、端到端加密的訊息、用戶自行管理的社群、跨鏈錢包和以看獎勵的功能，獎勵以代幣形式發放。同一賬號可在安卓、iPhone和任何現代瀏覽器上使用。",
+    "openInBrowser": "開啓 DeHub 於你的瀏覽器",
+    "seoDescription": "下載 DeHub 應用程式：開源、用戶自主的社交媒體，實時直播、加密訊息和看看賺錢。免費在 Google Play、App Store 和網頁上。",
+    "seoTitle": "DeHub App — Android、iPhone、Web下載"
+  },
+  "dehubLinks": {
+    "kind": {
+      "community": "社區",
+      "communityInvite": "社群邀請",
+      "event": "活動",
+      "listing": "物品",
+      "post": "发帖",
+      "profile": "個人檔案",
+      "stage": "舞台",
+      "store": "商店"
+    },
+    "sendFailed": "失敗發送{{item}}",
+    "sentTo": "{{item}}發往{{name}}"
+  },
+  "loginStack": {
+    "aiRestyle": "AI重新設計",
+    "codeNote": "我們會寄一個驗證碼給你，不需密碼。",
+    "exploreFirst": "先探索",
+    "fingerprint": "指紋",
+    "headlineAccent": "並快樂。",
+    "headlineTop": "你將擁有一切",
+    "orContinueWith": "或繼續用",
+    "phone": "手機"
+  },
+  "player": {
+    "volume": "音量調整"
+  },
+  "quickActions": {
+    "question": "什麼錯誤了呢？",
+    "title": "頁面選項"
+  },
+  "streamPage": {
+    "faq": {
+      "a1": "是的。DeHub 免費加入，免費發布，並且可以選擇在鏈上發布流。匯入頻道需要付費，價格在支付前顯示。",
+      "a2": "不用。保持在你今天的觀眾身上，並在 DeHub 上建立。從 DeHub 的編輯器跨發布，以便你已經使用的每個平台都指向你擁有的觀眾。",
+      "a3": "是的。選擇 OBS 時，DeHub 給你一個永久的流動密鑰， OBS、Streamlabs 或任何 RTMP 編碼器。您也可以直接從您的電話、瀏覽器或捕捉卡上線。",
+      "a4": "觀眾在流動期間贈送和送禮物，且那些在 DeHub 代幣中直接存入您的錢包。上傳可以免費、付費或代幣門檻。",
+      "a5": "打開聯盟頁面來獲得鏈接。通過它加入的人被歸屬於你，並且你會獲得 20% 的活動收入，及 5% 的持續收入從他們邀請的人，付款在 DeHub 代幣中。",
+      "q1": "是否免費在 DeHub 流動？",
+      "q2": "我是否必須停止在 TikTok 或 Twitch 流動？",
+      "q3": "我是否可以使用 OBS 流動？",
+      "q4": "我如何獲得付款？",
+      "q5": "我的邀請鏈接如何工作？"
+    },
+    "faqTitle": "最常見問題",
+    "howToStart": "註冊後，打開發佈文編輯器，點擊「直播」按鈕 — 從你的相機、OBS或捕捉卡片。",
+    "moreGuides": "從TikTok來的？ 來看看<tiktok>英國創作者指南：</tiktok>離開TikTok<live>和</live>Web3直播：一個去中心化的Twitch替代品。",
+    "proof": {
+      "label3": "全球 DeHub 自家 CDN 的延遲"
+    },
+    "reasons": {
+      "body6": "免費加入 DeHub，免費發布，並且可以選擇在鏈上發布流。匯入頻道需要付費，價格在支付前顯示。"
+    }
+  },
   "desktopWordmark": {
     "pageTitle": "桌面标志预览",
     "heading": "DeHub 桌面标志",
@@ -274,6 +396,11 @@
     "heading": "DeHub 短片"
   },
   "settings": {
+    "glass": "玻璃般的",
+    "reset": "重置",
+    "sessionsRevokedMany": "{{count}} 設備登出",
+    "showDislikes": "顯示我的不喜歡給所有人看",
+    "showDislikesDesc": "任何人都可以在你的個人檔案中開啟「不喜歡」標籤。當這個選項關閉時，只有你自己才能看到它。",
     "usernameTaken": "用户名已被占用",
     "postingChain": "发帖区块链",
     "showOnline": "显示我在线辰光",
@@ -726,6 +853,9 @@
     "solanaUnlinkFailed": "迭只钱包断勿开"
   },
   "common": {
+    "confirm": "確認",
+    "mute": "靜音",
+    "unmute": "取消靜音",
     "save": "保存",
     "cancel": "取消",
     "delete": "删除",
@@ -1556,6 +1686,30 @@
     "deleteConversationFailed": "删脱了对话"
   },
   "music": {
+    "listeningCount_one": "{{count}} 聽聽",
+    "listeningCount_other": "{{count}} 聽聽",
+    "chartOrder": "音頻排行榜順序",
+    "chartVideos": "音樂視頻",
+    "liveCount": "現場直播",
+    "mostLiked": "最喜歡",
+    "mostListened": "最聽過",
+    "mostPlayed": "最常聽",
+    "mostRecent": "最新",
+    "mostViewed": "最點擊",
+    "mostVoted": "最投票",
+    "newest": "新的最新的",
+    "noStages": "目前還沒有舞台",
+    "quality": "品質",
+    "radioChartOrder": "電台排行榜順序",
+    "radioPicks": "我們的選擇",
+    "recentStages": "最近",
+    "shareStationTitle": "{{name}} 吾在 DeHub Radio 喇叭台",
+    "stagesChartOrder": "舞台排行榜順序",
+    "stagesLive": "現場直播",
+    "trending": "熱門",
+    "upcoming": "即將直播",
+    "videoChartOrder": "音樂錄影帶排行榜",
+    "videoCharts": "音樂視頻排行榜",
     "all": "全部",
     "tracks": "歌曲",
     "videos": "视频",
@@ -1570,6 +1724,11 @@
     "returnHome": "返回主页"
   },
   "profile": {
+    "dislikes": {
+      "emptyOther": "無怨言。",
+      "privateDesc": "呢個帳號把不喜歡的留在自己身上。",
+      "privateTitle": "隱私"
+    },
     "back": "返回",
     "usernameAvailable": "用户名可用！",
     "signUpToClaim": "注册来拿",
@@ -1686,6 +1845,37 @@
     "tokensUnit": "代币"
   },
   "agents": {
+    "life": {
+      "daily": "今日發文： {{posts}} · 目標： {{target}}",
+      "editComment": "编辑评论",
+      "postText": "发帖内容",
+      "queueHelp": "發佈原文。適用20分鐘的分享空檔，不進行minting。",
+      "queuePost": "排隊",
+      "unlike": "唔同",
+      "unliked": "唔鍾意"
+    },
+    "tasks": {
+      "clearSelection": "清晰選擇",
+      "eachHelp": "將這些指示發送給每個選定的代理人。每個代理人根據所要求的節奏進行完整任務。共享發文限制仍然適用。",
+      "eachMode": "每個代理都這樣做",
+      "enabled": "啓用 · 活動",
+      "enabledHelp": "啓用咧，咱個代理人有空咧。任務狀態下面會顯示咱個是正在執行、等候中、暫停中或失敗咧。",
+      "oneAgent": "一名代理",
+      "selectedCount": "{{count}}選擇{{total}}",
+      "swarm": "蜂群",
+      "window": {
+        "allTime": "所有時間",
+        "author": "作者（可选）",
+        "authorPlaceholder": "@username 或錢包",
+        "category": "類別（可選）",
+        "categoryPlaceholder": "精確的類別名稱",
+        "dislike": "唔鍾意",
+        "last1h": "最後一小時",
+        "last30d": "前30天",
+        "title": "每個時間段的每個帖子"
+      },
+      "windowLimits": "所有匹配的帖子都已排队。行動限制了執行速度；它們並不會將任務限制在三個帖子。撰寫回覆可能會使用積分。"
+    },
     "title": "AI代理",
     "connectToManage": "连接来管理AI代理",
     "signInToCreate": "登录来创建搭管理AI代理。",
@@ -1789,6 +1979,7 @@
     "failedSubmit": "提交申请失败。请再试过。"
   },
   "loginModal": {
+    "continuePhone": "继续用手机",
     "unlockBiometricContinue": "用你的指纹或脸部解锁你的钱包来继续。",
     "unlockBiometricSignIn": "用你的指纹或脸部解锁你的钱包来登录。",
     "unlockPasswordContinue": "输入你的钱包密码来继续。",
@@ -1912,6 +2103,14 @@
     "applicationFailed": "提交失败。请再试过。"
   },
   "dao": {
+    "status": {
+      "accepted": "已接受",
+      "cancelled": "已取消",
+      "completed": "已完成",
+      "expired": "已過期",
+      "open": "開放",
+      "rejected": "已拒絕"
+    },
     "title": "DAO 财库",
     "subtitle": "一个钱包，由社区资助，由其投票支出",
     "contribute": "贡献",
@@ -1952,6 +2151,17 @@
     "votingPowerNote": "投票持续 7 天。投票权是该提案开启时，每位贡献者的累计代币贡献。至少需要 10% 的参与度，并且“接受”票数必须超过“拒绝”票数。"
   },
   "governance": {
+    "decidedInTabs": "已決定提案的結果在 Passed 和 Rejected 頁籤中。",
+    "draftSavedRetry": "您的草稿已儲存 — 按 Submit 重新嘗試。",
+    "freeForBadgeHolders": "免費給徽章持有者。您的草稿在打字時即儲存。",
+    "mediaTooLarge": "檔案必須小於 50 MB。",
+    "mediaTypeInvalid": "選擇一張圖片或視頻。",
+    "noOpenProposals": "無現有開放的提案",
+    "proposalAttachment": "提案附件",
+    "proposalFeeNote": "提案費用為 10,000 DHB 沒有 staking 設備。您的草稿即時儲存。",
+    "submitFailed": "提交提案失敗",
+    "uploadFailed": "上傳失敗",
+    "uploadFailedDetail": "上傳失敗：{{message}}",
     "title": "治理",
     "proposalCount": "已提交 {{count}} 个提案",
     "proposalCount_other": "已提交 {{count}} 个提案",
@@ -2015,6 +2225,7 @@
     "voteFailedHoldTokens": "投票失败。您必须持有 DeHub 代币才能投票。"
   },
   "sidebar": {
+    "switchAccount": "切換帳戶",
     "talkOfTheTown": "城里个热话",
     "nothingTrending": "暂时呒没热门个",
     "posts": "话题",
@@ -2623,6 +2834,10 @@
     "chessOnlineIntro": "與其他玩家進行實時對決。DeHub 代幣的投注即將推出。"
   },
   "stats": {
+    "money": {
+      "estimatedOperations": "估計操作",
+      "operationsGroup": "操作"
+    },
     "community": {
       "title": "社区",
       "members": "成员",
@@ -5122,6 +5337,7 @@
     }
   },
   "goLive": {
+    "connectionFailed": "廣播連接失敗。",
     "bigEvent": "大型活动",
     "bigEventHint": "适合大量观众：观众会延迟约 20 秒观看，卡顿更少。",
     "goLive": "去直播",
@@ -5356,6 +5572,7 @@
     "ambWant4": "自動自發，能夠獨立規劃及執行活動或營銷策劃的人"
   },
   "depin": {
+    "dismiss": "取消",
     "seoTitle": "DePin | 社区自治媒体基建 | DeHub",
     "openDehub": "開啟 DeHub",
     "signInBlurb": "登入以將此瀏覽器標籤轉換為輕量級備份節點。",
@@ -5771,6 +5988,7 @@
     "newMessage": "{{name}} 给你发送了一条消息"
   },
   "audioPost": {
+    "visualizerColour": "視覺化顏色",
     "popOut": "弹出 — 继续听，同时浏览",
     "closeCornerPlayer": "关闭角落播放器",
     "cornerPlayer": "音频帖子播放",
