@@ -56,6 +56,7 @@ export const VideoGlitchLoader = memo(function VideoGlitchLoader({
         className,
       )}
       data-video-glitch=""
+      data-keep-dark
       aria-hidden="true"
     >
       {showPoster ? (

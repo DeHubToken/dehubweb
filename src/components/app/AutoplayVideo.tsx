@@ -215,7 +215,7 @@ export const AutoplayVideo = memo(function AutoplayVideo({
   // If video has a format error (H.265/HEVC), just show poster
   if (hasError) {
     return (
-      <div ref={containerRef} className={cn("relative", className)}>
+      <div ref={containerRef} className={cn("relative isolate", className)}>
         {poster ? (
           <img src={poster} alt="" className="w-full h-full object-cover rounded-lg" />
         ) : (
@@ -226,7 +226,7 @@ export const AutoplayVideo = memo(function AutoplayVideo({
   }
 
   return (
-    <div ref={containerRef} className={cn("relative", className)}>
+    <div ref={containerRef} className={cn("relative isolate", className)}>
       {/* Skeleton shimmer — visible until video has loaded data */}
       {!hasLoaded && (
         <div className="absolute inset-0 z-[1]">
