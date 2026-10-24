@@ -81,6 +81,14 @@ export const SearchDialog = () => {
   // appear in the order of their best-ranked result.
   const categories = Array.from(new Set(results.map(r => r.category)));
 
+  // Categories stay English in the index (they are matched too); only the
+  // heading and the chip are shown translated.
+  const categoryLabel = (category: string) => {
+    const key = `docsSearchIndex.category${category}`;
+    const label = t(key);
+    return label === key ? category : label;
+  };
+
   return (
     <CommandDialog
       open={isOpen}
@@ -150,7 +158,7 @@ export const SearchDialog = () => {
           const categoryResults = results.filter(result => result.category === category);
 
           return (
-            <CommandGroup key={category} heading={category}>
+            <CommandGroup key={category} heading={categoryLabel(category)}>
               {categoryResults.map(result => (
                 <CommandItem
                   key={result.id}
@@ -174,7 +182,7 @@ export const SearchDialog = () => {
                       </p>
                       <div className="flex items-center mt-2 text-xs text-muted-foreground">
                         <span className="bg-muted px-2 py-0.5 rounded text-xs">
-                          {result.type === 'blog' && result.category === 'Blog' ? t('docsSearch.blogPost') : result.category}
+                          {result.type === 'blog' && result.category === 'Blog' ? t('docsSearch.blogPost') : categoryLabel(result.category)}
                         </span>
                         {typeof result.score === 'number' && (
                           <span className="ml-2">
