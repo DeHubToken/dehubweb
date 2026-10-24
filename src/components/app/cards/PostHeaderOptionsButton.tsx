@@ -1,19 +1,29 @@
 import { useTranslation as _useCopy } from 'react-i18next';
 import type { ButtonHTMLAttributes } from 'react';
+import { Zap } from 'lucide-react';
 import MoreVertical from '@/components/ui/cut-icons/morevertical';
 import { cn } from '@/lib/utils';
 
+/** Header icons in a card corner. */
+export const HEADER_ICON_SIZE = 20;
+/** How far the visible dots sit inside the card's content box, from the top
+ *  and from the side alike: with the bento's 12px padding, 18px from its edge. */
+const CORNER_INSET = 6;
+/** The cut dots fill x 14-18, y 4-28 of their 32-unit grid. */
+const dotsShiftX = (size: number, corner: boolean) => size * (14 / 32) - (corner ? CORNER_INSET : 0);
+/** Lowers corner glyphs so the dots' top sits CORNER_INSET below the content's top. */
+const cornerDrop = (size: number) => CORNER_INSET - size * (4 / 32);
+
 type PostHeaderOptionsButtonProps = ButtonHTMLAttributes<HTMLButtonElement> & {
   iconSize?: number;
-  /** Lift the dots to the content's top edge as well as its right edge, so a
-   *  card's corner button is inset the same from the top as from the side.
+  /** Inset the dots the same from the content's top as from its side.
    *  Off for buttons that sit in a row rather than in a card's corner. */
   corner?: boolean;
 };
 
-/** Align the visible dots with the content edge, retaining a 44px tap target. */
+/** Align the visible dots with the card corner, retaining a 44px tap target. */
 export function PostHeaderOptionsButton({
-  iconSize = 23.5,
+  iconSize = HEADER_ICON_SIZE,
   corner = true,
   className,
   style,
@@ -34,12 +44,38 @@ export function PostHeaderOptionsButton({
         style={{
           width: iconSize,
           height: iconSize,
-          // Align the edge of the vertical dots on the 32-unit grid.
-          transform: `translateX(${iconSize * (14 / 32)}px)`,
-          // The dots start 4 units down the 32-unit grid. A separate property
-          // from the transform so overlay layouts can drop it in CSS.
-          translate: corner ? `0 ${-iconSize * (4 / 32)}px` : undefined,
+          transform: `translateX(${dotsShiftX(iconSize, corner)}px)`,
+          // A separate property from the transform so overlay layouts can drop it in CSS.
+          translate: corner ? `0 ${cornerDrop(iconSize)}px` : undefined,
         }}
+      />
+    </button>
+  );
+}
+
+/**
+ * The owner's Boost bolt beside the corner dots: same size, same drop, and
+ * 14px clear of the dots' glyph box. `rowGap` is the parent's flex gap.
+ */
+export function PostHeaderBoostButton({
+  rowGap,
+  className,
+  style,
+  ...props
+}: ButtonHTMLAttributes<HTMLButtonElement> & { rowGap: number }) {
+  return (
+    <button
+      type="button"
+      data-head-boost
+      {...props}
+      className={cn('shrink-0 text-zinc-400 hover:text-white transition-colors active:scale-95 disabled:opacity-40', className)}
+      // The dots are pushed CORNER_INSET short of their own shift, so the
+      // bolt keeps 14px between the two glyph boxes.
+      style={{ marginRight: 14 - rowGap - dotsShiftX(HEADER_ICON_SIZE, true), ...style }}
+    >
+      <Zap
+        data-corner-dots=""
+        style={{ width: HEADER_ICON_SIZE, height: HEADER_ICON_SIZE, translate: `0 ${cornerDrop(HEADER_ICON_SIZE)}px` }}
       />
     </button>
   );

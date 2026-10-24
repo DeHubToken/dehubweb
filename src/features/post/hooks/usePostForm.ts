@@ -1292,6 +1292,10 @@ export function usePostForm(
         chainId,
         shopLinks,
         shopListingIds,
+        visibility,
+        contentWarning,
+        quotePolicy,
+        replyPolicy,
       },
     };
     const updatedDrafts = [newDraft, ...drafts.filter(d => d.id !== replaceId)].slice(0, 10);
@@ -1311,7 +1315,8 @@ export function usePostForm(
     titleText, showTitle, selectedCategory, isMature, isForKids, isSubscribersOnly,
     isPPV, ppvAmount, ppvCurrency, isWatch2Earn, w2eViews, w2eComments, w2eTotal,
     w2eCurrency, isTokenGated, tokenContract, tokenSymbol, tokenAmount, poll,
-    scheduledDate, chainId, shopLinks, shopListingIds]);
+    scheduledDate, chainId, shopLinks, shopListingIds,
+    visibility, contentWarning, quotePolicy, replyPolicy]);
 
   const loadDraft = useCallback((draft: Draft) => {
     setText(draft.text);
@@ -1345,6 +1350,10 @@ export function usePostForm(
     if (p.poll !== undefined) setPoll(p.poll ?? null);
     if (p.shopLinks !== undefined) setShopLinks(p.shopLinks as ShopLink[]);
     if (p.shopListingIds !== undefined) setShopListingIds(p.shopListingIds);
+    if (p.visibility !== undefined) setVisibility(p.visibility);
+    if (p.contentWarning !== undefined) setContentWarning(p.contentWarning);
+    if (p.quotePolicy !== undefined) setQuotePolicy(p.quotePolicy);
+    if (p.replyPolicy !== undefined) setReplyPolicy(p.replyPolicy);
     if (p.scheduledDate !== undefined) {
       // A schedule that has come and gone is not a schedule. Dropping it means
       // the post goes out now instead of being rejected for a past time.

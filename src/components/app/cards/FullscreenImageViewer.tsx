@@ -20,7 +20,11 @@ import { lockBodyScroll } from '@/lib/body-scroll-lock';
  *    double-tap-to-like ladder on the image itself. While a slide is zoomed,
  *    `watchDrag` refuses embla the drag and the slide swallows the touch stream
  *    before the close handlers see it; at 1x all three behave as they always
- *    did. Double-tap is left alone — it stays a like, as it is on the card.
+ *    did. On desktop double-click stays a like, as it is on the card.
+ *
+ * 3. PHONES TAP DIFFERENTLY. At phone width one tap anywhere hides or shows the
+ *    buttons, a double tap zooms to 2.5x about the finger (or back out), and
+ *    zooming in hides the buttons by itself. Close is the X or a swipe down.
  */
 
 import { useCallback, useEffect, useMemo, useState, useRef, type ReactNode } from 'react';
@@ -41,6 +45,7 @@ import { cdnImageSource } from '@/lib/media-url';
 import { HandoffImage } from './HandoffImage';
 import { rememberGalleryIndex } from '@/lib/media-presentation';
 import { useTapGestures } from '@/hooks/use-tap-gestures';
+import { useIsMobile } from '@/hooks/use-mobile';
 import { TapReactionBurst } from '@/components/app/cards/TapReactionBurst';
 import type { PostReaction, ReactionCounts } from '@/lib/reactions';
 
@@ -96,14 +101,21 @@ export function FullscreenImageViewer({
   soundtrackControl,
 }: FullscreenImageViewerProps) {
   const { t: _copy } = _useCopy();
+  // Phones: one tap shows/hides the buttons, double tap zooms. Desktop keeps
+  // click-outside-to-close and double-click-to-like.
+  const isPhone = useIsMobile();
+  const [chromeHidden, setChromeHidden] = useState(false);
+  const toggleChrome = useCallback(() => setChromeHidden((h) => !h), []);
   // A zoomed slide owns the drag. `watchDrag` is consulted on every touchstart,
   // so a ref is enough here — no reInit, and no stale closure either.
   const zoomedRef = useRef(false);
   const [zoomed, setZoomed] = useState(false);
   const handleZoomChange = useCallback((next: boolean) => {
+    // Zooming in clears the buttons out of the way; back at 1x they return.
+    if (isPhone && next !== zoomedRef.current) setChromeHidden(next);
     zoomedRef.current = next;
     setZoomed(next);
-  }, []);
+  }, [isPhone]);
   const emblaOptions = useMemo(
     () => ({ loop: false, startIndex: initialIndex, watchDrag: () => !zoomedRef.current }),
     [initialIndex],
@@ -140,6 +152,7 @@ export function FullscreenImageViewer({
       emblaApi.scrollTo(initialIndex, true);
       setCurrentIndex(initialIndex);
       setDragOffset(0);
+      setChromeHidden(false);
       // Slides unmount on close without their effects getting to say so.
       handleZoomChange(false);
     }
@@ -255,6 +268,7 @@ export function FullscreenImageViewer({
 
   // Calculate opacity based on drag offset
   const bgOpacity = Math.max(0.3, 1 - dragOffset / 300);
+  const chrome = `transition-opacity duration-200 ${chromeHidden ? 'opacity-0 pointer-events-none' : 'opacity-100'}`;
 
   // Portalled to the body, so when the viewer is opened from inside a drawer
   // (comments, DMs) it inherits the `pointer-events: none` Radix pins on the
@@ -276,7 +290,7 @@ export function FullscreenImageViewer({
         >
           {/* Top-right controls. Order left → right: utility chips (desktop
               only), translate, close. Close stays anchored far-right. */}
-          <div data-keep-dark className="absolute top-4 right-4 z-10 flex items-center gap-2">
+          <div data-keep-dark className={`absolute top-4 right-4 z-10 flex items-center gap-2 ${chrome}`}>
             {/* Bookmark / pin / info — lifted here on desktop to match the
                 Close / Translate controls; the bottom bar keeps them inline on
                 mobile/tablet. */}
@@ -318,7 +332,7 @@ export function FullscreenImageViewer({
 
           {/* Image counter */}
           {hasMultiple && (
-            <div data-keep-dark className="absolute top-4 left-1/2 -translate-x-1/2 z-10 px-3 py-1.5 rounded-xl bg-black/60 backdrop-blur-[24px] saturate-[180%] border border-white/20 text-white text-sm font-medium">
+            <div data-keep-dark className={`${chrome} absolute top-4 left-1/2 -translate-x-1/2 z-10 px-3 py-1.5 rounded-xl bg-black/60 backdrop-blur-[24px] saturate-[180%] border border-white/20 text-white text-sm font-medium`}>
               {currentIndex + 1} / {images.length}
             </div>
           )}
@@ -349,6 +363,7 @@ export function FullscreenImageViewer({
                   postId={postId}
                   isActive={idx === currentIndex}
                   onZoomChange={handleZoomChange}
+                  onTap={isPhone ? toggleChrome : undefined}
                 />
               ))}
             </div>
@@ -389,7 +404,7 @@ export function FullscreenImageViewer({
 
           {/* Dot indicators — lifted above the action bar when it is present */}
           {hasMultiple && !zoomed && (
-            <div className={`absolute ${showActionBar ? 'bottom-20' : 'bottom-6'} left-1/2 -translate-x-1/2 flex gap-2`}>
+            <div className={`${chrome} absolute ${showActionBar ? 'bottom-20' : 'bottom-6'} left-1/2 -translate-x-1/2 flex gap-2`}>
               {images.map((_, idx) => (
                 <button
                   key={idx}
@@ -409,7 +424,7 @@ export function FullscreenImageViewer({
           )}
           
           {soundtrackControl && (
-            <div data-keep-dark className="absolute top-20 left-4 right-4 z-10 flex justify-start" onClick={(e) => e.stopPropagation()}>
+            <div data-keep-dark className={`absolute top-20 left-4 right-4 z-10 flex justify-start ${chrome}`} onClick={(e) => e.stopPropagation()}>
               {soundtrackControl}
             </div>
           )}
@@ -420,7 +435,7 @@ export function FullscreenImageViewer({
             <div
               data-keep-dark
               onClick={(e) => e.stopPropagation()}
-              className="absolute bottom-0 inset-x-0 z-10 px-2 pt-10 pb-[max(0.5rem,env(safe-area-inset-bottom))] bg-gradient-to-t from-black/85 via-black/45 to-transparent"
+              className={`absolute bottom-0 inset-x-0 z-10 px-2 pt-10 pb-[max(0.5rem,env(safe-area-inset-bottom))] bg-gradient-to-t from-black/85 via-black/45 to-transparent ${chrome}`}
             >
               <ActionBar
                 postId={postId}
@@ -466,6 +481,11 @@ export function FullscreenImageViewer({
 
 /** Zoom ceiling. Past 4x even an original is mush on a phone photo. */
 const MAX_ZOOM = 4;
+/** Where a phone double tap lands. */
+const DOUBLE_TAP_ZOOM = 2.5;
+/** Two taps closer than this (ms, px) are a double tap. */
+const DOUBLE_TAP_MS = 280;
+const DOUBLE_TAP_SLOP = 40;
 /** Released below this, the gesture counts as a return to 1x, not a tiny zoom. */
 const ZOOM_FLOOR = 1.02;
 
@@ -484,7 +504,8 @@ function touchDistance(a: React.Touch, b: React.Touch): number {
 
 /**
  * Single fullscreen slide — image sits inside a padded container.
- * Double-tapping the image likes the post; single tap on empty area closes.
+ * Desktop: double-clicking the image likes the post; a click on the empty
+ * area closes. Phone (`onTap`): see the header, point 3.
  *
  * Pinch (two fingers), or a trackpad pinch / ctrl-scroll, zooms up to 4x about
  * whatever is under the fingers; one finger or the mouse then pans, clamped so
@@ -498,6 +519,7 @@ function FullscreenSlide({
   postId,
   isActive,
   onZoomChange,
+  onTap,
 }: {
   img: string;
   index: number;
@@ -505,6 +527,8 @@ function FullscreenSlide({
   postId?: string;
   isActive: boolean;
   onZoomChange: (zoomed: boolean) => void;
+  /** Phone mode: a single tap anywhere calls this, a double tap zooms. */
+  onTap?: () => void;
 }) {
   const tapGestures = useTapGestures({
     postId,
@@ -561,6 +585,32 @@ function FullscreenSlide({
       y: focalY + (current.y - focalY) * ratio,
     });
   }, [applyZoom]);
+
+  // ── Phone taps: one toggles the buttons, two zoom in / back out ──
+  const lastTapRef = useRef<{ at: number; x: number; y: number } | null>(null);
+  const singleTapTimer = useRef<ReturnType<typeof setTimeout>>();
+  useEffect(() => () => clearTimeout(singleTapTimer.current), []);
+  const handlePhoneTap = useCallback((clientX: number, clientY: number) => {
+    const now = performance.now();
+    const last = lastTapRef.current;
+    if (
+      last
+      && now - last.at < DOUBLE_TAP_MS
+      && Math.hypot(clientX - last.x, clientY - last.y) < DOUBLE_TAP_SLOP
+    ) {
+      clearTimeout(singleTapTimer.current);
+      lastTapRef.current = null;
+      if (zoomRef.current.scale > 1) applyZoom(NO_ZOOM);
+      else zoomAbout(DOUBLE_TAP_ZOOM, clientX, clientY);
+      return;
+    }
+    lastTapRef.current = { at: now, x: clientX, y: clientY };
+    clearTimeout(singleTapTimer.current);
+    singleTapTimer.current = setTimeout(() => {
+      lastTapRef.current = null;
+      onTap?.();
+    }, DOUBLE_TAP_MS);
+  }, [applyZoom, zoomAbout, onTap]);
 
   // ── Touch: two fingers zoom, one finger pans once zoomed ──
   const gesture = useRef<{
@@ -772,6 +822,11 @@ function FullscreenSlide({
       // own preventDefault, so its horizontal drag is unaffected.
       style={{ touchAction: 'none', cursor: zoom.scale > 1 ? 'grab' : undefined }}
       onClick={(e) => {
+        if (onTap) {
+          e.stopPropagation();
+          if (!movedRef.current) handlePhoneTap(e.clientX, e.clientY);
+          return;
+        }
         if (zoom.scale > 1 || movedRef.current) {
           e.stopPropagation();
           return;
@@ -797,8 +852,7 @@ function FullscreenSlide({
           transition: gesturing ? 'none' : 'transform 180ms ease-out',
           willChange: zoom.scale > 1 ? 'transform' : undefined,
         }}
-        onClick={(e) => e.stopPropagation()}
-        {...tapGestures}
+        {...(onTap ? {} : { onClick: (e: React.MouseEvent) => e.stopPropagation(), ...tapGestures })}
       />
     </div>
   );

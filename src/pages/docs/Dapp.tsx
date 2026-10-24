@@ -423,14 +423,14 @@ const Dapp = () => {
 
         <GuideSection
           id="articles"
-          title={_copy("copy.ca8d24a3e762", { defaultValue: "dapp.articlesTitle" })}
+          title="dapp.articlesTitle"
           paras={['dapp.articlesDesc']}
           bullets={[['dapp.articlesB1', 'dapp.articlesB1Desc'], ['dapp.articlesB2', 'dapp.articlesB2Desc'], ['dapp.articlesB3', 'dapp.articlesB3Desc']]}
         />
 
         <GuideSection
           id="multi-posting"
-          title={_copy("copy.b6ad48b669f7", { defaultValue: "dapp.multipostTitle" })}
+          title="dapp.multipostTitle"
           paras={['dapp.multipostDesc']}
           bullets={[['dapp.multipostB1', 'dapp.multipostB1Desc'], ['dapp.multipostB2', 'dapp.multipostB2Desc'], ['dapp.multipostB3', 'dapp.multipostB3Desc']]}
         />
@@ -1027,7 +1027,7 @@ const Dapp = () => {
 
         <GuideSection
           id="dao-treasury"
-          title={_copy("copy.c558e7501904", { defaultValue: "dapp.daoTitle" })}
+          title="dapp.daoTitle"
           paras={['dapp.daoDesc']}
           bullets={[['dapp.daoB1', 'dapp.daoB1Desc'], ['dapp.daoB2', 'dapp.daoB2Desc'], ['dapp.daoB3', 'dapp.daoB3Desc']]}
         />
@@ -1819,7 +1819,7 @@ const Dapp = () => {
 
         <GuideSection
           id="packs"
-          title={_copy("copy.e79b190608ca", { defaultValue: "dapp.packsTitle" })}
+          title="dapp.packsTitle"
           paras={['dapp.packsDesc']}
           bullets={[['dapp.packsB1', 'dapp.packsB1Desc'], ['dapp.packsB2', 'dapp.packsB2Desc']]}
         />
@@ -1861,7 +1861,7 @@ const Dapp = () => {
           <Shot src="/media/docs-music.png" alt={t('dapp.altMusic')} />
         </section>
 
-        <GuideSection id="cinema" title={_copy("copy.5e3ce481ab0d", { defaultValue: "dapp.cinemaTitle" })} paras={['dapp.cinemaDesc']} />
+        <GuideSection id="cinema" title="dapp.cinemaTitle" paras={['dapp.cinemaDesc']} />
 
         <section id="wallet" className="scroll-mt-32">
           <h2 className="text-3xl font-bold text-foreground mb-6 font-exo flex items-center gap-3">
@@ -1889,14 +1889,14 @@ const Dapp = () => {
 
         <GuideSection
           id="exchange"
-          title={_copy("copy.43b9fafd6db4", { defaultValue: "dapp.exchangeTitle" })}
+          title="dapp.exchangeTitle"
           paras={['dapp.exchangeDesc']}
           bullets={[['dapp.exchangeB1', 'dapp.exchangeB1Desc'], ['dapp.exchangeB2', 'dapp.exchangeB2Desc'], ['dapp.exchangeB3', 'dapp.exchangeB3Desc']]}
         />
 
         <GuideSection
           id="marketplaces"
-          title={_copy("copy.d924f9b45914", { defaultValue: "dapp.marketsTitle" })}
+          title="dapp.marketsTitle"
           paras={['dapp.marketsDesc']}
           bullets={[['dapp.marketsB1', 'dapp.marketsB1Desc'], ['dapp.marketsB2', 'dapp.marketsB2Desc'], ['dapp.marketsB3', 'dapp.marketsB3Desc']]}
         />
@@ -1991,14 +1991,14 @@ const Dapp = () => {
 
         <GuideSection
           id="converter"
-          title={_copy("copy.e207739f2f08", { defaultValue: "dapp.converterTitle" })}
+          title="dapp.converterTitle"
           paras={['dapp.converterDesc']}
           bullets={[['dapp.converterB1', 'dapp.converterB1Desc'], ['dapp.converterB2', 'dapp.converterB2Desc'], ['dapp.converterB3', 'dapp.converterB3Desc']]}
         />
 
         <GuideSection
           id="mini-apps"
-          title={_copy("copy.663e192da1bc", { defaultValue: "dapp.miniAppsTitle" })}
+          title="dapp.miniAppsTitle"
           paras={['dapp.miniAppsDesc']}
           bullets={[['dapp.miniAppsB1', 'dapp.miniAppsB1Desc'], ['dapp.miniAppsB2', 'dapp.miniAppsB2Desc'], ['dapp.miniAppsB3', 'dapp.miniAppsB3Desc'], ['dapp.miniAppsB4', 'dapp.miniAppsB4Desc']]}
         />
@@ -2066,7 +2066,7 @@ const Dapp = () => {
 
         <GuideSection
           id="kids-mode"
-          title={_copy("copy.421205947abf", { defaultValue: "dapp.kidsTitle" })}
+          title="dapp.kidsTitle"
           paras={['dapp.kidsDesc']}
           bullets={[['dapp.kidsB1', 'dapp.kidsB1Desc'], ['dapp.kidsB2', 'dapp.kidsB2Desc']]}
         />

@@ -1,26 +1,29 @@
 /**
- * The top half of the phone sign-in sheet: three short clips fanned like a
- * hand of cards, hearts floating off the front one, and the headline.
+ * The top half of the phone sign-in sheet: two lanes of short clips drifting
+ * past in opposite directions (the feed already running), then the headline.
+ * One clip is the AI restyle and says so; the rest are ordinary creator posts.
  *
  * Phone only (LoginModal renders it below 768px on the options step); the
- * desktop sheet is unchanged. The clips are cut from the creator page hero and
- * ship from /login-stack, so nothing here depends on the feed (no network
- * call, no chance of a mature post on the sign-in screen).
+ * desktop sheet is unchanged. The clips ship from /login-stack, so nothing here
+ * depends on the feed (no network call, no chance of a mature post on the
+ * sign-in screen). Creator clips are CC BY 4.0, credited in
+ * public/login-stack/CREDITS.txt.
  *
  * Its own chunk: LoginModal sits in the entry bundle and lazy-loads this.
  */
 import { useEffect, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
-import dehubMark from '@/assets/dehub-logo-center.png';
+import { Sparkles } from 'lucide-react';
 import '@/styles/login-stack.css';
 
-const CLIPS = {
-  left: { src: '/login-stack/left.mp4', poster: '/login-stack/left.jpg' },
-  front: { src: '/login-stack/front.mp4', poster: '/login-stack/front.jpg' },
-  right: { src: '/login-stack/right.mp4', poster: '/login-stack/right.jpg' },
-} as const;
+type ClipName = 'concert' | 'street' | 'restyle' | 'bass' | 'skate' | 'friends' | 'drums' | 'vlog';
 
-function Clip({ src, poster }: { src: string; poster: string }) {
+// Each lane lists its clips twice so the -50% scroll loops without a seam.
+const LANE_A: ClipName[] = ['restyle', 'concert', 'street', 'bass'];
+const LANE_B: ClipName[] = ['skate', 'friends', 'drums', 'vlog'];
+
+/** Plays only while on screen, so at most a handful decode at once. */
+function Clip({ name }: { name: ClipName }) {
   const ref = useRef<HTMLVideoElement>(null);
   useEffect(() => {
     const video = ref.current;
@@ -30,18 +33,24 @@ function Clip({ src, poster }: { src: string; poster: string }) {
     video.muted = true;
     if (window.matchMedia?.('(prefers-reduced-motion: reduce)').matches) return;
     // Older engines (and jsdom) return nothing from play() rather than a promise.
-    void video.play()?.catch?.(() => {});
+    const play = () => { void video.play()?.catch?.(() => {}); };
+    if (typeof IntersectionObserver === 'undefined') { play(); return; }
+    const io = new IntersectionObserver(([entry]) => {
+      if (entry.isIntersecting) play();
+      else video.pause();
+    });
+    io.observe(video);
+    return () => io.disconnect();
   }, []);
   return (
     <video
       ref={ref}
-      src={src}
-      poster={poster}
+      src={`/login-stack/${name}.mp4`}
+      poster={`/login-stack/${name}.jpg`}
       muted
       loop
       playsInline
-      autoPlay
-      preload="auto"
+      preload="metadata"
       aria-hidden="true"
       tabIndex={-1}
       className="login-stack__video"
@@ -49,38 +58,32 @@ function Clip({ src, poster }: { src: string; poster: string }) {
   );
 }
 
-const Heart = ({ className }: { className: string }) => (
-  <svg viewBox="0 0 24 24" className={className} aria-hidden="true">
-    <path d="M12 21s-7.5-4.6-9.6-9.3C.9 8.3 3.1 4.5 6.9 4.5c2.1 0 3.6 1.1 5.1 2.9 1.5-1.8 3-2.9 5.1-2.9 3.8 0 6 3.8 4.5 7.2C19.5 16.4 12 21 12 21z" />
-  </svg>
-);
+function Lane({ clips, reverse, restyleLabel }: { clips: ClipName[]; reverse?: boolean; restyleLabel: string }) {
+  return (
+    <div className={reverse ? 'login-stack__lane login-stack__lane--down' : 'login-stack__lane'}>
+      {[...clips, ...clips].map((name, i) => (
+        <div key={i} className="login-stack__tile">
+          <Clip name={name} />
+          {name === 'restyle' && (
+            <span className="login-stack__ai">
+              <Sparkles aria-hidden="true" />
+              {restyleLabel}
+            </span>
+          )}
+        </div>
+      ))}
+    </div>
+  );
+}
 
 export function LoginShortsStack() {
   const { t } = useTranslation();
+  const restyleLabel = t('loginStack.aiRestyle', 'AI restyle');
   return (
     <div className="login-stack" data-login-stack>
-      <div className="login-stack__cards" aria-hidden="true">
-        <div className="login-stack__card login-stack__card--left"><Clip {...CLIPS.left} /></div>
-        <div className="login-stack__card login-stack__card--right"><Clip {...CLIPS.right} /></div>
-        <div className="login-stack__front">
-          <div className="login-stack__card login-stack__card--front">
-            <Clip {...CLIPS.front} />
-            <div className="login-stack__shade" />
-            <div className="login-stack__meta">
-              <span className="login-stack__handle">
-                <img src={dehubMark} alt="" className="login-stack__avatar" />
-                @dehub
-              </span>
-              <span className="login-stack__tip">
-                <img src={dehubMark} alt="" />
-                {t('loginStack.tip', 'Tip DHB')}
-              </span>
-            </div>
-          </div>
-          <Heart className="login-stack__heart login-stack__heart--1" />
-          <Heart className="login-stack__heart login-stack__heart--2" />
-          <Heart className="login-stack__heart login-stack__heart--3" />
-        </div>
+      <div className="login-stack__lanes" aria-hidden="true">
+        <Lane clips={LANE_A} restyleLabel={restyleLabel} />
+        <Lane clips={LANE_B} reverse restyleLabel={restyleLabel} />
       </div>
       <h2 className="login-stack__headline text-white">
         {t('loginStack.headlineTop', 'You will own everything')}
