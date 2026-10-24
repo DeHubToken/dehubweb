@@ -7,8 +7,8 @@ import { DOUBLE_TAP_LIKE_EVENT } from '@/lib/tap-reactions';
 import type { TextPost } from '@/types/feed.types';
 
 const { navigate, cachePost } = vi.hoisted(() => ({ navigate: vi.fn(), cachePost: vi.fn() }));
-vi.mock('react-router-dom', () => ({ useNavigate: () => navigate }));
-vi.mock('react-i18next', () => ({ useTranslation: () => ({ t: (key: string) => key }) }));
+vi.mock('react-router-dom', async importOriginal => ({ ...await importOriginal<typeof import('react-router-dom')>(), useNavigate: () => navigate }));
+vi.mock('react-i18next', async importOriginal => ({ ...await importOriginal<typeof import('react-i18next')>(), useTranslation: () => ({ t: (key: string) => key }) }));
 vi.mock('@/hooks/use-surface-draft', () => ({ useSurfaceDraft: (_: string, value: string) => useState(value), draftIdentity: () => '7' }));
 vi.mock('@/hooks/use-auto-open-comments', () => ({ useAutoOpenComments: () => {} }));
 vi.mock('@/contexts/AuthContext', () => ({ useAuth: () => ({ walletAddress: null, openLoginModal: vi.fn() }) }));
