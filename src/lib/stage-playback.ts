@@ -489,8 +489,15 @@ export function playStageRecording(space: StagePlayable, seekRatio?: number) {
       publish({ loading: false });
       if (!state.paused) rafId = requestAnimationFrame(pump);
     })
-    .catch(() => {
+    .catch((error: unknown) => {
       if (generation !== sourceGeneration) return;
+      // Preparing a dub can intentionally pause an in-flight play(). The
+      // browser rejects that promise with AbortError; keep the loaded source
+      // so the dub engine can resume it when speech is ready.
+      if (state.paused && error instanceof DOMException && error.name === 'AbortError') {
+        publish({ loading: false });
+        return;
+      }
       // Autoplay policy or a dead URL — either way the control must not stay lit.
       toast.error(_translateCopy('copy.49bbcbf7a97b', { defaultValue: 'That recording could not be played' }));
       stopStageRecording();
