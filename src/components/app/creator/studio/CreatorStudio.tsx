@@ -1186,7 +1186,7 @@ export const CreatorStudio = memo(function CreatorStudio({ onOpenEditor, stickyT
 
   const generationQuote = useJobQuote(mode === 'audio'
     ? activeAudioTask.paid && activeAudioTask.quoteModelId ? { kind: 'tool', modelId: activeAudioTask.quoteModelId, quantity: audioUnits } : null
-    : mode === 'video' ? { kind: 'video', modelId: videoModel, durationSeconds: duration }
+    : mode === 'video' ? { kind: 'video', modelId: videoModel, durationSeconds: duration, resolution, aspectRatio: aspect }
     : mode === '3d' ? { kind: 'model3d', modelId: model3dModel, quality: 'standard' }
     : { kind: 'image', modelId: imageModel, quantity: batch });
   // Free starter images: the server claims one per job, this only decides

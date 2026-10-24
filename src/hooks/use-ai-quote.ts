@@ -23,6 +23,8 @@ export interface QuoteRequest {
   durationSeconds?: number;
   quality?: 'none' | 'standard' | 'HD';
   quantity?: number;
+  resolution?: string;
+  aspectRatio?: string;
 }
 
 /**
@@ -52,6 +54,8 @@ export function useJobQuote(request: QuoteRequest | null, enabled = true) {
       request?.durationSeconds,
       request?.quality,
       request?.quantity,
+      request?.resolution,
+      request?.aspectRatio,
     ],
     queryFn: () => fetchJobQuote(request!),
     enabled: enabled && !!request?.modelId,

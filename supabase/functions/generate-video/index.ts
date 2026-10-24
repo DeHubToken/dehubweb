@@ -3,7 +3,9 @@ import Replicate from "https://esm.sh/replicate@0.25.2";
 // corsHeaders is the shared list — the only one that names x-wallet-address and
 // x-dehub-token, which chargeForJob requires and the browser will not send
 // unless the preflight says they are allowed. A local copy silently drops them.
-import { corsHeaders, rateLimitByIp } from "../_shared/auth.ts";
+import { corsHeaders, rateLimitByIp, serviceClient } from "../_shared/auth.ts";
+import { isVeniceVideo, VENICE_VIDEO_MODELS, veniceVideoOptions } from '../_shared/venice-catalog.ts';
+import { quoteVenice, veniceFetch, VeniceError } from '../_shared/venice.ts';
 import { recordGeneration, settleGeneration, generationTicket } from '../_shared/generation-jobs.ts';
 import { chargeForJob } from "../_shared/ai-payment-guard.ts";
 import { falQueueUrls } from "../_shared/fal-queue.ts";
@@ -47,7 +49,7 @@ const VIDEO_MODELS: Record<string, {
   supports: readonly string[];
   duration: string;
   version?: string;
-  provider?: 'replicate' | 'fal';
+  provider?: 'replicate' | 'fal' | 'venice';
   falFamily?: FalFamily;
   falTextModel?: string;
   falImageModel?: string;
@@ -60,6 +62,11 @@ const VIDEO_MODELS: Record<string, {
    */
   falOmitAudio?: boolean;
 }> = {
+  ...Object.fromEntries(Object.entries(VENICE_VIDEO_MODELS).map(([id, model]) => [id, {
+    id, name: model.name, description: 'Venice video at provider cost',
+    supports: [model.imageRequired ? 'image-to-video' : 'text-to-video'],
+    duration: '5–15s', provider: 'venice' as const,
+  }])),
   ...CREATOR_FAL_VIDEO_MODELS,
   'seedance-2.5': {
     id: 'bytedance/seedance-2.5',
@@ -923,6 +930,19 @@ serve(async (req) => {
       const provider = ticket?.provider || body.provider || 'replicate';
       if (ticket) body.falAppId = ticket.provider_app;
 
+      if (provider === 'venice') {
+        const serviceKey = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY');
+        const internal = !!serviceKey && req.headers.get('Authorization') === `Bearer ${serviceKey}`;
+        if (!internal) {
+          const auth = await requireDeHubAuth(req);
+          if (!auth.ok) return auth.response;
+          if (!ticket || ticket.wallet_address !== auth.wallet) return new Response(JSON.stringify({ error: 'Render not found' }), { status: 404, headers: { ...corsHeaders, 'Content-Type': 'application/json' } });
+        }
+        if (!ticket) throw new Error('Render not found');
+        if (['succeeded', 'failed'].includes(ticket.result?.status)) return new Response(JSON.stringify(ticket.result), { headers: { ...corsHeaders, 'Content-Type': 'application/json' } });
+        return await settleGeneration('generate-video', body.predictionId, await handleVeniceStatus(body.predictionId, ticket.result));
+      }
+
       if (provider === 'kie') {
         return await settleGeneration('generate-video', body.predictionId, await handleKieStatusCheck(body.predictionId));
       }
@@ -958,6 +978,19 @@ serve(async (req) => {
     }
 
     let validatedDuration: number | undefined;
+    let providerPriceDhb: number | undefined;
+    let veniceInput: Record<string, unknown> | undefined;
+    if (isVeniceVideo(model)) {
+      const seconds = Number(String(duration).replace(/s$/, ''));
+      try {
+        if (VENICE_VIDEO_MODELS[model].imageRequired !== !!sourceImage) throw new Error(VENICE_VIDEO_MODELS[model].imageRequired ? 'Attach an image to animate.' : 'Choose Wan Animate to animate an attached image.');
+        if (referenceImageUrls?.length || endFrameUrl || audioUrls?.length || videoUrls?.length || seed !== undefined || effect || negativePrompt) throw new Error('These options are not supported by this Venice model.');
+        veniceInput = veniceVideoOptions(model, { durationSeconds: seconds, resolution, aspectRatio });
+        providerPriceDhb = (await quoteVenice(model, { durationSeconds: seconds, resolution, aspectRatio })).priceDhb;
+      } catch (error) {
+        return new Response(JSON.stringify({ error: (error as Error).message }), { status: error instanceof VeniceError ? 503 : 400, headers: { ...corsHeaders, 'Content-Type': 'application/json' } });
+      }
+    }
     if (CREATOR_FAL_VIDEO_MODELS[model]) {
       try {
         validatedDuration = buildCreatorFalVideoRequest(model, { prompt, sourceImage, duration, aspectRatio, resolution, negativePrompt, referenceImageUrls, endFrameUrl, audioUrls, videoUrls, seed, effect }).durationSeconds;
@@ -977,6 +1010,7 @@ serve(async (req) => {
     // request never costs anything, and before the provider so a render cannot
     // be started for free.
     const charged = await chargeForJob(req, {
+      providerPriceDhb,
       kind: 'video',
       modelId: model,
       body,
@@ -990,6 +1024,16 @@ serve(async (req) => {
     // the cost tables assume those jobs land there — and anything it cannot
     // or will not take runs on the model's declared provider as before.
     try {
+      if (veniceInput) {
+        const submission = await veniceFetch('/video/queue', { ...veniceInput, prompt, ...(sourceImage ? { image_url: sourceImage } : {}) }, true);
+        const result = await submission.json();
+        if (!result.queue_id || result.model !== veniceInput.model) throw new VeniceError('Venice accepted the request but returned an incomplete render ticket.', 503, true);
+        return await recordGeneration(charged, new Response(JSON.stringify({
+          status: 'starting', predictionId: result.queue_id, provider: 'venice',
+          veniceModel: result.model, downloadUrl: result.download_url,
+          providerCostUsd: charged.priceDhb / 1000, markup: 0,
+        }), { headers: { ...corsHeaders, 'Content-Type': 'application/json' } }));
+      }
       const kieResponse = await tryKieGeneration(model, {
         prompt,
         sourceImage,
@@ -1010,6 +1054,10 @@ serve(async (req) => {
       if (!response.ok) await charged.refund();
       return await recordGeneration(charged, response);
     } catch (providerError) {
+      if (providerError instanceof VeniceError && providerError.uncertain) {
+        await serviceClient().from('ai_generation_jobs').update({ status: 'starting', provider: 'venice', result: { status: 'processing', error: providerError.message, submissionUnconfirmed: true }, updated_at: new Date().toISOString() }).eq('id', charged.jobId);
+        return new Response(JSON.stringify({ error: providerError.message, code: 'SUBMISSION_UNCONFIRMED', paymentRestored: false }), { status: 503, headers: { ...corsHeaders, 'Content-Type': 'application/json' } });
+      }
       // The provider refused the job before it started, so nothing was
       // rendered and the price goes back on the payer's transfer. Say so in
       // the response: the client used to show a bare "failed to start" and
@@ -1039,6 +1087,35 @@ serve(async (req) => {
     );
   }
 });
+
+async function handleVeniceStatus(queueId: string, ticket: any): Promise<Response> {
+  if (!ticket?.veniceModel) throw new Error('Missing Venice render ticket');
+  let response: Response;
+  try { response = await veniceFetch('/video/retrieve', { model: ticket.veniceModel, queue_id: queueId }); }
+  catch (error) {
+    if (error instanceof VeniceError && error.status === 400) return new Response(JSON.stringify({ status: 'failed', predictionId: queueId, provider: 'venice', error: error.message }), { headers: { ...corsHeaders, 'Content-Type': 'application/json' } });
+    throw error;
+  }
+  let media: ArrayBuffer | undefined;
+  let result: any;
+  if (response.headers.get('Content-Type')?.includes('video/')) media = await response.arrayBuffer();
+  else {
+    result = await response.json();
+    if (['FAILED', 'CANCELED', 'CANCELLED'].includes(result.status)) return new Response(JSON.stringify({ status: 'failed', predictionId: queueId, provider: 'venice', error: 'Venice could not complete this render.' }), { headers: { ...corsHeaders, 'Content-Type': 'application/json' } });
+    if (result.status !== 'COMPLETED') return new Response(JSON.stringify({ status: 'processing', predictionId: queueId, provider: 'venice' }), { headers: { ...corsHeaders, 'Content-Type': 'application/json' } });
+    if (!ticket.downloadUrl || !String(ticket.downloadUrl).startsWith('https://')) throw new Error('Venice returned no download link');
+    const file = await fetch(ticket.downloadUrl, { signal: AbortSignal.timeout(60_000) });
+    if (!file.ok || !file.headers.get('Content-Type')?.includes('video/')) throw new Error('Video download is pending. Reconnect to collect it.');
+    media = await file.arrayBuffer();
+  }
+  if (!media?.byteLength) throw new Error('Venice returned an empty video');
+  const db = serviceClient();
+  const path = `venice/${queueId.replace(/[^a-zA-Z0-9-]/g, '')}.mp4`;
+  const { error } = await db.storage.from('ai-media-uploads').upload(path, media, { contentType: 'video/mp4', upsert: true });
+  if (error) throw new Error('Video save is pending. Reconnect to collect it.');
+  const videoUrl = db.storage.from('ai-media-uploads').getPublicUrl(path).data.publicUrl;
+  return new Response(JSON.stringify({ status: 'succeeded', predictionId: queueId, provider: 'venice', videoUrl, model: ticket.veniceModel, providerCostUsd: ticket.providerCostUsd, markup: 0 }), { headers: { ...corsHeaders, 'Content-Type': 'application/json' } });
+}
 
 // ─── fal.ai generation ───
 

@@ -15,9 +15,11 @@ import { buildCreatorFalImageRequest } from '../_shared/creator-fal-input.ts';
 // The shared list — the only one that names x-wallet-address and x-dehub-token,
 // which chargeForJob requires and the browser will not send unless the preflight
 // says they are allowed. A local copy silently drops them; see auth.ts.
-import { corsHeaders } from '../_shared/auth.ts';
+import { corsHeaders, serviceClient } from '../_shared/auth.ts';
 import { buildSpecFromPrompt, renderTemplateBanner, formatFromPosterSize } from '../_shared/dehub-template-banner.ts';
 import { kieKey, kieUsableUrl, kieCreateTask, kieWaitForResult } from '../_shared/kie.ts';
+import { isVeniceImage } from '../_shared/venice-catalog.ts';
+import { generateVeniceImage, quoteVenice, VeniceError } from '../_shared/venice.ts';
 
 const serve = (handler: (req: Request) => Response | Promise<Response>) => Deno.serve(handler);
 
@@ -378,6 +380,11 @@ const handleGenerateImage = async (req: Request): Promise<Response> => {
 
     if (!prompt) {
       throw new Error('Prompt is required');
+    }
+
+    if (isVeniceImage(model)) {
+      const result = await generateVeniceImage(model, prompt, aspectRatio);
+      return new Response(JSON.stringify({ ...result, success: true }), { headers: { ...corsHeaders, 'Content-Type': 'application/json' } });
     }
 
     // Read before the sourceImage → logoImage promotion below mutates it, so
@@ -815,6 +822,7 @@ ART DIRECTION: ${enhancedUserRequest}`;
     }));
   } catch (error) {
     console.error('Error in generate-image:', error);
+    if (error instanceof VeniceError) return new Response(JSON.stringify({ error: error.message, code: error.uncertain ? 'SUBMISSION_UNCONFIRMED' : 'VENICE_UNAVAILABLE' }), { status: error.status, headers: { ...corsHeaders, 'Content-Type': 'application/json' } });
     const providerFailure = error instanceof ImageProviderError;
     const errorMessage = providerFailure ? error.message : (error instanceof Error ? error.message : IMAGE_UNAVAILABLE);
     return new Response(
@@ -832,6 +840,16 @@ serve(async (req) => {
   // Peek at the payload to price the job. The clone leaves the original body
   // readable by the handler, so nothing below this point had to change.
   const peek = await req.clone().json().catch(() => ({})) as Partial<GenerateImageRequest>;
+  let providerPriceDhb: number | undefined;
+  if (peek.model && isVeniceImage(peek.model)) {
+    if (!peek.prompt?.trim() || peek.sourceImage || peek.referenceImageUrls?.length || peek.bannerRenderer) {
+      return new Response(JSON.stringify({ error: 'Venice image models require a text prompt without attached images.' }), { status: 400, headers: { ...corsHeaders, 'Content-Type': 'application/json' } });
+    }
+    const maxLength = peek.model === 'venice-qwen-image' ? 2048 : 7500;
+    if (peek.prompt.length > maxLength) return new Response(JSON.stringify({ error: `This model accepts up to ${maxLength} prompt characters.` }), { status: 400, headers: { ...corsHeaders, 'Content-Type': 'application/json' } });
+    try { providerPriceDhb = (await quoteVenice(peek.model)).priceDhb; }
+    catch (error) { return new Response(JSON.stringify({ error: (error as Error).message }), { status: 503, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }); }
+  }
   if (peek.referenceImageUrls?.length && (!peek.model || !CREATOR_FAL_IMAGE_MODELS[peek.model]?.editUsesPlural)) {
     return new Response(JSON.stringify({ error: 'Choose a model supporting multiple image references' }), { status: 400, headers: { ...corsHeaders, 'Content-Type': 'application/json' } });
   }
@@ -847,6 +865,7 @@ serve(async (req) => {
   }
 
   const charged = await chargeForJob(req, {
+    providerPriceDhb,
     kind: 'image',
     modelId: peek.model || 'gemini-2.5-flash',
     body: peek as Record<string, unknown>,
@@ -864,6 +883,11 @@ serve(async (req) => {
   }
   // Anything short of a success hands the credit back — a refusal or a provider
   // outage must not be billable.
-  if (!response.ok) await charged.refund();
+  if (!response.ok) {
+    const failure = await response.clone().json().catch(() => ({}));
+    if (failure.code === 'SUBMISSION_UNCONFIRMED') {
+      await serviceClient().from('ai_generation_jobs').update({ provider: 'venice', result: { error: failure.error, submissionUnconfirmed: true }, updated_at: new Date().toISOString() }).eq('id', charged.jobId);
+    } else await charged.refund();
+  }
   return await recordGeneration(charged, response);
 });
