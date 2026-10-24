@@ -570,14 +570,13 @@
     "heading": "Cortos de DeHub"
   },
   "settings": {
-    "glass": "Glassy",
     "sessionsRevokedMany": "{{count}} dispositivos desconectados",
     "usernameTaken": "Nombre de usuario ocupado",
-    "showDislikesDesc": "Cualquiera puede abrir la pestaña «No me gusta» de tu perfil. Si está desactivado, solo tú puedes verla.",
-    "showDislikes": "Mostrar mis «no me gusta» a todos",
     "postingChain": "Cadena de bloques de las publicaciones",
     "showOnline": "Mostrar cuando estoy conectado",
     "showOnlineDesc": "Las personas a las que envías mensajes ven un punto verde junto a tu nombre mientras usas DeHub",
+    "showDislikes": "Mostrar mis «no me gusta» a todos",
+    "showDislikesDesc": "Cualquiera puede abrir la pestaña «No me gusta» de tu perfil. Si está desactivado, solo tú puedes verla.",
     "smartReplies": "Respuestas sugeridas",
     "smartRepliesDesc": "Redacta dos respuestas que puedes tocar en un chat. La × de las sugerencias lo desactiva.",
     "title": "Ajustes",
@@ -756,6 +755,7 @@
     "systemLight": "Sistema Claro",
     "immersive": "Inmersivo",
     "cosmic": "Cosmic Pixels",
+    "glass": "Glassy",
     "hazy": "Noches Brumosas",
     "swarms": "Enjambres",
     "lavalamp": "Lámpara de lava",
@@ -2108,7 +2108,6 @@
     "returnHome": "Volver al inicio"
   },
   "profile": {
-    "dislikes": { "loadMore": "Cargar más", "privateDesc": "Esta cuenta mantiene sus «no me gusta» en privado.", "privateTitle": "Los «no me gusta» son privados", "emptyOther": "Todavía nada marcado con «no me gusta».", "emptyOwn": "Las publicaciones que no te gustan salen de tus feeds y aparecen aquí. Quita el «no me gusta» para recuperar la publicación.", "emptyTitle": "Aún no hay «no me gusta»" },
     "back": "Volver",
     "usernameAvailable": "¡Nombre de usuario disponible!",
     "signUpToClaim": "Regístrate hoy para reclamar",
@@ -2136,8 +2135,16 @@
       "commentUnavailable": "Este comentario ya no está disponible"
     },
     "tabs": {
-      "dislikes": "No me gusta",
-      "playlists": "Listas de reproducción"
+      "playlists": "Listas de reproducción",
+      "dislikes": "No me gusta"
+    },
+    "dislikes": {
+      "emptyTitle": "Aún no hay «no me gusta»",
+      "emptyOwn": "Las publicaciones que no te gustan salen de tus feeds y aparecen aquí. Quita el «no me gusta» para recuperar la publicación.",
+      "emptyOther": "Todavía nada marcado con «no me gusta».",
+      "privateTitle": "Los «no me gusta» son privados",
+      "privateDesc": "Esta cuenta mantiene sus «no me gusta» en privado.",
+      "loadMore": "Cargar más"
     },
     "offerWorthNow": "Aproximadamente {{amount}} tokens a la tasa actual",
     "offerNotePlaceholder": "Añade una nota (opcional)",
@@ -2282,7 +2289,29 @@
       "oneAgent": "Un agente",
       "swarm": "Enjambre",
       "swarmChoose": "Elige agentes",
-      "selectAll": "Seleccionar todos los agentes", "clearSelection": "Borrar selección", "selectedCount": "{{count}} de {{total}} seleccionados", "distribution": "Cómo ejecutan la instrucción los agentes", "eachMode": "Cada agente lo hace", "sharedMode": "Repartir el trabajo", "eachHelp": "Envía estas instrucciones a cada agente seleccionado. Cada agente realiza la tarea completa con la frecuencia indicada. Se mantienen los límites compartidos de publicación.", "allCategories": "Todas las publicaciones de todas las categorías. Sin filtro por palabra clave ni límite de tres Me gusta por tarea.", "windowLimits": "Se añaden todas las publicaciones coincidentes a la cola. Los límites regulan el ritmo; no reducen la tarea a tres publicaciones. Escribir respuestas puede consumir créditos.", "promptLimits": "Las solicitudes de todas las publicaciones incluyen todas las categorías. Los Me gusta selectivos por tema se limitan a tres por ejecución. Todos los agentes comparten el intervalo entre publicaciones; escribir puede consumir créditos.", "pauseSwarm": "Pausar enjambre", "resumeSwarm": "Reanudar agentes disponibles", "cancelSwarm": "Cancelar enjambre", "cancelTask": "Cancelar tarea", "actionsProcessed": "acciones procesadas", "reviewMembers": "Las tareas con acciones inciertas requieren revisión individual antes de reanudarse. Una acción en curso puede terminar después de pausar o cancelar.", "controlUpdated": "{{count}} tareas actualizadas", "enabled": "Habilitado · actividad", "enabledHelp": "Habilitado significa que este agente está disponible. Los estados de las tareas indican si está ejecutándose, esperando, pausado o ha fallado.", "lastActive": "Última actividad", "noActivity": "Sin actividad registrada", "noTasks": "Este agente aún no tiene tareas.", "swarmHelp": "Una instrucción y trabajo compartido. Los objetivos se reparten entre agentes y las publicaciones programadas se alternan.",
+      "selectAll": "Seleccionar todos los agentes",
+      "clearSelection": "Borrar selección",
+      "selectedCount": "{{count}} de {{total}} seleccionados",
+      "distribution": "Cómo ejecutan la instrucción los agentes",
+      "eachMode": "Cada agente lo hace",
+      "sharedMode": "Repartir el trabajo",
+      "eachHelp": "Envía estas instrucciones a cada agente seleccionado. Cada agente realiza la tarea completa con la frecuencia indicada. Se mantienen los límites compartidos de publicación.",
+      "allCategories": "Todas las publicaciones de todas las categorías. Sin filtro por palabra clave ni límite de tres Me gusta por tarea.",
+      "windowLimits": "Se añaden todas las publicaciones coincidentes a la cola. Los límites regulan el ritmo; no reducen la tarea a tres publicaciones. Escribir respuestas puede consumir créditos.",
+      "promptLimits": "Las solicitudes de todas las publicaciones incluyen todas las categorías. Los Me gusta selectivos por tema se limitan a tres por ejecución. Todos los agentes comparten el intervalo entre publicaciones; escribir puede consumir créditos.",
+      "pauseSwarm": "Pausar enjambre",
+      "resumeSwarm": "Reanudar agentes disponibles",
+      "cancelSwarm": "Cancelar enjambre",
+      "cancelTask": "Cancelar tarea",
+      "actionsProcessed": "acciones procesadas",
+      "reviewMembers": "Las tareas con acciones inciertas requieren revisión individual antes de reanudarse. Una acción en curso puede terminar después de pausar o cancelar.",
+      "controlUpdated": "{{count}} tareas actualizadas",
+      "enabled": "Habilitado · actividad",
+      "enabledHelp": "Habilitado significa que este agente está disponible. Los estados de las tareas indican si está ejecutándose, esperando, pausado o ha fallado.",
+      "lastActive": "Última actividad",
+      "noActivity": "Sin actividad registrada",
+      "noTasks": "Este agente aún no tiene tareas.",
+      "swarmHelp": "Una instrucción y trabajo compartido. Los objetivos se reparten entre agentes y las publicaciones programadas se alternan.",
       "swarmMember": "Agente {{index}} de {{total}} del enjambre",
       "runSwarm": "Iniciar enjambre",
       "description": "Las acciones se realizan como el agente seleccionado. Las tareas programadas continúan con la aplicación cerrada.",
@@ -2823,8 +2852,6 @@
     "anonymousLikes_other": "{{count}} me gusta de titulares de insignias anónimos"
   },
   "postInfo": {
-    "unavailable": "No disponible",
-    "ownersUnavailable": "Los propietarios actuales no se pueden leer en este momento.",
     "title": "Info del Post",
     "tokenId": "Id. de token",
     "mintedOn": "Acuñado el",
@@ -2836,6 +2863,8 @@
     "total": "{{count}} total",
     "distribution": "Distribución",
     "loading": "Cargando...",
+    "unavailable": "No disponible",
+    "ownersUnavailable": "Los propietarios actuales no se pueden leer en este momento.",
     "owner": "{{count}} propietario",
     "owner_other": "{{count}} propietarios",
     "engagement": "Interacción",
@@ -3899,8 +3928,8 @@
     "buyTokensToUnlock": "Compra tokens DeHub para desbloquear una insignia y sus Superpoderes. Cualquier poseedor de insignia los obtiene; no se requiere staking.",
     "currentIntro": "Los titulares de insignia reciben nuevos impulsos cada quince días. Team up está abierto a todos: combina la potencia de tu cartera con hasta otras siete personas y cada miembro recibe la insignia que desbloquea el total.",
     "currentPowersHeading": "Las doce facultades",
-    "goldenHourStarted": "Golden Hour en curso durante {{minutes}} minutos — todo lo que publiques ahora cuenta el doble",
-    "signalFlareTo": "Llamarada de señal a {{people}} personas"
+    "signalFlareTo": "Llamarada de señal a {{people}} personas",
+    "goldenHourStarted": "Golden Hour en curso durante {{minutes}} minutos — todo lo que publiques ahora cuenta el doble"
   },
   "work": {
     "integrity": {
@@ -6935,8 +6964,6 @@
     "notEnoughTokensForBounty": "Tokens insuficientes. Necesitas {{need}} tokens pero tienes {{have}}."
   },
   "events": {
-    "deleteConfirmTitle": "¿Eliminar este evento?",
-    "deleteConfirmBody": "Esto elimina el evento, su lista de invitados y su chat para todos. No se puede deshacer.",
     "seoTitle": "Eventos — Quedadas y eventos de la comunidad en DeHub",
     "seoDescription": "Explora los próximos eventos de la comunidad de DeHub, confirma tu asistencia a quedadas y organiza los tuyos en la plataforma social descentralizada y de sus usuarios.",
     "defaultSeoDescription": "Evento de la comunidad en DeHub.",
@@ -7002,6 +7029,8 @@
     "requestAccessForChat": "Solicita acceso para ver el chat y confirmar asistencia",
     "edit": "Editar",
     "delete": "Eliminar",
+    "deleteConfirmTitle": "¿Eliminar este evento?",
+    "deleteConfirmBody": "Esto elimina el evento, su lista de invitados y su chat para todos. No se puede deshacer.",
     "reply": "Responder",
     "react": "Reaccionar",
     "typeMessage": "Escribe un mensaje...",
@@ -8443,7 +8472,14 @@
     "priceChartCleared": "Gráfico de precios borrado. Precio de referencia fijo: $0.0001. Los precios de ejecución dependen de las órdenes disponibles."
   },
   "editor": {
-    "video": { "tFade": "Fundido cruzado", "none": "Ninguna", "transition": "Transición", "speed": "Velocidad", "sound": "Sonido","video": "Vídeo"},
+    "video": {
+      "tFade": "Fundido cruzado",
+      "none": "Ninguna",
+      "transition": "Transición",
+      "speed": "Velocidad",
+      "sound": "Sonido",
+      "video": "Vídeo"
+    },
     "review": {
       "title": "Revisión del proyecto",
       "shared": "Compartido contigo",
@@ -9625,6 +9661,9 @@
       "solid": "Restaurar relleno sólido",
       "solidBackground": "Usar el primer color como fondo de página"
     },
+    "filters": {
+      "strength": "Intensidad del filtro: {{value}} %"
+    },
     "fonts": {
       "graphicCoverage": "Incluye capas de texto, gráficos y tablas. Las capas bloqueadas mantienen sus fuentes.",
       "replaceDesign": "Reemplazar una fuente a lo largo de este diseño",
@@ -9702,6 +9741,7 @@
       "gridPreview": "Vista previa de la cuadrícula de guía",
       "gridTitle": "Cuadrícula de diseño",
       "hint": "Arrastre desde una regla para añadir una guía. Elige Editar guías para moverlas o arrástralas fuera de la página para eliminarlas. Las guías y los márgenes no están incluidos en las descargas.",
+      "horizontal": "Horizontal",
       "margin": "Margen",
       "pixelPosition": "{{position}} píxeles",
       "position": "Posición como porcentaje",
@@ -9714,9 +9754,8 @@
       "snap": "Ajustar a las guías",
       "thirds": "Tercios",
       "title": "Guías y márgenes",
-      "visible": "Mostrar guías",
-      "horizontal": "Horizontal",
-      "vertical": "Vertical"
+      "vertical": "Vertical",
+      "visible": "Mostrar guías"
     },
     "help": {
       "keyboardHint": "Los atajos de teclado se aplican fuera de los campos de texto y los diálogos. Las acciones del lienzo requieren que el lienzo esté enfocado. Cmd sustituye a Ctrl en un Mac.",
@@ -9783,10 +9822,10 @@
       "previewUnavailable": "La vista previa no está disponible. La configuración del marco sigue siendo editable.",
       "previewUpdating": "Actualizando vista previa del boceto…",
       "resetPlacement": "Restablecer colocación",
+      "rotation": "Rotación de la maqueta",
       "size": "Tamaño dentro de la página",
       "title": "Dispositivo e imprimir maquetas",
-      "usePhoto": "Rellenar con una copia de la foto seleccionada",
-      "rotation": "Rotación de la maqueta"
+      "usePhoto": "Rellenar con una copia de la foto seleccionada"
     },
     "notes": {
       "changed": "Esta página ha cambiado. Vuelva a abrir Notas antes de guardar.",
@@ -10226,6 +10265,7 @@
       "fill": "Color de relleno",
       "fitLayers": "Ajustar las capas seleccionadas",
       "noFill": "Eliminar relleno",
+      "noOutline": "Quitar contorno",
       "outline": "Color del contorno",
       "pageSize": "Mantener las dimensiones de la página",
       "pickFill": "Elige el relleno del lienzo",
@@ -10234,8 +10274,7 @@
       "svgPadding": "Acolchado extra",
       "svgScopeHint": "Exporta hasta 100 capas seleccionadas de forma, dibujo, símbolo y conector en su ubicación actual de fotograma clave. Mantener las dimensiones de la página preserva su posición en la página; ajustando los cultivos alrededor de sus límites de capa. El texto, las fotos y los gráficos de datos utilizan sus propias exportaciones.",
       "title": "Estilo de vectores seleccionados ({{count}})",
-      "width": "Ancho del contorno",
-      "noOutline": "Quitar contorno"
+      "width": "Ancho del contorno"
     },
     "viewport": {
       "fit": "Ajustar",
@@ -10246,9 +10285,6 @@
       "toolbar": "Navegación por lienzo",
       "zoomIn": "Acercar lienzo",
       "zoomOut": "Alejar lienzo"
-    },
-    "filters": {
-      "strength": "Intensidad del filtro: {{value}} %"
     }
   },
   "jungleMood": {
@@ -11728,6 +11764,7 @@
     "0898cae94805": "Transacción revertida: {{value1}}",
     "08a41a32cf73": "Firma el mensaje en tu monedero...",
     "08d72ec6a16a": "Camboya",
+    "08f271887ce9": "M",
     "0974c4de9d07": "Rutas de entrada",
     "097f795fdba3": "Una transacción de pago se ha guardado. Revisémosla primero.",
     "09dfca6b1964": "No se pudo preparar el pago de la recompensa",
@@ -12114,6 +12151,7 @@
     "3c26ee4f00ee": "🎙️ Extrae la voz limpia del tráfico, viento, siseo o tono de habitación",
     "3c415b527ee7": "No se pudo reproducir en el escenario — mantente conectado como anfitrión",
     "3c4ea43f652c": "Fija un mensaje en la parte superior del chat",
+    "3c784a16cf27": "Cortos",
     "3c8432b0c6a7": "Verificación fallida. Inténtalo de nuevo.",
     "3c8701908f73": "Dame un resumen de las publicaciones más destacadas en DeHub en las últimas 24 horas.",
     "3cce984f2403": "Las publicaciones originales, videos y comentarios cuentan para los sorteos que los mencionan.",
@@ -12401,6 +12439,7 @@
     "5f630944e9be": "Grabación no disponible para esta etapa",
     "5f6ee7408686": "El nonce de la transacción del monedero ha cambiado. Vuelva a intentarlo.",
     "5f6fa5654ead": "Fallo al dejar de seguir",
+    "5f80e47aa1f6": "Sylheti",
     "600a38deff07": "Introduce un importe y un rango de precios válidos (hasta 8 decimales)",
     "601883e0a2f7": "Kazaj",
     "6018fc0a180e": "🎨 Ideal para escenas abstractas, surrealistas o de naturaleza",
@@ -12647,6 +12686,7 @@
     "7d5825cf909d": "No está configurada una dirección de pago.",
     "7d61d28cb660": "¡Revisión ortográfica completada!",
     "7d94977e033d": "Etiopía",
+    "7db20897053b": "Personas",
     "7dc1cd7eaff6": "Mascotas",
     "7ddb44d8a533": "hace un momento",
     "7de5d8585f7b": "{{value1}}% de deslizamiento",
@@ -12706,6 +12746,7 @@
     "84c1caa126cf": "No se ha completado la conexión del monedero de Solana.",
     "84c963d0d0aa": "✨ Sobresale en la estética artística de ensueño",
     "84d88dc1232f": "Todos los emojis anteriores junto con confeti extra y música de fiesta",
+    "84e0ad815b9c": "SECTOR {{value1}}",
     "85047a283815": "Volviendo a realizar la toma",
     "85352185fc18": "El presupuesto de la tarifa de gasolina no está disponible. Vuelve a intentarlo.",
     "853637136575": "Suecia",
@@ -12714,6 +12755,7 @@
     "8560c9de7520": "Usuarios de Bluesky que quieren ir en vivo a los seguidores que ya tienen.",
     "856638383b55": "Acabo de acuñar mi primera colección de NFT en Base 🎨 La libertad creativa en web3 es inigualable.",
     "856c0adf9c71": "Introduce el correo electrónico que usabas en esa cuenta antigua",
+    "856c1e009fcc": "Wu Chinese",
     "8594d99a685c": "Propinas en tiempo real, pago por visión, suscripciones, bloqueo de tokens, 20% de participación de afiliados",
     "85a39ab345d6": "Sí",
     "85c4a159c7b0": "Nuevo texto",
@@ -12958,6 +13000,7 @@
     "a40c8397bd8b": "Generación cancelada",
     "a424d0cc4ec7": "Cualquier persona con una cuenta DeHub que sea mayor de 18 años y viva en algún lugar del sorteo es legal. El personal de DeHub, los contratistas y sus hogares no son elegibles, y los sorteos son nulos donde la ley local los prohíbe.",
     "a432f534f6ce": "por ejemplo, Mi voz",
+    "a4504b3d0ff7": "Telugu",
     "a46573483313": "🎥 El realismo más convincente disponible, con audio nativo",
     "a46f39e9cccc": "Inicie sesión con su cuenta anterior primero",
     "a47169437cd2": "Error al cambiar de monedero",
@@ -13166,6 +13209,7 @@
     "be567a4c5484": "🔊 Audio nativo incluido",
     "be9f2a4ccc47": "{{value1}} Tu mensaje ha vuelto a la bandeja.",
     "bea54a349795": "Noruega",
+    "beb497b64cad": "Social y Feed",
     "beba774c16f6": "Los materiales ✨ PBR reaccionan adecuadamente a la iluminación de la escena",
     "becca700f302": "¿Cancelar \"{{value1}}\"? El enlace deja de funcionar.",
     "befbb5506209": "🎨 Edad, acento, ritmo, textura y estado de ánimo — todos los cinco te acercan mucho",
@@ -13407,6 +13451,7 @@
     "de4ab7c90a0a": "Falló la carga de desbloqueo biométrico",
     "de5008d194a7": "Irak",
     "de690b83607b": "Estudio de pista múltiple en /editor",
+    "de88c121a82a": "Premium",
     "de9e2132fd4d": "Esta cartera fue guardada por una versión más reciente de DeHub. Por favor, recargue y vuelva a intentarlo.",
     "dea7dbdf2bed": "Usando habilidad: {{value1}}",
     "decf4d0b7c4e": "Falló la conexión de la cartera de Solana",
@@ -17777,11 +17822,9 @@
     "b4a7365740ef": "Estadísticas en vivo",
     "7e658675b5ca": "Empleo",
     "c864f329f5dd": "Comunidades",
-    "3c784a16cf27": "Cortos",
     "4e677391fd0a": "Top 100",
     "d591a7cb7e70": "Agentes IA",
     "752d035aa9d9": "Mis recompensas",
-    "de88c121a82a": "Premium",
     "dfe95783edfe": "Precios",
     "c6b6a71ac899": "Creadores",
     "4369677cc938": "Obtén la app:",
@@ -17794,8 +17837,7 @@
     "7c50f8a38a76": "Publicidad",
     "d451ef69d283": "TV en Vivo",
     "89dd748442c1": "Aplicaciones",
-    "e18a39d085ea": "Convertir",
-    "7db20897053b": "Personas"
+    "e18a39d085ea": "Convertir"
   },
   "articles": {
     "cardLabel": "Artículo · {{count}} min de lectura",

@@ -570,14 +570,13 @@
     "heading": "DeHub-shorts"
   },
   "settings": {
-    "glass": "Glassy",
     "sessionsRevokedMany": "{{count}} apparaten zijn uitgelogd",
     "usernameTaken": "Gebruikersnaam is bezet",
-    "showDislikesDesc": "Iedereen kan het tabblad Dislikes op je profiel openen. Staat dit uit, dan zie alleen jij het.",
-    "showDislikes": "Mijn dislikes aan iedereen tonen",
     "postingChain": "Blockchain voor berichten",
     "showOnline": "Laat zien wanneer ik online ben",
     "showOnlineDesc": "Mensen die je een bericht stuurt, zien een groene stip naast je naam terwijl je DeHub gebruikt",
+    "showDislikes": "Mijn dislikes aan iedereen tonen",
+    "showDislikesDesc": "Iedereen kan het tabblad Dislikes op je profiel openen. Staat dit uit, dan zie alleen jij het.",
     "smartReplies": "Voorgestelde antwoorden",
     "smartRepliesDesc": "Stelt twee antwoorden op die je in een chat kunt aantikken. De × bij de suggesties zet dit uit.",
     "title": "Instellingen",
@@ -756,6 +755,7 @@
     "systemLight": "Systeem Licht",
     "immersive": "Meeslepend",
     "cosmic": "Cosmic Pixels",
+    "glass": "Glassy",
     "hazy": "Nevelige Nachten",
     "swarms": "Zwermen",
     "lavalamp": "Lavalamp",
@@ -1133,6 +1133,7 @@
     "automatic": "Automatisch"
   },
   "common": {
+    "confirm": "Bevestigen",
     "mute": "Stom",
     "unmute": "Ontstom",
     "save": "Opslaan",
@@ -1158,12 +1159,16 @@
     "done": "Klaar",
     "back": "Terug",
     "refresh": "Vernieuwen",
+    "apply": "Toepassen",
+    "next": "Volgende",
+    "previous": "Vorige",
+    "redo": "Opnieuw",
+    "remove": "Verwijderen",
     "allRightsReserved": "Alle rechten voorbehouden",
     "noData": "Geen gegevens",
     "yes": "Ja",
     "no": "Nee",
     "ok": "OK",
-    "confirm": "Bevestigen",
     "copy": "Kopiëren",
     "paste": "Plakken",
     "pasted": "Geplakt",
@@ -1181,8 +1186,6 @@
     "info": "Info",
     "more": "Meer",
     "less": "Minder",
-    "next": "Volgende",
-    "previous": "Vorige",
     "today": "Vandaag",
     "now": "Nu",
     "viewAll": "Alles bekijken",
@@ -1350,10 +1353,7 @@
     "age": "Leeftijd",
     "from": "Van",
     "to": "Naar",
-    "value": "Waarde",
-    "apply": "Toepassen",
-    "redo": "Opnieuw",
-    "remove": "Verwijderen"
+    "value": "Waarde"
   },
   "tip": {
     "title": "Fooi versturen",
@@ -2298,7 +2298,6 @@
     "returnHome": "Terug naar home"
   },
   "profile": {
-    "dislikes": { "loadMore": "Meer laden", "privateDesc": "Dit account houdt zijn dislikes voor zichzelf.", "privateTitle": "Dislikes zijn privé", "emptyOther": "Nog niets gedisliket.", "emptyOwn": "Berichten die je disliket verdwijnen uit je feeds en verschijnen hier. Maak een dislike ongedaan om het bericht terug te halen.", "emptyTitle": "Nog geen dislikes" },
     "back": "Terug",
     "usernameAvailable": "Gebruikersnaam beschikbaar!",
     "signUpToClaim": "Meld je vandaag aan om te claimen",
@@ -2326,8 +2325,16 @@
       "commentUnavailable": "Deze reactie is niet meer beschikbaar"
     },
     "tabs": {
-      "dislikes": "Dislikes",
-      "playlists": "Afspeellijsten"
+      "playlists": "Afspeellijsten",
+      "dislikes": "Dislikes"
+    },
+    "dislikes": {
+      "emptyTitle": "Nog geen dislikes",
+      "emptyOwn": "Berichten die je disliket verdwijnen uit je feeds en verschijnen hier. Maak een dislike ongedaan om het bericht terug te halen.",
+      "emptyOther": "Nog niets gedisliket.",
+      "privateTitle": "Dislikes zijn privé",
+      "privateDesc": "Dit account houdt zijn dislikes voor zichzelf.",
+      "loadMore": "Meer laden"
     },
     "offerWorthNow": "Ongeveer {{amount}} tokens tegen de huidige koers",
     "offerNotePlaceholder": "Voeg een notitie toe (optioneel)",
@@ -2472,7 +2479,29 @@
       "oneAgent": "Eén agent",
       "swarm": "Zwerm",
       "swarmChoose": "Kies agenten",
-      "selectAll": "Alle agents selecteren", "clearSelection": "Selectie wissen", "selectedCount": "{{count}} van {{total}} geselecteerd", "distribution": "Hoe agents de instructie uitvoeren", "eachMode": "Elke agent doet dit", "sharedMode": "Werk verdelen", "eachHelp": "Stuur deze instructies naar elke geselecteerde agent. Elke agent voert de volledige taak uit volgens het gevraagde schema. Gedeelde publicatielimieten blijven gelden.", "allCategories": "Alle berichten in alle categorieën. Geen trefwoordfilter en geen limiet van drie likes per taak.", "windowLimits": "Alle overeenkomende berichten worden in de wachtrij gezet. Actielimieten bepalen het tempo; ze beperken de taak niet tot drie berichten. Antwoorden schrijven kan credits kosten.", "promptLimits": "Verzoeken voor alle berichten omvatten alle categorieën. Selectieve likes op onderwerp zijn beperkt tot drie per uitvoering. Alle agents delen het publicatie-interval; schrijven kan credits kosten.", "pauseSwarm": "Zwerm pauzeren", "resumeSwarm": "Beschikbare agents hervatten", "cancelSwarm": "Zwerm annuleren", "cancelTask": "Taak annuleren", "actionsProcessed": "acties verwerkt", "reviewMembers": "Taken met onzekere acties vereisen individuele controle voordat ze worden hervat. Een lopende actie kan na pauzeren of annuleren worden afgerond.", "controlUpdated": "{{count}} taken bijgewerkt", "enabled": "Ingeschakeld · activiteit", "enabledHelp": "Ingeschakeld betekent dat deze agent beschikbaar is. De taakstatussen hieronder tonen of de agent werkt, wacht, gepauzeerd is of een fout heeft.", "lastActive": "Laatst actief", "noActivity": "Geen activiteit vastgelegd", "noTasks": "Deze agent heeft nog geen taken.", "swarmHelp": "Eén opdracht, gedeeld werk. Doelen worden verdeeld en geplande berichten wisselen tussen agenten.",
+      "selectAll": "Alle agents selecteren",
+      "clearSelection": "Selectie wissen",
+      "selectedCount": "{{count}} van {{total}} geselecteerd",
+      "distribution": "Hoe agents de instructie uitvoeren",
+      "eachMode": "Elke agent doet dit",
+      "sharedMode": "Werk verdelen",
+      "eachHelp": "Stuur deze instructies naar elke geselecteerde agent. Elke agent voert de volledige taak uit volgens het gevraagde schema. Gedeelde publicatielimieten blijven gelden.",
+      "allCategories": "Alle berichten in alle categorieën. Geen trefwoordfilter en geen limiet van drie likes per taak.",
+      "windowLimits": "Alle overeenkomende berichten worden in de wachtrij gezet. Actielimieten bepalen het tempo; ze beperken de taak niet tot drie berichten. Antwoorden schrijven kan credits kosten.",
+      "promptLimits": "Verzoeken voor alle berichten omvatten alle categorieën. Selectieve likes op onderwerp zijn beperkt tot drie per uitvoering. Alle agents delen het publicatie-interval; schrijven kan credits kosten.",
+      "pauseSwarm": "Zwerm pauzeren",
+      "resumeSwarm": "Beschikbare agents hervatten",
+      "cancelSwarm": "Zwerm annuleren",
+      "cancelTask": "Taak annuleren",
+      "actionsProcessed": "acties verwerkt",
+      "reviewMembers": "Taken met onzekere acties vereisen individuele controle voordat ze worden hervat. Een lopende actie kan na pauzeren of annuleren worden afgerond.",
+      "controlUpdated": "{{count}} taken bijgewerkt",
+      "enabled": "Ingeschakeld · activiteit",
+      "enabledHelp": "Ingeschakeld betekent dat deze agent beschikbaar is. De taakstatussen hieronder tonen of de agent werkt, wacht, gepauzeerd is of een fout heeft.",
+      "lastActive": "Laatst actief",
+      "noActivity": "Geen activiteit vastgelegd",
+      "noTasks": "Deze agent heeft nog geen taken.",
+      "swarmHelp": "Eén opdracht, gedeeld werk. Doelen worden verdeeld en geplande berichten wisselen tussen agenten.",
       "swarmMember": "Zwermagent {{index}} van {{total}}",
       "runSwarm": "Start zwerm",
       "description": "Acties worden uitgevoerd als de geselecteerde agent. Geplande taken gaan door wanneer de app gesloten is.",
@@ -2508,7 +2537,7 @@
         "authorChoose": "Kies maker",
         "categoryAll": "Alle categorieën",
         "categoryChoose": "Kies categorieën",
-        "categoryHint": "Voeg maximaal 20 categorieën toe, gescheiden door komma\u0027s. Eén overeenkomst is genoeg. Laat leeg voor alles.",
+        "categoryHint": "Voeg maximaal 20 categorieën toe, gescheiden door komma's. Eén overeenkomst is genoeg. Laat leeg voor alles.",
         "last1h": "Afgelopen uur",
         "last30d": "Afgelopen 30 dagen",
         "allTime": "Altijd",
@@ -3013,8 +3042,6 @@
     "anonymousLikes_other": "{{count}} likes van anonieme badgehouders"
   },
   "postInfo": {
-    "unavailable": "Niet beschikbaar",
-    "ownersUnavailable": "De huidige eigenaren kunnen nu niet worden gelezen.",
     "title": "Berichtinfo",
     "tokenId": "Token-ID",
     "mintedOn": "Gemint op",
@@ -3026,6 +3053,8 @@
     "total": "{{count}} totaal",
     "distribution": "Verdeling",
     "loading": "Laden...",
+    "unavailable": "Niet beschikbaar",
+    "ownersUnavailable": "De huidige eigenaren kunnen nu niet worden gelezen.",
     "owner": "{{count}} eigenaar",
     "owner_other": "{{count}} eigenaren",
     "engagement": "Interactie",
@@ -4089,8 +4118,8 @@
     "buyTokensToUnlock": "Koop DeHub tokens om een badge en zijn SuperPowers te ontgrendelen. Elke badgehouder krijgt ze — staken is niet vereist.",
     "currentIntro": "Badge-houders krijgen elke twee weken nieuwe boosts. Team up staat open voor iedereen: combineer je wallet-kracht met maximaal zeven anderen en elk lid krijgt de badge die jullie totaal ontgrendelt.",
     "currentPowersHeading": "De twaalf machten",
-    "goldenHourStarted": "Golden Hour loopt voor {{minutes}} minuten — alles wat je nu post telt dubbel",
-    "signalFlareTo": "Signaalfluit naar {{people}} mensen"
+    "signalFlareTo": "Signaalfluit naar {{people}} mensen",
+    "goldenHourStarted": "Golden Hour loopt voor {{minutes}} minuten — alles wat je nu post telt dubbel"
   },
   "work": {
     "integrity": {
@@ -7125,8 +7154,6 @@
     "notEnoughTokensForBounty": "Niet genoeg tokens. Nodig {{need}} tokens maar heb {{have}}."
   },
   "events": {
-    "deleteConfirmTitle": "Dit evenement verwijderen?",
-    "deleteConfirmBody": "Dit verwijdert het evenement, de gastenlijst en de chat voor iedereen. Het kan niet ongedaan worden gemaakt.",
     "seoTitle": "Evenementen — bijeenkomsten en community-evenementen op DeHub",
     "seoDescription": "Bekijk aankomende DeHub-evenementen, meld je aan voor bijeenkomsten en organiseer zelf evenementen op het gedecentraliseerde sociale platform van gebruikers.",
     "defaultSeoDescription": "Communitygebeurtenis op DeHub.",
@@ -7192,6 +7219,8 @@
     "requestAccessForChat": "Verzoek toegang om de chat te bekijken en in te schrijven",
     "edit": "Bewerken",
     "delete": "Verwijderen",
+    "deleteConfirmTitle": "Dit evenement verwijderen?",
+    "deleteConfirmBody": "Dit verwijdert het evenement, de gastenlijst en de chat voor iedereen. Het kan niet ongedaan worden gemaakt.",
     "reply": "Antwoorden",
     "react": "Reageren",
     "typeMessage": "Typ een bericht...",
@@ -8635,7 +8664,14 @@
     "priceChartCleared": "Prijsgrafiek is geleegd. Referentieprijs is vastgesteld op $0.0001. Uitvoeringsprijzen zijn afhankelijk van beschikbare orders."
   },
   "editor": {
-    "video": { "tFade": "Overvloeien", "none": "Geen", "transition": "Overgang", "speed": "Snelheid", "sound": "Geluid","video": "Video"},
+    "video": {
+      "tFade": "Overvloeien",
+      "none": "Geen",
+      "transition": "Overgang",
+      "speed": "Snelheid",
+      "sound": "Geluid",
+      "video": "Video"
+    },
     "review": {
       "title": "Projectbeoordeling",
       "shared": "Met jou gedeeld",
@@ -8713,6 +8749,7 @@
       "jpegQuality": "JPEG-kwaliteit",
       "jpegQualityHint": "Lagere kwaliteit produceert meestal kleinere bestanden. Pixelafmetingen blijven hetzelfde; gedetailleerde artwork kan compressie vertonen.",
       "noSections": "Geen overeenkomende secties",
+      "notesText": "Presentatornotities (.txt)",
       "notesTextHint": "Download sectiekoppen, originele paginanummers, paginanamen en notities van presentatoren als een tekstbestand.",
       "pageBookmarks": "Bladwijzers met paginanaam",
       "pageOrderHint": "Bladzijden volgen de ingevoerde volgorde. Gebruik 3,1-2 om te beginnen met bladzijde 3, of 5-1 om een reeks om te keren. Herhaalde bladzijden verschijnen één keer.",
@@ -8720,8 +8757,7 @@
       "pptx": "PowerPoint-presentatie",
       "pptxHint": "Elke pagina wordt één diavoorstellingsslide met presentator-aantekeningen en links. Pas individuele tekst en elementen aan in het originele ontwerp.",
       "section": "Benoemde sectie",
-      "transparent": "Transparante achtergrond",
-      "notesText": "Presentatornotities (.txt)"
+      "transparent": "Transparante achtergrond"
     },
     "inspector": {
       "selectHint": "Selecteer een laag op het canvas of een clip op de tijdlijn.",
@@ -9412,9 +9448,11 @@
     },
     "charts": {
       "applyDateBounds": "Datumgrenzen toepassen",
+      "applyImportedStyle": "Stijl toepassen op concept",
       "applyReference": "Doellijn toepassen",
       "areaMode": "Indeling vlakdiagram",
       "areaModeHint": "Gestapelde en proportionele gebieden tonen elke serie als een band. Streamgraphs centreren het totaal rond nul en verbergen het referentiedoel. Deze lay-outs hebben niet-negatieve bronwaarden nodig. Proportionele weergave houdt originele tellingen in de gegevens; overlappende gebieden kunnen negatieve waarden bevatten.",
+      "axesSection": "Assen en schaal",
       "benchmarkHint": "Vult een vast doel van alle huidige bronwaarden. Pas de doellijn toe om deze te gebruiken; herbereken na het bewerken van de gegevens.",
       "binCounts": "Exporteer histogram bin-tellingen",
       "brandPaletteHint": "Laadt een opgeslagen palet in dit diagramconcept. Save palette slaat tot de eerste tien verschillende grafiekkleuren op in merkstijlen. Grafiekwaarden blijven ongewijzigd.",
@@ -9431,6 +9469,7 @@
       "categoryColours": "Categoriekleuren",
       "categoryName": "Categorienaam",
       "categoryReducer": "Vat elke serie samen met",
+      "categorySummary": "Herhaalde categorieën samenvoegen",
       "categorySummaryCounts": "{{rows}} rijen worden {{categories}} categorieën; {{repeated}} categorieën herhalen",
       "categorySummaryHint": "Elke serie wordt apart samengevat. Categorieën behouden hun voornaam, functie en categoriekleur. Aantal rijen telt overeenkomende bronrijen in elke serie. Gebruik Ongedaan maken conceptwijziging om de oorspronkelijke rijen te herstellen.",
       "categoryValue": "Waarde",
@@ -9501,6 +9540,7 @@
       "pictogramLegend": "Legendawaarden",
       "pictogramRounding": "Symbolen benaderen elk aandeel met behulp van hele pictogrammen. Kleine aandelen kunnen op nul worden afgerond; de legenda behoudt de bronwaarden. Verhoog het totaal aantal symbolen voor fijnere details. Het aantal pictogrammen vervangt uw gegevens niet.",
       "pictogramSettings": "Pictogramsymbolen",
+      "pieValueHint": "Schakel Waarden tonen in om deze notatie te gebruiken. Aandelen gebruiken alleen positieve segmenten; het totaal in het midden behoudt zijn waardenotatie.",
       "pieValueMode": "Legende-waarden opsplitsen",
       "plotSection": "Tekstgrootte en plotstijl",
       "pointLabelMode": "Puntwaardelabels",
@@ -9573,11 +9613,7 @@
       "xDate": "Daten en UTC-tijden",
       "xIntervals": "Horizontale-asintervallen",
       "xNumber": "Getallen",
-      "hierarchySample": "Europa,Frankrijk,35",
-      "applyImportedStyle": "Stijl toepassen op concept",
-      "axesSection": "Assen en schaal",
-      "categorySummary": "Herhaalde categorieën samenvoegen",
-      "pieValueHint": "Schakel Waarden tonen in om deze notatie te gebruiken. Aandelen gebruiken alleen positieve segmenten; het totaal in het midden behoudt zijn waardenotatie."
+      "hierarchySample": "Europa,Frankrijk,35"
     },
     "clipboard": {
       "copy": "Kopieer lagen",
@@ -9601,6 +9637,7 @@
       "changed": "Het ontwerp veranderde voordat deze combinatie kon worden ingevoegd.",
       "colour": "Tekstkleur",
       "eyebrow": "Eyebrow",
+      "heading": "Kop",
       "insertSelected": "Geselecteerde combinatie invoegen",
       "layoutFonts": "Lay-outlettertypen gebruiken",
       "layoutFontsActive": "Elke lay-out maakt gebruik van de originele lettertypekoppeling.",
@@ -9616,8 +9653,7 @@
       "sampleSubtitle": "Uw verhaal begint hier.",
       "sampleTitle": "Maak iets gedenkwaardigs",
       "subtitle": "Ondersteunende tekst",
-      "title": "Tekstcombinaties",
-      "heading": "Kop"
+      "title": "Tekstcombinaties"
     },
     "connectors": {
       "bend": "Buigpositie",
@@ -9702,11 +9738,13 @@
       "sampleValue": "Waarde"
     },
     "dataVisual": {
+      "accent": "Accentkleur",
       "addColumn": "Kolom toevoegen",
       "addRow": "Rij toevoegen",
       "captionControls": "Titel, bijschrift en SVG-beschrijving",
       "captionHint": "Titel en bijschrift verschijnen binnen het grafiekje en reserveren ruimte boven en onder de plot. SVG-beschrijvingen begeleiden de vector-export; andere exportformaten behouden het zichtbare tekstmateriaal. Beschrijf het hoofdresultaat en relevante waarden in de alternatieve tekst.",
       "cell": "Rij {{row}}, kolom {{column}}",
+      "chart": "Grafiek",
       "chartType": "Grafiektype",
       "data": "Datum",
       "defaultFont": "Default lettertype",
@@ -9740,12 +9778,10 @@
         "stripeColour": "Afwisselende rijkleur",
         "stripes": "Afwisselende cellen"
       },
+      "textColour": "Tekst",
       "title": "Grafieken en tabellen",
       "values": "Waarden weergeven",
-      "vectorHint": "Exporteert deze afbeelding op een transparante achtergrond. Tekst blijft bewerkbaar en gebruikt het geselecteerde lettertype waar beschikbaar.",
-      "accent": "Accentkleur",
-      "chart": "Grafiek",
-      "textColour": "Tekst"
+      "vectorHint": "Exporteert deze afbeelding op een transparante achtergrond. Tekst blijft bewerkbaar en gebruikt het geselecteerde lettertype waar beschikbaar."
     },
     "designTools": {
       "applySize": "Grootte toepassen",
@@ -9757,15 +9793,15 @@
       "find": "Tekst zoeken",
       "findReplace": "Vind en vervang",
       "insert": "Invoegen",
+      "matchCase": "Hoofdlettergevoelig",
       "matches": "{{count}} tekstlagen gevonden",
       "pasteStyle": "Stijl plakken",
+      "replaceAll": "Alles vervangen",
       "replaceWith": "Vervangen door",
       "replacement": "Vervangende kleur",
+      "resize": "Formaat wijzigen",
       "styleReady": "Stijl klaar om aan te brengen",
-      "toolbar": "Ontwerptools",
-      "matchCase": "Hoofdlettergevoelig",
-      "replaceAll": "Alles vervangen",
-      "resize": "Formaat wijzigen"
+      "toolbar": "Ontwerptools"
     },
     "diagrams": {
       "edgeLabels": "Connectorlabels, één per regel (optioneel)",
@@ -9831,6 +9867,7 @@
     },
     "gradients": {
       "add": "Tussenstop toevoegen",
+      "applyImportedStyle": "Stijl toepassen op concept",
       "brandPaletteHint": "Laadt paletkleuren in de kleurovergang met ondoorzichtige, gelijkmatig verdeelde stops. Kleurovergangen gebruiken maximaal acht kleuren; grotere paletten behouden hun eindpunten en bemonsteren de kleuren ertussen.",
       "brandPalettes": "Opgeslagen paletten en kleurovergangskleuren",
       "colour": "Stop kleuren",
@@ -9850,8 +9887,7 @@
       "styleFileHint": "Brengt gradiëntkleuren, posities, transparantie, hoek- en radiale instellingen over tussen apparaten. Importeren laadt het concept; pas het toe op het bijwerken van illustraties.",
       "styleFiles": "Verloopstijlen overdragen",
       "styleLoaded": "Stijl geladen in het concept",
-      "svgHint": "Exporteer deze gradient op de pagina-grootte, inclusief stop-posities en transparantie. Pas het afzonderlijk toe om het in je ontwerp te gebruiken.",
-      "applyImportedStyle": "Stijl toepassen op concept"
+      "svgHint": "Exporteer deze gradient op de pagina-grootte, inclusief stop-posities en transparantie. Pas het afzonderlijk toe om het in je ontwerp te gebruiken."
     },
     "graphicDraftHistory": {
       "local": "Grafisch concept",
@@ -9936,9 +9972,9 @@
       "hint": "PDF-downloads behouden web-, e-mail-, telefoon-, sms- en paginalinks. De afhandeling van de contactlink is afhankelijk van de viewer en het apparaat. Exporteer bestemmingspagina's om interne links actief te houden.",
       "mixed": "Geselecteerde kunstwerken hebben gemengde linkbestemmingen. Pas een bestemming toe om deze dezelfde link te geven.",
       "openPage": "Ga naar pagina {{number}}",
+      "remove": "Link verwijderen",
       "targetPage": "Bestemmingspagina",
-      "title": "Link",
-      "remove": "Link verwijderen"
+      "title": "Link"
     },
     "media": {
       "replace": "Geselecteerde laag vervangen",
@@ -9964,8 +10000,10 @@
       "caption": "Adres- of fotobijschrift (optioneel)",
       "editHint": "Voegt een gegroepeerde set bewerkbare vormen en een fotolijst in voor deze pagina. Een gekopieerde foto behoudt de effecten en het brandpunt met het opvulscherm, of behoudt de huidige uitsnede met Passende foto. De originele foto blijft op zijn plaats. Selecteer het scherm om de afbeelding te vervangen; desgroepeer om individuele framedetails te bewerken.",
       "emptyScreen": "Selecteer één ontgrendelde foto om de mockup te vullen, of voeg een leeg scherm in en vervang deze later.",
+      "fit": "Foto passend maken",
       "fitHint": "Scherm bijsnijden vullen aan het frame. Pasfoto behoudt de huidige uitsnede van de geselecteerde foto en toont de achtergrond van het scherm eromheen.",
       "insert": "Mockup invoegen",
+      "noPalettes": "Sla een palet op in Merkstijlen om het hier te gebruiken.",
       "paletteHint": "De eerste drie kleuren stellen framemateriaal, details en schermachtergrond in. Ontbrekende kleuren behouden hun huidige waarden. Het Save-palet slaat deze kaderkleuren op in merkstijlen.",
       "palettes": "Gespeelde frame-paletten",
       "placementHint": "Het hele mockup draait samen en past binnen dit percentage van de pagina. Zijn vormen, foto en caption blijven als groep bewerkt.",
@@ -9979,9 +10017,7 @@
       "rotation": "Mockup-rotatie",
       "size": "Grootte binnen pagina",
       "title": "Mockups voor apparaten en print",
-      "usePhoto": "Vul met een kopie van de geselecteerde foto",
-      "fit": "Foto passend maken",
-      "noPalettes": "Sla een palet op in Merkstijlen om het hier te gebruiken."
+      "usePhoto": "Vul met een kopie van de geselecteerde foto"
     },
     "notes": {
       "changed": "Deze pagina is gewijzigd. Open Aantekeningen opnieuw voordat u opslaat.",
@@ -10071,9 +10107,9 @@
       "search": "Opgeslagen looks zoeken",
       "strength": "Opgeslagen looksterkte",
       "styleFileHint": "Transfers kleur, vervaging, duotoon- en detailaanpassingen tussen apparaten. Importeren toont de opgeslagen naam; pas het toe om de geselecteerde mediabewerkingen te vervangen. Crop, frames, randen en timing blijven op hun plaats.",
+      "styleFiles": "Foto-looks overzetten",
       "styleLoaded": "Geïmporteerde look toegepast",
-      "title": "Opgeslagen fotolooks",
-      "styleFiles": "Foto-looks overzetten"
+      "title": "Opgeslagen fotolooks"
     },
     "photoTone": {
       "duotone": "Duotoon",
@@ -10219,12 +10255,12 @@
       "waitForBounds": "Wacht tot de geselecteerde lagen op het canvas verschijnen."
     },
     "selectionShadows": {
+      "apply": "Schaduw toepassen",
       "colour": "Schaduwkleur",
       "hint": "Is van toepassing op geselecteerde voorgrondillustraties in één bewerking. Vervaging en compensatie gebruiken de 1080p-referentieschaal van de editor.",
       "mixed": "Geselecteerde lagen hebben verschillende schaduwen.",
       "remove": "Schaduwen verwijderen",
-      "title": "Schaduwen voor selectie ({{count}})",
-      "apply": "Schaduw toepassen"
+      "title": "Schaduwen voor selectie ({{count}})"
     },
     "stroke": {
       "ends": "Regeleindes",
@@ -10261,6 +10297,7 @@
       "applyCellFill": "Vulling toepassen",
       "applyCellInk": "Tekstkleur toepassen",
       "applyCellTextSize": "Tekstgrootte toepassen",
+      "applyImportedStyle": "Stijl toepassen op concept",
       "applyScale": "Pas schaal toe op {{range}}",
       "ascending": "Sort A–Z / 0–9",
       "brandPaletteHint": "Gebruikt de eerste opgeslagen paletkleur voor de koptekst, met bijpassende randen, subtiele strepen en automatische zwarte of witte tekst. Lichaamsvullingen en aangepaste celstijlen blijven op hun plaats. Palet opslaan slaat de huidige tabelkleuren op.",
@@ -10284,6 +10321,7 @@
       "copyCellStyles": "Kopieer celstijlen",
       "defaultCellTextSize": "Tabeltekstgrootte gebruiken",
       "descending": "Sort Z–A / 9–0",
+      "duplicateCase": "Hoofdlettergevoelig",
       "duplicateColumns": "Dubbele rijen zoeken met",
       "duplicateTrim": "Negeer de omringende witruimte",
       "equalSize": "Gelijke celgroottes",
@@ -10359,9 +10397,7 @@
       "unmergeRange": "Ontleed {{range}}",
       "vertical": "Verticale uitlijning",
       "weightsHint": "Grootten zijn relatief. Een waarde van 2 gebruikt tweemaal zoveel ruimte als 1; de tabel behoudt zijn totale grootte.",
-      "wrap": "Tekst in cel wikkelen",
-      "applyImportedStyle": "Stijl toepassen op concept",
-      "duplicateCase": "Hoofdlettergevoelig"
+      "wrap": "Tekst in cel wikkelen"
     },
     "text": {
       "backgroundPerLine": "Pas achtergrond aan elke regel aan",
@@ -10435,12 +10471,12 @@
     "viewport": {
       "fit": "Pasvorm",
       "fitShortcut": "Pagina aanpassen (Shift+1)",
+      "pan": "Canvas verschuiven",
       "selection": "Selectie",
       "selectionShortcut": "Zoom naar selectie (Shift+2)",
       "toolbar": "Canvas navigatie",
       "zoomIn": "Canvas inzoomen",
-      "zoomOut": "Canvas uitzoomen",
-      "pan": "Canvas verschuiven"
+      "zoomOut": "Canvas uitzoomen"
     }
   },
   "jungleMood": {
@@ -12097,6 +12133,7 @@
     "182776d50439": "Bitcoiners die in sats willen worden betaald zonder tussenpersoon.",
     "183a6f2db673": "Muntkosten {{value1}}{{value2}} en je saldo is kort. Vul bij en je kunt het op elk gewenst moment uit het menu van de post halen.",
     "184b63d14517": "Dit account heeft al een portefeuille. Laad de pagina opnieuw en log ermee in.",
+    "18d4e170765c": "Iran",
     "18eb2e8a02b2": "💨 Snelste & goedkoopste optie voor snelle tests",
     "19265efd1ad2": "Ongeldig antwoord van de server",
     "1928372ee940": "👤 Upload foto's van gezichten voor karakterconsistentie over video's",
@@ -12363,6 +12400,7 @@
     "3c26ee4f00ee": "🎙️ Haalt de stem schoon uit verkeer, wind, ruis of kamergeluid",
     "3c415b527ee7": "Kon niet op het podium spelen — blijf als host verbonden",
     "3c4ea43f652c": "Speld een bericht vast aan de top van de chat",
+    "3c784a16cf27": "Korte broeken",
     "3c8432b0c6a7": "Verificatie mislukt. Probeer het opnieuw.",
     "3c8701908f73": "Geef een overzicht van de topposts op DeHub uit de afgelopen 24 uur.",
     "3cce984f2403": "Originele posts, video’s en commentaren tellen mee voor lotingen die ze noemen.",
@@ -12533,6 +12571,7 @@
     "4f558bb3921c": "Na de advertentie-inkomstenverlaging van 45% op YouTube. Schommelt het hardst per niche en kijkerland.",
     "4f8701c79363": "{{value1}} posts",
     "4fa459932407": "Bekijk dit bericht op DeHub",
+    "4fbaf98ad285": "Yoruba",
     "4fd65ff8fec4": "Rapport indienen mislukt",
     "4fe0d0facd1a": "Fout bij het blokkeren.",
     "4fe3045bc30f": "Elke trekking opent met zijn prijs, de sluitingstijd en de exacte manieren om een inzending te verdienen, geplaatst in de app en vastgemaakt aan de feed.",
@@ -12678,6 +12717,7 @@
     "62fec567d392": "Transactie teruggedraaid door het contract.",
     "630766dc19d2": "Momentopname, transactiehash en winnende inzending worden als één set gepubliceerd. Het opnieuw uitvoeren van de rekenkunde op basis van openbare gegevens moet dezelfde winnaar bereiken.",
     "6310c4498df1": "{{value1}} verzonden. Meldingen worden geteld...",
+    "63288751bc8a": "Tadzjieks",
     "63a012b3ac1a": "Kon dat apparaat niet verwijderen",
     "63acfab9c9a3": "Nostr + Bitcoin Lightning",
     "63c815c265a3": "Bonusprogramma’s zijn uitnodigingsgebaseerd en zijn herhaaldelijk ingetrokken.",
@@ -12895,6 +12935,7 @@
     "7d5825cf909d": "Geen betaaladres geconfigureerd",
     "7d61d28cb660": "Spelfouten gecontroleerd!",
     "7d94977e033d": "Ethiopië",
+    "7db20897053b": "Mensen",
     "7dc1cd7eaff6": "Dieren",
     "7ddb44d8a533": "net nu",
     "7de5d8585f7b": "{{value1}}% slip",
@@ -12937,6 +12978,7 @@
     "827beb6ec9dc": "Kon geen checkout starten.",
     "8295e7c45852": "Lid is nu een beheerder",
     "82a3537ff0db": "name",
+    "82b1fa7e2a09": "P/E",
     "82c5c975c9b2": "Stel met mijn stem een reactie op de bovenste post op DeHub op.",
     "82ddbc18cbc2": "Een implementatietransactie is al opgeslagen. Controleer de bevestiging voordat u een andere verzendt.",
     "82e397cc758f": "{{value1}} — door de community gemarkeerd als mogelijke oplichterij, in afwachting van beoordeling",
@@ -12945,6 +12987,7 @@
     "837098b8084a": "Herstelgegevens laden mislukt",
     "83d25f48207f": "Het frame verven",
     "83ff243820f8": "Onvoldoende SOL voor transactiekosten. Voeg SOL toe aan je Phantom-portemonnee.",
+    "8430e6a7cb5c": "Sessie verlopen — wordt hersteld...",
     "843991d1d9b3": "Kan beoordeling niet achterlaten",
     "843c489421f4": "Catalaans",
     "846b108641a7": "Ongeldige handtekeninggegevens van backend",
@@ -12959,6 +13002,7 @@
     "8537866e57c9": "Kan Solana-portemonneeadres niet lezen",
     "85494984469a": "Geen microfoon beschikbaar. Controleer of er niets anders wordt gebruikt en probeer het opnieuw.",
     "8560c9de7520": "Bluesky-gebruikers die live willen gaan naar de volgers die ze al hebben.",
+    "856638383b55": "Net mijn eerste NFT-collectie op Base geslagen. 🎨 De creatieve vrijheid in web3 is ongeëvenaard.",
     "856c0adf9c71": "Voer het e-mailadres in dat je voor dat oude account hebt gebruikt",
     "856c1e009fcc": "Wu Chinees",
     "8594d99a685c": "Real-time tips, pay-per-view, subscriptions, token gating, 20% affiliate share",
@@ -13172,6 +13216,7 @@
     "9f83d1d03403": "⚡ Snelste manier om te zien of een idee in 3D leest",
     "9fc4fcabe3ce": "Geen responslichaam",
     "9fca41678ade": "Max {{value1}} referentiebeelden",
+    "9fd0c1b98d0a": "Minimale fooi is {{value1}} DHB",
     "9ff2df0a6bb4": "De taakverzoek is mislukt ({{value1}}). Ververs de taken voordat je het opnieuw probeert.",
     "a000e0071926": "Maak mini-apps & games",
     "a01190768ce6": "Platformstatistieken controleren",
@@ -13359,6 +13404,7 @@
     "b7d596163a60": "Ontgrendelt op {{value1}}",
     "b7dd9cadc901": "Nummer zonder titel",
     "b7e6642632f8": "Via MCP kan Claude door openbare DeHub-berichten bladeren, onderwerpen doorzoeken en makerprofielen opzoeken. Het bericht wordt niet namens jou geplaatst.",
+    "b80021ded1cc": "Sindhi",
     "b81274bafb79": "Opname bewaard",
     "b839406a8f78": "De ruil is bevestigd, maar de USDC is nog niet verschenen. Gebruik CV in een oogwenk.",
     "b84576d9462b": "Schermnaam moet minder dan 50 tekens lang zijn",
@@ -13367,6 +13413,7 @@
     "b92741f70207": "Te zwak",
     "b9442cc89e40": "Kan berichten niet verwijderen",
     "b976792afa31": "Phantom-wallet niet gevonden. Installeer Phantom of open deze pagina in de Phantom-browser.",
+    "b979cda45ed2": "Toekennen mislukt",
     "b9a0a1f4459c": "Transactie {{value1}} is ingediend, maar kon niet worden geregistreerd. Bewaar deze hash en gebruik Check payment; verstuur deze niet opnieuw.",
     "b9a1bc8a4642": "Aangedreven door Uniswap V3 op Base • Token: {{value1}}",
     "b9a8a19200c1": "Gebruikers die tips hebben gestuurd op DeHub",
@@ -13653,6 +13700,7 @@
     "de4ab7c90a0a": "Biometrische ontgrendeling mislukt",
     "de5008d194a7": "Irak",
     "de690b83607b": "Meerbanenstudio op /editor",
+    "de88c121a82a": "Premium",
     "de9e2132fd4d": "Deze portemonnee is opgeslagen door een nieuwere versie van DeHub. Voer opnieuw in en probeer het opnieuw.",
     "dea7dbdf2bed": "Gebruikt vaardigheid: {{value1}}",
     "decf4d0b7c4e": "Kan geen verbinding maken met Solana-portemonnee",
@@ -18023,11 +18071,9 @@
     "b4a7365740ef": "Live statistieken",
     "7e658675b5ca": "Vacatures",
     "c864f329f5dd": "Community's",
-    "3c784a16cf27": "Korte broeken",
     "4e677391fd0a": "Top 100",
     "d591a7cb7e70": "AI Agenten",
     "752d035aa9d9": "Mijn Bounties",
-    "de88c121a82a": "Premium",
     "dfe95783edfe": "Prijzen",
     "c6b6a71ac899": "Creators",
     "4369677cc938": "Download de app",
@@ -18040,8 +18086,7 @@
     "7c50f8a38a76": "Reclame",
     "d451ef69d283": "Live-tv",
     "89dd748442c1": "Apps",
-    "e18a39d085ea": "Converteren",
-    "7db20897053b": "Mensen"
+    "e18a39d085ea": "Converteren"
   },
   "articles": {
     "cardLabel": "Artikel · {{count}} min lezen",
