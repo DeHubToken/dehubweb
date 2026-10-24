@@ -19,7 +19,6 @@ import Copy from "@/components/ui/cut-icons/copy";
 import ExternalLink from "@/components/ui/cut-icons/open-externally";
 import ThumbsDown from "@/components/ui/cut-icons/dislike";
 import Eye from "@/components/ui/cut-icons/visibility";
-import Users from "@/components/ui/cut-icons/communities";
 import Lock from "@/components/ui/cut-icons/privacy";
 import EyeOff from "@/components/ui/cut-icons/hidden";
 import Pencil from "@/components/ui/cut-icons/edit";
@@ -626,7 +625,7 @@ export default function PostInfoPage() {
                     ? t('postInfo.loading')
                     : holders.length > 0 
                       ? t('postInfo.owner', { count: holders.length })
-                      : t('postInfo.owner', { count: 1 })
+                      : t('postInfo.unavailable')
                   }
                 </span>
               </div>
@@ -695,26 +694,9 @@ export default function PostInfoPage() {
                   );
                 })
               ) : (
-                // Fallback: Show creator as 100% owner
-                <div className="flex items-center gap-3">
-                  <div className="w-10 h-10 rounded-xl bg-primary/20 flex items-center justify-center shrink-0">
-                    <Users className="w-5 h-5 text-white/60" />
-                  </div>
-                  <div className="flex-1 min-w-0">
-                    <p className="text-white font-medium truncate font-mono text-sm">
-                      {truncateAddr(nftInfo.minter)}
-                    </p>
-                    <p className="text-xs text-white/60">
-                      {TOTAL_FRACTIONS}/{TOTAL_FRACTIONS}{_copy("copy.817da1791eca", { defaultValue: " fractions (100%)" })}</p>
-                  </div>
-                  <button
-                    onClick={() => copyToClipboard(nftInfo.minter)}
-                    className="p-2 text-white/60 hover:text-white transition-colors shrink-0"
-                    aria-label={_copy("copy.144e3f6e3d5c", { defaultValue: "Copy owner wallet" })}
-                  >
-                    <Copy className="w-4 h-4" />
-                  </button>
-                </div>
+                // A failed chain read, or no transfers in the scanned window, says
+                // nothing about who owns it, so no "creator owns 100%" row here.
+                <p className="text-xs text-white/60">{t('postInfo.ownersUnavailable')}</p>
               )}
             </div>
           </section>

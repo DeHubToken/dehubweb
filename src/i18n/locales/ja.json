@@ -2115,6 +2115,8 @@
     "anonymousLikes_other": "匿名のバッジ保有者からのいいね{{count}}件"
   },
   "postInfo": {
+    "unavailable": "利用できません",
+    "ownersUnavailable": "現在の所有者を今は読み取れません。",
     "title": "投稿情報",
     "tokenId": "トークンID",
     "mintedOn": "ミント日",
@@ -5636,6 +5638,8 @@
     "notEnoughTokensForBounty": "トークンが不足しています。{{need}} トークン必要ですが、{{have}} しかありません。"
   },
   "events": {
+    "deleteConfirmTitle": "このイベントを削除しますか？",
+    "deleteConfirmBody": "これにより、イベント、ゲストリスト、全員のチャットが削除されます。元に戻すことはできません。",
     "seoTitle": "イベント — DeHubのミートアップ＆コミュニティイベント",
     "seoDescription": "DeHubの今後のコミュニティイベントを閲覧し、ミートアップにRSVPして、分散型ユーザー所有のソーシャルプラットフォームで独自のイベントをホストしてください。",
     "defaultSeoDescription": "DeHub上のコミュニティイベント。",
