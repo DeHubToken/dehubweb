@@ -1,4 +1,5 @@
 import { useTranslation as _useCopy } from 'react-i18next';
+import { translateCopy as _translateCopy } from '@/i18n/copy';
 /**
  * Translatable Text Component
  * ===========================
@@ -150,7 +151,7 @@ export function renderTextWithLinks(text: string, opts?: { flagged?: boolean }):
     ? {
         className:
           'inline-flex items-center hover:scale-110 transition-transform cursor-pointer relative z-10 border-2 border-red-500/80 rounded-md px-1 bg-red-500/10',
-        titleSuffix: ' — flagged by the community as a possible scam, pending review',
+        title: (url: string) => _translateCopy("copy.82e397cc758f", { defaultValue: "{{value1}} — flagged by the community as a possible scam, pending review", value1: url }),
       }
     : null;
   const parts: ReactNode[] = [];
@@ -313,7 +314,7 @@ export function renderTextWithLinks(text: string, opts?: { flagged?: boolean }):
             }}
             onPointerDown={(e) => e.stopPropagation()}
             onMouseDown={(e) => e.stopPropagation()}
-            title={flaggedLinkProps ? `${url}${flaggedLinkProps.titleSuffix}` : url}
+            title={flaggedLinkProps ? flaggedLinkProps.title(url) : url}
             data-no-navigate="true"
           >
             🔗
@@ -338,7 +339,7 @@ export function renderTextWithLinks(text: string, opts?: { flagged?: boolean }):
           }}
           onPointerDown={(e) => e.stopPropagation()}
           onMouseDown={(e) => e.stopPropagation()}
-          title={flaggedLinkProps ? `${url}${flaggedLinkProps.titleSuffix}` : url}
+          title={flaggedLinkProps ? flaggedLinkProps.title(url) : url}
           data-no-navigate="true"
         >
           🔗
@@ -860,6 +861,7 @@ export function useTranslation(
   /** Public text (post, comment, bio) may reach a training tier; chats never. */
   publicContent = false,
 ) {
+  const { t: _copy } = _useCopy();
   const { language: userLang } = useUserLanguage();
   const autoEnabled = useSyncExternalStore(subscribeAutoTranslate, autoTranslateEnabled);
   const [isTranslated, setIsTranslated] = useState(false);
@@ -933,7 +935,7 @@ export function useTranslation(
 
       if (!data.translatedText) {
         if (!current()) return;
-        setError('Translation unavailable');
+        setError(_copy("copy.81cb3cf414b1", { defaultValue: "Translation unavailable" }));
         setTimeout(() => { if (current()) setError(null); }, 3000);
         return;
       }
@@ -948,7 +950,7 @@ export function useTranslation(
       if (looksLikeTranslationGarbage(translated)) {
         console.error('[Translate] Provider returned an error message, discarding');
         if (!current()) return;
-        setError('Translation unavailable');
+        setError(_copy("copy.81cb3cf414b1", { defaultValue: "Translation unavailable" }));
         setTimeout(() => { if (current()) setError(null); }, 3000);
         return;
       }
@@ -976,7 +978,7 @@ export function useTranslation(
     } catch (err) {
       console.error('[Translate] Translation failed:', err);
       if (!current()) return;
-      setError('Translation unavailable');
+      setError(_copy("copy.81cb3cf414b1", { defaultValue: "Translation unavailable" }));
       setTimeout(() => { if (current()) setError(null); }, 3000);
     } finally {
       if (current()) {
@@ -984,7 +986,7 @@ export function useTranslation(
         setIsLoading(false);
       }
     }
-  }, [text, userLang, publicContent]);
+  }, [text, userLang, publicContent, _copy]);
 
   const handleShowOriginal = useCallback(() => {
     generationRef.current += 1;

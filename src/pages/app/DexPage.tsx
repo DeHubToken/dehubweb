@@ -1,3 +1,4 @@
+import { translateCopy as _translateCopy } from '@/i18n/copy';
 import { useSurfaceDraft } from '@/hooks/use-surface-draft';
 import { tokenLabel } from '@/lib/token-label';
 import { dexActionError } from '@/lib/dex/action-error';
@@ -39,7 +40,7 @@ const PAGE_SIZE = 15;
 const venue: DexChainId = BASE_CHAIN_ID;
 type CachedPosition = Omit<VerifiedPosition, 'liquidity'> & { liquidity: string };
 const readSharedMarket = minuteCache(async () => {
-  const { data, error } = await readWithTimeout(Promise.resolve(supabase.rpc('get_dex_market')), 'Shared market');
+  const { data, error } = await readWithTimeout(Promise.resolve(supabase.rpc('get_dex_market')), _translateCopy("copy.1bc35668033a", { defaultValue: "Shared market" }));
   if (error) throw error;
   return parseDehubMarket<CachedPosition>(data);
 });
@@ -311,7 +312,7 @@ export default function DexPage() {
       chain_id: input.chainId, token_id: minted.tokenId, owner_address: input.walletAddress, mint_tx_hash: minted.txHash,
       side: input.side, dhb_amount: input.side === 'sell' ? Number(input.amount) : null, usdc_amount: input.side === 'buy' ? Number(input.amount) : null,
       min_usdc_per_dhb: Number(input.minPrice), max_usdc_per_dhb: Number(input.maxPrice),
-    }, { onConflict: 'chain_id,token_id', ignoreDuplicates: true }), input.walletAddress)), 'Listing registration');
+    }, { onConflict: 'chain_id,token_id', ignoreDuplicates: true }), input.walletAddress)), _translateCopy("copy.082d83db99e8", { defaultValue: "Listing registration" }));
     if (error) throw new Error(t('dex.registrationFailed'));
     savePending(null); setAmount.complete(amount, ''); setReview(null); setFundingQuote(null); setMine(true); setPage(0); setBalanceRevision((n) => n + 1);
     priceTouched.current = false;

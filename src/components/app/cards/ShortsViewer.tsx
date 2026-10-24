@@ -1121,7 +1121,7 @@ export function ShortsViewer({ shorts, initialIndex, onClose, onLoadMore, hasMor
     claimMediaSession(
       instanceId,
       {
-        title: currentShort.title?.trim() || currentShort.description?.split(String.fromCharCode(10))[0] || "DeHub short",
+        title: currentShort.title?.trim() || currentShort.description?.split(String.fromCharCode(10))[0] || _copy("copy.ed4fa5bea3cd", { defaultValue: "DeHub short" }),
         artist: currentShort.displayName || currentShort.creatorUsername || currentShort.username,
         artwork: currentShort.thumbnail || null,
       },
@@ -1133,7 +1133,7 @@ export function ShortsViewer({ shorts, initialIndex, onClose, onLoadMore, hasMor
       },
     );
     setMediaSessionPlaying(instanceId, true);
-  }, [currentShort, isPaused, isMuted, instanceId, togglePlayPause, goToPrevRef, goToNextRef]);
+  }, [currentShort, isPaused, isMuted, instanceId, togglePlayPause, goToPrevRef, goToNextRef, _copy]);
 
   // Closing the viewer must not leave the OS holding a session for a player
   // that is no longer on the page.
@@ -2329,7 +2329,7 @@ export function ShortsViewer({ shorts, initialIndex, onClose, onLoadMore, hasMor
                     try {
                       await updateTokenVisibility(currentShort.id, next);
                       setVisibility(next);
-                      toast.success(`Post set to ${next}`);
+                      toast.success(next === 'private' ? _copy("copy.bc3aabd76a18", { defaultValue: "Post set to private" }) : _copy("copy.30a9e349befb", { defaultValue: "Post set to public" }));
                     } catch { toast.error(_copy("copy.67ca6fcb8233", { defaultValue: "Failed to update visibility" })); }
                   }}
                   className="flex items-center gap-3 px-4 py-3 text-white hover:bg-white/10 rounded-xl transition-colors text-left"

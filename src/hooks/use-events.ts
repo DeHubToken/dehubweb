@@ -10,6 +10,7 @@ import { supabase } from '@/integrations/supabase/client';
 import { withWalletHeader } from '@/lib/supabase-wallet-client';
 import { useAuth } from '@/contexts/AuthContext';
 import { toast } from 'sonner';
+import { translateCopy as _translateCopy } from '@/i18n/copy';
 
 export interface CommunityEvent {
   id: string;
@@ -140,7 +141,7 @@ export function useToggleRsvp() {
 
   return useMutation({
     mutationFn: async ({ eventId, status }: { eventId: string; status: 'going' | 'interested' | 'pending' | 'remove' }) => {
-      if (!walletAddress) throw new Error('Not authenticated');
+      if (!walletAddress) throw new Error(_translateCopy("copy.76d1efbeed2d", { defaultValue: "Not authenticated" }));
       const addr = walletAddress.toLowerCase();
 
       if (status === 'remove') {
@@ -187,7 +188,7 @@ export function useManageRsvp() {
 
   return useMutation({
     mutationFn: async ({ rsvpId, eventId, newStatus }: { rsvpId: string; eventId: string; newStatus: 'approved' | 'denied' }) => {
-      if (!walletAddress) throw new Error('Not authenticated');
+      if (!walletAddress) throw new Error(_translateCopy("copy.76d1efbeed2d", { defaultValue: "Not authenticated" }));
       // Update the RSVP status — RLS allows event creator to update via wallet header
       const { error } = await withWalletHeader(
         supabase
@@ -201,7 +202,7 @@ export function useManageRsvp() {
     onSuccess: (_, variables) => {
       queryClient.invalidateQueries({ queryKey: ['event-rsvps', variables.eventId] });
       queryClient.invalidateQueries({ queryKey: ['event', variables.eventId] });
-      toast.success(variables.newStatus === 'approved' ? 'Request approved' : 'Request denied');
+      toast.success(variables.newStatus === 'approved' ? _translateCopy("copy.b07efc4b3f44", { defaultValue: "Request approved" }) : _translateCopy("copy.1d01fc5159dc", { defaultValue: "Request denied" }));
     },
   });
 }
@@ -226,7 +227,7 @@ export function useCreateEvent() {
       gate_fee?: number;
       is_private?: boolean;
     }) => {
-      if (!walletAddress) throw new Error('Not authenticated');
+      if (!walletAddress) throw new Error(_translateCopy("copy.76d1efbeed2d", { defaultValue: "Not authenticated" }));
       const { data, error } = await withWalletHeader(
         supabase
           .from('community_events')
@@ -268,7 +269,7 @@ export function useUpdateEvent() {
         ends_at?: string | null;
       };
     }) => {
-      if (!walletAddress) throw new Error('Not authenticated');
+      if (!walletAddress) throw new Error(_translateCopy("copy.76d1efbeed2d", { defaultValue: "Not authenticated" }));
       const { data, error } = await withWalletHeader(
         supabase
           .from('community_events')
@@ -301,7 +302,7 @@ export function useDeleteEvent() {
 
   return useMutation({
     mutationFn: async (eventId: string) => {
-      if (!walletAddress) throw new Error('Not authenticated');
+      if (!walletAddress) throw new Error(_translateCopy("copy.76d1efbeed2d", { defaultValue: "Not authenticated" }));
       const { error } = await withWalletHeader(
         supabase.from('community_events').delete().eq('id', eventId),
         walletAddress

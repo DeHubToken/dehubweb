@@ -1,3 +1,5 @@
+import { translateCopy as _translateCopy } from '@/i18n/copy';
+
 /** The /dm server confirms persistence with a sender-only sendMessage echo. */
 export interface DmSendTransport {
   senderAddress?: string;
@@ -42,7 +44,7 @@ export function confirmDmSend<T extends DmSendEcho>(
       else resolve(message!);
     };
     const timer = setTimeout(() => finish(undefined, new Error(
-      'The server did not confirm this message. Refresh the conversation before trying again.',
+      _translateCopy("copy.af45f05ed571", { defaultValue: "The server did not confirm this message. Refresh the conversation before trying again." }),
     )), timeoutMs);
 
     try {
@@ -65,16 +67,16 @@ export function confirmDmSend<T extends DmSendEcho>(
       }));
       unsubscribers.push(transport.on('error', (error: any) => {
         if (error?.dmId && error.dmId !== payload.dmId) return;
-        finish(undefined, new Error(error?.msg || error?.message || 'Failed to send message.'));
+        finish(undefined, new Error(error?.msg || error?.message || _translateCopy("copy.77873624411b", { defaultValue: "Failed to send message." })));
       }));
       const disconnected = () => finish(undefined, new Error(
-        'Chat disconnected before confirming this message. Refresh the conversation before trying again.',
+        _translateCopy("copy.8a074c213d18", { defaultValue: "Chat disconnected before confirming this message. Refresh the conversation before trying again." }),
       ));
       unsubscribers.push(transport.on('disconnect', disconnected));
       unsubscribers.push(transport.on('disconnected', disconnected));
       transport.emit(payload);
     } catch (error) {
-      finish(undefined, error instanceof Error ? error : new Error('Failed to send message.'));
+      finish(undefined, error instanceof Error ? error : new Error(_translateCopy("copy.77873624411b", { defaultValue: "Failed to send message." })));
     }
   });
 }

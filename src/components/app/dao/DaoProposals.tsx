@@ -236,7 +236,7 @@ function ProposeDrawer({ open, onOpenChange }: { open: boolean; onOpenChange: (o
         setRecipient.complete(recipient, '');
         onOpenChange(false);
       },
-      onError: (error) => toast.error(error instanceof Error ? error.message : 'Could not create proposal'),
+      onError: (error) => toast.error(error instanceof Error ? error.message : _copy("copy.16c1736b8a7e", { defaultValue: "Could not create proposal" })),
     });
   };
 
@@ -353,7 +353,7 @@ function PaymentDrawer({ proposal, onOpenChange }: { proposal: DaoProposal | nul
         toast.success(_copy("copy.63f37bd5edd0", { defaultValue: "Payment submitted for manual DAO verification" }));
         onOpenChange(false);
       },
-      onError: (error) => toast.error(error instanceof Error ? error.message : 'Could not record payment proof'),
+      onError: (error) => toast.error(error instanceof Error ? error.message : _copy("copy.379938304e72", { defaultValue: "Could not record payment proof" })),
     });
   }, [onOpenChange, option.chainId, option.symbol, proposal, submitPayment, _copy]);
 
@@ -372,11 +372,11 @@ function PaymentDrawer({ proposal, onOpenChange }: { proposal: DaoProposal | nul
       record(result.hash, amount);
     } catch (error) {
       if (isWalletLockedError(error)) queueUnlock();
-      else toast.error(error instanceof Error ? error.message : 'Payment did not go through');
+      else toast.error(error instanceof Error ? error.message : _copy("copy.13214e577996", { defaultValue: "Payment did not go through" }));
     } finally {
       setSending(false);
     }
-  }, [amount, option, proposal, queueUnlock, record]);
+  }, [amount, option, proposal, queueUnlock, record, _copy]);
 
   useEffect(() => {
     if (!proposal) {

@@ -23,6 +23,7 @@
 
 import { createLogger } from '@/lib/logger';
 import { ICE_SERVERS, waitForIceGathering, resolveSessionResource } from './ice';
+import { translateCopy as _translateCopy } from '@/i18n/copy';
 
 const logger = createLogger('WHIP');
 
@@ -62,7 +63,7 @@ export class WhipHttpError extends Error {
   readonly bodySnippet: string;
 
   constructor(status: number, requestedUrl: string, finalUrl: string, contentType: string, bodySnippet: string) {
-    super(`Streaming server rejected the broadcast (HTTP ${status}).`);
+    super(_translateCopy('copy.ab8f2c351837', { defaultValue: 'Streaming server rejected the broadcast (HTTP {{value1}}).', value1: status }));
     this.name = 'WhipHttpError';
     this.status = status;
     this.requestedUrl = requestedUrl;
@@ -228,7 +229,7 @@ export async function publishToWhip({
   onHealth,
   videoEncoding,
 }: PublishOptions): Promise<WhipSession> {
-  if (!streamKey) throw new Error('A stream key is required to go live.');
+  if (!streamKey) throw new Error(_translateCopy('copy.19e4e514a027', { defaultValue: 'A stream key is required to go live.' }));
 
   const pc = new RTCPeerConnection({
     iceServers: extraIceServers?.length
@@ -390,7 +391,7 @@ export async function publishToWhip({
     }
 
     if (!videoTrack && !audioTrack) {
-      throw new Error('No camera or microphone track to broadcast.');
+      throw new Error(_translateCopy('copy.b74430089a1a', { defaultValue: 'No camera or microphone track to broadcast.' }));
     }
 
     pc.addEventListener('connectionstatechange', () => {
@@ -410,7 +411,7 @@ export async function publishToWhip({
           emit('reconnecting');
           break;
         case 'failed':
-          emit('failed', 'The connection to the streaming server was lost.');
+          emit('failed', _translateCopy('copy.3bda4a262f4c', { defaultValue: 'The connection to the streaming server was lost.' }));
           break;
         default:
           break;
@@ -455,7 +456,7 @@ export async function publishToWhip({
     }
 
     const answer = await response.text();
-    if (!answer.trim()) throw new Error('Streaming server returned an empty answer.');
+    if (!answer.trim()) throw new Error(_translateCopy('copy.885f1ac84a0c', { defaultValue: 'Streaming server returned an empty answer.' }));
 
     // Resolve against response.url so a relative Location lands on the
     // regional catalyst we were redirected to, not on livepeer.studio.

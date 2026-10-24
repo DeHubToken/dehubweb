@@ -2,6 +2,7 @@ import { createConnector } from 'wagmi';
 import type { Address } from 'viem';
 import { wagmiConfig } from '@/lib/wagmi';
 import { activateWalletKey, restoreWalletSession, lockWallet, isUnlockAvailable } from '@/lib/smart-wallet';
+import { translateCopy as _translateCopy } from '@/i18n/copy';
 
 export const IMPORTED_WALLET_ID = 'dehub-imported-wallet';
 
@@ -35,9 +36,9 @@ export function ensureImportedWalletConnector() {
     async getProvider() {
       return {
         async request(args: Parameters<NonNullable<typeof pendingProvider>['request']>[0]) {
-          if (!pendingProvider && !isUnlockAvailable()) throw new Error('Import your private key or seed phrase to reconnect this wallet.');
+          if (!pendingProvider && !isUnlockAvailable()) throw new Error(_translateCopy('copy.f3de29192666', { defaultValue: 'Import your private key or seed phrase to reconnect this wallet.' }));
           const provider = pendingProvider ?? await restoreWalletSession();
-          if (!provider) throw new Error('Import your private key or seed phrase to reconnect this wallet.');
+          if (!provider) throw new Error(_translateCopy('copy.f3de29192666', { defaultValue: 'Import your private key or seed phrase to reconnect this wallet.' }));
           return provider.request(args);
         },
       };
@@ -71,7 +72,7 @@ export function ensureImportedWalletConnector() {
     },
     async switchChain({ chainId }) {
       const chain = config.chains.find(c => c.id === chainId);
-      if (!chain) throw new Error('Unsupported chain');
+      if (!chain) throw new Error(_translateCopy('copy.396032d00fb9', { defaultValue: 'Unsupported chain' }));
       const provider = await this.getProvider();
       await provider.request({ method: 'wallet_switchEthereumChain', params: [{ chainId: `0x${chainId.toString(16)}` }] });
       config.emitter.emit('change', { chainId });

@@ -75,7 +75,7 @@ export function useEventGatePayment({
       await switchChain(chainId);
       const signerAddress = await getWalletAddress();
 
-      toast.loading('Processing payment...', { id: 'gate-payment' });
+      toast.loading(_copy("copy.c03dae247d6d", { defaultValue: "Processing payment..." }), { id: 'gate-payment' });
 
       const confirmedTxHash = await sendTip({
         tokenId: 0,
@@ -97,13 +97,13 @@ export function useEventGatePayment({
         signerAddress
       );
 
-      toast.success(dhbText(`Paid ${amount} DHB entry fee!`), { id: 'gate-payment' });
+      toast.success(dhbText(_copy("copy.e08897abcc4f", { defaultValue: "Paid {{value1}} DHB entry fee!", value1: amount })), { id: 'gate-payment' });
 
       queryClient.invalidateQueries({ queryKey: ['event-gate-paid', eventId] });
       onSuccess?.();
     } catch (error: unknown) {
       console.error('[GatePayment] Failed:', error);
-      toastTxError(error, 'Payment failed', { id: 'gate-payment' });
+      toastTxError(error, _copy("copy.17aadc092fe6", { defaultValue: "Payment failed" }), { id: 'gate-payment' });
     } finally {
       setIsPaying(false);
     }

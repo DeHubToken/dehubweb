@@ -83,8 +83,8 @@ export function EngagementChart() {
                 labelFormatter={(v) => v}
               />
               <Legend wrapperStyle={{ fontSize: 11, paddingTop: 4 }} />
-              <Line type="monotone" dataKey="likes" stroke="#22c55e" dot={false} strokeWidth={2} name="Likes" />
-              <Line type="monotone" dataKey="followers" stroke="#3b82f6" dot={false} strokeWidth={2} name="New Followers" />
+              <Line type="monotone" dataKey="likes" stroke="#22c55e" dot={false} strokeWidth={2} name={_copy("copy.cca0662f9ddd", { defaultValue: "Likes" })} />
+              <Line type="monotone" dataKey="followers" stroke="#3b82f6" dot={false} strokeWidth={2} name={_copy("copy.375b90c2d3d1", { defaultValue: "New Followers" })} />
             </LineChart>
           </ResponsiveContainer>
         )}

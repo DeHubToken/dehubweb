@@ -215,7 +215,7 @@ export const TrendingTopicsList = memo(function TrendingTopicsList({
                       )}
                     </div>
                     <span className="text-[11px] text-zinc-500 shrink-0 ml-2">
-                      {isPlaceholder ? '-' : `${cat.post_count} ${cat.post_count === 1 ? _copy("copy.72231043bc18", { defaultValue: "post" }) : _copy("copy.a44f1b975171", { defaultValue: "posts" })}`}
+                      {isPlaceholder ? '-' : _copy("copy.05dbf9aabdc7", { count: cat.post_count, defaultValue_one: "{{count}} post", defaultValue_other: "{{count}} posts", defaultValue: "{{count}} posts" })}
                     </span>
                   </button>
                 );

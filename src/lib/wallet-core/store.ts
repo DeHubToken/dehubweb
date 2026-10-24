@@ -8,6 +8,7 @@
 import { supabase } from "@/integrations/supabase/client";
 import { createLogger } from '@/lib/logger';
 import type { EncryptedPayload } from "./crypto";
+import { translateCopy as _translateCopy } from '@/i18n/copy';
 
 const log = createLogger('WalletStore');
 
@@ -61,7 +62,7 @@ export async function fetchWallet(userId: string): Promise<StoredWallet | null> 
     .select("eth_address, encrypted_seed, salt, iv, kdf_iterations")
     .eq("user_id", userId)
     .maybeSingle();
-  if (error) throw new Error(error.message || "Failed to load wallet");
+  if (error) throw new Error(error.message || _translateCopy("copy.79ec4b16de03", { defaultValue: "Failed to load wallet" }));
   if (!data) return null;
   const wallet: StoredWallet = {
     ethAddress: data.eth_address,
@@ -106,7 +107,7 @@ export async function saveWallet(
       kdf_iterations: recoveryPayload.iterations,
     });
     if (recErr) {
-      throw new Error("Couldn't set up wallet recovery — nothing was saved. Please try again.");
+      throw new Error(_translateCopy("copy.336516f42a0f", { defaultValue: "Couldn't set up wallet recovery — nothing was saved. Please try again." }));
     }
   }
 
@@ -124,7 +125,7 @@ export async function saveWallet(
   });
   if (insertErr) {
     log.trace?.('wallet-save-error', { reason: insertErr.message, code: insertErr.code });
-    throw new Error(insertErr.message || "Failed to save wallet");
+    throw new Error(insertErr.message || _translateCopy("copy.78b02b1a598a", { defaultValue: "Failed to save wallet" }));
   }
   log.trace?.('wallet-saved');
 
@@ -143,7 +144,7 @@ export async function fetchRecoveryPayload(userId: string): Promise<EncryptedPay
     .select("encrypted_seed, salt, iv, kdf_iterations")
     .eq("user_id", userId)
     .maybeSingle();
-  if (error) throw new Error(error.message || "Failed to load recovery data");
+  if (error) throw new Error(error.message || _translateCopy("copy.837098b8084a", { defaultValue: "Failed to load recovery data" }));
   if (!data) return null;
   return {
     ciphertext: data.encrypted_seed,

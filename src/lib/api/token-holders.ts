@@ -8,6 +8,7 @@
 import { createPublicClient, http, parseAbiItem, encodeFunctionData, decodeFunctionResult, type Address, type Hex } from 'viem';
 import { base, bsc } from 'viem/chains';
 import { supabase } from '@/integrations/supabase/client';
+import { translateCopy as _translateCopy } from '@/i18n/copy';
 
 export interface TokenHolder {
   address: string;
@@ -334,6 +335,6 @@ export async function getFractionBalance(
  * Truncate address for display
  */
 export function truncateAddress(address: string): string {
-  if (!address || address.length < 10) return address || 'Unknown';
+  if (!address || address.length < 10) return address || _translateCopy("copy.b764cdc0eab7", { defaultValue: "Unknown" });
   return `${address.slice(0, 6)}...${address.slice(-4)}`;
 }

@@ -58,9 +58,9 @@ export function QuickBuyButton({ symbol, tokenAddress, tokenDecimals, tokenLogo,
       {/* Buy Method Drawer */}
       <Drawer open={open} onOpenChange={setOpen}>
         <DrawerContent column glass>
-          <DrawerTitle className="sr-only">{_copy("copy.e8c84f1c82bf", { defaultValue: "Buy " })}{symbol}</DrawerTitle>
+          <DrawerTitle className="sr-only">{_copy("copy.9b5f8d89fc43", { defaultValue: "Buy {{value1}}", value1: symbol })}</DrawerTitle>
           <div className="p-5 pb-8 space-y-2">
-            <h3 className="text-white font-semibold text-base mb-4">{_copy("copy.8d2e3063a993", { defaultValue: "Buy $" })}{symbol}</h3>
+            <h3 className="text-white font-semibold text-base mb-4">{_copy("copy.19cc62df5710", { defaultValue: "Buy ${{value1}}", value1: symbol })}</h3>
 
             {!isDHB && (
               <>

@@ -32,6 +32,7 @@ import { BLOCKED_POST_IDS } from '@/constants/post.constants';
 import { useAuth } from '@/contexts/AuthContext';
 import { hlsUrlFor, liveProviderOf, liveThumbnailFor, noteLatencyMode } from '@/lib/live-ingest';
 import { toStoryboard } from '@/lib/storyboard';
+import { translateCopy as _translateCopy } from '@/i18n/copy';
 
 // Fallback thumbnails for when API doesn't return one
 const FALLBACK_THUMBNAILS = [
@@ -145,7 +146,7 @@ export function mapNFTToVideoItem(nft: DeHubNFT, index: number): VideoItem {
     nft.mintername ||
     nft.creator?.display_name ||
     nft.creator?.username ||
-    'Unknown Creator';
+    _translateCopy("copy.056823642989", { defaultValue: "Unknown Creator" });
 
   // Build canonical avatar URL using minter address
   const minterAddress = nft.minter || nft.creator?.id || '';
@@ -384,7 +385,7 @@ export function mapNFTToLiveStream(nft: DeHubNFT, index: number): LiveStream {
     nft.mintername ||
     nft.creator?.display_name ||
     nft.creator?.username ||
-    'Unknown Streamer';
+    _translateCopy("copy.dc03dee626ea", { defaultValue: "Unknown Streamer" });
 
   // Build canonical avatar URL using minter address
   const minterAddress = nft.minter || nft.creator?.id || '';
@@ -407,7 +408,7 @@ export function mapNFTToLiveStream(nft: DeHubNFT, index: number): LiveStream {
     type: 'live',
     streamer,
     avatar,
-    title: nft.name || nft.title || 'Live Stream',
+    title: nft.name || nft.title || _translateCopy("copy.7975f2a611d0", { defaultValue: "Live Stream" }),
     game: category || 'Just Chatting',
     viewers: formatViews(viewCount).replace(' views', ''),
     thumbnail,
@@ -464,7 +465,7 @@ export function mapNFTToStoryUser(nft: DeHubNFT): { name: string; avatar: string
     nft.mintername ||
     nft.creator?.display_name ||
     nft.creator?.username ||
-    'User';
+    _translateCopy("copy.b512d97e7cbf", { defaultValue: "User" });
 
   // Build canonical avatar URL using minter address
   const minterAddress = nft.minter || nft.creator?.id || '';
@@ -662,7 +663,7 @@ export function mapApiLiveStreamToLocal(stream: ApiLiveStream, index: number): L
 
   const streamerName = rawAccount?.displayName ||
     rawAccount?.username ||
-    'Unknown Streamer';
+    _translateCopy("copy.dc03dee626ea", { defaultValue: "Unknown Streamer" });
 
   const avatar = rawAccount
     ? buildAvatarUrl(rawAccount.address, rawAccount.avatarImageUrl || rawAccount.avatarUrl)

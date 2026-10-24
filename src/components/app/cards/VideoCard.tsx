@@ -1592,9 +1592,9 @@ const VideoCardBody = memo(function VideoCard({ video, postPage = false, onBack,
     claimMediaSession(
       instanceId,
       {
-        title: video.title || 'DeHub video',
+        title: video.title || _copy("copy.75a86ca428cf", { defaultValue: "DeHub video" }),
         artist: video.channel || 'DeHub',
-        album: video.isAudio ? 'DeHub • Audio' : 'DeHub • Video',
+        album: video.isAudio ? _copy("copy.a2caa0dc28fb", { defaultValue: "DeHub • Audio" }) : _copy("copy.4671ecba9812", { defaultValue: "DeHub • Video" }),
         artwork: (video.isAudio ? video.channelAvatar : thumbnail) || null,
       },
       {
@@ -1609,7 +1609,7 @@ const VideoCardBody = memo(function VideoCard({ video, postPage = false, onBack,
       },
     );
     setMediaSessionPlaying(instanceId, true);
-  }, [isPlaying, isMuted, instanceId, video.title, video.channel, video.channelAvatar, video.isAudio, thumbnail, handlePlayClick, seekBy]);
+  }, [isPlaying, isMuted, instanceId, video.title, video.channel, video.channelAvatar, video.isAudio, thumbnail, handlePlayClick, seekBy, _copy]);
 
   // A card unmounting mid-play — scrolled out of the virtualised feed, or the
   // route changed — must not leave the OS holding a dead session.
@@ -1699,7 +1699,7 @@ const VideoCardBody = memo(function VideoCard({ video, postPage = false, onBack,
     const resumeAt = currentTime;
     videoRef.current.currentTime = segment.end_seconds;
 
-    toast(`${SEGMENT_LABELS[segment.category]} skipped`, {
+    toast(_copy("copy.1a6575c0a40f", { defaultValue: "{{value1}} skipped", value1: SEGMENT_LABELS[segment.category] }), {
       action: {
         label: _copy("copy.a8283ade3185", { defaultValue: "Undo" }),
         onClick: () => {
@@ -2708,7 +2708,7 @@ const VideoCardBody = memo(function VideoCard({ video, postPage = false, onBack,
           <button
             type="button"
             data-video-controls data-video-bare data-preview-mute
-            aria-label={isMuted ? t('common.unmute', 'Unmute') : t('common.mute', 'Mute')}
+            aria-label={isMuted ? _copy("copy.ce4ee4efc5e3", { defaultValue: "Unmute" }) : _copy("copy.8dd6857baf02", { defaultValue: "Mute" })}
             onPointerDown={(event) => event.stopPropagation()}
             onPointerUp={(event) => event.stopPropagation()}
             onTouchStart={(event) => event.stopPropagation()}
@@ -2723,7 +2723,7 @@ const VideoCardBody = memo(function VideoCard({ video, postPage = false, onBack,
           <button
             type="button"
             data-video-controls data-video-bare data-preview-mute
-            aria-label={liveSoundOn ? t('common.mute', 'Mute') : t('common.unmute', 'Unmute')}
+            aria-label={liveSoundOn ? _copy("copy.8dd6857baf02", { defaultValue: "Mute" }) : _copy("copy.ce4ee4efc5e3", { defaultValue: "Unmute" })}
             onPointerDown={(event) => event.stopPropagation()}
             onPointerUp={(event) => event.stopPropagation()}
             onTouchStart={(event) => event.stopPropagation()}
@@ -3012,7 +3012,7 @@ const VideoCardBody = memo(function VideoCard({ video, postPage = false, onBack,
                   <Rewind className="h-6 w-6 text-white" />
                 )}
               </div>
-              <p className="text-white text-xs text-center mt-1">10s</p>
+              <p className="text-white text-xs text-center mt-1">{_copy("copy.7819f63beefe", { defaultValue: "10s" })}</p>
             </motion.div>
           )}
         </AnimatePresence>

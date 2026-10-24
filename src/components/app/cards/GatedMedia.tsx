@@ -187,19 +187,21 @@ export function GatedMedia({ gate, preview, className, children }: GatedMediaPro
       ) : isSubGated ? (
         panel(
           <Star className="h-7 w-7 text-white" />,
-          'Subscribers only',
+          _copy("copy.109ddfc1cc4a", { defaultValue: "Subscribers only" }),
           cheapestPlanPrice !== undefined ? (
             <>{_copy("copy.8b2ebd182d8e", { defaultValue: "Subscribe from" })}<DhbAmount amount={formatCompact(cheapestPlanPrice)} iconClassName="h-3.5 w-3.5" />
             </>
+          ) : gate.creatorName ? (
+            _copy("copy.855f365abafc", { defaultValue: "Subscribe to {{value1}}", value1: gate.creatorName })
           ) : (
-            `Subscribe to ${gate.creatorName || _copy("copy.c48cabf53e9c", { defaultValue: "this creator" })}`
+            _copy("copy.aad8e3e9e836", { defaultValue: "Subscribe to this creator" })
           ),
           () => setShowSubDrawer(true),
         )
       ) : (
         panel(
           <Lock className="h-7 w-7 text-white" />,
-          'Holdings Required',
+          _copy("copy.490f4babbf34", { defaultValue: "Holdings Required" }),
           <>{_copy("copy.b8d42680be12", { defaultValue: "Must be holding" })}<DhbAmount amount={formatCompact(Number(gate.lockedPrice))} currency={gate.lockedCurrency} iconClassName="h-3.5 w-3.5" />
           </>,
           () => setShowLockedDrawer(true),

@@ -59,7 +59,7 @@ export function EditPostImages({ tokenId, disabled, onBusyChange }: {
       applyImageReplacement(queryClient, tokenId, updated);
       toast.success(_copy("copy.5f8fb589fe93", { defaultValue: "Image replaced" }));
     } catch (error) {
-      toast.error(error instanceof Error ? error.message : 'Could not replace that image');
+      toast.error(error instanceof Error ? error.message : _copy("copy.4d8a0bff64c5", { defaultValue: "Could not replace that image" }));
     } finally {
       setBusy(false);
       onBusyChange(false);
@@ -69,7 +69,7 @@ export function EditPostImages({ tokenId, disabled, onBusyChange }: {
   const add = async (files: File[]) => {
     if (busy || disabled || imageLimit === null || !files.length) return;
     if (images.length + files.length > imageLimit) {
-      toast.error(`Your badge tier allows up to ${imageLimit} images per post`);
+      toast.error(_copy("copy.881d0b252f79", { defaultValue: "Your badge tier allows up to {{value1}} images per post", value1: imageLimit }));
       return;
     }
     if (files.some(file => !/^image\/(jpeg|png|webp|gif|heic|heif|avif)$/i.test(file.type) || file.size > MAX_IMAGE_UPLOAD_BYTES)) {
@@ -89,7 +89,7 @@ export function EditPostImages({ tokenId, disabled, onBusyChange }: {
       applyImageReplacement(queryClient, tokenId, updated);
       toast.success(_copy("copy.82c3fa23437f", { defaultValue: "Images added" }));
     } catch (error) {
-      toast.error(error instanceof Error ? error.message : 'Could not add those images');
+      toast.error(error instanceof Error ? error.message : _copy("copy.0b6b539f3e91", { defaultValue: "Could not add those images" }));
     } finally {
       setBusy(false);
       onBusyChange(false);
@@ -121,7 +121,7 @@ export function EditPostImages({ tokenId, disabled, onBusyChange }: {
     <h3 className="text-sm font-medium text-zinc-300">{_copy("copy.be7e2f201293", { defaultValue: "Images" })}</h3>
     <p className="text-xs text-zinc-400">{_copy("copy.0f0d5afa82cf", { defaultValue: "Adding or replacing images saves immediately. Your post keeps its link, views and comments." })}</p>
     {imageLimit === null ? <button type="button" disabled={busy || disabled} className="text-xs text-zinc-400" onClick={() => setAttempt(value => value + 1)}>{_copy("copy.f6a4983ea9c5", { defaultValue: "Image allowance unavailable. Retry" })}</button> :
-      <p className="text-xs text-zinc-400">{images.length} / {imageLimit}{_copy("copy.76d4bc2aa471", { defaultValue: " images · Based on your badge tier" })}</p>}
+      <p className="text-xs text-zinc-400">{_copy("copy.1034a88fc92e", { defaultValue: "{{value1}} / {{value2}} images · Based on your badge tier", value1: images.length, value2: imageLimit })}</p>}
     <input ref={addInput} type="file" multiple accept="image/jpeg,image/png,image/webp,image/gif,image/heic,image/heif,image/avif" className="hidden" onChange={event => {
       const files = Array.from(event.target.files ?? []);
       event.target.value = '';

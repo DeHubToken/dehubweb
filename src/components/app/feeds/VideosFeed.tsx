@@ -94,12 +94,12 @@ const DURATION_FILTERS = [
 
 // Fallback categories if API fails
 const FALLBACK_CATEGORIES: DeHubCategory[] = [
-  { id: 'gaming', name: 'Gaming', slug: 'gaming' },
-  { id: 'music', name: 'Music', slug: 'music' },
-  { id: 'entertainment', name: 'Entertainment', slug: 'entertainment' },
-  { id: 'education', name: 'Education', slug: 'education' },
-  { id: 'crypto', name: 'Crypto', slug: 'crypto' },
-  { id: 'programming', name: 'Programming', slug: 'programming' },
+  { id: 'gaming', get name() { return _translateCopy("copy.0fadfa228814", { defaultValue: "Gaming" }); }, slug: 'gaming' },
+  { id: 'music', get name() { return _translateCopy("copy.6eb00b4b2614", { defaultValue: "Music" }); }, slug: 'music' },
+  { id: 'entertainment', get name() { return _translateCopy("copy.ceaa553e838f", { defaultValue: "Entertainment" }); }, slug: 'entertainment' },
+  { id: 'education', get name() { return _translateCopy("copy.512ab3c6b986", { defaultValue: "Education" }); }, slug: 'education' },
+  { id: 'crypto', get name() { return _translateCopy("copy.df12b8f89b61", { defaultValue: "Crypto" }); }, slug: 'crypto' },
+  { id: 'programming', get name() { return _translateCopy("copy.e6aba2bd5a6b", { defaultValue: "Programming" }); }, slug: 'programming' },
 ];
 
 const LIVE_CATEGORIES_INSERT_AFTER = 6;
@@ -726,7 +726,7 @@ export function VideosFeed({ showFilters = false, isRefreshing = false, refreshK
         // that carried a title AND a description only ever showed the second.
         title: item.name || '',
         description: item.description || '',
-        sound: 'Original Sound',
+        sound: _translateCopy("copy.9ef6cdcd044c", { defaultValue: "Original Sound" }),
         comments: formatCount(item.commentCount || 0),
         shares: '0',
         repostCount: ((item as any).totalReposts || (item as any).reposts || 0) + ((item as any).quotes || 0),
@@ -773,8 +773,8 @@ export function VideosFeed({ showFilters = false, isRefreshing = false, refreshK
   const EmptyState = () => (
     <AppState
       icon={isError ? 'notifications' : 'videos'}
-      title={isError ? 'Videos could not load' : 'No videos yet'}
-      description={isError ? 'Try loading the video feed again.' : 'Video posts will appear here.'}
+      title={isError ? _translateCopy("copy.7824c7c065f6", { defaultValue: "Videos could not load" }) : _translateCopy("copy.7b1fd32345ce", { defaultValue: "No videos yet" })}
+      description={isError ? _translateCopy("copy.65998993506d", { defaultValue: "Try loading the video feed again." }) : _translateCopy("copy.906275cbc53f", { defaultValue: "Video posts will appear here." })}
       kind={isError ? 'error' : 'empty'}
       size="page"
       primaryAction={isError ? { get label() { return _translateCopy("copy.d8b8392e2c54", { defaultValue: "Try again" }); }, onClick: () => refetch(), icon: <RefreshCw /> } : undefined}

@@ -36,6 +36,7 @@
 import { supabase } from '@/integrations/supabase/client';
 import i18n from '@/i18n';
 import { ensureFreshToken } from '@/lib/api/dehub/core';
+import { translateCopy as _translateCopy } from '@/i18n/copy';
 
 const FUNCTION = 'stage-voice-clone';
 
@@ -75,7 +76,7 @@ export class VoiceCloneError extends Error {
 
 async function authHeaders(wallet: string): Promise<Record<string, string>> {
   const token = await ensureFreshToken();
-  if (!token) throw new VoiceCloneError('Sign in again to set up your voice.');
+  if (!token) throw new VoiceCloneError(_translateCopy('copy.e6fa32486225', { defaultValue: 'Sign in again to set up your voice.' }));
   return { 'x-dehub-token': token, 'x-wallet-address': wallet.toLowerCase() };
 }
 
@@ -166,7 +167,7 @@ async function submit(
     // From here the money is gone, so the message must never read as
     // "send it again".
     const paid = !!txHash || payload?.code === 'CLONE_FAILED';
-    throw new VoiceCloneError(payload?.error || 'Voice cloning failed.', payload?.code, paid);
+    throw new VoiceCloneError(payload?.error || _translateCopy('copy.5daedb7a1824', { defaultValue: 'Voice cloning failed.' }), payload?.code, paid);
   }
 
   return {

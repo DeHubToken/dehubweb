@@ -1,3 +1,5 @@
+import { translateCopy as _translateCopy } from '@/i18n/copy';
+
 /** Keep the provider's reason without copying credentials or signed request bodies. */
 export function userOperationErrorDetail(error: unknown): string {
   const seen = new Set<unknown>();
@@ -18,9 +20,9 @@ export function userOperationErrorDetail(error: unknown): string {
 
 export function userOperationValidationMessage(detail: string): string | undefined {
   if (/\baa25\b|invalid account nonce/i.test(detail)) {
-    return 'The wallet transaction nonce changed. Please retry.';
+    return _translateCopy('copy.5f6ee7408686', { defaultValue: 'The wallet transaction nonce changed. Please retry.' });
   }
   if (/(?:maxFeePerGas|maxPriorityFeePerGas|gas price)[^\n]*(?:too low|must be|less than|below)|(?:too low|below)[^\n]*(?:maxFeePerGas|maxPriorityFeePerGas|gas price)/i.test(detail)) {
-    return 'The network gas quote changed. Please retry for a fresh quote.';
+    return _translateCopy('copy.aa6a25801331', { defaultValue: 'The network gas quote changed. Please retry for a fresh quote.' });
   }
 }

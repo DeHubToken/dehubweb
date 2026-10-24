@@ -34,6 +34,7 @@ import { toast } from 'sonner';
 import { createLogger } from '@/lib/logger';
 import { invalidateFractionQueries, type FractionListing, type FractionOffer, type FractionTrade } from './use-fraction-marketplace';
 import type { ChainId } from '@/components/app/ChainSelector';
+import { translateCopy as _translateCopy } from '@/i18n/copy';
 
 const logger = createLogger('FractionCheckout');
 
@@ -93,7 +94,7 @@ async function callFraction<T>(
         // Body was not JSON — fall through to the generic message.
       }
     }
-    throw new Error(detail || error.message || 'Request failed');
+    throw new Error(detail || error.message || _translateCopy("copy.cfce761befa8", { defaultValue: "Request failed" }));
   }
   if ((data as { error?: string })?.error) throw new Error((data as { error: string }).error);
   return data as T;
@@ -111,9 +112,9 @@ async function confirmWithRetry<T>(
   body: Record<string, unknown>,
   walletAddress: string | null,
   txHash: string,
-  strandedMessage: string,
+  stranded: 'paid' | 'sent',
 ): Promise<T> {
-  let lastError = 'Could not confirm the transaction';
+  let lastError = _translateCopy("copy.96165bbfc9cb", { defaultValue: "Could not confirm the transaction" });
   for (let attempt = 0; attempt < 10; attempt++) {
     try {
       return await callFraction<T>({ ...body, txHash }, walletAddress);
@@ -124,7 +125,9 @@ async function confirmWithRetry<T>(
     }
   }
   logger.error('confirm timed out', { hash: txHash });
-  throw new Error(`${lastError}. ${strandedMessage}: ${txHash}`);
+  throw new Error(stranded === 'paid'
+    ? _translateCopy("copy.c683f074accd", { defaultValue: "{{value1}}. Your payment went through — send this transaction to the seller: {{value2}}", value1: lastError, value2: txHash })
+    : _translateCopy("copy.3d739114b158", { defaultValue: "{{value1}}. The fractions were sent — send this transaction to the buyer: {{value2}}", value1: lastError, value2: txHash }));
 }
 
 /**
@@ -194,13 +197,13 @@ export function useFractionPurchase() {
         18,
         quote.chainId as ChainId,
       );
-      if (!result?.hash) throw new Error('Transaction was not submitted');
+      if (!result?.hash) throw new Error(_translateCopy("copy.1f204df4182c", { defaultValue: "Transaction was not submitted" }));
 
       return confirmWithRetry<{ success: boolean; trade: FractionTrade }>(
         { action: 'confirm', listingId: quote.listingId, quantity: quote.quantity },
         walletAddress,
         result.hash,
-        'Your payment went through — send this transaction to the seller',
+        'paid',
       );
     },
     onSuccess: (data) => {
@@ -228,7 +231,7 @@ export function useSettleTrade() {
   /** Seller side: send the fractions a buyer has already paid for. */
   const deliver = useMutation({
     mutationFn: async (trade: FractionTrade) => {
-      if (!walletAddress) throw new Error('Sign in to settle this trade');
+      if (!walletAddress) throw new Error(_translateCopy("copy.f18cf7e132aa", { defaultValue: "Sign in to settle this trade" }));
       const { transferFractions } = await import('@/lib/contracts/fraction-transfer');
       const result = await transferFractions(
         trade.token_id,
@@ -237,13 +240,13 @@ export function useSettleTrade() {
         trade.quantity,
         (trade.chain_id || 8453) as ChainId,
       );
-      if (!result?.hash) throw new Error('Transaction was not submitted');
+      if (!result?.hash) throw new Error(_translateCopy("copy.1f204df4182c", { defaultValue: "Transaction was not submitted" }));
 
       return confirmWithRetry<{ success: boolean; trade: FractionTrade }>(
         { action: 'deliver', tradeId: trade.id },
         walletAddress,
         result.hash,
-        'The fractions were sent — send this transaction to the buyer',
+        'sent',
       );
     },
     onSuccess: (data) => {
@@ -265,13 +268,13 @@ export function useSettleTrade() {
         18,
         (trade.chain_id || 8453) as ChainId,
       );
-      if (!result?.hash) throw new Error('Transaction was not submitted');
+      if (!result?.hash) throw new Error(_translateCopy("copy.1f204df4182c", { defaultValue: "Transaction was not submitted" }));
 
       return confirmWithRetry<{ success: boolean; trade: FractionTrade }>(
         { action: 'pay-trade', tradeId: trade.id },
         walletAddress,
         result.hash,
-        'Your payment went through — send this transaction to the seller',
+        'paid',
       );
     },
     onSuccess: (data) => {
@@ -298,7 +301,7 @@ export function useOfferResponse() {
 
   const accept = useMutation({
     mutationFn: async (offer: FractionOffer) => {
-      if (!walletAddress) throw new Error('Sign in to accept this offer');
+      if (!walletAddress) throw new Error(_translateCopy("copy.c8f4628f861e", { defaultValue: "Sign in to accept this offer" }));
       const { transferFractions } = await import('@/lib/contracts/fraction-transfer');
       const result = await transferFractions(
         offer.token_id,
@@ -307,13 +310,13 @@ export function useOfferResponse() {
         offer.quantity,
         (offer.chain_id || 8453) as ChainId,
       );
-      if (!result?.hash) throw new Error('Transaction was not submitted');
+      if (!result?.hash) throw new Error(_translateCopy("copy.1f204df4182c", { defaultValue: "Transaction was not submitted" }));
 
       return confirmWithRetry<{ success: boolean; trade: FractionTrade }>(
         { action: 'accept-offer', offerId: offer.id },
         walletAddress,
         result.hash,
-        'The fractions were sent — send this transaction to the buyer',
+        'sent',
       );
     },
     onSuccess: (data) => {

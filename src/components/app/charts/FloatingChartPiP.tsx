@@ -5,6 +5,7 @@
  */
 
 import { useRef, useState, useCallback, useEffect, useMemo } from 'react';
+import { useTranslation as _useCopy } from 'react-i18next';
 import { GripHorizontal, TrendingUp, TrendingDown } from "lucide-react";
 import X from "@/components/ui/cut-icons/close";
 
@@ -28,6 +29,7 @@ const DEFAULT_H = 220;
 const TIMEFRAMES: ChartTimeframe[] = ['1D', '7D', '30D', '90D', '1Y'];
 
 export function FloatingChartPiP({ item, index, onClose, onUpdate }: FloatingChartPiPProps) {
+  const { t: _copy } = _useCopy();
   const containerRef = useRef<HTMLDivElement>(null);
   const [timeframe, setTimeframe] = useState<ChartTimeframe>('7D');
 
@@ -223,7 +225,7 @@ export function FloatingChartPiP({ item, index, onClose, onUpdate }: FloatingCha
                   const formatted = value >= 1
                     ? `$${value.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 4 })}`
                     : value >= 0.0001 ? `$${value.toFixed(6)}` : `$${value.toFixed(8)}`;
-                  return [formatted, 'Price'];
+                  return [formatted, _copy("copy.93c91c851e7a", { defaultValue: "Price" })];
                 }}
                 labelStyle={{ color: '#a1a1aa' }}
                 itemStyle={{ color: '#ffffff' }}

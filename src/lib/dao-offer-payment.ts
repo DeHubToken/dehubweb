@@ -8,6 +8,7 @@ import { DAO_TREASURY_ADDRESS } from '@/lib/dao-treasury';
 import { connectSolanaWallet, getSolanaProvider, isValidSolanaAddress } from '@/lib/solana/wallet';
 import { SOLANA_PUBLIC_RPC, SPL_TOKEN_PROGRAM_ID } from '@/lib/chains/solana';
 import { ROBINHOOD_CHAIN_ID, ROBINHOOD_ENABLED, ROBINHOOD_TOKENS } from '@/lib/chains/robinhood';
+import { translateCopy as _translateCopy } from '@/i18n/copy';
 
 export interface DaoPaymentOption {
   chainId: 1 | 56 | 101 | 4663 | 8453;
@@ -46,7 +47,7 @@ export const DAO_PAYMENT_OPTIONS: DaoPaymentOption[] = [
     decimals: 9,
     native: true,
     enabled: isValidSolanaAddress(DAO_SOLANA_TREASURY_ADDRESS),
-    unavailableReason: 'The DAO Solana receiving address has not been configured yet.',
+    get unavailableReason() { return _translateCopy("copy.4d953c26f30e", { defaultValue: "The DAO Solana receiving address has not been configured yet." }); },
   },
   {
     chainId: 101,
@@ -56,7 +57,7 @@ export const DAO_PAYMENT_OPTIONS: DaoPaymentOption[] = [
     decimals: 6,
     native: false,
     enabled: isValidSolanaAddress(DAO_SOLANA_TREASURY_ADDRESS),
-    unavailableReason: 'The DAO Solana receiving address has not been configured yet.',
+    get unavailableReason() { return _translateCopy("copy.4d953c26f30e", { defaultValue: "The DAO Solana receiving address has not been configured yet." }); },
   },
   {
     chainId: 101,
@@ -66,7 +67,7 @@ export const DAO_PAYMENT_OPTIONS: DaoPaymentOption[] = [
     decimals: 6,
     native: false,
     enabled: isValidSolanaAddress(DAO_SOLANA_TREASURY_ADDRESS),
-    unavailableReason: 'The DAO Solana receiving address has not been configured yet.',
+    get unavailableReason() { return _translateCopy("copy.4d953c26f30e", { defaultValue: "The DAO Solana receiving address has not been configured yet." }); },
   },
 ];
 
@@ -107,7 +108,7 @@ async function sendSolana(
     ? await import('@/lib/smart-wallet').then(wallet => wallet.getDerivedSolanaAddress())
     : phantom ? await connectSolanaWallet() : null;
   if (!payerAddress) {
-    throw new Error('Unlock your DeHub wallet or connect Phantom to pay on Solana.');
+    throw new Error(_translateCopy("copy.128034cc629d", { defaultValue: "Unlock your DeHub wallet or connect Phantom to pay on Solana." }));
   }
 
   const payer = new PublicKey(payerAddress);
@@ -183,10 +184,10 @@ export async function sendDaoOfferPayment(
   option: DaoPaymentOption,
   amount: number,
 ): Promise<{ hash: string; recipient: string }> {
-  if (!option.enabled) throw new Error(option.unavailableReason || 'That payment route is not available yet.');
-  if (!Number.isFinite(amount) || amount <= 0) throw new Error('Enter a valid payment amount.');
+  if (!option.enabled) throw new Error(option.unavailableReason || _translateCopy("copy.bd21506af162", { defaultValue: "That payment route is not available yet." }));
+  if (!Number.isFinite(amount) || amount <= 0) throw new Error(_translateCopy("copy.507c6db8c126", { defaultValue: "Enter a valid payment amount." }));
   const recipient = daoPaymentRecipient(option.chainId);
-  if (!recipient) throw new Error(option.unavailableReason || 'No DAO receiving address is configured for that chain.');
+  if (!recipient) throw new Error(option.unavailableReason || _translateCopy("copy.6720688fe740", { defaultValue: "No DAO receiving address is configured for that chain." }));
 
   if (option.chainId === 101) {
     return { hash: await sendSolana(option, recipient, amount), recipient };
@@ -207,6 +208,6 @@ export async function sendDaoOfferPayment(
   }
 
   const receipt = await result.wait(1);
-  if (!receipt || receipt.status !== 1) throw new Error('The payment transaction did not confirm.');
+  if (!receipt || receipt.status !== 1) throw new Error(_translateCopy("copy.693d7320dbbf", { defaultValue: "The payment transaction did not confirm." }));
   return { hash: receipt.hash || result.hash, recipient };
 }

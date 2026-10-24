@@ -7,6 +7,7 @@
 // below uses a dependency-free base58 decode instead of `new PublicKey()`.
 import type { PublicKey } from '@solana/web3.js';
 import { BASE58_ALPHABET, base58Encode } from './base58';
+import { translateCopy as _translateCopy } from '@/i18n/copy';
 
 export interface SolanaWalletProvider {
   isPhantom?: boolean;
@@ -71,18 +72,18 @@ export function isValidSolanaAddress(address: string): boolean {
 export async function connectSolanaWallet(): Promise<string> {
   const provider = getSolanaProvider();
   if (!provider) {
-    throw new Error('Phantom wallet not found. Install Phantom or open this page in the Phantom browser.');
+    throw new Error(_translateCopy('copy.b976792afa31', { defaultValue: 'Phantom wallet not found. Install Phantom or open this page in the Phantom browser.' }));
   }
 
   try {
     const resp = await provider.connect();
     const pubkey = resp.publicKey?.toBase58() ?? provider.publicKey?.toBase58();
-    if (!pubkey) throw new Error('Could not read Solana wallet address');
+    if (!pubkey) throw new Error(_translateCopy('copy.8537866e57c9', { defaultValue: 'Could not read Solana wallet address' }));
     return pubkey;
   } catch (err: unknown) {
     const code = (err as { code?: number })?.code;
-    if (code === 4001) throw new Error('Solana wallet connection was rejected');
-    throw err instanceof Error ? err : new Error('Failed to connect Solana wallet');
+    if (code === 4001) throw new Error(_translateCopy('copy.a0c7a7192ad8', { defaultValue: 'Solana wallet connection was rejected' }));
+    throw err instanceof Error ? err : new Error(_translateCopy('copy.decf4d0b7c4e', { defaultValue: 'Failed to connect Solana wallet' }));
   }
 }
 

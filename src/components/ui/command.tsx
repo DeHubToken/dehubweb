@@ -1,3 +1,4 @@
+import { useTranslation as _useCopy } from 'react-i18next';
 import * as React from "react";
 import { type DialogProps } from "@radix-ui/react-dialog";
 import { Command as CommandPrimitive } from "cmdk";
@@ -36,11 +37,12 @@ interface CommandDialogProps extends DialogProps {
   title?: string;
 }
 
-const CommandDialog = ({ children, shouldFilter, contentClassName, contentProps, title = "Command menu", ...props }: CommandDialogProps) => {
+const CommandDialog = ({ children, shouldFilter, contentClassName, contentProps, title, ...props }: CommandDialogProps) => {
+  const { t: _copy } = _useCopy();
   return (
     <Dialog {...props}>
       <DialogContent className={cn("overflow-hidden p-0 shadow-lg", contentClassName)} aria-describedby={undefined} {...contentProps}>
-        <DialogTitle className="sr-only">{title}</DialogTitle>
+        <DialogTitle className="sr-only">{title ?? _copy("copy.0039a45ea19f", { defaultValue: "Command menu" })}</DialogTitle>
         <Command shouldFilter={shouldFilter} className="[&_[cmdk-group-heading]]:px-2 [&_[cmdk-group-heading]]:font-medium [&_[cmdk-group-heading]]:text-muted-foreground [&_[cmdk-group]:not([hidden])_~[cmdk-group]]:pt-0 [&_[cmdk-group]]:px-2 [&_[cmdk-input-wrapper]_svg]:h-5 [&_[cmdk-input-wrapper]_svg]:w-5 [&_[cmdk-input]]:h-12 [&_[cmdk-item]]:px-2 [&_[cmdk-item]]:py-3 [&_[cmdk-item]_svg]:h-5 [&_[cmdk-item]_svg]:w-5">
           {children}
         </Command>

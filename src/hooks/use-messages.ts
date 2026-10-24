@@ -57,6 +57,7 @@ import { isEncryptedContent } from '@/lib/dm-e2ee/crypto';
 import { decryptFromPeer, decryptMessageInPlace, loadIdentity, onIdentityChange, prepareOutgoing } from '@/lib/dm-e2ee/keys';
 import { openMediaPlaintext } from '@/lib/dm-e2ee/media-message';
 import { messageHistoryItems, mergeMessageHead, needsMessageHistoryRecovery, nextMessagePage, type MessageHistory } from '@/lib/dm-head';
+import { translateCopy as _translateCopy } from '@/i18n/copy';
 
 /**
  * Blob URL for an optimistic message with auto-revoke. The optimistic entry is
@@ -901,7 +902,7 @@ export function useSendMessage(conversationId: string) {
           }
         } catch (err) {
           console.error('[useSendMessage] createAndStart failed:', err);
-          throw new Error('Could not establish conversation. Please try again.');
+          throw new Error(_translateCopy("copy.e01fe7927536", { defaultValue: "Could not establish conversation. Please try again." }));
         }
       }
 

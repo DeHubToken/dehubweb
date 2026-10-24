@@ -159,8 +159,8 @@ export function AdsOverviewTab({ onOpenCampaign, onNewCampaign, onGoBilling }: A
               contentStyle={{ background: 'rgba(24,24,27,0.95)', border: '1px solid rgba(255,255,255,0.1)', borderRadius: 12, fontSize: 12 }}
               labelStyle={{ color: '#a1a1aa' }}
             />
-            <Line type="monotone" dataKey="impressions" stroke="#3b82f6" strokeWidth={2} dot={false} name="Impressions" />
-            <Line type="monotone" dataKey="clicks" stroke="#22c55e" strokeWidth={2} dot={false} name="Clicks" />
+            <Line type="monotone" dataKey="impressions" stroke="#3b82f6" strokeWidth={2} dot={false} name={_copy("copy.c6310e909e40", { defaultValue: "Impressions" })} />
+            <Line type="monotone" dataKey="clicks" stroke="#22c55e" strokeWidth={2} dot={false} name={_copy("copy.921fc9804ed3", { defaultValue: "Clicks" })} />
           </LineChart>
         </ResponsiveContainer>
       </div>

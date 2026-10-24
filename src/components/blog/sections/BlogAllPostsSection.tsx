@@ -27,11 +27,11 @@ export const BlogAllPostsSection: React.FC<BlogAllPostsSectionProps> = ({
       <div className="flex items-center gap-3 mb-6 flex-wrap">
         <Calendar className="w-6 h-6 text-foreground" />
         <h2 className="text-2xl font-bold text-foreground font-exo">
-          {searchQuery || selectedTag ? (selectedTag ? `Tagged: ${selectedTag}` : _copy("copy.39414102545e", { defaultValue: "Search Results" })) : _copy("copy.9fc1b0e4ec78", { defaultValue: "Latest Posts" })}
+          {searchQuery || selectedTag ? (selectedTag ? _copy("copy.bb59e23fe44a", { defaultValue: "Tagged: {{value1}}", value1: selectedTag }) : _copy("copy.39414102545e", { defaultValue: "Search Results" })) : _copy("copy.9fc1b0e4ec78", { defaultValue: "Latest Posts" })}
         </h2>
         {(searchQuery || selectedTag) && (
           <span className="text-muted-foreground font-exo">
-            ({filteredPosts.length}{_copy("copy.37f42e396e80", { defaultValue: " post" })}{filteredPosts.length !== 1 ? 's' : ''})
+            ({_copy("copy.05dbf9aabdc7", { count: filteredPosts.length, defaultValue_one: "{{count}} post", defaultValue_other: "{{count}} posts", defaultValue: "{{count}} posts" })})
           </span>
         )}
         {(searchQuery || selectedTag) && onClearFilter && (

@@ -83,7 +83,7 @@ export function ImagePaywallModal({
       onConfirm(txHash);
     } catch (err) {
       toast.dismiss('image-gen-payment');
-      toast.error(err instanceof Error ? err.message : 'Payment failed.');
+      toast.error(err instanceof Error ? err.message : _copy("copy.4225d535fe99", { defaultValue: "Payment failed." }));
     } finally {
       setIsPaying(false);
     }

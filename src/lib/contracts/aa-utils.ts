@@ -22,6 +22,7 @@ import type { ChainId } from '@/components/app/ChainSelector';
 import { CHAIN_CONFIGS, BASE_CHAIN_ID, initChainRpcUrls } from './dhb-token';
 import { createLogger } from '@/lib/logger';
 import { userOperationErrorDetail, userOperationValidationMessage } from '@/lib/user-operation-error';
+import { translateCopy as _translateCopy } from '@/i18n/copy';
 
 // Hex type for AA transactions
 type Hex = `0x${string}`;
@@ -249,7 +250,7 @@ export async function switchChain(chainId: ChainId): Promise<void> {
   await prepareWalletRelay(await connector.getProvider());
   await wagmiSwitchChain(wagmiConfig, { chainId: chainId as any, connector });
   if (await connector.getChainId() !== chainId) {
-    throw new Error('The wallet did not change networks. Reconnect it and try again.');
+    throw new Error(_translateCopy("copy.d5047f2d13d2", { defaultValue: "The wallet did not change networks. Reconnect it and try again." }));
   }
 }
 
@@ -316,7 +317,7 @@ export async function getWalletAddress(opts?: { silent?: boolean }): Promise<str
   if (!isWeb3Auth) return getAccount(wagmiConfig).address!;
   const accounts = await provider.request({ method: 'eth_accounts' }) as string[];
   if (accounts?.length) return accounts[0];
-  throw new Error('Could not read your wallet address. Please try again.');
+  throw new Error(_translateCopy("copy.eea1874693b0", { defaultValue: "Could not read your wallet address. Please try again." }));
 }
 
 /**
@@ -413,8 +414,10 @@ export function parseTxError(error: unknown, context: string = 'transaction'): s
   }
   const unavailableChain = lowerError.match(/no_signer_on_chain:(\d+)/);
   if (unavailableChain) {
-    const chain = CHAIN_CONFIGS[Number(unavailableChain[1]) as ChainId]?.name || 'That network';
-    return `${chain} transactions are temporarily unavailable. Please try again.`;
+    const chain = CHAIN_CONFIGS[Number(unavailableChain[1]) as ChainId]?.name;
+    return chain
+      ? _translateCopy("copy.455d64d06084", { defaultValue: "{{value1}} transactions are temporarily unavailable. Please try again.", value1: chain })
+      : _translateCopy("copy.00140a37bd26", { defaultValue: "Transactions on that network are temporarily unavailable. Please try again." });
   }
   if (lowerError.includes('user rejected') || lowerError.includes('user denied')) {
     return 'Transaction was rejected by user.';
@@ -465,10 +468,10 @@ export function parseTxError(error: unknown, context: string = 'transaction'): s
     return 'Gas estimation failed. The transaction may revert.';
   }
   if (lowerError.includes('already minted') || lowerError.includes('token already exists')) {
-    return 'This content has already been minted.';
+    return _translateCopy("copy.965cc4f09367", { defaultValue: "This content has already been minted." });
   }
   if (lowerError.includes('invalid signature') || lowerError.includes('signer should sign')) {
-    return 'Signature verification failed on-chain.';
+    return _translateCopy("copy.1a68fdbd95af", { defaultValue: "Signature verification failed on-chain." });
   }
   if (lowerError.includes('unable to find matching address') || lowerError.includes('torus keyring') ||
     lowerError.includes('unknown account') ||
@@ -477,12 +480,12 @@ export function parseTxError(error: unknown, context: string = 'transaction'): s
   }
   if (lowerError.includes('execution reverted')) {
     const match = errorStr.match(/reason="([^"]+)"/);
-    if (match) return `Transaction reverted: ${match[1]}`;
-    return 'Transaction reverted by the contract.';
+    if (match) return _translateCopy("copy.0898cae94805", { defaultValue: "Transaction reverted: {{value1}}", value1: match[1] });
+    return _translateCopy("copy.62fec567d392", { defaultValue: "Transaction reverted by the contract." });
   }
 
   if (context === 'approval') {
-    return 'Token approval failed. Please try again.';
+    return _translateCopy("copy.8c4b27f2f47f", { defaultValue: "Token approval failed. Please try again." });
   }
 
   return `Failed to ${context}: ${errorStr.slice(0, 100)}`;

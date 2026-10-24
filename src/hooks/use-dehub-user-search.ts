@@ -12,6 +12,7 @@ import { buildAvatarUrl } from '@/lib/media-url';
 import { useDebouncedValue } from './use-debounced-value';
 import type { SearchCreator } from './use-dehub-search';
 import { useAuth } from '@/contexts/AuthContext';
+import { translateCopy as _translateCopy } from '@/i18n/copy';
 
 /**
  * Map DeHub user to SearchCreator format
@@ -22,7 +23,7 @@ export function mapUserToSearchCreator(user: DeHubUser): SearchCreator {
   
   return {
     id: address || user._id || user.id || '',
-    name: user.displayName || user.display_name || user.username || 'Unknown User',
+    name: user.displayName || user.display_name || user.username || _translateCopy("copy.bd47bcdbf137", { defaultValue: "Unknown User" }),
     handle: user.username ? `@${user.username.replace('@', '')}` : '@unknown',
     avatar: buildAvatarUrl(address, rawAvatarUrl),
     verified: user.isVerified || user.is_verified || false,

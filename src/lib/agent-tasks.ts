@@ -1,4 +1,5 @@
 import { ensureFreshToken } from '@/lib/api/dehub/core';
+import { translateCopy as _translateCopy } from '@/i18n/copy';
 
 export interface AgentTask {
   id: string; agent_id: string; prompt: string; status: string;
@@ -19,11 +20,11 @@ export async function agentTaskRequest<T>(wallet: string, body: Record<string, u
       method: 'POST', headers: { ...(body instanceof FormData ? {} : { 'Content-Type': 'application/json' }), 'x-dehub-token': token, 'x-wallet-address': wallet },
       body: body instanceof FormData ? body : JSON.stringify(body), signal: controller.signal,
     });
-    const data = await response.json().catch(() => { throw new Error(`The task service returned an unreadable response (${response.status}). Refresh tasks before retrying.`); });
-    if (!response.ok) throw new Error(typeof data?.error === 'string' ? data.error : `The task request failed (${response.status}). Refresh tasks before retrying.`);
+    const data = await response.json().catch(() => { throw new Error(_translateCopy("copy.4eb5fa08a3c5", { defaultValue: "The task service returned an unreadable response ({{value1}}). Refresh tasks before retrying.", value1: response.status })); });
+    if (!response.ok) throw new Error(typeof data?.error === 'string' ? data.error : _translateCopy("copy.9ff2df0a6bb4", { defaultValue: "The task request failed ({{value1}}). Refresh tasks before retrying.", value1: response.status }));
     return data;
   } catch (error) {
-    if (controller.signal.aborted) throw new Error('The task request timed out. Refresh tasks before retrying.');
+    if (controller.signal.aborted) throw new Error(_translateCopy("copy.60f7d7960fb8", { defaultValue: "The task request timed out. Refresh tasks before retrying." }));
     throw error;
   } finally {
     clearTimeout(timeout);

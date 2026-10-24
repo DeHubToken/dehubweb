@@ -410,7 +410,7 @@ function LoginModalBodyInner({ open, step, setStep, layout = 'default' }: LoginM
       await verifyEmailOtp(email, emailCode.trim());
     } catch (error: any) {
       console.error('Email OTP verification failed:', error);
-      setEmailError(error?.message || 'Invalid code. Please try again.');
+      setEmailError(error?.message || t("copy.d0a5eff9cf29", { defaultValue: "Invalid code. Please try again." }));
     } finally {
       setActiveProvider(null);
     }
@@ -449,7 +449,7 @@ function LoginModalBodyInner({ open, step, setStep, layout = 'default' }: LoginM
       await verifyPhoneOtp(phone.trim(), phoneCode);
     } catch (error: any) {
       console.error('Phone OTP verification failed:', error);
-      setPhoneError(error?.message || 'Invalid code. Please try again.');
+      setPhoneError(error?.message || t("copy.d0a5eff9cf29", { defaultValue: "Invalid code. Please try again." }));
     } finally {
       setActiveProvider(null);
     }

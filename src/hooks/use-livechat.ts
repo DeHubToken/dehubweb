@@ -21,6 +21,7 @@ import {
 } from '@/lib/api/dehub/socket';
 import { useAuth } from '@/contexts/AuthContext';
 import type { ReactionData, ReplyToData } from '@/components/app/chat/ChatMessage';
+import { translateCopy as _translateCopy } from '@/i18n/copy';
 
 /** Shape of a livechat message used internally in the UI */
 export interface SupabaseLiveChatMessage {
@@ -65,7 +66,7 @@ export function useLiveChatRooms() {
       })
       .catch((err) => {
         console.error('[LiveChat] Failed to fetch rooms:', err);
-        setError(err?.message || 'Failed to load chat rooms');
+        setError(err?.message || _translateCopy("copy.ab29d84b39de", { defaultValue: "Failed to load chat rooms" }));
       })
       .finally(() => setIsLoading(false));
   }, []);
@@ -513,7 +514,7 @@ export function useLiveChatMessages(roomId: string | null) {
     // message simply disappear. Say what happened and drop the row that will
     // never be confirmed.
     const unsubError = onLiveChatError(roomId, (data) => {
-      const message = data?.message || 'Message was not sent';
+      const message = data?.message || _translateCopy("copy.4e957da5c208", { defaultValue: "Message was not sent" });
       toast.error(message);
       setMessages((prev) => {
         const next = prev.filter((m) => !m.id.startsWith('temp-'));
@@ -553,11 +554,11 @@ export function useLiveChatMessages(roomId: string | null) {
 
     const unsubBanned = onUserBanned(roomId, (data) => {
       setIsBanned(true);
-      toast.error(data.message || 'You have been banned from chat');
+      toast.error(data.message || _translateCopy("copy.38e7a424a9d7", { defaultValue: "You have been banned from chat" }));
     });
     const unsubUnbanned = onUserUnbanned(roomId, (data) => {
       setIsBanned(false);
-      toast.success(data.message || 'You have been unbanned');
+      toast.success(data.message || _translateCopy("copy.7deb65a4e9e4", { defaultValue: "You have been unbanned" }));
     });
 
     return () => {
@@ -590,10 +591,10 @@ export function useLiveChatMessages(roomId: string | null) {
       audioUrl?: string,
       audioDuration?: number
     ) => {
-      if (!roomId || !isAuthenticated || !walletAddress) throw new Error('Sign in to send a message');
+      if (!roomId || !isAuthenticated || !walletAddress) throw new Error(_translateCopy("copy.bc30560b2f21", { defaultValue: "Sign in to send a message" }));
       if (isBanned) {
         toast.error(_copy("copy.4d7240d59cda", { defaultValue: "You are banned from chat" }));
-        throw new Error('You are banned from chat');
+        throw new Error(_translateCopy("copy.4d7240d59cda", { defaultValue: "You are banned from chat" }));
       }
       setIsSending(true);
 
@@ -637,7 +638,7 @@ export function useLiveChatMessages(roomId: string | null) {
         const socket = getSocket(roomId);
         if (!socket.connected) {
           await new Promise<void>((resolve, reject) => {
-            const timeout = setTimeout(() => reject(new Error('Socket connection timeout')), 5000);
+            const timeout = setTimeout(() => reject(new Error(_translateCopy("copy.7fbd7933cfe0", { defaultValue: "Socket connection timeout" }))), 5000);
             socket.once('connect', () => { clearTimeout(timeout); resolve(); });
             if (socket.connected) { clearTimeout(timeout); resolve(); }
           });
@@ -662,7 +663,7 @@ export function useLiveChatMessages(roomId: string | null) {
           messageEvent: 'message', errorEvent: 'error',
           matches: message => roomMessageMatches(message, { account: walletAddress, content, room: roomId, attachment: imageUrl || audioUrl }),
         });
-        if (!confirmed) throw new Error('Message was not confirmed. Your draft has been kept.');
+        if (!confirmed) throw new Error(_translateCopy("copy.b13c7f1738c8", { defaultValue: "Message was not confirmed. Your draft has been kept." }));
 
         /*
          * No refetch here.
@@ -689,7 +690,7 @@ export function useLiveChatMessages(roomId: string | null) {
           if (roomId) cacheRoomMessages(roomId, next);
           return next;
         });
-        toast.error(`Failed to send: ${err?.message || 'Unknown error'}`);
+        toast.error(_translateCopy("copy.9b9ec2e38a00", { defaultValue: "Failed to send: {{value1}}", value1: err?.message || _translateCopy("copy.27c2ccd962c2", { defaultValue: "Unknown error" }) }));
         console.error('[LiveChat] Failed to send message:', err);
         throw err;
       } finally {

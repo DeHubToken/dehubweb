@@ -1,4 +1,6 @@
-/** Recovery copy shared by the staking notice outcomes. */
+import { translateCopy as _translateCopy } from '@/i18n/copy';
+
+/** Recovery copy shared by the staking notice outcomes. Hand-written where a language has one; every other language goes through the shared copy key. */
 const messages: Record<string, string> = {
   en: "This deposit is no longer pending on the network. Tracking cleared; check your wallet activity before depositing again.",
   ar: "لم يعد هذا الإيداع معلقًا على الشبكة. تم مسح التتبع؛ تحقق من نشاط محفظتك قبل الإيداع مرة أخرى.",
@@ -9,5 +11,6 @@ const messages: Record<string, string> = {
 };
 
 export function retiredStakeMessage(language: string): string {
-  return messages[language.toLowerCase().split(/[-_]/)[0]] ?? messages.en;
+  return messages[language.toLowerCase().split(/[-_]/)[0]]
+    ?? _translateCopy('copy.78930530fc52', { defaultValue: messages.en });
 }

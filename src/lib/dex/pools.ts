@@ -16,6 +16,7 @@ import { getERC20Balance, writeContractAA } from '@/lib/contracts/aa-utils';
 import { BASE_CHAIN_ID, CHAIN_CONFIGS, ETH_CHAIN_ID } from '@/lib/contracts/dhb-token';
 import { ROBINHOOD_CHAIN_ID, ROBINHOOD_EXPLORER_URL, ROBINHOOD_TOKENS } from '@/lib/chains/robinhood';
 import { SOLANA_EXPLORER_URL } from '@/lib/chains/solana';
+import { translateCopy as _translateCopy } from '@/i18n/copy';
 import { NATIVE, quoteSwap, runSwap, type SwapCall } from './evm-swap';
 
 export type PoolChain = 'base' | 'ethereum' | 'robinhood' | 'solana';
@@ -123,8 +124,8 @@ export const checkToken = (chain: PoolChain, tokenAddress: string) =>
   callPoolFunction<TokenCheck>({ check: true, chain, tokenAddress: tokenAddress.trim() }, false);
 
 export async function uploadPoolImage(file: File): Promise<string> {
-  if (!file.type.startsWith('image/')) throw new Error('Choose an image file');
-  if (file.size > 5 * 1024 * 1024) throw new Error('Images must be 5 MB or smaller');
+  if (!file.type.startsWith('image/')) throw new Error(_translateCopy("copy.94377a89a9e4", { defaultValue: "Choose an image file" }));
+  if (file.size > 5 * 1024 * 1024) throw new Error(_translateCopy("copy.0640fb78b7cf", { defaultValue: "Images must be 5 MB or smaller" }));
   const extension = (file.name.split('.').pop() || 'png').replace(/[^a-z0-9]/gi, '').slice(0, 5) || 'png';
   const path = `dex-pools/${crypto.randomUUID()}.${extension}`;
   const { error } = await supabase.storage.from('community-media').upload(path, file, { contentType: file.type, cacheControl: '31536000', upsert: false });
@@ -167,13 +168,13 @@ export async function planFee(asset: FeeAsset, feeDhb: number, assetUsd: number,
   const dhb = CHAIN_CONFIGS[BASE_CHAIN_ID].dhbToken;
   if (asset.symbol === 'DHB') {
     const balance = await getERC20Balance(dhb, walletAddress, BASE_CHAIN_ID);
-    if (balance < dhbUnits) throw new Error(`Not enough DHB on Base: ${formatUnits(dhbUnits, 18)} needed`);
+    if (balance < dhbUnits) throw new Error(_translateCopy("copy.296fa7255dc3", { defaultValue: "Not enough DHB on Base: {{value1}} needed", value1: formatUnits(dhbUnits, 18) }));
     return { asset, feeDhb: dhbUnits, swapIn: null, swap: null };
   }
-  if (!(assetUsd > 0)) throw new Error(`No ${asset.symbol} price is available right now`);
+  if (!(assetUsd > 0)) throw new Error(_translateCopy("copy.d7de421562cb", { defaultValue: "No {{value1}} price is available right now", value1: asset.symbol }));
   const swapIn = parseUnits((POOL_FEE_USD * SWAP_HEADROOM / assetUsd).toFixed(asset.decimals === 6 ? 6 : 12), asset.decimals);
   const swap = await quoteSwap({ chainId: BASE_CHAIN_ID, tokenIn: asset.address, tokenOut: dhb, amountIn: swapIn, recipient: walletAddress, slippageBps: 100 });
-  if (swap.minAmountOut < dhbUnits) throw new Error(`That ${asset.symbol} does not swap into enough DHB right now`);
+  if (swap.minAmountOut < dhbUnits) throw new Error(_translateCopy("copy.2d34f6196636", { defaultValue: "That {{value1}} does not swap into enough DHB right now", value1: asset.symbol }));
   return { asset, feeDhb: dhbUnits, swapIn, swap };
 }
 
@@ -188,7 +189,7 @@ export async function payFee(plan: FeePlan, walletAddress: string): Promise<stri
   }
   const tx = await writeContractAA(dhb, erc20, 'transfer', [DEX_TREASURY, plan.feeDhb], { chainId: BASE_CHAIN_ID, context: 'DEX pool listing fee' });
   const receipt = await tx.wait(1);
-  if (receipt.status !== 1) throw new Error('The fee transfer did not confirm');
+  if (receipt.status !== 1) throw new Error(_translateCopy("copy.69f509bb1116", { defaultValue: "The fee transfer did not confirm" }));
   return receipt.hash || tx.hash;
 }
 

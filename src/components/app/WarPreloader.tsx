@@ -72,13 +72,13 @@ interface BootLine {
 }
 
 const BOOT_LINES: BootLine[] = [
-  { get label() { return _translateCopy("copy.3fa166bf3458", { defaultValue: "POWER ON SELF TEST" }); }, value: 'OK' },
-  { get label() { return _translateCopy("copy.68d6169126ca", { defaultValue: "CRYPTO MODULE / AES-256" }); }, value: 'OK' },
-  { get label() { return _translateCopy("copy.b72988f504fc", { defaultValue: "UPLINK / GEOSTATIONARY" }); }, value: 'ACQUIRED' },
-  { get label() { return _translateCopy("copy.b1a86a177256", { defaultValue: "NODE HANDSHAKE 0x4F3A" }); }, value: 'COMPLETE' },
-  { get label() { return _translateCopy("copy.0a6d2b40baa6", { defaultValue: "MAP DATA / TERRAIN CACHE" }); }, value: 'SYNCED' },
-  { get label() { return _translateCopy("copy.743901de27bf", { defaultValue: "TRACK / 05 CONTACTS" }); }, value: 'LOCKED' },
-  { get label() { return _translateCopy("copy.0a0ae2624226", { defaultValue: "OPERATOR CLEARANCE" }); }, value: 'GRANTED' },
+  { get label() { return _translateCopy("copy.3fa166bf3458", { defaultValue: "POWER ON SELF TEST" }); }, get value() { return _translateCopy("copy.565339bc4d33", { defaultValue: "OK" }); } },
+  { get label() { return _translateCopy("copy.68d6169126ca", { defaultValue: "CRYPTO MODULE / AES-256" }); }, get value() { return _translateCopy("copy.565339bc4d33", { defaultValue: "OK" }); } },
+  { get label() { return _translateCopy("copy.b72988f504fc", { defaultValue: "UPLINK / GEOSTATIONARY" }); }, get value() { return _translateCopy("copy.5d7f83d07e32", { defaultValue: "ACQUIRED" }); } },
+  { get label() { return _translateCopy("copy.b1a86a177256", { defaultValue: "NODE HANDSHAKE 0x4F3A" }); }, get value() { return _translateCopy("copy.894981ff0205", { defaultValue: "COMPLETE" }); } },
+  { get label() { return _translateCopy("copy.0a6d2b40baa6", { defaultValue: "MAP DATA / TERRAIN CACHE" }); }, get value() { return _translateCopy("copy.e9658423f1bb", { defaultValue: "SYNCED" }); } },
+  { get label() { return _translateCopy("copy.743901de27bf", { defaultValue: "TRACK / 05 CONTACTS" }); }, get value() { return _translateCopy("copy.bfc160483cb0", { defaultValue: "LOCKED" }); } },
+  { get label() { return _translateCopy("copy.0a0ae2624226", { defaultValue: "OPERATOR CLEARANCE" }); }, get value() { return _translateCopy("copy.54d6526a479e", { defaultValue: "GRANTED" }); } },
 ];
 
 /** Eased-progress point at which each log line commits. */
@@ -115,7 +115,7 @@ const LOCK_ACQUIRE_S = LOCK_AT.map(
 const HEAD_LEFT = [
   { get label() { return _translateCopy("copy.fef2ec95d68c", { defaultValue: "NODE" }); }, value: 'DH-114' },
   { get label() { return _translateCopy("copy.e7404b86c92a", { defaultValue: "GRID" }); }, value: '37N 05E' },
-  { get label() { return _translateCopy("copy.ac6c84ed1369", { defaultValue: "MODE" }); }, value: 'RECON' },
+  { get label() { return _translateCopy("copy.ac6c84ed1369", { defaultValue: "MODE" }); }, get value() { return _translateCopy("copy.110c7594e507", { defaultValue: "RECON" }); } },
 ];
 
 const HEAD_RIGHT = [
@@ -124,7 +124,12 @@ const HEAD_RIGHT = [
   { get label() { return _translateCopy("copy.52f1b54ce34b", { defaultValue: "BAND" }); }, value: 'KU 12.4' },
 ];
 
-const FOOT_CHIPS = ['SECTOR 07', 'BEARING 214', 'ELEV 1180 M', 'RANGE 4.2 KM'];
+const footChips = () => [
+  _translateCopy("copy.84e0ad815b9c", { defaultValue: "SECTOR {{value1}}", value1: '07' }),
+  _translateCopy("copy.34516c65bc41", { defaultValue: "BEARING {{value1}}", value1: '214' }),
+  _translateCopy("copy.fa2a6041c358", { defaultValue: "ELEV {{value1}} M", value1: '1180' }),
+  _translateCopy("copy.e7f6674f5280", { defaultValue: "RANGE {{value1}} KM", value1: '4.2' }),
+];
 
 /**
  * Milliseconds from navigation start to this chunk being evaluated. On a real
@@ -452,7 +457,7 @@ function WarBootSequence() {
               data-acquired={i < stage.locks ? 'true' : 'false'}
             >
               <span data-war-track-id>{track.id}</span>
-              <span data-war-track-bearing>{_copy("copy.4a49c5b26d3d", { defaultValue: "BRG " })}{track.bearing}</span>
+              <span data-war-track-bearing>{_copy("copy.4ae268ba1719", { defaultValue: "BRG {{value1}}", value1: track.bearing })}</span>
               <span data-war-track-state>
                 {i < stage.locks ? _copy("copy.74c4812d040a", { defaultValue: "LOCK" }) : _copy("copy.7a1580c49e45", { defaultValue: "SCAN" })}
               </span>
@@ -514,7 +519,7 @@ function WarBootSequence() {
           data-war-boot-status
           className="hidden flex-wrap justify-center gap-2 sm:flex"
         >
-          {FOOT_CHIPS.map((chip) => (
+          {footChips().map((chip) => (
             <span key={chip} data-war-chip>
               {chip}
             </span>

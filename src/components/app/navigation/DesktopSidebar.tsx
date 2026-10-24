@@ -383,7 +383,7 @@ export function DesktopSidebar({ onPostClick }: DesktopSidebarProps) {
   };
 
   // Get user display info for avatar
-  const displayName = user?.displayName || user?.username || 'Anonymous';
+  const displayName = user?.displayName || user?.username || _copy("copy.e7a8aa2df7e5", { defaultValue: "Anonymous" });
   const userAvatarUrl = user?.avatarImageUrl && user?.address
     ? buildAvatarUrl(user.address, user.avatarImageUrl)
     : null;

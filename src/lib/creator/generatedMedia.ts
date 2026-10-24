@@ -1,3 +1,5 @@
+import { translateCopy as _translateCopy } from "@/i18n/copy";
+
 export type GeneratedMediaKind = "image" | "video" | "audio";
 
 const FORMATS: Record<string, { kind: GeneratedMediaKind; ext: string }> = {
@@ -37,7 +39,7 @@ export function generatedMediaFormat(kind: GeneratedMediaKind, url: string, cont
     mime = Object.keys(FORMATS).find(key => FORMATS[key].kind === kind && FORMATS[key].ext === normalized) ?? DEFAULTS[kind];
   }
   const format = FORMATS[mime];
-  if (!format || format.kind !== kind) throw new Error("The generated asset has an unsupported media format");
+  if (!format || format.kind !== kind) throw new Error(_translateCopy("copy.0ca78105ccca", { defaultValue: "The generated asset has an unsupported media format" }));
   return { mime, ext: format.ext };
 }
 

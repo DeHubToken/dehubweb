@@ -208,14 +208,14 @@ export function CrossChainDepositDrawer({ open, onOpenChange, destinationSymbol,
       );
 
       const data = await res.json();
-      if (!res.ok || data?.error) throw new Error(data?.error || 'Quote failed');
+      if (!res.ok || data?.error) throw new Error(data?.error || t("copy.5501d3ecddf6", { defaultValue: "Quote failed" }));
       setQuote(data);
     } catch (err: any) {
-      setQuoteError(err?.message || 'Failed to get quote');
+      setQuoteError(err?.message || t("copy.37bcfc8af381", { defaultValue: "Failed to get quote" }));
     } finally {
       setQuoteLoading(false);
     }
-  }, [selectedToken, amount, walletAddress, refundAddress, dest.assetId]);
+  }, [selectedToken, amount, walletAddress, refundAddress, dest.assetId, t]);
 
   useEffect(() => {
     if (step !== 'amount' || !amount || parseFloat(amount) <= 0) return;

@@ -13,6 +13,7 @@ import {
   onPairSignal,
   type PairIceServer,
 } from '@/lib/api/dehub/pair-socket';
+import { translateCopy as _translateCopy } from '@/i18n/copy';
 
 export type PairStatus = 'idle' | 'queued' | 'matched' | 'connected' | 'error';
 
@@ -207,7 +208,7 @@ export function usePairSession() {
         livenessTimer.current = window.setTimeout(() => {
           livenessTimer.current = null;
           if (pcRef.current !== pc) return;
-          setError('Lost connection to the other person.');
+          setError(_translateCopy("copy.c7339bfb16b1", { defaultValue: "Lost connection to the other person." }));
           finish('end');
         }, LIVENESS_GRACE_MS);
       }
@@ -309,7 +310,7 @@ export function usePairSession() {
     });
 
     const offError = onPairError((err) => {
-      const msg = err?.msg || err?.message || 'Something went wrong.';
+      const msg = err?.msg || err?.message || _translateCopy("copy.0c953ab32c60", { defaultValue: "Something went wrong." });
       // Rate limiting is advisory — it should not drop the user out of a call.
       if (err?.code === 'RATE_LIMITED') {
         setError(msg);

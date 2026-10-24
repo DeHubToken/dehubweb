@@ -24,7 +24,7 @@ const OG_IMAGE = "https://dehub.io" + ogImage;
 const steps = [
   {
     get title() { return _translateCopy("copy.db582e44a2f9", { defaultValue: "Open the DeHub connector in ChatGPT" }); },
-    body: "Click the button below. ChatGPT will jump straight to the DeHub connector inside your Settings → Connectors panel.",
+    get body() { return _translateCopy("copy.a1be36bee94a", { defaultValue: "Click the button below. ChatGPT will jump straight to the DeHub connector inside your Settings → Connectors panel." }); },
   },
   {
     get title() { return _translateCopy("copy.ae7947534d62", { defaultValue: "Enable the connector" }); },
@@ -32,34 +32,34 @@ const steps = [
   },
   {
     get title() { return _translateCopy("copy.1c353e8894fb", { defaultValue: "Start a new chat and use it" }); },
-    body: "Open a new chat, mention DeHub in your prompt (e.g. \"Summarise today's trending posts on DeHub\") and ChatGPT will call the connector automatically.",
+    get body() { return _translateCopy("copy.fd931309f64c", { defaultValue: "Open a new chat, mention DeHub in your prompt (e.g. \"Summarise today's trending posts on DeHub\") and ChatGPT will call the connector automatically." }); },
   },
 ];
 
-const examples = [
-  "Summarise the top 10 trending posts on DeHub right now.",
-  "Find posts on DeHub about Bitcoin from the last 24 hours and give me a bullet-point digest.",
-  "Look up the DeHub profile @satoshi and tell me what they've posted this week.",
-  "Draft a reply to the top post on DeHub in my voice.",
+const examples = () => [
+  _translateCopy("copy.276b978fa5ec", { defaultValue: "Summarise the top 10 trending posts on DeHub right now." }),
+  _translateCopy("copy.cc498e0e6ed6", { defaultValue: "Find posts on DeHub about Bitcoin from the last 24 hours and give me a bullet-point digest." }),
+  _translateCopy("copy.3b2e4df4defd", { defaultValue: "Look up the DeHub profile @satoshi and tell me what they've posted this week." }),
+  _translateCopy("copy.82c5c975c9b2", { defaultValue: "Draft a reply to the top post on DeHub in my voice." }),
 ];
 
 const faqs: { q: string; a: string; aKey?: string }[] = [
   {
-    q: "Is DeHub free to use inside ChatGPT?",
-    a: "Yes. The DeHub ChatGPT app is free. You only need an active ChatGPT account that supports connectors (available on ChatGPT Plus, Pro, Team and Enterprise).",
+    get q() { return _translateCopy("copy.ea334731f6e3", { defaultValue: "Is DeHub free to use inside ChatGPT?" }); },
+    get a() { return _translateCopy("copy.004256b0a4f4", { defaultValue: "Yes. The DeHub ChatGPT app is free. You only need an active ChatGPT account that supports connectors (available on ChatGPT Plus, Pro, Team and Enterprise)." }); },
   },
   {
-    q: "What can the DeHub connector do?",
+    get q() { return _translateCopy("copy.75332791a900", { defaultValue: "What can the DeHub connector do?" }); },
     get a() { return _translateCopy('accountConnect.what', { defaultValue: 'Browse public posts and profiles. With an OAuth account connection, manage your profile and privacy, publish posts and comments, follow people, read notifications, save bookmarks and generate images, video, audio and 3D assets. Generation uses DeHub\'s existing payment rules.' }); },
   },
   {
-    q: "Do I need a DeHub account?",
-    a: "No account is required to read public content through the connector. A DeHub account is only needed if you want to post, tip or hold tokens.",
+    get q() { return _translateCopy("copy.40fc098cb988", { defaultValue: "Do I need a DeHub account?" }); },
+    get a() { return _translateCopy("copy.af1dcb0cb4da", { defaultValue: "No account is required to read public content through the connector. A DeHub account is only needed if you want to post, tip or hold tokens." }); },
     aKey: "accountConnect.account",
   },
   {
-    q: "Which ChatGPT models support this?",
-    a: "Any ChatGPT model that supports Apps / Connectors — currently GPT-5 and GPT-4.1 class models on Plus, Pro, Team and Enterprise plans.",
+    get q() { return _translateCopy("copy.087e62e23c74", { defaultValue: "Which ChatGPT models support this?" }); },
+    get a() { return _translateCopy("copy.ad3880ca9416", { defaultValue: "Any ChatGPT model that supports Apps / Connectors — currently GPT-5 and GPT-4.1 class models on Plus, Pro, Team and Enterprise plans." }); },
   },
 ];
 
@@ -71,7 +71,7 @@ export default function ConnectChatGPTPage() {
     "@graph": [
       {
         "@type": "HowTo",
-        name: "How to use DeHub inside ChatGPT",
+        name: _copy("copy.8b0f0e2f8de1", { defaultValue: "How to use DeHub inside ChatGPT" }),
         description:
           _copy("copy.23bc33eaf5bb", { defaultValue: "Add the DeHub connector to ChatGPT and let GPT browse posts, profiles and trends from the DeHub social network." }),
         image: OG_IMAGE,
@@ -168,7 +168,7 @@ export default function ConnectChatGPTPage() {
         <section className="mt-14">
           <h2 className="text-xl font-bold md:text-2xl">{_copy("copy.7887eb17f548", { defaultValue: "Prompts to try" })}</h2>
           <ul className="mt-6 space-y-2">
-            {[...examples, t('accountConnect.profilePrompt'), t('accountConnect.generatePrompt'), t('accountConnect.libraryPrompt')].map((e) => (
+            {[...examples(), t('accountConnect.profilePrompt'), t('accountConnect.generatePrompt'), t('accountConnect.libraryPrompt')].map((e) => (
               <li
                 key={e}
                 className="flex items-start gap-3 rounded-xl border border-white/10 bg-white/[0.03] p-4 text-sm text-white/80"

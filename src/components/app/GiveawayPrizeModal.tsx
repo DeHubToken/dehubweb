@@ -1,4 +1,4 @@
-import { useTranslation as _useCopy } from 'react-i18next';
+import { Trans, useTranslation as _useCopy } from 'react-i18next';
 import { tokenLabel } from '@/lib/token-label';
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
@@ -106,7 +106,13 @@ export function GiveawayPrizeModal() {
             <span className="text-base font-bold text-amber-400 self-end mb-2">{_copy("copy.72a7a4f82e48", { defaultValue: "prize" })}</span>
           </div>
 
-          <p className="text-white/75 text-sm leading-relaxed mb-6">{_copy("copy.29eeeb9e4b0e", { defaultValue: "You won a " })}<span className="text-white font-medium">{_copy("copy.24154912f277", { defaultValue: "$200 prize" })}</span>{_copy("copy.7e5782fce821", { defaultValue: " from our World Cup giveaway on Twitter. Your tokens have been credited to your account, set for transfer when the contract is live." })}</p>
+          <p className="text-white/75 text-sm leading-relaxed mb-6">
+            <Trans
+              i18nKey="copy.39958a403593"
+              defaults="You won a <prize>$200 prize</prize> from our World Cup giveaway on Twitter. Your tokens have been credited to your account, set for transfer when the contract is live."
+              components={{ prize: <span className="text-white font-medium" /> }}
+            />
+          </p>
 
           <button
             onClick={handleView}

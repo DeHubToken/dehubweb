@@ -29,6 +29,12 @@ export function LiveGiftBuyDrawer({ open, onOpenChange, neededDhb, onFunded, ret
   const { walletAddress } = useAuth();
   const queryClient = useQueryClient();
   const { t } = useTranslation();
+  // Callers name where the buyer goes back to; the known places are worded here.
+  const returnLabel = returnTo === 'gift'
+    ? _copy("copy.a1954b15a745", { defaultValue: "gift" })
+    : returnTo === 'post'
+      ? _copy("copy.72231043bc18", { defaultValue: "post" })
+      : returnTo;
   const [method, setMethod] = useState<'card' | 'crypto'>('card');
   const [amountUsd, setAmountUsd] = useSurfaceDraft("components/app/live/LiveGiftBuyDrawer.tsx:amountUsd", '10');
   const [tokenPrice, setTokenPrice] = useState(0);
@@ -68,7 +74,7 @@ export function LiveGiftBuyDrawer({ open, onOpenChange, neededDhb, onFunded, ret
         if (['sent', 'completed', 'success'].includes((status.tokenSendStatus || '').toLowerCase())) {
           delivered();
         } else if (['failed', 'cancelled', 'canceled', 'expired'].includes((status.status_stripe || '').toLowerCase())) {
-          setError('Payment did not complete. Try again.');
+          setError(_copy("copy.022b10cbda10", { defaultValue: "Payment did not complete. Try again." }));
           setClientSecret('');
           setSessionId('');
         }
@@ -77,12 +83,12 @@ export function LiveGiftBuyDrawer({ open, onOpenChange, neededDhb, onFunded, ret
     void check();
     const timer = setInterval(check, 2500);
     return () => { cancelled = true; clearInterval(timer); };
-  }, [open, sessionId, delivered]);
+  }, [open, sessionId, delivered, _copy]);
 
   const buyWithCard = async () => {
     if (DHB_SALES_PAUSED) return;
     if (!isPaymentsConfigured()) {
-      setError('Card payments are temporarily unavailable. Please try again later.');
+      setError(_copy("copy.78cd2746bd20", { defaultValue: "Card payments are temporarily unavailable. Please try again later." }));
       return;
     }
     if (!walletAddress || !Number.isFinite(Number(amountUsd)) || Number(amountUsd) < 0.5 || !Number.isFinite(estimatedDhb) || estimatedDhb <= 0) return;
@@ -98,11 +104,11 @@ export function LiveGiftBuyDrawer({ open, onOpenChange, neededDhb, onFunded, ret
         embedded: true,
         redirect: `${window.location.origin}${window.location.pathname}?gift_payment=return&session_id={CHECKOUT_SESSION_ID}`,
       });
-      if (!result.clientSecret || !result.sessionId) throw new Error('Card checkout is unavailable.');
+      if (!result.clientSecret || !result.sessionId) throw new Error(_copy("copy.a703a8e28fed", { defaultValue: "Card checkout is unavailable." }));
       setSessionId(result.sessionId);
       setClientSecret(result.clientSecret);
     } catch (cause) {
-      setError(cause instanceof Error ? cause.message : 'Could not start checkout.');
+      setError(cause instanceof Error ? cause.message : _copy("copy.827beb6ec9dc", { defaultValue: "Could not start checkout." }));
     } finally {
       setBusy(false);
     }
@@ -115,7 +121,7 @@ export function LiveGiftBuyDrawer({ open, onOpenChange, neededDhb, onFunded, ret
           <DrawerTitle className="text-white">{_copy("copy.1dffe3aad33c", { defaultValue: "Buy tokens" })}</DrawerTitle>
         </DrawerHeader>
         <div className="overflow-y-auto space-y-4 pb-3">
-          <p className="text-sm text-zinc-400">{t('liveGift.buy.intro', { returnTo })}</p>
+          <p className="text-sm text-zinc-400">{t('liveGift.buy.intro', { returnTo: returnLabel })}</p>
           {!clientSecret && (
             <div className="grid grid-cols-2 gap-2">
               <Button variant="glass" className="w-full" onClick={() => setMethod('card')} aria-pressed={method === 'card'}><CreditCard className="w-4 h-4 mr-2" />{_copy("copy.be3702e3f1af", { defaultValue: "Card" })}</Button>
@@ -135,7 +141,7 @@ export function LiveGiftBuyDrawer({ open, onOpenChange, neededDhb, onFunded, ret
                   <EmbeddedCheckout />
                 </EmbeddedCheckoutProvider>
               </div>
-              <p className="text-xs text-zinc-400 text-center">{paymentComplete ? t('liveGift.buy.waitingDelivery') : _copy("copy.de7a520d250e", { defaultValue: "Complete payment here. Your {{value1}} stays open behind this drawer.", value1: returnTo })}</p>
+              <p className="text-xs text-zinc-400 text-center">{paymentComplete ? t('liveGift.buy.waitingDelivery') : _copy("copy.de7a520d250e", { defaultValue: "Complete payment here. Your {{value1}} stays open behind this drawer.", value1: returnLabel })}</p>
             </div>
           ) : (
             <div className="space-y-3">
@@ -148,7 +154,7 @@ export function LiveGiftBuyDrawer({ open, onOpenChange, neededDhb, onFunded, ret
             </div>
           )}
           {error && <p role="alert" className="text-sm text-red-300">{error}</p>}
-          <Button variant="glass" className="w-full" onClick={() => onOpenChange(false)}>{_copy("copy.1b52b1397dee", { defaultValue: "Back to " })}{returnTo}</Button>
+          <Button variant="glass" className="w-full" onClick={() => onOpenChange(false)}>{_copy("copy.7ff60540f666", { defaultValue: "Back to {{value1}}", value1: returnLabel })}</Button>
         </div>
       </DrawerContent>
     </Drawer>

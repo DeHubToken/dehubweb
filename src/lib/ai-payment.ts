@@ -20,6 +20,7 @@ import { getSubscriptionCredits } from '@/lib/api/dehub/credits';
 import { Interface } from 'ethers';
 import { useQuery } from '@tanstack/react-query';
 import i18n from '@/i18n';
+import { translateCopy as _translateCopy } from '@/i18n/copy';
 import { useAuth } from '@/contexts/AuthContext';
 import { getAuthToken } from '@/lib/api/dehub';
 import { apiCall } from '@/lib/api/dehub/core';
@@ -265,10 +266,10 @@ export async function payForJob(
    */
   { remember = true }: { remember?: boolean } = {},
 ): Promise<string> {
-  if (!getAuthToken()) throw new Error('Sign in to pay for a generation.');
+  if (!getAuthToken()) throw new Error(_translateCopy("copy.cc5512856126", { defaultValue: "Sign in to pay for a generation." }));
   await apiCall('/api/auth/verify', { requiresAuth: true });
   if (!Number.isFinite(priceDhb) || priceDhb <= 0) {
-    throw new Error('Nothing to pay.');
+    throw new Error(_translateCopy("copy.99c7a77baaf9", { defaultValue: "Nothing to pay." }));
   }
 
   // Resolved before the reuse check, because the cache is keyed on it. One
@@ -346,7 +347,7 @@ export async function payForJob(
   await withTimeout(
     switchChain(payChainId),
     CHAIN_SWITCH_TIMEOUT_MS,
-    `Could not switch to ${chain}. Unlock your wallet and try again.`,
+    _translateCopy("copy.8112d6b18c18", { defaultValue: "Could not switch to {{value1}}. Unlock your wallet and try again.", value1: chain }),
   );
 
   // Submitted, but not yet known to be mined. Kept out here so the catch below
@@ -391,7 +392,7 @@ export async function payForJob(
       if (recorded) return submittedHash;
       throw new Error(i18n.t('tokenPayments.sentUnconfirmed'));
     }
-    throw new Error(parseTxError(err) || 'Payment failed.');
+    throw new Error(parseTxError(err) || _translateCopy("copy.4225d535fe99", { defaultValue: "Payment failed." }));
   }
 
   if (reverted) {

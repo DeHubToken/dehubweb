@@ -92,10 +92,10 @@ export function SaveToFolderDrawer({ open, onOpenChange, tokenId }: SaveToFolder
     try {
       if (adding) {
         await addToFolderAsync({ folderId, tokenId, suppressToast: true });
-        setNotice({ message: `Added to ${folderName}`, tone: 'success' });
+        setNotice({ message: _copy("copy.48dbe907c42a", { defaultValue: "Added to {{value1}}", value1: folderName }), tone: 'success' });
       } else {
         await removeFromFolderAsync({ folderId, tokenId, suppressToast: true });
-        setNotice({ message: `Removed from ${folderName}`, tone: 'success' });
+        setNotice({ message: _copy("copy.c95d6fb0cd5c", { defaultValue: "Removed from {{value1}}", value1: folderName }), tone: 'success' });
       }
     } catch {
       setPending((prev) => ({ ...prev, [folderId]: !adding }));
@@ -127,7 +127,7 @@ export function SaveToFolderDrawer({ open, onOpenChange, tokenId }: SaveToFolder
       setPending((prev) => ({ ...prev, [created._id]: true }));
       try {
         await addToFolderAsync({ folderId: created._id, tokenId, suppressToast: true });
-        setNotice({ message: `Saved to ${created.name}`, tone: 'success' });
+        setNotice({ message: _copy("copy.05a3a4786104", { defaultValue: "Saved to {{value1}}", value1: created.name }), tone: 'success' });
       } catch {
         setPending((prev) => ({ ...prev, [created._id]: false }));
         setNotice({ message: _copy("copy.c5abcffd4c32", { defaultValue: "Folder created, but the post wasn't added" }), tone: 'error' });
@@ -229,7 +229,7 @@ export function SaveToFolderDrawer({ open, onOpenChange, tokenId }: SaveToFolder
                   autoFocus
                   value={newFolderName}
                   onChange={(e) => setNewFolderName(e.target.value)}
-                  placeholder="e.g. Cooking, Travel"
+                  placeholder={_copy("copy.b4a1b6baab97", { defaultValue: "e.g. Cooking, Travel" })}
                   maxLength={50}
                   className="h-12 rounded-xl border-white/10 bg-white/[0.06] text-white placeholder:text-zinc-500 focus-visible:ring-white/30"
                 />

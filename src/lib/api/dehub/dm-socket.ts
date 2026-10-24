@@ -15,6 +15,7 @@ import { DEHUB_API_BASE, getAuthToken } from './core';
 import type { DmMessage, DmConversation, DmMsgType } from './dm';
 import { confirmDmSend } from '@/lib/dm-send-confirmation';
 import type { TipBadgeAccount } from '@/lib/tip-badges';
+import { translateCopy as _translateCopy } from '@/i18n/copy';
 
 export function onBadgeBalanceUpdated(cb: (account: TipBadgeAccount) => void): () => void {
   return addPersistentListener('badgeBalanceUpdated', cb);
@@ -317,7 +318,7 @@ export function waitForDmSocket(timeoutMs = 8000): Promise<void> {
     const onConnect = () => { cleanup(); resolve(); };
     const timer = setTimeout(() => {
       cleanup();
-      reject(new Error('Not connected to chat. Check your connection and try again.'));
+      reject(new Error(_translateCopy("copy.d2de8a1bb283", { defaultValue: "Not connected to chat. Check your connection and try again." })));
     }, timeoutMs);
 
     socket.on('connect', onConnect);
@@ -400,7 +401,7 @@ export async function emitEditMessage(payload: EditMessagePayload): Promise<void
     errorEvent: 'error',
     matches: (event: EditedMessage) => event._id === payload.messageId && event.dmId === payload.dmId && event.content === payload.content,
   });
-  if (!saved) throw new Error('The edit was not confirmed. Your text is still here.');
+  if (!saved) throw new Error(_translateCopy("copy.f02d9391febf", { defaultValue: "The edit was not confirmed. Your text is still here." }));
 }
 
 export function emitAddDmReaction(dmId: string, messageId: string, emoji: string): Promise<void> {

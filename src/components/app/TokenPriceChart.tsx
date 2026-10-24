@@ -126,7 +126,7 @@ export function TokenPriceChart({ data, isLoading, timeframe = '7D', onTimeframe
               fontSize: '12px',
             }}
             labelFormatter={(t) => formatTooltipLabel(t)}
-            formatter={(value: number) => [formatTooltipPrice(value), 'Price']}
+            formatter={(value: number) => [formatTooltipPrice(value), _copy("copy.93c91c851e7a", { defaultValue: "Price" })]}
             labelStyle={{ color: '#a1a1aa' }}
             itemStyle={{ color: '#ffffff' }}
           />

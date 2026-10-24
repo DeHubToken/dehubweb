@@ -18,6 +18,7 @@ import { supabase } from '@/integrations/supabase/client';
 import { withWalletHeader } from '@/lib/supabase-wallet-client';
 import { useAuth } from '@/contexts/AuthContext';
 import { toast } from 'sonner';
+import { translateCopy as _translateCopy } from '@/i18n/copy';
 import type {
   AdAccount,
   AdCampaign,
@@ -83,7 +84,7 @@ export function useEnsureAdAccount() {
   const qc = useQueryClient();
   return useMutation({
     mutationFn: async (fields?: { company_name?: string; website?: string }) => {
-      if (!wallet) throw new Error('Connect a wallet first');
+      if (!wallet) throw new Error(_translateCopy("copy.9af4aa875c03", { defaultValue: "Connect a wallet first" }));
       // Insert-ignore first: merge-duplicates upsert would try to UPDATE
       // wallet_address, which clients hold no column grant for.
       const { error: insErr } = await withWalletHeader(
@@ -164,7 +165,7 @@ export function useCreateCampaign() {
   const qc = useQueryClient();
   return useMutation({
     mutationFn: async (draft: CampaignDraft): Promise<AdCampaign> => {
-      if (!wallet) throw new Error('Connect a wallet first');
+      if (!wallet) throw new Error(_translateCopy("copy.9af4aa875c03", { defaultValue: "Connect a wallet first" }));
       const { data, error } = await withWalletHeader(
         adsDb
           .from('ad_campaigns')
@@ -278,7 +279,7 @@ export function useCreateCreative() {
   const qc = useQueryClient();
   return useMutation({
     mutationFn: async (draft: CreativeDraft): Promise<AdCreative> => {
-      if (!wallet) throw new Error('Connect a wallet first');
+      if (!wallet) throw new Error(_translateCopy("copy.9af4aa875c03", { defaultValue: "Connect a wallet first" }));
       const { data, error } = await withWalletHeader(
         adsDb
           .from('ad_creatives')
@@ -493,7 +494,7 @@ export function useTopUpCredit() {
   const qc = useQueryClient();
   return useMutation({
     mutationFn: async (txHash: string) => {
-      if (!wallet) throw new Error('Connect a wallet first');
+      if (!wallet) throw new Error(_translateCopy("copy.9af4aa875c03", { defaultValue: "Connect a wallet first" }));
       const { data, error } = await supabase.functions.invoke('ads-topup', {
         body: { txHash },
         headers: { 'x-wallet-address': wallet },
@@ -515,7 +516,7 @@ export function useTopUpCredit() {
     onSuccess: (d) => {
       qc.invalidateQueries({ queryKey: keys.account(wallet) });
       qc.invalidateQueries({ queryKey: keys.payments(wallet) });
-      toast.success(`Credited $${d.usdCredited.toFixed(2)} to your ads balance`);
+      toast.success(_translateCopy("copy.f4e1ba1bc848", { defaultValue: "Credited ${{value1}} to your ads balance", value1: d.usdCredited.toFixed(2) }));
     },
     onError: (e: Error) => toast.error(e.message),
   });

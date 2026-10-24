@@ -149,7 +149,7 @@ export function ProfileHoverCard({
     // itself comes from the shared override which flips instantly).
     setProfile(prev => prev ? { ...prev, followers: prev.followers + 1 } : null);
     toggleFollow(false, {
-      name: profile.displayName || profile.username || 'user',
+      name: profile.displayName || profile.username || _copy("copy.04f8996da763", { defaultValue: "user" }),
       onError: () => {
         setProfile(prev => prev ? { ...prev, followers: Math.max(0, prev.followers - 1) } : null);
         toast.error(_copy("copy.add025e2b83c", { defaultValue: "Failed to follow" }));

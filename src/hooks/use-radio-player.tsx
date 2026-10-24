@@ -25,6 +25,7 @@ import {
   releaseMediaSession,
   setMediaSessionPlaying,
 } from '@/lib/media-session';
+import { translateCopy as _translateCopy } from '@/i18n/copy';
 
 /** Identity this provider uses to hold the OS media session. */
 const MEDIA_SESSION_OWNER = 'radio-player';
@@ -290,7 +291,7 @@ export function RadioPlayerProvider({ children }: RadioPlayerProviderProps) {
       MEDIA_SESSION_OWNER,
       {
         title: station.name,
-        artist: station.country || 'Live radio',
+        artist: station.country || _translateCopy("copy.fc7331753319", { defaultValue: "Live radio" }),
         album: 'DeHub Radio',
         artwork: station.favicon || null,
       },

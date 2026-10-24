@@ -60,28 +60,28 @@ const PLATFORMS: Platform[] = [
     label: 'YouTube',
     defaultRpm: 2.0,
     range: '$0.50 – $6.00',
-    note: 'After YouTube’s 45% ad-revenue cut. Swings hardest by niche and viewer country.',
+    get note() { return _translateCopy("copy.4f558bb3921c", { defaultValue: "After YouTube’s 45% ad-revenue cut. Swings hardest by niche and viewer country." }); },
   },
   {
     key: 'twitch',
     get label() { return _translateCopy("copy.a731a58c4cf3", { defaultValue: "Twitch" }); },
     defaultRpm: 3.0,
     range: '$2.00 – $4.00',
-    note: 'Ad revenue only — excludes subs and bits, which are usually the larger share.',
+    get note() { return _translateCopy("copy.cc1b7168f16e", { defaultValue: "Ad revenue only — excludes subs and bits, which are usually the larger share." }); },
   },
   {
     key: 'tiktok',
     label: 'TikTok',
     defaultRpm: 0.03,
     range: '$0.02 – $0.04',
-    note: 'Creator Rewards. Famously low per view; scale is the entire model.',
+    get note() { return _translateCopy("copy.64e7a24c5311", { defaultValue: "Creator Rewards. Famously low per view; scale is the entire model." }); },
   },
   {
     key: 'reels',
     get label() { return _translateCopy("copy.b19565a545ba", { defaultValue: "Instagram Reels" }); },
     defaultRpm: 0.02,
     range: '$0.01 – $0.05',
-    note: 'Bonus programmes are invite-only and have been repeatedly wound down.',
+    get note() { return _translateCopy("copy.63c815c265a3", { defaultValue: "Bonus programmes are invite-only and have been repeatedly wound down." }); },
   },
 ];
 
@@ -258,7 +258,7 @@ export function EarningsComparison() {
               inputMode="numeric"
               value={estimatorViews}
               onChange={(e) => setEstimatorViews(e.target.value)}
-              placeholder="e.g. 250000"
+              placeholder={_copy("copy.d4f0af4eced7", { defaultValue: "e.g. {{value1}}", value1: 250000 })}
               className="w-full bg-zinc-800 border border-zinc-700 rounded-xl px-3 py-2 text-white text-sm placeholder:text-zinc-600"
             />
             {estimatorRows && (

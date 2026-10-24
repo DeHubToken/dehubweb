@@ -126,8 +126,8 @@ export function LiveFeed({ isRefreshing = false, showFilters = false }: LiveFeed
       <h3 className="text-white font-semibold text-lg mb-2"><TranslationText name="copy.d8c1b1fc3a37" fallback={"No Live Streams"} /></h3>
       <p className="text-zinc-400 text-sm max-w-xs mb-4">
         {isError 
-          ? _copy("copy.c9eebd6e986b", { defaultValue: "Unable to load streams. {{value1}}", value1: error?.message || 'Please try again.' })
-          : 'No one is streaming right now. Check back later!'}
+          ? _copy("copy.c9eebd6e986b", { defaultValue: "Unable to load streams. {{value1}}", value1: error?.message || _copy("copy.eea4fb33efd3", { defaultValue: "Please try again." }) })
+          : _copy("copy.b0fa8ed37810", { defaultValue: "No one is streaming right now. Check back later!" })}
       </p>
       <button 
         onClick={() => refetch()}

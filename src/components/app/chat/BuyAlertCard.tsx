@@ -81,7 +81,7 @@ export function BuyAlertCard({ content, timestamp, onHide }: BuyAlertCardProps) 
           <div className="flex items-center justify-between mb-2.5">
             <div className="flex items-center gap-1.5">
               <img src={dehubCoin} alt={tokenLabel()} className="w-5 h-5" />
-              <span className="font-bold text-white text-sm tracking-wide">{fmtTokens(data.dhbAmount)}{_copy("copy.4c917437a03f", { defaultValue: " BUY" })}</span>
+              <span className="font-bold text-white text-sm tracking-wide">{_copy("copy.15d586130914", { defaultValue: "{{value1}} BUY", value1: fmtTokens(data.dhbAmount) })}</span>
             </div>
             {onHide && !confirming && (
               <button

@@ -115,7 +115,7 @@ export function AiToolPaywallModal({
     } catch (err: unknown) {
       console.error('[AiToolPaywall] Tool setup failed:', err);
       toast.dismiss('ai-tool-payment');
-      toast.error(err instanceof Error ? err.message : 'Could not start the tool.');
+      toast.error(err instanceof Error ? err.message : _copy("copy.d701b3a4c2eb", { defaultValue: "Could not start the tool." }));
     } finally {
       setIsPaying(false);
     }

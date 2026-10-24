@@ -17,16 +17,16 @@ export default function BuilderPreviewPage() {
   const { t: _copy } = _useCopy();
   const { id } = useParams<{ id: string }>();
   const [srcDoc, setSrcDoc] = useState<string | null>(null);
-  const [error, setError] = useState<string | null>(null);
+  const [unavailable, setUnavailable] = useState(false);
 
   useEffect(() => {
     if (!id) return;
     let cancelled = false;
     setSrcDoc(null);
-    setError(null);
+    setUnavailable(false);
     loadBuilderAppHtml(id)
       .then((html) => !cancelled && setSrcDoc(html))
-      .catch(() => !cancelled && setError('This app is not available yet — it may still be building.'));
+      .catch(() => !cancelled && setUnavailable(true));
     return () => {
       cancelled = true;
     };
@@ -44,8 +44,8 @@ export default function BuilderPreviewPage() {
         />
       ) : (
         <div className="w-full h-full grid place-items-center">
-          {error ? (
-            <p className="text-[#949499] text-sm px-6 text-center">{error}</p>
+          {unavailable ? (
+            <p className="text-[#949499] text-sm px-6 text-center">{_copy("copy.5dafc5f5d31b", { defaultValue: "This app is not available yet — it may still be building." })}</p>
           ) : (
             <DeHubPageLoader minHeight="0" />
           )}

@@ -1,4 +1,5 @@
 import type { CSSProperties } from "react";
+import { useTranslation as _useCopy } from 'react-i18next';
 
 /**
  * DeHub preloader — the animated DeHub mark (a ring sweeping around the "U").
@@ -92,10 +93,12 @@ export const DeHubPageLoader = ({
   minHeight = "60vh",
   fullScreen = false,
   className = "",
-}: DeHubPageLoaderProps) => (
+}: DeHubPageLoaderProps) => {
+  const { t: _copy } = _useCopy();
+  return (
   <div
     role="status"
-    aria-label={label ?? "Loading"}
+    aria-label={label ?? _copy("copy.dc380888c4e2", { defaultValue: "Loading" })}
     className={`flex flex-col items-center justify-center gap-3 ${
       fullScreen ? "min-h-[100dvh] w-full" : "w-full"
     } ${className}`}
@@ -106,7 +109,8 @@ export const DeHubPageLoader = ({
         animates opacity, which would override it. */}
     {label && <span className="dehub-loader-mark text-sm text-zinc-500">{label}</span>}
   </div>
-);
+  );
+};
 
 
 /**

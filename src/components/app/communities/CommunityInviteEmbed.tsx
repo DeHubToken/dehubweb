@@ -1,4 +1,5 @@
 import { useTranslation as _useCopy } from 'react-i18next';
+import { translateCopy as _translateCopy } from '@/i18n/copy';
 /**
  * Community Invite Embed
  * ======================
@@ -29,10 +30,10 @@ interface CommunityInviteEmbedProps {
 }
 
 const INVALID_REASON_COPY: Record<string, string> = {
-  revoked: 'Invite revoked',
-  expired: 'Invite expired',
-  exhausted: 'Invite fully used',
-  not_found: 'Invite not found',
+  get revoked() { return _translateCopy("copy.d8fb3309e7d7", { defaultValue: "Invite revoked" }); },
+  get expired() { return _translateCopy("copy.1c289b31ef0f", { defaultValue: "Invite expired" }); },
+  get exhausted() { return _translateCopy("copy.952133b2dee2", { defaultValue: "Invite fully used" }); },
+  get not_found() { return _translateCopy("copy.a2492a22aba2", { defaultValue: "Invite not found" }); },
 };
 
 export function CommunityInviteEmbed({ code, fallback = null }: CommunityInviteEmbedProps) {
@@ -49,8 +50,8 @@ export function CommunityInviteEmbed({ code, fallback = null }: CommunityInviteE
   if (isError || !preview) return <>{fallback}</>;
 
   const isValid = !!preview.is_valid;
-  const name = preview.name || 'a community';
-  const invalidCopy = INVALID_REASON_COPY[preview.reason ?? 'not_found'] ?? 'Invite unavailable';
+  const name = preview.name || _copy("copy.d87ca853de3c", { defaultValue: "a community" });
+  const invalidCopy = INVALID_REASON_COPY[preview.reason ?? 'not_found'] ?? _copy("copy.cf9f7729c86c", { defaultValue: "Invite unavailable" });
 
   return (
     <button
