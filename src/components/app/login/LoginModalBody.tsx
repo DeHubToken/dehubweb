@@ -31,7 +31,7 @@ import { loginProbesSnapshot, resolveLoginProbes, type LoginProbes } from '@/lib
 import { LoginSavedProfiles } from './LoginSavedProfiles';
 import { LoginBodySkeleton } from './LoginBodySkeleton';
 import { getWalletSetupIntent, setWalletSetupIntent, type WalletSetupIntent } from '@/lib/wallet-setup-intent';
-import type { LoginStep } from './steps';
+import { type LoginStep, isInlineLoginStep } from './steps';
 import type { DiscoveredWallet, WalletId } from './LoginWalletsStep';
 import { createLogger } from '@/lib/logger';
 import { toast } from 'sonner';
@@ -733,11 +733,11 @@ function LoginModalBodyInner({ open, step, setStep, layout = 'default' }: LoginM
     </div>
   );
 
-  const renderPasskeyStep = () => (
+  const renderPasskeyStep = (compact = false) => (
     <div className="space-y-4">
-      <p className="text-white/60 text-sm">
+      {!compact && <p className="text-white/60 text-sm">
         {t('loginModal.passkeyIntro', 'Your fingerprint or face is your account. Nothing to remember, nothing to type.')}
-      </p>
+      </p>}
       <Button
         onClick={() => handlePasskey('signin')}
         disabled={isConnecting}
@@ -768,9 +768,9 @@ function LoginModalBodyInner({ open, step, setStep, layout = 'default' }: LoginM
       {passkeyError && (
         <p className="text-red-400 text-sm">{passkeyError}</p>
       )}
-      <p className="text-white/40 text-xs">
+      {!compact && <p className="text-white/40 text-xs">
         {t('loginModal.passkeyBackupHint', "Your account lives in this device's passkey. On most phones it syncs with your Google or Apple account, and you can add a password backup in Settings.")}
-      </p>
+      </p>}
     </div>
   );
 
@@ -778,6 +778,50 @@ function LoginModalBodyInner({ open, step, setStep, layout = 'default' }: LoginM
   // order and weight change: email is the field on screen, every other way in
   // is one tap below it.
   const stackOptionClass = 'login-stack-option text-white disabled:opacity-50';
+  const inlineLayout = layout === 'stack' && isInlineLoginStep(step);
+  const chooseInlineStep = (next: LoginStep) => {
+    cancelEmailMagicLink();
+    setStep(next);
+  };
+
+  const renderImportWalletStep = () => (
+        <React.Suspense fallback={<DeHubPageLoader size={56} minHeight="180px" />}>
+          <LoginImportWalletStep busy={isConnecting} onImport={async privateKey => {
+            await handleUseDifferentWallet();
+            const { prepareImportedWallet, ensureImportedWalletConnector, finishImportedWallet, IMPORTED_WALLET_ID } = await import('@/lib/imported-wallet');
+            try {
+              await prepareImportedWallet(privateKey);
+              setWagmiAuthIntent(true, IMPORTED_WALLET_ID);
+              await connectAsync({ connector: ensureImportedWalletConnector() });
+            } catch (error) {
+              setWagmiAuthIntent(false);
+              await finishImportedWallet(false);
+              throw error;
+            }
+          }} />
+        </React.Suspense>
+  );
+
+  const renderWalletsStep = () => (
+        <React.Suspense fallback={<DeHubPageLoader size={56} minHeight="180px" />}>
+          <LoginWalletsStep
+            isConnecting={isConnecting}
+            activeProvider={activeProvider}
+            connectedAddress={isWagmiAlreadyConnected ? wagmiCurrentAddress ?? null : null}
+            connectedWalletName={wagmiCurrentConnector?.name ?? null}
+            connectedWalletId={connectedWalletId}
+            onContinueConnectedWallet={isWagmiAlreadyConnected && wagmiCurrentConnector ? () => handleWalletConnect((connectedWalletId ?? wagmiCurrentConnector.id) as WalletId, () => {}) : undefined}
+            discoveredWallets={discoveredWallets}
+            onUseDifferentWallet={handleUseDifferentWallet}
+            onSwitchAccount={canSwitchAccount ? handleSwitchAccount : undefined}
+            onWalletConnect={handleWalletConnect}
+            onDiscoveredWalletConnect={handleDiscoveredWalletConnect}
+            onWalletConnectConnect={handleWalletConnectConnect}
+            onImportWallet={layout === 'stack' ? () => { chooseSetupIntent(null); setStep('import-wallet'); } : undefined}
+          />
+        </React.Suspense>
+  );
+
   const renderStackMainStep = () => (
     <div className="space-y-4">
       {!isAuthenticated && (
@@ -819,10 +863,16 @@ function LoginModalBodyInner({ open, step, setStep, layout = 'default' }: LoginM
         </div>
       )}
 
+      <div className="login-stack-method" data-login-method={step}>
+        {step !== 'main' && step !== 'email' && (
+          <button type="button" onClick={() => chooseInlineStep('main')} disabled={isConnecting} className="mb-2 text-xs text-white/60 hover:text-white underline underline-offset-4">
+            {t('loginModal.continueEmail')}
+          </button>
+        )}
+        {(step === 'main' || step === 'email') && (
       <form onSubmit={handleEmailSubmit} className="space-y-2.5" noValidate>
         <label htmlFor="login-stack-email" className="sr-only">{t('loginModal.emailPlaceholder')}</label>
         <div className="relative">
-          <Mail className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-white/40 pointer-events-none" aria-hidden="true" />
           <Input
             id="login-stack-email"
             type="email"
@@ -832,7 +882,7 @@ function LoginModalBodyInner({ open, step, setStep, layout = 'default' }: LoginM
             value={email}
             onChange={(e) => { setEmail(e.target.value); if (emailError) setEmailError(''); }}
             disabled={isConnecting}
-            className="h-14 pl-12 bg-white/10 border-white/10 text-white text-base placeholder:text-white/40 rounded-2xl"
+            className="h-14 text-center bg-white/10 border-white/10 text-white text-base placeholder:text-white/40 rounded-2xl"
           />
         </div>
         {emailError && <p className="text-red-400 text-sm">{emailError}</p>}
@@ -851,6 +901,14 @@ function LoginModalBodyInner({ open, step, setStep, layout = 'default' }: LoginM
           )}
         </Button>
       </form>
+        )}
+        {step === 'phone' && renderPhoneStep(true)}
+        {step === 'phone-code' && renderPhoneCodeStep()}
+        {step === 'passkey' && renderPasskeyStep(true)}
+        {step === 'wallets' && renderWalletsStep()}
+        {step === 'import-wallet' && renderImportWalletStep()}
+        {step === 'email-waiting' && renderEmailWaitingStep()}
+      </div>
 
       <div className="flex items-center gap-3">
         <Separator className="flex-1 bg-white/10" />
@@ -867,12 +925,12 @@ function LoginModalBodyInner({ open, step, setStep, layout = 'default' }: LoginM
           <span className="login-stack-option__disc">{activeProvider === 'apple' ? <Loader2 className="w-5 h-5 animate-spin" /> : <AppleIcon />}</span>
           Apple
         </button>
-        <button type="button" onClick={() => setStep('phone')} disabled={isConnecting} className={stackOptionClass} aria-label={t('loginModal.continuePhone', 'Continue with phone')}>
+        <button type="button" onClick={() => chooseInlineStep('phone')} aria-pressed={step === 'phone' || step === 'phone-code'} disabled={isConnecting} className={stackOptionClass} aria-label={t('loginModal.continuePhone', 'Continue with phone')}>
           <span className="login-stack-option__disc"><Phone className="w-5 h-5" /></span>
           {t('loginStack.phone', 'Phone')}
         </button>
         {passkeyAvailable && (
-          <button type="button" onClick={() => setStep('passkey')} disabled={isConnecting} className={stackOptionClass} aria-label={t('loginModal.continuePasskey', 'Continue with fingerprint')}>
+          <button type="button" onClick={() => chooseInlineStep('passkey')} aria-pressed={step === 'passkey'} disabled={isConnecting} className={stackOptionClass} aria-label={t('loginModal.continuePasskey', 'Continue with fingerprint')}>
             <span className="login-stack-option__disc"><Fingerprint className="w-5 h-5" /></span>
             {t('loginStack.fingerprint', 'Fingerprint')}
           </button>
@@ -885,7 +943,8 @@ function LoginModalBodyInner({ open, step, setStep, layout = 'default' }: LoginM
             the list it opens. */}
         <button
           type="button"
-          onClick={() => setStep('wallets')}
+          onClick={() => chooseInlineStep('wallets')}
+          aria-pressed={step === 'wallets' || step === 'import-wallet'}
           onPointerEnter={() => { void import('./LoginWalletsStep'); }}
           disabled={isConnecting}
           className={stackOptionClass}
@@ -1010,7 +1069,7 @@ function LoginModalBodyInner({ open, step, setStep, layout = 'default' }: LoginM
     </div>
   );
 
-  const renderPhoneStep = () => (
+  const renderPhoneStep = (compact = false) => (
     <div className="space-y-4">
       <form onSubmit={handlePhoneSubmit} className="space-y-4">
         <div className="space-y-2">
@@ -1043,9 +1102,9 @@ function LoginModalBodyInner({ open, step, setStep, layout = 'default' }: LoginM
           )}
         </Button>
 
-        <p className="text-white/40 text-xs text-center">
+        {!compact && <p className="text-white/40 text-xs text-center">
           {t('loginModal.phoneCodeInfo', "We'll text you a 6-digit verification code.")}
-        </p>
+        </p>}
       </form>
     </div>
   );
@@ -1106,48 +1165,15 @@ function LoginModalBodyInner({ open, step, setStep, layout = 'default' }: LoginM
       {/* The same placeholder the shell shows while this chunk is in flight,
           so the wait for the chunk and the wait for the probes read as one
           beat rather than two — and the options appear once, complete. */}
-      {step === 'main' && (probes ? (layout === 'stack' ? renderStackMainStep() : renderMainStep()) : <LoginBodySkeleton />)}
-      {step === 'passkey' && renderPasskeyStep()}
-      {step === 'email' && renderEmailStep()}
-      {step === 'email-waiting' && renderEmailWaitingStep()}
-      {step === 'phone' && renderPhoneStep()}
-      {step === 'phone-code' && renderPhoneCodeStep()}
-      {step === 'import-wallet' && (
-        <React.Suspense fallback={<DeHubPageLoader size={56} minHeight="180px" />}>
-          <LoginImportWalletStep busy={isConnecting} onImport={async privateKey => {
-            await handleUseDifferentWallet();
-            const { prepareImportedWallet, ensureImportedWalletConnector, finishImportedWallet, IMPORTED_WALLET_ID } = await import('@/lib/imported-wallet');
-            try {
-              await prepareImportedWallet(privateKey);
-              setWagmiAuthIntent(true, IMPORTED_WALLET_ID);
-              await connectAsync({ connector: ensureImportedWalletConnector() });
-            } catch (error) {
-              setWagmiAuthIntent(false);
-              await finishImportedWallet(false);
-              throw error;
-            }
-          }} />
-        </React.Suspense>
-      )}
-      {step === 'wallets' && (
-        <React.Suspense fallback={<DeHubPageLoader size={56} minHeight="180px" />}>
-          <LoginWalletsStep
-            isConnecting={isConnecting}
-            activeProvider={activeProvider}
-            connectedAddress={isWagmiAlreadyConnected ? wagmiCurrentAddress ?? null : null}
-            connectedWalletName={wagmiCurrentConnector?.name ?? null}
-            connectedWalletId={connectedWalletId}
-            onContinueConnectedWallet={isWagmiAlreadyConnected && wagmiCurrentConnector ? () => handleWalletConnect((connectedWalletId ?? wagmiCurrentConnector.id) as WalletId, () => {}) : undefined}
-            discoveredWallets={discoveredWallets}
-            onUseDifferentWallet={handleUseDifferentWallet}
-            onSwitchAccount={canSwitchAccount ? handleSwitchAccount : undefined}
-            onWalletConnect={handleWalletConnect}
-            onDiscoveredWalletConnect={handleDiscoveredWalletConnect}
-            onWalletConnectConnect={handleWalletConnectConnect}
-            onImportWallet={layout === 'stack' ? () => { chooseSetupIntent(null); setStep('import-wallet'); } : undefined}
-          />
-        </React.Suspense>
-      )}
+      {inlineLayout && (probes ? renderStackMainStep() : <LoginBodySkeleton />)}
+      {step === 'main' && !inlineLayout && (probes ? renderMainStep() : <LoginBodySkeleton />)}
+      {step === 'passkey' && !inlineLayout && renderPasskeyStep()}
+      {step === 'email' && !inlineLayout && renderEmailStep()}
+      {step === 'email-waiting' && !inlineLayout && renderEmailWaitingStep()}
+      {step === 'phone' && !inlineLayout && renderPhoneStep()}
+      {step === 'phone-code' && !inlineLayout && renderPhoneCodeStep()}
+      {step === 'import-wallet' && !inlineLayout && renderImportWalletStep()}
+      {step === 'wallets' && !inlineLayout && renderWalletsStep()}
       {step === 'wallet-create' && supabaseUserId && (
         <React.Suspense fallback={<DeHubPageLoader size={56} minHeight="180px" />}>
           <WalletCreateStep
