@@ -1,6 +1,6 @@
 import { useTranslation as _useCopy } from 'react-i18next';
 import { useSurfaceDraft } from '@/hooks/use-surface-draft';
-import { useMemo, useEffect, useRef, useCallback, useState } from 'react';
+import { useMemo, useEffect, useLayoutEffect, useRef, useCallback, useState } from 'react';
 import { useSearchParams, useParams, useNavigate } from 'react-router-dom';
 import { Film, Star, Pin, ListVideo, ThumbsDown } from "lucide-react";
 import Image from "@/components/ui/cut-icons/images";
@@ -48,7 +48,7 @@ const PROFILE_TAB_POST_TYPE: Partial<Record<TabValue, string>> = {
   songs: 'feed-audio',
   live: 'live',
 };
-import { scrollDocumentToSmooth } from '@/lib/document-scroll';
+import { scrollDocumentTo, scrollDocumentToSmooth } from '@/lib/document-scroll';
 
 /** A reposted governance proposal on the profile timeline. */
 export interface ProfileProposalItem {
@@ -82,11 +82,9 @@ export function useProfilePage({ activeTab = 'home' }: UseProfilePageOptions = {
   const profileContainerRef = useRef<HTMLDivElement>(null);
   const queryClient = useQueryClient();
 
-  // Reset scroll position on mount
-  useEffect(() => {
-    window.scrollTo(0, 0);
-    document.documentElement.scrollTop = 0;
-    document.body.scrollTop = 0;
+  // Settle the incoming profile before paint and before its navigation snapshot.
+  useLayoutEffect(() => {
+    scrollDocumentTo(0);
     setTranslatedBio(null);
   }, [routeUsername, userId]);
 
