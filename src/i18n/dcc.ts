@@ -1478,4 +1478,7 @@ export const dcc = {
     activeCampaigns: 'एक्टिव कैंपेन',
     status: 'स्टेटस',
   },
+  featuredIn: {
+    yahooFinanceHeadline: 'DeHub मेटावर्स का पोर्टल लॉन्च कर रहा है',
+  },
 };
