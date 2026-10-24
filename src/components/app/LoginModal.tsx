@@ -30,7 +30,7 @@ import { LoginBodySkeleton } from '@/components/app/login/LoginBodySkeleton';
 import { Drawer, DrawerContent, DrawerHeader, DrawerTitle, warmDeferredSheets } from '@/components/ui/drawer';
 import { Dialog, DialogContent, DialogTitle } from '@/components/ui/dialog';
 import { useAuth } from '@/contexts/AuthContext';
-import { type LoginStep, resumingStep } from '@/components/app/login/steps';
+import { type LoginStep, resumingStep, isInlineLoginStep } from '@/components/app/login/steps';
 import { getWalletSetupIntent, setWalletSetupIntent } from '@/lib/wallet-setup-intent';
 import dehubLogo from '@/assets/dehub-logo-white.png';
 import { useKeyboardSafeSheet } from '@/hooks/use-keyboard-open';
@@ -220,7 +220,7 @@ export function LoginModal({ open, onOpenChange }: LoginModalProps) {
   // Share the email-first hero across screen sizes while retaining the
   // desktop's existing middle-column drawer and the phone's full-screen sheet.
   const stackSheet = isMobile && loginIntent !== 'add-profile';
-  const stackLayout = loginIntent !== 'add-profile' && step === 'main';
+  const stackLayout = loginIntent !== 'add-profile' && isInlineLoginStep(step);
 
   const termsNotice = (
     <Trans
@@ -239,7 +239,7 @@ export function LoginModal({ open, onOpenChange }: LoginModalProps) {
         <DrawerTitle className="sr-only">{titleText}</DrawerTitle>
       </DrawerHeader>
 
-      <div className="login-stack-scroll flex-1 min-h-0 overflow-y-auto overscroll-contain px-6 pb-4">
+      <div className="login-stack-scroll flex flex-col flex-1 min-h-0 overflow-y-auto overscroll-contain px-6 pb-4">
         <Suspense fallback={<div className="h-[420px]" aria-hidden="true" />}>
           <LoginShortsStack />
         </Suspense>
@@ -251,7 +251,7 @@ export function LoginModal({ open, onOpenChange }: LoginModalProps) {
       </div>
 
       <div className="shrink-0 px-6 py-3 border-t border-white/10 pb-[calc(0.75rem+env(safe-area-inset-bottom))]">
-        <p className="text-xs text-white/40 text-center">{t('loginStack.codeNote', 'We email you a code, no password needed.')}{' '}{termsNotice}</p>
+        <p className="text-xs text-white/40 text-center">{(step === 'main' || step === 'email' || step === 'email-waiting') && <>{t('loginStack.codeNote', 'We email you a code, no password needed.')} </>}{termsNotice}</p>
       </div>
     </>
   ) : (
@@ -332,6 +332,8 @@ export function LoginModal({ open, onOpenChange }: LoginModalProps) {
         data-login-stack-sheet={stackSheet ? '' : undefined}
         className={stackSheet
           ? "bg-black/80 backdrop-blur-2xl saturate-[180%] border-0 p-0 gap-0 rounded-none overflow-clip z-[2147483646] flex flex-col mt-0 h-[100dvh] max-h-[100dvh]"
+          : stackLayout
+          ? "bg-black/60 backdrop-blur-2xl saturate-[180%] border border-white/10 border-b-0 p-0 gap-0 rounded-t-2xl overflow-clip z-[2147483646] flex flex-col h-[90dvh] max-h-[90dvh]"
           : "bg-black/60 backdrop-blur-2xl saturate-[180%] border border-white/10 border-b-0 p-0 gap-0 rounded-t-2xl overflow-clip z-[2147483646] flex flex-col max-h-[90dvh]"}
         overlayClassName="z-[2147483645] login-modal-overlay backdrop-blur-xl md:bg-black/40"
       >
