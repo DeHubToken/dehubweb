@@ -340,6 +340,8 @@ export function AudioVisualizer({
 
   const { theme, themeChoice } = useAppTheme();
   const isLightTheme = (theme === 'light' || themeChoice === 'system-light');
+  const studioLayout = theme === 'glass' || theme === 'system' || isLightTheme;
+  const visualizerLight = isLightTheme && !studioLayout;
   const animationRef = useRef<number | null>(null);
   const isConnectedRef = useRef(false);
   // The presets do not fit a narrow card. Mask whichever edge is actually
@@ -644,7 +646,7 @@ export function AudioVisualizer({
 
   const drawFrame = useCallback(() => {
     // Paper flips the painters' lightness scale; see setVisualizerInk.
-    setVisualizerInk(isLightTheme);
+    setVisualizerInk(visualizerLight);
     const canvas = canvasRef.current;
     if (!canvas) return;
     const ctx = canvas.getContext('2d');
@@ -653,7 +655,7 @@ export function AudioVisualizer({
     const { width } = canvas;
     // Studio card: the animation stands on the deck's top line, and the strip
     // under the deck gets a mirrored copy for its frosted glass to bleed.
-    const studio = !isFullscreen && (theme === 'glass' || (theme === 'system' && !isLightTheme));
+    const studio = !isFullscreen && studioLayout;
     const bleed = studio ? Math.round(STUDIO_BLEED * width / (canvas.clientWidth || width)) : 0;
     const height = canvas.height - bleed;
     if (!width || height <= 0) return;
@@ -678,7 +680,7 @@ export function AudioVisualizer({
       ctx.fillRect(0, height, width, bleed);
       ctx.restore();
     }
-  }, [style, hue, seed, idleFrequency, idleTime, idleShape, isLightTheme, theme, isFullscreen]);
+  }, [style, hue, seed, idleFrequency, idleTime, idleShape, visualizerLight, studioLayout, theme, isFullscreen]);
 
   function paintFrame(ctx: CanvasRenderingContext2D, canvas: HTMLCanvasElement, width: number, height: number) {
     if (style === 'static') {
@@ -761,7 +763,7 @@ export function AudioVisualizer({
       ctx.setTransform(1, 0, 0, 1, 0, 0);
       ctx.clearRect(0, 0, width, height);
       ctx.setTransform(scale, 0, 0, scale, 0, 0);
-      drawExtra(style, ctx as never, width / scale, height / scale, listener.frame, makePalette(hue, isLightTheme, theme), extraStateRef.current as never);
+      drawExtra(style, ctx as never, width / scale, height / scale, listener.frame, makePalette(hue, visualizerLight, theme), extraStateRef.current as never);
       ctx.setTransform(1, 0, 0, 1, 0, 0);
       return;
     }
@@ -1103,14 +1105,14 @@ export function AudioVisualizer({
 
   const stopBubble = (e: React.SyntheticEvent) => e.stopPropagation();
 
-  if (theme === 'glass' || (theme === 'system' && !isLightTheme)) return (
-    <div data-no-swipe data-video-controls data-audio-player data-audio-studio data-material={theme} data-audio-studio-fullscreen={isFullscreen || undefined} className={className} onClick={stopBubble}>
+  if (studioLayout) return (
+    <div data-no-swipe data-video-controls data-audio-player data-audio-studio data-material={isLightTheme ? 'light' : theme} data-audio-studio-fullscreen={isFullscreen || undefined} className={className} onClick={stopBubble}>
       <div data-audio-studio-title>
         {artworkUrl && !artworkUrl.split('?')[0].endsWith('/placeholder.svg') && <img data-audio-studio-cover src={artworkUrl} alt="" loading="lazy" onError={event => { event.currentTarget.hidden = true; }} />}
         <div><strong>{displayTitle || popoutTrack?.title || t('audioPost.untitled')}</strong>
         <span>{popoutTrack?.artist || t('audioPost.creator')}</span></div>
       </div>
-      <div data-audio-studio-motion>
+      <div data-audio-studio-motion data-keep-dark>
       <canvas ref={canvasRef} width={canvasSize.w} height={canvasSize.h}
         style={{ touchAction: 'pan-y' }}
         onPointerDown={e => beginScrub(e.currentTarget, e, false)}
