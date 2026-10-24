@@ -93,7 +93,7 @@ export function ShareToDmModal({ open, onOpenChange, url }: ShareToDmModalProps)
 
   const sharedLink = useMemo(() => parseDehubLink(url), [url]);
   // Capitalised for the toast: "Item sent to Ana", "Community sent to Ana".
-  const noun = sharedLink ? dehubLinkLabel(sharedLink.kind) : 'link';
+  const noun = dehubLinkLabel(sharedLink ? sharedLink.kind : 'link');
   const sentLabel = noun.charAt(0).toUpperCase() + noun.slice(1);
 
   const buildContent = () => {
@@ -148,7 +148,7 @@ export function ShareToDmModal({ open, onOpenChange, url }: ShareToDmModalProps)
       // the message behind a dmId that never materialised — the user landed on
       // an empty composer and the share was silently lost.
       if (conv.otherUser) { await sendToUser(conv.otherUser, key); return; }
-      toast.error(`Failed to send ${noun}`);
+      toast.error(_copy('dehubLinks.sendFailed', { item: noun }));
       return;
     }
     setRowStatus(s => ({ ...s, [key]: 'sending' }));
@@ -156,11 +156,11 @@ export function ShareToDmModal({ open, onOpenChange, url }: ShareToDmModalProps)
       const wire = await prepareOutgoing(conv.otherUser?.address, buildContent());
       await emitSendMessage({ dmId: conv.id, content: wire.content, type: 'msg' });
       setRowStatus(s => ({ ...s, [key]: 'sent' }));
-      toast.success(`${sentLabel} sent to ${conv.otherUser?.displayName || conv.otherUser?.username || 'chat'}`);
+      toast.success(_copy('dehubLinks.sentTo', { item: sentLabel, name: conv.otherUser?.displayName || conv.otherUser?.username || _copy('dehubLinks.recipientChat') }));
     } catch (err) {
       console.error('[ShareToDm] send to conversation failed:', err);
       setRowStatus(s => ({ ...s, [key]: 'idle' }));
-      toast.error(`Failed to send ${noun}`);
+      toast.error(_copy('dehubLinks.sendFailed', { item: noun }));
     }
   };
 
@@ -188,11 +188,11 @@ export function ShareToDmModal({ open, onOpenChange, url }: ShareToDmModalProps)
       const wire = await prepareOutgoing(user.address, buildContent());
       await emitSendMessage({ dmId: conv._id, content: wire.content, type: 'msg' });
       setRowStatus(s => ({ ...s, [key]: 'sent' }));
-      toast.success(`${sentLabel} sent to ${user.displayName || user.username || 'user'}`);
+      toast.success(_copy('dehubLinks.sentTo', { item: sentLabel, name: user.displayName || user.username || _copy('dehubLinks.recipientUser') }));
     } catch (err) {
       console.error('[ShareToDm] send to user failed:', err);
       setRowStatus(s => ({ ...s, [key]: 'idle' }));
-      toast.error(`Failed to send ${noun}`);
+      toast.error(_copy('dehubLinks.sendFailed', { item: noun }));
     }
   };
 

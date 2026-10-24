@@ -2600,7 +2600,7 @@ function AppearanceSettings({ theme, themeChoice, setTheme }: { theme: string; t
               <ThemePreviewCard
                 key={option.value}
                 value={option.value}
-                label={option.value === 'glass' ? 'Glassy' : t(option.labelKey)}
+                label={t(option.labelKey)}
                 active={themeChoice === option.value}
                 available={option.available}
                 onSelect={() => {

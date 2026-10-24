@@ -1,4 +1,191 @@
 {
+  "copy": {
+    "036cfd952896": "किन्हें फॉलो करें",
+    "05d0e1b9a76e": "कैप्चर कार्ड फिर से शुरू करें",
+    "0c820caf16c0": "अभी तक कोई बायो नहीं है",
+    "0f3dd376ee85": "Toe capture card khojathio…",
+    "12b91b0ac5dd": "{{value1}} — प्रतिक्रिया देने के लिए दबाए रखें",
+    "150d73bf85e7": "Elgato, AVerMedia… OBS nai",
+    "1929290e09aa": "Capture card setup kholo (camera access mangi)",
+    "1b2c08a8733d": "Quality",
+    "26be785e21b7": "अभी तक कोई म्यूजिक वीडियो नहीं है",
+    "2971f9103f78": "شكراً لجهودك في تحسين DeHub — ما طلبتَهُ الآن متوفر الآن:",
+    "2f33a51e3171": "DeHub गवर्नेंस प्रस्ताव — वोट करें और चर्चा करें।",
+    "2f7e24392d9c": "आगामी स्टेज",
+    "302b4ce5c73d": "ऑडियो अपलोड",
+    "344b4271ca01": "फॉलोइंग",
+    "36cffc7912e4": "Tor mic (game upre katha bole le)",
+    "37fd4e355ba3": "फुलस्क्रीन से बाहर निकलें",
+    "3a17aa4e4abb": "स्टेज",
+    "3b59e95daada": "अभी कोई लाइव स्टेज नहीं है",
+    "42484309dc66": "{{value1}} — लिंक दिखाने के लिए बैकस्पेस दबाएं",
+    "42ee912bff23": "रेडियो स्टेशन",
+    "44207eb29645": "बदला जा रहा है...",
+    "44c9d36485b7": "सभी देखें",
+    "4a1bd4a3aaf3": "Capture card",
+    "506ff3946215": "गोपनीयता नीति",
+    "594bea9c9448": "Kono capture card nai milal. USB se lagao, tab niche chuno.",
+    "5e0cb5ae157b": "इमेज {{value1}}",
+    "641d1ef657bd": "फॉलो करें",
+    "67004337fb60": "E device nai khuli sake. OBS ya Elgato Studio ke band karo (ek baar me khali ek app use kar sake).",
+    "6a40edf1fc87": "WhatsApp",
+    "7527dc6722fc": "रीपोस्ट करने में विफल",
+    "77db95ebd737": "संदेश कॉपी करें",
+    "7bb6682e5826": "नया कॉलबैक अनुरोध",
+    "7c14e8607c11": "स्टेशन लोड हो रहा है...",
+    "846d8244b7d8": "आमंत्रण संदेश कॉपी किया गया",
+    "89a167dad6da": "رنگ‌نمای بصری",
+    "8bb1dbd60bce": "E tab ke khula rakho jab tak to live ahe.",
+    "8c91325d901b": "इस संदेश के साथ स्ट्रीमर्स को DeHub स्ट्रीमिंग पेज पर भेजें। आपका लिंक उनके आने से पहले ही उन्हें आपसे जोड़ देता है।",
+    "8dd6857baf02": "म्यूट करें",
+    "905392fbed15": "شكراً على مساعدتك في تحسين DeHub — {{value1}} من الأشياء التي طلبتها الآن تعمل:",
+    "96882965394f": "Game audio",
+    "99ca327a47b5": "{{value1}} के लिए कवर ग्राफिक",
+    "a2838b66518a": "Auto (tor card jetna best kar sake)",
+    "a3156ed263d2": "{{value1}} — अपनी प्रतिक्रिया बदलने के लिए दबाए रखें",
+    "a865110e919b": "वॉलेट इम्पोर्ट करें",
+    "ab4d6796dbbe": "म्यूजिक वीडियो",
+    "b10fb966d720": "वॉल्यूम",
+    "b3412a3b86de": "स्ट्रीमर्स को आमंत्रित करें",
+    "b5f64aac226f": "بوسیلهٔ ادامه دادن، شما موافقت می‌کنید با قوانین ما.",
+    "b8643d1cc81a": "1080p 60 ke lagbhag 9 Mbps upload darkar. Slow Wi‑Fi me 720p chuno.",
+    "c1c8f6c1d828": "जल्द शुरू हो रहा है",
+    "c1cd85f576ed": "{{value1}} — DeHub गवर्नेंस",
+    "c7ce89b32897": "Capture card ke pause karo",
+    "cc96aaa18cf2": "मेरे साथ DeHub पर स्ट्रीम करें। टिप्स सीधे आपके वॉलेट में ऑन-चेन आते हैं, आप अपने दर्शकों के मालिक हैं, और आप एक ही बार में TikTok और बाकी हर जगह पोस्ट करना जारी रख सकते हैं। यहाँ साइन अप करें: {{link}}",
+    "cccec0619e2d": "अभी तक कोई ऑडियो अपलोड नहीं है",
+    "cd9939b6aa1a": "इमेज {{value1}} बदलें",
+    "ce4ee4efc5e3": "अनम्यूट करें",
+    "d0f08798ff1a": "इनके द्वारा फॉलो किया गया",
+    "d7038cc95b8e": "TV me card ke passthrough se khelo, e preview se nai. E thoda piche chale.",
+    "de6694f3ada3": "Ek device chuno",
+    "e3ee915a8e8c": "و",
+    "ede548996483": "शर्तें",
+    "fedc5cda305d": "Capture paused"
+  },
+  "dehubAppPage": {
+    "android": "Android",
+    "appStore": "App Store par download karu",
+    "downloadApk": "APK download karu (Google Play bina Android khatir)",
+    "downloadTitle": "DeHub download karu",
+    "faq": {
+      "a1": "Na. dehub.io par DeHub ek independent open-source social media platform hai. DePaul University ke DeHUB student portal, Rowan ke DEHub aur deHUB Access door-entry app sab alag product hai je kar naam khali ek jaisan hai.",
+      "a2": "Haan. DeHub Google Play aur App Store se download kare khatir free hai, aur dehub.io par browser me use kare khatir bhi free hai.",
+      "a3": "Android फोन में Google Play से या सीधा APK डाउनलोड करके, iPhone में App Store से, और कोनो भी आधुनिक डेस्कटॉप या मोबाइल ब्राउज़र में dehub.io पर।",
+      "a4": "हाँ। सबसे नया Android बिल्ड DeHub द्वारा सीधा APK डाउनलोड के रूप में dehub.io/apk पर उपलब्ध है, Android 8 और ओकर ऊपर के वर्जन खातिर।",
+      "a5": "क्रोनोलॉजिकल फीड में पोस्ट कर सकिला, लाइव जा सकिला या लाइव स्ट्रीम देख सकिला, दोस्त मन से एंड-टू-एंड एन्क्रिप्शन के साथ मैसेज कर सकिला, कम्युनिटी में जुड़ सकिला और चला सकिला, इन-बिल्ट मल्टी-चेन वॉलेट में टोकन रख सकिला और देख के इनाम कमा सकिला।",
+      "q1": "Ka DeHub DePaul University ke app hai?",
+      "q2": "Ka DeHub app free hai?",
+      "q3": "DeHub कौन-कौन डिवाइस में चलेला?",
+      "q4": "का हम Android में बिना Google Play के DeHub इंस्टॉल कर सकिला?",
+      "q5": "हम DeHub ऐप में का-का कर सकिला?"
+    },
+    "faqTitle": "Frequently asked questions",
+    "googlePlay": "Google Play par le",
+    "heading": "DeHub App",
+    "intro1": "DeHub ek decentralised social network aur mobile app hai, je 2021 se banat hai, jahan post ke on-chain mint karal ja sake hai aur creator log aapan audience, content aur kamai ke rakh sake hain.",
+    "intro2": "Ime chronological feed, live streaming, end-to-end encrypted messaging, user-run communities, multi-chain wallet aur watch-to-earn rewards token me mile hai. Ekke account Android, iPhone aur kono modern browser me chale hai.",
+    "iphone": "iPhone",
+    "notSure": "अभी भी समझ में नीखे आवत कि रउआ कौन DeHub के जरूरत है? <compare>DeHub vs DePaul DeHUB vs Rowan DEHub</compare> ई सब साफ कर देला, और <guide>What is DeHub?</guide> पूरा प्लेटफॉर्म के बारे में विस्तार से बतावेला।",
+    "openInBrowser": "DeHub ke aapan browser me kholu",
+    "seoDescription": "DeHub app le: open-source, user-owned social media jisme live streaming, encrypted messaging aur watch-to-earn hai. Google Play, App Store aur web par free hai.",
+    "seoTitle": "DeHub App — Android, iPhone aur Web khatir download karu"
+  },
+  "dehubLinks": {
+    "copyLinkDetail": "{{item}} link ke aapan clipboard me copy karu",
+    "kind": {
+      "app": "app",
+      "bounty": "bounty",
+      "community": "community",
+      "communityInvite": "community invite",
+      "event": "event",
+      "film": "title",
+      "link": "link",
+      "listing": "item",
+      "post": "post",
+      "profile": "profile",
+      "proposal": "proposal",
+      "stage": "stage",
+      "store": "store"
+    },
+    "recipientChat": "chat",
+    "recipientUser": "user",
+    "sendFailed": "{{item}} bhejek me fail ho gailak",
+    "sentTo": "{{item}} {{name}} ke bhej gailak"
+  },
+  "loginStack": {
+    "aiRestyle": "AI restyle",
+    "codeNote": "Hamni toke ek code email karbo, password ke darkar nai.",
+    "exploreFirst": "Pahile explore karo",
+    "fingerprint": "Fingerprint",
+    "headlineAccent": "aur khush rahba.",
+    "headlineTop": "To sab kuch ke malik banba",
+    "orContinueWith": "ya aage badho",
+    "phone": "Phone"
+  },
+  "player": {
+    "volume": "Volume level"
+  },
+  "quickActions": {
+    "question": "Hemde nêwe bişe çiyê?",
+    "title": "Page options"
+  },
+  "stageCover": {
+    "admitOne": "ADMIT ONE",
+    "live": "live",
+    "minutes": "{{minutes}} min",
+    "onAir": "ON AIR",
+    "recorded": "RECORDED",
+    "replay": "replay",
+    "stage": "stage",
+    "upcoming": "upcoming"
+  },
+  "streamPage": {
+    "eyebrow": "//FOR_STREAMERS",
+    "faq": {
+      "a1": "Yes. DeHubêrê freeyê heqê û freeyê postkirinê ye û mintkirina streamê xwe ya on-chain, xwezayê ye. Împortkirina kanalê ji mal peymanê ye û qimata wê di navbera tê pêşniyar kirin.",
+      "a2": "ना। जहँय तोर दर्शक अभी हें उहाँ स्ट्रीमिंग जारी राख और ओकर साथे-साथे DeHub में भी बना। DeHub कंपोजर से क्रॉस-पोस्ट कर ताकि जतनों प्लेटफॉर्म तोय अभी इस्तेमाल करथिस, उ सब तोर अपन दर्शक मन के कइने इशारा करे।",
+      "a3": "हाँ। जब आप लाइव जाएं तो OBS चुनें और DeHub आपको OBS, Streamlabs या किसी भी RTMP एनकोडर के लिए एक स्थायी स्ट्रीम की (key) देता है। आप अपने फोन, ब्राउज़र या कैप्चर कार्ड से भी सीधे लाइव जा सकते हैं।",
+      "a4": "Viewers-man tip aur gift bhejenla toke stream time, aur u sab on-chain DeHub token ban ke sidha toke wallet mein jama hoye jaala. Uploads free, pay-per-view ya token-gated bhi hoye sake la.",
+      "a5": "Affiliate page ke kholo aapan link pawe ke khatir. Je keu u link se joiin kari, u tor naam se jud jaai, aur tu unkar activity se 20% kamaiba, aur unkar dwara bolaal log se 5% recurring commission paiba, je DeHub tokens mein milat hai.",
+      "q1": "چەشنی پێشکەشکردن لە DeHub بە ئازادە?",
+      "q2": "क्या मुझे TikTok या Twitch पर स्ट्रीमिंग बंद करनी होगी?",
+      "q3": "का मैं OBS से स्ट्रीम कर सकूं?",
+      "q4": "मुझे भुगतान कैसे मिलता है?",
+      "q5": "मेरा इनवाइट लिंक कैसे काम करता है?"
+    },
+    "faqTitle": "अक्सर पूछे जाने वाले प्रश्न",
+    "heading": "DeHub पर स्ट्रीम करीं",
+    "howToStart": "साइन अप करीं, पोस्ट कंपोजर खोलीं और 'Go live' पर टैप करीं — अपना कैमरा, OBS या कैप्चर कार्ड से।",
+    "importYoutube": "अपना YouTube चैनल इम्पोर्ट करीं",
+    "intro": "अपना लाइव दर्शक के अइसन प्लेटफॉर्म पर लाईन जवन रउआ अपना लगे रख सकिला। अपना फोन, ब्राउज़र या OBS से लाइव जाईं, स्ट्रीम करत समय ऑन-चेन टिप्स पाईं, और जवन दर्शक रउआ बनाइब ओकरा के अपना लगे राखीं। DeHub के First Class Agency के टीम बनवले है, जवन UK के नंबर-वन ऑफिशियल TikTok LIVE पार्टनर एजेंसी है, जवना में 1,000 से ज्यादा लाइव स्ट्रीमर बाड़न।",
+    "inviteLink": "अपना इनवाइट लिंक पाईं",
+    "moreGuides": "TikTok से आ रहे हैं? <tiktok>TikTok छोड़ने के लिए यूके क्रिएटर गाइड</tiktok> और <live>Web3 लाइव स्ट्रीमिंग: एक विकेंद्रीकृत Twitch विकल्प</live> पढ़ें।",
+    "proof": {
+      "label1": "DeHub लाइव स्ट्रीमिंग पर एक साथ देखे वाला दर्शक",
+      "label2": "स्ट्रीमिंग सर्विस पर अपटाइम",
+      "label3": "DeHub के अपना CDN पर ग्लोबल लेटेंसी",
+      "value3": "200ms से कम"
+    },
+    "reasons": {
+      "body1": "जब रउआ लाइव रहीब, दर्शक टिप्स देहन और गिफ्ट भेजहन, जवना में टियर्ड गिफ्ट एनिमेशन और स्ट्रीम पर टिप्स मैसेज पढ़ल जाला। टिप्स DeHub टोकन में ऑन-चेन सेटल हो जाला और सीधा रउआ वॉलेट में आवेला, बीच में कहीं कटेला ना।",
+      "body2": "रउआ फॉलोअर केहू दोसर के डेटाबेस के लाइन ना हवें। स्ट्रीम और अपलोड के रउआ वॉलेट में ऑन-चेन मिंट कइल जा सकेला, फीड क्रोनोलॉजिकल है, और कोड ओपन सोर्स है, त केहू चुपचाप नियम ना बदल सकेला।",
+      "body3": "रउआ इनवाइट लिंक से जवन भी जुड़त है, ओकर एक्टिविटी के 20% रउआ मिलेला, साथ ही ओकर इनवाइट कइल लोग से 5% रिकरिंग कमाई, जवन DeHub टोकन में मिलत है।",
+      "body4": "सवाल-जवाब, कोलैब और वॉच पार्टी खातिर लाइव ऑडियो स्टेज होस्ट करीं। ओकरा खातिर पहिलहीं से एगो कार्ड के साथ अनाउंस करीं जवना के रउआ दर्शक शेयर कर सकें, और रिकॉर्ड कइल स्टेज के बाद में सुन सकें।",
+      "body5": "अपने अन्य अकाउंट्स को एक बार कनेक्ट करें और DeHub कंपोजर से X, Instagram, YouTube, TikTok, Farcaster और आठ अन्य प्लेटफॉर्म पर पब्लिश करें। TikTok को अपने डिस्कवरी इंजन के रूप में रखें जबकि आप ऐसे दर्शक बनाएं जिनके आप मालिक हैं।",
+      "body6": "पूरे YouTube चैनल, या TikTok, Vimeo या SoundCloud प्रोफाइल को एक बार में इम्पोर्ट करें। भुगतान करने से पहले सटीक कीमत DeHub टोकन में दिखाई जाती है।",
+      "title1": "टिप्स जवन सीधा रउआ वॉलेट में आवेला",
+      "title2": "अइसन दर्शक जवन रउआ अपना लगे रख सकिला",
+      "title3": "जेकरा के लाईन ओकरा से कमाईं",
+      "title4": "लाइव स्टेज",
+      "title5": "सब जगह एक साथ पोस्ट करीं",
+      "title6": "अपना चैनल अपने साथ लाएं"
+    },
+    "seoDescription": "DeHub पर लाइव जाईं: ऑन-चेन टिप्स जवन सीधा रउआ वॉलेट में आवेला, अइसन दर्शक जवन रउआ अपना लगे रख सकिला, एक बार में दोसर प्लेटफॉर्म पर पोस्टिंग, और रउआ जवना के इनवाइट करब ओकर 20% कमाई।",
+    "seoTitle": "DeHub पर स्ट्रीम करीं — TikTok और Twitch क्रिएटर्स खातिर लाइव स्ट्रीमिंग",
+    "startStreaming": "स्ट्रीमिंग शुरू करीं",
+    "whyTitle": "DeHub पर काहे स्ट्रीम करीं"
+  },
   "desktopWordmark": {
     "pageTitle": "ڈیسک ٹاپ لوگو کر پیش نظارہ",
     "heading": "DeHub ڈیسک ٹاپ لوگو",
@@ -274,6 +461,11 @@
     "heading": "DeHub چھوٹا ویڈیو"
   },
   "settings": {
+    "glass": "Glassy",
+    "reset": "Reset",
+    "sessionsRevokedMany": "{{count}} cihazlar kapatıldı",
+    "showDislikes": "Kemê Dislikesê ji hemû re nîşan bike",
+    "showDislikesDesc": "Hevînê ji hemû re Dislikesê li profilê xwe de bişonîne. Eger ev nîne, ji berî ku ji hemû re nîşan bike, tu ji wê re nîşanî neke.",
     "usernameTaken": "یوزرنیم پہلے سے لے لیل گیل ہے",
     "postingChain": "پوسٹ کے واسطے بلاک چین",
     "showOnline": "Nga u shfaq kur jam online",
@@ -452,7 +644,6 @@
     "systemLight": "سسٹم اُجالا",
     "immersive": "Immersive",
     "cosmic": "Cosmic Pixels",
-    "glass": "Glass",
     "hazy": "Hazy Nights",
     "swarms": "Swarms",
     "lavalamp": "Lava Lamp",
@@ -698,6 +889,9 @@
     "solanaUnlinkFailed": "اُ والیٹ نی ہٹ پالک"
   },
   "common": {
+    "confirm": "Confirm",
+    "mute": "Mute",
+    "unmute": "Unmute",
     "save": "محفوظ کرو",
     "cancel": "منسوخ",
     "delete": "مٹاؤ",
@@ -1526,6 +1720,41 @@
     "deleteConversationFailed": "बातचीत डिलीट नईं कर सक्या"
   },
   "music": {
+    "chartOrder": "Audio chart order",
+    "chartVideos": "Music videos",
+    "country": "Country",
+    "linkCopied": "Link copied",
+    "listenLive": "سادری: سادری",
+    "listeningCount_one": "{{count}} listening",
+    "listeningCount_other": "{{count}} listening",
+    "liveCount": "live",
+    "liveRadio": "رادیو زنده",
+    "mostLiked": "Most liked",
+    "mostListened": "Most listened",
+    "mostPlayed": "Most played",
+    "mostRecent": "Most recent",
+    "mostViewed": "Most viewed",
+    "mostVoted": "Most voted",
+    "newest": "Newest",
+    "nextStation": "نقطه بعدی",
+    "noStages": "Hevîneke nîne",
+    "onAir": "On air",
+    "pause": "Pause",
+    "plays": "Plays",
+    "quality": "Kualiti",
+    "radioChartOrder": "Radio chart order",
+    "radioPicks": "Our picks",
+    "recentStages": "Recent",
+    "shareStation": "Share station",
+    "shareStationTitle": "{{name}} ۈرادیو DeHub",
+    "stagesChartOrder": "Stages chart order",
+    "stagesLive": "Live now",
+    "trending": "Trending",
+    "trendingWeek": "اس ہفتے ٹرینڈ ہو رہا ہے",
+    "upcoming": "Upcoming",
+    "videoChartOrder": "Music video chart order",
+    "videoCharts": "Music Video Charts",
+    "votes": "Votes",
     "all": "سب",
     "tracks": "ٹریک",
     "videos": "ویڈیو",
@@ -1540,6 +1769,14 @@
     "returnHome": "گھر واپس جاؤ"
   },
   "profile": {
+    "dislikes": {
+      "emptyOther": "نفرمایم که هیچ‌چیز را نپسندیده باشم.",
+      "emptyOwn": "پست‌هایی که دوست ندارید از فییدتان خارج می‌شوند و در اینجا ظاهر می‌شوند. با لغو نپسندیدن، پست را دوباره به فییدتان بازگردانید.",
+      "emptyTitle": "No dislikes yet",
+      "loadMore": "Load more",
+      "privateDesc": "اہلے یہ اکاؤنٹ اپنے ناپسندیدہ کو اپنے ساتھ ہی رکھتا ہے۔",
+      "privateTitle": "ڕێزەکان خۆماڵییە"
+    },
     "back": "واپس",
     "usernameAvailable": "یوزرنیم دستیاب ہے!",
     "signUpToClaim": "لینے کے لیے سائن اپ کرو",
@@ -1567,6 +1804,7 @@
       "commentUnavailable": "E comment abhi nae milal"
     },
     "tabs": {
+      "dislikes": "Dislikes",
       "playlists": "پلے لسٹ"
     },
     "offerWorthNow": "نزیکەی {{amount}} دراو بە نرخی ئێستا",
@@ -1662,6 +1900,73 @@
     "tokensUnit": "دراو"
   },
   "agents": {
+    "life": {
+      "compose": "اس ایجنٹ کے طور پر پوسٹ کریں",
+      "daily": "پست‌های امروز: {{posts}} · هدف روزانه: {{target}}",
+      "editComment": "Tippani badlo",
+      "imageUrl": "Image URL (optional)",
+      "less": "Kam gatividhi dekho",
+      "more": "Aur gatividhi dekho",
+      "postQueued": "پست در صف قرار گرفت. آن را در کارهای بالا پیگیری کنید.",
+      "postText": "पोस्ट करक",
+      "queueHelp": "آپ کا درست متن شائع کرتا ہے ۔ شیئر کردہ 20 منٹ کا پوسٹ گیپ لاگو ہوتا ہے ۔ کوئی مائننگ نہیں ۔",
+      "queuePost": "ڕێزەی کۆڵ",
+      "unlike": "Alag",
+      "unliked": "Alag pasand",
+      "viewPost": "پۆست ببینە"
+    },
+    "tasks": {
+      "actionsProcessed": "Karyawahi process ki gayi",
+      "allCategories": "Sabhi shreniyon mein har post. Koi keyword filter nahi aur koi teen-like kaam ki seema nahi.",
+      "cancelSwarm": "Swarm radd karo",
+      "cancelTask": "Kaam radd karo",
+      "clearSelection": "Chayan saaf karo",
+      "controlUpdated": "{{count}} kaam update kiye gaye",
+      "distribution": "Agent prompt kaise chalate hain",
+      "eachHelp": "Ye nirdesh har chune gaye agent ko bhejo. Har agent anurodh ki gayi gati par pura kaam karta hai. Sajha posting seema abhi bhi lagu hoti hai.",
+      "eachMode": "Har agent ye karta hai",
+      "enabled": "Sakriya · gatividhi",
+      "enabledHelp": "Sakriya ka matlab hai ki ye agent uplabdh hai. Neeche diye gaye kaam ki sthiti dikhati hai ki kya ye chal raha hai, pratiksha kar raha hai, ruka hua hai ya vifal hai.",
+      "lastActive": "Antim sakriya",
+      "list": "Tasks",
+      "loading": "لود وظایف…",
+      "noActivity": "Koi gatividhi darj nahi ki gayi",
+      "noTasks": "Is agent ke liye abhi tak koi kaam nahi hai.",
+      "oneAgent": "Ek agent",
+      "pause": "Pause",
+      "pauseSwarm": "Swarm roko",
+      "preparing": "Preparing task…",
+      "promptLimits": "Har post ke liye anurodh sabhi shreniyon ka upyog karte hain. Vishay-aadharit chuninda likes prati run teen tak seemit hain. Sabhi agent posting gap sajha karte hain; likhne mein credits ka upyog ho sakta hai.",
+      "resume": "बायोडाटा",
+      "resumeSwarm": "Yogy agent ko phir se shuru karo",
+      "reviewMembers": "Anishchit karyawahi wale kaamon ko phir se shuru karne se pehle vyaktigat samiksha ki avashyakta hoti hai. Rukne ya radd karne ke baad bhi chal rahi karyawahi puri ho sakti hai.",
+      "run": "Run prompt",
+      "runSwarm": "Swarm chalao",
+      "selectAll": "Sabhi agent chuno",
+      "selectedCount": "{{count}} mein se {{total}} chuna gaya",
+      "sharedMode": "Kaam baanto",
+      "skip": "ڕێکخراوی بۆ چالاکییەکانی نەناسێنەر",
+      "swarm": "Swarm",
+      "window": {
+        "allTime": "All time",
+        "author": "مؤلف (اختياري)",
+        "authorAll": "All creators",
+        "authorChoose": "Choose creator",
+        "authorPlaceholder": "@username یا کیف پول",
+        "category": "قسم (اختیاری)",
+        "categoryAll": "Sabh category-man",
+        "categoryChoose": "Choose categories",
+        "categoryHint": "Kategoriyalar:",
+        "categoryPlaceholder": "Exact category name",
+        "dislike": "Dislike",
+        "filterHelp": "Sab posts ke liye filter ke khali chhor de. Jab dono set rahela, tab dono ke match kare ke pari. Purana reaction sab rahela; ulta reaction chune se u badal jaela.",
+        "last1h": "Last hour",
+        "last30d": "Last 30 days",
+        "title": "ہر واقعه کی ہر وقت پوسٹ",
+        "write": "Write instructions"
+      },
+      "windowLimits": "Sabhi mel khane wali posts queue mein hain. Karyawahi ki seema execution ki gati tay karti hai; ye kaam ko teen posts tak seemit nahi karti. Jawab likhne mein credits ka upyog ho sakta hai."
+    },
     "title": "AI ایجنٹ",
     "connectToManage": "AI ایجنٹ سنبھالنے کے لیے جُڑو",
     "signInToCreate": "AI ایجنٹ بنانے اور سنبھالنے کے لیے لاگ ان کرو۔",
@@ -1763,6 +2068,7 @@
     "failedSubmit": "درخواست جمع نہیں ہوئی۔ دوبارہ کوشش کرو۔"
   },
   "loginModal": {
+    "continuePhone": "فون کے ساتھ جاری رکھیں",
     "unlockBiometricContinue": "آگے بڑھے لے اپن والٹ کے اپن انگلی کے چھاپ یا چہرہ سے ان لاک کرو۔",
     "unlockBiometricSignIn": "سائن ان کرے لے اپن والٹ کے اپن انگلی کے چھاپ یا چہرہ سے ان لاک کرو۔",
     "unlockPasswordContinue": "آگے بڑھے لے اپن والٹ پاس ورڈ ڈالو۔",
@@ -1887,6 +2193,14 @@
     "applicationFailed": "جمع نہیں ہوئی۔ دوبارہ کوشش کرو۔"
   },
   "dao": {
+    "status": {
+      "accepted": "Accepted",
+      "cancelled": "Cancelled",
+      "completed": "Completed",
+      "expired": "Expired",
+      "open": "Open",
+      "rejected": "Rejected"
+    },
     "title": "DAO خزانہ",
     "subtitle": "ایک بٹوا، سماج سے بھرل، اوکر ووٹ سے خرچ",
     "contribute": "یوگدان دو",
@@ -1927,6 +2241,20 @@
     "votingPowerNote": "دەنگدان ٧ ڕۆژ دەخایەنێت. هێزی دەنگدان کۆی پشکی دراوی هەر بەشداربوویەکە کاتێک ئەم پێشنیارە کراوەتەوە. لانی کەم ١٠٪ دەبێت بەشداری بکات و قبوڵکردن دەبێت لە ڕەتکردنەوە زیاتر بێت."
   },
   "governance": {
+    "addMedia": "फोटो या वीडियो जोड़ें",
+    "badgeHoldersOnly": "بەدەستەوەی بەڕێوەبەر",
+    "decidedInTabs": "निर्णय लिए गए प्रस्ताव 'पास' और 'रिजेक्टेड' टैब में हैं।",
+    "draftSavedRetry": "ڤەرھەمەتەکەت تەواوە. بۆ تەوەکردن بە دەست بەسەر بێنەوە.",
+    "freeForBadgeHolders": "बैज धारकों के लिए मुफ्त। आप जैसे-जैसे टाइप करते हैं, आपका ड्राफ्ट सेव होता जाता है।",
+    "mediaTooLarge": "فایل‌ها باید ۵۰ مگابایت یا کوچکتر باشند.",
+    "mediaTypeInvalid": "एक फोटो या वीडियो चुनें।",
+    "noOpenProposals": "Abhi koi proposal khula nai hai",
+    "proposalAttachment": "پیشنهاد پیوست",
+    "proposalFeeNote": "स्टेकिंग बैज के बिना प्रस्तावों की कीमत 10,000 DHB है। आप जैसे-जैसे टाइप करते हैं, आपका ड्राफ्ट सेव होता जाता है।",
+    "removeMedia": "Remove attachment",
+    "submitFailed": "پیشنهاد ارائه نشده است",
+    "uploadFailed": "अपलोड विफल रहा",
+    "uploadFailedDetail": "{{message}}",
     "title": "حکمرانی",
     "proposalCount": "{{count}} تجویز جمع ہوئی",
     "proposalCount_other": "{{count}} تجویزاں جمع ہوئیاں",
@@ -1990,6 +2318,7 @@
     "voteFailedHoldTokens": "رایه ناکامه شوه. تاسو باید د رایې ورکولو لپاره د هاب توکنونه وساتئ."
   },
   "sidebar": {
+    "switchAccount": "حساب عوض کن",
     "talkOfTheTown": "شہر کی چرچا",
     "nothingTrending": "ابھی کچھ ٹرینڈنگ نہیں",
     "posts": "موضوعات",
@@ -2593,6 +2922,10 @@
     "chessOnlineIntro": "د نورو لوبغاړو پروړاندې ژوندی جګړه. د هاب توکنونو کې شرطونه راځي."
   },
   "stats": {
+    "money": {
+      "estimatedOperations": "अनुमानित ऑपरेशन्स",
+      "operationsGroup": "ऑपरेशन्स"
+    },
     "community": {
       "title": "برادری",
       "members": "رکن",
@@ -3227,6 +3560,7 @@
     "shopAllowanceUsed": "د {{allowance}} څخه {{allowance}} کارول شوي. د لوړ بیرج او بل سلاټ لپاره نور د هاب توکنونه سټیک کړئ."
   },
   "stages": {
+    "ended": "समाप्त",
     "allStages": "سب آڈیو روم",
     "title": "آڈیو روم",
     "tabLive": "در حال اجرا",
@@ -4520,6 +4854,7 @@
     "boughtToVaultToast": "@{{handle}} অখন তোমার ইউজারনেমে আছে"
   },
   "accounts": {
+    "followersCount": "{{value}} फॉलोअर्स",
     "seoTitle": "खाता बाज़ार — DeHub",
     "seoDescription": "خریدی و فروش حساب‌های موجود دی‌هاب با دی‌اچ‌بی. مرور حساب‌ها بر اساس دنبال‌کنندگان، آپلودها و سن — نام‌کاربری، پست‌ها، دنبال‌کنندگان و حقوق نشان‌ها همه منتقل می‌شوند و پرداخت مستقیم به فروشنده می‌رود.",
     "title": "ھەژمارەکان",
@@ -5232,6 +5567,7 @@
     }
   },
   "goLive": {
+    "connectionFailed": "پەیام‌ڕێژەی بڵاوکراوەیەکەی بەستەوە نەبوو.",
     "bigEvent": "بڑا ایونٹ",
     "bigEventHint": "بہت دیکھنے والن لگے: دیکھنے والا لگ بھگ 20 سیکنڈ پاچھے دیکھبیں، رکاوٹ کم ہوئی۔",
     "goLive": "गो लाइव",
@@ -5467,6 +5803,7 @@
     "noRoleFits": "نقش مناسبی ندیده‌اید؟ با ما در <mail>dev@dehub.io</mail> تماس بگیرید — همیشه به دنبال افراد مهارت‌دار هستیم."
   },
   "depin": {
+    "dismiss": "हटाएं",
     "seoTitle": "DePin | समुदाय-शक्ति मीडिया अवसंरचना | DeHub",
     "seoDescription": "DeHub DePin وایژان می‌کنه که مردم می‌تونن از ذخیره‌سازی، باندویذ و قدرت پردازشی‌شون استفاده کنن تا کمک کنن به میزبانی، ترنس‌کد کردن و توزیع محتوای رسانه‌ای از طریق یک شبکه مقاوم.",
     "navAria": "ناوبری DePin",
@@ -5902,6 +6239,7 @@
     "newMessage": "{{name}} आपको एक संदेश भेजा"
   },
   "audioPost": {
+    "visualizerColour": "رنگ‌نمای بصری",
     "popOut": "पॉप आउट — ब्राउज करते समय सुनते रहो",
     "closeCornerPlayer": "कोने वाले प्लेयर को बंद करो",
     "cornerPlayer": "ऑडियो पोस्ट प्लेबैक",
