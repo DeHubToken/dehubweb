@@ -8,6 +8,35 @@ import type { BlogPost } from '@/types/blog';
 // getPublishedPosts() corpus: overrides applied, published only, newest first.
 export const blogPostsMetadata: BlogPost[] = [
   {
+    "id": "higgsfield-genjutsu-alternative",
+    "slug": "higgsfield-genjutsu-alternative",
+    "title": "Higgsfield Genjutsu Alternative: Maboroshi Prices Compared, and How We Rebuilt It (2026)",
+    "excerpt": "Swap anyone in a real video, keep the original audio, and pay per clip with no subscription. Here is what Genjutsu-style editing costs on Higgsfield and on DeHub Maboroshi, plus the full pipeline behind it.",
+    "content": "",
+    "bannerImage": "/media/maboroshi-genjutsu-alternative-banner.jpg",
+    "bannerImageAlt": "Maboroshi, the Higgsfield Genjutsu alternative on DeHub: swap anyone in a real video, with no subscription",
+    "author": {
+      "name": "DeHub Team"
+    },
+    "publishedAt": "2026-10-24T03:00:00.000Z",
+    "tags": [
+      "AI",
+      "AI video",
+      "Creator Studio",
+      "Higgsfield",
+      "Genjutsu",
+      "Maboroshi",
+      "Kling",
+      "Seedance",
+      "Pricing"
+    ],
+    "readingTime": 9,
+    "featured": true,
+    "status": "published",
+    "seoTitle": "Higgsfield Genjutsu Alternative 2026: Prices Compared + How It Works | DeHub",
+    "seoDescription": "Swap anyone in a real video from $1.75, keep the original audio, no subscription. Higgsfield Genjutsu vs DeHub Maboroshi prices, plus the full pipeline behind it."
+  },
+  {
     "id": "ready-to-debate-your-side-bring-it-to-dehub",
     "slug": "ready-to-debate-your-side-bring-it-to-dehub",
     "title": "Ready to Debate Your Side? Bring It to DeHub.",
@@ -3468,29 +3497,33 @@ export const newPostsMetadata: BlogPost[] = [
 
 // getLatestPost() result — docs home hero.
 export const latestPostMetadata: BlogPost | undefined = {
-  "id": "dehub-next-chapter-riftn-bnb-recovery-relaunch",
-  "slug": "dehub-next-chapter-riftn-bnb-recovery-relaunch",
-  "title": "DeHub’s next chapter: Riftn, BNB recovery and the road to relaunch",
-  "excerpt": "Our proposed move to Riftn, the push for a proper assessment of our stuck BNB, and the plan to get DeHub relaunched and trading.",
+  "id": "higgsfield-genjutsu-alternative",
+  "slug": "higgsfield-genjutsu-alternative",
+  "title": "Higgsfield Genjutsu Alternative: Maboroshi Prices Compared, and How We Rebuilt It (2026)",
+  "excerpt": "Swap anyone in a real video, keep the original audio, and pay per clip with no subscription. Here is what Genjutsu-style editing costs on Higgsfield and on DeHub Maboroshi, plus the full pipeline behind it.",
   "content": "",
-  "bannerImage": "/media/dehub-to-riftn-transition.png",
-  "bannerImageAlt": "DeHub to Riftn — the next chapter",
+  "bannerImage": "/media/maboroshi-genjutsu-alternative-banner.jpg",
+  "bannerImageAlt": "Maboroshi, the Higgsfield Genjutsu alternative on DeHub: swap anyone in a real video, with no subscription",
   "author": {
     "name": "DeHub Team"
   },
-  "publishedAt": "2026-10-22T18:00:00.000Z",
+  "publishedAt": "2026-10-24T03:00:00.000Z",
   "tags": [
-    "DeHub",
-    "Riftn",
-    "BNB",
-    "Community",
-    "Relaunch"
+    "AI",
+    "AI video",
+    "Creator Studio",
+    "Higgsfield",
+    "Genjutsu",
+    "Maboroshi",
+    "Kling",
+    "Seedance",
+    "Pricing"
   ],
-  "readingTime": 6,
+  "readingTime": 9,
   "featured": true,
   "status": "published",
-  "seoTitle": "DeHub’s next chapter: Riftn, BNB recovery and relaunch",
-  "seoDescription": "DeHub proposes the Riftn name, a renewed focus on BNB, a public recovery campaign, and a relaunch timetable. Recovery remains subject to Binance’s assessment."
+  "seoTitle": "Higgsfield Genjutsu Alternative 2026: Prices Compared + How It Works | DeHub",
+  "seoDescription": "Swap anyone in a real video from $1.75, keep the original audio, no subscription. Higgsfield Genjutsu vs DeHub Maboroshi prices, plus the full pipeline behind it."
 };
 
 export const excludedTitles: string[] = [
