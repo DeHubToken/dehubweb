@@ -27,6 +27,7 @@ import Pause from "@/components/ui/cut-icons/pause";
 import { MediaControlIcon } from '@/components/app/video/MediaControlIcon';
 import { useVideoScrubZone } from '@/hooks/use-video-scrub-zone';
 import { useAppTheme } from '@/contexts/ThemeContext';
+import { isCanvasTheme } from '@/lib/canvas-themes';
 import { cn } from '@/lib/utils';
 import { registerOffDocumentMedia } from '@/lib/pause-media-in';
 import {
@@ -340,7 +341,7 @@ export function AudioVisualizer({
 
   const { theme, themeChoice } = useAppTheme();
   const isLightTheme = (theme === 'light' || themeChoice === 'system-light');
-  const studioLayout = theme === 'glass' || theme === 'system' || isLightTheme;
+  const studioLayout = isCanvasTheme(theme) || theme === 'system' || isLightTheme;
   const visualizerLight = isLightTheme && !studioLayout;
   const animationRef = useRef<number | null>(null);
   const isConnectedRef = useRef(false);
