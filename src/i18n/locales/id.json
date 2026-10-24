@@ -988,6 +988,8 @@
     "dmSent": "Terkirim {{amount}} token ke {{name}}!"
   },
   "postOptions": {
+    "liveAlertsOn": "Anda sekarang mengikuti {{name}}. Anda akan mendapat notifikasi saat mereka mulai siaran langsung.",
+    "liveAlertsAlreadyOn": "Anda mengikuti {{name}}, jadi Anda akan mendapat notifikasi saat mereka mulai siaran langsung.",
     "embed": "Sematkan",
     "copyEmbedCode": "Salin kode sematan",
     "embedCodeCopied": "Kode sematan disalin",

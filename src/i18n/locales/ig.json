@@ -995,6 +995,8 @@
     "dmSent": "E zigara {{name}} {{amount}} tokens!"
   },
   "postOptions": {
+    "liveAlertsOn": "Ị na-eso {{name}} ugbu a. Ị ga-enweta ọkwa mgbe ha malitere nkwasa ndụ.",
+    "liveAlertsAlreadyOn": "Ị na-eso {{name}}, ya mere ị ga-enweta ọkwa mgbe ha malitere nkwasa ndụ.",
     "embed": "Tinye n'ime",
     "copyEmbedCode": "Detụọ koodu ntinye",
     "embedCodeCopied": "Edepụtala koodu ntinye",

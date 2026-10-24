@@ -439,16 +439,13 @@ const DOCS_PAGES = {
  *  as a broken internal link in Search Console. noindex, follow is the honest
  *  answer: the page really does exist, it just has nothing to rank.
  *
- *  quickstart / installation / endpoints sit here too: their pages are
- *  developer-doc drafts still carrying template boilerplate (yourplatform.com
- *  hosts, /api/v1 placeholder endpoints), while their old meta sold them as
- *  real user-onboarding / API-reference pages — the worst kind of mismatch to
- *  index. They come back out (with DOCS_PAGES entries and sitemap rows) when
- *  the real developer docs land. */
+ *  quickstart sits here too until it gets a DOCS_PAGES entry and a sitemap
+ *  row. installation and endpoints were template pages for a made-up API and
+ *  now redirect to the real pages (DOCS_REDIRECTS). */
 const DOCS_COMING_SOON = new Set([
   'website', 'app', 'dehub', 'x', 'instagram', 'architecture', 'configuration',
   'data-models', 'auth', 'webhooks', 'best-practices', 'troubleshooting', 'examples',
-  'quickstart', 'installation', 'endpoints',
+  'quickstart',
 ]);
 
 const DOCS_REDIRECTS = {
@@ -457,6 +454,8 @@ const DOCS_REDIRECTS = {
   'e2e-encryption': '/docs/dapps#encryption',
   'ai-toolkits': '/docs/dapps#ai-suite',
   'token': '/docs/token/overview',
+  'installation': '/dehub-app',
+  'endpoints': '/connect',
 };
 
 const _docsContentCache = new Map();

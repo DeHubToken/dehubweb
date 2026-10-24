@@ -986,6 +986,8 @@
     "dmSent": "S'han enviat {{amount}} fitxes a {{name}}!"
   },
   "postOptions": {
+    "liveAlertsOn": "Ara segueixes {{name}}. Rebràs una notificació quan faci un directe.",
+    "liveAlertsAlreadyOn": "Segueixes {{name}}, així que rebràs una notificació quan faci un directe.",
     "embed": "Insereix",
     "copyEmbedCode": "Copia el codi d'inserció",
     "embedCodeCopied": "Codi d'inserció copiat",

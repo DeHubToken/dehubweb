@@ -19,7 +19,7 @@ import MessageCircle from "@/components/ui/cut-icons/messages";
 import { VerifiedBadge } from '@/components/app/VerifiedBadge';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Input } from '@/components/ui/input';
-import { PublicChat, DirectMessageChat, NewConversationModal, NewMessageSelector, CreateGroupModal } from '@/components/app/chat';
+import { PublicChat, DirectMessageChat, NewConversationModal, NewMessageSelector } from '@/components/app/chat';
 import { OnlineDot } from '@/components/app/chat/OnlineDot';
 
 import { useAuth } from '@/contexts/AuthContext';
@@ -235,7 +235,6 @@ export default function MessagesPage() {
     : undefined;
   const [showMessageSelector, setShowMessageSelector] = useState(false);
   const [showNewConversation, setShowNewConversation] = useState(false);
-  const [showCreateGroup, setShowCreateGroup] = useState(false);
   
   const [searchQuery, setSearchQuery] = useSurfaceDraft("pages/app/MessagesPage.tsx:searchQuery", '');
   // Both search-backed queries key on the query string — passing the raw
@@ -774,22 +773,12 @@ export default function MessagesPage() {
         open={showMessageSelector}
         onOpenChange={setShowMessageSelector}
         onSelectDM={() => setShowNewConversation(true)}
-        onSelectGroup={() => setShowCreateGroup(true)}
       />
 
       <NewConversationModal
         open={showNewConversation}
         onOpenChange={setShowNewConversation}
         onConversationCreated={(conversation) => {
-          setSelectedConversation(conversation);
-        }}
-      />
-
-      {/* Create Group Modal */}
-      <CreateGroupModal
-        open={showCreateGroup}
-        onOpenChange={setShowCreateGroup}
-        onGroupCreated={(conversation) => {
           setSelectedConversation(conversation);
         }}
       />

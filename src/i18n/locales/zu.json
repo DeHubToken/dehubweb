@@ -996,6 +996,8 @@
     "dmSent": "Kuthunyelwe u-{{amount}} tokens ku-{{name}}!"
   },
   "postOptions": {
+    "liveAlertsOn": "Manje uyamlandela u-{{name}}. Uzothola isaziso uma beqala ukusakaza bukhoma.",
+    "liveAlertsAlreadyOn": "Uyamlandela u-{{name}}, ngakho uzothola isaziso uma beqala ukusakaza bukhoma.",
     "embed": "Shumeka",
     "copyEmbedCode": "Kopisha ikhodi yokushumeka",
     "embedCodeCopied": "Ikhodi yokushumeka ikopishiwe",

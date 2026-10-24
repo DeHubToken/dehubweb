@@ -988,6 +988,8 @@
     "dmSent": "{{amount}} ምልክታት ን{{name}} ተሰዲዱ!"
   },
   "postOptions": {
+    "liveAlertsOn": "ሕጂ ን{{name}} ትስዕብ ኣለኻ። ቀጥታ ምስ ዝጀምሩ መፍለጢ ክበጽሓካ እዩ።",
+    "liveAlertsAlreadyOn": "ን{{name}} ትስዕብ ኢኻ፣ ስለዚ ቀጥታ ምስ ዝጀምሩ መፍለጢ ክበጽሓካ እዩ።",
     "embed": "ኣእቱ",
     "copyEmbedCode": "ናይ ምእታው ኮድ ቅዳሕ",
     "embedCodeCopied": "ናይ ምእታው ኮድ ተቐዲሑ",

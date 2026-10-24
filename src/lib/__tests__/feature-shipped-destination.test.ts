@@ -32,11 +32,11 @@ describe('getShippedFeatureDestination', () => {
     })).toBe('/app/command-centre');
   });
 
-  it('routes endpoint requests to the API documentation before tip matching', () => {
+  it('routes endpoint requests to the API access page before tip matching', () => {
     expect(getShippedFeatureDestination({
       id: 'request-5',
       title: 'Endpoint for tipping comments and replies',
-    })).toBe('/docs/endpoints');
+    })).toBe('/connect');
   });
 
   it('falls back to the exact shipped request', () => {

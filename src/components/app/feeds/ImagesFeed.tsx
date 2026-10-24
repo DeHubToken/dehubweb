@@ -450,10 +450,6 @@ export function ImagesFeed({
 
   // Auth-guarded sort selection
   const handleSortSelect = useCallback((option: SortOption) => {
-    if (option.value === 'subscribed') {
-      toast.info(_copy("copy.35e9cfb027f9", { defaultValue: "Subscribed feed coming soon!" }));
-      return;
-    }
     if (option.value === 'following' && !isAuthenticated) {
       toast.info(_copy("copy.c32690bd04d1", { defaultValue: "Log in to see followed creators" }));
       return;

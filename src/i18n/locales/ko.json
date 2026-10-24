@@ -987,6 +987,8 @@
     "dmSent": "{{name}}님에게 {{amount}} DHB를 보냈어요!"
   },
   "postOptions": {
+    "liveAlertsOn": "이제 {{name}}님을 팔로우합니다. 라이브를 시작하면 알림을 받게 됩니다.",
+    "liveAlertsAlreadyOn": "{{name}}님을 팔로우하고 있어서 라이브를 시작하면 알림을 받게 됩니다.",
     "embed": "퍼가기",
     "copyEmbedCode": "퍼가기 코드 복사",
     "embedCodeCopied": "퍼가기 코드가 복사되었습니다",

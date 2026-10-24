@@ -10,6 +10,5 @@ export { DirectMessageChat } from './DirectMessageChat';
 export { DmDockMount } from './DmDockMount';
 export { NewConversationModal } from './NewConversationModal';
 export { NewMessageSelector } from './NewMessageSelector';
-export { CreateGroupModal } from './CreateGroupModal';
 export { GroupSettingsDrawer } from './GroupSettingsDrawer';
 export { BuyAlertCard } from './BuyAlertCard';

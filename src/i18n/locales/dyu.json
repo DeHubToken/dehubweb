@@ -5221,6 +5221,8 @@
     "dmSent": "{{amount}} o ye koo ɲuman ye. cira {{name}} ma!"
   },
   "postOptions": {
+    "liveAlertsOn": "I bɛ {{name}} nɔfɛ sisan. U ni lajɛ daminɛ, i bɛna kibaru sɔrɔ.",
+    "liveAlertsAlreadyOn": "I bɛ {{name}} nɔfɛ, o la u ni lajɛ daminɛ, i bɛna kibaru sɔrɔ.",
     "askAI": "A y'a ɲininga ko:",
     "giftBoost": "Fanga be mɔgɔ minw na, olu ka kan ka sɔn",
     "markSection": "Fanga min be mɔgɔ la, o ye ka mɔgɔ lafili.",

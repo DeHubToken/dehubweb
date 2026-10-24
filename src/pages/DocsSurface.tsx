@@ -48,8 +48,6 @@ const DocsHome = lazy(() => import("./docs/DocsHome"));
 const Overview = lazy(() => import("./docs/Overview"));
 const Advertising = lazy(() => import("./docs/Advertising"));
 const QuickStart = lazy(() => import("./docs/QuickStart"));
-const Installation = lazy(() => import("./docs/Installation"));
-const ApiEndpoints = lazy(() => import("./docs/ApiEndpoints"));
 const Team = lazy(() => import("./docs/Team"));
 const BrandGuidelines = lazy(() => import("./docs/BrandGuidelines"));
 const BrandAssets = lazy(() => import("./docs/BrandAssets"));
@@ -171,8 +169,11 @@ export default function DocsSurface() {
             {/* Google indexed the hyphenated typo; it used to soft-404 into the
                 SPA shell. Kept in sync with DOCS_REDIRECTS in the SEO worker. */}
             <Route path="/docs/quick-start" element={<Navigate to="/docs/quickstart" replace />} />
-            <Route path="/docs/installation" element={wrap(Installation)} />
-            <Route path="/docs/endpoints" element={wrap(ApiEndpoints)} />
+            {/* Both were template pages for a made-up API. Installing DeHub
+                means getting the app; API access is the assistant connector.
+                Kept in sync with DOCS_REDIRECTS in the SEO worker. */}
+            <Route path="/docs/installation" element={<Navigate to="/dehub-app" replace />} />
+            <Route path="/docs/endpoints" element={<Navigate to="/connect" replace />} />
             <Route path="/docs/blog" element={wrap(Blog)} />
             {/* Blog posts share ONE BlogPost mount across both URLs. The card
                 links use the canonical /guides/<slug>; /docs/blog/<slug> stays

@@ -985,6 +985,8 @@
     "dmSent": "Ați trimis {{amount}} tokenuri către {{name}}!"
   },
   "postOptions": {
+    "liveAlertsOn": "Acum urmărești contul {{name}}. Vei primi o notificare când intră live.",
+    "liveAlertsAlreadyOn": "Urmărești contul {{name}}, așa că vei primi o notificare când intră live.",
     "embed": "Încorporează",
     "copyEmbedCode": "Copiază codul de încorporare",
     "embedCodeCopied": "Codul de încorporare a fost copiat",

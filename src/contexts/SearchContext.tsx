@@ -314,24 +314,6 @@ const createSearchIndex = (): SearchIndex[] => {
       keywords: ['quickstart', 'getting started', 'setup', 'guide', 'first steps']
     },
     {
-      id: 'installation',
-      title: 'Installation',
-      content: 'Installation guide for DeHub tools, setup instructions, requirements, dependencies, download app',
-      path: '/docs/installation',
-      category: 'Development',
-      type: 'page',
-      keywords: ['installation', 'setup', 'install', 'requirements', 'dependencies', 'download', 'app']
-    },
-    {
-      id: 'api-endpoints',
-      title: 'API Endpoints',
-      content: 'DeHub API endpoints documentation, REST API, GraphQL, webhooks, integration guide',
-      path: '/docs/endpoints',
-      category: 'Development',
-      type: 'page',
-      keywords: ['api', 'endpoints', 'rest', 'graphql', 'webhooks', 'integration']
-    },
-    {
       id: 'terms',
       title: 'Terms',
       content: 'DeHub terms and conditions, user agreement, platform terms, legal terms',

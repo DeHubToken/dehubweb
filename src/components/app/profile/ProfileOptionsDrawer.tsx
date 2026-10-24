@@ -10,7 +10,6 @@ import ShieldCheck from "@/components/ui/cut-icons/security";
 import Flag from "@/components/ui/cut-icons/report";
 
 import MessageCircle from "@/components/ui/cut-icons/messages";
-import Bell from "@/components/ui/cut-icons/alerts";
 
 import { ReportModal } from '@/components/app/modals/ReportModal';
 import { toast } from 'sonner';
@@ -73,11 +72,6 @@ export function ProfileOptionsContent({
     navigator.clipboard.writeText(profileFeedUrl(profile.handle));
     trackShare('copy_link', { kind: 'profile_rss' });
     toast.success(t('profileOptions.rssFeedCopied'));
-    setShareSheetOpen(false);
-  };
-
-  const handleToggleNotifications = () => {
-    toast.success(t('profileOptions.notificationsEnabled'));
     setShareSheetOpen(false);
   };
 
@@ -173,15 +167,6 @@ export function ProfileOptionsContent({
                   <span className="text-white font-medium">{t('profileOptions.sendTip')}</span>
                 </button>
               )}
-              <button
-                onClick={handleToggleNotifications}
-                className="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl bg-white/5 backdrop-blur-md border border-white/10 hover:bg-white/10 active:scale-[0.98] transition-[background-color,transform] text-left"
-              >
-                <div className="w-8 h-8 rounded-xl bg-white/10 backdrop-blur-sm flex items-center justify-center">
-                  <Bell className="w-4 h-4 text-white" />
-                </div>
-                <span className="text-white font-medium">{t('profileOptions.notify')}</span>
-              </button>
               <button
                 onClick={onMakeOffer}
                 className="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl bg-white/5 backdrop-blur-md border border-white/10 hover:bg-white/10 active:scale-[0.98] transition-[background-color,transform] text-left"

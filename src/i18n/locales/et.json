@@ -996,6 +996,8 @@
     "dmSent": "{{amount}} žetooni saadetud saajale {{name}}!"
   },
   "postOptions": {
+    "liveAlertsOn": "Jälgid nüüd kasutajat {{name}}. Saad teavituse, kui ta alustab otseülekannet.",
+    "liveAlertsAlreadyOn": "Jälgid kasutajat {{name}}, seega saad teavituse, kui ta alustab otseülekannet.",
     "embed": "Manusta",
     "copyEmbedCode": "Kopeeri manustamiskood",
     "embedCodeCopied": "Manustamiskood kopeeritud",

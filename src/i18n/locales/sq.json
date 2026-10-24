@@ -996,6 +996,8 @@
     "dmSent": "U dërguan {{amount}} tokena te {{name}}!"
   },
   "postOptions": {
+    "liveAlertsOn": "Tani ndiqni {{name}}. Do të merrni një njoftim kur të nisë transmetimi live.",
+    "liveAlertsAlreadyOn": "Ju ndiqni {{name}}, ndaj do të merrni një njoftim kur të nisë transmetimi live.",
     "embed": "Ngulit",
     "copyEmbedCode": "Kopjo kodin e ngulitjes",
     "embedCodeCopied": "Kodi i ngulitjes u kopjua",

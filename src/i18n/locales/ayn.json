@@ -4186,6 +4186,8 @@
     "dmSent": "انرسل {{amount}} توكنز لـ {{name}}!"
   },
   "postOptions": {
+    "liveAlertsOn": "صرت تتابع {{name}}. بيوصلك إشعار لمّا يبث مباشر.",
+    "liveAlertsAlreadyOn": "أنت تتابع {{name}}، فبيوصلك إشعار لمّا يبث مباشر.",
     "askAI": "اسأل الذكاء الاصطناعي",
     "giftBoost": "تقدّم برّكة",
     "markSection": "المساحات المنسية",

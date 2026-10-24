@@ -853,6 +853,9 @@ export default function PostInfoPage() {
             <TranscriptSection
               tokenId={Number(nftInfo.tokenId)}
               durationSeconds={nftInfo.videoDuration}
+              // This page has no player, so a chapter or a line's timestamp
+              // opens the post at that moment instead.
+              onSeek={(seconds) => navigate(`/app/post/${postId}?t=${Math.floor(seconds)}`)}
             />
           )}
 

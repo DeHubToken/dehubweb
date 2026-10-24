@@ -991,6 +991,8 @@
     "dmSent": "{{amount}} Tokens a {{name}} gschickt!"
   },
   "postOptions": {
+    "liveAlertsOn": "Du folgsch jetzt {{name}}. Du überchunnsch e Benachrichtigung, wenn s live gaht.",
+    "liveAlertsAlreadyOn": "Du folgsch {{name}}, also überchunnsch e Benachrichtigung, wenn s live gaht.",
     "embed": "Iibette",
     "copyEmbedCode": "Iibettigscode kopiere",
     "embedCodeCopied": "Iibettigscode kopiert",

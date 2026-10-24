@@ -27,7 +27,7 @@ vi.mock('@/lib/dm-e2ee/keys', () => ({ prepareOutgoing: vi.fn() }));
 vi.mock('@/lib/media-url', () => ({ buildAvatarUrl: () => '', extractAvatarPath: () => '' }));
 vi.mock('@/components/app/chat', () => ({
   DirectMessageChat: ({ onBack }: { onBack: () => void }) => <button onClick={onBack}>Back to messages</button>,
-  PublicChat: () => null, NewConversationModal: () => null, NewMessageSelector: () => null, CreateGroupModal: () => null,
+  PublicChat: () => null, NewConversationModal: () => null, NewMessageSelector: () => null,
 }));
 vi.mock('@/components/app/page-kit/PageKit', () => ({
   PageIsland: ({ children }: { children: ReactNode }) => <div>{children}</div>,
