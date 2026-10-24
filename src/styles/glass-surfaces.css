@@ -109,6 +109,11 @@ html[data-theme='jungle'] {
 html[data-theme='war'] {
   --nav-glass-base: rgb(var(--war-gunmetal, 14 20 18) / 0.24);
 }
+/* Lava's pale highlights pass behind white header copy. Match the native
+   smoked card density so the labels remain readable through that phase. */
+html[data-theme='lavalamp'] {
+  --nav-glass-base: rgb(var(--glass-tint, 9 9 11) / 0.82);
+}
 html {
   --nav-glass: color-mix(in srgb, var(--tint-accent) 20%, transparent);
   --nav-glass-blur: var(--tint-glass-blur);
@@ -329,7 +334,7 @@ html {
     -webkit-backdrop-filter: none !important;
     backdrop-filter: none !important;
   }
-  html {
+  html, html[data-theme='lavalamp'] {
     --nav-glass: rgb(var(--glass-tint, 9 9 11) / 0.94);
     --nav-glass-base: rgb(var(--glass-tint, 9 9 11) / 0.94);
     --tint-bento: 1;
