@@ -1,0 +1,42 @@
+/* Search is a recess in the page, with depth instead of an outlined box. */
+html {
+  --search-fill: rgba(255,255,255,.06);
+  --search-fill-focus: rgba(255,255,255,.09);
+  --search-depth: inset 0 1px 3px rgba(0,0,0,.22), inset 0 -1px 0 rgba(255,255,255,.035);
+  --search-depth-focus: inset 0 2px 4px rgba(0,0,0,.28), inset 0 -1px 0 rgba(255,255,255,.05);
+}
+html:is([data-theme='light'], [data-system-tone='light']) {
+  --search-fill: rgba(11,11,13,.035);
+  --search-fill-focus: rgba(11,11,13,.055);
+  --search-depth: inset 0 1px 2px rgba(11,11,13,.045), 0 1px 0 rgba(255,255,255,.75);
+  --search-depth-focus: inset 0 2px 3px rgba(11,11,13,.075), 0 1px 0 rgba(255,255,255,.8);
+}
+/* Explicit roles also cover portals without guessing translated placeholders. */
+html:not(#_):not(#_):not(#_):not(#_):not(#_):not(#_) :is([data-search-surface], input[type='search']) {
+  background: var(--search-fill) !important;
+  border: 0 !important;
+  outline: none !important;
+  box-shadow: var(--search-depth) !important;
+  transition: background-color 160ms ease, box-shadow 160ms ease;
+}
+html:not(#_):not(#_):not(#_):not(#_):not(#_):not(#_) :is([data-search-surface], input[type='search']):is(:focus-within, :active) {
+  background: var(--search-fill-focus) !important;
+  box-shadow: var(--search-depth-focus) !important;
+}
+html:not(#_):not(#_):not(#_):not(#_):not(#_):not(#_) [data-search-surface] input {
+  background: transparent !important;
+  border: 0 !important;
+  outline: none !important;
+  box-shadow: none !important;
+}
+@media (prefers-reduced-motion: reduce) {
+  :is([data-search-surface], input[type='search']) { transition: none !important; }
+}
+@media (forced-colors: active) {
+  html:not(#_):not(#_):not(#_):not(#_):not(#_):not(#_) :is([data-search-surface], input[type='search']) {
+    outline: 1px solid CanvasText !important;
+  }
+  html:not(#_):not(#_):not(#_):not(#_):not(#_):not(#_) :is([data-search-surface], input[type='search']):focus-within {
+    outline: 2px solid Highlight !important;
+  }
+}

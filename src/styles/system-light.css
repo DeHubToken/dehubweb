@@ -102,7 +102,6 @@ html[data-theme="system"][data-system-tone="light"]:not(#_):not(#_):not(#_):not(
 html[data-theme="system"][data-system-tone="light"]:not(#_):not(#_):not(#_):not(#_) [class*="lg:bg-zinc-800"] { background-color: rgba(11,11,13,.05) !important; }
 html[data-theme="system"][data-system-tone="light"]:not(#_):not(#_):not(#_):not(#_) [data-primary-cta] { border-color: transparent !important; }
 html[data-theme="system"][data-system-tone="light"]:not(#_):not(#_):not(#_):not(#_) :is(.w-10.h-10.bg-zinc-800, .w-9.h-9.bg-zinc-800) { background-color: rgba(11,11,13,.05) !important; background-image: none !important; }
-html[data-theme="system"][data-system-tone="light"]:not(#_):not(#_):not(#_):not(#_) :has(> input[placeholder^="Search"]), html[data-theme="system"][data-system-tone="light"]:not(#_):not(#_):not(#_):not(#_) input[placeholder^="Search"] { background-color: rgba(11,11,13,.045) !important; border-radius: 12px; }
 html[data-theme="system"][data-system-tone="light"]:not(#_):not(#_):not(#_):not(#_):not(#_) :is(input, textarea)::placeholder { color: rgba(11,11,13,.6) !important; -webkit-text-fill-color: rgba(11,11,13,.6) !important; }
 html[data-theme="system"][data-system-tone="light"]:not(#_):not(#_):not(#_):not(#_):not(#_) input.bg-zinc-900 { background-color: rgba(11,11,13,.045) !important; }
 /* System rule: no bentos. Posts run edge to edge, split by hairlines. */
