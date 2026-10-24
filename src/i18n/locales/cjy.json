@@ -169,6 +169,10 @@
     "pollWinner": "{{option}} 获胜",
     "stillCounting": "仍在统计：礼物确认可能需要一分钟。"
   },
+  "quickActions": {
+    "title": "页面选项",
+    "question": "这个页面有什么问题？"
+  },
   "errors": {
     "sponsorshipUnavailable": "免费交易咾我搭停勒，勿是倷个钱包个问题。过歇再试试。",
     "gasSponsorshipFailed": "箇笔交易垫勿了。过歇再试试。"
@@ -264,6 +268,8 @@
     "postingChain": "发帖区块链",
     "showOnline": "显示我在线时",
     "showOnlineDesc": "当你使用 DeHub 时，你的联系人会在你的名字旁看到一个绿色点",
+    "showDislikes": "显示我的不喜欢给所有人",
+    "showDislikesDesc": "任何人都可以打开你个人资料中的“不喜欢”选项卡。当关闭时，只有你能看到它。",
     "smartReplies": "建议回复",
     "smartRepliesDesc": "在聊天里头写下两条能点嘞回复。建议上头嘞 × 就把它关咾。",
     "title": "设置",
@@ -442,6 +448,7 @@
     "systemLight": "系统 亮色",
     "immersive": "Immersive",
     "cosmic": "宇宙像素",
+    "glass": "玻璃模式",
     "hazy": "朦胧夜",
     "swarms": "蜂群",
     "lavalamp": "熔岩灯",
@@ -709,9 +716,14 @@
     "solanaLinked": "Solana 钱包已连接",
     "solanaLinkFailed": "连不上这个钱包",
     "solanaUnlinked": "Solana 钱包已断开",
-    "solanaUnlinkFailed": "断不开这个钱包"
+    "solanaUnlinkFailed": "断不开这个钱包",
+    "sessionsRevokedMany": "{{count}} 设备已签出",
+    "reset": "重置"
   },
   "common": {
+    "mute": "静音",
+    "unmute": "取消静音",
+    "confirm": "确认",
     "save": "保存",
     "cancel": "取消",
     "delete": "删除",
@@ -1548,7 +1560,42 @@
     "radio": "电台",
     "trendingTracks": "热门歌曲",
     "moreVideos": "更多视频",
-    "newReleases": "新发布"
+    "newReleases": "新发布",
+    "mostPlayed": "最常播放",
+    "mostLiked": "最喜欢",
+    "mostRecent": "最新",
+    "chartOrder": "音频排行榜顺序",
+    "radioPicks": "我们的推荐",
+    "mostVoted": "最多投票",
+    "trending": "热门",
+    "radioChartOrder": "电台排行榜顺序",
+    "stagesLive": "正在直播",
+    "upcoming": "即将开始",
+    "mostListened": "最多收听",
+    "recentStages": "最近",
+    "stagesChartOrder": "舞台排行榜顺序",
+    "noStages": "这里还没有舞台",
+    "listening": "正在收听",
+    "listens": "收听",
+    "liveCount": "直播",
+    "chartVideos": "音乐视频",
+    "videoCharts": "音乐视频排行榜",
+    "mostViewed": "最受欢迎",
+    "trendingWeek": "热门本周",
+    "newest": "最新",
+    "videoChartOrder": "音乐视频排行榜顺序",
+    "country": "国家",
+    "quality": "质量",
+    "votes": "投票",
+    "plays": "播放量",
+    "onAir": "正在播放",
+    "liveRadio": "直播电台",
+    "pause": "暂停",
+    "listenLive": "实时收听",
+    "nextStation": "下一台电台",
+    "shareStation": "分享电台",
+    "shareStationTitle": "{{name}} 在 DeHub Radio 上",
+    "linkCopied": "链接已复制"
   },
   "notFound": {
     "title": "页面找不着",
@@ -1582,7 +1629,16 @@
       "commentUnavailable": "此评论已不再可用"
     },
     "tabs": {
-      "playlists": "播放列表"
+      "playlists": "播放列表",
+      "dislikes": "不喜欢"
+    },
+    "dislikes": {
+      "emptyTitle": "暂无不喜欢",
+      "emptyOwn": "你不喜欢的帖子会离开你的推送并出现在这里。取消不喜欢可以将帖子恢复。",
+      "emptyOther": "目前没有不喜欢的帖子。",
+      "privateTitle": "不喜欢是私密的",
+      "privateDesc": "这个账户将其不喜欢保持私密。",
+      "loadMore": "加载更多"
     },
     "offerWorthNow": "按当前汇率约 {{amount}} 个代币",
     "offerNotePlaceholder": "加条备注（可不填）",
@@ -1672,6 +1728,67 @@
     "tokensUnit": "代币"
   },
   "agents": {
+    "life": {
+      "daily": "今日发布：{{posts}} · 每日目标：{{target}}",
+      "compose": "以此代理身份发布",
+      "postText": "发布文本",
+      "imageUrl": "图片URL（可选）",
+      "queueHelp": "发布你的原文。共享20分钟发布间隔适用。无铸造。",
+      "queuePost": "排队发布",
+      "postQueued": "发布已排队。在上面的任务中跟踪它。",
+      "viewPost": "查看帖子",
+      "unlike": "不一样",
+      "unliked": "不喜欢",
+      "less": "显示更少"
+    },
+    "tasks": {
+      "oneAgent": "一个代理人",
+      "swarm": "蜂群",
+      "clearSelection": "清除选择",
+      "selectedCount": "{{count}} of {{total}} 个已选中",
+      "eachMode": "每个代理都这样做。",
+      "eachHelp": "将以下指令发送给每个选定的代理。每个代理按照请求的节奏完成完整任务。共享发布限制仍然适用。",
+      "allCategories": "每个分类下的所有帖子。无关键词过滤，无三连点任务限制。",
+      "windowLimits": "所有匹配的帖子已排队。操作限制仅影响执行速度，不会将任务限制在三篇帖子内。回复消息可能会消耗积分。",
+      "promptLimits": "每篇帖子需使用所有类别。主题相关的选择性点赞每次限用三次。所有代理共享发帖间隔；撰写可使用信用额度。",
+      "pauseSwarm": "暂停蜂群",
+      "cancelSwarm": "取消蜂群",
+      "cancelTask": "取消任务",
+      "actionsProcessed": "动作已处理",
+      "reviewMembers": "任务中存在不确定性操作的，在继续前需进行个别审核。已在执行中的操作可能在暂停或取消后仍会完成。",
+      "controlUpdated": "更新 {{count}} 任务",
+      "enabled": "启用 · 活动",
+      "enabledHelp": "启用表示此代理可用。任务状态下方显示其当前运行、等待、暂停或失败的状态。",
+      "lastActive": "上次活动时间",
+      "noActivity": "无活动记录",
+      "noTasks": "没有任务分配给这个代理人。",
+      "runSwarm": "运行 swarm",
+      "preparing": "准备任务…",
+      "run": "运行提示",
+      "list": "任务",
+      "loading": "加载任务中…",
+      "pause": "暂停",
+      "resume": "恢复",
+      "skip": "跳过未确认操作并恢复",
+      "window": {
+        "authorAll": "所有创作者",
+        "authorChoose": "选择创作者",
+        "categoryAll": "所有类别",
+        "categoryChoose": "选择类别",
+        "categoryHint": "添加任何以逗号分隔的类别名称，最多20个。帖子可以匹配任何选定的类别。留空表示所有类别。",
+        "last1h": "过去1小时",
+        "last30d": "过去30天",
+        "allTime": "全部时间",
+        "dislike": "不喜欢",
+        "author": "作者（可选）",
+        "category": "类别（可选）",
+        "authorPlaceholder": "@用户名或钱包",
+        "categoryPlaceholder": "精确类别名称",
+        "filterHelp": "保持过滤器空白以获取所有帖子。当两者都设置时，两者都必须匹配。现有反应保持不变；选择相反的反应会改变它。",
+        "write": "撰写说明",
+        "title": "时间段内的每一篇帖子"
+      }
+    },
     "title": "AI 代理",
     "connectToManage": "连接来管理AI代理",
     "signInToCreate": "登录来创建和管理你的AI代理。",
@@ -1796,7 +1913,8 @@
     "passkeyFailed": "指纹登录失败。请重试。",
     "passkeyBackupHint": "您的账户保存在此设备的通行密钥中。在大多数手机上，它会与您的 Google 或 Apple 账户同步，您可以在设置中添加密码备份。",
     "walletBlockedTitle": "这个钱包是全新的",
-    "walletBlockedBody": "新钱包要有余额或者以前的交易才能开账户。用下面的一种方式注册，然后在设置里连接这个钱包。"
+    "walletBlockedBody": "新钱包要有余额或者以前的交易才能开账户。用下面的一种方式注册，然后在设置里连接这个钱包。",
+    "continuePhone": "继续使用手机"
   },
   "careers": {
     "title": "DeHub招聘",
@@ -1968,7 +2086,20 @@
       "authorChip": "提案作者"
     },
     "notEnoughUnstakedTokens": "Base 上未质押的代币不足。您需要在 Base 上拥有 {{needed}} 个可用（未质押）的 DeHub 代币，但您只有 {{held}} 个。已质押的代币不能用于支付费用。",
-    "voteFailedHoldTokens": "投票失败。您必须持有 DeHub 代币才能投票。"
+    "voteFailedHoldTokens": "投票失败。您必须持有 DeHub 代币才能投票。",
+    "badgeHoldersOnly": "仅限徽章持有者",
+    "removeMedia": "移除附件",
+    "addMedia": "添加图片或视频",
+    "freeForBadgeHolders": "徽章持有者免费。您的草稿会随着输入而自动保存。",
+    "proposalFeeNote": "建议需支付10,000 DHB，未获得抵押徽章。您的草稿会随着输入而自动保存。",
+    "noOpenProposals": "目前没有开放的建议。",
+    "decidedInTabs": "决定通过的提案在“通过”和“拒绝”选项卡中。",
+    "mediaTypeInvalid": "选择一张图片或视频。",
+    "mediaTooLarge": "文件必须50 MB或更小。",
+    "uploadFailed": "上传失败",
+    "uploadFailedDetail": "上传失败：{{message}}",
+    "submitFailed": "提交提案失败",
+    "draftSavedRetry": "您的草稿已保存 —— 按“提交”重新尝试。"
   },
   "sidebar": {
     "talkOfTheTown": "热门话题",
@@ -1986,7 +2117,8 @@
     "searchMenu": "寻菜单",
     "clearSearch": "清咾搜寻",
     "noMenuMatches": "菜单里头没啥对上",
-    "searchDehubFor": "在 DeHub 上寻「{{query}}」"
+    "searchDehubFor": "在 DeHub 上寻「{{query}}」",
+    "switchAccount": "切换账户"
   },
   "comments": {
     "reportComment": "举报评论",
@@ -2708,6 +2840,10 @@
       "wallTitle": "人们怎么说",
       "wallNote": "已获得许可发布",
       "anonymous": "DeHub 成员"
+    },
+    "money": {
+      "operationsGroup": "运营",
+      "estimatedOperations": "估计的运营量"
     }
   },
   "superpowers": {
@@ -5554,7 +5690,8 @@
     "endStreamConfirmBody": "您的广播将对所有观看者停止，无法恢复。",
     "keepStreaming": "继续直播",
     "encoderPermanentHint": "这个密钥永远不会改变。设置好你的编码器一次——下次只需在那里按下“开始”，DeHub 就会为你创建帖子。",
-    "notEnoughTokensForBounty": "代币不足。需要 {{need}} 个代币，但只有 {{have}} 个。"
+    "notEnoughTokensForBounty": "代币不足。需要 {{need}} 个代币，但只有 {{have}} 个。",
+    "connectionFailed": "广播连接失败。"
   },
   "events": {
     "seoTitle": "活动 — DeHub 的见面会与社区活动",
@@ -8683,6 +8820,57 @@
     "like": "点赞",
     "unlike": "移除点赞"
   },
+  "copy": {
+    "b3412a3b86de": "邀请主播",
+    "cc96aaa18cf2": "来DeHub直播吧，打赏直接链上打入你的钱包，你拥有你的观众，并且可以一步完成在TikTok和其他平台继续发布内容。现在就注册吧：{{link}}",
+    "77db95ebd737": "复制消息",
+    "846d8244b7d8": "邀请信息已复制",
+    "b10fb966d720": "体积",
+    "b5f64aac226f": "继续使用本服务即表示您同意我们的",
+    "44c9d36485b7": "看看全部",
+    "641d1ef657bd": "跟随",
+    "42ee912bff23": "无需翻译，原文即为英文标题，保持不变。",
+    "7c14e8607c11": "加载站点...",
+    "ab4d6796dbbe": "音乐视频",
+    "26be785e21b7": "还没有音乐视频呢。",
+    "302b4ce5c73d": "音频上传",
+    "cccec0619e2d": "没有音频上传过。",
+    "036cfd952896": "誰要關注？",
+    "3a17aa4e4abb": "阶段",
+    "3b59e95daada": "目前没有现场演出。",
+    "d0f08798ff1a": "跟随之后",
+    "ce4ee4efc5e3": "不静音",
+    "8dd6857baf02": "哑巴",
+    "37fd4e355ba3": "退出全屏模式",
+    "7527dc6722fc": "重新发布失败",
+    "44207eb29645": "替换中…",
+    "6a40edf1fc87": "微信",
+    "c1c8f6c1d828": "即将开始",
+    "2f7e24392d9c": "即将到来的舞台",
+    "a865110e919b": "导入钱包",
+    "7bb6682e5826": "新的回调请求",
+    "2f33a51e3171": "DeHub治理提案 —— 投票与讨论。",
+    "a3156ed263d2": "{{value1}} — 按住以更改你的反应",
+    "12b91b0ac5dd": "{{value1}} — 按住反应",
+    "c1cd85f576ed": "{{value1}} — DeHub 治理",
+    "42484309dc66": "{{value1}} —— 按后退键显示链接",
+    "0f3dd376ee85": "在找你的捕捉卡…",
+    "150d73bf85e7": "Elgato、AVerMedia… 还是OBS？",
+    "1929290e09aa": "打开捕捉卡设置（要求访问相机权限）",
+    "1b2c08a8733d": "质量",
+    "36cffc7912e4": "你的麦克风（用于游戏中对话）",
+    "4a1bd4a3aaf3": "捕捉卡",
+    "594bea9c9448": "未找到捕捉卡。通过USB插入，然后从下方选择。",
+    "67004337fb60": "无法打开此设备。关闭OBS或Elgato Studio（一次只能使用一个应用程序）。",
+    "8bb1dbd60bce": "保持此标签页在直播期间打开。",
+    "96882965394f": "游戏音频",
+    "a2838b66518a": "自动（尽可能好）",
+    "b8643d1cc81a": "1080p 60需要大约9 Mbps的上传带宽。在慢Wi-Fi下选择720p。",
+    "c7ce89b32897": "暂停捕捉卡",
+    "d7038cc95b8e": "通过卡的直通功能在电视上播放，而不是此预览。它会稍有延迟。",
+    "de6694f3ada3": "选择设备",
+    "fedc5cda305d": "捕捉暂停"
+  },
   "postProcessing": {
     "uploading": "上传中…",
     "preparing": "准备中…",
@@ -8691,6 +8879,98 @@
     "posted": "发好了",
     "view": "看",
     "failed": "视频处理不了"
+  },
+  "player": {
+    "volume": "音量级别"
+  },
+  "loginStack": {
+    "aiRestyle": "AI重塑",
+    "headlineTop": "你将拥有一切",
+    "headlineAccent": "并快乐。",
+    "orContinueWith": "或者继续使用",
+    "phone": "手机",
+    "fingerprint": "指纹",
+    "exploreFirst": "先探索",
+    "codeNote": "我们会通过邮件发送一个验证码，无需密码。"
+  },
+  "dehubLinks": {
+    "kind": {
+      "post": "发布",
+      "profile": "个人资料",
+      "community": "社区",
+      "communityInvite": "社区邀请",
+      "store": "商店",
+      "listing": "物品",
+      "event": "活动",
+      "stage": "舞台",
+      "film": "标题",
+      "bounty": "奖赏"
+    },
+    "sentTo": "{{item}} 发送给 {{name}}",
+    "sendFailed": "未能发送{{item}}",
+    "copyLinkDetail": "将 {{item}} 链接复制到剪贴板",
+    "recipientChat": "聊天",
+    "recipientUser": "用户"
+  },
+  "dehubAppPage": {
+    "seoTitle": "DeHub App — 安卓、iPhone 及网页版下载",
+    "seoDescription": "获取 DeHub 应用：开源、用户自有的社交媒体，支持实时直播、加密消息和看赚功能。在 Google Play、App Store 和网页上免费下载。",
+    "intro1": "DeHub 是一款自 2021 年以来正在开发中的去中心化社交网络和移动应用，用户可以在链上铸造帖子，创作者能够保留其粉丝、内容和收入。",
+    "intro2": "它结合了按时间顺序排列的动态、直播、端到端加密的消息、用户自主运营的社区、多链钱包以及以代币形式支付的看奖励。同一个账户可在Android、iPhone和任何现代浏览器上使用。",
+    "downloadTitle": "下载 DeHub",
+    "googlePlay": "获取 Google Play 应用商店版本",
+    "appStore": "下载至 App Store",
+    "android": "安卓",
+    "openInBrowser": "打开浏览器并访问 DeHub",
+    "downloadApk": "下载 APK（Android 非 Google Play 版本）",
+    "faq": {
+      "a1": "No。deHub在dehub.io是一个独立的开源社交媒体平台。DePaul大学的DeHUB学生门户，罗旺的DEHub和deHUB Access门禁应用程序是无关产品，只是巧合地共享了相同的名称。",
+      "q2": "DeHub 应用是否免费？",
+      "a2": "是的。DeHub 在 Google Play 和 App Store 上免费下载，并在浏览器中通过 dehub.io 免费使用。",
+      "a3": "安卓手机通过 Google Play 或直接下载 APK，iPhone 通过 App Store，以及任何现代桌面或移动浏览器在 dehub.io 上使用。",
+      "a4": "是的。最新的Android版本由DeHub作为直接APK下载发布在dehub.io/apk，适用于Android 8及以上版本。"
+    },
+    "notSure": "还不确定需要哪个DeHub？<compare>DeHub vs DePaul DeHUB vs Rowan DEHub</compare>可以帮你解决，而<guide>What is DeHub?</guide>则深入介绍了该平台。"
+  },
+  "streamPage": {
+    "seoTitle": "直播在 DeHub — TikTok & Twitch 创作者的直播平台",
+    "seoDescription": "去 DeHub 上线直播：链上小费直接打入你的钱包，拥有属于你的观众群，一次发布到其他平台，并且每位你邀请的人都能为你带来 20% 的收益。",
+    "heading": "直播在DeHub上",
+    "importYoutube": "导入你的YouTube频道",
+    "inviteLink": "获取你的邀请链接",
+    "howToStart": "注册，打开发布器并点击“直播” — 从你的摄像头、OBS或捕获卡中。",
+    "proof": {
+      "label1": "实时观看人数",
+      "value3": "200毫秒以下",
+      "label3": "全球延迟在DeHub的CDN上"
+    },
+    "whyTitle": "为什么在DeHub上直播？",
+    "reasons": {
+      "body1": "观众在直播期间打赏并送礼物，拥有分层级的礼物动画和读出的打赏信息。打赏在链上以DeHub代币结算，并直接存入您的钱包，而非在传输过程中被扣除。",
+      "title2": "观众你拥有",
+      "body2": "你的粉丝不是别人数据库中的一行记录。流媒体和上传可以铸造到你的钱包中，时序表是按时间顺序排列的，代码是开源的，因此没有人能悄悄修改规则。",
+      "title3": "带来的每一个人都能赚钱",
+      "body3": "你的邀请链接将为你支付通过它加入的人的活动的20%，以及他们进一步邀请的人的5%持续收益，以DeHub代币支付。",
+      "title4": "直播舞台",
+      "body4": "直播音频舞台，用于回答问题、合作和观看派对。提前用一张卡片宣布，让观众可以分享，并回放已录制的内容。",
+      "body5": "连接其他账户并发布到 X、Instagram、YouTube、TikTok、Farcaster 和另外八个平台。将 TikTok 作为你的发现引擎，同时建立属于自己的粉丝群。",
+      "title6": "带上你的频道",
+      "body6": "导入整个YouTube频道，或TikTok、Vimeo或SoundCloud个人资料，价格在DeHub令牌中显示，支付前显示。"
+    },
+    "faqTitle": "常见问题",
+    "faq": {
+      "q1": "是否可以在 DeHub 免费流媒体?",
+      "a1": "是的。DeHub 免费加入和免费发布，链上流媒体是可选的。导入频道需要付费，价格在支付前显示。",
+      "q2": "我是否需要停止在 TikTok 或 Twitch 流媒体?",
+      "a2": "不。保持在您的现有观众的平台上流媒体，并在 DeHub 上建立。从 DeHub 的编写器中跨发布，以便您使用的每个平台都指向您拥有的观众。",
+      "q3": "我是否可以使用 OBS 流媒体?",
+      "a3": "是的。选择 OBS 时，DeHub 为 OBS、Streamlabs 或任何 RTMP 编码器提供永久流媒体密钥。您也可以直接从您的手机、浏览器或捕获卡开始直播。",
+      "q4": "我如何获得报酬?",
+      "a4": "观众在直播期间向您打赏和发送礼物，且这些在 DeHub 代币中直接在您的钱包中结算。上传也可以免费、按需支付或代币门控。",
+      "q5": "我的邀请链接如何工作?",
+      "a5": "打开合作伙伴页面获取您的链接。通过该链接加入的人员将被归属给您，您将获得 20% 的活动收入，来自他们邀请的人员的 5% 的持续收入，支付在 DeHub 代币中。"
+    },
+    "moreGuides": "来自TikTok？阅读<tiktok>英国创作者指南：离开TikTok</tiktok>和<live>Web3直播：一个去中心化的Twitch替代品</live>。"
   },
   "post": {
     "like": "喜欢",

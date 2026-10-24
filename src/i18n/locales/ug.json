@@ -169,6 +169,10 @@
     "pollWinner": "{{option}} won",
     "stillCounting": "ھېلىمۇ ساناپ باقايلى: سوۋغاتلار تەستىقلاش ئۈچۈن بىر مىنۇت ۋاقىت كېتىدۇ."
   },
+  "quickActions": {
+    "title": "بەت تاللانمىلىرى",
+    "question": "بۇ بەتتىكى خاتالىق نېمە ؟"
+  },
   "errors": {
     "sponsorshipUnavailable": "ھەقسىز مامىلىلەر بىز تەرەپتە توختىتىلدى، ھەميانىڭىزدا ئەمەس. بىردەمدىن كېيىن قايتا سىناڭ.",
     "gasSponsorshipFailed": "بۇ مامىلىنىڭ خىراجىتىنى كۆتۈرەلمىدۇق. بىردەمدىن كېيىن قايتا سىناڭ."
@@ -264,6 +268,8 @@
     "postingChain": "يازما بلوكچەينى",
     "showOnline": "مەن توردا بولغاندا كۆرسىتىش پروگراممىسى",
     "showOnlineDesc": "سىز يوللىغان كىشىلەر DeHub نى ئىشلەتكەندە ئىسمىڭىزنىڭ يېنىدىكى يېشىل نوقتىنى كۆرىدۇ",
+    "showDislikes": "مېنىڭ ياقتۇرمايدىغان نەرسىلىرىمنى ھەممەيلەنگە كۆرسىتىش",
+    "showDislikesDesc": "ھەرقانداق ئادەم سىزنىڭ پروفىلىڭىزدىكى ياقتۇرمايدىغانلار تاختىسىنى ئاچالايدۇ. بۇ ئىش تۈگىگەندىن كېيىن، ئۇنى پەقەت سىزلا كۆرەلەيسىز.",
     "smartReplies": "تەۋسىيە جاۋابلار",
     "smartRepliesDesc": "پاراڭدا چېكەلەيدىغان ئىككى جاۋاب تەييارلايدۇ. تەۋسىيەلەردىكى × بۇنى ئېتىدۇ.",
     "title": "تەڭشەكلەر",
@@ -442,6 +448,7 @@
     "systemLight": "سىستېما يورۇق",
     "immersive": "Immersive",
     "cosmic": "Cosmic Pixels",
+    "glass": "Glassy",
     "hazy": "تۇمانلىق كېچىلەر",
     "swarms": "توپلار",
     "lavalamp": "لاۋا چىرىغى",
@@ -709,9 +716,14 @@
     "solanaLinked": "Solana ھەميان ئۇلاندى",
     "solanaLinkFailed": "بۇ ھەميياننى ئۇلىغىلى بولمىدى",
     "solanaUnlinked": "Solana ھەميان ئۈزۈلدى",
-    "solanaUnlinkFailed": "بۇ ھەميياننى ئۈزگىلى بولمىدى"
+    "solanaUnlinkFailed": "بۇ ھەميياننى ئۈزگىلى بولمىدى",
+    "sessionsRevokedMany": "{{count}} ئۈسكۈنىلەر ئىمزالانغان",
+    "reset": "ئەسلىگە كەلتۈرۈش"
   },
   "common": {
+    "mute": "گاڭگىراپ قالغان",
+    "unmute": "Unmute",
+    "confirm": "تەستىقلاش",
     "save": "ساقلاش",
     "cancel": "بىكار قىلىش",
     "delete": "ئۆچۈرۈش",
@@ -1549,7 +1561,41 @@
     "radio": "رادىئو",
     "trendingTracks": "داڭلىق نەغمىلەر",
     "moreVideos": "تېخىمۇ كۆپ ۋىدىئو",
-    "newReleases": "يېڭى نەشرلەر"
+    "newReleases": "يېڭى نەشرلەر",
+    "mostPlayed": "ئەڭ كۆپ قويۇلغان",
+    "mostLiked": "ئەڭ ياقتۇرىدىغان",
+    "mostRecent": "ئەڭ يېڭى",
+    "chartOrder": "ئۈن جەدۋىلى تەرتىپى",
+    "radioPicks": "بىزنىڭ تاللىشىمىز",
+    "mostVoted": "ئەڭ كۆپ ئاۋاز",
+    "trending": "Trending",
+    "radioChartOrder": "رادىئو چارتى تەرتىپى",
+    "stagesLive": "ھازىرلا ياشا",
+    "upcoming": "كەلگۈسى",
+    "mostListened": "ئەڭ كۆپ ئاڭلانغان",
+    "recentStages": "Recent",
+    "stagesChartOrder": "باسقۇچلار جەدۋىلى تەرتىپى",
+    "noStages": "بۇ يەردە تېخى باسقۇچ يوق",
+    "listening": "ئاڭلاش",
+    "listens": "ئاڭلىغۇچلار",
+    "liveCount": "live",
+    "chartVideos": "مۇزىكا سىنلىرى",
+    "videoCharts": "مۇزىكا سىن چارتىلىرى",
+    "mostViewed": "ئەڭ كۆپ كۆرۈلگەن",
+    "trendingWeek": "بۇ ھەپتىلىك ئېقىم",
+    "newest": "ئەڭ يېڭى",
+    "videoChartOrder": "مۇزىكا سىن چارتى تەرتىپى",
+    "country": "دۆلەت",
+    "quality": "سۈپەت",
+    "plays": "قويغۇلار",
+    "onAir": "ھاۋادا",
+    "liveRadio": "بىۋاستە رادىيو",
+    "pause": "توختىتىش",
+    "listenLive": "تىزىملىكلەر LIVE",
+    "nextStation": "كېيىنكى بېكەت",
+    "shareStation": "تەقسىملەش ئورنى",
+    "shareStationTitle": "{{name}} on DeHub رادىئوسىدا",
+    "linkCopied": "ئۇلىنىش كۆچۈرۈلدى"
   },
   "notFound": {
     "title": "بەت تېپىلمىدى",
@@ -1583,7 +1629,16 @@
       "commentUnavailable": "بۇ ئىنكاس ئەمدى مەۋجۇت ئەمەس"
     },
     "tabs": {
-      "playlists": "ئويۇن تىزىملىكى"
+      "playlists": "ئويۇن تىزىملىكى",
+      "dislikes": "ياقتۇرمايدۇ"
+    },
+    "dislikes": {
+      "emptyTitle": "ياقتۇرمايدۇ تېخى",
+      "emptyOwn": "سىز ياقتۇرمايدىغان يازمىلار يىمەكلىكلىرىڭىزنى قالدۇرۇپ، بۇ يەرگە كىرىڭ. يازمىنى قايتۇرۇشنى ياقتۇرماسلىق.",
+      "emptyOther": "ھېچنېمە تېخىچە ياقتۇرۇلمىدى.",
+      "privateTitle": "ياقتۇرمايدىغانلار مەخپىي بولىدۇ",
+      "privateDesc": "بۇ ھېساب ئۆز نەپسى خاھىشى بويىچە قالىدۇ.",
+      "loadMore": "تېخىمۇ كۆپ يۈكلە"
     },
     "offerWorthNow": "ھازىرقى باھا بويىچە {{amount}} توكېن ئەتراپىدا",
     "offerNotePlaceholder": "ئىزاھات قوشۇڭ (ئىختىيارى)",
@@ -1668,6 +1723,72 @@
     "tokensUnit": "نۆتىك پۇل"
   },
   "agents": {
+    "life": {
+      "daily": "بۈگۈنكى يازمىلار: {{posts}} · كۈندىلىك نىشان: {{target}}",
+      "compose": "بۇ ۋاكالەتچى قىلىپ ئەۋەتىش",
+      "postText": "تېكىستنى يوللاش",
+      "imageUrl": "سۈرەت URL (ئىختىيارسىز)",
+      "queueHelp": "توغرا تېكىستنى ئېلان قىلىدۇ. 20 مىنۇتلۇق ئورتاق پوچتا بوشلۇقى قوللىنىلىدۇ. يالغانچىلىق يوق.",
+      "queuePost": "نۆۋەتلىك پوچتا",
+      "postQueued": "ئەۋەتىلگەن يازمىلار قاتارىغا كىرگۈزۈلدى. يۇقىرىدىكى ۋەزىپىلەردە ئىزدىنىڭ.",
+      "viewPost": "يازمىنى كۆرۈش",
+      "unlike": "ئوخشىماسلىق",
+      "unliked": "ياقتۇرمىدى",
+      "editComment": "ئىنكاسنى تەھرىرلەش",
+      "more": "تېخىمۇ كۆپ پائالىيەتنى كۆرسىتىش",
+      "less": "ئاز كۆرسەت"
+    },
+    "tasks": {
+      "oneAgent": "بىر ۋاكالەتچى",
+      "swarm": "Swarm",
+      "selectAll": "بارلىق ۋاكالەتچىلەرنى تاللاڭ",
+      "clearSelection": "تازىلاش تاللانمىسى",
+      "distribution": "ۋاكالەتچىلەر قانداق قىلىپ تېز سۈرئەتتە ئىجرا قىلىدۇ",
+      "eachMode": "ھەر بىر ۋاكالەتچى شۇنداق قىلىدۇ",
+      "sharedMode": "خىزمەتنى ھەمبەھىرلەش",
+      "eachHelp": "بۇ كۆرسەتمىلەرنى ھەر تاللانغان ۋاكالەتچىگە ئەۋەتىڭ. ھەر بىر ۋاكالەتچى تەلەپ قىلىنغان ۋەزىپىنى تولۇق ئادا قىلىدۇ. ئورتاق يوللاش چەكلىمىسى يەنىلا كۈچكە ئىگە.",
+      "allCategories": "ھەرخىل تۈرلەردىكى يازمىلار. ئاچقۇچلۇق سۆز سۈزگۈچ ۋە ئۈچ خىل خىزمەت چېكى يوق.",
+      "windowLimits": "بىر- بىرىگە ماس كېلىدىغان بارلىق يازمىلار تىزىلغان. ھەرىكەت سۈرئىتىنى چەكلەيدۇ ؛ ئۇلار ۋەزىپىنى ئۈچ ئورۇنغا بۆلمەيدۇ. جاۋابلارنى يېزىش قەرزنى ئىشلىتىشى مۇمكىن.",
+      "promptLimits": "ھەربىر يازمىنىڭ تەلەپلىرى ھەرخىل تۈرلەرنى ئىشلىتىدۇ. تېمىغا ئاساسەن تاللانغان ياقتۇرىدىغانلار ھەر قېتىمدا ئۈچكە چەكلىنىدۇ. بارلىق ۋاكالەتچىلەر يوللاش بوشلۇقىنى ئورتاق تەقسىملەيدۇ ؛ يازما قەرزنى ئىشلىتەلەيدۇ.",
+      "pauseSwarm": "Swarmنى پەسەيتىش",
+      "resumeSwarm": "مۇۋاپىق ۋاكالەتچىلەرنى تەكرارلاش پروگراممىسى",
+      "cancelSwarm": "Swarm نى ئەمەلدىن قالدۇرۇش",
+      "cancelTask": "ۋەزىپىنى بىكار قىلىش",
+      "actionsProcessed": "جەرىمانە قويۇلغان ھەرىكەتلەر",
+      "reviewMembers": "ئېنىق بولمىغان ھەرىكەتلەر بىلەن مەشغۇلاتنى قايتا باشلاشتىن بۇرۇن، ئايرىم- ئايرىم تەكشۈرۈپ چىقىش كېرەك. ئۇچۇشتا بولغان ھەرىكەت توختىتىلغاندىن كېيىن ئاخىرلىشىشى ياكى بىكار قىلىنىشى مۇمكىن.",
+      "controlUpdated": "يېڭىلىنىپ بولدى {{count}} tasks",
+      "enabled": "ئىجرا قىلىنغان · پائالىيەت",
+      "enabledHelp": "بۇ ۋاكالەتچىنىڭ بارلىقىنى بىلدۈرىدۇ. تۆۋەندىكى ۋەزىپە ئۇنىڭ قاچىلىنىۋاتقانلىقىنى، كۈتۈۋاتقانلىقىنى، توختىتىلغانلىقىنى ياكى مەغلۇپ بولغانلىقىنى كۆرسىتىدۇ.",
+      "lastActive": "ئەڭ ئاخىرقى ئاكتىپ",
+      "noActivity": "ھېچبىر پائالىيەت خاتىرىلەنمىدى",
+      "noTasks": "بۇ ۋاكالەتچىگە تېخى ۋەزىپە تاپشۇرۇلمىغان.",
+      "runSwarm": "Swarm نى قاچىلاش",
+      "preparing": "Yigʻirmoqda yigʻilmoqda…",
+      "run": "Yigʻirmoqda yigʻirmoq",
+      "list": "Yigʻirmoqlar",
+      "loading": "Yigʻirmoqlarni yigʻirmoqda…",
+      "pause": "Toxtatmoq",
+      "resume": "Kechirmoq",
+      "skip": "Tasdiqlanmagan amalda yigʻirmoqdan oʻtmoq va kechirmoq",
+      "window": {
+        "authorAll": "Barchasi mualliflar",
+        "authorChoose": "Muallif tanlamoq",
+        "categoryAll": "Barcha turlar",
+        "categoryChoose": "Turlar tanlamoq",
+        "categoryHint": "Kamida 20 ta tur nomlarini virgul bilan ajratib qoʻshmoq. Bir post tanlangan turlarning barchasiga mos kelishi mumkin. Boʻsh qoldirmoq barcha turlar uchun.",
+        "last1h": "Soatdan keyingi",
+        "last30d": "Oʻttiz kun oldin",
+        "allTime": "Barcha vaqt",
+        "dislike": "Yomonlik",
+        "author": "Muallif (xohishli)",
+        "category": "Tur (xohishli)",
+        "authorPlaceholder": "@username yoki xazinachilik",
+        "categoryPlaceholder": "Toʻgʻri tur nomi",
+        "filterHelp": "Filtrlarni boʻsh qoldirmoq barcha postlar uchun. Ikkinchisi ham belgilanib qoldirilsa, ikkalasi ham mos kelishi kerak. Qayta reaksiyalar saqlanadi; aksincha reaksiyani tanlash uni oʻzgartiradi.",
+        "write": "Instruksiyalar yozmoq",
+        "title": "Zaman cheklovida barcha postlar"
+      }
+    },
     "title": "سۈنئىي ئەقىل ۋاكالەتچىلىرى",
     "connectToManage": "سۈنئىي ئەقىل ۋاكالەتچىلىرىنى باشقۇرۇش ئۈچۈن ئۇلاڭ",
     "signInToCreate": "سۈنئىي ئەقىل ۋاكالەتچىلىرىنى قۇرۇش ۋە باشقۇرۇش ئۈچۈن كىرىڭ.",
@@ -1793,7 +1914,8 @@
     "passkeyFailed": "بارماق ئىزى بىلەن كىرىش مەغلۇپ بولدى. قايتا سىناپ بېقىڭ.",
     "passkeyBackupHint": "ھېسابىڭىز بۇ ئۈسكۈنىنىڭ ئاچقۇچىدا ساقلىنىدۇ. كۆپىنچە تېلېفۇنلاردا ئۇ Google ياكى Apple ھېسابىڭىز بىلەن سىستېمىلىق بولىدۇ، ۋە تەڭشەكلەردە پاسۋۇرد قوشالايسىز.",
     "walletBlockedTitle": "بۇ ھەميان پۈتۈنلەي يېڭى",
-    "walletBlockedBody": "يېڭى ھەميانلارنىڭ ھېسابات ئېچىشى ئۈچۈن قالدۇق ياكى ئىلگىرىكى سودا بولۇشى كېرەك. تۆۋەندىكى تاللاشلارنىڭ بىرى بىلەن تىزىملىتىڭ، ئاندىن بۇ ھەميانىنى تەڭشەكلەردىن ئۇلاڭ."
+    "walletBlockedBody": "يېڭى ھەميانلارنىڭ ھېسابات ئېچىشى ئۈچۈن قالدۇق ياكى ئىلگىرىكى سودا بولۇشى كېرەك. تۆۋەندىكى تاللاشلارنىڭ بىرى بىلەن تىزىملىتىڭ، ئاندىن بۇ ھەميانىنى تەڭشەكلەردىن ئۇلاڭ.",
+    "continuePhone": "Telefon bilan davom etmoq"
   },
   "careers": {
     "title": "DeHub خىزمەتلىرى",
@@ -1965,7 +2087,21 @@
       "authorChip": "تەكلىپ ئاپتورى"
     },
     "notEnoughUnstakedTokens": "Base دا يېتەرلىك سېلىنمىغان نۆتىك پۇل يوق. سىز Base دا {{needed}} سۇيۇق (سېلىنمىغان) DeHub نۆتىكىسىغا موھتاج، ئەمما سىزدە {{held}} بار. سېلىنغان نۆتىك پۇلنى ھەق ئۈچۈن ئىشلىتىشكە بولمايدۇ.",
-    "voteFailedHoldTokens": "بېلەت تاشلاش مەغلۇپ بولدى. بېلەت تاشلاش ئۈچۈن DeHub نۆتىكىسىنى ساقلىشىڭىز كېرەك."
+    "voteFailedHoldTokens": "بېلەت تاشلاش مەغلۇپ بولدى. بېلەت تاشلاش ئۈچۈن DeHub نۆتىكىسىنى ساقلىشىڭىز كېرەك.",
+    "badgeHoldersOnly": "Belgilar egalari faqat",
+    "removeMedia": "Foydalanmani olib tashlamoq",
+    "addMedia": "Rasm yoki video qoʻshmoq",
+    "freeForBadgeHolders": "Belgilar egalari uchun boʻsh. Siz yozganingizda yozuvingiz saqlanadi.",
+    "proposalFeeNote": "Takliflar 10,000 DHB belgisiz staking bilan 10,000 DHB narxida. Siz yozganingizda yozuvingiz saqlanadi.",
+    "noOpenProposals": "Hozircha ochiq takliflar yoʻq.",
+    "decidedInTabs": "قارار قىلىنغان تەكلىپلەر ئۆتۈپ كەتكەن ۋە رەت قىلىنغان تاختىلاردا ساقلىنىدۇ.",
+    "mediaTypeInvalid": "سۈرەت ياكى فىلىم تاللاڭ.",
+    "mediaTooLarge": "ھۆججەتلەر 50 MB ياكى ئۇنىڭدىن كىچىك بولۇشى كېرەك.",
+    "uploadFailed": "قاچىلاش مەغلۇپ بولدى",
+    "uploadFailedDetail": "قاچىلاش مەغلۇپ بولدى: {{message}}",
+    "proposalAttachment": "تەكلىپ قوشۇش",
+    "submitFailed": "تەكلىپنى ئەۋەتىش مەغلۇپ بولدى",
+    "draftSavedRetry": "لايىھەڭىز ساقلاندى — قايتا تەھرىرلەشكە يوللاڭ."
   },
   "sidebar": {
     "talkOfTheTown": "كۆپ سۆزلەنگەن",
@@ -1983,7 +2119,8 @@
     "searchMenu": "تىزىملىك ئىزدەش",
     "clearSearch": "ئىزدەشنى تازىلاش",
     "noMenuMatches": "تىزىملىكتە ماس كېلىدىغان نەرسە يوق",
-    "searchDehubFor": "DeHub دا \"{{query}}\" ئىزدەش"
+    "searchDehubFor": "DeHub دا \"{{query}}\" ئىزدەش",
+    "switchAccount": "ھېساباتىنى ئالماشتۇرۇش"
   },
   "comments": {
     "reportComment": "دوكلاتنى تەھلىل قىلىش",
@@ -2704,6 +2841,10 @@
       "wallTitle": "Millet nima deydu",
       "wallNote": "ruxsit bilen nashr qilindi",
       "anonymous": "DeHub a'zosi"
+    },
+    "money": {
+      "operationsGroup": "مەشغۇلاتلار",
+      "estimatedOperations": "مۆلچەرلەنگەن مەشغۇلات"
     }
   },
   "superpowers": {
@@ -5540,7 +5681,8 @@
     "endStreamConfirmBody": "Broadcast ھەممە كۆرگۈچىلەرنىڭ ئالدىدا توختايدۇ ۋە قايتا باشلىنالمايدۇ.",
     "keepStreaming": "Streaming نى داۋاملاشتۇرۇڭ",
     "encoderPermanentHint": "بۇ ئاچقۇچ ئۆزگەرمەيدۇ. كودلىغۇچنى بىر قېتىم قاچىلاڭ — كېيىنكى قېتىم باشلاش بېتىنى بېسىڭ، DeHub سىزنىڭ يازمىڭىزنى ئىجاد قىلىدۇ.",
-    "notEnoughTokensForBounty": "ئايەتلەر يېتەرلىك ئەمەس. {{need}} ئايەتلەر لازىم، لېكىن بۇنىڭدا {{have}} بار."
+    "notEnoughTokensForBounty": "ئايەتلەر يېتەرلىك ئەمەس. {{need}} ئايەتلەر لازىم، لېكىن بۇنىڭدا {{have}} بار.",
+    "connectionFailed": "تارقىتىش ئۇلىنىشى مەغلۇپ بولدى."
   },
   "events": {
     "seoTitle": "پائالىيەتلەر — DeHub دىكى ئۇچرىشىش ۋە جامائەت پائالىيەتلىرى",
@@ -6280,6 +6422,7 @@
     "pause": "توختىتىش",
     "listens_one": "{{count}} Listen",
     "listens_other": "{{count}} listens",
+    "visualizerColour": "Visualizer رەڭگى",
     "lyrics": "ناخشا تېكىستى",
     "lyricsLoading": "تېكىست ئىزدەۋاتىدۇ…",
     "lyricsNone": "تېكىست تېپىلمىدى"
@@ -8676,6 +8819,68 @@
     "like": "LIKE",
     "unlike": "LIKE نى چىقىرىۋېتىش"
   },
+  "copy": {
+    "b3412a3b86de": "ئېقىتقۇچىلارنى چاقىرىش پروگراممىسى",
+    "8c91325d901b": "بۇ ئۇچۇر بىلەن سۈزگۈچلەرنى DeHub سۈزگۈچ بېتىگە يوللاڭ. ئۇلار (يەنى مەككە كۇففارلىرى) دىن ئىلگىرى ئۆتكەن كاپىرلار (ئۆز پەيغەمبەرلىرىگە) ھىيلە - مىكىر ئىشلىتىپ (االله نىڭ نۇرىنى ئۆچۈرمەكچى بولدى).",
+    "cc96aaa18cf2": "مەن بىلەن DeHub غا كىرىڭ. يانچۇقىڭىزدا بىۋاستە زەنجىرلەر بار، سىزنىڭ تاماشىبىنلىرىڭىز بار، سىز بىر قەدەمدە TikTok ۋە باشقا ھەرقانداق يەرگە يوللىيالايسىز. بۇ يەرگە تىزىملىتىڭ: {{link}}",
+    "77db95ebd737": "ئۇچۇرنى كۆچۈرۈش",
+    "846d8244b7d8": "كۆچۈرۈلگەن ئۇچۇرنى چاقىرىش",
+    "b10fb966d720": "Hajmi",
+    "b5f64aac226f": "داۋاملاشتۇرۇپ، بىزنىڭ كېلىشىمگە قوشۇلىسىز",
+    "ede548996483": "مەلumatlar",
+    "e3ee915a8e8c": "ۋە",
+    "506ff3946215": "مەخپىيەتلىك سىياسىتى",
+    "44c9d36485b7": "ھەممىنى كۆرۈش",
+    "641d1ef657bd": "ئەگىشىش",
+    "344b4271ca01": "ئەگىشىش",
+    "89a167dad6da": "Visualizer رەڭگى",
+    "42ee912bff23": "رادىيو ئىستانسىلىرى",
+    "7c14e8607c11": "يۈكلەش ئورنى...",
+    "ab4d6796dbbe": "مۇزىكا سىنلىرى",
+    "26be785e21b7": "مۇزىكا سىنلىرى تېخى يوق",
+    "302b4ce5c73d": "Audio Uploads",
+    "cccec0619e2d": "ئاۋازى تېخى يۈكلەنمىدى",
+    "036cfd952896": "Who to follow",
+    "0c820caf16c0": "No bio yet",
+    "3a17aa4e4abb": "Stages",
+    "3b59e95daada": "ھازىر ھاياتلىق باسقۇچلىرى يوق",
+    "d0f08798ff1a": "Followed by",
+    "ce4ee4efc5e3": "Unmute",
+    "8dd6857baf02": "Mute",
+    "37fd4e355ba3": "Exit fullscreen",
+    "7527dc6722fc": "Failed to repost",
+    "44207eb29645": "Replacing…",
+    "6a40edf1fc87": "WhatsApp",
+    "c1c8f6c1d828": "STARTING SOON",
+    "2f7e24392d9c": "UPCOMING STAGE",
+    "a865110e919b": "Import wallet",
+    "7bb6682e5826": "يېڭى چاقىرىق قايتۇرۇش ئىلتىماسى",
+    "2f33a51e3171": "DeHub باشقۇرۇش تەكلىپى — ئاۋاز بېرىش ۋە مۇزاكىرە قىلىش.",
+    "a3156ed263d2": "{{value1}} — ئىنكاسىڭىزنى ئۆزگەرتىشنى ساقلاڭ",
+    "12b91b0ac5dd": "{{value1}} — ئىنكاس قايتۇرۇشنى ساقلاڭ",
+    "5e0cb5ae157b": "Image {{value1}}",
+    "cd9939b6aa1a": "Replace image {{value1}}",
+    "99ca327a47b5": "{{value1}} ئۈچۈن قاپلاش گرافىكىسى",
+    "c1cd85f576ed": "{{value1}} — DeHub Governance",
+    "42484309dc66": "{{value1}} — ئۇلىنىشنى كۆرسىتىش ئۈچۈن ئارقا بوشلۇق",
+    "05d0e1b9a76e": "تۇتۇش كارتىسىنى قايتا قوزغىتىش پروگراممىسى",
+    "0f3dd376ee85": "تۇتۇش كارتىسىنى ئىزدەش...",
+    "150d73bf85e7": "Elgato، AVerMedia… no OBS",
+    "1929290e09aa": "سۈرەتكە ئېلىش كارتىسىنى ئېچىش پروگراممىسى (كامېراغا كىرىشنى تەلەپ قىلىدۇ)",
+    "1b2c08a8733d": "Neyitlik",
+    "36cffc7912e4": "Sizning oyunniñ sozlash mikrofoni",
+    "4a1bd4a3aaf3": "Qaydash kartasi",
+    "594bea9c9448": "Qaydash kartasi topilmadi. USB orqali uldirip, keyin u yerda tanlang.",
+    "67004337fb60": "Bu qurghuni ochish mumkin emas. OBS yoki Elgato Studio yoping (bir vaqtda faqat bitta ilovani ishlatish mumkin).",
+    "8bb1dbd60bce": "Oynayapmizda bu saytni ochib turing.",
+    "96882965394f": "Oyun sozi",
+    "a2838b66518a": "Avtomatik (qurghuning eng yaxshi qobiliyati)",
+    "b8643d1cc81a": "1080p 60 9 Mbps upload zarur, tezkor Wi-Fi bo'lmaganda 720p tanlang.",
+    "c7ce89b32897": "Qaydash kartasini to'xtatish",
+    "d7038cc95b8e": "TV orqali kartaning passthrough orqali o'ynaying, bu yerdagi ko'rsatuv emas. U qisqa qoldiradi.",
+    "de6694f3ada3": "Qurghuni tanlang",
+    "fedc5cda305d": "Qaydash to'xtatildi"
+  },
   "postProcessing": {
     "uploading": "يوللاۋاتىدۇ…",
     "preparing": "تەييارلىنىۋاتىدۇ…",
@@ -8684,5 +8889,113 @@
     "posted": "يوللاندى",
     "view": "كۆرۈش",
     "failed": "سىننى بىر تەرەپ قىلغىلى بولمىدى"
+  },
+  "player": {
+    "volume": "Ovoz darajasi"
+  },
+  "loginStack": {
+    "aiRestyle": "AI restyle",
+    "headlineTop": "Siz barcha narsani egallaysiz",
+    "headlineAccent": "va xushbo'lsiz bo'ling.",
+    "orContinueWith": "yoki davom eting",
+    "phone": "Telefon",
+    "fingerprint": "Oynash izi",
+    "exploreFirst": "Birinchi eshittiring",
+    "codeNote": "Men sizga kod yuboraman, parol kerak emas."
+  },
+  "dehubLinks": {
+    "kind": {
+      "post": "post",
+      "profile": "profil",
+      "community": "jamiyat",
+      "communityInvite": "jamiyat taklifi",
+      "store": "do'kon",
+      "listing": "narsalar",
+      "event": "voqea",
+      "stage": "maydon",
+      "film": "titul",
+      "app": "ئەپ",
+      "proposal": "تەكلىپ",
+      "link": "ئۇلانما"
+    },
+    "sentTo": "{{item}} ئەۋەتكەن {{name}}",
+    "sendFailed": "{{item}} ئەۋەتكىلى بولمىدى",
+    "copyLinkDetail": "ئالماشتۇرۇش تاختىسىغا {{item}} ئۇلىنىشىنى كۆچۈرۈڭ",
+    "recipientChat": "پاراڭ",
+    "recipientUser": "ئىشلەتكۈچى"
+  },
+  "dehubAppPage": {
+    "seoTitle": "DeHub ئەپ — Android، iPhone ۋە WEB ئۈچۈن چۈشۈرۈش",
+    "seoDescription": "DeHub ئەپنى ئېلىڭ: ئېچىۋېتىلگەن مەنبە، ئىشلەتكۈچىگە مەنسۇپ بولغان ئىجتىمائىي تاراتقۇلار، بىۋاستە تارقىتىش، ئىناۋەتلىك ئۇچۇر يوللاش ۋە كۆرۈش- ئىزدىنىش. Google Play، App Store ۋە تور بېكەتلەردە ھەقسىز.",
+    "heading": "DeHub ئەپ",
+    "intro1": "DeHub بولسا 2021 -يىلىدىن بۇيان تەرەققىي قىلىۋاتقان بىر مەركەزسىز ئىجتىمائىي ئالاقە ۋە كۆچمە ئەپ بولۇپ، ئۇ يەردىكى يازمىلارنى زەنجىرگە سېلىپ، ئىجادچىلار تاماشىبىنلىرىنى، مەزمۇنىنى ۋە كىرىمىنى ساقلاپ قالالايدۇ.",
+    "intro2": "ئۇ ۋاقىتلىق ئوزۇقلۇق، بىۋاستە تارقىتىش، ئاخىردىن ئاخىرغىچە خىرىسلانغان ئۇچۇرلار، ئىشلەتكۈچىنىڭ باشقۇرۇلىدىغان جەمئىيەتلىرى، كۆپ زەنجىرلىك پۇل مۇئامىلە ۋە بەلگىلەر بىلەن تۆلەنگەن مۇكاپاتلارنى ئۆز ئىچىگە ئالىدۇ. ئوخشاش ھېسابات Android، iPhone ۋە ھەرقانداق زامانىۋى تور كۆرگۈچتە ئىشلىتىلىدۇ.",
+    "downloadTitle": "DeHub نى چۈشۈرۈڭ",
+    "googlePlay": "ئۇنى Google Play غا قاچىلاڭ",
+    "appStore": "App Store دىن چۈشۈرۈڭ",
+    "android": "ئاندرويد",
+    "iphone": "iPhone",
+    "openInBrowser": "DeHub نى توركۆرگۈڭىزدە ئېچىڭ",
+    "downloadApk": "APK (Google Play بولمىغان Android) نى چۈشۈرۈڭ",
+    "faqTitle": "كۆپ سورىلىدىغان سوئاللار",
+    "faq": {
+      "q1": "DeHub دېپول ئۇنىۋېرسىتېتى ئەپمۇ ؟",
+      "a1": "Dehub.io دىكى DeHub مۇستەقىل ئېچىۋېتىلگەن ئىجتىمائىي ئالاقە سۇپىسى. DePaul ئۇنىۋېرسىتېتىنىڭ DeHUB ئوقۇغۇچىلار تورى، Rowan's DEHUB ۋە deHUB Access كىرىش ئەپلىرى بۇ ئىسىمنى ئورتاقلاشتۇرىدىغان مۇناسىۋەتسىز مەھسۇلاتلار.",
+      "q2": "DeHub ئەپ ھەقسىزمۇ ؟",
+      "a2": "شۇنداق. DeHub Google Play ۋە App Store دىن چۈشۈرگىلى بولىدۇ، ھەمدە dehub.io تور كۆرگۈسىدە ئىشلىتىشكە بولىدۇ.",
+      "q3": "DeHub قايسى ئۈسكۈنىلەردە ئىشلەيدۇ ؟",
+      "a3": "Google Play ياكى بىۋاستە APK چۈشۈرۈش ئارقىلىق Android يانفونلىرى، App Store ئارقىلىق iPhone ۋە dehub.io دىكى ھەرقانداق زامانىۋى ئۈستەلئۈستى ياكى كۆچمە تور كۆرگۈچ.",
+      "q4": "مەن Google Play نى ئىشلەتمەيلا DeHub نى Android غا قاچىلىسام بولامدۇ ؟",
+      "a4": "شۇنداق. ئەڭ يېڭى Android قۇرۇش دېھۇب تەرىپىدىن dehub.io/apk، Android 8 ۋە ئۇنىڭدىن يۇقىرى نەشرىدە بىۋاستە APK چۈشۈرۈش سۈپىتىدە ئېلان قىلىندى.",
+      "q5": "DeHub ئەپتە قانداق قىلسام بولىدۇ ؟",
+      "a5": "ۋاقىتلىق يىمەكلىككە يوللاڭ، بىۋاستە كىرىڭ ياكى بىۋاستە ئېقىملارنى كۆرۈڭ، ھەمراھىڭىزغا ئۇچۇر يوللاڭ، ھەمراھىڭىزغا قوشۇلۇڭ، ھەمراھىڭىزغا قوشۇلۇڭ، كۆپ زەنجىرلىك يانچۇقتا بەلگىلەرنى تۇتۇڭ ۋە كۆرۈش ئۈچۈن مۇكاپاتقا ئېرىشىڭ."
+    },
+    "notSure": "سىز قايسى DeHub غا ئېھتىياجلىق ئىكەنلىكىڭىزنى تېخى ئېنىق بىلمەمسىز ؟ <compare> DeHub vs DePaul DeHUB vs Rowan DEHub </compare> بۇنى تەكشۈرۈپ چىقىڭ، <guide> DeHub دېگەن نېمە ؟</guide> سۇپىنى چوڭقۇر قاپلايدۇ."
+  },
+  "streamPage": {
+    "seoTitle": "DeHub دىكى ئېقىم — TikTok ۋە Twitch ئىجادچىلىرى ئۈچۈن بىۋاستە ئېقىم",
+    "seoDescription": "DeHub -دا ياشاش: يانچۇقىڭىزغا كىرىدىغان زەنجىرلىك تەكلىپلەر، ئۆزىڭىزگە مەنسۇپ بولغان تاماشىبىنلار، بىر قەدەمدە باشقا سۇپىلارغا يوللاش، ھەمدە سىز تەكلىپ قىلغانلارنىڭ % 20 ى.",
+    "eyebrow": "// FOR_STREAMERS",
+    "heading": "DeHub دىكى ئېقىم",
+    "intro": "تاماشىبىنلارنى ئۆزىڭىز ياقتۇرىدىغان سەھنىگە ئېلىپ كېلىڭ. يانفونىڭىزدىن، تور كۆرگۈڭىزدىن ياكى OBS دىن بىۋاستە چىقىڭ، تارقىلىش جەريانىدا زەنجىرگە تايىنىپ، ئۆزىڭىز قۇرغان تاماشىبىنلارنى ساقلاڭ. DeHub، ئەنگلىيەدىكى TikTok نىڭ 1 -دەرىجىلىك ھەمكارلىق ئورگىنى بولغان First Class Agency نىڭ ئارقىسىدىكى كوماندى تەرىپىدىن ياسالغان بولۇپ، 1000 دىن ئارتۇق بىۋاستە تارقىتىش ۋاستىسى بار.",
+    "startStreaming": "ئېقىمنى باشلاش",
+    "importYoutube": "YouTube قانىلىڭىزنى ئىمپورت قىلىڭ",
+    "inviteLink": "چاقىرىق ئۇلىنىشىنى ئېلىڭ",
+    "howToStart": "تىزىملىتىڭ، پوچتا كومپوزىتورىنى ئېچىڭ ۋە Live Go نى بېسىڭ — كامېراڭىزدىن، OBS ياكى سۈرەتكە ئېلىش كارتىسىدىن.",
+    "proof": {
+      "label1": "deHub بىۋاستە تارقىتىش پروگراممىسىدىكى بىرلا ۋاقىتتا كۆرگۈچ",
+      "label2": "ئېقىش مۇلازىمىتىنىڭ ئومۇمىي ۋاقتى",
+      "value3": "Sub -200ms",
+      "label3": "deHub نىڭ ئۆز CDN دىكى دۇنياۋى كېچىكتۈرۈش"
+    },
+    "whyTitle": "نېمىشقا DeHub -دا ئېقىۋاتىدۇ",
+    "reasons": {
+      "title1": "يانچۇقىڭىزدىكى شۇ يەردىكى مەسلىھەتلەر",
+      "body1": "تاماشىبىنلار سىز ھايات ۋاقتىڭىزدا سوۋغات ۋە سوۋغاتلارنى ئەۋەتىپ، ئېكراندا يۇقىرى ئاۋازدا ئوقۇيدىغان دەرىجىدە سوۋغاتلىق سۈرەتلەر ۋە ئۇچۇرلار بىلەن تەمىنلەيدۇ. مەسلىھەتلەر يولدا كېسىۋېتىشنىڭ ئورنىغا، DeHub بەلگىلىرىدە زەنجىرلىنىپ، يانچۇقىڭىزغا بىۋاستە كىرىدۇ.",
+      "title2": "سىز ياقتۇرىدىغان تاماشىبىن",
+      "body2": "سىزنىڭ ئەگەشكۈچىلىرىڭىز باشقىلارنىڭ سانلىق مەلۇماتىغا ماس كەلمەيدۇ. ئېقىمى ۋە يۈكلىمىسىنى زەنجىر بىلەن يانچۇقىڭىزغا سېلىشتۇرغىلى بولىدۇ، ئوزۇقلۇق ۋاقىتلىق، كود ئېچىۋېتىلگەن، شۇڭا ھېچكىم بۇ قائىدىلەرنى سۈكۈت بىلەن قايتا يازالمايدۇ.",
+      "title3": "(ئى مۇھەممەد!) سەن ئۇلارنىڭ ئارىسىدىكى مەلۇم كىشىلەر بىلەن (مۇشرىكلارغا ياردەم بەرمەسلىك",
+      "body3": "تەكلىپ ئۇلانمىسىڭىز، ئۇنىڭغا قوشۇلغانلارنىڭ ھەرىكىتىنىڭ % 20 نى تۆلىسىز، ھەمدە تەكلىپ قىلىنغانلارنىڭ % 5 نى تەكرارلاپ، DeHub بەلگىلىرى ئارقىلىق تۆلىسىز.",
+      "title4": "ھاياتلىق باسقۇچلار",
+      "body4": "سوئاللار، ھەمكارلىق ۋە تاماشىبىنلار ئۈچۈن بىۋاستە ئاۋازلىق سەھنىلەرنى ئورۇنلاش. تاماشىبىنلار ھەمبەھىرلىيەلەيدىغان خەتنى ئالدىن ئېلان قىلىڭ ۋە خاتىرىلەنگەن خەتنى قايتا ئاڭلاڭ.",
+      "title5": "ھەرقايسى جايلارنى بىرلا ۋاقىتتا ئەۋەتىش پروگراممىسى",
+      "body5": "باشقا ھېساباتىڭىزنى بىر قېتىم ئۇلاپ، X، Instagram، YouTube، TikTok، Farcaster ۋە DeHub كومپيۇتېرنىڭ يەنە سەككىز سۇپىسىغا ئېلان قىلىڭ. ئۆزىڭىز ياقتۇرىدىغان تاماشىبىننى قۇرۇشتا TikTok نى ئىزدەش ماتورى سۈپىتىدە ساقلاڭ.",
+      "title6": "قانىلىڭىزنى ئۆزىڭىز بىلەن بىللە ئېلىپ كېلىڭ",
+      "body6": "پۈتۈن YouTube قانىلىنى ياكى TikTok، Vimeo ياكى SoundCloud پروفىلسىنى بىر گۇرۇپپىغا كىرگۈزۈڭ. پۇل تۆلەشتىن بۇرۇن، توغرا باھا DeHub بەلگىلىرىدە كۆرسىتىلگەن."
+    },
+    "faqTitle": "كۆپ سورىلىدىغان سوئاللار",
+    "faq": {
+      "q1": "DeHubda stream qilib turish boz qilibmi?",
+      "a1": "Ha. DeHubga kirish boz, yuklab qoʻshish boz, va streamni blokcha ustida mint qilish tavsiya etilmaydi. Kanalni import qilish pulli, va pul berishdan oldin narxi koʻrsatiladi.",
+      "q2": "Men TikTok yoki Twitchdan stream qilib turishni toxtatib turishim kerakmi?",
+      "a2": "Yoʻq. Sizning obunachilaringiz hozir joylashgan joyda stream qilib turishingiz kerak, va DeHub bilan birga ham rivojlanishingiz mumkin. DeHub kompozitori orqali cross-post qilib, siz foydalanadigan barcha platformalardan sizning obunachilaringizga ega boʻlgan joyga yoʻnaltirishingiz mumkin.",
+      "q3": "OBS bilan stream qilib turish mumkinmi?",
+      "a3": "Ha. Stream qilib turganingizda OBSni tanlang, va DeHub sizga OBS, Streamlabs yoki barcha RTMP kodlaydiganlarga doimiy stream kalitini beradi. Siz telefoningizdan, webbrazerningizdan yoki qabul kartasidan ham stream qilib turishingiz mumkin.",
+      "q4": "Men qanday pul olamiz?",
+      "a4": "Muxliflar sizning streamingizda tipping va sovgʼalar yuboradilar, va ular blokcha ustida DeHub tokenlari orqali sizning xazinangizga toʻgʻridan-toʻgʻri keladi. Yuklab qoʻyilganlar ham boz, pay-per-view yoki token-gated boʻlishi mumkin.",
+      "q5": "Mening davʼat havolam qanday ishlaydi?",
+      "a5": "Davʼat sahifasini ochib, sizning havolangizni oling. Barcha kim sizning havolangiz orqali kiradilar, ular sizga tegishli boʻladi, va siz ular faoliyatining 20% va ular davʼat qilganlaridan 5% takroriy pul olishingiz mumkin, bu DeHub tokenlari bilan toʻlanadi."
+    },
+    "moreGuides": "TikTokdan kelganmaysiz? TikTokdan chiqish bo'yicha <tiktok>UK muallif g'ayritasi</tiktok> va <live>Web3 stream qilib turish: dezentralizatsiyalangan Twitch alternativi</live>ni o'qing."
   }
 }

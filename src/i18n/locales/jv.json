@@ -169,6 +169,9 @@
     "pollWinner": "{{option}} ngoko won",
     "stillCounting": "Kudu ngarani: nganggo wonggo kudu wonggo menunggu kanggo konfirmasi, nganggo wonggo kudu wonggo menunggu kanggo ngarani."
   },
+  "quickActions": {
+    "title": "Kanggo ngisorake ngisorake page"
+  },
   "errors": {
     "sponsorshipUnavailable": "Transaksi gratis lagi dijeda saka pihak kita, dudu ing dompet sampeyan. Coba maneh sedhela maneh.",
     "gasSponsorshipFailed": "Transaksi iki ora bisa disponsori. Coba maneh sedhela."
@@ -264,6 +267,7 @@
     "postingChain": "Blockchain kanggo kiriman",
     "showOnline": "Tampilake kapan aku lagi online",
     "showOnlineDesc": "Wong sing kok peseni bakal weruh titik ijo ing sandinge jenengmu nalika lagi nggunakake DeHub",
+    "showDislikes": "Kanggo ngarani sakae saking ngisorake kanggo semuanya",
     "smartReplies": "Wangsulan sing disaranake",
     "smartRepliesDesc": "Nyusun rong wangsulan sing bisa kokthuthuk ing obrolan. Tandha × ing saran bakal mateni iki.",
     "title": "Setelan",
@@ -442,6 +446,7 @@
     "systemLight": "Sistem Padhang",
     "immersive": "Immersive",
     "cosmic": "Cosmic Pixels",
+    "glass": "Kaca-kaca",
     "hazy": "Hazy Nights",
     "swarms": "Swarms",
     "lavalamp": "Lampu lava",
@@ -709,9 +714,14 @@
     "solanaLinked": "Dompet Solana wis kasambung",
     "solanaLinkFailed": "Ora bisa nyambungake dompet kuwi",
     "solanaUnlinked": "Dompet Solana wis dipedhot",
-    "solanaUnlinkFailed": "Ora bisa medhot dompet kuwi"
+    "solanaUnlinkFailed": "Ora bisa medhot dompet kuwi",
+    "sessionsRevokedMany": "{{count}} perangkat keluar dari sesi",
+    "reset": "Reset"
   },
   "common": {
+    "mute": "Mute",
+    "unmute": "Kasih ngemong",
+    "confirm": "Kuwuwus ngarani.",
     "save": "Simpen",
     "cancel": "Batal",
     "delete": "Busak",
@@ -1551,7 +1561,24 @@
     "radio": "Radio",
     "trendingTracks": "Lagu Trending",
     "moreVideos": "Video Luwih Akeh",
-    "newReleases": "Rilis Anyar"
+    "newReleases": "Rilis Anyar",
+    "mostPlayed": "Paling sering diputer",
+    "chartOrder": "Gambar urut daun audio",
+    "trending": "Lagi tren",
+    "upcoming": "Kedepan",
+    "stagesChartOrder": "Urutan bagan tahapan",
+    "noStages": "Gak ada tahap/tahunan kanggo ngelakuin ngaweni.",
+    "listens": "ngrungokake",
+    "liveCount": "nyuwun",
+    "mostViewed": "Konten paling ditonton",
+    "trendingWeek": "Trending ini minggu ini",
+    "newest": "Anyar",
+    "country": "Negara",
+    "quality": "Kualitas",
+    "plays": "Main-main",
+    "liveRadio": "Radio langsung ngajeng",
+    "shareStation": "Kabari stasiun",
+    "linkCopied": "Link udh dipake"
   },
   "notFound": {
     "title": "Halaman Ora Ditemokake",
@@ -1585,7 +1612,13 @@
       "commentUnavailable": "Komentar iki wis ora kasedhiya"
     },
     "tabs": {
-      "playlists": "Dhaptar Puter"
+      "playlists": "Dhaptar Puter",
+      "dislikes": "Gak suka"
+    },
+    "dislikes": {
+      "emptyOther": "Gak ada yang dianggep ngawur kaya gini.",
+      "privateDesc": "Kulon ingkang akun ini ngendhik ngendhiknya kanggo diri-diri aja.",
+      "loadMore": "Kudu ngisor"
     },
     "offerWorthNow": "Kira-kira {{amount}} token kanthi tarif saiki",
     "offerNotePlaceholder": "Tambahi cathetan (opsional)",
@@ -1675,6 +1708,60 @@
     "tokensUnit": "token"
   },
   "agents": {
+    "life": {
+      "daily": "Ngepostin ingkang dhuwur: {{posts}} · Target harini: {{target}}",
+      "postText": "Teks kiriman",
+      "imageUrl": "Gambar URL (opsional)",
+      "queueHelp": "Kanggo ngarani ngisorake lan ngarani ngisorake 20 menit. Gak usah minting.",
+      "viewPost": "Deleng kiriman",
+      "unlike": "Kanggo nganggo",
+      "unliked": "Dikanggo",
+      "editComment": "Edit komentar",
+      "more": "Nglihat aktivitas lanjaran",
+      "less": "Nglihat aktivitas ringkang"
+    },
+    "tasks": {
+      "oneAgent": "Satu agen",
+      "swarm": "Swarm",
+      "selectAll": "Pilih semu agen",
+      "clearSelection": "Kosongin pilihan",
+      "selectedCount": "{{count}} dari {{total}} dipilih",
+      "distribution": "Kanggo agen ngelakuin prompt",
+      "eachMode": "Tiwu agen ngelakuin ini",
+      "sharedMode": "Bagikan beban",
+      "eachHelp": "Kirim instruksi ini ke semu agen yang dipilih. Tiwu agen ngelakuin tugas semuanya dhuwur cadence yang diminta. Batasan postingan yang dibagikan masih berlaku.",
+      "allCategories": "Semua postingan di semu kategori. Tidak ada filter kata kunci dan tidak ada batasan tugas tiga like.",
+      "windowLimits": "Semua postingan yang cocok diantri. Batasan aksi mengatur kecepatan eksekusi; mereka tidak memangkas tugas ke tiga postingan. Menulis balasan bisa pakai kredit.",
+      "promptLimits": "Permintaan untuk setiap postingan pakai semu kategori. Like selektif berdasarkan topik terbatas ke tiga per pelaksanaan. Semu agen ngagapin jarak postingan; menulis bisa pakai kredit.",
+      "pauseSwarm": "Ngistirahatin swarm",
+      "resumeSwarm": "Ngebangkitin agen yang elok",
+      "cancelSwarm": "Ngancurin swarm",
+      "cancelTask": "Ngancurin tugas",
+      "actionsProcessed": "aksi yang diproses",
+      "reviewMembers": "Tugas dengan aksi yang ngertel-ngertel butuh review individu sebelum ngabangkitin. Aksi yang udah dhuwur penerbangan bisa selesai setelah istirahat atau ancur.",
+      "controlUpdated": "Updated {{count}} tugas",
+      "enabled": "Enabled · aktivitas",
+      "enabledHelp": "Enabled artinya agen ini elok. Kondisi tugas dibawah ngasih tau apakah agen ini ngelakuin, menunggu, istirahat, atau gagal.",
+      "lastActive": "Terakhir aktif",
+      "noActivity": "Tidak ada aktivitas yang dicatat",
+      "noTasks": "Belum ada tugas untuk agen ini.",
+      "runSwarm": "Ngelakuin swarm",
+      "preparing": "Nyiapake tugas…",
+      "run": "Jalanake printah",
+      "list": "Tugas-tugas",
+      "loading": "Ngisor-ngisorin tugas…",
+      "resume": "Ringkesan",
+      "skip": "Nganggo aksi ngawasih, lan lanjutin",
+      "window": {
+        "authorAll": "Kréator sénggoje",
+        "categoryAll": "Kulon-kulon kategori",
+        "categoryHint": "Kanggo tambahin nama kategori ngisor-ngisor, nganggo koma, saking 20. Post bisa ngaruh saking kategori ngisor-ngisor. Kosongin kalau untuk semua.",
+        "dislike": "Kanggo nganggo",
+        "author": "Kang Penulis (kang bisa nganggo)",
+        "category": "Kategori (ngawit)",
+        "filterHelp": "Kosongin filter-filternya untuk semua postingan. Kalo keduanya diisi, keduanya harus cocog. Reaksi yang ada tetap dipertahankan; pilih reaksi lawan, reaksi itu berubah."
+      }
+    },
     "title": "Agen AI",
     "connectToManage": "Nyambung kanggo ngatur agen AI",
     "signInToCreate": "Mlebu kanggo gawe lan ngatur agen AI.",
@@ -1800,7 +1887,8 @@
     "passkeyFailed": "Mlebu nganggo sidik driji gagal. Coba maneh.",
     "passkeyBackupHint": "Akun sampeyan ana ing passkey piranti iki. Ing umume telpon, iki bakal sinkronisasi karo akun Google utawa Apple sampeyan, lan sampeyan bisa nambah cadangan sandhi ing Setelan.",
     "walletBlockedTitle": "Dompet iki anyar banget",
-    "walletBlockedBody": "Dompet anyar butuh saldo utawa transaksi sadurunge kanggo mbukak akun. Daftar nganggo salah siji pilihan ing ngisor, banjur sambungake dompet iki saka Setelan."
+    "walletBlockedBody": "Dompet anyar butuh saldo utawa transaksi sadurunge kanggo mbukak akun. Daftar nganggo salah siji pilihan ing ngisor, banjur sambungake dompet iki saka Setelan.",
+    "continuePhone": "Lanjut nganggo telpon"
   },
   "careers": {
     "title": "Gabung DeHub",
@@ -1972,7 +2060,19 @@
       "authorChip": "Panulis usulan"
     },
     "notEnoughUnstakedTokens": "Ora cukup token sing ora di-stake ing Base. Sampeyan butuh {{needed}} token DeHub cair (ora di-stake) ing Base nanging duwe {{held}}. Token sing di-stake ora bisa digunakake kanggo biaya.",
-    "voteFailedHoldTokens": "Voting gagal. Sampeyan kudu duwe token DeHub kanggo milih."
+    "voteFailedHoldTokens": "Voting gagal. Sampeyan kudu duwe token DeHub kanggo milih.",
+    "removeMedia": "Busak lampiran",
+    "freeForBadgeHolders": "Gratis gwae pikeun penanda. Ngrumit tulisanmu gawe simpanan otomatis.",
+    "proposalFeeNote": "Proposal ngawit 10.000 DHB kanggo gawe staking badge. Draft lan ngawit otomatis kanggo ditulis.",
+    "noOpenProposals": "Gak ada penawaran terbuka nganggo gini.",
+    "decidedInTabs": "Pilihan proposal ingkang wis dipilih ingkang wonten ing tab Passed lan Rejected.",
+    "mediaTypeInvalid": "Pilih gambar utawa video.",
+    "mediaTooLarge": "File-file ingkang wajib 50 MB utawi kacilakake.",
+    "uploadFailed": "Upload gagal",
+    "uploadFailedDetail": "Upload gagal: {{message}}",
+    "proposalAttachment": "Proposal attachment",
+    "submitFailed": "Gagal ngajukake proposal",
+    "draftSavedRetry": "Draftmu wis disimpen — tekan Submit kanggo ngulangake."
   },
   "sidebar": {
     "talkOfTheTown": "Omongan Kutha",
@@ -1990,7 +2090,8 @@
     "searchMenu": "Golek ing menu",
     "clearSearch": "Resiki panggolekan",
     "noMenuMatches": "Ora ana sing cocog ing menu",
-    "searchDehubFor": "Golek \"{{query}}\" ing DeHub"
+    "searchDehubFor": "Golek \"{{query}}\" ing DeHub",
+    "switchAccount": "Ganti akun"
   },
   "comments": {
     "reportComment": "Laporaen komentar",
@@ -2707,6 +2808,10 @@
       "wallTitle": "Apa sing dikandhakake wong",
       "wallNote": "diterbitake kanthi ijin",
       "anonymous": "Anggota DeHub"
+    },
+    "money": {
+      "operationsGroup": "Operasi",
+      "estimatedOperations": "Estimasi operasi"
     }
   },
   "superpowers": {
@@ -5406,7 +5511,8 @@
     "endStreamConfirmBody": "Siaran sampeyan mandheg kanggo kabeh sing nonton lan ora bisa diulang.",
     "keepStreaming": "Terus streaming",
     "encoderPermanentHint": "Kunci iki ora bakal owah. Setel encoder-mu sepisan — sabanjure mung pencet Mulai ing kana lan DeHub bakal nggawe kiriman kanggo sampeyan.",
-    "notEnoughTokensForBounty": "Token ora cukup. Butuh {{need}} token nanging duwe {{have}}."
+    "notEnoughTokensForBounty": "Token ora cukup. Butuh {{need}} token nanging duwe {{have}}.",
+    "connectionFailed": "Koneksi siaran gagal."
   },
   "events": {
     "seoTitle": "Kebajenan — Kumpul-Kumpulan & Acara Masyarakat di DeHub",
@@ -6106,6 +6212,7 @@
     "pause": "Pause",
     "listens_one": "{{count}} ngrungokake",
     "listens_other": "{{count}} ngrungokake",
+    "visualizerColour": "Warna Visualizer",
     "lyrics": "Lirik",
     "lyricsLoading": "Nggoleki lirik…",
     "lyricsNone": "Lirik ora ketemu"
@@ -8506,6 +8613,68 @@
     "like": "Senengi",
     "unlike": "Copot seneng"
   },
+  "copy": {
+    "b3412a3b86de": "Nambahake streamer",
+    "8c91325d901b": "Kirim streamer menyang halaman streaming DeHub kanti pesan iki. Linkmu ngatribusike streamer sadurungipun panjenengané tiba.",
+    "cc96aaa18cf2": "Ninggalaken siaran ing DeHub bareng kula. Tips langsung ngalanglang ing dompetmu, kau punika nglayani wong-wong ingkang dados pendengar, lan kau bisa nambahake postingan ing TikTok lan ing wong liyane ing satunggal langkah. Daftar ing sini: {{link}}",
+    "77db95ebd737": "Kopi pesan",
+    "846d8244b7d8": "Pesan ingkang dipotong",
+    "b10fb966d720": "Suhu",
+    "b5f64aac226f": "Dhèkaken, kau setuju karo",
+    "ede548996483": "Terms",
+    "e3ee915a8e8c": "lan",
+    "506ff3946215": "Kebijakan Privasi",
+    "44c9d36485b7": "Tonton Semua",
+    "641d1ef657bd": "Tonton",
+    "344b4271ca01": "Mengikuti",
+    "89a167dad6da": "Warna Visualizer",
+    "42ee912bff23": "Stasiun Radio",
+    "7c14e8607c11": "Menggunggung stasiun...",
+    "ab4d6796dbbe": "Musik Video",
+    "26be785e21b7": "Gak ada musik video lagi",
+    "302b4ce5c73d": "Upload Audio",
+    "cccec0619e2d": "Gak ada upload audio lagi",
+    "036cfd952896": "Siapa yang diikuti",
+    "0c820caf16c0": "Gak ada bio lagi",
+    "3a17aa4e4abb": "Tahapan",
+    "3b59e95daada": "Gak ada tahapan live sekarang",
+    "d0f08798ff1a": "Diikuti oleh",
+    "ce4ee4efc5e3": "Nonaktifkan bunyi",
+    "8dd6857baf02": "Aktifkan bunyi",
+    "37fd4e355ba3": "Keluar fullscreen",
+    "7527dc6722fc": "Gagal repost",
+    "44207eb29645": "Mengganti…",
+    "6a40edf1fc87": "WhatsApp",
+    "c1c8f6c1d828": "SEBENTAR LAGI",
+    "2f7e24392d9c": "TAHAPAN DATANG NYA",
+    "a865110e919b": "Impor dompet",
+    "7bb6682e5826": "Permintaan callback baru",
+    "2f33a51e3171": "Proposal governance DeHub — pilih dan obrol.",
+    "a3156ed263d2": "{{value1}} — pegang untuk ganti reaksi",
+    "12b91b0ac5dd": "{{value1}} — pegang untuk reaksi",
+    "5e0cb5ae157b": "Gambar {{value1}}",
+    "cd9939b6aa1a": "Ganti gambar {{value1}}",
+    "99ca327a47b5": "Grafik cover untuk {{value1}}",
+    "c1cd85f576ed": "{{value1}} — DeHub Governance",
+    "42484309dc66": "{{value1}} — Backspace untuk nampilin tautan",
+    "05d0e1b9a76e": "Lanjutkan capture card",
+    "0f3dd376ee85": "Mencari capture card kamu…",
+    "150d73bf85e7": "Elgato, AVerMedia… gak OBS",
+    "1929290e09aa": "Buka setup capture card (minta akses kamera)",
+    "1b2c08a8733d": "Kualitas",
+    "36cffc7912e4": "Mikromu (untuk ngomong sambil main game)",
+    "4a1bd4a3aaf3": "Kartu capture",
+    "594bea9c9448": "Kartu capture ga ketemu. Sambungin ke USB, bareng ngeliat di bawah.",
+    "67004337fb60": "Gak bisa buka perangkat ini. Tutup OBS atau Elgato Studio (cuma satu aplikasi yang bisa pakai satu waktu).",
+    "8bb1dbd60bce": "Jaga tab ini buka sambil live.",
+    "96882965394f": "Audio game",
+    "a2838b66518a": "Auto (terbaik yang bisa kartu mu)",
+    "b8643d1cc81a": "1080p 60 butuh sekitar 9 Mbps upload. Pilih 720p kalau Wi-Fi mu lambat.",
+    "c7ce89b32897": "Jeda kartu capture",
+    "d7038cc95b8e": "Main di TV lewat passthrough kartu, ga lewat preview ini. Ada sedikit delay.",
+    "de6694f3ada3": "Pilih perangkat",
+    "fedc5cda305d": "Capture jeda"
+  },
   "postProcessing": {
     "uploading": "Ngunggah…",
     "preparing": "Nyiapake…",
@@ -8514,5 +8683,98 @@
     "posted": "Wis dikirim",
     "view": "Deleng",
     "failed": "Video ora bisa diproses"
+  },
+  "player": {
+    "volume": "Level volume"
+  },
+  "loginStack": {
+    "aiRestyle": "AI restyle",
+    "headlineTop": "Kamu bakal miliki segala",
+    "headlineAccent": "dan bahagia.",
+    "orContinueWith": "atau lanjut dengan",
+    "phone": "Telepon",
+    "fingerprint": "Sidik jari",
+    "exploreFirst": "Jelajahi dulu",
+    "codeNote": "Kita kirim kode ke email mu, ga butuh password."
+  },
+  "dehubLinks": {
+    "kind": {
+      "post": "post",
+      "profile": "profile",
+      "community": "komunitas",
+      "communityInvite": "undangan komunitas",
+      "store": "store",
+      "listing": "item",
+      "event": "event",
+      "stage": "stage",
+      "film": "title",
+      "bounty": "bounty"
+    },
+    "sentTo": "{{item}} dikirim ke {{name}}",
+    "sendFailed": "Gagal kirim {{item}}",
+    "copyLinkDetail": "Kopiaken link {{item}} menyang clipboarde.",
+    "recipientChat": "cèthi",
+    "recipientUser": "Sedulur"
+  },
+  "dehubAppPage": {
+    "seoTitle": "DeHub Aplikasi — Unduh untuk Android, iPhone & Web",
+    "seoDescription": "Dapatkan aplikasi DeHub: media sosial open-source, dimiliki pengguna, dengan live streaming, pesan terenkripsi, dan watch-to-earn. Gratis di Google Play, App Store, dan web.",
+    "heading": "Aplikasi DeHub",
+    "intro1": "DeHub adalah jaringan sosial desentralisasi dan aplikasi mobile yang dikembangkan sejak 2021, di mana postingan bisa diproduksi on-chain dan kreator tetap memegang audiens, konten, dan pendapatan mereka.",
+    "intro2": "Aplikasi ini menggabungkan feed kronologis, live streaming, pesan terenkripsi end-to-end, komunitas yang dijalankan oleh pengguna, dompet multi-chain, dan imbalan watch-to-earn yang dibayar dalam token. Akun yang sama berfungsi di Android, iPhone, dan di browser modern apa pun.",
+    "downloadTitle": "Kasus DeHub",
+    "googlePlay": "Dapatkan di Google Play",
+    "appStore": "Unduh di App Store",
+    "android": "Android",
+    "iphone": "iPhone",
+    "openInBrowser": "Buka DeHub di browser Anda",
+    "downloadApk": "Unduh APK (Android tanpa Google Play)",
+    "faqTitle": "Pertanyaan yang sering ditanyakan",
+    "faq": {
+      "q1": "Apakah DeHub itu aplikasi DePaul University?",
+      "a1": "Tidak. DeHub di dehub.io adalah platform media sosial independen open-source. Portal mahasiswa DePaul University, DEHub Rowan, dan aplikasi pintu masuk deHUB Access tidak berhubungan dan hanya kebetulan memiliki nama yang sama.",
+      "q2": "Apakah aplikasi DeHub gratis?",
+      "a2": "Ya. DeHub gratis untuk diunduh dari Google Play dan App Store, serta gratis untuk digunakan di browser di dehub.io.",
+      "q3": "Apa perangkat yang bisa menjalankan DeHub?",
+      "a3": "Android melalui Google Play atau unduhan APK langsung, iPhone melalui App Store, dan browser desktop atau mobile modern apa pun di dehub.io.",
+      "q4": "Bisa saya instal DeHub di Android tanpa Google Play?",
+      "a5": "Kanggo ngarani postingan di feed kronologis, iku ngelive atawa ngeliat streaming live, ngirim pesan temen lan ngawangi end-to-end encryption, iku ngajeni at ngelaku komunitas, iku ngawit token di dompet multi-chain lan iku ngaweni imbalan laning ngeliat."
+    },
+    "notSure": "Kudu gak tau DeHub mana yang butuh? <compare>DeHub vs DePaul DeHUB vs Rowan DEHub</compare> ngeliatin aja, dan <guide>Apa itu DeHub?</guide> ngasih tau detail tentang platformnya."
+  },
+  "streamPage": {
+    "seoDescription": "Goseng live di DeHub: tip on-chain yén ngaruh di dompetmu, audiensé yén dimiliki, posting ke platformmu yén lain di satu langkah, dan 20% dari semuanya yén ngajakmu.",
+    "eyebrow": "//GAWÉJI KÉNG SÉNGGÉN",
+    "heading": "Siaran di DeHub",
+    "intro": "Kanggo ngembel audiensi live muwah ngendhok platform sing diwekeni. Ngendhok live lanang dari telepon, browser, atau OBS, ambil tip berantai (on-chain) saking stream mu, dan ngendhok audiensi sing diwongsi. DeHub diwongsi lanang saking tim First Class Agency, agensi partner TikTok LIVE resmi nomor siji di UK, sing ngarani lebih dari 1,000 streamer live.",
+    "howToStart": "Daftar, buka komposer postingan, nggih tap Go live — dari kamera, OBS, atau capture card.",
+    "proof": {
+      "label1": "Kanggo ngaweni ngisor-ngisor di DeHub live streaming",
+      "value3": "Ing ngisor 200ms",
+      "label3": "Latensi global ing Global CDN DeHub"
+    },
+    "whyTitle": "Kapinteran streaming ing DeHub?",
+    "reasons": {
+      "title1": "Tips sing mlebu ing dompetmu",
+      "title2": "Klo udara ngarani kanggo milih",
+      "body2": "Kang pengikutmu gak bisa jadi baris di database orang lain. Streaming dan uploadan bisa di-*mint* ke dompetmu secara on-chain, feednya kronologis, dan kode sumbernya open source, jadi gak ada yang bisa diam-diam ngubah aturan.",
+      "body3": "Kamu dapet link undhangan mu nganti 20% aktivitas ti kanggo semuanya yén iku ngundhane lewat link mu, plus 5% berulang ti orang-orang yén iku ngundhane kanggo ngundhane lagi, dibayar nganti DeHub tokens.",
+      "title4": "Panggung sengit",
+      "body4": "Ngadahi panggung suara kanggo tanya jawab, kolaborasi lan nonton bareng. Ngumumake siji-sijine ing wektu-wektu karo kartu kang bisa dibagi-bagian karo wong-wong ing panggungmu, lan dadi tontonan kang wis direkam.",
+      "title5": "Ngumumake ing kana ing wong-wong ing papan-papan ingkang béda-béda.",
+      "body5": "Ngubungake akun liyané lan ngepublikasaké ing X, Instagram, YouTube, TikTok, Farcaster lan wong loro saka DeHub composer. Tetepake TikTok minangka mesin panyimpeni sementara ngembangaké wong sing nduwé akun.",
+      "title6": "Gawé kanggo nganti saluranmu kanggo nganti",
+      "body6": "Ngih import saluran YouTube lanja, atawa akun TikTok, Vimeo, atawa SoundCloud, nganti satu kali. Harga pasti ditunukan nganti DeHub token lanja, saking nganti nganti bayar."
+    },
+    "faq": {
+      "a1": "Kene. DeHub gratis iku ngajogone, gratis iku ngawasane, anuminting stream on-chain iku opsional. Ngalikatin saluran iku bayar, ane hargane dipajangin dhuwur iku bayar.",
+      "q2": "Géngé kudu ngareng streaming di TikTok atau Twitch?",
+      "a2": "Nongkono. Lanjur streaming di tempat audiensmu sekarang aja, dan bangetkep DeHub saking sini. Cross-posting dari komposer DeHub, supaya semua platform yang udah dipake ngarani ke audiens yang udah dimiliki.",
+      "q3": "Géng bisa streaming dhuwur OBS?",
+      "a4": "Para pamirsa menehi tip lan ngirim hadiah nalika sampeyan lagi streaming, lan iku kabeh bakal mlebu on-chain awujud token DeHub langsung menyang dompet sampeyan. Unggahan uga bisa gratis, pay-per-view, utawa token-gated.",
+      "q5": "Kepiye cara kerjane link undanganku?",
+      "a5": "Bukal halaman afiliasi guna dapet linkmu. Manisake pikeun iku ngajogga lewat link iku, atribute kanthi mu, dan mu dapet 20% nganti aktivitasenya plus 5% berulang-ulang nganti orang-orang iku ngajogga, dibayar nganti DeHub tokens."
+    },
+    "moreGuides": "Kang ngarani TikTok? Baca <tiktok>petunjuk kreator UK ngeluar TikTok</tiktok> dan <live>live streaming Web3: alternatif Twitch yang decentralised</live>."
   }
 }

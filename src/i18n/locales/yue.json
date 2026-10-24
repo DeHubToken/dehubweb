@@ -169,6 +169,10 @@
     "pollWinner": "{{option}} 贏咗",
     "stillCounting": "仲計緊：禮物可能需要一分鐘先可以確認。"
   },
+  "quickActions": {
+    "title": "頁面選項",
+    "question": "呢個頁面有咩問題？"
+  },
   "errors": {
     "sponsorshipUnavailable": "免費交易喺我哋呢邊暫停咗，唔係你個銀包有問題。請稍後再試。",
     "gasSponsorshipFailed": "呢筆交易嘅費用付唔到。請稍後再試。"
@@ -264,6 +268,8 @@
     "postingChain": "發帖區塊鏈",
     "showOnline": "當我上網嗰陣顯示",
     "showOnlineDesc": "當你用緊 DeHub 嗰陣，你發訊息嘅人會見到你個名旁邊有個綠色點",
+    "showDislikes": "向所有人展示我嘅唔鍾意",
+    "showDislikesDesc": "任何人都可以打開你個人檔案嘅「唔鍾意」標籤。當呢個閂咗嗰陣，只有你先可以睇到佢。",
     "smartReplies": "建議回覆",
     "smartRepliesDesc": "喺傾偈度寫兩個你可以撳嘅回覆。建議上面嘅 × 會閂咗佢。",
     "title": "設定",
@@ -442,6 +448,7 @@
     "systemLight": "系統 淺色",
     "immersive": "Immersive",
     "cosmic": "宇宙像素",
+    "glass": "玻璃般嘅",
     "hazy": "朦朧夜",
     "swarms": "蜂群",
     "lavalamp": "熔岩燈",
@@ -709,9 +716,14 @@
     "solanaLinked": "Solana 錢包已連接",
     "solanaLinkFailed": "連接唔到嗰個錢包",
     "solanaUnlinked": "Solana 錢包已中斷連接",
-    "solanaUnlinkFailed": "斷開唔到嗰個錢包"
+    "solanaUnlinkFailed": "斷開唔到嗰個錢包",
+    "sessionsRevokedMany": "{{count}} 裝置已經登出",
+    "reset": "重設"
   },
   "common": {
+    "mute": "口",
+    "unmute": "唔滿意",
+    "confirm": "確定",
     "save": "儲存",
     "cancel": "取消",
     "delete": "刪除",
@@ -1551,7 +1563,42 @@
     "radio": "電台",
     "trendingTracks": "熱門歌曲",
     "moreVideos": "更多影片",
-    "newReleases": "新發佈"
+    "newReleases": "新發佈",
+    "mostPlayed": "最多人玩過",
+    "mostLiked": "最鍾意",
+    "mostRecent": "最近",
+    "chartOrder": "音頻圖表順序",
+    "radioPicks": "我哋嘅選擇",
+    "mostVoted": "最多人投票",
+    "trending": "趨勢",
+    "radioChartOrder": "無線電圖表順序",
+    "stagesLive": "而家住",
+    "upcoming": "嚟緊",
+    "mostListened": "大部分人都聽咗",
+    "recentStages": "最近",
+    "stagesChartOrder": "階段圖表順序",
+    "noStages": "呢度仲未有階段",
+    "listening": "聽緊",
+    "listens": "聽",
+    "liveCount": "生活",
+    "chartVideos": "音樂影片",
+    "videoCharts": "音樂視頻榜單",
+    "mostViewed": "最多人睇過",
+    "trendingWeek": "流行這星期",
+    "newest": "最新",
+    "videoChartOrder": "音樂影片排行榜",
+    "country": "地區",
+    "quality": "品質",
+    "votes": "票數",
+    "plays": "播放次數",
+    "onAir": "現播",
+    "liveRadio": "直播電台",
+    "pause": "暫停",
+    "listenLive": "現場聽音",
+    "nextStation": "下一台電台",
+    "shareStation": "分享電台",
+    "shareStationTitle": "{{name}} 在 DeHub Radio",
+    "linkCopied": "連結已複製"
   },
   "notFound": {
     "title": "搵唔到頁面",
@@ -1585,7 +1632,16 @@
       "commentUnavailable": "呢個留言已經唔可以用喇"
     },
     "tabs": {
-      "playlists": "播放清單"
+      "playlists": "播放清單",
+      "dislikes": "不喜歡"
+    },
+    "dislikes": {
+      "emptyTitle": "目前沒有不喜歡",
+      "emptyOwn": "你不喜歡的帖子會離開你的動態並出現在這裡。取消不喜歡可以讓帖子回到你的動態。",
+      "emptyOther": "目前沒有不喜歡的帖子。",
+      "privateTitle": "不喜歡是私密的",
+      "privateDesc": "這個帳戶把不喜歡的東西藏起來。",
+      "loadMore": "載更多"
     },
     "offerWorthNow": "按目前匯率約 {{amount}} 個代幣",
     "offerNotePlaceholder": "加個備註（可以唔填）",
@@ -1675,6 +1731,73 @@
     "tokensUnit": "代幣"
   },
   "agents": {
+    "life": {
+      "daily": "今日發帖：{{posts}} · 每日目標：{{target}}",
+      "compose": "以此代理發帖",
+      "postText": "發帖文字",
+      "imageUrl": "圖片網址（選擇性）",
+      "queueHelp": "發布你的原文。分享後20分鐘的發帖間隔。無鑄造。",
+      "queuePost": "排隊發帖",
+      "postQueued": "發帖已排隊。可在上面的任務中追蹤。",
+      "viewPost": "查看發帖",
+      "unlike": "唔係",
+      "unliked": "唔似",
+      "editComment": "編輯評論",
+      "more": "顯示更多活動",
+      "less": "顯示較少"
+    },
+    "tasks": {
+      "oneAgent": "一個代理",
+      "swarm": "蜂擁而至",
+      "selectAll": "選擇所有代理",
+      "clearSelection": "清除選擇",
+      "selectedCount": "{{count}}/{{total}} 個已選中",
+      "distribution": "代理如何執行提示",
+      "eachMode": "每個代理都會這樣做",
+      "sharedMode": "分享工作",
+      "eachHelp": "將這些指示發送給所有選中的代理。每個代理都會按照所請求的頻率完成整個任務。共享發帖限制仍然適用。",
+      "allCategories": "所有類別的所有帖子。沒有關鍵字過濾和沒有三個點贊任務限制。",
+      "windowLimits": "所有符合的帖子都會排隊。動作限制決定執行速度；它們不會將任務限制在三個帖子。撰寫回覆可能會使用信用額度。",
+      "promptLimits": "每個帖子的請求會使用所有類別。主題基礎的選擇性點贊每次運行限制為三個。所有代理共享發帖間隔；撰寫可能會使用信用額度。",
+      "pauseSwarm": "暫停蜂擁",
+      "resumeSwarm": "恢復合格代理",
+      "cancelSwarm": "取消蜂擁",
+      "cancelTask": "取消任務",
+      "actionsProcessed": "已處理動作",
+      "reviewMembers": "不確定動作的任務在恢復前需要個別審查。一個動作已經在執行中，可能在暫停或取消後仍會完成。",
+      "controlUpdated": "更新 {{count}} 個任務",
+      "enabled": "啟用 · 活動",
+      "enabledHelp": "啟用表示這個代理可用。下面的任務狀態顯示它是否在運行、等待、暫停或失敗。",
+      "lastActive": "最後活動",
+      "noActivity": "未記錄任何活動",
+      "noTasks": "這個代理還沒有任務。",
+      "runSwarm": "執行蜂擁",
+      "preparing": "準備任務…",
+      "run": "執行指令",
+      "list": "任務",
+      "loading": "載入任務中…",
+      "pause": "暫停",
+      "resume": "繼續",
+      "skip": "跳過未確認動作並繼續",
+      "window": {
+        "authorAll": "所有創作者",
+        "authorChoose": "選擇創作者",
+        "categoryAll": "所有類別",
+        "categoryChoose": "選擇類別",
+        "categoryHint": "加入任何類別名稱，以逗號分隔，最多 20 個。帖子可符合任何選定類別。留空則為所有。",
+        "last1h": "過去一小時",
+        "last30d": "過去 30 天",
+        "allTime": "全部時間",
+        "dislike": "不喜歡",
+        "author": "作者（選擇性）",
+        "category": "類別（選擇性）",
+        "authorPlaceholder": "@用戶名或錢包",
+        "categoryPlaceholder": "精確類別名稱",
+        "filterHelp": "留空過濾器則為所有帖子。當兩者都設定時，兩者都必須符合。現有反應保持不變；選擇相反反應則會改變它。",
+        "write": "撰寫指令",
+        "title": "時間範圍內的每篇帖子"
+      }
+    },
     "title": "AI代理",
     "connectToManage": "連接嚟管理AI代理",
     "signInToCreate": "登入嚟建立同管理AI代理。",
@@ -1800,7 +1923,8 @@
     "passkeyFailed": "指紋登入失敗。請再試一次。",
     "passkeyBackupHint": "你嘅帳戶儲存在呢部裝置嘅密碼匙度。喺大部分手機上，佢會同你嘅 Google 或 Apple 帳戶同步，你仲可以喺設定度加入密碼備份。",
     "walletBlockedTitle": "呢個錢包係全新嘅",
-    "walletBlockedBody": "新錢包要有餘額或者以前嘅交易先可以開戶口。用下面其中一個方法註冊，然後喺設定度連接呢個錢包。"
+    "walletBlockedBody": "新錢包要有餘額或者以前嘅交易先可以開戶口。用下面其中一個方法註冊，然後喺設定度連接呢個錢包。",
+    "continuePhone": "繼續使用手機"
   },
   "careers": {
     "title": "加入DeHub",
@@ -1972,7 +2096,21 @@
       "authorChip": "提案作者"
     },
     "notEnoughUnstakedTokens": "Base 上嘅未質押代幣不足。你需要 {{needed}} 個喺 Base 上嘅流動 (未質押) DeHub 代幣，但你只有 {{held}} 個。已質押嘅代幣唔可以用於費用。",
-    "voteFailedHoldTokens": "投票失敗。你必須持有 DeHub 代幣先可以投票。"
+    "voteFailedHoldTokens": "投票失敗。你必須持有 DeHub 代幣先可以投票。",
+    "badgeHoldersOnly": "獲得徽章者專用",
+    "removeMedia": "移除附件",
+    "addMedia": "新增圖片或影片",
+    "freeForBadgeHolders": "獲得徽章者免費。您的草稿會隨打隨儲存。",
+    "proposalFeeNote": "沒有徽章者需支付 10,000 DHB。您的草稿會隨打隨儲存。",
+    "noOpenProposals": "目前沒有開放的提案。",
+    "decidedInTabs": "決定咗嘅提案喺「通過同拒絕」標籤入面。",
+    "mediaTypeInvalid": "揀張圖片或者影片。",
+    "mediaTooLarge": "檔案一定要50 MB 或以下。",
+    "uploadFailed": "上載失敗",
+    "uploadFailedDetail": "上載失敗： {{message}}",
+    "proposalAttachment": "提案附件",
+    "submitFailed": "提交唔到提案",
+    "draftSavedRetry": "你嘅草稿已經儲存咗 — 撳提交嚟重試。"
   },
   "sidebar": {
     "talkOfTheTown": "城中熱話",
@@ -1990,7 +2128,8 @@
     "searchMenu": "搜尋選單",
     "clearSearch": "清除搜尋",
     "noMenuMatches": "選單入面冇匹配項",
-    "searchDehubFor": "喺 DeHub 搜尋「{{query}}」"
+    "searchDehubFor": "喺 DeHub 搜尋「{{query}}」",
+    "switchAccount": "切換帳戶"
   },
   "comments": {
     "reportComment": "舉報留言",
@@ -2712,6 +2851,10 @@
       "wallTitle": "人哋講乜",
       "wallNote": "喺得到許可嘅情況下發佈",
       "anonymous": "一個 DeHub 成員"
+    },
+    "money": {
+      "operationsGroup": "操作",
+      "estimatedOperations": "估計嘅運作"
     }
   },
   "superpowers": {
@@ -5607,7 +5750,8 @@
     "endStreamConfirmBody": "您的廣播將停止供所有觀看者使用，無法繼續。",
     "keepStreaming": "繼續串流",
     "encoderPermanentHint": "呢個密鑰永遠唔會改變。設定一次你嘅編碼器 — 下次只需要撳嗰度開始， DeHub 就會為你建立帖子。",
-    "notEnoughTokensForBounty": "代幣不足。需要 {{need}} 個代幣但只有 {{have}} 個。"
+    "notEnoughTokensForBounty": "代幣不足。需要 {{need}} 個代幣但只有 {{have}} 個。",
+    "connectionFailed": "廣播連線失敗。"
   },
   "events": {
     "seoTitle": "DeHub 的活動 — 聚會及社群活動",
@@ -6362,6 +6506,7 @@
     "pause": "暫停",
     "listens_one": "{{count}} 聽",
     "listens_other": "{{count}} 聽緊",
+    "visualizerColour": "可視化器顏色",
     "lyrics": "歌詞",
     "lyricsLoading": "搵緊歌詞…",
     "lyricsNone": "搵唔到歌詞"
@@ -8765,6 +8910,67 @@
     "like": "似",
     "unlike": "移除鍾意"
   },
+  "copy": {
+    "b3412a3b86de": "邀請流媒體人",
+    "8c91325d901b": "用呢個訊息將串流播放者傳送去 DeHub 串流頁面。你嘅連結會喺佢哋落地之前將佢哋歸因於你。",
+    "cc96aaa18cf2": "同我一齊喺 DeHub 串流播放。貼士會直接喺你嘅銀包入面，你擁有你嘅受眾，而且你可以一步到位噉繼續喺 TikTok 同其他地方發佈。喺呢度報名： {{link}}",
+    "77db95ebd737": "複製訊息",
+    "846d8244b7d8": "複製咗嘅邀請訊息",
+    "b10fb966d720": "容量",
+    "b5f64aac226f": "由於你繼續使用本網站，表示你同意我們的",
+    "ede548996483": "期限",
+    "e3ee915a8e8c": "同",
+    "506ff3946215": "私隱政策",
+    "44c9d36485b7": "睇晒",
+    "641d1ef657bd": "跟住",
+    "344b4271ca01": "跟住",
+    "89a167dad6da": "可視化器顏色",
+    "42ee912bff23": "電台",
+    "7c14e8607c11": "裝載站 ...",
+    "ab4d6796dbbe": "音樂影片",
+    "26be785e21b7": "無音樂影片",
+    "302b4ce5c73d": "音頻上傳",
+    "cccec0619e2d": "尚未上傳音頻",
+    "036cfd952896": "要追蹤的人",
+    "0c820caf16c0": "尚未有個人簡介",
+    "3a17aa4e4abb": "舞台",
+    "3b59e95daada": "目前沒有直播舞台",
+    "d0f08798ff1a": "被追蹤",
+    "ce4ee4efc5e3": "靜音",
+    "8dd6857baf02": "取消靜音",
+    "37fd4e355ba3": "離開全螢幕",
+    "7527dc6722fc": "重新分享失敗",
+    "44207eb29645": "正在取代…",
+    "c1c8f6c1d828": "即將開始",
+    "2f7e24392d9c": "即將登場之舞台",
+    "a865110e919b": "匯入錢包",
+    "7bb6682e5826": "新的回呼請求",
+    "2f33a51e3171": "DeHub治理提案 — 投票及討論",
+    "a3156ed263d2": "{{value1}} — 按住以更改你的反應",
+    "12b91b0ac5dd": "{{value1}} — 按住以反應",
+    "5e0cb5ae157b": "圖片 {{value1}}",
+    "cd9939b6aa1a": "取代圖片 {{value1}}",
+    "99ca327a47b5": "{{value1}} 的封面圖",
+    "c1cd85f576ed": "{{value1}} — DeHub治理",
+    "42484309dc66": "{{value1}} — 按後退鍵顯示連結",
+    "05d0e1b9a76e": "恢復捕捉卡",
+    "0f3dd376ee85": "尋找你的捕捉卡…",
+    "150d73bf85e7": "Elgato、AVerMedia… 沒有 OBS",
+    "1929290e09aa": "開啟捕捉卡設定（要求相機存取）",
+    "1b2c08a8733d": "品質",
+    "36cffc7912e4": "你的麥克風（用以遊戲時講話）",
+    "4a1bd4a3aaf3": "捕捉卡",
+    "594bea9c9448": "未偵測到捕捉卡。請用USB插上，然後選擇以下。",
+    "67004337fb60": "無法開啟此裝置。關閉OBS或Elgato Studio（同一時間只可用一個應用程式）。",
+    "8bb1dbd60bce": "直播時請保持此頁面開啟。",
+    "96882965394f": "遊戲音效",
+    "a2838b66518a": "自動（選用最佳卡片性能）",
+    "b8643d1cc81a": "1080p 60需約9 Mbps上傳速度。慢Wi-Fi時請選擇720p。",
+    "c7ce89b32897": "暫停捕捉卡",
+    "d7038cc95b8e": "透過卡片的直通功能在電視上播放，而非此預覽。會稍微延遲。",
+    "de6694f3ada3": "選擇裝置",
+    "fedc5cda305d": "捕捉暫停"
+  },
   "postProcessing": {
     "uploading": "上傳緊…",
     "preparing": "準備緊…",
@@ -8773,5 +8979,113 @@
     "posted": "已發佈",
     "view": "睇",
     "failed": "處理唔到條片"
+  },
+  "player": {
+    "volume": "音量水平"
+  },
+  "loginStack": {
+    "aiRestyle": "AI重塑",
+    "headlineTop": "你將擁有一切",
+    "headlineAccent": "並快樂。",
+    "orContinueWith": "或繼續使用",
+    "phone": "手機",
+    "fingerprint": "指紋",
+    "exploreFirst": "先探索",
+    "codeNote": "我們會以電子郵件發送一個代碼，無需密碼。"
+  },
+  "dehubLinks": {
+    "kind": {
+      "post": "郵政",
+      "profile": "個人檔案",
+      "community": "社區",
+      "communityInvite": "社區邀請",
+      "store": "鱘魚",
+      "listing": "項目",
+      "event": "活動",
+      "stage": "階段",
+      "film": "題目",
+      "bounty": "獎金",
+      "app": "應用程式",
+      "proposal": "計劃書",
+      "link": "連結"
+    },
+    "sentTo": "{{item}} 已發送到 {{name}}",
+    "sendFailed": "發送唔到 {{item}}",
+    "copyLinkDetail": "將 {{item}} 連結複製去你嘅剪貼簿",
+    "recipientChat": "傾計",
+    "recipientUser": "用戶"
+  },
+  "dehubAppPage": {
+    "seoTitle": "DeHub 應用程式 — 下載適用於 Android 、 iPhone 同網絡",
+    "seoDescription": "攞 DeHub 應用程式：開放源碼、用戶擁有嘅社交媒體，包括即時串流、加密訊息同埋睇嚟賺錢。喺 Google Play 、 App Store 同網絡上面免費。",
+    "heading": "去中心應用程式",
+    "intro1": "DeHub 係一個去中心化嘅社交網絡同流動應用程式，由2021年開始開發，可以喺鏈上寫帖子，而創作者可以保留佢哋嘅受眾、內容同收入。",
+    "intro2": "佢結合咗按時間順序嘅資訊提供、即時串流、端對端加密訊息、用戶經營嘅社群、多鏈錢包同埋以代幣支付嘅睇嚟賺取獎賞。同一個帳戶可以喺 Android 、 iPhone 同埋任何現代瀏覽器上面運作。",
+    "downloadTitle": "下載 DeHub",
+    "googlePlay": "喺 Google Play 上面攞到",
+    "appStore": "喺 App Store 下載",
+    "android": "安卓",
+    "openInBrowser": "喺你個瀏覽器度打開 DeHub",
+    "downloadApk": "下載 APK （ Android 唔使 Google Play ）",
+    "faqTitle": "常見問題",
+    "faq": {
+      "q1": "DeHub 係咪德保羅大學嘅應用程式？",
+      "a1": "唔係。 dehub.io 嘅 DeHub 係一個獨立嘅開源社交媒體平台。德保羅大學嘅 DeHUB 學生入口網站、羅文嘅 DEHub 同 deHUB Access 入門應用程式都係無關嘅產品，但係巧合地同呢個名一樣。",
+      "q2": "DeHub 應用程式係咪免費？",
+      "a2": "係。 DeHub 可以喺 Google Play 同 App Store 免費下載，亦可以喺 dehub.io 嘅瀏覽器入面免費使用。",
+      "q3": "DeHub 喺邊啲裝置上面運行？",
+      "a3": "Android 手機透過 Google Play 或者直接 APK 下載， iPhone 透過 App Store ，同埋任何現代桌面或者手機瀏覽器喺 dehub.io 。",
+      "q4": "冇 Google Play 係咪可以喺 Android 上面安裝 DeHub ？",
+      "a4": "係。最新嘅 Android 版本由 DeHub 喺 dehub . io/apk 發佈，可以直接下載 APK 版本，適用於 Android 8以上版本。",
+      "q5": "我可以喺 DeHub 應用程式入面做啲咩？",
+      "a5": "發佈到按時間順序嘅資訊提供、直播或者睇直播、透過端對端加密向朋友發送訊息、加入同埋運作社群、喺內置多鏈錢包入面保留代幣，同埋賺取觀看獎賞。"
+    },
+    "notSure": "仲未肯定你需要邊個 DeHub ？ <compare> 德胡布對德保羅德胡布對羅文德胡布 </compare> 搞掂咗佢，而 <guide> 德胡係乜嘢？ </guide> 深入噉覆蓋咗個平台。"
+  },
+  "streamPage": {
+    "seoTitle": "喺 DeHub 上面串流播放 — 針對 TikTok 同 Twitch 創作者嘅即時串流",
+    "seoDescription": "喺 DeHub 上面直播：喺你銀包入面嘅鏈上提示，你擁有嘅受眾，一步就發佈到你其他平台，同埋你邀請嘅每個人嘅20 % 。",
+    "eyebrow": "// 流媒體",
+    "heading": "喺 DeHub 上面串流",
+    "intro": "將你嘅現場觀眾帶到你擁有嘅平台。透過手機、瀏覽器或者 OBS 直播，喺串流播放嗰陣喺鏈上面獲得小費，同埋保留你建立嘅觀眾群。 DeHub 係由英國第一大官方 TikTok LIVE 合作夥伴機構 First Class Agency 背後嘅團隊建立，有超過1，000個直播者。",
+    "startStreaming": "開始串流",
+    "importYoutube": "匯入你嘅 YouTube 頻道",
+    "inviteLink": "攞你嘅邀請連結",
+    "howToStart": "註冊，打開帖子編輯器，然後㩒一下 [ 直播 ] — 喺你部相機、 OBS 或者拍攝卡度。",
+    "proof": {
+      "label1": "同播同看 DeHub 直播觀看人數",
+      "label2": "跨串流服務嘅正常運作時間",
+      "value3": "200 毫秒以下",
+      "label3": "喺 DeHub 自己嘅 CDN 上面嘅全域延遲"
+    },
+    "whyTitle": "點解要喺 DeHub 上面串流播放",
+    "reasons": {
+      "title1": "喺你銀包入面嘅貼士",
+      "body1": "觀眾會喺你直播嗰陣畀小費同埋送禮物，而且會喺串流上面大聲讀出分層嘅禮物動畫同小費訊息。貼士會喺 DeHub 代幣嘅鏈上結算，然後直接放入你嘅銀包，而唔係喺途中被剪斷。",
+      "title2": "你擁有嘅觀眾群",
+      "body2": "你嘅追蹤者唔係其他人嘅資料庫入面嘅一行。串流同上載可以喺你嘅銀包入面鏈上鑄造，資訊提供係按時間順序排列，而且代碼係開源嘅，所以冇人會靜靜地改寫規則。",
+      "title3": "從你帶嚟嘅每個人身上賺錢",
+      "body3": "你嘅邀請連結會向你支付每個透過佢加入嘅人嘅活動嘅 20 % ，加上佢哋繼續邀請嘅人嘅 5 % 經常性支付，用 DeHub 代幣支付。",
+      "title4": "現場舞台",
+      "body4": "主持現場音頻舞台，提供問題、合作同埋觀看派對。提前用一張你嘅觀眾可以分享嘅卡片宣布一個，然後聽返錄音嘅。",
+      "title5": "一次過喺所有地方發佈",
+      "body5": "連接你其他帳戶一次，然後發佈到 X 、 Instagram 、 YouTube 、 TikTok 、 Farcaster 同埋 DeHub 作曲家嘅另外八個平台。喺建立你自己嘅受眾嘅同時，將 TikTok 當係你嘅發現引擎。",
+      "title6": "帶埋你嘅頻道嚟",
+      "body6": "一次過匯入整個 YouTube 頻道，或者 TikTok 、 Vimeo 或者 SoundCloud 個人檔案。喺你畀錢之前，確切嘅價錢會用 DeHub 代幣顯示。"
+    },
+    "faqTitle": "常見問題",
+    "faq": {
+      "q1": "係咪免費喺 DeHub 串流？",
+      "a1": "係。 DeHub 係免費加入同免費發佈，而且喺鏈上鑄造流係選擇性嘅。匯入頻道會畀錢，而佢嘅價錢會喺你畀錢之前顯示。",
+      "q2": "我係咪一定要停止喺抖音或者 Twitch 上面串流播放？",
+      "a2": "唔係。繼續喺你嘅觀眾今日嘅地方串流，同埋喺佢嘅旁邊建立 DeHub 。由 DeHub 作曲家交叉發佈，等你已經用緊嘅每個平台都會指向你擁有嘅觀眾。",
+      "q3": "我可唔可以用 OBS 串流？",
+      "a3": "係。喺你直播嗰陣揀 OBS ， DeHub 會畀你一個 OBS 、 Streamlabs 或者任何 RTMP 編碼器嘅永久串流密鑰。你亦可以直接喺你部手機、瀏覽器或者捕捉卡度直播。",
+      "q4": "我點樣攞錢？",
+      "a4": "觀眾喺你嘅串流期間會畀小費同埋送禮物，而嗰啲就會用 DeHub 代幣喺鏈上直接寄畀你嘅銀包。上載亦都可以係免費、按次付費或者憑證閘式。",
+      "q5": "我嘅邀請連結點樣運作？",
+      "a5": "打開聯盟頁面攞你嘅連結。任何透過佢加入嘅人都係屬於你，而你會賺到佢哋活動嘅 20 % ，加埋佢哋邀請嘅人嘅 5 % 經常性收入，用 DeHub 代幣付款。"
+    },
+    "moreGuides": "嚟自抖音？閱讀 <tiktok> 英國創作者指南，離開 TikTok </tiktok> 同 <live> Web3直播：去中心化 Twitch 替代方案 </live> 。"
   }
 }

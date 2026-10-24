@@ -169,6 +169,10 @@
     "pollWinner": "{{option}} won",
     "stillCounting": "Ka na-agụta: onyinye nwere ike iwe otu nkeji iji gosi."
   },
+  "quickActions": {
+    "title": "Ihuakwụkwọ nhọrọ",
+    "question": "Gịnị dị njọ n 'ihuakwụkwọ a?"
+  },
   "errors": {
     "sponsorshipUnavailable": "Azụmahịa n'efu kwụsịtụrụ n'akụkụ anyị, ọ bụghị n'obere akpa gị. Biko nwaa ọzọ n'oge na-adịghị anya.",
     "gasSponsorshipFailed": "Enweghị ike ịkwụ ụgwọ azụmahịa a. Biko nwaa ọzọ obere oge."
@@ -264,6 +268,8 @@
     "postingChain": "Blockchain maka mbipụta",
     "showOnline": "Gosi mgbe m nọ n 'ịntanetị",
     "showOnlineDesc": "Ndị mmadụ ị na-eziga ozi na-ahụ ntụpọ akwụkwọ ndụ akwụkwọ ndụ n 'akụkụ aha gị mgbe ị na-eji DeHub",
+    "showDislikes": "Gosi onye ọ bụla ihe na-amasịghị m",
+    "showDislikesDesc": "Onye ọbụla nwere ike imepe taabụ Dislikes na profaịlụ gị. Mgbe nke a kwụsịrị, naanị ị ga-ahụ ya.",
     "smartReplies": "Nzaghachi atụrụ aro",
     "smartRepliesDesc": "Ọ na-edepụta nzaghachi abụọ ị nwere ike ịpị na nkata. Akara × dị na ndụmọdụ na-agbanyụ ya.",
     "title": "Ntọala",
@@ -709,9 +715,13 @@
     "solanaLinked": "Ejikọtala obere akpa Solana",
     "solanaLinkFailed": "Enweghị ike ijikọ obere akpa ego ahụ",
     "solanaUnlinked": "Ewepụla obere akpa Solana",
-    "solanaUnlinkFailed": "Enweghị ike ịwepụ njikọ obere akpa ego ahụ"
+    "solanaUnlinkFailed": "Enweghị ike ịwepụ njikọ obere akpa ego ahụ",
+    "reset": "Tọgharịa"
   },
   "common": {
+    "mute": "N 'ọnụ",
+    "unmute": "Gbanyụọ",
+    "confirm": "Gosi",
     "save": "Chekwaa",
     "cancel": "Kagbuo",
     "delete": "Hichapụ",
@@ -1547,7 +1557,42 @@
     "radio": "Redịo",
     "trendingTracks": "Egwu Na-ewu Ewu",
     "moreVideos": "Vidio Ndị Ọzọ",
-    "newReleases": "Ihe Ọhụrụ"
+    "newReleases": "Ihe Ọhụrụ",
+    "mostPlayed": "Kasị egwuri",
+    "mostLiked": "Nke a na-achịkwa",
+    "mostRecent": "Kacha ọhụrụ",
+    "chartOrder": "Audio chaatị iji",
+    "radioPicks": "Anyị picks",
+    "mostVoted": "Ọtụtụ ntuli aka",
+    "trending": "Na-ewu ewu",
+    "radioChartOrder": "Radio chaatị iji",
+    "stagesLive": "Live ugbu a",
+    "upcoming": "Na-abịa",
+    "mostListened": "Kasị gere ntị",
+    "recentStages": "Na-adịbeghị anya",
+    "stagesChartOrder": "Ogbo chaatị iji",
+    "noStages": "Ọ dịghị ogbo ebe a ma",
+    "listening": "na-ege ntị",
+    "listens": "na-ege ntị",
+    "liveCount": "ndụ",
+    "chartVideos": "MUSIC VIDEO",
+    "videoCharts": "Music Video chaatị dị iche iche",
+    "mostViewed": "Kasị anya",
+    "trendingWeek": "Trending a izu",
+    "newest": "Kacha ọhụrụ",
+    "videoChartOrder": "Music video chaatị iji",
+    "country": "Eze Nwanyị",
+    "quality": "Ogugu nke Ọkụ",
+    "votes": "Ntuli aka",
+    "plays": "Egwuruegwu",
+    "onAir": "On ikuku",
+    "liveRadio": "Live redio",
+    "pause": "Kwụsị",
+    "listenLive": "Ndesịta LIVE",
+    "nextStation": "Next ọdụ",
+    "shareStation": "Share ọdụ",
+    "shareStationTitle": "{{name}} na DeHub Radio",
+    "linkCopied": "Edebata ụzọ njikọ"
   },
   "notFound": {
     "title": "Achọtaghị Peeji",
@@ -1581,7 +1626,14 @@
       "commentUnavailable": "Nkwupụta a adịkwaghị"
     },
     "tabs": {
-      "playlists": "Ndepụta egwu"
+      "playlists": "Ndepụta egwu",
+      "dislikes": "Enweghị mmasị"
+    },
+    "dislikes": {
+      "emptyOwn": "Post ị na-enweghị mmasị hapụ ndepụta gị ma gosi ebe a. Wepụ ihe na-amasịghị iweghachi post ahụ.",
+      "privateTitle": "Mmasị bụ nkeonwe",
+      "privateDesc": "Ihe ndekọ a na-eme ka onwe ya ghara ịhụ ya n 'anya.",
+      "loadMore": "ỤLỌ NCHE"
     },
     "offerWorthNow": "Banyere {{amount}} tokens na ọnụego ugbu a",
     "offerNotePlaceholder": "Tinye ozi (nhọrọ)",
@@ -1669,6 +1721,65 @@
     "tokensUnit": "tokens"
   },
   "agents": {
+    "life": {
+      "daily": "Ihe taa: {{posts}} · Ihe mgbaru ọsọ kwa ụbọchị: {{target}}",
+      "compose": "Post dị ka a gị n 'ụlọnga",
+      "imageUrl": "Inyogo URL (nhọrọ)",
+      "queueHelp": "Ebipụta gị kpọmkwem ederede. Ekekọrịta 20-nkeji post ọdịiche na-emetụta. Ọ dịghị minting.",
+      "queuePost": "Ahịrịkpa post",
+      "postQueued": "Edebere post ahụ n'ahịrị. Soro ya na Tasks dị n'elu.",
+      "unlike": "N 'adịghị ka",
+      "unliked": "Enweghị mmasị",
+      "editComment": "Dezie nkọwa",
+      "more": "Gosi ọrụ ndị ọzọ",
+      "less": "Gosi obere"
+    },
+    "tasks": {
+      "oneAgent": "Otu gị n 'ụlọnga",
+      "clearSelection": "Kpochapụ ihenhọrọ",
+      "selectedCount": "{{count}} nke {{total}} ahọpụtara",
+      "distribution": "Olee otú gị n 'ụlọnga na-agba ọsọ ahụ",
+      "eachMode": "Onye nnọchianya ọ bụla na-eme nke a",
+      "sharedMode": "Kekọrịta ọrụ ahụ",
+      "eachHelp": "Ziga ntụziaka ndị a na onye nnọchianya ọ bụla a họpụtara ahọpụta. Onye nnọchianya ọ bụla na-arụ ọrụ zuru oke na cadence a chọrọ. Ekekọrịta posting ókè ka na-emetụta.",
+      "allCategories": "Nke ọ bụla post n’ime ụdị niile. Enweghị filter okwu ma ọ bụ oke ọrụ atọ.",
+      "windowLimits": "All posts bụ kwụ n 'ahịrị. Action amachi ijeụkwụ igbu; ha adịghị ewepụtụ ọrụ atọ posts. Ide nzaghachi nwere ike iji kredit.",
+      "promptLimits": "Arịrịọ maka ọkwa ọ bụla na-eji ụdị niile. Mmasị a na-ahọrọ dabere na isiokwu nwere oke na atọ kwa ọsọ. Ndị ọrụ niile na-ekerịta oghere ntinye; ide ihe nwere ike iji kredit.",
+      "pauseSwarm": "Kwụsị swarm",
+      "resumeSwarm": "Malite ndị nnọchiteanya tozuru etozu",
+      "cancelSwarm": "Kagbuo swarm",
+      "cancelTask": "Kagbuo ọrụ",
+      "actionsProcessed": "omume esichara",
+      "controlUpdated": "Emelitere {{count}} ọrụ",
+      "enabled": "Kwadoro · ọrụ",
+      "enabledHelp": "Enabled means this agent is available. The ọrụ na-ekwu n 'okpuru na-egosi ma ọ na-agba ọsọ, na-eche, kwụsịtụrụ ma ọ bụ dara.",
+      "lastActive": "Ikpeazụ arụ ọrụ",
+      "noActivity": "Enweghị ọrụ e dekọrọ",
+      "runSwarm": "Na-agba ọsọ swarm",
+      "run": "Bido ngwa ngwa",
+      "list": "Ọrụ",
+      "loading": "Na-edebata ọrụ ndị ahụ...",
+      "pause": "Kwụsị",
+      "resume": "Malite",
+      "skip": "Wepụ ihe a na-akwadoghị ma maliteghachi",
+      "window": {
+        "authorAll": "All kere eke",
+        "categoryAll": "Ige niile",
+        "categoryChoose": "Họrọ ige",
+        "categoryHint": "Tinye aha ụdị ọ bụla nkewapụrụ site na commas, ruo 20. A post nwere ike dakọtara ọ bụla họrọ Atiya. Hapụ ihe efu maka mmadụ niile.",
+        "last1h": "Oge awa ikpeazụ",
+        "last30d": "Ikpeazụ 30 ụbọchị",
+        "allTime": "Oge niile",
+        "dislike": "Enweghị mmasị",
+        "author": "Onye edemede (nhọrọ)",
+        "category": "Category (nhọrọ)",
+        "authorPlaceholder": "@aha njirimara ma ọ bụ obere akpa",
+        "categoryPlaceholder": "Kpọmkwem udi aha",
+        "filterHelp": "Hapụ nzacha n 'efu maka ọkwa niile. Mgbe e debere ha abụọ, ha abụọ ga-adaba. A na-echekwa mmeghachi omume dị ugbu a; ịhọrọ mmeghachi omume dị iche na-agbanwe ya.",
+        "write": "Dee ntụziaka",
+        "title": "Ọ bụla post na a oge"
+      }
+    },
     "title": "Ndị Ọrụ AI",
     "connectToManage": "Jikọọ iji Jikwaa Ndị Ọrụ AI",
     "signInToCreate": "Banye iji mepụta ma jikwaa ndị ọrụ AI gị.",
@@ -1794,7 +1905,8 @@
     "passkeyFailed": "Ọdịda ịbanye na mkpuaka. Biko nwaa ọzọ.",
     "passkeyBackupHint": "Akaụntụ gị dị na paswọọdụ ngwaọrụ a. Na ọtụtụ ekwentị, ọ na-ejikọta ya na akaụntụ Google ma ọ bụ Apple gị, ị nwekwara ike itinye nkwado paswọọdụ na Ntọala.",
     "walletBlockedTitle": "Obere akpa ego a bụ ọhụrụ kpamkpam",
-    "walletBlockedBody": "Obere akpa ego ọhụrụ chọrọ ego ma ọ bụ azụmahịa gara aga iji mepee akaụntụ. Debanye aha site na otu n'ime nhọrọ ndị dị n'okpuru, wee jikọọ obere akpa ego a site na Ntọala."
+    "walletBlockedBody": "Obere akpa ego ọhụrụ chọrọ ego ma ọ bụ azụmahịa gara aga iji mepee akaụntụ. Debanye aha site na otu n'ime nhọrọ ndị dị n'okpuru, wee jikọọ obere akpa ego a site na Ntọala.",
+    "continuePhone": "Gaa n 'ihu na ekwentị"
   },
   "careers": {
     "title": "Ọrụ na DeHub",
@@ -1966,7 +2078,21 @@
       "authorChip": "Proposal na-ede akwụkwọ"
     },
     "notEnoughUnstakedTokens": "Ezuola unstaked tokens na Base. Ị chọrọ {{needed}} liquid (unstaked) DeHub tokens na Base mana ị nwere {{held}}. Enweghị ike iji staked tokens maka ụgwọ.",
-    "voteFailedHoldTokens": "Ntuli aka dara. Ị ga-enwerịrị DeHub tokens iji votu."
+    "voteFailedHoldTokens": "Ntuli aka dara. Ị ga-enwerịrị DeHub tokens iji votu.",
+    "badgeHoldersOnly": "Baajị njide naanị",
+    "removeMedia": "Wepụ mgbakwunye",
+    "addMedia": "Tinye inyogo ma ọ bụ vidiyo",
+    "freeForBadgeHolders": "Free n 'ihi na baajị njide. Draft gị na-echekwa ka ị pịnyere.",
+    "proposalFeeNote": "Atụmatụ na-eri 10,000 DHB na-enweghị a staking baajị. Draft gị na-echekwa ka ị pịnyere.",
+    "noOpenProposals": "Enweghị atụmatụ mepere emepe ugbu a",
+    "decidedInTabs": "Atụmatụ e kpebiri dị na taabụ ndị a gafere na ndị a jụrụ ajụ.",
+    "mediaTypeInvalid": "Họrọ ihe oyiyi ma ọ bụ a video.",
+    "mediaTooLarge": "Faịlụ ga-abụrịrị 50 MB ma ọ bụ obere.",
+    "uploadFailed": "Bubata dìfọ́ọ̀",
+    "uploadFailedDetail": "Mbugo dara ada: {{message}}",
+    "proposalAttachment": "Mgbakwụnye aro",
+    "submitFailed": "Ọdịda n 'ibubata atụmatụ",
+    "draftSavedRetry": "Ederede gị ka echekwara — pịa Nyefee iji nwaa ọzọ."
   },
   "sidebar": {
     "talkOfTheTown": "Okwu obodo",
@@ -1984,7 +2110,8 @@
     "searchMenu": "Chọọ menu",
     "clearSearch": "Hichapụ nchọta",
     "noMenuMatches": "Ọ dịghị ihe dị na menu dabara",
-    "searchDehubFor": "Chọọ DeHub maka \"{{query}}\""
+    "searchDehubFor": "Chọọ DeHub maka \"{{query}}\"",
+    "switchAccount": "Gbanye akaụntụ"
   },
   "comments": {
     "reportComment": "Report okwu",
@@ -2705,6 +2832,10 @@
       "wallTitle": "Ihe ndị mmadụ na-asị",
       "wallNote": "bipụtara n'ikike",
       "anonymous": "Onye otu DeHub"
+    },
+    "money": {
+      "operationsGroup": "Ọrụ",
+      "estimatedOperations": "Atụmatụ arụmọrụ"
     }
   },
   "superpowers": {
@@ -5555,7 +5686,8 @@
     "endStreamConfirmBody": "Mgbasa ozi gị na-akwụsị maka onye ọ bụla na-ekiri ma ọ gaghị enweghachi.",
     "keepStreaming": "Gụnye na-agbasa ozi",
     "encoderPermanentHint": "Igodo a anaghị agbanwe agbanwe. Nịm gị encoder elu otu ugboro — oge ọzọ dị nnọọ pịa Malite n 'ebe ahụ na DeHub emepụta post n' ihi na ị.",
-    "notEnoughTokensForBounty": "Enweghị tokenịị zuru. Chọrọ {{need}} tokenịị mana nwere {{have}}."
+    "notEnoughTokensForBounty": "Enweghị tokenịị zuru. Chọrọ {{need}} tokenịị mana nwere {{have}}.",
+    "connectionFailed": "Njikọ mgbasaozi ahụ adaala."
   },
   "events": {
     "seoTitle": "Ihe omume — Nzukọ & Ihe Omume Obodo na DeHub",
@@ -6293,6 +6425,7 @@
     "pause": "Kwụsị",
     "listens_one": "{{count}} gee ntị",
     "listens_other": "{{count}} na-ege ntị",
+    "visualizerColour": "Agba Visualizer",
     "lyrics": "Okwu abụ",
     "lyricsLoading": "Na-achọ okwu abụ…",
     "lyricsNone": "Ahụghị okwu abụ"
@@ -8679,6 +8812,65 @@
     "like": "Dị ka",
     "unlike": "Wepụ dị ka"
   },
+  "copy": {
+    "b3412a3b86de": "Òkù streamers",
+    "8c91325d901b": "Ziga ndị iyi egwu na DeHub gụgharia peeji nke nwere ozi a. Njikọ gị na-akọrọ gị ha tupu ha adaa.",
+    "cc96aaa18cf2": "Soro m gwuo na DeHub. Atụmatụ ala na yinye ozugbo na obere akpa gị, ị nwere ndị na-ege gị ntị, ma ị nwere ike ịnọgide na-eziga na TikTok na ebe ọ bụla ọzọ n 'otu nzọụkwụ. Debanye aha ebe a: {{link}}",
+    "77db95ebd737": "Debata ozi",
+    "846d8244b7d8": "E depụtaghachiri ozi ịkpọ òkù",
+    "b10fb966d720": "Mpịakọta",
+    "b5f64aac226f": "Site n 'ịga n' ihu, ị na-ekweta na anyị",
+    "ede548996483": "Okwu",
+    "e3ee915a8e8c": "na",
+    "506ff3946215": "Amụma nzuzo",
+    "44c9d36485b7": "Lee niile",
+    "641d1ef657bd": "Soro",
+    "344b4271ca01": "Na-esote",
+    "89a167dad6da": "Agba Visualizer",
+    "42ee912bff23": "Ụgbọchukwu Ọrụ Ọhịa",
+    "7c14e8607c11": "Ebe ọrụ nkwụfu",
+    "ab4d6796dbbe": "Igbo: Muziki Videos",
+    "26be785e21b7": "Enweghị vidio egwu ọ bụla ugbu a",
+    "302b4ce5c73d": "Ihe ebugoro na ọdịyo",
+    "cccec0619e2d": "Enweghị ihe ebugoro na ọdịyo ọ bụla ugbu a",
+    "036cfd952896": "Ndị ị ga-eso",
+    "0c820caf16c0": "Enweghị bayo ọ bụla ugbu a",
+    "3a17aa4e4abb": "Ọkwa",
+    "3b59e95daada": "Enweghị ọkwa ndụ ọ bụla ugbu a",
+    "d0f08798ff1a": "Ndị na-eso gị",
+    "ce4ee4efc5e3": "Wepụ ogbi",
+    "8dd6857baf02": "Mechie ụda",
+    "37fd4e355ba3": "Wepụ na ihuenyo zuru ezu",
+    "7527dc6722fc": "Ihe ebugoro ọzọ adaala",
+    "44207eb29645": "A na-anọchi…",
+    "6a40edf1fc87": "WhatsApp",
+    "c1c8f6c1d828": "NA-AMALITE N'OGE NA-ADỊGHỊ ANYA",
+    "2f7e24392d9c": "ỌKWA NA-ABỊANỤ",
+    "a865110e919b": "Bubata obere akpa ego",
+    "7bb6682e5826": "Arịrịọ ọhụrụ maka oku azụ",
+    "2f33a51e3171": "Atụmatụ ọchịchị DeHub — tụọ vootu ma kparịta ụka.",
+    "a3156ed263d2": "{{value1}} — jide ka ị gbanwee mmeghachi omume gị",
+    "12b91b0ac5dd": "{{value1}} — jide ka ị meghachi omume",
+    "5e0cb5ae157b": "Foto {{value1}}",
+    "cd9939b6aa1a": "Dochie foto {{value1}}",
+    "99ca327a47b5": "Ihe osise mkpuchi maka {{value1}}",
+    "c1cd85f576ed": "{{value1}} — Ọchịchị DeHub",
+    "42484309dc66": "{{value1}} — Pịa Backspace iji gosi njikọ ahụ",
+    "05d0e1b9a76e": "Malitegharịa kaadị njide",
+    "0f3dd376ee85": "Na-achọ kaadị njide gị…",
+    "150d73bf85e7": "Elgato, AVerMedia… enweghị OBS",
+    "1929290e09aa": "Mepee ntọala kaadị njide (na-arịọ maka ohere igwefoto)",
+    "1b2c08a8733d": "Ogugu nke Ọkụ",
+    "594bea9c9448": "Enweghị kaadị njide achọtara. Tinye ya n 'elu USB, wee bulie ya n' okpuru.",
+    "67004337fb60": "Agaghị emepenwu ngwaọrụ a. Mechie OBS ma ọ bụ Elgato Studio (naanị otu ngwa nwere ike iji ya n 'otu oge).",
+    "8bb1dbd60bce": "Mee ka taabụ a meghee mgbe ị dị ndụ.",
+    "96882965394f": "Egwuregwu ọdịyo",
+    "a2838b66518a": "Auto (kacha mma gị kaadị nwere ike ime)",
+    "b8643d1cc81a": "1080p 60 chọrọ banyere 9 Mbps bulite. Họrọ 720p na nwayọọWi-Fi.",
+    "c7ce89b32897": "Kwụsịtụ kaadi nnara ahụ",
+    "d7038cc95b8e": "Gwuo na TV gị site na passthrough nke kaadị ahụ, ọ bụghị nlele a. Ọ dị ntakịrị n 'azụ.",
+    "de6694f3ada3": "Họrọ ngwaọrụ"
+  },
   "postProcessing": {
     "uploading": "Na-ebugo…",
     "preparing": "Na-akwado…",
@@ -8687,5 +8879,101 @@
     "posted": "Ebipụtala ya",
     "view": "Lee",
     "failed": "Enweghị ike ịhazi vidiyo ahụ"
+  },
+  "player": {
+    "volume": "Ọkwa ụda"
+  },
+  "loginStack": {
+    "headlineTop": "Ị ga-nwe ihe niile",
+    "headlineAccent": "na enwe obi ụtọ.",
+    "orContinueWith": "ma ọ bụ gaa n 'ihu na",
+    "phone": "Ekwentị",
+    "fingerprint": "Mkpịsị aka",
+    "exploreFirst": "Inyocha mbụ",
+    "codeNote": "Anyị na-ezitere gị koodu, ọ dịghị paswọọdụ achọrọ."
+  },
+  "dehubLinks": {
+    "kind": {
+      "post": "bipute",
+      "profile": "profaịlụ",
+      "community": "anya",
+      "communityInvite": "obodo ịkpọ òkù",
+      "store": "ụlọ ahịa",
+      "listing": "ihenhọrọ",
+      "event": "ihe omume",
+      "stage": "ogbo",
+      "film": "isiokwu",
+      "bounty": "Onyinye",
+      "app": "ngwa",
+      "proposal": "ngwaahịa",
+      "link": "njikọ"
+    },
+    "sentTo": "{{item}} zigara {{name}}",
+    "sendFailed": "Ọchịchịrị ịbụ {{item}}",
+    "copyLinkDetail": "Idetuo {{item}} njikọ gị clipboard",
+    "recipientChat": "anya",
+    "recipientUser": "onyeọrụ"
+  },
+  "dehubAppPage": {
+    "seoDescription": "Nweta ngwa DeHub: oghe-isi iyi, onye ọrụ-ekesịpde na-elekọta mmadụ media na ndụ gụgharia, ezoro ezo ozi na nche-na-enweta. Free na Google Play, na App Store na web.",
+    "intro1": "DeHub bụ a decentralized na-elekọta mmadụ na netwọk na mobile ngwa, na mmepe ebe ọ bụ na 2021, ebe posts nwere ike minted na yinye na creators na-ha na-ege ntị, ha ọdịnaya na ha revenue.",
+    "intro2": "Ọ na-ejikọta usoro ozi na-eso usoro oge, mgbasa ozi ndụ, ozi e zoro ezo site na mmalite ruo na njedebe, obodo ndị ọrụ na-elekọta, obere akpa ego nwere ọtụtụ agbụ, na ụgwọ ọrụ \"lelee-keta-ego\" a na-akwụ na token. Otu akaụntụ ahụ na-arụ ọrụ na Android, iPhone, na ihe nchọgharị ọ bụla nke oge a.",
+    "downloadTitle": "Nbudata DeHub",
+    "appStore": "Download na App Store",
+    "openInBrowser": "Mepee DeHub na omenchọgharị gị",
+    "downloadApk": "Download ngwa (Android enweghị Google Play)",
+    "faqTitle": "Ọtụtụ mgbe Ẹbụp Ajụjụ",
+    "faq": {
+      "q1": "Ọ bụ DeHub na DePaul University app?",
+      "a1": "Mba. DeHub nke dị na dehub.io bụ ikpo okwu mgbasa ozi ọha na eze nwere onwe ya nke mepere emepe. Ọnụ ụzọ ụmụ akwụkwọ DeHUB nke Mahadum DePaul, DEHub nke Rowan, na ngwa ntinye ọnụ ụzọ deHUB Access bụ ngwaahịa ndị na-enweghị njikọ ọ bụla ma e wezụga na ha na-ekerịta otu aha ahụ.",
+      "q2": "Ọ bụrụ na DeHub app dị naanị n'ụdị dị naanị?",
+      "a2": "Ee. DeHub bụ free ibudata site na Google Play na App Store, na free iji na nchọgharị na dehub.io.",
+      "q3": "Kedu ngwaọrụ DeHub ji arụ ọrụ?",
+      "a3": "Android igwe site Google Play ma ọ bụ kpọmkwem ngwa download, iPhone site App Store, na ihe ọ bụla oge a na desktọọpụ ma ọ bụ mobile nchọgharị na dehub.io.",
+      "a4": "Ee. Kacha ọhụrụ Android Mee e bipụtara DeHub dị ka a kpọmkwem ngwa download na dehub.io/apk, n 'ihi na Android 8 na elu.",
+      "q5": "Kedu ihe m nwere ike ime na ngwa DeHub?"
+    },
+    "notSure": "Ka na-ejighị n 'aka nke DeHub ị chọrọ? <compare> DeHub vs DePaul DeHUB vs Rowan DEHub </compare> ụdị ya, na <guide>Gịnị bụ DeHub?</guide> na-ekpuchi ikpo okwu na omimi."
+  },
+  "streamPage": {
+    "seoTitle": "Gụgharia na DeHub — Live Streaming maka TikTok & Ndị na-emepụta Twitch",
+    "seoDescription": "Gaa na-ebi ndụ na DeHub: on-yinye Atụmatụ na ala gị obere akpa, na-ege ntị na ị nwere, ikenye gị ọzọ nyiwe na otu nzọụkwụ, na 20% si onye ọ bụla ị na-akpọ.",
+    "eyebrow": "//maka_iyi egwu",
+    "heading": "Gụgharia na DeHub",
+    "startStreaming": "Bido gụgharia",
+    "importYoutube": "Mbubata gị YouTube ọwa",
+    "inviteLink": "Nweta njikọ ịkpọ òkù gị",
+    "howToStart": "Debanye aha, mepee onye dere post ma kpatụ Gaa ndụ — site na igwefoto gị, OBS ma ọ bụ kaadị weghaara.",
+    "proof": {
+      "label1": "ndị na-ekiri ihe n'otu oge na mgbasa ozi ndụ DeHub",
+      "label2": "uptime gafee gụgharia ọrụ",
+      "label3": "zuru ụwa ọnụ na CDN nke DeHub"
+    },
+    "whyTitle": "Gịnị mere iyi na DeHub",
+    "reasons": {
+      "title1": "Atụmatụ na ala gị obere akpa",
+      "body1": "Ndị na-ekiri ihe na izipu onyinye mgbe ị na-ebi ndụ, na tiered onyinye animations na n 'ọnụ ozi na-agụ n' olu dara ụda na iyi. Atụmatụ dozie on-yinye na DeHub tokens na ala ozugbo na gị obere akpa kama ịbụ clipped na ụzọ site.",
+      "title3": "Nweta n 'aka onye ọ bụla ị wetara.",
+      "body3": "Gị òkù njikọ-akwụ gị 20% nke ọrụ nke onye ọ bụla na-esonyere site na ya, plus 5% ugboro ugboro si ndị ha na-aga na-akpọ, ugwo na DeHub tokens.",
+      "title4": "Live ogbo",
+      "body4": "Ọbịa ndụ audio ogbo maka ajụjụ, collabors na nche ọzọ. Kpọsaa otu tupu oge eruo na kaadị ndị na-ege gị ntị nwere ike ịkekọrịta, ma gee ndị e dekọrọ ntị azụ.",
+      "title5": "Post n 'ebe nile n' otu mgbe",
+      "body5": "Jikọọ akaụntụ gị ndị ọzọ otu ugboro ma bipụta na X, Instagram, YouTube, TikTok, Farcaster na nyiwe asatọ ọzọ site na onye dere DeHub. Debe TikTok dị ka igwe nchọpụta gị mgbe ị na-ewu ndị na-ege ntị ị nwere.",
+      "title6": "Weta ọwa gị na gị",
+      "body6": "Mbubata a dum YouTube ọwa, ma ọ bụ a TikTok, Vimeo ma ọ bụ SoundCloud profaịlụ, na otu ogbe. E gosipụtara ọnụahịa ahụ kpọmkwem na akara ngosi DeHub tupu ị kwụọ ụgwọ."
+    },
+    "faqTitle": "Ọtụtụ mgbe Ẹbụp Ajụjụ",
+    "faq": {
+      "q1": "Ọ bụ free gụgharia na DeHub?",
+      "a1": "Ee. DeHub bụ free isonyere na free ka post, na minting a iyi na yinye bụ nhọrọ. A na-akwụ ụgwọ mbubata ọwa, ma egosikwa ọnụahịa ya tupu ị kwụọ ụgwọ.",
+      "q2": "M ga-akwụsị gụgharia na TikTok ma ọ bụ Twitch?",
+      "a2": "Mba. Nọgide na-agbasa ebe ndị na-ege gị ntị nọ taa ma wulite na DeHub n 'akụkụ ya. Cross-post si DeHub dere otú ọ bụla n' elu ikpo okwu ị na-ama na-eji ihe azụ na-ege ntị na i nwere.",
+      "q3": "Enwere m ike iji OBS gbanye mmiri?",
+      "a3": "Ee. Họrọ OBS mgbe ị na-aga ndụ na DeHub na-enye gị a na-adịgide adịgide iyi isi maka OBS, Streamlabs ma ọ bụ ihe ọ bụla RTMP encoder. I nwekwara ike ịga ndụ ozugbo site na ekwentị gị, ihe nchọgharị gị ma ọ bụ kaadị njide.",
+      "q4": "Kedụ ka a ga-esi akwụ m ụgwọ?",
+      "a4": "Ndị na-ekiri ihe na izipu onyinye n 'oge iyi gị, na ndị na-edozi na yinye na akara ngosi DeHub ozugbo na obere akpa gị. Uploads nwekwara ike ịbụ free, ịkwụ ụgwọ-kwa-view ma ọ bụ token-gated.",
+      "q5": "Kedụ ka njikọ ịkpọ òkù m si arụ ọrụ?"
+    },
+    "moreGuides": "Na-abịa site na TikTok? Gụọ <tiktok> onye okike UK na-ahapụ TikTok</tiktok> <live> Web3 ndụ gụgharia: a decentralized Twitch ọzọ</live>."
   }
 }

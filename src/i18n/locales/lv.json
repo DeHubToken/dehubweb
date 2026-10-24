@@ -169,6 +169,10 @@
     "pollWinner": "{{option}} uzvarēja",
     "stillCounting": "Joprojām tiek skaitīts: dāvanu apstiprināšana var aizņemt kādu brīdi."
   },
+  "quickActions": {
+    "title": "Lapas opcijas",
+    "question": "Kas nav kārtībā ar šo lapu?"
+  },
   "errors": {
     "sponsorshipUnavailable": "Bezmaksas darījumi ir apturēti mūsu pusē, nevis jūsu makā. Lūdzu, drīzumā mēģiniet vēlreiz.",
     "gasSponsorshipFailed": "Šo darījumu neizdevās segt. Lūdzu, pēc brīža mēģiniet vēlreiz."
@@ -264,6 +268,8 @@
     "postingChain": "Ierakstu blokķēde",
     "showOnline": "Rādīt, kad esmu tiešsaistē",
     "showOnlineDesc": "Kamēr izmantojat DeHub, personas, kurām sūtāt ziņojumus, blakus jūsu vārdam redz zaļu punktu",
+    "showDislikes": "Parādīt manas nepatikšanas visiem",
+    "showDislikesDesc": "Ikviens var atvērt cilni \"Nepatīk\" jūsu profilā. Kad tas ir izslēgts, to var redzēt tikai jūs.",
     "smartReplies": "Ieteiktās atbildes",
     "smartRepliesDesc": "Sagatavo divas atbildes, kurām vari pieskarties tērzēšanā. × pie ieteikumiem to izslēdz.",
     "title": "Iestatījumi",
@@ -442,6 +448,7 @@
     "systemLight": "Sistēma Gaišs",
     "immersive": "Immersive",
     "cosmic": "Cosmic Pixels",
+    "glass": "Stiklains",
     "hazy": "Miglainās naktis",
     "swarms": "Spieti",
     "lavalamp": "Lavas lampa",
@@ -695,9 +702,14 @@
     "solanaLinked": "Solana maks pievienots",
     "solanaLinkFailed": "Neizdevās savienot šo maku",
     "solanaUnlinked": "Solana maks atvienots",
-    "solanaUnlinkFailed": "Neizdevās atvienot šo maku"
+    "solanaUnlinkFailed": "Neizdevās atvienot šo maku",
+    "sessionsRevokedMany": "{{count}} ierīces izrakstījās",
+    "reset": "Atiestatīt"
   },
   "common": {
+    "mute": "Izslēgt skaņu",
+    "unmute": "Ieslēgt skaņu",
+    "confirm": "Apstiprināt",
     "save": "Saglabāt",
     "cancel": "Atcelt",
     "delete": "Dzēst",
@@ -1535,7 +1547,41 @@
     "radio": "Radio",
     "trendingTracks": "Populārie ieraksti",
     "moreVideos": "Vairāk video",
-    "newReleases": "Jaunie izlaidumi"
+    "newReleases": "Jaunie izlaidumi",
+    "mostPlayed": "Visvairāk spēlētais",
+    "mostLiked": "Visvairāk patika",
+    "mostRecent": "Jaunākie",
+    "chartOrder": "Audio diagrammu secība",
+    "radioPicks": "Mūsu izvēle",
+    "mostVoted": "Visvairāk balsots",
+    "trending": "Populārs",
+    "radioChartOrder": "Radio diagrammu secība",
+    "stagesLive": "Tiešraide",
+    "upcoming": "Gaidāmie",
+    "mostListened": "Visvairāk klausītie",
+    "recentStages": "Nesenie",
+    "stagesChartOrder": "Posmu diagrammas secība",
+    "noStages": "Šeit vēl nav posmu",
+    "listening": "klausīšanās",
+    "listens": "klausās",
+    "liveCount": "tiešraidē",
+    "chartVideos": "Mūzikas videoklipi",
+    "videoCharts": "Mūzikas video diagrammas",
+    "mostViewed": "Visvairāk skatītie",
+    "trendingWeek": "Šonedēļ aktuāli",
+    "videoChartOrder": "Mūzikas video diagrammu secība",
+    "country": "Valsts",
+    "quality": "Kvalitāte",
+    "votes": "Balsis",
+    "plays": "Spēles",
+    "onAir": "Gaisā",
+    "liveRadio": "Radio tiešraide",
+    "pause": "Pauze",
+    "listenLive": "Publicē reāllaikā",
+    "nextStation": "Nākamā stacija",
+    "shareStation": "Kopīgot staciju",
+    "shareStationTitle": "{{name}} DeHub radio",
+    "linkCopied": "Saite nokopēta"
   },
   "notFound": {
     "title": "Lapa nav atrasta",
@@ -1569,7 +1615,16 @@
       "commentUnavailable": "Šis komentārs vairs nav pieejams"
     },
     "tabs": {
-      "playlists": "Repertuāri"
+      "playlists": "Repertuāri",
+      "dislikes": "Nepatikas"
+    },
+    "dislikes": {
+      "emptyTitle": "Pagaidām nav atzīmju \"nepatīk\"",
+      "emptyOwn": "Ziņas, kas jums nepatīk, atstājiet savas plūsmas un parādieties šeit. Atsauciet nepatiku, lai atgrieztu ziņu.",
+      "emptyOther": "Pagaidām nekas nepatika.",
+      "privateTitle": "Nepatīk ir privāti",
+      "privateDesc": "Šis konts saglabā nepatiku pret sevi.",
+      "loadMore": "Laiatzīmēt vairāk"
     },
     "offerWorthNow": "Aptuveni {{amount}} žetoni pašreizējā kursā",
     "offerNotePlaceholder": "Pievieno piezīmi (nav obligāti)",
@@ -1659,6 +1714,71 @@
     "tokensUnit": "žetoni"
   },
   "agents": {
+    "life": {
+      "daily": "Ziņas šodien: {{posts}} · Dienas mērķis: {{target}}",
+      "compose": "Publicēt kā šim aģentam",
+      "postText": "Ziņas teksts",
+      "imageUrl": "Attēla URL (neobligāti)",
+      "queueHelp": "Publicē precīzu tekstu. Tiek piemērota kopīga 20 minūšu atstarpe. Nav kalšanas.",
+      "queuePost": "Kūdīžas ziņojums",
+      "postQueued": "Izlikt ierakstu rindā. Izsekot to iepriekš sadaļā Uzdevumi.",
+      "viewPost": "Skatīt ziņu",
+      "unlike": "Nepatīk",
+      "unliked": "Nepatika",
+      "editComment": "Rediģēt komentāru",
+      "more": "Rādīt vairāk aktivitātes",
+      "less": "Rādīt mazāk"
+    },
+    "tasks": {
+      "oneAgent": "Viens aģents",
+      "swarm": "Spiets",
+      "selectAll": "Izvelieties visus aģentus",
+      "clearSelection": "Notīrīt atlasi",
+      "selectedCount": "{{count}} no {{total}} atlasīts",
+      "distribution": "Kā aģenti izpilda uzvedni",
+      "eachMode": "To dara katrs aģents",
+      "sharedMode": "Dalīties ar darbu",
+      "eachHelp": "Nosūtiet šos norādījumus katram atlasītajam aģentam. Katrs aģents veic pilnu uzdevumu pieprasītajā laikā. Joprojām ir spēkā kopīgoto ierakstu ierobežojumi.",
+      "allCategories": "Katrs ieraksts visās kategorijās. Nav atslēgvārdu filtra un nav trīs \"patīk\" ierobežojuma uzdevumam.",
+      "windowLimits": "Visi atbilstošie ieraksti ir ievietoti rindā. Darbību limiti nosaka izpildes tempu; tie nesaīsina uzdevumu līdz trim ierakstiem. Atbilžu rakstīšanai var tikt izmantoti kredīti.",
+      "promptLimits": "Pieprasījumi katrai ziņai izmanto visas kategorijas. Uz tēmām balstītas selektīvās simpātijas ir ierobežotas līdz trim vienā sērijā. Visiem aģentiem ir kopīgs izlikšanas iztrūkums; rakstīšanai var izmantot kredītpunktus.",
+      "pauseSwarm": "Apturēt spietu",
+      "cancelSwarm": "Atcelt spietu",
+      "cancelTask": "Atcelt uzdevumu",
+      "actionsProcessed": "apstrādātās darbības",
+      "reviewMembers": "Uzdares ar neizskaidrotām darbībām jāpārskata individuāli pirms turpināšanas. Darbība, kas jau ir sākta, var beigties pēc pārtraukuma vai atcelšanas.",
+      "enabled": "Iespējota · aktivitāte",
+      "enabledHelp": "Iespējots nozīmē, ka šis aģents ir pieejams. Tālāk redzamie uzdevuma stāvokļi parāda, vai tas darbojas, gaida, ir apturēts vai neizdevās.",
+      "lastActive": "Pēdējais aktīvs",
+      "noActivity": "Nav reģistrēta neviena aktivitāte",
+      "noTasks": "Šim aģentam vēl nav uzdevumu.",
+      "runSwarm": "Bēdziet no spieta",
+      "preparing": "Sagatavojot uzdevumu…",
+      "run": "Izpildīt uzdevumu",
+      "list": "Uzdevumi",
+      "loading": "Lādēju uzdevumus…",
+      "pause": "Pausē",
+      "resume": "Turpināt",
+      "skip": "Pārskaitīt nepapildinātas darbības un turpināt",
+      "window": {
+        "authorAll": "Visi autori",
+        "authorChoose": "Izvēlaties autoru",
+        "categoryAll": "Visas kategorijas",
+        "categoryChoose": "Izvēlaties kategorijas",
+        "categoryHint": "Pievienot katras kategorijas nosaukumus ar komatu atdalītiem, līdz 20. Poste var atbilstēt jebkurai izvēlētai kategorijai. Atstāt tukšu, lai izveltu visus.",
+        "last1h": "Pēdējā stunda",
+        "last30d": "Pēdējie 30 dienas",
+        "allTime": "Vislaikā",
+        "dislike": "Nepieņemt",
+        "author": "Autors (opcionāli)",
+        "category": "Kategorija (opcionāli)",
+        "authorPlaceholder": "@vārds vai portmonis",
+        "categoryPlaceholder": "Precīzs kategorijas nosaukums",
+        "filterHelp": "Atstāt filtrus tukšos, lai izveltu visus postus. Ja abi ir noteikti, abiem jāatbilst. Esamās reakcijas saglabājas; izvēlēties pretējo reakciju mainīs to.",
+        "write": "Rakstīt instrukcijas",
+        "title": "Visi posti noteiktā laikposmā"
+      }
+    },
     "title": "MI aģenti",
     "connectToManage": "Piesakieties, lai pārvaldītu MI aģentus",
     "signInToCreate": "Piesakieties, lai izveidotu un pārvaldītu savus MI aģentus.",
@@ -1784,7 +1904,8 @@
     "passkeyFailed": "Pirkstu nospieduma pierakstīšanās neizdevās. Lūdzu, mēģiniet vēlreiz.",
     "passkeyBackupHint": "Jūsu konts atrodas šīs ierīces paroles atslēgā. Lielākajā daļā tālruņu tas sinhronizējas ar jūsu Google vai Apple kontu, un iestatījumos varat pievienot paroles dublējumu.",
     "walletBlockedTitle": "Šis maks ir pavisam jauns",
-    "walletBlockedBody": "Jauniem makiem konta atvēršanai vajadzīgs atlikums vai iepriekšēja transakcija. Reģistrējies ar kādu no tālāk norādītajām iespējām un pēc tam pievieno šo maku Iestatījumos."
+    "walletBlockedBody": "Jauniem makiem konta atvēršanai vajadzīgs atlikums vai iepriekšēja transakcija. Reģistrējies ar kādu no tālāk norādītajām iespējām un pēc tam pievieno šo maku Iestatījumos.",
+    "continuePhone": "Turpināt ar telefonu"
   },
   "careers": {
     "title": "Karjera DeHub",
@@ -1956,7 +2077,21 @@
       "authorChip": "Priekšlikuma autors"
     },
     "notEnoughUnstakedTokens": "Nepietiek nenoņemt žetonu uz Base. Jums ir nepieciešami {{needed}} brīvi (nenoņemti) DeHub žetoni uz Base, bet jums ir {{held}}. Nenoņemti žetoni nevar tikt izmantoti maksājumiem.",
-    "voteFailedHoldTokens": "Balsošana neizdevās. Lai balsotu, jums ir jātur DeHub žetoni."
+    "voteFailedHoldTokens": "Balsošana neizdevās. Lai balsotu, jums ir jātur DeHub žetoni.",
+    "badgeHoldersOnly": "Zīmju ieguvēji tikai",
+    "removeMedia": "Noņemt pievienojumu",
+    "addMedia": "Pievienot attēlu vai video",
+    "freeForBadgeHolders": "Brīvprātīgi zīmju ieguvēji. Izrakstījums glabājas, kad rakstīte.",
+    "proposalFeeNote": "Ieteikumi maksa 10 000 DHB bez stakinga zīmes. Izrakstījums glabājas, kad rakstīte.",
+    "noOpenProposals": "Nav atvērti iteikumi šobrīd.",
+    "decidedInTabs": "Izlemtie priekšlikumi ir cilnēs Pieņemts un Noraidīts.",
+    "mediaTypeInvalid": "Izvelkies attēlu vai video.",
+    "mediaTooLarge": "Faili jābūt 50 MB vai mazāk.",
+    "uploadFailed": "Augšupielādēšana neizdevās",
+    "uploadFailedDetail": "Augšupielādēšana neizdevās: {{message}}",
+    "proposalAttachment": "Priekšlikuma pievienojums",
+    "submitFailed": "Neizdevās nosūtīt priekšlikumu",
+    "draftSavedRetry": "Melnraksts ir saglabāts — nospiediet Iesniegt, lai mēģinātu vēlreiz."
   },
   "sidebar": {
     "talkOfTheTown": "Pilsētas saruna",
@@ -1974,7 +2109,8 @@
     "searchMenu": "Meklēt izvēlnē",
     "clearSearch": "Notīrīt meklēšanu",
     "noMenuMatches": "Izvēlnē nekas nesakrīt",
-    "searchDehubFor": "Meklēt “{{query}}” vietnē DeHub"
+    "searchDehubFor": "Meklēt “{{query}}” vietnē DeHub",
+    "switchAccount": "Pārvietoties uz kontu"
   },
   "comments": {
     "reportComment": "Ziņot par komentāru",
@@ -2697,6 +2833,10 @@
       "wallTitle": "Ko saka cilvēki",
       "wallNote": "publicēts ar atļauju",
       "anonymous": "DeHub biedrs"
+    },
+    "money": {
+      "operationsGroup": "Operācijas",
+      "estimatedOperations": "Prognozētās operācijas"
     }
   },
   "superpowers": {
@@ -5590,7 +5730,8 @@
     "endStreamConfirmBody": "Jūsu apraide apstājas visiem skatītājiem un to nevar atsākt.",
     "keepStreaming": "Turpināt tiešradi",
     "encoderPermanentHint": "Šī atslēga nekad nemainās. Iestatiet kodētāju vienu reizi — nākamreiz vienkārši nospiediet Start (Sākt), un DeHub izveidos jums ziņu.",
-    "notEnoughTokensForBounty": "Nepietiek žetonu. Nepieciešami {{need}} žetoni, bet ir {{have}}."
+    "notEnoughTokensForBounty": "Nepietiek žetonu. Nepieciešami {{need}} žetoni, bet ir {{have}}.",
+    "connectionFailed": "Translēšanas savienojums neizdevās."
   },
   "events": {
     "seoTitle": "Pasākumi — tikšanās un kopienas pasākumi DeHub",
@@ -6345,6 +6486,7 @@
     "pause": "Apturēt",
     "listens_one": "{{count}} klausīties",
     "listens_other": "{{count}} klausās",
+    "visualizerColour": "Vizualizētāja krāsa",
     "lyrics": "Dziesmas vārdi",
     "lyricsLoading": "Meklējam vārdus…",
     "lyricsNone": "Vārdi nav atrasti"
@@ -8747,6 +8889,65 @@
     "like": "Patīk",
     "unlike": "Noņemt atzīmi \"Patīk"
   },
+  "copy": {
+    "b3412a3b86de": "Uzvēlieties strīmētājus",
+    "8c91325d901b": "Nosūtiet strīmētājus uz DeHub strīmēšanas lapai ar šo ziņu. Jūsu saites jums piešķir priekšroku, pirms tie ienāk.",
+    "cc96aaa18cf2": "Nāciet straumēt DeHub kopā ar mani. Padomi nonāk uz ķēdes tieši jūsu makā, jums pieder jūsu auditorija, un jūs varat turpināt publicēt ziņas TikTok un visur citur vienā darbībā. Reģistrējieties šeit: {{link}}",
+    "77db95ebd737": "Kopēt ziņojumu",
+    "846d8244b7d8": "Ziņa kopēta",
+    "b10fb966d720": "Gaisma",
+    "b5f64aac226f": "Turpinot, jūs piekrīt mūsu",
+    "ede548996483": "Noteikumi",
+    "e3ee915a8e8c": "un",
+    "506ff3946215": "Privātuma politika",
+    "44c9d36485b7": "Redzēt visus",
+    "641d1ef657bd": "Selet",
+    "344b4271ca01": "Sekojot",
+    "89a167dad6da": "Vizualizētāja krāsa",
+    "42ee912bff23": "Radio Stacijas",
+    "7c14e8607c11": "Ielādēju stacijas...",
+    "ab4d6796dbbe": "Mūzikas videoklipi",
+    "26be785e21b7": "Vēl nav neviena mūzikas videoklipa",
+    "302b4ce5c73d": "Audio augšupielādes",
+    "cccec0619e2d": "Vēl nav augšupielādēts neviens audio fails",
+    "036cfd952896": "Kam sekot",
+    "0c820caf16c0": "Pagaidām nav biogrāfijas",
+    "3a17aa4e4abb": "Posmi",
+    "3b59e95daada": "Pašlaik nav tiešraides posmu",
+    "d0f08798ff1a": "Seko",
+    "8dd6857baf02": "Mute",
+    "37fd4e355ba3": "Iziet no pilnā ekrāna režīma",
+    "7527dc6722fc": "Neizdevās publicēt atkārtoti",
+    "44207eb29645": "Notiek nomaiņa...",
+    "6a40edf1fc87": "WhatsApp",
+    "c1c8f6c1d828": "DRĪZUMĀ",
+    "a865110e919b": "Importēt maku",
+    "7bb6682e5826": "Jauns atbildei vērsts pieprasījums",
+    "2f33a51e3171": "DeHub pārvaldības priekšlikums — balsojiet un apspriediet.",
+    "a3156ed263d2": "{{value1}} — turiet nospiestu, lai mainītu savu reakciju",
+    "12b91b0ac5dd": "{{value1}} — aizturiet, lai reaģētu",
+    "5e0cb5ae157b": "Image {{value1}}",
+    "99ca327a47b5": "Vāka grafika {{value1}}",
+    "c1cd85f576ed": "{{value1}} — DeHub pārvaldība",
+    "42484309dc66": "{{value1}} — Atpakaļatkāpe, lai parādītu saiti",
+    "05d0e1b9a76e": "Atsākt tveršanas karti",
+    "0f3dd376ee85": "Meklē jūsu tveršanas karti...",
+    "150d73bf85e7": "Elgato, AVerMedia… nav OBS",
+    "1929290e09aa": "Atveriet tveršanas kartes iestatīšanu (lūdz piekļuvi kamerai)",
+    "1b2c08a8733d": "Kvalitāte",
+    "36cffc7912e4": "Jūsu mikrofons (dziesmu rediģēšanai)",
+    "4a1bd4a3aaf3": "Capture karte",
+    "594bea9c9448": "Nav atrasta capture karte. Ievieto to USB, tad izvēlieties zemāk.",
+    "67004337fb60": "Neviens no šiem ierīču nevar atvērt. Aizvērt OBS vai Elgato Studio (tikai viena programma var to izmantot vienlaicīgi).",
+    "8bb1dbd60bce": "Paliek šī taba atvērts, kamēr esi online.",
+    "96882965394f": "Spēles audio",
+    "a2838b66518a": "Automātiski (vislabāk, ko var dara jūsu karte)",
+    "b8643d1cc81a": "1080p 60 saskaņā ar 9 Mbps augšupielādes ātrumu. Ievērojami lēnās Wi-Fi savākšanā izvēlieties 720p.",
+    "c7ce89b32897": "Pausē capture karte",
+    "d7038cc95b8e": "Spēli izvadīt televizora caur kartei pieejamo pārraidi, nevis šo priekšskatījumu. Tas ir mazāk aizgājis.",
+    "de6694f3ada3": "Izvēlieties ierīci",
+    "fedc5cda305d": "Capture pārtraukts"
+  },
   "postProcessing": {
     "uploading": "Augšupielādē…",
     "preparing": "Sagatavo…",
@@ -8755,5 +8956,112 @@
     "posted": "Publicēts",
     "view": "Skatīt",
     "failed": "Video nevarēja apstrādāt"
+  },
+  "player": {
+    "volume": "Līmeņa līmenis"
+  },
+  "loginStack": {
+    "aiRestyle": "AI restilizēšana",
+    "headlineTop": "Jūs būsiet visu īpašnieki",
+    "headlineAccent": "un būsiet laimīgi.",
+    "orContinueWith": "Vai turpiniet ar",
+    "phone": "Telefons",
+    "fingerprint": "Atslēga",
+    "exploreFirst": "Pirmo reizi izpētīt",
+    "codeNote": "Mūsu e-pasta adresējamā koda saņemšana, bez parolei nepieciešamības."
+  },
+  "dehubLinks": {
+    "kind": {
+      "post": "Publikācija",
+      "profile": "Profils",
+      "community": "Komūna",
+      "communityInvite": "Komūnas aicinājums",
+      "store": "Veikals",
+      "listing": "Prece",
+      "event": "Notikums",
+      "stage": "Stādījums",
+      "film": "nosaukums",
+      "bounty": "piemaksa",
+      "app": "lietotne",
+      "proposal": "priekšlikums",
+      "link": "link"
+    },
+    "sentTo": "{{item}} nosūtīts uz {{name}}",
+    "sendFailed": "Neizdevās nosūtīt {{item}}",
+    "copyLinkDetail": "Kopējiet {{item}} saiti starpliktuvē",
+    "recipientChat": "tērzēt",
+    "recipientUser": "lietotājs"
+  },
+  "dehubAppPage": {
+    "seoTitle": "DeHub lietotne — lejupielāde Android, iPhone un tīmeklim",
+    "seoDescription": "Iegūstiet DeHub lietotni: atvērtā pirmkoda, lietotājam piederošus sociālos medijus ar tiešraidi, šifrētu ziņojumapmaiņu un tiešraidi. Bezmaksas pakalpojumos Google Play, App Store un tīmeklī.",
+    "heading": "DeHub lietotne",
+    "intro1": "DeHub ir decentralizēts sociālais tīkls un mobilā lietotne, kas tiek izstrādāta kopš 2021. gada, kur ziņas var izkalt ķēdē un veidotāji saglabā savu auditoriju, saturu un ieņēmumus.",
+    "intro2": "Tas apvieno hronoloģisku plūsmu, tiešraides straumēšanu, pilnīgu šifrētu ziņojumapmaiņu, lietotāju palaistas kopienas, vairāku ķēžu maku un atlīdzības, kas tiek maksātas ar žetoniem. Tas pats konts darbojas Android, iPhone un jebkurā modernā pārlūkprogrammā.",
+    "downloadTitle": "Lejupielādēt DeHub",
+    "googlePlay": "Izvēlies to no Google Play",
+    "appStore": "Lejupielādēt App Store",
+    "iphone": "iPhone",
+    "openInBrowser": "Atveriet DeHub savā pārlūkprogrammā",
+    "downloadApk": "Lejupielādēt APK failu (Android bez Google Play)",
+    "faqTitle": "Kopējoši pieprasīto jautājumus",
+    "faq": {
+      "q1": "Vai DeHub ir DePaul universitātes lietotne?",
+      "a1": "Nē. DeHub vietnē dehub.io ir neatkarīga atvērtā pirmkoda sociālo mediju platforma. DePaul universitātes DeHUB studentu portāls, Rowan DEHub un deHUB piekļuves durvju ieejas lietotne ir nesaistīti produkti, kuriem ir kopīgs nosaukums.",
+      "a2": "Jā. DeHub var bez maksas lejupielādēt no Google Play un App Store, kā arī bez maksas izmantot pārlūkprogrammā vietnē dehub.io.",
+      "q3": "Kurās ierīcēs darbojas DeHub?",
+      "a3": "Android tālruņi, izmantojot Google Play vai tiešo APK lejupielādi, iPhone, izmantojot App Store, un jebkura moderna darbvirsma vai mobilā pārlūkprogramma vietnē dehub.io.",
+      "q4": "Vai es varu instalēt DeHub Android ierīcē bez Google Play?",
+      "a4": "Jā. Jaunāko Android versiju DeHub publicē kā tiešu APK lejupielādi vietnē dehub.io/apk, Android 8 un jaunākām versijām.",
+      "q5": "Ko varu darīt DeHub lietotnē?",
+      "a5": "Publicējiet hronoloģiskā plūsmā, dodieties tiešraidē vai skatieties tiešraides straumes, sūtiet ziņojumus draugiem ar pilnīgu šifrēšanu, pievienojieties un vadiet kopienas, turiet žetonus iebūvētā vairāku ķēžu makā un nopelniet atlīdzību par skatīšanos."
+    },
+    "notSure": "Vēl nav skaidrs, kuru DeHub jums ir nepieciešams? <compare>DeHub vs DePaula DeHUB vs Rowan DEHub</compare> šis teksts to atrisina, un <guide>Kas ir DeHub?</guide> izklāsta platformu ģenerāli."
+  },
+  "streamPage": {
+    "seoTitle": "Straumēšana DeHub — tiešraide TikTok un Twitch veidotājiem",
+    "seoDescription": "Dodieties tiešraidē uz DeHub: ķēdes padomi, kas nonāk jūsu makā, jums piederoša auditorija, kas vienā solī publicē jūsu citās platformās, un 20% no visiem, kurus uzaicināt.",
+    "eyebrow": "//FOR_STREAMERS",
+    "heading": "Straumēt DeHub",
+    "intro": "Novediet savu tiešraides auditoriju uz jums piederošu platformu. Tiešraidē izmantojiet tālruni, pārlūkprogrammu vai OBS, straumēšanas laikā saņemiet dzeramnaudu un saglabājiet auditoriju, ko veidojat. DeHub ir veidojusi komanda aiz First Class Agency, Apvienotās Karalistes oficiālās TikTok LIVE partneru aģentūras, ar vairāk nekā 1000 tiešraides straumētājiem.",
+    "startStreaming": "Sākt straumēšanu",
+    "importYoutube": "Importējiet savu YouTube kanālu",
+    "inviteLink": "Saņemt uzaicinājuma saiti",
+    "howToStart": "Reģistrējieties, atveriet ziņu veidotāju un pieskarieties Pāriet tiešraidē — no kameras, OBS vai tveršanas kartes.",
+    "proof": {
+      "label1": "vienlaicīgie skatītāji DeHub tiešraidē",
+      "label2": "darbspējas laiks straumēšanas pakalpojumos",
+      "value3": "Zem 200 ms",
+      "label3": "globālais latentums DeHub paša CDN"
+    },
+    "whyTitle": "Kāpēc straumēt uz DeHub?",
+    "reasons": {
+      "title1": "Padomi, kas nonāk jūsu makā",
+      "body1": "Skatītāji sniedz padomus un sūta dāvanas, kamēr esat tiešsaistē, izmantojot daudzpakāpju dāvanu animācijas un padomu ziņojumus, kas tiek skaļi lasīti straumē. Padomi nokārtojas ķēdē ar DeHub žetoniem un nonāk tieši jūsu makā, nevis tiek apgriezti ceļā.",
+      "title2": "Jums piederoša auditorija",
+      "body2": "Jūsu sekotāji nav rinda citas personas datu bāzē. Straumes un augšupielādes var izkalt ķēdē uz jūsu maku, plūsma ir hronoloģiska, un kods ir atvērtā koda, tāpēc neviens mierīgi nepārraksta noteikumus.",
+      "title3": "Nopelniet no ikviena līdzi paņemtā",
+      "body3": "Jūsu uzaicinājuma saite maksā 20% no ikviena, kas pievienojas, izmantojot to, kā arī 5%, kas atkārtojas no cilvēkiem, kurus viņi uzaicina, maksājot DeHub žetonos.",
+      "title4": "Tiešraides posmi",
+      "body4": "Rīkojiet tiešraides audio posmus, lai uzdotu jautājumus, piedalītos un skatītos ballītes. Paziņojiet par to pirms laika ar kartīti, ko jūsu auditorija var kopīgot, un klausieties ierakstītos.",
+      "title5": "Publicējiet ziņas visur uzreiz",
+      "body5": "Savienojiet citus kontus vienu reizi un publicējiet tos X, Instagram, YouTube, TikTok, Farcaster un vēl astoņās DeHub komponista platformās. Saglabājiet TikTok kā savu atklājumu dzinēju, kamēr veidojat sev piederošu auditoriju.",
+      "title6": "Ņemiet līdzi savu kanālu",
+      "body6": "Importējiet visu YouTube kanālu vai TikTok, Vimeo vai SoundCloud profilu vienā paketē. Precīza cena pirms apmaksas tiek parādīta DeHub žetonos."
+    },
+    "faqTitle": "Visbiežāk uzdotie jautājumi",
+    "faq": {
+      "q1": "Vai straumēšana DeHub ir bezmaksas?",
+      "a1": "Jā. DeHub var brīvi pievienoties un publicēt, un straumes kalšana ķēdē nav obligāta. Kanāla importēšana ir apmaksāta, un tā cena tiek parādīta pirms maksājuma veikšanas.",
+      "q2": "Vai man ir jāpārtrauc straumēšana TikTok vai Twitch platformā?",
+      "a2": "Nē. Turpiniet straumēt, kur šodien atrodas jūsu auditorija, un balstieties uz DeHub. Cross-post no DeHub komponista, lai katra platforma, kuru jau izmantojat, atgrieztos pie jums piederošās auditorijas.",
+      "q3": "Vai varu straumēt ar OBS?",
+      "a3": "Jā. Izvēlieties OBS, kad sākat tiešraidi, un DeHub sniedz jums pastāvīgu straumes atslēgu OBS, Streamlabs vai jebkuram RTMP kodētājam. Varat arī tiešraidē izmantot tālruni, pārlūkprogrammu vai tveršanas karti.",
+      "q4": "Kā es varu saņemt samaksu?",
+      "a4": "Skatītāji sniedz dzeramnaudu un sūta dāvanas straumēšanas laikā, un tie, kas nokārtojas ķēdē ar DeHub žetoniem, nonāk tieši jūsu makā. Augšupielādes var būt arī bezmaksas, maksas vai marķiera sinhronizētas.",
+      "q5": "Kā darbojas uzaicinājuma saite?",
+      "a5": "Atveriet partnera lapu, lai iegūtu saiti. Ikviens, kurš pievienojas, tiek attiecināts uz jums, un jūs nopelnāt 20% no viņu aktivitātes un 5%, kas atkārtojas no viņu uzaicinātajiem cilvēkiem, maksājot DeHub žetonos."
+    },
+    "moreGuides": "Vai esat nācis no TikTok? Izlasiet <tiktok> Apvienotās Karalistes radošo rokasgrāmatu par to, kā pamest TikTok</tiktok> un <live>Web3 tiešraidi: decentralizēta Twitch alternatīva</live>."
   }
 }

@@ -169,6 +169,10 @@
     "pollWinner": "{{option}}韩元",
     "stillCounting": "还在计数：礼品可能需要一分钟才能确认。"
   },
+  "quickActions": {
+    "title": "頁面選項",
+    "question": "什麼錯誤了呢？"
+  },
   "errors": {
     "sponsorshipUnavailable": "免费交易辣阿拉搿面停脱了，勿是侬钱包个问题。歇歇再试。",
     "gasSponsorshipFailed": "搿笔交易垫勿出。歇歇再试。"
@@ -264,6 +268,8 @@
     "postingChain": "发帖区块链",
     "showOnline": "显示我在线辰光",
     "showOnlineDesc": "搿个辰光，搿个用DeHub，搿个名字旁边会得看到一个绿点。",
+    "showDislikes": "顯示我的不喜歡給所有人看",
+    "showDislikesDesc": "任何人都可以在你的個人檔案中開啟「不喜歡」標籤。當這個選項關閉時，只有你自己才能看到它。",
     "smartReplies": "建议回复",
     "smartRepliesDesc": "勒聊天里向写两条好点个回复。建议高头个 × 会得关脱伊。",
     "title": "设置",
@@ -442,6 +448,7 @@
     "systemLight": "系统 浅色",
     "immersive": "Immersive",
     "cosmic": "宇宙像素",
+    "glass": "玻璃般的",
     "hazy": "朦胧夜",
     "swarms": "蜂群",
     "lavalamp": "熔岩灯",
@@ -709,9 +716,14 @@
     "solanaLinked": "Solana 钱包连上了",
     "solanaLinkFailed": "迭只钱包连勿上",
     "solanaUnlinked": "Solana 钱包断开了",
-    "solanaUnlinkFailed": "迭只钱包断勿开"
+    "solanaUnlinkFailed": "迭只钱包断勿开",
+    "sessionsRevokedMany": "{{count}} 設備登出",
+    "reset": "重置"
   },
   "common": {
+    "mute": "靜音",
+    "unmute": "取消靜音",
+    "confirm": "確認",
     "save": "保存",
     "cancel": "取消",
     "delete": "删除",
@@ -1549,7 +1561,31 @@
     "radio": "电台",
     "trendingTracks": "热门歌曲",
     "moreVideos": "更多视频",
-    "newReleases": "新发布"
+    "newReleases": "新发布",
+    "mostPlayed": "最常聽",
+    "mostLiked": "最喜歡",
+    "mostRecent": "最新",
+    "chartOrder": "音頻排行榜順序",
+    "radioPicks": "我們的選擇",
+    "mostVoted": "最投票",
+    "trending": "熱門",
+    "radioChartOrder": "電台排行榜順序",
+    "stagesLive": "現場直播",
+    "upcoming": "即將直播",
+    "mostListened": "最聽過",
+    "recentStages": "最近",
+    "stagesChartOrder": "舞台排行榜順序",
+    "noStages": "目前還沒有舞台",
+    "listening": "正在聽",
+    "listens": "聽過",
+    "liveCount": "現場直播",
+    "chartVideos": "音樂視頻",
+    "videoCharts": "音樂視頻排行榜",
+    "mostViewed": "最點擊",
+    "newest": "新的最新的",
+    "videoChartOrder": "音樂錄影帶排行榜",
+    "quality": "品質",
+    "shareStationTitle": "{{name}} 吾在 DeHub Radio 喇叭台"
   },
   "notFound": {
     "title": "搜弗到页面",
@@ -1584,6 +1620,11 @@
     },
     "tabs": {
       "playlists": "歌单"
+    },
+    "dislikes": {
+      "emptyOther": "無怨言。",
+      "privateTitle": "隱私",
+      "privateDesc": "呢個帳號把不喜歡的留在自己身上。"
     },
     "offerWorthNow": "大约 {{amount}} 个代币按当前汇率",
     "offerNotePlaceholder": "加条备注（好勿填）",
@@ -1672,6 +1713,37 @@
     "tokensUnit": "代币"
   },
   "agents": {
+    "life": {
+      "daily": "今日發文： {{posts}} · 目標： {{target}}",
+      "postText": "发帖内容",
+      "queueHelp": "發佈原文。適用20分鐘的分享空檔，不進行minting。",
+      "queuePost": "排隊",
+      "unlike": "唔同",
+      "unliked": "唔鍾意",
+      "editComment": "编辑评论"
+    },
+    "tasks": {
+      "oneAgent": "一名代理",
+      "swarm": "蜂群",
+      "clearSelection": "清晰選擇",
+      "selectedCount": "{{count}}選擇{{total}}",
+      "eachMode": "每個代理都這樣做",
+      "eachHelp": "將這些指示發送給每個選定的代理人。每個代理人根據所要求的節奏進行完整任務。共享發文限制仍然適用。",
+      "windowLimits": "所有匹配的帖子都已排队。行動限制了執行速度；它們並不會將任務限制在三個帖子。撰寫回覆可能會使用積分。",
+      "enabled": "啓用 · 活動",
+      "enabledHelp": "啓用咧，咱個代理人有空咧。任務狀態下面會顯示咱個是正在執行、等候中、暫停中或失敗咧。",
+      "window": {
+        "last1h": "最後一小時",
+        "last30d": "前30天",
+        "allTime": "所有時間",
+        "dislike": "唔鍾意",
+        "author": "作者（可选）",
+        "category": "類別（可選）",
+        "authorPlaceholder": "@username 或錢包",
+        "categoryPlaceholder": "精確的類別名稱",
+        "title": "每個時間段的每個帖子"
+      }
+    },
     "title": "AI代理",
     "connectToManage": "连接来管理AI代理",
     "signInToCreate": "登录来创建搭管理AI代理。",
@@ -1794,7 +1866,8 @@
     "passkeyFailed": "指纹登录失败。请再试一次。",
     "passkeyBackupHint": "侬个账号就存在迭台设备个密钥里。大部分手机会同步到侬个Google或Apple账号，侬还可以在设置里加一个密码备份。",
     "walletBlockedTitle": "迭只钱包是全新个",
-    "walletBlockedBody": "新钱包要有余额或者老早个交易再好开账户。用下头其中一种方式注册，再到设置里向连牢迭只钱包。"
+    "walletBlockedBody": "新钱包要有余额或者老早个交易再好开账户。用下头其中一种方式注册，再到设置里向连牢迭只钱包。",
+    "continuePhone": "继续用手机"
   },
   "careers": {
     "title": "加入DeHub",
@@ -1966,7 +2039,18 @@
       "authorChip": "提议作者"
     },
     "notEnoughUnstakedTokens": "Base 上未质押的代币不足。您需要在 Base 上拥有 {{needed}} 个流动（未质押）的 DeHub 代币，但您只有 {{held}} 个。已质押的代币不能用于支付费用。",
-    "voteFailedHoldTokens": "投票失败。您必须持有 DeHub 代币才能投票。"
+    "voteFailedHoldTokens": "投票失败。您必须持有 DeHub 代币才能投票。",
+    "freeForBadgeHolders": "免費給徽章持有者。您的草稿在打字時即儲存。",
+    "proposalFeeNote": "提案費用為 10,000 DHB 沒有 staking 設備。您的草稿即時儲存。",
+    "noOpenProposals": "無現有開放的提案",
+    "decidedInTabs": "已決定提案的結果在 Passed 和 Rejected 頁籤中。",
+    "mediaTypeInvalid": "選擇一張圖片或視頻。",
+    "mediaTooLarge": "檔案必須小於 50 MB。",
+    "uploadFailed": "上傳失敗",
+    "uploadFailedDetail": "上傳失敗：{{message}}",
+    "proposalAttachment": "提案附件",
+    "submitFailed": "提交提案失敗",
+    "draftSavedRetry": "您的草稿已儲存 — 按 Submit 重新嘗試。"
   },
   "sidebar": {
     "talkOfTheTown": "城里个热话",
@@ -1984,7 +2068,8 @@
     "searchMenu": "搜索菜单",
     "clearSearch": "清脱搜索",
     "noMenuMatches": "菜单里向呒没匹配个",
-    "searchDehubFor": "勒 DeHub 里向搜「{{query}}」"
+    "searchDehubFor": "勒 DeHub 里向搜「{{query}}」",
+    "switchAccount": "切換帳戶"
   },
   "comments": {
     "reportComment": "举报评论",
@@ -2706,6 +2791,10 @@
       "wallTitle": "人们怎么说",
       "wallNote": "已获得许可发布",
       "anonymous": "DeHub 成员"
+    },
+    "money": {
+      "operationsGroup": "操作",
+      "estimatedOperations": "估計操作"
     }
   },
   "superpowers": {
@@ -5126,7 +5215,8 @@
     "endStreamConfirmBody": "您的广播对所有观看者停止，无法恢复。",
     "keepStreaming": "继续流传输",
     "encoderPermanentHint": "箇鑰匙永不變。設定好編碼器一次——下次只需在那裡按一下「開始」，DeHub 就會為您創建帖子。",
-    "notEnoughTokensForBounty": "代幣不足。需要 {{need}} 隻代幣，但只有 {{have}} 隻。"
+    "notEnoughTokensForBounty": "代幣不足。需要 {{need}} 隻代幣，但只有 {{have}} 隻。",
+    "connectionFailed": "廣播連接失敗。"
   },
   "events": {
     "goingCount_one": "{{count}} 走",
@@ -5310,6 +5400,7 @@
     "openDehub": "開啟 DeHub",
     "signInBlurb": "登入以將此瀏覽器標籤轉換為輕量級備份節點。",
     "signIn": "登入",
+    "dismiss": "取消",
     "signInAgain": "再登入一下",
     "online": "在线",
     "storedThisSession": "儲存此會話",
@@ -5731,6 +5822,7 @@
     "pause": "暂停",
     "listens_one": "{{count}} 听",
     "listens_other": "{{count}} 听",
+    "visualizerColour": "視覺化顏色",
     "lyrics": "歌词",
     "lyricsLoading": "正在获取歌词…",
     "lyricsNone": "未找到歌词"
@@ -8080,6 +8172,51 @@
     "like": "点赞",
     "unlike": "取消点赞"
   },
+  "copy": {
+    "b3412a3b86de": "邀請主播",
+    "8c91325d901b": "將主播發送到 DeHub 流動頁面，附帶這個訊息。您的連結將他們歸屬於您之前他們抵達。",
+    "cc96aaa18cf2": "來 DeHub 和我一起直播。Tips 直接在您的錢包中，您擁有您的觀眾，並且可以在一步中在 TikTok 和其他地方發布。註冊： {{link}}",
+    "77db95ebd737": "複製訊息",
+    "846d8244b7d8": "已複製邀請訊息",
+    "b10fb966d720": "音量",
+    "b5f64aac226f": "繼續進行，表示您同意",
+    "ede548996483": "條款",
+    "e3ee915a8e8c": "和",
+    "506ff3946215": "隱私政策",
+    "44c9d36485b7": "查看所有",
+    "641d1ef657bd": "追蹤",
+    "344b4271ca01": "正在追蹤",
+    "89a167dad6da": "視覺化顏色",
+    "42ee912bff23": "電台頻道",
+    "7c14e8607c11": "載入頻道中...",
+    "d0f08798ff1a": "随后",
+    "37fd4e355ba3": "退出全屏",
+    "44207eb29645": "更換…",
+    "6a40edf1fc87": "微信",
+    "c1c8f6c1d828": "即將開始",
+    "2f7e24392d9c": "將來的舞台",
+    "a865110e919b": "导入钱包",
+    "7bb6682e5826": "新回调请求",
+    "2f33a51e3171": "DeHub治理提案 — 投票與討論。",
+    "a3156ed263d2": "{{value1}} — 按鈕按一下更改你的反應",
+    "12b91b0ac5dd": "{{value1}} — 按鈕按住",
+    "c1cd85f576ed": "{{value1}} — DeHub 管理",
+    "42484309dc66": "{{value1}} — 回退鍵顯示連結",
+    "150d73bf85e7": "Elgato, AVerMedia… 咱家OBS喔",
+    "1b2c08a8733d": "品質",
+    "36cffc7912e4": "你的麥克風（用來說話）",
+    "4a1bd4a3aaf3": "捕捉卡",
+    "594bea9c9448": "沒找到捕捉卡。用USB插上，再從下面選擇。",
+    "67004337fb60": "無法開啓此裝置。關閉OBS或Elgato Studio（一次只能用一個程式）。",
+    "8bb1dbd60bce": "直播時請保持此頁面開啓。",
+    "96882965394f": "遊戲音效",
+    "a2838b66518a": "自動（盡可能好）",
+    "b8643d1cc81a": "1080p 60需約9 Mbps上傳速度。慢Wi-Fi時請選擇720p。",
+    "c7ce89b32897": "暫停捕捉卡",
+    "d7038cc95b8e": "用卡的通過模式在電視上播放，不是這個預覽。會稍微遲一點。",
+    "de6694f3ada3": "選擇裝置",
+    "fedc5cda305d": "捕捉暫停中"
+  },
   "postProcessing": {
     "uploading": "上传中…",
     "preparing": "准备中…",
@@ -8088,5 +8225,67 @@
     "posted": "发好了",
     "view": "看",
     "failed": "视频处理勿了"
+  },
+  "player": {
+    "volume": "音量調整"
+  },
+  "loginStack": {
+    "aiRestyle": "AI重新設計",
+    "headlineTop": "你將擁有一切",
+    "headlineAccent": "並快樂。",
+    "orContinueWith": "或繼續用",
+    "phone": "手機",
+    "fingerprint": "指紋",
+    "exploreFirst": "先探索",
+    "codeNote": "我們會寄一個驗證碼給你，不需密碼。"
+  },
+  "dehubLinks": {
+    "kind": {
+      "post": "发帖",
+      "profile": "個人檔案",
+      "community": "社區",
+      "communityInvite": "社群邀請",
+      "store": "商店",
+      "listing": "物品",
+      "event": "活動",
+      "stage": "舞台"
+    },
+    "sentTo": "{{item}}發往{{name}}",
+    "sendFailed": "失敗發送{{item}}"
+  },
+  "dehubAppPage": {
+    "seoTitle": "DeHub App — Android、iPhone、Web下載",
+    "seoDescription": "下載 DeHub 應用程式：開源、用戶自主的社交媒體，實時直播、加密訊息和看看賺錢。免費在 Google Play、App Store 和網頁上。",
+    "heading": "德胡比應用程式",
+    "intro1": "DeHub是一個去中心化的社交網絡和行動應用程式，自2021年開發起，使用者可以在鏈上發布帖子，創作者可以保留觀眾、內容和收入。",
+    "intro2": "佢合并了時間線式的feed、實時直播、端到端加密的訊息、用戶自行管理的社群、跨鏈錢包和以看獎勵的功能，獎勵以代幣形式發放。同一賬號可在安卓、iPhone和任何現代瀏覽器上使用。",
+    "openInBrowser": "開啓 DeHub 於你的瀏覽器",
+    "faq": {
+      "a1": "No. DeHub 於 dehub.io 係一個獨立開源社交媒體平台。德保大學的 DeHUB 學生門戶、羅漢大學的 DEHub 以及 deHUB 通行門禁手機應用係無關聯產品，剛好名字相同。",
+      "a3": "安卓手機可在Google Play或直接下載APK，iPhone可在App Store，任何現代桌面或手機瀏覽器都可以在dehub.io。"
+    }
+  },
+  "streamPage": {
+    "howToStart": "註冊後，打開發佈文編輯器，點擊「直播」按鈕 — 從你的相機、OBS或捕捉卡片。",
+    "proof": {
+      "label3": "全球 DeHub 自家 CDN 的延遲"
+    },
+    "reasons": {
+      "body6": "免費加入 DeHub，免費發布，並且可以選擇在鏈上發布流。匯入頻道需要付費，價格在支付前顯示。"
+    },
+    "faqTitle": "最常見問題",
+    "faq": {
+      "q1": "是否免費在 DeHub 流動？",
+      "a1": "是的。DeHub 免費加入，免費發布，並且可以選擇在鏈上發布流。匯入頻道需要付費，價格在支付前顯示。",
+      "q2": "我是否必須停止在 TikTok 或 Twitch 流動？",
+      "a2": "不用。保持在你今天的觀眾身上，並在 DeHub 上建立。從 DeHub 的編輯器跨發布，以便你已經使用的每個平台都指向你擁有的觀眾。",
+      "q3": "我是否可以使用 OBS 流動？",
+      "a3": "是的。選擇 OBS 時，DeHub 給你一個永久的流動密鑰， OBS、Streamlabs 或任何 RTMP 編碼器。您也可以直接從您的電話、瀏覽器或捕捉卡上線。",
+      "q4": "我如何獲得付款？",
+      "a4": "觀眾在流動期間贈送和送禮物，且那些在 DeHub 代幣中直接存入您的錢包。上傳可以免費、付費或代幣門檻。",
+      "q5": "我的邀請鏈接如何工作？",
+      "a5": "打開聯盟頁面來獲得鏈接。通過它加入的人被歸屬於你，並且你會獲得 20% 的活動收入，及 5% 的持續收入從他們邀請的人，付款在 DeHub 代幣中。"
+    },
+    "moreGuides": "從TikTok來的？ 來看看<tiktok>英國創作者指南：</tiktok>離開TikTok<live>和</live>Web3直播：一個去中心化的Twitch替代品。"
   }
 }

@@ -169,6 +169,10 @@
     "pollWinner": "{{option}} võitis",
     "stillCounting": "Ikka veel loeb: kingituste kinnitamine võib võtta minuti."
   },
+  "quickActions": {
+    "title": "Lehe valikud",
+    "question": "Mis sellel lehel viga on?"
+  },
   "errors": {
     "sponsorshipUnavailable": "Tasuta tehingud on meie poolel peatatud, mitte teie rahakotis. Proovige varsti uuesti.",
     "gasSponsorshipFailed": "Seda tehingut ei õnnestunud katta. Proovige hetke pärast uuesti."
@@ -264,6 +268,8 @@
     "postingChain": "Postituste plokiahel",
     "showOnline": "Näita, kui ma olen võrgus",
     "showOnlineDesc": "Inimesed, kellele sõnumi saadad, näevad DeHubi kasutamise ajal sinu nime kõrval rohelist täppi",
+    "showDislikes": "Näita kõigile minu mittemeeldimisi",
+    "showDislikesDesc": "Igaüks võib avada Sinu profiilil vahekaardi „Ei meeldi“. Kui see on välja lülitatud, näete seda ainult teie.",
     "smartReplies": "Soovitatud vastused",
     "smartRepliesDesc": "Koostab kaks vastust, mida saad vestluses puudutada. Soovituste × lülitab selle välja.",
     "title": "Seaded",
@@ -442,6 +448,7 @@
     "systemLight": "Süsteem Hele",
     "immersive": "Immersive",
     "cosmic": "Cosmic Pixels",
+    "glass": "Klaasjas",
     "hazy": "Udused ööd",
     "swarms": "Parved",
     "lavalamp": "Laavalamp",
@@ -709,9 +716,14 @@
     "solanaLinked": "Solana rahakott ühendatud",
     "solanaLinkFailed": "Seda rahakotti ei õnnestunud ühendada",
     "solanaUnlinked": "Solana rahakott lahti ühendatud",
-    "solanaUnlinkFailed": "Seda rahakotti ei õnnestunud lahti ühendada"
+    "solanaUnlinkFailed": "Seda rahakotti ei õnnestunud lahti ühendada",
+    "sessionsRevokedMany": "{{count}} seadet on välja logitud",
+    "reset": "Lähtesta"
   },
   "common": {
+    "mute": "Vaigista",
+    "unmute": "Tühista vaigistus",
+    "confirm": "Kinnita",
     "save": "Salvesta",
     "cancel": "Tühista",
     "delete": "Kustuta",
@@ -1551,7 +1563,42 @@
     "radio": "Raadio",
     "trendingTracks": "Populaarsed lood",
     "moreVideos": "Rohkem videoid",
-    "newReleases": "Uued väljaanded"
+    "newReleases": "Uued väljaanded",
+    "mostPlayed": "Enim mängitud",
+    "mostLiked": "Kõige meeldivam",
+    "mostRecent": "Kõige hiljutisem",
+    "chartOrder": "Helikaardi järjekord",
+    "radioPicks": "Meie valikud",
+    "mostVoted": "Enim hääli saanud",
+    "trending": "Suundumus",
+    "radioChartOrder": "Raadiokaartide järjekord",
+    "stagesLive": "Reaalajas kohe",
+    "upcoming": "Eelseisev",
+    "mostListened": "Enim kuulatud",
+    "recentStages": "Hiljutised",
+    "stagesChartOrder": "Etappide diagrammide järjestus",
+    "noStages": "Siin pole veel etappe",
+    "listening": "kuulamine",
+    "listens": "kuulab",
+    "liveCount": "reaalajas",
+    "chartVideos": "Muusikavideod",
+    "videoCharts": "Muusika videodiagrammid",
+    "mostViewed": "Enim vaadatud",
+    "trendingWeek": "Trending nädalal",
+    "newest": "Uuemad",
+    "videoChartOrder": "Muusikavideo loend",
+    "country": "Riik",
+    "quality": "Kvaliteet",
+    "votes": "Hääled",
+    "plays": "Käited",
+    "onAir": "Eetris",
+    "liveRadio": "Eluselt raadio",
+    "pause": "Pauši",
+    "listenLive": "Kõla eluselt",
+    "nextStation": "Järgmine raadiojaam",
+    "shareStation": "Jaotage raadiojaami",
+    "shareStationTitle": "{{name}} DeHub Raadio jaamas",
+    "linkCopied": "Link kopitud"
   },
   "notFound": {
     "title": "Lehte ei leitud",
@@ -1585,7 +1632,16 @@
       "commentUnavailable": "See kommentaar pole enam saadaval"
     },
     "tabs": {
-      "playlists": "Esitusloendid"
+      "playlists": "Esitusloendid",
+      "dislikes": "Häälestused"
+    },
+    "dislikes": {
+      "emptyTitle": "Siiani häälestusi pole",
+      "emptyOwn": "Postid, mida sa häälestad, lahkuvad sinu voodist ja näivad siin. Tühista häälestus, et post tagasi toodi.",
+      "emptyOther": "Siiani häälestusi pole.",
+      "privateTitle": "Häälestused on privaatsed",
+      "privateDesc": "See konto hoiab häälestusi endale.",
+      "loadMore": "Laienda rohkem"
     },
     "offerWorthNow": "Umbes {{amount}} žetooni praeguse kursiga",
     "offerNotePlaceholder": "Lisa märkus (valikuline)",
@@ -1675,6 +1731,72 @@
     "tokensUnit": "žetooni"
   },
   "agents": {
+    "life": {
+      "daily": "Postitused tänapäeval: {{posts}} · Päevane siht: {{target}}",
+      "compose": "Postita selle agentina",
+      "postText": "Postiteks",
+      "imageUrl": "Pildi URL (valikuline)",
+      "queueHelp": "Julkustab täpselt teie teksti. Jagatud 20-minutiline vahe postituste vahel. Ei ole mintimist.",
+      "queuePost": "Järjestada postitus",
+      "postQueued": "Postitus järjestatud. Järgige seda ülesandeid ülemisel.",
+      "viewPost": "Vaata postitust",
+      "unlike": "Erinevalt",
+      "unliked": "Meeldimatu",
+      "editComment": "Muuda kommentaari",
+      "more": "Kuva rohkem tegevusi",
+      "less": "Kuva vähem"
+    },
+    "tasks": {
+      "oneAgent": "Üks agent",
+      "swarm": "Parv",
+      "selectAll": "Vali kõik esindajad",
+      "clearSelection": "Tühjenda valik",
+      "selectedCount": "{{count}}/{{total}} valitud",
+      "distribution": "Kuidas agendid viiba käivitavad",
+      "eachMode": "Iga esindaja teeb seda",
+      "sharedMode": "Jaga tööd",
+      "eachHelp": "Saada need juhised igale valitud esindajale. Iga agent täidab kogu ülesande soovitud kadentsusega. Jagatud sisestamise piirangud kehtivad endiselt.",
+      "allCategories": "Kõik postitused kõigi kategooriatest. Ei ole sõnavara filtreid ega kolme hääletamise piirangut.",
+      "windowLimits": "Kõik sobivad postitused on jada. Tegevuspiirangud mõjutavad täitmise kiirust, kuid ei lühenda ülesannet kolmest postitusele. Viimiste kirjutamine võib kasutada krediite.",
+      "promptLimits": "Iga postituse taotlused kasutavad kõiki kategooriaid. Teemapõhiste valikuliste meeldimiste arv on piiratud kolmega jooksu kohta. Kõik agendid jagavad sisestusvahet; kirjutamine võib kasutada krediiti.",
+      "pauseSwarm": "Peata sülem",
+      "resumeSwarm": "Jätka sobivate esindajatega",
+      "cancelTask": "Tühista ülesanne",
+      "actionsProcessed": "toimingud on töödeldud",
+      "reviewMembers": "Ebakindlate tegevustega ülesanded tuleb enne jätkamist individuaalselt üle vaadata. Juba lennul olev toiming võib pärast peatamist või tühistamist lõppeda.",
+      "controlUpdated": "Uuendatud {{count}} ülesannet",
+      "enabled": "Lubatud · tegevus",
+      "enabledHelp": "Lubatud tähendab, et see agent on saadaval. Allolevad ülesande olekud näitavad, kas see töötab, ootab, on peatatud või ebaõnnestus.",
+      "lastActive": "Viimati aktiivne",
+      "noActivity": "Tegevusi pole salvestatud",
+      "noTasks": "Ei ole veel tehti ülesandeid sellele agentile.",
+      "runSwarm": "Jooksuparv",
+      "preparing": "Valmistan ülesannet…",
+      "run": "Jooksuta käsku",
+      "list": "Ülesanded",
+      "loading": "Ülesanded laadimine…",
+      "pause": "Pauus",
+      "resume": "Jätka",
+      "skip": "Ohita kindlustamata tegu ja jätka",
+      "window": {
+        "authorAll": "Kõik loojad",
+        "authorChoose": "Vali looja",
+        "categoryAll": "Kõik kategooriad",
+        "categoryChoose": "Vali kategooriad",
+        "categoryHint": "Lisa kategooriaid eraldatuna komadega, kuni 20. Post võib sobida valitud kategooriast. Jäta tühi kõigi jaoks.",
+        "last1h": "Viimane tundi",
+        "last30d": "Viimased 30 päeva",
+        "allTime": "Kogu aeg",
+        "dislike": "Meeldimatud",
+        "author": "Autor (valikuline)",
+        "category": "Kategooria (valikuline)",
+        "authorPlaceholder": "@kasutajanimi või portfell",
+        "categoryPlaceholder": "Täpne kategooria nimi",
+        "filterHelp": "Jäta filtreid tühjaks kõikidele postidele. Kui mõlemad on määratud, peavad mõlemad sobima. Järgnevad reaktsioonid säilitatakse; valik vastast reaktsiooni muudab seda.",
+        "write": "Kirjuta juhendid",
+        "title": "Kõik postid ajaperioodil"
+      }
+    },
     "title": "AI agendid",
     "connectToManage": "Logi sisse AI agentide haldamiseks",
     "signInToCreate": "Logi sisse oma AI agentide loomiseks ja haldamiseks.",
@@ -1800,7 +1922,8 @@
     "passkeyFailed": "Sõrmejäljega sisselogimine ebaõnnestus. Palun proovi uuesti.",
     "passkeyBackupHint": "Sinu konto asub selle seadme pääsukoodis. Enamikus telefonides sünkroonitakse see sinu Google'i või Apple'i kontoga ning saad seadetes lisada parooli varukoopia.",
     "walletBlockedTitle": "See rahakott on täiesti uus",
-    "walletBlockedBody": "Uutel rahakottidel peab konto avamiseks olema saldo või varasem tehing. Registreeru ühega allolevatest valikutest ja ühenda see rahakott seejärel seadetes."
+    "walletBlockedBody": "Uutel rahakottidel peab konto avamiseks olema saldo või varasem tehing. Registreeru ühega allolevatest valikutest ja ühenda see rahakott seejärel seadetes.",
+    "continuePhone": "Jätka mobiiliga"
   },
   "careers": {
     "title": "Karjäär DeHubis",
@@ -1972,7 +2095,21 @@
       "authorChip": "Ettepaneku autor"
     },
     "notEnoughUnstakedTokens": "Base'is pole piisavalt väljavõtmata žetoone. Vajate Base'is {{needed}} vedelat (väljavõtmata) DeHubi žetooni, kuid teil on {{held}}. Stakinguga seotud žetoone ei saa tasude jaoks kasutada.",
-    "voteFailedHoldTokens": "Hääletus ebaõnnestus. Hääletamiseks peate omama DeHubi žetoone."
+    "voteFailedHoldTokens": "Hääletus ebaõnnestus. Hääletamiseks peate omama DeHubi žetoone.",
+    "badgeHoldersOnly": "Võistlusmärkide omanikud ainult",
+    "removeMedia": "Eemalda liite",
+    "addMedia": "Lisa pildi või videot",
+    "freeForBadgeHolders": "Vaba võistlusmärkide omanikutele. Sinu lühikiri salvestub kui sa kirjutad.",
+    "proposalFeeNote": "Ettepanekud maksavad 10 000 DHB ilma stakingu võistlusmärgita. Sinu lühikiri salvestub kui sa kirjutad.",
+    "noOpenProposals": "Praegu pole avatud ettepanekuid.",
+    "decidedInTabs": "Otsustatud ettepanekud on vahekaartidel Edastatud ja Tagasi lükatud.",
+    "mediaTypeInvalid": "Vali pilt või video.",
+    "mediaTooLarge": "Failid peavad olema 50 MB või väiksemad.",
+    "uploadFailed": "Üleslaadimine ebaõnnestus",
+    "uploadFailedDetail": "Üleslaadimine ebaõnnestus: {{message}}",
+    "proposalAttachment": "Ettepaneku manus",
+    "submitFailed": "Ettepaneku esitamine ebaõnnestus",
+    "draftSavedRetry": "Teie mustand on salvestatud — vajutage uuesti proovimiseks nuppu Esita."
   },
   "sidebar": {
     "talkOfTheTown": "Linna jutt",
@@ -1990,7 +2127,8 @@
     "searchMenu": "Otsi menüüst",
     "clearSearch": "Tühjenda otsing",
     "noMenuMatches": "Menüüs ei vasta midagi",
-    "searchDehubFor": "Otsi DeHubist „{{query}}“"
+    "searchDehubFor": "Otsi DeHubist „{{query}}“",
+    "switchAccount": "Vaheta kontot"
   },
   "comments": {
     "reportComment": "Teata kommentaarist",
@@ -2699,6 +2837,10 @@
       "wallTitle": "Mida inimesed ütlevad",
       "wallNote": "avaldatud loal",
       "anonymous": "DeHubi liige"
+    },
+    "money": {
+      "operationsGroup": "Toimingud",
+      "estimatedOperations": "Eeldatavad toimingud"
     }
   },
   "superpowers": {
@@ -5597,7 +5739,8 @@
     "endStreamConfirmBody": "Teie ülekanne peatub kõigile vaatajatele ja seda ei saa jätkata.",
     "keepStreaming": "Jätka striimimist",
     "encoderPermanentHint": "See võti ei muutu kunagi. Seadistage oma kodeerija üks kord — järgmine kord vajutage lihtsalt nuppu Start ja DeHub loob teile postituse.",
-    "notEnoughTokensForBounty": "Märke pole piisavalt. Vajalik {{need}} märk, kuid teil on {{have}}."
+    "notEnoughTokensForBounty": "Märke pole piisavalt. Vajalik {{need}} märk, kuid teil on {{have}}.",
+    "connectionFailed": "Saadeteühendus ebaõnnestus."
   },
   "events": {
     "seoTitle": "Sündmused — DeHubi kogukonnaüritused ja kohtumised",
@@ -6332,6 +6475,7 @@
     "pause": "Peata",
     "listens_one": "{{count}} kuula",
     "listens_other": "{{count}} kuulab",
+    "visualizerColour": "Visualiseerija värv",
     "lyrics": "Laulusõnad",
     "lyricsLoading": "Otsin laulusõnu…",
     "lyricsNone": "Laulusõnu ei leitud"
@@ -8711,6 +8855,66 @@
     "like": "Meeldib",
     "unlike": "Eemalda meeldimine"
   },
+  "copy": {
+    "b3412a3b86de": "Kutsu voogedastajaid",
+    "8c91325d901b": "Saada voogedastajad selle sõnumiga DeHubi voogedastuslehele. Sinu link omistab need sulle enne nende saabumist.",
+    "cc96aaa18cf2": "Tule streamima DeHub'iga minuga. Nädalatuled tulevad su walleti suletult, oled oma publikuga seotud, ja saad ühes samas sammu postida TikTok'ile ja kõikku mujale. Registreeru siia: {{link}}",
+    "77db95ebd737": "Kopeeri sõnum",
+    "846d8244b7d8": "Kutse sõnum on kopeeritud",
+    "b10fb966d720": "Helitugevus",
+    "b5f64aac226f": "Jätkates nõustud meie",
+    "ede548996483": "Tingimused",
+    "e3ee915a8e8c": "ja",
+    "44c9d36485b7": "Vaata kõiki",
+    "641d1ef657bd": "Jälgi",
+    "344b4271ca01": "Järgneb",
+    "89a167dad6da": "Visualiseerija värv",
+    "42ee912bff23": "Raadiojaamad",
+    "7c14e8607c11": "Jaamade laadimine...",
+    "ab4d6796dbbe": "Muusikavideod",
+    "26be785e21b7": "Muusikavideoid pole veel",
+    "302b4ce5c73d": "Heli üleslaadimised",
+    "cccec0619e2d": "Ühtegi heli pole veel üles laaditud",
+    "036cfd952896": "Keda jälgida",
+    "0c820caf16c0": "Ei biot veel",
+    "3a17aa4e4abb": "Etapid",
+    "3b59e95daada": "Praegu ei ole reaalajas etappe",
+    "d0f08798ff1a": "Järgneb",
+    "ce4ee4efc5e3": "Tühista vaigistus",
+    "8dd6857baf02": "Suu",
+    "37fd4e355ba3": "Välju täisruudust",
+    "7527dc6722fc": "Uuesti sisestamine ebaõnnestus",
+    "44207eb29645": "Asendamine…",
+    "6a40edf1fc87": "WhatsApp",
+    "c1c8f6c1d828": "ALGAB VARSTI",
+    "a865110e919b": "Ladesta võrrklaua",
+    "7bb6682e5826": "Uus tagasihelistamistaotlus",
+    "2f33a51e3171": "DeHubi juhtimise ettepanek — hääleta ja aruta.",
+    "a3156ed263d2": "{{value1}} — hoia all, et oma reaktsiooni muuta",
+    "12b91b0ac5dd": "{{value1}} — hoia reageerimiseks all",
+    "5e0cb5ae157b": "Pilt {{value1}}",
+    "cd9939b6aa1a": "Asenda pilt {{value1}}",
+    "99ca327a47b5": "Kaanepilt {{value1}}",
+    "c1cd85f576ed": "{{value1}} — DeHubi haldus",
+    "42484309dc66": "{{value1}} — Tagasilüke lingi näitamiseks",
+    "05d0e1b9a76e": "Jätkake hõivekaarti",
+    "0f3dd376ee85": "Jäädvustuskaardi otsimine…",
+    "150d73bf85e7": "Elgato, AVerMedia… OBS puudub",
+    "1929290e09aa": "Ava hõivekaardi seadistus (küsib juurdepääsu kaamerale)",
+    "1b2c08a8733d": "Kvaliteet",
+    "36cffc7912e4": "Mikrofon (mängu üle kõnelemiseks)",
+    "4a1bd4a3aaf3": "Salvestuskaart",
+    "594bea9c9448": "Ei leitud salvestuskaarti. Seega selle ühendage USB-sse ning valige seejärel allpool.",
+    "67004337fb60": "Seda seadet ei saa avada. Sulgege OBS või Elgato Studio (vaid üks programmidest võib seda üheaegselt kasutada).",
+    "8bb1dbd60bce": "Hoida see leht avatud, kui te olete ülekanal.",
+    "96882965394f": "Mängu heli",
+    "a2838b66518a": "Auto (parim, mida kaart saab teha)",
+    "b8643d1cc81a": "1080p 60 vajab umbes 9 Mbps üleslaadimist. Valige 720p, kui Wi-Fi on aeglasem.",
+    "c7ce89b32897": "Pausa salvestuskaardi",
+    "d7038cc95b8e": "Mängi oma TV-l läbi kaardi ülekandes, mitte selle eelvaates. See on ülekanal üle iga pausi.",
+    "de6694f3ada3": "Valige seade",
+    "fedc5cda305d": "Salvestuskaart pausitud"
+  },
   "postProcessing": {
     "uploading": "Üleslaadimine…",
     "preparing": "Ettevalmistamine…",
@@ -8719,5 +8923,112 @@
     "posted": "Postitatud",
     "view": "Vaata",
     "failed": "Videot ei õnnestunud töödelda"
+  },
+  "player": {
+    "volume": "Heli taset"
+  },
+  "loginStack": {
+    "aiRestyle": "AI-i uusvorming",
+    "headlineTop": "Sa oled kõik, mis tahad",
+    "headlineAccent": "ja oled õnnelik.",
+    "orContinueWith": "või continue",
+    "phone": "Telefon",
+    "fingerprint": "Silm",
+    "exploreFirst": "Eksploro",
+    "codeNote": "E-postiga saadame teile koodi, mitte parooli vajadest."
+  },
+  "dehubLinks": {
+    "kind": {
+      "post": "post",
+      "profile": "profiil",
+      "community": "kogukond",
+      "communityInvite": "kogukonna kutse",
+      "store": "müük",
+      "listing": "asja",
+      "event": "sündmus",
+      "stage": "stseen",
+      "film": "title",
+      "bounty": "auhind",
+      "app": "rakendus",
+      "proposal": "ettepanek",
+      "link": "link"
+    },
+    "sentTo": "{{item}} saatis {{name}}-le",
+    "sendFailed": "Eitlus {{item}} saadmise korraldamisel",
+    "copyLinkDetail": "Kopeeri {{item}} link oma klipbordile",
+    "recipientChat": "sõnumid",
+    "recipientUser": "kasutaja"
+  },
+  "dehubAppPage": {
+    "seoTitle": "DeHub rakendus — Laadi alla Androidile, iPhonile & veebile",
+    "seoDescription": "Saad DeHubi rakenduse: avatud lähtekoodiga, kasutajaomistatud sotsiaalmeedia, elusõiduga, salustatud sõnumitega ja vaata-teeniga. Vaba Google Play’l, App Store’le ja veebile.",
+    "heading": "DeHub rakendus",
+    "intro1": "DeHub on detsentraalne sotsiaalvõrk ja mobiilirakendus, mis on arenduses alates 2021. aastast, kus postitused võivad olla salvestatud blockchainil ja loojad hoidavad oma auditooriumi, sisu ja tulu.",
+    "intro2": "See ühendab kronoloogilist voolu, elusõidu, lõpptõrjega salustatud sõnumitega, kasutaja juhitavaid ühinguid, mitmeketase portfelliga ja vaata-teeni auhindadega, mis makstakse tokenites. Samas konto töötab Androidil, iPhonil ja igas uusajalikus veebirajalis.",
+    "downloadTitle": "Laadi alla DeHub",
+    "googlePlay": "Saad selle Google Play’lt",
+    "appStore": "Laadi alla App Store’lt",
+    "android": "Android",
+    "iphone": "iPhone",
+    "openInBrowser": "Ava DeHub oma veebirajalis",
+    "downloadApk": "Laadi alla APK (Android ilma Google Play’ta)",
+    "faqTitle": "Sagedased küsimused",
+    "faq": {
+      "q1": "Kas DeHub on DePaul University rakendus?",
+      "a1": "Ei. DeHub dehub.io-s on sõltumatu avatud lähtekoodiga sotsiaalmeedia platvorm. DePaul University DeHUBi õpilasportaal, Rowan’s DEHub ja deHUB Access sissepääsu rakendus on seotud tooted, mis juhuslikult jagavad nime.",
+      "q2": "Kas DeHubi rakendus on tasuta?",
+      "a2": "Jah. DeHub on tasuta alla laadimine Google Play’lt ja App Store’lt ning tasuta kasutamine veebis dehub.io-s.",
+      "q3": "Millele seadmetele töötab DeHub?",
+      "a3": "Androidi telefonitele Google Play’lt või suora APK alla laadimise kaudu, iPhonile App Store’lt ja igale uusajalikule arkaadi- või mobiiliveebirajale dehub.io-s.",
+      "q4": "Saan DeHubi asendada Androidile ilma Google Play’ta?",
+      "a4": "Jah. DeHub avaldab uusima Androidi versiooni otsese Apk allalaadimisena aadressil dehub.io/apk, Android 8 ja uuemate versioonide jaoks.",
+      "q5": "Mida saan DeHubi rakenduses teha?",
+      "a5": "Postita kronoloogilisse voogu, mine otseülekandesse või vaata otseülekandeid, saada sõpradele sõnumeid otsast otsani krüpteeringuga, liitu kogukondadega ja juhi neid, hoia žetoone sisseehitatud mitmeahelalises rahakotis ja teeni vaatamise eest hüvesid."
+    },
+    "notSure": "Väidamatult ei tea veel, millel DeHubil puudutakse? <compare>DeHub vs DePaul DeHUB vs Rowan DEHub</compare> lahendab see, ja <guide>Mida on DeHub?</guide> käsitleb platvormi sügavamalt."
+  },
+  "streamPage": {
+    "seoTitle": "Voogesitus DeHubis — reaalajas voogesitus TikToki ja Twitchi loojatele",
+    "seoDescription": "Mine DeHubi otseülekandesse: ahelas olevad nõuanded, mis jõuavad sinu rahakotti, sulle kuuluv vaatajaskond, postitamine teistele platvormidele ühe sammuga ja 20% kõigilt, keda kutsud.",
+    "eyebrow": "//_VOOGEDASTUSELE",
+    "heading": "Voogedastus DeHubis",
+    "intro": "Too oma reaalajas vaatajaskond enda omandis olevale platvormile. Mine otseülekandesse oma telefonist, brauserist või OBS-ist, saa voogesituse ajal ahelas jootraha ja säilita enda loodud vaatajaskond. DeHubi ehitab Suurbritannia suurima ametliku TikToki REAALAJAS partneragentuuri First Class Agency meeskond, millel on üle 1000 reaalajas striimeri.",
+    "startStreaming": "Alusta voogesitust",
+    "importYoutube": "Impordi oma YouTube 'i kanal",
+    "inviteLink": "Hangi oma kutselink",
+    "howToStart": "Registreeru, ava postituse koostaja ja puuduta ekraanil kaameras, OBS-is või pildistuskaardil nuppu Alusta reaalajas.",
+    "proof": {
+      "label1": "samaaegsed vaatajad DeHubi reaalajas voogesituses",
+      "label2": "voogedastusteenuste tööaeg",
+      "value3": "Alla 200 ms",
+      "label3": "Globaalne latency DeHub'i oma CDN-s"
+    },
+    "whyTitle": "Miks streamida DeHub'is?",
+    "reasons": {
+      "body1": "Vaatajad annavad reaalajas jootraha ja saadavad kingitusi, kasutades mitmetasandilisi kingitusanimatsioone ja jootraha sõnumeid. Jootraha arveldatakse DeHubi žetoonides ja maandutakse otse rahakotti, mitte ei lõigata teel läbi.",
+      "title2": "Audients, mida oled loonud",
+      "body2": "Teie järgijad ei ole teise inimese andmebaasis rida. Voogud ja üleslaadimised võivad olla salvestatud teie kottidesse, voog on kronoloogiline, ja kood on avatud lähtekoodiga, seega keegi ei muuda vaikimisi reegleid.",
+      "title3": "Teeni kõigilt, keda kaasa võtad",
+      "title4": "Reaalajas etapid",
+      "body4": "Korralda reaalajas audiofaase küsimuste esitamiseks, vestluste korraldamiseks ja pidude vaatamiseks. Teatage sellest eelnevalt kaardiga, mida teie vaatajaskond saab jagada, ja kuulake uuesti salvestatud kaarte.",
+      "title5": "Postita kõikjale korraga",
+      "body5": "Ühendage oma teised kontod üks kord ja avaldage X-i, Instagrami, YouTube 'i, TikToki, Farcasteri ja veel kaheksa DeHubi helilooja platvormi kaudu. Hoia TikTok oma avastamismootorina, kuni ehitad endale kuulajaskonna.",
+      "title6": "Võta oma kanal endaga kaasa",
+      "body6": "Impordi kogu YouTube 'i kanal või TikToki, Vimeo või SoundCloudi profiil ühe partiina. Täpne hind kuvatakse DeHubi märkides enne maksmist."
+    },
+    "faqTitle": "Korduma kippuvad küsimused",
+    "faq": {
+      "q1": "Kas DeHubis voogesitamine on tasuta?",
+      "a1": "Jah. DeHubiga liitumine ja postitamine on tasuta ning voo vermimine ahelas on vabatahtlik. Kanali importimise eest makstakse ja selle hind kuvatakse enne maksmist.",
+      "q2": "Kas ma pean lõpetama voogesituse TikTokis või Twitchis?",
+      "a2": "Ei. Jätka voogesitust seal, kus sinu vaatajaskond praegu on, ja kasuta kõrvuti DeHubi. Ristpostitus DeHubi heliloojalt, nii et iga platvorm, mida juba kasutad, osutab sulle kuuluvale publikule.",
+      "q3": "Kas ma saan OBS-iga voogesitada?",
+      "a3": "Jah. Valige reaalajas OBS ja DeHub annab teile püsiva vooluklahvi OBS-i, Streamlabsi või mis tahes RTMP-kodeerija jaoks. Otseülekande saad teha ka otse telefonist, brauserist või pildistamiskaardilt.",
+      "q4": "Kas saan ka töötasu?",
+      "a4": "Vaatajad annavad jootraha ja saadavad kingitusi voo ajal ning DeHubi tokenid jõuavad otse sinu rahakotti. Üleslaadimised võivad olla ka tasuta, tasulised või märgistatud.",
+      "q5": "Kuidas minu kutselink toimib?",
+      "a5": "Linkide saamiseks ava sidusettevõtte leht. Igaüks, kes selle kaudu liitub, omistatakse sulle ja sa teenid 20% nende tegevusest pluss 5% korduvalt inimestelt, keda nad kutsuvad, makstakse DeHubi žetoonides."
+    },
+    "moreGuides": "Kas tuled TikTokist? Loe <tiktok> Ühendkuningriigi autorijuhendit TikTokist</tiktok> ja <live>Web3otsevoogedastusest lahkumise kohta: detsentraliseeritud Twitchi alternatiiv</live>."
   }
 }

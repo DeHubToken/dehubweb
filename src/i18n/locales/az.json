@@ -169,6 +169,10 @@
     "pollWinner": "{{option}} qalib gəldi",
     "stillCounting": "Hələ də hesablama aparılır: hədiyyələrin təsdiqlənməsi bir dəqiqə çəkə bilər."
   },
+  "quickActions": {
+    "title": "Səhifə seçimləri",
+    "question": "Bu səhifədə nə problem var?"
+  },
   "errors": {
     "sponsorshipUnavailable": "Pulsuz əməliyyatlar bizim tərəfimizdə dayandırılıb, cüzdanınızda deyil. Bir azdan yenidən cəhd edin.",
     "gasSponsorshipFailed": "Bu əməliyyat sponsorluq edilə bilmədi. Bir azdan yenidən cəhd edin."
@@ -264,6 +268,8 @@
     "postingChain": "Paylaşım blokçeyni",
     "showOnline": "Onlayn olduğum vaxtı göstərin",
     "showOnlineDesc": "Mesaj göndərdiyiniz insanlar DeHub-dan istifadə edərkən adınızın yanında yaşıl nöqtə görür",
+    "showDislikes": "Bəyənmədiyimi hər kəsə göstər",
+    "showDislikesDesc": "İstənilən şəxs profilinizdə Bəyənilməyənlər tabını aça bilər. Bu sönülü olduqda onu yalnız siz görə bilərsiniz.",
     "smartReplies": "Təklif olunan cavablar",
     "smartRepliesDesc": "Söhbətdə toxuna biləcəyin iki cavab hazırlayır. Təkliflərdəki × bunu söndürür.",
     "title": "Parametrlər",
@@ -442,6 +448,7 @@
     "systemLight": "Sistem İşıqlı",
     "immersive": "Immersive",
     "cosmic": "Cosmic Pixels",
+    "glass": "Şüşəli",
     "hazy": "Dumanlı gecələr",
     "swarms": "Swarms",
     "lavalamp": "Lava lampası",
@@ -709,9 +716,14 @@
     "solanaLinked": "Solana cüzdanı qoşuldu",
     "solanaLinkFailed": "Həmin pul kisəsini qoşmaq alınmadı",
     "solanaUnlinked": "Solana cüzdanı ayrıldı",
-    "solanaUnlinkFailed": "Həmin pul kisəsini ayırmaq alınmadı"
+    "solanaUnlinkFailed": "Həmin pul kisəsini ayırmaq alınmadı",
+    "sessionsRevokedMany": "{{count}} cihazlar imzalandı",
+    "reset": "Sıfırla"
   },
   "common": {
+    "mute": "Səssiz et",
+    "unmute": "Səssizlikdən çıxarın",
+    "confirm": "Təsdiq et",
     "save": "Saxla",
     "cancel": "Ləğv et",
     "delete": "Sil",
@@ -1545,7 +1557,42 @@
     "radio": "Radio",
     "trendingTracks": "Trend Mahnılar",
     "moreVideos": "Daha Çox Video",
-    "newReleases": "Yeni Buraxılışlar"
+    "newReleases": "Yeni Buraxılışlar",
+    "mostPlayed": "Ən çox oynanılan",
+    "mostLiked": "Ən çox bəyənilənlər",
+    "mostRecent": "Ən son",
+    "chartOrder": "Səsli qrafik sifarişi",
+    "radioPicks": "Seçimlərimiz",
+    "mostVoted": "Ən çox səs toplamış",
+    "trending": "Populyar",
+    "radioChartOrder": "Radio qrafik sifarişi",
+    "stagesLive": "İndi yaşayın",
+    "upcoming": "Qarşıdan gələn",
+    "mostListened": "Ən çox dinlənilən",
+    "recentStages": "Son",
+    "stagesChartOrder": "Mərhələlər cədvəli ardıcıllığı",
+    "noStages": "Burada hələ heç bir mərhələ yoxdur",
+    "listening": "dinləmək",
+    "listens": "dinləyir",
+    "liveCount": "yaşamaq",
+    "chartVideos": "Musiqi videoları",
+    "videoCharts": "Musiqi Video Qrafikləri",
+    "mostViewed": "Ən çox baxılanlar",
+    "trendingWeek": "Trending bu həftə",
+    "newest": "Yeni",
+    "videoChartOrder": "Musiqi klipinin siyahısı",
+    "country": "Ölkə",
+    "quality": "Keyfiyyət",
+    "votes": "Səsvermə",
+    "plays": "Oynanışlar",
+    "onAir": "Hava üzərində",
+    "liveRadio": "Canlı radio",
+    "pause": "Dayandır",
+    "listenLive": "Canlı dinlə",
+    "nextStation": "Səsvermə",
+    "shareStation": "Səsvermə",
+    "shareStationTitle": "{{name}} DeHub Radio-da",
+    "linkCopied": "Link koplandı"
   },
   "notFound": {
     "title": "Səhifə Tapılmadı",
@@ -1579,7 +1626,16 @@
       "commentUnavailable": "Bu şərh artıq mövcud deyil"
     },
     "tabs": {
-      "playlists": "Səsləndirmə siyahıları"
+      "playlists": "Səsləndirmə siyahıları",
+      "dislikes": "Dislike"
+    },
+    "dislikes": {
+      "emptyTitle": "Hal-hazırda dislike yoxdur",
+      "emptyOwn": "Sizə dislayk olan postlar feed-lərdən çıxır və burada göstərilir. Dislike-i geri qaytarmaq üçün dislaykı ləğv edin.",
+      "emptyOther": "Hal-hazırda dislayk edilməmiş post yoxdur.",
+      "privateTitle": "Dislikelər əlverişsizdir",
+      "privateDesc": "Bu hesab dislayklərini özünə qoyur.",
+      "loadMore": "Daha çox yüklə"
     },
     "offerWorthNow": "Hazırkı məzənnə ilə təxminən {{amount}} token",
     "offerNotePlaceholder": "Qeyd əlavə et (istəyə bağlı)",
@@ -1669,6 +1725,73 @@
     "tokensUnit": "tokenlər"
   },
   "agents": {
+    "life": {
+      "daily": "Bugün postlar: {{posts}} · Gündəlik məqsəd: {{target}}",
+      "compose": "Bu agent kimi post edin",
+      "postText": "Post mətnini yazın",
+      "imageUrl": "Resim URL-si (seçki)",
+      "queueHelp": "Sizin tam mətninizi nəşr edir. Paylaşılan 20-dakikalıq post aralığı təqdim olunur. Minting yoxdur.",
+      "queuePost": "Postu sıraya qoy",
+      "postQueued": "Post sıraya qoyuldu. Yuxarıda \"Vəzifələr\"də izləyin.",
+      "viewPost": "Postu görüntülə",
+      "unlike": "Bəyənmə",
+      "unliked": "Bəyənilməyib",
+      "editComment": "Şərhi redaktə et",
+      "more": "Daha çox fəaliyyət göstər",
+      "less": "Daha az göstər"
+    },
+    "tasks": {
+      "oneAgent": "Bir agent",
+      "swarm": "Sürü",
+      "selectAll": "Bütün agentləri seç",
+      "clearSelection": "Seçimi təmizlə",
+      "selectedCount": "{{count}} / {{total}} seçildi",
+      "distribution": "Agentlər sorğunu necə icra edir",
+      "eachMode": "Hər bir agent bunu edir",
+      "sharedMode": "İşi paylaş",
+      "eachHelp": "Bu təlimatları seçilmiş hər bir agentə göndər. Hər bir agent tapşırığı tələb olunan templə tam yerinə yetirir. Paylaşım limitləri hələ də qüvvədədir.",
+      "allCategories": "Bütün kateqoriyalar üzrə hər bir yazı. Açar söz filtri və üç bəyənməlik tapşırıq limiti yoxdur.",
+      "windowLimits": "Uyğun gələn bütün yazılar növbəyə qoyulur. Fəaliyyət limitləri icranı tənzimləyir; onlar tapşırığı üç yazıyla məhdudlaşdırmır. Cavabların yazılması kreditlərdən istifadə edə bilər.",
+      "promptLimits": "Hər bir yazı üçün sorğular bütün kateqoriyalardan istifadə edir. Mövzuya əsaslanan seçmə bəyənmələr hər icra üçün üçlüklə məhdudlaşır. Bütün agentlər paylaşım intervalını bölüşür; yazmaq kreditlərdən istifadə edə bilər.",
+      "pauseSwarm": "Sürünü dayandır",
+      "resumeSwarm": "Uyğun agentləri davam etdir",
+      "cancelSwarm": "Sürünü ləğv et",
+      "cancelTask": "Tapşırığı ləğv et",
+      "actionsProcessed": "icra edilmiş fəaliyyətlər",
+      "reviewMembers": "Qeyri-müəyyən fəaliyyətləri olan tapşırıqlar davam etdirilməzdən əvvəl fərdi baxış tələb edir. Artıq icra prosesində olan fəaliyyət dayandırıldıqdan və ya ləğv edildikdən sonra tamamlana bilər.",
+      "controlUpdated": "{{count}} tapşırıq yeniləndi",
+      "enabled": "Aktivdir · fəaliyyət",
+      "enabledHelp": "Aktiv olması o deməkdir ki, bu agent mövcuddur. Aşağıdakı tapşırıq statusları onun işlədiyini, gözlədiyini, dayandırıldığını və ya uğursuz olduğunu göstərir.",
+      "lastActive": "Sonuncu aktivlik",
+      "noActivity": "Heç bir fəaliyyət qeydə alınmayıb",
+      "noTasks": "Bu agent üçün hələ tapşırıq yoxdur.",
+      "runSwarm": "Sürünü işə sal",
+      "preparing": "Tapşırıq hazırlanır...",
+      "run": "Cəld icra et",
+      "list": "Tapşırıqlar",
+      "loading": "Tapşırıqlar yüklənir...",
+      "pause": "Fasilə ver",
+      "resume": "Davam et",
+      "skip": "Skip edilməyən əməliyyatı at və davam et",
+      "window": {
+        "authorAll": "Bütün yaradıcılar",
+        "authorChoose": "Seçiniz yaradıcı",
+        "categoryAll": "Bütün kateqoriyalar",
+        "categoryChoose": "Kateqoriyalar seçin",
+        "categoryHint": "20-yə qədər vergüllə ayrılmış istənilən kateqoriya adını əlavə edin. Yazı istənilən seçilmiş kateqoriyaya uyğun ola bilər. Hamı üçün boş buraxın.",
+        "last1h": "Son saat",
+        "last30d": "Son 30 gün",
+        "allTime": "Hər zaman",
+        "dislike": "Bəyənməmək",
+        "author": "Müəllif (qeyri-məcburi)",
+        "category": "Kateqoriya (qeyri-məcburi)",
+        "authorPlaceholder": "@istifadəçi adı və ya cüzdan",
+        "categoryPlaceholder": "Dəqiq kateqoriya adı",
+        "filterHelp": "Bütün ismarıclar üçün filtrləri boş saxlayın. Hər ikisi təyin edildikdə hər ikisi uyğun gəlməlidir. Mövcud reaksiyalar saxlanılır; əks reaksiyanın seçilməsi onu dəyişir.",
+        "write": "Təlimatlar yazın",
+        "title": "Hər bir post müddətdə"
+      }
+    },
     "title": "AI Agentləri",
     "connectToManage": "AI Agentlərini İdarə Etmək Üçün Qoşulun",
     "signInToCreate": "AI agentlərinizi yaratmaq və idarə etmək üçün daxil olun.",
@@ -1793,7 +1916,8 @@
     "passkeyFailed": "Barmaq izi ilə daxil olma uğursuz oldu. Zəhmət olmasa yenidən cəhd edin.",
     "passkeyBackupHint": "Hesabınız bu cihazın parol açarında yaşayır. Əksər telefonlarda bu, Google və ya Apple hesabınızla sinxronlaşdırılır və Ayarlar bölməsində parol ehtiyat nüsxəsi əlavə edə bilərsiniz.",
     "walletBlockedTitle": "Bu pulqabı tamamilə yenidir",
-    "walletBlockedBody": "Yeni pulqabılara hesab açmaq üçün balans və ya əvvəlki əməliyyat lazımdır. Aşağıdakı seçimlərdən biri ilə qeydiyyatdan keçin, sonra bu pulqabını Ayarlardan qoşun."
+    "walletBlockedBody": "Yeni pulqabılara hesab açmaq üçün balans və ya əvvəlki əməliyyat lazımdır. Aşağıdakı seçimlərdən biri ilə qeydiyyatdan keçin, sonra bu pulqabını Ayarlardan qoşun.",
+    "continuePhone": "Telefonla davam et"
   },
   "careers": {
     "title": "DeHub-da Karyera",
@@ -1965,7 +2089,21 @@
       "authorChip": "Təklif müəllifi"
     },
     "notEnoughUnstakedTokens": "Base-də kifayət qədər stak edilməmiş token yoxdur. Sizə Base-də {{needed}} likvid (stak edilməmiş) DeHub tokenləri lazımdır, lakin sizin {{held}} var. Stak edilmiş tokenlər ödənişlər üçün istifadə edilə bilməz.",
-    "voteFailedHoldTokens": "Səsvermə uğursuz oldu. Səs vermək üçün DeHub tokenlərinə sahib olmalısınız."
+    "voteFailedHoldTokens": "Səsvermə uğursuz oldu. Səs vermək üçün DeHub tokenlərinə sahib olmalısınız.",
+    "badgeHoldersOnly": "Yalnız nişan sahibləri",
+    "removeMedia": "Qoşmanı silin",
+    "addMedia": "Şəkil və ya video əlavə edin",
+    "freeForBadgeHolders": "Nişan sahibləri üçün pulsuzdur. Qaralamanız yazdığınız kimi yaddaşda saxlanılır.",
+    "proposalFeeNote": "Təkliflər 10,000 DHB ilə staking nişanı olmadan qəbul edilir. Əsasnamə siz tərtib edərkən saxlanılır.",
+    "noOpenProposals": "İndi açıq təklif yoxdur",
+    "decidedInTabs": "Qərarlaşdırılmış təkliflər Keçirilmiş və Rədd Edilmiş Nişanlardadır.",
+    "mediaTypeInvalid": "Şəkil və ya video seçin.",
+    "mediaTooLarge": "Fayllar 50 MB və ya daha kiçik olmalıdır.",
+    "uploadFailed": "Yükləmək alınmadı",
+    "uploadFailedDetail": "Yükləmə alınmadı: {{message}}",
+    "proposalAttachment": "Təklif əlavəsi",
+    "submitFailed": "Təklifi təqdim etmək alınmadı",
+    "draftSavedRetry": "Qaralamanız yaddaşda saxlanıldı — yenidən cəhd etmək üçün Təqdim Et düyməsini basın."
   },
   "sidebar": {
     "talkOfTheTown": "Şəhərin Söhbəti",
@@ -1983,7 +2121,8 @@
     "searchMenu": "Menyuda axtar",
     "clearSearch": "Axtarışı təmizlə",
     "noMenuMatches": "Menyuda uyğun heç nə yoxdur",
-    "searchDehubFor": "DeHub-da «{{query}}» axtar"
+    "searchDehubFor": "DeHub-da «{{query}}» axtar",
+    "switchAccount": "Hesabı dəyişin"
   },
   "comments": {
     "reportComment": "Şərh bildir",
@@ -2657,6 +2796,10 @@
       "wallTitle": "İnsanlar nə deyir",
       "wallNote": "icazə ilə dərc edilmişdir",
       "anonymous": "DeHub üzvü"
+    },
+    "money": {
+      "operationsGroup": "Əməliyyatlar",
+      "estimatedOperations": "Təxmini əməliyyatlar"
     }
   },
   "superpowers": {
@@ -5518,7 +5661,8 @@
     "endStreamConfirmBody": "Sizin yayımınız bütün izləyicilər üçün dayandırılır və bərpa edilə bilməz.",
     "keepStreaming": "Axını davam etdir",
     "encoderPermanentHint": "Bu açar heç vaxt dəyişmir. Kodlamanızı bir dəfə qurun — növbəti dəfə sadəcə Başla düyməsini basın və DeHub yazını sizin üçün yaradır.",
-    "notEnoughTokensForBounty": "Kifayət qədər token yoxdur. {{need}} token lazımdır, lakin {{have}} var."
+    "notEnoughTokensForBounty": "Kifayət qədər token yoxdur. {{need}} token lazımdır, lakin {{have}} var.",
+    "connectionFailed": "Yayım bağlantısı uğursuz oldu."
   },
   "events": {
     "seoTitle": "Tədbirlər — DeHub-da Görüşlər və Cəmiyyət Tədbirləri",
@@ -6215,6 +6359,7 @@
     "pause": "Fasilə ver",
     "listens_one": "{{count}} dinlə",
     "listens_other": "{{count}} dinləyir",
+    "visualizerColour": "Görüntüləyici rəngi",
     "lyrics": "Mahnı sözləri",
     "lyricsLoading": "Sözlər axtarılır…",
     "lyricsNone": "Söz tapılmadı"
@@ -8613,6 +8758,68 @@
     "like": "Bəyən",
     "unlike": "Kimi sil"
   },
+  "copy": {
+    "b3412a3b86de": "Axıncıları dəvət edin",
+    "8c91325d901b": "Bu mesajla yayımları DeHub yayım səhifəsinə göndərin. Linkiniz yerə enməzdən əvvəl onları sizə aid edir.",
+    "cc96aaa18cf2": "Mənimlə DeHub-da yayımlayın. İpucları birbaşa cüzdanınıza enir, siz öz auditoriyanıza sahibsiniz və bir addımda TikTok-a və digər hər yerə göndərməyə davam edə bilərsiniz. Burada qeydiyyatdan keçin: {{link}}",
+    "77db95ebd737": "Mesajı kopy",
+    "846d8244b7d8": "Dəvət mesajı kopyalandı",
+    "b10fb966d720": "Səs",
+    "b5f64aac226f": "Davam etməklə, siz bizimlə razılaşırsınız:",
+    "ede548996483": "Şərtlər",
+    "e3ee915a8e8c": "və",
+    "506ff3946215": "Məxfilik Siyasəti",
+    "44c9d36485b7": "Hamısına bax",
+    "641d1ef657bd": "İzləyin",
+    "344b4271ca01": "Aşağıdakı",
+    "89a167dad6da": "Görüntüləyici rəngi",
+    "42ee912bff23": "Radiostansiyalar",
+    "7c14e8607c11": "Yükləmə stansiyaları...",
+    "ab4d6796dbbe": "Musiqi Videoları",
+    "26be785e21b7": "Hələ musiqi videosu yoxdur",
+    "302b4ce5c73d": "Audio Uploads",
+    "cccec0619e2d": "Yoxdur audio yükləmə",
+    "036cfd952896": "Kim izləməli",
+    "0c820caf16c0": "Hələ bio yoxdur",
+    "3a17aa4e4abb": "Sahnələr",
+    "3b59e95daada": "Hazırda canlı sahnə yoxdur",
+    "d0f08798ff1a": "Kim tərəfindən izlənilir",
+    "ce4ee4efc5e3": "Səsdən çıx",
+    "8dd6857baf02": "Səsə qoy",
+    "37fd4e355ba3": "Tam ekranı bağla",
+    "7527dc6722fc": "Yenidən paylaşma uğursuz oldu",
+    "44207eb29645": "Əvəzləyir…",
+    "6a40edf1fc87": "WhatsApp",
+    "c1c8f6c1d828": "ÇAQIRMAQDA",
+    "2f7e24392d9c": "GELƏCƏK SAHNƏ",
+    "a865110e919b": "Cib cüzdəni aç",
+    "7bb6682e5826": "Yeni geri çağrı sifarişi",
+    "2f33a51e3171": "DeHub idarəetmə təklifi — səs ver və müzakirə edin.",
+    "a3156ed263d2": "{{value1}} — reaksiyanı dəyişmək üçün tutun",
+    "12b91b0ac5dd": "{{value1}} — reaksiyaya cavab ver",
+    "5e0cb5ae157b": "{{value1}} — şəkil",
+    "cd9939b6aa1a": "{{value1}} şəkilini əvəzlə",
+    "99ca327a47b5": "{{value1}} üçün örtük qrafika",
+    "c1cd85f576ed": "{{value1}} — DeHub İdarəetmə",
+    "42484309dc66": "{{value1}} — linki göstərmək üçün geri tuşuna basın",
+    "05d0e1b9a76e": "Qapma kartını davam etdir",
+    "0f3dd376ee85": "Qapma kartını axtarır…",
+    "150d73bf85e7": "Elgato, AVerMedia… OBS yoxdur",
+    "1929290e09aa": "Qapma kartı ayarlamasını aç (kamera erişimini istəyir)",
+    "1b2c08a8733d": "Nə qədər yaxşı",
+    "36cffc7912e4": "Sizin mikrofonunuz (oyun üstündə danışmaq üçün)",
+    "4a1bd4a3aaf3": "Qapma kartı",
+    "594bea9c9448": "Qapma kartı tapılmadı. USB vasitəsilə bağlayın, sonra aşağıdakıdan seçin.",
+    "67004337fb60": "Bu cihazı aça bilmirdim. OBS və ya Elgato Studio-yu bağlayın (simultan yalnız bir proqram istifadə edə bilər).",
+    "8bb1dbd60bce": "Canlı yayımlama zamanı bu saytı açıq saxlayın.",
+    "96882965394f": "Oyun səsi",
+    "a2838b66518a": "Avtomatik (sizin kartınızın ən yaxşısı)",
+    "b8643d1cc81a": "1080p 60 FPS təqribən 9 Mbps yükleme tələb edir. Ləng Wi-Fi-də 720p seçin.",
+    "c7ce89b32897": "Qapma kartını dayandırın",
+    "d7038cc95b8e": "TV-nizə kartın passthrough vasitəsilə oynatın, deyil bu önizləmə. Bu bir az gecikdir.",
+    "de6694f3ada3": "Cihazı seçin",
+    "fedc5cda305d": "Qapma dayandırıldı"
+  },
   "postProcessing": {
     "uploading": "Yüklənir…",
     "preparing": "Hazırlanır…",
@@ -8621,5 +8828,112 @@
     "posted": "Paylaşıldı",
     "view": "Bax",
     "failed": "Video emal edilə bilmədi"
+  },
+  "player": {
+    "volume": "Səs səviyyəsi"
+  },
+  "loginStack": {
+    "aiRestyle": "AI restayl",
+    "headlineTop": "Sizin üçün hər şey olacaq",
+    "headlineAccent": "və siz şad olacaqsınız.",
+    "orContinueWith": "yoxsa davam edin",
+    "phone": "Telefon",
+    "fingerprint": "İşarə",
+    "exploreFirst": "İlk dəfə kəşf edin",
+    "codeNote": "Biz sizinə parol olmadan kod göndəririk."
+  },
+  "dehubLinks": {
+    "kind": {
+      "post": "post",
+      "profile": "profil",
+      "community": "icma",
+      "communityInvite": "icma dəvəti",
+      "store": "dükkan",
+      "listing": "növ",
+      "event": "hadisə",
+      "stage": "sahə",
+      "film": "başlıq",
+      "bounty": "lütf",
+      "app": "tətbiq",
+      "proposal": "təklif",
+      "link": "keçid"
+    },
+    "sentTo": "{{item}} {{name}} ünvanına göndərildi",
+    "sendFailed": "{{item}} göndərmək alınmadı",
+    "copyLinkDetail": "Mübadilə buferinizin {{item}} linkini kopyalayın",
+    "recipientChat": "söhbət",
+    "recipientUser": "istifadəçi"
+  },
+  "dehubAppPage": {
+    "seoTitle": "DeHub Tətbiqi — Android, iPhone və Web üçün endirin",
+    "seoDescription": "DeHub tətbiqini əldə edin: açıq mənbəli, istifadəçiyə məxsus sosial mediada canlı yayım, şifrəli mesajlaşma və izləmə imkanı. Google Play, App Store və internetdə pulsuz.",
+    "heading": "DeHub tətbiqi",
+    "intro1": "DeHub — bu 2021-ci ildən etibarən inkişaf etdirilən dezentralizə edilmiş sosial şəbəkə və mobil applikasiya olub, burada postlar blokçeyn üzərində məktəbə çıxarılaraq, yaradıcılar izləyicilərini, məzmununu və gəlirlərini özündə saxlayırlar.",
+    "intro2": "Burada xronoloji lent, canlı yayım, bitib-tükənməyən şifrələnmiş mesajlaşma, istifadəçi tərəfindən idarə olunan icmalar, çox zəncirli cüzdan və tokenlərdə ödənilən gözqamaşdırıcı mükafatlar birləşdirilir. Eyni hesab Android-də, iPhone-da və istənilən müasir brauzerdə işləyir.",
+    "downloadTitle": "DeHub-u endirin",
+    "googlePlay": "Google Play-də əldə edin",
+    "appStore": "Tətbiq Mağazasında endirin",
+    "android": "Android",
+    "iphone": "iPhone",
+    "openInBrowser": "DeHub-ı brauzerinizdə açın",
+    "downloadApk": "İndir APK (Android – Google Play olmadan)",
+    "faq": {
+      "q1": "DeHub DePaul Universitetinin tətbiqidir?",
+      "a1": "Xeyr. DeHub at dehub.io müstəqil açıq mənbəli sosial media platformasıdır. DePaul Universitetinin DeHUB tələbə portalı, Rowan's DEHub və deHUB Access qapı giriş tətbiqi adı ilə əlaqəli olmayan məhsullardır.",
+      "q2": "DeHub tətbiqi pulsuzdur?",
+      "a2": "Bəli. DeHub-ı Google Play və App Store-dan endirmək və dehub.io saytındakı brauzerdə istifadə etmək pulsuzdur.",
+      "a3": "Google Play və ya birbaşa APK yükləmə, App Store vasitəsilə iPhone və dehub.io-da istənilən müasir masaüstü və ya mobil brauzer vasitəsilə Android telefonlar.",
+      "q4": "Google Play olmadan Android-də DeHub quraşdıra bilərəm?",
+      "a4": "Bəli. Ən son Android qurğusu DeHub tərəfindən Android 8 və daha yuxarı versiyalar üçün dehub.io/apk saytında birbaşa APK endirilməsi kimi dərc edilir.",
+      "q5": "DeHub tətbiqində nə edə bilərəm?",
+      "a5": "Xronoloji lentə yerləşdirin, canlı yayımları izləyin və ya izləyin, ucu-bucağı olmayan şifrələmə ilə dostlara mesaj yazın, icmalara qoşulun və onları idarə edin, daxili çox zəncirli cüzdanda işarələr saxlayın və izlədiyiniz üçün mükafatlar qazanın."
+    },
+    "notSure": "Hələ də hansı DeHub-a ehtiyacınız olduğundan əmin deyilsiniz? <compare> DeHub vs DePaul DeHub vs Rowan DEHub </compare> sorts həyata keçirir və <guide> DeHub nədir? </guide> platformanı dərinlikdə əhatə edir."
+  },
+  "streamPage": {
+    "seoTitle": "Akış DeHub-da — TikTok & Twitch yaradıcılarının canlı yayımı üçün",
+    "seoDescription": "DeHub-da canlı yayımlayın: cüzdanınıza enən, sahib olduğunuz auditoriya, digər platformalarınıza bir addımda yerləşdirdiyiniz və dəvət etdiyiniz hər kəsdən 20% olan şəbəkə ipucları.",
+    "eyebrow": "//STREAMLERLƏR İÇİN",
+    "heading": "DeHub-da yayımlayın",
+    "intro": "Canlı auditoriyanızı sahib olduğunuz platformaya gətirin. Telefonunuzdan, brauzerinizdən və ya OBS-dən canlı yayıma çıxın, yayımladığınız zaman zəncirlənin və qurduğunuz auditoriyanı saxlayın. DeHub Birləşmiş Krallığın bir nömrəli rəsmi TikTok CANLI tərəfdaş agentliyi olan Birinci Sinif Agentliyinin arxasındakı komanda tərəfindən 1000-dən çox canlı yayımçı ilə qurulub.",
+    "startStreaming": "Axına başla",
+    "importYoutube": "Kanalınızı YouTube-a daxil edin.",
+    "inviteLink": "Dəvət linkinizi əldə edin",
+    "howToStart": "Qeydiyyatdan keçin, post kompozitorunu açın və \"Yaşayış\" butonuna basın - kameradan, OBS-dən və ya qeyd alma kartından.",
+    "proof": {
+      "label1": "deHub canlı yayımında eyni vaxtda izləyicilər",
+      "label2": "axın xidmətləri üzrə iş vaxtı",
+      "value3": "Alt-200ms",
+      "label3": "deHub-un öz CDN-də qlobal gecikmə"
+    },
+    "whyTitle": "Niyə DeHub-da yayımlamalı",
+    "reasons": {
+      "title1": "Sənətə kömək edən məsləhətlər",
+      "body1": "Baxışçılara canlı yayım zamanında pul və hədiyə göndərirlər, animasiya ilə tərtiblənmiş hədiyələr və yayım zamanı oxunan töhfə mesajları. Töhfələr DeHub tokenlarında hesab olunur və pul cədvəli yolla deyil, direkt olaraq cibinizə düşür.",
+      "title2": "Sahib olduğunuz auditoriya",
+      "body2": "İzləyiciləriniz başqasının məlumat bazasında bir sıra deyil. Axınlar və yükləmələr zəncirvari şəkildə cüzdanınıza zərb edilə bilər, lent xronoloji, kod isə açıq mənbədir, buna görə də heç kəs qaydaları sakitcə yenidən yazmır.",
+      "title3": "Gətirdiyiniz hər kəsdən qazanın",
+      "body3": "Dəvət linkiniz sizə qoşulan hər kəsin fəaliyyətinin 20% -ni, eləcə də dəvət etməyə getdikləri insanların təkrarlanan 5% -ni DeHub tokenlərində ödəyir.",
+      "title4": "Canlı mərhələlər",
+      "body4": "Canlı səsə ev sahibliyi edin Suallar, kollablar və şənlikləri izləmək üçün mərhələlər. Auditoriyanızın paylaşa biləcəyi kartı əvvəlcədən elan edin və qeydə alınanları dinləyin.",
+      "title5": "Hər yerdə eyni anda paylaşın",
+      "body5": "Bir dəfə digər hesablarınızı birləşdirin və DeHub bəstəkarından X, Instagram, YouTube, TikTok, Farcaster və daha səkkiz platformaya dərc edin. Sahib olduğunuz auditoriyanı yaradarkən TikTok-u kəşf mühərrikiniz kimi saxlayın.",
+      "title6": "Kanalınızı özünüzlə gətirin",
+      "body6": "Bir topluda bütöv YouTube kanalını və ya TikTok, Vimeo və ya SoundCloud profilini idxal edin. Ödəniş etməzdən əvvəl dəqiq qiymət DeHub tokenlərində göstərilir."
+    },
+    "faqTitle": "Tez-tez soruşulan suallar",
+    "faq": {
+      "q1": "DeHub-da yayımlamaq pulsuzdur?",
+      "a1": "Bəli. DeHub qoşulmaq və göndərmək üçün pulsuzdur və şəbəkədaxili bir axını mintinq etmək qeyri-məcburidir. Kanalın idxalı ödənişlidir və ödəniş etməzdən əvvəl onun qiyməti göstərilir.",
+      "q2": "TikTok və ya Twitch-də yayımımı dayandırmalıyam?",
+      "a2": "Xeyr. Auditoriyanızın olduğu yeri yayımlamağa davam edin və onunla yanaşı DeHub-da yaradın. DeHub bəstəkarı ilə əlaqə saxlayın ki, artıq istifadə etdiyiniz hər platforma sahib olduğunuz auditoriyanı geri qaytarsın.",
+      "q3": "OBS ilə yayımlaya bilərəm?",
+      "a3": "Bəli. Dərc etdikdə OBS seçin və DeHub sizə OBS, Streamlabs və ya hər hansı RTMP kodlayıcısı üçün daimi yayım açarı verir. Həmçinin telefonunuzdan, brauzerinizdən və ya ələ keçirmə kartınızdan birbaşa yayımlaya bilərsiniz.",
+      "q4": "Ödənişi necə ala bilərəm?",
+      "a4": "İzləyicilər axışınız zamanı ipucu verir və hədiyyələr göndərir, həmin şəxslər isə düz cüzdanınıza qədər DeHub işarələrində şəbəkə üzərində yerləşirlər. Yükləmələr həmçinin pulsuz, ödənişli və ya mötəbər ola bilər.",
+      "q5": "Dəvət linkim necə işləyir?",
+      "a5": "Linkinizi əldə etmək üçün filial səhifəsini açın. Onun vasitəsilə qoşulan hər kəs sizə aid edilir və siz onun fəaliyyətinin 20% -ni, eləcə də dəvət etdikləri adamlardan təkrarlanan 5% -ni DeHub tokenlərində ödəyirsiniz."
+    },
+    "moreGuides": "TikTok-dan gəlirsiniz? <tiktok> oxuyun Birləşmiş Krallığın yaradıcı təlimatı TikTok-dan çıxmaq üçün </tiktok> və <live> Web3 canlı yayım: mərkəzləşmiş Twitch alternativ</live>."
   }
 }

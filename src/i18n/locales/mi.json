@@ -169,6 +169,10 @@
     "pollWinner": "{{option}} i riro",
     "stillCounting": "Kei te tatau tonu: Ka taea e nga taonga te tango i te meneti ki te whakapumautia."
   },
+  "quickActions": {
+    "title": "Whārangi kōwhiringa",
+    "question": "He aha te mea he ki tenei whārangi?"
+  },
   "errors": {
     "sponsorshipUnavailable": "Kua tārewa ngā whakawhitinga kore utu i tō mātou taha, ehara i tō pūkoro. Ngana anō ā tōna wā.",
     "gasSponsorshipFailed": "Kāore i taea te utu i tēnei whakawhitinga. Ngana anō ā tōna wā."
@@ -264,6 +268,8 @@
     "postingChain": "Poraka mekameka mō ngā whakairinga",
     "showOnline": "Whakaatu i te wa e ahau i runga i te ipurangi",
     "showOnlineDesc": "Ko nga tangata e tuku ana koe ka kite i tetahi tohu matomato i te taha o to ingoa i a koe e whakamahi ana i te DeHub",
+    "showDislikes": "Whakaatu i toku kino ki te katoa",
+    "showDislikesDesc": "Ka taea e tetahi te whakatuwhera i te ripa Dislikes i runga i to koutou pūkete. Ka mutu tenei, ka taea anake e koe te kite i te reira.",
     "smartReplies": "Ngā whakautu tūtohu",
     "smartRepliesDesc": "Ka tuhi i ētahi whakautu e rua hei pāwhiri i te kōrero. Mā te × i runga i ngā tūtohu e whakaweto.",
     "title": "Tautuhinga",
@@ -442,6 +448,7 @@
     "systemLight": "Pūnaha Mārama",
     "immersive": "Immersive",
     "cosmic": "Cosmic Pixels",
+    "glass": "Glassy",
     "hazy": "Pō Kohu",
     "swarms": "Ngā Pōkai",
     "lavalamp": "Rama rangitoto",
@@ -708,9 +715,14 @@
     "solanaLinked": "Kua honoa te pūkoro Solana",
     "solanaLinkFailed": "Kāore i taea te hono i taua pūkoro",
     "solanaUnlinked": "Kua wetekina te pūkoro Solana",
-    "solanaUnlinkFailed": "Kāore i taea te momotu i taua pūkoro"
+    "solanaUnlinkFailed": "Kāore i taea te momotu i taua pūkoro",
+    "sessionsRevokedMany": "{{count}} nga taputapu kua hainahia",
+    "reset": "Whakahokia"
   },
   "common": {
+    "mute": "Mute",
+    "unmute": "Unmute",
+    "confirm": "Whakamātauria",
     "save": "Tiaki",
     "cancel": "Whakakore",
     "delete": "Muku",
@@ -1550,7 +1562,41 @@
     "radio": "Reo irirangi",
     "trendingTracks": "Waiata rongonui",
     "moreVideos": "Ataata anō",
-    "newReleases": "Tuku hou"
+    "newReleases": "Tuku hou",
+    "mostPlayed": "Ko te nuinga o te hunga e takaro ana",
+    "mostLiked": "Ko te nuinga e pai ana ki ahau",
+    "mostRecent": "Ko te mea hou",
+    "chartOrder": "Whakaritea mahere oro",
+    "radioPicks": "To tatou pikiki",
+    "mostVoted": "Ko te nuinga o nga pooti",
+    "trending": "Te whakahoutanga",
+    "radioChartOrder": "Raupapa mahere irirangi",
+    "stagesLive": "Kei te ora inaianei",
+    "upcoming": "Kei te haere mai",
+    "mostListened": "Ko te nuinga o te hunga whakarongo",
+    "recentStages": "I tata nei",
+    "stagesChartOrder": "Tuhinga o mua",
+    "noStages": "Kaore ano nga waahanga i konei",
+    "listening": "whakarongo",
+    "listens": "whakarongo",
+    "liveCount": "ora",
+    "chartVideos": "Ngā ataata waiata",
+    "videoCharts": "Ngā kāri ataata waiata",
+    "mostViewed": "Ko te nuinga o te hunga e kite ana",
+    "trendingWeek": "Kei te haere tonu ahau i tenei wiki",
+    "newest": "Ko te mea hou",
+    "videoChartOrder": "Whakaritea mahere ataata waiata",
+    "country": "Whenua",
+    "quality": "Kounga",
+    "votes": "Ngā pōti",
+    "plays": "Ngā mahere",
+    "onAir": "I runga i te rangi",
+    "liveRadio": "Te reo irirangi ora",
+    "listenLive": "Kei te ora ngā rārangi",
+    "nextStation": "Teihana e whai ake nei",
+    "shareStation": "Teihana tohatoha",
+    "shareStationTitle": "{{name}} i runga i DeHub Radio",
+    "linkCopied": "Kei te taha matau"
   },
   "notFound": {
     "title": "Kāore i kitea te whārangi",
@@ -1584,7 +1630,16 @@
       "commentUnavailable": "Kāore e wātea ana tēnei kōrero"
     },
     "tabs": {
-      "playlists": "Rārangi purei"
+      "playlists": "Rārangi purei",
+      "dislikes": "Te kore e pai"
+    },
+    "dislikes": {
+      "emptyTitle": "Kaore ano kia whakahawea",
+      "emptyOwn": "Posts e kore koe e pai ki te waiho i to koutou kai, me te whakaatu i konei. E kore e pai ki te whakahoki mai i te pou.",
+      "emptyOther": "Kahore he mea e kore e pai ki a ia.",
+      "privateTitle": "Ko te kore e pai ko te tūmataiti",
+      "privateDesc": "Ko tenei kaute e pupuri ana i ona hiahia ki a ia ano.",
+      "loadMore": "He nui ake te utu"
     },
     "offerWorthNow": "Tata ki te {{amount}} tohu i te reiti o nāianei",
     "offerNotePlaceholder": "Tāpiritia he tuhipoka (kōwhiringa)",
@@ -1674,6 +1729,72 @@
     "tokensUnit": "tohu"
   },
   "agents": {
+    "life": {
+      "compose": "Post rite tenei kaihoko",
+      "postText": "Tuhinga",
+      "imageUrl": "URL whakaahua (kōwhiringa)",
+      "queueHelp": "Ka whakaputahia e matou to tuhinga tika. Ko te tohatoha 20 meneti post gap e pa ana. Kaore he peita.",
+      "queuePost": "Tuhinga o mua",
+      "postQueued": "Post queued. whai i te reira i roto i ngā mahi i runga ake nei.",
+      "viewPost": "Tirohia te pou",
+      "unlike": "Kāore i te pai",
+      "unliked": "Kāore i te pai (i mua)",
+      "editComment": "Whakatika i te tākupu",
+      "more": "Whakaatu atu anō i te ngohe",
+      "less": "Whakaatu iti iho"
+    },
+    "tasks": {
+      "oneAgent": "Kotahi te māngai",
+      "swarm": "Kāhui",
+      "selectAll": "Tīpako i ngā māngai katoa",
+      "clearSelection": "Ūkui i te tīpakonga",
+      "selectedCount": "{{count}} o {{total}} kua tīpakohia",
+      "distribution": "Me pēhea te rere a ngā māngai i te tōpana",
+      "eachMode": "Ka pēnei ia māngai",
+      "sharedMode": "Tohaina te mahi",
+      "eachHelp": "Tukuna ēnei tohutohu ki ia māngai kua tīpakohia. Ka mahia e ia māngai te mahi katoa i te auau e hiahiatia ana. E hāngai tonu ana ngā here tiritiri mō te tuku pou.",
+      "allCategories": "Ia pou puta noa i ngā kāwai katoa. Kāore he tātari kupu matua, ā, kāore hoki he here e toru ngā pai mō te mahi.",
+      "windowLimits": "Ka rārangitia ngā pou katoa e hāngai ana. Mā ngā here mahi e āta whakahaere te rere; kāore e whakaiti i te mahi ki ngā pou e toru. Mā te tuhi whakautu pea e whakamahi ngā whiwhinga.",
+      "promptLimits": "Mā ngā tono mō ia pou e whakamahi ngā kāwai katoa. E toru noa iho ngā pai kōwhiri i runga i te kaupapa mō ia rere. Ka tiritiri ngā māngai katoa i te āputa tuku; mā te tuhi pea e whakamahi ngā whiwhinga.",
+      "pauseSwarm": "Whakatārewatia te kāhui",
+      "resumeSwarm": "Whakahokia ngā māngai e āhei ana",
+      "cancelSwarm": "Whakakorea te kāhui",
+      "cancelTask": "Whakakorea te mahi",
+      "actionsProcessed": "kua tukatukahia ngā mahi",
+      "reviewMembers": "Ko ngā mahi he kōrerorero ngā mahi me āta arotake i mua i te whakahoki anō. Ko tētahi mahi e rere ana pea ka oti i muri i te whakatārewatanga, te whakakorenga rānei.",
+      "controlUpdated": "Kua whakahōutia {{count}} ngā mahi",
+      "enabled": "Kua whakahohea · ngohe",
+      "enabledHelp": "Ko te tikanga o te whakahohea, e wātea ana tēnei māngai. E whakaatu ana ngā āhuatanga mahi i raro nei mēnā e rere ana, e tatari ana, e whakatārewatia ana, i rahua rānei.",
+      "lastActive": "I ngohe whakamutunga",
+      "noActivity": "Kāore he ngohe i tuhia",
+      "noTasks": "Kāore anō he mahi mō tēnei māngai.",
+      "runSwarm": "Whakahaerehia te kāhui",
+      "preparing": "Kei te whakarite i te mahi…",
+      "run": "Whakahaerehia te akiaki",
+      "list": "Ngā mahi",
+      "loading": "E uta ana i ngā mahi…",
+      "pause": "Whakatā",
+      "resume": "Whakaara anō",
+      "skip": "Pūhia te mahi kāore anō kia whakaūngia, ā, whakaara anō",
+      "window": {
+        "authorAll": "Ngā kaihanga katoa",
+        "authorChoose": "Kōwhiria he kaihanga",
+        "categoryAll": "Ngā kāwai katoa",
+        "categoryChoose": "Kōwhiria ngā kāwai",
+        "categoryHint": "Tāpirihia ngā ingoa kāwai, me wehe ki te piko, kia 20 te nui. Ka taea e tētahi pou te ōrite ki tētahi kāwai kua kōwhiria. Waiho kia wātea mō te katoa.",
+        "last1h": "Te hāora whakamutunga",
+        "last30d": "Ngā rā 30 whakamutunga",
+        "allTime": "Te wā katoa",
+        "dislike": "Kāore i te pai",
+        "author": "Kaituhi (kōwhiringa)",
+        "category": "Kāwai (kōwhiringa)",
+        "authorPlaceholder": "@ingoakaiwhakamahi, pēke moni rānei",
+        "categoryPlaceholder": "Ingoa kāwai tūturu",
+        "filterHelp": "Waiho ngā tātari kia wātea mō ngā pou katoa. Ina whakaritea e rua, me ōrite e rua. Ka tiakina ngā tauhohenga o nāianei; mā te kōwhiri i te tauhohenga hē, ka huri taua tauhohenga.",
+        "write": "Tuhia ngā tohutohu",
+        "title": "Ia pou i roto i tētahi wā"
+      }
+    },
     "title": "Kaihautū MI",
     "connectToManage": "Takiuru ki te whakahaere kaihautū MI",
     "signInToCreate": "Takiuru ki te hanga me te whakahaere i ō kaihautū MI.",
@@ -1799,7 +1920,8 @@
     "passkeyFailed": "Kua rahua te takiuru mā te matimati. Tēnā ka whakamātau anō.",
     "passkeyBackupHint": "Kei roto i te kīhōpuku o tēnei pūrere tō pūkete. I te nuinga o ngā waea, ka honoa tēnei ki tō pūkete Google, Apple rānei, ā, ka taea e koe te tāpiri i tētahi pūrua kupuhipa ki ngā Tautuhinga.",
     "walletBlockedTitle": "He hou katoa tēnei pūkoro",
-    "walletBlockedBody": "Me whai toenga, he tauwhitinga o mua rānei ngā pūkoro hou kia huaki pūkete. Haina mai mā tētahi o ngā kōwhiringa i raro, kātahi ka hono i tēnei pūkoro mai i ngā Tautuhinga."
+    "walletBlockedBody": "Me whai toenga, he tauwhitinga o mua rānei ngā pūkoro hou kia huaki pūkete. Haina mai mā tētahi o ngā kōwhiringa i raro, kātahi ka hono i tēnei pūkoro mai i ngā Tautuhinga.",
+    "continuePhone": "Haere tonu me te waea"
   },
   "careers": {
     "title": "Mahi i DeHub",
@@ -1971,7 +2093,21 @@
       "authorChip": "Kaihanga kaupapa"
     },
     "notEnoughUnstakedTokens": "Kāore i rahi ngā tohu kua wetekina i runga i te Base. E hiahiatia ana e koe {{needed}} DeHub tohu wai (kāore i wetekina) i runga i te Base, engari kei a koe te {{held}}. Kāore e taea te whakamahi i ngā tohu kua wetekina mō ngā utu.",
-    "voteFailedHoldTokens": "I rahua te pooti. Me whai tohu DeHub koe ki te pooti."
+    "voteFailedHoldTokens": "I rahua te pooti. Me whai tohu DeHub koe ki te pooti.",
+    "badgeHoldersOnly": "Ko ngā kaipupuri tohu anake",
+    "removeMedia": "Tangohia te āpitihanga",
+    "addMedia": "Tāpirihia he whakaahua, he ataata rānei",
+    "freeForBadgeHolders": "He kore utu mō ngā kaipupuri tohu. Ka tiakina tō tauira i a koe e patopato ana.",
+    "proposalFeeNote": "E 10,000 DHB te utu o ngā tono ki te kore he tohu petipeti. Ka tiakina tō tauira i a koe e patopato ana.",
+    "noOpenProposals": "Kāore he tono tuwhera i tēnei wā",
+    "decidedInTabs": "Ko nga tono kua whakatauhia kei roto i nga ripa kua paahitia, kua whakakorehia.",
+    "mediaTypeInvalid": "Kōwhiria he whakaahua, he ataata rānei.",
+    "mediaTooLarge": "Me 50 MB te rahi o ngā kōnae, iti iho rānei.",
+    "uploadFailed": "Kua kore a Upload",
+    "uploadFailedDetail": "Kua ngaro a Upload: {{message}}",
+    "proposalAttachment": "Whakapā Mai",
+    "submitFailed": "Kaore i taea te tuku tono",
+    "draftSavedRetry": "Kei te ora tō kaupapa — Press Submit to retry."
   },
   "sidebar": {
     "talkOfTheTown": "Kōrero o te tāone",
@@ -1989,7 +2125,8 @@
     "searchMenu": "Rapua i te tahua",
     "clearSearch": "Whakakāhoretia te rapu",
     "noMenuMatches": "Kāore he mea e ōrite ana i te tahua",
-    "searchDehubFor": "Rapua \"{{query}}\" i DeHub"
+    "searchDehubFor": "Rapua \"{{query}}\" i DeHub",
+    "switchAccount": "Pūkete Whakawhiti"
   },
   "comments": {
     "reportComment": "Ngā kōrero pūrongo",
@@ -2712,6 +2849,10 @@
       "wallTitle": "He aha te kōrero a te hunga",
       "wallNote": "i whakaputa i te whakaaetanga",
       "anonymous": "He mema DeHub"
+    },
+    "money": {
+      "operationsGroup": "Ngā mahi",
+      "estimatedOperations": "Ngā mahi kua whakaritea"
     }
   },
   "superpowers": {
@@ -5586,7 +5727,8 @@
     "endStreamConfirmBody": "Ka mutu tō pāhōhō mō te katoa e titiro ana, e kore e taea te tīmata anō.",
     "keepStreaming": "Whakatau tonu te tukutuku",
     "encoderPermanentHint": "E kore e huri tenei kī. Whakatuwherahia to waehere kotahi — i te wa e whai ake nei ka pēhi noa i te Tīmata i reira ka hanga e DeHub te pou mo koe.",
-    "notEnoughTokensForBounty": "Kāore e nui ngā tohu. Me {{need}} tohu engari kei a koe {{have}}."
+    "notEnoughTokensForBounty": "Kāore e nui ngā tohu. Me {{need}} tohu engari kei a koe {{have}}.",
+    "connectionFailed": "Kua kore te hononga whakawhiti."
   },
   "events": {
     "seoTitle": "Ngā huihuinga — Meetups & Community Events on DeHub",
@@ -6337,6 +6479,7 @@
     "pause": "Pause",
     "listens_one": "{{count}} whakarongo",
     "listens_other": "{{count}} whakarongo",
+    "visualizerColour": "Tae Visualizer",
     "lyrics": "Kupu waiata",
     "lyricsLoading": "E rapu ana i ngā kupu…",
     "lyricsNone": "Kāore he kupu i kitea"
@@ -8736,6 +8879,63 @@
     "like": "Pāheko",
     "unlike": "Mukua te pāheko"
   },
+  "copy": {
+    "b3412a3b86de": "Ka karangatia e nga kaihauturu",
+    "8c91325d901b": "Tukuna nga kaitautoko ki te whārangi rere DeHub me tenei karere. Ka hoatu e tou hononga ki a koutou i mua i to ratou whenua.",
+    "cc96aaa18cf2": "Haere mai ki te rere i runga i DeHub ki ahau. Tips whenua i runga i te rīpene tika i roto i to koutou putea, e whai koe i to koutou hunga whakarongo, a ka taea e koe te pupuri i te tuku ki TikTok, me te wahi atu i roto i te taahiraa kotahi. Hokona ki konei: {{link}}",
+    "77db95ebd737": "He karere kape",
+    "846d8244b7d8": "Ko te karere tono i kopia",
+    "b5f64aac226f": "Mā te haere tonu, ka whakaae koe ki a mātou",
+    "ede548996483": "Ngā tikanga",
+    "e3ee915a8e8c": "me te",
+    "506ff3946215": "Kaupapahere Tūmataiti",
+    "44c9d36485b7": "Tirohia nga mea katoa",
+    "641d1ef657bd": "Tō muri mai",
+    "344b4271ca01": "Tō muri mai",
+    "89a167dad6da": "Tae Visualizer",
+    "42ee912bff23": "Te reo irirangi",
+    "7c14e8607c11": "Ko nga teihana utaina...",
+    "ab4d6796dbbe": "Ngā ataata waiata",
+    "26be785e21b7": "Kaore ano he ataata waiata",
+    "302b4ce5c73d": "Whakarongo Uploads",
+    "cccec0619e2d": "Kaore ano nga tuku oro",
+    "036cfd952896": "Ko wai hei whai",
+    "0c820caf16c0": "Kaore he koiora",
+    "3a17aa4e4abb": "Ngā wāhanga",
+    "3b59e95daada": "Kaore he waahanga ora i tenei wa",
+    "d0f08798ff1a": "Te whai i a ia",
+    "8dd6857baf02": "Ko te ngutu",
+    "37fd4e355ba3": "Whakanohoia te mata katoa",
+    "7527dc6722fc": "Kaore i taea te whakahoki mai",
+    "44207eb29645": "Ka hurihia e ia...",
+    "c1c8f6c1d828": "Tīmata wawe",
+    "2f7e24392d9c": "Te wāhanga e whai ake nei",
+    "a865110e919b": "Putea kawemai",
+    "7bb6682e5826": "He tono karanga hou",
+    "a3156ed263d2": "{{value1}} — pupuri ki te huri i to koutou urupare",
+    "12b91b0ac5dd": "{{value1}} — kia mau ki te whakautu",
+    "5e0cb5ae157b": "Whakaahua {{value1}}",
+    "cd9939b6aa1a": "Whakaahua hurihuri {{value1}}",
+    "99ca327a47b5": "Kohikohi whakaahua mo {{value1}}",
+    "c1cd85f576ed": "{{value1}} — Te whakahaere DeHub",
+    "42484309dc66": "{{value1}} — Backspace ki te whakaatu i te hononga",
+    "05d0e1b9a76e": "Whakahokia te kāri hopu",
+    "0f3dd376ee85": "E rapu ana ahau i to koutou kāri hopu...",
+    "150d73bf85e7": "Elgato, AVerMedia... Kaore he OBS",
+    "1b2c08a8733d": "Te kounga",
+    "36cffc7912e4": "Tō hopuoro (hei kōrero mā runga i te kēmu)",
+    "4a1bd4a3aaf3": "Kari hopu",
+    "594bea9c9448": "Kāore he kari hopu i kitea. Monokia ki te USB, kātahi ka tīpako i raro nei.",
+    "67004337fb60": "Kāore e taea te whakatuwhera i tēnei pūrere. Katia a OBS, a Elgato Studio rānei (kotahi anake te taupānga ka taea te whakamahi i te wā kotahi).",
+    "8bb1dbd60bce": "Kia tuwhera tonu tēnei ripa i a koe e pāho ana.",
+    "96882965394f": "Oro kēmu",
+    "a2838b66518a": "Aunoa (te mea pai rawa ka taea e tō kari)",
+    "b8643d1cc81a": "Ko te 1080p 60 e hiahia ana ki te 9 Mbps te tukuake. Tīpakohia te 720p mēnā he pōturi te Wi‑Fi.",
+    "c7ce89b32897": "Whakatārewatia te kari hopu",
+    "d7038cc95b8e": "Pāpāho ki tō pouaka whakaata mā te passthrough o te kari, kaua mā tēnei arokite. He paku tōmuri.",
+    "de6694f3ada3": "Tīpako he pūrere",
+    "fedc5cda305d": "Kua whakatārewatia te hopu"
+  },
   "postProcessing": {
     "uploading": "E tuku ana…",
     "preparing": "E whakarite ana…",
@@ -8744,5 +8944,110 @@
     "posted": "Kua whakairia",
     "view": "Tirohia",
     "failed": "Kāore i taea te tukatuka i te ataata"
+  },
+  "player": {
+    "volume": "Taumata rōrahi"
+  },
+  "loginStack": {
+    "aiRestyle": "AI restyle",
+    "headlineTop": "Ka riro i a koe ngā mea katoa",
+    "headlineAccent": "ā, ka harikoa koe.",
+    "orContinueWith": "me haere tonu rānei me",
+    "phone": "Waea",
+    "fingerprint": "Tapumati",
+    "exploreFirst": "Tūhura i te tuatahi",
+    "codeNote": "Ka īmēra mātou i tētahi waehere ki a koe, kāore he kupuhipa e hiahiatia ana."
+  },
+  "dehubLinks": {
+    "kind": {
+      "post": "pou",
+      "profile": "kōtaha",
+      "community": "hapori",
+      "communityInvite": "pōwhiri hapori",
+      "store": "toa",
+      "listing": "tūemi",
+      "event": "takahanga",
+      "stage": "atamira",
+      "film": "taitara",
+      "app": "taupānga",
+      "proposal": "kaupapa",
+      "link": "hononga"
+    },
+    "sentTo": "{{item}} i tukuna ki {{name}}",
+    "sendFailed": "Kaore i taea te tuku {{item}}",
+    "copyLinkDetail": "Tārua te {{item}} hono ki to papapātuhi",
+    "recipientChat": "kōrerorero",
+    "recipientUser": "kaiwhakamahi"
+  },
+  "dehubAppPage": {
+    "seoTitle": "DeHub App — Tikiake mō Android, iPhone & Web",
+    "seoDescription": "Tangohia te taupānga DeHub: puna tuwhera, pāpāho pāpori kaiwhakamahi ki te rere ora, karere whakamunatanga, me te mataara-ki-earn. Free i runga i Google Play, te App Store me te paetukutuku.",
+    "heading": "Ko te taupānga DeHub",
+    "intro1": "Ko DeHub he whatunga hapori decentralised me te taupānga pūkoro, i roto i te whanaketanga mai i te 2021, i reira e taea te minted pou i runga i te mekameka, a ka pupuri nga kaihanga i to ratou hunga whakarongo, to ratou ihirangi me to ratou moni whiwhi.",
+    "intro2": "Ka honoa e ia he kai wā, he rere ora, he karere whakamunatanga mutunga-ki-mutunga, he hapori e whakahaerehia ana e te kaiwhakamahi, he putea maha-a-ringa me nga utu mataaratanga e utua ana i roto i nga tohu. Ko te pūkete ano e mahi ana i runga i Android, iPhone, me tetahi pūtirotiro hou.",
+    "downloadTitle": "Tikiake DeHub",
+    "googlePlay": "Tikiake i runga i Google Play",
+    "appStore": "Tikiake i runga i te App Store",
+    "openInBrowser": "Whakatuwherahia te DeHub i roto i to kaitirotiro",
+    "downloadApk": "Tikiake i te APK (Android kahore Google Play)",
+    "faqTitle": "He maha nga pātai e pātai ana",
+    "faq": {
+      "q1": "Ko DeHub te taupānga DePaul University?",
+      "a1": "Kaore. Ko DeHub i dehub.io he papaaho pāpori puna tuwhera motuhake. Ko te tomokanga akonga DeHUB a DePaul University, ko te DEHub a Rowan me te taupānga whakauru tatau deHUB Access he hua kore e pa ana ki te tohatoha i te ingoa.",
+      "q2": "Kei te wātea te taupānga DeHub?",
+      "a2": "Ae. DeHub he free ki te tiki i Google Play me te App Store, a free ki te whakamahi i roto i te pūtirotiro i dehub.io.",
+      "q3": "He aha nga taputapu e rere ana a DeHub?",
+      "a3": "Android waea mā Google Play ranei te tiki tika APK, iPhone mā te App Store, me tetahi papamahi hou ranei pūtirotiro pūkoro i dehub.io.",
+      "q4": "Ka taea e ahau te tāuta DeHub i runga i Android kahore Google Play?",
+      "a4": "Ae. Ko te hanga Android hou rawa atu kua whakaputaina e DeHub hei tango APK tika ki dehub.io/apk, mō Android 8 me teitei ake.",
+      "q5": "He aha taku mahi i roto i te taupānga DeHub?",
+      "a5": "Tukuna ki tētahi whāngai wā-tūturu, haere ora, mātakitaki rānei i ngā rerenga ora, tukuna he karere ki ngā hoa me te whakamunatanga mutunga-ki-te-mutunga, uru atu ki ngā hapori me te whakahaere i a rātou, pupuri i ngā tohu ki tētahi pēke maha-mekameka kua hangaia ki roto, me te whiwhi utu mō te mātakitaki."
+    },
+    "notSure": "Kāore tonu i te tino mōhio ko tēhea DeHub e hiahia ana koe? Mā te <compare>DeHub vs DePaul DeHUB vs Rowan DEHub</compare> e whakamārama, ā, mā te <guide>What is DeHub?</guide> e kapi hōhonu te tūāpapa."
+  },
+  "streamPage": {
+    "seoTitle": "Rere i runga i DeHub — Rerenga Ora mō ngā Kaihanga TikTok & Twitch",
+    "seoDescription": "Haere ora i runga i DeHub: ngā pito i runga i te mekameka e tau ana ki tō pēke, he hunga mātakitaki nāu ake, te tuku ki ō atu tūāpapa i te kotahi o te hīkoi, me te 20% mai i ia tangata ka pōwhiritia e koe.",
+    "eyebrow": "//FOR_STREAMERS",
+    "heading": "Rere i runga i DeHub",
+    "intro": "Kawea mai tō hunga mātakitaki ora ki tētahi tūāpapa nāu ake. Haere ora mai i tō waea, tō pūtirotiro, OBS rānei, whiwhi pito i runga i te mekameka i a koe e rere ana, me te pupuri i te hunga mātakitaki i hangaia e koe. I hangaia a DeHub e te tīma i muri i a First Class Agency, te tari hoa TikTok LIVE whaimana tau tuatahi o te UK, me te neke atu i te 1,000 ngā kaiwhakaata ora.",
+    "startStreaming": "Tīmata te rere",
+    "importYoutube": "Kawemai tō hongere YouTube",
+    "inviteLink": "Tikina tō hono pōwhiri",
+    "howToStart": "Waitohu, whakatuwheratia te kaitito pou me te pato i te Haere ora — mai i tō kāmera, OBS, kāri hopu rānei.",
+    "proof": {
+      "label1": "ngā mātakitaki tukutahi i runga i te rerenga ora o DeHub",
+      "label2": "te wā mahi puta noa i ngā ratonga rerenga",
+      "value3": "Raro i te 200ms",
+      "label3": "te tūreitanga ao i runga i te CDN ake a DeHub"
+    },
+    "whyTitle": "He aha te rere i runga i DeHub",
+    "reasons": {
+      "title1": "Ngā pito e tau ana ki tō pēke",
+      "body1": "Ka tuku pito me ngā koha ngā mātakitaki i a koe e ora ana, me ngā hākoritanga koha kua whakarōpūhia me ngā karere pito e pānuitia ana i runga i te rere. Ka tau ngā pito i runga i te mekameka ki ngā tohu DeHub, ā, ka tau tika ki tō pēke kaua i te tapahia i te huarahi.",
+      "title2": "He hunga mātakitaki nāu ake",
+      "body2": "Ko ō kaiwhaiwhai ehara i te rarangi i roto i te pātengi raraunga a tētahi atu. Ka taea te hanga i ngā rerenga me ngā tukunga ki runga i te mekameka ki tō pēke, he wā-tūturu te whāngai, ā, he pūtake tuwhera te waehere, nō reira kāore he tangata e tuhi anō i ngā ture i te huna.",
+      "title3": "Whiwhi mai i ia tangata ka kawea mai e koe",
+      "body3": "Ka utua koe e tō hono pōwhiri ki te 20% o te mahi a ia tangata e uru mai ana mā reira, me te 5% anō mai i ngā tāngata ka pōwhiritia e rātou, ka utua ki ngā tohu DeHub.",
+      "title4": "Ngā atamira ora",
+      "body4": "Manaakitia ngā Atamira oro ora mō ngā pātai, ngā mahi tahi me ngā rōpū mātakitaki. Whakapuakina tētahi i mua i te wā me tētahi kāri ka taea e tō hunga mātakitaki te tiri, me te whakarongo anō ki ngā mea kua hopukina.",
+      "title5": "Tukuna ki ngā wāhi katoa i te wā kotahi",
+      "body5": "Honoa ō atu pūkete i te kotahi o te wā me te whakaputa ki X, Instagram, YouTube, TikTok, Farcaster me ētahi atu tūāpapa e waru mai i te kaitito DeHub. Puritia a TikTok hei pūkaha kitenga i a koe e hanga ana i tētahi hunga mātakitaki nāu ake.",
+      "title6": "Kawea mai tō hongere me koe",
+      "body6": "Kawemai i tētahi hongere YouTube katoa, tētahi kōtaha TikTok, Vimeo, SoundCloud rānei, i te puranga kotahi. Ka whakaaturia te utu tūturu ki ngā tohu DeHub i mua i tō utu."
+    },
+    "faqTitle": "He maha nga pātai e pātai ana",
+    "faq": {
+      "q1": "He wātea ki te rere i runga i DeHub?",
+      "a1": "Ae. He koreutu a DeHub ki te whakauru me te kore utu ki te tuku, a he kowhiringa te hanga i tetahi awa i runga i te raka. Ka utua te kawemai i te hongere, ka whakaatuhia tona utu i mua i to utu.",
+      "q2": "Me mutu e ahau te rere i runga i TikTok ranei Twitch?",
+      "a2": "E kore. Kia mau ki te rere i te wahi e to koutou hunga whakarongo i tenei ra, me te hanga i runga i DeHub i te taha o reira. Cross-post i te kaiwaiata DeHub na nga papa katoa kua whakamahia e koe nga tohu ki te hunga whakarongo e whai ake nei koe.",
+      "q3": "Ka taea e ahau te rere ki OBS?",
+      "a3": "Ae. tīpako OBS ka haere koe ora, a DeHub hoatu ki a koutou he kī rere tonu mo OBS, Streamlabs ranei tetahi encoder RTMP. Ka taea hoki e koe te haere ora tika i tō waea, i tō pūtirotiro, i tētahi kāri hopu rānei.",
+      "q4": "Me pehea taku utu?",
+      "a4": "Tirohia tohutohu me te tuku taonga i roto i to koutou awa, me te hunga e noho i runga i te blockchain i roto i DeHub tohu tika ki to koutou putea. Ka taea hoki e nga Uploads te kore utu, te utu i te tirohanga, te tohu ranei.",
+      "q5": "Me pehea te mahi o taku hononga tono?",
+      "a5": "Whakatuwherahia te whārangi hononga ki te tiki i to hononga. Ko te tangata e uru ana ki a ia ka whakawhiwhia ki a koe, a ka whiwhi koe i te 20% o to raatau mahi me te 5% mai i nga tangata e tono ana ratou, ka utua i nga tohu DeHub."
+    }
   }
 }
