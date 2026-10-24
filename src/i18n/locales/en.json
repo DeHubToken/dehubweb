@@ -9101,7 +9101,8 @@
       "xAxisMode": "Horizontal data type",
       "xDate": "Dates and UTC times",
       "xIntervals": "Horizontal-axis intervals",
-      "xNumber": "Numbers"
+      "xNumber": "Numbers",
+      "hierarchySample": "Europe,France,35"
     },
     "clipboard": {
       "copy": "Copy layers",
@@ -9219,7 +9220,11 @@
       "selectionPreview": "Selected data preview",
       "separator": "File separator",
       "skipEmpty": "Skip empty data rows",
-      "use": "Use selected data"
+      "use": "Use selected data",
+      "sampleCategory": "Category",
+      "sampleNorth": "North",
+      "sampleSouth": "South",
+      "sampleValue": "Value"
     },
     "dataVisual": {
       "accent": "Accent",
