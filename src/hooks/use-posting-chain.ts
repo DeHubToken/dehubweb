@@ -40,7 +40,7 @@ export function usePostingChain() {
         // Keep the existing availability check; a failed status request is optional.
         const status = await getSolanaStatus().catch(() => null);
         if (status?.mintingEnabled === false) {
-          toast.error(status.message || 'Solana posting is temporarily unavailable. Try Base or BNB instead.');
+          toast.error(status.message || _copy("copy.7f16ea6ac0d8", { defaultValue: "Solana posting is temporarily unavailable. Try Base or BNB instead." }));
           return;
         }
       }

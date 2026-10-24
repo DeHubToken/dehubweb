@@ -22,7 +22,7 @@ export default function CreatorFlowPublicPage() {
   const title = flow ? `${flow.name} — DeHub Creator Flow` : 'DeHub Creator Flow';
   const description = flow
     ? t('creatorFlow.publicDescription', { count: flow.nodes.length, name: flow.name })
-    : 'A shared AI generation flow on DeHub.';
+    : t("copy.e150cb02665b", { defaultValue: "A shared AI generation flow on DeHub." });
 
   return (
     <div className="fixed inset-0 flex flex-col bg-[#090a0b] text-white">

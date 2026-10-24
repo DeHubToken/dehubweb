@@ -66,7 +66,7 @@ export function CreateTopicRoomModal({ open, onOpenChange, onCreated }: CreateTo
             <Input
               value={topic}
               onChange={(e) => setTopic(e.target.value)}
-              placeholder="e.g. Gaming, Crypto, Art"
+              placeholder={_copy("copy.c5899ae1f1b5", { defaultValue: "e.g. Gaming, Crypto, Art" })}
               className="bg-zinc-800 border-zinc-700 text-white placeholder:text-zinc-500"
               maxLength={100}
             />

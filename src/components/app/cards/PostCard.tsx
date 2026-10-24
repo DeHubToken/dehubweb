@@ -280,8 +280,8 @@ const PostCardBody = memo(function PostCard({ post, threadSlot, onOpenComments }
   const handleFollowFromMenu = useCallback(() => {
     if (!walletAddress) { openLoginModal(); return; }
     if (!post.author.id) return;
-    toggleFollow(false, { name: post.author.name || post.author.handle || 'user' });
-  }, [walletAddress, openLoginModal, post.author.id, post.author.name, post.author.handle, toggleFollow]);
+    toggleFollow(false, { name: post.author.name || post.author.handle || _copy("copy.04f8996da763", { defaultValue: "user" }) });
+  }, [walletAddress, openLoginModal, post.author.id, post.author.name, post.author.handle, toggleFollow, _copy]);
   
   // View tracking - batches views when post is visible for 2+ seconds
   const viewRef = useFeedViewTracking(post.id);
@@ -620,7 +620,7 @@ const PostCardBody = memo(function PostCard({ post, threadSlot, onOpenComments }
                       try {
                         await updateTokenVisibility(post.id, next);
                         setVisibility(next);
-                        toast.success(`Post set to ${next}`);
+                        toast.success(next === 'private' ? _copy("copy.bc3aabd76a18", { defaultValue: "Post set to private" }) : _copy("copy.30a9e349befb", { defaultValue: "Post set to public" }));
                       } catch { toast.error(_copy("copy.67ca6fcb8233", { defaultValue: "Failed to update visibility" })); }
                     }}
                     className="flex items-center gap-3 px-4 py-3 text-white hover:bg-white/10 rounded-xl transition-colors text-left"

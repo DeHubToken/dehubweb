@@ -1,3 +1,4 @@
+import { translateCopy as _translateCopy } from '@/i18n/copy';
 import { useTranslation as _useCopy } from 'react-i18next';
 import { useAccountDraftKey, useDraftState } from '@/hooks/use-draft-state';
 import { withWalletHeader } from '@/lib/supabase-wallet-client';
@@ -364,31 +365,31 @@ function ImageGenerationLoader({ startTime }: { startTime: number }) {
  * sensibly here without a matching web release.
  */
 const TOOL_LABELS: Record<string, string> = {
-  lookup_user: 'Looking up that profile',
-  user_posts: 'Reading their posts',
-  search: 'Searching DeHub',
-  get_feed: 'Checking the feed',
-  get_post: 'Opening that post',
-  get_followers: 'Checking followers',
-  get_leaderboard: 'Checking the leaderboard',
-  get_live_streams: 'Checking who is live',
-  get_platform_stats: 'Checking platform stats',
-  get_chat_history: 'Reading recent chat',
-  get_top_categories: 'Checking trending categories',
-  my_wallet: 'Checking your wallet',
-  my_earnings: 'Adding up your earnings',
-  my_stats: 'Checking your stats',
-  my_notifications: 'Checking your notifications',
-  my_library: 'Checking your library',
-  my_settings: 'Checking your settings',
-  my_engagement_history: 'Checking who you engage with',
-  web_search: 'Searching the web',
+  get lookup_user() { return _translateCopy("copy.f159c06178be", { defaultValue: "Looking up that profile" }); },
+  get user_posts() { return _translateCopy("copy.5cc6ab9e7e37", { defaultValue: "Reading their posts" }); },
+  get search() { return _translateCopy("copy.4af83339a6f1", { defaultValue: "Searching DeHub" }); },
+  get get_feed() { return _translateCopy("copy.38e888a3984e", { defaultValue: "Checking the feed" }); },
+  get get_post() { return _translateCopy("copy.7a075dd38cf7", { defaultValue: "Opening that post" }); },
+  get get_followers() { return _translateCopy("copy.44612f2b9571", { defaultValue: "Checking followers" }); },
+  get get_leaderboard() { return _translateCopy("copy.985497b3df2b", { defaultValue: "Checking the leaderboard" }); },
+  get get_live_streams() { return _translateCopy("copy.7029fea5b78f", { defaultValue: "Checking who is live" }); },
+  get get_platform_stats() { return _translateCopy("copy.a01190768ce6", { defaultValue: "Checking platform stats" }); },
+  get get_chat_history() { return _translateCopy("copy.fd3b0226be07", { defaultValue: "Reading recent chat" }); },
+  get get_top_categories() { return _translateCopy("copy.a775fbb0a832", { defaultValue: "Checking trending categories" }); },
+  get my_wallet() { return _translateCopy("copy.6c9f1bd00a37", { defaultValue: "Checking your wallet" }); },
+  get my_earnings() { return _translateCopy("copy.bfdf678e86b0", { defaultValue: "Adding up your earnings" }); },
+  get my_stats() { return _translateCopy("copy.221173c89094", { defaultValue: "Checking your stats" }); },
+  get my_notifications() { return _translateCopy("copy.90f7144eff9c", { defaultValue: "Checking your notifications" }); },
+  get my_library() { return _translateCopy("copy.eef1c394932f", { defaultValue: "Checking your library" }); },
+  get my_settings() { return _translateCopy("copy.6f60d3260ac2", { defaultValue: "Checking your settings" }); },
+  get my_engagement_history() { return _translateCopy("copy.32476cbf27ea", { defaultValue: "Checking who you engage with" }); },
+  get web_search() { return _translateCopy("copy.87d2f3386f90", { defaultValue: "Searching the web" }); },
 };
 
 function describeTools(tools: string[]): string {
   if (!tools.length) return '';
-  const label = TOOL_LABELS[tools[0]] || `Running ${tools[0].replace(/_/g, ' ')}`;
-  return tools.length > 1 ? `${label} (+${tools.length - 1} more)…` : `${label}…`;
+  const label = TOOL_LABELS[tools[0]] || _translateCopy("copy.5cd951f76ade", { defaultValue: "Running {{value1}}", value1: tools[0].replace(/_/g, ' ') });
+  return tools.length > 1 ? _translateCopy("copy.e8b87fe35732", { defaultValue: "{{value1}} (+{{count}} more)…", value1: label, count: tools.length - 1 }) : _translateCopy("copy.0ddb74a93b79", { defaultValue: "{{value1}}…", value1: label });
 }
 
 function AssistantPageForAccount() {
@@ -658,7 +659,7 @@ function AssistantPageForAccount() {
     setIsAiToolProcessing(false);
     setMessages(prev => prev.map(m =>
       m.id === messageId
-        ? { ...m, isToolProcessing: false, content: '❌ Gave up waiting on this one. Nothing was charged twice — try again.' }
+        ? { ...m, isToolProcessing: false, content: _translateCopy("copy.b3bec679ec25", { defaultValue: "❌ Gave up waiting on this one. Nothing was charged twice — try again." }) }
         : m,
     ));
   }, [clearPendingTool]);
@@ -667,7 +668,7 @@ function AssistantPageForAccount() {
     clearPendingVideo();
     setMessages(prev => prev.map(m =>
       m.id === messageId
-        ? { ...m, isVideoGenerating: false, content: '❌ Gave up waiting on this video. Nothing was charged twice — try again.' }
+        ? { ...m, isVideoGenerating: false, content: _translateCopy("copy.67872752c00c", { defaultValue: "❌ Gave up waiting on this video. Nothing was charged twice — try again." }) }
         : m,
     ));
   }, [clearPendingVideo]);
@@ -964,7 +965,7 @@ function AssistantPageForAccount() {
           const finalMessage: Message = {
             id: streamingMsgId,
             role: 'assistant',
-            content: streamedContent || 'No response',
+            content: streamedContent || _translateCopy("copy.961136f9207a", { defaultValue: "No response" }),
           };
           queueMessage(finalMessage);
           setActiveTools([]);
@@ -979,14 +980,14 @@ function AssistantPageForAccount() {
           setMessages(prev => [...prev, {
             id: (Date.now() + 2).toString(),
             role: 'assistant',
-            content: `❌ ${err?.message || 'Voice chat error'}`,
+            content: `❌ ${err?.message || _translateCopy("copy.90b7d951bb29", { defaultValue: "Voice chat error" })}`,
             isError: true,
           }]);
           setActiveTools([]);
           setIsLoading(false);
           // Restart listening even on error
           if (voiceAssistant.isVoiceMode) {
-            voiceAssistant.speakResponse('Sorry, I encountered an error. Please try again.');
+            voiceAssistant.speakResponse(_translateCopy("copy.6248fa921adb", { defaultValue: "Sorry, I encountered an error. Please try again." }));
           }
         },
       });
@@ -995,7 +996,7 @@ function AssistantPageForAccount() {
       setMessages(prev => [...prev, {
         id: (Date.now() + 1).toString(),
         role: 'assistant',
-        content: `❌ ${error?.message || 'Unknown error'}`,
+        content: `❌ ${error?.message || _translateCopy("copy.27c2ccd962c2", { defaultValue: "Unknown error" })}`,
         isError: true,
       }]);
       setIsLoading(false);
@@ -1055,7 +1056,7 @@ function AssistantPageForAccount() {
       const restoredMessage: Message = {
         id: pending.messageId,
         role: 'assistant',
-        content: pending.content || '⏳ Resuming processing...',
+        content: pending.content || _translateCopy("copy.ca1c93c8986f", { defaultValue: "⏳ Resuming processing..." }),
         isToolProcessing: true,
         toolRequestId: pending.requestId,
         toolAppId: pending.appId,
@@ -1091,7 +1092,7 @@ function AssistantPageForAccount() {
         const restoredMsg: Message = {
           id: pending.messageId,
           role: 'assistant',
-          content: pending.content || '🎬 Resuming video generation...',
+          content: pending.content || _translateCopy("copy.e30bd852819d", { defaultValue: "🎬 Resuming video generation..." }),
           isVideoGenerating: true,
           videoPredictionId: pending.predictionId,
         };
@@ -1267,7 +1268,7 @@ function AssistantPageForAccount() {
         setMessages(prev => [...prev, {
           id: (Date.now() + 1).toString(),
           role: 'assistant',
-          content: `Video generation failed: ${data.error}`
+          content: _translateCopy("copy.a64e8f4a14b6", { defaultValue: "Video generation failed: {{value1}}", value1: data.error })
         }]);
         setIsVideoLoading(false);
         setPendingVideoRequest(null);
@@ -1279,7 +1280,7 @@ function AssistantPageForAccount() {
       const assistantMessage: Message = {
         id: messageId,
         role: 'assistant',
-        content: `🎬 Generating video with **${videoModel.name}**...\n\n_This may take 1-3 minutes_`,
+        content: `${_translateCopy("copy.acce6b5b88e4", { defaultValue: "🎬 Generating video with **{{value1}}**...", value1: videoModel.name })}\n\n_${_translateCopy("copy.6945e5fa7a6a", { defaultValue: "This may take 1-3 minutes" })}_`,
         isVideoGenerating: true,
         videoPredictionId: data.predictionId
       };
@@ -1299,7 +1300,7 @@ function AssistantPageForAccount() {
         messageId,
         provider: data.provider,
         falAppId: data.falAppId,
-        content: `🎬 Generating video with **${videoModel.name}**...\n\n_This may take 1-3 minutes_`,
+        content: `${_translateCopy("copy.acce6b5b88e4", { defaultValue: "🎬 Generating video with **{{value1}}**...", value1: videoModel.name })}\n\n_${_translateCopy("copy.6945e5fa7a6a", { defaultValue: "This may take 1-3 minutes" })}_`,
       });
 
       finishDraft();
@@ -1489,14 +1490,14 @@ function AssistantPageForAccount() {
         queueMessage(completedMessage);
 
         setIsAiToolProcessing(false);
-        toast.success(`${toolModel?.name || 'AI Tool'} completed!`);
+        toast.success(_translateCopy("copy.647b71499b5f", { defaultValue: "{{value1}} completed!", value1: toolModel?.name || _translateCopy("copy.e515e4369dcc", { defaultValue: "AI Tool" }) }));
       } else if (data.status === 'failed') {
         clearInterval(pollingRef.current[requestId]);
         delete pollingRef.current[requestId];
         clearPendingTool();
 
         setMessages(prev => prev.map(m =>
-          m.id === messageId ? { ...m, isToolProcessing: false, content: `❌ Processing failed: ${data.error || 'Unknown error'}` } : m
+          m.id === messageId ? { ...m, isToolProcessing: false, content: _translateCopy("copy.eb8a221f3e69", { defaultValue: "❌ Processing failed: {{value1}}", value1: data.error || _translateCopy("copy.27c2ccd962c2", { defaultValue: "Unknown error" }) }) } : m
         ));
         setIsAiToolProcessing(false);
       }
@@ -1547,7 +1548,7 @@ function AssistantPageForAccount() {
           role: 'assistant',
           content: '',
           ...(data.audioUrl ? { audioUrl: data.audioUrl } : data.imageUrl ? { imageUrl: data.imageUrl } : {}),
-          ...(data.text && { content: `📝 **Transcription:**\n\n${data.text}` }),
+          ...(data.text && { content: `${_translateCopy("copy.0a66a5f0f8ba", { defaultValue: "📝 **Transcription:**" })}\n\n${data.text}` }),
         };
         if (!assistantMessage.audioUrl && !assistantMessage.imageUrl && !assistantMessage.content) {
           assistantMessage.content = `✅ ${toolModel.name} completed.`;
@@ -1561,11 +1562,11 @@ function AssistantPageForAccount() {
         // Async tool — start polling
         const messageId = (Date.now() + 1).toString();
         const label = toolModel.name;
-        const desc = 'This may take a minute';
+        const desc = _translateCopy("copy.0dbd749f0550", { defaultValue: "This may take a minute" });
         const assistantMessage: Message = {
           id: messageId,
           role: 'assistant',
-          content: `${toolModel.emoji} Processing with **${label}**...\n\n_${desc}_`,
+          content: `${toolModel.emoji} ${_translateCopy("copy.e5010bd7c215", { defaultValue: "Processing with **{{value1}}**...", value1: label })}\n\n_${desc}_`,
           isToolProcessing: true,
           toolRequestId: data.requestId,
           toolAppId: data.appId,
@@ -1625,7 +1626,7 @@ function AssistantPageForAccount() {
         }
       }
       void incrementSkillUsage(matchedSkill.id);
-      toast.message(`Using skill: ${matchedSkill.name}`, { duration: 2000 });
+      toast.message(_translateCopy("copy.dea7dbdf2bed", { defaultValue: "Using skill: {{value1}}", value1: matchedSkill.name }), { duration: 2000 });
     }
 
     // ── Character mention matching ──
@@ -1639,7 +1640,7 @@ function AssistantPageForAccount() {
       }
       charMatch.characters.forEach((c) => void incrementCharacterUsage(c.id));
       const names = charMatch.characters.map((c) => c.name).join(', ');
-      toast.message(`Using character${charMatch.characters.length > 1 ? 's' : ''}: ${names}`, { duration: 2000 });
+      toast.message(_translateCopy("copy.b1eb6280b281", { defaultValue: "Using characters: {{value1}}", value1: names, count: charMatch.characters.length }), { duration: 2000 });
     }
 
     const personaBlock = buildCharacterPersonaBlock(charMatch.characters);
@@ -1690,7 +1691,7 @@ function AssistantPageForAccount() {
         setIsLoading(false);
         
         if (alwaysSpeakReplies) {
-          setTimeout(() => elevenLabsSpeak("Here's the official DeHub logo!"), 300);
+          setTimeout(() => elevenLabsSpeak(_translateCopy("copy.4cef372919b2", { defaultValue: "Here's the official DeHub logo!" })), 300);
         }
         return;
       }
@@ -3267,7 +3268,7 @@ function AssistantPageForAccount() {
           setInputGlow(true);
           setTimeout(() => setInputGlow(false), 2000);
           incrementSkillUsage(skill.id).catch(() => {});
-          toast.success(`Loaded skill: ${skill.name}`);
+          toast.success(_translateCopy("copy.9d78863486f3", { defaultValue: "Loaded skill: {{value1}}", value1: skill.name }));
         }}
       />
 

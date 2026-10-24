@@ -164,7 +164,7 @@ export function EditPostModal({
       await replaceVideoFile(tokenId, file, { onProgress: setReplaceProgress });
       toast.success(_copy("copy.1971808ff075", { defaultValue: "New file uploaded — it will swap in once it finishes processing" }));
     } catch (error) {
-      const message = error instanceof Error ? error.message : 'Could not replace that file';
+      const message = error instanceof Error ? error.message : _copy("copy.209f88a9f342", { defaultValue: "Could not replace that file" });
       toast.error(message);
     } finally {
       setIsReplacing(false);
@@ -239,7 +239,7 @@ export function EditPostModal({
     const commonGroundChanged = commonGround !== null && commonGround !== discussion.commonGround;
 
     if (Object.keys(params).length === 0 && !commonGroundChanged) {
-      toast.message('No changes to save');
+      toast.message(_copy("copy.d608d0f65354", { defaultValue: "No changes to save" }));
       return;
     }
 
@@ -263,7 +263,7 @@ export function EditPostModal({
       return;
     }
     if (params.description && (params.description as string).length > descriptionMax) {
-      toast.error(`Description must be ${descriptionMax.toLocaleString('en-US')} characters or less`);
+      toast.error(_copy("copy.d8b5fc0e754c", { defaultValue: "Description must be {{value1}} characters or less", value1: descriptionMax.toLocaleString('en-US') }));
       return;
     }
     if (currentArticleBody !== undefined && articleBody.trim().length < 100) {
@@ -294,7 +294,7 @@ export function EditPostModal({
       }
     } catch (error: any) {
       console.error('[EditPostModal] Submit error:', error);
-      toast.error(error.message || 'Failed to update post');
+      toast.error(error.message || _copy("copy.3cd8b962fe5d", { defaultValue: "Failed to update post" }));
     } finally {
       setIsSubmitting(false);
     }
@@ -568,7 +568,7 @@ export function EditPostModal({
                     ? _copy("copy.89fb9227db8c", { defaultValue: "{{value1}} on the Shop board", value1: shopLinks.length + pickedListingIds.length })
                     : _copy("copy.9b6b30cafe48", { defaultValue: "Add to the Shop board" })}
                 </span>
-                <span className="block text-zinc-500 text-xs mt-0.5">{_copy("copy.0a85e2393dd7", { defaultValue: "Your shop listings and affiliate links, opened from the Shop button. You can add " })}{shopAllowance.allowance}.
+                <span className="block text-zinc-500 text-xs mt-0.5">{_copy("copy.66e6143db45a", { defaultValue: "Your shop listings and affiliate links, opened from the Shop button. You can add {{value1}}.", value1: shopAllowance.allowance })}
                 </span>
               </span>
               <ShoppingBag className="w-4 h-4 text-zinc-400 shrink-0" />
@@ -644,7 +644,7 @@ export function EditPostModal({
               >
                 <span className="min-w-0">
                   <span className="block text-white text-sm font-medium">
-                    {isReplacing ? `Uploading… ${replaceProgress}%` : _copy("copy.d2a55fac5489", { defaultValue: "Replace video file" })}
+                    {isReplacing ? _copy("copy.895236fb16b8", { defaultValue: "Uploading… {{value1}}%", value1: replaceProgress }) : _copy("copy.d2a55fac5489", { defaultValue: "Replace video file" })}
                   </span>
                   <span className="block text-zinc-500 text-xs mt-0.5">{_copy("copy.60a265f0d4de", { defaultValue: "Keeps this post's link, views and comments. The old file plays until the new one finishes processing." })}</span>
                 </span>

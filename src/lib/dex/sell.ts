@@ -7,6 +7,7 @@ import { BASE_CHAIN_ID, BNB_CHAIN_ID } from '@/lib/contracts/dhb-token';
 import { DEX_CHAINS, dexProvider, dexReceipt, verifyPosition, type DexChainId, type VerifiedPosition } from './v4';
 import { getAccount } from '@wagmi/core';
 import { wagmiConfig } from '@/lib/wagmi';
+import { translateCopy as _translateCopy } from '@/i18n/copy';
 import { readWithTimeout, type OrderStage } from './read-timeout';
 
 const PERMIT2 = '0x000000000022D473030F116dDEE9F6B43aC78BA3';
@@ -37,7 +38,7 @@ async function assertSigningWallet(chainId: DexChainId, expected: string) {
   const { provider } = await readWithTimeout(getActiveProvider(chainId), 'Wallet connection', 60000);
   const actual = provider ? (await readWithTimeout(provider.request({ method: 'eth_accounts' }) as Promise<string[]>, 'Wallet account'))[0]
     : getAccount(wagmiConfig).address;
-  if (actual?.toLowerCase() !== expected.toLowerCase()) throw new Error('Wallet account changed. Review the order again.');
+  if (actual?.toLowerCase() !== expected.toLowerCase()) throw new Error(_translateCopy("copy.44915624625f", { defaultValue: "Wallet account changed. Review the order again." }));
 }
 
 export async function detectDhbChain(walletAddress: string): Promise<{ chainId: DexChainId | null; balance: string; base: string; bnb: string }> {
@@ -84,7 +85,7 @@ function tickRange(chainId: DexChainId, floor: number, ceiling: number): [number
   const lower = Math.ceil(Math.log(rawLower) / LN_TICK / TICK_SPACING) * TICK_SPACING;
   const upper = Math.floor(Math.log(rawUpper) / LN_TICK / TICK_SPACING) * TICK_SPACING;
   if (lower < TickMath.MIN_TICK || upper > TickMath.MAX_TICK || lower >= upper) {
-    throw new Error('The selected price range is too narrow or outside Uniswap limits');
+    throw new Error(_translateCopy("copy.97df334a4cf1", { defaultValue: "The selected price range is too narrow or outside Uniswap limits" }));
   }
   return [lower, upper];
 }
@@ -92,7 +93,7 @@ function tickRange(chainId: DexChainId, floor: number, ceiling: number): [number
 function initialSqrtPrice(chainId: DexChainId, floor: string): ReturnType<typeof encodeSqrtRatioX96> {
   // floor is restricted to eight decimal places so the integer ratio is exact.
   const floorUnits = parseUnits(floor, 8);
-  if (floorUnits <= 0n) throw new Error('Enter a positive minimum price');
+  if (floorUnits <= 0n) throw new Error(_translateCopy("copy.30c92b6b4ca8", { defaultValue: "Enter a positive minimum price" }));
   return chainId === BASE_CHAIN_ID
     ? encodeSqrtRatioX96((10n ** 20n).toString(), floorUnits.toString())
     : encodeSqrtRatioX96(floorUnits.toString(), (10n ** 8n).toString());
@@ -125,7 +126,7 @@ export async function quoteSellPosition(input: SellInput): Promise<SellQuote> {
   if (amountIn <= 0n || !Number.isFinite(floor) || !Number.isFinite(ceiling) ||
       floor <= 0 || ceiling <= floor || !/^\d+(?:\.\d{1,8})?$/.test(input.minPrice) ||
       !/^\d+(?:\.\d{1,8})?$/.test(input.maxPrice)) {
-    throw new Error('Enter a valid amount and price range (up to 8 decimal places)');
+    throw new Error(_translateCopy("copy.600a38deff07", { defaultValue: "Enter a valid amount and price range (up to 8 decimal places)" }));
   }
   const [tickLower, tickUpper] = tickRange(input.chainId, floor, ceiling);
   const provider = await dexProvider(input.chainId);
@@ -160,7 +161,7 @@ export async function quoteSellPosition(input: SellInput): Promise<SellQuote> {
     amount1: (input.side === 'sell') === (input.chainId === BASE_CHAIN_ID) ? amountIn.toString() : '0',
     useFullPrecision: true,
   });
-  if (position.liquidity.toString() === '0') throw new Error('Amount is too small for this range');
+  if (position.liquidity.toString() === '0') throw new Error(_translateCopy("copy.4dc5f1795260", { defaultValue: "Amount is too small for this range" }));
   const mintAmounts = position.mintAmounts;
   const requested = input.side === 'sell'
     ? input.chainId === BASE_CHAIN_ID ? mintAmounts.amount1 : mintAmounts.amount0
@@ -169,7 +170,7 @@ export async function quoteSellPosition(input: SellInput): Promise<SellQuote> {
     ? input.chainId === BASE_CHAIN_ID ? mintAmounts.amount0 : mintAmounts.amount1
     : input.chainId === BASE_CHAIN_ID ? mintAmounts.amount1 : mintAmounts.amount0;
   if (BigInt(other.toString()) !== 0n || BigInt(requested.toString()) > amountIn) {
-    throw new Error('The position would require more tokens than requested');
+    throw new Error(_translateCopy("copy.f922f863a383", { defaultValue: "The position would require more tokens than requested" }));
   }
   const { calldata, value } = V4PositionManager.addCallParameters(position, {
     recipient: input.walletAddress,
@@ -183,7 +184,7 @@ export async function quoteSellPosition(input: SellInput): Promise<SellQuote> {
 }
 
 async function ensureTokenApproval(input: SellInput, amount: bigint, progress: (stage: OrderStage) => void) {
-  if (amount > MAX_UINT160) throw new Error('Amount exceeds Permit2 limits');
+  if (amount > MAX_UINT160) throw new Error(_translateCopy("copy.9042c1f7b36e", { defaultValue: "Amount exceeds Permit2 limits" }));
   const cfg = DEX_CHAINS[input.chainId];
   const provider = await dexProvider(input.chainId);
   const tokenAddress = input.side === 'sell' ? cfg.dhb : cfg.usdc;
@@ -191,14 +192,14 @@ async function ensureTokenApproval(input: SellInput, amount: bigint, progress: (
   const token = new Contract(tokenAddress, ERC20, provider);
   progress('balance');
   const balance = await readWithTimeout(token.balanceOf(input.walletAddress) as Promise<bigint>, 'Token balance');
-  if (balance < amount) throw new Error(`Insufficient ${symbol} on the selected chain`);
+  if (balance < amount) throw new Error(_translateCopy("copy.d96ce204c037", { defaultValue: "Insufficient {{value1}} on the selected chain", value1: symbol }));
   const allowance = await readWithTimeout(token.allowance(input.walletAddress, PERMIT2) as Promise<bigint>, 'Token allowance');
   if (allowance < amount) {
     progress('tokenApproval');
     await assertSigningWallet(input.chainId, input.walletAddress);
     const tx = await writeContractAA(tokenAddress, ERC20, 'approve', [PERMIT2, amount],
       { chainId: input.chainId, context: `approve ${symbol} for Permit2` });
-    if ((await readWithTimeout(tx.wait(), 'Approval confirmation', 120000)).status !== 1) throw new Error(`${symbol} approval did not confirm`);
+    if ((await readWithTimeout(tx.wait(), 'Approval confirmation', 120000)).status !== 1) throw new Error(_translateCopy("copy.e9301bb3bd6c", { defaultValue: "{{value1}} approval did not confirm", value1: symbol }));
   }
   const permit = new Contract(PERMIT2, PERMIT, provider);
   const [permitted, expiration] = await readWithTimeout(permit.allowance(input.walletAddress, tokenAddress, cfg.positionManager) as Promise<[bigint, bigint, bigint]>, 'Position allowance');
@@ -208,7 +209,7 @@ async function ensureTokenApproval(input: SellInput, amount: bigint, progress: (
     await assertSigningWallet(input.chainId, input.walletAddress);
     const tx = await writeContractAA(PERMIT2, PERMIT, 'approve', [tokenAddress, cfg.positionManager, amount, expires],
       { chainId: input.chainId, context: `approve ${symbol} for the position manager` });
-    if ((await readWithTimeout(tx.wait(), 'Approval confirmation', 120000)).status !== 1) throw new Error('Position approval did not confirm');
+    if ((await readWithTimeout(tx.wait(), 'Approval confirmation', 120000)).status !== 1) throw new Error(_translateCopy("copy.2592c9cec433", { defaultValue: "Position approval did not confirm" }));
   }
 }
 
@@ -218,11 +219,11 @@ export async function mintSellPosition(input: SellInput, progress: (stage: Order
   if (signer) {
     const accounts = await readWithTimeout(signer.request({ method: 'eth_accounts' }) as Promise<string[]>, 'Wallet account');
     if (!accounts[0] || accounts[0].toLowerCase() !== input.walletAddress.toLowerCase()) {
-      throw new Error('The connected signing wallet does not match this DHB address');
+      throw new Error(_translateCopy("copy.f3809982d30a", { defaultValue: "The connected signing wallet does not match this DHB address" }));
     }
   }
   if (!signer && getAccount(wagmiConfig).address?.toLowerCase() !== input.walletAddress.toLowerCase()) {
-    throw new Error('Connect the wallet holding this balance before creating a position');
+    throw new Error(_translateCopy("copy.930f3956e9cd", { defaultValue: "Connect the wallet holding this balance before creating a position" }));
   }
   progress('quote');
   let quote = await quoteSellPosition(input);
@@ -230,7 +231,7 @@ export async function mintSellPosition(input: SellInput, progress: (stage: Order
   // Approvals can take time. Recheck pool state and single-sided requirements.
   quote = await quoteSellPosition(input);
   const parsed = POSITION.parseTransaction({ data: quote.calldata });
-  if (!parsed) throw new Error('Could not prepare the Uniswap position transaction');
+  if (!parsed) throw new Error(_translateCopy("copy.4129edfefaa7", { defaultValue: "Could not prepare the Uniswap position transaction" }));
   const cfg = DEX_CHAINS[input.chainId];
   progress('submit');
   await assertSigningWallet(input.chainId, input.walletAddress);
@@ -239,15 +240,15 @@ export async function mintSellPosition(input: SellInput, progress: (stage: Order
   progress('confirm');
   submitted?.(tx.hash);
   const result = await readWithTimeout(tx.wait(), 'Position confirmation; use Resume listing to check this transaction', 120000);
-  if (result.status !== 1) throw Object.assign(new Error('The position transaction reverted. No position was created.'), { code: 'DEX_REVERTED' });
+  if (result.status !== 1) throw Object.assign(new Error(_translateCopy("copy.bc9ab4939838", { defaultValue: "The position transaction reverted. No position was created." })), { code: 'DEX_REVERTED' });
   return recoverMint(input, result.hash);
 }
 
 export async function recoverMint(input: SellInput, hash: string): Promise<{ tokenId: string; txHash: string }> {
   const cfg = DEX_CHAINS[input.chainId];
   const receipt = await readWithTimeout(dexReceipt(input.chainId, hash), 'Transaction receipt');
-  if (!receipt) throw new Error('Position submitted but its receipt is not available yet');
-  if (receipt.status !== 1) throw Object.assign(new Error('The position transaction reverted. No position was created.'), { code: 'DEX_REVERTED' });
+  if (!receipt) throw new Error(_translateCopy("copy.d5f9fa3fd6f8", { defaultValue: "Position submitted but its receipt is not available yet" }));
+  if (receipt.status !== 1) throw Object.assign(new Error(_translateCopy("copy.bc9ab4939838", { defaultValue: "The position transaction reverted. No position was created." })), { code: 'DEX_REVERTED' });
   const transferTopic = id('Transfer(address,address,uint256)');
   const mintLog = receipt.logs.find((log) =>
     log.address.toLowerCase() === cfg.positionManager.toLowerCase() &&
@@ -255,16 +256,16 @@ export async function recoverMint(input: SellInput, hash: string): Promise<{ tok
     log.topics[1] === `0x${'0'.repeat(64)}` &&
     log.topics[2]?.toLowerCase() === `0x${input.walletAddress.slice(2).toLowerCase().padStart(64, '0')}`,
   );
-  if (!mintLog?.topics[3]) throw new Error('Position minted but its NFT could not be identified');
+  if (!mintLog?.topics[3]) throw new Error(_translateCopy("copy.c212b0313c5d", { defaultValue: "Position minted but its NFT could not be identified" }));
   return { tokenId: BigInt(mintLog.topics[3]).toString(), txHash: receipt.hash };
 }
 
 export async function withdrawSellPosition(position: VerifiedPosition, walletAddress: string): Promise<string> {
   const fresh = await readWithTimeout(verifyPosition(position), 'Position refresh');
-  if (!fresh) throw new Error('This position has already been withdrawn or is unavailable');
+  if (!fresh) throw new Error(_translateCopy("copy.63ce18ea5d1a", { defaultValue: "This position has already been withdrawn or is unavailable" }));
   position = fresh;
   if (position.owner.toLowerCase() !== walletAddress.toLowerCase()) {
-    throw new Error('Only the current position owner can withdraw');
+    throw new Error(_translateCopy("copy.6a6d12191ed6", { defaultValue: "Only the current position owner can withdraw" }));
   }
   const chainId = position.chain_id as DexChainId;
   const cfg = DEX_CHAINS[chainId];
@@ -272,11 +273,11 @@ export async function withdrawSellPosition(position: VerifiedPosition, walletAdd
   if (signer) {
     const accounts = await readWithTimeout(signer.request({ method: 'eth_accounts' }) as Promise<string[]>, 'Wallet account');
     if (accounts[0]?.toLowerCase() !== walletAddress.toLowerCase()) {
-      throw new Error('Connect the wallet that owns this position');
+      throw new Error(_translateCopy("copy.f74fac0bec11", { defaultValue: "Connect the wallet that owns this position" }));
     }
   }
   if (!signer && getAccount(wagmiConfig).address?.toLowerCase() !== walletAddress.toLowerCase()) {
-    throw new Error('Connect the wallet that owns this position');
+    throw new Error(_translateCopy("copy.f74fac0bec11", { defaultValue: "Connect the wallet that owns this position" }));
   }
   const provider = await dexProvider(chainId);
   const dhb = new Token(chainId, cfg.dhb, 18, 'DHB');
@@ -299,11 +300,11 @@ export async function withdrawSellPosition(position: VerifiedPosition, walletAdd
     burnToken: true,
   });
   const parsed = POSITION.parseTransaction({ data: call.calldata });
-  if (!parsed) throw new Error('Could not prepare the withdrawal transaction');
+  if (!parsed) throw new Error(_translateCopy("copy.0bd84ea477d0", { defaultValue: "Could not prepare the withdrawal transaction" }));
   await assertSigningWallet(chainId, walletAddress);
   const tx = await writeContractAA(cfg.positionManager, POSITION, parsed.name, Array.from(parsed.args),
     { chainId, value: call.value, context: 'withdraw DHB sell position' });
   const receipt = await readWithTimeout(tx.wait(), 'Withdrawal confirmation; check your wallet transaction before retrying', 120000);
-  if (receipt.status !== 1) throw new Error('Withdrawal did not confirm');
+  if (receipt.status !== 1) throw new Error(_translateCopy("copy.d04b32e3ec44", { defaultValue: "Withdrawal did not confirm" }));
   return receipt.hash;
 }

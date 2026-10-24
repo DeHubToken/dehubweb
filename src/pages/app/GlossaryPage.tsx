@@ -271,8 +271,8 @@ export default function GlossaryPage() {
               <img src={medal} alt={_copy("copy.11fe66e7be8e", { defaultValue: "Rank {{value1}}", value1: i + 1 })} className="w-6 h-6 object-contain relative" />
             </span>
           ),
-          title: `#${i + 1} Trophy`,
-          description: `Awarded to the #${i + 1} ranked user on the leaderboard. Displayed next to their avatar.`,
+          title: _copy("copy.20c63c3c707d", { defaultValue: "#{{value1}} Trophy", value1: i + 1 }),
+          description: _copy("copy.a86233be3ef9", { defaultValue: "Awarded to the #{{value1}} ranked user on the leaderboard. Displayed next to their avatar.", value1: i + 1 }),
         })),
         { icon: <Zap size={iconSize} />, title: t('glossary.tokenId', 'Token ID'), description: t('glossary.tokenIdDesc', 'A unique on-chain identifier a post gets when it\'s minted as an NFT on the blockchain. Minting is optional, so a post that hasn\'t been minted has no Token ID yet.') },
       ],

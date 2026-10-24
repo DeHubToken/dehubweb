@@ -193,12 +193,12 @@ export function RealtimeChatPanel({
   onReact,
   onRemoveReaction,
   canModerate = false,
-  title = 'Live chat',
+  title: titleProp,
   subtitle,
   icon: Icon = MessageSquare,
-  emptyHint = 'No messages yet — say something.',
-  placeholder = 'Type here...',
-  signInLabel = 'Sign in to chat',
+  emptyHint: emptyHintProp,
+  placeholder: placeholderProp,
+  signInLabel: signInLabelProp,
   listClassName = 'h-56',
   className,
   maxLength = 500,
@@ -208,6 +208,10 @@ export function RealtimeChatPanel({
   draftKey,
 }: RealtimeChatPanelProps) {
   const { t: _copy } = _useCopy();
+  const title = titleProp ?? _copy("copy.1c7cc7287ca8", { defaultValue: "Live chat" });
+  const emptyHint = emptyHintProp ?? _copy("copy.815cd42549ac", { defaultValue: "No messages yet — say something." });
+  const placeholder = placeholderProp ?? _copy("copy.8cbff9ea966c", { defaultValue: "Type here..." });
+  const signInLabel = signInLabelProp ?? _copy("copy.048ff525a56b", { defaultValue: "Sign in to chat" });
   const [newMessage, setNewMessage] = useDraft(draftKey);
   const [replyTo, setReplyTo] = useDraftState<RealtimeChatMessage | null>(draftKey ? `${draftKey}:reply` : null, null);
   const [editingId, setEditingId] = useState<string | null>(null);
@@ -442,7 +446,7 @@ export function RealtimeChatPanel({
                             <Tooltip>
                               <TooltipTrigger asChild>
                                 <button
-                                  onClick={() => { if (confirm('Delete this message?')) onDelete(msg.id); }}
+                                  onClick={() => { if (confirm(_copy("copy.8f6e2cda49ca", { defaultValue: "Delete this message?" }))) onDelete(msg.id); }}
                                   className="p-0.5 text-zinc-500 hover:text-red-400 transition-colors rounded"
                                 >
                                   <Trash2 className="w-3.5 h-3.5" />

@@ -10,7 +10,7 @@ import { tokenLabel } from '@/lib/token-label';
 import { BrandIcon } from '@/components/app/war/WarHudIcon';
 import { DhbCoin } from '@/components/app/DhbAmount';
 import { useState } from 'react';
-import { useTranslation } from 'react-i18next';
+import { useTranslation, Trans } from 'react-i18next';
 import dehubCoin from '@/assets/dehub-coin.png';
 import padlockImg from '@/assets/padlock.png';
 import { Input } from '@/components/ui/input';
@@ -54,8 +54,12 @@ export function DmFeeInfoBanner({
           <div className="flex-1">
             <h3 className="text-white font-semibold text-sm mb-1">{_copy("copy.467f1b07dbab", { defaultValue: "Tip to Message" })}</h3>
             <p className="text-zinc-400 text-xs leading-relaxed">
-              {recipientName}{_copy("copy.9905f07aff07", { defaultValue: " requires a minimum tip of" })}{' '}
-              <span className="text-white font-semibold">{fee.toLocaleString()} <DhbCoin /></span>{' '}{_copy("copy.202623ca8581", { defaultValue: "per message. Each message you send will deduct this amount." })}</p>
+              <Trans
+                i18nKey="copy.70d1cca2aba3"
+                defaults="{{value1}} requires a minimum tip of <amount>{{value2}} <coin></coin></amount> per message. Each message you send will deduct this amount."
+                values={{ value1: recipientName, value2: fee.toLocaleString() }}
+                components={{ amount: <span className="text-white font-semibold" />, coin: <DhbCoin /> }}
+              /></p>
           </div>
         </div>
 
@@ -107,10 +111,24 @@ export function DmFeeInfoBanner({
         </div>
 
         {isAboveMinimum && hasCustomSufficient && (
-          <p className="text-[10px] text-zinc-400 text-center mt-2">{_copy("copy.5269efbb02b6", { defaultValue: "🔥 Tipping " })}{tipAmount.toLocaleString()} <DhbCoin />{_copy("copy.d93b445ac1b2", { defaultValue: " per message will rank you higher in " })}{recipientName}{_copy("copy.8e35393fe469", { defaultValue: "'s inbox" })}</p>
+          <p className="text-[10px] text-zinc-400 text-center mt-2">
+            <Trans
+              i18nKey="copy.338524eabcce"
+              defaults="🔥 Tipping {{value1}} <coin></coin> per message will rank you higher in {{value2}}'s inbox"
+              values={{ value1: tipAmount.toLocaleString(), value2: recipientName }}
+              components={{ coin: <DhbCoin /> }}
+            />
+          </p>
         )}
         {isAboveMinimum && !hasCustomSufficient && (
-          <p className="text-[10px] text-zinc-500 text-center mt-2">{_copy("copy.fe20acd5b775", { defaultValue: "Insufficient balance for " })}{tipAmount.toLocaleString()} <DhbCoin />{_copy("copy.aa39569a26c1", { defaultValue: " tip" })}</p>
+          <p className="text-[10px] text-zinc-500 text-center mt-2">
+            <Trans
+              i18nKey="copy.9f11cad12bdd"
+              defaults="Insufficient balance for {{value1}} <coin></coin> tip"
+              values={{ value1: tipAmount.toLocaleString() }}
+              components={{ coin: <DhbCoin /> }}
+            />
+          </p>
         )}
       </div>
     </div>

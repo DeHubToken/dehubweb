@@ -16,6 +16,7 @@
  */
 
 import { toast } from 'sonner';
+import { translateCopy as _translateCopy } from '@/i18n/copy';
 const TOAST_ID = 'stage-recording-upload';
 
 /**
@@ -32,7 +33,7 @@ function corner(): { position?: 'bottom-right' } {
 
 /** The upload has started: recording is the only copy, keep the tab open. */
 export function showRecordingUploading(): void {
-  toast.loading('Uploading recording', {
+  toast.loading(_translateCopy('copy.39c360181ca8', { defaultValue: 'Uploading recording' }), {
     id: TOAST_ID,
     // Stays until the upload resolves it one way or the other.
     duration: Infinity,
@@ -42,22 +43,22 @@ export function showRecordingUploading(): void {
 
 /** Upload done and recording_url written — safe to close the tab. */
 export function showRecordingSaved(): void {
-  toast.message('Recording saved', {
+  toast.message(_translateCopy('copy.b81274bafb79', { defaultValue: 'Recording saved' }), {
     id: TOAST_ID,
     duration: 6_000,
     ...corner(),
-    description: "It's safe to close this tab.",
+    description: _translateCopy("copy.e3873af3dfb9", { defaultValue: "It's safe to close this tab." }),
   });
 }
 
 /** Both upload attempts failed. Sticky: this is the host's only witness. */
 export function showRecordingFailed(): void {
-  toast.message('Recording could not be saved', {
+  toast.message(_translateCopy('copy.051a9db4009d', { defaultValue: 'Recording could not be saved' }), {
     id: TOAST_ID,
     duration: Infinity,
     closeButton: true,
     ...corner(),
-    description: 'The recording could not be kept after retrying.',
+    description: _translateCopy('copy.826efabad5e7', { defaultValue: 'The recording could not be kept after retrying.' }),
   });
 }
 

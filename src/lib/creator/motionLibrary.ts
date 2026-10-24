@@ -1,3 +1,5 @@
+import { translateCopy as _translateCopy } from '@/i18n/copy';
+
 export interface MotionVariant { url: string; poster: string }
 export interface MotionClip {
   id: string; name: string; category: string; tags: string;
@@ -33,9 +35,9 @@ export function motionModel(clip: MotionClip, workflow: 'swap' | 'motion' = 'swa
 export function motionAspect(clip: MotionClip) { return clip.width / clip.height > 1.3 ? '16:9' : clip.height / clip.width > 1.3 ? '9:16' : '1:1'; }
 export async function downloadMotionSource(id: string): Promise<File> {
   const response = await fetch(`/api/creator-motion-source?id=${encodeURIComponent(id)}`, { credentials: 'omit', referrerPolicy: 'no-referrer' });
-  if (!response.ok || Number(response.headers.get('Content-Length')) > 100 * 1024 * 1024) throw new Error('This source clip is unavailable or exceeds 100 MB.');
+  if (!response.ok || Number(response.headers.get('Content-Length')) > 100 * 1024 * 1024) throw new Error(_translateCopy("copy.0d752fdfe929", { defaultValue: "This source clip is unavailable or exceeds 100 MB." }));
   const blob = await response.blob();
-  if (blob.size > 100 * 1024 * 1024) throw new Error('Choose a source clip smaller than 100 MB.');
+  if (blob.size > 100 * 1024 * 1024) throw new Error(_translateCopy("copy.c1beb7c2b7af", { defaultValue: "Choose a source clip smaller than 100 MB." }));
   return new File([blob], `source-${id}.mp4`, { type: 'video/mp4' });
 }
 export function searchMotionClips(clips: MotionClip[], query: string, category = 'All') {

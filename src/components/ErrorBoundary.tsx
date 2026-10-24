@@ -164,7 +164,7 @@ export class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundarySt
             </div>
             <div className="max-w-sm">
               <p className="text-sm font-medium text-foreground">
-                {this.props.label ? _translateCopy("copy.e00e2b3e9d84", { defaultValue: "{{value1}} hit a snag", value1: this.props.label }) : 'This section hit a snag'}
+                {this.props.label ? _translateCopy("copy.e00e2b3e9d84", { defaultValue: "{{value1}} hit a snag", value1: this.props.label }) : <TranslationText name="copy.91465aefbd47" fallback={"This section hit a snag"} />}
               </p>
               <p className="mt-1 text-xs text-muted-foreground"><TranslationText name="copy.65824fc476fa" fallback={"The rest of the app is still working. Try again or head back home."} /></p>
             </div>
@@ -204,7 +204,7 @@ export class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundarySt
             <div className="relative mb-6">
               <img 
                 src={assistantAvatar} 
-                alt="Assistant" 
+                alt={_translateCopy("copy.391e40515277", { defaultValue: "Assistant" })} 
                 className="w-24 h-24 object-contain opacity-80"
               />
               <div className="absolute -bottom-1 -right-1 w-8 h-8 rounded-full bg-red-500/20 backdrop-blur-xl border border-red-500/30 flex items-center justify-center">
@@ -248,7 +248,7 @@ export class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundarySt
                     {this.state.error.name || 'Error'}
                   </p>
                   <p className="text-xs text-red-400 font-mono whitespace-pre-wrap break-all">
-                    {this.state.error.message || 'Unknown error'}
+                    {this.state.error.message || _translateCopy("copy.27c2ccd962c2", { defaultValue: "Unknown error" })}
                   </p>
                   {this.state.error.stack && (
                     <p className="text-[10px] text-red-400/60 font-mono mt-2 whitespace-pre-wrap break-all">

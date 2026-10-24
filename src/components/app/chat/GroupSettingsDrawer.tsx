@@ -253,7 +253,7 @@ export function GroupSettingsDrawer({ open, onOpenChange, groupId, onLeft, onUpd
                       {info.description && (
                         <p className="text-sm text-zinc-400 mt-1">{info.description}</p>
                       )}
-                      <p className="text-xs text-zinc-500 mt-1">{info.memberCount}{_copy("copy.c93aa5da2800", { defaultValue: " members" })}</p>
+                      <p className="text-xs text-zinc-500 mt-1">{_copy("copy.9f5aa2fb70d1", { defaultValue: "{{count}} members", count: info.memberCount })}</p>
                     </div>
                     {isCreator && (
                       <Button
@@ -276,7 +276,7 @@ export function GroupSettingsDrawer({ open, onOpenChange, groupId, onLeft, onUpd
               <div className="space-y-2">
                 <div className="flex items-center justify-between">
                   <h4 className="text-sm font-medium text-zinc-400 flex items-center gap-2">
-                    <Users className="w-4 h-4" />{_copy("copy.ebc719b960a2", { defaultValue: "Members (" })}{info.members?.length || info.memberCount})
+                    <Users className="w-4 h-4" />{_copy("copy.fb3b706ecf49", { defaultValue: "Members ({{value1}})", value1: info.members?.length || info.memberCount })}
                   </h4>
                   {isCreator && (
                     <Button

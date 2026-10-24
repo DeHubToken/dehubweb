@@ -17,6 +17,7 @@ import { buildAvatarUrl, buildCoverUrl, deviceWidth } from '@/lib/media-url';
 import { mapToVideoItem, mapToImagePost, mapToTextPost, type UnifiedFeedItem } from './use-unified-feed';
 import type { DateFilterValue, PostTypeFilterValue } from '@/lib/feed-utils';
 import type { VideoItem, ImagePost, TextPost } from '@/types/feed.types';
+import { translateCopy as _translateCopy } from '@/i18n/copy';
 
 const DEHUB_API_BASE = "https://api.dehub.io";
 
@@ -93,7 +94,7 @@ export function mapUserToProfile(user: DeHubUser): ProfileData {
   const createdAt = user.createdAt || user.created_at;
   const joinDate = createdAt 
     ? new Date(createdAt).toLocaleDateString(i18n.language || undefined, { month: 'long', year: 'numeric' })
-    : 'Unknown';
+    : _translateCopy("copy.b764cdc0eab7", { defaultValue: "Unknown" });
 
   // Calculate follower/following counts - handle both number and array types
   const followerCount = user.follower_count ?? 
@@ -135,7 +136,7 @@ export function mapUserToProfile(user: DeHubUser): ProfileData {
 
   return {
     id: user._id || user.id || '',
-    name: user.displayName || user.display_name || user.username || 'Unknown User',
+    name: user.displayName || user.display_name || user.username || _translateCopy("copy.bd47bcdbf137", { defaultValue: "Unknown User" }),
     handle: user.username ? `@${user.username.replace('@', '')}` : '@unknown',
     ensName: user.ensName || undefined,
     verified: user.isVerified || user.is_verified || false,

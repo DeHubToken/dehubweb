@@ -1,3 +1,4 @@
+import { translateCopy as _translateCopy } from '@/i18n/copy';
 import { useTranslation as _useCopy } from 'react-i18next';
 import { MobileStatusBar } from '../MobileStatusBar';
 import { MobileTopBar } from '../MobileTopBar';
@@ -18,7 +19,12 @@ const MOCK_LEADERBOARD = [
   { rank: 10, user: 'dao_builder', score: '28,100', change: '-3' },
 ];
 
-const PERIOD_TABS = ['Daily', 'Weekly', 'Monthly', 'All Time'];
+const PERIOD_TABS = [
+  { id: 'daily', get label() { return _translateCopy("copy.b36c2611dcdf", { defaultValue: "Daily" }); } },
+  { id: 'weekly', get label() { return _translateCopy("copy.2975132481a7", { defaultValue: "Weekly" }); } },
+  { id: 'monthly', get label() { return _translateCopy("copy.9b11f6b707d2", { defaultValue: "Monthly" }); } },
+  { id: 'all-time', get label() { return _translateCopy("copy.476adfac4cd9", { defaultValue: "All Time" }); } },
+];
 
 export function LeaderboardScreen() {
   const { t: _copy } = _useCopy();
@@ -31,12 +37,12 @@ export function LeaderboardScreen() {
       <div className="flex gap-1.5 px-4 py-3">
         {PERIOD_TABS.map((tab, i) => (
           <button
-            key={tab}
+            key={tab.id}
             className={`px-3 py-1.5 rounded-lg text-xs font-medium ${
               i === 0 ? 'bg-white/10 text-white border border-white/20' : 'text-zinc-500'
             }`}
           >
-            {tab}
+            {tab.label}
           </button>
         ))}
       </div>

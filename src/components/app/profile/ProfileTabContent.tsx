@@ -304,8 +304,8 @@ export function ProfileTabContent({
       <TabPanel activeTab={activeTab} visitedTabs={visitedTabs.current} tab="images">
         {showLoading ? null : PROFILE_IMAGES.length === 0 ? (
           isContentFiltered
-            ? <ProfileEmptyState iconSrc={imageFrame3dIcon} iconAlt="Images" {...NO_MATCHES_COPY} />
-            : <ProfileEmptyState iconSrc={imageFrame3dIcon} iconAlt="Images" title={_copy("copy.0318e75932f9", { defaultValue: "No images yet" })} subtitle={_copy("copy.a3d5fe6a4d9f", { defaultValue: "Image posts will appear here" })} />
+            ? <ProfileEmptyState iconSrc={imageFrame3dIcon} iconAlt={_copy("copy.be7e2f201293", { defaultValue: "Images" })} {...NO_MATCHES_COPY} />
+            : <ProfileEmptyState iconSrc={imageFrame3dIcon} iconAlt={_copy("copy.be7e2f201293", { defaultValue: "Images" })} title={_copy("copy.0318e75932f9", { defaultValue: "No images yet" })} subtitle={_copy("copy.a3d5fe6a4d9f", { defaultValue: "Image posts will appear here" })} />
         ) : PROFILE_IMAGES.length >= 4 ? (
           <ProfileImageGrid images={PROFILE_IMAGES} />
         ) : (
@@ -323,8 +323,8 @@ export function ProfileTabContent({
       <TabPanel activeTab={activeTab} visitedTabs={visitedTabs.current} tab="videos">
         {showLoading ? null : ALL_PROFILE_VIDEOS.length === 0 ? (
           isContentFiltered
-            ? <ProfileEmptyState iconSrc={filmstrip3dIcon} iconAlt="Videos" {...NO_MATCHES_COPY} />
-            : <ProfileEmptyState iconSrc={filmstrip3dIcon} iconAlt="Videos" title={_copy("copy.7b1fd32345ce", { defaultValue: "No videos yet" })} subtitle={_copy("copy.e4cea00e921f", { defaultValue: "Video posts will appear here" })} />
+            ? <ProfileEmptyState iconSrc={filmstrip3dIcon} iconAlt={_copy("copy.c9a9639463c2", { defaultValue: "Videos" })} {...NO_MATCHES_COPY} />
+            : <ProfileEmptyState iconSrc={filmstrip3dIcon} iconAlt={_copy("copy.c9a9639463c2", { defaultValue: "Videos" })} title={_copy("copy.7b1fd32345ce", { defaultValue: "No videos yet" })} subtitle={_copy("copy.e4cea00e921f", { defaultValue: "Video posts will appear here" })} />
         ) : (
           <div className="space-y-3">
             {ALL_PROFILE_VIDEOS.map((video, index) => (
@@ -362,8 +362,8 @@ export function ProfileTabContent({
             video-card list holds this creator's tracks. */}
         {showLoading ? null : ALL_PROFILE_VIDEOS.length === 0 ? (
           isContentFiltered
-            ? <ProfileEmptyState iconSrc={audio3dIcon} iconAlt="Audio" {...NO_MATCHES_COPY} />
-            : <ProfileEmptyState iconSrc={audio3dIcon} iconAlt="Audio" title={_copy("copy.f9a83d6ac749", { defaultValue: "No audio yet" })} subtitle={_copy("copy.0ff0f3e32eca", { defaultValue: "Audio tracks will appear here" })} />
+            ? <ProfileEmptyState iconSrc={audio3dIcon} iconAlt={_copy("copy.bc1b88907d3b", { defaultValue: "Audio" })} {...NO_MATCHES_COPY} />
+            : <ProfileEmptyState iconSrc={audio3dIcon} iconAlt={_copy("copy.bc1b88907d3b", { defaultValue: "Audio" })} title={_copy("copy.f9a83d6ac749", { defaultValue: "No audio yet" })} subtitle={_copy("copy.0ff0f3e32eca", { defaultValue: "Audio tracks will appear here" })} />
         ) : (
           <div className="space-y-3">
             {ALL_PROFILE_VIDEOS.map((track, index) => (
@@ -378,7 +378,7 @@ export function ProfileTabContent({
       {/* LIVE TAB */}
       <TabPanel activeTab={activeTab} visitedTabs={visitedTabs.current} tab="live">
         {showLoading ? null : PROFILE_LIVE.length === 0 ? (
-          <ProfileEmptyState iconSrc={live3dIcon} iconAlt="Live" title={_copy("copy.25d36bfae913", { defaultValue: "No live streams yet" })} subtitle={_copy("copy.b713cad3fece", { defaultValue: "Live content will appear here" })} />
+          <ProfileEmptyState iconSrc={live3dIcon} iconAlt={_copy("copy.b64ac05f17e6", { defaultValue: "Live" })} title={_copy("copy.25d36bfae913", { defaultValue: "No live streams yet" })} subtitle={_copy("copy.b713cad3fece", { defaultValue: "Live content will appear here" })} />
         ) : (
           <div className="space-y-3">
             {PROFILE_LIVE.map((stream, index) => (
@@ -445,8 +445,8 @@ function HomeTabPanel({
   if (ALL_CONTENT.length === 0 && !hasOptimisticPosts) {
     if (isLoading) return null;
     return isContentFiltered
-      ? <ProfileEmptyState iconSrc={home3dIcon} iconAlt="All" iconClassName="opacity-90" {...NO_MATCHES_COPY} />
-      : <ProfileEmptyState iconSrc={home3dIcon} iconAlt="All" iconClassName="opacity-90" title={_copy("copy.f2bd677095e4", { defaultValue: "No posts yet" })} subtitle={_copy("copy.9d35e0e6ebe0", { defaultValue: "Content will appear here when posted" })} />;
+      ? <ProfileEmptyState iconSrc={home3dIcon} iconAlt={_copy("copy.a52ace420f21", { defaultValue: "All" })} iconClassName="opacity-90" {...NO_MATCHES_COPY} />
+      : <ProfileEmptyState iconSrc={home3dIcon} iconAlt={_copy("copy.a52ace420f21", { defaultValue: "All" })} iconClassName="opacity-90" title={_copy("copy.f2bd677095e4", { defaultValue: "No posts yet" })} subtitle={_copy("copy.9d35e0e6ebe0", { defaultValue: "Content will appear here when posted" })} />;
   }
   
   const filteredOptimisticPosts = isViewingOwnProfile 
@@ -584,8 +584,8 @@ function PostsTabPanel({
 
   if (mergedItems.length === 0 && !isLoadingAll && !isLoadingContent) {
     return isContentFiltered
-      ? <ProfileEmptyState iconSrc={comment3dIcon} iconAlt="Posts" iconClassName="opacity-90" {...NO_MATCHES_COPY} />
-      : <ProfileEmptyState iconSrc={comment3dIcon} iconAlt="Posts" iconClassName="opacity-90" title={_copy("copy.06c31e423138", { defaultValue: "No posts, comments, or replies yet" })} subtitle={_copy("copy.18cbb7d6aa86", { defaultValue: "They will appear here" })} />;
+      ? <ProfileEmptyState iconSrc={comment3dIcon} iconAlt={_copy("copy.a80811cf6889", { defaultValue: "Posts" })} iconClassName="opacity-90" {...NO_MATCHES_COPY} />
+      : <ProfileEmptyState iconSrc={comment3dIcon} iconAlt={_copy("copy.a80811cf6889", { defaultValue: "Posts" })} iconClassName="opacity-90" title={_copy("copy.06c31e423138", { defaultValue: "No posts, comments, or replies yet" })} subtitle={_copy("copy.18cbb7d6aa86", { defaultValue: "They will appear here" })} />;
   }
 
   return (
@@ -709,7 +709,7 @@ function SubscribersTabPanel({
             <p className="text-xs text-white/70">
               {draftPlanCount === 1
                 ? _copy("copy.4bf441cdf785", { defaultValue: "One of your plans is still a draft. " })
-                : draftPlanCount + ' of your plans are still drafts. '}{_copy("copy.50a8089f73e2", { defaultValue: "A plan only sells once it is published on chain. Until then nobody can subscribe to you, and the Subscribers switch on a new post stays off." })}</p>
+                : _copy("copy.c309a91b813f", { count: draftPlanCount, defaultValue: "{{count}} of your plans are still drafts. " })}{_copy("copy.50a8089f73e2", { defaultValue: "A plan only sells once it is published on chain. Until then nobody can subscribe to you, and the Subscribers switch on a new post stays off." })}</p>
           </div>
         )}
         <div className="grid gap-4">
@@ -1055,7 +1055,7 @@ function PinnedPostCard({ pin }: { pin: any }) {
           transcodingStatus: post.transcodingStatus,
           storyboard: toStoryboard((post as { storyboard?: unknown }).storyboard),
           title: post.title || post.name || '',
-          channel: post.minterDisplayName || post.minterUsername || creatorObj?.display_name || 'Unknown',
+          channel: post.minterDisplayName || post.minterUsername || creatorObj?.display_name || _translateCopy("copy.b764cdc0eab7", { defaultValue: "Unknown" }),
           channelAvatar: avatar, verified: false,
           views: formatViews(resolveViewCount(post)).replace(' views', ''),
           uploadedAgo: formatTimeAgo(rawTimestamp),
@@ -1069,7 +1069,7 @@ function PinnedPostCard({ pin }: { pin: any }) {
       ) : postType === 'image' || postType === 'feed-images' ? (
         <ImageCard post={{
           id: String(post.tokenId), type: 'image', contentRating: post.contentRating,
-          username: post.minterDisplayName || post.minterUsername || creatorObj?.display_name || 'Unknown',
+          username: post.minterDisplayName || post.minterUsername || creatorObj?.display_name || _translateCopy("copy.b764cdc0eab7", { defaultValue: "Unknown" }),
           verified: false, avatar,
           image: buildImageUrl(post.tokenId, post.imageUrl) || '/placeholder.svg',
           imageUrls: buildFeedImageUrls(post.imageUrls) || [buildImageUrl(post.tokenId, post.imageUrl) || '/placeholder.svg'],
@@ -1089,7 +1089,7 @@ function PinnedPostCard({ pin }: { pin: any }) {
           views: formatViews(resolveViewCount(post)).replace(' views', ''),
           author: {
             id: resolvedAddress,
-            name: post.minterDisplayName || post.minterUsername || creatorObj?.display_name || 'Unknown',
+            name: post.minterDisplayName || post.minterUsername || creatorObj?.display_name || _translateCopy("copy.b764cdc0eab7", { defaultValue: "Unknown" }),
             handle: post.minterUsername || creatorObj?.username || resolvedAddress?.slice(0, 8) || 'anon',
             avatarSeed: avatar, verified: false,
           },

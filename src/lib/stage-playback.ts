@@ -49,6 +49,7 @@ import {
   setMediaSessionPlaying,
   setMediaSessionPosition,
 } from '@/lib/media-session';
+import { translateCopy as _translateCopy } from '@/i18n/copy';
 
 /**
  * Identity this engine uses to hold the OS media session. One string because
@@ -203,7 +204,7 @@ function ensureAudio(): HTMLAudioElement {
   el.crossOrigin = 'anonymous';
   el.addEventListener('error', () => {
     if (!state.spaceId) return;
-    toast.error('That recording could not be played');
+    toast.error(_translateCopy('copy.49bbcbf7a97b', { defaultValue: 'That recording could not be played' }));
     stopStageRecording();
   });
   el.addEventListener('durationchange', () => {
@@ -401,7 +402,7 @@ export function stopStageRecording() {
  */
 export function playStageRecording(space: StagePlayable, seekRatio?: number) {
   if (!space.recording_url) {
-    toast.info('Recording not available for this stage');
+    toast.info(_translateCopy('copy.5f630944e9be', { defaultValue: 'Recording not available for this stage' }));
     return;
   }
 
@@ -438,7 +439,7 @@ export function playStageRecording(space: StagePlayable, seekRatio?: number) {
 
   publish({
     spaceId: space.id,
-    title: space.title || 'Stage recording',
+    title: space.title || _translateCopy('copy.31d03cbfa55b', { defaultValue: 'Stage recording' }),
     loading: true,
     paused: false,
     progress: 0,
@@ -452,7 +453,7 @@ export function playStageRecording(space: StagePlayable, seekRatio?: number) {
   // gap where backgrounding the browser kills the audio outright.
   claimMediaSession(
     MEDIA_SESSION_OWNER,
-    { title: space.title || 'Stage recording', artist: 'DeHub Stages' },
+    { title: space.title || _translateCopy('copy.31d03cbfa55b', { defaultValue: 'Stage recording' }), artist: 'DeHub Stages' },
     {
       play: resumeStageRecording,
       pause: pauseStageRecording,
@@ -482,7 +483,7 @@ export function playStageRecording(space: StagePlayable, seekRatio?: number) {
     .catch(() => {
       if (generation !== sourceGeneration) return;
       // Autoplay policy or a dead URL — either way the control must not stay lit.
-      toast.error('That recording could not be played');
+      toast.error(_translateCopy('copy.49bbcbf7a97b', { defaultValue: 'That recording could not be played' }));
       stopStageRecording();
     });
 
@@ -536,7 +537,7 @@ export function resumeStageRecording() {
       rafId = requestAnimationFrame(pump);
     })
     .catch(() => {
-      toast.error('That recording could not be played');
+      toast.error(_translateCopy('copy.49bbcbf7a97b', { defaultValue: 'That recording could not be played' }));
       stopStageRecording();
     });
 }

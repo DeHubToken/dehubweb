@@ -91,7 +91,7 @@ function RadioHero({ station }: { station: RadioStation }) {
 
   const share = async () => {
     const url = viewerShareUrl(`${window.location.origin}/app`);
-    const text = `Listening to ${station.name} on DeHub`;
+    const text = _copy("copy.b12d153bb3ac", { defaultValue: "Listening to {{value1}} on DeHub", value1: station.name });
     try {
       if (navigator.share) {
         await navigator.share({ title: station.name, text, url });
@@ -137,7 +137,7 @@ function RadioHero({ station }: { station: RadioStation }) {
             <Radio className="h-3 w-3" strokeWidth={2.5} />{_copy("copy.89f55db34c78", { defaultValue: " On air" })}</span>
           {station.clickcount > 0 && (
             <span className="inline-flex items-center gap-1 text-zinc-200">
-              <Headphones className="h-3 w-3" /> {formatViews(station.clickcount).replace(' views', '')}{_copy("copy.fb374167f445", { defaultValue: " plays today" })}</span>
+              <Headphones className="h-3 w-3" /> {_copy("copy.35f4cdf11013", { defaultValue: "{{value1}} plays today", value1: formatViews(station.clickcount).replace(' views', '') })}</span>
           )}
         </div>
         <h2 className="mt-2 text-[26px] font-bold leading-tight text-white line-clamp-2">{station.name}</h2>
@@ -293,7 +293,7 @@ export function CinematicMusic({ radioStations, blockedAddresses, showFilters = 
 
   const renderTracks = (list: { items: VideoItem[]; isLoading: boolean }, title: string, header?: React.ReactNode) => (
     <>
-      <SectionTitle title={title} action={list.items.length > 0 ? 'Play all' : undefined} onAction={() => list.items[0] && openPost(list.items[0])} />
+      <SectionTitle title={title} action={list.items.length > 0 ? _copy("copy.12e7b8220dc7", { defaultValue: "Play all" }) : undefined} onAction={() => list.items[0] && openPost(list.items[0])} />
       {header}
       <div className="-mx-2 border-t border-white/[0.12]">
         {list.isLoading ? (
@@ -343,8 +343,8 @@ export function CinematicMusic({ radioStations, blockedAddresses, showFilters = 
         ))}
       </div>}
 
-      {chip === 'top' && renderTracks(top, 'Top 50')}
-      {chip === 'new' && renderTracks(fresh, 'New releases')}
+      {chip === 'top' && renderTracks(top, _copy("copy.50ea9e32e19c", { defaultValue: "Top 50" }))}
+      {chip === 'new' && renderTracks(fresh, _copy("copy.136dfb88fd85", { defaultValue: "New releases" }))}
       {chip === 'videos' && renderTracks(videos, _copy('music.videoCharts', { defaultValue: 'Music Video Charts' }), (
         <div data-no-swipe data-music-chart-kind role="group" aria-label={_copy('music.videoChartOrder', { defaultValue: 'Music video chart order' })} className="overflow-x-auto px-0.5 scrollbar-hide">
           {MUSIC_VIDEO_CHART_SORTS.map((sort) => (

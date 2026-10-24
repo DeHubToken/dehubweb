@@ -30,6 +30,7 @@ import {
   type ThreadCommentRow,
   type ThreadedComment,
 } from '@/lib/comment-threads';
+import { translateCopy as _translateCopy } from '@/i18n/copy';
 
 export interface FeatureRequestComment extends ThreadedComment {
   feature_request_id: string;
@@ -204,7 +205,7 @@ export function useSubmitComment() {
       featureAuthorAddress?: string | null;
       parentAuthorAddress?: string | null;
     }) => {
-      if (!walletAddress) throw new Error('Not authenticated');
+      if (!walletAddress) throw new Error(_translateCopy("copy.76d1efbeed2d", { defaultValue: "Not authenticated" }));
       const address = walletAddress.toLowerCase();
       const avatarPath = await resolveCommentAvatar(address, user?.avatarImageUrl, user?.username);
       const text = content.trim();
@@ -286,7 +287,7 @@ export function useEditComment() {
 
   return useMutation({
     mutationFn: async ({ commentId, content }: { commentId: string; content: string; featureRequestId: string }) => {
-      if (!walletAddress) throw new Error('Not authenticated');
+      if (!walletAddress) throw new Error(_translateCopy("copy.76d1efbeed2d", { defaultValue: "Not authenticated" }));
       const { error } = await supabase
         .from('feature_request_comments')
         .update({ content: content.trim(), updated_at: new Date().toISOString() })
@@ -310,7 +311,7 @@ export function useDeleteComment() {
 
   return useMutation({
     mutationFn: async ({ commentId, featureRequestId }: { commentId: string; featureRequestId: string }) => {
-      if (!walletAddress) throw new Error('Not authenticated');
+      if (!walletAddress) throw new Error(_translateCopy("copy.76d1efbeed2d", { defaultValue: "Not authenticated" }));
 
       const { error } = await supabase
         .from('feature_request_comments')
@@ -366,7 +367,7 @@ export function useReactToComment() {
       current: PostReaction | null;
       featureRequestId: string;
     }) => {
-      if (!walletAddress) throw new Error('Not authenticated');
+      if (!walletAddress) throw new Error(_translateCopy("copy.76d1efbeed2d", { defaultValue: "Not authenticated" }));
       const address = walletAddress.toLowerCase();
 
       if (current === reaction) {

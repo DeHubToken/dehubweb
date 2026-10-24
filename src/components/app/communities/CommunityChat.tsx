@@ -530,7 +530,7 @@ export function CommunityChat({ communityId, community, membership, isMember }: 
         if (error) throw error;
       } catch (err: any) {
         console.error('[CommunityChat] AI Admin error:', err);
-        toast.error(err?.message || 'AI Admin failed to respond');
+        toast.error(err?.message || _copy("copy.b49ffce28586", { defaultValue: "AI Admin failed to respond" }));
       } finally {
         setAdminThinking(false);
       }
@@ -564,7 +564,7 @@ export function CommunityChat({ communityId, community, membership, isMember }: 
   const handleVoiceRecordingComplete = useCallback(async (blob: Blob, _duration: number) => {
     if (!isAuthenticated) { openLoginModal(); return; }
     const toastId = 'community-voice-upload';
-    toast.loading('Uploading voice note...', { id: toastId });
+    toast.loading(_copy("copy.97a0afff525e", { defaultValue: "Uploading voice note..." }), { id: toastId });
     try {
       const token = getAuthToken();
       const file = voiceRecordingFile(blob);
@@ -578,7 +578,7 @@ export function CommunityChat({ communityId, community, membership, isMember }: 
         },
       });
       if (error || !data?.ok || !data?.url) {
-        throw new Error(data?.error || error?.message || 'Upload failed');
+        throw new Error(data?.error || error?.message || _copy("copy.6efc5d27f30b", { defaultValue: "Upload failed" }));
       }
       await sendMessage(data.url, 'voice', data.url, replyTo?.id, {
         username: profileData?.handle || undefined,
@@ -591,7 +591,7 @@ export function CommunityChat({ communityId, community, membership, isMember }: 
       toast.success(_copy("copy.690c816e9745", { defaultValue: "Voice note sent!" }), { id: toastId });
     } catch (err: any) {
       console.error('[CommunityChat] Voice upload failed:', err);
-      toast.error(err?.message || 'Failed to send voice note', { id: toastId });
+      toast.error(err?.message || _copy("copy.615d555f779c", { defaultValue: "Failed to send voice note" }), { id: toastId });
     }
   }, [isAuthenticated, walletAddress, sendMessage, replyTo, profileData, user, openLoginModal, startSlowModeCountdown, setReplyTo, _copy]);
 
@@ -633,7 +633,7 @@ export function CommunityChat({ communityId, community, membership, isMember }: 
       || pinnedMessage.username
       || (pinnedMessage.wallet_address
         ? `${pinnedMessage.wallet_address.slice(0, 6)}...${pinnedMessage.wallet_address.slice(-4)}`
-        : 'Anon')
+        : _copy("copy.90395d452a30", { defaultValue: "Anon" }))
     : '';
   const pinnedPreview = pinnedMessage
     ? (pinnedMessage.content
@@ -1103,7 +1103,7 @@ export function CommunityChat({ communityId, community, membership, isMember }: 
               <span className="absolute top-1 right-0 text-[10px] text-zinc-600 z-10">{newMessage.length}/500</span>
               <Textarea
                 ref={textareaRef}
-                placeholder={`Type here...`}
+                placeholder={_copy("copy.8cbff9ea966c", { defaultValue: "Type here..." })}
                 value={newMessage}
                 onChange={(e) => {
                   const val = e.target.value;

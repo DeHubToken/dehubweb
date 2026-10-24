@@ -12,6 +12,7 @@ import { useAuth } from '@/contexts/AuthContext';
 import { withWalletHeader } from '@/lib/supabase-wallet-client';
 import { toast } from 'sonner';
 import { useEffect } from 'react';
+import { translateCopy as _translateCopy } from '@/i18n/copy';
 
 export interface EventChatMessage {
   id: string;
@@ -68,8 +69,8 @@ export function useEventChat(eventId: string | undefined) {
       ...msg,
       reply_to: {
         id: parent.id,
-        content: parent.content || (parent.message_type === 'gif' ? 'GIF' : 'Media'),
-        sender_name: parent.display_name || parent.username || 'User',
+        content: parent.content || (parent.message_type === 'gif' ? 'GIF' : _translateCopy("copy.d357175cfe89", { defaultValue: "Media" })),
+        sender_name: parent.display_name || parent.username || _translateCopy("copy.b512d97e7cbf", { defaultValue: "User" }),
       },
     };
   });
@@ -123,7 +124,7 @@ export function useEventChat(eventId: string | undefined) {
     replyToId?: string,
     userProfile?: { username?: string; displayName?: string; avatarUrl?: string; badgeBalance?: number }
   ) => {
-    if (!eventId || !walletAddress) throw new Error('Sign in to send a message');
+    if (!eventId || !walletAddress) throw new Error(_copy("copy.bc30560b2f21", { defaultValue: "Sign in to send a message" }));
     const msg = {
       event_id: eventId,
       wallet_address: walletAddress.toLowerCase(),

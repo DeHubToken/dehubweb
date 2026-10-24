@@ -69,7 +69,9 @@ export function useMuteAuthor() {
         // in Settings to go to. Without this the action is one-way, which is
         // not what a mute should be. unmuteUser has existed and been reachable
         // from nothing since it was written.
-        toast.success(`Muted ${displayName || 'account'} — they won't know`, {
+        toast.success(displayName
+          ? _copy("copy.6c0c22a155f4", { defaultValue: "Muted {{value1}} — they won't know", value1: displayName })
+          : _copy("copy.1585e999670b", { defaultValue: "Muted account — they won't know" }), {
           action: {
             label: _copy("copy.a8283ade3185", { defaultValue: "Undo" }),
             onClick: () => {
@@ -85,7 +87,9 @@ export function useMuteAuthor() {
                   // that reads as undone and still looks applied.
                   queryClient.invalidateQueries({ queryKey: ['unified-feed'] });
                   queryClient.invalidateQueries({ queryKey: ['dehub-feed'] });
-                  toast.success(`Unmuted ${displayName || 'account'}`);
+                  toast.success(displayName
+                    ? _copy("copy.1e771eecf49a", { defaultValue: "Unmuted {{value1}}", value1: displayName })
+                    : _copy("copy.73b1ced97680", { defaultValue: "Unmuted account" }));
                 } catch (error) {
                   console.error('[unmuteAuthor]', error);
                   toast.error(_copy("copy.6487e666c44d", { defaultValue: "Failed to unmute account" }));

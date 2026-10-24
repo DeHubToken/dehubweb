@@ -15,6 +15,7 @@
 
 import { Interface } from 'ethers';
 import i18n from '@/i18n';
+import { translateCopy as _translateCopy } from '@/i18n/copy';
 import {
   writeContractAA,
   getERC20Balance,
@@ -101,8 +102,8 @@ export async function payDhb(
   options: DhbPaymentOptions,
 ): Promise<DhbPaymentResult> {
   const amount = Math.ceil(amountDhb);
-  if (!Number.isFinite(amount) || amount <= 0) throw new Error('Nothing to pay.');
-  if (!treasury) throw new Error('No payment address configured.');
+  if (!Number.isFinite(amount) || amount <= 0) throw new Error(_translateCopy("copy.99c7a77baaf9", { defaultValue: "Nothing to pay." }));
+  if (!treasury) throw new Error(_translateCopy("copy.7d5825cf909d", { defaultValue: "No payment address configured." }));
 
   const amountWei = toWei(amount, 18);
   const signerAddress = await getWalletAddress();
@@ -114,7 +115,7 @@ export async function payDhb(
   ) {
     // The bill is opened against one account server-side; paying from another
     // would transfer real DHB and settle nothing.
-    throw new Error('Your wallet changed while this was being prepared. Reload and try again.');
+    throw new Error(_translateCopy("copy.fa539bc7ebfc", { defaultValue: "Your wallet changed while this was being prepared. Reload and try again." }));
   }
 
   const [baseBalance, bnbBalance] = await Promise.all([
@@ -174,6 +175,6 @@ export async function payDhb(
       confirmed: Promise.resolve(true),
     };
   } catch (err) {
-    throw new Error(parseTxError(err) || 'Payment failed.');
+    throw new Error(parseTxError(err) || _translateCopy("copy.4225d535fe99", { defaultValue: "Payment failed." }));
   }
 }

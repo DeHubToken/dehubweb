@@ -31,6 +31,7 @@ import {
 import { readGroups, sanitiseGroups, writeGroups, type FollowGroup } from '@/lib/follow-groups';
 import { getCreatorPlaybackRates, setCreatorPlaybackRates } from '@/lib/video-preferences';
 import { collectArchive, type ArchiveStep, type DeHubArchive } from '@/lib/data-archive';
+import { translateCopy as _translateCopy } from '@/i18n/copy';
 
 export const EXPORT_FORMAT = 'dehub-export';
 export const EXPORT_VERSION = 2;
@@ -223,10 +224,10 @@ export function downloadExport(data: DeHubDataExport) {
 export function parseExport(raw: string): DeHubDataExport {
   const parsed = JSON.parse(raw);
   if (!parsed || parsed.format !== EXPORT_FORMAT) {
-    throw new Error('That is not a DeHub export file.');
+    throw new Error(_translateCopy("copy.25085aff20ef", { defaultValue: "That is not a DeHub export file." }));
   }
   if (Number(parsed.version) > EXPORT_VERSION) {
-    throw new Error('That file was made by a newer version of DeHub.');
+    throw new Error(_translateCopy("copy.646aac7d320a", { defaultValue: "That file was made by a newer version of DeHub." }));
   }
   return {
     format: EXPORT_FORMAT,

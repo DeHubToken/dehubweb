@@ -354,14 +354,14 @@ export function LivePostChat({ tokenId, streamId: liveStreamId, isOffline = fals
       return;
     }
     const toastId = 'livechat-voice-upload';
-    toast.loading('Uploading voice note...', { id: toastId });
+    toast.loading(_copy("copy.97a0afff525e", { defaultValue: "Uploading voice note..." }), { id: toastId });
     try {
       const { url, duration } = await uploadLiveChatVoice(blob);
       await send('', 'audio', undefined, undefined, url, duration);
       toast.success(_copy("copy.690c816e9745", { defaultValue: "Voice note sent!" }), { id: toastId });
     } catch (err: any) {
       console.error('[LiveChat] Voice upload failed:', err);
-      toast.error(err?.message || 'Failed to send voice note', { id: toastId });
+      toast.error(err?.message || _copy("copy.615d555f779c", { defaultValue: "Failed to send voice note" }), { id: toastId });
     }
   }, [isAuthenticated, send, _copy]);
 
@@ -439,7 +439,7 @@ export function LivePostChat({ tokenId, streamId: liveStreamId, isOffline = fals
             title={_copy("copy.7c5784e7b79a", { defaultValue: "People watching this stream right now" })}
           >
             <Eye className="w-3.5 h-3.5" />
-            <span>{watching}{_copy("copy.dcb8e1a4fcaa", { defaultValue: " watching" })}</span>
+            <span>{_copy("copy.8fc2e70dbd8e", { defaultValue: "{{count}} watching", count: watching })}</span>
           </button>
         )}
         {watching !== null && (

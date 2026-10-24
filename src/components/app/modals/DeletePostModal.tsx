@@ -56,7 +56,7 @@ export function DeletePostModal({
       }
     } catch (error: any) {
       console.error('[DeletePostModal] Error:', error);
-      toast.error(error.message || 'Failed to delete post');
+      toast.error(error.message || _copy("copy.95ff1729b2c2", { defaultValue: "Failed to delete post" }));
     } finally {
       setIsDeleting(false);
     }

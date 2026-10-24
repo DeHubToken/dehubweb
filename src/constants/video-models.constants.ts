@@ -151,14 +151,16 @@ export const VIDEO_MODELS: Record<string, VideoModel> = {
     supportsEndFrame: true,
     supportsSeed: true,
     aspectRatios: ['16:9', '9:16', '1:1', '4:3', '3:4', '21:9'],
-    tips: [
-      '🌊 The strongest all-rounder here — start on this one',
-      '⏱️ Up to 30 seconds in a single pass, twice Seedance 2.0',
-      '🖼️ Attach an image to animate it, or set a start and end frame',
-      '👤 Reference images hold a character or product across the clip',
-      '🔊 Audio is generated jointly with the picture, so lip sync lands',
-      '📺 720p is the ceiling — 480p halves the cost',
-    ],
+    get tips() {
+      return [
+        _translateCopy("copy.1202a152d5a7", { defaultValue: "🌊 The strongest all-rounder here — start on this one" }),
+        _translateCopy("copy.e9dc7adbfd92", { defaultValue: "⏱️ Up to 30 seconds in a single pass, twice Seedance 2.0" }),
+        _translateCopy("copy.32cba4a53adb", { defaultValue: "🖼️ Attach an image to animate it, or set a start and end frame" }),
+        _translateCopy("copy.bb59f9125f09", { defaultValue: "👤 Reference images hold a character or product across the clip" }),
+        _translateCopy("copy.e41c2119f8fc", { defaultValue: "🔊 Audio is generated jointly with the picture, so lip sync lands" }),
+        _translateCopy("copy.9c72701f5a0a", { defaultValue: "📺 720p is the ceiling — 480p halves the cost" }),
+      ];
+    },
   },
   'kling-2.6-pro': {
     id: 'kling-2.6-pro',
@@ -178,13 +180,15 @@ export const VIDEO_MODELS: Record<string, VideoModel> = {
     supportsNegativePrompt: true,
     supportsSeed: true,
     aspectRatios: ['16:9', '9:16', '1:1'],
-    tips: [
-      '🎬 Best for cinematic, high-fidelity scenes',
-      '🖼️ Attach an image to animate it into a video',
-      '🔇 Generates native audio automatically',
-      '⏱️ 10s duration gives smoother motion arcs',
-      '🎯 Use negative prompts to avoid unwanted elements',
-    ],
+    get tips() {
+      return [
+        _translateCopy("copy.c3dcb2e92bdd", { defaultValue: "🎬 Best for cinematic, high-fidelity scenes" }),
+        _translateCopy("copy.401f701bb337", { defaultValue: "🖼️ Attach an image to animate it into a video" }),
+        _translateCopy("copy.1a9548da66c3", { defaultValue: "🔇 Generates native audio automatically" }),
+        _translateCopy("copy.cff6a12bbd2a", { defaultValue: "⏱️ 10s duration gives smoother motion arcs" }),
+        _translateCopy("copy.9c3aebc376ac", { defaultValue: "🎯 Use negative prompts to avoid unwanted elements" }),
+      ];
+    },
   },
   'luma-ray2': {
     id: 'luma-ray2',
@@ -196,12 +200,14 @@ export const VIDEO_MODELS: Record<string, VideoModel> = {
     emoji: '✨',
     baseCostUsd: 0.65,
     aspectRatios: ['16:9', '9:16', '1:1', '3:4', '4:3'],
-    tips: [
-      '✨ Excels at dreamy, artistic aesthetics',
-      '📝 Text-to-video only — describe your scene vividly',
-      '🎨 Great for abstract, surreal, or nature scenes',
-      '📐 Try different aspect ratios for variety',
-    ],
+    get tips() {
+      return [
+        _translateCopy("copy.84c963d0d0aa", { defaultValue: "✨ Excels at dreamy, artistic aesthetics" }),
+        _translateCopy("copy.b16813224510", { defaultValue: "📝 Text-to-video only — describe your scene vividly" }),
+        _translateCopy("copy.6018fc0a180e", { defaultValue: "🎨 Great for abstract, surreal, or nature scenes" }),
+        _translateCopy("copy.f2f36b3c349f", { defaultValue: "📐 Try different aspect ratios for variety" }),
+      ];
+    },
   },
   'runway-gen4': {
     id: 'runway-gen4',
@@ -218,12 +224,14 @@ export const VIDEO_MODELS: Record<string, VideoModel> = {
     allowedDurations: [5, 10],
     defaultDuration: 10,
     aspectRatios: ['16:9', '9:16', '1:1'],
-    tips: [
-      '🖼️ Requires an image — attach one to animate it',
-      '🚀 Best-in-class image animation quality',
-      '📸 Works great with photos, illustrations, AI art',
-      '💡 Describe the motion you want in your prompt',
-    ],
+    get tips() {
+      return [
+        _translateCopy("copy.730dfbcdb279", { defaultValue: "🖼️ Requires an image — attach one to animate it" }),
+        _translateCopy("copy.2431127c6c54", { defaultValue: "🚀 Best-in-class image animation quality" }),
+        _translateCopy("copy.f96b156f47b2", { defaultValue: "📸 Works great with photos, illustrations, AI art" }),
+        _translateCopy("copy.f24b37b0fb8e", { defaultValue: "💡 Describe the motion you want in your prompt" }),
+      ];
+    },
   },
   'minimax-video': {
     id: 'minimax-video',
@@ -234,12 +242,14 @@ export const VIDEO_MODELS: Record<string, VideoModel> = {
     tier: 'standard',
     emoji: '⚡',
     baseCostUsd: 0.22,
-    tips: [
-      '⚡ Fast generation at an affordable price',
-      '🖼️ Attach an image for image-to-video mode',
-      '📝 Keep prompts concise for best results',
-      '💰 Great value for quick iterations',
-    ],
+    get tips() {
+      return [
+        _translateCopy("copy.bfb11ed80e67", { defaultValue: "⚡ Fast generation at an affordable price" }),
+        _translateCopy("copy.8943e37a9f6f", { defaultValue: "🖼️ Attach an image for image-to-video mode" }),
+        _translateCopy("copy.17d5c18b44b7", { defaultValue: "📝 Keep prompts concise for best results" }),
+        _translateCopy("copy.5ec12d01e69b", { defaultValue: "💰 Great value for quick iterations" }),
+      ];
+    },
   },
   'ltx-video': {
     id: 'ltx-video',
@@ -252,12 +262,14 @@ export const VIDEO_MODELS: Record<string, VideoModel> = {
     baseCostUsd: 0.085,
     supportsSeed: true,
     supportsNegativePrompt: true,
-    tips: [
-      '💨 Fastest & cheapest option for quick tests',
-      '🔁 Use seed to iterate on the same scene',
-      '🎯 Negative prompts help refine output',
-      '💡 Perfect for rapid prototyping ideas',
-    ],
+    get tips() {
+      return [
+        _translateCopy("copy.18eb2e8a02b2", { defaultValue: "💨 Fastest & cheapest option for quick tests" }),
+        _translateCopy("copy.df370662c4a6", { defaultValue: "🔁 Use seed to iterate on the same scene" }),
+        _translateCopy("copy.513bb874b9d3", { defaultValue: "🎯 Negative prompts help refine output" }),
+        _translateCopy("copy.bdb289c47571", { defaultValue: "💡 Perfect for rapid prototyping ideas" }),
+      ];
+    },
   },
   'seedance-1.5-pro': {
     id: 'seedance-1.5-pro',
@@ -276,13 +288,15 @@ export const VIDEO_MODELS: Record<string, VideoModel> = {
     supportsResolution: true,
     supportsSeed: true,
     aspectRatios: ['16:9', '9:16', '1:1'],
-    tips: [
-      '🌊 Cinematic quality with native audio',
-      '🖼️ Attach an image to animate it',
-      '📺 Supports 720p resolution',
-      '⏱️ Flexible 2-12s duration range',
-      '🔁 Lock a seed for consistent iterations',
-    ],
+    get tips() {
+      return [
+        _translateCopy("copy.d444f9499ffc", { defaultValue: "🌊 Cinematic quality with native audio" }),
+        _translateCopy("copy.2a0b2a2c6dc1", { defaultValue: "🖼️ Attach an image to animate it" }),
+        _translateCopy("copy.70d52cba6985", { defaultValue: "📺 Supports 720p resolution" }),
+        _translateCopy("copy.6b22cd35ed6f", { defaultValue: "⏱️ Flexible 2-12s duration range" }),
+        _translateCopy("copy.b014009b335a", { defaultValue: "🔁 Lock a seed for consistent iterations" }),
+      ];
+    },
   },
   'seedance-2.0': {
     id: 'seedance-2.0',
@@ -310,14 +324,16 @@ export const VIDEO_MODELS: Record<string, VideoModel> = {
     supportsVideoInput: true,
     supportsSeed: true,
     aspectRatios: ['16:9', '9:16', '1:1'],
-    tips: [
-      '👤 Upload face photos for character consistency across videos',
-      '🎵 Upload audio for lip-sync animation',
-      '🎬 Set start + end frames for controlled transitions',
-      '🎨 Upload a video to restyle it with a new prompt',
-      '🔁 Lock a seed to iterate without randomness',
-      '📺 720p is the ceiling — 480p for speed',
-    ],
+    get tips() {
+      return [
+        _translateCopy("copy.1928372ee940", { defaultValue: "👤 Upload face photos for character consistency across videos" }),
+        _translateCopy("copy.cec7465fbd73", { defaultValue: "🎵 Upload audio for lip-sync animation" }),
+        _translateCopy("copy.5458c46e4c3d", { defaultValue: "🎬 Set start + end frames for controlled transitions" }),
+        _translateCopy("copy.af5821c6714e", { defaultValue: "🎨 Upload a video to restyle it with a new prompt" }),
+        _translateCopy("copy.265a1587a724", { defaultValue: "🔁 Lock a seed to iterate without randomness" }),
+        _translateCopy("copy.f991c9ed6f9f", { defaultValue: "📺 720p is the ceiling — 480p for speed" }),
+      ];
+    },
   },
   'seedance-2.0-fast': {
     id: 'seedance-2.0-fast',
@@ -343,13 +359,15 @@ export const VIDEO_MODELS: Record<string, VideoModel> = {
     supportsVideoInput: true,
     supportsSeed: true,
     aspectRatios: ['16:9', '9:16', '1:1'],
-    tips: [
-      '⚡ Same features as Seedance 2.0 but faster & cheaper',
-      '👤 Upload face photos for character consistency',
-      '🎵 Upload audio for lip-sync animation',
-      '🎬 Set start + end frames for controlled transitions',
-      '🔁 Lock a seed to iterate without randomness',
-    ],
+    get tips() {
+      return [
+        _translateCopy("copy.be205011d048", { defaultValue: "⚡ Same features as Seedance 2.0 but faster & cheaper" }),
+        _translateCopy("copy.bd98369b2f2c", { defaultValue: "👤 Upload face photos for character consistency" }),
+        _translateCopy("copy.cec7465fbd73", { defaultValue: "🎵 Upload audio for lip-sync animation" }),
+        _translateCopy("copy.5458c46e4c3d", { defaultValue: "🎬 Set start + end frames for controlled transitions" }),
+        _translateCopy("copy.265a1587a724", { defaultValue: "🔁 Lock a seed to iterate without randomness" }),
+      ];
+    },
   },
 
   // ─────────────────────────────────────────────────────────────────────────
@@ -382,12 +400,14 @@ export const VIDEO_MODELS: Record<string, VideoModel> = {
     resolutions: ['720p', '1080p'],
     provider: 'fal',
     aspectRatios: ['16:9', '9:16'],
-    tips: [
-      '🎥 The most convincing realism available, with native audio',
-      '🖼️ Attach an image to animate it',
-      '💸 One flat price whatever the length — 8s costs the same as 4s',
-      '📺 Worth running at 1080p',
-    ],
+    get tips() {
+      return [
+        _translateCopy("copy.a46573483313", { defaultValue: "🎥 The most convincing realism available, with native audio" }),
+        _translateCopy("copy.2a0b2a2c6dc1", { defaultValue: "🖼️ Attach an image to animate it" }),
+        _translateCopy("copy.ef7a51cc6c7f", { defaultValue: "💸 One flat price whatever the length — 8s costs the same as 4s" }),
+        _translateCopy("copy.bba4b4b1c9c1", { defaultValue: "📺 Worth running at 1080p" }),
+      ];
+    },
   },
   'veo-3.1-fast': {
     id: 'veo-3.1-fast',
@@ -408,11 +428,13 @@ export const VIDEO_MODELS: Record<string, VideoModel> = {
     resolutions: ['720p', '1080p'],
     provider: 'fal',
     aspectRatios: ['16:9', '9:16'],
-    tips: [
-      '⚡ Where to start on Veo — iterate here, finish on 3.1',
-      '🖼️ Attach an image to animate it',
-      '🔊 Native audio included',
-    ],
+    get tips() {
+      return [
+        _translateCopy("copy.6ea7b41550d1", { defaultValue: "⚡ Where to start on Veo — iterate here, finish on 3.1" }),
+        _translateCopy("copy.2a0b2a2c6dc1", { defaultValue: "🖼️ Attach an image to animate it" }),
+        _translateCopy("copy.be567a4c5484", { defaultValue: "🔊 Native audio included" }),
+      ];
+    },
   },
   'kling-3.0': {
     id: 'kling-3.0',
@@ -432,12 +454,14 @@ export const VIDEO_MODELS: Record<string, VideoModel> = {
     supportsNegativePrompt: true,
     provider: 'fal',
     aspectRatios: ['16:9', '9:16', '1:1'],
-    tips: [
-      '🎞️ Holds a shot together over longer durations than most',
-      '🖼️ Attach an image to animate it',
-      '⏱️ Up to 15 seconds in one generation',
-      '🎯 Negative prompts work well here',
-    ],
+    get tips() {
+      return [
+        _translateCopy("copy.46a61505dcff", { defaultValue: "🎞️ Holds a shot together over longer durations than most" }),
+        _translateCopy("copy.2a0b2a2c6dc1", { defaultValue: "🖼️ Attach an image to animate it" }),
+        _translateCopy("copy.5493bc5ab5d9", { defaultValue: "⏱️ Up to 15 seconds in one generation" }),
+        _translateCopy("copy.45959396fd77", { defaultValue: "🎯 Negative prompts work well here" }),
+      ];
+    },
   },
   'kling-3.0-standard': {
     id: 'kling-3.0-standard',
@@ -457,11 +481,13 @@ export const VIDEO_MODELS: Record<string, VideoModel> = {
     supportsNegativePrompt: true,
     provider: 'fal',
     aspectRatios: ['16:9', '9:16', '1:1'],
-    tips: [
-      '🎬 Kling 3.0 at three quarters the price',
-      '🖼️ Attach an image to animate it',
-      '⏱️ Up to 15 seconds',
-    ],
+    get tips() {
+      return [
+        _translateCopy("copy.d7b0416afe3d", { defaultValue: "🎬 Kling 3.0 at three quarters the price" }),
+        _translateCopy("copy.2a0b2a2c6dc1", { defaultValue: "🖼️ Attach an image to animate it" }),
+        _translateCopy("copy.9bbdb1635108", { defaultValue: "⏱️ Up to 15 seconds" }),
+      ];
+    },
   },
   'kling-2.5-turbo': {
     id: 'kling-2.5-turbo',
@@ -481,12 +507,14 @@ export const VIDEO_MODELS: Record<string, VideoModel> = {
     supportsNegativePrompt: true,
     provider: 'fal',
     aspectRatios: ['16:9', '9:16', '1:1'],
-    tips: [
-      '🌪️ Smoothest motion of the cheap tiers',
-      '🖼️ Attach an image to animate it',
-      '🔇 No audio on this one — use Kling 3.0 or Seedance if you need it',
-      '🎯 Negative prompts are honoured',
-    ],
+    get tips() {
+      return [
+        _translateCopy("copy.c58d818026c4", { defaultValue: "🌪️ Smoothest motion of the cheap tiers" }),
+        _translateCopy("copy.2a0b2a2c6dc1", { defaultValue: "🖼️ Attach an image to animate it" }),
+        _translateCopy("copy.c3a2370d7310", { defaultValue: "🔇 No audio on this one — use Kling 3.0 or Seedance if you need it" }),
+        _translateCopy("copy.25892e077570", { defaultValue: "🎯 Negative prompts are honoured" }),
+      ];
+    },
   },
   'hailuo-2.3': {
     id: 'hailuo-2.3',
@@ -499,11 +527,13 @@ export const VIDEO_MODELS: Record<string, VideoModel> = {
     baseCostUsd: 0.49,
     provider: 'fal',
     aspectRatios: ['16:9', '9:16', '1:1'],
-    tips: [
-      '🌀 Best-in-class body mechanics and sense of weight',
-      '😀 Strong facial performance — good for characters',
-      '🖼️ Attach an image to animate it',
-    ],
+    get tips() {
+      return [
+        _translateCopy("copy.9b4a676d824a", { defaultValue: "🌀 Best-in-class body mechanics and sense of weight" }),
+        _translateCopy("copy.e07101e47c58", { defaultValue: "😀 Strong facial performance — good for characters" }),
+        _translateCopy("copy.2a0b2a2c6dc1", { defaultValue: "🖼️ Attach an image to animate it" }),
+      ];
+    },
   },
   'hailuo-2.3-fast': {
     id: 'hailuo-2.3-fast',
@@ -516,10 +546,12 @@ export const VIDEO_MODELS: Record<string, VideoModel> = {
     baseCostUsd: 0.33,
     provider: 'fal',
     aspectRatios: ['16:9', '9:16', '1:1'],
-    tips: [
-      '💨 Same physics, faster turnaround',
-      '🖼️ Requires an image — attach one to animate',
-    ],
+    get tips() {
+      return [
+        _translateCopy("copy.70c8bb68d882", { defaultValue: "💨 Same physics, faster turnaround" }),
+        _translateCopy("copy.5139cfcbeae0", { defaultValue: "🖼️ Requires an image — attach one to animate" }),
+      ];
+    },
   },
   'wan-2.6': {
     id: 'wan-2.6',
@@ -540,12 +572,14 @@ export const VIDEO_MODELS: Record<string, VideoModel> = {
     supportsResolution: true,
     provider: 'fal',
     aspectRatios: ['16:9', '9:16', '1:1'],
-    tips: [
-      '🎭 Holds a character’s identity across the whole clip',
-      '🖼️ Requires an image — attach one to animate',
-      '🔊 Audio is generated in sync',
-      '📺 720p or 1080p only on this one',
-    ],
+    get tips() {
+      return [
+        _translateCopy("copy.445309f6cea6", { defaultValue: "🎭 Holds a character’s identity across the whole clip" }),
+        _translateCopy("copy.5139cfcbeae0", { defaultValue: "🖼️ Requires an image — attach one to animate" }),
+        _translateCopy("copy.1c5dd60a911b", { defaultValue: "🔊 Audio is generated in sync" }),
+        _translateCopy("copy.4016dc0dc4f9", { defaultValue: "📺 720p or 1080p only on this one" }),
+      ];
+    },
   },
   'wan-2.5': {
     id: 'wan-2.5',
@@ -567,10 +601,12 @@ export const VIDEO_MODELS: Record<string, VideoModel> = {
     supportsNegativePrompt: true,
     provider: 'fal',
     aspectRatios: ['16:9', '9:16', '1:1'],
-    tips: [
-      '🌈 Leans stylised rather than photoreal',
-      '🖼️ Attach an image to animate it',
-    ],
+    get tips() {
+      return [
+        _translateCopy("copy.e45c8c46328a", { defaultValue: "🌈 Leans stylised rather than photoreal" }),
+        _translateCopy("copy.2a0b2a2c6dc1", { defaultValue: "🖼️ Attach an image to animate it" }),
+      ];
+    },
   },
   'luma-ray2-flash': {
     id: 'luma-ray2-flash',
@@ -588,11 +624,13 @@ export const VIDEO_MODELS: Record<string, VideoModel> = {
     provider: 'fal',
     // Ray 2 accepts no 1:1 — offering it would 422 after payment.
     aspectRatios: ['16:9', '9:16', '4:3', '3:4', '21:9', '9:21'],
-    tips: [
-      '✨ Great for abstract, surreal and nature scenes',
-      '🖼️ Attach an image to animate it',
-      '💰 A quarter the price of full Ray 2',
-    ],
+    get tips() {
+      return [
+        _translateCopy("copy.753106470b0a", { defaultValue: "✨ Great for abstract, surreal and nature scenes" }),
+        _translateCopy("copy.2a0b2a2c6dc1", { defaultValue: "🖼️ Attach an image to animate it" }),
+        _translateCopy("copy.7e59061caf0d", { defaultValue: "💰 A quarter the price of full Ray 2" }),
+      ];
+    },
   },
   'pixverse-v5': {
     id: 'pixverse-v5',
@@ -611,11 +649,13 @@ export const VIDEO_MODELS: Record<string, VideoModel> = {
     supportsNegativePrompt: true,
     provider: 'fal',
     aspectRatios: ['16:9', '9:16', '1:1'],
-    tips: [
-      '🎨 The one to reach for on anime and illustrated looks',
-      '🖼️ Attach an image to animate it',
-      '⏱️ 8s costs double 5s',
-    ],
+    get tips() {
+      return [
+        _translateCopy("copy.5bbdbab529c3", { defaultValue: "🎨 The one to reach for on anime and illustrated looks" }),
+        _translateCopy("copy.2a0b2a2c6dc1", { defaultValue: "🖼️ Attach an image to animate it" }),
+        _translateCopy("copy.2ae698f884fb", { defaultValue: "⏱️ 8s costs double 5s" }),
+      ];
+    },
   },
   'ltx-13b': {
     id: 'ltx-13b',
@@ -636,11 +676,13 @@ export const VIDEO_MODELS: Record<string, VideoModel> = {
     // LTX tops out at 720p, so no resolution chip — it would offer a 1080p
     // this model cannot produce.
     aspectRatios: ['16:9', '9:16', '1:1'],
-    tips: [
-      '🪶 By far the cheapest way to test an idea',
-      '🔁 Lock a seed and iterate on the same scene',
-      '🖼️ Attach an image to animate it',
-    ],
+    get tips() {
+      return [
+        _translateCopy("copy.08166df65da6", { defaultValue: "🪶 By far the cheapest way to test an idea" }),
+        _translateCopy("copy.d3d91f0a3b47", { defaultValue: "🔁 Lock a seed and iterate on the same scene" }),
+        _translateCopy("copy.2a0b2a2c6dc1", { defaultValue: "🖼️ Attach an image to animate it" }),
+      ];
+    },
   },
 };
 

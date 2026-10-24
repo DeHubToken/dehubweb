@@ -107,7 +107,7 @@ export function MusicConfirmDialog({ open, onOpenChange, userPrompt, onConfirm }
       }
     } catch (err: any) {
       console.error('Lyrics generation error:', err);
-      toast.error(err?.message || 'Failed to generate lyrics');
+      toast.error(err?.message || _copy("copy.17fb85a7f9d4", { defaultValue: "Failed to generate lyrics" }));
     } finally {
       setIsGeneratingLyrics(false);
     }
@@ -147,7 +147,7 @@ export function MusicConfirmDialog({ open, onOpenChange, userPrompt, onConfirm }
               type="text"
               value={style}
               onChange={(e) => setStyle(e.target.value)}
-              placeholder="e.g. upbeat pop, chill lo-fi, dark trap"
+              placeholder={_copy("copy.e40d82148076", { defaultValue: "e.g. upbeat pop, chill lo-fi, dark trap" })}
               className="w-full px-3 py-2.5 rounded-xl bg-white/5 border border-white/10 text-sm text-white placeholder:text-white/25 focus:outline-none focus:border-white/25 transition-colors"
             />
           </div>

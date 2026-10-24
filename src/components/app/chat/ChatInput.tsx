@@ -409,7 +409,7 @@ export function ChatInput({ onSendMessage, onTipClick, sendDisabled, sendDisable
     const file = voiceRecordingFile(blob);
     setAudioPreview({ file, blob, duration });
     clearImage();
-    toast.success(`Recording saved (${duration}s)`);
+    toast.success(_copy("copy.4951131f6346", { defaultValue: "Recording saved ({{value1}}s)", value1: duration }));
   };
 
   const handleEnhanceText = async () => {
@@ -425,7 +425,7 @@ export function ChatInput({ onSendMessage, onTipClick, sendDisabled, sendDisable
       });
 
       if (error) {
-        toast.error(error.message || 'Failed to enhance text');
+        toast.error(error.message || _copy("copy.95724793b6b1", { defaultValue: "Failed to enhance text" }));
         return;
       }
 
@@ -594,7 +594,7 @@ export function ChatInput({ onSendMessage, onTipClick, sendDisabled, sendDisable
       {audioPreview && (
         <div className="mb-2 relative inline-flex items-center gap-2 px-3 py-2 bg-zinc-800 rounded-lg">
           <div className="w-2 h-2 rounded-full bg-white" />
-          <span className="text-sm text-white">{_copy("copy.1ea036b48a82", { defaultValue: "🎤 Voice message (" })}{formatDuration(audioPreview.duration)})
+          <span className="text-sm text-white">{_copy("copy.f5763184d69c", { defaultValue: "🎤 Voice message ({{value1}})", value1: formatDuration(audioPreview.duration) })}
           </span>
           <button
             onClick={removeAudioPreview}
@@ -740,7 +740,7 @@ export function ChatInput({ onSendMessage, onTipClick, sendDisabled, sendDisable
                   </Button>
                 </PopoverTrigger>
               </TooltipTrigger>
-              <TooltipContent>AI</TooltipContent>
+              <TooltipContent>{_copy("copy.11fb682be0a0", { defaultValue: "AI" })}</TooltipContent>
             </Tooltip>
             <PopoverContent
               align="end"

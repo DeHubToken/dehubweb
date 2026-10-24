@@ -275,7 +275,7 @@ export function StageRadioPanel() {
     if (!files.length || !musicFolder) return;
 
     if (clips.length + files.length > MAX_MUSIC_CLIPS) {
-      toast.error(`Room for ${MAX_MUSIC_CLIPS} clips. Delete one first.`);
+      toast.error(_copy("copy.f3c14becb5fd", { defaultValue: "Room for {{value1}} clips. Delete one first.", value1: MAX_MUSIC_CLIPS }));
       return;
     }
 
@@ -283,11 +283,11 @@ export function StageRadioPanel() {
     let added = 0;
     for (const file of files) {
       if (file.type && !ACCEPTED_AUDIO_TYPES.includes(file.type)) {
-        toast.error(`${file.name}: not an audio file`);
+        toast.error(_copy("copy.5ef2449f06cb", { defaultValue: "{{value1}}: not an audio file", value1: file.name }));
         continue;
       }
       if (file.size > MAX_MUSIC_MB * 1024 * 1024) {
-        toast.error(`${file.name}: over ${MAX_MUSIC_MB}MB`);
+        toast.error(_copy("copy.140f7dc6c115", { defaultValue: "{{value1}}: over {{value2}}MB", value1: file.name, value2: MAX_MUSIC_MB }));
         continue;
       }
       const safeName = file.name.replace(/[^a-zA-Z0-9._-]/g, '_').toLowerCase();
@@ -378,7 +378,9 @@ export function StageRadioPanel() {
                 {radioStatus === 'idle' && t('stages.stopped')}
                 {radioStatus === 'live' &&
                   (onAirIsTrack
-                    ? _copy("copy.334bc5180bf8", { defaultValue: "Playing to the room{{value1}}", value1: canSkip ? ` · ${positionInSet + 1} of ${radioQueue.length}` : '' })
+                    ? (canSkip
+                        ? _copy("copy.f5c65d387b57", { defaultValue: "Playing to the room · {{value1}} of {{value2}}", value1: positionInSet + 1, value2: radioQueue.length })
+                        : t('stages.playingToRoom'))
                     : [
                         getCountryFlag(radioStation.countrycode || ''),
                         describe(radioStation.tags, radioStation.bitrate) || t('stages.playingToRoom'),
@@ -523,8 +525,11 @@ export function StageRadioPanel() {
                 />
               ) : (
                 <p className="text-[11px] text-white/40">
-                  {parsed.name ? `“${parsed.name}”` : t('stages.allStations')}
-                  {parsed.countryName && ` in ${parsed.countryName}`}
+                  {parsed.countryName
+                    ? parsed.name
+                      ? _copy("copy.1320a0e8db37", { defaultValue: "“{{value1}}” in {{value2}}", value1: parsed.name, value2: parsed.countryName })
+                      : _copy("copy.9e3f664ecc42", { defaultValue: "All stations in {{value1}}", value1: parsed.countryName })
+                    : parsed.name ? `“${parsed.name}”` : t('stages.allStations')}
                   {!isLoadingStations && _copy("copy.7cb1d7585a38", { defaultValue: " · {{value1}} found", value1: stations.length })}
                 </p>
               )}

@@ -285,7 +285,7 @@ export const SidebarLeaderboard = forwardRef<SidebarLeaderboardHandle>(function 
               FOCUS_RING,
             )}
           >
-            {period}
+            {period === 'All' ? t("copy.a52ace420f21", { defaultValue: "All" }) : period}
           </button>
         ))}
       </div>

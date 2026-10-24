@@ -7,6 +7,7 @@
  */
 import { getAuthToken } from '@/lib/api/dehub/core';
 import type { ObjectType } from '@/lib/api/justwatch';
+import { translateCopy as _translateCopy } from '@/i18n/copy';
 
 const SUPABASE_URL =
   import.meta.env.VITE_SUPABASE_URL || 'https://aigxuutjaqsywioxjefr.supabase.co';
@@ -41,7 +42,7 @@ export interface FilmReviewsResponse {
  *  catalogue has, and rendered the same way. */
 export class FilmReviewsUnavailableError extends Error {
   constructor() {
-    super('Film reviews are not available yet');
+    super(_translateCopy("copy.a58930922cc9", { defaultValue: "Film reviews are not available yet" }));
     this.name = 'FilmReviewsUnavailableError';
   }
 }
@@ -103,7 +104,7 @@ export interface SaveFilmReviewInput {
 
 export async function saveFilmReview(input: SaveFilmReviewInput): Promise<FilmReview> {
   const token = getAuthToken();
-  if (!token) throw new Error('Sign in to leave a review.');
+  if (!token) throw new Error(_translateCopy("copy.8b5f87b82d66", { defaultValue: "Sign in to leave a review." }));
 
   const res = await reach(target(input.justwatchId, input.objectType), {
     method: 'POST',
@@ -123,7 +124,7 @@ export async function saveFilmReview(input: SaveFilmReviewInput): Promise<FilmRe
 
 
   const data = await res.json().catch(() => null);
-  if (!res.ok) throw new Error(data?.error ?? `Could not save your review (${res.status})`);
+  if (!res.ok) throw new Error(data?.error ?? _translateCopy("copy.9f77374a745f", { defaultValue: "Could not save your review ({{value1}})", value1: res.status }));
 
   return data.review as FilmReview;
 }
@@ -133,7 +134,7 @@ export async function deleteFilmReview(
   objectType: ObjectType,
 ): Promise<void> {
   const token = getAuthToken();
-  if (!token) throw new Error('Sign in to manage your review.');
+  if (!token) throw new Error(_translateCopy("copy.9636894a7e7a", { defaultValue: "Sign in to manage your review." }));
 
   const res = await reach(target(justwatchId, objectType), {
     method: 'DELETE',
@@ -142,6 +143,6 @@ export async function deleteFilmReview(
 
   if (!res.ok) {
     const data = await res.json().catch(() => null);
-    throw new Error(data?.error ?? `Could not remove your review (${res.status})`);
+    throw new Error(data?.error ?? _translateCopy("copy.5e0aa872e5d0", { defaultValue: "Could not remove your review ({{value1}})", value1: res.status }));
   }
 }

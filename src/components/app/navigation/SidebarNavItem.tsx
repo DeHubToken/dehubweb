@@ -37,6 +37,8 @@ export const NAV_LABEL_KEYS: Record<string, string> = {
   'AI Agents': 'nav.agents', Advertising: 'nav.advertising', Premium: 'nav.premium',
   Pricing: 'nav.pricing', Creators: 'nav.creators', 'Get the App': 'nav.getTheApp',
   'Connect AI': 'nav.connectAi',
+  // The bounty history page's own title key.
+  'My Bounties': 'work.myBounties',
   // Same key the bottom nav uses for this destination.
   Stages: 'stages.title',
   // Page titles where the page has one, so the menu row reads the same as the

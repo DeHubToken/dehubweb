@@ -302,7 +302,7 @@ export function ReactionPicker({
                       role="menuitemradio"
                       aria-checked={isCurrent}
                       type="button"
-                      aria-label={reaction.label}
+                      aria-label={t(`reactionInfo.labels.${reaction.key}`, { defaultValue: reaction.label })}
                       data-reaction-option
                       data-keep-round
                       data-active={isCurrent ? 'true' : undefined}
@@ -363,7 +363,7 @@ export function ReactionPicker({
     const tally = counts ? (counts[reaction.key] ?? 0) : null;
     const withTally =
       tally === null
-        ? reaction.label
+        ? t(`reactionInfo.labels.${reaction.key}`, { defaultValue: reaction.label })
         : `${reaction.label} — ${tally} ${tally === 1 ? 'reaction' : 'reactions'}`;
     return (
       <button

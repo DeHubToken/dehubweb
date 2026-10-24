@@ -56,7 +56,7 @@ export default function PublicFlowViewer({ id, onLoaded }: Props) {
     if (!flow) return;
     const counters: Record<string, number> = {};
     for (const n of flow.nodes) counters[n.type ?? 'node'] = (counters[n.type ?? 'node'] ?? 0) + 1;
-    createFlow(`${flow.name} (copy)`, {
+    createFlow(t("copy.ccaef4a11333", { defaultValue: "{{value1}} (copy)", value1: flow.name }), {
       nodes: flow.nodes.map((n) => ({ ...n, selected: false, data: { ...n.data, status: 'idle', jobId: undefined, pendingGenerate: false, pipelineQueued: false } })),
       edges: flow.edges,
       nodeCounters: counters,
