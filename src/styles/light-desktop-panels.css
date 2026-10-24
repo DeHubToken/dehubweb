@@ -14,8 +14,10 @@
     border-radius: 0 !important;
     box-shadow: none;
     padding: var(--desktop-pearl-inset);
-    margin-top: 8px;
-    top: 8px;
+    /* Match the System feed nav's 6px desktop top inset. */
+    padding-top: 6px;
+    margin-top: 0;
+    top: 0;
     height: calc(100dvh - 16px);
     --search-fill: #e9ebed;
     --search-fill-focus: #e2e5e8;
