@@ -96,7 +96,7 @@ export function EditStoreDrawer({ store, open, onClose }: Props) {
               ) : (
                 <div className="w-full h-full bg-gradient-to-br from-white/5 to-white/[0.02]" />
               )}
-              <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+              <div data-keep-dark className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
                 {uploadingBanner ? <Loader2 className="w-5 h-5 animate-spin text-white" /> : <Camera className="w-5 h-5 text-white" />}
               </div>
             </div>
@@ -118,7 +118,7 @@ export function EditStoreDrawer({ store, open, onClose }: Props) {
                     <ThemedIcon icon="stores" alt="" className="w-10 h-10 object-contain opacity-75" />
                   </div>
                 )}
-                <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center rounded-lg">
+                <div data-keep-dark className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center rounded-lg">
                   {uploadingAvatar ? <Loader2 className="w-4 h-4 animate-spin text-white" /> : <Camera className="w-4 h-4 text-white" />}
                 </div>
               </div>
