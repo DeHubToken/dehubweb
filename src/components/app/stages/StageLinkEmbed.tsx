@@ -10,15 +10,8 @@ import { useTranslation as _useCopy } from 'react-i18next';
  * date entirely and becomes a join button, because by then "when" is "now" and
  * the only useful thing the card can say is that the room is open.
  *
- * The host's cover graphic, if they set one, sits above the card content at
- * its own shape — full width, natural height, the same treatment
- * StageCoverArt gives it on the stage page itself, so a non-16:9 cover gets
- * no letterbox bars in the feed either. It used to back the whole
- * card as an absolutely-positioned object-cover layer, which cropped it to
- * whatever height the text happened to make (~150px of a 16:9 graphic); art
- * designed to announce an event was mostly invisible. With the image out from
- * under the text there is no scrim either, and the card falls back to the
- * flat surface every other embed uses when there is no graphic at all.
+ * Cover art sits above the content in the same edge-to-edge 16:9 frame used
+ * by stage cards and stage pages, including the generated fallback poster.
  */
 
 import { useNavigate } from 'react-router-dom';
@@ -33,7 +26,7 @@ import Users from "@/components/ui/cut-icons/communities";
 import type { ReactNode } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { buildAvatarUrl, buildAvatarCdnFallbackUrl } from '@/lib/media-url';
-import { GeneratedStageCover } from '@/components/app/stages/GeneratedStageCover';
+import { StageCoverArt } from '@/components/app/stages/StageCoverArt';
 import { cn } from '@/lib/utils';
 import { BadgedName } from '@/components/app/BadgedName';
 import { StageRecordingPlayer } from '@/components/app/stages/StageRecordingPlayer';
@@ -101,24 +94,10 @@ export function StageLinkEmbed({ stageId, stageShortId, fallback = null }: Stage
         hasCover && 'hover:border-white/20',
       )}
     >
-      {/* Cover graphic at its own shape — full width, natural height, the
-          same treatment StageCoverArt uses on the stage page. Very tall
-          uploads are capped so one card cannot swallow the feed.
-          aria-hidden because the heading below already names the stage. */}
-      {hasCover ? (
-        <div aria-hidden className="w-full">
-          <img
-            src={stage.cover_image_url!}
-            alt=""
-            loading="lazy"
-            className="block w-full h-auto max-h-[70vh] object-cover"
-          />
-        </div>
-      ) : (
-        <div aria-hidden>
-          <GeneratedStageCover stage={stage} />
-        </div>
-      )}
+      {/* The heading below already names the stage. */}
+      <div aria-hidden>
+        <StageCoverArt src={stage.cover_image_url} stage={stage} />
+      </div>
 
       <div className="relative p-3.5 space-y-2">
         {/* Status line */}
