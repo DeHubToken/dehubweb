@@ -83,7 +83,7 @@ export function SetupStoreFlow({ onComplete, onCancel }: SetupStoreFlowProps) {
       )}
 
       {/* Banner upload */}
-      <div>
+      <div className="w-full">
         <Label className="text-zinc-300 text-xs mb-1.5 block">{t('stores.bannerImage')}</Label>
         <div
           onClick={() => bannerRef.current?.click()}
@@ -96,7 +96,7 @@ export function SetupStoreFlow({ onComplete, onCancel }: SetupStoreFlowProps) {
               <Camera className="w-6 h-6 text-zinc-500" />
             </div>
           )}
-          <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+          <div data-keep-dark className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
             {uploadingBanner ? <Loader2 className="w-5 h-5 animate-spin text-primary-foreground" /> : <Camera className="w-5 h-5 text-primary-foreground" />}
           </div>
         </div>
@@ -115,14 +115,14 @@ export function SetupStoreFlow({ onComplete, onCancel }: SetupStoreFlowProps) {
             <ThemedIcon icon="stores" alt="" className="w-12 h-12 object-contain opacity-75" />
           </div>
         )}
-        <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center rounded-lg">
+        <div data-keep-dark className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center rounded-lg">
           {uploading ? <Loader2 className="w-5 h-5 animate-spin text-primary-foreground" /> : <Camera className="w-5 h-5 text-primary-foreground" />}
         </div>
       </div>
       <input ref={fileRef} type="file" accept="image/*" className="hidden" onChange={e => e.target.files?.[0] && handleAvatarUpload(e.target.files[0])} />
 
       <div className="text-center space-y-2">
-        <h2 className="text-xl font-bold text-primary-foreground">{onCancel ? t('stores.createNewStore') : t('stores.setUpYourStore')}</h2>
+        <h2 className="text-xl font-bold text-foreground">{onCancel ? t('stores.createNewStore') : t('stores.setUpYourStore')}</h2>
         <p className="text-sm text-zinc-400">{t('stores.createStoreBlurb')}</p>
       </div>
       <div className="w-full space-y-3">
