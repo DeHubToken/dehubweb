@@ -88,7 +88,7 @@ export function CommunityCard({ community, isMember, role, unreadCount, onClick 
         )}
       </div>
 
-      <div className="flex-1 min-w-0">
+      <div className="relative flex-1 min-w-0">
         <div className="flex items-center gap-1.5">
           <span className="text-white font-medium text-sm truncate">{community.name}</span>
           {community.is_private && <Lock className="w-3 h-3 text-zinc-500 flex-shrink-0" />}
