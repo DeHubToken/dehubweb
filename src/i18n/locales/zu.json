@@ -1,4 +1,18 @@
 {
+  "desktopWordmark": {
+    "pageTitle": "Ukubuka kuqala ilogo yedeskithophu",
+    "heading": "Ilogo yedeskithophu ye-DeHub",
+    "day": "Usuku {{day}}",
+    "replay": "Phinda udlale isethulo",
+    "enlarge": "Nweba",
+    "actualSize": "Usayizi wangempela",
+    "reassemble": "Hlanganisa kabusha ilogo",
+    "loading": "Iyalayisha",
+    "ready": "Ukulungele",
+    "interrupted": "Imidwebo iyekile ukuphendula",
+    "unavailable": "Ayikwazanga ukulayisha ukubuka kuqala kwe-3D",
+    "hint": "Ilogo ihlala yonke imizuzwana emibili, bese iyahlukana. Hambisa phezu kwalo noma ulikhethe ukuze ulibuyisele ndawonye."
+  },
   "mastodonApps": {
     "authTitle": "Ngena nge-DeHub",
     "authWants": "I-{{app}} ifuna ukusebenzisa i-akhawunti yakho ye-DeHub",
@@ -2198,6 +2212,8 @@
     "anonymousLikes_other": "Ukuthanda okungu-{{count}} okuvela kubanikazi bamabheji abangaziwa"
   },
   "postInfo": {
+    "unavailable": "Ayitholakali",
+    "ownersUnavailable": "Abanikazi bamanje abakwazi ukufundwa njengamanje.",
     "title": "Ulwazi Lokuthunyelwe",
     "tokenId": "Token ID",
     "mintedOn": "Kwadalwa",
@@ -5703,6 +5719,8 @@
     "notEnoughTokensForBounty": "Awekho amathuluzi anele. Udinga amathuluzi angama-{{need}} kodwa unama-{{have}}."
   },
   "events": {
+    "deleteConfirmTitle": "Susa lo mcimbi?",
+    "deleteConfirmBody": "Lokhu kususa umcimbi, uhlu lwawo lwezivakashi kanye nengxoxo yawo yawo wonke umuntu. Ayikwazi ukuhlehliswa.",
     "seoTitle": "Imicimbi — Imihlangano Nemicimbi Yomphakathi ku-DeHub",
     "seoDescription": "Bhrawuza imicimbi yomphakathi ye-DeHub ezayo, i-RSVP ukuze uhlangane futhi ubungaze imicimbi yakho enkundleni yezenhlalo ehlukanisiwe, ephethwe ngumsebenzisi.",
     "defaultSeoDescription": "Umcimbi womphakathi ku-DeHub.",

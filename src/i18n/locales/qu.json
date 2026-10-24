@@ -1,4 +1,18 @@
 {
+  "desktopWordmark": {
+    "pageTitle": "Escritorio logo qhawarina",
+    "heading": "DeHub escritorio logo",
+    "day": "P'unchaw {{day}}",
+    "replay": "Qallariyta wakmanta pukllachiy",
+    "enlarge": "Hatunyachiy",
+    "actualSize": "Chiqap sayaynin",
+    "reassemble": "Logota wakmanta huñuy",
+    "loading": "Cargachkan",
+    "ready": "Wakichisqa",
+    "interrupted": "Siq'ikuna manaña kutichinchu",
+    "unavailable": "3D qhawarinata mana cargayta atikurqanchu",
+    "hint": "Logoqa iskay segundo hunt'asqa kachkan, chaymantataq p'akikun. Wakmanta huñunaykipaq hawanman cursorta apay utaq akllay."
+  },
   "mastodonApps": {
     "authTitle": "DeHubwan yaykuy",
     "authWants": "{{app}} DeHub yupayniykita llamk'achiyta munan",
@@ -2202,6 +2216,8 @@
     "anonymousLikes_other": "Mana sutiyuq insigniayuqkunamanta {{count}} munasqa"
   },
   "postInfo": {
+    "unavailable": "Mana tarikuq",
+    "ownersUnavailable": "Kunan dueñokunataqa manam kunanpachaqa ñawinchayta atikunmanchu.",
     "title": "Post willay",
     "tokenId": "Token ID",
     "mintedOn": "Rurasqa",
@@ -5711,6 +5727,8 @@
     "notEnoughTokensForBounty": "Mana suficiente tokenkunachu. Necesita {{need}} fichas ichaqa {{have}} nisqayuq."
   },
   "events": {
+    "deleteConfirmTitle": "¿Kay ruwayta chinkachiyta munankichu?",
+    "deleteConfirmBody": "Kayqa ruwayta, invitado listanta chaymanta llapa runapaq rimanakuyninta hurqun. Manan kutichiyta atikunmanchu.",
     "seoTitle": "Ruwaykuna — Huñunakuykuna & Ayllu Ruwaykuna DeHub kaqpi",
     "seoDescription": "Hamuq DeHub ayllu ruwaykunata maskay, RSVP huñunakuykunaman chaymanta kikiyki ruwaykunata descentralizada, usuariopa kaqnin social plataforma kaqpi quy.",
     "defaultSeoDescription": "DeHub nisqapi ayllu llaqtapi ruway.",

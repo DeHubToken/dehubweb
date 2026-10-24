@@ -1,4 +1,18 @@
 {
+  "desktopWordmark": {
+    "pageTitle": "Previzualizare logo desktop",
+    "heading": "Logo desktop DeHub",
+    "day": "Ziua {{day}}",
+    "replay": "Redă din nou introducerea",
+    "enlarge": "Mărește",
+    "actualSize": "Dimensiune reală",
+    "reassemble": "Reasamblați sigla",
+    "loading": "Se încarcă",
+    "ready": "Gata",
+    "interrupted": "Grafica a încetat să mai răspundă",
+    "unavailable": "Previzualizarea 3D nu a putut fi încărcată",
+    "hint": "Logo-ul rămâne întreg timp de două secunde, apoi se descompune. Treceți cu mouse-ul peste el sau selectați-l pentru a-l reasambla."
+  },
   "mastodonApps": {
     "authTitle": "Conectează-te cu DeHub",
     "authWants": "{{app}} vrea să folosească contul tău DeHub",
@@ -2181,6 +2195,8 @@
     "anonymousLikes_other": "{{count}} aprecieri de la deținători anonimi de insigne"
   },
   "postInfo": {
+    "unavailable": "Indisponibil",
+    "ownersUnavailable": "Proprietarii actuali nu pot fi citiți chiar acum.",
     "title": "Post Info",
     "tokenId": "Token ID",
     "mintedOn": "Minted On",
@@ -5711,6 +5727,8 @@
     "notEnoughTokensForBounty": "Nu sunt suficiente token-uri. Ai nevoie de {{need}} token-uri, dar ai {{have}}."
   },
   "events": {
+    "deleteConfirmTitle": "Ștergeți acest eveniment?",
+    "deleteConfirmBody": "Acest lucru elimină evenimentul, lista de invitați și chat-ul pentru toată lumea. Acțiunea nu poate fi anulată.",
     "seoTitle": "Evenimente — Întâlniri și evenimente comunitare pe DeHub",
     "seoDescription": "Răsfoiți evenimentele comunitare viitoare DeHub, RSVP la întâlniri și găzduiți-vă propriile evenimente pe platforma socială descentralizată, deținută de utilizatori.",
     "defaultSeoDescription": "Eveniment comunitar pe DeHub.",

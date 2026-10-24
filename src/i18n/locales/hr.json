@@ -1,4 +1,18 @@
 {
+  "desktopWordmark": {
+    "pageTitle": "Pregled logotipa radne površine",
+    "heading": "DeHub logotip radne površine",
+    "day": "Dan {{day}}",
+    "replay": "Ponovno reproducirajte uvod",
+    "enlarge": "Povećaj",
+    "actualSize": "Stvarna veličina",
+    "reassemble": "Ponovno sastavite logotip",
+    "loading": "Učitavanje",
+    "ready": "Spremno",
+    "interrupted": "Grafika je prestala odgovarati",
+    "unavailable": "Učitavanje 3D pregleda nije uspjelo",
+    "hint": "Logotip ostaje cijeli dvije sekunde, a zatim se raspada. Zadržite pokazivač miša iznad njega ili ga odaberite kako biste ga ponovno sastavili."
+  },
   "mastodonApps": {
     "authTitle": "Prijava putem DeHuba",
     "authWants": "{{app}} želi koristiti tvoj DeHub račun",
@@ -2168,6 +2182,8 @@
     "anonymousLikes_other": "{{count}} sviđanja od anonimnih nositelja znački"
   },
   "postInfo": {
+    "unavailable": "Nije dostupno",
+    "ownersUnavailable": "Trenutačni vlasnici trenutačno se ne mogu pročitati.",
     "title": "Informacije o objavi",
     "tokenId": "ID tokena",
     "mintedOn": "Kreirano",
@@ -5642,6 +5658,8 @@
     "notEnoughTokensForBounty": "Nema dovoljno tokena. Potrebno {{need}} tokena, a imate {{have}}."
   },
   "events": {
+    "deleteConfirmTitle": "Želite li izbrisati ovaj događaj?",
+    "deleteConfirmBody": "Time se događaj, popis gostiju i chat uklanjaju za sve sudionike. Ne može se poništiti.",
     "seoTitle": "Događaji — Susreti i događaji zajednice na DeHubu",
     "seoDescription": "Pregledajte nadolazeće događaje zajednice DeHub, odgovorite na pozive za susrete i organizirajte svoje događaje na decentraliziranoj, korisnički vlaštenoj društvenoj platformi.",
     "defaultSeoDescription": "Događaj zajednice na DeHubu.",

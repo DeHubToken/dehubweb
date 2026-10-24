@@ -1,4 +1,18 @@
 {
+  "desktopWordmark": {
+    "pageTitle": "Topi-maso ny logo amin'ny solosaina",
+    "heading": "Logo DeHub amin'ny solosaina",
+    "day": "Andro {{day}}",
+    "replay": "Avereno alefa ny fampidirana",
+    "enlarge": "Hanalehibe",
+    "actualSize": "Habe tena izy",
+    "reassemble": "Ampitambaro indray ny logo",
+    "loading": "Mampiditra",
+    "ready": "Vonona",
+    "interrupted": "Tsy mamaly intsony ny sary",
+    "unavailable": "Tsy nahomby ny fampidirana ny topi-maso 3D",
+    "hint": "Mijanona ho feno mandritra ny segondra roa ny logo, avy eo dia mirava. Ataovy eo amboniny ny tondro na fidio izy mba hampitambarana azy indray."
+  },
   "mastodonApps": {
     "authTitle": "Midira amin'ny DeHub",
     "authWants": "Te hampiasa ny kaontinao DeHub i {{app}}",
@@ -2191,6 +2205,8 @@
     "anonymousLikes_other": "{{count}} fankasitrahana avy amin'ireo tompon'ny badge tsy mitonona anarana"
   },
   "postInfo": {
+    "unavailable": "Tsy misy",
+    "ownersUnavailable": "Amin'izao fotoana izao dia tsy azo vakiana ny tompon'ny toerana.",
     "title": "Fampahalalana momba ny lahatsoratra",
     "tokenId": "Token ID",
     "mintedOn": "Noforonina",
@@ -5705,6 +5721,8 @@
     "notEnoughTokensForBounty": "Tsy ampy ny tapaho. Mila tapaho {{need}} fa manana {{have}}."
   },
   "events": {
+    "deleteConfirmTitle": "Hofafana ity hetsika ity?",
+    "deleteConfirmBody": "Izany dia manala ny hetsika, ny lisitry ny vahiny ary ny resaka momba azy ho an'ny rehetra. Tsy azo averina izany.",
     "seoTitle": "Fampisehoana Ã¢Â Meetups & Famoriam-bahoaka ao amin'ny DeHub",
     "seoDescription": "Tsidiho ny hetsika ho an'ny fikambanana DeHub atsy ho atsy, RSVP mba hihaonana sy hampiantrano ny hetsika manokana ao amin'ny sehatra sosialy tsy mialonjafy sy an'ny mpampiasa.",
     "defaultSeoDescription": "Hetsiky ny fiarahamonina tao amin'ny DeHub.",

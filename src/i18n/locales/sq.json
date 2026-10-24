@@ -1,4 +1,18 @@
 {
+  "desktopWordmark": {
+    "pageTitle": "Pamje paraprake e logos së desktopit",
+    "heading": "Logoja e desktopit DeHub",
+    "day": "Dita {{day}}",
+    "replay": "Luaj prezantimin përsëri",
+    "enlarge": "Zmadho",
+    "actualSize": "Madhësia aktuale",
+    "reassemble": "Ribashko logon",
+    "loading": "Duke u ngarkuar",
+    "ready": "Gati",
+    "interrupted": "Grafika ndaloi së përgjigjuri",
+    "unavailable": "Pamja paraprake 3D nuk mund të ngarkohet",
+    "hint": "Logoja qëndron e plotë për dy sekonda, pastaj ndahet. Rri pezull mbi të ose zgjidhe për ta bashkuar përsëri."
+  },
   "mastodonApps": {
     "authTitle": "Hyr me DeHub",
     "authWants": "{{app}} do të përdorë llogarinë tënde DeHub",
@@ -2169,6 +2183,8 @@
     "anonymousLikes_other": "{{count}} pëlqime nga mbajtës anonimë distinktivësh"
   },
   "postInfo": {
+    "unavailable": "E padisponueshme",
+    "ownersUnavailable": "Pronarët aktualë nuk mund të lexohen tani.",
     "title": "Informacione për postimin",
     "tokenId": "ID e tokenit",
     "mintedOn": "Krijuar më",
@@ -5691,6 +5707,8 @@
     "notEnoughTokensForBounty": "Nuk ka tokena të mjaftueshëm. Nevojiten {{need}} tokena por keni {{have}}."
   },
   "events": {
+    "deleteConfirmTitle": "Dëshiron ta fshish këtë ngjarje?",
+    "deleteConfirmBody": "Kjo fshin ngjarjen, listën e të ftuarve dhe bisedën e saj për të gjithë. Nuk mund të zhbëhet.",
     "seoTitle": "Ngjarje — Takime & Ngjarje Komuniteti në DeHub",
     "seoDescription": "Shiko ngjarjet e ardhshme të komunitetit në DeHub, shprehi interes për takime dhe organizo shenjat tuaja në platformën sociale decentralizuar dhe e pronuar nga përdoruesi.",
     "defaultSeoDescription": "Ngjarje komuniteti në DeHub.",

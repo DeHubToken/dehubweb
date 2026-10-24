@@ -1,4 +1,18 @@
 {
+  "desktopWordmark": {
+    "pageTitle": "Horudhaca astaanta desktop-ka",
+    "heading": "Astaanta desktop-ka ee DeHub",
+    "day": "Maalinta {{day}}",
+    "replay": "Mar kale ciyaar hordhaca",
+    "enlarge": "Weynee",
+    "actualSize": "Cabbirka dhabta ah",
+    "reassemble": "Dib u ururi astaanta",
+    "loading": "Waa la soo rarayaa",
+    "ready": "Diyaar",
+    "interrupted": "Sawirradii way joojiyeen inay ka jawaabaan",
+    "unavailable": "Suurtagal ma noqon in la soo raro horudhaca 3D",
+    "hint": "Astaantu waxay ahaanaysaa mid dhan laba ilbiriqsi, ka dibna way kala jabaysaa. Dul mari ama dooro si aad dib ugu ururiso."
+  },
   "mastodonApps": {
     "authTitle": "Ku gal DeHub",
     "authWants": "{{app}} wuxuu rabaa inuu isticmaalo akoonkaaga DeHub",
@@ -2168,6 +2182,8 @@
     "anonymousLikes_other": "{{count}} jeclaansho oo ka yimid haystayaasha calaamado qarsoon"
   },
   "postInfo": {
+    "unavailable": "Lama heli karo",
+    "ownersUnavailable": "Milkiilayaasha hadda jira hadda lama akhriyi karo.",
     "title": "Macluumaadka qoraalka",
     "tokenId": "Token ID",
     "mintedOn": "La sameeyey",
@@ -5614,6 +5630,8 @@
     "notEnoughTokensForBounty": "Kama filna tokens. Waxaad u baahan tahay {{need}} tokens laakiin waxaad haysataa {{have}}."
   },
   "events": {
+    "deleteConfirmTitle": "Ka tirtir dhacdadan?",
+    "deleteConfirmBody": "Tani waxay meesha ka saaraysaa dhacdada, liiska martida iyo wada sheekaysiga qof walba. Lagama noqon karo.",
     "seoTitle": "Dhacdooyinka — Kulamada & Dhacdooyinka Bulshada ee DeHub",
     "seoDescription": "Browse dhacdooyinka bulshada DeHub ee soo socda, RSVP si aad ula kulanto oo aad u martigeliso dhacdooyinkaaga madal bulsho oo ay leedahay isticmaale.",
     "defaultSeoDescription": "Munaasabadda Jaaliyadda ee DeHub.",

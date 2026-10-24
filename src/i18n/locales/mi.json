@@ -1,4 +1,18 @@
 {
+  "desktopWordmark": {
+    "pageTitle": "Whakaaturanga tohu papamahi",
+    "heading": "Tohu papamahi DeHub",
+    "day": "Rā {{day}}",
+    "replay": "Whakatangihia anō te kupu whakataki",
+    "enlarge": "Whakanuia",
+    "actualSize": "Rahi tūturu",
+    "reassemble": "Whakahiatohia anō te tohu",
+    "loading": "E uta ana",
+    "ready": "Kua rite",
+    "interrupted": "Kua mutu te urupare a ngā whakairoiro",
+    "unavailable": "Kaore e taea te utaina i te tirohanga 3D",
+    "hint": "Ka noho tōtika te tohu mō ngā hēkona e rua, kātahi ka marara. Whakatārewahia te pehu ki runga, kōwhiria rānei kia hono anō."
+  },
   "mastodonApps": {
     "authTitle": "Takiuru mā DeHub",
     "authWants": "E hiahia ana a {{app}} ki te whakamahi i tō pūkete DeHub",
@@ -2171,6 +2185,8 @@
     "anonymousLikes_other": "{{count}} pai mai i ngā kaipupuri tohu huna"
   },
   "postInfo": {
+    "unavailable": "Kāore e wātea",
+    "ownersUnavailable": "Kāore e taea te pānui i ngā rangatira o nāianei i tēnei wā.",
     "title": "Mōhiohio pou",
     "tokenId": "Token ID",
     "mintedOn": "I hangaia",
@@ -5675,6 +5691,8 @@
     "notEnoughTokensForBounty": "Kāore e nui ngā tohu. Me {{need}} tohu engari kei a koe {{have}}."
   },
   "events": {
+    "deleteConfirmTitle": "Ka whakakorea e koe tenei huihuinga?",
+    "deleteConfirmBody": "Ka tangohia e tenei te huihuinga, tona raarangi manuhiri me tona korerorero mo te katoa. Kaore e taea te whakakore.",
     "seoTitle": "Ngā huihuinga — Meetups & Community Events on DeHub",
     "seoDescription": "Browse ngā huihuinga hapori DeHub e haere mai ana, RSVP ki te hui me te manaaki i ō ake kaupapa i runga i te papaaho pāpori decentralized, e whai ana i te kaiwhakamahi.",
     "defaultSeoDescription": "He huihuinga hapori mo DeHub.",

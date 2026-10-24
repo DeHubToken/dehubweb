@@ -1,4 +1,18 @@
 {
+  "desktopWordmark": {
+    "pageTitle": "Nlele akara ngosi desktọọpụ",
+    "heading": "Akara ngosi desktọọpụ DeHub",
+    "day": "Ụbọchị {{day}}",
+    "replay": "Gwuo ntụnye ahụ ọzọ",
+    "enlarge": "Mụbaa",
+    "actualSize": "Ụhara n 'ezie",
+    "reassemble": "Chikọta akara ngosi ahụ ọzọ",
+    "loading": "Na-edebata",
+    "ready": "Dịrị njikere",
+    "interrupted": "Ndịna-emeputa ahụ kwụsịrị ịzaghachi",
+    "unavailable": "Agaghị ebubataghi ngosi 3D ahụ",
+    "hint": "Akara ngosi ahụ na-anọ n'otu ruo sekọnd abụọ, mgbe ahụ ọ gbasaa. Bugharịa ihe nrịbama n'elu ya ma ọ bụ họrọ ya ka ọ jikọta ọnụ ọzọ."
+  },
   "mastodonApps": {
     "authTitle": "Banye na DeHub",
     "authWants": "{{app}} chọrọ iji akaụntụ DeHub gị",
@@ -2166,6 +2180,8 @@
     "anonymousLikes_other": "Mmasị {{count}} sitere n'aka ndị ji baajị na-amaghị aha"
   },
   "postInfo": {
+    "unavailable": "Agaghị adị",
+    "ownersUnavailable": "Enweghị ike ịgụ ndị nwe ya ugbu a.",
     "title": "Ozi banyere mbipụta",
     "tokenId": "Token ID",
     "mintedOn": "Emepụtara",
@@ -5644,6 +5660,8 @@
     "notEnoughTokensForBounty": "Enweghị tokenịị zuru. Chọrọ {{need}} tokenịị mana nwere {{have}}."
   },
   "events": {
+    "deleteConfirmTitle": "Hichaa mmemme a?",
+    "deleteConfirmBody": "Nke a na-ewepụ ihe omume ahụ, ndepụta ndị ọbịa ya na nkata ya maka mmadụ niile. Agaghị emezigharị ya.",
     "seoTitle": "Ihe omume — Nzukọ & Ihe Omume Obodo na DeHub",
     "seoDescription": "Chọgharịa na-abịa DeHub obodo ihe, RSVP ka meetups na usu gị onwe gị ihe na decentralized, onye ọrụ-ekesịpde na-elekọta mmadụ n 'elu ikpo okwu.",
     "defaultSeoDescription": "Ihe omume obodo na DeHub.",

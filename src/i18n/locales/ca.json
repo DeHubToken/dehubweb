@@ -1,4 +1,18 @@
 {
+  "desktopWordmark": {
+    "pageTitle": "Vista prèvia del logotip de l'escriptori",
+    "heading": "Logotip d'escriptori DeHub",
+    "day": "Dia {{day}}",
+    "replay": "Torna a reproduir la introducció",
+    "enlarge": "Amplia",
+    "actualSize": "Mida real",
+    "reassemble": "Torna a muntar el logotip",
+    "loading": "S'està carregant",
+    "ready": "A punt",
+    "interrupted": "Els gràfics han deixat de respondre",
+    "unavailable": "No s'ha pogut carregar la vista prèvia en 3D",
+    "hint": "El logotip roman sencer durant dos segons i després es trenca. Col·loca el cursor sobre ell o selecciona'l per tornar-lo a armar."
+  },
   "mastodonApps": {
     "authTitle": "Inicia la sessió amb DeHub",
     "authWants": "{{app}} vol fer servir el teu compte de DeHub",
@@ -2179,6 +2193,8 @@
     "anonymousLikes_other": "{{count}} m'agrada de titulars de distintius anònims"
   },
   "postInfo": {
+    "unavailable": "No disponible",
+    "ownersUnavailable": "Ara mateix no es pot llegir els propietaris actuals.",
     "title": "Informació de la publicació",
     "tokenId": "ID del token",
     "mintedOn": "Creat el",
@@ -5648,6 +5664,8 @@
     "notEnoughTokensForBounty": "No hi ha prou testimonis. Necessites {{need}} testimonis però en tens {{have}}."
   },
   "events": {
+    "deleteConfirmTitle": "Vols eliminar aquest esdeveniment?",
+    "deleteConfirmBody": "Això elimina l'esdeveniment, la llista de convidats i el xat per a tothom. No es pot desfer.",
     "seoTitle": "Esdeveniments — Trobades i esdeveniments comunitaris a DeHub",
     "seoDescription": "Exploreu els propers esdeveniments comunitaris de DeHub, confirmeu l'assistència a trobades i organitzeu els vostres propis esdeveniments a la plataforma social descentralitzada i de propietat dels usuaris.",
     "defaultSeoDescription": "Esdeveniment comunitari a DeHub.",

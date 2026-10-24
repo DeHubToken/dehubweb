@@ -1,4 +1,18 @@
 {
+  "desktopWordmark": {
+    "pageTitle": "桌面徽标预览",
+    "heading": "DeHub 桌面徽标",
+    "day": "第 {{day}} 天",
+    "replay": "重新播放开场动画",
+    "enlarge": "放大",
+    "actualSize": "实际大小",
+    "reassemble": "重组徽标",
+    "loading": "加载中",
+    "ready": "已就绪",
+    "interrupted": "图形已停止响应",
+    "unavailable": "无法加载3D预览",
+    "hint": "徽标会完整保持两秒，然后碎裂开来。将鼠标悬停在上面或选中它，即可重新拼合。"
+  },
   "mastodonApps": {
     "authTitle": "用 DeHub 登录",
     "authWants": "{{app}} 想使用你的 DeHub 账号",
@@ -2168,6 +2182,8 @@
     "anonymousLikes_other": "来自匿名徽章持有者的 {{count}} 个赞"
   },
   "postInfo": {
+    "unavailable": "不可用",
+    "ownersUnavailable": "当前无法读取所有者信息。",
     "title": "帖子信息",
     "tokenId": "代币ID",
     "mintedOn": "铸造于",
@@ -5643,6 +5659,8 @@
     "notEnoughTokensForBounty": "代币不足。需要 {{need}} 个代币，但只有 {{have}} 个。"
   },
   "events": {
+    "deleteConfirmTitle": "删除此事件？",
+    "deleteConfirmBody": "这个操作将删除该活动、其参与者名单和所有聊天记录，且无法撤销。",
     "seoTitle": "活动 — DeHub 的见面会与社区活动",
     "seoDescription": "浏览即将到来的 DeHub 社区活动，报名参加聚会，并在去中心化、用户自有的社交平台上举办自己的活动。",
     "defaultSeoDescription": "社区活动在 DeHub 上举办。",

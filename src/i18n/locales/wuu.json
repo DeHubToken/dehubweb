@@ -1,4 +1,18 @@
 {
+  "desktopWordmark": {
+    "pageTitle": "桌面标志预览",
+    "heading": "DeHub 桌面标志",
+    "day": "第 {{day}} 天",
+    "replay": "再放一遍开场",
+    "enlarge": "放大",
+    "actualSize": "实际大小",
+    "reassemble": "重新拼好标志",
+    "loading": "加载中",
+    "ready": "好了",
+    "interrupted": "图形呒没反应了",
+    "unavailable": "3D 预览载不进来",
+    "hint": "标志会完整停两秒，然后碎开来。拿鼠标移到上头或者选中伊，就会重新拼好。"
+  },
   "mastodonApps": {
     "authTitle": "用 DeHub 登录",
     "authWants": "{{app}} 想用侬个 DeHub 账号",
@@ -2113,6 +2127,8 @@
     "anonymousLikes_other": "来自匿名徽章持有者个 {{count}} 个赞"
   },
   "postInfo": {
+    "ownersUnavailable": "現在讀勿出當前個所有者。",
+    "unavailable": "用勿來",
     "title": "帖子信息",
     "tokenId": "代币ID",
     "mintedOn": "铸造于",
@@ -5162,6 +5178,8 @@
     "notEnoughTokensForBounty": "代幣不足。需要 {{need}} 隻代幣，但只有 {{have}} 隻。"
   },
   "events": {
+    "deleteConfirmBody": "搿樣會對所有人刪脫活動、來賓名單搭聊天，呒沒辦法撤銷。",
+    "deleteConfirmTitle": "刪脫搿個活動？",
     "goingCount_one": "{{count}} 走",
     "goingCount_other": "{{count}} 走",
     "interestedCount_one": "{{count}} 有兴趣",

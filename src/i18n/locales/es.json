@@ -74,6 +74,20 @@
   "agents.workspace.action": "Acción",
   "agents.workspace.schedule": "Programación",
   "agents.workspace.filter": "Filtrar actividad",
+  "desktopWordmark": {
+    "pageTitle": "Vista previa del logotipo de escritorio",
+    "heading": "Logotipo de escritorio de DeHub",
+    "day": "Día {{day}}",
+    "replay": "Reproducir la introducción de nuevo",
+    "enlarge": "Ampliar",
+    "actualSize": "Tamaño real",
+    "reassemble": "Volver a montar el logotipo",
+    "loading": "Cargando",
+    "ready": "Listo",
+    "interrupted": "Los gráficos dejaron de responder",
+    "unavailable": "No se ha podido cargar la vista previa 3D",
+    "hint": "El logotipo permanece entero durante dos segundos y luego se rompe. Coloca el cursor sobre él o selecciónalo para volver a armarlo."
+  },
   "mastodonApps": {
     "authTitle": "Inicia sesión con DeHub",
     "authWants": "{{app}} quiere usar tu cuenta de DeHub",
@@ -2666,6 +2680,8 @@
     "anonymousLikes_other": "{{count}} me gusta de titulares de insignias anónimos"
   },
   "postInfo": {
+    "unavailable": "No disponible",
+    "ownersUnavailable": "Los propietarios actuales no se pueden leer en este momento.",
     "title": "Info del Post",
     "tokenId": "Id. de token",
     "mintedOn": "Acuñado el",
@@ -6771,6 +6787,8 @@
     "notEnoughTokensForBounty": "Tokens insuficientes. Necesitas {{need}} tokens pero tienes {{have}}."
   },
   "events": {
+    "deleteConfirmTitle": "¿Eliminar este evento?",
+    "deleteConfirmBody": "Esto elimina el evento, su lista de invitados y su chat para todos. No se puede deshacer.",
     "seoTitle": "Eventos — Quedadas y eventos de la comunidad en DeHub",
     "seoDescription": "Explora los próximos eventos de la comunidad de DeHub, confirma tu asistencia a quedadas y organiza los tuyos en la plataforma social descentralizada y de sus usuarios.",
     "defaultSeoDescription": "Evento de la comunidad en DeHub.",

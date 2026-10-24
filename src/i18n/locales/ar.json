@@ -74,6 +74,20 @@
   "agents.workspace.action": "إجراء",
   "agents.workspace.schedule": "الجدول الزمني",
   "agents.workspace.filter": "تصفية النشاط",
+  "desktopWordmark": {
+    "pageTitle": "معاينة شعار سطح المكتب",
+    "heading": "شعار DeHub لسطح المكتب",
+    "day": "اليوم {{day}}",
+    "replay": "تشغيل المقدمة مرة أخرى",
+    "enlarge": "تكبير",
+    "actualSize": "الحجم الفعلي",
+    "reassemble": "إعادة تجميع الشعار",
+    "loading": "جارٍ التحميل",
+    "ready": "جاهز",
+    "interrupted": "توقفت الرسومات عن الاستجابة",
+    "unavailable": "تعذر تحميل المعاينة ثلاثية الأبعاد",
+    "hint": "يبقى الشعار كاملاً لمدة ثانيتين، ثم ينهار. مرر مؤشر الماوس فوقه أو حدده لإعادة تجميعه."
+  },
   "mastodonApps": {
     "authTitle": "تسجيل الدخول باستخدام DeHub",
     "authWants": "يريد {{app}} استخدام حسابك على DeHub",
@@ -2674,6 +2688,8 @@
     "anonymousLikes_other": "{{count}} إعجابات من حاملي شارات مجهولين"
   },
   "postInfo": {
+    "unavailable": "غير متاح",
+    "ownersUnavailable": "لا يمكن قراءة المالكين الحاليين في الوقت الحالي.",
     "title": "معلومات المنشور",
     "tokenId": "معرّف التوكن",
     "mintedOn": "تم السك في",
@@ -6779,6 +6795,8 @@
     "notEnoughTokensForBounty": "لا توجد رموز كافية. تحتاج إلى {{need}} رمز ولكن لديك {{have}}."
   },
   "events": {
+    "deleteConfirmTitle": "هل تريد حذف هذا الحدث ؟",
+    "deleteConfirmBody": "هذا يحذف الحدث، قائمة الضيوف الخاصة به، ومحادثاته لكل شخص. لا يمكن التراجع عنه.",
     "seoTitle": "الفعاليات — لقاءات وفعاليات المجتمع على DeHub",
     "seoDescription": "تصفّح فعاليات مجتمع DeHub القادمة، وأكّد حضورك للقاءات، ونظّم فعالياتك الخاصة على منصة اجتماعية لامركزية يملكها مستخدموها.",
     "defaultSeoDescription": "فعالية مجتمعية على DeHub.",

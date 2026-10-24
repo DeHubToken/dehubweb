@@ -1,0 +1,30 @@
+name: Desktop wordmark render
+on:
+  pull_request:
+    paths:
+      - 'src/components/app/navigation/desktop-wordmark-fracture.js'
+      - 'src/components/app/navigation/DesktopCrumblingWordmark.tsx'
+      - 'scripts/verify-desktop-wordmark.cjs'
+      - '.github/workflows/desktop-wordmark.yml'
+jobs:
+  render:
+    runs-on: ubuntu-latest
+    timeout-minutes: 6
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Install isolated rendering dependencies
+        run: |
+          npm install --prefix "$RUNNER_TEMP/wordmark" --no-package-lock --ignore-scripts three@0.181.1 esbuild@0.25.11 playwright@1.56.1
+          "$RUNNER_TEMP/wordmark/node_modules/.bin/playwright" install --with-deps chromium
+      - name: Verify delay, fracture, hover, reassembly and reduced motion
+        env:
+          NODE_PATH: ${{ runner.temp }}/wordmark/node_modules
+        run: node scripts/verify-desktop-wordmark.cjs
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: desktop-wordmark-stages
+          path: wordmark-evidence/

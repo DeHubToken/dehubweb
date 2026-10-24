@@ -1,4 +1,18 @@
 {
+  "desktopWordmark": {
+    "pageTitle": "معاينة شعار سطح المكتب",
+    "heading": "شعار DeHub لسطح المكتب",
+    "day": "اليوم {{day}}",
+    "replay": "شغّل المقدمة تاني",
+    "enlarge": "تكبير",
+    "actualSize": "الحجم الفعلي",
+    "reassemble": "إعادة تجميع الشعار",
+    "loading": "جارٍ التحميل",
+    "ready": "جاهز",
+    "interrupted": "الرسومات وقفت عن الاستجابة",
+    "unavailable": "ماقدرناش نحمّل المعاينة ثلاثية الأبعاد",
+    "hint": "الشعار يفضل كامل ثانيتين، وبعدين يتفكك. حط الماوس عليه أو اختاره علشان يرجع يتجمّع."
+  },
   "mastodonApps": {
     "authTitle": "سجّل الدخول بـ DeHub",
     "authWants": "{{app}} عايز يستخدم حسابك على DeHub",
@@ -2087,6 +2101,8 @@
     "anonymousLikes_other": "{{count}} إعجابات من أصحاب شارات مجهولين"
   },
   "postInfo": {
+    "unavailable": "لا متوفر",
+    "ownersUnavailable": "لا يمكن قراءة المالكين الحاليين في الوقت الحالي.",
     "title": "معلومات المنشور",
     "tokenId": "رقم التوكن",
     "mintedOn": "اتعمل في",
@@ -5014,6 +5030,8 @@
     "notEnoughTokensForBounty": "مفيش توكنات كفاية. محتاج {{need}} توكن بس معاك {{have}}."
   },
   "events": {
+    "deleteConfirmTitle": "حذف هذا الحدث؟",
+    "deleteConfirmBody": "هذاً يزيل الحدث و قائمة الضيوف و المحادثة من الجميع. لا يمكن التراجع عنها.",
     "defaultSeoDescription": "حدث مجتمعي على ديهاب.",
     "noUpcoming": "ما فدش حدثش قادمهش بعد كده",
     "eventName": "إسم الحدث *",

@@ -1,4 +1,18 @@
 {
+  "desktopWordmark": {
+    "pageTitle": "Töölaua logo eelvaade",
+    "heading": "DeHubi töölaua logo",
+    "day": "Päev {{day}}",
+    "replay": "Esita sissejuhatus uuesti",
+    "enlarge": "Suurenda",
+    "actualSize": "Tegelik suurus",
+    "reassemble": "Pange logo uuesti kokku",
+    "loading": "Laadimine",
+    "ready": "Valmis",
+    "interrupted": "Graafika lõpetas reageerimise",
+    "unavailable": "3D eelvaadet ei saanud laadida",
+    "hint": "Logo jääb kaheks sekundiks terveks ja puruneb seejärel laiali. Viige kursor selle kohale või valige see, et see uuesti kokku panna."
+  },
   "mastodonApps": {
     "authTitle": "Logi sisse DeHubiga",
     "authWants": "{{app}} soovib kasutada sinu DeHubi kontot",
@@ -2170,6 +2184,8 @@
     "anonymousLikes_other": "{{count}} meeldimist anonüümsetelt märgiomanikelt"
   },
   "postInfo": {
+    "unavailable": "Pole saadaval",
+    "ownersUnavailable": "Praeguseid omanikke ei saa praegu lugeda.",
     "title": "Postituse info",
     "tokenId": "Tokeni ID",
     "mintedOn": "Loodud",
@@ -5684,6 +5700,8 @@
     "notEnoughTokensForBounty": "Märke pole piisavalt. Vajalik {{need}} märk, kuid teil on {{have}}."
   },
   "events": {
+    "deleteConfirmTitle": "Kas kustutada see sündmus?",
+    "deleteConfirmBody": "See eemaldab sündmuse, selle külaliste nimekirja ja vestluse kõigi jaoks. Seda ei saa tagasi võtta.",
     "seoTitle": "Sündmused — DeHubi kogukonnaüritused ja kohtumised",
     "seoDescription": "Sirvige DeHubi tulevasi kogukonnaüritusi, registreeruge kohtumistele ja korraldage oma üritusi detsentraliseeritud, kasutajate omandatud sotsiaalplatvormil.",
     "defaultSeoDescription": "Kogukonnaüritus DeHubis.",

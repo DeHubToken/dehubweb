@@ -1,4 +1,18 @@
 {
+  "desktopWordmark": {
+    "pageTitle": "Forhåndsvisning af skrivebordslogo",
+    "heading": "DeHub desktop-logo",
+    "day": "Dag {{day}}",
+    "replay": "Afspil introen igen",
+    "enlarge": "Forstør",
+    "actualSize": "Faktisk størrelse",
+    "reassemble": "Saml logoet igen",
+    "loading": "Indlæser",
+    "ready": "Klar",
+    "interrupted": "Grafikken stoppede med at svare",
+    "unavailable": "Kunne ikke indlæse 3D-forhåndsvisningen",
+    "hint": "Logoet forbliver helt i to sekunder og går derefter i stykker. Hold markøren over det, eller vælg det for at samle det igen."
+  },
   "mastodonApps": {
     "authTitle": "Log ind med DeHub",
     "authWants": "{{app}} vil bruge din DeHub-konto",
@@ -2187,6 +2201,8 @@
     "anonymousLikes_other": "{{count}} likes fra anonyme badgeholdere"
   },
   "postInfo": {
+    "unavailable": "Ikke tilgængelig",
+    "ownersUnavailable": "De nuværende ejere kan ikke læses lige nu.",
     "title": "Opslags-info",
     "tokenId": "Token-ID",
     "mintedOn": "Oprettet den",
@@ -5695,6 +5711,8 @@
     "notEnoughTokensForBounty": "Ikke nok tokens. Behøver {{need}} tokens, men har {{have}}."
   },
   "events": {
+    "deleteConfirmTitle": "Vil du slette denne begivenhed?",
+    "deleteConfirmBody": "Dette fjerner begivenheden, dens gæsteliste og dens chat for alle. Det kan ikke fortrydes.",
     "seoTitle": "Events — Meetups & Community Events på DeHub",
     "seoDescription": "Gennemse kommende DeHub-fællesskabsbegivenheder, RSVP til meetups og host dine egne begivenheder på den decentraliserede, brugerejede sociale platform.",
     "defaultSeoDescription": "Fællesskabsbegivenhed på DeHub.",

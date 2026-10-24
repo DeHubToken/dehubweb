@@ -1,4 +1,18 @@
 {
+  "desktopWordmark": {
+    "pageTitle": "Förhandsvisning av skrivbordslogotypen",
+    "heading": "DeHub skrivbordslogotyp",
+    "day": "Dag {{day}}",
+    "replay": "Spela upp introen igen",
+    "enlarge": "Förstora",
+    "actualSize": "Faktisk storlek",
+    "reassemble": "Sätt ihop logotypen igen",
+    "loading": "Laddar",
+    "ready": "Klar",
+    "interrupted": "Grafiken slutade svara",
+    "unavailable": "Kunde inte ladda 3D-förhandsgranskningen",
+    "hint": "Logotypen förblir hel i två sekunder och bryts sedan isär. Håll muspekaren över den eller välj den för att sätta ihop den igen."
+  },
   "mastodonApps": {
     "authTitle": "Logga in med DeHub",
     "authWants": "{{app}} vill använda ditt DeHub-konto",
@@ -2186,6 +2200,8 @@
     "anonymousLikes_other": "{{count}} gillamarkeringar från anonyma märkesinnehavare"
   },
   "postInfo": {
+    "unavailable": "Inte tillgänglig",
+    "ownersUnavailable": "De nuvarande ägarna kan inte läsas just nu.",
     "title": "Inläggsinfo",
     "tokenId": "Token-ID",
     "mintedOn": "Präglad den",
@@ -5652,6 +5668,8 @@
     "notEnoughTokensForBounty": "Inte tillräckligt med tokens. Behöver {{need}} tokens men har {{have}}."
   },
   "events": {
+    "deleteConfirmTitle": "Ta bort detta evenemang?",
+    "deleteConfirmBody": "Det här tar bort händelsen, dess gästlista och dess chatt för alla. Det går inte att ångra.",
     "seoDescription": "Bläddra bland kommande DeHub-gemenskapsevenemang, RSVP till meetups och arrangera dina egna evenemang på den decentraliserade, användarägda sociala plattformen.",
     "defaultSeoDescription": "Gemenskapsevenemang på DeHub.",
     "title": "Events",

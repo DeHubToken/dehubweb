@@ -1,4 +1,18 @@
 {
+  "desktopWordmark": {
+    "pageTitle": "Náhľad loga pracovnej plochy",
+    "heading": "Logo DeHub pre stolné počítače",
+    "day": "Deň {{day}}",
+    "replay": "Prehrať úvod znova",
+    "enlarge": "Zväčšiť",
+    "actualSize": "Skutočná veľkosť",
+    "reassemble": "Znova poskladať logo",
+    "loading": "Načítava sa",
+    "ready": "Pripravené",
+    "interrupted": "Grafika prestala reagovať",
+    "unavailable": "Nepodarilo sa načítať 3D náhľad",
+    "hint": "Logo zostane dve sekundy celé, potom sa rozpadne. Ak ho chcete znova poskladať, umiestnite naň kurzor alebo ho vyberte."
+  },
   "mastodonApps": {
     "authTitle": "Prihlásiť sa cez DeHub",
     "authWants": "{{app}} chce používať váš účet DeHub",
@@ -2285,6 +2299,8 @@
     "anonymousLikes_other": "{{count}} lajkov od anonymných držiteľov odznakov"
   },
   "postInfo": {
+    "unavailable": "Nedostupné",
+    "ownersUnavailable": "Aktuálnych vlastníkov momentálne nie je možné prečítať.",
     "title": "Informácie o príspevku",
     "tokenId": "ID tokenu",
     "mintedOn": "Vytvorené",
@@ -5819,6 +5835,8 @@
     "notEnoughTokensForBounty": "Nedostatok tokenov. Potrebujete {{need}} tokenov, ale máte {{have}}."
   },
   "events": {
+    "deleteConfirmTitle": "Odstrániť túto udalosť?",
+    "deleteConfirmBody": "Tým sa odstráni udalosť, jej zoznam hostí a chat pre všetkých. Nedá sa vrátiť späť.",
     "seoTitle": "Události — Setkania & Komunitné Události na DeHub",
     "seoDescription": "Prehľad nadchádzajúcich komunitných udalostí na DeHub, prihláste sa na setkania a hostujte svoje vlastné udalosti na decentralizovanej, užívateľovlastnej sociálnej platforme.",
     "defaultSeoDescription": "Komunitná udalosť na DeHub.",

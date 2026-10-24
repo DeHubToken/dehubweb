@@ -1,4 +1,18 @@
 {
+  "desktopWordmark": {
+    "pageTitle": "桌面標誌預覽",
+    "heading": "DeHub 桌面標誌",
+    "day": "第 {{day}} 日",
+    "replay": "再播一次開場",
+    "enlarge": "放大",
+    "actualSize": "實際尺寸",
+    "reassemble": "重新砌返個標誌",
+    "loading": "載入緊",
+    "ready": "準備好",
+    "interrupted": "啲圖像停止咗回應",
+    "unavailable": "載入唔到 3D 預覽",
+    "hint": "個標誌會完整維持兩秒，然後散開。將滑鼠移到上面或者揀佢，就會重新砌返埋。"
+  },
   "mastodonApps": {
     "authTitle": "用 DeHub 登入",
     "authWants": "{{app}} 想用你嘅 DeHub 帳戶",
@@ -2167,6 +2181,8 @@
     "anonymousLikes_other": "來自匿名徽章持有人嘅 {{count}} 個讚"
   },
   "postInfo": {
+    "unavailable": "唔可以用",
+    "ownersUnavailable": "而家睇唔到而家嘅擁有者。",
     "title": "帖子資訊",
     "tokenId": "代幣ID",
     "mintedOn": "鑄造於",
@@ -5691,6 +5707,8 @@
     "notEnoughTokensForBounty": "代幣不足。需要 {{need}} 個代幣但只有 {{have}} 個。"
   },
   "events": {
+    "deleteConfirmTitle": "刪除呢個活動？",
+    "deleteConfirmBody": "呢個操作會移除活動、佢嘅嘉賓名單同埋所有人嘅即時通訊。呢個係復原唔到嘅。",
     "seoTitle": "DeHub 的活動 — 聚會及社群活動",
     "seoDescription": "瀏覽 DeHub 社群即將舉行的活動，報名參加聚會或在去中心化、用戶擁有的社交平台上舉辦你自己的活動。",
     "defaultSeoDescription": "DeHub 的社群活動。",

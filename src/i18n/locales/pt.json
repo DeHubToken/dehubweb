@@ -1,4 +1,18 @@
 {
+  "desktopWordmark": {
+    "pageTitle": "Pré-visualização do logótipo para computador",
+    "heading": "Logótipo do DeHub para computador",
+    "day": "Dia {{day}}",
+    "replay": "Reproduzir a introdução novamente",
+    "enlarge": "Ampliar",
+    "actualSize": "Tamanho real",
+    "reassemble": "Voltar a montar o logótipo",
+    "loading": "A carregar",
+    "ready": "Pronto",
+    "interrupted": "Os gráficos pararam de responder",
+    "unavailable": "Não foi possível carregar a pré-visualização 3D",
+    "hint": "O logótipo mantém-se inteiro durante dois segundos e depois desfaz-se. Passe o cursor por cima ou selecione-o para o voltar a montar."
+  },
   "mastodonApps": {
     "authTitle": "Entrar com DeHub",
     "authWants": "{{app}} quer usar sua conta DeHub",
@@ -2191,6 +2205,8 @@
     "anonymousLikes_other": "{{count}} curtidas de portadores de emblema anônimos"
   },
   "postInfo": {
+    "unavailable": "Indisponível",
+    "ownersUnavailable": "Os proprietários atuais não podem ser lidos no momento.",
     "title": "Info do Post",
     "tokenId": "Token ID",
     "mintedOn": "Cunhado em",
@@ -5721,6 +5737,8 @@
     "notEnoughTokensForBounty": "Tokens insuficientes. Precisa de {{need}} tokens, mas tem {{have}}."
   },
   "events": {
+    "deleteConfirmTitle": "Eliminar este evento?",
+    "deleteConfirmBody": "Isso remove o evento, a lista de convidados e o chat para todos. Não pode ser desfeito.",
     "seoTitle": "Eventos — Encontros e Eventos Comunitários no DeHub",
     "seoDescription": "Procure eventos comunitários futuros do DeHub, confirme presença em encontros e crie seus próprios eventos na plataforma social descentralizada e de propriedade dos usuários.",
     "defaultSeoDescription": "Evento comunitário no DeHub.",

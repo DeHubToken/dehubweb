@@ -1,4 +1,18 @@
 {
+  "desktopWordmark": {
+    "pageTitle": "Ish stoli logotipini oldindan ko'rish",
+    "heading": "DeHub ish stoli logotipi",
+    "day": "{{day}}-kun",
+    "replay": "Kirishni qayta ijro etish",
+    "enlarge": "Kattalashtirish",
+    "actualSize": "Haqiqiy o'lcham",
+    "reassemble": "Logotipni qayta yig'ish",
+    "loading": "Yuklanmoqda",
+    "ready": "Tayyor",
+    "interrupted": "Grafika javob bermay qoldi",
+    "unavailable": "3D ko'rinishni yuklab bo'lmadi",
+    "hint": "Logotip ikki soniya butun turadi, keyin parchalanib ketadi. Uni qayta yig'ish uchun kursorni ustiga olib boring yoki uni tanlang."
+  },
   "mastodonApps": {
     "authTitle": "DeHub orqali kirish",
     "authWants": "{{app}} DeHub akkauntingizdan foydalanmoqchi",
@@ -2188,6 +2202,8 @@
     "anonymousLikes_other": "Anonim nishon egalaridan {{count}} ta layk"
   },
   "postInfo": {
+    "unavailable": "Mavjud emas",
+    "ownersUnavailable": "Hozirgi egalarini hozir oʻqib boʻlmaydi.",
     "title": "Post ma'lumoti",
     "tokenId": "Token ID",
     "mintedOn": "Yaratilgan",
@@ -5725,6 +5741,8 @@
     "notEnoughTokensForBounty": "Tokenlar yetarli emas. {{need}} token kerak, lekin {{have}} bor."
   },
   "events": {
+    "deleteConfirmTitle": "Bu tadbir oʻchirib tashlansinmi?",
+    "deleteConfirmBody": "Bu tadbirni, undagi mehmonlar roʻyxatini va chatni hamma uchun olib tashlaydi. Buni bekor qilib boʻlmaydi.",
     "seoTitle": "Voqealar — DeHubda Topshiriqlar va Jamiyat Voqealari",
     "seoDescription": "DeHub jamiyatining kelajakdagi voqealarini koʻring, topishirlarga roʻyxatdan oʻtish va foydalanuvchilar tomonidan boshqariladigan, foydalanuvchilar malikligidagi ijtimoiy platformada oʻz voqeangizni oʻtkazing.",
     "defaultSeoDescription": "DeHubdagi jamiyat voqeasi.",
