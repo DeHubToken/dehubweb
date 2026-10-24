@@ -1,4 +1,18 @@
 {
+  "desktopWordmark": {
+    "pageTitle": "桌面標誌預覽",
+    "heading": "DeHub 桌面標誌",
+    "day": "日 {{day}}",
+    "replay": "再播一次介紹",
+    "enlarge": "放大",
+    "actualSize": "實際尺寸",
+    "reassemble": "重新組裝個標誌",
+    "loading": "載入緊",
+    "ready": "準備好",
+    "interrupted": "啲圖像停止咗回應",
+    "unavailable": "唔係能夠載入 3D 預覽",
+    "hint": "個標誌會保持完整兩秒，然後斷開。將滑鼠游標移到佢上面或者揀佢就可以將佢放返埋一齊。"
+  },
   "mastodonApps": {
     "authTitle": "用 DeHub 登入",
     "authWants": "{{app}} 想用你嘅 DeHub 帳戶",

@@ -1,4 +1,18 @@
 {
+  "desktopWordmark": {
+    "pageTitle": "Werkskerm logo voorskou",
+    "heading": "DeHub-lessenaarlogo",
+    "day": "Jou {{day}}",
+    "replay": "Speel die intro weer",
+    "enlarge": "Vergroot",
+    "actualSize": "Werklike grootte",
+    "reassemble": "Herbevestig die logo",
+    "loading": "Laai tans",
+    "ready": "Gereed",
+    "interrupted": "Die grafiek het opgehou om te reageer",
+    "unavailable": "Kon nie die 3D-voorskou laai nie",
+    "hint": "Die logo bly twee sekondes lank heel en breek dan uitmekaar. Beweeg daaroor of kies dit om dit weer saam te stel."
+  },
   "mastodonApps": {
     "authTitle": "Meld aan met DeHub",
     "authWants": "{{app}} wil jou DeHub-rekening gebruik",

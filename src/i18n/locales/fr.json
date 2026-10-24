@@ -1,4 +1,18 @@
 {
+  "desktopWordmark": {
+    "pageTitle": "Aperçu du logo du bureau",
+    "heading": "Logo de bureau DeHub",
+    "day": "Jour {{day}}",
+    "replay": "Rejouer l'intro",
+    "enlarge": "Agrandir",
+    "actualSize": "Taille réelle",
+    "reassemble": "Réassembler le logo",
+    "loading": "Chargement",
+    "ready": "Prêt",
+    "interrupted": "Les graphiques ont cessé de répondre",
+    "unavailable": "Impossible de charger l'aperçu 3D",
+    "hint": "Le logo reste entier pendant deux secondes, puis se brise. Passez le curseur dessus ou sélectionnez-le pour le reconstituer."
+  },
   "mastodonApps": {
     "authTitle": "Se connecter avec DeHub",
     "authWants": "{{app}} veut utiliser votre compte DeHub",
@@ -376,11 +390,11 @@
   },
   "settings": {
     "usernameTaken": "Nom d'utilisateur déjà pris",
-    "showDislikesDesc": "Tout le monde peut ouvrir l'onglet « Je n'aime pas » de votre profil. Désactivé, vous seul pouvez le voir.",
-    "showDislikes": "Montrer mes « je n'aime pas » à tout le monde",
     "postingChain": "Blockchain des publications",
     "showOnline": "Montrer quand je suis en ligne",
     "showOnlineDesc": "Les personnes que vous envoyez un message voient un point vert à côté de votre nom lorsque vous utilisez DeHub",
+    "showDislikes": "Montrer mes « je n'aime pas » à tout le monde",
+    "showDislikesDesc": "Tout le monde peut ouvrir l'onglet « Je n'aime pas » de votre profil. Désactivé, vous seul pouvez le voir.",
     "smartReplies": "Réponses suggérées",
     "smartRepliesDesc": "Rédige deux réponses à toucher dans une discussion. La × sur les suggestions désactive l'option.",
     "title": "Paramètres",
@@ -1903,7 +1917,6 @@
     "returnHome": "Retour à l'accueil"
   },
   "profile": {
-    "dislikes": { "loadMore": "Charger plus", "privateDesc": "Ce compte garde ses « je n'aime pas » pour lui.", "privateTitle": "Les « je n'aime pas » sont privés", "emptyOther": "Rien pour l'instant.", "emptyOwn": "Les publications que vous n'aimez pas quittent vos fils et apparaissent ici. Annulez le « je n'aime pas » pour faire revenir la publication.", "emptyTitle": "Aucun « je n'aime pas » pour l'instant" },
     "back": "Retour",
     "usernameAvailable": "Nom d'utilisateur disponible !",
     "signUpToClaim": "Inscrivez-vous pour le réclamer",
@@ -1931,8 +1944,16 @@
       "commentUnavailable": "Ce commentaire n'est plus disponible"
     },
     "tabs": {
-      "dislikes": "Je n'aime pas",
-      "playlists": "Playlists"
+      "playlists": "Playlists",
+      "dislikes": "Je n'aime pas"
+    },
+    "dislikes": {
+      "emptyTitle": "Aucun « je n'aime pas » pour l'instant",
+      "emptyOwn": "Les publications que vous n'aimez pas quittent vos fils et apparaissent ici. Annulez le « je n'aime pas » pour faire revenir la publication.",
+      "emptyOther": "Rien pour l'instant.",
+      "privateTitle": "Les « je n'aime pas » sont privés",
+      "privateDesc": "Ce compte garde ses « je n'aime pas » pour lui.",
+      "loadMore": "Charger plus"
     },
     "offerWorthNow": "Environ {{amount}} jetons au taux actuel",
     "offerNotePlaceholder": "Ajoute une note (facultatif)",
@@ -2064,7 +2085,29 @@
       "oneAgent": "Un agent",
       "swarm": "Essaim",
       "swarmChoose": "Choisir les agents",
-      "selectAll": "Sélectionner tous les agents", "clearSelection": "Effacer la sélection", "selectedCount": "{{count}} sur {{total}} sélectionnés", "distribution": "Exécution des instructions", "eachMode": "Chaque agent exécute la tâche", "sharedMode": "Répartir le travail", "eachHelp": "Envoyez ces instructions à chaque agent sélectionné. Chaque agent effectue toute la tâche à la fréquence demandée. Les limites de publication partagées restent applicables.", "allCategories": "Toutes les publications de toutes les catégories. Aucun filtre par mot-clé ni limite de trois mentions J’aime par tâche.", "windowLimits": "Toutes les publications correspondantes sont mises en file. Les limites règlent le rythme sans réduire la tâche à trois publications. La rédaction de réponses peut utiliser des crédits.", "promptLimits": "Les demandes visant toutes les publications incluent toutes les catégories. Les mentions J’aime sélectives par thème sont limitées à trois par exécution. Tous les agents partagent le délai de publication ; la rédaction peut utiliser des crédits.", "pauseSwarm": "Suspendre l’essaim", "resumeSwarm": "Reprendre les agents disponibles", "cancelSwarm": "Annuler l’essaim", "cancelTask": "Annuler la tâche", "actionsProcessed": "actions traitées", "reviewMembers": "Les tâches aux actions incertaines nécessitent un examen individuel avant reprise. Une action en cours peut se terminer après une suspension ou une annulation.", "controlUpdated": "{{count}} tâches mises à jour", "enabled": "Activé · activité", "enabledHelp": "Activé signifie que cet agent est disponible. Les états des tâches indiquent s’il travaille, attend, est suspendu ou a échoué.", "lastActive": "Dernière activité", "noActivity": "Aucune activité enregistrée", "noTasks": "Cet agent n’a pas encore de tâches.", "swarmHelp": "Une consigne, un travail partagé. Les cibles sont réparties entre les agents et les publications planifiées alternent.",
+      "selectAll": "Sélectionner tous les agents",
+      "clearSelection": "Effacer la sélection",
+      "selectedCount": "{{count}} sur {{total}} sélectionnés",
+      "distribution": "Exécution des instructions",
+      "eachMode": "Chaque agent exécute la tâche",
+      "sharedMode": "Répartir le travail",
+      "eachHelp": "Envoyez ces instructions à chaque agent sélectionné. Chaque agent effectue toute la tâche à la fréquence demandée. Les limites de publication partagées restent applicables.",
+      "allCategories": "Toutes les publications de toutes les catégories. Aucun filtre par mot-clé ni limite de trois mentions J’aime par tâche.",
+      "windowLimits": "Toutes les publications correspondantes sont mises en file. Les limites règlent le rythme sans réduire la tâche à trois publications. La rédaction de réponses peut utiliser des crédits.",
+      "promptLimits": "Les demandes visant toutes les publications incluent toutes les catégories. Les mentions J’aime sélectives par thème sont limitées à trois par exécution. Tous les agents partagent le délai de publication ; la rédaction peut utiliser des crédits.",
+      "pauseSwarm": "Suspendre l’essaim",
+      "resumeSwarm": "Reprendre les agents disponibles",
+      "cancelSwarm": "Annuler l’essaim",
+      "cancelTask": "Annuler la tâche",
+      "actionsProcessed": "actions traitées",
+      "reviewMembers": "Les tâches aux actions incertaines nécessitent un examen individuel avant reprise. Une action en cours peut se terminer après une suspension ou une annulation.",
+      "controlUpdated": "{{count}} tâches mises à jour",
+      "enabled": "Activé · activité",
+      "enabledHelp": "Activé signifie que cet agent est disponible. Les états des tâches indiquent s’il travaille, attend, est suspendu ou a échoué.",
+      "lastActive": "Dernière activité",
+      "noActivity": "Aucune activité enregistrée",
+      "noTasks": "Cet agent n’a pas encore de tâches.",
+      "swarmHelp": "Une consigne, un travail partagé. Les cibles sont réparties entre les agents et les publications planifiées alternent.",
       "swarmMember": "Agent {{index}} sur {{total}} dans cet essaim",
       "runSwarm": "Lancer cet essaim",
       "description": "Les actions sont effectuées par l’agent sélectionné. Les tâches planifiées continuent lorsque l’application est fermée.",
@@ -2100,11 +2143,11 @@
         "authorChoose": "Choisir un créateur",
         "categoryAll": "Toutes les catégories",
         "categoryChoose": "Choisir des catégories",
-        "categoryHint": "Ajoutez jusqu\u0027à 20 catégories séparées par des virgules. Une seule correspondance suffit. Laissez vide pour toutes.",
+        "categoryHint": "Ajoutez jusqu'à 20 catégories séparées par des virgules. Une seule correspondance suffit. Laissez vide pour toutes.",
         "last1h": "Dernière heure",
         "last30d": "30 derniers jours",
         "allTime": "Depuis le début",
-        "dislike": "Je n\u0027aime pas",
+        "dislike": "Je n'aime pas",
         "author": "Auteur (facultatif)",
         "category": "Catégorie (facultative)",
         "authorPlaceholder": "@pseudo ou portefeuille",
@@ -8206,7 +8249,14 @@
     "priceChartCleared": "Graphe des prix effacé. Prix de référence corrigé : $0.0001. Les prix d'exécution dépendent des ordres disponibles."
   },
   "editor": {
-    "video": { "tFade": "Fondu enchaîné", "none": "Aucune", "transition": "Transition", "speed": "Vitesse", "sound": "Son","video": "Vidéo"},
+    "video": {
+      "tFade": "Fondu enchaîné",
+      "none": "Aucune",
+      "transition": "Transition",
+      "speed": "Vitesse",
+      "sound": "Son",
+      "video": "Vidéo"
+    },
     "review": {
       "title": "Révision du projet",
       "shared": "Partagé avec vous",

@@ -1,4 +1,18 @@
 {
+  "desktopWordmark": {
+    "pageTitle": "Pamje paraprake e logos së desktopit",
+    "heading": "Logoja e desktopit DeHub",
+    "day": "Dita {{day}}",
+    "replay": "Luaj prezantimin përsëri",
+    "enlarge": "Zmadho",
+    "actualSize": "Madhësia aktuale",
+    "reassemble": "Ribashko logon",
+    "loading": "Duke u ngarkuar",
+    "ready": "Gati",
+    "interrupted": "Grafika ndaloi së përgjigjuri",
+    "unavailable": "Pamja paraprake 3D nuk mund të ngarkohet",
+    "hint": "Logoja qëndron e plotë për dy sekonda, pastaj ndahet. Rri pezull mbi të ose zgjidhe për ta bashkuar përsëri."
+  },
   "mastodonApps": {
     "authTitle": "Hyr me DeHub",
     "authWants": "{{app}} do të përdorë llogarinë tënde DeHub",

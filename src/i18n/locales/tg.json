@@ -1,4 +1,18 @@
 {
+  "desktopWordmark": {
+    "pageTitle": "Пешнамоиши логотипи мизи корӣ",
+    "heading": "Логотипи мизи кории DeHub",
+    "day": "Рӯз {{day}}",
+    "replay": "Пахш кардани интро аз нав",
+    "enlarge": "Калон кардан",
+    "actualSize": "Андозаи аслӣ",
+    "reassemble": "Аз нав ҷамъ кардани логотип",
+    "loading": "Боркунӣ идома дода шудааст",
+    "ready": "Тайёр",
+    "interrupted": "Ҷавоби графикӣ қатъ карда шуд",
+    "unavailable": "Наметавонам пешнамоиши 3D- ро пурбор кунам",
+    "hint": "LOGO барои ду сония пурра мемонад, сипас ҷудо мешавад. Ilipat ito o piliin ito upang i-set ito muli."
+  },
   "mastodonApps": {
     "authTitle": "Бо DeHub ворид шавед",
     "authWants": "{{app}} мехоҳад ҳисоби DeHub-и шуморо истифода барад",

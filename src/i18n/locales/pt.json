@@ -1,4 +1,18 @@
 {
+  "desktopWordmark": {
+    "pageTitle": "Pré-visualização do logótipo do ambiente",
+    "heading": "Logotipo da área de trabalho do DeHub",
+    "day": "Dia {{day}}",
+    "replay": "Reproduzir a introdução novamente",
+    "enlarge": "Ampliar",
+    "actualSize": "Tamanho real",
+    "reassemble": "Volte a montar o logótipo",
+    "loading": "A carregar",
+    "ready": "Pronto",
+    "interrupted": "Os gráficos pararam de responder",
+    "unavailable": "Não foi possível carregar a pré-visualização 3D",
+    "hint": "O logotipo permanece inteiro por dois segundos e depois se separa. Passe o cursor sobre ele ou selecione-o para montá-lo novamente."
+  },
   "mastodonApps": {
     "authTitle": "Entrar com DeHub",
     "authWants": "{{app}} quer usar sua conta DeHub",

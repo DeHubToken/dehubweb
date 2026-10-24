@@ -1,4 +1,18 @@
 {
+  "desktopWordmark": {
+    "pageTitle": "Logo de escritorio de vista previa",
+    "heading": "Logo de escritorio de DeHub",
+    "day": "Día {{day}}",
+    "replay": "Reproduce la intro nuevamente",
+    "enlarge": "Agrandar",
+    "actualSize": "Tamaño real",
+    "reassemble": "Reensamblar el logo",
+    "loading": "Cargando",
+    "ready": "Listo",
+    "interrupted": "Los gráficos dejaron de responder",
+    "unavailable": "No se pudo cargar la vista previa 3D",
+    "hint": "El logo permanece completo por dos segundos, luego se rompe. Pase el ratón sobre él o selecciónelo para volver a ensamblarlo."
+  },
   "mastodonApps": {
     "authTitle": "DeHubwan yaykuy",
     "authWants": "{{app}} DeHub yupayniykita llamk'achiyta munan",

@@ -1,4 +1,17 @@
 {
+  "desktopWordmark": {
+    "heading": "DeHub 台面上頭嘅 Logo",
+    "day": "日 {{day}}",
+    "replay": "再播放開場動畫",
+    "enlarge": "放大",
+    "actualSize": "原始大小",
+    "reassemble": "重組 Logo",
+    "loading": "載入中...",
+    "ready": "準備好",
+    "interrupted": "圖形停止回應",
+    "unavailable": "無法載入 3D 預覽",
+    "hint": "Logo 先整齊兩秒，再拆散。滑鼠移到上面或選擇它就可以重組。"
+  },
   "mastodonApps": {
     "authTitle": "用 DeHub 登录",
     "authWants": "{{app}} 想用侬个 DeHub 账号",

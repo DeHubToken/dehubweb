@@ -1,4 +1,8 @@
 {
+  "desktopWordmark": {
+    "day": "يوم {{day}}",
+    "actualSize": "الْحَجْمُ الْحَقِيقِيُّ"
+  },
   "mastodonApps": {
     "authTitle": "سجّل الدخول بـ DeHub",
     "authWants": "{{app}} داير يستخدم حسابك في DeHub",

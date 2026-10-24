@@ -1,4 +1,17 @@
 {
+  "desktopWordmark": {
+    "heading": "DeHub 台面logo",
+    "day": "日子 {{day}}",
+    "replay": "再播放一次開場動畫",
+    "enlarge": "放大",
+    "actualSize": "實際大小",
+    "reassemble": "重組logo",
+    "loading": "載入中...",
+    "ready": "準備好",
+    "interrupted": "圖形停止回應",
+    "unavailable": "無法載入3D預覽",
+    "hint": "logo整體顯示兩秒後，就會散開。把滑鼠游標放上頭或選擇它，就可以重新組合起來。"
+  },
   "mastodonApps": {
     "authTitle": "用 DeHub 登录",
     "authWants": "{{app}} 想使用你的 DeHub 账号",

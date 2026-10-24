@@ -1,4 +1,18 @@
 {
+  "desktopWordmark": {
+    "pageTitle": "لوغو ديسكتووب",
+    "heading": "لوغو ديهوب ديسكتووب",
+    "day": "يوم {{day}}",
+    "replay": "لعب التقديم من جديد",
+    "enlarge": "كبير",
+    "actualSize": "حجم طبيعي",
+    "reassemble": "جمع لوغو من جديد",
+    "loading": "جاري التحميل",
+    "ready": "معد",
+    "interrupted": "توقفت الرسومات عن الاستجابة",
+    "unavailable": "لم يتم تحميل عرض 3D",
+    "hint": "يبقى اللوغو كاملين لثانيتين، بعدين يتفكك. ضع مؤشر الفأرة عليه أو اختره ليجمع من جديد."
+  },
   "mastodonApps": {
     "authTitle": "سجّل دخولك بـ DeHub",
     "authWants": "{{app}} يبغى يستخدم حسابك في DeHub",

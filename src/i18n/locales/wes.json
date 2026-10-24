@@ -1,4 +1,18 @@
 {
+  "desktopWordmark": {
+    "pageTitle": "Desktop logo preview",
+    "heading": "DeHub desktop logo",
+    "day": "Dei {{day}}",
+    "replay": "Pia de intro again",
+    "enlarge": "Wen yu wok am big",
+    "actualSize": "Sai size",
+    "reassemble": "Reassemble logo",
+    "loading": "Loading",
+    "ready": "Ready",
+    "interrupted": "Graphics no dey respond",
+    "unavailable": "No fit load 3D preview",
+    "hint": "Logo dey stay whole for two seconds, den break apart. Wen yu hover or select am, put am back together."
+  },
   "mastodonApps": {
     "authTitle": "Sign in with DeHub",
     "authWants": "{{app}} want use your DeHub account",

@@ -1,4 +1,14 @@
 {
+  "desktopWordmark": {
+    "pageTitle": "Desktop logo preview",
+    "heading": "DeHub desktop logo",
+    "day": "Day {{day}}",
+    "enlarge": "Enlarge",
+    "actualSize": "Actual size",
+    "loading": "Loading",
+    "ready": "Ready",
+    "hint": "Logo dey stay whole for two seconds, na after dat, dey break apart. If you put mouse on top of it (hover) or click on it (select), logo go come back together again."
+  },
   "mastodonApps": {
     "authTitle": "Sign in with DeHub",
     "authWants": "{{app}} wan use your DeHub account",

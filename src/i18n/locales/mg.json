@@ -1,4 +1,17 @@
 {
+  "desktopWordmark": {
+    "pageTitle": "Topy mason'ny fango desktop",
+    "heading": "Sary famantarana ny desktop DeHub",
+    "replay": "Andramo indray ny Intro",
+    "enlarge": "Alehibiazo",
+    "actualSize": "Haben'ny tena izy",
+    "reassemble": "Manambatra ny logo",
+    "loading": "Mizaha",
+    "ready": "Vonona",
+    "interrupted": "Nijanona tsy namaly ilay sary",
+    "unavailable": "Tsy afaka naka ny topy mason'ny 3D",
+    "hint": "Mijanona mandritra ny roa segondra ilay fango, avy eo tapaka. Avereno izany na safidio mba hamerenana azy indray."
+  },
   "mastodonApps": {
     "authTitle": "Midira amin'ny DeHub",
     "authWants": "Te hampiasa ny kaontinao DeHub i {{app}}",

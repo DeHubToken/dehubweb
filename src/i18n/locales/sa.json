@@ -1,4 +1,16 @@
 {
+  "desktopWordmark": {
+    "pageTitle": "Desktop Logo Preview",
+    "heading": "DeHub डेस्कटॉप लोगो",
+    "replay": "पुनः प्रवेष्टव्यं",
+    "enlarge": "विस्तार्यताम्",
+    "actualSize": "अधुना परिमाणम्",
+    "reassemble": "सङ्केतपत्रं पुनः प्राप्तम्",
+    "loading": "लोडताम्",
+    "ready": "पूर्णम्",
+    "interrupted": "प्रतिसाद रूपांतरित",
+    "unavailable": "\"फलकम्ःCountry data 3D\" सम्बद्धानि पृष्ठानि"
+  },
   "mastodonApps": {
     "authTitle": "DeHub द्वारा प्रविशतु",
     "authWants": "{{app}} भवतः DeHub-खातम् उपयोक्तुम् इच्छति",
