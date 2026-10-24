@@ -1,3 +1,4 @@
+import { fetchStageRecordings, hasStageRecording } from '@/lib/stage-recordings';
 import { useTranslation as _useCopy } from 'react-i18next';
 /**
  * Stages Page
@@ -399,15 +400,8 @@ export default function StagesPage() {
   const { data: recentPastStages = [] } = useQuery({
     queryKey: ['past-stages'],
     enabled: activeTab === 'live' && !hasLiveNow,
-    queryFn: async () => {
-      const { data } = await supabase
-        .from('audio_spaces')
-        .select('*')
-        .eq('status', 'ended')
-        .order('ended_at', { ascending: false })
-        .limit(20);
-      return (data as AudioSpace[]) || [];
-    },
+    queryFn: () => fetchStageRecordings(),
+    select: (stages: AudioSpace[]) => stages.filter(hasStageRecording),
     staleTime: 5 * 60_000,
   });
 
