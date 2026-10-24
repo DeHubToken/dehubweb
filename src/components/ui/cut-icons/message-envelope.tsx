@@ -1,6 +1,6 @@
 import React from "react";
 import { createCutIcon } from "./create-cut-icon";
 
-export default createCutIcon("CutMessageEnvelope", () => (
-  <path d="M2.8 5.8 H21 Q29.2 5.8 29.2 14 V26.2 H11 Q2.8 26.2 2.8 18 Z M7.6 8.2 H21 Q23.4 8.2 24.7 9.15 L16 15.8 Z M5.2 9.4 L16 18.8 L26.8 11 V23.8 H11 Q5.2 23.8 5.2 18 Z" fill="currentColor" fillRule="evenodd" stroke="none" />
-));
+export default createCutIcon("CutMessageEnvelope", ({ weight }) => <>
+  <path d="M4 5H20.2Q28 5 28 12.8V27H11.8Q4 27 4 19.2Z M6.6 7.6V19.2Q6.6 24.4 11.8 24.4H25.4V12.8Q25.4 7.6 20.2 7.6Z" fill="currentColor" fillRule="evenodd"/><path d="M6 8L16 16.6L26 8" fill="none" fillRule="evenodd" stroke="currentColor" strokeWidth={weight * 1.3} strokeLinejoin="round"/>
+</>);

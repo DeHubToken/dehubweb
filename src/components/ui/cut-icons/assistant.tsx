@@ -1,6 +1,6 @@
 import React from "react";
 import { createCutIcon } from "./create-cut-icon";
 
-export default createCutIcon("CutAssistant", ({ weight, maskId }) => <>
-<path d="M16 3L19.5 12.5L29 16L19.5 19.5L16 29L12.5 19.5L3 16L12.5 12.5Z" fill="none" stroke="currentColor" strokeWidth={weight * 1.2} strokeLinejoin="round"/><path d="M24.1000 4.0440L24.1000 8.0000L24.8560 8.0000Q25.9000 8.0000 25.9000 6.9560L25.9000 3.0000L25.1440 3.0000Q24.1000 3.0000 24.1000 4.0440Z" fill="currentColor" fillRule="evenodd"/><path d="M23.5440 6.4000L27.5000 6.4000L27.5000 5.6440Q27.5000 4.6000 26.4560 4.6000L22.5000 4.6000L22.5000 5.3560Q22.5000 6.4000 23.5440 6.4000Z" fill="currentColor" fillRule="evenodd"/>
+export default createCutIcon("CutAssistant", () => <>
+  <path d="M14.450 3.600L14.900 3.600Q17.550 3.600 17.550 6.250C17.550 11.000 21.000 14.450 28.400 14.450L28.400 14.900Q28.400 17.550 25.750 17.550C21.000 17.550 17.550 21.000 17.550 28.400L17.100 28.400Q14.450 28.400 14.450 25.750C14.450 21.000 11.000 17.550 3.600 17.550L3.600 17.100Q3.600 14.450 6.250 14.450C11.000 14.450 14.450 11.000 14.450 3.600Z M16.000 10.600C17.458 12.976 19.024 14.542 21.400 16.000C19.024 17.458 17.458 19.024 16.000 21.400C14.542 19.024 12.976 17.458 10.600 16.000C12.976 14.542 14.542 12.976 16.000 10.600Z" fill="currentColor" fillRule="evenodd" data-assistant-star="nova-n2"/>
 </>);
