@@ -940,7 +940,7 @@ serve(async (req) => {
         }
         if (!ticket) throw new Error('Render not found');
         if (['succeeded', 'failed'].includes(ticket.result?.status)) return new Response(JSON.stringify(ticket.result), { headers: { ...corsHeaders, 'Content-Type': 'application/json' } });
-        return await settleGeneration('generate-video', body.predictionId, await handleVeniceStatus(body.predictionId, ticket.result));
+        return await settleGeneration('generate-video', body.predictionId, await handleVeniceStatus(body.predictionId, ticket.result, ticket.wallet_address));
       }
 
       if (provider === 'kie') {
@@ -1088,7 +1088,7 @@ serve(async (req) => {
   }
 });
 
-async function handleVeniceStatus(queueId: string, ticket: any): Promise<Response> {
+async function handleVeniceStatus(queueId: string, ticket: any, wallet: string): Promise<Response> {
   if (!ticket?.veniceModel) throw new Error('Missing Venice render ticket');
   let response: Response;
   try { response = await veniceFetch('/video/retrieve', { model: ticket.veniceModel, queue_id: queueId }); }
@@ -1110,10 +1110,12 @@ async function handleVeniceStatus(queueId: string, ticket: any): Promise<Respons
   }
   if (!media?.byteLength) throw new Error('Venice returned an empty video');
   const db = serviceClient();
-  const path = `venice/${queueId.replace(/[^a-zA-Z0-9-]/g, '')}.mp4`;
-  const { error } = await db.storage.from('ai-media-uploads').upload(path, media, { contentType: 'video/mp4', upsert: true });
+  const path = `${wallet}/venice-${queueId.replace(/[^a-zA-Z0-9-]/g, '')}/original`;
+  const { error } = await db.storage.from('creator-assets').upload(path, media, { contentType: 'video/mp4', upsert: true });
   if (error) throw new Error('Video save is pending. Reconnect to collect it.');
-  const videoUrl = db.storage.from('ai-media-uploads').getPublicUrl(path).data.publicUrl;
+  const signed = await db.storage.from('creator-assets').createSignedUrl(path, 3600);
+  if (signed.error || !signed.data?.signedUrl) throw new Error('Video link is pending. Reconnect to collect it.');
+  const videoUrl = signed.data.signedUrl;
   return new Response(JSON.stringify({ status: 'succeeded', predictionId: queueId, provider: 'venice', videoUrl, model: ticket.veniceModel, providerCostUsd: ticket.providerCostUsd, markup: 0 }), { headers: { ...corsHeaders, 'Content-Type': 'application/json' } });
 }
 
