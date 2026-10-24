@@ -2185,6 +2185,8 @@ function CommentsSectionForAccount({ tokenId, onClose, initialTab, embedded = fa
     };
 
     setOptimisticComments(prev => [tempComment, ...prev]);
+    emitCommentCreated(tokenId);
+    let accepted = false;
     const replyTarget = replyTo;
     // Your own reply has to land somewhere you can see it, so open the thread
     // it belongs to. Replying to a reply still means the root's thread.
@@ -2247,6 +2249,7 @@ function CommentsSectionForAccount({ tokenId, onClose, initialTab, embedded = fa
         });
         await postComment(tokenId, newComment, replyTarget?.id);
       }
+      accepted = true;
       if (loadDraft(commentDraftScope)?.text === submittedText) clearDraft(commentDraftScope);
       coachReset();
       setReplyTo(current => current?.id === replyTarget?.id ? null : current);
@@ -2263,7 +2266,6 @@ function CommentsSectionForAccount({ tokenId, onClose, initialTab, embedded = fa
         inputRef.current.style.height = '';
       }
       await queryClient.refetchQueries({ queryKey: ['comments', tokenId] });
-      emitCommentCreated(tokenId);
       setOptimisticComments(prev => prev.filter(c => c.id !== tempId));
       // Posted, and the row that played it from here is gone with the line
       // above: nothing reads the recording's object URL any more.
@@ -2272,6 +2274,7 @@ function CommentsSectionForAccount({ tokenId, onClose, initialTab, embedded = fa
       // to call the model first — so hand off to the poller.
       if (mentionsAssistant(newComment)) armAssistantReply();
     } catch (err) {
+      if (!accepted) emitCommentsDeleted(tokenId);
       setOptimisticComments(prev => prev.filter(c => c.id !== tempId));
       // Text and attachments remain in the composer until the request succeeds.
       // The server's own words when it has them — a refusal explains itself
