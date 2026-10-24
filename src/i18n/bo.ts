@@ -2271,6 +2271,7 @@ export const bo = {
     tokenUtilityTitle: 'ལག་ལེན་དང་ལག་ལེན་གྱི་ཁེ་ཕན་',
     walletDesc: 'DeHub གསང་བའི་དངུལ་ཁུག་དང་། གསང་བའི་འཛིན་བཟུང་། ཚད་གཞི ། ཕོར་ཆ ། དངུལ་ཁུག་འབྲེལ་བ ། MetaMask ། Crypto དངུལ་ཁུག་',
     whereToBuyTitle: 'གང་ནས་ཉོ་ཐུབ །',
+    bridgeDesc: 'BASE དང་BNB འབྲེལ་མཐུད་ཀྱི་དབར་གྱི་DeHub རྟགས་མཚན་གྱི་ཆེད་དུ་cross-chain གསང་བའི་གཞུང་ལམ་དང་། གསང་བའི་བརྒྱུད་ལམ་དང་། cross-chain swap',
   },
   docsSeo: {
     advertisingDesc: 'DeHub གི་POVR Ad Tech ཀྱིས་གསལ་བཤད་བྱས་པ ། མཐོང་སྣང་དང་གོ་གནས་ཀྱི་དཔང་རྟགས་དང་། མགུ་སྐོར་འགོག་པའི་ལས་འགུལ་དང་། བཟོ་སྐྲུན་པ་ཚོའི་ཆེད་དུ་འབབ་ཁུངས་བགོས་པ །',
@@ -2359,5 +2360,7 @@ export const bo = {
     usWeeklyHeadline: 'Blockchain གི་རྒྱ་མཚོ་དམར་པོའི་ས་མཚམས་ལ་སྣེ་འཁྲིད་བྱེད་པའི་ལས་སྡེ་རྣམས་དང་མཇལ་འཕྲད་',
     usWeeklyReach: 'ཀློག་མཁན་མི་ཀྲར་༥༠༠ ལྷག་པ །',
     yahooFinanceReach: 'འཛམ་གླིང་གི་ཚོང་འབྲེལ་གསར་འགྱུར་གྱི་དྲ་ཚིགས །',
+    entrepreneurReach: '20M+ ཟླ་རེའི་ལག་ལེན་པ །',
+    yahooFinanceHeadline: 'Metaverse གི་སྒོ་ཕྱོགས །',
   },
 };

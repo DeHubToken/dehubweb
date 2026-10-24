@@ -89,6 +89,7 @@ export const si = {
     bannerAltDhbScan: 'DHBScan ප්රමිතික',
     bannerAltFundraise: '$1,000,000 ප්‍රයෝජන මුදල',
     bannerAltHelicopter: 'අවසන් චැඩ් ස්ථාවර හෙලිකොප්ටරය',
+    bannerAltHelmet: 'අවසන් චැඩ් ස්ථාවර අක්ෂර හිස්වැස්ම',
   },
   overview: {
     title: 'DeHub: සාම්ප්‍රදායික මාධ්‍ය යෙදුම් සඳහා විමධ්‍යගත, පරිශීලක හිමිකාරිත්වය සහිත විකල්පයක්.',
@@ -2656,6 +2657,7 @@ export const si = {
     walletTitle: 'පසුම්බිය සහ හිමිකාරිත්වය',
     whereToBuyDesc: 'වෙළඳපොළවල් හරහා DeHub ටෝකන මිලදී ගැනීම, වෙළඳ යුගල, ද්‍රවශීලතා තටාක, DEX, CEX ලැයිස්තුගත කිරීම්, Uniswap, PancakeSwap',
     whereToBuyTitle: 'මිලදී ගත හැකි ස්ථාන',
+    docsHomeTitle: 'ප් ‍ රලේඛන නිවහන',
   },
   docsSeo: {
     advertisingDesc: 'DeHub හි POVR දැන්වීම් තාක්ෂණය පැහැදිලි කිරීම: proof-of-view-and-rank, වංචා-ප්‍රතිරෝධී ප්‍රචාරණ සහ නිර්මාණකරුවන් සඳහා ආදායම් බෙදා ගැනීම.',

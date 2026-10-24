@@ -89,6 +89,7 @@ export const so = {
     bannerAltFundraise: '$ 1,000,000 Maalgelinta',
     bannerAltHelicopter: 'Helicopter-ka ugu dambeeya ee Chad Standing',
     bannerAltHelmet: 'Last Chad Standing dabeecadda helmet',
+    bannerAltDhbScan: 'DHBScan Metrics',
   },
   overview: {
     title: 'DeHub: Baddalka decentralized-ka ah ee uu leeyahay isticmaalaha ee apps-ka warbaahinta dhaqameed.',
@@ -1283,6 +1284,7 @@ export const so = {
     diagramDataFlowStart: 'Bilowga socodka xogta',
     diagramMinersRole1: 'Taasi waxay bixisaa awoodda xisaabinta',
     diagramMinersRole2: 'badiyadka to deHub tokens',
+    diagramCoordinatorRole: 'Tasking, encryption + decryption',
   },
   e2ee: {
     title: 'Sirta E2E',
@@ -2617,6 +2619,11 @@ export const so = {
     walletTitle: 'Wallet & Holdings',
     whereToBuyDesc: 'Iibso calaamadaha DeHub ee isweydaarsiga, lammaanaha ganacsiga, barkadaha dareeraha, DEX, liiska CEX, Uniswap, PancakeSwap',
     whereToBuyTitle: 'Where to Buy',
+    apiEndpointsTitle: 'API Endpoints',
+    badgesTitle: 'Badges & Tiers',
+    categoryBlog: 'Blog',
+    featuredInTitle: 'Featured In',
+    governanceTitle: 'Maamul',
   },
   docsSeo: {
     advertisingDesc: 'DeHub\'s POVR ad tech ayaa sharaxay: caddaynta-eegista-iyo-rank, ololaha u adkaysta khiyaanada iyo wadaagista dakhliga ee abuurayaasha.',
