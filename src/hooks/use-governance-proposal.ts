@@ -16,7 +16,7 @@ export function useGovernanceProposal(key: string | undefined) {
   const resolved = useQuery({
     queryKey: ['governance-proposal-number', key],
     queryFn: async () => {
-      const { data, error } = await supabase
+      const { data, error } = await (supabase as any)
         .from('governance_proposals')
         .select('*')
         .eq('proposal_number', Number(key))
