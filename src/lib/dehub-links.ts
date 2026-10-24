@@ -25,6 +25,7 @@
  *    still lands where it pointed even though the card is chosen by `kind`.
  */
 
+import i18n from 'i18next';
 import { RESERVED_LINK_SEGMENTS } from '@/lib/reserved-usernames';
 import { cutFromText } from '@/lib/cut-from-text';
 
@@ -467,19 +468,6 @@ export const dehubLinkFor = {
 };
 
 /** Human label for a link kind — used by share sheets and fallback chips. */
-export function dehubLinkLabel(kind: DehubLinkKind): string {
-  switch (kind) {
-    case 'post': return 'post';
-    case 'profile': return 'profile';
-    case 'community': return 'community';
-    case 'communityInvite': return 'community invite';
-    case 'store': return 'store';
-    case 'listing': return 'item';
-    case 'event': return 'event';
-    case 'stage': return 'stage';
-    case 'film': return 'title';
-    case 'bounty': return 'bounty';
-    case 'app': return 'app';
-    case 'proposal': return 'proposal';
-  }
+export function dehubLinkLabel(kind: DehubLinkKind | 'link'): string {
+  return i18n.t(`dehubLinks.kind.${kind}`);
 }

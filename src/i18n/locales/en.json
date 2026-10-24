@@ -522,7 +522,7 @@
     "systemLight": "System Light",
     "immersive": "Immersive",
     "cosmic": "Cosmic Pixels",
-    "glass": "Glass",
+    "glass": "Glassy",
     "hazy": "Hazy Nights",
     "swarms": "Swarms",
     "lavalamp": "Lava Lamp",
@@ -795,6 +795,7 @@
     "sessionRevoked": "Device signed out",
     "sessionRevokeFailed": "Could not sign out that device",
     "sessionsRevokedOne": "1 device signed out",
+    "sessionsRevokedMany": "{{count}} devices signed out",
     "sessionsRevokeAllFailed": "Could not sign out the other devices",
     "activeSessions": "Active sessions",
     "refresh": "Refresh",
@@ -900,6 +901,9 @@
     "automatic": "Automatic"
   },
   "common": {
+    "mute": "Mute",
+    "unmute": "Unmute",
+    "confirm": "Confirm",
     "save": "Save",
     "cancel": "Cancel",
     "delete": "Delete",
@@ -2001,7 +2005,7 @@
     "tokensUnit": "tokens"
   },
   "agents": {
-    "life": {"title":"Alive","help":"Lets this agent live on its own. It keeps its own hours, posts, likes and replies in its own voice, and sleeps at night.","starting":"Setting up its personality…","awake":"Awake in {{home}}","asleep":"Asleep in {{home}}","next":"next check {{time}}","recent":"Lately","empty":"Nothing yet. It will check in soon.","kind":{"post":"Posted","comment":"Commented","reply":"Replied","like":"Liked a post","profile":"Updated its profile","error":"Something went wrong"}},
+    "life": {"title":"Alive","help":"Lets this agent live on its own. It keeps its own hours, posts, likes and replies in its own voice, and sleeps at night.","starting":"Setting up its personality…","awake":"Awake in {{home}}","asleep":"Asleep in {{home}}","next":"next check {{time}}","recent":"Lately","empty":"Nothing yet. It will check in soon.","daily":"Posts today: {{posts}} · Daily target: {{target}}","compose":"Post as this agent","postText":"Post text","imageUrl":"Image URL (optional)","queueHelp":"Publishes your exact text. Shared 20-minute post gap applies. No minting.","queuePost":"Queue post","postQueued":"Post queued. Track it in Tasks above.","viewPost":"View post","unlike":"Unlike","unliked":"Unliked","editComment":"Edit comment","more":"Show more activity","less":"Show less","kind":{"post":"Posted","comment":"Commented","reply":"Replied","like":"Liked a post","profile":"Updated its profile","error":"Something went wrong"}},
     "profile": {
         "edit":  "Edit profile",
         "avatar":  "Avatar",
@@ -2428,7 +2432,21 @@
     "closesInDays": "{{count}}d left",
     "closesInHours": "{{count}}h left",
     "closesInMinutes": "{{count}}m left",
-    "loadFailed": "Couldn't load proposals"
+    "loadFailed": "Couldn't load proposals",
+    "badgeHoldersOnly": "Badge holders only",
+    "removeMedia": "Remove attachment",
+    "addMedia": "Add image or video",
+    "freeForBadgeHolders": "Free for badge holders. Your draft saves as you type.",
+    "proposalFeeNote": "Proposals cost 10,000 DHB without a staking badge. Your draft saves as you type.",
+    "noOpenProposals": "No open proposals right now",
+    "decidedInTabs": "Decided proposals are in the Passed and Rejected tabs.",
+    "mediaTypeInvalid": "Pick an image or a video.",
+    "mediaTooLarge": "Files must be 50 MB or smaller.",
+    "uploadFailed": "Upload failed",
+    "uploadFailedDetail": "Upload failed: {{message}}",
+    "proposalAttachment": "Proposal attachment",
+    "submitFailed": "Failed to submit proposal",
+    "draftSavedRetry": "Your draft is saved — press Submit to retry."
   },
   "sidebar": {
     "talkOfTheTown": "Talk of The Town",
@@ -3433,6 +3451,8 @@
       "tooltipPerDay": "{{revenue}} / {{costs}} a day",
       "reinvestment": "Marketing & developer wages",
       "reinvestmentGroup": "Reinvestment",
+      "operationsGroup": "Operations",
+      "estimatedOperations": "Estimated operations",
       "reinvestmentNote": "DeHub reports that retained historical operating funds were fully reinvested. Marketing and developer wages are shown together, averaged across each month, after subtracting costs already recorded that month.",
       "profitShared": "Net profit shared",
       "profitSharedHint": "{{usd}} paid to holders and stakers · {{from}}–{{to}}",
@@ -6645,7 +6665,8 @@
     "endStreamConfirmBody": "Your broadcast stops for everyone watching and cannot be resumed.",
     "keepStreaming": "Keep streaming",
     "encoderPermanentHint": "This key never changes. Set your encoder up once — next time just press Start there and DeHub creates the post for you.",
-    "notEnoughTokensForBounty": "Not enough tokens. Need {{need}} tokens but have {{have}}."
+    "notEnoughTokensForBounty": "Not enough tokens. Need {{need}} tokens but have {{have}}.",
+    "connectionFailed": "The broadcast connection failed."
   },
   "events": {
     "seoTitle": "Events — Meetups & Community Events on DeHub",
@@ -14209,7 +14230,24 @@
     "9a01cfe1592a": "{{value1}} — DeHub Stores",
     "ff1e56a487ea": "Remaining uses: {{value1}}",
     "ccf0988984a3": "Showing {{value1}} of {{value2}}",
-    "5fb924a4a79f": "Edit {{value1}} — DeHub Bounties"
+    "5fb924a4a79f": "Edit {{value1}} — DeHub Bounties",
+    "05d0e1b9a76e": "Resume the capture card",
+    "0f3dd376ee85": "Looking for your capture card…",
+    "150d73bf85e7": "Elgato, AVerMedia… no OBS",
+    "1929290e09aa": "Open the capture card setup (asks for camera access)",
+    "1b2c08a8733d": "Quality",
+    "36cffc7912e4": "Your mic (to talk over the game)",
+    "4a1bd4a3aaf3": "Capture card",
+    "594bea9c9448": "No capture card found. Plug it in over USB, then pick it below.",
+    "67004337fb60": "Can't open this device. Close OBS or Elgato Studio (only one app can use it at a time).",
+    "8bb1dbd60bce": "Keep this tab open while you're live.",
+    "96882965394f": "Game audio",
+    "a2838b66518a": "Auto (best your card can do)",
+    "b8643d1cc81a": "1080p 60 needs about 9 Mbps upload. Pick 720p on slow Wi‑Fi.",
+    "c7ce89b32897": "Pause the capture card",
+    "d7038cc95b8e": "Play on your TV through the card's passthrough, not this preview. It's a little behind.",
+    "de6694f3ada3": "Pick a device",
+    "fedc5cda305d": "Capture paused"
   },
   "articles": {
     "cardLabel": "Article · {{count}} min read",
@@ -14287,5 +14325,101 @@
     "fingerprint": "Fingerprint",
     "exploreFirst": "Explore first",
     "codeNote": "We email you a code, no password needed."
+  },
+  "dehubLinks": {
+    "kind": {
+      "post": "post",
+      "profile": "profile",
+      "community": "community",
+      "communityInvite": "community invite",
+      "store": "store",
+      "listing": "item",
+      "event": "event",
+      "stage": "stage",
+      "film": "title",
+      "bounty": "bounty",
+      "app": "app",
+      "proposal": "proposal",
+      "link": "link"
+    },
+    "sentTo": "{{item}} sent to {{name}}",
+    "sendFailed": "Failed to send {{item}}",
+    "copyLinkDetail": "Copy the {{item}} link to your clipboard",
+    "recipientChat": "chat",
+    "recipientUser": "user"
+  },
+  "dehubAppPage": {
+    "seoTitle": "DeHub App — Download for Android, iPhone & Web",
+    "seoDescription": "Get the DeHub app: open-source, user-owned social media with live streaming, encrypted messaging and watch-to-earn. Free on Google Play, the App Store and the web.",
+    "heading": "The DeHub App",
+    "intro1": "DeHub is a decentralised social network and mobile app, in development since 2021, where posts can be minted on-chain and creators keep their audience, their content and their revenue.",
+    "intro2": "It combines a chronological feed, live streaming, end-to-end encrypted messaging, user-run communities, a multi-chain wallet and watch-to-earn rewards paid in tokens. The same account works on Android, iPhone and in any modern browser.",
+    "downloadTitle": "Download DeHub",
+    "googlePlay": "Get it on Google Play",
+    "appStore": "Download on the App Store",
+    "android": "Android",
+    "iphone": "iPhone",
+    "openInBrowser": "Open DeHub in your browser",
+    "downloadApk": "Download the APK (Android without Google Play)",
+    "faqTitle": "Frequently asked questions",
+    "faq": {
+      "q1": "Is DeHub the DePaul University app?",
+      "a1": "No. DeHub at dehub.io is an independent open-source social media platform. DePaul University’s DeHUB student portal, Rowan’s DEHub and the deHUB Access door-entry app are unrelated products that happen to share the name.",
+      "q2": "Is the DeHub app free?",
+      "a2": "Yes. DeHub is free to download from Google Play and the App Store, and free to use in the browser at dehub.io.",
+      "q3": "Which devices does DeHub run on?",
+      "a3": "Android phones through Google Play or the direct APK download, iPhone through the App Store, and any modern desktop or mobile browser at dehub.io.",
+      "q4": "Can I install DeHub on Android without Google Play?",
+      "a4": "Yes. The latest Android build is published by DeHub as a direct APK download at dehub.io/apk, for Android 8 and up.",
+      "q5": "What can I do in the DeHub app?",
+      "a5": "Post to a chronological feed, go live or watch live streams, message friends with end-to-end encryption, join and run communities, hold tokens in a built-in multi-chain wallet and earn rewards for watching."
+    },
+    "notSure": "Still not sure which DeHub you need? <compare>DeHub vs DePaul DeHUB vs Rowan DEHub</compare> sorts it out, and <guide>What is DeHub?</guide> covers the platform in depth."
+  },
+  "streamPage": {
+    "seoTitle": "Stream on DeHub — Live Streaming for TikTok & Twitch Creators",
+    "seoDescription": "Go live on DeHub: on-chain tips that land in your wallet, an audience you own, posting to your other platforms in one step, and 20% from everyone you invite.",
+    "eyebrow": "//FOR_STREAMERS",
+    "heading": "Stream on DeHub",
+    "intro": "Bring your live audience to a platform you own. Go live from your phone, your browser or OBS, get tipped on-chain while you stream, and keep the audience you build. DeHub is built by the team behind First Class Agency, the UK’s number-one official TikTok LIVE partner agency, with more than 1,000 live streamers.",
+    "startStreaming": "Start streaming",
+    "importYoutube": "Import your YouTube channel",
+    "inviteLink": "Get your invite link",
+    "howToStart": "Sign up, open the post composer and tap Go live — from your camera, OBS or a capture card.",
+    "proof": {
+      "label1": "concurrent viewers on DeHub live streaming",
+      "label2": "uptime across streaming services",
+      "value3": "Sub-200ms",
+      "label3": "global latency on DeHub’s own CDN"
+    },
+    "whyTitle": "Why stream on DeHub",
+    "reasons": {
+      "title1": "Tips that land in your wallet",
+      "body1": "Viewers tip and send gifts while you are live, with tiered gift animations and tip messages read aloud on stream. Tips settle on-chain in DeHub tokens and land directly in your wallet rather than being clipped on the way through.",
+      "title2": "An audience you own",
+      "body2": "Your followers are not a row in someone else’s database. Streams and uploads can be minted on-chain to your wallet, the feed is chronological, and the code is open source, so nobody quietly rewrites the rules.",
+      "title3": "Earn from everyone you bring",
+      "body3": "Your invite link pays you 20% of the activity of everyone who joins through it, plus 5% recurring from the people they go on to invite, paid in DeHub tokens.",
+      "title4": "Live stages",
+      "body4": "Host live audio Stages for questions, collabs and watch parties. Announce one ahead of time with a card your audience can share, and listen back to recorded ones.",
+      "title5": "Post everywhere at once",
+      "body5": "Connect your other accounts once and publish to X, Instagram, YouTube, TikTok, Farcaster and eight more platforms from the DeHub composer. Keep TikTok as your discovery engine while you build an audience you own.",
+      "title6": "Bring your channel with you",
+      "body6": "Import a whole YouTube channel, or a TikTok, Vimeo or SoundCloud profile, in one batch. The exact price is shown in DeHub tokens before you pay."
+    },
+    "faqTitle": "Frequently asked questions",
+    "faq": {
+      "q1": "Is it free to stream on DeHub?",
+      "a1": "Yes. DeHub is free to join and free to post, and minting a stream on-chain is optional. Importing a channel is paid, and its price is shown before you pay.",
+      "q2": "Do I have to stop streaming on TikTok or Twitch?",
+      "a2": "No. Keep streaming where your audience is today and build on DeHub alongside it. Cross-post from the DeHub composer so every platform you already use points back to the audience you own.",
+      "q3": "Can I stream with OBS?",
+      "a3": "Yes. Pick OBS when you go live and DeHub gives you a permanent stream key for OBS, Streamlabs or any RTMP encoder. You can also go live straight from your phone, your browser or a capture card.",
+      "q4": "How do I get paid?",
+      "a4": "Viewers tip and send gifts during your stream, and those settle on-chain in DeHub tokens straight to your wallet. Uploads can also be free, pay-per-view or token-gated.",
+      "q5": "How does my invite link work?",
+      "a5": "Open the affiliate page to get your link. Anyone who joins through it is attributed to you, and you earn 20% of their activity plus 5% recurring from the people they invite, paid in DeHub tokens."
+    },
+    "moreGuides": "Coming from TikTok? Read <tiktok>the UK creator guide to leaving TikTok</tiktok> and <live>Web3 live streaming: a decentralised Twitch alternative</live>."
   }
 }
