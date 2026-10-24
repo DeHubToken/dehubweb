@@ -36,6 +36,7 @@ vi.mock('@/components/app/cards/PostUtilityButtons', () => ({
 }));
 
 import { ActionBar } from '@/components/app/cards/ActionBar';
+import { clearCommentCounts } from '@/lib/comment-count-store';
 import type { PostStageValue } from '@/components/app/post-stage/post-stage-context';
 import { PostStagePhone, POST_STAGE_BODY_CLASS } from '@/components/app/post-stage/PostStagePhone';
 
@@ -61,6 +62,7 @@ function stageValue(overrides: Partial<PostStageValue> = {}): PostStageValue {
 }
 
 beforeEach(() => {
+  clearCommentCounts();
   voteOnPost.mockResolvedValue({});
   reactToPost.mockResolvedValue({});
   getPostQuotes.mockResolvedValue({ result: [] });

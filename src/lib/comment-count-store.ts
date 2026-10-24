@@ -5,6 +5,11 @@ const counts = new Map<string, Tally>();
 const listeners = new Set<() => void>();
 const notify = () => listeners.forEach(listener => listener());
 
+export function clearCommentCounts(): void {
+  counts.clear();
+  notify();
+}
+
 export function readCommentCount(tokenId: string, server = 0): number {
   return counts.get(String(tokenId))?.count ?? server;
 }
