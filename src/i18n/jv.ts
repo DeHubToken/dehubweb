@@ -1703,6 +1703,33 @@ export const jv = {
       'LP farming kanthi asil komunitas',
       'Ngluncurake fungsi fiat off-ramp kanggo konversi token-menyang-dhuwit sing lancar',
     ],
+    q1_2022_items: [
+      'Kasiné wiyosan kanthi 5 wédok awal inggih punika Super Robin Hood lan Tomb Runner lan prédiksi',
+      'Mileni 5.000+ wong wiyosan',
+      'Ngrembukak leaderboard lan reward inggih punika blockchain',
+      'Ngrembukak fitur sosial ingkang nggih punika tantangan kawula',
+      'Ngrembukak mesin game ingkang kaasup ingkang dipun-gawé khusus kanggé piranti mobile',
+    ],
+    q2_2021_items: [
+      'Ngrembukak v1 token',
+      'Ngrembukak ranté wiyosan ingkang dipun-gawé déning komunitas, harga / kapital pasar.',
+      'Ngrembukak kolom likuiditas ingkang pisanan ing Pancake Swap',
+      'Ngrembukak komunitas wiyosan 2.000+ ingkang wiwit saking dhuwur',
+      'Ngrembukak mekanisme pilihan pamaréntahan dasar',
+      'Kasus keamanan smart contract ditemtokaké',
+    ],
+    q4_2021_items: [
+      'Ngrembukak game prédiksi lan game raffle',
+      'Tampil ing Gate.io sawisé hiperbolisasi harga 1000x, karo dhuwur $10 juta ing LP ingkang dipun-gawé',
+      'Kasus agen tampilan ingkang salah, njaluk dana lan ngegawé grafik ingkang salah, nanging Gate nginvestigasi lan ngrasa, nanging ora bisa nemtokaken karyawan ingkang salah amarga rekamanipun kalah',
+      'Ngrembukak mekanisme game ingkang dipun-gawé karo randomisasi ingkang bisa dipunpastèkaké',
+      'Komunitas wiyosan ngembang 8.000+ wong',
+    ],
+    q4_2022_items: [
+      'Pengaturan pajak kontrak njaluk malahan, njaluk token lan LP, dipun-rembukak v2',
+      'Migrami 25.000+ wong wiyosan menyang kontrak ingkang dipun-gawé kaping pisanan',
+      'Ngrembukak tokenomics standar ERC20 kanggé njaluk masalah ingkang bakal kawiwitan',
+    ],
   },
   brandAssets: {
     logoIconName: 'DeHub Logo - Icon',
