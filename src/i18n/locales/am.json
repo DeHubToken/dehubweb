@@ -2128,6 +2128,8 @@
     "anonymousLikes_other": "ስም-አልባ ባጅ ካላቸው ሰዎች {{count}} መውደዶች"
   },
   "postInfo": {
+    "unavailable": "አይገኝም",
+    "ownersUnavailable": "አሁን ያሉት ባለአክሲዮኖች አሁን ሊነበቡ አይችሉም ።",
     "title": "የልጥፍ መረጃ",
     "tokenId": "ቶከን ID",
     "mintedOn": "የተፈጠረበት",
@@ -5619,6 +5621,8 @@
     "notEnoughTokensForBounty": "በቂ ቶከኖች የሉም። {{need}} ቶከኖች ያስፈልጋሉ ነገር ግን {{have}} አለዎት።"
   },
   "events": {
+    "deleteConfirmTitle": "ይህን ክስተት ሰርዝ?",
+    "deleteConfirmBody": "ይህ ዝግጅቱን ፣ የእንግዳ ዝርዝሩን እና ለሁሉም ሰው ውይይቱን ያስወግዳል ። ሊወገድ አይችልም ።",
     "seoTitle": "ክስተቶች — በ DeHub ላይ Meetups & የማህበረሰብ ክስተቶች",
     "seoDescription": "መጪውን የ DeHub የማህበረሰብ ዝግጅቶችን ያስሱ ፣ RSVP ለማሟላት እና በተጠቃሚ ባለቤትነት ባላቸው ማህበራዊ መድረክ ላይ የራስዎን ዝግጅቶች ለማስተናገድ ።",
     "defaultSeoDescription": "በ DeHub ላይ የማህበረሰብ ክስተት ።",

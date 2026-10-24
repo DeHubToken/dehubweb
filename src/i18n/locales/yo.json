@@ -2096,6 +2096,8 @@
     "anonymousLikes_other": "Ìfẹ́ràn {{count}} láti ọ̀dọ̀ àwọn tó ní báàjì tí kò fi orúkọ hàn"
   },
   "postInfo": {
+    "unavailable": "Kò sí",
+    "ownersUnavailable": "Àwọn onílé tí ó wà nísinsìnyí kò lè kà á báyìí.",
     "title": "Ìwífún nípa àkọsílẹ̀",
     "tokenId": "Token ID",
     "mintedOn": "Ti ṣẹ̀dá",
@@ -5539,6 +5541,8 @@
     "notEnoughTokensForBounty": "Kò tó àmi-ìṣẹ́. Nílò {{need}} àmi-ìṣẹ́ ṣùgbọ́n ní {{have}}."
   },
   "events": {
+    "deleteConfirmTitle": "Pa ìṣẹ̀lẹ̀ yìí rẹ́?",
+    "deleteConfirmBody": "Èyí mú ìṣẹ̀lẹ̀ náà kúrò, àtòjọ àwọn àlejò rẹ̀ àti ìjíròrò rẹ̀ fún gbogbo ènìyàn. A kò lè mú un kúrò.",
     "seoTitle": "Awọn iṣẹlẹ — Awọn ipade & Awọn iṣẹlẹ Agbegbe lori DeHub",
     "seoDescription": "Ṣàwárí àwọn ìṣẹ̀lẹ̀ àdúgbò DeHub tó ń bọ̀, RSVP láti pàdé kí o sì ṣe àlejò àwọn ìṣẹ̀lẹ̀ tìrẹ lórí pẹpẹ àjọṣepọ̀ tí ó jẹ́ ti oníṣe.",
     "defaultSeoDescription": "Ìṣẹ̀lẹ̀ àwùjọ lórí DeHub.",
