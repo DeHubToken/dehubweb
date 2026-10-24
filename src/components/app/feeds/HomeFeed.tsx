@@ -23,7 +23,8 @@ import { useQueries, useQuery, useQueryClient } from '@tanstack/react-query';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { flattenFeedPages } from '@/lib/feed-pages';
 import { isHomeFeedRoute } from '@/lib/home-routes';
-import { shortsBatchCount, shortsBatchIndex } from '@/lib/shorts-rotation';
+import { shortsBatchCount } from '@/lib/shorts-rotation';
+import { homeReelBatchIndex, homeSuggestedAfter } from '@/lib/feed-carousel-layout';
 import { useShortsRotation, type ShortsHistoryStore } from '@/hooks/use-shorts-rotation';
 
 const shortsHistoryStore: ShortsHistoryStore = {
@@ -1668,8 +1669,9 @@ export function HomeFeed({ active = true, shuffleKey, isRefreshing, showFilters 
 
 
 
-  // One insertion schedule for single-column and measured masonry layouts.
+  // Keep the opening masonry row full before its first full-width carousel.
   const renderFeedWithShorts = () => {
+    const organicCount = listedItems.filter(item => item.type !== 'ad').length;
     type Segment = { items: FeedItemType[]; start: number; inserts: ReactElement[]; shorts: boolean };
     const segments: Segment[] = [];
     let posts = 0;
@@ -1678,7 +1680,7 @@ export function HomeFeed({ active = true, shuffleKey, isRefreshing, showFilters 
       if (item.type === 'ad') return;
       posts++;
       const inserts: ReactElement[] = [];
-      const batchIndex = shortsBatchIndex(posts);
+      const batchIndex = homeReelBatchIndex(posts, colCount, organicCount);
       const batch = batchIndex >= 0 ? shortsBatches[batchIndex] : undefined;
       const hasShorts = !!batch?.length && !isKidsMode;
       if (!isKidsMode) {
@@ -1688,7 +1690,7 @@ export function HomeFeed({ active = true, shuffleKey, isRefreshing, showFilters 
           </div>,
         );
         // Keep other inserts at least two posts away from a Shorts boundary.
-        if (posts === 3 && isAuthenticated) inserts.push(<MobileWhoToFollowCarousel key="who-to-follow" />);
+        if (posts === homeSuggestedAfter(colCount) && isAuthenticated) inserts.push(<MobileWhoToFollowCarousel key="who-to-follow" />);
         if (posts === RADIO_INSERT_AFTER && radioStations.length) inserts.push(
           <RadioCarouselSection key="radio" stations={radioStations} />,
         );
