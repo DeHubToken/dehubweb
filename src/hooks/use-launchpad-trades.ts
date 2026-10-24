@@ -1,6 +1,7 @@
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { useEffect } from 'react';
 import { supabase } from '@/integrations/supabase/client';
+import { dehubAuthHeaders } from '@/lib/ai-invoke';
 
 export type LaunchpadTrade = {
   id: string;
@@ -42,14 +43,16 @@ export function useLaunchpadTrades(tokenId?: string, limit = 50) {
   return query;
 }
 
-export async function mockTrade(args: { tokenId: string; side: 'buy' | 'sell'; amount: number; traderAddress: string }) {
+// The function records the trade against the wallet behind the DeHub token,
+// so the call carries the auth headers rather than naming a trader.
+export async function mockTrade(args: { tokenId: string; side: 'buy' | 'sell'; amount: number }) {
   const { data, error } = await supabase.functions.invoke('launchpad-mock-trade', {
     body: {
       token_id: args.tokenId,
       side: args.side,
       amount: args.amount,
-      trader_address: args.traderAddress,
     },
+    headers: dehubAuthHeaders(),
   });
   if (error) throw error;
   return data;
