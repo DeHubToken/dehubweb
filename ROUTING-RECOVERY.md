@@ -1,5 +1,9 @@
 # Destination-specific connectivity recovery
 
+Superseded by `ops/DIRECT-RECOVERY.md` and `ops/production-routing.json`.
+The zone-route experiment below did not prevent the 24 October recurrence.
+Do not run it again; the recovery entry point now performs read-only checks.
+
 On 2026-09-12 the affected S24 resolved dehub.io to 188.114.96.5. TCP/443
 to that address and 188.114.97.5 repeatedly timed out. The same device
 connected to 104.21.91.225 and 172.67.180.213. A TLS-validated request for

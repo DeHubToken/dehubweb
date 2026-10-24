@@ -7,7 +7,7 @@
   "scripts": {
     "postinstall": "node scripts/patch-vaul-scroll.mjs",
     "dev": "vite",
-    "build": "node scripts/build-locale-packs.mjs && NODE_OPTIONS=--max-old-space-size=8192 vite build && node scripts/copy-seo-assets.mjs && node scripts/check-entry-bundle.mjs && node scripts/check-seo-build.mjs",
+    "build": "node scripts/production-routing.mjs --config-only && node scripts/build-locale-packs.mjs && NODE_OPTIONS=--max-old-space-size=8192 vite build && node scripts/copy-seo-assets.mjs && node scripts/check-entry-bundle.mjs && node scripts/check-seo-build.mjs",
     "build:dev": "NODE_OPTIONS=--max-old-space-size=8192 vite build --mode development",
     "lint": "eslint .",
     "i18n:coverage": "node scripts/i18n-coverage.mjs",

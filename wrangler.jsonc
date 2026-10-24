@@ -5,16 +5,17 @@
   "vars": { "CLOUDFLARE_BILLING_ACCOUNT_ID": "66a904429763c3c58f371813c79d6b44", "MAINTENANCE_MODE": "false", "MOBILE_MAINTENANCE_MODE": "false" },
   "durable_objects": { "bindings": [{ "name": "EDITOR_PRESENCE", "class_name": "EditorPresenceRoom" }, { "name": "ACCOUNT_MCP", "class_name": "AccountMcpAuth" }] },
   "migrations": [{ "tag": "editor-presence-v1", "new_sqlite_classes": ["EditorPresenceRoom"] }, { "tag": "account-mcp-v1", "new_sqlite_classes": ["AccountMcpAuth"] }],
-  // Bind alias hosts to the worker so their →apex 301s are served here and
-  // the dead origins behind their DNS records are never contacted. The apex
-  // stays on its dashboard-configured custom domain; this is additive.
+  // Public dehub.io uses the direct HTTPS gateway (ops/production-routing.json).
+  // Only origin.dehub.io attaches the application Worker. Never add an apex
+  // route/custom domain or enable the apex DNS proxy: affected networks cannot
+  // reach its shared anycast addresses. Alias hosts retain their redirects.
   // dehub.net (+ all subdomains) = SEO domain-move redirects, served here
   // since the zone moved to Cloudflare (July 2026).
   // staging.dehub.io is deployed separately with wrangler.staging.jsonc.
   // legacy.dehub.io = the pre-2026 app, retired. Needs a proxied placeholder
   // DNS record on the zone for this route to fire at all.
   "routes": [
-    { "pattern": "dehub.io/*", "zone_name": "dehub.io" },
+    { "pattern": "origin.dehub.io", "custom_domain": true },
     { "pattern": "www.dehub.io/*", "zone_name": "dehub.io" },
     { "pattern": "legacy.dehub.io/*", "zone_name": "dehub.io" },
     { "pattern": "dehub.net/*", "zone_name": "dehub.net" },
