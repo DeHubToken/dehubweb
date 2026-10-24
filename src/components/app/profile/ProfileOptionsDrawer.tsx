@@ -9,7 +9,7 @@ import LayoutDashboard from "@/components/ui/cut-icons/command";
 import ShieldCheck from "@/components/ui/cut-icons/security";
 import Flag from "@/components/ui/cut-icons/report";
 
-import MessageCircle from "@/components/ui/cut-icons/messages";
+import MessageCircle from "@/components/ui/cut-icons/message-envelope";
 
 import { ReportModal } from '@/components/app/modals/ReportModal';
 import { toast } from 'sonner';

@@ -139,7 +139,7 @@ export function SidebarNavItem({
   const showAvatar = avatarUrl !== undefined;
   const navIcon = (className: string) => isDesktop && item.path === '/app/assistant' ? (
     <AssistantNavIcon className={className} />
-  ) : !isDesktop && item.themedIcon ? (
+  ) : !isDesktop && item.path !== '/app/messages' && item.themedIcon ? (
     <ThemedIcon icon={item.themedIcon} alt="" className={cn(className, 'object-contain')} />
   ) : (
     <item.icon className={className} />

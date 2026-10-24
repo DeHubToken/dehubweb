@@ -14,7 +14,7 @@ import Ban from "@/components/ui/cut-icons/blocked";
 
 import Search from "@/components/ui/cut-icons/search";
 import Plus from "@/components/ui/cut-icons/add";
-import MessageCircle from "@/components/ui/cut-icons/messages";
+import MessageCircle from "@/components/ui/cut-icons/message-envelope";
 
 import { VerifiedBadge } from '@/components/app/VerifiedBadge';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';

@@ -3,7 +3,7 @@ import Sparkles from "@/components/ui/cut-icons/assistant";
 import Home from "@/components/ui/cut-icons/home";
 import Search from "@/components/ui/cut-icons/search";
 import Plus from "@/components/ui/cut-icons/add";
-import MessageSquare from "@/components/ui/cut-icons/messages";
+import MessageSquare from "@/components/ui/cut-icons/message-envelope";
 
 import { cn } from '@/lib/utils';
 
