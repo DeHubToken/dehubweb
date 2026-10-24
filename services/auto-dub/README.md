@@ -60,6 +60,20 @@ deployment. Do not enable the disabled sweep cron for this rollout.
 
 ## Stage speech
 
+Stage replay accepts the same timed translations as video playback. Device
+speech follows the selected transcript language immediately; public stages can
+also request a shared speaker-voice AAC track. The stage queue runs in
+`dehub-stage-media.service`, separately from the video service so a release
+does not interrupt an existing render. It reuses the current environment and
+model cache. Install `stage-nginx-location.conf` in the existing TLS server
+block. Its `/recordings` route converts legacy WebM/AAC to seekable AAC/M4A;
+its `/stage-jobs` route accepts stage replay jobs. Originals are retained.
+
+Stage renders are requested per selected language, with no new sweep or cron.
+Device speech remains available while the cached render is pending. A device
+without a voice waits for cached audio rather than labelling original speech
+as a dub.
+
 Stage voice pickers request Google Chirp 3 HD through the existing speech
 endpoints. Set backend secret `GOOGLE_TTS_SERVICE_ACCOUNT_JSON` to the JSON key
 of a dedicated Google Cloud service account allowed to use Text-to-Speech.
