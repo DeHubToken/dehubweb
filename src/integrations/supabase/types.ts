@@ -4402,6 +4402,7 @@ export type Database = {
           like_count: number
           media_type: string | null
           media_url: string | null
+          proposal_number: number
           status: string
           title: string
           updated_at: string
@@ -4421,6 +4422,7 @@ export type Database = {
           like_count?: number
           media_type?: string | null
           media_url?: string | null
+          proposal_number?: number
           status?: string
           title: string
           updated_at?: string
@@ -4440,6 +4442,7 @@ export type Database = {
           like_count?: number
           media_type?: string | null
           media_url?: string | null
+          proposal_number?: number
           status?: string
           title?: string
           updated_at?: string
