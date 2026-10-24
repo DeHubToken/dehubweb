@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
+import { translateCopy as _translateCopy } from '@/i18n/copy';
 
 /** One turn of context handed to the drafter. Trimmed by the edge function. */
 export interface SmartReplyTurn {
@@ -97,7 +98,7 @@ export function useSmartReplies(thread: SmartReplyTurn[], peerName?: string) {
         ? (data.suggestions as SmartReplySuggestion[])
         : [];
       if (next.length === 0) {
-        setError(data?.error ? String(data.error) : 'Could not draft replies');
+        setError(data?.error ? String(data.error) : _translateCopy("copy.c242c60db16c", { defaultValue: "Could not draft replies" }));
         setStatus('error');
         return;
       }

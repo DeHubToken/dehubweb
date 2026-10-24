@@ -229,23 +229,22 @@ function requireHardwareWebgl(what: string, needsWebgl2: boolean): ArcadeGameCap
   if (!gpu.webgl) {
     return {
       ok: false,
-      reason: 'NO WEBGL',
-      detail:
-        'This browser is not giving any page a WebGL context. Hardware acceleration is most likely switched off in the browser settings.',
+      reason: _translateCopy("copy.c87d62b143c8", { defaultValue: "NO WEBGL" }),
+      detail: _translateCopy("copy.ec00487a8201", { defaultValue: "This browser is not giving any page a WebGL context. Hardware acceleration is most likely switched off in the browser settings." }),
     };
   }
   if (needsWebgl2 && !gpu.webgl2) {
     return {
       ok: false,
-      reason: 'WEBGL2 UNAVAILABLE',
-      detail: `This browser reports WebGL 1 only, and ${what} requires WebGL 2. Updating the browser or the graphics driver usually resolves it.`,
+      reason: _translateCopy("copy.752f425c6767", { defaultValue: "WEBGL2 UNAVAILABLE" }),
+      detail: _translateCopy("copy.128cd05c1f6d", { defaultValue: "This browser reports WebGL 1 only, and {{value1}} requires WebGL 2. Updating the browser or the graphics driver usually resolves it.", value1: what }),
     };
   }
   if (gpu.software) {
     return {
       ok: false,
-      reason: 'SOFTWARE RENDERING',
-      detail: `The GPU is not being used (${gpu.renderer}). ${what} would run at a few frames per second. Enable hardware acceleration in the browser settings, then restart it.`,
+      reason: _translateCopy("copy.54fc1b88ffd3", { defaultValue: "SOFTWARE RENDERING" }),
+      detail: _translateCopy("copy.7e12ec04a5ea", { defaultValue: "The GPU is not being used ({{value1}}). {{value2}} would run at a few frames per second. Enable hardware acceleration in the browser settings, then restart it.", value1: gpu.renderer, value2: what }),
     };
   }
 
@@ -272,9 +271,8 @@ function requireCanvas(): ArcadeGameCapability {
     if (!document.createElement('canvas').getContext('2d')) {
       return {
         ok: false,
-        reason: 'NO CANVAS',
-        detail:
-          'This browser is not giving any page a 2D canvas to draw on, which usually means canvas is switched off in its settings or by an extension.',
+        reason: _translateCopy("copy.e4e7dadb6c2b", { defaultValue: "NO CANVAS" }),
+        detail: _translateCopy("copy.a4fc0068efec", { defaultValue: "This browser is not giving any page a 2D canvas to draw on, which usually means canvas is switched off in its settings or by an extension." }),
       };
     }
   } catch {
@@ -335,12 +333,12 @@ export const ARCADE_GAMES: ArcadeGame[] = [
   {
     slug: 'gods-eye',
     get title() { return _translateCopy("copy.925917aad5b0", { defaultValue: "God's Eye" }); },
-    tagline: 'Find the DeHub community across a living 3D Earth.',
+    get tagline() { return _translateCopy("copy.d81e05376674", { defaultValue: "Find the DeHub community across a living 3D Earth." }); },
     get description() { return _translateCopy("copy.9cc9f71c23f2", { defaultValue: "Explore a live spatial-intelligence globe and, if you choose, place a deliberately approximate version of yourself among the DeHub community." }); },
-    action: 'Open the globe',
+    get action() { return _translateCopy("copy.c7dd40da23fc", { defaultValue: "Open the globe" }); },
     art: '/arcade/gods-eye.jpg',
     artVideo: '/arcade/gods-eye.mp4',
-    artAlt: "God's Eye View orbiting a live 3D globe through its spatial-intelligence displays",
+    get artAlt() { return _translateCopy("copy.5d75b8f91016", { defaultValue: "God's Eye View orbiting a live 3D globe through its spatial-intelligence displays" }); },
     credit: {
       name: "God's Eye View",
       url: 'https://github.com/bilawalsidhu/gods-eye-view',
@@ -351,19 +349,18 @@ export const ARCADE_GAMES: ArcadeGame[] = [
     bootTauMs: 8000,
     exitSource: 'gods-eye-view',
     allow: 'fullscreen; autoplay',
-    checkCapability: () => requireHardwareWebgl('The globe', true),
+    checkCapability: () => requireHardwareWebgl(_translateCopy("copy.37be1c23c77c", { defaultValue: "The globe" }), true),
     socialPresence: true,
   },
   {
     slug: 'trenchstar',
     get title() { return _translateCopy("copy.d9bac180ccc1", { defaultValue: "Chartopia" }); },
     brand: '/arcade/chartopia-brand-v1.webp',
-    tagline: 'Stand in a trading floor built out of live markets.',
+    get tagline() { return _translateCopy("copy.52c873592957", { defaultValue: "Stand in a trading floor built out of live markets." }); },
     get description() { return _translateCopy("copy.a61d44ba33d5", { defaultValue: "The mother of all arenas. Trade like a time traveller with dozens of screens. Enjoy live feeds from Binance, Dexscreener or any thing you want from videos, to browser tabs and all between." }); },
-    action: 'Take the desk',
+    get action() { return _translateCopy("copy.d8e27d2f63dc", { defaultValue: "Take the desk" }); },
     art: '/arcade/trenchstar.webp',
-    artAlt:
-      'A curved wall of live candle charts and market panels around a dark trading floor in Chartopia',
+    get artAlt() { return _translateCopy("copy.0fa895900e3b", { defaultValue: "A curved wall of live candle charts and market panels around a dark trading floor in Chartopia" }); },
     credit: {
       name: 'Chartopia',
       url: 'https://dehub.io',
@@ -399,17 +396,16 @@ export const ARCADE_GAMES: ArcadeGame[] = [
     sandbox: FIRST_PARTY_SANDBOX,
     // WebGL2: the post chain runs a multisampled half-float render target,
     // which WebGL 1 cannot give it.
-    checkCapability: () => requireHardwareWebgl('The floor', true),
+    checkCapability: () => requireHardwareWebgl(_translateCopy("copy.e28d5b82f51c", { defaultValue: "The floor" }), true),
   },
   {
     slug: 'street-slayer',
     get title() { return _translateCopy("copy.71b386d38529", { defaultValue: "Street Slayer" }); },
-    tagline: 'A neon-street brawler, made for DeHub alone.',
+    get tagline() { return _translateCopy("copy.883791f091e3", { defaultValue: "A neon-street brawler, made for DeHub alone." }); },
     get description() { return _translateCopy("copy.7a56c707abec", { defaultValue: "A side-scrolling beat ’em up down a neon-lit street: pick one of three fighters, then punch, kick and throw your way through everything the block sends at you." }); },
-    action: 'Fight',
+    get action() { return _translateCopy("copy.1ef142c8213e", { defaultValue: "Fight" }); },
     art: '/arcade/street-slayer.webp',
-    artAlt:
-      'Three street fighters closing in on the player character outside a neon-lit shopfront in Street Slayer',
+    get artAlt() { return _translateCopy("copy.4b6b806e9540", { defaultValue: "Three street fighters closing in on the player character outside a neon-lit shopfront in Street Slayer" }); },
     credit: {
       name: 'Street Slayer',
       // No `url`: this one was commissioned rather than found. See the interface.
@@ -453,11 +449,11 @@ export const ARCADE_GAMES: ArcadeGame[] = [
   {
     slug: 'kings-gambit',
     get title() { return _translateCopy("copy.f0052e2e699b", { defaultValue: "King's Gambit" }); },
-    tagline: 'Cinematic 3D chess. Three civilisations, one board.',
+    get tagline() { return _translateCopy("copy.2493f427a7d1", { defaultValue: "Cinematic 3D chess. Three civilisations, one board." }); },
     get description() { return _translateCopy("copy.81631a8fce75", { defaultValue: "Chess with an army behind every piece. Three rigged civilisations march, strike and fall across a marble board in four battlegrounds, at three engine strengths." }); },
-    action: 'Play',
+    get action() { return _translateCopy("copy.436e61016e26", { defaultValue: "Play" }); },
     art: '/arcade/kings-gambit.webp',
-    artAlt: "Two armies of sculpted 3D chess figures facing each other across a lit board in King's Gambit",
+    get artAlt() { return _translateCopy("copy.f5b17eee7801", { defaultValue: "Two armies of sculpted 3D chess figures facing each other across a lit board in King's Gambit" }); },
     credit: {
       name: "King's Gambit",
       url: 'https://github.com/alexngdev99/rork-medieval-3d-chess',
@@ -502,11 +498,11 @@ export const ARCADE_GAMES: ArcadeGame[] = [
   {
     slug: 'claude-of-duty',
     get title() { return _translateCopy("copy.60b676c3ea06", { defaultValue: "Claude of Duty" }); },
-    tagline: 'A browser FPS with every asset generated at boot.',
+    get tagline() { return _translateCopy("copy.c35def1a8ba2", { defaultValue: "A browser FPS with every asset generated at boot." }); },
     get description() { return _translateCopy("copy.7242e3ca17b3", { defaultValue: "A first-person shooter that ships no art at all: every mesh, texture, weapon and sound is generated in JavaScript on your machine while the level loads." }); },
-    action: 'Deploy',
+    get action() { return _translateCopy("copy.4c236daafb44", { defaultValue: "Deploy" }); },
     art: '/arcade/claude-of-duty.webp',
-    artAlt: 'First-person view down a weapon across the procedurally generated terrain of Claude of Duty',
+    get artAlt() { return _translateCopy("copy.c4e568f92ce6", { defaultValue: "First-person view down a weapon across the procedurally generated terrain of Claude of Duty" }); },
     credit: {
       name: 'Claude of Duty',
       url: 'https://github.com/mshumer/Claude-of-Duty',
@@ -539,16 +535,16 @@ export const ARCADE_GAMES: ArcadeGame[] = [
     readySource: 'war-game',
     exitSource: 'war-game',
     allow: 'pointer-lock; fullscreen; gamepad; autoplay',
-    checkCapability: () => requireHardwareWebgl('The game', true),
+    checkCapability: () => requireHardwareWebgl(_translateCopy("copy.afb8a55cade5", { defaultValue: "The game" }), true),
   },
   {
     slug: 'jungle-trail',
     get title() { return _translateCopy("copy.b4c84bb16148", { defaultValue: "Jungle Trail" }); },
-    tagline: 'Walk a rainforest that is built the moment you arrive.',
+    get tagline() { return _translateCopy("copy.31d619c4fc45", { defaultValue: "Walk a rainforest that is built the moment you arrive." }); },
     get description() { return _translateCopy("copy.96b3207d2940", { defaultValue: "A first-person walk through a procedurally generated rainforest — a hundred thousand plants, weather and a day cycle, all grown on your machine as you arrive." }); },
-    action: 'Walk in',
+    get action() { return _translateCopy("copy.9596e412512f", { defaultValue: "Walk in" }); },
     art: '/arcade/jungle-trail.webp',
-    artAlt: 'A path through dense procedurally generated rainforest canopy in Jungle Trail',
+    get artAlt() { return _translateCopy("copy.38d4c602d69c", { defaultValue: "A path through dense procedurally generated rainforest canopy in Jungle Trail" }); },
     credit: {
       name: 'Jungle Trail',
       url: 'https://github.com/StarKnightt/jungle-trail',
@@ -576,7 +572,7 @@ export const ARCADE_GAMES: ArcadeGame[] = [
     allow: 'pointer-lock; fullscreen; autoplay',
     // WebGL 1 is enough here: the engine targets r170 and does not require a
     // WebGL2 context.
-    checkCapability: () => requireHardwareWebgl('The walk', false),
+    checkCapability: () => requireHardwareWebgl(_translateCopy("copy.dfead53d0c4f", { defaultValue: "The walk" }), false),
   },
 ];
 

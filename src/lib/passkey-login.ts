@@ -22,6 +22,7 @@ import {
   type PasskeyEnrollment,
   type RequestOptionsJSON,
 } from '@/lib/wallet-core/passkey';
+import { translateCopy as _translateCopy } from '@/i18n/copy';
 
 export { PasskeyCancelledError, PasskeyUnsupportedError } from '@/lib/wallet-core/passkey';
 
@@ -47,7 +48,7 @@ export function isPasskeyLoginAvailable(): Promise<boolean> {
 
 async function call<T>(body: Record<string, unknown>): Promise<T> {
   const { data, error } = await supabase.functions.invoke('passkey-auth', { body });
-  if (error) throw new PasskeyLoginError(error.message || 'Passkey sign-in failed. Please try again.');
+  if (error) throw new PasskeyLoginError(error.message || _translateCopy('copy.42bb80d16005', { defaultValue: 'Passkey sign-in failed. Please try again.' }));
   if (data?.error) throw new PasskeyLoginError(String(data.error), data.code ? String(data.code) : null);
   return data as T;
 }

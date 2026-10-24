@@ -43,6 +43,7 @@ import {
 import { stageCaptionChannel } from '@/lib/stage-captions';
 import { leaseChannel } from '@/lib/realtime-channel-lease';
 import type { RealtimeChannel } from '@supabase/supabase-js';
+import { translateCopy as _translateCopy } from '@/i18n/copy';
 
 export interface DubQuote {
   pricePerMinuteDhb: number;
@@ -118,7 +119,7 @@ async function callDub<T>(body: Record<string, unknown>, wallet: string | null):
     const headers: Record<string, string> = {};
     if (wallet) {
       const dehubToken = await ensureFreshToken();
-      if (!dehubToken) return { data: null, error: 'signed out' };
+      if (!dehubToken) return { data: null, error: _translateCopy("copy.80c6e7caffee", { defaultValue: "Signed out" }) };
       headers['x-dehub-token'] = dehubToken;
       headers['x-wallet-address'] = wallet.toLowerCase();
     }
@@ -127,10 +128,10 @@ async function callDub<T>(body: Record<string, unknown>, wallet: string | null):
     // body, which is where our own code and numbers live — so read both.
     const payload = data as (T & { error?: string; code?: string }) | null;
     if (payload?.error) return { data: null, error: payload.error, code: payload.code };
-    if (error) return { data: null, error: error.message ?? 'request failed' };
+    if (error) return { data: null, error: error.message ?? _translateCopy("copy.cfce761befa8", { defaultValue: "Request failed" }) };
     return { data: payload as T, error: null };
   } catch {
-    return { data: null, error: 'request failed' };
+    return { data: null, error: _translateCopy("copy.cfce761befa8", { defaultValue: "Request failed" }) };
   }
 }
 
@@ -288,7 +289,7 @@ export function useStageDubbing(spaceId: string | undefined | null, wallet: stri
             // dubbing stays refused on every stage, forever.
             await raiseOpenTab();
           } else {
-            toast.error(error ?? 'Could not start dubbing.');
+            toast.error(error ?? _translateCopy("copy.9e0d7a17c5fa", { defaultValue: "Could not start dubbing." }));
           }
           return;
         }
@@ -346,7 +347,7 @@ export function useStageDubbing(spaceId: string | undefined | null, wallet: stri
         // The transfer is on chain either way — never tell them to send it
         // again, or they will pay twice for one session. The hash is kept, so
         // pressing Pay again retries confirmation with it rather than paying.
-        toast.error(error ?? 'Payment sent but not confirmed yet.', {
+        toast.error(error ?? _translateCopy("copy.e56c8547b460", { defaultValue: "Payment sent but not confirmed yet." }), {
           description: i18n.t('dub.paymentLeftWallet'),
         });
         return;
@@ -356,11 +357,11 @@ export function useStageDubbing(spaceId: string | undefined | null, wallet: stri
       toast.success(
         data.paidDhb > 0
           ? i18n.t('dub.paidForMinutes', { amount: data.paidDhb, minutes: data.minutes })
-          : 'Dubbing session closed.',
+          : _translateCopy("copy.30ecb796cc14", { defaultValue: "Dubbing session closed." }),
       );
       setBill(null);
     } catch (err) {
-      toast.error(err instanceof Error ? err.message : 'Payment failed.');
+      toast.error(err instanceof Error ? err.message : _translateCopy("copy.4225d535fe99", { defaultValue: "Payment failed." }));
     } finally {
       setSettling(false);
     }

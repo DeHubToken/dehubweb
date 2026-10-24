@@ -208,10 +208,10 @@ export function WalletUnlockStep({ userId, onComplete, onLogout }: WalletUnlockS
         host: window.location.hostname,
       });
       if (err instanceof PasskeyCancelledError) {
-        setError('Biometric unlock did not complete. If this computer no longer offers your passkey, use your wallet password, then set up biometrics on this device again.');
+        setError(_copy("copy.b1b108dd0ffa", { defaultValue: "Biometric unlock did not complete. If this computer no longer offers your passkey, use your wallet password, then set up biometrics on this device again." }));
         return;
       }
-      const message = err instanceof Error ? err.message : 'Biometric unlock failed';
+      const message = err instanceof Error ? err.message : _copy("copy.92ac34fc40b8", { defaultValue: "Biometric unlock failed" });
       // The passkey layer states the failure but not the remedy, because only
       // here do we know whether this wallet has a password to fall back to.
       // Telling a biometrics-only user to "use your password" is a dead end.
@@ -225,9 +225,9 @@ export function WalletUnlockStep({ userId, onComplete, onLogout }: WalletUnlockS
       setError(
         hasPasswordWrap
           ? willOfferEnrolHere
-            ? `${message} Unlock with your wallet password below — we'll offer to set biometrics up on this device right after.`
-            : `${message} Use your wallet password instead.`
-          : `${message} This wallet has no password yet — sign in on a device where biometrics work and add one from Settings → Account Security.`,
+            ? _copy("copy.4229e23cc94b", { defaultValue: "{{value1}} Unlock with your wallet password below — we'll offer to set biometrics up on this device right after.", value1: message })
+            : _copy("copy.9373bd6d5c3a", { defaultValue: "{{value1}} Use your wallet password instead.", value1: message })
+          : _copy("copy.8c8a27f7d316", { defaultValue: "{{value1}} This wallet has no password yet — sign in on a device where biometrics work and add one from Settings → Account Security.", value1: message }),
       );
     } finally {
       setBusy(false);
@@ -241,7 +241,7 @@ export function WalletUnlockStep({ userId, onComplete, onLogout }: WalletUnlockS
       const current = wallet ?? await loadWallet();
       if (!wallet) setWallet(current);
       if (!current.payload) {
-        throw new Error('This wallet has no password — unlock it with biometrics instead.');
+        throw new Error(_copy("copy.5c5ddf5f50cd", { defaultValue: "This wallet has no password — unlock it with biometrics instead." }));
       }
       const secret = await decryptString(current.payload, password);
       const derived = deriveFromSecret(secret);
@@ -266,7 +266,7 @@ export function WalletUnlockStep({ userId, onComplete, onLogout }: WalletUnlockS
       }
       await onComplete(derived.ethPrivateKey);
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Failed to unlock wallet');
+      setError(err instanceof Error ? err.message : _copy("copy.0f95141495c2", { defaultValue: "Failed to unlock wallet" }));
     } finally {
       setBusy(false);
     }
@@ -288,7 +288,7 @@ export function WalletUnlockStep({ userId, onComplete, onLogout }: WalletUnlockS
   const handleSetPassword = async () => {
     if (!pendingSecret || !pendingPrivKey) return;
     setError(null);
-    if (password !== newConfirm) { setError("Passwords don't match"); return; }
+    if (password !== newConfirm) { setError(_copy("copy.ec5d490e7422", { defaultValue: "Passwords don't match" })); return; }
     setBusy(true);
     // Rejections release the button before returning. There is no `finally`
     // covering this block — the success path deliberately falls through to the
@@ -298,15 +298,15 @@ export function WalletUnlockStep({ userId, onComplete, onLogout }: WalletUnlockS
     try {
       const assessment = await assessPassword(password);
       if (!assessment.longEnough) {
-        reject(`Password must be at least ${MIN_PASSWORD_LENGTH} characters`);
+        reject(_copy("copy.68b4bdd219c5", { defaultValue: "Password must be at least {{value1}} characters", value1: MIN_PASSWORD_LENGTH }));
         return;
       }
       if (assessment.breached === true) {
-        reject('This password has appeared in a data breach — choose a different one');
+        reject(_copy("copy.200c70fe2782", { defaultValue: "This password has appeared in a data breach — choose a different one" }));
         return;
       }
       if (!assessment.acceptable) {
-        reject('Choose a stronger password (mix letters, numbers, and symbols)');
+        reject(_copy("copy.1510dcb7d4c4", { defaultValue: "Choose a stronger password (mix letters, numbers, and symbols)" }));
         return;
       }
 
@@ -317,7 +317,7 @@ export function WalletUnlockStep({ userId, onComplete, onLogout }: WalletUnlockS
       await saveWallet(userId, current.ethAddress, encrypted);
       toast.success(_copy("copy.22f7e9ec9eec", { defaultValue: "Password backup saved — your wallet now opens on any device" }));
     } catch (err) {
-      reject(err instanceof Error ? err.message : 'Could not save the password backup');
+      reject(err instanceof Error ? err.message : _copy("copy.40e6805e54a0", { defaultValue: "Could not save the password backup" }));
       return;
     }
 
@@ -328,7 +328,7 @@ export function WalletUnlockStep({ userId, onComplete, onLogout }: WalletUnlockS
     try {
       await onComplete(privKey);
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Failed to sign in');
+      setError(err instanceof Error ? err.message : _copy("copy.648b8b9af1fd", { defaultValue: "Failed to sign in" }));
     } finally {
       setBusy(false);
     }
@@ -349,7 +349,7 @@ export function WalletUnlockStep({ userId, onComplete, onLogout }: WalletUnlockS
     try {
       await onComplete(privKey);
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Failed to sign in');
+      setError(err instanceof Error ? err.message : _copy("copy.648b8b9af1fd", { defaultValue: "Failed to sign in" }));
     } finally {
       setBusy(false);
     }
@@ -366,21 +366,21 @@ export function WalletUnlockStep({ userId, onComplete, onLogout }: WalletUnlockS
   const handleReplaceLostWallet = async () => {
     if (!replacementAcknowledged) return;
     setError(null);
-    if (password !== newConfirm) { setError("Passwords don't match"); return; }
+    if (password !== newConfirm) { setError(_copy("copy.ec5d490e7422", { defaultValue: "Passwords don't match" })); return; }
     setBusy(true);
     const reject = (message: string) => { setError(message); setBusy(false); };
     try {
       const assessment = await assessPassword(password);
       if (!assessment.longEnough) {
-        reject(`Password must be at least ${MIN_PASSWORD_LENGTH} characters`);
+        reject(_copy("copy.68b4bdd219c5", { defaultValue: "Password must be at least {{value1}} characters", value1: MIN_PASSWORD_LENGTH }));
         return;
       }
       if (assessment.breached === true) {
-        reject('This password has appeared in a data breach — choose a different one');
+        reject(_copy("copy.200c70fe2782", { defaultValue: "This password has appeared in a data breach — choose a different one" }));
         return;
       }
       if (!assessment.acceptable) {
-        reject('Choose a stronger password (mix letters, numbers, and symbols)');
+        reject(_copy("copy.1510dcb7d4c4", { defaultValue: "Choose a stronger password (mix letters, numbers, and symbols)" }));
         return;
       }
       // Closes the sheet and finishes the sign-in on success.
@@ -388,7 +388,7 @@ export function WalletUnlockStep({ userId, onComplete, onLogout }: WalletUnlockS
       setPassword('');
       setNewConfirm('');
     } catch (err) {
-      reject(err instanceof Error ? err.message : 'Could not set up a new wallet');
+      reject(err instanceof Error ? err.message : _copy("copy.9c8c9e004293", { defaultValue: "Could not set up a new wallet" }));
       return;
     }
     setBusy(false);
@@ -416,14 +416,14 @@ export function WalletUnlockStep({ userId, onComplete, onLogout }: WalletUnlockS
       }
       // Enrolment is a convenience, never a gate on signing in — fall through.
       console.warn('[WalletUnlock] Biometric enrolment failed:', err);
-      toast.error(err instanceof Error ? err.message : 'Could not turn on biometric unlock');
+      toast.error(err instanceof Error ? err.message : _copy("copy.8e9a4bd17e64", { defaultValue: "Could not turn on biometric unlock" }));
     }
 
     setPendingSecret(null);
     try {
       await onComplete(pendingPrivKey);
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Failed to sign in');
+      setError(err instanceof Error ? err.message : _copy("copy.648b8b9af1fd", { defaultValue: "Failed to sign in" }));
     } finally {
       setBusy(false);
     }
@@ -447,22 +447,22 @@ export function WalletUnlockStep({ userId, onComplete, onLogout }: WalletUnlockS
     setError(null);
     try {
       if (!isValidRecoveryCode(recoveryInput)) {
-        throw new Error('Invalid recovery code');
+        throw new Error(_copy("copy.545a440e69f0", { defaultValue: "Invalid recovery code" }));
       }
       if (newPassword !== newConfirm) {
-        throw new Error("Passwords don't match");
+        throw new Error(_copy("copy.ec5d490e7422", { defaultValue: "Passwords don't match" }));
       }
       const assessment = await assessPassword(newPassword);
       if (!assessment.longEnough) {
-        throw new Error(`Password must be at least ${MIN_PASSWORD_LENGTH} characters`);
+        throw new Error(_copy("copy.68b4bdd219c5", { defaultValue: "Password must be at least {{value1}} characters", value1: MIN_PASSWORD_LENGTH }));
       }
       if (!assessment.acceptable) {
-        throw new Error('Choose a stronger password (mix letters, numbers, and symbols)');
+        throw new Error(_copy("copy.1510dcb7d4c4", { defaultValue: "Choose a stronger password (mix letters, numbers, and symbols)" }));
       }
 
       const recoveryPayload = await fetchRecoveryPayload(userId);
       if (!recoveryPayload) {
-        throw new Error('No recovery record found for this account.');
+        throw new Error(_copy("copy.6baff4227970", { defaultValue: "No recovery record found for this account." }));
       }
       const secret = await decryptSeedWithRecoveryCode(recoveryPayload, recoveryInput);
       const derived = deriveFromSecret(secret);
@@ -479,7 +479,7 @@ export function WalletUnlockStep({ userId, onComplete, onLogout }: WalletUnlockS
       setNewRecoveryCode(freshCode);
       setPhase('recover-new-code');
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Recovery failed');
+      setError(err instanceof Error ? err.message : _copy("copy.f8ec24c56456", { defaultValue: "Recovery failed" }));
     } finally {
       setBusy(false);
     }

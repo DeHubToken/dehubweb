@@ -161,7 +161,9 @@ export function SegmentMarkerDrawer({ open, onOpenChange, tokenId, getCurrentTim
                       <span className="text-zinc-500"> · {clock(segment.start_seconds)} – {clock(segment.end_seconds)}</span>
                     </p>
                     <p className="text-[11px] text-zinc-500">
-                      {segment.votes_up}{_copy("copy.72915d37182e", { defaultValue: " agree" })}{segment.votes_down > 0 ? _copy("copy.2f41333ad013", { defaultValue: " · {{value1}} disagree", value1: segment.votes_down }) : ''}
+                      {segment.votes_down > 0
+                        ? _copy("copy.171fadabba25", { defaultValue: "{{value1}} agree · {{value2}} disagree", value1: segment.votes_up, value2: segment.votes_down })
+                        : _copy("copy.42a7d5fd9558", { defaultValue: "{{value1}} agree", value1: segment.votes_up })}
                     </p>
                   </div>
                   {isMine ? (

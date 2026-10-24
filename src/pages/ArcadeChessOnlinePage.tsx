@@ -135,7 +135,7 @@ async function invokeChess(body: Record<string, unknown>): Promise<{ match?: Che
     } catch {
       // Fall through to the generic message.
     }
-    return { error: error.message || 'The match server did not answer.' };
+    return { error: error.message || _translateCopy("copy.f364d8da5b94", { defaultValue: "The match server did not answer." }) };
   }
   return data as { match?: ChessMatch; error?: string };
 }
@@ -183,8 +183,8 @@ function useChessRecords(wallets: string[]): Record<string, ChessRecord> {
 
 
 function recordLine(record: ChessRecord | undefined): string {
-  if (!record || record.played === 0) return 'First battle';
-  return `${record.wins}W · ${record.losses}L · ${record.draws}D`;
+  if (!record || record.played === 0) return _translateCopy("copy.fc09b7dd0411", { defaultValue: "First battle" });
+  return _translateCopy("copy.7a73328114fe", { defaultValue: "{{value1}}W · {{value2}}L · {{value3}}D", value1: record.wins, value2: record.losses, value3: record.draws });
 }
 
 /** The other seat at a match, from one player's point of view. */

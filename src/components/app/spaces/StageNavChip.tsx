@@ -11,7 +11,7 @@ export function StageNavChip() {
     <button
       type="button"
       onClick={() => openModal('live')}
-      aria-label={`${t('stages.expandStage')}: ${currentSpace.title}`}
+      aria-label={t("copy.b1d159c83f4d", { defaultValue: "Expand stage: {{value1}}", value1: currentSpace.title })}
       className="flex h-11 w-11 shrink-0 items-center justify-center rounded-r-2xl border-l border-current/10 text-foreground focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2"
       data-stage-nav-chip
     >

@@ -1,3 +1,5 @@
+import { translateCopy as _translateCopy } from '@/i18n/copy';
+
 type Relay = {
   connected?: boolean;
   restartTransport: () => Promise<void>;
@@ -16,10 +18,10 @@ export async function prepareWalletRelay(provider: any): Promise<void> {
         await relay.restartTransport();
         // restartTransport can return while an existing connect is in progress.
         if (relay.connected === false && relay.transportOpen) await relay.transportOpen();
-        if (relay.connected === false) throw new Error('Wallet relay is disconnected');
+        if (relay.connected === false) throw new Error(_translateCopy('copy.2a1cde646f07', { defaultValue: 'Wallet relay is disconnected' }));
       })(),
       new Promise<never>((_, reject) => {
-        timer = setTimeout(() => reject(new Error('Wallet connection timed out')), 15_000);
+        timer = setTimeout(() => reject(new Error(_translateCopy('copy.e4ce286c7c11', { defaultValue: 'Wallet connection timed out' }))), 15_000);
       }),
     ]);
   } finally {
@@ -43,7 +45,7 @@ export async function waitForWalletSignature<T>(request: () => Promise<T>): Prom
     return await Promise.race([
       request(),
       new Promise<never>((_, reject) => {
-        timer = setTimeout(() => reject(new Error('Wallet signature timed out')), 120_000);
+        timer = setTimeout(() => reject(new Error(_translateCopy('copy.075067fe8b21', { defaultValue: 'Wallet signature timed out' }))), 120_000);
       }),
     ]);
   } finally {

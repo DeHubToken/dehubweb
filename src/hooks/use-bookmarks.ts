@@ -9,6 +9,7 @@ import { buildAvatarUrl, buildImageUrl, buildVideoUrl, buildHlsUrl, buildFeedIma
 import { formatDuration, formatViews, formatTimeAgo } from '@/lib/feed-utils';
 import { resolveViewCount } from '@/lib/engagement';
 import type { VideoItem, ImagePost, TextPost, FeedItem } from '@/types/feed.types';
+import { translateCopy as _translateCopy } from '@/i18n/copy';
 
 export type BookmarkType = 'all' | 'liked' | 'history' | 'folders' | 'recent' | 'ppv' | 'images' | 'videos' | 'text';
 
@@ -55,7 +56,7 @@ function mapNFTToVideoItem(nft: DeHubNFT): VideoItem {
     hlsUrl: buildHlsUrl(nft.hlsUrl),
     duration: formatDuration(nft.videoDuration || nft.duration),
     title: nft.name || nft.title || nft.description?.split('\n')[0] || '',
-    channel: nft.minterDisplayName || nft.mintername || 'Unknown Creator',
+    channel: nft.minterDisplayName || nft.mintername || _translateCopy("copy.056823642989", { defaultValue: "Unknown Creator" }),
     channelAvatar,
     verified: false,
     views: formatViews(resolveViewCount(nft)),
@@ -164,7 +165,7 @@ function mapNFTToTextPost(nft: DeHubNFT): TextPost {
     replyPolicy: nft.replyPolicy,
     author: {
       id: nft.minter,
-      name: nft.minterDisplayName || nft.mintername || 'Unknown',
+      name: nft.minterDisplayName || nft.mintername || _translateCopy("copy.b764cdc0eab7", { defaultValue: "Unknown" }),
       handle: nft.mintername || nft.minter,
       avatarSeed: avatarUrl,
       verified: false,
@@ -482,7 +483,7 @@ export function useBookmarkPost(tokenId: string | number) {
 
     const next = !isBookmarked;
     setOverride(next);
-    toast.success(next ? 'Saved to bookmarks' : 'Removed from bookmarks');
+    toast.success(next ? _copy("copy.037df3bbbaee", { defaultValue: "Saved to bookmarks" }) : _copy("copy.e4d2fa5b248e", { defaultValue: "Removed from bookmarks" }));
     toggleMutation.mutate({ next, onSaved });
   };
 

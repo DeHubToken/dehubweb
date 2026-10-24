@@ -219,8 +219,9 @@ function WheelTimePicker({
 }
 
 
-export function ScheduleSheet({ isOpen, onClose, scheduledDate, onSchedule, title = 'Schedule Post', minimumMinutes = 0 }: ScheduleSheetProps) {
+export function ScheduleSheet({ isOpen, onClose, scheduledDate, onSchedule, title: titleProp, minimumMinutes = 0 }: ScheduleSheetProps) {
   const { t: _copy } = _useCopy();
+  const title = titleProp ?? _copy("copy.765608de66a0", { defaultValue: "Schedule Post" });
   const today = startOfToday();
   const [currentMonth, setCurrentMonth] = useState(scheduledDate || today);
   const [selectedDate, setSelectedDate] = useState<Date | null>(scheduledDate);

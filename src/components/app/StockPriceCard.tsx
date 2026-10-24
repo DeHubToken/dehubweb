@@ -61,8 +61,18 @@ export function StockPriceCard({ data }: StockPriceCardProps) {
   const isPositive = data.percentChange24h != null && data.percentChange24h >= 0;
   const yahooUrl = `https://finance.yahoo.com/quote/${encodeURIComponent(data.symbol)}`;
 
+  const recommendationLabels: Record<string, string> = {
+    strong_buy: _copy("copy.413544e4c9f4", { defaultValue: "Strong buy" }),
+    buy: _copy("copy.64e3cb0e4960", { defaultValue: "Buy" }),
+    hold: _copy("copy.8e685d5409b3", { defaultValue: "Hold" }),
+    outperform: _copy("copy.f8385e3ed4d6", { defaultValue: "Outperform" }),
+    underperform: _copy("copy.daaa410b8f03", { defaultValue: "Underperform" }),
+    sell: _copy("copy.2ec1e2815946", { defaultValue: "Sell" }),
+    strong_sell: _copy("copy.7587a3ad996a", { defaultValue: "Strong sell" }),
+  };
   const recommendationLabel = data.recommendationKey
-    ? data.recommendationKey.charAt(0).toUpperCase() + data.recommendationKey.slice(1).replace('_', ' ')
+    ? recommendationLabels[data.recommendationKey.toLowerCase()]
+      ?? data.recommendationKey.charAt(0).toUpperCase() + data.recommendationKey.slice(1).replace('_', ' ')
     : null;
 
   const recommendationColor = data.recommendationKey
@@ -184,7 +194,7 @@ export function StockPriceCard({ data }: StockPriceCardProps) {
         )}
         {data.trailingPE != null && (
           <div className="ml-auto">
-            <span className="text-zinc-500">P/E</span>
+            <span className="text-zinc-500">{_copy("copy.82b1fa7e2a09", { defaultValue: "P/E" })}</span>
             <p className="text-white font-medium">{data.trailingPE.toFixed(2)}</p>
           </div>
         )}

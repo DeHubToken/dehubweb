@@ -27,7 +27,7 @@ import { BrandIcon } from '@/components/app/war/WarHudIcon';
 import { AppState } from '@/components/app/AppState';
 import { DhbCoin } from '@/components/app/DhbAmount';
 import { useState, useCallback, useEffect } from 'react';
-import { useTranslation } from 'react-i18next';
+import { useTranslation, Trans } from 'react-i18next';
 import { Loader2, AlertCircle } from "lucide-react";
 import Search from "@/components/ui/cut-icons/search";
 import ArrowLeft from "@/components/ui/cut-icons/back";
@@ -88,7 +88,7 @@ function UserSearchResult({
   const avatarPath = extractAvatarPath(user);
   const avatarUrl = user.address ? buildAvatarUrl(user.address, avatarPath) : undefined;
   const rawDisplayName = user.displayName || user.display_name;
-  const displayName = rawDisplayName || user.username || 'User';
+  const displayName = rawDisplayName || user.username || _copy("copy.b512d97e7cbf", { defaultValue: "User" });
   const showHandle = !!user.username && !!rawDisplayName; // only show @handle when distinct from top line
   const isVerified = user.isVerified || user.is_verified;
   const badgeBalance = (user as any).badgeBalance ?? (user as any).balance ?? undefined;
@@ -133,7 +133,7 @@ function UserSearchResult({
         {!dmDisabled && !isLoading && perMessageFee && perMessageFee > 0 && (
           <p className="text-xs text-zinc-400 mt-1 flex items-center gap-1">
             <img src={dehubCoin} alt={tokenLabel()} className="w-3 h-3" />
-            {perMessageFee.toLocaleString()}{_copy("copy.cf92bc9b461f", { defaultValue: " to message" })}</p>
+            {_copy("copy.742164ec53fb", { defaultValue: "{{value1}} to message", value1: perMessageFee.toLocaleString() })}</p>
         )}
         {isLoading && (
           <p className="text-xs text-zinc-400 mt-1 flex items-center gap-1">
@@ -168,7 +168,7 @@ function FeePaymentStep({
 
   const avatarPath = extractAvatarPath(user);
   const avatarUrl = user.address ? buildAvatarUrl(user.address, avatarPath) : undefined;
-  const displayName = user.displayName || user.display_name || user.username || 'User';
+  const displayName = user.displayName || user.display_name || user.username || _copy("copy.b512d97e7cbf", { defaultValue: "User" });
 
   const tipAmount = customAmount ? parseFloat(customAmount) : fee;
   const isValidAmount = !Number.isNaN(tipAmount) && tipAmount >= fee;
@@ -202,7 +202,7 @@ function FeePaymentStep({
 
   const handlePay = async (amount: number) => {
     if (Number.isNaN(amount) || amount < fee) {
-      toast.error(dhbText(`Minimum tip is ${fee.toLocaleString()} DHB`));
+      toast.error(dhbText(_copy("copy.9fd0c1b98d0a", { defaultValue: "Minimum tip is {{value1}} DHB", value1: fee.toLocaleString() })));
       return;
     }
     if (!messageText.trim()) {
@@ -221,13 +221,13 @@ function FeePaymentStep({
 
       if (balance < amountWei) {
         const balanceHuman = Number(balance) / 1e18;
-        toast.error(dhbText(`Insufficient tokens. Need ${amount.toLocaleString()} but have ${balanceHuman.toFixed(2)}`));
+        toast.error(dhbText(_copy("copy.12e58368b1fe", { defaultValue: "Insufficient tokens. Need {{value1}} but have {{value2}}", value1: amount.toLocaleString(), value2: balanceHuman.toFixed(2) })));
         setBalanceInfo({ checked: true, balance: balanceHuman, sufficient: false });
         setIsSending(false);
         return;
       }
 
-      toast.loading('Sending tip to unlock DMs...', { id: 'dm-fee-gate' });
+      toast.loading(_copy("copy.aa3489b23c1c", { defaultValue: "Sending tip to unlock DMs..." }), { id: 'dm-fee-gate' });
 
       const tipResult = await sendTip({
         tokenId: 0,
@@ -237,7 +237,7 @@ function FeePaymentStep({
       });
       const txHash = tipResult.hash;
 
-      toast.success(dhbText(`Paid ${amount.toLocaleString()} DHB — opening chat! 🎉`), { id: 'dm-fee-gate' });
+      toast.success(dhbText(_copy("copy.a247af008271", { defaultValue: "Paid {{value1}} DHB — opening chat! 🎉", value1: amount.toLocaleString() })), { id: 'dm-fee-gate' });
       // Paying to unlock DMs already makes the per-message cost explicit —
       // don't make them click through the same warning again in the thread.
       try {
@@ -248,7 +248,7 @@ function FeePaymentStep({
       onPaid(messageText.trim(), txHash);
     } catch (error: unknown) {
       console.error('[NewConversationModal] Payment failed:', error);
-      toastTxError(error, 'Payment failed', { id: 'dm-fee-gate' });
+      toastTxError(error, _copy("copy.17aadc092fe6", { defaultValue: "Payment failed" }), { id: 'dm-fee-gate' });
     } finally {
       setIsSending(false);
     }
@@ -286,8 +286,12 @@ function FeePaymentStep({
         <div>
           <h3 className="text-white font-semibold text-sm">{_copy("copy.467f1b07dbab", { defaultValue: "Tip to Message" })}</h3>
           <p className="text-zinc-400 text-xs leading-relaxed">
-            {displayName}{_copy("copy.9905f07aff07", { defaultValue: " requires a minimum tip of" })}{' '}
-            <span className="text-white font-medium">{fee.toLocaleString()} <DhbCoin /></span>{_copy("copy.90a646a30f4b", { defaultValue: " to start a conversation." })}</p>
+            <Trans
+              i18nKey="copy.253ffa81cd88"
+              defaults="{{value1}} requires a minimum tip of <amount>{{value2}} <coin></coin></amount> to start a conversation."
+              values={{ value1: displayName, value2: fee.toLocaleString() }}
+              components={{ amount: <span className="text-white font-medium" />, coin: <DhbCoin /> }}
+            /></p>
         </div>
       </div>
 
@@ -300,11 +304,23 @@ function FeePaymentStep({
       ) : balanceInfo.checked && !balanceInfo.sufficient ? (
         <div className="flex items-center gap-2 p-3 rounded-xl bg-white/5 border border-white/10">
           <AlertCircle className="w-4 h-4 text-zinc-400 flex-shrink-0" />
-          <p className="text-xs text-zinc-300">{_copy("copy.8174682f8ac4", { defaultValue: "Insufficient balance. You have " })}{Math.floor(balanceInfo.balance).toLocaleString()} <DhbCoin />{_copy("copy.fd707532efb1", { defaultValue: " but need " })}{fee.toLocaleString()} <DhbCoin />.
+          <p className="text-xs text-zinc-300">
+            <Trans
+              i18nKey="copy.a5b214ef27ab"
+              defaults="Insufficient balance. You have {{value1}} <coin></coin> but need {{value2}} <coin></coin>."
+              values={{ value1: Math.floor(balanceInfo.balance).toLocaleString(), value2: fee.toLocaleString() }}
+              components={{ coin: <DhbCoin /> }}
+            />
           </p>
         </div>
       ) : balanceInfo.checked ? (
-        <p className="text-xs text-zinc-500 text-center">{_copy("copy.13d779df5bcd", { defaultValue: "Your balance: " })}{Math.floor(balanceInfo.balance).toLocaleString()} <DhbCoin />
+        <p className="text-xs text-zinc-500 text-center">
+          <Trans
+            i18nKey="copy.825123b7470b"
+            defaults="Your balance: {{value1}} <coin></coin>"
+            values={{ value1: Math.floor(balanceInfo.balance).toLocaleString() }}
+            components={{ coin: <DhbCoin /> }}
+          />
         </p>
       ) : null}
 
@@ -333,7 +349,7 @@ function FeePaymentStep({
             <Loader2 className="w-4 h-4 mr-2 animate-spin" />{_copy("copy.f40a853e58a1", { defaultValue: "Processing..." })}</>
         ) : (
           <>
-            <img src={dehubCoin} alt={tokenLabel()} className="w-4 h-4 mr-2" />{_copy("copy.761d0751f5d4", { defaultValue: "Pay " })}{fee.toLocaleString()}{_copy("copy.25a4b563d8f7", { defaultValue: " & Start Chat" })}</>
+            <img src={dehubCoin} alt={tokenLabel()} className="w-4 h-4 mr-2" />{_copy("copy.052503ac5a38", { defaultValue: "Pay {{value1}} & Start Chat", value1: fee.toLocaleString() })}</>
         )}
       </Button>
 
@@ -374,7 +390,14 @@ function FeePaymentStep({
       </div>
 
       {customAmount && isValidAmount && tipAmount > fee && (
-        <p className="text-[10px] text-zinc-400 text-center">{_copy("copy.5269efbb02b6", { defaultValue: "🔥 Tipping " })}{tipAmount.toLocaleString()} <DhbCoin />{_copy("copy.fb56ded4ed2c", { defaultValue: " will rank you higher in " })}{displayName}{_copy("copy.8e35393fe469", { defaultValue: "'s inbox" })}</p>
+        <p className="text-[10px] text-zinc-400 text-center">
+          <Trans
+            i18nKey="copy.0f8f49bd32e6"
+            defaults="🔥 Tipping {{value1}} <coin></coin> will rank you higher in {{value2}}'s inbox"
+            values={{ value1: tipAmount.toLocaleString(), value2: displayName }}
+            components={{ coin: <DhbCoin /> }}
+          />
+        </p>
       )}
     </div>
   );
@@ -451,7 +474,7 @@ export function NewConversationModal({
       setSearchQuery.complete(searchQuery, '');
       setFeeUser(null);
     } catch (error: any) {
-      toast.error(error.message || 'Failed to start conversation');
+      toast.error(error.message || _copy("copy.6ba48fbb4e23", { defaultValue: "Failed to start conversation" }));
     } finally {
       setSelectedUserId(null);
     }

@@ -8,6 +8,7 @@ import { useDeHubProfile } from '@/hooks/use-dehub-profile';
 import { parseDefaultProfileTab } from '@/components/app/profile/ProfileConstants';
 import { getAiScrapingPreference, mergeAiScrapingPreference, type AiScrapingPreference } from '@/lib/ai-scraping';
 import { getShowOnline, mergeShowOnline } from '@/lib/online-presence';
+import { translateCopy as _translateCopy } from '@/i18n/copy';
 
 /**
  * Follow visibility modes stored in DeHub API customs.followVisibility:
@@ -69,7 +70,7 @@ export function usePrivacySettings() {
       show_online?: boolean;
       show_dislikes?: boolean;
     }) => {
-      if (!walletAddress) throw new Error('Not authenticated');
+      if (!walletAddress) throw new Error(_translateCopy("copy.76d1efbeed2d", { defaultValue: "Not authenticated" }));
 
       const profileUpdate: Record<string, any> = {};
 

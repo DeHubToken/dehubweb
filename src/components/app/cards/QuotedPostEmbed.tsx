@@ -155,7 +155,7 @@ function QuotedPollPreview({ tokenId }: { tokenId: number }) {
       })}
       <div className="flex items-center gap-1 text-[12px] text-zinc-500">
         <BarChart2 className="w-3.5 h-3.5" />
-        <span>{total} {total === 1 ? _copy("copy.ab274474a6aa", { defaultValue: "vote" }) : _copy("copy.9df609548dde", { defaultValue: "votes" })}{isEnded ? _copy("copy.c7383371a694", { defaultValue: " · Final results" }) : ''}</span>
+        <span>{_copy("copy.8ce57030b104", { defaultValue: "{{count}} votes", count: total })}{isEnded ? _copy("copy.c7383371a694", { defaultValue: " · Final results" }) : ''}</span>
       </div>
     </div>
   );
@@ -233,7 +233,7 @@ export const QuotedPostEmbed = memo(function QuotedPostEmbed({ quotedPost, class
     quotedPost.minterDisplayName ||
     quotedPost.minterUsername ||
     quotedPost.mintername ||
-    'Unknown';
+    _copy("copy.b764cdc0eab7", { defaultValue: "Unknown" });
   const handle =
     quotedPost.minterUser?.username ||
     quotedPost.minterUsername ||

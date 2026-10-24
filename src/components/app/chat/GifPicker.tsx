@@ -52,7 +52,7 @@ export function GifPicker({ onGifSelect }: GifPickerProps) {
           size="sm"
           className="h-8 px-2 text-zinc-400 hover:text-white hover:bg-zinc-700 text-xs font-bold"
         >
-          GIF
+          {_copy("emojiPicker.tabGif", { defaultValue: "GIF" })}
         </Button>
       </PopoverTrigger>
       <PopoverContent 
@@ -89,7 +89,7 @@ export function GifPicker({ onGifSelect }: GifPickerProps) {
               >
                 <img 
                   src={gif} 
-                  alt="GIF" 
+                  alt={_copy("emojiPicker.tabGif", { defaultValue: "GIF" })} 
                   className="w-full h-full object-cover"
                   loading="lazy"
                 />

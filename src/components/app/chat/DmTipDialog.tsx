@@ -180,7 +180,7 @@ export function DmTipDialog({
           duration: 8000,
         });
       } else {
-        toastTxError(error, 'Tip failed', { id: 'dm-tip' });
+        toastTxError(error, _copy("copy.07d3d96b534a", { defaultValue: "Tip failed" }), { id: 'dm-tip' });
       }
     } finally {
       setIsSending(false);
@@ -194,7 +194,7 @@ export function DmTipDialog({
           <DrawerTitle className="text-white text-lg flex items-center justify-center gap-2">
             <Gem className="w-5 h-5 text-white" />{_copy("copy.f3b690653334", { defaultValue: "Send Tip" })}</DrawerTitle>
           {recipientName && (
-            <p className="text-white/60 text-sm mt-1">{_copy("copy.725b3269b046", { defaultValue: "Tip " })}{recipientName}
+            <p className="text-white/60 text-sm mt-1">{_copy("copy.ded08bf9c1f0", { defaultValue: "Tip {{value1}}", value1: recipientName })}
             </p>
           )}
         </DrawerHeader>

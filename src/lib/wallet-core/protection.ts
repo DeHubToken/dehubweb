@@ -7,6 +7,7 @@ import { classifyPayloadKind } from "./crypto";
 import { fetchWallet, getCachedWallet, type StoredWallet } from "./store";
 import { isBiometricUnlockAvailable } from "./passkey";
 import { getCachedPasskeyWraps, loadPasskeyWraps, type PasskeyWrap } from "./passkey-store";
+import { translateCopy as _translateCopy } from '@/i18n/copy';
 
 export interface WalletProtection {
   wallet: StoredWallet | null;
@@ -70,7 +71,7 @@ export async function loadWalletOrCached(userId: string): Promise<StoredWallet> 
   }
   const cached = getCachedWallet();
   if (cached) return cached;
-  throw new Error("No wallet found for this account.");
+  throw new Error(_translateCopy("copy.ba8fde9c4317", { defaultValue: "No wallet found for this account." }));
 }
 
 export async function getWalletProtection(userId: string): Promise<WalletProtection> {

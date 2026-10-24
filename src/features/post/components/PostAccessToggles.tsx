@@ -389,7 +389,7 @@ export function PostAccessToggles({
         return;
       }
       if (solanaChain ? !isValidSolanaAddress(addr) : !isValidEvmAddress(addr)) {
-        toast.error(solanaChain ? 'Invalid Solana mint address' : 'Invalid token contract address');
+        toast.error(solanaChain ? _copy("copy.a8797c5bf7e6", { defaultValue: "Invalid Solana mint address" }) : _copy("copy.67a116fac571", { defaultValue: "Invalid token contract address" }));
         return;
       }
       setTokenContract(addr);

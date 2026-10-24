@@ -308,8 +308,8 @@ function CampaignDetail({ id, onBack }: { id: string; onBack: () => void }) {
                 contentStyle={{ background: 'rgba(24,24,27,0.95)', border: '1px solid rgba(255,255,255,0.1)', borderRadius: 12, fontSize: 12 }}
                 labelStyle={{ color: '#a1a1aa' }}
               />
-              <Line type="monotone" dataKey="impressions" stroke="#3b82f6" strokeWidth={2} dot={false} name="Impressions" />
-              <Line type="monotone" dataKey="clicks" stroke="#22c55e" strokeWidth={2} dot={false} name="Clicks" />
+              <Line type="monotone" dataKey="impressions" stroke="#3b82f6" strokeWidth={2} dot={false} name={_copy("copy.c6310e909e40", { defaultValue: "Impressions" })} />
+              <Line type="monotone" dataKey="clicks" stroke="#22c55e" strokeWidth={2} dot={false} name={_copy("copy.921fc9804ed3", { defaultValue: "Clicks" })} />
             </LineChart>
           </ResponsiveContainer>
         )}
@@ -404,16 +404,16 @@ function CampaignDetail({ id, onBack }: { id: string; onBack: () => void }) {
 function TargetingSummary({ targeting }: { targeting: AdTargeting }) {
   const { t } = useTranslation();
   const rows: string[] = [];
-  if (targeting.tiers?.length) rows.push(`Tiers: ${targeting.tiers.map(tierLabel).join(', ')}`);
+  if (targeting.tiers?.length) rows.push(t("copy.1546afc33325", { defaultValue: "Tiers: {{value1}}", value1: targeting.tiers.map(tierLabel).join(', ') }));
   if (targeting.followerMin != null || targeting.followerMax != null) {
-    rows.push(`Followers: ${targeting.followerMin ?? 0}–${targeting.followerMax ?? '∞'}`);
+    rows.push(t("copy.aafb41401f0c", { defaultValue: "Followers: {{value1}}–{{value2}}", value1: targeting.followerMin ?? 0, value2: targeting.followerMax ?? '∞' }));
   }
-  if (targeting.languages?.length) rows.push(`Languages: ${targeting.languages.join(', ')}`);
+  if (targeting.languages?.length) rows.push(t("copy.d5417f1eb0a5", { defaultValue: "Languages: {{value1}}", value1: targeting.languages.join(', ') }));
   if (targeting.premium) rows.push(t('ads.premiumOnly'));
-  if (targeting.communities?.length) rows.push(`${targeting.communities.length} communit${targeting.communities.length === 1 ? 'y' : 'ies'}`);
-  if (targeting.behaviors?.length) rows.push(`Behaviors: ${targeting.behaviors.join(', ')}`);
-  if (targeting.categories?.length) rows.push(`Categories: ${targeting.categories.map((c) => `#${c}`).join(' ')}`);
-  if (targeting.followedCreators?.length) rows.push(`Followers of ${targeting.followedCreators.length} creator(s)`);
+  if (targeting.communities?.length) rows.push(t("copy.48330895c4a2", { count: targeting.communities.length, defaultValue: "{{count}} communities" }));
+  if (targeting.behaviors?.length) rows.push(t("copy.8b9ea7c3fa4a", { defaultValue: "Behaviors: {{value1}}", value1: targeting.behaviors.join(', ') }));
+  if (targeting.categories?.length) rows.push(t("copy.f1aa43ed0599", { defaultValue: "Categories: {{value1}}", value1: targeting.categories.map((c) => `#${c}`).join(' ') }));
+  if (targeting.followedCreators?.length) rows.push(t("copy.31141bd66490", { count: targeting.followedCreators.length, defaultValue: "Followers of {{count}} creators" }));
   if (rows.length === 0) return <p className="text-sm text-muted-foreground">{t('ads.everyoneNoFilters')}</p>;
   return (
     <ul className="text-sm text-muted-foreground space-y-1">
@@ -483,7 +483,7 @@ function CreativeCard({ creative }: { creative: AdCreative }) {
     body: creative.body,
     ctaLabel: creative.cta_label,
     ctaUrl: creative.cta_url,
-    advertiser: 'Preview',
+    advertiser: t("copy.324b134f57c7", { defaultValue: "Preview" }),
     width: creative.width,
     height: creative.height,
     durationSeconds: creative.duration_seconds,

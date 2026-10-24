@@ -23,6 +23,7 @@
 import { io, Socket } from 'socket.io-client';
 import { DEHUB_API_BASE, getAuthToken } from './core';
 import { liveReactionType, type LiveReactionType } from '@/lib/live/reaction-flow';
+import { translateCopy as _translateCopy } from '@/i18n/copy';
 
 /** Matches LivestreamEvents on the backend. These strings are the contract. */
 const EVENT = {
@@ -228,7 +229,7 @@ export function watchStreamJoins(
     if (data?.streamId === streamId && data.user) onJoin(data.user);
   };
   const handleAnonJoin = (data: { streamId?: string }) => {
-    if (data?.streamId === streamId) onJoin({ username: 'Visitor' });
+    if (data?.streamId === streamId) onJoin({ username: _translateCopy("copy.cf9f5896322a", { defaultValue: "Visitor" }) });
   };
   socket.on('connect', join);
   socket.on(EVENT.joinStream, handleJoin);

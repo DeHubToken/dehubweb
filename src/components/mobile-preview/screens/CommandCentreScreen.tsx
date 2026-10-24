@@ -64,9 +64,9 @@ export function CommandCentreScreen() {
         <h3 className="text-white text-sm font-semibold mb-3">{_copy("copy.d8d9b7dd3c9e", { defaultValue: "Recent Transactions" })}</h3>
         <div className="space-y-2">
           {[
-            { type: 'Tip received', amount: t('mobilePreview.tokenAmount', { amount: '+50' }), from: 'bob_dev', time: '2h ago' },
-            { type: 'Subscription', amount: t('mobilePreview.tokenAmount', { amount: '+100' }), from: 'crypto_sarah', time: '5h ago' },
-            { type: 'Withdrawal', amount: t('mobilePreview.tokenAmount', { amount: '-500' }), from: 'To wallet', time: '1d ago' },
+            { type: _copy("copy.3394014a3379", { defaultValue: "Tip received" }), amount: t('mobilePreview.tokenAmount', { amount: '+50' }), from: 'bob_dev', time: t("copy.51452941c07c", { defaultValue: "{{value1}}h ago", value1: 2 }) },
+            { type: _copy("copy.4999c6c6c7ba", { defaultValue: "Subscription" }), amount: t('mobilePreview.tokenAmount', { amount: '+100' }), from: 'crypto_sarah', time: t("copy.51452941c07c", { defaultValue: "{{value1}}h ago", value1: 5 }) },
+            { type: _copy("copy.d2987dcd1e4e", { defaultValue: "Withdrawal" }), amount: t('mobilePreview.tokenAmount', { amount: '-500' }), from: _copy("copy.01152367b49d", { defaultValue: "To wallet" }), time: t("copy.0dc906eaa41d", { defaultValue: "{{value1}}d ago", value1: 1 }) },
           ].map((tx, i) => (
             <div key={i} className="flex items-center gap-3 py-2 rounded-lg">
               <div className="w-8 h-8 rounded-full bg-white/[0.06] flex items-center justify-center">

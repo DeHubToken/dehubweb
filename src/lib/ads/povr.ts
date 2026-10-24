@@ -8,6 +8,7 @@ import { canonicalTierName } from '@/lib/staking-badges';
  * linear POVR rates. Keep the three in sync.
  */
 import i18n from '@/i18n';
+import { translateCopy as _translateCopy } from '@/i18n/copy';
 
 export interface PovrTierInfo {
   name: string;
@@ -35,7 +36,7 @@ export const POVR_TIERS: PovrTierInfo[] = [
 ];
 
 /** Users below the 10k DHB badge floor. */
-export const NO_BADGE_TIER = { name: 'none', label: 'No Badge', cpmUsd: 10 };
+export const NO_BADGE_TIER = { name: 'none', get label() { return _translateCopy("copy.6883cefe9094", { defaultValue: "No Badge" }); }, cpmUsd: 10 };
 
 export function tierLabel(name: string): string {
   return name === 'none' ? NO_BADGE_TIER.label : canonicalTierName(name);
@@ -185,20 +186,20 @@ export interface AudienceEstimate {
 }
 
 export const CAMPAIGN_STATUS_LABELS: Record<CampaignStatus, string> = {
-  draft: 'Draft',
-  pending_review: 'In review',
-  active: 'Active',
-  paused: 'Paused',
-  rejected: 'Rejected',
-  completed: 'Completed',
-  archived: 'Archived',
+  get draft() { return _translateCopy("copy.ebf12ef47cf5", { defaultValue: "Draft" }); },
+  get pending_review() { return _translateCopy("copy.c39059141ced", { defaultValue: "In review" }); },
+  get active() { return _translateCopy("copy.92340695899b", { defaultValue: "Active" }); },
+  get paused() { return _translateCopy("copy.e159b06187d3", { defaultValue: "Paused" }); },
+  get rejected() { return _translateCopy("copy.aea4a04a8042", { defaultValue: "Rejected" }); },
+  get completed() { return _translateCopy("copy.22a970d2e5b1", { defaultValue: "Completed" }); },
+  get archived() { return _translateCopy("copy.bdb86505f806", { defaultValue: "Archived" }); },
 };
 
 export const AD_BEHAVIOR_OPTIONS: Array<{ value: AdBehavior; label: string; hint: string }> = [
-  { value: 'tippers', label: 'Tippers', hint: 'Users who have sent tips on DeHub' },
-  { value: 'ppv_buyers', label: 'PPV buyers', hint: 'Users who have purchased paid content' },
-  { value: 'stakers', label: 'Stakers', get hint() { return i18n.t('ads.stakersHint'); } },
-  { value: 'streamers', label: 'Streamers', hint: 'Users who have gone live' },
+  { value: 'tippers', get label() { return _translateCopy("copy.942bdfa695d5", { defaultValue: "Tippers" }); }, get hint() { return _translateCopy("copy.b9a8a19200c1", { defaultValue: "Users who have sent tips on DeHub" }); } },
+  { value: 'ppv_buyers', get label() { return _translateCopy("copy.7bbecafcf917", { defaultValue: "PPV buyers" }); }, get hint() { return _translateCopy("copy.2ab5a89c5c7d", { defaultValue: "Users who have purchased paid content" }); } },
+  { value: 'stakers', get label() { return _translateCopy("copy.5a1a7b1cd695", { defaultValue: "Stakers" }); }, get hint() { return i18n.t('ads.stakersHint'); } },
+  { value: 'streamers', get label() { return _translateCopy("copy.de43cabb212f", { defaultValue: "Streamers" }); }, get hint() { return _translateCopy("copy.3b068dde6fd6", { defaultValue: "Users who have gone live" }); } },
 ];
 
 export function formatUsd(v: number | null | undefined, dp = 2): string {

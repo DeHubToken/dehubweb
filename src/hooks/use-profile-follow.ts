@@ -72,20 +72,20 @@ export function useProfileFollow({
     try {
       await followUser(profile.walletAddress);
       if (isTargetPrivate) {
-        toast.success(`Follow request sent to ${profile.name}`);
+        toast.success(_copy("copy.89db78228f64", { defaultValue: "Follow request sent to {{value1}}", value1: profile.name }));
       } else {
-        toast.success(`Following ${profile.name}`);
+        toast.success(_copy("copy.91266f0b5e2a", { defaultValue: "Following {{value1}}", value1: profile.name }));
       }
       invalidateProfileQueries();
     } catch (error: unknown) {
       const errorMessage = error instanceof Error ? error.message : String(error);
       if (errorMessage.toLowerCase().includes('already') || errorMessage.toLowerCase().includes('following')) {
-        toast.info(`Already following ${profile.name}`);
+        toast.info(_copy("copy.65ae469907b9", { defaultValue: "Already following {{value1}}", value1: profile.name }));
         // Keep follow state as true since they're already following
       } else {
         setFollowStatus(false);
         setFollowOverride(profile.walletAddress, false);
-        handleApiError(error, 'Failed to follow. Please try again.');
+        handleApiError(error, _copy("copy.b775b90b6bc6", { defaultValue: "Failed to follow. Please try again." }));
       }
     } finally {
       setIsFollowLoading(false);
@@ -110,12 +110,12 @@ export function useProfileFollow({
 
     try {
       await unfollowUser(profile.walletAddress);
-      toast.success(`Unfollowed ${profile.name}`);
+      toast.success(_copy("copy.df4ab0546621", { defaultValue: "Unfollowed {{value1}}", value1: profile.name }));
       invalidateProfileQueries();
     } catch (error) {
       setFollowStatus(true);
       setFollowOverride(profile.walletAddress, true);
-      handleApiError(error, 'Failed to unfollow. Please try again.');
+      handleApiError(error, _copy("copy.0ef9806c5055", { defaultValue: "Failed to unfollow. Please try again." }));
     } finally {
       setIsFollowLoading(false);
       setShareSheetOpen(false);

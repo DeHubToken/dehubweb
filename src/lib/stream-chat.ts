@@ -1,3 +1,5 @@
+import { translateCopy as _translateCopy } from '@/i18n/copy';
+
 /**
  * Streaming Chat Client
  * =====================
@@ -50,7 +52,7 @@ export async function streamChat({ body, onDelta, onMeta, onTool, onDone, onErro
     if (!resp.ok) {
       let errorData: any = {};
       try { errorData = await resp.json(); } catch { /* ignore */ }
-      const err = new Error(errorData.error || `AI request failed (${resp.status})`) as any;
+      const err = new Error(errorData.error || _translateCopy('copy.a2bdedd473a3', { defaultValue: 'AI request failed ({{value1}})', value1: resp.status })) as any;
       err.errorCode = errorData.errorCode || (resp.status === 429 ? 'RATE_LIMIT' : resp.status === 402 ? 'CREDITS_EXHAUSTED' : 'API_ERROR');
       err.statusCode = resp.status;
       onError(err);
@@ -58,7 +60,7 @@ export async function streamChat({ body, onDelta, onMeta, onTool, onDone, onErro
     }
 
     if (!resp.body) {
-      onError(new Error('No response body'));
+      onError(new Error(_translateCopy('copy.9fc4fcabe3ce', { defaultValue: 'No response body' })));
       return;
     }
 

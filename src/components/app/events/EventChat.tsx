@@ -185,7 +185,7 @@ export function EventChat({ eventId }: EventChatProps) {
         },
       });
       if (error || !data?.ok || !data?.url) {
-        throw new Error(data?.error || error?.message || 'Upload failed');
+        throw new Error(data?.error || error?.message || _copy("copy.6efc5d27f30b", { defaultValue: "Upload failed" }));
       }
       await sendMessage(data.url, 'voice', data.url, replyTo?.id, {
         username: profileData?.handle || undefined,
@@ -199,7 +199,7 @@ export function EventChat({ eventId }: EventChatProps) {
       console.error('[EventChat] Voice upload failed:', err);
       toast.error(err?.message || t('events.voiceNoteFailed'), { id: toastId });
     }
-  }, [isAuthenticated, walletAddress, sendMessage, replyTo, profileData, user, openLoginModal, setReplyTo]);
+  }, [isAuthenticated, walletAddress, sendMessage, replyTo, profileData, user, openLoginModal, setReplyTo, _copy]);
 
   const handleKeyDown = (e: React.KeyboardEvent) => {
     if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); handleSend(); }

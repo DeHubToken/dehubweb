@@ -4,6 +4,7 @@ import { createPoll, getPolls, POLL_BATCH_LIMIT, voteOnPoll, removePollVote, clo
 import { useAuth } from '@/contexts/AuthContext';
 import { toast } from 'sonner';
 import type { DeHubPoll } from '@/lib/api/dehub';
+import { translateCopy as _translateCopy } from '@/i18n/copy';
 
 const POLLS_KEY = 'polls';
 
@@ -160,7 +161,7 @@ export function useCreatePoll() {
       queryClient.invalidateQueries({ queryKey: [POLLS_KEY] });
       toast.success(_copy("copy.05ea13855698", { defaultValue: "Poll created" }));
     },
-    onError: (err: any) => toast.error(err?.message || 'Failed to create poll'),
+    onError: (err: any) => toast.error(err?.message || _copy("copy.c653104b4b35", { defaultValue: "Failed to create poll" })),
   });
 }
 
@@ -201,7 +202,7 @@ export function useVoteOnPoll() {
       }
       // Usually "Poll has expired" — refetch so the card flips to final results.
       queryClient.invalidateQueries({ queryKey: [POLLS_KEY, variables.tokenId] });
-      toast.error(err?.message || 'Failed to vote');
+      toast.error(err?.message || _translateCopy("copy.b1ae867aaa75", { defaultValue: "Failed to vote" }));
     },
   });
 }

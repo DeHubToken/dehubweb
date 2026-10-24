@@ -177,7 +177,7 @@ export default function ImageGenNode({ id, data, selected }: NodeProps<FlowNode>
                 onClose={() => setModelOpen(false)}
                 value={model}
                 onSelect={(v) => updateNodeData(id, { model: v })}
-                options={IMAGE_MODEL_OPTIONS.map((m) => ({ value: m.id, label: m.name, hint: m.tier }))}
+                options={IMAGE_MODEL_OPTIONS.map((m) => ({ value: m.id, label: m.name, hint: m.tier === 'premium' ? t("copy.de88c121a82a", { defaultValue: "Premium" }) : m.tier === 'standard' ? t("copy.ef6691545d2c", { defaultValue: "Standard" }) : t("copy.6c582b62e0e5", { defaultValue: "Fast" }) }))}
               />
             </div>
             <div className="relative">

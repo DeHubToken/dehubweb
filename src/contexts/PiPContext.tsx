@@ -1,3 +1,4 @@
+import { translateCopy as _translateCopy } from '@/i18n/copy';
 /**
  * Picture-in-Picture Context
  * ==========================
@@ -36,7 +37,7 @@ export function PiPProvider({ children }: { children: ReactNode }) {
     const current = channelsRef.current;
     if (current.find(c => c.id === channel.id)) return false;
     if (current.length >= MAX_PIP) {
-      toast.error(`Maximum ${MAX_PIP} mini-players allowed`);
+      toast.error(_translateCopy("copy.c50afe75aceb", { defaultValue: "Maximum {{value1}} mini-players allowed", value1: MAX_PIP }));
       return false;
     }
     setPipChannels(prev => [...prev, channel]);

@@ -150,7 +150,7 @@ export function StageLinkEmbed({ stageId, stageShortId, fallback = null }: Stage
             <Calendar className="w-3 h-3 shrink-0" />
             <span>{format(startsAt, 'EEE, MMM d · h:mm a')}</span>
             {!isOverdue && (
-              <span className="text-zinc-500">{_copy("copy.1345f685c721", { defaultValue: "· in " })}{formatDistanceToNowStrict(startsAt)}
+              <span className="text-zinc-500">{_copy("copy.61da348bbdf3", { defaultValue: "· in {{value1}}", value1: formatDistanceToNowStrict(startsAt) })}
               </span>
             )}
           </p>

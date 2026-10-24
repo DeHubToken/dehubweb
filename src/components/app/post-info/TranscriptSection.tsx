@@ -103,7 +103,7 @@ function TranscriptLine({
         onClick={() => {
           if (onSeek) return onSeek(segment.start);
           navigator.clipboard.writeText(formatTimestamp(segment.start));
-          toast.success(`Copied ${formatTimestamp(segment.start)}`);
+          toast.success(_copy("copy.6549699fee2e", { defaultValue: "Copied {{value1}}", value1: formatTimestamp(segment.start) }));
         }}
         className="shrink-0 text-white/50 font-mono text-xs pt-0.5 hover:text-white"
       >

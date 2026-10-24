@@ -1,10 +1,11 @@
 import { getAuthToken } from './dehub';
 import type { PurchaseApi } from '@/hooks/use-crypto-purchase';
 import type { PaymentAsset, Purchase } from '@/lib/crypto-purchase';
+import { translateCopy as _translateCopy } from '@/i18n/copy';
 
 async function request<T>(path: string, body?: unknown, authenticated = false): Promise<T> {
   const token = authenticated ? getAuthToken() : null;
-  if (authenticated && !token) throw new Error('Please sign in again to view your purchase.');
+  if (authenticated && !token) throw new Error(_translateCopy("copy.bb6c82fba71f", { defaultValue: "Please sign in again to view your purchase." }));
   const controller = new AbortController();
   const timer = setTimeout(() => controller.abort(), 40_000);
   try {
@@ -15,10 +16,10 @@ async function request<T>(path: string, body?: unknown, authenticated = false): 
       signal: controller.signal,
     });
     const data = await response.json();
-    if (!response.ok) throw new Error(data?.message || 'Could not load this purchase. Please retry.');
+    if (!response.ok) throw new Error(data?.message || _translateCopy("copy.f39991f4a6d7", { defaultValue: "Could not load this purchase. Please retry." }));
     return data;
   } catch (error) {
-    if (error instanceof Error && error.name === 'AbortError') throw new Error('The connection timed out. Check your saved purchases before trying again.');
+    if (error instanceof Error && error.name === 'AbortError') throw new Error(_translateCopy("copy.99c528517279", { defaultValue: "The connection timed out. Check your saved purchases before trying again." }));
     throw error;
   } finally { clearTimeout(timer); }
 }

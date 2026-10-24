@@ -108,9 +108,10 @@ export function SoundboardPanel({
   onClose,
   playClip,
   stopClip,
-  errorMessage = 'Could not play that sound',
+  errorMessage: errorMessageProp,
 }: SoundboardPanelProps) {
   const { t: _copy } = _useCopy();
+  const errorMessage = errorMessageProp ?? _copy("copy.ad6ad16e9ae0", { defaultValue: "Could not play that sound" });
   const { walletAddress } = useAuth();
   const [volume, setVolume] = useState(70);
   const [playingId, setPlayingId] = useState<string | null>(null);
@@ -160,12 +161,12 @@ export function SoundboardPanel({
     }
 
     if (file.size > MAX_FILE_SIZE_MB * 1024 * 1024) {
-      toast.error(`File must be under ${MAX_FILE_SIZE_MB}MB`);
+      toast.error(_copy("copy.f01dadac618b", { defaultValue: "File must be under {{value1}}MB", value1: MAX_FILE_SIZE_MB }));
       return;
     }
 
     if (customSounds.length >= MAX_CUSTOM_SOUNDS) {
-      toast.error(`Max ${MAX_CUSTOM_SOUNDS} custom sounds. Delete one first.`);
+      toast.error(_copy("copy.93979061fcb7", { defaultValue: "Max {{value1}} custom sounds. Delete one first.", value1: MAX_CUSTOM_SOUNDS }));
       return;
     }
 

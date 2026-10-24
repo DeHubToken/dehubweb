@@ -42,6 +42,7 @@ import {
   type StageDubAudio,
 } from '@/lib/stage-dub';
 import type { RealtimeChannel } from '@supabase/supabase-js';
+import { translateCopy as _translateCopy } from '@/i18n/copy';
 
 const PCM_WORKLET_URL = '/dehub-caption-pcm.js';
 const PCM_WORKLET_NAME = 'dehub-caption-pcm';
@@ -665,7 +666,7 @@ function toLine(message: StageCaptionMessage, wallet: string): StageCaptionLine 
   return {
     id: message.id,
     wallet,
-    name: message.name || 'Speaker',
+    name: message.name || _translateCopy("copy.a9e0c7058512", { defaultValue: "Speaker" }),
     text: message.text.slice(0, 500),
     final: !!message.final,
     kind: message.kind === 'ai' ? 'ai' : 'speech',

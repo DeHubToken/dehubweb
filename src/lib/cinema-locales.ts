@@ -8,6 +8,7 @@
  *
  * This is the subset of JustWatch's 140+ locales worth putting in a picker.
  */
+import i18n from 'i18next';
 
 export interface CinemaLocale {
   /** JustWatch locale, `xx_YY`. */
@@ -50,6 +51,23 @@ export const CINEMA_LOCALES: CinemaLocale[] = [
   { locale: 'en_PH', country: 'Philippines', flag: '🇵🇭' },
   { locale: 'ar_AE', country: 'United Arab Emirates', flag: '🇦🇪' },
 ];
+
+/** The country in the reader's language; the English name when the browser cannot say. */
+function displayCountry(locale: string, english: string): string {
+  try {
+    const region = locale.split('_')[1];
+    const language = (i18n.language || 'en').replace('_', '-');
+    const name = new Intl.DisplayNames([language, 'en'], { type: 'region' }).of(region);
+    return name && name !== region ? name : english;
+  } catch {
+    return english;
+  }
+}
+
+for (const entry of CINEMA_LOCALES) {
+  const english = entry.country;
+  Object.defineProperty(entry, 'country', { get: () => displayCountry(entry.locale, english), enumerable: true });
+}
 
 export const DEFAULT_LOCALE = 'en_US';
 

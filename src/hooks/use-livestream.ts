@@ -22,6 +22,7 @@ import {
   type SendGiftData,
 } from '@/lib/api/dehub';
 import { useAuth } from '@/contexts/AuthContext';
+import { translateCopy as _translateCopy } from '@/i18n/copy';
 
 // Re-export API types for consumers
 export type { ApiLiveStream, StreamKeyInfo, StreamActivity, SendGiftData };
@@ -46,7 +47,7 @@ export function useLiveStreamDetails(streamId: string | null) {
       setStream(res.result);
     } catch (err) {
       console.error('[Livestream] Failed to fetch stream:', err);
-      setError(err instanceof Error ? err.message : 'Failed to load stream');
+      setError(err instanceof Error ? err.message : _translateCopy("copy.9dca8ee026ff", { defaultValue: "Failed to load stream" }));
     } finally {
       setIsLoading(false);
     }
@@ -198,7 +199,7 @@ export function useStreamActions() {
   const [isEnding, setIsEnding] = useState(false);
 
   const like = useCallback(async (streamId: string) => {
-    if (!isAuthenticated) throw new Error('Not authenticated');
+    if (!isAuthenticated) throw new Error(_translateCopy("copy.76d1efbeed2d", { defaultValue: "Not authenticated" }));
     setIsLiking(true);
     try {
       // Returns { likes, isLiked } — the endpoint is a toggle, and callers
@@ -210,7 +211,7 @@ export function useStreamActions() {
   }, [isAuthenticated]);
 
   const gift = useCallback(async (streamId: string, data: SendGiftData) => {
-    if (!isAuthenticated) throw new Error('Not authenticated');
+    if (!isAuthenticated) throw new Error(_translateCopy("copy.76d1efbeed2d", { defaultValue: "Not authenticated" }));
     setIsSendingGift(true);
     try {
       await sendLiveStreamGift(streamId, data);
@@ -220,7 +221,7 @@ export function useStreamActions() {
   }, [isAuthenticated]);
 
   const end = useCallback(async (streamId: string) => {
-    if (!isAuthenticated) throw new Error('Not authenticated');
+    if (!isAuthenticated) throw new Error(_translateCopy("copy.76d1efbeed2d", { defaultValue: "Not authenticated" }));
     setIsEnding(true);
     try {
       await endLiveStream(streamId);

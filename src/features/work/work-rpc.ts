@@ -1,3 +1,5 @@
+import { translateCopy as _translateCopy } from '@/i18n/copy';
+import { WorkCopyError } from './types';
 import { supabase } from '@/integrations/supabase/client';
 import { withWalletHeader } from '@/lib/supabase-wallet-client';
 import { ensureFreshToken } from '@/lib/api/dehub/core';
@@ -20,7 +22,7 @@ export async function workReceipt(id: string, hash: string, chain: number, escro
   });
   if (response.status === 202) return null;
   const data = await response.json();
-  if (!response.ok) throw new Error(data.error || 'Could not verify the chain receipt');
+  if (!response.ok) throw new Error(data.error || _translateCopy("copy.59c84e9a9e0a", { defaultValue: "Could not verify the chain receipt" }));
   return data as { payload: string; signature: string };
 }
 
@@ -29,18 +31,18 @@ export async function settleWorkPayment(wallet: string, submission: string, reco
     rpc: (name, args) => workRpc(wallet, name, args),
     send: async (intent: WorkPaymentIntent) => {
      const send = await prepareWorkPayment(async () => {
-      if((await getWalletAddress()).toLowerCase()!==wallet.toLowerCase()) throw Object.assign(new Error('The signing wallet does not match your bounty account'),{code:'WORK_NOT_SENT'});
+      if((await getWalletAddress()).toLowerCase()!==wallet.toLowerCase()) throw Object.assign(new WorkCopyError(_translateCopy("copy.04246863ce2d", { defaultValue: "The signing wallet does not match your bounty account" })),{code:'WORK_NOT_SENT'});
       const { data: job, error } = await supabase.from('work_jobs' as any).select('onchain_job_id,fund_tx_hash').eq('id', intent.job_id).single();
       if (error) throw error;
       if ((job as any).fund_tx_hash) {
         const { data: sub, error: subError } = await supabase.from('work_submissions' as any).select('approved_units,proof_url').eq('id', submission).single();
         if (subError) throw subError;
         const config=await getWorkConfig();
-        if(!config.escrow_address) throw new Error('Escrow is unavailable');
+        if(!config.escrow_address) throw new WorkCopyError(_translateCopy("copy.d6abd06bb70c", { defaultValue: "Escrow is unavailable" }));
         return () => writeWork(config.escrow_address,'approveSubmission',[(job as any).onchain_job_id,intent.worker_address,(sub as any).approved_units,
           sha256(toUtf8Bytes((sub as any).proof_url.trim().toLowerCase())),sha256(toUtf8Bytes(intent.id))]);
       }
-      if((await getWalletAddress()).toLowerCase()!==wallet.toLowerCase()) throw new Error('The signing wallet does not match your bounty account');
+      if((await getWalletAddress()).toLowerCase()!==wallet.toLowerCase()) throw new WorkCopyError(_translateCopy("copy.04246863ce2d", { defaultValue: "The signing wallet does not match your bounty account" }));
       return () => payWorkerDirect({ currency: intent.currency, to: intent.worker_address, amount: intent.amount });
      });
      return send();

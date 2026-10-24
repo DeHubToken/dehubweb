@@ -84,7 +84,7 @@ export default function GovernanceProposalPage() {
   const handleRepost = useCallback(() => {
     if (!isAuthenticated) {
       openLoginModal();
-      return Promise.reject(new Error('Sign in to repost'));
+      return Promise.reject(new Error(_copy("copy.c779b3f5f490", { defaultValue: "Sign in to repost" })));
     }
     return repost.toggle().catch((error: unknown) => {
       toast.error(_copy("copy.7527dc6722fc", { defaultValue: "Failed to repost" }));

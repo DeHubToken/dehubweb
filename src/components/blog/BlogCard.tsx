@@ -119,7 +119,7 @@ const BlogCard: React.FC<BlogCardProps> = ({ post, featured = false }) => {
             </div>
             <div className="flex items-center gap-1">
               <Clock className="w-4 h-4" />
-              <span>{post.readingTime}{_copy("copy.121d7143a052", { defaultValue: " min read" })}</span>
+              <span>{_copy("copy.77aed61df729", { defaultValue: "{{value1}} min read", value1: post.readingTime })}</span>
             </div>
           </div>
 
@@ -149,7 +149,7 @@ const BlogCard: React.FC<BlogCardProps> = ({ post, featured = false }) => {
           ))}
           {post.tags.length > 3 && (
             <span className="text-muted-foreground text-sm self-center">
-              +{post.tags.length - 3}{_copy("copy.226ba18bbcdb", { defaultValue: " more" })}</span>
+              {_copy("copy.a40947644c97", { defaultValue: "+{{value1}} more", value1: post.tags.length - 3 })}</span>
           )}
         </div>
 
