@@ -1,9 +1,9 @@
 import { useEffect, useRef } from 'react';
 import { useMediaVolume } from '@/lib/video-preferences';
 import { applyVideoVolume, dubLevelGain, dubVoiceVolume, setDubMixActive, useDubMix } from '@/lib/dub-mix';
-const owners = new WeakSet<HTMLVideoElement>();
+const owners = new WeakSet<HTMLMediaElement>();
 
-export function useCachedDubAudio(videoRef: React.RefObject<HTMLVideoElement>, url: string | null, onFailed: () => void) {
+export function useCachedDubAudio(videoRef: React.RefObject<HTMLMediaElement>, url: string | null, onFailed: () => void) {
   const master = useMediaVolume();
   const mix = useDubMix();
   const settings = useRef({ master, mix, onFailed });

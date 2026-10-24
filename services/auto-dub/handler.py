@@ -270,12 +270,16 @@ def process(job: dict) -> dict:
         orig = read_wav(orig_path)
         if len(orig) < SR:
             raise RuntimeError("audio too short")
-        if len(orig) > 900 * SR:
-            raise RuntimeError("video exceeds duration limit")
+        maximum = 7200 if job.get('sourceKind') == 'stage' else 900
+        if len(orig) > maximum * SR:
+            raise RuntimeError("recording exceeds duration limit")
 
         refs = {}
         cloned = False
         for speaker in {str(s.get("speaker") or "0") for s in segments}:
+            if job.get('sourceKind') == 'stage' and speaker not in job.get('cloneSpeakers', []):
+                refs[speaker] = None
+                continue
             sample_lines = [s for s in source_segments if str(s.get("speaker") or "0") == speaker]
             ref, kind = build_reference(orig, sample_lines, tmp)
             refs[speaker] = ref
