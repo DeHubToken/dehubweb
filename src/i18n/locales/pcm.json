@@ -1,127 +1,4 @@
 {
-  "stageCover": {
-    "admitOne": "ADMIT ONE",
-    "live": "live",
-    "minutes": "{{minutes}} min",
-    "onAir": "ON AIR",
-    "recorded": "RECORDED",
-    "replay": "replay",
-    "stage": "stage",
-    "upcoming": "upcoming"
-  },
-  "copy": {
-    "036cfd952896": "Who to follow",
-    "0c820caf16c0": "No bio yet",
-    "0f3dd376ee85": "Wetin you dey look for, your capture card?",
-    "1929290e09aa": "Open setup for capture card (ask for permission to use camera)",
-    "1b2c08a8733d": "Quality",
-    "2f7e24392d9c": "UPCOMING STAGE",
-    "302b4ce5c73d": "Audio Uploads",
-    "344b4271ca01": "Following",
-    "37fd4e355ba3": "Exit fullscreen",
-    "3a17aa4e4abb": "Stages",
-    "42ee912bff23": "Radio Stations",
-    "44207eb29645": "Replacing…",
-    "44c9d36485b7": "See All",
-    "4a1bd4a3aaf3": "Capture card",
-    "506ff3946215": "Privacy Policy",
-    "594bea9c9448": "No capture card dey find am. Plug am in through USB, den pick am from di list below.",
-    "5e0cb5ae157b": "Image {{value1}}",
-    "641d1ef657bd": "Follow",
-    "6a40edf1fc87": "WhatsApp",
-    "7527dc6722fc": "Failed to repost",
-    "77db95ebd737": "Copy message",
-    "7c14e8607c11": "Loading stations...",
-    "846d8244b7d8": "Invite message copied",
-    "89a167dad6da": "Visualizer colour",
-    "8dd6857baf02": "Mute",
-    "96882965394f": "Game audio",
-    "a865110e919b": "Import wallet",
-    "ab4d6796dbbe": "Music Videos",
-    "b10fb966d720": "Volume",
-    "b3412a3b86de": "Invite streamers",
-    "c1c8f6c1d828": "STARTING SOON",
-    "c1cd85f576ed": "{{value1}} — DeHub Governance",
-    "cd9939b6aa1a": "Replace image {{value1}}",
-    "ce4ee4efc5e3": "Unmute",
-    "d0f08798ff1a": "Followed by",
-    "de6694f3ada3": "Pick a device",
-    "e3ee915a8e8c": "and",
-    "ede548996483": "Terms",
-    "fedc5cda305d": "Capture paused"
-  },
-  "dehubAppPage": {
-    "android": "Android",
-    "appStore": "Download for iOS",
-    "downloadTitle": "Download DeHub",
-    "faq": {
-      "q4": "You fit install DeHub for Android without Google Play. You fit download am from website of DeHub, https://dehub.app, and install am manually.",
-      "q5": "You fit do many tins for inside DeHub app. You fit join communities, connect wit' pipo wey dey share same interest, share your own content, join discussions, and even create your own groups."
-    },
-    "faqTitle": "Frequently asked questions",
-    "intro2": "E go fit combine feed wey dey chronological, live streaming, messaging wey dey encrypted from start to finish, communities wey dey run by user, wallet wey dey work for many blockchain and reward wey you go earn when you watch, reward wey go pay you in token. Same account go work for Android, iPhone and any browser wey modern.",
-    "iphone": "iPhone"
-  },
-  "dehubLinks": {
-    "kind": {
-      "app": "app",
-      "bounty": "bounty",
-      "community": "community",
-      "communityInvite": "community invite",
-      "event": "event",
-      "film": "title",
-      "link": "link",
-      "listing": "item",
-      "post": "post",
-      "profile": "profile",
-      "proposal": "proposal",
-      "stage": "stage",
-      "store": "store"
-    },
-    "recipientChat": "chat",
-    "recipientUser": "user",
-    "sendFailed": "Fail wey try send {{item}}",
-    "sentTo": "{{item}} send for {{name}}"
-  },
-  "loginStack": {
-    "aiRestyle": "AI restyle",
-    "exploreFirst": "Explore first",
-    "fingerprint": "Fingerprint",
-    "headlineAccent": "and be happy.",
-    "orContinueWith": "or continue with",
-    "phone": "Phone"
-  },
-  "player": {
-    "volume": "Volume level"
-  },
-  "quickActions": {
-    "question": "E go wrong wey? Page dis one no dey work wey? Or something else?",
-    "title": "Page options"
-  },
-  "streamPage": {
-    "eyebrow": "//FOR_STREAMERS",
-    "faq": {
-      "a1": "Yes. DeHub free for join, free for post, and mint stream on-chain no go be compulsory. Import channel go be paid, and price go show for you before you pay.",
-      "q1": "No go free for stream on DeHub, you go pay naira for dat.",
-      "q2": "You no dey need stop stream for TikTok or Twitch. But make sure say you follow di rules wey dem dey apply for each platform.",
-      "q3": "You fit go stream with OBS.",
-      "q4": "How I go take collect my money?"
-    },
-    "faqTitle": "Frequently asked questions",
-    "heading": "Stream on DeHub",
-    "moreGuides": "Wahala from TikTok? Come read <tiktok>na UK creator guide wey go explain how to leave TikTok</tiktok> and <live>Web3 live streaming: na alternative Twitch wey no dey under one person control</live>.",
-    "proof": {
-      "label2": "uptime across streaming services",
-      "value3": "Sub-200ms"
-    },
-    "reasons": {
-      "body1": "Watcha see, viewers can send tip and gift you while you dey stream, na different level of gift animation and tip messages dey read out loud on stream. Tips dey settle on-chain in DeHub coins and dey go straight to your wallet instead of dey cut off on the way.",
-      "body3": "Your invite link pay you 20% of di activity of every person wey join through am, plus 5% recurring from di people dem go invite, pay for DeHub tokens.",
-      "body6": "Import whole YouTube channel, TikTok, Vimeo or SoundCloud profile, all at once. Price show for you in DeHub token before you pay.",
-      "title4": "Live stages"
-    },
-    "startStreaming": "Start streaming"
-  },
   "desktopWordmark": {
     "pageTitle": "Preview for di desktop logo",
     "heading": "Di DeHub desktop logo",
@@ -135,6 +12,16 @@
     "interrupted": "Di graphics no dey answer again",
     "unavailable": "We no fit load di 3D preview",
     "hint": "Di logo go stay whole for two seconds, then e go scatter. Put your mouse on top am or select am make e join back."
+  },
+  "stageCover": {
+    "admitOne": "ADMIT ONE",
+    "live": "live",
+    "minutes": "{{minutes}} min",
+    "onAir": "ON AIR",
+    "recorded": "RECORDED",
+    "replay": "replay",
+    "stage": "stage",
+    "upcoming": "upcoming"
   },
   "mastodonApps": {
     "authTitle": "Sign in with DeHub",
@@ -306,6 +193,10 @@
     "pollWinner": "{{option}} won",
     "stillCounting": "Still counting: gifts can take a minute to confirm."
   },
+  "quickActions": {
+    "title": "Page options",
+    "question": "E go wrong wey? Page dis one no dey work wey? Or something else?"
+  },
   "errors": {
     "sponsorshipUnavailable": "Free transaction don pause for our side, no be your wallet get problem. Abeg try again small time.",
     "gasSponsorshipFailed": "We no fit pay for dis transaction. Abeg try again small time."
@@ -397,8 +288,6 @@
     "heading": "Di DeHub Shorts"
   },
   "settings": {
-    "glass": "Glassy",
-    "reset": "Reset",
     "usernameTaken": "Dem don take dis username",
     "postingChain": "Blockchain wey you go use post",
     "showOnline": "Wen yu dey online.",
@@ -574,6 +463,7 @@
     "systemLight": "System Light",
     "immersive": "Immersive",
     "cosmic": "Cosmic Pixels",
+    "glass": "Glassy",
     "hazy": "Hazy Nights",
     "swarms": "Swarms",
     "lavalamp": "Lava Lamp",
@@ -788,12 +678,13 @@
     "solanaLinked": "Solana wallet don connect",
     "solanaLinkFailed": "We no fit connect dat wallet",
     "solanaUnlinked": "Solana wallet don disconnect",
-    "solanaUnlinkFailed": "We no fit disconnect dat wallet"
+    "solanaUnlinkFailed": "We no fit disconnect dat wallet",
+    "reset": "Reset"
   },
   "common": {
-    "confirm": "Confirm",
     "mute": "Mute",
     "unmute": "Unmute",
+    "confirm": "Confirm",
     "save": "Save Am",
     "cancel": "Cancel",
     "delete": "Delete Am",
@@ -1574,36 +1465,6 @@
   "music": {
     "listeningCount_one": "{{count}} listening",
     "listeningCount_other": "{{count}} listening",
-    "chartOrder": "Audio chart order",
-    "chartVideos": "Music videos",
-    "country": "Country",
-    "linkCopied": "Link copied",
-    "listenLive": "Listen live",
-    "liveCount": "live",
-    "liveRadio": "Live radio",
-    "mostLiked": "Most liked",
-    "mostListened": "Most listened",
-    "mostPlayed": "Most played",
-    "mostRecent": "Most recent",
-    "mostViewed": "Most viewed",
-    "mostVoted": "Most voted",
-    "newest": "Newest",
-    "nextStation": "Next station",
-    "onAir": "On air",
-    "pause": "Pause",
-    "plays": "Plays",
-    "quality": "Quality",
-    "radioChartOrder": "Radio chart order",
-    "radioPicks": "Our picks",
-    "recentStages": "Recent",
-    "shareStation": "Share station",
-    "stagesChartOrder": "Stages chart order",
-    "stagesLive": "Live now",
-    "trending": "Trending",
-    "upcoming": "Upcoming",
-    "videoChartOrder": "Music video chart order",
-    "videoCharts": "Music Video Charts",
-    "votes": "Votes",
     "all": "All",
     "tracks": "Tracks",
     "videos": "Videos",
@@ -1611,20 +1472,43 @@
     "radio": "Radio",
     "trendingTracks": "Trending tracks",
     "moreVideos": "More videos",
-    "newReleases": "New releases"
+    "newReleases": "New releases",
+    "mostPlayed": "Most played",
+    "mostLiked": "Most liked",
+    "mostRecent": "Most recent",
+    "chartOrder": "Audio chart order",
+    "radioPicks": "Our picks",
+    "mostVoted": "Most voted",
+    "trending": "Trending",
+    "radioChartOrder": "Radio chart order",
+    "stagesLive": "Live now",
+    "upcoming": "Upcoming",
+    "mostListened": "Most listened",
+    "recentStages": "Recent",
+    "stagesChartOrder": "Stages chart order",
+    "liveCount": "live",
+    "chartVideos": "Music videos",
+    "videoCharts": "Music Video Charts",
+    "mostViewed": "Most viewed",
+    "newest": "Newest",
+    "videoChartOrder": "Music video chart order",
+    "country": "Country",
+    "quality": "Quality",
+    "votes": "Votes",
+    "plays": "Plays",
+    "onAir": "On air",
+    "liveRadio": "Live radio",
+    "pause": "Pause",
+    "listenLive": "Listen live",
+    "nextStation": "Next station",
+    "shareStation": "Share station",
+    "linkCopied": "Link copied"
   },
   "notFound": {
     "title": "Page No Dey",
     "returnHome": "Go back Home"
   },
   "profile": {
-    "dislikes": {
-      "emptyOther": "Nothing disliked yet.",
-      "emptyOwn": "Post you no like, go dey for your feed, come show for here. Use \"undo dislike\" for bring back post.",
-      "emptyTitle": "No dislikes yet",
-      "loadMore": "Load more",
-      "privateDesc": "Dis account no dey show dislike for nobody."
-    },
     "back": "Back",
     "usernameAvailable": "Username dey available!",
     "signUpToClaim": "Sign up today make you claim am",
@@ -1650,8 +1534,15 @@
       "commentUnavailable": "Dis comment no dey available again"
     },
     "tabs": {
-      "dislikes": "Dislikes",
-      "playlists": "Playlists"
+      "playlists": "Playlists",
+      "dislikes": "Dislikes"
+    },
+    "dislikes": {
+      "emptyTitle": "No dislikes yet",
+      "emptyOwn": "Post you no like, go dey for your feed, come show for here. Use \"undo dislike\" for bring back post.",
+      "emptyOther": "Nothing disliked yet.",
+      "privateDesc": "Dis account no dey show dislike for nobody.",
+      "loadMore": "Load more"
     },
     "offerWorthNow": "Wia di current rate, {{amount}} tokens dey be.",
     "offerNotePlaceholder": "Add small note (if you want)",
@@ -1720,54 +1611,54 @@
   "agents": {
     "life": {
       "daily": "Posts today: {{posts}} · Daily target: {{target}}",
-      "editComment": "Edit comment",
-      "imageUrl": "Image URL (optional)",
-      "less": "Show less",
       "postText": "Post text",
+      "imageUrl": "Image URL (optional)",
       "queuePost": "Queue post",
+      "viewPost": "View post",
       "unlike": "Unlike",
       "unliked": "Unliked",
-      "viewPost": "View post"
+      "editComment": "Edit comment",
+      "less": "Show less"
     },
     "tasks": {
-      "actionsProcessed": "actions processed",
+      "oneAgent": "One agent",
+      "swarm": "Swarm",
+      "clearSelection": "Clear selection",
+      "eachHelp": "Send dis instructions go every selected agent. Each agent go do full task at dem requested time. Still, dem shared post limit dey apply.",
+      "windowLimits": "All matching posts dey waitin’ in line. Action limit dey slow down execution; dem no dey cut task to just three posts. Writing reply dey use credit.",
+      "pauseSwarm": "Pause swarm",
+      "resumeSwarm": "Resume eligible agents",
       "cancelSwarm": "Cancel swarm",
       "cancelTask": "Cancel task",
-      "clearSelection": "Clear selection",
+      "actionsProcessed": "actions processed",
+      "reviewMembers": "Task wey get uncertainty, person go review am before continue. Action wey dey go on, go complete after pause or cancel.",
       "controlUpdated": "Updated {{count}} tasks",
-      "eachHelp": "Send dis instructions go every selected agent. Each agent go do full task at dem requested time. Still, dem shared post limit dey apply.",
       "enabled": "Enabled · activity",
       "enabledHelp": "Agent don dey available. Task wey dey below show whether e dey run, wait, pause or fail.",
       "lastActive": "Last active",
+      "noActivity": "No activity recorded",
+      "runSwarm": "Run swarm",
+      "preparing": "Preparing task…",
+      "run": "Run prompt",
       "list": "Tasks",
       "loading": "Loading tasks…",
-      "noActivity": "No activity recorded",
-      "oneAgent": "One agent",
       "pause": "Pause",
-      "pauseSwarm": "Pause swarm",
-      "preparing": "Preparing task…",
       "resume": "Resume",
-      "resumeSwarm": "Resume eligible agents",
-      "reviewMembers": "Task wey get uncertainty, person go review am before continue. Action wey dey go on, go complete after pause or cancel.",
-      "run": "Run prompt",
-      "runSwarm": "Run swarm",
-      "swarm": "Swarm",
       "window": {
-        "allTime": "All time",
-        "author": "Author (optional)",
         "authorAll": "All creators",
         "authorChoose": "Choose creator",
-        "authorPlaceholder": "@username or wallet",
-        "category": "Category (optional)",
         "categoryAll": "All categories",
         "categoryChoose": "Choose categories",
-        "categoryPlaceholder": "Exact category name",
-        "dislike": "Dislike",
         "last1h": "Last hour",
         "last30d": "Last 30 days",
+        "allTime": "All time",
+        "dislike": "Dislike",
+        "author": "Author (optional)",
+        "category": "Category (optional)",
+        "authorPlaceholder": "@username or wallet",
+        "categoryPlaceholder": "Exact category name",
         "write": "Write instructions"
-      },
-      "windowLimits": "All matching posts dey waitin’ in line. Action limit dey slow down execution; dem no dey cut task to just three posts. Writing reply dey use credit."
+      }
     },
     "title": "AI Agents",
     "connectToManage": "Connect to manage AI agents",
@@ -2024,14 +1915,6 @@
     "applicationFailed": "E no submit. Abeg try again."
   },
   "dao": {
-    "status": {
-      "accepted": "Accepted",
-      "cancelled": "Cancelled",
-      "completed": "Completed",
-      "expired": "Expired",
-      "open": "Open",
-      "rejected": "Rejected"
-    },
     "title": "DAO Treasury",
     "subtitle": "One wallet, community dey fund am, na vote dey spend am",
     "contribute": "Contribute",
@@ -2065,15 +1948,17 @@
     "power": "power",
     "tokenAmount": "Token amount",
     "pricePerTokenUsd": "Price per token (USD)",
-    "votingPowerNote": "Voting dey last for 7 days. Power of voting be each contributor’s total token dey contribute when dis proposal open. At least 10% must join in, and \"Accept\" must win more than \"Reject\"."
+    "votingPowerNote": "Voting dey last for 7 days. Power of voting be each contributor’s total token dey contribute when dis proposal open. At least 10% must join in, and \"Accept\" must win more than \"Reject\".",
+    "status": {
+      "open": "Open",
+      "accepted": "Accepted",
+      "rejected": "Rejected",
+      "completed": "Completed",
+      "expired": "Expired",
+      "cancelled": "Cancelled"
+    }
   },
   "governance": {
-    "badgeHoldersOnly": "Badge holders only",
-    "freeForBadgeHolders": "Free for dem who dey carry badge. Your draft save for you while you type.",
-    "proposalAttachment": "Proposal attachment",
-    "removeMedia": "Remove attachment",
-    "uploadFailed": "Upload failed",
-    "uploadFailedDetail": "Upload failed: {{message}}",
     "title": "Rul Dem",
     "proposalCount": "{{count}} proposal don submit",
     "proposalCount_other": "{{count}} proposals don submit",
@@ -2125,10 +2010,15 @@
       "deleteDescription": "Dis one go comot di comment and all di reply wey dey under am for everybody.",
       "empty": "No question yet. Let wey discussion dey start now.",
       "authorChip": "Proposal author"
-    }
+    },
+    "badgeHoldersOnly": "Badge holders only",
+    "removeMedia": "Remove attachment",
+    "freeForBadgeHolders": "Free for dem who dey carry badge. Your draft save for you while you type.",
+    "uploadFailed": "Upload failed",
+    "uploadFailedDetail": "Upload failed: {{message}}",
+    "proposalAttachment": "Proposal attachment"
   },
   "sidebar": {
-    "switchAccount": "Switch account",
     "talkOfTheTown": "Wetin Dey Happen",
     "nothingTrending": "Nothing dey trend now",
     "posts": "Topics",
@@ -2144,7 +2034,8 @@
     "searchMenu": "Search menu",
     "clearSearch": "Clear search",
     "noMenuMatches": "Nothing for di menu match",
-    "searchDehubFor": "Search \"{{query}}\" for DeHub"
+    "searchDehubFor": "Search \"{{query}}\" for DeHub",
+    "switchAccount": "Switch account"
   },
   "comments": {
     "reportComment": "Report comment",
@@ -2237,8 +2128,6 @@
     "anonymousLikes_other": "{{count}} likes from anonymous badge holders"
   },
   "postInfo": {
-    "ownersUnavailable": "We no fit read who own am right now.",
-    "unavailable": "E no dey available",
     "title": "Post Info",
     "tokenId": "Token ID",
     "mintedOn": "Dem create am",
@@ -2250,6 +2139,8 @@
     "total": "Total {{count}}",
     "distribution": "Distribution",
     "loading": "E dey load...",
+    "unavailable": "E no dey available",
+    "ownersUnavailable": "We no fit read who own am right now.",
     "owner": "{{count}} owner",
     "owner_other": "{{count}} owners",
     "engagement": "Engagement",
@@ -2722,10 +2613,6 @@
     "kingsGambitBoardEmpty": "No online match don finish yet. Open challenge."
   },
   "stats": {
-    "money": {
-      "estimatedOperations": "Estimated operations",
-      "operationsGroup": "Operations"
-    },
     "community": {
       "title": "Community",
       "members": "Members",
@@ -2846,6 +2733,10 @@
       "sending": "Sending…",
       "thanks": "Got it — thanks. Anyfin you clear for promo use, dey go pass through a person first before dey show up anywhere.",
       "anonymous": "A DeHub member"
+    },
+    "money": {
+      "operationsGroup": "Operations",
+      "estimatedOperations": "Estimated operations"
     }
   },
   "superpowers": {
@@ -5194,8 +5085,6 @@
     "notEnoughTokensForBounty": "Token no dey enough. Need {{need}} token but only have {{have}}."
   },
   "events": {
-    "deleteConfirmBody": "E go remove di event, im guest list and im chat for everybody. You no fit undo am.",
-    "deleteConfirmTitle": "You wan delete dis event?",
     "title": "Events",
     "filterUpcoming": "Upcoming",
     "filterPast": "Past",
@@ -5245,6 +5134,8 @@
     "guests": "Guests",
     "edit": "Edit",
     "delete": "Delete",
+    "deleteConfirmTitle": "You wan delete dis event?",
+    "deleteConfirmBody": "E go remove di event, im guest list and im chat for everybody. You no fit undo am.",
     "reply": "Reply",
     "react": "React",
     "typeMessage": "Type a message...",
@@ -5695,7 +5586,6 @@
     "mentionedYou": "{{name}} say you go tell me"
   },
   "audioPost": {
-    "visualizerColour": "Visualizer colour",
     "cornerPlayer": "Audio post playback",
     "untitled": "Audio post",
     "creator": "DeHub creator",
@@ -5703,6 +5593,7 @@
     "pause": "Pause",
     "listens_one": "{{count}} listen",
     "listens_other": "{{count}} listens",
+    "visualizerColour": "Visualizer colour",
     "lyrics": "Song words",
     "lyricsLoading": "Dey find song words…",
     "lyricsNone": "No song words dey"
@@ -7707,6 +7598,47 @@
     "like": "Like",
     "unlike": "Remove like"
   },
+  "copy": {
+    "b3412a3b86de": "Invite streamers",
+    "77db95ebd737": "Copy message",
+    "846d8244b7d8": "Invite message copied",
+    "b10fb966d720": "Volume",
+    "ede548996483": "Terms",
+    "e3ee915a8e8c": "and",
+    "506ff3946215": "Privacy Policy",
+    "44c9d36485b7": "See All",
+    "641d1ef657bd": "Follow",
+    "344b4271ca01": "Following",
+    "89a167dad6da": "Visualizer colour",
+    "42ee912bff23": "Radio Stations",
+    "7c14e8607c11": "Loading stations...",
+    "ab4d6796dbbe": "Music Videos",
+    "302b4ce5c73d": "Audio Uploads",
+    "036cfd952896": "Who to follow",
+    "0c820caf16c0": "No bio yet",
+    "3a17aa4e4abb": "Stages",
+    "d0f08798ff1a": "Followed by",
+    "ce4ee4efc5e3": "Unmute",
+    "8dd6857baf02": "Mute",
+    "37fd4e355ba3": "Exit fullscreen",
+    "7527dc6722fc": "Failed to repost",
+    "44207eb29645": "Replacing…",
+    "6a40edf1fc87": "WhatsApp",
+    "c1c8f6c1d828": "STARTING SOON",
+    "2f7e24392d9c": "UPCOMING STAGE",
+    "a865110e919b": "Import wallet",
+    "5e0cb5ae157b": "Image {{value1}}",
+    "cd9939b6aa1a": "Replace image {{value1}}",
+    "c1cd85f576ed": "{{value1}} — DeHub Governance",
+    "0f3dd376ee85": "Wetin you dey look for, your capture card?",
+    "1929290e09aa": "Open setup for capture card (ask for permission to use camera)",
+    "1b2c08a8733d": "Quality",
+    "4a1bd4a3aaf3": "Capture card",
+    "594bea9c9448": "No capture card dey find am. Plug am in through USB, den pick am from di list below.",
+    "96882965394f": "Game audio",
+    "de6694f3ada3": "Pick a device",
+    "fedc5cda305d": "Capture paused"
+  },
   "postProcessing": {
     "uploading": "E dey upload…",
     "preparing": "E dey prepare…",
@@ -7715,5 +7647,73 @@
     "posted": "E don post",
     "view": "See am",
     "failed": "We no fit process di video"
+  },
+  "player": {
+    "volume": "Volume level"
+  },
+  "loginStack": {
+    "aiRestyle": "AI restyle",
+    "headlineAccent": "and be happy.",
+    "orContinueWith": "or continue with",
+    "phone": "Phone",
+    "fingerprint": "Fingerprint",
+    "exploreFirst": "Explore first"
+  },
+  "dehubLinks": {
+    "kind": {
+      "post": "post",
+      "profile": "profile",
+      "community": "community",
+      "communityInvite": "community invite",
+      "store": "store",
+      "listing": "item",
+      "event": "event",
+      "stage": "stage",
+      "film": "title",
+      "bounty": "bounty",
+      "app": "app",
+      "proposal": "proposal",
+      "link": "link"
+    },
+    "sentTo": "{{item}} send for {{name}}",
+    "sendFailed": "Fail wey try send {{item}}",
+    "recipientChat": "chat",
+    "recipientUser": "user"
+  },
+  "dehubAppPage": {
+    "intro2": "E go fit combine feed wey dey chronological, live streaming, messaging wey dey encrypted from start to finish, communities wey dey run by user, wallet wey dey work for many blockchain and reward wey you go earn when you watch, reward wey go pay you in token. Same account go work for Android, iPhone and any browser wey modern.",
+    "downloadTitle": "Download DeHub",
+    "appStore": "Download for iOS",
+    "android": "Android",
+    "iphone": "iPhone",
+    "faqTitle": "Frequently asked questions",
+    "faq": {
+      "q4": "You fit install DeHub for Android without Google Play. You fit download am from website of DeHub, https://dehub.app, and install am manually.",
+      "q5": "You fit do many tins for inside DeHub app. You fit join communities, connect wit' pipo wey dey share same interest, share your own content, join discussions, and even create your own groups."
+    }
+  },
+  "streamPage": {
+    "eyebrow": "//FOR_STREAMERS",
+    "heading": "Stream on DeHub",
+    "startStreaming": "Start streaming",
+    "proof": {
+      "label2": "uptime across streaming services",
+      "value3": "Sub-200ms"
+    },
+    "reasons": {
+      "body1": "Watcha see, viewers can send tip and gift you while you dey stream, na different level of gift animation and tip messages dey read out loud on stream. Tips dey settle on-chain in DeHub coins and dey go straight to your wallet instead of dey cut off on the way.",
+      "body3": "Your invite link pay you 20% of di activity of every person wey join through am, plus 5% recurring from di people dem go invite, pay for DeHub tokens.",
+      "title4": "Live stages",
+      "body6": "Import whole YouTube channel, TikTok, Vimeo or SoundCloud profile, all at once. Price show for you in DeHub token before you pay."
+    },
+    "faqTitle": "Frequently asked questions",
+    "faq": {
+      "q1": "No go free for stream on DeHub, you go pay naira for dat.",
+      "a1": "Yes. DeHub free for join, free for post, and mint stream on-chain no go be compulsory. Import channel go be paid, and price go show for you before you pay.",
+      "q2": "You no dey need stop stream for TikTok or Twitch. But make sure say you follow di rules wey dem dey apply for each platform.",
+      "q3": "You fit go stream with OBS.",
+      "q4": "How I go take collect my money?"
+    },
+    "moreGuides": "Wahala from TikTok? Come read <tiktok>na UK creator guide wey go explain how to leave TikTok</tiktok> and <live>Web3 live streaming: na alternative Twitch wey no dey under one person control</live>."
   }
 }
