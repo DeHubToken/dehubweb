@@ -58,6 +58,7 @@ import { ScrollArea } from '@/components/ui/scroll-area';
 import { Drawer, DrawerContent, DrawerHeader, DrawerTitle } from '@/components/ui/drawer';
 import { supabase } from '@/integrations/supabase/client';
 import { invokeAi, dehubAuthHeaders } from '@/lib/ai-invoke';
+import { isImageProviderUnavailable } from '@/lib/image-provider-error';
 import { createLogger } from '@/lib/logger';
 import { fetchJobQuote, formatDhb } from '@/hooks/use-ai-quote';
 import { payForJob } from '@/lib/ai-payment';
@@ -1392,7 +1393,7 @@ function AssistantPageForAccount() {
       if (data.error) {
         const errorMessage = data.safetyBlocked
           ? t('assistant.safetyBlocked')
-          : data.error;
+          : isImageProviderUnavailable(data.error, data.code) ? t('assistant.errorGeneric') : data.error;
 
         if (data.clearHistory) {
           setMessages([
@@ -1433,7 +1434,8 @@ function AssistantPageForAccount() {
       if (context && typeof context.json === 'function') {
         try {
           const body = await context.json();
-          if (body?.error) friendlyMessage = body.error;
+          if (body?.error) friendlyMessage = isImageProviderUnavailable(body.error, body.code)
+            ? t('assistant.errorGeneric') : body.error;
           errorCode = body?.code;
         } catch {
           // Non-JSON error body — fall back to the generic message.
