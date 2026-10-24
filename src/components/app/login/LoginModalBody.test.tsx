@@ -10,12 +10,12 @@ vi.mock('wagmi', () => ({
   useConnect: () => ({ connectAsync: vi.fn() }), useDisconnect: () => ({ disconnectAsync: vi.fn() }),
 }));
 vi.mock('@/components/app/WagmiScope', () => ({ WagmiScope: ({ children }: any) => children }));
-vi.mock('@/contexts/AuthContext', () => ({ useAuth: () => ({ isConnecting: false, isAuthenticated: false }) }));
+vi.mock('@/contexts/AuthContext', () => ({ useAuth: () => ({ isConnecting: false, isAuthenticated: false, cancelEmailMagicLink: vi.fn() }) }));
 vi.mock('@/hooks/use-surface-draft', () => ({ useSurfaceDraft: (_key: string, value: string) => useState(value) }));
 vi.mock('@/lib/web3auth', () => ({ getWalletDeepLink: vi.fn(), isMobileDevice: () => false, isWalletInAppBrowser: () => false }));
 vi.mock('@/lib/wagmi', () => ({ clearWagmiStorage: vi.fn() }));
 vi.mock('@/lib/passkey-login', () => ({ PasskeyCancelledError: class extends Error {}, PasskeyLoginError: class extends Error {}, PasskeyUnsupportedError: class extends Error {} }));
-vi.mock('@/lib/login-probes', () => ({ loginProbesSnapshot: () => ({ passkey: false, telegram: false }), resolveLoginProbes: vi.fn() }));
+vi.mock('@/lib/login-probes', () => ({ loginProbesSnapshot: () => ({ passkey: true, telegram: false }), resolveLoginProbes: vi.fn() }));
 vi.mock('@/lib/wallet-setup-intent', () => ({ getWalletSetupIntent: () => null, setWalletSetupIntent: vi.fn() }));
 vi.mock('./LoginSavedProfiles', () => ({ LoginSavedProfiles: () => null }));
 
@@ -46,4 +46,29 @@ it('account migration keeps its identity sign-in flow separate', () => {
   expect(screen.getByText('loginModal.migrateIntentHint')).toBeInTheDocument();
   expect(screen.getByRole('button', { name: 'loginModal.continueGoogle' })).toBeInTheDocument();
   expect(screen.queryByRole('textbox')).toBeNull();
+});
+
+it('switches phone and fingerprint in place without losing the email draft or provider row', () => {
+  const view = render(<SheetBody layout="stack" />);
+  const email = screen.getByPlaceholderText('loginModal.emailPlaceholder');
+  const google = screen.getByRole('button', { name: 'loginModal.continueGoogle' });
+  fireEvent.change(email, { target: { value: 'person@example.com' } });
+
+  fireEvent.click(screen.getByRole('button', { name: 'loginModal.continuePhone' }));
+  expect(screen.queryByPlaceholderText('loginModal.emailPlaceholder')).toBeNull();
+  expect(view.container.querySelector('[data-login-method="phone"]')).toContainElement(
+    screen.getByPlaceholderText('loginModal.phonePlaceholder'),
+  );
+  expect(screen.getByRole('button', { name: 'loginModal.continueGoogle' })).toBe(google);
+
+  fireEvent.click(screen.getByRole('button', { name: 'loginModal.continuePasskey' }));
+  expect(screen.queryByPlaceholderText('loginModal.phonePlaceholder')).toBeNull();
+  expect(view.container.querySelector('[data-login-method="passkey"]')).toContainElement(
+    screen.getByRole('button', { name: 'loginModal.passkeySignIn' }),
+  );
+  expect(screen.getByRole('button', { name: 'loginModal.continueGoogle' })).toBe(google);
+
+  fireEvent.click(screen.getByRole('button', { name: 'loginModal.continueEmail' }));
+  expect(screen.getByPlaceholderText('loginModal.emailPlaceholder')).toHaveValue('person@example.com');
+  expect(screen.queryByRole('button', { name: 'loginModal.passkeySignIn' })).toBeNull();
 });
