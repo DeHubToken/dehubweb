@@ -87,6 +87,9 @@ export const tl = {
     bannerAltFundraise: '$ 1,000,000 Fundraiser',
     bannerAltHelicopter: 'Huling Chad Nakatayong helicopter',
     bannerAltHelmet: 'Huling Chad Nakatayo character helmet',
+    bannerAltAppFeed: 'DeHub Revamped App Feed',
+    bannerAltCoinbase: 'Coinbase logo sa mobile device na may mga chart ng kalakalan sa background',
+    bannerAltDhbScan: 'DHBScan Metrics',
   },
   overview: {
     title: "DeHub: Isang desentralisadong, pag-aari ng user na alternatibo sa tradisyonal na media apps.",
@@ -1379,6 +1382,12 @@ export const tl = {
     flowWalletSignature: 'Ang Iyong Lagda sa Wallet',
     flowYourPrivateKey: 'Ang iyong Pribadong Key (32 bytes)',
     flowYourPrivateKeyDevice: 'Ang iyong Pribadong Key (mula sa iyong device)',
+    flowCiphertextTag: 'Ciphertext + Authentication Tag',
+    flowIfFound: 'Kung natagpuan, gamitin ito',
+    flowIfNotFound: 'Kung hindi nahanap',
+    flowNonce: 'Nonce',
+    flowSessionKey: 'Session Key',
+    flowX25519Operation: 'X25519 operasyon',
   },
   aiToolkits: {
     title: 'Ito ay isang toolkit',

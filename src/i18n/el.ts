@@ -1437,6 +1437,7 @@ export const el = {
     flowX25519Operation: 'Χ25519 ΛΕΙΤΟΥΡΓΙΑ',
     flowYourPrivateKey: 'Το ιδιωτικό σας κλειδί (32 byte)',
     flowYourPrivateKeyDevice: 'Το ιδιωτικό σας κλειδί (από τη συσκευή σας)',
+    flowEncrypt: 'Κρυπτογράφηση XChaCha20-Poly1305',
   },
   aiToolkits: {
     title: 'Εργαλεία AI',
@@ -2431,6 +2432,8 @@ export const el = {
     walletTitle: 'Πορτοφόλι & Κύριας Κεφαλαιότητας',
     whereToBuyDesc: 'Αγοράστε μάρκες DeHub σε ανταλλακτήρια, ζεύγη συναλλαγών, δεξαμενές ρευστότητας, DEX, καταχωρήσεις CEX, Uniswap, PancakeSwap',
     whereToBuyTitle: 'Πού να αγοράσετε',
+    apiEndpointsTitle: 'Καταληκτικά σημεία API',
+    tokenEconomicsDesc: 'Οικονομικά στοιχεία DeHub, χρονοδιάγραμμα εκπομπών, μοντέλο tokenomics, διανομή, μηχανική εφοδιασμού, καύση, αποπληθωρισμός',
   },
   docsSeo: {
     advertisingDesc: 'Η τεχνολογία διαφημίσεων POVR της DeHub εξήγησε: απόδειξη προβολής και κατάταξης, καμπάνιες ανθεκτικές στην απάτη και κατανομή εσόδων για τους δημιουργούς.',

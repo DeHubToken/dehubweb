@@ -2513,6 +2513,7 @@ export const dyu = {
     walletDesc: 'DeHub token wallet, token holdings, balance, portfolio, wallet connect, MetaMask, crypto wallet',
     walletTitle: 'Wallet & Holdings',
     whereToBuyTitle: 'Where to Buy',
+    whereToBuyDesc: 'DeHub ka tagamasiyɛnw san wariw, jago kɛyɔrɔw, wari sɔrɔyɔrɔw, DEX, CEX sɛbɛninw, Uniswap, PancakeSwap',
   },
   docsSeo: {
     advertisingTitle: 'Advertising — DeHub Docs',
@@ -2595,6 +2596,9 @@ export const dyu = {
     websiteTitle: 'Modèle: Dɔgɔtɔrɔ tɛ yɔrɔ min na',
     xDesc: 'I ka X ka konti ni DeHub ka site web kan.',
     xTitle: 'X Integration — DeHub Docs',
+    advertisingDesc: 'DeHub ka POVR kunnafoniw fɛɛrɛsiraw ɲɛfɔra: a yirala ko a ka ɲi ka kɛ ni miiriya ye ani a ka ɲi ka kɛ ni miiriya ye',
+    appDesc: 'O kama, a ka ɲi ka ladili ɲumanw di an ma.',
+    authDesc: 'DeHub ka sɛbɛri: siginidenw, JWT kalanw ani EDGE ka baara kɛcogo.',
   },
   featuredIn: {
     entrepreneurBlurb: 'O ye ka kɛ sababu ye ka mɔgɔw dɛmɛ u ka se ka ɲɛnagwɛkow kɛ. O kama, u y\'a daminɛ ka baara kɛ ni yɛrɛminɛli ye.',
