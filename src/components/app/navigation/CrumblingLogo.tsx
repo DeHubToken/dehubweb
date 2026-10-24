@@ -24,18 +24,37 @@ function readStart() {
   } catch { return Date.now(); }
 }
 
-export function CrumblingLogo({ children }: { children: ReactNode }) {
+function prefersReducedMotion() {
+  try { return window.matchMedia('(prefers-reduced-motion: reduce)').matches; } catch { return false; }
+}
+
+/**
+ * `still` is what the shards draw. Each shard is a full copy of the mark, so a
+ * live child (War's WarLogo is a WebGL canvas) would run nine more of it: on
+ * phones that used up the WebGL contexts and blanked the theme background.
+ * Callers with a live mark pass a plain <img> of it here.
+ */
+export function CrumblingLogo({ children, still }: { children: ReactNode; still?: ReactNode }) {
   const [progress, setProgress] = useState(0);
+  const [reduced, setReduced] = useState(prefersReducedMotion);
+  useEffect(() => {
+    const query = window.matchMedia('(prefers-reduced-motion: reduce)');
+    const change = () => setReduced(query.matches);
+    query.addEventListener('change', change);
+    return () => query.removeEventListener('change', change);
+  }, []);
   useEffect(() => {
     const update = () => setProgress(Math.min(1, Math.max(0, (Date.now() - readStart()) / FIVE_DAYS)));
     update();
     const timer = window.setInterval(update, 60_000);
     return () => window.clearInterval(timer);
   }, []);
-  const visibleShards = useMemo(() => shards.map((shard, index) => ({ shard, amount: Math.max(0, progress - index * .018) })), [progress]);
+  // A shard with nothing to show yet is not drawn at all.
+  const visibleShards = useMemo(() => shards.map((shard, index) => ({ shard, index, amount: Math.max(0, progress - index * .018) })).filter(({ amount }) => amount > 0), [progress]);
+  if (reduced) return <span data-logo-crumble style={{ display: 'inline-flex', position: 'relative' }}>{children}</span>;
   return <span data-logo-crumble style={{ display: 'inline-flex', position: 'relative', perspective: '260px', transformStyle: 'preserve-3d' }}>
     <span style={{ display: 'inline-flex', opacity: 1 - progress * .72, transition: 'opacity 900ms ease' }}>{children}</span>
-    {visibleShards.map(({ shard, amount }, index) => <span key={index} aria-hidden="true" style={{ position: 'absolute', inset: 0, display: 'inline-flex', overflow: 'hidden', clipPath: shard[0], opacity: amount * .96, pointerEvents: 'none', filter: 'drop-shadow(0 1px 1px rgba(0,0,0,.28))', transform: `translate3d(${shard[1] * amount * 7}px,${shard[2] * amount * 7}px,${shard[3] * amount * 8}px) rotateX(${shard[4] * amount}deg) rotateY(${shard[4] * amount * .7}deg) rotateZ(${shard[4] * amount * .35}deg)`, transformOrigin: 'center', transition: 'opacity 900ms ease, transform 1200ms cubic-bezier(.2,.8,.2,1)' }}>{children}</span>)}
+    {visibleShards.map(({ shard, index, amount }) => <span key={index} aria-hidden="true" style={{ position: 'absolute', inset: 0, display: 'inline-flex', overflow: 'hidden', clipPath: shard[0], opacity: amount * .96, pointerEvents: 'none', filter: 'drop-shadow(0 1px 1px rgba(0,0,0,.28))', transform: `translate3d(${shard[1] * amount * 7}px,${shard[2] * amount * 7}px,${shard[3] * amount * 8}px) rotateX(${shard[4] * amount}deg) rotateY(${shard[4] * amount * .7}deg) rotateZ(${shard[4] * amount * .35}deg)`, transformOrigin: 'center', transition: 'opacity 900ms ease, transform 1200ms cubic-bezier(.2,.8,.2,1)' }}>{still ?? children}</span>)}
     {[0, 1, 2, 3].map(index => <i key={index} aria-hidden="true" style={{ position: 'absolute', left: `${24 + index * 19}%`, top: `${18 + (index % 2) * 39}%`, width: 2 + index % 2, height: 2 + index % 2, borderRadius: '50%', background: index % 2 ? '#9cecff' : '#ffe28a', opacity: progress > .12 ? Math.min(.8, progress * 1.3) : 0, transform: `translate3d(${(index - 1.5) * progress * 13}px,${progress * (8 + index * 3)}px,20px)`, transition: 'opacity 1s ease, transform 1.2s ease', pointerEvents: 'none' }} />)}
   </span>;
 }

@@ -61,9 +61,19 @@ const loadHls = () => (hlsModule ??= import('hls.js'));
  * here it buys the first segment of the lowest rung, which is enough for a
  * duration, a first frame and an instant start, and nothing more. Playing, or
  * `preload="auto"` (the next short), opens it up.
+ *
+ * Applied as a ceiling, not just a target. hls.js on its own reads ahead by
+ * bytes — up to 60 MB, i.e. the whole of most posts on a low rung — capped at
+ * 600 s, so a card scrolled past would have downloaded its entire video.
  */
 const METADATA_BUFFER_SECONDS = 4;
 const PLAYING_BUFFER_SECONDS = 30;
+
+/** Set both ends of hls.js's read-ahead to `seconds`. */
+function capReadAhead(config: Pick<HlsConfig, 'maxBufferLength' | 'maxMaxBufferLength'>, seconds: number) {
+  config.maxBufferLength = seconds;
+  config.maxMaxBufferLength = seconds;
+}
 
 const HLS_TYPE = 'application/vnd.apple.mpegurl';
 
@@ -184,6 +194,7 @@ export function setVideoSource(el: HTMLVideoElement, { src, hls, startLow = fals
         // A 400 px card never needs the 1080p rung, whatever the bandwidth.
         capLevelToPlayerSize: true,
         maxBufferLength: METADATA_BUFFER_SECONDS,
+        maxMaxBufferLength: METADATA_BUFFER_SECONDS,
         backBufferLength: 30,
       };
       const player = new HlsCtor(config);
@@ -222,7 +233,7 @@ function applyLoadPolicy(el: HTMLVideoElement, session: Session) {
   if (!player || !session.parsed || session.disposed) return;
   const full = !el.paused || el.preload === 'auto';
   if (!full && el.preload !== 'metadata') return;
-  player.config.maxBufferLength = full ? PLAYING_BUFFER_SECONDS : METADATA_BUFFER_SECONDS;
+  capReadAhead(player.config, full ? PLAYING_BUFFER_SECONDS : METADATA_BUFFER_SECONDS);
   if (!session.loading) {
     session.loading = true;
     player.startLoad(-1);
