@@ -108,7 +108,9 @@ html[data-system-tone="light"] .login-stack-corner {
 
 .login-stack-scroll > .login-stack {
   flex: 1 0 200px;
+  min-height: 200px;
   width: 100%;
+  overflow: hidden;
 }
 .login-stack-scroll .login-stack__lanes {
   height: auto;
