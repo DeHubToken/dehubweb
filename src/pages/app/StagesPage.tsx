@@ -74,7 +74,7 @@ const HOSTING_TAB: StagesTabDef = { icon: Mic, labelKey: 'stages.tabHosting', va
  * Leads with the cover graphic when the host set one — an announcement in a
  * list of announcements is competing for attention, which is the whole reason
  * the graphic exists. It sits above the text rather than behind it (see
- * StageCoverArt) so nothing is cropped away. Without a cover the card shows
+ * StageCoverArt) in a consistent 16:9 frame. Without a cover the card shows
  * the stage's generated poster (GeneratedStageCover).
  */
 function ScheduledStageCard({

@@ -261,7 +261,7 @@ export function PastStagesList({
             >
               <div className="flex flex-col sm:flex-row gap-3 min-w-0">
                 {/* The host's artwork, through the shared component so it is
-                    the same whole image the live and upcoming cards show. Full
+                    the same 16:9 frame the live and upcoming cards show. Full
                     width on a phone, a fixed thumbnail beside the details on
                     wider screens. It sits beside the text, never beside the
                     bar: the bar used to share its row with the artwork and got
