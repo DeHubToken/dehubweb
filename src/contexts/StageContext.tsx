@@ -2094,6 +2094,34 @@ export function StageProvider({ children }: { children: ReactNode }) {
     }
   }, []);
 
+  /**
+   * Tell the room a newly added audio track is live while the mic is muted.
+   *
+   * The SDK mixes every published audio track into one stream, and muting the
+   * mic while it is the only track in that mix marks the whole stream muted for
+   * the room. Adding a second track to the mix does not lift that, so a host
+   * who starts the radio (or a screen share with audio) while muted hears it
+   * locally and the room hears nothing. Flipping the mic's mute re-evaluates
+   * the mix: unmute announces it live, and the re-mute is kept local because
+   * the new track is still unmuted. The raw mic is held shut across the flip
+   * so nothing the host says leaks in the moment between.
+   */
+  const reannounceMixedAudio = useCallback(async () => {
+    const mic = localAudioTrackRef.current;
+    if (!mic?.muted) return;
+    const outgoing = mic.getMediaStreamTrack?.() as MediaStreamTrack | undefined;
+    voiceEffectsHookRef.current.setRawMicEnabled(false);
+    try {
+      await mic.setMuted(false);
+      await mic.setMuted(true);
+    } catch (err) {
+      console.warn('[Stage] Could not re-announce mixed audio', err);
+    } finally {
+      if (outgoing) outgoing.enabled = false;
+      voiceEffectsHookRef.current.setRawMicEnabled(true);
+    }
+  }, []);
+
   const startScreenShare = useCallback(async () => {
     if (!agoraClientRef.current) { toast.error(_copy("copy.6f900045dd16", { defaultValue: "Not connected to a stage" })); return; }
     if (screenVideoTrackRef.current) return;
@@ -2144,6 +2172,7 @@ export function StageProvider({ children }: { children: ReactNode }) {
       if (audioTrack) {
         try {
           await client.publish([audioTrack]);
+          await reannounceMixedAudio();
         } catch (err) {
           console.warn('[Stage] Screen audio publish failed — sharing video only', err);
           screenAudioTrackRef.current = null;
@@ -2168,7 +2197,7 @@ export function StageProvider({ children }: { children: ReactNode }) {
       console.error('Error starting screen share:', err);
       toast.error(_copy("copy.5c70d1026341", { defaultValue: "Failed to share screen" }));
     }
-  }, [stopScreenShare, _copy]);
+  }, [stopScreenShare, reannounceMixedAudio, _copy]);
 
   // ─── Radio ───────────────────────────────────────────────────────────────
   //
@@ -2268,6 +2297,7 @@ export function StageProvider({ children }: { children: ReactNode }) {
             }
             await client.publish([track]);
             radioTrackRef.current = track;
+            await reannounceMixedAudio();
             return track;
           })().finally(() => { radioPublishRef.current = null; });
         }
@@ -2299,7 +2329,7 @@ export function StageProvider({ children }: { children: ReactNode }) {
       toast.error(_copy("copy.88be655c6f72", { defaultValue: "Could not put that station on air" }));
       void stopRadio();
     }
-  }, [advanceRadio, stopRadio, _copy]);
+  }, [advanceRadio, stopRadio, reannounceMixedAudio, _copy]);
   startRadioRef.current = startRadio;
 
   const radioNext = useCallback(() => {
