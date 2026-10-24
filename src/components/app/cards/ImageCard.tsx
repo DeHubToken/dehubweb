@@ -86,6 +86,7 @@ import { usePostTipCount } from '@/hooks/use-post-tip-count';
 import { useTapGestures } from '@/hooks/use-tap-gestures';
 import { TapReactionBurst } from '@/components/app/cards/TapReactionBurst';
 import { FullscreenImageViewerLazy } from './FullscreenImageViewerLazy';
+import { useIsMobile } from '@/hooks/use-mobile';
 import { ImageTranslationSheet } from './ImageTranslationSheet';
 import { useFeedViewTracking } from '@/hooks/use-view-tracking';
 import { useImageTranslation } from '@/hooks/use-image-translation';
@@ -758,6 +759,7 @@ const ImageCardBody = memo(function ImageCard({ post, aboveFold = false, onOpenC
   useAutoOpenComments(setShowComments, post.id);
   const { t } = useI18n();
   const [showAIChat, setShowAIChat] = useState(false);
+  const isPhone = useIsMobile();
   const [fullscreenOpen, setFullscreenOpen] = useState(false);
   const [fullscreenIndex, setFullscreenIndex] = useState(0);
   const [activeImageIndex, setActiveImageIndex] = useState(0);
@@ -925,8 +927,16 @@ const ImageCardBody = memo(function ImageCard({ post, aboveFold = false, onOpenC
 
   const handleImageClick = (index: number) => {
     if (wasDrawerJustDismissed()) return;
+    const gated = isPPV || isLocked || isSubGated || isW2E || matureGate.isGated;
+    // Phones open a plain photo full screen over the feed, so closing it lands
+    // back on the same card. Desktop still opens the post page.
+    if (!postPage && isPhone && !post.soundtrackUrl && !gated) {
+      setFullscreenIndex(index);
+      setFullscreenOpen(true);
+      return;
+    }
     // Only photos with a song continue in the shorts viewer; plain photos open their post.
-    if (!postPage && (!post.soundtrackUrl || isPPV || isLocked || isSubGated || isW2E || matureGate.isGated)) {
+    if (!postPage && (!post.soundtrackUrl || gated)) {
       openPost();
       return;
     }
