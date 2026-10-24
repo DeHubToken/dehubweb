@@ -228,15 +228,18 @@ export function LoginModal({ open, onOpenChange }: LoginModalProps) {
 
   const sheetBody = stackLayout ? (
     <>
-      {/* Logo and Explore sit 16px from the top and the sides, both 40px tall. */}
-      <DrawerHeader className="px-4 pt-[calc(1rem+env(safe-area-inset-top))] pb-2 shrink-0">
-        <div className="flex items-center justify-between">
+      {/* Logo and Explore sit 16px from the top and the sides, both 40px tall,
+          floating over the clips so they run to the top of the screen. Only
+          the logo's corner gets a faint shade; Explore carries its own glass. */}
+      <DrawerHeader className="absolute inset-x-0 top-0 z-10 px-4 pt-[calc(1rem+env(safe-area-inset-top))] pb-2">
+        <div aria-hidden="true" className="login-stack-corner" />
+        <div className="relative flex items-center justify-between">
           <img src={dehubMark} alt="DeHub" className="h-10 w-auto" />
           {!requiresUsername && (
             <button
               type="button"
               onClick={handleClose}
-              className="h-10 px-4 rounded-full border border-white/15 bg-white/10 text-white text-sm font-semibold"
+              className="h-10 px-4 rounded-xl border border-white/15 bg-white/10 backdrop-blur-md text-white text-sm font-semibold"
             >
               {t('loginStack.exploreFirst', 'Explore first')}
             </button>
@@ -246,7 +249,7 @@ export function LoginModal({ open, onOpenChange }: LoginModalProps) {
       </DrawerHeader>
 
       <div className="flex-1 min-h-0 overflow-y-auto overscroll-contain px-6 pb-4">
-        <Suspense fallback={<div className="h-[350px]" aria-hidden="true" />}>
+        <Suspense fallback={<div className="h-[420px]" aria-hidden="true" />}>
           <LoginShortsStack />
         </Suspense>
         <div className="mt-5">
