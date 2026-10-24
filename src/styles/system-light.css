@@ -206,10 +206,13 @@ html[data-theme="system"][data-system-tone="light"] #root:not(#_):not(#_):not(#_
 /* Dark-only decoration (specks and vignettes drawn for a black page). */
 /* Calendar days are ghost controls. Keep their selection distinct from the
    ordinary dates even when the light control material sees hover classes. */
+html:is([data-theme="light"], [data-system-tone="light"]):not(#_):not(#_):not(#_):not(#_):not(#_) [data-calendar] td:not(:has([aria-selected="true"])) {
+  background: transparent !important;
+}
 html:is([data-theme="light"], [data-system-tone="light"]):not(#_):not(#_):not(#_):not(#_):not(#_) [data-calendar] button[name="day"] {
   background: transparent !important; box-shadow: none !important; border-color: transparent !important;
 }
-html:is([data-theme="light"], [data-system-tone="light"]):not(#_):not(#_):not(#_):not(#_):not(#_) [data-calendar] button[name="day"]:is(:hover, .calendar-today):not(:disabled) {
+html:is([data-theme="light"], [data-system-tone="light"]):not(#_):not(#_):not(#_):not(#_):not(#_) [data-calendar] button[name="day"]:is(:hover, .calendar-today):not(:disabled):not([aria-selected="true"]) {
   background: rgba(11,11,13,.08) !important;
 }
 html:is([data-theme="light"], [data-system-tone="light"]):not(#_):not(#_):not(#_):not(#_):not(#_) [data-calendar] button[name="day"][aria-selected="true"] {
