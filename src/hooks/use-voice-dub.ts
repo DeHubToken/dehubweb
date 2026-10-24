@@ -23,7 +23,7 @@ let speaker: object | null = null;
 
 // One engine per <video>. A post opened over the feed shares the feed card's
 // element, and two engines on it double every line.
-const owners = new WeakMap<HTMLVideoElement, object>();
+const owners = new WeakMap<HTMLMediaElement, object>();
 
 /**
  * Speak `segments` in `voice`, in step with the video. Pass null segments or
@@ -34,7 +34,7 @@ const owners = new WeakMap<HTMLVideoElement, object>();
  * restoring the original audio to the viewer's level.
  */
 export function useVoiceDub(
-  videoRef: React.RefObject<HTMLVideoElement>,
+  videoRef: React.RefObject<HTMLMediaElement>,
   segments: TranscriptSegment[] | null,
   voice: SpeechSynthesisVoice | null,
   onFailed?: () => void,

@@ -64,6 +64,10 @@ import { formatTimestamp, formatTxt, formatSrt, downloadFile } from '@/lib/trans
 import { useAuth } from '@/contexts/AuthContext';
 import { PLAYBACK_RATES } from '@/lib/video-preferences';
 import { getStagePlaybackState } from '@/lib/stage-playback';
+import { stopStageRecording } from '@/lib/stage-playback';
+import { playableStageRecording } from '@/lib/stage-recording-source';
+import { StageReplayDub } from './StageReplayDub';
+import { primeSpeech } from '@/hooks/dub-preference';
 import { formatStageRate } from '@/components/app/stages/StageRateButton';
 import { usePendingAction } from '@/hooks/use-pending-action';
 import { viewerShareUrl } from '@/lib/share-url';
@@ -291,14 +295,34 @@ function InlinePlayer({
   src,
   audioRef,
   currentTime,
+  stageId,
+  transcriptId,
+  language,
+  segments,
 }: {
   src: string;
   audioRef: React.RefObject<HTMLAudioElement>;
   currentTime: number;
+  stageId: string;
+  transcriptId: string;
+  language: string | null;
+  segments: Segment[] | null;
 }) {
   const { t: _copy } = _useCopy();
   const [playing, setPlaying] = useState(false);
   const [duration, setDuration] = useState(0);
+  const [source, setSource] = useState<string | null>(null);
+  const [sourceFailed, setSourceFailed] = useState(false);
+  const [dubReady, setDubReady] = useState(!language);
+  useEffect(() => {
+    let alive = true;
+    setSource(null);
+    setSourceFailed(false);
+    void playableStageRecording(stageId, src).then((url) => {
+      if (alive) setSource(url);
+    }).catch(() => { if (alive) setSourceFailed(true); });
+    return () => { alive = false; };
+  }, [stageId, src]);
   // This drawer keeps its own <audio> (the transcript follows its currentTime
   // directly), so speed is local to it — but it reads the same persisted
   // ladder and starts from the shared engine's last-used rate.
@@ -308,7 +332,7 @@ function InlinePlayer({
     const a = audioRef.current;
     if (!a) return;
     a.playbackRate = rate;
-  }, [rate, src]);
+  }, [rate, source]);
 
   const cycleRate = () => {
     setRate((r) => {
@@ -331,12 +355,14 @@ function InlinePlayer({
       a.removeEventListener('pause', onPause);
       a.removeEventListener('loadedmetadata', onMeta);
     };
-  }, [audioRef]);
+  }, [audioRef, source]);
 
   const toggle = () => {
     const a = audioRef.current;
     if (!a) return;
-    if (a.paused) a.play().catch(() => {});
+    primeSpeech();
+    stopStageRecording();
+    if (a.paused) a.play().catch(() => { setSourceFailed(true); });
     else a.pause();
   };
 
@@ -351,11 +377,14 @@ function InlinePlayer({
   const pct = duration ? (currentTime / duration) * 100 : 0;
 
   return (
+    <div>
     <div className="bg-white/5 backdrop-blur-[24px] border border-white/10 rounded-xl p-3 flex items-center gap-3">
-      <audio ref={audioRef} src={src} preload="metadata" />
+      <audio ref={audioRef} src={source ?? undefined} preload="metadata" onError={() => setSourceFailed(true)} />
       <Button
         size="icon"
         onClick={toggle}
+        disabled={!source || !dubReady || sourceFailed}
+        aria-label={_copy(playing ? 'common.pause' : 'common.play')}
         className="h-9 w-9 rounded-lg bg-white/10 hover:bg-white/20 text-white border border-white/10"
       >
         {playing ? <Pause className="w-4 h-4" /> : <Play className="w-4 h-4" />}
@@ -387,6 +416,10 @@ function InlinePlayer({
       >
         {formatStageRate(rate)}x
       </button>
+    </div>
+    {sourceFailed && <p role="alert" className="text-xs text-white/60">{_copy('stages.noRecording')}</p>}
+    {!source && !sourceFailed && <p role="status" className="text-xs text-white/60">{_copy('common.loading')}</p>}
+    <StageReplayDub audioRef={audioRef} transcriptId={transcriptId} language={language} segments={segments} onReady={setDubReady} />
     </div>
   );
 }
@@ -786,6 +819,10 @@ export function StageTranscriptDrawer({ space, open, onOpenChange }: Props) {
                 src={space.recording_url!}
                 audioRef={audioRef}
                 currentTime={currentTime}
+                stageId={stageId!}
+                transcriptId={transcriptId!}
+                language={language === 'original' || language === transcript.source_language ? null : language}
+                segments={useTranslated ? translation!.segments : null}
               />
 
               {/* AI Summary + chapters */}
@@ -833,7 +870,7 @@ export function StageTranscriptDrawer({ space, open, onOpenChange }: Props) {
                     className="pl-8 h-8 text-xs bg-white/5 border-white/10 text-white placeholder:text-white/40 rounded-lg"
                   />
                 </div>
-                <Select value={language} onValueChange={setLanguage}>
+                <Select value={language} onValueChange={(value) => { primeSpeech(); setLanguage(value); }}>
                   <SelectTrigger className="h-8 text-xs bg-white/5 border-white/10 text-white rounded-lg w-auto min-w-[120px] gap-1.5">
                     <Globe2 className="w-3.5 h-3.5 opacity-70" />
                     <SelectValue />

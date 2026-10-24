@@ -270,8 +270,9 @@ def process(job: dict) -> dict:
         orig = read_wav(orig_path)
         if len(orig) < SR:
             raise RuntimeError("audio too short")
-        if len(orig) > 900 * SR:
-            raise RuntimeError("video exceeds duration limit")
+        maximum = 7200 if job.get('sourceKind') == 'stage' else 900
+        if len(orig) > maximum * SR:
+            raise RuntimeError("recording exceeds duration limit")
 
         refs = {}
         cloned = False

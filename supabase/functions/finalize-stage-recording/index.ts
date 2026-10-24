@@ -168,6 +168,30 @@ Deno.serve(async (req) => {
 
     const work = (async () => {
       try {
+        // Remuxing thousands of WebM packets can exceed an Edge isolate's CPU
+        // allowance. Reuse the existing media host for AAC, which also plays
+        // on iPhones older than iOS 17. Keep the original object intact.
+        const { data: worker } = await admin.from('video_dub_worker').select('worker_url, secret').eq('id', 1).maybeSingle();
+        const workerUrl = Deno.env.get('DUB_WORKER_URL') || worker?.worker_url || '';
+        const secret = Deno.env.get('DUB_WORKER_SECRET') || worker?.secret || '';
+        if (workerUrl && secret && /\/jobs\/?$/.test(workerUrl)) {
+          const path = `${stageId}/recording.m4a`;
+          const { data: upload, error } = await admin.storage.from(BUCKET).createSignedUploadUrl(path, { upsert: true });
+          if (error || !upload?.signedUrl) throw new Error('could not authorize recording upload');
+          const result = await fetch(workerUrl.replace(/\/jobs\/?$/, '/recordings'), {
+            method: 'POST', headers: { Authorization: `Bearer ${secret}`, 'Content-Type': 'application/json' },
+            body: JSON.stringify({ input: { sourceUrl: stage.recording_url, uploadUrl: upload.signedUrl } }),
+            signal: AbortSignal.timeout(180_000),
+          });
+          if (!result.ok) throw new Error(`recording worker ${result.status}`);
+          const output = await result.json();
+          if (!output.ok) throw new Error('recording worker did not finish');
+          const { data: url } = admin.storage.from(BUCKET).getPublicUrl(path);
+          const { error: updateError } = await admin.from('audio_spaces').update({ recording_url: url.publicUrl })
+            .eq('id', stageId).eq('recording_url', stage.recording_url);
+          if (updateError) throw updateError;
+          return { ok: true, status: 'ready', recordingUrl: url.publicUrl, durationSeconds: output.durationSeconds };
+        }
         const res = await fetch(stage.recording_url!);
         if (!res.ok) throw new Error(`fetch ${res.status}`);
         const src = new Uint8Array(await res.arrayBuffer());
@@ -195,15 +219,25 @@ Deno.serve(async (req) => {
           `${(out.durationMs / 1000).toFixed(3)}s, now at ${out.objectName}` +
           (out.note ? ` (${out.note})` : ''),
         );
+        return { ok: true, status: 'ready', recordingUrl: finalUrl, durationSeconds: out.durationMs / 1000 };
       } catch (e) {
         // The original object and recording_url are both untouched on this
         // path, so a failure here costs seeking and nothing else. Never let it
         // stop the transcript.
         const why = e instanceof AlreadyIndexed ? `already indexed: ${e.message}` : String((e as Error).message || e);
         console.error(`[finalize] ${stageId} left as-is — ${why}`);
+        return { ok: false, status: 'failed', error: why };
+      } finally {
+        await transcribe();
       }
-      await transcribe();
     })();
+
+    // Playback needs the actual converted URL, not an accepted response that
+    // leaves iPhone waiting for a background task which may have been killed.
+    if (!thenTranscribe) {
+      const result = await work;
+      return json(result, result.ok ? 200 : 502);
+    }
 
     // @ts-ignore - EdgeRuntime is provided by the platform
     if (typeof EdgeRuntime !== 'undefined') EdgeRuntime.waitUntil(work);

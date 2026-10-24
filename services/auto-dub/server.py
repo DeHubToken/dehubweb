@@ -7,6 +7,7 @@ from threading import BoundedSemaphore
 from fastapi import FastAPI, Header, HTTPException
 
 import clips
+import recordings
 from handler import handler
 
 app = FastAPI(docs_url=None, redoc_url=None, openapi_url=None)
@@ -16,11 +17,28 @@ executor = ThreadPoolExecutor(max_workers=1)
 # room for one more stage to wait its turn.
 clip_slots = BoundedSemaphore(2)
 clip_executor = ThreadPoolExecutor(max_workers=1)
+recording_slots = BoundedSemaphore(1)
 
 
 @app.get("/")
 def health():
-    return {"service": "video-dubs", "provider": "chatterbox-multilingual-v3", "clips": True}
+    return {"service": "video-dubs", "provider": "chatterbox-multilingual-v3", "clips": True, "recordings": True}
+
+
+@app.post('/recordings')
+def finalize_recording(body: dict, authorization: str = Header(default='')):
+    authorized(authorization)
+    job = body.get('input') or {}
+    if not job.get('sourceUrl') or not job.get('uploadUrl'):
+        raise HTTPException(400, 'Incomplete recording')
+    if not recording_slots.acquire(blocking=False):
+        raise HTTPException(503, 'Recording worker busy')
+    try:
+        return recordings.convert(job)
+    except Exception:
+        raise HTTPException(502, 'Recording conversion failed')
+    finally:
+        recording_slots.release()
 
 
 def authorized(authorization: str) -> str:
