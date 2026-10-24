@@ -107,7 +107,7 @@ const BlogCard: React.FC<BlogCardProps> = ({ post, featured = false }) => {
             height={630}
             loading="lazy"
             decoding="async"
-            className={`w-full object-cover object-bottom transition-transform duration-200 group-hover:scale-105 ${featured ? 'h-48' : 'h-40'}`}
+            className="w-full aspect-[40/21] object-cover transition-transform duration-200 group-hover:scale-105"
           />
         </div>
 
