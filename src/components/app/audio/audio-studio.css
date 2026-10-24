@@ -71,6 +71,7 @@
 [data-audio-studio-pill][aria-expanded='true'] svg { transform:rotate(180deg); }
 [data-audio-studio-style-menu] { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:2px; max-height:min(320px,60vh); overflow-y:auto; }
 [data-audio-studio-style-drawer] { color:#eef4f6; }
+html:is([data-theme='light'],[data-system-tone='light']) [data-audio-studio-style-drawer] { color:#172129; }
 [data-audio-studio-style-drawer] :is(h2,button) { color:inherit !important; }
 [data-audio-studio-style-drawer] [data-audio-studio-style-menu] { max-height:55dvh; padding:6px 12px calc(16px + env(safe-area-inset-bottom)); gap:4px; }
 [data-audio-studio-style-menu] button { position:relative; display:flex; flex-direction:column; align-items:stretch; justify-content:flex-start; gap:4px; width:100%; min-width:0; padding:6px 6px 10px; border-radius:12px; border:0; background:transparent; color:inherit; font-size:12px; font-weight:500; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; opacity:.6; cursor:pointer; transition:opacity .2s,background .2s; }
