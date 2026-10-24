@@ -20,7 +20,6 @@ import { NAV_ITEMS } from '@/constants/app.constants';
 import type { NavItem } from '@/types/app.types';
 import { SidebarNavItem } from './SidebarNavItem';
 import { CrumblingLogo } from './CrumblingLogo';
-import { DesktopCrumblingWordmark } from './DesktopCrumblingWordmark';
 import { filterNavItems, exploreSearchHref } from './nav-search';
 import { canManageAgents } from '@/lib/agent-access';
 import { useSearchHistory } from '@/hooks/use-search-history';
@@ -63,6 +62,31 @@ import { warmLoginSheet } from '@/components/app/LoginModal';
  * the value is only a discriminator, since the handler is passed in.
  */
 const LOGOUT_ITEM: NavItem = { icon: LogOut, label: "Log out", path: '', action: 'logout' };
+
+/**
+ * The fracturing wordmark is reached lazily so neither it nor its renderer sits
+ * on the boot path. Until its chunk lands, the fallback is the same flat PNG the
+ * component shows before its first frame, in the same box, so nothing shifts.
+ */
+const STATIC_WORDMARK = (
+  <span className="inline-block relative w-[135px] h-[40.6px] -top-[3px]">
+    <img
+      src="/dehub-header-logo.png"
+      alt="dehub"
+      width={135}
+      height={40.6}
+      className="h-[40.6px] w-[135px] object-contain"
+      fetchPriority="high"
+      decoding="async"
+    />
+  </span>
+);
+const DesktopCrumblingWordmark = React.lazy<React.ComponentType<{ light?: boolean }>>(() =>
+  import('./DesktopCrumblingWordmark')
+    .then((m) => ({ default: m.DesktopCrumblingWordmark }))
+    // A chunk that fails to load leaves the flat mark, not the rail's error boundary.
+    .catch(() => ({ default: () => STATIC_WORDMARK })),
+);
 
 interface DesktopSidebarProps {
   onPostClick: () => void;
@@ -415,7 +439,7 @@ export function DesktopSidebar({ onPostClick }: DesktopSidebarProps) {
                 renderCompactLogo ? "w-[22px] h-[24px]" : "w-[135px] h-[42px]"
               )}
             >
-              {!renderCompactLogo ? <DesktopCrumblingWordmark light={isLightTheme} /> : <CrumblingLogo>{isWarTheme ? (
+              {!renderCompactLogo ? <React.Suspense fallback={STATIC_WORDMARK}><DesktopCrumblingWordmark light={isLightTheme} /></React.Suspense> : <CrumblingLogo>{isWarTheme ? (
                 <>
                   <WarLogo
                     src={dehubLogoCompact}
