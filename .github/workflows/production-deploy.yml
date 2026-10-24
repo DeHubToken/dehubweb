@@ -33,6 +33,8 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: '22'
+      - name: Verify public routing before deploying
+        run: node scripts/production-routing.mjs
       - name: Validate Cloudflare production credentials
         run: node scripts/cloudflare-production-credentials.mjs
         env:
@@ -59,6 +61,8 @@ jobs:
         run: curl --fail --silent --show-error https://dehub.io/sitemap-static.xml --output /tmp/live-sitemap-static.xml
       - name: Deploy production worker and assets
         run: pnpm exec wrangler deploy --config wrangler.jsonc
+      - name: Verify public routing after deploying
+        run: node scripts/production-routing.mjs
       - name: Verify production serves this commit
         env:
           EXPECTED_REVISION: ${{ inputs.revision }}

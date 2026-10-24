@@ -1,4 +1,31 @@
-# Temporary direct entry point
+# Production direct HTTPS delivery
+
+The 24 October 2026 recurrence had the existing apex A record pointing to
+138.68.188.224 with its proxy enabled. The affected phone resolved it to
+188.114.96.5/188.114.97.5 and timed out on both TCP/443 endpoints. Google,
+the Supabase project, and 138.68.188.224 remained reachable. A TLS-validated
+request through the phone's own Wi-Fi to the direct gateway returned the
+current production version. Do not fix this by changing the user's DNS or VPN.
+
+The durable routing contract is `ops/production-routing.json`, shared with
+dehub-mobile. The apex must be DNS-only to the gateway. No apex AAAA record
+is supported until a working IPv6 gateway is verified. `origin.dehub.io` stays
+attached to dehub-migration as a custom domain; the public apex must not be a
+Worker route or custom domain. The build validates this separation. Production
+release checks verify A/AAAA through two resolvers, HTTPS, and API health before
+and after deployment. Mobile publication checks the same public route.
+
+The old zone-route mutation is retired: it cannot make shared Cloudflare
+addresses reliable on the affected network. The inspection workflow is now
+read-only and needs no DNS API credential. Do not re-enable the apex proxy to
+address the dashboard's origin-exposure recommendation: api.dehub.io already
+uses this public gateway. A future move behind a delivery provider requires
+phone verification, an explicit contract change, and a reviewed PR.
+
+These checks prevent releases from silently claiming success on a regressed
+route. They cannot prevent an account owner from changing DNS in the dashboard,
+or guarantee against future provider outages. They are release checks, not a
+recurring monitor. Keep certificate renewal enabled and validate it after cutover.
 
 Approved incident tradeoff: public API/apex traffic bypasses Cloudflare's inbound
 edge filtering. HTTPS, application authentication and API rate limits remain.
