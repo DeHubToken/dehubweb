@@ -2903,7 +2903,7 @@ const VideoCardBody = memo(function VideoCard({ video, postPage = false, onBack,
               )}
             </div>}
                 </div>}
-                <span data-video-bare data-video-time className="min-w-[36px] text-center text-xs font-medium tabular-nums text-white">{formatTime(Math.max(0, Math.ceil(duration - currentTime)))}</span>
+                <span data-video-bare data-video-time data-keep-dark={!splitControls || undefined} className="min-w-[36px] text-center text-xs font-medium tabular-nums text-white">{formatTime(Math.max(0, Math.ceil(duration - currentTime)))}</span>
               </div>
               <div data-video-inline-tools className="ml-auto flex shrink-0 items-center gap-1">
             {/* Keep the CC slot and glyph in place while the subtitle menu loads. */}
