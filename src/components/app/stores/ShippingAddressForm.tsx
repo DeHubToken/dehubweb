@@ -136,32 +136,32 @@ export function ShippingAddressForm({ onChange }: Props) {
     setFields(EMPTY);
   };
 
-  const inputClass = "bg-white/5 border-white/10 text-primary-foreground placeholder:text-primary-foreground/50";
+  const inputClass = "bg-white/5 border-white/10 text-foreground placeholder:text-foreground/50";
   const checkboxClass = "border-white/30 data-[state=checked]:bg-white data-[state=checked]:text-black focus-visible:ring-0 focus-visible:ring-offset-0";
 
   return (
     <div className="space-y-3">
-      <Label className="text-primary-foreground font-semibold">{t('stores.shippingAddress')}</Label>
+      <Label className="text-foreground font-semibold">{t('stores.shippingAddress')}</Label>
 
       {saved.length > 0 && (
         <div className="flex items-center gap-2">
           <div className="flex-1">
             <Select value={selectedId} onValueChange={handleSelectChange}>
-              <SelectTrigger className={`${inputClass} [&>svg]:text-primary-foreground [&>span]:text-primary-foreground`}>
+              <SelectTrigger className={`${inputClass} [&>svg]:text-foreground [&>span]:text-foreground`}>
                 <SelectValue placeholder={t('stores.selectSavedAddress')} />
               </SelectTrigger>
-              <SelectContent className="text-primary-foreground">
+              <SelectContent className="text-foreground">
                 {saved.map(a => (
-                  <SelectItem key={a.id} value={a.id} className="text-primary-foreground focus:bg-white/10 focus:text-primary-foreground">
-                    <span className="flex items-center gap-1.5 text-primary-foreground">
-                      {a.is_default && <MapPin className="w-3.5 h-3.5 text-primary-foreground shrink-0" />}
-                      <span className="font-medium text-primary-foreground">{a.label}</span>
-                      <span className="text-primary-foreground/70">— {a.full_name}, {a.address_line1}, {a.city}</span>
+                  <SelectItem key={a.id} value={a.id} className="text-foreground focus:bg-white/10 focus:text-foreground">
+                    <span className="flex items-center gap-1.5 text-foreground">
+                      {a.is_default && <MapPin className="w-3.5 h-3.5 text-foreground shrink-0" />}
+                      <span className="font-medium text-foreground">{a.label}</span>
+                      <span className="text-foreground/70">— {a.full_name}, {a.address_line1}, {a.city}</span>
                     </span>
                   </SelectItem>
                 ))}
-                <SelectItem value="new" className="text-primary-foreground focus:bg-white/10 focus:text-primary-foreground">
-                  <span className="text-primary-foreground">{_copy("copy.370ec29b9271", { defaultValue: "+ Enter new address" })}</span>
+                <SelectItem value="new" className="text-foreground focus:bg-white/10 focus:text-foreground">
+                  <span className="text-foreground">{_copy("copy.370ec29b9271", { defaultValue: "+ Enter new address" })}</span>
                 </SelectItem>
               </SelectContent>
             </Select>
@@ -182,34 +182,34 @@ export function ShippingAddressForm({ onChange }: Props) {
 
       {/* Structured fields */}
       <div>
-        <Label className="text-primary-foreground text-xs">{t('stores.fullName')}</Label>
+        <Label className="text-foreground text-xs">{t('stores.fullName')}</Label>
         <Input value={fields.full_name} onChange={e => update('full_name', e.target.value)} placeholder={t('stores.fullNamePlaceholder')} className={inputClass} />
       </div>
       <div>
-        <Label className="text-primary-foreground text-xs">{t('stores.street')}</Label>
+        <Label className="text-foreground text-xs">{t('stores.street')}</Label>
         <Input value={fields.address_line1} onChange={e => update('address_line1', e.target.value)} placeholder={t('stores.streetPlaceholder')} className={inputClass} />
       </div>
       <div>
-        <Label className="text-primary-foreground text-xs">{t('stores.apt')}</Label>
+        <Label className="text-foreground text-xs">{t('stores.apt')}</Label>
         <Input value={fields.address_line2} onChange={e => update('address_line2', e.target.value)} placeholder={t('stores.aptPlaceholder')} className={inputClass} />
       </div>
       <div className="grid grid-cols-2 gap-2">
         <div>
-          <Label className="text-primary-foreground text-xs">{t('stores.city')}</Label>
+          <Label className="text-foreground text-xs">{t('stores.city')}</Label>
           <Input value={fields.city} onChange={e => update('city', e.target.value)} placeholder={t('stores.cityPlaceholder')} className={inputClass} />
         </div>
         <div>
-          <Label className="text-primary-foreground text-xs">{t('stores.state')}</Label>
+          <Label className="text-foreground text-xs">{t('stores.state')}</Label>
           <Input value={fields.state} onChange={e => update('state', e.target.value)} placeholder={t('stores.statePlaceholder')} className={inputClass} />
         </div>
       </div>
       <div className="grid grid-cols-2 gap-2">
         <div>
-          <Label className="text-primary-foreground text-xs">{t('stores.postal')}</Label>
+          <Label className="text-foreground text-xs">{t('stores.postal')}</Label>
           <Input value={fields.postal_code} onChange={e => update('postal_code', e.target.value)} placeholder={t('stores.postalPlaceholder')} className={inputClass} />
         </div>
         <div>
-          <Label className="text-primary-foreground text-xs">{t('stores.country')}</Label>
+          <Label className="text-foreground text-xs">{t('stores.country')}</Label>
           <Input value={fields.country} onChange={e => update('country', e.target.value)} placeholder={t('stores.countryPlaceholder')} className={inputClass} />
         </div>
       </div>
@@ -219,7 +219,7 @@ export function ShippingAddressForm({ onChange }: Props) {
         <div className="rounded-lg border border-white/10 bg-white/5 p-3 space-y-2">
           <div className="flex items-center gap-2">
             <Checkbox id="save-addr" className={checkboxClass} checked={wantSave} onCheckedChange={v => setWantSave(!!v)} />
-            <label htmlFor="save-addr" className="text-sm text-primary-foreground cursor-pointer">{t('stores.saveAddressForNextTime')}</label>
+            <label htmlFor="save-addr" className="text-sm text-foreground cursor-pointer">{t('stores.saveAddressForNextTime')}</label>
           </div>
           {wantSave && (
             <div className="space-y-2 animate-in fade-in slide-in-from-top-1 duration-200">
@@ -232,7 +232,7 @@ export function ShippingAddressForm({ onChange }: Props) {
                 />
                 <div className="flex items-center gap-1.5">
                   <Checkbox id="set-default" className={checkboxClass} checked={isDefault} onCheckedChange={v => setIsDefault(!!v)} />
-                  <label htmlFor="set-default" className="text-xs text-primary-foreground whitespace-nowrap cursor-pointer">{t('stores.defaultLabel')}</label>
+                  <label htmlFor="set-default" className="text-xs text-foreground whitespace-nowrap cursor-pointer">{t('stores.defaultLabel')}</label>
                 </div>
               </div>
               <Button
