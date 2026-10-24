@@ -32,6 +32,7 @@ import "./styles/system-immersive.css";
 import "./styles/system-light.css";
 import "./styles/light-desktop-panels.css";
 import "./styles/text-readability.css";
+import "./styles/light-contrast.css";
 import "./styles/pinned-community-stage.css";
 // Canvas-theme chrome (war / osaka / jungle) is NOT imported here: each theme
 // is a separate CSS chunk loaded by src/lib/theme-css.ts, only for the theme in

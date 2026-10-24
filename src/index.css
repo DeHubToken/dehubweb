@@ -3513,31 +3513,9 @@ html[data-system-tone="light"] .animate-pulse.bg-muted {
   background-color: #e4e4e7 !important;
 }
 
-/* Primary CTA (create-post / log-in) uses bg-zinc-900/90 — keep it black. */
-html[data-theme="light"] .bg-zinc-900\/90,
-html[data-theme="light"] .bg-zinc-900\/80 {
-  background-color: #000000 !important;
-  color: #ffffff !important;
-}
-html[data-system-tone="light"] .bg-zinc-900\/90,
-html[data-system-tone="light"] .bg-zinc-900\/80 {
-  background-color: #000000 !important;
-  color: #ffffff !important;
-}
-html[data-theme="light"] .bg-zinc-900\/90 *,
-html[data-theme="light"] .bg-zinc-900\/80 * {
-  color: #ffffff !important;
-}
-html[data-system-tone="light"] .bg-zinc-900\/90 *,
-html[data-system-tone="light"] .bg-zinc-900\/80 * {
-  color: #ffffff !important;
-}
-html[data-theme="light"] .hover\:bg-zinc-800\/90:hover {
-  background-color: #1a1a1a !important;
-}
-html[data-system-tone="light"] .hover\:bg-zinc-800\/90:hover {
-  background-color: #1a1a1a !important;
-}
+/* Dark CTAs use explicit data-primary-cta/data-nav-create contracts. A zinc
+   opacity utility also appears on drawers and chat action bars; forcing all
+   of its descendants white erased controls when those surfaces became light. */
 
 /* ==========================================================================
  * Login / Sign-up modal — light mode

@@ -12,6 +12,7 @@ import Trash2 from "@/components/ui/cut-icons/delete";
 
 import Send from "@/components/ui/cut-icons/send";
 import Mic from "@/components/ui/cut-icons/mic";
+import Attach from "@/components/ui/cut-icons/attach";
 import X from "@/components/ui/cut-icons/close";
 
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
@@ -26,7 +27,9 @@ import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover
 import { EmojiGifPicker } from '../chat/EmojiGifPicker';
 import { formatTimeAgo } from '@/lib/feed-utils';
 import { useLiveChatRooms, useLiveChatMessages, useLiveChatPresence, type SupabaseLiveChatMessage } from '@/hooks/use-livechat';
-import { getMediaUrl, getAuthToken, uploadLiveChatVoice } from '@/lib/api/dehub';
+import { getMediaUrl, getAuthToken, uploadLiveChatVoice, uploadChatImage } from '@/lib/api/dehub';
+import { PUBLIC_CHAT_IMAGE_TYPES, validatePublicChatMedia } from '@/lib/public-chat-media';
+import { sendPublicChatImage } from '@/lib/public-chat-attachment';
 import { buildAvatarUrl, buildAvatarCdnFallbackUrl } from '@/lib/media-url';
 import { useAuth } from '@/contexts/AuthContext';
 import { usePublicChatReading } from '@/hooks/use-public-chat-unread';
@@ -180,6 +183,17 @@ export function SidebarChat({ isActive }: SidebarChatProps) {
   const scrollContainerRef = useRef<HTMLDivElement>(null);
   usePublicChatReading(isActive, scrollContainerRef);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
+  const imageInputRef = useRef<HTMLInputElement>(null);
+  const [imageFile, setImageFile] = useState<File | null>(null);
+  const [imagePreview, setImagePreview] = useState<string | null>(null);
+  const mediaSendInFlight = useRef(false);
+  const [uploadingImage, setUploadingImage] = useState(false);
+  useEffect(() => {
+    if (!imageFile) { setImagePreview(null); return; }
+    const url = URL.createObjectURL(imageFile);
+    setImagePreview(url);
+    return () => URL.revokeObjectURL(url);
+  }, [imageFile]);
   const navigate = useNavigate();
   const { isAuthenticated, walletAddress, openLoginModal } = useAuth();
 
@@ -314,15 +328,26 @@ export function SidebarChat({ isActive }: SidebarChatProps) {
   const handleSend = async () => {
     if (!isAuthenticated) { openLoginModal(); return; }
     const trimmed = newMessage.trim();
-    if (!trimmed || !roomId) return;
+    if ((!trimmed && !imageFile) || !roomId || mediaSendInFlight.current) return;
+    mediaSendInFlight.current = true;
+    const pendingImage = imageFile;
     const replyToId = replyTo?.id;
-    setReplyTo(null);
     try {
-      await send(trimmed, 'text', undefined, replyToId);
+      if (pendingImage) {
+        setUploadingImage(true);
+        await sendPublicChatImage(pendingImage, trimmed, replyToId, uploadChatImage, send);
+        setImageFile(current => current === pendingImage ? null : current);
+      } else {
+        await send(trimmed, 'text', undefined, replyToId);
+      }
+      setReplyTo(current => current?.id === replyToId ? null : current);
       setNewMessage(current => current === newMessage ? '' : current);
     } catch (err) {
       console.error('[SidebarChat] Send failed:', err);
       toast.error(_copy("copy.66b8e077d85f", { defaultValue: "Failed to send message" }));
+    } finally {
+      mediaSendInFlight.current = false;
+      setUploadingImage(false);
     }
   };
 
@@ -332,6 +357,7 @@ export function SidebarChat({ isActive }: SidebarChatProps) {
 
   const handleGifSelect = async (gifUrl: string) => {
     if (!isAuthenticated) { openLoginModal(); return; }
+    if (mediaSendInFlight.current) return;
     const replyToId = replyTo?.id;
     setReplyTo(null);
     try {
@@ -382,7 +408,7 @@ export function SidebarChat({ isActive }: SidebarChatProps) {
   const isLoading = roomsLoading || messagesLoading;
 
   return (
-    <div className="flex flex-col h-full pl-px">
+    <div data-sidebar-chat className="flex flex-col h-full pl-px">
       <SharedTranslationContext.Provider value={{ translateSignal, originalSignal, requestTranslate: () => {}, requestOriginal: () => {} }}>
       <div className="relative flex-1">
         <div ref={scrollContainerRef} className="absolute inset-0 overflow-y-auto py-2 space-y-2">
@@ -573,11 +599,12 @@ export function SidebarChat({ isActive }: SidebarChatProps) {
                     </div>
                     {/* Hover action buttons */}
                     {isAuthenticated && (
-                      <div className="pointer-events-none absolute right-0 top-0 z-10 flex items-center gap-0.5 rounded-l-md bg-zinc-900/90 pl-1 opacity-0 backdrop-blur-sm transition-opacity group-hover:pointer-events-auto group-hover:opacity-100">
+                      <div data-sidebar-chat-actions className="pointer-events-none absolute right-0 top-0 z-10 flex items-center gap-0.5 rounded-l-md bg-zinc-900/90 pl-1 opacity-0 backdrop-blur-sm transition-opacity group-hover:pointer-events-auto group-hover:opacity-100 group-focus-within:pointer-events-auto group-focus-within:opacity-100">
                         <Tooltip>
                           <TooltipTrigger asChild>
                             <button
                               onClick={() => setReplyTo(msg)}
+                              aria-label={_copy("copy.c253f451bdd5", { defaultValue: "Reply" })}
                               className="p-0.5 text-zinc-500 hover:text-white transition-colors rounded"
                             >
                               <Reply className="w-3 h-3" />
@@ -594,6 +621,7 @@ export function SidebarChat({ isActive }: SidebarChatProps) {
                                 <TooltipTrigger asChild>
                                   <button
                                     onClick={() => { setEditingId(msg.id); setEditInitial(msg.content || ''); }}
+                                    aria-label={_copy("copy.464c4ffd019e", { defaultValue: "Edit" })}
                                     className="p-0.5 text-zinc-500 hover:text-white transition-colors rounded"
                                   >
                                     <Pencil className="w-3 h-3" />
@@ -606,6 +634,7 @@ export function SidebarChat({ isActive }: SidebarChatProps) {
                               <TooltipTrigger asChild>
                                 <button
                                   onClick={() => void deleteMessage(msg.id)}
+                                  aria-label={_copy("copy.e2d0a54968ea", { defaultValue: "Delete" })}
                                   className="p-0.5 text-zinc-500 hover:text-red-400 transition-colors rounded"
                                 >
                                   <Trash2 className="w-3 h-3" />
@@ -619,7 +648,7 @@ export function SidebarChat({ isActive }: SidebarChatProps) {
                           <Tooltip>
                             <TooltipTrigger asChild>
                               <PopoverTrigger asChild>
-                                <button className="p-0.5 text-zinc-500 hover:text-white transition-colors rounded">
+                                <button aria-label={_copy("copy.01fad993ff61", { defaultValue: "React" })} className="p-0.5 text-zinc-500 hover:text-white transition-colors rounded">
                                   <SmilePlus className="w-3 h-3" />
                                 </button>
                               </PopoverTrigger>
@@ -679,14 +708,30 @@ export function SidebarChat({ isActive }: SidebarChatProps) {
             </span>
             <p className="text-[10px] text-zinc-400 truncate">{replyTo.content || _copy("copy.d357175cfe89", { defaultValue: "Media" })}</p>
           </div>
-          <button onClick={() => setReplyTo(null)} className="flex-shrink-0 p-0.5 text-zinc-500 hover:text-white">
+          <button aria-label={_copy("copy.19766ed6ccb2", { defaultValue: "Cancel" })} onClick={() => setReplyTo(null)} className="flex-shrink-0 p-0.5 text-zinc-500 hover:text-white">
             <X className="w-3 h-3" />
           </button>
         </div>
       )}
 
       {/* Input */}
-      <div className="pl-3 pr-[14px] py-3">
+      <div data-sidebar-chat-composer className="pl-3 pr-[14px] py-3">
+        {imagePreview && (
+          <div className="relative mb-2 w-fit">
+            <img src={imagePreview} alt={imageFile?.name || ''} className="h-16 max-w-full rounded-lg object-contain" />
+            <button type="button" disabled={uploadingImage} onClick={() => setImageFile(null)} aria-label={_copy("copy.595b066a8838", { defaultValue: "Remove attachment" })} className="absolute -right-1 -top-1 rounded-full bg-zinc-800 p-1 text-white">
+              <X className="h-3 w-3" />
+            </button>
+          </div>
+        )}
+        <input ref={imageInputRef} type="file" accept={PUBLIC_CHAT_IMAGE_TYPES.join(',')} className="hidden" aria-label={_copy("copy.21298c62c8e5", { defaultValue: "Attach a file" })} onChange={(event) => {
+          const file = event.target.files?.[0];
+          event.target.value = '';
+          if (!file) return;
+          const check = validatePublicChatMedia(file);
+          if (!check.ok) { toast.error(check.error); return; }
+          setImageFile(file);
+        }} />
         <div>
           <Textarea
             ref={textareaRef}
@@ -726,9 +771,15 @@ export function SidebarChat({ isActive }: SidebarChatProps) {
                 <LiveChatOnlineCount count={onlineCount} />
               </div>
             )}
+            <Button type="button" data-chat-composer-action variant="ghost" size="icon" disabled={uploadingImage || isSending} aria-label={_copy("copy.21298c62c8e5", { defaultValue: "Attach a file" })} title={_copy("copy.21298c62c8e5", { defaultValue: "Attach a file" })} onClick={() => {
+              if (!isAuthenticated) { openLoginModal(); return; }
+              imageInputRef.current?.click();
+            }} className="h-8 w-8 text-zinc-400 hover:text-white hover:bg-zinc-700">
+              <Attach className="h-5 w-5" />
+            </Button>
             <VoiceRecorder
               onRecordingComplete={handleVoiceRecordingComplete}
-              disabled={isSending}
+              disabled={isSending || uploadingImage}
             />
             <EmojiGifPicker
               onEmojiSelect={handleEmojiSelect}
@@ -738,10 +789,11 @@ export function SidebarChat({ isActive }: SidebarChatProps) {
               variant="ghost"
               size="icon"
               onClick={handleSend}
-              disabled={!newMessage.trim() || isSending}
+              data-chat-composer-action
+              disabled={(!newMessage.trim() && !imageFile) || isSending || uploadingImage}
               className="h-8 w-8 text-zinc-400 hover:text-white hover:bg-zinc-700"
             >
-              {isSending ? (
+              {isSending || uploadingImage ? (
                 <Loader2 className="w-5 h-5 animate-spin" />
               ) : (
                 <Send className="w-5 h-5" />

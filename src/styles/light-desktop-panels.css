@@ -4,12 +4,15 @@
 @media (min-width: 1024px) {
   html:is([data-theme='light'], [data-system-tone='light']) {
     --desktop-pearl-radius: 20px;
+    --desktop-pearl-search-radius: 12px;
     --desktop-pearl-inset: 16px;
   }
 
   html:is([data-theme='light'], [data-system-tone='light']):not(#_):not(#_):not(#_):not(#_):not(#_):not(#_):not(#_):not(#_) [data-desktop-right-rail] {
-    background: #f3f4f5;
-    border-radius: 28px !important;
+    background: transparent;
+    border: 0;
+    border-radius: 0 !important;
+    box-shadow: none;
     padding: var(--desktop-pearl-inset);
     margin-top: 8px;
     top: 8px;
@@ -36,14 +39,14 @@
     [data-desktop-right-rail] [data-search-bento] {
     border: 0 !important;
     padding: 0 !important;
-    border-radius: var(--desktop-pearl-radius) !important;
+    border-radius: var(--desktop-pearl-search-radius) !important;
     overflow: hidden;
   }
 
   html:is([data-theme='light'], [data-system-tone='light']):not(#_):not(#_):not(#_):not(#_):not(#_):not(#_):not(#_):not(#_)
     [data-desktop-right-rail] [data-search-bento] input {
     height: 44px;
-    border-radius: var(--desktop-pearl-radius) !important;
+    border-radius: var(--desktop-pearl-search-radius) !important;
   }
 
   html:is([data-theme='light'], [data-system-tone='light']):not(#_):not(#_):not(#_):not(#_):not(#_):not(#_):not(#_):not(#_)
