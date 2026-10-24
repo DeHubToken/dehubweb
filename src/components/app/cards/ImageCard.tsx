@@ -654,13 +654,13 @@ function FeedDescription({
     <div className="relative space-y-1" data-card-caption={(linkFreeTitle || shownDescription) && dehubLinks.length === 0 && assetRefs.length === 0 && !/https?:\/\//.test(linkSource ?? '') ? '' : undefined} data-no-navigate {...tapGestures} onClick={(event) => event.stopPropagation()}>
       {!disabled && <TapReactionBurst postId={postId} />}
       {linkFreeTitle && (
-        <h3 className={stage ? "text-white text-[15px] font-bold leading-tight" : "text-white text-[14px] leading-tight"}>
+        <h3 className={stage ? "text-white text-[15px] font-bold leading-tight whitespace-pre-wrap break-words" : "text-white text-[14px] leading-tight whitespace-pre-wrap break-words"}>
           {renderTextWithLinks(linkFreeTitle)}
         </h3>
       )}
       {shownDescription && (
         <div>
-          <p className="text-zinc-300 text-[14px] leading-relaxed">
+          <p className="text-zinc-300 text-[14px] leading-relaxed whitespace-pre-wrap break-words">
             {renderTextWithLinks(shownDescription)}
             {stage && hasLongDescription && !expanded && (
               <button type="button" data-stage-more onClick={() => setExpanded(true)} className="ml-1 font-bold">{_copy("copy.187897ce0afc", { defaultValue: "more" })}</button>
