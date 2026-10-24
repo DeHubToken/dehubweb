@@ -1742,7 +1742,7 @@ export function ShortsViewer({ shorts, initialIndex, onClose, onLoadMore, hasMor
                       className="flex items-center gap-1 select-none touch-none"
                       animate={justVoted ? { scale: [1, 1.3, 1] } : {}}
                       transition={{ duration: 0.3, ease: "easeOut" }}
-                      aria-label={myReaction ? _copy("copy.a3156ed263d2", { defaultValue: "{{value1}} — hold to change your reaction", value1: reactionMeta(myReaction).label }) : _copy("copy.12b91b0ac5dd", { defaultValue: "{{value1}} — hold to react", value1: reactionMeta(leadReaction ?? "like").label })}
+                      aria-label={myReaction ? _copy("copy.a3156ed263d2", { defaultValue: "{{value1}} — hold to change your reaction", value1: reactionMeta(myReaction).label }) : _copy("copy.12b91b0ac5dd", { defaultValue: "{{value1}} — hold to react", value1: reactionMeta(reactionForThumbTap(myReaction, localReactionCounts)).label })}
                       aria-haspopup="menu"
                       aria-expanded={likeTray.open}
                     >
@@ -1994,7 +1994,7 @@ export function ShortsViewer({ shorts, initialIndex, onClose, onLoadMore, hasMor
                       className="flex items-center gap-1 select-none touch-none"
                       animate={justVoted ? { scale: [1, 1.3, 1] } : {}}
                       transition={{ duration: 0.3, ease: "easeOut" }}
-                      aria-label={myReaction ? _copy("copy.a3156ed263d2", { defaultValue: "{{value1}} — hold to change your reaction", value1: reactionMeta(myReaction).label }) : _copy("copy.12b91b0ac5dd", { defaultValue: "{{value1}} — hold to react", value1: reactionMeta(leadReaction ?? "like").label })}
+                      aria-label={myReaction ? _copy("copy.a3156ed263d2", { defaultValue: "{{value1}} — hold to change your reaction", value1: reactionMeta(myReaction).label }) : _copy("copy.12b91b0ac5dd", { defaultValue: "{{value1}} — hold to react", value1: reactionMeta(reactionForThumbTap(myReaction, localReactionCounts)).label })}
                       aria-haspopup="menu"
                       aria-expanded={likeTray.open}
                     >

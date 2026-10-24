@@ -1526,6 +1526,13 @@
     "encryptionOff": "رمزگذاری روی این دستگاه فعال نیست",
     "encryptionTurnOn": "فعال کردن",
     "cannotDecrypt": "پیام رمزگذاری‌شده — در این دستگاه قابل باز کردن نیست",
+    "lockedTitle": "برای خواندن پیام‌هایتان، قفل را باز کنید",
+    "lockedBody": "چت شما با {{name}} رمزگذاری سرتاسری شده است. برای باز کردن کیف پول خود، آن را در این دستگاه باز کنید.",
+    "lockedUnlock": "باز کردن قفل کیف پول",
+    "lockedTryAgain": "دوباره امتحان کنید",
+    "lockedPrivate": "فقط تو میتونی بخونیشون",
+    "undecryptableRun_one": "پیام {{count}} در این دستگاه باز نمی‌شود",
+    "undecryptableRun_other": "پیام‌های {{count}} در این دستگاه باز نمی‌شوند",
     "title": "پیام‌ها",
     "searchConversations": "جستجوی مکالمات...",
     "failedToLoad": "بارگذاری مکالمات ناموفق بود",
@@ -8856,7 +8863,7 @@
     "failed": "پردازش ویدیو ممکن نشد"
   },
   "loginStack": {
-    "tip": "انعام DHB",
+    "aiRestyle": "تغییر سبک با هوش مصنوعی",
     "headlineTop": "صاحب همه چیز خواهی شد",
     "headlineAccent": "و خوشحال خواهی بود.",
     "orContinueWith": "یا ادامه با",

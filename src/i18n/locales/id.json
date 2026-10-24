@@ -1532,6 +1532,13 @@
     "encryptionOff": "Enkripsi tidak aktif di perangkat ini",
     "encryptionTurnOn": "Aktifkan",
     "cannotDecrypt": "Pesan terenkripsi — tidak dapat dibuka di perangkat ini",
+    "lockedTitle": "Buka kunci untuk membaca pesan Anda",
+    "lockedBody": "Obrolan Anda dengan {{name}} dienkripsi dari ujung ke ujung. Buka dompet Anda di perangkat ini untuk membukanya.",
+    "lockedUnlock": "Buka dompet",
+    "lockedTryAgain": "Coba lagi",
+    "lockedPrivate": "Hanya Anda yang bisa membacanya",
+    "undecryptableRun_one": "Pesan {{count}} tidak dapat dibuka di perangkat ini",
+    "undecryptableRun_other": "Pesan {{count}} tidak dapat dibuka di perangkat ini",
     "title": "Pesan",
     "searchConversations": "Cari percakapan...",
     "failedToLoad": "Gagal memuat percakapan",
@@ -8878,7 +8885,7 @@
     "failed": "Video tidak dapat diproses"
   },
   "loginStack": {
-    "tip": "Tip DHB",
+    "aiRestyle": "Gaya ulang AI",
     "headlineTop": "Kamu akan memiliki segalanya",
     "headlineAccent": "dan bahagia.",
     "orContinueWith": "atau lanjut dengan",

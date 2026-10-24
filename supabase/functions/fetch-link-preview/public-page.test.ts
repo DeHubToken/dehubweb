@@ -57,7 +57,9 @@ Deno.test('pinned HTTP transport preserves Host and bounds response bodies', asy
   try {
     const result=await requestPinned(new URL(url),{address:'127.0.0.1',family:4},signal);
     assertEquals(result.html,`<title>does-not-resolve.invalid:${address.port}</title>`);
-    await assertRejects(()=>requestPinned(new URL(url+'/large'),{address:'127.0.0.1',family:4},signal));
+    // A page over the budget is cut to its head, not refused.
+    const large=await requestPinned(new URL(url+'/large'),{address:'127.0.0.1',family:4},signal);
+    assertEquals(large.html.length,1_048_576);
     const redirect=await requestPinned(new URL(url+'/redirect'),{address:'127.0.0.1',family:4},signal);
     assertEquals(redirect.status,302);
   } finally { await new Promise<void>((resolve,reject)=>server.close(error=>error?reject(error):resolve())); }

@@ -1528,6 +1528,13 @@
     "encryptionOff": "Kryptering er av på denne enheten",
     "encryptionTurnOn": "Slå på",
     "cannotDecrypt": "Kryptert melding — kan ikke åpnes på denne enheten",
+    "lockedTitle": "Lås opp for å lese meldingene dine",
+    "lockedBody": "Chatten din med {{name}} er ende-til-ende-kryptert. Lås opp lommeboken din på denne enheten for å åpne den.",
+    "lockedUnlock": "Lås opp lommeboken",
+    "lockedTryAgain": "Prøv igjen",
+    "lockedPrivate": "Bare du kan lese dem",
+    "undecryptableRun_one": "{{count}}-meldingen kan ikke åpnes på denne enheten",
+    "undecryptableRun_other": "{{count}}-meldinger kan ikke åpnes på denne enheten",
     "title": "Meldinger",
     "searchConversations": "Søk i samtaler...",
     "failedToLoad": "Kunne ikke laste samtaler",
@@ -8857,7 +8864,7 @@
     "failed": "Videoen kunne ikke behandles"
   },
   "loginStack": {
-    "tip": "Gi DHB-tips",
+    "aiRestyle": "AI-restyle",
     "headlineTop": "Du kommer til å eie alt",
     "headlineAccent": "og være lykkelig.",
     "orContinueWith": "eller fortsett med",

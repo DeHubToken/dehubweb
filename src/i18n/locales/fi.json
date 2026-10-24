@@ -1524,6 +1524,13 @@
     "encryptionOff": "Salaus ei ole käytössä tässä laitteessa",
     "encryptionTurnOn": "Ota käyttöön",
     "cannotDecrypt": "Salattu viesti — ei voida avata tällä laitteella",
+    "lockedTitle": "Avaa lukitus lukeaksesi viestisi",
+    "lockedBody": "Keskustelusi käyttäjän {{name}} kanssa on täysin salattu. Avaa lompakkosi tällä laitteella avataksesi sen.",
+    "lockedUnlock": "Avaa lompakko",
+    "lockedTryAgain": "Yritä uudelleen",
+    "lockedPrivate": "Vain sinä voit lukea ne",
+    "undecryptableRun_one": "{{count}} viestiä ei voi avata tällä laitteella",
+    "undecryptableRun_other": "{{count}} viestiä ei voi avata tällä laitteella",
     "title": "Viestit",
     "searchConversations": "Etsi keskusteluista...",
     "failedToLoad": "Keskustelujen lataus epäonnistui",
@@ -8754,7 +8761,7 @@
     "failed": "Videota ei voitu käsitellä"
   },
   "loginStack": {
-    "tip": "Anna DHB-tippi",
+    "aiRestyle": "AI-tyylittely",
     "headlineTop": "Omistat kaiken",
     "headlineAccent": "ja olet onnellinen.",
     "orContinueWith": "tai jatka käyttäen",

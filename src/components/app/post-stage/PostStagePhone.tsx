@@ -34,6 +34,8 @@ interface PostStagePhoneProps {
 
 /** Body class that hides the app's phone chrome while the stage is up. */
 export const POST_STAGE_BODY_CLASS = 'post-stage-mode';
+/** Added alongside it when the stage keeps the top bar and feed pill. */
+export const POST_STAGE_KEEP_NAV_CLASS = 'post-stage-keep-nav';
 
 export function PostStagePhone({ value, children, comments, related, kind, title, subtitle, thumbnail, padded }: PostStagePhoneProps) {
   const rootRef = useRef<HTMLDivElement>(null);
@@ -42,6 +44,15 @@ export function PostStagePhone({ value, children, comments, related, kind, title
     document.body.classList.add(POST_STAGE_BODY_CLASS);
     return () => document.body.classList.remove(POST_STAGE_BODY_CLASS);
   }, []);
+
+  // Audio has no media to float Back on, so it keeps the top bar and feed
+  // pill, whose settings slot turns into Back on a post.
+  const keepNav = kind === 'audio';
+  useEffect(() => {
+    if (!keepNav) return;
+    document.body.classList.add(POST_STAGE_KEEP_NAV_CLASS);
+    return () => document.body.classList.remove(POST_STAGE_KEEP_NAV_CLASS);
+  }, [keepNav]);
 
   return (
     <>

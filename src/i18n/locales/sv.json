@@ -1528,6 +1528,13 @@
     "encryptionOff": "Kryptering är avstängd på den här enheten",
     "encryptionTurnOn": "Slå på",
     "cannotDecrypt": "Krypterat meddelande — kan inte öppnas på den här enheten",
+    "lockedTitle": "Lås upp för att läsa dina meddelanden",
+    "lockedBody": "Din chatt med {{name}} är end-to-end-krypterad. Lås upp din plånbok på den här enheten för att öppna den.",
+    "lockedUnlock": "Lås upp plånboken",
+    "lockedTryAgain": "Försök igen",
+    "lockedPrivate": "Bara du kan läsa dem",
+    "undecryptableRun_one": "Meddelandet {{count}} kan inte öppnas på den här enheten",
+    "undecryptableRun_other": "{{count}} -meddelanden kan inte öppnas på den här enheten",
     "title": "Meddelanden",
     "searchConversations": "Sök konversationer...",
     "failedToLoad": "Kunde inte ladda konversationer",
@@ -8757,7 +8764,7 @@
     "failed": "Videon kunde inte bearbetas"
   },
   "loginStack": {
-    "tip": "Ge DHB-dricks",
+    "aiRestyle": "AI-restyle",
     "headlineTop": "Du kommer att äga allt",
     "headlineAccent": "och vara lycklig.",
     "orContinueWith": "eller fortsätt med",

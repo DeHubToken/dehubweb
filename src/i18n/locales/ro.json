@@ -1527,6 +1527,13 @@
     "encryptionOff": "Criptarea este dezactivată pe acest dispozitiv",
     "encryptionTurnOn": "Activează",
     "cannotDecrypt": "Mesaj criptat — nu poate fi deschis pe acest dispozitiv",
+    "lockedTitle": "Deblochează pentru a-ți citi mesajele",
+    "lockedBody": "Chatul tău cu {{name}} este criptat integral. Deblochează-ți portofelul pe acest dispozitiv pentru a-l deschide.",
+    "lockedUnlock": "Deblochează portofelul",
+    "lockedTryAgain": "Încearcă din nou",
+    "lockedPrivate": "Numai tu le poți citi",
+    "undecryptableRun_one": "Mesajul {{count}} nu poate fi deschis pe acest dispozitiv",
+    "undecryptableRun_other": "Mesajele {{count}} nu pot fi deschise pe acest dispozitiv",
     "title": "Messages",
     "searchConversations": "Search conversations...",
     "failedToLoad": "A eșuat încărcarea conversațiilor",
@@ -8867,7 +8874,7 @@
     "failed": "Videoclipul nu a putut fi procesat"
   },
   "loginStack": {
-    "tip": "Bacșiș în DHB",
+    "aiRestyle": "Restyle AI",
     "headlineTop": "Vei deține totul",
     "headlineAccent": "și vei fi fericit.",
     "orContinueWith": "sau continuă cu",
