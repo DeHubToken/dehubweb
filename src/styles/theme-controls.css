@@ -1,3 +1,5 @@
+@import './search-fields.css';
+
 /* Standalone fallbacks sit outside the app shell's black baseline. The generic
    background/foreground tokens default to light, so set the dark baselines
    explicitly before applying the canvas page veil. */

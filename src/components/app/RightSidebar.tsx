@@ -38,6 +38,7 @@ function SearchBar({ compact }: { compact?: boolean }) {
     <div className="relative">
       <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-zinc-500" />
       <Input
+        data-search-surface
         value={searchValue}
         onChange={(e) => setSearchValue(e.target.value)}
         onKeyDown={handleKeyDown}

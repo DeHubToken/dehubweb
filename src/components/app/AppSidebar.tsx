@@ -170,6 +170,7 @@ export function AppSidebar({ isOpen, onOpenChange }: AppSidebarProps) {
           placeholder={t('sidebar.searchMenu')}
           aria-label={t('sidebar.searchMenu')}
           data-menu-search
+          data-search-surface
           className="w-full h-[42px] pl-10 pr-9 rounded-xl bg-white/5 border border-white/10 text-[15px] text-white placeholder:text-zinc-500 outline-none focus:border-white/30 transition-colors"
         />
         {menuQuery && (

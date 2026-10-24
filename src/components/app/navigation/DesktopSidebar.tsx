@@ -559,6 +559,7 @@ export function DesktopSidebar({ onPostClick }: DesktopSidebarProps) {
                       onKeyDown={handleSearchKeyDown}
                       tabIndex={showSearch ? 0 : -1}
                       placeholder={t('sidebar.searchMenu')}
+                      data-search-surface
                       aria-label={t('sidebar.searchMenu')}
                       className={cn(
                         "w-full h-[38px] pl-9 pr-8 rounded-xl text-[14px] outline-none transition-colors",
@@ -805,6 +806,7 @@ export function DesktopSidebar({ onPostClick }: DesktopSidebarProps) {
                       onKeyDown={handleSearchKeyDown}
                       tabIndex={showBottomSearch ? 0 : -1}
                       placeholder={t('sidebar.searchMenu')}
+                      data-search-surface
                       aria-label={t('sidebar.searchMenu')}
                       className={cn(
                         "w-full h-[38px] pl-9 pr-8 rounded-xl text-[14px] outline-none transition-colors",
