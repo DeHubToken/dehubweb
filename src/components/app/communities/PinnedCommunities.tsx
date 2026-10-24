@@ -101,7 +101,7 @@ function PinnedCommunityCard({ community, onClick, isOwnProfile, onManagePins, c
             }}
           />
         )}
-        <div className="w-12 h-12 rounded-lg bg-white/[0.06] flex items-center justify-center overflow-hidden flex-shrink-0">
+        <div className="relative w-12 h-12 rounded-lg bg-white/[0.06] flex items-center justify-center overflow-hidden flex-shrink-0">
           {community.avatar_url ? (
             <img src={storageImage(community.avatar_url, deviceWidth(48))} alt="" className="w-full h-full object-cover" loading="lazy" decoding="async" />
           ) : (
@@ -109,7 +109,7 @@ function PinnedCommunityCard({ community, onClick, isOwnProfile, onManagePins, c
           )}
         </div>
 
-        <div className="flex-1 min-w-0">
+        <div className="relative flex-1 min-w-0">
           <p className="text-sm font-semibold text-white truncate">{community.name}</p>
           {community.description && (
             <p className="text-xs truncate mt-0.5 text-zinc-400">{community.description}</p>
