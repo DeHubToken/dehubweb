@@ -15,7 +15,7 @@ import Briefcase from "@/components/ui/cut-icons/bounties";
 
 import Home from "@/components/ui/cut-icons/home";
 import User from "@/components/ui/cut-icons/profile";
-import MessageSquare from "@/components/ui/cut-icons/messages";
+import MessageSquare from "@/components/ui/cut-icons/message-envelope";
 import Bell from "@/components/ui/cut-icons/alerts";
 import Search from "@/components/ui/cut-icons/search";
 import Settings from "@/components/ui/cut-icons/settings";

@@ -3,6 +3,7 @@ export { default as Shorts } from "./cut-icons/shorts";
 export { default as Home } from "./cut-icons/home";
 export { default as House } from "./cut-icons/home";
 export { default as Search } from "./cut-icons/search";
+export { default as MessageEnvelope } from "./cut-icons/message-envelope";
 export { default as MessageSquare } from "./cut-icons/messages";
 export { default as MessageCircle } from "./cut-icons/messages";
 export { default as MessageSquareText } from "./cut-icons/messages";

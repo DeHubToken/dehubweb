@@ -6,7 +6,7 @@ import Copy from "@/components/ui/cut-icons/copy";
 import Wallet from "@/components/ui/cut-icons/wallet";
 import Ban from "@/components/ui/cut-icons/blocked";
 
-import MessageSquare from "@/components/ui/cut-icons/messages";
+import MessageSquare from "@/components/ui/cut-icons/message-envelope";
 
 import { Skeleton } from '@/components/ui/skeleton';
 import { useEffect, useRef, useState } from 'react';

@@ -26,7 +26,7 @@ import { NAV_LABEL_KEYS } from './SidebarNavItem';
 // Rail row → artwork. Rows without a bespoke render borrow the closest one.
 const NAV_ICON_KEYS: Record<string, ThemeIconKey> = {
   Home: 'home', Profile: 'profile', Explore: 'search', Notifications: 'notifications',
-  Messages: 'messages', Arcade: 'arcade', Apps: 'stores', Communities: 'communities', Assistant: 'assistant',
+  Arcade: 'arcade', Apps: 'stores', Communities: 'communities', Assistant: 'assistant',
   Settings: 'settings', Stages: 'stages', Bookmarks: 'bookmarks', Command: 'command',
   Editor: 'videos', Creator: 'paint',
   Feedback: 'messages', Events: 'events', Leaderboard: 'trophy', 'Feature Requests': 'features', Staking: 'staking',
