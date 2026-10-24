@@ -164,7 +164,9 @@ async function submit(db: any, row: DubRow, worker: WorkerConfig): Promise<Submi
 
   let res: Response;
   try {
-    res = await fetch(worker.url || `https://api.runpod.ai/v2/${worker.endpoint}/run`, {
+    const destination = t.source_kind === 'stage' && worker.url
+      ? worker.url.replace(/\/jobs\/?$/, '/stage-jobs') : worker.url;
+    res = await fetch(destination || `https://api.runpod.ai/v2/${worker.endpoint}/run`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${worker.url ? worker.secret : worker.key}` },
     body: JSON.stringify({ input }),
