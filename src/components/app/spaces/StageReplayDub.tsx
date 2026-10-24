@@ -12,7 +12,7 @@ export function StageReplayDub({ audioRef, transcriptId, language, segments, onR
   transcriptId: string;
   language: string | null;
   segments: TranscriptSegment[] | null;
-  onReady: (ready: boolean) => void;
+  onReady: (ready: boolean, failed?: boolean) => void;
 }) {
   const { t } = useTranslation();
   const voices = useSpeechVoices();
@@ -25,11 +25,10 @@ export function StageReplayDub({ audioRef, transcriptId, language, segments, onR
   useVoiceDub(audioRef, language && !url && !deviceFailed ? segments : null, voice, () => setDeviceFailed(true));
   useCachedDubAudio(audioRef, url, () => setAudioFailed(true));
   const ready = !language || (!!segments?.length && (!!url || (!!voice && !deviceFailed)));
-  useEffect(() => {
-    onReady(ready);
-    if (!ready) audioRef.current?.pause();
-  }, [ready, onReady, audioRef]);
-  if (!language) return null;
   const failed = (audioFailed || ['failed', 'unavailable', 'too-long'].includes(cached?.status ?? '')) && (!voice || deviceFailed);
+  useEffect(() => {
+    onReady(ready, failed);
+  }, [ready, failed, onReady]);
+  if (!language) return null;
   return <p role="status" className="text-xs text-white/60">{t(ready ? 'dub.dubbed' : failed ? 'dub.noVoice' : 'dub.preparing')}</p>;
 }
