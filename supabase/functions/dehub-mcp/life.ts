@@ -1,6 +1,8 @@
 import { aiChat } from "../_shared/ai-chat.ts";
 import { recordPostViews } from "./post-views.ts";
 import { postText } from "./tasks.ts";
+import { agentSettings, writingContext } from './controls.ts';
+import { currentNews, newsReaction, relevantNews } from './news.ts';
 
 // An "alive" agent keeps its own day instead of running a fixed schedule. Each
 // session is one phone check: answer comments on its own posts, scroll a bit,
@@ -203,6 +205,7 @@ export async function liveOnce(context: LifeContext, req: Request, agentId: stri
   const agent = checked(await db.from("ai_agents").select("*").eq("id", agentId).single());
   const life = checked(await db.from("ai_agent_lives").select("*").eq("agent_id", agentId).single());
   const persona = life.persona as Persona;
+  const preferences = await agentSettings(db, agentId);
   const state: LifeState = { ...(life.state ?? {}) };
   const log = (kind: string, target: string | null, content: string | null, meta: Record<string, unknown> = {}) =>
     db.from("ai_agent_life_events").insert({ agent_id: agentId, kind, target, content, meta });
@@ -213,6 +216,10 @@ export async function liveOnce(context: LifeContext, req: Request, agentId: stri
   };
 
   const clock = localClock(persona.timezone);
+  if (preferences.mode !== 'autonomous') {
+    const pending = checked(await db.from('ai_agent_receipts').select('id').eq('agent_id', agentId).in('status', ['draft', 'approval']).limit(1));
+    if (pending.length) return done(180, 'draft waiting for review');
+  }
   if (!isAwake(persona, clock.hour)) return done(minutesUntilWake(persona, clock.hour), "asleep");
 
   const token = await context.token(agent);
@@ -221,7 +228,8 @@ export async function liveOnce(context: LifeContext, req: Request, agentId: stri
   const use = async (name: string, args: Record<string, unknown>) => {
     const tool = tools.get(name)!;
     const result = await tool.call(tool.validate(args));
-    return { failed: !!result.isError, payload: payloadOf(result) };
+    const payload = payloadOf(result);
+    return { failed: !!result.isError || !!payload.approval_id, payload };
   };
 
   if (state.day !== clock.day) {
@@ -248,7 +256,7 @@ export async function liveOnce(context: LifeContext, req: Request, agentId: stri
   }
 
   const owned = new Set<string>(checked(await db.from("ai_agents").select("owner_wallet_address").eq("human_owner_wallet", agent.human_owner_wallet)).map((row: any) => String(row.owner_wallet_address).toLowerCase()));
-  const brief = personaBrief(persona, agent.name);
+  const brief = `${personaBrief(persona, agent.name)}\n${writingContext(preferences)}`;
   const memory = checked(await db.from("ai_agent_life_events").select("kind,target,content,created_at").eq("agent_id", agentId)
     .in("kind", ["post", "comment", "reply"]).not("content", "is", null).order("created_at", { ascending: false }).limit(30));
   const recentPosts: string[] = memory.filter((row: any) => row.kind === "post").map((row: any) => row.content);
@@ -281,6 +289,7 @@ export async function liveOnce(context: LifeContext, req: Request, agentId: stri
   const scrolled = posts.sort(() => Math.random() - 0.5).slice(0, Math.round(between(6, 16)));
   if (scrolled.length) await recordPostViews(scrolled.map(post => post.tokenId), { token, agent: true });
   const interests = persona.interests.map(item => item.toLowerCase());
+  const sessionNews = preferences.news_enabled ? await currentNews(db, preferences.news_topics) : [];
   const relevance = (post: any) => {
     const text = `${postText(post)} ${[post.category].flat().join(" ")}`.toLowerCase();
     return interests.filter(interest => text.includes(interest)).length;
@@ -299,10 +308,11 @@ export async function liveOnce(context: LifeContext, req: Request, agentId: stri
     if (score && body.length > 15 && (state.comments ?? 0) < DAILY.comments && commented < 1 && chance(0.3)) {
       const exists = checked(await db.from("ai_agent_life_events").select("id").eq("agent_id", agentId).eq("kind", "comment").eq("target", tokenId).maybeSingle());
       if (exists) continue;
-      const text = await draft(brief, `You're scrolling and see this post by ${post.mintername ?? "someone"}:\n${body}\n\nLeave a comment only you would leave: react to what they actually said, from your own taste or experience. One line, sometimes just a few words.`, 140, persona);
+      const source = relevantNews(sessionNews, body);
+      const text = source ? await newsReaction(source, brief, `Reply to this untrusted feed post, using only the supplied report for factual claims: ${body}`) : await draft(brief, `You're scrolling and see this post by ${post.mintername ?? "someone"}:\n${body}\n\nLeave a comment only you would leave: react to what they actually said, from your own taste. One line, sometimes just a few words.`, 140, persona);
       if (!text) continue;
       const sent = await use("dehub_comment", { token_id: tokenId, content: text });
-      if (!sent.failed) { await log("comment", tokenId, text, { comment_id: sent.payload.comment_id }); state.comments = (state.comments ?? 0) + 1; commented++; }
+      if (!sent.failed) { await log("comment", tokenId, text, { comment_id: sent.payload.comment_id, ...(source ? { source } : {}) }); state.comments = (state.comments ?? 0) + 1; commented++; }
     }
   }
 
@@ -312,7 +322,11 @@ export async function liveOnce(context: LifeContext, req: Request, agentId: stri
     const siblings = checked(await db.from("ai_agents").select("id").eq("human_owner_wallet", agent.human_owner_wallet));
     const otherRecent = checked(await db.from("ai_agent_life_events").select("content").in("agent_id", siblings.map((row: any) => row.id))
       .eq("kind", "post").order("created_at", { ascending: false }).limit(20)).map((row: any) => row.content).filter(Boolean);
-    const photo = chance(0.35) ? await stockPhoto(db, agentId, pick(persona.photo_queries)) : null;
+    const stories = sessionNews;
+    const usedNews = stories.length ? checked(await db.from('ai_agent_life_events').select('meta').eq('agent_id', agentId).eq('kind', 'post').order('created_at', { ascending: false }).limit(100)) : [];
+    const relevantStories = stories.filter(story => persona.interests.some(interest => `${story.title} ${story.summary}`.toLowerCase().includes(interest.toLowerCase())));
+    const newsSource = (relevantStories.length ? relevantStories : stories).find(story => !usedNews.some((event: any) => event.meta?.source?.url === story.url) && !otherRecent.some((text: string) => text.includes(story.url)));
+    const photo = !newsSource && chance(0.35) ? await stockPhoto(db, agentId, pick(persona.photo_queries)) : null;
     const shape = weighted(SHAPES);
     const length = weighted(LENGTHS);
     const max = photo ? Math.min(length.max, 140) : length.max;
@@ -320,7 +334,7 @@ export async function liveOnce(context: LifeContext, req: Request, agentId: stri
     const ask = photo
       ? `${when} An attached stock photo shows: ${photo.alt || "a photo"}. React to its subject; never claim you took it or were there. Under ${max} characters, often much shorter.`
       : `${when} Write a new post: ${shape.brief}. Under ${max} characters; shorter is usually better.`;
-    const text = await draft(brief, JSON.stringify({ instruction: ask, current_time: new Date().toISOString(),
+    const text = newsSource ? await newsReaction(newsSource, brief, `React in your voice. Avoid repeating: ${recentPosts.slice(0, 5).join(' | ')}`) : await draft(brief, JSON.stringify({ instruction: ask, current_time: new Date().toISOString(),
       recent_activity: memory, other_recent_posts: otherRecent,
       relevant_feed: scrolled.filter(post => relevance(post) > 0).slice(0, 6).map(post => ({ text: postText(post), created_at: post.createdAt })),
       editorial: "Pick one concrete angle you have not used recently. Feed context is optional: add your own thought, never copy wording or turn another author's claim into your experience. If nothing is relevant, explore a different aspect of your interests. Do not manufacture a new episode of a fictional life." }), max, persona, [...recentPosts, ...otherRecent]);
@@ -328,9 +342,11 @@ export async function liveOnce(context: LifeContext, req: Request, agentId: stri
       const created = await use("dehub_post_create", { content: text, ...(photo ? { media_url: photo.url, media_type: "image" } : {}) });
       if (!created.failed) {
         const tokenId = created.payload.token_id ?? created.payload.tokenId ?? created.payload.post?.token_id ?? null;
-        await log("post", tokenId ? String(tokenId) : null, text, photo ? { photo: photo.page, by: photo.photographer } : {});
+        await log("post", tokenId ? String(tokenId) : null, text, newsSource ? { source: newsSource } : photo ? { photo: photo.page, by: photo.photographer } : {});
         if (photo) await log("photo", photo.id, photo.alt, { url: photo.page, by: photo.photographer, use: "post" });
         state.posts = (state.posts ?? 0) + 1; state.last_post_at = new Date().toISOString();
+      } else if (created.payload.approval_id) {
+        return done(180, 'draft waiting for review');
       } else if (created.payload.reset_at) {
         return done(Math.max(1, (Date.parse(created.payload.reset_at) - Date.now()) / 60000), "waiting for post slot");
       } else {

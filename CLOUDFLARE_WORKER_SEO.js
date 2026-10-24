@@ -754,6 +754,31 @@ function postFaqLd(contentHtml) {
   return mainEntity.length >= 2 ? { '@type': 'FAQPage', mainEntity } : null;
 }
 
+/**
+ * VideoObject for the first video embedded in a post body, so the guide can
+ * appear in video results. Null when the post has no video or no poster frame
+ * (Google requires a thumbnail).
+ */
+function postVideoLd(contentHtml, post) {
+  const tag = /<video\b[^>]*>/i.exec(contentHtml || '');
+  if (!tag) return null;
+  const attr = (name) => {
+    const m = new RegExp(`\\s${name}="([^"]*)"`, 'i').exec(tag[0]);
+    return m ? m[1].replace(/&amp;/g, '&') : '';
+  };
+  const contentUrl = attr('src');
+  const thumbnailUrl = attr('poster');
+  if (!contentUrl || !thumbnailUrl) return null;
+  return {
+    '@type': 'VideoObject',
+    name: attr('title') || post.title,
+    description: (post.seoDescription || post.excerpt || post.title).slice(0, 280),
+    thumbnailUrl,
+    contentUrl,
+    ...(post.publishedAt ? { uploadDate: post.publishedAt } : {}),
+  };
+}
+
 function buildBlogHtml(post, canonicalUrl, contentHtml, manifest) {
   const image = buildBlogShareImage(post);
   const title = post.seoTitle || `${post.title} — DeHub Blog`;
@@ -782,6 +807,8 @@ function buildBlogHtml(post, canonicalUrl, contentHtml, manifest) {
   };
   const faq = postFaqLd(contentHtml);
   if (faq) jsonLd['@graph'].push({ ...faq, '@id': `${canonicalUrl}#faq` });
+  const video = postVideoLd(contentHtml, post);
+  if (video) jsonLd['@graph'].push({ ...video, '@id': `${canonicalUrl}#video` });
   return `<!DOCTYPE html>
 <html lang="en">
 <head>
@@ -903,6 +930,8 @@ const HOME_GUIDE_LINKS = [
   ['/guides/dehub-vs-cheelee-theta-xcad-watch-to-earn', 'Cheelee alternative: DeHub vs Cheelee, Theta.tv and XCAD'],
   ['/guides/web3-live-streaming-decentralised-twitch-alternative', 'Web3 live streaming: a decentralised Twitch alternative'],
   ['/guides/best-decentralised-social-media-platforms-2026', 'Best decentralised social media platforms 2026'],
+  ['/guides/higgsfield-genjutsu-alternative', 'Higgsfield Genjutsu alternative: swap anyone in a video'],
+  ['/guides/how-does-higgsfield-genjutsu-work', 'How does Higgsfield Genjutsu work? Step by step'],
   ['/guides/dehub-vs-depaul-dehub-vs-rowan-dehub', 'DeHub vs DePaul DeHUB vs Rowan DEHub'],
   ['/dehub-app', 'Get the DeHub app'],
 ];
@@ -2410,7 +2439,7 @@ function unservedLocaleRedirect(url, route, table) {
 }
 
 /** og:locale values, in the territory form Facebook's own locale list uses. */
-const OG_LOCALES = { en: 'en_US', ar: 'ar_AR', es: 'es_ES', fr: 'fr_FR', nl: 'nl_NL', tr: 'tr_TR' };
+const OG_LOCALES = { en: 'en_US', ar: 'ar_AR', es: 'es_ES', fr: 'fr_FR', nl: 'nl_NL', tr: 'tr_TR', ha: 'ha_NG', hi: 'hi_IN', ja: 'ja_JP', ko: 'ko_KR', pt: 'pt_BR', tl: 'tl_PH', vi: 'vi_VN', zh: 'zh_CN' };
 function ogLocale(lang) {
   return OG_LOCALES[lang] || `${lang}_${lang.toUpperCase()}`;
 }
@@ -3663,11 +3692,11 @@ function buildCreatorPackHtml(pack) {
 }
 
 /**
- * A single DAO proposal, /app/governance/<uuid>. An attached image is the
- * share card; otherwise the governance card stands in.
+ * A single DAO proposal, /app/governance/<n> (or the legacy uuid). An attached
+ * image is the share card; otherwise the governance card stands in.
  */
 function buildProposalHtml(proposal) {
-  const canonicalUrl = `${APP_URL}/app/governance/${proposal.id}`;
+  const canonicalUrl = `${APP_URL}/app/governance/${proposal.proposal_number ?? proposal.id}`;
   const name = proposal.title || 'Proposal';
   const author = proposal.author_username
     ? `@${proposal.author_username}`
@@ -4571,7 +4600,7 @@ function shouldServeSSR(pathname) {
   if (/^\/(?:app\/)?stores\/[^/]+/.test(pathname)) return true;
   if (/^\/(?:app\/)?events\/\d+/.test(pathname)) return true;
   // A single governance proposal, rendered from PostgREST below.
-  if (/^\/(?:app\/)?governance\/[0-9a-fA-F-]{8,}\/?$/.test(pathname)) return true;
+  if (/^\/(?:app\/)?governance\/(?:\d{1,9}|[0-9a-fA-F-]{8,})\/?$/.test(pathname)) return true;
   // A shared Creator Flow, /creator/flow/<id>. `creator` is a reserved
   // ROUTE_SEGMENT, so without this rule the share link unfurls as the SPA
   // shell — the flow renderer below would never run.
@@ -5313,9 +5342,9 @@ const ENTITY_SITEMAPS = {
       : null),
   }],
   proposals: [{
-    query: () => 'governance_proposals?select=id,title,description,updated_at&order=created_at.asc&limit=5000',
+    query: () => 'governance_proposals?select=*&order=created_at.asc&limit=5000',
     entry: (p) => (substantiveLength(`${p.title || ''} ${p.description || ''}`) >= ENTITY_SITEMAP_MIN_TEXT
-      ? { loc: `${APP_URL}/app/governance/${p.id}`, lastmod: p.updated_at, changefreq: 'weekly', priority: '0.5' }
+      ? { loc: `${APP_URL}/app/governance/${p.proposal_number ?? p.id}`, lastmod: p.updated_at, changefreq: 'weekly', priority: '0.5' }
       : null),
   }],
   features: [{
@@ -6720,10 +6749,13 @@ async function handleRequest(request, env, ctx) {
     return entityMiss(pack);
   }
 
-  const proposalMatch = cleanPath.match(/^\/(?:app\/)?governance\/([0-9a-fA-F-]{8,})$/);
+  // /app/governance/<n> is the share form; the uuid is the legacy one.
+  const proposalMatch = cleanPath.match(/^\/(?:app\/)?governance\/(\d{1,9}|[0-9a-fA-F-]{8,})$/);
   if (proposalMatch) {
     const proposal = await supabaseLookup(
-      `governance_proposals?id=eq.${encodeURIComponent(proposalMatch[1])}&select=*&limit=1`,
+      /^\d+$/.test(proposalMatch[1])
+        ? `governance_proposals?proposal_number=eq.${proposalMatch[1]}&select=*&limit=1`
+        : `governance_proposals?id=eq.${encodeURIComponent(proposalMatch[1])}&select=*&limit=1`,
     );
     if (proposal) {
       return guard(new Response(buildProposalHtml(proposal), { status: 200, headers: blogHeaders }));

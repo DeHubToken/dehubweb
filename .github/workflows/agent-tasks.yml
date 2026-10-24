@@ -8,6 +8,7 @@ on:
       - 'supabase/migrations/20261013010000_badge_agent_capacity.sql'
       - 'supabase/migrations/20261020230000_agent_swarm_controls.sql'
       - 'supabase/migrations/20261022050000_agent_lives.sql'
+      - 'supabase/migrations/20261023120000_agent_workspace.sql'
       - 'tests/sql/agent-tasks.sql'
       - '.github/workflows/agent-tasks.yml'
 jobs:
@@ -21,7 +22,7 @@ jobs:
         with:
           deno-version: v2.x
       - run: deno check --config supabase/functions/dehub-mcp/deno.json supabase/functions/dehub-mcp/index.ts supabase/functions/anon-views/index.ts
-      - run: deno test --allow-env --config supabase/functions/dehub-mcp/deno.json supabase/functions/dehub-mcp/task-plan.test.ts supabase/functions/dehub-mcp/tasks.test.ts supabase/functions/dehub-mcp/post-views.test.ts supabase/functions/dehub-mcp/agent-cap.test.ts supabase/functions/dehub-mcp/life.test.ts
+      - run: deno test --allow-env --config supabase/functions/dehub-mcp/deno.json supabase/functions/dehub-mcp/task-plan.test.ts supabase/functions/dehub-mcp/tasks.test.ts supabase/functions/dehub-mcp/post-views.test.ts supabase/functions/dehub-mcp/agent-cap.test.ts supabase/functions/dehub-mcp/life.test.ts supabase/functions/dehub-mcp/workspace.test.ts
   database:
     name: Agent task permissions and claims
     runs-on: ubuntu-latest
@@ -42,3 +43,4 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - run: psql -v ON_ERROR_STOP=1 -f tests/sql/agent-tasks.sql
+      - run: psql -v ON_ERROR_STOP=1 -f tests/sql/agent-workspace.sql

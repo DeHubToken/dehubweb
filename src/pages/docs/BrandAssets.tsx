@@ -58,7 +58,7 @@ const BrandAssets = () => {
   const logoAssets: LogoAsset[] = [
     {
       id: 'wordmark-white',
-      name: 'Wordmark — White',
+      name: t('brandAssets.logoWordmarkWhite'),
       description: _copy("copy.febe4ba8ab01", { defaultValue: "Full DeHub wordmark for use on dark backgrounds." }),
       url: wordmarkWhite.url,
       filename: 'dehub-wordmark-white.png',
@@ -66,7 +66,7 @@ const BrandAssets = () => {
     },
     {
       id: 'wordmark-black',
-      name: 'Wordmark — Black',
+      name: t('brandAssets.logoWordmarkBlack'),
       description: _copy("copy.b3a0a6360ee6", { defaultValue: "Full DeHub wordmark for use on light backgrounds." }),
       url: wordmarkBlack.url,
       filename: 'dehub-wordmark-black.png',
@@ -74,7 +74,7 @@ const BrandAssets = () => {
     },
     {
       id: 'mark-white',
-      name: 'Mark — White',
+      name: t('brandAssets.logoMarkWhite'),
       description: _copy("copy.91387693b21c", { defaultValue: "DeHub icon mark for use on dark backgrounds." }),
       url: markWhite.url,
       filename: 'dehub-mark-white.png',
@@ -82,7 +82,7 @@ const BrandAssets = () => {
     },
     {
       id: 'mark-black',
-      name: 'Mark — Black',
+      name: t('brandAssets.logoMarkBlack'),
       description: _copy("copy.eef94579ec7c", { defaultValue: "DeHub icon mark for use on light backgrounds." }),
       url: markBlack.url,
       filename: 'dehub-mark-black.png',

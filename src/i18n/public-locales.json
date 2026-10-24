@@ -1,5 +1,5 @@
 {
-  "version": "5744f5c773e5cfa3",
+  "version": "f99230df98adb1d9",
   "routes": {
     "/": [
       "ar",
@@ -883,12 +883,54 @@
       "nl",
       "tr"
     ],
+    "/guides/higgsfield-genjutsu-alternative": [
+      "ar",
+      "es",
+      "fr",
+      "nl",
+      "tr",
+      "de",
+      "ha",
+      "hi",
+      "id",
+      "it",
+      "ja",
+      "ko",
+      "pl",
+      "pt",
+      "ru",
+      "th",
+      "tl",
+      "vi",
+      "zh"
+    ],
     "/guides/high-score-dehub-gaming-hits-5000-monthly-active-users---a-dehub-milestone-from-q1-2022": [
       "ar",
       "es",
       "fr",
       "nl",
       "tr"
+    ],
+    "/guides/how-does-higgsfield-genjutsu-work": [
+      "ar",
+      "es",
+      "fr",
+      "nl",
+      "tr",
+      "de",
+      "ha",
+      "hi",
+      "id",
+      "it",
+      "ja",
+      "ko",
+      "pl",
+      "pt",
+      "ru",
+      "th",
+      "tl",
+      "vi",
+      "zh"
     ],
     "/guides/how-monetization-works-on-social-media-apps": [
       "ar",

@@ -36,6 +36,7 @@ import { CardHeader } from '@/components/app/cards/CardHeader';
 import { ActionBar } from '@/components/app/cards/ActionBar';
 import { useAuth } from '@/contexts/AuthContext';
 import { buildAvatarUrl } from '@/lib/media-url';
+import { proposalPath } from '@/lib/dehub-links';
 import { useProfileAvatar } from '@/hooks/use-profile-avatar-cache';
 import { useDebouncedValue } from '@/hooks/use-debounced-value';
 import { SEOHead } from '@/components/SEOHead';
@@ -139,7 +140,7 @@ function GovernanceCard({
     <div
       data-feed-item
       className="overflow-visible relative rounded-xl border border-white/[0.12] bg-white/[0.03] backdrop-blur-[24px] p-3 cursor-pointer hover:bg-white/[0.05] transition-colors"
-      onClick={() => navigate(`/app/governance/${proposal.id}`)}
+      onClick={() => navigate(proposalPath(proposal))}
     >
       <div className="flex items-start justify-between">
         <CardHeader
@@ -234,7 +235,7 @@ function GovernanceCard({
               />
               <button
                 type="button"
-                onClick={() => navigate(`/app/governance/${proposal.id}`)}
+                onClick={() => navigate(proposalPath(proposal))}
                 className="mt-2 flex items-center gap-1.5 text-xs text-zinc-400 hover:text-white transition-colors"
               >
                 <MessageCircle className="w-3.5 h-3.5" />
@@ -311,7 +312,7 @@ function SubmitProposalDrawer({
     try {
       setMedia(await uploadProposalMedia(file, walletAddress));
     } catch (err) {
-      toast.error(err instanceof Error ? err.message : 'Upload failed');
+      toast.error(err instanceof Error ? err.message : t('governance.uploadFailed'));
     } finally {
       setUploading(false);
       if (fileInputRef.current) fileInputRef.current.value = '';
@@ -405,7 +406,7 @@ function SubmitProposalDrawer({
             />
             {media ? (
               <div className="relative">
-                <ProposalMedia url={media.url} type={media.type} alt={title || 'Proposal attachment'} />
+                <ProposalMedia url={media.url} type={media.type} alt={title || t('governance.proposalAttachment')} />
                 <button
                   type="button"
                   onClick={() => setMedia(null)}

@@ -1,5 +1,11 @@
 // SEO metadata for every docs section. Keyed by route path under /docs.
 // Keep titles <60 chars, descriptions <160 chars.
+//
+// Crawlers get the SEO worker's own DOCS_PAGES copy, not these. These are what
+// DocsSEO sets for readers (tab title, share meta). Their translations come
+// from src/i18n/en.ts docsSeo, keyed by docsSeoKey() below
+// ('token/where-to-buy' -> tokenWhereToBuyTitle / tokenWhereToBuyDesc,
+// '' -> indexTitle). Change an English line here and there together.
 
 export interface DocsSeoEntry {
   title: string;
@@ -211,10 +217,16 @@ export const DOCS_SEO: Record<string, DocsSeoEntry> = {
 
 const BASE_URL = "https://dehub.io";
 
+/** The en.ts docsSeo key stem for a DOCS_SEO slug. */
+const docsSeoKey = (slug: string): string =>
+  slug ? slug.replace(/[/-](\w)/g, (_, c: string) => c.toUpperCase()) : "index";
+
 export function getDocsSeoForPath(pathname: string): {
   entry: DocsSeoEntry;
   canonical: string;
   slug: string;
+  /** en.ts docsSeo key stem; absent for blog posts, which own their metadata. */
+  key?: string;
 } {
   const clean = pathname.replace(/\/+$/, "");
 
@@ -226,6 +238,7 @@ export function getDocsSeoForPath(pathname: string): {
       slug: "blog",
       canonical: `${BASE_URL}/docs/blog`,
       entry: DOCS_SEO["blog"],
+      key: docsSeoKey("blog"),
     };
   }
 
@@ -258,5 +271,6 @@ export function getDocsSeoForPath(pathname: string): {
     slug: p,
     canonical: `${BASE_URL}/docs${p ? `/${p}` : ""}`,
     entry,
+    key: docsSeoKey(DOCS_SEO[p] ? p : ""),
   };
 }

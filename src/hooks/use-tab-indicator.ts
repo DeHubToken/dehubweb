@@ -100,9 +100,24 @@ export function useTabIndicator<T extends string>(
   // Skip during drag — drag controls the indicator position directly via DOM,
   // and calling update() here would make GlassIndicator jump to the new tab's
   // position mid-drag, fighting the imperative transform.
+  //
+  // The first measurement waits a frame (the indicator is not shown until it
+  // is ready, so nothing flashes). It lands in the same commit as a whole new
+  // page, and two getBoundingClientRect reads per tab row forced layout in
+  // the middle of it. Every later one (a tab change, a cached page coming
+  // back) stays before paint, so the indicator never shows stale geometry.
+  const firstMeasureDoneRef = useRef(false);
   useLayoutEffect(() => {
     if (isDraggingRef?.current) return;
-    update();
+    if (firstMeasureDoneRef.current) {
+      update();
+      return;
+    }
+    const frame = requestAnimationFrame(() => {
+      firstMeasureDoneRef.current = true;
+      update();
+    });
+    return () => cancelAnimationFrame(frame);
   }, [update, isDraggingRef]);
 
   // Only track for duration AFTER user switches tabs (not on initial mount)

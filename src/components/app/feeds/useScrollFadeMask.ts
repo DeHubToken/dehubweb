@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import type { CSSProperties, RefObject } from 'react';
 
 /** How much of the row dissolves at an overflowing edge. */
@@ -51,7 +51,13 @@ export function useScrollFadeMask<T extends HTMLElement>(
 
   // Runs after every render so chips arriving later (categories loading, a
   // search narrowing the list) re-measure without the caller wiring up deps.
-  useLayoutEffect(measure);
+  // On the next frame, not in a layout effect: reading scrollWidth there
+  // forced a full layout inside every commit, and a page change commits a lot
+  // of these rows at once (it was the top cost of opening a profile).
+  useEffect(() => {
+    const frame = requestAnimationFrame(measure);
+    return () => cancelAnimationFrame(frame);
+  });
 
   useEffect(() => {
     const el = ref.current;
