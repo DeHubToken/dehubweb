@@ -386,8 +386,8 @@ export function MobileBottomNav() {
                     }}
                   />
                   <Plus
-                    className="w-5 h-5 md:w-6 md:h-6 relative"
-                    style={{ color: '#ffffff', stroke: '#ffffff', zIndex: 10 }}
+                    className="w-7 h-7 md:w-8 md:h-8 relative"
+                    style={{ color: '#ffffff', zIndex: 10 }}
                   />
                 </div>
             </button>
