@@ -127,7 +127,7 @@ export function MyStoreTab({ createListingOpen = false, onCreateListingClose, cr
   return (
     <div className="space-y-4">
       {/* Store header with avatar + info + edit */}
-      <div className="relative rounded-xl overflow-hidden border border-white/[0.12]">
+      <div data-keep-dark={activeStore?.banner_url ? true : undefined} className={`relative rounded-xl overflow-hidden border border-white/[0.12] ${activeStore?.banner_url ? 'bg-zinc-950' : ''}`}>
         {/* Full banner background */}
         <div className="absolute inset-0">
           {activeStore?.banner_url ? (
