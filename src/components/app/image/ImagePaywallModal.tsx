@@ -46,13 +46,14 @@ export function ImagePaywallModal({
 
   const count = Math.max(1, Math.floor(quantity));
   const unitCostUsd = getImageCostUsd(model);
-  const costUsd = unitCostUsd * count;
+  const estimatedCostUsd = unitCostUsd * count;
 
   // Priced by the server, so the figure shown here is the figure charged.
-  const { priceDhb: costDhb, isLoading: isQuoting, error: quoteError } = useJobQuote(
+  const { priceDhb: costDhb, priceUsd: quotedUsd, isLoading: isQuoting, error: quoteError } = useJobQuote(
     { kind: 'image', modelId: selectedModelKey, quantity: count },
     open,
   );
+  const costUsd = selectedModelKey.startsWith('venice-') ? quotedUsd : estimatedCostUsd;
   const { walletDhb, isLoading: isWalletLoading } = useSpendableDhb();
 
   // Someone without the DHB cannot pay at all, so the honest answer is to send
