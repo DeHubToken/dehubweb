@@ -14,7 +14,7 @@ export function StageRecordingLanguage({ space, className }: { space: StagePlaya
       primeSpeech();
       setStageRecordingLanguage(space.id, language);
       if (getStagePlaybackState().spaceId !== space.id) playStageRecording(space);
-      else resumeStageRecording();
+      else if (!getStagePlaybackState().loading) resumeStageRecording();
     }}>
       <SelectTrigger aria-label={t('settings.language')} className="h-11 w-full gap-2 rounded-xl border-0 bg-white/10 text-white text-sm hover:bg-white/20">
         <Globe2 className="h-4 w-4 shrink-0" /><SelectValue />
