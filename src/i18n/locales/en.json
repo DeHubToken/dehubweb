@@ -1,4 +1,14 @@
 {
+  "stageCover": {
+    "admitOne": "ADMIT ONE",
+    "live": "live",
+    "minutes": "{{minutes}} min",
+    "onAir": "ON AIR",
+    "recorded": "RECORDED",
+    "replay": "replay",
+    "stage": "stage",
+    "upcoming": "upcoming"
+  },
   "mastodonApps": {
     "authTitle": "Sign in with DeHub",
     "authWants": "{{app}} wants to use your DeHub account",
@@ -1821,6 +1831,8 @@
     "noConversationsYet": "No conversations yet"
   },
   "music": {
+    "listeningCount_one": "{{count}} listening",
+    "listeningCount_other": "{{count}} listening",
     "all": "All",
     "tracks": "Tracks",
     "videos": "Videos",
@@ -1843,8 +1855,6 @@
     "recentStages": "Recent",
     "stagesChartOrder": "Stages chart order",
     "noStages": "No stages here yet",
-    "listening": "listening",
-    "listens": "listens",
     "liveCount": "live",
     "chartVideos": "Music videos",
     "videoCharts": "Music Video Charts",
@@ -10142,6 +10152,8 @@
     "reminderLater": "Not now"
   },
   "copy": {
+    "2971f9103f78": "Thanks for helping make DeHub better — something you asked for is now live:",
+    "905392fbed15": "Thanks for helping make DeHub better — {{value1}} things you asked for are now live:",
     "b3412a3b86de": "Invite streamers",
     "8c91325d901b": "Send streamers to the DeHub streaming page with this message. Your link attributes them to you before they land.",
     "cc96aaa18cf2": "Come stream on DeHub with me. Tips land on-chain straight in your wallet, you own your audience, and you can keep posting to TikTok and everywhere else in one step. Sign up here: {{link}}",
@@ -10294,8 +10306,6 @@
     "8c7afb50b89c": "Share elsewhere",
     "bdd4f5015e96": "Close shipped request notification",
     "8f3dc69e83c4": "Your feedback shipped!",
-    "1164d7bbddd1": "Thanks for helping make DeHub better — ",
-    "3b8d0bc452b6": " now live:",
     "1aa7b1c1d5fb": "Thanks!",
     "6b1037924516": "% slippage",
     "e50f1f5e6029": "Slippage Tolerance",
@@ -12647,7 +12657,6 @@
     "add025e2b83c": "Failed to follow",
     "b764cdc0eab7": "Unknown",
     "d12860c21e78": "Link copied",
-    "622c73f8d79f": "something you asked for is",
     "20d4214b9d4b": "View shipped requests",
     "da4c7c208cf4": "Check it out",
     "f80cac6f6a85": "ETF",
@@ -14062,7 +14071,6 @@
     "4390ee6449c2": "{{value1}} chat",
     "48409768c73d": "Joined {{value1}} — say hello",
     "9b5f8d89fc43": "Buy {{value1}}",
-    "b96359f1f31b": "{{value1}} things you asked for are",
     "c4097c4376ef": "Insufficient {{value1}}",
     "d5f002181e09": "Pay with {{value1}} you already hold",
     "2e7bbe25543b": "Custom amount (USD, min ${{value1}})",
