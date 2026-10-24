@@ -51,7 +51,7 @@ import { useSuperpowers } from '@/hooks/use-superpowers';
 import { useCreatePoll } from '@/hooks/use-polls';
 import { toast } from 'sonner';
 import { cn } from '@/lib/utils';
-import { cdnImageSrcSet, cdnImageSource } from '@/lib/media-url';
+import { cdnImage, cdnImageSrcSet, cdnImageSource } from '@/lib/media-url';
 import { useFeedFrameAspect } from '@/hooks/use-feed-frame-aspect';
 import { motion, AnimatePresence } from 'framer-motion';
 import dehubCoin from '@/assets/dehub-coin.png';
@@ -213,8 +213,11 @@ function ImageSlide({
   viewportRef,
   immersive = false,
   pinned = false,
+  knownRatio,
 }: {
   pinned?: boolean;
+  /** The shape the gallery measured ahead, or its tallest photo's while this one is unknown. */
+  knownRatio?: number;
   img: string;
   description?: string;
   idx: number;
@@ -236,11 +239,11 @@ function ImageSlide({
   // every LATER mount (tab switch, feed revisit, carousel re-render) reserves
   // the exact final height up front.
   const [measurement, setMeasurement] = useState<{ img: string; ratio: number }>();
-  const measuredRatio = measurement?.img === img ? measurement.ratio : imageAspectRatioCache.get(img);
+  const measuredRatio = measurement?.img === img ? measurement.ratio : imageAspectRatioCache.get(img) ?? knownRatio;
   const slideRef = useRef<HTMLDivElement>(null);
   // All slides share the row's vertical visibility: a late hidden neighbour
   // must not increase the carousel's height while its first photo is in view.
-  const ratio = useFeedFrameAspect(`image:${postId ?? ''}:${idx}:${cdnImageSource(img)}`, measuredRatio ?? 1, viewportRef, !immersive);
+  const ratio = useFeedFrameAspect(`image:${postId ?? ''}:${idx}:${cdnImageSource(img)}`, measuredRatio ?? 1, viewportRef, !immersive, measuredRatio);
   const [retainBitmap, setRetainBitmap] = useState(aboveFold || immersive);
   const horizontalBitmap = useHorizontalBitmap(img, !!ratio, viewportRef, slideRef, pinned);
   // Resolve the ratio during render so a replaced image never paints with the
@@ -330,6 +333,34 @@ function ImageSlide({
       />
     </div>
   );
+}
+
+/**
+ * Every gallery photo's shape, measured up front from a small copy. A photo
+ * not loaded yet used to hold a square guess, and the strip grew to that
+ * guess: a post of wide screenshots showed a huge empty band under its first
+ * photo until it was tapped.
+ */
+function useGalleryAspects(images: string[], enabled: boolean) {
+  const [measured, setMeasured] = useState<Record<string, number>>({});
+  useEffect(() => {
+    if (!enabled || typeof Image === 'undefined') return;
+    let live = true;
+    images.forEach((img) => {
+      if (imageAspectRatioCache.get(img)) return;
+      const probe = new Image();
+      probe.decoding = 'async';
+      probe.onload = () => {
+        if (!probe.naturalWidth || !probe.naturalHeight) return;
+        const ratio = probe.naturalWidth / probe.naturalHeight;
+        cacheAspectRatio(img, ratio);
+        if (live) setMeasured((previous) => ({ ...previous, [img]: ratio }));
+      };
+      probe.src = cdnImage(img, { width: 160 });
+    });
+    return () => { live = false; };
+  }, [images, enabled]);
+  return images.map((img) => measured[img] ?? imageAspectRatioCache.get(img));
 }
 
 /**
@@ -476,18 +507,28 @@ function ImageCarousel({
   }, [images.length]);
   
   const hasMultiple = images.length > 1;
+  // A feed gallery is framed: the strip is as tall as its tallest photo and
+  // shorter ones sit centred in a thin outline, so the space reads as the
+  // post's photo area instead of a gap.
+  const framed = hasMultiple && !immersive;
+  const measuredAspects = useGalleryAspects(images, framed);
+  const tallestAspect = useMemo(() => {
+    const known = measuredAspects.filter((ratio): ratio is number => !!ratio);
+    return known.length ? Math.min(...known) : undefined;
+  }, [measuredAspects]);
   // Centre the arrows on the photo in view, not on the strip: a lazy neighbour
   // can make the strip taller than a wide photo and leave them in the gap.
-  const arrowTop = activeHeight ? { top: activeHeight / 2 } : undefined;
+  // A framed gallery centres its photos, so the frame's middle is theirs.
+  const arrowTop = activeHeight && !framed ? { top: activeHeight / 2 } : undefined;
   
   return (
-    <div ref={rootRef} data-media-full data-sound-playing={soundPlaying || undefined} className={cn('relative overflow-hidden', immersive ? 'rounded-none' : 'rounded-2xl')} onWheel={handleWheel} data-no-navigate data-no-swipe={hasMultiple ? true : undefined}>
+    <div ref={rootRef} data-media-full data-gallery-frame={framed || undefined} data-sound-playing={soundPlaying || undefined} className={cn('relative overflow-hidden', immersive ? 'rounded-none' : 'rounded-2xl')} onWheel={handleWheel} data-no-navigate data-no-swipe={hasMultiple ? true : undefined}>
       {/* Carousel container */}
       <div
         ref={scrollRef}
         onScroll={updateCurrentIndex}
         style={{ height: immersive ? activeHeight : undefined }}
-        className={cn("flex items-start gap-2 scrollbar-hide", hasMultiple ? "overflow-x-auto overscroll-x-contain touch-auto" : "overflow-x-hidden touch-pan-y")}
+        className={cn("flex gap-2 scrollbar-hide", framed ? 'items-stretch' : 'items-start', hasMultiple ? "overflow-x-auto overscroll-x-contain touch-auto" : "overflow-x-hidden touch-pan-y")}
       >
         {images.map((img, idx) => (
           <div
@@ -495,6 +536,7 @@ function ImageCarousel({
             className={cn(
               'min-w-0',
               hasMultiple ? 'flex-none max-w-full' : 'flex-[0_0_100%]',
+              framed && 'flex flex-col justify-center',
             )}
           >
             <ImageSlide
@@ -507,6 +549,7 @@ function ImageCarousel({
               viewportRef={scrollRef}
               immersive={immersive}
               pinned={images.length <= 1 || Math.abs(idx - currentIndex) <= 1}
+              knownRatio={measuredAspects[idx] ?? tallestAspect}
             />
           </div>
         ))}
