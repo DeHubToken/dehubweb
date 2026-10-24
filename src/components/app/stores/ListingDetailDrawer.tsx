@@ -40,6 +40,7 @@ import { openDmDock } from '@/hooks/use-dm-dock';
 import { GLASS_STYLES } from '@/constants/app.constants';
 import { ReviewSection } from './ReviewSection';
 import { ThemedIcon } from '@/components/app/war/WarHudIcon';
+import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
 import { podProviderLabel, parsePodUrl } from '@/lib/pod-providers';
 
 interface Props {
@@ -245,13 +246,12 @@ export function ListingDetailDrawer({ listing, open, onClose }: Props) {
             onClick={() => { onClose(); navigate(`/app/stores/${listing.store_id}`); }}
             className="flex items-center gap-2 text-sm transition-colors text-foreground"
           >
-            {listing.stores?.avatar_url ? (
-              <img src={listing.stores.avatar_url} className="w-6 h-6 rounded object-cover" alt="" />
-            ) : (
-              <div className="w-6 h-6 rounded bg-white/10 flex items-center justify-center text-[10px] font-bold text-foreground">
+            <Avatar className="w-6 h-6 rounded">
+              <AvatarImage src={listing.stores?.avatar_url || undefined} className="object-cover" alt="" />
+              <AvatarFallback className="rounded bg-white/10 text-[10px] font-bold text-foreground">
                 {(listing.stores?.name || 'S')[0].toUpperCase()}
-              </div>
-            )}
+              </AvatarFallback>
+            </Avatar>
             {listing.stores?.name || t('stores.store')}
           </button>
 
