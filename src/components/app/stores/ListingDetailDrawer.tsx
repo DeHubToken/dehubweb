@@ -40,6 +40,7 @@ import { openDmDock } from '@/hooks/use-dm-dock';
 import { GLASS_STYLES } from '@/constants/app.constants';
 import { ReviewSection } from './ReviewSection';
 import { ThemedIcon } from '@/components/app/war/WarHudIcon';
+import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
 import { podProviderLabel, parsePodUrl } from '@/lib/pod-providers';
 
 interface Props {
@@ -163,7 +164,7 @@ export function ListingDetailDrawer({ listing, open, onClose }: Props) {
         <div className="px-4 pb-6 space-y-4 max-h-[75vh] overflow-y-auto">
           {/* Image carousel */}
           {images.length > 0 && (
-            <div className="relative aspect-square rounded-xl overflow-hidden bg-white/5 max-h-[40vh]">
+            <div className="relative mx-auto aspect-square rounded-xl overflow-hidden bg-white/5 max-h-[40vh]">
               {images[imgIdx] && images[imgIdx] !== failedImage ? (
                 <img src={images[imgIdx]} alt={listing.title} className="w-full h-full object-cover" onError={() => setFailedImage(images[imgIdx])} />
               ) : (
@@ -245,13 +246,12 @@ export function ListingDetailDrawer({ listing, open, onClose }: Props) {
             onClick={() => { onClose(); navigate(`/app/stores/${listing.store_id}`); }}
             className="flex items-center gap-2 text-sm transition-colors text-foreground"
           >
-            {listing.stores?.avatar_url ? (
-              <img src={listing.stores.avatar_url} className="w-6 h-6 rounded object-cover" alt="" />
-            ) : (
-              <div className="w-6 h-6 rounded bg-white/10 flex items-center justify-center text-[10px] font-bold text-foreground">
+            <Avatar className="w-6 h-6 rounded">
+              <AvatarImage src={listing.stores?.avatar_url || undefined} className="object-cover" alt="" />
+              <AvatarFallback className="rounded bg-white/10 text-[10px] font-bold text-foreground">
                 {(listing.stores?.name || 'S')[0].toUpperCase()}
-              </div>
-            )}
+              </AvatarFallback>
+            </Avatar>
             {listing.stores?.name || t('stores.store')}
           </button>
 
