@@ -18,6 +18,8 @@
 
 import { handleCorsPreflight, jsonResponse } from '../_shared/auth.ts';
 import { DHB_USD_PEG, dhbToUsd, quotePriceDhb, type JobKind } from '../_shared/ai-pricing.ts';
+import { isVeniceImage, isVeniceVideo } from '../_shared/venice-catalog.ts';
+import { quoteVenice } from '../_shared/venice.ts';
 
 Deno.serve(async (req) => {
   const preflight = handleCorsPreflight(req);
@@ -25,6 +27,11 @@ Deno.serve(async (req) => {
 
   try {
     const body = await req.json().catch(() => ({}));
+
+    const modelId = String(body?.modelId ?? '');
+    if ((body.kind === 'image' && isVeniceImage(modelId)) || (body.kind === 'video' && isVeniceVideo(modelId))) {
+      return jsonResponse({ ...await quoteVenice(modelId, body), pegUsd: DHB_USD_PEG });
+    }
 
     const priceDhb = quotePriceDhb(
       String(body?.kind ?? '') as JobKind,

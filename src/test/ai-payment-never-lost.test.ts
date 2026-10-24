@@ -95,6 +95,13 @@ describe('a paid transfer is never lost', () => {
     expect(stored).toContain(HASH);
   });
 
+  it('transfers a fractional provider quote without whole-token rounding', async () => {
+    const { payForJob } = await import('@/lib/ai-payment');
+    mocks.writeContractAA.mockResolvedValue({ hash: HASH, wait: async () => ({ status: 1, hash: HASH }) });
+    await payForJob(173.125);
+    expect(mocks.writeContractAA.mock.calls[0][3][1]).toBe(173125000000000000000n);
+  });
+
   it('records the confirmed transfer with the server', async () => {
     const { payForJob } = await import('@/lib/ai-payment');
     mocks.writeContractAA.mockResolvedValue({
