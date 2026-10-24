@@ -1,3 +1,5 @@
+import { updateCommentCount } from './comment-count-store';
+
 const COMMENT_COUNT_EVENT = 'dehub:comment-count';
 
 interface CommentCountDetail {
@@ -21,6 +23,7 @@ export function reconcileCommentCount(current: number, server: number, pending =
 }
 
 function emitCommentCountChange(tokenId: string, delta: number): void {
+  updateCommentCount(tokenId, delta);
   if (typeof window === 'undefined' || !delta) return;
   window.dispatchEvent(new CustomEvent<CommentCountDetail>(COMMENT_COUNT_EVENT, {
     detail: { tokenId: String(tokenId), delta },
