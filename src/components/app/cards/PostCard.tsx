@@ -181,6 +181,7 @@ const PostCardBody = memo(function PostCard({ post, threadSlot, onOpenComments }
   const isTabletOrMobile = useIsTabletOrMobile();
   const navigate = useNavigate();
   const queryClient = useQueryClient();
+  const bodyNavigationRef = useRef<HTMLDivElement>(null);
   const { walletAddress, openLoginModal } = useAuth();
   // Deep Current is the one power spent on somebody ELSE's post, so it is
   // the one row that belongs in this half of the menu. `status.powers` is
@@ -320,7 +321,10 @@ const PostCardBody = memo(function PostCard({ post, threadSlot, onOpenComments }
     onSingleTap: (event) => {
       if (wasDrawerJustDismissed() || window.getSelection()?.toString().length) return;
       // A quoted post opens itself; the tap must not open this one 360ms later.
-      if ((event.target as HTMLElement | null)?.closest?.('[data-glass-embed], [data-no-navigate]')) return;
+      const excluded = (event.target as HTMLElement | null)?.closest?.('[data-glass-embed], [data-no-navigate]');
+      // Our wrapper blocks the compatibility click, not its own pointer tap.
+      // Keep nested quotes and controls excluded after the tap timer resolves.
+      if (excluded && excluded !== bodyNavigationRef.current) return;
       // Already on this post's own page: another push only adds a Back step.
       const path = window.location.pathname;
       if (path === `/app/post/${post.id}` || (post.newPostId && path === `/newpost/${post.newPostId}`)) return;
@@ -646,6 +650,7 @@ const PostCardBody = memo(function PostCard({ post, threadSlot, onOpenComments }
           excluded here so a central double/triple tap cannot open the post.
           Holds remain available for text selection. */}
       <div
+        ref={bodyNavigationRef}
         className="relative pt-3 space-y-2"
         data-no-navigate
       >
