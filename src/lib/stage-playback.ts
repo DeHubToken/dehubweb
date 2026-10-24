@@ -93,6 +93,8 @@ export interface StagePlaybackState {
    * a town hall listened at 2x in the feed is still 2x from the corner player.
    */
   rate: number;
+  position: number;
+  duration: number;
 }
 
 const IDLE: StagePlaybackState = {
@@ -105,6 +107,8 @@ const IDLE: StagePlaybackState = {
   volume: 0,
   timeLeft: '',
   rate: readStoredRate(),
+  position: 0,
+  duration: 0,
 };
 
 let state: StagePlaybackState = IDLE;
@@ -174,6 +178,7 @@ export function cycleStageRecordingRate(): number {
 // source and analyser on every press, leaked onto a shared AudioContext.
 
 let audioEl: HTMLAudioElement | null = null;let audioCtx: AudioContext | null = null;
+export const getStageRecordingElement = () => audioEl;
 let analyser: AnalyserNode | null = null;
 // Typed off the API rather than as a bare Uint8Array: on TS 5.7+ that
 // annotation widens the buffer to ArrayBufferLike and getByteFrequencyData
@@ -316,6 +321,8 @@ function publishPosition() {
   const s = remaining % 60;
   publish({
     progress: Math.round(Math.min(1, Math.max(0, t / dur)) * 1000) / 1000,
+    position: Math.round(t * 2) / 2,
+    duration: dur,
     timeLeft: `-${m}:${s.toString().padStart(2, '0')}`,
   });
   // Feeds the OS progress bar. `dur` here is the resolved duration, not
@@ -445,6 +452,8 @@ export function playStageRecording(space: StagePlayable, seekRatio?: number) {
     progress: 0,
     volume: 0,
     timeLeft: '',
+    position: 0,
+    duration: estimatedDuration,
   });
 
   // Claimed before play() rather than after it resolves: on a phone the lock
@@ -624,6 +633,17 @@ export function seekStageRecording(space: StagePlayable, position: number) {
  */
 export function getStagePlaybackState(): StagePlaybackState {
   return state;
+}
+
+export function seekStageRecordingToTime(space: StagePlayable, seconds: number) {
+  if (state.spaceId !== space.id) {
+    const span = space.started_at && space.ended_at ? (Date.parse(space.ended_at) - Date.parse(space.started_at)) / 1000 : 0;
+    playStageRecording(space, span > 0 ? seconds / span : 0);
+    return;
+  }
+  if (audioEl) audioEl.currentTime = Math.max(0, seconds);
+  publishPosition();
+  if (state.paused) resumeStageRecording();
 }
 
 /** Subscribe to the shared player. */
