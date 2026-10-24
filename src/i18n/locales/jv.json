@@ -1,4 +1,18 @@
 {
+  "desktopWordmark": {
+    "pageTitle": "Pratinjau logo desktop",
+    "heading": "Logo desktop DeHub",
+    "day": "Dina {{day}}",
+    "replay": "Puter maneh intro",
+    "enlarge": "Gedhekake",
+    "actualSize": "Ukuran asli",
+    "reassemble": "Rakit maneh logo",
+    "loading": "Lagi ngemot",
+    "ready": "Siap",
+    "interrupted": "Grafis mandheg nanggapi",
+    "unavailable": "Ora bisa ngemot pratinjau 3D",
+    "hint": "Logo tetep wutuh suwene rong detik, banjur pecah. Arahake kursor ing ndhuwure utawa pilih supaya nyawiji maneh."
+  },
   "mastodonApps": {
     "authTitle": "Mlebu nganggo DeHub",
     "authWants": "{{app}} kepengin nganggo akun DeHub sampeyan",

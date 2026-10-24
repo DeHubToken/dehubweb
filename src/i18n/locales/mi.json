@@ -1,4 +1,18 @@
 {
+  "desktopWordmark": {
+    "pageTitle": "Whakaaturanga tohu papamahi",
+    "heading": "Tohu papamahi DeHub",
+    "day": "Rā {{day}}",
+    "replay": "Whakatangihia anō te kupu whakataki",
+    "enlarge": "Whakanuia",
+    "actualSize": "Rahi tūturu",
+    "reassemble": "Whakahiatohia anō te tohu",
+    "loading": "E uta ana",
+    "ready": "Kua rite",
+    "interrupted": "Kua mutu te urupare a ngā whakairoiro",
+    "unavailable": "Kaore e taea te utaina i te tirohanga 3D",
+    "hint": "Ka noho tōtika te tohu mō ngā hēkona e rua, kātahi ka marara. Whakatārewahia te pehu ki runga, kōwhiria rānei kia hono anō."
+  },
   "mastodonApps": {
     "authTitle": "Takiuru mā DeHub",
     "authWants": "E hiahia ana a {{app}} ki te whakamahi i tō pūkete DeHub",

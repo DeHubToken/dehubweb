@@ -1,4 +1,18 @@
 {
+  "desktopWordmark": {
+    "pageTitle": "Desktop-Logo-Vorschau",
+    "heading": "DeHub Desktop-Logo",
+    "day": "Tag {{day}}",
+    "replay": "Intro nochmals abspielen",
+    "enlarge": "Vergrössern",
+    "actualSize": "Originalgrösse",
+    "reassemble": "Logo wieder zusammensetzen",
+    "loading": "Lädt",
+    "ready": "Fertig",
+    "interrupted": "Die Grafik reagiert nicht mehr",
+    "unavailable": "3D-Vorschau konnte nicht geladen werden",
+    "hint": "Das Logo bleibt zwei Sekunden lang ganz, dann zerfällt es. Halte die Maus darüber oder wähle es, um es wieder zusammenzusetzen."
+  },
   "mastodonApps": {
     "authTitle": "Mit DeHub aamälde",
     "authWants": "{{app}} wott dis DeHub-Konto bruuche",

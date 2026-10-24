@@ -1,4 +1,18 @@
 {
+  "desktopWordmark": {
+    "pageTitle": "桌面标志预览",
+    "heading": "DeHub 桌面标志",
+    "day": "第 {{day}} 日",
+    "replay": "再播放一遍开场",
+    "enlarge": "放大",
+    "actualSize": "实际大小",
+    "reassemble": "重新拼合标志",
+    "loading": "加载中",
+    "ready": "好了",
+    "interrupted": "图形冇反应了",
+    "unavailable": "3D 预览加载不了",
+    "hint": "标志会完整保持两秒，然后碎开。把鼠标移到上面或者选中它，就会重新拼合。"
+  },
   "mastodonApps": {
     "authTitle": "用 DeHub 登录",
     "authWants": "{{app}} 想使用你的 DeHub 账号",

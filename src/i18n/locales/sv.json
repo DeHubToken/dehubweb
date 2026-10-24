@@ -1,4 +1,18 @@
 {
+  "desktopWordmark": {
+    "pageTitle": "Förhandsvisning av skrivbordslogotypen",
+    "heading": "DeHub skrivbordslogotyp",
+    "day": "Dag {{day}}",
+    "replay": "Spela upp introen igen",
+    "enlarge": "Förstora",
+    "actualSize": "Faktisk storlek",
+    "reassemble": "Sätt ihop logotypen igen",
+    "loading": "Laddar",
+    "ready": "Klar",
+    "interrupted": "Grafiken slutade svara",
+    "unavailable": "Kunde inte ladda 3D-förhandsgranskningen",
+    "hint": "Logotypen förblir hel i två sekunder och bryts sedan isär. Håll muspekaren över den eller välj den för att sätta ihop den igen."
+  },
   "mastodonApps": {
     "authTitle": "Logga in med DeHub",
     "authWants": "{{app}} vill använda ditt DeHub-konto",

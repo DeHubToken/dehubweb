@@ -1,4 +1,18 @@
 {
+  "desktopWordmark": {
+    "pageTitle": "Xem trước logo trên máy tính để bàn",
+    "heading": "Logo DeHub trên máy tính để bàn",
+    "day": "Ngày {{day}}",
+    "replay": "Phát lại phần giới thiệu",
+    "enlarge": "Phóng to",
+    "actualSize": "Kích thước thực tế",
+    "reassemble": "Lắp ráp lại logo",
+    "loading": "Đang tải",
+    "ready": "Sẵn sàng",
+    "interrupted": "Đồ họa đã ngừng phản hồi",
+    "unavailable": "Không thể tải bản xem trước 3D",
+    "hint": "Logo vẫn nguyên vẹn trong hai giây, sau đó tách ra. Di chuột qua nó hoặc chọn nó để đặt nó lại với nhau."
+  },
   "mastodonApps": {
     "authTitle": "Đăng nhập bằng DeHub",
     "authWants": "{{app}} muốn dùng tài khoản DeHub của bạn",

@@ -1,4 +1,18 @@
 {
+  "desktopWordmark": {
+    "pageTitle": "Iş stoly logosynyň deslapky görnüşi",
+    "heading": "DeHub iş stoly logosy",
+    "day": "Gün {{day}}",
+    "replay": "Girişi täzeden oýnat",
+    "enlarge": "Ulyla",
+    "actualSize": "Hakyky ululygy",
+    "reassemble": "Logony täzeden jemle",
+    "loading": "Ýüklenýär",
+    "ready": "Taýýar",
+    "interrupted": "Grafika jogap bermegi bes etdi",
+    "unavailable": "3D öňünden görmegi ýükläp bolmady",
+    "hint": "Logo iki sekunt bitin durýar, soňra bölek-bölek bolýar. Ony täzeden jemlemek üçin kursory üstüne getiriň ýa-da ony saýlaň."
+  },
   "mastodonApps": {
     "authTitle": "DeHub bilen gir",
     "authWants": "{{app}} DeHub hasabyňyzy ulanmak isleýär",

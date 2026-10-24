@@ -1,4 +1,18 @@
 {
+  "desktopWordmark": {
+    "pageTitle": "Forhåndsvisning av skrivebordslogo",
+    "heading": "DeHub-logo for skrivebordet",
+    "day": "Dag {{day}}",
+    "replay": "Spill av introen på nytt",
+    "enlarge": "Forstørr",
+    "actualSize": "Faktisk størrelse",
+    "reassemble": "Sett logoen sammen igjen",
+    "loading": "Laster",
+    "ready": "Ferdig",
+    "interrupted": "Grafikken sluttet å svare",
+    "unavailable": "Kunne ikke laste inn 3D-forhåndsvisningen",
+    "hint": "Logoen forblir hel i to sekunder, og faller deretter fra hverandre. Hold musepekeren over den eller velg den for å sette den sammen igjen."
+  },
   "mastodonApps": {
     "authTitle": "Logg inn med DeHub",
     "authWants": "{{app}} vil bruke DeHub-kontoen din",
