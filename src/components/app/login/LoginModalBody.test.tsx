@@ -19,11 +19,18 @@ vi.mock('@/lib/login-probes', () => ({ loginProbesSnapshot: () => ({ passkey: fa
 vi.mock('@/lib/wallet-setup-intent', () => ({ getWalletSetupIntent: () => null, setWalletSetupIntent: vi.fn() }));
 vi.mock('./LoginSavedProfiles', () => ({ LoginSavedProfiles: () => null }));
 
-function SheetBody() {
+function SheetBody({ layout = 'default' }: { layout?: 'default' | 'stack' }) {
   const [step, setStep] = useState<LoginStep>('main');
-  return <LoginModalBody open step={step} setStep={setStep} />;
+  return <LoginModalBody open step={step} setStep={setStep} layout={layout} />;
 }
 afterEach(cleanup);
+
+it.each(['default', 'stack'] as const)('keeps Telegram before Wallet when availability probing fails in %s layout', (layout) => {
+  render(<SheetBody layout={layout} />);
+  const telegram = screen.getByRole('button', { name: 'loginModal.continueTelegram' });
+  const wallet = screen.getByRole('button', { name: 'loginModal.connectWallet' });
+  expect(telegram.compareDocumentPosition(wallet) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy();
+});
 
 it('Import Wallet immediately replaces sign-in options with the secret form', async () => {
   render(<SheetBody />);
