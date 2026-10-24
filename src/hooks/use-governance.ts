@@ -65,6 +65,8 @@ export interface GovernanceProposal {
   /** Optional attachment, stored in the public feature-media bucket. */
   media_url?: string | null;
   media_type?: 'image' | 'video' | null;
+  /** Public short number, /app/governance/<n>. Absent until the migration lands. */
+  proposal_number?: number | null;
 }
 
 /** A proposal attachment, uploaded as soon as it is picked so a draft keeps it. */

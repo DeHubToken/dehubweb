@@ -14,6 +14,7 @@ import Governance from '@/components/ui/cut-icons/governance';
 import { useGovernanceProposal } from '@/hooks/use-governance-proposal';
 import { ProposalVerdictLabel, verdictOf, votingTimeLeft } from '@/components/app/governance/ProposalVerdict';
 import { buildAvatarUrl } from '@/lib/media-url';
+import { proposalPath } from '@/lib/dehub-links';
 
 interface ProposalLinkEmbedProps {
   proposalId: string;
@@ -52,7 +53,7 @@ export function ProposalLinkEmbed({ proposalId, path, fallback = null }: Proposa
       type="button"
       onClick={(e) => {
         e.stopPropagation();
-        navigate(path || `/app/governance/${proposal.id}`);
+        navigate(path || proposalPath(proposal));
       }}
       data-no-navigate
       data-glass-embed

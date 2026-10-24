@@ -82,9 +82,10 @@ describe('entity SEO routes', () => {
   });
 
   it('lets a governance proposal past the gate and renders it', () => {
-    expect(gate()).toContain(String.raw`/^\/(?:app\/)?governance\/[0-9a-fA-F-]{8,}\/?$/`);
+    expect(gate()).toContain(String.raw`/^\/(?:app\/)?governance\/(?:\d{1,9}|[0-9a-fA-F-]{8,})\/?$/`);
     expect(WORKER).toContain('function buildProposalHtml');
     expect(WORKER).toMatch(/governance_proposals\?id=eq\./);
+    expect(WORKER).toMatch(/governance_proposals\?proposal_number=eq\./);
   });
 
   it('lets /video/<tokenId> and its /app twin past the gate', () => {
