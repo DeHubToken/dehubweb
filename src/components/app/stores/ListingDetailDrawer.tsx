@@ -184,15 +184,15 @@ export function ListingDetailDrawer({ listing, open, onClose }: Props) {
                   it is loading, or if pricing is down, the listing shows its
                   USD price — which is a display value and not something the
                   wallet can be asked to send. */}
-              <span className="text-xl font-bold flex items-center gap-1.5 text-primary-foreground">
+              <span className="text-xl font-bold flex items-center gap-1.5 text-foreground">
                 {quote ? (<><img src={dehubCoin} alt={tokenLabel()} className="w-5 h-5" />{quote.dhbAmount.toLocaleString()}</>) : `$${priceUsd.toLocaleString()}`}
               </span>
               <p className="text-xs text-zinc-500">${priceUsd.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })} USD</p>
             </div>
             <div className="flex gap-2">
               {listing.is_digital && <span className="text-xs bg-primary/20 text-primary px-2 py-0.5 rounded">{t('stores.digital')}</span>}
-              <span className="text-xs bg-white/10 px-2 py-0.5 rounded capitalize text-primary-foreground">{t(CONDITION_KEYS[listing.condition] ?? 'stores.condUsed')}</span>
-              <span className="text-xs bg-white/10 px-2 py-0.5 rounded capitalize text-primary-foreground">{t(CATEGORY_KEYS[listing.category] ?? 'stores.catOther')}</span>
+              <span className="text-xs bg-white/10 px-2 py-0.5 rounded capitalize text-foreground">{t(CONDITION_KEYS[listing.condition] ?? 'stores.condUsed')}</span>
+              <span className="text-xs bg-white/10 px-2 py-0.5 rounded capitalize text-foreground">{t(CATEGORY_KEYS[listing.category] ?? 'stores.catOther')}</span>
             </div>
           </div>
 
@@ -207,11 +207,11 @@ export function ListingDetailDrawer({ listing, open, onClose }: Props) {
 
           {/* Description */}
           {listing.description && (
-            <p className="text-sm whitespace-pre-wrap text-primary-foreground">{listing.description}</p>
+            <p className="text-sm whitespace-pre-wrap text-foreground">{listing.description}</p>
           )}
 
           {/* Stock */}
-          <div className="flex items-center gap-2 text-xs text-primary-foreground">
+          <div className="flex items-center gap-2 text-xs text-foreground">
             <Package className="w-3.5 h-3.5" />
             {listing.stock_quantity === null
               ? t('stores.unlimitedStock')
@@ -231,12 +231,12 @@ export function ListingDetailDrawer({ listing, open, onClose }: Props) {
           {/* Seller */}
           <button
             onClick={() => { onClose(); navigate(`/app/stores/${listing.store_id}`); }}
-            className="flex items-center gap-2 text-sm transition-colors text-primary-foreground"
+            className="flex items-center gap-2 text-sm transition-colors text-foreground"
           >
             {listing.stores?.avatar_url ? (
               <img src={listing.stores.avatar_url} className="w-6 h-6 rounded object-cover" alt="" />
             ) : (
-              <div className="w-6 h-6 rounded bg-white/10 flex items-center justify-center text-[10px] font-bold text-primary-foreground">
+              <div className="w-6 h-6 rounded bg-white/10 flex items-center justify-center text-[10px] font-bold text-foreground">
                 {(listing.stores?.name || 'S')[0].toUpperCase()}
               </div>
             )}
