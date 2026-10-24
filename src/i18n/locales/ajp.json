@@ -5193,6 +5193,8 @@
     "requestAccessForChat": "طلب الوصول للتشات والإرسالي",
     "edit": "تعديل",
     "delete": "حذف",
+    "deleteConfirmTitle": "حطّ هذا الحدث؟",
+    "deleteConfirmBody": "ياكلف الحدث و قائمة الضيوف و الدردشة معاه من كل حد. ما بيشوفش عودهش.",
     "reply": "رد",
     "react": "تفاعل",
     "typeMessage": "اكتب رسالتك...",

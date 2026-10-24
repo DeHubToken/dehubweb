@@ -2051,6 +2051,8 @@
     "total": "الإجمالي {{count}}",
     "distribution": "التوزيع",
     "loading": "بيحمّل...",
+    "unavailable": "لا متوفر",
+    "ownersUnavailable": "لا يمكن قراءة المالكين الحاليين في الوقت الحالي.",
     "owner": "{{count}} مالك",
     "owner_other": "{{count}} ملاك",
     "engagement": "التفاعل",
@@ -4979,7 +4981,9 @@
     "requestSent": "الطلب مرفوع للصانع الحدث",
     "entryFeeCoins_one": "{{count}} رسوم دخول العملة",
     "entryFeeCoins_other": "{{count}} رسوم دخول العملة",
-    "requestWasDenied": "تطلبتك رفضت"
+    "requestWasDenied": "تطلبتك رفضت",
+    "deleteConfirmTitle": "حذف هذا الحدث؟",
+    "deleteConfirmBody": "هذاً يزيل الحدث و قائمة الضيوف و المحادثة من الجميع. لا يمكن التراجع عنها."
   },
   "referral": {
     "stats": {

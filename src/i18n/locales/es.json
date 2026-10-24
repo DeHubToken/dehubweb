@@ -376,11 +376,11 @@
   },
   "settings": {
     "usernameTaken": "Nombre de usuario ocupado",
-    "showDislikesDesc": "Cualquiera puede abrir la pestaña «No me gusta» de tu perfil. Si está desactivado, solo tú puedes verla.",
-    "showDislikes": "Mostrar mis «no me gusta» a todos",
     "postingChain": "Cadena de bloques de las publicaciones",
     "showOnline": "Mostrar cuando estoy conectado",
     "showOnlineDesc": "Las personas a las que envías mensajes ven un punto verde junto a tu nombre mientras usas DeHub",
+    "showDislikes": "Mostrar mis «no me gusta» a todos",
+    "showDislikesDesc": "Cualquiera puede abrir la pestaña «No me gusta» de tu perfil. Si está desactivado, solo tú puedes verla.",
     "smartReplies": "Respuestas sugeridas",
     "smartRepliesDesc": "Redacta dos respuestas que puedes tocar en un chat. La × de las sugerencias lo desactiva.",
     "title": "Ajustes",
@@ -1903,7 +1903,6 @@
     "returnHome": "Volver al inicio"
   },
   "profile": {
-    "dislikes": { "loadMore": "Cargar más", "privateDesc": "Esta cuenta mantiene sus «no me gusta» en privado.", "privateTitle": "Los «no me gusta» son privados", "emptyOther": "Todavía nada marcado con «no me gusta».", "emptyOwn": "Las publicaciones que no te gustan salen de tus feeds y aparecen aquí. Quita el «no me gusta» para recuperar la publicación.", "emptyTitle": "Aún no hay «no me gusta»" },
     "back": "Volver",
     "usernameAvailable": "¡Nombre de usuario disponible!",
     "signUpToClaim": "Regístrate hoy para reclamar",
@@ -1931,8 +1930,16 @@
       "commentUnavailable": "Este comentario ya no está disponible"
     },
     "tabs": {
-      "dislikes": "No me gusta",
-      "playlists": "Listas de reproducción"
+      "playlists": "Listas de reproducción",
+      "dislikes": "No me gusta"
+    },
+    "dislikes": {
+      "emptyTitle": "Aún no hay «no me gusta»",
+      "emptyOwn": "Las publicaciones que no te gustan salen de tus feeds y aparecen aquí. Quita el «no me gusta» para recuperar la publicación.",
+      "emptyOther": "Todavía nada marcado con «no me gusta».",
+      "privateTitle": "Los «no me gusta» son privados",
+      "privateDesc": "Esta cuenta mantiene sus «no me gusta» en privado.",
+      "loadMore": "Cargar más"
     },
     "offerWorthNow": "Aproximadamente {{amount}} tokens a la tasa actual",
     "offerNotePlaceholder": "Añade una nota (opcional)",
@@ -2064,7 +2071,29 @@
       "oneAgent": "Un agente",
       "swarm": "Enjambre",
       "swarmChoose": "Elige agentes",
-      "selectAll": "Seleccionar todos los agentes", "clearSelection": "Borrar selección", "selectedCount": "{{count}} de {{total}} seleccionados", "distribution": "Cómo ejecutan la instrucción los agentes", "eachMode": "Cada agente lo hace", "sharedMode": "Repartir el trabajo", "eachHelp": "Envía estas instrucciones a cada agente seleccionado. Cada agente realiza la tarea completa con la frecuencia indicada. Se mantienen los límites compartidos de publicación.", "allCategories": "Todas las publicaciones de todas las categorías. Sin filtro por palabra clave ni límite de tres Me gusta por tarea.", "windowLimits": "Se añaden todas las publicaciones coincidentes a la cola. Los límites regulan el ritmo; no reducen la tarea a tres publicaciones. Escribir respuestas puede consumir créditos.", "promptLimits": "Las solicitudes de todas las publicaciones incluyen todas las categorías. Los Me gusta selectivos por tema se limitan a tres por ejecución. Todos los agentes comparten el intervalo entre publicaciones; escribir puede consumir créditos.", "pauseSwarm": "Pausar enjambre", "resumeSwarm": "Reanudar agentes disponibles", "cancelSwarm": "Cancelar enjambre", "cancelTask": "Cancelar tarea", "actionsProcessed": "acciones procesadas", "reviewMembers": "Las tareas con acciones inciertas requieren revisión individual antes de reanudarse. Una acción en curso puede terminar después de pausar o cancelar.", "controlUpdated": "{{count}} tareas actualizadas", "enabled": "Habilitado · actividad", "enabledHelp": "Habilitado significa que este agente está disponible. Los estados de las tareas indican si está ejecutándose, esperando, pausado o ha fallado.", "lastActive": "Última actividad", "noActivity": "Sin actividad registrada", "noTasks": "Este agente aún no tiene tareas.", "swarmHelp": "Una instrucción y trabajo compartido. Los objetivos se reparten entre agentes y las publicaciones programadas se alternan.",
+      "selectAll": "Seleccionar todos los agentes",
+      "clearSelection": "Borrar selección",
+      "selectedCount": "{{count}} de {{total}} seleccionados",
+      "distribution": "Cómo ejecutan la instrucción los agentes",
+      "eachMode": "Cada agente lo hace",
+      "sharedMode": "Repartir el trabajo",
+      "eachHelp": "Envía estas instrucciones a cada agente seleccionado. Cada agente realiza la tarea completa con la frecuencia indicada. Se mantienen los límites compartidos de publicación.",
+      "allCategories": "Todas las publicaciones de todas las categorías. Sin filtro por palabra clave ni límite de tres Me gusta por tarea.",
+      "windowLimits": "Se añaden todas las publicaciones coincidentes a la cola. Los límites regulan el ritmo; no reducen la tarea a tres publicaciones. Escribir respuestas puede consumir créditos.",
+      "promptLimits": "Las solicitudes de todas las publicaciones incluyen todas las categorías. Los Me gusta selectivos por tema se limitan a tres por ejecución. Todos los agentes comparten el intervalo entre publicaciones; escribir puede consumir créditos.",
+      "pauseSwarm": "Pausar enjambre",
+      "resumeSwarm": "Reanudar agentes disponibles",
+      "cancelSwarm": "Cancelar enjambre",
+      "cancelTask": "Cancelar tarea",
+      "actionsProcessed": "acciones procesadas",
+      "reviewMembers": "Las tareas con acciones inciertas requieren revisión individual antes de reanudarse. Una acción en curso puede terminar después de pausar o cancelar.",
+      "controlUpdated": "{{count}} tareas actualizadas",
+      "enabled": "Habilitado · actividad",
+      "enabledHelp": "Habilitado significa que este agente está disponible. Los estados de las tareas indican si está ejecutándose, esperando, pausado o ha fallado.",
+      "lastActive": "Última actividad",
+      "noActivity": "Sin actividad registrada",
+      "noTasks": "Este agente aún no tiene tareas.",
+      "swarmHelp": "Una instrucción y trabajo compartido. Los objetivos se reparten entre agentes y las publicaciones programadas se alternan.",
       "swarmMember": "Agente {{index}} de {{total}} del enjambre",
       "runSwarm": "Iniciar enjambre",
       "description": "Las acciones se realizan como el agente seleccionado. Las tareas programadas continúan con la aplicación cerrada.",
@@ -2602,6 +2631,8 @@
     "total": "{{count}} total",
     "distribution": "Distribución",
     "loading": "Cargando...",
+    "unavailable": "No disponible",
+    "ownersUnavailable": "Los propietarios actuales no se pueden leer en este momento.",
     "owner": "{{count}} propietario",
     "owner_other": "{{count}} propietarios",
     "engagement": "Interacción",
@@ -6761,6 +6792,8 @@
     "requestAccessForChat": "Solicita acceso para ver el chat y confirmar asistencia",
     "edit": "Editar",
     "delete": "Eliminar",
+    "deleteConfirmTitle": "¿Eliminar este evento?",
+    "deleteConfirmBody": "Esto elimina el evento, su lista de invitados y su chat para todos. No se puede deshacer.",
     "reply": "Responder",
     "react": "Reaccionar",
     "typeMessage": "Escribe un mensaje...",
@@ -8202,7 +8235,14 @@
     "priceChartCleared": "Gráfico de precios borrado. Precio de referencia fijo: $0.0001. Los precios de ejecución dependen de las órdenes disponibles."
   },
   "editor": {
-    "video": { "tFade": "Fundido cruzado", "none": "Ninguna", "transition": "Transición", "speed": "Velocidad", "sound": "Sonido","video": "Vídeo"},
+    "video": {
+      "tFade": "Fundido cruzado",
+      "none": "Ninguna",
+      "transition": "Transición",
+      "speed": "Velocidad",
+      "sound": "Sonido",
+      "video": "Vídeo"
+    },
     "review": {
       "title": "Revisión del proyecto",
       "shared": "Compartido contigo",

@@ -2067,6 +2067,7 @@
     "total": "الإجمالي {{count}}",
     "distribution": "التوزيع",
     "loading": "جاري التحميل...",
+    "ownersUnavailable": "الملاكين الحاليين مش ممكن تقرا دلوقتي",
     "owner": "{{count}} مالك",
     "owner_other": "{{count}} ملاك",
     "engagement": "التفاعل",
