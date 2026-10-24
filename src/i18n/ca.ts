@@ -1861,6 +1861,14 @@ export const ca = {
       'Agricultura LP amb rendiments comunitaris',
       'Inicia la funcionalitat de rampa de sortida fiduciària per a una conversió sense problemes de token a efectiu',
     ],
+    q2_2022_items: [
+      'Aplicació de streaming que suporta contingut 4K amb un temps d\'execució del 99,9%',
+      'Produït primer documental tokenitzat amb Jorge Masvidal, Brad Pickett i més, per Luke Barnatt',
+      'Genesis per a la col·lecció de Chads',
+      'Obtingut la registració SEC amb el Govern de les Filipines per als serveis de béns immobles, construcció i intermediació immobiliària',
+      'Implementat compressió de vídeo avançada reduint els costos de banda amplada en un 60%',
+      'Desenvolupat mercat de NFT amb sistema de distribució de royalties',
+    ],
   },
   brandAssets: {
     title: 'Recursos de marca',
