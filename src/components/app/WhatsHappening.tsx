@@ -307,7 +307,7 @@ export const WhatsHappening = memo(function WhatsHappening({ showCountrySelector
         
       </div>
 
-      <div className="p-4 pt-3">
+      <div data-side-panel-content className="p-4 pt-3">
 
       {/* Tab content */}
       <div style={{ height: 320 }} className="relative overflow-y-auto overflow-x-hidden scrollbar-thin scrollbar-thumb-zinc-700 scrollbar-track-transparent">

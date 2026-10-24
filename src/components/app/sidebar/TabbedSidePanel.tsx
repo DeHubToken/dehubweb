@@ -98,7 +98,7 @@ export const TabbedSidePanel = memo(function TabbedSidePanel() {
       </div>
 
       {/* Tab Content — show/hide for maximum browser compatibility */}
-      <div className="h-[400px]">
+      <div data-side-panel-content className="h-[400px]">
         {/* Leaderboard panel */}
         <div className={`h-full overflow-y-auto overscroll-contain overflow-x-hidden scrollbar-thin scrollbar-thumb-zinc-700 scrollbar-track-transparent ${effectiveTab === 'leaderboard' ? '' : 'hidden'}`}>
           {(leaderboardOpened || effectiveTab === 'leaderboard') && <SidebarLeaderboard ref={leaderboardRef} />}
