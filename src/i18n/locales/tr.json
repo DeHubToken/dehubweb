@@ -570,14 +570,13 @@
     "heading": "DeHub Kısa Videolar"
   },
   "settings": {
-    "glass": "Camsı",
     "sessionsRevokedMany": "{{count}} cihaz oturumu kapatıldı",
     "usernameTaken": "Kullanıcı adı alınmış",
-    "showDislikesDesc": "Herkes profilindeki Beğenilmeyenler sekmesini açabilir. Bu kapalıyken yalnızca sen görebilirsin.",
-    "showDislikes": "Beğenmediklerimi herkese göster",
     "postingChain": "Gönderi blokzinciri",
     "showOnline": "Çevrimiçi olduğumda göster",
     "showOnlineDesc": "Mesaj gönderdiğiniz kişiler, DeHub'ı kullanırken adınızın yanında yeşil bir nokta görür",
+    "showDislikes": "Beğenmediklerimi herkese göster",
+    "showDislikesDesc": "Herkes profilindeki Beğenilmeyenler sekmesini açabilir. Bu kapalıyken yalnızca sen görebilirsin.",
     "smartReplies": "Önerilen yanıtlar",
     "smartRepliesDesc": "Sohbette dokunabileceğin iki yanıt hazırlar. Önerilerdeki × bunu kapatır.",
     "title": "Ayarlar",
@@ -756,6 +755,7 @@
     "systemLight": "Sistem Açık",
     "immersive": "Göğüsleyici",
     "cosmic": "Cosmic Pixels",
+    "glass": "Camsı",
     "hazy": "Puslu Geceler",
     "swarms": "Sürüler",
     "lavalamp": "Lav Lambası",
@@ -2108,7 +2108,6 @@
     "returnHome": "Ana Sayfaya Dön"
   },
   "profile": {
-    "dislikes": { "loadMore": "Daha fazla yükle", "privateDesc": "Bu hesap beğenmediklerini kendine saklıyor.", "privateTitle": "Beğenilmeyenler gizli", "emptyOther": "Henüz beğenilmeyen bir şey yok.", "emptyOwn": "Beğenmediğin gönderiler akışlarından çıkar ve burada görünür. Gönderiyi geri getirmek için beğenmemeyi geri al.", "emptyTitle": "Henüz beğenmediğin bir şey yok" },
     "back": "Geri",
     "usernameAvailable": "Kullanıcı adı mevcut!",
     "signUpToClaim": "Almak için bugün kaydolun",
@@ -2136,8 +2135,16 @@
       "commentUnavailable": "Bu yorum artık mevcut değil"
     },
     "tabs": {
-      "dislikes": "Beğenilmeyenler",
-      "playlists": "Oynatma Listeleri"
+      "playlists": "Oynatma Listeleri",
+      "dislikes": "Beğenilmeyenler"
+    },
+    "dislikes": {
+      "emptyTitle": "Henüz beğenmediğin bir şey yok",
+      "emptyOwn": "Beğenmediğin gönderiler akışlarından çıkar ve burada görünür. Gönderiyi geri getirmek için beğenmemeyi geri al.",
+      "emptyOther": "Henüz beğenilmeyen bir şey yok.",
+      "privateTitle": "Beğenilmeyenler gizli",
+      "privateDesc": "Bu hesap beğenmediklerini kendine saklıyor.",
+      "loadMore": "Daha fazla yükle"
     },
     "offerWorthNow": "Mevcut kurdan yaklaşık {{amount}} jeton",
     "offerNotePlaceholder": "Bir not ekle (isteğe bağlı)",
@@ -2282,7 +2289,29 @@
       "oneAgent": "Tek ajan",
       "swarm": "Sürü",
       "swarmChoose": "Ajanları seç",
-      "selectAll": "Tüm aracıları seç", "clearSelection": "Seçimi temizle", "selectedCount": "{{total}} aracıdan {{count}} seçildi", "distribution": "Aracıların talimatı yürütme şekli", "eachMode": "Her aracı bunu yapsın", "sharedMode": "İşi paylaş", "eachHelp": "Bu talimatları seçilen her aracıya gönderin. Her aracı görevin tamamını istenen sıklıkta gerçekleştirir. Ortak paylaşım sınırları geçerlidir.", "allCategories": "Tüm kategorilerdeki tüm gönderiler. Anahtar kelime filtresi ve görev başına üç beğeni sınırı yoktur.", "windowLimits": "Eşleşen tüm gönderiler kuyruğa alınır. İşlem sınırları hızı düzenler; görevi üç gönderiyle sınırlamaz. Yanıt yazmak kredi kullanabilir.", "promptLimits": "Tüm gönderi istekleri tüm kategorileri kapsar. Konuya göre seçilen beğeniler yürütme başına üç ile sınırlıdır. Tüm aracılar ortak paylaşım aralığını kullanır; yazmak kredi kullanabilir.", "pauseSwarm": "Sürüyü duraklat", "resumeSwarm": "Uygun aracıları sürdür", "cancelSwarm": "Sürüyü iptal et", "cancelTask": "Görevi iptal et", "actionsProcessed": "işlem işlendi", "reviewMembers": "Belirsiz işlemleri olan görevler sürdürülmeden önce tek tek incelenmelidir. Devam eden bir işlem duraklatma veya iptalden sonra tamamlanabilir.", "controlUpdated": "{{count}} görev güncellendi", "enabled": "Etkin · etkinlik", "enabledHelp": "Etkin, bu aracının kullanılabilir olduğu anlamına gelir. Aşağıdaki görev durumları çalıştığını, beklediğini, duraklatıldığını veya başarısız olduğunu gösterir.", "lastActive": "Son etkinlik", "noActivity": "Kayıtlı etkinlik yok", "noTasks": "Bu aracının henüz görevi yok.", "swarmHelp": "Tek komut, paylaşılan iş. Hedefler ajanlar arasında bölünür; zamanlanmış gönderiler sırayla paylaşılır.",
+      "selectAll": "Tüm aracıları seç",
+      "clearSelection": "Seçimi temizle",
+      "selectedCount": "{{total}} aracıdan {{count}} seçildi",
+      "distribution": "Aracıların talimatı yürütme şekli",
+      "eachMode": "Her aracı bunu yapsın",
+      "sharedMode": "İşi paylaş",
+      "eachHelp": "Bu talimatları seçilen her aracıya gönderin. Her aracı görevin tamamını istenen sıklıkta gerçekleştirir. Ortak paylaşım sınırları geçerlidir.",
+      "allCategories": "Tüm kategorilerdeki tüm gönderiler. Anahtar kelime filtresi ve görev başına üç beğeni sınırı yoktur.",
+      "windowLimits": "Eşleşen tüm gönderiler kuyruğa alınır. İşlem sınırları hızı düzenler; görevi üç gönderiyle sınırlamaz. Yanıt yazmak kredi kullanabilir.",
+      "promptLimits": "Tüm gönderi istekleri tüm kategorileri kapsar. Konuya göre seçilen beğeniler yürütme başına üç ile sınırlıdır. Tüm aracılar ortak paylaşım aralığını kullanır; yazmak kredi kullanabilir.",
+      "pauseSwarm": "Sürüyü duraklat",
+      "resumeSwarm": "Uygun aracıları sürdür",
+      "cancelSwarm": "Sürüyü iptal et",
+      "cancelTask": "Görevi iptal et",
+      "actionsProcessed": "işlem işlendi",
+      "reviewMembers": "Belirsiz işlemleri olan görevler sürdürülmeden önce tek tek incelenmelidir. Devam eden bir işlem duraklatma veya iptalden sonra tamamlanabilir.",
+      "controlUpdated": "{{count}} görev güncellendi",
+      "enabled": "Etkin · etkinlik",
+      "enabledHelp": "Etkin, bu aracının kullanılabilir olduğu anlamına gelir. Aşağıdaki görev durumları çalıştığını, beklediğini, duraklatıldığını veya başarısız olduğunu gösterir.",
+      "lastActive": "Son etkinlik",
+      "noActivity": "Kayıtlı etkinlik yok",
+      "noTasks": "Bu aracının henüz görevi yok.",
+      "swarmHelp": "Tek komut, paylaşılan iş. Hedefler ajanlar arasında bölünür; zamanlanmış gönderiler sırayla paylaşılır.",
       "swarmMember": "Sürü ajanı {{index}} / {{total}}",
       "runSwarm": "Sürüyü başlat",
       "description": "İşlemler seçilen ajan adına yapılır. Zamanlanmış görevler uygulama kapalıyken de devam eder.",
@@ -2823,8 +2852,6 @@
     "anonymousLikes_other": "Anonim rozet sahiplerinden {{count}} beğeni"
   },
   "postInfo": {
-    "unavailable": "Uygun değil",
-    "ownersUnavailable": "Mevcut sahipler şu anda okunamıyor.",
     "title": "Gönderi Bilgisi",
     "tokenId": "Token Kimliği",
     "mintedOn": "Basım Tarihi",
@@ -2836,6 +2863,8 @@
     "total": "toplam {{count}}",
     "distribution": "Dağılım",
     "loading": "Yükleniyor...",
+    "unavailable": "Uygun değil",
+    "ownersUnavailable": "Mevcut sahipler şu anda okunamıyor.",
     "owner": "{{count}} sahip",
     "owner_other": "{{count}} sahip",
     "engagement": "Etkileşim",
@@ -3899,8 +3928,8 @@
     "buyTokensToUnlock": "Bir rozetin ve Süper Güçlerinin kilidini açmak için DeHub jetonları satın alın. Herhangi bir rozet sahibi bunları kazanır — stake etmeye gerek yok.",
     "currentIntro": "Rozet sahipleri iki haftada bir yeni güçlendirme alır. Team up herkese açıktır: cüzdan gücünüzü yedi kişiye kadar başkalarıyla birleştirin, toplamınızın açtığı rozeti her üye alsın.",
     "currentPowersHeading": "On iki güç",
-    "goldenHourStarted": "Altın Saat {{minutes}} dakika sürüyor — şimdi paylaştığınız her şey iki katı değerinde",
-    "signalFlareTo": "{{people}} kişiye İşaret Fişeği"
+    "signalFlareTo": "{{people}} kişiye İşaret Fişeği",
+    "goldenHourStarted": "Altın Saat {{minutes}} dakika sürüyor — şimdi paylaştığınız her şey iki katı değerinde"
   },
   "work": {
     "integrity": {
@@ -6935,8 +6964,6 @@
     "notEnoughTokensForBounty": "Yeterli jeton yok. {{need}} jetona ihtiyacınız var ancak {{have}} var."
   },
   "events": {
-    "deleteConfirmTitle": "Bu etkinlik silinsin mi?",
-    "deleteConfirmBody": "Bu, etkinliği, davetli listesini ve sohbeti herkes için kaldırır. Geri alınamaz.",
     "seoTitle": "Etkinlikler — DeHub'da buluşmalar ve topluluk etkinlikleri",
     "seoDescription": "DeHub'ın yaklaşan topluluk etkinliklerine göz atın, buluşmalara katılacağınızı bildirin ve merkeziyetsiz, kullanıcılarının sahip olduğu bu sosyal platformda kendi etkinliğinizi düzenleyin.",
     "defaultSeoDescription": "DeHub'da bir topluluk etkinliği.",
@@ -7002,6 +7029,8 @@
     "requestAccessForChat": "Sohbeti görmek ve katılım bildirmek için izin isteyin",
     "edit": "Düzenle",
     "delete": "Sil",
+    "deleteConfirmTitle": "Bu etkinlik silinsin mi?",
+    "deleteConfirmBody": "Bu, etkinliği, davetli listesini ve sohbeti herkes için kaldırır. Geri alınamaz.",
     "reply": "Yanıtla",
     "react": "Tepki ver",
     "typeMessage": "Bir mesaj yazın...",
@@ -8443,7 +8472,14 @@
     "priceChartCleared": "Fiyat grafiği temizlendi. Sabit referans fiyatı: 0.0001 $. Uygulama fiyatları mevcut siparişlere bağlıdır."
   },
   "editor": {
-    "video": { "tFade": "Çapraz geçiş", "none": "Yok", "transition": "Geçiş", "speed": "Hız", "sound": "Ses","video": "Video"},
+    "video": {
+      "tFade": "Çapraz geçiş",
+      "none": "Yok",
+      "transition": "Geçiş",
+      "speed": "Hız",
+      "sound": "Ses",
+      "video": "Video"
+    },
     "review": {
       "title": "Proje incelemesi",
       "shared": "Sizinle paylaşılan",
@@ -9179,6 +9215,7 @@
       "generatedToken": "Kopyalanacak biçimlendirilmiş yer tutucu",
       "hint": "Geçerli sayfayı şablon olarak kullanın. Metin ve QR katmanlarını elektronik tablo sütunlarına bağlayın veya sütun adlarını metninizin içine çift parantez içine koyun. Seçilen her satır yeni bir sayfa oluşturur; orijinali yerinde kalır.",
       "import": "CSV veya TSV'yi içe aktar",
+      "importConnections": "Bağlantı dosyasını içe aktar",
       "keepTemplateField": "Şablon ve yer tutucuları kullanma",
       "keepTemplateLink": "Şablon bağlantısını koru",
       "keepTemplatePhoto": "Şablon fotoğrafını sakla",
@@ -9215,8 +9252,7 @@
       "tokenDecimals": "Onluk yerleri",
       "tokenHint": "Metin içinde yer tutucuları kullan için o katmana yer tutucu yapıştır ve yer tutucu yapıştır. Biçimlendirme, tablo değerlerini değiştirmez. Sayısal formatlar, düz sayılar gerektirir; 25, yüzde modunda %25 olarak formatlanır.",
       "tokenLocale": "Sayısal bölge",
-      "trimToken": "Boşlukları biçimlendirmeden önce kes",
-      "importConnections": "Bağlantı dosyasını içe aktar"
+      "trimToken": "Boşlukları biçimlendirmeden önce kes"
     },
     "charts": {
       "applyDateBounds": "Tarih sınırlarını uygula",
@@ -9351,6 +9387,7 @@
       "scatterLinesHint": "Satırlar satır sırasını takip eder. Noktaları soldan sağa bağlamak için Veri'de sayısal X'e göre sıralayın. Tek bir seri, çizgi için ilk palet rengini kullanır.",
       "searchTypes": "Grafik türlerini ara",
       "seriesPatterns": "Şekilleri ve desenleri serilere göre değiştirin",
+      "seriesStructure": "Veri serilerini yönet",
       "seriesStructureHint": "Değerler ve renkler her seriyi takip eder. Yeni seriler sıfırdan başlar. Veri kılavuzunun ilk satırındaki serileri yeniden adlandırın.",
       "seriesTotal": "Seriler boyunca toplam",
       "showAxisValues": "Ölçek etiketlerini göster",
@@ -9370,6 +9407,7 @@
       "transpose": "Satırları ve sütunları değiştir",
       "transposeHint": "Altı kategoriye kadar seri haline gelir. Mevcut seriler kategori haline gelir; palet sırası değişmeden kalır.",
       "transposeScatter": "Verileri aktarmak için bir kategori grafiğine geçin.",
+      "treemapExample": "Taslağı hiyerarşi örneğiyle değiştir",
       "treemapHint": "Avrupa / Fransa ve Avrupa / Almanya gibi benzersiz yaprak yolları kullanın. Altı seviyeye kadar desteklenir. Değerler negatif olmamalı ve en az bir pozitif değer içermelidir. Sıfır değerler gizlidir. Bir yol hem bir grup hem de bir yaprak olamaz. İlk seri değerleri sağlar; diğer kaynak seriler korunur.",
       "trimCategory": "Önde ve arkada kalan alanları yoksay",
       "typeDraftHint": "Tür değiştirme, taslak verilerinizi saklar. Hazır olduğunuzda grafiği güncelleyin veya ekleyin.",
@@ -9383,9 +9421,7 @@
       "xDate": "Tarihler ve UTC saatleri",
       "xIntervals": "Yatay eksen aralıkları",
       "xNumber": "Numaralar",
-      "hierarchySample": "Avrupa,Fransa,35",
-      "seriesStructure": "Veri serilerini yönet",
-      "treemapExample": "Taslağı hiyerarşi örneğiyle değiştir"
+      "hierarchySample": "Avrupa,Fransa,35"
     },
     "clipboard": {
       "copy": "Katmanları kopyala",
@@ -9654,12 +9690,12 @@
       "preview": "Gradyan önizleme",
       "remove": "Durdurmayı kaldır",
       "reverse": "Geri",
+      "spread": "Yayılma",
       "stop": "Durma {{number}} saat {{position}}%",
       "styleFileHint": "Cihazlar arasında gradyan renkleri, pozisyonları, şeffaflığı, açıyı ve radyal ayarları aktarır. İçe aktarma taslağı yükler; çizimi güncellemek için uygulayın.",
       "styleFiles": "Aktarım gradyan stilleri",
       "styleLoaded": "Taslağa yüklenen stil",
-      "svgHint": "Durma konumları ve şeffaflık dahil olmak üzere bu gradyanı sayfa boyutunda dışa aktarır. Tasarımda kullanmak için ayrı ayrı uygulayın.",
-      "spread": "Yayılma"
+      "svgHint": "Durma konumları ve şeffaflık dahil olmak üzere bu gradyanı sayfa boyutunda dışa aktarır. Tasarımda kullanmak için ayrı ayrı uygulayın."
     },
     "graphicDraftHistory": {
       "local": "Grafik taslak",
@@ -9871,6 +9907,7 @@
       "hint": "Bu cihazda hesap başına kaydedildi. Bir görünüm uygulamak renk, bulanıklık ve ayrıntı ayarlarının yerini alır. Kırpma, çerçeve, sınırlar ve zamanlama yerinde kalır. Uygulamak için bir görünümü içe aktarın, ardından kitaplığınıza kaydedin.",
       "importStyle": "Görünüm dosyasını içe aktar",
       "memoryOnly": "Bu oturum için kullanılabilir; cihaz depolama alanı kaydedilemedi",
+      "name": "Görünüm adı",
       "remove": "Kaydedilmiş görünümü kaldır",
       "replace": "Mevcut ayarlarla değiştirin",
       "saveCurrent": "Mevcut ayarlamaları kaydet",
@@ -9880,13 +9917,12 @@
       "styleFileHint": "Cihazlar arasında renk, bulanıklık, çift ton ve detay ayarlamalarını aktarır. İçe aktarma, kaydedilen adını gösterir; seçilen ortam ayarlarını değiştirmek için uygulayın. Kırpma, çerçeveler, sınırlar ve zamanlama yerinde kalır.",
       "styleFiles": "Fotoğraf görünümünü aktar",
       "styleLoaded": "İçe aktarılmış görünüm uygulandı",
-      "title": "Kaydedilen fotoğraf görünümleri",
-      "name": "Görünüm adı"
+      "title": "Kaydedilen fotoğraf görünümleri"
     },
     "photoTone": {
+      "duotone": "Çift ton",
       "original": "Orijinal renkler",
-      "strength": "Duoton tonu gücü",
-      "duotone": "Çift ton"
+      "strength": "Duoton tonu gücü"
     },
     "photos": {
       "arrange": "Fotoğrafları yeniden düzenleyin",
@@ -9923,6 +9959,7 @@
       "notes": "Sunucu notları",
       "notesCopied": "Notlar kopyalandı",
       "notesCopyFailed": "Notlar kopyalanamadı",
+      "notesLarger": "Not metnini büyüt",
       "notesScrollSpeed": "Kaydırma hızı",
       "notesSmaller": "Notların metin boyutunu küçült",
       "pagePickerShortcut": "Sayfalara göz at (G)",
@@ -9933,6 +9970,7 @@
       "rehearsalHint": "Ziyaretler sayfa başına birikir. Uygulama arka plandayken, sayfalar yüklenirken veya sayfa seçici açıkken zaman durur. Başvurmadan önce duraklatın; ziyaret edilmeyen sayfa süreleri değişmeden kalır.",
       "resetClock": "Saati sıfırla",
       "resetRehearsal": "Zamanlamaları sıfırla",
+      "saveRehearsal": "Zamanlamaları uygula ve kapat",
       "setTimer": "Geri sayımı ayarla",
       "temporaryInk": "Sayfayı değiştirdiğinizde işaretler silinir",
       "timeUp": "Süre doldu",
@@ -9943,9 +9981,7 @@
       "upNext": "Sıradaki",
       "usePageTiming": "Sayfa sürelerini kullan",
       "whiteScreen": "Beyaz ekran",
-      "whiteScreenShortcut": "Beyaz ekran (W)",
-      "notesLarger": "Not metnini büyüt",
-      "saveRehearsal": "Zamanlamaları uygula ve kapat"
+      "whiteScreenShortcut": "Beyaz ekran (W)"
     },
     "qr": {
       "background": "Arka plan",
@@ -10212,9 +10248,9 @@
       "mixedFonts": "Birden fazla yazı tipi ailesi seçildi",
       "regular": "Normal metin",
       "setColour": "Rengi ayarla",
+      "setSize": "Boyutu ayarla",
       "size": "Metin boyutu",
-      "title": "Seçilen metni biçimlendir ({{count}})",
-      "setSize": "Boyutu ayarla"
+      "title": "Seçilen metni biçimlendir ({{count}})"
     },
     "tools": {
       "noResults": "Eşleşen araç yok. Daha kısa bir arama yapmayı deneyin.",
@@ -12115,6 +12151,7 @@
     "3c26ee4f00ee": "🎙️ Trafiğin, rüzgarın, hissin veya odun sesinden sesi temiz bir şekilde çekiyor",
     "3c415b527ee7": "Sahneye oynatmak mümkün olmadı — host olarak bağlı kalın",
     "3c4ea43f652c": "Mesajı sohbetin en üstüne sabitleyin",
+    "3c784a16cf27": "Kısa Videolar",
     "3c8432b0c6a7": "Onaylama başarısız oldu. Lütfen tekrar deneyin.",
     "3c8701908f73": "DeHub'de son 24 saat içinde en popüler gönderileri bana özetle.",
     "3cce984f2403": "Asıl gönderiler, videolar ve yorumlar, adlarını taşıyan çekilişlere katılır.",
@@ -12648,6 +12685,7 @@
     "7d5825cf909d": "Ödeme adresi yapılandırılmamış.",
     "7d61d28cb660": "Düzeltme kontrolü!",
     "7d94977e033d": "Etiyopya",
+    "7db20897053b": "Kişiler",
     "7dc1cd7eaff6": "Hayvanlar",
     "7ddb44d8a533": "dakika önce",
     "7de5d8585f7b": "{{value1}}% kayıp",
@@ -13412,6 +13450,7 @@
     "de4ab7c90a0a": "Biyometrik kilit açma yüklenemedi",
     "de5008d194a7": "Irak",
     "de690b83607b": "/editor adresinde çok kanallı stüdyo",
+    "de88c121a82a": "Premium",
     "de9e2132fd4d": "Bu cüzdan, DeHub'ın daha yeni bir sürümü tarafından kaydedildi. Lütfen yeniden yükleyin ve tekrar deneyin.",
     "dea7dbdf2bed": "Beceriyi kullanma: {{value1}}",
     "decf4d0b7c4e": "Solana cüzdanı bağlanamadı",
@@ -17782,11 +17821,9 @@
     "b4a7365740ef": "Canlı istatistik",
     "7e658675b5ca": "Kariyer",
     "c864f329f5dd": "Topluluklar",
-    "3c784a16cf27": "Kısa Videolar",
     "4e677391fd0a": "İlk 100",
     "d591a7cb7e70": "AI Ajanları",
     "752d035aa9d9": "Ödüllerim",
-    "de88c121a82a": "Premium",
     "dfe95783edfe": "Fiyatlandırma",
     "c6b6a71ac899": "Üreticiler",
     "4369677cc938": "Uygulamayı İndir",
@@ -17799,8 +17836,7 @@
     "7c50f8a38a76": "Reklamcılık",
     "d451ef69d283": "Canlı TV",
     "89dd748442c1": "Uygulamalar",
-    "e18a39d085ea": "Dönüştür",
-    "7db20897053b": "Kişiler"
+    "e18a39d085ea": "Dönüştür"
   },
   "articles": {
     "cardLabel": "Makale ·{{count}} dk. okuma",

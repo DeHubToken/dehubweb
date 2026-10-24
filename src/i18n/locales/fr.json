@@ -570,14 +570,13 @@
     "heading": "Courts DeHub"
   },
   "settings": {
-    "glass": "Glassy",
     "sessionsRevokedMany": "{{count}} appareils déconnectés",
     "usernameTaken": "Nom d'utilisateur déjà pris",
-    "showDislikesDesc": "Tout le monde peut ouvrir l'onglet « Je n'aime pas » de votre profil. Désactivé, vous seul pouvez le voir.",
-    "showDislikes": "Montrer mes « je n'aime pas » à tout le monde",
     "postingChain": "Blockchain des publications",
     "showOnline": "Montrer quand je suis en ligne",
     "showOnlineDesc": "Les personnes que vous envoyez un message voient un point vert à côté de votre nom lorsque vous utilisez DeHub",
+    "showDislikes": "Montrer mes « je n'aime pas » à tout le monde",
+    "showDislikesDesc": "Tout le monde peut ouvrir l'onglet « Je n'aime pas » de votre profil. Désactivé, vous seul pouvez le voir.",
     "smartReplies": "Réponses suggérées",
     "smartRepliesDesc": "Rédige deux réponses à toucher dans une discussion. La × sur les suggestions désactive l'option.",
     "title": "Paramètres",
@@ -756,6 +755,7 @@
     "systemLight": "Système Clair",
     "immersive": "Immersif",
     "cosmic": "Cosmic Pixels",
+    "glass": "Glassy",
     "hazy": "Nuits Brumeuses",
     "swarms": "Essaims",
     "lavalamp": "Lampe à lave",
@@ -2108,7 +2108,6 @@
     "returnHome": "Retour à l'accueil"
   },
   "profile": {
-    "dislikes": { "loadMore": "Charger plus", "privateDesc": "Ce compte garde ses « je n'aime pas » pour lui.", "privateTitle": "Les « je n'aime pas » sont privés", "emptyOther": "Rien pour l'instant.", "emptyOwn": "Les publications que vous n'aimez pas quittent vos fils et apparaissent ici. Annulez le « je n'aime pas » pour faire revenir la publication.", "emptyTitle": "Aucun « je n'aime pas » pour l'instant" },
     "back": "Retour",
     "usernameAvailable": "Nom d'utilisateur disponible !",
     "signUpToClaim": "Inscrivez-vous pour le réclamer",
@@ -2136,8 +2135,16 @@
       "commentUnavailable": "Ce commentaire n'est plus disponible"
     },
     "tabs": {
-      "dislikes": "Je n'aime pas",
-      "playlists": "Playlists"
+      "playlists": "Playlists",
+      "dislikes": "Je n'aime pas"
+    },
+    "dislikes": {
+      "emptyTitle": "Aucun « je n'aime pas » pour l'instant",
+      "emptyOwn": "Les publications que vous n'aimez pas quittent vos fils et apparaissent ici. Annulez le « je n'aime pas » pour faire revenir la publication.",
+      "emptyOther": "Rien pour l'instant.",
+      "privateTitle": "Les « je n'aime pas » sont privés",
+      "privateDesc": "Ce compte garde ses « je n'aime pas » pour lui.",
+      "loadMore": "Charger plus"
     },
     "offerWorthNow": "Environ {{amount}} jetons au taux actuel",
     "offerNotePlaceholder": "Ajoute une note (facultatif)",
@@ -2282,7 +2289,29 @@
       "oneAgent": "Un agent",
       "swarm": "Essaim",
       "swarmChoose": "Choisir les agents",
-      "selectAll": "Sélectionner tous les agents", "clearSelection": "Effacer la sélection", "selectedCount": "{{count}} sur {{total}} sélectionnés", "distribution": "Exécution des instructions", "eachMode": "Chaque agent exécute la tâche", "sharedMode": "Répartir le travail", "eachHelp": "Envoyez ces instructions à chaque agent sélectionné. Chaque agent effectue toute la tâche à la fréquence demandée. Les limites de publication partagées restent applicables.", "allCategories": "Toutes les publications de toutes les catégories. Aucun filtre par mot-clé ni limite de trois mentions J’aime par tâche.", "windowLimits": "Toutes les publications correspondantes sont mises en file. Les limites règlent le rythme sans réduire la tâche à trois publications. La rédaction de réponses peut utiliser des crédits.", "promptLimits": "Les demandes visant toutes les publications incluent toutes les catégories. Les mentions J’aime sélectives par thème sont limitées à trois par exécution. Tous les agents partagent le délai de publication ; la rédaction peut utiliser des crédits.", "pauseSwarm": "Suspendre l’essaim", "resumeSwarm": "Reprendre les agents disponibles", "cancelSwarm": "Annuler l’essaim", "cancelTask": "Annuler la tâche", "actionsProcessed": "actions traitées", "reviewMembers": "Les tâches aux actions incertaines nécessitent un examen individuel avant reprise. Une action en cours peut se terminer après une suspension ou une annulation.", "controlUpdated": "{{count}} tâches mises à jour", "enabled": "Activé · activité", "enabledHelp": "Activé signifie que cet agent est disponible. Les états des tâches indiquent s’il travaille, attend, est suspendu ou a échoué.", "lastActive": "Dernière activité", "noActivity": "Aucune activité enregistrée", "noTasks": "Cet agent n’a pas encore de tâches.", "swarmHelp": "Une consigne, un travail partagé. Les cibles sont réparties entre les agents et les publications planifiées alternent.",
+      "selectAll": "Sélectionner tous les agents",
+      "clearSelection": "Effacer la sélection",
+      "selectedCount": "{{count}} sur {{total}} sélectionnés",
+      "distribution": "Exécution des instructions",
+      "eachMode": "Chaque agent exécute la tâche",
+      "sharedMode": "Répartir le travail",
+      "eachHelp": "Envoyez ces instructions à chaque agent sélectionné. Chaque agent effectue toute la tâche à la fréquence demandée. Les limites de publication partagées restent applicables.",
+      "allCategories": "Toutes les publications de toutes les catégories. Aucun filtre par mot-clé ni limite de trois mentions J’aime par tâche.",
+      "windowLimits": "Toutes les publications correspondantes sont mises en file. Les limites règlent le rythme sans réduire la tâche à trois publications. La rédaction de réponses peut utiliser des crédits.",
+      "promptLimits": "Les demandes visant toutes les publications incluent toutes les catégories. Les mentions J’aime sélectives par thème sont limitées à trois par exécution. Tous les agents partagent le délai de publication ; la rédaction peut utiliser des crédits.",
+      "pauseSwarm": "Suspendre l’essaim",
+      "resumeSwarm": "Reprendre les agents disponibles",
+      "cancelSwarm": "Annuler l’essaim",
+      "cancelTask": "Annuler la tâche",
+      "actionsProcessed": "actions traitées",
+      "reviewMembers": "Les tâches aux actions incertaines nécessitent un examen individuel avant reprise. Une action en cours peut se terminer après une suspension ou une annulation.",
+      "controlUpdated": "{{count}} tâches mises à jour",
+      "enabled": "Activé · activité",
+      "enabledHelp": "Activé signifie que cet agent est disponible. Les états des tâches indiquent s’il travaille, attend, est suspendu ou a échoué.",
+      "lastActive": "Dernière activité",
+      "noActivity": "Aucune activité enregistrée",
+      "noTasks": "Cet agent n’a pas encore de tâches.",
+      "swarmHelp": "Une consigne, un travail partagé. Les cibles sont réparties entre les agents et les publications planifiées alternent.",
       "swarmMember": "Agent {{index}} sur {{total}} dans cet essaim",
       "runSwarm": "Lancer cet essaim",
       "description": "Les actions sont effectuées par l’agent sélectionné. Les tâches planifiées continuent lorsque l’application est fermée.",
@@ -2318,11 +2347,11 @@
         "authorChoose": "Choisir un créateur",
         "categoryAll": "Toutes les catégories",
         "categoryChoose": "Choisir des catégories",
-        "categoryHint": "Ajoutez jusqu\u0027à 20 catégories séparées par des virgules. Une seule correspondance suffit. Laissez vide pour toutes.",
+        "categoryHint": "Ajoutez jusqu'à 20 catégories séparées par des virgules. Une seule correspondance suffit. Laissez vide pour toutes.",
         "last1h": "Dernière heure",
         "last30d": "30 derniers jours",
         "allTime": "Depuis le début",
-        "dislike": "Je n\u0027aime pas",
+        "dislike": "Je n'aime pas",
         "author": "Auteur (facultatif)",
         "category": "Catégorie (facultative)",
         "authorPlaceholder": "@pseudo ou portefeuille",
@@ -2827,8 +2856,6 @@
     "anonymousLikes_other": "{{count}} j'aime de détenteurs de badges anonymes"
   },
   "postInfo": {
-    "unavailable": "Non disponible",
-    "ownersUnavailable": "Les propriétaires actuels ne peuvent pas être lus pour le moment.",
     "title": "Info du Post",
     "tokenId": "Identifiant du jeton",
     "mintedOn": "Créé le",
@@ -2840,6 +2867,8 @@
     "total": "{{count}} total",
     "distribution": "Distribution",
     "loading": "Chargement...",
+    "unavailable": "Non disponible",
+    "ownersUnavailable": "Les propriétaires actuels ne peuvent pas être lus pour le moment.",
     "owner": "{{count}} propriétaire",
     "owner_other": "{{count}} propriétaires",
     "engagement": "Engagement",
@@ -3903,8 +3932,8 @@
     "buyTokensToUnlock": "Achetez des jetons DeHub pour débloquer un badge et ses SuperPouvoirs. Tout détenteur de badge les obtient — le staking n'est pas requis.",
     "currentIntro": "Les détenteurs de badge reçoivent de nouveaux boosts toutes les deux semaines. Team up est ouvert à tous : combinez la puissance de votre portefeuille avec jusqu'à sept autres et chaque membre obtient le badge que votre total débloque.",
     "currentPowersHeading": "Les douze puissances",
-    "goldenHourStarted": "Golden Hour en cours depuis {{minutes}} minutes — tout ce que vous publiez compte désormais double",
-    "signalFlareTo": "Flare de signal pour {{people}} personnes"
+    "signalFlareTo": "Flare de signal pour {{people}} personnes",
+    "goldenHourStarted": "Golden Hour en cours depuis {{minutes}} minutes — tout ce que vous publiez compte désormais double"
   },
   "work": {
     "integrity": {
@@ -6939,8 +6968,6 @@
     "notEnoughTokensForBounty": "Jetons insuffisants. Besoin de {{need}} jetons mais vous en avez {{have}}."
   },
   "events": {
-    "deleteConfirmTitle": "Supprimer cet événement ?",
-    "deleteConfirmBody": "Cela supprime l'événement, sa liste d'invités et son chat pour tout le monde. Cette action est irréversible.",
     "seoTitle": "Événements — Rencontres et événements communautaires sur DeHub",
     "seoDescription": "Parcourez les événements communautaires à venir de DeHub, répondez aux invitations des rencontres et organisez vos propres événements sur la plateforme sociale décentralisée et appartenant aux utilisateurs.",
     "defaultSeoDescription": "Événement communautaire sur DeHub.",
@@ -7006,6 +7033,8 @@
     "requestAccessForChat": "Demander l'accès pour voir le chat et confirmer votre présence",
     "edit": "Modifier",
     "delete": "Supprimer",
+    "deleteConfirmTitle": "Supprimer cet événement ?",
+    "deleteConfirmBody": "Cela supprime l'événement, sa liste d'invités et son chat pour tout le monde. Cette action est irréversible.",
     "reply": "Répondre",
     "react": "Réagir",
     "typeMessage": "Tapez un message...",
@@ -8447,7 +8476,14 @@
     "priceChartCleared": "Graphe des prix effacé. Prix de référence corrigé : $0.0001. Les prix d'exécution dépendent des ordres disponibles."
   },
   "editor": {
-    "video": { "tFade": "Fondu enchaîné", "none": "Aucune", "transition": "Transition", "speed": "Vitesse", "sound": "Son","video": "Vidéo"},
+    "video": {
+      "tFade": "Fondu enchaîné",
+      "none": "Aucune",
+      "transition": "Transition",
+      "speed": "Vitesse",
+      "sound": "Son",
+      "video": "Vidéo"
+    },
     "review": {
       "title": "Révision du projet",
       "shared": "Partagé avec vous",
@@ -9473,6 +9509,7 @@
       "keyboardHint": "Tab se déplace d'une cellule à l'autre ; Enter se déplace vers le bas. Coller les cellules de la feuille de calcul directement dans la grille.",
       "nextCell": "Cellule suivante",
       "numberCleanupHint": "Le nettoyage des numéros supprime les marques monétaires prises en charge et les séparateurs de regroupement, et convertit les négatifs comptables. Les pourcentages restent en points de pourcentage : 25% devient 25. Le texte non reconnu reste inchangé. Les actions modifient les cellules sources tout en maintenant la mise en forme du tableau attachée aux positions des cellules.",
+      "numberInputFormat": "Ponctuation des nombres dans la source",
       "pasteHint": "Coller des lignes à partir d'une feuille de calcul, CSV ou TSV. Ils remplacent une plage rectangulaire commençant à la cellule choisie ; les données environnantes sont conservées.",
       "pasteRange": "Coller une plage de cellules",
       "pasted": "{{rows}} lignes et {{columns}} colonnes collées",
@@ -9482,8 +9519,7 @@
       "redoAction": "Refaire l'action de données",
       "startCell": "Commencer à la cellule",
       "undoAction": "Annuler l'action sur les données",
-      "valueHint": "Modifiez la cellule entière ici, y compris les sauts de ligne. Les valeurs sont stockées sous forme de texte ; les formules ne sont pas calculées.",
-      "numberInputFormat": "Ponctuation des nombres dans la source"
+      "valueHint": "Modifiez la cellule entière ici, y compris les sauts de ligne. Les valeurs sont stockées sous forme de texte ; les formules ne sont pas calculées."
     },
     "dataExport": {
       "copyCells": "Copier les cellules",
@@ -9700,6 +9736,7 @@
     "guides": {
       "add": "Ajouter un guide",
       "applyGrid": "Appliquer la grille",
+      "centre": "Centre",
       "clear": "Effacer",
       "direction": "Orientation du guide",
       "dragHorizontal": "Faites glisser vers le bas pour ajouter un guide horizontal. Appuyez sur Entrée pour ajouter un guide central.",
@@ -9722,8 +9759,7 @@
       "thirds": "Tiers",
       "title": "Repères et marges",
       "vertical": "Vertical",
-      "visible": "Afficher les repères",
-      "centre": "Centre"
+      "visible": "Afficher les repères"
     },
     "help": {
       "keyboardHint": "Les raccourcis clavier s'appliquent en dehors des champs de texte et des boîtes de dialogue. Les actions sur le canevas nécessitent que le canevas soit sélectionné. Cmd remplace Ctrl sur Mac.",
@@ -10161,6 +10197,7 @@
       "stylePreserveHint": "Les styles conservent votre contenu, les cellules fusionnées et la taille des lignes et des colonnes.",
       "styles": "Styles de table",
       "stylesCopied": "Styles de cellules copiés",
+      "stylesPasted": "Styles de cellule collés",
       "summary": "Ajouter une ligne de résumé",
       "summaryCalculation": "Calcul",
       "summaryHint": "Calcule chaque colonne séparément. Les cellules vierges et non numériques sont ignorées. La ligne ajoutée contient des nombres fixes ; recalculer après avoir modifié les valeurs source.",
@@ -10172,11 +10209,11 @@
       "unmergeRange": "Annuler la fusion {{range}}",
       "vertical": "Alignement vertical",
       "weightsHint": "Les tailles sont relatives. Une valeur de 2 utilise deux fois plus d'espace qu'une ; la table conserve sa taille globale.",
-      "wrap": "Envelopper le texte de la cellule",
-      "stylesPasted": "Styles de cellule collés"
+      "wrap": "Envelopper le texte de la cellule"
     },
     "text": {
       "backgroundPerLine": "Ajuster l'arrière-plan à chaque ligne",
+      "bullets": "Liste à puces",
       "curve": "Courbe {{value}}",
       "echoDistance": "Distance d'écho",
       "editingTools": "Outils d'édition de texte",
@@ -10185,8 +10222,7 @@
       "listStyle": "Style de liste",
       "numbered": "Liste numérotée",
       "plain": "Texte brut",
-      "strikethrough": "Barré",
-      "bullets": "Liste à puces"
+      "strikethrough": "Barré"
     },
     "textSearch": {
       "emptyAfterReplacement": "Ce niveau sera vide",
@@ -10245,14 +10281,14 @@
       "width": "Largeur du contour"
     },
     "viewport": {
+      "fit": "Ajuster",
       "fitShortcut": "Ajuster la page (Maj+1)",
+      "pan": "Déplacer le canevas",
       "selection": "Sélection",
       "selectionShortcut": "Zoomer sur la sélection (Maj+2)",
       "toolbar": "Navigation sur le canevas",
       "zoomIn": "Zoom sur la toile",
-      "zoomOut": "Zoom arrière sur la toile",
-      "fit": "Ajuster",
-      "pan": "Déplacer le canevas"
+      "zoomOut": "Zoom arrière sur la toile"
     }
   },
   "jungleMood": {
@@ -12117,6 +12153,7 @@
     "3c26ee4f00ee": "🎙️ Extrait la voix proprement du trafic, du vent, du bourdonnement ou du ton de la pièce",
     "3c415b527ee7": "Impossible de jouer en direct — restez connecté en tant qu'hôte",
     "3c4ea43f652c": "Épinglez un message en haut du chat",
+    "3c784a16cf27": "Courts",
     "3c8432b0c6a7": "Vérification échouée. Veuillez réessayer.",
     "3c8701908f73": "Donnez-moi un briefing des principaux posts sur DeHub au cours des dernières 24 heures.",
     "3cce984f2403": "Les posts originaux, vidéos et commentaires comptent pour les tirages qui les nomment.",
@@ -12650,6 +12687,7 @@
     "7d5825cf909d": "Pas d'adresse de paiement configurée.",
     "7d61d28cb660": "Vérification orthographique !",
     "7d94977e033d": "Éthiopie",
+    "7db20897053b": "Personnes",
     "7dc1cd7eaff6": "Animaux de compagnie",
     "7ddb44d8a533": "juste maintenant",
     "7de5d8585f7b": "{{value1}}% de glissement",
@@ -13413,6 +13451,7 @@
     "de4ab7c90a0a": "Échec du chargement de l'authentification biométrique",
     "de5008d194a7": "Irak",
     "de690b83607b": "Studio multi-piste à /éditeur",
+    "de88c121a82a": "Premium",
     "de9e2132fd4d": "Cette bourse a été sauvegardée par une version plus récente de DeHub. Veuillez recharger et réessayer.",
     "dea7dbdf2bed": "En utilisant la compétence : {{value1}}",
     "decf4d0b7c4e": "Échec de la connexion au portefeuille Solana",
@@ -17783,11 +17822,9 @@
     "b4a7365740ef": "Stats en direct",
     "7e658675b5ca": "Carrières",
     "c864f329f5dd": "Communautés",
-    "3c784a16cf27": "Courts",
     "4e677391fd0a": "Top 100",
     "d591a7cb7e70": "Agents IA",
     "752d035aa9d9": "Mes primes",
-    "de88c121a82a": "Premium",
     "dfe95783edfe": "Tarifs",
     "c6b6a71ac899": "Créateurs",
     "4369677cc938": "Télécharger l'application",
@@ -17800,8 +17837,7 @@
     "7c50f8a38a76": "Publicité",
     "d451ef69d283": "TV en Direct",
     "89dd748442c1": "Applications",
-    "e18a39d085ea": "Convertir",
-    "7db20897053b": "Personnes"
+    "e18a39d085ea": "Convertir"
   },
   "articles": {
     "cardLabel": "Article · {{count}} min de lecture",
