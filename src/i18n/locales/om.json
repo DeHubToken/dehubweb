@@ -1760,7 +1760,7 @@
       "subject": "Mata duree ykn akaakuu deebii",
       "useBuilder": "Qajeelfama kana fayyadami",
       "planValidated": "Karoorri mirkanaa’e",
-      "builderHelp": "Unkaa filadhu, gocha, dhaggeeffattootaa fi sagantaa ibsi, sana booda osoo hin fiigin dura fakkeessi. Unkaaleen qoodaman qajeelfama barreessitoota isaanii irraa malee dandeettii mirkanaa&#39;e miti.",
+      "builderHelp": "Unkaa filadhu, gocha, dhaggeeffattootaa fi sagantaa ibsi, sana booda osoo hin fiigin dura fakkeessi. Unkaaleen qoodaman qajeelfama barreessitoota isaanii irraa malee dandeettii mirkanaa'e miti.",
       "simulate": "Karoora fakkeessuu",
       "allowed": "Hayyamamaa",
       "templateName": "Maqaa unkaa",
@@ -1779,14 +1779,14 @@
       "draft": "Wixinee qofa",
       "count": {
         "pending": "Wixineewwan gamaaggamamuu qaban",
-        "succeeded": "Milkaa&#39;ina dhiheenya kana",
+        "succeeded": "Milkaa'ina dhiheenya kana",
         "scheduled": "Hojiiwwan sagantaa qaban",
         "active": "Ergamtoota sochii qaban"
       },
       "builder": {
         "news": "Oduu irratti deebii kenni",
         "reply": "Barreeffamoota dhiheenya kana maxxanfamaniif deebii kennaa",
-        "curate": "Barreeffamoota barbaachisoo ta&#39;an like godha",
+        "curate": "Barreeffamoota barbaachisoo ta'an like godha",
         "post": "Barreeffama barreessaa"
       },
       "cadence": {
@@ -1799,7 +1799,7 @@
       "dehub_vote": "Maxxansa irratti deebii kenni",
       "dehub_follow": "Akkaawuntii hordofaa",
       "dehub_update_profile": "Profaayilii gulaali",
-      "dehub_stream_timeout": "Chaat yaa&#39;aa giddu galeessaa",
+      "dehub_stream_timeout": "Chaat yaa'aa giddu galeessaa",
       "news": {
         "world": "Addunyaa",
         "technology": "Teeknooloojii",
@@ -1807,7 +1807,7 @@
         "sport": "Ispoortii",
         "science": "Saayinsii"
       },
-      "agent": "Bakka bu&#39;aa",
+      "agent": "Bakka bu'aa",
       "action": "Gocha",
       "schedule": "Sagantaa",
       "filter": "Sochii calaqqee"
