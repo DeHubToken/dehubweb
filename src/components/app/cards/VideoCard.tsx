@@ -204,6 +204,8 @@ import { usePostStage } from '@/components/app/post-stage/post-stage-context';
 import { StageCreatorRow } from '@/components/app/post-stage/StageCreatorRow';
 import { viewerShareUrl } from '@/lib/share-url';
 import { KeywordFilterGate } from './KeywordFilterGate';
+import { useTabletPortraitFeed } from '@/hooks/use-tablet-portrait-feed';
+import { tabletPortraitTitleSize } from '@/lib/tablet-portrait-feed';
 
 /**
  * How far a touch may travel and still count as a tap on the player. Matches the
@@ -1926,6 +1928,10 @@ const VideoCardBody = memo(function VideoCard({ video, postPage = false, onBack,
   }, []);
 
   const scrubEventRef = useRef<HTMLDivElement>(null);
+  const tabletPortrait = useTabletPortraitFeed(scrubEventRef,
+    !isPhone && isTabletOrMobile && mediaAspect < 1 && !isImmersive && !postPage && !stage && !hideActions
+    && !isFullscreen && !video.isAudio && !video.isAd && !video.isLivePost && !!video.videoUrl
+    && !isContentGated && !matureGate.isGated && !contentWarning.hidden);
   const scrubZone = useVideoScrubZone({
     mediaRef: containerRef,
     eventRef: scrubEventRef,
@@ -2200,6 +2206,8 @@ const VideoCardBody = memo(function VideoCard({ video, postPage = false, onBack,
     <div
       ref={scrubEventRef}
       data-video-card
+      data-tablet-portrait={tabletPortrait || undefined}
+      style={tabletPortrait ? { ['--tablet-video-width' as string]: `min(44%, calc(65svh * ${mediaAspect.toFixed(4)}))` } : undefined}
       data-video-header-above={headerAboveMedia ? '' : undefined}
       onClick={isImmersive || stage ? undefined : handleCardClick}
       {...scrubZone}
@@ -3178,12 +3186,14 @@ const VideoCardBody = memo(function VideoCard({ video, postPage = false, onBack,
                     translated this text and hands the result down. Left on, this
                     asked the edge function to translate the translation. */}
                 {shownTitle && (
-                  <TranslatableText publicContent text={shownTitle} className={stage ? "text-white text-[15px] font-bold mb-0.5" : "text-white text-[14px] mb-1"} as="h3" hideControls auto={false} />
+                  <div style={tabletPortrait ? { fontSize: tabletPortraitTitleSize(shownTitle), fontWeight: tabletPortraitTitleSize(shownTitle) > 17 ? 600 : 400 } : undefined}>
+                    <TranslatableText publicContent text={shownTitle} className={tabletPortrait ? "text-white text-inherit leading-snug mb-3 break-words" : stage ? "text-white text-[15px] font-bold mb-0.5" : "text-white text-[14px] mb-1"} as="h3" hideControls auto={false} />
+                  </div>
                 )}
                 {shownDesc && (
                   <ExpandableDescription
                     description={shownDesc}
-                    isImmersive={isImmersive || !!stage}
+                    isImmersive={isImmersive || !!stage || tabletPortrait}
                     clampLines={stage ? (shownTitle ? 2 : 3) : 4}
                   />
                 )}
@@ -3193,7 +3203,7 @@ const VideoCardBody = memo(function VideoCard({ video, postPage = false, onBack,
           })()}
         </SharedTranslationProvider>
         </div>
-        <div className="mb-3">
+        <div data-video-metadata className="mb-3">
           <PostMetadata 
             className="!mt-3"
             timestamp={video.uploadedAgo}
