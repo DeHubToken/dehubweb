@@ -7,6 +7,7 @@ import LinkIcon from "@/components/ui/cut-icons/link";
 import { useTranslation } from 'react-i18next';
 import type { Community } from '@/hooks/use-communities';
 import { storageImage, deviceWidth } from '@/lib/media-url';
+import { useAppTheme } from '@/contexts/ThemeContext';
 
 function formatRelativeTime(dateString: string): string {
   const date = new Date(dateString);
@@ -46,6 +47,8 @@ interface CommunityCardProps {
 export function CommunityCard({ community, isMember, role, unreadCount, onClick }: CommunityCardProps) {
   const { t: _copy } = _useCopy();
   const { t } = useTranslation();
+  const { theme, themeChoice } = useAppTheme();
+  const isLight = theme === 'light' || themeChoice === 'system-light';
   const isOwner = role === 'owner';
   const description = community.description || '';
   const links = extractUrls(description);
@@ -115,10 +118,10 @@ export function CommunityCard({ community, isMember, role, unreadCount, onClick 
           <span className="text-white text-xs">{community.member_count.toLocaleString()} {t('communities.members')}</span>
           {isMember && (
             isOwner ? (
-              <span className="flex items-center gap-1 text-xs text-amber-400/80">
+              <span className={`flex items-center gap-1 text-xs ${isLight ? 'text-amber-800' : 'text-amber-400/80'}`}>
                 <Crown className="w-3 h-3" />{_copy("copy.4b1b8aa3608a", { defaultValue: "Owner" })}</span>
             ) : (
-              <span className="text-xs text-emerald-500/80">{t('communities.joined')}</span>
+              <span className={`text-xs ${isLight ? 'text-emerald-800' : 'text-emerald-500/80'}`}>{t('communities.joined')}</span>
             )
           )}
         </div>
