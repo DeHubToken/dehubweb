@@ -36,7 +36,9 @@ export function apRelayTarget(pathname, accept, isProfileSegment) {
   if (post) return `/api/ap/posts/${post[1]}`;
   const profile = /^\/@?([^/]+)\/?$/.exec(pathname);
   if (profile) {
-    const segment = decodeURIComponent(profile[1]);
+    // A malformed escape is not a username; let the page route handle it.
+    let segment;
+    try { segment = decodeURIComponent(profile[1]); } catch { return null; }
     if (!isProfileSegment || isProfileSegment(segment)) return `/api/ap/users/${encodeURIComponent(segment.replace(/^@/, ''))}`;
   }
   return null;
@@ -57,12 +59,18 @@ export function apRelayHeaders(request, url) {
 export async function handleApRelay(request, target, apiOrigin) {
   const url = new URL(request.url);
   const method = request.method === 'POST' ? 'POST' : 'GET';
-  const upstream = await fetch(`${apiOrigin}${target}${url.search}`, {
-    method,
-    headers: apRelayHeaders(request, url),
-    body: method === 'POST' ? await request.arrayBuffer() : undefined,
-    redirect: 'manual',
-  });
+  let upstream;
+  try {
+    upstream = await fetch(`${apiOrigin}${target}${url.search}`, {
+      method,
+      headers: apRelayHeaders(request, url),
+      body: method === 'POST' ? await request.arrayBuffer() : undefined,
+      redirect: 'manual',
+    });
+  } catch {
+    // An unreachable API is a 502 to the remote server, not a Worker crash.
+    return new Response('Bad Gateway', { status: 502, headers: { 'access-control-allow-origin': '*' } });
+  }
   const headers = new Headers();
   for (const name of ['content-type', 'cache-control', 'location']) {
     const value = upstream.headers.get(name);
