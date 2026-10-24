@@ -83,7 +83,7 @@ export function LiveTVSection({ showFilters = false }: LiveTVSectionProps) {
         <div className="relative">
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-zinc-500" />
           <Input
-            type="text"
+            type="search"
             placeholder={t('tv.searchPlaceholder')}
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
