@@ -104,6 +104,12 @@ export const ko = {
     disclaimerText: "DeHub 토큰은 인게임 화폐와 유사한 생태계 내 유틸리티 토큰으로 기능하며 투자 수단이 아닙니다. 블록체인 인프라가 교육 목적의 전례 없는 투명성과 검증 가능한 온체인 데이터를 제공하지만, 모든 시장에는 내재적 위험이 있습니다. 시장 변동성, 기술적 문제, 보안 침해 또는 예상치 못한 상황으로 인해 전체 투자를 잃을 수 있습니다. 완전히 잃어도 되는 자금으로만 참여하세요.",
   },
   dapp: {
+    aiSuiteB5: '@assistant:',
+    aiSuiteTitle: 'AI 도구 모음',
+    packsTitle: '이모지, 스티커 및 팩',
+    tocAi: 'AI 도구 모음',
+    tocDepin: 'DePIN',
+    tvRadioB1: 'DeHub TV 채널:',
     title: '완전한 생태계',
     intro1: 'DeHub은 검열 저항적이고 오픈소스인 레거시 미디어 플랫폼의 대안으로, 콘텐츠 제작, 스트리밍 및 게임 산업을 서비스합니다. 누구나 첫 조회부터 수익화할 수 있는 생태계로, 탈플랫폼, 섀도우 밴, 침묵 또는 어떤 방식으로든 조작될 두려움 없이 진정한 자신이 될 수 있습니다.',
     intro2: '앱은 탈중앙화된 채굴자 네트워크를 통해 확장되며, 설계상 영원히 존재해야 하는 콘텐츠를 호스팅, 트랜스코딩 및 전달하기 위한 공유 컴퓨팅 파워를 제공합니다.',
@@ -1558,6 +1564,7 @@ export const ko = {
     assistantTitle: 'DeHub AI 어시스턴트',
   },
   advertising: {
+    povrTitle: 'POVR: 시청 및 순위 증명',
     title: '광고',
     subtitle: '탈중앙화 광고 플랫폼',
     adsManagerLiveDesc: '캠페인을 만들고, 배지 등급을 타겟팅하고, DeHub 토큰으로 자금을 조달하고, 실시간으로 결과를 추적하세요.',
@@ -2431,6 +2438,7 @@ export const ko = {
     status: '상태',
   },
   docsSearch: {
+    popularDepin: 'DePIN',
     title: '문서 검색',
     placeholder: '문서 및 블로그 검색...',
     placeholderShort: '검색...',
@@ -2515,6 +2523,11 @@ export const ko = {
     contactText: '이 가이드라인에 대한 질문이나 긴급한 조치가 필요한 신고는 dev@dehub.io 으로 보내주시기 바랍니다.',
   },
   adTools: {
+    cpmRow: '노출 1,000회당 비용:',
+    cpmValue: '노출 1,000회당 {amount}',
+    ctr: '클릭률',
+    ctrRow: '클릭률:',
+    roas: '광고 수익률',
     budgetCalculatorTitle: '캠페인 예산 계산기',
     budgetCalculatorDesc: '현실적인 비용 추정 및 잠재고객 타겟팅으로 POVR 광고 캠페인을 계획하세요',
     dailyBudget: '일일 예산 ($)',

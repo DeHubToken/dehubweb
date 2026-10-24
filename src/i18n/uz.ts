@@ -1,5 +1,6 @@
 export const uz = {
   nav: {
+    docsChatAssistant: 'Yordamchi',
     main: 'Asosiy menyu',
     home: 'Bosh sahifa',
     overview: "Umumiy ko'rinish",
@@ -103,6 +104,18 @@ export const uz = {
     disclaimerText: "DeHub tokenlari ekotizimimiz ichida foydalanish tokenlari sifatida xizmat qiladi, o'yin valyutalariga o'xshash, va investitsiya vositalari emas. Barcha bozorlar tabiiy xavflarga ega.",
   },
   dapp: {
+    accountsB5Desc: 'Qo\'shilgan har bir kishi Yangi a\'zolar katalogiga tushadi va dastlabki o\'ttiz kun davomida ismi yonida yangi a\'zo belgisini olib yuradi, shunda hamjamiyat ularni payqab, kutib olishi mumkin. Yangi a\'zolarga ixtiyoriy yo\'naltirilgan tanishuv ham taklif qilinadi, uni keyinroq Sozlamalardan qayta ochish mumkin.',
+    accountsB6Desc: '"Barmoq izi bilan davom etish"ni tanlang — passkeyning o\'zi hisob bo\'ladi: email ham, telefon raqami ham, parol ham kerak emas. Xuddi shu passkey veb-saytda ham, Android ilovasida ham ishlaydi.',
+    accountsB7Desc: 'Kirish oynasida allaqachon ega bo\'lgan hamyoningiz kalitlarini import qilish va avvalgi DeHub hisobini ko\'chirish uchun alohida variantlar bor, shuning uchun yangi ro\'yxatdan o\'tuvchilar hech qachon ular orasidan tanlashga majbur bo\'lmaydi.',
+    accountsB8Desc: 'Hisobingizni Sozlamalardan o\'zingiz o\'chirishingiz mumkin. Profilingiz, yuklamalaringiz va saqlangan mediangiz, zaxira nusxalari bilan birga, o\'chiriladi, Sign in with Apple havolasi esa bekor qilinadi. Ommaviy blokcheynga allaqachon yozilgan narsalar u yerda qoladi.',
+    commCreator4: 'Premium kontentni pullik devor ortida ulashing',
+    feeCalc4: 'Badge talablariga javob berilishi bilan darhol faollashadi',
+    feedsDesc2: 'Formatlar lentaning yuqori qismidagi yorliqlar sifatida ko\'rsatiladi. Standart Bosh sahifa yorlig\'i siz kuzatadigan odamlar va hamjamiyatlardan kelgan hamma narsani aralashtirib ko\'rsatadi; maxsus yorliqlar esa bitta mediani ajratib beradi, masalan, faqat uzun videolarni yoki faqat musiqani ko\'rishingiz mumkin. Saralash ushbu sahifada pastroqda tasvirlangan platforma reyting algoritmiga asoslanadi, shuning uchun qamrovni reklama xarajati emas, sifat va faollik belgilaydi.',
+    harpoon: '9) Garpun',
+    keyFeat2: 'Darajali sovg\'a animatsiyalari va efirda ovoz chiqarib o\'qiladigan choy puli xabarlari',
+    mon1: 'Kimdir sizga xabar yozishidan oldin DeHub tokenlarida minimal choy puli talab qiling',
+    tocConnect: 'AI ulash',
+    tocRequests: 'Funksiya so\'rovlari',
     title: 'To&#39;liq ekotizim',
     intro1: 'DeHub - bu kontent yaratish, striming va o&#39;yin sanoatiga xizmat ko&#39;rsatadigan eski media platformalariga senzuraga chidamli, ochiq kodli alternativa. Har kim birinchi qarashdayoq pul ishlashi mumkin bo&#39;lgan ekotizim, bunda platformadan tushkunlikka tushish, soyada taqiqlanish, jim bo&#39;lish yoki o&#39;zining asl o&#39;zidan boshqa narsa bo&#39;lish uchun manipulyatsiya qilinishdan qo&#39;rqmaydi. Erkin gapirish va fikrlash, oddiy ongdan uzoqlashish, xohlagancha ifoda etish.',
     intro2: 'Ilova markazlashtirilmagan konchilar tarmog&#39;i orqali kengaytirilgan bo&#39;lib, dizayn bo&#39;yicha abadiy yashashi kerak bo&#39;lgan kontentni joylashtirish, kodlash va yetkazib berish uchun umumiy hisoblash quvvatini ta&#39;minlaydi.',
@@ -2497,6 +2510,7 @@ export const uz = {
     limitedSlots: 'Rasmiy ishga tushirish uchun cheklangan hamkorlikdagi joylar mavjud',
   },
   docsSearch: {
+    noResults: '"{query}" bo\'yicha hech narsa topilmadi',
     title: 'Quyida o‘rnatilgan hujjatlarni izlab toping',
     placeholder: 'Quyida dokumentlar va bloglarni izlab toping...',
     placeholderShort: 'Qidiruv...',

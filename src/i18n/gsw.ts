@@ -104,6 +104,8 @@ export const gsw = {
     disclaimerText: "DeHub-Token diened als Utility-Token innerhalb vo üsem Ökosystem, ähnlich wie In-Game-Währige, und sind kei Investitionsinstrumänt. Obwohl üsi Blockchain-Infrastruktur unpräzedänzierti Transparänz und verifizierbare On-chain-Date für Bildigszwäck bietet, bergend alli Märkt inhärenti Risike. Sie chönted Ihri ganzi Investition verliere wäge Marktvolatilität, technische Problem, Sicherheitslücke oder unvorhergsehne Umständ. Mached Sie nur mit Gäld mit, wo Sie sich leischte chönd komplett z verliere. DeHub und sini Partner übernämed kei Verantwortig für finanzielli Verlüscht.",
   },
   dapp: {
+    aiSuiteB3: 'KI-Baukaschte:',
+    aiSuiteTitle: 'KI-Suite',
     adsPortalLink: 'Lesen Sie die vollständige Werbedokumentation',
     affiliateB1: 'Ihr Empfehlungslink:',
     affiliateB3: 'Alles nachverfolgen:',

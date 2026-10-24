@@ -1805,6 +1805,9 @@ export const ig = {
     q4_2024: 'Q4 2024',
   },
   brandAssets: {
+    download: 'Budata',
+    logoDownloadsDesc: 'Faịlụ logo dị elu n\'ụdị dị iche iche maka ojiji dị iche iche.',
+    logoFullName: 'Logo DeHub - Zuru oke',
     logoMarkBlack: 'Akara — Oji',
     logoMarkWhite: 'Akara — Ọcha',
     title: 'Akụ Aha',
@@ -2253,6 +2256,7 @@ export const ig = {
     efficient: 'Njikwa ngwugwu nke rụrụ ọrụ nke ọma',
   },
   quickStart: {
+    step1Title: 'Mepụta akaụntụ gị',
     title: 'Ntuziaka Mmalite Ngwa Ngwa',
     breadcrumbDocs: 'Akwụkwọ',
     breadcrumbGettingStarted: 'Mmalite',
@@ -2329,6 +2333,8 @@ export const ig = {
     serverError: 'Njehie Sava',
   },
   advertiserDashboard: {
+    avgCtr: 'Nkezi ọnụego ịpị',
+    roas: 'Nlọghachi ego mgbasa ozi',
     title: 'Dashibọọdụ Onye Mgbasa Ozi',
     subtitle: 'Jikwaa mkpọlite mgbasa ozi POVR gị',
     newCampaign: 'Mkpọlite Ọhụrụ',
@@ -2392,6 +2398,12 @@ export const ig = {
     disclaimer: 'Nkwupụta',
   },
   adTools: {
+    clickThroughRate: 'Ọnụego ịpị',
+    ctrRow: 'Ọnụego ịpị:',
+    realisticEstimates: 'Ntụle ndị kwere omume',
+    roas: 'Nlọghachi ego mgbasa ozi',
+    tiersSelectedOther: 'A họọrọ ọkwa {count}',
+    totalAudienceRow: 'Ngụkọta ndị na-ekiri:',
     avgCpmRow: 'Nkezi CPM:',
     becomeLaunchPartner: 'Bụrụ Onye Mmekọ Mwepụta',
     benefit_earlyAccess: 'Early ohere revolutionary POVR ezubere iche technology',

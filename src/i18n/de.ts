@@ -104,6 +104,13 @@ export const de = {
     disclaimerText: "DeHub-Token dienen als Utility-Token innerhalb unseres Ökosystems, ähnlich wie In-Game-Währungen, und sind keine Investitionsinstrumente. Alle Märkte bergen inhärente Risiken.",
   },
   dapp: {
+    aiSuiteB3: 'KI-Baukasten:',
+    aiSuiteTitle: 'KI-Suite',
+    boostPower: '1) Schub',
+    multipostB2: 'Beitragsguthaben:',
+    notificationsB2: 'Push-Benachrichtigungen im Web und auf dem Handy:',
+    spNameBoost: 'Schub',
+    stagesB4Desc: 'Stages werden aufgezeichnet, und die Aufnahme lässt sich direkt auf der Karte abspielen, auf der sie erscheint – mit Spulen, in der gewünschten Geschwindigkeit und direkt über das Teilen-Menü teil- und repostbar. Ein gemeinsamer Eck-Player begleitet sie über Web und Mobilgerät hinweg.',
     title: 'Ein komplettes Ökosystem',
     intro1: 'DeHub ist eine zensurresistente, quelloffene Alternative zu herkömmlichen Medienplattformen für die Content-Erstellung, Streaming- und Gaming-Branche. Ein Ökosystem, in dem jeder ab dem ersten Aufruf monetarisieren kann, ohne Angst vor Deplatforming, Schattenverboten oder Manipulation.',
     intro2: 'Die App skaliert über ein dezentrales Miner-Netzwerk, das gemeinsame Rechenleistung bereitstellt, um Inhalte zu hosten, zu transkodieren und bereitzustellen, die bauartbedingt für immer existieren sollen.',

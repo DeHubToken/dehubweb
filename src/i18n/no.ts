@@ -104,6 +104,11 @@ export const no = {
     disclaimerText: 'DeHub-tokens er nyttetokens, ikke investeringsinstrumenter.',
   },
   dapp: {
+    appsB2: 'Android-app:',
+    exchangeTitle: 'Børs',
+    moreB1: 'Veiledning:',
+    spMinShort: 'minutter',
+    tocExchange: 'Børs',
     title: 'Komplett økosystem',
     intro1: 'DeHub er et sensurresistent, åpen kildekode-alternativ til tradisjonelle medieplattformer for innholdsskaping, strømming og spill.',
     intro2: 'Appen drives av et desentralisert nettverk av minere som tilbyr delt datakraft for innholdshosting, transkoding og levering.',
@@ -1034,6 +1039,7 @@ export const no = {
     moreB3Desc: 'Live nettstedstatistikk – besøkende, sidevisninger og antall brukere, per dag, år eller hele tiden – publiseres i stedet for å holdes internt. Den samme siden viser DeHubs inntekter og kostnader, bygget opp fra daglige inntektstotaler og kostnadene leverandørene våre faktisk har registrert, slik at økonomien er like offentlig som trafikken.',
   },
   games: {
+    trenchTitle: 'Chartopia',
     title: 'Spill',
     subtitle: 'I krysningen mellom gaming og strømming.',
     intro1: 'Som et team fullt av gamere og streamere har vi bygget og utgitt flere arcadespill.',
@@ -1231,6 +1237,7 @@ export const no = {
     disclaimerText: 'DeHub Token er kun for nytte.',
   },
   depin: {
+    mobileTasks: 'Vertstjenester',
     title: 'DePIN',
     subtitle: 'Desentralisert fysisk infrastrukturnettverk (DePIN) for delt datakraft',
     abstract: 'Sammendrag',

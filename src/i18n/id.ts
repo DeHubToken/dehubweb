@@ -104,6 +104,8 @@ export const id = {
     disclaimerText: 'Token DeHub berfungsi sebagai token utilitas dalam ekosistem kami, mirip dengan mata uang dalam game, dan bukan instrumen investasi. Meskipun infrastruktur blockchain kami menyediakan transparansi yang tak tertandingi dan data on-chain yang dapat diverifikasi untuk tujuan pendidikan, semua pasar membawa risiko inheren. Anda bisa kehilangan seluruh investasi Anda karena volatilitas pasar, masalah teknis, pelanggaran keamanan, atau keadaan tak terduga. Hanya berpartisipasi dengan jumlah yang mampu Anda tanggung kehilangannya sepenuhnya.',
   },
   dapp: {
+    appsB2: 'Aplikasi Android:',
+    spTierCobra: 'Kobra Raja',
     title: 'Ekosistem Lengkap',
     intro1: 'DeHub adalah alternatif sumber terbuka yang tahan sensor untuk platform media tradisional yang melayani industri pembuatan konten, streaming, dan gaming. Satu ekosistem di mana siapa pun dapat memonetisasi dari tontonan pertama.',
     intro2: 'Aplikasi ini berskala melalui jaringan penambang terdesentralisasi, menyediakan daya komputasi bersama untuk hosting, transcoding, dan pengiriman konten.',
