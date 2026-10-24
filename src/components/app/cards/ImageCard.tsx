@@ -25,7 +25,7 @@ import { stripAssetRefs } from '@/lib/asset-refs';
 import { useAutoOpenComments } from '@/hooks/use-auto-open-comments';
 import { useNavigate } from 'react-router-dom';
 import { useQueryClient } from '@tanstack/react-query';
-import { Zap, ChevronDown, ChevronUp, ChevronLeft, Globe, Ticket, BarChart2, Star } from "lucide-react";
+import { ChevronDown, ChevronUp, ChevronLeft, Globe, Ticket, BarChart2, Star } from "lucide-react";
 import Eye from "@/components/ui/cut-icons/visibility";
 import Flag from "@/components/ui/cut-icons/report";
 import Ban from "@/components/ui/cut-icons/blocked";
@@ -56,7 +56,7 @@ import { useFeedFrameAspect } from '@/hooks/use-feed-frame-aspect';
 import { motion, AnimatePresence } from 'framer-motion';
 import dehubCoin from '@/assets/dehub-coin.png';
 import { CardHeader } from './CardHeader';
-import { PostHeaderOptionsButton } from './PostHeaderOptionsButton';
+import { PostHeaderBoostButton, PostHeaderOptionsButton } from './PostHeaderOptionsButton';
 import { MatureContentGate, useMatureGate } from './MatureContentGate';
 import { ContentWarningGate, useContentWarning } from './ContentWarningGate';
 import { ActionBar } from './ActionBar';
@@ -1031,14 +1031,12 @@ const ImageCardBody = memo(function ImageCard({ post, aboveFold = false, onOpenC
       {/* The phone menu sits beside Recent; its drawer remains owned by this card. */}
       <div className={stage ? 'hidden' : 'flex items-center gap-1 pb-2'}>
         {isOwnPost && (
-          <button
+          <PostHeaderBoostButton
+            rowGap={4}
             onClick={() => setShowBoostModal(true)}
             disabled={!postTokenId}
-            className="mr-[1.6px] text-zinc-400 hover:text-white hover:scale-110 active:scale-95 transition-all disabled:opacity-40"
             aria-label={t('postOptions.boostPost')}
-          >
-            <Zap className="w-[23.5px] h-[23.5px]" />
-          </button>
+          />
         )}
         <Drawer open={showOptionsDrawer} onOpenChange={setShowOptionsDrawer}>
           {/* State-driven, not DrawerTrigger — see PostCard: a trigger pins
