@@ -68,6 +68,11 @@ export function isExportSupported(): boolean {
     && typeof OffscreenCanvas === "function";
 }
 
+/** Gecko's H.264 encoder only reliably gives MP4-ready output as Annex B. */
+function prefersAnnexB(): boolean {
+  return typeof navigator !== "undefined" && /\bFirefox\//.test(navigator.userAgent);
+}
+
 
 /** Pick an H.264 level whose max coded area fits width*height (rounded to macroblocks). */
 function pickAvcLevel(width: number, height: number, fps: number): string {
@@ -409,6 +414,11 @@ export async function exportProject(opts: ExportOptions): Promise<ExportResult> 
     height,
     bitrate: videoBitrate,
     framerate: fps,
+    // Firefox's "avc" output can carry neither metadata.decoderConfig nor
+    // in-band SPS/PPS, which leaves nothing to build the avcC box from and the
+    // MP4 can't be finalised. Annex B repeats SPS/PPS on every keyframe;
+    // videoDecoderConfigFixer reads them and rewrites the chunks for MP4.
+    ...(videoMuxerCodec === "avc" && prefersAnnexB() ? { avc: { format: "annexb" as const } } : {}),
   });
 
   const isVisualTrack = (trackId: string) => {
