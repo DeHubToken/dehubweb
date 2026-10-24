@@ -64,7 +64,7 @@ import { warmLoginSheet } from '@/components/app/LoginModal';
 const LOGOUT_ITEM: NavItem = { icon: LogOut, label: "Log out", path: '', action: 'logout' };
 
 /**
- * The fracturing wordmark is reached lazily so neither it nor its renderer sits
+ * The animated wordmark is reached lazily so neither it nor its renderer sits
  * on the boot path. Until its chunk lands, the fallback is the same flat PNG the
  * component shows before its first frame, in the same box, so nothing shifts.
  */
@@ -81,9 +81,9 @@ const STATIC_WORDMARK = (
     />
   </span>
 );
-const DesktopCrumblingWordmark = React.lazy<React.ComponentType<{ light?: boolean }>>(() =>
-  import('./DesktopCrumblingWordmark')
-    .then((m) => ({ default: m.DesktopCrumblingWordmark }))
+const DesktopGlitchWordmark = React.lazy<React.ComponentType<{ light?: boolean }>>(() =>
+  import('./DesktopGlitchWordmark')
+    .then((m) => ({ default: m.DesktopGlitchWordmark }))
     // A chunk that fails to load leaves the flat mark, not the rail's error boundary.
     .catch(() => ({ default: () => STATIC_WORDMARK })),
 );
@@ -439,7 +439,7 @@ export function DesktopSidebar({ onPostClick }: DesktopSidebarProps) {
                 renderCompactLogo ? "w-[22px] h-[24px]" : "w-[135px] h-[42px]"
               )}
             >
-              {!renderCompactLogo ? <React.Suspense fallback={STATIC_WORDMARK}><DesktopCrumblingWordmark light={isLightTheme} /></React.Suspense> : <CrumblingLogo still={isWarTheme ? (
+              {!renderCompactLogo ? <React.Suspense fallback={STATIC_WORDMARK}><DesktopGlitchWordmark light={isLightTheme} /></React.Suspense> : <CrumblingLogo still={isWarTheme ? (
                 <>
                   <img
                     src={dehubLogoCompact}
