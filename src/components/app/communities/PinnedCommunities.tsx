@@ -84,6 +84,8 @@ function PinnedCommunityCard({ community, onClick, isOwnProfile, onManagePins, c
     <div className={className ? `relative ${className}` : 'relative'}>
       <button
         onClick={onClick}
+        data-profile-art={community.banner_url ? '' : undefined}
+        data-keep-dark={community.banner_url ? '' : undefined}
         className="w-full flex items-center gap-3 p-3 rounded-xl bg-white/[0.04] border border-white/[0.08] hover:bg-white/[0.07] transition-colors text-left relative overflow-hidden"
       >
         {community.banner_url && (
