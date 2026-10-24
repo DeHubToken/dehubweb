@@ -42,6 +42,7 @@ import { useEffect, useState } from 'react';
 import { toast } from 'sonner';
 import { PLAYBACK_RATES } from '@/lib/video-preferences';
 import { requestPlaybackAudioSession } from '@/lib/audio-session';
+import { playableStageRecording } from '@/lib/stage-recording-source';
 import {
   claimMediaSession,
   releaseMediaSession,
@@ -190,27 +191,7 @@ let realDuration = 0;
 let forcingDuration = false;
 /** A scrub that arrived before a duration was known, applied once one is. */
 let pendingSeekRatio: number | null = null;
-
-/** Stages already asked about this session, so a replay does not ask again. */
-const playableCopyRequested = new Set<string>();
-
-/**
- * Recordings made before the server started filing them as MP4 are still
- * WebM, which iPhone apps cannot play at all. Playing one here asks for its
- * MP4 copy; the function converts it once, repoints the stage at it, and
- * every later listener on any device gets the MP4. Fire and forget: this play
- * carries on with the WebM, which browsers handle fine.
- */
-function requestPlayableCopy(stageId: string, url: string) {
-  if (!/\.webm(\?|$)/i.test(url) || playableCopyRequested.has(stageId)) return;
-  playableCopyRequested.add(stageId);
-  void supabase.functions
-    .invoke('finalize-stage-recording', { body: { stageId, transcribe: false } })
-    .then(({ error }) => {
-      // The next play asks again.
-      if (error) playableCopyRequested.delete(stageId);
-    }, () => playableCopyRequested.delete(stageId));
-}
+let sourceGeneration = 0;
 
 function ensureAudio(): HTMLAudioElement {
   if (audioEl) return audioEl;
@@ -384,6 +365,7 @@ function pump() {
 
 /** Stop playback and release the download. */
 export function stopStageRecording() {
+  sourceGeneration++;
   if (endTimeout !== null) {
     clearTimeout(endTimeout);
     endTimeout = null;
@@ -431,6 +413,8 @@ export function playStageRecording(space: StagePlayable, seekRatio?: number) {
 
   const el = ensureAudio();
   el.pause();
+  el.removeAttribute('src');
+  el.load();
 
   estimatedDuration =
     space.started_at && space.ended_at
@@ -441,8 +425,7 @@ export function playStageRecording(space: StagePlayable, seekRatio?: number) {
   pendingSeekRatio = seekRatio ?? null;
   lastVolumeAt = 0;
 
-  el.src = space.recording_url;
-  requestPlayableCopy(space.id, space.recording_url);
+  const generation = ++sourceGeneration;
   // A fresh source keeps a previously-set rate on the element, but reapply
   // anyway: the preference may have changed while another recording played.
   applyRateToElement();
@@ -484,12 +467,20 @@ export function playStageRecording(space: StagePlayable, seekRatio?: number) {
   );
   setMediaSessionPlaying(MEDIA_SESSION_OWNER, true);
 
-  el.play()
+  playableStageRecording(space.id, space.recording_url).then((url) => {
+    if (generation !== sourceGeneration) return;
+    el.src = url;
+    applyRateToElement();
+    if (!state.paused) return el.play();
+    el.load();
+  })
     .then(() => {
+      if (generation !== sourceGeneration) return;
       publish({ loading: false });
-      rafId = requestAnimationFrame(pump);
+      if (!state.paused) rafId = requestAnimationFrame(pump);
     })
     .catch(() => {
+      if (generation !== sourceGeneration) return;
       // Autoplay policy or a dead URL — either way the control must not stay lit.
       toast.error('That recording could not be played');
       stopStageRecording();

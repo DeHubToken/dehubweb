@@ -15,7 +15,8 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: '3.11'
-      - run: pip install numpy soundfile requests
+      - run: pip install numpy soundfile requests fastapi httpx
+      - run: sudo apt-get update -qq && sudo apt-get install -y ffmpeg
       - run: python -m unittest discover -s services/auto-dub -p 'test_*.py'
   speech-budget:
     runs-on: ubuntu-latest

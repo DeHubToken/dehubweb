@@ -101,12 +101,27 @@ async function submit(db: any, row: DubRow, worker: WorkerConfig): Promise<Submi
 
   const { data: t } = await db
     .from('transcripts')
-    .select('id, source_kind, source_ref, status, source_lang, duration_seconds, segments, visibility')
+    .select('id, source_kind, source_ref, status, source_lang, duration_seconds, segments, visibility, speaker_map')
     .eq('id', row.transcript_id)
     .maybeSingle();
-  if (!t || t.status !== 'ready' || t.visibility !== 'public' || t.source_kind !== 'video') {
+  if (!t || t.status !== 'ready' || t.visibility !== 'public' || !['video', 'stage'].includes(t.source_kind)) {
     await db.from('video_dubs').update({ status: 'failed', error: 'transcript not dubbable', attempts: MAX_ATTEMPTS }).eq('id', row.id);
     return 'skipped';
+  }
+
+  let sourceUrl = `${DEHUB_CDN_BASE}videos/${t.source_ref}.mp4`;
+  const cloneSpeakers: string[] = [];
+  if (t.source_kind === 'stage') {
+    const { data: stage } = await db.from('audio_spaces').select('recording_url, status').eq('id', t.source_ref).maybeSingle();
+    if (!stage?.recording_url || stage.status !== 'ended') return 'skipped';
+    sourceUrl = stage.recording_url;
+    const entries = Object.entries(t.speaker_map ?? {}) as [string, { wallet?: string }][];
+    const wallets = entries.map(([, entry]) => entry.wallet?.toLowerCase()).filter(Boolean);
+    if (wallets.length) {
+      const { data: voices } = await db.from('custom_voices').select('wallet_address').eq('is_stage_voice', true).in('wallet_address', wallets);
+      const consented = new Set((voices ?? []).map((voice: { wallet_address: string }) => voice.wallet_address.toLowerCase()));
+      cloneSpeakers.push(...entries.filter(([, entry]) => entry.wallet && consented.has(entry.wallet.toLowerCase())).map(([id]) => id));
+    }
   }
 
   const { data: tr } = await db
@@ -146,7 +161,9 @@ async function submit(db: any, row: DubRow, worker: WorkerConfig): Promise<Submi
     path,
     lang: row.language.split('-')[0],
     sourceLang: normalizeLang(t.source_lang) ?? 'en',
-    videoUrl: `${DEHUB_CDN_BASE}videos/${t.source_ref}.mp4`,
+    videoUrl: sourceUrl,
+    sourceKind: t.source_kind,
+    cloneSpeakers,
     segments: tr.segments ?? [],
     sourceSegments: t.segments ?? [],
     uploadUrl: signed.signedUrl,
@@ -156,7 +173,9 @@ async function submit(db: any, row: DubRow, worker: WorkerConfig): Promise<Submi
 
   let res: Response;
   try {
-    res = await fetch(worker.url || `https://api.runpod.ai/v2/${worker.endpoint}/run`, {
+    const destination = t.source_kind === 'stage' && worker.url
+      ? worker.url.replace(/\/jobs\/?$/, '/stage-jobs') : worker.url;
+    res = await fetch(destination || `https://api.runpod.ai/v2/${worker.endpoint}/run`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${worker.url ? worker.secret : worker.key}` },
     body: JSON.stringify({ input }),
@@ -248,11 +267,11 @@ async function request(db: any, body: any, worker: WorkerConfig) {
     ? lookup.eq('id', transcriptId)
     : lookup.eq('source_kind', 'video').eq('source_ref', target!.ref)
   ).maybeSingle();
-  if (!t || t.source_kind !== 'video') return json({ error: 'no video transcript' }, 404);
+  if (!t || !['video', 'stage'].includes(t.source_kind)) return json({ error: 'no playable transcript' }, 404);
   if (t.status !== 'ready') return json({ ok: true, status: 'no-transcript' }, 409);
   if (t.visibility !== 'public') return json({ error: 'only public videos can use the shared dub cache' }, 403);
   if (normalizeLang(t.source_lang) === normalizeLang(lang)) return json({ ok: true, status: 'same-as-source' });
-  if (Number(t.duration_seconds ?? 0) > MAX_REQUEST_SECONDS) return json({ ok: true, status: 'too-long' });
+  if (Number(t.duration_seconds ?? 0) > (t.source_kind === 'stage' ? 7200 : MAX_REQUEST_SECONDS)) return json({ ok: true, status: 'too-long' });
 
   if (!worker.configured) return json({ ok: true, status: 'unavailable' });
   await db.from('video_dubs')
