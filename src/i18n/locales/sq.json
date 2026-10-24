@@ -1,4 +1,18 @@
 {
+  "desktopWordmark": {
+    "pageTitle": "Pamje paraprake e markës së fjalëve në desktop",
+    "heading": "Marka e fjalëve Desktop DEHUB",
+    "day": "Dita {{day}}",
+    "replay": "Riprodho artikullin",
+    "enlarge": "Zmadho",
+    "actualSize": "Madhësia aktuale e kokës",
+    "reassemble": "Ribashko markën e fjalëve të desktopit",
+    "loading": "Duke u ngarkuar",
+    "ready": "Gati",
+    "interrupted": "Konteksti grafik u ndërpre",
+    "unavailable": "Pamja paraprake 3D nuk mund të ngarkohet",
+    "hint": "Prit dy sekonda, pastaj shkërmoqu. Lëvizni ose përqendrohuni për t 'u ribashkuar."
+  },
   "mastodonApps": {
     "authTitle": "Hyr me DeHub",
     "authWants": "{{app}} do të përdorë llogarinë tënde DeHub",

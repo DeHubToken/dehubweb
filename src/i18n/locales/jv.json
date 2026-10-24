@@ -1,4 +1,18 @@
 {
+  "desktopWordmark": {
+    "pageTitle": "Desktop wordmark preview",
+    "heading": "Desktop DEHUB wordmark",
+    "day": "Day {{day}}",
+    "replay": "Replay entry",
+    "enlarge": "Enlarge",
+    "actualSize": "Actual header size",
+    "reassemble": "Ngumpulake maneh tembung logo desktop",
+    "loading": "Loading",
+    "ready": "Ready",
+    "interrupted": "Graphics context interrupted",
+    "unavailable": "Ora bisa mbukak preview 3D",
+    "hint": "Tahan rong detik, banjur pecah. Hover utawa fokus kanggo nggabung maneh."
+  },
   "mastodonApps": {
     "authTitle": "Mlebu nganggo DeHub",
     "authWants": "{{app}} kepengin nganggo akun DeHub sampeyan",

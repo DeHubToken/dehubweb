@@ -1,4 +1,18 @@
 {
+  "desktopWordmark": {
+    "pageTitle": "Darbvirsmas vārdiskās zīmes priekšskatījums",
+    "heading": "Darbvirsmas DEHUB vārdzīme",
+    "day": "Diena {{day}}",
+    "replay": "Atkārtoti atskaņot ierakstu",
+    "enlarge": "Palielināt",
+    "actualSize": "Faktiskais galvenes izmērs",
+    "reassemble": "Atkārtoti salieciet darbvirsmas vārdzīmi",
+    "loading": "Notiek ielāde",
+    "ready": "Gatavs",
+    "interrupted": "Grafikas konteksts pārtraukts",
+    "unavailable": "Nevar ielādēt 3D priekšskatījumu",
+    "hint": "Divu sekunžu turēšana, tad drupināšana. Novietojiet kursoru vai koncentrējieties, lai saliktu atpakaļ."
+  },
   "mastodonApps": {
     "authTitle": "Pierakstīties ar DeHub",
     "authWants": "{{app}} vēlas izmantot tavu DeHub kontu",

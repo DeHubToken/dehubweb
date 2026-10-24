@@ -1,4 +1,18 @@
 {
+  "desktopWordmark": {
+    "pageTitle": "ڊيسڪٽاپ ورڊ مارڪ ڏيکاءُ",
+    "heading": "ڊيسڪٽاپ DEHUB ورڊ مارڪ",
+    "day": "ڏينهن {{day}}",
+    "replay": "داخلا ٻيهر هلايو",
+    "enlarge": "وڏو",
+    "actualSize": "اصل هيڊر سائيز",
+    "reassemble": "ڊيسڪٽاپ ورڊ مارڪ ٻيهر گڏ ڪريو",
+    "loading": "لوڊ ڪندي",
+    "ready": "تيار",
+    "interrupted": "گرافڪس جي تناظر ۾ رڪاوٽ",
+    "unavailable": "3D ڏيک لوڊ ڪرڻ کان قاصر",
+    "hint": "2 سيڪنڊ رکو، پوءِ ٽڪرائجو. ريفريجريشن ڪرڻ يا ريفريجريشن ڪرڻ."
+  },
   "mastodonApps": {
     "authTitle": "DeHub سان سائن ان ڪريو",
     "authWants": "{{app}} توهان جو DeHub کاتو استعمال ڪرڻ چاهي ٿو",

@@ -1,4 +1,18 @@
 {
+  "desktopWordmark": {
+    "pageTitle": "Pré-visualização da marca nominativa do ambiente",
+    "heading": "Marca nominativa DEHUB para desktop",
+    "day": "Dia {{day}}",
+    "replay": "Repetir entrada",
+    "enlarge": "Ampliar",
+    "actualSize": "Tamanho real do cabeçalho",
+    "reassemble": "Remonte a marca nominativa da área de trabalho",
+    "loading": "A carregar",
+    "ready": "Pronto",
+    "interrupted": "Contexto gráfico interrompido",
+    "unavailable": "Não foi possível carregar a pré-visualização 3D",
+    "hint": "Segurar por dois segundos, depois desmoronar. Passe o mouse ou foque para remontar."
+  },
   "mastodonApps": {
     "authTitle": "Entrar com DeHub",
     "authWants": "{{app}} quer usar sua conta DeHub",

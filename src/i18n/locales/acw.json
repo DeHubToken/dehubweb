@@ -1,4 +1,15 @@
 {
+  "desktopWordmark": {
+    "pageTitle": "معاينة شعار الديسكتوب",
+    "heading": "شعار DEHUB للسطح المكتب",
+    "day": "يوم {{day}}",
+    "replay": "إعادة الإدخال",
+    "enlarge": "كبر",
+    "actualSize": "الحجم الفعلي للعنوان",
+    "reassemble": "أعيد تجميع شعار سطح المكتب",
+    "unavailable": "ما قدرنا نحمّل المعاينة 3D",
+    "hint": "ثانيتين توقف، بعدين ينكسر. حط الماوس أو تركّز عشان يعيد يتجمع."
+  },
   "mastodonApps": {
     "authTitle": "سجّل دخولك بـ DeHub",
     "authWants": "{{app}} يبغى يستخدم حسابك في DeHub",

@@ -1,4 +1,18 @@
 {
+  "desktopWordmark": {
+    "pageTitle": "የዴስክቶፕ ቃል ምልክት ቅድመ እይታ",
+    "heading": "ዴስክቶፕ DEHUB wordmark",
+    "day": "ቀን {{day}}",
+    "replay": "መግቢያ ዳግም አጫውት",
+    "enlarge": "ማስፋፋት",
+    "actualSize": "ተግባራዊ የርዕስ መጠን",
+    "reassemble": "የዴስክቶፕ ቃል ምልክት እንደገና ይሰብስቡ",
+    "loading": "በመጫን ላይ",
+    "ready": "ዝግጁ",
+    "interrupted": "ግራፊክስ አውድ ተቋርጧል",
+    "unavailable": "የ 3D ቅድመ እይታን መጫን አልተቻለም",
+    "hint": "ሁለት ሰከንድ ያዝ, ከዚያም crumble. እንደገና ለመሰብሰብ ያተኩሩ ወይም ያተኩሩ ።"
+  },
   "mastodonApps": {
     "authTitle": "በDeHub ይግቡ",
     "authWants": "{{app}} የDeHub መለያዎን መጠቀም ይፈልጋል",

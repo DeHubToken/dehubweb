@@ -1,4 +1,18 @@
 {
+  "desktopWordmark": {
+    "pageTitle": "Werkskerm woordmerk voorskou",
+    "heading": "Werkskerm Dehub-woordmerk",
+    "day": "Jou {{day}}",
+    "replay": "Speel weer inskrywing",
+    "enlarge": "Vergroot",
+    "actualSize": "Werklike kopgrootte",
+    "reassemble": "Herbevestig die werkskermwoordmerk",
+    "loading": "Laai tans",
+    "ready": "Gereed",
+    "interrupted": "Grafiese konteks onderbreek",
+    "unavailable": "Kan nie die 3D-voorskou laai nie",
+    "hint": "Twee sekondes hou vas, dan verkrummel. Beweeg of fokus op herontmoeting."
+  },
   "mastodonApps": {
     "authTitle": "Meld aan met DeHub",
     "authWants": "{{app}} wil jou DeHub-rekening gebruik",

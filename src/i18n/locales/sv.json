@@ -1,4 +1,18 @@
 {
+  "desktopWordmark": {
+    "pageTitle": "Förhandsgranskning av skrivbordsordmär",
+    "heading": "Skrivbords-DEHUB-ordmärke",
+    "day": "Dag {{day}}",
+    "replay": "Spela upp posten igen",
+    "enlarge": "Förstora",
+    "actualSize": "Faktisk rubrikstorlek",
+    "reassemble": "Återmontera skrivbordets ordmärke",
+    "loading": "Laddar",
+    "ready": "Klar",
+    "interrupted": "Grafiksammanhang avbrutet",
+    "unavailable": "Det gick inte att ladda 3D-förhandsgranskningen",
+    "hint": "Håll kvar i två sekunder och smula sedan sönder. Hovra eller fokusera för att återmontera."
+  },
   "mastodonApps": {
     "authTitle": "Logga in med DeHub",
     "authWants": "{{app}} vill använda ditt DeHub-konto",

@@ -1,4 +1,18 @@
 {
+  "desktopWordmark": {
+    "pageTitle": "Uhakiki wa alama ya kompyuta ya mezani",
+    "heading": "Alama ya neno ya Desktop DEHUB",
+    "day": "Siku {{day}}",
+    "replay": "Cheza tena kiingilio",
+    "enlarge": "Panua",
+    "actualSize": "Ukubwa halisi wa kichwa",
+    "reassemble": "Unganisha tena alama ya maneno ya eneo-kazi",
+    "loading": "Inapakia",
+    "ready": "Tayari",
+    "interrupted": "Muktadha wa michoro umeingiliwa",
+    "unavailable": "Imeshindwa kupakia hakiki ya 3D",
+    "hint": "Shikilia kwa sekunde mbili, kisha uvurugike. Sogeza au uzingatie kuunganisha tena."
+  },
   "mastodonApps": {
     "authTitle": "Ingia ukitumia DeHub",
     "authWants": "{{app}} inataka kutumia akaunti yako ya DeHub",

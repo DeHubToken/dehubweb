@@ -1,4 +1,18 @@
 {
+  "desktopWordmark": {
+    "pageTitle": "Náhled slovní značky na ploše",
+    "heading": "Desktop DEHUB wordmark",
+    "day": "Den {{day}}",
+    "replay": "Přehrát záznam",
+    "enlarge": "Zvětšit",
+    "actualSize": "Skutečná velikost záhlaví",
+    "reassemble": "Znovu sestavte slovní značku na ploše",
+    "loading": "Načítání",
+    "ready": "Připraveno",
+    "interrupted": "Grafický kontext přerušen",
+    "unavailable": "Nelze načíst 3D náhled",
+    "hint": "Podržte dvě sekundy a pak se rozpadněte. Pro opětovné sestavení najeďte myší nebo zaostřete."
+  },
   "mastodonApps": {
     "authTitle": "Přihlásit se přes DeHub",
     "authWants": "{{app}} chce používat váš účet DeHub",

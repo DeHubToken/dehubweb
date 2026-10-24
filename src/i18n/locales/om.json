@@ -1,4 +1,18 @@
 {
+  "desktopWordmark": {
+    "pageTitle": "Durargii mallattoo jechaa deeskitooppii",
+    "heading": "Mallattoo jechaa DEHUB desktop",
+    "day": "Guyyaa {{day}}",
+    "replay": "Galtee irra deebi&#39;ii taphadhu",
+    "enlarge": "Guddisuu",
+    "actualSize": "Hammangaa mataduree qabatamaa",
+    "reassemble": "Mallattoo jechaa deeskitooppii irra deebi&#39;ii walitti qabi",
+    "loading": "Fe&#39;amaa jira",
+    "ready": "Qophaa&#39;aa",
+    "interrupted": "Yaadni giraafiksii addaan cite",
+    "unavailable": "Durargii 3D fe&#39;uu hin dandeenye",
+    "hint": "Sekondii lama qabadhu, achiis caccabsi. Irra deebi&#39;ii walitti qabuuf hover ykn xiyyeeffadhu."
+  },
   "mastodonApps": {
     "authTitle": "DeHub'n seeni",
     "authWants": "{{app}} herrega kee DeHub fayyadamuu barbaada",

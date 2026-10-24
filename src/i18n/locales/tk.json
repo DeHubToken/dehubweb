@@ -1,4 +1,18 @@
 {
+  "desktopWordmark": {
+    "pageTitle": "Desktap sözbaşy belgesini öňünden gör",
+    "heading": "Desktop DEHUB sözlügi",
+    "day": "Gün {{day}}",
+    "replay": "Girişi gaýtalap oýna",
+    "enlarge": "Ulyla",
+    "actualSize": "Asl başlygyň ölçegi",
+    "reassemble": "Desktop sözbaşyny gaýtaryp alyň",
+    "loading": "Ýükle",
+    "ready": "Taýyndy",
+    "interrupted": "Grafik kontekst kesildi",
+    "unavailable": "3D öňünden seretmek üçin ýüklenip bolmady",
+    "hint": "Iki saniye saklaň, soňra ýykyl. Ýüklemek ýa-da gaýtargylamak üçin ünsüňi jemle."
+  },
   "mastodonApps": {
     "authTitle": "DeHub bilen gir",
     "authWants": "{{app}} DeHub hasabyňyzy ulanmak isleýär",

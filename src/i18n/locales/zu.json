@@ -1,4 +1,18 @@
 {
+  "desktopWordmark": {
+    "pageTitle": "Ukubuka kuqala i-wordmark yedeskithophu",
+    "heading": "I-wordmark ye-Desktop DEHUB",
+    "day": "Usuku {{day}}",
+    "replay": "Phinda udlale ukungena",
+    "enlarge": "Nweba",
+    "actualSize": "Usayizi wangempela we-header",
+    "reassemble": "Hlanganisa kabusha uphawu lwamagama lwedeskithophu",
+    "loading": "Iyalayisha",
+    "ready": "Ukulungele",
+    "interrupted": "Umongo wemidwebo uphazamisekile",
+    "unavailable": "Ayikwazi ukulayisha ukubuka kuqala kwe-3D",
+    "hint": "Ukubamba okwemizuzwana emibili, bese kuphahlazeka. Hambisa noma ugxile ekuhlanganiseni kabusha."
+  },
   "mastodonApps": {
     "authTitle": "Ngena nge-DeHub",
     "authWants": "I-{{app}} ifuna ukusebenzisa i-akhawunti yakho ye-DeHub",

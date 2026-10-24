@@ -1,4 +1,17 @@
 {
+  "desktopWordmark": {
+    "pageTitle": "Masaüstü sözlük önbaxışı",
+    "heading": "Masaüstü DEHUB işarəsi",
+    "replay": "Girişi təkrarla",
+    "enlarge": "Genişləndir",
+    "actualSize": "Faktiki başlıq ölçüsü",
+    "reassemble": "Masaüstü söz nişanını yenidən yığın",
+    "loading": "Yüklənir",
+    "ready": "Hazırdır",
+    "interrupted": "Qrafika kontekstində fasilə verilir",
+    "unavailable": "3D önbaxışı yükləmək mümkün deyil",
+    "hint": "İki saniyə saxlayın, sonra əzin. Yenidən yığmağa diqqət yetirin."
+  },
   "mastodonApps": {
     "authTitle": "DeHub ilə daxil ol",
     "authWants": "{{app}} DeHub hesabınızdan istifadə etmək istəyir",

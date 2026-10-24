@@ -1,4 +1,18 @@
 {
+  "desktopWordmark": {
+    "pageTitle": "ການສະແດງຕົວເລກອັກສອນໃນໂຕຕະທີ່",
+    "heading": "ເຄື່ອງໝາຍຄຳສັບ Desktop DEHUB",
+    "day": "ມື້ {{day}}",
+    "replay": "ເຂົ້າຫຼິ້ນຄືນ",
+    "enlarge": "ຂະຫຍາຍ",
+    "actualSize": "ຂະໜາດຫົວໜ້າຕົວຈິງ",
+    "reassemble": "Reassemble ເຄື່ອງ ຫມາຍ ຄໍາ ສັບ desktop",
+    "loading": "ກໍາລັງໂຫລດ",
+    "ready": "ພ້ອມ",
+    "interrupted": "ສະພາບການຂອງກາຟິກຖືກລົບກວນ",
+    "unavailable": "ບໍ່ສາມາດໂຫຼດການເບິ່ງລ່ວງໜ້າ 3D ໄດ້",
+    "hint": "ຖູແຂ້ວ 2 ນາທີ, ຫຼັງຈາກນັ້ນລ້າງອອກ. ມັນຕ້ອງຮັກສາ ຫຼື ຟື້ນຟູສາຍພົວພັນກັບພວກເຂົາຢ່າງແນ່ນອນ."
+  },
   "mastodonApps": {
     "authTitle": "ເຂົ້າສູ່ລະບົບດ້ວຍ DeHub",
     "authWants": "{{app}} ຕ້ອງການໃຊ້ບັນຊີ DeHub ຂອງທ່ານ",
