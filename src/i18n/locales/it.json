@@ -2379,7 +2379,7 @@
     "hoursAgo": "{{count}}h fa",
     "daysAgo": "{{count}}g fa",
     "monthsAgo": "{{count}}me fa",
-    "forLabel": "Per",
+    "forLabel": "A favore",
     "againstLabel": "Contro",
     "lentBadgeCantVote": "Il tuo badge ti viene prestato e i badge prestati non possono votare. Acquista DHB per ottenere il tuo badge.",
     "buyDhb": "Acquista DHB",

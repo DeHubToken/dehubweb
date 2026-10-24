@@ -2385,8 +2385,8 @@
     "hoursAgo": "{{count}}h ago",
     "daysAgo": "{{count}}d ago",
     "monthsAgo": "{{count}}mo ago",
-    "forLabel": "Cho",
-    "againstLabel": "Chống lại",
+    "forLabel": "Ủng hộ",
+    "againstLabel": "Phản đối",
     "lentBadgeCantVote": "Huy hiệu của bạn được cho bạn mượn và huy hiệu cho mượn không thể bỏ phiếu. Mua DHB để kiếm huy hiệu của riêng bạn.",
     "buyDhb": "Mua DHB",
     "discussion": {

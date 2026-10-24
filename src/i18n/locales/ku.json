@@ -2124,8 +2124,8 @@
     "hoursAgo": "{{count}}s berê",
     "daysAgo": "{{count}}r berê",
     "monthsAgo": "{{count}}m berê",
-    "forLabel": "بۆ",
-    "againstLabel": "دژ - بەرامبەر",
+    "forLabel": "Alîgir",
+    "againstLabel": "Dijber",
     "discussion": {
       "showMoreReplies": "زیاتر وەڵام بۆ {{count}} نیشان بدە",
       "deleteTitle": "Vê şîroveyê jê bibe?",

@@ -2383,8 +2383,8 @@
     "hoursAgo": "{{count}} ساعة",
     "daysAgo": "{{count}} يوم",
     "monthsAgo": "{{count}} شهر",
-    "forLabel": "من أجل",
-    "againstLabel": "ضد",
+    "forLabel": "مؤيد",
+    "againstLabel": "معارض",
     "lentBadgeCantVote": "تم إعارة شارتك لك، ولا يمكن للشارات المعارة التصويت. اشترِ DHB لكسب شارتك الخاصة.",
     "buyDhb": "شراء DHB",
     "discussion": {

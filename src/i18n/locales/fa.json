@@ -2373,8 +2373,8 @@
     "hoursAgo": "{{count}} ساعت پیش",
     "daysAgo": "{{count}} روز پیش",
     "monthsAgo": "{{count}} ماه پیش",
-    "forLabel": "برای",
-    "againstLabel": "علیه",
+    "forLabel": "موافق",
+    "againstLabel": "مخالف",
     "lentBadgeCantVote": "نشان شما به شما قرض داده می‌شود و نشان‌های قرض داده شده نمی‌توانند رأی دهند. برای کسب نشان خودتان، DHB بخرید.",
     "buyDhb": "خرید دی اچ بی",
     "discussion": {

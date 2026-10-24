@@ -2371,8 +2371,8 @@
     "hoursAgo": "{{count}} होरापूर्वम्",
     "daysAgo": "{{count}} दिनपूर्वम्",
     "monthsAgo": "{{count}} मासपूर्वम्",
-    "forLabel": "यतः",
-    "againstLabel": "विरुद्धम्",
+    "forLabel": "पक्षे",
+    "againstLabel": "विपक्षे",
     "lentBadgeCantVote": "भवतः ऐपि सङ्केतः अवरुद्धः यतः अयं कश्चन मुक्तप्रतिहस्तकः । ॐ ॐ भूर्भुवः स्वः स्वः ॐ भूर्भुवः स्वाहा ।",
     "buyDhb": "DHB क्रय",
     "discussion": {

@@ -2381,8 +2381,8 @@
     "hoursAgo": "ከ{{count}}ሰ በፊት",
     "daysAgo": "ከ{{count}}ቀ በፊት",
     "monthsAgo": "ከ{{count}}ወ በፊት",
-    "forLabel": "ለ",
-    "againstLabel": "ተቃራኒ",
+    "forLabel": "ድጋፍ",
+    "againstLabel": "ተቃውሞ",
     "lentBadgeCantVote": "ባጅዎ ለእርስዎ ተበድሯል ፣ እና የብድር ባጆች ድምጽ መስጠት አይችሉም ። የራስዎን ባጅ ለማግኘት DHB ን ይግዙ ።",
     "buyDhb": "DHB ይግዙ",
     "discussion": {

@@ -25,6 +25,7 @@
  */
 
 import { useSyncExternalStore } from 'react';
+import i18n from 'i18next';
 
 /** One caption channel per stage, separate from reactions so their rates are independent. */
 export function stageCaptionChannel(spaceId: string): string {
@@ -233,29 +234,57 @@ export function setSendCaptions(value: boolean) {
  */
 const LANG_KEY = 'dehub.stage.captions.lang';
 
-function readLangPref(): string | null {
+/** Stored when the viewer picks the spoken language on purpose. */
+const SOURCE_PREF = 'source';
+
+const isCaptionLanguage = (code: string | null | undefined): code is string =>
+  !!code && CAPTION_LANGUAGES.some((l) => l.code === code);
+
+/**
+ * Until a viewer picks, captions come in the language DeHub is shown in. They
+ * used to default to the spoken language, so a Turkish listener in an English
+ * room saw English captions and took translation for broken.
+ */
+function uiLanguage(): string | null {
+  const code = (i18n.language || '').split('-')[0].toLowerCase();
+  return isCaptionLanguage(code) ? code : null;
+}
+
+function readLangPref(): string | null | undefined {
   if (typeof window === 'undefined') return null;
   try {
     const raw = window.localStorage.getItem(LANG_KEY);
+    if (raw === SOURCE_PREF) return null;
     // Guard the stored value against a picker that has since dropped a language.
-    return raw && CAPTION_LANGUAGES.some((l) => l.code === raw) ? raw : null;
+    return isCaptionLanguage(raw) ? raw : undefined;
   } catch {
-    return null;
+    return undefined;
   }
 }
 
-let captionLanguage = readLangPref();
+/** The viewer's own pick: a language, null for the spoken one, undefined for none yet. */
+let pickedLanguage = readLangPref();
+let captionLanguage: string | null = pickedLanguage === undefined ? uiLanguage() : pickedLanguage;
+
+// Follows the app's language until the viewer picks one for captions.
+i18n.on?.('languageChanged', () => {
+  if (pickedLanguage !== undefined) return;
+  const next = uiLanguage();
+  if (next === captionLanguage) return;
+  captionLanguage = next;
+  emit();
+});
 
 export function useCaptionLanguage(): string | null {
   return useSyncExternalStore(subscribe, () => captionLanguage, () => null);
 }
 
 export function setCaptionLanguage(value: string | null) {
+  pickedLanguage = value;
   if (captionLanguage === value) return;
   captionLanguage = value;
   try {
-    if (value) window.localStorage.setItem(LANG_KEY, value);
-    else window.localStorage.removeItem(LANG_KEY);
+    window.localStorage.setItem(LANG_KEY, value ?? SOURCE_PREF);
   } catch {
     /* private mode — the choice just does not survive the tab */
   }

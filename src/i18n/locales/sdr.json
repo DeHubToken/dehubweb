@@ -2294,8 +2294,8 @@
     "hoursAgo": "{{count}} گھنٹے پہلے",
     "daysAgo": "{{count}} دن پہلے",
     "monthsAgo": "{{count}} مہینے پہلے",
-    "forLabel": "For",
-    "againstLabel": "ضد",
+    "forLabel": "पक्ष में",
+    "againstLabel": "विरोध में",
     "lentBadgeCantVote": "Tumhar badge tumra la dehal gel achhi, aur dehal badge vote nahi kar sakait. DHB kinla apna badge pawe khatir.",
     "buyDhb": "Kharid DHB",
     "discussion": {

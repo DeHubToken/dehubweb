@@ -2379,7 +2379,7 @@
     "daysAgo": "{{count}} dagar sedan",
     "monthsAgo": "{{count}} månader sedan",
     "forLabel": "För",
-    "againstLabel": "Antal röster emot:",
+    "againstLabel": "Emot",
     "lentBadgeCantVote": "Din badge är utlånad till dig, och utlånade badges kan inte rösta. Köp DHB för att tjäna ditt eget märke.",
     "buyDhb": "Köp DHB",
     "discussion": {

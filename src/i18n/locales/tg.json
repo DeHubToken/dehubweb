@@ -2372,8 +2372,8 @@
     "hoursAgo": "{{count}} с пеш",
     "daysAgo": "{{count}} р пеш",
     "monthsAgo": "{{count}} м пеш",
-    "forLabel": "Барои...",
-    "againstLabel": "Бар зидди",
+    "forLabel": "Тарафдор",
+    "againstLabel": "Муқобил",
     "lentBadgeCantVote": "Шиносоҳи шумо ба шумо қарз дода шудааст, ва шиносоҳои қарзӣ наметавонанд овоз диҳанд. DHB-ро харид кунед, то шиносоҳи худро ба даст оред.",
     "buyDhb": "DHB-ро харид кунед",
     "discussion": {

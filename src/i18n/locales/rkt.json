@@ -5824,8 +5824,8 @@
     "hoursAgo": "{{count}} ঘণ্টা আগে",
     "daysAgo": "{{count}} দিন আগে",
     "monthsAgo": "{{count}} মাস আগে",
-    "forLabel": "ফর",
-    "againstLabel": "অ্যাগেইনস্ট",
+    "forLabel": "পক্ষে",
+    "againstLabel": "বিপক্ষে",
     "buyDhb": "DHB কিন",
     "discussion": {
       "authorChip": "প্রস্তাবক",

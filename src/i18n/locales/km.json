@@ -2386,8 +2386,8 @@
     "hoursAgo": "{{count}} ម៉ោងមុន",
     "daysAgo": "{{count}} ថ្ងៃមុន",
     "monthsAgo": "{{count}} ខែមុន",
-    "forLabel": "សម្រាប់",
-    "againstLabel": "ទល់នឹង",
+    "forLabel": "គាំទ្រ",
+    "againstLabel": "ប្រឆាំង",
     "lentBadgeCantVote": "ផ្លាកសញ្ញារបស់អ្នកត្រូវបានខ្ចីទៅឱ្យអ្នក ហើយផ្លាកសញ្ញាកម្ចីមិនអាចបោះឆ្នោតបានទេ ។ ទិញ DHB ដើម្បីទទួលបានផ្លាកសញ្ញាផ្ទាល់ខ្លួនរបស់អ្នក ។",
     "buyDhb": "ទិញ DHB",
     "discussion": {

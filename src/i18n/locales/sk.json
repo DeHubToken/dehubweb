@@ -2480,8 +2480,8 @@
     "hoursAgo": "{{count}}h ago",
     "daysAgo": "{{count}}d ago",
     "monthsAgo": "{{count}}mo ago",
-    "forLabel": "Dôvod",
-    "againstLabel": "Hlasy proti:",
+    "forLabel": "Za",
+    "againstLabel": "Proti",
     "lentBadgeCantVote": "Váš odznak je požičaný a požičané odznaky nemôžu hlasovať. Kúpte si DHB a získajte svoj vlastný odznak.",
     "buyDhb": "Kúpiť DHB",
     "discussion": {

@@ -2380,8 +2380,8 @@
     "hoursAgo": "{{count}}s ka hor",
     "daysAgo": "{{count}}m ka hor",
     "monthsAgo": "{{count}}b ka hor",
-    "forLabel": "Wixii ...",
-    "againstLabel": "Ka soo horjeeda",
+    "forLabel": "Taageero",
+    "againstLabel": "Diidmo",
     "lentBadgeCantVote": "Calaamaddaada ayaa lagugu amaahdaa, Calaamadaha amaahduna ma codayn karaan. Iibso DHB si aad u kasbato astaantaada.",
     "buyDhb": "Iibso DHB",
     "discussion": {

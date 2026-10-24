@@ -5221,7 +5221,7 @@
     "promptDrop": "Na im I go do.",
     "promptFilters": "Filter by category",
     "promptLabel": "Your prompt",
-    "promptMediaError": "Choose pikin pikin wey dey below 20MB.",
+    "promptMediaError": "Choose pikin pikin wey dey below 50MB.",
     "promptMediaLimit": "Up to {{max}} attachments.",
     "promptNew": "New prompt",
     "promptPageTitle": "Requests",
@@ -6001,7 +6001,7 @@
     "daysAgo": "{{count}}d ago",
     "monthsAgo": "{{count}}mo ago",
     "forLabel": "For",
-    "againstLabel": "Againist",
+    "againstLabel": "Against",
     "lentBadgeCantVote": "Your badge dem lend am to you, and dem lend badge no fit vote. Buy DHB make you get ya own badge.",
     "buyDhb": "Buy DHB",
     "discussion": {

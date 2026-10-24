@@ -2386,8 +2386,8 @@
     "hoursAgo": "{{count}} గంటల క్రితం",
     "daysAgo": "{{count}} రోజుల క్రితం",
     "monthsAgo": "{{count}} నెలల క్రితం",
-    "forLabel": "సరదాగా గడుపుదాం",
-    "againstLabel": "వ్యతిరేకంగా",
+    "forLabel": "అనుకూలం",
+    "againstLabel": "వ్యతిరేకం",
     "lentBadgeCantVote": "మీ బ్యాడ్జ్ మీకు ఇవ్వబడింది మరియు ఇచ్చిన బ్యాడ్జ్ ‌ లు ఓటు వేయలేవు. మీ స్వంత బ్యాడ్జ్ సంపాదించడానికి DHB కొనండి.",
     "buyDhb": "DHB కొనండి",
     "discussion": {

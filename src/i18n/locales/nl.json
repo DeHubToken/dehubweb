@@ -2153,7 +2153,7 @@
     "promptDetails": "Optionele details",
     "promptDevice": "Apparaat en besturingssysteem (voor fouten)",
     "promptFilters": "Filteren op categorie",
-    "promptMediaError": "Kies afbeeldingen of video's kleiner dan 20 MB per bestand.",
+    "promptMediaError": "Kies afbeeldingen of video's kleiner dan 50 MB per bestand.",
     "promptMediaLimit": "Maximaal {{max}} bijlagen.",
     "removePromptAttachment": "{{name}} verwijderen",
     "promptAttachment": "Bijlage {{number}}",

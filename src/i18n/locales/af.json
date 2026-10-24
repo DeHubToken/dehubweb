@@ -2416,8 +2416,8 @@
     "hoursAgo": "{{count}}h ago",
     "daysAgo": "{{count}}d ago",
     "monthsAgo": "{{count}}mo ago",
-    "forLabel": "vir",
-    "againstLabel": "teen",
+    "forLabel": "Vir",
+    "againstLabel": "Teen",
     "lentBadgeCantVote": "Jou kenteken is aan jou geleen, en geleende kentekens kan nie stem nie. Koop DHB om jou eie badge te verdien.",
     "buyDhb": "Koop DHB",
     "discussion": {

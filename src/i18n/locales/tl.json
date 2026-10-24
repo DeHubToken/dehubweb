@@ -2420,8 +2420,8 @@
     "hoursAgo": "{{count}}h ago",
     "daysAgo": "{{count}}d ago",
     "monthsAgo": "{{count}}mo ago",
-    "forLabel": "Para",
-    "againstLabel": "kinahinatnan",
+    "forLabel": "Pabor",
+    "againstLabel": "Laban",
     "lentBadgeCantVote": "Pinahiram sa iyo ang iyong badge, at hindi makakaboto ang mga pinahiram na badge. Bumili ng DHB upang kumita ng iyong sariling badge.",
     "buyDhb": "Bumili ng DHB",
     "discussion": {

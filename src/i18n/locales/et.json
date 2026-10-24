@@ -2383,8 +2383,8 @@
     "hoursAgo": "{{count}} t tagasi",
     "daysAgo": "{{count}} p tagasi",
     "monthsAgo": "{{count}} k tagasi",
-    "forLabel": "Kasutamine",
-    "againstLabel": "vastu",
+    "forLabel": "Poolt",
+    "againstLabel": "Vastu",
     "lentBadgeCantVote": "Sinu erimärk on sulle laenatud ja laenatud erimärgid ei saa hääletada. Osta DHB, et teenida endale erimärk.",
     "buyDhb": "Osta DHB",
     "discussion": {

@@ -2380,8 +2380,8 @@
     "hoursAgo": "{{count}}wkt sẹ́yìn",
     "daysAgo": "{{count}}ọj sẹ́yìn",
     "monthsAgo": "{{count}}oṣ sẹ́yìn",
-    "forLabel": "Fun ...",
-    "againstLabel": "Lodi si",
+    "forLabel": "Ní ojúrere",
+    "againstLabel": "Ní ìlòdì",
     "lentBadgeCantVote": "Àmì ìbánisọ̀rọ̀ rẹ ni a yá fún ọ, àti pé àmì ìbánisọ̀rọ̀ tí o yá kò lè dìbò. Ra DHB láti gba àmì ẹ̀yẹ tìrẹ.",
     "buyDhb": "Ra DHB",
     "discussion": {
