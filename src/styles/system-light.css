@@ -218,6 +218,9 @@ html:is([data-theme="light"], [data-system-tone="light"]):not(#_):not(#_):not(#_
 html:is([data-theme="light"], [data-system-tone="light"]):not(#_):not(#_):not(#_):not(#_):not(#_) [data-calendar] button[name="day"][aria-selected="true"] {
   background: #0b0b0d !important; color: #fff !important;
 }
+html:is([data-theme="light"], [data-system-tone="light"]):not(#_):not(#_):not(#_):not(#_):not(#_) [data-creator-library-panel] {
+  background-color: var(--paper, #fff) !important;
+}
 html[data-system-tone="light"] [data-dark-decor] { display: none !important; }
 html[data-theme="system"][data-system-tone="light"] :is(#root, [data-vaul-drawer], [role="dialog"]):not(#_):not(#_):not(#_) :is([class*="text-[#fff]"], [class*="text-[#ffffff]"], [class*="text-[#FFF]"]):not([data-media-full] *):not([data-keep-dark]):not([data-keep-dark] *):not([data-on-media] *) { color: var(--sl-ink) !important; }
 html[data-system-tone="light"] [data-builder-backdrop] header img { filter: invert(1); }
