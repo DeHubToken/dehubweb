@@ -986,6 +986,8 @@
     "dmSent": "Odesláno {{amount}} tokenů uživateli {{name}}!"
   },
   "postOptions": {
+    "liveAlertsOn": "Nyní sledujete {{name}}. Až začne vysílat živě, dostanete upozornění.",
+    "liveAlertsAlreadyOn": "{{name}} už sledujete, takže až začne vysílat živě, dostanete upozornění.",
     "embed": "Vložit",
     "copyEmbedCode": "Kopírovat kód pro vložení",
     "embedCodeCopied": "Kód pro vložení zkopírován",

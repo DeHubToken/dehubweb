@@ -3832,6 +3832,8 @@
     "dmSent": "已经畀 {{name}} 送出 {{amount}} 代币！"
   },
   "postOptions": {
+    "liveAlertsOn": "已经关注{{name}}了。伊开始直播个辰光侬会收到通知。",
+    "liveAlertsAlreadyOn": "侬已经关注{{name}}了，伊开始直播个辰光侬会收到通知。",
     "aiOverview": "AI 概要",
     "askAI": "詢問 AI",
     "giftBoost": "送贈一個提升",

@@ -996,6 +996,8 @@
     "dmSent": "Nandefa {{amount}} tokens ho an'i {{name}}!"
   },
   "postOptions": {
+    "liveAlertsOn": "Manaraka an'i {{name}} ianao izao. Hahazo fampandrenesana ianao rehefa manao fampielezana mivantana izy.",
+    "liveAlertsAlreadyOn": "Manaraka an'i {{name}} ianao, ka hahazo fampandrenesana rehefa manao fampielezana mivantana izy.",
     "embed": "Ampidiro",
     "copyEmbedCode": "Adikao ny kaody fampidirana",
     "embedCodeCopied": "Voadika ny kaody fampidirana",

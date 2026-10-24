@@ -878,6 +878,8 @@
     "dmSent": "{{amount}} توکن ji {{name}} re hat şandin!"
   },
   "postOptions": {
+    "liveAlertsOn": "Niha tu {{name}} dişopînî. Dema ku ew diçin zindî, tu yê agahdariyekê bistînî.",
+    "liveAlertsAlreadyOn": "Tu {{name}} dişopînî, ji ber vê yekê dema ku ew diçin zindî tu yê agahdariyekê bistînî.",
     "embed": "تێخستن",
     "copyEmbedCode": "کۆدی تێخستن کۆپی بکە",
     "embedCodeCopied": "کۆدی تێخستن کۆپی کرا",

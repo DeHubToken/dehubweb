@@ -986,6 +986,8 @@
     "dmSent": "נשלחו {{amount}} אסימונים ל-{{name}}!"
   },
   "postOptions": {
+    "liveAlertsOn": "עכשיו במעקב אחרי {{name}}. תתקבל התראה כשיתחיל שידור חי.",
+    "liveAlertsAlreadyOn": "{{name}} כבר במעקב שלך, לכן תתקבל התראה כשיתחיל שידור חי.",
     "embed": "הטמעה",
     "copyEmbedCode": "העתק קוד הטמעה",
     "embedCodeCopied": "קוד ההטמעה הועתק",

@@ -995,6 +995,8 @@
     "dmSent": "{{amount}} mallattoolee {{name}}-f ergame!"
   },
   "postOptions": {
+    "liveAlertsOn": "Amma {{name}} hordofaa jirta. Yeroo isaan tamsaasa kallattii jalqaban beeksisa ni argatta.",
+    "liveAlertsAlreadyOn": "{{name}} hordofta, kanaaf yeroo isaan tamsaasa kallattii jalqaban beeksisa ni argatta.",
     "embed": "Keessa galchi",
     "copyEmbedCode": "Koodii keessa galchuu waraabi",
     "embedCodeCopied": "Koodiin keessa galchuu waraabame",

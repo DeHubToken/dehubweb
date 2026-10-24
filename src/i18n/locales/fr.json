@@ -1218,6 +1218,8 @@
     "dmSent": "{{amount}} jetons envoyés à {{name}} !"
   },
   "postOptions": {
+    "liveAlertsOn": "Vous suivez désormais {{name}}. Vous recevrez une notification dès le début du direct.",
+    "liveAlertsAlreadyOn": "Vous suivez {{name}}, vous recevrez donc une notification dès le début du direct.",
     "embed": "Intégrer",
     "copyEmbedCode": "Copier le code d'intégration",
     "embedCodeCopied": "Code d'intégration copié",

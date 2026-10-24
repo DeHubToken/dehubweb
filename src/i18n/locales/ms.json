@@ -1246,6 +1246,8 @@
     "dmSent": "{{amount}} token dihantar kepada {{name}}!"
   },
   "postOptions": {
+    "liveAlertsOn": "Anda kini mengikuti {{name}}. Anda akan menerima pemberitahuan apabila mereka bersiaran langsung.",
+    "liveAlertsAlreadyOn": "Anda mengikuti {{name}}, jadi anda akan menerima pemberitahuan apabila mereka bersiaran langsung.",
     "embed": "Benamkan",
     "copyEmbedCode": "Salin kod benam",
     "embedCodeCopied": "Kod benam disalin",

@@ -996,6 +996,8 @@
     "dmSent": "给 {{name}} 发了 {{amount}} 代币！"
   },
   "postOptions": {
+    "liveAlertsOn": "已关注{{name}}。开播时你会收到通知。",
+    "liveAlertsAlreadyOn": "你已关注{{name}}，开播时你会收到通知。",
     "embed": "嵌入",
     "copyEmbedCode": "复制嵌入代码",
     "embedCodeCopied": "嵌入代码已复制",

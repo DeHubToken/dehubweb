@@ -987,6 +987,8 @@
     "dmSent": "{{name}}に{{amount}} DHBを送りました！"
   },
   "postOptions": {
+    "liveAlertsOn": "{{name}}さんをフォローしました。ライブ配信が始まると通知が届きます。",
+    "liveAlertsAlreadyOn": "{{name}}さんをフォロー中なので、ライブ配信が始まると通知が届きます。",
     "embed": "埋め込み",
     "copyEmbedCode": "埋め込みコードをコピー",
     "embedCodeCopied": "埋め込みコードをコピーしました",

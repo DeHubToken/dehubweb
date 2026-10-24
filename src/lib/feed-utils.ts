@@ -148,7 +148,6 @@ export const SORT_OPTIONS = [
   // Engagement+recency ranking (API sortBy=score). Backup to chronological while we test it.
   { label: 'Discovery', value: 'discovery' as const, labelKey: 'filters.discovery' },
   { label: 'Following', value: 'following' as const, labelKey: 'filters.following' },
-  { label: 'Subscribed', value: 'subscribed' as const, labelKey: 'filters.subscribed' },
   { label: 'Random', value: 'random' as const, labelKey: 'filters.random' },
 ] as const;
 

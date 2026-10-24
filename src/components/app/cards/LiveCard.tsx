@@ -17,7 +17,6 @@ import MoreVertical from "@/components/ui/cut-icons/morevertical";
 import AssistantNavIcon from "@/components/ui/AssistantNavIcon";
 import Flag from "@/components/ui/cut-icons/report";
 import Ban from "@/components/ui/cut-icons/blocked";
-import EyeOff from "@/components/ui/cut-icons/hidden";
 import Info from "@/components/ui/cut-icons/information";
 
 import Bell from "@/components/ui/cut-icons/alerts";
@@ -47,6 +46,7 @@ import { useLiveReaction } from '@/hooks/use-live-reaction';
 import { useAuth } from '@/contexts/AuthContext';
 import { useBookmarkPost } from '@/hooks/use-bookmarks';
 import { useBlockAuthor } from '@/hooks/use-block-author';
+import { useNotifyWhenLive } from '@/hooks/use-notify-when-live';
 import type { LiveStream } from '@/types/feed.types';
 
 interface LiveCardProps {
@@ -69,6 +69,8 @@ export function LiveCard({ stream }: LiveCardProps) {
   // shared query, so they cannot disagree.
   const { isBookmarked, isLoading: isBookmarkLoading, toggleBookmark } = useBookmarkPost(stream.id);
   const { blockAuthor } = useBlockAuthor();
+  const notifyWhenLive = useNotifyWhenLive();
+  const isOwnStream = !!walletAddress && stream.creatorId?.toLowerCase() === walletAddress.toLowerCase();
   const handleMuteStreamer = useCallback(() => {
     if (!walletAddress) { openLoginModal(); return; }
     if (!stream.creatorId) return;
@@ -140,9 +142,14 @@ export function LiveCard({ stream }: LiveCardProps) {
               >
                 <Info className="w-4 h-4" /> {t("postInfo.title", "Post info")}
               </DropdownMenuItem>
-              <DropdownMenuItem className="text-white hover:bg-zinc-700 cursor-pointer gap-2">
-                <Bell className="w-4 h-4" /> {t('postOptions.notifyWhenLive')}
-              </DropdownMenuItem>
+              {!isOwnStream && (
+                <DropdownMenuItem
+                  onClick={() => { void notifyWhenLive(stream.creatorId, stream.streamer); }}
+                  className="text-white hover:bg-zinc-700 cursor-pointer gap-2"
+                >
+                  <Bell className="w-4 h-4" /> {t('postOptions.notifyWhenLive')}
+                </DropdownMenuItem>
+              )}
               <DropdownMenuItem
                 onClick={() => setShowReportModal(true)}
                 className="text-white hover:bg-zinc-700 cursor-pointer gap-2"
@@ -151,9 +158,6 @@ export function LiveCard({ stream }: LiveCardProps) {
               </DropdownMenuItem>
               <DropdownMenuItem onClick={handleMuteStreamer} className="text-white hover:bg-zinc-700 cursor-pointer gap-2">
                 <Ban className="w-4 h-4" /> {t('postOptions.blockCreator')}
-              </DropdownMenuItem>
-              <DropdownMenuItem className="text-white hover:bg-zinc-700 cursor-pointer gap-2">
-                <EyeOff className="w-4 h-4" /> {t('postOptions.seeLessLikeThis')}
               </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>

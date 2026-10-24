@@ -995,6 +995,8 @@
     "dmSent": "Kua tukuna te {{amount}} tohu ki a {{name}}!"
   },
   "postOptions": {
+    "liveAlertsOn": "Kei te whai koe i a {{name}} ināianei. Ka whiwhi koe i tētahi pānui ina tīmata rātou ki te pāho ora.",
+    "liveAlertsAlreadyOn": "Kei te whai koe i a {{name}}, nō reira ka whiwhi koe i tētahi pānui ina tīmata rātou ki te pāho ora.",
     "embed": "Tāmau",
     "copyEmbedCode": "Tāruatia te waehere tāmau",
     "embedCodeCopied": "Kua tāruatia te waehere tāmau",

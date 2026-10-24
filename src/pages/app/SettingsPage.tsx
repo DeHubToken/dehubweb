@@ -21,7 +21,6 @@ import Link2 from "@/components/ui/cut-icons/link";
 import Users from "@/components/ui/cut-icons/communities";
 import Moon from "@/components/ui/cut-icons/appearance";
 import Lock from "@/components/ui/cut-icons/privacy";
-import Filter from "@/components/ui/cut-icons/filter";
 import LayoutGrid from "@/components/ui/cut-icons/apps";
 import HomeCutIcon from "@/components/ui/cut-icons/home";
 import FilterCutIcon from "@/components/ui/cut-icons/filter";
@@ -3673,22 +3672,6 @@ function MessagesSettings() {
         <h3 className="font-medium text-zinc-400 text-sm mb-4">{t('settings.preferences')}</h3>
         <div className="space-y-4">
           <SmartRepliesToggle />
-          <SettingToggle
-            icon={Bell}
-            anchor="message-notifications"
-            title={t('settings.messageNotifications')}
-            description={t('settings.messageNotificationsDesc')}
-            defaultChecked
-            comingSoon
-          />
-          <SettingToggle
-            icon={Eye}
-            anchor="read-receipts"
-            title={t('settings.readReceipts')}
-            description={t('settings.readReceiptsDesc')}
-            defaultChecked
-            comingSoon
-          />
           <SettingsRow
             icon={<Lock />}
             anchor="e2e-encryption"
@@ -3696,49 +3679,6 @@ function MessagesSettings() {
             description={t('settings.e2eEncryptionDesc')}
             action={<span className="text-sm font-medium text-zinc-300">{t('settings.automatic', "Automatic")}</span>}
           />
-          <SettingToggle
-            icon={Filter}
-            anchor="filter-requests"
-            title={t('settings.filterMessageRequests')}
-            description={t('settings.filterMessageRequestsDesc')}
-            comingSoon
-          />
-        </div>
-      </div>
-
-      {/* Storage */}
-      <div data-setting-anchor="message-storage">
-        <h3 className="font-medium text-zinc-400 text-sm mb-4">{t('settings.storage')}</h3>
-        <div className="rounded-xl border border-zinc-700/50 bg-zinc-800/50 p-4">
-          <div className="flex justify-between text-sm mb-2">
-            <span className="text-white font-medium">{t('settings.storageUsed')}</span>
-            <span className="text-zinc-400">{t('settings.storageAmount')}</span>
-          </div>
-          <div className="w-full bg-zinc-700 rounded-lg h-2 mb-3">
-            <div className="bg-white h-2 rounded-lg" style={{ width: '42%' }} />
-          </div>
-          <div className="flex justify-between text-xs text-zinc-500">
-            <span>{t('settings.messagesStorage')}</span>
-            <span>{t('settings.mediaStorage')}</span>
-          </div>
-          <p className="text-center text-xs text-zinc-500 mt-3">
-            {t('settings.upgradeStorage')}
-          </p>
-        </div>
-      </div>
-
-      {/* Quick Actions */}
-      <div data-setting-anchor="quick-actions">
-        <h3 className="font-medium text-zinc-400 text-sm mb-4">{t('settings.quickActions')}</h3>
-        <div className="grid grid-cols-2 gap-3">
-          <button type="button" onClick={() => toast.info(t('settings.comingSoon', 'Coming soon'))} className="flex flex-col items-center gap-2 rounded-xl border border-zinc-700 bg-zinc-800 p-4 transition-colors hover:bg-zinc-700">
-            <FileText className="size-6 text-zinc-400" />
-            <span className="text-sm text-zinc-300">{t('settings.archivedChats')}</span>
-          </button>
-          <button type="button" onClick={() => toast.info(t('settings.comingSoon', 'Coming soon'))} className="flex flex-col items-center gap-2 rounded-xl border border-zinc-700 bg-zinc-800 p-4 transition-colors hover:bg-zinc-700">
-            <Save className="size-6 text-zinc-400" />
-            <span className="text-sm text-zinc-300">{t('settings.exportChats')}</span>
-          </button>
         </div>
       </div>
     </div>

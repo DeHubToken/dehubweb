@@ -4184,6 +4184,8 @@
     "dmSent": "Don send {{amount}} tokens give {{name}}!"
   },
   "postOptions": {
+    "liveAlertsOn": "You don dey follow {{name}} now. You go get notification when dem go live.",
+    "liveAlertsAlreadyOn": "You dey follow {{name}}, so you go get notification when dem go live.",
     "askAI": "Ask AI",
     "giftBoost": "Gift a boost",
     "markSection": "Skippable sections",

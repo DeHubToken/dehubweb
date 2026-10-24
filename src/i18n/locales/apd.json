@@ -4189,6 +4189,8 @@
     "dmSent": "اترسل {{amount}} توكنز لـ {{name}}!"
   },
   "postOptions": {
+    "liveAlertsOn": "بقيت بتتابع {{name}}. حيجيك إشعار لمن يبدأ بث مباشر.",
+    "liveAlertsAlreadyOn": "إنت بتتابع {{name}}، فحيجيك إشعار لمن يبدأ بث مباشر.",
     "giftBoost": "تمنح زيادة",
     "embed": "تضمين",
     "copyEmbedCode": "نسخ رمز التضمين",

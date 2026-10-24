@@ -986,6 +986,8 @@
     "dmSent": "Sendte {{amount}} tokens til {{name}}!"
   },
   "postOptions": {
+    "liveAlertsOn": "Du følger nu {{name}}. Du får en notifikation, når de går live.",
+    "liveAlertsAlreadyOn": "Du følger {{name}}, så du får en notifikation, når de går live.",
     "embed": "Indlejr",
     "copyEmbedCode": "Kopiér indlejringskode",
     "embedCodeCopied": "Indlejringskode kopieret",

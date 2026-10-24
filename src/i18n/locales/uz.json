@@ -995,6 +995,8 @@
     "dmSent": "{{name}} ga {{amount}} tokenlar yuborildi!"
   },
   "postOptions": {
+    "liveAlertsOn": "Endi {{name}} sahifasiga obuna boʻldingiz. Jonli efirga chiqqanida bildirishnoma olasiz.",
+    "liveAlertsAlreadyOn": "Siz {{name}} sahifasiga obunasiz, shuning uchun jonli efirga chiqqanida bildirishnoma olasiz.",
     "embed": "Joylashtirish",
     "copyEmbedCode": "Joylashtirish kodini nusxalash",
     "embedCodeCopied": "Joylashtirish kodi nusxalandi",

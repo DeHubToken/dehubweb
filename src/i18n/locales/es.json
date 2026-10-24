@@ -1218,6 +1218,8 @@
     "dmSent": "¡Enviaste {{amount}} tokens a {{name}}!"
   },
   "postOptions": {
+    "liveAlertsOn": "Ahora sigues a {{name}}. Recibirás una notificación cuando transmita en vivo.",
+    "liveAlertsAlreadyOn": "Sigues a {{name}}, así que recibirás una notificación cuando transmita en vivo.",
     "embed": "Insertar",
     "copyEmbedCode": "Copiar código de inserción",
     "embedCodeCopied": "Código de inserción copiado",

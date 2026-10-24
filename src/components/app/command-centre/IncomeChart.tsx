@@ -15,11 +15,11 @@ import { AppState } from '@/components/app/AppState';
 const timeFilters = ['1h', '1d', '1w', '1m', 'Max'];
 const cardClass = "rounded-2xl p-5 bg-zinc-900 border border-zinc-800";
 
+// The two income sources with a dated record per payment. Subscriptions, ad
+// revenue and bounties have no per-payment history to bucket by period, so
+// they are left out rather than drawn as a permanent zero.
 const SOURCE_CONFIG = [
   { key: 'tips', get label() { return _translateCopy("copy.3838a4d8cb8c", { defaultValue: "Tips" }); }, color: '#22c55e' },
-  { key: 'subs', get label() { return _translateCopy("copy.17371507e9f7", { defaultValue: "Subs" }); }, color: '#3b82f6' },
-  { key: 'adRevenue', get label() { return _translateCopy("copy.4268168ace02", { defaultValue: "Ad Revenue" }); }, color: '#eab308' },
-  { key: 'bounties', get label() { return _translateCopy("copy.314b92e83a11", { defaultValue: "Bounties" }); }, color: '#a855f7' },
   { key: 'ppv', get label() { return _translateCopy("copy.0c0f9221e9fc", { defaultValue: "PPV Sales" }); }, color: '#ec4899' },
 ] as const;
 
@@ -110,16 +110,8 @@ export function IncomeChart() {
       if (inRange(r.created_at)) ppvTotal += Number(r.amount);
     });
 
-    // Subs, Ad Revenue, Bounties — no DB source yet, placeholder 0
-    const subsTotal = 0;
-    const adRevenueTotal = 0;
-    const bountiesTotal = 0;
-
     const totals: Record<string, number> = {
       tips: Math.round(tipsTotal * 100) / 100,
-      subs: Math.round(subsTotal * 100) / 100,
-      adRevenue: Math.round(adRevenueTotal * 100) / 100,
-      bounties: Math.round(bountiesTotal * 100) / 100,
       ppv: Math.round(ppvTotal * 100) / 100,
     };
 
