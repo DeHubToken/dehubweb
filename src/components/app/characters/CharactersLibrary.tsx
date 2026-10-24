@@ -90,6 +90,7 @@ export function CharactersLibrary() {
         <div className="relative flex-1">
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-zinc-500" />
           <Input
+            type="search"
             value={query}
             onChange={(e) => setQuery(e.target.value)}
             placeholder={_copy("copy.ca569b663bd7", { defaultValue: "Search characters…" })}
