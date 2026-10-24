@@ -40,6 +40,8 @@ import {
 } from '@/lib/audio-handoff';
 import { Slider } from '@/components/ui/slider';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
+import { Drawer, DrawerContent, DrawerTitle } from '@/components/ui/drawer';
+import { useIsMobile } from '@/hooks/use-mobile';
 import { useScrollFadeMask } from '@/components/app/feeds/useScrollFadeMask';
 import {
   VisualizerStyle,
@@ -163,27 +165,40 @@ const STYLES: { value: AnyStyle; label: string }[] = [
   ...EXTRA_STYLES,
 ];
 
-/** Quick picks on the System/Glass card; everything else sits behind More. */
-const QUICK_STYLES: AnyStyle[] = ['bars', 'waveform', 'circular'];
-
-function StudioStylePicker({ style, onPick, moreLabel }: { style: AnyStyle; onPick: (s: AnyStyle) => void; moreLabel: string }) {
+/** One pill on the System/Glass card shows the playing style; tapping it opens every style. */
+function StudioStylePicker({ style, onPick, title }: { style: AnyStyle; onPick: (s: AnyStyle) => void; title: string }) {
   const [open, setOpen] = useState(false);
-  // The playing style always shows, taking the last quick slot when it isn't one.
-  const quick = QUICK_STYLES.includes(style) ? QUICK_STYLES : [...QUICK_STYLES.slice(0, -1), style];
+  const isMobile = useIsMobile();
   const label = (v: AnyStyle) => STYLES.find(s => s.value === v)?.label ?? v;
-  return (
-    <div data-audio-studio-styles role="group">
-      {quick.map(v => (
-        <button key={v} type="button" data-active={v === style || undefined} aria-pressed={v === style} onClick={() => onPick(v)}>{label(v)}</button>
+  const pill = (
+    <button type="button" data-audio-studio-pill aria-expanded={open} aria-haspopup="dialog" onClick={isMobile ? () => setOpen(true) : undefined}>
+      {label(style)}<ChevronDown aria-hidden />
+    </button>
+  );
+  const grid = (
+    <div data-audio-studio-style-menu role="group" aria-label={title}>
+      {STYLES.map(s => (
+        <button key={s.value} type="button" data-active={s.value === style || undefined} aria-pressed={s.value === style} onClick={() => { onPick(s.value); setOpen(false); }}>{s.label}</button>
       ))}
+    </div>
+  );
+  if (isMobile) return (
+    <div data-audio-studio-styles onClick={e => e.stopPropagation()}>
+      {pill}
+      <Drawer open={open} onOpenChange={setOpen}>
+        <DrawerContent glass column hideHandle={false} data-audio-studio-style-drawer>
+          <DrawerTitle className="px-5 pt-3 pb-1 text-sm font-semibold">{title}</DrawerTitle>
+          {grid}
+        </DrawerContent>
+      </Drawer>
+    </div>
+  );
+  return (
+    <div data-audio-studio-styles onClick={e => e.stopPropagation()}>
       <Popover open={open} onOpenChange={setOpen}>
-        <PopoverTrigger asChild>
-          <button type="button" data-audio-studio-more aria-expanded={open}>{moreLabel}<ChevronDown aria-hidden /></button>
-        </PopoverTrigger>
-        <PopoverContent data-glass-menu data-audio-studio-style-menu side="top" align="start" collisionPadding={12} className="w-[min(320px,calc(100vw-24px))] p-2" onClick={e => e.stopPropagation()}>
-          {STYLES.map(s => (
-            <button key={s.value} type="button" data-active={s.value === style || undefined} aria-pressed={s.value === style} onClick={() => { onPick(s.value); setOpen(false); }}>{s.label}</button>
-          ))}
+        <PopoverTrigger asChild>{pill}</PopoverTrigger>
+        <PopoverContent data-glass-menu side="top" align="start" collisionPadding={12} className="w-[min(320px,calc(100vw-24px))] p-2" onClick={e => e.stopPropagation()}>
+          {grid}
         </PopoverContent>
       </Popover>
     </div>
@@ -1107,7 +1122,7 @@ export function AudioVisualizer({
         </div>
       </div>
       <div data-audio-studio-options>
-          {showStylePicker && <StudioStylePicker style={style} onPick={setStyle} moreLabel={t('postStage.more')} />}
+          {showStylePicker && <StudioStylePicker style={style} onPick={setStyle} title={t('creator.style')} />}
           {popoutTrack && <button type="button" data-audio-lyrics-toggle aria-label={t('audioPost.lyrics')} aria-pressed={showLyrics} data-active={showLyrics || undefined} onClick={() => setShowLyrics(v => !v)}><MicVocal /></button>}
           {popoutTrack && <button type="button" aria-label={isPoppedOut ? t('audioPost.closeCornerPlayer') : t('audioPost.popOut')} onClick={handlePopOut}><PictureInPicture2 /></button>}
           {showVolume && <button type="button" aria-label={isEffectivelyMuted ? _copy('copy.ce4ee4efc5e3', { defaultValue: 'Unmute' }) : _copy('copy.8dd6857baf02', { defaultValue: 'Mute' })} onClick={() => { const next = !isEffectivelyMuted; if (!next && volume === 0) setVolume(.8); setSelfMuted(next); videoPlaybackManager.globalMuted = next; onMuteChange?.(next); }}><Volume2 /></button>}
