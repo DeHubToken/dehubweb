@@ -20,7 +20,6 @@ import Sparkles from "@/components/ui/cut-icons/assistant";
 import { cn } from '@/lib/utils';
 import { CreatorBento, CreatorHeroWall, MediumDoors, loadCreatorGallery, thumbUrl, type GalleryItem } from '@/components/app/creator/CreatorStage';
 
-const accent = '#e5e7eb';
 const hot = '#ff2c91';
 // Metallic liquid glass surface — replaces the old lime green accent for backgrounds
 const metallicBg =
@@ -329,9 +328,8 @@ export default function CreatorPage() {
                     aria-pressed={activeNav === item}
                     className={cn(
                       'relative shrink-0 inline-flex items-start gap-1 text-[14px] font-medium tracking-wide transition-colors',
-                      activeNav === item ? '' : 'text-white/55 hover:text-white'
+                      activeNav === item ? 'text-white' : 'text-white/55 hover:text-white'
                     )}
-                    style={activeNav === item ? { color: accent } : undefined}
                   >
                     {index === 4 && <span className="mr-2 text-white/40">••</span>}
                     {t(NAV_KEYS[item])}
@@ -368,8 +366,7 @@ export default function CreatorPage() {
                     <button
                       type="button"
                       onClick={() => openLoginModal()}
-                      className="rounded-lg bg-white/10 px-4 py-2 text-sm font-semibold hover:bg-white/15"
-                      style={{ color: accent }}
+                      className="rounded-lg bg-white/10 px-4 py-2 text-sm font-semibold text-white hover:bg-white/15"
                     >
                       {t('creator.login')}
                     </button>
