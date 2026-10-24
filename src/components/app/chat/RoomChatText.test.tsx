@@ -18,7 +18,7 @@ afterEach(cleanup);
 
 it('offers translation for Latin chat and only changes the selected message', () => {
   render(<><RoomChatText text="Bonjour tout le monde" /><RoomChatText text="Hola a todos" /></>);
-  fireEvent.click(screen.getAllByRole('button', { name: 'common.translate' })[0]);
+  fireEvent.click(screen.getAllByRole('button', { name: 'comments.translate' })[0]);
   expect(screen.getByText('Translated: Bonjour tout le monde')).toBeTruthy();
   expect(screen.getByText('Hola a todos')).toBeTruthy();
   expect(screen.queryByText('Translated: Hola a todos')).toBeNull();
