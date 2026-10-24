@@ -1726,7 +1726,8 @@
       "growthResult": "{{followers}} 粉絲 · {{following}} 追蹤中",
       "runs": "{{runs}} 最近執行 · {{completed}} 完成 · {{failed}} 失敗",
       "count": {
-        "active": "主動代理"
+        "active": "主動代理",
+        "pending": "待审阅个草稿"
       },
       "dehub_comment": "回复搭评论",
       "dehub_vote": "对帖子作出反应",
