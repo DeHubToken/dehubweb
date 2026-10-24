@@ -35,10 +35,18 @@
   mask-image: linear-gradient(transparent, #000 90%);
 }
 
-/* Light surfaces: a lighter wash so dark text stays readable. The strip keeps
-   its own dark shade, so its white text works on every theme. */
-html:is([data-theme="light"], [data-theme="minimal"]) [data-pinned-wash] > div {
-  opacity: 0.3;
+/* Artwork owns its foreground. A light page must not turn the profile's
+   white ink black or leave its coloured wash floating over white paper. */
+html:is([data-theme="light"], [data-system-tone="light"]):not(#_):not(#_):not(#_):not(#_):not(#_) [data-profile-art] {
+  background: #0b0b0d !important;
+  color: #fff !important;
+  --control-fill: rgba(255,255,255,.1);
+  --control-raised: rgba(255,255,255,.16);
+  --control-ink: #fff;
+  --control-edge: rgba(255,255,255,.2);
+}
+html[data-theme="minimal"] [data-pinned-wash] > div {
+  opacity: .3;
 }
 
 /* The strip always sits on dark art, so its text stays white even where a

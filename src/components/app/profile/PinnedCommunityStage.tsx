@@ -48,7 +48,7 @@ export function PinnedCommunityStrip({
   const { t } = useTranslation();
   if (!community.banner_url) return null;
   return (
-    <div data-pinned-strip className="relative flex h-[72px] items-center gap-3 px-4 sm:px-6">
+    <div data-pinned-strip data-keep-dark className="relative flex h-[72px] items-center gap-3 px-4 sm:px-6">
       <div data-pinned-dissolve aria-hidden className="pointer-events-none absolute inset-x-0 bottom-0 -z-10">
         <div data-pinned-dissolve-bleed style={{ backgroundImage: `url(${storageImage(community.banner_url, 480)})` }} />
         <div data-pinned-dissolve-art style={{ backgroundImage: `url(${storageImage(community.banner_url, 1100)})` }}>
