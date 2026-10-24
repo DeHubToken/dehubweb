@@ -201,11 +201,11 @@ export function VideoPaywallModal({
   // exactly this number and generate-video verifies that the transfer covers
   // its own quote, so a client-side price that drifted by a single DHB would
   // fail at the chain rather than merely look wrong.
-  const { priceDhb: costDhb, isLoading: isQuoting, error: quoteError } = useJobQuote(
-    { kind: 'video', modelId: selectedModelKey, durationSeconds: isPerSecond ? duration : undefined },
+  const { priceDhb: costDhb, priceUsd: quotedUsd, isLoading: isQuoting, error: quoteError } = useJobQuote(
+    { kind: 'video', modelId: selectedModelKey, durationSeconds: duration, resolution },
     open,
   );
-  const costUsd = getVideoCostUsd(model, isPerSecond ? duration : undefined);
+  const costUsd = model.provider === 'venice' ? quotedUsd : getVideoCostUsd(model, isPerSecond ? duration : undefined);
   // Offering a payment someone cannot make would only fail at the signature,
   // so a wallet short of the price is sent to buy instead.
   const needsTokens = !isWalletLoading && costDhb > 0 && walletDhb < costDhb;
@@ -415,12 +415,12 @@ export function VideoPaywallModal({
                         </div>
                         <div className="text-right shrink-0">
                           <p className="text-xs font-medium text-white">
-                            {optionModel.perSecondCostUsd 
+                            {optionModel.provider === 'venice' ? t('creator.liveQuote', { defaultValue: 'Live quote' }) : optionModel.perSecondCostUsd 
                               ? `$${(optionModel.perSecondCostUsd * 2).toFixed(2)}/s`
                               : `$${optionCostUsd.toFixed(2)}`
                             }
                           </p>
-                          <p className="text-[10px] text-zinc-500">{formatDhb(optionCostDhb)} <DhbCoin label={t('buyCoins.tokensUnit')} /></p>
+                          {optionModel.provider !== 'venice' && <p className="text-[10px] text-zinc-500">{formatDhb(optionCostDhb)} <DhbCoin label={t('buyCoins.tokensUnit')} /></p>}
                         </div>
                       </button>
                     );

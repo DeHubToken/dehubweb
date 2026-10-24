@@ -94,7 +94,7 @@ export async function settleGeneration(endpoint: string, predictionId: string, r
 
 /** Registered tickets choose their own provider; polling callers cannot redirect refund decisions. */
 export async function generationTicket(endpoint: string, predictionId: string) {
-  const { data, error } = await serviceClient().from('ai_generation_jobs').select('provider,provider_app,result')
+  const { data, error } = await serviceClient().from('ai_generation_jobs').select('provider,provider_app,result,wallet_address')
     .eq('endpoint', endpoint).eq('prediction_id', predictionId).maybeSingle();
   if (error) throw new Error('Could not load the render ticket. Please retry.');
   return data;

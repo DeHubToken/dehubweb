@@ -23,6 +23,8 @@ import { claimDhbPayment } from './dhb-transfer.ts';
 import { debitCredits, refundCredits } from './credits.ts';
 
 export interface ChargeRequest extends QuoteOptions {
+  /** Server-fetched provider quote. Never populated from a client price field. */
+  providerPriceDhb?: number;
   kind: JobKind;
   modelId: string;
   /** Rate-limit bucket name, e.g. 'generate-image'. */
@@ -84,13 +86,13 @@ export async function chargeForJob(req: Request, opts: ChargeRequest): Promise<C
     };
   }
 
-  const priceDhb = quotePriceDhb(opts.kind, opts.modelId, {
+  const priceDhb = opts.providerPriceDhb ?? quotePriceDhb(opts.kind, opts.modelId, {
     durationSeconds: opts.durationSeconds,
     quality: opts.quality,
     quantity: opts.quantity,
   });
 
-  if (priceDhb === null) {
+  if (priceDhb === null || !Number.isFinite(priceDhb) || priceDhb <= 0) {
     return {
       ok: false,
       response: jsonResponse({ error: `Unknown model: ${opts.kind}/${opts.modelId}` }, 400),

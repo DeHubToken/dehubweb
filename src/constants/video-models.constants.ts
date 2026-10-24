@@ -5,6 +5,7 @@ import { translateCopy as _translateCopy } from '@/i18n/copy';
  */
 
 import { CREATOR_FAL_VIDEO_MODELS } from '../../supabase/functions/_shared/creator-fal-catalog';
+import { VENICE_VIDEO_MODELS, isVeniceVideo } from '../../supabase/functions/_shared/venice-catalog';
 
 export interface VideoModel {
   id: string;
@@ -47,7 +48,7 @@ export interface VideoModel {
    */
   resolutions?: string[];
   /** Provider for the model (defaults to 'replicate') */
-  provider?: 'replicate' | 'fal';
+  provider?: 'replicate' | 'fal' | 'venice';
   /** Whether the model supports reference images (character/style consistency) */
   supportsReferenceImages?: boolean;
   /** Max number of reference images */
@@ -91,6 +92,7 @@ export const VIDEO_MARKUP_OVERRIDES: Record<string, number> = {
  * Calculate the final cost in USD with markup
  */
 export const getVideoCostUsd = (model: VideoModel, durationSeconds?: number): number => {
+  if (isVeniceVideo(model.id)) return model.baseCostUsd;
   const markup = VIDEO_MARKUP_OVERRIDES[model.id] ?? VIDEO_GENERATION_MARKUP;
   if (model.perSecondCostUsd && durationSeconds) {
     return model.perSecondCostUsd * durationSeconds * (1 + markup);
@@ -112,6 +114,15 @@ export const getVideoResolutions = (model: VideoModel | undefined): string[] =>
   model?.resolutions ?? ['480p', '720p', '1080p'];
 
 export const VIDEO_MODELS: Record<string, VideoModel> = {
+  ...Object.fromEntries(Object.entries(VENICE_VIDEO_MODELS).map(([id, model]) => [id, {
+    id, name: model.name, description: 'Live Venice quote · zero DeHub markup',
+    supports: [model.imageRequired ? 'image-to-video' as const : 'text-to-video' as const],
+    duration: '5–15s', tier: 'standard' as const, emoji: '◈', baseCostUsd: 0,
+    defaultDuration: 5, minDuration: 5, maxDuration: 15, allowedDurations: [5, 10, 15],
+    hasAudio: false, supportsResolution: true, resolutions: ['720p', '1080p'],
+    aspectRatios: ['16:9', '9:16', '1:1'], provider: 'venice' as const,
+    supportsNegativePrompt: false,
+  }])),
   ...CREATOR_FAL_VIDEO_MODELS,
   'seedance-2.5': {
     id: 'seedance-2.5',

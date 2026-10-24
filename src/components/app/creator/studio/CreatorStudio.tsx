@@ -1186,7 +1186,7 @@ export const CreatorStudio = memo(function CreatorStudio({ onOpenEditor, stickyT
 
   const generationQuote = useJobQuote(mode === 'audio'
     ? activeAudioTask.paid && activeAudioTask.quoteModelId ? { kind: 'tool', modelId: activeAudioTask.quoteModelId, quantity: audioUnits } : null
-    : mode === 'video' ? { kind: 'video', modelId: videoModel, durationSeconds: duration }
+    : mode === 'video' ? { kind: 'video', modelId: videoModel, durationSeconds: duration, resolution, aspectRatio: aspect }
     : mode === '3d' ? { kind: 'model3d', modelId: model3dModel, quality: 'standard' }
     : { kind: 'image', modelId: imageModel, quantity: batch });
   // Free starter images: the server claims one per job, this only decides
@@ -1606,7 +1606,7 @@ export const CreatorStudio = memo(function CreatorStudio({ onOpenEditor, stickyT
             value: m.id,
             label: m.name,
             detail: m.description,
-            meta: `$${getVideoCostUsd(m, m.defaultDuration ?? 5).toFixed(2)}`,
+            meta: m.provider === 'venice' ? t('creator.liveQuote', { defaultValue: 'Live quote' }) : `$${getVideoCostUsd(m, m.defaultDuration ?? 5).toFixed(2)}`,
             disabled: (needsImage && !reference && !m.requiresVideoInput) || (rejectsImage && !!reference),
             disabledReason: t(needsImage ? 'creator.needsAttachedImage' : 'creator.cannotUseAttached'),
           };

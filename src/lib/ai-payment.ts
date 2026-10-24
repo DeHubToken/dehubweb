@@ -304,10 +304,10 @@ export async function payForJob(
     }
   }
 
-  // Round up: the treasury must receive at least the price, and a fractional
-  // wei short would leave the transfer one unit under it.
-  const amount = Math.ceil(priceDhb);
-  const amountWei = toWei(amount, 18);
+  // Preserve fractional provider quotes instead of adding a whole-token surplus.
+  // Quotes use at most three DHB decimal places (one micro-dollar).
+  const amount = priceDhb;
+  const amountWei = toWei(amount.toFixed(6), 18);
   const signerAddress = payer;
 
   // Treat a flaky RPC as a zero balance rather than aborting.
