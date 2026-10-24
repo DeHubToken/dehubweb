@@ -1,5 +1,5 @@
 {
-  "version": "d8961d4575b55d36",
+  "version": "4d0b4035f4fe1e49",
   "routes": {
     "/": [
       "ar",
@@ -888,7 +888,21 @@
       "es",
       "fr",
       "nl",
-      "tr"
+      "tr",
+      "de",
+      "ha",
+      "hi",
+      "id",
+      "it",
+      "ja",
+      "ko",
+      "pl",
+      "pt",
+      "ru",
+      "th",
+      "tl",
+      "vi",
+      "zh"
     ],
     "/guides/high-score-dehub-gaming-hits-5000-monthly-active-users---a-dehub-milestone-from-q1-2022": [
       "ar",
