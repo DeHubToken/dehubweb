@@ -162,6 +162,7 @@ export function CardHeader({
           onMouseDown={handleProfileMouseDown}
           onPointerEnter={warmProfilePage}
           onPointerDown={warmProfilePage}
+          data-opens-page
           disabled={!isClickable}
           /* The avatar inside has no alt (it is decorative beside the name),
              so the button needs a name of its own — one per card on the feed,
@@ -188,6 +189,7 @@ export function CardHeader({
             onMouseDown={handleProfileMouseDown}
           onPointerEnter={warmProfilePage}
           onPointerDown={warmProfilePage}
+          data-opens-page
             disabled={!isClickable}
             className={`inline-flex items-baseline gap-1 shrink min-w-0 max-w-full text-base leading-5 text-left ${isClickable ? 'cursor-pointer' : 'cursor-default'}`}
           >
@@ -206,6 +208,7 @@ export function CardHeader({
                 onMouseDown={handleProfileMouseDown}
           onPointerEnter={warmProfilePage}
           onPointerDown={warmProfilePage}
+          data-opens-page
                 disabled={!isClickable}
                 tabIndex={-1}
                 className={`text-zinc-500 text-sm truncate min-w-0 leading-4 text-left ${isClickable ? 'cursor-pointer' : 'cursor-default'}`}
