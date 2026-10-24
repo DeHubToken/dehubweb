@@ -234,6 +234,7 @@ export function ShareToDmModal({ open, onOpenChange, url }: ShareToDmModalProps)
           <div className="relative">
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-zinc-500" />
             <Input
+              type="search"
               value={searchInput}
               onChange={(e) => setSearchInput(e.target.value)}
               placeholder={_copy("copy.73913e8faf3f", { defaultValue: "Search people…" })}

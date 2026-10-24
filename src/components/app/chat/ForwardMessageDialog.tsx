@@ -80,9 +80,10 @@ export function ForwardMessageDialog({
         </DialogHeader>
 
         {/* Search */}
-        <div className="mx-4 mb-2 flex items-center gap-2 rounded-xl bg-zinc-800 px-3 py-2">
+        <div data-search-surface className="mx-4 mb-2 flex items-center gap-2 rounded-xl bg-zinc-800 px-3 py-2">
           <Search className="w-4 h-4 text-zinc-500 flex-shrink-0" />
           <input
+            type="search"
             value={search}
             onChange={(e) => setSearch(e.target.value)}
             placeholder={_copy("copy.bd2b64636d36", { defaultValue: "Search conversations…" })}
