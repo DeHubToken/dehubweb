@@ -1,26 +1,14 @@
 /**
- * The top half of the phone sign-in sheet: two lanes of short clips drifting
- * past in opposite directions (the feed already running), then the headline.
- * One clip is the AI restyle and says so; the rest are ordinary creator posts.
- *
- * Phone only (LoginModal renders it below 768px on the options step); the
- * desktop sheet is unchanged. The clips ship from /login-stack, so nothing here
- * depends on the feed (no network call, no chance of a mature post on the
- * sign-in screen). Creator clips are CC BY 4.0, credited in
- * public/login-stack/CREDITS.txt.
- *
- * Its own chunk: LoginModal sits in the entry bundle and lazy-loads this.
+ * Two lanes of selected clips above the email-first login. The drawer and
+ * phone screen share the catalogue, with a new order on each mount.
  */
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Sparkles } from 'lucide-react';
+import { loginClipLanes } from '@/lib/login-clip-lanes';
+import { LOGIN_CLIP_IDS } from './login-clip-assets';
 import '@/styles/login-stack.css';
 
-type ClipName = 'concert' | 'street' | 'restyle' | 'bass' | 'skate' | 'friends' | 'drums' | 'vlog';
-
-// Each lane lists its clips twice so the -50% scroll loops without a seam.
-const LANE_A: ClipName[] = ['restyle', 'concert', 'street', 'bass'];
-const LANE_B: ClipName[] = ['skate', 'friends', 'drums', 'vlog'];
+type ClipName = typeof LOGIN_CLIP_IDS[number];
 
 /** Plays only while on screen, so at most a handful decode at once. */
 function Clip({ name }: { name: ClipName }) {
@@ -58,18 +46,12 @@ function Clip({ name }: { name: ClipName }) {
   );
 }
 
-function Lane({ clips, reverse, restyleLabel }: { clips: ClipName[]; reverse?: boolean; restyleLabel: string }) {
+function Lane({ clips, reverse }: { clips: ClipName[]; reverse?: boolean }) {
   return (
     <div className={reverse ? 'login-stack__lane login-stack__lane--down' : 'login-stack__lane'}>
       {[...clips, ...clips].map((name, i) => (
         <div key={i} className="login-stack__tile">
           <Clip name={name} />
-          {name === 'restyle' && (
-            <span className="login-stack__ai">
-              <Sparkles aria-hidden="true" />
-              {restyleLabel}
-            </span>
-          )}
         </div>
       ))}
     </div>
@@ -78,12 +60,12 @@ function Lane({ clips, reverse, restyleLabel }: { clips: ClipName[]; reverse?: b
 
 export function LoginShortsStack() {
   const { t } = useTranslation();
-  const restyleLabel = t('loginStack.aiRestyle', 'AI restyle');
+  const [lanes] = useState(() => loginClipLanes(LOGIN_CLIP_IDS));
   return (
     <div className="login-stack" data-login-stack>
       <div className="login-stack__lanes" aria-hidden="true">
-        <Lane clips={LANE_A} restyleLabel={restyleLabel} />
-        <Lane clips={LANE_B} reverse restyleLabel={restyleLabel} />
+        <Lane clips={lanes.first} />
+        <Lane clips={lanes.second} reverse />
       </div>
       <h2 className="login-stack__headline text-white">
         {t('loginStack.headlineTop', 'You will own everything')}
