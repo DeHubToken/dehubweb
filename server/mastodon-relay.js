@@ -50,12 +50,21 @@ export async function handleMastodonRelay(request, target, apiOrigin) {
   if (request.method === 'OPTIONS') return new Response(null, { status: 204, headers: CORS });
   const url = new URL(request.url);
   const hasBody = !['GET', 'HEAD'].includes(request.method);
-  const upstream = await fetch(`${apiOrigin}${target}${url.search}`, {
-    method: request.method,
-    headers: mastodonRelayHeaders(request, url),
-    body: hasBody ? await request.arrayBuffer() : undefined,
-    redirect: 'manual',
-  });
+  let upstream;
+  try {
+    upstream = await fetch(`${apiOrigin}${target}${url.search}`, {
+      method: request.method,
+      headers: mastodonRelayHeaders(request, url),
+      body: hasBody ? await request.arrayBuffer() : undefined,
+      redirect: 'manual',
+    });
+  } catch {
+    // An unreachable API is a 502 to the client app, not a Worker crash.
+    return new Response(JSON.stringify({ error: 'Bad Gateway' }), {
+      status: 502,
+      headers: { ...CORS, 'content-type': 'application/json', 'cache-control': 'no-store' },
+    });
+  }
   const headers = new Headers(CORS);
   for (const name of ['content-type', 'cache-control', 'link', 'location']) {
     const value = upstream.headers.get(name);
