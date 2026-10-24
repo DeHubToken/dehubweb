@@ -2072,6 +2072,8 @@
     "anonymousLikes_other": "{{count}} ถูกใจจากผู้ถือแบดจ์ที่บ่เปิดเผยตัวตน"
   },
   "postInfo": {
+    "ownersUnavailable": "ตอนนี้ยังอ่านเจ้าของปัจจุบันบ่ได้",
+    "unavailable": "บ่พร้อมใช้งาน",
     "title": "ข้อมูลโพสต์",
     "tokenId": "Token ID",
     "mintedOn": "สร้างเมื่อ",
@@ -5296,6 +5298,8 @@
     "notEnoughTokensForBounty": "โทเคนไม่เพียงพอ ต้องการ {{need}} โทเคน แต่มี {{have}}"
   },
   "events": {
+    "deleteConfirmBody": "อันนี้สิลบกิจกรรม รายชื่อแขก แล้วก็แชตของกิจกรรมออกสำหรับทุกคน บ่สามารถย้อนคืนได้",
+    "deleteConfirmTitle": "ลบกิจกรรมนี้บ่?",
     "noneCreated": "ยังไม่สร้างเหตุการณ์ไว้เลย",
     "goingWithCount": "ไป ({{count}})",
     "going": "ไป",

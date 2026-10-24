@@ -2101,6 +2101,8 @@
     "anonymousLikes_other": "So {{count}} daga masu riƙe da lamba da ba a sani ba"
   },
   "postInfo": {
+    "unavailable": "Ba a samu ba",
+    "ownersUnavailable": "Ba za a iya karanta masu mallakar yanzu ba a yanzu.",
     "title": "Bayanan bugu",
     "tokenId": "ID na Token",
     "mintedOn": "An ƙirƙira",
@@ -5544,6 +5546,8 @@
     "notEnoughTokensForBounty": "Ba isassun tokens. Ana buƙatar tokens {{need}} amma kuna da {{have}}."
   },
   "events": {
+    "deleteConfirmTitle": "Share wannan taron?",
+    "deleteConfirmBody": "Wannan yana kawar da taron, jerin baƙi da tattaunawarsa ga kowa da kowa. Ba za a iya cire shi ba.",
     "seoTitle": "Abubuwan da suka faru — Meetups & Abubuwan Al'umma akan DeHub",
     "seoDescription": "Browse mai zuwa DeHub al'umma events, RSVP zuwa tarups da kuma dauki bakuncin your own events a kan decentralized, mai amfani mallakar zamantakewa dandali.",
     "title": "Abubuwan da suka faru",

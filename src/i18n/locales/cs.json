@@ -2108,6 +2108,8 @@
     "anonymousLikes_other": "{{count}} lajků od anonymních držitelů odznaků"
   },
   "postInfo": {
+    "unavailable": "Nedostupné",
+    "ownersUnavailable": "Aktuální vlastníci se zatím nedají přečíst.",
     "title": "Informace o příspěvku",
     "tokenId": "ID tokenu",
     "mintedOn": "Vytvořeno",
@@ -5579,6 +5581,8 @@
     "notEnoughTokensForBounty": "Nedostatek tokenů. Potřebujete {{need}} tokenů, ale máte {{have}}."
   },
   "events": {
+    "deleteConfirmTitle": "Smazat tuto událost?",
+    "deleteConfirmBody": "Tím se odstraní událost, seznam hostů a chat pro všechny. Nelze ji vrátit zpět.",
     "seoTitle": "Události — Setkání a komunitní akce na DeHub",
     "seoDescription": "Procházejte nadcházející komunitní akce DeHub, RSVP na setkání a pořádejte své vlastní akce na decentralizované, uživatelem vlastněné sociální platformě.",
     "defaultSeoDescription": "Komunitní akce na DeHub.",

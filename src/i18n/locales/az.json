@@ -2094,6 +2094,8 @@
     "anonymousLikes_other": "Anonim nişan sahiblərindən {{count}} bəyənmə"
   },
   "postInfo": {
+    "unavailable": "Əlçatan deyil",
+    "ownersUnavailable": "Hazırda mövcud sahibləri oxumaq mümkün deyil.",
     "title": "Paylaşım məlumatı",
     "tokenId": "Token ID",
     "mintedOn": "Yaradılıb",
@@ -5536,6 +5538,8 @@
     "notEnoughTokensForBounty": "Kifayət qədər token yoxdur. {{need}} token lazımdır, lakin {{have}} var."
   },
   "events": {
+    "deleteConfirmTitle": "Bu tədbir silinsin?",
+    "deleteConfirmBody": "Bu, tədbiri, onun qonaq siyahısını və söhbətini hər kəs üçün silir. Geri qaytarmaq mümkün deyil.",
     "seoTitle": "Tədbirlər — DeHub-da Görüşlər və Cəmiyyət Tədbirləri",
     "seoDescription": "DeHub cəmiyyət tədbirlərini araşdırın, görüşlərə cavab verin və mərkəzləşdirilməmiş, istifadəçiyə məxsus sosial platformada öz tədbirlərinizi keçirin.",
     "defaultSeoDescription": "DeHub-da cəmiyyət tədbirləri.",

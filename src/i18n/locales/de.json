@@ -2164,6 +2164,8 @@
     "anonymousLikes_other": "{{count}} Likes von anonymen Badge-Inhabern"
   },
   "postInfo": {
+    "unavailable": "Nicht verfügbar",
+    "ownersUnavailable": "Die aktuellen Eigentümer können im Moment nicht gelesen werden.",
     "title": "Beitragsinfo",
     "tokenId": "Token-ID",
     "mintedOn": "Geprägt am",
@@ -5689,6 +5691,8 @@
     "notEnoughTokensForBounty": "Nicht genügend Token. Benötigt {{need}} Token, hat aber {{have}}."
   },
   "events": {
+    "deleteConfirmTitle": "Dieses Ereignis löschen?",
+    "deleteConfirmBody": "Dadurch werden das Ereignis, seine Gästeliste und sein Chat für alle entfernt. Es kann nicht rückgängig gemacht werden.",
     "seoTitle": "Events — Meetups & Community Events auf DeHub",
     "seoDescription": "Durchsuchen Sie bevorstehende DeHub-Community-Events, melden Sie sich zu Meetups an und veranstalten Sie Ihre eigenen Events auf der dezentralisierten, benutzergesteuerten Social-Media-Plattform.",
     "defaultSeoDescription": "Community-Event auf DeHub.",
