@@ -17839,7 +17839,18 @@
     "84e0ad815b9c": "SECTOR {{value1}}",
     "856c1e009fcc": "Wu Chinese",
     "a4504b3d0ff7": "Telugu",
-    "beb497b64cad": "Social y Feed"
+    "beb497b64cad": "Social y Feed",
+    "0f8f49bd32e6": "🔥 Dar una propina de {{value1}} <coin></coin> te situará más arriba en la bandeja de entrada de {{value2}}",
+    "1e488da3dfa7": "Los mensajes que envíes a {{value1}} son de pago y costarán <amount>{{value2}}</amount> <coin></coin> cada uno. ¿Seguro que quieres continuar?",
+    "253ffa81cd88": "{{value1}} exige una propina mínima de <amount>{{value2}} <coin></coin></amount> para iniciar una conversación.",
+    "338524eabcce": "🔥 Dar {{value1}} <coin></coin> de propina por mensaje te situará más arriba en la bandeja de entrada de {{value2}}",
+    "39958a403593": "Has ganado un <prize>premio de 200 $</prize> en nuestro sorteo del Mundial en Twitter. Los tokens se han abonado en tu cuenta y se transferirán cuando el contrato esté activo.",
+    "5d486dd87845": "Al continuar, aceptas nuestros <terms>Términos</terms> y nuestra <privacy>Política de privacidad</privacy>",
+    "6ed656c2254e": "<amount></amount> para llegar a {{value1}}",
+    "70d1cca2aba3": "{{value1}} exige una propina mínima de <amount>{{value2}} <coin></coin></amount> por mensaje. Este importe se descontará por cada mensaje que envíes.",
+    "825123b7470b": "Tu saldo: {{value1}} <coin></coin>",
+    "9f11cad12bdd": "Saldo insuficiente para una propina de {{value1}} <coin></coin>",
+    "a5b214ef27ab": "Saldo insuficiente. Tienes {{value1}} <coin></coin>, pero necesitas {{value2}} <coin></coin>."
   },
   "articles": {
     "cardLabel": "Artículo · {{count}} min de lectura",

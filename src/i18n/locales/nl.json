@@ -18088,7 +18088,18 @@
     "856638383b55": "Net mijn eerste NFT-collectie op Base geslagen. 🎨 De creatieve vrijheid in web3 is ongeëvenaard.",
     "9fd0c1b98d0a": "Minimale fooi is {{value1}} DHB",
     "b80021ded1cc": "Sindhi",
-    "b979cda45ed2": "Toekennen mislukt"
+    "b979cda45ed2": "Toekennen mislukt",
+    "0f8f49bd32e6": "🔥 Met een fooi van {{value1}} <coin></coin> kom je hoger in de inbox van {{value2}}",
+    "1e488da3dfa7": "Berichten aan {{value1}} zijn betaald en kosten elk <amount>{{value2}}</amount> <coin></coin>. Weet je zeker dat je wilt doorgaan?",
+    "253ffa81cd88": "{{value1}} vraagt een minimale fooi van <amount>{{value2}} <coin></coin></amount> om een gesprek te beginnen.",
+    "338524eabcce": "🔥 Met een fooi van {{value1}} <coin></coin> per bericht kom je hoger in de inbox van {{value2}}",
+    "39958a403593": "Je hebt een <prize>prijs van $ 200</prize> gewonnen bij onze WK-winactie op Twitter. Je tokens zijn bijgeschreven op je account en worden overgemaakt zodra het contract actief is.",
+    "5d486dd87845": "Door verder te gaan, ga je akkoord met onze <terms>Voorwaarden</terms> en ons <privacy>Privacybeleid</privacy>",
+    "6ed656c2254e": "<amount></amount> tot {{value1}}",
+    "70d1cca2aba3": "{{value1}} vraagt een minimale fooi van <amount>{{value2}} <coin></coin></amount> per bericht. Dit bedrag wordt voor elk verzonden bericht afgeschreven.",
+    "825123b7470b": "Je saldo: {{value1}} <coin></coin>",
+    "9f11cad12bdd": "Onvoldoende saldo voor een fooi van {{value1}} <coin></coin>",
+    "a5b214ef27ab": "Onvoldoende saldo. Je hebt {{value1}} <coin></coin>, maar hebt {{value2}} <coin></coin> nodig."
   },
   "articles": {
     "cardLabel": "Artikel · {{count}} min lezen",

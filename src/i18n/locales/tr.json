@@ -17839,7 +17839,18 @@
     "89dd748442c1": "Uygulamalar",
     "e18a39d085ea": "Dönüştür",
     "7db20897053b": "Kişiler",
-    "4ae268ba1719": "BRG {{value1}}"
+    "4ae268ba1719": "BRG {{value1}}",
+    "0f8f49bd32e6": "🔥 {{value1}} <coin></coin> bahşiş vermek, {{value2}} kullanıcısının gelen kutusunda sizi daha üst sıraya taşır",
+    "1e488da3dfa7": "{{value1}} kullanıcısına gönderdiğiniz mesajlar ücretlidir ve her biri <amount>{{value2}}</amount> <coin></coin> tutar. Devam etmek istediğinizden emin misiniz?",
+    "253ffa81cd88": "{{value1}}, sohbet başlatmak için en az <amount>{{value2}} <coin></coin></amount> bahşiş istiyor.",
+    "338524eabcce": "🔥 Mesaj başına {{value1}} <coin></coin> bahşiş vermek, {{value2}} kullanıcısının gelen kutusunda sizi daha üst sıraya taşır",
+    "39958a403593": "Twitter’daki Dünya Kupası çekilişimizden <prize>200 $ ödül</prize> kazandınız. Tokenlarınız hesabınıza eklendi ve sözleşme aktif olduğunda aktarılacak.",
+    "5d486dd87845": "Devam ederek <terms>Şartlarımızı</terms> ve <privacy>Gizlilik Politikamızı</privacy> kabul etmiş olursunuz",
+    "6ed656c2254e": "{{value1}} için <amount></amount> kaldı",
+    "70d1cca2aba3": "{{value1}}, mesaj başına en az <amount>{{value2}} <coin></coin></amount> bahşiş istiyor. Gönderdiğiniz her mesajda bu tutar düşülür.",
+    "825123b7470b": "Bakiyeniz: {{value1}} <coin></coin>",
+    "9f11cad12bdd": "{{value1}} <coin></coin> bahşiş için yetersiz bakiye",
+    "a5b214ef27ab": "Yetersiz bakiye. {{value1}} <coin></coin> bakiyeniz var, ancak {{value2}} <coin></coin> gerekiyor."
   },
   "articles": {
     "cardLabel": "Makale ·{{count}} dk. okuma",
