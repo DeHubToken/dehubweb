@@ -1,6 +1,7 @@
 // Mock launchpad trade endpoint. No real chain interaction in Phase 1.
 import { createClient } from 'npm:@supabase/supabase-js@2';
 import { corsHeaders } from '../_shared/cors.ts';
+import { requireDeHubAuth } from '../_shared/auth.ts';
 
 const CURVE = {
   virtualDHB: 30_000,
@@ -31,9 +32,16 @@ Deno.serve(async (req) => {
   if (req.method === 'OPTIONS') return new Response('ok', { headers: corsHeaders });
 
   try {
+    // The trade is recorded against the signed-in wallet. It used to take
+    // `trader_address` from the body and write it with the service role, so
+    // anyone could post trades as any wallet and push a token to graduation.
+    const auth = await requireDeHubAuth(req);
+    if (!auth.ok) return auth.response;
+    const trader_address = auth.wallet;
+
     const body = await req.json();
-    const { token_id, side, amount, trader_address } = body ?? {};
-    if (!token_id || !trader_address || (side !== 'buy' && side !== 'sell') || !(Number(amount) > 0)) {
+    const { token_id, side, amount } = body ?? {};
+    if (!token_id || (side !== 'buy' && side !== 'sell') || !(Number(amount) > 0)) {
       return new Response(JSON.stringify({ error: 'invalid input' }), {
         status: 400, headers: { ...corsHeaders, 'Content-Type': 'application/json' },
       });
@@ -79,7 +87,7 @@ Deno.serve(async (req) => {
     }
 
     const { data: trade, error: insErr } = await admin.from('launchpad_trades').insert({
-      token_id, trader_address: String(trader_address).toLowerCase(),
+      token_id, trader_address,
       side, dhb_in, tokens_out, price_per_token,
     }).select().single();
     if (insErr) {
