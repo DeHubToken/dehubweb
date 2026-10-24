@@ -1532,6 +1532,13 @@
     "encryptionOff": "Encriptação desativada neste dispositivo",
     "encryptionTurnOn": "Ativar",
     "cannotDecrypt": "Mensagem criptografada — não pode ser aberta neste dispositivo",
+    "lockedTitle": "Desbloqueie para ler as suas mensagens",
+    "lockedBody": "O seu chat com {{name}} está encriptado de ponta a ponta. Desbloqueie a sua carteira neste dispositivo para abri-la.",
+    "lockedUnlock": "Desbloquear carteira",
+    "lockedTryAgain": "Tentar novamente",
+    "lockedPrivate": "Só tu os podes ler",
+    "undecryptableRun_one": "A mensagem {{count}} não pode ser aberta neste dispositivo",
+    "undecryptableRun_other": "As mensagens {{count}} não podem ser abertas neste dispositivo",
     "title": "Mensagens",
     "searchConversations": "Buscar conversas...",
     "failedToLoad": "Falha ao carregar conversas",
@@ -9005,7 +9012,7 @@
     "failed": "Não foi possível processar o vídeo"
   },
   "loginStack": {
-    "tip": "Gorjeta em DHB",
+    "aiRestyle": "Reestilo com IA",
     "headlineTop": "Você vai ter tudo",
     "headlineAccent": "e ser feliz.",
     "orContinueWith": "ou continue com",

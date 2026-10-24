@@ -111,10 +111,13 @@ describe('hls-vod', () => {
     syncVideoLoad(el);
     expect(player.startLoad).toHaveBeenCalledTimes(1);
     expect(player.config.maxBufferLength).toBe(4);
+    // A ceiling, not just a target: hls.js would otherwise read ahead by bytes.
+    expect(player.config.maxMaxBufferLength).toBe(4);
 
     Object.defineProperty(el, 'paused', { value: false, configurable: true });
     el.dispatchEvent(new Event('play'));
     expect(player.config.maxBufferLength).toBe(30);
+    expect(player.config.maxMaxBufferLength).toBe(30);
     expect(player.startLoad).toHaveBeenCalledTimes(1);
   });
 

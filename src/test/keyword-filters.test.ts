@@ -69,6 +69,12 @@ describe('filter places', () => {
     ['/shorts', 'public'],
     ['/maldoteth', 'profile'],
     ['/profile', 'profile'],
+    ['/app', 'home'],
+    ['/app/post/123', 'thread'],
+    ['/app/notifications', 'notifications'],
+    ['/app/explore', 'public'],
+    ['/app/profile', 'profile'],
+    ['/app/maldoteth', 'profile'],
   ])('%s is %s', (path, place) => {
     expect(filterContextForPath(path)).toBe(place);
   });

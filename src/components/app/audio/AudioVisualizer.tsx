@@ -196,6 +196,8 @@ const HUE_GRADIENT =
   'linear-gradient(to right, hsl(0, 80%, 60%), hsl(60, 80%, 60%), hsl(120, 80%, 60%), hsl(180, 80%, 60%), hsl(240, 80%, 60%), hsl(300, 80%, 60%), hsl(360, 80%, 60%))';
 
 const STATIC_BAR_COUNT = 100;
+/** CSS px of the studio animation that runs on under the deck (audio-studio.css). */
+const STUDIO_BLEED = 44;
 /** Matches `fftSize: 256` below — an idle frame has to be the analyser's size. */
 const IDLE_BIN_COUNT = 128;
 /** Pointer travel that turns a press on the canvas into a scrub. */
@@ -613,9 +615,37 @@ export function AudioVisualizer({
     const ctx = canvas.getContext('2d');
     if (!ctx) return;
 
-    const { width, height } = canvas;
-    if (!width || !height) return;
+    const { width } = canvas;
+    // Studio card: the animation stands on the deck's top line, and the strip
+    // under the deck gets a mirrored copy for its frosted glass to bleed.
+    const studio = !isFullscreen && (theme === 'glass' || (theme === 'system' && !isLightTheme));
+    const bleed = studio ? Math.round(STUDIO_BLEED * width / (canvas.clientWidth || width)) : 0;
+    const height = canvas.height - bleed;
+    if (!width || height <= 0) return;
+    if (bleed) ctx.clearRect(0, 0, width, canvas.height);
+    paintFrame(ctx, canvas, width, height);
+    if (bleed) {
+      ctx.save();
+      ctx.setTransform(1, 0, 0, -1, 0, height * 2);
+      // Frosted in the canvas itself, so the bleed reads as glass even where
+      // the deck's backdrop blur doesn't render.
+      ctx.filter = `blur(${Math.round(bleed / 4)}px) saturate(1.4)`;
+      ctx.globalAlpha = .85;
+      ctx.drawImage(canvas, 0, height - bleed, width, bleed, 0, height - bleed, width, bleed);
+      ctx.restore();
+      // Fade the reflection out so it melts into the deck instead of ending in an edge.
+      ctx.save();
+      ctx.globalCompositeOperation = 'destination-out';
+      const fade = ctx.createLinearGradient(0, height, 0, height + bleed);
+      fade.addColorStop(0, 'rgba(0,0,0,.15)');
+      fade.addColorStop(1, 'rgba(0,0,0,1)');
+      ctx.fillStyle = fade;
+      ctx.fillRect(0, height, width, bleed);
+      ctx.restore();
+    }
+  }, [style, hue, seed, idleFrequency, idleTime, idleShape, isLightTheme, theme, isFullscreen]);
 
+  function paintFrame(ctx: CanvasRenderingContext2D, canvas: HTMLCanvasElement, width: number, height: number) {
     if (style === 'static') {
       const audio = audioRef.current;
       const played = audio && audio.duration ? audio.currentTime / audio.duration : 0;
@@ -730,7 +760,7 @@ export function AudioVisualizer({
         drawOrb(ctx, frequencyData, width, height, hue);
         break;
     }
-  }, [style, hue, seed, idleFrequency, idleTime, idleShape, isLightTheme, theme]);
+  }
 
   const drawFrameRef = useRef(drawFrame);
   drawFrameRef.current = drawFrame;

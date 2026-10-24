@@ -1528,6 +1528,13 @@
     "encryptionOff": "এই ডিভাইসে এনক্রিপশন বন্ধ আছে",
     "encryptionTurnOn": "চালু করুন",
     "cannotDecrypt": "এনক্রিপ্ট করা বার্তা — এই ডিভাইসে খোলা যাবে না",
+    "lockedTitle": "আপনার বার্তাগুলি পড়তে আনলক করুন",
+    "lockedBody": "{{name}} -এর সাথে আপনার চ্যাটটি এন্ড-টু-এন্ড এনক্রিপ্টেড । এটি খুলতে এই ডিভাইসে আপনার ওয়ালেট আনলক করুন ।",
+    "lockedUnlock": "ওয়ালেট আনলক করুন",
+    "lockedTryAgain": "আবার চেষ্টা করুন",
+    "lockedPrivate": "শুধুমাত্র আপনি সেগুলি পড়তে পারেন",
+    "undecryptableRun_one": "{{count}} বার্তাটি এই ডিভাইসে খোলা যাবে না",
+    "undecryptableRun_other": "{{count}} বার্তাগুলি এই ডিভাইসে খোলা যাবে না",
     "title": "বার্তা",
     "searchConversations": "কথোপকথন অনুসন্ধান করুন...",
     "failedToLoad": "কথোপকথন লোড করতে ব্যর্থ",
@@ -8864,7 +8871,7 @@
     "failed": "ভিডিওটি প্রসেস করা যায়নি"
   },
   "loginStack": {
-    "tip": "DHB টিপ দিন",
+    "aiRestyle": "AI রিস্টাইল",
     "headlineTop": "তুমি সবকিছুর মালিক হবে",
     "headlineAccent": "এবং সুখী থাকবে।",
     "orContinueWith": "অথবা চালিয়ে যান",

@@ -223,10 +223,12 @@ async function loadTargets(step: TaskStep, task: any, token: string, ownedWallet
       const at = Date.parse(post.createdAt);
       return Number.isFinite(at) && at >= Date.parse(cursor.passFrom) && at < Date.parse(cursor.passTo);
     });
-    await recordPostViews(posts.map((post: any) => post.tokenId), { token, agent: true });
     const replying = step.tool === "dehub_comment" && !!step.topic;
     // Written replies skip the owner's own agents and posts with nothing to reply to.
     const matching = posts.filter((post: any) => matchesPostFilters(post, step));
+    // Only posts the task acts on are seen. Counting every scanned post put a
+    // public view on the whole window, filtered-out authors included.
+    await recordPostViews(matching.map((post: any) => post.tokenId), { token, agent: true });
     const eligible = replying ? matching.filter((post: any) => !ownedWallets.has(String(post.minter ?? "").toLowerCase()) && postText(post)) : matching;
     cursor.targets = eligible.map((post: any) => step.audience === "post_authors" ? post.minter?.toLowerCase() : String(post.tokenId)).filter(Boolean);
     cursor.posts = replying ? Object.fromEntries(eligible.map((post: any) => [String(post.tokenId), { text: postText(post), author: post.mintername ?? post.minterDisplayName ?? null }])) : undefined;

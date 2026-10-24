@@ -1525,6 +1525,13 @@
     "encryptionOff": "ההצפנה כבויה במכשיר הזה",
     "encryptionTurnOn": "הפעלה",
     "cannotDecrypt": "הודעה מוצפנת — לא ניתן לפתוח במכשיר זה",
+    "lockedTitle": "בטל את הנעילה כדי לקרוא את ההודעות שלך",
+    "lockedBody": "הצ'אט שלכם עם {{name}} מוצפן מקצה לקצה. פתח את הארנק במכשיר זה כדי לפתוח אותו.",
+    "lockedUnlock": "שחרור נעילת הארנק",
+    "lockedTryAgain": "ניסיון חוזר",
+    "lockedPrivate": "רק אתם יכולים לקרוא אותם",
+    "undecryptableRun_one": "לא ניתן לפתוח את ההודעה {{count}} במכשיר זה",
+    "undecryptableRun_other": "לא ניתן לפתוח הודעות {{count}} במכשיר זה",
     "title": "הודעות",
     "searchConversations": "חפש שיחות...",
     "failedToLoad": "טעינת השיחות נכשלה",
@@ -8863,7 +8870,7 @@
     "failed": "לא ניתן היה לעבד את הסרטון"
   },
   "loginStack": {
-    "tip": "טיפ ב-DHB",
+    "aiRestyle": "סגנון מחדש ב-AI",
     "headlineTop": "הכול יהיה שלך",
     "headlineAccent": "ותהיה מאושר.",
     "orContinueWith": "או המשך עם",

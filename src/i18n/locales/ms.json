@@ -1791,6 +1791,13 @@
     "encryptionOff": "Penyulitan tidak aktif pada peranti ini",
     "encryptionTurnOn": "Hidupkan",
     "cannotDecrypt": "Mesej disulitkan — tidak boleh dibuka pada peranti ini",
+    "lockedTitle": "Buka kunci untuk membaca mesej anda",
+    "lockedBody": "Sembang anda dengan {{name}} disulitkan hujung ke hujung. Buka kunci dompet anda pada peranti ini untuk membukanya.",
+    "lockedUnlock": "Buka kunci dompet",
+    "lockedTryAgain": "Cuba lagi",
+    "lockedPrivate": "Hanya anda yang boleh membacanya",
+    "undecryptableRun_one": "Mesej {{count}} tidak boleh dibuka pada peranti ini",
+    "undecryptableRun_other": "Mesej {{count}} tidak boleh dibuka pada peranti ini",
     "title": "Messages",
     "searchConversations": "Search conversations...",
     "failedToLoad": "Gagal memuat perbualan",
@@ -9109,7 +9116,7 @@
     "failed": "Video tidak dapat diproses"
   },
   "loginStack": {
-    "tip": "Tip DHB",
+    "aiRestyle": "Gaya semula AI",
     "headlineTop": "Anda akan memiliki segalanya",
     "headlineAccent": "dan gembira.",
     "orContinueWith": "atau teruskan dengan",

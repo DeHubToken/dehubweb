@@ -34,6 +34,7 @@ import { useAuth } from '@/contexts/AuthContext';
 import { type LoginStep, resumingStep } from '@/components/app/login/steps';
 import { getWalletSetupIntent, setWalletSetupIntent } from '@/lib/wallet-setup-intent';
 import dehubLogo from '@/assets/dehub-logo-white.png';
+import dehubMark from '@/assets/dehub-mark-tight.png';
 import { useKeyboardSafeSheet } from '@/hooks/use-keyboard-open';
 import { beginAuthTrace, readAuthTrace } from '@/lib/auth-trace';
 import { createLogger } from '@/lib/logger';
@@ -227,9 +228,10 @@ export function LoginModal({ open, onOpenChange }: LoginModalProps) {
 
   const sheetBody = stackLayout ? (
     <>
-      <DrawerHeader className="px-5 pt-[calc(0.75rem+env(safe-area-inset-top))] pb-2 shrink-0">
+      {/* Logo and Explore sit 16px from the top and the sides, both 40px tall. */}
+      <DrawerHeader className="px-4 pt-[calc(1rem+env(safe-area-inset-top))] pb-2 shrink-0">
         <div className="flex items-center justify-between">
-          <img src={dehubLogo} alt="DeHub" className="h-6" />
+          <img src={dehubMark} alt="DeHub" className="h-10 w-auto" />
           {!requiresUsername && (
             <button
               type="button"
