@@ -996,6 +996,8 @@
     "dmSent": "اتبعت {{amount}} عملات رمزية لـ {{name}}!"
   },
   "postOptions": {
+    "liveAlertsOn": "بقيت بتتابع {{name}}. هيوصلك إشعار لما يعمل لايف.",
+    "liveAlertsAlreadyOn": "إنت بتتابع {{name}}، فهيوصلك إشعار لما يعمل لايف.",
     "embed": "تضمين",
     "copyEmbedCode": "نسخ كود التضمين",
     "embedCodeCopied": "تم نسخ كود التضمين",

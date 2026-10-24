@@ -995,6 +995,8 @@
     "dmSent": "{{amount}} ቶከኖች ለ{{name}} ተልኳል!"
   },
   "postOptions": {
+    "liveAlertsOn": "አሁን {{name}}ን እየተከተሉ ነው። ቀጥታ ሲሆኑ ማሳወቂያ ይደርስዎታል።",
+    "liveAlertsAlreadyOn": "{{name}}ን ይከተላሉ፣ ስለዚህ ቀጥታ ሲሆኑ ማሳወቂያ ይደርስዎታል።",
     "embed": "አካትት",
     "copyEmbedCode": "የማካተቻ ኮድ ቅዳ",
     "embedCodeCopied": "የማካተቻ ኮድ ተቀድቷል",

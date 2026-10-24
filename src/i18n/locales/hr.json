@@ -996,6 +996,8 @@
     "dmSent": "Poslano {{amount}} tokena korisniku {{name}}!"
   },
   "postOptions": {
+    "liveAlertsOn": "Sada pratite {{name}}. Dobit ćete obavijest kad počne prijenos uživo.",
+    "liveAlertsAlreadyOn": "Pratite {{name}}, pa ćete dobiti obavijest kad počne prijenos uživo.",
     "embed": "Ugradi",
     "copyEmbedCode": "Kopiraj kod za ugradnju",
     "embedCodeCopied": "Kod za ugradnju kopiran",

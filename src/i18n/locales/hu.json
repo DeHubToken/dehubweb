@@ -986,6 +986,8 @@
     "dmSent": "{{amount}} tokenek elküldve neki: {{name}}!"
   },
   "postOptions": {
+    "liveAlertsOn": "Mostantól követed: {{name}}. Értesítést kapsz, amikor élő adást indít.",
+    "liveAlertsAlreadyOn": "Követed: {{name}}, így értesítést kapsz, amikor élő adást indít.",
     "embed": "Beágyazás",
     "copyEmbedCode": "Beágyazási kód másolása",
     "embedCodeCopied": "Beágyazási kód másolva",

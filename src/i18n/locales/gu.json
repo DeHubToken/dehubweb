@@ -995,6 +995,8 @@
     "dmSent": "{{name}}ને {{amount}} ટોકન્સ મોકલ્યા!"
   },
   "postOptions": {
+    "liveAlertsOn": "તમે હવે {{name}}ને ફોલો કરો છો. તેઓ લાઇવ જશે ત્યારે તમને સૂચના મળશે.",
+    "liveAlertsAlreadyOn": "તમે {{name}}ને ફોલો કરો છો, તેથી તેઓ લાઇવ જશે ત્યારે તમને સૂચના મળશે.",
     "embed": "એમ્બેડ",
     "copyEmbedCode": "એમ્બેડ કોડ કૉપિ કરો",
     "embedCodeCopied": "એમ્બેડ કોડ કૉપિ થયો",

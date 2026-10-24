@@ -1218,6 +1218,8 @@
     "dmSent": "تم إرسال {{amount}} عملات إلى {{name}}!"
   },
   "postOptions": {
+    "liveAlertsOn": "أنت الآن تتابع {{name}}. سيصلك إشعار عندما يبدأ البث المباشر.",
+    "liveAlertsAlreadyOn": "أنت تتابع {{name}}، لذا سيصلك إشعار عندما يبدأ البث المباشر.",
     "embed": "تضمين",
     "copyEmbedCode": "نسخ رمز التضمين",
     "embedCodeCopied": "تم نسخ رمز التضمين",

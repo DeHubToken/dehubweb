@@ -1032,6 +1032,8 @@
     "dmSent": "{{amount}} Tokens an {{name}} gesendet!"
   },
   "postOptions": {
+    "liveAlertsOn": "Du folgst jetzt {{name}}. Du bekommst eine Benachrichtigung, sobald es live geht.",
+    "liveAlertsAlreadyOn": "Du folgst {{name}}, also bekommst du eine Benachrichtigung, sobald es live geht.",
     "embed": "Einbetten",
     "copyEmbedCode": "Einbettungscode kopieren",
     "embedCodeCopied": "Einbettungscode kopiert",

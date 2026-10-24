@@ -313,9 +313,8 @@ sm = sm.replace(/\s*<\/urlset>\s*$/, `\n${blogUrls}\n</urlset>\n`);
 //     troubleshooting, examples) — no content to index.
 //   - depin / e2e-encryption / ai-toolkits — consolidated into /docs/dapps and now
 //     redirect there; redirects don't belong in a sitemap.
-//   - quickstart / installation / endpoints — developer-doc drafts still carrying
-//     template boilerplate; noindexed at the edge (worker DOCS_COMING_SOON) until
-//     the real API docs land, so they must not be submitted either.
+//   - quickstart — noindexed at the edge (worker DOCS_COMING_SOON).
+//   - installation / endpoints — redirect to /dehub-app and /connect.
 const DOCS_META_ONLY = [
   'overview', 'dapps', 'games',
   'token/overview', 'token/economics', 'token/utility', 'token/where-to-buy',

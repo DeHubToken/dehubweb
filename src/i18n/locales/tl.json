@@ -1028,6 +1028,8 @@
     "dmSent": "Naipadala ang {{amount}} tokens kay {{name}}!"
   },
   "postOptions": {
+    "liveAlertsOn": "Sinusundan mo na si {{name}}. Makakatanggap ka ng notification kapag nag-live sila.",
+    "liveAlertsAlreadyOn": "Sinusundan mo si {{name}}, kaya makakatanggap ka ng notification kapag nag-live sila.",
     "embed": "I-embed",
     "copyEmbedCode": "Kopyahin ang embed code",
     "embedCodeCopied": "Nakopya ang embed code",

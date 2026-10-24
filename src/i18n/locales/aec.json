@@ -3802,6 +3802,8 @@
     "dmSent": "اتبعت {{amount}} توكنز لـ {{name}}!"
   },
   "postOptions": {
+    "liveAlertsOn": "بقيت بتتابع {{name}}. هيوصلك إشعار لما يعمل بث.",
+    "liveAlertsAlreadyOn": "إنت بتتابع {{name}}، فهيوصلك إشعار لما يعمل بث.",
     "embed": "تضمين",
     "copyEmbedCode": "نسخ رمز التضمين",
     "embedCodeCopied": "تم نسخ رمز التضمين",

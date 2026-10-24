@@ -982,6 +982,8 @@
     "dmSent": "{{name}} nosūtīti {{amount}} žetoni!"
   },
   "postOptions": {
+    "liveAlertsOn": "Tagad jūs sekojat {{name}}. Saņemsiet paziņojumu, kad sāksies tiešraide.",
+    "liveAlertsAlreadyOn": "Jūs sekojat {{name}}, tāpēc saņemsiet paziņojumu, kad sāksies tiešraide.",
     "embed": "Iegult",
     "copyEmbedCode": "Kopēt iegulšanas kodu",
     "embedCodeCopied": "Iegulšanas kods nokopēts",

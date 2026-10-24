@@ -2,8 +2,7 @@ import { useTranslation as _useCopy } from 'react-i18next';
 /**
  * NewMessageSelector Component
  * ==============================
- * Modal for selecting between creating a DM or Group chat.
- * Note: DeHub backend supports 1:1 DMs only — Create Group is hidden.
+ * Modal for starting a new conversation. DeHub supports 1:1 DMs only.
  */
 
 import MessageCircle from "@/components/ui/cut-icons/messages";
@@ -15,7 +14,6 @@ interface NewMessageSelectorProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
   onSelectDM: () => void;
-  onSelectGroup?: () => void;
 }
 
 export function NewMessageSelector({ 

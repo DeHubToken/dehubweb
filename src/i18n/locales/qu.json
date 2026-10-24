@@ -995,6 +995,8 @@
     "dmSent": "{{amount}} fichas nisqakuna {{name}}-man apachisqa!"
   },
   "postOptions": {
+    "liveAlertsOn": "Kunanqa {{name}}ta qatinkiña. Kawsaypi rikhurimuptin willakuyta chaskinki.",
+    "liveAlertsAlreadyOn": "{{name}}ta qatinki, chayrayku kawsaypi rikhurimuptin willakuyta chaskinki.",
     "embed": "Churay",
     "copyEmbedCode": "Churana kodigota copiay",
     "embedCodeCopied": "Churana kodigoqa copiasqañam",

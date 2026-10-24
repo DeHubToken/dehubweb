@@ -995,6 +995,8 @@
     "dmSent": "{{name}}-a {{amount}} tokenler iberildi!"
   },
   "postOptions": {
+    "liveAlertsOn": "Indi {{name}} yzarlaýarsyňyz. Göni ýaýlyma çykanda habarnama alarsyňyz.",
+    "liveAlertsAlreadyOn": "Siz {{name}} yzarlaýarsyňyz, şonuň üçin göni ýaýlyma çykanda habarnama alarsyňyz.",
     "embed": "Goýmak",
     "copyEmbedCode": "Goýma koduny göçür",
     "embedCodeCopied": "Goýma kody göçürildi",

@@ -996,6 +996,8 @@
     "dmSent": "An aika {{amount}} tokens ga {{name}}!"
   },
   "postOptions": {
+    "liveAlertsOn": "Yanzu kana bin {{name}}. Za ka sami sanarwa idan suka fara watsa kai tsaye.",
+    "liveAlertsAlreadyOn": "Kana bin {{name}}, don haka za ka sami sanarwa idan suka fara watsa kai tsaye.",
     "embed": "Saka",
     "copyEmbedCode": "Kwafi lambar sakawa",
     "embedCodeCopied": "An kwafi lambar sakawa",

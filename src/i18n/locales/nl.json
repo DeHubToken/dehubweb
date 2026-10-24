@@ -1408,6 +1408,8 @@
     "dmSent": "{{amount}} tokens verzonden naar {{name}}!"
   },
   "postOptions": {
+    "liveAlertsOn": "Je volgt nu {{name}}. Je krijgt een melding wanneer ze live gaan.",
+    "liveAlertsAlreadyOn": "Je volgt {{name}}, dus je krijgt een melding wanneer ze live gaan.",
     "embed": "Insluiten",
     "copyEmbedCode": "Insluitcode kopiëren",
     "embedCodeCopied": "Insluitcode gekopieerd",

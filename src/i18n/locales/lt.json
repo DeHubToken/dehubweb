@@ -993,6 +993,8 @@
     "dmSent": "{{name}} išsiųsta {{amount}} žetonų!"
   },
   "postOptions": {
+    "liveAlertsOn": "Dabar sekate {{name}}. Gausite pranešimą, kai prasidės tiesioginė transliacija.",
+    "liveAlertsAlreadyOn": "Sekate {{name}}, todėl gausite pranešimą, kai prasidės tiesioginė transliacija.",
     "embed": "Įterpti",
     "copyEmbedCode": "Kopijuoti įterpimo kodą",
     "embedCodeCopied": "Įterpimo kodas nukopijuotas",

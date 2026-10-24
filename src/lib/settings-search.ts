@@ -133,12 +133,7 @@ export const SETTINGS_SEARCH_INDEX: SettingsSearchEntry[] = [
   { tab: 'messages', anchor: 'free-dm-access', label: 'Free DM Access', labelKey: 'settings.freeAccessList', keywords: 'free list bypass fee' },
   { tab: 'messages', anchor: 'do-not-disturb', label: 'Do not disturb', labelKey: 'settings.doNotDisturb', keywords: 'dnd mute silence' },
   { tab: 'messages', anchor: 'smart-replies', label: 'Suggested replies', labelKey: 'settings.smartReplies', keywords: 'ai smart reply drafts orb suggestions' },
-  { tab: 'messages', anchor: 'message-notifications', label: 'Message Notifications', labelKey: 'settings.messageNotifications' },
-  { tab: 'messages', anchor: 'read-receipts', label: 'Read Receipts', labelKey: 'settings.readReceipts', keywords: 'seen ticks' },
   { tab: 'messages', anchor: 'e2e-encryption', label: 'End-to-End Encryption', labelKey: 'settings.e2eEncryption', keywords: 'encrypted secure' },
-  { tab: 'messages', anchor: 'filter-requests', label: 'Filter Message Requests', labelKey: 'settings.filterMessageRequests', keywords: 'spam requests' },
-  { tab: 'messages', anchor: 'message-storage', label: 'Storage', labelKey: 'settings.storage', keywords: 'space used media' },
-  { tab: 'messages', anchor: 'quick-actions', label: 'Quick Actions', labelKey: 'settings.quickActions', keywords: 'archive export chats' },
 
   // Assets
   { tab: 'assets', anchor: 'wallet-address', label: 'Wallet Address', keywords: 'address copy 0x' },

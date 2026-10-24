@@ -4918,6 +4918,8 @@
     "dmSent": "Ngirim {{amount}} token menyang {{name}}!"
   },
   "postOptions": {
+    "liveAlertsOn": "Saiki kowe ngetutake {{name}}. Kowe bakal oleh notifikasi nalika dheweke miwiti siaran langsung.",
+    "liveAlertsAlreadyOn": "Kowe ngetutake {{name}}, dadi kowe bakal oleh notifikasi nalika dheweke miwiti siaran langsung.",
     "markSection": "Bagean sing bisa dilewati",
     "embed": "Lebokake",
     "copyEmbedCode": "Salin kode lebokan",

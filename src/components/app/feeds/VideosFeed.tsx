@@ -21,8 +21,6 @@ import { useQuery } from '@tanstack/react-query';
 import { useNavigate } from 'react-router-dom';
 import { Loader2 } from "lucide-react";
 import RefreshCw from "@/components/ui/cut-icons/refresh";
-import Radio from "@/components/ui/cut-icons/live";
-import Eye from "@/components/ui/cut-icons/visibility";
 
 import Play from "@/components/ui/cut-icons/play";
 import ChevronRight from "@/components/ui/cut-icons/next";
@@ -50,18 +48,11 @@ import { getMediaUrl, getCategories, type DeHubCategory, type DeHubNFT } from '@
 import { buildAvatarUrl, buildHlsUrl } from '@/lib/media-url';
 import { SwipeableCarousel } from '@/components/app/SwipeableCarousel';
 import { SORT_OPTIONS, DEFAULT_FEED_SORT, DATE_FILTER_OPTIONS, CONTENT_TYPE_FILTERS, type SortOption, type DateFilterOption, type ContentTypeFilters, type SortValue } from '@/lib/feed-utils';
-import { usePersistedFeedFilter, usePersistedContentFilters } from '@/hooks/use-persisted-feed-filter';
+import { usePersistedFeedFilter, usePersistedContentFilters, setFilterValue } from '@/hooks/use-persisted-feed-filter';
 import type { ShortVideo, VideoItem } from '@/types/feed.types';
 
-// Category images
-import minecraftCategory from '@/assets/minecraft-category.png';
-import codCategory from '@/assets/cod-category.png';
-import gtaCategory from '@/assets/gta-category.png';
-import fortniteCategory from '@/assets/fortnite-category.png';
-import valorantCategory from '@/assets/valorant-category.png';
-import leagueCategory from '@/assets/league-category.png';
-import apexCategory from '@/assets/apex-category.png';
-import justchattingCategory from '@/assets/justchatting-category.png';
+import { LIVE_GAMES } from '@/constants/live-games';
+import { FEED_TOGGLES_RELOAD_EVENT } from '@/lib/feed-defaults';
 import { resolveViewCount } from '@/lib/engagement';
 import { toStoryboard } from '@/lib/storyboard';
 
@@ -115,17 +106,6 @@ function useActiveFilterClass() {
 const INACTIVE_FILTER_CLASS = 'bg-zinc-800 text-zinc-300 hover:bg-zinc-700';
 /** Number of pages to pre-fetch for random mode cross-page shuffling */
 const RANDOM_PREFETCH_PAGES = 5;
-
-const LIVE_CATEGORIES = [
-  { name: 'Just Chatting', streams: 0, viewers: 0, image: justchattingCategory },
-  { name: 'Fortnite', streams: 0, viewers: 0, image: fortniteCategory },
-  { name: 'Valorant', streams: 0, viewers: 0, image: valorantCategory },
-  { name: 'Minecraft', streams: 0, viewers: 0, image: minecraftCategory },
-  { name: 'League of Legends', streams: 0, viewers: 0, image: leagueCategory },
-  { name: 'Call of Duty', streams: 0, viewers: 0, image: codCategory },
-  { name: 'GTA V', streams: 0, viewers: 0, image: gtaCategory },
-  { name: 'Apex Legends', streams: 0, viewers: 0, image: apexCategory },
-];
 
 // Helper to format counts
 function formatCount(count: number): string {
@@ -216,7 +196,15 @@ function parseTimeAgoToDate(timeAgo: string): Date {
 // SUB-COMPONENTS
 // ============================================================================
 
-// Live Categories Carousel - consistent format with LiveFeed
+// Live Categories Carousel - the same games as the Live tab. A tap opens the
+// Live tab on that game; "See all" opens it on every stream.
+function openLiveTab(gameId: string | null) {
+  setFilterValue('live', 'category', gameId);
+  // The Live feed may already be mounted; make it read the category again.
+  window.dispatchEvent(new CustomEvent(FEED_TOGGLES_RELOAD_EVENT));
+  window.dispatchEvent(new CustomEvent('switch-home-tab', { detail: 'live' }));
+}
+
 function LiveCategoriesCarousel() {
   const { t: _copy } = _useCopy();
   return (
@@ -224,36 +212,26 @@ function LiveCategoriesCarousel() {
       <div className="flex items-center justify-between mb-3">
         <h3 className="font-bold text-white flex items-center gap-2">
           <span data-live-pulse className="w-2 h-2 bg-red-500 rounded-full animate-pulse" />{_copy("copy.0bdcc439bd5f", { defaultValue: "Live Categories" })}</h3>
-        <button className="text-red-400 text-sm hover:underline flex items-center gap-1">{_copy("copy.14c21c5e3ffe", { defaultValue: "See all " })}<ChevronRight className="w-4 h-4" />
+        <button onClick={() => openLiveTab(null)} className="text-red-400 text-sm hover:underline flex items-center gap-1">{_copy("copy.14c21c5e3ffe", { defaultValue: "See all " })}<ChevronRight className="w-4 h-4" />
         </button>
       </div>
       <div className="relative">
         <SwipeableCarousel className="flex gap-3 overflow-x-auto scrollbar-hide px-1">
-          {LIVE_CATEGORIES.map((cat) => (
+          {LIVE_GAMES.map((game) => (
             <button
-              key={cat.name}
+              key={game.id}
+              onClick={() => openLiveTab(game.id)}
               className="flex-shrink-0 group"
             >
               <div className="w-36 sm:w-[10.5rem] overflow-hidden rounded-xl">
                 <img 
-                  src={cat.image} 
-                  alt={cat.name}
+                  src={game.image} 
+                  alt={game.name}
+                  loading="lazy"
                   className="w-full aspect-[3/4] object-cover group-hover:scale-105 transition-transform duration-200"
                 />
               </div>
-              <div className="mt-1.5 text-left">
-                <p className="text-white text-xs font-medium truncate w-36 sm:w-[10.5rem]">{cat.name}</p>
-                <div className="flex items-center gap-2 text-zinc-500 text-xs">
-                  <span className="flex items-center gap-0.5">
-                    <Radio className="w-3 h-3" />
-                    {cat.streams}
-                  </span>
-                  <span className="flex items-center gap-0.5">
-                    <Eye className="w-3 h-3" />
-                    {cat.viewers}
-                  </span>
-                </div>
-              </div>
+              <p className="mt-1.5 text-left text-white text-xs font-medium truncate w-36 sm:w-[10.5rem]">{game.name}</p>
             </button>
           ))}
         </SwipeableCarousel>
@@ -510,10 +488,6 @@ export function VideosFeed({ showFilters = false, isRefreshing = false, refreshK
 
   // Auth-guarded sort selection
   const handleSortSelect = useCallback((option: SortOption) => {
-    if (option.value === 'subscribed') {
-      toast.info(_copy("copy.35e9cfb027f9", { defaultValue: "Subscribed feed coming soon!" }));
-      return;
-    }
     if (option.value === 'following' && !isAuthenticated) {
       toast.info(_copy("copy.c32690bd04d1", { defaultValue: "Log in to see followed creators" }));
       return;

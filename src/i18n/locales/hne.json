@@ -990,6 +990,8 @@
     "dmSent": "{{name}} ला {{amount}} टोकन भेज दे गे!"
   },
   "postOptions": {
+    "liveAlertsOn": "अब तैं {{name}} ल फॉलो करत हस। जब ओमन लाइव होहीं त तोला सूचना मिलही।",
+    "liveAlertsAlreadyOn": "तैं {{name}} ल फॉलो करथस, एकरे सेती जब ओमन लाइव होहीं त तोला सूचना मिलही।",
     "embed": "एम्बेड",
     "copyEmbedCode": "एम्बेड कोड कॉपी करव",
     "embedCodeCopied": "एम्बेड कोड कॉपी हो गे",

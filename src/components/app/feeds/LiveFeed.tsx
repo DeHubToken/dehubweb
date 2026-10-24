@@ -15,7 +15,6 @@ import { useAutoRetryFeed } from '@/hooks/use-auto-retry-feed';
 import { Tv } from "lucide-react";
 import RefreshCw from "@/components/ui/cut-icons/refresh";
 import Radio from "@/components/ui/cut-icons/live";
-import Eye from "@/components/ui/cut-icons/visibility";
 import MicOff from "@/components/ui/cut-icons/mic-off";
 
 import ChevronRight from "@/components/ui/cut-icons/next";
@@ -43,31 +42,12 @@ import { StageRateButton } from '@/components/app/stages/StageRateButton';
 import type { AudioSpace } from '@/types/audio-spaces.types';
 import { CinematicLive } from '@/components/app/feeds/CinematicLive';
 import { useCinematicPhone } from '@/hooks/use-cinematic-phone';
-
-// Category images
-import apexCategory from '@/assets/apex-category.png';
-import codCategory from '@/assets/cod-category.png';
-import fortniteCategory from '@/assets/fortnite-category.png';
-import gtaCategory from '@/assets/gta-category.png';
-import valorantCategory from '@/assets/valorant-category.png';
-import leagueCategory from '@/assets/league-category.png';
-import minecraftCategory from '@/assets/minecraft-category.png';
-import justchattingCategory from '@/assets/justchatting-category.png';
-import lcsCategory from '@/assets/lcs-category.png';
 import { usePersistedFeedFilter } from '@/hooks/use-persisted-feed-filter';
+import { LIVE_GAMES, streamMatchesGame } from '@/constants/live-games';
 
-// Categories data - all zeroed until API integration
-const MOCK_CATEGORIES = [
-  { id: 'just-chatting', name: 'Just Chatting', image: justchattingCategory, streams: 0, viewers: 0 },
-  { id: 'lcs', name: 'Last Chad Standing', image: lcsCategory, streams: 0, viewers: 0 },
-  { id: 'fortnite', name: 'Fortnite', image: fortniteCategory, streams: 0, viewers: 0 },
-  { id: 'valorant', name: 'VALORANT', image: valorantCategory, streams: 0, viewers: 0 },
-  { id: 'league', name: 'League of Legends', image: leagueCategory, streams: 0, viewers: 0 },
-  { id: 'minecraft', name: 'Minecraft', image: minecraftCategory, streams: 0, viewers: 0 },
-  { id: 'gta', name: 'Grand Theft Auto V', image: gtaCategory, streams: 0, viewers: 0 },
-  { id: 'apex', name: 'Apex Legends', image: apexCategory, streams: 0, viewers: 0 },
-  { id: 'cod', name: 'Call of Duty', image: codCategory, streams: 0, viewers: 0 },
-];
+// Only a stored game id or "all" is a valid saved category; ids from the old
+// placeholder list fall back to all.
+const CATEGORY_FILTER_VALUES: (string | null)[] = [null, ...LIVE_GAMES.map(g => g.id)];
 
 interface LiveFeedProps {
   isRefreshing?: boolean;
@@ -77,7 +57,8 @@ interface LiveFeedProps {
 export function LiveFeed({ isRefreshing = false, showFilters = false }: LiveFeedProps) {
   const { t: _copy } = _useCopy();
 
-  const [selectedCategory, setSelectedCategory] = usePersistedFeedFilter<string | null>('live', 'category', null);
+  const [selectedCategory, setSelectedCategory] = usePersistedFeedFilter<string | null>('live', 'category', null, CATEGORY_FILTER_VALUES);
+  const game = LIVE_GAMES.find(g => g.id === selectedCategory) || null;
   const navigate = useNavigate();
   const cinematic = useCinematicPhone();
 
@@ -110,6 +91,18 @@ export function LiveFeed({ isRefreshing = false, showFilters = false }: LiveFeed
 
   // No infinite scroll needed - streams are shown in a carousel
 
+  // The category a stream carries is matched to a game by name, the same way
+  // the phone layout (CinematicLive) and the app do it.
+  const shownStreams = useMemo(
+    () => (game ? streams.filter(s => streamMatchesGame(s.game, game)) : streams),
+    [streams, game],
+  );
+  const streamsPerGame = useMemo(() => {
+    const counts: Record<string, number> = {};
+    for (const g of LIVE_GAMES) counts[g.id] = streams.filter(s => streamMatchesGame(s.game, g)).length;
+    return counts;
+  }, [streams]);
+
   const { isAutoRetrying } = useAutoRetryFeed({
     itemCount: streams.length,
     isLoading: isApiLoading,
@@ -138,7 +131,7 @@ export function LiveFeed({ isRefreshing = false, showFilters = false }: LiveFeed
 
   const categoryItems = useMemo(() => [
     { key: 'all', label: _copy("copy.a52ace420f21", { defaultValue: "All" }) },
-    ...MOCK_CATEGORIES.map(c => ({ key: c.id, label: c.name })),
+    ...LIVE_GAMES.map(g => ({ key: g.id, label: g.name })),
   ], [_copy]);
 
   // System theme on phones: who's live, top games and a grid of streams.
@@ -182,16 +175,20 @@ export function LiveFeed({ isRefreshing = false, showFilters = false }: LiveFeed
           <div className="space-y-3">
             <div className="flex items-center justify-between px-1">
               <h2 className="font-bold text-white flex items-center gap-2">
-                <span data-live-pulse className="w-2 h-2 bg-red-500 rounded-full animate-pulse" />{_copy("copy.bfd297afbf9e", { defaultValue: "Streams" })}</h2>
-              <button className="text-red-400 text-sm hover:underline">{_copy("copy.e1c32645f2f8", { defaultValue: "Show All" })}</button>
+                <span data-live-pulse className="w-2 h-2 bg-red-500 rounded-full animate-pulse" />{game ? game.name : _copy("copy.bfd297afbf9e", { defaultValue: "Streams" })}</h2>
+              {game && (
+                <button onClick={() => setSelectedCategory(null)} className="text-red-400 text-sm hover:underline">{_copy("copy.e1c32645f2f8", { defaultValue: "Show All" })}</button>
+              )}
             </div>
 
             {streams.length === 0 ? (
               <EmptyState />
+            ) : shownStreams.length === 0 ? (
+              <p className="px-1 py-6 text-center text-sm text-zinc-400">{_copy("copy.1de134eff461", { defaultValue: "No one is streaming " })}{game?.name}{_copy("copy.51599ee1733e", { defaultValue: " right now." })}</p>
             ) : (
               <SwipeableCarousel>
                 <div className="flex gap-3 overflow-x-auto scrollbar-hide pr-12">
-                  {streams.map((stream) => (
+                  {shownStreams.map((stream) => (
                     <div key={stream.id} className="flex-shrink-0 w-72 sm:w-80">
                       <LiveCard stream={stream} />
                     </div>
@@ -235,20 +232,22 @@ export function LiveFeed({ isRefreshing = false, showFilters = false }: LiveFeed
           <div className="space-y-3">
             <div className="flex items-center justify-between px-1">
               <h2 className="font-bold text-white">{_copy("copy.b8b1d894c683", { defaultValue: "Categories" })}</h2>
-              <button className="text-red-400 text-sm hover:underline">{_copy("copy.3227aa966625", { defaultValue: "Browse" })}</button>
             </div>
             
             <SwipeableCarousel>
               <div className="flex gap-3 overflow-x-auto scrollbar-hide pr-12">
-                {MOCK_CATEGORIES.map((category) => (
+                {LIVE_GAMES.map((category) => (
                   <button
                     key={category.id}
-                    className="flex-shrink-0 group"
+                    onClick={() => setSelectedCategory(selectedCategory === category.id ? null : category.id)}
+                    aria-pressed={selectedCategory === category.id}
+                    className={cn('flex-shrink-0 group transition-opacity', game && game.id !== category.id && 'opacity-50')}
                   >
-                    <div className="w-24 sm:w-28 overflow-hidden rounded-xl">
+                    <div className={cn('w-24 sm:w-28 overflow-hidden rounded-xl', selectedCategory === category.id && 'ring-2 ring-red-500')}>
                       <img 
                         src={category.image} 
                         alt={category.name}
+                        loading="lazy"
                         className="w-full aspect-[3/4] object-cover group-hover:scale-105 transition-transform duration-200"
                       />
                     </div>
@@ -257,11 +256,7 @@ export function LiveFeed({ isRefreshing = false, showFilters = false }: LiveFeed
                       <div className="flex items-center gap-2 text-zinc-500 text-xs">
                         <span className="flex items-center gap-0.5">
                           <Radio className="w-3 h-3" />
-                          {category.streams}
-                        </span>
-                        <span className="flex items-center gap-0.5">
-                          <Eye className="w-3 h-3" />
-                          {category.viewers}
+                          {streamsPerGame[category.id] ?? 0}
                         </span>
                       </div>
                     </div>

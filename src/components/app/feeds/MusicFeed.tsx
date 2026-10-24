@@ -12,7 +12,7 @@ import { useTranslation as _useCopy } from 'react-i18next';
 
 import { useState, useMemo, useRef, useEffect } from 'react';
 import { useDragTabIndicator } from '@/hooks/use-drag-tab-indicator';
-import { Mic2, Disc3 } from "lucide-react";
+import { Disc3 } from "lucide-react";
 import Music from "@/components/ui/cut-icons/music";
 import Radio from "@/components/ui/cut-icons/live";
 
@@ -54,16 +54,17 @@ import { usePersistedFeedFilter } from '@/hooks/use-persisted-feed-filter';
 // TYPES
 // ============================================================================
 
-type MusicSubTab = 'all' | 'tracks' | 'videos' | 'podcasts' | 'radio' | 'stages';
+type MusicSubTab = 'all' | 'tracks' | 'videos' | 'radio' | 'stages';
 
 const MUSIC_SUB_TABS: { icon?: typeof Music; customIcon?: string; label: string; value: MusicSubTab }[] = [
   { icon: Music, get label() { return _translateCopy("copy.a52ace420f21", { defaultValue: "All" }); }, value: 'all' },
   { icon: Disc3, get label() { return _translateCopy("copy.88980154513d", { defaultValue: "Tracks" }); }, value: 'tracks' },
   { icon: Play, get label() { return _translateCopy("copy.c9a9639463c2", { defaultValue: "Videos" }); }, value: 'videos' },
-  { icon: Mic2, get label() { return _translateCopy("copy.6ac749b31f9a", { defaultValue: "Podcasts" }); }, value: 'podcasts' },
   { icon: Radio, get label() { return _translateCopy("copy.2a7dfeb2f2b0", { defaultValue: "Radio" }); }, value: 'radio' },
   { customIcon: stagesMicIcon, get label() { return _translateCopy("copy.3a17aa4e4abb", { defaultValue: "Stages" }); }, value: 'stages' },
 ];
+
+const MUSIC_SUB_TAB_VALUES = MUSIC_SUB_TABS.map(tab => tab.value);
 
 const VIDEOS_PAGE_SIZE = 10; // Page size for videos tab - small for fast initial load
 // Page size for the "All" tab carousels. Only CAROUSEL_INITIAL_VISIBLE items
@@ -355,10 +356,18 @@ interface MusicFeedProps {
   showFilters?: boolean;
   isRefreshing?: boolean;
   refreshKey?: number;
+  /** Open on this sub-tab, e.g. /music?tab=radio from Home's radio "See all". Unknown values are ignored. */
+  tab?: string | null;
+  /** Changes on every arrival, so a second visit to the same ?tab= still applies. */
+  tabRequest?: string;
 }
 
-export function MusicFeed({ showFilters = false, isRefreshing = false }: MusicFeedProps) {
-  const [activeSubTab, setActiveSubTab] = usePersistedFeedFilter<MusicSubTab>('music', 'subTab', 'all');
+export function MusicFeed({ showFilters = false, isRefreshing = false, tab, tabRequest }: MusicFeedProps) {
+  const [activeSubTab, setActiveSubTab] = usePersistedFeedFilter<MusicSubTab>('music', 'subTab', 'all', MUSIC_SUB_TAB_VALUES);
+  useEffect(() => {
+    const requested = MUSIC_SUB_TAB_VALUES.find(value => value === tab);
+    if (requested) setActiveSubTab(requested);
+  }, [tab, tabRequest, setActiveSubTab]);
   const [chartSort, setChartSort] = usePersistedFeedFilter<AudioChartSort>('music', 'chartSort', 'trending');
   const [videoChartSort, setVideoChartSort] = useState<MusicVideoChartSort>('views');
   const musicSubIsDraggingRef = useRef(false);
@@ -437,15 +446,6 @@ export function MusicFeed({ showFilters = false, isRefreshing = false }: MusicFe
     .map((nft, index) => mapNFTToVideoItem(nft, index)), [videoChartData, blockedAddresses]);
 
 
-  const getEmptyLabel = () => {
-    switch (activeSubTab) {
-      case 'tracks': return 'tracks';
-      case 'videos': return 'music videos';
-      case 'podcasts': return 'podcasts';
-      default: return 'music content';
-    }
-  };
-
   // Drag-to-swipe for music sub-tab indicator (must be before conditional returns)
   const musicSubTabPositions = useRef<Partial<Record<MusicSubTab, HTMLElement | null>>>({});
 
@@ -499,9 +499,12 @@ export function MusicFeed({ showFilters = false, isRefreshing = false }: MusicFe
           </div>
         );
       case 'tracks':
-      case 'podcasts':
       default:
-        return <EmptyState type={getEmptyLabel()} />;
+        return (
+          <div className="pb-32">
+            <AudioChart items={audioUploads} isLoading={isLoadingAudio} sort={chartSort} onSort={setChartSort} />
+          </div>
+        );
     }
   };
 

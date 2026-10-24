@@ -1181,6 +1181,8 @@
     "dmSent": "Sent {{amount}} tokens to {{name}}!"
   },
   "postOptions": {
+    "liveAlertsOn": "Following {{name}}. You'll get a notification when they go live.",
+    "liveAlertsAlreadyOn": "You follow {{name}}, so you'll get a notification when they go live.",
     "embed": "Embed",
     "copyEmbedCode": "Copy embed code",
     "embedCodeCopied": "Embed code copied",

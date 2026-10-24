@@ -988,6 +988,8 @@
     "dmSent": "Inviati {{amount}} token a {{name}}!"
   },
   "postOptions": {
+    "liveAlertsOn": "Ora segui {{name}}. Riceverai una notifica quando andrà in diretta.",
+    "liveAlertsAlreadyOn": "Segui {{name}}, quindi riceverai una notifica quando andrà in diretta.",
     "embed": "Incorpora",
     "copyEmbedCode": "Copia codice di incorporamento",
     "embedCodeCopied": "Codice di incorporamento copiato",

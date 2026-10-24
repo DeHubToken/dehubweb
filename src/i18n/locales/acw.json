@@ -4312,6 +4312,8 @@
     "dmSent": "انرسل {{amount}} توكنز لـ {{name}}!"
   },
   "postOptions": {
+    "liveAlertsOn": "صرت تتابع {{name}}. بيوصلك إشعار لما يبث مباشر.",
+    "liveAlertsAlreadyOn": "إنت تتابع {{name}}، فبيوصلك إشعار لما يبث مباشر.",
     "aiOverview": "نظرة عامة على AI",
     "askAI": "اسأل AI",
     "giftBoost": "قدم تعزيز",

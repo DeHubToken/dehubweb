@@ -986,6 +986,8 @@
     "dmSent": "Skickade {{amount}} tokens till {{name}}!"
   },
   "postOptions": {
+    "liveAlertsOn": "Du följer nu {{name}}. Du får en avisering när de sänder live.",
+    "liveAlertsAlreadyOn": "Du följer {{name}}, så du får en avisering när de sänder live.",
     "embed": "Bädda in",
     "copyEmbedCode": "Kopiera inbäddningskod",
     "embedCodeCopied": "Inbäddningskod kopierad",

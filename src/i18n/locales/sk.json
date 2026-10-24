@@ -1018,6 +1018,8 @@
     "dmSent": "Odoslané {{amount}} tokenov používateľovi {{name}}!"
   },
   "postOptions": {
+    "liveAlertsOn": "Teraz sledujete {{name}}. Keď začne vysielať naživo, dostanete upozornenie.",
+    "liveAlertsAlreadyOn": "Sledujete {{name}}, takže keď začne vysielať naživo, dostanete upozornenie.",
     "embed": "Vložiť",
     "copyEmbedCode": "Kopírovať kód na vloženie",
     "embedCodeCopied": "Kód na vloženie skopírovaný",
