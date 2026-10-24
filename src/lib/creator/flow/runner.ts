@@ -170,6 +170,8 @@ export async function planRun(nodeIds: string[]): Promise<RunPlan> {
         kind: 'video',
         modelId: model,
         durationSeconds: duration,
+        resolution: (n.data.resolution as string) || '720p',
+        aspectRatio: (n.data.aspectRatio as string) || '16:9',
         quality: cfg?.supportsResolution ? priceQualityFor(n.data.resolution as string | undefined) : undefined,
       });
       items.push({ nodeId: n.id, label: n.data.label, kind: 'video', model, modelName: cfg?.name ?? model, priceDhb });

@@ -4,6 +4,7 @@ import { translateCopy as _translateCopy } from '@/i18n/copy';
  */
 
 import { CREATOR_FAL_IMAGE_MODELS } from '../../supabase/functions/_shared/creator-fal-catalog';
+import { VENICE_IMAGE_MODELS, isVeniceImage } from '../../supabase/functions/_shared/venice-catalog';
 
 export interface ImageModel {
   id: string;
@@ -49,6 +50,7 @@ export const IMAGE_MARKUP_OVERRIDES: Record<string, number> = {
  * Calculate the final cost in USD with markup
  */
 export const getImageCostUsd = (model: ImageModel): number => {
+  if (isVeniceImage(model.id)) return model.baseCostUsd;
   const markup = IMAGE_MARKUP_OVERRIDES[model.id] ?? IMAGE_GENERATION_MARKUP;
   return model.baseCostUsd * (1 + markup);
 };
@@ -63,6 +65,10 @@ export const getImageCostDhb = (model: ImageModel, dhbPriceUsd: number): number 
 };
 
 export const IMAGE_MODELS: Record<string, ImageModel> = {
+  ...Object.fromEntries(Object.entries(VENICE_IMAGE_MODELS).map(([id, model]) => [id, {
+    id, name: model.name, description: 'Venice provider cost · zero DeHub markup',
+    emoji: '◈', tier: 'fast' as const, baseCostUsd: model.baseCostUsd, supportsEdit: false,
+  }])),
   ...CREATOR_FAL_IMAGE_MODELS,
   'gemini-2.5-flash': {
     id: 'gemini-2.5-flash',
