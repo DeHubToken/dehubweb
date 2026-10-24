@@ -101,7 +101,7 @@ function ConversationItem({
     (otherUser?.address ? `${otherUser.address.slice(0, 6)}...${otherUser.address.slice(-4)}` : 'User');
   const lastMessagePreview = conversation.lastMessage?.undecryptable
     ? `🔒 ${t('messages.cannotDecrypt')}`
-    : conversation.lastMessage?.content || 'No messages yet';
+    : conversation.lastMessage?.content || _copy("copy.f42e0f66017d", { defaultValue: "No messages yet" });
   const lastMessageTime = conversation.lastMessage?.createdAt 
     ? formatDistanceToNow(new Date(conversation.lastMessage.createdAt), { addSuffix: false })
     : '';

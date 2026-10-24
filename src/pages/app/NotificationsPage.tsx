@@ -1081,11 +1081,15 @@ const NotificationItem = memo(function NotificationItem({
       if (action === 'accept') {
         await approveFollowRequest(requestId);
         setFollowRequestAction('accepted');
-        toast.success(`Accepted ${notification.actorUsername || 'user'}'s follow request`);
+        toast.success(notification.actorUsername
+          ? _copy("copy.d39dc495bc2f", { defaultValue: "Accepted {{value1}}'s follow request", value1: notification.actorUsername })
+          : _copy("copy.6ef938c24115", { defaultValue: "Follow request accepted" }));
       } else {
         await rejectFollowRequest(requestId);
         setFollowRequestAction('rejected');
-        toast.success(`Rejected ${notification.actorUsername || 'user'}'s follow request`);
+        toast.success(notification.actorUsername
+          ? _copy("copy.002d8f205c6a", { defaultValue: "Rejected {{value1}}'s follow request", value1: notification.actorUsername })
+          : _copy("copy.962b110538f3", { defaultValue: "Follow request rejected" }));
       }
       // Mark as read
       if (!notification.read) {
@@ -1098,7 +1102,7 @@ const NotificationItem = memo(function NotificationItem({
         setFollowRequestAction(action === 'accept' ? 'accepted' : 'rejected');
         toast.info(_copy("copy.2a14c0b8505d", { defaultValue: "Request already handled" }));
       } else {
-        toast.error(`Failed to ${action} follow request`);
+        toast.error(action === 'accept' ? _copy("copy.9a891fda4604", { defaultValue: "Failed to accept follow request" }) : _copy("copy.a6485001fd03", { defaultValue: "Failed to reject follow request" }));
       }
     } finally {
       setFollowRequestLoading(null);

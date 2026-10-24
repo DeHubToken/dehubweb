@@ -1,3 +1,4 @@
+import { translateCopy as _translateCopy } from '@/i18n/copy';
 /**
  * Related Posts Feed Component
  * ============================
@@ -45,7 +46,7 @@ function adToVideoItem(nft: any): VideoItem {
     duration: formatDuration(durationSeconds),
     durationSeconds: typeof durationSeconds === 'number' ? durationSeconds : 0,
     title: nft.title || nft.name || '',
-    channel: nft.minterDisplayName || nft.mintername || 'Unknown',
+    channel: nft.minterDisplayName || nft.mintername || _translateCopy("copy.b764cdc0eab7", { defaultValue: "Unknown" }),
     channelAvatar: buildAvatarUrl(nft.minter, extractAvatarPath(nft)) || '/placeholder.svg',
     verified: false,
     views: formatViews(resolveViewCount(nft)),

@@ -146,7 +146,7 @@ export default function BookmarksPage() {
               <IslandAction
                 label={_copy("copy.496121494e4a", { defaultValue: "Clear history" })}
                 onClick={() => {
-                  if (confirm('Clear all watch history?')) clearHistory.mutate();
+                  if (confirm(_copy("copy.7312b2b203d9", { defaultValue: "Clear all watch history?" }))) clearHistory.mutate();
                 }}
                 disabled={clearHistory.isPending}
               >

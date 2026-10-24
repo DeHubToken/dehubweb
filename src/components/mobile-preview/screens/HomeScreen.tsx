@@ -14,13 +14,18 @@ import Share from "@/components/ui/cut-icons/share";
 
 
 const mockPosts = (t: TFunction) => [
-  { id: '1', user: 'alice.eth', content: 'Just minted my first NFT collection on Base 🎨 The creative freedom in web3 is unmatched.', likes: 42, comments: 8, reposts: 3, time: '2m' },
-  { id: '2', user: 'bob_dev', content: 'New governance proposal is live — vote on treasury allocation for Q2 developer grants. Let\'s build together! 🏗️', likes: 128, comments: 24, reposts: 15, time: '15m', hasImage: true },
-  { id: '3', user: 'crypto_sarah', content: 'The leaderboard competition is heating up 🔥 Currently sitting at #3 — who\'s coming for the top spot?', likes: 67, comments: 12, reposts: 5, time: '1h' },
+  { id: '1', user: 'alice.eth', content: t("copy.856638383b55", { defaultValue: "Just minted my first NFT collection on Base 🎨 The creative freedom in web3 is unmatched." }), likes: 42, comments: 8, reposts: 3, time: '2m' },
+  { id: '2', user: 'bob_dev', content: t("copy.fc4b39480874", { defaultValue: "New governance proposal is live — vote on treasury allocation for Q2 developer grants. Let's build together! 🏗️" }), likes: 128, comments: 24, reposts: 15, time: '15m', hasImage: true },
+  { id: '3', user: 'crypto_sarah', content: t("copy.0e8c7960f98e", { defaultValue: "The leaderboard competition is heating up 🔥 Currently sitting at #3 — who's coming for the top spot?" }), likes: 67, comments: 12, reposts: 5, time: '1h' },
   { id: '4', user: 'defi_whale', content: t('mobilePreview.home.stakedPost'), likes: 203, comments: 31, reposts: 22, time: '3h', hasImage: true },
 ];
 
-const TABS = ['For You', 'Following', 'Videos', 'Images'];
+const TABS = (t: TFunction) => [
+  t("copy.565d8d7337ed", { defaultValue: "For You" }),
+  t("copy.344b4271ca01", { defaultValue: "Following" }),
+  t("copy.c9a9639463c2", { defaultValue: "Videos" }),
+  t("copy.be7e2f201293", { defaultValue: "Images" }),
+];
 
 export function HomeScreen() {
   const { t } = useTranslation();
@@ -31,7 +36,7 @@ export function HomeScreen() {
 
       {/* Feed tabs */}
       <div className="flex gap-1 px-4 pb-2">
-        {TABS.map((tab, i) => (
+        {TABS(t).map((tab, i) => (
           <button
             key={tab}
             className={`px-3 py-1.5 rounded-lg text-xs font-medium transition-all ${

@@ -1,4 +1,5 @@
 import { apiCall } from './core';
+import { translateCopy as _translateCopy } from '@/i18n/copy';
 
 /**
  * Subscription tokens: a dollar balance held by DeHub, shown as tokens at
@@ -40,7 +41,7 @@ export async function getSubscriptionCreditTopUpTarget(
     { requiresAuth: true },
   );
   if (!response?.topUp?.dhbToken || !response.topUp.treasuryAddress) {
-    throw new Error('Top-ups are not available right now. Try again shortly.');
+    throw new Error(_translateCopy("copy.3e8ec7933cc7", { defaultValue: "Top-ups are not available right now. Try again shortly." }));
   }
   return response.topUp;
 }

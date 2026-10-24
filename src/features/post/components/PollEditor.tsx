@@ -1,3 +1,4 @@
+import { translateCopy as _translateCopy } from '@/i18n/copy';
 import { useTranslation as _useCopy } from 'react-i18next';
 import Check from "@/components/ui/cut-icons/check";
 
@@ -14,9 +15,9 @@ interface PollEditorProps {
 }
 
 const DURATION_OPTIONS = [
-  { label: '1 day', value: 24 },
-  { label: '3 days', value: 72 },
-  { label: '7 days', value: 168 },
+  { get label() { return _translateCopy("copy.ca4c4a68ebc9", { defaultValue: "{{count}} days", count: 1 }); }, value: 24 },
+  { get label() { return _translateCopy("copy.ca4c4a68ebc9", { defaultValue: "{{count}} days", count: 3 }); }, value: 72 },
+  { get label() { return _translateCopy("copy.ca4c4a68ebc9", { defaultValue: "{{count}} days", count: 7 }); }, value: 168 },
 ];
 
 export function PollEditor({ poll, onChange, onRemove }: PollEditorProps) {

@@ -1,4 +1,5 @@
 import { useTranslation as _useCopy } from 'react-i18next';
+import { translateCopy as _translateCopy } from '@/i18n/copy';
 import { useSurfaceDraft } from '@/hooks/use-surface-draft';
 /**
  * Bookmark Folders Panel
@@ -48,9 +49,9 @@ import { AppState } from '@/components/app/AppState';
 type FolderSort = 'newest' | 'oldest' | 'channel';
 
 const SORT_LABELS: Record<FolderSort, string> = {
-  newest: 'Newest saved',
-  oldest: 'Oldest saved',
-  channel: 'By channel',
+  get newest() { return _translateCopy("copy.562b7ab54780", { defaultValue: "Newest saved" }); },
+  get oldest() { return _translateCopy("copy.0d840153ae44", { defaultValue: "Oldest saved" }); },
+  get channel() { return _translateCopy("copy.51708f08f32f", { defaultValue: "By channel" }); },
 };
 
 /** One page of 100 covers any folder a person actually curates by hand. */
@@ -58,7 +59,7 @@ const ITEMS_LIMIT = 100;
 
 function itemChannel(item: BookmarkFolderItem): string {
   const post = item.post as (BookmarkFolderItem['post'] & { minterDisplayName?: string; minterUsername?: string }) | undefined;
-  return post?.minterDisplayName || post?.minterUsername || post?.minter || 'Unknown';
+  return post?.minterDisplayName || post?.minterUsername || post?.minter || _translateCopy("copy.b764cdc0eab7", { defaultValue: "Unknown" });
 }
 
 function itemThumbnail(item: BookmarkFolderItem): string | undefined {
@@ -217,7 +218,7 @@ export function BookmarkFoldersPanel() {
       // One at a time: the API removes by token, and a partial failure should
       // still leave the successful removals applied.
       await Promise.all(Array.from(selected).map(tokenId => removeItemFromFolder(openFolderId, tokenId)));
-      toast.success(selected.size === 1 ? 'Removed from folder' : `${selected.size} removed`);
+      toast.success(selected.size === 1 ? _copy("copy.740df387db52", { defaultValue: "Removed from folder" }) : _copy("copy.7238bf26833c", { count: selected.size, defaultValue: "{{count}} removed" }));
       setSelected(new Set());
       refreshFolders();
     } catch {
@@ -237,7 +238,7 @@ export function BookmarkFoldersPanel() {
       await addItemsToFolderBulk(targetFolderId, tokenIds);
       await Promise.all(tokenIds.map(tokenId => removeItemFromFolder(openFolderId, tokenId)));
       const target = folders.find(f => f._id === targetFolderId);
-      toast.success(`Moved to ${target?.name ?? 'folder'}`);
+      toast.success(_copy("copy.ead2df37acec", { defaultValue: "Moved to {{value1}}", value1: target?.name ?? _copy("copy.034a00624882", { defaultValue: "folder" }) }));
       setSelected(new Set());
       refreshFolders();
     } catch {
@@ -362,7 +363,7 @@ export function BookmarkFoldersPanel() {
                     </button>
                     <button
                       onClick={() => {
-                        if (!confirm(`Delete "${folder.name}"? The posts stay saved.`)) return;
+                        if (!confirm(_copy("copy.ee50e58f6326", { defaultValue: "Delete \"{{value1}}\"? The posts stay saved.", value1: folder.name }))) return;
                         deleteFolder(folder._id);
                       }}
                       className="p-2 rounded-lg text-zinc-400 hover:text-red-400 hover:bg-red-500/10"
@@ -426,7 +427,7 @@ export function BookmarkFoldersPanel() {
           {sortedItems.map((item) => {
             const isSelected = selected.has(Number(item.tokenId));
             const thumbnail = itemThumbnail(item);
-            const title = item.post?.name || item.post?.description?.split('\n')[0] || `Post #${item.tokenId}`;
+            const title = item.post?.name || item.post?.description?.split('\n')[0] || _copy("copy.a17c49cfedad", { defaultValue: "Post #{{value1}}", value1: item.tokenId });
             return (
               <div
                 key={item._id}

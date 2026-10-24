@@ -1,6 +1,7 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/contexts/AuthContext';
+import { translateCopy as _translateCopy } from '@/i18n/copy';
 
 export interface UserCharacter {
   id: string;
@@ -54,7 +55,7 @@ export function useCreateCharacter() {
   const qc = useQueryClient();
   return useMutation({
     mutationFn: async (input: NewCharacterInput): Promise<UserCharacter> => {
-      if (!walletAddress) throw new Error('Connect your wallet to create characters.');
+      if (!walletAddress) throw new Error(_translateCopy("copy.a833fbf7c2c4", { defaultValue: "Connect your wallet to create characters." }));
       const wallet = walletAddress.toLowerCase();
       const baseSlug = input.slug ? slugifyCharacter(input.slug) : slugifyCharacter(input.name);
       let slug = baseSlug;
@@ -96,7 +97,7 @@ export function useUpdateCharacter() {
   const qc = useQueryClient();
   return useMutation({
     mutationFn: async ({ id, patch }: { id: string; patch: Partial<NewCharacterInput> }) => {
-      if (!walletAddress) throw new Error('Not authenticated');
+      if (!walletAddress) throw new Error(_translateCopy("copy.76d1efbeed2d", { defaultValue: "Not authenticated" }));
       const wallet = walletAddress.toLowerCase();
       const { error } = await supabase
         .from('user_characters')
@@ -114,7 +115,7 @@ export function useDeleteCharacter() {
   const qc = useQueryClient();
   return useMutation({
     mutationFn: async (id: string) => {
-      if (!walletAddress) throw new Error('Not authenticated');
+      if (!walletAddress) throw new Error(_translateCopy("copy.76d1efbeed2d", { defaultValue: "Not authenticated" }));
       const wallet = walletAddress.toLowerCase();
       const { error } = await supabase
         .from('user_characters')

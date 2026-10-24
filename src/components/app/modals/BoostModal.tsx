@@ -139,12 +139,12 @@ export function BoostModal({ open, onOpenChange, tokenId, postTitle }: BoostModa
           if (isNotification) {
             const label = chosen === 'harpoon' ? 'Harpoon' : 'Signal Flare';
             toast.promise(waitForSignalFlareReceipt(booking.id), {
-              loading: `${label} sent. Counting notifications...`,
+              loading: _copy("copy.6310c4498df1", { defaultValue: "{{value1}} sent. Counting notifications...", value1: label }),
               success: recipients =>
                 recipients === null
-                  ? `${label} sent. The final count will appear in Past usage.`
-                  : `${label} notified ${recipients} ${recipients === 1 ? 'person' : 'people'}`,
-              error: `${label} sent. The final count will appear in Past usage.`,
+                  ? _copy("copy.f56abda33b4f", { defaultValue: "{{value1}} sent. The final count will appear in Past usage.", value1: label })
+                  : _copy("copy.465e9ba799d1", { defaultValue: "{{value1}} notified {{count}} people", value1: label, count: recipients }),
+              error: _copy("copy.f56abda33b4f", { defaultValue: "{{value1}} sent. The final count will appear in Past usage.", value1: label }),
             });
           } else {
             toast.success(

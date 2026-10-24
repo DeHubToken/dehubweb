@@ -8,6 +8,7 @@
  */
 
 import { useCallback } from 'react';
+import { useTranslation as _useCopy } from 'react-i18next';
 import { useStage } from '@/contexts/StageContext';
 import { SoundboardPanel } from '@/components/app/shared/SoundboardPanel';
 
@@ -17,6 +18,7 @@ interface StageSoundboardProps {
 }
 
 export function StageSoundboard({ isVisible, onClose }: StageSoundboardProps) {
+  const { t: _copy } = _useCopy();
   const { injectAudio, stopInject } = useStage();
 
   const playClip = useCallback(
@@ -38,7 +40,7 @@ export function StageSoundboard({ isVisible, onClose }: StageSoundboardProps) {
       onClose={onClose}
       playClip={playClip}
       stopClip={stopInject}
-      errorMessage="Could not play on stage — stay connected as host"
+      errorMessage={_copy("copy.3c415b527ee7", { defaultValue: "Could not play on stage — stay connected as host" })}
     />
   );
 }

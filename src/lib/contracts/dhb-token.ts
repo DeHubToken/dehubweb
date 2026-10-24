@@ -14,6 +14,7 @@ import {
   DHB_ROBINHOOD_PENDING_BRIDGE_ADDRESS,
 } from '@/lib/chains/robinhood';
 import { ARC_CHAIN_ID, ARC_EXPLORER_URL, ARC_PUBLIC_RPC } from '@/lib/chains/arc';
+import { translateCopy as _translateCopy } from '@/i18n/copy';
 
 // Chain IDs
 export const BASE_CHAIN_ID = 8453;
@@ -136,7 +137,7 @@ export async function initChainRpcUrls(): Promise<void> {
 export function getChainConfig(chainId: ChainId): ChainConfig {
   const config = CHAIN_CONFIGS[chainId];
   if (!config) {
-    throw new Error(`Unsupported chain ID: ${chainId}`);
+    throw new Error(_translateCopy("copy.661614a5eda4", { defaultValue: "Unsupported chain ID: {{value1}}", value1: chainId }));
   }
   return config;
 }

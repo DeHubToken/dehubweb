@@ -22,7 +22,7 @@ import Link2 from "@/components/ui/cut-icons/link";
 
 import { resolveNewPost } from '@/lib/api/dehub';
 import type { DehubLinkMatch } from '@/lib/dehub-links';
-import { dehubLinkLabel, MAX_EMBEDS_PER_MESSAGE } from '@/lib/dehub-links';
+import { MAX_EMBEDS_PER_MESSAGE } from '@/lib/dehub-links';
 import { CommunityLinkEmbed } from '@/components/app/communities/CommunityLinkEmbed';
 import { CommunityInviteEmbed } from '@/components/app/communities/CommunityInviteEmbed';
 import { StoreLinkEmbed } from '@/components/app/stores/StoreLinkEmbed';
@@ -62,6 +62,22 @@ const BountyLinkEmbed = lazy(() =>
 export function DehubLinkFallback({ link }: { link: DehubLinkMatch }) {
   const { t: _copy } = _useCopy();
   const navigate = useNavigate();
+  const viewLabel = (() => {
+    switch (link.kind) {
+      case 'post': return _copy("copy.fe9715bcd31d", { defaultValue: "View post" });
+      case 'profile': return _copy("copy.d4788f256f73", { defaultValue: "View profile" });
+      case 'community': return _copy("copy.1b46d5d1250d", { defaultValue: "View community" });
+      case 'communityInvite': return _copy("copy.d9a48368402a", { defaultValue: "View community invite" });
+      case 'store': return _copy("copy.8ebcf526fab5", { defaultValue: "View store" });
+      case 'listing': return _copy("copy.89e22d40460e", { defaultValue: "View item" });
+      case 'event': return _copy("copy.691f700a56d1", { defaultValue: "View event" });
+      case 'stage': return _copy("copy.2074fadab822", { defaultValue: "View stage" });
+      case 'film': return _copy("copy.c9916d206fc0", { defaultValue: "View title" });
+      case 'bounty': return _copy("copy.132977c8bc76", { defaultValue: "View bounty" });
+      case 'app': return _copy("copy.34d0f5c1452f", { defaultValue: "View app" });
+      case 'proposal': return _copy("copy.fb66e1c96ee1", { defaultValue: "View proposal" });
+    }
+  })();
 
   return (
     <button
@@ -77,9 +93,8 @@ export function DehubLinkFallback({ link }: { link: DehubLinkMatch }) {
         <Link2 className="w-4 h-4 text-zinc-500" />
       </div>
       <div className="min-w-0">
-        <p className="text-sm font-medium text-white truncate">{_copy("copy.9a92a27a2688", { defaultValue: "View " })}{dehubLinkLabel(link.kind)}
-        </p>
-        <p className="text-xs text-zinc-500 truncate">{_copy("copy.ca7842e53ac8", { defaultValue: "dehub.io" })}{link.path}</p>
+        <p className="text-sm font-medium text-white truncate">{viewLabel}</p>
+        <p className="text-xs text-zinc-500 truncate">dehub.io{link.path}</p>
       </div>
     </button>
   );

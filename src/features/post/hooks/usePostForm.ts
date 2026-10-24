@@ -5,6 +5,7 @@ import { useAccountDraftKey } from '@/hooks/use-draft-state';
 import { readCurrentDraft, readDraft, writeDraft, clearDraft, flushDrafts } from '@/lib/draft-cache';
 import { useState, useRef, useCallback, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
+import i18next from 'i18next';
 import { useNavigate } from 'react-router-dom';
 import { supabase } from '@/integrations/supabase/client';
 import type { Json } from '@/integrations/supabase/types';
@@ -80,8 +81,8 @@ function formatFeeAmount(amount: number): string {
   return amount.toFixed(8).replace(/\.?0+$/, '');
 }
 
-const TIER_VISIBILITY_MESSAGE =
-  'Climb tiers to increase your visibility and get more feeds on the post per day';
+/** A failure message this file has already put into the reader's language. */
+class PostCopyError extends Error {}
 
 interface ActiveDraft {
   text: string;
@@ -699,7 +700,7 @@ export function usePostForm(
     const availableSlots = imageLimit - currentImageCount;
     
     if (availableSlots <= 0) {
-      toast.error(`Maximum ${imageLimit} images allowed for your badge tier`);
+      toast.error(_copy("copy.06ff3b9cf286", { defaultValue: "Maximum {{value1}} images allowed for your badge tier", value1: imageLimit }));
       return;
     }
 
@@ -762,7 +763,7 @@ export function usePostForm(
     if (file.size > mediaUploadLimit) {
       // Without this an oversized video uploaded for up to 8 minutes and died
       // at the XHR timeout with a generic failure.
-      toast.error(`Video is too large — your ${postQuota?.tier || 'base'} tier allows ${mediaUploadLimitLabel}`);
+      toast.error(_copy("copy.8be9a68e0703", { defaultValue: "Video is too large — your {{value1}} tier allows {{value2}}", value1: postQuota?.tier || 'base', value2: mediaUploadLimitLabel }));
       return;
     }
 
@@ -886,7 +887,7 @@ export function usePostForm(
 
   const processAudioFile = useCallback((file: File) => {
     if (file.size > mediaUploadLimit) {
-      toast.error(`Audio is too large — your ${postQuota?.tier || 'base'} tier allows ${mediaUploadLimitLabel}`);
+      toast.error(_copy("copy.7de82e4f914f", { defaultValue: "Audio is too large — your {{value1}} tier allows {{value2}}", value1: postQuota?.tier || 'base', value2: mediaUploadLimitLabel }));
       return;
     }
     const url = URL.createObjectURL(file);
@@ -1052,7 +1053,7 @@ export function usePostForm(
       return;
     }
     if (file.size > MEDIA_LIMITS.MAX_FILE_SIZE) {
-      toast.error(`${file.name} is too large — images are capped at ${Math.round(MEDIA_LIMITS.MAX_FILE_SIZE / (1024 * 1024))}MB`);
+      toast.error(_copy("copy.4482222e374c", { defaultValue: "{{value1}} is too large — images are capped at {{value2}}MB", value1: file.name, value2: Math.round(MEDIA_LIMITS.MAX_FILE_SIZE / (1024 * 1024)) }));
       return;
     }
     setMedia(prev => prev.map((m, i) => {
@@ -1096,7 +1097,7 @@ export function usePostForm(
 
       if (error) {
         console.error('Enhancement error:', error);
-        toast.error(error.message || 'Failed to process text');
+        toast.error(_copy("copy.b14f4609b8d3", { defaultValue: "Failed to process text" }));
         return;
       }
 
@@ -1106,7 +1107,7 @@ export function usePostForm(
         if (editorRef.current) {
           editorRef.current.innerText = data.enhancedText;
         }
-        toast.success(mode === 'spellcheck' ? 'Spell checked!' : 'Style applied!');
+        toast.success(mode === 'spellcheck' ? _copy("copy.7d61d28cb660", { defaultValue: "Spell checked!" }) : _copy("copy.e116b32c9c80", { defaultValue: "Style applied!" }));
       } else if (data?.error) {
         toast.error(data.error);
       }
@@ -1647,7 +1648,7 @@ export function usePostForm(
         const balanceNum = Number(balance) / 1e18;
 
         if (balanceNum < totalBounty) {
-          toast.error(dhbText(`Insufficient DHB balance. Need ${totalBounty} DHB but have ${balanceNum.toFixed(2)} DHB`));
+          toast.error(dhbText(_copy("copy.ba0ad677202d", { defaultValue: "Insufficient DHB balance. Need {{value1}} DHB but have {{value2}} DHB", value1: totalBounty, value2: balanceNum.toFixed(2) })));
           setIsPosting(false);
           return;
         }
@@ -1745,7 +1746,7 @@ export function usePostForm(
       // Step 1: Call the mint API to get signature
       // Dismiss any existing toast to avoid overlap
       toast.dismiss('mint-progress');
-      toast.loading('Uploading content', { id: 'mint-progress', duration: Infinity });
+      toast.loading(_copy("copy.daf0d93824fa", { defaultValue: "Uploading content" }), { id: 'mint-progress', duration: Infinity });
       setUploadProgress(5);
       
       // Determine title and description based on post type
@@ -1851,7 +1852,7 @@ export function usePostForm(
                 // A bounty post must mint — downgrading here would publish a
                 // post advertising a bounty with no tokens locked behind it.
                 toast.error(
-                  `Insufficient ${feeForMint.symbol} for the mint fee — top up to publish this bounty post.`,
+                  _copy("copy.a9b0f4f416f0", { defaultValue: "Insufficient {{value1}} for the mint fee — top up to publish this bounty post.", value1: feeForMint.symbol }),
                   { id: 'mint-progress' },
                 );
                 setIsPosting(false);
@@ -1896,17 +1897,17 @@ export function usePostForm(
         };
 
         if (held < owed) {
-          toast.info(TIER_VISIBILITY_MESSAGE, {
+          toast.info(_copy("copy.d26789df47bf", { defaultValue: "Climb tiers to increase your visibility and get more feeds on the post per day" }), {
             ...tierToast,
             description: dhbText(
-              `This post costs ${owed.toLocaleString()} DHB and you hold ${Math.floor(held).toLocaleString()}.`,
+              _copy("copy.81ded5297863", { defaultValue: "This post costs {{value1}} DHB and you hold {{value2}}.", value1: owed.toLocaleString(), value2: Math.floor(held).toLocaleString() }),
             ),
           });
           setIsPosting(false);
           setUploadProgress(0);
           return;
         }
-        toast.info(TIER_VISIBILITY_MESSAGE, tierToast);
+        toast.info(_copy("copy.d26789df47bf", { defaultValue: "Climb tiers to increase your visibility and get more feeds on the post per day" }), tierToast);
       }
 
       /**
@@ -2068,8 +2069,8 @@ export function usePostForm(
             if (failed > 0) {
               toast.error(
                 failed === shopListingIds.length
-                  ? 'Your post is up, but its shop items could not be attached. Add them from Edit post.'
-                  : `Your post is up. ${failed} shop ${failed === 1 ? 'item' : 'items'} could not be attached — add them from Edit post.`,
+                  ? _copy("copy.d163cccd48f0", { defaultValue: "Your post is up, but its shop items could not be attached. Add them from Edit post." })
+                  : _copy("copy.17027391d32d", { defaultValue: "Your post is up. {{count}} shop items could not be attached — add them from Edit post.", count: failed }),
               );
             }
           });
@@ -2111,10 +2112,10 @@ export function usePostForm(
       const isSolanaMint = !!(mintResponse.isSolana && mintResponse.transaction && mintResponse.mintAddress);
 
       if (uploadOnSolana && !isSolanaMint && !alreadyOnChain) {
-        throw new Error(
+        throw new PostCopyError(
           mintResponse.isSolana
-            ? 'Solana mint data incomplete from server. Please try again.'
-            : 'Solana minting is not enabled on the server. Contact support or try an EVM chain.',
+            ? _copy("copy.84b7e19c6085", { defaultValue: "Solana mint data incomplete from server. Please try again." })
+            : _copy("copy.4a840d259f17", { defaultValue: "Solana minting is not enabled on the server. Contact support or try an EVM chain." }),
         );
       }
 
@@ -2133,7 +2134,7 @@ export function usePostForm(
       // for it would be a lie.
       if (mintResponse.scheduled) {
         const when = mintResponse.scheduledAt ? new Date(mintResponse.scheduledAt) : scheduledDate;
-        toast.success(`Post scheduled for ${when ? when.toLocaleString() : 'later'}`, { id: 'mint-progress' });
+        toast.success(when ? _copy("copy.ef58a8022edc", { defaultValue: "Post scheduled for {{value1}}", value1: when.toLocaleString() }) : _copy("copy.0ae4cb6e00b3", { defaultValue: "Post scheduled for later" }), { id: 'mint-progress' });
         resetForm();
         onClose();
         return;
@@ -2154,7 +2155,7 @@ export function usePostForm(
 
       if (mintingThisPost) {
         setUploadProgress(65);
-        toast.loading('Publishing post', { id: 'mint-progress', duration: Infinity });
+        toast.loading(_copy("copy.678f5f6b6dfd", { defaultValue: "Publishing post" }), { id: 'mint-progress', duration: Infinity });
 
         // Slowly creep progress from 69→99% while waiting for chain confirmation
         // Faster initially, then decelerates as it approaches 99%
@@ -2203,7 +2204,7 @@ export function usePostForm(
         // timers above instead of awaited with no way to stop.
         const signMint = (async (): Promise<{ hash: string; confirmed?: Promise<string> }> => {
           if (isSolanaMint) {
-            toast.loading('Waiting for Phantom', { id: 'mint-progress', duration: Infinity });
+            toast.loading(_copy("copy.25ea9ade0b10", { defaultValue: "Waiting for Phantom" }), { id: 'mint-progress', duration: Infinity });
             const solResult = await broadcastSolanaMint({
               transactionBase64: mintResponse.transaction!,
               mintAddress: mintResponse.mintAddress!,
@@ -2218,7 +2219,7 @@ export function usePostForm(
           }
 
           if (hasBounty) {
-            toast.loading('Approving tokens', { id: 'mint-progress', duration: Infinity });
+            toast.loading(_copy("copy.8088b64eba1a", { defaultValue: "Approving tokens" }), { id: 'mint-progress', duration: Infinity });
 
             return {
               hash: await mintWithBounty({
@@ -2352,7 +2353,7 @@ export function usePostForm(
           try {
             const { payDhb } = await import('@/lib/dhb-payment');
             const { settleWithRetry } = await import('@/lib/post-quota-settle');
-            toast.loading(dhbText(`Paying ${owed.toLocaleString()} DHB`), {
+            toast.loading(dhbText(_copy("copy.468f8a27a4c1", { defaultValue: "Paying {{value1}} DHB", value1: owed.toLocaleString() })), {
               id: 'post-quota-pay',
               duration: Infinity,
             });
@@ -2364,7 +2365,7 @@ export function usePostForm(
             });
             const settled = await settleWithRetry(payment.txHash, payment.chainId);
             if (settled) {
-              toast.success(dhbText(`Paid ${owed.toLocaleString()} DHB for this post`), {
+              toast.success(dhbText(_copy("copy.056be4d72f24", { defaultValue: "Paid {{value1}} DHB for this post", value1: owed.toLocaleString() })), {
                 id: 'post-quota-pay',
                 duration: 6000,
               });
@@ -2401,7 +2402,7 @@ export function usePostForm(
       // here needs acknowledging.
       if (shortfall) {
         toast.info(_copy("copy.c94920b1b46e", { defaultValue: "Posted — but not minted" }), {
-          description: `Minting costs ${formatFeeAmount(shortfall.amount)} ${shortfall.symbol} and your balance is short. Top up and you can mint it from the post's menu any time.`,
+          description: _copy("copy.183a6f2db673", { defaultValue: "Minting costs {{value1}} {{value2}} and your balance is short. Top up and you can mint it from the post's menu any time.", value1: formatFeeAmount(shortfall.amount), value2: shortfall.symbol }),
           action: { label: t('postComposer.getTokens'), onClick: () => navigate('/app/buy') },
           duration: 12000,
         });
@@ -2409,7 +2410,7 @@ export function usePostForm(
 
       if (liveMode === 'video' && scheduledDate) {
         if (!mintResponse.stream?._id) throw new Error('Stream entity missing from mint response');
-        toast.success(`Livestream scheduled for ${scheduledDate.toLocaleString()}`, { id: 'mint-progress' });
+        toast.success(_copy("copy.d5ddf917d361", { defaultValue: "Livestream scheduled for {{value1}}", value1: scheduledDate.toLocaleString() }), { id: 'mint-progress' });
         resetForm();
         onClose();
         navigate('/app');
@@ -2438,7 +2439,7 @@ export function usePostForm(
           channelAvatar: avatar || '', // Must be string for VideoItem type
           verified: false,
           views: '0',
-          uploadedAgo: 'Just now',
+          uploadedAgo: _copy("copy.66f53417d3b7", { defaultValue: "Just now" }),
           creatorId: user?.address,
           creatorUsername: username,
           creatorBadgeBalance: user?.badgeBalance,
@@ -2475,7 +2476,7 @@ export function usePostForm(
           caption: text.trim(),
           comments: 0,
           views: '0',
-          timeAgo: 'Just now',
+          timeAgo: _copy("copy.66f53417d3b7", { defaultValue: "Just now" }),
           creatorId: user?.address,
           creatorUsername: username,
           creatorBadgeBalance: user?.badgeBalance,
@@ -2637,7 +2638,7 @@ export function usePostForm(
         // The allowance turned this post down. The server writes this sentence
         // for the creator, so it is shown verbatim — and the only useful next
         // step is DHB, not "try again".
-        toast.error(dhbText("You've used today's free posting allowance"), {
+        toast.error(dhbText(_copy("copy.822a61fab463", { defaultValue: "You've used today's free posting allowance" })), {
           description: dhbText(error.message),
           action: { label: t('postComposer.getTokens'), onClick: () => navigate('/app/buy') },
           duration: 12000,
@@ -2655,9 +2656,9 @@ export function usePostForm(
         // is the branch people reported retyping their post after.
         const gasName = chainId === 56 ? 'BNB' : 'ETH';
         const chainName = chainId === 56 ? 'BNB' : chainId === 1 ? 'Ethereum' : 'Base';
-        toast.error(`Not enough ${gasName} for gas on ${chainName}`, {
-          description: `Your draft is still here — top up and press Post again.`,
-          action: { label: `Get ${gasName}`, onClick: () => navigate('/app/buy') },
+        toast.error(_copy("copy.ee980688bc72", { defaultValue: "Not enough {{value1}} for gas on {{value2}}", value1: gasName, value2: chainName }), {
+          description: _copy("copy.dc326b074aa2", { defaultValue: "Your draft is still here — top up and press Post again." }),
+          action: { label: _copy("copy.e09a7a558dd5", { defaultValue: "Get {{value1}}", value1: gasName }), onClick: () => navigate('/app/buy') },
           duration: 12000,
         });
       } else if (isWalletLocked) {
@@ -2689,7 +2690,7 @@ export function usePostForm(
         // The session died while the user was composing. Recover it in place:
         // showing "Post failed: …" here is what forced people to sign out and
         // back in just to publish, and it discards the draft in the process.
-        const toastId = toast.loading('Session expired — restoring…');
+        const toastId = toast.loading(_copy("copy.8430e6a7cb5c", { defaultValue: "Session expired — restoring…" }));
         const recovered = await refreshSession(true);
         toast.dismiss(toastId);
 
@@ -2706,7 +2707,13 @@ export function usePostForm(
           });
         }
       } else {
-        toast.error(`Post failed: ${errorMsg}`);
+        // Server, wallet and SDK messages are English; other readers get the
+        // translated sentence rather than a reason they cannot read.
+        const language = i18next.resolvedLanguage || i18next.language || 'en';
+        const readsEnglish = language === 'en' || language.startsWith('en-');
+        toast.error(error instanceof PostCopyError || readsEnglish
+          ? _copy("copy.209e2e6fd656", { defaultValue: "Post failed: {{value1}}", value1: errorMsg })
+          : _copy("copy.06bcf36e88e7", { defaultValue: "Post failed. Please try again." }));
       }
     } finally {
       setIsPosting(false);

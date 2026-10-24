@@ -113,11 +113,13 @@ export const AUDIO_TASKS: Record<AudioTask, AudioTaskSpec> = {
     paid: false,
     baseCostUsd: 0,
     typicalDuration: '2-10s',
-    tips: [
-      '🎭 v3 reads performance tags inline — [whispers], [laughs], [sighs]',
-      '🎚️ Lower stability is more expressive; higher is more consistent take to take',
-      '🌍 Leave the language on Auto unless a name is being read in the wrong accent',
-    ],
+    get tips() {
+      return [
+        _translateCopy("copy.4f3b20014534", { defaultValue: "🎭 v3 reads performance tags inline — [whispers], [laughs], [sighs]" }),
+        _translateCopy("copy.f7672c62832a", { defaultValue: "🎚️ Lower stability is more expressive; higher is more consistent take to take" }),
+        _translateCopy("copy.e2735cfecc17", { defaultValue: "🌍 Leave the language on Auto unless a name is being read in the wrong accent" }),
+      ];
+    },
   },
   dialogue: {
     id: 'dialogue',
@@ -132,11 +134,13 @@ export const AUDIO_TASKS: Record<AudioTask, AudioTaskSpec> = {
     paid: false,
     baseCostUsd: 0,
     typicalDuration: '5-20s',
-    tips: [
-      '📝 One line per speaker, "Name: line" — the name picks the voice',
-      '🎭 Performance tags work here too, and carry across the exchange',
-      '🗣️ Assign a voice to each speaker below; unassigned names use the default',
-    ],
+    get tips() {
+      return [
+        _translateCopy("copy.7159f8c461db", { defaultValue: "📝 One line per speaker, \"Name: line\" — the name picks the voice" }),
+        _translateCopy("copy.bb9a824c15a1", { defaultValue: "🎭 Performance tags work here too, and carry across the exchange" }),
+        _translateCopy("copy.b6b08db7d866", { defaultValue: "🗣️ Assign a voice to each speaker below; unassigned names use the default" }),
+      ];
+    },
   },
   sfx: {
     id: 'sfx',
@@ -151,11 +155,13 @@ export const AUDIO_TASKS: Record<AudioTask, AudioTaskSpec> = {
     paid: false,
     baseCostUsd: 0,
     typicalDuration: '5-15s',
-    tips: [
-      '🔁 Turn on Loop for a seamless ambience bed',
-      '🎯 Prompt influence high follows your words literally; low is more creative',
-      '⏱️ Leave duration on Auto and the model picks a natural length',
-    ],
+    get tips() {
+      return [
+        _translateCopy("copy.4d7613aaa6fb", { defaultValue: "🔁 Turn on Loop for a seamless ambience bed" }),
+        _translateCopy("copy.a8cc7c33d850", { defaultValue: "🎯 Prompt influence high follows your words literally; low is more creative" }),
+        _translateCopy("copy.919d03775c6c", { defaultValue: "⏱️ Leave duration on Auto and the model picks a natural length" }),
+      ];
+    },
   },
   music: {
     id: 'music',
@@ -175,11 +181,13 @@ export const AUDIO_TASKS: Record<AudioTask, AudioTaskSpec> = {
     // Priced and charged by elevenlabs-music itself, off the clamped length.
     quoteModelId: 'elevenlabs-music',
     typicalDuration: '30-90s',
-    tips: [
-      '🎼 Name the instruments, tempo and mood — genre alone gives generic results',
-      '🎤 Instrumental is on by default; turn it off to get sung vocals',
-      '⏳ Longer tracks cost proportionally more and take proportionally longer',
-    ],
+    get tips() {
+      return [
+        _translateCopy("copy.7a0d10ee48de", { defaultValue: "🎼 Name the instruments, tempo and mood — genre alone gives generic results" }),
+        _translateCopy("copy.e96e4eaa7f2d", { defaultValue: "🎤 Instrumental is on by default; turn it off to get sung vocals" }),
+        _translateCopy("copy.1b40bb576828", { defaultValue: "⏳ Longer tracks cost proportionally more and take proportionally longer" }),
+      ];
+    },
   },
   'voice-design': {
     id: 'voice-design',
@@ -194,11 +202,13 @@ export const AUDIO_TASKS: Record<AudioTask, AudioTaskSpec> = {
     paid: false,
     baseCostUsd: 0,
     typicalDuration: '10-20s',
-    tips: [
-      '🎨 Age, accent, pace, texture and mood — all five gets you much closer',
-      '🔀 Three takes come back each run; save the one you want to your library',
-      '💾 A saved voice then shows up everywhere the voice picker does',
-    ],
+    get tips() {
+      return [
+        _translateCopy("copy.befbb5506209", { defaultValue: "🎨 Age, accent, pace, texture and mood — all five gets you much closer" }),
+        _translateCopy("copy.4099490ccba4", { defaultValue: "🔀 Three takes come back each run; save the one you want to your library" }),
+        _translateCopy("copy.9321c1b7fd4e", { defaultValue: "💾 A saved voice then shows up everywhere the voice picker does" }),
+      ];
+    },
   },
   'voice-changer': {
     id: 'voice-changer',
@@ -215,11 +225,13 @@ export const AUDIO_TASKS: Record<AudioTask, AudioTaskSpec> = {
     baseCostUsd: 0.06,
     meteredBy: 'per-minute',
     typicalDuration: '10-40s',
-    tips: [
-      '🎭 Your delivery, timing and emotion are kept — only the voice changes',
-      '🎧 A clean, close recording gives a dramatically better result',
-      '🔇 Background noise removal is on by default',
-    ],
+    get tips() {
+      return [
+        _translateCopy("copy.428489c2a481", { defaultValue: "🎭 Your delivery, timing and emotion are kept — only the voice changes" }),
+        _translateCopy("copy.ddd8502b52b6", { defaultValue: "🎧 A clean, close recording gives a dramatically better result" }),
+        _translateCopy("copy.200196977414", { defaultValue: "🔇 Background noise removal is on by default" }),
+      ];
+    },
   },
   dubbing: {
     id: 'dubbing',
@@ -236,11 +248,13 @@ export const AUDIO_TASKS: Record<AudioTask, AudioTaskSpec> = {
     baseCostUsd: 0.3,
     meteredBy: 'per-minute',
     typicalDuration: '1-5 min',
-    tips: [
-      '🗣️ The original speaker’s voice is preserved in the new language',
-      '👥 Set the speaker count when you know it — guessing costs accuracy',
-      '⏳ This one genuinely takes minutes. It keeps running if you leave the page',
-    ],
+    get tips() {
+      return [
+        _translateCopy("copy.2c8ab5653dc3", { defaultValue: "🗣️ The original speaker’s voice is preserved in the new language" }),
+        _translateCopy("copy.db8b78a8135b", { defaultValue: "👥 Set the speaker count when you know it — guessing costs accuracy" }),
+        _translateCopy("copy.d5aba0f13e0d", { defaultValue: "⏳ This one genuinely takes minutes. It keeps running if you leave the page" }),
+      ];
+    },
   },
   transcribe: {
     id: 'transcribe',
@@ -256,11 +270,13 @@ export const AUDIO_TASKS: Record<AudioTask, AudioTaskSpec> = {
     paid: false,
     baseCostUsd: 0,
     typicalDuration: '10-60s',
-    tips: [
-      '👥 Speaker labels separate who said what across the whole recording',
-      '🔊 Audio events like [laughter] are tagged inline when they occur',
-      '📋 The transcript is copyable straight from the result card',
-    ],
+    get tips() {
+      return [
+        _translateCopy("copy.b9006a0bffc3", { defaultValue: "👥 Speaker labels separate who said what across the whole recording" }),
+        _translateCopy("copy.0bdcd36bf1d9", { defaultValue: "🔊 Audio events like [laughter] are tagged inline when they occur" }),
+        _translateCopy("copy.66d1deb3238d", { defaultValue: "📋 The transcript is copyable straight from the result card" }),
+      ];
+    },
   },
   isolate: {
     id: 'isolate',
@@ -276,11 +292,13 @@ export const AUDIO_TASKS: Record<AudioTask, AudioTaskSpec> = {
     paid: false,
     baseCostUsd: 0,
     typicalDuration: '10-30s',
-    tips: [
-      '🎙️ Pulls the voice clean out of traffic, wind, hiss or room tone',
-      '🎬 Good first step before dubbing or the voice changer',
-      '🔇 Anything that is not speech is removed, music included',
-    ],
+    get tips() {
+      return [
+        _translateCopy("copy.3c26ee4f00ee", { defaultValue: "🎙️ Pulls the voice clean out of traffic, wind, hiss or room tone" }),
+        _translateCopy("copy.d1590a7543b5", { defaultValue: "🎬 Good first step before dubbing or the voice changer" }),
+        _translateCopy("copy.0859a70dbad1", { defaultValue: "🔇 Anything that is not speech is removed, music included" }),
+      ];
+    },
   },
 };
 
@@ -398,9 +416,9 @@ export const DEFAULT_VOICE_SETTINGS: VoiceSettings = {
  * and it costs nothing extra to offer.
  */
 export const AUDIO_OUTPUT_FORMATS = [
-  { value: 'mp3_44100_128', get label() { return _translateCopy("copy.811aa4592c1c", { defaultValue: "MP3 128 kbps" }); }, detail: 'Default — smallest' },
-  { value: 'mp3_44100_192', get label() { return _translateCopy("copy.4812442f11c9", { defaultValue: "MP3 192 kbps" }); }, detail: 'Higher quality' },
-  { value: 'pcm_44100', get label() { return _translateCopy("copy.0d199b18375b", { defaultValue: "WAV / PCM" }); }, detail: 'Uncompressed, for editing' },
+  { value: 'mp3_44100_128', get label() { return _translateCopy("copy.811aa4592c1c", { defaultValue: "MP3 128 kbps" }); }, get detail() { return _translateCopy("copy.f4694ff0f7cb", { defaultValue: "Default — smallest" }); } },
+  { value: 'mp3_44100_192', get label() { return _translateCopy("copy.4812442f11c9", { defaultValue: "MP3 192 kbps" }); }, get detail() { return _translateCopy("copy.44bf48722344", { defaultValue: "Higher quality" }); } },
+  { value: 'pcm_44100', get label() { return _translateCopy("copy.0d199b18375b", { defaultValue: "WAV / PCM" }); }, get detail() { return _translateCopy("copy.8aa30b32cb98", { defaultValue: "Uncompressed, for editing" }); } },
 ] as const;
 
 export type AudioOutputFormat = (typeof AUDIO_OUTPUT_FORMATS)[number]['value'];

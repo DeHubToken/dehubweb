@@ -45,9 +45,10 @@ function UserSelectItem({
   isSelected: boolean;
   onToggle: () => void;
 }) {
+  const { t: _copy } = _useCopy();
   const avatarPath = extractAvatarPath(user);
   const avatarUrl = user.address ? buildAvatarUrl(user.address, avatarPath) : undefined;
-  const displayName = user.displayName || user.display_name || user.username || 'User';
+  const displayName = user.displayName || user.display_name || user.username || _copy("copy.b512d97e7cbf", { defaultValue: "User" });
   const isVerified = user.isVerified || user.is_verified;
   
   return (
@@ -167,7 +168,7 @@ export function CreateGroupModal({
       handleClose();
     } catch (error: any) {
       console.error('[CreateGroupModal] Error creating group:', error);
-      toast.error(error.message || 'Failed to create group');
+      toast.error(error.message || _copy("copy.8848db900667", { defaultValue: "Failed to create group" }));
     } finally {
       setIsCreating(false);
     }

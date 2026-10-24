@@ -56,7 +56,7 @@ export function AssistantReplyCard({ content, timestamp, replyToName }: Assistan
         <div className="flex items-baseline gap-2">
           <span className="font-semibold text-white text-sm truncate">{_copy("copy.a39a7ffad4a3", { defaultValue: "assistant" })}</span>
           <span className="text-[10px] uppercase tracking-wide px-1.5 py-px rounded bg-primary/20 text-primary border border-primary/30">
-            AI
+            {_copy("copy.11fb682be0a0", { defaultValue: "AI" })}
           </span>
         </div>
 

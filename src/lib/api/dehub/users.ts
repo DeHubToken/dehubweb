@@ -1,5 +1,6 @@
 import { apiCall, authedUpload } from './core';
 import { isReservedUsername } from '@/lib/reserved-usernames';
+import { translateCopy as _translateCopy } from '@/i18n/copy';
 import type { DeHubUser, DeHubNFT, PaginatedResponse } from './types';
 import type { ApiCommentResponse } from './comments';
 
@@ -147,7 +148,7 @@ export async function updateProfile(data: UpdateProfileData): Promise<{ result: 
   // whatever surface gets added next, and any path where a debounce has not
   // caught up. The API accepts these names, so nothing downstream will stop it.
   if (data.username !== undefined && isReservedUsername(data.username)) {
-    throw new Error('This username is reserved');
+    throw new Error(_translateCopy("copy.71bfd7fdb453", { defaultValue: "This username is reserved" }));
   }
 
   if (data.username !== undefined) formData.append("username", data.username);

@@ -70,12 +70,12 @@ const DURATION_FILTERS = [
 
 // Fallback categories if API fails
 const FALLBACK_CATEGORIES: DeHubCategory[] = [
-  { id: 'dance', name: 'Dance', slug: 'dance' },
-  { id: 'comedy', name: 'Comedy', slug: 'comedy' },
-  { id: 'music', name: 'Music', slug: 'music' },
-  { id: 'gaming', name: 'Gaming', slug: 'gaming' },
-  { id: 'food', name: 'Food', slug: 'food' },
-  { id: 'pets', name: 'Pets', slug: 'pets' },
+  { id: 'dance', get name() { return _translateCopy("copy.23d2d73543f9", { defaultValue: "Dance" }); }, slug: 'dance' },
+  { id: 'comedy', get name() { return _translateCopy("copy.85f1c8c8e324", { defaultValue: "Comedy" }); }, slug: 'comedy' },
+  { id: 'music', get name() { return _translateCopy("copy.6eb00b4b2614", { defaultValue: "Music" }); }, slug: 'music' },
+  { id: 'gaming', get name() { return _translateCopy("copy.0fadfa228814", { defaultValue: "Gaming" }); }, slug: 'gaming' },
+  { id: 'food', get name() { return _translateCopy("copy.e4eb18069d65", { defaultValue: "Food" }); }, slug: 'food' },
+  { id: 'pets', get name() { return _translateCopy("copy.7dc1cd7eaff6", { defaultValue: "Pets" }); }, slug: 'pets' },
 ];
 
 type DurationFilter = typeof DURATION_FILTERS[number];
@@ -499,8 +499,8 @@ export function ShortsFeed({ showFilters = false, isRefreshing = false, refreshK
   const EmptyState = () => (
     <AppState
       icon={isError ? 'notifications' : 'videos'}
-      title={isError ? 'Shorts could not load' : 'No shorts yet'}
-      description={isError ? 'Try loading the shorts feed again.' : 'Short videos will appear here.'}
+      title={isError ? _translateCopy("copy.5cd6047c4b96", { defaultValue: "Shorts could not load" }) : _translateCopy("copy.1a67b14aa38a", { defaultValue: "No shorts yet" })}
+      description={isError ? _translateCopy("copy.0b4e78022a4a", { defaultValue: "Try loading the shorts feed again." }) : _translateCopy("copy.30349ad97e62", { defaultValue: "Short videos will appear here." })}
       kind={isError ? 'error' : 'empty'}
       size="page"
       primaryAction={isError ? { get label() { return _translateCopy("copy.d8b8392e2c54", { defaultValue: "Try again" }); }, onClick: () => refetch(), icon: <RefreshCw /> } : undefined}

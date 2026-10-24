@@ -38,7 +38,7 @@ export function SlippageSettings({ slippageBps, onSlippageChange }: SlippageSett
         className="flex items-center gap-1.5 text-xs text-zinc-400 hover:text-zinc-200 transition-colors"
       >
         <Settings2 className="w-3.5 h-3.5" />
-        <span>{displayPct}{_copy("copy.6b1037924516", { defaultValue: "% slippage" })}</span>
+        <span>{_copy("copy.7de5d8585f7b", { defaultValue: "{{value1}}% slippage", value1: displayPct })}</span>
       </button>
 
       {open && (

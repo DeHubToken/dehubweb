@@ -15,17 +15,22 @@ import Repeat2 from "@/components/ui/cut-icons/repost";
 import { cn } from '@/lib/utils';
 
 const mockNotifications = (t: TFunction) => [
-  { id: '1', type: 'like', user: 'bob_dev', content: 'liked your post', time: '2m', read: false, icon: Heart },
-  { id: '2', type: 'follow', user: 'crypto_sarah', content: 'started following you', time: '10m', read: false, icon: UserPlus },
-  { id: '3', type: 'comment', user: 'defi_whale', content: 'replied to your post: "Great analysis!"', time: '30m', read: false, icon: MessageSquare },
-  { id: '4', type: 'repost', user: 'nft_artist', content: 'reposted your video', time: '1h', read: true, icon: Repeat2 },
+  { id: '1', type: 'like', user: 'bob_dev', content: t("copy.57c0fd659537", { defaultValue: "liked your post" }), time: '2m', read: false, icon: Heart },
+  { id: '2', type: 'follow', user: 'crypto_sarah', content: t("copy.f78802719628", { defaultValue: "started following you" }), time: '10m', read: false, icon: UserPlus },
+  { id: '3', type: 'comment', user: 'defi_whale', content: t("copy.9a3e29c172c5", { defaultValue: "replied to your post: \"Great analysis!\"" }), time: '30m', read: false, icon: MessageSquare },
+  { id: '4', type: 'repost', user: 'nft_artist', content: t("copy.2a03e61c55b6", { defaultValue: "reposted your video" }), time: '1h', read: true, icon: Repeat2 },
   { id: '5', type: 'tip', user: 'dao_voter', content: t('mobilePreview.notifications.tippedYou', { amount: '50' }), time: '2h', read: true, icon: Coins },
-  { id: '6', type: 'mention', user: 'web3_dev', content: 'mentioned you in a post', time: '5h', read: true, icon: AtSign },
-  { id: '7', type: 'like', user: 'music_prod', content: 'liked your comment', time: '1d', read: true, icon: Heart },
-  { id: '8', type: 'follow', user: 'alpha_trader', content: 'started following you', time: '1d', read: true, icon: UserPlus },
+  { id: '6', type: 'mention', user: 'web3_dev', content: t("copy.1eea0fec7eb6", { defaultValue: "mentioned you in a post" }), time: '5h', read: true, icon: AtSign },
+  { id: '7', type: 'like', user: 'music_prod', content: t("copy.cbf25cdc5fa2", { defaultValue: "liked your comment" }), time: '1d', read: true, icon: Heart },
+  { id: '8', type: 'follow', user: 'alpha_trader', content: t("copy.f78802719628", { defaultValue: "started following you" }), time: '1d', read: true, icon: UserPlus },
 ];
 
-const FILTER_TABS = ['All', 'Mentions', 'Likes', 'Follows'];
+const FILTER_TABS = (t: TFunction) => [
+  t("copy.a52ace420f21", { defaultValue: "All" }),
+  t("copy.6f32e692ede0", { defaultValue: "Mentions" }),
+  t("copy.cca0662f9ddd", { defaultValue: "Likes" }),
+  t("copy.7ccfd5f034ad", { defaultValue: "Follows" }),
+];
 
 export function NotificationsScreen() {
   const { t: _copy } = _useCopy();
@@ -37,7 +42,7 @@ export function NotificationsScreen() {
 
       {/* Filter tabs */}
       <div className="flex gap-1.5 px-4 py-3">
-        {FILTER_TABS.map((tab, i) => (
+        {FILTER_TABS(t).map((tab, i) => (
           <button
             key={tab}
             className={`px-3 py-1.5 rounded-lg text-xs font-medium ${

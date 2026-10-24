@@ -18,6 +18,7 @@ import { toast } from 'sonner';
 import { useQueryClient, type QueryClient } from '@tanstack/react-query';
 import { followUser, unfollowUser } from '@/lib/api/dehub';
 import type { ProfileData } from '@/hooks/use-dehub-profile';
+import { translateCopy as _translateCopy } from '@/i18n/copy';
 
 /** Optimistic overrides: lowercased wallet address -> isFollowing */
 let overrides = new Map<string, boolean>();
@@ -112,7 +113,7 @@ export async function toggleFollowFor(
 
   const previous = overrides.get(lower);
   const next = !currentlyFollowing;
-  const name = opts.name || 'user';
+  const name = opts.name;
 
   // Optimistic flip — every subscribed surface updates instantly
   pendingAddresses = new Set(pendingAddresses).add(lower);
@@ -123,7 +124,11 @@ export async function toggleFollowFor(
     if (next) await followUser(address);
     else await unfollowUser(address);
     if (!opts.silent) {
-      toast.success(next ? `Following ${name}!` : `Unfollowed ${name}`);
+      if (next) {
+        toast.success(name ? _translateCopy("copy.97e3f1368597", { defaultValue: "Following {{value1}}!", value1: name }) : _translateCopy("copy.01830e9a6f0f", { defaultValue: "Following user!" }));
+      } else {
+        toast.success(name ? _translateCopy("copy.df4ab0546621", { defaultValue: "Unfollowed {{value1}}", value1: name }) : _translateCopy("copy.cad903684311", { defaultValue: "Unfollowed user" }));
+      }
     }
     opts.onSuccess?.(next);
     return true;
@@ -131,7 +136,7 @@ export async function toggleFollowFor(
     const msg = (error instanceof Error ? error.message : String(error)).toLowerCase();
     if (next && (msg.includes('already') || msg.includes('following'))) {
       // Server already agrees — keep the optimistic "following" state
-      if (!opts.silent) toast.info(`Already following ${name}`);
+      if (!opts.silent) toast.info(name ? _translateCopy("copy.65ae469907b9", { defaultValue: "Already following {{value1}}", value1: name }) : _translateCopy("copy.5ca81f0afb5f", { defaultValue: "Already following user" }));
       opts.onSuccess?.(next);
       return true;
     }
@@ -143,7 +148,7 @@ export async function toggleFollowFor(
     // whatever generic message the caller would have shown.
     const handled = await announceRateLimit(error);
     if (opts.onError) opts.onError(error, { handled });
-    else if (!handled) toast.error(next ? 'Failed to follow' : 'Failed to unfollow');
+    else if (!handled) toast.error(next ? _translateCopy("copy.add025e2b83c", { defaultValue: "Failed to follow" }) : _translateCopy("copy.5f6fa5654ead", { defaultValue: "Failed to unfollow" }));
     return false;
   } finally {
     const nextPending = new Set(pendingAddresses);

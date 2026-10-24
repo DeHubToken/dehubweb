@@ -370,6 +370,7 @@ interface VoiceNotePlayerProps {
 }
 
 function VoiceNotePlayer({ voiceNote }: VoiceNotePlayerProps) {
+  const { t } = useI18n();
   const [isPlaying, setIsPlaying] = useState(false);
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const buttonRef = useRef<HTMLButtonElement>(null);
@@ -418,7 +419,7 @@ function VoiceNotePlayer({ voiceNote }: VoiceNotePlayerProps) {
       className="flex items-center gap-1.5 bg-zinc-700/50 px-2 py-1 rounded-full text-xs text-zinc-300 hover:bg-zinc-700 transition-colors"
     >
       {isPlaying ? <Pause className="w-3 h-3" /> : <Play className="w-3 h-3" />}
-      <span>{voiceNote.duration}s</span>
+      <span>{t("copy.e46818576648", { defaultValue: "{{value1}}s", value1: voiceNote.duration })}</span>
     </button>
   );
 }
@@ -3001,7 +3002,7 @@ function CommentsSectionForAccount({ tokenId, onClose, initialTab, embedded = fa
               /* Recording indicator */
               <div data-comment-recording className="flex-1 flex items-center gap-2 bg-red-500/10 rounded-xl px-4 h-10">
                 <div data-live-pulse className="w-2 h-2 bg-red-500 rounded-full animate-pulse" />
-                <span className="text-sm text-red-400 flex-1">{recordingTime}s / {MAX_VOICE_DURATION}s</span>
+                <span className="text-sm text-red-400 flex-1">{t("copy.d11f9dace97e", { defaultValue: "{{value1}}s / {{value2}}s", value1: recordingTime, value2: MAX_VOICE_DURATION })}</span>
                 <button
                   onClick={stopRecording}
                   className="flex items-center gap-1 text-red-400 hover:text-red-300 text-xs font-medium"

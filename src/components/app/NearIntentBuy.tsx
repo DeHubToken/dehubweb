@@ -91,8 +91,14 @@ export function NearIntentBuy({ tokensToReceive, active, onDelivered }: { tokens
       const required = parseUnits(receipt.amountInFormatted, receipt.paymentDecimals);
       const balance = BigInt(await walletRpc(chain, 'eth_getBalance', [sender, 'latest']));
       if (balance < required) {
-        const symbol = receipt.originSymbol || 'native token';
-        throw new Error(`Insufficient ${symbol} on ${paymentChainName(receipt.originBlockchain || '')}. Your wallet has ${formatPaymentAmount(formatUnits(balance, receipt.paymentDecimals))} ${symbol}; this payment needs ${formatPaymentAmount(receipt.amountInFormatted)} ${symbol}. Choose another currency or a smaller amount.`);
+        const symbol = receipt.originSymbol || t('copy.23d2c78e67a0', { defaultValue: 'native token' });
+        throw new Error(t('copy.b9dd5e4e9c87', {
+          defaultValue: 'Insufficient {{value1}} on {{value2}}. Your wallet has {{value3}} {{value1}}; this payment needs {{value4}} {{value1}}. Choose another currency or a smaller amount.',
+          value1: symbol,
+          value2: paymentChainName(receipt.originBlockchain || ''),
+          value3: formatPaymentAmount(formatUnits(balance, receipt.paymentDecimals)),
+          value4: formatPaymentAmount(receipt.amountInFormatted),
+        }));
       }
     }
     if (provider?.smartAccount) {

@@ -2,6 +2,7 @@ import { useEffect, useRef } from 'react';
 import { useLocation } from 'react-router-dom';
 import { useAppTheme } from '@/contexts/ThemeContext';
 import { useAuth } from '@/contexts/AuthContext';
+import { translateCopy as _translateCopy } from '@/i18n/copy';
 import {
   fetchSantaLeaderboard,
   submitSantaScore,
@@ -481,7 +482,7 @@ export function WinterSnow() {
       // Santa bails off in tears one way; the wrecked sleigh cartwheels the other.
       g.jump = { x: hp.x, y: hp.y, vx: -g.dir.x * 2.5 + (Math.random() - 0.5) * 2, vy: -11, rot: 0 };
       g.wreck = { x: hp.x, y: hp.y, vx: g.dir.x * 1.5 + (Math.random() - 0.5) * 2, vy: -5, rot: 0.45 };
-      g.pops.push({ x: hp.x, y: hp.y - 50, vy: -0.5, o: 1, text: 'Waaah!', size: 30 });
+      g.pops.push({ x: hp.x, y: hp.y - 50, vy: -0.5, o: 1, text: _translateCopy("copy.4ea2d71e5a61", { defaultValue: "Waaah!" }), size: 30 });
       // The sack train bursts — sacks and loose gifts fly everywhere.
       for (let i = 1; i < g.body.length; i++) {
         const p = normPix(g, segPix(g, i, 1));
@@ -562,10 +563,16 @@ export function WinterSnow() {
       const milestone = g.score % 5 === 0;
       if (milestone) {
         g.celebrate = 95;
-        g.pops.push({ x: hp.x, y: hp.y - 46, vy: -0.7, o: 1, text: 'Ho ho ho!', size: 26 });
+        g.pops.push({ x: hp.x, y: hp.y - 46, vy: -0.7, o: 1, text: _translateCopy("copy.a760e5923ed9", { defaultValue: "Ho ho ho!" }), size: 26 });
         playCelebrate();
       } else {
-        const cheer = ['Ho ho!', 'Merry!', 'Yes!', '🎁', '😄'][g.score % 5];
+        const cheer = [
+          _translateCopy("copy.95a2a4f58832", { defaultValue: "Ho ho!" }),
+          _translateCopy("copy.4b3d229c8e5b", { defaultValue: "Merry!" }),
+          _translateCopy("copy.8aff5108a050", { defaultValue: "Yes!" }),
+          '🎁',
+          '😄',
+        ][g.score % 5];
         g.pops.push({ x: hp.x, y: hp.y - 40, vy: -0.8, o: 1, text: cheer, size: 20 });
         playPickup(g.score);
       }
@@ -1172,10 +1179,10 @@ export function WinterSnow() {
           ctx.shadowBlur = 8;
           ctx.font = '700 22px system-ui, sans-serif';
           ctx.fillStyle = `rgba(255,255,255,${fade})`;
-          ctx.fillText('Hitch up the sleigh…', width / 2, height * 0.15);
+          ctx.fillText(_translateCopy("copy.5027e8897005", { defaultValue: "Hitch up the sleigh…" }), width / 2, height * 0.15);
           ctx.font = '800 24px system-ui, sans-serif';
           ctx.fillStyle = `rgba(255,90,90,${fade})`;
-          ctx.fillText('🔴 Rudolph, light the way!', width / 2, height * 0.15 + 34);
+          ctx.fillText(_translateCopy("copy.44503e3f2949", { defaultValue: "🔴 Rudolph, light the way!" }), width / 2, height * 0.15 + 34);
           ctx.restore();
 
           // The digit itself — punches in large, settles, and eases out within each second.
@@ -1217,8 +1224,9 @@ export function WinterSnow() {
           ctx.lineWidth = 7;
           ctx.strokeStyle = 'rgba(20,90,40,0.9)';
           ctx.fillStyle = 'rgba(120,240,150,0.98)';
-          ctx.strokeText('GO!', width / 2, height * 0.46);
-          ctx.fillText('GO!', width / 2, height * 0.46);
+          const go = _translateCopy("copy.64db8c5cb274", { defaultValue: "GO!" });
+          ctx.strokeText(go, width / 2, height * 0.46);
+          ctx.fillText(go, width / 2, height * 0.46);
           ctx.restore();
         }
 
@@ -1249,17 +1257,17 @@ export function WinterSnow() {
           ctx.textBaseline = 'middle';
           ctx.font = '800 32px system-ui, sans-serif';
           ctx.fillStyle = 'rgba(255,120,120,0.98)';
-          ctx.fillText('💥 Santa crashed!', cx, top + 38);
+          ctx.fillText(_translateCopy("copy.f0fafe36cd8c", { defaultValue: "💥 Santa crashed!" }), cx, top + 38);
           ctx.font = '700 21px system-ui, sans-serif';
           ctx.fillStyle = 'rgba(255,255,255,0.95)';
-          ctx.fillText(`🎁 × ${game.score} delivered`, cx, top + 78);
+          ctx.fillText(_translateCopy("copy.f04f0d69b072", { defaultValue: "🎁 × {{value1}} delivered", value1: game.score }), cx, top + 78);
           ctx.font = '700 15px system-ui, sans-serif';
           if (game.newBest) {
             ctx.fillStyle = `rgba(255,214,90,${0.75 + Math.sin(game.t * 0.2) * 0.25})`;
-            ctx.fillText('🎉 NEW PERSONAL BEST!', cx, top + 112);
+            ctx.fillText(_translateCopy("copy.e6cee7e1c5e6", { defaultValue: "🎉 NEW PERSONAL BEST!" }), cx, top + 112);
           } else {
             ctx.fillStyle = 'rgba(255,255,255,0.6)';
-            ctx.fillText(`your best ${game.best}`, cx, top + 112);
+            ctx.fillText(_translateCopy("copy.137c70c98e46", { defaultValue: "your best {{value1}}", value1: game.best }), cx, top + 112);
           }
 
           // All-time leaderboard.
@@ -1268,7 +1276,7 @@ export function WinterSnow() {
             ctx.textAlign = 'center';
             ctx.font = '700 11px system-ui, sans-serif';
             ctx.fillStyle = 'rgba(160,200,255,0.7)';
-            ctx.fillText('ALL-TIME LEADERBOARD', cx, boardTop + 6);
+            ctx.fillText(_translateCopy("copy.078ce6dbfd7e", { defaultValue: "ALL-TIME LEADERBOARD" }), cx, boardTop + 6);
             const me = authRef.current.walletAddress?.toLowerCase() || null;
             const leftX = cx - cardW / 2 + 28;
             const rightX = cx + cardW / 2 - 28;
@@ -1300,8 +1308,8 @@ export function WinterSnow() {
             ctx.fillStyle = 'rgba(255,255,255,0.5)';
             ctx.fillText(
               authRef.current.isAuthenticated
-                ? 'No scores yet — you could be #1!'
-                : 'Connect your wallet to join the leaderboard',
+                ? _translateCopy("copy.d1a3b045bcba", { defaultValue: "No scores yet — you could be #1!" })
+                : _translateCopy("copy.5869edb58b51", { defaultValue: "Connect your wallet to join the leaderboard" }),
               cx,
               boardTop + 14
             );
@@ -1311,10 +1319,12 @@ export function WinterSnow() {
           if (game.t - game.deadAt! > RESTART_DELAY) {
             ctx.font = '500 13px system-ui, sans-serif';
             ctx.fillStyle = `rgba(255,255,255,${0.5 + Math.sin(game.t * 0.08) * 0.2})`;
-            ctx.fillText('press any arrow to fly again · Esc to quit', cx, top + cardH - 22);
+            ctx.fillText(_translateCopy("copy.59bda7434cf4", { defaultValue: "press any arrow to fly again · Esc to quit" }), cx, top + cardH - 22);
           }
         } else {
-          const label = game.best > 0 ? `🎁 ${game.score}   ·   best ${game.best}` : `🎁 ${game.score}`;
+          const label = game.best > 0
+            ? _translateCopy("copy.712b74b49e01", { defaultValue: "🎁 {{value1}}   ·   best {{value2}}", value1: game.score, value2: game.best })
+            : `🎁 ${game.score}`;
           ctx.font = '700 17px system-ui, sans-serif';
           const tw = ctx.measureText(label).width;
           const pillW = tw + 36;
@@ -1333,7 +1343,7 @@ export function WinterSnow() {
             const hintFade = Math.min(1, (420 - game.t) / 60);
             ctx.font = '500 12px system-ui, sans-serif';
             ctx.fillStyle = `rgba(255,255,255,${0.55 * hintFade})`;
-            ctx.fillText('arrows / WASD steer · Esc quits', width / 2, 12 + pillH + 14);
+            ctx.fillText(_translateCopy("copy.42b1b22c17c2", { defaultValue: "arrows / WASD steer · Esc quits" }), width / 2, 12 + pillH + 14);
           }
         }
         ctx.restore();

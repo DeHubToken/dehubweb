@@ -6,6 +6,8 @@
 // HIBP's k-anonymity range API (only the first 5 hex chars of the SHA-1 are
 // ever sent), and it FAILS OPEN — a network error never blocks wallet creation.
 
+import { translateCopy as _translateCopy } from "@/i18n/copy";
+
 export const MIN_PASSWORD_LENGTH = 12;
 
 // Past this length, character variety stops carrying useful information: a
@@ -52,7 +54,14 @@ export interface PasswordAssessment {
 // fixed point on the scale is what lets the meter show it: the old scale mixed
 // the two, so a 4-character password scored 2/4 with two lit bars and read as
 // halfway there, when in fact submit would bounce it.
-const LABELS = ["Too weak", "Too weak", "Okay", "Good", "Strong"] as const;
+function strengthLabel(score: 0 | 1 | 2 | 3 | 4): string {
+  switch (score) {
+    case 2: return _translateCopy("copy.16584052fd33", { defaultValue: "Okay" });
+    case 3: return _translateCopy("copy.c939327ca16d", { defaultValue: "Good" });
+    case 4: return _translateCopy("copy.30a04fdcb6bb", { defaultValue: "Strong" });
+    default: return _translateCopy("copy.b92741f70207", { defaultValue: "Too weak" });
+  }
+}
 export const MIN_ACCEPTABLE_SCORE = 2;
 
 function classCount(pw: string): number {
@@ -86,10 +95,10 @@ export function assessLocal(pw: string): PasswordAssessment {
   // Every blocker, in the order a user would fix them. The old code pushed at
   // most one and rendered only warnings[0], so a password that was both short
   // AND predictable told you about the predictability and hid the length rule.
-  if (trivial) warnings.push("This is a common or predictable password");
-  if (!longEnough) warnings.push(`Use at least ${MIN_PASSWORD_LENGTH} characters`);
+  if (trivial) warnings.push(_translateCopy("copy.9dee76e2a2ac", { defaultValue: "This is a common or predictable password" }));
+  if (!longEnough) warnings.push(_translateCopy("copy.7ac7cc545c79", { defaultValue: "Use at least {{value1}} characters", value1: MIN_PASSWORD_LENGTH }));
   else if (!variedEnough) {
-    warnings.push(`Add a number or symbol, or make it ${PASSPHRASE_LENGTH}+ characters`);
+    warnings.push(_translateCopy("copy.1b393fde18bc", { defaultValue: "Add a number or symbol, or make it {{value1}}+ characters", value1: PASSPHRASE_LENGTH }));
   }
 
   let score: number;
@@ -107,15 +116,15 @@ export function assessLocal(pw: string): PasswordAssessment {
   const clamped = Math.max(0, Math.min(4, score)) as 0 | 1 | 2 | 3 | 4;
   return {
     score: clamped,
-    label: LABELS[clamped],
+    label: strengthLabel(clamped),
     warnings,
     classCount: classes,
     longEnough,
     breached: null,
     acceptable,
     requirements: [
-      { label: `${MIN_PASSWORD_LENGTH} characters or more`, met: longEnough },
-      { label: `A number or symbol — or ${PASSPHRASE_LENGTH}+ characters`, met: variedEnough },
+      { label: _translateCopy("copy.db04a0e33c7b", { defaultValue: "{{value1}} characters or more", value1: MIN_PASSWORD_LENGTH }), met: longEnough },
+      { label: _translateCopy("copy.a9d80b26d3a0", { defaultValue: "A number or symbol — or {{value1}}+ characters", value1: PASSPHRASE_LENGTH }), met: variedEnough },
     ],
   };
 }
@@ -168,7 +177,7 @@ export async function assessPassword(pw: string): Promise<PasswordAssessment> {
     // so it must not keep the "Strong" it earned on length and variety alone.
     score: acceptable ? local.score : (Math.min(local.score, 1) as 0 | 1),
     warnings: breached === true
-      ? [...local.warnings, "This password has appeared in a data breach"]
+      ? [...local.warnings, _translateCopy("copy.d1ff9c36fdfa", { defaultValue: "This password has appeared in a data breach" })]
       : local.warnings,
   };
 }

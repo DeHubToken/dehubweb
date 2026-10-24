@@ -147,14 +147,14 @@ export function SwapToTokenDrawer({
     getSwapQuote(amountWei, selectedToken.address, targetAddress)
       .then(q => {
         setQuoteResult(q);
-        if (!q) setError('No liquidity available for this pair/amount');
+        if (!q) setError(_copy("copy.312baa1e9c78", { defaultValue: "No liquidity available for this pair/amount" }));
       })
       .catch(() => {
         setQuoteResult(null);
-        setError('Failed to get quote');
+        setError(_copy("copy.37bcfc8af381", { defaultValue: "Failed to get quote" }));
       })
       .finally(() => setQuoting(false));
-  }, [debouncedAmount, selectedToken.address, targetAddress, targetDecimals]);
+  }, [debouncedAmount, selectedToken.address, targetAddress, targetDecimals, _copy]);
 
   const amountInWithSlippage = quoteResult ? applySlippage(quoteResult.amountIn) : null;
   const amountInFormatted = amountInWithSlippage
@@ -188,11 +188,11 @@ export function SwapToTokenDrawer({
         targetAddress,
       );
       setSuccess(true);
-      toast.success(`Swapped for ${amt.toLocaleString()} ${targetSymbol}`, {
-        description: `TX: ${receipt.hash.slice(0, 10)}…`,
+      toast.success(_copy("copy.f0e43aaa925d", { defaultValue: "Swapped for {{value1}} {{value2}}", value1: amt.toLocaleString(), value2: targetSymbol }), {
+        description: _copy("copy.ca56c9d369b9", { defaultValue: "TX: {{value1}}…", value1: receipt.hash.slice(0, 10) }),
       });
     } catch (err: any) {
-      const msg = err?.shortMessage || err?.message || 'Swap failed';
+      const msg = err?.shortMessage || err?.message || _copy("copy.09d8a776b907", { defaultValue: "Swap failed" });
       setError(msg);
       toast.error(_copy("copy.09d8a776b907", { defaultValue: "Swap failed" }), { description: msg });
     } finally {
@@ -231,7 +231,7 @@ export function SwapToTokenDrawer({
     <Drawer open={open} onOpenChange={handleClose}>
       <DrawerContent column glass hideHandle={false}>
         <DrawerHeader>
-          <DrawerTitle className="text-white">{_copy("copy.8d2e3063a993", { defaultValue: "Buy $" })}{targetSymbol}</DrawerTitle>
+          <DrawerTitle className="text-white">{_copy("copy.19cc62df5710", { defaultValue: "Buy ${{value1}}", value1: targetSymbol })}</DrawerTitle>
         </DrawerHeader>
         <div className="px-4 pb-8 space-y-4">
           {success ? (
@@ -317,14 +317,16 @@ export function SwapToTokenDrawer({
                   </span>
                 </div>
                 <div className="flex items-center gap-2">
-                  <p className={`text-xs ${insufficientBalance ? 'text-red-400' : 'text-zinc-500'}`}>{_copy("copy.90dce8fe9b03", { defaultValue: "Balance: " })}{balanceFormatted} {selectedToken.symbol}
-                    {insufficientBalance && _copy("copy.fe663571b1c3", { defaultValue: " (insufficient)" })}
+                  <p className={`text-xs ${insufficientBalance ? 'text-red-400' : 'text-zinc-500'}`}>
+                    {insufficientBalance
+                      ? _copy("copy.64849cbbae3a", { defaultValue: "Balance: {{value1}} {{value2}} (insufficient)", value1: balanceFormatted, value2: selectedToken.symbol })
+                      : _copy("copy.7c662c639791", { defaultValue: "Balance: {{value1}} {{value2}}", value1: balanceFormatted, value2: selectedToken.symbol })}
                   </p>
                   <button
                     onClick={() => setBuyTokenOpen(true)}
                     className="text-xs text-emerald-400 hover:text-emerald-300 font-medium flex items-center gap-1"
                   >
-                    <Plus className="w-3 h-3" />{_copy("copy.e8c84f1c82bf", { defaultValue: "Buy " })}{selectedToken.symbol}
+                    <Plus className="w-3 h-3" />{_copy("copy.9b5f8d89fc43", { defaultValue: "Buy {{value1}}", value1: selectedToken.symbol })}
                   </button>
                 </div>
               </div>
@@ -351,7 +353,7 @@ export function SwapToTokenDrawer({
                 )}
               </Button>
 
-              <p className="text-[10px] text-zinc-600 text-center">{_copy("copy.4634f46234d7", { defaultValue: "Powered by Uniswap V3 on Base • Token: " })}{targetAddress.slice(0, 6)}…{targetAddress.slice(-4)}
+              <p className="text-[10px] text-zinc-600 text-center">{_copy("copy.b9a1bc8a4642", { defaultValue: "Powered by Uniswap V3 on Base • Token: {{value1}}", value1: `${targetAddress.slice(0, 6)}…${targetAddress.slice(-4)}` })}
               </p>
             </>
           )}
@@ -414,7 +416,7 @@ export function SwapToTokenDrawer({
     <Drawer open={buyTokenOpen} onOpenChange={setBuyTokenOpen}>
       <DrawerContent column glass hideHandle={false}>
         <div className="p-5 pb-8 space-y-2">
-          <h3 className="text-white font-semibold text-base mb-4">{_copy("copy.e8c84f1c82bf", { defaultValue: "Buy " })}{selectedToken.symbol}</h3>
+          <h3 className="text-white font-semibold text-base mb-4">{_copy("copy.9b5f8d89fc43", { defaultValue: "Buy {{value1}}", value1: selectedToken.symbol })}</h3>
           <button
             disabled
             className="w-full flex items-center gap-3 p-3.5 rounded-xl bg-white/[0.06] border border-white/10 opacity-50 cursor-not-allowed"

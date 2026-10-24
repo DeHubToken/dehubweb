@@ -223,7 +223,7 @@ export function EmojiGifPicker({ onEmojiSelect, onGifSelect, triggerClassName, i
                     >
                       <img 
                         src={gif} 
-                        alt="GIF" 
+                        alt={t('emojiPicker.tabGif', 'GIF')}
                         className="w-full h-full object-cover"
                         loading="lazy"
                       />

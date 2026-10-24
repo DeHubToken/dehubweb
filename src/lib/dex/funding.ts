@@ -22,6 +22,7 @@ import { BASE_CHAIN_ID } from '@/lib/contracts/dhb-token';
 import type { WalletToken } from '@/lib/wallet/tokens';
 import type { TokenPrices } from '@/hooks/use-token-prices';
 import { isSmartWalletSession } from '@/lib/connection-source';
+import { translateCopy as _translateCopy } from '@/i18n/copy';
 import { DEX_CHAINS } from './v4';
 import { mintSellPosition, quoteSellPosition, recoverMint, type SellInput } from './sell';
 import { readWithTimeout, type OrderStage } from './read-timeout';
@@ -122,9 +123,9 @@ export interface FundingQuote {
  * in eth_call and simply drops out.
  */
 export async function quoteFunding(asset: FundingAsset, usdcAmount: bigint): Promise<FundingQuote> {
-  if (usdcAmount <= 0n) throw new Error('Enter an amount to spend');
+  if (usdcAmount <= 0n) throw new Error(_translateCopy("copy.971c27fc7a12", { defaultValue: "Enter an amount to spend" }));
   if (asset.symbol === 'USDC') {
-    if (asset.balance < usdcAmount) throw new Error('Insufficient USDC on Base');
+    if (asset.balance < usdcAmount) throw new Error(_translateCopy("copy.936ab77133ed", { defaultValue: "Insufficient USDC on Base" }));
     return { asset, usdcAmount, amountIn: 0n, maxAmountIn: 0n, feeTier: null };
   }
   const tokenIn = asset.symbol === 'ETH' ? WETH : asset.address;
@@ -136,9 +137,9 @@ export async function quoteFunding(asset: FundingAsset, usdcAmount: bigint): Pro
     } catch { return null; }
   }));
   const best = quotes.filter((q): q is { amountIn: bigint; fee: number } => q !== null).sort((a, b) => (a.amountIn < b.amountIn ? -1 : 1))[0];
-  if (!best) throw new Error(`No ${asset.symbol} → USDC route is available on Base right now`);
+  if (!best) throw new Error(_translateCopy("copy.043c788827c7", { defaultValue: "No {{value1}} → USDC route is available on Base right now", value1: asset.symbol }));
   const maxAmountIn = best.amountIn + best.amountIn * SLIPPAGE_BPS / 10000n;
-  if (maxAmountIn > asset.balance) throw new Error(`Not enough ${asset.symbol} on Base to cover this order after slippage`);
+  if (maxAmountIn > asset.balance) throw new Error(_translateCopy("copy.757bcf3b6e5a", { defaultValue: "Not enough {{value1}} on Base to cover this order after slippage", value1: asset.symbol }));
   return { asset, usdcAmount, amountIn: best.amountIn, maxAmountIn, feeTier: best.fee };
 }
 
@@ -174,7 +175,7 @@ async function fundAndMintBatched(order: FundedOrder, progress: (stage: FundingS
   const cfg = DEX_CHAINS[FUNDING_CHAIN];
   progress('quote');
   const position = await quoteSellPosition(input);
-  if (position.amountIn > quote.usdcAmount) throw new Error('The position would require more USDC than the swap delivers');
+  if (position.amountIn > quote.usdcAmount) throw new Error(_translateCopy("copy.4d1b8116e93e", { defaultValue: "The position would require more USDC than the swap delivers" }));
   const expires = Math.floor(Date.now() / 1000) + 86400;
   const calls: { to: string; data: `0x${string}`; value?: bigint }[] = [];
   if (quote.asset.symbol !== 'USDC') {
@@ -188,7 +189,7 @@ async function fundAndMintBatched(order: FundedOrder, progress: (stage: FundingS
   calls.push({ to: USDC, data: erc20.encodeFunctionData('approve', [PERMIT2, position.amountIn]) as `0x${string}` });
   calls.push({ to: PERMIT2, data: permit2.encodeFunctionData('approve', [USDC, cfg.positionManager, position.amountIn, expires]) as `0x${string}` });
   const parsed = positionManager.parseTransaction({ data: position.calldata });
-  if (!parsed) throw new Error('Could not prepare the Uniswap position transaction');
+  if (!parsed) throw new Error(_translateCopy("copy.4129edfefaa7", { defaultValue: "Could not prepare the Uniswap position transaction" }));
   calls.push({ to: cfg.positionManager, data: position.calldata as `0x${string}`, value: BigInt(position.value) });
   progress('submit');
   const tx = await writeBatchAA(calls, { chainId: FUNDING_CHAIN, context: 'fund and create DHB buy order' });
@@ -213,24 +214,24 @@ async function fundAndMintSequential(order: FundedOrder, progress: (stage: Fundi
         progress('tokenApproval');
         const approval = await writeContractAA(quote.asset.address, erc20, 'approve', [SWAP_ROUTER, quote.maxAmountIn],
           { chainId: FUNDING_CHAIN, context: `approve ${quote.asset.symbol} for the swap` });
-        if ((await readWithTimeout(approval.wait(), 'Approval confirmation', 120000)).status !== 1) throw new Error(`${quote.asset.symbol} approval did not confirm`);
+        if ((await readWithTimeout(approval.wait(), 'Approval confirmation', 120000)).status !== 1) throw new Error(_translateCopy("copy.e9301bb3bd6c", { defaultValue: "{{value1}} approval did not confirm", value1: quote.asset.symbol }));
       }
     }
     progress('swap');
     const call = swapCall(quote, input.walletAddress);
     const parsed = router.parseTransaction({ data: call.data });
-    if (!parsed) throw new Error('Could not prepare the swap');
+    if (!parsed) throw new Error(_translateCopy("copy.97102b01c53e", { defaultValue: "Could not prepare the swap" }));
     const tx = await writeContractAA(SWAP_ROUTER, router, parsed.name, Array.from(parsed.args),
       { chainId: FUNDING_CHAIN, value: call.value, context: `swap ${quote.asset.symbol} for USDC` });
     swapped(tx.hash);
     progress('swapConfirm');
     const receipt = await readWithTimeout(tx.wait(), 'Swap confirmation; use Resume to continue once it lands', 180000);
-    if (receipt.status !== 1) throw Object.assign(new Error('The swap reverted. Nothing was spent.'), { code: 'DEX_REVERTED' });
+    if (receipt.status !== 1) throw Object.assign(new Error(_translateCopy("copy.46b32278bdc1", { defaultValue: "The swap reverted. Nothing was spent." })), { code: 'DEX_REVERTED' });
   }
   if (quote.asset.symbol !== 'USDC') {
     // A confirmed swap is not yet a visible balance on a load-balanced RPC.
     const balance = await waitForERC20Balance(USDC, input.walletAddress, quote.usdcAmount, FUNDING_CHAIN, 10, 1500);
-    if (balance < quote.usdcAmount) throw new Error('The swap confirmed but the USDC has not shown up yet. Use Resume in a moment.');
+    if (balance < quote.usdcAmount) throw new Error(_translateCopy("copy.b839406a8f78", { defaultValue: "The swap confirmed but the USDC has not shown up yet. Use Resume in a moment." }));
   }
   return mintSellPosition(input, progress, submitted);
 }

@@ -391,7 +391,7 @@ export default function BuyCoinsPage() {
       const supply = availableSupply ?? Infinity;
       if (tokensToReceive > supply) {
         toast.error(
-          `Only ${supply.toLocaleString()} ${symbol} available. Please reduce your purchase amount.`
+          _copy("copy.43b2600ae3fb", { defaultValue: "Only {{value1}} {{value2}} available. Please reduce your purchase amount.", value1: supply.toLocaleString(), value2: symbol })
         );
         return;
       }

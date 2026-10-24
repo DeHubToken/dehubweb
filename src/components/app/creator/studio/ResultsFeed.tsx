@@ -158,7 +158,7 @@ export const ResultsFeed = memo(function ResultsFeed({ wallet, onAnimate, onMode
         {runningCount > 0
           ? t('creator.generationsRunning', { count: runningCount })
           : finishedCount > 0
-            ? `${t('creator.generationsFinished', { count: readyCount })}${failedCount ? ` ${failedCount} failed.` : ''}`
+            ? `${t('creator.generationsFinished', { count: readyCount })}${failedCount ? ` ${t("copy.bb01ae575021", { defaultValue: "{{count}} failed.", count: failedCount })}` : ''}`
             : ''}
       </p>
 

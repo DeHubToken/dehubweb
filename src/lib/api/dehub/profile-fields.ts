@@ -8,12 +8,13 @@
  * @module lib/api/dehub/profile-fields
  */
 import { apiCall } from './core';
+import { translateCopy as _translateCopy } from '@/i18n/copy';
 
 export type ProfileField = { name: string; value: string; verifiedAt?: string | null };
 
 export async function saveProfileFields(fields: Array<{ name: string; value: string }>): Promise<ProfileField[]> {
   const response = await apiCall<any>('/api/profile-fields', { method: 'PUT', body: { fields }, requiresAuth: true });
-  if (response && response.status === false) throw new Error(response.error || 'Request failed');
+  if (response && response.status === false) throw new Error(response.error || _translateCopy("copy.cfce761befa8", { defaultValue: "Request failed" }));
   const list = response?.result ?? response;
   return Array.isArray(list) ? list : [];
 }

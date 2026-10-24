@@ -1,4 +1,3 @@
-import { useTranslation as _useCopy } from 'react-i18next';
 /**
  * Login sheet — the shell.
  * ========================
@@ -23,7 +22,7 @@ import { useTranslation as _useCopy } from 'react-i18next';
  */
 
 import React, { Suspense, useCallback, useEffect, useLayoutEffect, useState } from 'react';
-import { useTranslation } from 'react-i18next';
+import { Trans, useTranslation } from 'react-i18next';
 import ChevronRight from "@/components/ui/cut-icons/next";
 
 import { DeHubPageLoader } from '@/components/app/DeHubLoader';
@@ -91,7 +90,6 @@ interface LoginModalProps {
 }
 
 export function LoginModal({ open, onOpenChange }: LoginModalProps) {
-  const { t: _copy } = _useCopy();
   const { style: keyboardStyle } = useKeyboardSafeSheet(open);
   const { walletPhase, isProcessingRedirect, loginIntent, requiresUsername } = useAuth();
   const { t } = useTranslation();
@@ -226,6 +224,17 @@ export function LoginModal({ open, onOpenChange }: LoginModalProps) {
   const stackSheet = isMobile && loginIntent !== 'add-profile';
   const stackLayout = stackSheet && step === 'main';
 
+  const termsNotice = (
+    <Trans
+      i18nKey="copy.5d486dd87845"
+      defaults="By continuing, you agree to our <terms>Terms</terms> and <privacy>Privacy Policy</privacy>"
+      components={{
+        terms: <a href="https://dehub.io/terms" target="_blank" rel="noopener noreferrer" className="underline hover:text-white/60 transition-colors" />,
+        privacy: <a href="https://dehub.io/privacy" target="_blank" rel="noopener noreferrer" className="underline hover:text-white/60 transition-colors" />,
+      }}
+    />
+  );
+
   const sheetBody = stackLayout ? (
     <>
       {/* Logo and Explore sit 16px from the top and the sides, both 40px tall. */}
@@ -257,11 +266,7 @@ export function LoginModal({ open, onOpenChange }: LoginModalProps) {
       </div>
 
       <div className="shrink-0 px-6 py-3 border-t border-white/10 pb-[calc(0.75rem+env(safe-area-inset-bottom))]">
-        <p className="text-xs text-white/40 text-center">{t('loginStack.codeNote', 'We email you a code, no password needed.')}{' '}{_copy("copy.b5f64aac226f", { defaultValue: "By continuing, you agree to our" })}{' '}
-          <a href="https://dehub.io/terms" target="_blank" rel="noopener noreferrer" className="underline hover:text-white/60 transition-colors">{_copy("copy.ede548996483", { defaultValue: "Terms" })}</a>
-          {_copy("copy.e3ee915a8e8c", { defaultValue: " and " })}
-          <a href="https://dehub.io/privacy" target="_blank" rel="noopener noreferrer" className="underline hover:text-white/60 transition-colors">{_copy("copy.506ff3946215", { defaultValue: "Privacy Policy" })}</a>
-        </p>
+        <p className="text-xs text-white/40 text-center">{t('loginStack.codeNote', 'We email you a code, no password needed.')}{' '}{termsNotice}</p>
       </div>
     </>
   ) : (
@@ -304,11 +309,7 @@ export function LoginModal({ open, onOpenChange }: LoginModalProps) {
       </div>
 
       <div className="shrink-0 px-6 py-4 bg-black/20 border-t border-white/10 pb-[calc(1rem+env(safe-area-inset-bottom))]">
-        <p className="text-xs text-white/40 text-center">{_copy("copy.b5f64aac226f", { defaultValue: "By continuing, you agree to our" })}{' '}
-          <a href="https://dehub.io/terms" target="_blank" rel="noopener noreferrer" className="underline hover:text-white/60 transition-colors">{_copy("copy.ede548996483", { defaultValue: "Terms" })}</a>
-          {_copy("copy.e3ee915a8e8c", { defaultValue: " and " })}
-          <a href="https://dehub.io/privacy" target="_blank" rel="noopener noreferrer" className="underline hover:text-white/60 transition-colors">{_copy("copy.506ff3946215", { defaultValue: "Privacy Policy" })}</a>
-        </p>
+        <p className="text-xs text-white/40 text-center">{termsNotice}</p>
       </div>
     </>
   );

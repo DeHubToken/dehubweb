@@ -45,7 +45,7 @@ const MUSIC_VIDEOS: VideoItem[] = [
     channelAvatar: '',
     verified: true,
     views: '2.4M',
-    uploadedAgo: '3 days ago',
+    get uploadedAgo() { return _translateCopy("copy.0d0d0a848ddf", { defaultValue: "{{count}} days ago", count: 3 }); },
   },
   {
     id: 'mv-2',
@@ -57,7 +57,7 @@ const MUSIC_VIDEOS: VideoItem[] = [
     channelAvatar: '',
     verified: true,
     views: '892K',
-    uploadedAgo: '1 week ago',
+    get uploadedAgo() { return _translateCopy("copy.04fa7282ba91", { defaultValue: "{{count}} weeks ago", count: 1 }); },
   },
   {
     id: 'mv-3',
@@ -69,7 +69,7 @@ const MUSIC_VIDEOS: VideoItem[] = [
     channelAvatar: '',
     verified: false,
     views: '456K',
-    uploadedAgo: '2 weeks ago',
+    get uploadedAgo() { return _translateCopy("copy.04fa7282ba91", { defaultValue: "{{count}} weeks ago", count: 2 }); },
   },
   {
     id: 'mv-4',
@@ -81,7 +81,7 @@ const MUSIC_VIDEOS: VideoItem[] = [
     channelAvatar: '',
     verified: true,
     views: '1.2M',
-    uploadedAgo: '5 days ago',
+    get uploadedAgo() { return _translateCopy("copy.0d0d0a848ddf", { defaultValue: "{{count}} days ago", count: 5 }); },
   },
   {
     id: 'mv-5',
@@ -93,7 +93,7 @@ const MUSIC_VIDEOS: VideoItem[] = [
     channelAvatar: '',
     verified: true,
     views: '678K',
-    uploadedAgo: '1 day ago',
+    get uploadedAgo() { return _translateCopy("copy.0d0d0a848ddf", { defaultValue: "{{count}} days ago", count: 1 }); },
   },
 ];
 
@@ -117,9 +117,9 @@ const AUDIO_TRACKS: AudioTrack[] = [
     artistHandle: '@novapulse',
     verified: true,
     duration: '3:42',
-    plays: '1.8M plays',
+    get plays() { return _translateCopy("copy.69b41bb59853", { defaultValue: "{{value1}} plays", value1: '1.8M' }); },
     coverArt: 'https://images.unsplash.com/photo-1470225620780-dba8ba36b745?w=400',
-    uploadedAgo: '2 days ago',
+    get uploadedAgo() { return _translateCopy("copy.0d0d0a848ddf", { defaultValue: "{{count}} days ago", count: 2 }); },
   },
   {
     id: 'audio-2',
@@ -128,9 +128,9 @@ const AUDIO_TRACKS: AudioTrack[] = [
     artistHandle: '@cyberwave',
     verified: false,
     duration: '4:18',
-    plays: '456K plays',
+    get plays() { return _translateCopy("copy.69b41bb59853", { defaultValue: "{{value1}} plays", value1: '456K' }); },
     coverArt: 'https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?w=400',
-    uploadedAgo: '1 week ago',
+    get uploadedAgo() { return _translateCopy("copy.04fa7282ba91", { defaultValue: "{{count}} weeks ago", count: 1 }); },
   },
   {
     id: 'audio-3',
@@ -139,9 +139,9 @@ const AUDIO_TRACKS: AudioTrack[] = [
     artistHandle: '@neonkings',
     verified: true,
     duration: '3:55',
-    plays: '2.3M plays',
+    get plays() { return _translateCopy("copy.69b41bb59853", { defaultValue: "{{value1}} plays", value1: '2.3M' }); },
     coverArt: 'https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?w=400',
-    uploadedAgo: '3 days ago',
+    get uploadedAgo() { return _translateCopy("copy.0d0d0a848ddf", { defaultValue: "{{count}} days ago", count: 3 }); },
   },
   {
     id: 'audio-4',
@@ -150,9 +150,9 @@ const AUDIO_TRACKS: AudioTrack[] = [
     artistHandle: '@aurorasound',
     verified: true,
     duration: '5:02',
-    plays: '892K plays',
+    get plays() { return _translateCopy("copy.69b41bb59853", { defaultValue: "{{value1}} plays", value1: '892K' }); },
     coverArt: 'https://images.unsplash.com/photo-1514320291840-2e0a9bf2a9ae?w=400',
-    uploadedAgo: '4 days ago',
+    get uploadedAgo() { return _translateCopy("copy.0d0d0a848ddf", { defaultValue: "{{count}} days ago", count: 4 }); },
   },
   {
     id: 'audio-5',
@@ -161,9 +161,9 @@ const AUDIO_TRACKS: AudioTrack[] = [
     artistHandle: '@heavyfreq',
     verified: false,
     duration: '3:21',
-    plays: '345K plays',
+    get plays() { return _translateCopy("copy.69b41bb59853", { defaultValue: "{{value1}} plays", value1: '345K' }); },
     coverArt: 'https://images.unsplash.com/photo-1459749411175-04bf5292ceea?w=400',
-    uploadedAgo: '6 days ago',
+    get uploadedAgo() { return _translateCopy("copy.0d0d0a848ddf", { defaultValue: "{{count}} days ago", count: 6 }); },
   },
   {
     id: 'audio-6',
@@ -172,9 +172,9 @@ const AUDIO_TRACKS: AudioTrack[] = [
     artistHandle: '@chillmasters',
     verified: true,
     duration: '4:45',
-    plays: '1.1M plays',
+    get plays() { return _translateCopy("copy.69b41bb59853", { defaultValue: "{{value1}} plays", value1: '1.1M' }); },
     coverArt: 'https://images.unsplash.com/photo-1507838153414-b4b713384a76?w=400',
-    uploadedAgo: '1 day ago',
+    get uploadedAgo() { return _translateCopy("copy.0d0d0a848ddf", { defaultValue: "{{count}} days ago", count: 1 }); },
   },
   {
     id: 'audio-7',
@@ -183,9 +183,9 @@ const AUDIO_TRACKS: AudioTrack[] = [
     artistHandle: '@streetbeats',
     verified: false,
     duration: '3:38',
-    plays: '567K plays',
+    get plays() { return _translateCopy("copy.69b41bb59853", { defaultValue: "{{value1}} plays", value1: '567K' }); },
     coverArt: 'https://images.unsplash.com/photo-1571330735066-03aaa9429d89?w=400',
-    uploadedAgo: '5 days ago',
+    get uploadedAgo() { return _translateCopy("copy.0d0d0a848ddf", { defaultValue: "{{count}} days ago", count: 5 }); },
   },
   {
     id: 'audio-8',
@@ -194,9 +194,9 @@ const AUDIO_TRACKS: AudioTrack[] = [
     artistHandle: '@goldenhour',
     verified: true,
     duration: '4:12',
-    plays: '789K plays',
+    get plays() { return _translateCopy("copy.69b41bb59853", { defaultValue: "{{value1}} plays", value1: '789K' }); },
     coverArt: 'https://images.unsplash.com/photo-1487180144351-b8472da7d491?w=400',
-    uploadedAgo: '2 weeks ago',
+    get uploadedAgo() { return _translateCopy("copy.04fa7282ba91", { defaultValue: "{{count}} weeks ago", count: 2 }); },
   },
 ];
 
@@ -307,7 +307,7 @@ export default function MusicPage() {
                 track={{
                   ...track,
                   id: `podcast-${track.id}`,
-                  title: `Episode ${i + 1}: ${track.title}`,
+                  title: _copy("copy.5c0836a65f68", { defaultValue: "Episode {{value1}}: {{value2}}", value1: i + 1, value2: track.title }),
                   duration: `${45 + i * 12}:00`,
                   plays: `${Math.floor(Math.random() * 500) + 100}K plays`,
                 }} 

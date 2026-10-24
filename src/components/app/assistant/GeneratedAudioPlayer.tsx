@@ -180,7 +180,7 @@ export function GeneratedAudioPlayer({ audioUrl, className }: GeneratedAudioPlay
                 const file = new File([blob], 'dehub-audio.mp3', { type: 'audio/mpeg' });
                 const dataTransfer = new DataTransfer();
                 dataTransfer.items.add(file);
-                openPostModalWithFiles(dataTransfer.files, '🎵 Check out this AI-generated track!');
+                openPostModalWithFiles(dataTransfer.files, _copy("copy.4483d7be60d9", { defaultValue: "🎵 Check out this AI-generated track!" }));
               } catch (e) {
                 console.error('Failed to fetch audio for posting:', e);
               } finally {

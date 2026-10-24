@@ -107,8 +107,8 @@ export function VoiceTrainingDrawer({ open, onOpenChange, onSuccess, customApiKe
       );
 
       if (!res.ok) {
-        const err = await res.json().catch(() => ({ error: 'Clone failed' }));
-        throw new Error(err.error || 'Voice cloning failed');
+        const err = await res.json().catch(() => ({ error: _copy("copy.7f490a2dcdaa", { defaultValue: "Clone failed" }) }));
+        throw new Error(err.error || _copy("copy.9f818b7609a5", { defaultValue: "Voice cloning failed" }));
       }
 
       const data = await res.json();
@@ -132,7 +132,7 @@ export function VoiceTrainingDrawer({ open, onOpenChange, onSuccess, customApiKe
       onOpenChange(false);
     } catch (err: any) {
       console.error('Voice clone error:', err);
-      toast.error(err.message || 'Failed to clone voice');
+      toast.error(err.message || _copy("copy.1efd290efaf9", { defaultValue: "Failed to clone voice" }));
     } finally {
       setIsSubmitting(false);
     }
@@ -165,7 +165,7 @@ export function VoiceTrainingDrawer({ open, onOpenChange, onSuccess, customApiKe
             <Input
               value={voiceName}
               onChange={(e) => setVoiceName(e.target.value)}
-              placeholder="e.g. My Voice"
+              placeholder={_copy("copy.a432f534f6ce", { defaultValue: "e.g. My Voice" })}
               className="bg-white/10 border-white/10 text-white placeholder:text-white/40"
               maxLength={50}
             />

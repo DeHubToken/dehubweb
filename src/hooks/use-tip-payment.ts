@@ -130,10 +130,10 @@ export function useTipPayment({
 
       if (token ? !(amount >= MIN_DIRECT_TIP) : amount < MIN_TIP_DHB || amount > MAX_TIP_DHB) {
         if (token) {
-          toast.error(`Minimum tip is ${MIN_DIRECT_TIP} ${unit}`);
+          toast.error(_copy("copy.ebb51e28caa3", { defaultValue: "Minimum tip is {{value1}} {{value2}}", value1: MIN_DIRECT_TIP, value2: unit }));
           return;
         }
-        toast.error(dhbText(`Amount must be between ${MIN_TIP_DHB} and ${MAX_TIP_DHB} DHB`));
+        toast.error(dhbText(_copy("copy.0ea3027cdb14", { defaultValue: "Amount must be between {{value1}} and {{value2}} DHB", value1: MIN_TIP_DHB, value2: MAX_TIP_DHB })));
         return;
       }
 
@@ -149,7 +149,7 @@ export function useTipPayment({
 
         await switchChain(tipChainId);
 
-        toast.loading('Sending tip...', { id: 'tip-payment' });
+        toast.loading(_copy("copy.b278b8ea1c8c", { defaultValue: "Sending tip..." }), { id: 'tip-payment' });
 
         const tipResult = await sendTip({
           tokenId: tokenId || 0,
@@ -171,7 +171,7 @@ export function useTipPayment({
             const confirmedTip = await readConfirmedTipDetails(confirmedTxHash, tipChainId, token ?? undefined);
 
             if (token) {
-              toast.success(`${confirmedTip.amount.toLocaleString()} ${unit} tip sent!`, { id: 'tip-payment' });
+              toast.success(_copy("copy.a8537f3a1a4a", { defaultValue: "{{value1}} {{value2}} tip sent!", value1: confirmedTip.amount.toLocaleString(), value2: unit }), { id: 'tip-payment' });
               onConfirmed?.();
               return;
             }
@@ -189,14 +189,14 @@ export function useTipPayment({
 
             if (!saved) {
               console.error('[Tip] All DB save retries failed for tx:', confirmedTxHash);
-              toast.error('Tip confirmed on-chain but failed to save. Contact support with tx: ' + confirmedTxHash.slice(0, 10) + '...', {
+              toast.error(_copy("copy.6d8a60ec4ad9", { defaultValue: "Tip confirmed on-chain but failed to save. Contact support with tx: {{value1}}...", value1: confirmedTxHash.slice(0, 10) }), {
                 duration: 10000,
               });
               return;
             }
 
             // DB saved — reconcile UI
-            toast.success(dhbText(`DHB ${amount.toLocaleString()} tip sent!`), { id: 'tip-payment' });
+            toast.success(dhbText(_copy("copy.76a7616a1518", { defaultValue: "DHB {{value1}} tip sent!", value1: amount.toLocaleString() })), { id: 'tip-payment' });
             onConfirmed?.();
           } catch (err) {
             console.error('[Tip] Background confirmation failed:', err);
@@ -226,7 +226,7 @@ export function useTipPayment({
           const message = aa ? aa.parseTxError(error as Error) : '';
           if ((error as any)?.code === 'TRANSACTION_CONFIRMATION_PENDING') {
             toast.warning(message, { id: 'tip-payment', duration: 10000 });
-          } else toast.error(message || 'Tip failed', { id: 'tip-payment' });
+          } else toast.error(message || _copy("copy.07d3d96b534a", { defaultValue: "Tip failed" }), { id: 'tip-payment' });
         } else {
           // The wallet unlock flow owns the next toast. Remove this pending
           // state so its prompt never lands on top of a stale "Sending tip".

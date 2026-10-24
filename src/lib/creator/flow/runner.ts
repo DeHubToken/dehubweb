@@ -23,6 +23,7 @@ import { buildPipelineWaves, resolveInputs, resolveMentions } from './executor';
 import { streamAssistant, type AssistantModelId } from './assistant';
 import type { FlowNode, GenEntry } from './types';
 import i18n from '@/i18n';
+import { translateCopy as _translateCopy } from '@/i18n/copy';
 
 export const DEFAULT_IMAGE_MODEL = 'nano-banana-2';
 export const DEFAULT_VIDEO_MODEL = 'seedance-2.0';
@@ -142,7 +143,7 @@ export async function planRun(nodeIds: string[]): Promise<RunPlan> {
   if (waves.length === 0) throw new FlowRunError('Nothing to run', 'EMPTY');
 
   const issues = findIssues(nodeIds);
-  if (issues.length > 0) throw new FlowRunError(issues[0].key, 'INVALID');
+  if (issues.length > 0) throw new FlowRunError(_translateCopy(issues[0].key, { defaultValue: issues[0].key }), 'INVALID');
 
   const paid = scoped.filter((n) => n.type === 'imageGenNode' || n.type === 'videoGenNode');
   if (paid.length > 0 && !localStorage.getItem('dehub_token')) {
@@ -154,7 +155,7 @@ export async function planRun(nodeIds: string[]): Promise<RunPlan> {
   const items: PlanItem[] = [];
   for (const n of scoped) {
     if (n.type === 'assistantNode') {
-      items.push({ nodeId: n.id, label: n.data.label, kind: 'assistant', model: (n.data.assistantModel as string) || 'gemini-flash', modelName: 'Assistant', priceDhb: 0 });
+      items.push({ nodeId: n.id, label: n.data.label, kind: 'assistant', model: (n.data.assistantModel as string) || 'gemini-flash', modelName: _translateCopy("copy.391e40515277", { defaultValue: "Assistant" }), priceDhb: 0 });
       continue;
     }
     if (n.type === 'imageGenNode') {
@@ -185,7 +186,7 @@ function waitForJob(jobId: string): Promise<GenerationJob> {
     const check = (jobs: GenerationJob[]) => {
       const job = jobs.find((j) => j.id === jobId);
       if (!job) {
-        reject(new Error('The job was removed before it finished.'));
+        reject(new Error(_translateCopy("copy.cda7e5fa6275", { defaultValue: "The job was removed before it finished." })));
         return true;
       }
       if (job.status === 'running') return false;
@@ -241,7 +242,7 @@ async function runImageNode(node: FlowNode, txHash: string | undefined) {
     updateNodeData(node.id, { status: 'done', imageUrl: job.url, jobId: undefined });
     return;
   }
-  const message = job.error || 'Generation failed';
+  const message = job.error || _translateCopy("copy.78257562583c", { defaultValue: "Generation failed" });
   settleGeneration(node.id, slot, { error: message });
   updateNodeData(node.id, { status: 'error', errorMsg: message, jobId: undefined });
   throw new Error(message);
@@ -285,7 +286,7 @@ async function runVideoNode(node: FlowNode, txHash: string | undefined) {
     updateNodeData(node.id, { status: 'done', videoUrl: job.url, capturedFrameUrl: undefined, jobId: undefined });
     return;
   }
-  const message = job.error || 'Generation failed';
+  const message = job.error || _translateCopy("copy.78257562583c", { defaultValue: "Generation failed" });
   settleGeneration(node.id, slot, { error: message });
   updateNodeData(node.id, { status: 'error', errorMsg: message, jobId: undefined });
   throw new Error(message);
@@ -362,7 +363,7 @@ export async function executeRun(plan: RunPlan, txHash: string | undefined, prog
             if (node.type === 'imageGenNode') await runImageNode(node, txHash);
             else if (node.type === 'videoGenNode') await runVideoNode(node, txHash);
             else if (node.type === 'assistantNode') await runAssistantNode(node);
-            log(`[${node.data.label}] done`);
+            log(_translateCopy("copy.59c7c1fa6f67", { defaultValue: "[{{value1}}] done", value1: node.data.label }));
           } catch (e) {
             failed.add(id);
             failures += 1;

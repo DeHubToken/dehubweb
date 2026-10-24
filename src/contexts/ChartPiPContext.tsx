@@ -1,3 +1,4 @@
+import { translateCopy as _translateCopy } from '@/i18n/copy';
 /**
  * Chart Picture-in-Picture Context
  * =================================
@@ -64,11 +65,11 @@ export function ChartPiPProvider({ children }: { children: ReactNode }) {
     const id = `chart-pip-${item.symbol}-${Date.now()}`;
     setChartPiPs(prev => {
       if (prev.some(p => p.symbol.toUpperCase() === item.symbol.toUpperCase())) {
-        toast.info(`${item.symbol} chart is already floating`);
+        toast.info(_translateCopy("copy.a55f6ae8cf6b", { defaultValue: "{{value1}} chart is already floating", value1: item.symbol }));
         return prev;
       }
       if (prev.length >= MAX_CHART_PIP) {
-        toast.error(`Maximum ${MAX_CHART_PIP} floating charts allowed`);
+        toast.error(_translateCopy("copy.1f3571fe06c9", { defaultValue: "Maximum {{value1}} floating charts allowed", value1: MAX_CHART_PIP }));
         return prev;
       }
       return [...prev, { ...item, id }];

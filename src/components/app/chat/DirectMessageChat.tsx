@@ -1,4 +1,4 @@
-import { useTranslation as _useCopy } from 'react-i18next';
+import { useTranslation as _useCopy, Trans } from 'react-i18next';
 import { useDraftState } from '@/hooks/use-draft-state';
 import { useSurfaceDraft } from '@/hooks/use-surface-draft';
 /**
@@ -202,7 +202,7 @@ function VoiceMessagePlayer({
       >
         {isPlaying ? <Pause className="w-4 h-4" /> : <Play className="w-4 h-4" />}
         <span>{_copy("copy.e7d42aa1a046", { defaultValue: "🎤 Voice" })}</span>
-        {duration != null && <span className="text-xs text-zinc-400">{duration}s</span>}
+        {duration != null && <span className="text-xs text-zinc-400">{_copy("copy.e46818576648", { defaultValue: "{{value1}}s", value1: duration })}</span>}
       </button>
     </div>
   );
@@ -447,7 +447,7 @@ const MessageBubble = memo(function MessageBubble({
   const displayName = message.sender?.displayName || message.sender?.username ||
     (message.sender?.address
       ? `${message.sender.address.slice(0, 6)}...${message.sender.address.slice(-4)}`
-      : 'User');
+      : _copy("copy.b512d97e7cbf", { defaultValue: "User" }));
   const senderProfilePath = message.sender?.username
     ? `/${message.sender.username}`
     : message.sender?.address
@@ -796,7 +796,7 @@ const MessageBubble = memo(function MessageBubble({
             {message.msgType === 'gif' && primaryMediaUrl && (
               <img
                 src={primaryMediaUrl}
-                alt="GIF"
+                alt={tr('emojiPicker.tabGif', 'GIF')}
                 className="max-w-full max-h-48 rounded-lg"
               />
             )}
@@ -1269,7 +1269,7 @@ export function DirectMessageChat({ conversation, onBack, initialComposerText, d
 
   const avatarUrl = buildAvatarUrl(otherUser?.address || '', otherUser?.avatarImageUrl || otherUser?.avatarUrl);
   const displayName = otherUser?.displayName || otherUser?.display_name || otherUser?.username ||
-    (otherUser?.address ? `${otherUser.address.slice(0, 6)}...${otherUser.address.slice(-4)}` : 'User');
+    (otherUser?.address ? `${otherUser.address.slice(0, 6)}...${otherUser.address.slice(-4)}` : _copy("copy.b512d97e7cbf", { defaultValue: "User" }));
   const profileLink = otherUser?.username ? `/${otherUser.username}` : otherUser?.address ? `/${otherUser.address}` : '#';
 
   // createAndStart — get/create conversation + dmFee
@@ -1660,9 +1660,9 @@ export function DirectMessageChat({ conversation, onBack, initialComposerText, d
       id: replyTarget._id,
       userId: sender?.address || sender?._id || '',
       userName: sender?.displayName || sender?.username
-        || (sender?.address ? `${sender.address.slice(0, 6)}...${sender.address.slice(-4)}` : 'User'),
+        || (sender?.address ? `${sender.address.slice(0, 6)}...${sender.address.slice(-4)}` : _copy("copy.b512d97e7cbf", { defaultValue: "User" })),
       content: replyTarget.content
-        || (replyTarget.encMedia ? encryptedMediaLabel(replyTarget.encMedia, _copy) : replyTarget.msgType === 'voice' ? '🎤 Voice' : ''),
+        || (replyTarget.encMedia ? encryptedMediaLabel(replyTarget.encMedia, _copy) : replyTarget.msgType === 'voice' ? _copy("copy.e7d42aa1a046", { defaultValue: "🎤 Voice" }) : ''),
       timestamp: new Date(replyTarget.createdAt),
       type: replyTarget.msgType === 'gif' ? 'gif' as const : replyTarget.msgType === 'msg' ? 'text' as const : 'image' as const,
     };
@@ -1694,7 +1694,7 @@ export function DirectMessageChat({ conversation, onBack, initialComposerText, d
       wire = await prepareOutgoing(otherUser?.address, trimmed);
       await emitEditMessage({ dmId: resolvedConversationId, messageId, content: wire.content });
     } catch (err) {
-      toast.error(err instanceof Error ? err.message : 'Could not save the edit.');
+      toast.error(err instanceof Error ? err.message : _copy("copy.e408e6277aae", { defaultValue: "Could not save the edit." }));
       return false;
     }
 
@@ -1711,7 +1711,7 @@ export function DirectMessageChat({ conversation, onBack, initialComposerText, d
       return { ...old, pages };
     });
     return true;
-  }, [queryClient, resolvedConversationId, otherUser?.address]);
+  }, [queryClient, resolvedConversationId, otherUser?.address, _copy]);
 
   /*
    * An encrypted attachment is forwarded without re-uploading it: the file on
@@ -1723,7 +1723,7 @@ export function DirectMessageChat({ conversation, onBack, initialComposerText, d
   const forwardEncryptedMedia = useCallback(
     async (message: DmMessage, media: MediaDescriptor, targetConversationId: string) => {
       const stored = message.mediaUrls?.[0]?.url;
-      if (!stored) throw new Error('This attachment is still uploading.');
+      if (!stored) throw new Error(_copy("copy.731440416c31", { defaultValue: "This attachment is still uploading." }));
       const targetPeer = peerAddressForConversation(queryClient, targetConversationId, walletAddress);
       const wire = await prepareOutgoing(targetPeer, encodeMediaDescriptor(media));
       if (wire.encrypted && wire.content.length <= MAX_ENVELOPE_CHARS) {
@@ -1742,7 +1742,7 @@ export function DirectMessageChat({ conversation, onBack, initialComposerText, d
       queryClient.invalidateQueries({ queryKey: messagesKeys.messages(targetConversationId) });
       queryClient.invalidateQueries({ queryKey: messagesKeys.conversations() });
     },
-    [queryClient, walletAddress, user?._id],
+    [queryClient, walletAddress, user?._id, _copy],
   );
 
   const handleForwardSelect = useCallback(
@@ -1786,7 +1786,7 @@ export function DirectMessageChat({ conversation, onBack, initialComposerText, d
           });
         }
       } catch (err) {
-        toast.error(err instanceof Error ? err.message : 'Could not forward the message.');
+        toast.error(err instanceof Error ? err.message : _copy("copy.60761edbfeb6", { defaultValue: "Could not forward the message." }));
         return;
       }
       toast.success(_copy("copy.4b0ad27c8ac8", { defaultValue: "Message forwarded" }));
@@ -1943,7 +1943,7 @@ export function DirectMessageChat({ conversation, onBack, initialComposerText, d
         }
 
         console.log('[DM Fee] Paying', activeFee, 'DHB to recipient:', recipientAddress, '| chain:', chainId);
-        toast.loading('Processing payment...', { id: 'dm-fee-send' });
+        toast.loading(_copy("copy.c03dae247d6d", { defaultValue: "Processing payment..." }), { id: 'dm-fee-send' });
 
         const tipResult = await sendTip({
           tokenId: 0,
@@ -1962,7 +1962,7 @@ export function DirectMessageChat({ conversation, onBack, initialComposerText, d
           bumpTxConfirmations();
         }
 
-        toast.success(dhbText(`Paid ${activeFee.toLocaleString()} DHB`), { id: 'dm-fee-send', duration: 2000 });
+        toast.success(dhbText(_copy("copy.ab9b7678406a", { defaultValue: "Paid {{value1}} DHB", value1: activeFee.toLocaleString() })), { id: 'dm-fee-send', duration: 2000 });
 
         // Update balance after payment
         if (chainId === BASE_CHAIN_ID) {
@@ -1992,7 +1992,7 @@ export function DirectMessageChat({ conversation, onBack, initialComposerText, d
             duration: 8000,
           });
         } else {
-          toastTxError(error, 'Payment failed', { id: 'dm-fee-send' });
+          toastTxError(error, _copy("copy.17aadc092fe6", { defaultValue: "Payment failed" }), { id: 'dm-fee-send' });
         }
         
         // Remove optimistic message on failure
@@ -2065,13 +2065,17 @@ export function DirectMessageChat({ conversation, onBack, initialComposerText, d
             // for a second one.
             paidTxHashRef.current = { hash: feeTxHash, content: restored };
           }
-          const reason = err instanceof Error && err.message ? err.message : 'Failed to send message';
+          const reason = err instanceof Error && err.message ? err.message : '';
           toast.error(
             restored
-              ? `${reason} Your message is back in the box.`
+              ? reason
+                ? _copy("copy.be9f2a4ccc47", { defaultValue: "{{value1}} Your message is back in the box.", value1: reason })
+                : _copy("copy.bbed874d4125", { defaultValue: "Failed to send message. Your message is back in the box." })
               : mediaFile || gifUrl
-                ? `${reason} Please attach it again.`
-                : reason,
+                ? reason
+                  ? _copy("copy.4805a5986928", { defaultValue: "{{value1}} Please attach it again.", value1: reason })
+                  : _copy("copy.2b7dfba1fd62", { defaultValue: "Failed to send message. Please attach it again." })
+                : reason || _copy("copy.66b8e077d85f", { defaultValue: "Failed to send message" }),
           );
           return false;
         },
@@ -2105,7 +2109,7 @@ export function DirectMessageChat({ conversation, onBack, initialComposerText, d
       }
     } catch (err) {
       console.error('Block/unblock error:', err);
-      toast.error(isBlocked ? 'Failed to unblock' : 'Failed to block');
+      toast.error(isBlocked ? _copy("copy.576a5b77b7f1", { defaultValue: "Failed to unblock" }) : _copy("copy.4fe0d0facd1a", { defaultValue: "Failed to block" }));
     } finally {
       setIsBlockProcessing(false);
     }
@@ -2521,7 +2525,7 @@ export function DirectMessageChat({ conversation, onBack, initialComposerText, d
           accountBanned
             ? tr('banned.line')
             : initError && isVirtualConv
-            ? 'Connection failed — tap Retry above'
+            ? _copy("copy.5dbb36f20e18", { defaultValue: "Connection failed — tap Retry above" })
             : feeSendDisabled
             ? tr('messages.feeNotEnough', { amount: activeFee.toLocaleString() })
             : undefined
@@ -2550,8 +2554,14 @@ export function DirectMessageChat({ conversation, onBack, initialComposerText, d
         <AlertDialogContent className="bg-black/60 backdrop-blur-[24px] border border-white/10 shadow-2xl">
           <AlertDialogHeader>
             <AlertDialogTitle className="text-white">{tr('messages.feeWarningTitle')}</AlertDialogTitle>
-            <AlertDialogDescription className="text-zinc-400">{_copy("copy.ad27ba3bd0f2", { defaultValue: "The messages you send to " })}{displayName}{_copy("copy.af4f82f3bb35", { defaultValue: " are paid and will cost" })}{' '}
-              <span className="text-white font-semibold">{activeFee.toLocaleString()} <DhbCoin /></span>{_copy("copy.a9599402ff8f", { defaultValue: " each. Are you sure you want to continue?" })}</AlertDialogDescription>
+            <AlertDialogDescription className="text-zinc-400">
+              <Trans
+                i18nKey="copy.1e488da3dfa7"
+                defaults="The messages you send to {{value1}} are paid and will cost <amount>{{value2}}</amount> <coin></coin> each. Are you sure you want to continue?"
+                values={{ value1: displayName, value2: activeFee.toLocaleString() }}
+                components={{ amount: <span className="text-white font-semibold" />, coin: <DhbCoin /> }}
+              />
+            </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
             <AlertDialogCancel className="bg-zinc-800 border-zinc-700 text-white hover:bg-zinc-700">{_copy("copy.19766ed6ccb2", { defaultValue: "Cancel" })}</AlertDialogCancel>

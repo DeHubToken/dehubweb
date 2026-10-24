@@ -584,8 +584,8 @@ export function ImagesFeed({
   const EmptyState = () => (
     <AppState
       icon={isError ? 'notifications' : 'images'}
-      title={isError ? 'Images could not load' : 'No images yet'}
-      description={isError ? 'Try loading the image feed again.' : 'Image posts will appear here.'}
+      title={isError ? _translateCopy("copy.37c7145de50e", { defaultValue: "Images could not load" }) : _translateCopy("copy.0318e75932f9", { defaultValue: "No images yet" })}
+      description={isError ? _translateCopy("copy.0ab44d0aca8a", { defaultValue: "Try loading the image feed again." }) : _translateCopy("copy.ff00aefda574", { defaultValue: "Image posts will appear here." })}
       kind={isError ? 'error' : 'empty'}
       size="page"
       primaryAction={isError ? { get label() { return _translateCopy("copy.d8b8392e2c54", { defaultValue: "Try again" }); }, onClick: () => refetch(), icon: <RefreshCw /> } : undefined}

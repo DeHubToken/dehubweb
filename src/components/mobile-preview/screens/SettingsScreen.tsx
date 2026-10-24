@@ -18,24 +18,24 @@ const SETTINGS_SECTIONS = [
   {
     get title() { return _translateCopy("copy.7e1b0d5641f2", { defaultValue: "Account" }); },
     items: [
-      { icon: User, get label() { return _translateCopy("copy.fec2ac0f4cf1", { defaultValue: "Edit Profile" }); }, desc: 'Name, bio, avatar' },
-      { icon: Bell, get label() { return _translateCopy("copy.788011833a5a", { defaultValue: "Notifications" }); }, desc: 'Push & email preferences' },
-      { icon: Shield, get label() { return _translateCopy("copy.54a57c3147c4", { defaultValue: "Privacy" }); }, desc: 'Post visibility, followers' },
+      { icon: User, get label() { return _translateCopy("copy.fec2ac0f4cf1", { defaultValue: "Edit Profile" }); }, get desc() { return _translateCopy("copy.ceaf691ad344", { defaultValue: "Name, bio, avatar" }); } },
+      { icon: Bell, get label() { return _translateCopy("copy.788011833a5a", { defaultValue: "Notifications" }); }, get desc() { return _translateCopy("copy.1194ca96f308", { defaultValue: "Push & email preferences" }); } },
+      { icon: Shield, get label() { return _translateCopy("copy.54a57c3147c4", { defaultValue: "Privacy" }); }, get desc() { return _translateCopy("copy.44979ef7a31c", { defaultValue: "Post visibility, followers" }); } },
     ],
   },
   {
     get title() { return _translateCopy("copy.66962f72a088", { defaultValue: "Preferences" }); },
     items: [
-      { icon: Globe, get label() { return _translateCopy("copy.a4fe65264ef7", { defaultValue: "Language" }); }, desc: 'English' },
-      { icon: Moon, get label() { return _translateCopy("copy.df8c7c89b3e4", { defaultValue: "Dark Mode" }); }, desc: 'Always on', toggle: true },
-      { icon: Palette, get label() { return _translateCopy("copy.3907fa7f8072", { defaultValue: "Appearance" }); }, desc: 'Theme & colors' },
-      { icon: Smartphone, get label() { return _translateCopy("copy.34e108c0896d", { defaultValue: "Display" }); }, desc: 'Font size, layout' },
+      { icon: Globe, get label() { return _translateCopy("copy.a4fe65264ef7", { defaultValue: "Language" }); }, get desc() { return _translateCopy("copy.ba118bf7fc9c", { defaultValue: "English" }); } },
+      { icon: Moon, get label() { return _translateCopy("copy.df8c7c89b3e4", { defaultValue: "Dark Mode" }); }, get desc() { return _translateCopy("copy.044ba8a9ae43", { defaultValue: "Always on" }); }, toggle: true },
+      { icon: Palette, get label() { return _translateCopy("copy.3907fa7f8072", { defaultValue: "Appearance" }); }, get desc() { return _translateCopy("copy.38e68237670c", { defaultValue: "Theme & colors" }); } },
+      { icon: Smartphone, get label() { return _translateCopy("copy.34e108c0896d", { defaultValue: "Display" }); }, get desc() { return _translateCopy("copy.4c92455bc211", { defaultValue: "Font size, layout" }); } },
     ],
   },
   {
     get title() { return _translateCopy("copy.be91940b79f4", { defaultValue: "Support" }); },
     items: [
-      { icon: HelpCircle, get label() { return _translateCopy("copy.a78cebc44214", { defaultValue: "Help Center" }); }, desc: 'FAQs & guides' },
+      { icon: HelpCircle, get label() { return _translateCopy("copy.a78cebc44214", { defaultValue: "Help Center" }); }, get desc() { return _translateCopy("copy.4c10afc9077a", { defaultValue: "FAQs & guides" }); } },
     ],
   },
 ];

@@ -147,7 +147,7 @@ export function IncomeChart() {
           )}
         </div>
         <GlassFilterRow
-          items={timeFilters.map((f) => ({ key: f, label: f }))}
+          items={timeFilters.map((f) => ({ key: f, label: f === 'Max' ? t("copy.a1a5936d3b0f", { defaultValue: "Max" }) : f }))}
           activeKey={activeFilter}
           onSelect={(key) => setActiveFilter(key)}
         />

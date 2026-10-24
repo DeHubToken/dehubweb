@@ -1,3 +1,4 @@
+import { translateCopy as _translateCopy } from '@/i18n/copy';
 import { useTranslation as _useCopy } from 'react-i18next';
 import { useEffect, useLayoutEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -38,14 +39,14 @@ interface ArticleComposerProps {
 
 type Tool = { key: string; icon: typeof Bold; before: string; after: string; placeholder: string; block: boolean };
 const TOOLS: Tool[] = [
-  { key: 'heading', icon: Heading1, before: '# ', after: '', placeholder: 'Heading', block: true },
-  { key: 'subheading', icon: Heading2, before: '## ', after: '', placeholder: 'Subheading', block: true },
-  { key: 'bold', icon: Bold, before: '**', after: '**', placeholder: 'bold text', block: false },
-  { key: 'italic', icon: Italic, before: '*', after: '*', placeholder: 'italic text', block: false },
-  { key: 'quote', icon: Quote, before: '> ', after: '', placeholder: 'Quote', block: true },
-  { key: 'bullets', icon: List, before: '- ', after: '', placeholder: 'List item', block: true },
-  { key: 'numbers', icon: ListOrdered, before: '1. ', after: '', placeholder: 'List item', block: true },
-  { key: 'link', icon: Link2, before: '[', after: '](https://)', placeholder: 'link text', block: false },
+  { key: 'heading', icon: Heading1, before: '# ', after: '', get placeholder() { return _translateCopy("copy.b34f17f02ecf", { defaultValue: "Heading" }); }, block: true },
+  { key: 'subheading', icon: Heading2, before: '## ', after: '', get placeholder() { return _translateCopy("copy.f593a11d4a56", { defaultValue: "Subheading" }); }, block: true },
+  { key: 'bold', icon: Bold, before: '**', after: '**', get placeholder() { return _translateCopy("copy.fae745ccad9a", { defaultValue: "bold text" }); }, block: false },
+  { key: 'italic', icon: Italic, before: '*', after: '*', get placeholder() { return _translateCopy("copy.5ca0a3629fd9", { defaultValue: "italic text" }); }, block: false },
+  { key: 'quote', icon: Quote, before: '> ', after: '', get placeholder() { return _translateCopy("copy.eb4cdebd82bf", { defaultValue: "Quote" }); }, block: true },
+  { key: 'bullets', icon: List, before: '- ', after: '', get placeholder() { return _translateCopy("copy.201333ac71bc", { defaultValue: "List item" }); }, block: true },
+  { key: 'numbers', icon: ListOrdered, before: '1. ', after: '', get placeholder() { return _translateCopy("copy.201333ac71bc", { defaultValue: "List item" }); }, block: true },
+  { key: 'link', icon: Link2, before: '[', after: '](https://)', get placeholder() { return _translateCopy("copy.9ccec3cf40d4", { defaultValue: "link text" }); }, block: false },
 ];
 
 /** Grows a textarea to its content so the page, not the box, scrolls. */

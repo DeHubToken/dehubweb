@@ -1,3 +1,4 @@
+import { translateCopy as _translateCopy } from '@/i18n/copy';
 import { useTranslation as _useCopy } from 'react-i18next';
 import { useSurfaceDraft } from '@/hooks/use-surface-draft';
 /**
@@ -85,8 +86,11 @@ const MIGRATE_PENDING_KEY = 'dehub_legacy_migration_pending';
 
 const OLD_LOGIN_LABELS: Record<string, string> = {
   google: 'Google', apple: 'Apple', twitter: 'X (Twitter)', discord: 'Discord',
-  email: 'Email', email_passwordless: 'Email',
-  sms: 'Phone (SMS)', sms_passwordless: 'Phone (SMS)', phone: 'Phone (SMS)',
+  get email() { return _translateCopy("copy.969ccbd3cf63", { defaultValue: "Email" }); },
+  get email_passwordless() { return _translateCopy("copy.969ccbd3cf63", { defaultValue: "Email" }); },
+  get sms() { return _translateCopy("copy.75d6c93885ba", { defaultValue: "Phone (SMS)" }); },
+  get sms_passwordless() { return _translateCopy("copy.75d6c93885ba", { defaultValue: "Phone (SMS)" }); },
+  get phone() { return _translateCopy("copy.75d6c93885ba", { defaultValue: "Phone (SMS)" }); },
 };
 
 /**
@@ -283,7 +287,7 @@ export function WalletCreateStep({ userId, onComplete, intent = null, securing =
       })
       .catch((e) => {
         console.error('[Migrate] Redirect resume failed:', e);
-        setError(e instanceof Error ? e.message : 'Migration failed. Please try again.');
+        setError(e instanceof Error ? e.message : _copy("copy.d5d921be4047", { defaultValue: "Migration failed. Please try again." }));
       })
       .finally(() => setMigrateBusy(null));
   }, [securing]);
@@ -332,7 +336,7 @@ export function WalletCreateStep({ userId, onComplete, intent = null, securing =
       return;
     }
     if (provider === 'email_passwordless' && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(migrateEmail)) {
-      setError('Enter the email you used on your old account');
+      setError(_copy("copy.5b1492e510f2", { defaultValue: "Enter the email you used on your old account" }));
       return;
     }
     // SMS identifies the account BY the hint, so a wrong shape silently returns
@@ -341,7 +345,7 @@ export function WalletCreateStep({ userId, onComplete, intent = null, securing =
     if (provider === 'sms_passwordless') {
       const normalised = normalisePhoneHint(migratePhone);
       if (!normalised) {
-        setError('Enter your number with the country code, e.g. +34 659265340');
+        setError(_copy("copy.76ad8fdf1b75", { defaultValue: "Enter your number with the country code, e.g. +34 659265340" }));
         return;
       }
       phoneHint = normalised;
@@ -361,7 +365,7 @@ export function WalletCreateStep({ userId, onComplete, intent = null, securing =
       toast.success(_copy("copy.0b88365361e9", { defaultValue: "Old wallet retrieved. Matching it to your profile..." }));
     } catch (e) {
       console.error('[Migrate] Legacy login failed:', e);
-      setError(e instanceof Error ? e.message : 'Could not retrieve your old wallet. Please try again.');
+      setError(e instanceof Error ? e.message : _copy("copy.9ddf89261d94", { defaultValue: "Could not retrieve your old wallet. Please try again." }));
     } finally {
       setMigrateBusy(null);
     }
@@ -380,14 +384,14 @@ export function WalletCreateStep({ userId, onComplete, intent = null, securing =
     }
     if (mode === 'migrate') {
       if (!migratedKey) {
-        setError('Sign in with your old account first');
+        setError(_copy("copy.a46f39e9cccc", { defaultValue: "Sign in with your old account first" }));
         return null;
       }
       return migratedKey;
     }
     const trimmed = importPhrase.trim();
     if (!isValidMnemonic(trimmed) && !isRawPrivateKey(trimmed)) {
-      setError('Invalid recovery phrase or private key');
+      setError(_copy("copy.9a9a17963756", { defaultValue: "Invalid recovery phrase or private key" }));
       return null;
     }
     return trimmed;
@@ -396,14 +400,14 @@ export function WalletCreateStep({ userId, onComplete, intent = null, securing =
   const handlePasswordNext = async () => {
     setError(null);
     if (password !== confirm) {
-      setError("Passwords don't match");
+      setError(_copy("copy.ec5d490e7422", { defaultValue: "Passwords don't match" }));
       return;
     }
     setBusy(true);
     try {
       const assessment = await assessPassword(password);
       if (assessment.breached === true) {
-        setError('This password has appeared in a data breach — choose a different one');
+        setError(_copy("copy.200c70fe2782", { defaultValue: "This password has appeared in a data breach — choose a different one" }));
         return;
       }
       if (!assessment.acceptable) {
@@ -411,7 +415,7 @@ export function WalletCreateStep({ userId, onComplete, intent = null, securing =
         // The two used to disagree — the meter asked for 12 characters while
         // submit replied "mix letters, numbers, and symbols" — which reads as
         // the rules changing on you at the last step.
-        setError(assessment.warnings[0] ?? 'Choose a stronger password');
+        setError(assessment.warnings[0] ?? _copy("copy.701a69a12862", { defaultValue: "Choose a stronger password" }));
         return;
       }
     } finally {
@@ -437,7 +441,7 @@ export function WalletCreateStep({ userId, onComplete, intent = null, securing =
     const existing = await fetchWallet(userId).catch(() => null);
     if (existing && existing.ethAddress.toLowerCase() !== ethAddress.toLowerCase()) {
       throw new Error(
-        'This account already has a wallet — reload the page and sign in with it.',
+        _copy("copy.184b63d14517", { defaultValue: "This account already has a wallet — reload the page and sign in with it." }),
       );
     }
   };
@@ -448,8 +452,8 @@ export function WalletCreateStep({ userId, onComplete, intent = null, securing =
     if (!legacyAccountForWallet(foundAccounts, ownerAddress, safeAddress)) {
       throw new Error(
         safeAddress
-          ? 'This login recovered a different wallet from the profile you selected. Nothing was changed.'
-          : 'We could not verify this wallet against your DeHub profile. Try the recovery again before continuing.',
+          ? _copy("copy.7231b14b03fd", { defaultValue: "This login recovered a different wallet from the profile you selected. Nothing was changed." })
+          : _copy("copy.4acc79823766", { defaultValue: "We could not verify this wallet against your DeHub profile. Try the recovery again before continuing." }),
       );
     }
   };
@@ -474,7 +478,7 @@ export function WalletCreateStep({ userId, onComplete, intent = null, securing =
       await onComplete(pendingBackup.privKey);
     } catch (err) {
       signupLog.trace?.('wallet-signin-error', { reason: err instanceof Error ? err.message : String(err) });
-      setError(err instanceof Error ? err.message : 'Could not secure your account');
+      setError(err instanceof Error ? err.message : _copy("copy.c2fb518cd172", { defaultValue: "Could not secure your account" }));
     } finally {
       setBusy(false);
     }
@@ -494,7 +498,7 @@ export function WalletCreateStep({ userId, onComplete, intent = null, securing =
       await onComplete(derived.ethPrivateKey);
     } catch (err) {
       signupLog.trace?.('wallet-setup-error', { reason: err instanceof Error ? err.message : String(err) });
-      setError(err instanceof Error ? err.message : 'Could not secure your account');
+      setError(err instanceof Error ? err.message : _copy("copy.c2fb518cd172", { defaultValue: "Could not secure your account" }));
     } finally {
       setBusy(false);
     }
@@ -546,10 +550,10 @@ export function WalletCreateStep({ userId, onComplete, intent = null, securing =
         signupLog.trace?.('wallet-protection-unsupported');
         setBiometricAvailable(false);
         setProtection('password');
-        setError(`${err.message} Set a password instead.`);
+        setError(_copy("copy.972b469ab8ea", { defaultValue: "{{value1}} Set a password instead.", value1: err.message }));
         return;
       }
-      setError(err instanceof Error ? err.message : 'Could not secure your account');
+      setError(err instanceof Error ? err.message : _copy("copy.c2fb518cd172", { defaultValue: "Could not secure your account" }));
     } finally {
       setBusy(false);
     }
@@ -615,7 +619,7 @@ export function WalletCreateStep({ userId, onComplete, intent = null, securing =
       migratedAddress = deriveFromSecret(migratedKey).ethAddress;
     } catch (e) {
       console.error('[WalletCreate] Could not derive an address from the migrated key:', e);
-      migratedKeyError = 'We could not read that old wallet key. Please try another login method, or contact support.';
+      migratedKeyError = _copy("copy.1f513876a376", { defaultValue: "We could not read that old wallet key. Please try another login method, or contact support." });
     }
   }
   const matchedAccount = migratedAddress && safeAddressChecked

@@ -13,6 +13,7 @@
  */
 
 import type { VideoEncoding } from './whip';
+import { translateCopy as _translateCopy } from '@/i18n/copy';
 
 /** Device names that are a capture card (or an HDMI dongle), not a face cam. */
 export const CAPTURE_CARD_LABEL =
@@ -173,7 +174,7 @@ export function encodingForTrack(track: MediaStreamTrack): VideoEncoding {
 /** Thrown when capture card mode starts and no card can be found. */
 export class NoCaptureCardError extends Error {
   constructor() {
-    super('No capture card found. Plug it in, close OBS or Elgato Studio, then try again.');
+    super(_translateCopy('copy.a77f8e8ed8b9', { defaultValue: 'No capture card found. Plug it in, close OBS or Elgato Studio, then try again.' }));
     this.name = 'NoCaptureCardError';
   }
 }

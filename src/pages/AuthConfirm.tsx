@@ -1,3 +1,4 @@
+import { translateCopy as _translateCopy } from '@/i18n/copy';
 import { useTranslation as _useCopy } from 'react-i18next';
 import { useEffect, useRef, useState } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
@@ -52,7 +53,7 @@ export default function AuthConfirm() {
     const sync = params.get("sync");
 
     if (!tokenHash || !type) {
-      setError("This link is missing information. Try requesting a new one.");
+      setError(_translateCopy("copy.79bb2578e09b", { defaultValue: "This link is missing information. Try requesting a new one." }));
       setState("error");
       return;
     }
@@ -72,7 +73,8 @@ export default function AuthConfirm() {
       });
       if (error) {
         try { localStorage.removeItem(SUPA_LOGIN_PENDING_KEY); } catch { /* ignore */ }
-        setError(error.message || "This link is invalid or has expired.");
+        // Supabase words this in English; the sentence below says the same.
+        setError(_translateCopy("copy.5998ac369aec", { defaultValue: "This link is invalid or has expired." }));
         setState("error");
         return;
       }

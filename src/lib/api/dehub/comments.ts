@@ -2,6 +2,7 @@ import { apiCall, DEHUB_API_BASE, authedUpload } from './core';
 import { voiceRecordingFilename } from '@/lib/voice-recording';
 import type { DeHubUser } from './types';
 import i18n from 'i18next';
+import { translateCopy as _translateCopy } from '@/i18n/copy';
 
 // API comment response from /api/nft/{tokenId}/comments
 export interface ApiCommentResponse {
@@ -109,7 +110,7 @@ export interface EditCommentResponse {
  * looked posted until the next refetch quietly removed it, and the reason was
  * never shown to anybody.
  */
-function assertCommentAccepted(response: unknown, fallback = 'Could not post comment'): void {
+function assertCommentAccepted(response: unknown, fallback?: string): void {
   if (response && typeof response === 'object' && (response as { result?: unknown }).result === false) {
     // The author's reply controls refused this account
     // (dehub-stream-backend src/reaction/reply-policy). Said in the reader's
@@ -118,7 +119,7 @@ function assertCommentAccepted(response: unknown, fallback = 'Could not post com
       throw new Error(i18n.t('replyPolicy.refused'));
     }
     const message = (response as { error?: string }).error;
-    throw new Error(message || fallback);
+    throw new Error(message || (fallback ?? _translateCopy("copy.33eb41334d12", { defaultValue: "Could not post comment" })));
   }
 }
 

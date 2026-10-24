@@ -1,3 +1,5 @@
+import { translateCopy as _translateCopy } from '@/i18n/copy';
+
 const CDN_BASE = 'https://dehubcdn.ams3.cdn.digitaloceanspaces.com/';
 const TAG = /\[soundtrack:(\d+):([^:]*):([^:\]]*):?([^\]]*)\]/;
 
@@ -16,7 +18,7 @@ export function parseSoundtrackTag(description?: string | null): { soundtrackUrl
   } catch { return {}; }
   return {
     soundtrackUrl: url.href,
-    soundtrackTitle: decodeField(match[2]) || 'Sound',
+    soundtrackTitle: decodeField(match[2]) || _translateCopy('copy.46124e023603', { defaultValue: 'Sound' }),
     soundtrackCreator: decodeField(match[3]),
   };
 }

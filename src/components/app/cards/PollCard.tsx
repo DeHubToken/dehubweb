@@ -217,7 +217,7 @@ export function PollCard({ tokenId }: PollCardProps) {
       )}
 
       <div className="flex items-center justify-between text-xs text-zinc-500">
-        <span>{totalVotes} {totalVotes === 1 ? _copy("copy.ab274474a6aa", { defaultValue: "vote" }) : _copy("copy.9df609548dde", { defaultValue: "votes" })}</span>
+        <span>{_copy("copy.8ce57030b104", { defaultValue: "{{count}} votes", count: totalVotes })}</span>
         <div className="flex items-center gap-3">
           {poll.expiresAt && (
             <span>

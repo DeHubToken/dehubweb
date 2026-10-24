@@ -111,7 +111,7 @@ export function DataPortability() {
       const next = await planImport(data, address);
       setPlan(next);
     } catch (error) {
-      const message = error instanceof Error ? error.message : 'That file could not be read.';
+      const message = error instanceof Error ? error.message : _copy("copy.e9fe8433758b", { defaultValue: "That file could not be read." });
       toast.error(message);
     } finally {
       setIsPlanning(false);
