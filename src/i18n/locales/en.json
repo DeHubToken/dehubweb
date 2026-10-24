@@ -1,17 +1,17 @@
 {
   "desktopWordmark": {
-    "pageTitle": "Desktop wordmark preview",
-    "heading": "Desktop DEHUB wordmark",
+    "pageTitle": "Desktop logo preview",
+    "heading": "DeHub desktop logo",
     "day": "Day {{day}}",
-    "replay": "Replay entry",
+    "replay": "Play the intro again",
     "enlarge": "Enlarge",
-    "actualSize": "Actual header size",
-    "reassemble": "Reassemble the desktop wordmark",
+    "actualSize": "Actual size",
+    "reassemble": "Reassemble the logo",
     "loading": "Loading",
     "ready": "Ready",
-    "interrupted": "Graphics context interrupted",
-    "unavailable": "Unable to load the 3D preview",
-    "hint": "Two-second hold, then crumble. Hover or focus to reassemble."
+    "interrupted": "The graphics stopped responding",
+    "unavailable": "Could not load the 3D preview",
+    "hint": "The logo stays whole for two seconds, then breaks apart. Hover over it or select it to put it back together."
   },
   "mastodonApps": {
     "authTitle": "Sign in with DeHub",
