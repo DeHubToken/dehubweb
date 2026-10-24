@@ -3610,7 +3610,8 @@
       "sharedDetail": "{{claims}} réclamations par {{wallets}} portefeuilles",
       "open": "Voir chaque ligne « {{part}} »",
       "see": "Voir chaque ligne",
-      "footnote": "Seuls les fonds conservés pour les opérations sont comptés comme revenus ci-dessus. Les rachats et les récompenses partagées sont enregistrés séparément. Tous les montants et devises originales figurent dans le registre."
+      "footnote": "Seuls les fonds conservés pour les opérations sont comptés comme revenus ci-dessus. Les rachats et les récompenses partagées sont enregistrés séparément. Tous les montants et devises originales figurent dans le registre.",
+      "grossFootnote": "Le total des revenus ci-dessus comprend la BNB partagée avec les détenteurs et les stakers. Ces paiements ont été distribués, non conservés par DeHub. Les rachats restent séparés. Chaque montant et chaque devise d'origine peuvent être inspectés dans le grand livre."
     },
     "taxLedger": {
       "title": "Registre de la taxe du token",
@@ -3757,7 +3758,8 @@
     "buyTokensToUnlock": "Achetez des jetons DeHub pour débloquer un badge et ses SuperPouvoirs. Tout détenteur de badge les obtient — le staking n'est pas requis.",
     "currentIntro": "Les détenteurs de badge reçoivent de nouveaux boosts toutes les deux semaines. Team up est ouvert à tous : combinez la puissance de votre portefeuille avec jusqu'à sept autres et chaque membre obtient le badge que votre total débloque.",
     "currentPowersHeading": "Les douze puissances",
-    "goldenHourStarted": "Golden Hour en cours depuis {{minutes}} minutes — tout ce que vous publiez compte désormais double"
+    "goldenHourStarted": "Golden Hour en cours depuis {{minutes}} minutes — tout ce que vous publiez compte désormais double",
+    "signalFlareTo": "Flare de signal pour {{people}} personnes"
   },
   "work": {
     "integrity": {

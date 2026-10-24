@@ -2807,6 +2807,9 @@
       "wallTitle": "Ihe ndị mmadụ na-asị",
       "wallNote": "bipụtara n'ikike",
       "anonymous": "Onye otu DeHub"
+    },
+    "taxSplit": {
+      "grossFootnote": "Ngụkọta ego niile dị n 'elu gụnyere BNB kesara ndị njide na stakers. A kesara ụgwọ ndị a, DeHub ejighi ya. Buybacks nọgidere iche. Ọ bụla ego na mbụ ego nwere ike inyocha na ledger."
     }
   },
   "superpowers": {
@@ -2944,7 +2947,8 @@
     },
     "buyTokensToUnlockBadge": "Onye ọ bụla nwere akara ngosi ga-enweta SuperPowers. Zụta tokenịị DeHub iji meghee akara ngosi — anaghị achọ staking.",
     "buyTokensToUnlock": "Zụta tokenịị DeHub iji meghee akara ngosi na SuperPowers ya. Onye ọ bụla nwere akara ngosi ga-enweta ha — anaghị achọ staking.",
-    "goldenHourStarted": "Golden Hour na-agba maka {{minutes}} nkeji — ihe niile ị bipụtara ugbu a na-agụ okpukpu abụọ"
+    "goldenHourStarted": "Golden Hour na-agba maka {{minutes}} nkeji — ihe niile ị bipụtara ugbu a na-agụ okpukpu abụọ",
+    "signalFlareTo": "Ihe ịrịba ama Flare ka {{people}} ndị mmadụ"
   },
   "work": {
     "integrity": {

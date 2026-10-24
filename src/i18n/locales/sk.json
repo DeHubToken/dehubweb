@@ -2928,6 +2928,9 @@
       "wallTitle": "Čo hovoria ľudia",
       "wallNote": "zverejnené so súhlasom",
       "anonymous": "Člen DeHub"
+    },
+    "taxSplit": {
+      "grossFootnote": "Vyššie uvedená celková suma príjmov zahŕňa BNB zdieľanú s držiteľmi a stávkujúcimi. Tieto platby boli distribuované, nie zadržané spoločnosťou DeHub. Spätné odkúpenia zostávajú oddelené. Každá suma a pôvodná mena môžu byť skontrolované v hlavnej knihe."
     }
   },
   "superpowers": {
@@ -3065,7 +3068,8 @@
     },
     "buyTokensToUnlockBadge": "Každý držiteľ odznaku získa SuperSchopnosti. Kúpte si tokeny DeHub na odomknutie odznaku — stakovanie nie je potrebné.",
     "buyTokensToUnlock": "Kúpte si tokeny DeHub na odomknutie odznaku a jeho SuperSchopností. Každý držiteľ odznaku ich získa — stakovanie nie je potrebné.",
-    "goldenHourStarted": "Golden Hour beží {{minutes}} minút — všetko, čo teraz zverejníte, sa počíta dvojnásobne"
+    "goldenHourStarted": "Golden Hour beží {{minutes}} minút — všetko, čo teraz zverejníte, sa počíta dvojnásobne",
+    "signalFlareTo": "Signalizujte vzplanutie {{people}} ľudí"
   },
   "work": {
     "integrity": {

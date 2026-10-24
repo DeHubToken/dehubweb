@@ -2694,6 +2694,9 @@
       "toastSent": "Tank you — we go take your feedback for look.",
       "toastFailed": "Wetin go fail, try again!",
       "anonymous": "A DeHub member"
+    },
+    "taxSplit": {
+      "grossFootnote": "Revenyu wey dey above, im include BNB wey dey share wit holders and stakers. Payment dem dey distribute, no be say dem dey keep am for DeHub. Buyback dem dey separate. Every kobo and original currency wey you see, you fit check am for ledger."
     }
   },
   "superpowers": {

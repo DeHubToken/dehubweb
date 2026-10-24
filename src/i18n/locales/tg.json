@@ -2798,6 +2798,9 @@
       "wallTitle": "Мардум чӣ мегӯянд",
       "wallNote": "бо иҷозаи муаллиф нашр шудааст",
       "anonymous": "Узви DeHub"
+    },
+    "taxSplit": {
+      "grossFootnote": "Ang kabuuang kita sa itaas ay naglalaman ng BNB na ibahagi sa mga holders at stakers. Ин пардохтҳо тақсим карда шуданд, аз ҷониби DeHub нигоҳ дошта нашуданд. Buybacks алоҳида боқӣ мемонад. Ҳар як миқдор ва асъори аслӣ метавонад дар дафтар тафтиш карда шавад."
     }
   },
   "superpowers": {
@@ -2935,7 +2938,8 @@
     },
     "buyTokensToUnlockBadge": "Ҳар як дорандаи нишон метавонад SuperPowers гирад. Токенҳои DeHub-ро харед, то нишонро кушоед — стейкинг лозим нест.",
     "buyTokensToUnlock": "Токенҳои DeHub-ро харед, то нишон ва SuperPowers-и онро кушоед. Ҳар як дорандаи нишон онҳоро мегирад — стейкинг лозим нест.",
-    "goldenHourStarted": "Golden Hour барои {{minutes}} дақиқа давом мекунад — ҳама чизе, ки шумо ҳозир мегузоред, ду баробар ҳисоб мешавад"
+    "goldenHourStarted": "Golden Hour барои {{minutes}} дақиқа давом мекунад — ҳама чизе, ки шумо ҳозир мегузоред, ду баробар ҳисоб мешавад",
+    "signalFlareTo": "{{people}} people"
   },
   "work": {
     "integrity": {

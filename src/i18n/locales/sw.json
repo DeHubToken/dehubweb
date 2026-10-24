@@ -2826,6 +2826,9 @@
       "wallTitle": "Watu wanasema nini",
       "wallNote": "kuchapishwa kwa ruhusa",
       "anonymous": "Mwanachama wa DeHub"
+    },
+    "taxSplit": {
+      "grossFootnote": "Jumla ya mapato hapo juu ni pamoja na BNB inayoshirikiwa na wamiliki na stakers. Malipo haya yalisambazwa, hayakuhifadhiwa na DeHub. Ununuzi unabaki tofauti. Kila kiasi na sarafu ya awali inaweza kukaguliwa kwenye leja."
     }
   },
   "superpowers": {
@@ -2963,7 +2966,8 @@
     },
     "buyTokensToUnlockBadge": "Mwenye beji yeyote hupata SuperPowers. Nunua tokeni za DeHub ili kufungua beji — kuweka hisa hakuhitajiki.",
     "buyTokensToUnlock": "Nunua tokeni za DeHub ili kufungua beji na SuperPowers zake. Mwenye beji yeyote hupata hizo — kuweka hisa hakuhitajiki.",
-    "goldenHourStarted": "Saa ya Dhahabu inaendelea kwa dakika {{minutes}} — kila kitu unachochapisha sasa kinahesabiwa mara mbili"
+    "goldenHourStarted": "Saa ya Dhahabu inaendelea kwa dakika {{minutes}} — kila kitu unachochapisha sasa kinahesabiwa mara mbili",
+    "signalFlareTo": "Ishara Flare kwa {{people}} watu"
   },
   "work": {
     "integrity": {

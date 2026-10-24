@@ -2772,6 +2772,9 @@
       "wallTitle": "Mit mondanak az emberek",
       "wallNote": "engedéllyel közzétéve",
       "anonymous": "Egy DeHub tag"
+    },
+    "taxSplit": {
+      "grossFootnote": "A fenti teljes bevétel magában foglalja a BNB-T a tulajdonosokkal és a staker-ekkel megosztva. Ezeket a kifizetéseket a DeHub nem tartotta meg. A visszavásárlások külön maradnak. Minden összeg és eredeti pénznem ellenőrizhető a főkönyvben."
     }
   },
   "superpowers": {
@@ -2909,7 +2912,8 @@
     },
     "buyTokensToUnlockBadge": "Minden jelvénytulajdonos SuperPowers-t kap. Vásároljon DeHub tokeneket egy jelvény feloldásához – a staking nem szükséges.",
     "buyTokensToUnlock": "Vásároljon DeHub tokeneket egy jelvény és annak SuperPowers feloldásához. Minden jelvénytulajdonos megkapja őket – a staking nem szükséges.",
-    "goldenHourStarted": "Golden Hour futtatása {{minutes}} percig — minden, amit most posztolsz, duplán számít"
+    "goldenHourStarted": "Golden Hour futtatása {{minutes}} percig — minden, amit most posztolsz, duplán számít",
+    "signalFlareTo": "Jelzőtábla {{people}} személynek"
   },
   "work": {
     "integrity": {
