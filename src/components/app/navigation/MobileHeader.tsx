@@ -42,7 +42,7 @@ const HeaderLogo = memo(function HeaderLogo({ onClick, onPointerDown, isAuthenti
   return (
     <button onClick={onClick} onPointerDown={onPointerDown} className="block cursor-pointer translate-y-[2.5px] scale-[1.15]" aria-label={isAuthenticated ? _copy("copy.8ee0cba52fcd", { defaultValue: "dehub home" }) : _copy("copy.c189840cf7e2", { defaultValue: "Log in" })}>
       <FeedRefreshLogo>
-      <ElectricLogo>{theme === 'war' ? (
+      <ElectricLogo still={theme === 'war' ? <img src={dehubMark} alt="dehub" className="h-7 w-[33px]" decoding="async" /> : undefined}>{theme === 'war' ? (
         // Fixed width here rather than w-auto: the hologram is a canvas, which
         // has no intrinsic aspect ratio to derive a width from.
         <WarLogo src={dehubMark} alt="dehub" className="h-7 w-[33px]" />

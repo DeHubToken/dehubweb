@@ -2119,6 +2119,8 @@
     "anonymousLikes_other": "来自匿名徽章持有人的 {{count}} 个赞"
   },
   "postInfo": {
+    "unavailable": "不可用",
+    "ownersUnavailable": "目前无法读取当前所有者。",
     "title": "帖子信息",
     "tokenId": "代币ID",
     "mintedOn": "铸造于",
@@ -5650,6 +5652,8 @@
     "notEnoughTokensForBounty": "代币不足。需要 {{need}} 个代币，但只有 {{have}} 个。"
   },
   "events": {
+    "deleteConfirmTitle": "删除此活动？",
+    "deleteConfirmBody": "这将删除事件、其访客列表和每个人的聊天。此操作无法撤消。",
     "seoTitle": "活动 — DeHub 上的聚会与社区活动",
     "seoDescription": "浏览 DeHub 即将举行的社区活动，报名参加聚会，或在这个去中心化、由用户共同拥有的社交平台上举办你自己的活动。",
     "defaultSeoDescription": "DeHub 上的社区活动。",

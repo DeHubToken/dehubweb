@@ -2173,6 +2173,8 @@
     "anonymousLikes_other": "অনামী ব্যাজধারীগুলার থাকি {{count}}টা লাইক"
   },
   "postInfo": {
+    "ownersUnavailable": "এলা মালিকগুলার তথ্য পড়া যাওছে না।",
+    "unavailable": "পাওয়া যায় না",
     "title": "পোস্ট তথ্য",
     "tokenId": "টোকেন ID",
     "mintedOn": "তৈরি হইছে",
@@ -5194,6 +5196,8 @@
     "notEnoughTokensForBounty": "টোকেন পৰ্যাপ্ত নাই। {{need}} টোকেন লাগে, কিন্তু মেৰে {{have}} টোকেন আছে।"
   },
   "events": {
+    "deleteConfirmTitle": "এই ইভেন্টটা মুছি দিবেন?",
+    "deleteConfirmBody": "এইটা ইভেন্টটিকে, এর গেস্ট লিস্ট আর সবার চ্যাটটিকে মুছে ফেলে। এটা ফিরিয়ে আনা যাবে না।",
     "seoTitle": "DeHub-এ Events — Meetups & Community Events",
     "seoDescription": "DeHub-এ আগামী Community Events ब्राउজ कर, Meetups-এ RSVP कर, আর নিজे Events host कर— decentralized, user-owned social platform-এ।",
     "defaultSeoDescription": "DeHub-এ Community event.",

@@ -2118,6 +2118,8 @@
     "anonymousLikes_other": "Anonim nishon egalaridan {{count}} ta layk"
   },
   "postInfo": {
+    "unavailable": "Mavjud emas",
+    "ownersUnavailable": "Hozirgi egalarini hozir oʻqib boʻlmaydi.",
     "title": "Post ma'lumoti",
     "tokenId": "Token ID",
     "mintedOn": "Yaratilgan",
@@ -5655,6 +5657,8 @@
     "notEnoughTokensForBounty": "Tokenlar yetarli emas. {{need}} token kerak, lekin {{have}} bor."
   },
   "events": {
+    "deleteConfirmTitle": "Bu tadbir oʻchirib tashlansinmi?",
+    "deleteConfirmBody": "Bu tadbirni, undagi mehmonlar roʻyxatini va chatni hamma uchun olib tashlaydi. Buni bekor qilib boʻlmaydi.",
     "seoTitle": "Voqealar — DeHubda Topshiriqlar va Jamiyat Voqealari",
     "seoDescription": "DeHub jamiyatining kelajakdagi voqealarini koʻring, topishirlarga roʻyxatdan oʻtish va foydalanuvchilar tomonidan boshqariladigan, foydalanuvchilar malikligidagi ijtimoiy platformada oʻz voqeangizni oʻtkazing.",
     "defaultSeoDescription": "DeHubdagi jamiyat voqeasi.",

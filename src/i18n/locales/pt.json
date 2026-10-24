@@ -2120,6 +2120,8 @@
     "anonymousLikes_other": "{{count}} curtidas de portadores de emblema anônimos"
   },
   "postInfo": {
+    "unavailable": "Indisponível",
+    "ownersUnavailable": "Os proprietários atuais não podem ser lidos no momento.",
     "title": "Info do Post",
     "tokenId": "Token ID",
     "mintedOn": "Cunhado em",
@@ -5650,6 +5652,8 @@
     "notEnoughTokensForBounty": "Tokens insuficientes. Precisa de {{need}} tokens, mas tem {{have}}."
   },
   "events": {
+    "deleteConfirmTitle": "Eliminar este evento?",
+    "deleteConfirmBody": "Isso remove o evento, a lista de convidados e o chat para todos. Não pode ser desfeito.",
     "seoTitle": "Eventos — Encontros e Eventos Comunitários no DeHub",
     "seoDescription": "Procure eventos comunitários futuros do DeHub, confirme presença em encontros e crie seus próprios eventos na plataforma social descentralizada e de propriedade dos usuários.",
     "defaultSeoDescription": "Evento comunitário no DeHub.",

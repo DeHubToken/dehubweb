@@ -2066,6 +2066,8 @@
     "anonymousLikes_other": "ካብ ስሞም ዘይፍለጥ ወነንቲ ባጅ {{count}} ምፍታዋት"
   },
   "postInfo": {
+    "unavailable": "ኣይተረኽበን ።",
+    "ownersUnavailable": "እቶም ናይ ሕጂ ባለቤታት ኣብዚ እዋን እዚ ክነበብዎ ኣይክእሉን እዮም ።",
     "title": "ሓበሬታ ጽሑፍ",
     "tokenId": "ቶከን ID",
     "mintedOn": "ተፈጢሩ",
@@ -5513,6 +5515,8 @@
     "notEnoughTokensForBounty": "ቶክን ኣይኣኽሉን። {{need}} ቶክን የድልየካ እዩ ግን {{have}} ኣሎካ።"
   },
   "events": {
+    "deleteConfirmTitle": "ነዚ ፍጻመ እዚ ትሰርሖዶ ፧",
+    "deleteConfirmBody": "እዚ ነቲ ፍጻመ ፡ ዝርዝር ኣጋይሽኡን ዝርርብኡን ንኹሉ የጥፍኦ ። ክጠፍእ ኣይክእልን እዩ ።",
     "seoTitle": "ፍጻመታት — Meetups & Community Events on DeHub",
     "seoDescription": "ኣብ ዝመጽእ ናይ DeHub ማሕበረሰብ ፍጻመታት ፡ RSVP ንናይ ገዛእ ርእስኻ ፍጻመታት ኣብ ዝተማእከለ ፡ ናይ ተጠቀምቲ ዝብሎም ማሕበራዊ መድረኽ ንምእካብን ንምቕራብን ።",
     "defaultSeoDescription": "ማሕበረሰባዊ ፍጻመ ኣብ ደሆብ ።",

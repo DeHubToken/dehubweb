@@ -2113,6 +2113,8 @@
     "anonymousLikes_other": "{{count}} לייקים ממחזיקי תג אנונימיים"
   },
   "postInfo": {
+    "unavailable": "לא זמין",
+    "ownersUnavailable": "אי אפשר לקרוא את הבעלים הנוכחיים כרגע.",
     "title": "מידע על הפוסט",
     "tokenId": "מזהה טוקן",
     "mintedOn": "הוטבע ב",
@@ -5636,6 +5638,8 @@
     "notEnoughTokensForBounty": "אין מספיק אסימונים. נדרשים {{need}} אסימונים אך יש {{have}}."
   },
   "events": {
+    "deleteConfirmTitle": "מחק את האירוע הזה?",
+    "deleteConfirmBody": "פעולה זו מסירה את האירוע, את רשימת האורחים שלו ואת הצ'אט שלו לכולם. לא ניתן לבטל את הפעולה.",
     "seoTitle": "אירועים — מפגשים ואירועים קהילתיים בדהאב",
     "seoDescription": "עיין בקרוב באירועי קהילה של DeHub, RSVP למפגשים והנח את האירועים שלך בפלטפורמה חברתית מבוזרת ובבעלות משתמשים.",
     "defaultSeoDescription": "אירוע קהילתי ב - DeHub.",

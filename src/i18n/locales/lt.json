@@ -2099,6 +2099,8 @@
     "anonymousLikes_other": "Patiktukai iš anoniminių ženklelių turėtojų: {{count}}"
   },
   "postInfo": {
+    "unavailable": "Neprieinama",
+    "ownersUnavailable": "Dabartiniai savininkai šiuo metu negali būti skaitomi.",
     "title": "Įrašo informacija",
     "tokenId": "Žetono ID",
     "mintedOn": "Sukurta",
@@ -5628,6 +5630,8 @@
     "notEnoughTokensForBounty": "Nepakanka žetonų. Reikia {{need}} žetonų, bet turite {{have}}."
   },
   "events": {
+    "deleteConfirmTitle": "Ištrinti šį įvykį?",
+    "deleteConfirmBody": "Tai pašalina įvykį, jo svečių sąrašą ir pokalbį visiems. Tai negali būti anuliuota.",
     "seoTitle": "Renginiai — Susitikimai ir bendruomenės renginiai DeHub",
     "seoDescription": "Naršykite būsimus DeHub bendruomenės renginius, patvirtinkite dalyvavimą susitikimuose ir organizuokite savo renginius decentralizuotoje, vartotojui priklausančioje socialinėje platformoje.",
     "defaultSeoDescription": "Bendruomenės renginys DeHub.",

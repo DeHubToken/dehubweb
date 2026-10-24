@@ -4,7 +4,7 @@ import { CrumblingLogo } from './CrumblingLogo';
 const idleFrame: ElectricFrame = { bolts: [], x: 0, y: 0, charged: false, held: false };
 
 /** Idle costs no animation frames. Normal taps keep the existing action. */
-export function ElectricLogo({ children, active = true }: { children: ReactNode; active?: boolean }) {
+export function ElectricLogo({ children, still, active = true }: { children: ReactNode; still?: ReactNode; active?: boolean }) {
   const root = useRef<HTMLSpanElement>(null);
   const [frame, setFrame] = useState(idleFrame);
   const raf = useRef(0), start = useRef<number | null>(null), suppress = useRef(false);
@@ -43,7 +43,7 @@ export function ElectricLogo({ children, active = true }: { children: ReactNode;
     onContextMenu={e => e.preventDefault()}
     onClickCapture={e => { if (suppress.current) { e.preventDefault(); e.stopPropagation(); suppress.current = false; } }}
     style={{ display: 'inline-flex', position: 'relative', touchAction: 'none', userSelect: 'none', transform: `translate(${frame.x * .375}px,${frame.y * .375}px)` }}>
-    <span style={{ display: 'inline-flex', filter: frame.held ? frame.charged ? 'drop-shadow(-1px 0 2px #72d9ff) drop-shadow(1px 0 2px #ffe86c)' : 'drop-shadow(0 0 2px white) drop-shadow(0 0 4px #ffffffaa)' : undefined }}><CrumblingLogo>{children}</CrumblingLogo></span>
+    <span style={{ display: 'inline-flex', filter: frame.held ? frame.charged ? 'drop-shadow(-1px 0 2px #72d9ff) drop-shadow(1px 0 2px #ffe86c)' : 'drop-shadow(0 0 2px white) drop-shadow(0 0 4px #ffffffaa)' : undefined }}><CrumblingLogo still={still}>{children}</CrumblingLogo></span>
     {frame.bolts.length > 0 && <svg aria-hidden="true" viewBox="-44 -38 88 76" style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', overflow: 'visible', pointerEvents: 'none' }}>
       {frame.bolts.map((b, i) => <g key={i} opacity={b.opacity} fill="none" strokeLinejoin="miter" strokeLinecap="round"><polyline points={b.points.map(p => p.join(',')).join(' ')} stroke={b.colour} strokeWidth={b.width + 2} opacity={.2}/><polyline points={b.points.map(p => p.join(',')).join(' ')} stroke={b.colour} strokeWidth={b.width}/><polyline points={b.points.map(p => p.join(',')).join(' ')} stroke="white" strokeWidth={.45}/></g>)}
     </svg>}

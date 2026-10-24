@@ -2085,6 +2085,8 @@
     "anonymousLikes_other": "{{count}} patīk no anonīmiem nozīmīšu īpašniekiem"
   },
   "postInfo": {
+    "unavailable": "Nav pieejams",
+    "ownersUnavailable": "Pašreizējie īpašnieki nav lasāmi šajā brīdī.",
     "title": "Ieraksta informācija",
     "tokenId": "Žetona ID",
     "mintedOn": "Izveidots",
@@ -5608,6 +5610,8 @@
     "notEnoughTokensForBounty": "Nepietiek žetonu. Nepieciešami {{need}} žetoni, bet ir {{have}}."
   },
   "events": {
+    "deleteConfirmTitle": "Dzēst šo pasākumu?",
+    "deleteConfirmBody": "Tādējādi pasākums, tā viesu saraksts un tērzēšana tiek noņemta visiem. To nevar atsaukt.",
     "seoTitle": "Pasākumi — tikšanās un kopienas pasākumi DeHub",
     "seoDescription": "Apskatiet gaidāmos DeHub kopienas pasākumus, atzīmējiet dalību tikšanās reizēs un rīkojiet savus pasākumus decentralizētajā, lietotāju pārvaldītajā sociālajā platformā.",
     "defaultSeoDescription": "Kopienas pasākums DeHub.",

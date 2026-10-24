@@ -2127,6 +2127,8 @@
     "anonymousLikes_other": "{{count}} lượt thích từ những người giữ huy hiệu ẩn danh"
   },
   "postInfo": {
+    "unavailable": "Không khả dụng",
+    "ownersUnavailable": "Các chủ sở hữu hiện tại không thể đọc được ngay bây giờ.",
     "title": "Post Info",
     "tokenId": "Token ID",
     "mintedOn": "Minted On",
@@ -5658,6 +5660,8 @@
     "notEnoughTokensForBounty": "Không đủ token. Cần {{need}} token nhưng chỉ có {{have}}."
   },
   "events": {
+    "deleteConfirmTitle": "Xóa sự kiện này?",
+    "deleteConfirmBody": "Thao tác này sẽ xóa sự kiện, danh sách khách mời và cuộc trò chuyện cho tất cả mọi người. Không thể hoàn tác.",
     "seoTitle": "Sự kiện — Các Cuộc Gặp Gỡ & Sự Kiện Cộng Đồng trên DeHub",
     "seoDescription": "Duyệt các sự kiện cộng đồng sắp tới của DeHub, RSVP để tham dự các cuộc gặp gỡ và tổ chức các sự kiện của riêng bạn trên nền tảng xã hội phi tập trung, do người dùng sở hữu.",
     "defaultSeoDescription": "Sự kiện cộng đồng trên DeHub.",

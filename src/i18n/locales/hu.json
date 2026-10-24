@@ -2108,6 +2108,8 @@
     "anonymousLikes_other": "{{count}} kedvelés névtelen jelvénytulajdonosoktól"
   },
   "postInfo": {
+    "unavailable": "Nem érhető el",
+    "ownersUnavailable": "A jelenlegi tulajdonosok jelenleg nem olvashatók.",
     "title": "Bejegyzés infó",
     "tokenId": "Token ID",
     "mintedOn": "Létrehozva",
@@ -5579,6 +5581,8 @@
     "notEnoughTokensForBounty": "Nincs elég token. {{need}} token szükséges, de {{have}} van."
   },
   "events": {
+    "deleteConfirmTitle": "Törli ezt az eseményt?",
+    "deleteConfirmBody": "Ez eltávolítja az eseményt, a vendéglistát és a csevegést mindenki számára. Nem lehet visszavonni.",
     "seoTitle": "Események — Találkozók és közösségi események a DeHub-on",
     "seoDescription": "Böngésszen a közelgő DeHub közösségi események között, jelentkezzen be a találkozókra, és szervezzen saját eseményeket a decentralizált, felhasználó által tulajdonolt közösségi platformon.",
     "defaultSeoDescription": "Közösségi esemény a DeHub-on.",

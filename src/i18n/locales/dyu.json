@@ -2067,6 +2067,8 @@
     "anonymousLikes_other": "Diyanye {{count}} ka bɔ badge tigi tɔgɔbaliw fɛ"
   },
   "postInfo": {
+    "unavailable": "A tɛ sɔrɔ",
+    "ownersUnavailable": "Sisan, a tigiw tɛ se ka kalan.",
     "title": "Post kunnafoni",
     "tokenId": "Token ID",
     "mintedOn": "Dabɔ",
@@ -5461,6 +5463,8 @@
     "encoderPermanentHint": "O la, a tun be se ka kɛ ko a tun be se ka kɛ cogo min na. I ka coder sigi siɲɛ kelen — siɲɛ wɛrɛ, i ka Start kan ani DeHub ka baara kɛ i ye."
   },
   "events": {
+    "deleteConfirmTitle": "I b'a fɛ ka nin ɲɔgɔnye in jɔsi wa?",
+    "deleteConfirmBody": "Nin bɛ ɲɔgɔnye ni a lajɛlibagaw ka tɔgɔlisi ani a baro bɔ mɔgɔ bɛɛ ye. A tɛ se ka segin kɔ.",
     "seoTitle": "Ɲɛnamayaw — Ɲɛnamayaw ni sigida koo minw be kɛra DeHub kan",
     "seoDescription": "DeHub ka sigida ka koo nataw lajɛ, RSVP ka lajɛnbaw kɛ ani k'i yɛrɛ ka koo dɔw kɛ sigida la min tɛ dan na, min ye mɔgɔ ka baara ye.",
     "defaultSeoDescription": "O ye Jehova ka Masaya kibaro diiman ye.",

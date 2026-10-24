@@ -2121,6 +2121,8 @@
     "anonymousLikes_other": "{{count}} fankasitrahana avy amin'ireo tompon'ny badge tsy mitonona anarana"
   },
   "postInfo": {
+    "unavailable": "Tsy misy",
+    "ownersUnavailable": "Amin'izao fotoana izao dia tsy azo vakiana ny tompon'ny toerana.",
     "title": "Fampahalalana momba ny lahatsoratra",
     "tokenId": "Token ID",
     "mintedOn": "Noforonina",
@@ -5635,6 +5637,8 @@
     "notEnoughTokensForBounty": "Tsy ampy ny tapaho. Mila tapaho {{need}} fa manana {{have}}."
   },
   "events": {
+    "deleteConfirmTitle": "Hofafana ity hetsika ity?",
+    "deleteConfirmBody": "Izany dia manala ny hetsika, ny lisitry ny vahiny ary ny resaka momba azy ho an'ny rehetra. Tsy azo averina izany.",
     "seoTitle": "Fampisehoana Ã¢Â Meetups & Famoriam-bahoaka ao amin'ny DeHub",
     "seoDescription": "Tsidiho ny hetsika ho an'ny fikambanana DeHub atsy ho atsy, RSVP mba hihaonana sy hampiantrano ny hetsika manokana ao amin'ny sehatra sosialy tsy mialonjafy sy an'ny mpampiasa.",
     "defaultSeoDescription": "Hetsiky ny fiarahamonina tao amin'ny DeHub.",

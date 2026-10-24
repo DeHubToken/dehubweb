@@ -2478,7 +2478,7 @@ const VideoCardBody = memo(function VideoCard({ video, postPage = false, onBack,
                     <AudioVisualizer
                       tokenId={video.id}
                       viewerKey={walletAddress}
-                      requiresAccess={!!video.isPPV || isHoldGated(video.isLocked, video.lockedPrice) || !!video.subscriberPlans?.length}
+                      requiresAccess={!!video.isPPV || isHoldGated(video.isLocked, video.lockedPrice) || !!video.subscriberPlans?.length || (!!video.visibility && video.visibility !== 'public')}
                       audioUrl={video.audioUrl}
                       artworkUrl={thumbnail || undefined}
                       isPlaying={isPlaying}

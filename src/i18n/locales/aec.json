@@ -2054,6 +2054,8 @@
     "anonymousLikes_other": "{{count}} إعجابات من أصحاب شارات مجهولين"
   },
   "postInfo": {
+    "unavailable": "لا متوفر",
+    "ownersUnavailable": "لا يمكن قراءة المالكين الحاليين في الوقت الحالي.",
     "title": "معلومات المنشور",
     "tokenId": "رقم التوكن",
     "mintedOn": "اتعمل في",
@@ -4981,6 +4983,8 @@
     "notEnoughTokensForBounty": "مفيش توكنات كفاية. محتاج {{need}} توكن بس معاك {{have}}."
   },
   "events": {
+    "deleteConfirmTitle": "حذف هذا الحدث؟",
+    "deleteConfirmBody": "هذاً يزيل الحدث و قائمة الضيوف و المحادثة من الجميع. لا يمكن التراجع عنها.",
     "defaultSeoDescription": "حدث مجتمعي على ديهاب.",
     "noUpcoming": "ما فدش حدثش قادمهش بعد كده",
     "eventName": "إسم الحدث *",

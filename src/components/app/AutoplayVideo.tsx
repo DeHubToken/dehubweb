@@ -5,6 +5,8 @@
  * Uses IntersectionObserver to start/stop playback and control preloading.
  * Shows a skeleton shimmer while the video is loading.
  * Prevents bandwidth waste from off-screen videos.
+ * Plays the post's HLS ladder when it has one (lib/hls-vod), lowest rung
+ * first, with the MP4 as the fallback.
  */
 
 import { useRef, useEffect, useState, memo } from 'react';
@@ -13,9 +15,13 @@ import { cn } from '@/lib/utils';
 import { VideoGlitchLoader } from '@/components/app/video/VideoGlitchLoaderLazy';
 import { useResolvedThumbnail, DEFAULT_POSTER_WIDTH } from '@/lib/thumbnail-fallback';
 import { useFirstInteraction } from '@/hooks/use-boot-settled';
+import { clearVideoSource, setVideoSource, syncVideoLoad } from '@/lib/hls-vod';
 
 interface AutoplayVideoProps {
+  /** The post's MP4: plays when there is no ladder, and is its fallback. */
   src: string;
+  /** The post's HLS master playlist URL (`buildHlsUrl`), when it has one. */
+  hlsSrc?: string;
   poster?: string;
   className?: string;
   /** How much of the video must be visible to trigger play (0-1). Default 0.5 */
@@ -82,6 +88,7 @@ function recomputeGroup(group: string) {
 
 export const AutoplayVideo = memo(function AutoplayVideo({
   src,
+  hlsSrc,
   poster: posterProp,
   className,
   threshold = 0.5,
@@ -180,7 +187,7 @@ export const AutoplayVideo = memo(function AutoplayVideo({
     } else {
       video.pause();
     }
-  }, [isVisible, disabled, groupAllowed, engaged, src]);
+  }, [isVisible, disabled, groupAllowed, engaged, src, hlsSrc]);
 
   // Reset state when src changes or becomes disabled
   useEffect(() => {
@@ -193,6 +200,17 @@ export const AutoplayVideo = memo(function AutoplayVideo({
   // A playback slot also owns the network/decoder budget. Merely pausing the
   // other visible tiles still lets their metadata downloads compete.
   const shouldLoad = isVisible && !disabled && groupAllowed && engaged;
+
+  // The source is set here rather than as a `src` prop: on a ladder hls.js
+  // owns the element's src (a blob: MediaSource), and losing the slot has to
+  // tear that session down too, or its segment requests keep running.
+  useEffect(() => {
+    const video = videoRef.current;
+    if (!video || !shouldLoad) return;
+    setVideoSource(video, { src, hls: hlsSrc, startLow: true });
+    syncVideoLoad(video);
+    return () => clearVideoSource(video);
+  }, [shouldLoad, src, hlsSrc, hasError]);
 
   // If video has a format error (H.265/HEVC), just show poster
   if (hasError) {
@@ -217,7 +235,6 @@ export const AutoplayVideo = memo(function AutoplayVideo({
       )}
       <video
         ref={videoRef}
-        src={shouldLoad ? src : undefined}
         poster={poster}
         className="dehub-inline-video w-full h-full object-cover rounded-lg"
         loop

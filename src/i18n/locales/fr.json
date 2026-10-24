@@ -2609,6 +2609,8 @@
     "anonymousLikes_other": "{{count}} j'aime de détenteurs de badges anonymes"
   },
   "postInfo": {
+    "unavailable": "Non disponible",
+    "ownersUnavailable": "Les propriétaires actuels ne peuvent pas être lus pour le moment.",
     "title": "Info du Post",
     "tokenId": "Identifiant du jeton",
     "mintedOn": "Créé le",
@@ -6714,6 +6716,8 @@
     "notEnoughTokensForBounty": "Jetons insuffisants. Besoin de {{need}} jetons mais vous en avez {{have}}."
   },
   "events": {
+    "deleteConfirmTitle": "Supprimer cet événement ?",
+    "deleteConfirmBody": "Cela supprime l'événement, sa liste d'invités et son chat pour tout le monde. Cette action est irréversible.",
     "seoTitle": "Événements — Rencontres et événements communautaires sur DeHub",
     "seoDescription": "Parcourez les événements communautaires à venir de DeHub, répondez aux invitations des rencontres et organisez vos propres événements sur la plateforme sociale décentralisée et appartenant aux utilisateurs.",
     "defaultSeoDescription": "Événement communautaire sur DeHub.",

@@ -2111,6 +2111,8 @@
     "anonymousLikes_other": "Qabattoota baajii maqaa hin qabne irraa jaalala {{count}}"
   },
   "postInfo": {
+    "unavailable": "Hin argamne",
+    "ownersUnavailable": "Abbootiin qabeenyaa amma jiran yeroo ammaa kana dubbifamuu hin danda'an.",
     "title": "Odeeffannoo maxxansaa",
     "tokenId": "Token ID",
     "mintedOn": "Uumame",
@@ -5587,6 +5589,8 @@
     "notEnoughTokensForBounty": "Token gahaa miti. Token {{need}} barbaachisa garuu {{have}} qabaadhu."
   },
   "events": {
+    "deleteConfirmTitle": "Taatee kana haquu?",
+    "deleteConfirmBody": "Kunis taatee, tarree keessummoota isaa fi chat isaa hundaaf ni haqa. Deebi'uu hin danda'u.",
     "seoTitle": "Taateewwan — Meetups & Taateewwan Hawaasaa DeHub irratti",
     "seoDescription": "Taateewwan hawaasaa DeHub dhufan daawwadhaa, walgahiidhaaf RSVP godhaa fi taateewwan mataa keessanii waltajjii hawaasummaa giddugaleessa hin taane, fayyadamtootaan qabame irratti keessummeessaa.",
     "defaultSeoDescription": "Taatee hawaasaa DeHub irratti.",

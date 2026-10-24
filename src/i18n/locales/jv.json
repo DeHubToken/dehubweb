@@ -2101,6 +2101,8 @@
     "anonymousLikes_other": "{{count}} seneng saka pemegang lencana anonim"
   },
   "postInfo": {
+    "ownersUnavailable": "Pamilik saiki durung bisa diwaca.",
+    "unavailable": "Ora kasedhiya",
     "title": "Info Postingan",
     "tokenId": "Token ID",
     "mintedOn": "Digawe",
@@ -5424,6 +5426,8 @@
     "notEnoughTokensForBounty": "Token ora cukup. Butuh {{need}} token nanging duwe {{have}}."
   },
   "events": {
+    "deleteConfirmTitle": "Busak acara iki?",
+    "deleteConfirmBody": "Iki bakal mbusak acara, dhaptar tamu, lan obrolane kanggo kabeh wong. Iki ora bisa dibatalake.",
     "seoTitle": "Kebajenan — Kumpul-Kumpulan & Acara Masyarakat di DeHub",
     "seoDescription": "Browse acara DeHub komunitas yang akan datang, daftar untuk pertemuan dan host acara sendiri di platform sosial yang dezentral dan dimiliki oleh pengguna.",
     "defaultSeoDescription": "Gemblèng komunitas di DeHub.",

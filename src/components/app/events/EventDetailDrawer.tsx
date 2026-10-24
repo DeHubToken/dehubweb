@@ -3,6 +3,16 @@ import { useTranslation } from 'react-i18next';
 import { useState, useCallback } from 'react';
 import { Drawer, DrawerContent, DrawerHeader, DrawerTitle } from '@/components/ui/drawer';
 import { Button } from '@/components/ui/button';
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from '@/components/ui/alert-dialog';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { format } from 'date-fns';
 import { Flame, CheckCircle2, Globe, Clock, UserCheck, UserX } from "lucide-react";
@@ -134,6 +144,11 @@ export function EventDetailDrawer({ event, open, onOpenChange }: EventDetailDraw
   const isPending = myRsvp?.status === 'pending';
   const isDenied = myRsvp?.status === 'denied';
   const isPrivateBlocked = isPrivate && !isCreator && !isApproved;
+  // On a private event the guest's one RSVP row is also their approval, so
+  // Going/Interested must never rewrite or delete it: that used to drop an
+  // approved guest back to "request access" and lock them out of the chat.
+  const holdsPrivatePlace = isPrivate && !isCreator && isApproved;
+  const [confirmingDelete, setConfirmingDelete] = useState(false);
 
   const { pay: payGateFee, isPaying } = useEventGatePayment({
     eventId: event?.id ?? '',
@@ -157,6 +172,10 @@ export function EventDetailDrawer({ event, open, onOpenChange }: EventDetailDraw
     }
     if (isPrivate && !isCreator && !isApproved) {
       toast.error(t('events.needApproval'));
+      return;
+    }
+    if (holdsPrivatePlace) {
+      toast.info(t('events.youreApproved'));
       return;
     }
     if (myRsvp?.status === status) {
@@ -374,7 +393,7 @@ export function EventDetailDrawer({ event, open, onOpenChange }: EventDetailDraw
                   className={cn(
                     'flex-1',
                     !canInteract && 'opacity-50',
-                    myRsvp?.status === 'going' && 'opacity-100 [&>div]:!border [&>div]:!border-white/30'
+                    (myRsvp?.status === 'going' || holdsPrivatePlace) && 'opacity-100 [&>div]:!border [&>div]:!border-white/30'
                   )}
                 />
                 <LiquidGlassBubble2
@@ -387,7 +406,7 @@ export function EventDetailDrawer({ event, open, onOpenChange }: EventDetailDraw
                   className={cn(
                     'flex-1',
                     !canInteract && 'opacity-50',
-                    myRsvp?.status === 'interested' && 'opacity-100 [&>div]:!border [&>div]:!border-white/30'
+                    myRsvp?.status === 'interested' && !holdsPrivatePlace && 'opacity-100 [&>div]:!border [&>div]:!border-white/30'
                   )}
                 />
               </div>
@@ -473,7 +492,7 @@ export function EventDetailDrawer({ event, open, onOpenChange }: EventDetailDraw
                     <Button
                       variant="ghost"
                       size="sm"
-                      onClick={handleDelete}
+                      onClick={() => setConfirmingDelete(true)}
                       disabled={deleteEvent.isPending}
                       className="text-red-400 hover:text-red-300 hover:bg-red-500/10"
                     >
@@ -487,6 +506,24 @@ export function EventDetailDrawer({ event, open, onOpenChange }: EventDetailDraw
           </div>
         </DrawerContent>
       </Drawer>
+
+      {/* Deleting takes the guest list and the chat with it, so it asks first. */}
+      <AlertDialog open={confirmingDelete} onOpenChange={setConfirmingDelete}>
+        <AlertDialogContent className="z-[10000] bg-black/80 backdrop-blur-[24px] border-white/10">
+          <AlertDialogHeader>
+            <AlertDialogTitle className="text-white">{t('events.deleteConfirmTitle')}</AlertDialogTitle>
+            <AlertDialogDescription className="text-zinc-400">{t('events.deleteConfirmBody')}</AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel className="bg-white/5 border-white/10 text-white hover:bg-white/10 hover:text-white">
+              {t('common.cancel')}
+            </AlertDialogCancel>
+            <AlertDialogAction className="bg-red-500/80 text-white hover:bg-red-500" onClick={handleDelete}>
+              {t('events.delete')}
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
 
       {/* Attendees drawer */}
       {attendeesType && (

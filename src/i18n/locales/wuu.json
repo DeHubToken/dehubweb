@@ -2095,6 +2095,8 @@
     "anonymousLikes_other": "来自匿名徽章持有者个 {{count}} 个赞"
   },
   "postInfo": {
+    "ownersUnavailable": "現在讀勿出當前個所有者。",
+    "unavailable": "用勿來",
     "title": "帖子信息",
     "tokenId": "代币ID",
     "mintedOn": "铸造于",
@@ -5144,6 +5146,8 @@
     "notEnoughTokensForBounty": "代幣不足。需要 {{need}} 隻代幣，但只有 {{have}} 隻。"
   },
   "events": {
+    "deleteConfirmBody": "搿樣會對所有人刪脫活動、來賓名單搭聊天，呒沒辦法撤銷。",
+    "deleteConfirmTitle": "刪脫搿個活動？",
     "goingCount_one": "{{count}} 走",
     "goingCount_other": "{{count}} 走",
     "interestedCount_one": "{{count}} 有兴趣",

@@ -2129,6 +2129,8 @@
     "anonymousLikes_other": "{{count}} Likes vo anonyme Badge-Inhaber"
   },
   "postInfo": {
+    "unavailable": "Nöd verfüegbar",
+    "ownersUnavailable": "Di aktuelle Bsitzer chönd grad nöd glääse wärde.",
     "title": "Biitragsinformation",
     "tokenId": "Token-ID",
     "mintedOn": "Erstellt am",
@@ -5614,6 +5616,8 @@
     "notEnoughTokensForBounty": "Nicht genügend Tokens. Benötigt {{need}} Tokens, hat aber {{have}}."
   },
   "events": {
+    "deleteConfirmTitle": "Dä Aalass lösche?",
+    "deleteConfirmBody": "Das löscht dä Aalass, sini Gäschteliischte und sin Chat für alli. Das cha nöd rückgängig gmacht wärde.",
     "seoTitle": "Ereignisse — Meetups & Gemeindschaftsereignisse auf DeHub",
     "seoDescription": "Bliid die naachkommende DeHub-Gemeenschdafts-Events durch, meld dich für Meetups an oder hoste deine eigne Events auf der dezentralisierte, nutzer-eigene Social-Plattform.",
     "defaultSeoDescription": "Gemeinschaftsereignis auf DeHub.",

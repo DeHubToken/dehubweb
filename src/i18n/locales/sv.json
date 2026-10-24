@@ -2115,6 +2115,8 @@
     "anonymousLikes_other": "{{count}} gillamarkeringar från anonyma märkesinnehavare"
   },
   "postInfo": {
+    "unavailable": "Inte tillgänglig",
+    "ownersUnavailable": "De nuvarande ägarna kan inte läsas just nu.",
     "title": "Inläggsinfo",
     "tokenId": "Token-ID",
     "mintedOn": "Präglad den",
@@ -5581,6 +5583,8 @@
     "notEnoughTokensForBounty": "Inte tillräckligt med tokens. Behöver {{need}} tokens men har {{have}}."
   },
   "events": {
+    "deleteConfirmTitle": "Ta bort detta evenemang?",
+    "deleteConfirmBody": "Det här tar bort händelsen, dess gästlista och dess chatt för alla. Det går inte att ångra.",
     "seoDescription": "Bläddra bland kommande DeHub-gemenskapsevenemang, RSVP till meetups och arrangera dina egna evenemang på den decentraliserade, användarägda sociala plattformen.",
     "defaultSeoDescription": "Gemenskapsevenemang på DeHub.",
     "title": "Events",

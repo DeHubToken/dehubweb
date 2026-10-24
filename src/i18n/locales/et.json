@@ -2101,6 +2101,8 @@
     "anonymousLikes_other": "{{count}} meeldimist anonüümsetelt märgiomanikelt"
   },
   "postInfo": {
+    "unavailable": "Pole saadaval",
+    "ownersUnavailable": "Praeguseid omanikke ei saa praegu lugeda.",
     "title": "Postituse info",
     "tokenId": "Tokeni ID",
     "mintedOn": "Loodud",
@@ -5615,6 +5617,8 @@
     "notEnoughTokensForBounty": "Märke pole piisavalt. Vajalik {{need}} märk, kuid teil on {{have}}."
   },
   "events": {
+    "deleteConfirmTitle": "Kas kustutada see sündmus?",
+    "deleteConfirmBody": "See eemaldab sündmuse, selle külaliste nimekirja ja vestluse kõigi jaoks. Seda ei saa tagasi võtta.",
     "seoTitle": "Sündmused — DeHubi kogukonnaüritused ja kohtumised",
     "seoDescription": "Sirvige DeHubi tulevasi kogukonnaüritusi, registreeruge kohtumistele ja korraldage oma üritusi detsentraliseeritud, kasutajate omandatud sotsiaalplatvormil.",
     "defaultSeoDescription": "Kogukonnaüritus DeHubis.",

@@ -232,3 +232,15 @@ html[data-theme]:not(#_):not(#_):not(#_):not(#_):not(#_):not(#_) [data-audio-lyr
   background-color: rgba(0, 0, 0, 0.62) !important;
   color: rgba(255, 255, 255, 0.78) !important;
 }
+
+/* Multi-photo feed galleries: a thin outline round the photo area, as tall as
+   the tallest photo, so a shorter photo sits in a frame instead of above an
+   empty gap. Two ids keep theme media resets (Jungle, Osaka) from erasing it. */
+html [data-gallery-frame]:not(#_):not(#_) {
+  border: 1px solid var(--gallery-frame-edge, rgba(255, 255, 255, 0.16));
+  background-color: var(--gallery-frame-fill, rgba(255, 255, 255, 0.03));
+}
+html:is([data-theme='light'], [data-system-tone='light']) {
+  --gallery-frame-edge: rgba(11, 11, 13, 0.14);
+  --gallery-frame-fill: rgba(11, 11, 13, 0.025);
+}
