@@ -346,8 +346,8 @@ export function DesktopSidebar({ onPostClick }: DesktopSidebarProps) {
   // which is to say until long after the parent armed Kids Mode.
   const isKidsMode = useKidsModeLock();
   const visibleRailItems = useMemo(
-    () => filterNavItems(railItems, navQuery, t, canManageAgents(walletAddress)),
-    [railItems, navQuery, t, isKidsMode, walletAddress],
+    () => filterNavItems(railItems, isCollapsed ? '' : navQuery, t, canManageAgents(walletAddress)),
+    [railItems, navQuery, isCollapsed, t, isKidsMode, walletAddress],
   );
   const isAIActive = location.pathname === '/app/assistant';
 
