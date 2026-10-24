@@ -1,5 +1,5 @@
 {
-  "version": "5744f5c773e5cfa3",
+  "version": "4d0b4035f4fe1e49",
   "routes": {
     "/": [
       "ar",
@@ -882,6 +882,27 @@
       "fr",
       "nl",
       "tr"
+    ],
+    "/guides/higgsfield-genjutsu-alternative": [
+      "ar",
+      "es",
+      "fr",
+      "nl",
+      "tr",
+      "de",
+      "ha",
+      "hi",
+      "id",
+      "it",
+      "ja",
+      "ko",
+      "pl",
+      "pt",
+      "ru",
+      "th",
+      "tl",
+      "vi",
+      "zh"
     ],
     "/guides/high-score-dehub-gaming-hits-5000-monthly-active-users---a-dehub-milestone-from-q1-2022": [
       "ar",

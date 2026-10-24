@@ -25,7 +25,7 @@ import { stripAssetRefs } from '@/lib/asset-refs';
 import { useAutoOpenComments } from '@/hooks/use-auto-open-comments';
 import { useNavigate } from 'react-router-dom';
 import { useQueryClient } from '@tanstack/react-query';
-import { Zap, ChevronDown, ChevronUp, ChevronLeft, Globe, Ticket, BarChart2, Star } from "lucide-react";
+import { ChevronDown, ChevronUp, ChevronLeft, Globe, Ticket, BarChart2, Star } from "lucide-react";
 import Eye from "@/components/ui/cut-icons/visibility";
 import Flag from "@/components/ui/cut-icons/report";
 import Ban from "@/components/ui/cut-icons/blocked";
@@ -56,7 +56,7 @@ import { useFeedFrameAspect } from '@/hooks/use-feed-frame-aspect';
 import { motion, AnimatePresence } from 'framer-motion';
 import dehubCoin from '@/assets/dehub-coin.png';
 import { CardHeader } from './CardHeader';
-import { PostHeaderOptionsButton } from './PostHeaderOptionsButton';
+import { PostHeaderBoostButton, PostHeaderOptionsButton } from './PostHeaderOptionsButton';
 import { MatureContentGate, useMatureGate } from './MatureContentGate';
 import { ContentWarningGate, useContentWarning } from './ContentWarningGate';
 import { ActionBar } from './ActionBar';
@@ -214,7 +214,10 @@ function ImageSlide({
   immersive = false,
   pinned = false,
   knownRatio,
+  fill = false,
 }: {
+  /** A framed gallery's shorter photo: cropped to fill the whole frame. */
+  fill?: boolean;
   pinned?: boolean;
   /** The shape the gallery measured ahead, or its tallest photo's while this one is unknown. */
   knownRatio?: number;
@@ -285,7 +288,7 @@ function ImageSlide({
   return (
     <div
       ref={slideRef}
-      className={cn('relative flex cursor-pointer select-none', immersive ? 'justify-center' : 'justify-start')}
+      className={cn('relative flex cursor-pointer select-none', immersive ? 'justify-center' : 'justify-start', fill && 'h-full w-full')}
       data-feed-image-frame={!immersive || undefined}
       data-media-frame-key={!immersive ? `image:${postId ?? img}:${idx}` : undefined}
       // Still stops the click reaching the card's navigate handler; the ladder
@@ -310,13 +313,15 @@ function ImageSlide({
         sizes={FEED_IMAGE_SIZES}
         width={ratio ? Math.round(ratio * 1000) : undefined}
         height={ratio ? 1000 : undefined}
-        className={cn('block w-auto h-auto max-w-full object-contain', immersive ? 'rounded-none' : 'rounded-2xl')}
+        className={cn('block w-auto h-auto max-w-full', fill ? 'object-cover' : 'object-contain', immersive ? 'rounded-none' : 'rounded-2xl')}
         // Keep the slide's geometry when its offscreen bitmap is released.
         // An img without src otherwise collapses and changes the feed height.
         // On the post page (immersive) the photo follows the post page video
         // rule: it grows until it fills the width or 80% of the screen height,
         // whichever comes first, keeping its real shape.
-        style={immersive
+        style={fill
+          ? { width: '100%', height: '100%', aspectRatio: 'auto' }
+          : immersive
           ? { maxHeight: IMMERSIVE_IMAGE_MAX_HEIGHT, width: ratio ? `calc(${IMMERSIVE_IMAGE_MAX_HEIGHT} * ${ratio.toFixed(4)})` : undefined, aspectRatio: ratio }
           : { maxHeight: FEED_IMAGE_CAP, width: ratio ? `calc(${FEED_IMAGE_CAP} * ${ratio.toFixed(4)})` : undefined, aspectRatio: ratio }}
         loading={aboveFold && idx === 0 ? 'eager' : 'lazy'}
@@ -507,9 +512,8 @@ function ImageCarousel({
   }, [images.length]);
   
   const hasMultiple = images.length > 1;
-  // A feed gallery is framed: the strip is as tall as its tallest photo and
-  // shorter ones sit centred in a thin outline, so the space reads as the
-  // post's photo area instead of a gap.
+  // A feed gallery is framed: the strip is as tall as its tallest photo, in a
+  // thin outline, so posts with mixed photo sizes look the same.
   const framed = hasMultiple && !immersive;
   const measuredAspects = useGalleryAspects(images, framed);
   const tallestAspect = useMemo(() => {
@@ -518,6 +522,12 @@ function ImageCarousel({
   }, [measuredAspects]);
   // Centre the arrows on the photo in view, not on the strip: a lazy neighbour
   // can make the strip taller than a wide photo and leave them in the gap.
+  // Shorter photos are cropped to fill the frame, so no post shows blank
+  // space inside its outline. Unmeasured ones wait for their shape.
+  const fillsFrame = (idx: number) => {
+    const ratio = measuredAspects[idx];
+    return framed && !!ratio && !!tallestAspect && ratio > tallestAspect * 1.01;
+  };
   // A framed gallery centres its photos, so the frame's middle is theirs.
   const arrowTop = activeHeight && !framed ? { top: activeHeight / 2 } : undefined;
   
@@ -537,6 +547,7 @@ function ImageCarousel({
               'min-w-0',
               hasMultiple ? 'flex-none max-w-full' : 'flex-[0_0_100%]',
               framed && 'flex flex-col justify-center',
+              fillsFrame(idx) && 'flex-[0_0_100%]',
             )}
           >
             <ImageSlide
@@ -550,6 +561,7 @@ function ImageCarousel({
               immersive={immersive}
               pinned={images.length <= 1 || Math.abs(idx - currentIndex) <= 1}
               knownRatio={measuredAspects[idx] ?? tallestAspect}
+              fill={fillsFrame(idx)}
             />
           </div>
         ))}
@@ -1031,14 +1043,12 @@ const ImageCardBody = memo(function ImageCard({ post, aboveFold = false, onOpenC
       {/* The phone menu sits beside Recent; its drawer remains owned by this card. */}
       <div className={stage ? 'hidden' : 'flex items-center gap-1 pb-2'}>
         {isOwnPost && (
-          <button
+          <PostHeaderBoostButton
+            rowGap={4}
             onClick={() => setShowBoostModal(true)}
             disabled={!postTokenId}
-            className="mr-[1.6px] text-zinc-400 hover:text-white hover:scale-110 active:scale-95 transition-all disabled:opacity-40"
             aria-label={t('postOptions.boostPost')}
-          >
-            <Zap className="w-[23.5px] h-[23.5px]" />
-          </button>
+          />
         )}
         <Drawer open={showOptionsDrawer} onOpenChange={setShowOptionsDrawer}>
           {/* State-driven, not DrawerTrigger — see PostCard: a trigger pins

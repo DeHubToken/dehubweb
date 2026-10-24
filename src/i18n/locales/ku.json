@@ -1549,7 +1549,10 @@
     "revealFailed": "Mifte nehat nîşandan. Dîsa biceribîne.",
     "signInAgain": "Dîsa têkeve",
     "createSignIn": "Ji bo afirandina ajanekî dîsa têkeve",
-    "checkConnection": "Girêdana xwe kontrol bike û dîsa biceribîne."
+    "checkConnection": "Girêdana xwe kontrol bike û dîsa biceribîne.",
+    "workspace": {
+      "draft": "تەنها ڕەشنووس"
+    }
   },
   "hero": {
     "title": "Bi Xêr Hatin",
