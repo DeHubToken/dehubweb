@@ -2394,8 +2394,8 @@
     "hoursAgo": "{{count}}h ago",
     "daysAgo": "{{count}}d ago",
     "monthsAgo": "{{count}}mo ago",
-    "forLabel": "Реле сияқты",
-    "againstLabel": "- қарсы -\t:",
+    "forLabel": "Жақтап",
+    "againstLabel": "Қарсы",
     "lentBadgeCantVote": "Сіздің белгішеңіз сізге қарызға берілген, ал қарызға алынған белгішелер дауыс бере алмайды. Өзіңіздің белгішеңізді табу үшін DHB сатып алыңыз.",
     "buyDhb": "DHB сатып алу",
     "discussion": {

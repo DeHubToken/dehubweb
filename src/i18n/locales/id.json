@@ -2379,8 +2379,8 @@
     "hoursAgo": "{{count}}j lalu",
     "daysAgo": "{{count}}h lalu",
     "monthsAgo": "{{count}}bl lalu",
-    "forLabel": "Sebagai",
-    "againstLabel": "Melawan",
+    "forLabel": "Setuju",
+    "againstLabel": "Menolak",
     "lentBadgeCantVote": "Lencana Anda dipinjamkan kepada Anda, dan lencana yang dipinjamkan tidak dapat memilih. Beli DHB untuk mendapatkan lencana Anda sendiri.",
     "buyDhb": "Beli DHB",
     "discussion": {

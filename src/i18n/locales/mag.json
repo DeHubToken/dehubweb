@@ -2350,8 +2350,8 @@
     "hoursAgo": "{{count}} घंटा पहिले",
     "daysAgo": "{{count}} दिन पहिले",
     "monthsAgo": "{{count}} महीना पहिले",
-    "forLabel": "के परिप्रेक्ष्य में,",
-    "againstLabel": "के खिलाफ, के खिलाफ",
+    "forLabel": "पक्ष में",
+    "againstLabel": "विरोध में",
     "lentBadgeCantVote": "आपके बैज आपके लिए लैंडिंग है, और लैंड बैज मतदान नहीं कर सकता है । Dj Remix अपने डिस्काउंट के लिए कैसे अप्लाई करे",
     "buyDhb": "जीएलई vs डीएलई",
     "discussion": {

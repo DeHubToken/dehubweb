@@ -2383,8 +2383,8 @@
     "hoursAgo": "{{count}} zham aratch",
     "daysAgo": "{{count}} or aratch",
     "monthsAgo": "{{count}} amis aratch",
-    "forLabel": "կողմ",
-    "againstLabel": "դեմ",
+    "forLabel": "Կողմ",
+    "againstLabel": "Դեմ",
     "lentBadgeCantVote": "Ձեր կրծքանշանը տրված է ձեզ, և պահված կրծքանշանները չեն կարող քվեարկել: Գնեք DHB ՝ ձեր սեփական կրծքանշանը վաստակելու համար:",
     "buyDhb": "Գնել DHB",
     "discussion": {

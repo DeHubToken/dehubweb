@@ -2400,8 +2400,8 @@
     "hoursAgo": "{{count}} ชั่วโมงที่แล้ว",
     "daysAgo": "{{count}} วันที่แล้ว",
     "monthsAgo": "{{count}} เดือนที่แล้ว",
-    "forLabel": "สำหรับ",
-    "againstLabel": "เขื่อนถม (ด้วยดิน หรือหิน)",
+    "forLabel": "เห็นด้วย",
+    "againstLabel": "ไม่เห็นด้วย",
     "lentBadgeCantVote": "แบดจ์ของคุณถูกให้ยืมและแบดจ์ให้ยืมไม่สามารถลงคะแนนได้ซื้อ DHB เพื่อรับตราของคุณเอง",
     "buyDhb": "ซื้อ DHB",
     "discussion": {

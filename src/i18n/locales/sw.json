@@ -2373,8 +2373,8 @@
     "hoursAgo": "saa {{count}} zilizopita",
     "daysAgo": "siku {{count}} zilizopita",
     "monthsAgo": "miezi {{count}} iliyopita",
-    "forLabel": "Kwa",
-    "againstLabel": "Dhidi ya",
+    "forLabel": "Kuunga mkono",
+    "againstLabel": "Kupinga",
     "lentBadgeCantVote": "Beji yako imekopeshwa kwako, na beji za mkopo haziwezi kupiga kura. Nunua DHB ili upate beji yako mwenyewe.",
     "buyDhb": "Nunua DHB",
     "discussion": {

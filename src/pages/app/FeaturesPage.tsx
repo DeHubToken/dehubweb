@@ -543,7 +543,7 @@ function PromptComposer({ initialCategory, focusRequest, onPosted }: { initialCa
     const accepted = valid.slice(0, room);
     setAttachments(prev => [...prev, ...accepted.map(file => ({ file, preview: URL.createObjectURL(file) }))]);
     setError(valid.length < picked.length
-      ? t('features.promptMediaError', 'Choose images or videos under 20MB each.')
+      ? t('features.promptMediaError', 'Choose images or videos under 50MB each.')
       : accepted.length < picked.length
         ? t('features.promptMediaLimit', 'Up to {{max}} attachments.', { max: MAX_FEATURE_ATTACHMENTS }) : '');
   };

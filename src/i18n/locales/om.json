@@ -2393,8 +2393,8 @@
     "hoursAgo": "{{count}}h ago",
     "daysAgo": "{{count}}d ago",
     "monthsAgo": "{{count}}mo ago",
-    "forLabel": "F",
-    "againstLabel": "Faallaa",
+    "forLabel": "Deeggara",
+    "againstLabel": "Mormuu",
     "lentBadgeCantVote": "Baajiin kee siif liqeesse, baajii liqeesse immoo sagalee kennuu hin danda&#39;u. Baajii mataa keessanii argachuuf DHB bitadhaa.",
     "buyDhb": "DHB bitadhaa",
     "discussion": {

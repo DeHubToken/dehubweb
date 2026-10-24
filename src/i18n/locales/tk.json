@@ -2365,8 +2365,8 @@
     "hoursAgo": "{{count}} sag öň",
     "daysAgo": "{{count}} gün öň",
     "monthsAgo": "{{count}} aý öň",
-    "forLabel": "Üçin",
-    "againstLabel": "Garşylyk",
+    "forLabel": "Tarapdar",
+    "againstLabel": "Garşy",
     "lentBadgeCantVote": "Siziň nyşanyňyz size karz berilýär, we karz berlen nyşanlar ses berip bilmeýär. Özüňize nyşan gazanmak üçin DHB satyn alyň.",
     "buyDhb": "DHB satyn al",
     "discussion": {

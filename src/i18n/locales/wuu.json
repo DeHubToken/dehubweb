@@ -5307,8 +5307,8 @@
     "hoursAgo": "{{count}}小时前",
     "daysAgo": "{{count}}天前",
     "monthsAgo": "{{count}}个月前",
-    "forLabel": "为",
-    "againstLabel": "對",
+    "forLabel": "赞成",
+    "againstLabel": "反对",
     "lentBadgeCantVote": "侬个徽章是借给侬个，借来个徽章弗能投票。买DHB来弄自家个徽章。",
     "buyDhb": "买 DHB",
     "discussion": {

@@ -2388,8 +2388,8 @@
     "hoursAgo": "{{count}} ਘੰਟੇ ਪਹਿਲਾਂ",
     "daysAgo": "{{count}} ਦਿਨ ਪਹਿਲਾਂ",
     "monthsAgo": "{{count}} ਮਹੀਨੇ ਪਹਿਲਾਂ",
-    "forLabel": "ਲਈ",
-    "againstLabel": "ਖਿਲਾਫ਼",
+    "forLabel": "ਹੱਕ ਵਿੱਚ",
+    "againstLabel": "ਵਿਰੋਧ ਵਿੱਚ",
     "lentBadgeCantVote": "ਤੁਹਾਡਾ ਬੈਜ ਤੁਹਾਨੂੰ ਉਧਾਰ ਦਿੱਤਾ ਗਿਆ ਹੈ, ਅਤੇ ਉਧਾਰ ਦਿੱਤੇ ਬੈਜ ਵੋਟ ਨਹੀਂ ਦੇ ਸਕਦੇ । ਆਪਣਾ ਬੈਜ ਕਮਾਉਣ ਲਈ ਡੀਐਚਬੀ ਖਰੀਦੋ.",
     "buyDhb": "ਡੀਐਚਬੀ ਖਰੀਦੋ",
     "discussion": {

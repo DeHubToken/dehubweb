@@ -2380,8 +2380,8 @@
     "hoursAgo": "{{count}}시간 전",
     "daysAgo": "{{count}}일 전",
     "monthsAgo": "{{count}}개월 전",
-    "forLabel": "에 대한",
-    "againstLabel": "대적",
+    "forLabel": "찬성",
+    "againstLabel": "반대",
     "lentBadgeCantVote": "배지가 대여되었으며 대여한 배지는 투표할 수 없습니다. DHB를 구매하고 나만의 배지를 받으세요.",
     "buyDhb": "DHB 구매",
     "discussion": {

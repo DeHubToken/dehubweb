@@ -2379,8 +2379,8 @@
     "hoursAgo": "for {{count}} timer siden",
     "daysAgo": "for {{count}} dage siden",
     "monthsAgo": "for {{count}} måneder siden",
-    "forLabel": "Til",
-    "againstLabel": "Mod",
+    "forLabel": "For",
+    "againstLabel": "Imod",
     "lentBadgeCantVote": "Dit badge er udlånt til dig, og udlånte badges kan ikke stemme. Køb DHB for at få dit eget badge.",
     "buyDhb": "Køb DHB",
     "discussion": {

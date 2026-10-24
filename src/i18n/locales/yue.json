@@ -2380,7 +2380,7 @@
     "hoursAgo": "{{count}}小時前",
     "daysAgo": "{{count}}日前",
     "monthsAgo": "{{count}}個月前",
-    "forLabel": "畀",
+    "forLabel": "贊成",
     "againstLabel": "反對",
     "lentBadgeCantVote": "你個徽章係借畀你，而借咗嘅徽章就唔可以投票。買 DHB 就可以賺到你自己嘅徽章。",
     "buyDhb": "買 DHB",
