@@ -5,10 +5,8 @@
  * effect nodes, and returns a processed MediaStreamTrack suitable
  * for AgoraRTC.createCustomAudioTrack().
  *
- * Local monitoring: when an effect other than 'none' is active, the
- * processed output is also routed to ctx.destination at a reduced gain
- * (0.2) so the host/speaker can hear their own voice effect.  getUserMedia
- * AEC handles residual echo when speakers are in use.
+ * Microphone output only goes to the broadcast track. Playing it locally
+ * makes the speaker hear a delayed copy and can feed it back into the mic.
  */
 
 import { useCallback, useRef } from 'react';
@@ -18,15 +16,6 @@ import { createPitchShifter } from '@/lib/stage-pitch-shifter';
 /** Vendored phase-vocoder worklet (public/dehub-phase-vocoder.js). */
 const PHASE_VOCODER_URL = '/dehub-phase-vocoder.js';
 const PHASE_VOCODER_NAME = 'phase-vocoder-processor';
-/**
- * Local self-monitor level. Kept at 0: routing the effected voice back to the
- * talker's own speaker causes feedback interference — the mic re-captures the
- * PITCH-SHIFTED playback, which getUserMedia's echo canceller can't cancel
- * (it no longer matches the reference), so it loops and builds up. The talker
- * doesn't need to hear their own effect anyway (listeners do, via Agora).
- */
-const MONITOR_GAIN = 0;
-
 interface AudioGraph {
   ctx: AudioContext;
   source: MediaStreamAudioSourceNode;
@@ -122,8 +111,7 @@ function disconnectEntireGraph(graph: AudioGraph) {
 /**
  * Build the effect processing chain.
  * Connects source → effect nodes internally but does NOT connect to the
- * final destination — the caller wires output to both the Agora destination
- * and the local monitor gain.
+ * final destination — the caller wires output to the Agora destination.
  * Returns the output AudioNode (last in the chain) and any intermediate nodes
  * that need to be tracked for cleanup.
  */
@@ -295,19 +283,11 @@ export function useVoiceEffects() {
     // Agora path: processed audio → Agora channel (heard by other participants)
     output.connect(destination);
 
-    // Self-monitor path: host/speaker hears their own voice effect locally.
-    // Gain is 0 for 'none' (no loopback needed) and MONITOR_GAIN for active
-    // effects (low enough that getUserMedia AEC handles residual speaker echo).
-    const monitorGain = ctx.createGain();
-    monitorGain.gain.value = effectId !== 'none' ? MONITOR_GAIN : 0;
-    output.connect(monitorGain);
-    monitorGain.connect(ctx.destination);
-
     graphRef.current = {
       ctx,
       source,
       destination,
-      nodes: [...nodes, monitorGain],
+      nodes,
       sources,
       detachKeeper: keepRunning(ctx),
     };
@@ -325,12 +305,7 @@ export function useVoiceEffects() {
     const { nodes, sources, output } = buildEffectChain(graph.ctx, graph.source, effectId);
     output.connect(graph.destination);
 
-    const monitorGain = graph.ctx.createGain();
-    monitorGain.gain.value = effectId !== 'none' ? 0.2 : 0;
-    output.connect(monitorGain);
-    monitorGain.connect(graph.ctx.destination);
-
-    graph.nodes = [...nodes, monitorGain];
+    graph.nodes = nodes;
     graph.sources = sources;
 
     return graph.destination.stream.getAudioTracks()[0];
