@@ -2582,6 +2582,8 @@ export const he = {
     walletTitle: 'ארנק ואחזקות',
     whereToBuyDesc: 'קנו אסימוני DeHub בבורסות, זוגות מסחר, בריכות נזילות, DEX, רישומי CEX, Uniswap, PancakeSwap',
     whereToBuyTitle: 'איפה לקנות',
+    apiEndpointsTitle: 'נקודות קצה של API',
+    installationTitle: 'התקנה',
   },
   docsSeo: {
     advertisingDesc: 'טכנולוגיית מודעות POVR של DeHub הסבירה: הוכחת צפייה ודרגה, קמפיינים עמידים להונאות וחלוקת הכנסות ליוצרים.',

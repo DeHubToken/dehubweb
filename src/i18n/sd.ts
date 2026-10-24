@@ -2591,6 +2591,7 @@ export const sd = {
     walletTitle: 'پرس ۽ هولڊنگ',
     whereToBuyDesc: 'تبادلي تي DeHub ٽوڪن خريد ڪريو، واپاري جوڙو، مائع پول، ڊيڪس، سي اي ايڪس لسٽنگ، يونيسوپ، PancakeSwap',
     whereToBuyTitle: 'ڪٿي خريد ڪرڻ لاء',
+    socialTitle: 'سماجي خصوصيتون',
   },
   docsSeo: {
     advertisingDesc: 'DeHub جي POVR اشتهار ٽيڪ وضاحت ڪئي: ثبوت جي نظرثاني ۽ درجه بندي، دوکي جي مزاحمتي مهم ۽ تخليق ڪندڙن لاءِ آمدني جي حصيداري.',

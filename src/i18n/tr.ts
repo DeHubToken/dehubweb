@@ -1344,6 +1344,7 @@ export const tr = {
     diagramCoordinatorRole: "Görevlendirme, şifreleme + şifre çözme",
     diagramMinersRole1: "Bilgi işlem gücü sağlayan",
     diagramMinersRole2: "deHub tokenleri karşılığında",
+    diagramDataFlowStart: "Veri akışının başlangıcı",
   },
   e2ee: {
     title: "Uçtan Uca Şifreleme (E2EE)",
@@ -2558,6 +2559,11 @@ export const tr = {
     walletTitle: "Cüzdan ve Holdingler",
     whereToBuyDesc: "DeHub tokenlerini borsalardan, işlem çiftlerinden, likidite havuzlarından, DEX, CEX listelerinden, Uniswap, PancakeSwap'tan satın alın",
     whereToBuyTitle: "Nereden Satın Alınır",
+    categoryBlog: "Blog",
+    dappsTitle: "d'App",
+    depinTitle: "DePIN",
+    governanceTitle: "Yönetişim",
+    stakeTitle: "Bahis",
   },
   docsSeo: {
     advertisingDesc: "DeHub'in POVR ad teknolojisi açıklaması: izlenme ve sıralama kanıtı, sahtecilik karşıtı kampanyalar ve yaratıcılarla gelir paylaşımı.",
@@ -2643,6 +2649,7 @@ export const tr = {
     websiteTitle: "Web Sitesi Kılavuzu — DeHub Belgeleri",
     xDesc: "X hesabı ile bağlanın ve DeHub ile içerik paylaşın.",
     xTitle: "X Entegrasyonu — DeHub Belgeleri",
+    overviewDesc: "DeHub'a üst düzey genel bakış: misyonu, kökenleri ve merkezi olmayan, kullanıcıya ait sosyal ekosistem.",
   },
   featuredIn: {
     entrepreneurBlurb: "Girişimci Asya Pasifik, DeHub'ın 2021 'den bu yana önyükleme yapılan, NFT altyapısı üzerine inşa edilmiş VR'ye hazır spor, film, müzik ve oyun gibi yaratıcıya ait bir eğlence ekonomisi vizyonunu ele aldı.",

@@ -2624,6 +2624,7 @@ export const ko = {
     walletTitle: '지갑 및 보유 자산',
     whereToBuyDesc: '거래소, 트레이딩 페어, 유동성 풀, DEX, CEX 리스팅, Uniswap, PancakeSwap에서 DeHub 토큰 구매',
     whereToBuyTitle: '구매처',
+    quickstartDesc: 'DeHub 플랫폼, 시작, 첫 단계, 설정 지침에 대한 빠른 시작 가이드',
   },
   docsSeo: {
     advertisingDesc: 'DeHub의 POVR 광고 기술 설명: 조회수 및 순위 증명, 사기 방지 캠페인 및 크리에이터를 위한 수익 공유.',
@@ -2707,6 +2708,9 @@ export const ko = {
     websiteTitle: '웹사이트 가이드 — DeHub Docs',
     xDesc: 'X 계정과 교차 게시 콘텐츠를 DeHub와 연결하세요.',
     xTitle: 'X 통합 — DeHub 문서',
+    appDesc: 'DeHub 모바일 및 데스크톱 애플리케이션용 가이드.',
+    tokenUtilityDesc: '토큰을 보유하면 DeHub 전반에 걸친 거버넌스, 스테이킹 보상, 조정 권한 및 마켓플레이스 혜택이 잠금 해제됩니다.',
+    troubleshootingDesc: '일반적인 DeHub 문제, 오류 메시지 및 해결 방법.',
   },
   featuredIn: {
     entrepreneurBlurb: '기업가 아시아 태평양은 2021년부터 NFT 인프라를 기반으로 구축된 VR 지원 스포츠, 영화, 음악 및 게임 등 크리에이터 소유 엔터테인먼트 경제에 대한 DeHub의 비전을 다뤘습니다.',

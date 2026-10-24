@@ -1339,6 +1339,7 @@ export const tts = {
     walletDesc: 'DeHub token wallet, token holdings, balance, portfolio, wallet connect, MetaMask, crypto wallet',
     walletTitle: 'กระเป๋าเงิน & สินทรัพย์',
     whereToBuyTitle: 'ซื้อได้ที่ไหน',
+    faqDesc: 'คำถามที่พบบ่อยเกี่ยวกับแพลตฟอร์ม DeHub คำถามทั่วไป การแก้ไขปัญหา การช่วยเหลือ',
   },
   docsSeo: {
     advertisingDesc: 'DeHub แบบ POVR ad tech คืออะไร: การยืนยันการดูและอันดับ (proof-of-view-and-rank) แคมเปญที่ไม่มีการโกง และการแบ่งรายได้กับผู้สร้างเนื้อหา',
