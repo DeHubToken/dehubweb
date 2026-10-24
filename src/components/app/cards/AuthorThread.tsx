@@ -312,7 +312,7 @@ function ThreadEntry({
               )}
               aria-label={isOwn
                 ? t('postInfo.likes')
-                : t('comments.holdToReact', { reaction: reactionMeta(leadReaction ?? 'like').label })}
+                : t('comments.holdToReact', { reaction: reactionMeta(reactionForThumbTap(heldReaction, state.reactionCounts)).label })}
               aria-haspopup={isOwn ? undefined : 'menu'}
               aria-expanded={isOwn ? undefined : likeTray.open}
             >

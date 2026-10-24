@@ -1143,7 +1143,7 @@ export function ActionBar({
           aria-label={
             myPositiveReaction || (reactionsEnabled && myNegativeReaction)
               ? _copy("copy.a3156ed263d2", { defaultValue: "{{value1}} — hold to change your reaction", value1: reactionMeta((myPositiveReaction ?? myNegativeReaction)!).label })
-              : _copy("copy.12b91b0ac5dd", { defaultValue: "{{value1}} — hold to react", value1: reactionMeta(leadReaction ?? "like").label })
+              : _copy("copy.12b91b0ac5dd", { defaultValue: "{{value1}} — hold to react", value1: reactionMeta(resolveLeadReaction(localReactionCounts, myReaction) ?? "like").label })
           }
           aria-haspopup={reactionsEnabled ? 'menu' : undefined}
           aria-expanded={reactionsEnabled ? likeTray.open : undefined}
@@ -1277,7 +1277,7 @@ export function ActionBar({
             aria-label={
               myPositiveReaction || (reactionsEnabled && myNegativeReaction)
                 ? _copy("copy.a3156ed263d2", { defaultValue: "{{value1}} — hold to change your reaction", value1: reactionMeta((myPositiveReaction ?? myNegativeReaction)!).label })
-                : _copy("copy.12b91b0ac5dd", { defaultValue: "{{value1}} — hold to react", value1: reactionMeta(leadReaction ?? "like").label })
+                : _copy("copy.12b91b0ac5dd", { defaultValue: "{{value1}} — hold to react", value1: reactionMeta(resolveLeadReaction(localReactionCounts, myReaction) ?? "like").label })
             }
             aria-haspopup={reactionsEnabled ? 'menu' : undefined}
             aria-expanded={reactionsEnabled ? likeTray.open : undefined}

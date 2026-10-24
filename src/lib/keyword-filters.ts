@@ -59,7 +59,8 @@ export function matchKeywordFilter(
  * every surface, so they read the place from the route rather than being told.
  */
 export function filterContextForPath(pathname: string): FilterContext {
-  const path = pathname.toLowerCase().replace(/\/+$/, '') || '/';
+  // The app's own routes all sit under /app; the place is what follows it.
+  const path = pathname.toLowerCase().replace(/^\/app(?=\/|$)/, '').replace(/\/+$/, '') || '/';
   if (path === '/' || path === '/home' || path === '/following') return 'home';
   if (/^\/(posts?|newpost|video)\//.test(path)) return 'thread';
   if (path.startsWith('/notifications')) return 'notifications';

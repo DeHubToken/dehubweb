@@ -1,7 +1,7 @@
 import { useTranslation as _useCopy } from 'react-i18next';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { BASE_POST_TEXT_CHARS } from '@/lib/post-text-limit';
-import { abbreviateUrl, countPostChars, sliceToPostLimit } from '@/lib/link-display';
+import { abbreviateUrl } from '@/lib/link-display';
 import { createLinkScanRegex, splitLeadingUrlBoundary } from '@/components/app/TranslatableText';
 import { cn } from '@/lib/utils';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -246,8 +246,9 @@ export function PostContentArea({
     assetPicker.isOpen,
   );
 
-  // Links are free: they do not count toward the post's character limit.
-  const charCount = countPostChars(text);
+  // Every character counts, links included: the API enforces the tier limit on
+  // the raw text, so a looser count here let posts through that it then refused.
+  const charCount = text.length;
 
   // Save and restore cursor position
   const saveCursorPosition = useCallback(() => {
@@ -463,9 +464,9 @@ export function PostContentArea({
       first = false;
     }
     
-    // Enforce the tier's character limit on the post text. Links are free.
-    if (countPostChars(plainText) > maxChars) {
-      plainText = sliceToPostLimit(plainText, maxChars);
+    // Enforce the tier's character limit on the post text, as the API counts it.
+    if (plainText.length > maxChars) {
+      plainText = plainText.slice(0, maxChars);
       if (editor) {
         editor.textContent = plainText;
         // Move cursor to end
