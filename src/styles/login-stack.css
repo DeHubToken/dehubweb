@@ -25,7 +25,8 @@ html[data-system-tone="light"] .login-stack {
 .login-stack__lanes {
   position: relative;
   margin: 0 -14px;
-  height: clamp(360px, calc(100svh - 320px + env(safe-area-inset-top)), 530px);
+  /* Leave room for email, alternative providers and legal copy on phones. */
+  height: clamp(260px, calc(100svh - 400px - env(safe-area-inset-bottom)), 480px);
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 8px;
