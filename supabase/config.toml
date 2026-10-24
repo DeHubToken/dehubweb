@@ -383,6 +383,10 @@ project_id = "aigxuutjaqsywioxjefr"
   # Stripe webhook; auth is the stripe-signature header, verified in-function.
   [functions.payments-webhook]
     verify_jwt = false
+  # Bundler/paymaster relay the smart wallet's viem client calls directly, with
+  # no headers to add; restricted to AA methods and chains, sponsorship IP-limited.
+  [functions.pimlico-rpc]
+    verify_jwt = false
   # Public sitemap for crawlers.
   [functions.sitemap-index]
     verify_jwt = false
