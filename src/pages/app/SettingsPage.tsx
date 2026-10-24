@@ -995,6 +995,7 @@ function ProfileSettings() {
             own chip so it stays legible over any picture. */}
         <button
           type="button"
+          data-on-media
           onClick={() => coverInputRef.current?.click()}
           aria-label={t('settings.clickCameraUpload')}
           className="absolute inset-0 flex items-center justify-center bg-black/0 transition-colors hover:bg-black/40 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/40"
