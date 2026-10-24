@@ -1218,6 +1218,8 @@
     "dmSent": "{{name}} adlı kişiye {{amount}} jeton gönderildi!"
   },
   "postOptions": {
+    "liveAlertsOn": "Artık {{name}} kullanıcısını takip ediyorsunuz. Canlı yayına geçtiğinde bildirim alacaksınız.",
+    "liveAlertsAlreadyOn": "{{name}} kullanıcısını takip ediyorsunuz, bu yüzden canlı yayına geçtiğinde bildirim alacaksınız.",
     "embed": "Yerleştir",
     "copyEmbedCode": "Yerleştirme kodunu kopyala",
     "embedCodeCopied": "Yerleştirme kodu kopyalandı",

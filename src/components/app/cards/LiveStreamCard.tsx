@@ -28,7 +28,6 @@ import { Heart, StopCircle, Activity, Loader2 } from "lucide-react";
 import AssistantNavIcon from "@/components/ui/AssistantNavIcon";
 import Flag from "@/components/ui/cut-icons/report";
 import Ban from "@/components/ui/cut-icons/blocked";
-import EyeOff from "@/components/ui/cut-icons/hidden";
 import Volume2 from "@/components/ui/cut-icons/volume";
 import VolumeX from "@/components/ui/cut-icons/mute";
 import Maximize from "@/components/ui/cut-icons/fullscreen";
@@ -86,6 +85,7 @@ import type { WhepState, WhepSubscription } from '@/lib/livepeer/whep';
 import { peekLiveSession, takeLiveSession } from '@/lib/live-handoff';
 import { useStreamActions, useStreamActivities } from '@/hooks/use-livestream';
 import { useBlockAuthor } from '@/hooks/use-block-author';
+import { useNotifyWhenLive } from '@/hooks/use-notify-when-live';
 import { GatedMedia } from './GatedMedia';
 import { useFeedViewTracking } from '@/hooks/use-view-tracking';
 import { useStreamPresence } from '@/hooks/use-stream-presence';
@@ -482,6 +482,7 @@ export function LiveStreamCard({ stream, chatSlot, immersive = false }: LiveStre
 
   const queryClient = useQueryClient();
   const isStreamOwner = isOwnStream;
+  const notifyWhenLive = useNotifyWhenLive();
   const { gift, end, isEnding } = useStreamActions();
   const { blockAuthor } = useBlockAuthor();
   // Every /api/live/{id}/* interaction route takes the Mongo ObjectId, never
@@ -1151,9 +1152,14 @@ export function LiveStreamCard({ stream, chatSlot, immersive = false }: LiveStre
               >
                 <Activity className="w-4 h-4" /> {t('postOptions.activityLog')}
               </DropdownMenuItem>
-              <DropdownMenuItem className="text-white hover:bg-zinc-700 cursor-pointer gap-2">
-                <Bell className="w-4 h-4" /> {t('postOptions.notifyWhenLive')}
-              </DropdownMenuItem>
+              {!isStreamOwner && (
+                <DropdownMenuItem
+                  onClick={() => { void notifyWhenLive(stream.creatorId, stream.streamer); }}
+                  className="text-white hover:bg-zinc-700 cursor-pointer gap-2"
+                >
+                  <Bell className="w-4 h-4" /> {t('postOptions.notifyWhenLive')}
+                </DropdownMenuItem>
+              )}
               <DropdownMenuItem
                 onClick={() => setShowReportModal(true)}
                 className="text-white hover:bg-zinc-700 cursor-pointer gap-2"
@@ -1172,9 +1178,6 @@ export function LiveStreamCard({ stream, chatSlot, immersive = false }: LiveStre
                   <Ban className="w-4 h-4" /> {t('postOptions.blockCreator')}
                 </DropdownMenuItem>
               )}
-              <DropdownMenuItem className="text-white hover:bg-zinc-700 cursor-pointer gap-2">
-                <EyeOff className="w-4 h-4" /> {t('postOptions.seeLessLikeThis')}
-              </DropdownMenuItem>
               {/* End stream - only for the stream creator while live */}
               {!streamEnded && isAuthenticated && isStreamOwner && (
                 <DropdownMenuItem

@@ -985,6 +985,8 @@
     "dmSent": "Lähetettiin {{amount}} tokenia vastaanottajalle {{name}}!"
   },
   "postOptions": {
+    "liveAlertsOn": "Seuraat nyt käyttäjää {{name}}. Saat ilmoituksen, kun hän aloittaa suoran lähetyksen.",
+    "liveAlertsAlreadyOn": "Seuraat käyttäjää {{name}}, joten saat ilmoituksen, kun hän aloittaa suoran lähetyksen.",
     "embed": "Upota",
     "copyEmbedCode": "Kopioi upotuskoodi",
     "embedCodeCopied": "Upotuskoodi kopioitu",

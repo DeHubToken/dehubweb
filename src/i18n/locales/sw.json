@@ -984,6 +984,8 @@
     "dmSent": "Umetuma {{amount}} tokeni kwa {{name}}!"
   },
   "postOptions": {
+    "liveAlertsOn": "Sasa unamfuata {{name}}. Utapata arifa wanapoanza matangazo ya moja kwa moja.",
+    "liveAlertsAlreadyOn": "Unamfuata {{name}}, kwa hiyo utapata arifa wanapoanza matangazo ya moja kwa moja.",
     "embed": "Pachika",
     "copyEmbedCode": "Nakili msimbo wa kupachika",
     "embedCodeCopied": "Msimbo wa kupachika umenakiliwa",

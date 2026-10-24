@@ -999,6 +999,8 @@
     "dmSent": "Đã gửi {{amount}} token cho {{name}}!"
   },
   "postOptions": {
+    "liveAlertsOn": "Bạn đã theo dõi {{name}}. Bạn sẽ nhận được thông báo khi họ phát trực tiếp.",
+    "liveAlertsAlreadyOn": "Bạn đang theo dõi {{name}}, nên bạn sẽ nhận được thông báo khi họ phát trực tiếp.",
     "embed": "Nhúng",
     "copyEmbedCode": "Sao chép mã nhúng",
     "embedCodeCopied": "Đã sao chép mã nhúng",

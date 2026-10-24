@@ -996,6 +996,8 @@
     "dmSent": "{{amount}} tokenlər {{name}} üçün göndərildi!"
   },
   "postOptions": {
+    "liveAlertsOn": "Artıq {{name}} izləyirsiniz. Canlı yayına başlayanda bildiriş alacaqsınız.",
+    "liveAlertsAlreadyOn": "Siz {{name}} izləyirsiniz, ona görə canlı yayına başlayanda bildiriş alacaqsınız.",
     "embed": "Yerləşdir",
     "copyEmbedCode": "Yerləşdirmə kodunu kopyala",
     "embedCodeCopied": "Yerləşdirmə kodu kopyalandı",

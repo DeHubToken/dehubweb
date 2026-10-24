@@ -21,7 +21,7 @@ const DESTINATION_RULES: Array<{ terms: RegExp; path: string }> = [
   { terms: /\bfractions?\b/i, path: '/app/fractions' },
   { terms: /\b(stores?|marketplace|listings?)\b/i, path: '/app/stores' },
   { terms: /\bleaderboards?\b/i, path: '/app/leaderboard' },
-  { terms: /\b(api|endpoint)\b/i, path: '/docs/endpoints' },
+  { terms: /\b(api|endpoint)\b/i, path: '/connect' },
   { terms: /\b(tips?|tipping|ppv|pay-per-view|dhb|uniswap|buy)\b/i, path: '/app/buy' },
 ];
 

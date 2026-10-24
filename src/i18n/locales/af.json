@@ -997,6 +997,8 @@
     "dmSent": "{{amount}} tokens aan {{name}} gestuur!"
   },
   "postOptions": {
+    "liveAlertsOn": "Jy volg nou {{name}}. Jy sal 'n kennisgewing kry wanneer hulle regstreeks gaan.",
+    "liveAlertsAlreadyOn": "Jy volg {{name}}, so jy sal 'n kennisgewing kry wanneer hulle regstreeks gaan.",
     "embed": "Inbed",
     "copyEmbedCode": "Kopieer inbedkode",
     "embedCodeCopied": "Inbedkode gekopieer",

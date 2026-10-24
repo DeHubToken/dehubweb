@@ -996,6 +996,8 @@
     "dmSent": "تصيفطو {{amount}} عملات رمزية ل {{name}}!"
   },
   "postOptions": {
+    "liveAlertsOn": "وليتي كتتابع {{name}}. غادي يوصلك إشعار ملي يدير لايف.",
+    "liveAlertsAlreadyOn": "راك كتتابع {{name}}، إذن غادي يوصلك إشعار ملي يدير لايف.",
     "embed": "تضمين",
     "copyEmbedCode": "نسخ كود التضمين",
     "embedCodeCopied": "تنسخ كود التضمين",

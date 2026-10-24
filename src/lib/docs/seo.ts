@@ -132,22 +132,11 @@ export const DOCS_SEO: Record<string, DocsSeoEntry> = {
     description:
       "Press coverage of DeHub: US Weekly, Yahoo Finance, Entrepreneur and Investing.com on the user-owned social platform.",
   },
-  // quickstart / installation / endpoints are developer-doc drafts that still
-  // carry placeholder content; the worker serves them noindex,follow until the
-  // real API docs land. Descriptions here describe what actually renders.
+  // The worker serves quickstart noindex,follow until it gets a sitemap row.
   quickstart: {
     title: "Quick Start — DeHub Docs",
     description:
       "Developer quick start for the DeHub API: prerequisites, client setup and your first request. Full API docs are in progress.",
-  },
-  installation: {
-    title: "Installation — DeHub Docs",
-    description: "Developer environment setup for building against DeHub. Full SDK docs are in progress.",
-  },
-  endpoints: {
-    title: "API Endpoints — DeHub Docs",
-    description:
-      "DeHub API endpoint reference — full, versioned API documentation is in progress.",
   },
   blog: {
     title: "Blog — DeHub Docs",

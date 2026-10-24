@@ -994,6 +994,8 @@
     "dmSent": "A ti fi {{amount}} àmì ránṣẹ́ sí {{name}}!"
   },
   "postOptions": {
+    "liveAlertsOn": "O ti ń tẹ̀lé {{name}} báyìí. Wàá gba ìfitónilétí nígbà tí wọ́n bá bẹ̀rẹ̀ ìgbóhùnsáfẹ́fẹ́ tààrà.",
+    "liveAlertsAlreadyOn": "O ń tẹ̀lé {{name}}, nítorí náà wàá gba ìfitónilétí nígbà tí wọ́n bá bẹ̀rẹ̀ ìgbóhùnsáfẹ́fẹ́ tààrà.",
     "embed": "Fi sinu",
     "copyEmbedCode": "Daakọ koodu ifisinu",
     "embedCodeCopied": "A ti daakọ koodu ifisinu",

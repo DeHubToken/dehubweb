@@ -771,6 +771,13 @@ interface VideoCardProps {
   firstFeedPost?: boolean;
 }
 
+/** Seconds from a `?t=` link, or null when there is none worth seeking to. */
+function readStartAt(): number | null {
+  if (typeof window === 'undefined') return null;
+  const at = Number(new URLSearchParams(window.location.search).get('t'));
+  return Number.isFinite(at) && at > 0 ? at : null;
+}
+
 const VideoCardBody = memo(function VideoCard({ video, postPage = false, onBack, isImmersive = false, disableAutoplay = false, hideActions = false, aboveFold = false, firstFeedPost = false, onOpenComments }: VideoCardProps) {
   const { t: _copy } = _useCopy();
   const playbackAllowed = useFeedPlaybackAllowed();
@@ -1812,6 +1819,24 @@ const VideoCardBody = memo(function VideoCard({ video, postPage = false, onBack,
   useEffect(() => {
     if (!ownsVideoElement) videoPlaybackManager.stop(instanceId);
   }, [ownsVideoElement, instanceId]);
+
+  // A chapter or timestamp link (/app/post/123?t=95) opens the post at that
+  // moment. Read once: scrubbing afterwards must not snap back to it.
+  const startAtRef = useRef<number | null>(postPage ? readStartAt() : null);
+  useEffect(() => {
+    const el = videoRef.current;
+    if (!ownsVideoElement || !el || startAtRef.current == null) return;
+    const seek = () => {
+      const at = startAtRef.current;
+      if (at == null) return;
+      startAtRef.current = null;
+      el.currentTime = Number.isFinite(el.duration) && el.duration > 0 ? Math.min(at, el.duration) : at;
+      setCurrentTime(el.currentTime);
+    };
+    if (el.readyState >= HTMLMediaElement.HAVE_METADATA) { seek(); return; }
+    el.addEventListener('loadedmetadata', seek, { once: true });
+    return () => el.removeEventListener('loadedmetadata', seek);
+  }, [ownsVideoElement, playableVideoUrl]);
 
   takeVideoRef.current = takeVideoElement;
   const playbackPhase = usePlaybackRecovery(videoRef, playableVideoUrl, ownsVideoElement, {

@@ -4344,6 +4344,8 @@
     "dmSent": "انبعت {{amount}} توكنز لـ {{name}}!"
   },
   "postOptions": {
+    "liveAlertsOn": "صرت تتابع {{name}}. رح يوصلك إشعار لما يبث مباشر.",
+    "liveAlertsAlreadyOn": "إنت بتتابع {{name}}، فرح يوصلك إشعار لما يبث مباشر.",
     "giftBoost": "قدّم دفعة دعم",
     "markSection": "المساحات المنسية",
     "embed": "تضمين",

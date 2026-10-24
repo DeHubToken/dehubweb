@@ -988,6 +988,8 @@
     "dmSent": "Wysłano {{amount}} tokenów do {{name}}!"
   },
   "postOptions": {
+    "liveAlertsOn": "Obserwujesz teraz {{name}}. Dostaniesz powiadomienie, gdy rozpocznie się transmisja na żywo.",
+    "liveAlertsAlreadyOn": "Obserwujesz {{name}}, więc dostaniesz powiadomienie, gdy rozpocznie się transmisja na żywo.",
     "embed": "Osadź",
     "copyEmbedCode": "Kopiuj kod do osadzenia",
     "embedCodeCopied": "Kod do osadzenia skopiowany",

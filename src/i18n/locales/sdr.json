@@ -967,6 +967,8 @@
     "dmSent": "{{name}} کو {{amount}} دراو بھیج دیل!"
   },
   "postOptions": {
+    "liveAlertsOn": "اب تم {{name}} کو فالو کرت ہو۔ جب اوہ لائیو ہوئیں تو تمہیں اطلاع ملی۔",
+    "liveAlertsAlreadyOn": "تم {{name}} کو فالو کرت ہو، اسی لیے جب اوہ لائیو ہوئیں تو تمہیں اطلاع ملی۔",
     "embed": "ایمبیڈ",
     "copyEmbedCode": "ایمبیڈ کوڈ کاپی کرو",
     "embedCodeCopied": "ایمبیڈ کوڈ کاپی ہو گیا",

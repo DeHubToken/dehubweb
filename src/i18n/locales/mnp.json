@@ -3993,6 +3993,8 @@
     "dmSent": "已给 {{name}} 发 {{amount}} 代幣！"
   },
   "postOptions": {
+    "liveAlertsOn": "已关注{{name}}。开始直播其时候你会收到通知。",
+    "liveAlertsAlreadyOn": "你已经关注{{name}}，开始直播其时候你会收到通知。",
     "aiOverview": "AI概览",
     "askAI": "问AI",
     "giftBoost": "赠送加速",
