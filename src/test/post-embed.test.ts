@@ -142,3 +142,11 @@ describe('discovery', () => {
     expect(WORKER).toContain('const oembedTag = oembedLinkTag(APP_URL, record);');
   });
 });
+
+describe('the client copy of the embed code', () => {
+  it('matches what the worker would write', async () => {
+    const { postEmbedCode } = await import('@/lib/post-embed-code');
+    expect(postEmbedCode(12)).toBe(embedSnippet('https://dehub.io', 12, { width: 550, height: 480 }));
+    expect(postEmbedCode('6888')).toBe(embedSnippet('https://dehub.io', 6888, { width: 550, height: 480 }));
+  });
+});

@@ -1,4 +1,132 @@
 {
+  "mastodonApps": {
+    "authTitle": "DeHub ilə daxil ol",
+    "authWants": "{{app}} DeHub hesabınızdan istifadə etmək istəyir",
+    "authSignedInAs": "{{name}} kimi daxil olmusunuz",
+    "authSignIn": "Davam etmək üçün daxil olun",
+    "allow": "İcazə ver",
+    "cancel": "Ləğv et",
+    "scopeRead": "Lentlərinizi, paylaşımlarınızı, bildirişlərinizi və əlfəcinlərinizi görmək",
+    "scopeWrite": "Sizin adınızdan paylaşmaq, cavab vermək, bəyənmək, yaymaq və əlfəcinə əlavə etmək",
+    "scopeFollow": "Hesabları izləmək, izləməni dayandırmaq, bloklamaq və səssizə almaq",
+    "scopePush": "Sizə bildiriş göndərmək",
+    "scopeProfile": "Profilinizi görmək",
+    "invalid": "Bu daxil olma linki etibarlı deyil. Tətbiqə qayıdın və yenidən cəhd edin.",
+    "failed": "Alınmadı. Yenidən cəhd edin.",
+    "codeTitle": "Daxil olmanı bitirmək üçün bu kodu tətbiqə kopyalayın.",
+    "copy": "Kopyala",
+    "copied": "Kopyalandı",
+    "seoDescription": "Mastodon tətbiqinə DeHub hesabınızdan istifadə etməyə icazə verin.",
+    "redirecting": "Sizi {{app}} tətbiqinə qaytarırıq…",
+    "connectedTitle": "Qoşulmuş tətbiqlər",
+    "connectedDescription": "Bu hesabla daxil olduğunuz Mastodon tətbiqləri. Çıxış etmək üçün birini silin.",
+    "connectedEmpty": "Hələ qoşulmuş tətbiq yoxdur.",
+    "lastUsed": "Son istifadə {{date}}",
+    "remove": "Sil",
+    "removed": "Tətbiq silindi"
+  },
+  "fediverse": {
+    "title": "Fediverse",
+    "description": "Mastodon və digər fediverse tətbiqlərindəki insanlar sizi bu ünvanda tapıb izləyə bilər. Yeni açıq paylaşımlarınız onlara orada çatır.",
+    "copy": "Kopyala",
+    "copied": "Kopyalandı",
+    "privateNote": "Şəxsi hesablar fediverse-də göstərilmir.",
+    "noUsername": "Fediverse ünvanı almaq üçün istifadəçi adı seçin."
+  },
+  "profileFields": {
+    "title": "Profil sahələri",
+    "description": "Profilinizdə dörd əlavə sətrə qədər, məsələn veb sayt və ya əvəzlikləriniz.",
+    "label": "Etiket",
+    "content": "Məzmun",
+    "save": "Sahələri yadda saxla",
+    "saved": "Profil sahələri yadda saxlanıldı",
+    "failed": "Yadda saxlanılmadı. Yenidən cəhd edin.",
+    "verified": "Təsdiqlənmiş link",
+    "verifyHint": "Linki təsdiqləmək üçün bunu həmin səhifəyə əlavə edin, sonra yenidən yadda saxlayın: {{snippet}}"
+  },
+  "followedTags": {
+    "follow": "#{{tag}} izlə",
+    "following": "İzləyirsiniz",
+    "unfollow": "#{{tag}} izləməni dayandır",
+    "followed": "İndi #{{tag}} izləyirsiniz. Onun paylaşımları İzlədikləriniz lentində görünəcək.",
+    "unfollowed": "#{{tag}} izlənmir",
+    "failed": "Yadda saxlanılmadı. Yenidən cəhd edin.",
+    "clear": "Təmizlə"
+  },
+  "notificationFilters": {
+    "title": "Bildirişləri süz",
+    "description": "Çevrənizdən kənar biri sizinlə əlaqə qurduqda nə baş verəcəyini seçin. Süzülmüş bildirişlər nişan və push olmadan \"Süzülənlər\" bölməsində gözləyir.",
+    "notFollowing": "İzləmədiyiniz insanlar",
+    "notFollowers": "Sizi izləməyən insanlar",
+    "newAccounts": "Yeni hesablar (30 gündən az)",
+    "accept": "Mənə bildir",
+    "filter": "Süz",
+    "drop": "Tam gizlət",
+    "filteredTitle": "Süzülmüş bildirişlər",
+    "filteredEmpty": "Heç nə süzülməyib.",
+    "failed": "Yadda saxlanılmadı. Yenidən cəhd edin."
+  },
+  "keywordFilters": {
+    "title": "Səssiz sözlər",
+    "description": "Bu sözlər olan paylaşımları və şərhləri gizlədin və ya xəbərdarlığın arxasına qatlayın. Bu siyahını yalnız siz görürsünüz.",
+    "placeholder": "Söz və ya ifadə",
+    "add": "Səssizləşdir",
+    "added": "Səssizləşdirildi: {{phrase}}",
+    "wholeWord": "Yalnız tam söz",
+    "whenMatches": "Paylaşım uyğun gələndə",
+    "warn": "Xəbərdarlıq göstər",
+    "hide": "Gizlət",
+    "howLong": "Nə qədər",
+    "forever": "Silənə qədər",
+    "duration1h": "1 saatlıq",
+    "duration1d": "1 günlük",
+    "duration7d": "7 günlük",
+    "duration30d": "30 günlük",
+    "where": "Harada",
+    "home": "Əsas səhifə",
+    "public": "Kəşf və axtarış",
+    "profile": "Profillər",
+    "thread": "Söhbətlər",
+    "notifications": "Bildirişlər",
+    "empty": "Heç bir sözü səssizləşdirməmisiniz.",
+    "remove": "Səssizdən çıxar",
+    "until": "{{date}} tarixinə qədər",
+    "filtered": "Süzüldü: {{phrase}}",
+    "showAnyway": "Yenə də göstər",
+    "failed": "Yadda saxlanılmadı. Yenidən cəhd edin."
+  },
+  "postVisibility": {
+    "label": "Bunu kim görə bilər",
+    "public": "Hamı",
+    "followers": "Yalnız izləyicilər",
+    "direct": "Yalnız qeyd olunanlar",
+    "noRepost": "Yalnız açıq paylaşımlar yenidən paylaşıla bilər",
+    "directHint": "Bu paylaşımı yalnız @ ilə qeyd etdiyiniz insanlar görəcək",
+    "needsMention": "Yalnız qeyd olunanlara paylaşmaq üçün ən azı bir nəfəri @ ilə qeyd edin"
+  },
+  "replyPolicy": {
+    "label": "Kim cavab verə bilər",
+    "public": "Hər kəs",
+    "followers": "İzləyiciləriniz",
+    "following": "İzlədiyiniz insanlar",
+    "mentioned": "Yalnız qeyd olunanlar",
+    "noticeFollowers": "Yalnız müəllifin izləyiciləri cavab verə bilər",
+    "noticeFollowing": "Yalnız müəllifin izlədiyi insanlar cavab verə bilər",
+    "noticeMentioned": "Yalnız paylaşımda qeyd olunanlar cavab verə bilər",
+    "refused": "Müəllif bu paylaşıma kimin cavab verə biləcəyini məhdudlaşdırıb"
+  },
+  "quotePolicy": {
+    "label": "Kim sitat gətirə bilər",
+    "public": "Hər kəs",
+    "followers": "İzləyicilər",
+    "nobody": "Yalnız mən",
+    "off": "Müəllif sitat gətirməni bağlayıb",
+    "removed": "Müəllif paylaşımını bu sitatdan çıxarıb",
+    "remove": "Çıxar",
+    "removedToast": "Paylaşımınız bu sitatdan çıxarıldı",
+    "removeFailed": "Paylaşımınızı sitatdan çıxarmaq mümkün olmadı",
+    "refused": "Müəllif bu paylaşımdan sitat gətirməyinizə icazə vermir"
+  },
   "contentWarning": {
     "label": "Məzmun xəbərdarlığı",
     "placeholder": "Xəbərdarlığınızı buraya yazın",
@@ -132,6 +260,7 @@
     "heading": "DeHub Qısalar"
   },
   "settings": {
+    "usernameTaken": "Bu ad tutulub",
     "postingChain": "Paylaşım blokçeyni",
     "showOnline": "Onlayn olduğum vaxtı göstərin",
     "showOnlineDesc": "Mesaj göndərdiyiniz insanlar DeHub-dan istifadə edərkən adınızın yanında yaşıl nöqtə görür",
@@ -657,7 +786,6 @@
     "embed": "Yerləşdir",
     "copyEmbedCode": "Yerləşdirmə kodunu kopyala",
     "embedCodeCopied": "Yerləşdirmə kodu kopyalandı",
-    "copyFailed": "Linki kopyalamaq mümkün olmadı",
     "options": "Seçimlər",
     "aiOverview": "AI icmalı",
     "sendTip": "Bəxşiş Göndər",
@@ -685,7 +813,8 @@
     "unpinPost": "Profilinizdən silin",
     "postPinned": "Profilinizə bərkidilib",
     "postUnpinned": "Profilinizdən silinmədi",
-    "pinFailed": "Bu yazını sancmaq və ya açmaq mümkün olmadı"
+    "pinFailed": "Bu yazını sancmaq və ya açmaq mümkün olmadı",
+    "copyFailed": "Linki kopyalamaq mümkün olmadı"
   },
   "filters": {
     "sort": "Sırala",
@@ -2250,6 +2379,7 @@
     "pendingSubmitted": "{{amount}} token göndərildi. Təsdiqlənmə hələ də yoxlanılır. Bir daha göndərməyin."
   },
   "communities": {
+    "chatTab": "Söhbət",
     "title": "İcmalar",
     "create": "Yarat",
     "searchPlaceholder": "İcmaları axtar...",
@@ -2284,7 +2414,30 @@
     "addDescription": "Təsvir əlavə edin...",
     "communityDescription": "İcma təsviri...",
     "posts": "Paylaşımlar",
-    "chat": "Söhbət",
+    "chat": {
+      "intervalHour": "1 saat",
+      "intervalHours": "{{count}} saat",
+      "intervalMinute": "1 dəqiqə",
+      "intervalMinutes": "{{count}} dəqiqə",
+      "intervalSecond": "1 saniyə",
+      "intervalSeconds": "{{count}} saniyə",
+      "muted": "Siz mutasiyaya məruz qalmısınız",
+      "mutedUntil": "{{until}} tarixinə qədər dəyişmisiniz",
+      "postingDisabled": "Buradakı üzvlər üçün poçt qeyri-aktiv edilib",
+      "pinnedGif": "GIF",
+      "pinnedMedia": "Media",
+      "jumpToPinned": "Sancılmış mesaja keçin",
+      "pinnedMessage": "Sancaqlanmış mesaj",
+      "unpin": "Sancağı ləğv et",
+      "pin": "PİN kod",
+      "delete": "Sil",
+      "slowMode": "Yavaş rejim: hər {{interval}} üçün bir mesaj",
+      "slowModeWait": "Yavaş rejim — {{time}} gözləyin",
+      "send": "Göndər",
+      "deleteMessageTitle": "Bu mesaj silinsin?",
+      "deleteMessageBody": "Bunu geri qaytarmaq mümkün deyil.",
+      "cancel": "Ləğv et"
+    },
     "membersTab": "Üzvlər ({{count}})",
     "about": "Haqqında",
     "backToCommunities": "İcmalar",
@@ -3726,6 +3879,7 @@
     "sellYourFractions": "Fraksiyalarınızı satın ({{held}} saxlanılır)"
   },
   "creator": {
+    "libraryEmpty": "Saxladığınız generasiyalar burada görünəcək.",
     "whatToCreate": "Nə yaratmaq lazımdır",
     "startCreatingWith": "{{model}} ilə yaratmağa başlayın",
     "studioSubtitle": "Səhnə, personaj, əhval-ruhiyyə və ya stil təsvir edin. Nəticələr aşağıda görünür və birbaşa redaktora keçir.",
@@ -6054,7 +6208,10 @@
     "play": "Oxut",
     "pause": "Fasilə ver",
     "listens_one": "{{count}} dinlə",
-    "listens_other": "{{count}} dinləyir"
+    "listens_other": "{{count}} dinləyir",
+    "lyrics": "Mahnı sözləri",
+    "lyricsLoading": "Sözlər axtarılır…",
+    "lyricsNone": "Söz tapılmadı"
   },
   "converter": {
     "seoTitle": "Converter — DeHub-a video idxal edin",
@@ -6568,6 +6725,7 @@
     "seoDescription": "Rəsmi DeHub sənədləri: platformaya baxış, dApps, tokenlər token iqtisadiyyatı, steykinq, oyunlar, yol xəritəsi, FAQ və daha çoxu."
   },
   "dex": {
+    "title": "token / USD",
     "seoTitle": "DEX — tokenlər-ni öz qiymətinizlə ticarət edin",
     "seoDescription": "Base və ya BNB Chain-də Uniswap v4 limit sifarişi ilə tokenlər alış və ya satış qiymətinizi təyin edin. Canlı sifariş kitabı, bazar dərinliyi və vahid ortaq USD qiyməti.",
     "venue": "Şəbəkə",
@@ -6790,6 +6948,14 @@
     }
   },
   "editor": {
+    "video": {
+      "tFade": "Qarışıq keçid",
+      "none": "Heç biri",
+      "transition": "Keçid",
+      "speed": "Sürət",
+      "sound": "Səs",
+      "video": "Video"
+    },
     "review": {
       "title": "Layihə baxışı",
       "shared": "Sizinlə paylaşılanlar",

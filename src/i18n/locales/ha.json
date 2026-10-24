@@ -1,4 +1,132 @@
 {
+  "mastodonApps": {
+    "authTitle": "Shiga da DeHub",
+    "authWants": "{{app}} yana son amfani da asusunka na DeHub",
+    "authSignedInAs": "An shiga a matsayin {{name}}",
+    "authSignIn": "Shiga don ci gaba",
+    "allow": "Bari",
+    "cancel": "Soke",
+    "scopeRead": "Ganin jerin lokutanka, rubuce-rubucenka, sanarwarka da alamominka",
+    "scopeWrite": "Rubutu, amsa, so, haɓakawa da sa alama a madadinka",
+    "scopeFollow": "Bi, daina bi, toshe da yin shiru ga asusu",
+    "scopePush": "Aika maka sanarwa",
+    "scopeProfile": "Ganin bayananka",
+    "invalid": "Wannan hanyar shiga ba ta da inganci. Koma manhajar ka sake gwadawa.",
+    "failed": "Hakan bai yi aiki ba. Sake gwadawa.",
+    "codeTitle": "Kwafi wannan lambar a cikin manhajar don kammala shiga.",
+    "copy": "Kwafa",
+    "copied": "An kwafa",
+    "seoDescription": "Bari manhajar Mastodon ta yi amfani da asusunka na DeHub.",
+    "redirecting": "Ana mayar da kai zuwa {{app}}…",
+    "connectedTitle": "Manhajojin da aka haɗa",
+    "connectedDescription": "Manhajojin Mastodon da ka shiga da wannan asusun. Cire ɗaya don fita daga cikinsa.",
+    "connectedEmpty": "Babu manhajar da aka haɗa tukuna.",
+    "lastUsed": "An yi amfani na ƙarshe {{date}}",
+    "remove": "Cire",
+    "removed": "An cire manhajar"
+  },
+  "fediverse": {
+    "title": "Fediverse",
+    "description": "Mutane a Mastodon da sauran manhajojin fediverse za su iya samunka su bi ka a wannan adireshin. Sabbin rubuce-rubucenka na jama'a suna isa gare su a can.",
+    "copy": "Kwafa",
+    "copied": "An kwafa",
+    "privateNote": "Ba a nuna asusun sirri a fediverse ba.",
+    "noUsername": "Zaɓi sunan mai amfani don samun adireshin fediverse."
+  },
+  "profileFields": {
+    "title": "Filayen bayanan martaba",
+    "description": "Har zuwa ƙarin layi huɗu a bayanan martabarka, kamar shafin yanar gizo ko karin magananka.",
+    "label": "Lakabi",
+    "content": "Abun ciki",
+    "save": "Ajiye filayen",
+    "saved": "An ajiye filayen bayanan martaba",
+    "failed": "Ba a ajiye ba. Sake gwadawa.",
+    "verified": "Hanyar haɗi da aka tabbatar",
+    "verifyHint": "Don tabbatar da hanyar haɗi, ƙara wannan a wannan shafin, sannan ka sake ajiyewa: {{snippet}}"
+  },
+  "followedTags": {
+    "follow": "Bi #{{tag}}",
+    "following": "Kana bi",
+    "unfollow": "Daina bin #{{tag}}",
+    "followed": "Yanzu kana bin #{{tag}}. Rubuce-rubucensa za su bayyana a cikin abincin Waɗanda kake bi.",
+    "unfollowed": "Ka daina bin #{{tag}}",
+    "failed": "Ba a ajiye ba. Sake gwadawa.",
+    "clear": "Share"
+  },
+  "notificationFilters": {
+    "title": "Tace sanarwa daga",
+    "description": "Zaɓi abin da zai faru idan wani a wajen da'irarka ya yi hulɗa da kai. Sanarwar da aka tace tana jira a ƙarƙashin \"An tace\", ba alama ba turawa.",
+    "notFollowing": "Mutanen da ba ka bi ba",
+    "notFollowers": "Mutanen da ba sa bin ka",
+    "newAccounts": "Sabbin asusu (ƙasa da kwana 30)",
+    "accept": "Sanar da ni",
+    "filter": "Tace",
+    "drop": "Ɓoye gaba ɗaya",
+    "filteredTitle": "Sanarwar da aka tace",
+    "filteredEmpty": "Ba a tace komai ba.",
+    "failed": "Ba a ajiye ba. Sake gwadawa."
+  },
+  "keywordFilters": {
+    "title": "Kalmomin da aka kashe",
+    "description": "Ɓoye rubuce-rubuce da sharhi masu ɗauke da waɗannan kalmomi, ko ninke su a bayan gargaɗi. Kai kaɗai kake ganin wannan jerin.",
+    "placeholder": "Kalma ko jumla",
+    "add": "Kashe",
+    "added": "An kashe: {{phrase}}",
+    "wholeWord": "Cikakkiyar kalma kawai",
+    "whenMatches": "Idan rubutu ya dace",
+    "warn": "Nuna gargaɗi",
+    "hide": "Ɓoye shi",
+    "howLong": "Tsawon lokaci",
+    "forever": "Har sai na cire shi",
+    "duration1h": "Na awa 1",
+    "duration1d": "Na kwana 1",
+    "duration7d": "Na kwana 7",
+    "duration30d": "Na kwana 30",
+    "where": "Ina",
+    "home": "Gida",
+    "public": "Bincika da nema",
+    "profile": "Bayanan martaba",
+    "thread": "Tattaunawa",
+    "notifications": "Sanarwa",
+    "empty": "Ba ka kashe wata kalma ba.",
+    "remove": "Buɗe",
+    "until": "Har {{date}}",
+    "filtered": "An tace: {{phrase}}",
+    "showAnyway": "Nuna duk da haka",
+    "failed": "Ba a ajiye ba. Sake gwadawa."
+  },
+  "postVisibility": {
+    "label": "Wa zai iya ganin wannan",
+    "public": "Kowa",
+    "followers": "Mabiya kawai",
+    "direct": "Mutanen da aka ambata kawai",
+    "noRepost": "Rubutun jama'a kawai za a iya sake wallafawa",
+    "directHint": "Mutanen da ka ambata da @ ne kawai za su ga wannan rubutu",
+    "needsMention": "Ambaci aƙalla mutum ɗaya da @ don wallafa wa mutanen da aka ambata kawai"
+  },
+  "replyPolicy": {
+    "label": "Wa zai iya amsawa",
+    "public": "Kowa",
+    "followers": "Mabiyanka",
+    "following": "Waɗanda kake bi",
+    "mentioned": "Waɗanda aka ambata kaɗai",
+    "noticeFollowers": "Mabiya marubucin kaɗai ne za su iya amsawa",
+    "noticeFollowing": "Waɗanda marubucin ke bi kaɗai ne za su iya amsawa",
+    "noticeMentioned": "Waɗanda aka ambata a rubutun kaɗai ne za su iya amsawa",
+    "refused": "Marubucin ya iyakance wanda zai iya amsa wannan rubutun"
+  },
+  "quotePolicy": {
+    "label": "Wa zai iya ambato",
+    "public": "Kowa",
+    "followers": "Mabiya",
+    "nobody": "Ni kaɗai",
+    "off": "Marubucin ya kashe ambato",
+    "removed": "Marubucin ya cire rubutunsa daga wannan ambaton",
+    "remove": "Cire",
+    "removedToast": "An cire rubutunka daga wannan ambaton",
+    "removeFailed": "Ba a iya cire rubutunka daga ambaton ba",
+    "refused": "Marubucin bai ba ka damar ambaton wannan rubutun ba"
+  },
   "contentWarning": {
     "label": "Gargaɗin abun ciki",
     "placeholder": "Rubuta gargaɗinka a nan",
@@ -132,6 +260,7 @@
     "heading": "Gajerun bidiyon DeHub"
   },
   "settings": {
+    "usernameTaken": "An riga an ɗauki sunan",
     "postingChain": "Blockchain na wallafawa",
     "showOnline": "Nuna lokacin da nake kan layi",
     "showOnlineDesc": "Mutanen da kake sako suna ganin kore dot kusa da sunanka yayin da kake amfani da DeHub",
@@ -657,7 +786,6 @@
     "embed": "Saka",
     "copyEmbedCode": "Kwafi lambar sakawa",
     "embedCodeCopied": "An kwafi lambar sakawa",
-    "copyFailed": "Ba a iya kwafi hanyar haɗin ba",
     "options": "Zaɓuɓɓuka",
     "aiOverview": "AI bayyani",
     "sendTip": "Aika Kyauta",
@@ -685,7 +813,8 @@
     "unpinPost": "Unpin daga bayaninka",
     "postPinned": "Pinned zuwa bayaninka",
     "postUnpinned": "Unpinned daga bayanin martaba",
-    "pinFailed": "Ba zai iya PIN ko unpin wannan post"
+    "pinFailed": "Ba zai iya PIN ko unpin wannan post",
+    "copyFailed": "Ba a iya kwafi hanyar haɗin ba"
   },
   "filters": {
     "sort": "Tsara",
@@ -2306,6 +2435,7 @@
     "pendingSubmitted": "{{amount}} tokens an aiko su. Ana ci gaba da duba tabbaci. Kada ka sake aiko shi."
   },
   "communities": {
+    "chatTab": "Hira",
     "title": "Al'ummomi",
     "create": "Ƙirƙira",
     "searchPlaceholder": "Bincika al'ummomi...",
@@ -2340,7 +2470,28 @@
     "addDescription": "Ƙara bayani...",
     "communityDescription": "Bayanin al'umma...",
     "posts": "Wallafe-wallafe",
-    "chat": "Hira",
+    "chat": {
+      "intervalHour": "1 awa",
+      "intervalHours": "{{count}} awanni",
+      "intervalMinute": "Dakika 1",
+      "intervalMinutes": "{{count}} mintuna",
+      "intervalSecond": "1 na biyu",
+      "intervalSeconds": "{{count}} dakika",
+      "muted": "Kuna da muted",
+      "mutedUntil": "Kuna da muted har {{until}}",
+      "postingDisabled": "Posting yana da nakasa ga membobi a nan",
+      "pinnedMedia": "Kafofin watsa labarai",
+      "jumpToPinned": "Tsallake zuwa sakon pinned",
+      "pinnedMessage": "Pinned sakon",
+      "pin": "Pin",
+      "delete": "Share",
+      "slowMode": "Yanayin Slow: saƙo ɗaya kowane {{interval}}",
+      "slowModeWait": "Yanayin Slow — jira {{time}}",
+      "send": "Aika",
+      "deleteMessageTitle": "Share wannan sakon?",
+      "deleteMessageBody": "Ba za a iya cire wannan ba.",
+      "cancel": "Cancel"
+    },
     "membersTab": "Membobi ({{count}})",
     "about": "Game da",
     "backToCommunities": "Al'ummomi",
@@ -3775,6 +3926,7 @@
     "sellYourFractions": "Sayar da sassan ku ({{held}} rike)"
   },
   "creator": {
+    "libraryEmpty": "Abubuwan da ka ƙirƙira ka ajiye za su bayyana a nan.",
     "whatToCreate": "Abin da za a ƙirƙiri",
     "startCreatingWith": "Fara ƙirƙirar tare da {{model}}",
     "studioSubtitle": "Bayyana wani wuri, hali, yanayi ko salon. Sakamakon ƙasa a ƙasa kuma kai tsaye a cikin edita.",
@@ -6096,7 +6248,10 @@
     "play": "Yi wasa",
     "pause": "Dakatar da",
     "listens_one": "{{count}} saurare",
-    "listens_other": "{{count}} sauraro"
+    "listens_other": "{{count}} sauraro",
+    "lyrics": "Kalmomin waƙa",
+    "lyricsLoading": "Ana neman kalmomi…",
+    "lyricsNone": "Ba a sami kalmomi ba"
   },
   "converter": {
     "seoTitle": "Converter — shigo da bidiyo zuwa DeHub",
@@ -6612,6 +6767,7 @@
     "seoDescription": "Takardun hukuma na DeHub: bayanin dandamali, dApps, tattalin arzikin token tokens, staking, wasanni, tsarin gaba, tambayoyin da ake yawan yi da ƙari."
   },
   "dex": {
+    "title": "tokens / USD",
     "seoTitle": "DEX — Sanya tokens a farashin da kake so",
     "seoDescription": "Sanya farashin siyan ko siyar da tokens tare da odar iyaka ta Uniswap v4 akan Base ko BNB Chain. Littafin oda na kai tsaye, zurfin kasuwa da kuma farashin USD ɗaya da aka raba.",
     "venue": "Sakamakon",
@@ -6832,6 +6988,14 @@
     }
   },
   "editor": {
+    "video": {
+      "tFade": "Haɗuwa a hankali",
+      "none": "Babu",
+      "transition": "Sauyawa",
+      "speed": "Gudu",
+      "sound": "Sauti",
+      "video": "Bidiyo"
+    },
     "review": {
       "title": "Bitar aiki",
       "shared": "An raba tare da kai",

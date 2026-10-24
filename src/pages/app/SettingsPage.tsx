@@ -271,6 +271,11 @@ import { DeHubPageLoader, ButtonLoader } from '@/components/app/DeHubLoader';
 import { usePendingAction } from '@/hooks/use-pending-action';
 import { useScrollFadeMask } from '@/components/app/feeds/useScrollFadeMask';
 import { ThemePreviewCard } from '@/components/app/settings/ThemePreviewCard';
+import { KeywordFiltersSection } from '@/components/app/settings/KeywordFiltersSection';
+import { NotificationFiltersSetting } from '@/components/app/settings/NotificationFiltersSetting';
+import { ProfileFieldsSetting } from '@/components/app/settings/ProfileFieldsSetting';
+import { FediverseHandleSetting } from '@/components/app/settings/FediverseHandleSetting';
+import { ConnectedAppsSetting } from '@/components/app/settings/ConnectedAppsSetting';
 
 export default function SettingsPage() {
   const { t: _copy } = _useCopy();
@@ -1121,6 +1126,15 @@ function ProfileSettings() {
         />
       </div>
 
+      {/* Profile fields — label/value lines under the bio, links verified by rel="me" */}
+      <ProfileFieldsSetting />
+
+      {/* Fediverse — the @username@dehub.io address Mastodon can follow */}
+      <FediverseHandleSetting />
+
+      {/* Connected apps — Mastodon apps signed in to this account */}
+      <ConnectedAppsSetting />
+
       {/* Links */}
       <div className="space-y-6">
         {/* Only the social rows collapse — there are seven of them and most
@@ -1412,6 +1426,9 @@ function NotificationSettings() {
           </div>
         </div>
       </div>
+
+      {/* Who may reach you at all — Mastodon's notification filters */}
+      <NotificationFiltersSetting />
 
       {/* Activity */}
       <div>
@@ -2031,6 +2048,11 @@ function PrivacySettings() {
       {/* Blocked Users */}
       <div data-setting-anchor="blocked-users">
         <BlockedUsersSection />
+      </div>
+
+      {/* Muted words — keyword filters */}
+      <div data-setting-anchor="muted-words">
+        <KeywordFiltersSection />
       </div>
 
       {/* Geo-Blocking */}

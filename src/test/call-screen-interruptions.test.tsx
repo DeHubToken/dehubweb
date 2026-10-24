@@ -11,6 +11,10 @@ vi.mock('@/contexts/AuthContext', () => ({ useAuth: () => ({ walletAddress: mock
 vi.mock('@/lib/api/dehub/core', () => ({ apiCall: () => Promise.resolve(), getAuthToken: () => null }));
 vi.mock('@/utils/simple-call-check', () => ({ simpleCallCheck: mocks.check, debugAllCalls: vi.fn() }));
 vi.mock('sonner', () => ({ toast: { error: vi.fn() } }));
+vi.mock('@/lib/supabase-wallet-client', async () => {
+  const { supabase } = await import('@/integrations/supabase/client');
+  return { walletScopedClient: () => supabase };
+});
 vi.mock('@/integrations/supabase/client', () => ({ supabase: {
   functions: { invoke: mocks.token },
   from: () => ({

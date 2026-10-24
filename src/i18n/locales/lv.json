@@ -1,4 +1,132 @@
 {
+  "mastodonApps": {
+    "authTitle": "Pierakstīties ar DeHub",
+    "authWants": "{{app}} vēlas izmantot tavu DeHub kontu",
+    "authSignedInAs": "Pierakstījies kā {{name}}",
+    "authSignIn": "Pieraksties, lai turpinātu",
+    "allow": "Atļaut",
+    "cancel": "Atcelt",
+    "scopeRead": "Redzēt tavas laika joslas, ierakstus, paziņojumus un grāmatzīmes",
+    "scopeWrite": "Publicēt, atbildēt, atzīmēt ar patīk, kopīgot un saglabāt tavā vārdā",
+    "scopeFollow": "Sekot, pārtraukt sekot, bloķēt un apklusināt kontus",
+    "scopePush": "Sūtīt tev paziņojumus",
+    "scopeProfile": "Redzēt tavu profilu",
+    "invalid": "Šī pierakstīšanās saite nav derīga. Atgriezies lietotnē un mēģini vēlreiz.",
+    "failed": "Neizdevās. Mēģini vēlreiz.",
+    "codeTitle": "Iekopē šo kodu lietotnē, lai pabeigtu pierakstīšanos.",
+    "copy": "Kopēt",
+    "copied": "Nokopēts",
+    "seoDescription": "Ļauj Mastodon lietotnei izmantot tavu DeHub kontu.",
+    "redirecting": "Vedam tevi atpakaļ uz {{app}}…",
+    "connectedTitle": "Pievienotās lietotnes",
+    "connectedDescription": "Mastodon lietotnes, kurās esi pierakstījies ar šo kontu. Noņem kādu, lai no tās izrakstītos.",
+    "connectedEmpty": "Vēl nav pievienotu lietotņu.",
+    "lastUsed": "Pēdējoreiz izmantota {{date}}",
+    "remove": "Noņemt",
+    "removed": "Lietotne noņemta"
+  },
+  "fediverse": {
+    "title": "Fediverss",
+    "description": "Cilvēki Mastodon un citās fediversa lietotnēs var tevi atrast un sekot tev šajā adresē. Tavi jaunie publiskie ieraksti tur viņus sasniedz.",
+    "copy": "Kopēt",
+    "copied": "Nokopēts",
+    "privateNote": "Privātie konti fediversā netiek rādīti.",
+    "noUsername": "Izvēlies lietotājvārdu, lai iegūtu fediversa adresi."
+  },
+  "profileFields": {
+    "title": "Profila lauki",
+    "description": "Līdz četrām papildu rindām tavā profilā, piemēram, vietne vai tavi vietniekvārdi.",
+    "label": "Nosaukums",
+    "content": "Saturs",
+    "save": "Saglabāt laukus",
+    "saved": "Profila lauki saglabāti",
+    "failed": "Netika saglabāts. Mēģini vēlreiz.",
+    "verified": "Apstiprināta saite",
+    "verifyHint": "Lai apstiprinātu saiti, pievieno šo tajā lapā un saglabā vēlreiz: {{snippet}}"
+  },
+  "followedTags": {
+    "follow": "Sekot #{{tag}}",
+    "following": "Seko",
+    "unfollow": "Pārtraukt sekot #{{tag}}",
+    "followed": "Tagad tu seko #{{tag}}. Tā ieraksti parādīsies tavā Sekotie plūsmā.",
+    "unfollowed": "Tu vairs neseko #{{tag}}",
+    "failed": "Netika saglabāts. Mēģini vēlreiz.",
+    "clear": "Notīrīt"
+  },
+  "notificationFilters": {
+    "title": "Filtrēt paziņojumus no",
+    "description": "Izvēlies, kas notiek, kad kāds ārpus tava loka ar tevi mijiedarbojas. Filtrētie paziņojumi gaida sadaļā Filtrētie, bez nozīmītes un bez push paziņojuma.",
+    "notFollowing": "Cilvēkiem, kuriem tu neseko",
+    "notFollowers": "Cilvēkiem, kuri tev neseko",
+    "newAccounts": "Jauniem kontiem (jaunākiem par 30 dienām)",
+    "accept": "Paziņot man",
+    "filter": "Filtrēt",
+    "drop": "Pilnībā paslēpt",
+    "filteredTitle": "Filtrētie paziņojumi",
+    "filteredEmpty": "Nekas nav filtrēts.",
+    "failed": "Netika saglabāts. Mēģini vēlreiz."
+  },
+  "keywordFilters": {
+    "title": "Apklusinātie vārdi",
+    "description": "Paslēp ierakstus un komentārus ar šiem vārdiem vai saloki tos aiz brīdinājuma. Šo sarakstu redzi tikai tu.",
+    "placeholder": "Vārds vai frāze",
+    "add": "Apklusināt",
+    "added": "Apklusināts: {{phrase}}",
+    "wholeWord": "Tikai viss vārds",
+    "whenMatches": "Kad ieraksts atbilst",
+    "warn": "Rādīt brīdinājumu",
+    "hide": "Paslēpt",
+    "howLong": "Cik ilgi",
+    "forever": "Kamēr to noņemšu",
+    "duration1h": "Uz 1 stundu",
+    "duration1d": "Uz 1 dienu",
+    "duration7d": "Uz 7 dienām",
+    "duration30d": "Uz 30 dienām",
+    "where": "Kur",
+    "home": "Sākums",
+    "public": "Izpētīt un meklēt",
+    "profile": "Profili",
+    "thread": "Sarunas",
+    "notifications": "Paziņojumi",
+    "empty": "Tu neesi apklusinājis nevienu vārdu.",
+    "remove": "Atcelt apklusināšanu",
+    "until": "Līdz {{date}}",
+    "filtered": "Filtrēts: {{phrase}}",
+    "showAnyway": "Tomēr rādīt",
+    "failed": "Netika saglabāts. Mēģini vēlreiz."
+  },
+  "postVisibility": {
+    "label": "Kas to var redzēt",
+    "public": "Visi",
+    "followers": "Tikai sekotāji",
+    "direct": "Tikai pieminētie",
+    "noRepost": "Atkārtoti publicēt var tikai publiskas ziņas",
+    "directHint": "Šo ziņu redzēs tikai cilvēki, kurus pieminēsi ar @",
+    "needsMention": "Piemini ar @ vismaz vienu cilvēku, lai publicētu tikai pieminētajiem"
+  },
+  "replyPolicy": {
+    "label": "Kas var atbildēt",
+    "public": "Jebkurš",
+    "followers": "Jūsu sekotāji",
+    "following": "Cilvēki, kuriem sekojat",
+    "mentioned": "Tikai pieminētie",
+    "noticeFollowers": "Atbildēt var tikai autora sekotāji",
+    "noticeFollowing": "Atbildēt var tikai cilvēki, kuriem seko autors",
+    "noticeMentioned": "Atbildēt var tikai ziņā pieminētie",
+    "refused": "Autors ir ierobežojis, kas var atbildēt uz šo ziņu"
+  },
+  "quotePolicy": {
+    "label": "Kas var citēt",
+    "public": "Jebkurš",
+    "followers": "Sekotāji",
+    "nobody": "Tikai es",
+    "off": "Autors ir izslēdzis citēšanu",
+    "removed": "Autors noņēma savu ziņu no šī citāta",
+    "remove": "Noņemt",
+    "removedToast": "Jūsu ziņa noņemta no šī citāta",
+    "removeFailed": "Neizdevās noņemt jūsu ziņu no citāta",
+    "refused": "Autors neļauj jums citēt šo ziņu"
+  },
   "contentWarning": {
     "label": "Satura brīdinājums",
     "placeholder": "Uzrakstiet savu brīdinājumu šeit",
@@ -132,6 +260,7 @@
     "heading": "DeHub Īsvideo"
   },
   "settings": {
+    "usernameTaken": "Lietotājvārds ir aizņemts",
     "postingChain": "Ierakstu blokķēde",
     "showOnline": "Rādīt, kad esmu tiešsaistē",
     "showOnlineDesc": "Kamēr izmantojat DeHub, personas, kurām sūtāt ziņojumus, blakus jūsu vārdam redz zaļu punktu",
@@ -643,7 +772,6 @@
     "embed": "Iegult",
     "copyEmbedCode": "Kopēt iegulšanas kodu",
     "embedCodeCopied": "Iegulšanas kods nokopēts",
-    "copyFailed": "Neizdevās nokopēt saiti",
     "options": "Opcijas",
     "aiOverview": "MI pārskats",
     "sendTip": "Sūtīt dzeramnaudu",
@@ -671,7 +799,8 @@
     "unpinPost": "Atspraust no profila",
     "postPinned": "Piesprausts jūsu profilam",
     "postUnpinned": "Atsprausti no jūsu profila",
-    "pinFailed": "Nevarēja piespraust vai atspraust šo ziņu"
+    "pinFailed": "Nevarēja piespraust vai atspraust šo ziņu",
+    "copyFailed": "Neizdevās nokopēt saiti"
   },
   "filters": {
     "sort": "Kārtot",
@@ -2290,6 +2419,7 @@
     "pendingSubmitted": "{{amount}} žetoni iesniegti. Apstiprināšana vēl tiek pārbaudīta. Nesūtiet to vēlreiz."
   },
   "communities": {
+    "chatTab": "Tērzēšana",
     "title": "Kopienas",
     "create": "Izveidot",
     "searchPlaceholder": "Meklēt kopienas...",
@@ -2324,7 +2454,30 @@
     "addDescription": "Pievienot aprakstu...",
     "communityDescription": "Kopienas apraksts...",
     "posts": "Ieraksti",
-    "chat": "Tērzēšana",
+    "chat": {
+      "intervalHour": "1 stunda",
+      "intervalHours": "{{count}} stundas",
+      "intervalMinute": "1 minūte",
+      "intervalMinutes": "{{count}} minūtes",
+      "intervalSecond": "1 sekunde",
+      "intervalSeconds": "{{count}} sekundes",
+      "muted": "Jūs esat izslēgts",
+      "mutedUntil": "Jūs esat izslēgts līdz {{until}}",
+      "postingDisabled": "Šeit dalībniekiem ir atspējota publicēšana",
+      "pinnedGif": "GIF",
+      "pinnedMedia": "Multivide",
+      "jumpToPinned": "Pāriet uz piesprausto ziņojumu",
+      "pinnedMessage": "Piesprausts ziņojums",
+      "unpin": "Atspraust",
+      "pin": "PIN kods",
+      "delete": "Dzēst",
+      "slowMode": "Lēnais režīms: viens ziņojums ik pēc {{interval}}",
+      "slowModeWait": "Lēnais režīms — gaidiet {{time}}",
+      "send": "Sūtīt",
+      "deleteMessageTitle": "Vai dzēst šo ziņojumu?",
+      "deleteMessageBody": "Šo darbību nevar atsaukt.",
+      "cancel": "Atcelt"
+    },
     "membersTab": "Dalībnieki ({{count}})",
     "about": "Par kopienu",
     "backToCommunities": "Kopienas",
@@ -3790,6 +3943,7 @@
     "sellYourFractions": "Pārdot savas daļas ({{held}} turētas)"
   },
   "creator": {
+    "libraryEmpty": "Šeit parādīsies jūsu saglabātās ģenerācijas.",
     "whatToCreate": "Ko izveidot",
     "startCreatingWith": "Sākt veidot ar {{model}}",
     "studioSubtitle": "Aprakstiet ainu, tēlu, noskaņu vai stilu. Rezultāti parādīsies zemāk un nonāks tieši redaktorā.",
@@ -6184,7 +6338,10 @@
     "play": "Atskaņot",
     "pause": "Apturēt",
     "listens_one": "{{count}} klausīties",
-    "listens_other": "{{count}} klausās"
+    "listens_other": "{{count}} klausās",
+    "lyrics": "Dziesmas vārdi",
+    "lyricsLoading": "Meklējam vārdus…",
+    "lyricsNone": "Vārdi nav atrasti"
   },
   "converter": {
     "seoTitle": "Konvertors — importējiet video uz DeHub",
@@ -6700,6 +6857,7 @@
     "seoDescription": "Oficiālā DeHub dokumentācija: platformas pārskats, dApps, žetoni tokena ekonomika, staking, spēles, ceļvedis, bieži uzdotie jautājumi un vairāk."
   },
   "dex": {
+    "title": "žetoni / USD",
     "seoTitle": "DEX — Tirdziniet žetoni par savu cenu",
     "seoDescription": "Nosakiet savu žetoni pirkšanas vai pārdošanas cenu ar Uniswap v4 limituzdevumu uz Base vai BNB Chain. Tiešsaistes uzdevumu grāmata, tirgus dziļums un viena kopēja USD cena.",
     "venue": "Tīkls",
@@ -6922,6 +7080,14 @@
     }
   },
   "editor": {
+    "video": {
+      "tFade": "Pārplūšana",
+      "none": "Nav",
+      "transition": "Pāreja",
+      "speed": "Ātrums",
+      "sound": "Skaņa",
+      "video": "Video"
+    },
     "review": {
       "title": "Projekta pārskatīšana",
       "shared": "Kopīgots ar jums",

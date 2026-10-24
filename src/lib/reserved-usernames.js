@@ -58,6 +58,8 @@ export const ROUTE_SEGMENTS = [
 
   // --- Edge-only surfaces: served by the worker, never reach the router ---
   'blog', 'rss', 'sitemap', 'robots',
+  // Federation (/ap/…) and Mastodon app sign-in (/oauth/…), relayed to the API.
+  'ap', 'oauth',
 
   // --- Worker redirect tables (LEGAL_REDIRECTS / SPA_REDIRECTS) ---
   'legal', 'privacy', 'privacy-policy', 'terms', 'terms-of-service',

@@ -1,4 +1,132 @@
 {
+  "mastodonApps": {
+    "authTitle": "Bejelentkezés DeHubbal",
+    "authWants": "A(z) {{app}} használni szeretné a DeHub-fiókodat",
+    "authSignedInAs": "Bejelentkezve mint {{name}}",
+    "authSignIn": "Jelentkezz be a folytatáshoz",
+    "allow": "Engedélyezés",
+    "cancel": "Mégse",
+    "scopeRead": "Az idővonalaid, bejegyzéseid, értesítéseid és könyvjelzőid megtekintése",
+    "scopeWrite": "Bejegyzés, válasz, kedvelés, megosztás és könyvjelzőzés a nevedben",
+    "scopeFollow": "Fiókok követése, követésük megszüntetése, letiltása és némítása",
+    "scopePush": "Értesítések küldése neked",
+    "scopeProfile": "A profilod megtekintése",
+    "invalid": "Ez a bejelentkezési link nem érvényes. Menj vissza az alkalmazásba, és próbáld újra.",
+    "failed": "Nem sikerült. Próbáld újra.",
+    "codeTitle": "Másold be ezt a kódot az alkalmazásba a bejelentkezés befejezéséhez.",
+    "copy": "Másolás",
+    "copied": "Másolva",
+    "seoDescription": "Engedd, hogy egy Mastodon-alkalmazás használja a DeHub-fiókodat.",
+    "redirecting": "Visszaviszünk ide: {{app}}…",
+    "connectedTitle": "Csatlakoztatott alkalmazások",
+    "connectedDescription": "Mastodon-alkalmazások, amelyekbe ezzel a fiókkal jelentkeztél be. Távolíts el egyet a kijelentkeztetéshez.",
+    "connectedEmpty": "Még nincs csatlakoztatott alkalmazás.",
+    "lastUsed": "Utoljára használva: {{date}}",
+    "remove": "Eltávolítás",
+    "removed": "Alkalmazás eltávolítva"
+  },
+  "fediverse": {
+    "title": "Födiverzum",
+    "description": "A Mastodonon és más födiverzum-alkalmazásokban lévők ezen a címen megtalálhatnak és követhetnek. Az új nyilvános bejegyzéseid ott érik el őket.",
+    "copy": "Másolás",
+    "copied": "Másolva",
+    "privateNote": "A privát fiókok nem jelennek meg a födiverzumban.",
+    "noUsername": "Válassz felhasználónevet, hogy födiverzum-címed legyen."
+  },
+  "profileFields": {
+    "title": "Profilmezők",
+    "description": "Legfeljebb négy extra sor a profilodon, például weboldal vagy a névmásaid.",
+    "label": "Címke",
+    "content": "Tartalom",
+    "save": "Mezők mentése",
+    "saved": "Profilmezők mentve",
+    "failed": "Nem sikerült menteni. Próbáld újra.",
+    "verified": "Ellenőrzött hivatkozás",
+    "verifyHint": "Egy hivatkozás ellenőrzéséhez add hozzá ezt az oldalhoz, majd ments újra: {{snippet}}"
+  },
+  "followedTags": {
+    "follow": "#{{tag}} követése",
+    "following": "Követed",
+    "unfollow": "#{{tag}} követésének leállítása",
+    "followed": "Mostantól követed: #{{tag}}. A bejegyzései a Követettek hírfolyamodban jelennek meg.",
+    "unfollowed": "Már nem követed: #{{tag}}",
+    "failed": "Nem sikerült menteni. Próbáld újra.",
+    "clear": "Törlés"
+  },
+  "notificationFilters": {
+    "title": "Értesítések szűrése tőlük",
+    "description": "Válaszd ki, mi történjen, ha valaki a körödön kívülről lép kapcsolatba veled. A szűrt értesítések a Szűrt alatt várnak, jelvény és push nélkül.",
+    "notFollowing": "Akiket nem követsz",
+    "notFollowers": "Akik nem követnek téged",
+    "newAccounts": "Új fiókok (30 napnál fiatalabbak)",
+    "accept": "Értesíts",
+    "filter": "Szűrés",
+    "drop": "Teljes elrejtés",
+    "filteredTitle": "Szűrt értesítések",
+    "filteredEmpty": "Semmi sincs kiszűrve.",
+    "failed": "Nem sikerült menteni. Próbáld újra."
+  },
+  "keywordFilters": {
+    "title": "Némított szavak",
+    "description": "Rejtsd el az ezeket a szavakat tartalmazó bejegyzéseket és hozzászólásokat, vagy hajtsd őket egy figyelmeztetés mögé. Ezt a listát csak te látod.",
+    "placeholder": "Szó vagy kifejezés",
+    "add": "Némítás",
+    "added": "Némítva: {{phrase}}",
+    "wholeWord": "Csak teljes szó",
+    "whenMatches": "Ha egy bejegyzés egyezik",
+    "warn": "Figyelmeztetés mutatása",
+    "hide": "Elrejtés",
+    "howLong": "Meddig",
+    "forever": "Amíg el nem távolítom",
+    "duration1h": "1 órára",
+    "duration1d": "1 napra",
+    "duration7d": "7 napra",
+    "duration30d": "30 napra",
+    "where": "Hol",
+    "home": "Kezdőlap",
+    "public": "Felfedezés és keresés",
+    "profile": "Profilok",
+    "thread": "Beszélgetések",
+    "notifications": "Értesítések",
+    "empty": "Még nem némítottál szavakat.",
+    "remove": "Némítás feloldása",
+    "until": "{{date}}-ig",
+    "filtered": "Szűrve: {{phrase}}",
+    "showAnyway": "Megjelenítés mégis",
+    "failed": "Nem sikerült menteni. Próbáld újra."
+  },
+  "postVisibility": {
+    "label": "Ki láthatja ezt",
+    "public": "Mindenki",
+    "followers": "Csak követők",
+    "direct": "Csak az említettek",
+    "noRepost": "Csak nyilvános bejegyzések oszthatók meg újra",
+    "directHint": "Ezt a bejegyzést csak azok látják, akiket @-cal megemlítesz",
+    "needsMention": "Említs meg @-cal legalább egy személyt, hogy csak az említetteknek posztolj"
+  },
+  "replyPolicy": {
+    "label": "Ki válaszolhat",
+    "public": "Bárki",
+    "followers": "A követőid",
+    "following": "Akiket követsz",
+    "mentioned": "Csak az említettek",
+    "noticeFollowers": "Csak a szerző követői válaszolhatnak",
+    "noticeFollowing": "Csak azok válaszolhatnak, akiket a szerző követ",
+    "noticeMentioned": "Csak a bejegyzésben említettek válaszolhatnak",
+    "refused": "A szerző korlátozta, ki válaszolhat erre a bejegyzésre"
+  },
+  "quotePolicy": {
+    "label": "Ki idézheti",
+    "public": "Bárki",
+    "followers": "Követők",
+    "nobody": "Csak én",
+    "off": "A szerző kikapcsolta az idézést",
+    "removed": "A szerző eltávolította a bejegyzését ebből az idézetből",
+    "remove": "Eltávolítás",
+    "removedToast": "A bejegyzésed eltávolítva ebből az idézetből",
+    "removeFailed": "Nem sikerült eltávolítani a bejegyzésedet az idézetből",
+    "refused": "A szerző nem engedi, hogy idézd ezt a bejegyzést"
+  },
   "contentWarning": {
     "label": "Tartalmi figyelmeztetés",
     "placeholder": "Írd ide a figyelmeztetést",
@@ -132,11 +260,12 @@
     "heading": "DeHub Shorts"
   },
   "settings": {
-    "showDislikesDesc": "Bárki megnyithatja a profilod Nemtetszések lapját. Ha ki van kapcsolva, csak te látod.",
-    "showDislikes": "Nemtetszéseim megjelenítése mindenkinek",
+    "usernameTaken": "A felhasználónév foglalt",
     "postingChain": "Bejegyzések blokklánca",
     "showOnline": "Megjelenítés, amikor online vagyok",
     "showOnlineDesc": "Azok a személyek, akiknek üzenetet küldesz, egy zöld pontot látnak a neved mellett, miközben a DeHubot használod",
+    "showDislikes": "Nemtetszéseim megjelenítése mindenkinek",
+    "showDislikesDesc": "Bárki megnyithatja a profilod Nemtetszések lapját. Ha ki van kapcsolva, csak te látod.",
     "smartReplies": "Javasolt válaszok",
     "smartRepliesDesc": "Két választ fogalmaz meg, amelyekre a csevegésben rákoppinthatsz. A javaslatokon lévő × kikapcsolja ezt.",
     "title": "Beállítások",
@@ -659,7 +788,6 @@
     "embed": "Beágyazás",
     "copyEmbedCode": "Beágyazási kód másolása",
     "embedCodeCopied": "Beágyazási kód másolva",
-    "copyFailed": "Nem sikerült a linket másolni",
     "options": "Lehetőségek",
     "aiOverview": "AI áttekintés",
     "sendTip": "Borravaló küldése",
@@ -687,7 +815,8 @@
     "unpinPost": "Leválasztás a profilodról",
     "postPinned": "Rögzítve a profilodhoz",
     "postUnpinned": "Eltávolítva a profilodból",
-    "pinFailed": "Nem sikerült rögzíteni vagy feloldani ezt a bejegyzést"
+    "pinFailed": "Nem sikerült rögzíteni vagy feloldani ezt a bejegyzést",
+    "copyFailed": "Nem sikerült a linket másolni"
   },
   "filters": {
     "sort": "Rendezés",
@@ -1420,7 +1549,6 @@
     "returnHome": "Vissza a kezdőlapra"
   },
   "profile": {
-    "dislikes": { "loadMore": "Továbbiak betöltése", "privateDesc": "Ez a fiók megtartja magának a nemtetszéseit.", "privateTitle": "A nemtetszések privátak", "emptyOther": "Még semmi.", "emptyOwn": "A nem tetsző bejegyzések eltűnnek a hírfolyamaidból, és itt jelennek meg. Vond vissza a nemtetszést, hogy visszahozd a bejegyzést.", "emptyTitle": "Még nincs nemtetszés" },
     "back": "Vissza",
     "usernameAvailable": "Felhasználónév elérhető!",
     "signUpToClaim": "Regisztráljon és foglalja le",
@@ -1448,8 +1576,16 @@
       "commentUnavailable": "Ez a megjegyzés már nem érhető el"
     },
     "tabs": {
-      "dislikes": "Nemtetszések",
-      "playlists": "Játéklisták"
+      "playlists": "Játéklisták",
+      "dislikes": "Nemtetszések"
+    },
+    "dislikes": {
+      "emptyTitle": "Még nincs nemtetszés",
+      "emptyOwn": "A nem tetsző bejegyzések eltűnnek a hírfolyamaidból, és itt jelennek meg. Vond vissza a nemtetszést, hogy visszahozd a bejegyzést.",
+      "emptyOther": "Még semmi.",
+      "privateTitle": "A nemtetszések privátak",
+      "privateDesc": "Ez a fiók megtartja magának a nemtetszéseit.",
+      "loadMore": "Továbbiak betöltése"
     },
     "offerWorthNow": "Körülbelül {{amount}} token a jelenlegi árfolyamon",
     "offerNotePlaceholder": "Írj egy üzenetet (nem kötelező)",
@@ -2257,6 +2393,7 @@
     "pendingSubmitted": "{{amount}} token elküldve. A megerősítés még ellenőrzés alatt áll. Ne küldje el újra."
   },
   "communities": {
+    "chatTab": "Csevegés",
     "title": "Közösségek",
     "create": "Létrehozás",
     "searchPlaceholder": "Közösségek keresése...",
@@ -2291,7 +2428,30 @@
     "addDescription": "Adj hozzá leírást...",
     "communityDescription": "Közösség leírása...",
     "posts": "Bejegyzések",
-    "chat": "Csevegés",
+    "chat": {
+      "intervalHour": "1 óra",
+      "intervalHours": "{{count}} óra",
+      "intervalMinute": "1 perc",
+      "intervalMinutes": "{{count}} perc",
+      "intervalSecond": "1 másodperc",
+      "intervalSeconds": "{{count}} másodperc",
+      "muted": "El van némítva",
+      "mutedUntil": "Elnémítva eddig: {{until}}",
+      "postingDisabled": "A kiküldetés itt le van tiltva a tagok számára",
+      "pinnedGif": "GIF",
+      "pinnedMedia": "Média",
+      "jumpToPinned": "Ugrás a rögzített üzenetre",
+      "pinnedMessage": "Rögzített üzenet",
+      "unpin": "Rögzítés feloldása",
+      "pin": "PIN",
+      "delete": "Törlés",
+      "slowMode": "Lassú üzemmód: minden {{interval}} után egy üzenet",
+      "slowModeWait": "Lassú üzemmód — várjon {{time}}",
+      "send": "Küldés",
+      "deleteMessageTitle": "Törlöd ezt az üzenetet?",
+      "deleteMessageBody": "A művelet nem vonható vissza.",
+      "cancel": "Mégse"
+    },
     "membersTab": "Tagok ({{count}})",
     "about": "Névjegy",
     "backToCommunities": "Közösségek",
@@ -3756,6 +3916,7 @@
     "sellYourFractions": "Adja el töredékeit ({{held}} tartva)"
   },
   "creator": {
+    "libraryEmpty": "A mentett generálásaid itt jelennek meg.",
     "whatToCreate": "Mit kell létrehozni",
     "startCreatingWith": "Kezdj el létrehozni a {{model}} segítségével",
     "studioSubtitle": "Írj le egy jelenetet, karaktert, hangulatot vagy stílust. Az eredmények alul jelennek meg és közvetlenül az editorba kerülnek.",
@@ -6097,7 +6258,10 @@
     "play": "Játék",
     "pause": "Szüneteltetés",
     "listens_one": "{{count}} figyelj",
-    "listens_other": "{{count}} figyel"
+    "listens_other": "{{count}} figyel",
+    "lyrics": "Dalszöveg",
+    "lyricsLoading": "Dalszöveg keresése…",
+    "lyricsNone": "Nincs dalszöveg"
   },
   "converter": {
     "seoTitle": "Konverter — videó importálása a DeHubra",
@@ -6613,6 +6777,7 @@
     "seoDescription": "Hivatalos DeHub dokumentáció: platform áttekintés, dApp-ok, a tokenek token gazdaságtana, staking, játékok, ütemterv, GYIK és több."
   },
   "dex": {
+    "title": "tokenek / USD",
     "seoTitle": "DEX — Kereskedj tokenek-vel a saját áradon",
     "seoDescription": "Állítsd be a tokenek vételi vagy eladási árat egy Uniswap v4 limit megbízással Base vagy BNB Chain hálózaton. Élő megbízási könyv, piaci mélység és egy megosztott USD ár.",
     "venue": "Hálózat",
@@ -6835,6 +7000,14 @@
     }
   },
   "editor": {
+    "video": {
+      "tFade": "Keresztáttűnés",
+      "none": "Nincs",
+      "transition": "Áttűnés",
+      "speed": "Sebesség",
+      "sound": "Hang",
+      "video": "Videó"
+    },
     "review": {
       "title": "Projekt áttekintése",
       "shared": "Veled megosztva",
@@ -8496,5 +8669,15 @@
     "posted": "Közzétéve",
     "view": "Megnézem",
     "failed": "A videót nem sikerült feldolgozni"
+  },
+  "loginStack": {
+    "tip": "DHB borravaló",
+    "headlineTop": "Mindened meglesz",
+    "headlineAccent": "és boldog leszel.",
+    "orContinueWith": "vagy folytasd ezzel",
+    "phone": "Telefon",
+    "fingerprint": "Ujjlenyomat",
+    "exploreFirst": "Előbb nézz körül",
+    "codeNote": "E-mailben küldünk egy kódot, jelszó nélkül."
   }
 }

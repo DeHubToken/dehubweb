@@ -889,6 +889,8 @@ export default function PostInfoPage() {
           currentCategories={Array.isArray(nftInfo.category) ? nftInfo.category : nftInfo.category ? [nftInfo.category] : []}
           currentContentRating={nftInfo.contentRating}
           currentSpoilerText={nftInfo.spoilerText}
+          currentQuotePolicy={nftInfo.quotePolicy}
+          currentReplyPolicy={nftInfo.replyPolicy}
           currentForKids={nftInfo.forKids}
           currentShopLinks={(nftInfo as any).shopLinks}
           onSuccess={(edited) => {

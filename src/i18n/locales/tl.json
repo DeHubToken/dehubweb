@@ -1,4 +1,132 @@
 {
+  "mastodonApps": {
+    "authTitle": "Mag-sign in gamit ang DeHub",
+    "authWants": "Gustong gamitin ng {{app}} ang DeHub account mo",
+    "authSignedInAs": "Naka-sign in bilang {{name}}",
+    "authSignIn": "Mag-sign in para magpatuloy",
+    "allow": "Payagan",
+    "cancel": "Kanselahin",
+    "scopeRead": "Makita ang mga timeline, post, notification at bookmark mo",
+    "scopeWrite": "Mag-post, sumagot, mag-like, mag-boost at mag-bookmark para sa iyo",
+    "scopeFollow": "Mag-follow, mag-unfollow, mag-block at mag-mute ng mga account",
+    "scopePush": "Padalhan ka ng mga notification",
+    "scopeProfile": "Makita ang profile mo",
+    "invalid": "Hindi valid ang sign-in link na ito. Bumalik sa app at subukan ulit.",
+    "failed": "Hindi gumana. Subukan ulit.",
+    "codeTitle": "Kopyahin ang code na ito sa app para matapos ang pag-sign in.",
+    "copy": "Kopyahin",
+    "copied": "Nakopya",
+    "seoDescription": "Hayaang gamitin ng isang Mastodon app ang DeHub account mo.",
+    "redirecting": "Ibinabalik ka namin sa {{app}}…",
+    "connectedTitle": "Mga nakakonektang app",
+    "connectedDescription": "Mga Mastodon app na pinag-sign in-an mo gamit ang account na ito. Alisin ang isa para i-sign out ito.",
+    "connectedEmpty": "Wala pang nakakonektang app.",
+    "lastUsed": "Huling ginamit {{date}}",
+    "remove": "Alisin",
+    "removed": "Naalis ang app"
+  },
+  "fediverse": {
+    "title": "Fediverse",
+    "description": "Puwede kang hanapin at i-follow ng mga tao sa Mastodon at iba pang fediverse app sa address na ito. Doon din aabot sa kanila ang mga bago mong pampublikong post.",
+    "copy": "Kopyahin",
+    "copied": "Nakopya",
+    "privateNote": "Hindi ipinapakita sa fediverse ang mga private account.",
+    "noUsername": "Pumili ng username para magkaroon ng fediverse address."
+  },
+  "profileFields": {
+    "title": "Mga field ng profile",
+    "description": "Hanggang apat na dagdag na linya sa profile mo, gaya ng website o ng iyong pronouns.",
+    "label": "Label",
+    "content": "Nilalaman",
+    "save": "I-save ang mga field",
+    "saved": "Na-save ang mga field ng profile",
+    "failed": "Hindi na-save. Subukan ulit.",
+    "verified": "Na-verify na link",
+    "verifyHint": "Para ma-verify ang link, idagdag ito sa page na iyon, saka i-save ulit: {{snippet}}"
+  },
+  "followedTags": {
+    "follow": "I-follow ang #{{tag}}",
+    "following": "Fina-follow",
+    "unfollow": "I-unfollow ang #{{tag}}",
+    "followed": "Fina-follow mo na ang #{{tag}}. Lalabas ang mga post nito sa Following feed mo.",
+    "unfollowed": "Na-unfollow ang #{{tag}}",
+    "failed": "Hindi na-save. Subukan ulit.",
+    "clear": "I-clear"
+  },
+  "notificationFilters": {
+    "title": "I-filter ang mga notification mula sa",
+    "description": "Piliin kung ano ang mangyayari kapag may taong labas sa iyong grupo na nakipag-ugnayan sa iyo. Naghihintay ang mga na-filter na notification sa Na-filter, walang badge at walang push.",
+    "notFollowing": "Mga taong hindi mo fina-follow",
+    "notFollowers": "Mga taong hindi ka fina-follow",
+    "newAccounts": "Mga bagong account (wala pang 30 araw)",
+    "accept": "Abisuhan ako",
+    "filter": "I-filter",
+    "drop": "Itago nang buo",
+    "filteredTitle": "Mga na-filter na notification",
+    "filteredEmpty": "Wala pang na-filter.",
+    "failed": "Hindi na-save. Subukan ulit."
+  },
+  "keywordFilters": {
+    "title": "Mga naka-mute na salita",
+    "description": "Itago ang mga post at komento na may ganitong mga salita, o itupi sila sa likod ng babala. Ikaw lang ang nakakakita ng listahang ito.",
+    "placeholder": "Salita o parirala",
+    "add": "I-mute",
+    "added": "Na-mute: {{phrase}}",
+    "wholeWord": "Buong salita lang",
+    "whenMatches": "Kapag tumugma ang post",
+    "warn": "Magpakita ng babala",
+    "hide": "Itago",
+    "howLong": "Gaano katagal",
+    "forever": "Hanggang alisin ko",
+    "duration1h": "Sa loob ng 1 oras",
+    "duration1d": "Sa loob ng 1 araw",
+    "duration7d": "Sa loob ng 7 araw",
+    "duration30d": "Sa loob ng 30 araw",
+    "where": "Saan",
+    "home": "Home",
+    "public": "Mag-explore at maghanap",
+    "profile": "Mga profile",
+    "thread": "Mga usapan",
+    "notifications": "Mga notification",
+    "empty": "Wala ka pang na-mute na salita.",
+    "remove": "I-unmute",
+    "until": "Hanggang {{date}}",
+    "filtered": "Na-filter: {{phrase}}",
+    "showAnyway": "Ipakita pa rin",
+    "failed": "Hindi na-save. Subukan ulit."
+  },
+  "postVisibility": {
+    "label": "Sino ang makakakita nito",
+    "public": "Lahat",
+    "followers": "Mga follower lang",
+    "direct": "Mga binanggit lang",
+    "noRepost": "Mga pampublikong post lang ang puwedeng i-repost",
+    "directHint": "Ang mga taong babanggitin mo gamit ang @ lang ang makakakita ng post na ito",
+    "needsMention": "Bumanggit ng kahit isang tao gamit ang @ para mag-post sa mga binanggit lang"
+  },
+  "replyPolicy": {
+    "label": "Sino ang puwedeng sumagot",
+    "public": "Kahit sino",
+    "followers": "Iyong mga tagasunod",
+    "following": "Mga taong sinusundan mo",
+    "mentioned": "Mga nabanggit lang",
+    "noticeFollowers": "Mga tagasunod lang ng may-akda ang puwedeng sumagot",
+    "noticeFollowing": "Mga sinusundan lang ng may-akda ang puwedeng sumagot",
+    "noticeMentioned": "Mga nabanggit lang sa post ang puwedeng sumagot",
+    "refused": "Nilimitahan ng may-akda kung sino ang puwedeng sumagot sa post na ito"
+  },
+  "quotePolicy": {
+    "label": "Sino ang puwedeng mag-quote",
+    "public": "Kahit sino",
+    "followers": "Mga tagasunod",
+    "nobody": "Ako lang",
+    "off": "Pinatay ng may-akda ang pag-quote",
+    "removed": "Inalis ng may-akda ang kanilang post sa quote na ito",
+    "remove": "Alisin",
+    "removedToast": "Inalis ang iyong post sa quote na ito",
+    "removeFailed": "Hindi maalis ang iyong post sa quote",
+    "refused": "Hindi ka pinapayagan ng may-akda na i-quote ang post na ito"
+  },
   "contentWarning": {
     "label": "Babala sa nilalaman",
     "placeholder": "Isulat dito ang iyong babala",
@@ -132,11 +260,12 @@
     "heading": "Shorts ng DeHub"
   },
   "settings": {
-    "showDislikesDesc": "Kahit sino ay puwedeng magbukas ng tab na Ayaw sa profile mo. Kapag naka-off, ikaw lang ang makakakita.",
-    "showDislikes": "Ipakita sa lahat ang mga ayaw ko",
+    "usernameTaken": "Nakuha na ang username",
     "postingChain": "Blockchain para sa mga post",
     "showOnline": "Ipakita kapag ako ay online",
     "showOnlineDesc": "Nakakakita ang mga taong pinadalhan mo ng mensahe ng berdeng tuldok sa tabi ng iyong pangalan habang gumagamit ka ng DeHub",
+    "showDislikes": "Ipakita sa lahat ang mga ayaw ko",
+    "showDislikesDesc": "Kahit sino ay puwedeng magbukas ng tab na Ayaw sa profile mo. Kapag naka-off, ikaw lang ang makakakita.",
     "smartReplies": "Mga iminungkahing sagot",
     "smartRepliesDesc": "Gumagawa ng dalawang sagot na puwede mong i-tap sa chat. Ang × sa mga mungkahi ang nagpapatay nito.",
     "title": "Mga Setting",
@@ -704,7 +833,6 @@
     "embed": "I-embed",
     "copyEmbedCode": "Kopyahin ang embed code",
     "embedCodeCopied": "Nakopya ang embed code",
-    "copyFailed": "Hindi makopya ang link",
     "options": "Mga Opsyon",
     "aiOverview": "Pangkalahatang - ideya ng AI",
     "sendTip": "Magpadala ng Tip",
@@ -732,7 +860,8 @@
     "unpinPost": "I - unpin mula sa iyong profile",
     "postPinned": "Na - pin sa iyong profile",
     "postUnpinned": "Na - unpin mula sa iyong profile",
-    "pinFailed": "Hindi ma - pin o ma - unpin ang post na ito"
+    "pinFailed": "Hindi ma - pin o ma - unpin ang post na ito",
+    "copyFailed": "Hindi makopya ang link"
   },
   "filters": {
     "sort": "Ayusin",
@@ -1475,7 +1604,6 @@
     "returnHome": "Return Home"
   },
   "profile": {
-    "dislikes": { "loadMore": "Mag-load pa", "privateDesc": "Itinatago ng account na ito ang mga ayaw nito.", "privateTitle": "Pribado ang mga ayaw", "emptyOther": "Wala pang ayaw.", "emptyOwn": "Ang mga post na ayaw mo ay aalis sa mga feed mo at lalabas dito. I-undo ang ayaw para ibalik ang post.", "emptyTitle": "Wala pang ayaw" },
     "back": "Back",
     "usernameAvailable": "Username available!",
     "signUpToClaim": "Mag-sign up ngayon upang i-claim",
@@ -1503,8 +1631,16 @@
       "commentUnavailable": "Hindi na available ang komentong ito"
     },
     "tabs": {
-      "dislikes": "Ayaw",
-      "playlists": "Mga Playlist"
+      "playlists": "Mga Playlist",
+      "dislikes": "Ayaw"
+    },
+    "dislikes": {
+      "emptyTitle": "Wala pang ayaw",
+      "emptyOwn": "Ang mga post na ayaw mo ay aalis sa mga feed mo at lalabas dito. I-undo ang ayaw para ibalik ang post.",
+      "emptyOther": "Wala pang ayaw.",
+      "privateTitle": "Pribado ang mga ayaw",
+      "privateDesc": "Itinatago ng account na ito ang mga ayaw nito.",
+      "loadMore": "Mag-load pa"
     },
     "offerWorthNow": "Tinatayang {{amount}} na token sa kasalukuyang rate",
     "offerNotePlaceholder": "Magdagdag ng paalala (opsyonal)",
@@ -2359,6 +2495,7 @@
     "pendingSubmitted": "{{amount}} tokens na-submit. Kasalukuyang sinusuri pa ang kumpirmasyon. Huwag mo na itong ipadala muli."
   },
   "communities": {
+    "chatTab": "Chat",
     "title": "Communities",
     "create": "Gumawa",
     "searchPlaceholder": "Maghanap ng komunidad...",
@@ -2393,7 +2530,30 @@
     "addDescription": "Magdagdag ng paglalarawan...",
     "communityDescription": "Community description...",
     "posts": "Posts",
-    "chat": "Chat",
+    "chat": {
+      "intervalHour": "1 oras",
+      "intervalHours": "{{count}} oras",
+      "intervalMinute": "1 minuto",
+      "intervalMinutes": "{{count}} minuto",
+      "intervalSecond": "1 segundo",
+      "intervalSeconds": "{{count}} segundo",
+      "muted": "Na - mute ka",
+      "mutedUntil": "Naka - mute ka hanggang {{until}}",
+      "postingDisabled": "Hindi pinagana ang pag - post para sa mga miyembro dito",
+      "pinnedGif": "GIF",
+      "pinnedMedia": "Media",
+      "jumpToPinned": "Pumunta sa naka - pin na mensahe",
+      "pinnedMessage": "Naka - pin na mensahe",
+      "unpin": "I - unpin",
+      "pin": "Pin",
+      "delete": "Tanggalin",
+      "slowMode": "Mabagal na mode: isang mensahe kada {{interval}}",
+      "slowModeWait": "Mabagal na mode — maghintay {{time}}",
+      "send": "Ipadala",
+      "deleteMessageTitle": "Tanggalin ang mensaheng ito?",
+      "deleteMessageBody": "Hindi ito mababawi.",
+      "cancel": "Kanselahin"
+    },
     "membersTab": "Mga miyembro ({{count}})",
     "about": "Tungkol sa",
     "backToCommunities": "Communities",
@@ -3860,6 +4020,7 @@
     "sellYourFractions": "Ibenta ang iyong mga fraction ({{held}} na hawak)"
   },
   "creator": {
+    "libraryEmpty": "Lalabas dito ang iyong mga naka-save na likha.",
     "whatToCreate": "Ano ang gagawin",
     "startCreatingWith": "Magsimula ng paglikha gamit ang {{model}}",
     "studioSubtitle": "Ilarawan ang isang eksena, karakter, mood o istilo. Ang mga resulta ay lalabas sa ibaba at direktang papasok sa editor.",
@@ -6259,7 +6420,10 @@
     "play": "Maglaro",
     "pause": "I - pause",
     "listens_one": "{{count}} pakinggan",
-    "listens_other": "{{count}} listens"
+    "listens_other": "{{count}} listens",
+    "lyrics": "Liriko",
+    "lyricsLoading": "Hinahanap ang liriko…",
+    "lyricsNone": "Walang nakitang liriko"
   },
   "converter": {
     "seoTitle": "Converter — mag-import ng video sa DeHub",
@@ -6773,6 +6937,7 @@
     "seoDescription": "Opisyal na dokumentasyon ng DeHub: pangkalahatang-ideya ng platform, dApps, ekonomiya ng tokens token, staking, mga laro, roadmap, FAQ at higit pa."
   },
   "dex": {
+    "title": "tokens / USD",
     "seoTitle": "DEX — I — trade ang tokens sa iyong presyo",
     "seoDescription": "Itakda ang iyong tokens bumili o magbenta ng presyo na may isang Uniswap v4 limit order sa Base o BNB Chain. Live na aklat ng order, lalim ng merkado at isang ibinahaging presyo ng USD.",
     "venue": "Network",
@@ -6993,6 +7158,14 @@
     }
   },
   "editor": {
+    "video": {
+      "tFade": "Paghahalo",
+      "none": "Wala",
+      "transition": "Transisyon",
+      "speed": "Bilis",
+      "sound": "Tunog",
+      "video": "Video"
+    },
     "review": {
       "title": "Pagsusuri ng proyekto",
       "shared": "Ibinahagi sa iyo",
@@ -8734,6 +8907,16 @@
     "posted": "Nai-post na",
     "view": "Tingnan",
     "failed": "Hindi ma-process ang video"
+  },
+  "loginStack": {
+    "tip": "Mag-tip ng DHB",
+    "headlineTop": "Mapapasaiyo ang lahat",
+    "headlineAccent": "at magiging masaya ka.",
+    "orContinueWith": "o magpatuloy gamit ang",
+    "phone": "Telepono",
+    "fingerprint": "Fingerprint",
+    "exploreFirst": "Mag-explore muna",
+    "codeNote": "Magpapadala kami ng code sa email, walang password."
   },
   "walletSelector": {
     "title": "Piliin ang Wallet",

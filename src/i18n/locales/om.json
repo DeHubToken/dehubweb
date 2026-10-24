@@ -1,4 +1,132 @@
 {
+  "mastodonApps": {
+    "authTitle": "DeHub'n seeni",
+    "authWants": "{{app}} herrega kee DeHub fayyadamuu barbaada",
+    "authSignedInAs": "Akka {{name}}tti seenteetta",
+    "authSignIn": "Itti fufuuf seeni",
+    "allow": "Hayyami",
+    "cancel": "Haqi",
+    "scopeRead": "Sararoota yeroo, maxxansaalee, beeksisaa fi mallattoolee kee ilaaluu",
+    "scopeWrite": "Bakka kee bu'ee maxxansuu, deebisuu, jaallachuu, babal'isuu fi mallatteessuu",
+    "scopeFollow": "Herregoota hordofuu, hordofuu dhiisuu, cufuu fi callisiisuu",
+    "scopePush": "Beeksisa siif erguu",
+    "scopeProfile": "Piroofaayilii kee ilaaluu",
+    "invalid": "Liinkiin seensaa kun sirrii miti. Gara appichaatti deebi'ii irra deebi'ii yaali.",
+    "failed": "Hin milkoofne. Irra deebi'ii yaali.",
+    "codeTitle": "Seensa xumuruuf koodii kana gara appichaatti garagalchi.",
+    "copy": "Garagalchi",
+    "copied": "Garagalfame",
+    "seoDescription": "Appiin Mastodon herrega kee DeHub akka fayyadamu hayyami.",
+    "redirecting": "Gara {{app}}tti si deebisaa jirra…",
+    "connectedTitle": "Appiiwwan walqabatan",
+    "connectedDescription": "Appiiwwan Mastodon herrega kanaan itti seente. Ba'uuf tokko balleessi.",
+    "connectedEmpty": "Ammallee appiin walqabate hin jiru.",
+    "lastUsed": "Yeroo dhumaaf kan fayyadame {{date}}",
+    "remove": "Balleessi",
+    "removed": "Appiin balleeffame"
+  },
+  "fediverse": {
+    "title": "Fediverse",
+    "description": "Namoonni Mastodon fi appiiwwan fediverse biroo irra jiran teessoo kanaan si argatanii si hordofuu danda'u. Maxxansaaleen kee haaraan uummataa achitti isaan ga'u.",
+    "copy": "Garagalchi",
+    "copied": "Garagalfame",
+    "privateNote": "Herregni dhuunfaa fediverse irratti hin mul'atu.",
+    "noUsername": "Teessoo fediverse argachuuf maqaa fayyadamaa filadhu."
+  },
+  "profileFields": {
+    "title": "Dirreewwan piroofaayilii",
+    "description": "Hanga sararoota dabalataa afurii piroofaayilii kee irratti, kan akka marsariitii ykn bakka bu'aa maqaa kee.",
+    "label": "Mallattoo",
+    "content": "Qabiyyee",
+    "save": "Dirreewwan olkaa'i",
+    "saved": "Dirreewwan piroofaayilii olkaa'aman",
+    "failed": "Hin olkaa'amne. Irra deebi'ii yaali.",
+    "verified": "Liinkii mirkanaa'e",
+    "verifyHint": "Liinkii mirkaneessuuf, kana fuula sana irratti dabali, achiis irra deebi'ii olkaa'i: {{snippet}}"
+  },
+  "followedTags": {
+    "follow": "#{{tag}} hordofi",
+    "following": "Hordofaa jirta",
+    "unfollow": "#{{tag}} hordofuu dhiisi",
+    "followed": "Amma #{{tag}} hordofaa jirta. Maxxansaaleen isaa fayyaa hordoftu keessatti mul'atu.",
+    "unfollowed": "#{{tag}} hordofuu dhiifte",
+    "failed": "Hin olkaa'amne. Irra deebi'ii yaali.",
+    "clear": "Qulqulleessi"
+  },
+  "notificationFilters": {
+    "title": "Beeksisa irraa calali",
+    "description": "Yeroo namni geengoo kee alaa si wajjin walqunnamu maaltu akka ta'u filadhu. Beeksisni calalame mallattoo fi dhiibbaa malee jalatti \"Calalame\" eegu.",
+    "notFollowing": "Namoota ati hin hordofne",
+    "notFollowers": "Namoota si hin hordofne",
+    "newAccounts": "Herrega haaraa (guyyaa 30 gadi)",
+    "accept": "Natti himi",
+    "filter": "Calali",
+    "drop": "Guutummaan dhoksi",
+    "filteredTitle": "Beeksisa calalaman",
+    "filteredEmpty": "Wanti calalame hin jiru.",
+    "failed": "Hin olkaa'amne. Irra deebi'ii yaali."
+  },
+  "keywordFilters": {
+    "title": "Jechoota callisiifaman",
+    "description": "Maxxansaalee fi yaada jechoota kana qaban dhoksi, ykn akeekkachiisa duuba isaan maruu. Tarree kana kan argitu ati qofa.",
+    "placeholder": "Jecha ykn gaalee",
+    "add": "Callisi",
+    "added": "Callisifame: {{phrase}}",
+    "wholeWord": "Jecha guutuu qofa",
+    "whenMatches": "Yeroo maxxansi wal simu",
+    "warn": "Akeekkachiisa agarsiisi",
+    "hide": "Dhoksi",
+    "howLong": "Hammam turuu",
+    "forever": "Hanga ani haqutti",
+    "duration1h": "Sa'aatii 1f",
+    "duration1d": "Guyyaa 1f",
+    "duration7d": "Guyyaa 7f",
+    "duration30d": "Guyyaa 30f",
+    "where": "Eessatti",
+    "home": "Fuula jalqabaa",
+    "public": "Qoradhu fi barbaadi",
+    "profile": "Piroofaayiloota",
+    "thread": "Haasaa",
+    "notifications": "Beeksisa",
+    "empty": "Jecha tokkollee hin callisiisne.",
+    "remove": "Callisuu dhiisi",
+    "until": "Hanga {{date}}",
+    "filtered": "Calalame: {{phrase}}",
+    "showAnyway": "Haa ta'u malee agarsiisi",
+    "failed": "Hin olkaa'amne. Irra deebi'ii yaali."
+  },
+  "postVisibility": {
+    "label": "Kana eenyuutu arguu danda'a",
+    "public": "Hunda",
+    "followers": "Hordoftoota qofa",
+    "direct": "Namoota maqaan isaanii eerame qofa",
+    "noRepost": "Maxxansota uummataa qofatu irra deebi'amee maxxanfamuu danda'a",
+    "directHint": "Namoota @ dhaan maqaa isaanii eertu qofatu maxxansa kana arga",
+    "needsMention": "Namoota eeraman qofaaf maxxansuuf yoo xiqqaate nama tokko @ dhaan eeri"
+  },
+  "replyPolicy": {
+    "label": "Eenyuutu deebii kennuu danda'a",
+    "public": "Nama kamiyyuu",
+    "followers": "Hordoftoota kee",
+    "following": "Warra ati hordoftu",
+    "mentioned": "Warra maqaan isaanii eerame qofa",
+    "noticeFollowers": "Hordoftoota barreessaa qofatu deebii kennuu danda'a",
+    "noticeFollowing": "Warra barreessaan hordofu qofatu deebii kennuu danda'a",
+    "noticeMentioned": "Warra maxxansa keessatti maqaan isaanii eerame qofatu deebii kennuu danda'a",
+    "refused": "Barreessaan eenyuu deebii kennuu akka danda'u daangeesseera"
+  },
+  "quotePolicy": {
+    "label": "Eenyuutu caqasuu danda'a",
+    "public": "Nama kamiyyuu",
+    "followers": "Hordoftoota",
+    "nobody": "Ana qofa",
+    "off": "Barreessaan caqasuu cufeera",
+    "removed": "Barreessaan maxxansa isaa caqasa kana irraa haqeera",
+    "remove": "Haqi",
+    "removedToast": "Maxxansi kee caqasa kana irraa haqameera",
+    "removeFailed": "Maxxansa kee caqasa irraa haquun hin danda'amne",
+    "refused": "Barreessaan maxxansa kana akka caqastu siif hin hayyamu"
+  },
   "contentWarning": {
     "label": "Akeekkachiisa qabiyyee",
     "placeholder": "Akeekkachiisa kee asitti barreessi",
@@ -132,6 +260,7 @@
     "heading": "DeHub Gabaabduu"
   },
   "settings": {
+    "usernameTaken": "Maqaan fayyadamaa fudhatameera",
     "postingChain": "Biloookcheenii maxxansaa",
     "showOnline": "Yeroon toora interneetii irra jiru agarsiisi",
     "showOnlineDesc": "Namoonni ergaa ergitu osoo DeHub fayyadamtu maqaa kee cinaatti tuqaa magariisa argu",
@@ -657,7 +786,6 @@
     "embed": "Keessa galchi",
     "copyEmbedCode": "Koodii keessa galchuu waraabi",
     "embedCodeCopied": "Koodiin keessa galchuu waraabame",
-    "copyFailed": "Liinkii waraabuun hin danda'amne",
     "options": "Filannoowwan",
     "aiOverview": "Haala waliigalaa AI",
     "sendTip": "Tiippii Ergi",
@@ -685,7 +813,8 @@
     "unpinPost": "Profaayila keessan irraa unpin",
     "postPinned": "Profaayilii keessan irratti pinned ta'eera",
     "postUnpinned": "Profaayila keessan irraa unpinned",
-    "pinFailed": "Barreeffama kana pin ykn unpin gochuu hin dandeenye"
+    "pinFailed": "Barreeffama kana pin ykn unpin gochuu hin dandeenye",
+    "copyFailed": "Liinkii waraabuun hin danda'amne"
   },
   "filters": {
     "sort": "Tartiibsi",
@@ -2316,6 +2445,7 @@
     "pendingSubmitted": "{{amount}} tokens dhiyaateera. Mirkaneessi ammallee sakatta'amaa jira. Ammas hin erginaa."
   },
   "communities": {
+    "chatTab": "Haasawa",
     "title": "Hawaasota",
     "create": "Uumi",
     "searchPlaceholder": "Hawaasota barbaadi...",
@@ -2350,7 +2480,30 @@
     "addDescription": "Ibsa itti dabali...",
     "communityDescription": "Ibsa hawaasaa...",
     "posts": "Maxxansaalee",
-    "chat": "Haasawa",
+    "chat": {
+      "intervalHour": "1 sa'aatii",
+      "intervalHours": "{{count}} sa'aatii",
+      "intervalMinute": "1 daqiiqa",
+      "intervalMinutes": "{{count}} daqiiqaa",
+      "intervalSecond": "1 sekandii",
+      "intervalSeconds": "{{count}} sekandii",
+      "muted": "Sitti dhageessifame",
+      "mutedUntil": "Sitti dhageessifame hanga {{until}}",
+      "postingDisabled": "Barreeffamuu miseensotaaf as hin hayyamamu",
+      "pinnedGif": "GIF",
+      "pinnedMedia": "Meediyaa",
+      "jumpToPinned": "Ergaa maxxanfameetti ce'i",
+      "pinnedMessage": "Ergaa maxxanfame",
+      "unpin": "Maxxansa haqu",
+      "pin": "Maxxansi",
+      "delete": "Haqu",
+      "slowMode": "Haala suuta: ergaa tokko yeroo {{interval}}",
+      "slowModeWait": "Haala suuta — eeggadhu {{time}}",
+      "send": "Ergi",
+      "deleteMessageTitle": "Ergaa kana haquu?",
+      "deleteMessageBody": "Kun deebi'ee hin gochamu.",
+      "cancel": "Dhaabi"
+    },
     "membersTab": "Miseensota ({{count}})",
     "about": "Waa'ee",
     "backToCommunities": "Hawaasota",
@@ -3779,6 +3932,7 @@
     "sellYourFractions": "Firaakshinoota kee gurguraa ({{held}} qabame) ."
   },
   "creator": {
+    "libraryEmpty": "Uumamawwan kee olkaa'aman asitti mul'atu.",
     "whatToCreate": "Maal uumuu qabna",
     "startCreatingWith": "{{model}} irraa uumuu jalqabi.",
     "studioSubtitle": "Mul’ata, amala, miira ykn akkaataa ibsi. Bu'aan gadi bu'ee kallattiin gara gulaalaa seena.",
@@ -6154,7 +6308,10 @@
     "play": "taphachuu",
     "pause": "Gidduutti dhaabuu",
     "listens_one": "{{count}} dhaggeeffadhaa",
-    "listens_other": "{{count}} dhaggeeffata"
+    "listens_other": "{{count}} dhaggeeffata",
+    "lyrics": "Jechoota sirbaa",
+    "lyricsLoading": "Jechoota barbaadaa jira…",
+    "lyricsNone": "Jechoonni hin argamne"
   },
   "converter": {
     "seoTitle": "Converter — video gara DeHub galchuu",
@@ -6670,6 +6827,7 @@
     "seoDescription": "Galmee ifaa DeHub: ilaalcha waliigalaa pilaatifoormii, dApps, diinagdee tookenii mallattoolee, staking, taphoota, karoora, gaaffiiwwan yeroo baay’ee gaafataman fi kan biroo."
   },
   "dex": {
+    "title": "tokkenoota / USD",
     "seoTitle": "DEX — mallattoolee ati gatii keetiin gurguraa",
     "seoDescription": "mallattoolee bitachuu ykn gurguruu gatii kee Uniswap v4 limit order irratti Base ykn BNB Chain irratti godhi. Order book, market depth fi gatii tokko qofa USD.",
     "venue": "Network",
@@ -6892,6 +7050,14 @@
     }
   },
   "editor": {
+    "video": {
+      "tFade": "Walitti makamuu",
+      "none": "Homaa",
+      "transition": "Ce'umsa",
+      "speed": "Saffisa",
+      "sound": "Sagalee",
+      "video": "Viidiyoo"
+    },
     "review": {
       "title": "Sakatta'iinsa pirojektii",
       "shared": "Si waliin qoodame",

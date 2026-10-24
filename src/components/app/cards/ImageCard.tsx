@@ -79,7 +79,7 @@ const BoostModal = lazy(() =>
 );
 import { applyOptimisticEdit } from '@/lib/optimistic-edit';
 import { QuotePostModalLazy } from '../modals/QuotePostModalLazy';
-import { QuotedPostEmbed } from './QuotedPostEmbed';
+import { QuotedPostEmbed, RemovedQuoteNotice } from './QuotedPostEmbed';
 import { TipModal } from '../modals/TipModal';
 import { SwipeableCarousel } from '../SwipeableCarousel';
 import { usePostTipCount } from '@/hooks/use-post-tip-count';
@@ -176,6 +176,7 @@ interface ImageCardProps {
 import { createMediaAspectCache } from '@/lib/media-aspect-cache';
 import { viewerShareUrl } from '@/lib/share-url';
 import { AltTextBadge } from './AltTextBadge';
+import { KeywordFilterGate } from './KeywordFilterGate';
 const imageAspectRatioCache = createMediaAspectCache(
   () => localStorage.getItem('media-aspects-v1'), value => localStorage.setItem('media-aspects-v1', value),
 );
@@ -686,7 +687,7 @@ function FeedDescription({
   );
 }
 
-export const ImageCard = memo(function ImageCard({ post, aboveFold = false, onOpenComments, isImmersive = false, postPage = false }: ImageCardProps) {
+const ImageCardBody = memo(function ImageCard({ post, aboveFold = false, onOpenComments, isImmersive = false, postPage = false }: ImageCardProps) {
   const { t: _copy } = _useCopy();
   const [showComments, setShowComments] = useState(false);
   const [commentsInitialTab, setCommentsInitialTab] = useState<'replies' | 'quotes' | 'reposts' | 'search' | undefined>(undefined);
@@ -965,6 +966,7 @@ export const ImageCard = memo(function ImageCard({ post, aboveFold = false, onOp
       ) : (
       <CardHeader
         username={post.username}
+        visibility={post.visibility}
         handle={post.creatorUsername}
         avatarSeed={post.avatar}
         verified={post.verified}
@@ -1348,8 +1350,9 @@ export const ImageCard = memo(function ImageCard({ post, aboveFold = false, onOp
 
         {/* Quoted post embed (Twitter-style) */}
         {post.isQuotePost && post.quotedPost && (
-          <QuotedPostEmbed quotedPost={post.quotedPost} className="mt-2" />
+          <QuotedPostEmbed quotedPost={post.quotedPost} quoteTokenId={post.id} className="mt-2" />
         )}
+        {post.isQuotePost && post.quoteRevoked && <RemovedQuoteNotice className="mt-2" />}
         
         {/* Metadata: timestamp and views */}
         <PostMetadata 
@@ -1375,6 +1378,8 @@ export const ImageCard = memo(function ImageCard({ post, aboveFold = false, onOp
           newPostSlug={post.status === 'signed' ? post.newPostId ?? null : null}
           tokenId={parseInt(post.id, 10) || undefined}
           isOwnPost={!!isOwnPost}
+          quotePolicy={post.quotePolicy}
+          visibility={post.visibility}
           stage={stage}
           utilityDesktopAnchor
           className="p-0"
@@ -1422,6 +1427,7 @@ export const ImageCard = memo(function ImageCard({ post, aboveFold = false, onOp
             tokenId={post.id}
             initialTab={commentsInitialTab}
             commentsDisabled={!!(post as { commentsDisabled?: boolean }).commentsDisabled}
+            replyPolicy={post.replyPolicy}
             forKids={!!post.forKids}
           />
         )}
@@ -1536,6 +1542,8 @@ export const ImageCard = memo(function ImageCard({ post, aboveFold = false, onOp
             currentCategories={post.categories ?? []}
             currentContentRating={post.contentRating}
             currentSpoilerText={post.spoilerText}
+            currentQuotePolicy={post.quotePolicy}
+            currentReplyPolicy={post.replyPolicy}
             currentForKids={post.forKids}
             currentShopLinks={post.shopLinks}
             onSuccess={(edited) => {
@@ -1774,5 +1782,18 @@ export const ImageCard = memo(function ImageCard({ post, aboveFold = false, onOp
         </DrawerContent>
       </Drawer>
     </div>
+  );
+});
+
+/** Every post passes the viewer's keyword filters first — see KeywordFilterGate. */
+export const ImageCard = memo(function FilteredImageCard(props: ImageCardProps) {
+  const { post } = props;
+  return (
+    <KeywordFilterGate
+      texts={[post.title, post.description, post.caption, post.spoilerText, ...(post.mediaDescriptions ?? [])]}
+      authorId={post.creatorId}
+    >
+      <ImageCardBody {...props} />
+    </KeywordFilterGate>
   );
 });

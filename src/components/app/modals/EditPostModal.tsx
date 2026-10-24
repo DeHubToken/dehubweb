@@ -41,6 +41,7 @@ import { EditPostCover } from './EditPostCover';
 import { useTranslation } from 'react-i18next';
 import { normalizeCategoryName } from '@/lib/category-names';
 import { CONTENT_WARNING_MAX } from '@/components/app/cards/ContentWarningGate';
+import type { QuotePolicy, ReplyPolicy } from '@/lib/api/dehub/types';
 
 export interface EditPostResult {
   name: string;
@@ -58,6 +59,10 @@ export interface EditPostResult {
 interface EditPostModalProps {
   /** The post's content warning, if it has one. */
   currentSpoilerText?: string;
+  /** Who may quote the post; absent means anyone. */
+  currentQuotePolicy?: QuotePolicy;
+  /** Who may reply; absent means anyone. */
+  currentReplyPolicy?: ReplyPolicy;
   open: boolean;
   onOpenChange: (open: boolean) => void;
   tokenId: number | string;
@@ -89,6 +94,8 @@ export function EditPostModal({
   currentForKids,
   currentShopLinks,
   currentSpoilerText = '',
+  currentQuotePolicy = 'public',
+  currentReplyPolicy = 'public',
   canReplaceVideo = false,
   onSuccess,
 }: EditPostModalProps) {
@@ -101,6 +108,8 @@ export function EditPostModal({
   const [description, setDescription] = useDraftState(`post:edit:${tokenId}` + ":description", currentDescription);
   const [articleBody, setArticleBody] = useDraftState(`post:edit:${tokenId}` + ":articleBody", currentArticleBody ?? '');
   const [spoilerText, setSpoilerText] = useState(currentSpoilerText);
+  const [quotePolicy, setQuotePolicy] = useState<QuotePolicy>(currentQuotePolicy);
+  const [replyPolicy, setReplyPolicy] = useState<ReplyPolicy>(currentReplyPolicy);
   // Text cap scales with the badge tier; only read once the modal opens,
   // because every feed card mounts this component.
   const [tierTextMax, setTierTextMax] = useState(BASE_POST_TEXT_CHARS);
@@ -202,6 +211,8 @@ export function EditPostModal({
     if (JSON.stringify(categories) !== JSON.stringify(currentCategories)) params.category = categories;
     if (commentsDisabled !== currentCommentsDisabled) params.commentsDisabled = commentsDisabled;
     if (spoilerText.trim() !== currentSpoilerText.trim()) params.spoilerText = spoilerText.trim();
+    if (quotePolicy !== currentQuotePolicy) params.quotePolicy = quotePolicy;
+    if (replyPolicy !== currentReplyPolicy) params.replyPolicy = replyPolicy;
     const nextRating: ContentRating = isMature ? 'mature' : 'safe';
     // The API stores nothing for a safe post, so an unrated one arrives as
     // undefined — compare against the rating it means rather than the field.
@@ -331,6 +342,37 @@ export function EditPostModal({
               maxLength={CONTENT_WARNING_MAX}
               placeholder={t('contentWarning.placeholder')}
             />
+          </div>
+
+          {/* Who may quote it from now on. Quotes already made stay. */}
+          <div className="flex items-center justify-between gap-3">
+            <Label htmlFor="edit-quote-policy" className="text-sm font-medium text-zinc-300">{t('quotePolicy.label')}</Label>
+            <select
+              id="edit-quote-policy"
+              value={quotePolicy}
+              onChange={(e) => setQuotePolicy(e.target.value as QuotePolicy)}
+              className="rounded-xl border border-white/10 bg-white/5 px-3 py-2 text-sm text-white outline-none"
+            >
+              <option value="public">{t('quotePolicy.public')}</option>
+              <option value="followers">{t('quotePolicy.followers')}</option>
+              <option value="nobody">{t('quotePolicy.nobody')}</option>
+            </select>
+          </div>
+
+          {/* Who may reply from now on, while comments are on. Replies already made stay. */}
+          <div className="flex items-center justify-between gap-3">
+            <Label htmlFor="edit-reply-policy" className="text-sm font-medium text-zinc-300">{t('replyPolicy.label')}</Label>
+            <select
+              id="edit-reply-policy"
+              value={replyPolicy}
+              onChange={(e) => setReplyPolicy(e.target.value as ReplyPolicy)}
+              className="rounded-xl border border-white/10 bg-white/5 px-3 py-2 text-sm text-white outline-none"
+            >
+              <option value="public">{t('replyPolicy.public')}</option>
+              <option value="followers">{t('replyPolicy.followers')}</option>
+              <option value="following">{t('replyPolicy.following')}</option>
+              <option value="mentioned">{t('replyPolicy.mentioned')}</option>
+            </select>
           </div>
 
           {/* Description */}

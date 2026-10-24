@@ -1,4 +1,132 @@
 {
+  "mastodonApps": {
+    "authTitle": "התחברות עם DeHub",
+    "authWants": "{{app}} רוצה להשתמש בחשבון DeHub שלך",
+    "authSignedInAs": "מחובר בתור {{name}}",
+    "authSignIn": "התחבר כדי להמשיך",
+    "allow": "לאשר",
+    "cancel": "ביטול",
+    "scopeRead": "לראות את צירי הזמן, הפוסטים, ההתראות והסימניות שלך",
+    "scopeWrite": "לפרסם, להגיב, לעשות לייק, לשתף ולשמור בשמך",
+    "scopeFollow": "לעקוב, להפסיק לעקוב, לחסום ולהשתיק חשבונות",
+    "scopePush": "לשלוח לך התראות",
+    "scopeProfile": "לראות את הפרופיל שלך",
+    "invalid": "קישור ההתחברות הזה לא תקין. חזור לאפליקציה ונסה שוב.",
+    "failed": "זה לא הצליח. נסה שוב.",
+    "codeTitle": "העתק את הקוד הזה לאפליקציה כדי לסיים את ההתחברות.",
+    "copy": "העתק",
+    "copied": "הועתק",
+    "seoDescription": "אפשר לאפליקציית Mastodon להשתמש בחשבון DeHub שלך.",
+    "redirecting": "מחזירים אותך אל {{app}}…",
+    "connectedTitle": "אפליקציות מחוברות",
+    "connectedDescription": "אפליקציות Mastodon שהתחברת אליהן עם החשבון הזה. הסר אחת כדי לנתק אותה.",
+    "connectedEmpty": "אין עדיין אפליקציות מחוברות.",
+    "lastUsed": "שימוש אחרון {{date}}",
+    "remove": "הסר",
+    "removed": "האפליקציה הוסרה"
+  },
+  "fediverse": {
+    "title": "פדיברס",
+    "description": "אנשים במסטודון ובאפליקציות פדיברס אחרות יכולים למצוא אותך ולעקוב אחריך בכתובת הזו. הפוסטים הציבוריים החדשים שלך מגיעים אליהם שם.",
+    "copy": "העתק",
+    "copied": "הועתק",
+    "privateNote": "חשבונות פרטיים לא מוצגים בפדיברס.",
+    "noUsername": "בחר שם משתמש כדי לקבל כתובת בפדיברס."
+  },
+  "profileFields": {
+    "title": "שדות פרופיל",
+    "description": "עד ארבע שורות נוספות בפרופיל שלך, כמו אתר או כינויי הגוף שלך.",
+    "label": "תווית",
+    "content": "תוכן",
+    "save": "שמור שדות",
+    "saved": "שדות הפרופיל נשמרו",
+    "failed": "לא נשמר. נסה שוב.",
+    "verified": "קישור מאומת",
+    "verifyHint": "כדי לאמת קישור, הוסף את זה לעמוד ההוא ושמור שוב: {{snippet}}"
+  },
+  "followedTags": {
+    "follow": "עקוב אחרי #{{tag}}",
+    "following": "עוקב",
+    "unfollow": "הפסק לעקוב אחרי #{{tag}}",
+    "followed": "אתה עוקב עכשיו אחרי #{{tag}}. הפוסטים שלו יופיעו בפיד \"במעקב\".",
+    "unfollowed": "הפסקת לעקוב אחרי #{{tag}}",
+    "failed": "לא נשמר. נסה שוב.",
+    "clear": "נקה"
+  },
+  "notificationFilters": {
+    "title": "סינון התראות מ־",
+    "description": "בחר מה קורה כשמישהו מחוץ למעגל שלך מגיב אליך. התראות מסוננות ממתינות תחת \"מסוננות\", בלי מונה ובלי התראה קופצת.",
+    "notFollowing": "אנשים שאינך עוקב אחריהם",
+    "notFollowers": "אנשים שלא עוקבים אחריך",
+    "newAccounts": "חשבונות חדשים (פחות מ־30 יום)",
+    "accept": "הודע לי",
+    "filter": "סנן",
+    "drop": "הסתר לגמרי",
+    "filteredTitle": "התראות מסוננות",
+    "filteredEmpty": "שום דבר לא סונן.",
+    "failed": "לא נשמר. נסה שוב."
+  },
+  "keywordFilters": {
+    "title": "מילים מושתקות",
+    "description": "הסתר פוסטים ותגובות שמכילים את המילים האלה, או קפל אותם מאחורי אזהרה. רק אתה רואה את הרשימה הזו.",
+    "placeholder": "מילה או ביטוי",
+    "add": "השתק",
+    "added": "הושתק: {{phrase}}",
+    "wholeWord": "מילה שלמה בלבד",
+    "whenMatches": "כשפוסט תואם",
+    "warn": "הצג אזהרה",
+    "hide": "הסתר",
+    "howLong": "לכמה זמן",
+    "forever": "עד שאסיר",
+    "duration1h": "לשעה",
+    "duration1d": "ליום",
+    "duration7d": "ל-7 ימים",
+    "duration30d": "ל-30 ימים",
+    "where": "איפה",
+    "home": "בית",
+    "public": "חיפוש וגילוי",
+    "profile": "פרופילים",
+    "thread": "שיחות",
+    "notifications": "התראות",
+    "empty": "לא השתקת אף מילה.",
+    "remove": "בטל השתקה",
+    "until": "עד {{date}}",
+    "filtered": "סונן: {{phrase}}",
+    "showAnyway": "הצג בכל זאת",
+    "failed": "לא נשמר. נסה שוב."
+  },
+  "postVisibility": {
+    "label": "מי יכול לראות את זה",
+    "public": "כולם",
+    "followers": "עוקבים בלבד",
+    "direct": "אנשים שאוזכרו בלבד",
+    "noRepost": "אפשר לשתף מחדש רק פוסטים ציבוריים",
+    "directHint": "רק האנשים שתאזכר עם @ יראו את הפוסט הזה",
+    "needsMention": "אזכר לפחות אדם אחד עם @ כדי לפרסם רק לאנשים שאוזכרו"
+  },
+  "replyPolicy": {
+    "label": "מי יכול להגיב",
+    "public": "כולם",
+    "followers": "העוקבים שלך",
+    "following": "מי שאתה עוקב אחריו",
+    "mentioned": "רק מי שהוזכר",
+    "noticeFollowers": "רק עוקבי המחבר יכולים להגיב",
+    "noticeFollowing": "רק מי שהמחבר עוקב אחריו יכול להגיב",
+    "noticeMentioned": "רק מי שהוזכר בפוסט יכול להגיב",
+    "refused": "המחבר הגביל מי יכול להגיב לפוסט הזה"
+  },
+  "quotePolicy": {
+    "label": "מי יכול לצטט",
+    "public": "כולם",
+    "followers": "עוקבים",
+    "nobody": "רק אני",
+    "off": "המחבר כיבה את האפשרות לצטט",
+    "removed": "המחבר הסיר את הפוסט שלו מהציטוט הזה",
+    "remove": "הסרה",
+    "removedToast": "הפוסט שלך הוסר מהציטוט הזה",
+    "removeFailed": "לא ניתן היה להסיר את הפוסט שלך מהציטוט",
+    "refused": "המחבר לא מאפשר לך לצטט את הפוסט הזה"
+  },
   "contentWarning": {
     "label": "אזהרת תוכן",
     "placeholder": "כתבו כאן את האזהרה",
@@ -132,11 +260,12 @@
     "heading": "הקצרים של DeHub"
   },
   "settings": {
-    "showDislikesDesc": "כל אחד יכול לפתוח את הלשונית 'לא אהבתי' בפרופיל שלך. כשזה כבוי, רק את/ה רואה אותה.",
-    "showDislikes": "להציג לכולם את מה שלא אהבתי",
+    "usernameTaken": "שם המשתמש תפוס",
     "postingChain": "בלוקצ׳יין לפרסום",
     "showOnline": "הצגה כשאני במצב מחובר",
     "showOnlineDesc": "אנשים שאתם שולחים להם הודעה רואים נקודה ירוקה ליד השם שלכם בזמן שאתם משתמשים ב - DeHub",
+    "showDislikes": "להציג לכולם את מה שלא אהבתי",
+    "showDislikesDesc": "כל אחד יכול לפתוח את הלשונית 'לא אהבתי' בפרופיל שלך. כשזה כבוי, רק את/ה רואה אותה.",
     "smartReplies": "תשובות מוצעות",
     "smartRepliesDesc": "מנסח שתי תשובות שאפשר להקיש עליהן בצ'אט. ה-× שעל ההצעות מכבה את זה.",
     "title": "הגדרות",
@@ -659,7 +788,6 @@
     "embed": "הטמעה",
     "copyEmbedCode": "העתק קוד הטמעה",
     "embedCodeCopied": "קוד ההטמעה הועתק",
-    "copyFailed": "לא ניתן היה להעתיק את הקישור",
     "options": "אפשרויות",
     "aiOverview": "סקירה כללית על בינה מלאכותית",
     "sendTip": "שלח טיפ",
@@ -687,7 +815,8 @@
     "unpinPost": "הסרת הצמדה מהפרופיל שלך",
     "postPinned": "מוצמדים לפרופיל שלך",
     "postUnpinned": "הסיכה בוטלה מהפרופיל שלך",
-    "pinFailed": "לא ניתן היה להצמיד או לבטל את הצמדת הפוסט הזה"
+    "pinFailed": "לא ניתן היה להצמיד או לבטל את הצמדת הפוסט הזה",
+    "copyFailed": "לא ניתן היה להעתיק את הקישור"
   },
   "filters": {
     "sort": "מיון",
@@ -1422,7 +1551,6 @@
     "returnHome": "חזור לדף הבית"
   },
   "profile": {
-    "dislikes": { "loadMore": "טען עוד", "privateDesc": "החשבון הזה שומר את מה שלא אהב לעצמו.", "privateTitle": "לא אהבתי הוא פרטי", "emptyOther": "עדיין אין כלום.", "emptyOwn": "פוסטים שלא אהבת יוצאים מהפידים שלך ומופיעים כאן. בטל/י את הלא-אהבתי כדי להחזיר את הפוסט.", "emptyTitle": "עדיין אין" },
     "back": "חזור",
     "usernameAvailable": "שם המשתמש זמין!",
     "signUpToClaim": "הירשם כדי לתפוס",
@@ -1450,8 +1578,16 @@
       "commentUnavailable": "התגובה הזו כבר לא זמינה"
     },
     "tabs": {
-      "dislikes": "לא אהבתי",
-      "playlists": "פלייליסטים"
+      "playlists": "פלייליסטים",
+      "dislikes": "לא אהבתי"
+    },
+    "dislikes": {
+      "emptyTitle": "עדיין אין",
+      "emptyOwn": "פוסטים שלא אהבת יוצאים מהפידים שלך ומופיעים כאן. בטל/י את הלא-אהבתי כדי להחזיר את הפוסט.",
+      "emptyOther": "עדיין אין כלום.",
+      "privateTitle": "לא אהבתי הוא פרטי",
+      "privateDesc": "החשבון הזה שומר את מה שלא אהב לעצמו.",
+      "loadMore": "טען עוד"
     },
     "offerWorthNow": "כ-{{amount}} אסימונים בשער הנוכחי",
     "offerNotePlaceholder": "הוסף הערה (אופציונלי)",
@@ -2311,6 +2447,7 @@
     "pendingSubmitted": "{{amount}} אסימונים נשלחו. האישור עדיין נבדק. אל תשלח שוב."
   },
   "communities": {
+    "chatTab": "צ'אט",
     "title": "קהילות",
     "create": "צור",
     "searchPlaceholder": "חפש קהילות...",
@@ -2345,7 +2482,29 @@
     "addDescription": "הוסף תיאור...",
     "communityDescription": "תיאור הקהילה...",
     "posts": "פוסטים",
-    "chat": "צ'אט",
+    "chat": {
+      "intervalHour": "שעה אחת",
+      "intervalHours": "{{count}} שעות",
+      "intervalMinute": "דקה אחת",
+      "intervalMinutes": "{{count}} דקות",
+      "intervalSecond": "שנייה אחת",
+      "intervalSeconds": "{{count}} שניות",
+      "muted": "אתה מושתק",
+      "mutedUntil": "אתם מושתקים עד {{until}}",
+      "postingDisabled": "הפרסום מושבת עבור חברים כאן",
+      "pinnedMedia": "מדיה",
+      "jumpToPinned": "מעבר להודעה המוצמדת",
+      "pinnedMessage": "הודעה מוצמדת",
+      "unpin": "בטל הצמדה",
+      "pin": "קוד PIN",
+      "delete": "מחיקה",
+      "slowMode": "מצב איטי: הודעה אחת בכל {{interval}}",
+      "slowModeWait": "מצב איטי — יש להמתין {{time}}",
+      "send": "שליחה",
+      "deleteMessageTitle": "למחוק את ההודעה הזו?",
+      "deleteMessageBody": "לא ניתן לבטל פעולה זו.",
+      "cancel": "ביטול"
+    },
     "membersTab": "חברים ({{count}})",
     "about": "אודות",
     "backToCommunities": "קהילות",
@@ -3810,6 +3969,7 @@
     "sellYourFractions": "מכור את השברים שלך ({{held}} מוחזק)"
   },
   "creator": {
+    "libraryEmpty": "היצירות השמורות שלך יופיעו כאן.",
     "whatToCreate": "מה ליצור",
     "startCreatingWith": "התחל ליצור עם {{model}}",
     "studioSubtitle": "תאר סצנה, דמות, מצב רוח או סגנון. התוצאות מופיעות למטה ועוברות ישירות לעורך.",
@@ -6206,7 +6366,10 @@
     "play": "הפעלה",
     "pause": "השהיה",
     "listens_one": "{{count}} האזנה",
-    "listens_other": "{{count}} מקשיבים"
+    "listens_other": "{{count}} מקשיבים",
+    "lyrics": "מילים",
+    "lyricsLoading": "מחפשים מילים…",
+    "lyricsNone": "לא נמצאו מילים"
   },
   "converter": {
     "seoTitle": "ממיר — ייבוא וידאו ל-DeHub",
@@ -6722,6 +6885,7 @@
     "seoDescription": "התיעוד הרשמי של DeHub: סקירת הפלטפורמה, dApps, כלכלת טוקן אסימונים, סטייקינג, משחקים, מפת דרכים, שאלות נפוצות ועוד."
   },
   "dex": {
+    "title": "אסימונים / דולר אמריקאי",
     "seoTitle": "DEX — סחר ב-אסימונים במחיר שלך",
     "seoDescription": "הגדר את מחיר הקנייה או המכירה של אסימונים שלך עם הזמנת מגבלה של Uniswap v4 ב-Base או BNB Chain. ספר הזמנות חי, עומק שוק ומחיר USD משותף אחד.",
     "venue": "רשת",
@@ -6943,6 +7107,14 @@
     }
   },
   "editor": {
+    "video": {
+      "tFade": "מעבר מתמזג",
+      "none": "ללא",
+      "transition": "מעבר",
+      "speed": "מהירות",
+      "sound": "צליל",
+      "video": "וידאו"
+    },
     "review": {
       "title": "סקירת פרויקט",
       "shared": "שותף איתך",
@@ -8604,5 +8776,15 @@
     "posted": "פורסם",
     "view": "הצגה",
     "failed": "לא ניתן היה לעבד את הסרטון"
+  },
+  "loginStack": {
+    "tip": "טיפ ב-DHB",
+    "headlineTop": "הכול יהיה שלך",
+    "headlineAccent": "ותהיה מאושר.",
+    "orContinueWith": "או המשך עם",
+    "phone": "טלפון",
+    "fingerprint": "טביעת אצבע",
+    "exploreFirst": "קודם תסתובב",
+    "codeNote": "נשלח לך קוד במייל, בלי סיסמה."
   }
 }

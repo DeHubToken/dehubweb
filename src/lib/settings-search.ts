@@ -49,6 +49,9 @@ export const SETTINGS_SEARCH_INDEX: SettingsSearchEntry[] = [
   { tab: 'profile', anchor: 'username', label: 'Username', labelKey: 'settings.username', keywords: 'handle rename @' },
   { tab: 'profile', anchor: 'bio', label: 'Bio', labelKey: 'settings.bio', keywords: 'about description' },
   { tab: 'profile', anchor: 'social-links', label: 'Social Links', labelKey: 'settings.socialLinks', keywords: 'twitter x instagram tiktok youtube discord telegram facebook followers follower count total reach audience' },
+  { tab: 'profile', anchor: 'profile-fields', label: 'Profile fields', labelKey: 'profileFields.title', keywords: 'website pronouns links verify rel me metadata fields' },
+  { tab: 'profile', anchor: 'fediverse', label: 'Fediverse', labelKey: 'fediverse.title', keywords: 'mastodon activitypub federation handle follow decentralised' },
+  { tab: 'profile', anchor: 'connected-apps', label: 'Connected apps', labelKey: 'mastodonApps.connectedTitle', keywords: 'mastodon ivory tusky elk ice cubes apps sign in signed in oauth revoke remove access' },
   { tab: 'profile', anchor: 'sign-in', label: 'Sign-in', labelKey: 'settings.signIn', keywords: 'email login password recovery' },
   { tab: 'profile', anchor: 'ens', label: 'ENS', labelKey: 'settings.ensSection', keywords: 'ens domain eth name verified handle' },
   { tab: 'profile', anchor: 'stream-key', label: 'Stream key', labelKey: 'settings.streamKey.section', keywords: 'obs encoder rtmp stream key ingest server xbox twitch aircast go live broadcast' },
@@ -76,6 +79,7 @@ export const SETTINGS_SEARCH_INDEX: SettingsSearchEntry[] = [
   // Notifications
   { tab: 'notifications', anchor: 'email-notifications', label: 'Email Notifications', labelKey: 'settings.emailNotifications', keywords: 'email inbox' },
   { tab: 'notifications', anchor: 'browser-notifications', label: 'Browser Notifications', labelKey: 'settings.browserNotifications', keywords: 'push desktop permission alerts' },
+  { tab: 'notifications', anchor: 'notification-filters', label: 'Filter notifications', labelKey: 'notificationFilters.title', keywords: 'filter strangers new accounts spam followers people you follow mute' },
   { tab: 'notifications', anchor: 'notify-likes', label: 'Likes', labelKey: 'settings.likes', keywords: 'reactions hearts' },
   { tab: 'notifications', anchor: 'notify-comments', label: 'Comments', labelKey: 'settings.comments' },
   { tab: 'notifications', anchor: 'notify-new-followers', label: 'New Followers', labelKey: 'settings.newFollowers', keywords: 'follows' },
@@ -109,6 +113,7 @@ export const SETTINGS_SEARCH_INDEX: SettingsSearchEntry[] = [
   { tab: 'privacy', anchor: 'active-sessions', label: 'Active sessions', labelKey: 'settings.activeSessions', keywords: 'devices logged in sign out revoke' },
   { tab: 'privacy', anchor: 'your-data', label: 'Your Data', labelKey: 'settings.yourData', keywords: 'export download import gdpr' },
   { tab: 'privacy', anchor: 'blocked-users', label: 'Blocked Users', keywords: 'block unblock mute' },
+  { tab: 'privacy', anchor: 'muted-words', label: 'Muted words', labelKey: 'keywordFilters.title', keywords: 'filter keyword word phrase hide spoiler mute' },
   { tab: 'privacy', anchor: 'geo-blocking', label: 'Geo-blocking', labelKey: 'settings.geoBlocking', keywords: 'country region restrict' },
 
   // Content

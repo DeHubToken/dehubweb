@@ -82,6 +82,12 @@ export interface PostFormState {
   poll: PollData | null;
   /** The content warning being written; null when the post has none. */
   contentWarning: string | null;
+  /** Who may quote the post. */
+  quotePolicy: import('@/lib/api/dehub/types').QuotePolicy;
+  /** Who may reply to the post. */
+  replyPolicy: import('@/lib/api/dehub/types').ReplyPolicy;
+  /** Who may see the post. Fixed once it is posted. */
+  visibility: import('@/lib/api/dehub/types').PostVisibility;
   isEnhancing: boolean;
   isPosting: boolean;
   uploadProgress: number; // 0–100 stage-based progress
@@ -109,6 +115,9 @@ export interface PostFormActions {
   setLiveMode: (value: LiveMode) => void;
   setPoll: import('@/hooks/use-draft-state').DraftSetter<PollData | null>;
   setContentWarning: (value: string | null) => void;
+  setQuotePolicy: (value: import('@/lib/api/dehub/types').QuotePolicy) => void;
+  setReplyPolicy: (value: import('@/lib/api/dehub/types').ReplyPolicy) => void;
+  setVisibility: (value: import('@/lib/api/dehub/types').PostVisibility) => void;
   handleImageSelect: (e: React.ChangeEvent<HTMLInputElement>) => void;
   handleVideoSelect: (e: React.ChangeEvent<HTMLInputElement>) => Promise<void>;
   handleAudioSelect: (e: React.ChangeEvent<HTMLInputElement>) => void;

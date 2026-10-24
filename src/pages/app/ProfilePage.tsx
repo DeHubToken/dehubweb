@@ -4,7 +4,7 @@ import { tokenLabel } from '@/lib/token-label';
 import { useState, useMemo, useRef, useCallback, useEffect } from 'react';
 import { SEOHead } from '@/components/SEOHead';
 import { getAiScrapingPreference } from '@/lib/ai-scraping';
-import { profileFeedUrl } from '../../../server/rss-feeds.js';
+import { profileFeedUrl } from '@/lib/profile-feed-url';
 import { useTranslation } from 'react-i18next';
 
 import { Loader2 } from 'lucide-react';
@@ -570,7 +570,7 @@ export default function ProfilePage() {
         description={data.profile?.bio || _copy("copy.11ef7a60f50a", { defaultValue: "View {{value1}} on DeHub", value1: data.profile?.name || data.profile?.handle || _copy("copy.f119e4acc42e", { defaultValue: "this profile" }) })}
         url={`https://dehub.io/${(data.profile?.handle || '').replace(/^@/, '')}`}
         aiScraping={data.profile ? getAiScrapingPreference(data.profile.customs) : undefined}
-        feed={data.profile?.handle && !data.isTargetPrivate ? { url: profileFeedUrl('https://dehub.io', data.profile.handle) } : undefined}
+        feed={data.profile?.handle && !data.isTargetPrivate ? { url: profileFeedUrl(data.profile.handle) } : undefined}
         jsonLd={{
           '@context': 'https://schema.org',
           '@type': 'Person',

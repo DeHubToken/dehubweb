@@ -1,4 +1,132 @@
 {
+  "mastodonApps": {
+    "authTitle": "DeHub bilen gir",
+    "authWants": "{{app}} DeHub hasabyňyzy ulanmak isleýär",
+    "authSignedInAs": "{{name}} hökmünde girdiňiz",
+    "authSignIn": "Dowam etmek üçin giriň",
+    "allow": "Rugsat ber",
+    "cancel": "Ýatyr",
+    "scopeRead": "Wagt tasmalaryňyzy, ýazgylaryňyzy, bildirişleriňizi we bellikleriňizi görmek",
+    "scopeWrite": "Siziň adyňyzdan ýazmak, jogap bermek, halamak, paýlaşmak we bellemek",
+    "scopeFollow": "Hasaplary yzarlamak, yzarlamagy bes etmek, petiklemek we sessiz etmek",
+    "scopePush": "Size bildiriş ibermek",
+    "scopeProfile": "Profiliňizi görmek",
+    "invalid": "Bu giriş baglanyşygy dogry däl. Programma gaýdyp, täzeden synanyşyň.",
+    "failed": "Başartmady. Täzeden synanyşyň.",
+    "codeTitle": "Girişi tamamlamak üçin bu kody programma göçüriň.",
+    "copy": "Göçür",
+    "copied": "Göçürildi",
+    "seoDescription": "Mastodon programmasyna DeHub hasabyňyzy ulanmaga rugsat beriň.",
+    "redirecting": "Sizi {{app}} programmasyna gaýtarýarys…",
+    "connectedTitle": "Birikdirilen programmalar",
+    "connectedDescription": "Bu hasap bilen giren Mastodon programmalaryňyz. Çykmak üçin birini aýyryň.",
+    "connectedEmpty": "Häzirlikçe birikdirilen programma ýok.",
+    "lastUsed": "Soňky gezek ulanylan {{date}}",
+    "remove": "Aýyr",
+    "removed": "Programma aýryldy"
+  },
+  "fediverse": {
+    "title": "Fediwers",
+    "description": "Mastodon-daky we beýleki fediwers programmalaryndaky adamlar sizi şu salgy boýunça tapyp yzarlap bilerler. Täze köpçülikleýin ýazgylaryňyz olara şol ýerde ýetýär.",
+    "copy": "Göçür",
+    "copied": "Göçürildi",
+    "privateNote": "Şahsy hasaplar fediwersde görkezilmeýär.",
+    "noUsername": "Fediwers salgysyny almak üçin ulanyjy adyny saýlaň."
+  },
+  "profileFields": {
+    "title": "Profil meýdanlary",
+    "description": "Profiliňizde dört goşmaça setire çenli, meselem web sahypa ýa-da çalyşmalaryňyz.",
+    "label": "Bellik",
+    "content": "Mazmun",
+    "save": "Meýdanlary ýatda sakla",
+    "saved": "Profil meýdanlary ýatda saklandy",
+    "failed": "Ýatda saklanmady. Gaýtadan synanyşyň.",
+    "verified": "Tassyklanan baglanyşyk",
+    "verifyHint": "Baglanyşygy tassyklamak üçin muny şol sahypa goşuň, soň gaýtadan ýatda saklaň: {{snippet}}"
+  },
+  "followedTags": {
+    "follow": "#{{tag}} yzarla",
+    "following": "Yzarlaýarsyňyz",
+    "unfollow": "#{{tag}} yzarlamagy bes et",
+    "followed": "Indi #{{tag}} yzarlaýarsyňyz. Onuň ýazgylary yzarlaýanlaryňyzyň lentasynda görüner.",
+    "unfollowed": "#{{tag}} yzarlamagy bes etdiňiz",
+    "failed": "Ýatda saklanmady. Gaýtadan synanyşyň.",
+    "clear": "Arassala"
+  },
+  "notificationFilters": {
+    "title": "Bildirişleri süz",
+    "description": "Töweregiňizden daşardaky biri siz bilen gatnaşanda näme boljakdygyny saýlaň. Süzülen bildirişler bellik we push bolmazdan «Süzülenler» bölüminde garaşýar.",
+    "notFollowing": "Yzarlamaýan adamlaryňyz",
+    "notFollowers": "Sizi yzarlamaýan adamlar",
+    "newAccounts": "Täze hasaplar (30 günden az)",
+    "accept": "Maňa habar ber",
+    "filter": "Süz",
+    "drop": "Doly gizle",
+    "filteredTitle": "Süzülen bildirişler",
+    "filteredEmpty": "Hiç zat süzülmedi.",
+    "failed": "Ýatda saklanmady. Gaýtadan synanyşyň."
+  },
+  "keywordFilters": {
+    "title": "Sesi öçürilen sözler",
+    "description": "Bu sözleri öz içine alýan ýazgylary we teswirleri gizläň ýa-da duýduryşyň aňyrsyna epiň. Bu sanawy diňe siz görýärsiňiz.",
+    "placeholder": "Söz ýa-da söz düzümi",
+    "add": "Sesini öçür",
+    "added": "Sesi öçürildi: {{phrase}}",
+    "wholeWord": "Diňe doly söz",
+    "whenMatches": "Ýazgy gabat gelende",
+    "warn": "Duýduryş görkez",
+    "hide": "Gizle",
+    "howLong": "Näçe wagt",
+    "forever": "Aýyrýançam",
+    "duration1h": "1 sagat",
+    "duration1d": "1 gün",
+    "duration7d": "7 gün",
+    "duration30d": "30 gün",
+    "where": "Nirede",
+    "home": "Baş sahypa",
+    "public": "Gözleg we açyş",
+    "profile": "Profiller",
+    "thread": "Söhbetdeşlikler",
+    "notifications": "Bildirişler",
+    "empty": "Siz hiç bir sözüň sesini öçürmediňiz.",
+    "remove": "Sesini aç",
+    "until": "{{date}} çenli",
+    "filtered": "Süzüldi: {{phrase}}",
+    "showAnyway": "Barybir görkez",
+    "failed": "Ýatda saklanmady. Gaýtadan synanyşyň."
+  },
+  "postVisibility": {
+    "label": "Muny kim görüp biler",
+    "public": "Hemmeler",
+    "followers": "Diňe yzarlaýjylar",
+    "direct": "Diňe agzalan adamlar",
+    "noRepost": "Diňe köpçülikleýin ýazgylary gaýtadan paýlaşyp bolýar",
+    "directHint": "Bu ýazgyny diňe @ bilen agzan adamlaryňyz görer",
+    "needsMention": "Diňe agzalanlara paýlaşmak üçin iň bolmanda bir adamy @ bilen agzaň"
+  },
+  "replyPolicy": {
+    "label": "Kim jogap berip biler",
+    "public": "Islendik adam",
+    "followers": "Siziň yzarlaýjylaryňyz",
+    "following": "Siziň yzarlaýan adamlaryňyz",
+    "mentioned": "Diňe agzalanlar",
+    "noticeFollowers": "Diňe awtoryň yzarlaýjylary jogap berip biler",
+    "noticeFollowing": "Diňe awtoryň yzarlaýan adamlary jogap berip biler",
+    "noticeMentioned": "Diňe ýazgyda agzalanlar jogap berip biler",
+    "refused": "Awtor bu ýazga kimiň jogap berip biljekdigini çäklendirdi"
+  },
+  "quotePolicy": {
+    "label": "Kim sitata getirip biler",
+    "public": "Islendik adam",
+    "followers": "Yzarlaýjylar",
+    "nobody": "Diňe men",
+    "off": "Awtor sitata getirmegi öçürdi",
+    "removed": "Awtor ýazgysyny bu sitatadan aýyrdy",
+    "remove": "Aýyr",
+    "removedToast": "Ýazgyňyz bu sitatadan aýryldy",
+    "removeFailed": "Ýazgyňyzy sitatadan aýryp bolmady",
+    "refused": "Awtor bu ýazgydan sitata getirmegiňize rugsat bermeýär"
+  },
   "contentWarning": {
     "label": "Mazmun barada duýduryş",
     "placeholder": "Duýduryşyňyzy şu ýere ýazyň",
@@ -132,6 +260,7 @@
     "heading": "DeHub gysga wideolary"
   },
   "settings": {
+    "usernameTaken": "Ulanyjy ady eýelenen",
     "postingChain": "Ýazgylaryň blokçeýni",
     "showOnline": "Men onlayn bolanymda görkeziň",
     "showOnlineDesc": "Adamlar DeHub ulanýan wagtyň özünde adyňyň ýanynda ýaşyl dot görýärler.",
@@ -657,7 +786,6 @@
     "embed": "Goýmak",
     "copyEmbedCode": "Goýma koduny göçür",
     "embedCodeCopied": "Goýma kody göçürildi",
-    "copyFailed": "Baglanyşygy göçürip bolmady",
     "options": "Saýlawlar",
     "aiOverview": "Görüş",
     "sendTip": "Sylag iber",
@@ -685,7 +813,8 @@
     "unpinPost": "Profilinden çyk",
     "postPinned": "Profiline gir",
     "postUnpinned": "Profilinden çykyş",
-    "pinFailed": "Bu posty ýazmaga ýa-da ýazmaga rugsat berilmeýär"
+    "pinFailed": "Bu posty ýazmaga ýa-da ýazmaga rugsat berilmeýär",
+    "copyFailed": "Baglanyşygy göçürip bolmady"
   },
   "filters": {
     "sort": "Tertiple",
@@ -2289,6 +2418,7 @@
     "pendingSubmitted": "{{amount}} sanly wagt tabşyryldy. Tassyklaýyş heniz barlanýar. Ony gaýtadan ibermäň."
   },
   "communities": {
+    "chatTab": "Söhbet",
     "title": "Toplumlar",
     "create": "Döret",
     "searchPlaceholder": "Jemgyýetleri gözle...",
@@ -2323,7 +2453,30 @@
     "addDescription": "Bir açıklama ekleyin...",
     "communityDescription": "Jemgyýet beýany...",
     "posts": "Postlar",
-    "chat": "Söhbet",
+    "chat": {
+      "intervalHour": "1 sagat",
+      "intervalHours": "{{count}} Saat",
+      "intervalMinute": "1 minut",
+      "intervalMinutes": "{{count}} minutlar",
+      "intervalSecond": "1 sekund",
+      "intervalSeconds": "{{count}} sekundlar",
+      "muted": "Sen üýtgedildiň",
+      "mutedUntil": "Siz {{until}} çenli üýtgedildiňiz",
+      "postingDisabled": "Bu ýerde agzalar üçin ýazmak mümkinçiliginiň ýokdugy",
+      "pinnedGif": "GIF",
+      "pinnedMedia": "Medya",
+      "jumpToPinned": "Öwrenilen habaryň içine gir",
+      "pinnedMessage": "Pinned Message",
+      "unpin": "Unpin",
+      "pin": "Pin",
+      "delete": "Ewez Et",
+      "slowMode": "Slow mode: her bir habar{{interval}}",
+      "slowModeWait": "Slow mode — garaş {{time}}",
+      "send": "Gönder",
+      "deleteMessageTitle": "Bu habar ýitirilýärmi?",
+      "deleteMessageBody": "Bu şeýle ret edilmeli däl.",
+      "cancel": "Gaýd Et"
+    },
     "membersTab": "Agzalar ({{count}})",
     "about": "Barada",
     "backToCommunities": "Jemagatlar",
@@ -3757,6 +3910,7 @@
     "sellYourFractions": "Fraksiyalarýnýzý sat ({{held}} saklanýan)"
   },
   "creator": {
+    "libraryEmpty": "Saklanan döredilenleriňiz şu ýerde peýda bolar.",
     "whatToCreate": "Neyi yarata biler",
     "startCreatingWith": "{{model}}-ýnla yarataýan baþlaýýn",
     "studioSubtitle": "Sahne, personaj, ruh halý ýa da üslüb táýanýr. Natiýe altta ýokaryla ýaýlanýp redaktorýna doðru gider.",
@@ -6108,7 +6262,10 @@
     "play": "Oynat",
     "pause": "Galanlar",
     "listens_one": "{{count}} gulak asyň",
-    "listens_other": "{{count}} listens"
+    "listens_other": "{{count}} listens",
+    "lyrics": "Aýdymyň sözleri",
+    "lyricsLoading": "Sözler gözlenýär…",
+    "lyricsNone": "Söz tapylmady"
   },
   "converter": {
     "seoTitle": "Konwerter — DeHub-a wideo import et",
@@ -6624,6 +6781,7 @@
     "seoDescription": "DeHub-yň resmi resminamalary: platforma synlary, dApps, tokenler token ykdysadyýeti, staking, oýunlar, ýol kartasy, ýygy soralýan soraglar we başgalar."
   },
   "dex": {
+    "title": "tokenlar / USD",
     "seoTitle": "DEX — tokenler söwdasy öz bahasyňyzda",
     "seoDescription": "Base ýa-da BNB Chain-däki Uniswap v4 çäklendirilen buýrugy bilen tokenler satyn almak ýa-da satmak bahasyňyzy belläň. Hakyky buýurmalar kitaby, bazaryň çuňlugy we bir umumy ABŞ dollary bahasy.",
     "venue": "Tor",
@@ -6844,6 +7002,14 @@
     }
   },
   "editor": {
+    "video": {
+      "tFade": "Garyşyp geçiş",
+      "none": "Ýok",
+      "transition": "Geçiş",
+      "speed": "Tizlik",
+      "sound": "Ses",
+      "video": "Wideo"
+    },
     "review": {
       "title": "Taslama syny",
       "shared": "Siziň bilen paýlaşylan",

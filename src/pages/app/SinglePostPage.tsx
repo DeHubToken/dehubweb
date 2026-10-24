@@ -169,6 +169,10 @@ function toVideoItem(nft: DeHubNFT): VideoItem {
     contentRating: nft.contentRating,
     mediaDescriptions: nft.mediaDescriptions,
     spoilerText: nft.spoilerText,
+    quotePolicy: nft.quotePolicy,
+    visibility: nft.visibility,
+    quoteRevoked: nft.quoteRevoked,
+    replyPolicy: nft.replyPolicy,
     shopLinks: (nft as any).shopLinks,
     shopListingCount: (nft as any).shopListingCount,
     type: 'video',
@@ -257,6 +261,10 @@ function toImagePost(nft: DeHubNFT): ImagePost {
     contentRating: nft.contentRating,
     mediaDescriptions: nft.mediaDescriptions,
     spoilerText: nft.spoilerText,
+    quotePolicy: nft.quotePolicy,
+    visibility: nft.visibility,
+    quoteRevoked: nft.quoteRevoked,
+    replyPolicy: nft.replyPolicy,
     shopLinks: (nft as any).shopLinks,
     shopListingCount: (nft as any).shopListingCount,
     type: 'image',
@@ -337,6 +345,10 @@ function toTextPost(nft: DeHubNFT): TextPost {
     contentRating: nft.contentRating,
     mediaDescriptions: nft.mediaDescriptions,
     spoilerText: nft.spoilerText,
+    quotePolicy: nft.quotePolicy,
+    visibility: nft.visibility,
+    quoteRevoked: nft.quoteRevoked,
+    replyPolicy: nft.replyPolicy,
     shopLinks: (nft as any).shopLinks,
     shopListingCount: (nft as any).shopListingCount,
     type: 'post',
@@ -454,6 +466,10 @@ function toLiveStream(nft: DeHubNFT): LiveStream {
     contentRating: nft.contentRating,
     mediaDescriptions: nft.mediaDescriptions,
     spoilerText: nft.spoilerText,
+    quotePolicy: nft.quotePolicy,
+    visibility: nft.visibility,
+    quoteRevoked: nft.quoteRevoked,
+    replyPolicy: nft.replyPolicy,
     // The Shop board rides straight through to LiveStreamCard, which is what
     // renders the player here — the button lives inside it.
     shopLinks: (nft as any).shopLinks,
@@ -1189,6 +1205,7 @@ function SinglePostPageContent({ inOverlay = false, overrideId }: SinglePostPage
       tokenId={String(id)}
       initialTab={pageCommentsInitialTab}
       commentsDisabled={!!(post as { commentsDisabled?: boolean }).commentsDisabled}
+      replyPolicy={(post as { replyPolicy?: import('@/lib/api/dehub/types').ReplyPolicy }).replyPolicy}
       forKids={!!(post as { forKids?: boolean }).forKids}
       postAuthorAddress={isTextPost ? post.minter : undefined}
       forceInline
@@ -1237,6 +1254,7 @@ function SinglePostPageContent({ inOverlay = false, overrideId }: SinglePostPage
               tokenId={String(id)}
               initialTab={pageCommentsInitialTab}
               commentsDisabled={!!(post as { commentsDisabled?: boolean }).commentsDisabled}
+              replyPolicy={(post as { replyPolicy?: import('@/lib/api/dehub/types').ReplyPolicy }).replyPolicy}
               forKids={!!(post as { forKids?: boolean }).forKids}
               postAuthorAddress={isText ? post.minter : undefined}
               forceInline
@@ -1395,7 +1413,7 @@ function SinglePostPageContent({ inOverlay = false, overrideId }: SinglePostPage
               >
                 <Link2 className="w-5 h-5" /> {t('postOptions.copyLink')}
               </button>
-              {id && /^\d+$/.test(id) && (
+              {id && /^\d+$/.test(id) && (!(post as any)?.visibility || (post as any).visibility === 'public') && (
                 <button
                   onClick={() => { copyPostEmbedCode(id, t); setShowDesktopOptionsDrawer(false); }}
                   className="flex items-center gap-3 px-4 py-3 text-white hover:bg-white/10 rounded-xl transition-colors text-left"
@@ -1435,6 +1453,8 @@ function SinglePostPageContent({ inOverlay = false, overrideId }: SinglePostPage
           currentDescription={videoData.description}
           currentContentRating={videoData.contentRating}
           currentSpoilerText={videoData.spoilerText}
+          currentQuotePolicy={videoData.quotePolicy}
+          currentReplyPolicy={videoData.replyPolicy}
           currentShopLinks={videoData.shopLinks}
           onSuccess={(edited) => {
             applyOptimisticEdit(queryClient, id || '', edited);

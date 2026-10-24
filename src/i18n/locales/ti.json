@@ -1,4 +1,132 @@
 {
+  "mastodonApps": {
+    "authTitle": "ብDeHub እቶ",
+    "authWants": "{{app}} ሕሳብኩም ናይ DeHub ክጥቀም ይደሊ",
+    "authSignedInAs": "ከም {{name}} ኣቲኹም ኣለኹም",
+    "authSignIn": "ንምቕጻል እቶ",
+    "allow": "ፍቐድ",
+    "cancel": "ሰርዝ",
+    "scopeRead": "መስመራት ግዜ፡ ጽሑፋት፡ ምልክታትን ምልክታት ገጽን ምርኣይ",
+    "scopeWrite": "ብስምኩም ምልጣፍ፡ ምምላስ፡ ምፍታው፡ ምብዛሕን ምልክት ምግባርን",
+    "scopeFollow": "ሕሳባት ምስዓብ፡ ምስዓብ ምቁራጽ፡ ምዕጋትን ምጽማምን",
+    "scopePush": "ምልክታት ምስዳድ",
+    "scopeProfile": "መግለጺኹም ምርኣይ",
+    "invalid": "እዚ ናይ ምእታው መላግቦ ቅኑዕ ኣይኮነን። ናብቲ ኣፕ ተመሊስኩም እንደገና ፈትኑ።",
+    "failed": "ኣይሰለጠን። እንደገና ፈትኑ።",
+    "codeTitle": "ምእታው ንምውዳእ ነዚ ኮድ ናብቲ ኣፕ ቅድሑ።",
+    "copy": "ቅዳሕ",
+    "copied": "ተቐዲሑ",
+    "seoDescription": "ኣፕ Mastodon ሕሳብኩም ናይ DeHub ክጥቀም ፍቐዱ።",
+    "redirecting": "ናብ {{app}} ንመልሰኩም ኣለና…",
+    "connectedTitle": "ዝተራኸቡ ኣፕታት",
+    "connectedDescription": "በዚ ሕሳብ ዝኣቶኹምሎም ኣፕታት Mastodon። ንምውጻእ ሓደ ኣልግሱ።",
+    "connectedEmpty": "ክሳብ ሕጂ ዝተራኸበ ኣፕ የለን።",
+    "lastUsed": "ናይ መወዳእታ ኣጠቓቕማ {{date}}",
+    "remove": "ኣልግስ",
+    "removed": "እቲ ኣፕ ተኣልዩ"
+  },
+  "fediverse": {
+    "title": "ፌዲቨርስ",
+    "description": "ኣብ ማስቶዶንን ካልኦት ኣፕታት ፌዲቨርስን ዘለዉ ሰባት በዚ ኣድራሻ ክረኽቡኹምን ክኽተሉኹምን ይኽእሉ። ሓደስቲ ህዝባዊ ጽሑፋትኩም ኣብኡ ይበጽሕዎም።",
+    "copy": "ቅዳሕ",
+    "copied": "ተቐዲሑ",
+    "privateNote": "ብሕታዊ ሕሳባት ኣብ ፌዲቨርስ ኣይረኣዩን።",
+    "noUsername": "ኣድራሻ ፌዲቨርስ ንምርካብ ስም ተጠቃሚ ምረጹ።"
+  },
+  "profileFields": {
+    "title": "መዳያታት መግለጺ",
+    "description": "ኣብ መግለጺኹም ክሳብ ኣርባዕተ ተወሰኽቲ መስመራት፣ ከም መርበብ ሓበሬታ ወይ ተውላጥ ስምኹም።",
+    "label": "ምልክት",
+    "content": "ትሕዝቶ",
+    "save": "መዳያታት ዓቅብ",
+    "saved": "መዳያታት መግለጺ ተዓቂቦም",
+    "failed": "ኣይተዓቀበን። እንደገና ፈትኑ።",
+    "verified": "ዝተረጋገጸ ኣገናኝ",
+    "verifyHint": "ኣገናኝ ንምርግጋጽ እዚ ናብቲ ገጽ ወስኹ፣ ድሕሪኡ እንደገና ዓቅቡ፦ {{snippet}}"
+  },
+  "followedTags": {
+    "follow": "#{{tag}} ተኸተል",
+    "following": "ትኽተሎ ኣለኻ",
+    "unfollow": "#{{tag}} ምኽታል ኣቋርጽ",
+    "followed": "ሕጂ #{{tag}} ትኽተሎ ኣለኻ። ጽሑፋቱ ኣብ ዝኽተልካዮም ምግቢ ክረኣዩ እዮም።",
+    "unfollowed": "#{{tag}} ምኽታል ኣቋሪጽካ",
+    "failed": "ኣይተዓቀበን። እንደገና ፈትኑ።",
+    "clear": "ኣጽሪ"
+  },
+  "notificationFilters": {
+    "title": "ምልክታት ካብዚኦም ኣጻሪ",
+    "description": "ካብ ክቢኹም ወጻኢ ዝኾነ ሰብ ምሳኹም ክራኸብ ከሎ እንታይ ከም ዝኸውን ምረጹ። ዝተጻረዩ ምልክታት ብዘይ ምልክትን ብዘይ ፑሽን ኣብ «ዝተጻረዩ» ይጽበዩ።",
+    "notFollowing": "ዘይትኽተልዎም ሰባት",
+    "notFollowers": "ዘይኽተሉኹም ሰባት",
+    "newAccounts": "ሓደስቲ ሕሳባት (ትሕቲ 30 መዓልቲ)",
+    "accept": "ኣፍልጠኒ",
+    "filter": "ኣጻሪ",
+    "drop": "ምሉእ ብምሉእ ሕባእ",
+    "filteredTitle": "ዝተጻረዩ ምልክታት",
+    "filteredEmpty": "ዝተጻረየ የለን።",
+    "failed": "ኣይተዓቀበን። እንደገና ፈትኑ።"
+  },
+  "keywordFilters": {
+    "title": "ዝተዓብሱ ቃላት",
+    "description": "እዞም ቃላት ዘለዎም ጽሑፋትን ርእይቶታትን ሕብኡ፣ ወይ ኣብ ድሕሪ መጠንቀቕታ ዕጸፍዎም። ነዚ ዝርዝር ዝርእዮ ንስኹም ጥራይ ኢኹም።",
+    "placeholder": "ቃል ወይ ሓረግ",
+    "add": "ዕብስ",
+    "added": "ተዓቢሱ፦ {{phrase}}",
+    "wholeWord": "ምሉእ ቃል ጥራይ",
+    "whenMatches": "ጽሑፍ ምስ ዝሰማማዕ",
+    "warn": "መጠንቀቕታ ኣርኢ",
+    "hide": "ሕባእ",
+    "howLong": "ክሳብ ክንደይ",
+    "forever": "ክሳብ ዘውጽኦ",
+    "duration1h": "ን1 ሰዓት",
+    "duration1d": "ን1 መዓልቲ",
+    "duration7d": "ን7 መዓልቲ",
+    "duration30d": "ን30 መዓልቲ",
+    "where": "ኣበይ",
+    "home": "መበገሲ",
+    "public": "ዳህስስን ድለን",
+    "profile": "መግለጺታት",
+    "thread": "ዝርርባት",
+    "notifications": "ምልክታት",
+    "empty": "ዝኾነ ቃል ኣይዓበስኩምን።",
+    "remove": "ዕብስ ኣልዕል",
+    "until": "ክሳብ {{date}}",
+    "filtered": "ተጻሪዩ፦ {{phrase}}",
+    "showAnyway": "ብዝኾነ ኣርኢ",
+    "failed": "ኣይተዓቀበን። እንደገና ፈትኑ።"
+  },
+  "postVisibility": {
+    "label": "እዚ መን ክርእዮ ይኽእል",
+    "public": "ኩሉ ሰብ",
+    "followers": "ሰዓብቲ ጥራይ",
+    "direct": "ዝተጠቕሱ ሰባት ጥራይ",
+    "noRepost": "ዳግማይ ክልጠፉ ዝኽእሉ ህዝባዊ ጽሑፋት ጥራይ እዮም",
+    "directHint": "ነዚ ጽሑፍ ዝርእዩዎ ብ@ ዝጠቐስካዮም ሰባት ጥራይ እዮም",
+    "needsMention": "ንዝተጠቕሱ ጥራይ ንምልጣፍ እንተወሓደ ሓደ ሰብ ብ@ ጥቀስ"
+  },
+  "replyPolicy": {
+    "label": "መን ክምልስ ይኽእል",
+    "public": "ዝኾነ ሰብ",
+    "followers": "ተኸተልትኻ",
+    "following": "ትኽተሎም ሰባት",
+    "mentioned": "ዝተጠቕሱ ጥራይ",
+    "noticeFollowers": "ተኸተልቲ ደራሲ ጥራይ ክምልሱ ይኽእሉ",
+    "noticeFollowing": "ደራሲ ዝኽተሎም ሰባት ጥራይ ክምልሱ ይኽእሉ",
+    "noticeMentioned": "ኣብቲ ጽሑፍ ዝተጠቕሱ ጥራይ ክምልሱ ይኽእሉ",
+    "refused": "ደራሲ ነዚ ጽሑፍ መን ክምልስ ከም ዝኽእል ደሪቱ"
+  },
+  "quotePolicy": {
+    "label": "መን ክጠቅስ ይኽእል",
+    "public": "ዝኾነ ሰብ",
+    "followers": "ተኸተልቲ",
+    "nobody": "ኣነ ጥራይ",
+    "off": "ደራሲ ምጥቃስ ኣጥፊኡ ኣሎ",
+    "removed": "ደራሲ ጽሑፉ ካብዚ ጥቕሲ ኣልጊሱ",
+    "remove": "ኣልግስ",
+    "removedToast": "ጽሑፍካ ካብዚ ጥቕሲ ተኣልዩ",
+    "removeFailed": "ጽሑፍካ ካብ ጥቕሲ ክእለ ኣይተኻእለን",
+    "refused": "ደራሲ ነዚ ጽሑፍ ክትጠቕሶ ኣይፈቕደልካን"
+  },
   "contentWarning": {
     "label": "ናይ ትሕዝቶ መጠንቀቕታ",
     "placeholder": "መጠንቀቕታኻ ኣብዚ ጽሓፍ",
@@ -132,6 +260,7 @@
     "heading": "ሓጺርቲ DeHub"
   },
   "settings": {
+    "usernameTaken": "ስም ተጠቃሚ ተታሒዙ",
     "postingChain": "ናይ ልጥፋት ብሎክቸይን",
     "showOnline": "ኣብ ኢንተርነት ከለኹ ኣርኢ",
     "showOnlineDesc": "እቶም እትልእኮም ሰባት DeHub ክትጥቀም ከለኻ ኣብ ጥቓ ስምካ ዘሎ ሕጫውቲ ነጥቢ ይርእዩ",
@@ -649,7 +778,6 @@
     "embed": "ኣእቱ",
     "copyEmbedCode": "ናይ ምእታው ኮድ ቅዳሕ",
     "embedCodeCopied": "ናይ ምእታው ኮድ ተቐዲሑ",
-    "copyFailed": "መላግቦ ክቕዳሕ ኣይተኻእለን",
     "options": "ምርጫታት",
     "aiOverview": "ሓፈሻዊ ኣመለኻኽታ AI",
     "sendTip": "ሽልማት ስደድ",
@@ -677,7 +805,8 @@
     "unpinPost": "ካብ መገለጺኻ ኣርሕቕ",
     "postPinned": "ኣብ መገለጺኻ ተጸሚድካ",
     "postUnpinned": "ካብ መገለጺኻ ርሒቕካ",
-    "pinFailed": "ነዚ ጽሑፍ እዚ ክተኣታተወሉ ወይ ክተኣታተወሉ ኣይከኣለን ።"
+    "pinFailed": "ነዚ ጽሑፍ እዚ ክተኣታተወሉ ወይ ክተኣታተወሉ ኣይከኣለን ።",
+    "copyFailed": "መላግቦ ክቕዳሕ ኣይተኻእለን"
   },
   "filters": {
     "sort": "ደርድር",
@@ -2271,6 +2400,7 @@
     "pendingSubmitted": "{{amount}} ቶክን ተሰሚዎ። ተረጋግጽኡ ይካየድ ኣሎ። ደጊም ኣይሰደዶ።"
   },
   "communities": {
+    "chatTab": "ዝርርብ",
     "title": "ማሕበረሰባት",
     "create": "ፍጠር",
     "searchPlaceholder": "ማሕበረሰባት ድለ...",
@@ -2305,7 +2435,29 @@
     "addDescription": "መግለጺ ወስኽ...",
     "communityDescription": "መግለጺ ማሕበረሰብ...",
     "posts": "ልኡኻት",
-    "chat": "ዝርርብ",
+    "chat": {
+      "intervalHour": "1 ሰዓት",
+      "intervalHours": "{{count}} ሰዓታት",
+      "intervalMinute": "1 ደቒቕ",
+      "intervalMinutes": "{{count}} ደቓይቕ",
+      "intervalSecond": "1 ካልኢት",
+      "intervalSeconds": "{{count}} ሰከንድ",
+      "muted": "ንስኻ ተሃዊኽካ ኢኻ",
+      "mutedUntil": "ክሳብ {{until}}",
+      "postingDisabled": "እቲ ልኡኽ ንኣባላት ኣብዚ ተሰናኺሉ ኣሎ",
+      "pinnedGif": "ግሪፍ",
+      "pinnedMedia": "መራኸቢ ብዙሓን",
+      "jumpToPinned": "ናብ ዝተሰነየ መልእኽቲ ዘርግሕ",
+      "pinnedMessage": "መልእኽቲ",
+      "pin": "ፒን",
+      "delete": "ሰርዝ",
+      "slowMode": "ቀስ ብቐስ ኣገባብ: ሓደ መልእኽቲ ኣብ ነፍሲ ወከፍ {{interval}}",
+      "slowModeWait": "ቀሊል ኣገባብ — ተጸበዩ {{time}}",
+      "send": "ልኢኽ",
+      "deleteMessageTitle": "ነዚ መልእኽቲ እዚ ክትሰርሖ ትኽእልዶ ፧",
+      "deleteMessageBody": "እዚ ክጠፍእ ኣይክእልን እዩ ።",
+      "cancel": "ሰርዝ"
+    },
     "membersTab": "ኣባላት ({{count}})",
     "about": "ብዛዕባ",
     "backToCommunities": "ማሕበረሰባት",
@@ -3730,6 +3882,7 @@
     "sellYourFractions": "ንክፍላትካ ሸይጥ ({{held}} held)"
   },
   "creator": {
+    "libraryEmpty": "ዝዓቀብካዮም ፍርያት ኣብዚ ክርኣዩ እዮም።",
     "whatToCreate": "እንታይ ከም እትፈጥር",
     "startCreatingWith": "ምስ {{model}}",
     "studioSubtitle": "ሓደ ትዕይንት ፡ ባህሪ ፡ ስምዒት ወይ ቅጥዒ ግለጽ ። ኣብ ታሕቲ ዘሎ መሬት ብምውጻእ ብቐጥታ ናብ ኣሰናዳኢ ይኣቱ ።",
@@ -6075,7 +6228,10 @@
     "creator": "DeHub ፈጣሪ",
     "play": "ተጻወት",
     "pause": "ዕረፍቲ",
-    "listens_one": "{{count}} ስማዕ"
+    "listens_one": "{{count}} ስማዕ",
+    "lyrics": "ግጥሚ",
+    "lyricsLoading": "ግጥሚ ይድለ ኣሎ…",
+    "lyricsNone": "ግጥሚ ኣይተረኽበን"
   },
   "converter": {
     "seoTitle": "መለወጢ — ቪድዮ ናብ DeHub ኣምጽእ",
@@ -6125,7 +6281,7 @@
     "kindImage": "ስእልታት",
     "tileSourceKind": "{{source}} · {{kind}}",
     "reviewTitle": "ቅድሚ ምእታዉ ገምግም",
-    "reviewSubtitle": "ካብ {{source}} ፡ ከም {{kind}}} ። ነቲ ኦሪጅናል ንምዕቃብ ፡ ነቲ ኣርእስቲ ባዶ ግበር ።",
+    "reviewSubtitle": "ካብ {{source}} ፡ ከም {{kind}} ። ነቲ ኦሪጅናል ንምዕቃብ ፡ ነቲ ኣርእስቲ ባዶ ግበር ።",
     "reviewName": "ኣርእስቲ",
     "reviewNamePlaceholder": "ነቲ ናይ መጀመርታ ኣርእስቲ ንምሕላው ባዶ ግበር",
     "reviewDescription": "መግለጺ",
@@ -6591,6 +6747,7 @@
     "seoDescription": "ወግዓዊ ሰነዳት DeHub፦ ሓፈሻዊ ትሕዝቶ መድረኽ፡ dApps፡ ቁጠባ ቶከን ምልክታት፡ ስቴኪንግ፡ ጸወታታት፡ መንገዲ ካርታ፡ ተደጋጋሚ ሕቶታትን ካልእን።"
   },
   "dex": {
+    "title": "ቶክንስ / ዶላር",
     "seoTitle": "DEX — ኣብ ዋጋኻ ምልክታት ንግዲ",
     "seoDescription": "ዋጋ DHBኻ ብ Uniswap v4 ገደብ ትእዛዝ ኣብ Base ወይ BnB Chain ኣዳሉ ወይ ሸይጥ ። ህያው መጽሓፍ ቅደም ተከተል ፡ ጥልቀት ዕዳጋን ሓደ ናይ ሓባር USD ዋጋን ።",
     "venue": "ኔትወርክ",
@@ -6807,6 +6964,14 @@
     }
   },
   "editor": {
+    "video": {
+      "tFade": "ምሕዋስ",
+      "none": "የለን",
+      "transition": "ምስግጋር",
+      "speed": "ቅልጣፈ",
+      "sound": "ድምጺ",
+      "video": "ቪድዮ"
+    },
     "review": {
       "title": "ግምገማ ፕሮጀክት",
       "shared": "ምሳኹም ዝተኻፈለ",

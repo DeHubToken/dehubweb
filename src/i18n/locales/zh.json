@@ -1,4 +1,132 @@
 {
+  "mastodonApps": {
+    "authTitle": "使用 DeHub 登录",
+    "authWants": "{{app}} 想使用你的 DeHub 账号",
+    "authSignedInAs": "已登录为 {{name}}",
+    "authSignIn": "登录以继续",
+    "allow": "允许",
+    "cancel": "取消",
+    "scopeRead": "查看你的时间线、帖子、通知和书签",
+    "scopeWrite": "以你的身份发帖、回复、点赞、转发和收藏",
+    "scopeFollow": "关注、取消关注、屏蔽和静音账号",
+    "scopePush": "向你发送通知",
+    "scopeProfile": "查看你的个人资料",
+    "invalid": "此登录链接无效。请返回应用后重试。",
+    "failed": "没有成功，请重试。",
+    "codeTitle": "将此代码复制到应用中以完成登录。",
+    "copy": "复制",
+    "copied": "已复制",
+    "seoDescription": "允许 Mastodon 应用使用你的 DeHub 账号。",
+    "redirecting": "正在返回 {{app}}…",
+    "connectedTitle": "已连接的应用",
+    "connectedDescription": "你用此账号登录过的 Mastodon 应用。移除后即会退出登录。",
+    "connectedEmpty": "尚未连接任何应用。",
+    "lastUsed": "上次使用 {{date}}",
+    "remove": "移除",
+    "removed": "已移除应用"
+  },
+  "fediverse": {
+    "title": "联邦宇宙",
+    "description": "Mastodon 和其他联邦宇宙应用上的用户可以通过此地址找到并关注你。你的新公开帖子会在那里送达他们。",
+    "copy": "复制",
+    "copied": "已复制",
+    "privateNote": "私密账号不会显示在联邦宇宙中。",
+    "noUsername": "请选择用户名以获得联邦宇宙地址。"
+  },
+  "profileFields": {
+    "title": "个人资料字段",
+    "description": "在个人资料中最多添加四行，比如网站或你的代词。",
+    "label": "标签",
+    "content": "内容",
+    "save": "保存字段",
+    "saved": "个人资料字段已保存",
+    "failed": "保存失败，请重试。",
+    "verified": "已验证的链接",
+    "verifyHint": "要验证链接，请把这段代码添加到该页面，然后再保存一次：{{snippet}}"
+  },
+  "followedTags": {
+    "follow": "关注 #{{tag}}",
+    "following": "已关注",
+    "unfollow": "取消关注 #{{tag}}",
+    "followed": "已关注 #{{tag}}，相关帖子会出现在你的关注动态中。",
+    "unfollowed": "已取消关注 #{{tag}}",
+    "failed": "保存失败，请重试。",
+    "clear": "清除"
+  },
+  "notificationFilters": {
+    "title": "过滤以下来源的通知",
+    "description": "选择圈子以外的人与你互动时会怎样。被过滤的通知会留在“已过滤”中，不显示角标，也不推送。",
+    "notFollowing": "你没有关注的人",
+    "notFollowers": "没有关注你的人",
+    "newAccounts": "新账号（不满 30 天）",
+    "accept": "通知我",
+    "filter": "过滤",
+    "drop": "完全隐藏",
+    "filteredTitle": "已过滤的通知",
+    "filteredEmpty": "还没有被过滤的通知。",
+    "failed": "保存失败，请重试。"
+  },
+  "keywordFilters": {
+    "title": "屏蔽词",
+    "description": "隐藏包含这些词的帖子和评论，或将其折叠在提示后面。只有你能看到此列表。",
+    "placeholder": "词或短语",
+    "add": "屏蔽",
+    "added": "已屏蔽：{{phrase}}",
+    "wholeWord": "仅匹配完整词",
+    "whenMatches": "帖子匹配时",
+    "warn": "显示提示",
+    "hide": "隐藏",
+    "howLong": "时长",
+    "forever": "直到我删除",
+    "duration1h": "1 小时",
+    "duration1d": "1 天",
+    "duration7d": "7 天",
+    "duration30d": "30 天",
+    "where": "适用位置",
+    "home": "首页",
+    "public": "探索和搜索",
+    "profile": "个人主页",
+    "thread": "对话",
+    "notifications": "通知",
+    "empty": "你还没有屏蔽任何词。",
+    "remove": "取消屏蔽",
+    "until": "直到 {{date}}",
+    "filtered": "已过滤：{{phrase}}",
+    "showAnyway": "仍然显示",
+    "failed": "保存失败，请重试。"
+  },
+  "postVisibility": {
+    "label": "谁可以看到",
+    "public": "所有人",
+    "followers": "仅粉丝",
+    "direct": "仅被提及的人",
+    "noRepost": "只有公开帖子可以转发",
+    "directHint": "只有你用 @ 提及的人才能看到这条帖子",
+    "needsMention": "请至少用 @ 提及一个人，才能仅对被提及的人发布"
+  },
+  "replyPolicy": {
+    "label": "谁可以回复",
+    "public": "任何人",
+    "followers": "你的粉丝",
+    "following": "你关注的人",
+    "mentioned": "仅被提及的人",
+    "noticeFollowers": "只有作者的粉丝可以回复",
+    "noticeFollowing": "只有作者关注的人可以回复",
+    "noticeMentioned": "只有帖子中提及的人可以回复",
+    "refused": "作者限制了谁可以回复此帖子"
+  },
+  "quotePolicy": {
+    "label": "谁可以引用",
+    "public": "任何人",
+    "followers": "粉丝",
+    "nobody": "仅我自己",
+    "off": "作者已关闭引用",
+    "removed": "作者已将其帖子从此引用中移除",
+    "remove": "移除",
+    "removedToast": "你的帖子已从此引用中移除",
+    "removeFailed": "无法将你的帖子从引用中移除",
+    "refused": "作者不允许你引用此帖子"
+  },
   "contentWarning": {
     "label": "内容警告",
     "placeholder": "在此写下你的警告",
@@ -132,11 +260,12 @@
     "heading": "DeHub 短视频"
   },
   "settings": {
-    "showDislikesDesc": "任何人都可以打开你个人资料中的“踩”标签。关闭后只有你自己能看到。",
-    "showDislikes": "向所有人显示我踩过的内容",
+    "usernameTaken": "用户名已被占用",
     "postingChain": "发帖区块链",
     "showOnline": "在我上线时显示",
     "showOnlineDesc": "当您使用DeHub时，您发送消息的人会在您的姓名旁边看到一个绿点",
+    "showDislikes": "向所有人显示我踩过的内容",
+    "showDislikesDesc": "任何人都可以打开你个人资料中的“踩”标签。关闭后只有你自己能看到。",
     "smartReplies": "建议回复",
     "smartRepliesDesc": "在聊天中生成两条可以点按的回复。建议上的 × 会关闭此功能。",
     "title": "设置",
@@ -661,7 +790,6 @@
     "embed": "嵌入",
     "copyEmbedCode": "复制嵌入代码",
     "embedCodeCopied": "嵌入代码已复制",
-    "copyFailed": "无法复制链接",
     "options": "选项",
     "aiOverview": "AI概述",
     "sendTip": "发送打赏",
@@ -689,7 +817,8 @@
     "unpinPost": "取消固定您的个人资料",
     "postPinned": "已固定到您的个人资料",
     "postUnpinned": "已从您的个人资料中取消固定",
-    "pinFailed": "无法固定或取消固定此帖子"
+    "pinFailed": "无法固定或取消固定此帖子",
+    "copyFailed": "无法复制链接"
   },
   "filters": {
     "sort": "排序",
@@ -1428,7 +1557,6 @@
     "returnHome": "返回首页"
   },
   "profile": {
-    "dislikes": { "loadMore": "加载更多", "privateDesc": "此账号不公开踩过的内容。", "privateTitle": "踩过的内容是私密的", "emptyOther": "还没有踩过任何内容。", "emptyOwn": "你踩过的帖子会从你的信息流中消失并显示在这里。取消踩即可恢复该帖子。", "emptyTitle": "还没有踩过的内容" },
     "back": "返回",
     "usernameAvailable": "用户名可用！",
     "signUpToClaim": "注册以获取",
@@ -1456,8 +1584,16 @@
       "commentUnavailable": "此评论不再可用"
     },
     "tabs": {
-      "dislikes": "踩",
-      "playlists": "播放列表"
+      "playlists": "播放列表",
+      "dislikes": "踩"
+    },
+    "dislikes": {
+      "emptyTitle": "还没有踩过的内容",
+      "emptyOwn": "你踩过的帖子会从你的信息流中消失并显示在这里。取消踩即可恢复该帖子。",
+      "emptyOther": "还没有踩过任何内容。",
+      "privateTitle": "踩过的内容是私密的",
+      "privateDesc": "此账号不公开踩过的内容。",
+      "loadMore": "加载更多"
     },
     "offerWorthNow": "按当前汇率约 {{amount}} 个代币",
     "offerNotePlaceholder": "添加备注（可选）",
@@ -2317,6 +2453,7 @@
     "pendingSubmitted": "{{amount}} 个代币已提交。正在检查确认。请勿重复发送。"
   },
   "communities": {
+    "chatTab": "聊天",
     "title": "社区",
     "create": "创建",
     "searchPlaceholder": "搜索社区...",
@@ -2351,7 +2488,29 @@
     "addDescription": "添加描述...",
     "communityDescription": "社区描述...",
     "posts": "帖子",
-    "chat": "聊天",
+    "chat": {
+      "intervalHour": "1小时",
+      "intervalHours": "{{count}}小时",
+      "intervalMinute": "1分钟",
+      "intervalMinutes": "{{count}}分钟",
+      "intervalSecond": "1秒",
+      "intervalSeconds": "{{count}}秒",
+      "muted": "您已被静音",
+      "mutedUntil": "您已静音，直到{{until}}",
+      "postingDisabled": "此处已为会员禁用发布",
+      "pinnedMedia": "媒体",
+      "jumpToPinned": "跳转到固定的消息",
+      "pinnedMessage": "已固定的消息",
+      "unpin": "取消固定",
+      "pin": "PIN码",
+      "delete": "删除",
+      "slowMode": "慢速模式：每{{interval}}一条消息",
+      "slowModeWait": "慢速模式—等待{{time}}",
+      "send": "发送",
+      "deleteMessageTitle": "删除此消息？",
+      "deleteMessageBody": "此操作无法撤消。",
+      "cancel": "取消"
+    },
     "membersTab": "成员（{{count}}）",
     "about": "关于",
     "backToCommunities": "社区",
@@ -3817,6 +3976,7 @@
     "sellYourFractions": "出售你的碎片（持有 {{held}} 份）"
   },
   "creator": {
+    "libraryEmpty": "你保存的生成内容会显示在这里。",
     "whatToCreate": "创作类型",
     "startCreatingWith": "用 {{model}} 开始创作",
     "studioSubtitle": "描述一个场景、角色、氛围或风格。结果会出现在下方，并可直接带入编辑器。",
@@ -6221,7 +6381,10 @@
     "play": "播放",
     "pause": "暂停",
     "listens_one": "{{count}} 次收听",
-    "listens_other": "{{count}} 次收听"
+    "listens_other": "{{count}} 次收听",
+    "lyrics": "歌词",
+    "lyricsLoading": "正在获取歌词…",
+    "lyricsNone": "未找到歌词"
   },
   "converter": {
     "seoTitle": "转换器 — 将视频导入 DeHub",
@@ -6960,6 +7123,14 @@
     }
   },
   "editor": {
+    "video": {
+      "tFade": "交叉溶解",
+      "none": "无",
+      "transition": "转场",
+      "speed": "速度",
+      "sound": "声音",
+      "video": "视频"
+    },
     "review": {
       "title": "项目审阅",
       "shared": "与你共享",
@@ -8732,5 +8903,15 @@
     "posted": "已发布",
     "view": "查看",
     "failed": "视频无法处理"
+  },
+  "loginStack": {
+    "tip": "打赏 DHB",
+    "headlineTop": "你将拥有一切",
+    "headlineAccent": "并且很快乐。",
+    "orContinueWith": "或使用以下方式继续",
+    "phone": "手机",
+    "fingerprint": "指纹",
+    "exploreFirst": "先逛逛",
+    "codeNote": "我们会通过邮件发送验证码，无需密码。"
   }
 }

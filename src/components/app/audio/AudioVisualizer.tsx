@@ -14,7 +14,8 @@ import {
   useAudioPostPlayback,
   type AudioPostTrack,
 } from '@/lib/audio-post-playback';
-import { Minimize, PictureInPicture2, RotateCcw, RotateCw, Play as GlassPlay, Pause as GlassPause } from "lucide-react";
+import { ChevronDown, MicVocal, Minimize, PictureInPicture2, RotateCcw, RotateCw, Play as GlassPlay, Pause as GlassPause } from "lucide-react";
+import { AudioLyrics } from "./AudioLyrics";
 import Volume2 from "@/components/ui/cut-icons/volume";
 import VolumeX from "@/components/ui/cut-icons/mute";
 import Maximize from "@/components/ui/cut-icons/fullscreen";
@@ -38,6 +39,7 @@ import {
   type AudioHandoffGraph,
 } from '@/lib/audio-handoff';
 import { Slider } from '@/components/ui/slider';
+import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { useScrollFadeMask } from '@/components/app/feeds/useScrollFadeMask';
 import {
   VisualizerStyle,
@@ -143,6 +145,8 @@ interface AudioVisualizerProps {
    * whose track was paused on the post page must not show it as playing.
    */
   onPlaybackAdopted?: (playing: boolean) => void;
+  /** Open with lyrics showing (state gallery). */
+  initialShowLyrics?: boolean;
 }
 
 const STYLES: { value: AnyStyle; label: string }[] = [
@@ -158,6 +162,33 @@ const STYLES: { value: AnyStyle; label: string }[] = [
   { value: 'orb', get label() { return _translateCopy("copy.8483460e43ab", { defaultValue: "Orb" }); } },
   ...EXTRA_STYLES,
 ];
+
+/** Quick picks on the System/Glass card; everything else sits behind More. */
+const QUICK_STYLES: AnyStyle[] = ['bars', 'waveform', 'circular'];
+
+function StudioStylePicker({ style, onPick, moreLabel }: { style: AnyStyle; onPick: (s: AnyStyle) => void; moreLabel: string }) {
+  const [open, setOpen] = useState(false);
+  // The playing style always shows, taking the last quick slot when it isn't one.
+  const quick = QUICK_STYLES.includes(style) ? QUICK_STYLES : [...QUICK_STYLES.slice(0, -1), style];
+  const label = (v: AnyStyle) => STYLES.find(s => s.value === v)?.label ?? v;
+  return (
+    <div data-audio-studio-styles role="group">
+      {quick.map(v => (
+        <button key={v} type="button" data-active={v === style || undefined} aria-pressed={v === style} onClick={() => onPick(v)}>{label(v)}</button>
+      ))}
+      <Popover open={open} onOpenChange={setOpen}>
+        <PopoverTrigger asChild>
+          <button type="button" data-audio-studio-more aria-expanded={open}>{moreLabel}<ChevronDown aria-hidden /></button>
+        </PopoverTrigger>
+        <PopoverContent data-glass-menu data-audio-studio-style-menu side="top" align="start" collisionPadding={12} className="w-[min(320px,calc(100vw-24px))] p-2" onClick={e => e.stopPropagation()}>
+          {STYLES.map(s => (
+            <button key={s.value} type="button" data-active={s.value === style || undefined} aria-pressed={s.value === style} onClick={() => { onPick(s.value); setOpen(false); }}>{s.label}</button>
+          ))}
+        </PopoverContent>
+      </Popover>
+    </div>
+  );
+}
 
 /** One height for every control in the bottom row, so they line up. */
 const CONTROL_H = 'h-8';
@@ -203,6 +234,7 @@ export function AudioVisualizer({
   onPopOutChange,
   handoffKey,
   onPlaybackAdopted,
+  initialShowLyrics = false,
 }: AudioVisualizerProps) {
   const { t: _copy } = _useCopy();
   const surfaceActive = useContext(CachedPageActiveContext);
@@ -215,6 +247,8 @@ export function AudioVisualizer({
      card keeps animating off the same graph while it is on screen. */
   const shared = useAudioPostPlayback();
   const isPoppedOut = !!popoutTrack && shared.tokenId === popoutTrack.tokenId;
+  /** Lyrics over the animation; offered wherever the pop-out is (real posts). */
+  const [showLyrics, setShowLyrics] = useState(initialShowLyrics);
   const isPoppedOutRef = useRef(isPoppedOut);
   isPoppedOutRef.current = isPoppedOut;
   /** True from hand-over until the element comes back or the engine drops it. */
@@ -1017,6 +1051,7 @@ export function AudioVisualizer({
         onPointerDown={e => beginScrub(e.currentTarget, e, false)}
         onPointerMove={e => moveScrub(e.currentTarget, e)}
         onPointerUp={e => endScrub(e.currentTarget, e)} onPointerCancel={cancelScrub} />
+        {showLyrics && popoutTrack && <AudioLyrics tokenId={popoutTrack.tokenId} currentTime={currentTime} />}
         {/* Fullscreen is the animation alone: play and exit over it, the card hidden. */}
         {isFullscreen && onFullscreen && <div data-audio-studio-fs-bar>
           <button type="button" aria-label={isPlaying ? t('audioPost.pause') : t('audioPost.play')} onClick={handlePlayPause}>{isPlaying ? <GlassPause fill="currentColor" /> : <GlassPlay fill="currentColor" />}</button>
@@ -1042,7 +1077,8 @@ export function AudioVisualizer({
         </div>
       </div>
       <div data-audio-studio-options>
-          {showStylePicker && <select aria-label={t('nav.settings')} value={style} onChange={e => setStyle(e.target.value as AnyStyle)}>{STYLES.map(s => <option key={s.value} value={s.value}>{s.label}</option>)}</select>}
+          {showStylePicker && <StudioStylePicker style={style} onPick={setStyle} moreLabel={t('postStage.more')} />}
+          {popoutTrack && <button type="button" data-audio-lyrics-toggle aria-label={t('audioPost.lyrics')} aria-pressed={showLyrics} data-active={showLyrics || undefined} onClick={() => setShowLyrics(v => !v)}><MicVocal /></button>}
           {popoutTrack && <button type="button" aria-label={isPoppedOut ? t('audioPost.closeCornerPlayer') : t('audioPost.popOut')} onClick={handlePopOut}><PictureInPicture2 /></button>}
           {showVolume && <button type="button" aria-label={isEffectivelyMuted ? _copy('copy.ce4ee4efc5e3', { defaultValue: 'Unmute' }) : _copy('copy.8dd6857baf02', { defaultValue: 'Mute' })} onClick={() => { const next = !isEffectivelyMuted; if (!next && volume === 0) setVolume(.8); setSelfMuted(next); videoPlaybackManager.globalMuted = next; onMuteChange?.(next); }}><Volume2 /></button>}
           {onFullscreen && <button type="button" aria-label={isFullscreen ? _copy('copy.37fd4e355ba3', { defaultValue: 'Exit fullscreen' }) : _copy('copy.c461dbb2bab7', { defaultValue: 'Fullscreen' })} onClick={onFullscreen}><Maximize /></button>}
@@ -1067,6 +1103,8 @@ export function AudioVisualizer({
         onPointerUp={(e) => endScrub(e.currentTarget, e)}
         onPointerCancel={cancelScrub}
       />
+
+      {showLyrics && popoutTrack && <AudioLyrics tokenId={popoutTrack.tokenId} currentTime={currentTime} />}
 
       {/* Colour takes the corner; volume sits beside it. */}
       <div
@@ -1267,6 +1305,26 @@ export function AudioVisualizer({
               )}
             </>
           )}
+        {popoutTrack && (
+          <button
+            type="button"
+            data-on-media
+            data-audio-bare
+            data-audio-lyrics-toggle
+            aria-label={t('audioPost.lyrics')}
+            title={t('audioPost.lyrics')}
+            aria-pressed={showLyrics}
+            onClick={(e) => { e.stopPropagation(); setShowLyrics((v) => !v); }}
+            onPointerDown={stopBubble}
+            className={cn(
+              'pointer-events-auto shrink-0 w-8 flex items-center justify-center transition-colors',
+              CONTROL_H,
+              showLyrics ? 'opacity-100' : 'opacity-80 hover:opacity-100',
+            )}
+          >
+            <MediaControlIcon icon={MicVocal} active={showLyrics} />
+          </button>
+        )}
         {popoutTrack && (
           <button
             type="button"

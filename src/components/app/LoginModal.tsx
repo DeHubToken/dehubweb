@@ -40,6 +40,12 @@ import { createLogger } from '@/lib/logger';
 
 const flowLog = createLogger('LoginFlow');
 
+// Phone sign-in hero (three fanned clips + headline). Lazy so its CSS and
+// clips stay off the entry bundle; the option list renders without it.
+const LoginShortsStack = React.lazy(() =>
+  import('@/components/app/login/LoginShortsStack').then(m => ({ default: m.LoginShortsStack })),
+);
+
 const LoginModalBody = React.lazy(() =>
   import('@/components/app/login/LoginModalBody').then(m => ({ default: m.LoginModalBody })),
 );
@@ -213,9 +219,52 @@ export function LoginModal({ open, onOpenChange }: LoginModalProps) {
   // where that presentation is both expected and keyboard-safe.
   const usesDesktopUnlockPanel = (step === 'wallet-unlock' || step === 'wallet-secure') && !isMobile;
 
-  const sheetBody = (
+  // Phones get the full-screen "Shorts Stack" sign-in on the options step:
+  // clips up top, email first. Desktop, and adding a second profile from
+  // Settings, keep the plain sheet.
+  const stackSheet = isMobile && loginIntent !== 'add-profile';
+  const stackLayout = stackSheet && step === 'main';
+
+  const sheetBody = stackLayout ? (
     <>
-      <DrawerHeader className="px-6 pt-6 pb-4 shrink-0">
+      <DrawerHeader className="px-5 pt-[calc(0.75rem+env(safe-area-inset-top))] pb-2 shrink-0">
+        <div className="flex items-center justify-between">
+          <img src={dehubLogo} alt="DeHub" className="h-6" />
+          {!requiresUsername && (
+            <button
+              type="button"
+              onClick={handleClose}
+              className="h-10 px-4 rounded-full border border-white/15 bg-white/10 text-white text-sm font-semibold"
+            >
+              {t('loginStack.exploreFirst', 'Explore first')}
+            </button>
+          )}
+        </div>
+        <DrawerTitle className="sr-only">{titleText}</DrawerTitle>
+      </DrawerHeader>
+
+      <div className="flex-1 min-h-0 overflow-y-auto overscroll-contain px-6 pb-4">
+        <Suspense fallback={<div className="h-[350px]" aria-hidden="true" />}>
+          <LoginShortsStack />
+        </Suspense>
+        <div className="mt-5">
+          <Suspense fallback={fallback}>
+            <LoginModalBody open={open} step={step} setStep={setStep} layout="stack" />
+          </Suspense>
+        </div>
+      </div>
+
+      <div className="shrink-0 px-6 py-3 border-t border-white/10 pb-[calc(0.75rem+env(safe-area-inset-bottom))]">
+        <p className="text-xs text-white/40 text-center">{t('loginStack.codeNote', 'We email you a code, no password needed.')}{' '}{_copy("copy.b5f64aac226f", { defaultValue: "By continuing, you agree to our" })}{' '}
+          <a href="https://dehub.io/terms" target="_blank" rel="noopener noreferrer" className="underline hover:text-white/60 transition-colors">{_copy("copy.ede548996483", { defaultValue: "Terms" })}</a>
+          {_copy("copy.e3ee915a8e8c", { defaultValue: " and " })}
+          <a href="https://dehub.io/privacy" target="_blank" rel="noopener noreferrer" className="underline hover:text-white/60 transition-colors">{_copy("copy.506ff3946215", { defaultValue: "Privacy Policy" })}</a>
+        </p>
+      </div>
+    </>
+  ) : (
+    <>
+      <DrawerHeader className={stackSheet ? "px-6 pt-[calc(1.5rem+env(safe-area-inset-top))] pb-4 shrink-0" : "px-6 pt-6 pb-4 shrink-0"}>
         <div className="flex items-center justify-center relative">
           {/* No way back from 'profile' either - the account is already
               created by the time it shows. */}
@@ -292,7 +341,10 @@ export function LoginModal({ open, onOpenChange }: LoginModalProps) {
         style={keyboardStyle ?? undefined}
         hideHandle
         onEscapeKeyDown={(e) => { if (requiresUsername) e.preventDefault(); }}
-        className="bg-black/60 backdrop-blur-2xl saturate-[180%] border border-white/10 border-b-0 p-0 gap-0 rounded-t-2xl overflow-clip z-[2147483646] flex flex-col max-h-[90dvh]"
+        data-login-stack-sheet={stackSheet ? '' : undefined}
+        className={stackSheet
+          ? "bg-black/80 backdrop-blur-2xl saturate-[180%] border-0 p-0 gap-0 rounded-none overflow-clip z-[2147483646] flex flex-col mt-0 h-[100dvh] max-h-[100dvh]"
+          : "bg-black/60 backdrop-blur-2xl saturate-[180%] border border-white/10 border-b-0 p-0 gap-0 rounded-t-2xl overflow-clip z-[2147483646] flex flex-col max-h-[90dvh]"}
         overlayClassName="z-[2147483645] login-modal-overlay backdrop-blur-xl md:bg-black/40"
       >
         {sheetBody}

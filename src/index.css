@@ -6548,6 +6548,8 @@ html[data-theme="immersive"] [data-feed-filter-panel] {
 html[data-theme="light"] [data-creator-page] { --cr-accent: linear-gradient(135deg, #ffffff 0%, #e4e4e7 30%, #a1a1aa 60%, #f4f4f5 100%); }
 html[data-system-tone="light"] [data-creator-page] { --cr-accent: linear-gradient(135deg, #ffffff 0%, #e4e4e7 30%, #a1a1aa 60%, #f4f4f5 100%); }
 html[data-theme="hazy"] [data-creator-page] { --cr-accent: linear-gradient(135deg, #e879f9 0%, #a855f7 45%, #6366f1 100%); --cr-accent-ink: #ffffff; --cr-glow: rgba(168, 85, 247, 0.7); }
+/* Locked DM thread: the unlock badge picks up the haze. */
+html[data-theme="hazy"] [data-dm-locked-badge] { background: linear-gradient(135deg, #a855f7 0%, #6366f1 100%) !important; color: #fff !important; box-shadow: 0 0 26px rgba(168, 85, 247, 0.45) !important; }
 html[data-theme="cosmic"] [data-creator-page] { --cr-accent: linear-gradient(135deg, #93c5fd 0%, #6366f1 50%, #a855f7 100%); --cr-accent-ink: #ffffff; --cr-glow: rgba(99, 102, 241, 0.65); }
 html[data-theme="swarms"] [data-creator-page] { --cr-accent: linear-gradient(135deg, #fde68a 0%, #f59e0b 55%, #d97706 100%); --cr-accent-ink: #1c1003; --cr-glow: rgba(245, 158, 11, 0.6); }
 html[data-theme="lavalamp"] [data-creator-page] { --cr-accent: linear-gradient(135deg, #ffb347 0%, #ff7a1a 45%, #ff3d5a 100%); --cr-accent-ink: #2a0604; --cr-glow: rgba(255, 100, 40, 0.7); }

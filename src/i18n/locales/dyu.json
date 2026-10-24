@@ -1,4 +1,132 @@
 {
+  "mastodonApps": {
+    "authTitle": "Don ni DeHub ye",
+    "authWants": "{{app}} b'a fɛ ka i ka DeHub jatebila baara",
+    "authSignedInAs": "I donna ko {{name}}",
+    "authSignIn": "Don walasa ka taa ɲɛ",
+    "allow": "A to",
+    "cancel": "A dabila",
+    "scopeRead": "Ka i ka waati sira, i ka post, i ka kunnafoni ani i ka taamasiyɛn lajɛ",
+    "scopeWrite": "Ka post kɛ, ka jaabi, ka diya, ka a jɛnsɛn ani ka taamasiyɛn kɛ i tɔgɔ la",
+    "scopeFollow": "Ka jatebilaw tugu, ka u tugu dabila, ka u bilasira datugu ani ka u makun",
+    "scopePush": "Ka kunnafoniw ci i ma",
+    "scopeProfile": "Ka i ka profil lajɛ",
+    "invalid": "Nin donni sira tɛ tilennen ye. Segin apli la ka a lajɛ tugun.",
+    "failed": "A ma se. A lajɛ tugun.",
+    "codeTitle": "Nin kode kopi apli kɔnɔ walasa ka donni ban.",
+    "copy": "A kopi",
+    "copied": "A kopila",
+    "seoDescription": "A to Mastodon apli ka i ka DeHub jatebila baara.",
+    "redirecting": "An bɛ i segin {{app}} la…",
+    "connectedTitle": "Apli minnu sirilen don",
+    "connectedDescription": "Mastodon apli minnu i donna u la ni nin jatebila ye. Kelen bɔ walasa ka bɔ a la.",
+    "connectedEmpty": "Apli si ma siri fɔlɔ.",
+    "lastUsed": "Laban baarakɛ {{date}}",
+    "remove": "A bɔ",
+    "removed": "Apli bɔra"
+  },
+  "fediverse": {
+    "title": "Fediverse",
+    "description": "Mɔgɔ minnu bɛ Mastodon ni fediverse apli wɛrɛw kan, olu bɛ se ka i sɔrɔ ka i tugu nin adiresi la. I ka post foroba kuraw bɛ se u ma yen.",
+    "copy": "A kopi",
+    "copied": "A kopila",
+    "privateNote": "Jatebila gundolaw tɛ jira fediverse kan.",
+    "noUsername": "Baarakɛlaw tɔgɔ dɔ sugandi walasa ka fediverse adiresi sɔrɔ."
+  },
+  "profileFields": {
+    "title": "Porofili yɔrɔw",
+    "description": "Sira naani fo ka fara i ka porofili kan, i n'a fɔ siti walima i ka tɔgɔnɔnaw.",
+    "label": "Tɔgɔ",
+    "content": "Kɔnɔkow",
+    "save": "Yɔrɔw mara",
+    "saved": "Porofili yɔrɔw marala",
+    "failed": "A ma mara. A lajɛ tugun.",
+    "verified": "Siri lajɛlen",
+    "verifyHint": "Ka siri lajɛ, nin fara o siti kan, o kɔ a mara tugun: {{snippet}}"
+  },
+  "followedTags": {
+    "follow": "#{{tag}} tugu",
+    "following": "I b'a tugu",
+    "unfollow": "#{{tag}} tugu dabila",
+    "followed": "I bɛ #{{tag}} tugu sisan. A ka postw bɛna bɔ i ka tugulikɛ kɔnɔ.",
+    "unfollowed": "I ye #{{tag}} tugu dabila",
+    "failed": "A ma mara. A lajɛ tugun.",
+    "clear": "A jɔsi"
+  },
+  "notificationFilters": {
+    "title": "Kunnafoniw sɛgɛsɛgɛ ka bɔ",
+    "description": "A sugandi min bɛ kɛ ni mɔgɔ dɔ min tɛ i ka mɔgɔw cɛ ye ka baara kɛ i fɛ. Kunnafoni sɛgɛsɛgɛlenw bɛ makɔnɔ \"Sɛgɛsɛgɛlenw\" kɔnɔ, taamasiyɛn ni pusi tɛ.",
+    "notFollowing": "Mɔgɔ minnu tɛ i ka tugubaga ye",
+    "notFollowers": "Mɔgɔ minnu tɛ i tugu",
+    "newAccounts": "Jatebila kuraw (tile 30 kɔnɔ)",
+    "accept": "A fɔ n ye",
+    "filter": "A sɛgɛsɛgɛ",
+    "drop": "A dogo pewu",
+    "filteredTitle": "Kunnafoni sɛgɛsɛgɛlenw",
+    "filteredEmpty": "Foyi ma sɛgɛsɛgɛ.",
+    "failed": "A ma mara. A lajɛ tugun."
+  },
+  "keywordFilters": {
+    "title": "Kuma minnu dagbɛlen",
+    "description": "I ka post ni jaabi minnu bɛ nin kumaw kɔnɔ dogo, walima k'u biri lasɔmini kɔfɛ. E dɔrɔn de bɛ nin lisi ye.",
+    "placeholder": "Kuma walima kumasen",
+    "add": "A dagbɛ",
+    "added": "A dagbɛra: {{phrase}}",
+    "wholeWord": "Kuma dafalen dɔrɔn",
+    "whenMatches": "Ni post dɔ bɛ bɛn",
+    "warn": "Lasɔmini jira",
+    "hide": "A dogo",
+    "howLong": "Waati joli",
+    "forever": "Fo ne k'a bɔ",
+    "duration1h": "Lɛrɛ 1",
+    "duration1d": "Tile 1",
+    "duration7d": "Tile 7",
+    "duration30d": "Tile 30",
+    "where": "Min",
+    "home": "So",
+    "public": "Ɲinini ni yɔrɔw lajɛ",
+    "profile": "Porofili",
+    "thread": "Baro",
+    "notifications": "Kunnafoniw",
+    "empty": "I ma kuma si dagbɛ.",
+    "remove": "A dagbɛli bɔ",
+    "until": "Fo {{date}}",
+    "filtered": "A sɛgɛsɛgɛra: {{phrase}}",
+    "showAnyway": "A jira hali bi",
+    "failed": "A ma mara. A lajɛ tugun."
+  },
+  "postVisibility": {
+    "label": "Jɔn bɛ se ka nin ye",
+    "public": "Bɛɛ",
+    "followers": "Tugubagaw dɔrɔn",
+    "direct": "Mɔgɔ tɔgɔ fɔlenw dɔrɔn",
+    "noRepost": "Post foroba dɔrɔn de bɛ se ka lase tugun",
+    "directHint": "I bɛ mɔgɔ minnu tɔgɔ fɔ ni @ ye, olu dɔrɔn de bɛ nin post ye",
+    "needsMention": "Mɔgɔ kelen tɔgɔ fɔ ni @ ye walasa ka post ci mɔgɔ tɔgɔ fɔlenw dɔrɔn ma"
+  },
+  "replyPolicy": {
+    "label": "Jɔn bɛ se ka jaabi di",
+    "public": "Mɔgɔ bɛɛ",
+    "followers": "I ka tugubagaw",
+    "following": "I bɛ minnu tugu",
+    "mentioned": "Tɔgɔ fɔlenw dɔrɔn",
+    "noticeFollowers": "Sɛbɛnbaga ka tugubagaw dɔrɔn de bɛ se ka jaabi di",
+    "noticeFollowing": "Sɛbɛnbaga bɛ minnu tugu, olu dɔrɔn de bɛ se ka jaabi di",
+    "noticeMentioned": "Post kɔnɔ tɔgɔ fɔlenw dɔrɔn de bɛ se ka jaabi di",
+    "refused": "Sɛbɛnbaga ye jaabidilaw dan nin post la"
+  },
+  "quotePolicy": {
+    "label": "Jɔn bɛ se ka kuma fɔ ka bɔ a la",
+    "public": "Mɔgɔ bɛɛ",
+    "followers": "Tugubagaw",
+    "nobody": "Ne dɔrɔn",
+    "off": "Sɛbɛnbaga ye kuma bɔli datugu",
+    "removed": "Sɛbɛnbaga y'a ka post bɔ nin kuma bɔli la",
+    "remove": "A bɔ",
+    "removedToast": "I ka post bɔra nin kuma bɔli la",
+    "removeFailed": "A ma se ka i ka post bɔ kuma bɔli la",
+    "refused": "Sɛbɛnbaga t'a to i ka kuma bɔ nin post la"
+  },
   "contentWarning": {
     "label": "Kɔnɔkow lasɔmini",
     "placeholder": "I ka lasɔmini sɛbɛn yan",
@@ -132,6 +260,7 @@
     "heading": "DeHub Video surunw"
   },
   "settings": {
+    "usernameTaken": "Tɔgɔ tara ka ban",
     "postingChain": "Blokisɛn min bɛ kɛ postiw la",
     "showOnline": "N'i be n' ka site web kan, i ka n' ka site web yira",
     "showOnlineDesc": "Mɔgɔ minw be kuma, olu be yɔrɔ dɔ ye i tɔgɔ gɛrɛfɛ n'i be DeHub ta",
@@ -646,7 +775,6 @@
     "embed": "Don kɔnɔ",
     "copyEmbedCode": "Don-kɔnɔ kode kopi",
     "embedCodeCopied": "Don-kɔnɔ kode kopira",
-    "copyFailed": "A ma se ka lien kopi",
     "options": "Kɔrɔbɔ",
     "aiOverview": "A filɛ, a ye min fɔ",
     "sendTip": "Kɔrɔbɔ",
@@ -674,7 +802,8 @@
     "unpinPost": "Ka bɔ i ka sɛbɛ kɔnɔ",
     "postPinned": "I ka kunnafoniw lajɛ",
     "postUnpinned": "Ka bɔ i ka sɛbɛ kɔnɔ",
-    "pinFailed": "Ne tɛ se ka n yɛrɛ tanga o ma"
+    "pinFailed": "Ne tɛ se ka n yɛrɛ tanga o ma",
+    "copyFailed": "A ma se ka lien kopi"
   },
   "filters": {
     "sort": "Kɔrɔbɔ",
@@ -2267,6 +2396,7 @@
     "pendingSubmitted": "{{amount}}tokens submitted. Confirmation be to ka sɛgɛsɛgɛ. N'i ma siran, o be yɛlɛma ka kɛ ten."
   },
   "communities": {
+    "chatTab": "Baro",
     "title": "Communities",
     "create": "Dilan",
     "searchPlaceholder": "Jɛkuluw ɲini...",
@@ -2301,7 +2431,28 @@
     "addDescription": "Add a description...",
     "communityDescription": "Jɛkulu ɲɛfɔli...",
     "posts": "Posts",
-    "chat": "Baro",
+    "chat": {
+      "intervalHour": "Dɔɔni: lɛri kelen.",
+      "intervalHours": "{{count}} hours",
+      "intervalMinute": "Dakun fɔlɔ",
+      "intervalMinutes": "{{count}} min",
+      "intervalSecond": "Dɔɔni fɔlɔ",
+      "intervalSeconds": "{{count}} segɔn",
+      "muted": "I be to ka to ka kuma",
+      "postingDisabled": "O kama, an ka ɲi k'an seko bɛɛ kɛ ka mɔgɔw dɛmɛ u ka se ka Jehova bato.",
+      "pinnedGif": "GIF ka koo",
+      "pinnedMedia": "Kunnafonidilaw",
+      "jumpToPinned": "Aw ye taga a fɔ a ye ko a ka na ni a ye.",
+      "pinnedMessage": "O ye kumajugu ye",
+      "unpin": "O ye kooba ye.",
+      "pin": "O ye pikiri ye",
+      "delete": "A tun banna",
+      "slowModeWait": "Slo mode — fɔlɔ {{time}}",
+      "send": "I ka kan ka min fɔ",
+      "deleteMessageTitle": "Yala i be se k'o kumaw bɛɛ bɔ yen wa?",
+      "deleteMessageBody": "O tɛ se ka ban.",
+      "cancel": "Kanali"
+    },
     "membersTab": "Tɔndenw ({{count}})",
     "about": "A kan",
     "backToCommunities": "Communities",
@@ -3701,6 +3852,7 @@
     "needsYouHold": "Need {{needed}}, you hold {{held}}"
   },
   "creator": {
+    "libraryEmpty": "I ka dilanni maralenw bɛna bɔ yan.",
     "whatToCreate": "Nka, an ka ɲi ka mun lo kɛ do?",
     "startCreatingWith": "Add {{model}}",
     "studioSubtitle": "I ka koo, i ka jogo, i ka miiriya wala i ka kokɛcogo ɲɛfɔ. A be sɔrɔ duguma ani a be taga ni a ye sɛbɛbaga fɛ.",
@@ -6013,7 +6165,10 @@
     "creator": "Danbaga",
     "play": "A be to ka to ka to",
     "pause": "N' ye n' ka baara dabila",
-    "listens_other": "{{count}} listens"
+    "listens_other": "{{count}} listens",
+    "lyrics": "Dɔnkili kumaw",
+    "lyricsLoading": "Dɔnkili kumaw bɛ ɲinina…",
+    "lyricsNone": "Dɔnkili kuma si ma sɔrɔ"
   },
   "converter": {
     "seoTitle": "Converter — video la DeHub la sɛbɛn",
@@ -6518,6 +6673,7 @@
     "seoDescription": "Documentation officielle de DeHub : présentation de la plateforme, dApps, économie du token o ye koo ɲuman ye., staking, jeux, feuille de route, FAQ et plus encore."
   },
   "dex": {
+    "title": "tokens / USD",
     "seoTitle": "Dddd — Trade o ye koo ɲuman ye. at your price",
     "seoDescription": "I ka o ye koo ɲuman ye. san walima ka feere ni Uniswap v4 hakɛ dɔ ye min be sɔrɔ BNB ka jɔrɔkɔ kan. O la, an bena a ye ko an ye wari min sɔrɔ, o ye wari min ye, o ye wari min ye.",
     "venue": "Network",
@@ -6729,6 +6885,14 @@
     }
   },
   "editor": {
+    "video": {
+      "tFade": "Ɲɔgɔn kɔnɔ tɛmɛ",
+      "none": "Foyi",
+      "transition": "Tɛmɛni",
+      "speed": "Teliya",
+      "sound": "Mankan",
+      "video": "Video"
+    },
     "review": {
       "title": "Porozɛ lajɛ",
       "shared": "I fɛ tila",

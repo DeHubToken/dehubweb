@@ -86,6 +86,14 @@ export interface UnifiedFeedItem {
   mediaDescriptions?: string[];
   /** Content warning: the post opens collapsed behind this one line. */
   spoilerText?: string;
+  /** Who may quote it; absent means anyone. */
+  quotePolicy?: 'public' | 'followers' | 'nobody';
+  /** A quote whose quoted author took their post back out of it. */
+  quoteRevoked?: boolean;
+  /** Who may reply; absent means anyone. */
+  replyPolicy?: 'public' | 'followers' | 'following' | 'mentioned';
+  /** Who may see it; absent means everyone. */
+  visibility?: 'public' | 'followers' | 'direct';
   /** Published for children — see the field on BaseFeedItem. */
   forKids?: boolean;
   /** Signed-in viewers only — read totalViews via resolveViewCount instead. */
@@ -328,6 +336,10 @@ function mapVideoItem(item: UnifiedFeedItem, index: number): VideoItem {
     contentRating: item.contentRating,
     mediaDescriptions: item.mediaDescriptions,
     spoilerText: item.spoilerText,
+    quotePolicy: item.quotePolicy,
+    visibility: item.visibility,
+    quoteRevoked: item.quoteRevoked,
+    replyPolicy: item.replyPolicy,
     forKids: item.forKids,
     isLivePost: item.postType === 'live',
     liveStatus: item.stream?.status,
@@ -422,6 +434,10 @@ function mapImagePost(item: UnifiedFeedItem, index: number): ImagePost {
     contentRating: item.contentRating,
     mediaDescriptions: item.mediaDescriptions,
     spoilerText: item.spoilerText,
+    quotePolicy: item.quotePolicy,
+    visibility: item.visibility,
+    quoteRevoked: item.quoteRevoked,
+    replyPolicy: item.replyPolicy,
     forKids: item.forKids,
     isQuotePost: !!(item as any).isQuotePost,
     quotedPost: (item as any).quotedPost || null,
@@ -489,6 +505,10 @@ function mapTextPost(item: UnifiedFeedItem, index: number): TextPost {
     contentRating: item.contentRating,
     mediaDescriptions: item.mediaDescriptions,
     spoilerText: item.spoilerText,
+    quotePolicy: item.quotePolicy,
+    visibility: item.visibility,
+    quoteRevoked: item.quoteRevoked,
+    replyPolicy: item.replyPolicy,
     forKids: item.forKids,
     communityAlertPending: (item as any).communityAlertStatus === 'pending',
     isLocked: item.streamInfo?.isLockContent ?? false,

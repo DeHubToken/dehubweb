@@ -36,6 +36,10 @@ interface RepostShareSheetProps {
   onRepost: () => void;
   onUndoRepost: () => void;
   onQuote: () => void;
+  /** False when the author lets nobody else quote this post: the tile stays, disabled, saying so. */
+  canQuote?: boolean;
+  /** False for a followers-only or direct post: neither tile works, and both say why. */
+  canRepost?: boolean;
   shareUrl: string;
   shareTitle?: string;
   onCopyLink: () => void;
@@ -81,6 +85,8 @@ export function RepostShareSheet({
   onRepost,
   onUndoRepost,
   onQuote,
+  canQuote = true,
+  canRepost = true,
   shareUrl,
   shareTitle,
   onCopyLink,
@@ -147,7 +153,8 @@ export function RepostShareSheet({
     { key: 'x', label: 'X', icon: <XGlyph />, onClick: () => openExternal(`https://x.com/intent/post?url=${encoded}&text=${text}`, 'x') },
     { key: 'telegram', label: 'Telegram', icon: <Send className="h-[18px] w-[18px]" />, onClick: () => openExternal(`https://t.me/share/url?url=${encoded}&text=${text}`, 'telegram') },
     { key: 'whatsapp', label: _copy("copy.6a40edf1fc87", { defaultValue: "WhatsApp" }), icon: <MessageCircle className="h-[18px] w-[18px]" />, onClick: () => openExternal(`https://wa.me/?text=${text}${text ? '%20' : ''}${encoded}`, 'whatsapp') },
-    ...(tokenId && /^\d+$/.test(tokenId)
+    // An embed is a public page, so a followers-only or direct post has none.
+    ...(canRepost && tokenId && /^\d+$/.test(tokenId)
       ? [{ key: 'embed', label: t('postOptions.embed'), icon: <Code className="h-[18px] w-[18px]" />, onClick: () => { copyPostEmbedCode(tokenId, t); onOpenChange(false); } }]
       : []),
     { key: 'more', label: t('postStage.more', 'More'), icon: <MoreHorizontal className="h-[18px] w-[18px]" />, onClick: () => { void nativeShare(); } },
@@ -176,6 +183,8 @@ export function RepostShareSheet({
             type="button"
             data-stage-sheet-tile={isReposted ? 'undo' : 'repost'}
             onClick={isReposted ? onUndoRepost : onRepost}
+            disabled={!isReposted && !canRepost}
+            aria-disabled={!isReposted && !canRepost}
             className="flex flex-col items-start gap-0.5 rounded-xl px-3.5 py-3 text-left"
           >
             <span className="flex items-center gap-2 text-[15px] font-bold">
@@ -183,20 +192,24 @@ export function RepostShareSheet({
               {isReposted ? t('postStage.undoRepost', 'Undo repost') : t('postStage.repost', 'Repost')}
             </span>
             <span data-stage-muted className="text-xs">
-              {isReposted ? t('postStage.undoRepostHint', 'Take it off your profile') : t('postStage.repostHint', 'Instantly, to your followers')}
+              {isReposted
+                ? t('postStage.undoRepostHint', 'Take it off your profile')
+                : canRepost ? t('postStage.repostHint', 'Instantly, to your followers') : t('postVisibility.noRepost')}
             </span>
           </button>
           <button
             type="button"
             data-stage-sheet-tile="quote"
             onClick={onQuote}
+            disabled={!canQuote}
+            aria-disabled={!canQuote}
             className="flex flex-col items-start gap-0.5 rounded-xl px-3.5 py-3 text-left"
           >
             <span className="flex items-center gap-2 text-[15px] font-bold">
               <Quote className="h-5 w-5" />
               {t('postStage.quote', 'Quote')}
             </span>
-            <span data-stage-muted className="text-xs">{t('postStage.quoteHint', 'Add your own words')}</span>
+            <span data-stage-muted className="text-xs">{canQuote ? t('postStage.quoteHint', 'Add your own words') : canRepost ? t('quotePolicy.off') : t('postVisibility.noRepost')}</span>
           </button>
         </div>
 

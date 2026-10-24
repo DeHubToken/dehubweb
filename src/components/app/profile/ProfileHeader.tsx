@@ -19,6 +19,7 @@ import { VerifiedBadge } from '@/components/app/VerifiedBadge';
 import { TranslatableText, hasTranslatableText } from '@/components/app/TranslatableText';
 import { BioTranslateButton } from '@/components/app/profile/BioTranslateButton';
 import { ProfileLinksPill } from '@/components/app/profile/ProfileSocialLinks';
+import { ProfileFieldsList } from '@/components/app/profile/ProfileFieldsList';
 import { TotalReachPill } from '@/components/app/profile/TotalReachPill';
 import { MutualFollowers } from '@/components/app/profile/MutualFollowers';
 import { StreamerLevelCard } from '@/components/app/live/StreamerLevelCard';
@@ -419,6 +420,8 @@ export function ProfileHeader({
           {profile.bio && (
             <TranslatableText publicContent text={translatedBio || profile.bio} className="mt-3 text-white/90 text-base leading-6 block" as="p" />
           )}
+
+          <ProfileFieldsList fields={profile.profileFields} />
 
           {/* Pinned Communities */}
           {profile.walletAddress && (
