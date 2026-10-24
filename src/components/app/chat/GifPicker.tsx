@@ -65,6 +65,7 @@ export function GifPicker({ onGifSelect }: GifPickerProps) {
           <div className="relative">
             <Search className="absolute left-2 top-1/2 -translate-y-1/2 w-4 h-4 text-zinc-500" />
             <Input
+              type="search"
               placeholder={_copy("copy.301a3ea004c8", { defaultValue: "Search GIFs..." })}
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
