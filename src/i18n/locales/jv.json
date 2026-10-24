@@ -2803,6 +2803,9 @@
       "wallTitle": "Apa sing dikandhakake wong",
       "wallNote": "diterbitake kanthi ijin",
       "anonymous": "Anggota DeHub"
+    },
+    "taxSplit": {
+      "grossFootnote": "Sèluré total ingkang wonten ing atas kalebu BNB dipiyagi lan dipiyagi déning pemegang lan panyimpen. Pungutan-pungutan iku wis dipasrahaken, ora dipunggahaken déning DeHub. Pembelian balik tetep urip. Sèluré lan mata uang asli bisa dipanggil ing buku akun."
     }
   },
   "superpowers": {
@@ -2940,7 +2943,8 @@
     },
     "buyTokensToUnlockBadge": "Sapa wae sing duwe badge bakal entuk SuperPowers. Tuku token DeHub kanggo mbukak kunci badge — staking ora perlu.",
     "buyTokensToUnlock": "Tuku token DeHub kanggo mbukak kunci badge lan SuperPowers. Sapa wae sing duwe badge bakal entuk — staking ora perlu.",
-    "goldenHourStarted": "Golden Hour mlaku {{minutes}} menit — kabeh sing kok-post saiki dianggep tikel"
+    "goldenHourStarted": "Golden Hour mlaku {{minutes}} menit — kabeh sing kok-post saiki dianggep tikel",
+    "signalFlareTo": "Sinyal Flare kanggo {{people}} wong"
   },
   "work": {
     "integrity": {

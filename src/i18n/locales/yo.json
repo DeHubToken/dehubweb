@@ -2807,6 +2807,9 @@
       "wallTitle": "Ohun ti awọn eniyan sọ",
       "wallNote": "ti fi iwe ẹkọ silẹ pẹlu iwe ẹkọ",
       "anonymous": "Ọmọ DeHub kan"
+    },
+    "taxSplit": {
+      "grossFootnote": "Gbogbo owó tó wà lókè yìí ní í ṣe pẹ̀lú BnB tí a pín pẹ̀lú àwọn tó ní àti àwọn tó ń ṣe bàtà. Àwọn owó yìí ni wọ́n pín, tí DeHub kò fi pamọ́. Buybacks dúró yàtọ. Gbogbo iye àti owó ìpilẹ̀ṣẹ̀ ni a lè ṣe àyẹ̀wò rẹ̀ nínú ìwé-ìwé."
     }
   },
   "superpowers": {
@@ -2944,7 +2947,8 @@
     },
     "buyTokensToUnlockBadge": "Gbogbo eniti o ni aṣẹ-aṣẹ gba SuperPowers. Ra awọn àmi-ìṣẹ́ DeHub lati ṣii aṣẹ-aṣẹ kan — staking ko nilo.",
     "buyTokensToUnlock": "Ra awọn àmi-ìṣẹ́ DeHub lati ṣii aṣẹ-aṣẹ kan ati SuperPowers rẹ. Gbogbo eniti o ni aṣẹ-aṣẹ gba wọn — staking ko nilo.",
-    "goldenHourStarted": "Golden Hour ń ṣiṣẹ́ fún ìṣẹ́jú {{minutes}} — ohun gbogbo tí o bá kọ̀wé báyì yóò wá ní ẹ̀ẹ́ méjì"
+    "goldenHourStarted": "Golden Hour ń ṣiṣẹ́ fún ìṣẹ́jú {{minutes}} — ohun gbogbo tí o bá kọ̀wé báyì yóò wá ní ẹ̀ẹ́ méjì",
+    "signalFlareTo": "Àmì Flare sí {{people}} àwọn ènìyàn"
   },
   "work": {
     "integrity": {

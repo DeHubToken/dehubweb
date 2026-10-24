@@ -2762,6 +2762,9 @@
       "wallTitle": "Što ljudi kažu",
       "wallNote": "objavljeno sa dozvolom",
       "anonymous": "Član DeHuba"
+    },
+    "taxSplit": {
+      "grossFootnote": "Ukupni prihod iznad uključuje BNB podijeljen s vlasnicima i dioničarima. Ta su plaćanja distribuirana, a ne zadržana od strane DeHub-a. Otkupnine ostaju odvojene. Svaki iznos i izvorna valuta mogu se pregledati u glavnoj knjizi."
     }
   },
   "superpowers": {
@@ -2899,7 +2902,8 @@
     },
     "buyTokensToUnlockBadge": "Svaki vlasnik značke dobiva SuperMoći. Kupite DeHub tokene za otključavanje značke — nije potrebno ulaganje.",
     "buyTokensToUnlock": "Kupite DeHub tokene za otključavanje značke i njezinih SuperMoći. Svaki vlasnik značke ih dobiva — nije potrebno ulaganje.",
-    "goldenHourStarted": "Zlatni sat traje {{minutes}} minuta — sve što sada objavite broji se dvostruko"
+    "goldenHourStarted": "Zlatni sat traje {{minutes}} minuta — sve što sada objavite broji se dvostruko",
+    "signalFlareTo": "Signalna baklja za osobe {{people}}"
   },
   "work": {
     "integrity": {

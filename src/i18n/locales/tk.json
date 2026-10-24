@@ -2795,6 +2795,9 @@
       "wallTitle": "Adamlar näme diýýärler",
       "wallNote": "6. rugsat bilen çap edilýär",
       "anonymous": "DeHub üýşümi"
+    },
+    "taxSplit": {
+      "grossFootnote": "Göreli gelirde BNB-yň halderler weýa stakerlerge bölünüp berilýän bolumlar dýaldy. Bu öýünler DeHubda saklanmady, yalnyz satýn alýýalar baýsýna kelýer. Barchy raqam weýa baþlangyç para birligi ledgerde tekserile biler."
     }
   },
   "superpowers": {
@@ -2932,7 +2935,8 @@
     },
     "buyTokensToUnlockBadge": "Her haýsy nyşan eýesi SuperPowers alýar. Nyşany açmak üçin DeHub sanly wagt satyn alyň — goýum gerek däl.",
     "buyTokensToUnlock": "Nyşany we onuň SuperPowers-ini açmak üçin DeHub sanly wagt satyn alyň. Her haýsy nyşan eýesi olary alýar — goýum gerek däl.",
-    "goldenHourStarted": "Altyn sagat {{minutes}} minut dowam edýär — indi goýýan her zadyňyz iki esse artar"
+    "goldenHourStarted": "Altyn sagat {{minutes}} minut dowam edýär — indi goýýan her zadyňyz iki esse artar",
+    "signalFlareTo": "Sinyal Flare to {{people}} people"
   },
   "work": {
     "integrity": {

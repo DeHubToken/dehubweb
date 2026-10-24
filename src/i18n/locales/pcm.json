@@ -2609,6 +2609,9 @@
       "sending": "Sending…",
       "thanks": "Got it — thanks. Anyfin you clear for promo use, dey go pass through a person first before dey show up anywhere.",
       "anonymous": "A DeHub member"
+    },
+    "taxSplit": {
+      "grossFootnote": "Revenue wey dey top dey include BNB wey dey share wit holders and stakers. Dis payments dey distributed, no be say dem dey retain am by DeHub. Buybacks dey separate. Every amount and original currency dey inspect for ledger."
     }
   },
   "superpowers": {

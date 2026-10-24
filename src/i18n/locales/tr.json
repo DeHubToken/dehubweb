@@ -3606,7 +3606,8 @@
       "sharedDetail": "{{wallets}} cüzdandan {{claims}} talep",
       "open": "{{part}} için her satırı gör",
       "see": "Her satırı gör",
-      "footnote": "Yukarıda yalnızca elde tutulan işletme fonları gelir sayılır. Geri alımlar ve paylaşılan ödüller ayrı kaydedilir. Her tutar ve orijinal para birimi defterde incelenebilir."
+      "footnote": "Yukarıda yalnızca elde tutulan işletme fonları gelir sayılır. Geri alımlar ve paylaşılan ödüller ayrı kaydedilir. Her tutar ve orijinal para birimi defterde incelenebilir.",
+      "grossFootnote": "Yukarıdaki gelir toplamı, sahipler ve paydaşlarla paylaşılan BNB'yi içerir. Bu ödemeler dağıtıldı, DeHub tarafından alıkonulmadı. Geri alımlar ayrı kalır. Her tutar ve orijinal para birimi defterde incelenebilir."
     },
     "taxLedger": {
       "title": "Token vergisi defteri",
@@ -3753,7 +3754,8 @@
     "buyTokensToUnlock": "Bir rozetin ve Süper Güçlerinin kilidini açmak için DeHub jetonları satın alın. Herhangi bir rozet sahibi bunları kazanır — stake etmeye gerek yok.",
     "currentIntro": "Rozet sahipleri iki haftada bir yeni güçlendirme alır. Team up herkese açıktır: cüzdan gücünüzü yedi kişiye kadar başkalarıyla birleştirin, toplamınızın açtığı rozeti her üye alsın.",
     "currentPowersHeading": "On iki güç",
-    "goldenHourStarted": "Altın Saat {{minutes}} dakika sürüyor — şimdi paylaştığınız her şey iki katı değerinde"
+    "goldenHourStarted": "Altın Saat {{minutes}} dakika sürüyor — şimdi paylaştığınız her şey iki katı değerinde",
+    "signalFlareTo": "{{people}} kişiye İşaret Fişeği"
   },
   "work": {
     "integrity": {

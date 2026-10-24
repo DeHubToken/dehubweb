@@ -2826,6 +2826,9 @@
       "wallTitle": "מה אנשים אומרים",
       "wallNote": "פורסם בהסכמה",
       "anonymous": "חבר ב-DeHub"
+    },
+    "taxSplit": {
+      "grossFootnote": "סך ההכנסות לעיל כולל BNB משותף עם מחזיקי וסטייקרים. תשלומים אלה חולקו, לא נשמרו על ידי DeHub. הרכישות נשארות נפרדות. ניתן לבדוק כל סכום ומטבע מקורי בספר החשבונות."
     }
   },
   "superpowers": {
@@ -2963,7 +2966,8 @@
     },
     "buyTokensToUnlockBadge": "כל בעל תג מקבל כוחות-על. קנה אסימוני DeHub כדי לפתוח תג — אין צורך בהפקדה (סטייקינג).",
     "buyTokensToUnlock": "קנה אסימוני DeHub כדי לפתוח תג וכוחות-העל שלו. כל בעל תג מקבל אותם — אין צורך בהפקדה (סטייקינג).",
-    "goldenHourStarted": "Golden Hour רץ במשך {{minutes}} דקות — כל מה שתפרסם עכשיו נחשב כפול"
+    "goldenHourStarted": "Golden Hour רץ במשך {{minutes}} דקות — כל מה שתפרסם עכשיו נחשב כפול",
+    "signalFlareTo": "התלקחות אותות אל {{people}} אנשים"
   },
   "work": {
     "integrity": {

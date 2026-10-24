@@ -2828,6 +2828,9 @@
       "wallTitle": "사람들의 의견",
       "wallNote": "허가를 받아 게시됨",
       "anonymous": "DeHub 회원"
+    },
+    "taxSplit": {
+      "grossFootnote": "상기 총 수익에는 보유자 및 스테이커와 공유하는 BNB가 포함됩니다. 이러한 지불은 DeHub가 보유하지 않고 분배되었습니다. 환매는 별도로 유지됩니다. 모든 금액과 원래 통화는 원장에서 검사할 수 있습니다."
     }
   },
   "superpowers": {
@@ -2965,7 +2968,8 @@
     },
     "buyTokensToUnlockBadge": "뱃지 소지자는 슈퍼파워를 얻습니다. 뱃지를 잠금 해제하려면 DeHub 토큰을 구매하세요. 스테이킹은 필요하지 않습니다.",
     "buyTokensToUnlock": "뱃지와 슈퍼파워를 잠금 해제하려면 DeHub 토큰을 구매하세요. 뱃지 소지자는 누구나 얻을 수 있습니다. 스테이킹은 필요하지 않습니다.",
-    "goldenHourStarted": "골든 아워 {{minutes}}분 동안 진행 중 — 지금 게시하는 모든 내용은 두 배로 계산됩니다."
+    "goldenHourStarted": "골든 아워 {{minutes}}분 동안 진행 중 — 지금 게시하는 모든 내용은 두 배로 계산됩니다.",
+    "signalFlareTo": "{{people}} 명에게 신호 플레어"
   },
   "work": {
     "integrity": {
