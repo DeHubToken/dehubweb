@@ -41,7 +41,7 @@ import { useDraft } from '@/hooks/use-draft';
 import { buildAvatarUrl, buildAvatarCdnFallbackUrl } from '@/lib/media-url';
 import { useNavigate } from 'react-router-dom';
 import { cn } from '@/lib/utils';
-import { TranslatableText, SharedTranslationProvider } from '../TranslatableText';
+import { RoomChatText } from './RoomChatText';
 
 import { QUICK_CHAT_REACTIONS } from './reaction-options';
 import { MoreReactionsButton } from './MoreReactionsButton';
@@ -313,7 +313,7 @@ export function RealtimeChatPanel({
         )}
       </div>
 
-      <SharedTranslationProvider>
+      <>
         <div className="relative">
           <div
             ref={scrollRef}
@@ -411,7 +411,7 @@ export function RealtimeChatPanel({
                             </button>
                           </div>
                         ) : (
-                          <TranslatableText text={msg.content} className="text-xs text-zinc-300 break-words" as="p" auto="chat" />
+                          <RoomChatText key={msg.id} text={msg.content} />
                         )}
                         {msg.reactions && Object.keys(msg.reactions).length > 0 && (
                           <ChatReactions
@@ -521,7 +521,7 @@ export function RealtimeChatPanel({
               <ArrowDown className="w-3.5 h-3.5" />{_copy("copy.867524581f01", { defaultValue: "Jump to latest" })}</button>
           )}
         </div>
-      </SharedTranslationProvider>
+      </>
 
       {/* Reply preview */}
       {replyTo && (
