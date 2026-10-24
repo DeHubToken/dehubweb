@@ -2085,8 +2085,6 @@
     "anonymousLikes_other": "{{count}} patīk no anonīmiem nozīmīšu īpašniekiem"
   },
   "postInfo": {
-    "unavailable": "Nav pieejams",
-    "ownersUnavailable": "Pašreizējie īpašnieki nav lasāmi šajā brīdī.",
     "title": "Ieraksta informācija",
     "tokenId": "Žetona ID",
     "mintedOn": "Izveidots",
@@ -2098,6 +2096,8 @@
     "total": "Kopā {{count}}",
     "distribution": "Sadalījums",
     "loading": "Ielādē...",
+    "unavailable": "Nav pieejams",
+    "ownersUnavailable": "Pašreizējie īpašnieki nav lasāmi šajā brīdī.",
     "owner": "{{count}} īpašnieks",
     "owner_other": "{{count}} īpašnieki",
     "engagement": "Iesaiste",
@@ -2714,6 +2714,9 @@
       "wallTitle": "Ko saka cilvēki",
       "wallNote": "publicēts ar atļauju",
       "anonymous": "DeHub biedrs"
+    },
+    "taxSplit": {
+      "grossFootnote": "Iespējamie ienākumi, kas parādīti virsā, iekļauj BNB, ko dalīts ar vācējiem un stājējiem. Šie apmaksas tika izplatīti, nevis saglabāti DeHub. Atpirkumi paliek atsevišķi. Viss, kas saistīts ar summām un oriģinālo valūtu, var tiek redzēts ledgērī."
     }
   },
   "superpowers": {
@@ -2851,6 +2854,7 @@
     },
     "buyTokensToUnlockBadge": "Jebkurš emblēmas turētājs saņem SuperPowers. Pērciet DeHub žetonus, lai atbloķētu emblēmu — likšana nav nepieciešama.",
     "buyTokensToUnlock": "Pērciet DeHub žetonus, lai atbloķētu emblēmu un tās SuperPowers. Jebkurš emblēmas turētājs tos saņem — likšana nav nepieciešama.",
+    "signalFlareTo": "Signāla uzliesmojums {{people}} cilvēkiem",
     "goldenHourStarted": "Zelta stunda norit {{minutes}} minūtes — viss, ko tagad publicē, skaitās dubultā"
   },
   "work": {
@@ -5610,8 +5614,6 @@
     "notEnoughTokensForBounty": "Nepietiek žetonu. Nepieciešami {{need}} žetoni, bet ir {{have}}."
   },
   "events": {
-    "deleteConfirmTitle": "Dzēst šo pasākumu?",
-    "deleteConfirmBody": "Tādējādi pasākums, tā viesu saraksts un tērzēšana tiek noņemta visiem. To nevar atsaukt.",
     "seoTitle": "Pasākumi — tikšanās un kopienas pasākumi DeHub",
     "seoDescription": "Apskatiet gaidāmos DeHub kopienas pasākumus, atzīmējiet dalību tikšanās reizēs un rīkojiet savus pasākumus decentralizētajā, lietotāju pārvaldītajā sociālajā platformā.",
     "defaultSeoDescription": "Kopienas pasākums DeHub.",
@@ -5677,6 +5679,8 @@
     "requestAccessForChat": "Pieprasīt piekļuvi, lai skatītu tērzētavu un atbildētu uz ielūgumu",
     "edit": "Rediģēt",
     "delete": "Dzēst",
+    "deleteConfirmTitle": "Dzēst šo pasākumu?",
+    "deleteConfirmBody": "Tādējādi pasākums, tā viesu saraksts un tērzēšana tiek noņemta visiem. To nevar atsaukt.",
     "reply": "Atbildēt",
     "react": "Reaģēt",
     "typeMessage": "Rakstiet ziņojumu...",

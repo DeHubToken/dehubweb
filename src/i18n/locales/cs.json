@@ -2108,8 +2108,6 @@
     "anonymousLikes_other": "{{count}} lajků od anonymních držitelů odznaků"
   },
   "postInfo": {
-    "unavailable": "Nedostupné",
-    "ownersUnavailable": "Aktuální vlastníci se zatím nedají přečíst.",
     "title": "Informace o příspěvku",
     "tokenId": "ID tokenu",
     "mintedOn": "Vytvořeno",
@@ -2121,6 +2119,8 @@
     "total": "Celkem {{count}}",
     "distribution": "Distribuce",
     "loading": "Načítání...",
+    "unavailable": "Nedostupné",
+    "ownersUnavailable": "Aktuální vlastníci se zatím nedají přečíst.",
     "owner": "{{count}} vlastník",
     "owner_other": "{{count}} vlastníků",
     "engagement": "Zapojení",
@@ -2687,6 +2687,9 @@
       "wallTitle": "Co si lidé myslí",
       "wallNote": "zveřejněno se svolením",
       "anonymous": "Člen DeHub"
+    },
+    "taxSplit": {
+      "grossFootnote": "Výše uvedený celkový příjem zahrnuje BNB sdílené s držiteli a stokery. Tyto platby byly distribuovány, nikoli zadrženy společností DeHub. Zpětné odkupy zůstávají oddělené. Každá částka a původní měna mohou být zkontrolovány v hlavní knize."
     }
   },
   "superpowers": {
@@ -2824,6 +2827,7 @@
     },
     "buyTokensToUnlockBadge": "Každý držitel odznaku získá SuperSchopnosti. Kupte si tokeny DeHub a odemkněte si odznak — sázení není vyžadováno.",
     "buyTokensToUnlock": "Kupte si tokeny DeHub a odemkněte si odznak a jeho SuperSchopnosti. Každý držitel odznaku je získá — sázení není vyžadováno.",
+    "signalFlareTo": "Signalizujte vzplanutí {{people}} lidí",
     "goldenHourStarted": "Golden Hour běží {{minutes}} minut — vše, co nyní zveřejníte, se počítá dvakrát"
   },
   "work": {
@@ -5581,8 +5585,6 @@
     "notEnoughTokensForBounty": "Nedostatek tokenů. Potřebujete {{need}} tokenů, ale máte {{have}}."
   },
   "events": {
-    "deleteConfirmTitle": "Smazat tuto událost?",
-    "deleteConfirmBody": "Tím se odstraní událost, seznam hostů a chat pro všechny. Nelze ji vrátit zpět.",
     "seoTitle": "Události — Setkání a komunitní akce na DeHub",
     "seoDescription": "Procházejte nadcházející komunitní akce DeHub, RSVP na setkání a pořádejte své vlastní akce na decentralizované, uživatelem vlastněné sociální platformě.",
     "defaultSeoDescription": "Komunitní akce na DeHub.",
@@ -5648,6 +5650,8 @@
     "requestAccessForChat": "Požádat o přístup k zobrazení chatu a RSVP",
     "edit": "Upravit",
     "delete": "Smazat",
+    "deleteConfirmTitle": "Smazat tuto událost?",
+    "deleteConfirmBody": "Tím se odstraní událost, seznam hostů a chat pro všechny. Nelze ji vrátit zpět.",
     "reply": "Odpovědět",
     "react": "Reagovat",
     "typeMessage": "Napište zprávu...",

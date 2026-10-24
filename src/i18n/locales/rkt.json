@@ -2173,8 +2173,6 @@
     "anonymousLikes_other": "অনামী ব্যাজধারীগুলার থাকি {{count}}টা লাইক"
   },
   "postInfo": {
-    "ownersUnavailable": "এলা মালিকগুলার তথ্য পড়া যাওছে না।",
-    "unavailable": "পাওয়া যায় না",
     "title": "পোস্ট তথ্য",
     "tokenId": "টোকেন ID",
     "mintedOn": "তৈরি হইছে",
@@ -2186,6 +2184,8 @@
     "total": "মোট {{count}}",
     "distribution": "Distribution",
     "loading": "লোড হইতেছে...",
+    "unavailable": "পাওয়া যায় না",
+    "ownersUnavailable": "এলা মালিকগুলার তথ্য পড়া যাওছে না।",
     "owner": "{{count}} মালিক",
     "owner_other": "{{count}} মালিক",
     "engagement": "যোগদান",
@@ -2780,6 +2780,9 @@
       "wallTitle": "মানুষ কি বলে",
       "wallNote": "অনুমতি সহ প্রকাশিত",
       "anonymous": "একজন DeHub সদস্য"
+    },
+    "taxSplit": {
+      "grossFootnote": "আয় মোটের উপরে রয়েছে BNB মালিক এবং স্টেকারদের ভাগ করা। এই পরিশোধ ছিল, না ধারণ করা হয়েছিল DeHub। বাকি আছে আলাদা। প্রতিটি পরিমাণ এবং মূল মুদ্রা লেজারে দেখা যাবে।"
     }
   },
   "superpowers": {
@@ -5196,8 +5199,6 @@
     "notEnoughTokensForBounty": "টোকেন পৰ্যাপ্ত নাই। {{need}} টোকেন লাগে, কিন্তু মেৰে {{have}} টোকেন আছে।"
   },
   "events": {
-    "deleteConfirmTitle": "এই ইভেন্টটা মুছি দিবেন?",
-    "deleteConfirmBody": "এইটা ইভেন্টটিকে, এর গেস্ট লিস্ট আর সবার চ্যাটটিকে মুছে ফেলে। এটা ফিরিয়ে আনা যাবে না।",
     "seoTitle": "DeHub-এ Events — Meetups & Community Events",
     "seoDescription": "DeHub-এ আগামী Community Events ब्राउজ कर, Meetups-এ RSVP कर, আর নিজे Events host कर— decentralized, user-owned social platform-এ।",
     "defaultSeoDescription": "DeHub-এ Community event.",
@@ -5263,6 +5264,8 @@
     "requestAccessForChat": "চ্যাট দেখার জন্য অ্যাক্সেস চাই ও \"RSVP\"",
     "edit": "এডিট",
     "delete": "ডিলিট",
+    "deleteConfirmTitle": "এই ইভেন্টটা মুছি দিবেন?",
+    "deleteConfirmBody": "এইটা ইভেন্টটিকে, এর গেস্ট লিস্ট আর সবার চ্যাটটিকে মুছে ফেলে। এটা ফিরিয়ে আনা যাবে না।",
     "reply": "রিপ্লাই",
     "react": "রিঅ্যাক্ট",
     "typeMessage": "একটা মেসেজ টাইপ করুন...",

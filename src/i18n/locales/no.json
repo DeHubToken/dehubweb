@@ -2112,8 +2112,6 @@
     "anonymousLikes_other": "{{count}} likerklikk fra anonyme merkeinnehavere"
   },
   "postInfo": {
-    "unavailable": "Utilgjengelig",
-    "ownersUnavailable": "De nåværende eierne kan ikke leses akkurat nå.",
     "title": "Innleggsinformasjon",
     "tokenId": "Token-ID",
     "mintedOn": "Opprettet",
@@ -2125,6 +2123,8 @@
     "total": "Totalt {{count}}",
     "distribution": "Fordeling",
     "loading": "Laster...",
+    "unavailable": "Utilgjengelig",
+    "ownersUnavailable": "De nåværende eierne kan ikke leses akkurat nå.",
     "owner": "{{count}} eier",
     "owner_other": "{{count}} eiere",
     "engagement": "Engasjement",
@@ -2741,6 +2741,9 @@
       "wallTitle": "Hva folk sier",
       "wallNote": "publisert med tillatelse",
       "anonymous": "Et DeHub-medlem"
+    },
+    "taxSplit": {
+      "grossFootnote": "Den totale inntekten ovenfor inkluderer BNB delt med innehavere og stakere. Disse betalingene ble distribuert, ikke beholdt av DeHub. Tilbakekjøp forblir separate. Hvert beløp og opprinnelig valuta kan inspiseres i hovedboken."
     }
   },
   "superpowers": {
@@ -2878,6 +2881,7 @@
     },
     "buyTokensToUnlockBadge": "Alle badge-innehavere får SuperPowers. Kjøp DeHub-tokens for å låse opp et badge — staking er ikke nødvendig.",
     "buyTokensToUnlock": "Kjøp DeHub-tokens for å låse opp et badge og dets SuperPowers. Alle badge-innehavere får dem — staking er ikke nødvendig.",
+    "signalFlareTo": "Signalflamme til {{people}} personer",
     "goldenHourStarted": "Golden Hour kjører i {{minutes}} minutter — alt du poster teller nå dobbelt"
   },
   "work": {
@@ -5630,8 +5634,6 @@
     "notEnoughTokensForBounty": "Ikke nok tokens. Trenger {{need}} tokens, men har {{have}}."
   },
   "events": {
-    "deleteConfirmTitle": "Slette denne hendelsen?",
-    "deleteConfirmBody": "Dette fjerner arrangementet, gjestelisten og chatten for alle. Det kan ikke angres.",
     "seoTitle": "Hendelser – Møter & Samfunnshendelser på DeHub",
     "seoDescription": "Gjennomgå kommende DeHub-samfunnshendelser, meld deg på møter og arrangér dine egne hendelser på den de sentraliserte, bruker-eide sosiale plattformen.",
     "defaultSeoDescription": "Samfunnshendelse på DeHub.",
@@ -5697,6 +5699,8 @@
     "requestAccessForChat": "Be om tilgang for å se chatten og RSVP",
     "edit": "Redigere",
     "delete": "Slett",
+    "deleteConfirmTitle": "Slette denne hendelsen?",
+    "deleteConfirmBody": "Dette fjerner arrangementet, gjestelisten og chatten for alle. Det kan ikke angres.",
     "reply": "Svar",
     "react": "Reagere",
     "typeMessage": "Skriv en melding...",

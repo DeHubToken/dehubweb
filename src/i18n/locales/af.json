@@ -2135,8 +2135,6 @@
     "anonymousLikes_other": "{{count}} laaiks van anonieme badgehouers"
   },
   "postInfo": {
-    "unavailable": "Onbeskikbaar",
-    "ownersUnavailable": "Die huidige eienaars kan nie nou gelees word nie.",
     "title": "Post Info",
     "tokenId": "Token ID",
     "mintedOn": "Minted On",
@@ -2148,6 +2146,8 @@
     "total": "{{count}} total",
     "distribution": "Distribution",
     "loading": "Loading...",
+    "unavailable": "Onbeskikbaar",
+    "ownersUnavailable": "Die huidige eienaars kan nie nou gelees word nie.",
     "owner": "{{count}} owner",
     "owner_other": "{{count}} owners",
     "engagement": "Engagement",
@@ -2763,6 +2763,9 @@
       "wallTitle": "Wat mense sê",
       "wallNote": "gepubliseer met toestemming",
       "anonymous": "'n DeHub-lid"
+    },
+    "taxSplit": {
+      "grossFootnote": "Die inkomste totaal hierbo sluit BNB gedeel met houers en stakers. Hierdie betalings is versprei, nie deur DeHub behou nie. Terugkoop bly afsonderlik. Elke bedrag en oorspronklike geldeenheid kan in die grootboek geïnspekteer word."
     }
   },
   "superpowers": {
@@ -2900,6 +2903,7 @@
     },
     "buyTokensToUnlockBadge": "Enige badge-houer kry SuperPowers. Koop DeHub tokens om 'n badge te ontsluit — staking is nie nodig nie.",
     "buyTokensToUnlock": "Koop DeHub tokens om 'n badge en sy SuperPowers te ontsluit. Enige badge-houer kry dit — staking is nie nodig nie.",
+    "signalFlareTo": "Signaal opvlam na {{people}} mense",
     "goldenHourStarted": "Golden Hour vir {{minutes}} minute — alles wat jy nou plaas tel dubbel"
   },
   "work": {
@@ -5666,8 +5670,6 @@
     "notEnoughTokensForBounty": "Nie genoeg tokens nie. Benodig {{need}} tokens maar het {{have}}."
   },
   "events": {
-    "deleteConfirmTitle": "Skrap hierdie okkasie?",
-    "deleteConfirmBody": "Dit verwyder die geleentheid, sy gaste lys en sy chat vir almal. Dit kan nie ongedaan gemaak word nie.",
     "seoTitle": "Gebeurtenisse — Byeenkomste & Gemeenskapsevenementen op DeHub",
     "seoDescription": "Blaai deur komende DeHub-gemeenskapsevenementen, RSVP tot byeenkomste en gasheer jou eie gebeurtenisse op die desentraliseerde, gebruiker-eiendom sosiale platform.",
     "defaultSeoDescription": "Gemeenskapsevenement op DeHub.",
@@ -5733,6 +5735,8 @@
     "requestAccessForChat": "Versoek toegang om die klets en RSVP te sien",
     "edit": "Redigeer",
     "delete": "Wis",
+    "deleteConfirmTitle": "Skrap hierdie okkasie?",
+    "deleteConfirmBody": "Dit verwyder die geleentheid, sy gaste lys en sy chat vir almal. Dit kan nie ongedaan gemaak word nie.",
     "reply": "Antwoord",
     "react": "Reageer",
     "typeMessage": "Tik 'n boodskap...",

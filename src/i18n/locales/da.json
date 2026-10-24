@@ -2116,8 +2116,6 @@
     "anonymousLikes_other": "{{count}} likes fra anonyme badgeholdere"
   },
   "postInfo": {
-    "unavailable": "Ikke tilgængelig",
-    "ownersUnavailable": "De nuværende ejere kan ikke læses lige nu.",
     "title": "Opslags-info",
     "tokenId": "Token-ID",
     "mintedOn": "Oprettet den",
@@ -2129,6 +2127,8 @@
     "total": "Total {{count}}",
     "distribution": "Fordeling",
     "loading": "Indlæser...",
+    "unavailable": "Ikke tilgængelig",
+    "ownersUnavailable": "De nuværende ejere kan ikke læses lige nu.",
     "owner": "{{count}} ejer",
     "owner_other": "{{count}} ejere",
     "engagement": "Engagement",
@@ -2745,6 +2745,9 @@
       "wallTitle": "Hvad folk siger",
       "wallNote": "udgivet med tilladelse",
       "anonymous": "Et DeHub-medlem"
+    },
+    "taxSplit": {
+      "grossFootnote": "Omsætningen ovenfor omfatter BNB delt med indehavere og stakers. Disse betalinger blev fordelt, ikke tilbageholdt af DeHub. Tilbagekøb forbliver separate. Hvert beløb og original valuta kan inspiceres i hovedbogen."
     }
   },
   "superpowers": {
@@ -2882,6 +2885,7 @@
     },
     "buyTokensToUnlockBadge": "Enhver badge-indehaver får SuperPowers. Køb DeHub tokens for at låse op for en badge — staking er ikke påkrævet.",
     "buyTokensToUnlock": "Køb DeHub tokens for at låse op for en badge og dens SuperPowers. Enhver badge-indehaver får dem — staking er ikke påkrævet.",
+    "signalFlareTo": "Signaludbrud til {{people}} personer",
     "goldenHourStarted": "Golden Hour kører i {{minutes}} minutter — alt, hvad du poster nu, tæller dobbelt"
   },
   "work": {
@@ -5626,8 +5630,6 @@
     "notEnoughTokensForBounty": "Ikke nok tokens. Behøver {{need}} tokens, men har {{have}}."
   },
   "events": {
-    "deleteConfirmTitle": "Vil du slette denne begivenhed?",
-    "deleteConfirmBody": "Dette fjerner begivenheden, dens gæsteliste og dens chat for alle. Det kan ikke fortrydes.",
     "seoTitle": "Events — Meetups & Community Events på DeHub",
     "seoDescription": "Gennemse kommende DeHub-fællesskabsbegivenheder, RSVP til meetups og host dine egne begivenheder på den decentraliserede, brugerejede sociale platform.",
     "defaultSeoDescription": "Fællesskabsbegivenhed på DeHub.",
@@ -5693,6 +5695,8 @@
     "requestAccessForChat": "Anmod om adgang til at se chatten og RSVP",
     "edit": "Rediger",
     "delete": "Slet",
+    "deleteConfirmTitle": "Vil du slette denne begivenhed?",
+    "deleteConfirmBody": "Dette fjerner begivenheden, dens gæsteliste og dens chat for alle. Det kan ikke fortrydes.",
     "reply": "Svar",
     "react": "Reagér",
     "typeMessage": "Skriv en besked...",

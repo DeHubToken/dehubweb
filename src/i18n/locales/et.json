@@ -2101,8 +2101,6 @@
     "anonymousLikes_other": "{{count}} meeldimist anonüümsetelt märgiomanikelt"
   },
   "postInfo": {
-    "unavailable": "Pole saadaval",
-    "ownersUnavailable": "Praeguseid omanikke ei saa praegu lugeda.",
     "title": "Postituse info",
     "tokenId": "Tokeni ID",
     "mintedOn": "Loodud",
@@ -2114,6 +2112,8 @@
     "total": "Kokku {{count}}",
     "distribution": "Jaotus",
     "loading": "Laadimine...",
+    "unavailable": "Pole saadaval",
+    "ownersUnavailable": "Praeguseid omanikke ei saa praegu lugeda.",
     "owner": "{{count}} omanik",
     "owner_other": "{{count}} omanikku",
     "engagement": "Kaasatus",
@@ -2716,6 +2716,9 @@
       "wallTitle": "Mida inimesed ütlevad",
       "wallNote": "avaldatud loal",
       "anonymous": "DeHubi liige"
+    },
+    "taxSplit": {
+      "grossFootnote": "Ülaltoodud tulu kogusumma sisaldab BNB-d, mida jagatakse omanike ja virnastajatega. DeHub jaotas need maksed, kuid ei pidanud neid kinni. Tagasiostud jäävad eraldi. Iga summat ja algset valuutat saab pearaamatus kontrollida."
     }
   },
   "superpowers": {
@@ -2853,6 +2856,7 @@
     },
     "buyTokensToUnlockBadge": "Iga märgi omanik saab SuperVõimeid. Ostke DeHub märke, et avada märk — panustamine pole vajalik.",
     "buyTokensToUnlock": "Ostke DeHub märke, et avada märk ja selle SuperVõimed. Iga märgi omanik saab need — panustamine pole vajalik.",
+    "signalFlareTo": "Signaalrakett {{people}} inimesele",
     "goldenHourStarted": "Kuldne tund kestab {{minutes}} minutit – kõik, mida praegu postitate, loendatakse kahekordselt"
   },
   "work": {
@@ -5617,8 +5621,6 @@
     "notEnoughTokensForBounty": "Märke pole piisavalt. Vajalik {{need}} märk, kuid teil on {{have}}."
   },
   "events": {
-    "deleteConfirmTitle": "Kas kustutada see sündmus?",
-    "deleteConfirmBody": "See eemaldab sündmuse, selle külaliste nimekirja ja vestluse kõigi jaoks. Seda ei saa tagasi võtta.",
     "seoTitle": "Sündmused — DeHubi kogukonnaüritused ja kohtumised",
     "seoDescription": "Sirvige DeHubi tulevasi kogukonnaüritusi, registreeruge kohtumistele ja korraldage oma üritusi detsentraliseeritud, kasutajate omandatud sotsiaalplatvormil.",
     "defaultSeoDescription": "Kogukonnaüritus DeHubis.",
@@ -5684,6 +5686,8 @@
     "requestAccessForChat": "Taotlege juurdepääsu vestluse vaatamiseks ja RSVP saatmiseks",
     "edit": "Muuda",
     "delete": "Kustuta",
+    "deleteConfirmTitle": "Kas kustutada see sündmus?",
+    "deleteConfirmBody": "See eemaldab sündmuse, selle külaliste nimekirja ja vestluse kõigi jaoks. Seda ei saa tagasi võtta.",
     "reply": "Vasta",
     "react": "Reageeri",
     "typeMessage": "Kirjuta sõnum...",

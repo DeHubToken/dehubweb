@@ -2129,8 +2129,6 @@
     "anonymousLikes_other": "{{count}} Likes vo anonyme Badge-Inhaber"
   },
   "postInfo": {
-    "unavailable": "Nöd verfüegbar",
-    "ownersUnavailable": "Di aktuelle Bsitzer chönd grad nöd glääse wärde.",
     "title": "Biitragsinformation",
     "tokenId": "Token-ID",
     "mintedOn": "Erstellt am",
@@ -2142,6 +2140,8 @@
     "total": "Total {{count}}",
     "distribution": "Verteilig",
     "loading": "Ladet...",
+    "unavailable": "Nöd verfüegbar",
+    "ownersUnavailable": "Di aktuelle Bsitzer chönd grad nöd glääse wärde.",
     "owner": "{{count}} Besitzer",
     "owner_other": "{{count}} Besitzer",
     "engagement": "Engagement",
@@ -2758,6 +2758,9 @@
       "wallTitle": "Was Lüt säge",
       "wallNote": "veröffentlicht mit Erlaubnis",
       "anonymous": "E DeHub-Mitglid"
+    },
+    "taxSplit": {
+      "grossFootnote": "De Revenue totali obi drin gschäbe BNB, d’ an d’ Holder und d’ Staker ausbezahlt wärde. D’se Zahlungen wärde verteilt, net behalte von DeHub. Buybacks bliebe separat. Jeder Betrag und d’ Ursprungswährung kann im Ledger kontrolliert werde."
     }
   },
   "superpowers": {
@@ -2895,6 +2898,7 @@
     },
     "buyTokensToUnlockBadge": "Jeder Badge-Inhaber erhält Superkräfte. Kaufen Sie DeHub-Tokens, um einen Badge freizuschalten – Staking ist nicht erforderlich.",
     "buyTokensToUnlock": "Kaufen Sie DeHub-Tokens, um einen Badge und seine Superkräfte freizuschalten. Jeder Badge-Inhaber erhält sie – Staking ist nicht erforderlich.",
+    "signalFlareTo": "Signal Flare an {{people}} Leut",
     "goldenHourStarted": "Golden Hour lauft für {{minutes}} Minute — alles, wo du jetzt postisch, zählt dopplet"
   },
   "work": {
@@ -5616,8 +5620,6 @@
     "notEnoughTokensForBounty": "Nicht genügend Tokens. Benötigt {{need}} Tokens, hat aber {{have}}."
   },
   "events": {
-    "deleteConfirmTitle": "Dä Aalass lösche?",
-    "deleteConfirmBody": "Das löscht dä Aalass, sini Gäschteliischte und sin Chat für alli. Das cha nöd rückgängig gmacht wärde.",
     "seoTitle": "Ereignisse — Meetups & Gemeindschaftsereignisse auf DeHub",
     "seoDescription": "Bliid die naachkommende DeHub-Gemeenschdafts-Events durch, meld dich für Meetups an oder hoste deine eigne Events auf der dezentralisierte, nutzer-eigene Social-Plattform.",
     "defaultSeoDescription": "Gemeinschaftsereignis auf DeHub.",
@@ -5682,6 +5684,8 @@
     "requestAccessForChat": "Stelle eine Anfrage für Zugang, um den Chat zu sehen und dich anzumelden",
     "edit": "Bearbeiten",
     "delete": "Löschen",
+    "deleteConfirmTitle": "Dä Aalass lösche?",
+    "deleteConfirmBody": "Das löscht dä Aalass, sini Gäschteliischte und sin Chat für alli. Das cha nöd rückgängig gmacht wärde.",
     "reply": "Antworten",
     "react": "Reagieren",
     "typeMessage": "Schreib eine Nachricht...",

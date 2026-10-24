@@ -2117,8 +2117,6 @@
     "anonymousLikes_other": "익명 배지 보유자의 좋아요 {{count}}개"
   },
   "postInfo": {
-    "unavailable": "사용 불가",
-    "ownersUnavailable": "현재 소유자를 읽을 수 없습니다.",
     "title": "게시물 정보",
     "tokenId": "토큰 ID",
     "mintedOn": "발행일",
@@ -2130,6 +2128,8 @@
     "total": "총 {{count}}개",
     "distribution": "배분",
     "loading": "로딩 중...",
+    "unavailable": "사용 불가",
+    "ownersUnavailable": "현재 소유자를 읽을 수 없습니다.",
     "owner": "{{count}}명 소유자",
     "owner_other": "{{count}}명 소유자",
     "engagement": "참여도",
@@ -2743,6 +2743,9 @@
       "wallTitle": "사람들의 의견",
       "wallNote": "허가를 받아 게시됨",
       "anonymous": "DeHub 회원"
+    },
+    "taxSplit": {
+      "grossFootnote": "상기 총 수익에는 보유자 및 스테이커와 공유하는 BNB가 포함됩니다. 이러한 지불은 DeHub가 보유하지 않고 분배되었습니다. 환매는 별도로 유지됩니다. 모든 금액과 원래 통화는 원장에서 검사할 수 있습니다."
     }
   },
   "superpowers": {
@@ -2880,6 +2883,7 @@
     },
     "buyTokensToUnlockBadge": "뱃지 소지자는 슈퍼파워를 얻습니다. 뱃지를 잠금 해제하려면 DeHub 토큰을 구매하세요. 스테이킹은 필요하지 않습니다.",
     "buyTokensToUnlock": "뱃지와 슈퍼파워를 잠금 해제하려면 DeHub 토큰을 구매하세요. 뱃지 소지자는 누구나 얻을 수 있습니다. 스테이킹은 필요하지 않습니다.",
+    "signalFlareTo": "{{people}} 명에게 신호 플레어",
     "goldenHourStarted": "골든 아워 {{minutes}}분 동안 진행 중 — 지금 게시하는 모든 내용은 두 배로 계산됩니다."
   },
   "work": {
@@ -5642,8 +5646,6 @@
     "notEnoughTokensForBounty": "토큰이 부족합니다. {{need}} 토큰이 필요하지만 {{have}} 개만 있습니다."
   },
   "events": {
-    "deleteConfirmTitle": "이 이벤트를 삭제하시겠습니까?",
-    "deleteConfirmBody": "이렇게 하면 이벤트, 게스트 목록 및 모든 사람을 위한 채팅이 삭제됩니다. 되돌릴 수 없습니다.",
     "seoTitle": "이벤트 — DeHub의 밋업 및 커뮤니티 이벤트",
     "seoDescription": "DeHub 커뮤니티 이벤트를 둘러보고, 밋업에 참석 신청하고, 분산형 사용자 소유 소셜 플랫폼에서 자신의 이벤트를 호스팅하세요.",
     "defaultSeoDescription": "DeHub의 커뮤니티 이벤트입니다.",
@@ -5709,6 +5711,8 @@
     "requestAccessForChat": "채팅을 보고 RSVP하려면 액세스를 요청하세요",
     "edit": "편집",
     "delete": "삭제",
+    "deleteConfirmTitle": "이 이벤트를 삭제하시겠습니까?",
+    "deleteConfirmBody": "이렇게 하면 이벤트, 게스트 목록 및 모든 사람을 위한 채팅이 삭제됩니다. 되돌릴 수 없습니다.",
     "reply": "답장",
     "react": "반응",
     "typeMessage": "메시지를 입력하세요...",

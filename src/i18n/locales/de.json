@@ -2164,8 +2164,6 @@
     "anonymousLikes_other": "{{count}} Likes von anonymen Badge-Inhabern"
   },
   "postInfo": {
-    "unavailable": "Nicht verfügbar",
-    "ownersUnavailable": "Die aktuellen Eigentümer können im Moment nicht gelesen werden.",
     "title": "Beitragsinfo",
     "tokenId": "Token-ID",
     "mintedOn": "Geprägt am",
@@ -2177,6 +2175,8 @@
     "total": "{{count}} gesamt",
     "distribution": "Verteilung",
     "loading": "Laden...",
+    "unavailable": "Nicht verfügbar",
+    "ownersUnavailable": "Die aktuellen Eigentümer können im Moment nicht gelesen werden.",
     "owner": "{{count}} Besitzer",
     "owner_other": "{{count}} Besitzer",
     "engagement": "Interaktion",
@@ -2793,6 +2793,9 @@
       "wallTitle": "Was Leute sagen",
       "wallNote": "veröffentlicht mit Genehmigung",
       "anonymous": "Ein DeHub-Mitglied"
+    },
+    "taxSplit": {
+      "grossFootnote": "Die oben genannte Umsatzsumme enthält BNB, die mit Inhabern und Stakern geteilt werden. Diese Zahlungen wurden verteilt, nicht von DeHub einbehalten. Rückkäufe bleiben getrennt. Jeder Betrag und jede Originalwährung können im Hauptbuch eingesehen werden."
     }
   },
   "superpowers": {
@@ -2930,6 +2933,7 @@
     },
     "buyTokensToUnlockBadge": "Jeder Badge-Inhaber erhält Superkräfte. Kaufen Sie DeHub-Token, um eine Badge freizuschalten – Staking ist nicht erforderlich.",
     "buyTokensToUnlock": "Kaufen Sie DeHub-Token, um eine Badge und ihre Superkräfte freizuschalten. Jeder Badge-Inhaber erhält sie – Staking ist nicht erforderlich.",
+    "signalFlareTo": "Signalfackel an {{people}} Personen",
     "goldenHourStarted": "Golden Hour läuft für {{minutes}} Minuten – alles, was du jetzt postest, zählt doppelt"
   },
   "work": {
@@ -5691,8 +5695,6 @@
     "notEnoughTokensForBounty": "Nicht genügend Token. Benötigt {{need}} Token, hat aber {{have}}."
   },
   "events": {
-    "deleteConfirmTitle": "Dieses Ereignis löschen?",
-    "deleteConfirmBody": "Dadurch werden das Ereignis, seine Gästeliste und sein Chat für alle entfernt. Es kann nicht rückgängig gemacht werden.",
     "seoTitle": "Events — Meetups & Community Events auf DeHub",
     "seoDescription": "Durchsuchen Sie bevorstehende DeHub-Community-Events, melden Sie sich zu Meetups an und veranstalten Sie Ihre eigenen Events auf der dezentralisierten, benutzergesteuerten Social-Media-Plattform.",
     "defaultSeoDescription": "Community-Event auf DeHub.",
@@ -5758,6 +5760,8 @@
     "requestAccessForChat": "Fordern Sie Zugriff an, um den Chat anzusehen und RSVP zu erhalten",
     "edit": "Bearbeiten",
     "delete": "Löschen",
+    "deleteConfirmTitle": "Dieses Ereignis löschen?",
+    "deleteConfirmBody": "Dadurch werden das Ereignis, seine Gästeliste und sein Chat für alle entfernt. Es kann nicht rückgängig gemacht werden.",
     "reply": "Antworten",
     "react": "Reagieren",
     "typeMessage": "Geben Sie eine Nachricht ein...",

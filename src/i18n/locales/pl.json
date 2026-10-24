@@ -2116,8 +2116,6 @@
     "anonymousLikes_other": "Polubienia od anonimowych posiadaczy odznak: {{count}}"
   },
   "postInfo": {
-    "unavailable": "Niedostępne",
-    "ownersUnavailable": "Obecnych właścicieli nie można teraz odczytać.",
     "title": "Informacje o poście",
     "tokenId": "Token ID",
     "mintedOn": "Wytworzony",
@@ -2129,6 +2127,8 @@
     "total": "{{count}} łącznie",
     "distribution": "Dystrybucja",
     "loading": "Ładowanie...",
+    "unavailable": "Niedostępne",
+    "ownersUnavailable": "Obecnych właścicieli nie można teraz odczytać.",
     "owner": "{{count}} właściciel",
     "owner_other": "{{count}} właścicieli",
     "engagement": "Zaangażowanie",
@@ -2745,6 +2745,9 @@
       "wallTitle": "Co mówią ludzie",
       "wallNote": "opublikowane za zgodą",
       "anonymous": "Członek DeHub"
+    },
+    "taxSplit": {
+      "grossFootnote": "Powyższa suma przychodów obejmuje BNB dzielone z posiadaczami i inwestorami. Płatności te zostały rozdzielone, a nie zatrzymane przez DeHub. Wykupy pozostają oddzielne. Każdą kwotę i oryginalną walutę można sprawdzić w księdze."
     }
   },
   "superpowers": {
@@ -2882,6 +2885,7 @@
     },
     "buyTokensToUnlockBadge": "Każdy posiadacz odznaki otrzymuje SuperMoce. Kup tokeny DeHub, aby odblokować odznakę — obstawianie nie jest wymagane.",
     "buyTokensToUnlock": "Kup tokeny DeHub, aby odblokować odznakę i jej SuperMoce. Każdy posiadacz odznaki je otrzymuje — obstawianie nie jest wymagane.",
+    "signalFlareTo": "Sygnał flary do {{people}} osób",
     "goldenHourStarted": "Golden Hour trwa {{minutes}} minut — wszystko, co teraz opublikujesz, liczy się podwójnie"
   },
   "work": {
@@ -5647,8 +5651,6 @@
     "notEnoughTokensForBounty": "Za mało tokenów. Potrzeba {{need}} tokenów, a masz {{have}}."
   },
   "events": {
-    "deleteConfirmTitle": "Usunąć to wydarzenie?",
-    "deleteConfirmBody": "Spowoduje to usunięcie wydarzenia, listy gości i czatu dla wszystkich. Tego nie da się cofnąć.",
     "seoTitle": "Wydarzenia — Spotkania i wydarzenia społeczności na DeHub",
     "seoDescription": "Przeglądaj nadchodzące wydarzenia społeczności DeHub, potwierdź uczestnictwo w spotkaniach i organizuj własne wydarzenia na zdecentralizowanej, należącej do użytkowników platformie społecznej.",
     "defaultSeoDescription": "Wydarzenie społeczności na DeHub.",
@@ -5714,6 +5716,8 @@
     "requestAccessForChat": "Poproś o dostęp, aby wyświetlić czat i potwierdzić uczestnictwo",
     "edit": "Edytuj",
     "delete": "Usuń",
+    "deleteConfirmTitle": "Usunąć to wydarzenie?",
+    "deleteConfirmBody": "Spowoduje to usunięcie wydarzenia, listy gości i czatu dla wszystkich. Tego nie da się cofnąć.",
     "reply": "Odpowiedz",
     "react": "Zareaguj",
     "typeMessage": "Wpisz wiadomość...",

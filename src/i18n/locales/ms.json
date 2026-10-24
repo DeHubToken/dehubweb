@@ -2374,8 +2374,6 @@
     "anonymousLikes_other": "{{count}} suka daripada pemegang lencana tanpa nama"
   },
   "postInfo": {
-    "unavailable": "Tidak tersedia",
-    "ownersUnavailable": "Pemilik semasa tidak boleh dibaca sekarang.",
     "title": "Post Info",
     "tokenId": "Token ID",
     "mintedOn": "Minted On",
@@ -2387,6 +2385,8 @@
     "total": "{{count}} total",
     "distribution": "Distribution",
     "loading": "Loading...",
+    "unavailable": "Tidak tersedia",
+    "ownersUnavailable": "Pemilik semasa tidak boleh dibaca sekarang.",
     "owner": "{{count}} owner",
     "owner_other": "{{count}} owners",
     "engagement": "Engagement",
@@ -3003,6 +3003,9 @@
       "wallTitle": "Apa yang orang katakan",
       "wallNote": "diterbitkan dengan kebenaran",
       "anonymous": "Seorang ahli DeHub"
+    },
+    "taxSplit": {
+      "grossFootnote": "Jumlah pendapatan di atas termasuk BNB yang dikongsi dengan pemegang dan staker. Bayaran ini diagihkan, bukan dikekalkan oleh DeHub. Pembelian balik kekal berasingan. Setiap amaun dan mata wang asal boleh diperiksa dalam lejar."
     }
   },
   "superpowers": {
@@ -3140,6 +3143,7 @@
     },
     "buyTokensToUnlockBadge": "Pemegang lencana mana-mana pun mendapat Kuasa Super. Beli token DeHub untuk membuka kunci lencana — tiada pertaruhan diperlukan.",
     "buyTokensToUnlock": "Beli token DeHub untuk membuka kunci lencana dan Kuasa Supernya. Pemegang lencana mana-mana pun mendapatkannya — tiada pertaruhan diperlukan.",
+    "signalFlareTo": "Isyarat Flare kepada {{people}} orang",
     "goldenHourStarted": "Golden Hour berjalan selama {{minutes}} minit — semua yang anda siarkan kini dikira berganda"
   },
   "work": {
@@ -5902,8 +5906,6 @@
     "notEnoughTokensForBounty": "Tiada token yang mencukupi. Perlu {{need}} token tetapi mempunyai {{have}}."
   },
   "events": {
-    "deleteConfirmTitle": "Hapuskan acara ini?",
-    "deleteConfirmBody": "Ini membuang acara, senarai tetamu dan sembangnya untuk semua orang. Ia tidak boleh dibatalkan.",
     "seoTitle": "Acara — Pertemuan & Acara Komuniti di DeHub",
     "seoDescription": "Layari acara komuniti DeHub yang akan datang, RSVP ke pertemuan dan selenggarakan acara anda sendiri di platform media sosial yang terdesentralisasi dan dimiliki pengguna.",
     "defaultSeoDescription": "Acara komuniti di DeHub.",
@@ -5969,6 +5971,8 @@
     "requestAccessForChat": "Minta akses untuk melihat obrolan dan RSVP",
     "edit": "Edit",
     "delete": "Padam",
+    "deleteConfirmTitle": "Hapuskan acara ini?",
+    "deleteConfirmBody": "Ini membuang acara, senarai tetamu dan sembangnya untuk semua orang. Ia tidak boleh dibatalkan.",
     "reply": "Balas",
     "react": "Reaksi",
     "typeMessage": "Taip mesej...",

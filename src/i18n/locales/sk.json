@@ -2214,8 +2214,6 @@
     "anonymousLikes_other": "{{count}} lajkov od anonymných držiteľov odznakov"
   },
   "postInfo": {
-    "unavailable": "Nedostupné",
-    "ownersUnavailable": "Aktuálnych vlastníkov momentálne nie je možné prečítať.",
     "title": "Informácie o príspevku",
     "tokenId": "ID tokenu",
     "mintedOn": "Vytvorené",
@@ -2227,6 +2225,8 @@
     "total": "Celkom {{count}}",
     "distribution": "Distribúcia",
     "loading": "Načítava sa...",
+    "unavailable": "Nedostupné",
+    "ownersUnavailable": "Aktuálnych vlastníkov momentálne nie je možné prečítať.",
     "owner": "{{count}} vlastník",
     "owner_other": "{{count}} vlastníkov",
     "engagement": "Zapojenie",
@@ -2843,6 +2843,9 @@
       "wallTitle": "Čo hovoria ľudia",
       "wallNote": "zverejnené so súhlasom",
       "anonymous": "Člen DeHub"
+    },
+    "taxSplit": {
+      "grossFootnote": "Vyššie uvedená celková suma príjmov zahŕňa BNB zdieľanú s držiteľmi a stávkujúcimi. Tieto platby boli distribuované, nie zadržané spoločnosťou DeHub. Spätné odkúpenia zostávajú oddelené. Každá suma a pôvodná mena môžu byť skontrolované v hlavnej knihe."
     }
   },
   "superpowers": {
@@ -2980,6 +2983,7 @@
     },
     "buyTokensToUnlockBadge": "Každý držiteľ odznaku získa SuperSchopnosti. Kúpte si tokeny DeHub na odomknutie odznaku — stakovanie nie je potrebné.",
     "buyTokensToUnlock": "Kúpte si tokeny DeHub na odomknutie odznaku a jeho SuperSchopností. Každý držiteľ odznaku ich získa — stakovanie nie je potrebné.",
+    "signalFlareTo": "Signalizujte vzplanutie {{people}} ľudí",
     "goldenHourStarted": "Golden Hour beží {{minutes}} minút — všetko, čo teraz zverejníte, sa počíta dvojnásobne"
   },
   "work": {
@@ -5750,8 +5754,6 @@
     "notEnoughTokensForBounty": "Nedostatok tokenov. Potrebujete {{need}} tokenov, ale máte {{have}}."
   },
   "events": {
-    "deleteConfirmTitle": "Odstrániť túto udalosť?",
-    "deleteConfirmBody": "Tým sa odstráni udalosť, jej zoznam hostí a chat pre všetkých. Nedá sa vrátiť späť.",
     "seoTitle": "Události — Setkania & Komunitné Události na DeHub",
     "seoDescription": "Prehľad nadchádzajúcich komunitných udalostí na DeHub, prihláste sa na setkania a hostujte svoje vlastné udalosti na decentralizovanej, užívateľovlastnej sociálnej platforme.",
     "defaultSeoDescription": "Komunitná udalosť na DeHub.",
@@ -5817,6 +5819,8 @@
     "requestAccessForChat": "Požadujte prístup na zobrazenie chatu a potvrďte svoju účasti",
     "edit": "Upraviť",
     "delete": "Zmazať",
+    "deleteConfirmTitle": "Odstrániť túto udalosť?",
+    "deleteConfirmBody": "Tým sa odstráni udalosť, jej zoznam hostí a chat pre všetkých. Nedá sa vrátiť späť.",
     "reply": "Odpovedať",
     "react": "Reagovať",
     "typeMessage": "Napíšte správu...",

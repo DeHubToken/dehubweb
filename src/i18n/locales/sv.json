@@ -2115,8 +2115,6 @@
     "anonymousLikes_other": "{{count}} gillamarkeringar från anonyma märkesinnehavare"
   },
   "postInfo": {
-    "unavailable": "Inte tillgänglig",
-    "ownersUnavailable": "De nuvarande ägarna kan inte läsas just nu.",
     "title": "Inläggsinfo",
     "tokenId": "Token-ID",
     "mintedOn": "Präglad den",
@@ -2128,6 +2126,8 @@
     "total": "{{count}} totalt",
     "distribution": "Distribution",
     "loading": "Laddar...",
+    "unavailable": "Inte tillgänglig",
+    "ownersUnavailable": "De nuvarande ägarna kan inte läsas just nu.",
     "owner": "{{count}} owner",
     "owner_other": "{{count}} owners",
     "engagement": "Engagemang",
@@ -2692,6 +2692,9 @@
       "wallTitle": "Vad folk säger",
       "wallNote": "publicerad med tillstånd",
       "anonymous": "En DeHub-medlem"
+    },
+    "taxSplit": {
+      "grossFootnote": "Ovanstående intäktssumma inkluderar BNB som delas med innehavare och stakers. Dessa betalningar distribuerades, behölls inte av DeHub. Återköp förblir separata. Varje belopp och originalvaluta kan inspekteras i huvudboken."
     }
   },
   "superpowers": {
@@ -2822,7 +2825,8 @@
       "openToEveryone": "Team up är öppet för alla konton; privata team godkänner vem som får gå med."
     },
     "buyTokensToUnlockBadge": "Alla badge-innehavare får SuperPowers. Köp DeHub-tokens för att låsa upp en badge — staking krävs inte.",
-    "buyTokensToUnlock": "Köp DeHub-tokens för att låsa upp en badge och dess SuperPowers. Alla badge-innehavare får dem — staking krävs inte."
+    "buyTokensToUnlock": "Köp DeHub-tokens för att låsa upp en badge och dess SuperPowers. Alla badge-innehavare får dem — staking krävs inte.",
+    "signalFlareTo": "Signalutbrott till {{people}} personer"
   },
   "work": {
     "integrity": {
@@ -5583,8 +5587,6 @@
     "notEnoughTokensForBounty": "Inte tillräckligt med tokens. Behöver {{need}} tokens men har {{have}}."
   },
   "events": {
-    "deleteConfirmTitle": "Ta bort detta evenemang?",
-    "deleteConfirmBody": "Det här tar bort händelsen, dess gästlista och dess chatt för alla. Det går inte att ångra.",
     "seoDescription": "Bläddra bland kommande DeHub-gemenskapsevenemang, RSVP till meetups och arrangera dina egna evenemang på den decentraliserade, användarägda sociala plattformen.",
     "defaultSeoDescription": "Gemenskapsevenemang på DeHub.",
     "title": "Events",
@@ -5649,6 +5651,8 @@
     "requestAccessForChat": "Begär åtkomst för att visa chatten och svara",
     "edit": "Redigera",
     "delete": "Radera",
+    "deleteConfirmTitle": "Ta bort detta evenemang?",
+    "deleteConfirmBody": "Det här tar bort händelsen, dess gästlista och dess chatt för alla. Det går inte att ångra.",
     "reply": "Svara",
     "react": "Reagera",
     "typeMessage": "Skriv ett meddelande...",

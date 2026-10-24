@@ -2120,8 +2120,6 @@
     "anonymousLikes_other": "{{count}} curtidas de portadores de emblema anônimos"
   },
   "postInfo": {
-    "unavailable": "Indisponível",
-    "ownersUnavailable": "Os proprietários atuais não podem ser lidos no momento.",
     "title": "Info do Post",
     "tokenId": "Token ID",
     "mintedOn": "Cunhado em",
@@ -2133,6 +2131,8 @@
     "total": "{{count}} total",
     "distribution": "Distribuição",
     "loading": "Carregando...",
+    "unavailable": "Indisponível",
+    "ownersUnavailable": "Os proprietários atuais não podem ser lidos no momento.",
     "owner": "{{count}} proprietário",
     "owner_other": "{{count}} proprietários",
     "engagement": "Engajamento",
@@ -2749,6 +2749,9 @@
       "wallTitle": "O que as pessoas dizem",
       "wallNote": "publicado com permissão",
       "anonymous": "Um membro do DeHub"
+    },
+    "taxSplit": {
+      "grossFootnote": "O total da receita acima inclui o BNB compartilhado com detentores e stakers. Esses pagamentos foram distribuídos, não retidos pela DeHub. As recompras permanecem separadas. Cada valor e moeda original podem ser inspecionados no livro-razão."
     }
   },
   "superpowers": {
@@ -2886,6 +2889,7 @@
     },
     "buyTokensToUnlockBadge": "Qualquer portador de badge ganha Superpoderes. Compre tokens DeHub para desbloquear um badge — staking não é necessário.",
     "buyTokensToUnlock": "Compre tokens DeHub para desbloquear um badge e seus Superpoderes. Qualquer portador de badge os ganha — staking não é necessário.",
+    "signalFlareTo": "Sinalizar sinalizador para {{people}} pessoas",
     "goldenHourStarted": "Golden Hour a decorrer durante {{minutes}} minutos — tudo o que publicar agora conta a dobrar"
   },
   "work": {
@@ -5652,8 +5656,6 @@
     "notEnoughTokensForBounty": "Tokens insuficientes. Precisa de {{need}} tokens, mas tem {{have}}."
   },
   "events": {
-    "deleteConfirmTitle": "Eliminar este evento?",
-    "deleteConfirmBody": "Isso remove o evento, a lista de convidados e o chat para todos. Não pode ser desfeito.",
     "seoTitle": "Eventos — Encontros e Eventos Comunitários no DeHub",
     "seoDescription": "Procure eventos comunitários futuros do DeHub, confirme presença em encontros e crie seus próprios eventos na plataforma social descentralizada e de propriedade dos usuários.",
     "defaultSeoDescription": "Evento comunitário no DeHub.",
@@ -5719,6 +5721,8 @@
     "requestAccessForChat": "Solicitar acesso para visualizar o chat e confirmar presença",
     "edit": "Editar",
     "delete": "Excluir",
+    "deleteConfirmTitle": "Eliminar este evento?",
+    "deleteConfirmBody": "Isso remove o evento, a lista de convidados e o chat para todos. Não pode ser desfeito.",
     "reply": "Responder",
     "react": "Reagir",
     "typeMessage": "Digite uma mensagem...",

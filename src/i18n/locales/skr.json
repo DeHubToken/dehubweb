@@ -2086,8 +2086,6 @@
     "anonymousLikes_other": "گمنام بیج ہولڈرز دی طرفوں {{count}} لائیک"
   },
   "postInfo": {
-    "unavailable": "دستیاب کائنی",
-    "ownersUnavailable": "موجودہ مالکاں کوں ہݨ پڑھیا نئیں ونڄ سڳدا۔",
     "title": "پوسٹ معلومات",
     "tokenId": "ٹوکن ID",
     "mintedOn": "بݨایا گیا",
@@ -2099,6 +2097,8 @@
     "total": "کل {{count}}",
     "distribution": "وزیٹ",
     "loading": "لوڈ ہو ریہا ہے...",
+    "unavailable": "دستیاب کائنی",
+    "ownersUnavailable": "موجودہ مالکاں کوں ہݨ پڑھیا نئیں ونڄ سڳدا۔",
     "owner": "{{count}} مالک",
     "owner_other": "{{count}} مالکین",
     "engagement": "شمولیت",
@@ -5079,8 +5079,6 @@
     "notEnoughTokensForBounty": "کافی ٹوکن نئیں ن۔ {{need}} ٹوکن چاہیدے ن پر {{have}} نیں۔"
   },
   "events": {
-    "deleteConfirmTitle": "کیا اِس ایونٹ کو مٹا دیں؟",
-    "deleteConfirmBody": "یہ ایونٹ، اس کا گیسٹ لسٹ اور اس کا چٹ کو سب کے لئے ہٹا دیتا ہے۔ یہ واپس نہیں کیا جا سکتا۔",
     "seoTitle": "ہندوبھاگھی — ملاقاتیں اور کمیونٹی کی ایونٹیں ڈے ہب پر",
     "filterMine": "میں کے ایونٹس",
     "loadFailed": "چلنا ایونٹس لڈ نہ سکیں",
@@ -5130,6 +5128,8 @@
     "payFeeForChat": "چٹ میں شمولیت اور RSVP کے لیے انٹری فیس ادا کریں",
     "requestPendingReview": "آپ کا ریقویست پینڈنگ ہے — خالق اسے چیک کرے گا۔",
     "requestWasDenied": "آپ کی درخواست مسترد ہو گئی ہے",
+    "deleteConfirmTitle": "کیا اِس ایونٹ کو مٹا دیں؟",
+    "deleteConfirmBody": "یہ ایونٹ، اس کا گیسٹ لسٹ اور اس کا چٹ کو سب کے لئے ہٹا دیتا ہے۔ یہ واپس نہیں کیا جا سکتا۔",
     "reply": "جواب",
     "typeMessage": "پیغام ٹائپ کریں...",
     "uploadingVoiceNote": "آوازہِ سنیہ اپلوڈ کررہا ہے...",

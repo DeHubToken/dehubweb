@@ -2132,8 +2132,6 @@
     "anonymousLikes_other": "Mana sutiyuq insigniayuqkunamanta {{count}} munasqa"
   },
   "postInfo": {
-    "unavailable": "Mana tarikuq",
-    "ownersUnavailable": "Kunan dueñokunataqa manam kunanpachaqa ñawinchayta atikunmanchu.",
     "title": "Post willay",
     "tokenId": "Token ID",
     "mintedOn": "Rurasqa",
@@ -2145,6 +2143,8 @@
     "total": "Tukuy {{count}}",
     "distribution": "Distribution",
     "loading": "Chaqnaspa...",
+    "unavailable": "Mana tarikuq",
+    "ownersUnavailable": "Kunan dueñokunataqa manam kunanpachaqa ñawinchayta atikunmanchu.",
     "owner": "{{count}} owner",
     "owner_other": "{{count}} owners",
     "engagement": "Llamk'ay",
@@ -2760,6 +2760,9 @@
       "wallTitle": "Runakunapa ima nisqanku",
       "wallNote": "permisowan lluqsichisqa",
       "anonymous": "Huk DeHub nisqapi kaq"
+    },
+    "taxSplit": {
+      "grossFootnote": "Hawa qullqi yaykuy tukuyninpiqa BNB titularkunawan chaymanta apuestadoreswan rakisqa kachkan. Kay qullqi quykuna rakisqa karqa, mana DeHub kaqwan waqaychasqachu. Kutichisqa rantiykunaqa sapaqchasqam qipan. Sapa qolqe, original qolqepas libro mayor nisqapin qhawarikunman."
     }
   },
   "superpowers": {
@@ -2897,6 +2900,7 @@
     },
     "buyTokensToUnlockBadge": "Mayqin insigniayuqpas SuperPowers nisqatam chaskikun. DeHub tokenkunata rantiy huk insignia kicharinapaq — apuesta mana necesariochu.",
     "buyTokensToUnlock": "DeHub tokenkunata rantiy huk insignia chaymanta SuperPowers nisqakunata kicharinaykipaq. Mayqin insigniayuqpas chaykunatam chaskikun — estacayqa manam necesariochu.",
+    "signalFlareTo": "Señal Llamayu {{people}} runakunaman",
     "goldenHourStarted": "Golden Hourqa {{minutes}} minutokama purichkan — imaymana kaqniyki kunan iskaychayta atikun"
   },
   "work": {
@@ -5643,8 +5647,6 @@
     "notEnoughTokensForBounty": "Mana suficiente tokenkunachu. Necesita {{need}} fichas ichaqa {{have}} nisqayuq."
   },
   "events": {
-    "deleteConfirmTitle": "¿Kay ruwayta chinkachiyta munankichu?",
-    "deleteConfirmBody": "Kayqa ruwayta, invitado listanta chaymanta llapa runapaq rimanakuyninta hurqun. Manan kutichiyta atikunmanchu.",
     "seoTitle": "Ruwaykuna — Huñunakuykuna & Ayllu Ruwaykuna DeHub kaqpi",
     "seoDescription": "Hamuq DeHub ayllu ruwaykunata maskay, RSVP huñunakuykunaman chaymanta kikiyki ruwaykunata descentralizada, usuariopa kaqnin social plataforma kaqpi quy.",
     "defaultSeoDescription": "DeHub nisqapi ayllu llaqtapi ruway.",
@@ -5710,6 +5712,8 @@
     "requestAccessForChat": "Mañakuy yaykuyta qhawaypaq chaymanta RSVP",
     "edit": "Ruwapay",
     "delete": "Chinkachiy",
+    "deleteConfirmTitle": "¿Kay ruwayta chinkachiyta munankichu?",
+    "deleteConfirmBody": "Kayqa ruwayta, invitado listanta chaymanta llapa runapaq rimanakuyninta hurqun. Manan kutichiyta atikunmanchu.",
     "reply": "Kutichiy",
     "react": "Reaccionay",
     "typeMessage": "Huk willakuyta qillqay...",

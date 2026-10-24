@@ -2116,8 +2116,6 @@
     "anonymousLikes_other": "{{count}} Mi piace da titolari di badge anonimi"
   },
   "postInfo": {
-    "unavailable": "Non disponibile",
-    "ownersUnavailable": "Al momento non è possibile leggere gli attuali proprietari.",
     "title": "Info Post",
     "tokenId": "Token ID",
     "mintedOn": "Coniato il",
@@ -2129,6 +2127,8 @@
     "total": "{{count}} totale",
     "distribution": "Distribuzione",
     "loading": "Caricamento...",
+    "unavailable": "Non disponibile",
+    "ownersUnavailable": "Al momento non è possibile leggere gli attuali proprietari.",
     "owner": "{{count}} proprietario",
     "owner_other": "{{count}} proprietari",
     "engagement": "Coinvolgimento",
@@ -2745,6 +2745,9 @@
       "wallTitle": "Quello che dicono le persone",
       "wallNote": "pubblicato con permesso",
       "anonymous": "Un membro di DeHub"
+    },
+    "taxSplit": {
+      "grossFootnote": "Il totale dei ricavi di cui sopra include BNB condiviso con titolari e stakers. Questi pagamenti sono stati distribuiti, non trattenuti da DeHub. I riacquisti rimangono separati. Ogni importo e valuta originale possono essere ispezionati nel libro mastro."
     }
   },
   "superpowers": {
@@ -2882,6 +2885,7 @@
     },
     "buyTokensToUnlockBadge": "Ogni possessore di badge ottiene SuperPoteri. Acquista token DeHub per sbloccare un badge — lo staking non è richiesto.",
     "buyTokensToUnlock": "Acquista token DeHub per sbloccare un badge e i suoi SuperPoteri. Ogni possessore di badge li ottiene — lo staking non è richiesto.",
+    "signalFlareTo": "Segnalazione Flare a {{people}} persone",
     "goldenHourStarted": "Golden Hour in corso per {{minutes}} minuti — tutto ciò che pubblichi ora conta doppio"
   },
   "work": {
@@ -5645,8 +5649,6 @@
     "notEnoughTokensForBounty": "Token insufficienti. Necessari {{need}} token ma ne hai {{have}}."
   },
   "events": {
-    "deleteConfirmTitle": "Eliminare questo evento?",
-    "deleteConfirmBody": "Questo rimuove l'evento, la sua lista degli ospiti e la sua chat per tutti. Non può essere annullato.",
     "seoTitle": "Eventi — Meetup ed eventi della comunità su DeHub",
     "seoDescription": "Sfoglia i prossimi eventi della comunità DeHub, rispondi ai meetup e ospita i tuoi eventi sulla piattaforma social decentralizzata e di proprietà degli utenti.",
     "defaultSeoDescription": "Evento della comunità su DeHub.",
@@ -5712,6 +5714,8 @@
     "requestAccessForChat": "Richiedi accesso per visualizzare la chat e RSVP",
     "edit": "Modifica",
     "delete": "Elimina",
+    "deleteConfirmTitle": "Eliminare questo evento?",
+    "deleteConfirmBody": "Questo rimuove l'evento, la sua lista degli ospiti e la sua chat per tutti. Non può essere annullato.",
     "reply": "Rispondi",
     "react": "Reagisci",
     "typeMessage": "Scrivi un messaggio...",

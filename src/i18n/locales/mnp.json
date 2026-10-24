@@ -2077,8 +2077,6 @@
     "anonymousLikes_other": "{{count}} 个来自匿名徽章持有者的赞"
   },
   "postInfo": {
-    "ownersUnavailable": "現在讀不到當前個所有者。",
-    "unavailable": "不可用",
     "title": "帖子信息",
     "tokenId": "代币ID",
     "mintedOn": "铸造于",
@@ -2090,6 +2088,8 @@
     "total": "共{{count}}个",
     "distribution": "Distribution",
     "loading": "加载中...",
+    "unavailable": "不可用",
+    "ownersUnavailable": "現在讀不到當前個所有者。",
     "owner": "{{count}} 老闆",
     "owner_other": "{{count}} owners",
     "engagement": "互动",
@@ -5208,8 +5208,6 @@
     "notEnoughTokensForBounty": "代币不足。需要 {{need}} 个代币但只有 {{have}} 个。"
   },
   "events": {
-    "deleteConfirmBody": "這樣會幫所有人刪除活動、來賓名單和聊天，無法撤銷。",
-    "deleteConfirmTitle": "刪除這隻活動？",
     "seoDescription": "瀏覽 DeHub 社群即將到來的活動，報名聚會或在去中心化、用戶擁有的社交平台上舉辦你自己的活動。",
     "defaultSeoDescription": "DeHub 上的社群活動。",
     "title": "活動",
@@ -5274,6 +5272,8 @@
     "requestAccessForChat": "請求取得權限以查看聊天室並報名",
     "edit": "編輯",
     "delete": "刪除",
+    "deleteConfirmTitle": "刪除這隻活動？",
+    "deleteConfirmBody": "這樣會幫所有人刪除活動、來賓名單和聊天，無法撤銷。",
     "reply": "回覆",
     "react": "反應",
     "typeMessage": "輸入訊息...",

@@ -2101,8 +2101,6 @@
     "anonymousLikes_other": "{{count}} pëlqime nga mbajtës anonimë distinktivësh"
   },
   "postInfo": {
-    "unavailable": "E padisponueshme",
-    "ownersUnavailable": "Pronarët aktualë nuk mund të lexohen tani.",
     "title": "Informacione për postimin",
     "tokenId": "ID e tokenit",
     "mintedOn": "Krijuar më",
@@ -2114,6 +2112,8 @@
     "total": "Gjithsej {{count}}",
     "distribution": "Shpërndarja",
     "loading": "Duke ngarkuar...",
+    "unavailable": "E padisponueshme",
+    "ownersUnavailable": "Pronarët aktualë nuk mund të lexohen tani.",
     "owner": "{{count}} pronar",
     "owner_other": "{{count}} pronarë",
     "engagement": "Angazhimi",
@@ -2730,6 +2730,9 @@
       "wallTitle": "Çfarë thonë njerëzit",
       "wallNote": "botuar me leje",
       "anonymous": "Një anëtar i DeHub-it"
+    },
+    "taxSplit": {
+      "grossFootnote": "Totali i të ardhurave të mësipërme PËRFSHIN BNB-NË të ndarë me mbajtësit dhe aksionarët. Këto pagesa u shpërndanë, nuk u mbajtën nga DeHub. Rimbursimet mbeten të ndara. Çdo shumë dhe monedhë origjinale mund të kontrollohen në libër."
     }
   },
   "superpowers": {
@@ -2867,6 +2870,7 @@
     },
     "buyTokensToUnlockBadge": "Çdo mbajtës i medaljes merr SuperFuqi. Blini tokena DeHub për të zhbllokuar një medalje — staking nuk kërkohet.",
     "buyTokensToUnlock": "Bleni tokena DeHub për të zhbllokuar një medalje dhe SuperFuqitë e saj. Çdo mbajtës i medaljes i merr ato — staking nuk kërkohet.",
+    "signalFlareTo": "Shpërthimi i sinjalit në {{people}} njerëz",
     "goldenHourStarted": "Golden Hour po zgjat {{minutes}} minuta — çdo gjë që postoni tani numërohet dyfish"
   },
   "work": {
@@ -5625,8 +5629,6 @@
     "notEnoughTokensForBounty": "Nuk ka tokena të mjaftueshëm. Nevojiten {{need}} tokena por keni {{have}}."
   },
   "events": {
-    "deleteConfirmTitle": "Dëshiron ta fshish këtë ngjarje?",
-    "deleteConfirmBody": "Kjo fshin ngjarjen, listën e të ftuarve dhe bisedën e saj për të gjithë. Nuk mund të zhbëhet.",
     "seoTitle": "Ngjarje — Takime & Ngjarje Komuniteti në DeHub",
     "seoDescription": "Shiko ngjarjet e ardhshme të komunitetit në DeHub, shprehi interes për takime dhe organizo shenjat tuaja në platformën sociale decentralizuar dhe e pronuar nga përdoruesi.",
     "defaultSeoDescription": "Ngjarje komuniteti në DeHub.",
@@ -5692,6 +5694,8 @@
     "requestAccessForChat": "Kërko qasje për të parë bisedën dhe RSVP-në",
     "edit": "Modifiko",
     "delete": "Delete",
+    "deleteConfirmTitle": "Dëshiron ta fshish këtë ngjarje?",
+    "deleteConfirmBody": "Kjo fshin ngjarjen, listën e të ftuarve dhe bisedën e saj për të gjithë. Nuk mund të zhbëhet.",
     "reply": "Reply",
     "react": "Reagjo",
     "typeMessage": "Shkruani një mesazh...",

@@ -2099,8 +2099,6 @@
     "anonymousLikes_other": "Patiktukai iš anoniminių ženklelių turėtojų: {{count}}"
   },
   "postInfo": {
-    "unavailable": "Neprieinama",
-    "ownersUnavailable": "Dabartiniai savininkai šiuo metu negali būti skaitomi.",
     "title": "Įrašo informacija",
     "tokenId": "Žetono ID",
     "mintedOn": "Sukurta",
@@ -2112,6 +2110,8 @@
     "total": "Iš viso {{count}}",
     "distribution": "Paskirstymas",
     "loading": "Kraunama...",
+    "unavailable": "Neprieinama",
+    "ownersUnavailable": "Dabartiniai savininkai šiuo metu negali būti skaitomi.",
     "owner": "{{count}} savininkas",
     "owner_other": "{{count}} savininkų",
     "engagement": "Įsitraukimas",
@@ -2728,6 +2728,9 @@
       "wallTitle": "Ką sako žmonės",
       "wallNote": "paskelbta su leidimu",
       "anonymous": "DeHub narys"
+    },
+    "taxSplit": {
+      "grossFootnote": "Į pirmiau nurodytą bendrą pajamų sumą įeina BNB, kuriuo dalijamasi su savininkais ir dalininkais. Šie mokėjimai buvo paskirstyti, o ne „DeHub“ užlaikyti. Atpirkimai išlieka atskiri. Kiekvieną sumą ir pradinę valiutą galima patikrinti DK."
     }
   },
   "superpowers": {
@@ -2865,6 +2868,7 @@
     },
     "buyTokensToUnlockBadge": "Bet kuris ženklelio turėtojas gauna Supergalias. Pirkite DeHub žetonus, kad atrakintumėte ženklelį – statymas neprivalomas.",
     "buyTokensToUnlock": "Pirkite DeHub žetonus, kad atrakintumėte ženklelį ir jo Supergalias. Bet kuris ženklelio turėtojas juos gauna – statymas neprivalomas.",
+    "signalFlareTo": "Signalo išryškinimas {{people}} žmonėms",
     "goldenHourStarted": "„Golden Hour“ veikia {{minutes}} minutes – viskas, ką dabar skelbiate, skaičiuojama dvigubai"
   },
   "work": {
@@ -5630,8 +5634,6 @@
     "notEnoughTokensForBounty": "Nepakanka žetonų. Reikia {{need}} žetonų, bet turite {{have}}."
   },
   "events": {
-    "deleteConfirmTitle": "Ištrinti šį įvykį?",
-    "deleteConfirmBody": "Tai pašalina įvykį, jo svečių sąrašą ir pokalbį visiems. Tai negali būti anuliuota.",
     "seoTitle": "Renginiai — Susitikimai ir bendruomenės renginiai DeHub",
     "seoDescription": "Naršykite būsimus DeHub bendruomenės renginius, patvirtinkite dalyvavimą susitikimuose ir organizuokite savo renginius decentralizuotoje, vartotojui priklausančioje socialinėje platformoje.",
     "defaultSeoDescription": "Bendruomenės renginys DeHub.",
@@ -5697,6 +5699,8 @@
     "requestAccessForChat": "Prašyti leidimo peržiūrėti pokalbį ir RSVP",
     "edit": "Redaguoti",
     "delete": "Ištrinti",
+    "deleteConfirmTitle": "Ištrinti šį įvykį?",
+    "deleteConfirmBody": "Tai pašalina įvykį, jo svečių sąrašą ir pokalbį visiems. Tai negali būti anuliuota.",
     "reply": "Atsakyti",
     "react": "Reaguoti",
     "typeMessage": "Rašykite žinutę...",

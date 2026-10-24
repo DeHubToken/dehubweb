@@ -2121,8 +2121,6 @@
     "anonymousLikes_other": "{{count}} fankasitrahana avy amin'ireo tompon'ny badge tsy mitonona anarana"
   },
   "postInfo": {
-    "unavailable": "Tsy misy",
-    "ownersUnavailable": "Amin'izao fotoana izao dia tsy azo vakiana ny tompon'ny toerana.",
     "title": "Fampahalalana momba ny lahatsoratra",
     "tokenId": "Token ID",
     "mintedOn": "Noforonina",
@@ -2134,6 +2132,8 @@
     "total": "Totaly {{count}}",
     "distribution": "Distribution",
     "loading": "Mamorona...",
+    "unavailable": "Tsy misy",
+    "ownersUnavailable": "Amin'izao fotoana izao dia tsy azo vakiana ny tompon'ny toerana.",
     "owner": "{{count}} owner",
     "owner_other": "{{count}} owners",
     "engagement": "Fandraisan'anjara",
@@ -2748,6 +2748,9 @@
       "wallTitle": "Inona no lazain'ny olona",
       "wallNote": "navoaka miaraka amin'ny alalana",
       "anonymous": "Mpikambana DeHub"
+    },
+    "taxSplit": {
+      "grossFootnote": "Ny tolon'ny tolotra any amin'ny androso dia miditra amin'ny BNB miditra amin'ny mpikambana sy ny mpisotro. Ny fananany dia nampiasa, tsy natao mpanjaka na DeHub. Ny fananany miditra dia tsy manan-karena. Ny tolon'ny tolotra sy ny vali amin'ny androso dia manjaka."
     }
   },
   "superpowers": {
@@ -2885,6 +2888,7 @@
     },
     "buyTokensToUnlockBadge": "Ny mpihazona mari-pahaizana rehetra dia mahazo SuperPowers. Mividiana tapaho DeHub mba hamahana ny mari-pahaizana — tsy takiana ny fampidirana.",
     "buyTokensToUnlock": "Mividiana tapaho DeHub mba hamahana ny mari-pahaizana sy ny SuperPowers azy. Ny mpihazona mari-pahaizana rehetra dia mahazo azy ireo — tsy takiana ny fampidirana.",
+    "signalFlareTo": "Famantarana ny firohondrohon'ny{{people}} vahoaka",
     "goldenHourStarted": "Golden Hour mihazakazaka mandritra ny {{minutes}} minitra — izay rehetra alefanao ankehitriny dia ho avo roa heny"
   },
   "work": {
@@ -5637,8 +5641,6 @@
     "notEnoughTokensForBounty": "Tsy ampy ny tapaho. Mila tapaho {{need}} fa manana {{have}}."
   },
   "events": {
-    "deleteConfirmTitle": "Hofafana ity hetsika ity?",
-    "deleteConfirmBody": "Izany dia manala ny hetsika, ny lisitry ny vahiny ary ny resaka momba azy ho an'ny rehetra. Tsy azo averina izany.",
     "seoTitle": "Fampisehoana Ã¢Â Meetups & Famoriam-bahoaka ao amin'ny DeHub",
     "seoDescription": "Tsidiho ny hetsika ho an'ny fikambanana DeHub atsy ho atsy, RSVP mba hihaonana sy hampiantrano ny hetsika manokana ao amin'ny sehatra sosialy tsy mialonjafy sy an'ny mpampiasa.",
     "defaultSeoDescription": "Hetsiky ny fiarahamonina tao amin'ny DeHub.",
@@ -5703,6 +5705,8 @@
     "requestAccessForChat": "Mangataka ny fidirana hijery ny chat sy ny RSVP",
     "edit": "Hanova",
     "delete": "Hamafa",
+    "deleteConfirmTitle": "Hofafana ity hetsika ity?",
+    "deleteConfirmBody": "Izany dia manala ny hetsika, ny lisitry ny vahiny ary ny resaka momba azy ho an'ny rehetra. Tsy azo averina izany.",
     "reply": "Fanehoan-kevitra",
     "react": "Mihetseha.",
     "typeMessage": "Manorata hafatra...",

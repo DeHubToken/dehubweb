@@ -2101,8 +2101,6 @@
     "anonymousLikes_other": "來自匿名徽章持有人嘅 {{count}} 個讚"
   },
   "postInfo": {
-    "unavailable": "唔可以用",
-    "ownersUnavailable": "而家睇唔到而家嘅擁有者。",
     "title": "帖子資訊",
     "tokenId": "代幣ID",
     "mintedOn": "鑄造於",
@@ -2114,6 +2112,8 @@
     "total": "共{{count}}個",
     "distribution": "分派出去",
     "loading": "載入中...",
+    "unavailable": "唔可以用",
+    "ownersUnavailable": "而家睇唔到而家嘅擁有者。",
     "owner": "{{count}} 樓主",
     "owner_other": "{{count}} 擁有者",
     "engagement": "互動",
@@ -2729,6 +2729,9 @@
       "wallTitle": "人哋講乜",
       "wallNote": "喺得到許可嘅情況下發佈",
       "anonymous": "一個 DeHub 成員"
+    },
+    "taxSplit": {
+      "grossFootnote": "上面嘅收入總額包括同持有人同股東分享嘅 BNB 。呢啲款項係由 DeHub 分配，而唔係保留。回購仍然係分開嘅。每一個金額同原始貨幣都可以喺分帳入面檢查。"
     }
   },
   "superpowers": {
@@ -2866,6 +2869,7 @@
     },
     "buyTokensToUnlockBadge": "任何徽章持有者均可獲得超級能力。購買 DeHub 代幣以解鎖徽章 — 無需質押。",
     "buyTokensToUnlock": "購買 DeHub 代幣以解鎖徽章及其超級能力。任何徽章持有者均可獲得 — 無需質押。",
+    "signalFlareTo": "向 {{people}} 人發出訊號耀斑",
     "goldenHourStarted": "Golden Hour 進行緊 {{minutes}} 分鐘 — 你而家發佈嘅所有內容都會計雙倍"
   },
   "work": {
@@ -5627,8 +5631,6 @@
     "notEnoughTokensForBounty": "代幣不足。需要 {{need}} 個代幣但只有 {{have}} 個。"
   },
   "events": {
-    "deleteConfirmTitle": "刪除呢個活動？",
-    "deleteConfirmBody": "呢個操作會移除活動、佢嘅嘉賓名單同埋所有人嘅即時通訊。呢個係復原唔到嘅。",
     "seoTitle": "DeHub 的活動 — 聚會及社群活動",
     "seoDescription": "瀏覽 DeHub 社群即將舉行的活動，報名參加聚會或在去中心化、用戶擁有的社交平台上舉辦你自己的活動。",
     "defaultSeoDescription": "DeHub 的社群活動。",
@@ -5694,6 +5696,8 @@
     "requestAccessForChat": "請求獲取權限以查看聊天室並報名",
     "edit": "編輯",
     "delete": "刪除",
+    "deleteConfirmTitle": "刪除呢個活動？",
+    "deleteConfirmBody": "呢個操作會移除活動、佢嘅嘉賓名單同埋所有人嘅即時通訊。呢個係復原唔到嘅。",
     "reply": "回覆",
     "react": "回應",
     "typeMessage": "輸入訊息...",

@@ -2097,8 +2097,6 @@
     "anonymousLikes_other": "来自匿名徽章持有者的 {{count}} 个赞"
   },
   "postInfo": {
-    "unavailable": "不可用",
-    "ownersUnavailable": "当前无法读取所有者信息。",
     "title": "帖子信息",
     "tokenId": "代币ID",
     "mintedOn": "铸造于",
@@ -2110,6 +2108,8 @@
     "total": "共{{count}}个",
     "distribution": "分配",
     "loading": "加载中...",
+    "unavailable": "不可用",
+    "ownersUnavailable": "当前无法读取所有者信息。",
     "owner": "{{count}}位所有者",
     "owner_other": "{{count}}位所有者",
     "engagement": "互动",
@@ -2725,6 +2725,9 @@
       "wallTitle": "人们怎么说",
       "wallNote": "已获得许可发布",
       "anonymous": "DeHub 成员"
+    },
+    "taxSplit": {
+      "grossFootnote": "收入总额包括与持有者和赌注者共享的BNB。这些支付是分发的，而不是被DeHub保留的。回购额仍然是单独的。每个金额和原始货币都可以在日志中检查。"
     }
   },
   "superpowers": {
@@ -5574,8 +5577,6 @@
     "notEnoughTokensForBounty": "代币不足。需要 {{need}} 个代币，但只有 {{have}} 个。"
   },
   "events": {
-    "deleteConfirmTitle": "删除此事件？",
-    "deleteConfirmBody": "这个操作将删除该活动、其参与者名单和所有聊天记录，且无法撤销。",
     "seoTitle": "活动 — DeHub 的见面会与社区活动",
     "seoDescription": "浏览即将到来的 DeHub 社区活动，报名参加聚会，并在去中心化、用户自有的社交平台上举办自己的活动。",
     "defaultSeoDescription": "社区活动在 DeHub 上举办。",
@@ -5640,6 +5641,8 @@
     "requestAccessForChat": "申请访问以查看聊天并报名",
     "edit": "编辑",
     "delete": "删除",
+    "deleteConfirmTitle": "删除此事件？",
+    "deleteConfirmBody": "这个操作将删除该活动、其参与者名单和所有聊天记录，且无法撤销。",
     "reply": "回复",
     "react": "反应",
     "typeMessage": "输入消息...",
