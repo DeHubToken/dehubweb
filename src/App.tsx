@@ -8,7 +8,8 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import { NativeTitleTooltips } from "@/components/app/NativeTitleTooltips";
 import { MutationCache, QueryClient, QueryClientProvider, useQueryClient } from "@tanstack/react-query";
 import { AuthenticationError } from "@/lib/api/dehub";
-import { BrowserRouter, Routes, Route, Navigate, useLocation } from "react-router-dom";
+import { Routes, Route, Navigate, useLocation } from "react-router-dom";
+import { PaintFirstBrowserRouter } from "@/components/routing/PaintFirstBrowserRouter";
 import { useSwipeBack } from '@/hooks/use-swipe-back';
 import { OptimisticPostsProvider } from "@/hooks/use-optimistic-posts";
 // Direct import (not the modals barrel) so the barrel's other modals stay out
@@ -925,7 +926,7 @@ const App = () => (
          * BrowserRouter is now OUTSIDE WalletProviders so the hero route (/)
          * can render immediately without waiting for the ~1.5 MB wallet chunk.
          */}
-        <BrowserRouter>
+        <PaintFirstBrowserRouter>
           {/* Publishes the router's navigate() to lib/client-navigate, so post
               bodies can route without hand-rolling a history push. */}
           <ClientNavigateBridge />
@@ -1025,7 +1026,7 @@ const App = () => (
           </Routes>
           </MaintenanceGate>
           </RouteErrorBoundary>
-        </BrowserRouter>
+        </PaintFirstBrowserRouter>
       </QueryClientProvider>
     </I18nextProvider>
   </HelmetProvider>
