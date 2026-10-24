@@ -243,7 +243,9 @@ export function LoginModal({ open, onOpenChange }: LoginModalProps) {
       <DrawerHeader className="absolute inset-x-0 top-0 z-10 px-4 pt-[calc(1rem+env(safe-area-inset-top))] pb-2">
         <div aria-hidden="true" className="login-stack-corner" />
         <div className="relative flex items-center justify-between">
-          <img src={dehubMark} alt="DeHub" className="h-10 w-auto" />
+          <div className="h-10 flex items-center">
+            <img src={dehubMark} alt="DeHub" className="h-8 w-auto block" />
+          </div>
           {!requiresUsername && (
             <button
               type="button"

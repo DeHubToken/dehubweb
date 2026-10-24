@@ -80,6 +80,12 @@ html:is([data-theme="glass"], [data-theme="cosmic"], [data-theme="hazy"], [data-
   box-shadow: none !important;
 }
 
+/* Keep the fixed controls readable while an article or mobile drawer scrolls. */
+.docs-root [data-docs-header]:not(#_) {
+  background: hsl(var(--background) / 0.96) !important;
+  isolation: isolate;
+}
+
 /* Header + sidebar are thinner glass so page content reads as the primary
    surface; they also drop their `backdrop-blur-sm` default (replaced above). */
 html:is([data-theme="glass"], [data-theme="cosmic"], [data-theme="hazy"], [data-theme="swarms"], [data-theme="lavalamp"], [data-theme="winter"], [data-theme="war"], [data-theme="osaka"], [data-theme="jungle"], [data-theme="island"], [data-theme="hacker"], [data-theme="horror"]).dark .docs-root [data-docs-header],
