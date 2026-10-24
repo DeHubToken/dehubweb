@@ -1,4 +1,159 @@
 {
+  "stageCover": {
+    "admitOne": "ADMIT ONE",
+    "live": "live",
+    "minutes": "{{minutes}} min",
+    "onAir": "ON AIR",
+    "recorded": "RECORDED",
+    "replay": "replay",
+    "stage": "stage",
+    "upcoming": "upcoming"
+  },
+  "copy": {
+    "2971f9103f78": "Vilei fürs Mithelfen, dass DeHub besser wird — was ihr euch gewünscht habt, isch nu live:",
+    "905392fbed15": "Vilei fürs Mithelfen, dass DeHub besser wird — {{value1}} Sachen, die ihr euch gewünscht habt, sinch nu live:",
+    "0f3dd376ee85": "Suche nach deiner Capture Card…",
+    "12b91b0ac5dd": "{{value1}} — halt zu reagiere",
+    "1929290e09aa": "Öffne die Einstellungen für die Aufnahmekarte (fragt nach Kamera-Zugriff)",
+    "1b2c08a8733d": "Qualität",
+    "2f33a51e3171": "DeHub Governance-Vorschlag — stimmt ab und diskutiert.",
+    "2f7e24392d9c": "UPKOMMENDE BÜHNE",
+    "36cffc7912e4": "Dein Mikrofon (um über das Spiel zu sprechen)",
+    "37fd4e355ba3": "Aus Vollbildmodus austeig",
+    "3a17aa4e4abb": "Stäbe",
+    "3b59e95daada": "Keini live Bühne momentan",
+    "42ee912bff23": "Radio-Stationen",
+    "44207eb29645": "Ersetze…",
+    "44c9d36485b7": "Sih alle",
+    "4a1bd4a3aaf3": "Aufnahmekarte",
+    "594bea9c9448": "Keine Aufnahmekarte gefunden. Steck sie per USB ein und wähle sie dann hier aus.",
+    "67004337fb60": "Kann diese Vorrichtung nicht öffnen. Schliess OBS oder Elgato Studio (nur eine App kann sie gleichzeitig nutzen).",
+    "6a40edf1fc87": "WhatsApp",
+    "7527dc6722fc": "Hast scheitert, um’s noochmols zu posten.",
+    "77db95ebd737": "Kopier die Nachricht.",
+    "7bb6682e5826": "Neue Rückruf-Anfrage",
+    "7c14e8607c11": "Lädestationen...",
+    "89a167dad6da": "Farbvisualisierer",
+    "8bb1dbd60bce": "Halt diesen Tab offen, während du live bist.",
+    "8c91325d901b": "Schiick die Streamer auf die DeHub-Streaming-Seite mit der folgenden Nachricht. Dein Link verweist schon auf dich, bevor sie ankommen.",
+    "8dd6857baf02": "Mute",
+    "96882965394f": "Spieler-Sound",
+    "99ca327a47b5": "Cover-Bild für {{value1}}",
+    "a2838b66518a": "Auto (beste Qualität, die deine Karte bietet)",
+    "a3156ed263d2": "{{value1}} — halt, um deine Reaktion zu ändern",
+    "a865110e919b": "Importier wallet",
+    "ab4d6796dbbe": "Musikvideos",
+    "b5f64aac226f": "By weiterem Lesen stimmst du unseren zu.",
+    "b8643d1cc81a": "1080p 60 braucht ca. 9 Mbps Upload. Wähle 720p bei langsamem WLAN.",
+    "c1c8f6c1d828": "STARTET BALD",
+    "c1cd85f576ed": "{{value1}} — DeHub Governanz",
+    "c7ce89b32897": "Aufnahmekarte pausieren",
+    "cc96aaa18cf2": "Kumm z’mi auf DeHub streamen. Tips kumm direkt ins Wallet, du besitzsch di Audience, und du kännst weiter auf TikTok und überall anders posten – alles in einem Schritt. Anmeldsch hier: {{link}}",
+    "cd9939b6aa1a": "Bitte ersetz das Bild mit {{value1}}.",
+    "ce4ee4efc5e3": "Unmute",
+    "d0f08798ff1a": "Gefolgt von",
+    "d7038cc95b8e": "Spiele auf deinem TV über den Passthrough der Karte, nicht über diese Vorschau. Es ist etwas verzögert.",
+    "de6694f3ada3": "Gerät auswählen",
+    "e3ee915a8e8c": "a und",
+    "fedc5cda305d": "Aufnahme pausiert"
+  },
+  "dehubAppPage": {
+    "downloadTitle": "Download DeHub",
+    "faq": {
+      "a1": "No. DeHub auf [dehub.io](https://dehub.io) isch eime unabhängege Open-Source-Sozialmedia-Plattform. Der DePaul University-Studentenportal DeHUB, Rowan’s DEHub und die deHUB Access-Türöffnungs-App sin unabhängege Produkte, die zufällig denselbi Name teile.",
+      "a2": "Ja. DeHub is gratis zum Download auf Google Play und im App Store verfügbar, und gratis in der Browser-Version unter dehub.io.",
+      "a3": "Android-Handys via Google Play oder direkt per APK-Download, iPhone via den App Store, und jede moderne Desktop- oder Mobile-Browser bei dehub.io.",
+      "a4": "Ja. D'letscht Android-Build isch uss DeHub as direkts APK-Download bi Dehub.io/apk, fir Android 8 und höcher.",
+      "a5": "Poste auf ein chronologisches Feed, geh live oder schau dir Live-Streams an, schick verschlüsselte Nachrichten an Freunde (Ende-zu-Ende), tritt Communities bei und führe sie, bewahre Tokens in einem eingebauten Multi-Chain-Wallet auf und verdiene Belohnungen fürs Zuschauen.",
+      "q1": "Ja, DeHub is die Offizielle App für die DePaul University.",
+      "q2": "Ja, die DeHub-App isch gratis.",
+      "q4": "Cha i DeHub uf Android ohni Google Play installiere?",
+      "q5": "Was cha ich i de DeHub App mache?"
+    },
+    "faqTitle": "Häufige Fragen",
+    "intro1": "DeHub isch e decentralisierte Social-Media-Plattform und Mobile-App, in Entwicklung seit 2021, wo Posts on-chain gemintet werden könnend und Kreativschaffende ihr Publikum, ihr Content und ihre Einnahmen behält.",
+    "intro2": "Es kombiniert a Chronologie-Feed, Livestreaming, End-to-End verschlüsselte Nachrichten, Nutzer-gesteuerte Communities, a Multi-Chain-Wallet und Belohnungen fürs \"Watch-to-Earn\" in Tokens. Dasselbe Konto funktioniert auf Android, iPhone und in jedem modernen Browser.",
+    "iphone": "iPhone",
+    "notSure": "Äscht noch immer net, welcher DeHub dir gefällt? <compare>DeHub vs DePaul DeHUB vs Rowan DEHub</compare> klärt’s, und <guide>Was isch der DeHub?</guide> gäbt’s auf den Punkt.",
+    "seoDescription": "Läd dir die DeHub-App herunter: Open-Source, nutzerbesitzte Social-Media-Plattform mit Livestreaming, verschlüsselter Messaging und Watch-to-Earn. Kostenlos auf Google Play, dem App Store und der Webseite."
+  },
+  "dehubLinks": {
+    "copyLinkDetail": "Kopier den {{item}} Link in deine Zwischenablage.",
+    "kind": {
+      "bounty": "Boni",
+      "community": "gemeinde",
+      "communityInvite": "gemeinde-einladung",
+      "event": "ereignis",
+      "film": "Titel",
+      "link": "link",
+      "listing": "artikel",
+      "post": "post",
+      "profile": "profil",
+      "proposal": "Vorschlag",
+      "stage": "Stufe",
+      "store": "laden"
+    },
+    "recipientUser": "Benützer",
+    "sentTo": "{{item}} gschickt an {{name}}"
+  },
+  "loginStack": {
+    "aiRestyle": "KI-Restyling",
+    "codeNote": "Wir schicken dir per E-Mail einen Code, kein Passwort nötig.",
+    "exploreFirst": "Erst erkunden",
+    "fingerprint": "Fingerabdruck",
+    "headlineAccent": "und glücklich sein.",
+    "headlineTop": "Du wirst alles besitzen",
+    "orContinueWith": "oder weitermachen mit",
+    "phone": "Telefon"
+  },
+  "player": {
+    "volume": "Lautstärke"
+  },
+  "quickActions": {
+    "question": "Was is mit dieser Seite schief?",
+    "title": "Seitenoptionen"
+  },
+  "streamPage": {
+    "faq": {
+      "a1": "Ja. DeHub is gratis, um beizutreten und um zu posten, und das Minten eines Streams on-chain is optional. Das Importieren eines Kanals kostet Geld, und der Preis wird dir vor dem Bezahlen angezeigt.",
+      "a2": "No. Mach weiter mit dem Streaming, wo deine Zielgruppe heute ist, und baue parallel auf DeHub aus. Poste kreuzweise vom DeHub-Composer, sodass jede Plattform, die du schon nutzt, auf deine eigene Zielgruppe verweist.",
+      "a3": "Ja. Wähl OBS, wenn du live gehst, und DeHub gibt dir einen dauerhaften Stream-Key für OBS, Streamlabs oder jedes andere RTMP-Encoder. Du kannst auch direkt von deinem Handy, deinem Browser oder einer Capture-Karte live gehen.",
+      "a4": "Zuschauende können während eures Streams Tipps schicken und Geschenke überlassen, und die landen direkt in DeHub-Tokens auf eurer Wallet. Uploads könnt ihr auch gratis, pay-per-view oder token-gated machen.",
+      "a5": "Öffne die Affiliate-Seite, um deinen Link zu holen. Wer über dich beitritt, wird dir zugeschrieben, und du kassierst 20% von deren Aktivität plus 5% wiederkehrend von den Personen, die sie einladen – ausbezahlt in DeHub-Tokens.",
+      "q1": "Nö, auf DeHub isch’s net gratis, um Videos zu streamen. Du brauchst a Abo oder kaufst dir Credits.",
+      "q2": "Muss ich auf TikTok oder Twitch mit dem Streamen aufhören?",
+      "q3": "Ja, du kannst mit OBS streamen.",
+      "q4": "Wie bechume ich mis Gäld?"
+    },
+    "faqTitle": "Häufige Fragen",
+    "heading": "Stream on DeHub",
+    "howToStart": "Meld dich an, öffne den Post-Composer und tippe auf «Live gehen» – von deiner Kamera, OBS oder einer Capture Card.",
+    "importYoutube": "Läd dein YouTube-Kanal hoch.",
+    "intro": "Bring deine Live-Publikum auf eine Plattform, die du besitzscht. Geh live von deinem Handy, vom Browser oder OBS, lass dich während dem Stream on-chain getippt und behalt die Publikum, die du aufbaust. DeHub isch vo der Team hinter First Class Agency, der grösste officiell TikTok LIVE-Partneragentur in der UK, mit über 1’000 Live-Streamer.",
+    "inviteLink": "Hol dir de Invite-Link.",
+    "moreGuides": "Kummst du von TikTok? Lies <tiktok>die UK-Creator-Anleitung zum Verlassen von TikTok</tiktok> und <live>Web3-Livestreaming: eine dezentrale Twitch-Alternative</live>.",
+    "proof": {
+      "label1": "Aktuelle Zuschauer:innen auf DeHub Live-Streaming",
+      "label2": "Uptime über Streaming-Dienste",
+      "value3": "Sub-200-Millisekunden"
+    },
+    "reasons": {
+      "body1": "Zuschauende gönn a Tipp oder schick Gäbi während du live bist, mit gestaffelten Gäbi-Animations und Tipp-Nachrichten, die live vorgelesen worde. Tipp sitz direkt auf der Blockchain in DeHub-Tokens und lande direkt in deinem Wallet – ohne dass etwä was abgezogen worde.",
+      "body2": "De Follower:schäi sünd nit eini Rigi in enandere Dataabäi. Streams und Uploads gönnt mer auf-chain in de Wallet, de Feed is chronologisch, und de Code is open source – so kann mer nit stillschweigend de Regli umschribi.",
+      "body3": "De Invite-Link zahlt dir 20% vom Aktivität von jedermännle, der durch ihn beitrete, plus 5% wiederkehrend von den Leut, die sie dann weiterempfehlen, ausbezahlt in DeHub-Tokens.",
+      "body4": "Host live Audio-Stages für Fragen, Kollaborationen und Watchpartys. Verkündig eine vorher mit einer Karte, die deine Audience teilen kann, und hör dir die aufgezeichneten an.",
+      "body5": "Verbinde deine anderen Konten einmalig mit und veröffentliche auf X, Instagram, YouTube, TikTok, Farcaster und acht weitere Plattformen via dem DeHub-Composer. Lass TikTok als dein Entdeckungs-Engine, während du deine eigene Community aufbaust.",
+      "body6": "Importiere ein ganzes YouTube-Kanal, oder ein TikTok-, Vimeo- oder SoundCloud-Profil auf einmal. Der genaue Preis wird in DeHub-Token angezeigt, bevor du zahlst.",
+      "title2": "Ei eigi eigi Audienz, wo du besitzscht.",
+      "title3": "Gschäft mit jedem, den du bringscht.",
+      "title4": "Live-Stages",
+      "title5": "Poste überall auf einmal."
+    },
+    "seoDescription": "Geh live auf DeHub: on-chain Tips, die direkt in dein Wallet fliegn, ein Publikum, das dir gehört, Posten auf deine anderen Plattformen mit einem Klick, und 20% von jedem, den du einlädst.",
+    "seoTitle": "Streamen auf DeHub — Live-Streaming für TikTok- & Twitch-Creator:innen",
+    "startStreaming": "Starts gschtümmelt",
+    "whyTitle": "Warum streamst du auf DeHub?"
+  },
   "desktopWordmark": {
     "pageTitle": "Desktop-Logo-Vorschau",
     "heading": "DeHub Desktop-Logo",
@@ -274,6 +429,10 @@
     "heading": "DeHub Shorts"
   },
   "settings": {
+    "glass": "Glässe",
+    "sessionsRevokedMany": "{{count}} Geräte abgemeldet",
+    "showDislikes": "Zeig mir meine Abneigungen an alle.",
+    "showDislikesDesc": "Jeder kann d' Dislikes-Seite uf deinem Profil öffne. Wenn das abgswitcht isch, channs numme du si sehe.",
     "usernameTaken": "Benutzername scho vergä",
     "postingChain": "Blockchain für Biiträg",
     "showOnline": "Zeig, wenn i online bi.",
@@ -725,6 +884,9 @@
     "solanaUnlinkFailed": "Die Wallet het nöd chöne trennt wärde"
   },
   "common": {
+    "confirm": "Bestätige.",
+    "mute": "Mute",
+    "unmute": "Unmute",
     "save": "Speichere",
     "cancel": "Abbräche",
     "delete": "Lösche",
@@ -1557,6 +1719,33 @@
     "deleteConversationFailed": "Han d'Konversation nöd chönne lösche"
   },
   "music": {
+    "listeningCount_one": "{{count}} Zuhörende",
+    "listeningCount_other": "{{count}} Zuhörende",
+    "chartVideos": "Musikvideos",
+    "country": "Land",
+    "linkCopied": "Link kopiert",
+    "listenLive": "Live hören",
+    "liveRadio": "Live-Radio",
+    "mostLiked": "Meist gfallt",
+    "mostListened": "Meist gehöre",
+    "mostPlayed": "Meist gespielte",
+    "mostVoted": "Meist abgestimmte",
+    "newest": "Neueste",
+    "nextStation": "Nächste Station",
+    "onAir": "Im Aire",
+    "pause": "Pause",
+    "plays": "Abstimmungen",
+    "quality": "Qualität",
+    "radioPicks": "Dei mei Wahlä",
+    "recentStages": "Räscht",
+    "shareStation": "Station teilen",
+    "shareStationTitle": "{{name}} uf DeHub Radio",
+    "stagesChartOrder": "Stufen chart ordnung",
+    "trending": "Trending",
+    "trendingWeek": "Dit is aktuell",
+    "videoChartOrder": "Musikvideochart-Ordnig",
+    "videoCharts": "Musikvideo-Charts",
+    "votes": "Stimmen",
     "all": "Alli",
     "tracks": "Tracks",
     "videos": "Videos",
@@ -1571,6 +1760,14 @@
     "returnHome": "Zrugg zur Startsyte"
   },
   "profile": {
+    "dislikes": {
+      "emptyOther": "Noch kenne ni abgstimmte.",
+      "emptyOwn": "Posts, wo du abgstimmst, verschwinden uss deine Follower und erscheine hier. Undo abstimme, um e Post zurückzubringe.",
+      "emptyTitle": "Noch kenne ni abgstimmte",
+      "loadMore": "Mehr laden",
+      "privateDesc": "Dä Konto haltet siini Abstimmungen für sich.",
+      "privateTitle": "Abstimmungen sind privat"
+    },
     "back": "Zrugg",
     "usernameAvailable": "Benutzername verfüegbar!",
     "signUpToClaim": "Mäld di aa zum",
@@ -1598,6 +1795,7 @@
       "commentUnavailable": "Dies Kommentär isch nöd meh verfügbar"
     },
     "tabs": {
+      "dislikes": "Abstimmungen",
       "playlists": "Playlistä"
     },
     "offerWorthNow": "Um die {{amount}} Tokens zum aktuelle Kurs",
@@ -1688,6 +1886,73 @@
     "tokensUnit": "Tokens"
   },
   "agents": {
+    "life": {
+      "compose": "Als dä Agent postiere",
+      "daily": "Posts heut: {{posts}} · Täglich Ziil: {{target}}",
+      "editComment": "Kommentar bearbeiten",
+      "imageUrl": "Bild-URL (optional)",
+      "less": "Weniger zeigen",
+      "more": "Mehr Aktivität zeigen",
+      "postQueued": "Post in Warteschlange. Follt si in Aufgaben oben.",
+      "postText": "Posttext",
+      "queueHelp": "Veröffentlicht dä exakti Text. 20-Minuten-Postpauke gältet. Keini Minting.",
+      "queuePost": "Warteschlange postiere",
+      "unlike": "Ungleich",
+      "unliked": "Ungelikt",
+      "viewPost": "Post aneeseen"
+    },
+    "tasks": {
+      "actionsProcessed": "ausgeführte Aktionen",
+      "allCategories": "Jeder Posting über alle Kategorien. Kein Keyword-Filter und keine Drei-Likes-Aufgabenbegrenzung.",
+      "cancelSwarm": "Schwarm abbrechen",
+      "cancelTask": "Aufgabe abbrechen",
+      "clearSelection": "Auswahl löschen",
+      "controlUpdated": "Aktualisiert {{count}} Aufgaben",
+      "distribution": "Wie Agenten den Auftrag ausführen",
+      "eachHelp": "Sende diese Anweisungen an alle ausgewählten Agenten. Jeder Agent führt den gesamten Auftrag mit der gewünschten Geschwindigkeit aus. Gemeinsame Posting-Grenzen gelten weiterhin.",
+      "eachMode": "Jeder Agent macht das",
+      "enabled": "Aktiviert · Aktivität",
+      "enabledHelp": "Aktiviert bedeutet, dieser Agent ist verfügbar. Die folgenden Aufgabenstatus zeigen an, ob er läuft, wartet, pausiert oder fehlgeschlagen ist.",
+      "lastActive": "Letzte Aktivität",
+      "list": "Aufgaben",
+      "loading": "Lade Aufgaben…",
+      "noActivity": "Keine Aktivität aufgezeichnet",
+      "noTasks": "Für diesen Agenten noch keine Aufgaben.",
+      "oneAgent": "Ein Agent",
+      "pause": "Pause",
+      "pauseSwarm": "Schwarm pausieren",
+      "preparing": "Vorbereitung der Aufgabe…",
+      "promptLimits": "Anfragen für jedes Posting nutzen alle Kategorien. Themenbasierte selektive Likes sind auf drei pro Lauf beschränkt. Alle Agenten teilen sich die Posting-Lücke; das Schreiben kann Credits verbrauchen.",
+      "resume": "Fortsetzen",
+      "resumeSwarm": "Eligible Agenten wieder aufnehmen",
+      "reviewMembers": "Aufgaben mit unklaren Aktionen benötigen eine individuelle Überprüfung vor der Wiederaufnahme. Eine bereits in Bearbeitung befindliche Aktion kann nach einer Pause oder einem Abbruch abgeschlossen werden.",
+      "run": "Prompt ausführen",
+      "runSwarm": "Schwarm ausführen",
+      "selectAll": "Alle Agenten auswählen",
+      "selectedCount": "{{count}} von {{total}} ausgewählt",
+      "sharedMode": "Arbeit teilen",
+      "skip": "Überspringe nicht bestätigte Aktion und setze fort",
+      "swarm": "Schwarm",
+      "window": {
+        "allTime": "Gesamte Zeit",
+        "author": "Autor (optional)",
+        "authorAll": "Alle Creator",
+        "authorChoose": "Creator auswählen",
+        "authorPlaceholder": "@Benutzername oder Wallet",
+        "category": "Kategorie (optional)",
+        "categoryAll": "Alle Kategorien",
+        "categoryChoose": "Kategorien auswählen",
+        "categoryHint": "Füge beliebige Kategorienamen ein, getrennt durch Kommas, bis zu 20. Ein Post kann jede ausgewählte Kategorie treffen. Lass es leer für alle.",
+        "categoryPlaceholder": "Genauer Kategoriename",
+        "dislike": "Nicht mögen",
+        "filterHelp": "Lass die Filter leer für alle Posts. Wenn beide gesetzt sind, müssen beide übereinstimmen. Bestehende Reaktionen bleiben erhalten; Auswahl der gegenteiligen Reaktion ändert sie.",
+        "last1h": "Letzte Stunde",
+        "last30d": "Letzte 30 Tage",
+        "title": "Jeder Post in einem Zeitabschnitt",
+        "write": "Instruktionen schreiben"
+      },
+      "windowLimits": "Alle passenden Postings werden in die Warteschlange gestellt. Aktionsgrenzen bestimmen das Tempo; sie kürzen den Auftrag nicht auf drei Postings. Das Schreiben von Antworten kann Credits verbrauchen."
+    },
     "title": "KI-Agente",
     "connectToManage": "Verbinde zum KI-Agente z verwaltä",
     "signInToCreate": "Mäld di aa zum dini KI-Agente z erstelle und z verwaltä.",
@@ -1844,6 +2109,7 @@
     "failedSubmit": "Bewärbig iireiche fehlgschlage. Bitte probier s nomol."
   },
   "loginModal": {
+    "continuePhone": "Weiter mit dem Handy",
     "unlockBiometricContinue": "Entsperr dini Brieftasche mit dim Fingerabdruck oder dim Gsicht zum Witermaache.",
     "unlockBiometricSignIn": "Entsperr dini Brieftasche mit dim Fingerabdruck oder dim Gsicht zum Aameelde.",
     "unlockPasswordContinue": "Gib dini Brieftasche-Passwort ii zum Witermaache.",
@@ -1969,6 +2235,14 @@
     "applicationFailed": "Iireiche fehlgschlage. Bitte probier s nomol."
   },
   "dao": {
+    "status": {
+      "accepted": "Angenommen",
+      "cancelled": "Storniert",
+      "completed": "Abgeschlossen",
+      "expired": "Abgelaufen",
+      "open": "Open",
+      "rejected": "Abgelehnt"
+    },
     "title": "DAO Schatzchämmer",
     "subtitle": "Ein Wallet, vo de Community gfüederet, vo ihre Stimm usgäh",
     "contribute": "Beitraged",
@@ -2009,6 +2283,17 @@
     "votingPowerNote": "Abstimmige dauert 7 Tag. D Abstimmigskraft isch jede Biitragende sini kumulativi Token-Biitrag, wenn die Vorschlag uuftut. Mindeschtens 10% müend mitmache und \"Aanää\" muess \"Ablehne\" überbiete."
   },
   "governance": {
+    "addMedia": "Bild oder Video hinzufügen",
+    "badgeHoldersOnly": "Nur mit Badge",
+    "decidedInTabs": "Entschiedene Vorschläge findscht si im *Abgelehnt* und *Angenommen* Tab.",
+    "freeForBadgeHolders": "Kostenlos für Badge-Inhaber. Dein Entwurf speichert sich, während du tipst.",
+    "mediaTooLarge": "Dateien müssä no 50 MB gross sää.",
+    "mediaTypeInvalid": "Wähle ein Bild oder ein Video.",
+    "noOpenProposals": "Aktuell keine offenen Vorschläge.",
+    "proposalFeeNote": "Vorschläge kosten 10'000 DHB ohne Staking-Badge. Dein Entwurf speichert sich, während du tipst.",
+    "removeMedia": "Anlage entfernen",
+    "submitFailed": "Hä scheitert am Einreichen vo’m Vorschlag.",
+    "uploadFailedDetail": "Upload gescheitert: {{message}}",
     "title": "Verwaltig",
     "proposalCount": "{{count}} Vorschläg",
     "proposalCount_other": "{{count}} proposals submitted",
@@ -2102,6 +2387,7 @@
     "weeksAgo": "vor {{count}}W"
   },
   "sidebar": {
+    "switchAccount": "Wechseln Sie zum anderen Konto",
     "talkOfTheTown": "Stadtgspröch",
     "nothingTrending": "No nüt im Trend",
     "posts": "Theme",
@@ -2711,6 +2997,9 @@
     "chessOnlineIntro": "Live-Duelle gegen andere Spieler. Wetten in DeHub-Tokens kommen bald."
   },
   "stats": {
+    "money": {
+      "estimatedOperations": "Gschätzti Operatione"
+    },
     "community": {
       "title": "Gmeinschaft",
       "members": "Mitglieder",
@@ -5645,6 +5934,7 @@
     }
   },
   "goLive": {
+    "connectionFailed": "De Übertragungsverbindung isch gescheitert.",
     "bigEvent": "Grosse Event",
     "bigEventHint": "Für es grosses Publikum: d Zuschauer gsehnd öppe 20 Sekunde verzögeret, defür mit weniger Unterbrüch.",
     "goLive": "Go Live",
@@ -6411,6 +6701,7 @@
     "newMessage": "{{name}} het dir e Nachricht gschickt"
   },
   "audioPost": {
+    "visualizerColour": "Farbvisualisierer",
     "popOut": "Pop uus — höre witer während du browscht",
     "closeCornerPlayer": "Schliess de Eckespieler",
     "cornerPlayer": "Audio-Biitraag Widergoob",
