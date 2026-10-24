@@ -40,6 +40,9 @@
 html:is([data-theme="light"], [data-system-tone="light"]):not(#_):not(#_):not(#_):not(#_):not(#_) [data-profile-art] {
   background: #0b0b0d !important;
   color: #fff !important;
+  --ink: #fff;
+  --ink-muted: rgba(255,255,255,.82);
+  --muted-foreground: 0 0% 82%;
   --control-fill: rgba(255,255,255,.1);
   --control-raised: rgba(255,255,255,.16);
   --control-ink: #fff;
