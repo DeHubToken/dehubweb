@@ -1,4 +1,18 @@
 {
+  "desktopWordmark": {
+    "pageTitle": "Töölaua logo eelvaade",
+    "heading": "DeHubi töölaua logo",
+    "day": "Päev {{day}}",
+    "replay": "Esita sissejuhatus uuesti",
+    "enlarge": "Suurenda",
+    "actualSize": "Tegelik suurus",
+    "reassemble": "Pange logo uuesti kokku",
+    "loading": "Laadimine",
+    "ready": "Valmis",
+    "interrupted": "Graafika lõpetas reageerimise",
+    "unavailable": "3D eelvaadet ei saanud laadida",
+    "hint": "Logo jääb kaheks sekundiks terveks ja puruneb seejärel laiali. Viige kursor selle kohale või valige see, et see uuesti kokku panna."
+  },
   "mastodonApps": {
     "authTitle": "Logi sisse DeHubiga",
     "authWants": "{{app}} soovib kasutada sinu DeHubi kontot",

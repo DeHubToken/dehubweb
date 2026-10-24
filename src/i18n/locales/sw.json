@@ -1,4 +1,18 @@
 {
+  "desktopWordmark": {
+    "pageTitle": "Uhakiki wa nembo ya kompyuta ya mezani",
+    "heading": "Nembo ya Desktop ya DeHub",
+    "day": "Siku {{day}}",
+    "replay": "Cheza utangulizi tena",
+    "enlarge": "Panua",
+    "actualSize": "Ukubwa halisi",
+    "reassemble": "Unganisha tena nembo",
+    "loading": "Inapakia",
+    "ready": "Tayari",
+    "interrupted": "Michoro iliacha kujibu",
+    "unavailable": "Haikuweza kupakia hakikisho la 3D",
+    "hint": "Nembo hukaa nzima kwa sekunde mbili, kisha huvunjika. Sogeza juu yake au uichague ili kuirudisha pamoja."
+  },
   "mastodonApps": {
     "authTitle": "Ingia ukitumia DeHub",
     "authWants": "{{app}} inataka kutumia akaunti yako ya DeHub",

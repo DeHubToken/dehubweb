@@ -1,4 +1,18 @@
 {
+  "desktopWordmark": {
+    "pageTitle": "ቅድመ ምርኣይ ምልክታ ዴስክቶፕ",
+    "heading": "DeHub ዴስክቶፕ አርማ",
+    "day": "መዓልቲ {{day}}",
+    "replay": "ነቲ መእተዊ መሊስካ ስዓቦ",
+    "enlarge": "ምስፍሕፋሕ",
+    "actualSize": "ስሩዕ መጠን",
+    "reassemble": "ነቲ ምልክታ ዳግም ኣማዕብል",
+    "loading": "መእተዊ",
+    "ready": "ተዳልዩ",
+    "interrupted": "እቲ ስእሊ መልሲ ኣይረኸበን ።",
+    "unavailable": "3D ቅድመ-እይታ ክጭፍልቕ ኣይከኣልኩን ።",
+    "hint": "እቲ ምልክታ ንክልተ ካልኢት ምሉእ ኮይኑ ፡ ድሕሪኡ ድማ ተፈልዩ ። ኣብ ልዕሊኡ ወይ ከኣ ብሓባር ንምምላስ ሕረዮ ።"
+  },
   "mastodonApps": {
     "authTitle": "ብDeHub እቶ",
     "authWants": "{{app}} ሕሳብኩም ናይ DeHub ክጥቀም ይደሊ",

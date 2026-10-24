@@ -1,4 +1,18 @@
 {
+  "desktopWordmark": {
+    "pageTitle": "Asztali logó előnézete",
+    "heading": "DeHub asztali logó",
+    "day": "{{day}}. nap",
+    "replay": "Bevezető újrajátszása",
+    "enlarge": "Nagyít",
+    "actualSize": "Valódi méret",
+    "reassemble": "A logó újra összerakása",
+    "loading": "Betöltés",
+    "ready": "Kész",
+    "interrupted": "A grafika nem válaszol",
+    "unavailable": "Nem sikerült betölteni a 3D előnézetet",
+    "hint": "A logó két másodpercig egyben marad, majd darabokra esik. Vidd fölé az egeret, vagy jelöld ki, és újra összeáll."
+  },
   "mastodonApps": {
     "authTitle": "Bejelentkezés DeHubbal",
     "authWants": "A(z) {{app}} használni szeretné a DeHub-fiókodat",

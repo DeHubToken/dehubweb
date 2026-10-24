@@ -1,4 +1,18 @@
 {
+  "desktopWordmark": {
+    "pageTitle": "Ish stoli logotipini oldindan ko'rish",
+    "heading": "DeHub ish stoli logotipi",
+    "day": "{{day}}-kun",
+    "replay": "Kirishni qayta ijro etish",
+    "enlarge": "Kattalashtirish",
+    "actualSize": "Haqiqiy o'lcham",
+    "reassemble": "Logotipni qayta yig'ish",
+    "loading": "Yuklanmoqda",
+    "ready": "Tayyor",
+    "interrupted": "Grafika javob bermay qoldi",
+    "unavailable": "3D ko'rinishni yuklab bo'lmadi",
+    "hint": "Logotip ikki soniya butun turadi, keyin parchalanib ketadi. Uni qayta yig'ish uchun kursorni ustiga olib boring yoki uni tanlang."
+  },
   "mastodonApps": {
     "authTitle": "DeHub orqali kirish",
     "authWants": "{{app}} DeHub akkauntingizdan foydalanmoqchi",

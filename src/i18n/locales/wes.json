@@ -1,4 +1,18 @@
 {
+  "desktopWordmark": {
+    "pageTitle": "Preview for desktop logo",
+    "heading": "Di DeHub desktop logo",
+    "day": "Dei {{day}}",
+    "replay": "Play di intro again",
+    "enlarge": "Mek am big",
+    "actualSize": "Di real size",
+    "reassemble": "Join di logo back",
+    "loading": "E di load",
+    "ready": "E don ready",
+    "interrupted": "Di graphics no di answer again",
+    "unavailable": "We no fit load di 3D preview",
+    "hint": "Di logo go stay whole for two second, den e go broke for piece. Put mouse for top am or choose am make e join back."
+  },
   "mastodonApps": {
     "authTitle": "Sign in with DeHub",
     "authWants": "{{app}} want use your DeHub account",

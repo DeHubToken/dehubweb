@@ -1,4 +1,18 @@
 {
+  "desktopWordmark": {
+    "pageTitle": "Masaüstü logo önizleme",
+    "heading": "DeHub masaüstü logosu",
+    "day": "Gün {{day}}",
+    "replay": "Tanıtımı tekrar oynat",
+    "enlarge": "Büyüt",
+    "actualSize": "Gerçek boyut",
+    "reassemble": "Logoyu yeniden birleştirin",
+    "loading": "Yükleniyor",
+    "ready": "Hazır",
+    "interrupted": "Grafikler yanıt vermeyi durdurdu",
+    "unavailable": "3D önizleme yüklenemedi",
+    "hint": "Logo iki saniye boyunca bütün kalır, sonra parçalanır. Üzerine gelin veya tekrar bir araya getirmek için seçin."
+  },
   "mastodonApps": {
     "authTitle": "DeHub ile giriş yap",
     "authWants": "{{app}} DeHub hesabını kullanmak istiyor",

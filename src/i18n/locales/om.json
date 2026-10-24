@@ -1,4 +1,18 @@
 {
+  "desktopWordmark": {
+    "pageTitle": "Durargii asxaa kompiitaraa",
+    "heading": "Asxaa kompiitaraa DeHub",
+    "day": "Guyyaa {{day}}",
+    "replay": "Seensa irra deebi'ii taphachiisi",
+    "enlarge": "Guddisi",
+    "actualSize": "Hamma dhugaa",
+    "reassemble": "Asxaa irra deebi'ii walitti qabi",
+    "loading": "Fe'amaa jira",
+    "ready": "Qophaa'eera",
+    "interrupted": "Giraafiksiin deebii kennuu dhiise",
+    "unavailable": "Durargii 3D fe'uun hin danda'amne",
+    "hint": "Asxaan sekondii lamaaf guutuu ta'ee tura, achiis caccaba. Irra deebi'ee walitti qabuuf kursera isa irratti fidi ykn filadhu."
+  },
   "mastodonApps": {
     "authTitle": "DeHub'n seeni",
     "authWants": "{{app}} herrega kee DeHub fayyadamuu barbaada",

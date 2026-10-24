@@ -1,4 +1,18 @@
 {
+  "desktopWordmark": {
+    "pageTitle": "Darbvirsmas logotipa priekšskatījums",
+    "heading": "DeHub darbvirsmas logotips",
+    "day": "Diena {{day}}",
+    "replay": "Vēlreiz atskaņojiet ievadu",
+    "enlarge": "Palielināt",
+    "actualSize": "Faktiskais izmērs",
+    "reassemble": "Salikt logotipu atkal kopā",
+    "loading": "Notiek ielāde",
+    "ready": "Gatavs",
+    "interrupted": "Grafika pārstāja reaģēt",
+    "unavailable": "Nevarēja ielādēt 3D priekšskatījumu",
+    "hint": "Logotips paliek vesels divas sekundes, pēc tam sadalās. Novietojiet virs tā kursoru vai atlasiet to, lai to atkal saliktu kopā."
+  },
   "mastodonApps": {
     "authTitle": "Pierakstīties ar DeHub",
     "authWants": "{{app}} vēlas izmantot tavu DeHub kontu",
