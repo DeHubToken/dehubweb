@@ -70,8 +70,8 @@ let configPromise: Promise<TelegramLoginConfig> | null = null;
  * there means turning Telegram login on or swapping the bot never needs a
  * frontend build — and the button simply does not render until it is set.
  *
- * Cached for the life of the tab; a failure is cached too, so a login sheet
- * opened repeatedly on a bad network does not re-ask every time.
+ * Cache a working configuration for the tab. A failed availability request
+ * must be retried when the person actually chooses Telegram.
  */
 export function fetchTelegramLoginConfig(): Promise<TelegramLoginConfig> {
   if (configPromise) return configPromise;
@@ -87,7 +87,10 @@ export function fetchTelegramLoginConfig(): Promise<TelegramLoginConfig> {
     } catch {
       return DISABLED;
     }
-  })();
+  })().then(config => {
+    if (!config.enabled) configPromise = null;
+    return config;
+  });
   return configPromise;
 }
 
