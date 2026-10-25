@@ -6869,3 +6869,39 @@ html[data-theme="light"] [data-notifications-close],
 html[data-system-tone="light"] [data-notifications-close] {
   color: rgb(24 24 27 / 0.8);
 }
+
+/* Only measured, single-column tablet Home cards opt in. The header stays
+   above both columns; metadata and the existing actions belong beside media. */
+[data-video-card][data-tablet-portrait] {
+  display: grid;
+  grid-template-columns: var(--tablet-video-width) minmax(0, 1fr);
+  column-gap: 24px;
+  align-items: start;
+}
+[data-tablet-portrait] > [data-card-head] {
+  grid-column: 1 / -1;
+}
+html body [data-tablet-portrait] > [data-media-full] {
+  grid-column: 1;
+  grid-row: 2;
+  width: 100% !important;
+  max-height: 65svh !important;
+  margin: 0 !important;
+}
+[data-tablet-portrait] > [data-card-info] {
+  grid-column: 2;
+  grid-row: 2;
+  align-self: stretch;
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  padding-top: 0;
+  overflow-wrap: anywhere;
+}
+[data-tablet-portrait] [data-video-metadata] {
+  margin-top: auto;
+  padding-top: 16px;
+}
+[data-tablet-portrait] > :not([data-card-head], [data-media-full], [data-card-info]) {
+  grid-column: 1 / -1;
+}
