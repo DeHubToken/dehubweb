@@ -14672,7 +14672,7 @@
     "elements": {
       "shapes": "Qaababka",
       "hint": "Guji qaab si aad ugu darto bogga. Jiid gacan-qabsiyada dhinacyada si aad u kala fidiso, geesaha si aad u beddesho cabbirka.",
-      "downloadFile": "Download element file",
+      "downloadFile": "Soo deji faylka curiyaha",
       "insert": "Geli element",
       "inserted": "Waxaa la geliyay {{name}}",
       "keepProportions": "Hayso sicir-bararka ilaha marka aad gasho",
@@ -15625,7 +15625,7 @@
       "hint": "Ka soo jiido taliye si aad ugu darto hage. Xulo hagaha Edit si aad u guurto hagayaasha, ama ka jiid bogga si aad uga saarto. Tilmaamaha iyo xuduudaha laguma darin soo dejinta.",
       "horizontal": "Siman",
       "margin": "Xuduud",
-      "pixelPosition": "{{position}} pixels",
+      "pixelPosition": "{{position}} bikseel",
       "position": "Mowqifka sida boqolkiiba",
       "remove": "Ka saar {{direction}} hagaha {{position}}%",
       "replaceExisting": "Beddel tilmaamaha jira",
@@ -16083,7 +16083,7 @@
       "descending": "Ku sort Z–A / 9–0",
       "mergeRange": "Ku merge cells",
       "rawNumbers": "Ku naxariisto raw numbers",
-      "sampleDataSize": "{{rows}} rows · {{series}} columns",
+      "sampleDataSize": "{{rows}} riidka · {{series}} kooxda",
       "scaleCentred": "Ku centre scale on zero",
       "sizingSection": "Habayak iyo boqortooyinka row iyo column",
       "unmergeRange": "Ka fur isku-darka {{range}}",
@@ -16100,7 +16100,7 @@
       "curve": "Qalooc {{value}}",
       "editingTools": "Awoodiyooyinka text",
       "effects": "Effects text",
-      "listStyle": "List style"
+      "listStyle": "Qaabka liiska"
     },
     "textSearch": {
       "emptyAfterReplacement": "Lakabkan wuxuu ahaan doonaa mid madhan",

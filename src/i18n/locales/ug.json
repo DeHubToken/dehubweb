@@ -15064,7 +15064,7 @@
       "opacity": "Buxarishning qorinish darajasi",
       "pointHint": "Simplifying kichik farqlarni, rasmlarning boxiga nisbatan, o'chiradi. Yopiq rasmlar kamida uchta nuqta saqlaydi. Smoothing va stroke usullari hali ham qo'llaniladi; undo asl nuqtalarni qayta tiklaydi.",
       "points": "Rasmlar nuqta ({{count}})",
-      "precision": "Simplification precision",
+      "precision": "ئاددىيلاشتۇرۇش ئېنىقلىقى",
       "smoothing": "Smoothing",
       "suggestedShape": "Tavsiya qilingan: {{shape}}"
     },
@@ -15487,7 +15487,7 @@
       "findReplace": "تېپىش ۋە ئالماشتۇرۇش پروگراممىسى",
       "insert": "كىرگۈز",
       "matchCase": "مۇسابىقە ئەھۋالىنى ماسلاشتۇرۇش",
-      "matches": "{{count}} text layers found",
+      "matches": "{{count}} تېكىست قاتلىمى تېپىلدى",
       "pasteStyle": "قويۇش ئۇسلۇبى",
       "replaceAll": "ھەممىنى ئالماشتۇرۇش",
       "replaceWith": "بىلەن ئالماشتۇرۇش",
@@ -15628,7 +15628,7 @@
       "hint": "ھىدايەت قوشۇش ئۈچۈن ھاكىمىيەتچىدىن تارتىۋېلىڭ. يول كۆرسەتكۈچلەرنى يۆتكەش ئۈچۈن يول كۆرسەتكۈچلەرنى تاللاڭ ياكى يول كۆرسەتكۈچلەرنى ئۆچۈرۈش ئۈچۈن بەتتىن چىقىرىۋېتىڭ. يول كۆرسەتكۈچلەر ۋە چېگرالار چۈشۈرۈشكە كىرگۈزۈلمەيدۇ.",
       "horizontal": "ئۇستىگە يۆتكىلىش",
       "margin": "مەھسول",
-      "pixelPosition": "{{position}} pixels",
+      "pixelPosition": "{{position}} پىكسېل",
       "position": "%s نىڭ ئورنى",
       "remove": "{{direction}} يېتەكچىسىنى ئۆچۈرۈش {{position}}%",
       "replaceExisting": "مەۋجۇت كۆرسەتكۈچلەرنى ئالماشتۇرۇش پروگراممىسى",
@@ -16158,7 +16158,8 @@
       "svgPadding": "قوشۇمچە قاچىلاش",
       "svgScopeHint": "نۆۋەتتىكى ئاچقۇچلۇق ئورۇندا 100 تاللانغان شەكىل، رەسىم، بەلگە ۋە باغلىغۇچ قاتلىمىنى ئېكسپورت قىلىدۇ. بەتنىڭ ئۆلچەملىرىنى ساقلاڭ، بەتنىڭ ئورنىنى ساقلاڭ، قاتلام چېگراسىغا ماس كېلىدىغان زىرائەتلەرنى ساقلاڭ. تېكىست، رەسىم ۋە سانلىق مەلۇمات گرافىكلىرى ئۆز ئېكسپورتلىرىنى ئىشلىتىدۇ.",
       "title": "تاللانغان ئۇسلۇب ۋېكتورى ({{count}})",
-      "width": "خەرىتىنىڭ كەڭلىكى"
+      "width": "خەرىتىنىڭ كەڭلىكى",
+      "pageSize": "بەت ئۆلچىمىنى ساقلاش"
     },
     "viewport": {
       "fit": "ماسلاشتۇرۇش",

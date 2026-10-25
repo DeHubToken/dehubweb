@@ -9147,7 +9147,7 @@
       "presetDeviceHint": "Maximaal 20 benoemde paletten en lettertypeparen, opgeslagen op dit apparaat voor uw account. Logo's blijven in de huidige merkkit.",
       "presetLibrary": "Opgeslagen merkstijlen",
       "presetLoaded": "Geladen merkstijlen. Pas het merk toe om dit ontwerp te herstylen.",
-      "presetName": "Brand preset name",
+      "presetName": "Naam van merkvoorinstelling",
       "replacePreset": "Vervangen door huidige",
       "saveNewPreset": "Nieuw opslaan",
       "saveStyles": "Sla stijlen op met ontwerp",
@@ -9718,7 +9718,7 @@
     },
     "dataExport": {
       "copyCells": "Kopieer cellen",
-      "csv": "Download CSV",
+      "csv": "CSV downloaden",
       "formulasAsText": "Formules als tekst behandelen"
     },
     "dataImport": {
@@ -10197,7 +10197,7 @@
       "correction": "Foutcorrectie",
       "downloadCalendar": "Download agenda-activiteit (.ics)",
       "downloadCalendarHint": "Sla deze activiteit op als een importerbaar agenda-bestand.",
-      "downloadContact": "Download contact (.vcf)",
+      "downloadContact": "Contact downloaden (.vcf)",
       "downloadContactHint": "Sla deze contactgegevens op als een bestand voor je adresboek.",
       "downloadSvg": "Download QR als SVG",
       "failed": "Gebruik kortere tekst en twee verschillende hex-kleuren.",

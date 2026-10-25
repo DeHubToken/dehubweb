@@ -15009,7 +15009,9 @@
       "bubbleHint": "使用数字X坐标在第一列。多系列模式下，选择Y和大小列；默认使用第一系列的Y，第二系列的大小。面积与大小成比例；零大小的区域隐藏。没有大小系列，气泡大小均等。额外系列保持在源数据中。值标签显示Y/大小。坐标轴和比例可以使用日期和UTC时间。",
       "raceExample": "替换草稿为排名示例",
       "sameCategoryColour": "为所有类别使用",
-      "sampleColours": "使用样本调色板和文本颜色"
+      "sampleColours": "使用样本调色板和文本颜色",
+      "styleFileHint": "传输外观和调色板至设备。图表数据、类型、标题、中心文字和缩放边界保留在目标设计中。",
+      "xDate": "日期和UTC时间"
     },
     "dataImport": {
       "file": "导入 {{name}}",
@@ -15028,7 +15030,11 @@
       "previewLimit": "预览显示前六行选定的数据，包括标题行。所有选定的行都将被导入。",
       "ready": "{{rows}} 行和 {{columns}} 列的数据行已准备就绪",
       "separator": "文件分隔符",
-      "skipEmpty": "跳过空数据行"
+      "skipEmpty": "跳过空数据行",
+      "paste": "粘贴表格数据",
+      "pastedName": "粘贴的表格",
+      "selectionPreview": "选定的数据预览",
+      "use": "使用选定的数据"
     },
     "backgrounds": {
       "hint": "复制此页面的照片、渐变或实色背景。锁定的背景保持不变。",
@@ -15216,7 +15222,8 @@
     },
     "dataExport": {
       "csv": "下载 CSV",
-      "formulasAsText": "公式被视为文本"
+      "formulasAsText": "公式被视为文本",
+      "copyCells": "复制单元格"
     },
     "dataVisual": {
       "captionHint": "标题和字幕出现在图形内部，保留图形上方和下方的空白空间。SVG 描述随着矢量输出一起出现；其他输出格式保留可见文本。描述主要发现和相关值的替代文本。",
@@ -15255,7 +15262,14 @@
       "textColour": "文字",
       "title": "图表和表格",
       "values": "显示值",
-      "vectorHint": "以透明背景导出此图形。文字保持可编辑，并使用可用的所选字体。"
+      "vectorHint": "以透明背景导出此图形。文字保持可编辑，并使用可用的所选字体。",
+      "accent": "音调",
+      "addColumn": "添加列",
+      "addRow": "添加行",
+      "captionControls": "标题、说明和 SVG 描述",
+      "expandData": "扩展数据编辑器",
+      "expandedData": "编辑图形数据",
+      "fixSource": "使用源数据修正此输入。"
     },
     "designTools": {
       "replaceAll": "替换所有",
@@ -15272,7 +15286,10 @@
       "replaceWith": "替换为",
       "replacement": "更换颜色",
       "styleReady": "准备好应聘了！",
-      "toolbar": "设计工具"
+      "toolbar": "设计工具",
+      "copyStyle": "复制样式",
+      "matches": "{{count}} 文本层次结构",
+      "pasteStyle": "粘贴样式"
     },
     "diagrams": {
       "insert": "插入图表",
@@ -15309,7 +15326,8 @@
       "start": "从第几页开始",
       "suffix": "后缀",
       "title": "页面编号和重复元素",
-      "total": "显示总页数"
+      "total": "显示总页数",
+      "numberHint": "将可编辑页码添加到整个文档。数字在添加、复制、删除或重新排序页面时更新。锁定数字保持不变。"
     },
     "fills": {
       "angle": "角度",
@@ -15414,7 +15432,10 @@
       "thirds": "三分法",
       "title": "辅助线和边距",
       "vertical": "垂直",
-      "visible": "显示辅助线"
+      "visible": "显示辅助线",
+      "applyGrid": "应用网格",
+      "centre": "居中",
+      "direction": "引导方向"
     },
     "help": {
       "keyboardHint": "快捷键适用于文本域和对话框之外。画布操作需要画布获得焦点。Mac 上的 Cmd 替代 Ctrl。",
@@ -15440,10 +15461,12 @@
       "hint": "PDF下载保留网页、电子邮件、电话、短信和页面链接。联系链接的处理取决于查看器和设备。导出目的地页面以保持内部链接活跃。",
       "mixed": "选择的艺术作品链接目标混杂，请为其指定统一的链接目标。",
       "openPage": "去到页面 {{number}}",
-      "targetPage": "目的页面"
+      "targetPage": "目的页面",
+      "remove": "移除链接"
     },
     "media": {
-      "replaceWith": "将选定图层替换为 {{name}}"
+      "replaceWith": "将选定图层替换为 {{name}}",
+      "replace": "替换选中层"
     },
     "mediaSelection": {
       "borderColour": "边框颜色",
@@ -15456,7 +15479,10 @@
       "radiusHint": "角角处理适用于矩形媒体框。",
       "removeBorder": "去掉边框",
       "resetColours": "重置颜色调整",
-      "setRadius": "设置圆角半径"
+      "setRadius": "设置圆角半径",
+      "applyFilter": "应用滤镜到选择",
+      "setBorder": "设置边框",
+      "title": "样式选中照片和视频（{{count}}）"
     },
     "mockups": {
       "caption": "地址或照片说明（可选）",
@@ -15475,7 +15501,11 @@
       "resetPlacement": "重新设置位置",
       "rotation": "模拟旋转",
       "size": "页面尺寸",
-      "title": "设备和打印样板"
+      "title": "设备和打印样板",
+      "insert": "插入模板",
+      "preview": "预览模板",
+      "previewAlt": "草稿模板布局",
+      "usePhoto": "用选中照片填充"
     },
     "notes": {
       "presenter": "演示者笔记",
@@ -15483,14 +15513,16 @@
       "hint": "名称和备注会被保存在这个设计中，但不会出现在图片、视频或PDF导出中。",
       "name": "页面名称",
       "saved": "页面笔记已保存",
-      "title": "页面笔记"
+      "title": "页面笔记",
+      "save": "保存页面笔记"
     },
     "orientation": {
       "angle": "绝对角度",
       "hint": "每个选中的层都接收相同的角度在其现有位置。 相对旋转下旋转选择。",
       "setAngle": "设置每一层",
       "title": "设置图层方向",
-      "upright": "直立的"
+      "upright": "直立的",
+      "unflip": "移除翻转"
     },
     "outline": {
       "border": "照片边框",
@@ -15499,7 +15531,8 @@
       "dashLengths": "横线和间隔长度",
       "dashOffset": "横线偏移",
       "pattern": "线条模式",
-      "width": "边框宽度：{{value}}"
+      "width": "边框宽度：{{value}}",
+      "applyPattern": "应用图案"
     },
     "pageAnimation": {
       "apply": "应用动画",
@@ -15864,7 +15897,8 @@
       "effects": "效果效果",
       "listStart": "从……开始编号",
       "numbered": "数字列表",
-      "plain": "没有任何内容"
+      "plain": "没有任何内容",
+      "listStyle": "列表样式"
     },
     "textSearch": {
       "emptyAfterReplacement": "这个层将会是空的",

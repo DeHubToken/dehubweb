@@ -11797,7 +11797,9 @@
       "pptx": "Тақдимоти PowerPoint",
       "pptxHint": "Ang bawat pahina ay nagawang isang imahe ng slide, na may mga pagtatanghal at mga Таҳрир кардани матн ва унсурҳои инфиродӣ дар тарҳи аслӣ.",
       "section": "Қисмати номбаршуда",
-      "transparent": "Заминаи шаффоф"
+      "transparent": "Заминаи шаффоф",
+      "cropMarks": "Аломатҳои буридашуда ва ҳашияҳои чопӣ",
+      "findSection": "Бахшро ёбед"
     },
     "inspector": {
       "selectHint": "Слоеи саҳнаро ё клипро дар хати вақт интихоб кунед.",
@@ -11955,8 +11957,9 @@
       "resetNames": "Бозсозии номҳо",
       "search": "Layers-action",
       "searchOverlap": "Layers-action",
-      "stackOrder": "Top layer first",
-      "startAt": "Оғоз кардан дар"
+      "stackOrder": "Аввал қабати болоӣ",
+      "startAt": "Оғоз кардан дар",
+      "lockedSkipped": "{{count}} қафли қафл нигоҳ дошта шудаанд"
     },
     "blend": {
       "normal": "Муқаррарӣ",
@@ -12288,7 +12291,8 @@
     "backgrounds": {
       "applyAll": "Stayllardan foydalaning",
       "hint": "Barcha sahifalarga sahifa fonini kopirovka qiling",
-      "updated": "{{count}} qamalgan sahifalar saqlanadi"
+      "updated": "{{count}} qamalgan sahifalar saqlanadi",
+      "skipped": "{{count}} саҳифаҳои қуфл сохта шудаанд"
     },
     "brush": {
       "capLabel": "Охири яра",
@@ -12300,7 +12304,8 @@
       "points": "Нуқтаҳои кашидан ({{count}})",
       "precision": "Дақиқии соддагардонӣ",
       "smoothing": "Ҳамворкунӣ",
-      "suggestedShape": "Пешниҳодшуда: {{shape}}"
+      "suggestedShape": "Пешниҳодшуда: {{shape}}",
+      "convertShape": "Расмро дар шакл тартиб диҳед"
     },
     "bulk": {
       "exportData": "Содироти маълумоти ҷадвалӣ",
@@ -12369,7 +12374,9 @@
       "tokenDecimals": "Ҷойҳои даҳӣ",
       "tokenHint": "I-paste ang placeholder sa tekstong template o nilalaman ng QR at piliin ang Paggamit ng placeholder sa teksto para sa layer na iyon. Ang pag-format ng mga halaga ng spreadsheet na hindi nagbabago. Ang mga numeric format ay nangangailangan ng mga parehong numero; 25 mga format bilang 25% sa porsyento na mode.",
       "tokenLocale": "Ҷойгиршавии рақам",
-      "trimToken": "Фосилаҳо пеш аз форматбандӣ"
+      "trimToken": "Фосилаҳо пеш аз форматбандӣ",
+      "applyConnectionFile": "Пайвастҳои мувофиқро татбиқ кунед",
+      "connectionsLoaded": "Пайвастҳои мувофиқ бор шудаанд"
     },
     "charts": {
       "applyImportedStyle": "Татбиқи услуб ба лоиҳа",
@@ -12537,7 +12544,8 @@
       "xDate": "Санаҳо ва вақтҳои UTC",
       "xIntervals": "Фосилаҳои меҳвари уфуқӣ",
       "xNumber": "Рақамҳо",
-      "hierarchySample": "Аврупо,Фаронса,35"
+      "hierarchySample": "Аврупо,Фаронса,35",
+      "racePosterHint": "Кадри статикӣ пешнамоиши SVG ва пешнамоиши хомакиро идора мекунад. Аниматсияро хомӯш кунед, то ин кадр дар хати вақт низ собит монад. Содироти растрӣ ва видеоии аниматсионӣ вақти нишондиҳандаи пахшро истифода мебаранд. Ҳамаи кадрҳо як миқёси ҳадди аксари собит доранд."
     },
     "clipboard": {
       "copy": "Layers-action",
@@ -12551,7 +12559,8 @@
       "canvasHint": "I-click ang isang color sa pahina. Kansela ang Escape.",
       "failed": "Ранги канвасро хондан имконнопазир аст. Дубора кӯшиш кунед ё арзиши рангро ворид кунед.",
       "ink": "Ранги матнро аз канвас интихоб кунед",
-      "pick": "Pumili mula sa canvas"
+      "pick": "Pumili mula sa canvas",
+      "accent": "Акценти ранг аз канвас интихоб кунед"
     },
     "compositions": {
       "accent": "Ранги задаи задаи тез",
@@ -12575,7 +12584,8 @@
       "sampleSubtitle": "Ҳикояи шумо аз ин ҷо оғоз мешавад.",
       "sampleTitle": "Чизе созед, ки дар хотир монад",
       "subtitle": "Матни ёрирасон",
-      "title": "Комбинатсияҳои матнӣ"
+      "title": "Комбинатсияҳои матнӣ",
+      "brandFontHint": "Шрифтҳои сарлавҳа ва матни нигоҳдоштаро ба комбинасияи нав татбиқ мекунад. Рангҳои матн ва акценти аз рӯи контролҳои дар боло истифода мебаранд; карҳои мавҷуда дар ҷойи худ мемонанд."
     },
     "connectors": {
       "bend": "Мавқеи хамшавӣ",
@@ -12899,7 +12909,8 @@
       "title": "Пайванд"
     },
     "media": {
-      "replace": "Layers-action"
+      "replace": "Layers-action",
+      "replaceWith": "Қабати интихобшударо бо {{name}} иваз кунед"
     },
     "mediaSelection": {
       "applyFilter": "Ilapat ang filter sa pagpili",
@@ -12954,7 +12965,8 @@
       "hint": "Ҳар як қабати интихобшуда дар мавқеъи мавҷудаи худ як кунҷро мегирад. Тобхурии нисбӣ дар поён интихобро якҷоя мегардонад.",
       "setAngle": "Барпосозии ҳар як қабат",
       "title": "Layers-action",
-      "unflip": "Нест кардани флипҳо"
+      "unflip": "Нест кардани флипҳо",
+      "upright": "Рост"
     },
     "outline": {
       "applyPattern": "Татбиқ кардани намуна",
@@ -13033,7 +13045,8 @@
     },
     "photoTone": {
       "original": "Рангҳои аслӣ",
-      "strength": "Қувваи дуотон"
+      "strength": "Қувваи дуотон",
+      "duotone": "Дуотон"
     },
     "photos": {
       "arrange": "Ҷойи аксҳоро иваз кунед",
