@@ -22,6 +22,9 @@ import { useTranslation as _useCopy } from 'react-i18next';
  */
 import { memo, useCallback, useEffect, useId, useMemo, useRef, useState } from 'react';
 import { MOTION_TEMPLATE_PROMPT, type ViralTemplate } from '@/lib/creator/viralTemplates';
+import { appendCinemaDirection, normalizeCinemaDirection, type CinemaDirection } from '@/lib/creator/cinemaDirection';
+import { CinemaDirectionControls } from './CinemaDirectionControls';
+import { useDraftState } from '@/hooks/use-draft-state';
 import type { GenerationDraft } from '@/lib/editor/generationDraft';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
@@ -492,6 +495,7 @@ export const CreatorStudio = memo(function CreatorStudio({ onOpenEditor, stickyT
 
   // One read of the cache, on mount, shared by every slice below.
   const [restored] = useState(readSnapshot);
+  const [cinemaDirections, setCinemaDirections] = useDraftState<ByMode<CinemaDirection>>('creator:cinema-direction', { image: {}, video: {}, audio: {}, '3d': {} });
 
   const [mode, setMode] = useState<Mode>(restored.mode);
 
@@ -786,7 +790,7 @@ export const CreatorStudio = memo(function CreatorStudio({ onOpenEditor, stickyT
         : mode === 'audio'
           ? AUDIO_ASPECT
           : MODEL3D_ASPECT;
-  const resolvedPrompt = useMemo(() => applyPreset(preset, prompt), [preset, prompt]);
+  const resolvedPrompt = useMemo(() => appendCinemaDirection(applyPreset(preset, prompt), cinemaDirections[mode], mode), [preset, prompt, cinemaDirections, mode]);
 
   /** Applying a preset also adopts the model and aspect it was tuned for. */
   const pickPreset = useCallback((next: CreatorPreset | null) => {
@@ -1838,6 +1842,7 @@ export const CreatorStudio = memo(function CreatorStudio({ onOpenEditor, stickyT
                     <label htmlFor={promptId} className="sr-only">
                       {t('creator.promptLabel')}
                     </label>
+                    <CinemaDirectionControls value={cinemaDirections[mode]} mode={mode} onChange={value => setCinemaDirections(previous => ({ ...previous, [mode]: normalizeCinemaDirection(value) }))} />
                     <textarea
                       id={promptId}
                       ref={textareaRef}
