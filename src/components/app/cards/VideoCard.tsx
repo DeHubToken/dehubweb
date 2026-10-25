@@ -2206,8 +2206,6 @@ const VideoCardBody = memo(function VideoCard({ video, postPage = false, onBack,
     <div
       ref={scrubEventRef}
       data-video-card
-      data-tablet-portrait={tabletPortrait || undefined}
-      style={tabletPortrait ? { ['--tablet-video-width' as string]: `min(44%, calc(65svh * ${mediaAspect.toFixed(4)}))` } : undefined}
       data-video-header-above={headerAboveMedia ? '' : undefined}
       onClick={isImmersive || stage ? undefined : handleCardClick}
       {...scrubZone}
@@ -2219,6 +2217,8 @@ const VideoCardBody = memo(function VideoCard({ video, postPage = false, onBack,
         ? "overflow-hidden isolate"
         : "overflow-visible cursor-pointer isolate"
       }
+      data-tablet-portrait={tabletPortrait || undefined}
+      style={tabletPortrait ? { ['--tablet-video-width' as string]: `min(44%, calc(65svh * ${mediaAspect.toFixed(4)}))` } : undefined}
     >
       {/* Header with AI and menu buttons - hidden in immersive mode and carousel (hideActions) mode */}
       {!isImmersive && !hideActions && !stage && (
