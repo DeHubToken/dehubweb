@@ -103,7 +103,7 @@ html:is([data-theme='light'],[data-system-tone='light']) [data-audio-studio-styl
 [data-audio-studio-options] [data-audio-hue] { appearance:none; background:linear-gradient(90deg,#fff 0%,#f66 7%,#ffdc60 22%,#75e88a 38%,#68dfe9 52%,#6a8ff5 68%,#ca7af2 83%,#f66 100%); height:8px; border-radius:99px; }
 [data-audio-hue]::-webkit-slider-thumb { appearance:none; width:15px; height:15px; border-radius:50%; background:transparent; border:2px solid white; box-shadow:0 1px 4px #0009; }
 [data-audio-hue]::-moz-range-thumb { width:12px; height:12px; border-radius:50%; background:transparent; border:2px solid white; box-shadow:0 1px 4px #0009; }
-html[data-theme] [data-audio-frame]:has([data-audio-studio]):not([data-video-fullscreen]):not(#_):not(#_) { height:auto !important; min-height:0; aspect-ratio:auto !important; width:100% !important; background:transparent !important; }
+html[data-theme] [data-audio-frame]:has([data-audio-studio]):not([data-video-fullscreen]):not(#_):not(#_) { height:auto !important; min-height:0; max-height:none !important; aspect-ratio:auto !important; width:100% !important; background:transparent !important; }
 html[data-theme] [data-audio-backdrop]:has([data-audio-studio]):not(#_):not(#_) { background:transparent !important; border:0; border-radius:28px; backdrop-filter:none !important; }
 [data-audio-backdrop]:has([data-audio-studio]) > .absolute { position:relative; }
 html[data-theme] [data-audio-frame][data-video-fullscreen]:has([data-audio-studio]):not(#_):not(#_) { border-radius:0; background:rgb(3 9 12 / .96) !important; }
