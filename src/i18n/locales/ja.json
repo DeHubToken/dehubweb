@@ -181,6 +181,13 @@
     "warnPaper": "紙に書き、スクリーンショットやノートアプリに記録しないでください。"
   },
   "copy": {
+    "01fad993ff61": "リアクション",
+    "05dbf9aabdc7_one": "{{count}} 件の投稿",
+    "1205929886b3": "👑 DeHub エクストラ",
+    "62c8b95e8e5e": "出来高 {{value1}}",
+    "93100fc44c0a": "@ユーザー名",
+    "a4d1abed0b2b": "モデ",
+    "f9c8b16a4071": "時価総額 {{value1}}",
     "0000cb98ea19": "スピーカーが承認されました",
     "0013fee41d62": "まだ二次アフィリエイトはありません",
     "001cab7d69a2": "@ assistantにDeHubメッセージの内容を伝えてください。アプリを構築し、ホストし、誰でも開くことができるリンクを送信します。",
@@ -5776,7 +5783,7 @@
     "ca1c93c8986f": "⏳ 処理を再開中...",
     "ca4c4a68ebc9_one": "{{count}} 日",
     "ca4c4a68ebc9_other": "{{count}} 日",
-    "ca62d5e073f5": "TV",
+    "ca62d5e073f5": "テレビ",
     "cad903684311": "ユーザーをアンフォローしました",
     "cb7691b210ac": "エスクロー報奨金: ソーシャル、クリップス、契約",
     "cbb2315229e5": "そのメンバーはバンされていません",
@@ -9421,6 +9428,7 @@
     "inviteSent": "招待を送信しました",
     "inviteToCommunity": "コミュニティに招待する",
     "manage": {
+      "banTitle": "{{name}} を禁止",
       "addAdministrator": "管理者を追加",
       "addRule": "ルールを追加",
       "adminBadge": "管理者",
@@ -9631,6 +9639,7 @@
     "communityDescription": "コミュニティの説明...",
     "posts": "投稿",
     "chat": {
+      "pinnedGif": "GIF画像",
       "intervalHour": "1時間",
       "intervalHours": "{{count}}時間",
       "intervalMinute": "1分",
@@ -10662,7 +10671,7 @@
     "quoteAsPost": "投稿として引用",
     "renameSpeaker": "スピーカーの名前を変更",
     "renameSpeakerHint": "このスピーカーをトランスクリプト全体でラベル付けするためにユーザー名を入力してください。",
-    "usernamePlaceholder": "@username",
+    "usernamePlaceholder": "@ユーザー名",
     "save": "保存",
     "copyTranscript": "トランスクリプトをコピー",
     "downloadTxt": ".txtをダウンロード",
@@ -12201,7 +12210,7 @@
     "priceDhb": "価格（トークン）",
     "bandUnder10k": "1万未満",
     "band10kTo100k": "1万～ 10万",
-    "band100kTo1m": "100k – 1M",
+    "band100kTo1m": "10万 – 100万",
     "band1mPlus": "1ヶ月",
     "clear": "クリア",
     "noSearchMatch": "売却対象のハンドルはありません。",
@@ -12324,9 +12333,9 @@
     "sortUploads": "最もアップロードが多い",
     "priceDhb": "価格（トークン）",
     "bandUnder10k": "10k未満",
-    "band10kTo100k": "10k – 100k",
-    "band100kTo1m": "100k – 1M",
-    "band1mPlus": "1M+",
+    "band10kTo100k": "1万 – 10万",
+    "band100kTo1m": "10万 – 100万",
+    "band1mPlus": "100万以上",
     "clear": "クリア",
     "forSaleCount_one": "{{count}} 販売中",
     "forSaleCount_other": "{{count}} 販売中",
@@ -15415,6 +15424,8 @@
       "trimToken": "書式設定する前にスペースをトリミングする"
     },
     "charts": {
+      "raceSettings": "ランキングアニメーション",
+      "scatterHint": "散布図は、最初の列に数値のX座標、残りの列にY値を使用します。複数のシリーズは共通のX座標を共有します。Axesとスケールを選択して、経過時間の水平軸を設定してください。",
       "applyDateBounds": "日付の制限を適用する",
       "applyImportedStyle": "下書きにスタイルを適用",
       "applyReference": "ターゲットラインを適用",
@@ -15750,6 +15761,8 @@
       "vectorHint": "このグラフィックを透明の背景でエクスポートします。テキストは編集可能で、選択したフォントを使用します。"
     },
     "designTools": {
+      "insert": "挿入",
+      "pasteStyle": "スタイルを貼り付け",
       "applySize": "サイズを適用",
       "changeAll": "すべてを変更",
       "closePanel": "パネルを閉じます",
@@ -15867,6 +15880,8 @@
       "title": "写真グリッド"
     },
     "groups": {
+      "matchReference": "リファレンスサイズ",
+      "ungroup": "グループを解除する",
       "applyOpacity": "選択したレイヤーに適用",
       "applyRotation": "選択範囲を回転",
       "applyScale": "スケールの選択",
@@ -16089,7 +16104,8 @@
       "swap": "写真を入れ替える"
     },
     "present": {
-      "goToPage": "Go",
+      "timerMinutes": "分",
+      "goToPage": "実行",
       "allHidden": "すべてのページが非表示です。このプレゼンテーションの最初のページを表示しています。",
       "blackout": "ブラックアウト",
       "browsePages": "ページ",
@@ -16183,6 +16199,7 @@
       "title": "グリッド内で選択を繰り返す"
     },
     "resize": {
+      "width": "幅",
       "anchor": "アートワークのアンカー",
       "content": "サイズ変更時のアートワーク",
       "dpi": "印刷解像度（ピクセル/インチ）",
@@ -16225,6 +16242,8 @@
       "joins": "アウトラインコーナー"
     },
     "svgPath": {
+      "filled": "閉じた塗りつぶし可能な幾何学",
+      "title": "編集可能なSVG幾何学をインポート",
       "chooseFile": "SVGファイルを選択してください",
       "colour": "パスの色",
       "data": "SVGマークアップまたはパスデータ（ d ）",
@@ -16248,6 +16267,7 @@
       "weight": "線の太さ"
     },
     "tables": {
+      "rawNumbers": "生の数値を表示",
       "allColumns": "全ての列",
       "appendSummary": "要約行を追加",
       "applyCellFill": "塗りつぶしを適用",
@@ -16405,6 +16425,7 @@
       "search": "検索ツール"
     },
     "vectorSelection": {
+      "svgBounds": "SVGディメンション",
       "applyFill": "塗りつぶしを設定",
       "applyOutline": "アウトラインを設定",
       "downloadSvg": "選択したベクトルをSVGとしてダウンロード",
@@ -16423,6 +16444,7 @@
       "width": "輪郭の幅"
     },
     "viewport": {
+      "selection": "選択",
       "fit": "フィット",
       "fitShortcut": "ページに合わせる(Shift +1)",
       "pan": "パンキャンバス",
@@ -16814,7 +16836,7 @@
   },
   "emojiPicker": {
     "tabEmoji": "絵文字",
-    "tabGif": "GIF",
+    "tabGif": "GIF画像",
     "searchEmoji": "絵文字を検索",
     "searchGifs": "GIFを検索...",
     "noEmoji": "絵文字が見つかりません",
@@ -17699,6 +17721,7 @@
       "art-creativity": "アート＆クリエイティビティ"
     },
     "pay": {
+      "title": "{{name}}を支払いますか？",
       "body": "DHBはアプリのウォレットに直接振り込まれる、{{wallet}}。支払いは取り消せません。",
       "confirm": "支払い {{amount}} トークン",
       "sending": "お支払いを送信中…",
@@ -17706,6 +17729,7 @@
       "noOwner": "このアプリにはまだ認証済みのウォレットで支払いができません。"
     },
     "add": {
+      "title": "{{name}}を追加しますか？",
       "body": "アプリ一覧に表示され、通知を送信することができます。いつでもアプリページから削除することができます。",
       "confirm": "アプリを追加"
     }

@@ -179,6 +179,22 @@
     "warnPaper": "將佢哋寫喺紙上面，而唔係喺螢幕截圖或者筆記應用程式入面。"
   },
   "copy": {
+    "14c5558a8cd9": "無匹配的轉錄",
+    "24601bcaae6e": "介紹",
+    "5190ff487713": "質押",
+    "559b3708d9b1": "編輯排程",
+    "721164f0dc70": "文字稿",
+    "76f613ec06cb": "尚未產生任何內容",
+    "93100fc44c0a": "@ 用戶名",
+    "a00fb0c50741": "接受咗",
+    "a151f2e912fe": "訂閱",
+    "a4d1abed0b2b": "管理員",
+    "be4b0c384393": "索拉娜",
+    "c49677dc5ccd": "子母畫面",
+    "c5de2b8c2cfe": "3:2 · X 或 YouTube",
+    "c7fbcf193b1d": "{{value1}} 已不再是管理員",
+    "f9c8b16a4071": "市值 {{value1}}",
+    "fc036ea0e9f0": "連結去特定頁面",
     "0000cb98ea19": "發言人已經批准",
     "0013fee41d62": "還沒有二級聯盟夥伴",
     "001cab7d69a2": "告訴 @assistant 你想喺 DeHub 訊息入邊乜嘢。佢會建造應用程式，主機佢，然後發送畀你一個連結任何人都可以打開。",
@@ -6667,6 +6683,9 @@
     "heading": "DeHub 短片"
   },
   "settings": {
+    "socialConnect": "連接",
+    "socialConnected": "已連接 {{platform}} 個",
+    "socialConnectedShort": "連接咗",
     "activeSessions": "活躍會話",
     "activeSessionsDesc": "目前登入裝置。",
     "adLoad": "你嘅資訊提供入面嘅廣告",
@@ -9043,7 +9062,7 @@
     "owner": "{{count}} 樓主",
     "owner_other": "{{count}} 擁有者",
     "engagement": "互動",
-    "likeRatio": "Like Ratio",
+    "likeRatio": "喜歡比例",
     "likes": "讚好",
     "dislikes": "唔鍾意",
     "views": "瀏覽",
@@ -9388,6 +9407,7 @@
     "admin": "管理員",
     "bannedFromCommunity": "您已被禁止加入本社區",
     "existingPost": {
+      "remove": "從社群移除",
       "added": "帖子加入咗社群",
       "adding": "加緊 …",
       "failed": "唔該更新社區文章，試吓再次。",
@@ -9429,6 +9449,7 @@
     "inviteSent": "邀請已經寄咗",
     "inviteToCommunity": "邀請去社群",
     "manage": {
+      "removeFromCommunity": "從社群移除",
       "addAdministrator": "新增管理員",
       "addRule": "新增規則",
       "adminBadge": "管理員",
@@ -9639,6 +9660,7 @@
     "communityDescription": "社群描述...",
     "posts": "帖子",
     "chat": {
+      "pinnedGif": "GIF動圖",
       "intervalHour": "1 個鐘",
       "intervalHours": "{{count}} 小時",
       "intervalMinute": "1 分鐘",
@@ -10485,6 +10507,7 @@
     "shopAllowanceUsed": "已使用 {{allowance}} 個中的 {{allowance}} 個。質押更多 DeHub 代幣以獲得更高徽章和另一個插槽。"
   },
   "stages": {
+    "usernamePlaceholder": "@ 用戶名",
     "deleteRecordingFailed": "無法刪除錄音",
     "deleteStageFailed": "無法刪除階段",
     "endThisStage": "結束本階段",
@@ -11216,6 +11239,7 @@
     "sellYourFractions": "出售你的分數 ({{held}} 持有)"
   },
   "creator": {
+    "seconds": "{{count}} 秒",
     "editorAssetMissing": "那一代沒有媒體可匯入。",
     "editorAssetUnsupported": "3D 模型唔可以放喺 timeline 度。 係下載模型先。",
     "editorImportFailed": "唔能夠將呢個結果導入編輯器。",
@@ -12205,7 +12229,7 @@
     "sortShortest": "最短先",
     "priceDhb": "價格（代幣）",
     "bandUnder10k": "10k 以下",
-    "band10kTo100k": "10k – 100k",
+    "band10kTo100k": "1萬 – 10萬",
     "band100kTo1m": "10 萬 – 100 萬",
     "band1mPlus": "100 萬 +",
     "clear": "清晰",
@@ -15326,6 +15350,7 @@
       "updated": "更新 {{count}} 頁面"
     },
     "brush": {
+      "joinLabel": "筆劃角落",
       "capLabel": "線條結尾",
       "closed": "關閉輪廓",
       "convertHint": "用可編輯的形狀取代其目前框內的路徑。位置、大小、旋轉、輪廓、效果、群組和時間都保持不變。開放的繪圖變成輪廓。撤銷恢復繪圖的路徑。",
@@ -15338,6 +15363,9 @@
       "suggestedShape": "建議： {{shape}}"
     },
     "bulk": {
+      "applyConnectionFile": "應用匹配連接",
+      "blankField": "空白",
+      "copyPhotoName": "複製照片名稱：{{name}}",
       "allRecords": "所有記錄都喺範圍內",
       "applyMatches": "使用匹配嘅連線",
       "blankKeepsPhoto": "空白：保留模板相片",
@@ -15405,6 +15433,12 @@
       "trimToken": "刪除前置空白"
     },
     "charts": {
+      "dateAxisHint": "使用 ISO 日期 (2026-01-31) 或 UTC 時間戳 (2026-01-31T14:30Z) 在第一個資料欄中。 位置反映了已經過去的時間，包括空白。 日期和時間標籤在每個裝置上都使用 UTC。 限制會擴展尺寸，而保留所有資料可見。",
+      "filterCase": "完全匹配大小寫",
+      "filterText": "標籤文字匹配",
+      "findStarter": "尋找圖表起始點",
+      "labelEvery": "每個類別標籤",
+      "raceSettings": "排名動畫",
       "applyDateBounds": "應用日期界限",
       "applyImportedStyle": "應用樣式到草稿",
       "applyReference": "應用目標線",
@@ -15521,6 +15555,7 @@
       "sampleColours": "用樣本調色板同文字顏色",
       "sampleDataSize": "{{rows}} 行 · {{series}} 數字列",
       "scale": {
+        "apply": "套用比例界限",
         "auto": "自動",
         "hint": "界限會擴大自動比例，等相關圖表可以共用範圍。喺呢啲界限之外嘅值仍然可以睇到。",
         "reset": "自動縮放"
@@ -15582,6 +15617,7 @@
       "pick": "從畫布選取"
     },
     "compositions": {
+      "title": "文字組合",
       "accent": "重點顏色",
       "brandFontHint": "將儲存的標題及正文字體套用至新組合。文字及重點顏色使用上方控制；現有藝術品保持原位。",
       "brandFonts": "使用儲存的字體配對",
@@ -15614,6 +15650,7 @@
       "width": "線重"
     },
     "crop": {
+      "precision": "自訂比例及精確焦點",
       "applyFocus": "應用精確對焦",
       "applyRatio": "應用比例",
       "canvasHint": "拖曳就可以將圖片移動到佢嘅框架入面。",
@@ -15687,6 +15724,7 @@
       "sampleValue": "價值"
     },
     "dataVisual": {
+      "addColumn": "加入欄",
       "accent": "口音",
       "addRow": "加行",
       "captionControls": "標題、字幕同 SVG 描述",
@@ -15732,6 +15770,7 @@
       "vectorHint": "將此圖形以透明背景匯出。文字可編輯並使用選定的字型。"
     },
     "designTools": {
+      "replaceAll": "替換",
       "applySize": "套用大小",
       "changeAll": "變更所有",
       "closePanel": "關閉面板",
@@ -15944,6 +15983,7 @@
       "title": "風格選擇嘅相片同影片（ {{count}} ）"
     },
     "mockups": {
+      "previewAlt": "草稿模型版面配置",
       "caption": "地址或相片字幕（可選）",
       "editHint": "為呢個頁面插入一組可編輯嘅形狀同埋相框。複製咗嘅相片會用填充畫面保留佢嘅效果同焦點，或者用適合相片保留佢當前嘅裁剪。原始相片會保持原位。揀個畫面嚟取代佢嘅圖片；解除分組嚟編輯個別框架詳情。",
       "emptyScreen": "揀一張解鎖咗嘅相嚟填滿個模型，或者插入一個空白嘅畫面，然後遲啲換返佢。",
@@ -15983,6 +16023,7 @@
       "upright": "直立"
     },
     "outline": {
+      "applyPattern": "套用樣式",
       "border": "相片邊框",
       "colour": "邊框顏色",
       "customPattern": "自訂圖案",
@@ -16023,6 +16064,8 @@
       "strokeOpacity": "大綱不透明度： {{value}} %"
     },
     "palette": {
+      "applyDesign": "應用設計色板",
+      "useColour": "用 {{colour}}",
       "chooseTarget": "先揀一個文件顏色，然後用色板作為替代品。",
       "extractionHint": "抽樣當前頁面，包括相片。揀一個色板做替代顏色，或者將調色板套用到整個設計嘅可編輯顏色。",
       "presetLimit": "你哋嘅 20 個品牌風格位已滿。添加色彩前，先刪除一個儲存嘅風格。",
@@ -16235,6 +16278,10 @@
       "weight": "線條寬度"
     },
     "tables": {
+      "replaceOverrides": "應用時重置自訂單元格樣式",
+      "sortColumn": "排序欄",
+      "starters": "從樣本資料開始",
+      "summary": "加入摘要行",
       "allColumns": "所有欄位",
       "appendSummary": "附加摘要行",
       "applyCellFill": "套用填充",
@@ -16351,6 +16398,8 @@
       "strikethrough": "突破"
     },
     "textSearch": {
+      "occurrences": "{{count}} 次出現喺呢層",
+      "wholeWords": "整個字",
       "emptyAfterReplacement": "呢個層會係空嘅",
       "next": "下一個比賽",
       "nextMatch": "下一場比賽",
@@ -16362,6 +16411,7 @@
       "tooLong": "替換呢個圖層入面每個出現嘅字元都會超過10萬個字元。縮短更換時間，或者一次過更換一次。"
     },
     "textSelection": {
+      "colour": "文字顏色",
       "applyBox": "套用文字框大小",
       "applySpacing": "申請",
       "bold": "大膽",
@@ -16513,12 +16563,15 @@
     "paused": "而家喺鏈上面暫停咗代幣轉移，所以呢個解鎖仲未完成。遲啲再試一次。",
     "otherChain": "呢個帖子係喺另一個鏈上面，所以佢需要你喺嗰度嘅銀包入面嘅 DeHub 代幣。",
     "buyCard": "用卡買代幣",
-    "buyCardHint": "Visa, Mastercard, Apple Pay",
+    "buyCardHint": "Visa 、萬事達卡、 Apple Pay",
     "moveFunds": "轉入資金",
     "moveFundsHint": "由其他鏈兌換或者存入",
     "notNow": "遲啲先"
   },
   "glossary": {
+    "staking": "質押",
+    "tokenId": "代幣ID",
+    "tokenIdInfo": "代幣ID",
     "assistant": "AI助手",
     "assistantDesc": "一款 AI 助手，能夠回答問題、生成圖像、創建視頻、幫助使用平台功能。",
     "audio": "音頻",
@@ -16792,7 +16845,7 @@
   },
   "emojiPicker": {
     "tabEmoji": "表情符號",
-    "tabGif": "GIF",
+    "tabGif": "GIF動圖",
     "searchEmoji": "搜尋表情符號",
     "searchGifs": "搜尋 GIFs...",
     "noEmoji": "搵唔到表情符號",
