@@ -2,7 +2,7 @@ import { useTranslation as _useCopy } from 'react-i18next';
 import { useState, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
-import { useCrossPostStore } from '@/store/crossPostStore';
+import { useCrossPostAccountCount } from './CrossPostPicker';
 import { Loader2, SpellCheck, Palette, ChevronLeft, Type, Hash, BarChart2, MonitorPlay, Cable, AlertTriangle } from "lucide-react";
 import More from "@/components/ui/cut-icons/more";
 import Paperclip from "@/components/ui/cut-icons/attach";
@@ -129,7 +129,7 @@ export function PostActionBar({
   const { t } = useTranslation();
   const [audioPopoverOpen, setAudioPopoverOpen] = useState(false);
   const [postOptionsOpen, setPostOptionsOpen] = useState(false);
-  const crossPostCount = useCrossPostStore(state => state.selected.length);
+  const crossPostCount = useCrossPostAccountCount(!!extraTool);
   /**
    * OBS does not want the composer's fields — it wants an ingest URL and a
    * key. Picking it opens the Go Live sheet on its own setup step instead of
