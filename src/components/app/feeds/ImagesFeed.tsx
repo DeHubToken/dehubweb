@@ -1,4 +1,5 @@
 import { WindowedFeedItem } from '@/components/app/feeds/WindowedFeedItem';
+import { RetainedPostSurface } from '@/components/app/feeds/RetainedPostSurface';
 import { translateCopy as _translateCopy } from '@/i18n/copy';
 import { useTranslation as _useCopy } from 'react-i18next';
 /**
@@ -370,14 +371,13 @@ function EndlessScrollView({
       {visiblePosts.map((post, index) => (
         <Fragment key={post.id}>
           <WindowedFeedItem
-            data-feed-item
-            data-cinematic="image"
-            data-cinematic-first={index === 0 ? '' : undefined}
-            className="rounded-xl border border-white/[0.12] bg-white/[0.03] p-3"
             eager={index < 3} estimatedHeight={640}
             vanishOnDislike={post.id}
           >
-            <ImageCard post={post} />
+            <RetainedPostSurface id={String(post.id)} frameProps={{
+              ...{ 'data-feed-item': true, 'data-cinematic': 'image', 'data-cinematic-first': index === 0 ? '' : undefined },
+              className: 'rounded-xl border border-white/[0.12] bg-white/[0.03] p-3',
+            }}><ImageCard post={post} /></RetainedPostSurface>
           </WindowedFeedItem>
           {index === 0 && servedAd && (
             <div data-feed-item data-cinematic="ad" className="rounded-xl border border-white/[0.12] bg-white/[0.03] p-3">
