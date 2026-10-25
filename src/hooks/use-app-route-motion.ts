@@ -51,8 +51,8 @@ export function useAppRouteMotion(location: Location, reducedMotion: boolean | n
 
     const post = /^\/(?:app\/)?(?:post|posts|video|newpost)\//.test(location.pathname);
     const profile = /^\/(?:app\/)?profile\/?$/.test(location.pathname) || /^\/[^/]+$/.test(location.pathname);
-    const title = post ? t('common.post', { defaultValue: 'Post' })
-      : profile ? t('sidebar.profile', { defaultValue: 'Profile' })
+    const title = post ? t('sidebar.post', { defaultValue: 'Post' })
+      : profile ? t('nav.profile', { defaultValue: 'Profile' })
       : t('common.loading', { defaultValue: 'Loading…' });
     shell.current = showRouteLoadingShell(title, t('common.back', { defaultValue: 'Back' }), backwards);
     if (!shell.current) {
