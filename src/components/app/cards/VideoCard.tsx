@@ -1929,7 +1929,7 @@ const VideoCardBody = memo(function VideoCard({ video, postPage = false, onBack,
 
   const scrubEventRef = useRef<HTMLDivElement>(null);
   const tabletPortrait = useTabletPortraitFeed(scrubEventRef,
-    !isPhone && isTabletOrMobile && mediaAspect < 1 && !isImmersive && !postPage && !stage && !hideActions
+    isTabletOrMobile && mediaAspect < 1 && !isImmersive && !postPage && !stage && !hideActions
     && !isFullscreen && !video.isAudio && !video.isAd && !video.isLivePost && !!video.videoUrl
     && !isContentGated && !matureGate.isGated && !contentWarning.hidden);
   const scrubZone = useVideoScrubZone({
@@ -2256,7 +2256,7 @@ const VideoCardBody = memo(function VideoCard({ video, postPage = false, onBack,
       <div 
         ref={containerRef}
         tabIndex={0}
-        data-feed-preview={phoneFeedFrame || undefined}
+        data-feed-preview={(phoneFeedFrame && !tabletPortrait) || undefined}
         data-media-frame-key={!isImmersive && !isFullscreen ? `video:${video.id}` : undefined}
         data-media-frame-measured={resolvedVideoAspect == null ? undefined : measuredAspect}
         data-audio-frame={video.isAudio || undefined}
