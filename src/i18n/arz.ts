@@ -104,6 +104,8 @@ export const arz = {
     disclaimerText: 'توكنات DeHub بتشتغل كتوكنات منفعة جوه نظامنا البيئي.',
   },
   dapp: {
+    aiSuiteB5: '@assistant:',
+    tvRadioB1: 'DeHub TV:',
     connectTitle: 'ربط الذكاء الاصطناعي (MCP)',
     dehubTokenTitle: 'عملة DeHub',
     labelWatch2earn: 'المشاهدة مقابل الربح:',
@@ -2885,6 +2887,7 @@ export const arz = {
     contactText: 'يمكن إرسال الأسئلة حول هذه الإرشادات، أو التقارير التي تحتاج إلى عناية عاجلة، إلى dev@dehub.io.',
   },
   adTools: {
+    roas: 'ROAS',
     budgetCalculatorTitle: 'حاسبة ميزانية الحملة',
     budgetCalculatorDesc: 'خطط لحملتك الإعلانية مع تقديرات واقعية للتكلفة واستهداف الجمهور',
     dailyBudget: 'الميزانية اليومية ($)',

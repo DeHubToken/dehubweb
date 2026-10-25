@@ -2384,6 +2384,7 @@ export const mnp = {
     status: '状态',
   },
   adTools: {
+    roas: 'ROAS',
     audienceWarning: '按此预算，受众规模偏小（{count}）。建议扩大等级范围或降低预算。',
     budgetCalculatorDesc: '用贴近实际的成本估算和受众定向来规划你的 POVR 广告活动',
     budgetCalculatorTitle: '广告预算计算器',
