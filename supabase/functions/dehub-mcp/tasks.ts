@@ -24,6 +24,38 @@ export type Context = {
 const json = (value: unknown, status = 200) => new Response(JSON.stringify(value), { status, headers: { "Content-Type": "application/json" } });
 const message = (error: unknown) => error instanceof Error ? error.message : "Task failed.";
 const checked = (result: any) => { if (result.error) throw new Error(result.error.message); return result.data; };
+// Wake on submission rather than waiting for the minute cron.
+async function wakeTasks(db: any) {
+  const result = await db.rpc('tick_agent_tasks');
+  if (result.error) console.error('Task wake failed:', result.error.message);
+}
+
+/** Snapshot once for every member, without counting discovery as public views. */
+export async function pacedTargets(step: TaskStep, token: string): Promise<string[]> {
+  if (!step.from || !step.to || Date.parse(step.to) > Date.now()) throw new Error('Pacing requires a post window ending now or earlier.');
+  const targets = new Set<string>();
+  let after: any;
+  const seen = new Set<string>();
+  const deadline = Date.now() + 30000;
+  do {
+    if (Date.now() >= deadline) throw new Error('That window is too large to prepare. Choose a shorter post window.');
+    const data = await api('feed', token, { sortBy: 'createdAt', sortOrder: 'desc', status: 'minted', limit: 50,
+      from: step.from, to: step.to, agent_cursor: 'true', cursor_time: after?.created_at, cursor_token: after?.token_id });
+    if (!data.pagination || !('next_cursor' in data.pagination)) throw new Error('The post cursor is unavailable.');
+    for (const post of data.result ?? []) {
+      const at = Date.parse(post.createdAt);
+      if (at >= Date.parse(step.from) && at < Date.parse(step.to) && matchesPostFilters(post, step) && /^\d+$/.test(String(post.tokenId))) targets.add(String(post.tokenId));
+    }
+    if (targets.size > 10000) throw new Error('Choose a window containing at most 10,000 posts.');
+    after = data.pagination.next_cursor;
+    if (after) {
+      const key = JSON.stringify(after);
+      if (seen.has(key)) throw new Error('The post cursor stopped advancing. Try again.');
+      seen.add(key);
+    }
+  } while (after);
+  return [...targets];
+}
 const swarmBucket = (target: string, size: number): number => {
   let hash = 2166136261;
   for (const character of target.toLowerCase()) hash = Math.imul(hash ^ character.charCodeAt(0), 16777619);
@@ -246,7 +278,11 @@ export async function runTask(context: Context, req: Request, task: any) {
   const agent = checked(await db.from("ai_agents").select("*").eq("id", task.agent_id).single());
   if (!agentOwnerAllowed(agent.human_owner_wallet) || agent.human_owner_wallet !== task.owner_wallet || !agent.is_active) throw new Error("Agent access is unavailable.");
   const token = await context.token(agent);
-  if (!token) throw new Error("Could not sign in as this agent.");
+  if (!token) {
+    checked(await db.from('ai_agent_tasks').update({ status: 'queued', next_run_at: new Date(Date.now() + 60000).toISOString(),
+      message: 'Agent sign-in is temporarily unavailable. Retrying automatically.' }).eq('id', task.id).eq('lease', task.lease).eq('status', 'running'));
+    return;
+  }
   const registry = context.tools(agent.api_key, req);
   const preferences = await agentSettings(db, agent.id);
   const plan = taskPlanSchema.parse(task.plan);
@@ -410,6 +446,13 @@ export async function runTask(context: Context, req: Request, task: any) {
     task.cursor.index++;
     actions++;
     await save({ message: `${task.completed_actions} actions processed.` });
+    if (plan.pacing) {
+      const finished = task.cursor.index >= task.cursor.targets.length;
+      await save({ status: finished ? 'completed' : 'queued',
+        next_run_at: new Date(Date.now() + plan.pacing.gap_seconds * (task.swarm_size ?? 1) * 1000).toISOString(),
+        message: finished ? 'Task completed.' : `${task.completed_actions} reactions processed. Waiting for the next turn.` });
+      break;
+    }
   }
 }
 
@@ -434,6 +477,7 @@ export async function handleTaskRequest(req: Request, context: Context): Promise
       checked(await db.from("ai_agent_tasks").update({ status: "queued" }).eq("id", task.id).eq("lease", task.lease).eq("status", "running"));
       checked(await db.from("ai_agent_tasks").update({ lease: null, lease_until: null }).eq("id", task.id).eq("lease", task.lease));
     }
+    await wakeTasks(db);
     return json({ ran: true, task_id: task.id });
   }
   const auth = await requireDeHubAuth(req);
@@ -485,6 +529,7 @@ export async function handleTaskRequest(req: Request, context: Context): Promise
       if (retry) return json({ task: retry });
       return json({ error: 'Could not queue the post. Try again.' }, 409);
     }
+    await wakeTasks(db);
     return json({ task: result.data });
   }
   if (input.operation === "correct_activity") {
@@ -542,6 +587,26 @@ export async function handleTaskRequest(req: Request, context: Context): Promise
     catch (error) { return json({ error: message(error) }, 422); }
     const mode = input.swarm_mode ?? 'shared';
     if (!['shared', 'each'].includes(mode)) return json({ error: 'Choose shared work or each agent.' }, 400);
+    if (input.spread_minutes !== undefined && input.spread_minutes !== 0) {
+      const duration = input.spread_minutes;
+      if (!Number.isInteger(duration) || duration < 1 || duration > 1440 || mode !== 'each' || plan.interval_minutes !== null ||
+          plan.steps.length !== 1 || plan.steps[0].tool !== 'dehub_vote' || plan.steps[0].audience !== 'posts') {
+        return json({ error: 'Choose each agent and one fixed-window like or dislike task, spread over 1 to 1,440 minutes.' }, 422);
+      }
+      try {
+        const signingAgent = checked(await db.from('ai_agents').select('*').eq('id', agents[0].id).single());
+        const token = await context.token(signingAgent);
+        if (!token) return json({ error: 'Agent sign-in is temporarily unavailable. Try again.' }, 503);
+        const targets = await pacedTargets(plan.steps[0], token);
+        if (!targets.length) return json({ error: 'No posts match that window and its filters.' }, 422);
+        const gap = duration * 60 / Math.max(1, targets.length * input.agent_ids.length - 1);
+        plan = taskPlanSchema.parse({ ...plan, summary: `${plan.summary} Each agent, taking turns over approximately ${duration} minutes; first turn now.`, pacing: { gap_seconds: gap, duration_minutes: duration } });
+        const tasks = checked(await db.rpc('create_paced_agent_swarm', { p_owner_wallet: auth.wallet, p_agent_ids: input.agent_ids,
+          p_request_id: input.request_id, p_prompt: input.prompt.trim(), p_plan: plan, p_targets: targets }));
+        await wakeTasks(db);
+        return json({ tasks });
+      } catch (error) { return json({ error: message(error) }, 422); }
+    }
     const cadence = plan.interval_minutes;
     if (cadence !== null && mode === "shared") {
       const multiplied = cadence * input.agent_ids.length;
@@ -552,6 +617,7 @@ export async function handleTaskRequest(req: Request, context: Context): Promise
       const tasks = checked(await db.rpc("create_agent_swarm_tasks_v2", { p_owner_wallet: auth.wallet,
         p_agent_ids: input.agent_ids, p_request_id: input.request_id, p_prompt: input.prompt.trim(),
         p_plan: plan, p_interval_minutes: mode === "shared" ? cadence : null, p_mode: mode }));
+      await wakeTasks(db);
       return json({ tasks });
     } catch (error) { return json({ error: message(error) }, 409); }
   }
@@ -571,6 +637,7 @@ export async function handleTaskRequest(req: Request, context: Context): Promise
     catch (error) { return json({ error: message(error) }, 422); }
     const template = await matchingTemplate(db, auth.wallet, input.template_id, input.prompt.trim());
     const task = checked(await db.from("ai_agent_tasks").insert({ agent_id: agent.id, owner_wallet: auth.wallet, request_id: input.request_id, prompt: input.prompt.trim(), plan, workspace_template_id: template }).select("id").single());
+    await wakeTasks(db);
     return json({ task });
   }
   if (input.swarm_id && ['pause', 'resume', 'cancel'].includes(input.operation)) {
@@ -584,6 +651,7 @@ export async function handleTaskRequest(req: Request, context: Context): Promise
       .in('status', operation === 'pause' ? ['queued', 'running'] : operation === 'cancel' ? ['queued', 'running', 'paused', 'failed'] : ['paused', 'failed']);
     if (operation === 'resume') query = query.eq('needs_review', false).or(`lease_until.is.null,lease_until.lte.${new Date().toISOString()}`);
     const updated = checked(await query.select('id'));
+    if (operation === 'resume') await wakeTasks(db);
     return json({ success: true, updated: updated.length });
   }
   const task = checked(await db.from("ai_agent_tasks").select("id,status,needs_review,lease_until").eq("id", input.task_id).eq("owner_wallet", auth.wallet).maybeSingle());
@@ -601,5 +669,6 @@ export async function handleTaskRequest(req: Request, context: Context): Promise
   checked(await db.from("ai_agent_tasks").update({ status: input.operation === "pause" ? "paused" : input.operation === "cancel" ? "cancelled" : "queued",
     ...(["resume", "skip"].includes(input.operation) ? { next_run_at: new Date().toISOString(), needs_review: false } : {}), updated_at: new Date().toISOString(),
   }).eq("id", task.id).eq("owner_wallet", auth.wallet).eq("status", task.status));
+  if (['resume', 'skip'].includes(input.operation)) await wakeTasks(db);
   return json({ success: true });
 }
