@@ -137,8 +137,10 @@ export function StageMiniPlayer({ rootRef, kind, title, subtitle, thumbnail, onB
       data-visible={visible || undefined}
       aria-hidden={!visible}
       className={cn(
-        'fixed inset-x-2 top-[max(0.5rem,env(safe-area-inset-top))] z-[46] transition-all duration-200',
-        visible ? 'translate-y-0 opacity-100' : 'pointer-events-none -translate-y-3 opacity-0',
+        // Grows out of the top-left corner, where the floating back icon sits
+        // while the media is on screen, so the icon reads as the bar's first tile.
+        'fixed inset-x-2 top-[max(0.5rem,env(safe-area-inset-top))] z-[46] origin-top-left transition-all duration-200',
+        visible ? 'translate-y-0 scale-100 opacity-100' : 'pointer-events-none -translate-y-1 scale-[0.92] opacity-0',
       )}
     >
       <div
