@@ -120,6 +120,7 @@ import {
 } from '@/components/ui/drawer';
 import type { ImagePost } from '@/types/feed.types';
 import { usePostStage } from '@/components/app/post-stage/post-stage-context';
+import { useImagesFeedScrollView } from '@/lib/images-feed-mode';
 import { StageCreatorRow } from '@/components/app/post-stage/StageCreatorRow';
 
 // Use lg breakpoint (1024px) to determine if we show drawer vs inline
@@ -226,7 +227,7 @@ function ImageSlide({
   idx: number;
   aboveFold: boolean;
   postId?: string;
-  onImageClick: (index: number) => void;
+  onImageClick: (index: number, onPicture: boolean) => void;
   viewportRef: React.RefObject<HTMLDivElement>;
   immersive?: boolean;
 }) {
@@ -235,7 +236,14 @@ function ImageSlide({
   const tapGestures = useTapGestures({
     postId,
     reactionArea: immersive ? 'surface' : 'center',
-    onSingleTap: () => onImageClick(idx),
+    onSingleTap: (event) => {
+      // A narrow photo sits left-aligned in its frame, so a tap can land beside
+      // it. Report whether it landed on the picture itself.
+      const rect = (event.currentTarget as HTMLElement).querySelector('img')?.getBoundingClientRect();
+      const onPicture = !rect
+        || (event.clientX >= rect.left && event.clientX <= rect.right && event.clientY >= rect.top && event.clientY <= rect.bottom);
+      onImageClick(idx, onPicture);
+    },
   });
   // Feed items carry no image dimensions, so first paint reserves minHeight and
   // the card grows on load (CLS). Remembering the measured ratio per URL means
@@ -386,7 +394,7 @@ function ImageCarousel({
   images: string[];
   /** Alt text per image, by position. */
   descriptions?: string[];
-  onImageClick: (index: number) => void;
+  onImageClick: (index: number, onPicture: boolean) => void;
   onIndexChange?: (index: number) => void;
   aboveFold?: boolean;
   postId?: string;
@@ -784,6 +792,7 @@ const ImageCardBody = memo(function ImageCard({ post, aboveFold = false, onOpenC
   const [showOptionsDrawer, setShowOptionsDrawer] = useState(false);
   // The phone post page ("Stage"). Null in every feed.
   const stage = usePostStage();
+  const imagesFeedScrollView = useImagesFeedScrollView();
   const [showTipModal, setShowTipModal] = useState(false);
   const [showQuoteModal, setShowQuoteModal] = useState(false);
   const [showPollCreator, setShowPollCreator] = useState(false);
@@ -927,9 +936,15 @@ const ImageCardBody = memo(function ImageCard({ post, aboveFold = false, onOpenC
     navigate(`/app?image=${encodeURIComponent(post.id)}`);
   }, [navigate, post.id, showPPVDrawer, showBountyDrawer, showLockedDrawer]);
 
-  const handleImageClick = (index: number) => {
+  const handleImageClick = (index: number, onPicture = true) => {
     if (wasDrawerJustDismissed()) return;
     const gated = isPPV || isLocked || isSubGated || isW2E || matureGate.isGated;
+    // A tap beside a narrow photo opens the image feed, the same as the picture.
+    // Already in the image feed, it falls through to the full-screen photo.
+    if (!onPicture && !postPage && !imagesFeedScrollView && !gated) {
+      openPost();
+      return;
+    }
     // Phones open a plain photo full screen over the feed, so closing it lands
     // back on the same card. Desktop still opens the post page.
     if (!postPage && isPhone && !post.soundtrackUrl && !gated) {
