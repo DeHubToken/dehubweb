@@ -104,6 +104,9 @@ export const acw = {
     disclaimerText: 'توكنات DeHub تشتغل كتوكنات خدمية جوّه النظام البيئي حقنا ومو أدوات استثمار.',
   },
   dapp: {
+    aiSuiteB5: '@assistant:',
+    tvRadioB1: 'DeHub TV:',
+    walletHubB5: 'Solana:',
     accountsB6Desc: 'اختر \"متابعة ببصمة الإصبع\" ومفتاح المرور نفسه هو الحساب — لا بريد إلكتروني، لا رقم هاتف، لا كلمة مرور. يعمل نفس مفتاح المرور على موقع الويب وفي تطبيق Android.',
     affected1: 'الإكراميات والتبرعات',
     affected2: 'مشتريات الدفع لكل مشاهدة',
@@ -1522,6 +1525,7 @@ export const acw = {
     baileyExp3: "لاعب محترف سابق، يحتل المرتبة الأولى عالميًا في أفضل 3 في COD MW2 وأفضل 100 في Warzone تحت اسم RickyBobby",
   },
   roadmap: {
+    q4_2023_items: ['الخروج الطوعي من Gate.io لإعطاء الأولوية للامركزية', 'الالتزام بالشفافية عبر تطبيق سياسة المنصات اللامركزية بالكامل', 'تطبيق استراتيجيات آلية لتوفير السيولة', 'نشر تقارير شفافية كاملة تعرض كل مقاييس البروتوكول'],
     latestUpdate: 'أحدث تحديث تطويري',
     latestUpdateCta: 'اقرأ نظرة عامة على تطوير الربع الرابع',
     lookingAhead: 'نظرة إلى الأمام',
@@ -2552,6 +2556,7 @@ export const acw = {
     status: 'ستاتوس',
   },
   adTools: {
+    roas: 'ROAS',
     budgetCalculatorDesc: 'خطّط حملتك الإعلانية على POVR بتقديرات تكلفة واقعية واستهداف دقيق للجمهور',
     budgetCalculatorTitle: 'حاسبة ميزانية الحملة',
     cpmRow: 'التكلفة لكل ألف ظهور:',
@@ -2645,6 +2650,7 @@ export const acw = {
     targetBadgeTiers: 'درجات البادج الاهداف (مدى)',
   },
   docsSearch: {
+    popularDepin: 'DePIN',
     placeholder: 'تجريبحث في الوثائق والمدونات...',
     placeholderShort: 'تسحري...',
     popularWatchToEarn: 'حسابات على تيك توك للربح',

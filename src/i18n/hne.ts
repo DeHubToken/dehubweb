@@ -1595,6 +1595,7 @@ export const hne = {
     baileyExp3: "पूर्व पेशेवर गेमर, टैग रिकीबॉबी के तहत COD MW2 में शीर्ष 3 और वारज़ोन पर शीर्ष 100 में विश्व स्तर पर रैंकिंग",
   },
   roadmap: {
+    q1_2022_items: ['FTV से DeHub में रीब्रांड', '$DHB में टोकन माइग्रेशन', '5 आर्केड गेम रिलीज़'],
     title: 'रोडमैप',
     subtitle: 'हमर विकास यात्रा अउ भविष्य के योजना',
     selectYear: 'वर्ष चुनव',
@@ -2452,6 +2453,7 @@ export const hne = {
     contactText: 'ए दिशानिर्देशमन के बारे म प्रश्न, या तत्काल ध्यान के आवश्यकता वाले रिपोर्ट, dev@dehub.io म भेज सकत हंवय ।',
   },
   adTools: {
+    cpmValue: '{amount} CPM',
     impressionsCount: '{count} इंप्रेशन',
     selectedCountries: 'चुने गए देश ({count})',
     vsLastWeek: 'पिछले सप्ताह की तुलना में {delta}',

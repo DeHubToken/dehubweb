@@ -2468,6 +2468,8 @@ export const bho = {
     notAllowedItem8: 'अन्य व्यक्ति, क्रिएटर, ब्रांड या प्रोजेक्ट का इम्पर्सनेशन',
   },
   adTools: {
+    cpmRow: 'CPM:',
+    cpmValue: '{amount} CPM',
     audienceWarning: 'इस बजट के लिए ऑडियंस छोटी है ({count})। अधिक टियर चुनें या बजट घटाएँ।',
     campaignDescription: 'कैंपेन विवरण',
     dayCountOne: '{count} दिन',
