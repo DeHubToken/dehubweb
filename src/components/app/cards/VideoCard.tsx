@@ -2195,7 +2195,7 @@ const VideoCardBody = memo(function VideoCard({ video, postPage = false, onBack,
   const mediaRadius = isFullscreen
     ? 'rounded-none'
     : stage
-      ? 'rounded-none'
+      ? 'rounded-2xl'
       : isImmersive ? 'rounded-none lg:rounded-2xl'
       : 'rounded-2xl';
 

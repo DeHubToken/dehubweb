@@ -50,7 +50,8 @@ export function PostStagePhone({ value, children, comments, related, kind, title
         {/* Only the post itself is on the stage. The related posts below are
             ordinary feed cards and must not pick up its layout. */}
         <PostStageContext.Provider value={value}>
-          <div data-stage-post className={padded ? 'px-3' : undefined}>
+          {/* Same gutter the home feed uses, so media sits at the feed's width. */}
+          <div data-stage-post className={padded ? 'px-3' : 'px-2 sm:px-3'}>
             {children}
           </div>
         </PostStageContext.Provider>
