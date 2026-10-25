@@ -282,9 +282,12 @@ interface ShortsFeedProps {
   showFilters?: boolean;
   isRefreshing?: boolean;
   refreshKey?: number;
+  /** A short tapped elsewhere in the app: open the viewer on it once the list has it. */
+  startShortId?: string;
+  onStartShortConsumed?: () => void;
 }
 
-export function ShortsFeed({ showFilters = false, isRefreshing = false, refreshKey = 0 }: ShortsFeedProps) {
+export function ShortsFeed({ showFilters = false, isRefreshing = false, refreshKey = 0, startShortId, onStartShortConsumed }: ShortsFeedProps) {
   const { t: _copy } = _useCopy();
   const { t } = useI18n();
   const { isCollapsed } = useSidebarCollapse();
@@ -458,6 +461,17 @@ export function ShortsFeed({ showFilters = false, isRefreshing = false, refreshK
     
     return allShorts;
   }, [allShorts, selectedDuration]);
+
+  // Open the viewer on the short that was tapped elsewhere. It waits until the
+  // list holds that short; if it never does, the feed simply stays as it is.
+  useEffect(() => {
+    if (!startShortId || shorts.length === 0) return;
+    const index = shorts.findIndex(short => String(short.id) === startShortId);
+    if (index < 0) return;
+    setSelectedIndex(index);
+    setViewerOpen(true);
+    onStartShortConsumed?.();
+  }, [startShortId, shorts, onStartShortConsumed]);
 
   // Check if any client-side filters are active
   const hasActiveFilters = selectedDuration.label !== 'Any' || selectedUploadDate.value !== 'all';
