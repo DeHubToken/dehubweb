@@ -632,6 +632,35 @@ export type Database = {
           },
         ]
       }
+      ai_agent_controls: {
+        Row: {
+          agent_id: string
+          last_alert_at: string | null
+          settings: Json
+          updated_at: string
+        }
+        Insert: {
+          agent_id: string
+          last_alert_at?: string | null
+          settings?: Json
+          updated_at?: string
+        }
+        Update: {
+          agent_id?: string
+          last_alert_at?: string | null
+          settings?: Json
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "ai_agent_controls_agent_id_fkey"
+            columns: ["agent_id"]
+            isOneToOne: true
+            referencedRelation: "ai_agents"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       ai_agent_life_events: {
         Row: {
           agent_id: string
@@ -708,6 +737,24 @@ export type Database = {
           },
         ]
       }
+      ai_agent_news_cache: {
+        Row: {
+          feed: string
+          fetched_at: string
+          stories: Json
+        }
+        Insert: {
+          feed: string
+          fetched_at?: string
+          stories?: Json
+        }
+        Update: {
+          feed?: string
+          fetched_at?: string
+          stories?: Json
+        }
+        Relationships: []
+      }
       ai_agent_post_slots: {
         Row: {
           next_post_at: string
@@ -745,6 +792,56 @@ export type Database = {
         Relationships: [
           {
             foreignKeyName: "ai_agent_rate_limits_agent_id_fkey"
+            columns: ["agent_id"]
+            isOneToOne: false
+            referencedRelation: "ai_agents"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      ai_agent_receipts: {
+        Row: {
+          agent_id: string
+          alert_delivery: string | null
+          arguments: Json
+          created_at: string
+          id: string
+          result: Json | null
+          rollback_status: string | null
+          status: string
+          tool: string
+          undo: Json | null
+          updated_at: string
+        }
+        Insert: {
+          agent_id: string
+          alert_delivery?: string | null
+          arguments: Json
+          created_at?: string
+          id?: string
+          result?: Json | null
+          rollback_status?: string | null
+          status: string
+          tool: string
+          undo?: Json | null
+          updated_at?: string
+        }
+        Update: {
+          agent_id?: string
+          alert_delivery?: string | null
+          arguments?: Json
+          created_at?: string
+          id?: string
+          result?: Json | null
+          rollback_status?: string | null
+          status?: string
+          tool?: string
+          undo?: Json | null
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "ai_agent_receipts_agent_id_fkey"
             columns: ["agent_id"]
             isOneToOne: false
             referencedRelation: "ai_agents"
@@ -838,6 +935,7 @@ export type Database = {
           swarm_mode: string
           swarm_size: number | null
           updated_at: string
+          workspace_template_id: string | null
         }
         Insert: {
           agent_id: string
@@ -862,6 +960,7 @@ export type Database = {
           swarm_mode?: string
           swarm_size?: number | null
           updated_at?: string
+          workspace_template_id?: string | null
         }
         Update: {
           agent_id?: string
@@ -886,6 +985,7 @@ export type Database = {
           swarm_mode?: string
           swarm_size?: number | null
           updated_at?: string
+          workspace_template_id?: string | null
         }
         Relationships: [
           {
@@ -896,6 +996,36 @@ export type Database = {
             referencedColumns: ["id"]
           },
         ]
+      }
+      ai_agent_templates: {
+        Row: {
+          created_at: string
+          evaluation: Json
+          id: string
+          name: string
+          owner_wallet: string
+          prompt: string
+          published: boolean
+        }
+        Insert: {
+          created_at?: string
+          evaluation?: Json
+          id?: string
+          name: string
+          owner_wallet: string
+          prompt: string
+          published?: boolean
+        }
+        Update: {
+          created_at?: string
+          evaluation?: Json
+          id?: string
+          name?: string
+          owner_wallet?: string
+          prompt?: string
+          published?: boolean
+        }
+        Relationships: []
       }
       ai_agents: {
         Row: {
@@ -4402,7 +4532,6 @@ export type Database = {
           like_count: number
           media_type: string | null
           media_url: string | null
-          proposal_number: number
           status: string
           title: string
           updated_at: string
@@ -4422,7 +4551,6 @@ export type Database = {
           like_count?: number
           media_type?: string | null
           media_url?: string | null
-          proposal_number?: number
           status?: string
           title: string
           updated_at?: string
@@ -4442,7 +4570,6 @@ export type Database = {
           like_count?: number
           media_type?: string | null
           media_url?: string | null
-          proposal_number?: number
           status?: string
           title?: string
           updated_at?: string
@@ -8658,6 +8785,7 @@ export type Database = {
       }
       affiliate_wallet: { Args: never; Returns: string }
       agent_owner_allowed: { Args: { wallet: string }; Returns: boolean }
+      agent_workspace_ready: { Args: never; Returns: boolean }
       ai_free_claim: {
         Args: {
           p_job_id: string
@@ -9008,6 +9136,19 @@ export type Database = {
           p_plan: Json
           p_prompt: string
           p_request_id: string
+        }
+        Returns: {
+          id: string
+        }[]
+      }
+      create_paced_agent_swarm: {
+        Args: {
+          p_agent_ids: string[]
+          p_owner_wallet: string
+          p_plan: Json
+          p_prompt: string
+          p_request_id: string
+          p_targets: string[]
         }
         Returns: {
           id: string
