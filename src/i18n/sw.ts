@@ -2648,6 +2648,7 @@ export const sw = {
     status: 'Hali',
   },
   adTools: {
+    dayCountOther: 'Siku {count}',
     budgetCalculatorTitle: 'Kikokotoo cha Bajeti ya Kampeni',
     budgetCalculatorDesc: 'Panga kampeni yako ya matangazo ya POVR kwa makadirio halisi ya gharama na ulengaji wa hadhira',
     dailyBudget: 'Bajeti ya Kila Siku ($)',

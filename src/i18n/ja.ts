@@ -104,6 +104,13 @@ export const ja = {
     disclaimerText: 'DeHubトークンはエコシステム内のユーティリティトークンとして機能し、ゲーム内通貨に似ており、投資商品ではありません。すべての市場には固有のリスクがあります。完全に失っても構わない資金でのみ参加してください。',
   },
   dapp: {
+    tocDepin: 'DePIN',
+    aiSuiteB5: '@assistant：',
+    appsB2: 'Android版：',
+    arcadeDesc: 'アーケードは、ブラウザのタブでDeHub内で動くゲームの棚です。インストールも購入も別アカウントも不要で、開けばすぐに遊べます。現在6タイトルを配信中です。オンラインのEloランキングを備えたシネマティックな3Dチェス『王の策略』、レベルの読み込み中にすべてのメッシュ・テクスチャ・サウンドをあなたのマシン上で生成するシューター『クロード・オブ・デューティ』、手続き的に生成された熱帯雨林を一人称視点で歩く『ジャングル・トレイル』、DeHubのために作られた横スクロールのベルトアクション『Street Slayer』、デスクのモニターにライブの市場フィードが映り、WebXRによるVRモードも備えた歩き回れるトレーディングフロア『チャートオピア』、そしてDeHubコミュニティの中に自分のおおよその位置を置くこともできるライブ3D地球儀『神の目』。開発者は自作のゲームを審査に提出することもできます。',
+    connectTitle: 'AIを接続（MCP）',
+    labelWatch2earn: '視聴して稼ぐ：',
+    tvRadioB1: 'DeHubテレビ：',
     title: '完全なエコシステム',
     intro1: 'DeHubは、コンテンツ制作、ストリーミング、ゲーム業界にサービスを提供する、検閲耐性のあるオープンソースの従来型メディアプラットフォームの代替手段です。',
     intro2: 'アプリは分散型マイナーネットワークを通じてスケーリングされ、コンテンツのホスティング、トランスコーディング、配信のための共有計算能力を提供します。',
@@ -1356,6 +1363,7 @@ export const ja = {
     diagramMinersRole2: 'deHubトークンと引き換えに',
   },
   e2ee: {
+    fetchDbDesc: 'DeHubが取得するデータ：encrypted_content + nonce + version',
     title: 'エンドツーエンド暗号化',
     intro: 'DeHubはすべてのプライベート通信にエンドツーエンド暗号化（E2EE）を実装し、送信者と意図された受信者のみがメッセージを読めるようにします。',
     howItWorks: '仕組み',
@@ -2443,6 +2451,7 @@ export const ja = {
     status: 'ステータス',
   },
   docsSearch: {
+    popularDepin: 'DePIN',
     title: 'ドキュメントを検索する',
     placeholder: 'ドキュメントとブログを検索...',
     placeholderShort: '検索...',
@@ -2527,6 +2536,10 @@ export const ja = {
     contactText: 'これらのガイドラインに関する質問、または緊急の注意が必要なレポートは、dev@dehub.ioに送信することができます。',
   },
   adTools: {
+    cpmRow: 'インプレッション単価：',
+    cpmValue: '{amount}（1,000回表示あたり）',
+    ctr: 'クリック率',
+    ctrRow: 'クリック率：',
     budgetCalculatorTitle: 'キャンペーン予算計算ツール',
     budgetCalculatorDesc: '現実的なコスト見積もりとオーディエンスターゲティングでPOVR広告キャンペーンを計画する',
     dailyBudget: '1日あたりの予算（ $ ）',

@@ -1203,6 +1203,7 @@ export const dyu = {
     solvingDesc: 'Sisan, token governance ka tɔgɔ jugu kosɔn, sababu fila minnu bɛ yen, olu ye whale manipulation ani holder base minnu bɛ yen, olu ka tɛmɛn tɛ. Voting logic ani game theory minnu bɛ sanfɛ, olu bɛ solution kura jira duniye bɛɛ kɔnɔ, ani an bɛ kɔrɔsira ko an bɛ se ka token governance skeptics ka kɔnɔko yɛlɛma.',
   },
   tokenStake: {
+    formulaLine3: 'Baarakɛla ka staking niyɔrɔ = 100% * Staking hakɛ',
     title: 'Staking',
     subtitle: 'Ka aw ka DeHub token stake ka sara sɔrɔ ani ka rezo lakana.',
     overviewTitle: 'Staking kunnafoni',
@@ -1882,6 +1883,8 @@ export const dyu = {
     ],
   },
   brandAssets: {
+    brandGuidelinesDesc: 'DeHub ka taamasiyɛn sariyaw ni a cogo ladilikanw bɛɛ.',
+    download: 'Ka a jigin',
     title: 'Tɔgɔ nafaw',
     subtitle: 'Ka DeHub tɔgɔ nafa ofisiɛlw jigin ani ka baara.',
     logoTitle: 'Logoww',
@@ -2071,6 +2074,9 @@ export const dyu = {
     restrictionsItem5: 'Mɔgɔ minw ye mɔgɔ tɔgɔ jugu fɔ, olu ka kan ka ban ka wari di u ma.',
   },
   privacyPolicy: {
+    doCollectItem7: 'Fɛn minnu i bɛ sugandi ka u daminɛ: telefɔni nimɔrɔ sɛbɛnni kunnafoniw kama, ni mɔgɔ wɛrɛw bɛ a ye ni i bɛ ɛntɛrinɛti kan, ani sosiyali jatebɔ wɛrɛ minnu i bɛ u siri sɛbɛnni caman kama.',
+    thirdPartyItem10: 'Ni i ye sosiyali jatebɔ wɛrɛw siri, sɛbɛn minnu i bɛ sugandi ka u ci, olu bɛ ci o yɔrɔw ma sɛbɛnni baarakɛyɔrɔ dɔ fɛ, ani Farcaster ma i sɔnna bolonɔbila min ma o fɛ',
+    thirdPartyItem7: 'Cloudflare bɛ siti ni a ka media di ani k\'u mara',
     title: 'Gundo sariyaw',
     lastUpdated: 'Ladoni laban:',
     effective: 'A daminɛna:',
@@ -2206,6 +2212,8 @@ export const dyu = {
     joinDiscord: 'Ka jɛ Discord la',
   },
   faq: {
+    a26: 'Ɔwɔ. Gan o gan i yɛlɛla, o b\'i di bolo-di yɔrɔ kelen. Yɔrɔ in b\'i yɛrɛ ka jɛkulu juru don jatebɔ wɛrɛ ma waati o waati i y\'a to yen — o la, jɛkulu walima jatebɔ filanan bɛ a dɛmɛbaga ka jɛkulu ta. Badge min dira, a b\'a dɛmɛbaga tɔgɔ yira ni i ye i ka ɲɛ da a kan, ani i bɛ se k\'a segin waati o waati. A bɛ jɛkulu girinya ta, nka a tɛ fɛn minnu sɔngɔ ye wari ye olu ta: i ka sara jɛkulu, i ka sanni dɔgɔyali, i ka sɛbɛnni sira ani bolo-di yɔrɔw bɛɛ bɛ bɔ i yɛrɛ ka staking hakɛ la.',
+    q24: 'Yala n ka kan ka n ka sɛbɛnw kɛ NFT ye wa?',
     title: 'Ɲininkaliw min bɛ kɛ caman',
     subtitle: 'Ka jaabi sɔrɔ ɲininkali caman na DeHub, an ka token ekosistɛmu ani platform nafaw la.',
     commonQuestions: 'Ɲininkali camanw',
@@ -2338,6 +2346,8 @@ export const dyu = {
     efficient: 'Package manager nafaman',
   },
   quickStart: {
+    step2Desc: 'Settings → Profile kɔnɔ, tɔgɔ yirali, tɔgɔ, ja, kɔfɛ ja ani i ka lakali fara a kan, ani i ka sosiyali wɛrɛw siri walasa i ka porofili ka i ka sera bɛɛ yira. Ni i bɛ yen, i ka ɲɛjiginw sugandi Settings → Appearance kɔnɔ, ani ni i b\'a fɛ ka yɔrɔw yira i la, i bɛ se ka taama ladilikan sugandili kɛ.',
+    step5Desc: 'DeHub tokenw marali walima u staking bɛ badge di, ka bɔ Crab la ka se Megalodon ma. Badge bɛ i ka saraw dɔgɔya, ka i ka sɛbɛnni sira bonya, ka SuperPowers da wuli ani ka girinya fara i ka filɛliw, i ka jaabiw ani i ka kalata kan.',
     title: 'Joona daminɛ gafe',
     breadcrumbDocs: 'Sɛbɛnw',
     breadcrumbGettingStarted: 'Daminɛ',
@@ -2478,6 +2488,12 @@ export const dyu = {
     useRewardsTitle: 'Rewards currency',
   },
   communityGuidelines: {
+    notAllowedItem5: 'Koniya kumaw, minnu bɛ mɔgɔw tɔɔrɔ u siya, u bɔyɔrɔ, u jamana, u diinɛ, u fiɲɛ, u bana, u cɛya walima musoya, u yɛrɛ ka cɛya-musoya jateli walima u kanu sira kosɔn',
+    notAllowedItem6: 'Mɔgɔ wɛrɛ ka gundo kunnafoniw jɛnsɛnni (doxxing) k\'a sɔnni tɛ',
+    notAllowedItem8: 'Ka i yɛrɛ kɛ mɔgɔ wɛrɛ ye, dabɔbaga, taamasiyɛn walima porozɛ wɛrɛ ye',
+    notAllowedItem9: 'Fɛn juguw (malware), nanbara jɛɲɔgɔnyaw (phishing), wari-bolo nicilanw (wallet drainers), ani nanbara walima wari kɛcogo juguw',
+    notAllowedText: 'Nin kunnafoniw ni kɛwale ninnu dalilen don DeHub yɔrɔ bɛɛ la, i n\'a fɔ sɛbɛnw, hakilinaw, ɲɛnajɛ jɛnsɛnniw, cikanw, porofiliw ani tɔgɔw:',
+    whatHappensNextItem4: 'Fɛn minnu tɛ sariya la, olu bɛ ci fanga ɲɛmɔgɔw ma yɔrɔ min na sariya b\'a fɛ',
     title: 'Jamana ka ladiliw',
     lastUpdated: 'An ka kunnafoni wɛrɛw lajɛ:',
     lastUpdatedDate: 'saan 2026 ɔkutɔburu tile 26.',
@@ -2507,6 +2523,10 @@ export const dyu = {
     contactText: 'I be se ka ɲiningaliw kɛ o ladiliw koo la, walima ka kunnafoniw ci dev@dehub.io ma minw ka kan ka jatiminɛ kɛ joona joona.',
   },
   adTools: {
+    audienceWarning: 'Lamɛnbaga dɔɔnin ({count}) bɛ nin wari hakɛ in na. A filɛ ka jɛkulu caman sugandi walima ka wari hakɛ dɔgɔya.',
+    budgetWarning: 'Don o don wari hakɛ ({amount}) ka bon nin lamɛnbagaw hakɛ in ma. Jaabiw tɛ se ka kɛ tiɲɛ ye.',
+    cpmValue: '{amount} yeli 1000 o 1000',
+    vsLastWeek: '{delta} ni dɔgɔkun tɛmɛnen ye',
     budgetCalculatorTitle: 'Campaign Budget Calculator',
     budgetCalculatorDesc: 'I ka POVR ka piblisite labɛn ni wari hakɛ jatiminɛ ani jama ka jatiminɛ ye',
     dailyBudget: 'Daily Budget ($)',

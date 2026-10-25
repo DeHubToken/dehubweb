@@ -104,6 +104,14 @@ export const lo = {
     disclaimerText: 'ໂທເຄັນ DeHub ເຮັດວຽກເປັນໂທເຄັນຜົນປະໂຫຍດພາຍໃນລະບົບນິເວດຂອງພວກເຮົາ, ຄ້າຍຄືກັບສະກຸນເງິນໃນເກມ, ແລະ ບໍ່ແມ່ນເຄື່ອງມືການລົງທຶນ.',
   },
   dapp: {
+    aiSuiteB5: '@assistant:',
+    tocDepin: 'DePIN',
+    daoTitle: 'ຄັງເງິນ DAO',
+    spNameTimelineBomber: 'ນັກຖິ້ມລະເບີດໄທມ໌ໄລນ໌',
+    spTierCobra: 'ງູຈົງອາງ',
+    studioB9: 'ມາໂບໂຣຊິ:',
+    tocDao: 'ຄັງເງິນ DAO',
+    walletHubB5: 'ກະເປົາ Solana:',
     title: 'ລະບົບນິເວດທີ່ສົມບູນ',
     intro1: 'DeHub ເປັນທາງເລືອກແບບກະຈາຍອຳນາດ, ໂອເພັນຊອດ, ຕ້ານການກວດກາ ແທນແພລດຟອມມີເດຍເກົ່າ ທີ່ຮັບໃຊ້ອຸດສາຫະກຳການສ້າງເນື້ອຫາ, ການສະຕຣີມ ແລະ ເກມ.',
     intro2: 'ແອັບນີ້ຖືກຂະຫຍາຍຜ່ານເຄືອຂ່າຍຂຸດຄົ້ນແບບກະຈາຍອຳນາດ, ໃຫ້ພະລັງງານຄອມພິວເຕີ້ຮ່ວມກັນເພື່ອໂຮສ, ແປງ ແລະ ສົ່ງເນື້ອຫາ.',
@@ -1031,6 +1039,7 @@ export const lo = {
     altFeatures: 'ກະດານຮ້ອງຂໍຟີເຈີ, ບ່ອນທີ່ຊຸມຊົນສົ່ງ ແລະ ລົງຄະແນນສຽງກ່ຽວກັບແນວຄວາມຄິດ.',
   },
   games: {
+    trenchTitle: 'ຊາໂທເປຍ',
     title: 'ເກມ',
     subtitle: 'ຢູ່ຈຸດຕັດກັນທີ່ເຊື່ອມໂຍງລະຫວ່າງເກມ ແລະ ການສະຕຣີມ.',
     intro1: 'ເປັນທີມທີ່ເຕັಮໄປດ້ວຍນັກຫຼິ້ນເກມ ແລະ ສະຕຣີມເມີ, ພວກເຮົາໄດ້ສ້າງ ແລະ ປ່ອຍເກມ arcade ຫຼາຍເກມ.',
@@ -1228,6 +1237,9 @@ export const lo = {
     disclaimerText: 'ໂທເຄັນ DeHub ແມ່ນສຳລັບຜົນປະໂຫຍດເທົ່ານັ້ນ.',
   },
   depin: {
+    mobileSpecs: 'CPU 4 ແກນ, RAM 4GB',
+    pcSpecs: 'CPU 4 ແກນ, RAM 8GB, GPU',
+    serverSpecs: 'CPU 8 ແກນ, RAM 16GB, SSD',
     title: 'DePIN',
     subtitle: 'ເຄືອຂ່າຍໂຄງສ້າງພື້ນຖານທາງກາຍະພາບແບບກະຈາຍ (DePIN) ຂອງພະລັງງານຄອಮພິວເຕີ້ຮ່ວມກັນ',
     abstract: 'ບົດຄັດຫຍໍ້',
@@ -2239,6 +2251,7 @@ export const lo = {
     status: 'ສະຖານະ',
   },
   docsSearch: {
+    popularDepin: 'DePIN',
     placeholder: 'ສົ່ງນັບຕົວການດີນານສະກຸນກັນ...',
     placeholderShort: 'ສົ່ງ...',
     clearRecent: 'ລ້າງການຄົ້ນຫາຫຼ້າສຸດ',
@@ -2288,6 +2301,11 @@ export const lo = {
     useAiTitle: 'ການສ້າງດ້ວຍ AI',
   },
   adTools: {
+    cpmRow: 'ຄ່າຕໍ່ 1000 ການສະແດງ:',
+    cpmValue: '{amount} ຕໍ່ 1000 ການສະແດງ',
+    ctr: 'ອັດຕາການຄລິກ',
+    ctrRow: 'ອັດຕາການຄລິກ:',
+    roas: 'ຜົນຕອບແທນຄ່າໂຄສະນາ',
     avgCpmRow: 'CPM ສະເລ່ຍ:',
     becomeLaunchPartner: 'ກາຍເປັນຄູ່ຮ່ວມງານການເປີດຕົວ',
     benefit_earlyAccess: 'ການເຂົ້າເຖິງເຕັກໂນໂລຢີເປົ້າ ຫມາຍ POVR ທີ່ປະຕິວັດໃນເບື້ອງຕົ້ນ',
