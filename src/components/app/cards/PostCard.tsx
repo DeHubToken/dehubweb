@@ -312,10 +312,10 @@ const PostCardBody = memo(function PostCard({ post, threadSlot, onOpenComments }
 
   // Navigate to single post page when clicking non-interactive areas
   // Pre-cache post data for instant display on the single post page
-  /** Only central body taps wait for double 👍 / triple ❤️. Every other
-   * body tap opens immediately; links and text selection keep their actions. */
+  /** Text opens immediately; reactions stay on their explicit controls. */
   const tapGestures = useTapGestures({
     postId: post.id,
+    singleTapOnly: true,
     reactionArea: 'center',
     enableLongPress: false,
     onSingleTap: (event) => {
@@ -647,7 +647,7 @@ const PostCardBody = memo(function PostCard({ post, threadSlot, onOpenComments }
       </div>
 
       {/* Pointer gestures own body navigation; the compatibility click is
-          excluded here so a central double/triple tap cannot open the post.
+          excluded here so one release cannot push two history entries.
           Holds remain available for text selection. */}
       <div
         ref={bodyNavigationRef}

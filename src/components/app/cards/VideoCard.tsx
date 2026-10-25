@@ -1980,9 +1980,10 @@ const VideoCardBody = memo(function VideoCard({ video, postPage = false, onBack,
     onUndoSingleTap: isImmersive ? handlePlayClick : undefined,
   });
 
-  // A single tap on the title or description opens the post, like the rest of
-  // the card; two and three taps still react. Links and "See more" keep theirs.
+  // Text opens immediately. Media retains multi-tap reactions; links and
+  // "See more" keep their own actions.
   const captionTapGestures = useTapGestures({
+    singleTapOnly: !isImmersive,
     postId: video.id,
     reactionArea: 'center',
     disabled: hideActions || isContentGated,
