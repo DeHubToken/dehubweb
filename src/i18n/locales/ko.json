@@ -22,6 +22,7 @@
     "what": "공개 게시물과 프로필을 살펴보세요. OAuth 계정 연결을 통해 프로필과 개인 정보를 관리하고, 게시물과 댓글을 게시하고, 사람을 팔로우하고, 알림을 읽고, 북마크를 저장하고, 이미지, 비디오, 오디오 및 3D 자산을 생성할 수 있습니다. Generation은 DeHub의 기존 결제 규칙을 사용합니다."
   },
   "articles": {
+    "edit": "편집",
     "addCover": "커버 사진 추가하기",
     "backToTop": "맨 위로 이동",
     "backToWriting": "글쓰기로 돌아가기",
@@ -120,6 +121,7 @@
     "waiting": "다음 트위치 방송 준비 완료"
   },
   "viralTemplates": {
+    "more": "더 보기",
     "all": "전체",
     "back": "템플릿으로 돌아가기",
     "browse": "모든 {{count}} 템플릿 찾아보기",
@@ -148,6 +150,7 @@
     "useNamed": "{{name}} 을 (를) 사용하세요"
   },
   "walletBackup": {
+    "revealWords": "탭하여 보기",
     "backedUpOn": "백업됨 {{date}}",
     "backupDescription": "지갑을 복원할 수 있도록 복구 문구 또는 개인 키를 저장하세요.",
     "checkWrong": "그것 말고. 당신의 말을 확인하고 다시 시도해보세요.",
@@ -177,6 +180,18 @@
     "warnPaper": "스크린샷이나 메모 앱이 아닌 종이에 작성하세요."
   },
   "copy": {
+    "01fad993ff61": "반응",
+    "3c7e8ac23a6f": "이 결정에 이의 제기하기",
+    "62c8b95e8e5e": "거래량 {{value1}}",
+    "6e31723e40c6": "USD 가격 없음",
+    "93100fc44c0a": "@사용자이름",
+    "9f9c6f0d0963": "내 DeHub RPM",
+    "a17c49cfedad": "게시물 #{{value1}}",
+    "c104151457b7": "3단계 설정",
+    "c5de2b8c2cfe": "3:2 · X 또는 YouTube",
+    "e63ffac3f5e5": "페페",
+    "f5c9bd131486": "더 보기",
+    "f9c8b16a4071": "시가총액 {{value1}}",
     "0000cb98ea19": "스피커 승인됨",
     "0013fee41d62": "아직 2차 제휴사 없음",
     "001cab7d69a2": "DeHub 메시지에서 @ assistant에게 무엇을 원하는지 알려주세요. 앱을 빌드하고 호스팅하며 누구나 열 수 있는 링크를 전송합니다.",
@@ -6624,6 +6639,7 @@
     "heading": "DeHub 쇼츠"
   },
   "settings": {
+    "ensRemove": "제거",
     "activeSessions": "활성 세션",
     "activeSessionsDesc": "현재 계정에 로그인된 장치입니다.",
     "adLoad": "피드 내 광고",
@@ -8344,6 +8360,7 @@
       "viewPost": "포스트 보기"
     },
     "tasks": {
+      "profile": "프로필 업데이트",
       "action": "조치",
       "activity": "최근 활동",
       "comment": "의견",
@@ -8416,7 +8433,7 @@
         "reply": "답변",
         "replyPlaceholder": "따뜻하고 짧게. 맞는 질문을 할 때.",
         "replyStyle": "답변은 어떻게 들릴까?",
-        "to": "To",
+        "to": "수신",
         "today": "오늘",
         "view": "보기",
         "allTime": "모든 시간",
@@ -9401,6 +9418,11 @@
     "inviteSent": "초대 보냈습니다",
     "inviteToCommunity": "커뮤니티 초대",
     "manage": {
+      "alsoDeleteMessages": "모든 메시지도 삭제",
+      "bannedReasonLine": "사유: {{reason}}",
+      "muteTitle": "{{name}} 음소거",
+      "remove": "삭제",
+      "rules": "커뮤니티 규칙",
       "addAdministrator": "관리자 추가",
       "addRule": "규칙 추가",
       "adminBadge": "관리자",
@@ -9507,6 +9529,7 @@
       "reason": "사유",
       "reasonPlaceholder": "운영자만 볼 수 있습니다",
       "recentActions": {
+        "reason": "사유: {{reason}}",
         "empty": "조정 조치가 발생하면 해당 조치가 표시됩니다.",
         "emptyFilter": "이런 종류의 행동은 아직 없습니다.",
         "emptyTitle": "최근 작업 없음",
@@ -9735,6 +9758,7 @@
       "title": "토큰 세금 계보"
     },
     "money": {
+      "loss": "순손실",
       "chartDaily": "일일 수익 및 비용",
       "chartMonthly": "수입과 비용 당일, 월간 평균",
       "conversionTerm": "가격",
@@ -10633,7 +10657,7 @@
     "quoteAsPost": "게시물로 인용",
     "renameSpeaker": "스피커 이름 바꾸기",
     "renameSpeakerHint": "전체 트랜스크립트에서 이 스피커에 레이블을 지정할 사용자 이름을 입력하세요.",
-    "usernamePlaceholder": "@username",
+    "usernamePlaceholder": "@사용자이름",
     "save": "저장",
     "copyTranscript": "트랜스크립트 복사",
     "downloadTxt": ".txt 다운로드",
@@ -11028,7 +11052,7 @@
     "feeSplitInline": "(40% 번/30% 스테이커/20% 크리에이터/10% 플랫폼)",
     "review": "검토",
     "graduatesAt": "졸업생",
-    "graduatesAtValue": "$42,000 mcap",
+    "graduatesAtValue": "$ 42,000 mcap",
     "mockNote": "1단계 모의고사 — 온체인 트랜잭션이 전송되지 않습니다.",
     "back": "뒤로",
     "next": "다음",
@@ -12171,7 +12195,7 @@
     "sortShortest": "최단 순",
     "priceDhb": "가격 (토큰)",
     "bandUnder10k": "10,000 미만",
-    "band10kTo100k": "10k – 100k",
+    "band10kTo100k": "1만 – 10만",
     "band100kTo1m": "10만 – 1백만",
     "band1mPlus": "1백만 이상",
     "clear": "책임",
@@ -12297,9 +12321,9 @@
     "sortUploads": "업로드 가장 많음",
     "priceDhb": "가격 (토큰)",
     "bandUnder10k": "10k 미만",
-    "band10kTo100k": "10k – 100k",
-    "band100kTo1m": "100k – 1M",
-    "band1mPlus": "1M+",
+    "band10kTo100k": "1만 – 10만",
+    "band100kTo1m": "10만 – 100만",
+    "band1mPlus": "100만 이상",
     "clear": "필터 해제",
     "forSaleCount_one": "{{count}} 판매 중",
     "forSaleCount_other": "{{count}} 판매 중",
@@ -14188,7 +14212,7 @@
     "refundHint": "이 결제 네트워크에서 제어하는 지갑인지 확인하세요. 메모 또는 태그가 필요한 거래소 주소는 피하세요. 모든 제공업체 환불은 여기로 돌아갑니다.",
     "quoteSummary": "추정 결제: {{amount}} {{symbol}} {{chain}}",
     "receiveNet": "받을 DeHub 토큰: {{amount}} 개",
-    "gasReserve": "Includes ${{amount}} for network gas.",
+    "gasReserve": "네트워크 가스 ${{amount}} 포함.",
     "swapEstimate": "결제 확인 후 약 {{minutes}} 분.",
     "estimateUnknown": "시기는 결제 네트워크에 따라 다릅니다.",
     "confirmationTime": "네트워크 확인 및 토큰 배송에 시간이 소요됩니다. 이는 예상치이며 카운트다운이 아닙니다.",
@@ -14198,10 +14222,10 @@
     "acceptTerms": "구매 약관에 동의합니다.",
     "terms": "약관 보기",
     "sendExact": "{{chain}} 에 정확히 {{amount}} {{symbol}} 을 (를) 보내세요. 인출 또는 네트워크 수수료에 대해 별도로 허용합니다.",
-    "paymentSummary": "Payment: {{amount}} {{symbol}} on {{chain}}",
+    "paymentSummary": "결제: {{amount}} {{symbol}} on {{chain}}",
     "copyPayment": "결제 주소 복사",
     "memoNotice": "필수 메모/태그 — 주소가 포함된 메모/태그를 포함하지 않으면 결제 금액이 입금되지 않을 수 있습니다.",
-    "copyMemo": "Copy memo/tag",
+    "copyMemo": "메모/태그 복사",
     "copied": "복사됨",
     "copyFailed": "복사할 수 없습니다. 텍스트를 선택하고 수동으로 복사하세요.",
     "deadline": "입금 마감일: {{date}}. 이 시간 이후에는 새로운 결제를 보내지 마세요.",
@@ -14606,6 +14630,7 @@
   },
   "editor": {
     "assembly": {
+      "matchConsent": "클립과 사진을 내 질문과 일치시킵니다",
       "matchDuration": "일치하는 영상이 요청된 영상보다 짧습니다. 기간을 단축하거나 더 많은 미디어를 선택하십시오.",
       "matchFailed": "시퀀스 매칭이 사용할 수 없습니다. 선택한 클립과 타이밍은 변경되지 않았습니다. 수동으로 확인할 수 있습니다.",
       "matchLimit": "최대 10개의 클립이나 사진을 선택하세요. 동영상 길이는 1초에서 10분 사이여야 합니다.",
@@ -14630,6 +14655,7 @@
     "videoNeedsImage": "{{model}} 에 시작 이미지가 필요합니다. 대신 크리에이터 스튜디오에서 생성하세요.",
     "videoTemplates": {
       "copy": {
+        "answerHint": "한 문장으로 설명합니다.",
         "after": "이후",
         "afterHint": "결과를 표시합니다.",
         "announcement": "대대적인 발표",
@@ -15315,6 +15341,7 @@
       "suggestedShape": "추천: {{shape}}"
     },
     "bulk": {
+      "import": "CSV 또는 TSV를 임포트하세요",
       "allRecords": "범위 내 모든 레코드",
       "applyConnectionFile": "일치하는 연결 적용",
       "applyMatches": "일치하는 연결 사용",
@@ -15385,6 +15412,8 @@
       "trimToken": "포맷하기 전에 공백 다듬기"
     },
     "charts": {
+      "pasteObservations": "원시 관찰을 붙여넣으세요",
+      "pieValueHint": "이미지 표시를 위해 Show values를 활성화하세요. 공유는 양의 슬라이스만 사용합니다; 중앙 총계는 값 형식이 유지됩니다.",
       "applyDateBounds": "날짜 범위 적용",
       "applyImportedStyle": "초안에 스타일 적용",
       "applyReference": "목표 라인 적용",
@@ -15567,6 +15596,7 @@
       "pick": "캔버스에서 선택"
     },
     "compositions": {
+      "subtitle": "지원 텍스트",
       "accent": "어센트 색상",
       "brandFontHint": "새로운 조합에 저장된 헤딩 및 본문 폰트를 적용합니다. 텍스트 및 어센트 색상은 위 컨트롤을 사용하며, 기존 아트웍은 그대로 유지됩니다.",
       "brandFonts": "저장된 폰트 짝을 사용",
@@ -15599,6 +15629,7 @@
       "width": "라인 중량"
     },
     "crop": {
+      "applyRatio": "비율 적용",
       "applyFocus": "정확한 초점 적용",
       "canvasHint": "이미지를 프레임 내부로 이동하려면 드래그하세요.",
       "done": "완료",
@@ -15829,6 +15860,7 @@
       "undo": "변경 초안 실행 취소"
     },
     "grids": {
+      "insert": "사진 그리드 삽입",
       "addPhoto": "이 프레임의 사진 선택",
       "frame": "사진 액자",
       "hint": "사진 레이아웃을 삽입한 다음 프레임에 사진을 놓습니다. 그룹 내에서 프레임을 편집하려면 프레임을 두 번 클릭합니다.",
@@ -15837,6 +15869,7 @@
       "title": "사진 그리드"
     },
     "groups": {
+      "rotateBy": "{{degrees}}°로 회전",
       "applyOpacity": "선택한 레이어에 적용",
       "applyRotation": "선택 회전",
       "applyScale": "스케일 선택",
@@ -16049,6 +16082,7 @@
       "strength": "듀오톤 강도"
     },
     "photos": {
+      "rotate": "사진 순서를 회전합니다",
       "arrange": "사진 재정렬",
       "arrangeHint": "프레임, 위치, 스타일링 및 그룹이 제자리에 유지됩니다. 사진 초점은 출처를 따릅니다. 여러 페이지에 걸친 배경과 사진은 제외됩니다.",
       "narrowSearch": "처음 100개의 일치하는 프레임을 표시합니다. 검색을 통해 목록의 범위를 좁힙니다.",
@@ -16514,6 +16548,8 @@
     "notNow": "나중에"
   },
   "glossary": {
+    "edit": "게시물 수정",
+    "subtitle": "모든 아이콘과 기능의 의미 알아보기",
     "assistant": "AI 어시스턴트",
     "assistantDesc": "AI-파워드 채팅 어시스턴트는 질문에 답변, 이미지 생성, 비디오 생성, 플랫폼 기능에 도움을 줄 수 있는 AI를 탑재한 채팅 어시스턴트입니다.",
     "audio": "오디오",
