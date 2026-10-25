@@ -3,6 +3,7 @@ import { useState, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 import { Loader2, SpellCheck, Palette, ChevronLeft, Type, Hash, BarChart2, MonitorPlay, Cable, AlertTriangle } from "lucide-react";
+import More from "@/components/ui/cut-icons/more";
 import Paperclip from "@/components/ui/cut-icons/attach";
 import Calendar from "@/components/ui/cut-icons/events";
 import Radio from "@/components/ui/cut-icons/live";
@@ -77,7 +78,7 @@ interface PostActionBarProps {
   /** Add or take off a content warning. */
   onToggleContentWarning?: () => void;
   hasContentWarning?: boolean;
-  /** One more toolbar control after the emoji picker — the cross-post icon. */
+  /** Multi-post account controls rendered inside the shared options sheet. */
   extraTool?: React.ReactNode;
   /** No Go Live control — a quote cannot be a livestream. */
   hideLive?: boolean;
@@ -126,6 +127,7 @@ export function PostActionBar({
   const { t: _copy } = _useCopy();
   const { t } = useTranslation();
   const [audioPopoverOpen, setAudioPopoverOpen] = useState(false);
+  const [postOptionsOpen, setPostOptionsOpen] = useState(false);
   /**
    * OBS does not want the composer's fields — it wants an ingest URL and a
    * key. Picking it opens the Go Live sheet on its own setup step instead of
@@ -371,7 +373,7 @@ export function PostActionBar({
         </div>
       )}
 
-    <div className="px-4 py-2 border-t border-white/10 flex items-center justify-between">
+    <div data-composer-action-bar className="px-4 py-2 border-t border-white/10 flex items-center justify-between gap-2">
       <div className="flex items-center gap-0.5">
         <input ref={imageInputRef} type="file" accept="image/*" multiple onChange={onImageSelect} className="hidden" />
         <input ref={videoInputRef} type="file" accept="video/*" onChange={onVideoSelect} className="hidden" />
@@ -554,39 +556,47 @@ export function PostActionBar({
           </Popover>
         )}
 
-        {/* Poll button — hidden when live or media attached */}
-        {!isLive && !hasVideo && !hasImage && onTogglePoll && (
-          <Tooltip>
-            <TooltipTrigger asChild>
-              <button
-                type="button"
-                onClick={onTogglePoll}
-                className={cn('p-2 hover:bg-white/10 rounded-xl transition-colors', hasPoll && 'bg-white/20')}
-              >
-                <BarChart2 className="w-5 h-5 text-white" />
-              </button>
-            </TooltipTrigger>
-            <TooltipContent>{hasPoll ? _copy("copy.03ed4421a6d5", { defaultValue: "Remove poll" }) : _copy("copy.1dd3d9f671d4", { defaultValue: "Add poll" })}</TooltipContent>
-          </Tooltip>
+        {(!isLive && (onTogglePoll || onToggleContentWarning || extraTool)) && (
+          <button
+            type="button"
+            onClick={() => setPostOptionsOpen(true)}
+            aria-label={t('upload.postOptions', { defaultValue: 'Post options' })}
+            aria-haspopup="dialog"
+            aria-expanded={postOptionsOpen}
+            className={cn('flex h-9 w-9 shrink-0 items-center justify-center rounded-xl text-white transition-colors hover:bg-white/10', (hasPoll || hasContentWarning) && 'bg-white/20')}
+          >
+            <More className="h-5 w-5" />
+          </button>
         )}
 
-        {/* Content warning — a live stream opens straight to the stream, so it has none. */}
-        {!isLive && onToggleContentWarning && (
-          <Tooltip>
-            <TooltipTrigger asChild>
-              <button
-                type="button"
-                onClick={onToggleContentWarning}
-                aria-pressed={!!hasContentWarning}
-                aria-label={hasContentWarning ? _copy('contentWarning.remove') : _copy('contentWarning.add')}
-                className={cn('p-2 hover:bg-white/10 rounded-xl transition-colors', hasContentWarning && 'bg-white/20')}
-              >
-                <AlertTriangle className="w-5 h-5 text-white" />
-              </button>
-            </TooltipTrigger>
-            <TooltipContent>{hasContentWarning ? _copy('contentWarning.remove') : _copy('contentWarning.add')}</TooltipContent>
-          </Tooltip>
-        )}
+        <Drawer open={postOptionsOpen} onOpenChange={setPostOptionsOpen}>
+          <DrawerContent column glass className="border-t border-white/10 max-h-[80dvh]">
+            <DrawerHeader className="border-b border-white/10">
+              <DrawerTitle>{t('upload.postOptions', { defaultValue: 'Post options' })}</DrawerTitle>
+            </DrawerHeader>
+            <div className="overflow-y-auto p-4">
+              {!isLive && !hasVideo && !hasImage && onTogglePoll && (
+                <button type="button" aria-pressed={!!hasPoll}
+                  onClick={() => { setPostOptionsOpen(false); onTogglePoll(); }}
+                  className={cn('flex w-full items-center gap-3 rounded-xl px-4 py-3 text-left text-sm text-white hover:bg-white/10', hasPoll && 'bg-white/15')}
+                >
+                  <BarChart2 className="h-5 w-5" />
+                  {hasPoll ? _copy('copy.03ed4421a6d5', { defaultValue: 'Remove poll' }) : _copy('copy.1dd3d9f671d4', { defaultValue: 'Add poll' })}
+                </button>
+              )}
+              {!isLive && onToggleContentWarning && (
+                <button type="button" aria-pressed={!!hasContentWarning}
+                  onClick={() => { setPostOptionsOpen(false); onToggleContentWarning(); }}
+                  className={cn('flex w-full items-center gap-3 rounded-xl px-4 py-3 text-left text-sm text-white hover:bg-white/10', hasContentWarning && 'bg-white/15')}
+                >
+                  <AlertTriangle className="h-5 w-5" />
+                  {hasContentWarning ? t('contentWarning.remove') : t('contentWarning.add')}
+                </button>
+              )}
+              {!isLive && extraTool}
+            </div>
+          </DrawerContent>
+        </Drawer>
 
         {/* Emoji/GIF picker - single working button */}
         <EmojiGifPicker 
@@ -595,7 +605,6 @@ export function PostActionBar({
           triggerClassName="h-auto w-auto p-2 rounded-xl text-white backdrop-blur-none hover:bg-white/10 [&_svg]:size-5"
         />
 
-        {extraTool}
 
       </div>
 
