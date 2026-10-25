@@ -29,7 +29,11 @@ export const taskPlanSchema = z.object({
   summary: z.string().min(1).max(1000),
   steps: z.array(taskStepSchema).min(1).max(12),
   interval_minutes: z.number().finite().min(30).max(525600).nullable(),
+  pacing: z.object({ gap_seconds: z.number().finite().min(0).max(86400), duration_minutes: z.number().int().min(1).max(1440) }).strict().optional(),
 }).strict().superRefine((plan, ctx) => {
+  if (plan.pacing && (plan.interval_minutes !== null || plan.steps.length !== 1 || plan.steps[0].tool !== 'dehub_vote' || plan.steps[0].audience !== 'posts')) {
+    ctx.addIssue({ code: 'custom', message: 'Pacing supports one fixed-window reaction task.' });
+  }
   plan.steps.forEach((step, index) => {
     const invalid = (message: string) => ctx.addIssue({ code: "custom", message, path: ["steps", index] });
     if ((step.author || step.category || step.categories) && !windowSteps(step)) invalid("Author and category filters require a post window.");

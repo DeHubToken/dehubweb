@@ -46,6 +46,7 @@ export function AgentTasksPanel({ wallet, agents }: { wallet: string; agents: { 
   const [chosen, setChosen] = useState('');
   const [swarm, setSwarm] = useState(false);
   const [distribution, setDistribution] = useState<'each' | 'shared'>('each');
+  const [spreadMinutes, setSpreadMinutes] = useState(0);
   const [selected, setSelected] = useState<string[]>([]);
   const [requestId, setRequestId] = useState(() => crypto.randomUUID());
   const [windowMode, setWindowMode] = useState(false);
@@ -65,7 +66,7 @@ export function AgentTasksPanel({ wallet, agents }: { wallet: string; agents: { 
     queryFn: () => agentTaskRequest<{ tasks: AgentTask[] }>(wallet, { operation: 'list' }) });
   const refresh = () => { client.invalidateQueries({ queryKey: ['agent-tasks', wallet] }); client.invalidateQueries({ queryKey: ['agent-task-history', wallet] }); };
   const create = useMutation({ mutationFn: (text: string) => agentTaskRequest(wallet, { operation: swarm ? 'create_swarm' : 'create',
-    ...(swarm ? { agent_ids: swarmIds, swarm_mode: distribution } : { agent_id: agentId }),
+    ...(swarm ? { agent_ids: swarmIds, swarm_mode: distribution, spread_minutes: distribution === 'each' ? spreadMinutes : 0 } : { agent_id: agentId }),
     prompt: text, request_id: requestId, timezone: Intl.DateTimeFormat().resolvedOptions().timeZone }),
     onSuccess: (_data, text) => { if (text === prompt) setPrompt.complete(prompt, ''); setRequestId(crypto.randomUUID()); refresh(); toast.success(t('agents.tasks.queued')); },
     onError: (error: Error) => toast.error(error.message),
@@ -105,6 +106,15 @@ export function AgentTasksPanel({ wallet, agents }: { wallet: string; agents: { 
           {(['each', 'shared'] as const).map(mode => <Button key={mode} type="button" size="sm" disabled={create.isPending} aria-pressed={distribution === mode} variant={distribution === mode ? 'default' : 'outline'} onClick={() => { setDistribution(mode); changed(); }}>{t(`agents.tasks.${mode}Mode`)}</Button>)}
         </div>
         <p className="text-sm text-white/70">{t(distribution === 'each' ? 'agents.tasks.eachHelp' : 'agents.tasks.swarmHelp')}</p>
+        {distribution === 'each' && <div className="space-y-2">
+          <p className="text-sm font-medium">{t('agents.tasks.pacing.label', { defaultValue: 'When to act' })}</p>
+          <div className="flex flex-wrap gap-2" role="group" aria-label={t('agents.tasks.pacing.label', { defaultValue: 'When to act' })}>
+            {[0, 60, 360, 720, 1440].map(minutes => <Button key={minutes} type="button" size="sm" disabled={create.isPending}
+              aria-pressed={spreadMinutes === minutes} variant={spreadMinutes === minutes ? 'default' : 'outline'}
+              onClick={() => { setSpreadMinutes(minutes); changed(); }}>{minutes === 0 ? t('agents.tasks.pacing.now', { defaultValue: 'Immediately' }) : t('agents.tasks.pacing.hours', { defaultValue: 'Over {{count}} hours', count: minutes / 60 })}</Button>)}
+          </div>
+          <p className="text-sm text-white/70">{t('agents.tasks.pacing.help', { defaultValue: 'Starts automatically with Sentient off. Pacing supports one like or dislike action on a fixed post window: each agent reacts to every matching post, one turn at a time. The first turn starts now; service limits can extend the finish time.' })}</p>
+        </div>}
       </div> : <div className="space-y-2 text-sm"><label className="font-medium text-white/85" htmlFor="task-agent">{t('agents.agentName')}</label>
         <Select value={agentId} disabled={create.isPending} onValueChange={value => { setChosen(value); setRequestId(crypto.randomUUID()); create.reset(); }}>
           <SelectTrigger id="task-agent" data-theme-control-surface aria-label={t('agents.agentName')} className="border-white/20 bg-black/25 text-white"><SelectValue /></SelectTrigger>
@@ -149,6 +159,7 @@ export function AgentTasksPanel({ wallet, agents }: { wallet: string; agents: { 
       <div className="flex flex-wrap items-center gap-3"><Button disabled={(windowMode ? !windowReady : !prompt.trim()) || create.isPending || (swarm && swarmIds.length < 2)} onClick={() => create.mutate(windowMode && range ? windowPrompt(windowRange(preset, custom)!, windowActions, replyStyle, { author: filterModes.author ? filters.author : '', category: filterModes.category ? filters.category : '' }) : prompt)}>{create.isPending ? t('agents.tasks.preparing') : swarm ? t('agents.tasks.runSwarm') : t('agents.tasks.run')}</Button><p className="min-w-0 flex-1 text-sm leading-relaxed text-white/75">{t(windowMode ? 'agents.tasks.windowLimits' : 'agents.tasks.promptLimits')}</p></div>
     </> : <p className="text-sm text-white/60">{t('agents.tasks.createFirst')}</p>}
     {create.error && <p role="alert" className="text-sm break-words">{create.error.message}</p>}
+    <p className="text-sm text-white/70">{t('agents.tasks.pacing.independent', { defaultValue: 'Prompted tasks run independently of Sentient mode. Asking for likes does not turn on autonomous posting.' })}</p>
     {control.error && <p role="alert" className="text-sm break-words">{control.error.message}</p>}
     {create.isSuccess && <p role="status" className="text-sm">{t('agents.tasks.queued')}</p>}
     <div className="flex items-center justify-between border-t border-white/15 pt-4"><h3 className="font-semibold">{t('agents.tasks.list')}</h3><Button variant="ghost" size="sm" disabled={tasks.isFetching} onClick={refresh}>{t('agents.tasks.refresh')}</Button></div>

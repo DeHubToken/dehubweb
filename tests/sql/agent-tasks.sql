@@ -31,6 +31,7 @@ DO $$ BEGIN IF EXISTS(SELECT 1 FROM public.get_my_agents()) THEN RAISE EXCEPTION
 SELECT set_config('test.signed_wallet','0x9324840523a5d17dd12a2f11a9472e5a199c1937',false);
 DO $$ BEGIN IF (SELECT count(*) FROM public.get_my_agents())<>1 THEN RAISE EXCEPTION 'Owner listing missing'; END IF; END $$;
 RESET ROLE;
+
 ALTER TABLE public.ai_agents ADD COLUMN wallet_private_key text, ADD COLUMN metadata jsonb DEFAULT '{}'::jsonb;
 \ir ../../supabase/migrations/20261013010000_badge_agent_capacity.sql
 SET ROLE service_role;
@@ -144,5 +145,39 @@ DO $$ BEGIN
     RAISE EXCEPTION 'Public swarm creation permitted';
   EXCEPTION WHEN insufficient_privilege THEN NULL;
   END;
+END $$;
+RESET ROLE;
+
+\ir ../../supabase/migrations/20261025020000_paced_agent_swarms.sql
+SET ROLE service_role;
+UPDATE ai_agent_tasks SET status='completed',lease=NULL,lease_until=NULL;
+DO $$
+DECLARE owner_wallet text := '0x9324840523a5d17dd12a2f11a9472e5a199c1937';
+  members uuid[]; request uuid := gen_random_uuid(); claimed jsonb;
+BEGIN
+  SELECT array_agg(a.id ORDER BY a.id) INTO members FROM ai_agents a WHERE a.human_owner_wallet=owner_wallet;
+  PERFORM create_paced_agent_swarm(owner_wallet,members[1:2],request,'Like all recent posts',
+    '{"pacing":{"gap_seconds":60,"duration_minutes":3}}',ARRAY['123','124']);
+  IF (SELECT count(*) FROM ai_agent_tasks WHERE swarm_id=request AND cursor->'targets'='["123","124"]'::jsonb)<>2 THEN RAISE EXCEPTION 'Snapshot missing'; END IF;
+  IF (SELECT min(next_run_at) FROM ai_agent_tasks WHERE swarm_id=request)>now() THEN RAISE EXCEPTION 'First turn delayed'; END IF;
+  IF (SELECT max(next_run_at)-min(next_run_at) FROM ai_agent_tasks WHERE swarm_id=request)<>interval '1 minute' THEN RAISE EXCEPTION 'Members not staggered'; END IF;
+  claimed:=claim_agent_task();
+  IF (claimed->>'swarm_index')::integer<>0 THEN RAISE EXCEPTION 'Wrong first member'; END IF;
+  UPDATE ai_agent_tasks SET next_run_at=now() WHERE swarm_id=request;
+  IF claim_agent_task() IS NOT NULL THEN RAISE EXCEPTION 'Swarm members ran concurrently'; END IF;
+  UPDATE ai_agent_tasks SET cursor=jsonb_set(cursor,'{index}','1'),status='queued',lease=NULL,lease_until=NULL,next_run_at=now()+interval '2 minutes' WHERE id=(claimed->>'id')::uuid;
+  claimed:=claim_agent_task();
+  IF (claimed->>'swarm_index')::integer<>1 THEN RAISE EXCEPTION 'Did not rotate members'; END IF;
+  PERFORM create_paced_agent_swarm(owner_wallet,members[1:2],request,'Retry',
+    '{"pacing":{"gap_seconds":60,"duration_minutes":3}}',ARRAY['999']);
+  IF EXISTS(SELECT 1 FROM ai_agent_tasks WHERE swarm_id=request AND cursor->'targets'<>'["123","124"]'::jsonb) THEN RAISE EXCEPTION 'Retry changed snapshot'; END IF;
+END $$;
+RESET ROLE;
+SET ROLE anon;
+DO $$ BEGIN
+  BEGIN
+    PERFORM create_paced_agent_swarm('x',ARRAY[]::uuid[],gen_random_uuid(),'Unauthorized','{}',ARRAY['1']);
+    RAISE EXCEPTION 'Public paced creation permitted';
+  EXCEPTION WHEN insufficient_privilege THEN NULL; END;
 END $$;
 RESET ROLE;
