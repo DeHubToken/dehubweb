@@ -582,6 +582,7 @@ async function tradeV4(
   amountIn: bigint,
   minOut: bigint,
   say: (ok: boolean, extra?: Record<string, unknown>) => void,
+  assertCurrentAccount: () => void,
 ): Promise<AAWriteResult> {
   const v4 = V4_CHAINS[chainId];
   const coder = AbiCoder.defaultAbiCoder();
@@ -593,6 +594,7 @@ async function tradeV4(
   if (!buy) {
     const allowance = await getERC20Allowance(token, address, PERMIT2, chainId as ChainId);
     if (allowance < amountIn) {
+      assertCurrentAccount();
       const approval = await approveERC20(token, PERMIT2, MAX_UINT256, chainId as ChainId);
       say(true, { stage: 'approved', hash: approval.hash });
       if ((await approval.wait()).status !== 1) throw new Error('Token approval failed; swap not sent');
@@ -602,6 +604,7 @@ async function tradeV4(
     );
     const now = Math.floor(Date.now() / 1000);
     if (granted < amountIn || Number(expiration) < now + 120) {
+      assertCurrentAccount();
       const grant = await writeContractAA(
         PERMIT2, permit2Interface, 'approve',
         [token, v4.router, MAX_UINT160, now + 30 * 86400],
@@ -612,6 +615,7 @@ async function tradeV4(
     }
   }
 
+  assertCurrentAccount();
   return writeContractAA(
     v4.router, universalRouterInterface, 'execute', v4SwapArgs(token, key, buy, amountIn, minOut),
     { value: buy ? amountIn : 0n, chainId, context: 'swap' },
@@ -622,12 +626,18 @@ async function relayTrade(
   to: MessageEventSource | null,
   data: GameHostMessage,
   address: string | null | undefined,
+  currentAddress: () => string | null | undefined,
 ): Promise<void> {
   const key = typeof data.key === 'string' ? data.key.slice(0, 64) : '';
   const say = (ok: boolean, extra: Record<string, unknown> = {}) => {
     if (to) (to as Window).postMessage({ source: 'dehub', type: 'traded', ok, key, ...extra }, '*');
   };
   if (!address) return say(false, { reason: 'signin' });
+  const assertCurrentAccount = () => {
+    if (currentAddress()?.toLowerCase() !== address.toLowerCase()) {
+      throw new Error('Account changed. Review the trade again.');
+    }
+  };
 
   const chainId = typeof data.chain === 'number' ? data.chain : NaN;
   const chain = TRADE_CHAINS[chainId];
@@ -666,9 +676,10 @@ async function relayTrade(
     balanceBefore === null || after === null || (side === 'buy' ? after > balanceBefore : after < balanceBefore);
 
   try {
+    assertCurrentAccount();
     let result: AAWriteResult;
     if (v4) {
-      result = await tradeV4(chainId, address, token, v4, side === 'buy', amountIn, minOut, say);
+      result = await tradeV4(chainId, address, token, v4, side === 'buy', amountIn, minOut, say, assertCurrentAccount);
     } else if (side === 'buy') {
       result = await writeContractAA(
         chain.router,
@@ -688,6 +699,7 @@ async function relayTrade(
     } else {
       const allowance = await getERC20Allowance(token, address, chain.router, chainId as ChainId);
       if (allowance < amountIn) {
+        assertCurrentAccount();
         const approval = await approveERC20(token, chain.router, amountIn, chainId as ChainId);
         say(true, { stage: 'approved', hash: approval.hash });
         if ((await approval.wait()).status !== 1) throw new Error('Token approval failed; swap not sent');
@@ -703,6 +715,7 @@ async function relayTrade(
       }]);
       const unwrap = tradeRouterInterface.encodeFunctionData('unwrapWETH9', [minOut, address]);
       const deadline = BigInt(Math.floor(Date.now() / 1000) + TRADE_DEADLINE_SECONDS);
+      assertCurrentAccount();
       result = await writeContractAA(
         chain.router,
         tradeRouterInterface,
@@ -804,7 +817,7 @@ export function useGameHostBridge(
         // the classic double-buy, and the frame already disarms its button.
         if (tradeBusy.current) return;
         tradeBusy.current = true;
-        void relayTrade(event.source, data, opts.current?.address).finally(() => {
+        void relayTrade(event.source, data, opts.current?.address, () => opts.current?.address).finally(() => {
           tradeBusy.current = false;
         });
         return;

@@ -2579,6 +2579,7 @@ async function planBuyEvm(m,ethAmount,slipPct){
   const q=await routeEvm(ch,m,'buy',amountIn);
   const slip=BigInt(Math.round((slipPct||3)*100));
   const minOut=q.out*(10000n-slip)/10000n;
+  if(minOut<=0n)throw new Error('Amount is too small for a protected swap');
   return {ch,q,amountIn,minOut,side:'buy',m,
     async send(onStage){
       signer.check();
@@ -2606,6 +2607,7 @@ async function planSellEvm(m,rawAmount,slipPct){
   const q=await routeEvm(ch,m,'sell',rawAmount);
   const slip=BigInt(Math.round((slipPct||3)*100));
   const minOut=q.out*(10000n-slip)/10000n;
+  if(minOut<=0n)throw new Error('Amount is too small for a protected swap');
   return {ch,q,amountIn:rawAmount,minOut,side:'sell',m,
     async send(onStage){
       signer.check();
@@ -2742,7 +2744,9 @@ async function planSol(m,side,amountRaw,slipPct){
   const signer=captureTradeWallet(ch);
   const inMint=side==='buy'?ch.wsol:m.tokenAddr,outMint=side==='buy'?m.tokenAddr:ch.wsol;
   const q=await jupQuote(inMint,outMint,amountRaw.toString(),Math.round((slipPct||3)*100));
-  return {ch,q,amountIn:amountRaw,minOut:BigInt(q.otherAmountThreshold||q.outAmount),side,m,
+  const minOut=BigInt(q.otherAmountThreshold||'0');
+  if(minOut<=0n)throw new Error('Quote has no protected minimum received');
+  return {ch,q,amountIn:amountRaw,minOut,side,m,
     async send(onStage){
       signer.check();
       const tx=await jupSwap(q,signer.address);
