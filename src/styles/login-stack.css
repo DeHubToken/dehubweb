@@ -122,10 +122,6 @@ html[data-system-tone="light"] .login-stack-corner {
   width: 100%;
 }
 @media (min-width: 768px) {
-  .login-stack-scroll > .login-stack {
-    width: calc(100% + 28px);
-    align-self: center;
-  }
   .login-stack-scroll > .login-stack-form {
     max-width: 480px;
     margin-left: auto;
@@ -140,6 +136,7 @@ html[data-system-tone="light"] .login-stack-corner {
 .login-stack-method {
   min-height: 124px;
   max-height: 240px;
+  overflow-x: hidden;
   overflow-y: auto;
   overscroll-behavior: contain;
 }
