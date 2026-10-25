@@ -6866,16 +6866,17 @@ html[data-system-tone="light"] [data-notifications-close] {
   color: rgb(24 24 27 / 0.8);
 }
 
-/* Only measured, single-column tablet Home cards opt in. The header stays
-   above both columns; metadata and the existing actions belong beside media. */
+/* Only measured, single-column wide feeds opt in. Creator, copy and actions
+   share the left column; the portrait video starts at the top on the right. */
 [data-video-card][data-tablet-portrait]:not(#_):not(#_) {
   display: grid;
-  grid-template-columns: var(--tablet-video-width) minmax(0, 1fr);
+  grid-template-columns: minmax(0, 1fr) var(--tablet-video-width);
+  grid-template-rows: auto minmax(0, 1fr);
   column-gap: 24px;
   align-items: start;
 }
 [data-tablet-portrait] > [data-card-head]:not(#_):not(#_) {
-  grid-column: 1 / -1;
+  grid-column: 1;
   grid-row: 1;
   position: relative;
   inset: auto;
@@ -6885,14 +6886,14 @@ html[data-system-tone="light"] [data-notifications-close] {
   pointer-events: auto;
 }
 html body [data-tablet-portrait] > [data-media-full]:not(#_):not(#_) {
-  grid-column: 1;
-  grid-row: 2;
+  grid-column: 2;
+  grid-row: 1 / span 2;
   width: 100% !important;
   max-height: 65svh !important;
   margin: 0 !important;
 }
 [data-tablet-portrait] > [data-card-info]:not(#_):not(#_) {
-  grid-column: 2;
+  grid-column: 1;
   grid-row: 2;
   align-self: stretch;
   display: flex;
