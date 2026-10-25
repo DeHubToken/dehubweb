@@ -57,6 +57,28 @@ describe('Chartopia amount precision', () => {
   });
 });
 
+describe('Robinhood pool discovery', () => {
+  it('pages within the RPC block limit and finds older pools without gaps', async () => {
+    const ranges: Array<[bigint, bigint]> = [];
+    const log = { data: 'pool key' };
+    const context: any = {
+      V4: { robinhood: { logs: true, logRange: 10_000_000, pm: 'manager' } }, V4_INIT: 'topic',
+      hexBig: (n: bigint) => '0x' + n.toString(16),
+      rpcPublic: async (_: string, method: string, params: any[]) => {
+        if (method === 'eth_blockNumber') return '0x5d6025c';
+        ranges.push([BigInt(params[0].fromBlock), BigInt(params[0].toBlock)]);
+        return ranges.length === 3 ? [log] : [];
+      },
+    };
+    runInNewContext(section('async function v4InitLog(', 'async function v4Key('), context);
+    expect(await context.v4InitLog({ key: 'robinhood', rpc: 'rpc' }, 'pool')).toBe(log);
+    expect(ranges).toHaveLength(3);
+    for (const [start, end] of ranges) expect(end - start + 1n).toBe(10_000_000n);
+    expect(ranges[1][1]).toBe(ranges[0][0] - 1n);
+    expect(ranges[2][1]).toBe(ranges[1][0] - 1n);
+  });
+});
+
 describe('Chartopia EVM execution', () => {
   it.each([null, { status: '0x0' }])('does not send a swap after unsuccessful approval %j', async receipt => {
     const { context, market, sent } = evmHarness();
