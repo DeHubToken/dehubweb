@@ -2,7 +2,7 @@ import { useTranslation as _useCopy } from 'react-i18next';
 import { useSurfaceDraft } from '@/hooks/use-surface-draft';
 import { BrandIcon } from '@/components/app/war/WarHudIcon';
 import { AppState } from '@/components/app/AppState';
-import { IslandAction, PageIsland } from '@/components/app/page-kit/PageKit';
+import { PageIsland } from '@/components/app/page-kit/PageKit';
 import { DhbCoin } from '@/components/app/DhbAmount';
 import { useState, useEffect, useRef, useCallback, type CSSProperties } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -613,16 +613,6 @@ export default function MessagesPage() {
             className="shrink-0"
             icon={<BrandIcon src={messagesBubbleIcon} alt={_copy("copy.04d7b4833927", { defaultValue: "Messages" })} className="h-8 w-8 object-contain" />}
             title={t('messages.title')}
-            actions={
-              <>
-                <IslandAction label={_copy("copy.0e9161011702", { defaultValue: "Refresh" })} onClick={() => refetch()} disabled={isRefetching}>
-                  <RefreshCw className={`h-[18px] w-[18px] ${isRefetching ? 'animate-spin' : ''}`} />
-                </IslandAction>
-                <IslandAction label={_copy("copy.4787aa7e2d5c", { defaultValue: "Start new conversation" })} onClick={() => setShowNewConversation(true)}>
-                  <Plus className="h-[18px] w-[18px]" />
-                </IslandAction>
-              </>
-            }
           >
             <div className="relative flex items-center">
               <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-zinc-500" />
@@ -631,8 +621,33 @@ export default function MessagesPage() {
                 placeholder={t('messages.searchConversations')}
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                className="pl-10 bg-white/[0.06] border-0 text-white placeholder:text-zinc-500 rounded-lg"
+                className="pl-10 pr-[68px] bg-white/[0.06] border-0 text-white placeholder:text-zinc-500 rounded-lg"
               />
+              {/* Refresh and new message sit quietly inside the search field
+                  instead of as island squares next to the title. */}
+              <div className="absolute right-1 top-1/2 -translate-y-1/2 flex items-center">
+                <button
+                  type="button"
+                  data-messages-search-action
+                  onClick={() => refetch()}
+                  disabled={isRefetching}
+                  aria-label={_copy("copy.0e9161011702", { defaultValue: "Refresh" })}
+                  title={_copy("copy.0e9161011702", { defaultValue: "Refresh" })}
+                  className="h-7 w-7 flex items-center justify-center rounded-md text-zinc-500 hover:text-white transition-colors disabled:opacity-50"
+                >
+                  <RefreshCw className={`h-4 w-4 ${isRefetching ? 'animate-spin' : ''}`} />
+                </button>
+                <button
+                  type="button"
+                  data-messages-search-action
+                  onClick={() => setShowNewConversation(true)}
+                  aria-label={_copy("copy.4787aa7e2d5c", { defaultValue: "Start new conversation" })}
+                  title={_copy("copy.4787aa7e2d5c", { defaultValue: "Start new conversation" })}
+                  className="h-7 w-7 flex items-center justify-center rounded-md text-zinc-500 hover:text-white transition-colors"
+                >
+                  <Plus className="h-4 w-4" />
+                </button>
+              </div>
             </div>
           </PageIsland>
 
