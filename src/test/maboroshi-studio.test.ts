@@ -55,6 +55,23 @@ afterEach(() => { dom.window.close(); });
 const connected = async () => { await vi.waitFor(() => expect(sent.some(x => x.type === 'maboroshi:ready')).toBe(true)); session(); await vi.waitFor(() => expect(el('project').hidden).toBe(false)); };
 
 describe('Maboroshi creator journey', () => {
+  it('refreshes a saved output for private library delivery without a generation payment', async () => {
+    saved = project({ state: 'draft', files: { ...project().files, 'final-preview.mp4': `https://live.dehub.io/maboroshi/media/${id}/final-preview.mp4?expires=123&signature=${'b'.repeat(64)}` } });
+    await vi.waitFor(() => expect(sent.some(x => x.type === 'maboroshi:ready')).toBe(true));
+    session({ libraryBridge: 1, allowPayments: false });
+    await vi.waitFor(() => expect(el('result-save-library').hidden).toBe(false));
+    await vi.waitFor(() => expect(el('project').hidden).toBe(false));
+    el('result-save-library').click(); el('result-save-library').click();
+    await vi.waitFor(() => expect(sent.filter(x => x.type === 'maboroshi:save')).toHaveLength(1));
+    const request = sent.find(x => x.type === 'maboroshi:save');
+    expect(request.wallet).toBe(wallet); expect(request.projectId).toBe(id);
+    expect(request.url).toContain('final-preview.mp4?expires=123');
+    expect(sent.some(x => x.type === 'maboroshi:pay')).toBe(false);
+    w.document.dispatchEvent(new w.CustomEvent('maboroshi:native-save-result', { detail: { requestId: request.requestId, error: 'offline' } }));
+    expect(el('result-save-library').disabled).toBe(false);
+    expect(el('library-save-status').textContent).toContain('Try again');
+    expect(el('project').hidden).toBe(false);
+  });
   it('offers one complete Kling render with no preparation or HD purchase', async () => {
     saved = project({ renderer: 'kling', state: 'prepared', hasReference: true, review: { approved: true }, quotes: { draft: 3150000 }, files: { ...project().files, 'seedance-input.mp4': 'https://live.dehub.io/maboroshi/media/input.mp4' } });
     await connected();

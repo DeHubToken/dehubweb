@@ -6,6 +6,50 @@ let selectedInput = '', selectedResult = '', requestVersion = 0, sessionVersion 
 let referencesChanged = false, working = false, pendingPayment = null, paymentNotice = '';
 const localMedia = new Map();
 let selectedSourceFile = null, selectedClipId = '', clipImport = null;
+let libraryBridge = false, libraryPending = null;
+function renderLibraryDelivery() {
+  for (const id of ['result-save-library', 'remake-save-library']) {
+    $(id).hidden = !libraryBridge;
+    $(id).disabled = !token || !!libraryPending || locked() || busy() || (id === 'remake-save-library' && current?.state !== 'edit_complete');
+  }
+}
+async function saveToLibrary(remake) {
+  if (!libraryBridge || !token || !current || libraryPending || locked() || busy()) return;
+  const version = sessionVersion, ident = current.id;
+  const requestId = crypto.randomUUID();
+  libraryPending = { requestId, projectId: ident };
+  renderLibraryDelivery();
+  $('library-save-status').textContent = 'Preparing your saved output…';
+  try {
+    // Refresh expiring media links from the authenticated saved project.
+    await load(ident);
+    if (version !== sessionVersion || current?.id !== ident) return;
+    const url = remake ? current.state === 'edit_complete' && current.files['remake-result.mp4'] : current.files[selectedResult];
+    if (!url) throw Error('This output is not ready. Your saved project is retained.');
+    const input = { type: 'maboroshi:save', requestId, wallet: account, projectId: ident, url,
+      version: remake ? current.remake.shots.map(shot => shot.id).join('.') : '0', createdAt: current.created * 1000 };
+    if (window.ReactNativeWebView) window.ReactNativeWebView.postMessage(JSON.stringify(input));
+    else window.parent.postMessage(input, 'https://dehub.io');
+    $('library-save-status').textContent = 'Saving to your private library…';
+    setTimeout(() => {
+      if (version === sessionVersion && libraryPending?.requestId === requestId) {
+        libraryPending = null; render();
+        $('library-save-status').textContent = 'Save confirmation was interrupted. Your project is retained; retry saving without another generation charge.';
+      }
+    }, 120000);
+  } catch (error) {
+    if (version === sessionVersion) { libraryPending = null; render(); $('library-save-status').textContent = error.message; }
+  }
+}
+function librarySaveResult(data) {
+  if (!libraryPending || data?.requestId !== libraryPending.requestId) return;
+  const sameProject = current?.id === libraryPending.projectId;
+  libraryPending = null; render();
+  if (sameProject) $('library-save-status').textContent = data.error ? 'Could not save. Your project is retained. Try again.' : 'Saved to your private generation library. Open Creator to add it to your timeline.';
+}
+document.addEventListener('maboroshi:native-save-result', event => librarySaveResult(event.detail));
+$('result-save-library').onclick = () => void saveToLibrary(false);
+$('remake-save-library').onclick = () => void saveToLibrary(true);
 const presets = window.MABOROSHI_PRESETS || [];
 const linkedPreset = presets.find(preset => preset.id === new URLSearchParams(location.search).get('preset')) || null;
 let selectedPreset = linkedPreset;
@@ -35,7 +79,7 @@ function renderPresetDetail() {
   $('preset-guidance').textContent = !token ? 'Sign in to DeHub to use a preset.' : !allowPayments ? 'This app supports saved previews and downloads.' : !editable() ? 'Start a new project to try another look.' : 'Replaces the direction below. Your files stay selected. You can edit the wording before saving.';
 }
 const busy = () => current && ['queued', 'running'].includes(current.state);
-const locked = () => working || !!pendingPayment;
+const locked = () => working || !!pendingPayment || !!libraryPending;
 const editable = () => allowPayments && (!current || ['uploaded', 'prepared'].includes(current.state));
 const money = (micros) => new Intl.NumberFormat(undefined, { style: 'currency', currency: 'USD' }).format(micros / 1e6);
 const stateLabel = (state) => ({ uploaded: 'Ready to prepare', prepared: 'Ready to review', queued: 'Queued', running: 'Processing', draft: 'Preview ready', complete: 'Video ready', failed: 'Needs attention', attention: 'Needs attention' })[state] || 'Saved';
@@ -71,6 +115,7 @@ function mediaPreview(id, media) {
   preview.hidden = false; preview.dataset.key = key;
 }
 function clearProject() {
+  libraryPending = null; $('library-save-status').textContent = '';
   clipImport?.abort(); clipImport = null; selectedSourceFile = null; selectedClipId = ''; $('source').required = true;
   if (pendingPayment) { pendingPayment.reject(Error('The active project changed.')); pendingPayment = null; }
   clearTimeout(timer); requestVersion++; current = null; selectedInput = ''; selectedResult = ''; paymentNotice = '';
@@ -129,6 +174,7 @@ function nextStep() {
   return 'Your video is ready to download. Your original and preview remain saved.';
 }
 function render() {
+  renderLibraryDelivery();
   renderPresetDetail();
   const kling = (current ? current.renderer || 'seedance' : $('renderer').value) === 'kling';
   $('preparation-options').hidden = kling;
@@ -205,6 +251,8 @@ async function load(ident) {
 async function authenticate(data) {
   if (typeof data.token !== 'string' || typeof data.wallet !== 'string') return;
   const permitted = data.allowPayments !== false && data.paymentBridge === 1;
+  libraryBridge = data.libraryBridge === 1;
+  renderLibraryDelivery();
   if (data.token === token && data.wallet.toLowerCase() === account && permitted === allowPayments) return;
   const version = ++sessionVersion;
   clearProject(); working = false; token = data.token; account = data.wallet.toLowerCase(); allowPayments = false;
@@ -224,6 +272,7 @@ window.addEventListener('message', event => {
   if (event.source !== window.parent || event.origin !== 'https://dehub.io') return;
   if (event.data?.type === 'maboroshi:session') void authenticate(event.data);
   if (event.data?.type === 'maboroshi:payment-result') paymentResult(event.data);
+  if (event.data?.type === 'maboroshi:save-result') librarySaveResult(event.data);
   if (event.data?.type === 'maboroshi:clip') void chooseCatalogClip(event.data.clip);
 });
 // Native injects events only after verifying the exact WebView origin and path.
