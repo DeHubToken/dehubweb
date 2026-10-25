@@ -558,6 +558,13 @@ export function PostActionBar({
           </Popover>
         )}
 
+        {/* Emoji/GIF picker - single working button */}
+        <EmojiGifPicker 
+          onEmojiSelect={onInsertEmoji}
+          onGifSelect={onInsertGif}
+          triggerClassName="h-auto w-auto p-2 rounded-xl text-white backdrop-blur-none hover:bg-white/10 [&_svg]:size-5"
+        />
+
         {(!isLive && (onTogglePoll || onToggleContentWarning || extraTool)) && (
           <button
             type="button"
@@ -603,12 +610,6 @@ export function PostActionBar({
           </DrawerContent>
         </Drawer>
 
-        {/* Emoji/GIF picker - single working button */}
-        <EmojiGifPicker 
-          onEmojiSelect={onInsertEmoji}
-          onGifSelect={onInsertGif}
-          triggerClassName="h-auto w-auto p-2 rounded-xl text-white backdrop-blur-none hover:bg-white/10 [&_svg]:size-5"
-        />
 
 
       </div>
