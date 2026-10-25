@@ -45,7 +45,7 @@ function findPlayer(root: HTMLElement | null): HTMLMediaElement | null {
 }
 
 function findLikeTile(root: HTMLElement | null): HTMLButtonElement | null {
-  return root?.querySelector<HTMLButtonElement>('[data-stage-post] [data-stage-bar] [data-stage-action="like"]') ?? null;
+  return root?.querySelector<HTMLButtonElement>('[data-stage-post] [data-stage-like]') ?? null;
 }
 
 export function StageMiniPlayer({ rootRef, kind, title, subtitle, thumbnail, onBack }: StageMiniPlayerProps) {
