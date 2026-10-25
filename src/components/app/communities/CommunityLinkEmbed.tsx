@@ -48,7 +48,7 @@ export function CommunityLinkEmbed({ slug, fallback = null }: CommunityLinkEmbed
 
   if (isLoading) {
     return (
-      <div className="mt-2 h-16 rounded-xl bg-white/[0.04] animate-pulse" />
+      <div className="mt-2 h-16 rounded-xl theme-skeleton animate-pulse" />
     );
   }
 

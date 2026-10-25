@@ -41,7 +41,7 @@ export function SharedPostEmbed({ tokenId, className, fullWidth = false, fallbac
 
   if (isLoading) {
     return (
-      <div className={`${widthClass} h-40 rounded-2xl bg-white/[0.05] border border-zinc-700/60 animate-pulse ${className || ''}`} />
+      <div className={`${widthClass} h-40 rounded-2xl theme-skeleton border border-zinc-700/60 animate-pulse ${className || ''}`} />
     );
   }
 

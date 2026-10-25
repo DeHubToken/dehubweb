@@ -108,7 +108,7 @@ export default function WorkPage() {
         {isLoading ? (
           <div className="grid sm:grid-cols-2 gap-3">
             {Array.from({ length: 6 }).map((_, i) => (
-              <div key={i} className="h-40 rounded-2xl bg-white/5 animate-pulse" />
+              <div key={i} className="h-40 rounded-2xl theme-skeleton animate-pulse" />
             ))}
           </div>
         ) : jobs.length === 0 ? (

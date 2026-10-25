@@ -78,8 +78,8 @@ export function UsernameVault({ onSell }: Props) {
   if (isLoading) {
     return (
       <div className="space-y-2">
-        <div className="h-20 rounded-xl bg-white/5 animate-pulse" />
-        <div className="h-20 rounded-xl bg-white/5 animate-pulse" />
+        <div className="h-20 rounded-xl theme-skeleton animate-pulse" />
+        <div className="h-20 rounded-xl theme-skeleton animate-pulse" />
       </div>
     );
   }

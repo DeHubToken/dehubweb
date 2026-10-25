@@ -270,7 +270,7 @@ export default function AppsPage() {
         {apps === null ? (
           <div className="grid grid-cols-1 gap-2 md:grid-cols-2">
             {Array.from({ length: 6 }, (_, i) => (
-              <div key={i} className="h-20 animate-pulse rounded-2xl bg-zinc-900/60" />
+              <div key={i} className="h-20 animate-pulse rounded-2xl theme-skeleton" />
             ))}
           </div>
         ) : apps.length === 0 && failed ? (

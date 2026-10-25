@@ -29,7 +29,7 @@ export function ProposalLinkEmbed({ proposalId, path, fallback = null }: Proposa
   const { data: proposal, isLoading } = useGovernanceProposal(proposalId);
 
   if (isLoading) {
-    return <div className="mt-2 h-32 rounded-xl bg-white/[0.04] animate-pulse" />;
+    return <div className="mt-2 h-32 rounded-xl theme-skeleton animate-pulse" />;
   }
   if (!proposal) return <>{fallback}</>;
 

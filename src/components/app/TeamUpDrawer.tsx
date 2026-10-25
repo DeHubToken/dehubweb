@@ -171,9 +171,9 @@ export function TeamUpDrawer({ open, onOpenChange }: { open: boolean; onOpenChan
           </div>
         ) : mine.isLoading ? (
           <div className="space-y-2" aria-label={t('superpowers.teamUp.loadingTeam')}>
-            <div className="h-20 rounded-xl bg-white/5 animate-pulse" />
-            <div className="h-14 rounded-xl bg-white/[0.03] animate-pulse" />
-            <div className="h-14 rounded-xl bg-white/[0.03] animate-pulse" />
+            <div className="h-20 rounded-xl theme-skeleton animate-pulse" />
+            <div className="h-14 rounded-xl theme-skeleton animate-pulse" />
+            <div className="h-14 rounded-xl theme-skeleton animate-pulse" />
           </div>
         ) : team ? (
           <div className="max-h-[68vh] overflow-y-auto flex flex-col gap-4">

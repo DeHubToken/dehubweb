@@ -34,9 +34,9 @@ export function AuthGate({ description: _description }: { description?: string }
     <div data-auth-gate className="flex flex-col items-center justify-center min-h-[calc(100svh_-_64px_-_var(--app-top-bar))] lg:min-h-screen p-8 -mt-[30px] lg:-mt-[50px]">
       {showSkeleton ? (
         <>
-          <div className="w-20 h-20 mb-6 rounded-full bg-white/[0.06] animate-pulse" />
-          <div className="h-6 w-40 bg-white/[0.06] rounded animate-pulse mb-6" />
-          <div className="h-10 w-24 bg-white/[0.06] rounded-xl animate-pulse" />
+          <div className="w-20 h-20 mb-6 rounded-full theme-skeleton animate-pulse" />
+          <div className="h-6 w-40 theme-skeleton rounded animate-pulse mb-6" />
+          <div className="h-10 w-24 theme-skeleton rounded-xl animate-pulse" />
         </>
       ) : (
         <>

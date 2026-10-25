@@ -178,7 +178,7 @@ export function BrowseTab() {
       {isLoading ? (
         <div className="space-y-2.5">
           {Array.from({ length: 8 }).map((_, i) => (
-            <div key={i} className="h-[88px] rounded-xl bg-white/5 animate-pulse" />
+            <div key={i} className="h-[88px] rounded-xl theme-skeleton animate-pulse" />
           ))}
         </div>
       ) : listings.length === 0 ? (
