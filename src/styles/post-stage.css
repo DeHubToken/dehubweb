@@ -199,8 +199,7 @@ html[data-theme='horror'] {
 }
 
 /* The post owns the screen for every media kind: no logo bar, no feed pill,
-   no bottom nav (the docked composer takes the bottom nav's place). Back is
-   the small icon on the media, which grows into the mini bar on scroll. */
+   no bottom nav (the docked composer takes the bottom nav's place). */
 @media (max-width: 639px) {
   body.post-stage-mode :is([data-mobile-header], [data-feed-nav], [data-feed-nav-outer], [data-home-tabs]),
   body.post-stage-mode [data-bottom-nav] {

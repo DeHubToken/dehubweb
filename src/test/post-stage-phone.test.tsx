@@ -193,7 +193,7 @@ describe('the stage page shell', () => {
     expect(css).toContain('body.post-stage-mode :is([data-mobile-header], [data-feed-nav], [data-feed-nav-outer], [data-home-tabs])');
     expect(css).not.toContain('post-stage-keep-nav');
     const src = readFileSync('src/components/app/post-stage/PostStagePhone.tsx', 'utf8');
-    expect(src).toContain("const floatsBack = kind === 'image' || kind === 'audio';");
+    expect(src).not.toContain('StageMediaChrome');
   });
 
   it('docks the stage composer to the screen in the comments section', () => {

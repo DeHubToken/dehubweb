@@ -1,14 +1,13 @@
 /**
  * Post page "Stage" — the phone (<640px) layout of the dedicated post page.
  *
- *   media, full width, with a small back icon (and options) floating on it
+ *   media, full width, laid out the same as the home feed card
  *   creator row (followers + Follow), caption clamped with "more", meta row
  *   one five-tile bar: like · comments · repost & share · tip · save
  *   comments straight under it ("Comments N" + sort), composer docked to the
  *   bottom of the screen as liquid glass; the logo bar, feed pill and bottom
  *   nav are hidden here for every media kind
- *   a mini player pinned to the top once the media scrolls away: the back
- *   icon grows into it
+ *   a mini player pinned to the top once the media scrolls away
  *
  * The cards are the same ones the feed uses. They read `PostStageContext` and
  * only change shape when it is provided, which happens here and nowhere else,
@@ -17,7 +16,6 @@
 import { useEffect, useRef, type ReactNode } from 'react';
 import { PostStageContext, type PostStageValue } from './post-stage-context';
 import { StageMiniPlayer, type StageMediaKind } from './StageMiniPlayer';
-import { StageMediaChrome } from './StageMediaChrome';
 
 interface PostStagePhoneProps {
   value: PostStageValue;
@@ -46,11 +44,6 @@ export function PostStagePhone({ value, children, comments, related, kind, title
     return () => document.body.classList.remove(POST_STAGE_BODY_CLASS);
   }, []);
 
-  // Image and audio have no back control of their own, so the floating icon
-  // comes from StageMediaChrome, the same one text posts use in their flow.
-  // Video already draws its own back on the player.
-  const floatsBack = kind === 'image' || kind === 'audio';
-
   return (
     <>
       <div ref={rootRef} data-post-page data-post-stage={kind} className="flex flex-col">
@@ -58,12 +51,7 @@ export function PostStagePhone({ value, children, comments, related, kind, title
             ordinary feed cards and must not pick up its layout. */}
         <PostStageContext.Provider value={value}>
           <div data-stage-post className={padded ? 'px-3' : undefined}>
-            {floatsBack ? (
-              <div className="relative">
-                <StageMediaChrome placement="media" onBack={value.onBack} />
-                {children}
-              </div>
-            ) : children}
+            {children}
           </div>
         </PostStageContext.Provider>
         {comments && (

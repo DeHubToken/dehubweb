@@ -2659,7 +2659,7 @@ const VideoCardBody = memo(function VideoCard({ video, postPage = false, onBack,
           </div>
         )}
         
-        {(onBack || stage) && !video.isAudio && !isFullscreen && (controlsVisible || isContentGated) && (
+        {onBack && !stage && !video.isAudio && !isFullscreen && (controlsVisible || isContentGated) && (
           <button
             type="button"
             data-video-controls
@@ -2667,7 +2667,7 @@ const VideoCardBody = memo(function VideoCard({ video, postPage = false, onBack,
             data-video-bare
             aria-label={t('common.goBack')}
             className="absolute left-2 top-1.5 z-20 h-8 w-8 text-white flex items-center justify-center"
-            onClick={(event) => { event.stopPropagation(); (onBack ?? stage?.onBack)?.(); }}
+            onClick={(event) => { event.stopPropagation(); onBack(); }}
             data-swipe-back
           >
             <MediaControlIcon icon={ArrowLeft} />
