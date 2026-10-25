@@ -30,8 +30,8 @@ export function CrossPostPicker({ onNavigateAway }: { onNavigateAway?: () => voi
   const { selected, toggle } = useCrossPostStore();
   const status = useQuery({ queryKey: MULTIPOST_QUERY_KEY, queryFn: getMultipostStatus, enabled: isAuthenticated, staleTime: 60_000 });
 
-  if (!isAuthenticated || status.isError) return null;
-  const accounts = (status.data?.accounts ?? []).filter((a) => !a.pending);
+  if (!isAuthenticated) return null;
+  const accounts = status.isError ? [] : (status.data?.accounts ?? []).filter((a) => !a.pending);
   const chosen = accounts.filter((a) => selected.includes(a.id));
   const active = chosen.reduce((sum, a) => sum + creditsFor(a.platform), 0);
 
@@ -56,7 +56,7 @@ export function CrossPostPicker({ onNavigateAway }: { onNavigateAway?: () => voi
     return (
       <button type="button" onClick={openSettings} className="flex w-full items-center gap-3 rounded-xl px-4 py-3 text-left text-sm text-white hover:bg-white/10">
         {icon}
-        <span>{label}</span>
+        <span>{label}{status.isError && <span className="block text-xs text-white/60">{t('multiPost.loadFailed')}</span>}</span>
       </button>
     );
   }
