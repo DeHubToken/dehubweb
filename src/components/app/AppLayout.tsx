@@ -98,6 +98,9 @@ import { DmDockMount } from '@/components/app/chat/DmDockMount';
 import { PersistentPageCache, isCachedPageRoute } from './PersistentPageCache';
 import { ErrorBoundary } from '@/components/ErrorBoundary';
 import { isHomeFeedRoute } from '@/lib/home-routes';
+import { useRetainedPost, type RetainedPostEntry } from '@/lib/retained-post-surface';
+import { RetainedPostDock } from '@/components/app/feeds/RetainedPostSurface';
+import { QuietPostLoading } from '@/components/app/QuietPostLoading';
 import { getDocumentScrollTop, scrollDocumentTo } from '@/lib/document-scroll';
 import { GlobalFeedNav } from './GlobalFeedNav';
 import { GlobalFeedNavProvider } from '@/contexts/GlobalFeedNavContext';
@@ -158,14 +161,28 @@ function PostOverlayLoading() {
     <>
       <div aria-hidden data-post-overlay-backdrop className="fixed top-0 bottom-0 z-10" style={{ left: POST_LAYER_LEFT, width: POST_LAYER_WIDTH }} />
       <div data-post-overlay aria-busy="true" className="fixed top-0 bottom-0 z-10 pt-28" style={{ left: POST_LAYER_LEFT, width: POST_LAYER_WIDTH }}>
-        <div className="app-route-loading-body" aria-hidden="true">
-          <div className="app-route-loading-author"><i /><span /></div>
-          <div className="app-route-loading-line" /><div className="app-route-loading-line" /><div className="app-route-loading-line" />
-          <div className="app-route-loading-media" />
-        </div>
+        <QuietPostLoading />
       </div>
     </>
   );
+}
+
+function RetainedPostOverlay({ entry }: { entry: RetainedPostEntry }) {
+  const ref = useRef<HTMLDivElement>(null);
+  return <>
+    <div aria-hidden data-post-overlay-backdrop className="fixed top-0 bottom-0 z-10" style={{ left: POST_LAYER_LEFT, width: POST_LAYER_WIDTH }} />
+    <div ref={ref} data-post-overlay data-scroll-nav-source className="fixed top-0 bottom-0 z-10 overflow-y-auto overscroll-contain"
+      style={{ left: POST_LAYER_LEFT, width: POST_LAYER_WIDTH, WebkitOverflowScrolling: 'touch' }}>
+      <PostOverlayEffects overlayRef={ref} postId={entry.id} />
+      <div className="pt-[5.5rem] lg:pt-14 px-2 sm:px-3 pb-24">
+        <RetainedPostDock entry={entry} />
+        {/* The existing card is already visible; only its optional details await code/data. */}
+        <ErrorBoundary compact resetKey={entry.id} label="Post">
+          <Suspense fallback={null}><SinglePostPage inOverlay detailsOnly /></Suspense>
+        </ErrorBoundary>
+      </div>
+    </div>
+  </>;
 }
 
 function AppLayoutContent({ children }: AppLayoutContentProps) {
@@ -405,6 +422,7 @@ function AppLayoutContent({ children }: AppLayoutContentProps) {
   // never touched. Post → post (a related video, a quoted post) reuses the same
   // layer, so reset it explicitly there, before paint.
   const overlayPostId = postMatch?.params.postId ?? videoMatch?.params.tokenId ?? null;
+  const retainedPost = useRetainedPost(overlayPostId);
 
   const isCached = isCachedPageRoute(location.pathname);
   // An open DM hides the mobile bottom nav, so <main> must drop the pb-16
@@ -464,6 +482,7 @@ function AppLayoutContent({ children }: AppLayoutContentProps) {
             <PersistentPageCache
               keepHomeVisible={showHomePagePersisted}
               overlayKey={overlayPostId}
+              retainedPostKey={showHomePagePersisted && retainedPost ? overlayPostId : null}
             />
           </GlobalFeedNavProvider>
           
@@ -488,7 +507,8 @@ function AppLayoutContent({ children }: AppLayoutContentProps) {
               through the header. The post's own clearance padding keeps its
               content below the nav pill, and scrolling slides it under the glass
               exactly like the feed does. */}
-          {showHomePagePersisted && (
+          {showHomePagePersisted && retainedPost && <RetainedPostOverlay entry={retainedPost} />}
+          {showHomePagePersisted && !retainedPost && (
             <Suspense fallback={<PostOverlayLoading />}>
               <PostOverlayEffects overlayRef={postOverlayRef} postId={overlayPostId} />
               {/* Backing for the post layer, deliberately a separate element from

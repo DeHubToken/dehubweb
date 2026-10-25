@@ -1,3 +1,6 @@
+import { MORE_DOT_PATHS } from '@/components/ui/cut-icons/more-paths';
+import '@/styles/quiet-post-loading.css';
+
 export interface RouteLoadingShell {
   cover(): void;
   reveal(): void;
@@ -24,7 +27,17 @@ export function showRouteLoadingShell(title: string, backLabel: string, backward
   node.style.width = `${rect.width}px`;
   node.style.color = style.color;
   node.style.backgroundColor = style.backgroundColor;
-  node.innerHTML = '<header><button type="button"><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="m14 5-7 7 7 7" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></button><strong></strong></header><div class="app-route-loading-body" aria-hidden="true"><div class="app-route-loading-author"><i></i><span></span></div><div class="app-route-loading-line"></div><div class="app-route-loading-line"></div><div class="app-route-loading-line"></div><div class="app-route-loading-media"></div></div>';
+  node.innerHTML = '<header><button type="button"><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="m14 5-7 7 7 7" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></button><strong class="sr-only"></strong></header><div class="post-quiet-loader" aria-hidden="true"></div>';
+  const dots = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+  dots.setAttribute('viewBox', '0 0 32 32');
+  for (const path of MORE_DOT_PATHS) {
+    const dot = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+    dot.setAttribute('d', path);
+    dot.setAttribute('fill', 'currentColor');
+    dot.setAttribute('fill-rule', 'evenodd');
+    dots.appendChild(dot);
+  }
+  node.querySelector('.post-quiet-loader')!.appendChild(dots);
   const button = node.querySelector('button')!;
   button.setAttribute('aria-label', backLabel);
   button.onclick = () => window.history.back();
