@@ -6924,7 +6924,7 @@ html body [data-tablet-portrait] > [data-media-full]:not(#_):not(#_) {
 [data-tablet-portrait] [data-preview-mute]:not(#_):not(#_) {
   top: 0.5rem;
 }
-html[data-theme="immersive"] [data-tablet-portrait] > [data-media-full]::after {
+html[data-theme="immersive"] [data-tablet-portrait] > [data-media-full]:not(#_):not(#_)::after {
   content: none;
 }
 @media (min-width: 560px) and (max-width: 767px) {
@@ -6934,7 +6934,7 @@ html[data-theme="immersive"] [data-tablet-portrait] > [data-media-full]::after {
   [data-tablet-portrait] [data-card-caption] h3 {
     font-size: min(1em, 22px);
   }
-  html[data-theme="immersive"] [data-feed-root] [data-feed-item][data-cinematic-first]:has(> [data-tablet-portrait]) {
+  html[data-theme="immersive"] [data-feed-root] [data-feed-item][data-cinematic-first]:has(> [data-tablet-portrait]):not(#_) {
     padding-top: calc(env(safe-area-inset-top, 0px) + 3.75rem) !important;
   }
 }
