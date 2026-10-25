@@ -239,7 +239,7 @@ export function LoginModal({ open, onOpenChange }: LoginModalProps) {
         <DrawerTitle className="sr-only">{titleText}</DrawerTitle>
       </DrawerHeader>
 
-      <div className="login-stack-scroll flex flex-col flex-1 min-h-0 overflow-y-auto overscroll-contain px-6 pb-4">
+      <div className="login-stack-scroll flex flex-col flex-1 min-h-0 overflow-y-auto overflow-x-hidden overscroll-contain px-6 md:px-2.5 pb-4">
         <Suspense fallback={<div className="h-[420px]" aria-hidden="true" />}>
           <LoginShortsStack />
         </Suspense>
