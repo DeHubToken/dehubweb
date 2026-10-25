@@ -6872,30 +6872,37 @@ html[data-system-tone="light"] [data-notifications-close] {
 
 /* Only measured, single-column tablet Home cards opt in. The header stays
    above both columns; metadata and the existing actions belong beside media. */
-[data-video-card][data-tablet-portrait] {
+[data-video-card][data-tablet-portrait]:not(#_):not(#_) {
   display: grid;
   grid-template-columns: var(--tablet-video-width) minmax(0, 1fr);
   column-gap: 24px;
   align-items: start;
 }
-[data-tablet-portrait] > [data-card-head] {
+[data-tablet-portrait] > [data-card-head]:not(#_):not(#_) {
   grid-column: 1 / -1;
+  grid-row: 1;
+  position: relative;
+  inset: auto;
+  margin: 0;
+  align-self: stretch;
+  align-items: flex-start;
+  pointer-events: auto;
 }
-html body [data-tablet-portrait] > [data-media-full] {
+html body [data-tablet-portrait] > [data-media-full]:not(#_):not(#_) {
   grid-column: 1;
   grid-row: 2;
   width: 100% !important;
   max-height: 65svh !important;
   margin: 0 !important;
 }
-[data-tablet-portrait] > [data-card-info] {
+[data-tablet-portrait] > [data-card-info]:not(#_):not(#_) {
   grid-column: 2;
   grid-row: 2;
   align-self: stretch;
   display: flex;
   flex-direction: column;
   min-width: 0;
-  padding-top: 0;
+  padding: 0;
   overflow-wrap: anywhere;
 }
 [data-tablet-portrait] [data-video-metadata] {
@@ -6904,4 +6911,30 @@ html body [data-tablet-portrait] > [data-media-full] {
 }
 [data-tablet-portrait] > :not([data-card-head], [data-media-full], [data-card-info]) {
   grid-column: 1 / -1;
+}
+[data-tablet-portrait] [data-caption-options]:not(#_):not(#_) {
+  display: none !important;
+}
+[data-tablet-portrait] [data-card-head] :is([data-head-options], [data-head-boost]):not(#_):not(#_) {
+  display: flex !important;
+}
+[data-tablet-portrait] [data-caption-options] + .relative:not(#_):not(#_) {
+  padding-right: 0;
+}
+[data-tablet-portrait] [data-preview-mute]:not(#_):not(#_) {
+  top: 0.5rem;
+}
+html[data-theme="immersive"] [data-tablet-portrait] > [data-media-full]::after {
+  content: none;
+}
+@media (min-width: 560px) and (max-width: 767px) {
+  [data-video-card][data-tablet-portrait]:not(#_):not(#_) {
+    column-gap: 16px;
+  }
+  [data-tablet-portrait] [data-card-caption] h3 {
+    font-size: min(1em, 22px);
+  }
+  html[data-theme="immersive"] [data-feed-root] [data-feed-item][data-cinematic-first]:has(> [data-tablet-portrait]) {
+    padding-top: calc(env(safe-area-inset-top, 0px) + 3.75rem) !important;
+  }
 }
