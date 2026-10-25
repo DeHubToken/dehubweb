@@ -2536,9 +2536,6 @@
     "bio": "Kendanagroutyoun",
     "bioPlaceholder": "Patmeeq dzainor masin...",
     "socialLinks": "Socialakan hghumnaqner",
-    "socialFollowers": "Հետևորդներ {{platform}}-ում",
-    "socialFollowersHint": "Ցուցադրվում է ձեր պրոֆիլում ՝ որպես ընդհանուր հասանելիության մաս ։ Համարը մուտքագրեք ինքներդ. մենք այն հարթակից չենք կարդում ։",
-    "socialFollowersPlaceholder": "օրինակ ՝ 12500",
     "profileUpdated": "Andznagrouytse hagnorvaghits e",
     "failedLoadProfile": "Chehaghordagrvats bernal andznagrouytsi tyvyalere",
     "imageTooLarge5": "Nkare petq e lini 5MB-its phoqr",
@@ -3864,8 +3861,7 @@
     "reach": {
       "total": "Հասանելիության ընդհանուր գումարը",
       "breakdownTitle": "Որտեղից է գալիս այս հասանելիությունը",
-      "dehubFollowers": "ԴեՀյուբի հետևորդներ",
-      "selfReported": "Սոցիալական հետևորդների թիվը մուտքագրվում է հեղինակի կողմից:"
+      "dehubFollowers": "ԴեՀյուբի հետևորդներ"
     },
     "loginDescription": "Moutq gortsuhr dzer andznagrouytse teselou ev kargatselou hamar.",
     "replyThread": {

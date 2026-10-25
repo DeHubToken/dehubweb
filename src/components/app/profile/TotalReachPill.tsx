@@ -7,22 +7,22 @@ import { SOCIAL_CONFIGS } from '@/components/app/profile/ProfileSocialLinks';
 import { formatCount } from '@/lib/feed-utils';
 import { cn } from '@/lib/utils';
 import { computeSocialReach, hasSocialReach } from '@/lib/social-reach';
+import { useSocialReach } from '@/hooks/use-social-reach';
 
 interface TotalReachPillProps {
-  /** The profile's merged customs blob: social links plus self-reported counts. */
-  customs?: Record<string, unknown> | null;
+  /** The profile's wallet; its connected social accounts are looked up by it. */
+  wallet?: string | null;
   /** DeHub followers as counted by DeHub. */
   followers?: number | null;
   className?: string;
 }
 
 /**
- * "Total reach" beside the follower count: DeHub followers plus what the
- * creator reports for each linked social. Renders nothing until at least one
- * social carries a count, so a profile with links alone looks as it always
- * did. Hover opens the breakdown on a pointer device; a tap toggles it.
+ * "Total reach" beside the follower count: DeHub followers plus the verified
+ * follower counts of the socials the creator has connected. Renders nothing
+ * until at least one connected account carries a count. Hover opens the breakdown on a pointer device; a tap toggles it.
  */
-export function TotalReachPill({ customs, followers, className }: TotalReachPillProps) {
+export function TotalReachPill({ wallet, followers, className }: TotalReachPillProps) {
   const { t } = useTranslation();
   const [open, setOpen] = useState(false);
   const closeTimer = useRef<number | null>(null);
@@ -31,7 +31,8 @@ export function TotalReachPill({ customs, followers, className }: TotalReachPill
     if (closeTimer.current) window.clearTimeout(closeTimer.current);
   }, []);
 
-  const reach = computeSocialReach(customs, followers);
+  const { data: accounts } = useSocialReach(wallet);
+  const reach = computeSocialReach(accounts, followers);
   if (!hasSocialReach(reach)) return null;
 
   const cancelClose = () => {
@@ -102,7 +103,7 @@ export function TotalReachPill({ customs, followers, className }: TotalReachPill
           <span className="text-zinc-300">{t('profile.reach.total')}</span>
           <span className="font-bold tabular-nums text-white">{total}</span>
         </div>
-        <p className="mt-2 text-[11px] leading-snug text-zinc-500">{t('profile.reach.selfReported')}</p>
+        <p className="mt-2 text-[11px] leading-snug text-zinc-500">{t('profile.reach.verified')}</p>
       </PopoverContent>
     </Popover>
   );

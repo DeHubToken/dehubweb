@@ -2540,9 +2540,6 @@
     "bio": "Bio",
     "bioPlaceholder": "Vertel ons meer van jouself...",
     "socialLinks": "Sosiale skakels",
-    "socialFollowers": "Volgers op {{platform}}",
-    "socialFollowersHint": "Wys op jou profiel as deel van jou totale bereik. Voer die nommer self in — ons lees dit nie van die platform af nie.",
-    "socialFollowersPlaceholder": "bv. 12500",
     "profileUpdated": "Profiel suksesvol opgedateer",
     "failedLoadProfile": "Kon nie profieldata laai nie",
     "imageTooLarge5": "Prent moet kleiner as 5MB wees",
@@ -3892,8 +3889,7 @@
     "reach": {
       "total": "Totale bereik",
       "breakdownTitle": "Waar hierdie reikwydte vandaan kom",
-      "dehubFollowers": "DeHub-volgelinge",
-      "selfReported": "Sosiale volgelinge tel word deur die skepper ingevoer."
+      "dehubFollowers": "DeHub-volgelinge"
     },
     "loginDescription": "Meld aan om jou profiel te sien en te bestuur.",
     "replyThread": {

@@ -2539,9 +2539,6 @@
     "bio": "Bio",
     "bioPlaceholder": "Na tregoni për veten...",
     "socialLinks": "Lidhjet Sociale",
-    "socialFollowers": "Ndjekësit në {{platform}}",
-    "socialFollowersHint": "Shfaqet në profilin tënd si pjesë e shtrirjes tënde totale. Vendos numrin vetë — nuk e lexojmë nga platforma.",
-    "socialFollowersPlaceholder": "p.sh. 12500",
     "profileUpdated": "Profili u përditësua me sukses",
     "failedLoadProfile": "Dështoi ngarkimi i të dhënave të profilit",
     "imageTooLarge5": "Imazhi duhet të jetë më i vogël se 5MB",
@@ -3868,8 +3865,7 @@
     "reach": {
       "total": "Arritja totale",
       "breakdownTitle": "Nga vjen kjo arritje",
-      "dehubFollowers": "Ndjekësit e DeHub",
-      "selfReported": "Numrat e ndjekësve socialë futen nga krijuesi."
+      "dehubFollowers": "Ndjekësit e DeHub"
     },
     "loginDescription": "Hyni për të parë dhe menaxhuar profilin tuaj.",
     "replyThread": {

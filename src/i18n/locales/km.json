@@ -2492,9 +2492,6 @@
     "bio": "ជីវប្រវត្តិ",
     "bioPlaceholder": "ប្រាប់អំពីខ្លួនអ្នក...",
     "socialLinks": "តំណសង្គម",
-    "socialFollowers": "អ្នកដើរតាមនៅលើ {{platform}}",
-    "socialFollowersHint": "បង្ហាញនៅលើប្រវត្តិរូបរបស់អ្នកជាផ្នែកមួយនៃការឈានដល់សរុបរបស់អ្នក ។ សូមចូលលេខនេះដោយខ្លួនឯង - យើងមិនអានវានៅលើបណ្តាញសង្គមទេ ។",
-    "socialFollowersPlaceholder": "ឧ. 12500",
     "profileUpdated": "បានធ្វើបច្ចុប្បន្នភាពប្រវត្តិរូបដោយជោគជ័យ",
     "failedLoadProfile": "ផ្ទុកប្រវត្តិរូបមិនបានសម្រេច",
     "imageTooLarge5": "រូបភាពត្រូវតែតូចជាង 5MB",
@@ -3824,8 +3821,7 @@
     "reach": {
       "total": "ការឈានដល់សរុប",
       "breakdownTitle": "តើ ការ សម្រេច នេះ មក ពី ណា?",
-      "dehubFollowers": "អ្នកដើរតាម DeHub",
-      "selfReported": "ចំនួនអ្នកតាមដានសង្គមត្រូវបានបញ្ចូលដោយអ្នកបង្កើត ។"
+      "dehubFollowers": "អ្នកដើរតាម DeHub"
     },
     "loginDescription": "ចូលដើម្បីមើល និងគ្រប់គ្រងប្រវត្តិរូប។",
     "replyThread": {

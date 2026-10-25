@@ -2514,9 +2514,6 @@
     "bio": "自己紹介",
     "bioPlaceholder": "自己紹介を書いてください...",
     "socialLinks": "ソーシャルリンク",
-    "socialFollowers": "{{platform}}のフォロワー",
-    "socialFollowersHint": "合計リーチの一部としてプロフィールに表示されます。 ご自身で番号を入力してください。プラットフォームから読み取ることはありません。",
-    "socialFollowersPlaceholder": "例） 12500",
     "profileUpdated": "プロフィールが正常に更新されました",
     "failedLoadProfile": "プロフィールデータの読み込みに失敗しました",
     "imageTooLarge5": "画像は5MB未満にしてください",
@@ -2922,7 +2919,15 @@
     "solanaLinked": "Solana ウォレットを接続しました",
     "solanaLinkFailed": "そのウォレットを接続できませんでした",
     "solanaUnlinked": "Solana ウォレットの接続を解除しました",
-    "solanaUnlinkFailed": "そのウォレットの接続を解除できませんでした"
+    "solanaUnlinkFailed": "そのウォレットの接続を解除できませんでした",
+    "socialConnectHint": "アカウントを連携すると、実際のフォロワー数が合計リーチに表示されます。数値はプラットフォームから直接取得されます。",
+    "socialConnect": "連携",
+    "socialConnectAria": "{{platform}}を連携",
+    "socialConnected": "{{platform}}を連携しました",
+    "socialConnectedShort": "連携済み",
+    "socialConnectFailed": "{{platform}}を連携できませんでした。もう一度お試しください。",
+    "socialVerifiedFollowers": "フォロワー{{value}}人",
+    "socialFollowersPending": "フォロワー数を更新中"
   },
   "common": {
     "confirm": "確認",
@@ -3839,7 +3844,7 @@
       "total": "トータルリーチ",
       "breakdownTitle": "このリーチがどこから来たのか",
       "dehubFollowers": "DeHubフォロワー",
-      "selfReported": "ソーシャルフォロワー数は、クリエイターが入力します。"
+      "verified": "ソーシャルの数値はクリエイターが連携したアカウントから取得しています。"
     },
     "loginDescription": "ログインしてプロフィールを表示・管理。",
     "replyThread": {

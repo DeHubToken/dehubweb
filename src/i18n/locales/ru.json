@@ -6514,9 +6514,6 @@
     "bio": "О себе",
     "bioPlaceholder": "Расскажите о себе...",
     "socialLinks": "Социальные ссылки",
-    "socialFollowers": "Подписчики на {{platform}}",
-    "socialFollowersHint": "Отображается в вашем профиле как часть вашего общего охвата. Введите номер самостоятельно — мы не читаем его с платформы.",
-    "socialFollowersPlaceholder": "например, 12500",
     "profileUpdated": "Профиль успешно обновлён",
     "failedLoadProfile": "Не удалось загрузить данные профиля",
     "imageTooLarge5": "Изображение должно быть менее 5 МБ",
@@ -7027,7 +7024,15 @@
     "adLoadStandardDesc": "Одна реклама каждые восемь",
     "adLoadFewer": "Меньше",
     "adLoadFewerDesc": "Одна каждые шестнадцать",
-    "automatic": "Автоматически"
+    "automatic": "Автоматически",
+    "socialConnectHint": "Подключите аккаунт, чтобы показать его реальное число подписчиков в общем охвате. Данные берутся прямо с платформы.",
+    "socialConnect": "Подключить",
+    "socialConnectAria": "Подключить {{platform}}",
+    "socialConnected": "{{platform}} подключён",
+    "socialConnectedShort": "Подключено",
+    "socialConnectFailed": "Не удалось подключить {{platform}}. Попробуйте ещё раз.",
+    "socialVerifiedFollowers": "{{value}} подписчиков",
+    "socialFollowersPending": "Обновляем число подписчиков"
   },
   "common": {
     "confirm": "Подтвердить",
@@ -8026,7 +8031,7 @@
       "total": "Общий охват",
       "breakdownTitle": "Откуда этот охват",
       "dehubFollowers": "Подписчики DeHub",
-      "selfReported": "Количество подписчиков в социальных сетях вводится креатором."
+      "verified": "Данные соцсетей берутся из аккаунтов, которые подключил автор."
     },
     "loginDescription": "Войдите для управления профилем.",
     "replyThread": {

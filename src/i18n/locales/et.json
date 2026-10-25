@@ -6590,9 +6590,6 @@
     "bio": "Biograafia",
     "bioPlaceholder": "Räägi endast...",
     "socialLinks": "Sotsiaalsed lingid",
-    "socialFollowers": "Jälgijad rakenduses {{platform}}",
-    "socialFollowersHint": "Näidatakse Sinu profiilil osana Sinu koguulatusest. Sisesta number ise — me ei loe seda platvormilt.",
-    "socialFollowersPlaceholder": "nt 12500",
     "profileUpdated": "Profiil edukalt uuendatud",
     "failedLoadProfile": "Profiili andmete laadimine ebaõnnestus",
     "imageTooLarge5": "Pilt peab olema väiksem kui 5MB",
@@ -8108,8 +8105,7 @@
     "reach": {
       "total": "Koguhaare",
       "breakdownTitle": "Kust see haare pärineb",
-      "dehubFollowers": "DeHubi jälgijad",
-      "selfReported": "Sotsiaalsete jälgijate arvu sisestab looja."
+      "dehubFollowers": "DeHubi jälgijad"
     },
     "loginDescription": "Logi sisse, et vaadata ja hallata oma profiili.",
     "replyThread": {

@@ -6559,9 +6559,6 @@
     "bio": "Akụkọ onwe",
     "bioPlaceholder": "Gwa anyị banyere onwe gị...",
     "socialLinks": "Njikọ mmekọrịta",
-    "socialFollowers": "Ndị na-eso ụzọ na {{platform}}",
-    "socialFollowersHint": "Gosiri na profaịlụ gị dị ka akụkụ nke gị ngụkọta iru. Tinye nọmba ahụ n 'onwe gị — anyị anaghị agụ ya site n' elu ikpo okwu.",
-    "socialFollowersPlaceholder": "dịka 12500",
     "profileUpdated": "Emelitela profaịlụ nke ọma",
     "failedLoadProfile": "Enweghị ike ibudata data profaịlụ",
     "imageTooLarge5": "Onyonyo ga-adị obere karịa 5MB",
@@ -8075,8 +8072,7 @@
     "reach": {
       "total": "Total iru",
       "breakdownTitle": "Ebee ka iru a si abịa",
-      "dehubFollowers": "DeHub na-eso ụzọ",
-      "selfReported": "Onye na-emepụta ihe na-abanye ọnụ ọgụgụ ndị na-eso ụzọ ọha."
+      "dehubFollowers": "DeHub na-eso ụzọ"
     },
     "loginDescription": "Banye iji hụ ma jikwaa profaịlụ gị.",
     "replyThread": {

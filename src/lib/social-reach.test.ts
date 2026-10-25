@@ -1,71 +1,31 @@
-import { describe, expect, it } from 'vitest';
-import {
-  MAX_SOCIAL_FOLLOWERS,
-  computeSocialReach,
-  hasSocialReach,
-  mergeSocialFollowers,
-  parseFollowerCount,
-  readSocialFollowerInputs,
-  sanitizeFollowerInput,
-  emptySocialFollowerInputs,
-} from './social-reach';
+import { describe, expect, it, vi } from 'vitest';
 
-describe('parseFollowerCount', () => {
-  it('accepts the number the API stores and the digits a field holds', () => {
-    expect(parseFollowerCount(12500)).toBe(12500);
-    expect(parseFollowerCount('12500')).toBe(12500);
-    expect(parseFollowerCount(' 12,500 ')).toBe(12500);
-    expect(parseFollowerCount('0')).toBe(0);
-  });
+vi.mock('@/integrations/supabase/client', () => ({ supabase: { functions: { invoke: vi.fn() } } }));
+vi.mock('@/lib/ai-invoke', () => ({ dehubAuthHeaders: () => ({}) }));
+vi.mock('@/lib/api/dehub/core', () => ({ ensureFreshToken: vi.fn() }));
 
-  it('rejects anything that is not a whole non-negative count', () => {
-    expect(parseFollowerCount('')).toBeNull();
-    expect(parseFollowerCount('abc')).toBeNull();
-    expect(parseFollowerCount('-5')).toBeNull();
-    expect(parseFollowerCount(-5)).toBeNull();
-    expect(parseFollowerCount(1.5)).toBeNull();
-    expect(parseFollowerCount(Number.NaN)).toBeNull();
-    expect(parseFollowerCount(Number.POSITIVE_INFINITY)).toBeNull();
-    expect(parseFollowerCount(MAX_SOCIAL_FOLLOWERS + 1)).toBeNull();
-    expect(parseFollowerCount(null)).toBeNull();
-    expect(parseFollowerCount({ count: 3 })).toBeNull();
-  });
+import { computeSocialReach, hasSocialReach, type VerifiedSocialAccount } from './social-reach';
 
-  it('strips everything but digits from a keystroke', () => {
-    expect(sanitizeFollowerInput('12,500 ')).toBe('12500');
-    expect(sanitizeFollowerInput('-3e5')).toBe('35');
-    expect(sanitizeFollowerInput('123456789012345')).toHaveLength(String(MAX_SOCIAL_FOLLOWERS).length);
-  });
+const account = (platform: string, followers: number | null): VerifiedSocialAccount => ({
+  platform,
+  username: 'creator',
+  profileUrl: null,
+  followers,
+  followersUpdatedAt: null,
 });
 
 describe('computeSocialReach', () => {
-  it('reads links top level and counts from customs, in platform order', () => {
-    const reach = computeSocialReach(
-      {
-        youtubeLink: 'https://youtube.com/@dehub',
-        twitterLink: 'https://x.com/dehub',
-        customs: { twitterFollowers: 1200, youtubeFollowers: '3400', followVisibility: 'public' },
-      },
-      150,
-    );
-    expect(reach.dehub).toBe(150);
-    expect(reach.socials.map((s) => [s.platform, s.count])).toEqual([
-      ['twitter', 1200],
-      ['youtube', 3400],
-    ]);
-    expect(reach.total).toBe(150 + 1200 + 3400);
+  it('adds verified counts of connected accounts to DeHub followers, in display order', () => {
+    const reach = computeSocialReach([account('youtube', 3400), account('twitter', 1200)], 50);
+    expect(reach.dehub).toBe(50);
+    expect(reach.socials.map((s) => s.platform)).toEqual(['twitter', 'youtube']);
+    expect(reach.total).toBe(4650);
     expect(hasSocialReach(reach)).toBe(true);
   });
 
-  it('reads an already-merged customs blob', () => {
-    const reach = computeSocialReach({ instagramLink: 'dehub', instagramFollowers: 42 }, 0);
-    expect(reach.socials).toEqual([{ platform: 'instagram', label: 'Instagram', count: 42 }]);
-    expect(reach.total).toBe(42);
-  });
-
-  it('ignores a count whose link is empty or missing', () => {
+  it('ignores accounts with no reported count, zero, or an unsupported platform', () => {
     const reach = computeSocialReach(
-      { twitterLink: '   ', customs: { twitterFollowers: 9000, tiktokFollowers: 500 } },
+      [account('twitter', null), account('instagram', 0), account('linkedin', 900), account('tiktok', -5)],
       10,
     );
     expect(reach.socials).toEqual([]);
@@ -73,63 +33,7 @@ describe('computeSocialReach', () => {
     expect(hasSocialReach(reach)).toBe(false);
   });
 
-  it('ignores zero, negative and malformed counts', () => {
-    const reach = computeSocialReach(
-      {
-        twitterLink: 'x.com/a',
-        instagramLink: 'instagram.com/a',
-        tiktokLink: 'tiktok.com/@a',
-        customs: { twitterFollowers: 0, instagramFollowers: -20, tiktokFollowers: 'lots' },
-      },
-      5,
-    );
-    expect(reach.socials).toEqual([]);
-    expect(reach.total).toBe(5);
-  });
-
-  it('treats a missing profile or follower count as zero', () => {
-    expect(computeSocialReach(undefined, undefined)).toEqual({ dehub: 0, socials: [], total: 0 });
-    expect(computeSocialReach({ twitterLink: 'x', customs: { twitterFollowers: 7 } }, null).total).toBe(7);
-  });
-});
-
-describe('readSocialFollowerInputs', () => {
-  it('seeds a form with stored counts as digits and empty strings elsewhere', () => {
-    const inputs = readSocialFollowerInputs({ customs: { twitterFollowers: 1200, discordFollowers: 'bad' } });
-    expect(inputs.twitter).toBe('1200');
-    expect(inputs.discord).toBe('');
-    expect(inputs.facebook).toBe('');
-  });
-});
-
-describe('mergeSocialFollowers', () => {
-  const links = {
-    twitter: 'https://x.com/dehub',
-    instagram: '',
-    tiktok: 'https://tiktok.com/@dehub',
-  };
-
-  it('keeps every unrelated customs key and writes counts as numbers', () => {
-    const merged = mergeSocialFollowers(
-      { followVisibility: 'hidden', defaultProfileTab: 'posts', '1': 'https://dehub.io', nested: { a: 1 } as unknown as string },
-      { ...emptySocialFollowerInputs(), twitter: '12,500', tiktok: '300' },
-      links,
-    );
-    expect(merged).toEqual({
-      followVisibility: 'hidden',
-      defaultProfileTab: 'posts',
-      '1': 'https://dehub.io',
-      twitterFollowers: 12500,
-      tiktokFollowers: 300,
-    });
-  });
-
-  it('drops the key for a cleared count, a zero, or a platform whose link is empty', () => {
-    const merged = mergeSocialFollowers(
-      { twitterFollowers: 900, instagramFollowers: 800, tiktokFollowers: 700 },
-      { ...emptySocialFollowerInputs(), twitter: '', instagram: '500', tiktok: '0' },
-      links,
-    );
-    expect(merged).toEqual({});
+  it('copes with no accounts and no DeHub count', () => {
+    expect(computeSocialReach(undefined, null)).toEqual({ dehub: 0, socials: [], total: 0 });
   });
 });

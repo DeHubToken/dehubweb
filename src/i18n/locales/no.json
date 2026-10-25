@@ -2520,9 +2520,6 @@
     "bio": "Biografi",
     "bioPlaceholder": "Fortell oss om deg selv...",
     "socialLinks": "Sosiale lenker",
-    "socialFollowers": "Følgere på {{platform}}",
-    "socialFollowersHint": "Vises på profilen din som en del av din totale rekkevidde. Skriv inn tallet selv – vi leser det ikke fra plattformen.",
-    "socialFollowersPlaceholder": "f.eks. 12500",
     "profileUpdated": "Profil oppdatert",
     "failedLoadProfile": "Kunne ikke laste profildata",
     "imageTooLarge5": "Bildet må være under 5 MB",
@@ -3841,8 +3838,7 @@
     "reach": {
       "total": "Total rekkevidde",
       "breakdownTitle": "Hvor denne rekkevidden kommer fra",
-      "dehubFollowers": "DeHub-følgere",
-      "selfReported": "Antall følgere på sosiale medier legges inn av skaperen."
+      "dehubFollowers": "DeHub-følgere"
     },
     "loginDescription": "Logg inn for å se og administrere profilen din.",
     "replyThread": {

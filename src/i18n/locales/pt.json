@@ -2530,9 +2530,6 @@
     "bio": "Bio",
     "bioPlaceholder": "Conte-nos sobre você...",
     "socialLinks": "Links sociais",
-    "socialFollowers": "Seguidores em {{platform}}",
-    "socialFollowersHint": "Exibido no seu perfil como parte do seu alcance total. Insira o número você mesmo — não o lemos na plataforma.",
-    "socialFollowersPlaceholder": "por exemplo, 12500",
     "profileUpdated": "Perfil atualizado com sucesso",
     "failedLoadProfile": "Falha ao carregar dados do perfil",
     "imageTooLarge5": "A imagem deve ter menos de 5MB",
@@ -2938,7 +2935,15 @@
     "solanaLinked": "Carteira Solana conectada",
     "solanaLinkFailed": "Não foi possível conectar essa carteira",
     "solanaUnlinked": "Carteira Solana desconectada",
-    "solanaUnlinkFailed": "Não foi possível desconectar essa carteira"
+    "solanaUnlinkFailed": "Não foi possível desconectar essa carteira",
+    "socialConnectHint": "Conecte uma conta para mostrar o número real de seguidores no seu alcance total. Os números vêm direto da plataforma.",
+    "socialConnect": "Conectar",
+    "socialConnectAria": "Conectar {{platform}}",
+    "socialConnected": "{{platform}} conectado",
+    "socialConnectedShort": "Conectado",
+    "socialConnectFailed": "Não foi possível conectar {{platform}}. Tente novamente.",
+    "socialVerifiedFollowers": "{{value}} seguidores",
+    "socialFollowersPending": "Atualizando seguidores"
   },
   "common": {
     "confirm": "Confirmar",
@@ -3856,7 +3861,7 @@
       "total": "Alcance total",
       "breakdownTitle": "De onde vem esse alcance",
       "dehubFollowers": "Seguidores do DeHub",
-      "selfReported": "As contagens de seguidores nas redes sociais são inseridas pelo criador."
+      "verified": "Os números sociais vêm de contas que o criador conectou."
     },
     "loginDescription": "Faça login para ver e gerenciar seu perfil.",
     "replyThread": {

@@ -2514,9 +2514,6 @@
     "bio": "简介",
     "bioPlaceholder": "介绍一下自己...",
     "socialLinks": "社交链接",
-    "socialFollowers": "{{platform}}的关注者",
-    "socialFollowersHint": "作为总覆盖范围的一部分显示在您的个人资料中。 请自行输入号码，我们不会从平台上读取该号码。",
-    "socialFollowersPlaceholder": "例如： 12500",
     "profileUpdated": "个人资料更新成功",
     "failedLoadProfile": "加载个人资料失败",
     "imageTooLarge5": "图片必须小于5MB",
@@ -2922,7 +2919,15 @@
     "solanaLinked": "Solana 钱包已连接",
     "solanaLinkFailed": "无法连接该钱包",
     "solanaUnlinked": "Solana 钱包已断开连接",
-    "solanaUnlinkFailed": "无法断开该钱包"
+    "solanaUnlinkFailed": "无法断开该钱包",
+    "socialConnectHint": "连接账号即可在总影响力中显示其真实粉丝数。数据直接来自平台。",
+    "socialConnect": "连接",
+    "socialConnectAria": "连接 {{platform}}",
+    "socialConnected": "{{platform}} 已连接",
+    "socialConnectedShort": "已连接",
+    "socialConnectFailed": "无法连接 {{platform}}，请重试。",
+    "socialVerifiedFollowers": "{{value}} 位粉丝",
+    "socialFollowersPending": "粉丝数更新中"
   },
   "common": {
     "confirm": "确认",
@@ -3839,7 +3844,7 @@
       "total": "总覆盖率",
       "breakdownTitle": "这种影响力来自何处",
       "dehubFollowers": "DeHub关注者",
-      "selfReported": "社交关注者数量由创作者输入。"
+      "verified": "社交数据来自创作者已连接的账号。"
     },
     "loginDescription": "登录以查看和管理您的个人资料。",
     "replyThread": {
