@@ -1032,6 +1032,11 @@ export const gsw = {
     studioB9: 'Maboroshi',
     studioB9Desc: 'Maboroshi sitzt im Creator für Video-Ersatz und Charakterarbeit, mit 180 Vorabstimmungen, den Zahlungsoptionen vom Creator und einer kostengünstigeren Render-Option.',
     moreB3Desc: 'Live Site-Statistike — Besucher, Sichtige Seiten und Community-Zahlen, täglich, jährlich oder allzeit — veröffentlicht und nicht intern aufbewahrt. Die gleiche Seite zeigt DeHubs Umsatz und Kosten, die aus den täglichen Umsatzsummen und den tatsächlich von unseren Providern aufgezeichneten Kosten gebildet werden, sodass die Finanzen so öffentlich sind wie der Traffic.',
+    aiSuiteB4: 'Creator Studio:',
+    appsB1: 'Web:',
+    appsB2: 'Android:',
+    converterB3: 'Podcasts:',
+    studioTitle: 'Creator Studio & Editor',
   },
   games: {
     chessTitle: 'Königsgambit',
@@ -1345,6 +1350,8 @@ export const gsw = {
     diagramDataFlowStart: 'Beginn des Datenflusses',
     diagramMinersRole1: 'Das bietet Rechenleistung',
     diagramMinersRole2: 'im Gegenzug für DeHub-Token',
+    mobileTasks: 'Hosting',
+    pcLaptops: 'PCs/Laptops',
   },
   e2ee: {
     comingSoon: '🚧 Demnächst',
@@ -1885,6 +1892,9 @@ export const gsw = {
     logoMarkWhite: 'Mark — Weiss',
     logoWordmarkBlack: 'Wordmark — Schiach',
     logoWordmarkWhite: 'Wordmark — Weiss',
+    brandGuidelines: 'Brand Richtlinie',
+    completeBrandPackage: 'Vollständiges Branding-Paket',
+    shakeUp2025: '2025 Shake Up',
   },
   legalDisclaimer: {
     disclaimer: 'Haftungsausschluss:',
