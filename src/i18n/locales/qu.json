@@ -2523,9 +2523,6 @@
     "bio": "Bio",
     "bioPlaceholder": "Qammanata willawayku...",
     "socialLinks": "Tinkikuna",
-    "socialFollowers": "Qatiqninkuna {{platform}} nisqapi.",
-    "socialFollowersHint": "Perfilniykipi rikuchisqa tukuy chayayniykimanta huknin hina. Kikiyki yupayta qillqay — manam plataformamantachu ñawiriyku.",
-    "socialFollowersPlaceholder": "p.h. 12500",
     "profileUpdated": "Riqsichiy allinta tikrachisqa",
     "failedLoadProfile": "Mana riqsichiy willaykunata churayta atirqanchu",
     "imageTooLarge5": "Siqi 5MB aswan pisi kanan",
@@ -3852,8 +3849,7 @@
     "reach": {
       "total": "Llapan chayay",
       "breakdownTitle": "Maymantataq kay chayay hamun",
-      "dehubFollowers": "DeHub qatiqninkuna",
-      "selfReported": "Social qatiq yupaykunataqa kamaqmi yaykuchin."
+      "dehubFollowers": "DeHub qatiqninkuna"
     },
     "loginDescription": "Yaykuy riqsichiykita qhawanaykipaq kamachiynaykipaq.",
     "replyThread": {

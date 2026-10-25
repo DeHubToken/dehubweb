@@ -2513,9 +2513,6 @@
     "bio": "소개",
     "bioPlaceholder": "자기소개를 작성하세요...",
     "socialLinks": "소셜 링크",
-    "socialFollowers": "{{platform}} 의 팔로워",
-    "socialFollowersHint": "전체 도달 범위의 일부로 프로필에 표시됩니다. 번호를 직접 입력하세요. 플랫폼에서 읽지 않습니다.",
-    "socialFollowersPlaceholder": "예: 12500",
     "profileUpdated": "프로필이 성공적으로 업데이트되었습니다",
     "failedLoadProfile": "프로필 데이터 로드 실패",
     "imageTooLarge5": "이미지는 5MB 미만이어야 합니다",
@@ -2921,7 +2918,15 @@
     "solanaLinked": "Solana 지갑이 연결되었습니다",
     "solanaLinkFailed": "해당 지갑을 연결할 수 없습니다",
     "solanaUnlinked": "Solana 지갑 연결이 해제되었습니다",
-    "solanaUnlinkFailed": "해당 지갑의 연결을 해제할 수 없습니다"
+    "solanaUnlinkFailed": "해당 지갑의 연결을 해제할 수 없습니다",
+    "socialConnectHint": "계정을 연결하면 실제 팔로워 수가 총 도달 범위에 표시됩니다. 수치는 플랫폼에서 직접 가져옵니다.",
+    "socialConnect": "연결",
+    "socialConnectAria": "{{platform}} 연결",
+    "socialConnected": "{{platform}} 연결됨",
+    "socialConnectedShort": "연결됨",
+    "socialConnectFailed": "{{platform}}에 연결하지 못했습니다. 다시 시도해 주세요.",
+    "socialVerifiedFollowers": "팔로워 {{value}}명",
+    "socialFollowersPending": "팔로워 수 업데이트 중"
   },
   "common": {
     "confirm": "확인",
@@ -3837,7 +3842,7 @@
       "total": "총 도달 범위",
       "breakdownTitle": "도달 범위의 출처",
       "dehubFollowers": "DeHub 팔로워",
-      "selfReported": "소셜 팔로워 수는 크리에이터가 입력합니다."
+      "verified": "소셜 수치는 크리에이터가 연결한 계정에서 가져옵니다."
     },
     "loginDescription": "로그인하여 프로필을 관리하세요.",
     "replyThread": {

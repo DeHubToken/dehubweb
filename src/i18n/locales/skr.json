@@ -5714,9 +5714,6 @@
     "bio": "بایو",
     "bioPlaceholder": "اپݨے بارے وِچ لکھو...",
     "socialLinks": "سوشل لنکس",
-    "socialFollowers": "{{platform}} دے فالوورز",
-    "socialFollowersHint": "تہاڈی پروفائل تے تہاڈی کل پہنچ دے حصے دے طور تے وکھائے ویندے نیں۔ نمبر خود درج کرو — اساں پلیٹ فارم توں ایہہ نہیں پڑھدے۔",
-    "socialFollowersPlaceholder": "مثال: 12500",
     "profileUpdated": "پروفائل کامیابی نال اپڈیٹ ہو گئی",
     "failedLoadProfile": "پروفائل ڈیٹا لوڈ کائنی ہوئیا",
     "imageTooLarge5": "تصویر 5MB توں کم ہوݨی چاہیدی",
@@ -7091,8 +7088,7 @@
     "reach": {
       "total": "ڪُل پهچ",
       "breakdownTitle": "اِیتھے اِیہہ پهچ کِیتھوں آندی ھِ",
-      "dehubFollowers": "ڈی ھب فالوورز",
-      "selfReported": "سوشل فالوورز گِݨتی تخلیق کار دِتّی ھِ۔"
+      "dehubFollowers": "ڈی ھب فالوورز"
     },
     "loginDescription": "اپݨا پروفائل ݙیکھݨ تے سنبھالݨ کیتے لاگ ان کرو۔",
     "replyThread": {

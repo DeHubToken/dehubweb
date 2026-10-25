@@ -615,9 +615,6 @@
     "bio": "Biografía",
     "bioPlaceholder": "Cuéntanos sobre ti...",
     "socialLinks": "Redes sociales",
-    "socialFollowers": "Seguidores en {{platform}}",
-    "socialFollowersHint": "Se muestra en tu perfil como parte de tu alcance total. Introduce el número tú mismo, no lo leemos desde la plataforma.",
-    "socialFollowersPlaceholder": "por ejemplo, 12500",
     "profileUpdated": "Perfil actualizado correctamente",
     "failedLoadProfile": "Error al cargar datos del perfil",
     "imageTooLarge5": "La imagen debe ser menor de 5MB",
@@ -1130,7 +1127,15 @@
     "adLoadStandardDesc": "Un post patrocinado cada ocho",
     "adLoadFewer": "Menos",
     "adLoadFewerDesc": "Un cada dieciséis",
-    "automatic": "Automático"
+    "automatic": "Automático",
+    "socialConnectHint": "Conecta una cuenta para mostrar su número real de seguidores en tu alcance total. Los datos vienen directamente de la plataforma.",
+    "socialConnect": "Conectar",
+    "socialConnectAria": "Conectar {{platform}}",
+    "socialConnected": "{{platform}} conectado",
+    "socialConnectedShort": "Conectado",
+    "socialConnectFailed": "No se pudo conectar {{platform}}. Inténtalo de nuevo.",
+    "socialVerifiedFollowers": "{{value}} seguidores",
+    "socialFollowersPending": "Actualizando seguidores"
   },
   "common": {
     "confirm": "Confirmar",
@@ -2137,7 +2142,7 @@
       "total": "Alcance total",
       "breakdownTitle": "De dónde viene este alcance",
       "dehubFollowers": "Seguidores de DeHub",
-      "selfReported": "El creador introduce el número de seguidores en redes sociales."
+      "verified": "Los datos sociales provienen de cuentas que el creador conectó."
     },
     "loginDescription": "Inicia sesión para ver y gestionar tu perfil.",
     "replyThread": {
