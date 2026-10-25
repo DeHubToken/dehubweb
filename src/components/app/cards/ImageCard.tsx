@@ -922,6 +922,7 @@ const ImageCardBody = memo(function ImageCard({ post, aboveFold = false, onOpenC
 
   const openPost = useCallback(() => {
     if (wasDrawerJustDismissed() || showPPVDrawer || showBountyDrawer || showLockedDrawer) return;
+    if (window.location.pathname === `/app/post/${post.id}`) return;
     cacheImageForNavigation(queryClient, post);
     navigate(`/app/post/${post.id}`, { state: { fromFeed: true } });
   }, [navigate, queryClient, post, showPPVDrawer, showBountyDrawer, showLockedDrawer]);

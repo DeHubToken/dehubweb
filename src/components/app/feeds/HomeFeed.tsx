@@ -1,4 +1,5 @@
 import { WindowedFeedItem } from '@/components/app/feeds/WindowedFeedItem';
+import { RetainedPostSurface } from '@/components/app/feeds/RetainedPostSurface';
 import { useTranslation as _useCopy } from 'react-i18next';
 import { translateCopy as _translateCopy } from '@/i18n/copy';
 import { useSurfaceDraft } from '@/hooks/use-surface-draft';
@@ -1600,7 +1601,9 @@ export function HomeFeed({ active = true, shuffleKey, isRefreshing, showFilters 
             <span>{t('superpowers.boostedLabel')}</span>
           </button>
         )}
-        {card}
+        {item.type === 'post' || item.type === 'image'
+          ? <RetainedPostSurface id={String(item.data.id)}>{card}</RetainedPostSurface>
+          : card}
       </WindowedFeedItem>
     );
   };
