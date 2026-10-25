@@ -38,12 +38,12 @@ export function AiToolProcessingSkeleton({
   return (
     <div className="max-w-[85%] flex flex-col gap-2">
       {/* Status text */}
-      <div className="bg-foreground/10 text-foreground rounded-2xl px-4 py-2.5">
+      <div className="bg-[var(--skeleton-surface)] text-[var(--skeleton-ink)] rounded-2xl px-4 py-2.5">
         <MarkdownText content={content} className="text-sm" />
       </div>
 
       {/* Skeleton music player */}
-      <div className="rounded-2xl overflow-hidden bg-foreground/5 border border-border backdrop-blur-xl p-4 space-y-3">
+      <div className="rounded-2xl overflow-hidden bg-[var(--skeleton-surface)] border border-border backdrop-blur-xl p-4 space-y-3">
         {/* Top row: play button skeleton + title skeleton */}
         <div className="flex items-center gap-3">
           {/* Play button skeleton */}
@@ -86,7 +86,7 @@ export function AiToolProcessingSkeleton({
         <div className="space-y-1.5">
           <div className="h-1.5 w-full rounded-full theme-skeleton overflow-hidden">
             <motion.div
-              className="h-full rounded-full bg-foreground/60"
+              className="h-full rounded-full bg-[var(--skeleton-ink)] opacity-60"
               animate={{ width: `${progress}%` }}
               transition={{ duration: 0.3, ease: 'linear' }}
             />
