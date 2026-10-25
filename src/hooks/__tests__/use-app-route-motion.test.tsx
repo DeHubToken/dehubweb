@@ -42,6 +42,8 @@ it('shows the destination header and Back before scheduling post content', () =>
   rerender({ route: to });
   expect(result.current).toBe(from);
   expect(document.querySelector('.app-route-loading-shell strong')?.textContent).toBe('Post');
+  expect(document.querySelectorAll('.post-quiet-loader path')).toHaveLength(3);
+  expect(document.querySelector('.app-route-loading-author, .app-route-loading-line, .app-route-loading-media')).toBeNull();
   expect(document.querySelector('main')?.style.opacity).toBe('0.8');
   const back = vi.spyOn(history, 'back').mockImplementation(() => {});
   fireEvent.click(document.querySelector('.app-route-loading-shell button')!);

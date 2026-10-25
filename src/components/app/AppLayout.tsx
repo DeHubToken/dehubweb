@@ -100,6 +100,7 @@ import { ErrorBoundary } from '@/components/ErrorBoundary';
 import { isHomeFeedRoute } from '@/lib/home-routes';
 import { useRetainedPost, type RetainedPostEntry } from '@/lib/retained-post-surface';
 import { RetainedPostDock } from '@/components/app/feeds/RetainedPostSurface';
+import { QuietPostLoading } from '@/components/app/QuietPostLoading';
 import { getDocumentScrollTop, scrollDocumentTo } from '@/lib/document-scroll';
 import { GlobalFeedNav } from './GlobalFeedNav';
 import { GlobalFeedNavProvider } from '@/contexts/GlobalFeedNavContext';
@@ -160,11 +161,7 @@ function PostOverlayLoading() {
     <>
       <div aria-hidden data-post-overlay-backdrop className="fixed top-0 bottom-0 z-10" style={{ left: POST_LAYER_LEFT, width: POST_LAYER_WIDTH }} />
       <div data-post-overlay aria-busy="true" className="fixed top-0 bottom-0 z-10 pt-28" style={{ left: POST_LAYER_LEFT, width: POST_LAYER_WIDTH }}>
-        <div className="app-route-loading-body" aria-hidden="true">
-          <div className="app-route-loading-author"><i /><span /></div>
-          <div className="app-route-loading-line" /><div className="app-route-loading-line" /><div className="app-route-loading-line" />
-          <div className="app-route-loading-media" />
-        </div>
+        <QuietPostLoading />
       </div>
     </>
   );
@@ -178,9 +175,7 @@ function RetainedPostOverlay({ entry }: { entry: RetainedPostEntry }) {
       style={{ left: POST_LAYER_LEFT, width: POST_LAYER_WIDTH, WebkitOverflowScrolling: 'touch' }}>
       <PostOverlayEffects overlayRef={ref} postId={entry.id} />
       <div className="pt-[5.5rem] lg:pt-14 px-2 sm:px-3 pb-24">
-        <div data-feed-item className="rounded-2xl border border-white/[0.12] bg-white/[0.03] p-3">
-          <RetainedPostDock entry={entry} />
-        </div>
+        <RetainedPostDock entry={entry} />
         {/* The existing card is already visible; only its optional details await code/data. */}
         <ErrorBoundary compact resetKey={entry.id} label="Post">
           <Suspense fallback={null}><SinglePostPage inOverlay detailsOnly /></Suspense>

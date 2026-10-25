@@ -2,6 +2,7 @@ import { useTranslation as _useCopy } from 'react-i18next';
 import { useRouteContentReady } from '@/hooks/use-route-content-ready';
 import { bindRetainedComments } from '@/lib/retained-post-surface';
 import More from '@/components/ui/cut-icons/more';
+import { QuietPostLoading } from '@/components/app/QuietPostLoading';
 /**
  * Single Post Page
  * ================
@@ -85,7 +86,6 @@ import {
 } from '@/components/ui/drawer';
 import { formatTimeAgo, formatDuration, formatViews } from '@/lib/feed-utils';
 import { useAuth } from '@/contexts/AuthContext';
-import { VideoCardSkeleton, ImageCardSkeleton, PostCardSkeleton } from '@/components/app/feeds/FeedSkeletons';
 import { useFeedSwallowClip } from '@/hooks/use-feed-swallow-clip';
 import type { VideoItem, ImagePost, TextPost, LiveStream } from '@/types/feed.types';
 import { hlsUrlFor, liveProviderOf, noteLatencyMode } from '@/lib/live-ingest';
@@ -574,12 +574,7 @@ function NotFoundState() {
  * Loading state component
  */
 function LoadingState() {
-  return (
-    <div className="space-y-3 py-4">
-      <VideoCardSkeleton />
-      <PostCardSkeleton />
-    </div>
-  );
+  return <QuietPostLoading />;
 }
 
 /**

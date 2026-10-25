@@ -26,11 +26,12 @@ describe('retained feed post', () => {
   it('keeps the same card, image and local state through opening and rapid Back', () => {
     const mounted = vi.fn();
     const view = (open: boolean) => <>
-      <RetainedPostSurface id="retained-photo"><StatefulCard mounted={mounted} /></RetainedPostSurface>
+      <RetainedPostSurface id="retained-photo" frameProps={{ className: 'original-frame' }}><StatefulCard mounted={mounted} /></RetainedPostSurface>
       <Dock id={open ? 'retained-photo' : null} />
     </>;
     const result = render(view(false));
     const photo = screen.getByAltText('Original photo');
+    const frame = result.container.querySelector('.original-frame')!;
     const input = screen.getByRole('textbox', { name: 'Card draft' });
     fireEvent.change(input, { target: { value: 'still here' } });
     fireEvent.click(screen.getByRole('button', { name: 'Count 0' }));
@@ -38,11 +39,13 @@ describe('retained feed post', () => {
     vi.spyOn(getRetainedPost('retained-photo')!.container, 'getBoundingClientRect').mockReturnValue({ height: 321 } as DOMRect);
     result.rerender(view(true));
     expect(result.container.querySelector('[data-retained-post-dock]')!.contains(photo)).toBe(true);
+    expect(result.container.querySelector('[data-retained-post-dock]')!.contains(frame)).toBe(true);
     expect((source as HTMLElement).style.minHeight).toBe('321px');
     result.rerender(view(false));
     result.rerender(view(true));
     result.rerender(view(false));
     expect(source.contains(photo)).toBe(true);
+    expect(source.contains(frame)).toBe(true);
     expect(screen.getByAltText('Original photo')).toBe(photo);
     expect(screen.getByRole('textbox', { name: 'Card draft' })).toBe(input);
     expect((input as HTMLInputElement).value).toBe('still here');
