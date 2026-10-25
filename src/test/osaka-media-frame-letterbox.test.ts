@@ -7,6 +7,7 @@ const IMAGE_CARD = readFileSync(resolve(__dirname, '../components/app/cards/Imag
 const VIDEO_CARD = readFileSync(resolve(__dirname, '../components/app/cards/VideoCard.tsx'), 'utf8');
 const LIVE_CARD = readFileSync(resolve(__dirname, '../components/app/cards/LiveStreamCard.tsx'), 'utf8');
 const SHORTS = readFileSync(resolve(__dirname, '../components/app/cards/ShortsViewer.tsx'), 'utf8');
+const MINI_CSS = readFileSync(resolve(__dirname, '../styles/shorts-mini.css'), 'utf8');
 
 describe('Osaka media frames do not letterbox narrow images', () => {
   // An image narrower than the feed column leaves the wrapper's own box exposed
@@ -64,8 +65,20 @@ describe('Osaka media frames do not letterbox narrow images', () => {
     // rendered class list, so what still matters is that a fill of its own is
     // in there unconditionally, ahead of the arms.
     expect(LIVE_CARD).toMatch(/data-media-full[\s\S]{0,120}?'bg-black overflow-hidden'/);
-    // The Shorts viewer's scrim and its video column, in that order.
-    expect(SHORTS).toMatch(/data-media-full[\s\S]{0,160}?isMobile \? "bg-black" :/);
+    // The default viewer is opaque on phones. Picture drags use a separate
+    // fading backdrop, leaving the actual video opaque over the source feed.
+    expect(SHORTS.includes('isMobile ? "bg-black" : "bg-black/60 backdrop-blur-[24px]"')).toBe(true);
+    expect(SHORTS.includes('data-shorts-mini-drag={mini.dragging || undefined}')).toBe(true);
+    expect(SHORTS.includes('data-shorts-drag-backdrop')).toBe(true);
+    expect(SHORTS.includes('opacity: mini.backdropOpacity')).toBe(true);
+    const dragStart = MINI_CSS.indexOf('[data-shorts-viewer][data-shorts-mini-drag]');
+    const dragRule = MINI_CSS.slice(dragStart, MINI_CSS.indexOf('}', dragStart));
+    expect(dragStart).toBeGreaterThan(-1);
+    expect(dragRule.includes('[data-shorts-mini-drag] [data-shorts-player]')).toBe(true);
+    expect(dragRule.includes('[data-shorts-mini-drag] [data-shorts-picture]')).toBe(true);
+    expect(dragRule.includes('background: transparent !important')).toBe(true);
+    const miniRule = MINI_CSS.slice(0, MINI_CSS.indexOf('}'));
+    expect(miniRule.includes('background: #000 !important')).toBe(true);
     // The column has three arms now — mobile, windowed desktop, and the
     // immersive fullscreen one — and every arm has to ship a fill of its own.
     // Miss one and Osaka's `:not([class*='bg-'])` guard makes that state
