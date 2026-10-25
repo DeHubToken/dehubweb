@@ -2499,6 +2499,7 @@ export const fi = {
     contactText: 'Näitä ohjeita koskevat kysymykset tai kiireellistä huomiota vaativat raportit voi lähettää osoitteeseen dev@dehub.io.',
   },
   adTools: {
+    cpmRow: 'Hinta / 1 000 näyttöä:',
     budgetCalculatorTitle: 'Kampanjan budjettilaskuri',
     budgetCalculatorDesc: 'Suunnittele POVR-mainoskampanjasi realististen kustannusarvioiden ja yleisöön kohdistamisen avulla',
     dailyBudget: 'Päivittäinen budjetti ($)',

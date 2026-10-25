@@ -104,6 +104,11 @@ export const it = {
     disclaimerText: "I token DeHub funzionano come token di utilità nel nostro ecosistema, simili alle valute di gioco, e non sono strumenti di investimento. Tutti i mercati comportano rischi intrinseci. Partecipa solo con fondi che puoi permetterti di perdere completamente.",
   },
   dapp: {
+    exStandard: 'Tariffa standard:',
+    labelWatch2earn: 'Guarda e guadagna:',
+    lensModel: 'Grafo sociale basato su NFT con follow e post',
+    moreB6: 'Agenti IA e prompt:',
+    notificationsB2: 'Notifiche push su web e mobile:',
     title: 'Un Ecosistema Completo',
     intro1: 'DeHub è un\'alternativa open source e resistente alla censura alle piattaforme multimediali tradizionali, al servizio delle industrie della creazione di contenuti, dello streaming e del gaming.',
     intro2: "L'app è scalata tramite una rete di miner decentralizzata, che fornisce potenza di calcolo condivisa per ospitare, transcodificare e distribuire contenuti che per design dovrebbero vivere per sempre.",
@@ -1045,6 +1050,7 @@ export const it = {
     moreB3Desc: 'Statistiche del sito in tempo reale — visitatori, visualizzazioni di pagina e numeri di comunità, per giorno, anno o tutto il tempo — pubblicate piuttosto che mantenute interne. La stessa pagina mostra le entrate e i costi di DeHub, costruiti dai totali delle entrate giornaliere e dai costi effettivamente registrati dai nostri fornitori, quindi le finanze sono pubbliche quanto il traffico.',
   },
   games: {
+    trenchTitle: 'Chartopia',
     title: 'Giochi',
     intro1: 'I giochi DeHub sono progettati per essere accessibili a tutti, non solo ai possessori di crypto.',
     intro2: 'I giochi sono disponibili tramite l\'app DeHub e il browser web.',
@@ -1242,6 +1248,7 @@ export const it = {
     disclaimerText: 'I token DeHub sono strettamente per scopi di utilità e non un investimento. I mercati sono altamente volatili. Investi solo ciò che puoi permetterti di perdere.',
   },
   depin: {
+    workflow2: 'Assegnazione dei compiti:',
     title: 'DePIN',
     subtitle: 'Una Rete di Infrastruttura Fisica Decentralizzata (DePIN) di Potenza di Calcolo Condivisa per una Vera Resistenza alla Censura',
     abstract: 'Abstract',
@@ -1356,6 +1363,8 @@ export const it = {
     diagramMinersRole2: 'in cambio di token DeHub',
   },
   e2ee: {
+    howWorksTitle: 'Come funziona la crittografia end-to-end di DeHub',
+    msgPrep: '1. Preparazione del messaggio',
     title: 'Crittografia End-to-End',
     intro: 'DeHub implementa la crittografia end-to-end (E2EE) per tutte le comunicazioni private, garantendo che solo il mittente e il destinatario previsto possano leggere i messaggi.',
     howItWorks: 'Come Funziona',
@@ -1561,6 +1570,7 @@ export const it = {
     contentAnalysisDesc: 'Ottieni contesto o spiega i post con funzionalità di analisi e interpretazione dei contenuti basate sull\'intelligenza artificiale.',
   },
   advertising: {
+    costs2023Desc: 'Circa da $84 miliardi a $88 miliardi',
     title: 'Pubblicità',
     subtitle: 'Piattaforma pubblicitaria decentralizzata alimentata da POVR',
     adsManagerLiveDesc: 'Crea campagne, scegli i livelli di badge, finanzia con i token DeHub e monitora i risultati in tempo reale.',
@@ -2077,6 +2087,7 @@ export const it = {
     restrictionsItem5: 'Sospensione o espulsione permanente di un account da parte di moderatori designati per comportamento abusivo',
   },
   privacyPolicy: {
+    thirdPartyItem8Prefix: 'IA e traduzione:',
     title: 'Informativa sulla Privacy',
     lastUpdated: 'Ultimo aggiornamento:',
     effective: 'In vigore:',

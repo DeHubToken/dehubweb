@@ -104,6 +104,8 @@ export const cs = {
     disclaimerText: "Tokeny DeHub fungují jako utilitní tokeny v našem ekosystému, podobně jako herní měny, a nejsou investičními nástroji. Zatímco naše blockchainová infrastruktura poskytuje bezprecedentní transparentnost a ověřitelná on-chain data pro vzdělávací účely, všechny trhy nesou inherentní rizika. Můžete přijít o celou investici kvůli volatilitě trhu, technickým problémům, bezpečnostním narušením nebo nepředvídaným okolnostem. Účastněte se pouze s prostředky, které si můžete dovolit zcela ztratit. DeHub a jeho partneři nepřebírají odpovědnost za jakékoli finanční ztráty.",
   },
   dapp: {
+    aiSuiteTitle: 'Sada nástrojů AI',
+    spMinShort: 'minut',
     title: 'Kompletní Ekosystém',
     intro1: 'DeHub je alternativa odolná vůči cenzuře s otevřeným zdrojovým kódem k tradičním mediálním platformám sloužícím tvorbě obsahu, streamování a hernímu průmyslu. Ekosystém, kde kdokoli může monetizovat od prvního zhlédnutí, bez strachu z vyřazení z platformy, shadowbanu, umlčení nebo jakékoli manipulace.',
     intro2: 'Aplikace je škálována prostřednictvím decentralizované sítě těžařů, poskytujících sdílený výpočetní výkon pro hostování, překódování a doručování obsahu, který by měl z principu existovat navždy.',
