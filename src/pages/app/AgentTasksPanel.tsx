@@ -111,7 +111,7 @@ export function AgentTasksPanel({ wallet, agents }: { wallet: string; agents: { 
           <div className="flex flex-wrap gap-2" role="group" aria-label={t('agents.tasks.pacing.label', { defaultValue: 'When to act' })}>
             {[0, 60, 360, 720, 1440].map(minutes => <Button key={minutes} type="button" size="sm" disabled={create.isPending}
               aria-pressed={spreadMinutes === minutes} variant={spreadMinutes === minutes ? 'default' : 'outline'}
-              onClick={() => { setSpreadMinutes(minutes); changed(); }}>{minutes === 0 ? t('agents.tasks.pacing.now', { defaultValue: 'Immediately' }) : t('agents.tasks.pacing.hours', { defaultValue: 'Over {{count}} hours', count: minutes / 60 })}</Button>)}
+              onClick={() => { setSpreadMinutes(minutes); if (minutes > 0) { setWindowMode(true); setWindowActions(['like']); if (preset === 'today' || preset === 'next7d') setPreset('last24h'); } changed(); }}>{minutes === 0 ? t('agents.tasks.pacing.now', { defaultValue: 'Immediately' }) : t('agents.tasks.pacing.hours', { defaultValue: 'Over {{count}} hours', count: minutes / 60 })}</Button>)}
           </div>
           <p className="text-sm text-white/70">{t('agents.tasks.pacing.help', { defaultValue: 'Starts automatically with Sentient off. Pacing supports one like or dislike action on a fixed post window: each agent reacts to every matching post, one turn at a time. The first turn starts now; service limits can extend the finish time.' })}</p>
         </div>}
@@ -149,7 +149,7 @@ export function AgentTasksPanel({ wallet, agents }: { wallet: string; agents: { 
         </div>
         <p className="text-sm text-white/70">{t('agents.tasks.window.filterHelp')}</p>
         <div className="space-y-2"><p className="text-sm font-medium text-white/85">{t('agents.tasks.window.actions')}</p>
-          <div className="flex flex-wrap gap-2">{WINDOW_ACTIONS.map(value => <button key={value} type="button" aria-pressed={windowActions.includes(value)} disabled={create.isPending}
+          <div className="flex flex-wrap gap-2">{WINDOW_ACTIONS.map(value => <button key={value} type="button" aria-pressed={windowActions.includes(value)} disabled={create.isPending || (swarm && distribution === 'each' && spreadMinutes > 0 && (value === 'view' || value === 'reply'))}
             onClick={() => { setWindowActions(list => toggleWindowAction(list, value)); changed(); }}
             className={`rounded-full border px-3 py-2 text-sm transition-colors ${windowActions.includes(value) ? 'border-white/70 bg-white/20 text-white' : 'border-white/20 bg-black/20 text-white/70'}`}>{t(`agents.tasks.window.${value}`)}</button>)}</div>
         </div>
