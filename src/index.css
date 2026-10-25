@@ -366,6 +366,12 @@ All colors MUST be HSL.
      to the surrounding panel's material — the knob then vanishes into its own
      track. Carrying no colour class makes the thumb unmatchable; themes that
      want a different knob override this on `[data-switch-thumb]`. */
+  [data-switch-track][data-state="checked"] {
+    background-color: #fff;
+  }
+  [data-switch-track][data-state="unchecked"] {
+    background-color: rgb(255 255 255 / 0.3);
+  }
   [data-switch-thumb] {
     background-color: rgb(24 24 27);
   }
