@@ -2,6 +2,17 @@ import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
 import type { GovernanceProposal } from './use-governance';
 
+// Bound the lookup shape to avoid expanding the entire generated database schema.
+type ProposalLookup = {
+  select(columns: '*'): {
+    eq(column: 'proposal_number' | 'id', value: number | string): {
+      single(): PromiseLike<{ data: GovernanceProposal | null; error: unknown }>;
+    };
+  };
+};
+const proposalTable = supabase.from.bind(supabase) as unknown as
+  (table: 'governance_proposals') => ProposalLookup;
+
 const isProposalNumber = (key: string | undefined): key is string => !!key && /^\d{1,9}$/.test(key);
 
 /**
@@ -16,13 +27,13 @@ export function useGovernanceProposal(key: string | undefined) {
   const resolved = useQuery({
     queryKey: ['governance-proposal-number', key],
     queryFn: async () => {
-      const { data, error } = await supabase
-        .from('governance_proposals')
+      const { data, error } = await proposalTable('governance_proposals')
         .select('*')
         .eq('proposal_number', Number(key))
         .single();
       if (error) throw error;
-      const row = data as GovernanceProposal;
+      if (!data) throw new Error('Proposal not found');
+      const row = data;
       queryClient.setQueryData(['governance-proposal', row.id], row);
       return row.id;
     },
@@ -42,13 +53,14 @@ function useGovernanceProposalById(proposalId: string | undefined) {
   return useQuery({
     queryKey: ['governance-proposal', proposalId],
     queryFn: async () => {
-      const { data, error } = await supabase
-        .from('governance_proposals')
+      if (!proposalId) throw new Error('Proposal ID is required');
+      const { data, error } = await proposalTable('governance_proposals')
         .select('*')
-        .eq('id', proposalId!)
+        .eq('id', proposalId)
         .single();
       if (error) throw error;
-      return data as GovernanceProposal;
+      if (!data) throw new Error('Proposal not found');
+      return data;
     },
     enabled: !!proposalId,
     staleTime: 60_000,
