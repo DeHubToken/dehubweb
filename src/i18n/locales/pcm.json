@@ -5102,8 +5102,6 @@
     "bio": "Bio",
     "bioPlaceholder": "Yarn us small about yourself...",
     "socialLinks": "Social Link Dem",
-    "socialFollowers": "Followers on {{platform}}",
-    "socialFollowersPlaceholder": "e.g. 12500",
     "profileUpdated": "Profile don update well well",
     "failedLoadProfile": "E no fit load profile data",
     "imageTooLarge5": "Image must dey less than 5MB",
@@ -6369,8 +6367,7 @@
     "joined": "Joined",
     "reach": {
       "total": "Total reach",
-      "dehubFollowers": "DeHub followers",
-      "selfReported": "Social follower counts wey people enter dey be manual."
+      "dehubFollowers": "DeHub followers"
     },
     "loginDescription": "Log in make you fit see and manage your profile.",
     "replyThread": {

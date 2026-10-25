@@ -2533,9 +2533,6 @@
     "bio": "ባዮ",
     "bioPlaceholder": "ስለ ራስህ ንገረን...",
     "socialLinks": "ማህበራዊ ማገናኛዎች",
-    "socialFollowers": "ተከታዮች በ {{platform}}",
-    "socialFollowersHint": "እንደ አጠቃላይ መድረሻዎ አካል በመገለጫዎ ላይ ይንሸራተቱ ። ቁጥሩን እራስዎ ያስገቡ — ከመድረክ አናነበውም ።",
-    "socialFollowersPlaceholder": "ለምሳሌ 12500",
     "profileUpdated": "መገለጫ በተሳካ ሁኔታ ተዘምኗል",
     "failedLoadProfile": "የመገለጫ መረጃ መጫን አልተሳካም",
     "imageTooLarge5": "ምስል ከ5MB ያነሰ መሆን አለበት",
@@ -3858,8 +3855,7 @@
     "reach": {
       "total": "ጠቅላላ ተደራሽነት",
       "breakdownTitle": "ይህ ተደራሽነት ከየት እንደመጣ",
-      "dehubFollowers": "DeHub ተከታዮች",
-      "selfReported": "የማኅበራዊ መከታተያ ቁጥሮች በፈጣሪ ይካተታሉ ።"
+      "dehubFollowers": "DeHub ተከታዮች"
     },
     "loginDescription": "መገለጫህን ለማየትና ለማስተዳደር ግባ።",
     "replyThread": {

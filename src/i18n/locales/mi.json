@@ -6553,9 +6553,6 @@
     "bio": "Korero mōu",
     "bioPlaceholder": "Kōrerotia mōu...",
     "socialLinks": "Hononga pāpāho",
-    "socialFollowers": "Ko nga kaiwhaiwhai i runga i {{platform}}",
-    "socialFollowersHint": "Hokona i runga i to koutou pūkete rite te wahi o to koutou REACH katoa. Whakauru i te tau ki a koe ano — e kore matou e pānui i te reira i te papa.",
-    "socialFollowersPlaceholder": "e ai ki te 12500",
     "profileUpdated": "Kua angitū te whakahou kōtaha",
     "failedLoadProfile": "Kāore i taea te uta raraunga kōtaha",
     "imageTooLarge5": "Me iti ake te whakaahua i te 5MB",
@@ -8066,8 +8063,7 @@
     "reach": {
       "total": "Te whaainga katoa",
       "breakdownTitle": "Ko te wahi i puta mai ai tenei whaainga",
-      "dehubFollowers": "Ngā kaiwhaiwhai o DeHub",
-      "selfReported": "Ko nga kaute whaiwhai pāpori e whakauruhia ana e te kaihanga."
+      "dehubFollowers": "Ngā kaiwhaiwhai o DeHub"
     },
     "loginDescription": "Takiuru ki te tiro me te whakahaere i tō kōtaha.",
     "replyThread": {
