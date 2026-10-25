@@ -11,6 +11,14 @@ import { PLATFORM_NAMES, getMultipostStatus } from '@/lib/multipost';
 import { creditsFor } from '@/lib/social-pricing';
 import { MULTIPOST_QUERY_KEY, PlatformIcon } from '@/components/app/settings/MultiPostSettings';
 
+export function useCrossPostAccountCount(enabled: boolean) {
+  const { isAuthenticated } = useAuth();
+  const selected = useCrossPostStore(state => state.selected);
+  const status = useQuery({ queryKey: MULTIPOST_QUERY_KEY, queryFn: getMultipostStatus, enabled: enabled && isAuthenticated, staleTime: 60_000 });
+  if (!enabled || !isAuthenticated || status.isError) return 0;
+  return (status.data?.accounts ?? []).filter(account => !account.pending && selected.includes(account.id)).length;
+}
+
 /**
  * Multi-post controls inside the shared composer options sheet. Connected
  * accounts stay selectable without stacking another overlay over the sheet.
