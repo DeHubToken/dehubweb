@@ -1,4 +1,4 @@
-import { act, cleanup, fireEvent, render, screen } from '@testing-library/react';
+import { act, cleanup, fireEvent, render, screen, waitFor } from '@testing-library/react';
 import { useRef } from 'react';
 import { afterEach, expect, it, vi } from 'vitest';
 import type { PanInfo } from 'framer-motion';
@@ -33,7 +33,7 @@ function mount(width = 1920, height = 1080, enabled = true) {
     end(x: number, y: number, dy: number, dx = 0, velocity = 0) { let consumed = false; act(() => { consumed = controls.finish(pan(x, y, dy, dx, velocity)); }); return consumed; }, event };
 }
 
-it.each([[1920, 1080], [1080, 1080], [1080, 1920]])('minimizes and restores the same %sx%s video without changing media state', (w, h) => {
+it.each([[1920, 1080], [1080, 1080], [1080, 1920]])('minimizes and restores the same %sx%s video without changing media state', async (w, h) => {
   const view = mount(w, h);
   const load = vi.spyOn(view.video, 'load');
   const play = vi.spyOn(view.video, 'play');
@@ -41,6 +41,11 @@ it.each([[1920, 1080], [1080, 1080], [1080, 1920]])('minimizes and restores the 
   expect(bodyScrollLockDepth()).toBe(1);
   view.start(200, 400);
   act(() => { expect(view.mini.drag(pan(200, 400, 120))).toBe(true); });
+  expect(view.mini.dragging).toBe(true);
+  await waitFor(() => {
+    expect(view.mini.backdropOpacity.get()).toBeCloseTo(0.25);
+    expect(view.mini.chromeOpacity.get()).toBe(0);
+  });
   expect(view.end(200, 400, 120)).toBe(true);
   expect(view.mini.minimized).toBe(true);
   expect(view.mini.frame!.width / view.mini.frame!.height).toBeCloseTo(w / h);
@@ -86,6 +91,7 @@ it('cancels a short or reversed drag and keeps another overlay scroll lock intac
   act(() => { view.mini.drag(pan(200, 400, 120)); view.mini.drag(pan(200, 400, -10)); });
   expect(view.mini.scale.get()).toBe(1);
   expect(view.mini.y.get()).toBe(0);
+  expect(view.mini.backdropOpacity.get()).toBe(1);
   view.start(200, 400);
   act(() => view.mini.cancel());
   expect(view.end(200, 400, 150)).toBe(false);

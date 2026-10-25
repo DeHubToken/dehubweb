@@ -1409,6 +1409,7 @@ export function ShortsViewer({ shorts, initialIndex, onClose, onLoadMore, hasMor
       data-media-full={isMobile ? '' : undefined}
       data-shorts-viewer
       data-shorts-mini={mini.minimized || undefined}
+      data-shorts-mini-drag={mini.dragging || undefined}
       layout
       transition={{ layout: { duration: mini.reducedMotion ? 0 : 0.22, ease: 'easeOut' } }}
       className={cn("fixed inset-0 z-[60] flex items-center justify-center", isMobile ? "bg-black" : "bg-black/60 backdrop-blur-[24px]")}
@@ -1422,6 +1423,7 @@ export function ShortsViewer({ shorts, initialIndex, onClose, onLoadMore, hasMor
         overscrollBehavior: 'contain',
         scale: mini.scale,
         y: mini.y,
+        ...{ ['--shorts-drag-chrome-opacity' as string]: mini.chromeOpacity },
         ...(commentsViewport.height !== null ? {
           top: commentsViewport.offsetTop,
           bottom: 'auto',
@@ -1433,6 +1435,7 @@ export function ShortsViewer({ shorts, initialIndex, onClose, onLoadMore, hasMor
       onTouchMove={mini.minimized ? undefined : handleTouchMove}
       onTouchEnd={mini.minimized ? undefined : handleTouchEnd}
     >
+      {mini.dragging && <motion.div data-shorts-drag-backdrop className="absolute inset-0 bg-black pointer-events-none" style={{ opacity: mini.backdropOpacity }} />}
       {theme === 'glass' && !isMobile && <GlassBackground />}
       {/* Desktop Layout with Side Panels */}
       <div data-shorts-layout className={cn("relative flex h-full", isMobile ? "w-full flex-col" : "items-center justify-center gap-4 px-4")}>
