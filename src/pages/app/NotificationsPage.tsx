@@ -2324,19 +2324,17 @@ export default function NotificationsPage({ inDrawer = false }: { inDrawer?: boo
               beforeTabs={
                 <div className="flex shrink-0 items-center gap-1.5">
                   {settingsControl}
-                  {totalUnread > 0 && (
-                <IslandAction
-                  label={t('notifications.markAllRead')}
-                  onClick={handleMarkAllAsRead}
-                  disabled={markAllAsRead.isPending}
-                >
-                  {markAllAsRead.isPending ? (
-                    <Loader2 className="h-[18px] w-[18px] animate-spin text-white" />
-                  ) : (
-                    <Check className="h-[18px] w-[18px] text-white" />
-                  )}
-                </IslandAction>
-              )}
+                  <IslandAction
+                    label={t('notifications.markAllRead')}
+                    onClick={handleMarkAllAsRead}
+                    disabled={totalUnread === 0 || markAllAsRead.isPending}
+                  >
+                    {markAllAsRead.isPending ? (
+                      <Loader2 className="h-[18px] w-[18px] animate-spin text-white" />
+                    ) : (
+                      <Check className="h-[18px] w-[18px] text-white" />
+                    )}
+                  </IslandAction>
                 </div>
               }
               value={activeTab}
