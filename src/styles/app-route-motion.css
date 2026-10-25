@@ -7,10 +7,10 @@
   overflow: hidden;
   pointer-events: auto;
   transform-origin: 50% 42%;
-  animation: app-route-shell-enter 180ms cubic-bezier(.2,.8,.2,1) both;
+  animation: app-route-shell-enter 220ms cubic-bezier(.2,.8,.2,1) both;
   will-change: transform, opacity;
 }
-.app-route-loading-shell[data-direction='back'] { animation-name: app-route-shell-return; }
+.app-route-loading-shell[data-direction='back'] { animation-name: app-route-shell-return; animation-duration: 180ms; }
 .app-route-loading-shell > header { display: flex; align-items: center; gap: 16px; height: 56px; padding: 8px 16px; }
 .app-route-loading-shell > header button {
   pointer-events: auto;
@@ -33,9 +33,9 @@
 .app-route-loading-media { margin-top: 28px; height: 180px; border-radius: 14px; }
 .app-route-loading-author i, .app-route-loading-author span, .app-route-loading-line, .app-route-loading-media { background: color-mix(in srgb, currentColor 12%, transparent); }
 .app-route-loading-shell[data-leaving] { animation: app-route-shell-leave 120ms ease-out both; }
-@keyframes app-route-shell-enter { from { opacity: .35; transform: scale(.94); } to { opacity: 1; transform: scale(1); } }
+@keyframes app-route-shell-enter { from { opacity: 0; transform: translateY(12px) scale(.94); } to { opacity: 1; transform: translateY(0) scale(1); } }
 @keyframes app-route-shell-return { from { opacity: .35; transform: scale(1.03); } to { opacity: 1; transform: scale(1); } }
-@keyframes app-route-shell-leave { from { opacity: 1; } to { opacity: 0; } }
+@keyframes app-route-shell-leave { to { opacity: 0; } }
 @media (max-width: 1023px) { .app-route-loading-shell { top: 44px; bottom: 64px; } }
 .reduce-motion .app-route-loading-shell { animation: none; }
 @media (prefers-reduced-motion: reduce) { .app-route-loading-shell { animation: none; } }

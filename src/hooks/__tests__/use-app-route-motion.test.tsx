@@ -14,6 +14,7 @@ beforeEach(() => {
   vi.useFakeTimers();
   history.replaceState({ idx: 1 }, '');
   document.body.innerHTML = '<main data-main-panel style="opacity: .8"></main>';
+  document.querySelector('main')!.inert = false;
   frames = new Map();
   nextFrame = 0;
   vi.spyOn(window, 'requestAnimationFrame').mockImplementation(callback => { frames.set(++nextFrame, callback); return nextFrame; });
@@ -47,10 +48,12 @@ it('shows the destination header and Back before scheduling post content', () =>
   expect(back).toHaveBeenCalledOnce();
   paintThenRender();
   expect(result.current).toBe(to);
-  expect(document.querySelector('main')?.style.opacity).toBe('0');
+  expect(document.querySelector('main')?.style.opacity).toBe('0.8');
+  expect(document.querySelector('main')?.inert).toBe(true);
   expect(document.querySelector('.app-route-loading-shell')).not.toBeNull();
   act(() => notifyRouteContentReady(to.key));
   expect(document.querySelector('main')?.style.opacity).toBe('0.8');
+  expect(document.querySelector('main')?.inert).toBe(false);
   act(() => vi.advanceTimersByTime(120));
   expect(document.querySelector('.app-route-loading-shell')).toBeNull();
 });
@@ -77,9 +80,9 @@ it('keeps only the latest destination and ignores stale ready signals', () => {
   paintThenRender();
   expect(result.current).toBe(profile);
   act(() => notifyRouteContentReady('post'));
-  expect(document.querySelector('main')?.style.opacity).toBe('0');
+  expect(document.querySelector('main')?.inert).toBe(true);
   act(() => notifyRouteContentReady('profile'));
-  expect(document.querySelector('main')?.style.opacity).toBe('0.8');
+  expect(document.querySelector('main')?.inert).toBe(false);
 });
 
 it('does not require View Transitions and removes reduced-motion loading immediately on readiness', () => {
