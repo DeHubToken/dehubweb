@@ -61,10 +61,14 @@ describe('Maboroshi creator journey', () => {
     session({ libraryBridge: 1, allowPayments: false });
     await vi.waitFor(() => expect(el('result-save-library').hidden).toBe(false));
     await vi.waitFor(() => expect(el('project').hidden).toBe(false));
+    Object.defineProperty(w.HTMLVideoElement.prototype, 'videoWidth', { configurable: true, get: () => 1080 });
+    Object.defineProperty(w.HTMLVideoElement.prototype, 'videoHeight', { configurable: true, get: () => 1920 });
+    w.HTMLMediaElement.prototype.load = function () { if (this.onloadedmetadata) this.onloadedmetadata(); };
     el('result-save-library').click(); el('result-save-library').click();
     await vi.waitFor(() => expect(sent.filter(x => x.type === 'maboroshi:save')).toHaveLength(1));
     const request = sent.find(x => x.type === 'maboroshi:save');
     expect(request.wallet).toBe(wallet); expect(request.projectId).toBe(id);
+    expect(request.width).toBe(1080); expect(request.height).toBe(1920);
     expect(request.url).toContain('final-preview.mp4?expires=123');
     expect(sent.some(x => x.type === 'maboroshi:pay')).toBe(false);
     w.document.dispatchEvent(new w.CustomEvent('maboroshi:native-save-result', { detail: { requestId: request.requestId, error: 'offline' } }));

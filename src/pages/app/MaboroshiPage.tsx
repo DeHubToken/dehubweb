@@ -17,7 +17,7 @@ import { completeMaboroshiPayment, getMaboroshiQuote, isMaboroshiPaymentRequest,
 import { MotionLibraryShowcase } from '@/components/app/creator/MotionLibraryShowcase';
 import { findMotionClip, type MotionClip } from '@/lib/creator/motionLibrary';
 import { maboroshiStudioUrl } from '@/lib/maboroshi-studio';
-import { isMaboroshiDelivery, maboroshiAssetId } from '@/lib/maboroshi-delivery';
+import { isMaboroshiDelivery, maboroshiAssetId, maboroshiAspect } from '@/lib/maboroshi-delivery';
 import { saveCloudGeneration } from '@/lib/creator/cloudLibrary';
 
 const ORIGIN = 'https://live.dehub.io';
@@ -66,7 +66,7 @@ export default function MaboroshiPage({ remake = false }: { remake?: boolean }) 
           const id = await maboroshiAssetId(input);
           if (activeWallet.current !== input.wallet) return;
           await saveCloudGeneration(input.wallet, { id, kind: 'video', prompt: 'Remake video', resolvedPrompt: '',
-            model: 'remake', modelName: 'Remake', aspect: '16:9', status: 'done', stage: '',
+            model: 'remake', modelName: 'Remake', aspect: maboroshiAspect(input), status: 'done', stage: '',
             url: input.url, createdAt: input.createdAt });
           if (activeWallet.current !== input.wallet) return;
           setDeliveryStatus(t('copy.922cb35a34dc', 'Saved to your account'));
