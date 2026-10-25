@@ -15032,7 +15032,7 @@
       "resetNames": "Reimposta nomi",
       "search": "Cerca livelli",
       "searchOverlap": "Cerca strati sovrapposti",
-      "stackOrder": "Top layer first",
+      "stackOrder": "Prima il livello superiore",
       "startAt": "Inizia da"
     },
     "blend": {
@@ -15412,7 +15412,7 @@
       "copyToken": "Copia segnaposto",
       "created": "Create {{count}} pagine. Annulla ripristina il design originale.",
       "data": "Dati del foglio di calcolo con intestazioni di colonna",
-      "emptyText": "Empty text layer",
+      "emptyText": "Livello di testo vuoto",
       "exportConnections": "Esporta connessioni correnti",
       "exportData": "Esporta dati foglio di calcolo",
       "filterColumn": "Filtra i record per colonna",

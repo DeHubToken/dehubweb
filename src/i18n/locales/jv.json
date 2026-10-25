@@ -14508,7 +14508,16 @@
       "pageBookmarks": "Panggonan buku tumpang",
       "pageOrderHint": "Kaca-kaca kudu urut sesuai urutane. Gunakake 3,1-2 kanggo ngawali kaca 3, utawa 5-1 kanggo ngabalikaké urutan kaca 5-1. Kaca-kaca kang wis diurutake kudu nganakake urutane.",
       "pptxHint": "Klo tipe halaman lan jadi satu gambar slide, lan dadi dhuwur presenter notes lan URL. Edit teks lan elemen lanjaran sing dadi dhuwur lan dinawisahake.",
-      "transparent": "Gambar latar belakang transparan"
+      "transparent": "Gambar latar belakang transparan",
+      "cropMarks": "Anggepake lan gawe wates",
+      "documentImageQuality": "Detail gambar page",
+      "filenameHint": "Kosongke karo nama default. Gunakake {title}, {name}, {section}, {page}, utawa {page:3}. Tambahake prefix minangka teks biasa. Nama-nama kang duwé réplika munggahake nomer halaman.",
+      "filenamePattern": "Polakan nama file halaman",
+      "notesText": "Catatan presenter (.txt)",
+      "notesTextHint": "Kolom download, nomer halaman asli, nama halaman, lan catatan presenter dadi file teks.",
+      "pdf": "Dokumen PDF",
+      "pptx": "Pra-sajian PowerPoint",
+      "section": "Bagian kang diarani"
     },
     "inspector": {
       "selectHint": "Pilih lapisan ing kanvas utawa klip ing garis wektu.",
@@ -14636,7 +14645,8 @@
       "replaceSelection": "Ganti nganggo pilihan",
       "saveSelection": "Simpen pilihan",
       "title": "Elemen sing disimpen",
-      "undoLibrary": "Batal owah-owahan pustaka"
+      "undoLibrary": "Batal owah-owahan pustaka",
+      "importFile": "Nambah file elemen"
     },
     "layers": {
       "startAt": "Dimulih di",
@@ -14666,7 +14676,8 @@
       "rename": "Ganti jeneng",
       "resetNames": "Reset jeneng",
       "search": "Telusuri lapisan",
-      "searchOverlap": "Telusuri lapisan sing tumpang tindih"
+      "searchOverlap": "Telusuri lapisan sing tumpang tindih",
+      "stackOrder": "Pertama ing layer atas"
     },
     "blend": {
       "normal": "Normal",
@@ -14819,7 +14830,8 @@
       "showPresentation": "Tampilna ing presentasi",
       "transferHint": "Kopi ngantiya saking 50 halaman, anjeh ngantiya ke satu halaman. Kelompokan anjeh ngantiya saking pilihannya. Ngantiya ngaruhake halaman ini aja; keluhuran lan penampilan lanjutan ditinggalin. Tujuan ngantiya ngaruhake lapisan waktunya.",
       "transferLayers": "Goyongin ingkang dipilih ing layer ke halaman ingkang dipilih, lan ngarani ingkang dipilih ing layer.",
-      "visibilityHint": "Kaca sing didhelikake tetep bisa diedit lan kasedhiya kanggo diundhuh."
+      "visibilityHint": "Kaca sing didhelikake tetep bisa diedit lan kasedhiya kanggo diundhuh.",
+      "moveLayersToPage": "Pindhaké ing halaman"
     },
     "audioTools": {
       "normalize": "Normalake volume",
@@ -14882,10 +14894,10 @@
       "apply": "Trapake merek",
       "addLogo": "Tambah logo",
       "applied": "Merek wis ditrapake ing {{count}} lapisan.",
-      "exportFile": "Download styles file",
+      "exportFile": "Undhuh berkas gaya",
       "fileDownloaded": "File gaya brand dledung",
       "fileHint": "Kanggo ngantiwarni warna dina nama lan pasangan huruf diantos-ntos. Gambar lan logo lanjep ngajaga dina desain.",
-      "importFile": "Import styles file",
+      "importFile": "Impor berkas gaya",
       "presetDeviceHint": "Kanggo siji akun, bisa ngelaku 20 palet warna dhuwur nama lan pasangan font, dicantos ing ngisor ingkang kanggo gwe. Logo lan logo ingkang dhuwur brand kit, ngandika ingkang siji.",
       "presetLoaded": "Gambar brand udh dipake. Paké brand gini ngarani desain ini.",
       "presetName": "Nama preset brand",
@@ -15006,7 +15018,8 @@
       "joinLabel": "Kasih sudut-sudutnya.",
       "pointHint": "Kasih ringkas ngurangin perbedaan kecil ngendhok ngentho saking kotak gambar. Gambar tutup ngawasihake ati-ati ngendhok seteng tiga titik. Smoothing dan gaya garis lanjep ngawasihake; undo ngembalake titik asli.",
       "points": "Gambar titik-titik ({{count}})",
-      "suggestedShape": "{{shape}}"
+      "suggestedShape": "{{shape}}",
+      "precision": "Akurasi simplifikasi"
     },
     "bulk": {
       "data": "Data spreadsheet dengan header kolom",
@@ -15041,7 +15054,7 @@
       "generate": "Kudu {{count}} halaman",
       "generatedToken": "Panggonan kanggo nyalin sing wis diformat",
       "hint": "Gunakake kaca saiki minangka cithakan. Sambungake lapisan teks lan QR menyang kolom spreadsheet, utawa lebokake jeneng kolom ing njero kurung kurawal pindho ing teks sampeyan. Saben baris sing dipilih bakal nggawe kaca anyar; sing asli tetep ing panggonane.",
-      "importConnections": "Import connection file",
+      "importConnections": "Impor berkas sambungan",
       "keepTemplateLink": "Simpen link cithakan",
       "last": "Kudu nganggo perahu.",
       "layerLinks": "Layér link saking kolom-kolom",
@@ -15057,7 +15070,7 @@
       "pagePreviewAlt": "Kaca cithakan sing diisi karo cathetan data {{record}}",
       "pagePreviewBusy": "Gwé ngembarani pratinjungan halaman yén udah diisi…",
       "pagePreviewHint": "Ndhuweke ngisorake rekornis ing ngaranan teks ing ngarani, QR code, dha ngawruhake foto ing ngarani. Pratinjau ingkane ngakene halaman ing desain kalian.",
-      "photoNameCopied": "Copied {{name}}",
+      "photoNameCopied": "{{name}} wis disalin",
       "photosHint": "Kangga nilai kolom ngandhapake nama lapisan foto sumber di desain ini. Nilai kosong ngawasih template foto atau frame. Penempatan dan gaya ngandhapake template; foto sumber yang ngaruh-ngaruhane wajib ada di perangkat ini.",
       "placeholderColumn": "Kolom spreadsheet",
       "preview": "Kanggo ngelihatin data baris preview.",
@@ -15068,7 +15081,16 @@
       "tokenDecimals": "Angka desimal",
       "tokenHint": "Pastekan placeholder ini ke teks template atau konten QR, lananti pilihlah *Use placeholders in text* untuk lapisan itu. Formatasi ngawur nganggo nilai spreadsheet ga ngawur. Format angka butuh angka mungil; 25 di mode persen ditulis 25%.",
       "tokenLocale": "Nomor lokale",
-      "trimToken": "Pangkas spasi sadurunge format"
+      "trimToken": "Pangkas spasi sadurunge format",
+      "filterOperation": "Perbandhingan filter",
+      "layerPhotos": "Foto saka kolom",
+      "matchCount": "{{count}} sambungan siap; {{ambiguous}} lapisan ambiguo dilewati",
+      "matchHint": "Cocog jeneng lengkap nalika nglirwakake huruf gedhe, spasi berulang, tanda hubung lan garis bawah. Sambungan valid sing ana lan placeholder teks dijaga. Cocog ambiguo tetep ora sambung. Sambungan foto nggunakake pencarian foto jeneng sing ana.",
+      "pagePreview": "Pratinjau kaca sing isine",
+      "photoNames": "Jeneng foto sumber sing kasedhiya ({{count}})",
+      "placeholderFormat": "Format teks utawa nomer",
+      "placeholders": "Gunakake placeholder ing teks",
+      "tokenCopied": "Placeholder disalin"
     },
     "charts": {
       "importStyle": "Impor file gaya",
@@ -15076,7 +15098,7 @@
       "applyDateBounds": "Kasih batang tanggal",
       "applyImportedStyle": "Aplikasi gaya menyang draf",
       "applyReference": "Kanggo ngaplikasake ngisor ngisor saking target line.",
-      "areaMode": "Area chart layout",
+      "areaMode": "Tata letak grafik area",
       "areaModeHint": "Kondisi area yang ditumpuk dan proporsional ngarani tiap seri kayak band. Streamgraphs ngendekin totalnya di sekitar nol dan ngelupain target referensi. Layout-layanan ini butuh nilai sumber non-negatif. Tampilan proporsional ngawasi jumlah asli di data; area yang bertumpuk bisa ngandung nilai negatif.",
       "axesSection": "Akses dan skala",
       "benchmarkHint": "Kanggo isi target tetep siji dhuwur nganti nganti nilai sumber kanggo saiki. Gunakan garis target kanggo nganti, lan ulang perhitungan kanggo nganti data kanggo diubah.",
@@ -15102,7 +15124,7 @@
       "decimals": "Angka desimal",
       "defaultTextSize": "Default ukuran teks",
       "donutHole": "Kue donat lubang",
-      "donutLabel": "Donut centre label",
+      "donutLabel": "Label tengah donat",
       "donutTotalHint": "Gunggung total irisan positif lan nggunakake format nilai sing dipilih.",
       "equalBubbleSizes": "Sama ukuran",
       "exportStyle": "Ekspor gaya saiki",
@@ -15177,7 +15199,8 @@
       "scale": {
         "apply": "Kasih batas skala",
         "auto": "Automatis",
-        "hint": "Bounds ngembangake skala otomatis supaya grafik sing gegandhengan bisa nuduhake rentang sing padha. Nilai ing njaba watesan kasebut tetep katon."
+        "hint": "Bounds ngembangake skala otomatis supaya grafik sing gegandhengan bisa nuduhake rentang sing padha. Nilai ing njaba watesan kasebut tetep katon.",
+        "reset": "Skala otomatis"
       },
       "scatterHint": "Gambar *scatter plot* ngunake koordinat numerik X di kolom pertama lan nilai Y di kolom-kolom sisa. Banyak seri ngerti koordinat X tu. Pilih *Dates* lan *UTC times* di *Axes* lan skala buat sumbu horizontal waktu yang lalulintas.",
       "scatterLines": "Koneksin titik-titik ngelangit",
@@ -15216,7 +15239,27 @@
       "xDate": "Tanggal dan waktu UTC",
       "xIntervals": "Interval sumbu horizontal",
       "xNumber": "Nombor",
-      "hierarchySample": "Europe,Pransya,35"
+      "hierarchySample": "Europe,Pransya,35",
+      "binCounts": "Ekspor jumlah bin histogram",
+      "brandPalettes": "Palet sing disimpen lan warna grafik",
+      "bubbleHint": "Gunakake koordinat X numerik ing kolom pisanan. Ing mode multi-seri, pilih kolom Y lan ukuran ing ngisor; baku nggunakake seri pisanan kanggo Y lan seri kapindho kanggo ukuran. Area proporsional karo ukuran; ukuran nol didhelikake. Tanpa seri ukuran, gelembung padha. Seri tambahan tetep ing data sumber. Label nilai nuduhake Y / ukuran. Sumbu lan skala bisa nggunakake tanggal lan wektu UTC kanggo X.",
+      "bubbleSizeColumn": "Ukuran gelembung saka",
+      "categoryReducer": "Ringkesake saben seri karo",
+      "compact": "Nomer kompak",
+      "dateAxisHint": "Gunakake tanggal ISO (2026-01-31) utawa cap wektu UTC (2026-01-31T14:30Z) ing kolom data pisanan. Posisi nggambarake wektu sing lumaku, kalebu celah. Label tanggal lan wektu nggunakake UTC ing saben piranti. Batas nambah skala nalika njaga kabeh data katon.",
+      "dateFormat": "Format label tanggal",
+      "donutLabelOptional": "Label pusat opsional",
+      "donutTotal": "Nuduhake total ing pusat",
+      "exportDisplayedRows": "Ekspor baris sing ditampilake",
+      "findPictogramIcon": "Golek ikon piktogram",
+      "findStarter": "Golek starter grafik",
+      "raceExample": "Ganti draft karo conto ranking",
+      "raceSettings": "Animasi ranking",
+      "radarRings": "Ring grid radar",
+      "referenceLabel": "Label target (opsional)",
+      "removeReference": "Busak target",
+      "searchTypes": "Golek jenis grafik",
+      "seriesStructureHint": "Nilai lan warna ngetutake saben seri. Seri anyar diwiwiti saka nol. Ganti jeneng seri ing baris pisanan kisi data."
     },
     "clipboard": {
       "copy": "Salin lapisan",
@@ -15281,7 +15324,9 @@
       "precisionHint": "Rasio ngowahi potongane nanging tetep njaga area sing ditampilake. Posisi fokus mindhah jendhela potongan sing wis ana ing antarane pinggiran sing kasedhiya, kalebu gambar sing dibalik.",
       "ratioHeight": "Rasio tinggi",
       "ratioWidth": "Rasio lebar",
-      "swapRatio": "Tukeneke lebar dhuwur dhuwur lebar"
+      "swapRatio": "Tukeneke lebar dhuwur dhuwur lebar",
+      "applyFocus": "Terapake fokus tepat",
+      "focusX": "Fokus horisontal (%)"
     },
     "dataCells": {
       "actionCount": "Ganti {{changed}} sel {{selected}} sel yang dipilih",
@@ -15380,7 +15425,9 @@
         "stripes": "Kelaran sel-sel nganti-nganten"
       },
       "title": "Gambar-gambar dan tabel",
-      "values": "Ndhuwekeke ngarani ngisorakeke."
+      "values": "Ndhuwekeke ngarani ngisorakeke.",
+      "resetDraft": "Baleni draft",
+      "stacked": "Tumpuk seri"
     },
     "designTools": {
       "applySize": "Tetapkan ukuran",
@@ -15398,7 +15445,9 @@
       "replaceAll": "Ganti kabeh",
       "replaceWith": "Ganti denga",
       "replacement": "Ganti warna",
-      "styleReady": "Sampun siap guna gaya"
+      "styleReady": "Sampun siap guna gaya",
+      "insert": "Sisipake",
+      "toolbar": "Alat-alit désain"
     },
     "diagrams": {
       "insert": "Sisipkan diagram",
@@ -15408,7 +15457,11 @@
       "previewHint": "Kanggo ngeliat pratinjau, warna halaman dipake sarta gawe gambar lan lain. Ngisorake, ngelukake gambar sarta ngembarake lapisan yén bisa diubah.",
       "previewUnavailable": "Kanggo ngeliat pratinjau kanvas gak bisa. Nggawe draft lanjepan bisa ditulis lanjepan.",
       "previewUpdating": "Gwéyé ngisorake diagram préwéwé…",
-      "vertical": "Tata letak vertikal"
+      "vertical": "Tata letak vertikal",
+      "preview": "Pra-liwat diagram",
+      "previewAlt": "Tata letak diagram",
+      "previewNeedsData": "Pakai warna lan label node nganti 120 karakter kanggo liwat.",
+      "title": "Pilihan diagram sing bisa diubah"
     },
     "document": {
       "start": "Dimulih di",
@@ -15428,7 +15481,11 @@
       "repeated": "Elemen sing dipilih wis disalin menyang kaca sing dipilih",
       "size": "Géngéngan tulisan",
       "suffix": "Sufiks",
-      "title": "Nomor halaman dan elemen yang diulang"
+      "title": "Nomor halaman dan elemen yang diulang",
+      "numberStyle": "Gaya angka",
+      "removeNumbers": "Tutup nomor halaman",
+      "skipCover": "Tutup ing halaman pisanan",
+      "total": "Tampil total halaman"
     },
     "fills": {
       "angle": "Sudut",
@@ -15448,7 +15505,8 @@
     "fonts": {
       "graphicCoverage": "Masukkan lapisan teks, grafik, dan tabel. Lapisan yang dikunci tetap menggunakan font aslinya.",
       "replaceDesign": "Kanggo nganti font ngendi-ngendi di desain ini.",
-      "source": "Font kanggo ngganti"
+      "source": "Font kanggo ngganti",
+      "target": "Font pengganti"
     },
     "gradients": {
       "importStyle": "Impor file gaya",
@@ -15467,7 +15525,12 @@
       "styleFileHint": "Kang ngarani warna gradien, posisi, transparansi, sudut, dan pengaturan radial antar perangkat. Import ngarani draft; guna kané ngawangi ngarani karya seni.",
       "styleFiles": "Tranfer gaya gradient",
       "styleLoaded": "Gaya udah dimasukin ke draft",
-      "svgHint": "Ngasilaké gradient iki ingkang ngembang ing ukuran page, ingkang ngemot posisi stop lan transparansi. Gunakaké ingkang béda-béda supaya bisa digunakaké ing desain."
+      "svgHint": "Ngasilaké gradient iki ingkang ngembang ing ukuran page, ingkang ngemot posisi stop lan transparansi. Gunakaké ingkang béda-béda supaya bisa digunakaké ing desain.",
+      "brandPalettes": "Palet lan warna gradasi sing disimpen",
+      "noBrandPalettes": "Simpen palet sing duwé setidaknya loro warna ing Brand styles kanggo nggunakaké ing sini.",
+      "preview": "Pra-liwat gradasi",
+      "remove": "Tutup stop",
+      "reverse": "Balik"
     },
     "graphicDraftHistory": {
       "local": "Rancangan Grafis",
@@ -15477,10 +15540,11 @@
     "grids": {
       "addPhoto": "Pilih foto kanggo pigura iki",
       "hint": "Gambar layout nyuwun, lan kanggo ngelanturin gambar kekepanekepane, ngelanturin frame lan ngelanturin gambar kekepanekepane. Double-click frame lan kanggo ngeditakekepane lan kanggo ngelanturakekepane dina group.",
-      "insert": "Insert photo grid",
+      "insert": "Lebokna kisi foto",
       "rounding": "Kelurusan sisi sudut",
       "spacing": "Kedhaan di pixel",
-      "title": "Gedhog foto"
+      "title": "Gedhog foto",
+      "frame": "Bingkai foto"
     },
     "groups": {
       "applyOpacity": "Kanggo ngelmukeke nglawane lan nglawane yén dipilih",
@@ -15494,7 +15558,11 @@
       "resize": "Kecilakeh pilihane",
       "scalePercent": "Pilih skala miturut persentase",
       "smaller": "Kecil-kecilan",
-      "ungroup": "Ungroup"
+      "ungroup": "Ungroup",
+      "applyRotation": "Pindhah seleksi",
+      "rotate": "Pindhah seleksi",
+      "rotateBy": "Pindhah {{degrees}}°",
+      "rotationDegrees": "Pindhah seleksi karo derajat"
     },
     "guides": {
       "clear": "Busak",
@@ -15516,7 +15584,13 @@
       "thirds": "Ketiga",
       "title": "Panduan lan Marginal",
       "vertical": "Vertikal",
-      "visible": "Tuduhna pandhuan"
+      "visible": "Tuduhna pandhuan",
+      "applyGrid": "Tetepaké grid",
+      "direction": "Arah panduan",
+      "gridPreview": "Pratinjau kisi pandhuan",
+      "gridTitle": "Kisi tata letak",
+      "resolution": "Adhedhasar {{dpi}} piksel saben inci",
+      "rulers": "Tampilna penggaris"
     },
     "help": {
       "keyboardHint": "Piyambaké karo tombol sing ndhuwur bisa dipigunakaké ing njaba saka bidang teks lan dialog. Aksi-aksi canvas butuh canvas dibukak. Cmd nggantungaké Ctrl ing Mac.",
@@ -15611,7 +15685,7 @@
       "colour": "Wewatesan sisi",
       "customPattern": "Pola khusus",
       "dashLengths": "Sapasang lan jarak antar titik",
-      "dashOffset": "Dash offset",
+      "dashOffset": "Geseran garis putus-putus",
       "pattern": "Garis pola",
       "width": "Garis pinggir lebar: {{value}}"
     },
@@ -15693,7 +15767,8 @@
       "number": "Foto {{number}}",
       "rotate": "Goyang urut gambar",
       "shuffle": "Goyangan foto",
-      "swap": "Ganti foto"
+      "swap": "Ganti foto",
+      "searchFrames": "Golek bingkai foto miturut jeneng utawa nomer"
     },
     "present": {
       "clearMarks": "Hapus tanda",
@@ -15764,7 +15839,7 @@
       "correction": "Korèk ingkes",
       "downloadCalendar": "Unduh acara kalender (.ics)",
       "downloadCalendarHint": "Simpan acara yang sama sebagai berkas kalender yang bisa diimpor.",
-      "downloadContact": "Download contact (.vcf)",
+      "downloadContact": "Undhuh kontak (.vcf)",
       "downloadContactHint": "Simpan detail kontak samae seperti file guna buat alamat buku.",
       "downloadSvg": "Gedhong QR segawe ing SVG",
       "failed": "Gunakake teks sing luwih cendhak lan rong warna hex sing beda.",
@@ -15774,7 +15849,8 @@
       "smsHint": "Kudu ngaweni draft pesen di perangkat yang dukung. Dukungan penulisan pesen lan pengisian pesen awal ngaruh ke app.",
       "useDetails": "Gunakake rincian iki",
       "vectorHint": "Kang ngeluarin draft QR code ingkang ada sarta warangga sarta zona tenan-nyo kanggo gambar vektor ingkang bisa diskalakan.",
-      "wifiContentHint": "Kontén QR yén dibanget ngarani kontén password jaringan."
+      "wifiContentHint": "Kontén QR yén dibanget ngarani kontén password jaringan.",
+      "title": "Kode QR"
     },
     "repeat": {
       "apply": "Nggawe kothak sing diulang",
@@ -15963,7 +16039,8 @@
       "transpose": "Tukar baris dan kolom",
       "undoRowCleanup": "Goyang baris pembersihan",
       "unmergeAll": "Kembalikan semua",
-      "weightsHint": "Sizingan ingkang ngaruh. Nilai 2 ngaruh duwur saking 1; table lanang ngawasih saking ukurane."
+      "weightsHint": "Sizingan ingkang ngaruh. Nilai 2 ngaruh duwur saking 1; table lanang ngawasih saking ukurane.",
+      "structureTarget": "Baris atau kolom untuk diedit"
     },
     "text": {
       "backgroundPerLine": "Sesuaikeun latar belakang tipe tipe",
@@ -16016,8 +16093,8 @@
       "search": "Kanggo ngisorake tools pencarian"
     },
     "vectorSelection": {
-      "applyFill": "Set fill",
-      "applyOutline": "Set outline",
+      "applyFill": "Setel isen",
+      "applyOutline": "Setel garis pinggir",
       "downloadSvg": "Unduh vektor yén dipilih saking SVG",
       "exportOptions": "Unduh karya vektor",
       "fill": "Warna isi",
@@ -16043,6 +16120,9 @@
       "toolbar": "Navigasi canvas",
       "zoomIn": "Zoomin canvas",
       "zoomOut": "Zoout canvas"
+    },
+    "frames": {
+      "title": "Bingkai foto"
     }
   },
   "jungleMood": {

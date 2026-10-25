@@ -12121,7 +12121,12 @@
       "showPresentation": "Dhiyeessii keessatti argisiisi",
       "transferHint": "Fuula 50 hanga ta'etti gophii, ykn gara tokkootti sochi. Gareewwan fi bakka buusuun filannoo hordofu. Sochii gochuun fuula kana qofa irratti dhiibbaa geessa; mul'anni biroo ni eegamu. Bakki itti deemu harka yeroo qabuun wal simachuu qaba.",
       "transferLayers": "Harka filataman gara fuulotaatti sochi ykn gophii",
-      "visibilityHint": "Fuulonni dhokatan kan gulaalamuu danda'an ta'anii turu akkasumas buufachuuf ni argamu."
+      "visibilityHint": "Fuulonni dhokatan kan gulaalamuu danda'an ta'anii turu akkasumas buufachuuf ni argamu.",
+      "allNotes": "Fuulonni {{count}} hundi faayilii yaadannoo tokko keessatti",
+      "duration": "Turtii fuula",
+      "jump": "Gara fuulaatti deemaa",
+      "layerDestinations": "Lakkoofsota fuula galma ykn hangawwan",
+      "moveEarlier": "Fuula duraan sochoosi"
     },
     "audioTools": {
       "normalize": "Sagalee idilee normalize gochuu",

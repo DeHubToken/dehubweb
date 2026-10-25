@@ -15583,7 +15583,8 @@
       "styleFileHint": "Överför gradientfärger, positioner, transparens, vinkel och radiella inställningar mellan enheter. Importera laddar utkastet; använd det för att uppdatera konstverk.",
       "styleFiles": "Överför gradientstilar",
       "styleLoaded": "Stil laddad i utkastet",
-      "svgHint": "Exporterar denna gradient vid sidstorleken, inklusive stoppositioner och transparens. Applicera den separat för att använda den i designen."
+      "svgHint": "Exporterar denna gradient vid sidstorleken, inklusive stoppositioner och transparens. Applicera den separat för att använda den i designen.",
+      "position": "Placering"
     },
     "graphicDraftHistory": {
       "local": "Grafiskt utkast",

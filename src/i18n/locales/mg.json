@@ -15046,7 +15046,7 @@
       "insert": "Hampiditra singantaharo",
       "inserted": "Nampidirina {{name}}",
       "keepProportions": "Tazony ny anjaran'ilay loharano rehefa ampidirina",
-      "layerCount": "{{count}} layers",
+      "layerCount": "Sosona {{count}}",
       "name": "Anaran'ilay singantaharo",
       "proportionHint": "Mifanaraka tsara amin'ny pejy loharanom-baovao ato amin'ity pejy ity, mitazona ny fametrahana ny asakanto mifandraika amin'izany. Ajanony ny fampiasana ny fandaminana mifandraika amin'ity pejy ity. Ireo singantaharo efa zokinjokiny tsy misy loharano dia mitazona ny fandaminana misy azy ireo.",
       "redoLibrary": "Fanovana ny tahirim-boky reo",
@@ -15084,7 +15084,8 @@
       "search": "Karoy ny sosona",
       "searchOverlap": "Karohy mifandimby sosona",
       "stackOrder": "Ny sosona ambony aloha",
-      "startAt": "Atombohy amin'ny"
+      "startAt": "Atombohy amin'ny",
+      "applyNames": "Ampiharo ireo anarana"
     },
     "blend": {
       "normal": "Mahazatra",
@@ -15462,7 +15463,7 @@
       "first": "Avy amin'ny andalana",
       "firstMatchingRecord": "Topazo maso ny firaketana mifandraika voalohany",
       "formatPlaceholder": "Manomana mpamaritra data iray",
-      "generate": "Generate {{count}} pages",
+      "generate": "Mamorona pejy {{count}}",
       "hint": "Ampiasao ho modely io pejy io ankehitriny. Mampifandray ny soratra sy ny QR sosona mba spreadsheet tsanganana, na asio andry anarana ao anatin'ny hantsana avo roa heny ao anatin'ny andinin-teny. Ny laharan-tariby voafantina tsirairay dia mamorona pejy vaovao; mijanona eo amin'ny toerana ny voalohany.",
       "importConnections": "Hampiditra rakitra fifandraisana",
       "keepTemplateField": "Ampiasao ny môdely sy ny placeholders",
@@ -15992,7 +15993,7 @@
       "hint": "Tsoahy avy amin'ny mpitondra iray mba hanampy mpitari-dalana. Safidio ny toro-lalana Edit mba hamindrana ireo mpitari-dalana, na hisintona azy ireo amin'ny pejy mba hanesorana azy ireo. Ny torolàlana sy ny sisiny dia tsy tafiditra ao amin'ny downloads.",
       "horizontal": "_Mandry",
       "margin": "Olotra",
-      "pixelPosition": "{{position}} pixels",
+      "pixelPosition": "Piksel {{position}}",
       "position": "Ny toerana toy ny isan-jato",
       "remove": "Esory {{direction}} guide amin'ny {{position}}%",
       "replaceExisting": "Soloy ireo toro-lalana misy",

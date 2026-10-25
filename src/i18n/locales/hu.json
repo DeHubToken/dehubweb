@@ -15192,7 +15192,7 @@
       "filterHint": "Legfeljebb három aktív feltételnek kell egyeznie. A szűrés megváltoztatja a megjelenített diagram- és grafikonexportálást, miközben megőrzi az összes forrássort. Az elnevezett sorozatú szűrők figyelmen kívül maradnak, ha az adott sorozatot eltávolítják vagy átnevezik. A folyamatábrák megtartják az első forrásértéküket.",
       "filterKind": "Szűrési feltétel",
       "filterLabelSummary": "Címke {{operator}} {{text}}",
-      "filterOperator": "Label matching rule",
+      "filterOperator": "Címkeegyezési szabály",
       "filterRowsSummary": "Forrássorok {{first}}–{{last}}",
       "filterSeries": "Szűrendő sorozat",
       "filterText": "Megfeleltetendő címkeszöveg",
@@ -16104,7 +16104,7 @@
       "listStart": "Kezdd el a számozást ekkor:",
       "listStyle": "Lista stílusa",
       "numbered": "Számozott lista",
-      "plain": "Plain text",
+      "plain": "Egyszerű szöveg",
       "strikethrough": "Áthúzott"
     },
     "textSearch": {

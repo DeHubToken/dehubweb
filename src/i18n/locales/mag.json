@@ -14548,7 +14548,10 @@
       "rename": "नाम बदलि देलकै",
       "replaceSelection": "चयन के साथ हल",
       "saveSelection": "सहेजें हलचल हलचल",
-      "undoLibrary": "हलांकि पुस्तकालय हलासन"
+      "undoLibrary": "हलांकि पुस्तकालय हलासन",
+      "title": "बचावल गइल आइटम",
+      "inserted": "{{name}} डाले गए",
+      "layerCount": "{{count}} परतें"
     },
     "layers": {
       "text": "टेक्स्ट",
@@ -14578,7 +14581,8 @@
       "search": "लेजर होल्डिंग्स, लेजर होल्डिंग्स",
       "searchOverlap": "ओवरलैप कैलक्यूलेटर",
       "stackOrder": "टॉप लेयर पहिले",
-      "startAt": "शुरुवात कर"
+      "startAt": "शुरुवात कर",
+      "lockedSkipped": "{{count}} लॉक परतें रखी गईं"
     },
     "blend": {
       "normal": "सामान्य",

@@ -16403,7 +16403,8 @@
       "listStart": "ابدأ الترقيم في",
       "numbered": "قائمة مرقمة",
       "plain": "نص عادي",
-      "strikethrough": "الشطب من خلاله"
+      "strikethrough": "الشطب من خلاله",
+      "listStyle": "نمط القائمة"
     },
     "textSearch": {
       "emptyAfterReplacement": "هذِى الطبقة سَتكون فارغة",

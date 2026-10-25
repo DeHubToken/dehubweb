@@ -15197,7 +15197,7 @@
       "allPdf": "Alle {{count}} sider i ett PDF",
       "allPptx": "Alle {{count}} sider i en presentasjon",
       "applyDuration": "Påfør varighet",
-      "batchDuration": "Set selected page durations",
+      "batchDuration": "Angi varighet for valgte sider",
       "batchNameHint": "Velg første linje i den største synlige overskriften på hver side. Eksisterende sidenavn forblir med mindre du velger å erstatte dem.",
       "batchNames": "Generer sidenavn",
       "choosePages": "Velg sider",
