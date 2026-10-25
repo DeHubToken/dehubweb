@@ -249,7 +249,7 @@ function CollageView({ posts, onImageClick, loaderRef, isFetchingNextPage, hasNe
                   </div>
                 </div>
               )}
-              <div className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-3 sm:gap-5">
+              <div data-grid-hover className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-3 sm:gap-5">
                 <div className="flex items-center gap-1 sm:gap-1.5 text-white">
                   <ThumbsUp className="w-4 h-4 sm:w-5 sm:h-5" />
                   <span className="font-semibold text-xs sm:text-sm">{post.likes.toLocaleString()}</span>
