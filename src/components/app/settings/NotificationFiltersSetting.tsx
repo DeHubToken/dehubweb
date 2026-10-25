@@ -1,3 +1,4 @@
+import { lazy, Suspense } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { Filter, UserCheck, UserPlus, UserX } from 'lucide-react';
@@ -16,6 +17,12 @@ const ROWS: Array<{ key: NotificationPolicyKey; icon: typeof Filter }> = [
   { key: 'notFollowers', icon: UserCheck },
   { key: 'newAccounts', icon: UserPlus },
 ];
+
+// The held-back list renders notification rows, which live with the
+// notifications page; load them only when this setting is on screen.
+const FilteredNotificationsSection = lazy(() =>
+  import('@/pages/app/NotificationsPage').then(m => ({ default: m.FilteredNotificationsSection })),
+);
 
 const VALUES: NotificationPolicyValue[] = ['accept', 'filter', 'drop'];
 
@@ -89,6 +96,11 @@ export function NotificationFiltersSetting() {
           </label>
         ))}
       </div>
+      {isAuthenticated && (
+        <Suspense fallback={null}>
+          <FilteredNotificationsSection />
+        </Suspense>
+      )}
     </div>
   );
 }
