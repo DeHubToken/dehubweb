@@ -2,8 +2,7 @@ import { useTranslation as _useCopy } from 'react-i18next';
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { BlogPost } from '@/types/blog';
-import { OptimizedImage } from '@/components/OptimizedImage';
-import { mediaImage, mediaImageSrcSet } from '@/lib/media-url';
+import { BlogBanner } from '@/components/blog/BlogBanner';
 import { formatDate } from '@/utils/blogUtils';
 import { usePublicPageLocale } from '@/hooks/usePublicPageLocale';
 import { localizedPageUrl } from '@/lib/seo/public-locales';
@@ -21,15 +20,14 @@ const RelatedPostCard: React.FC<{ post: BlogPost }> = ({ post }) => {
       to={url.pathname + url.search}
       className="group bg-plain-white rounded-lg shadow-sm hover:shadow-md transition-all duration-200 overflow-hidden border border-sky-blue/10"
     >
-      <div className="aspect-[40/21] overflow-hidden">
-        <OptimizedImage
-          src={mediaImage(post.bannerImage, { width: 480 })}
-          srcSet={mediaImageSrcSet(post.bannerImage, [360, 480, 736])}
-          sizes="(min-width: 768px) 300px, 100vw"
-          alt={translatedPage.data?.h1 || post.bannerImageAlt}
-          className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-200"
-        />
-      </div>
+      <BlogBanner
+        src={post.bannerImage}
+        width={480}
+        widths={[360, 480, 736]}
+        sizes="(min-width: 768px) 300px, 100vw"
+        alt={translatedPage.data?.h1 || post.bannerImageAlt}
+        imgClassName="group-hover:scale-105 transition-transform duration-200"
+      />
       <div className="p-4">
         <h4 className="font-semibold text-royal-blue group-hover:text-middle-blue transition-colors line-clamp-2 mb-2">
           {translatedPage.data?.h1 || post.title}
