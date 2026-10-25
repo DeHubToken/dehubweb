@@ -60,7 +60,7 @@ export function OffersTab() {
   }
 
   if (isLoading) {
-    return <div className="h-40 rounded-xl bg-white/5 animate-pulse" />;
+    return <div className="h-40 rounded-xl theme-skeleton animate-pulse" />;
   }
 
   const incoming = data?.incoming.filter(isLive) ?? [];

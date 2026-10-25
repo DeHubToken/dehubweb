@@ -101,7 +101,7 @@ export const VideoGlitchLoader = memo(function VideoGlitchLoader({
           )}
         </>
       ) : (
-        <div className="absolute inset-0 bg-white/[0.06] animate-pulse" />
+        <div className="absolute inset-0 theme-skeleton animate-pulse" />
       )}
       {glitch ? (
       <>
@@ -151,7 +151,7 @@ export const VideoGlitchLoader = memo(function VideoGlitchLoader({
       </>
       ) : (
         // Quiet loading state: the frame reads as pending without the noise.
-        showPoster && <div className="absolute inset-0 bg-white/[0.05] animate-pulse" />
+        showPoster && <div className="absolute inset-0 theme-skeleton animate-pulse" />
       )}
       {/* Vignette darken — only over a real poster frame */}
       {showPoster && <div className="absolute inset-0 bg-black/25" />}

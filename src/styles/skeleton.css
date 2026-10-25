@@ -1,0 +1,24 @@
+/* Loading blocks use the same foreground as their surrounding surface. */
+:root { --skeleton-fill: hsl(var(--foreground) / .08); }
+html[data-theme="minimal"] { --skeleton-fill: rgb(255 255 255 / .04); }
+html:is([data-theme="light"], [data-system-tone="light"]) { --skeleton-fill: rgb(11 11 13 / .08); }
+[data-keep-dark], [data-on-media] { --skeleton-fill: rgb(255 255 255 / .08); }
+.theme-skeleton,
+.home-skeleton-block {
+  background: var(--skeleton-fill) !important;
+}
+[data-skeleton-group] { background: hsl(var(--card)); }
+[data-skeleton-group] :is([class*="bg-zinc-8"], [class*="bg-zinc-7"], [class*="bg-white/"]) {
+  background: var(--skeleton-fill) !important;
+}
+@media (prefers-reduced-motion: no-preference) {
+  .theme-skeleton { animation: pulse 2s cubic-bezier(.4, 0, .6, 1) infinite; }
+}
+/* Theme surface remaps have deliberately high specificity. Loading blocks
+   retain their contrast even inside nav pills, dialogs and media slots. */
+html:is([data-theme="light"], [data-system-tone="light"]):not(#_):not(#_):not(#_):not(#_):not(#_):not(#_)
+  :is([data-skeleton], .theme-skeleton, .home-skeleton-block),
+html:is([data-theme="light"], [data-system-tone="light"]):not(#_):not(#_):not(#_):not(#_):not(#_):not(#_)
+  [data-skeleton-group] :is([class*="bg-zinc-8"], [class*="bg-zinc-7"], [class*="bg-white/"]) {
+  background: var(--skeleton-fill) !important;
+}

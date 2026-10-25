@@ -141,7 +141,7 @@ export function ArcadeLeaderboard({
       {isLoading ? (
         <div className="space-y-1.5">
           {Array.from({ length: 3 }, (_, i) => (
-            <div key={i} className="h-12 animate-pulse rounded-xl bg-zinc-900" />
+            <div key={i} className="h-12 animate-pulse rounded-xl theme-skeleton" />
           ))}
         </div>
       ) : rows.length === 0 ? (
