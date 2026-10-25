@@ -336,7 +336,7 @@ const PostCardBody = memo(function PostCard({ post, threadSlot, onOpenComments }
   const handleCardClick = useCallback((e: React.MouseEvent) => {
     // Swallow the ghost click left behind when a bottom sheet was just dismissed
     // by tapping the scrim — otherwise that tap navigates into the post.
-    if (wasDrawerJustDismissed()) return;
+    if (wasDrawerJustDismissed() || window.location.pathname === `/app/post/${post.id}`) return;
     const target = e.target as HTMLElement;
     const isInteractive = target.closest('button, a, input, textarea, [role="button"], [data-no-navigate]');
     if (isInteractive) return;

@@ -1,6 +1,7 @@
 import { act, cleanup, render, screen } from '@testing-library/react';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { WindowedFeedItem } from './WindowedFeedItem';
+import { dockRetainedPost, registerRetainedPost, type RetainedPostEntry } from '@/lib/retained-post-surface';
 
 let intersect: IntersectionObserverCallback;
 let resize: ResizeObserverCallback;
@@ -55,6 +56,30 @@ describe('windowed feed cards', () => {
     render(<WindowedFeedItem eager estimatedHeight={520} data-testid="slot"><div role="dialog" aria-modal="true">Reply</div></WindowedFeedItem>);
     visibility(screen.getByTestId('slot'), false);
     expect(screen.getByRole('dialog')).toBeTruthy();
+  });
+
+  it('keeps a docked post mounted when its source leaves the observer window', () => {
+    render(<WindowedFeedItem eager estimatedHeight={520} vanishOnDislike="retained-window" data-testid="slot">
+      <div data-testid="source"><div data-testid="card">Retained post</div></div>
+    </WindowedFeedItem>);
+    const source = screen.getByTestId('source') as HTMLDivElement;
+    const card = screen.getByTestId('card') as HTMLDivElement;
+    const dock = document.createElement('div');
+    document.body.appendChild(dock);
+    const entry: RetainedPostEntry = { id: 'retained-window', source, container: card, dock: null, restore: null };
+    let unregister = () => {}, restore = () => {};
+    act(() => {
+      unregister = registerRetainedPost(entry);
+      restore = dockRetainedPost(entry, dock);
+    });
+    visibility(screen.getByTestId('slot'), false);
+    expect(screen.getByTestId('source')).toBe(source);
+    expect(dock.contains(card)).toBe(true);
+    act(() => { restore(); unregister(); });
+    expect(source.contains(card)).toBe(true);
+    dock.remove();
+    visibility(screen.getByTestId('slot'), false);
+    expect(screen.queryByTestId('card')).toBeNull();
   });
 });
 
