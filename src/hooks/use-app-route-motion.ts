@@ -2,6 +2,8 @@ import { startTransition, useLayoutEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import type { Location } from 'react-router-dom';
 import { getSurface } from '@/lib/surface-motion';
+import { getRetainedPost, retainedPostId } from '@/lib/retained-post-surface';
+import { isHomeFeedRoute } from '@/lib/home-routes';
 import { ROUTE_CONTENT_READY, showRouteLoadingShell, type RouteLoadingShell } from '@/lib/route-loading-shell';
 
 function historyIndex(): number {
@@ -44,6 +46,14 @@ export function useAppRouteMotion(location: Location, reducedMotion: boolean | n
     const commit = () => {
       setDisplayed(previous => generation.current === token ? location : previous);
     };
+    // This trip moves an already-mounted card. A painted loading cover would
+    // hide the very content the reader just selected, including on Back.
+    const retainedTrip = (isHomeFeedRoute(displayed.pathname) && getRetainedPost(retainedPostId(location.pathname)))
+      || (isHomeFeedRoute(location.pathname) && getRetainedPost(retainedPostId(displayed.pathname)));
+    if (retainedTrip) {
+      commit();
+      return;
+    }
     if (!appNavigation || (displayed.pathname === location.pathname && sameProfile)) {
       commit();
       return;

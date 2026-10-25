@@ -1,5 +1,8 @@
 import { useTranslation as _useCopy } from 'react-i18next';
 import { useRouteContentReady } from '@/hooks/use-route-content-ready';
+import { bindRetainedComments } from '@/lib/retained-post-surface';
+import More from '@/components/ui/cut-icons/more';
+import { QuietPostLoading } from '@/components/app/QuietPostLoading';
 /**
  * Single Post Page
  * ================
@@ -83,7 +86,6 @@ import {
 } from '@/components/ui/drawer';
 import { formatTimeAgo, formatDuration, formatViews } from '@/lib/feed-utils';
 import { useAuth } from '@/contexts/AuthContext';
-import { VideoCardSkeleton, ImageCardSkeleton, PostCardSkeleton } from '@/components/app/feeds/FeedSkeletons';
 import { useFeedSwallowClip } from '@/hooks/use-feed-swallow-clip';
 import type { VideoItem, ImagePost, TextPost, LiveStream } from '@/types/feed.types';
 import { hlsUrlFor, liveProviderOf, noteLatencyMode } from '@/lib/live-ingest';
@@ -572,12 +574,7 @@ function NotFoundState() {
  * Loading state component
  */
 function LoadingState() {
-  return (
-    <div className="space-y-3 py-4">
-      <VideoCardSkeleton />
-      <PostCardSkeleton />
-    </div>
-  );
+  return <QuietPostLoading />;
 }
 
 /**
@@ -703,6 +700,8 @@ function DesktopCreatorInfo({
 }
 
 interface SinglePostPageProps {
+  /** The feed still owns the visible photo/text card; append only its details. */
+  detailsOnly?: boolean;
   /**
    * True when AppLayout renders this inside the from-feed post overlay. That
    * layer is its own scroll container, so the page must not touch the document
@@ -750,7 +749,7 @@ export default function SinglePostPage(props: SinglePostPageProps = {}) {
   );
 }
 
-function SinglePostPageContent({ inOverlay = false, overrideId }: SinglePostPageProps = {}) {
+function SinglePostPageContent({ inOverlay = false, overrideId, detailsOnly = false }: SinglePostPageProps = {}) {
   const { postId, tokenId, commentId } = useParams<{ postId?: string; tokenId?: string; commentId?: string }>();
   const navigate = useNavigate();
   const { t } = useI18n();
@@ -799,6 +798,18 @@ function SinglePostPageContent({ inOverlay = false, overrideId }: SinglePostPage
     }
     setShowPageComments((open) => !open);
   }, []);
+  const [detailsExpanded, setDetailsExpanded] = useState(false);
+  const retainedCommentsRef = useRef<HTMLDivElement>(null);
+  const scrollToRetainedComments = useRef(false);
+  useLayoutEffect(() => { setDetailsExpanded(false); }, [id]);
+  useLayoutEffect(() => {
+    if (!detailsOnly || !id) return;
+    return bindRetainedComments(String(id), tab => {
+      scrollToRetainedComments.current = true;
+      setDetailsExpanded(true);
+      handleOpenPageComments(tab);
+    });
+  }, [detailsOnly, id, handleOpenPageComments]);
   
   // Mobile/tablet vs desktop layout. The post used to open in a vaul bottom
   // sheet on mobile; it is now the same page it is on desktop, so this only
@@ -1047,7 +1058,7 @@ function SinglePostPageContent({ inOverlay = false, overrideId }: SinglePostPage
   const isFullBleedLive = contentType === 'live' && isMobileView;
   // An image post opens the same way a video post does on phone and tablet:
   // picture first, full width, the app's top chrome out of the way.
-  const isImmersiveImage = isImagePost && isMobileView;
+  const isImmersiveImage = !detailsOnly && isImagePost && isMobileView;
   useEffect(() => {
     const cls = isFullBleedLive ? 'immersive-live-mode' : (isVideoPost || isImmersiveImage) ? 'immersive-video-mode' : null;
     if (cls) document.body.classList.add(cls);
@@ -1214,6 +1225,11 @@ function SinglePostPageContent({ inOverlay = false, overrideId }: SinglePostPage
       forceInline
     />
   ) : null;
+  useLayoutEffect(() => {
+    if (!detailsOnly || !detailsExpanded || !post || !scrollToRetainedComments.current) return;
+    scrollToRetainedComments.current = false;
+    retainedCommentsRef.current?.scrollIntoView({ block: 'start', behavior: 'smooth' });
+  }, [detailsOnly, detailsExpanded, post, pageCommentsInitialTab]);
 
   const renderStage = () => {
     if (!post || !id) return null;
@@ -1492,7 +1508,22 @@ function SinglePostPageContent({ inOverlay = false, overrideId }: SinglePostPage
   const isLivePost = contentType === 'live';
 
   const renderPostContent = () => (
-    useStage ? (
+    detailsOnly ? (
+      <section data-retained-post-details className="pt-3">
+        <button type="button" data-retained-details-toggle aria-expanded={detailsExpanded}
+          aria-label={_copy('common.more', { defaultValue: 'More' })}
+          onClick={() => setDetailsExpanded(value => !value)}
+          className="mx-auto flex h-10 w-10 items-center justify-center rounded-xl text-white hover:bg-white/10">
+          <More className="h-5 w-5" />
+        </button>
+        {detailsExpanded && <div ref={retainedCommentsRef}>
+          {isImagePost && id && parseInt(id, 10) > 0 && <PollCard tokenId={parseInt(id, 10)} />}
+          {pageComments}
+          {showRelated && isImagePost && id && <RelatedImagesFeed currentPostId={id} />}
+          {showRelated && isTextPost && id && <RelatedPostsFeed currentPostId={id} />}
+        </div>}
+      </section>
+    ) : useStage ? (
       renderStage()
     ) : isImmersiveImage ? (
       /* Same shape as the phone video post: media at the very top, edge to
@@ -1587,7 +1618,7 @@ function SinglePostPageContent({ inOverlay = false, overrideId }: SinglePostPage
           scrolling content (not an outer margin) so the post scrolls up UNDER the
           sticky nav pill and is swallowed at its rounded top edge on the glass
           themes, exactly like the home feed. */}
-      {useStage ? (
+      {useStage && !detailsOnly ? (
         renderPostContent()
       ) : (
       <div
