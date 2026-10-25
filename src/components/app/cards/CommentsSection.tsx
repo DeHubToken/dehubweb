@@ -122,7 +122,9 @@ import { CommentLikersDrawer } from './CommentLikersDrawer';
 import { FullscreenImageViewerLazy } from './FullscreenImageViewerLazy';
 import { toast } from 'sonner';
 import { createVoiceRecorder, voiceRecordingBlob, VOICE_RECORDING_SECONDS } from '@/lib/voice-recording';
-import { emitCommentCreated, emitCommentsDeleted } from '@/lib/comment-count-events';
+import { emitCommentsDeleted } from '@/lib/comment-count-events';
+import { deliverReply, replyIdOf, useReplyDelivery } from '@/lib/reply-delivery';
+import { useCommentCount } from '@/lib/comment-count-store';
 import { useMention } from '@/hooks/use-mention';
 import { useAssistantPendingReply } from '@/hooks/use-assistant-pending-reply';
 import { ASSISTANT_AVATAR, mentionsAssistant, isAssistantAddress } from '@/lib/assistant';
@@ -472,6 +474,7 @@ const CommentItemBody = memo(function CommentItem({ comment, tokenId, onLike, on
   // like, edit or delete was simply refused. The real row replaces it the
   // moment the post lands, so until then it offers nothing.
   const isPending = comment.id.startsWith('temp-');
+  const delivery = useReplyDelivery(tokenId, comment.id);
 
   // Creator on one side, name-wearer on the other. Both chips are about the
   // same question a reader is asking — is this really them — so they live
@@ -508,7 +511,7 @@ const CommentItemBody = memo(function CommentItem({ comment, tokenId, onLike, on
     <motion.div
       initial={{ opacity: 0, y: 10 }}
       animate={{ opacity: 1, y: 0 }}
-      className="relative flex items-start gap-3 py-3 cursor-pointer"
+      className={cn("relative flex items-start gap-3 py-3 cursor-pointer rounded-xl", delivery?.status === 'posted' && 'reply-text-glow bg-muted/40')}
       data-comment-id={comment.id}
       /*
         Tap the comment to answer it.
@@ -635,6 +638,19 @@ const CommentItemBody = memo(function CommentItem({ comment, tokenId, onLike, on
           )}
           <span data-war-readout className="text-zinc-500 text-[13px] leading-5">{comment.timeAgo}</span>
         </div>
+        {delivery && (
+          <div role="status" aria-live="polite" className="flex items-center gap-2 text-xs text-zinc-400 py-1">
+            {delivery.status === 'sending' ? i18n.t('toasts.sending') : delivery.status === 'posted' ? i18n.t('toasts.comment_posted') : (
+              <>
+                <span>{delivery.error || i18n.t('toasts.failed_to_post_comment')}</span>
+                <button type="button" className="min-h-9 px-2 underline underline-offset-2" onClick={event => {
+                  event.stopPropagation();
+                  void delivery.retry?.();
+                }}>{i18n.t('common.retry')}</button>
+              </>
+            )}
+          </div>
+        )}
         {isEditing ? (
           <div className="flex items-center gap-2 mt-1">
             <input
@@ -961,6 +977,7 @@ const CommentItem = memo(function FilteredCommentItem(props: CommentItemProps) {
 // ============================================================================
 
 function CommentsSectionForAccount({ tokenId, onClose, initialTab, embedded = false, commentsDisabled = false, replyPolicy, forKids = false, postAuthorAddress, onDirtyChange, page = false, stage = false, stageCount, onStageTabChange }: CommentsSectionProps) {
+  const displayStageCount = useCommentCount(stage ? tokenId : undefined, stageCount ?? 0);
   // A kids post's thread is open to Kids Mode only. The post's own author is
   // exempt server-side, but they are also the one person who can always reach
   // it, so there is nothing to show them here.
@@ -1361,10 +1378,16 @@ function CommentsSectionForAccount({ tokenId, onClose, initialTab, embedded = fa
   });
 
   // Combine API comments with optimistic ones and apply like/edit/delete overrides
+  useEffect(() => {
+    const ids = new Set((apiComments ?? []).map(comment => String(comment.id)));
+    setOptimisticComments(previous => previous.some(comment => ids.has(comment.id))
+      ? previous.filter(comment => !ids.has(comment.id)) : previous);
+  }, [apiComments]);
+
   const allComments = useMemo(() => {
     const mapped = apiComments?.map(mapApiComment) || [];
     const apiIds = new Set(mapped.map(c => c.id));
-    const pending = optimisticComments.filter(c => !apiIds.has(c.id) && c.id.startsWith('temp-'));
+    const pending = optimisticComments.filter(c => !apiIds.has(c.id));
     const combined = [...pending, ...mapped];
 
     /**
@@ -2180,6 +2203,7 @@ function CommentsSectionForAccount({ tokenId, onClose, initialTab, embedded = fa
       timeAgo: t('comments.justNow'),
       createdAt: new Date(),
       voiceNote: voiceNote || undefined,
+      imageUrl: commentImagePreview || commentGifUrl || undefined,
       replyToId: replyTo?.id,
       address: userAddress,
     };
@@ -2200,17 +2224,19 @@ function CommentsSectionForAccount({ tokenId, onClose, initialTab, embedded = fa
     const submittedText = newComment;
     setIsSubmitting(true);
 
-    try {
+    await deliverReply({
+      tokenId,
+      tempId,
+      onStart: () => { setIsSubmitting(true); submitInFlightRef.current = true; },
+      request: async () => {
       if (voiceNote) {
         // Voice note comment via /api/comment_audio
         const audioBlob = await fetch(voiceNote.url).then(r => r.blob());
-        // Thrown rather than returned: the refusal path below is what takes
-        // the optimistic row back off the list and puts the draft back in the
-        // composer. An early return here left both behind.
+        // A refused upload keeps its original attachment available for Retry.
         if (audioBlob.size > 2 * 1024 * 1024) {
           throw new Error(t('comments.voiceNoteTooLarge'));
         }
-        await addVoiceComment({
+        return await addVoiceComment({
           tokenId: parseInt(tokenId, 10),
           audioFile: audioBlob,
           content: newComment || undefined,
@@ -2221,7 +2247,7 @@ function CommentsSectionForAccount({ tokenId, onClose, initialTab, embedded = fa
         // be the dedicated GIF endpoint: /api/comment_image only ever looks
         // at an uploaded file, so a hosted URL posted through it would save
         // as a caption with no GIF attached.
-        await addGifComment({
+        return await addGifComment({
           tokenId: parseInt(tokenId, 10),
           content: newComment,
           gifUrl,
@@ -2232,7 +2258,7 @@ function CommentsSectionForAccount({ tokenId, onClose, initialTab, embedded = fa
         // this has to go straight there as multipart/form-data — no separate
         // upload-then-post-URL step (that silently dropped the image, since
         // the backend never looks at a JSON imageUrl).
-        await addImageComment({
+        return await addImageComment({
           tokenId: parseInt(tokenId, 10),
           imageFile,
           content: newComment,
@@ -2245,25 +2271,29 @@ function CommentsSectionForAccount({ tokenId, onClose, initialTab, embedded = fa
           replyToId: replyTarget?.id,
           mentions: newComment.match(/@\w+/g) || [],
         });
-        await postComment(tokenId, newComment, replyTarget?.id);
+        return await postComment(tokenId, newComment, replyTarget?.id);
       }
+      },
+      onSuccess: async result => {
+      const realId = replyIdOf(result);
+      if (realId != null) setOptimisticComments(prev => prev.map(c => c.id === tempId ? { ...c, id: String(realId) } : c));
       if (loadDraft(commentDraftScope)?.text === submittedText) clearDraft(commentDraftScope);
       coachReset();
       setReplyTo(current => current?.id === replyTarget?.id ? null : current);
       setNewComment.complete(submittedText, '');
-      setVoiceNote(null);
+      setVoiceNote(current => current === audioNote ? null : current);
       // Not removeVoiceNote: the URL has to outlive this, to be put back if the
       // post fails. The player built on it goes now, though.
       releasePreviewAudio();
-      removeCommentImage();
-      removeCommentGif();
+      setCommentImage(current => current === imageFile ? null : current);
+      setCommentImagePreview(current => current === commentImagePreview ? null : current);
+      setCommentGifUrl(current => current === gifUrl ? null : current);
       setIsInputExpanded(false);
       // Reset textarea inline height set by auto-resize
       if (inputRef.current) {
         inputRef.current.style.height = '';
       }
       await queryClient.refetchQueries({ queryKey: ['comments', tokenId] });
-      emitCommentCreated(tokenId);
       setOptimisticComments(prev => prev.filter(c => c.id !== tempId));
       // Posted, and the row that played it from here is gone with the line
       // above: nothing reads the recording's object URL any more.
@@ -2271,19 +2301,21 @@ function CommentsSectionForAccount({ tokenId, onClose, initialTab, embedded = fa
       // The refetch above is always too early for a tagged assistant — it has
       // to call the model first — so hand off to the poller.
       if (mentionsAssistant(newComment)) armAssistantReply();
-    } catch (err) {
-      setOptimisticComments(prev => prev.filter(c => c.id !== tempId));
+      },
+      onFailure: err => {
       // Text and attachments remain in the composer until the request succeeds.
       // The server's own words when it has them — a refusal explains itself
       // ("comments are turned off", a link that cannot be posted) and a
       // generic failure message would leave the author guessing.
       toast.error(err instanceof Error && err.message ? err.message : t('toasts.failed_to_post_comment'));
       console.error('Comment error:', err);
-    } finally {
+      },
+      onSettled: () => {
       setIsSubmitting(false);
       submitInFlightRef.current = false;
-    }
-  }, [newComment, voiceNote, commentImage, commentGifUrl, isSubmitting, isAuthenticated, user, replyTo, tokenId, commentDraftScope, queryClient, armAssistantReply, coachReset, t]);
+      },
+    });
+  }, [newComment, voiceNote, commentImage, commentImagePreview, commentGifUrl, isSubmitting, isAuthenticated, user, replyTo, tokenId, commentDraftScope, queryClient, armAssistantReply, coachReset, t]);
 
   /**
    * What every Post control calls. On a Common Ground thread the first reply
@@ -2459,7 +2491,7 @@ function CommentsSectionForAccount({ tokenId, onClose, initialTab, embedded = fa
             <h2 data-stage-ink className="text-[17px] font-bold">
               {t('postStage.comments', 'Comments')}
               {typeof stageCount === 'number' && (
-                <span data-stage-muted className="ml-1.5 font-semibold tabular-nums">{stageCount}</span>
+                <span data-stage-muted className="ml-1.5 font-semibold tabular-nums">{displayStageCount}</span>
               )}
             </h2>
           )}
