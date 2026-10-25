@@ -38,6 +38,8 @@ import EyeOff from "@/components/ui/cut-icons/hidden";
 
 import Download from "@/components/ui/cut-icons/download";
 import X from "@/components/ui/cut-icons/close";
+import Play from "@/components/ui/cut-icons/play";
+import Pause from "@/components/ui/cut-icons/pause";
 import ThumbsUp from "@/components/ui/cut-icons/like";
 import MessageSquare from "@/components/ui/cut-icons/messages";
 import Bookmark from "@/components/ui/cut-icons/save";
@@ -94,13 +96,14 @@ import { useQueryClient } from '@tanstack/react-query';
 import { VideoSlide } from './VideoSlide';
 import { pauseMediaIn, resumeMedia } from '@/lib/pause-media-in';
 import { useVideoFullscreen } from '@/hooks/use-video-fullscreen';
+import { useInAppVideoMini } from '@/hooks/use-in-app-video-mini';
+import '@/styles/shorts-mini.css';
 import { setVoteCache, getVoteCache } from '@/lib/vote-cache';
 import { getVideoPreferences, getPlaybackRateFor, setPlaybackRate as vpSetPlaybackRate, PLAYBACK_RATES, formatRate, useMediaMuted } from '@/lib/video-preferences';
 import { videoPlaybackManager } from '@/lib/video-playback-manager';
 import { createWheelGesture } from '@/lib/wheel-gesture';
 import { completesSwipeBack } from '@/lib/swipe-back';
 import { useAnyOverlayOpen } from '@/lib/overlay-open';
-import { lockBodyScroll } from '@/lib/body-scroll-lock';
 import { UserMentionDropdown } from '@/components/app/mentions';
 import { usePostLinkCopyCount, useLinkCopyFloor, useTrackPostLinkCopy } from '@/hooks/use-link-copy-count';
 import { viewerShareUrl } from '@/lib/share-url';
@@ -499,6 +502,9 @@ export function ShortsViewer({ shorts, initialIndex, onClose, onLoadMore, hasMor
     // rather than a dead button.
     allowSimulated: true,
   });
+  const mini = useInAppVideoMini(containerRef, currentIndex, !isFullscreen && !showComments);
+  const minimizedRef = useRef(mini.minimized);
+  minimizedRef.current = mini.minimized;
 
   /**
    * Radix portals every modal and drawer to <body>, which is *outside* the
@@ -878,26 +884,8 @@ export function ShortsViewer({ shorts, initialIndex, onClose, onLoadMore, hasMor
   const leadReaction = resolveThumbReaction(localReactionCounts, myReaction);
   const thumbCount = resolveThumbCount(localLikeCount, localDislikeCount, leadReaction);
 
-  // Lock body scroll when viewer is open, and flag the fullscreen state so the
-  // top nav bars (home tab bar z-[110], mobile header z-[60]) drop beneath the
-  // viewer and get frosted by its backdrop-blur instead of poking through sharp.
-  // See the `body.shorts-viewer-open` rules in index.css.
-  useEffect(() => {
-    const releaseScrollLock = lockBodyScroll('shorts-viewer');
-    // NB: do NOT set `touch-action: none` on <body>. It cascades to the whole
-    // subtree and kills touch-scrolling inside the inline comments panel
-    // (which is a descendant, not a portalled drawer), leaving the sheet
-    // frozen. `overflow: hidden` already locks the page, and body keeps its
-    // global `overscroll-behavior: none` from index.css to stop pull-to-refresh.
-    document.body.classList.add('shorts-viewer-open');
-
-    return () => {
-      releaseScrollLock();
-      document.body.classList.remove('shorts-viewer-open');
-    };
-  }, []);
-
   const goToNext = useCallback(() => {
+    if (minimizedRef.current) return;
     if (isMobile && showComments) return;
     if (transitioningRef.current) { queuedStep.current = 'next'; return; }
     if (currentIndex < shorts.length - 1) {
@@ -912,6 +900,7 @@ export function ShortsViewer({ shorts, initialIndex, onClose, onLoadMore, hasMor
   }, [currentIndex, shorts.length, hasMore, isLoadingMore, onLoadMore, isTransitioning, isMobile, showComments]);
 
   const goToPrev = useCallback(() => {
+    if (minimizedRef.current) return;
     if (isMobile && showComments) return;
     if (transitioningRef.current) { queuedStep.current = 'prev'; return; }
     if (currentIndex > 0) {
@@ -956,6 +945,7 @@ export function ShortsViewer({ shorts, initialIndex, onClose, onLoadMore, hasMor
   // handler catches the gesture wherever it is dispatched.
   useEffect(() => {
     const handleWheel = (e: WheelEvent) => {
+      if (minimizedRef.current) return;
       // Regions that own their own scrolling (the desktop comments panel) opt
       // out by attribute. This has to be a target test rather than the
       // `stopPropagation` it replaces: a window-level capture listener runs
@@ -995,6 +985,7 @@ export function ShortsViewer({ shorts, initialIndex, onClose, onLoadMore, hasMor
 
   // Handle keyboard navigation
   useEffect(() => {
+    if (mini.minimized) return;
     const handleKeyDown = (e: KeyboardEvent) => {
       const tag = (e.target as HTMLElement)?.tagName;
       if (tag === 'INPUT' || tag === 'TEXTAREA' || (e.target as HTMLElement)?.isContentEditable) return;
@@ -1019,7 +1010,7 @@ export function ShortsViewer({ shorts, initialIndex, onClose, onLoadMore, hasMor
 
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [goToNext, goToPrev, onClose, isFullscreen, toggleFullscreen, showComments, toggleMute]);
+  }, [goToNext, goToPrev, onClose, isFullscreen, toggleFullscreen, showComments, toggleMute, mini.minimized]);
 
   // Handle drag for visual feedback during swipe
   const isRestoreDrag = useCallback((info: PanInfo) => {
@@ -1032,11 +1023,13 @@ export function ShortsViewer({ shorts, initialIndex, onClose, onLoadMore, hasMor
   }, [isMobile, overlaysHidden, autoHidden, showComments, videoContainer]);
 
   const handleDrag = useCallback((_: any, info: PanInfo) => {
+    if (mini.drag(info)) { setDragOffset(0); return; }
     setDragOffset(Math.abs(info.offset.x) > Math.abs(info.offset.y) ? 0 : info.offset.y);
-  }, [setDragOffset]);
+  }, [setDragOffset, mini.drag]);
 
   const handleDragEnd = useCallback((_: any, info: PanInfo) => {
     resetDragOffset();
+    if (mini.finish(info)) return;
 
     // Restoring the caption must not consume a valid navigation flick.
     if (isRestoreDrag(info)) {
@@ -1056,7 +1049,7 @@ export function ShortsViewer({ shorts, initialIndex, onClose, onLoadMore, hasMor
     } else if (info.offset.y > swipeThreshold || info.velocity.y > velocityThreshold) {
       goToPrev();
     }
-  }, [goToNext, goToPrev, isRestoreDrag, resetDragOffset]);
+  }, [goToNext, goToPrev, isRestoreDrag, resetDragOffset, mini.finish]);
 
   // Toggle play/pause - only shows indicator on explicit tap
   /**
@@ -1414,6 +1407,9 @@ export function ShortsViewer({ shorts, initialIndex, onClose, onLoadMore, hasMor
       // becomes the white page instead of letting the feed show through.
       data-media-full={isMobile ? '' : undefined}
       data-shorts-viewer
+      data-shorts-mini={mini.minimized || undefined}
+      layout
+      transition={{ layout: { duration: mini.reducedMotion ? 0 : 0.22, ease: 'easeOut' } }}
       className={cn("fixed inset-0 z-[60] flex items-center justify-center", isMobile ? "bg-black" : "bg-black/60 backdrop-blur-[24px]")}
       // The viewer runs its own swipe-back; see handleTouchStart.
       data-swipe-back-ignore={isMobile ? '' : undefined}
@@ -1423,19 +1419,22 @@ export function ShortsViewer({ shorts, initialIndex, onClose, onLoadMore, hasMor
       // drag (it sets `touch-action: pan-x` on the drag layer itself).
       style={{
         overscrollBehavior: 'contain',
+        scale: mini.scale,
+        y: mini.y,
         ...(commentsViewport.height !== null ? {
           top: commentsViewport.offsetTop,
           bottom: 'auto',
           height: commentsViewport.height,
         } : {}),
+        ...mini.frame,
       }}
-      onTouchStart={handleTouchStart}
-      onTouchMove={handleTouchMove}
-      onTouchEnd={handleTouchEnd}
+      onTouchStart={mini.minimized ? undefined : handleTouchStart}
+      onTouchMove={mini.minimized ? undefined : handleTouchMove}
+      onTouchEnd={mini.minimized ? undefined : handleTouchEnd}
     >
       {theme === 'glass' && !isMobile && <GlassBackground />}
       {/* Desktop Layout with Side Panels */}
-      <div className={cn("relative flex h-full", isMobile ? "w-full flex-col" : "items-center justify-center gap-4 px-4")}>
+      <div data-shorts-layout className={cn("relative flex h-full", isMobile ? "w-full flex-col" : "items-center justify-center gap-4 px-4")}>
         
         {/* Left Side - Desktop Only: prev/next navigation. The action buttons
             now live in a horizontal bar across the bottom of the video (feed
@@ -1468,6 +1467,7 @@ export function ShortsViewer({ shorts, initialIndex, onClose, onLoadMore, hasMor
             comments panel below can take the bottom half (Instagram-style split). */}
         <motion.div
           ref={attachVideoContainer}
+          data-shorts-player
           data-media-full
           data-keep-dark
           className={cn(
@@ -1493,21 +1493,23 @@ export function ShortsViewer({ shorts, initialIndex, onClose, onLoadMore, hasMor
           )}
           animate={isMobile ? { height: showComments ? '50%' : '100%' } : undefined}
           transition={SMOOTH_TRANSITION}
-          onPointerCancelCapture={() => { resetDragOffset(); endTimelineSeek(); }}
+          onPointerCancelCapture={() => { mini.cancel(); resetDragOffset(); endTimelineSeek(); }}
           onMouseMove={isMobile ? undefined : handleDesktopPointerMove}
           onMouseLeave={isMobile ? undefined : handleDesktopPointerLeave}
         >
           
           {/* Draggable carousel container */}
           <motion.div
+            data-shorts-pager
             className="absolute inset-0"
-            drag={isTimelineSeeking || (isMobile && showComments) ? false : 'y'}
-            dragListener={!isTimelineSeeking && !(isMobile && showComments)}
+            drag={mini.minimized || isTimelineSeeking || (isMobile && showComments) ? false : 'y'}
+            dragListener={!mini.minimized && !isTimelineSeeking && !(isMobile && showComments)}
             dragDirectionLock
             dragConstraints={{ top: 0, bottom: 0 }}
             dragElastic={0}
             dragMomentum={false}
             onDrag={handleDrag}
+            onDragStart={mini.start}
             onDragEnd={handleDragEnd}
           >
             {/* Render window of 3 videos (prev/current/next), plus the slide
@@ -2164,6 +2166,16 @@ export function ShortsViewer({ shorts, initialIndex, onClose, onLoadMore, hasMor
           </div>
         )}
       </div>
+
+      {mini.minimized && <div data-shorts-mini-controls>
+        <button className="absolute inset-0" onClick={mini.restore} aria-label={_copy('copy.a76e13b98392', { defaultValue: 'Restore' })} />
+        <div className="absolute top-1 right-1 flex gap-1">
+          <button className={VIEWER_CONTROL} onClick={() => setIsPaused(value => !value)} aria-label={isPaused ? _copy('copy.436e61016e26', { defaultValue: 'Play' }) : _copy('copy.858e4ba7a29f', { defaultValue: 'Pause' })}>
+            {isPaused ? <Play className="w-5 h-5" /> : <Pause className="w-5 h-5" />}
+          </button>
+          <button className={VIEWER_CONTROL} onClick={onClose} aria-label={_copy('copy.7d9eb7acb13e', { defaultValue: 'Close' })}><X className="w-5 h-5" /></button>
+        </div>
+      </div>}
 
       {/* Mobile top header controls - TikTok style - animated with chromeHidden */}
       {isMobile && (
