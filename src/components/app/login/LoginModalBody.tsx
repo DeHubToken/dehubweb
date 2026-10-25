@@ -8,7 +8,7 @@ import '@/styles/login-stack.css';
  * same frame as the click, while this (wagmi, the wallet steps, RainbowKit)
  * arrives behind it. See the note at the top of LoginModal.tsx.
  */
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { useAccount, useConnect, useConnectors, useDisconnect } from 'wagmi';
 import { useTranslation } from 'react-i18next';
 import { Mail, Phone, Loader2, Fingerprint, ArrowDownToLine, KeyRound } from "lucide-react";
@@ -194,6 +194,7 @@ function LoginModalBodyInner({ open, step, setStep, layout = 'default' }: LoginM
   const [email, setEmail] = useSurfaceDraft("src/components/app/login/LoginModalBody.tsx:email", '');
   const [emailCode, setEmailCode] = useState('');
   const [emailError, setEmailError] = useState('');
+  const emailInputRef = useRef<HTMLInputElement>(null);
   const [phone, setPhone] = useSurfaceDraft("src/components/app/login/LoginModalBody.tsx:phone", '');
   const [phoneCode, setPhoneCode] = useState('');
   const [phoneError, setPhoneError] = useState('');
@@ -370,14 +371,15 @@ function LoginModalBodyInner({ open, step, setStep, layout = 'default' }: LoginM
     setEmailError('');
 
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!emailRegex.test(email)) {
-      setEmailError(t('loginModal.invalidEmail'));
+    if (!emailRegex.test(email.trim())) {
+      setEmailError(email.trim() ? t('loginModal.invalidEmail') : t('loginModal.emailPlaceholder'));
+      emailInputRef.current?.focus();
       return;
     }
 
     setActiveProvider('email');
     try {
-      await connectWithEmail(email);
+      await connectWithEmail(email.trim());
       setStep('email-waiting');
     } catch (error) {
       console.error('Email login failed:', error);
@@ -875,6 +877,7 @@ function LoginModalBodyInner({ open, step, setStep, layout = 'default' }: LoginM
         <div className="relative">
           <Input
             id="login-stack-email"
+            ref={emailInputRef}
             type="email"
             inputMode="email"
             autoComplete="email"
@@ -964,6 +967,7 @@ function LoginModalBodyInner({ open, step, setStep, layout = 'default' }: LoginM
         <div className="space-y-2">
           <Input
             type="email"
+            ref={emailInputRef}
             placeholder={t('loginModal.emailPlaceholder')}
             value={email}
             onChange={(e) => setEmail(e.target.value)}

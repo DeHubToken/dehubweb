@@ -1,4 +1,4 @@
-/* Phone sign-in sheet hero (LoginShortsStack): two lanes of clips drifting in
+/* Responsive sign-in hero: lanes of clips drifting in
    opposite directions, faded into the sheet with a mask so it works on any
    theme's background. Per-theme accents follow the theme on <html>. */
 .login-stack {
@@ -19,9 +19,8 @@ html[data-system-tone="light"] .login-stack {
   --ls-tile-line: rgba(11, 11, 13, 0.08);
 }
 
-/* Wider than the form: the scroll area pads 24px, the lanes sit 10px in. They
-   start at the very top, under the floating logo and Explore button, so the
-   only fade is at the bottom where the headline sits. */
+/* Wider than the form: the scroll area pads 24px, the lanes sit 10px in.
+   Fade only at the bottom where the headline sits. */
 .login-stack__lanes {
   position: relative;
   margin: 0 -14px;
@@ -50,6 +49,7 @@ html[data-system-tone="light"] .login-stack-corner {
 }
 .login-stack__lane {
   display: flex;
+  align-self: start;
   flex-direction: column;
   gap: 8px;
   animation: ls-up 32s linear infinite;
@@ -122,11 +122,18 @@ html[data-system-tone="light"] .login-stack-corner {
   width: 100%;
 }
 @media (min-width: 768px) {
-  .login-stack-scroll > .login-stack,
+  .login-stack-scroll > .login-stack {
+    width: calc(100% + 28px);
+    align-self: center;
+  }
   .login-stack-scroll > .login-stack-form {
     max-width: 480px;
     margin-left: auto;
     margin-right: auto;
+  }
+  .login-stack-scroll .login-stack__lanes {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    margin: 0;
   }
 }
 
@@ -139,10 +146,10 @@ html[data-system-tone="light"] .login-stack-corner {
 
 @keyframes ls-up {
   from { transform: translateY(0); }
-  to { transform: translateY(-50%); }
+  to { transform: translateY(calc(-50% - 4px)); }
 }
 @keyframes ls-down {
-  from { transform: translateY(-50%); }
+  from { transform: translateY(calc(-50% - 4px)); }
   to { transform: translateY(0); }
 }
 @media (prefers-reduced-motion: reduce) {
@@ -165,7 +172,9 @@ html[data-system-tone="light"] .login-stack-corner {
 }
 .login-stack-option__disc {
   width: 100%;
-  height: 56px;
+  max-width: 48px;
+  height: auto;
+  aspect-ratio: 1;
   border-radius: 16px;
   display: flex;
   align-items: center;
