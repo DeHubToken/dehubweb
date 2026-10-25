@@ -635,10 +635,11 @@ function FeedDescription({
 }) {
   const { t: _copy } = _useCopy();
   const [expanded, setExpanded] = useState(false);
-  // A single tap on the title or description opens the post, like the rest of
-  // the card; two and three taps still react. Links and "See more" keep theirs.
+  // Text opens immediately. Media retains multi-tap reactions; links and
+  // "See more" keep their own actions.
   const tapGestures = useTapGestures({
     postId,
+    singleTapOnly: true,
     reactionArea: 'center',
     disabled,
     enableLongPress: false,

@@ -12,6 +12,7 @@
 import React, { Suspense, useState, useEffect, useMemo, useRef, memo } from 'react';
 import { useLocation, useParams } from 'react-router-dom';
 import { BUY_PATHS } from '@/lib/buy-route';
+import { RouteContentReady } from '@/hooks/use-route-content-ready';
 import { useSidebarCollapse } from '@/contexts/SidebarCollapseContext';
 import { lazyWithRetry } from '@/lib/lazy-with-retry';
 import { ErrorBoundary } from '@/components/ErrorBoundary';
@@ -209,6 +210,7 @@ const CachedPage = memo(function CachedPage({
           transient fault self-heal on the next navigation. */}
       <ErrorBoundary compact resetKey={resetToken} label={config.key}>
         <Suspense fallback={<SkeletonComponent />}>
+          <RouteContentReady active={isActive} />
           {/* Only the active page may write document metadata — see the context. */}
           <CachedPageActiveContext.Provider value={shouldStayVisible}>
             <Component />
