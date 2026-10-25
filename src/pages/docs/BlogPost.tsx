@@ -15,8 +15,7 @@ import { BlogPostBody } from '@/components/blog/BlogPostBody';
 import { BlogPostFooter } from '@/components/blog/BlogPostFooter';
 import { RelatedPosts } from '@/components/blog/RelatedPosts';
 import { BreadcrumbNavigation } from '@/components/blog/BreadcrumbNavigation';
-import { OptimizedImage } from '@/components/OptimizedImage';
-import { mediaImage, mediaImageSrcSet } from '@/lib/media-url';
+import { BlogBanner } from '@/components/blog/BlogBanner';
 import { useBlogData } from '@/hooks/useBlogData';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { getBlogShareImageUrl } from '@/lib/blogShareImage';
@@ -164,27 +163,26 @@ const BlogPost = () => {
           ) : (
             <>
               {/* Banner still renders instantly from bundled metadata */}
-              <div className="mb-8 rounded-2xl overflow-hidden w-full">
-                <OptimizedImage
-                  src={mediaImage(bannerImage, { width: 1100 })}
-                  srcSet={mediaImageSrcSet(bannerImage, [480, 736, 1100, 1440])}
-                  sizes="(min-width: 896px) 896px, 100vw"
-                  alt={post.bannerImageAlt}
-                  className="w-full h-auto object-cover"
-                  loading="eager"
-                  fetchPriority="high"
-                />
-              </div>
+              <BlogBanner
+                src={bannerImage}
+                width={1100}
+                widths={[480, 736, 1100, 1440]}
+                sizes="(min-width: 896px) 896px, 100vw"
+                alt={post.bannerImageAlt}
+                loading="eager"
+                fetchPriority="high"
+                className="mb-8 rounded-2xl"
+              />
               {bodyFailed ? (
                 <div className="mb-12 rounded-2xl border border-border bg-muted/30 px-6 py-10 text-center">
                   <p className="mb-4 text-royal-blue/70 font-exo">{t('blog.loadFailed')}</p>
                   <button
-                    type="button"
-                    onClick={() => refetchBody()}
-                    className="inline-flex items-center px-5 py-2.5 bg-gradient-to-r from-royal-blue to-middle-blue text-plain-white font-semibold rounded-lg hover:from-royal-blue/90 hover:to-middle-blue/90 transition-all duration-200 font-exo"
+                type="button"
+                onClick={() => refetchBody()}
+                className="inline-flex items-center px-5 py-2.5 bg-gradient-to-r from-royal-blue to-middle-blue text-plain-white font-semibold rounded-lg hover:from-royal-blue/90 hover:to-middle-blue/90 transition-all duration-200 font-exo"
                   >
-                    <RotateCw className="w-4 h-4 mr-2" />
-                    {t('blog.retry')}
+                <RotateCw className="w-4 h-4 mr-2" />
+                {t('blog.retry')}
                   </button>
                 </div>
               ) : (
