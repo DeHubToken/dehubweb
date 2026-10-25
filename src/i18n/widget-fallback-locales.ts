@@ -16,10 +16,10 @@
  */
 export const WIDGET_FALLBACK_LOCALES: readonly string[] = [
   'acm', 'acw', 'aec', 'af', 'ajp', 'am', 'apd', 'arz', 'ayn', 'be',
-  'bg', 'bn', 'ctg', 'dcc', 'de', 'el', 'fa', 'he', 'hi', 'hy',
-  'id', 'it', 'ja', 'ka', 'km', 'kn', 'ko', 'ku', 'ky', 'lo',
-  'lt', 'lv', 'mg', 'ml', 'mnp', 'mr', 'ms', 'my', 'no', 'om',
-  'pa', 'pcm', 'pl', 'pt', 'qu', 'rkt', 'ro', 'sd', 'sdr', 'sk',
-  'skr', 'sq', 'sr', 'sw', 'syl', 'ta', 'te', 'tg', 'th', 'ti',
-  'tl', 'uk', 'ur', 'uz', 'vi', 'wes', 'wuu', 'yue', 'zh', 'zu',
+  'bg', 'bn', 'ctg', 'dcc', 'el', 'fa', 'he', 'hi', 'hy', 'id',
+  'it', 'ka', 'km', 'kn', 'ko', 'ku', 'ky', 'lo', 'lt', 'lv',
+  'mg', 'ml', 'mnp', 'mr', 'ms', 'my', 'no', 'om', 'pa', 'pcm',
+  'pl', 'qu', 'rkt', 'ro', 'sd', 'sdr', 'sk', 'skr', 'sq', 'sr',
+  'sw', 'syl', 'ta', 'te', 'tg', 'th', 'ti', 'tl', 'uk', 'ur',
+  'uz', 'vi', 'wes', 'wuu', 'yue', 'zu',
 ];

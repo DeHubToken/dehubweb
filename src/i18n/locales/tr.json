@@ -570,14 +570,13 @@
     "heading": "DeHub Kısa Videolar"
   },
   "settings": {
-    "glass": "Camsı",
     "sessionsRevokedMany": "{{count}} cihaz oturumu kapatıldı",
     "usernameTaken": "Kullanıcı adı alınmış",
-    "showDislikesDesc": "Herkes profilindeki Beğenilmeyenler sekmesini açabilir. Bu kapalıyken yalnızca sen görebilirsin.",
-    "showDislikes": "Beğenmediklerimi herkese göster",
     "postingChain": "Gönderi blokzinciri",
     "showOnline": "Çevrimiçi olduğumda göster",
     "showOnlineDesc": "Mesaj gönderdiğiniz kişiler, DeHub'ı kullanırken adınızın yanında yeşil bir nokta görür",
+    "showDislikes": "Beğenmediklerimi herkese göster",
+    "showDislikesDesc": "Herkes profilindeki Beğenilmeyenler sekmesini açabilir. Bu kapalıyken yalnızca sen görebilirsin.",
     "smartReplies": "Önerilen yanıtlar",
     "smartRepliesDesc": "Sohbette dokunabileceğin iki yanıt hazırlar. Önerilerdeki × bunu kapatır.",
     "title": "Ayarlar",
@@ -753,6 +752,7 @@
     "systemLight": "Sistem Açık",
     "immersive": "Göğüsleyici",
     "cosmic": "Cosmic Pixels",
+    "glass": "Camsı",
     "hazy": "Puslu Geceler",
     "swarms": "Sürüler",
     "lavalamp": "Lav Lambası",
@@ -2115,14 +2115,6 @@
     "returnHome": "Ana Sayfaya Dön"
   },
   "profile": {
-    "dislikes": {
-      "loadMore": "Daha fazla yükle",
-      "privateDesc": "Bu hesap beğenmediklerini kendine saklıyor.",
-      "privateTitle": "Beğenilmeyenler gizli",
-      "emptyOther": "Henüz beğenilmeyen bir şey yok.",
-      "emptyOwn": "Beğenmediğin gönderiler akışlarından çıkar ve burada görünür. Gönderiyi geri getirmek için beğenmemeyi geri al.",
-      "emptyTitle": "Henüz beğenmediğin bir şey yok"
-    },
     "back": "Geri",
     "usernameAvailable": "Kullanıcı adı mevcut!",
     "signUpToClaim": "Almak için bugün kaydolun",
@@ -2150,8 +2142,16 @@
       "commentUnavailable": "Bu yorum artık mevcut değil"
     },
     "tabs": {
-      "dislikes": "Beğenilmeyenler",
-      "playlists": "Oynatma Listeleri"
+      "playlists": "Oynatma Listeleri",
+      "dislikes": "Beğenilmeyenler"
+    },
+    "dislikes": {
+      "emptyTitle": "Henüz beğenmediğin bir şey yok",
+      "emptyOwn": "Beğenmediğin gönderiler akışlarından çıkar ve burada görünür. Gönderiyi geri getirmek için beğenmemeyi geri al.",
+      "emptyOther": "Henüz beğenilmeyen bir şey yok.",
+      "privateTitle": "Beğenilmeyenler gizli",
+      "privateDesc": "Bu hesap beğenmediklerini kendine saklıyor.",
+      "loadMore": "Daha fazla yükle"
     },
     "offerWorthNow": "Mevcut kurdan yaklaşık {{amount}} jeton",
     "offerNotePlaceholder": "Bir not ekle (isteğe bağlı)",
@@ -2859,8 +2859,6 @@
     "anonymousLikes_other": "Anonim rozet sahiplerinden {{count}} beğeni"
   },
   "postInfo": {
-    "unavailable": "Uygun değil",
-    "ownersUnavailable": "Mevcut sahipler şu anda okunamıyor.",
     "title": "Gönderi Bilgisi",
     "tokenId": "Token Kimliği",
     "mintedOn": "Basım Tarihi",
@@ -2872,6 +2870,8 @@
     "total": "toplam {{count}}",
     "distribution": "Dağılım",
     "loading": "Yükleniyor...",
+    "unavailable": "Uygun değil",
+    "ownersUnavailable": "Mevcut sahipler şu anda okunamıyor.",
     "owner": "{{count}} sahip",
     "owner_other": "{{count}} sahip",
     "engagement": "Etkileşim",
@@ -3935,8 +3935,8 @@
     "buyTokensToUnlock": "Bir rozetin ve Süper Güçlerinin kilidini açmak için DeHub jetonları satın alın. Herhangi bir rozet sahibi bunları kazanır — stake etmeye gerek yok.",
     "currentIntro": "Rozet sahipleri iki haftada bir yeni güçlendirme alır. Team up herkese açıktır: cüzdan gücünüzü yedi kişiye kadar başkalarıyla birleştirin, toplamınızın açtığı rozeti her üye alsın.",
     "currentPowersHeading": "On iki güç",
-    "goldenHourStarted": "Altın Saat {{minutes}} dakika sürüyor — şimdi paylaştığınız her şey iki katı değerinde",
-    "signalFlareTo": "{{people}} kişiye İşaret Fişeği"
+    "signalFlareTo": "{{people}} kişiye İşaret Fişeği",
+    "goldenHourStarted": "Altın Saat {{minutes}} dakika sürüyor — şimdi paylaştığınız her şey iki katı değerinde"
   },
   "work": {
     "integrity": {
@@ -6971,8 +6971,6 @@
     "notEnoughTokensForBounty": "Yeterli jeton yok. {{need}} jetona ihtiyacınız var ancak {{have}} var."
   },
   "events": {
-    "deleteConfirmTitle": "Bu etkinlik silinsin mi?",
-    "deleteConfirmBody": "Bu, etkinliği, davetli listesini ve sohbeti herkes için kaldırır. Geri alınamaz.",
     "seoTitle": "Etkinlikler — DeHub'da buluşmalar ve topluluk etkinlikleri",
     "seoDescription": "DeHub'ın yaklaşan topluluk etkinliklerine göz atın, buluşmalara katılacağınızı bildirin ve merkeziyetsiz, kullanıcılarının sahip olduğu bu sosyal platformda kendi etkinliğinizi düzenleyin.",
     "defaultSeoDescription": "DeHub'da bir topluluk etkinliği.",
@@ -7038,6 +7036,8 @@
     "requestAccessForChat": "Sohbeti görmek ve katılım bildirmek için izin isteyin",
     "edit": "Düzenle",
     "delete": "Sil",
+    "deleteConfirmTitle": "Bu etkinlik silinsin mi?",
+    "deleteConfirmBody": "Bu, etkinliği, davetli listesini ve sohbeti herkes için kaldırır. Geri alınamaz.",
     "reply": "Yanıtla",
     "react": "Tepki ver",
     "typeMessage": "Bir mesaj yazın...",
@@ -7870,7 +7870,6 @@
     "paying": "{{amount}} token ödeniyor…",
     "pickCount": "{{selected}} / {{total}} seçildi. Profilinizde zaten olan hiçbir şey atlanır ve asla iki kez ücretlendirilmez.",
     "pickTitle": "Neyi taşıyacağını seç",
-    "placeholder": "youtube.com/@you, tiktok.com/@you, vimeo.com/you…",
     "progressDone": "{{imported}} içe aktarıldı.",
     "progressDoneWithFailures": "{{imported}} içe aktarıldı, {{failed}} içe aktarılamadı.",
     "progressIdle": "Bir toplu işlemdeki her video burada kendi kutucuğunu alır, böylece neyin geldiğini ve neyin başarısız olduğunu yeniden deneyebilirsiniz. Henüz hiçbir şey çalışmıyor — aşağıdaki ızgara bir örnektir.",
@@ -9222,6 +9221,7 @@
       "generatedToken": "Kopyalanacak biçimlendirilmiş yer tutucu",
       "hint": "Geçerli sayfayı şablon olarak kullanın. Metin ve QR katmanlarını elektronik tablo sütunlarına bağlayın veya sütun adlarını metninizin içine çift parantez içine koyun. Seçilen her satır yeni bir sayfa oluşturur; orijinali yerinde kalır.",
       "import": "CSV veya TSV'yi içe aktar",
+      "importConnections": "Bağlantı dosyasını içe aktar",
       "keepTemplateField": "Şablon ve yer tutucuları kullanma",
       "keepTemplateLink": "Şablon bağlantısını koru",
       "keepTemplatePhoto": "Şablon fotoğrafını sakla",
@@ -9258,8 +9258,7 @@
       "tokenDecimals": "Onluk yerleri",
       "tokenHint": "Metin içinde yer tutucuları kullan için o katmana yer tutucu yapıştır ve yer tutucu yapıştır. Biçimlendirme, tablo değerlerini değiştirmez. Sayısal formatlar, düz sayılar gerektirir; 25, yüzde modunda %25 olarak formatlanır.",
       "tokenLocale": "Sayısal bölge",
-      "trimToken": "Boşlukları biçimlendirmeden önce kes",
-      "importConnections": "Bağlantı dosyasını içe aktar"
+      "trimToken": "Boşlukları biçimlendirmeden önce kes"
     },
     "charts": {
       "applyDateBounds": "Tarih sınırlarını uygula",
@@ -9394,6 +9393,7 @@
       "scatterLinesHint": "Satırlar satır sırasını takip eder. Noktaları soldan sağa bağlamak için Veri'de sayısal X'e göre sıralayın. Tek bir seri, çizgi için ilk palet rengini kullanır.",
       "searchTypes": "Grafik türlerini ara",
       "seriesPatterns": "Şekilleri ve desenleri serilere göre değiştirin",
+      "seriesStructure": "Veri serilerini yönet",
       "seriesStructureHint": "Değerler ve renkler her seriyi takip eder. Yeni seriler sıfırdan başlar. Veri kılavuzunun ilk satırındaki serileri yeniden adlandırın.",
       "seriesTotal": "Seriler boyunca toplam",
       "showAxisValues": "Ölçek etiketlerini göster",
@@ -9413,6 +9413,7 @@
       "transpose": "Satırları ve sütunları değiştir",
       "transposeHint": "Altı kategoriye kadar seri haline gelir. Mevcut seriler kategori haline gelir; palet sırası değişmeden kalır.",
       "transposeScatter": "Verileri aktarmak için bir kategori grafiğine geçin.",
+      "treemapExample": "Taslağı hiyerarşi örneğiyle değiştir",
       "treemapHint": "Avrupa / Fransa ve Avrupa / Almanya gibi benzersiz yaprak yolları kullanın. Altı seviyeye kadar desteklenir. Değerler negatif olmamalı ve en az bir pozitif değer içermelidir. Sıfır değerler gizlidir. Bir yol hem bir grup hem de bir yaprak olamaz. İlk seri değerleri sağlar; diğer kaynak seriler korunur.",
       "trimCategory": "Önde ve arkada kalan alanları yoksay",
       "typeDraftHint": "Tür değiştirme, taslak verilerinizi saklar. Hazır olduğunuzda grafiği güncelleyin veya ekleyin.",
@@ -9426,9 +9427,7 @@
       "xDate": "Tarihler ve UTC saatleri",
       "xIntervals": "Yatay eksen aralıkları",
       "xNumber": "Numaralar",
-      "hierarchySample": "Avrupa,Fransa,35",
-      "seriesStructure": "Veri serilerini yönet",
-      "treemapExample": "Taslağı hiyerarşi örneğiyle değiştir"
+      "hierarchySample": "Avrupa,Fransa,35"
     },
     "clipboard": {
       "copy": "Katmanları kopyala",
@@ -9697,12 +9696,12 @@
       "preview": "Gradyan önizleme",
       "remove": "Durdurmayı kaldır",
       "reverse": "Geri",
+      "spread": "Yayılma",
       "stop": "Durma {{number}} saat {{position}}%",
       "styleFileHint": "Cihazlar arasında gradyan renkleri, pozisyonları, şeffaflığı, açıyı ve radyal ayarları aktarır. İçe aktarma taslağı yükler; çizimi güncellemek için uygulayın.",
       "styleFiles": "Aktarım gradyan stilleri",
       "styleLoaded": "Taslağa yüklenen stil",
-      "svgHint": "Durma konumları ve şeffaflık dahil olmak üzere bu gradyanı sayfa boyutunda dışa aktarır. Tasarımda kullanmak için ayrı ayrı uygulayın.",
-      "spread": "Yayılma"
+      "svgHint": "Durma konumları ve şeffaflık dahil olmak üzere bu gradyanı sayfa boyutunda dışa aktarır. Tasarımda kullanmak için ayrı ayrı uygulayın."
     },
     "graphicDraftHistory": {
       "local": "Grafik taslak",
@@ -9914,6 +9913,7 @@
       "hint": "Bu cihazda hesap başına kaydedildi. Bir görünüm uygulamak renk, bulanıklık ve ayrıntı ayarlarının yerini alır. Kırpma, çerçeve, sınırlar ve zamanlama yerinde kalır. Uygulamak için bir görünümü içe aktarın, ardından kitaplığınıza kaydedin.",
       "importStyle": "Görünüm dosyasını içe aktar",
       "memoryOnly": "Bu oturum için kullanılabilir; cihaz depolama alanı kaydedilemedi",
+      "name": "Görünüm adı",
       "remove": "Kaydedilmiş görünümü kaldır",
       "replace": "Mevcut ayarlarla değiştirin",
       "saveCurrent": "Mevcut ayarlamaları kaydet",
@@ -9923,13 +9923,12 @@
       "styleFileHint": "Cihazlar arasında renk, bulanıklık, çift ton ve detay ayarlamalarını aktarır. İçe aktarma, kaydedilen adını gösterir; seçilen ortam ayarlarını değiştirmek için uygulayın. Kırpma, çerçeveler, sınırlar ve zamanlama yerinde kalır.",
       "styleFiles": "Fotoğraf görünümünü aktar",
       "styleLoaded": "İçe aktarılmış görünüm uygulandı",
-      "title": "Kaydedilen fotoğraf görünümleri",
-      "name": "Görünüm adı"
+      "title": "Kaydedilen fotoğraf görünümleri"
     },
     "photoTone": {
+      "duotone": "Çift ton",
       "original": "Orijinal renkler",
-      "strength": "Duoton tonu gücü",
-      "duotone": "Çift ton"
+      "strength": "Duoton tonu gücü"
     },
     "photos": {
       "arrange": "Fotoğrafları yeniden düzenleyin",
@@ -9966,6 +9965,7 @@
       "notes": "Sunucu notları",
       "notesCopied": "Notlar kopyalandı",
       "notesCopyFailed": "Notlar kopyalanamadı",
+      "notesLarger": "Not metnini büyüt",
       "notesScrollSpeed": "Kaydırma hızı",
       "notesSmaller": "Notların metin boyutunu küçült",
       "pagePickerShortcut": "Sayfalara göz at (G)",
@@ -9976,6 +9976,7 @@
       "rehearsalHint": "Ziyaretler sayfa başına birikir. Uygulama arka plandayken, sayfalar yüklenirken veya sayfa seçici açıkken zaman durur. Başvurmadan önce duraklatın; ziyaret edilmeyen sayfa süreleri değişmeden kalır.",
       "resetClock": "Saati sıfırla",
       "resetRehearsal": "Zamanlamaları sıfırla",
+      "saveRehearsal": "Zamanlamaları uygula ve kapat",
       "setTimer": "Geri sayımı ayarla",
       "temporaryInk": "Sayfayı değiştirdiğinizde işaretler silinir",
       "timeUp": "Süre doldu",
@@ -9986,9 +9987,7 @@
       "upNext": "Sıradaki",
       "usePageTiming": "Sayfa sürelerini kullan",
       "whiteScreen": "Beyaz ekran",
-      "whiteScreenShortcut": "Beyaz ekran (W)",
-      "notesLarger": "Not metnini büyüt",
-      "saveRehearsal": "Zamanlamaları uygula ve kapat"
+      "whiteScreenShortcut": "Beyaz ekran (W)"
     },
     "qr": {
       "background": "Arka plan",
@@ -10255,9 +10254,9 @@
       "mixedFonts": "Birden fazla yazı tipi ailesi seçildi",
       "regular": "Normal metin",
       "setColour": "Rengi ayarla",
+      "setSize": "Boyutu ayarla",
       "size": "Metin boyutu",
-      "title": "Seçilen metni biçimlendir ({{count}})",
-      "setSize": "Boyutu ayarla"
+      "title": "Seçilen metni biçimlendir ({{count}})"
     },
     "tools": {
       "noResults": "Eşleşen araç yok. Daha kısa bir arama yapmayı deneyin.",
@@ -12158,6 +12157,7 @@
     "3c26ee4f00ee": "🎙️ Trafiğin, rüzgarın, hissin veya odun sesinden sesi temiz bir şekilde çekiyor",
     "3c415b527ee7": "Sahneye oynatmak mümkün olmadı — host olarak bağlı kalın",
     "3c4ea43f652c": "Mesajı sohbetin en üstüne sabitleyin",
+    "3c784a16cf27": "Kısa Videolar",
     "3c8432b0c6a7": "Onaylama başarısız oldu. Lütfen tekrar deneyin.",
     "3c8701908f73": "DeHub'de son 24 saat içinde en popüler gönderileri bana özetle.",
     "3cce984f2403": "Asıl gönderiler, videolar ve yorumlar, adlarını taşıyan çekilişlere katılır.",
@@ -12281,6 +12281,7 @@
     "4a9b1d39db85": "İş gönderilemedi",
     "4aaeb7f8214b": "Canlı bir sahneye ev sahipliği yapıyorsunuz",
     "4acc79823766": "Bu cüzdanı DeHub profilinize göre doğrulayamadık. Devam etmeden önce kurtarmayı tekrar deneyin.",
+    "4ae268ba1719": "BRG {{value1}}",
     "4aeadee78066": "Şu anda uygun bir takas rotası yok",
     "4af83339a6f1": "DeHub aranıyor",
     "4b2d3cc30bce": "Çince, Jinyu",
@@ -12691,6 +12692,7 @@
     "7d5825cf909d": "Ödeme adresi yapılandırılmamış.",
     "7d61d28cb660": "Düzeltme kontrolü!",
     "7d94977e033d": "Etiyopya",
+    "7db20897053b": "Kişiler",
     "7dc1cd7eaff6": "Hayvanlar",
     "7ddb44d8a533": "dakika önce",
     "7de5d8585f7b": "{{value1}}% kayıp",
@@ -13455,6 +13457,7 @@
     "de4ab7c90a0a": "Biyometrik kilit açma yüklenemedi",
     "de5008d194a7": "Irak",
     "de690b83607b": "/editor adresinde çok kanallı stüdyo",
+    "de88c121a82a": "Premium",
     "de9e2132fd4d": "Bu cüzdan, DeHub'ın daha yeni bir sürümü tarafından kaydedildi. Lütfen yeniden yükleyin ve tekrar deneyin.",
     "dea7dbdf2bed": "Beceriyi kullanma: {{value1}}",
     "decf4d0b7c4e": "Solana cüzdanı bağlanamadı",
@@ -15378,7 +15381,7 @@
     "f9730ea7776a": "Sıradaki",
     "e44dc88eb777": "@alice.eth",
     "4fa8c1cdf83e": "Alice Johnson",
-    "957b1cce1c08": "Web3 BUILDER & DESIGNER. Creating the future of decentralized social 🌐",
+    "957b1cce1c08": "Web3 geliştiricisi ve tasarımcısı. Merkeziyetsiz sosyal medyanın geleceğini yaratıyor 🌐",
     "2f77668a9dfb": "Mesaj",
     "74a883a037bc": "Ayarlar",
     "0b184bc5d534": "Oturumu Kapat",
@@ -17619,7 +17622,7 @@
     "0bdb3e5571c8": "Neon Nights - Görselleştirici",
     "1202d20ddea6": "Summer Vibes - Plaj Oturumları",
     "c7dd1e98fb0b": "Yeraltı Seansları Cilt 3",
-    "1b4d7b9046cb": "Lost in the Echo",
+    "1b4d7b9046cb": "Kaybolmuş Sessizlikte",
     "132dd8763452": "Gece Yarısı Koşucusu",
     "ae68f56a2dae": "Yıldız Işığı Serenadı",
     "2a723990eaee": "Bass Drop",
@@ -17816,6 +17819,17 @@
     "ff1e56a487ea": "Kalan kullanımlar: {{value1}}",
     "ccf0988984a3": "{{value2}} üzerinden {{value1}} gösteriliyor",
     "5fb924a4a79f": "{{value1}} Düzenle — DeHub Bounties",
+    "0f8f49bd32e6": "🔥 {{value1}} <coin></coin> bahşiş vermek, {{value2}} kullanıcısının gelen kutusunda sizi daha üst sıraya taşır",
+    "1e488da3dfa7": "{{value1}} kullanıcısına gönderdiğiniz mesajlar ücretlidir ve her biri <amount>{{value2}}</amount> <coin></coin> tutar. Devam etmek istediğinizden emin misiniz?",
+    "253ffa81cd88": "{{value1}}, sohbet başlatmak için en az <amount>{{value2}} <coin></coin></amount> bahşiş istiyor.",
+    "338524eabcce": "🔥 Mesaj başına {{value1}} <coin></coin> bahşiş vermek, {{value2}} kullanıcısının gelen kutusunda sizi daha üst sıraya taşır",
+    "39958a403593": "Twitter’daki Dünya Kupası çekilişimizden <prize>200 $ ödül</prize> kazandınız. Tokenlarınız hesabınıza eklendi ve sözleşme aktif olduğunda aktarılacak.",
+    "5d486dd87845": "Devam ederek <terms>Şartlarımızı</terms> ve <privacy>Gizlilik Politikamızı</privacy> kabul etmiş olursunuz",
+    "6ed656c2254e": "{{value1}} için <amount></amount> kaldı",
+    "70d1cca2aba3": "{{value1}}, mesaj başına en az <amount>{{value2}} <coin></coin></amount> bahşiş istiyor. Gönderdiğiniz her mesajda bu tutar düşülür.",
+    "825123b7470b": "Bakiyeniz: {{value1}} <coin></coin>",
+    "9f11cad12bdd": "{{value1}} <coin></coin> bahşiş için yetersiz bakiye",
+    "a5b214ef27ab": "Yetersiz bakiye. {{value1}} <coin></coin> bakiyeniz var, ancak {{value2}} <coin></coin> gerekiyor.",
     "936a161c3931": "Editör",
     "df79c0f30f3a": "Oyun Salonu",
     "713166971d73": "Komut",
@@ -17825,11 +17839,9 @@
     "b4a7365740ef": "Canlı istatistik",
     "7e658675b5ca": "Kariyer",
     "c864f329f5dd": "Topluluklar",
-    "3c784a16cf27": "Kısa Videolar",
     "4e677391fd0a": "İlk 100",
     "d591a7cb7e70": "AI Ajanları",
     "752d035aa9d9": "Ödüllerim",
-    "de88c121a82a": "Premium",
     "dfe95783edfe": "Fiyatlandırma",
     "c6b6a71ac899": "Üreticiler",
     "4369677cc938": "Uygulamayı İndir",
@@ -17842,20 +17854,7 @@
     "7c50f8a38a76": "Reklamcılık",
     "d451ef69d283": "Canlı TV",
     "89dd748442c1": "Uygulamalar",
-    "e18a39d085ea": "Dönüştür",
-    "7db20897053b": "Kişiler",
-    "4ae268ba1719": "BRG {{value1}}",
-    "0f8f49bd32e6": "🔥 {{value1}} <coin></coin> bahşiş vermek, {{value2}} kullanıcısının gelen kutusunda sizi daha üst sıraya taşır",
-    "1e488da3dfa7": "{{value1}} kullanıcısına gönderdiğiniz mesajlar ücretlidir ve her biri <amount>{{value2}}</amount> <coin></coin> tutar. Devam etmek istediğinizden emin misiniz?",
-    "253ffa81cd88": "{{value1}}, sohbet başlatmak için en az <amount>{{value2}} <coin></coin></amount> bahşiş istiyor.",
-    "338524eabcce": "🔥 Mesaj başına {{value1}} <coin></coin> bahşiş vermek, {{value2}} kullanıcısının gelen kutusunda sizi daha üst sıraya taşır",
-    "39958a403593": "Twitter’daki Dünya Kupası çekilişimizden <prize>200 $ ödül</prize> kazandınız. Tokenlarınız hesabınıza eklendi ve sözleşme aktif olduğunda aktarılacak.",
-    "5d486dd87845": "Devam ederek <terms>Şartlarımızı</terms> ve <privacy>Gizlilik Politikamızı</privacy> kabul etmiş olursunuz",
-    "6ed656c2254e": "{{value1}} için <amount></amount> kaldı",
-    "70d1cca2aba3": "{{value1}}, mesaj başına en az <amount>{{value2}} <coin></coin></amount> bahşiş istiyor. Gönderdiğiniz her mesajda bu tutar düşülür.",
-    "825123b7470b": "Bakiyeniz: {{value1}} <coin></coin>",
-    "9f11cad12bdd": "{{value1}} <coin></coin> bahşiş için yetersiz bakiye",
-    "a5b214ef27ab": "Yetersiz bakiye. {{value1}} <coin></coin> bakiyeniz var, ancak {{value2}} <coin></coin> gerekiyor."
+    "e18a39d085ea": "Dönüştür"
   },
   "articles": {
     "cardLabel": "Makale ·{{count}} dk. okuma",
