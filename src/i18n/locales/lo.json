@@ -8852,8 +8852,6 @@
     "decrease": "ຫຼຸດລົງ {{field}}",
     "increase": "ເພີ່ມ {{field}}",
     "srHeading": "ສະຕູດິໂອຜູ້ສ້າງ DeHub",
-    "bannerCopy": "ເປີດຕົວແຄມເປນທີ່ສ້າງສັນໄວກວ່າດ້ວຍເຄື່ອງມື DeHub AI",
-    "closeBanner": "ປິດປ້າຍຜູ້ສ້າງ",
     "openApp": "ເປີດແອັບ DeHub",
     "navExplore": "ຄົ້ນຫາ",
     "navImage": "ຮູບພາບ",
