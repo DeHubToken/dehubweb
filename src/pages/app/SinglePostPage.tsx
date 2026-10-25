@@ -1180,12 +1180,15 @@ function SinglePostPageContent({ inOverlay = false, overrideId, detailsOnly = fa
    */
   const useStage = isStagePhone && !!post && post.status !== 'pending' && contentType !== 'live';
 
-  // On phones an image post opens in the Images tab's scroll view, not on this
-  // page. Desktop and tablet keep the post page, and so do video, audio, text.
-  useEffect(() => {
-    if (!isStagePhone || !post || post.status === 'pending' || contentType !== 'image' || !id) return;
-    navigate(`/app?image=${encodeURIComponent(id)}`, { replace: true });
-  }, [isStagePhone, post, contentType, id, navigate]);
+  // An image post opens in the Images tab's scroll view on every screen, the
+  // same place a feed tap takes it, so a shared link or a refresh lands there
+  // too. Video, audio and text keep this page. The details sheet and overlays
+  // reuse this component and stay where they are.
+  const redirectToImages = !inOverlay && !detailsOnly && !overrideId && !!post && post.status !== 'pending' && contentType === 'image' && !!id;
+  useLayoutEffect(() => {
+    if (!redirectToImages) return;
+    navigate(`/app?image=${encodeURIComponent(id!)}`, { replace: true });
+  }, [redirectToImages, id, navigate]);
   const revealStageComments = useCallback((focusComposer: boolean) => {
     // Twice: once now, and once the section has re-rendered with its new tab.
     const run = () => {
@@ -1599,6 +1602,9 @@ function SinglePostPageContent({ inOverlay = false, overrideId, detailsOnly = fa
     </>
     )
   );
+
+  // Nothing to paint while the redirect above moves to the Images scroll view.
+  if (redirectToImages) return null;
 
   return (
     <>
