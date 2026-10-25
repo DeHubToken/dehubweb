@@ -51,7 +51,7 @@ function preloadable<P extends object>(load: () => Promise<React.ComponentType<P
   const preload = () => (pending ??= load().then((c) => (loaded = c)).catch((e) => { pending = null; throw e; }));
   const Lazy = React.lazy(() => preload().then((c) => ({ default: c })));
   function Preloadable(props: P) {
-    const [C] = useState<React.ComponentType<P>>(() => loaded ?? (Lazy as React.ComponentType<P>));
+    const [C] = useState<React.ComponentType<P>>(() => (loaded ?? Lazy) as React.ComponentType<P>);
     return <C {...props} />;
   }
   return Object.assign(Preloadable, { preload });
