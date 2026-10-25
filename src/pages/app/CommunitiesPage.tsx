@@ -216,7 +216,7 @@ export default function CommunitiesPage() {
       ) : isLoading ? (
         <div className="space-y-2">
           {Array.from({ length: 5 }).map((_, i) => (
-            <div key={i} className="h-20 rounded-xl bg-white/[0.04] animate-pulse" />
+            <div key={i} className="h-20 rounded-xl theme-skeleton animate-pulse" />
           ))}
         </div>
       ) : (

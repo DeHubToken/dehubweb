@@ -207,7 +207,7 @@ export default function AffiliatePage() {
             ) : null}
             {loading || (stats?.code && !imgLoaded) ? (
               <div className="absolute inset-0 overflow-hidden flex items-center justify-center">
-                <div className="absolute inset-0 bg-white/[0.04] animate-pulse" />
+                <div className="absolute inset-0 theme-skeleton animate-pulse" />
                 <div
                   className="absolute inset-y-0 -left-full w-1/2 bg-gradient-to-r from-transparent via-white/10 to-transparent"
                   style={{ animation: "shimmer-sweep 1.6s linear infinite" }}

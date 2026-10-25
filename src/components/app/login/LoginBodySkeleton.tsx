@@ -1,3 +1,4 @@
+import '@/styles/skeleton.css';
 /**
  * What the sheet shows in the beat before the sign-in options are ready: the
  * shape of the list, not a spinner.
@@ -12,7 +13,7 @@
  * to be on screen before that chunk arrives.
  */
 
-const ROW = 'h-12 rounded-xl bg-white/[0.07] border border-white/10 animate-pulse';
+const ROW = 'h-12 rounded-xl theme-skeleton border border-white/10 animate-pulse';
 
 export function LoginBodySkeleton() {
   return (
@@ -23,9 +24,9 @@ export function LoginBodySkeleton() {
         ))}
       </div>
       <div className="flex items-center gap-3 py-2">
-        <div className="h-px flex-1 bg-white/10" />
-        <div className="h-3 w-6 rounded bg-white/[0.07]" />
-        <div className="h-px flex-1 bg-white/10" />
+        <div className="h-px flex-1 theme-skeleton" />
+        <div className="h-3 w-6 rounded theme-skeleton" />
+        <div className="h-px flex-1 theme-skeleton" />
       </div>
       <div className="h-12 rounded-xl border border-white/10 animate-pulse" />
       <div className="grid grid-cols-2 gap-3">

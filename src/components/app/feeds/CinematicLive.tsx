@@ -195,8 +195,8 @@ export function CinematicLive({ streams, isLoading, tvChannels, emptyState, show
         <div className="grid grid-cols-2 gap-x-2.5 gap-y-3.5 px-1.5">
           {Array.from({ length: 4 }).map((_, i) => (
             <div key={i}>
-              <div className="aspect-video animate-pulse rounded-[10px] bg-white/5" />
-              <div className="mt-1.5 h-3 w-3/4 animate-pulse rounded bg-white/5" />
+              <div className="aspect-video animate-pulse rounded-[10px] theme-skeleton" />
+              <div className="mt-1.5 h-3 w-3/4 animate-pulse rounded theme-skeleton" />
             </div>
           ))}
         </div>

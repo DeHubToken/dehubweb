@@ -41,7 +41,7 @@ export function CommunityEvents({ communityId, canCreate }: CommunityEventsProps
 
       {isLoading ? (
         <div className="space-y-3">
-          {[1, 2].map(i => <div key={i} className="h-48 rounded-xl bg-white/[0.04] animate-pulse" />)}
+          {[1, 2].map(i => <div key={i} className="h-48 rounded-xl theme-skeleton animate-pulse" />)}
         </div>
       ) : events.length === 0 ? (
         <AppState icon="events" title={_copy("copy.de54ef8dc9c2", { defaultValue: "No events yet" })} description={_copy("copy.008ad4d946bb", { defaultValue: "Community events will appear here." })} size="section" />

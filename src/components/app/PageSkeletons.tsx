@@ -22,8 +22,8 @@ import { FeedCardSkeletonList } from '@/components/app/cards/FeedCardSkeleton';
 import { FEED_TABS } from '@/constants/app.constants';
 import { useShortsEnabled } from '@/contexts/ShortsEnabledContext';
 
-const SK = "bg-white/[0.06]";
-const SK_LIGHT = "bg-black/10";
+const SK = "theme-skeleton";
+const SK_LIGHT = "theme-skeleton";
 
 /**
  * Content-area stand-in: the animated DeHub mark, centred in whatever box the
@@ -49,8 +49,8 @@ export function FeedTabBarSkeleton() {
   const { shortsEnabled } = useShortsEnabled();
   const tabs = FEED_TABS.filter(tab => shortsEnabled || tab.value !== 'shorts');
   return (
-    <div data-home-skeleton-nav data-feed-nav-outer aria-hidden="true" className="sticky top-11 lg:top-0 bg-black z-50 px-2 pt-1 pb-3 sm:px-3 sm:pt-1 sm:pb-3 lg:pt-2">
-      <div data-feed-nav className="bg-zinc-900 rounded-xl">
+    <div data-home-skeleton-nav data-feed-nav-outer aria-hidden="true" className="sticky top-11 lg:top-0 bg-background z-50 px-2 pt-1 pb-3 sm:px-3 sm:pt-1 sm:pb-3 lg:pt-2">
+      <div data-feed-nav className="bg-card rounded-xl">
         <div className="flex h-[35px]">
           <div className="flex items-center justify-center px-3"><div className="home-skeleton-block w-4 h-4 rounded" /></div>
           {tabs.map(tab => (

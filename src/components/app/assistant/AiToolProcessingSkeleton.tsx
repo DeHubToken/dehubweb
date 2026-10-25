@@ -1,3 +1,4 @@
+import '@/styles/skeleton.css';
 /**
  * AI Tool Processing Skeleton
  * ============================
@@ -37,20 +38,20 @@ export function AiToolProcessingSkeleton({
   return (
     <div className="max-w-[85%] flex flex-col gap-2">
       {/* Status text */}
-      <div className="bg-white/10 text-white rounded-2xl px-4 py-2.5">
+      <div className="bg-foreground/10 text-foreground rounded-2xl px-4 py-2.5">
         <MarkdownText content={content} className="text-sm" />
       </div>
 
       {/* Skeleton music player */}
-      <div className="rounded-2xl overflow-hidden bg-white/5 border border-white/10 backdrop-blur-xl p-4 space-y-3">
+      <div className="rounded-2xl overflow-hidden bg-foreground/5 border border-border backdrop-blur-xl p-4 space-y-3">
         {/* Top row: play button skeleton + title skeleton */}
         <div className="flex items-center gap-3">
           {/* Play button skeleton */}
-          <div className="w-10 h-10 rounded-full bg-white/10 shimmer-skeleton shrink-0" />
+          <div className="w-10 h-10 rounded-full theme-skeleton shimmer-skeleton shrink-0" />
           {/* Title + artist */}
           <div className="flex-1 space-y-2">
-            <div className="h-3 w-3/4 rounded-full bg-white/10 shimmer-skeleton" />
-            <div className="h-2.5 w-1/2 rounded-full bg-white/8 shimmer-skeleton" style={{ animationDelay: '0.15s' }} />
+            <div className="h-3 w-3/4 rounded-full theme-skeleton shimmer-skeleton" />
+            <div className="h-2.5 w-1/2 rounded-full theme-skeleton shimmer-skeleton" style={{ animationDelay: '0.15s' }} />
           </div>
         </div>
 
@@ -83,9 +84,9 @@ export function AiToolProcessingSkeleton({
 
         {/* Progress bar + percentage */}
         <div className="space-y-1.5">
-          <div className="h-1.5 w-full rounded-full bg-white/10 overflow-hidden">
+          <div className="h-1.5 w-full rounded-full theme-skeleton overflow-hidden">
             <motion.div
-              className="h-full rounded-full bg-gradient-to-r from-white/60 to-white/30"
+              className="h-full rounded-full bg-foreground/60"
               animate={{ width: `${progress}%` }}
               transition={{ duration: 0.3, ease: 'linear' }}
             />
@@ -101,9 +102,9 @@ export function AiToolProcessingSkeleton({
 
         {/* Bottom controls skeleton */}
         <div className="flex items-center justify-center gap-4 pt-1">
-          <div className="w-6 h-6 rounded bg-white/8 shimmer-skeleton" />
-          <div className="w-8 h-8 rounded-lg bg-white/10 shimmer-skeleton" />
-          <div className="w-6 h-6 rounded bg-white/8 shimmer-skeleton" />
+          <div className="w-6 h-6 rounded theme-skeleton shimmer-skeleton" />
+          <div className="w-8 h-8 rounded-lg theme-skeleton shimmer-skeleton" />
+          <div className="w-6 h-6 rounded theme-skeleton shimmer-skeleton" />
         </div>
       </div>
 

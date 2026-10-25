@@ -432,7 +432,7 @@ export default function DaoPage() {
           </div>
           {isLoading ? (
             <div className="space-y-2">
-              {[0, 1, 2].map((i) => <div key={i} className="h-14 rounded-xl bg-white/[0.03] animate-pulse" />)}
+              {[0, 1, 2].map((i) => <div key={i} className="h-14 rounded-xl theme-skeleton animate-pulse" />)}
             </div>
           ) : data && data.contributors.length > 0 ? (
             <div className="space-y-2">

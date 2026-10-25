@@ -885,14 +885,14 @@ function SkeletonSegments() {
       {Array.from({ length: 5 }).map((_, i) => (
         <div key={i} className="bg-white/5 border border-white/10 rounded-xl p-3 space-y-2">
           <div className="flex items-center gap-2">
-            <div className="w-6 h-6 rounded-full bg-white/10 animate-pulse" />
-            <div className="h-3 w-24 bg-white/10 rounded animate-pulse" />
-            <div className="h-3 w-12 bg-white/5 rounded animate-pulse ml-auto" />
+            <div className="w-6 h-6 rounded-full theme-skeleton animate-pulse" />
+            <div className="h-3 w-24 theme-skeleton rounded animate-pulse" />
+            <div className="h-3 w-12 theme-skeleton rounded animate-pulse ml-auto" />
           </div>
           <div className="space-y-1.5">
-            <div className="h-3 bg-white/10 rounded animate-pulse" />
-            <div className="h-3 bg-white/10 rounded animate-pulse w-[85%]" />
-            <div className="h-3 bg-white/10 rounded animate-pulse w-[60%]" />
+            <div className="h-3 theme-skeleton rounded animate-pulse" />
+            <div className="h-3 theme-skeleton rounded animate-pulse w-[85%]" />
+            <div className="h-3 theme-skeleton rounded animate-pulse w-[60%]" />
           </div>
         </div>
       ))}
