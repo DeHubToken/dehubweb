@@ -1,8 +1,9 @@
-import { useEffect, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import { act, cleanup, fireEvent, render, screen } from '@testing-library/react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import { RetainedPostDock, RetainedPostSurface } from './RetainedPostSurface';
-import { bindRetainedComments, getRetainedPost, useRetainedPost, type RetainedCommentsTab } from '@/lib/retained-post-surface';
+import { bindRetainedComments, getRetainedPost, RetainedPostActivityContext, useRetainedPost, type RetainedCommentsTab } from '@/lib/retained-post-surface';
+import { CachedPageActiveContext } from '@/contexts/CachedPageActiveContext';
 
 afterEach(cleanup);
 
@@ -103,5 +104,33 @@ describe('retained feed post', () => {
     expect(sources[0].contains(firstPhoto)).toBe(true);
     result.rerender(view(false));
     expect(sources[1].contains(selectedPhoto)).toBe(true);
+  });
+
+  it('keeps selected media active while covered feed media stays inactive', () => {
+    const selectedActivity = vi.fn(), otherActivity = vi.fn();
+    function MediaCard({ id, changed }: { id: string; changed: (active: boolean) => void }) {
+      const active = useContext(CachedPageActiveContext);
+      useEffect(() => changed(active), [active, changed]);
+      return <audio data-testid={id} data-active={active} />;
+    }
+    const view = (open: boolean) => <>
+      <RetainedPostActivityContext.Provider value={open ? 'selected-media' : null}>
+        <CachedPageActiveContext.Provider value={!open}>
+          <RetainedPostSurface id="selected-media"><MediaCard id="selected" changed={selectedActivity} /></RetainedPostSurface>
+          <RetainedPostSurface id="other-media"><MediaCard id="other" changed={otherActivity} /></RetainedPostSurface>
+        </CachedPageActiveContext.Provider>
+      </RetainedPostActivityContext.Provider>
+      <Dock id={open ? 'selected-media' : null} />
+    </>;
+    const result = render(view(false));
+    const audio = screen.getByTestId('selected');
+    result.rerender(view(true));
+    expect(screen.getByTestId('selected')).toBe(audio);
+    expect(audio.dataset.active).toBe('true');
+    expect(screen.getByTestId('other').dataset.active).toBe('false');
+    expect(selectedActivity).not.toHaveBeenCalledWith(false);
+    result.rerender(view(false));
+    expect(screen.getByTestId('other').dataset.active).toBe('true');
+    expect(selectedActivity).not.toHaveBeenCalledWith(false);
   });
 });
