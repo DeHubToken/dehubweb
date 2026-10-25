@@ -36,6 +36,7 @@ vi.mock('@/components/app/cards/PostUtilityButtons', () => ({
 }));
 
 import { ActionBar } from '@/components/app/cards/ActionBar';
+import { clearCommentCounts } from '@/lib/comment-count-store';
 import type { PostStageValue } from '@/components/app/post-stage/post-stage-context';
 import { PostStagePhone, POST_STAGE_BODY_CLASS } from '@/components/app/post-stage/PostStagePhone';
 
@@ -61,6 +62,7 @@ function stageValue(overrides: Partial<PostStageValue> = {}): PostStageValue {
 }
 
 beforeEach(() => {
+  clearCommentCounts();
   voteOnPost.mockResolvedValue({});
   reactToPost.mockResolvedValue({});
   getPostQuotes.mockResolvedValue({ result: [] });
@@ -186,11 +188,12 @@ describe('the stage page shell', () => {
     expect(readFileSync('src/styles/post-stage.css', 'utf8')).not.toMatch(/-webkit-backdrop-filter/);
   });
 
-  it('keeps the top bar and feed pill on audio posts so Back stays reachable', () => {
+  it('hides the top bar and feed pill on image, video and audio posts', () => {
     const css = readFileSync('src/styles/post-stage.css', 'utf8');
-    expect(css).toContain('body.post-stage-mode:not(.post-stage-keep-nav) :is([data-mobile-header], [data-feed-nav], [data-feed-nav-outer], [data-home-tabs])');
+    expect(css).toContain('body.post-stage-mode :is([data-mobile-header], [data-feed-nav], [data-feed-nav-outer], [data-home-tabs])');
+    expect(css).not.toContain('post-stage-keep-nav');
     const src = readFileSync('src/components/app/post-stage/PostStagePhone.tsx', 'utf8');
-    expect(src).toContain("const keepNav = kind === 'audio';");
+    expect(src).not.toContain('StageMediaChrome');
   });
 
   it('docks the stage composer to the screen in the comments section', () => {

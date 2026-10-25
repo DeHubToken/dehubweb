@@ -625,7 +625,7 @@ export default function StagesPage() {
       return (
         <div className="space-y-2 sm:space-y-3">
           {[0, 1, 2].map((i) => (
-            <div key={i} data-page-bento className="bg-zinc-900 rounded-2xl p-4 animate-pulse">
+            <div data-skeleton-group key={i} data-page-bento className="bg-zinc-900 rounded-2xl p-4 animate-pulse">
               <div className="h-4 w-2/3 bg-zinc-800 rounded mb-2" />
               <div className="h-3 w-1/3 bg-zinc-800 rounded" />
             </div>

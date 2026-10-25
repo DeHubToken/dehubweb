@@ -21,7 +21,7 @@
  * `wagmi`, which must stay behind the WalletProviders lazy boundary.
  */
 
-import React, { Suspense, useCallback, useEffect, useLayoutEffect, useState } from 'react';
+import React, { Suspense, useCallback, useEffect, useLayoutEffect, useRef, useState } from 'react';
 import { Trans, useTranslation } from 'react-i18next';
 import ChevronRight from "@/components/ui/cut-icons/next";
 
@@ -102,6 +102,7 @@ export function LoginModal({ open, onOpenChange }: LoginModalProps) {
   const [step, setStep] = useState<LoginStep>(
     () => resumingStep(walletPhase, isProcessingRedirect) ?? 'main',
   );
+  const wasOpen = useRef(open);
   useEffect(() => {
     if (!open) return;
     if (!readAuthTrace().auth_attempt_id) beginAuthTrace('undecided');
@@ -130,6 +131,8 @@ export function LoginModal({ open, onOpenChange }: LoginModalProps) {
   // unlock step the sign-in options got a frame on screen first. This runs
   // before paint, so that frame never exists.
   useLayoutEffect(() => {
+    const reopening = open && !wasOpen.current;
+    wasOpen.current = open;
     if (!open) return;
     const next = resumingStep(walletPhase, isProcessingRedirect);
     if (next) {
@@ -141,6 +144,11 @@ export function LoginModal({ open, onOpenChange }: LoginModalProps) {
     // owe it a wallet, and the wallet has to come first.
     if (requiresUsername) {
       setStep('profile');
+      return;
+    }
+    // Preserve the closing frame, then reset before a reopened sheet paints.
+    if (reopening) {
+      setStep('main');
       return;
     }
     // The resume ended without producing a wallet step — it either failed or
@@ -160,19 +168,8 @@ export function LoginModal({ open, onOpenChange }: LoginModalProps) {
     // Closing by hand abandons a "Migrate account" / "Import keys"
     // choice too; a completed login clears it itself.
     setWalletSetupIntent(null);
-    setStep('main');
     onOpenChange(false);
   }, [onOpenChange, requiresUsername, step]);
-
-  // The sheet can also be closed from underneath it — a completed login calls
-  // closeLoginModal directly, and vaul never reports a close it did not drive.
-  // handleClose was therefore the ONLY thing resetting the step, so a sheet
-  // that closed on success kept 'wallets' and the next open landed straight
-  // back on the wallet picker. Reset here instead, once the sheet is shut, so
-  // nothing flashes on the way out.
-  useEffect(() => {
-    if (!open) setStep('main');
-  }, [open]);
 
   // Opened from Settings → Profile → Add profile while already signed in.
   // Retitled so the sheet reads as "adding another account" rather than
@@ -239,7 +236,7 @@ export function LoginModal({ open, onOpenChange }: LoginModalProps) {
         <DrawerTitle className="sr-only">{titleText}</DrawerTitle>
       </DrawerHeader>
 
-      <div className="login-stack-scroll flex flex-col flex-1 min-h-0 overflow-y-auto overscroll-contain px-6 pb-4">
+      <div className="login-stack-scroll flex flex-col flex-1 min-h-0 overflow-y-auto overflow-x-hidden overscroll-contain px-2.5 pb-4">
         <Suspense fallback={<div className="h-[420px]" aria-hidden="true" />}>
           <LoginShortsStack />
         </Suspense>
@@ -322,7 +319,7 @@ export function LoginModal({ open, onOpenChange }: LoginModalProps) {
   // width deliberately — it blurs the sidebars too, so nothing outside the
   // sign-in flow competes with it.
   return (
-    <Drawer open={open} onOpenChange={handleClose} warmable walletPrompt dismissible={!requiresUsername} repositionInputs={false}>
+    <Drawer open={open} onOpenChange={handleClose} warmable walletPrompt animatedExit dismissible={!requiresUsername} repositionInputs={false}>
       <DrawerContent
         data-login-modal
         column

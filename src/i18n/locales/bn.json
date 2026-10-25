@@ -2519,9 +2519,6 @@
     "bio": "বায়ো",
     "bioPlaceholder": "নিজের সম্পর্কে বলুন...",
     "socialLinks": "সোশ্যাল লিংক",
-    "socialFollowers": "{{platform}}-এর ফলোয়ার",
-    "socialFollowersHint": "আপনার প্রোফাইলে আপনার মোট রিচের অংশ হিসাবে দেখানো হবে। সংখ্যাটি নিজে লিখুন — আমরা প্ল্যাটফর্ম থেকে এটি পড়ি না।",
-    "socialFollowersPlaceholder": "যেমন: ১২৫০০",
     "profileUpdated": "প্রোফাইল সফলভাবে আপডেট হয়েছে",
     "failedLoadProfile": "প্রোফাইল ডেটা লোড করতে ব্যর্থ",
     "imageTooLarge5": "ছবি ৫MB-এর কম হতে হবে",
@@ -3840,8 +3837,7 @@
     "reach": {
       "total": "মোট নাগাল",
       "breakdownTitle": "এই নাগালটি কোথা থেকে এসেছে",
-      "dehubFollowers": "DeHub অনুসারীদের",
-      "selfReported": "সামাজিক অনুগামীদের গণনা স্রষ্টার দ্বারা প্রবেশ করা হয় ।"
+      "dehubFollowers": "DeHub অনুসারীদের"
     },
     "loginDescription": "আপনার প্রোফাইল দেখতে ও পরিচালনা করতে লগ ইন করুন।",
     "replyThread": {

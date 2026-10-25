@@ -252,7 +252,7 @@ export function BrowseTab() {
       {isLoading ? (
         <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3">
           {Array.from({ length: 8 }).map((_, i) => (
-            <div key={i} className="rounded-xl border border-white/10 bg-white/5 animate-pulse">
+            <div data-skeleton-group key={i} className="rounded-xl border border-white/10 bg-white/5 animate-pulse">
               <div className="aspect-square bg-white/5" />
               <div className="p-3 space-y-2">
                 <div className="h-3 bg-white/10 rounded w-3/4" />

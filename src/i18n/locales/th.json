@@ -2520,9 +2520,6 @@
     "bio": "ประวัติ",
     "bioPlaceholder": "เล่าเกี่ยวกับตัวคุณ...",
     "socialLinks": "ลิงก์โซเชียล",
-    "socialFollowers": "ผู้ติดตามใน {{platform}}",
-    "socialFollowersHint": "แสดงในโปรไฟล์ของคุณซึ่งเป็นส่วนหนึ่งของการเข้าถึงทั้งหมดของคุณ ป้อนหมายเลขด้วยตัวคุณเอง — เราไม่ได้อ่านจากแพลตฟอร์ม",
-    "socialFollowersPlaceholder": "เช่น 12500",
     "profileUpdated": "อัปเดตโปรไฟล์สำเร็จ",
     "failedLoadProfile": "โหลดข้อมูลโปรไฟล์ไม่สำเร็จ",
     "imageTooLarge5": "รูปภาพต้องมีขนาดไม่เกิน 5MB",
@@ -2928,7 +2925,15 @@
     "solanaLinked": "เชื่อมต่อกระเป๋า Solana แล้ว",
     "solanaLinkFailed": "ไม่สามารถเชื่อมต่อกระเป๋านั้นได้",
     "solanaUnlinked": "ยกเลิกการเชื่อมต่อกระเป๋า Solana แล้ว",
-    "solanaUnlinkFailed": "ไม่สามารถยกเลิกการเชื่อมต่อกระเป๋านั้นได้"
+    "solanaUnlinkFailed": "ไม่สามารถยกเลิกการเชื่อมต่อกระเป๋านั้นได้",
+    "socialConnectHint": "เชื่อมต่อบัญชีเพื่อแสดงจำนวนผู้ติดตามจริงในการเข้าถึงทั้งหมดของคุณ ตัวเลขมาจากแพลตฟอร์มโดยตรง",
+    "socialConnect": "เชื่อมต่อ",
+    "socialConnectAria": "เชื่อมต่อ {{platform}}",
+    "socialConnected": "เชื่อมต่อ {{platform}} แล้ว",
+    "socialConnectedShort": "เชื่อมต่อแล้ว",
+    "socialConnectFailed": "ไม่สามารถเชื่อมต่อ {{platform}} ได้ โปรดลองอีกครั้ง",
+    "socialVerifiedFollowers": "ผู้ติดตาม {{value}} คน",
+    "socialFollowersPending": "กำลังอัปเดตจำนวนผู้ติดตาม"
   },
   "common": {
     "mute": "ปิดเสียง",
@@ -3867,7 +3872,7 @@
       "total": "การเข้าถึงทั้งหมด",
       "breakdownTitle": "แหล่งที่มาของการเข้าถึงนี้",
       "dehubFollowers": "ผู้ติดตาม DeHub",
-      "selfReported": "ผู้สร้างเป็นผู้ป้อนจำนวนผู้ติดตามโซเชียล"
+      "verified": "ตัวเลขโซเชียลมาจากบัญชีที่ครีเอเตอร์เชื่อมต่อไว้"
     },
     "loginDescription": "เข้าสู่ระบบเพื่อดูและจัดการโปรไฟล์ของคุณ",
     "replyThread": {

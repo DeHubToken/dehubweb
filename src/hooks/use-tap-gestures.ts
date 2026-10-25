@@ -64,6 +64,8 @@ export interface UseTapGesturesOptions {
   postId?: string | number;
   /** Feed posts reserve only their central area for multi-tap reactions. */
   reactionArea?: 'center' | 'surface';
+  /** Navigable text opens on release; multi-tap reactions belong to its media. */
+  singleTapOnly?: boolean;
   /**
    * The surface's own single-tap action. By default it is held back
    * `TAP_WINDOW_MS` so a second tap can overtake it — the price of telling one
@@ -93,6 +95,7 @@ export interface UseTapGesturesOptions {
 export function useTapGestures({
   postId,
   reactionArea = 'surface',
+  singleTapOnly = false,
   onSingleTap,
   onUndoSingleTap,
   disabled,
@@ -133,14 +136,14 @@ export function useTapGestures({
         reset();
         return;
       }
-      if (disabled || !id) return;
+      if (!id || (disabled && !singleTapOnly)) return;
       // A second finger means a pinch or a two-finger scroll, never a tap.
       if (origin.current && origin.current.id !== event.pointerId) {
         reset();
         return;
       }
       held.current = false;
-      const rect = reactionArea === 'center' ? event.currentTarget.getBoundingClientRect() : null;
+      const rect = !singleTapOnly && reactionArea === 'center' ? event.currentTarget.getBoundingClientRect() : null;
       const central = !rect || isInTapReactionCenter(event.clientX - rect.left, event.clientY - rect.top, rect.width, rect.height);
       origin.current = { x: event.clientX, y: event.clientY, id: event.pointerId, central };
 
@@ -158,7 +161,7 @@ export function useTapGestures({
         emitOpenReactions(id);
       }, LONG_PRESS_MS);
     },
-    [disabled, id, enableLongPress, reactionArea, reset],
+    [disabled, id, enableLongPress, reactionArea, singleTapOnly, reset],
   );
 
   const onPointerMove = useCallback(
@@ -188,7 +191,7 @@ export function useTapGestures({
         holdTimer.current = null;
       }
 
-      if (disabled || !id) {
+      if (!id || (disabled && !singleTapOnly)) {
         onSingleTap?.(event);
         return;
       }
@@ -220,7 +223,7 @@ export function useTapGestures({
       // The rest of a feed post is an immediate open target. Crossing out
       // of the center also cancels a pending center gesture, so a later timer
       // cannot open or react to the post after navigation.
-      if (!from.central) {
+      if (singleTapOnly || !from.central) {
         reset();
         onSingleTap?.(event);
         return;
@@ -273,7 +276,7 @@ export function useTapGestures({
       emitTapReactionFeedback(id, 'love', point);
       emitTapReaction(id, 'love', point);
     },
-    [disabled, id, onSingleTap, onUndoSingleTap, reset],
+    [disabled, id, singleTapOnly, onSingleTap, onUndoSingleTap, reset],
   );
 
   const onPointerCancel = useCallback(() => {

@@ -56,7 +56,7 @@ export function EventLinkEmbed({ eventNumber, fallback = null }: EventLinkEmbedP
 
   if (isLoading) {
     return (
-      <div className="mt-2 h-40 rounded-xl bg-white/[0.04] animate-pulse" />
+      <div className="mt-2 h-40 rounded-xl theme-skeleton animate-pulse" />
     );
   }
 

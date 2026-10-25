@@ -6702,9 +6702,6 @@
     "bio": "Bio",
     "bioPlaceholder": "Kɔrɔbɔ kɛ bɔ",
     "socialLinks": "Kɔrɔbɔ",
-    "socialFollowers": "Mɔgɔ minw be tugu u kɔ {{platform}}",
-    "socialFollowersHint": "I ka kunnafoniw yira i ka kunnafoniw kan i ka kunnafoniw bɛɛ kɔnɔ. I yɛrɛ ka nimɔrɔ don — an t'a kalan o kan.",
-    "socialFollowersPlaceholder": "ɲɛyirali fɛ, ɲɛsin ID-12345 ma.",
     "profileUpdated": "Kɔrɔbɔ kɛ bɔ",
     "failedLoadProfile": "Kɔrɔbɔ kɛ bɔ",
     "imageTooLarge5": "Fɔlɔw 5MB kɛ",
@@ -8113,8 +8110,7 @@
     "reach": {
       "total": "Ka se yɔrɔ bɛɛ la",
       "breakdownTitle": "O koo bɔra min?",
-      "dehubFollowers": "DeHub ka kalandenw",
-      "selfReported": "Mɔgɔ min ye mɔgɔ bila sira ka tugu a kɔ, ale lo ye mɔgɔ bila sira ka tugu a kɔ."
+      "dehubFollowers": "DeHub ka kalandenw"
     },
     "loginDescription": "Sɔgɔma kɛ",
     "replyThread": {

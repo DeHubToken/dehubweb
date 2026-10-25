@@ -6579,9 +6579,6 @@
     "bio": "Bio",
     "bioPlaceholder": "Řekněte něco o sobě...",
     "socialLinks": "Sociální odkazy",
-    "socialFollowers": "Sledující: {{platform}}",
-    "socialFollowersHint": "Zobrazí se na vašem profilu jako součást vašeho celkového dosahu. Číslo zadávejte sami — z platformy ho nečteme.",
-    "socialFollowersPlaceholder": "např. 12500",
     "profileUpdated": "Profil úspěšně aktualizován",
     "failedLoadProfile": "Nepodařilo se načíst data profilu",
     "imageTooLarge5": "Obrázek musí být menší než 5MB",
@@ -8090,8 +8087,7 @@
     "reach": {
       "total": "Celkový dosah",
       "breakdownTitle": "Odkud tento dosah pochází",
-      "dehubFollowers": "Následovníci DeHubu",
-      "selfReported": "Počet sledujících na sociálních sítích zadává tvůrce."
+      "dehubFollowers": "Následovníci DeHubu"
     },
     "loginDescription": "Přihlaste se pro zobrazení a správu profilu.",
     "replyThread": {

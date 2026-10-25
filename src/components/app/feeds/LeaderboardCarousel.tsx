@@ -147,7 +147,7 @@ export const LeaderboardCarousel = memo(function LeaderboardCarousel() {
         {isLoading ? (
           <div className="flex gap-2 overflow-hidden" role="status" aria-label={t('leaderboard.loadingBoard')}>
             {Array.from({ length: SKELETON_CARDS }, (_, i) => (
-              <div key={i} className="flex-shrink-0 w-[160px] h-[84px] rounded-xl bg-white/[0.04] border border-white/[0.08] animate-pulse" />
+              <div key={i} className="flex-shrink-0 w-[160px] h-[84px] rounded-xl theme-skeleton border border-white/[0.08] animate-pulse" />
             ))}
           </div>
         ) : isError ? (

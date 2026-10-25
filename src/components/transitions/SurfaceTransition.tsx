@@ -4,7 +4,7 @@
  * Wraps the router's `<Routes>` and plays the choreographed app↔docs slide.
  *
  * Keyed by SURFACE (see getSurface), so only crossing the app↔docs boundary
- * animates the shell; app navigation uses middle-column snapshots. `mode="wait"` holds the
+ * animates the shell; app navigation paints a destination loading layer first. `mode="wait"` holds the
  * outgoing surface mounted through its exit (panels slide off + shell fades),
  * THEN mounts the incoming one (docs panel slides in) — the "slide off, then
  * slide in after" sequence.
@@ -16,8 +16,8 @@
  * to the whole subtree (AppLayout, PersistentPageCache, …) via router context —
  * so the feed doesn't blank out mid-slide.
  */
-import { type ReactNode } from 'react';
-import { useLocation, type Location } from 'react-router-dom';
+import { useMemo, useRef, type ReactNode } from 'react';
+import { NavigationType, UNSAFE_LocationContext, useLocation, type Location } from 'react-router-dom';
 import { AnimatePresence, motion, useReducedMotion } from 'framer-motion';
 import { useAppRouteMotion } from '@/hooks/use-app-route-motion';
 import {
@@ -37,10 +37,23 @@ export function SurfaceTransition({ children }: SurfaceTransitionProps) {
   const reduceMotion = useReducedMotion();
   const displayedLocation = useAppRouteMotion(location, reduceMotion);
   const surface = getSurface(location.pathname);
+  const renderedRoutes = useRef<{ location: Location; node: ReactNode } | null>(null);
+  // Reuse the exact source element for the loading shell's first frame. Even
+  // rendering Routes with the old location creates a fresh context value and
+  // needlessly re-renders the outgoing feed before the shell can paint.
+  if (displayedLocation.key === location.key || renderedRoutes.current?.location !== displayedLocation) {
+    renderedRoutes.current = { location: displayedLocation, node: children(displayedLocation) };
+  }
+  const routeTree = renderedRoutes.current!.node;
+  // Routes itself subscribes to the outer location even with a location prop.
+  // Shield that subscription too, so a tap cannot render the old feed again
+  // before the destination's loading shell reaches the screen.
+  const frozenContext = useMemo(() => ({ location: displayedLocation, navigationType: NavigationType.Pop }), [displayedLocation]);
+  const frozenRoutes = <UNSAFE_LocationContext.Provider value={frozenContext}>{routeTree}</UNSAFE_LocationContext.Provider>;
 
   // Respect reduced-motion: render the live tree with no presence animation.
   if (reduceMotion) {
-    return <>{children(location)}</>;
+    return <>{frozenRoutes}</>;
   }
 
   return (
@@ -56,7 +69,7 @@ export function SurfaceTransition({ children }: SurfaceTransitionProps) {
         // containing block for the fixed background canvas or mini-players.
         style={{ transformOrigin: 'center top' }}
       >
-        {children(displayedLocation)}
+        {frozenRoutes}
       </motion.div>
     </AnimatePresence>
   );

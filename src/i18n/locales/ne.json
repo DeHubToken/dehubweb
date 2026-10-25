@@ -6554,9 +6554,6 @@
     "bio": "जीवनी",
     "bioPlaceholder": "आफ्नो बारेमा बताउनुहोस्...",
     "socialLinks": "सामाजिक लिंकहरू",
-    "socialFollowers": "{{platform}} मा फलोअरहरू",
-    "socialFollowersHint": "तपाईंको कुल पहुँचको भागको रूपमा तपाईंको प्रोफाइलमा देखाइएको छ । नम्बर आफै प्रविष्ट गर्नुहोस् — हामी यसलाई प्लेटफर्मबाट पढ्दैनौं ।",
-    "socialFollowersPlaceholder": "जस्तै १२५००",
     "profileUpdated": "प्रोफाइल सफलतापूर्वक अपडेट भयो",
     "failedLoadProfile": "प्रोफाइल लोड गर्न असफल भयो",
     "imageTooLarge5": "तस्बिर 5MB भन्दा कम हुनुपर्छ",
@@ -8082,8 +8079,7 @@
     "reach": {
       "total": "कुल पहुँच",
       "breakdownTitle": "यो पहुँच कहाँबाट आउँछ",
-      "dehubFollowers": "DeHub अनुयायीहरू",
-      "selfReported": "सामाजिक अनुयायी गणनाहरू सृष्टिकर्ताद्वारा प्रविष्ट गरिन्छ ।"
+      "dehubFollowers": "DeHub अनुयायीहरू"
     },
     "loginDescription": "प्रोफाइल हेर्न र व्यवस्थापन गर्न लगइन गर्नुहोस्।",
     "replyThread": {

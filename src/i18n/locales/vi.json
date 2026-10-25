@@ -2530,9 +2530,6 @@
     "bio": "Bio",
     "bioPlaceholder": "Tell us about yourself...",
     "socialLinks": "Social Links",
-    "socialFollowers": "Người theo dõi trên {{platform}}",
-    "socialFollowersHint": "Được hiển thị trên hồ sơ của bạn như một phần trong tổng phạm vi tiếp cận của bạn. Tự nhập số điện thoại — chúng tôi không đọc số điện thoại từ nền tảng.",
-    "socialFollowersPlaceholder": "ví dụ: 12500",
     "profileUpdated": "Profile updated successfully",
     "failedLoadProfile": "Không thể tải dữ liệu hồ sơ",
     "imageTooLarge5": "Hình ảnh phải nhỏ hơn 5MB",
@@ -2938,7 +2935,15 @@
     "solanaLinked": "Đã kết nối ví Solana",
     "solanaLinkFailed": "Không thể kết nối ví đó",
     "solanaUnlinked": "Đã ngắt kết nối ví Solana",
-    "solanaUnlinkFailed": "Không thể ngắt kết nối ví đó"
+    "solanaUnlinkFailed": "Không thể ngắt kết nối ví đó",
+    "socialConnectHint": "Kết nối tài khoản để hiển thị số người theo dõi thật trong tổng phạm vi tiếp cận. Số liệu lấy trực tiếp từ nền tảng.",
+    "socialConnect": "Kết nối",
+    "socialConnectAria": "Kết nối {{platform}}",
+    "socialConnected": "Đã kết nối {{platform}}",
+    "socialConnectedShort": "Đã kết nối",
+    "socialConnectFailed": "Không thể kết nối {{platform}}. Vui lòng thử lại.",
+    "socialVerifiedFollowers": "{{value}} người theo dõi",
+    "socialFollowersPending": "Đang cập nhật số người theo dõi"
   },
   "common": {
     "mute": "Tắt tiếng",
@@ -3867,7 +3872,7 @@
       "total": "Tổng phạm vi tiếp cận",
       "breakdownTitle": "Phạm vi tiếp cận này đến từ đâu",
       "dehubFollowers": "Người theo dõi DeHub",
-      "selfReported": "Người sáng tạo nhập số lượng người theo dõi trên mạng xã hội."
+      "verified": "Số liệu mạng xã hội lấy từ các tài khoản nhà sáng tạo đã kết nối."
     },
     "loginDescription": "Đăng nhập để xem và quản lý hồ sơ của bạn.",
     "replyThread": {

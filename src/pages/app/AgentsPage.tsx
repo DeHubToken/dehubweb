@@ -378,7 +378,7 @@ export default function AgentsPage() {
         {isLoading ? (
           <>
             {[1, 2].map((i) => (
-              <div key={i} data-kit-section className="h-32 bg-white/5 animate-pulse" />
+              <div key={i} data-kit-section className="h-32 theme-skeleton animate-pulse" />
             ))}
           </>
         ) : isError ? (

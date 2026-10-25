@@ -228,7 +228,7 @@ export function PromptFlowModal({ open, onOpenChange, categories, initialPrompt 
               className="absolute inset-3 rounded-full border border-dashed border-white/15 animate-[spin_10s_linear_infinite]"
               style={{ animationDirection: 'reverse' }}
             />
-            <div className="absolute inset-6 rounded-full bg-white/[0.04] blur-xl animate-pulse" />
+            <div className="absolute inset-6 rounded-full theme-skeleton blur-xl animate-pulse" />
             <div className="absolute inset-0 flex items-center justify-center">
               <div className="w-12 h-12 rounded-2xl bg-white/10 border border-white/20 flex items-center justify-center animate-[pulse_2s_ease-in-out_infinite]">
                 <Sparkles className="w-6 h-6 animate-pulse" />

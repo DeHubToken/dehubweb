@@ -66,6 +66,8 @@ const post = {
 beforeEach(() => {
   vi.useFakeTimers();
   navigate.mockClear();
+  history.replaceState(null, '', '/');
+  navigate.mockImplementation((path: string) => history.replaceState(null, '', path));
   cachePost.mockClear();
   window.getSelection()?.removeAllRanges();
 });
@@ -91,13 +93,13 @@ function tap(target: Element, x = 200, y = 150) {
   fireEvent.click(target);
 }
 
-it.each(['headline', 'body'])('opens a single %s tap after multi-tap resolution', part => {
+it.each(['headline', 'body'])('opens a single %s tap on release without a reaction delay', part => {
   const { body } = mount();
   tap(part === 'headline' ? screen.getByText(post.title!) : body);
-  expect(navigate).not.toHaveBeenCalled();
-  act(() => vi.advanceTimersByTime(360));
   expect(navigate).toHaveBeenCalledExactlyOnceWith('/app/post/7', { state: { fromFeed: true } });
   expect(cachePost).toHaveBeenCalledTimes(1);
+  act(() => vi.advanceTimersByTime(500));
+  expect(navigate).toHaveBeenCalledTimes(1);
 });
 
 it('opens an outer body tap immediately without a duplicate compatibility click', () => {
@@ -115,7 +117,7 @@ it('opens the quoted post without opening its parent after the timer', () => {
   expect(navigate).toHaveBeenCalledExactlyOnceWith('/app/post/88');
 });
 
-it.each([2, 3])('preserves the %s-tap reaction without navigating', count => {
+it.each([2, 3])('opens text on the first of %s taps instead of reserving a reaction gesture', count => {
   const { body } = mount();
   const casts: string[] = [];
   const listener = (event: Event) => casts.push((event as CustomEvent).detail.reaction);
@@ -126,8 +128,8 @@ it.each([2, 3])('preserves the %s-tap reaction without navigating', count => {
       act(() => vi.advanceTimersByTime(80));
     }
     act(() => vi.advanceTimersByTime(500));
-    expect(navigate).not.toHaveBeenCalled();
-    expect(casts).toEqual([count === 2 ? 'like' : 'love']);
+    expect(navigate).toHaveBeenCalledTimes(1);
+    expect(casts).toEqual([]);
   } finally {
     window.removeEventListener(DOUBLE_TAP_LIKE_EVENT, listener);
   }

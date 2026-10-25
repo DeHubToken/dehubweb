@@ -6581,9 +6581,6 @@
     "bio": "Àkọsílẹ̀ ẹni",
     "bioPlaceholder": "Sọ fún wa nípa ara rẹ...",
     "socialLinks": "Àwọn ìjápọ̀ àwùjọ",
-    "socialFollowers": "Àwọn ọmọ-ẹ̀yìn lórí {{platform}}",
-    "socialFollowersHint": "Ṣàfihàn lórí àkójọpọ̀ rẹ gẹ́gẹ́ bí apá kan ìfikúnsí rẹ pátápátá. Fún ara rẹ ní nọ́mbà náà — a kò kà á láti orí ìtàgé.",
-    "socialFollowersPlaceholder": "e.g. 12500",
     "profileUpdated": "Àkọsílẹ̀ ti ṣe àyípadà dáradára",
     "failedLoadProfile": "Kò le gba dátà àkọsílẹ̀",
     "imageTooLarge5": "Àwòrán gbọdọ̀ kéré ju 5MB",
@@ -8076,8 +8073,7 @@
     "reach": {
       "total": "Lapapọ arọwọto",
       "breakdownTitle": "Nibo ni arọwọto yii ti wa",
-      "dehubFollowers": "Àwọn ọmọ-ẹ̀yìn DeHub",
-      "selfReported": "Olùṣẹ̀dá ló máa ń tẹ iye àwọn ọmọlẹ́yìn tó ń tẹ̀lé àwùjọ."
+      "dehubFollowers": "Àwọn ọmọ-ẹ̀yìn DeHub"
     },
     "loginDescription": "Wọlé láti rí àti ṣàkóso àkọsílẹ̀ rẹ.",
     "replyThread": {

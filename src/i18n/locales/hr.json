@@ -6590,9 +6590,6 @@
     "bio": "Biografija",
     "bioPlaceholder": "Recite nam nešto o sebi...",
     "socialLinks": "Društvene mreže",
-    "socialFollowers": "Pratitelji na {{platform}}",
-    "socialFollowersHint": "Prikazuje se na tvom profilu kao dio ukupnog dosega. Sami unesite broj — ne čitamo ga s platforme.",
-    "socialFollowersPlaceholder": "npr. 12500",
     "profileUpdated": "Profil uspješno ažuriran",
     "failedLoadProfile": "Učitavanje profila nije uspjelo",
     "imageTooLarge5": "Slika mora biti manja od 5MB",
@@ -8109,8 +8106,7 @@
     "reach": {
       "total": "Ukupan doseg",
       "breakdownTitle": "Odakle dolazi taj doseg",
-      "dehubFollowers": "Pratitelji na DeHubu",
-      "selfReported": "Kreator unosi broj pratitelja na društvenim mrežama."
+      "dehubFollowers": "Pratitelji na DeHubu"
     },
     "loginDescription": "Prijavite se za pregled i upravljanje profilom.",
     "replyThread": {

@@ -496,9 +496,9 @@ export function ProfileHeader({
                   )}
                 </div>
               )}
-              {/* DeHub followers plus the creator's own figures for their
-                  linked socials. Absent until a social carries a count. */}
-              <TotalReachPill customs={profile.customs} followers={profile.followers} />
+              {/* DeHub followers plus the verified counts of the creator's
+                  connected socials. Absent until one carries a count. */}
+              <TotalReachPill wallet={apiProfile?.walletAddress ?? profile.walletAddress} followers={profile.followers} />
             </div>
           ) : null}
 

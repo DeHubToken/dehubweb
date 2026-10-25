@@ -6577,9 +6577,6 @@
     "bio": "Bemutatkozás",
     "bioPlaceholder": "Mondjon valamit magáról...",
     "socialLinks": "Közösségi linkek",
-    "socialFollowers": "Követők a következőn:{{platform}}",
-    "socialFollowersHint": "A teljes elérés részeként jelenik meg a profilodon. Adja meg a számot — nem olvassuk el a platformról.",
-    "socialFollowersPlaceholder": "pl. 12500",
     "profileUpdated": "Profil sikeresen frissítve",
     "failedLoadProfile": "Profiladatok betöltése sikertelen",
     "imageTooLarge5": "A kép mérete max. 5MB lehet",
@@ -8087,8 +8084,7 @@
     "reach": {
       "total": "Teljes elérés",
       "breakdownTitle": "Honnan származik ez a hatókör?",
-      "dehubFollowers": "DeHub követők",
-      "selfReported": "A közösségi követők számát az alkotó adja meg."
+      "dehubFollowers": "DeHub követők"
     },
     "loginDescription": "Jelentkezzen be profiljának megtekintéséhez és kezeléséhez.",
     "replyThread": {

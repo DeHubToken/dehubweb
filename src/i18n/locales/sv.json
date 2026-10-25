@@ -6584,9 +6584,6 @@
     "bio": "Bio",
     "bioPlaceholder": "Berätta om dig själv...",
     "socialLinks": "Sociala länkar",
-    "socialFollowers": "Följare på {{platform}}",
-    "socialFollowersHint": "Visas på din profil som en del av din totala räckvidd. Ange numret själv — vi läser det inte från plattformen.",
-    "socialFollowersPlaceholder": "t.ex. 12500",
     "profileUpdated": "Profilen uppdaterades",
     "failedLoadProfile": "Kunde inte ladda profildata",
     "imageTooLarge5": "Bilden måste vara under 5MB",
@@ -8095,8 +8092,7 @@
     "reach": {
       "total": "Total räckvidd",
       "breakdownTitle": "Varifrån denna räckvidd kommer",
-      "dehubFollowers": "DeHub-följare",
-      "selfReported": "Antal följare i sociala medier anges av kreatören."
+      "dehubFollowers": "DeHub-följare"
     },
     "loginDescription": "Logga in för att visa och hantera din profil.",
     "replyThread": {

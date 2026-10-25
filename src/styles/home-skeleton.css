@@ -1,3 +1,4 @@
+@import './skeleton.css';
 .home-skeleton-block {
   background: hsl(var(--foreground) / 0.07);
 }

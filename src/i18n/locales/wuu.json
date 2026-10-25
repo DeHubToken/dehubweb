@@ -5352,9 +5352,6 @@
     "bio": "简介",
     "bioPlaceholder": "介绍一下侬自家...",
     "socialLinks": "社交链接",
-    "socialFollowers": "关注者（在 {{platform}} 上）",
-    "socialFollowersHint": "显示在您个人资料中，作为您总覆盖范围的一部分。请自行输入数字——我们不会从平台读取。",
-    "socialFollowersPlaceholder": "例如：12500",
     "profileUpdated": "个人档案更新成功",
     "failedLoadProfile": "加载个人档案失败",
     "imageTooLarge5": "图片必须小于5MB",
@@ -6747,8 +6744,7 @@
     "reach": {
       "total": "总触达",
       "breakdownTitle": "呢个触达从边度嚟",
-      "dehubFollowers": "DeHub 关注者",
-      "selfReported": "社交关注数由创作者输入。"
+      "dehubFollowers": "DeHub 关注者"
     },
     "loginDescription": "登录来看搭管理侬个个人档案。",
     "replyThread": {

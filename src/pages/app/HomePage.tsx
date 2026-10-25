@@ -296,6 +296,29 @@ export default function HomePage() {
   const [showImagesCollage, setShowImagesCollage] = useState(true); // Default to collage
   const [showImagesFilters, setShowImagesFilters] = useState(false);
   const [selectedImageId, setSelectedImageId] = useState<string | null>(null);
+
+  // An image post opened on its own (phone post page, shared link) lands in the
+  // Images tab's scroll view on that picture. The nav pill's back slot already
+  // returns to the grid from there, so nothing new is needed for the way back.
+  const pinnedImageId = searchParams.get('image') || undefined;
+  useEffect(() => {
+    if (!pinnedImageId) return;
+    setActiveTab('images');
+    setSelectedImageId(pinnedImageId);
+    setShowImagesCollage(false);
+    setSearchParams({}, { replace: true });
+  }, [pinnedImageId]); // eslint-disable-line react-hooks/exhaustive-deps
+
+  // Same for a video on a phone: it opens in the Shorts viewer on that video.
+  // ShortsFeed clears the id once it has opened, so it does not reopen later.
+  const pinnedShortId = searchParams.get('short') || undefined;
+  const [startShortId, setStartShortId] = useState<string | undefined>(undefined);
+  useEffect(() => {
+    if (!pinnedShortId) return;
+    setActiveTab('shorts');
+    setStartShortId(pinnedShortId);
+    setSearchParams({}, { replace: true });
+  }, [pinnedShortId]); // eslint-disable-line react-hooks/exhaustive-deps
   const [showVideosFilters, setShowVideosFilters] = useState(false);
   const [showMusicFilters, setShowMusicFilters] = useState(false);
   const [showLiveFilters, setShowLiveFilters] = useState(false);
@@ -1206,7 +1229,7 @@ export default function HomePage() {
           <div className={isCollapsed && !(islandTopBar && isMobile) ? 'pt-2' : undefined} style={{ display: deferredTab === 'shorts' ? 'block' : 'none' }}>
             <CachedPageActiveContext.Provider value={pageActive && deferredTab === 'shorts'}>
             <Suspense fallback={<FeedBodySkeleton />}>
-              <MemoShortsFeed showFilters={showShortsFilters} isRefreshing={isRefreshing} refreshKey={refreshKey} />
+              <MemoShortsFeed showFilters={showShortsFilters} isRefreshing={isRefreshing} refreshKey={refreshKey} startShortId={startShortId} onStartShortConsumed={() => setStartShortId(undefined)} />
             </Suspense>
             </CachedPageActiveContext.Provider>
           </div>

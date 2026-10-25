@@ -1,4 +1,5 @@
 import { WindowedFeedItem } from '@/components/app/feeds/WindowedFeedItem';
+import { RetainedPostSurface } from '@/components/app/feeds/RetainedPostSurface';
 import { useTranslation as _useCopy } from 'react-i18next';
 import { translateCopy as _translateCopy } from '@/i18n/copy';
 import { useSurfaceDraft } from '@/hooks/use-surface-draft';
@@ -1578,29 +1579,32 @@ export function HomeFeed({ active = true, shuffleKey, isRefreshing, showFilters 
     // skipped-state placeholder, so scrolling a card off and back never snaps it
     // to a wrong fixed height and shifts everything below it.
     const intrinsicH = item.type === 'video' ? '520px' : item.type === 'image' ? '640px' : item.type === 'ad' ? '420px' : '320px';
+    const retained = item.type === 'post' || item.type === 'image';
+    const frameProps = {
+      'data-feed-item': true,
+      'data-feed-token-id': item.type === 'ad' ? undefined : (item.data as any)?.id,
+      'data-feed-before-shorts': beforeShorts ? '' : undefined,
+      'data-cinematic': item.type,
+      'data-cinematic-first': firstFeedPost ? '' : undefined,
+      className: 'rounded-2xl border border-white/[0.12] bg-white/[0.03] p-3',
+    };
+    const boostLabel = index >= 0 && queuedBoostIds.includes(String((item.data as any)?.id)) ? (
+      <button type="button" onClick={() => navigate('/app/superpowers')}
+        className="flex items-center gap-1.5 pb-1.5 rounded-sm text-[11px] uppercase tracking-wider text-muted-foreground transition-colors hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring">
+        <ThemedIcon icon="superpowers" alt="" className="w-4 h-4 object-contain opacity-70" />
+        <span>{t('superpowers.boostedLabel')}</span>
+      </button>
+    ) : null;
     return (
       <WindowedFeedItem
         key={key}
-        data-feed-item
-        data-feed-token-id={item.type === 'ad' ? undefined : (item.data as any)?.id}
-        data-feed-before-shorts={beforeShorts ? '' : undefined}
-        data-cinematic={item.type}
-        data-cinematic-first={firstFeedPost ? '' : undefined}
-        className="rounded-2xl border border-white/[0.12] bg-white/[0.03] p-3"
+        {...(retained ? {} : frameProps)}
         eager={index < 3} estimatedHeight={parseInt(intrinsicH, 10)}
         vanishOnDislike={item.type === 'ad' ? undefined : (item.data as any)?.id}
       >
-        {index >= 0 && queuedBoostIds.includes(String((item.data as any)?.id)) && (
-          <button
-            type="button"
-            onClick={() => navigate('/app/superpowers')}
-            className="flex items-center gap-1.5 pb-1.5 rounded-sm text-[11px] uppercase tracking-wider text-muted-foreground transition-colors hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
-          >
-            <ThemedIcon icon="superpowers" alt="" className="w-4 h-4 object-contain opacity-70" />
-            <span>{t('superpowers.boostedLabel')}</span>
-          </button>
-        )}
-        {card}
+        {retained
+          ? <RetainedPostSurface id={String(item.data.id)} frameProps={frameProps} leading={boostLabel}>{card}</RetainedPostSurface>
+          : <>{boostLabel}{card}</>}
       </WindowedFeedItem>
     );
   };

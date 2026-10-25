@@ -2532,9 +2532,6 @@
     "bio": "బయో",
     "bioPlaceholder": "మీ గురించి చెప్పండి...",
     "socialLinks": "సోషల్ లింక్‌లు",
-    "socialFollowers": "{{platform}} లో ఫాలోవర్ ‌ లు",
-    "socialFollowersHint": "మీ మొత్తం పరిధిలో భాగంగా మీ ప్రొఫైల్ ‌ లో చూపబడింది. నంబర్ ‌ ను మీరే నమోదు చేయండి — మేము దానిని ప్లాట్ ‌ ఫారమ్ నుండి చదవము.",
-    "socialFollowersPlaceholder": "ఉదా. 12500",
     "profileUpdated": "ప్రొఫైల్ విజయవంతంగా నవీకరించబడింది",
     "failedLoadProfile": "ప్రొఫైల్ డేటాను లోడ్ చేయడం విఫలమైంది",
     "imageTooLarge5": "చిత్రం 5MB కంటే తక్కువగా ఉండాలి",
@@ -3858,8 +3855,7 @@
     "reach": {
       "total": "మొత్తం చేరుకోవడం",
       "breakdownTitle": "ఈ చేరుకోవడం ఎక్కడ నుండి వస్తుంది",
-      "dehubFollowers": "DeHub అనుచరులు",
-      "selfReported": "సామాజిక అనుచరుల సంఖ్యను సృష్టికర్త నమోదు చేస్తారు."
+      "dehubFollowers": "DeHub అనుచరులు"
     },
     "loginDescription": "మీ ప్రొఫైల్‌ను చూడటానికి మరియు నిర్వహించడానికి లాగిన్ అవ్వండి.",
     "replyThread": {

@@ -2540,9 +2540,6 @@
     "bio": "Biogrāfija",
     "bioPlaceholder": "Pastāstiet par sevi...",
     "socialLinks": "Sociālās saites",
-    "socialFollowers": "Sekotāji {{platform}}",
-    "socialFollowersHint": "Redzams jūsu profilā kā daļa no jūsu kopējās sasniedzamības. Ievadiet numuru pats — mēs to nenolasām no platformas.",
-    "socialFollowersPlaceholder": "piem., 12500",
     "profileUpdated": "Profils veiksmīgi atjaunināts",
     "failedLoadProfile": "Profila datu ielāde neizdevās",
     "imageTooLarge5": "Attēlam jābūt mazākam par 5MB",
@@ -3853,8 +3850,7 @@
     "reach": {
       "total": "Kopējā sasniedzamība",
       "breakdownTitle": "No kurienes nāk šī saziņa",
-      "dehubFollowers": "DeHub sekotāji",
-      "selfReported": "Sociālo sekotāju skaitu ievada veidotājs."
+      "dehubFollowers": "DeHub sekotāji"
     },
     "loginDescription": "Piesakieties, lai skatītu un pārvaldītu savu profilu.",
     "replyThread": {

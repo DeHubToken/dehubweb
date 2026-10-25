@@ -1,6 +1,8 @@
 import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { useQuery, useQueryClient } from '@tanstack/react-query';
+import { useQuery, useQueryClient, type QueryClient } from '@tanstack/react-query';
+import { socialReachQueryKey } from '@/hooks/use-social-reach';
+import { syncSocialReach } from '@/lib/social-reach';
 import { toast } from 'sonner';
 import { Clock, Unlink } from "lucide-react";
 import Coins from "@/components/ui/cut-icons/coins";
@@ -46,6 +48,13 @@ export function PlatformIcon({ platform }: { platform: string }) {
 
 export const MULTIPOST_QUERY_KEY = ['multipost', 'status'];
 
+/** Connections here are the same ones the profile's total reach counts. */
+function refreshReach(qc: QueryClient, wallet: string | null | undefined) {
+  syncSocialReach()
+    .then((accounts) => { if (wallet) qc.setQueryData(socialReachQueryKey(wallet), accounts); })
+    .catch(() => { /* the profile catches up when its cache expires */ });
+}
+
 export function MultiPostSettings() {
   const { t } = useTranslation();
   const { isAuthenticated, walletAddress } = useAuth();
@@ -78,7 +87,8 @@ export function MultiPostSettings() {
     const query = params.toString();
     window.history.replaceState(null, '', `${window.location.pathname}${query ? `?${query}` : ''}`);
     qc.invalidateQueries({ queryKey: MULTIPOST_QUERY_KEY });
-  }, [qc, t]);
+    if (connected) refreshReach(qc, walletAddress);
+  }, [qc, t, walletAddress]);
 
   if (!isAuthenticated) {
     return <p className="text-sm text-zinc-400">{t('multiPost.signIn')}</p>;
@@ -119,6 +129,7 @@ export function MultiPostSettings() {
       await disconnectAccount(accountId);
       toast.success(t('multiPost.disconnected'));
       qc.invalidateQueries({ queryKey: MULTIPOST_QUERY_KEY });
+      refreshReach(qc, walletAddress);
     } catch (err) {
       toast.error(err instanceof Error ? err.message : String(err));
     }

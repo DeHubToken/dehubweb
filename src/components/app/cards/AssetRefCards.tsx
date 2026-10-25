@@ -263,7 +263,7 @@ function AssetRefCard({ assetRef }: { assetRef: AssetRef }) {
   if (isLoading) {
     return (
       <div
-        className={cn('rounded-xl border border-white/10 bg-white/5 animate-pulse', CARD_HEIGHT)}
+        className={cn('rounded-xl border border-white/10 theme-skeleton animate-pulse', CARD_HEIGHT)}
         aria-hidden="true"
       />
     );

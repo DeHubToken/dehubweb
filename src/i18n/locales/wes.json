@@ -5820,9 +5820,6 @@
     "bio": "Bio",
     "bioPlaceholder": "Tell we about yourself...",
     "socialLinks": "Social Link dem",
-    "socialFollowers": "Followers for {{platform}}",
-    "socialFollowersHint": "Dem show for your profile as part of how many pipo you reach. You go enter the number yourself — we no go read am from the platform.",
-    "socialFollowersPlaceholder": "e.g. 12500",
     "profileUpdated": "Profile don update well well",
     "failedLoadProfile": "E no fit load profile data",
     "imageTooLarge5": "Image no fit pass 5MB",
@@ -7178,8 +7175,7 @@
     "reach": {
       "breakdownTitle": "Wa dis reach come from?",
       "total": "Total reach",
-      "dehubFollowers": "DeHub followers",
-      "selfReported": "Social follower count wey people enter, dem enter dem selves."
+      "dehubFollowers": "DeHub followers"
     },
     "loginDescription": "Log in for see and manage your profile.",
     "replyThread": {

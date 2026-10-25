@@ -5656,9 +5656,6 @@
     "bio": "بائو",
     "bioPlaceholder": "اپنے بارے میں بتاؤ...",
     "socialLinks": "سوشل لنکس",
-    "socialFollowers": "پیروکاروں پر {{platform}}",
-    "socialFollowersHint": "उदाहरण: 12500",
-    "socialFollowersPlaceholder": "12500",
     "profileUpdated": "پروفائل اپڈیٹ ہو گیا",
     "failedLoadProfile": "پروفائل ڈیٹا لوڈ نئیں ہویا",
     "imageTooLarge5": "تصویر ۵MB سے کم ہونی چائیے",
@@ -6971,8 +6968,7 @@
     "joined": "شامل",
     "reach": {
       "total": "कुल प्रेरणा",
-      "breakdownTitle": "येथून ही प्रेरणा येते",
-      "selfReported": "سوشل فالوور کاؤنٹس خالق نے دے دیے جاتے ہیں۔"
+      "breakdownTitle": "येथून ही प्रेरणा येते"
     },
     "loginDescription": "اپنا پروفائل دیکھنے اور مینیج کرنے کے لئے لاگ ان کرو۔",
     "replyThread": {

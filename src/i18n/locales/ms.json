@@ -2530,9 +2530,6 @@
     "bio": "Bio",
     "bioPlaceholder": "Ceritakan tentang diri anda...",
     "socialLinks": "Pautan Sosial",
-    "socialFollowers": "Pengikut di {{platform}}",
-    "socialFollowersHint": "Ditunjukkan pada profil anda sebagai sebahagian daripada jumlah capaian anda. Masukkan nombor itu sendiri — kami tidak membacanya dari platform.",
-    "socialFollowersPlaceholder": "cth. 12500",
     "profileUpdated": "Profil berjaya dikemas kini",
     "failedLoadProfile": "Gagal memuatkan data profil",
     "imageTooLarge5": "Imej mesti kurang daripada 5MB",
@@ -4109,8 +4106,7 @@
     "reach": {
       "total": "Jumlah capaian",
       "breakdownTitle": "Dari mana datangnya jangkauan ini",
-      "dehubFollowers": "Pengikut DeHub",
-      "selfReported": "Kiraan pengikut sosial dimasukkan oleh pengkarya."
+      "dehubFollowers": "Pengikut DeHub"
     },
     "loginDescription": "Log masuk untuk melihat dan menguruskan profil anda.",
     "replyThread": {

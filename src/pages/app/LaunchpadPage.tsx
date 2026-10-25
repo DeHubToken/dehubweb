@@ -104,7 +104,7 @@ export default function LaunchpadPage() {
           {isLoading
             ? <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 {[1, 2, 3, 4].map(i => (
-                  <div key={i} className="h-40 rounded-2xl bg-white/5 border border-white/10 animate-pulse" />
+                  <div key={i} className="h-40 rounded-2xl theme-skeleton border border-white/10 animate-pulse" />
                 ))}
               </div>
             : isError

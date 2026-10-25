@@ -1,11 +1,12 @@
 /**
  * Post page "Stage" — the phone (<640px) layout of the dedicated post page.
  *
- *   media, full width, with back / Ask AI / options floating on it
+ *   media, full width, laid out the same as the home feed card
  *   creator row (followers + Follow), caption clamped with "more", meta row
  *   one five-tile bar: like · comments · repost & share · tip · save
  *   comments straight under it ("Comments N" + sort), composer docked to the
- *   bottom of the screen as liquid glass; the bottom nav is hidden here
+ *   bottom of the screen as liquid glass; the logo bar, feed pill and bottom
+ *   nav are hidden here for every media kind
  *   a mini player pinned to the top once the media scrolls away
  *
  * The cards are the same ones the feed uses. They read `PostStageContext` and
@@ -34,8 +35,6 @@ interface PostStagePhoneProps {
 
 /** Body class that hides the app's phone chrome while the stage is up. */
 export const POST_STAGE_BODY_CLASS = 'post-stage-mode';
-/** Added alongside it when the stage keeps the top bar and feed pill. */
-export const POST_STAGE_KEEP_NAV_CLASS = 'post-stage-keep-nav';
 
 export function PostStagePhone({ value, children, comments, related, kind, title, subtitle, thumbnail, padded }: PostStagePhoneProps) {
   const rootRef = useRef<HTMLDivElement>(null);
@@ -45,22 +44,14 @@ export function PostStagePhone({ value, children, comments, related, kind, title
     return () => document.body.classList.remove(POST_STAGE_BODY_CLASS);
   }, []);
 
-  // Audio has no media to float Back on, so it keeps the top bar and feed
-  // pill, whose settings slot turns into Back on a post.
-  const keepNav = kind === 'audio';
-  useEffect(() => {
-    if (!keepNav) return;
-    document.body.classList.add(POST_STAGE_KEEP_NAV_CLASS);
-    return () => document.body.classList.remove(POST_STAGE_KEEP_NAV_CLASS);
-  }, [keepNav]);
-
   return (
     <>
       <div ref={rootRef} data-post-page data-post-stage={kind} className="flex flex-col">
         {/* Only the post itself is on the stage. The related posts below are
             ordinary feed cards and must not pick up its layout. */}
         <PostStageContext.Provider value={value}>
-          <div data-stage-post className={padded ? 'px-3' : undefined}>
+          {/* Same gutter the home feed uses, so media sits at the feed's width. */}
+          <div data-stage-post className={padded ? 'px-3' : 'px-2 sm:px-3'}>
             {children}
           </div>
         </PostStageContext.Provider>

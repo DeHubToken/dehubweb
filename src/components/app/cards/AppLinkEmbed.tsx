@@ -31,7 +31,7 @@ export function AppLinkEmbed({ slug, path, fallback = null }: AppLinkEmbedProps)
     staleTime: 5 * 60_000,
   });
 
-  if (isLoading) return <div className="mt-2 h-[72px] animate-pulse rounded-xl bg-white/[0.04]" />;
+  if (isLoading) return <div className="mt-2 h-[72px] animate-pulse rounded-xl theme-skeleton" />;
   if (!app) return <>{fallback}</>;
 
   const open = (e: MouseEvent) => {

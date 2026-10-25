@@ -2537,9 +2537,6 @@
     "bio": "Дар бораи ман",
     "bioPlaceholder": "Дар бораи худ нақл кунед...",
     "socialLinks": "Шабакаҳои иҷтимоӣ",
-    "socialFollowers": "Пайравони {{platform}}",
-    "socialFollowersHint": "Ipinapakita sa iyong profile bilang bahagi ng iyong kabuuang pag Рақамро худатон ворид кунед — мо онро аз платформа намехонем.",
-    "socialFollowersPlaceholder": "масалан, 12500",
     "profileUpdated": "Профил бомуваффақият навсозӣ шуд",
     "failedLoadProfile": "Боркунии маълумоти профил ноком шуд",
     "imageTooLarge5": "Тасвир бояд аз 5MB хурдтар бошад",
@@ -3855,8 +3852,7 @@
     "reach": {
       "total": "Дастрасии умумӣ",
       "breakdownTitle": "НОҲИЯИ ПАНҶ МЕГӮЯ",
-      "dehubFollowers": "Пайравони DeHub",
-      "selfReported": "Ang mga sukatan ng Social Follower ay nagpasok ng lumikha."
+      "dehubFollowers": "Пайравони DeHub"
     },
     "loginDescription": "Барои дидан ва идоракунии профили худ ворид шавед.",
     "replyThread": {

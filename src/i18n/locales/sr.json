@@ -2538,9 +2538,6 @@
     "bio": "Биографија",
     "bioPlaceholder": "Реците нешто о себи...",
     "socialLinks": "Друштвени линкови",
-    "socialFollowers": "Пратиоци на {{platform}}",
-    "socialFollowersHint": "Приказује се на вашем профилу као део укупног домета. Сами унесите број — не читамо га са платформе.",
-    "socialFollowersPlaceholder": "npr. 12500",
     "profileUpdated": "Профил успешно ажуриран",
     "failedLoadProfile": "Учитавање профила неуспешно",
     "imageTooLarge5": "Слика мора бити мања од 5MB",
@@ -3867,8 +3864,7 @@
     "reach": {
       "total": "Укупно доживљај",
       "breakdownTitle": "Одколе долази овај доживљај",
-      "dehubFollowers": "ДеХуб пратиоци",
-      "selfReported": "Бројеви пратилаца социјалних мрежа уносе их креатори."
+      "dehubFollowers": "ДеХуб пратиоци"
     },
     "loginDescription": "Пријавите се за преглед и управљање профилом.",
     "replyThread": {

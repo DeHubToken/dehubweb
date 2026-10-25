@@ -269,6 +269,8 @@ project_id = "aigxuutjaqsywioxjefr"
     verify_jwt = false
   [functions.multipost]
     verify_jwt = false
+  [functions.social-reach]
+    verify_jwt = false
   [functions.og-image]
     verify_jwt = false
   [functions.preview-transactional-email]

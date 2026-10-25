@@ -6450,8 +6450,6 @@
     "bio": "بایو",
     "bioPlaceholder": "موږ ته د ځان په اړه ووایاست...",
     "socialLinks": "ټولنیزې لینکونه",
-    "socialFollowersHint": "خپل پروفایل د خپل بشپړ لاسرسي برخې په توګه وښایاست. خپله شمیره دننه کړئ — موږ دا د پلیټ فارم څخه نه لوستو.",
-    "socialFollowersPlaceholder": "د نمونوي شمېر: 12500",
     "profileUpdated": "پروفایل په بریالیتوب سره تازه شو",
     "failedLoadProfile": "د پروفایل معلومات نشي لوډ کیدلی",
     "imageTooLarge5": "انځور باید له ۵MB نه کم وي",
@@ -6858,7 +6856,6 @@
     "solanaLinkFailed": "هغه والټ ونه نښلول شو",
     "solanaUnlinked": "د سولانا والټ پرې شو",
     "solanaUnlinkFailed": "هغه والټ جلا نه شو",
-    "socialFollowers": "{{platform}} پیروان",
     "sessionsLoadFailed": "د سېشنونو د لېدلو په وخت کې دېرېدلي",
     "sessionRevoked": "ټيکي چېرې وړېدلی",
     "sessionRevokeFailed": "دې ټيکي چېرې وړېدلو لپاره نه شولای شول",
@@ -7915,8 +7912,7 @@
     "reach": {
       "total": "په بشپړه توګه لاس رسی",
       "breakdownTitle": "له کوم ځایه چې دا رسم له کوم ځای څخه راځي",
-      "dehubFollowers": "د DeHub پیروان په نښه کړئ",
-      "selfReported": "د ټولنیز پیروانو شمیر د خالق لخوا ننوتل کیږي."
+      "dehubFollowers": "د DeHub پیروان په نښه کړئ"
     },
     "loginDescription": "د خپل پروفایل لیدو او اداره لپاره ننوتل وکړئ.",
     "replyThread": {

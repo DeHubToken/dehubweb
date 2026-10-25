@@ -46,7 +46,7 @@ describe('feed video — a tap on the media toggles playback, it does not naviga
     expect(VIDEO_CARD).toContain('focus-visible:outline-none');
   });
 
-  it('still opens the post from the surrounding bento', () => {
+  it('routes surrounding bento taps through the shared primary destination', () => {
     // handleCardClick is the one that navigates, and the media container opts
     // out of it by name — [data-no-navigate] — rather than by stopPropagation.
     expect(VIDEO_CARD).toMatch(/const handleCardClick[\s\S]{0,600}?openPost\(\)/);

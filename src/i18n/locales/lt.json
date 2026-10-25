@@ -2536,9 +2536,6 @@
     "bio": "Biografija",
     "bioPlaceholder": "Papasakokite apie save...",
     "socialLinks": "Socialinės nuorodos",
-    "socialFollowers": "Sekėjai {{platform}}",
-    "socialFollowersHint": "Rodoma jūsų profilyje kaip bendro pasiekiamumo dalis. Įveskite numerį patys — mes jo nenuskaitome iš platformos.",
-    "socialFollowersPlaceholder": "pvz., 12500",
     "profileUpdated": "Profilis sėkmingai atnaujintas",
     "failedLoadProfile": "Nepavyko įkelti profilio duomenų",
     "imageTooLarge5": "Nuotrauka turi būti mažesnė nei 5MB",
@@ -3862,8 +3859,7 @@
     "reach": {
       "total": "Bendras pasiekiamumas",
       "breakdownTitle": "Iš kur šis pasiekiamumas",
-      "dehubFollowers": "„DeHub“ sekėjai",
-      "selfReported": "Socialinių sekėjų skaičių įveda kūrėjas."
+      "dehubFollowers": "„DeHub“ sekėjai"
     },
     "loginDescription": "Prisijunkite, kad peržiūrėtumėte ir tvarkytumėte savo profilį.",
     "replyThread": {

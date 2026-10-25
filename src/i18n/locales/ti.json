@@ -2528,9 +2528,6 @@
     "bio": "ሓጺር ገለጻ",
     "bioPlaceholder": "ብዛዕባ ነብስኻ ንገረና...",
     "socialLinks": "ማሕበራዊ ሊንክታት",
-    "socialFollowers": "ኣብ {{platform}}",
-    "socialFollowersHint": "ከም ኣካል ናይ ምሉእ ትሕዝቶኻ ኣብ መገለጺኻ ተዓጽዩ ። ነቲ ቁጽሪ ብገዛእ ርእስኻ ኣእቲኻ — ካብ መድረኽ ኣይንበብን ኢና ።",
-    "socialFollowersPlaceholder": "ንኣብነት ፡ 12500",
     "profileUpdated": "ፕሮፋይል ብዓወት ተመሓይሹ",
     "failedLoadProfile": "ዳታ ፕሮፋይል ምጽዓን ኣይተዓወተን",
     "imageTooLarge5": "ስእሊ ካብ 5MB ክትንእስ ኣለዋ",
@@ -3829,8 +3826,7 @@
     "reach": {
       "total": "ምሉእ ምብጻሕ",
       "breakdownTitle": "እዚ ምብጻሕ እዚ ካበይ እዩ መጺኡ ፧",
-      "dehubFollowers": "ተኸታተልቲ DeHub",
-      "selfReported": "ማሕበራዊ ተኸታተልቲ ቆጸራታት ብፈጣሪ ይኣትዉ እዮም ።"
+      "dehubFollowers": "ተኸታተልቲ DeHub"
     },
     "loginDescription": "ፕሮፋይልካ ንምርኣይን ንምምሕዳርን ብዓል።",
     "replyThread": {

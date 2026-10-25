@@ -22,9 +22,11 @@ import Share2 from "@/components/ui/cut-icons/feedshare";
 import { toast } from 'sonner';
 import { cn } from '@/lib/utils';
 import { useRadioPlayer } from '@/hooks/use-radio-player';
-import { getPrimaryTags, type RadioStation } from '@/lib/api/radio-browser';
+import { getPrimaryTags, searchStations, type RadioStation } from '@/lib/api/radio-browser';
+import { Input } from '@/components/ui/input';
+import { useDebouncedValue } from '@/hooks/use-debounced-value';
 import { getCustomLogo } from '@/components/app/radio/RadioStationCard';
-import { StagesCarousel } from '@/components/app/music/StagesCarousel';
+import { StagesChart } from '@/components/app/music/StagesCarousel';
 import { openStageModal } from '@/contexts/StageContext';
 import { searchNFTs, type DeHubNFT } from '@/lib/api/dehub';
 import { fetchMusicVideoChart, MUSIC_VIDEO_CHART_SORTS, type MusicVideoChartSort } from '@/lib/music-video-chart';
@@ -214,10 +216,10 @@ function ChartSkeleton() {
       {Array.from({ length: 6 }).map((_, i) => (
         <div key={i} className="flex items-center gap-3 border-b border-white/[0.12] px-3.5 py-2.5">
           <span className="h-4 w-[22px] rounded bg-white/5" />
-          <span className="h-12 w-12 rounded-lg bg-white/5 animate-pulse" />
+          <span className="h-12 w-12 rounded-lg theme-skeleton animate-pulse" />
           <span className="flex-1 space-y-1.5">
-            <span className="block h-3.5 w-2/3 rounded bg-white/5 animate-pulse" />
-            <span className="block h-3 w-1/3 rounded bg-white/5 animate-pulse" />
+            <span className="block h-3.5 w-2/3 rounded theme-skeleton animate-pulse" />
+            <span className="block h-3 w-1/3 rounded theme-skeleton animate-pulse" />
           </span>
         </div>
       ))}
@@ -279,6 +281,17 @@ export function CinematicMusic({ radioStations, blockedAddresses, showFilters = 
   const { t: _copy } = _useCopy();
   const navigate = useNavigate();
   const [chip, setChip] = useState<Chip>('top');
+  const [searches, setSearches] = useState<Partial<Record<Chip, string>>>({});
+  const search = searches[chip] ?? '';
+  const query = search.trim().toLocaleLowerCase();
+  const radioQuery = useDebouncedValue(chip === 'radio' ? search.trim() : '', 300);
+  const { data: radioMatches = [], isLoading: searchingRadio } = useQuery({
+    queryKey: ['radio-search', radioQuery],
+    queryFn: () => searchStations(radioQuery, 50),
+    enabled: chip === 'radio' && !!radioQuery,
+    staleTime: 60_000,
+  });
+  const stations = radioQuery ? radioMatches : radioStations;
   const { currentStation, isPlaying, play, togglePlayPause } = useRadioPlayer();
 
   const top = useMusicChart('trending', blockedAddresses, chip === 'top');
@@ -298,13 +311,13 @@ export function CinematicMusic({ radioStations, blockedAddresses, showFilters = 
       <div className="-mx-2 border-t border-white/[0.12]">
         {list.isLoading ? (
           <ChartSkeleton />
-        ) : list.items.length === 0 ? (
-          <p className="px-3.5 py-8 text-center text-sm text-zinc-500">{_copy("copy.2de5247a982a", { defaultValue: "Nothing here yet." })}</p>
+        ) : !list.items.some(item => !query || `${item.title} ${item.channel}`.toLocaleLowerCase().includes(query)) ? (
+          <p className="px-3.5 py-8 text-center text-sm text-zinc-500">{query ? _copy('common.noResults', { defaultValue: 'No results found' }) : _copy("copy.2de5247a982a", { defaultValue: "Nothing here yet." })}</p>
         ) : (
-          list.items.map((item, i) => (
+          list.items.map((item, i) => ({ item, rank: i + 1 })).filter(({ item }) => !query || `${item.title} ${item.channel}`.toLocaleLowerCase().includes(query)).map(({ item, rank }) => (
             <ChartRow
               key={item.id}
-              rank={i + 1}
+              rank={rank}
               image={item.thumbnail}
               title={item.title || _copy("copy.f59ab8d1331b", { defaultValue: "Untitled" })}
               subtitle={`${item.channel}${item.views ? ` · ${item.views}` : ''}`}
@@ -325,7 +338,7 @@ export function CinematicMusic({ radioStations, blockedAddresses, showFilters = 
       {heroStation ? (
         <RadioHero key={heroStation.stationuuid} station={heroStation} />
       ) : (
-        <div className="-mx-2 animate-pulse bg-zinc-900" style={{ height: 'min(118vw, 460px)' }} />
+        <div className="-mx-2 animate-pulse theme-skeleton" style={{ height: 'min(118vw, 460px)' }} />
       )}
 
       {!showFilters && <div data-no-swipe className="-mx-2 mt-3.5 flex gap-2 overflow-x-auto px-3.5 scrollbar-hide">
@@ -343,6 +356,7 @@ export function CinematicMusic({ radioStations, blockedAddresses, showFilters = 
         ))}
       </div>}
 
+      {chip !== 'stages' && <Input type="search" value={search} onChange={event => setSearches(previous => ({ ...previous, [chip]: event.target.value }))} aria-label={_copy('common.search', { defaultValue: 'Search' })} placeholder={_copy('common.search', { defaultValue: 'Search' })} className="my-3" />}
       {chip === 'top' && renderTracks(top, _copy("copy.50ea9e32e19c", { defaultValue: "Top 50" }))}
       {chip === 'new' && renderTracks(fresh, _copy("copy.136dfb88fd85", { defaultValue: "New releases" }))}
       {chip === 'videos' && renderTracks(videos, _copy('music.videoCharts', { defaultValue: 'Music Video Charts' }), (
@@ -359,10 +373,12 @@ export function CinematicMusic({ radioStations, blockedAddresses, showFilters = 
         <>
           <SectionTitle title={_copy("copy.38be740dac96", { defaultValue: "Radio stations" })} />
           <div className="-mx-2 border-t border-white/[0.12]">
-            {radioStations.length === 0 ? (
+            {searchingRadio ? (
               <ChartSkeleton />
+            ) : stations.length === 0 ? (
+              <p className="px-3.5 py-8 text-center text-sm text-zinc-500">{_copy('common.noResults', { defaultValue: 'No results found' })}</p>
             ) : (
-              radioStations.map((station, i) => {
+              stations.map((station, i) => {
                 const current = currentStation?.stationuuid === station.stationuuid;
                 return (
                   <ChartRow
@@ -383,7 +399,7 @@ export function CinematicMusic({ radioStations, blockedAddresses, showFilters = 
       )}
       {chip === 'stages' && (
         <div className="pt-5">
-          <StagesCarousel onOpenStages={() => openStageModal('browse')} />
+          <StagesChart onOpenStages={() => openStageModal('browse')} />
         </div>
       )}
     </div>

@@ -152,7 +152,7 @@ export function mapUserToProfile(user: DeHubUser): ProfileData {
     isFollowing: user.isFollowing,
     followsYou: user.followsYou,
     isPending: user.isPending ?? user.isFollowRequestPending,
-    isPrivate: user.isPrivate || customs?.isPrivate === 'true' || customs?.isPrivate === true,
+    isPrivate: user.isPrivate ?? (customs?.isPrivate === 'true' || customs?.isPrivate === true),
     hideBadgeAndBalance: user.hideBadgeAndBalance === true,
     showMatureContent: user.showMatureContent === true,
     youBlocked: user.youBlocked ?? false,

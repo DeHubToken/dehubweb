@@ -2519,9 +2519,6 @@
     "bio": "Биография",
     "bioPlaceholder": "Кажете нещо за себе си...",
     "socialLinks": "Социални линкове",
-    "socialFollowers": "Последователи в {{platform}}",
-    "socialFollowersHint": "Показва се в профила ви като част от общия ви обхват. Въведете сами номера — не го четем от платформата.",
-    "socialFollowersPlaceholder": "напр. 12500",
     "profileUpdated": "Профилът е успешно обновен",
     "failedLoadProfile": "Зареждането на профила неуспешно",
     "imageTooLarge5": "Снимката трябва да е по-малка от 5MB",
@@ -3839,8 +3836,7 @@
     "reach": {
       "total": "Общ обхват",
       "breakdownTitle": "Откъде идва този обхват",
-      "dehubFollowers": "Последователи на DeHub",
-      "selfReported": "Броят последователи в социалните мрежи се въвежда от твореца."
+      "dehubFollowers": "Последователи на DeHub"
     },
     "loginDescription": "Влезте за преглед и управление на профила.",
     "replyThread": {

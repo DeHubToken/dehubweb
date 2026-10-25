@@ -2535,9 +2535,6 @@
     "bio": "بائيو",
     "bioPlaceholder": "پنهنجي باري ۾ ٻڌايو...",
     "socialLinks": "سوشل لنڪس",
-    "socialFollowers": "{{platform}} تي پيروڪار",
-    "socialFollowersHint": "توھان جي پروفائل تي ڏيکاريو پنھنجي مجموعي پھچ جي حصي طور. پنهنجو نمبر داخل ڪريو — اسان ان کي پليٽ فارم تان نه پڙهون ٿا.",
-    "socialFollowersPlaceholder": "مثال طور جي 12500",
     "profileUpdated": "پروفائيل ڪاميابيءَ سان اپڊيٽ ٿي وئي",
     "failedLoadProfile": "پروفائيل ڊيٽا لوڊ نه ٿي سگهيو",
     "imageTooLarge5": "تصوير 5MB کان گهٽ هجڻ گهرجي",
@@ -3861,8 +3858,7 @@
     "reach": {
       "total": "مجموعي طور تي پهچ",
       "breakdownTitle": "هي پهچ ڪٿان آندي",
-      "dehubFollowers": "DeHub پوئلڳن",
-      "selfReported": "تخليقڪار طرفان سماجي پوئلڳن جي ڳڻپ داخل ڪئي وئي آهي."
+      "dehubFollowers": "DeHub پوئلڳن"
     },
     "loginDescription": "پنهنجي پروفائيل ڏسڻ ۽ منظم ڪرڻ لاءِ لاگ ان ڪريو.",
     "replyThread": {

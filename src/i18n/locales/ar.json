@@ -615,9 +615,6 @@
     "bio": "نبذة",
     "bioPlaceholder": "أخبرنا عن نفسك...",
     "socialLinks": "روابط اجتماعية",
-    "socialFollowers": "المتابعون على {{platform}}",
-    "socialFollowersHint": "يظهر في ملفك التعريفي كجزء من مدى وصولك الإجمالي. أدخل الرقم بنفسك — نحن لا نقرأه من المنصة.",
-    "socialFollowersPlaceholder": "على سبيل المثال 12500",
     "profileUpdated": "تم تحديث الملف الشخصي بنجاح",
     "failedLoadProfile": "فشل تحميل بيانات الملف الشخصي",
     "imageTooLarge5": "يجب أن تكون الصورة أقل من 5 ميجابايت",
@@ -1130,7 +1127,15 @@
     "adLoadStandardDesc": "منشور ممول واحد كل ثمانية",
     "adLoadFewer": "أقل",
     "adLoadFewerDesc": "منشور واحد كل ستة عشر",
-    "automatic": "تلقائي"
+    "automatic": "تلقائي",
+    "socialConnectHint": "اربط حسابًا لعرض عدد متابعيه الحقيقي ضمن مدى وصولك الكلي. الأرقام تأتي مباشرة من المنصة.",
+    "socialConnect": "ربط",
+    "socialConnectAria": "ربط {{platform}}",
+    "socialConnected": "تم ربط {{platform}}",
+    "socialConnectedShort": "مرتبط",
+    "socialConnectFailed": "تعذر ربط {{platform}}. حاول مرة أخرى.",
+    "socialVerifiedFollowers": "{{value}} متابع",
+    "socialFollowersPending": "جارٍ تحديث عدد المتابعين"
   },
   "common": {
     "confirm": "تأكيد",
@@ -2141,7 +2146,7 @@
       "total": "الوصول الكلي",
       "breakdownTitle": "من أين يأتي هذا الوصول",
       "dehubFollowers": "متابعو DeHub",
-      "selfReported": "يتم إدخال عدد المتابعين الاجتماعيين من قبل المنشئ."
+      "verified": "أرقام التواصل الاجتماعي مأخوذة من حسابات ربطها صانع المحتوى."
     },
     "loginDescription": "سجّل الدخول لعرض وإدارة ملفك الشخصي.",
     "replyThread": {

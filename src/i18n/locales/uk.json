@@ -2520,9 +2520,6 @@
     "bio": "Біографія",
     "bioPlaceholder": "Розкажіть про себе...",
     "socialLinks": "Соціальні посилання",
-    "socialFollowers": "Підписники на {{platform}}",
-    "socialFollowersHint": "Відображається у вашому профілі як частина загального охоплення. Введіть номер самостійно — ми не читаємо його з платформи.",
-    "socialFollowersPlaceholder": "наприклад, 12500",
     "profileUpdated": "Профіль успішно оновлено",
     "failedLoadProfile": "Не вдалося завантажити дані профілю",
     "imageTooLarge5": "Зображення має бути меншим за 5 МБ",
@@ -4203,8 +4200,7 @@
     "reach": {
       "total": "Загальне охоплення",
       "breakdownTitle": "Звідки це охоплення",
-      "dehubFollowers": "Підписники DeHub",
-      "selfReported": "Кількість підписників у соціальних мережах вводить автор."
+      "dehubFollowers": "Підписники DeHub"
     },
     "loginDescription": "Увійдіть, щоб переглядати свій профіль і керувати ним.",
     "replyThread": {

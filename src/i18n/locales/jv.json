@@ -6404,9 +6404,6 @@
     "bio": "Bio",
     "bioPlaceholder": "Critakna babagan awakmu...",
     "socialLinks": "Pranala Sosial",
-    "socialFollowers": "Pangikut ing {{platform}}",
-    "socialFollowersHint": "Ditampilake ing profil sampeyan minangka bagéan saka jangkauan total sampeyan. Lebokake nomer dhewe - kita ora maca saka platform.",
-    "socialFollowersPlaceholder": "tuladha. 12500",
     "profileUpdated": "Profil kasil dianyari",
     "failedLoadProfile": "Gagal ngemot profil",
     "imageTooLarge5": "Gambar kudu kurang saka 5MB",
@@ -7813,8 +7810,7 @@
     "reach": {
       "total": "Jangkauan total",
       "breakdownTitle": "Saka ngendi jangkauan iki",
-      "dehubFollowers": "Pengikut DeHub",
-      "selfReported": "Jumlah pengikut sosial dilebokake dening kreator."
+      "dehubFollowers": "Pengikut DeHub"
     },
     "loginDescription": "Mlebu kanggo ndeleng lan ngatur profilmu.",
     "replyThread": {

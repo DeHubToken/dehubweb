@@ -64,7 +64,7 @@ function StatCard({ label, value, subtitle, delay = 0, loading = false }: { labe
       <div className="flex-1 min-w-0">
         <p className="text-[10px] sm:text-xs lg:text-[10px] text-white/50 uppercase tracking-wider mb-1 truncate">{label}</p>
         {loading ? (
-          <div className="h-6 w-24 rounded-md bg-white/10 animate-pulse" />
+          <div className="h-6 w-24 rounded-md theme-skeleton animate-pulse" />
         ) : (
           <p className="text-lg sm:text-xl lg:text-base font-bold text-white break-all leading-tight">{value}</p>
         )}

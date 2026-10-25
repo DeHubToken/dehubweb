@@ -2528,9 +2528,6 @@
     "bio": "Bio",
     "bioPlaceholder": "Oʻzingiz haqingizda gapirib bering...",
     "socialLinks": "Ijtimoiy havolalar",
-    "socialFollowers": "{{platform}} dagi obunachilar",
-    "socialFollowersHint": "Profilingizda umumiy qamrovingizning bir qismi sifatida ko'rsatiladi. Raqamni o'zingiz kiriting — biz uni platformadan o'qimaymiz.",
-    "socialFollowersPlaceholder": "masalan, 12500",
     "profileUpdated": "Profil muvaffaqiyatli yangilandi",
     "failedLoadProfile": "Profilni yuklash amalga oshmadi",
     "imageTooLarge5": "Rasm 5MB dan kichik boʻlishi kerak",
@@ -3873,8 +3870,7 @@
     "reach": {
       "total": "Umumiy qamrov",
       "breakdownTitle": "Bu imkoniyat qayerdan keladi",
-      "dehubFollowers": "DeHub izdoshlari",
-      "selfReported": "Ijtimoiy tarmoqlardagi obunachilar soni yaratuvchi tomonidan kiritiladi."
+      "dehubFollowers": "DeHub izdoshlari"
     },
     "loginDescription": "Profilingizni koʻrish va boshqarish uchun kiring.",
     "replyThread": {

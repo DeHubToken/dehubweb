@@ -2570,9 +2570,6 @@
     "bio": "Bio",
     "bioPlaceholder": "Erzähle uns von dir...",
     "socialLinks": "Soziale Links",
-    "socialFollowers": "Follower auf {{platform}}",
-    "socialFollowersHint": "Wird in deinem Profil als Teil deiner Gesamtreichweite angezeigt. Geben Sie die Nummer selbst ein — wir lesen sie nicht von der Plattform ab.",
-    "socialFollowersPlaceholder": "z.B. 12500",
     "profileUpdated": "Profil erfolgreich aktualisiert",
     "failedLoadProfile": "Profildaten konnten nicht geladen werden",
     "imageTooLarge5": "Bild muss kleiner als 5 MB sein",
@@ -2978,7 +2975,15 @@
     "solanaLinked": "Solana-Wallet verbunden",
     "solanaLinkFailed": "Diese Wallet konnte nicht verbunden werden",
     "solanaUnlinked": "Solana-Wallet getrennt",
-    "solanaUnlinkFailed": "Diese Wallet konnte nicht getrennt werden"
+    "solanaUnlinkFailed": "Diese Wallet konnte nicht getrennt werden",
+    "socialConnectHint": "Verbinde ein Konto, um seine echte Followerzahl in deiner Gesamtreichweite zu zeigen. Die Zahlen kommen direkt von der Plattform.",
+    "socialConnect": "Verbinden",
+    "socialConnectAria": "{{platform}} verbinden",
+    "socialConnected": "{{platform}} verbunden",
+    "socialConnectedShort": "Verbunden",
+    "socialConnectFailed": "{{platform}} konnte nicht verbunden werden. Bitte versuche es erneut.",
+    "socialVerifiedFollowers": "{{value}} Follower",
+    "socialFollowersPending": "Followerzahl wird aktualisiert"
   },
   "common": {
     "confirm": "Bestätigen",
@@ -3900,7 +3905,7 @@
       "total": "Gesamtreichweite",
       "breakdownTitle": "Woher diese Reichweite kommt",
       "dehubFollowers": "DeHub-Follower",
-      "selfReported": "Die Anzahl der sozialen Follower wird vom Ersteller eingegeben."
+      "verified": "Die Social-Zahlen stammen aus Konten, die der Creator verbunden hat."
     },
     "loginDescription": "Melde dich an, um dein Profil zu sehen und zu verwalten.",
     "replyThread": {

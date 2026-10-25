@@ -5757,8 +5757,6 @@
     "bio": "Bio",
     "bioPlaceholder": "নিজের কথা কিছু কও...",
     "socialLinks": "সোশ্যাল লিংক",
-    "socialFollowersHint": "আপনার প্রোফাইলে মোট পৌঁছানোর অংশ হিসেবে দেখানো হয়েছে। নিজে সংখ্যা লিখুন — আমরা প্ল্যাটফর্ম থেকে তা পড়ি না।",
-    "socialFollowersPlaceholder": "जैसे 12500",
     "profileUpdated": "প্রোফাইল ঠিকঠাক আপডেট হইছে",
     "failedLoadProfile": "প্রোফাইলের ডেটা লোড হয় নাই",
     "imageTooLarge5": "ছবি ৫MB-র কম হওয়া নাগবে",
@@ -7233,8 +7231,7 @@
     "reach": {
       "total": "টোটাল রিচ",
       "breakdownTitle": "এই রিচ কোথা থেকে আসে",
-      "dehubFollowers": "ডিহাব ফলোয়ার্স",
-      "selfReported": "সোশ্যাল ফলোয়ার কাউন্ট কে ক্রিয়েটর দিয়ে এন্টার করা হয়।"
+      "dehubFollowers": "ডিহাব ফলোয়ার্স"
     },
     "loginDescription": "প্রোফাইল দেখির আর সামলাইর লগ ইন করো।",
     "replyThread": {

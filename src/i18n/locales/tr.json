@@ -615,9 +615,6 @@
     "bio": "Biyografi",
     "bioPlaceholder": "Kendinizden bahsedin...",
     "socialLinks": "Sosyal Bağlantılar",
-    "socialFollowers": "Takipçiler {{platform}}",
-    "socialFollowersHint": "Profilinizde toplam erişiminizin bir parçası olarak gösterilir. Sayıyı kendiniz girin — platformdan okumuyoruz.",
-    "socialFollowersPlaceholder": "ör. 12500",
     "profileUpdated": "Profil başarıyla güncellendi",
     "failedLoadProfile": "Profil verileri yüklenemedi",
     "imageTooLarge5": "Görsel 5MB'den küçük olmalı",
@@ -1130,7 +1127,15 @@
     "adLoadStandardDesc": "Her sekizde bir sponsorlu post",
     "adLoadFewer": "Azalt",
     "adLoadFewerDesc": "Her on altıda bir",
-    "automatic": "Otomatik"
+    "automatic": "Otomatik",
+    "socialConnectHint": "Gerçek takipçi sayısını toplam erişiminde göstermek için bir hesap bağla. Sayılar doğrudan platformdan gelir.",
+    "socialConnect": "Bağla",
+    "socialConnectAria": "{{platform}} bağla",
+    "socialConnected": "{{platform}} bağlandı",
+    "socialConnectedShort": "Bağlı",
+    "socialConnectFailed": "{{platform}} bağlanamadı. Lütfen tekrar dene.",
+    "socialVerifiedFollowers": "{{value}} takipçi",
+    "socialFollowersPending": "Takipçi sayısı güncelleniyor"
   },
   "common": {
     "confirm": "Onayla",
@@ -2137,7 +2142,7 @@
       "total": "Toplam erişim",
       "breakdownTitle": "Bu erişimin nereden geldiği",
       "dehubFollowers": "DeHub takipçileri",
-      "selfReported": "Sosyal takipçi sayıları yaratıcı tarafından girilir."
+      "verified": "Sosyal sayılar içerik üreticisinin bağladığı hesaplardan gelir."
     },
     "loginDescription": "Profilinizi görüntülemek ve yönetmek için giriş yapın.",
     "replyThread": {

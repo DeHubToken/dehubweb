@@ -12,10 +12,12 @@
 import React, { Suspense, useState, useEffect, useMemo, useRef, memo } from 'react';
 import { useLocation, useParams } from 'react-router-dom';
 import { BUY_PATHS } from '@/lib/buy-route';
+import { RouteContentReady } from '@/hooks/use-route-content-ready';
 import { useSidebarCollapse } from '@/contexts/SidebarCollapseContext';
 import { lazyWithRetry } from '@/lib/lazy-with-retry';
 import { ErrorBoundary } from '@/components/ErrorBoundary';
 import { CachedPageActiveContext } from '@/contexts/CachedPageActiveContext';
+import { RetainedPostActivityContext } from '@/lib/retained-post-surface';
 import HomePage from '@/pages/app/HomePage';
 import { pauseMediaIn, pauseOffDocumentMediaIn, resumeMedia } from '@/lib/pause-media-in';
 import { handoffVideoFor } from '@/lib/video-handoff';
@@ -142,6 +144,7 @@ const CachedPage = memo(function CachedPage({
   isActive,
   forceVisible = false,
   overlayKey,
+  retainedPostKey,
   resetToken,
 }: {
   config: CachedPageConfig;
@@ -149,6 +152,7 @@ const CachedPage = memo(function CachedPage({
   forceVisible?: boolean;
   /** Post the overlay above this page is opening, if any. */
   overlayKey?: string | null;
+  retainedPostKey?: string | null;
   /** Route token that resets this page's error boundary on navigation. */
   resetToken?: unknown;
 }) {
@@ -209,10 +213,13 @@ const CachedPage = memo(function CachedPage({
           transient fault self-heal on the next navigation. */}
       <ErrorBoundary compact resetKey={resetToken} label={config.key}>
         <Suspense fallback={<SkeletonComponent />}>
+          <RouteContentReady active={isActive} />
           {/* Only the active page may write document metadata — see the context. */}
-          <CachedPageActiveContext.Provider value={shouldStayVisible}>
-            <Component />
-          </CachedPageActiveContext.Provider>
+          <RetainedPostActivityContext.Provider value={retainedPostKey ?? null}>
+            <CachedPageActiveContext.Provider value={shouldStayVisible && !retainedPostKey}>
+              <Component />
+            </CachedPageActiveContext.Provider>
+          </RetainedPostActivityContext.Provider>
         </Suspense>
       </ErrorBoundary>
     </div>
@@ -222,7 +229,8 @@ const CachedPage = memo(function CachedPage({
     prev.config !== next.config ||
     prev.isActive !== next.isActive ||
     prev.forceVisible !== next.forceVisible ||
-    prev.overlayKey !== next.overlayKey
+    prev.overlayKey !== next.overlayKey ||
+    prev.retainedPostKey !== next.retainedPostKey
   ) {
     return false;
   }
@@ -237,10 +245,13 @@ const CachedPage = memo(function CachedPage({
 export function PersistentPageCache({
   keepHomeVisible = false,
   overlayKey = null,
+  retainedPostKey = null,
 }: {
   keepHomeVisible?: boolean;
   /** Post id the overlay is opening — its media is handed up, not paused. */
   overlayKey?: string | null;
+  /** Visible card that keeps playback while the covered Home feed is inactive. */
+  retainedPostKey?: string | null;
 }) {
   const location = useLocation();
   const pathname = location.pathname;
@@ -296,6 +307,7 @@ export function PersistentPageCache({
             isActive={isActive}
             forceVisible={forceVisible}
             overlayKey={forceVisible ? overlayKey : null}
+            retainedPostKey={forceVisible ? retainedPostKey : null}
             resetToken={pathname}
           />
         );

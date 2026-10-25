@@ -54,7 +54,7 @@ export function ConnectedAppsSetting() {
       </h3>
       <p className="-mt-2 mb-3 text-xs text-zinc-500">{t('mastodonApps.connectedDescription')}</p>
       {apps === null ? (
-        <div className="h-10 animate-pulse rounded-xl bg-zinc-800" />
+        <div className="h-10 animate-pulse rounded-xl theme-skeleton" />
       ) : apps.length === 0 ? (
         <p className="text-sm text-zinc-400">{t('mastodonApps.connectedEmpty')}</p>
       ) : (

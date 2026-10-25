@@ -6415,8 +6415,6 @@
     "bio": "ବାୟୋ",
     "bioPlaceholder": "ଆପଣଙ୍କ ବିଷୟରେ କୁହନ୍ତୁ...",
     "socialLinks": "ସୋସିଆଲ ଲିଙ୍କ",
-    "socialFollowersHint": "ଆପଣଙ୍କର ସମୁଦାୟ ପହଂଚର ଅଂଶ ଭାବରେ ଆପଣଙ୍କର ପ୍ରୋଫାଇଲରେ ଦର୍ଶାଯାଇଛି । ନିଜକୁ ନମ୍ବର ଦିଅନ୍ତୁ — ଆମେ ପ୍ଲାଟଫର୍ମରୁ ଏହାକୁ ପଢ଼ୁନାହୁଁ ।",
-    "socialFollowersPlaceholder": "ଚାଲିଲେ 12500",
     "profileUpdated": "ପ୍ରୋଫାଇଲ ସଫଳ ଭାବେ ଅପଡେଟ ହେଲା",
     "failedLoadProfile": "ପ୍ରୋଫାଇଲ ଡାଟା ଲୋଡ ହୋଇପାରିଲା ନାହିଁ",
     "imageTooLarge5": "ଛବି ୫MB ରୁ କମ ହେବା ଉଚିତ",
@@ -7897,8 +7895,7 @@
     "reach": {
       "total": "ସମୁଦାୟ ପହଂଚ",
       "breakdownTitle": "ଏହି ପହଁଚ କେଉଁଠୁ ଆସିଲା?",
-      "dehubFollowers": "DeHub ଅନୁଗାମୀ",
-      "selfReported": "ସୃଷ୍ଟିକର୍ତ୍ତାଙ୍କ ଦ୍ୱାରା ସାମାଜିକ ଅନୁଗାମୀ ଗଣନା କରାଯାଇଥାଏ ।"
+      "dehubFollowers": "DeHub ଅନୁଗାମୀ"
     },
     "loginDescription": "ଆପଣଙ୍କ ପ୍ରୋଫାଇଲ ଦେଖିବାକୁ ଏବଂ ପରିଚାଳନା କରିବାକୁ ଲଗ ଇନ କରନ୍ତୁ।",
     "replyThread": {

@@ -6381,9 +6381,6 @@
     "bio": "ජීව දත්ත",
     "bioPlaceholder": "ඔබ ගැන අපට කියන්න...",
     "socialLinks": "සමාජ සබැඳි",
-    "socialFollowers": "අනුගාමිකයන් {{platform}}",
-    "socialFollowersHint": "ඔබේ සම්පූර්ණ ළඟා වීමේ කොටසක් ලෙස ඔබේ පැතිකඩෙහි පෙන්වන්න. ඔබම අංකය ඇතුළත් කරන්න — අපි එය වේදිකාවෙන් කියවන්නේ නැත.",
-    "socialFollowersPlaceholder": "උදා. 12500",
     "profileUpdated": "පැතිකඩ සාර්ථකව යාවත්කාලීන කරන ලදී",
     "failedLoadProfile": "පැතිකඩ පූරණය අසාර්ථකයි",
     "imageTooLarge5": "පින්තූරය 5MB ට අඩු විය යුතුයි",
@@ -7880,8 +7877,7 @@
     "reach": {
       "total": "මුළු ප් ‍ රවේශය",
       "breakdownTitle": "මෙම ප් ‍ රවේශය පැමිණෙන්නේ කොහෙන්ද?",
-      "dehubFollowers": "DeHub අනුගාමිකයන්",
-      "selfReported": "නිර්මාණකරුවා විසින් සමාජ අනුගාමිකයන් ගණනය කරනු ලැබේ."
+      "dehubFollowers": "DeHub අනුගාමිකයන්"
     },
     "loginDescription": "පැතිකඩ බැලීමට සහ කළමනාකරණය කිරීමට පිවිසෙන්න.",
     "replyThread": {

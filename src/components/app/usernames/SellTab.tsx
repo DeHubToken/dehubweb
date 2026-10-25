@@ -88,7 +88,7 @@ export function SellTab({ username: selectedUsername, onUsernameChange }: Props 
   }
 
   if (isLoading) {
-    return <div className="h-40 rounded-xl bg-white/5 animate-pulse" />;
+    return <div className="h-40 rounded-xl theme-skeleton animate-pulse" />;
   }
 
   if (!mine?.currentUsername) {

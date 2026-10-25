@@ -615,9 +615,6 @@
     "bio": "Bio",
     "bioPlaceholder": "Vertel iets over jezelf...",
     "socialLinks": "Sociale links",
-    "socialFollowers": "Volgers op {{platform}}",
-    "socialFollowersHint": "Wordt op je profiel weergegeven als onderdeel van je totale bereik. Voer het nummer zelf in — we lezen het niet van het platform.",
-    "socialFollowersPlaceholder": "bijv. 12500",
     "profileUpdated": "Profiel succesvol bijgewerkt",
     "failedLoadProfile": "Profielgegevens laden mislukt",
     "imageTooLarge5": "Afbeelding moet kleiner zijn dan 5MB",
@@ -1130,7 +1127,15 @@
     "adLoadStandardDesc": "Één gesponsorde post elke acht",
     "adLoadFewer": "Minder",
     "adLoadFewerDesc": "Één elke zestien",
-    "automatic": "Automatisch"
+    "automatic": "Automatisch",
+    "socialConnectHint": "Koppel een account om het echte aantal volgers in je totale bereik te tonen. De cijfers komen rechtstreeks van het platform.",
+    "socialConnect": "Koppelen",
+    "socialConnectAria": "{{platform}} koppelen",
+    "socialConnected": "{{platform}} gekoppeld",
+    "socialConnectedShort": "Gekoppeld",
+    "socialConnectFailed": "Kan {{platform}} niet koppelen. Probeer het opnieuw.",
+    "socialVerifiedFollowers": "{{value}} volgers",
+    "socialFollowersPending": "Aantal volgers wordt bijgewerkt"
   },
   "common": {
     "mute": "Stom",
@@ -2327,7 +2332,7 @@
       "total": "Totaal bereik",
       "breakdownTitle": "Waar dit bereik vandaan komt",
       "dehubFollowers": "DeHub-volgers",
-      "selfReported": "Het aantal sociale volgers wordt ingevoerd door de maker."
+      "verified": "Sociale cijfers komen van accounts die de maker heeft gekoppeld."
     },
     "loginDescription": "Log in om je profiel te bekijken en beheren.",
     "replyThread": {

@@ -2540,9 +2540,6 @@
     "bio": "Mayelana",
     "bioPlaceholder": "Sitshele ngawe...",
     "socialLinks": "Izixhumanisi Zenhlalo",
-    "socialFollowers": "Abalandeli ku- {{platform}}",
-    "socialFollowersHint": "Kuboniswe kuphrofayili yakho njengengxenye yengqikithi yokufinyelela kwakho. Faka inombolo ngokwakho — asiyifundi enkundleni.",
-    "socialFollowersPlaceholder": "isib. 12500",
     "profileUpdated": "Iphrofayela ibuyekezwe ngempumelelo",
     "failedLoadProfile": "Kuhlulekile ukulayisha idatha yephrofayela",
     "imageTooLarge5": "Isithombe kufanele sibe ngaphansi kuka-5MB",
@@ -3869,8 +3866,7 @@
     "reach": {
       "total": "Ingqikithi yokufinyelela",
       "breakdownTitle": "Loku kufinyelela kuvela kuphi",
-      "dehubFollowers": "Abalandeli be-DeHub",
-      "selfReported": "Izibalo zabalandeli zomphakathi zifakwa umsunguli."
+      "dehubFollowers": "Abalandeli be-DeHub"
     },
     "loginDescription": "Ngena ukubona nokuphatha iphrofayela yakho.",
     "replyThread": {

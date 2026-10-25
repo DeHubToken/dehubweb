@@ -249,7 +249,7 @@ export default function Top100CryptosPage() {
       {isLoading && (
         <div className="space-y-3">
           {Array.from({ length: 20 }).map((_, i) => (
-            <div key={i} className="h-12 bg-white/5 rounded animate-pulse" />
+            <div key={i} className="h-12 theme-skeleton rounded animate-pulse" />
           ))}
         </div>
       )}

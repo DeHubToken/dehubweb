@@ -6,6 +6,32 @@ import { useOverlayLifetime } from '../use-overlay-lifetime';
 beforeEach(() => vi.useFakeTimers());
 afterEach(() => vi.useRealTimers());
 
+it('retains an opted-in exit for a bounded duration and cancels it on reopen', () => {
+  const { result, rerender } = renderHook(({ open }) => useOverlayLifetime(open, false, undefined, 550), {
+    initialProps: { open: true },
+  });
+  rerender({ open: false });
+  expect(result.current.open).toBe(false);
+  expect(result.current.present).toBe(true);
+  act(() => vi.advanceTimersByTime(300));
+  rerender({ open: true });
+  act(() => vi.advanceTimersByTime(550));
+  expect(result.current.present).toBe(true);
+  rerender({ open: false });
+  act(() => vi.advanceTimersByTime(550));
+  expect(result.current.present).toBe(false);
+});
+
+it('immediately drops an animated exit when its cached page becomes inactive', () => {
+  let active = true;
+  const { result, rerender } = renderHook(() => useOverlayLifetime(true, false, undefined, 550), {
+    wrapper: ({ children }) => <CachedPageActiveContext.Provider value={active}>{children}</CachedPageActiveContext.Provider>,
+  });
+  active = false;
+  rerender();
+  expect(result.current.present).toBe(false);
+});
+
 it('releases the portal immediately on close and preserves a rapid reopen', () => {
   const { result, rerender } = renderHook(({ open }) => useOverlayLifetime(open, false, undefined), {
     initialProps: { open: true },

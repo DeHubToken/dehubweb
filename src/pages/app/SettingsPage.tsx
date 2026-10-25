@@ -125,15 +125,8 @@ import { ProfilesSection } from '@/components/app/settings/ProfilesSection';
 import { CollapsibleStack } from '@/components/app/settings/CollapsibleStack';
 import { GettingStartedSetting } from '@/components/app/settings/GettingStartedSetting';
 import { BadgeDelegationSection } from '@/components/app/settings/BadgeDelegationSection';
-import {
-  emptySocialFollowerInputs,
-  mergeSocialFollowers,
-  readSocialFollowerInputs,
-  sameSocialFollowerInputs,
-  sanitizeFollowerInput,
-  type SocialFollowerInputs,
-  type SocialPlatform,
-} from '@/lib/social-reach';
+import type { SocialPlatform, VerifiedSocialAccount } from '@/lib/social-reach';
+import { SocialConnectControl, useOwnSocialReach } from '@/components/app/settings/SocialReachConnect';
 import { getInAppPref, type NotificationKey } from '@/lib/api/dehub';
 import { getQuietHours, QH_ENABLED_KEY, QH_START_KEY, QH_END_KEY } from '@/lib/quiet-hours';
 import { PROFILE_TAB_OPTIONS } from '@/components/app/profile/ProfileConstants';
@@ -533,15 +526,27 @@ function ProfileSettings() {
   const [youtubeLink, setYoutubeLink] = useSurfaceDraft("pages/app/SettingsPage.tsx:youtubeLink", '');
   const [telegramLink, setTelegramLink] = useSurfaceDraft("pages/app/SettingsPage.tsx:telegramLink", '');
   const [facebookLink, setFacebookLink] = useSurfaceDraft("pages/app/SettingsPage.tsx:facebookLink", '');
-  // Self-reported follower counts for the linked socials, feeding the profile's
-  // total reach. They live in `customs`, which the API replaces wholesale, so
-  // the blob is kept as loaded and resent around the counts on save.
-  const [socialFollowers, setSocialFollowers] = useSurfaceDraft<SocialFollowerInputs>("pages/app/SettingsPage.tsx:socialFollowers", emptySocialFollowerInputs);
-  const [originalSocialFollowers, setOriginalSocialFollowers] = useState<SocialFollowerInputs>(emptySocialFollowerInputs);
-  const customsRef = useRef<Record<string, unknown>>({});
-  const setFollowerInput = useCallback((platform: SocialPlatform, value: string) => {
-    setSocialFollowers((prev) => ({ ...prev, [platform]: sanitizeFollowerInput(value) }));
-  }, [setSocialFollowers]);
+  // The socials connected for verified follower counts. Coming back from a
+  // Connect fills that platform's link if it was empty, ready to save.
+  const linkDrafts: Record<SocialPlatform, [string, (value: string) => void]> = {
+    twitter: [twitterLink, setTwitterLink],
+    instagram: [instagramLink, setInstagramLink],
+    tiktok: [tiktokLink, setTiktokLink],
+    youtube: [youtubeLink, setYoutubeLink],
+    discord: [discordLink, setDiscordLink],
+    facebook: [facebookLink, setFacebookLink],
+  };
+  const { data: connectedSocials, isLoading: socialsLoading } = useOwnSocialReach((account: VerifiedSocialAccount) => {
+    const draft = linkDrafts[account.platform as SocialPlatform];
+    if (draft && !draft[0].trim() && account.profileUrl) draft[1](account.profileUrl);
+  });
+  const connectFor = (platform: SocialPlatform) => (
+    <SocialConnectControl
+      platform={platform}
+      loading={socialsLoading}
+      account={connectedSocials?.find((a) => a.platform === platform)}
+    />
+  );
 
   const [originalValues, setOriginalValues] = useState({
     displayName: '',
@@ -617,10 +622,6 @@ function ProfileSettings() {
     setYoutubeLink.initialize(loadedYoutube);
     setTelegramLink.initialize(loadedTelegram);
     setFacebookLink.initialize(loadedFacebook);
-    customsRef.current = customs && typeof customs === 'object' ? customs : {};
-    const loadedFollowers = readSocialFollowerInputs(customsRef.current);
-    setSocialFollowers.initialize(loadedFollowers);
-    setOriginalSocialFollowers(loadedFollowers);
 
     setOriginalValues({
       displayName: loadedDisplayName,
@@ -641,7 +642,7 @@ function ProfileSettings() {
     // Settings renders the preview at w-20, above the default avatar size.
     setAvatarPreview(buildAvatarUrl(address, rawAvatarUrl, deviceWidth(80)));
     setCoverPreview(buildCoverUrl(address, rawCoverUrl));
-  }, [profileData, authUser?.address, setBio, setDisplayName, setUsername, setDiscordLink, setFacebookLink, setInstagramLink, setSocialFollowers, setTelegramLink, setTiktokLink, setTwitterLink, setYoutubeLink]);
+  }, [profileData, authUser?.address, setBio, setDisplayName, setUsername, setDiscordLink, setFacebookLink, setInstagramLink, setTelegramLink, setTiktokLink, setTwitterLink, setYoutubeLink]);
   
   // Check username availability
   useEffect(() => {
@@ -693,7 +694,6 @@ function ProfileSettings() {
     youtubeLink !== originalValues.youtubeLink ||
     telegramLink !== originalValues.telegramLink ||
     facebookLink !== originalValues.facebookLink ||
-    !sameSocialFollowerInputs(socialFollowers, originalSocialFollowers) ||
     !!avatarFile ||
     !!coverFile;
 
@@ -802,10 +802,6 @@ function ProfileSettings() {
         setYoutubeLink(newOriginals.youtubeLink);
         setTelegramLink(newOriginals.telegramLink);
         setFacebookLink(newOriginals.facebookLink);
-        customsRef.current = refreshedCustoms && typeof refreshedCustoms === 'object' ? refreshedCustoms : {};
-        const refreshedFollowers = readSocialFollowerInputs(customsRef.current);
-        setOriginalSocialFollowers(refreshedFollowers);
-        setSocialFollowers(refreshedFollowers);
       }
       queryClient.invalidateQueries({ queryKey: ['dehub-user-content'] });
 
@@ -903,20 +899,6 @@ function ProfileSettings() {
     data.telegramLink = telegramLink;
     data.youtubeLink = youtubeLink;
     data.facebookLink = facebookLink;
-    // Only when a count changed: `customs` has no server-side merge, so every
-    // send replaces the whole blob, and an unrelated save must not overwrite a
-    // blob another surface has since written.
-    if (!sameSocialFollowerInputs(socialFollowers, originalSocialFollowers)) {
-      data.customs = mergeSocialFollowers(customsRef.current, socialFollowers, {
-        twitter: twitterLink,
-        instagram: instagramLink,
-        tiktok: tiktokLink,
-        youtube: youtubeLink,
-        discord: discordLink,
-        telegram: telegramLink,
-        facebook: facebookLink,
-      });
-    }
     if (avatarFile) data.avatarImg = avatarFile;
     if (coverFile) data.coverImg = coverFile;
     
@@ -931,7 +913,6 @@ function ProfileSettings() {
         setYoutubeLink.complete(youtubeLink, youtubeLink);
         setTelegramLink.complete(telegramLink, telegramLink);
         setFacebookLink.complete(facebookLink, facebookLink);
-        setSocialFollowers.complete(socialFollowers, socialFollowers);
       } });
   };
   
@@ -1145,15 +1126,14 @@ function ProfileSettings() {
             place. */}
         <div data-setting-anchor="social-links">
           <h3 className={SETTINGS_HEADING_CLASS}>{t('settings.socialLinks')}</h3>
-          <p className="-mt-2 mb-4 text-xs text-zinc-500">{t('settings.socialFollowersHint')}</p>
+          <p className="-mt-2 mb-4 text-xs text-zinc-500">{t('settings.socialConnectHint')}</p>
           <CollapsibleStack>
             <SocialLinkInput 
               label={_copy("copy.89c9b65356e3", { defaultValue: "X (Twitter)" })} 
               placeholder="https://x.com/username"
               value={twitterLink}
               onChange={setTwitterLink}
-              followers={socialFollowers.twitter}
-              onFollowersChange={(v) => setFollowerInput('twitter', v)}
+              connect={connectFor('twitter')}
               icon={
                 <svg className="w-4 h-4 text-zinc-500" viewBox="0 0 24 24" fill="currentColor">
                   <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z" />
@@ -1165,8 +1145,7 @@ function ProfileSettings() {
               placeholder="https://instagram.com/username"
               value={instagramLink}
               onChange={setInstagramLink}
-              followers={socialFollowers.instagram}
-              onFollowersChange={(v) => setFollowerInput('instagram', v)}
+              connect={connectFor('instagram')}
               icon={
                 <svg className="w-4 h-4 text-zinc-500" viewBox="0 0 24 24" fill="currentColor">
                   <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/>
@@ -1178,8 +1157,7 @@ function ProfileSettings() {
               placeholder="https://tiktok.com/@username"
               value={tiktokLink}
               onChange={setTiktokLink}
-              followers={socialFollowers.tiktok}
-              onFollowersChange={(v) => setFollowerInput('tiktok', v)}
+              connect={connectFor('tiktok')}
               icon={
                 <svg className="w-4 h-4 text-zinc-500" viewBox="0 0 24 24" fill="currentColor">
                   <path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-5.2 1.74 2.89 2.89 0 0 1 2.31-4.64 2.93 2.93 0 0 1 .88.13V9.4a6.84 6.84 0 0 0-1-.05A6.33 6.33 0 0 0 5 20.1a6.34 6.34 0 0 0 10.86-4.43v-7a8.16 8.16 0 0 0 4.77 1.52v-3.4a4.85 4.85 0 0 1-1-.1z"/>
@@ -1191,8 +1169,7 @@ function ProfileSettings() {
               placeholder="https://youtube.com/@channel"
               value={youtubeLink}
               onChange={setYoutubeLink}
-              followers={socialFollowers.youtube}
-              onFollowersChange={(v) => setFollowerInput('youtube', v)}
+              connect={connectFor('youtube')}
               icon={
                 <svg className="w-4 h-4 text-zinc-500" viewBox="0 0 24 24" fill="currentColor">
                   <path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/>
@@ -1204,8 +1181,7 @@ function ProfileSettings() {
               placeholder={_copy("copy.dcd932e65e57", { defaultValue: "discord_username" })}
               value={discordLink}
               onChange={setDiscordLink}
-              followers={socialFollowers.discord}
-              onFollowersChange={(v) => setFollowerInput('discord', v)}
+              connect={connectFor('discord')}
               icon={
                 <svg className="w-4 h-4 text-zinc-500" viewBox="0 0 24 24" fill="currentColor">
                   <path d="M20.317 4.3698a19.7913 19.7913 0 00-4.8851-1.5152.0741.0741 0 00-.0785.0371c-.211.3753-.4447.8648-.6083 1.2495-1.8447-.2762-3.68-.2762-5.4868 0-.1636-.3933-.4058-.8742-.6177-1.2495a.077.077 0 00-.0785-.037 19.7363 19.7363 0 00-4.8852 1.515.0699.0699 0 00-.0321.0277C.5334 9.0458-.319 13.5799.0992 18.0578a.0824.0824 0 00.0312.0561c2.0528 1.5076 4.0413 2.4228 5.9929 3.0294a.0777.0777 0 00.0842-.0276c.4616-.6304.8731-1.2952 1.226-1.9942a.076.076 0 00-.0416-.1057c-.6528-.2476-1.2743-.5495-1.8722-.8923a.077.077 0 01-.0076-.1277c.1258-.0943.2517-.1923.3718-.2914a.0743.0743 0 01.0776-.0105c3.9278 1.7933 8.18 1.7933 12.0614 0a.0739.0739 0 01.0785.0095c.1202.099.246.1981.3728.2924a.077.077 0 01-.0066.1276 12.2986 12.2986 0 01-1.873.8914.0766.0766 0 00-.0407.1067c.3604.698.7719 1.3628 1.225 1.9932a.076.076 0 00.0842.0286c1.961-.6067 3.9495-1.5219 6.0023-3.0294a.077.077 0 00.0313-.0552c.5004-5.177-.8382-9.6739-3.5485-13.6604a.061.061 0 00-.0312-.0286zM8.02 15.3312c-1.1825 0-2.1569-1.0857-2.1569-2.419 0-1.3332.9555-2.4189 2.157-2.4189 1.2108 0 2.1757 1.0952 2.1568 2.419 0 1.3332-.9555 2.4189-2.1569 2.4189zm7.9748 0c-1.1825 0-2.1569-1.0857-2.1569-2.419 0-1.3332.9554-2.4189 2.1569-2.4189 1.2108 0 2.1757 1.0952 2.1568 2.419 0 1.3332-.946 2.4189-2.1568 2.4189Z"/>
@@ -1217,8 +1193,6 @@ function ProfileSettings() {
               placeholder="https://t.me/username"
               value={telegramLink}
               onChange={setTelegramLink}
-              followers={socialFollowers.telegram}
-              onFollowersChange={(v) => setFollowerInput('telegram', v)}
               icon={
                 <svg className="w-4 h-4 text-zinc-500" viewBox="0 0 24 24" fill="currentColor">
                   <path d="M11.944 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 12 0a12 12 0 0 0-.056 0zm4.962 7.224c.1-.002.321.023.465.14a.506.506 0 0 1 .171.325c.016.093.036.306.02.472-.18 1.898-.962 6.502-1.36 8.627-.168.9-.499 1.201-.82 1.23-.696.065-1.225-.46-1.9-.902-1.056-.693-1.653-1.124-2.678-1.8-1.185-.78-.417-1.21.258-1.91.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-1.793 1.14-5.061 3.345-.48.33-.913.49-1.302.48-.428-.008-1.252-.241-1.865-.44-.752-.245-1.349-.374-1.297-.789.027-.216.325-.437.893-.663 3.498-1.524 5.83-2.529 6.998-3.014 3.332-1.386 4.025-1.627 4.476-1.635z"/>
@@ -1230,8 +1204,7 @@ function ProfileSettings() {
               placeholder="https://facebook.com/username"
               value={facebookLink}
               onChange={setFacebookLink}
-              followers={socialFollowers.facebook}
-              onFollowersChange={(v) => setFollowerInput('facebook', v)}
+              connect={connectFor('facebook')}
               icon={
                 <svg className="w-4 h-4 text-zinc-500" viewBox="0 0 24 24" fill="currentColor">
                   <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/>
@@ -1811,7 +1784,7 @@ function PrivacySettings() {
             onCheckedChange={(checked) => updateSettings({ hide_badge_and_balance: checked })}
             disabled={isUpdating || isLoading}
           />
-          <div className="rounded-xl border border-amber-500/25 bg-amber-500/10 p-4 text-xs leading-relaxed text-amber-100/80">{_copy("copy.660711e7d4af", { defaultValue: "On-chain transactions are public. Sending tokens or tips can reveal your wallet address, including transactions made before private balance mode was enabled." })}</div>
+          <div className="rounded-xl border border-amber-500/25 bg-amber-500/10 p-4 text-xs leading-relaxed text-zinc-300">{_copy("copy.660711e7d4af", { defaultValue: "On-chain transactions are public. Sending tokens or tips can reveal your wallet address, including transactions made before private balance mode was enabled." })}</div>
           {isPrivate && (
             <div className="pl-8">
               <Button
@@ -3313,21 +3286,16 @@ function SocialLinkInput({
   icon,
   value,
   onChange,
-  followers,
-  onFollowersChange,
+  connect,
 }: {
   label: string;
   placeholder: string;
   icon: React.ReactNode;
   value?: string;
   onChange?: (value: string) => void;
-  /** Self-reported follower count on this platform, as typed (digits only). */
-  followers?: string;
-  onFollowersChange?: (value: string) => void;
+  /** Connect button, or the connected account and its verified count. */
+  connect?: React.ReactNode;
 }) {
-  const { t } = useTranslation();
-  const linked = !!value?.trim();
-  const followersLabel = t('settings.socialFollowers', { platform: label });
   return (
     <div>
       <label className={SETTINGS_LABEL_CLASS}>{label}</label>
@@ -3340,31 +3308,14 @@ function SocialLinkInput({
         <Input
           placeholder={placeholder}
           value={value}
-          onChange={(e) => {
-            onChange?.(e.target.value);
-            // A count only means something next to its link, so clearing the
-            // link retires the count with it rather than leaving a stale one.
-            if (!e.target.value.trim()) onFollowersChange?.('');
-          }}
+          onChange={(e) => onChange?.(e.target.value)}
           className={SETTINGS_FIELD_CLASS}
         />
       </div>
-      {onFollowersChange && (
-        <div className="mt-2 flex items-center gap-3">
+      {connect && (
+        <div className="mt-2 flex min-w-0 items-center gap-3">
           <div className="size-5 shrink-0" />
-          <Input
-            type="text"
-            inputMode="numeric"
-            pattern="[0-9]*"
-            autoComplete="off"
-            aria-label={followersLabel}
-            placeholder={t('settings.socialFollowersPlaceholder')}
-            value={linked ? followers ?? '' : ''}
-            disabled={!linked}
-            onChange={(e) => onFollowersChange(e.target.value)}
-            className={cn(SETTINGS_FIELD_CLASS, 'h-9 w-36 text-sm')}
-          />
-          <span className="text-xs text-zinc-500">{followersLabel}</span>
+          {connect}
         </div>
       )}
     </div>

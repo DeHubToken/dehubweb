@@ -2517,9 +2517,6 @@
     "bio": "簡介",
     "bioPlaceholder": "介紹下自己...",
     "socialLinks": "社交連結",
-    "socialFollowers": "追蹤者喺 {{platform}}",
-    "socialFollowersHint": "喺你嘅個人檔案上面顯示，作為你總觸及率嘅一部分。你自己輸入個號碼 — 我哋唔會喺平台度睇。",
-    "socialFollowersPlaceholder": "例如12500",
     "profileUpdated": "個人檔案更新成功",
     "failedLoadProfile": "載入個人檔案失敗",
     "imageTooLarge5": "圖片必須細過5MB",
@@ -3846,8 +3843,7 @@
     "reach": {
       "total": "總觸及率",
       "breakdownTitle": "呢個觸及範圍嚟自邊度",
-      "dehubFollowers": "DeHub 追蹤者",
-      "selfReported": "社交追蹤者數目係由創作者輸入。"
+      "dehubFollowers": "DeHub 追蹤者"
     },
     "loginDescription": "登入嚟睇同管理你嘅個人檔案。",
     "replyThread": {

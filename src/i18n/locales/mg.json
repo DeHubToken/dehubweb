@@ -2539,9 +2539,6 @@
     "bio": "Momba ahy",
     "bioPlaceholder": "Lazao ny momba anao...",
     "socialLinks": "Rohy sosialy",
-    "socialFollowers": "Mpanaraka ao amin'ny {{platform}}",
-    "socialFollowersHint": "Hita ao amin'ny mombamomba anao ho toy ny ampahany amin'ny tontolonao. Tsy Maninona Ka — namaha izany fotsiny.",
-    "socialFollowersPlaceholder": "ohatra 12500",
     "profileUpdated": "Voaova soa aman-tsara ny mombamomba",
     "failedLoadProfile": "Tsy nahomby ny fampidirana ny mombamomba",
     "imageTooLarge5": "Ny sary dia tokony ho latsaky ny 5MB",
@@ -3890,8 +3887,7 @@
     "reach": {
       "total": "TONTOLO IREO",
       "breakdownTitle": "Avy aiza no nihavian'izany",
-      "dehubFollowers": "Mpanara-dia an'i DeHub",
-      "selfReported": "Ny fandrindrana ara-tsosialy dia nampidirina tamin'ny mpamorona."
+      "dehubFollowers": "Mpanara-dia an'i DeHub"
     },
     "loginDescription": "Midira mba hahitana sy hitantanana ny mombamombanao.",
     "replyThread": {

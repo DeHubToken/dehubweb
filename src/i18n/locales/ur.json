@@ -2520,9 +2520,6 @@
     "bio": "تعارف",
     "bioPlaceholder": "اپنے بارے میں بتائیں...",
     "socialLinks": "سماجی روابط",
-    "socialFollowers": "{{platform}} پر فالوورز",
-    "socialFollowersHint": "اپنی کل رسائی کے حصے کے طور پر اپنی پروفائل پر دکھایا گیا ہے ۔ نمبر خود درج کریں — ہم اسے پلیٹ فارم سے نہیں پڑھتے ہیں ۔",
-    "socialFollowersPlaceholder": "مثلاً 12500",
     "profileUpdated": "پروفائل کامیابی سے اپ ڈیٹ ہو گیا",
     "failedLoadProfile": "پروفائل ڈیٹا لوڈ کرنے میں ناکامی",
     "imageTooLarge5": "تصویر 5MB سے کم ہونی چاہیے",
@@ -3841,8 +3838,7 @@
     "reach": {
       "total": "کل رسائی",
       "breakdownTitle": "یہ پہنچ کہاں سے آتی ہے",
-      "dehubFollowers": "DeHub کے فالوورز",
-      "selfReported": "تخلیق کار کی جانب سے سماجی پیروکاروں کی تعداد درج کی جاتی ہے ۔"
+      "dehubFollowers": "DeHub کے فالوورز"
     },
     "loginDescription": "اپنا پروفائل دیکھنے اور منظم کرنے کے لیے لاگ ان کریں۔",
     "replyThread": {

@@ -70,8 +70,8 @@ export default function CommunityPage() {
   if (isLoading) {
     return (
       <div className="max-w-2xl mx-auto px-3 py-4 space-y-4">
-        <div className="h-32 rounded-xl bg-white/[0.04] animate-pulse" />
-        <div className="h-16 rounded-xl bg-white/[0.04] animate-pulse" />
+        <div className="h-32 rounded-xl theme-skeleton animate-pulse" />
+        <div className="h-16 rounded-xl theme-skeleton animate-pulse" />
       </div>
     );
   }

@@ -2529,9 +2529,6 @@
     "bio": "Bio",
     "bioPlaceholder": "Magkuwento tungkol sa iyong sarili...",
     "socialLinks": "Mga Social Link",
-    "socialFollowers": "Mga tagasunod sa {{platform}}",
-    "socialFollowersHint": "Ipinapakita sa iyong profile bilang bahagi ng iyong kabuuang abot. Ipasok ang numero sa iyong sarili — hindi namin ito binabasa mula sa platform.",
-    "socialFollowersPlaceholder": "hal. 12500",
     "profileUpdated": "Matagumpay na na-update ang profile",
     "failedLoadProfile": "Hindi na-load ang data ng profile",
     "imageTooLarge5": "Dapat mas maliit sa 5MB ang larawan",
@@ -3897,8 +3894,7 @@
     "reach": {
       "total": "Kabuuang maaabot",
       "breakdownTitle": "Saan nagmumula ang abot na ito",
-      "dehubFollowers": "Mga tagasunod ng DeHub",
-      "selfReported": "Ang mga bilang ng mga social follower ay ipinasok ng tagalikha."
+      "dehubFollowers": "Mga tagasunod ng DeHub"
     },
     "loginDescription": "Mag-log in upang makita at pamahalaan ang iyong profile.",
     "replyThread": {

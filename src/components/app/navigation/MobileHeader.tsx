@@ -7,7 +7,7 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import { isHomePath } from '@/lib/home-path';
 import { isHomeFeedRoute } from '@/lib/home-routes';
 import Menu from "@/components/ui/cut-icons/menu";
-import Bell from "@/components/ui/cut-icons/alerts";
+import { NotificationBell } from './NotificationBell';
 
 import { Drawer, DrawerContent, DrawerTitle, DrawerTrigger } from '@/components/ui/drawer';
 import { useTranslation } from 'react-i18next';
@@ -207,14 +207,9 @@ export function MobileHeader({ isOpen, onOpenChange, children }: MobileHeaderPro
           <button
             onClick={() => openNotificationsDrawer()}
             className="relative flex h-11 w-11 shrink-0 items-center justify-center text-white transition-colors"
-            aria-label={_copy("copy.788011833a5a", { defaultValue: "Notifications" })}
+            aria-label={`${_copy("copy.788011833a5a", { defaultValue: "Notifications" })}${totalNotifUnread > 0 ? ` (${totalNotifUnread})` : ''}`}
           >
-            <Bell className="w-[26px] h-[26px]" />
-            {totalNotifUnread > 0 && (
-              <span data-unread-chip className="pointer-events-none absolute top-0 -right-1 min-w-[18px] h-[18px] px-[4px] bg-red-500 text-white text-[10px] font-bold rounded-[6px] flex items-center justify-center leading-none">
-                {totalNotifUnread > 99 ? '99+' : totalNotifUnread}
-              </span>
-            )}
+            <NotificationBell unread={totalNotifUnread} active={showBar && navVisible && !anyOverlayOpen && !isOpen} />
           </button>
         )}
       </div>

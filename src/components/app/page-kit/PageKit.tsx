@@ -18,7 +18,7 @@ import { useTranslation as _useCopy } from 'react-i18next';
  * attributes below, so a page never paints itself per theme.
  */
 
-import { useRef, type ReactNode } from 'react';
+import { Fragment, useRef, type ReactNode } from 'react';
 import ArrowLeft from "@/components/ui/cut-icons/back";
 
 import { useLocation, useNavigate } from 'react-router-dom';
@@ -144,12 +144,15 @@ export function PageTabs<T extends string>({
   onChange,
   className,
   size = 'md',
+  afterFirstTab,
 }: {
   tabs: PageTab<NoInfer<T>>[];
   value: T;
   onChange: (id: NoInfer<T>) => void;
   className?: string;
   size?: 'sm' | 'md';
+  /** Adjacent controls on the same row, immediately after the first tab. */
+  afterFirstTab?: ReactNode;
 }) {
   return (
     <div
@@ -161,29 +164,31 @@ export function PageTabs<T extends string>({
       // sideways on iPhone.
       className={cn('scrollbar-hide relative -mx-0.5 flex items-center gap-1.5 overflow-x-auto px-0.5', className)}
     >
-      {tabs.map((tab) => {
+      {tabs.map((tab, index) => {
         const active = tab.id === value;
         return (
-          <button
-            key={tab.id}
-            type="button"
-            role="tab"
-            aria-selected={active}
-            data-kit-chip
-            data-size={size}
-            data-active={active ? 'true' : undefined}
-            onClick={() => onChange(tab.id)}
-          >
-            {tab.icon ? (
-              typeof tab.icon === 'string' ? (
-                <ThemedIcon icon={tab.icon as IconKey} alt="" className="h-4 w-4 object-contain" />
-              ) : (
-                tab.icon
-              )
-            ) : null}
-            <span>{tab.label}</span>
-            {typeof tab.count === 'number' ? <span data-kit-chip-count>{tab.count}</span> : null}
-          </button>
+            <Fragment key={tab.id}>
+            <button
+              type="button"
+              role="tab"
+              aria-selected={active}
+              data-kit-chip
+              data-size={size}
+              data-active={active ? 'true' : undefined}
+              onClick={() => onChange(tab.id)}
+            >
+              {tab.icon ? (
+                typeof tab.icon === 'string' ? (
+                  <ThemedIcon icon={tab.icon as IconKey} alt="" className="h-4 w-4 object-contain" />
+                ) : (
+                  tab.icon
+                )
+              ) : null}
+              <span>{tab.label}</span>
+              {typeof tab.count === 'number' ? <span data-kit-chip-count>{tab.count}</span> : null}
+            </button>
+            {index === 0 ? afterFirstTab : null}
+          </Fragment>
         );
       })}
     </div>
