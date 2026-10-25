@@ -29,6 +29,7 @@ import { cn } from '@/lib/utils';
 import { useAutoOpenComments } from '@/hooks/use-auto-open-comments';
 import { useNavigate } from 'react-router-dom';
 import { useHandoffVideo } from '@/hooks/use-handoff-video';
+import { useVideoCardOpen } from '@/hooks/use-video-card-open';
 import { handoffVideoHolder } from '@/lib/video-handoff';
 import { useBootSettled, useFirstInteraction } from '@/hooks/use-boot-settled';
 import { useVideoFullscreen } from '@/hooks/use-video-fullscreen';
@@ -1462,6 +1463,9 @@ const VideoCardBody = memo(function VideoCard({ video, postPage = false, onBack,
   // (full controls there), which then carries on into more shorts. Desktop,
   // the post page and gated or live posts keep the full player.
   const isPhone = useIsMobile();
+  const feedShortsTarget = shortsEnabled && !postPage && !isImmersive && !isFullscreen && !hideActions
+    && !video.isAudio && !video.isAd && !(video.isLivePost && video.isLiveNow) && !!video.videoUrl
+    && !isContentGated && !isVideoNotReady;
   const feedPreview = isPhone && shortsEnabled && !isImmersive && !isFullscreen && !hideActions
     && !video.isAudio && !video.isAd && !(video.isLivePost && video.isLiveNow) && !!video.videoUrl
     && !isContentGated && !isVideoNotReady;
@@ -1473,11 +1477,11 @@ const VideoCardBody = memo(function VideoCard({ video, postPage = false, onBack,
   const phoneFeedFrame = feedPreview || liveFeedPreview;
   const [liveSoundOn, setLiveSoundOn] = useState(false);
   useEffect(() => {
-    if (!feedPreview || !bootSettled || !nearViewport || liteMode) return;
+    if (!feedShortsTarget || !bootSettled || !nearViewport || liteMode) return;
     // Warm the viewer code while its preview is visible. Queries still start
     // on touch-down so scrolling through cards does not fetch five feeds.
     import('@/components/app/BrainrotFeedHost').catch(() => {});
-  }, [feedPreview, bootSettled, nearViewport, liteMode]);
+  }, [feedShortsTarget, bootSettled, nearViewport, liteMode]);
 
   /** Swiped up out of fullscreen: stop here and carry on in the shorts feed. */
   const swipeIntoShorts = useCallback(() => {
@@ -1487,7 +1491,7 @@ const VideoCardBody = memo(function VideoCard({ video, postPage = false, onBack,
     openBrainrotFeed(video.id);
   }, [pauseVideo, instanceId, toggleFullscreen, video.id]);
 
-  /** Phone feed preview tapped: this clip first in the shorts viewer, then more shorts. */
+  /** Any feed surface opens this clip first, using the same live player. */
   const openPreviewInShorts = useCallback(() => {
     pauseVideo();
     videoPlaybackManager.stop(instanceId);
@@ -1952,25 +1956,29 @@ const VideoCardBody = memo(function VideoCard({ video, postPage = false, onBack,
     onCancel: () => setCurrentTime(videoRef.current?.currentTime ?? 0),
   });
 
-  /**
-   * Open the dedicated post page for this video, seeding the query cache so it
-   * paints immediately. The shared <video> moves with it — see useHandoffVideo.
-   */
-  const openPost = useCallback(() => {
-    if (wasDrawerJustDismissed()) return;
-    if (showBountyDrawer || showPPVDrawer || showLockedDrawer) return;
+  const openDedicatedPost = useCallback(() => {
     cacheVideoForNavigation(queryClient, video);
     navigate(`/app/post/${video.id}`, { state: { fromFeed: true } });
-  }, [navigate, queryClient, video, showBountyDrawer, showPPVDrawer, showLockedDrawer]);
+  }, [navigate, queryClient, video]);
+  const openPost = useVideoCardOpen({
+    mediaRef: containerRef,
+    shorts: feedShortsTarget,
+    blocked: showBountyDrawer || showPPVDrawer || showLockedDrawer,
+    wasDismissed: wasDrawerJustDismissed,
+    openShorts: openPreviewInShorts,
+    openPost: openDedicatedPost,
+  });
 
   /**
-   * One tap drives playback; two taps Like; three taps Love. Playback is
+   * Feed taps open the viewer immediately. Inside the player, one tap drives
+   * playback; two taps Like; three taps Love. Playback is
    * reversible, so the first tap happens immediately and is put back on tap
    * two rather than making every ordinary play/pause wait for the gesture
    * window. Fullscreen and seeking stay on their visible controls.
    */
   const tapGestures = useTapGestures({
     postId: video.id,
+    singleTapOnly: feedShortsTarget,
     reactionArea: isImmersive || isFullscreen ? 'surface' : 'center',
     // A gated card (PPV, holdings/subscriber lock, mature warning) draws no
     // burst — TapReactionBurst lives inside the isContentGated block further
@@ -1979,15 +1987,15 @@ const VideoCardBody = memo(function VideoCard({ video, postPage = false, onBack,
     // already behaves this way: its gate branch replaces the carousel that
     // carries the gesture, so this only brings video into line.
     disabled: hideActions || !!video.isAudio || isContentGated || liveFeedPreview,
-    onSingleTap: feedPreview ? openPreviewInShorts : isImmersive ? () => {
+    onSingleTap: feedShortsTarget ? openPost : isImmersive ? () => {
       showControlsBriefly();
       handlePlayClick();
     } : undefined,
     onUndoSingleTap: isImmersive ? handlePlayClick : undefined,
   });
 
-  // Text opens immediately. Media retains multi-tap reactions; links and
-  // "See more" keep their own actions.
+  // Text opens the same destination immediately; links and "See more" keep
+  // their own actions.
   const captionTapGestures = useTapGestures({
     singleTapOnly: !isImmersive,
     postId: video.id,
@@ -2006,7 +2014,7 @@ const VideoCardBody = memo(function VideoCard({ video, postPage = false, onBack,
   // Playback and reactions run from pointer events above. The compatibility
   // click only keeps the visible controls awake; it must never toggle twice.
   const handleVideoAreaClick = useCallback(() => {
-    if (feedPreview) return; // Pointer gestures own preview navigation.
+    if (feedShortsTarget) return; // Pointer release owns viewer navigation.
     if (liveFeedPreview) {
       openPost();
       return;
@@ -2017,7 +2025,7 @@ const VideoCardBody = memo(function VideoCard({ video, postPage = false, onBack,
       return;
     }
     showControlsBriefly();
-  }, [isImmersive, showControlsBriefly, handlePlayClick, feedPreview, openPreviewInShorts, liveFeedPreview, openPost]);
+  }, [isImmersive, showControlsBriefly, handlePlayClick, feedShortsTarget, liveFeedPreview, openPost]);
 
   // Both the click and the touch handler are bound unconditionally on the player.
   // `isTouchDevice` is a width check, not a capability one, so gating the click on
@@ -2070,8 +2078,8 @@ const VideoCardBody = memo(function VideoCard({ video, postPage = false, onBack,
       return;
     }
 
-    if (feedPreview) {
-      // Pointer gestures open immediately outside the central reaction area.
+    if (feedShortsTarget) {
+      // Pointer release opens the viewer without a multi-tap delay.
       e.preventDefault();
       return;
     }
@@ -2093,7 +2101,7 @@ const VideoCardBody = memo(function VideoCard({ video, postPage = false, onBack,
     // compatibility click so touch cannot run a second playback action.
     e.preventDefault();
     showControlsBriefly();
-  }, [isImmersive, showControlsBriefly, handlePlayClick, isFullscreen, swipeToShorts, swipeIntoShorts, feedPreview, openPreviewInShorts, liveFeedPreview, openPost]);
+  }, [isImmersive, showControlsBriefly, handlePlayClick, isFullscreen, swipeToShorts, swipeIntoShorts, feedShortsTarget, liveFeedPreview, openPost]);
 
   const formatTime = (seconds: number) => {
     const mins = Math.floor(seconds / 60);
@@ -2211,7 +2219,10 @@ const VideoCardBody = memo(function VideoCard({ video, postPage = false, onBack,
       {...scrubZone}
       onPointerDownCapture={event => {
         scrubZone.onPointerDownCapture?.(event);
-        if (!event.isPropagationStopped() && !isImmersive && !stage) warmPostPage();
+        if (!event.isPropagationStopped() && !isImmersive && !stage && !isControlTarget(event.target)) {
+          if (feedShortsTarget) import('@/components/app/BrainrotFeedHost').catch(() => {});
+          else warmPostPage();
+        }
       }}
       className={isImmersive || stage
         ? "overflow-hidden isolate"
