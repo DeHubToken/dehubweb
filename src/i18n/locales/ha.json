@@ -14586,7 +14586,9 @@
       "replaceSelection": "Sauya tare da zaɓi",
       "saveSelection": "Ajiye zabi",
       "title": "Abubuwan da aka adana",
-      "undoLibrary": "Undo library canji"
+      "undoLibrary": "Undo library canji",
+      "inserted": "{{name}}",
+      "name": "Isma ya suna"
     },
     "layers": {
       "text": "Rubutu",
@@ -15471,7 +15473,10 @@
       "styleFileHint": "Transfers gradient launuka, matsayi, nuna gaskiya, kusurwa da radial saituna tsakanin na'urorin. Shigo da kaya daftarin aiki; amfani da shi don sabunta zane-zane.",
       "styleFiles": "Canja wurin gradient styles",
       "styleLoaded": "Salon da aka ɗora a cikin rubutun",
-      "svgHint": "Fitarwa wannan gradient a girman shafi, ciki har da tsayawa matsayi da kuma nuna gaskiya. Aiwatar da shi daban don amfani da shi a cikin zane."
+      "svgHint": "Fitarwa wannan gradient a girman shafi, ciki har da tsayawa matsayi da kuma nuna gaskiya. Aiwatar da shi daban don amfani da shi a cikin zane.",
+      "applyImportedStyle": "Ayi ɗauki ɗauki style zuwa draft",
+      "colour": "Karewa rangi",
+      "downloadSvg": "Download gradient a matsayin SVG"
     },
     "graphicDraftHistory": {
       "local": "Rubutun hoto",
@@ -15493,13 +15498,13 @@
       "applyScale": "Zaɓin Sikeli",
       "group": "Group",
       "larger": "Mafi Girma",
-      "layerOpacity": "Layer opacity",
+      "layerOpacity": "Layer haske",
       "matchReference": "Girman nuni",
       "matchSizeHint": "Sikeli kowane Layer ko rukuni a kusa da cibiyarsa kuma yana ci gaba da haɓakawa. Aunawa sun haɗa da juyawa. Fit akwatin nuni yana amfani da girman mafi girma wanda ya dace da duka ma'auni; mafi girma da ƙarami kwatanta yankin akwatin don wannan zaɓi. Text da bugun jini styles sikelin tare da artwork.",
       "matchSizes": "Daidaita girman da aka zaba",
-      "resize": "Resize selection",
+      "resize": "Canza girman zaɓi",
       "rotate": "Zaɓin jujjuyawa",
-      "rotateBy": "Rotate {{degrees}}°",
+      "rotateBy": "Juyawa {{degrees}}°",
       "rotationDegrees": "Zaben juyawa ta digiri",
       "scalePercent": "Sikeli zabi da kashi",
       "smaller": "Ƙananan",
@@ -15510,7 +15515,7 @@
       "applyGrid": "Aiwatar da grid",
       "centre": "Centre",
       "clear": "Bayyanannu",
-      "direction": "Guide direction",
+      "direction": "Alkiblar layin jagora",
       "dragHorizontal": "Ja ƙasa don ƙara jagorar kwance. Latsa Shigar don ƙara jagorar cibiyar.",
       "dragVertical": "Ja dama don ƙara jagorar tsaye. Latsa Shigar don ƙara jagorar cibiyar.",
       "gridApplied": "Jagora grid da aka yi amfani da shi",
@@ -15518,7 +15523,7 @@
       "gridTitle": "Tsarin grid",
       "hint": "Jawo daga mai mulki don ƙara jagora. Zaɓi Jagoran Shirya don motsa jagora, ko jawo su daga shafin don cire su. Ba a haɗa jagora da margins a cikin saukewa ba.",
       "horizontal": "Madaidaiciya matsayin cewa.",
-      "pixelPosition": "{{position}} pixels",
+      "pixelPosition": "{{position}} pikseli",
       "position": "Matsayi a matsayin kashi",
       "remove": "Cire {{direction}} jagora a {{position}}%",
       "replaceExisting": "Sauya jagororin da ke akwai",
@@ -15529,7 +15534,9 @@
       "thirds": "Na uku",
       "title": "Jagora da margins",
       "vertical": "A tsaye",
-      "visible": "Nuna jagororin"
+      "visible": "Nuna jagororin",
+      "margin": "Makwabtaka",
+      "rulerUnits": "Unit na ruler"
     },
     "help": {
       "keyboardHint": "Hanyoyin gajerun maɓalli suna amfani da filayen rubutu na waje da tattaunawa. Ayyukan Canvas suna buƙatar a mayar da hankali ga canvas. Cmd maye gurbin Ctrl a kan Mac.",
@@ -15541,7 +15548,8 @@
     "layout": {
       "gap": "Grid rata a cikin pixels",
       "tidy": "Tidy a cikin grid",
-      "title": "Matsayi da sararin samaniya"
+      "title": "Matsayi da sararin samaniya",
+      "columns": "Ginshiƙan raga (0 = kai tsaye)"
     },
     "links": {
       "apply": "Aiwatar da mahada",
@@ -15655,7 +15663,8 @@
     },
     "paint": {
       "fillOpacity": "Cika opacity: {{value}}%",
-      "strokeOpacity": "Fitar da bayyanar layin: {{value}}%"
+      "strokeOpacity": "Fitar da bayyanar layin: {{value}}%",
+      "borderOpacity": "Kofofin opacity: {{value}}%"
     },
     "palette": {
       "applyDesign": "Aiwatar da fenti ga zane",
@@ -15786,7 +15795,8 @@
       "smsHint": "Opens a messaging draft a cikin masu aiki. Ƙware da wadanda suka samu da bayanai da kuma bayanai masu kwalin.",
       "title": "Lambar QR",
       "useDetails": "Yi amfani da waɗannan bayanan",
-      "vectorHint": "Exports the current QR draft da colours da quiet zone a cikin artwork na vector scalable."
+      "vectorHint": "Exports the current QR draft da colours da quiet zone a cikin artwork na vector scalable.",
+      "wifiContentHint": "Makwabtaka ya QR yana dauke da kalmar netwark."
     },
     "repeat": {
       "allowOverflow": "Bada izinin zane-zane a waje da shafin",
@@ -15797,7 +15807,7 @@
       "groupCopies": "Group kowane kwafe tayal",
       "groupCopiesHint": "Ƙungiyoyi duk kwashe yadudduka a cikin kowane tayal. Zaɓin asali yana kiyaye ƙungiyoyinta.",
       "hint": "Zaɓi rubutu, hotuna, siffofi, ko ƙirar rukuni. Maimaita shi zuwa dama da ƙasa daga matsayinta na yanzu. Asali shine kwayar grid ta farko; kwafi suna ci gaba da salo, amfanin gona da motsi.",
-      "layout": "Grid layout",
+      "layout": "Tsarin raga",
       "staggerHint": "Staggered layouts canza kowane jere na biyu ko shafi da rabin kwayar halitta, ciki har da rata. Asalin ya kasance a wuri.",
       "title": "Maimaita zaɓi a cikin grid"
     },
@@ -15810,7 +15820,8 @@
       "range": "Kowane gefe dole ne ya ƙudura zuwa 64–8,192 pixels. Dole ne ƙudurin bugawa ya zama 72–600.",
       "swap": "Girman Swap",
       "units": "Girman raka'a",
-      "width": "Nisa"
+      "width": "Nisa",
+      "anchor": "Anchor na artwork"
     },
     "sections": {
       "assign": "Aiwatar da sashe",
@@ -15818,16 +15829,19 @@
       "hint": "Sassan suna tafiya tare da shafuka lokacin da aka gyara ko kwafa. Nemo su a cikin binciken shafi, binciken gabatarwa, da {section} image filename alamu.",
       "select": "Zaɓi shafukan sashe",
       "selected": "Zabi {{count}} sashe shafukan",
-      "title": "Shirya shafukan da aka zaɓa a cikin sassan"
+      "title": "Shirya shafukan da aka zaɓa a cikin sassan",
+      "name": "Isma na section"
     },
     "selection": {
       "boundHint": "Auna daga iyakokin zaɓin juyawa. Resizing ci gaba da girma; matsayi yana farawa a saman kusurwar hagu na shafi.",
       "clear": "A bayyane zabi",
-      "count": "{{count}} selected",
+      "count": "{{count}} zaba",
       "mixedStyles": "Zaɓaɓɓun yadudduka suna da nau'o 'in gauraye. Aiwatar da ƙima yana saita shi a kan kowane Layer mai dacewa.",
       "readBounds": "Karanta ma'auni na yanzu",
       "sameHint": "Match da farko zaba Layer a kan wannan shafi. Ƙungiyoyi suna kasancewa tare; ɓoyayyun yadudduka, bango, da ƙungiyoyi masu kulle suna tsallakewa.",
-      "waitForBounds": "Jira yadudduka da aka zaɓa don bayyana a kan gwangwani."
+      "waitForBounds": "Jira yadudduka da aka zaɓa don bayyana a kan gwangwani.",
+      "allPage": "Zana all on page",
+      "precise": "Exact size da wuri"
     },
     "selectionShadows": {
       "apply": "Aiwatar da inuwa",
@@ -15851,13 +15865,14 @@
       "name": "Sunan Layer",
       "preview": "Kamfanin Path na Vector",
       "title": "Shigo da editable SVG geometry",
-      "weight": "Layin nauyi"
+      "weight": "Layin nauyi",
+      "data": "SVG markup ko path data (d)"
     },
     "symbols": {
       "colour": "Launi",
       "downloadSvg": "Sauke alama azaman SVG",
       "hint": "Alamu zauna editable. Recolour, resize, juya, rukuni, ko ƙara effects ta amfani da Layer controls.",
-      "next": "Next symbols",
+      "next": "Alamomin gaba",
       "noResults": "Babu alamomi masu dacewa. Gwada wani suna ko rukuni.",
       "previous": "Alamun da suka gabata",
       "search": "Bincika alamomin vector",
@@ -15968,7 +15983,10 @@
       "noStarters": "Babu abubuwan farawa da suka dace da wannan binciken.",
       "rawNumbers": "Nuna ainihin lambobi",
       "rowsRemoved": "An cire layuka {{count}}",
-      "structureTarget": "Layi ko shafi don gyarawa"
+      "structureTarget": "Layi ko shafi don gyarawa",
+      "applyImportedStyle": "Ayi ɗauki ɗauki style zuwa draft",
+      "ascending": "Jera A–Z / 0–9",
+      "brandPalettes": "Kofofin da aka sani da header da table palette"
     },
     "text": {
       "backgroundPerLine": "Fit baya ga kowane layi",

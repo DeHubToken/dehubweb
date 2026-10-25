@@ -12130,7 +12130,8 @@
       "search": "ਖੋਜ ਲੇਅਰ",
       "searchOverlap": "ਖੋਜ ਓਵਰਲੈਪਿੰਗ ਲੇਅਰ",
       "stackOrder": "ਸਿਖਰ ਲੇਅਰ ਪਹਿਲੀ",
-      "startAt": "'ਤੇ ਸ਼ੁਰੂ ਕਰੋ"
+      "startAt": "'ਤੇ ਸ਼ੁਰੂ ਕਰੋ",
+      "namingOrder": "ਲੇਅਰ ਨੰਬਰਿੰਗ ਆਰਡਰ"
     },
     "blend": {
       "normal": "ਸਧਾਰਨ",
@@ -12714,7 +12715,9 @@
       "xDate": "ਤਾਰੀਖਾਂ ਅਤੇ ਯੂਟੀਸੀ ਟਾਈਮਜ਼",
       "xIntervals": "ਹਰੀਜ਼ਟਲ- ਧੁਰਾ ਅੰਤਰਾਲ",
       "xNumber": "ਨੰਬਰਾਂ",
-      "hierarchySample": "ਯੂਰਪ,ਫਰਾਂਸ,35"
+      "hierarchySample": "ਯੂਰਪ,ਫਰਾਂਸ,35",
+      "chooseSeries": "ਸੋਧਣ ਲਈ ਡਾਟਾ ਸੀਰੀਜ਼",
+      "filterOperator": "ਲੇਬਲ ਮੇਲਣ ਦਾ ਨਿਯਮ"
     },
     "clipboard": {
       "copy": "ਲੇਅਰਜ਼ ਕਾਪੀ ਕਰੋ",

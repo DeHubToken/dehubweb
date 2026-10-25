@@ -12398,7 +12398,7 @@
       "opacity": "Qillqay ch'uya kaynin",
       "pointHint": "Simplifying nisqaqa llimphiy qillqasqamanta huch'uy pantaykunata qichun. Wichqasqa llimphiykunaqa kinsa puntukunatapas saqinmi. Smoothing hinallataq stroke styles nisqakunaqa llamk'ashallanmi; undo nisqawanqa ñawpaq puntukunaman kutin.",
       "points": "Siq'iy k'uchukuna ({{count}})",
-      "precision": "Simplification precision",
+      "precision": "Llamp'uyachiy chiqan kaynin",
       "smoothing": "Allinyachiy",
       "suggestedShape": "Yuyaychasqa: {{shape}}"
     },
@@ -12424,7 +12424,7 @@
       "exportData": "Hoja de cálculo nisqamanta willakuykunata hawa llaqtakunaman apachiy",
       "filterColumn": "Qillqakunata columnaman hina filtray",
       "filterHint": "Matches nisqakunaqa hatun qillqakunata (case) hinallataq k'iti k'iti k'anchaykunata manam qhawanchu. Original spreadsheet row yupaykunaqa kashallanmi.",
-      "filterOperation": "Filter comparison",
+      "filterOperation": "Filtro tupanachiy",
       "filterValue": "Chanin tupachinanpaq",
       "findPhotoName": "Pukyu foto sutita maskay",
       "first": "Filamanta",
@@ -12470,7 +12470,8 @@
       "tokenDecimals": "Chunkayuq chikukuna",
       "tokenHint": "Plantilla qillqaman utaq QR contenidoman churanata k&#39;askachiy chaymanta chay capapaq qillqapi tiyachiqkunata llamk&#39;achiyta akllay. Formato ruwayqa yupay raphi chanikunata mana tikrasqa saqin. Yupay formatokunaqa llañu yupaykunatam munan; 25 formatokuna 25% hina pachakmanta hukninpi.",
       "tokenLocale": "Yupay locale",
-      "trimToken": "Manaraq formato ruwachkaspa espaciokunata kuchuy"
+      "trimToken": "Manaraq formato ruwachkaspa espaciokunata kuchuy",
+      "title": "Bulk nisqa paqarichiy"
     },
     "charts": {
       "axesSection": "Hachas y escala",
@@ -12638,7 +12639,8 @@
       "xDate": "P'unchawkuna hinallataq UTC pacha",
       "xIntervals": "Horizontal-eje intervalokuna",
       "xNumber": "Yupaykuna",
-      "hierarchySample": "Europa,Francia,35"
+      "hierarchySample": "Europa,Francia,35",
+      "sameCategoryColour": "Tukuy categoría nisqapaq llamk’achiy"
     },
     "clipboard": {
       "copy": "Qatillapaq qatillaykuna",
@@ -13068,7 +13070,8 @@
       "dashLengths": "Dash y gap nisqa largokuna",
       "dashOffset": "Desplazamiento de tablero",
       "pattern": "Chiru patrón",
-      "width": "Frontera ancho: {{value}}"
+      "width": "Frontera ancho: {{value}}",
+      "border": "Foto frontera"
     },
     "pageAnimation": {
       "apply": "Animacionta churay",
@@ -13196,7 +13199,8 @@
       "undoMark": "Deshacer marca",
       "usePageTiming": "P’anqap unayniyuq kayninta llamk’achiy",
       "whiteScreen": "Yuraq pantalla",
-      "whiteScreenShortcut": "Yuraq pantalla (W) ."
+      "whiteScreenShortcut": "Yuraq pantalla (W) .",
+      "upNext": "Qatiqnin"
     },
     "qr": {
       "calendarAllDay": "P’unchay hunt’a ruway",
@@ -13464,7 +13468,8 @@
       "regular": "Sapa kuti qillqasqa",
       "setColour": "Color nisqa churay",
       "size": "Qillqap sayaynin",
-      "title": "Akllasqa qillqata formato ({{count}})"
+      "title": "Akllasqa qillqata formato ({{count}})",
+      "setSize": "Tamaño churay"
     },
     "tools": {
       "noResults": "Mana tupaq yanapakuykuna. Aswan pisi maskhayta kallpachakuy.",

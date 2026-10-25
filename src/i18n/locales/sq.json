@@ -15037,7 +15037,7 @@
       "find": "Gjej elemente të ruajtura",
       "importFile": "Importo file të elementit",
       "insert": "Shtoj element",
-      "inserted": "Inserted {{name}}",
+      "inserted": "U fut {{name}}",
       "keepProportions": "Mbani proporcionet e burimit gjatë futjes",
       "layerCount": "{{count}} lagje",
       "name": "Emri i elementit",
@@ -15077,7 +15077,7 @@
       "resetNames": "Rivendos emrat",
       "search": "Shtresat e kërkimit",
       "searchOverlap": "Kërkoje shtresat që përputhen dhe kalojnë njëri mbi tjetrën.",
-      "stackOrder": "Top layer first",
+      "stackOrder": "Së pari shtresa e sipërme",
       "startAt": "Fill në"
     },
     "blend": {
@@ -16447,19 +16447,20 @@
       "unmergeRange": "Shkëput {{range}}",
       "vertical": "Drejtvendosja vertikale",
       "weightsHint": "Madhësitë janë relative. Një vlerë prej 2 përdor dy herë më shumë hapësirë se 1; tabela mban madhësinë e saj të përgjithshme.",
-      "wrap": "Mbështillni tekstin e qelizës"
+      "wrap": "Mbështillni tekstin e qelizës",
+      "summary": "Shto një rresht përmbledhës"
     },
     "text": {
       "backgroundPerLine": "Përshtat sfondin për çdo rresht",
       "bullets": "Lista e plumbave",
       "curve": "Kurbë {{value}}",
       "echoDistance": "Distanca e jehonës",
-      "editingTools": "Text editing tools",
+      "editingTools": "Mjetet e redaktimit të tekstit",
       "effects": "Efektet e tekstit",
       "listStart": "Fillo numërimin në",
-      "listStyle": "List style",
+      "listStyle": "Stili i listës",
       "numbered": "Lista E numrave",
-      "plain": "Plain text",
+      "plain": "Tekst i thjeshtë",
       "strikethrough": "Nëpërmjet grevës"
     },
     "textSearch": {

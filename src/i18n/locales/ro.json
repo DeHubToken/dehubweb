@@ -15074,7 +15074,7 @@
       "resetNames": "Resetează numele",
       "search": "Caută straturi",
       "searchOverlap": "Caută straturi suprapuse",
-      "stackOrder": "Top layer first",
+      "stackOrder": "Mai întâi stratul de sus",
       "startAt": "Începeți la"
     },
     "blend": {
@@ -15766,7 +15766,7 @@
       "dimensions": "Fișierul conține {{rows}} rânduri și {{columns}} coloane",
       "filePreview": "Prezentați primele rânduri ale fișierului",
       "blankNumbers": "Tratați celulele numerice goale ca zero",
-      "file": "Import {{name}}",
+      "file": "Importă {{name}}",
       "header": "Primul rând al fișierului conține titluri",
       "keepSeriesName": "Păstrează un titlu pentru o coloană cu un singur valor",
       "numberFormat": "Punctuație numerică din sursă",

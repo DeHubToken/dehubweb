@@ -15179,7 +15179,8 @@
       "tokenLocale": "संख्या लोकेल",
       "trimToken": "ढाँचाबद्ध गर्नु अघि खाली ठाउँहरू हटाउनुहोस्",
       "connectionFiles": "स्थानीय सञ्जाल स्थापना",
-      "pagePreviewBusy": "पूर्वावलोकन पृष्ठ अद्यावधिक गरिरहेको…"
+      "pagePreviewBusy": "पूर्वावलोकन पृष्ठ अद्यावधिक गरिरहेको…",
+      "matchCount": "{{count}} जडान तयार; {{ambiguous}} अस्पष्ट लेयर छोडिए"
     },
     "charts": {
       "applyDateBounds": "मिति सीमाहरू लागू गर्नुहोस्",
@@ -15347,7 +15348,8 @@
       "linePattern": "लाइन पैटर्न",
       "styleGallery": "चार्ट शैली",
       "treemapExample": "ड्राफ्टलाई हायरार्की उदाहरणसहित प्रतिस्थापित गर्नुहोस",
-      "xDate": "मिति र युटिसी समय"
+      "xDate": "मिति र युटिसी समय",
+      "filterLabelSummary": "लेबल {{operator}} {{text}}"
     },
     "clipboard": {
       "copy": "लेअरहरू कापी गर्नुहोस्",

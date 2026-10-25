@@ -14950,7 +14950,7 @@
       "apply": "Marke aawände",
       "addLogo": "Logo derzuefüege",
       "applied": "Marke uf {{count}} Ebene aagwändet.",
-      "exportFile": "Download styles file",
+      "exportFile": "Stildatei herunterladen",
       "fileHint": "Transferier benannte Farben und Schriftpaare zwischen Geräten. Bilder und Logos bliebe im Design.",
       "fileLoaded": "Importierte Farben und Schriftarten. Speicher sie als benannten Stil oder wende sie auf dieses Design an.",
       "loadStyles": "Nutz die Design-Vorlagen der Marke.",
@@ -14960,7 +14960,8 @@
       "saveNewPreset": "Spare neu",
       "saveStyles": "Speichere Designs mit Stil.",
       "stylesSaved": "Brand-Styles mit disem Design gespärt",
-      "usePreset": "Stil bruche"
+      "usePreset": "Stil bruche",
+      "importFile": "Stile importieren"
     },
     "draw": {
       "heading": "Zeichne",
@@ -15082,7 +15083,7 @@
       "applyMatches": "Verwende passende Verbindungen",
       "blankField": "Blank",
       "blankKeepsPhoto": "Blank: Templatefoto behalten",
-      "blankRemovesLink": "Blank: remove copied link",
+      "blankRemovesLink": "Leer: kopierten Link entfernen",
       "connect": "Verbinde {{name}} mit einer Spalte.",
       "connectionFileHint": "Transfiert Texte, QR-Codes, Fotos, Links und Verbindungen zu Seiten- und Spaltenfeldern nach Schicht- und Spaltennamen. Übereinstimmende Verbindungen ersetzen ihre aktuelle Zuordnung; andere bleiben unverändert. Benennt vor dem Export die verbundenen Schichten eindeutig. Tabellenaufzeichnungen und Design-Kunstwerke sind nicht inkludiert.",
       "connectionFiles": "Transferverbindung aufbauen",
@@ -15091,7 +15092,7 @@
       "copyToken": "Platzhalter kopiere",
       "created": "Erstellt {{count}} Seiten. Rückgängig macht die ursprüngliche Gestaltung wiederher.",
       "data": "Excel-Daten mit Spaltenüberschriften",
-      "emptyText": "Empty text layer",
+      "emptyText": "Leere Textschicht",
       "exportConnections": "Verbindungen exportieren",
       "exportData": "Export Spreadsheetdaten",
       "filterOperation": "Filtervergleich",
@@ -15126,7 +15127,7 @@
       "pagePreviewAlt": "Vorlagenseite mit Datensatz {{record}} gefüllt",
       "pagePreviewBusy": "Aktualisiere die Vorschau der gefüllten Seite…",
       "pagePreviewHint": "Zeig diese Aufzeichnung mit dem aktuellen Text, QR-Code und den Verbindungen zu benannten Fotos. Die Vorschau fügt keine zusätzlichen Seiten zu deinem Design hinzu.",
-      "photoNames": "Available source photo names ({{count}})",
+      "photoNames": "Verfügbare Quellfotonamen ({{count}})",
       "photosHint": "Spaltenwerte passen zu den Namen der Quellfotobeschichtungen in diesem Design. Leere Werte behalten die Vorlagefoto oder den Rahmen bei. Platzierung und Styling folgen der Vorlage; jedes benannte Quellfoto muss auf diesem Gerät verfügbar sein.",
       "placeholderColumn": "Excel-Spalte",
       "placeholderFormat": "Text oder Nummer-Format",
@@ -15185,16 +15186,16 @@
       "filterFirst": "Erschte Serie",
       "filterHint": "Bis zu drei aktivierte Bedingungen müssen alle übereinstimmen. Die Filterung ändert die angezeigte Grafik und die Grafikexporte, während alle Quellzeilen beibehalten werden. Benennete-Serie-Filter werden ignoriert, wenn die Serie entfernt oder umbenannt wird. Fortschrittsgrafiken behalten ihren ersten Quelldatenwert bei.",
       "filterKind": "Filterbedingung",
-      "filterLabelSummary": "Label {{operator}} {{text}}",
-      "filterOperator": "Label matching rule",
-      "filterRowsSummary": "Source rows {{first}}–{{last}}",
+      "filterLabelSummary": "Beschriftung {{operator}} {{text}}",
+      "filterOperator": "Label-Matching-Regel",
+      "filterRowsSummary": "Quellzeilen {{first}}–{{last}}",
       "filterSeries": "Serien zum Filtern",
       "filterTotal": "Gesamt über alle Staffeln",
       "funnelGap": "Stagendistanz",
       "funnelHint": "Stages folgen der Reihenfolge pro Reihe. Benutze nichtnegative Werte mit mindestens einem positiven Stadium. Farben, Beschriftungen und Werte der Stadien werden separat bearbeitet.",
       "hierarchyColumns": "Kategorie-Spalten und Endgröße",
       "hierarchyImportHint": "Paste CSV- oder tabulatorgetrennte Daten mit ein bis sechs Kategorienkolumnen und einer letzten numerischen Grösse-Kolumne. Bis zu 50 Zeilen werden durch Schrägstriche getrennte Hierarchiepfade. Die Zellen der Kategorien müssen ausgefüllt sein und dürfen kein `/` enthalten. Dies ersetzt die Entwurfsdaten mit einer Serie.",
-      "histogramBins": "Maximum histogram bins",
+      "histogramBins": "Maximale Histogramm-Intervalle",
       "histogramFormatHint": "Zählhäufigkeiten bleiben als Zählwerte. Bei kleinen oder identischen Datensätzen werden weniger Bins verwendet. Die obere Grenze gehört zum letzten Bin. Die Bin-Grenzen werden durch die Zahlenformatierung bestimmt.",
       "includeStyleColours": "Palette-Farbe iibinde",
       "intervalsHint": "Mehr Intervalle gäbe feinere Skalenbeschriftungen; weniger machen die Grafik sauberer. Bei Streudiagrammen und Blasencharts kann man die horizontale und vertikale Skala unabhängig voneinander anpassen.",
@@ -15892,7 +15893,7 @@
       "hiddenNetwork": "Verstecktes Netzwerk",
       "networkSecurity": "Netzwerksicherheit",
       "openNetwork": "Öffne Netzwerk",
-      "preview": "QR code preview",
+      "preview": "QR-Vorschau",
       "smsHint": "Öffnet auf unterstützten Geräten eine Nachrichten-Entwurfsvorlage. Ob Empfänger und vorgefüllte Nachricht unterstützt wird, hängt von der App ab.",
       "title": "QR-Code",
       "vectorHint": "Exportiert den aktuellen QR-Entwurf mit seinen Farben und dem ruhigen Rand als skalierbares Vektorgrafik-Artwork.",
@@ -16110,7 +16111,8 @@
       "editingTools": "Textbearbeitungstools",
       "effects": "Texteffäkt",
       "plain": "Plain Text",
-      "strikethrough": "Durchgestrichen"
+      "strikethrough": "Durchgestrichen",
+      "listStyle": "Liste-Stil"
     },
     "textSearch": {
       "previewReplacement": "Vorschau Ersetze",
@@ -16165,7 +16167,8 @@
       "svgBounds": "SVG-Dimensionen",
       "svgPadding": "Extra Paddig",
       "svgScopeHint": "Exportiert bis zu 100 ausgewählte Formen-, Zeichnungs-, Symbol- und Verbindungsschichten an ihrem aktuellen Keyframe-Positionierungsstand. Bewahrt die Seitenränder bei der Exportierung bei; passt die Kamera um die Schichtgrenzen herum an. Text, Fotos und Datengrafiken exportieren sie selbstständig.",
-      "title": "Style selektierte Vektoren ({{count}})"
+      "title": "Style selektierte Vektoren ({{count}})",
+      "pageSize": "Bleibereichsdimensione"
     },
     "viewport": {
       "fit": "Passend",
@@ -16173,7 +16176,9 @@
       "zoomIn": "Canvas zoome rein",
       "zoomOut": "Canvas zoome raus",
       "fitShortcut": "Fit Seite (Strg+1)",
-      "pan": "Pan canvas"
+      "pan": "Panorama",
+      "selectionShortcut": "Zum Uuschnitt zoome (Shift+2)",
+      "toolbar": "Bildschirmnavigazioon"
     },
     "videoMatte": {
       "frames": "Entferne Hintergrund · {{completed}} / {{total}} Frames",

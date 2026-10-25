@@ -14965,7 +14965,7 @@
       "resetNames": "Redefinir nomes",
       "search": "Camadas de pesquisa",
       "searchOverlap": "Pesquisar camadas sobrepostas",
-      "stackOrder": "Top layer first",
+      "stackOrder": "Primeiro a camada superior",
       "startAt": "Comece por"
     },
     "blend": {
@@ -16053,7 +16053,7 @@
     "notes": {
       "changed": "Esta página foi alterada. Reabra as Notas antes de guardar.",
       "hint": "Os nomes e notas são salvos com esse design. Eles não aparecem em exportações para imagem, vídeo ou PDF.",
-      "name": "Page name",
+      "name": "Nome da página",
       "presenter": "Notas do apresentador",
       "save": "Salve notas da página",
       "saved": "Notas da página guardadas",

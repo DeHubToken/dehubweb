@@ -13464,7 +13464,9 @@
   "editor": {
     "layout": {
       "columns": "网格列（0 = 自动）",
-      "gap": "网格间距（像素）"
+      "gap": "网格间距（像素）",
+      "tidy": "整理為網格",
+      "title": "位置和間距"
     },
     "assembly": {
       "matchConsent": "匹配剪輯和照片到我的提示",
@@ -13791,7 +13793,10 @@
       "layerCount": "{{count}} 層",
       "name": "元素名稱",
       "saveSelection": "儲存選擇",
-      "undoLibrary": "撤銷圖書館變更"
+      "undoLibrary": "撤銷圖書館變更",
+      "proportionHint": "適應原頁比例，保留藝術品相對位置。關閉後使用此頁相對佈局。較舊元素無原始尺寸者保持相對佈局。",
+      "downloadFile": "下载元素文件",
+      "importFile": "导入元素文件"
     },
     "layers": {
       "applyNames": "套用名稱",
@@ -13819,7 +13824,10 @@
       "overlapHint": "選擇最底下一層。最前面的層會先出現。",
       "resetNames": "名字重置",
       "stackOrder": "頂層第一",
-      "startAt": "開始"
+      "startAt": "開始",
+      "readingOrder": "從上到下，從左到右",
+      "noMatches": "无匹配层",
+      "overlapShortcut": "Ctrl或Command + 点击循环重叠层"
     },
     "blend": {
       "normal": "正常",
@@ -14216,7 +14224,8 @@
       "tokenDecimals": "小数位数",
       "tokenHint": "拿占位符粘贴到模板文本或者二维码内容里向，并为该图层选择“勒文本里向使用占位符”。格式化弗会得改变电子表格里个值。数字格式要求纯数字；勒百分比模式下，25会得显示为25%。",
       "tokenLocale": "数字区域设置",
-      "trimToken": "格式化前修剪空格"
+      "trimToken": "格式化前修剪空格",
+      "connect": "將 {{name}} 連結到一欄"
     },
     "charts": {
       "bubbleSingleColumn": "啟用多個資料系列選擇分離的Y和尺寸欄。單系列資料使用均等氣泡大小。",
@@ -14346,7 +14355,9 @@
       "sampleDataSize": "{{rows}} 條 · {{series}} 數字欄",
       "scale": {
         "auto": "自动",
-        "reset": "自动秤"
+        "reset": "自动秤",
+        "apply": "套用比例界限",
+        "hint": "界限擴展自動比例，使相關圖表共享範圍。超出界限的值仍可見。"
       },
       "scatterHint": "散点图第一列用数值型X坐标，其余列用Y值。多组数据系列共享箇些X坐标。勒“轴搭刻度”里向选择日期搭UTC时间，好做经过时间个横轴。",
       "scatterLines": "拿散点连起来",
@@ -14366,7 +14377,24 @@
       "xAxisMode": "水平數據類型",
       "xIntervals": "水平軸間隔",
       "xNumber": "數字",
-      "hierarchySample": "歐洲，法國，35"
+      "hierarchySample": "歐洲，法國，35",
+      "categoryAxisHint": "保持每個資料點的每個標籤。第一和最後的類別保持標籤。傾斜標籤使用單行；返回0°以啟用折行。",
+      "chooseSeries": "資料系列編輯",
+      "donutTotal": "在中心显示总计",
+      "exportDisplayedRows": "导出显示的行",
+      "markerHint": "點大小為零隱藏標記；氣泡大小保持其圓形面積比例。",
+      "progressColours": "第一個色板顏色填充進度；第二個顯示剩餘的軌跡。顯示值控制百分比標籤。這些圖表只使用第一個來源值。",
+      "progressTrack": "剩余轨道",
+      "raceAnimate": "在图形的时间线持续时间内动画",
+      "raceExample": "用排名示例替换草稿",
+      "referenceLabel": "目标标签（可选）",
+      "removeReference": "删除目标",
+      "resetCategoryAxis": "重置类别标签",
+      "resetGeometry": "重置图表几何",
+      "resetIntervals": "重置比例間隔",
+      "rowFilters": "顯示的行數",
+      "sameCategoryColour": "適用於所有類別",
+      "xDate": "日期和UTC时间"
     },
     "clipboard": {
       "copy": "複製層",
@@ -14405,13 +14433,16 @@
       "previewUpdating": "更新預覽中…",
       "sampleEyebrow": "新視角",
       "sampleSubtitle": "你故事从这里开始。",
-      "subtitle": "支持性文本"
+      "subtitle": "支持性文本",
+      "title": "文字組合"
     },
     "connectors": {
       "width": "線條粗細",
       "bend": "彎曲位置",
       "colour": "線色",
-      "hint": "調整連接線的大小、拉伸、旋轉或翻轉。選擇它再次編輯其路徑和端點。"
+      "hint": "調整連接線的大小、拉伸、旋轉或翻轉。選擇它再次編輯其路徑和端點。",
+      "preview": "連接器預覽",
+      "title": "線和連接器"
     },
     "crop": {
       "focusPoint": "焦點 {{x}}%，{{y}}%",
@@ -14426,7 +14457,11 @@
       "focusX": "水平聚焦 (%)",
       "focusY": "垂直焦點 (%)",
       "onCanvas": "裁剪在画布上",
-      "pageRatio": "匹配页面比例"
+      "pageRatio": "匹配页面比例",
+      "applyFocus": "套用精確焦點",
+      "applyRatio": "套用比例",
+      "focusHint": "移動裁切視窗，保持其大小。",
+      "precisionHint": "比例會改變裁剪，但保持顯示區域不變。焦點位置會移動現有的裁剪視窗至其可用邊緣，包含翻轉圖片。"
     },
     "dataCells": {
       "actionRange": "單元格範圍（空白表示全部單元格）",
@@ -14445,10 +14480,20 @@
       "pasted": "{{rows}}行{{columns}}列",
       "pastedCells": "要粘贴个单元格",
       "previousCell": "上一只单元格",
-      "rangeActions": "填充、清除及清理一個範圍"
+      "rangeActions": "填充、清除及清理一個範圍",
+      "invalidAddress": "選擇現有單元格，位於 A1 和 {{last}} 之間",
+      "numberInputFormat": "來源中的數字標點符號",
+      "pasteHint": "從 spreadsheet、CSV 或 TSV 中粘貼行。它們取代選定的單元格的矩形範圍；周圍的資料保留。",
+      "pasteRange": "粘貼單元格範圍",
+      "redoAction": "重做資料動作",
+      "startCell": "從單元格開始",
+      "undoAction": "取消資料動作",
+      "valueHint": "編輯整個單元格，包括換行。值儲存為文字；公式不計算。"
     },
     "dataExport": {
-      "csv": "下载 CSV"
+      "csv": "下载 CSV",
+      "copyCells": "拷貝",
+      "formulasAsText": "將公式視為文字"
     },
     "dataImport": {
       "dimensions": "檔案有 {{rows}} 行，{{columns}}欄。",
@@ -14462,7 +14507,16 @@
       "sampleCategory": "類別",
       "sampleNorth": "北方",
       "sampleSouth": "南方",
-      "sampleValue": "價值"
+      "sampleValue": "價值",
+      "blankNumbers": "將空白的數值單元格視為零",
+      "file": "匯入 {{name}}",
+      "filePreview": "預覽第一個檔案的行",
+      "keepSeriesName": "保留一列值的系列標題",
+      "pastedName": "粘貼的 spreadsheet",
+      "pastedSource": "匯入的 spreadsheet 資料",
+      "separator": "檔案分隔符",
+      "skipEmpty": "跳過空白資料行",
+      "use": "使用選定的資料"
     },
     "dataVisual": {
       "addColumn": "添𠀀欄目",
@@ -14497,7 +14551,18 @@
       "textColour": "文字",
       "title": "圖表和表格",
       "values": "顯示值",
-      "vectorHint": "將此圖形以透明背景匯出。文字仍可編輯並使用選定的字型。"
+      "vectorHint": "將此圖形以透明背景匯出。文字仍可編輯並使用選定的字型。",
+      "accent": "語調",
+      "addRow": "新增行",
+      "captionControls": "標題、說明和 SVG 描述",
+      "chartType": "圖表類型",
+      "defaultFont": "預設字型",
+      "downloadSvg": "以 SVG 格式下載圖表",
+      "expandData": "擴展資料編輯器",
+      "expandedData": "編輯圖表資料",
+      "expandedHint": "修改會留在同一個草稿中，關閉此編輯器，然後更新或插入圖表以將修改應用到畫布上。",
+      "fixSource": "使用源資料來修正此輸入。",
+      "keepDraft": "完成編輯資料"
     },
     "designTools": {
       "find": "查找文本",
@@ -14511,7 +14576,13 @@
       "colours": "文件顏色",
       "copyStyle": "照样学样",
       "findReplace": "找到並替換",
-      "matchCase": "匹配案例"
+      "matchCase": "匹配案例",
+      "replaceAll": "全部取代",
+      "replaceWith": "取代為",
+      "replacement": "取代顏色",
+      "resize": "調整大小",
+      "styleReady": "樣式準備好",
+      "toolbar": "設計工具"
     },
     "diagrams": {
       "labels": "節點標籤，分行排列",
@@ -14519,7 +14590,13 @@
       "previewHint": "预览用个是页面颜色，没得其他图画。插入图表来添加可编辑个图层。",
       "previewUnavailable": "畫布預覽不可用。草稿仍可編輯。",
       "previewUpdating": "更新圖表預覽中…",
-      "vertical": "垂直排版"
+      "vertical": "垂直排版",
+      "edgeLabels": "連接器標籤，按行排列（可選）",
+      "editHint": "每個節點及其文字形成一個群組。連接器標籤與其線條一起群組，線條保持獨立可編輯；重新排列線條後，重新排列節點。空白標籤使用預設文字。圖表填充目前頁面，且可儲存至可重用元素庫。",
+      "insert": "插入圖表",
+      "preview": "預覽圖表",
+      "previewNeedsData": "完成顏色和使用節點標籤至120個字符預覽。",
+      "title": "可編輯圖表起始"
     },
     "document": {
       "position": "位置",
@@ -14537,7 +14614,13 @@
       "repeatRange": "目的地頁碼",
       "repeatScopeHint": "使用文件頁碼。當前頁面總是被排除。",
       "repeated": "选中个元素已经复制到选定个页面里向了",
-      "suffix": "後綴"
+      "suffix": "後綴",
+      "applyNumbers": "套用頁碼",
+      "numberHint": "將可編輯的頁碼新增至整份文件。數字會更新當頁面新增、複製、刪除或重新排列時。鎖定的數字保持不變。",
+      "numberPreview": "頁碼預覽",
+      "numberStyle": "數字樣式",
+      "numbersApplied": "套用頁碼",
+      "numbersRemoved": "未鎖定的頁碼移除"
     },
     "fills": {
       "apply": "套用填充",
@@ -14548,7 +14631,8 @@
       "solid": "還原實心填充",
       "angle": "角度",
       "hint": "為選取文字或形狀套用漸變，或將其放置於此頁面後方。",
-      "lockedBackground": "在替換背景前，請解鎖頁面背景。"
+      "lockedBackground": "在替換背景前，請解鎖頁面背景。",
+      "solidBackground": "用第一個顏色作為頁面背景"
     },
     "filters": {
       "strength": "濾水強度：{{value}}%"
@@ -14583,7 +14667,8 @@
       "spread": "散播",
       "stop": "停止{{number}}在{{position}}%",
       "styleLoaded": "風格已經被加载到草稿中",
-      "svgHint": "拿箇只渐变按页面大小导出，包括停止位置搭透明度。请分开应用，以便勒设计里向使用。"
+      "svgHint": "拿箇只渐变按页面大小导出，包括停止位置搭透明度。请分开应用，以便勒设计里向使用。",
+      "styleFileHint": "傳輸梯度顏色、位置、透明度、角度及輻射設定於裝置間。匯入載入草稿；套用以更新藝術品。"
     },
     "graphicDraftHistory": {
       "local": "图稿",
@@ -14593,7 +14678,11 @@
     "grids": {
       "frame": "相框",
       "insert": "插入照片网格",
-      "rounding": "角角磨圓"
+      "rounding": "角角磨圓",
+      "spacing": "像素間距",
+      "title": "相片格",
+      "addPhoto": "选择此帧的照片",
+      "hint": "插入照片布局，然后将图片拖放到其边框上。双击边框可在组内对其进行编辑。"
     },
     "groups": {
       "smaller": "較小",
@@ -14606,7 +14695,12 @@
       "matchSizes": "選擇好尺碼喔",
       "rotate": "旋转选中内容",
       "scalePercent": "選擇比例的尺度",
-      "ungroup": "取消分組"
+      "ungroup": "取消分組",
+      "matchReference": "參考尺寸",
+      "matchSizeHint": "以每個層或群組的中心為中心，保持比例，包括旋轉。測量包括旋轉。適合參考盒子使用最大的尺寸，適合和最小的比較盒子區域選項。文字和描邊樣式與藝術作品一起縮放。",
+      "rotateBy": "旋轉{{degrees}}°",
+      "resize": "调整所选内容的大小",
+      "rotationDegrees": "按度数旋转所选内容"
     },
     "guides": {
       "applyGrid": "应用网格",
@@ -14630,13 +14724,18 @@
       "gridTitle": "排版网格",
       "hint": "選擇一根尺子並拖曳添加導引線。選擇編輯導引線來移動導引線，或拖曳導引線離開頁面以刪除它們。導引線和邊距不會包含在下載中。",
       "horizontal": "水平",
-      "pixelPosition": "{{position}} 像素"
+      "pixelPosition": "{{position}} 像素",
+      "add": "添加導引線",
+      "remove": "移除{{direction}}指南在{{position}}%",
+      "vertical": "垂直",
+      "direction": "引导方向"
     },
     "help": {
       "title": "编辑器指南",
       "keyboardHint": "鍵盤快捷鍵適用於外部文本欄位和對話框。Canvas 動作需要將 Canvas 焦點。Cmd 在 Mac 上取代 Ctrl。",
       "noResults": "無法匹配的幫助。請嘗試輸入工具名稱或動作，如「貼上」、「裁切」或「群組」。",
-      "openTool": "開啟工具"
+      "openTool": "開啟工具",
+      "search": "搜尋捷徑和編輯器幫助"
     },
     "links": {
       "apply": "应用链接",
@@ -14647,7 +14746,10 @@
       "mixed": "选定个艺术品有弗同个链接目标。请设置一个目标，让伊拉链接到同一个地方。",
       "openPage": "去第{{number}}页",
       "remove": "拿脱链接",
-      "targetPage": "目的頁面"
+      "targetPage": "目的頁面",
+      "copyDestination": "複製目的地",
+      "copyFailed": "無法複製連結目的地",
+      "destination": "連結目的地"
     },
     "mediaSelection": {
       "applyFilter": "拿滤镜应用到选中个区域",
@@ -14657,7 +14759,13 @@
       "filterHint": "調整選擇的照片和視頻的顏色和模糊效果，於一處編輯。裁切、框架、邊框和時間戳都保持不變。",
       "filterStrength": "力量",
       "radius": "角半徑",
-      "radiusHint": "角角處的圓角應用於矩形媒體框架。"
+      "radiusHint": "角角處的圓角應用於矩形媒體框架。",
+      "filter": "選擇的選項顏色濾鏡",
+      "removeBorder": "移除邊框",
+      "resetColours": "重置色彩調整",
+      "setBorder": "設定邊框",
+      "setRadius": "設定角落半徑",
+      "title": "選擇相片和視頻樣式（{{count}}）"
     },
     "mockups": {
       "fitHint": "填滿螢幕裁切照片到框架。適合照片保持選定照片的現有裁切並顯示螢幕背景在其周圍。",
@@ -14678,7 +14786,9 @@
       "rotation": "模擬器旋轉",
       "size": "在頁面中設定大小",
       "title": "設備和印刷模擬器",
-      "usePhoto": "用選擇的照片填充"
+      "usePhoto": "用選擇的照片填充",
+      "caption": "地址或相片標題（選擇性）",
+      "editHint": "插入一組可編輯的形狀和相片框架。複製的相片保留其效果和焦點，使用填充屏幕，或者保留其目前的裁切，使用適合相片。原始相片保持原位。選擇屏幕以取代其圖像；解組以編輯個別框架細節。"
     },
     "notes": {
       "changed": "本頁已經改變。重新打開Notes之前儲存。",
@@ -14850,7 +14960,25 @@
       "hiddenNetwork": "隱藏網路",
       "smsHint": "勒支持个设备浪打开一条信息草稿。收件人搭预填信息个支持情况取决于具体个应用程序。",
       "title": "QR碼",
-      "useDetails": "用箇眼底个详细信息"
+      "useDetails": "用箇眼底个详细信息",
+      "brandPaletteHint": "選擇暗色前景和亮色背景自色板，當需要更大的 contrast 時使用黑色或白色。儲存色板儲存目前的 QR 顏色；編碼的內容保持不變。",
+      "brandPalettes": "儲存的色板和 QR 顏色",
+      "calendarAllDay": "全天活動",
+      "calendarHint": "時間事件使用 UTC 時間；日曆應用程式以接收者的時間區域顯示。全天日期包含最後一天。掃描器支援度有所不同；日曆檔案也可以直接匯入。",
+      "contactHint": "建立 vCard 聯絡人。掃描可能會提供儲存這些詳細資料的選擇；行為取決於掃描器。",
+      "content": "鏈接或文字",
+      "contentCopied": "QR 內容複製",
+      "copyContent": "複製 QR 內容",
+      "downloadContactHint": "儲存相同的聯絡人詳細資料作為您的地址簿檔案。",
+      "downloadSvg": "下載 QR 作為 SVG",
+      "failed": "使用較短的文字和兩種不同的十六進位顏色。",
+      "foreground": "前景",
+      "hint": "建立 QR 代碼的鏈接或文字。保持前景和背景之間的強烈 contrast。",
+      "networkSecurity": "網絡安全",
+      "openNetwork": "開啟網絡",
+      "preview": "QR 代碼預覽",
+      "quietZone": "靜音區域（模組）",
+      "resetDraft": "重置 QR 草稿"
     },
     "repeat": {
       "allowOverflow": "允許圖像超出頁面",
@@ -14874,7 +15002,8 @@
       "width": "寬度",
       "anchor": "作品錨定",
       "dpi": "屏幕分辨率（像素/英寸）",
-      "swap": "換維度"
+      "swap": "換維度",
+      "units": "尺寸單位"
     },
     "sections": {
       "assign": "應用區域",
@@ -14929,7 +15058,9 @@
       "noResults": "沒有匹配的符號。嘗試另一個名稱或類別。",
       "title": "向量符號",
       "vectorDownloadHint": "輸出圖書館符號，選擇顏色和線條粗細，背景為透明。",
-      "weight": "線條粗細"
+      "weight": "線條粗細",
+      "previous": "上一個符號",
+      "search": "搜尋向量符號"
     },
     "tables": {
       "allColumns": "所有欄位",
@@ -15023,14 +15154,34 @@
       "styleLoaded": "風格已經被加载到草稿中",
       "stylePreserveHint": "保持樣式、合併的格子和行和列的大小。",
       "summary": "加一行汇总行",
-      "summaryHint": "計算每列分開。空白和非數值的單元格跳過。附加的行包含固定的數字；更改原始值後重新計算。"
+      "summaryHint": "計算每列分開。空白和非數值的單元格跳過。附加的行包含固定的數字；更改原始值後重新計算。",
+      "styleFileHint": "在设备之间传输外观和调色板。内容、合并和自定义单元格格式保持在目标表格中。自动调整设置可能会改变显示的大小。",
+      "styles": "表格样式",
+      "stylesCopied": "复制的单元格样式",
+      "stylesPasted": "粘贴的单元格样式",
+      "summaryRange": "要计算的单元格范围",
+      "textReplaced": "替换了 {{cells}} 单元格中的 {{occurrences}} 匹配项",
+      "transpose": "转置行和列",
+      "undoRowCleanup": "撤销行清理",
+      "unmergeAll": "全部取消合并",
+      "unmergeRange": "取消合并 {{range}}",
+      "vertical": "垂直对齐",
+      "weightsHint": "大小是相对的。值 2 使用的空间是 1 的两倍；表格保持其总体大小。",
+      "wrap": "换行单元格文本",
+      "summaryCalculation": "计算"
     },
     "text": {
       "numbered": "编号列表",
       "bullets": "子弹列表",
       "curve": "曲线 {{value}}",
       "echoDistance": "回声距离",
-      "listStart": "从……开始编号"
+      "listStart": "从……开始编号",
+      "backgroundPerLine": "使背景适合每行",
+      "editingTools": "文本编辑工具",
+      "effects": "文字效果",
+      "listStyle": "列表样式",
+      "plain": "纯文本",
+      "strikethrough": "删除线"
     },
     "textSearch": {
       "emptyAfterReplacement": "呢層將會空白",
@@ -15097,6 +15248,10 @@
       "toolbar": "畫布導航",
       "zoomIn": "放大畫布",
       "zoomOut": "縮小畫布"
+    },
+    "media": {
+      "replace": "取代選擇的層",
+      "replaceWith": "替換選擇的層為{{name}}"
     }
   },
   "jungleMood": {

@@ -15757,8 +15757,8 @@
       "valueHint": "Uhamishie hii kila seli hapa, pamoja na mipango ya mstari. Maana ya kila chini ni kama metexti; habari za formula hazijarithimika."
     },
     "dataExport": {
-      "copyCells": "Copy cells",
-      "csv": "Download CSV",
+      "copyCells": "Nakili visanduku",
+      "csv": "Pakua CSV",
       "formulasAsText": "Chukulia fomula kama maandishi"
     },
     "dataImport": {
@@ -16089,7 +16089,7 @@
       "colour": "Kuongeza rangi ya mpaka",
       "customPattern": "Muundo mahususi",
       "dashLengths": "Urefu wa dashi na pengo",
-      "dashOffset": "Dash offset",
+      "dashOffset": "Msogeo wa vistari",
       "pattern": "Muundo wa mstari",
       "width": "Upana wa mpaka: {{value}}"
     },

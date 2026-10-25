@@ -15179,7 +15179,7 @@
       "dateLocale": "Lokal dato",
       "decimals": "Decimaler",
       "defaultTextSize": "Standard tekststørrelse",
-      "donutHole": "Donut hole",
+      "donutHole": "Donuthul",
       "donutLabel": "Donut center etiket",
       "donutLabelOptional": "Valgfri midteretiket",
       "donutTotal": "Vis total i centrum",
@@ -15582,7 +15582,8 @@
       "styleFileHint": "Overfører gradientfarver, positioner, gennemsigtighed, vinkel- og radialindstillinger mellem enheder. Import indlæser skitsen; anvend den for at opdatere tegningen.",
       "styleFiles": "Overfør gradient stilarter",
       "styleLoaded": "Stil indlæst i kladden",
-      "svgHint": "Eksporterer denne gradient på sidestørrelsen, herunder stop-positioner og gennemsigtighed. Påfør det separat for at bruge det i designet."
+      "svgHint": "Eksporterer denne gradient på sidestørrelsen, herunder stop-positioner og gennemsigtighed. Påfør det separat for at bruge det i designet.",
+      "position": "Placering"
     },
     "graphicDraftHistory": {
       "local": "Grafisk udkast",
@@ -15668,7 +15669,8 @@
       "openPage": "Gå til side {{number}}",
       "remove": "Fjern link",
       "targetPage": "Destinationsside",
-      "title": "Tilknyt"
+      "title": "Tilknyt",
+      "destination": "Linkmål"
     },
     "media": {
       "replace": "Erstat valgt lag",
@@ -16168,7 +16170,7 @@
       "pan": "Paner canvas",
       "selection": "Udvalg",
       "selectionShortcut": "Zoom til udvalg (Shift+2)",
-      "toolbar": "Canvas navigation",
+      "toolbar": "Lærredsnavigation",
       "zoomIn": "Zoom canvas ind",
       "zoomOut": "Zoom canvas ud"
     },
