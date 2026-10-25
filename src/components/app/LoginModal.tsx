@@ -250,7 +250,7 @@ export function LoginModal({ open, onOpenChange }: LoginModalProps) {
         </div>
       </div>
 
-      <div className="shrink-0 px-6 py-3 border-t border-white/10 pb-[calc(0.75rem+env(safe-area-inset-bottom))]">
+      <div className="shrink-0 px-6 pt-6 border-t border-white/10 pb-[calc(1.5rem+env(safe-area-inset-bottom))]">
         <p className="text-xs text-white/40 text-center">{(step === 'main' || step === 'email' || step === 'email-waiting') && <>{t('loginStack.codeNote', 'We email you a code, no password needed.')} </>}{termsNotice}</p>
       </div>
     </>

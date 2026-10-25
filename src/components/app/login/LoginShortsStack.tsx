@@ -1,11 +1,12 @@
 /**
- * Two lanes of selected clips above the email-first login. The drawer and
+ * Responsive lanes of selected clips above the email-first login. The drawer and
  * phone screen share the catalogue, with a new order on each mount.
  */
 import { useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { loginClipLanes } from '@/lib/login-clip-lanes';
 import { LOGIN_CLIP_IDS } from './login-clip-assets';
+import { useIsMobile } from '@/hooks/use-mobile';
 import '@/styles/login-stack.css';
 
 type ClipName = typeof LOGIN_CLIP_IDS[number];
@@ -61,11 +62,13 @@ function Lane({ clips, reverse }: { clips: ClipName[]; reverse?: boolean }) {
 export function LoginShortsStack() {
   const { t } = useTranslation();
   const [lanes] = useState(() => loginClipLanes(LOGIN_CLIP_IDS));
+  const isMobile = useIsMobile();
+  const selected = [...lanes.first, ...lanes.second];
+  const columns = isMobile ? [lanes.first, lanes.second] : [selected.slice(0, 3), selected.slice(3, 6), selected.slice(6)];
   return (
     <div className="login-stack" data-login-stack>
       <div className="login-stack__lanes" aria-hidden="true">
-        <Lane clips={lanes.first} />
-        <Lane clips={lanes.second} reverse />
+        {columns.map((clips, index) => <Lane key={index} clips={clips} reverse={index % 2 === 1} />)}
       </div>
       <h2 className="login-stack__headline text-white">
         {t('loginStack.headlineTop', 'You will own everything')}

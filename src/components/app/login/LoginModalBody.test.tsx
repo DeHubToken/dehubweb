@@ -48,6 +48,14 @@ it('account migration keeps its identity sign-in flow separate', () => {
   expect(screen.queryByRole('textbox')).toBeNull();
 });
 
+it('prompts and focuses the email field when continuing without an address', () => {
+  render(<SheetBody layout="stack" />);
+  const email = screen.getByPlaceholderText('loginModal.emailPlaceholder');
+  fireEvent.click(screen.getByRole('button', { name: 'loginModal.continueEmail' }));
+  expect(email).toHaveFocus();
+  expect(screen.getAllByText('loginModal.emailPlaceholder').some(element => element.tagName === 'P')).toBe(true);
+});
+
 it('switches phone and fingerprint in place without losing the email draft or provider row', () => {
   const view = render(<SheetBody layout="stack" />);
   const email = screen.getByPlaceholderText('loginModal.emailPlaceholder');
