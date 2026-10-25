@@ -301,13 +301,36 @@ export default function HomePage() {
   // Images tab's scroll view on that picture. The nav pill's back slot already
   // returns to the grid from there, so nothing new is needed for the way back.
   const pinnedImageId = searchParams.get('image') || undefined;
+  // Opened from another feed (a photo tapped on Home), Back returns to that
+  // feed at the same spot, not to the Images grid the picture lives in. The
+  // open is its own history entry, so the phone's Back and the pill's back
+  // arrow both land there.
+  const imageReturnRef = useRef<{ tab: string; scroll: number } | null>(null);
+  const restoreTabScrollRef = useRef<number | null>(null);
   useEffect(() => {
     if (!pinnedImageId) return;
+    const fromInApp = location.key !== 'default';
+    imageReturnRef.current = fromInApp && activeTab !== 'images'
+      ? { tab: activeTab, scroll: getDocumentScrollTop() }
+      : null;
     setActiveTab('images');
     setSelectedImageId(pinnedImageId);
     setShowImagesCollage(false);
-    setSearchParams({}, { replace: true });
+    setSearchParams({}, { replace: true, state: imageReturnRef.current ? { imageView: true } : undefined });
   }, [pinnedImageId]); // eslint-disable-line react-hooks/exhaustive-deps
+
+  // Back popped the image entry: put the original feed back where it was.
+  useEffect(() => {
+    const origin = imageReturnRef.current;
+    if (!origin || (location.state as { imageView?: boolean } | null)?.imageView) return;
+    // Leaving Home for another page is not the way back.
+    if (location.pathname !== '/app' && tabFromPathname(location.pathname) === null) return;
+    imageReturnRef.current = null;
+    restoreTabScrollRef.current = origin.scroll;
+    setSelectedImageId(null);
+    setShowImagesCollage(true);
+    setActiveTab(origin.tab);
+  }, [location.key]); // eslint-disable-line react-hooks/exhaustive-deps
 
   // Same for a video on a phone: it opens in the Shorts viewer on that video.
   // ShortsFeed clears the id once it has opened, so it does not reopen later.
@@ -713,6 +736,10 @@ export default function HomePage() {
    * Handle returning from feed view back to collage view.
    */
   const handleBackToCollage = useCallback(() => {
+    if (imageReturnRef.current) {
+      navigate(-1);
+      return;
+    }
     restoreGridScrollRef.current = true;
     setSelectedImageId(null);
     setShowImagesCollage(true);
@@ -789,6 +816,15 @@ export default function HomePage() {
     }
     
     prevTabRef.current = deferredTab;
+
+    // Coming back from a photo opened on this feed: its old spot, not the top.
+    const restoreTop = restoreTabScrollRef.current;
+    if (restoreTop !== null) {
+      restoreTabScrollRef.current = null;
+      scrollDocumentTo(restoreTop);
+      requestAnimationFrame(() => scrollDocumentTo(restoreTop));
+      return;
+    }
 
     // Skip scroll-to-top during drag — scrolling mid-drag causes layout reflow
     // which is the biggest source of lag on the home page.
