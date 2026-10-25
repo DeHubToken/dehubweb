@@ -406,7 +406,7 @@ A blockchain built for social content, created in 2020 when the community split 
 
 - **Users (5/10):** Monthly actives down 8% in Feb 2026 · Ecency 50k+ installs. Source: [Hive Statistics (arcange), Feb 2026](https://beeyard.bard-dev.com/@arcange/hive-statistics-202602-en).
 - **Key features (7/10):** Long-form blog posts, Upvote rewards, Curation rewards, Communities, Many front ends (PeakD, Ecency), Free, fast transactions, Games, Built-in DEX, Short video (3Speak).
-- **Dev activity (9/10):** 1,780 commits in 90 days (ecency/vision-next (Hive core on GitLab)).
+- **Dev activity (9/10):** 1,780 commits in 90 days (ecency/vision-next; Hive core is on GitLab).
 - **Strengths:** Free transactions, rewards for posting and curating, and a loyal community. Ecency alone shipped more than 1,700 commits in 90 days.
 - **Weak spots:** Monthly active users have been drifting down. Rewards can encourage low-quality posting, and new users find it complex.
 - **Outlook (5/10):** Mixed. Strong builders, but it needs a hit app to bring in new people.
@@ -502,7 +502,7 @@ An open-source social network founded in 2015 as an alternative to Facebook, wit
 
 - **Users (5/10):** No recent public figures. Source: [DappRadar](https://dappradar.com/dapp/minds).
 - **Key features (6/10):** Posts, Video, Groups, Boosts, Token rewards, Chat, Open source.
-- **Dev activity (3/10):** Closed source.
+- **Dev activity (3/10):** Not measured (code is on GitLab).
 - **Strengths:** Long history, free-speech positioning and video support.
 - **Weak spots:** No recent user figures, and its token barely trades. Code lives on GitLab and could not be measured.
 - **Outlook (3/10):** Weak momentum.
@@ -526,7 +526,7 @@ A social graph where your profile and followers are owned on-chain and shared ac
 
 - **Users (4/10):** ~650k profiles · ~22k daily active at Lens Chain launch (Apr 2025). Source: [thirdweb, 2026](https://blog.thirdweb.com/decentralized-social-2026-lens-farcaster-on-chain-identity/).
 - **Key features (7/10):** Profiles you own, On-chain follow graph, Collectible posts, Shared across apps, Usernames, Groups, Lens Chain.
-- **Dev activity (2/10):** 1 commits in 90 days (lens-protocol/lens-v3 + heyverse/hey).
+- **Dev activity (2/10):** 1 commit in 90 days (lens-protocol/lens-v3 + heyverse/hey).
 - **Strengths:** About 650,000 profiles and a clean ownership model.
 - **Weak spots:** Daily actives fell sharply after the 2024 peak, public code has nearly stopped, and Mask Network took over in January 2026.
 - **Outlook (4/10):** Uncertain until Mask ships.
