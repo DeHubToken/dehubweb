@@ -144,15 +144,15 @@ export function PageTabs<T extends string>({
   onChange,
   className,
   size = 'md',
-  afterFirstTab,
+  beforeTabs,
 }: {
   tabs: PageTab<NoInfer<T>>[];
   value: T;
   onChange: (id: NoInfer<T>) => void;
   className?: string;
   size?: 'sm' | 'md';
-  /** Adjacent controls on the same row, immediately after the first tab. */
-  afterFirstTab?: ReactNode;
+  /** Leading controls on the same row, before the category tabs. */
+  beforeTabs?: ReactNode;
 }) {
   return (
     <div
@@ -164,7 +164,8 @@ export function PageTabs<T extends string>({
       // sideways on iPhone.
       className={cn('scrollbar-hide relative -mx-0.5 flex items-center gap-1.5 overflow-x-auto px-0.5', className)}
     >
-      {tabs.map((tab, index) => {
+      {beforeTabs}
+      {tabs.map((tab) => {
         const active = tab.id === value;
         return (
             <Fragment key={tab.id}>
@@ -187,7 +188,6 @@ export function PageTabs<T extends string>({
               <span>{tab.label}</span>
               {typeof tab.count === 'number' ? <span data-kit-chip-count>{tab.count}</span> : null}
             </button>
-            {index === 0 ? afterFirstTab : null}
           </Fragment>
         );
       })}
