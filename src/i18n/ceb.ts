@@ -104,6 +104,20 @@ export const ceb = {
     disclaimerText: 'Ang DeHub tokens nagsilbi isip utility tokens sulod sa among ecosystem, susama sa in-game currencies, ug dili mga instrumento sa investment.',
   },
   dapp: {
+    backendLabel: 'Pagdawat sa stream',
+    frontendLabel: 'Pagpatukar',
+    kidsTitle: 'Mode para sa Bata',
+    profileB1: 'Lebel sa streamer:',
+    spNameBoost: 'Pagpakusog',
+    spNameFlakJacket: 'Panalipod nga Bisti',
+    spNameHarpoon: 'Salapang',
+    spNamePrecisionStrike: 'Tukmang Pag-atake',
+    spNameTimelineBomber: 'Tigbomba sa Timeline',
+    spTierCrab: 'Alimango',
+    themesDesc: 'Ang DeHub adunay napulog-unom ka kapilian sa panagway, dili lang usa ka switch sa light ug dark: System, System Light, Immersive, Minimal, Minimal Light, Cosmic, Hazy, Swarms, Lava Lamp, Winter, War, Osaka, Jungle, Island, Hacker ug Horror. Ang matag usa usa ka kompleto nga panit — kaugalingong paleta, chrome, mga icon ug, alang sa pipila niini, usa ka buhi nga animated nga background nga gi-render sa GPU. Ang System hingpit nga immersive, nga ang mga post puno sa gilapdon ug gibahin sa nipis nga mga linya imbes nga mga kahon, ug ang System Light mao ra nga layout apan itom nga tinta sa puti. Ang Island usa ka lagoon nga adunay nagpabanaag nga tubig nga nagsunod sa imong lokal nga orasan gikan sa golden hour hangtod sa gabii, ang Hacker hinay nga berde nga ulan nga ang app naka-monospace, ug ang Horror usa ka found footage sa daan nga VHS tape. Pilia ang usa sa Settings → Appearance, diin ang matag usa nagpakita og sample; upat niini nagtugot usab nimo nga magbutang og kaugalingong accent nga kolor, ug ang Jungle adunay kaugalingong switch sa adlaw ug kagabhion.',
+    tocKids: 'Mode para sa Bata',
+    walletHubB1: 'Pitaka:',
+    workB7: 'Mga panid sa ganti:',
     title: 'Usa ka Kompleto nga Ecosystem',
     intro1: 'Ang DeHub kay usa ka censorship resistant, open source nga alternatibo sa legacy media platforms nga nag-alagad sa content creation, streaming ug gaming industries.',
     intro2: 'Ang app gi-scale pinaagi sa decentralized miner network, naghatag sa shared computing power aron mag-host, mag-transcode, ug mag-deliver sa content.',
@@ -1025,6 +1039,9 @@ export const ceb = {
     moreB3Desc: 'Mga istatistika sa live site — mga bisita, panan-aw sa panid ug mga numero sa komunidad, sa adlaw, tuig o sa tanan nga oras — gipatik kaysa ipadayon ang sulud. Gipakita sa parehas nga panid ang kita ug gasto sa DeHub, nga gitukod gikan sa adlaw-adlaw nga kinatibuk-ang kita ug ang mga gasto nga tinuud nga natala sa among mga tagahatag, busa ang panalapi ingon sa publiko sama sa trapiko.',
   },
   games: {
+    trenchTitle: 'Chartopia',
+    chessTitle: 'Gambit sa Hari',
+    jungleTitle: 'Agianan sa Kalasangan',
     title: 'Mga Dula',
     subtitle: 'Sa kanunay nga nag-abot nga interseksyon sa gaming ug streaming.',
     intro1: 'Isip usa ka team puno sa mga gamer ug streamer, among gitukod ug gilansad ang pipila ka malingaw, libre nga arcade games ug nagtrabaho padulong sa among unang flagship game, Last Chad Standing.',
@@ -1070,6 +1087,7 @@ export const ceb = {
     feature4: 'Pagtukod og desentralisado nga mga guild ug e-sports nga mga dibisyon uban sa kasamtangan nga mga pro gamers',
   },
   tokenEconomics: {
+    disclaimer: 'Pahimangno',
     title: 'Ekonomiya ug Emisyon sa Token',
     subtitle: 'Pagsabot sa economic model ug emissions structure sa DeHub.',
     totalSupply: 'Total Supply',
@@ -1134,6 +1152,7 @@ export const ceb = {
     disclaimer: 'DISCLAIMER',
   },
   tokenGovernance: {
+    disclaimer: 'Pahimangno',
     title: 'Pagdumala',
     subtitle: 'Mag-participate sa decentralized governance sa DeHub ecosystem.',
     votingPower: 'Voting Power',
@@ -1152,6 +1171,8 @@ export const ceb = {
     stayTuned: 'Stay Unstoppable For More...',
   },
   tokenStake: {
+    disclaimer: 'Pahimangno',
+    tier1: 'Ang-ang 1',
     title: 'Staking',
     subtitle: 'I-stake ang imong DHB tokens aron kumita sa rewards ug makatampo sa network security.',
     howToStake: 'Unsaon Pag-stake',
@@ -1237,6 +1258,7 @@ export const ceb = {
     copyFailedDesc: 'Palihug kopyaha ang adres nga manwal.',
   },
   tokenSecurity: {
+    disclaimer: 'Pahimangno',
     title: 'Seguridad',
     subtitle: 'Impormasyon bahin sa security measures ug audits sa DeHub token.',
     audits: 'Mga Audit',
@@ -1247,6 +1269,7 @@ export const ceb = {
     audit: 'Audit',
   },
   depin: {
+    abstract: 'Katingbanan',
     title: 'DePIN',
     subtitle: 'Decentralized Physical Infrastructure Network',
     introTitle: 'Pasiuna sa DeHub DePIN',
@@ -2413,6 +2436,7 @@ export const ceb = {
     analytics: 'Analytics',
   },
   docsSearch: {
+    popularStaking: 'Pag-stake',
     title: 'Pangitaa ang docs',
     placeholder: 'Pagpangita sa mga docs & blog...',
     placeholderShort: 'Pagpangita...',
@@ -2432,6 +2456,7 @@ export const ceb = {
     popularDepin: 'DePIN',
   },
   tokenOverview: {
+    disclaimer: 'Pahimangno',
     useAiTitle: 'Ang Henerasyon',
     useAiDesc: 'Bayad alang sa henerasyon sa AI sa tibuuk nga Creator Studio — imahe, video, audio ug 3D — sa mga token sa DeHub, sa presyo nga gikutlo sa wala pa modagan ang matag trabaho, imbis nga maghupot usa ka bulag nga suskrisyon matag himan.',
     title: 'Kinatibuk-ang Pagpasabot',

@@ -104,6 +104,8 @@ export const te = {
     disclaimerText: 'DeHub టోకెన్‌లు మా ఎకోసిస్టమ్‌లో యుటిలిటీ టోకెన్‌లుగా పనిచేస్తాయి, ఇన్-గేమ్ కరెన్సీల మాదిరిగా, మరియు పెట్టుబడి సాధనాలు కావు.',
   },
   dapp: {
+    aiSuiteB5: '@assistant:',
+    tvRadioB1: 'DeHub టీవీ:',
     title: "DeHub d'App",
     subtitle: 'వికేంద్రీకృత అప్లికేషన్ ప్లాట్‌ఫార్మ్',
     heroTitle: "DeHub d'App ను కనుగొనండి",
@@ -2646,6 +2648,8 @@ export const te = {
     status: 'స్థితి',
   },
   adTools: {
+    cpmRow: '1000 ప్రదర్శనలకు ఖర్చు:',
+    cpmValue: '1000 ప్రదర్శనలకు {amount}',
     budgetCalculatorTitle: 'ప్రచార బడ్జెట్ కాలిక్యులేటర్',
     budgetCalculatorDesc: 'వాస్తవిక వ్యయ అంచనాలు మరియు ప్రేక్షకులను లక్ష్యంగా చేసుకుని మీ POVR ప్రకటనల ప్రచారాన్ని ప్లాన్ చేయండి',
     dailyBudget: 'రోజువారీ బడ్జెట్ ($)',

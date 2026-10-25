@@ -2311,6 +2311,7 @@ export const om = {
     efficient: "Bulchiisa paakeejii bu'a qabeessa",
   },
   quickStart: {
+    nextFaqTitle: 'Gaaffilee Yeroo Baay\'ee Gaafataman',
     title: 'Qajeelfama Jalqabbii Ariifataa',
     breadcrumbDocs: 'Galmee',
     breadcrumbGettingStarted: 'Jalqabuu',
