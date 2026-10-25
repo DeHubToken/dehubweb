@@ -181,6 +181,18 @@
     "warnPaper": "将它们写在纸上，不要在截图或笔记应用程序中。"
   },
   "copy": {
+    "2d9c014a222d": "最大值",
+    "3411059cb8e0": "西班牙语",
+    "5bcc40adf6e0": "俄语",
+    "62c8b95e8e5e": "成交量 {{value1}}",
+    "6e7aac65db01": "土耳其语",
+    "867524581f01": "跳到最新",
+    "93100fc44c0a": "@用户名",
+    "a659b60d246d": "德语",
+    "bafb66f32cd7": "阿拉伯语",
+    "c5de2b8c2cfe": "3:2 · X 或 YouTube",
+    "dbc468a14b60": "常见问题",
+    "f9c8b16a4071": "市值 {{value1}}",
     "0000cb98ea19": "主播批准",
     "0013fee41d62": "还没有二级联盟成员",
     "001cab7d69a2": "告诉@assistant您在DeHub消息中想要什么。它会构建应用，托管它并发送一个链接，任何人都可以打开。",
@@ -9619,6 +9631,7 @@
     "communityDescription": "社区描述...",
     "posts": "帖子",
     "chat": {
+      "pinnedGif": "GIF动图",
       "intervalHour": "1小时",
       "intervalHours": "{{count}}小时",
       "intervalMinute": "1分钟",
@@ -10983,7 +10996,7 @@
     "coinLoadFailed": "无法加载该代币。",
     "coinNotFound": "未找到该代币。",
     "coinSeoDescription": "在 DeHub Launchpad 交易 ${{symbol}}。",
-    "backToLaunchpad": "Launchpad",
+    "backToLaunchpad": "发射台",
     "byCreator": "由 {{creator}} 创建",
     "mcapToGraduation": "毕业进度 {{current}} / {{target}} 市值",
     "chartAfterFirstTrade": "首笔交易后将显示图表。",
@@ -16537,7 +16550,7 @@
     "paused": "令牌传输目前在链上暂停，因此此解锁尚未完成。请稍后重试。",
     "otherChain": "此帖子位于另一个链上，因此需要您钱包中的DeHub代币。",
     "buyCard": "用卡购买代币",
-    "buyCardHint": "Visa, Mastercard, Apple Pay",
+    "buyCardHint": "Visa、万事达卡、Apple Pay",
     "moveFunds": "转入资金",
     "moveFundsHint": "从其他链兑换或存入",
     "notNow": "暂不"
@@ -16820,7 +16833,7 @@
   },
   "emojiPicker": {
     "tabEmoji": "表情",
-    "tabGif": "GIF",
+    "tabGif": "GIF动图",
     "searchEmoji": "搜索表情",
     "searchGifs": "搜索 GIFs...",
     "noEmoji": "未找到表情",

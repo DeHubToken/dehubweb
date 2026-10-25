@@ -1,5 +1,25 @@
 {
   "copy": {
+    "1a00975a0ac1": "@په په",
+    "46ba977c5758": "فیسونه، بوسټونه، ګیټینګ، ټیپینګ",
+    "47ad279da2d8": "د {{value1}} غږ پرانیستل شو",
+    "50f8429f0d7c": "{{value1}} لرې شو",
+    "51386f3a6a6a": "د Solana خپرول ناکام شول: {{value1}}",
+    "51452941c07c": "{{value1}} ساعته مخکې",
+    "52c789c095cf": "سست حالت فعال دی — په هرو {{value1}} ثانیو کې یو پیغام",
+    "5e0aa872e5d0": "ستاسو د بیاکتنې په لرې کولو کې پاتې راغلم ({{value1}})",
+    "74273989b096": "بیا ترسره کول",
+    "7f55382219f0": "لټون...",
+    "8d2e3063a993": "پیرل $",
+    "93100fc44c0a": "@کارننوم",
+    "a64e8f4a14b6": "د ویډیو جوړول ناکام شول: {{value1}}",
+    "ab7b9519e1a2": "او (نجلۍ)",
+    "af707a1ddd84": "پر {{value1}} بندیز لرې شو",
+    "b45f6c4496f7": "په {{value2}} کې کافي {{value1}} نشته",
+    "b4923ce2de2c": "{{value1}} تایید شو",
+    "b65a2317ce7b": "راکړه ورکړه وسپارل شوه. دا د هش {{value1}} سره بیرته ترلاسه کړئ",
+    "f9c8b16a4071": "د بازار ارزښت {{value1}}",
+    "fef6a1a97127": "د {{value1}} لخوا تعقیب شوی",
     "00140a37bd26": "په دې شبکه کې معاملې په موقت ډول د لاسرسي وړ ندي. مهرباني وکړئ بیا هڅه وکړئ.",
     "002286513398": "تاسو د پیښو اداره کولو اجازه نلرئ",
     "0039a45ea19f": "د کمانډ مینو",
@@ -6404,6 +6424,9 @@
     "heading": "DeHub شارټس"
   },
   "settings": {
+    "socialConnect": "وصل کړئ",
+    "socialConnected": "{{platform}} وصل شو",
+    "socialConnectedShort": "سره نښلوي",
     "glass": "د ګیلیکسي فولډ",
     "reset": "د بیا رغونې",
     "sessionsRevokedMany": "{{count}} وسایل له حساب څخه وتلي دي",
@@ -6964,6 +6987,7 @@
     "automatic": "په اتوماتيک ډول"
   },
   "common": {
+    "redo": "بیا ترسره کول",
     "confirm": "تایید کړئ",
     "mute": "په پوزه کې",
     "unmute": "بې خونده بې خونده",
@@ -6996,6 +7020,8 @@
     "refresh": "د تازه کولو لپاره"
   },
   "tip": {
+    "payDirect": "په مستقیم ډول {{name}} ته په {{symbol}} کې په {{chain}} واستول شو. هیڅ تبادله نشته.",
+    "payDirectNoName": "په مستقیم ډول جوړونکي ته په {{symbol}} کې په {{chain}} کې واستول شو. هیڅ تبادله نشته.",
     "title": "ټپ ولیږئ",
     "toCreator": "{{name}} ته ټپ",
     "quickAmounts": "چټکې مقدارونه",
@@ -7117,6 +7143,7 @@
     "everyone": "د هر چا په"
   },
   "drawers": {
+    "ppvStableInfo": "پېرودونکي په {{symbol}} کې تادیه کوي، چې مستقیم تاسو ته درلېږل کېږي",
     "ppvTitle": "پی-پی-وی منځپانګه",
     "unlockPrice": "د خلاصولو بیه",
     "ppvDescription": "یو ځل پیسې ورکړئ او دا ځانګړې منځپانګه تل لپاره خلاص کړئ! 💎",
@@ -7175,6 +7202,9 @@
     "ppvTopUpTitle": "د خلاصیدو لپاره پورته"
   },
   "assistant": {
+    "errorUnknown": "❌ یو څه غلط شول: {{message}}. مهرباني وکړئ بیا هڅه وکړئ.",
+    "errorUpstream": "🔧 د AI خدمت تېروتنه ({{status}}). د AI چمتو کونکي ستونزې لري. مهرباني وکړئ په یوه دقیقه کې بیا هڅه وکړئ.",
+    "videoGenFailedDetail": "د ویډیو جوړولو ناکامي: {{error}}",
     "title": "مرستیال",
     "welcome": "لاندې د متن بکس یا د عمل تڼۍ وکاروئ.",
     "welcomeAlt": "سلام! هرڅه وپوښتئ، که د DeHub اړوند وي یا نه، زه مرسته کولی شم.",
@@ -7294,6 +7324,7 @@
     "generatedImage": "دا ستاسو جوړ شوی انځور دی!"
   },
   "commandCentre": {
+    "refundAddress": "په {{chain}} کې بیرته ورکول پته",
     "title": "کمانډ مرکز",
     "overview": "لنډیز",
     "subscriptions": "ګډونونه",
@@ -7614,10 +7645,45 @@
     "tipTokens": "{{amount}} ټوکنونه",
     "tokenAmount": "{{amount}} ټوکنونه",
     "custom": {
+      "bountyApplied": "{{name}} ستاسو په انعام کې غوښتنلیک ورکړ",
+      "bountyAppliedNamed": "{{name}} ستاسو په انعام \"{{title}}\" کې غوښتنلیک ورکړ",
+      "bountyReply": "{{name}} ستاسو انعام ته ځواب درکړ",
+      "bountyReplyNamed": "{{name}} ستاسو انعام (bounty) \"{{title}}\" ته ځواب درکړ",
+      "bountySubmitted": "{{name}} ستاسو په انعام کې کار وسپاره",
+      "bountySubmittedNamed": "{{name}} ستاسو په انعام \"{{title}}\" کې کار وسپاره",
+      "commentMention": "{{name}} په یوه تبصره کې ستاسو یادونه وکړه",
+      "featureComment": "{{name}} ستاسو د فیچر غوښتنې په اړه تبصره وکړه",
+      "featureCommentNamed": "{{name}} ستاسو د فیچر غوښتنې \"{{title}}\" په اړه تبصره وکړه",
+      "featureLike": "{{name}} ستاسو د فیچر غوښتنه خوښه کړه",
+      "featureLikeNamed": "{{name}} ستاسو د فیچر غوښتنه \"{{title}}\" خوښه کړه",
+      "featureMention": "{{name}} د فیچر په غوښتنه کې ستاسو یادونه وکړه",
+      "featureMentionNamed": "{{name}} په \"{{title}}\" کې ستاسو یادونه وکړه",
+      "featureReply": "{{name}} ستاسو تبصرې ته ځواب درکړ",
+      "featureReplyNamed": "{{name}} په \"{{title}}\" کې تاسو ته ځواب درکړ",
+      "followRequest": "{{name}} تاسو ته د تعقیبولو غوښتنه وکړه",
+      "fractionOffer": "{{name}} ستاسو په برخو (fractions) وړاندیز وکړ",
+      "fractionOfferAccepted": "{{name}} ستاسو د برخې وړاندیز ومانه",
+      "fractionOfferRejected": "{{name}} ستاسو د برخې وړاندیز رد کړ",
+      "fractionPurchased": "{{name}} ستاسو د پوسټ برخې وپېرلې",
+      "governanceComment": "{{name}} ستاسو د وړاندیز په اړه تبصره وکړه",
+      "governanceCommentNamed": "{{name}} ستاسو د وړاندیز \"{{title}}\" په اړه تبصره وکړه",
+      "governanceReply": "{{name}} په یوه وړاندیز کې ستاسو تبصرې ته ځواب درکړ",
+      "governanceReplyNamed": "{{name}} د \"{{title}}\" وړاندیز په اړه تاسو ته ځواب درکړ",
+      "governanceVote": "{{name}} ستاسو په وړاندیز رایه ورکړه",
+      "governanceVoteNamed": "{{name}} ستاسو په وړاندیز \"{{title}}\" رایه ورکړه",
+      "repostedPosts": "{{name}} ستاسو {{count}} پوسټونه بیا خپاره کړل",
+      "sentNotification": "{{name}} تاسو ته یو خبرتیا درولېږله",
+      "stageLive": "{{name}} په یوه سټېج کې ژوندی دی",
+      "stageLiveNamed": "{{name}} سټېج \"{{title}}\" ژوندی دی — د اورېدو لپاره ټپ کړئ",
+      "stageReminderNamed": "\"{{title}}\" ژر پیلېږي",
+      "storeOrder": "{{name}} ستاسو لیست وپېره",
+      "storeOrderNamed": "{{name}} ستاسو لیست \"{{title}}\" وپېره",
       "stageReminder": "د هغه څه لپاره چې تاسو یې په لټه کې یاست ډیر ژر پیل کیږي"
     }
   },
   "leaderboard": {
+    "directReferrals": "{{count}} مستقیم",
+    "secondaryReferrals": "{{count}} دویمه کچه",
     "title": "لیډربورډونه",
     "subtitle": "هر ۵ دقیقو آتومات تازه کیږي",
     "holdings": "شتمنۍ",
@@ -7730,6 +7796,12 @@
     "followBack": "د بیرته ستنیدو لپاره"
   },
   "features": {
+    "promptAttachment": "ضمیمه {{number}}",
+    "promptFilters": "د کټګورۍ له مخې فلټر کړئ",
+    "promptMediaLimit": "تر {{max}} پورې ضمیمې.",
+    "promptPlaceholder": "یو نظر، پرمختګ، یا بګ تشریح کړئ...",
+    "promptShortcut": "د خپرولو لپاره Ctrl / ⌘ + Enter",
+    "removePromptAttachment": "{{name}} لرې کړئ",
     "title": "د فیچر غوښتنې",
     "ideasSubmitted": "{{count}} نظرونه وسپارل شول",
     "ideaSubmitted": "۱ نظر وسپارل شو",
@@ -8018,7 +8090,11 @@
     "tokensUnit": "ټوکنونه"
   },
   "agents": {
+    "capacity": "{{used}} ‏د {{limit}} ‏اژنټونو · ‏{{badge}}",
     "life": {
+      "asleep": "په {{home}} کې ویده دی",
+      "awake": "په {{home}} کې ویښ دی",
+      "next": "راتلونکی چک {{time}}",
       "compose": "د دې مامور په توګه دنده ترسره کړئ",
       "daily": "نننۍ خپرونې: {{posts}} · ورځنی هدف: {{target}}",
       "editComment": "تبصره سمول",
@@ -8456,6 +8532,7 @@
     "applicationFailed": "سپارل ناکام شول. بیا هڅه وکړئ."
   },
   "dao": {
+    "voteRecorded": "رایه ثبت شوه",
     "status": {
       "accepted": "د منلو وړ",
       "cancelled": "لغوه شوې",
@@ -8705,7 +8782,7 @@
     "tokenId": "توکن ID",
     "mintedOn": "جوړ شوی",
     "transactionHash": "ټرانزېکشن هاش",
-    "viewOnExplorer": "View on {{explorer}}",
+    "viewOnExplorer": "په {{explorer}} کې کتنه",
     "creator": "جوړونکی",
     "visibility": "لیدنه",
     "fractionOwnership": "د برخې مالکیت",
@@ -9093,6 +9170,9 @@
     "communityDescription": "د ټولنې تشریح...",
     "posts": "پوستونه",
     "chat": {
+      "intervalSeconds": "{{count}} ثانیې",
+      "pin": "پین",
+      "slowMode": "ورو ورو حالت: هر {{interval}} یو پیغام",
       "intervalHour": "د 1 ساعت په اړه",
       "intervalMinute": "د 1 دقیقې",
       "intervalMinutes": "{{count}} دقیقه",
@@ -9144,6 +9224,8 @@
     "activityEmpty": "لا تر اوسه پورې هیڅ فعالیت نه دی شوی",
     "activityEmptyDesc": "دلته ستاسو د ټولنو څخه اعلانونه، یادونې او اعلانونه شامل دي.",
     "followerInvites": {
+      "send": "بلنې واستوئ ({{count}})",
+      "summary": "استول شوې: {{sent}} · پرېښودل شوې: {{skipped}} · چیټ وګورئ: {{review}} · ناکامه شوې: {{failed}}",
       "title": "د پیروانو لپاره غوښتنه وکړئ",
       "detail": "د هر پیرودونکي لپاره تر 50 پورې پیروان غوره کړئ. تادیه شوي یا تړل شوي DMs له مینځه وړل کیږي. مخکې له دې چې بیا هڅه وکړئ، د غیر تایید شوي لیږلو لپاره چیٹ وګورئ.",
       "selectAll": "دا پا Selectه غوره کړئ",
@@ -9180,6 +9262,12 @@
     "noMembersFound": "هیڅ غړي ونه موندل شول",
     "showMore": "د ډیر څه ښودنه وکړئ",
     "manage": {
+      "banTitle": "{{name}} را ممنوع کنید",
+      "bannedReasonLine": "دلیل: {{reason}}",
+      "bannedUntilLine": "تا {{date}}",
+      "mutedUntil": "تا {{date}} صدا خاموش شد",
+      "rightsSummary": "د {{granted}} حقوقو {{total}}",
+      "slowModeOn": "غړي کولی شي هر {{label}} کې یو پیغام واستوي. مدیران مستثنی دي.",
       "rightNotHeld": "تاسو د خپل ځان د دې حق نه لري",
       "customTitle": "د عامو او غیر معمولی نومونو",
       "adminBadge": "د مديريت په اړه",
@@ -9224,6 +9312,7 @@
       "deleteConfirmBody": "د {{name}} لپاره هر غړی، پیغام، پیښه او د بلنې لینک په دایمي توګه حذف کیږي. دا کار نشي بیرته کیدلی.",
       "deleteConfirmAction": "د تل لپاره له منځه یوسئ",
       "invites": {
+        "joined": "{{n}} ګډ شو",
         "defaultName": "په لینک کې ګډون وکړئ",
         "chipRevoked": "لغوه شوې",
         "chipExpired": "د پای ته رسیدو نیټه",
@@ -9294,6 +9383,8 @@
       "slowMode": "په تدریجي ډول",
       "slowModeOff": "کارونکي کولی شي پرته له ځنډه پیغامونه واستوي.",
       "recentActions": {
+        "reason": "دلیل: {{reason}}",
+        "showMore": "نور وښایاست ({{value}})",
         "permanently": "په دایمي توګه",
         "noAccess": "تاسو د وروستي عملونو لیدلو اجازه نلرئ.",
         "filterLabel": "د فلټر کړنې",
@@ -10133,6 +10224,7 @@
     "shopAllowanceUsed": "{{allowance}} له {{allowance}} څخه کارول شوي. د لوړ بیج (badge) او بل سلاټ (slot) لپاره نور ډی هب (DeHub) توکونه سټیک (stake) کړئ."
   },
   "stages": {
+    "usernamePlaceholder": "@کارننوم",
     "allStages": "ټولې غږيزې خونې",
     "title": "غږيزې خونې",
     "tabLive": "په ژوندۍ ب Liveه",
@@ -10719,6 +10811,20 @@
     "launched": "{{symbol}} پیل شو"
   },
   "fractions": {
+    "acrossPosts_other": "په {{count}} پوسټونو کې",
+    "allAlreadyListed_one": "ستاسو {{count}} ونډه دمخه لیست شوې.",
+    "allAlreadyListed_other": "ستاسو ټولې {{count}} ونډې دمخه لیست شوې.",
+    "alsoAlreadyListed_one": " · {{count}} دمخه لیست شوې",
+    "alsoAlreadyListed_other": " · {{count}} دمخه لیست شوې",
+    "listNFractions_one": "{{count}} ونډه لیست کړئ",
+    "listNFractions_other": "{{count}} ونډې لیست کړئ",
+    "matchFloor": "له ټیټې بیې سره برابر · {{price}}",
+    "overdueBy": "{{span}} ځنډ",
+    "postCounterparty": "پوسټ #{{id}} · {{address}}",
+    "priceEach": "هر یو {{price}}",
+    "settledCount_one": "{{count}} تصفیه شوې",
+    "settledCount_other": "{{count}} تصفیه شوې",
+    "timeLeft": "{{span}} پاتې",
     "seoTitle": "د ډبرو سکرو ډبرې",
     "seoDescription": "د DeHub د پوسټونو ونډې واخلئ او وپلورئ. یو mint شوی پوسټ 1000 آن-چېن ونډې دی — د یوې ویډیو، ټرېک یا انځور یوه برخه خپله کړئ او په ټوکنونه یې سوداګري وکړئ.",
     "title": "ونډې",
@@ -10847,6 +10953,10 @@
     "settledTitleSpeed": "، معمولا په {{speed}} کې"
   },
   "creator": {
+    "presetDroneFlyoverHint": "هوایي حرکت کوونکی شاټ",
+    "presetNeedsImage": "{{name}} یو ضمیمه شوي انځور ته اړتیا لري. لومړی یو ضمیمه کړئ.",
+    "presetPlaceholder": "{{name}}: موضوع بیان کړئ، د مثال په توګه \"{{sample}}\"",
+    "seconds": "{{count}} ثانیې",
     "libraryEmpty": "ستاسو خوندي شوي تولیدات به دلته ښکاره شي.",
     "whatToCreate": "څه شی جوړ کړئ",
     "studioSubtitle": "د یوې صحنې، کرکټر، مزاج یا سټایل تشریح کړئ. په لاندې لینک کلیک وکړئ او مستقیم مدیر ته یې واستوئ.",
@@ -11610,6 +11720,9 @@
     "presetOpenTowerTiltHint": "ستا د غلو په ښار کې خاموشه خاموشي ده"
   },
   "pricing": {
+    "equivalence": "= {{videos}} {{videoModel}} ویډیوګانې · {{images}} {{imageModel}} عکسونه",
+    "membersRange": "په یوه ګډ کاري ځای کې له {{min}} څخه تر {{max}} غړي",
+    "seedanceFullAccess": "{{model}} — بشپړ لاسرسی",
     "plansForEveryWorkflow": "د هر کاري جریان لپاره پلانونه",
     "findTheRightFit": "له افرادو څخه تر تصدۍ ټیمونو پورې، سم فټ ومومئ",
     "monthly": "میاشتنی",
@@ -11766,6 +11879,16 @@
     "raw": "د RAW په اړه"
   },
   "usernames": {
+    "buyHandle": "@{{handle}} واخلئ",
+    "charCount_one": "{{count}} توری",
+    "charCount_other": "{{count}} توري",
+    "forSaleCount_one": "{{count}} د پلورلو لپاره",
+    "forSaleCount_other": "{{count}} د پلورلو لپاره",
+    "paidStraightToSeller": "≈ ${{usd}} · مستقیم پلورونکي ته ورکول کیږي، DeHub هیڅ برخه نه اخلي",
+    "pitchOptional": "تشریح (اختیاري)",
+    "priceApprox": "≈ ${{usd}}. پیرودونکی تاسو ته مستقیم ورکوي — DeHub هیڅ برخه نه اخلي.",
+    "shareTitle": "@{{handle}} په DeHub کې د پلورلو لپاره دی",
+    "youBecomeHandle": "هغه شېبه چې څوک یې واخلي، تاسو @{{handle}} کیږئ. که تر هغه وخته دا نوم اخیستل شوی وي، شمېره لرونکی بڼه کارول کیږي او تاسو ته ویل کیږي چې کوم یو.",
     "seoTitle": "د نوم نوم DeHub سره د نومونو لیست",
     "seoDescription": "ترلاسه کړه د نوم نوم DeHub سره د نومونو لیست. د پلور لپاره لنډ، عددي او اصلي لاسي وپلټئ، یا خپل لیست کړئ — لیږد په زنځیر کې پیښیږي کله چې تادیه پاکه شي.",
     "title": "د کارونکي نومونه",
@@ -11876,6 +11999,10 @@
     "boughtToVaultToast": "@{{handle}} اوس ستاسو په کارن نومونو کې دی"
   },
   "accounts": {
+    "forSaleCount_one": "{{count}} د پلورلو لپاره",
+    "forSaleCount_other": "{{count}} د پلورلو لپاره",
+    "pitchOptional": "تشریح (اختیاري)",
+    "priceApprox": "≈ ${{usd}}. پیرودونکی تاسو ته مستقیم ورکوي — DeHub هیڅ برخه نه اخلي.",
     "followersCount": "{{value}} تعقیبونکي",
     "seoTitle": "د بازار موندنې څانګه — DeHub",
     "seoDescription": "د ټوکنونه لپاره د ټاکل شوي DeHub حسابونه واخلئ او وپلورئ. د پیروانو لخوا حسابونه وپلټئ، اپلوډ او عمر — هینډل، پوسټونه، پیروان او د بیج حقونه ټول لیږد، او تادیه مستقیم پلورونکي ته ځي.",
@@ -12064,6 +12191,12 @@
     "creatorEarnsDirect": "پیرودونکي په DeHub توکیو کې پیسې ورکوي. ستاسو د ونډې ځمکه په هغه شیبه کې چې دوی ګډون کوي، ستاسو د بیج ټایر لپاره د پلیټ فارم فیس کموي."
   },
   "liveOverlay": {
+    "joined": "{{name}} یوځای شو",
+    "newFollower": "نوی فالوور: {{name}}",
+    "newSubscriber": "نوی سبسکرایبر: {{name}}",
+    "shared": "{{name}} سټریم شریک کړ",
+    "subscribedTo": "{{name}} په {{plan}} سبسکرایب شو",
+    "tipped": "{{name}} ډالۍ ولېږله",
     "someone": "څوک په",
     "goalReached": "موخې ته د رسېدو لار!",
     "followersUnit": "پيروان په په",
@@ -13292,6 +13425,7 @@
     "sameLanguage": "دا ویډیو دمخه ستاسو په ژبه ده."
   },
   "support": {
+    "stepsPlaceholder": "1. فیډ پرانیزئ\n2. پر اپلوډ ټک وکړئ\n3. ...",
     "title": "د ملاتړ",
     "subtitle": "ستاسو ټیکټونه او د دوی حالت. نه د چا د پاره، نه د چا د پاره",
     "newTicket": "نوي تېکټ",
@@ -13396,6 +13530,9 @@
     "followBackAll": "د ټولو سره تعقیب کړئ"
   },
   "reactionInfo": {
+    "anonymous": "{{count}} خوښونه له نامعلومو کاروونکو څخه",
+    "reactedPost": "{{name}} ستاسو پوسټ ته یې غبرګون ښودلی",
+    "repostedPost": "{{name}} ستاسو پوسټ یې بیا خپور کړ",
     "title": "عکس العملونه",
     "seeWhoReacted": "وګورئ چا غبرګون ښودلی",
     "privateTitle": "ځواب ورکول private ته ځواب لرې کړه",
@@ -16357,6 +16494,7 @@
     "notEnoughForVoiceClone": "کافي ټوکنونه نشته. ستاسو د غږ کلون کول {{amount}} ټوکن لګښت لري او تاسو {{held}} لرئ."
   },
   "mobilePreview": {
+    "tokenAmount": "{{amount}} توکونه",
     "assistant": {
       "question1": "د اوس لپاره د DeHub توکیو لپاره د اپیل سټیک څه شی دی ؟",
       "question2": "هو، که زه د 90 ورځو لپاره 10،000 ټوکنونه ولګوم"
@@ -17255,6 +17393,8 @@
       "art-creativity": "هنر او خلاقیت"
     },
     "pay": {
+      "sent": "د {{amount}} ټوکنونه د {{name}} ته ورکړل شول",
+      "title": "د {{name}} پیسې؟",
       "body": "دې ټوکنونه د اپلیکېشن د پورتې ته (والت) ورځي، {{wallet}}. دې پلټنې وړ نه دي.",
       "confirm": "{{amount}} ته پېسې ورکړل شي؟",
       "sending": "دې ورکولو ته د پېرېښت...",
@@ -17315,6 +17455,7 @@
     "copyLink": "لینک کاپي کړئ"
   },
   "postStage": {
+    "viewQuotes": "نرخونه وګورئ",
     "back": "بېرته لاړ شه",
     "askAI": "د دې پوسټ په اړه له یو چا څخه وپوښتئ",
     "repostAndShare": "شریک کړئ او شریک کړئ",
@@ -17439,6 +17580,8 @@
     "clay": "کلي ټينګوونکی"
   },
   "walletBackup": {
+    "backedUpOn": "بیک اپ شو {{date}}",
+    "skipCheck": "د چک کولو له پامه غورځوئ",
     "phraseUnavailable": "د نوموړي په خبره په دې نښته کې ملکي وګړو ته مرګ ژوبله نه ده اوښتې. د دې چک کولو لپاره خپل اصلي لوگو یا وسیله وکاروئ. تاسو لاهم کولی شئ خپل شخصي کیلي بیرته ترلاسه کړئ.",
     "phraseMismatch": "دا کیسه په یوه بله کیسه پورې اړه لري. خپل اصلي ننوتل سره ننوځئ ترڅو سم بیک اپ ته لاسرسی ومومئ.",
     "backupDescription": "خپل د بیا رغونې عبارت یا شخصي کیلي خوندي کړئ ترڅو تاسو وکولی شئ خپل بټوه بیرته ترلاسه کړئ.",
@@ -17467,6 +17610,7 @@
     "reminderLater": "د اوس لپاره نه"
   },
   "articles": {
+    "wordCount": "{{count}} کلمې",
     "cardLabel": "مقاله · {{count}} دقیقې لوستل",
     "readTitle": "\"{{title}}\" ولولئ",
     "read": "مقاله ولولئ",
@@ -17507,6 +17651,9 @@
     "bodyLabel": "د مقالې بدن"
   },
   "liveAudience": {
+    "hereCount": "{{formatted}} دلته",
+    "startedAgo": "پیل شو {{time}}",
+    "watchingCount": "{{formatted}} ګوري",
     "whosHere": "څوک چې دلته",
     "host": "د کوربه توب په اړه",
     "topTippers": "د ټیګونو ارشیف: لوړپوړي چارواکي",
