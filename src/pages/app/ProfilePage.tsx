@@ -1,4 +1,5 @@
 import { useTranslation as _useCopy } from 'react-i18next';
+import { useRouteContentReady } from '@/hooks/use-route-content-ready';
 import { useSurfaceDraft } from '@/hooks/use-surface-draft';
 import { tokenLabel } from '@/lib/token-label';
 import { useState, useMemo, useRef, useCallback, useEffect } from 'react';
@@ -229,6 +230,7 @@ function PinnedPostSection({ profileAddress }: { profileAddress: string }) {
 }
 
 export default function ProfilePage() {
+  useRouteContentReady();
   const { t: _copy } = _useCopy();
   const { t } = useTranslation();
   const { theme } = useAppTheme();

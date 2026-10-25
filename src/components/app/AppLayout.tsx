@@ -153,6 +153,21 @@ function PostOverlayEffects({
   return null;
 }
 
+function PostOverlayLoading() {
+  return (
+    <>
+      <div aria-hidden data-post-overlay-backdrop className="fixed top-0 bottom-0 z-10" style={{ left: POST_LAYER_LEFT, width: POST_LAYER_WIDTH }} />
+      <div data-post-overlay aria-busy="true" className="fixed top-0 bottom-0 z-10 pt-28" style={{ left: POST_LAYER_LEFT, width: POST_LAYER_WIDTH }}>
+        <div className="app-route-loading-body" aria-hidden="true">
+          <div className="app-route-loading-author"><i /><span /></div>
+          <div className="app-route-loading-line" /><div className="app-route-loading-line" /><div className="app-route-loading-line" />
+          <div className="app-route-loading-media" />
+        </div>
+      </div>
+    </>
+  );
+}
+
 function AppLayoutContent({ children }: AppLayoutContentProps) {
   const { t: _copy } = _useCopy();
   const [sidebarOpen, setSidebarOpen] = useState(false);
@@ -474,7 +489,7 @@ function AppLayoutContent({ children }: AppLayoutContentProps) {
               content below the nav pill, and scrolling slides it under the glass
               exactly like the feed does. */}
           {showHomePagePersisted && (
-            <Suspense fallback={null}>
+            <Suspense fallback={<PostOverlayLoading />}>
               <PostOverlayEffects overlayRef={postOverlayRef} postId={overlayPostId} />
               {/* Backing for the post layer, deliberately a separate element from
                   the scroller: the swallow clip cuts the scroller at the nav
