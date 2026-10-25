@@ -1,0 +1,48 @@
+.notification-bell {
+  --bell-red: #ff6874;
+  position: relative;
+  display: inline-flex;
+  flex: none;
+  overflow: visible;
+  pointer-events: none;
+}
+html:is([data-theme='light'], [data-system-tone='light']) .notification-bell { --bell-red: #dc3545; }
+.notification-bell__swing { display: inline-flex; position: relative; transform-origin: 50% 5%; }
+.notification-bell__wave {
+  position: absolute;
+  inset: 0;
+  opacity: calc(var(--bell-opacity) * .5);
+  filter: drop-shadow(0 0 var(--bell-glow) var(--bell-red));
+  --bell-direction: -1;
+  --bell-delay: 0ms;
+  transform: translateX(calc(var(--bell-direction) * var(--bell-reach) * .35));
+}
+.notification-bell__wave[data-side='1'] { --bell-direction: 1; --bell-delay: 104ms; }
+.notification-bell__wave[data-echo='1'] { --bell-delay: 325ms; }
+.notification-bell__wave[data-side='1'][data-echo='1'] { --bell-delay: 429ms; }
+.notification-bell__wave svg { display: block; overflow: visible; }
+.notification-bell[data-unread='true'] .notification-bell__swing {
+  animation: notification-bell-swing var(--bell-cycle) ease-in-out infinite;
+}
+.notification-bell[data-unread='true'] .notification-bell__wave {
+  animation: notification-bell-ripple var(--bell-cycle) cubic-bezier(.2,.5,.3,1) infinite;
+  animation-delay: var(--bell-delay);
+}
+.notification-bell[data-running='false'] :is(.notification-bell__swing, .notification-bell__wave) { animation-play-state: paused; }
+@keyframes notification-bell-swing {
+  0%, 42%, 100% { transform: rotate(0deg); }
+  5% { transform: rotate(var(--bell-swing)); }
+  12% { transform: rotate(calc(var(--bell-swing) * -.77)); }
+  18% { transform: rotate(calc(var(--bell-swing) * .54)); }
+  25% { transform: rotate(calc(var(--bell-swing) * -.31)); }
+  31% { transform: rotate(calc(var(--bell-swing) * .15)); }
+}
+@keyframes notification-bell-ripple {
+  0% { opacity: 0; transform: translateX(0) scaleY(.94); }
+  8% { opacity: var(--bell-opacity); }
+  40%, 100% { opacity: 0; transform: translateX(calc(var(--bell-direction) * var(--bell-reach))) scaleY(1.12); }
+}
+html.reduce-motion .notification-bell :is(.notification-bell__swing, .notification-bell__wave) { animation: none; }
+@media (prefers-reduced-motion: reduce) {
+  .notification-bell :is(.notification-bell__swing, .notification-bell__wave) { animation: none !important; }
+}
