@@ -1686,6 +1686,7 @@ export const dyu = {
     baileyExp3: "A tun ye pro-gamer ye, ranking diɲɛ fɛ top 3 COD MW2 ni top 100 on Warzone ka kɛ RickyBobby ye.",
   },
   roadmap: {
+    q4_2024_items: ['An ye abɔnɛmanw bɔ onchain, minnu bɛ se ka san ani ka feere', 'Last Chad Standing (MMA battle royale fɔlɔ dunuɲa kɔnɔ) ka teaser bɔra, a lajɛra siɲɛ 1M+ ni kɔ', 'An ka ajansi kɛra UK #1 ye, ni live streamer 1,000 ye minnu ye kontra siri ni an kelenpe ye', 'DePIN ka dakun fɔlɔ (Phase 1) bɔra', 'Baro gundoman fɛɛrɛw, ni sɛbɛn datugulen ye kabini a bɔyɔrɔ fo ka se a sɔrɔbaga ma ✅'],
     title: 'Siraw ka plan',
     subtitle: 'An ka taama ani sini planw DeHub ekosistɛmu kama.',
     completed: 'A dafara',
