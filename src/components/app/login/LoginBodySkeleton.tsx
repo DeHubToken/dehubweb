@@ -13,7 +13,7 @@ import '@/styles/skeleton.css';
  * to be on screen before that chunk arrives.
  */
 
-const ROW = 'h-12 rounded-xl theme-skeleton border border-white/10 animate-pulse';
+const ROW = 'h-12 rounded-xl theme-skeleton border border-border animate-pulse';
 
 export function LoginBodySkeleton() {
   return (
@@ -28,10 +28,10 @@ export function LoginBodySkeleton() {
         <div className="h-3 w-6 rounded theme-skeleton" />
         <div className="h-px flex-1 theme-skeleton" />
       </div>
-      <div className="h-12 rounded-xl border border-white/10 animate-pulse" />
+      <div className="h-12 rounded-xl theme-skeleton border border-border animate-pulse" />
       <div className="grid grid-cols-2 gap-3">
-        <div className="h-12 rounded-xl border border-white/10 animate-pulse" />
-        <div className="h-12 rounded-xl border border-white/10 animate-pulse" />
+        <div className="h-12 rounded-xl theme-skeleton border border-border animate-pulse" />
+        <div className="h-12 rounded-xl theme-skeleton border border-border animate-pulse" />
       </div>
     </div>
   );
