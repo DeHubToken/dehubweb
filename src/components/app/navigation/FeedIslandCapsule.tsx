@@ -115,13 +115,13 @@ export function FeedIslandCapsule({
         >
           <span className="inline-flex">
             <FeedRefreshLogo>
-              <ElectricLogo active={show}><img src={logoSrc} alt="dehub" className="block h-[27.3px] w-[31.5px] max-w-none object-contain" width={192} height={164} /></ElectricLogo>
+              <ElectricLogo active={show}><img src={logoSrc} alt="dehub" className="block h-[27px] w-[31.5px] max-w-none object-contain" width={192} height={164} /></ElectricLogo>
             </FeedRefreshLogo>
           </span>
         </button>
         <div className="flex min-w-[28px] items-center justify-end">
           <button onClick={onBellClick} tabIndex={visible ? 0 : -1} aria-label={_copy("copy.788011833a5a", { defaultValue: "Notifications" })} className="relative flex h-7 w-7 shrink-0 items-center justify-center">
-            <Bell className="w-[21px] h-[21px]" strokeWidth={1.9} />
+            <Bell className="w-[26px] h-[26px]" strokeWidth={1.9} />
             {unread > 0 && (
               <span data-unread-chip className="absolute -top-0.5 -right-1.5 min-w-[16px] h-[16px] px-[3px] bg-red-500 text-white text-[9px] font-bold rounded-[6px] flex items-center justify-center leading-none">
                 {unread > 99 ? '99+' : unread}

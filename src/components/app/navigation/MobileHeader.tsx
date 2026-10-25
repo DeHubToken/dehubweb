@@ -40,17 +40,17 @@ const HeaderLogo = memo(function HeaderLogo({ onClick, onPointerDown, isAuthenti
   const { t: _copy } = _useCopy();
   const { theme } = useAppTheme();
   return (
-    <button onClick={onClick} onPointerDown={onPointerDown} className="block cursor-pointer translate-y-[2.5px] scale-[1.15]" aria-label={isAuthenticated ? _copy("copy.8ee0cba52fcd", { defaultValue: "dehub home" }) : _copy("copy.c189840cf7e2", { defaultValue: "Log in" })}>
+    <button onClick={onClick} onPointerDown={onPointerDown} className="flex h-11 w-11 shrink-0 items-center justify-center cursor-pointer" aria-label={isAuthenticated ? _copy("copy.8ee0cba52fcd", { defaultValue: "dehub home" }) : _copy("copy.c189840cf7e2", { defaultValue: "Log in" })}>
       <FeedRefreshLogo>
-      <ElectricLogo still={theme === 'war' ? <img src={dehubMark} alt="dehub" className="h-7 w-[33px]" decoding="async" /> : undefined}>{theme === 'war' ? (
+      <ElectricLogo still={theme === 'war' ? <img src={dehubMark} alt="dehub" className="block h-[27px] w-[31.5px] object-contain" decoding="async" /> : undefined}>{theme === 'war' ? (
         // Fixed width here rather than w-auto: the hologram is a canvas, which
         // has no intrinsic aspect ratio to derive a width from.
-        <WarLogo src={dehubMark} alt="dehub" className="h-7 w-[33px]" />
+        <WarLogo src={dehubMark} alt="dehub" className="h-[27px] w-[31.5px]" />
       ) : (
         <img
           src={dehubMark}
           alt="dehub"
-          className="h-7 w-auto"
+          className="block h-[27px] w-[31.5px] object-contain"
           loading="eager"
           decoding="async"
           fetchPriority="high"
@@ -149,7 +149,7 @@ export function MobileHeader({ isOpen, onOpenChange, children }: MobileHeaderPro
             <DrawerTrigger asChild>
               {user ? (
                 <button
-                  className="rounded-lg hover:opacity-80 transition-opacity"
+                  className="flex h-11 w-11 shrink-0 items-center justify-center rounded-lg hover:opacity-80 transition-opacity"
                   aria-label={_copy("copy.c02651240c87", { defaultValue: "Toggle menu" })}
                 >
                   <Avatar className="w-[27px] h-[27px]">
@@ -168,10 +168,10 @@ export function MobileHeader({ isOpen, onOpenChange, children }: MobileHeaderPro
                 </button>
               ) : (
                 <button
-                  className="p-2 rounded-lg transition-colors -ml-2"
+                  className="flex h-11 w-11 shrink-0 items-center justify-center rounded-lg transition-colors"
                   aria-label={_copy("copy.c02651240c87", { defaultValue: "Toggle menu" })}
                 >
-                  <Menu className="w-[31px] h-[31px] text-white" />
+                  <Menu className="w-[27px] h-[27px] text-white" />
                 </button>
               )}
             </DrawerTrigger>
@@ -206,7 +206,7 @@ export function MobileHeader({ isOpen, onOpenChange, children }: MobileHeaderPro
         {isAuthenticated && (
           <button
             onClick={() => openNotificationsDrawer()}
-            className="relative flex h-9 w-9 items-center justify-center text-white transition-colors"
+            className="relative flex h-11 w-11 shrink-0 items-center justify-center text-white transition-colors"
             aria-label={_copy("copy.788011833a5a", { defaultValue: "Notifications" })}
           >
             <Bell className="w-[26px] h-[26px]" />
