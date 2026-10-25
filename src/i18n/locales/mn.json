@@ -11308,8 +11308,6 @@
     "decrease": "{{field}} -ийг багасгана уу",
     "increase": "Нэмэгдүүлэх {{field}}",
     "srHeading": "DeHub Бүтээгчийн Студи",
-    "bannerCopy": "DeHub AI хэрэгслээр бүтээлч кампанит ажлыг хурдан эхлүүлэх",
-    "closeBanner": "Бүтээгчийн баннерыг хаах",
     "openApp": "DeHub аппликейшныг нээх",
     "navExplore": "Хайгуул",
     "navImage": "Зураг",
