@@ -16,8 +16,8 @@
  * to the whole subtree (AppLayout, PersistentPageCache, …) via router context —
  * so the feed doesn't blank out mid-slide.
  */
-import { useRef, type ReactNode } from 'react';
-import { useLocation, type Location } from 'react-router-dom';
+import { useMemo, useRef, type ReactNode } from 'react';
+import { NavigationType, UNSAFE_LocationContext, useLocation, type Location } from 'react-router-dom';
 import { AnimatePresence, motion, useReducedMotion } from 'framer-motion';
 import { useAppRouteMotion } from '@/hooks/use-app-route-motion';
 import {
@@ -45,10 +45,15 @@ export function SurfaceTransition({ children }: SurfaceTransitionProps) {
     renderedRoutes.current = { location: displayedLocation, node: children(displayedLocation) };
   }
   const routeTree = renderedRoutes.current!.node;
+  // Routes itself subscribes to the outer location even with a location prop.
+  // Shield that subscription too, so a tap cannot render the old feed again
+  // before the destination's loading shell reaches the screen.
+  const frozenContext = useMemo(() => ({ location: displayedLocation, navigationType: NavigationType.Pop }), [displayedLocation]);
+  const frozenRoutes = <UNSAFE_LocationContext.Provider value={frozenContext}>{routeTree}</UNSAFE_LocationContext.Provider>;
 
   // Respect reduced-motion: render the live tree with no presence animation.
   if (reduceMotion) {
-    return <>{routeTree}</>;
+    return <>{frozenRoutes}</>;
   }
 
   return (
@@ -64,7 +69,7 @@ export function SurfaceTransition({ children }: SurfaceTransitionProps) {
         // containing block for the fixed background canvas or mini-players.
         style={{ transformOrigin: 'center top' }}
       >
-        {routeTree}
+        {frozenRoutes}
       </motion.div>
     </AnimatePresence>
   );
