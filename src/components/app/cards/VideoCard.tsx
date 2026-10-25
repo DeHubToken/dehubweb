@@ -2216,6 +2216,10 @@ const VideoCardBody = memo(function VideoCard({ video, postPage = false, onBack,
       data-video-card
       data-video-header-above={headerAboveMedia ? '' : undefined}
       onClick={isImmersive || stage ? undefined : handleCardClick}
+      className={isImmersive || stage
+        ? "overflow-hidden isolate"
+        : "overflow-visible cursor-pointer isolate"
+      }
       {...scrubZone}
       onPointerDownCapture={event => {
         scrubZone.onPointerDownCapture?.(event);
@@ -2224,10 +2228,6 @@ const VideoCardBody = memo(function VideoCard({ video, postPage = false, onBack,
           else warmPostPage();
         }
       }}
-      className={isImmersive || stage
-        ? "overflow-hidden isolate"
-        : "overflow-visible cursor-pointer isolate"
-      }
       data-tablet-portrait={tabletPortrait || undefined}
       style={tabletPortrait ? { ['--tablet-video-width' as string]: `min(44%, calc(65svh * ${mediaAspect.toFixed(4)}))` } : undefined}
     >
