@@ -12,6 +12,7 @@ export interface RetainedPostEntry {
 }
 
 const entries = new Map<string, Set<RetainedPostEntry>>();
+let intendedEntry: RetainedPostEntry | null = null;
 const listeners = new Set<() => void>();
 const notify = () => listeners.forEach(listener => listener());
 const subscribe = (listener: () => void) => {
@@ -27,8 +28,12 @@ export function getRetainedPost(id: string | null | undefined): RetainedPostEntr
   if (!id) return null;
   const candidates = entries.get(id);
   if (!candidates) return null;
-  return [...candidates].find(entry => entry.dock) ?? [...candidates].find(entry => entry.source.isConnected) ?? null;
+  return [...candidates].find(entry => entry.dock)
+    ?? (intendedEntry && candidates.has(intendedEntry) && intendedEntry.source.isConnected ? intendedEntry : null)
+    ?? [...candidates].find(entry => entry.source.isConnected) ?? null;
 }
+
+export function markRetainedPostIntent(entry: RetainedPostEntry) { intendedEntry = entry; }
 
 export function useRetainedPost(id: string | null | undefined) {
   return useSyncExternalStore(subscribe, () => getRetainedPost(id), () => null);
@@ -45,6 +50,7 @@ export function registerRetainedPost(entry: RetainedPostEntry): () => void {
   notify();
   return () => {
     entry.restore?.();
+    if (intendedEntry === entry) intendedEntry = null;
     candidates.delete(entry);
     if (!candidates.size) entries.delete(entry.id);
     entry.comments = undefined;

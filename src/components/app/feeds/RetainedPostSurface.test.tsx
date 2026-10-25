@@ -85,4 +85,23 @@ describe('retained feed post', () => {
     expect(result.container.querySelector('[data-retained-post-dock]')).toBeNull();
     expect(result.container.querySelector('article')).toBeNull();
   });
+
+  it('moves the selected instance when Home and Images have the same post mounted', () => {
+    const mounted = vi.fn();
+    const view = (open: boolean) => <>
+      <RetainedPostSurface id="duplicate-photo"><StatefulCard mounted={mounted} /></RetainedPostSurface>
+      <RetainedPostSurface id="duplicate-photo"><StatefulCard mounted={mounted} /></RetainedPostSurface>
+      <Dock id={open ? 'duplicate-photo' : null} />
+    </>;
+    const result = render(view(false));
+    const sources = result.container.querySelectorAll('[data-retained-post-source]');
+    const firstPhoto = sources[0].querySelector('img')!;
+    const selectedPhoto = sources[1].querySelector('img')!;
+    fireEvent.pointerDown(selectedPhoto);
+    result.rerender(view(true));
+    expect(result.container.querySelector('[data-retained-post-dock]')!.contains(selectedPhoto)).toBe(true);
+    expect(sources[0].contains(firstPhoto)).toBe(true);
+    result.rerender(view(false));
+    expect(sources[1].contains(selectedPhoto)).toBe(true);
+  });
 });
