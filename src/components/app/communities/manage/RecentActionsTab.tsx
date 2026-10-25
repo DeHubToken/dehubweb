@@ -359,10 +359,10 @@ export function RecentActionsTab({ community, membership }: RecentActionsTabProp
           <div className="space-y-2">
             {Array.from({ length: 5 }).map((_, i) => (
               <div key={i} className="flex items-start gap-3 p-2.5">
-                <div className="w-9 h-9 rounded-full bg-white/[0.06] animate-pulse flex-shrink-0" />
+                <div className="w-9 h-9 rounded-full theme-skeleton animate-pulse flex-shrink-0" />
                 <div className="flex-1 space-y-2 pt-1">
-                  <div className="h-3.5 w-48 rounded bg-white/[0.06] animate-pulse" />
-                  <div className="h-3 w-20 rounded bg-white/[0.04] animate-pulse" />
+                  <div className="h-3.5 w-48 rounded theme-skeleton animate-pulse" />
+                  <div className="h-3 w-20 rounded theme-skeleton animate-pulse" />
                 </div>
               </div>
             ))}

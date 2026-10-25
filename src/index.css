@@ -5702,17 +5702,13 @@ html[data-system-tone="light"] [data-dehub-loader] {
   filter: invert(1);
 }
 
-/* …except inside the login sheet, which is bg-black/60 with white text on
-   EVERY theme. The invert above keys off the page theme, so on `light` it
-   turned the mark black on a black drawer — invisible exactly where the
-   handoff to the wallet step needs something to look at. Spelled out at full
-   specificity rather than relying on source order: the rule it has to beat is
-   (0,2,1). */
-html[data-theme="light"] [data-login-modal] [data-dehub-loader],
-html.light [data-login-modal] [data-dehub-loader] {
+/* Media and explicitly dark surfaces keep a white mark. Light login sheets
+   follow their page palette along with other dialogs. */
+html[data-theme="light"] [data-keep-dark] [data-dehub-loader],
+html.light [data-keep-dark] [data-dehub-loader] {
   filter: none;
 }
-html[data-system-tone="light"] [data-login-modal] [data-dehub-loader] {
+html[data-system-tone="light"] [data-keep-dark] [data-dehub-loader] {
   filter: none;
 }
 

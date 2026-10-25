@@ -77,9 +77,9 @@ export function ChartDesk<S extends string>({
         <div className="flex gap-3 overflow-hidden pr-8">
           {Array.from({ length: 3 }).map((_, i) => (
             <div key={i} className="w-[280px] flex-shrink-0">
-              <div className="aspect-video rounded-xl bg-zinc-800 animate-pulse" />
-              <div className="mt-2 h-3 bg-zinc-800 rounded w-3/4 animate-pulse" />
-              <div className="mt-1 h-2.5 bg-zinc-800 rounded w-1/2 animate-pulse" />
+              <div className="aspect-video rounded-xl theme-skeleton animate-pulse" />
+              <div className="mt-2 h-3 theme-skeleton rounded w-3/4 animate-pulse" />
+              <div className="mt-1 h-2.5 theme-skeleton rounded w-1/2 animate-pulse" />
             </div>
           ))}
         </div>

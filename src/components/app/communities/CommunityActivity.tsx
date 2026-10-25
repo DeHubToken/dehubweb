@@ -89,7 +89,7 @@ function ActivityRow({ notification }: { notification: DeHubNotification }) {
         {avatarUrl ? (
           <img src={avatarUrl} alt="" loading="lazy" className="w-full h-full object-cover" />
         ) : profileLoading ? (
-          <div className="w-full h-full animate-pulse bg-white/[0.08]" />
+          <div className="w-full h-full animate-pulse theme-skeleton" />
         ) : (
           <User className="w-4 h-4 text-zinc-500" />
         )}
@@ -104,7 +104,7 @@ function ActivityRow({ notification }: { notification: DeHubNotification }) {
               {sentence}
             </span>
           ) : (
-            <span className="h-3.5 w-40 rounded bg-white/[0.08] animate-pulse" />
+            <span className="h-3.5 w-40 rounded theme-skeleton animate-pulse" />
           )}
           {!notification.read && (
             <div className="w-1.5 h-1.5 rounded-full bg-blue-400 flex-shrink-0" />

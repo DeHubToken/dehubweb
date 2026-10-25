@@ -130,7 +130,7 @@ function NewPostSlugEmbed({
   });
 
   if (isLoading) {
-    return <div className="mt-2 h-24 rounded-xl bg-white/[0.04] animate-pulse" />;
+    return <div className="mt-2 h-24 rounded-xl theme-skeleton animate-pulse" />;
   }
   if (!data) return <>{fallback}</>;
 

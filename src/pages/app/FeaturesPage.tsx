@@ -656,7 +656,7 @@ function FeatureSkeletons() {
   return (
     <div className="space-y-3">
       {Array.from({ length: 5 }).map((_, i) => (
-        <div key={i} className="bg-zinc-900 rounded-2xl p-4 flex gap-3 animate-pulse">
+        <div data-skeleton-group key={i} className="bg-zinc-900 rounded-2xl p-4 flex gap-3 animate-pulse">
           <div className="flex flex-col items-center gap-1 min-w-[40px]">
             <div className="w-8 h-8 rounded-lg bg-zinc-800" />
             <div className="w-5 h-4 rounded bg-zinc-800" />

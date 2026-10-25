@@ -158,14 +158,14 @@ export function SmartReplyRail({
                   ) : (
                     <>
                       <span
-                        className={`block h-2 w-16 rounded-full bg-white/[0.07] ${busy ? 'animate-pulse' : ''}`}
+                        className={`block h-2 w-16 rounded-full theme-skeleton ${busy ? 'animate-pulse' : ''}`}
                       />
                       <span className="mt-3 block w-full space-y-1.5">
                         <span
-                          className={`block h-2.5 w-full rounded bg-white/[0.07] ${busy ? 'animate-pulse' : ''}`}
+                          className={`block h-2.5 w-full rounded theme-skeleton ${busy ? 'animate-pulse' : ''}`}
                         />
                         <span
-                          className={`block h-2.5 w-2/3 rounded bg-white/[0.07] ${busy ? 'animate-pulse' : ''}`}
+                          className={`block h-2.5 w-2/3 rounded theme-skeleton ${busy ? 'animate-pulse' : ''}`}
                         />
                       </span>
                     </>

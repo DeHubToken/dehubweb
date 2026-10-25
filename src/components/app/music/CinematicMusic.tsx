@@ -214,10 +214,10 @@ function ChartSkeleton() {
       {Array.from({ length: 6 }).map((_, i) => (
         <div key={i} className="flex items-center gap-3 border-b border-white/[0.12] px-3.5 py-2.5">
           <span className="h-4 w-[22px] rounded bg-white/5" />
-          <span className="h-12 w-12 rounded-lg bg-white/5 animate-pulse" />
+          <span className="h-12 w-12 rounded-lg theme-skeleton animate-pulse" />
           <span className="flex-1 space-y-1.5">
-            <span className="block h-3.5 w-2/3 rounded bg-white/5 animate-pulse" />
-            <span className="block h-3 w-1/3 rounded bg-white/5 animate-pulse" />
+            <span className="block h-3.5 w-2/3 rounded theme-skeleton animate-pulse" />
+            <span className="block h-3 w-1/3 rounded theme-skeleton animate-pulse" />
           </span>
         </div>
       ))}
@@ -325,7 +325,7 @@ export function CinematicMusic({ radioStations, blockedAddresses, showFilters = 
       {heroStation ? (
         <RadioHero key={heroStation.stationuuid} station={heroStation} />
       ) : (
-        <div className="-mx-2 animate-pulse bg-zinc-900" style={{ height: 'min(118vw, 460px)' }} />
+        <div className="-mx-2 animate-pulse theme-skeleton" style={{ height: 'min(118vw, 460px)' }} />
       )}
 
       {!showFilters && <div data-no-swipe className="-mx-2 mt-3.5 flex gap-2 overflow-x-auto px-3.5 scrollbar-hide">
