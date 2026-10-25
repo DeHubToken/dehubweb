@@ -140,11 +140,13 @@ type CustomDrawerProps = React.ComponentProps<typeof DrawerPrimitive.Root> & {
   /** Opt this deferred sheet in to `warmDeferredSheets()` — see the note there. */
   warmable?: boolean;
   walletPrompt?: boolean;
+  /** Let this sheet complete Vaul's 500ms exit; other sheets close immediately. */
+  animatedExit?: boolean;
 };
 
-const Drawer = ({ shouldScaleBackground = false, modal = true, onOpenChange, warmable = false, walletPrompt = false, children, ...props }: CustomDrawerProps) => {
+const Drawer = ({ shouldScaleBackground = false, modal = true, onOpenChange, warmable = false, walletPrompt = false, animatedExit = false, children, ...props }: CustomDrawerProps) => {
   const unlockOpen = useWalletUnlockPrompt();
-  const lifetime = useOverlayLifetime(props.open, props.defaultOpen, onOpenChange);
+  const lifetime = useOverlayLifetime(props.open, props.defaultOpen, onOpenChange, animatedExit ? 550 : 0);
   const canDeferRef = React.useRef<boolean | null>(null);
   if (canDeferRef.current === null) {
     canDeferRef.current =

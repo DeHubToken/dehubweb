@@ -160,7 +160,6 @@ export function LoginModal({ open, onOpenChange }: LoginModalProps) {
     // Closing by hand abandons a "Migrate account" / "Import keys"
     // choice too; a completed login clears it itself.
     setWalletSetupIntent(null);
-    setStep('main');
     onOpenChange(false);
   }, [onOpenChange, requiresUsername, step]);
 
@@ -171,7 +170,9 @@ export function LoginModal({ open, onOpenChange }: LoginModalProps) {
   // back on the wallet picker. Reset here instead, once the sheet is shut, so
   // nothing flashes on the way out.
   useEffect(() => {
-    if (!open) setStep('main');
+    if (open) return;
+    const timer = setTimeout(() => setStep('main'), 550);
+    return () => clearTimeout(timer);
   }, [open]);
 
   // Opened from Settings → Profile → Add profile while already signed in.
@@ -239,7 +240,7 @@ export function LoginModal({ open, onOpenChange }: LoginModalProps) {
         <DrawerTitle className="sr-only">{titleText}</DrawerTitle>
       </DrawerHeader>
 
-      <div className="login-stack-scroll flex flex-col flex-1 min-h-0 overflow-y-auto overflow-x-hidden overscroll-contain px-6 md:px-2.5 pb-4">
+      <div className="login-stack-scroll flex flex-col flex-1 min-h-0 overflow-y-auto overflow-x-hidden overscroll-contain px-2.5 pb-4">
         <Suspense fallback={<div className="h-[420px]" aria-hidden="true" />}>
           <LoginShortsStack />
         </Suspense>
@@ -322,7 +323,7 @@ export function LoginModal({ open, onOpenChange }: LoginModalProps) {
   // width deliberately — it blurs the sidebars too, so nothing outside the
   // sign-in flow competes with it.
   return (
-    <Drawer open={open} onOpenChange={handleClose} warmable walletPrompt dismissible={!requiresUsername} repositionInputs={false}>
+    <Drawer open={open} onOpenChange={handleClose} warmable walletPrompt animatedExit dismissible={!requiresUsername} repositionInputs={false}>
       <DrawerContent
         data-login-modal
         column

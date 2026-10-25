@@ -19,11 +19,11 @@ html[data-system-tone="light"] .login-stack {
   --ls-tile-line: rgba(11, 11, 13, 0.08);
 }
 
-/* Wider than the form: the scroll area pads 24px, the lanes sit 10px in.
+/* Wider than the form: the lanes sit 10px in, the form sits 24px in.
    Fade only at the bottom where the headline sits. */
 .login-stack__lanes {
   position: relative;
-  margin: 0 -14px;
+  margin: 0;
   /* Leave room for email, alternative providers and legal copy on phones. */
   height: clamp(260px, calc(100svh - 360px - env(safe-area-inset-bottom)), 520px);
   display: grid;
@@ -119,7 +119,9 @@ html[data-system-tone="light"] .login-stack-corner {
 }
 .login-stack-scroll > .login-stack-form {
   flex-shrink: 0;
-  width: 100%;
+  width: calc(100% - 28px);
+  margin-left: auto;
+  margin-right: auto;
 }
 @media (min-width: 768px) {
   .login-stack-scroll > .login-stack-form {
