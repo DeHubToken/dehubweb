@@ -363,11 +363,14 @@ function EndlessScrollView({
   }, [startFromId]);
 
   return (
-    <div data-feed-root className="p-2 sm:p-3 pt-0 sm:pt-0 space-y-3 relative">
+    // The scroll anchor is the first child, so space-y would hand the first
+    // card a 12px top margin and the gap under the pill would double against
+    // the home feed's. The card right after the anchor keeps no margin.
+    <div data-feed-root className="p-2 sm:p-3 pt-0 sm:pt-0 space-y-3 relative [&>[data-scroll-anchor]+*]:!mt-0">
       {/* Returning to the grid is the nav pill's left slot (it swaps its
           settings icon for a back arrow while this view is up), so there is no
           floating button over the feed. */}
-      <div ref={scrollTargetRef} />
+      <div ref={scrollTargetRef} data-scroll-anchor />
       {visiblePosts.map((post, index) => (
         <Fragment key={post.id}>
           <WindowedFeedItem
