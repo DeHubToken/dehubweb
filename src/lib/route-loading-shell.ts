@@ -1,0 +1,63 @@
+export interface RouteLoadingShell {
+  cover(): void;
+  reveal(): void;
+  remove(): void;
+}
+
+export const ROUTE_CONTENT_READY = 'dehub:route-content-ready';
+
+export function notifyRouteContentReady(key: string): void {
+  window.dispatchEvent(new CustomEvent(ROUTE_CONTENT_READY, { detail: key }));
+}
+
+/** A small, independent layer can composite while the destination renders. */
+export function showRouteLoadingShell(title: string, backLabel: string, backwards = false): RouteLoadingShell | null {
+  const main = document.querySelector<HTMLElement>('[data-main-panel]');
+  if (!main) return null;
+  const rect = main.getBoundingClientRect();
+  const node = document.createElement('section');
+  node.className = 'app-route-loading-shell';
+  node.dataset.direction = backwards ? 'back' : 'forward';
+  node.setAttribute('aria-busy', 'true');
+  const style = getComputedStyle(main);
+  node.style.left = `${rect.left}px`;
+  node.style.width = `${rect.width}px`;
+  node.style.color = style.color;
+  node.style.backgroundColor = style.backgroundColor;
+  node.innerHTML = '<header><button type="button"><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="m14 5-7 7 7 7" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></button><strong></strong></header><div class="app-route-loading-body" aria-hidden="true"><div class="app-route-loading-author"><i></i><span></span></div><div class="app-route-loading-line"></div><div class="app-route-loading-line"></div><div class="app-route-loading-line"></div><div class="app-route-loading-media"></div></div>';
+  const button = node.querySelector('button')!;
+  button.setAttribute('aria-label', backLabel);
+  button.onclick = () => window.history.back();
+  node.querySelector('strong')!.textContent = title;
+  document.body.appendChild(node);
+  const opacity = main.style.opacity;
+  const inert = main.inert;
+  let removed = false;
+  let timer: ReturnType<typeof setTimeout> | undefined;
+  const restore = () => { main.style.opacity = opacity; main.inert = inert; };
+  const remove = () => {
+    if (removed) return;
+    removed = true;
+    clearTimeout(timer);
+    restore();
+    node.remove();
+  };
+  // A lost route or error must never leave the feed hidden behind a shell.
+  timer = setTimeout(remove, 5000);
+  return {
+    cover() { if (!removed) { main.style.opacity = '0'; main.inert = true; } },
+    reveal() {
+      if (removed) return;
+      restore();
+      clearTimeout(timer);
+      if (document.documentElement.classList.contains('reduce-motion') || window.matchMedia?.('(prefers-reduced-motion: reduce)').matches) {
+        remove();
+        return;
+      }
+      button.disabled = true;
+      node.dataset.leaving = '';
+      timer = setTimeout(remove, 120);
+    },
+    remove,
+  };
+}

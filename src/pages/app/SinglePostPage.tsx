@@ -1,4 +1,5 @@
 import { useTranslation as _useCopy } from 'react-i18next';
+import { useRouteContentReady } from '@/hooks/use-route-content-ready';
 /**
  * Single Post Page
  * ================
@@ -736,6 +737,7 @@ function postSeoUrl(id?: string): string {
  * author thread can never disagree about which comment was linked.
  */
 export default function SinglePostPage(props: SinglePostPageProps = {}) {
+  useRouteContentReady();
   const { postId, tokenId, commentId } = useParams<{ postId?: string; tokenId?: string; commentId?: string }>();
   const { search } = useLocation();
   const id = props.overrideId || postId || tokenId;
