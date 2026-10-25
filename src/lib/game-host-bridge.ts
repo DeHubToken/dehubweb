@@ -595,7 +595,7 @@ async function tradeV4(
     if (allowance < amountIn) {
       const approval = await approveERC20(token, PERMIT2, MAX_UINT256, chainId as ChainId);
       say(true, { stage: 'approved', hash: approval.hash });
-      await approval.wait();
+      if ((await approval.wait()).status !== 1) throw new Error('Token approval failed; swap not sent');
     }
     const [granted, expiration] = await readContract<[bigint, bigint, bigint]>(
       PERMIT2, permit2Interface, 'allowance', [address, token, v4.router], chainId as ChainId,
@@ -608,7 +608,7 @@ async function tradeV4(
         { chainId, context: 'token approval' },
       );
       say(true, { stage: 'approved', hash: grant.hash });
-      await grant.wait();
+      if ((await grant.wait()).status !== 1) throw new Error('Router approval failed; swap not sent');
     }
   }
 
@@ -690,7 +690,7 @@ async function relayTrade(
       if (allowance < amountIn) {
         const approval = await approveERC20(token, chain.router, amountIn, chainId as ChainId);
         say(true, { stage: 'approved', hash: approval.hash });
-        await approval.wait();
+        if ((await approval.wait()).status !== 1) throw new Error('Token approval failed; swap not sent');
       }
       const swap = tradeRouterInterface.encodeFunctionData('exactInputSingle', [{
         tokenIn: token,

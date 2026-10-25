@@ -2072,7 +2072,7 @@ const CHAINS={
 };
 const EVM_CHAINS=[CHAINS.base,CHAINS.robinhood];
 const BASE=CHAINS.base;   /* the name the older code reads */
-const FEE_TIERS=[500,3000,10000];
+const FEE_TIERS=[100,500,3000,10000];
 let localTradingWallet=null,walletRevision=0,browserWalletAddress=null,browserWalletProvider=null;
 // A saved trading-wallet choice must never fall back to the account while its vault loads.
 try{if(localStorage.getItem('trenchstar.wallet.active'))localTradingWallet={chain:'blocked',address:'',name:'Locked trading wallet',locked:true};}catch{}
@@ -2088,19 +2088,28 @@ const hexToBig=h=>BigInt(h&&h!=='0x'?h:'0x0');
 const encAddr=a=>pad32(a.toLowerCase());
 const encUint=v=>pad32(BigInt(v).toString(16));
 function fmtUnits(v,d){
+  if(d===0)return Number(v);
   const s=BigInt(v).toString().padStart(d+1,'0');
   return +(s.slice(0,-d)+'.'+s.slice(-d)).replace(/(\.\d*?)0+$/,'$1').replace(/\.$/,'');
 }
 function toUnits(n,d){
-  const [i,f='']=String(n).split('.');
-  return BigInt(i+ (f+'0'.repeat(d)).slice(0,d));
+  if(!Number.isInteger(d)||d<0||d>255)throw new Error('Invalid token decimals');
+  const match=String(n).match(/^(\d+)(?:\.(\d*))?(?:e([+-]?\d+))?$/i);
+  if(!match)throw new Error('Enter a positive amount');
+  const digits=match[1]+(match[2]||'');
+  const shift=d+Number(match[3]||0)-(match[2]||'').length;
+  if(!Number.isSafeInteger(shift)||Math.abs(shift)>1000)throw new Error('Amount out of range');
+  const raw=BigInt(shift>=0?digits+'0'.repeat(shift):digits.slice(0,Math.max(0,digits.length+shift))||'0');
+  if(raw<=0n)throw new Error('Amount is below the smallest token unit');
+  return raw;
 }
 /* Reads go to a chain's public endpoint, never through the wallet: a wallet
    provider answers on whichever chain IT is switched to, and a balance read
    on Base through a wallet parked on Ethereum used to come back as zero. */
 async function rpcPublic(url,method,params){
   const r=await fetch(url,{method:'POST',headers:{'content-type':'application/json'},
-    body:JSON.stringify({jsonrpc:'2.0',id:1,method,params})});
+    body:JSON.stringify({jsonrpc:'2.0',id:1,method,params}),signal:AbortSignal.timeout(15000)});
+  if(!r.ok)throw new Error('Network request failed ('+r.status+')');
   const j=await r.json();
   if(j.error)throw new Error(j.error.message||('rpc '+j.error.code));
   return j.result;
@@ -2131,7 +2140,7 @@ async function connectWallet(){
     const accs=await prov.request({method:'eth_requestAccounts'});
     wallet.addr=accs&&accs[0];
     wallet.chainId=parseInt(await prov.request({method:'eth_chainId'}),16);
-    prov.on&&prov.on('accountsChanged',a=>{wallet.addr=a&&a[0];refreshWallet();});
+    prov.on&&prov.on('accountsChanged',a=>{wallet.addr=a&&a[0];walletRevision++;tdDisarm();syncWalletUI();refreshWallet();});
     prov.on&&prov.on('chainChanged',c=>{if(!localTradingWallet)wallet.chainId=parseInt(c,16);refreshWallet();});
     toast('WALLET CONNECTED · '+wallet.addr.slice(0,6)+'…'+wallet.addr.slice(-4));
     syncWalletUI();
@@ -2141,14 +2150,18 @@ async function connectWallet(){
   }finally{wallet.connecting=false;}
 }
 async function switchTo(ch){
-  if(wallet.chainId===ch.id)return;
-  try{await wallet.provider.request({method:'wallet_switchEthereumChain',params:[{chainId:ch.hex}]});}
+  const provider=wallet.provider;
+  if(parseInt(await provider.request({method:'eth_chainId'}),16)===ch.id){wallet.chainId=ch.id;return;}
+  try{await provider.request({method:'wallet_switchEthereumChain',params:[{chainId:ch.hex}]});}
   catch(e){
-    if(e.code===4902)await wallet.provider.request({method:'wallet_addEthereumChain',params:[{
+    if(e.code===4902){await provider.request({method:'wallet_addEthereumChain',params:[{
       chainId:ch.hex,chainName:ch.name,nativeCurrency:{name:'Ether',symbol:'ETH',decimals:18},
       rpcUrls:[ch.rpc],blockExplorerUrls:[ch.explorer]}]});
+      await provider.request({method:'wallet_switchEthereumChain',params:[{chainId:ch.hex}]});}
     else throw e;
   }
+  if(provider!==wallet.provider||parseInt(await provider.request({method:'eth_chainId'}),16)!==ch.id)
+    throw new Error('Wallet network changed. Review the trade again.');
   wallet.chainId=ch.id;
 }
 const switchToBase=()=>switchTo(BASE);
@@ -2228,7 +2241,8 @@ async function evmBag(ch,who){
       const [b,d]=await Promise.all([
         ethCallOn(ch,a,SEL.balanceOf+encAddr(who)),
         ethCallOn(ch,a,SEL.decimals)]);
-      const dec=Number(hexToBig(d))||18;
+      const dec=Number(hexToBig(d));
+      if(!Number.isInteger(dec)||dec<0||dec>255)throw new Error('Invalid token decimals');
       return {addr:a,raw:hexToBig(b),qty:Number(hexToBig(b))/Math.pow(10,dec),dec};
     }catch(e){return null;}
   }));
@@ -2239,7 +2253,7 @@ async function evmBag(ch,who){
   if(eth>0)assets.push({sym:'ETH',qty:eth,px:w?w.px:0,ch:w?w.ch:0,chain:ch.key,dec:18,native:true});
   for(const h of held){
     const b=best[h.addr];
-    if(b&&b.liq>1000)assets.push({sym:b.sym||'?',qty:h.qty,px:b.px,ch:b.ch,addr:h.addr,chain:ch.key,dec:h.dec,raw:h.raw});
+    assets.push({sym:b?.sym||watchedTokens(ch).get(h.addr)?.sym||'?',qty:h.qty,px:b?.px||0,ch:b?.ch||0,addr:h.addr,chain:ch.key,dec:h.dec,raw:h.raw});
   }
   return assets;
 }
@@ -2273,7 +2287,7 @@ async function solBag(who){
   if(solQty>0)assets.push({sym:'SOL',qty:solQty,px:s?s.px:0,ch:s?s.ch:0,chain:'solana',dec:9,native:true});
   for(const h of held){
     const b=best[h.addr];
-    if(b&&b.liq>1000)assets.push({sym:b.sym||'?',qty:h.qty,px:b.px,ch:b.ch,addr:h.addr,chain:'solana',dec:h.dec,raw:h.raw});
+    assets.push({sym:b?.sym||'?',qty:h.qty,px:b?.px||0,ch:b?.ch||0,addr:h.addr,chain:'solana',dec:h.dec,raw:h.raw});
   }
   return assets;
 }
@@ -2505,6 +2519,25 @@ function evmSigner(){
 }
 function evmAddr(){return wallet.addr||watchAddr();}
 
+function captureTradeWallet(ch){
+  const provider=ch.sol?sol.prov:wallet.provider;
+  const address=ch.sol?sol.addr:evmAddr(),revision=walletRevision;
+  const check=()=>{
+    if(revision!==walletRevision||provider!==(ch.sol?sol.prov:wallet.provider)||
+      address!==(ch.sol?sol.addr:evmAddr())||localTradingWallet?.locked)
+      throw new Error('Wallet changed or locked. Review the trade again.');
+  };
+  const verify=async()=>{
+    check();
+    const accounts=await provider.request({method:'eth_accounts'});
+    const chainId=await provider.request({method:'eth_chainId'});
+    check();
+    if(accounts?.[0]?.toLowerCase()!==address?.toLowerCase()||parseInt(chainId,16)!==ch.id)
+      throw new Error('Wallet account or network changed. Review the trade again.');
+  };
+  return {provider,address,check,verify};
+}
+
 /* Which pool. A v4 wall pair is tried first through its recovered key, and
    whatever cannot be keyed (or quoted) falls through to v3. */
 async function routeEvm(ch,m,side,amount){
@@ -2527,14 +2560,17 @@ function hostMsg(ch,side,m,q,amountIn,minOut){
 /* ---- EVM buy: ETH in, token out ---- */
 async function planBuyEvm(m,ethAmount,slipPct){
   const ch=CHAINS[m.chain];
+  const signer=captureTradeWallet(ch);
   const amountIn=toUnits(ethAmount,18);
   const q=await routeEvm(ch,m,'buy',amountIn);
   const slip=BigInt(Math.round((slipPct||3)*100));
   const minOut=q.out*(10000n-slip)/10000n;
   return {ch,q,amountIn,minOut,side:'buy',m,
     async send(onStage){
+      signer.check();
       if(evmSigner()==='native')return hostTrade(hostMsg(ch,'buy',m,q,amountIn,minOut),onStage);
       await switchTo(ch);
+      await signer.verify();
       const tx=q.v4
         ?{from:wallet.addr,to:V4[ch.key].ur,value:hexBig(amountIn),
           data:encV4Swap(q.key,true,amountIn,minOut,Math.floor(Date.now()/1000)+120)}
@@ -2542,8 +2578,9 @@ async function planBuyEvm(m,ethAmount,slipPct){
           data:encExactInputSingle({tokenIn:ch.weth,tokenOut:m.tokenAddr,fee:q.fee,
             recipient:wallet.addr,amountIn,amountOutMin:minOut})};
       /* dry run — never offer to sign something that already fails */
-      await rpc('eth_call',[tx,'latest']);
-      const hash=await wallet.provider.request({method:'eth_sendTransaction',params:[tx]});
+      await rpcPublic(ch.rpc,'eth_call',[tx,'latest']);
+      await signer.verify();
+      const hash=await signer.provider.request({method:'eth_sendTransaction',params:[tx]});
       watchEvmTx(ch,hash,onStage);
       return hash;
     }};
@@ -2551,18 +2588,24 @@ async function planBuyEvm(m,ethAmount,slipPct){
 /* ---- EVM sell: token in, ETH out, unwrapped in the same call ---- */
 async function planSellEvm(m,rawAmount,slipPct){
   const ch=CHAINS[m.chain];
+  const signer=captureTradeWallet(ch);
   const q=await routeEvm(ch,m,'sell',rawAmount);
   const slip=BigInt(Math.round((slipPct||3)*100));
   const minOut=q.out*(10000n-slip)/10000n;
   return {ch,q,amountIn:rawAmount,minOut,side:'sell',m,
     async send(onStage){
+      signer.check();
       if(evmSigner()==='native')return hostTrade(hostMsg(ch,'sell',m,q,rawAmount,minOut),onStage);
       await switchTo(ch);
-      const who=wallet.addr;
+      await signer.verify();
+      const who=signer.address;
       const sendTx=async t=>{
         onStage&&onStage('approving');
-        const h=await wallet.provider.request({method:'eth_sendTransaction',params:[Object.assign({from:who},t)]});
-        await waitEvmTx(ch,h);
+        await signer.verify();
+        const h=await signer.provider.request({method:'eth_sendTransaction',params:[Object.assign({from:who},t)]});
+        const receipt=await waitEvmTx(ch,h);
+        if(!receipt)throw new Error('Approval confirmation unknown. Check the explorer before retrying.');
+        if(parseInt(receipt.status,16)!==1)throw new Error('Token approval failed on chain. Swap not sent.');
       };
       let tx;
       if(q.v4){
@@ -2578,8 +2621,10 @@ async function planSellEvm(m,rawAmount,slipPct){
               recipient:ROUTER_SELF,amountIn:rawAmount,amountOutMin:minOut}),
             encUnwrap(minOut,who)])};
       }
-      await rpc('eth_call',[tx,'latest']);
-      const hash=await wallet.provider.request({method:'eth_sendTransaction',params:[tx]});
+      await signer.verify();
+      await rpcPublic(ch.rpc,'eth_call',[tx,'latest']);
+      await signer.verify();
+      const hash=await signer.provider.request({method:'eth_sendTransaction',params:[tx]});
       watchEvmTx(ch,hash,onStage);
       return hash;
     }};
@@ -2622,15 +2667,15 @@ async function solConnect(){
     const r=await p.connect();
     const pk=(r&&r.publicKey)||p.publicKey;
     sol.prov=p;sol.addr=pk.toString();
-    p.on&&p.on('disconnect',()=>{sol.addr=null;syncWalletUI();});
-    p.on&&p.on('accountChanged',pk=>{sol.addr=pk?pk.toString():null;refreshWallet();});
+    p.on&&p.on('disconnect',()=>{sol.addr=null;walletRevision++;tdDisarm();syncWalletUI();refreshWallet();});
+    p.on&&p.on('accountChanged',pk=>{sol.addr=pk?pk.toString():null;walletRevision++;tdDisarm();refreshWallet();});
     toast('PHANTOM CONNECTED · '+sol.addr.slice(0,4)+'…'+sol.addr.slice(-4));
     syncWalletUI();refreshWallet();
   }catch(e){toast(e.code===4001?'Connection rejected.':'Phantom error — '+String(e.message||'').slice(0,60));}
   finally{sol.connecting=false;}
 }
 function solAddr(){if(localTradingWallet)return localTradingWallet.chain==='solana'?localTradingWallet.address:'';return sol.addr||(dhData.me&&dhData.me.solana)||'';}
-const JUP='https://lite-api.jup.ag/swap/v1';
+const JUP='https://api.jup.ag/swap/v1';
 function b64ToBytes(b64){const s=atob(b64);const u=new Uint8Array(s.length);for(let i=0;i<s.length;i++)u[i]=s.charCodeAt(i);return u;}
 const B58='123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz';
 function bs58(bytes){
@@ -2653,11 +2698,12 @@ async function jupQuote(inMint,outMint,amount,slipBps){
 }
 async function jupSwap(quote,who){
   const r=await fetch(JUP+'/swap',{method:'POST',headers:{'content-type':'application/json'},
+    signal:AbortSignal.timeout(20000),
     body:JSON.stringify({quoteResponse:quote,userPublicKey:who,wrapAndUnwrapSol:true,
       dynamicComputeUnitLimit:true,dynamicSlippage:false,
       prioritizationFeeLamports:{priorityLevelWithMaxLamports:{maxLamports:1500000,priorityLevel:'high'}}})});
   const j=await r.json();
-  if(!j||!j.swapTransaction)throw new Error((j&&j.error)||'Jupiter could not build the swap');
+  if(!r.ok||!j||j.simulationError||!j.swapTransaction)throw new Error((j&&j.error)||'Jupiter could not simulate or build the swap');
   return j.swapTransaction;
 }
 async function solSend(txB64){
@@ -2678,12 +2724,15 @@ async function waitSolTx(sig){
 }
 async function planSol(m,side,amountRaw,slipPct){
   const ch=CHAINS.solana;
+  if(!sol.addr){await solConnect();if(!sol.addr)throw new Error('Connect a Solana wallet to trade');}
+  const signer=captureTradeWallet(ch);
   const inMint=side==='buy'?ch.wsol:m.tokenAddr,outMint=side==='buy'?m.tokenAddr:ch.wsol;
   const q=await jupQuote(inMint,outMint,amountRaw.toString(),Math.round((slipPct||3)*100));
   return {ch,q,amountIn:amountRaw,minOut:BigInt(q.otherAmountThreshold||q.outAmount),side,m,
     async send(onStage){
-      if(!sol.addr){await solConnect();if(!sol.addr)throw new Error('connect Phantom to trade on Solana');}
-      const tx=await jupSwap(q,sol.addr);
+      signer.check();
+      const tx=await jupSwap(q,signer.address);
+      signer.check();
       const sig=await solSend(tx);
       waitSolTx(sig).then(r=>{
         if(!r)onStage&&onStage('lost');
@@ -2696,10 +2745,27 @@ async function planSol(m,side,amountRaw,slipPct){
 /* ---- the book of what this desk actually did ---- */
 const fills=(()=>{try{return JSON.parse(localStorage.getItem('trenchstar.fills')||'[]');}catch(e){return [];}})();
 function saveFills(){try{localStorage.setItem('trenchstar.fills',JSON.stringify(fills.slice(0,60)));}catch(e){}}
-function recordFill(f){f.walletAddress=f.chain==='solana'?solAddr():evmAddr();fills.unshift(f);saveFills();renderFills();return f;}
+function recordFill(f){f.walletAddress??=f.chain==='solana'?solAddr():evmAddr();fills.unshift(f);saveFills();renderFills();return f;}
 function updateFill(hash,patch){
   const f=fills.find(x=>x.hash===hash);
   if(f){Object.assign(f,patch);saveFills();renderFills();}
+}
+async function recoverPendingFills(){
+  // A phone can suspend the room while confirmation is pending. Reconcile
+  // saved hashes once on load; never re-submit a transaction to recover it.
+  for(const fill of fills.filter(f=>['SENT','UNKNOWN'].includes(f.status)&&CHAINS[f.chain]).slice(0,10)){
+    const ch=CHAINS[fill.chain];
+    try{
+      if(ch.sol){
+        const result=await rpcPublic(ch.rpc,'getSignatureStatuses',[[fill.hash],{searchTransactionHistory:true}]);
+        const status=result?.value?.[0];
+        updateFill(fill.hash,{status:status?.err?'FAILED':['confirmed','finalized'].includes(status?.confirmationStatus)?'CONFIRMED':'UNKNOWN'});
+      }else{
+        const receipt=await rpcPublic(ch.rpc,'eth_getTransactionReceipt',[fill.hash]);
+        updateFill(fill.hash,{status:receipt?(parseInt(receipt.status,16)===1?'CONFIRMED':'FAILED'):'UNKNOWN'});
+      }
+    }catch{updateFill(fill.hash,{status:'UNKNOWN'});}
+  }
 }
 function txUrl(chainKey,hash){return CHAINS[chainKey].explorer+'/tx/'+hash;}
 const positions=[];
@@ -7381,6 +7447,7 @@ const dhPix=new Map();
 window.addEventListener('message',e=>{
   const d=e.data;
   if(!d||d.source!=='dehub')return;
+  if(e.source!==window.parent||e.origin!==location.origin)return;
 
   /* a trade the app signed on our behalf — see hostTrade */
   if(d.type==='traded'){hostTraded(d);return;}
@@ -11653,7 +11720,7 @@ document.querySelectorAll('.wtab').forEach(t=>t.addEventListener('click',()=>{
 }));
 
 /* ------------------------------ the ticket ------------------------------ */
-const td={m:null,side:'buy',amt:null,pct:null,slip:3,plan:null,busy:false,armTimer:0};
+const td={m:null,side:'buy',amt:null,pct:null,slip:3,plan:null,busy:false,armTimer:0,revision:0};
 let localTradeReview=null;
 function tradable(m){return !!(m&&m.fed&&m.tokenAddr&&CHAINS[m.chain]);}
 function tdFillSelect(){
@@ -11769,7 +11836,8 @@ function tdRender(){
     return;
   }
   const ch=CHAINS[m.chain];
-  $('#tdSym').innerHTML=m.sym+'<small id="tdChain">'+ch.label+'</small>';
+  $('#tdSym').textContent=m.sym;
+  const chainLabel=document.createElement('small');chainLabel.id='tdChain';chainLabel.textContent=ch.label;$('#tdSym').append(chainLabel);
   $('#tdPx').textContent=m.price?'$'+fmtPx(m.price):'—';
   const c=m.pct24||0;
   $('#tdCh').textContent=(c>=0?'+':'')+c.toFixed(1)+'%';$('#tdCh').style.color=c>=0?'var(--up)':'var(--down)';
@@ -11798,6 +11866,7 @@ function tdRender(){
 }
 function fmtPx(p){return p>=1?p.toLocaleString(undefined,{maximumFractionDigits:2}):(+p.toPrecision(4)).toString();}
 function tdDisarm(){
+  td.revision++;
   td.plan=null;clearTimeout(td.armTimer);
   const go=$('#tdGo');go.dataset.armed='';
 }
@@ -11812,7 +11881,7 @@ $('#tdGo').addEventListener('click',async()=>{
     td.busy=true;tdRender();
     const ch=plan.ch;
     const inUnit=plan.side==='buy'?ch.gas:m.sym,outUnit=plan.side==='buy'?m.sym:ch.gas;
-    const inQty=fmtUnits(plan.amountIn,plan.side==='buy'?ch.dec:(tdHeld()||{dec:18}).dec);
+    const inQty=fmtUnits(plan.amountIn,plan.inDecimals);
     msg.innerHTML='SENDING…';
     let fill=null;
     const onStage=(stage,d)=>{
@@ -11821,23 +11890,24 @@ $('#tdGo').addEventListener('click',async()=>{
         msg.innerHTML='CONFIRMED · <a href="'+txUrl(ch.key,fill.hash)+'" target="_blank" rel="noopener">'+fill.hash.slice(0,14)+'…</a>';
         setTimeout(refreshWallet,4000);}
       if(stage==='failed'){updateFill(fill&&fill.hash,{status:'FAILED'});msg.innerHTML='<b>FAILED ON CHAIN</b> · '+((d&&d.reason)||'');}
-      if(stage==='lost')updateFill(fill&&fill.hash,{status:'UNKNOWN'});
+      if(stage==='lost'){updateFill(fill&&fill.hash,{status:'UNKNOWN'});msg.textContent='CONFIRMATION UNKNOWN — CHECK THE EXPLORER BEFORE RETRYING';}
     };
     try{
       const hash=await plan.send(onStage);
       fill=recordFill({t:Date.now(),chain:ch.key,side:plan.side,sym:m.sym,token:m.tokenAddr,pair:m.pairAddr||'',v4:!!m.v4,
-        inQty,inUnit,outUnit,hash,status:'SENT',usd:plan.side==='buy'?td.amt*((tdGas()||{px:0}).px||0):0});
+        walletAddress:plan.walletAddress,inQty,inUnit,outUnit,hash,status:'SENT',usd:plan.usd});
       msg.innerHTML='SENT · <a href="'+txUrl(ch.key,hash)+'" target="_blank" rel="noopener">'+hash.slice(0,14)+'…</a> · WAITING FOR THE CHAIN';
       td.amt=null;td.pct=null;$('#tdAmt').value='';
     }catch(e){
       const s=String(e&&e.message||e);
-      msg.innerHTML='<b>'+(e&&e.code===4001?'REJECTED IN WALLET':'NOT SENT')+'</b> · '+s.slice(0,90);
+      msg.textContent=(e&&e.code===4001?'REJECTED IN WALLET':'SWAP NOT SENT')+' · '+s.slice(0,160);
     }
     localTradeReview=null;td.busy=false;tdSideUI();tdRender();
     return;
   }
   /* first press: quote */
   td.busy=true;tdRender();msg.textContent='QUOTING…';
+  const revision=td.revision,walletVersion=walletRevision;
   try{
     const ch=CHAINS[m.chain];
     let plan;
@@ -11851,10 +11921,18 @@ $('#tdGo').addEventListener('click',async()=>{
       if(raw<=0n)throw new Error('nothing to sell');
       plan=ch.sol?await planSol(m,'sell',raw,td.slip):await planSellEvm(m,raw,td.slip);
     }
+    const tokenDec=ch.sol
+      ?(await rpcPublic(ch.rpc,'getTokenSupply',[m.tokenAddr])).value.decimals
+      :Number(hexToBig(await ethCallOn(ch,m.tokenAddr,SEL.decimals)));
+    if(!Number.isInteger(tokenDec)||tokenDec<0||tokenDec>255)throw new Error('Token decimals unavailable');
+    if(revision!==td.revision||walletVersion!==walletRevision)throw new Error('Ticket or wallet changed. Request a new quote.');
+    plan.inDecimals=plan.side==='buy'?ch.dec:tokenDec;
+    plan.walletAddress=ch.sol?solAddr():evmAddr();
+    plan.usd=plan.side==='buy'?td.amt*((tdGas()||{px:0}).px||0):0;
     td.plan=plan;
-    const outDec=plan.side==='buy'?(ch.sol?(plan.q.outAmount&&m.dec)||null:null):ch.dec;
+    const outDec=plan.side==='buy'?tokenDec:ch.dec;
     const minOut=plan.side==='buy'
-      ? (ch.sol?'':'')+(outDec!=null?(+fmtUnits(plan.minOut,outDec).toPrecision(6)):'')
+      ? (+fmtUnits(plan.minOut,outDec).toPrecision(6))+' '+m.sym
       : (+fmtUnits(plan.minOut,ch.dec).toPrecision(6))+' '+ch.gas;
     /* a hooked v4 pool carries fee 0, so the old v3 wording described the
        majority of Robinhood's pairs as a zero-fee v3 pool */
@@ -11864,14 +11942,15 @@ $('#tdGo').addEventListener('click',async()=>{
     const impact=ch.sol&&plan.q.priceImpactPct!=null?' · IMPACT '+(+plan.q.priceImpactPct*100).toFixed(2)+'%':'';
     const who=localTradingWallet?'TRADING WALLET · '+localTradingWallet.address:ch.sol?'PHANTOM':(evmSigner()==='native'?'DEHUB WALLET · GAS SPONSORED':'YOUR WALLET');
     plan.review={action:plan.side.toUpperCase()+' '+m.sym,spend:fmtUnits(plan.amountIn,plan.side==='buy'?ch.dec:(tdHeld()||{dec:18}).dec)+' '+(plan.side==='buy'?ch.gas:m.sym),minimum:minOut||plan.minOut.toString()+' token base units',slippage:td.slip+'%',token:m.tokenAddr};
-    msg.innerHTML='ROUTE '+route+impact+'<br>MIN RECEIVED '+(minOut||('per quote, '+td.slip+'% slippage'))+
-      '<br>SIGNS WITH '+who+' · <b>PRESS AGAIN TO SEND</b>';
+    msg.style.whiteSpace='pre-line';
+    msg.textContent='ROUTE '+route+impact+'\nMIN RECEIVED '+(minOut||('per quote, '+td.slip+'% slippage'))+
+      '\nSIGNS WITH '+who+' · PRESS AGAIN TO SEND';
     go.dataset.armed='1';
     go.textContent=(plan.side==='buy'?'CONFIRM BUY ':'CONFIRM SELL ')+m.sym;
     clearTimeout(td.armTimer);
     td.armTimer=setTimeout(()=>{if(td.plan===plan){tdDisarm();msg.textContent='QUOTE EXPIRED — PRESS AGAIN';tdRender();}},20000);
   }catch(e){
-    msg.innerHTML='<b>NO QUOTE</b> · '+String(e&&e.message||e).slice(0,90);
+    tdDisarm();msg.textContent='NO QUOTE · '+String(e&&e.message||e).slice(0,160);
   }
   td.busy=false;tdRender();
 });
@@ -11894,6 +11973,7 @@ function renderFills(){
 syncWalletUI();
 tdSideUI();
 tdRender();
+void recoverPendingFills();
 /* the ticket reads live numbers; keep it honest while it is open */
 setInterval(()=>{if($('#walletPanel').classList.contains('on')&&td.m&&!td.busy&&$('#tdGo').dataset.armed!=='1')tdRender();},2000);
 
