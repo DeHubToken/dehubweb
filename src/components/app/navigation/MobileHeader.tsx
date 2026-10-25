@@ -42,20 +42,20 @@ const HeaderLogo = memo(function HeaderLogo({ onClick, onPointerDown, isAuthenti
   return (
     <button onClick={onClick} onPointerDown={onPointerDown} className="flex h-11 w-11 shrink-0 items-center justify-center cursor-pointer" aria-label={isAuthenticated ? _copy("copy.8ee0cba52fcd", { defaultValue: "dehub home" }) : _copy("copy.c189840cf7e2", { defaultValue: "Log in" })}>
       <FeedRefreshLogo>
-      <ElectricLogo still={theme === 'war' ? <img src={dehubMark} alt="dehub" className="block h-[27px] w-[31.5px] object-contain" decoding="async" /> : undefined}>{theme === 'war' ? (
+      <ElectricLogo still={theme === 'war' ? <img src={dehubMark} alt="dehub" className="block h-9 w-[42px] object-contain" decoding="async" /> : undefined}>{theme === 'war' ? (
         // Fixed width here rather than w-auto: the hologram is a canvas, which
         // has no intrinsic aspect ratio to derive a width from.
-        <WarLogo src={dehubMark} alt="dehub" className="h-[27px] w-[31.5px]" />
+        <WarLogo src={dehubMark} alt="dehub" className="h-9 w-[42px]" />
       ) : (
         <img
           src={dehubMark}
           alt="dehub"
-          className="block h-[27px] w-[31.5px] object-contain"
+          className="block h-9 w-[42px] object-contain"
           loading="eager"
           decoding="async"
           fetchPriority="high"
-          width={33}
-          height={28}
+          width={42}
+          height={36}
         />
       )}</ElectricLogo>
       </FeedRefreshLogo>
