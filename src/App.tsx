@@ -30,7 +30,7 @@ import { restoreQueryCache, startQueryPersist } from "@/lib/query-persist";
 import { setBackgroundPaused, scheduleBackgroundResume } from "@/lib/background-gate";
 import { AppLayout } from "./components/app/AppLayout";
 import { QuickActionsHost } from "./components/app/QuickActionsHost";
-import { LoginModal } from "@/components/app/LoginModal";
+import { LoginModal, scheduleLoginPrefetch } from "@/components/app/LoginModal";
 import React, { Suspense, useEffect, useState, type ReactNode } from "react";
 import { I18nextProvider } from "react-i18next";
 import i18nInstance from "@/i18n";
@@ -394,8 +394,13 @@ if (typeof window !== "undefined") {
 function AppContent() {
   useSwipeBack();
   const { t: _copy } = _useCopy();
-  const { isLoginModalOpen, closeLoginModal, user, walletAddress, isAuthenticated, isConnecting, isProcessingRedirect, requiresUsername } = useAuth();
+  const { isLoginModalOpen, closeLoginModal, user, walletAddress, isAuthenticated, isLoading: authLoading, isConnecting, isProcessingRedirect, requiresUsername } = useAuth();
   const queryClient = useQueryClient();
+  // Guests get the sign-in sheet's chunks after the page has fully loaded, so
+  // their first tap opens onto the real options, not the skeleton.
+  useEffect(() => {
+    if (!authLoading && !isAuthenticated) scheduleLoginPrefetch();
+  }, [authLoading, isAuthenticated]);
   usePreloadIcons();
   // Views are recorded by <PageViewTracker /> above <Routes>; this only
   // attaches the signed-in address to them.
