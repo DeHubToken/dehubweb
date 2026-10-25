@@ -1179,6 +1179,13 @@ function SinglePostPageContent({ inOverlay = false, overrideId, detailsOnly = fa
    * existing quotes and reposters lists.
    */
   const useStage = isStagePhone && !!post && post.status !== 'pending' && contentType !== 'live';
+
+  // On phones an image post opens in the Images tab's scroll view, not on this
+  // page. Desktop and tablet keep the post page, and so do video, audio, text.
+  useEffect(() => {
+    if (!isStagePhone || !post || post.status === 'pending' || contentType !== 'image' || !id) return;
+    navigate(`/app?image=${encodeURIComponent(id)}`, { replace: true });
+  }, [isStagePhone, post, contentType, id, navigate]);
   const revealStageComments = useCallback((focusComposer: boolean) => {
     // Twice: once now, and once the section has re-rendered with its new tab.
     const run = () => {
