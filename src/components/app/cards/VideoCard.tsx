@@ -1957,6 +1957,12 @@ const VideoCardBody = memo(function VideoCard({ video, postPage = false, onBack,
   });
 
   const openDedicatedPost = useCallback(() => {
+    // On phones a video opens in the Shorts viewer, in place. It has its own
+    // full-screen chrome, so the top nav is not involved.
+    if (window.matchMedia('(max-width: 639px)').matches) {
+      navigate(`/app?short=${encodeURIComponent(video.id)}`);
+      return;
+    }
     cacheVideoForNavigation(queryClient, video);
     navigate(`/app/post/${video.id}`, { state: { fromFeed: true } });
   }, [navigate, queryClient, video]);

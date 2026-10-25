@@ -307,7 +307,18 @@ export default function HomePage() {
     setSelectedImageId(pinnedImageId);
     setShowImagesCollage(false);
     setSearchParams({}, { replace: true });
-  }, []); // eslint-disable-line react-hooks/exhaustive-deps
+  }, [pinnedImageId]); // eslint-disable-line react-hooks/exhaustive-deps
+
+  // Same for a video on a phone: it opens in the Shorts viewer on that video.
+  // ShortsFeed clears the id once it has opened, so it does not reopen later.
+  const pinnedShortId = searchParams.get('short') || undefined;
+  const [startShortId, setStartShortId] = useState<string | undefined>(undefined);
+  useEffect(() => {
+    if (!pinnedShortId) return;
+    setActiveTab('shorts');
+    setStartShortId(pinnedShortId);
+    setSearchParams({}, { replace: true });
+  }, [pinnedShortId]); // eslint-disable-line react-hooks/exhaustive-deps
   const [showVideosFilters, setShowVideosFilters] = useState(false);
   const [showMusicFilters, setShowMusicFilters] = useState(false);
   const [showLiveFilters, setShowLiveFilters] = useState(false);
@@ -1218,7 +1229,7 @@ export default function HomePage() {
           <div className={isCollapsed && !(islandTopBar && isMobile) ? 'pt-2' : undefined} style={{ display: deferredTab === 'shorts' ? 'block' : 'none' }}>
             <CachedPageActiveContext.Provider value={pageActive && deferredTab === 'shorts'}>
             <Suspense fallback={<FeedBodySkeleton />}>
-              <MemoShortsFeed showFilters={showShortsFilters} isRefreshing={isRefreshing} refreshKey={refreshKey} />
+              <MemoShortsFeed showFilters={showShortsFilters} isRefreshing={isRefreshing} refreshKey={refreshKey} startShortId={startShortId} onStartShortConsumed={() => setStartShortId(undefined)} />
             </Suspense>
             </CachedPageActiveContext.Provider>
           </div>
