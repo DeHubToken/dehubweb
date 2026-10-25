@@ -1,5 +1,5 @@
 {
-  "version": "d956f131bea44696",
+  "version": "f1dda19ca4d9bae3",
   "routes": {
     "/": [
       "ar",
@@ -1297,6 +1297,13 @@
       "tr"
     ],
     "/guides/tokenized-subscriptions-explained": [
+      "ar",
+      "es",
+      "fr",
+      "nl",
+      "tr"
+    ],
+    "/guides/top-50-decentralized-social-apps-2026": [
       "ar",
       "es",
       "fr",
