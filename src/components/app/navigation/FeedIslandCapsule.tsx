@@ -170,6 +170,7 @@ export function FeedIslandCapsule({
               <LayoutGrid className="h-4 w-4" />
             </button>
             <button role="menuitem" aria-label={_copy("copy.bcf1bfcaa2af", { defaultValue: "Create post" })} title={_copy("copy.bcf1bfcaa2af", { defaultValue: "Create post" })}
+              onPointerDown={onLogoPointerDown}
               onClick={() => { setFeedTabsOpen(false); onCreatePost(); }}
               className="flex h-10 flex-1 items-center justify-center rounded-lg hover:bg-white/10">
               <Plus className="h-4 w-4" />

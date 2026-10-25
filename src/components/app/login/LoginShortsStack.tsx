@@ -11,9 +11,16 @@ import '@/styles/login-stack.css';
 
 type ClipName = typeof LOGIN_CLIP_IDS[number];
 
-/** Plays only while on screen, so at most a handful decode at once. */
+/**
+ * Loads and plays only while on screen. The sheet mounts every clip at once,
+ * and each one fetching its MP4 on open is what made the sheet feel slow to
+ * arrive. Until a tile is near the viewport it shows its poster frame only;
+ * once loaded, its source stays so scrolling back does not refetch.
+ */
 function Clip({ name }: { name: ClipName }) {
   const ref = useRef<HTMLVideoElement>(null);
+  const [loaded, setLoaded] = useState(false);
+  const [visible, setVisible] = useState(false);
   useEffect(() => {
     const video = ref.current;
     if (!video) return;
@@ -21,25 +28,31 @@ function Clip({ name }: { name: ClipName }) {
     // autoplay a video it cannot see is muted.
     video.muted = true;
     if (window.matchMedia?.('(prefers-reduced-motion: reduce)').matches) return;
-    // Older engines (and jsdom) return nothing from play() rather than a promise.
-    const play = () => { void video.play()?.catch?.(() => {}); };
-    if (typeof IntersectionObserver === 'undefined') { play(); return; }
+    // Older engines (and jsdom) have no observer: treat every tile as visible.
+    if (typeof IntersectionObserver === 'undefined') { setLoaded(true); setVisible(true); return; }
     const io = new IntersectionObserver(([entry]) => {
-      if (entry.isIntersecting) play();
-      else video.pause();
-    });
+      setVisible(entry.isIntersecting);
+      if (entry.isIntersecting) setLoaded(true);
+    }, { rootMargin: '120px 0px' });
     io.observe(video);
     return () => io.disconnect();
   }, []);
+  useEffect(() => {
+    const video = ref.current;
+    if (!video || !loaded) return;
+    // Older engines (and jsdom) return nothing from play() rather than a promise.
+    if (visible) void video.play()?.catch?.(() => {});
+    else video.pause();
+  }, [loaded, visible]);
   return (
     <video
       ref={ref}
-      src={`/login-stack/${name}.mp4`}
+      src={loaded ? `/login-stack/${name}.mp4` : undefined}
       poster={`/login-stack/${name}.jpg`}
       muted
       loop
       playsInline
-      preload="metadata"
+      preload={loaded ? 'metadata' : 'none'}
       aria-hidden="true"
       tabIndex={-1}
       className="login-stack__video"
