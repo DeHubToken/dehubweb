@@ -1,8 +1,8 @@
 import { useEffect, useRef, useState } from 'react';
 
 /**
- * While a track is audible the volume bar shows it: a loose swarm of notes
- * floats up out of the filled part toward the handle, and a thin arc slides out of the handle
+ * While a track is audible, notes drift inside the volume tube,
+ * and a thin arc slides out of the handle
  * on each beat. Drawn over the slider with touches passing through; still and
  * empty when paused, muted or with reduced motion on.
  *
@@ -22,17 +22,15 @@ const rand = (n: number) => { const v = Math.sin(n * 12.9898) * 43758.5453; retu
 
 /** Where note slot `i` is at time `t`: every cycle it reappears at a new random spot. */
 function noteAt(i: number, t: number, level: number, fillEnd: number, cy: number, trackHeight: number) {
-  const lift = trackHeight / 8;
   const duration = (1.8 + 1.6 * rand(i + 0.13)) / (0.75 + 0.5 * level);
   const phase = t / duration + rand(i + 0.71);
   const cycle = Math.floor(phase);
   const p = phase - cycle;
   const r = (j: number) => rand(i * 31.7 + cycle * 7.3 + j);
   const x = r(1) * fillEnd * 0.85 + p * (18 + 30 * r(2));
-  const y = cy + (r(3) - 0.5) * trackHeight * 0.8 - p * (5 + 10 * r(4)) * lift
-    + Math.sin(p * Math.PI * 2 * (0.6 + r(5)) + r(6) * Math.PI * 2) * 2 * lift;
+  const y = cy + Math.sin(p * Math.PI * 2 * (0.6 + r(5)) + r(6) * Math.PI * 2) * trackHeight * 0.08;
   const alpha = Math.pow(Math.sin(Math.PI * p), 0.8) * Math.max(0, Math.min(1, (fillEnd + 14 - x) / 10));
-  return { x, y, alpha, scale: 0.75 + 0.6 * r(7), rot: (r(8) - 0.5) * 0.7, glyph: i % 2 };
+  return { x, y, alpha, scale: 0.8 + 0.2 * r(7), rot: (r(8) - 0.5) * 0.3, glyph: i % 2 };
 }
 
 interface VolumeSoundCueProps {
@@ -98,12 +96,15 @@ export function VolumeSoundCue({ level, active, trackHeight, thumbRadius }: Volu
         const thumbX = thumbRadius + value * (width - thumbRadius * 2);
         const fillEnd = thumbX - thumbRadius;
 
-        // A loose swarm of notes: each pops up somewhere along the fill and
-        // floats off up and to the right on its own path, then fades.
-        const note = Math.max(6, trackHeight + 1);
+        // Notes stay behind the rounded tube walls, even while drifting.
+        const note = trackHeight * 0.65;
         const lift = trackHeight / 8;
         const count = Math.max(2, Math.min(NOTE_SLOTS, Math.round(fillEnd / 18)));
         if (fillEnd > note) {
+          ctx.save();
+          ctx.beginPath();
+          ctx.roundRect(thumbRadius, cy - trackHeight / 2, Math.max(0, width - thumbRadius * 2), trackHeight, trackHeight / 2);
+          ctx.clip();
           ctx.lineJoin = 'round';
           for (let i = 0; i < count; i++) {
             const n = noteAt(i, t, value, fillEnd, cy, trackHeight);
@@ -117,7 +118,7 @@ export function VolumeSoundCue({ level, active, trackHeight, thumbRadius }: Volu
             ctx.lineWidth = 1 / Math.max(lift, .75);
             shapes[n.glyph].forEach(part => { ctx.stroke(part); ctx.fill(part); });
           }
-          ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+          ctx.restore();
         }
 
         // One thin arc out of the handle per beat.

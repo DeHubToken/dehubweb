@@ -2528,9 +2528,6 @@
     "bio": "Bio",
     "bioPlaceholder": "Opowiedz o sobie...",
     "socialLinks": "Linki społecznościowe",
-    "socialFollowers": "Obserwujący na {{platform}}",
-    "socialFollowersHint": "Wyświetlane na Twoim profilu jako część całkowitego zasięgu. Wpisz numer samodzielnie — nie odczytujemy go z platformy.",
-    "socialFollowersPlaceholder": "np. 12500",
     "profileUpdated": "Profil zaktualizowany pomyślnie",
     "failedLoadProfile": "Nie udało się załadować danych profilu",
     "imageTooLarge5": "Obraz musi być mniejszy niż 5MB",
@@ -2936,7 +2933,15 @@
     "solanaLinked": "Portfel Solana połączony",
     "solanaLinkFailed": "Nie udało się połączyć tego portfela",
     "solanaUnlinked": "Portfel Solana odłączony",
-    "solanaUnlinkFailed": "Nie udało się odłączyć tego portfela"
+    "solanaUnlinkFailed": "Nie udało się odłączyć tego portfela",
+    "socialConnectHint": "Połącz konto, aby pokazać jego prawdziwą liczbę obserwujących w łącznym zasięgu. Dane pochodzą bezpośrednio z platformy.",
+    "socialConnect": "Połącz",
+    "socialConnectAria": "Połącz {{platform}}",
+    "socialConnected": "Połączono {{platform}}",
+    "socialConnectedShort": "Połączono",
+    "socialConnectFailed": "Nie udało się połączyć {{platform}}. Spróbuj ponownie.",
+    "socialVerifiedFollowers": "{{value}} obserwujących",
+    "socialFollowersPending": "Aktualizowanie liczby obserwujących"
   },
   "common": {
     "confirm": "Potwierdź",
@@ -3854,7 +3859,7 @@
       "total": "Całkowity zasięg",
       "breakdownTitle": "Skąd się bierze ten zasięg",
       "dehubFollowers": "Obserwujący DeHub",
-      "selfReported": "Liczby obserwujących społeczności są wprowadzane przez twórcę."
+      "verified": "Dane społecznościowe pochodzą z kont połączonych przez twórcę."
     },
     "loginDescription": "Zaloguj się, aby zobaczyć i zarządzać swoim profilem.",
     "replyThread": {

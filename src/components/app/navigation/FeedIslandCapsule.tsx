@@ -9,7 +9,7 @@ import { AnimatePresence, motion, useReducedMotion } from 'framer-motion';
 import Check from "@/components/ui/cut-icons/check";
 import LayoutGrid from "@/components/ui/cut-icons/apps";
 
-import Bell from "@/components/ui/cut-icons/alerts";
+import { NotificationBell } from './NotificationBell';
 import Menu from "@/components/ui/cut-icons/menu";
 import SlidersHorizontal from "@/components/ui/cut-icons/settings";
 import Plus from "@/components/ui/cut-icons/add";
@@ -120,13 +120,8 @@ export function FeedIslandCapsule({
           </span>
         </button>
         <div className="flex min-w-[28px] items-center justify-end">
-          <button onClick={onBellClick} tabIndex={visible ? 0 : -1} aria-label={_copy("copy.788011833a5a", { defaultValue: "Notifications" })} className="relative flex h-7 w-7 shrink-0 items-center justify-center">
-            <Bell className="w-[26px] h-[26px]" strokeWidth={1.9} />
-            {unread > 0 && (
-              <span data-unread-chip className="absolute -top-0.5 -right-1.5 min-w-[16px] h-[16px] px-[3px] bg-red-500 text-white text-[9px] font-bold rounded-[6px] flex items-center justify-center leading-none">
-                {unread > 99 ? '99+' : unread}
-              </span>
-            )}
+          <button onClick={onBellClick} tabIndex={visible ? 0 : -1} aria-label={`${_copy("copy.788011833a5a", { defaultValue: "Notifications" })}${unread > 0 ? ` (${unread})` : ''}`} className="relative flex h-7 w-7 shrink-0 items-center justify-center">
+            <NotificationBell unread={unread} active={visible && !tabsOpen} />
           </button>
         </div>
       </div>

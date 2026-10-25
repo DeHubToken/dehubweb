@@ -13,6 +13,8 @@
  */
 
 import { useEffect, useRef, useState, type ReactNode } from 'react';
+import { useTranslation } from 'react-i18next';
+import { Input } from '@/components/ui/input';
 import Play from '@/components/ui/cut-icons/play';
 import { AppState } from '@/components/app/AppState';
 import '@/components/app/audio/audio-studio.css';
@@ -52,12 +54,16 @@ export function ChartDesk<S extends string>({
   /** `next` selects the entry after this one, wrapping to the top. */
   renderSelected: (id: string, controls: { next: () => void }) => ReactNode;
 }) {
+  const { t } = useTranslation();
+  const [search, setSearch] = useState('');
+  const query = search.trim().toLocaleLowerCase();
+  const matchingRows = rows.filter(row => !query || `${row.title} ${row.subtitle ?? ''}`.toLocaleLowerCase().includes(query));
   const [selectedId, setSelectedId] = useState<string | null>(null);
-  const selected = rows.find(row => row.id === selectedId) || rows[0];
-  const selectedIndex = selected ? rows.indexOf(selected) : -1;
+  const selected = matchingRows.find(row => row.id === selectedId) || matchingRows[0];
+  const selectedIndex = selected ? matchingRows.indexOf(selected) : -1;
   const sortName = sorts.find(option => option.value === sort)?.label;
   const next = () => {
-    if (rows.length > 1) setSelectedId(rows[(selectedIndex + 1) % rows.length].id);
+    if (matchingRows.length > 1) setSelectedId(matchingRows[(selectedIndex + 1) % matchingRows.length].id);
   };
   const scrollRef = useRef<HTMLDivElement>(null);
 
@@ -70,6 +76,14 @@ export function ChartDesk<S extends string>({
   return (
     <div data-listening-desk>
       {header}
+      <Input
+        type="search"
+        value={search}
+        onChange={event => setSearch(event.target.value)}
+        aria-label={`${t('common.search', { defaultValue: 'Search' })}: ${sortLabel}`}
+        placeholder={t('common.search', { defaultValue: 'Search' })}
+        className="mb-3"
+      />
       <div data-audio-chart-sort role="group" aria-label={sortLabel}>
         {sorts.map(option => <button key={option.value} type="button" aria-pressed={sort === option.value} onClick={() => onSort(option.value)}>{option.label}</button>)}
       </div>
@@ -77,23 +91,23 @@ export function ChartDesk<S extends string>({
         <div className="flex gap-3 overflow-hidden pr-8">
           {Array.from({ length: 3 }).map((_, i) => (
             <div key={i} className="w-[280px] flex-shrink-0">
-              <div className="aspect-video rounded-xl bg-zinc-800 animate-pulse" />
-              <div className="mt-2 h-3 bg-zinc-800 rounded w-3/4 animate-pulse" />
-              <div className="mt-1 h-2.5 bg-zinc-800 rounded w-1/2 animate-pulse" />
+              <div className="aspect-video rounded-xl theme-skeleton animate-pulse" />
+              <div className="mt-2 h-3 theme-skeleton rounded w-3/4 animate-pulse" />
+              <div className="mt-1 h-2.5 theme-skeleton rounded w-1/2 animate-pulse" />
             </div>
           ))}
         </div>
       ) : rows.length === 0 || !selected ? (
-        <AppState icon={empty.icon} title={empty.title} size="compact" />
+        <AppState icon={empty.icon} title={query ? t('common.noResults', { defaultValue: 'No results found' }) : empty.title} size="compact" />
       ) : (
         <div data-listening-desk-layout data-chart-thumbs={thumbs}>
           <div data-listening-desk-player>
-            <span data-desk-rank>#{selectedIndex + 1}{sortName ? ` · ${sortName}` : ''}</span>
+            <span data-desk-rank>#{rows.indexOf(selected) + 1}{sortName ? ` · ${sortName}` : ''}</span>
             {renderSelected(selected.id, { next })}
           </div>
           <div data-listening-desk-tracks><div data-listening-desk-scroll ref={scrollRef}>
-            {rows.map((row, index) => <button type="button" key={row.id} data-selected={row.id === selected.id} onClick={() => setSelectedId(row.id)} aria-pressed={row.id === selected.id}>
-              <span data-track-number>{String(index + 1).padStart(2, '0')}</span>
+            {matchingRows.map(row => <button type="button" key={row.id} data-selected={row.id === selected.id} onClick={() => setSelectedId(row.id)} aria-pressed={row.id === selected.id}>
+              <span data-track-number>{String(rows.indexOf(row) + 1).padStart(2, '0')}</span>
               {thumbs !== 'none' && <span data-chart-thumb={thumbs}>{row.thumb ? <img src={row.thumb} alt="" loading="lazy" /> : <Play className="h-4 w-4" />}</span>}
               <span data-track-info><strong>{row.title}</strong>{row.subtitle && <small>{row.subtitle}</small>}</span>
               {row.trailing != null && <span data-track-duration>{row.trailing}</span>}

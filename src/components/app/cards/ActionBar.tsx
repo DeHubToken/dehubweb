@@ -72,7 +72,7 @@ import { hideDislikedPost, restoreDislikedPost } from '@/lib/disliked-posts-stor
 import { applyVoteStateToNFT, isVoteConfirmed } from '@/lib/engagement';
 import { usePostLinkCopyCount, useLinkCopyFloor, useTrackPostLinkCopy } from '@/hooks/use-link-copy-count';
 import { isPostReposted, markReposted, unmarkReposted } from '@/lib/repost-cache';
-import { reconcileCommentCount, subscribeToCommentCount } from '@/lib/comment-count-events';
+import { useCommentCount } from '@/lib/comment-count-store';
 import {
   DOUBLE_TAP_LIKE_EVENT,
   OPEN_REACTIONS_EVENT,
@@ -414,33 +414,7 @@ export function ActionBar({
   const selfWeight = useEngagementWeight();
   const voteWeight = voteWeightProp ?? selfWeight;
 
-  const serverCommentCount = rawCommentCount ?? 0;
-  // `pending` is the net change posted or deleted from this client that the
-  // server figure has not caught up with yet — it decides which way a stale
-  // server count is wrong. See reconcileCommentCount.
-  const [commentTally, setCommentTally] = useState({ count: serverCommentCount, pending: 0 });
-  const commentCount = commentTally.count;
-  const commentCountPostRef = useRef(postId);
-  useEffect(() => {
-    if (commentCountPostRef.current !== postId) {
-      commentCountPostRef.current = postId;
-      setCommentTally({ count: serverCommentCount, pending: 0 });
-      return;
-    }
-    setCommentTally(({ count, pending }) => {
-      const next = reconcileCommentCount(count, serverCommentCount, pending);
-      return { count: next, pending: next === serverCommentCount ? 0 : pending };
-    });
-  }, [postId, serverCommentCount]);
-  useEffect(() => {
-    if (!postId) return;
-    return subscribeToCommentCount(postId, (delta) => {
-      setCommentTally(({ count, pending }) => ({
-        count: Math.max(0, count + delta),
-        pending: pending + delta,
-      }));
-    });
-  }, [postId]);
+  const commentCount = useCommentCount(postId, rawCommentCount ?? 0);
   
   // Optimistic repost count: increment locally on repost for instant feedback
   const [repostDelta, setRepostDelta] = useState(0);

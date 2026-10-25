@@ -1,3 +1,4 @@
+import '@/styles/skeleton.css';
 import "./lib/storage-quota-guard"; // Must run first: keeps localStorage writable when it fills up.
 import "./lib/canvas-polyfills"; // Must run before any canvas usage (Safari 15 compat)
 import "./lib/media-session"; // Install page-close cleanup before any player mounts.

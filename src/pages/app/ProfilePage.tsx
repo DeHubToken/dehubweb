@@ -1,4 +1,5 @@
 import { useTranslation as _useCopy } from 'react-i18next';
+import { useRouteContentReady } from '@/hooks/use-route-content-ready';
 import { useSurfaceDraft } from '@/hooks/use-surface-draft';
 import { tokenLabel } from '@/lib/token-label';
 import { useState, useMemo, useRef, useCallback, useEffect } from 'react';
@@ -44,7 +45,7 @@ import { buildAvatarUrl, extractAvatarPath, buildImageUrl, buildFeedImageUrls, b
 import { ProfileHeader } from '@/components/app/profile/ProfileHeader';
 import { ProfileTabContent } from '@/components/app/profile/ProfileTabContent';
 import { ProfileContentToolbar } from '@/components/app/profile/ProfileContentToolbar';
-import { ProfileSkeleton } from '@/components/app/profile/ProfileSkeleton';
+import { QuietPostLoading } from '@/components/app/QuietPostLoading';
 import { ProfileOptionsContent } from '@/components/app/profile/ProfileOptionsDrawer';
 import { getDefaultBanner, parseDefaultProfileTab, isProfileTabValue, type TabValue } from '@/components/app/profile/ProfileConstants';
 import { useScrollFadeMask } from '@/components/app/feeds/useScrollFadeMask';
@@ -229,6 +230,7 @@ function PinnedPostSection({ profileAddress }: { profileAddress: string }) {
 }
 
 export default function ProfilePage() {
+  useRouteContentReady();
   const { t: _copy } = _useCopy();
   const { t } = useTranslation();
   const { theme } = useAppTheme();
@@ -476,12 +478,11 @@ export default function ProfilePage() {
     );
   };
 
-  // Loading state — show skeleton only if we don't have profile data yet.
-  // Don't re-show skeleton when auth resolves (keepPreviousData handles the transition).
-  // Also show skeleton if profile errored but auth is still loading or profile is refetching
+  // Keep the existing profile during refresh; a cold load only needs quiet dots.
+  // Also wait if auth is still loading or the profile is refetching
   // (race condition: private profiles return empty shell before auth token is available).
   if (!data.profile && (data.isAuthLoading || data.isLoadingProfile || data.isFetchingProfile)) {
-    return <div className="relative"><PageHeader overlay plainBack /><ProfileSkeleton /></div>;
+    return <div className="relative"><PageHeader overlay plainBack /><QuietPostLoading /></div>;
   }
 
   // Auth gate for own profile

@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState, type HTMLAttributes } from 'react';
 import { useDislikeVanish } from '@/hooks/use-dislike-vanish';
+import { useRetainedPostPinned } from '@/lib/retained-post-surface';
 
 type Subscription = { intersect: (entry: IntersectionObserverEntry) => void; resize: (entry: ResizeObserverEntry) => void };
 const subscriptions = new Map<Element, Subscription>();
@@ -35,6 +36,9 @@ export function WindowedFeedItem({ children, estimatedHeight, eager = false, sty
     vanishOnDislike?: string | number | null;
   }) {
   const supported = typeof IntersectionObserver !== 'undefined' && typeof ResizeObserver !== 'undefined';
+  const pinned = useRetainedPostPinned(vanishOnDislike);
+  const pinnedRef = useRef(pinned);
+  pinnedRef.current = pinned;
   const [mounted, setMounted] = useState(eager || !supported);
   const root = useRef<HTMLDivElement>(null);
   const height = useRef(estimatedHeight);
@@ -53,7 +57,7 @@ export function WindowedFeedItem({ children, estimatedHeight, eager = false, sty
       intersect(entry) {
         if (entry.isIntersecting) { setMounted(true); return; }
         // Hidden cached tabs and an open dialog must retain their current state.
-        if (!entry.boundingClientRect.height || element.contains(document.activeElement)
+        if (pinnedRef.current || !entry.boundingClientRect.height || element.contains(document.activeElement)
           || document.querySelector('[role="dialog"][data-state="open"], [aria-modal="true"]')) return;
         if (mountedRef.current) height.current = entry.boundingClientRect.height;
         setMounted(false);
@@ -64,8 +68,9 @@ export function WindowedFeedItem({ children, estimatedHeight, eager = false, sty
   const vanished = useDislikeVanish(vanishOnDislike, root);
   if (vanished) return null;
 
-  return <div {...props} ref={root} data-feed-mounted={mounted ? 'true' : 'false'}
-    style={mounted ? style : { ...style, height: height.current, boxSizing: 'border-box', overflow: 'hidden' }}>
-    {mounted ? children : null}
+  const keepMounted = mounted || pinned;
+  return <div {...props} ref={root} data-feed-mounted={keepMounted ? 'true' : 'false'}
+    style={keepMounted ? style : { ...style, height: height.current, boxSizing: 'border-box', overflow: 'hidden' }}>
+    {keepMounted ? children : null}
   </div>;
 }

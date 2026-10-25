@@ -54,7 +54,7 @@ function ListingEmbed({ listingId, fallback }: { listingId: string; fallback?: R
   const { data: prices } = useTokenPrices();
 
   if (isLoading) {
-    return <div className="mt-2 h-24 rounded-xl bg-white/[0.04] animate-pulse" />;
+    return <div className="mt-2 h-24 rounded-xl theme-skeleton animate-pulse" />;
   }
   if (!listing) return <>{fallback}</>;
 
@@ -117,7 +117,7 @@ function StoreEmbed({ storeId, fallback }: { storeId: string; fallback?: ReactNo
   const { data: store, isLoading } = useStoreById(storeId);
 
   if (isLoading) {
-    return <div className="mt-2 h-16 rounded-xl bg-white/[0.04] animate-pulse" />;
+    return <div className="mt-2 h-16 rounded-xl theme-skeleton animate-pulse" />;
   }
   if (!store) return <>{fallback}</>;
 

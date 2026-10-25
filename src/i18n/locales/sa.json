@@ -6461,8 +6461,6 @@
     "bio": "परिचयवर्णनम्",
     "bioPlaceholder": "स्वविषये वदतु...",
     "socialLinks": "सामाजिकसम्पर्काः",
-    "socialFollowersHint": "मते कारकलक्षणादिकं शब्दार्थरत्नेऽस्मामिर्दर्शितं यथा इन्द्रसहिता ऋभवो यूयम् \"इमाम् अस्मदीयां\" धियं स्तुतिं \"नः अस्माकं\" सातये धनादिलाभा",
-    "socialFollowersPlaceholder": "इ. स. १२,५००",
     "profileUpdated": "परिचयः सफलतया अद्यतनीकृतः",
     "failedLoadProfile": "परिचयदत्तांशः लोडयितुं विफलम्",
     "imageTooLarge5": "चित्रं ५MB इतः न्यूनं भवेत्",
@@ -7959,8 +7957,7 @@
     "reach": {
       "total": "पूर्णतः पुनः प्राप्त",
       "breakdownTitle": "इह कस्मान्न भवति?",
-      "dehubFollowers": "DEHUB अनुयायी",
-      "selfReported": "समाजे प्रवेष्टुमर्हति सृष्टिकर्ता प्रविशति ।"
+      "dehubFollowers": "DEHUB अनुयायी"
     },
     "loginDescription": "स्वपरिचयं द्रष्टुं प्रबन्धयितुं च प्रविशतु।",
     "replyThread": {

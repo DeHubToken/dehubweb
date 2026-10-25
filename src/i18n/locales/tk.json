@@ -6566,9 +6566,6 @@
     "bio": "Hakynda",
     "bioPlaceholder": "Özüňiz hakynda gürrüň beriň...",
     "socialLinks": "Jemgyýetçilik torlary",
-    "socialFollowers": "{{platform}}",
-    "socialFollowersHint": "Ýüküňiň bir bölegi hökmünde profilyňda görkezilýär. Bu sany özüňiz ýazyň — biz ony platformdan okamaýarys.",
-    "socialFollowersPlaceholder": "12500 ýyl",
     "profileUpdated": "Profil üstünlikli täzelendi",
     "failedLoadProfile": "Profil maglumatlaryny ýüklemek başa barmady",
     "imageTooLarge5": "Surat 5MB-dan kiçi bolmaly",
@@ -8048,8 +8045,7 @@
     "reach": {
       "total": "Ýüklüge ýetmek",
       "breakdownTitle": "Bu çakylyk nireden gelýär?",
-      "dehubFollowers": "DeHub diňleýjileri",
-      "selfReported": "Işgärleriň sanyna Ýaradyjy girýär."
+      "dehubFollowers": "DeHub diňleýjileri"
     },
     "loginDescription": "Profiliňizi görmek we dolandyrmak üçin giriň.",
     "replyThread": {

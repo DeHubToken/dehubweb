@@ -2530,9 +2530,6 @@
     "bio": "Bio",
     "bioPlaceholder": "Spune-ne despre tine...",
     "socialLinks": "Linkuri sociale",
-    "socialFollowers": "Urmăritori pe {{platform}}",
-    "socialFollowersHint": "Afișat în profilul tău ca parte a razei tale totale de acțiune. Introduceți singur numărul — nu îl citim de pe platformă.",
-    "socialFollowersPlaceholder": "de ex. 12500",
     "profileUpdated": "Profil actualizat cu succes",
     "failedLoadProfile": "Nu s-au putut încărca datele profilului",
     "imageTooLarge5": "Imaginea trebuie să aibă sub 5MB",
@@ -3849,8 +3846,7 @@
     "reach": {
       "total": "Acoperire totală",
       "breakdownTitle": "De unde provine această acoperire",
-      "dehubFollowers": "Urmăritori DeHub",
-      "selfReported": "Numărul de urmăritori sociali este introdus de creator."
+      "dehubFollowers": "Urmăritori DeHub"
     },
     "loginDescription": "Conectează-te pentru a-ți vizualiza și gestiona profilul.",
     "replyThread": {

@@ -201,7 +201,7 @@ export function LoginWalletsStep({
     return (
       <div className="space-y-3" aria-hidden>
         {[0, 1, 2].map((i) => (
-          <div key={i} className="w-full h-12 rounded-xl bg-white/10 animate-pulse" />
+          <div key={i} className="w-full h-12 rounded-xl theme-skeleton animate-pulse" />
         ))}
       </div>
     );

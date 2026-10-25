@@ -4,6 +4,7 @@ import { useTranslation as _useCopy } from 'react-i18next';
 import { useSurfaceDraft } from '@/hooks/use-surface-draft';
 import { isShortsPhoto, interleaveShorts } from '@/lib/shorts-photos';
 import { mapToShortVideo } from '@/lib/short-video';
+import { isTokenUnlocked } from '@/lib/unlocked-tokens-store';
 /**
  * Shorts Feed Component
  * =====================
@@ -282,9 +283,12 @@ interface ShortsFeedProps {
   showFilters?: boolean;
   isRefreshing?: boolean;
   refreshKey?: number;
+  /** A short tapped elsewhere in the app: open the viewer on it once the list has it. */
+  startShortId?: string;
+  onStartShortConsumed?: () => void;
 }
 
-export function ShortsFeed({ showFilters = false, isRefreshing = false, refreshKey = 0 }: ShortsFeedProps) {
+export function ShortsFeed({ showFilters = false, isRefreshing = false, refreshKey = 0, startShortId, onStartShortConsumed }: ShortsFeedProps) {
   const { t: _copy } = _useCopy();
   const { t } = useI18n();
   const { isCollapsed } = useSidebarCollapse();
@@ -441,11 +445,18 @@ export function ShortsFeed({ showFilters = false, isRefreshing = false, refreshK
   // Apply date filter on raw NFTs, then sort and map to ShortVideo array
   const allShorts = useMemo(() => {
     const dateFiltered = isFollowingMode ? allRawNFTs : filterByDate(allRawNFTs, selectedUploadDate.value);
-    // Exclude PPV content from shorts
-    const nonPPV = dateFiltered.filter((nft: any) => !nft.is_ppv && !nft.streamInfo?.isPayPerView);
+    // Exclude PPV content from shorts, except a pay-per-view this viewer has
+    // already unlocked. `startShortId` is in the deps so the list is rebuilt
+    // on the tap that follows an unlock.
+    const nonPPV = dateFiltered.filter((nft: any) => {
+      const isPPV = !!nft.is_ppv || !!nft.streamInfo?.isPayPerView;
+      return !isPPV || isTokenUnlocked(String(nft.tokenId || nft.id || nft.token_id));
+    });
     const sorted = isFollowingMode ? nonPPV : applySorting(nonPPV, selectedSort.value);
     return sorted.map((nft: any, index: number) => mapToShortVideo(nft, index));
-  }, [allRawNFTs, selectedSort.value, selectedUploadDate.value, isFollowingMode]);
+    // The unlock check reads storage, so this rebuild is what picks up an unlock.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [allRawNFTs, selectedSort.value, selectedUploadDate.value, isFollowingMode, startShortId]);
 
   // Apply client-side duration filter
   const shorts = useMemo((): ShortVideo[] => {
@@ -458,6 +469,17 @@ export function ShortsFeed({ showFilters = false, isRefreshing = false, refreshK
     
     return allShorts;
   }, [allShorts, selectedDuration]);
+
+  // Open the viewer on the short that was tapped elsewhere. It waits until the
+  // list holds that short; if it never does, the feed simply stays as it is.
+  useEffect(() => {
+    if (!startShortId || shorts.length === 0) return;
+    const index = shorts.findIndex(short => String(short.id) === startShortId);
+    if (index < 0) return;
+    setSelectedIndex(index);
+    setViewerOpen(true);
+    onStartShortConsumed?.();
+  }, [startShortId, shorts, onStartShortConsumed]);
 
   // Check if any client-side filters are active
   const hasActiveFilters = selectedDuration.label !== 'Any' || selectedUploadDate.value !== 'all';

@@ -22,8 +22,8 @@ import { FeedCardSkeletonList } from '@/components/app/cards/FeedCardSkeleton';
 import { FEED_TABS } from '@/constants/app.constants';
 import { useShortsEnabled } from '@/contexts/ShortsEnabledContext';
 
-const SK = "bg-white/[0.06]";
-const SK_LIGHT = "bg-black/10";
+const SK = "theme-skeleton";
+const SK_LIGHT = "theme-skeleton";
 
 /**
  * Content-area stand-in: the animated DeHub mark, centred in whatever box the
@@ -49,8 +49,8 @@ export function FeedTabBarSkeleton() {
   const { shortsEnabled } = useShortsEnabled();
   const tabs = FEED_TABS.filter(tab => shortsEnabled || tab.value !== 'shorts');
   return (
-    <div data-home-skeleton-nav data-feed-nav-outer aria-hidden="true" className="sticky top-11 lg:top-0 bg-black z-50 px-2 pt-1 pb-3 sm:px-3 sm:pt-1 sm:pb-3 lg:pt-2">
-      <div data-feed-nav className="bg-zinc-900 rounded-xl">
+    <div data-home-skeleton-nav data-feed-nav-outer aria-hidden="true" className="sticky top-11 lg:top-0 bg-background z-50 px-2 pt-1 pb-3 sm:px-3 sm:pt-1 sm:pb-3 lg:pt-2">
+      <div data-feed-nav className="bg-card rounded-xl">
         <div className="flex h-[35px]">
           <div className="flex items-center justify-center px-3"><div className="home-skeleton-block w-4 h-4 rounded" /></div>
           {tabs.map(tab => (
@@ -102,7 +102,7 @@ function HomeLeftSidebarSkeleton() {
         </div>
       </div>
       {/* Nav bento — matches -mt-[8.5px] + lg:p-2.5 lg:space-y-[2px] from real */}
-      <div data-desktop-sidebar-bento className="relative -mt-[8.5px] bg-zinc-900 rounded-2xl flex-1 min-h-0 overflow-hidden">
+      <div data-side-panel data-desktop-sidebar-bento className="relative -mt-[8.5px] bg-zinc-900 rounded-2xl flex-1 min-h-0 overflow-hidden">
         <div className="lg:p-2.5 lg:space-y-[2px] flex flex-col items-stretch h-full">
           {Array.from({ length: 10 }).map((_, i) => (
             <div key={i} className="flex items-center gap-3 px-2.5 py-2.5 w-full">
@@ -204,7 +204,7 @@ export function ExploreSkeleton() {
     <div className="min-h-screen">
       {/* Search Header */}
       <div className="p-2 sm:p-3 space-y-2 sm:space-y-3">
-        <div data-glass-loading-surface className="bg-zinc-900 rounded-2xl p-3 sm:p-4">
+        <div data-page-bento data-glass-loading-surface className="bg-zinc-900 rounded-2xl p-3 sm:p-4">
           <div className="flex gap-2">
             <Skeleton className={`flex-1 h-[48px] rounded-xl ${SK}`} />
             <Skeleton className={`w-12 h-[48px] rounded-xl ${SK}`} />
@@ -212,7 +212,7 @@ export function ExploreSkeleton() {
         </div>
 
         {/* Tabs Bento */}
-        <div data-glass-loading-surface className="bg-zinc-900 rounded-2xl p-2">
+        <div data-page-bento data-glass-loading-surface className="bg-zinc-900 rounded-2xl p-2">
           <div className="flex">
             {Array.from({ length: 5 }).map((_, i) => (
               <div key={i} className="flex-1 flex items-center justify-center gap-2 py-2 px-2">
@@ -239,7 +239,7 @@ export function ProfileSkeleton() {
   return (
     <div className="p-2 sm:p-3 space-y-2 sm:space-y-3">
       {/* Profile Card Bento */}
-      <div data-glass-loading-surface className="max-sm:-mx-2 bg-zinc-900 rounded-2xl overflow-hidden">
+      <div data-page-bento data-glass-loading-surface className="max-sm:-mx-2 bg-zinc-900 rounded-2xl overflow-hidden">
         <Skeleton className={`aspect-[3/1] w-full ${SK}`} />
         <div className="px-4 sm:px-6 pb-4">
           <div className="flex items-end justify-between -mt-12 sm:-mt-14 mb-4">
@@ -285,7 +285,7 @@ export function ProfileSkeleton() {
 export function MessagesSkeleton() {
   return (
     <div className="h-full p-3 sm:p-4">
-      <div data-glass-loading-surface className="w-full h-[calc(100dvh-120px)] lg:h-[calc(100dvh-32px)] bg-zinc-900 rounded-2xl flex flex-col overflow-hidden">
+      <div data-page-bento data-glass-loading-surface className="w-full h-[calc(100dvh-120px)] lg:h-[calc(100dvh-32px)] bg-zinc-900 rounded-2xl flex flex-col overflow-hidden">
         {/* Header */}
         <div className="p-4">
           <div className="flex items-center justify-between mb-4">
@@ -317,7 +317,7 @@ export function NotificationsSkeleton() {
     <div className="min-h-screen">
       {/* Header */}
       <div className="p-3 sm:p-4">
-        <div data-glass-loading-surface className="bg-zinc-900 rounded-2xl px-4 py-3">
+        <div data-page-bento data-glass-loading-surface className="bg-zinc-900 rounded-2xl px-4 py-3">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-2">
               <Skeleton className={`w-9 h-9 rounded-xl ${SK}`} />
@@ -330,7 +330,7 @@ export function NotificationsSkeleton() {
 
       {/* Tab bar bento */}
       <div className="px-3 sm:px-4 py-2">
-        <div data-glass-loading-surface className="bg-zinc-900 rounded-2xl p-2">
+        <div data-page-bento data-glass-loading-surface className="bg-zinc-900 rounded-2xl p-2">
           <div className="flex gap-1 overflow-hidden">
             {Array.from({ length: 6 }).map((_, i) => (
               <div key={i} className="flex-shrink-0 flex items-center justify-center gap-2 px-3 sm:px-4 py-2">
@@ -404,7 +404,7 @@ export function SettingsSkeleton() {
   return (
     <div className="min-h-screen p-3 sm:p-4">
       {/* Header Bento */}
-      <div data-glass-loading-surface className="bg-zinc-900 rounded-2xl p-4 sm:p-6 mb-4">
+      <div data-page-bento data-glass-loading-surface className="bg-zinc-900 rounded-2xl p-4 sm:p-6 mb-4">
         <div className="flex items-center justify-between mb-4">
           <div className="flex items-center gap-4">
             <Skeleton className={`w-10 h-10 rounded-xl ${SK}`} />
@@ -424,7 +424,7 @@ export function SettingsSkeleton() {
       </div>
 
       {/* Content Bento */}
-      <div data-glass-loading-surface className="bg-zinc-900 rounded-2xl p-4 sm:p-6">
+      <div data-page-bento data-glass-loading-surface className="bg-zinc-900 rounded-2xl p-4 sm:p-6">
         <ContentLoader minHeight="42vh" />
       </div>
     </div>
@@ -437,7 +437,7 @@ export function SettingsSkeleton() {
 export function FeaturesSkeleton() {
   return (
     <div className="min-h-screen p-3 sm:p-4">
-      <div data-glass-loading-surface className="bg-zinc-900 rounded-2xl p-4 sm:p-6 mb-4">
+      <div data-page-bento data-glass-loading-surface className="bg-zinc-900 rounded-2xl p-4 sm:p-6 mb-4">
         <div className="flex items-center justify-between mb-4">
           <div className="flex items-center gap-3">
             <Skeleton className={`w-12 h-12 rounded-xl ${SK}`} />
@@ -482,7 +482,7 @@ export function GridSkeleton() {
   return (
     <div className="p-3 sm:p-4 space-y-4">
       {/* Header bento */}
-      <div data-glass-loading-surface className="bg-zinc-900 rounded-2xl p-4">
+      <div data-page-bento data-glass-loading-surface className="bg-zinc-900 rounded-2xl p-4">
         <div className="flex items-center gap-3 mb-4">
           <Skeleton className={`w-10 h-10 rounded-xl ${SK}`} />
           <Skeleton className={`h-5 w-28 ${SK}`} />
@@ -506,7 +506,7 @@ export function GridSkeleton() {
 export function GenericPageSkeleton() {
   return (
     <div className="p-3 sm:p-4 space-y-4">
-      <div data-glass-loading-surface className="bg-zinc-900 rounded-2xl p-4 sm:p-6">
+      <div data-page-bento data-glass-loading-surface className="bg-zinc-900 rounded-2xl p-4 sm:p-6">
         <div className="flex items-center gap-3 mb-4">
           <Skeleton className={`w-10 h-10 rounded-xl ${SK}`} />
           <div className="space-y-2">

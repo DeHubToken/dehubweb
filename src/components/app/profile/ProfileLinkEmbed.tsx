@@ -41,7 +41,7 @@ export function ProfileLinkEmbed({ username, fallback = null }: ProfileLinkEmbed
   });
 
   if (isLoading) {
-    return <div className="mt-2 h-16 rounded-xl bg-white/[0.04] animate-pulse" />;
+    return <div className="mt-2 h-16 rounded-xl theme-skeleton animate-pulse" />;
   }
 
   // The username half of the route table is a catch-all: anything that is not

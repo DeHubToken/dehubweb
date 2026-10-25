@@ -6579,9 +6579,6 @@
     "bio": "Biografia",
     "bioPlaceholder": "Explica'ns sobre tu...",
     "socialLinks": "Enllaços socials",
-    "socialFollowers": "Seguidors a {{platform}}",
-    "socialFollowersHint": "Es mostra al teu perfil com a part del teu abast total. Introdueix el número tu mateix: no el llegim des de la plataforma.",
-    "socialFollowersPlaceholder": "p. ex. 12500",
     "profileUpdated": "Perfil actualitzat correctament",
     "failedLoadProfile": "Error en carregar les dades del perfil",
     "imageTooLarge5": "La imatge ha de ser inferior a 5MB",
@@ -8091,8 +8088,7 @@
     "reach": {
       "total": "Abast total",
       "breakdownTitle": "D'on ve aquest abast",
-      "dehubFollowers": "Seguidors de DeHub",
-      "selfReported": "El creador introdueix els recomptes de seguidors socials."
+      "dehubFollowers": "Seguidors de DeHub"
     },
     "loginDescription": "Inicia sessió per veure i gestionar el teu perfil.",
     "replyThread": {

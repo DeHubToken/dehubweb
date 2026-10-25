@@ -1,0 +1,42 @@
+[data-shorts-viewer][data-shorts-mini] {
+  background: #000 !important;
+  z-index: 140;
+  backdrop-filter: none !important;
+  box-shadow: 0 4px 24px #0006;
+}
+[data-shorts-mini] > :not([data-shorts-layout]):not([data-shorts-mini-controls]),
+[data-shorts-mini] [data-shorts-layout] > :not([data-shorts-player]),
+[data-shorts-mini] [data-shorts-player] > :not([data-shorts-pager]),
+[data-shorts-mini] [data-shorts-picture] > :not([data-shorts-media-slot]) {
+  display: none !important;
+}
+[data-shorts-mini] [data-shorts-layout],
+[data-shorts-mini] [data-shorts-player] {
+  width: 100% !important;
+  height: 100% !important;
+  max-width: none !important;
+  padding: 0 !important;
+  aspect-ratio: auto !important;
+}
+[data-shorts-mini-controls] {
+  position: absolute;
+  inset: 0;
+  z-index: 40;
+}
+[data-shorts-viewer][data-shorts-mini-drag],
+[data-shorts-mini-drag] [data-shorts-player],
+[data-shorts-mini-drag] [data-shorts-picture],
+[data-shorts-mini-drag] video {
+  background: transparent !important;
+  backdrop-filter: none !important;
+}
+[data-shorts-mini-drag] > :not([data-shorts-layout]):not([data-shorts-drag-backdrop]),
+[data-shorts-mini-drag] [data-shorts-layout] > :not([data-shorts-player]),
+[data-shorts-mini-drag] [data-shorts-player] > :not([data-shorts-pager]),
+[data-shorts-mini-drag] [data-shorts-picture] > :not([data-shorts-media-slot]) {
+  opacity: var(--shorts-drag-chrome-opacity, 0) !important;
+  pointer-events: none !important;
+}
+@media (prefers-reduced-motion: reduce) {
+  [data-shorts-viewer] { transform: none !important; }
+}

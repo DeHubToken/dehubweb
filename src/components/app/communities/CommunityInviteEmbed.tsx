@@ -42,7 +42,7 @@ export function CommunityInviteEmbed({ code, fallback = null }: CommunityInviteE
   const { data: preview, isLoading, isError } = useInvitePreview(code);
 
   if (isLoading) {
-    return <div className="mt-2 h-16 rounded-xl bg-white/[0.04] animate-pulse" />;
+    return <div className="mt-2 h-16 rounded-xl theme-skeleton animate-pulse" />;
   }
 
   // The RPC is set to retry: false, so a transient failure lands here rather

@@ -14,6 +14,7 @@ import type { NavItem } from '@/types/app.types';
 import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
 import { ThemedIcon } from '@/components/app/war/WarHudIcon';
 import AssistantNavIcon from '@/components/ui/AssistantNavIcon';
+import { NotificationBell } from './NotificationBell';
 
 // Map nav item labels to i18n keys. Exported because the menu-search filter
 // (nav-search.ts) has to match on the same translated label a row renders.
@@ -139,7 +140,10 @@ export function SidebarNavItem({
   };
 
   const showAvatar = avatarUrl !== undefined;
-  const navIcon = (className: string) => isDesktop && item.path === '/app/assistant' ? (
+  const isNotifications = item.path === '/app/notifications' || item.path === '/notifications';
+  const navIcon = (className: string) => isNotifications ? (
+    <NotificationBell unread={notificationCount} size={isDesktop ? 20 : 22} />
+  ) : isDesktop && item.path === '/app/assistant' ? (
     <AssistantNavIcon className={className} />
   ) : !isDesktop && item.path !== '/app/messages' && item.themedIcon ? (
     <ThemedIcon icon={item.themedIcon} alt="" className={cn(className, 'object-contain')} />
@@ -247,6 +251,7 @@ export function SidebarNavItem({
     <NavLink
       ref={itemRef as React.Ref<HTMLAnchorElement>}
       to={item.path}
+      aria-label={isNotifications ? `${translatedLabel}${notificationCount ? ` (${notificationCount})` : ''}` : undefined}
       onClick={handleClick}
       onPointerEnter={() => preloadRoute(item.path)}
       onTouchStart={() => preloadRoute(item.path)}
@@ -287,7 +292,7 @@ export function SidebarNavItem({
               : "bg-white/[0.06] backdrop-blur-sm border border-white/[0.08]"
         )}>
           {navIcon(cn(isDesktop ? "w-5 h-5" : "w-[22px] h-[22px]"))}
-          {notificationCount !== undefined && notificationCount > 0 && (
+          {!isNotifications && notificationCount !== undefined && notificationCount > 0 && (
             <span data-unread-chip className="absolute -top-1 -right-1 min-w-[18px] h-[18px] px-1 flex items-center justify-center bg-red-500 text-white text-[10px] font-bold rounded-full z-20 leading-none">
               {notificationCount > 99 ? '99+' : notificationCount}
             </span>

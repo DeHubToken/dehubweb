@@ -84,6 +84,34 @@ afterEach(() => {
 });
 
 describe('the tap ladder', () => {
+  it('opens navigable text on release without reserving central multi-taps', () => {
+    const onSingleTap = vi.fn();
+    const h = mountGesture({ postId: '7', singleTapOnly: true, enableLongPress: false, onSingleTap });
+    tapAt(h);
+    expect(onSingleTap).toHaveBeenCalledTimes(1);
+    act(() => void vi.advanceTimersByTime(80));
+    tapAt(h);
+    expect(onSingleTap).toHaveBeenCalledTimes(2);
+    act(() => void vi.advanceTimersByTime(500));
+    expect(casts).toEqual([]);
+  });
+
+  it('keeps scroll, cancel and controls excluded from immediate text opening', () => {
+    const onSingleTap = vi.fn();
+    const h = mountGesture({ postId: '7', singleTapOnly: true, enableLongPress: false, onSingleTap });
+    act(() => {
+      h.current!.onPointerDown(pointer(50, 50));
+      h.current!.onPointerUp(pointer(50, 100));
+      h.current!.onPointerDown(pointer(50, 50));
+      h.current!.onPointerCancel();
+      h.current!.onPointerUp(pointer(50, 50));
+      const button = document.createElement('button');
+      h.current!.onPointerDown(controlPointer(button));
+      h.current!.onPointerUp(controlPointer(button));
+    });
+    expect(onSingleTap).not.toHaveBeenCalled();
+  });
+
   it('sends a single tap through, not a reaction', () => {
     const onSingleTap = vi.fn();
     const h = mountGesture({ postId: '7', onSingleTap });
@@ -488,7 +516,7 @@ describe('surfaces are wired consistently', () => {
 
   it('uses the reaction ladder in the immersive video player too', () => {
     expect(VIDEO_CARD).toContain('disabled: hideActions || !!video.isAudio || isContentGated');
-    expect(VIDEO_CARD).toContain('onSingleTap: feedPreview ? openPreviewInShorts : isImmersive ? () =>');
+    expect(VIDEO_CARD).toContain('onSingleTap: feedShortsTarget ? openPost : isImmersive ? () =>');
     expect(VIDEO_CARD).toContain('onUndoSingleTap: isImmersive ? handlePlayClick : undefined');
     expect(VIDEO_CARD).not.toContain('handleDoubleTapSeek');
     expect(VIDEO_CARD).not.toContain('lastTapRef');
@@ -507,9 +535,8 @@ describe('surfaces are wired consistently', () => {
     expect(SHORTS).toContain('if (!lastToggleTookEffect.current) return;');
   });
 
-  it('gives a text post the ladder without costing it instant navigation', () => {
-    // The body opens immediately outside its central reaction area, while
-    // the center retains double/triple tap reactions.
+  it('keeps text navigation on its own pointer surface', () => {
+    // Text opens immediately; media keeps the multi-tap ladder.
     expect(POST).toContain('const tapGestures = useTapGestures({');
     expect(POST).toMatch(/useTapGestures\(\{[^}]*reactionArea: 'center'[^}]*onSingleTap/s);
     // The body sits inside `data-no-navigate` and carries the ladder.

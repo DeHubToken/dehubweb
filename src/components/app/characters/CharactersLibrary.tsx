@@ -115,7 +115,7 @@ export function CharactersLibrary() {
       {isLoading ? (
         <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3">
           {[0, 1, 2, 3].map((i) => (
-            <div key={i} className="aspect-[3/4] rounded-2xl bg-white/[0.03] border border-white/5 animate-pulse" />
+            <div key={i} className="aspect-[3/4] rounded-2xl theme-skeleton border border-white/5 animate-pulse" />
           ))}
         </div>
       ) : filtered.length === 0 ? (

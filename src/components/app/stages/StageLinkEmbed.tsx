@@ -63,7 +63,7 @@ export function StageLinkEmbed({ stageId, stageShortId, fallback = null }: Stage
   });
 
   if (isLoading) {
-    return <div className="mt-2 h-36 rounded-xl bg-white/[0.04] animate-pulse" />;
+    return <div className="mt-2 h-36 rounded-xl theme-skeleton animate-pulse" />;
   }
 
   // Deleted, cancelled, or simply not ours to read — the fallback chip keeps

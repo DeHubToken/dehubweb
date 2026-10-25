@@ -29,6 +29,7 @@ import { cn } from '@/lib/utils';
 import { useAutoOpenComments } from '@/hooks/use-auto-open-comments';
 import { useNavigate } from 'react-router-dom';
 import { useHandoffVideo } from '@/hooks/use-handoff-video';
+import { useVideoCardOpen } from '@/hooks/use-video-card-open';
 import { handoffVideoHolder } from '@/lib/video-handoff';
 import { useBootSettled, useFirstInteraction } from '@/hooks/use-boot-settled';
 import { useVideoFullscreen } from '@/hooks/use-video-fullscreen';
@@ -204,6 +205,8 @@ import { usePostStage } from '@/components/app/post-stage/post-stage-context';
 import { StageCreatorRow } from '@/components/app/post-stage/StageCreatorRow';
 import { viewerShareUrl } from '@/lib/share-url';
 import { KeywordFilterGate } from './KeywordFilterGate';
+import { useTabletPortraitFeed } from '@/hooks/use-tablet-portrait-feed';
+import { tabletPortraitTitleSize } from '@/lib/tablet-portrait-feed';
 
 /**
  * How far a touch may travel and still count as a tap on the player. Matches the
@@ -1460,6 +1463,9 @@ const VideoCardBody = memo(function VideoCard({ video, postPage = false, onBack,
   // (full controls there), which then carries on into more shorts. Desktop,
   // the post page and gated or live posts keep the full player.
   const isPhone = useIsMobile();
+  const feedShortsTarget = shortsEnabled && !postPage && !isImmersive && !isFullscreen && !hideActions
+    && !video.isAudio && !video.isAd && !(video.isLivePost && video.isLiveNow) && !!video.videoUrl
+    && !isContentGated && !isVideoNotReady;
   const feedPreview = isPhone && shortsEnabled && !isImmersive && !isFullscreen && !hideActions
     && !video.isAudio && !video.isAd && !(video.isLivePost && video.isLiveNow) && !!video.videoUrl
     && !isContentGated && !isVideoNotReady;
@@ -1471,11 +1477,11 @@ const VideoCardBody = memo(function VideoCard({ video, postPage = false, onBack,
   const phoneFeedFrame = feedPreview || liveFeedPreview;
   const [liveSoundOn, setLiveSoundOn] = useState(false);
   useEffect(() => {
-    if (!feedPreview || !bootSettled || !nearViewport || liteMode) return;
+    if (!feedShortsTarget || !bootSettled || !nearViewport || liteMode) return;
     // Warm the viewer code while its preview is visible. Queries still start
     // on touch-down so scrolling through cards does not fetch five feeds.
     import('@/components/app/BrainrotFeedHost').catch(() => {});
-  }, [feedPreview, bootSettled, nearViewport, liteMode]);
+  }, [feedShortsTarget, bootSettled, nearViewport, liteMode]);
 
   /** Swiped up out of fullscreen: stop here and carry on in the shorts feed. */
   const swipeIntoShorts = useCallback(() => {
@@ -1485,7 +1491,7 @@ const VideoCardBody = memo(function VideoCard({ video, postPage = false, onBack,
     openBrainrotFeed(video.id);
   }, [pauseVideo, instanceId, toggleFullscreen, video.id]);
 
-  /** Phone feed preview tapped: this clip first in the shorts viewer, then more shorts. */
+  /** Any feed surface opens this clip first, using the same live player. */
   const openPreviewInShorts = useCallback(() => {
     pauseVideo();
     videoPlaybackManager.stop(instanceId);
@@ -1788,7 +1794,7 @@ const VideoCardBody = memo(function VideoCard({ video, postPage = false, onBack,
     muted: isMuted,
     loop: !!(video.isAd || isLooping),
     preload: videoPreload,
-    className: 'dehub-inline-video w-full h-full object-contain',
+    className: `dehub-inline-video w-full h-full ${isFullscreen ? 'object-contain' : 'object-cover'}`,
     onEnded: handleVideoEnded,
     onError: handleVideoError,
     onTimeUpdate: handleTimeUpdate,
@@ -1926,6 +1932,10 @@ const VideoCardBody = memo(function VideoCard({ video, postPage = false, onBack,
   }, []);
 
   const scrubEventRef = useRef<HTMLDivElement>(null);
+  const tabletPortrait = useTabletPortraitFeed(scrubEventRef,
+    isTabletOrMobile && mediaAspect < 1 && !isImmersive && !postPage && !stage && !hideActions
+    && !isFullscreen && !video.isAudio && !video.isAd && !video.isLivePost && !!video.videoUrl
+    && !isContentGated && !matureGate.isGated && !contentWarning.hidden);
   const scrubZone = useVideoScrubZone({
     mediaRef: containerRef,
     eventRef: scrubEventRef,
@@ -1946,25 +1956,43 @@ const VideoCardBody = memo(function VideoCard({ video, postPage = false, onBack,
     onCancel: () => setCurrentTime(videoRef.current?.currentTime ?? 0),
   });
 
-  /**
-   * Open the dedicated post page for this video, seeding the query cache so it
-   * paints immediately. The shared <video> moves with it — see useHandoffVideo.
-   */
-  const openPost = useCallback(() => {
-    if (wasDrawerJustDismissed()) return;
-    if (showBountyDrawer || showPPVDrawer || showLockedDrawer) return;
+  const openDedicatedPost = useCallback(() => {
+    if (window.matchMedia('(max-width: 639px)').matches) {
+      // Landscape footage keeps the post page, with the player at the top.
+      // Tall footage plays in the Shorts viewer, in place.
+      if (mediaAspect <= 1 && !isPPVLocked) {
+        navigate(`/app?short=${encodeURIComponent(video.id)}`);
+        return;
+      }
+      // Locked pay-per-view asks to unlock first. Once it is unlocked the next
+      // tap plays it in the Shorts viewer.
+      if (isPPVLocked) {
+        setShowPPVDrawer(true);
+        return;
+      }
+    }
     cacheVideoForNavigation(queryClient, video);
     navigate(`/app/post/${video.id}`, { state: { fromFeed: true } });
-  }, [navigate, queryClient, video, showBountyDrawer, showPPVDrawer, showLockedDrawer]);
+  }, [navigate, queryClient, video, mediaAspect, isPPVLocked]);
+  const openPost = useVideoCardOpen({
+    mediaRef: containerRef,
+    shorts: feedShortsTarget,
+    blocked: showBountyDrawer || showPPVDrawer || showLockedDrawer,
+    wasDismissed: wasDrawerJustDismissed,
+    openShorts: openPreviewInShorts,
+    openPost: openDedicatedPost,
+  });
 
   /**
-   * One tap drives playback; two taps Like; three taps Love. Playback is
+   * Feed taps open the viewer immediately. Inside the player, one tap drives
+   * playback; two taps Like; three taps Love. Playback is
    * reversible, so the first tap happens immediately and is put back on tap
    * two rather than making every ordinary play/pause wait for the gesture
    * window. Fullscreen and seeking stay on their visible controls.
    */
   const tapGestures = useTapGestures({
     postId: video.id,
+    singleTapOnly: feedShortsTarget,
     reactionArea: isImmersive || isFullscreen ? 'surface' : 'center',
     // A gated card (PPV, holdings/subscriber lock, mature warning) draws no
     // burst — TapReactionBurst lives inside the isContentGated block further
@@ -1973,16 +2001,17 @@ const VideoCardBody = memo(function VideoCard({ video, postPage = false, onBack,
     // already behaves this way: its gate branch replaces the carousel that
     // carries the gesture, so this only brings video into line.
     disabled: hideActions || !!video.isAudio || isContentGated || liveFeedPreview,
-    onSingleTap: feedPreview ? openPreviewInShorts : isImmersive ? () => {
+    onSingleTap: feedShortsTarget ? openPost : isImmersive ? () => {
       showControlsBriefly();
       handlePlayClick();
     } : undefined,
     onUndoSingleTap: isImmersive ? handlePlayClick : undefined,
   });
 
-  // A single tap on the title or description opens the post, like the rest of
-  // the card; two and three taps still react. Links and "See more" keep theirs.
+  // Text opens the same destination immediately; links and "See more" keep
+  // their own actions.
   const captionTapGestures = useTapGestures({
+    singleTapOnly: !isImmersive,
     postId: video.id,
     reactionArea: 'center',
     disabled: hideActions || isContentGated,
@@ -1999,7 +2028,7 @@ const VideoCardBody = memo(function VideoCard({ video, postPage = false, onBack,
   // Playback and reactions run from pointer events above. The compatibility
   // click only keeps the visible controls awake; it must never toggle twice.
   const handleVideoAreaClick = useCallback(() => {
-    if (feedPreview) return; // Pointer gestures own preview navigation.
+    if (feedShortsTarget) return; // Pointer release owns viewer navigation.
     if (liveFeedPreview) {
       openPost();
       return;
@@ -2010,7 +2039,7 @@ const VideoCardBody = memo(function VideoCard({ video, postPage = false, onBack,
       return;
     }
     showControlsBriefly();
-  }, [isImmersive, showControlsBriefly, handlePlayClick, feedPreview, openPreviewInShorts, liveFeedPreview, openPost]);
+  }, [isImmersive, showControlsBriefly, handlePlayClick, feedShortsTarget, liveFeedPreview, openPost]);
 
   // Both the click and the touch handler are bound unconditionally on the player.
   // `isTouchDevice` is a width check, not a capability one, so gating the click on
@@ -2063,8 +2092,8 @@ const VideoCardBody = memo(function VideoCard({ video, postPage = false, onBack,
       return;
     }
 
-    if (feedPreview) {
-      // Pointer gestures open immediately outside the central reaction area.
+    if (feedShortsTarget) {
+      // Pointer release opens the viewer without a multi-tap delay.
       e.preventDefault();
       return;
     }
@@ -2086,7 +2115,7 @@ const VideoCardBody = memo(function VideoCard({ video, postPage = false, onBack,
     // compatibility click so touch cannot run a second playback action.
     e.preventDefault();
     showControlsBriefly();
-  }, [isImmersive, showControlsBriefly, handlePlayClick, isFullscreen, swipeToShorts, swipeIntoShorts, feedPreview, openPreviewInShorts, liveFeedPreview, openPost]);
+  }, [isImmersive, showControlsBriefly, handlePlayClick, isFullscreen, swipeToShorts, swipeIntoShorts, feedShortsTarget, liveFeedPreview, openPost]);
 
   const formatTime = (seconds: number) => {
     const mins = Math.floor(seconds / 60);
@@ -2180,7 +2209,7 @@ const VideoCardBody = memo(function VideoCard({ video, postPage = false, onBack,
   const mediaRadius = isFullscreen
     ? 'rounded-none'
     : stage
-      ? 'rounded-none'
+      ? 'rounded-2xl'
       : isImmersive ? 'rounded-none lg:rounded-2xl'
       : 'rounded-2xl';
 
@@ -2201,15 +2230,20 @@ const VideoCardBody = memo(function VideoCard({ video, postPage = false, onBack,
       data-video-card
       data-video-header-above={headerAboveMedia ? '' : undefined}
       onClick={isImmersive || stage ? undefined : handleCardClick}
-      {...scrubZone}
-      onPointerDownCapture={event => {
-        scrubZone.onPointerDownCapture?.(event);
-        if (!event.isPropagationStopped() && !isImmersive && !stage) warmPostPage();
-      }}
       className={isImmersive || stage
         ? "overflow-hidden isolate"
         : "overflow-visible cursor-pointer isolate"
       }
+      {...scrubZone}
+      onPointerDownCapture={event => {
+        scrubZone.onPointerDownCapture?.(event);
+        if (!event.isPropagationStopped() && !isImmersive && !stage && !isControlTarget(event.target)) {
+          if (feedShortsTarget) import('@/components/app/BrainrotFeedHost').catch(() => {});
+          else warmPostPage();
+        }
+      }}
+      data-tablet-portrait={tabletPortrait || undefined}
+      style={tabletPortrait ? { ['--tablet-video-width' as string]: `min(44%, calc(65svh * ${mediaAspect.toFixed(4)}))` } : undefined}
     >
       {/* Header with AI and menu buttons - hidden in immersive mode and carousel (hideActions) mode */}
       {!isImmersive && !hideActions && !stage && (
@@ -2247,7 +2281,7 @@ const VideoCardBody = memo(function VideoCard({ video, postPage = false, onBack,
       <div 
         ref={containerRef}
         tabIndex={0}
-        data-feed-preview={phoneFeedFrame || undefined}
+        data-feed-preview={(phoneFeedFrame && !tabletPortrait) || undefined}
         data-media-frame-key={!isImmersive && !isFullscreen ? `video:${video.id}` : undefined}
         data-media-frame-measured={resolvedVideoAspect == null ? undefined : measuredAspect}
         data-audio-frame={video.isAudio || undefined}
@@ -2257,35 +2291,33 @@ const VideoCardBody = memo(function VideoCard({ video, postPage = false, onBack,
         data-video-fullscreen={isFullscreen || undefined}
         data-media-full
         className={`bg-black cursor-pointer group/thumb outline-none focus:outline-none focus-visible:outline-none overflow-hidden ${mediaRadius} ${isFullscreen ? 'fixed inset-0 z-[9999] w-screen h-[100dvh] flex items-center justify-center' : `relative ${isImmersive ? 'mx-auto' : ''} ${isImmersive && showComments ? 'aspect-[2/1]' : ''}`}`}
-        /* Fit the full picture within the media budget, reserving a separate
-           transport strip below it on feeds, post pages and fullscreen. */
+        /* Inline footage fills the width and crops within its height budget.
+           The transport stays below it; fullscreen retains the full picture. */
         style={{ ...(
           isFullscreen || (isImmersive && showComments)
             ? undefined
             : isImmersive
               ? {
                   aspectRatio: mediaAspect,
-                  width: `min(100%, calc(${IMMERSIVE_MAX_MEDIA_HEIGHT} * ${mediaAspect.toFixed(4)}))`,
-                  maxHeight: splitControls ? `calc(${IMMERSIVE_MAX_MEDIA_HEIGHT} - 47px)` : IMMERSIVE_MAX_MEDIA_HEIGHT,
+                  width: '100%',
+                  maxHeight: splitControls
+                    ? `calc(${isPhone ? FEED_PREVIEW_MAX_HEIGHT : IMMERSIVE_MAX_MEDIA_HEIGHT} - 47px)`
+                    : isPhone ? FEED_PREVIEW_MAX_HEIGHT : IMMERSIVE_MAX_MEDIA_HEIGHT,
                 }
               : phoneFeedFrame
                 ? {
-                    // The frame hugs the clip, X style: up to 55% of the screen
-                    // tall, left aligned, so a slim video leaves empty space on
-                    // the right instead of bars at its sides.
+                    // Tall previews crop vertically instead of narrowing the frame.
                     aspectRatio: mediaAspect,
-                    width: `min(100%, calc(${FEED_PREVIEW_MAX_HEIGHT} * ${mediaAspect.toFixed(4)}))`,
+                    width: '100%',
                     maxHeight: FEED_PREVIEW_MAX_HEIGHT,
                     marginLeft: 0,
                     marginRight: 'auto',
-                    ['--feed-preview-aspect' as string]: mediaAspect.toFixed(4),
                   }
               : desktopFeedHug
                 ? {
-                    // Same rule as the phone preview, in the desktop column:
-                    // up to 75% of the screen tall, left aligned.
+                    // Fill the desktop column while retaining its height cap.
                     aspectRatio: feedFrameAspect,
-                    width: `min(100%, calc(${DESKTOP_FEED_MAX_HEIGHT} * ${feedFrameAspect.toFixed(4)}))`,
+                    width: '100%',
                     maxHeight: DESKTOP_FEED_MAX_HEIGHT,
                     marginLeft: 0,
                     marginRight: 'auto',
@@ -2576,7 +2608,7 @@ const VideoCardBody = memo(function VideoCard({ video, postPage = false, onBack,
                     src={thumbnail} srcSet={cdnImageSrcSet(thumbnail, [320, 480, 640, 960, 1280])} sizes="(min-width: 1024px) 600px, 100vw" decoding="async"
                     alt=""
                     aria-hidden="true"
-                    className="absolute inset-0 w-full h-full object-contain"
+                    className={`absolute inset-0 w-full h-full ${isFullscreen ? 'object-contain' : 'object-cover'}`}
                     loading={aboveFold ? 'eager' : 'lazy'}
                     fetchPriority={aboveFold ? 'high' : 'auto'}
                   />
@@ -2641,7 +2673,7 @@ const VideoCardBody = memo(function VideoCard({ video, postPage = false, onBack,
           </div>
         )}
         
-        {(onBack || stage) && !video.isAudio && !isFullscreen && (controlsVisible || isContentGated) && (
+        {onBack && !stage && !video.isAudio && !isFullscreen && (controlsVisible || isContentGated) && (
           <button
             type="button"
             data-video-controls
@@ -2649,7 +2681,7 @@ const VideoCardBody = memo(function VideoCard({ video, postPage = false, onBack,
             data-video-bare
             aria-label={t('common.goBack')}
             className="absolute left-2 top-1.5 z-20 h-8 w-8 text-white flex items-center justify-center"
-            onClick={(event) => { event.stopPropagation(); (onBack ?? stage?.onBack)?.(); }}
+            onClick={(event) => { event.stopPropagation(); onBack(); }}
             data-swipe-back
           >
             <MediaControlIcon icon={ArrowLeft} />
@@ -3179,12 +3211,14 @@ const VideoCardBody = memo(function VideoCard({ video, postPage = false, onBack,
                     translated this text and hands the result down. Left on, this
                     asked the edge function to translate the translation. */}
                 {shownTitle && (
-                  <TranslatableText publicContent text={shownTitle} className={stage ? "text-white text-[15px] font-bold mb-0.5" : "text-white text-[14px] mb-1"} as="h3" hideControls auto={false} />
+                  <div style={tabletPortrait ? { fontSize: tabletPortraitTitleSize(shownTitle), fontWeight: tabletPortraitTitleSize(shownTitle) > 17 ? 600 : 400 } : undefined}>
+                    <TranslatableText publicContent text={shownTitle} className={tabletPortrait ? "text-white text-inherit leading-snug mb-3 break-words" : stage ? "text-white text-[15px] font-bold mb-0.5" : "text-white text-[14px] mb-1"} as="h3" hideControls auto={false} />
+                  </div>
                 )}
                 {shownDesc && (
                   <ExpandableDescription
                     description={shownDesc}
-                    isImmersive={isImmersive || !!stage}
+                    isImmersive={isImmersive || !!stage || tabletPortrait}
                     clampLines={stage ? (shownTitle ? 2 : 3) : 4}
                   />
                 )}
@@ -3194,7 +3228,7 @@ const VideoCardBody = memo(function VideoCard({ video, postPage = false, onBack,
           })()}
         </SharedTranslationProvider>
         </div>
-        <div className="mb-3">
+        <div data-video-metadata className="mb-3">
           <PostMetadata 
             className="!mt-3"
             timestamp={video.uploadedAgo}

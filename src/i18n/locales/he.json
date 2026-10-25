@@ -2517,9 +2517,6 @@
     "bio": "ביוגרפיה",
     "bioPlaceholder": "ספר על עצמך...",
     "socialLinks": "קישורים חברתיים",
-    "socialFollowers": "עוקבים ב -{{platform}}",
-    "socialFollowersHint": "מוצג בפרופיל שלך כחלק מהישג ידך הכולל. הזן את המספר בעצמך — אנחנו לא קוראים אותו מהפלטפורמה.",
-    "socialFollowersPlaceholder": "לדוגמה, 12500",
     "profileUpdated": "הפרופיל עודכן בהצלחה",
     "failedLoadProfile": "טעינת נתוני הפרופיל נכשלה",
     "imageTooLarge5": "התמונה חייבת להיות קטנה מ-5MB",
@@ -3835,8 +3832,7 @@
     "reach": {
       "total": "טווח הגעה כולל",
       "breakdownTitle": "מאיפה ההגעה הזו מגיעה?",
-      "dehubFollowers": "חסידי DeHub",
-      "selfReported": "מספר העוקבים החברתיים מוזן על ידי היוצר."
+      "dehubFollowers": "חסידי DeHub"
     },
     "loginDescription": "התחבר כדי לצפות ולנהל את הפרופיל שלך.",
     "replyThread": {

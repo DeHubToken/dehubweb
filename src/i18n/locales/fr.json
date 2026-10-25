@@ -615,9 +615,6 @@
     "bio": "Bio",
     "bioPlaceholder": "Parlez-nous de vous...",
     "socialLinks": "Réseaux sociaux",
-    "socialFollowers": "Abonnés sur {{platform}}",
-    "socialFollowersHint": "Indiqué sur votre profil dans le cadre de votre portée totale. Saisissez le numéro vous-même — nous ne le lisons pas sur la plateforme.",
-    "socialFollowersPlaceholder": "par exemple 12500",
     "profileUpdated": "Profil mis à jour avec succès",
     "failedLoadProfile": "Échec du chargement du profil",
     "imageTooLarge5": "L'image doit faire moins de 5 Mo",
@@ -1130,7 +1127,15 @@
     "adLoadStandardDesc": "Un post sponsorisé toutes les huit",
     "adLoadFewer": "Moins",
     "adLoadFewerDesc": "Un toutes les seize",
-    "automatic": "Automatique"
+    "automatic": "Automatique",
+    "socialConnectHint": "Connectez un compte pour afficher son vrai nombre d'abonnés dans votre portée totale. Les chiffres viennent directement de la plateforme.",
+    "socialConnect": "Connecter",
+    "socialConnectAria": "Connecter {{platform}}",
+    "socialConnected": "{{platform}} connecté",
+    "socialConnectedShort": "Connecté",
+    "socialConnectFailed": "Impossible de connecter {{platform}}. Veuillez réessayer.",
+    "socialVerifiedFollowers": "{{value}} abonnés",
+    "socialFollowersPending": "Mise à jour des abonnés"
   },
   "common": {
     "confirm": "Confirmer",
@@ -2137,7 +2142,7 @@
       "total": "Portée totale",
       "breakdownTitle": "D'où vient cette portée",
       "dehubFollowers": "Abonnés DeHub",
-      "selfReported": "Les comptes d'abonnés sociaux sont saisis par le créateur."
+      "verified": "Les chiffres sociaux proviennent des comptes connectés par le créateur."
     },
     "loginDescription": "Connectez-vous pour voir et gérer votre profil.",
     "replyThread": {

@@ -366,6 +366,12 @@ All colors MUST be HSL.
      to the surrounding panel's material — the knob then vanishes into its own
      track. Carrying no colour class makes the thumb unmatchable; themes that
      want a different knob override this on `[data-switch-thumb]`. */
+  [data-switch-track][data-state="checked"] {
+    background-color: #fff;
+  }
+  [data-switch-track][data-state="unchecked"] {
+    background-color: rgb(255 255 255 / 0.3);
+  }
   [data-switch-thumb] {
     background-color: rgb(24 24 27);
   }
@@ -5702,17 +5708,13 @@ html[data-system-tone="light"] [data-dehub-loader] {
   filter: invert(1);
 }
 
-/* …except inside the login sheet, which is bg-black/60 with white text on
-   EVERY theme. The invert above keys off the page theme, so on `light` it
-   turned the mark black on a black drawer — invisible exactly where the
-   handoff to the wallet step needs something to look at. Spelled out at full
-   specificity rather than relying on source order: the rule it has to beat is
-   (0,2,1). */
-html[data-theme="light"] [data-login-modal] [data-dehub-loader],
-html.light [data-login-modal] [data-dehub-loader] {
+/* Media and explicitly dark surfaces keep a white mark. Light login sheets
+   follow their page palette along with other dialogs. */
+html[data-theme="light"] [data-keep-dark] [data-dehub-loader],
+html.light [data-keep-dark] [data-dehub-loader] {
   filter: none;
 }
-html[data-system-tone="light"] [data-login-modal] [data-dehub-loader] {
+html[data-system-tone="light"] [data-keep-dark] [data-dehub-loader] {
   filter: none;
 }
 
@@ -5997,10 +5999,8 @@ html[data-system-tone="light"] .art-rim {
 [data-feed-video-frame]:not(#_) {
   max-height: 75svh !important;
 }
-/* Phone feed preview (VideoCard): the frame hugs the clip within 55% of the
-   screen, left aligned like X, so a slim video leaves empty space on the
-   right rather than bars at its sides.
-   Beats the cap above and the cinematic feed's full-width media rule. */
+/* Phone previews fill the column and crop tall footage within 55% of the
+   screen. Keep the frame aligned with its bottom controls in every theme. */
 [data-feed-video-frame][data-feed-preview]:not(#_):not(#_) {
   max-height: 55svh !important;
   max-width: 100% !important;
@@ -6008,7 +6008,7 @@ html[data-system-tone="light"] .art-rim {
   margin-right: auto !important;
 }
 [data-media-full][data-feed-preview]:not(#_):not(#_) {
-  width: min(100%, calc(55svh * var(--feed-preview-aspect, 1.7778))) !important;
+  width: 100% !important;
 }
 /* The cinematic feed lays its author row and buttons over the top of the
    media, so unmute drops below them there. */
@@ -6870,4 +6870,74 @@ html:root [data-stage-generated-cover] [data-gsc-ink] * {
 html[data-theme="light"] [data-notifications-close],
 html[data-system-tone="light"] [data-notifications-close] {
   color: rgb(24 24 27 / 0.8);
+}
+
+/* Only measured, single-column wide feeds opt in. Creator, copy and actions
+   share the left column; the portrait video starts at the top on the right. */
+[data-video-card][data-tablet-portrait]:not(#_):not(#_) {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) var(--tablet-video-width);
+  grid-template-rows: auto minmax(0, 1fr);
+  column-gap: 24px;
+  align-items: start;
+}
+[data-tablet-portrait] > [data-card-head]:not(#_):not(#_) {
+  grid-column: 1;
+  grid-row: 1;
+  position: relative;
+  inset: auto;
+  margin: 0;
+  align-self: stretch;
+  align-items: flex-start;
+  pointer-events: auto;
+}
+html body [data-tablet-portrait] > [data-media-full]:not(#_):not(#_) {
+  grid-column: 2;
+  grid-row: 1 / span 2;
+  width: 100% !important;
+  max-height: 65svh !important;
+  margin: 0 !important;
+}
+[data-tablet-portrait] > [data-card-info]:not(#_):not(#_) {
+  grid-column: 1;
+  grid-row: 2;
+  align-self: stretch;
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  padding: 0;
+  overflow-wrap: anywhere;
+}
+[data-tablet-portrait] [data-video-metadata] {
+  margin-top: auto;
+  padding-top: 16px;
+}
+[data-tablet-portrait] > :not([data-card-head], [data-media-full], [data-card-info]) {
+  grid-column: 1 / -1;
+}
+[data-tablet-portrait] [data-caption-options]:not(#_):not(#_) {
+  display: none !important;
+}
+[data-tablet-portrait] [data-card-head] :is([data-head-options], [data-head-boost]):not(#_):not(#_) {
+  display: flex !important;
+}
+[data-tablet-portrait] [data-caption-options] + .relative:not(#_):not(#_) {
+  padding-right: 0;
+}
+[data-tablet-portrait] [data-preview-mute]:not(#_):not(#_) {
+  top: 0.5rem;
+}
+html[data-theme="immersive"] [data-tablet-portrait] > [data-media-full]:not(#_):not(#_)::after {
+  content: none;
+}
+@media (min-width: 560px) and (max-width: 767px) {
+  [data-video-card][data-tablet-portrait]:not(#_):not(#_) {
+    column-gap: 16px;
+  }
+  [data-tablet-portrait] [data-card-caption] h3 {
+    font-size: min(1em, 22px);
+  }
+  html[data-theme="immersive"] [data-feed-root] [data-feed-item][data-cinematic-first]:has(> [data-tablet-portrait]):not(#_) {
+    padding-top: calc(env(safe-area-inset-top, 0px) + 3.75rem) !important;
+  }
 }

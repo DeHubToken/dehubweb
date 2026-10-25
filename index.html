@@ -278,7 +278,8 @@
     <meta name="twitter:image" content="https://dehub.io/og/home.jpg">
 
     <!-- Favicons -->
-    <link rel="icon" type="image/x-icon" href="/favicon.ico">
+    <link rel="icon" type="image/svg+xml" href="/brand-icon.svg?v=3">
+    <link rel="alternate icon" type="image/x-icon" href="/favicon.ico?v=3">
     <link rel="icon" type="image/png" href="/dehub-icon.png?v=3">
     <link rel="apple-touch-icon" href="/apple-touch-icon.png?v=2">
     <link rel="manifest" href="/manifest.json">
@@ -502,7 +503,7 @@
          site, the app's welcome panel sits at y=92 (phone) / y=56 (desktop)
          and the prerendered one in this skeleton sat one px above both. */
       .bskel-tabs { height: 35px; margin: 4px 8px 9px; border-radius: 12px; background: var(--bskel, rgba(255,255,255,.06)); }
-      .bskel-tabs { height: 35px; margin: 4px 8px 13px; border-radius: 12px; background: var(--bskel-surface, #18181b); display: flex; align-items: center; }
+      .bskel-tabs { height: 35px; margin: 4px 8px 13px; border-radius: 12px; background: var(--bskel-nav, var(--bskel-surface, #18181b)); display: flex; align-items: center; }
       .bskel-tabs > div { flex: 1; display: flex; justify-content: center; }
       .bskel-tabs > div:first-child { flex: none; width: 40px; }
       .bskel-tabs span { width: 16px; height: 16px; }
@@ -573,8 +574,12 @@
       /* The light theme needs dark blocks, not white ones. data-theme is
          already on <html> by this point — the script at the top of <head>
          sets it synchronously, before this stylesheet is even matched. */
-      html[data-theme="light"] { --bskel: rgba(0,0,0,.07); --bskel-b: rgba(0,0,0,.10); }
-      html[data-theme="light"] { --bskel: rgba(0,0,0,.07); --bskel-b: rgba(0,0,0,.10); --bskel-surface: rgba(0,0,0,.02); --bskel-card: transparent; }
+      html:is([data-theme="light"], [data-system-tone="light"]) { --bskel: rgba(0,0,0,.07); --bskel-b: rgba(0,0,0,.10); --bskel-surface: rgba(0,0,0,.02); --bskel-card: transparent; }
+      html:is([data-theme="system"], [data-theme="immersive"]) { --bskel-surface: transparent; --bskel-card: transparent; }
+      html[data-system-tone="light"] { --bskel-nav: rgba(11,11,13,.045); }
+      html[data-system-tone="light"] .bskel-feed-card {
+        border: 0; border-bottom: 1px solid var(--bskel-b); border-radius: 0;
+      }
       html[data-theme="minimal"] { --bskel: rgba(255,255,255,.04); --bskel-surface: transparent; --bskel-card: transparent; }
       html:is([data-theme="minimal"],[data-theme="war"],[data-theme="hacker"]) .bskel * { border-radius: 0; }
     </style>

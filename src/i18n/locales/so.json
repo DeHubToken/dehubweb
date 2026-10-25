@@ -6576,9 +6576,6 @@
     "bio": "Naftaada",
     "bioPlaceholder": "Noo sheeg naftaada...",
     "socialLinks": "Xiriirrada Bulshada",
-    "socialFollowers": "Raacayaasha {{platform}}",
-    "socialFollowersHint": "Ku shub astaantaada qayb ka mid ah gaaritaankaaga guud. Ku qor lambarka naftaada — ma akhrineyno barxadda.",
-    "socialFollowersPlaceholder": "tusaale ahaan 12500",
     "profileUpdated": "Bogga shaqsigu si guul leh ayaa loo cusbooneysiiyay",
     "failedLoadProfile": "Soo dejinta xogta bogga shaqsigu wuu fashilmay",
     "imageTooLarge5": "Sawirku waa inuu ka yar yahay 5MB",
@@ -8094,8 +8091,7 @@
     "reach": {
       "total": "Wadarta gaarista",
       "breakdownTitle": "Halka ay gaadiidkani ka yimaadaan",
-      "dehubFollowers": "DeHub raacayaasha",
-      "selfReported": "Tirooyinka raacayaasha bulshada waxaa soo galaya abuuraha."
+      "dehubFollowers": "DeHub raacayaasha"
     },
     "loginDescription": "Soo gal si aad u aragto oo aad u maamusho boggaaga shaqsiga.",
     "replyThread": {

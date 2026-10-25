@@ -3,6 +3,14 @@ import { mapUserToProfile } from '@/hooks/use-dehub-profile';
 import { getBadgeName, getBadgeUrl } from '@/lib/staking-badges';
 
 describe('profile badges', () => {
+  it('uses an explicit public privacy setting ahead of legacy private customs', () => {
+    expect(mapUserToProfile({
+      username: 'public-holder', isPrivate: false, customs: { isPrivate: 'true' },
+    }).isPrivate).toBe(false);
+    expect(mapUserToProfile({
+      username: 'legacy-holder', customs: { isPrivate: 'true' },
+    }).isPrivate).toBe(true);
+  });
   it('keeps Algiers gifted King Cobra with a balance below entry', () => {
     const profile = mapUserToProfile({
       address: '0xalgiers', username: 'algiers', badgeBalance: 943.62, badgeLock: null,
