@@ -468,7 +468,7 @@ const VideoSlideBody = memo(function VideoSlideBody({
   // each slide, and a transformed ancestor makes `fixed` resolve against that
   // wrapper rather than the viewport.
   return (
-    <div data-keep-dark data-shorts-photo-slide={isPhotoSlide || undefined} className="absolute inset-0 bg-black" style={{ willChange: 'transform' }}>
+    <div data-shorts-picture data-keep-dark data-shorts-photo-slide={isPhotoSlide || undefined} className="absolute inset-0 bg-black" style={{ willChange: 'transform' }}>
       {/* Liquid glass fill behind letterboxed / non-portrait videos.
           One filtered layer plus a plain tint. It used to be a blurred layer
           with a second backdrop-blur pass stacked on it — blurring what was
@@ -496,7 +496,7 @@ const VideoSlideBody = memo(function VideoSlideBody({
           ladder, off pointer events. Desktop used to bind a competing onClick
           for centre-double-tap fullscreen; fullscreen kept its button and gave
           the gesture up, because one gesture cannot mean two things. */}
-      <div className="absolute inset-0 z-[2]" {...tapGestures}>
+      <div data-shorts-media-slot className="absolute inset-0 z-[2]" {...tapGestures}>
         {short.imageUrls?.length ? (
           <Suspense fallback={<img src={short.imageUrls[0]} alt="" className="w-full h-full object-contain" />}>
             <ShortsPhotoPager images={short.imageUrls} galleryKey={String(short.id)} />

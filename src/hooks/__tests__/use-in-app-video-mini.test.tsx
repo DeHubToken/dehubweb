@@ -3,6 +3,7 @@ import { useRef } from 'react';
 import { afterEach, expect, it, vi } from 'vitest';
 import type { PanInfo } from 'framer-motion';
 import { bodyScrollLockDepth, lockBodyScroll } from '@/lib/body-scroll-lock';
+import { videoPlaybackManager } from '@/lib/video-playback-manager';
 import { useInAppVideoMini } from '../use-in-app-video-mini';
 
 afterEach(() => { cleanup(); vi.restoreAllMocks(); document.body.style.overflow = ''; });
@@ -94,4 +95,25 @@ it('cancels a short or reversed drag and keeps another overlay scroll lock intac
   releaseOther();
   expect(bodyScrollLockDepth()).toBe(0);
   expect(document.body.style.overflow).toBe('auto');
+});
+
+it('keeps audio ownership while feed autoplay starts behind the mini', () => {
+  const muteFeed = vi.fn();
+  videoPlaybackManager.register('background-feed', vi.fn(), muteFeed, () => true);
+  videoPlaybackManager.play('background-feed');
+  videoPlaybackManager.claimAudio('background-feed');
+  const view = mount();
+  const owner = videoPlaybackManager.getCurrentlyPlayingId();
+  expect(owner).not.toBe('background-feed');
+  expect(muteFeed).toHaveBeenCalledWith(true);
+  view.start(200, 400);
+  view.end(200, 400, 150);
+  expect(videoPlaybackManager.play('background-feed')).toBe(false);
+  expect(videoPlaybackManager.takeFreeAudio('background-feed')).toBe(false);
+  expect(videoPlaybackManager.getCurrentlyPlayingId()).toBe(owner);
+  fireEvent.click(screen.getByText('Restore'));
+  expect(videoPlaybackManager.getCurrentlyPlayingId()).toBe(owner);
+  view.unmount();
+  expect(videoPlaybackManager.getCurrentlyPlayingId()).toBe('background-feed');
+  videoPlaybackManager.unregister('background-feed');
 });
