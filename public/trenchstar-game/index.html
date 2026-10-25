@@ -2414,7 +2414,7 @@ const V4={
   base:{ur:'0x6ff5693b99212da76ad316178a184ab56d299b43',quoter:'0x0d5e0f971ed27fbff6c2837bf31316121532048d',
     pm:'0x498581ff718922c3f8e6a244956af099b2652b2b',logs:false},
   robinhood:{ur:'0x8876789976decbfcbbbe364623c63652db8c0904',quoter:'0x8dc178efb8111bb0973dd9d722ebeff267c98f94',
-    pm:'0x8366a39cc670b4001a1121b8f6a443a643e40951',logs:true}
+    pm:'0x8366a39cc670b4001a1121b8f6a443a643e40951',logs:true,logRange:10000000}
 };
 const PERMIT2='0x000000000022D473030F116dDEE9F6B43aC78BA3';
 const ZERO='0x0000000000000000000000000000000000000000';
@@ -2426,22 +2426,36 @@ const SEL4={
   p2approve:'0x87517c45'   /* Permit2 approve(address,address,uint160,uint48) */
 };
 const v4Keys=(()=>{try{return JSON.parse(localStorage.getItem('trenchstar.v4keys')||'{}');}catch(e){return {};}})();
+async function v4InitLog(ch,id){
+  const v=V4[ch.key];if(!v?.logs)return null;
+  let end=BigInt(await rpcPublic(ch.rpc,'eth_blockNumber',[]));
+  const range=BigInt(v.logRange);
+  // Public nodes cap log ranges. Search recent windows first, with no gaps.
+  for(let page=0;page<32&&end>=0n;page++){
+    const start=end>=range?end-range+1n:0n;
+    const logs=await rpcPublic(ch.rpc,'eth_getLogs',[{address:v.pm,fromBlock:hexBig(start),toBlock:hexBig(end),topics:[V4_INIT,id]}]);
+    if(logs?.length)return logs[0];
+    end=start-1n;
+  }
+  return null;
+}
 async function v4Key(ch,m){
   const id=(m.pairAddr||'').toLowerCase();
   if(!/^0x[0-9a-f]{64}$/.test(id))return null;
-  if(v4Keys[id])return v4Keys[id];
+  const cacheKey=ch.key+':'+id;
+  if(v4Keys[cacheKey])return v4Keys[cacheKey];
   const v=V4[ch.key];if(!v||!v.logs)return null;
-  let logs=null;
-  try{logs=await rpcPublic(ch.rpc,'eth_getLogs',[{address:v.pm,fromBlock:'0x0',toBlock:'latest',topics:[V4_INIT,id]}]);}
+  let l=null;
+  try{l=await v4InitLog(ch,id);}
   catch(e){return null;}
-  const l=logs&&logs[0];if(!l||!l.topics||l.topics.length<4)return null;
+  if(!l||!l.topics||l.topics.length<4)return null;
   const w=i=>l.data.slice(2+i*64,66+i*64);
   const key={c0:'0x'+l.topics[2].slice(26),c1:'0x'+l.topics[3].slice(26),
     fee:parseInt(w(0),16),ts:parseInt(w(1),16),hooks:'0x'+w(2).slice(24)};
   /* Non-ETH-quoted pools are keyed and cached like any other — the ticket
      cannot route them, because it pays in the gas coin and sells back to it,
      but knowing WHY beats reporting a missing pool. routeEvm does the telling. */
-  v4Keys[id]=key;try{localStorage.setItem('trenchstar.v4keys',JSON.stringify(v4Keys));}catch(e){}
+  v4Keys[cacheKey]=key;try{localStorage.setItem('trenchstar.v4keys',JSON.stringify(v4Keys));}catch(e){}
   return key;
 }
 const encV4Key=k=>encAddr(k.c0)+encAddr(k.c1)+encUint(k.fee)+encUint(k.ts)+encAddr(k.hooks);
