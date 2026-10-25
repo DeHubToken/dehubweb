@@ -283,26 +283,18 @@ html [data-stage-chip][data-active='true']:not(#_):not(#_) {
 html [data-stage-chip]:not(#_):not(#_) svg {
   color: currentColor;
 }
-
-/* --- The five-tile bar -------------------------------------------------- */
-html [data-stage-tile]:not(#_):not(#_) {
+/* Comment search and sort: bare controls, the same weight as the post's bar. */
+html [data-stage-plain]:not(#_):not(#_) {
+  background: transparent;
   color: var(--stage-ink);
-  background: var(--stage-glass);
-  border: 1px solid var(--stage-border);
+  border: 0;
   box-shadow: none;
-  backdrop-filter: blur(22px) saturate(1.4);
 }
-html [data-stage-tile] > span:not([data-engaged-glyph]):not(#_) {
-  color: var(--stage-ink);
-}
-html [data-stage-tile][data-engaged]:not(#_):not(#_) {
-  background: var(--stage-chip);
-}
-html [data-stage-tile][data-engaged]:not(#_):not(#_) > svg {
+html [data-stage-plain][data-active='true']:not(#_):not(#_) {
   color: var(--stage-accent);
 }
-html[data-theme='minimal'] [data-stage-tile]:not(#_):not(#_) {
-  backdrop-filter: none;
+html [data-stage-plain]:not(#_):not(#_) svg {
+  color: currentColor;
 }
 
 /* --- Docked composer ------------------------------------------------------
@@ -391,18 +383,8 @@ html [data-stage-face]:not(#_) {
 }
 
 /* --- Shared dark post controls -------------------------------------------
-   The five tiles remain bare icons on the
-   page with hairlines above and below the bar, and the sheet's tiles and lists
-   lose their boxes too (rows keep their hairline dividers). */
-html:is([data-theme='system'], [data-theme='immersive']) [data-stage-bar]:not(#_):not(#_) {
-  border-block: 1px solid var(--stage-border);
-  padding-block: 2px;
-}
-html:is([data-theme='system'], [data-theme='immersive']) [data-stage-tile]:not(#_):not(#_):not(#_) {
-  background: transparent;
-  border-color: transparent;
-  backdrop-filter: none;
-}
+   The sheet's tiles and lists lose their boxes (rows keep their hairline
+   dividers). */
 html:is([data-theme='system'], [data-theme='immersive']) [data-stage-sheet] :is([data-stage-sheet-tile], [data-stage-sheet-list]):not(#_):not(#_):not(#_) {
   background: transparent;
   border-color: transparent;
