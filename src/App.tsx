@@ -38,7 +38,6 @@ import { HelmetProvider } from "react-helmet-async";
 import { SEOHead } from "@/components/SEOHead";
 import { ClientNavigateBridge } from "@/components/app/ClientNavigateBridge";
 import { HomeShellSkeleton } from "@/components/app/PageSkeletons";
-import { DeHubPageLoader } from "@/components/app/DeHubLoader";
 import { ThemePreviewProvider, ThemeProvider, useAppTheme } from "@/contexts/ThemeContext";
 import { UserPreferencesProvider } from "@/contexts/UserPreferencesContext";
 import { lazyWithRetry } from "@/lib/lazy-with-retry";
@@ -261,11 +260,20 @@ const AppsDevPage = React.lazy(() => import("./pages/app/AppsDevPage"));
 
 
 
-// Route-chunk fallback. Was `null`, which meant a slow chunk (cold cache, bad
-// connection) showed a blank page for as long as it took. The DeHub mark fades
-// in on a 250 ms delay (see .dehub-loader-mark in index.css), so a fast chunk
-// still shows no loading stage — the original reason this was empty.
-const PageLoader = () => <DeHubPageLoader fullScreen />;
+// A route wait should not introduce a separate branded opening screen.
+const PageLoader = () => {
+  const { t: copy } = _useCopy();
+  return (
+    <div role="status" aria-label={copy('copy.dc380888c4e2', { defaultValue: 'Loading' })} data-startup-skeleton className="min-h-[100dvh] w-full px-4 py-16">
+      <div aria-hidden="true" className="mx-auto max-w-xl space-y-4">
+        <div className="theme-skeleton h-10 w-2/3 rounded-xl" />
+        <div className="theme-skeleton h-48 w-full rounded-xl" />
+        <div className="theme-skeleton h-4 w-4/5 rounded" />
+        <div className="theme-skeleton h-4 w-3/5 rounded" />
+      </div>
+    </div>
+  );
+};
 
 /**
  * Builder lived at /app/builder until it took the top-level /builder URL.
@@ -899,7 +907,7 @@ const WalletLoader = () => {
   }
   // Everything else (marketing/standalone routes) used to get a blank screen
   // for the whole wallet-chunk fetch.
-  return <DeHubPageLoader fullScreen />;
+  return <PageLoader />;
 };
 
 /**
