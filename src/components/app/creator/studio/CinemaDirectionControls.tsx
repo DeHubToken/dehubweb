@@ -17,7 +17,7 @@ export function CinemaDirectionControls({ value, onChange, mode, disabled }: Pro
   return (
     <details className="rounded-2xl border border-white/15 p-3">
       <summary className="cursor-pointer text-sm font-medium">{text('title', 'Cinema direction')}</summary>
-      <p className="my-2 text-xs opacity-70">{text('hint', 'Optional prompt guidance. Results vary by model; these choices do not control physical cameras or edit footage. Standard generation pricing applies.')}</p>
+      <p className="my-2 text-xs opacity-70">{text('hint', 'Guide the visual style of your next image or video. Results vary by model.')}</p>
       <div className="flex flex-wrap gap-2">
         {CINEMA_DIRECTION_FIELDS.filter((field) => !field.videoOnly || mode === 'video').map((field) => (
           <SelectChip key={field.id} label={text(`${field.id}.label`, field.label)} value={direction[field.id] ?? ''}
