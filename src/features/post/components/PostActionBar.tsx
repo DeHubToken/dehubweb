@@ -2,6 +2,7 @@ import { useTranslation as _useCopy } from 'react-i18next';
 import { useState, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
+import { useCrossPostStore } from '@/store/crossPostStore';
 import { Loader2, SpellCheck, Palette, ChevronLeft, Type, Hash, BarChart2, MonitorPlay, Cable, AlertTriangle } from "lucide-react";
 import More from "@/components/ui/cut-icons/more";
 import Paperclip from "@/components/ui/cut-icons/attach";
@@ -128,6 +129,7 @@ export function PostActionBar({
   const { t } = useTranslation();
   const [audioPopoverOpen, setAudioPopoverOpen] = useState(false);
   const [postOptionsOpen, setPostOptionsOpen] = useState(false);
+  const crossPostCount = useCrossPostStore(state => state.selected.length);
   /**
    * OBS does not want the composer's fields — it wants an ingest URL and a
    * key. Picking it opens the Go Live sheet on its own setup step instead of
@@ -563,9 +565,12 @@ export function PostActionBar({
             aria-label={t('upload.postOptions', { defaultValue: 'Post options' })}
             aria-haspopup="dialog"
             aria-expanded={postOptionsOpen}
-            className={cn('flex h-9 w-9 shrink-0 items-center justify-center rounded-xl text-white transition-colors hover:bg-white/10', (hasPoll || hasContentWarning) && 'bg-white/20')}
+            className={cn('relative flex h-9 w-9 shrink-0 items-center justify-center rounded-xl text-white transition-colors hover:bg-white/10', (hasPoll || hasContentWarning || (extraTool && crossPostCount > 0)) && 'bg-white/20')}
           >
             <More className="h-5 w-5" />
+            {extraTool && crossPostCount > 0 && (
+              <span className="absolute -right-1 -top-1 flex h-4 min-w-4 items-center justify-center rounded-full bg-white px-1 text-[10px] font-semibold text-black">{crossPostCount}</span>
+            )}
           </button>
         )}
 
