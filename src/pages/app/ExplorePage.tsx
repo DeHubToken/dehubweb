@@ -197,10 +197,13 @@ const ExploreSearchInput = memo(function ExploreSearchInput({
   value,
   onChange,
   placeholder,
+  trailing,
 }: {
   value: string;
   onChange: (next: string) => void;
   placeholder: string;
+  /** Quiet icon actions at the field's right end. */
+  trailing?: React.ReactNode;
 }) {
   const [local, setLocal] = useSurfaceDraft("src/pages/app/ExplorePage.tsx:local", value);
   const lastPushedRef = useRef(value);
@@ -229,16 +232,23 @@ const ExploreSearchInput = memo(function ExploreSearchInput({
         onChange={(e) => push(e.target.value)}
         placeholder={placeholder}
         aria-label={placeholder}
-        className="w-full pl-12 pr-4 h-[48px] bg-zinc-800 border-zinc-700 rounded-xl text-white placeholder:text-zinc-500 focus:border-zinc-600 text-sm sm:text-base"
+        className={cn(
+          'w-full pl-12 h-[48px] bg-zinc-800 border-zinc-700 rounded-xl text-white placeholder:text-zinc-500 focus:border-zinc-600 text-sm sm:text-base',
+          trailing ? (local ? 'pr-[76px]' : 'pr-12') : 'pr-4',
+        )}
       />
-      {local && (
-        <button
-          onClick={() => push('')}
-          className="absolute right-3 top-1/2 -translate-y-1/2 text-zinc-500 hover:text-white transition-colors"
-        >
-          <X className="w-4 h-4" />
-        </button>
-      )}
+      <div className="absolute right-1.5 top-1/2 -translate-y-1/2 flex items-center">
+        {local && (
+          <button
+            type="button"
+            onClick={() => push('')}
+            className="h-8 w-8 flex items-center justify-center text-zinc-500 hover:text-white transition-colors"
+          >
+            <X className="w-4 h-4" />
+          </button>
+        )}
+        {trailing}
+      </div>
     </div>
   );
 });
@@ -774,29 +784,34 @@ export default function ExplorePage() {
             />
           }
         >
-          <div className="relative flex gap-2">
-            <ExploreSearchInput
-              value={searchQuery}
-              onChange={setSearchQuery}
-              placeholder={t('explorePage.searchPlaceholder')}
-            />
-            <button
-              type="button"
-              data-kit-square
-              data-active={showFilters || activeFilterCount > 0 ? 'true' : undefined}
-              onClick={() => setShowFilters(!showFilters)}
-              aria-label={t('explorePage.filters')}
-              aria-expanded={showFilters}
-              className="relative self-center"
-            >
-              <SlidersHorizontal className="h-[18px] w-[18px]" />
-              {activeFilterCount > 0 && (
-                <span className="absolute -top-1 -right-1 min-w-[16px] h-[16px] px-1 flex items-center justify-center bg-red-500 text-white text-[10px] font-bold rounded-full leading-none">
-                  {activeFilterCount}
-                </span>
-              )}
-            </button>
-          </div>
+          {/* The filter toggle is a plain icon inside the search field, the
+              same quiet treatment as the messages search. */}
+          <ExploreSearchInput
+            value={searchQuery}
+            onChange={setSearchQuery}
+            placeholder={t('explorePage.searchPlaceholder')}
+            trailing={
+              <button
+                type="button"
+                data-explore-filter-toggle
+                onClick={() => setShowFilters(!showFilters)}
+                aria-label={t('explorePage.filters')}
+                aria-expanded={showFilters}
+                title={t('explorePage.filters')}
+                className={cn(
+                  'relative h-8 w-8 flex items-center justify-center transition-colors',
+                  showFilters || activeFilterCount > 0 ? 'text-white' : 'text-zinc-500 hover:text-white',
+                )}
+              >
+                <SlidersHorizontal className="h-[18px] w-[18px]" />
+                {activeFilterCount > 0 && (
+                  <span className="absolute top-0 right-0 min-w-[14px] h-[14px] px-0.5 flex items-center justify-center bg-red-500 text-white text-[9px] font-bold rounded-full leading-none">
+                    {activeFilterCount}
+                  </span>
+                )}
+              </button>
+            }
+          />
 
           {/* Filter panel — the sliders button's payload. Collapsed by
               default; it lives inside the sticky bento so the rows stay
