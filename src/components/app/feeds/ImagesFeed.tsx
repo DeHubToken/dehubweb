@@ -42,6 +42,8 @@ import { usePersistedFeedFilter, usePersistedContentFilters } from '@/hooks/use-
 import { useDeHubImages, mapNFTToImagePost } from '@/hooks/use-dehub-feed';
 import { useUnifiedFeed, mapToImagePost } from '@/hooks/use-unified-feed';
 import type { ImagePost } from '@/types/feed.types';
+import { useQuery, useQueryClient } from '@tanstack/react-query';
+import { getNFTInfo, type DeHubNFT } from '@/lib/api/dehub';
 
 /** Number of pages to pre-fetch for random mode cross-page shuffling */
 const RANDOM_PREFETCH_PAGES = 5;
@@ -367,7 +369,9 @@ function EndlessScrollView({
       {/* Returning to the grid is the nav pill's left slot (it swaps its
           settings icon for a back arrow while this view is up), so there is no
           floating button over the feed. */}
-      <div ref={scrollTargetRef} />
+      {/* `hidden` keeps this anchor out of space-y, so the first card sits the
+          same distance under the nav pill as the first card on Home. */}
+      <div ref={scrollTargetRef} hidden />
       {visiblePosts.map((post, index) => (
         <Fragment key={post.id}>
           <WindowedFeedItem
@@ -547,6 +551,23 @@ export function ImagesFeed({
     return allNFTs.map((nft, index) => mapNFTToImagePost(nft, index));
   }, [apiData, unifiedData, useUnifiedSource]);
 
+  // A picture opened from the Home feed or a shared link is often not in the
+  // loaded Images pages. Fetch it and put it first, so the scroll view opens on
+  // that picture with the rest of the image feed below it.
+  const queryClient = useQueryClient();
+  const selectedMissing = !!selectedPostId && !imagePosts.some(p => p.id === selectedPostId);
+  const { data: pinnedNft } = useQuery({
+    queryKey: ['images-pinned-post', selectedPostId],
+    queryFn: () => getNFTInfo(selectedPostId!),
+    enabled: selectedMissing,
+    initialData: () => (selectedPostId ? queryClient.getQueryData<DeHubNFT>(['single-post', selectedPostId]) : undefined),
+    staleTime: 60_000,
+  });
+  const scrollPosts = useMemo(() => {
+    if (!selectedMissing || !pinnedNft) return imagePosts;
+    return [mapNFTToImagePost(pinnedNft, 0), ...imagePosts];
+  }, [imagePosts, selectedMissing, pinnedNft]);
+
   // Handle image click in collage - switch to feed view
   const handleImageClick = (postId: string) => {
     onPostSelected?.(postId);
@@ -685,7 +706,7 @@ export function ImagesFeed({
           {feedEverOpened && (
             <div style={{ display: showFeedView ? 'block' : 'none' }}>
               <EndlessScrollView
-                posts={imagePosts}
+                posts={scrollPosts}
                 loaderRef={feedLoaderRef}
                 isFetchingNextPage={isFetchingNextPage}
                 hasNextPage={hasNextPage ?? false}
