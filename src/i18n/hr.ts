@@ -104,6 +104,9 @@ export const hr = {
     disclaimerText: 'DeHub tokeni služe kao utility tokeni unutar našeg ekosustava, slično kao valute u igrama, i nisu investicijski instrumenti. Dok naša blockchain infrastruktura pruža neviđenu transparentnost i provjerljive on-chain podatke u obrazovne svrhe, sva tržišta nose inherentne rizike. Mogli biste izgubiti cijelu svoju investiciju zbog tržišne volatilnosti, tehničkih problema, sigurnosnih proboja ili nepredviđenih okolnosti. Sudjelujte samo s sredstvima koja si možete priuštiti potpuno izgubiti.',
   },
   dapp: {
+    altCommunities: 'Stranica Zajednice s popisom javnih zajednica i brojem njihovih članova.',
+    altStores: 'Stranica Trgovine, na kojoj kreatori i tvrtke vode vlastitu izvornu trgovinu.',
+    spMinShort: 'minuta',
     title: 'Potpuni ekosustav',
     intro1: 'DeHub je otporna na cenzuru, open source alternativa tradicionalnim medijskim platformama koja služi industriji kreacije sadržaja, streaminga i gaminga. Ekosustav u kojem svatko može monetizirati od prvog pregleda.',
     intro2: 'Aplikacija se skalira putem decentralizirane mreže rudara, pružajući zajedničku računalnu snagu za hosting, transkodiranje i isporuku sadržaja.',
@@ -1320,6 +1323,7 @@ export const hr = {
     diagramMinersRole2: 'u zamjenu za DeHub tokene',
   },
   e2ee: {
+    walletSig1: 'Od vas se traži da potpišete fiksnu poruku: "DeHub Messages — Sign to unlock end-to-end encrypted messages for <vaša adresa>"',
     title: 'End-to-end enkripcija (E2EE)',
     howWorksTitle: 'Kako funkcionira DeHubova end-to-end enkripcija',
     whatSecureTitle: '🛡️ Što čini našu E2EE sigurnom?',

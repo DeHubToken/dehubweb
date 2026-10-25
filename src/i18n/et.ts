@@ -104,6 +104,12 @@ export const et = {
     disclaimerText: 'DeHub tokenid toimivad kasulikkuse tokenitena meie ökosüsteemis, sarnaselt mängusiseste valuutadega, ja ei ole investeerimisvahendid. Kuigi meie plokiahela infrastruktuur pakub enneolematut läbipaistvust, kannavad kõik turud omased riskid. Võite kaotada kogu oma investeeringu. Osalege ainult vahenditega, mille kaotamist saate endale lubada.',
   },
   dapp: {
+    appsB2: 'Androidi rakendus:',
+    communitiesB2: 'Kogukonna vood:',
+    feedsMatureDesc: 'Loojad märgivad postituse koostamise ajal täiskasvanutele mõeldud sisuks. Sellised postitused ei ilmu avalikus avavoos ega otsingus, kuid on täielikult nähtavad looja profiilil ja kõigile, kes teda jälgivad. Vaatajad, kes tahavad neid kõikjal näha, lülitavad seadetes sisse valiku „Näita täiskasvanutele mõeldud sisu”.',
+    feedsPolls: 'Küsitlused:',
+    spTierCobra: 'Kuningkobra',
+    stagesB1: 'Juhi ja räägi:',
     title: 'Terviklik ökosüsteem',
     intro1: 'DeHub on tsensuurikindel avatud lähtekoodiga alternatiiv traditsioonilistele meediaplatvormidele, mis teenindab sisu loomise, striimimise ja mängude tööstusi. Ökosüsteem, kus igaüks saab teenida esimesest vaatamisest alates.',
     intro2: 'Rakendus skaleerub detsentraliseeritud kaevandajate võrgu kaudu, pakkudes jagatud arvutusvõimsust sisu majutamiseks, transkodeerimiseks ja edastamiseks.',
