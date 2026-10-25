@@ -13,6 +13,21 @@ function renderLibraryDelivery() {
     $(id).disabled = !token || !!libraryPending || locked() || busy() || (id === 'remake-save-library' && current?.state !== 'edit_complete');
   }
 }
+function outputDimensions(url) {
+  return new Promise((resolve, reject) => {
+    const video = document.createElement('video'); video.preload = 'metadata';
+    const finish = (error) => {
+      clearTimeout(timeout);
+      const width = video.videoWidth, height = video.videoHeight;
+      video.onloadedmetadata = null; video.onerror = null; video.removeAttribute('src'); video.load();
+      if (error || !width || !height) reject(Error('Could not read this video. Your saved project is retained; try again.'));
+      else resolve({ width, height });
+    };
+    const timeout = setTimeout(() => finish(true), 20000);
+    video.onloadedmetadata = () => finish(false); video.onerror = () => finish(true);
+    video.src = url; video.load();
+  });
+}
 async function saveToLibrary(remake) {
   if (!libraryBridge || !token || !current || libraryPending || locked() || busy()) return;
   const version = sessionVersion, ident = current.id;
@@ -26,8 +41,10 @@ async function saveToLibrary(remake) {
     if (version !== sessionVersion || current?.id !== ident) return;
     const url = remake ? current.state === 'edit_complete' && current.files['remake-result.mp4'] : current.files[selectedResult];
     if (!url) throw Error('This output is not ready. Your saved project is retained.');
+    const dimensions = await outputDimensions(url);
+    if (version !== sessionVersion || current?.id !== ident) return;
     const input = { type: 'maboroshi:save', requestId, wallet: account, projectId: ident, url,
-      version: remake ? current.remake.shots.map(shot => shot.id).join('.') : '0', createdAt: current.created * 1000 };
+      version: remake ? current.remake.shots.map(shot => shot.id).join('.') : '0', createdAt: current.created * 1000, ...dimensions };
     if (window.ReactNativeWebView) window.ReactNativeWebView.postMessage(JSON.stringify(input));
     else window.parent.postMessage(input, 'https://dehub.io');
     $('library-save-status').textContent = 'Saving to your private library…';

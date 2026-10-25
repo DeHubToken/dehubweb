@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
-import { useLocation } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { useAuth } from '@/contexts/AuthContext';
 import { useEditorQuota } from '@/hooks/use-editor-quota';
@@ -8,7 +8,9 @@ import { sendJobToEditor } from '@/lib/creator/sendToEditor';
 
 /** Route state contains an owned library id, never a private signed URL. */
 export function RemakeEditorHandoff() {
-  const { state } = useLocation();
+  const location = useLocation();
+  const { state } = location;
+  const navigate = useNavigate();
   const { walletAddress } = useAuth();
   const wallet = (walletAddress || '').toLowerCase();
   const input = state as { remakeAssetId?: string; wallet?: string } | null;
@@ -31,7 +33,13 @@ export function RemakeEditorHandoff() {
         if (job) {
           const result = await sendJobToEditor(job, { wallet, badgeBalance: options.current.badgeBalance,
             username: options.current.username, signal: controller.signal });
-          if (!controller.signal.aborted) setStatus(result ? 'done' : 'failed');
+          if (!controller.signal.aborted) {
+            setStatus(result ? 'done' : 'failed');
+            if (result) {
+              const { remakeAssetId: _id, wallet: _wallet, ...rest } = input || {};
+              navigate(location.pathname + location.search + location.hash, { replace: true, state: rest });
+            }
+          }
           return;
         }
         offset = page.nextOffset;
