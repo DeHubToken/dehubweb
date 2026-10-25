@@ -6,7 +6,8 @@
 }
 [data-shorts-mini] > :not([data-shorts-layout]):not([data-shorts-mini-controls]),
 [data-shorts-mini] [data-shorts-layout] > :not([data-shorts-player]),
-[data-shorts-mini] [data-shorts-player] > :not([data-shorts-pager]) {
+[data-shorts-mini] [data-shorts-player] > :not([data-shorts-pager]),
+[data-shorts-mini] [data-shorts-picture] > :not([data-shorts-media-slot]) {
   display: none !important;
 }
 [data-shorts-mini] [data-shorts-layout],

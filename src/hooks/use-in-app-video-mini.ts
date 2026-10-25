@@ -1,7 +1,9 @@
-import { useCallback, useEffect, useRef, useState, type RefObject } from 'react';
+import { useCallback, useEffect, useId, useRef, useState, type RefObject } from 'react';
 import { animate, useMotionValue, useReducedMotion, type PanInfo } from 'framer-motion';
 import { containedPicture } from '@/lib/live-overlay/layout';
 import { lockBodyScroll } from '@/lib/body-scroll-lock';
+import { videoPlaybackManager } from '@/lib/video-playback-manager';
+import { visualActivity } from '@/lib/visual-activity';
 
 /** Keep the viewer and its media mounted while its frame moves over the feed. */
 export function useInAppVideoMini(root: RefObject<HTMLElement | null>, index: number, enabled: boolean) {
@@ -10,6 +12,14 @@ export function useInAppVideoMini(root: RefObject<HTMLElement | null>, index: nu
   const scale = useMotionValue(1);
   const y = useMotionValue(0);
   const minimized = aspect !== null;
+  const owner = useId();
+  useEffect(() => {
+    const player = () => root.current?.querySelector<HTMLVideoElement>(`[data-shorts-slide="${index}"] video`) ?? null;
+    videoPlaybackManager.register(owner, () => player()?.pause(), muted => { const video = player(); if (video) video.muted = muted; }, () => true, player);
+    videoPlaybackManager.play(owner);
+    if (!visualActivity.isCallBusy()) videoPlaybackManager.claimAudio(owner);
+    return () => videoPlaybackManager.unregister(owner);
+  }, [root, index, owner]);
   const reducedMotion = useReducedMotion();
   useEffect(() => {
     if (minimized) return;
