@@ -1957,15 +1957,23 @@ const VideoCardBody = memo(function VideoCard({ video, postPage = false, onBack,
   });
 
   const openDedicatedPost = useCallback(() => {
-    // On phones a video opens in the Shorts viewer, in place. It has its own
-    // full-screen chrome, so the top nav is not involved.
     if (window.matchMedia('(max-width: 639px)').matches) {
-      navigate(`/app?short=${encodeURIComponent(video.id)}`);
-      return;
+      // Landscape footage keeps the post page, with the player at the top.
+      // Tall footage plays in the Shorts viewer, in place.
+      if (mediaAspect <= 1 && !isPPVLocked) {
+        navigate(`/app?short=${encodeURIComponent(video.id)}`);
+        return;
+      }
+      // Locked pay-per-view asks to unlock first. Once it is unlocked the next
+      // tap plays it in the Shorts viewer.
+      if (isPPVLocked) {
+        setShowPPVDrawer(true);
+        return;
+      }
     }
     cacheVideoForNavigation(queryClient, video);
     navigate(`/app/post/${video.id}`, { state: { fromFeed: true } });
-  }, [navigate, queryClient, video]);
+  }, [navigate, queryClient, video, mediaAspect, isPPVLocked]);
   const openPost = useVideoCardOpen({
     mediaRef: containerRef,
     shorts: feedShortsTarget,
