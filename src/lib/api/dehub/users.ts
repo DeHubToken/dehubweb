@@ -189,6 +189,9 @@ export async function updateProfile(data: UpdateProfileData): Promise<{ result: 
   console.log('[updateProfile] FormData keys:', keys);
 
   const result = await authedUpload<{ result: boolean }>('/api/update_profile', formData);
+  if (result?.result === false || (result as { error?: boolean })?.error) {
+    throw new Error(_translateCopy("copy.e51c5f7d0545", { defaultValue: "Profile update failed" }));
+  }
   console.log('[updateProfile] API response:', JSON.stringify(result));
   return result;
 }

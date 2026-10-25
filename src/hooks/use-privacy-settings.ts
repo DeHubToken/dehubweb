@@ -42,11 +42,11 @@ export function parseVisibility(raw?: unknown): { showFollowersFollowing: boolea
  */
 export function usePrivacySettings() {
   const { t: _copy } = _useCopy();
-  const { user, walletAddress, isAuthenticated } = useAuth();
+  const { user, walletAddress, isAuthenticated, refreshUser } = useAuth();
   const queryClient = useQueryClient();
 
   // Read current profile (customs) from the existing profile query
-  const { data: profile } = useDeHubProfile({
+  const { data: profile, isLoading } = useDeHubProfile({
     userId: walletAddress || undefined,
     enabled: !!walletAddress && isAuthenticated,
   });
@@ -130,6 +130,7 @@ export function usePrivacySettings() {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['dehub-profile'] });
+      void refreshUser();
       toast.success(_copy("copy.3bc473d05556", { defaultValue: "Privacy settings updated" }));
     },
     onError: (error) => {
@@ -154,7 +155,7 @@ export function usePrivacySettings() {
 
   return {
     settings: null, // kept for interface compat
-    isLoading: false,
+    isLoading,
     showFollowersFollowing,
     hideFollowerCounts,
     isPrivate,
