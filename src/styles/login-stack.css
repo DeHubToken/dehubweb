@@ -171,7 +171,9 @@ html[data-system-tone="light"] .login-stack-corner {
 }
 .login-stack-option__disc {
   width: 100%;
-  height: 56px;
+  max-width: 48px;
+  height: auto;
+  aspect-ratio: 1;
   border-radius: 16px;
   display: flex;
   align-items: center;
