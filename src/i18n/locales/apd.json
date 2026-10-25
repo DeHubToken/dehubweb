@@ -5734,9 +5734,6 @@
     "bio": "نبذة",
     "bioPlaceholder": "احكي عن نفسك...",
     "socialLinks": "روابط التواصل",
-    "socialFollowers": "المتابعون على {{platform}}",
-    "socialFollowersHint": "يظهرون في ملفك الشخصي كجزء من إجمالي وصولك. أدخل الرقم بنفسك - نحن لا نقرأه من المنصة.",
-    "socialFollowersPlaceholder": "مثال: 12500",
     "profileUpdated": "الملف الشخصي اتحدّث بنجاح",
     "failedLoadProfile": "ما قدرنا نحمّل الملف الشخصي",
     "imageTooLarge5": "الصورة لازم تكون أقل من 5MB",
@@ -7120,8 +7117,7 @@
     "reach": {
       "total": "إجمالي الوصول",
       "breakdownTitle": "من أين يأتي هذا الوصول",
-      "dehubFollowers": "متابعو DeHub",
-      "selfReported": "عدد المتابعين الاجتماعيين يدخله المنشئ."
+      "dehubFollowers": "متابعو DeHub"
     },
     "loginDescription": "سجّل دخول لمشاهدة وإدارة ملفك الشخصي.",
     "replyThread": {

@@ -2530,9 +2530,6 @@
     "bio": "Waa'ee",
     "bioPlaceholder": "Waa'ee kee nutti himi...",
     "socialLinks": "Liinkii Hawaasaa",
-    "socialFollowers": "Hordoftoota irratti {{platform}}",
-    "socialFollowersHint": "Gama profayila keetiin akka walii galatti argamuuf. Lakkofsa ofii kee galchi — isaa platform irraa hin dubbisnu.",
-    "socialFollowersPlaceholder": "fknf 12500",
     "profileUpdated": "Piroofaayiliin milkaa'inaan haaromfame",
     "failedLoadProfile": "Piroofaayilii fe'uun hin danda'amne",
     "imageTooLarge5": "Suuraan 5MB gadi ta'uu qaba",
@@ -3870,8 +3867,7 @@
     "reach": {
       "total": "Waliigala qaqqabummaa",
       "breakdownTitle": "Eessaa dhaqqabummaan kun dhufa",
-      "dehubFollowers": "Hordoftoota DeHub",
-      "selfReported": "Lakkoofsi hordoftoota hawaasummaa uumaan galcha."
+      "dehubFollowers": "Hordoftoota DeHub"
     },
     "loginDescription": "Piroofaayilii ilaaluuf fi bulchuuf seeni.",
     "replyThread": {

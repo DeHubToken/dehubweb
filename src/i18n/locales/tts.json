@@ -5938,9 +5938,6 @@
     "bio": "ประวัติ",
     "bioPlaceholder": "เล่าเรื่องตัวเอง...",
     "socialLinks": "ลิงก์โซเชียล",
-    "socialFollowers": "ผู้ติดตามบน {{platform}}",
-    "socialFollowersHint": "แสดงบนโปรไฟล์ของคุณเป็นส่วนหนึ่งของยอดการเข้าถึงทั้งหมดของคุณ ป้อนตัวเลขด้วยตนเอง — เราไม่อ่านจากแพลตฟอร์ม",
-    "socialFollowersPlaceholder": "เช่น 12500",
     "profileUpdated": "อัปเดตโปรไฟล์สำเร็จ",
     "failedLoadProfile": "โหลดข้อมูลโปรไฟล์ล้มเหลว",
     "imageTooLarge5": "ฮูปต้องน้อยกว่า 5MB",
@@ -7318,8 +7315,7 @@
     "reach": {
       "total": "ยอดการเข้าถึงทั้งหมด",
       "breakdownTitle": "การเข้าถึงนี้มาจากไหน",
-      "dehubFollowers": "ผู้ติดตาม DeHub",
-      "selfReported": "จำนวนผู้ติดตามโซเชียล ผู้สร้างเป็นผู้ป้อนข้อมูล"
+      "dehubFollowers": "ผู้ติดตาม DeHub"
     },
     "loginDescription": "เข้าสู่ระบบเพื่อเบิ่งและจัดการโปรไฟล์",
     "replyThread": {

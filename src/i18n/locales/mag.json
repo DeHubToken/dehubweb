@@ -6459,8 +6459,6 @@
     "bio": "बायो",
     "bioPlaceholder": "अपना बारे में बताओ...",
     "socialLinks": "सोशल लिंक",
-    "socialFollowersHint": "अपने समग्र पहुंच के हिस्से के रूप में अपना प्रोफ़ाइल दिखाएं । अपने खुद के नंबर दर्ज करो — हम एकरा मंच से नयँ पढ़ पइलिअइ ।",
-    "socialFollowersPlaceholder": "जेईई (एडवांस्ड) 1200",
     "profileUpdated": "प्रोफाइल अपडेट हो गेल",
     "failedLoadProfile": "प्रोफाइल डेटा लोड नइ हो पावल",
     "imageTooLarge5": "फोटो ५MB से कम होना चाहिं",
@@ -7956,8 +7954,7 @@
     "joined": "शामिल",
     "reach": {
       "breakdownTitle": "हई कहाँ ले आईल बा लोग?",
-      "dehubFollowers": "देसी अनुयायी हई",
-      "selfReported": "रचनाकार द्वारा सामाजिक अनुयायी के गिनती कैल जाई हई ।"
+      "dehubFollowers": "देसी अनुयायी हई"
     },
     "loginDescription": "अपना प्रोफाइल देखे आ मैनेज करे खातिर लॉग इन करो।",
     "replyThread": {

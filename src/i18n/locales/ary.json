@@ -6533,9 +6533,6 @@
     "bio": "البيو",
     "bioPlaceholder": "قول لينا على راسك...",
     "socialLinks": "روابط السوشل ميديا",
-    "socialFollowers": "المتابعون على {{platform}}",
-    "socialFollowersHint": "يظهر في ملفك التعريفي كجزء من مدى وصولك الإجمالي. أدخل الرقم بنفسك — نحن لا نقرأه من المنصة.",
-    "socialFollowersPlaceholder": "على سبيل المثال 12500",
     "profileUpdated": "البروفيل تبدل بنجاح",
     "failedLoadProfile": "ما قدرش يحمل بيانات البروفيل",
     "imageTooLarge5": "التصويرة خاصها تكون أقل من 5 ميغا",
@@ -8047,8 +8044,7 @@
     "reach": {
       "total": "الوصول الكلي",
       "breakdownTitle": "من أين يأتي هذا الوصول",
-      "dehubFollowers": "متابعو DeHub",
-      "selfReported": "يتم إدخال عدد المتابعين الاجتماعيين من قبل المنشئ."
+      "dehubFollowers": "متابعو DeHub"
     },
     "loginDescription": "دخل باش تشوف وتدبر البروفيل ديالك.",
     "replyThread": {

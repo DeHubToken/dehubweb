@@ -6484,9 +6484,6 @@
     "bio": "Био",
     "bioPlaceholder": "Өзіңіз туралы айтыңыз...",
     "socialLinks": "Әлеуметтік сілтемелер",
-    "socialFollowers": "{{platform}} бойынша ізбасарлар",
-    "socialFollowersHint": "Жалпы қол жетімділігіңіздің бір бөлігі ретінде профиліңізде көрсетіледі. Нөмірді өзіңіз енгізіңіз — біз оны платформадан оқымаймыз.",
-    "socialFollowersPlaceholder": "мысалы, 12500",
     "profileUpdated": "Профиль сәтті жаңартылды",
     "failedLoadProfile": "Профильді жүктеу сәтсіз аяқталды",
     "imageTooLarge5": "Сурет 5MB-дан кіші болуы керек",
@@ -8019,8 +8016,7 @@
     "reach": {
       "total": "Жалпы қолжетімділік",
       "breakdownTitle": "Бұл қол жетімділік қайдан келеді",
-      "dehubFollowers": "DeHub ізбасарлары",
-      "selfReported": "Әлеуметтік ізбасарлар сандарын жасаушы енгізеді."
+      "dehubFollowers": "DeHub ізбасарлары"
     },
     "loginDescription": "Профильді көру және басқару үшін кіріңіз.",
     "replyThread": {

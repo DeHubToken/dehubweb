@@ -6510,9 +6510,6 @@
     "bio": "Bio",
     "bioPlaceholder": "Verzell öppis über di...",
     "socialLinks": "Soziali Links",
-    "socialFollowers": "Follower uf {{platform}}",
-    "socialFollowersHint": "Zeigt uf dim Profil a als Teil vo dim ganzä Reichwiite. Gib d Zahl sälber ii – mir läsed si nöd vo dr Plattform.",
-    "socialFollowersPlaceholder": "z.B. 12500",
     "profileUpdated": "Profiu erfolgriich aktualisiert",
     "failedLoadProfile": "Profiu-Date chönd nid glade wärde",
     "imageTooLarge5": "Bild muess chleiner als 5MB sii",
@@ -8000,8 +7997,7 @@
     "reach": {
       "total": "Gesamti Reichwiite",
       "breakdownTitle": "Woher die Reichwiite chunt",
-      "dehubFollowers": "DeHub Follower",
-      "selfReported": "Soziali Follower-Zahle werded vom Creator yygäbe."
+      "dehubFollowers": "DeHub Follower"
     },
     "loginDescription": "Mäld di aa zum dis Profiu z gsee und z verwaltä.",
     "replyThread": {

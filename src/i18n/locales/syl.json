@@ -5225,9 +5225,6 @@
     "bio": "বায়ো",
     "bioPlaceholder": "তোমার নিজের কথা কিছু কও...",
     "socialLinks": "সোশ্যাল লিংক",
-    "socialFollowers": "ফলোয়ার {{platform}}-এর",
-    "socialFollowersHint": "আপনার প্রোফাইলে আপনার মোট রিচের অংশ হিসাবে দেখানো হবে। সংখ্যাটি নিজে লিখুন — আমরা প্ল্যাটফর্ম থেকে এটি পড়ি না।",
-    "socialFollowersPlaceholder": "যেমন: 12500",
     "profileUpdated": "প্রোফাইল ঠিকঠাক আপডেট অইসে",
     "failedLoadProfile": "প্রোফাইলের ডাটা লোড করা যায় নাই",
     "imageTooLarge5": "ছবি ৫MB থাকি কম অওয়া লাগবো",
@@ -6737,8 +6734,7 @@
     "reach": {
       "total": "মোট রিচ",
       "breakdownTitle": "এই রিচ কোথা থেকে আসে",
-      "dehubFollowers": "DeHub ফলোয়ার",
-      "selfReported": "সোশ্যাল ফলোয়ার সংখ্যা ক্রিয়েটর দ্বারা প্রবেশ করানো হয়।"
+      "dehubFollowers": "DeHub ফলোয়ার"
     },
     "loginDescription": "তোমার প্রোফাইল দেখতে আর ম্যানেজ করতে লগ ইন করো।",
     "replyThread": {

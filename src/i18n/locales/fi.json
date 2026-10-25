@@ -6579,9 +6579,6 @@
     "bio": "Kuvaus",
     "bioPlaceholder": "Kerro itsestäsi...",
     "socialLinks": "Sosiaalisen median linkit",
-    "socialFollowers": "Seuraajat kohteessa {{platform}}",
-    "socialFollowersHint": "Näkyy profiilissasi osana kokonaiskattavuuttasi. Syötä numero itse — emme lue sitä alustalta.",
-    "socialFollowersPlaceholder": "esim. 12500",
     "profileUpdated": "Profiili päivitetty onnistuneesti",
     "failedLoadProfile": "Profiilin lataaminen epäonnistui",
     "imageTooLarge5": "Kuvan tulee olla alle 5 Mt",
@@ -8084,8 +8081,7 @@
     "reach": {
       "total": "Kokonaisulottuvuus",
       "breakdownTitle": "Mistä tämä REACH-järjestelmä on peräisin",
-      "dehubFollowers": "DeHub-seuraajat",
-      "selfReported": "Tekijä syöttää sosiaalisen seuraajamäärän."
+      "dehubFollowers": "DeHub-seuraajat"
     },
     "loginDescription": "Kirjaudu sisään nähdäksesi ja hallinnoidaksesi profiiliasi.",
     "replyThread": {

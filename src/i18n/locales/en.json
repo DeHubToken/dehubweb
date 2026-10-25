@@ -614,9 +614,6 @@
     "bio": "Bio",
     "bioPlaceholder": "Tell us about yourself...",
     "socialLinks": "Social Links",
-    "socialFollowers": "Followers on {{platform}}",
-    "socialFollowersHint": "Shown on your profile as part of your total reach. Enter the number yourself — we do not read it from the platform.",
-    "socialFollowersPlaceholder": "e.g. 12500",
     "profileUpdated": "Profile updated successfully",
     "failedLoadProfile": "Failed to load profile data",
     "imageTooLarge5": "Image must be less than 5MB",
@@ -1130,7 +1127,15 @@
     "adLoadStandardDesc": "One sponsored post every eight",
     "adLoadFewer": "Fewer",
     "adLoadFewerDesc": "One every sixteen",
-    "automatic": "Automatic"
+    "automatic": "Automatic",
+    "socialConnectHint": "Connect an account to show its real follower count in your total reach. Counts come straight from the platform.",
+    "socialConnect": "Connect",
+    "socialConnectAria": "Connect {{platform}}",
+    "socialConnected": "{{platform}} connected",
+    "socialConnectedShort": "Connected",
+    "socialConnectFailed": "Could not connect {{platform}}. Please try again.",
+    "socialVerifiedFollowers": "{{value}} followers",
+    "socialFollowersPending": "Follower count updating"
   },
   "common": {
     "confirm": "Confirm",
@@ -2129,7 +2134,7 @@
       "total": "Total reach",
       "breakdownTitle": "Where this reach comes from",
       "dehubFollowers": "DeHub followers",
-      "selfReported": "Social follower counts are entered by the creator."
+      "verified": "Social counts come from accounts the creator connected."
     },
     "loginDescription": "Log in to view and manage your profile.",
     "replyThread": {

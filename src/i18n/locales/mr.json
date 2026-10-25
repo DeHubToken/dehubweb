@@ -2528,9 +2528,6 @@
     "bio": "बायो",
     "bioPlaceholder": "तुमच्याबद्दल सांगा...",
     "socialLinks": "सोशल लिंक्स",
-    "socialFollowers": "{{platform}} वर फॉलोअर्स",
-    "socialFollowersHint": "तुमच्या एकूण पोहोचण्याचा एक भाग म्हणून तुमच्या प्रोफाइलवर दाखवा. नंबर स्वतः प्रविष्ट करा — आम्ही प्लॅटफॉर्मवरून ते वाचत नाही.",
-    "socialFollowersPlaceholder": "उदा. 12500",
     "profileUpdated": "प्रोफाइल यशस्वीरित्या अपडेट झाले",
     "failedLoadProfile": "प्रोफाइल डेटा लोड करण्यात अयशस्वी",
     "imageTooLarge5": "चित्र 5MB पेक्षा कमी असावे",
@@ -3857,8 +3854,7 @@
     "reach": {
       "total": "एकूण पोहोच",
       "breakdownTitle": "कुठून आली ही उष्णता",
-      "dehubFollowers": "DeHub अनुयायी",
-      "selfReported": "निर्मात्याकडून सामाजिक अनुयायी संख्या प्रविष्ट केली जाते."
+      "dehubFollowers": "DeHub अनुयायी"
     },
     "loginDescription": "तुमचे प्रोफाइल पाहण्यासाठी आणि व्यवस्थापित करण्यासाठी लॉगिन करा.",
     "replyThread": {

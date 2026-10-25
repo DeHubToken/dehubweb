@@ -6413,9 +6413,6 @@
     "bio": "Bayani",
     "bioPlaceholder": "Gaya mana game da kanka...",
     "socialLinks": "Hanyoyin sadarwa",
-    "socialFollowers": "Mabiya akan {{platform}}",
-    "socialFollowersHint": "Shown a kan profile a matsayin wani ɓangare na your total isa. Shigar da lambar da kanka — ba mu karanta shi daga dandamali ba.",
-    "socialFollowersPlaceholder": "misali 12500",
     "profileUpdated": "An sabunta bayanan kai cikin nasara",
     "failedLoadProfile": "Ba a iya ɗora bayanan kai ba",
     "imageTooLarge5": "Hoto dole ya kasance ƙasa da 5MB",
@@ -7914,8 +7911,7 @@
     "reach": {
       "total": "Jimlar isa",
       "breakdownTitle": "Inda wannan isa ya fito daga",
-      "dehubFollowers": "DeHub mabiya",
-      "selfReported": "An shigar da ƙididdigar mabiya zamantakewa ta mahalicci."
+      "dehubFollowers": "DeHub mabiya"
     },
     "loginDescription": "Shiga don gani da sarrafa bayanan kanka.",
     "replyThread": {

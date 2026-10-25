@@ -2529,9 +2529,6 @@
     "bio": "Bio",
     "bioPlaceholder": "Ceritakan tentang diri Anda...",
     "socialLinks": "Tautan Sosial",
-    "socialFollowers": "Pengikut di {{platform}}",
-    "socialFollowersHint": "Ditampilkan di profil Anda sebagai bagian dari jangkauan total Anda. Masukkan nomornya sendiri — kami tidak membacanya dari platform.",
-    "socialFollowersPlaceholder": "misalnya 12500",
     "profileUpdated": "Profil berhasil diperbarui",
     "failedLoadProfile": "Gagal memuat data profil",
     "imageTooLarge5": "Gambar harus kurang dari 5MB",
@@ -2937,7 +2934,15 @@
     "solanaLinked": "Dompet Solana terhubung",
     "solanaLinkFailed": "Tidak dapat menghubungkan dompet itu",
     "solanaUnlinked": "Dompet Solana diputuskan",
-    "solanaUnlinkFailed": "Tidak dapat memutuskan dompet itu"
+    "solanaUnlinkFailed": "Tidak dapat memutuskan dompet itu",
+    "socialConnectHint": "Hubungkan akun untuk menampilkan jumlah pengikut aslinya di total jangkauanmu. Angka diambil langsung dari platform.",
+    "socialConnect": "Hubungkan",
+    "socialConnectAria": "Hubungkan {{platform}}",
+    "socialConnected": "{{platform}} terhubung",
+    "socialConnectedShort": "Terhubung",
+    "socialConnectFailed": "Tidak dapat menghubungkan {{platform}}. Coba lagi.",
+    "socialVerifiedFollowers": "{{value}} pengikut",
+    "socialFollowersPending": "Memperbarui jumlah pengikut"
   },
   "common": {
     "confirm": "Konfirmasi",
@@ -3855,7 +3860,7 @@
       "total": "Total jangkauan",
       "breakdownTitle": "Dari mana jangkauan ini berasal",
       "dehubFollowers": "Pengikut DeHub",
-      "selfReported": "Jumlah pengikut sosial dimasukkan oleh kreator."
+      "verified": "Angka sosial berasal dari akun yang dihubungkan kreator."
     },
     "loginDescription": "Masuk untuk melihat dan mengelola profil Anda.",
     "replyThread": {
