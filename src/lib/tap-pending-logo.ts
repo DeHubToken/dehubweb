@@ -38,6 +38,7 @@ function element(): HTMLDivElement {
   const img = document.createElement('img');
   img.src = '/dehub-loader-240.webp';
   img.alt = '';
+  img.setAttribute('data-dehub-loader', '');
   img.width = 56;
   img.height = 56;
   img.className = 'dehub-loader-mark select-none';
