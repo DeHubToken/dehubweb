@@ -1788,7 +1788,7 @@ const VideoCardBody = memo(function VideoCard({ video, postPage = false, onBack,
     muted: isMuted,
     loop: !!(video.isAd || isLooping),
     preload: videoPreload,
-    className: 'dehub-inline-video w-full h-full object-contain',
+    className: `dehub-inline-video w-full h-full ${isFullscreen ? 'object-contain' : 'object-cover'}`,
     onEnded: handleVideoEnded,
     onError: handleVideoError,
     onTimeUpdate: handleTimeUpdate,
@@ -2257,35 +2257,33 @@ const VideoCardBody = memo(function VideoCard({ video, postPage = false, onBack,
         data-video-fullscreen={isFullscreen || undefined}
         data-media-full
         className={`bg-black cursor-pointer group/thumb outline-none focus:outline-none focus-visible:outline-none overflow-hidden ${mediaRadius} ${isFullscreen ? 'fixed inset-0 z-[9999] w-screen h-[100dvh] flex items-center justify-center' : `relative ${isImmersive ? 'mx-auto' : ''} ${isImmersive && showComments ? 'aspect-[2/1]' : ''}`}`}
-        /* Fit the full picture within the media budget, reserving a separate
-           transport strip below it on feeds, post pages and fullscreen. */
+        /* Inline footage fills the width and crops within its height budget.
+           The transport stays below it; fullscreen retains the full picture. */
         style={{ ...(
           isFullscreen || (isImmersive && showComments)
             ? undefined
             : isImmersive
               ? {
                   aspectRatio: mediaAspect,
-                  width: `min(100%, calc(${IMMERSIVE_MAX_MEDIA_HEIGHT} * ${mediaAspect.toFixed(4)}))`,
-                  maxHeight: splitControls ? `calc(${IMMERSIVE_MAX_MEDIA_HEIGHT} - 47px)` : IMMERSIVE_MAX_MEDIA_HEIGHT,
+                  width: '100%',
+                  maxHeight: splitControls
+                    ? `calc(${isPhone ? FEED_PREVIEW_MAX_HEIGHT : IMMERSIVE_MAX_MEDIA_HEIGHT} - 47px)`
+                    : isPhone ? FEED_PREVIEW_MAX_HEIGHT : IMMERSIVE_MAX_MEDIA_HEIGHT,
                 }
               : phoneFeedFrame
                 ? {
-                    // The frame hugs the clip, X style: up to 55% of the screen
-                    // tall, left aligned, so a slim video leaves empty space on
-                    // the right instead of bars at its sides.
+                    // Tall previews crop vertically instead of narrowing the frame.
                     aspectRatio: mediaAspect,
-                    width: `min(100%, calc(${FEED_PREVIEW_MAX_HEIGHT} * ${mediaAspect.toFixed(4)}))`,
+                    width: '100%',
                     maxHeight: FEED_PREVIEW_MAX_HEIGHT,
                     marginLeft: 0,
                     marginRight: 'auto',
-                    ['--feed-preview-aspect' as string]: mediaAspect.toFixed(4),
                   }
               : desktopFeedHug
                 ? {
-                    // Same rule as the phone preview, in the desktop column:
-                    // up to 75% of the screen tall, left aligned.
+                    // Fill the desktop column while retaining its height cap.
                     aspectRatio: feedFrameAspect,
-                    width: `min(100%, calc(${DESKTOP_FEED_MAX_HEIGHT} * ${feedFrameAspect.toFixed(4)}))`,
+                    width: '100%',
                     maxHeight: DESKTOP_FEED_MAX_HEIGHT,
                     marginLeft: 0,
                     marginRight: 'auto',
@@ -2576,7 +2574,7 @@ const VideoCardBody = memo(function VideoCard({ video, postPage = false, onBack,
                     src={thumbnail} srcSet={cdnImageSrcSet(thumbnail, [320, 480, 640, 960, 1280])} sizes="(min-width: 1024px) 600px, 100vw" decoding="async"
                     alt=""
                     aria-hidden="true"
-                    className="absolute inset-0 w-full h-full object-contain"
+                    className={`absolute inset-0 w-full h-full ${isFullscreen ? 'object-contain' : 'object-cover'}`}
                     loading={aboveFold ? 'eager' : 'lazy'}
                     fetchPriority={aboveFold ? 'high' : 'auto'}
                   />

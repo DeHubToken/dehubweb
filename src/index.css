@@ -5997,10 +5997,8 @@ html[data-system-tone="light"] .art-rim {
 [data-feed-video-frame]:not(#_) {
   max-height: 75svh !important;
 }
-/* Phone feed preview (VideoCard): the frame hugs the clip within 55% of the
-   screen, left aligned like X, so a slim video leaves empty space on the
-   right rather than bars at its sides.
-   Beats the cap above and the cinematic feed's full-width media rule. */
+/* Phone previews fill the column and crop tall footage within 55% of the
+   screen. Keep the frame aligned with its bottom controls in every theme. */
 [data-feed-video-frame][data-feed-preview]:not(#_):not(#_) {
   max-height: 55svh !important;
   max-width: 100% !important;
@@ -6008,7 +6006,7 @@ html[data-system-tone="light"] .art-rim {
   margin-right: auto !important;
 }
 [data-media-full][data-feed-preview]:not(#_):not(#_) {
-  width: min(100%, calc(55svh * var(--feed-preview-aspect, 1.7778))) !important;
+  width: 100% !important;
 }
 /* The cinematic feed lays its author row and buttons over the top of the
    media, so unmute drops below them there. */
