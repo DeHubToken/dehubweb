@@ -39,14 +39,32 @@ import { createLogger } from '@/lib/logger';
 
 const flowLog = createLogger('LoginFlow');
 
+/**
+ * React.lazy suspends for a frame on first render even when the chunk is
+ * already downloaded, so a prefetched sheet still flashed its skeleton. This
+ * keeps the loaded component and renders it directly once it is there. The
+ * choice is made once per mount, so a live component is never swapped out.
+ */
+function preloadable<P extends object>(load: () => Promise<React.ComponentType<P>>) {
+  let loaded: React.ComponentType<P> | null = null;
+  let pending: Promise<React.ComponentType<P>> | null = null;
+  const preload = () => (pending ??= load().then((c) => (loaded = c)).catch((e) => { pending = null; throw e; }));
+  const Lazy = React.lazy(() => preload().then((c) => ({ default: c })));
+  function Preloadable(props: P) {
+    const [C] = useState<React.ComponentType<P>>(() => loaded ?? Lazy);
+    return <C {...props} />;
+  }
+  return Object.assign(Preloadable, { preload });
+}
+
 // Phone sign-in hero (three fanned clips + headline). Lazy so its CSS and
 // clips stay off the entry bundle; the option list renders without it.
-const LoginShortsStack = React.lazy(() =>
-  import('@/components/app/login/LoginShortsStack').then(m => ({ default: m.LoginShortsStack })),
+const LoginShortsStack = preloadable(() =>
+  import('@/components/app/login/LoginShortsStack').then(m => m.LoginShortsStack),
 );
 
-const LoginModalBody = React.lazy(() =>
-  import('@/components/app/login/LoginModalBody').then(m => ({ default: m.LoginModalBody })),
+const LoginModalBody = preloadable(() =>
+  import('@/components/app/login/LoginModalBody').then(m => m.LoginModalBody),
 );
 
 // The last step of signing up, and the only one an existing session can land on
@@ -60,7 +78,31 @@ const LoginProfileStep = React.lazy(() =>
  * Called from App once the app has painted; safe to call repeatedly.
  */
 export function prefetchLoginModal(): void {
-  void import('@/components/app/login/LoginModalBody').catch(() => {});
+  void LoginModalBody.preload().catch(() => {});
+  void LoginShortsStack.preload().catch(() => {});
+}
+
+/**
+ * Guests only: fetch the sheet's chunks once the page has finished loading and
+ * the main thread is idle, so the first tap on "Log in" or "+" opens straight
+ * onto the real options instead of the skeleton. Waits for `load` plus an idle
+ * slot so it never competes with the page itself, and stays off entirely on
+ * data-saver or 2G connections, where the tap-time warm-up is enough.
+ */
+let loginPrefetchScheduled = false;
+export function scheduleLoginPrefetch(): void {
+  if (loginPrefetchScheduled || typeof window === 'undefined') return;
+  loginPrefetchScheduled = true;
+  const conn = (navigator as { connection?: { saveData?: boolean; effectiveType?: string } }).connection;
+  if (conn?.saveData || /(^|-)2g$/.test(conn?.effectiveType ?? '')) return;
+  const ric = (window as { requestIdleCallback?: (cb: () => void, o?: { timeout: number }) => void })
+    .requestIdleCallback;
+  const run = () => {
+    if (ric) ric(prefetchLoginModal, { timeout: 4000 });
+    else setTimeout(prefetchLoginModal, 1500);
+  };
+  if (document.readyState === 'complete') setTimeout(run, 1000);
+  else window.addEventListener('load', () => setTimeout(run, 1000), { once: true });
 }
 
 /**
