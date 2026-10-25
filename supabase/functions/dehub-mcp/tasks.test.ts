@@ -1,4 +1,4 @@
-import { handleTaskRequest, matchesPostFilters, postBreaksGroundingRules, postText, replyBreaksRules, runTask, type TaskTool, type ProfileImages } from './tasks.ts';
+import { handleTaskRequest, matchesPostFilters, pacedTargets, postBreaksGroundingRules, postText, replyBreaksRules, runTask, type TaskTool, type ProfileImages } from './tasks.ts';
 import { AGENT_OWNER } from './task-plan.ts';
 
 const assert = (value: unknown, description: string) => { if (!value) throw new Error(description); };
@@ -65,6 +65,42 @@ Deno.test('a stored success is not replayed after interruption', async () => {
   const test = fixture('succeeded'); await test.run();
   assert(test.calls() === 0, 'replayed a completed reaction');
   assert(test.task.status === 'completed', 'did not finish the remaining cursor');
+});
+Deno.test('paced swarm performs one reaction per turn and completes its last target', async () => {
+  const test = fixture();
+  Object.assign(test.task.plan, { pacing: { gap_seconds: 60, duration_minutes: 6 } });
+  Object.assign(test.task, { swarm_size: 2, swarm_index: 0, swarm_mode: 'each' });
+  Object.assign(test.task.plan.steps[0], { audience: 'posts', from: '2026-10-01T00:00:00Z', to: '2026-10-02T00:00:00Z' });
+  Object.assign(test.task.cursor, { targets: ['123', '124'], index: 0, done: true });
+  const before = Date.now();
+  await test.run();
+  assert(test.calls() === 1 && test.task.status === 'queued', 'bulk reactions burst into one turn');
+  assert(Date.parse((test.task as any).next_run_at) >= before + 120000, 'did not leave room for other members');
+  assert(!test.task.needs_review && test.rows.ai_agent_lives === undefined, 'required manual resume or Sentient mode');
+  test.task.status = 'running';
+  await test.run();
+  assert(test.calls() === 2 && test.task.status === 'completed', 'last reaction did not complete');
+});
+Deno.test('temporary agent sign-in failure requeues without requiring resume', async () => {
+  const test = fixture();
+  await runTask({ db: () => test.db, token: async () => null, tools: () => test.registry }, new Request('https://example.test/tasks/tick'), structuredClone(test.task));
+  assert(test.task.status === 'queued' && !test.task.needs_review && test.calls() === 0, 'sign-in failure required manual resume');
+});
+Deno.test('paced discovery paginates once, filters, deduplicates and never records views', async () => {
+  const original = globalThis.fetch;
+  let pages = 0;
+  globalThis.fetch = async input => {
+    const url = new URL(String(input));
+    assert(url.pathname === '/api/feed', 'discovery recorded public views');
+    pages++;
+    if (pages === 1) return Response.json({ result: [{ tokenId: 1, createdAt: '2026-10-01T12:00:00Z', category: 'Music' }, { tokenId: 2, createdAt: '2026-10-01T11:00:00Z', category: 'Art' }], pagination: { next_cursor: { created_at: '2026-10-01T11:00:00Z', token_id: 2 } } });
+    assert(url.searchParams.get('cursor_token') === '2', 'lost snapshot page cursor');
+    return Response.json({ result: [{ tokenId: 1, createdAt: '2026-10-01T12:00:00Z', category: 'Music' }, { tokenId: 3, createdAt: '2026-10-01T10:00:00Z', category: 'Music' }], pagination: { next_cursor: null } });
+  };
+  try {
+    const targets = await pacedTargets({ tool: 'dehub_vote', arguments: { vote_type: 'like' }, audience: 'posts', from: '2026-10-01T00:00:00Z', to: '2026-10-02T00:00:00Z', category: 'Music' } as any, 'test');
+    assert(pages === 2 && targets.join(',') === '1,3', 'snapshot missed, duplicated or leaked filtered posts');
+  } finally { globalThis.fetch = original; }
 });
 Deno.test('an interrupted pending write pauses without retrying', async () => {
   const test = fixture('pending'); await test.run();
