@@ -1,0 +1,16 @@
+.post-quiet-loader {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 72px;
+  color: inherit;
+}
+.post-quiet-loader svg { width: 28px; height: 28px; }
+.post-quiet-loader path { opacity: .35; }
+html:is([data-theme="light"], [data-system-tone="light"]) .post-quiet-loader { color: var(--ink, #0b0b0d); }
+@media (prefers-reduced-motion: no-preference) {
+  html:not(.reduce-motion) .post-quiet-loader path { animation: post-quiet-dot 900ms ease-in-out infinite; }
+  html:not(.reduce-motion) .post-quiet-loader path:nth-child(2) { animation-delay: 150ms; }
+  html:not(.reduce-motion) .post-quiet-loader path:nth-child(3) { animation-delay: 300ms; }
+}
+@keyframes post-quiet-dot { 0%, 60%, 100% { opacity: .3; } 25% { opacity: 1; } }
