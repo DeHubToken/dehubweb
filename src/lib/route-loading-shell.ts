@@ -30,11 +30,10 @@ export function showRouteLoadingShell(title: string, backLabel: string, backward
   button.onclick = () => window.history.back();
   node.querySelector('strong')!.textContent = title;
   document.body.appendChild(node);
-  const opacity = main.style.opacity;
   const inert = main.inert;
   let removed = false;
   let timer: ReturnType<typeof setTimeout> | undefined;
-  const restore = () => { main.style.opacity = opacity; main.inert = inert; };
+  const restore = () => { main.inert = inert; };
   const remove = () => {
     if (removed) return;
     removed = true;
@@ -45,7 +44,7 @@ export function showRouteLoadingShell(title: string, backLabel: string, backward
   // A lost route or error must never leave the feed hidden behind a shell.
   timer = setTimeout(remove, 5000);
   return {
-    cover() { if (!removed) { main.style.opacity = '0'; main.inert = true; } },
+    cover() { if (!removed) main.inert = true; },
     reveal() {
       if (removed) return;
       restore();
@@ -55,6 +54,9 @@ export function showRouteLoadingShell(title: string, backLabel: string, backward
         return;
       }
       button.disabled = true;
+      const current = getComputedStyle(node);
+      node.style.opacity = current.opacity;
+      node.style.transform = current.transform;
       node.dataset.leaving = '';
       timer = setTimeout(remove, 120);
     },
