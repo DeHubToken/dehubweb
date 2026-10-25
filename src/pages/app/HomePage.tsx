@@ -296,6 +296,18 @@ export default function HomePage() {
   const [showImagesCollage, setShowImagesCollage] = useState(true); // Default to collage
   const [showImagesFilters, setShowImagesFilters] = useState(false);
   const [selectedImageId, setSelectedImageId] = useState<string | null>(null);
+
+  // An image post opened on its own (phone post page, shared link) lands in the
+  // Images tab's scroll view on that picture. The nav pill's back slot already
+  // returns to the grid from there, so nothing new is needed for the way back.
+  const pinnedImageId = searchParams.get('image') || undefined;
+  useEffect(() => {
+    if (!pinnedImageId) return;
+    setActiveTab('images');
+    setSelectedImageId(pinnedImageId);
+    setShowImagesCollage(false);
+    setSearchParams({}, { replace: true });
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
   const [showVideosFilters, setShowVideosFilters] = useState(false);
   const [showMusicFilters, setShowMusicFilters] = useState(false);
   const [showLiveFilters, setShowLiveFilters] = useState(false);
