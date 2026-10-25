@@ -2110,10 +2110,198 @@ export default function NotificationsPage({ inDrawer = false }: { inDrawer?: boo
     (key, defaultLabel) => t(key, { defaultValue: defaultLabel }),
   );
   const activeTabLabel = translateFilterLabel(activeTab);
-  // The header badge sits next to the active tab's name, so it has to count the
+  // The header count corresponds to the active tab's name, so it counts the
   // same thing that name does. Showing the all-tabs total beside "Mentions" read
   // as "42 mentions" when 42 was every unread notification on the account.
   const headerUnread = getTabCount(activeTab);
+  const settingsControl = (
+    <Sheet>
+      <SheetTrigger asChild>
+        <button
+          type="button"
+          data-kit-square
+          data-notification-settings
+          className="text-white"
+          aria-label={t('notifications.settings')}
+          title={t('notifications.settings')}
+        >
+          <Settings className="h-[18px] w-[18px] text-white" />
+        </button>
+      </SheetTrigger>
+      <SheetContent
+        side="bottom"
+        data-notifications-page
+        className="bg-black/60 backdrop-blur-[24px] saturate-[180%] border-t border-white/10 rounded-t-3xl max-h-[85vh] overflow-y-auto"
+      >
+        <SheetHeader className="pb-4">
+          <SheetTitle className="text-white text-lg font-bold flex items-center gap-2">
+            <Settings className="w-5 h-5 text-white" />
+            {t('notifications.settings')}
+          </SheetTitle>
+        </SheetHeader>
+                  
+        {/* Actions Section */}
+        <div className="space-y-3 mb-6">
+          <p className="text-xs text-white/50 uppercase tracking-wider font-medium">{t('notifications.actions')}</p>
+          <button
+            onClick={handleMarkAllAsRead}
+            disabled={markAllAsRead.isPending || totalUnread === 0}
+            className="w-full flex items-center gap-3 p-4 rounded-xl bg-white/10 hover:bg-white/15 transition-colors disabled:opacity-50"
+          >
+            <div className="w-10 h-10 rounded-xl bg-white/10 flex items-center justify-center">
+              <Check className="w-5 h-5 text-white" />
+            </div>
+            <div className="flex-1 text-left">
+              <p className="text-white font-medium">{t('notifications.markAllAsRead')}</p>
+              <p className="text-white/50 text-sm">{t('notifications.clearAllIndicators')}</p>
+            </div>
+          </button>
+                    
+          <button
+            onClick={handleClearAllNotifications}
+            disabled={isClearingAll || allNotifications.length === 0}
+            className="w-full flex items-center gap-3 p-4 rounded-xl bg-white/10 hover:bg-white/15 transition-colors disabled:opacity-50"
+          >
+            <div className="w-10 h-10 rounded-xl bg-white/10 flex items-center justify-center">
+              {isClearingAll ? <Loader2 className="w-5 h-5 text-white animate-spin" /> : <Trash2 className="w-5 h-5 text-white" />}
+            </div>
+            <div className="flex-1 text-left">
+              <p className="text-white font-medium">{t('notifications.clearAll')}</p>
+              <p className="text-white/50 text-sm">{t('notifications.removeHistory')}</p>
+            </div>
+          </button>
+        </div>
+                  
+        {/* This Browser Section */}
+        <div className="space-y-3 mb-6">
+          <p className="text-xs text-white/50 uppercase tracking-wider font-medium">
+            {t('notifications.thisBrowser', 'This browser')}
+          </p>
+          {/*
+            The rows below are account-level and follow you between
+            devices; this one is the browser's own permission, and it
+            is the only way back for anyone who blocked the native
+            prompt by accident or never saw it.
+          */}
+          <BrowserNotificationsSetting variant="card" />
+        </div>
+
+        {/* Account-level, and the only channel that reaches someone
+            who is not in the app at all. */}
+        <div className="space-y-3 mb-6">
+          <p className="text-xs text-white/50 uppercase tracking-wider font-medium">
+            {t('notifications.byEmail', 'By email')}
+          </p>
+          <EmailNotificationsSetting variant="card" />
+        </div>
+
+        {/* The same reach, paid for per message. */}
+        <div className="space-y-3 mb-6">
+          <p className="text-xs text-white/50 uppercase tracking-wider font-medium">
+            {t('notifications.byText', 'By text')}
+          </p>
+          <SmsNotificationsSetting variant="card" />
+        </div>
+
+        {/* Notification Types Section */}
+        <div className="space-y-3">
+          <p className="text-xs text-white/50 uppercase tracking-wider font-medium">{t('notifications.notificationTypes')}</p>
+                    
+          <div className="space-y-2">
+            <label className="flex items-center justify-between p-4 rounded-xl bg-white/10 cursor-pointer">
+              <div className="flex items-center gap-3">
+                <div className="w-10 h-10 rounded-xl bg-white/10 flex items-center justify-center overflow-visible">
+                  <ThemedIcon icon="trophy" alt="" className="w-8 h-8 object-contain" />
+                </div>
+                <div>
+                  <p className="text-white font-medium">{t('notifications.likes')}</p>
+                  <p className="text-white/50 text-sm">{t('notifications.likesDesc')}</p>
+                </div>
+              </div>
+              <Switch 
+                {...prefToggle('likes')}
+              />
+            </label>
+                      
+            <label className="flex items-center justify-between p-4 rounded-xl bg-white/10 cursor-pointer">
+              <div className="flex items-center gap-3">
+                <div className="w-10 h-10 rounded-xl bg-white/10 flex items-center justify-center overflow-visible">
+                  <ThemedIcon icon="posts" alt="" className="w-8 h-8 object-contain" />
+                </div>
+                <div>
+                  <p className="text-white font-medium">{t('notifications.comments')}</p>
+                  <p className="text-white/50 text-sm">{t('notifications.commentsDesc')}</p>
+                </div>
+              </div>
+              <Switch 
+                {...prefToggle('comments')}
+              />
+            </label>
+                      
+            <label className="flex items-center justify-between p-4 rounded-xl bg-white/10 cursor-pointer">
+              <div className="flex items-center gap-3">
+                <div className="w-10 h-10 rounded-xl bg-white/10 flex items-center justify-center overflow-visible">
+                  <ThemedIcon icon="accounts" alt="" className="w-8 h-8 object-contain" />
+                </div>
+                <div>
+                  <p className="text-white font-medium">{t('notifications.follows')}</p>
+                  <p className="text-white/50 text-sm">{t('notifications.followsDesc')}</p>
+                </div>
+              </div>
+              <Switch 
+                {...prefToggle('newFollowers')}
+              />
+            </label>
+                      
+            <label className="flex items-center justify-between p-4 rounded-xl bg-white/10 cursor-pointer">
+              <div className="flex items-center gap-3">
+                <div className="w-10 h-10 rounded-xl bg-white/10 flex items-center justify-center overflow-visible">
+                  <ThemedIcon icon="superpowers" alt="" className="w-8 h-8 object-contain" />
+                </div>
+                <div>
+                  <p className="text-white font-medium">{t('notifications.tips')}</p>
+                  <p className="text-white/50 text-sm">{t('notifications.tipsDesc')}</p>
+                </div>
+              </div>
+              <Switch 
+                {...prefToggle('tips')}
+              />
+            </label>
+                      
+            <label className="flex items-center justify-between p-4 rounded-xl bg-white/10 cursor-pointer">
+              <div className="flex items-center gap-3">
+                <div className="w-10 h-10 rounded-xl bg-white/10 flex items-center justify-center overflow-visible">
+                  <ThemedIcon icon="subscriptions" alt="" className="w-8 h-8 object-contain" />
+                </div>
+                <div>
+                  <p className="text-white font-medium">{t('notifications.subscriptions')}</p>
+                  <p className="text-white/50 text-sm">{t('notifications.subscriptionsDesc')}</p>
+                </div>
+              </div>
+              <Switch 
+                {...prefToggle('subscriptions')}
+              />
+            </label>
+                      
+            <label className="flex items-center justify-between p-4 rounded-xl bg-white/10 cursor-pointer">
+              <div className="flex items-center gap-3">
+                <div className="w-10 h-10 rounded-xl bg-white/10 flex items-center justify-center overflow-visible">
+                  <ThemedIcon icon="live" alt="" className="w-8 h-8 object-contain" />
+                </div>
+                <div>
+                  <p className="text-white font-medium">{t('notifications.livestreams')}</p>
+                  <p className="text-white/50 text-sm">{t('notifications.livestreamsDesc')}</p>
+                </div>
+              </div>
+              <Switch 
+                {...prefToggle('livestreamStart')}
+              />
+            </label>
+          </div>
+        </div>
+      </SheetContent>
+    </Sheet>
+  );
 
   return (
     // data-notifications-page scopes the light-mode remaps in index.css; the
@@ -2127,219 +2315,30 @@ export default function NotificationsPage({ inDrawer = false }: { inDrawer?: boo
         <PageIsland
           className={inDrawer ? 'top-0 lg:top-0' : undefined}
           icon="notifications"
-          title={
-            <span className="inline-flex max-w-full items-center gap-2 align-middle">
-              <span className="truncate" aria-live="polite">{activeTabLabel}</span>
-              {headerUnread > 0 && (
-                <span data-unread-chip className="px-2 py-0.5 text-xs font-medium bg-red-500 text-white rounded-lg">
-                  {headerUnread > 99 ? '99+' : headerUnread}
-                </span>
-              )}
-            </span>
-          }
-          actions={
-            <>
-              {totalUnread > 0 && (
+          title={<span aria-live="polite">{activeTabLabel}</span>}
+          actions={headerUnread > 0 ? (
+            <span data-notification-unread-total className="text-[17px] font-medium tabular-nums text-white">{headerUnread}</span>
+          ) : undefined}
+          tabs={
+            <PageTabs
+              afterFirstTab={
+                <div className="flex shrink-0 items-center gap-1.5">
+                  {settingsControl}
+                  {totalUnread > 0 && (
                 <IslandAction
                   label={t('notifications.markAllRead')}
                   onClick={handleMarkAllAsRead}
                   disabled={markAllAsRead.isPending}
                 >
                   {markAllAsRead.isPending ? (
-                    <Loader2 className="h-[18px] w-[18px] animate-spin" />
+                    <Loader2 className="h-[18px] w-[18px] animate-spin text-white" />
                   ) : (
-                    <Check className="h-[18px] w-[18px]" />
+                    <Check className="h-[18px] w-[18px] text-white" />
                   )}
                 </IslandAction>
               )}
-              <Sheet>
-                <SheetTrigger asChild>
-                  <button
-                    type="button"
-                    data-kit-square
-                    aria-label={t('notifications.settings')}
-                    title={t('notifications.settings')}
-                  >
-                    <Settings className="h-[18px] w-[18px]" />
-                  </button>
-                </SheetTrigger>
-                <SheetContent
-                  side="bottom"
-                  data-notifications-page
-                  className="bg-black/60 backdrop-blur-[24px] saturate-[180%] border-t border-white/10 rounded-t-3xl max-h-[85vh] overflow-y-auto"
-                >
-                  <SheetHeader className="pb-4">
-                    <SheetTitle className="text-white text-lg font-bold flex items-center gap-2">
-                      <Settings className="w-5 h-5 text-white" />
-                      {t('notifications.settings')}
-                    </SheetTitle>
-                  </SheetHeader>
-                  
-                  {/* Actions Section */}
-                  <div className="space-y-3 mb-6">
-                    <p className="text-xs text-white/50 uppercase tracking-wider font-medium">{t('notifications.actions')}</p>
-                    <button
-                      onClick={handleMarkAllAsRead}
-                      disabled={markAllAsRead.isPending || totalUnread === 0}
-                      className="w-full flex items-center gap-3 p-4 rounded-xl bg-white/10 hover:bg-white/15 transition-colors disabled:opacity-50"
-                    >
-                      <div className="w-10 h-10 rounded-xl bg-white/10 flex items-center justify-center">
-                        <Check className="w-5 h-5 text-white" />
-                      </div>
-                      <div className="flex-1 text-left">
-                        <p className="text-white font-medium">{t('notifications.markAllAsRead')}</p>
-                        <p className="text-white/50 text-sm">{t('notifications.clearAllIndicators')}</p>
-                      </div>
-                    </button>
-                    
-                    <button
-                      onClick={handleClearAllNotifications}
-                      disabled={isClearingAll || allNotifications.length === 0}
-                      className="w-full flex items-center gap-3 p-4 rounded-xl bg-white/10 hover:bg-white/15 transition-colors disabled:opacity-50"
-                    >
-                      <div className="w-10 h-10 rounded-xl bg-white/10 flex items-center justify-center">
-                        {isClearingAll ? <Loader2 className="w-5 h-5 text-white animate-spin" /> : <Trash2 className="w-5 h-5 text-white" />}
-                      </div>
-                      <div className="flex-1 text-left">
-                        <p className="text-white font-medium">{t('notifications.clearAll')}</p>
-                        <p className="text-white/50 text-sm">{t('notifications.removeHistory')}</p>
-                      </div>
-                    </button>
-                  </div>
-                  
-                  {/* This Browser Section */}
-                  <div className="space-y-3 mb-6">
-                    <p className="text-xs text-white/50 uppercase tracking-wider font-medium">
-                      {t('notifications.thisBrowser', 'This browser')}
-                    </p>
-                    {/*
-                      The rows below are account-level and follow you between
-                      devices; this one is the browser's own permission, and it
-                      is the only way back for anyone who blocked the native
-                      prompt by accident or never saw it.
-                    */}
-                    <BrowserNotificationsSetting variant="card" />
-                  </div>
-
-                  {/* Account-level, and the only channel that reaches someone
-                      who is not in the app at all. */}
-                  <div className="space-y-3 mb-6">
-                    <p className="text-xs text-white/50 uppercase tracking-wider font-medium">
-                      {t('notifications.byEmail', 'By email')}
-                    </p>
-                    <EmailNotificationsSetting variant="card" />
-                  </div>
-
-                  {/* The same reach, paid for per message. */}
-                  <div className="space-y-3 mb-6">
-                    <p className="text-xs text-white/50 uppercase tracking-wider font-medium">
-                      {t('notifications.byText', 'By text')}
-                    </p>
-                    <SmsNotificationsSetting variant="card" />
-                  </div>
-
-                  {/* Notification Types Section */}
-                  <div className="space-y-3">
-                    <p className="text-xs text-white/50 uppercase tracking-wider font-medium">{t('notifications.notificationTypes')}</p>
-                    
-                    <div className="space-y-2">
-                      <label className="flex items-center justify-between p-4 rounded-xl bg-white/10 cursor-pointer">
-                        <div className="flex items-center gap-3">
-                          <div className="w-10 h-10 rounded-xl bg-white/10 flex items-center justify-center overflow-visible">
-                            <ThemedIcon icon="trophy" alt="" className="w-8 h-8 object-contain" />
-                          </div>
-                          <div>
-                            <p className="text-white font-medium">{t('notifications.likes')}</p>
-                            <p className="text-white/50 text-sm">{t('notifications.likesDesc')}</p>
-                          </div>
-                        </div>
-                        <Switch 
-                          {...prefToggle('likes')}
-                        />
-                      </label>
-                      
-                      <label className="flex items-center justify-between p-4 rounded-xl bg-white/10 cursor-pointer">
-                        <div className="flex items-center gap-3">
-                          <div className="w-10 h-10 rounded-xl bg-white/10 flex items-center justify-center overflow-visible">
-                            <ThemedIcon icon="posts" alt="" className="w-8 h-8 object-contain" />
-                          </div>
-                          <div>
-                            <p className="text-white font-medium">{t('notifications.comments')}</p>
-                            <p className="text-white/50 text-sm">{t('notifications.commentsDesc')}</p>
-                          </div>
-                        </div>
-                        <Switch 
-                          {...prefToggle('comments')}
-                        />
-                      </label>
-                      
-                      <label className="flex items-center justify-between p-4 rounded-xl bg-white/10 cursor-pointer">
-                        <div className="flex items-center gap-3">
-                          <div className="w-10 h-10 rounded-xl bg-white/10 flex items-center justify-center overflow-visible">
-                            <ThemedIcon icon="accounts" alt="" className="w-8 h-8 object-contain" />
-                          </div>
-                          <div>
-                            <p className="text-white font-medium">{t('notifications.follows')}</p>
-                            <p className="text-white/50 text-sm">{t('notifications.followsDesc')}</p>
-                          </div>
-                        </div>
-                        <Switch 
-                          {...prefToggle('newFollowers')}
-                        />
-                      </label>
-                      
-                      <label className="flex items-center justify-between p-4 rounded-xl bg-white/10 cursor-pointer">
-                        <div className="flex items-center gap-3">
-                          <div className="w-10 h-10 rounded-xl bg-white/10 flex items-center justify-center overflow-visible">
-                            <ThemedIcon icon="superpowers" alt="" className="w-8 h-8 object-contain" />
-                          </div>
-                          <div>
-                            <p className="text-white font-medium">{t('notifications.tips')}</p>
-                            <p className="text-white/50 text-sm">{t('notifications.tipsDesc')}</p>
-                          </div>
-                        </div>
-                        <Switch 
-                          {...prefToggle('tips')}
-                        />
-                      </label>
-                      
-                      <label className="flex items-center justify-between p-4 rounded-xl bg-white/10 cursor-pointer">
-                        <div className="flex items-center gap-3">
-                          <div className="w-10 h-10 rounded-xl bg-white/10 flex items-center justify-center overflow-visible">
-                            <ThemedIcon icon="subscriptions" alt="" className="w-8 h-8 object-contain" />
-                          </div>
-                          <div>
-                            <p className="text-white font-medium">{t('notifications.subscriptions')}</p>
-                            <p className="text-white/50 text-sm">{t('notifications.subscriptionsDesc')}</p>
-                          </div>
-                        </div>
-                        <Switch 
-                          {...prefToggle('subscriptions')}
-                        />
-                      </label>
-                      
-                      <label className="flex items-center justify-between p-4 rounded-xl bg-white/10 cursor-pointer">
-                        <div className="flex items-center gap-3">
-                          <div className="w-10 h-10 rounded-xl bg-white/10 flex items-center justify-center overflow-visible">
-                            <ThemedIcon icon="live" alt="" className="w-8 h-8 object-contain" />
-                          </div>
-                          <div>
-                            <p className="text-white font-medium">{t('notifications.livestreams')}</p>
-                            <p className="text-white/50 text-sm">{t('notifications.livestreamsDesc')}</p>
-                          </div>
-                        </div>
-                        <Switch 
-                          {...prefToggle('livestreamStart')}
-                        />
-                      </label>
-                    </div>
-                  </div>
-                </SheetContent>
-              </Sheet>
-            </>
-          }
-          tabs={
-            <PageTabs
+                </div>
+              }
               value={activeTab}
               onChange={handleTabClick}
               tabs={orderedTabKeys.map((tabKey) => {
