@@ -482,6 +482,7 @@ function AppLayoutContent({ children }: AppLayoutContentProps) {
             <PersistentPageCache
               keepHomeVisible={showHomePagePersisted}
               overlayKey={overlayPostId}
+              retainedPostKey={showHomePagePersisted && retainedPost ? overlayPostId : null}
             />
           </GlobalFeedNavProvider>
           

@@ -1,4 +1,7 @@
-import { useSyncExternalStore } from 'react';
+import { createContext, useSyncExternalStore } from 'react';
+
+/** The covered feed is inactive; only this retained card keeps its media owner. */
+export const RetainedPostActivityContext = createContext<string | null>(null);
 
 export type RetainedCommentsTab = 'replies' | 'quotes' | 'reposts' | 'search';
 export interface RetainedPostEntry {

@@ -1,7 +1,8 @@
-import { cloneElement, useCallback, useLayoutEffect, useRef, useState, type HTMLAttributes, type ReactElement, type ReactNode } from 'react';
+import { cloneElement, useCallback, useContext, useLayoutEffect, useRef, useState, type HTMLAttributes, type ReactElement, type ReactNode } from 'react';
 import { createPortal } from 'react-dom';
+import { CachedPageActiveContext } from '@/contexts/CachedPageActiveContext';
 import {
-  dockRetainedPost, markRetainedPostIntent, openRetainedComments, registerRetainedPost,
+  dockRetainedPost, getRetainedPost, markRetainedPostIntent, openRetainedComments, registerRetainedPost, RetainedPostActivityContext,
   useRetainedPostPinned, type RetainedCommentsTab, type RetainedPostEntry,
 } from '@/lib/retained-post-surface';
 
@@ -18,6 +19,10 @@ export function RetainedPostSurface({ id, children, frameProps, leading }: {
     return element;
   });
   const pinned = useRetainedPostPinned(id);
+  const pageActive = useContext(CachedPageActiveContext);
+  const retainedId = useContext(RetainedPostActivityContext);
+  const selected = retainedId === id && getRetainedPost(id) === entryRef.current;
+  const pinnedHere = pinned && getRetainedPost(id) === entryRef.current && !!entryRef.current?.dock;
   useLayoutEffect(() => {
     const slot = source.current;
     if (!slot) return;
@@ -30,10 +35,10 @@ export function RetainedPostSurface({ id, children, frameProps, leading }: {
   const openComments = useCallback((tab?: RetainedCommentsTab) => openRetainedComments(id, tab), [id]);
   const markIntent = useCallback(() => { if (entryRef.current) markRetainedPostIntent(entryRef.current); }, []);
   return <div ref={source} data-retained-post-source={id} onPointerDownCapture={markIntent} onClickCapture={markIntent}>
-    {createPortal(<div {...frameProps}>
+    {createPortal(<CachedPageActiveContext.Provider value={pageActive || selected || pinnedHere}><div {...frameProps}>
       {leading}
-      {pinned ? cloneElement(children as ReactElement<{ onOpenComments?: typeof openComments }>, { onOpenComments: openComments }) : children}
-    </div>, container)}
+      {pinnedHere ? cloneElement(children as ReactElement<{ onOpenComments?: typeof openComments }>, { onOpenComments: openComments }) : children}
+    </div></CachedPageActiveContext.Provider>, container)}
   </div>;
 }
 
