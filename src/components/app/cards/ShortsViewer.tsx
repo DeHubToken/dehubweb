@@ -107,6 +107,7 @@ import { useAnyOverlayOpen } from '@/lib/overlay-open';
 import { UserMentionDropdown } from '@/components/app/mentions';
 import { usePostLinkCopyCount, useLinkCopyFloor, useTrackPostLinkCopy } from '@/hooks/use-link-copy-count';
 import { viewerShareUrl } from '@/lib/share-url';
+import { ShareToDmModal } from '@/components/app/modals/ShareToDmModal';
 import {
   DOUBLE_TAP_LIKE_EVENT,
   OPEN_REACTIONS_EVENT,
@@ -398,6 +399,7 @@ export function ShortsViewer({ shorts, initialIndex, onClose, onLoadMore, hasMor
   }, [showComments]);
   const [commentsInitialTab, setCommentsInitialTab] = useState<'replies' | 'quotes' | 'reposts' | 'search' | undefined>(undefined);
   const [shareSheetOpen, setShareSheetOpen] = useState(false);
+  const [shareToDmOpen, setShareToDmOpen] = useState(false);
   const [showReportModal, setShowReportModal] = useState(false);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [visibility, setVisibility] = useState<TokenVisibility>('public');
@@ -682,6 +684,7 @@ export function ShortsViewer({ shorts, initialIndex, onClose, onLoadMore, hasMor
     setIsDescriptionExpanded(false);
     setIsPaused(false);
     setShareDelta(0);
+    setShareToDmOpen(false);
   }, [currentIndex, currentShort?.id, currentShort?.likes, currentShort?.isLiked, currentShort?.isDisliked]);
   
   // Check follow status from API when creator changes
@@ -1274,6 +1277,7 @@ export function ShortsViewer({ shorts, initialIndex, onClose, onLoadMore, hasMor
       isDescriptionExpanded ||
       showComments ||
       shareSheetOpen ||
+      shareToDmOpen ||
       showReportModal ||
       showDeleteModal
     ) {
@@ -1283,7 +1287,7 @@ export function ShortsViewer({ shorts, initialIndex, onClose, onLoadMore, hasMor
     return () => clearTimeout(timer);
   }, [
     isMobile, isPaused, autoHidden, overlaysHidden, isTransitioning,
-    isTimelineSeeking, isDescriptionExpanded, showComments, shareSheetOpen,
+    isTimelineSeeking, isDescriptionExpanded, showComments, shareSheetOpen, shareToDmOpen,
     showReportModal, showDeleteModal,
   ]);
 
@@ -2263,12 +2267,29 @@ export function ShortsViewer({ shorts, initialIndex, onClose, onLoadMore, hasMor
       )}
 
       {/* Options Drawer — mirrors the main-feed post card's three-dot menu. */}
+      <ShareToDmModal
+        open={shareToDmOpen}
+        onOpenChange={setShareToDmOpen}
+        url={viewerShareUrl(`${window.location.origin}/app/post/${currentShort.id}`)}
+      />
       <Drawer open={shareSheetOpen} onOpenChange={setShareSheetOpen}>
         <DrawerContent scrollable glass className="px-4 pb-6">
           <DrawerHeader className="relative pb-2">
             <DrawerTitle className="text-white text-lg">{_copy("copy.d0db8b5e364b", { defaultValue: "Options" })}</DrawerTitle>
           </DrawerHeader>
           <div className="flex flex-col gap-1">
+            {visibility === 'public' && (!currentShort.visibility || currentShort.visibility === 'public') && (
+              <button
+                onClick={() => {
+                  setShareSheetOpen(false);
+                  if (!walletAddress) { openLoginModal(); return; }
+                  setShareToDmOpen(true);
+                }}
+                className="flex items-center gap-3 px-4 py-3 text-white hover:bg-white/10 rounded-xl transition-colors text-left"
+              >
+                <Share2 className="w-5 h-5" />{_copy("copy.20e392c29da3", { defaultValue: "Send in a message" })}
+              </button>
+            )}
             {/* Bookmark / pin / post info — the same three the feed card's
                 menu and action bar carry. */}
             {!!currentShort.videoUrl && !currentShort.imageUrls?.length && !downloadGate.isGated && (
