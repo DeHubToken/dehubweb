@@ -1029,6 +1029,7 @@ export function ShortsViewer({ shorts, initialIndex, onClose, onLoadMore, hasMor
 
   const handleDragEnd = useCallback((_: any, info: PanInfo) => {
     resetDragOffset();
+    if (_.type === 'pointercancel' || _.type === 'touchcancel') { mini.cancel(); return; }
     if (mini.finish(info)) return;
 
     // Restoring the caption must not consume a valid navigation flick.
@@ -1049,7 +1050,7 @@ export function ShortsViewer({ shorts, initialIndex, onClose, onLoadMore, hasMor
     } else if (info.offset.y > swipeThreshold || info.velocity.y > velocityThreshold) {
       goToPrev();
     }
-  }, [goToNext, goToPrev, isRestoreDrag, resetDragOffset, mini.finish]);
+  }, [goToNext, goToPrev, isRestoreDrag, resetDragOffset, mini.finish, mini.cancel]);
 
   // Toggle play/pause - only shows indicator on explicit tap
   /**

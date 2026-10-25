@@ -47,7 +47,12 @@ export function useInAppVideoMini(root: RefObject<HTMLElement | null>, index: nu
     }
   }, [enabled, minimized, root, index]);
   const drag = useCallback((info: PanInfo) => {
-    if (origin.current === null || info.offset.y <= 0 || Math.abs(info.offset.x) > info.offset.y) return false;
+    if (origin.current === null) return false;
+    if (info.offset.y <= 0 || Math.abs(info.offset.x) > info.offset.y) {
+      scale.set(1);
+      y.set(0);
+      return false;
+    }
     if (!reducedMotion) {
       scale.set(1 - Math.min(0.55, info.offset.y / Math.max(window.innerHeight, 1)));
       y.set(info.offset.y * 0.5);

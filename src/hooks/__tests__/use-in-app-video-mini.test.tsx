@@ -83,6 +83,10 @@ it('cancels a short or reversed drag and keeps another overlay scroll lock intac
   expect(view.end(200, 400, 30)).toBe(true);
   expect(view.mini.minimized).toBe(false);
   view.start(200, 400);
+  act(() => { view.mini.drag(pan(200, 400, 120)); view.mini.drag(pan(200, 400, -10)); });
+  expect(view.mini.scale.get()).toBe(1);
+  expect(view.mini.y.get()).toBe(0);
+  view.start(200, 400);
   act(() => view.mini.cancel());
   expect(view.end(200, 400, 150)).toBe(false);
   view.start(200, 400);
