@@ -201,7 +201,8 @@ export default function CreatorPage() {
   const { t } = useTranslation();
   const navigate = useNavigate();
   const { isAuthenticated, openLoginModal, walletAddress } = useAuth();
-  const [marketingDraft, setMarketingDraft] = useState<{ owner: string | null; draft: GenerationDraft } | null>(null);
+  const [marketingDraft, setMarketingDraft] = useState<{ id: string; owner: string | null; draft: GenerationDraft } | null>(null);
+  const activeMarketingDraft = marketingDraft && marketingDraft.owner === walletAddress ? marketingDraft : null;
   const [activeCategory, setActiveCategory] = useState<typeof categories[number]>('All');
   const [activeNav, setActiveNav] = useState<typeof navItems[number]>('Explore');
   const [bannerDismissed, setBannerDismissed] = useState(false);
@@ -389,9 +390,11 @@ export default function CreatorPage() {
 
         {/* The hero's wall of community work sits behind the studio's headline and composer. */}
         <CreatorHeroWall />
-        <CreatorStudio onOpenEditor={openEditor} stickyTop={headerHeight} generationDraft={marketingDraft && marketingDraft.owner === walletAddress ? marketingDraft.draft : undefined} />
+        <CreatorStudio onOpenEditor={openEditor} stickyTop={headerHeight} generationDraft={activeMarketingDraft?.draft}
+          snapshotScope={activeMarketingDraft ? `campaign:${activeMarketingDraft.id}` : 'main'} generationDraftId={activeMarketingDraft?.id} />
+        {activeMarketingDraft && <button type="button" className="mx-4 mt-2 text-sm underline" onClick={() => setMarketingDraft(null)}>{t('creator.marketing.return')}</button>}
         <MarketingWorkspace onPrepare={(draft) => {
-          setMarketingDraft({ owner: walletAddress, draft });
+          setMarketingDraft({ id: `campaign-${Date.now()}-${Math.random().toString(36).slice(2, 10)}`, owner: walletAddress, draft });
           document.querySelector('[data-creator-composer]')?.scrollIntoView({ behavior: 'smooth', block: 'center' });
         }} />
         <div>

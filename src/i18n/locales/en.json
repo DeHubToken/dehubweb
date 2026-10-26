@@ -5053,7 +5053,8 @@
     "sellYourFractions": "Sell your fractions ({{held}} held)"
   },
   "creator": {
-    "marketing":  {
+    "marketing": {
+        "return": "Return to studio draft",
                       "title":  "Campaign brief",
                       "intro":  "Describe your product and brand, then prepare matching ad formats.",
                       "saved":  "Your brief is saved on this device for this account.",
