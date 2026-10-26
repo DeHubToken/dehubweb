@@ -214,6 +214,13 @@ export interface FollowStatus {
   isFollowRequestPending: boolean;
 }
 
+export async function getFollowStatusBatch(targets: string[], viewer: string): Promise<Record<string, FollowStatus>> {
+  const response = await apiCall<{ result: Record<string, FollowStatus> }>('/api/is_following/batch', {
+    method: 'POST', body: { targets, viewer: viewer.toLowerCase() }, requiresAuth: true,
+  });
+  return response.result;
+}
+
 export async function getFollowStatus(targetAddress: string): Promise<FollowStatus> {
   const response = await apiCall<{ result: Partial<FollowStatus> | boolean } | Partial<FollowStatus> | boolean>("/api/is_following", {
     params: { target: targetAddress },

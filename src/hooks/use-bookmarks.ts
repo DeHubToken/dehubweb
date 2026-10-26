@@ -287,9 +287,8 @@ export function useBookmarks(type: BookmarkType = 'all', searchQuery: string = '
   const ppvPurchasesQuery = useQuery({ ...purchaseOptions, enabled: !!walletAddress && isAuthenticated });
   const purchasedTokenIds = ppvPurchasesQuery.data || new Set<string>();
   const ppvQuery = useInfiniteQuery({
-    queryKey: ['bookmarks', 'ppv', walletAddress],
+    queryKey: ['bookmarks', 'ppv', 'paged', walletAddress],
     initialPageParam: 0,
-    getNextPageParam: (lastPage) => lastPage.nextPage,
     queryFn: async ({ pageParam }) => {
       const ids = [...await queryClient.ensureQueryData(purchaseOptions)];
       const page = ids.slice(pageParam, pageParam + PAGE_SIZE);
@@ -303,6 +302,7 @@ export function useBookmarks(type: BookmarkType = 'all', searchQuery: string = '
       }));
       return { items: nfts.filter(Boolean) as DeHubNFT[], nextPage: pageParam + PAGE_SIZE < ids.length ? pageParam + PAGE_SIZE : undefined };
     },
+    getNextPageParam: (lastPage) => lastPage.nextPage,
     enabled: isAuthenticated && (type === 'ppv' || type === 'all') && !!walletAddress,
     staleTime: 2 * 60 * 1000,
   });

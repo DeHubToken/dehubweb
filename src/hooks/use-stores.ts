@@ -60,7 +60,7 @@ export function useCreateStore() {
 // ── Listings ──────────────────────────────────────────────
 export function useBrowseListings(category?: string, sort?: string, search?: string) {
   const query = useInfiniteQuery({
-    queryKey: ['store-listings-browse', category, sort, search],
+    queryKey: ['store-listings-browse', 'paged', category, sort, search],
     initialPageParam: 0,
     queryFn: async ({ pageParam, signal }) => {
       let q = supabase.from('store_listings').select('*, stores(name, avatar_url, wallet_address)').eq('status', 'active');
