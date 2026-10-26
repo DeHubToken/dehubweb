@@ -39,7 +39,7 @@ DeHub is one of the early pioneers of decentralized streaming and social, first 
 
 Users tell you where a network is today. Commits tell you where it will be next year. These are the busiest public codebases in decentralized social over the last 90 days.
 
-![Public commits in the last 90 days: DeHub 6,083, Amethyst 4,275, Pixelfed 3,726, Hive 1,780, Damus 1,481](/media/fig-desoc-commits.jpg)
+![Public commits in the last 90 days: DeHub 6,083, Amethyst 4,275, Pixelfed 3,726, Hive 1,780, Damus 1,481](/media/fig-desoc-commits-v2.jpg)
 
 ## The full top 50 at a glance
 
