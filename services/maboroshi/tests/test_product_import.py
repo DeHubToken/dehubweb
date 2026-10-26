@@ -38,14 +38,34 @@ class ProductImportTests(unittest.TestCase):
         self.assertEqual(error.exception.status_code, 400)
 
     def test_connection_pins_ip_and_keeps_hostname_tls_verification(self):
-        connection = importer.PinnedHTTPSConnection('shop.example.com', '8.8.8.8', 2)
+        connection = importer.PinnedHTTPSConnection('shop.example.com', '8.8.8.8', time.monotonic() + 2)
         raw = Mock()
         context = Mock()
         connection._context = context
         with patch.object(socket, 'create_connection', return_value=raw) as connect:
             connection.connect()
-        connect.assert_called_once_with(('8.8.8.8', 443), 2)
+        self.assertEqual(connect.call_args.args[0], ('8.8.8.8', 443))
+        self.assertGreater(connect.call_args.args[1], 0)
+        self.assertLessEqual(connect.call_args.args[1], 2)
         context.wrap_socket.assert_called_once_with(raw, server_hostname='shop.example.com')
+
+    def test_tcp_and_tls_share_one_absolute_deadline(self):
+        raw, context = Mock(), Mock()
+        with patch.object(importer.time, 'monotonic', side_effect=[100, 100, 103]):
+            connection = importer.PinnedHTTPSConnection('shop.example.com', '8.8.8.8', 102)
+            connection._context = context
+            with patch.object(socket, 'create_connection', return_value=raw), self.assertRaises(TimeoutError):
+                connection.connect()
+        context.wrap_socket.assert_not_called()
+        raw.close.assert_called_once()
+        raw, context = Mock(), Mock()
+        with patch.object(importer.time, 'monotonic', side_effect=[100, 100, 101, 103]):
+            connection = importer.PinnedHTTPSConnection('shop.example.com', '8.8.8.8', 102)
+            connection._context = context
+            with patch.object(socket, 'create_connection', return_value=raw), self.assertRaises(TimeoutError):
+                connection.connect()
+        raw.settimeout.assert_called_once_with(1)
+        context.wrap_socket.return_value.close.assert_called_once()
 
     def response(self, body=b'<html></html>', status=200, headers=None):
         headers = {'Content-Type': 'text/html', **(headers or {})}

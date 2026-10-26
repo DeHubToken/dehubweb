@@ -88,15 +88,28 @@ def resolve_public(host, deadline):
 
 class PinnedHTTPSConnection(http.client.HTTPSConnection):
     """Connect only to the checked address, retaining hostname verification and SNI."""
-    def __init__(self, host, address, timeout):
-        super().__init__(host, timeout=timeout, context=ssl.create_default_context())
+    def __init__(self, host, address, deadline):
+        super().__init__(host, timeout=max(0.001, deadline - time.monotonic()), context=ssl.create_default_context())
         self.address = address
+        self.deadline = deadline
 
     def connect(self):
-        sock = socket.create_connection((self.address, 443), self.timeout)
+        remaining = self.deadline - time.monotonic()
+        if remaining <= 0:
+            raise TimeoutError()
+        sock = socket.create_connection((self.address, 443), remaining)
         try:
+            remaining = self.deadline - time.monotonic()
+            if remaining <= 0:
+                raise TimeoutError()
+            sock.settimeout(remaining)
             self.sock = self._context.wrap_socket(sock, server_hostname=self.host)
+            if time.monotonic() >= self.deadline:
+                raise TimeoutError()
         except BaseException:
+            if self.sock:
+                self.sock.close()
+                self.sock = None
             sock.close()
             raise
 
@@ -122,7 +135,7 @@ def fetch_html(value):
         remaining = deadline - time.monotonic()
         if remaining <= 0:
             raise HTTPException(504, 'The product page took too long to respond.')
-        connection = PinnedHTTPSConnection(parsed.hostname, address, remaining)
+        connection = PinnedHTTPSConnection(parsed.hostname, address, deadline)
         timer = None
         try:
             connection.connect()
