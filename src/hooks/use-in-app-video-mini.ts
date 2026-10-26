@@ -6,7 +6,11 @@ import { videoPlaybackManager } from '@/lib/video-playback-manager';
 import { visualActivity } from '@/lib/visual-activity';
 
 /** Keep the viewer and its media mounted while its frame moves over the feed. */
-export function useInAppVideoMini(root: RefObject<HTMLElement | null>, index: number, enabled: boolean) {
+/**
+ * `wideOnly`: phones keep drag-down for paging back (and leaving from the first
+ * short), so only a wide or square picture minimizes there, as in the app.
+ */
+export function useInAppVideoMini(root: RefObject<HTMLElement | null>, index: number, enabled: boolean, wideOnly = false) {
   const [aspect, setAspect] = useState<number | null>(null);
   const [dragging, setDragging] = useState(false);
   const draggingRef = useRef(false);
@@ -49,6 +53,7 @@ export function useInAppVideoMini(root: RefObject<HTMLElement | null>, index: nu
     if (!enabled || minimized || (event.target as Element | null)?.closest('button, a, input, [data-shorts-scrollable]')) return;
     const video = root.current?.querySelector<HTMLVideoElement>(`[data-shorts-slide="${index}"] video`);
     if (!video?.videoWidth || !video.videoHeight) return;
+    if (wideOnly && video.videoWidth < video.videoHeight) return;
     const box = video.getBoundingClientRect();
     const picture = containedPicture(box.width, box.height, video.videoWidth, video.videoHeight);
     const x = info.point.x - window.scrollX - info.offset.x;
@@ -57,7 +62,7 @@ export function useInAppVideoMini(root: RefObject<HTMLElement | null>, index: nu
         y >= box.top + picture.top && y <= box.top + picture.top + picture.height) {
       origin.current = video.videoWidth / video.videoHeight;
     }
-  }, [enabled, minimized, root, index]);
+  }, [enabled, minimized, root, index, wideOnly]);
   const drag = useCallback((info: PanInfo) => {
     if (origin.current === null) return false;
     if (info.offset.y <= 0 || Math.abs(info.offset.x) > info.offset.y) {
