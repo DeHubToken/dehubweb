@@ -1131,6 +1131,8 @@ export type Database = {
           price_dhb: number
           provider: string | null
           provider_app: string | null
+          refund_lease_until: string | null
+          refund_token: string | null
           result: Json | null
           status: string
           tx_hash: string | null
@@ -1150,6 +1152,8 @@ export type Database = {
           price_dhb: number
           provider?: string | null
           provider_app?: string | null
+          refund_lease_until?: string | null
+          refund_token?: string | null
           result?: Json | null
           status?: string
           tx_hash?: string | null
@@ -1169,6 +1173,8 @@ export type Database = {
           price_dhb?: number
           provider?: string | null
           provider_app?: string | null
+          refund_lease_until?: string | null
+          refund_token?: string | null
           result?: Json | null
           status?: string
           tx_hash?: string | null
@@ -2551,6 +2557,8 @@ export type Database = {
       creator_assets: {
         Row: {
           created_at: string
+          favorite: boolean
+          hidden: boolean
           id: string
           metadata: Json
           ready: boolean
@@ -2559,6 +2567,8 @@ export type Database = {
         }
         Insert: {
           created_at?: string
+          favorite?: boolean
+          hidden?: boolean
           id: string
           metadata?: Json
           ready?: boolean
@@ -2567,6 +2577,8 @@ export type Database = {
         }
         Update: {
           created_at?: string
+          favorite?: boolean
+          hidden?: boolean
           id?: string
           metadata?: Json
           ready?: boolean
@@ -4619,6 +4631,93 @@ export type Database = {
           },
         ]
       }
+      growth_autopost_queue: {
+        Row: {
+          created_at: string
+          id: string
+          kind: string
+          link: string | null
+          media: Json
+          platforms: string[]
+          posted_at: string | null
+          results: Json | null
+          reviewed_by: string | null
+          scheduled_for: string
+          source_ref: string
+          status: string
+          text: Json
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          kind: string
+          link?: string | null
+          media?: Json
+          platforms?: string[]
+          posted_at?: string | null
+          results?: Json | null
+          reviewed_by?: string | null
+          scheduled_for?: string
+          source_ref: string
+          status?: string
+          text?: Json
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          kind?: string
+          link?: string | null
+          media?: Json
+          platforms?: string[]
+          posted_at?: string | null
+          results?: Json | null
+          reviewed_by?: string | null
+          scheduled_for?: string
+          source_ref?: string
+          status?: string
+          text?: Json
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      growth_autopost_settings: {
+        Row: {
+          auto_approve: boolean
+          daily_caps: Json
+          daily_total_cap: number
+          enabled_kinds: string[]
+          id: boolean
+          live_min_audience: number
+          platforms: Json
+          updated_at: string
+          updated_by: string | null
+        }
+        Insert: {
+          auto_approve?: boolean
+          daily_caps?: Json
+          daily_total_cap?: number
+          enabled_kinds?: string[]
+          id?: boolean
+          live_min_audience?: number
+          platforms?: Json
+          updated_at?: string
+          updated_by?: string | null
+        }
+        Update: {
+          auto_approve?: boolean
+          daily_caps?: Json
+          daily_total_cap?: number
+          enabled_kinds?: string[]
+          id?: boolean
+          live_min_audience?: number
+          platforms?: Json
+          updated_at?: string
+          updated_by?: string | null
+        }
+        Relationships: []
+      }
       job_applications: {
         Row: {
           created_at: string
@@ -5355,6 +5454,9 @@ export type Database = {
           id: number
           path: string
           prev_path: string | null
+          utm_campaign: string | null
+          utm_medium: string | null
+          utm_source: string | null
           viewer_id: string
         }
         Insert: {
@@ -5364,6 +5466,9 @@ export type Database = {
           id?: never
           path: string
           prev_path?: string | null
+          utm_campaign?: string | null
+          utm_medium?: string | null
+          utm_source?: string | null
           viewer_id: string
         }
         Update: {
@@ -5373,6 +5478,9 @@ export type Database = {
           id?: never
           path?: string
           prev_path?: string | null
+          utm_campaign?: string | null
+          utm_medium?: string | null
+          utm_source?: string | null
           viewer_id?: string
         }
         Relationships: []
@@ -5854,6 +5962,51 @@ export type Database = {
           },
         ]
       }
+      signup_attribution: {
+        Row: {
+          created_at: string
+          first_seen_at: string | null
+          is_new_account: boolean
+          landing_path: string | null
+          ref_code: string | null
+          referrer_host: string | null
+          utm_campaign: string | null
+          utm_content: string | null
+          utm_medium: string | null
+          utm_source: string | null
+          utm_term: string | null
+          wallet_address: string
+        }
+        Insert: {
+          created_at?: string
+          first_seen_at?: string | null
+          is_new_account?: boolean
+          landing_path?: string | null
+          ref_code?: string | null
+          referrer_host?: string | null
+          utm_campaign?: string | null
+          utm_content?: string | null
+          utm_medium?: string | null
+          utm_source?: string | null
+          utm_term?: string | null
+          wallet_address: string
+        }
+        Update: {
+          created_at?: string
+          first_seen_at?: string | null
+          is_new_account?: boolean
+          landing_path?: string | null
+          ref_code?: string | null
+          referrer_host?: string | null
+          utm_campaign?: string | null
+          utm_content?: string | null
+          utm_medium?: string | null
+          utm_source?: string | null
+          utm_term?: string | null
+          wallet_address?: string
+        }
+        Relationships: []
+      }
       social_credit_topups: {
         Row: {
           chain: string
@@ -6108,6 +6261,74 @@ export type Database = {
           {
             foreignKeyName: "stage_chat_messages_space_id_fkey"
             columns: ["space_id"]
+            isOneToOne: false
+            referencedRelation: "audio_spaces"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      stage_clips: {
+        Row: {
+          attempts: number
+          created_at: string
+          duration_seconds: number | null
+          end_seconds: number
+          error: string | null
+          hook: string
+          id: string
+          idx: number
+          job_id: string | null
+          last_attempt_at: string | null
+          queued_at: string | null
+          stage_id: string
+          start_seconds: number
+          status: string
+          title: string
+          updated_at: string
+          video_url: string | null
+        }
+        Insert: {
+          attempts?: number
+          created_at?: string
+          duration_seconds?: number | null
+          end_seconds: number
+          error?: string | null
+          hook?: string
+          id?: string
+          idx: number
+          job_id?: string | null
+          last_attempt_at?: string | null
+          queued_at?: string | null
+          stage_id: string
+          start_seconds: number
+          status?: string
+          title?: string
+          updated_at?: string
+          video_url?: string | null
+        }
+        Update: {
+          attempts?: number
+          created_at?: string
+          duration_seconds?: number | null
+          end_seconds?: number
+          error?: string | null
+          hook?: string
+          id?: string
+          idx?: number
+          job_id?: string | null
+          last_attempt_at?: string | null
+          queued_at?: string | null
+          stage_id?: string
+          start_seconds?: number
+          status?: string
+          title?: string
+          updated_at?: string
+          video_url?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "stage_clips_stage_id_fkey"
+            columns: ["stage_id"]
             isOneToOne: false
             referencedRelation: "audio_spaces"
             referencedColumns: ["id"]
@@ -8798,6 +9019,39 @@ export type Database = {
         }
         Returns: boolean
       }
+      ai_generation_debit_canceled: {
+        Args: { p_job_id: string; p_token: string }
+        Returns: Json
+      }
+      ai_generation_debit_declined: {
+        Args: { p_job_id: string }
+        Returns: Json
+      }
+      ai_generation_refund_claim: {
+        Args: { p_job_id: string; p_token: string }
+        Returns: Json
+      }
+      ai_generation_refund_finish: {
+        Args: { p_credit_restored?: boolean; p_job_id: string; p_token: string }
+        Returns: Json
+      }
+      ai_generation_save_result: {
+        Args: { p_expected_result: Json; p_job_id: string; p_result: Json }
+        Returns: Json
+      }
+      ai_generation_transition: {
+        Args: {
+          p_created_before?: string
+          p_expected_statuses?: string[]
+          p_job_id: string
+          p_prediction_id?: string
+          p_provider?: string
+          p_provider_app?: string
+          p_result: Json
+          p_status: string
+        }
+        Returns: Json
+      }
       ai_job_record_credits: {
         Args: {
           p_debit_key: string
@@ -9449,6 +9703,10 @@ export type Database = {
       get_user_id_by_phone: { Args: { p_phone: string }; Returns: string }
       governance_has_comment_badge: {
         Args: { token?: string; wallet: string }
+        Returns: boolean
+      }
+      growth_autopost_scheduler_authorized: {
+        Args: { p_token: string }
         Returns: boolean
       }
       increment_category_count: { Args: { p_name: string }; Returns: undefined }
