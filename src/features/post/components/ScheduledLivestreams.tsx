@@ -5,11 +5,13 @@ import { useAuth } from '@/contexts/AuthContext';
 import { getUserScheduledStreams, getStreamKey, getStreamIngestUrl, type LiveStream } from '@/lib/api/dehub/livestream';
 import type { LiveStreamHandoff } from '../types';
 import { toast } from 'sonner';
+import { countdownParts, useMinuteTick } from '@/lib/schedule/countdown';
 
 export default function ScheduledLivestreams({ onStart }: { onStart: (stream: LiveStreamHandoff) => void }) {
   const { t: _copy } = _useCopy();
   const { walletAddress } = useAuth();
   const [starting, setStarting] = useState<string | null>(null);
+  const now = useMinuteTick();
   const { data } = useQuery({
     queryKey: ['composer-scheduled-streams', walletAddress],
     queryFn: () => getUserScheduledStreams(walletAddress!),
@@ -39,7 +41,15 @@ export default function ScheduledLivestreams({ onStart }: { onStart: (stream: Li
         <div key={stream.streamId} className="flex items-center justify-between gap-3 py-2">
           <div className="min-w-0 text-xs text-white">
             <p className="truncate font-medium">{stream.title}</p>
-            {stream.scheduledAt && <p className="mt-1 text-white/60">{new Date(stream.scheduledAt).toLocaleString()}</p>}
+            {stream.scheduledAt && (() => {
+              const countdown = countdownParts(new Date(stream.scheduledAt), now);
+              return (
+                <p className="mt-1 text-white/60">
+                  {new Date(stream.scheduledAt).toLocaleString()}
+                  {countdown && ` · ${_copy('whenSheet.startsIn', { defaultValue: 'Starts in {{time}}', time: countdown })}`}
+                </p>
+              );
+            })()}
           </div>
           <button type="button" disabled={!!starting} onClick={() => void start(stream)} className="shrink-0 rounded-lg border border-white/20 px-3 py-2 text-xs text-white disabled:opacity-50">{starting === stream.streamId ? _copy("copy.c926c2c50e65", { defaultValue: "Opening…" }) : _copy("copy.9ff3a615582e", { defaultValue: "Start now" })}</button>
         </div>
