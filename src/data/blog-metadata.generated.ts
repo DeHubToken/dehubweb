@@ -8,6 +8,37 @@ import type { BlogPost } from '@/types/blog';
 // getPublishedPosts() corpus: overrides applied, published only, newest first.
 export const blogPostsMetadata: BlogPost[] = [
   {
+    "id": "top-50-most-active-open-source-projects-2026",
+    "slug": "top-50-most-active-open-source-projects-2026",
+    "title": "Top 50 Most Active Open Source Projects 2026, Ranked by GitHub Activity",
+    "seoTitle": "Top 50 Most Active Open Source Projects 2026 (GitHub Data) | DeHub",
+    "seoDescription": "The 50 most active open source projects of 2026, ranked on real GitHub commits and contributors over 90 days. Linux, Chromium, Nixpkgs, LLVM, Firefox, vLLM, PyTorch and more.",
+    "excerpt": "We measured the GitHub history of 205 of the biggest open source projects and ranked the 50 most active on commits and contributors over the last 90 days. Linux, Chromium and Nixpkgs lead, and AI projects take 12 of the 50 spots.",
+    "content": "",
+    "bannerImage": "/media/top-50-most-active-open-source-projects-2026-banner.png",
+    "bannerImageAlt": "Top 50 most active open source projects 2026, ranked by GitHub activity, by DeHub",
+    "author": {
+      "name": "DeHub Team"
+    },
+    "publishedAt": "2026-10-26T20:00:00.000Z",
+    "tags": [
+      "open source",
+      "top 50",
+      "GitHub",
+      "most active open source projects",
+      "Linux",
+      "Chromium",
+      "AI",
+      "vLLM",
+      "PyTorch",
+      "developer tools",
+      "DeHub"
+    ],
+    "readingTime": 10,
+    "featured": true,
+    "status": "published"
+  },
+  {
     "id": "top-50-blockchain-projects-2026",
     "slug": "top-50-blockchain-projects-2026",
     "title": "Top 50 Blockchain Projects 2026, Ranked by GitHub Activity",
@@ -3589,32 +3620,33 @@ export const newPostsMetadata: BlogPost[] = [
 
 // getLatestPost() result — docs home hero.
 export const latestPostMetadata: BlogPost | undefined = {
-  "id": "top-50-blockchain-projects-2026",
-  "slug": "top-50-blockchain-projects-2026",
-  "title": "Top 50 Blockchain Projects 2026, Ranked by GitHub Activity",
-  "seoTitle": "Top 50 Most Active Blockchain Projects 2026 by GitHub Activity | DeHub",
-  "seoDescription": "The 50 most active blockchain projects of 2026, ranked by real GitHub commits and developers over 90 days. Solana, Ethereum, Bitcoin, Zcash, Cardano, Base and more.",
-  "excerpt": "We counted every commit and every active developer across 123 public GitHub repos behind 86 blockchains over 90 days, then ranked the 50 most active. Solana leads, Ethereum has the biggest team, and some big names have gone quiet.",
+  "id": "top-50-most-active-open-source-projects-2026",
+  "slug": "top-50-most-active-open-source-projects-2026",
+  "title": "Top 50 Most Active Open Source Projects 2026, Ranked by GitHub Activity",
+  "seoTitle": "Top 50 Most Active Open Source Projects 2026 (GitHub Data) | DeHub",
+  "seoDescription": "The 50 most active open source projects of 2026, ranked on real GitHub commits and contributors over 90 days. Linux, Chromium, Nixpkgs, LLVM, Firefox, vLLM, PyTorch and more.",
+  "excerpt": "We measured the GitHub history of 205 of the biggest open source projects and ranked the 50 most active on commits and contributors over the last 90 days. Linux, Chromium and Nixpkgs lead, and AI projects take 12 of the 50 spots.",
   "content": "",
-  "bannerImage": "/media/top-50-blockchain-projects-2026-banner.png",
-  "bannerImageAlt": "Top 50 blockchain projects 2026 ranked by GitHub activity, by DeHub",
+  "bannerImage": "/media/top-50-most-active-open-source-projects-2026-banner.png",
+  "bannerImageAlt": "Top 50 most active open source projects 2026, ranked by GitHub activity, by DeHub",
   "author": {
     "name": "DeHub Team"
   },
   "publishedAt": "2026-10-26T20:00:00.000Z",
   "tags": [
-    "blockchain",
-    "top 50",
-    "GitHub activity",
-    "crypto developers",
-    "Solana",
-    "Ethereum",
-    "Bitcoin",
-    "Layer 2",
     "open source",
+    "top 50",
+    "GitHub",
+    "most active open source projects",
+    "Linux",
+    "Chromium",
+    "AI",
+    "vLLM",
+    "PyTorch",
+    "developer tools",
     "DeHub"
   ],
-  "readingTime": 11,
+  "readingTime": 10,
   "featured": true,
   "status": "published"
 };
