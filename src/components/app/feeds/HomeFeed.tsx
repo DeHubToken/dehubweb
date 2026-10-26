@@ -1579,7 +1579,9 @@ export function HomeFeed({ active = true, shuffleKey, isRefreshing, showFilters 
     // skipped-state placeholder, so scrolling a card off and back never snaps it
     // to a wrong fixed height and shifts everything below it.
     const intrinsicH = item.type === 'video' ? '520px' : item.type === 'image' ? '640px' : item.type === 'ad' ? '420px' : '320px';
-    const retained = item.type === 'post' || item.type === 'image';
+    // Text, image and audio posts open on their own page by moving this very
+    // card there (no reload); video keeps its own viewer.
+    const retained = item.type === 'post' || item.type === 'image' || (item.type === 'video' && !!(item.data as VideoItem).isAudio);
     const frameProps = {
       'data-feed-item': true,
       'data-feed-token-id': item.type === 'ad' ? undefined : (item.data as any)?.id,
