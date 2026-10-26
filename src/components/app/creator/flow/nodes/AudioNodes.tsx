@@ -35,28 +35,35 @@ export function AudioInputNode({ id, data }: NodeProps<FlowNode>) {
   const { readOnly } = useFlowActions();
   const update = useCreatorFlowStore(state => state.updateNodeData);
   const [assets, setAssets] = useState<Array<{ id: string; label: string; url?: string }>>([]);
+  const [assetWallet, setAssetWallet] = useState(walletAddress);
   const [offset, setOffset] = useState<number | null>(0);
   const [busy, setBusy] = useState(false);
   const request = useRef(false);
+  const version = useRef(0), liveWallet = useRef(walletAddress);
+  liveWallet.current = walletAddress;
+  const visibleAssets = assetWallet === walletAddress ? assets : [];
   const connected = useHandleConnected(id, 'audio', 'source');
   const load = async () => {
     if (!walletAddress || offset === null || request.current) return;
+    const owner = walletAddress, scope = version.current;
     request.current = true; setBusy(true);
     try {
       const page = await loadCloudGenerationPage(walletAddress, offset);
+      if (liveWallet.current !== owner || version.current !== scope) return;
+      setAssetWallet(owner);
       setAssets(previous => [...previous, ...page.jobs.filter(job => job.kind === 'audio' && job.url).map(job => ({ id: job.id, label: job.prompt || job.modelName, url: job.url }))]);
       setOffset(page.nextOffset);
-    } finally { request.current = false; setBusy(false); }
+    } finally { if (version.current === scope && liveWallet.current === owner) { request.current = false; setBusy(false); } }
   };
-  useEffect(() => { setAssets([]); setOffset(0); }, [walletAddress]);
+  useEffect(() => { version.current++; request.current = false; setBusy(false); setAssets([]); setAssetWallet(walletAddress); setOffset(0); }, [walletAddress]);
   return <NodeCard>
     <AboveLabel text={data.label || t('creatorFlow.nodeAudioInput')} /><CornerResizer />
     <div className="space-y-3 p-4">
       {!readOnly && <>
         <button type="button" disabled={busy} onClick={() => void load().catch(() => {})} className="nodrag min-h-11 text-xs underline">{t('creator.referenceLibrary')}</button>
         <select aria-label={t('creatorFlow.nodeAudioInput')} disabled={busy} className="nodrag nowheel w-full bg-zinc-900 p-2 text-xs" value={data.audioAssetId || ''}
-          onChange={event => { const asset = assets.find(asset => asset.id === event.target.value); update(id, { audioAssetId: asset?.id, audioUrl: asset?.url }); }}>
-          <option value="">{t('creator.libraryEmpty')}</option>{assets.map(asset => <option key={asset.id} value={asset.id}>{asset.label}</option>)}
+          onChange={event => { const asset = visibleAssets.find(asset => asset.id === event.target.value); update(id, { audioAssetId: asset?.id, audioUrl: asset?.url }); }}>
+          <option value="">{t('creator.libraryEmpty')}</option>{visibleAssets.map(asset => <option key={asset.id} value={asset.id}>{asset.label}</option>)}
         </select>
       </>}
       <AudioResult data={data} />
