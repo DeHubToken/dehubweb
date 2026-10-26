@@ -6708,6 +6708,8 @@
     "creatorEarnsDirect": "Abonnees betalen in DeHub-tokens. Je aandeel komt in je portemonnee terecht op het moment dat ze zich abonneren, minus de platformkosten voor je badge-niveau."
   },
   "liveOverlay": {
+    "giftedSubs_one": "{{name}} gaf een abonnement cadeau!",
+    "giftedSubs_other": "{{name}} gaf {{count}} abonnementen cadeau!",
     "someone": "Iemand",
     "newFollower": "Nieuwe volger: {{name}}",
     "newSubscriber": "Nieuwe abonnee: {{name}}",
@@ -6917,6 +6919,7 @@
       "subathon_timer": "Subathon-timer",
       "points_board": "Loyale kijkers",
       "streamer_level": "Streamer-niveau",
+      "hype_train": "Hype train",
       "tip_jar": "Geschenkpot"
     },
     "hints": {
@@ -6941,6 +6944,7 @@
       "subathon_timer": "Een afteller die gifts, follows en abonnementen terugzet",
       "points_board": "Je topkijkers op basis van punten van kijken en geven",
       "streamer_level": "Je streamer-niveau en wekelijkse reeks, vanuit je profiel",
+      "hype_train": "Toont de hype train zolang die rijdt: drie cadeaus of abonnementen binnen vijf minuten zetten hem in gang.",
       "tip_jar": "Een pot die volloopt als betaalde geschenken binnenkomen"
     },
     "fields": {
@@ -18378,5 +18382,74 @@
     "fingerprint": "Vingerafdruk",
     "exploreFirst": "Eerst rondkijken",
     "codeNote": "We mailen je een code, geen wachtwoord nodig."
+  },
+  "liveHype": {
+    "train": {
+      "level": "Hype train · Level {{level}}",
+      "endedLevel": "De hype train haalde level {{level}}!",
+      "ended": "De hype train is voorbij",
+      "thanks_one": "Dank aan {{count}} supporter",
+      "thanks_other": "Dank aan {{count}} supporters",
+      "top": "Top: {{name}}"
+    },
+    "chat": {
+      "giftedSubs_one": "gaf een abonnement cadeau 🎁",
+      "giftedSubs_other": "gaf {{count}} abonnementen cadeau 🎁"
+    },
+    "gift": {
+      "open": "Abonnementen cadeau geven",
+      "title": "Abonnementen cadeau geven",
+      "plan": "Abonnement",
+      "mode": {
+        "random": "Willekeurige kijkers in de chat",
+        "user": "Iemand specifiek"
+      },
+      "howMany": "Hoeveel",
+      "randomHint": "Gaat naar mensen die de afgelopen 30 minuten in de chat schreven en nog niet geabonneerd zijn.",
+      "who": "Gebruikersnaam of walletadres",
+      "whoPlaceholder": "@gebruikersnaam",
+      "send_one": "1 abonnement cadeau · ${{price}}",
+      "send_other": "{{count}} abonnementen cadeau · ${{price}}",
+      "payHint": "Betaald in DHB vanuit je wallet, in één overboeking.",
+      "fewer_one": "Er kan nu maar 1 persoon in de chat een abonnement krijgen, dus je betaalt er 1.",
+      "fewer_other": "Er kunnen nu maar {{count}} mensen in de chat een abonnement krijgen, dus je betaalt er {{count}}.",
+      "done_one": "Abonnement cadeau gegeven!",
+      "done_other": "{{count}} abonnementen cadeau gegeven!",
+      "failed": "Abonnementen cadeau geven is niet gelukt",
+      "notReady": "Dit abonnement kan nog niet cadeau worden gegeven",
+      "noPlan": "Kies eerst een abonnement",
+      "noPlans": "{{name}} heeft nog geen abonnementen om cadeau te geven.",
+      "cancel": "Annuleren",
+      "stage": {
+        "preparing": "Voorbereiden…",
+        "wallet": "Bevestig in je wallet",
+        "confirming": "Wachten op de transactie…",
+        "recording": "Afronden…"
+      }
+    },
+    "badges": {
+      "title": "Tijdelijke badges",
+      "intro": "Bied een paar dagen een badge aan. Wie in die tijd abonneert of iets cadeau geeft, krijgt hem, en hij staat voorgoed naast hun naam in je chat.",
+      "name": "Naam van de badge",
+      "namePlaceholder": "Lanceerweek",
+      "days": "Beschikbaar (dagen)",
+      "emoji": "Emoji",
+      "who": "Wie kan hem verdienen",
+      "audience": {
+        "both": "Abonnees en gevers",
+        "subscribers": "Abonnees",
+        "gifters": "Gevers"
+      },
+      "create": "Badge aanbieden",
+      "created": "De badge is live.",
+      "end": "Nu stoppen",
+      "ended": "Gestopt",
+      "until": "Tot {{date}}",
+      "holders_one": "{{count}} houder",
+      "holders_other": "{{count}} houders",
+      "limit": "Er kunnen drie badges tegelijk lopen. Stop er een om een nieuwe aan te bieden.",
+      "failed": "Dat lukte niet. Probeer het opnieuw.",
+      "hypeHint": "Iedereen die meerijdt op een hype train krijgt ook je 🚂-badge op het gehaalde level."
+    }
   }
 }

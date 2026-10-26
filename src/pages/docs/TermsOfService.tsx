@@ -57,6 +57,8 @@ const TermsOfService = () => {
       <Section title={t('termsOfService.softwareDevelopers')}>
         <p>{t('termsOfService.softwareDevText1')}</p>
         <p>{t('termsOfService.softwareDevText2')}</p>
+        <p>{t('termsOfService.softwareDevText3')}</p>
+        <p>{t('termsOfService.wyomingDaoText')}</p>
       </Section>
 
       <Section title={t('termsOfService.whoMayUse')}>

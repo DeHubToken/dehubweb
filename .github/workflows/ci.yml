@@ -365,6 +365,8 @@ jobs:
 
       - name: Whisper dispatch and results
         run: node --experimental-strip-types --test supabase/functions/_shared/whisper.test.ts
+      - name: Bank cash-out partner
+        run: node --experimental-strip-types --test supabase/functions/_shared/transak.test.ts
 
       - name: Bounded visual highlight requests
         run: node --experimental-strip-types --test supabase/functions/editor-visual-highlights/handler.test.ts supabase/functions/editor-visual-highlights/completion.test.ts
