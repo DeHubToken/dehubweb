@@ -63,9 +63,15 @@ export const clamp01 = (v: number) => (v < 0 ? 0 : v > 1 ? 1 : v);
 
 // ─── Alert timing (live-overlay.css, use-alert-queue.ts) ─────────────────────
 
-/** `ow-alert-in`: the card rises 30% of its height and grows from 92%, overshooting a touch. */
-export const ALERT_ENTER_MS = 420;
-export const alertEnterEase = cubicBezier(0.2, 0.9, 0.25, 1.2);
+/**
+ * `ow-alert-in`: the card rises 24% of its height, grows from 94% and comes
+ * into focus from a 6px blur, fully opaque and sharp 60% of the way through.
+ */
+export const ALERT_ENTER_MS = 520;
+export const alertEnterEase = cubicBezier(0.16, 1, 0.3, 1);
+const ENTER_AT = [0, 0.6, 1];
+const ENTER_OPACITY = [0, 1, 1];
+const ENTER_BLUR = [6, 0, 0];
 /** `ow-alert-out`: fades while rising 20% of its height. */
 export const ALERT_LEAVE_MS = 380;
 /** No alert is shown for less than this, however short its own duration. */
@@ -143,9 +149,11 @@ export interface Pose {
   /** Vertical offset as a share of the card's height (positive is down). */
   dy: number;
   scale: number;
+  /** Blur radius in CSS pixels; 0 when sharp. */
+  blur: number;
 }
 
-export const newPose = (): Pose => ({ alpha: 1, dy: 0, scale: 1 });
+export const newPose = (): Pose => ({ alpha: 1, dy: 0, scale: 1, blur: 0 });
 
 /**
  * The `ow-alert-in` / `ow-alert-out` pair for a slot at `now`. `enterMs` and
@@ -165,15 +173,21 @@ export function alertPose(
     out.alpha = 1 - e;
     out.dy = -0.2 * e;
     out.scale = 1;
+    out.blur = 0;
   } else if (shown < enterMs) {
-    const e = enterEase(clamp01(shown / enterMs));
-    out.alpha = clamp01(e);
-    out.dy = 0.3 * (1 - e);
-    out.scale = 0.92 + 0.08 * e;
+    const p = clamp01(shown / enterMs);
+    // Like CSS, the timing function runs between each pair of keyframes:
+    // transform has only its ends, opacity and blur stop at 60%.
+    const e = enterEase(p);
+    out.alpha = clamp01(keyframes(p, ENTER_AT, ENTER_OPACITY, enterEase));
+    out.blur = Math.max(0, keyframes(p, ENTER_AT, ENTER_BLUR, enterEase));
+    out.dy = 0.24 * (1 - e);
+    out.scale = 0.94 + 0.06 * e;
   } else {
     out.alpha = 1;
     out.dy = 0;
     out.scale = 1;
+    out.blur = 0;
   }
   return out;
 }
@@ -186,6 +200,7 @@ export function rowEnter(addedAt: number, now: number, out: Pose): Pose {
   out.alpha = e;
   out.dy = 0.3 * (1 - e);
   out.scale = 1;
+  out.blur = 0;
   return out;
 }
 

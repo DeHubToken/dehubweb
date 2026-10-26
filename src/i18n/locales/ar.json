@@ -6545,6 +6545,15 @@
     "creatorEarnsDirect": "يدفع المشتركون بعملات DeHub. تصل حصتك إلى محفظتك في اللحظة التي يشتركون فيها، مخصومًا منها رسوم المنصة لمستوى شارتك."
   },
   "liveOverlay": {
+    "eyebrow": {
+      "follow": "متابع جديد",
+      "subscribe": "مشترك جديد",
+      "subscribedTo": "اشترك · {{plan}}",
+      "gifted_one": "أهدى اشتراكًا",
+      "gifted_other": "أهدى {{count}} اشتراكات",
+      "share": "شارك البث",
+      "join": "انضم الآن"
+    },
     "giftedSubs_one": "أهدى {{name}} اشتراكًا!",
     "giftedSubs_other": "أهدى {{name}} {{count}} اشتراكات!",
     "someone": "شخص ما",

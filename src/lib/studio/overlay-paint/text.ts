@@ -218,6 +218,42 @@ export class TextKit {
     return at - x;
   }
 
+  /**
+   * Width of `text` with `spacing` pixels after every character, as CSS
+   * `letter-spacing` lays it out (trailing space included). Canvas has
+   * `letterSpacing` only in newer browsers, so tracked text is set by hand.
+   */
+  trackedWidth(text: string, spacing: number): number {
+    let w = 0;
+    for (const ch of text) w += this.width(ch) + spacing;
+    return w;
+  }
+
+  /** `text` ellipsized into `maxWidth` with letter-spacing `spacing`. */
+  fitTracked(text: string, maxWidth: number, spacing: number): string {
+    if (!text) return '';
+    const key = `${this.current}\u0000${Math.floor(maxWidth)}\u0000t${spacing.toFixed(2)}\u0000${text}`;
+    let out = this.fitted.get(key);
+    if (out === undefined) {
+      if (this.fitted.size > MAX_CACHED) this.fitted.clear();
+      out = ellipsize(text, Math.floor(maxWidth), (s) => this.trackedWidth(s, spacing));
+      this.fitted.set(key, out);
+    }
+    return out;
+  }
+
+  /** Draw `text` left-aligned at x with `spacing` after each character. Returns the width drawn. */
+  drawTracked(text: string, x: number, y: number, spacing: number): number {
+    const ctx = this.ctx;
+    if (!ctx) return 0;
+    let at = x;
+    for (const ch of text) {
+      ctx.fillText(ch, at, y);
+      at += this.width(ch) + spacing;
+    }
+    return at - x;
+  }
+
   /** Drop everything: a new translator or a font that finished loading changes every width. */
   flush(): void {
     this.widths.clear();

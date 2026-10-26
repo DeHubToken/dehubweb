@@ -6727,6 +6727,15 @@
     "creatorEarnsDirect": "Abonnees betalen in DeHub-tokens. Je aandeel komt in je portemonnee terecht op het moment dat ze zich abonneren, minus de platformkosten voor je badge-niveau."
   },
   "liveOverlay": {
+    "eyebrow": {
+      "follow": "Nieuwe volger",
+      "subscribe": "Nieuwe abonnee",
+      "subscribedTo": "Geabonneerd · {{plan}}",
+      "gifted_one": "Gaf een abonnement cadeau",
+      "gifted_other": "Gaf {{count}} abonnementen cadeau",
+      "share": "Deelde de stream",
+      "join": "Net binnen"
+    },
     "giftedSubs_one": "{{name}} gaf een abonnement cadeau!",
     "giftedSubs_other": "{{name}} gaf {{count}} abonnementen cadeau!",
     "someone": "Iemand",

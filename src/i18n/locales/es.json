@@ -6537,6 +6537,15 @@
     "creatorEarnsDirect": "Los suscriptores pagan en tokens DeHub. Tu acción llega a tu billetera en el momento en que se suscriben, menos la tarifa de la plataforma para tu nivel de insignia."
   },
   "liveOverlay": {
+    "eyebrow": {
+      "follow": "Nuevo seguidor",
+      "subscribe": "Nuevo suscriptor",
+      "subscribedTo": "Suscrito · {{plan}}",
+      "gifted_one": "Regaló una suscripción",
+      "gifted_other": "Regaló {{count}} suscripciones",
+      "share": "Compartió el directo",
+      "join": "Acaba de entrar"
+    },
     "giftedSubs_one": "¡{{name}} regaló una suscripción!",
     "giftedSubs_other": "¡{{name}} regaló {{count}} suscripciones!",
     "someone": "Alguien",

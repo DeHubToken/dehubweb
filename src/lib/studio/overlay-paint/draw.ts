@@ -18,9 +18,8 @@ type RasterCtx = CanvasRenderingContext2D | OffscreenCanvasRenderingContext2D;
 
 // ─── Colours (live-overlay.css) ──────────────────────────────────────────────
 
-/** The overlay's glass: `rgb(10 10 12 / 0.72)`. Canvas has no backdrop blur, so it is the tint alone. */
-export const GLASS = 'rgba(10,10,12,0.72)';
-export const GLASS_EDGE = 'rgba(255,255,255,0.16)';
+/** `--ow-muted`: eyebrows, list titles, labels. */
+export const MUTED = 'rgba(255,255,255,0.62)';
 export const WHITE = '#ffffff';
 export const white = (alpha: number) => WHITE_ALPHA[Math.round(alpha * 100)] ?? `rgba(255,255,255,${alpha})`;
 const WHITE_ALPHA: string[] = Array.from({ length: 101 }, (_, i) => `rgba(255,255,255,${i / 100})`);
@@ -76,14 +75,193 @@ export function roundRectPath(
   ctx.closePath();
 }
 
-/** The glass panel every boxed widget sits on: tint, then a hairline edge inside it. */
-export function glassPanel(ctx: Ctx, x: number, y: number, w: number, h: number, r: number, hair: number, fill = GLASS): void {
-  roundRectPath(ctx, x, y, w, h, r);
+// ─── Glass (`--ow-glass`, `--ow-edge`, `--ow-lip`, `--ow-drop`) ─────────────
+
+/** Which `box-shadow` a panel casts. Only panels narrower than their widget's box show one: the box clips it. */
+export type GlassDrop = 'panel' | 'chat' | null;
+
+export interface GlassOptions {
+  /** A CSS pixel in canvas pixels, for the hairline edge and the lip. */
+  hair: number;
+  /** A CSS pixel in canvas pixels, for the drop shadow's offsets and blur. */
+  unit: number;
+  /** The 1px `--ow-edge`; the ticker has none. */
+  edge?: boolean;
+  drop?: GlassDrop;
+  /** The lower third's extra light on its leading side. */
+  sheen?: boolean;
+}
+
+const DROP_LAYERS: Record<'panel' | 'chat', Array<[number, number, number, string]>> = {
+  // 0 18px 44px -14px black/65, 0 3px 10px black/35
+  panel: [
+    [18, 44, -14, 'rgba(0,0,0,0.65)'],
+    [3, 10, 0, 'rgba(0,0,0,0.35)'],
+  ],
+  // 0 6px 18px -8px black/60
+  chat: [[6, 18, -8, 'rgba(0,0,0,0.6)']],
+};
+
+/**
+ * Paint one glass panel at (x, y): the 165deg gradient, the hairline edge, a
+ * one-pixel light lip along the top and a dark one along the bottom, and the
+ * drop shadow when asked for. Canvas has no backdrop blur, so the gradient is
+ * the whole of the glass.
+ */
+function paintGlass(c: RasterCtx, x: number, y: number, w: number, h: number, r: number, o: GlassOptions, canDrop: boolean): void {
+  const { hair, unit } = o;
+  if (o.drop && canDrop) {
+    // Shadows are cast from a copy of the shape moved off the canvas, then
+    // whatever fell under the panel is cut away: a CSS box-shadow is never
+    // drawn beneath its (translucent) box.
+    const away = (w + h) * 4 + 1000;
+    c.save();
+    c.fillStyle = '#000';
+    for (const [dy, blur, spread, color] of DROP_LAYERS[o.drop]) {
+      const s = spread * unit;
+      c.shadowColor = color;
+      c.shadowBlur = blur * unit;
+      c.shadowOffsetX = away;
+      c.shadowOffsetY = dy * unit;
+      roundRectPath(c, x - away - s, y - s, w + 2 * s, h + 2 * s, Math.max(0, r + s));
+      c.fill();
+    }
+    c.restore();
+    c.save();
+    c.globalCompositeOperation = 'destination-out';
+    roundRectPath(c, x, y, w, h, r);
+    c.fill();
+    c.restore();
+  }
+
+  // linear-gradient(165deg, ...): along a line through the centre, as long as CSS makes it.
+  const a = (165 * Math.PI) / 180;
+  const dx = Math.sin(a);
+  const dy = -Math.cos(a);
+  const len = Math.abs(w * dx) + Math.abs(h * dy);
+  const cx = x + w / 2;
+  const cy = y + h / 2;
+  const g = c.createLinearGradient(cx - (dx * len) / 2, cy - (dy * len) / 2, cx + (dx * len) / 2, cy + (dy * len) / 2);
+  g.addColorStop(0, 'rgba(46,46,54,0.78)');
+  g.addColorStop(0.46, 'rgba(18,18,22,0.84)');
+  g.addColorStop(1, 'rgba(6,6,8,0.9)');
+  roundRectPath(c, x, y, w, h, r);
+  c.fillStyle = g;
+  c.fill();
+  if (o.sheen) {
+    const sheen = c.createLinearGradient(x, 0, x + w, 0);
+    sheen.addColorStop(0, 'rgba(255,255,255,0.06)');
+    sheen.addColorStop(0.6, 'rgba(255,255,255,0)');
+    c.fillStyle = sheen;
+    c.fill();
+  }
+
+  const edge = o.edge === false ? 0 : hair;
+  if (edge) {
+    roundRectPath(c, x + edge / 2, y + edge / 2, w - edge, h - edge, Math.max(0, r - edge / 2));
+    c.lineWidth = edge;
+    c.strokeStyle = 'rgba(255,255,255,0.1)';
+    c.stroke();
+  }
+
+  // The lip: inset 0 1px 0 white/16 and inset 0 -1px 0 black/45, inside the edge.
+  const ix = x + edge;
+  const iy = y + edge;
+  const iw = w - edge * 2;
+  const ih = h - edge * 2;
+  const ir = Math.max(0, r - edge);
+  if (iw > 0 && ih > 0) {
+    c.save();
+    roundRectPath(c, ix, iy, iw, ih, ir);
+    c.clip();
+    for (const [shift, color] of LIP) {
+      // Everything inside the panel except the panel moved by a pixel: a one-pixel crescent.
+      roundRectPath(c, ix, iy + shift * hair, iw, ih, ir);
+      c.rect(ix - 10, iy - 10, iw + 20, ih + 20);
+      c.fillStyle = color;
+      c.fill('evenodd');
+    }
+    c.restore();
+  }
+}
+const LIP: Array<[number, string]> = [
+  [1, 'rgba(255,255,255,0.16)'],
+  [-1, 'rgba(0,0,0,0.45)'],
+];
+
+const glassSprites = new Map<string, { raster: Raster; pad: number } | null>();
+
+/**
+ * A glass panel, drawn from a sprite cached by size: the gradient, edge, lip
+ * and shadow never change while the panel keeps its size, so a frame only
+ * copies pixels. Where no scratch canvas exists it is painted directly,
+ * without the drop shadow (whose cut-out would punch through the picture).
+ */
+export function glassPanel(ctx: Ctx, x: number, y: number, w: number, h: number, r: number, o: GlassOptions): void {
+  if (!(w > 0) || !(h > 0)) return;
+  const W = Math.max(1, Math.round(w));
+  const H = Math.max(1, Math.round(h));
+  const key = `${W}|${H}|${Math.round(r * 2)}|${o.hair.toFixed(2)}|${o.unit.toFixed(2)}|${o.edge !== false}|${o.drop ?? ''}|${!!o.sheen}`;
+  let sprite = glassSprites.get(key);
+  if (sprite === undefined) {
+    const pad = o.drop ? Math.ceil((o.drop === 'panel' ? 70 : 30) * o.unit) : 0;
+    const scratch = makeCanvas(W + pad * 2, H + pad * 2);
+    if (scratch) {
+      paintGlass(scratch.ctx, pad, pad, W, H, r, o, true);
+      sprite = { raster: scratch.canvas, pad };
+    } else {
+      sprite = null;
+    }
+    if (glassSprites.size > 160) glassSprites.delete(glassSprites.keys().next().value as string);
+    glassSprites.set(key, sprite);
+  }
+  if (!sprite) {
+    paintGlass(ctx, x, y, w, h, r, o, false);
+    return;
+  }
+  const sx = w / W;
+  const sy = h / H;
+  ctx.drawImage(sprite.raster, x - sprite.pad * sx, y - sprite.pad * sy, sprite.raster.width * sx, sprite.raster.height * sy);
+}
+
+/**
+ * A small disc with a light top lip: the counters' icon well and the list
+ * ranks. `fill` is a colour or a gradient already made for this position.
+ */
+export function lippedDisc(ctx: Ctx, cx: number, cy: number, d: number, fill: string | CanvasGradient, lip: string, hair: number): void {
+  const r = d / 2;
+  ctx.beginPath();
+  ctx.arc(cx, cy, r, 0, Math.PI * 2);
   ctx.fillStyle = fill;
   ctx.fill();
-  roundRectPath(ctx, x + hair / 2, y + hair / 2, w - hair, h - hair, Math.max(0, r - hair / 2));
-  ctx.lineWidth = hair;
-  ctx.strokeStyle = GLASS_EDGE;
+  if (!lip) return;
+  ctx.save();
+  ctx.clip();
+  ctx.beginPath();
+  ctx.arc(cx, cy + hair, r, 0, Math.PI * 2);
+  ctx.rect(cx - r - 2, cy - r - 2, d + 4, d + 4);
+  ctx.fillStyle = lip;
+  ctx.fill('evenodd');
+  ctx.restore();
+}
+
+/**
+ * `[data-ow-avatar]`'s rings, both outside the picture: a bright inner ring
+ * `ring` wide and, when `halo` is wider, a faint halo out to `halo`.
+ */
+export function avatarRings(ctx: Ctx, cx: number, cy: number, size: number, ring: number, ringColor: string, halo = 0): void {
+  const r = size / 2;
+  if (halo > ring) {
+    ctx.beginPath();
+    ctx.arc(cx, cy, r + (ring + halo) / 2, 0, Math.PI * 2);
+    ctx.lineWidth = halo - ring;
+    ctx.strokeStyle = 'rgba(255,255,255,0.12)';
+    ctx.stroke();
+  }
+  ctx.beginPath();
+  ctx.arc(cx, cy, r + ring / 2, 0, Math.PI * 2);
+  ctx.lineWidth = ring;
+  ctx.strokeStyle = ringColor;
   ctx.stroke();
 }
 

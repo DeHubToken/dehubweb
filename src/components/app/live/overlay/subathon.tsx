@@ -119,7 +119,7 @@ export function PointsBoard({ settings }: { settings: Record<string, unknown> })
       <div data-ow-list-title>{title}</div>
       {rows.map((r, i) => (
         <div key={r.address} data-ow-list-row>
-          <span data-ow-rank>{i + 1}</span>
+          <span data-ow-rank data-place={i + 1}>{i + 1}</span>
           <span data-ow-name>{r.displayName || r.username || `${r.address.slice(0, 6)}…`}</span>
           <span data-ow-amount>{t('liveOverlay.points', { count: r.points, formatted: r.points.toLocaleString() })}</span>
         </div>
