@@ -175,6 +175,7 @@ interface StudioSnapshot {
   resolution: Resolution;
   audioTask: AudioTask;
   ttsModel: TtsModelKey;
+  speechExport: 'mp3_44100_128' | 'wav_24000';
   voiceId: string;
   /** Stability / similarity / style / speed, as chosen on the voice chips. */
   stability: number;
@@ -207,6 +208,7 @@ const DEFAULT_SNAPSHOT: StudioSnapshot = {
   resolution: '720p',
   audioTask: 'speech',
   ttsModel: 'eleven_multilingual_v2',
+  speechExport: 'mp3_44100_128',
   voiceId: DEFAULT_VOICE_ID,
   stability: DEFAULT_VOICE_SETTINGS.stability,
   similarity: DEFAULT_VOICE_SETTINGS.similarity,
@@ -290,6 +292,7 @@ function readSnapshot(storageKey: string): StudioSnapshot {
           : DEFAULT_SNAPSHOT.resolution,
       audioTask: isAudioTask(saved.audioTask) ? saved.audioTask : DEFAULT_SNAPSHOT.audioTask,
       ttsModel: pick(saved.ttsModel, TTS_MODELS, DEFAULT_SNAPSHOT.ttsModel),
+      speechExport: saved.speechExport === 'wav_24000' ? 'wav_24000' : 'mp3_44100_128',
       // Not validated against the voice library: it is fetched asynchronously
       // and a cloned voice the creator made is just as legitimate as a stock
       // one. A voice that has since been deleted fails loudly at generation
@@ -536,7 +539,9 @@ const CreatorStudioWorkspace = memo(function CreatorStudioWorkspace({ onOpenEdit
   // ── Audio workspace ───────────────────────────────────────────────────────
   const [audioTask, setAudioTask] = useState<AudioTask>(restored.audioTask);
   const [ttsModel, setTtsModel] = useState<TtsModelKey>(restored.ttsModel);
+  const [speechExport, setSpeechExport] = useState(restored.speechExport);
   const [voiceId, setVoiceId] = useState<string>(restored.voiceId);
+  const speechExportFormat = /^[a-z]{2,3}-[A-Z]{2}-Chirp3-HD-[A-Za-z]+$/.test(voiceId) ? 'mp3_44100_128' : speechExport;
   const [stability, setStability] = useState(restored.stability);
   const [similarity, setSimilarity] = useState(restored.similarity);
   const [style, setStyle] = useState(restored.style);
@@ -717,6 +722,7 @@ const CreatorStudioWorkspace = memo(function CreatorStudioWorkspace({ onOpenEdit
       resolution,
       audioTask,
       ttsModel,
+      speechExport,
       voiceId,
       stability,
       similarity,
@@ -752,6 +758,7 @@ const CreatorStudioWorkspace = memo(function CreatorStudioWorkspace({ onOpenEdit
     resolution,
     audioTask,
     ttsModel,
+    speechExport,
     voiceId,
     stability,
     similarity,
@@ -1344,6 +1351,7 @@ const CreatorStudioWorkspace = memo(function CreatorStudioWorkspace({ onOpenEdit
           text: resolvedPrompt,
           voiceId,
           modelId: ttsModel,
+          outputFormat: speechExportFormat,
           languageCode: speechLang || undefined,
           voiceSettings: voiceTuning,
         };
@@ -1377,6 +1385,8 @@ const CreatorStudioWorkspace = memo(function CreatorStudioWorkspace({ onOpenEdit
     voiceId,
     ttsModel,
     speechLang,
+    speechExport,
+    speechExportFormat,
     stability,
     similarity,
     style,
@@ -2024,6 +2034,15 @@ const CreatorStudioWorkspace = memo(function CreatorStudioWorkspace({ onOpenEdit
                         />
                       )}
 
+                      {audioTask === 'speech' && (
+                        <SelectChip label={t('creator.audioExportFormat')} value={speechExportFormat}
+                          display={speechExportFormat === 'wav_24000' ? t('creator.audioExportWav') : t('creator.audioExportMp3')}
+                          options={[
+                            { value: 'mp3_44100_128', label: t('creator.audioExportMp3') },
+                            ...(!/^[a-z]{2,3}-[A-Z]{2}-Chirp3-HD-[A-Za-z]+$/.test(voiceId) ? [{ value: 'wav_24000', label: t('creator.audioExportWav') }] : []),
+                          ]}
+                          onChange={(value) => setSpeechExport(value === 'wav_24000' ? value : 'mp3_44100_128')} />
+                      )}
                       {(audioTask === 'speech' || audioTask === 'dialogue') && (
                         <>
                           <SelectChip

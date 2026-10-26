@@ -14,6 +14,7 @@ import {
   readUpload,
 } from '../_shared/elevenlabs.ts';
 import { chargeForJob } from '../_shared/ai-payment-guard.ts';
+import { audioContainer } from '../_shared/speech-audio.ts';
 
 const MAX_UPLOAD_BYTES = 100 * 1024 * 1024;
 
@@ -37,7 +38,7 @@ Deno.serve(async (req) => {
 
     const upload = await readUpload(req);
     if (!upload) return errorResponse('An audio or video file is required');
-    const { file, form } = upload;
+    const { file } = upload;
 
     if (file.size > MAX_UPLOAD_BYTES) {
       return errorResponse('That file is over 100 MB. Use a shorter or smaller one.');
@@ -46,10 +47,8 @@ Deno.serve(async (req) => {
     const outbound = new FormData();
     outbound.append('audio', file, file.name || 'input.mp3');
 
-    const format = form.get('outputFormat') === 'pcm_44100' ? 'pcm_44100' : 'mp3_44100_128';
-
     const response = await fetch(
-      `https://api.elevenlabs.io/v1/audio-isolation?output_format=${format}`,
+      'https://api.elevenlabs.io/v1/audio-isolation',
       {
         method: 'POST',
         headers: { 'xi-api-key': apiKey },
@@ -63,10 +62,10 @@ Deno.serve(async (req) => {
       return errorResponse(readProviderError(errText, 'Could not clean that recording'), 502);
     }
 
-    return audioResponse(
-      await response.arrayBuffer(),
-      format === 'pcm_44100' ? 'audio/wav' : 'audio/mpeg',
-    );
+    const buffer = await response.arrayBuffer();
+    const container = audioContainer(buffer);
+    if (!container) return errorResponse('The audio service returned an invalid recording', 502);
+    return audioResponse(buffer, container === 'wav' ? 'audio/wav' : 'audio/mpeg');
   } catch (err) {
     console.error('elevenlabs-audio-isolation error:', err);
     return errorResponse('Internal server error', 500);
