@@ -3234,6 +3234,7 @@
     "statsLoadFailed": "Ставка статистикасын жүктеу мүмкін емес"
   },
   "communities": {
+    "shareLink": "Сілтемені бөлісу",
     "chatTab": "Чат",
     "followerInvites": {
       "title": "Ізбасарларды шақыру",

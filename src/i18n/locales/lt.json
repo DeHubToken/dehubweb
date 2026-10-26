@@ -3225,6 +3225,7 @@
     "statsLoadFailed": "Neįmanoma įkelti staklingų duomenų"
   },
   "communities": {
+    "shareLink": "Dalytis nuoroda",
     "chatTab": "Pokalbis",
     "followerInvites": {
       "title": "Pakviesti sekėjų",

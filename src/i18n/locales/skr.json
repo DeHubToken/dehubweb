@@ -3158,6 +3158,7 @@
     "statsLoadFailed": "چلنا سٹیکنگ کے آمار لود نہ کئے"
   },
   "communities": {
+    "shareLink": "لنک شیئر کرو",
     "chatTab": "چیٹ",
     "followerInvites": {
       "title": "دوستوں کو دعوت دیں",

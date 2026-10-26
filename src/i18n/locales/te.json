@@ -3220,6 +3220,7 @@
     "statsLoadFailed": "స్టేకింగ్ గణాంకాలను లోడ్ చేయలేకపోయాను"
   },
   "communities": {
+    "shareLink": "లింక్ ‌ ను షేర్ చేయండి",
     "chatTab": "చాట్",
     "followerInvites": {
       "title": "అనుమతించే అనుయాయులను పిలుపుమిమ్మల్ని",

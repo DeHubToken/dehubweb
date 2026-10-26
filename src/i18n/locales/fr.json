@@ -3225,6 +3225,7 @@
     "statsLoadFailed": "Impossible de charger les statistiques de staking"
   },
   "communities": {
+    "shareLink": "Partager le lien",
     "chatTab": "Discussion",
     "followerInvites": {
       "title": "Inviter des abonnés",

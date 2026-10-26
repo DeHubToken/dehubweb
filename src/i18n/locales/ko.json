@@ -3230,6 +3230,7 @@
     "statsLoadFailed": "투표 제안 통계를 불러올 수 없습니다"
   },
   "communities": {
+    "shareLink": "링크 공유하기",
     "chatTab": "채팅",
     "followerInvites": {
       "title": "팔로워 초대",

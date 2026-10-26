@@ -3195,6 +3195,7 @@
     "pendingSubmitted": "{{amount}} टोकन जमा किए गए। पुष्टि अभी भी जाँची जा रही है। इसे फिर से न भेजें।"
   },
   "communities": {
+    "shareLink": "लिङ्कम् बाँट्यताम्",
     "chatTab": "वार्तालापः",
     "followerInvites": {
       "title": "अनुयायी निमन्त्रणा",

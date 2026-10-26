@@ -3224,6 +3224,7 @@
     "statsLoadFailed": "Panustamisstatistikat ei saanud laadida"
   },
   "communities": {
+    "shareLink": "Jaga linki",
     "chatTab": "Vestlus",
     "followerInvites": {
       "title": "Kutsu jälgijaid",

@@ -3238,6 +3238,7 @@
     "statsLoadFailed": "Không thể tải thống kê staking"
   },
   "communities": {
+    "shareLink": "Chia sẻ liên kết",
     "chatTab": "Trò chuyện",
     "followerInvites": {
       "title": "Mời người theo dõi",

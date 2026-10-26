@@ -3221,6 +3221,7 @@
     "statsLoadFailed": "ஸ்டேக்கிங் புள்ளிவிவரங்களை ஏற்ற முடியவில்லை"
   },
   "communities": {
+    "shareLink": "இணைப்பைப் பகிரவும்",
     "chatTab": "அரட்டை",
     "followerInvites": {
       "title": "தொடர்புகளை அழைக்க",

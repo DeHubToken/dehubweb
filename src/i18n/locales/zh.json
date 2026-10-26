@@ -3232,6 +3232,7 @@
     "statsLoadFailed": "無法載入抵押資訊"
   },
   "communities": {
+    "shareLink": "分享链接",
     "chatTab": "聊天",
     "followerInvites": {
       "title": "邀請追隨者",

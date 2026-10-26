@@ -3235,6 +3235,7 @@
     "statsLoadFailed": "ფსონების სტატისტიკის ჩატვირთვა ვერ მოხერხდა"
   },
   "communities": {
+    "shareLink": "ბმულის გაზიარება",
     "chatTab": "ჩატი",
     "followerInvites": {
       "title": "მოწოდების მოყვარულები",

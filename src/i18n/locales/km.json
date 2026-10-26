@@ -3222,6 +3222,7 @@
     "statsLoadFailed": "មិនអាចផ្ទុកស្ថិតិការភ្នាល់បានទេ"
   },
   "communities": {
+    "shareLink": "ចែករំលែកតំណ",
     "chatTab": "ជជែក",
     "followerInvites": {
       "title": "អញ្ជើញអ្នកតាមដាន",

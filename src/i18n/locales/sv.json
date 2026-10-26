@@ -3227,6 +3227,7 @@
     "statsLoadFailed": "Kunde inte ladda staking-statistik"
   },
   "communities": {
+    "shareLink": "Dela länk",
     "chatTab": "Chatt",
     "followerInvites": {
       "title": "Bjud in följare",

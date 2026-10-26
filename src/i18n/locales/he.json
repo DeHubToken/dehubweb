@@ -3223,6 +3223,7 @@
     "statsLoadFailed": "לא ניתן לטעון סטטיסטיקות של תרמיל"
   },
   "communities": {
+    "shareLink": "שיתוף הקישור",
     "chatTab": "צ'אט",
     "followerInvites": {
       "title": "בקש אחרונים",

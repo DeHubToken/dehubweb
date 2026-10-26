@@ -3585,6 +3585,7 @@
     "statsLoadFailed": "Не вдалося завантажити статистику стейкінгу"
   },
   "communities": {
+    "shareLink": "Поділитися посиланням",
     "chatTab": "Чат",
     "followerInvites": {
       "title": "Запросити підписників",

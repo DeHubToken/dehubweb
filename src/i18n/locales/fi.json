@@ -3223,6 +3223,7 @@
     "statsLoadFailed": "Ei voitu ladata staking -tilastoja"
   },
   "communities": {
+    "shareLink": "Jaa linkki",
     "chatTab": "Keskustelu",
     "followerInvites": {
       "title": "Kutsu seuraajia",
