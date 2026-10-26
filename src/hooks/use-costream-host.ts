@@ -24,7 +24,13 @@ import {
   getMyInvites,
   getMyOpenCoStream,
   inviteGuest,
+  joinCoStreamQueue,
+  leaveCoStreamQueue,
   leaveSeat,
+  pollCoStreamQueue,
+  startBattle,
+  stopBattle,
+  type QueueAnswer,
   openCoStream,
   removeGuest,
   setAcceptingRequests,
@@ -41,6 +47,7 @@ const logger = createLogger('CoStreamHost');
 
 const SEAT_POLL_MS = 3000;
 const INVITE_POLL_MS = 10_000;
+const QUEUE_POLL_MS = 4000;
 
 export interface CoStreamParticipant {
   wallet: string;
@@ -77,6 +84,13 @@ export interface UseCoStreamHost {
   leave: () => Promise<void>;
   /** Re-read the room now (after a match, say). */
   refresh: (roomId?: string) => Promise<void>;
+  /** Looking for a partner: how many creators are in the queue. Null when not looking. */
+  searching: { waiting: number } | null;
+  findPartner: () => Promise<void>;
+  cancelFind: () => Promise<void>;
+  /** Host: a timed gift battle against the seated partner. */
+  battle: (seconds: number) => Promise<void>;
+  endBattle: () => Promise<void>;
 }
 
 export const participantLabel = (username: string | null | undefined, wallet: string) =>
@@ -102,6 +116,7 @@ export function useCoStreamHost({
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [remotes, setRemotes] = useState<RemoteMedia[]>([]);
+  const [searching, setSearching] = useState<{ waiting: number } | null>(null);
   const rtcRef = useRef<CoStreamRtc | null>(null);
   const rtcRoomRef = useRef<string | null>(null);
   const roomIdRef = useRef<string | null>(null);
@@ -275,6 +290,43 @@ export function useCoStreamHost({
   // Off air, or unmounted: put the broadcast back to the host alone.
   useEffect(() => () => { if (mixer.isActive()) void mixer.stop(); }, [mixer]);
 
+  // ── Matchmaking ──
+  const settleQueue = useCallback(async (answer: QueueAnswer) => {
+    if (answer.status === 'matched') {
+      setSearching(null);
+      roomIdRef.current = answer.costream_id;
+      await refresh(answer.costream_id);
+      return true;
+    }
+    if (answer.status === 'waiting') setSearching({ waiting: answer.waiting });
+    return false;
+  }, [refresh]);
+
+  const searchingNow = searching !== null;
+  useEffect(() => {
+    if (!searchingNow || !me || !streamId) return;
+    let cancelled = false;
+    const timer = window.setInterval(() => {
+      void pollCoStreamQueue(me)
+        .then(async (answer) => {
+          if (cancelled) return;
+          // A dropped heartbeat (a sleeping tab) falls out of the queue; step
+          // back in rather than silently stop looking.
+          if (answer.status === 'idle') answer = await joinCoStreamQueue(me, streamId, username);
+          if (!cancelled) await settleQueue(answer);
+        })
+        .catch((err) => logger.warn('Queue poll failed', err));
+    }, QUEUE_POLL_MS);
+    return () => { cancelled = true; window.clearInterval(timer); };
+  }, [searchingNow, me, streamId, username, settleQueue]);
+
+  // Leaving the screen, or going off air, takes this creator out of the queue.
+  useEffect(() => {
+    if (!searchingNow || !me) return;
+    return () => { void leaveCoStreamQueue(me).catch(() => undefined); };
+  }, [searchingNow, me]);
+  useEffect(() => { if (!live) setSearching(null); }, [live]);
+
   const onScreen: CoStreamParticipant[] = others.map((p) => ({
     ...p,
     connected: remotes.some((r) => r.uid === costreamUid(p.wallet) && (r.video || r.audio)),
@@ -339,6 +391,31 @@ export function useCoStreamHost({
       await leaveSeat(me, mySeat.id);
       roomIdRef.current = null;
       setState(null);
+    }),
+    searching,
+    findPartner: () => run(async () => {
+      if (!me || !streamId) throw new Error('Go live first');
+      setSearching({ waiting: 0 });
+      try {
+        await settleQueue(await joinCoStreamQueue(me, streamId, username));
+      } catch (err) {
+        setSearching(null);
+        throw err;
+      }
+    }),
+    cancelFind: () => run(async () => {
+      setSearching(null);
+      if (me) await leaveCoStreamQueue(me);
+    }),
+    battle: (seconds) => run(async () => {
+      if (!me || !state || role !== 'host') return;
+      await startBattle(me, state.room.id, seconds);
+      await refresh();
+    }),
+    endBattle: () => run(async () => {
+      if (!me || !state || role !== 'host') return;
+      await stopBattle(me, state.room.id);
+      await refresh();
     }),
   };
 }

@@ -127,5 +127,30 @@ DO $$ BEGIN
   IF public.costream_queue_size() <> 0 THEN RAISE EXCEPTION 'queue should be empty'; END IF;
 END $$;
 
+-- Battle scores (20261026100000): a round starts at zero against the seated
+-- partner, the host keeps the tally, and nobody else can touch it.
+\if :{?with_scores}
+SELECT public.test_wallet(:other);
+UPDATE public.live_costreams SET battle_host_score = 12.5, battle_guest_score = 40 WHERE host_wallet = :other AND status = 'active';
+SELECT public.test_wallet(:guest);
+UPDATE public.live_costreams SET battle_guest_score = 9999 WHERE host_wallet = :other AND status = 'active';
+DO $$ BEGIN
+  IF NOT EXISTS (SELECT 1 FROM public.live_costreams WHERE host_wallet = '0x3333333333333333333333333333333333333333'
+    AND status = 'active' AND battle_host_score = 12.5 AND battle_guest_score = 40
+    AND battle_guest_wallet = '0x2222222222222222222222222222222222222222') THEN
+    RAISE EXCEPTION 'battle tally should be the host''s alone, against the seated partner';
+  END IF;
+END $$;
+SELECT public.test_wallet(:other);
+UPDATE public.live_costreams SET battle_started_at = now(), battle_ends_at = now() + interval '1 minute' WHERE host_wallet = :other AND status = 'active';
+DO $$ BEGIN
+  IF NOT EXISTS (SELECT 1 FROM public.live_costreams WHERE host_wallet = '0x3333333333333333333333333333333333333333'
+    AND status = 'active' AND battle_host_score = 0 AND battle_guest_score = 0 AND battle_round = 2) THEN
+    RAISE EXCEPTION 'a new round should start from zero';
+  END IF;
+END $$;
+SELECT pg_temp.expect_error($$UPDATE public.live_costreams SET battle_host_score = -1 WHERE host_wallet = '0x3333333333333333333333333333333333333333'$$, 'negative score');
+\endif
+
 RESET ROLE;
 SELECT 'live costreams: all checks passed' AS result;

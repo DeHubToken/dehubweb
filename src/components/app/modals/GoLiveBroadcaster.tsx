@@ -49,6 +49,8 @@ import { startVideoEffect, type VideoEffectStage } from '@/lib/livepeer/video-ef
 import { createGuestMixer } from '@/lib/livepeer/guest-mixer';
 import { useCoStreamHost } from '@/hooks/use-costream-host';
 import { CoStreamHostPanel } from '@/components/app/live/costream/CoStreamHostPanel';
+import { CoStreamBattleBar } from '@/components/app/live/costream/CoStreamBattleBar';
+import { useBattleTally } from '@/hooks/use-battle-tally';
 import { useAuth } from '@/contexts/AuthContext';
 import type { VideoEffectId } from '@/constants/video-effects.constants';
 import { VideoEffectSelector } from '@/components/app/live/VideoEffectSelector';
@@ -1904,6 +1906,7 @@ export function GoLiveBroadcaster({
     el.srcObject = mixing ? guestMixer.preview() : null;
   }, [mixing, guestMixer, coStream.onScreen.length]);
   const guestNudge = coStream.incoming.length + coStream.requests.length;
+  useBattleTally(walletAddress, coStream.state, coStream.role === 'host');
 
   return (
     <div className={cn(fullBleed ? 'absolute inset-0 bg-black' : 'space-y-4 pb-4')}>
@@ -1941,6 +1944,14 @@ export function GoLiveBroadcaster({
         )}
 
         <LiveReactionFlow streamId={streamId} enabled={phase === 'live' || phase === 'reconnecting'} bottom={fullBleed ? 100 : 24} />
+
+        {onAir && (
+          <CoStreamBattleBar
+            state={coStream.state}
+            streamId={streamId}
+            className="absolute left-1/2 top-[calc(max(0.75rem,env(safe-area-inset-top))+5.5rem)] z-20 -translate-x-1/2"
+          />
+        )}
 
         {!videoOn && phase !== 'error' && (
           <div className="absolute inset-0 flex flex-col items-center justify-center gap-2 text-zinc-500">

@@ -31,6 +31,11 @@ export interface CoStreamRoom {
   battle_started_at: string | null;
   battle_ends_at: string | null;
   battle_round: number;
+  /** DHB paid to each side this round, kept by the host's broadcaster. */
+  battle_host_score?: number | string | null;
+  battle_guest_score?: number | string | null;
+  /** The seated partner this round is against. */
+  battle_guest_wallet?: string | null;
   created_at: string;
 }
 
@@ -97,8 +102,9 @@ async function withSeats(room: CoStreamRoom | null): Promise<CoStreamState | nul
   return { room, seats: await seatsFor(room.id) };
 }
 
-const ROOM_COLUMNS =
-  'id, host_wallet, host_stream_id, host_username, accepting_requests, status, battle_started_at, battle_ends_at, battle_round, created_at';
+// Everything, not a column list: the battle score columns arrive in a later
+// migration, and naming a column the database lacks fails the whole read.
+const ROOM_COLUMNS = '*';
 
 export async function getCoStream(roomId: string): Promise<CoStreamState | null> {
   const { data, error } = await table(supabase, 'live_costreams').select(ROOM_COLUMNS).eq('id', roomId).maybeSingle();
@@ -269,6 +275,41 @@ export async function startBattle(host: string, roomId: string, seconds: number)
     })
     .eq('id', roomId);
   if (error) fail(error, 'Could not start the battle');
+}
+
+/** Host: the running tally for this round. */
+export async function reportBattleScores(host: string, roomId: string, hostScore: number, guestScore: number): Promise<void> {
+  const { error } = await table(writer(host), 'live_costreams')
+    .update({ battle_host_score: Math.max(0, hostScore), battle_guest_score: Math.max(0, guestScore) })
+    .eq('id', roomId);
+  if (error && !/battle_(host|guest)_score/.test(error.message || '')) fail(error, 'Could not save the battle score');
+}
+
+export type BattlePhase = 'idle' | 'running' | 'result';
+
+/** How long the result stays up after a round ends. */
+export const BATTLE_RESULT_MS = 12_000;
+
+export function battlePhase(room: Pick<CoStreamRoom, 'battle_started_at' | 'battle_ends_at'> | null | undefined, now = Date.now()): BattlePhase {
+  if (!room?.battle_started_at || !room.battle_ends_at) return 'idle';
+  const end = Date.parse(room.battle_ends_at);
+  if (now < end) return 'running';
+  return now < end + BATTLE_RESULT_MS ? 'result' : 'idle';
+}
+
+/** The two sides of a round: host, and the seated partner with a live of their own. */
+export function battleSides(state: CoStreamState | null | undefined) {
+  if (!state) return null;
+  const { room, seats } = state;
+  const partner =
+    seats.find((s) => s.status === 'accepted' && s.stream_id && s.wallet === room.battle_guest_wallet) ??
+    seats.find((s) => s.status === 'accepted' && s.stream_id) ??
+    null;
+  if (!partner?.stream_id) return null;
+  return {
+    host: { wallet: room.host_wallet, streamId: room.host_stream_id, username: room.host_username, score: Number(room.battle_host_score) || 0 },
+    guest: { wallet: partner.wallet, streamId: partner.stream_id, username: partner.username, score: Number(room.battle_guest_score) || 0 },
+  };
 }
 
 export async function stopBattle(host: string, roomId: string): Promise<void> {
