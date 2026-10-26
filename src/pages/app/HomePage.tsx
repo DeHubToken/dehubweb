@@ -39,6 +39,7 @@ import { setImagesFeedScrollView, IMAGES_BACK_TO_COLLAGE_EVENT } from '@/lib/ima
 import { setTabSwitchTime } from '@/lib/gesture-state';
 import { getLiteMode } from '@/hooks/use-connection-quality';
 import { clearPrefetchState } from '@/hooks/use-feed-prefetch';
+import { refreshFeedQueries } from '@/lib/feed-refresh-queries';
 import { useFeedSwallowClip } from '@/hooks/use-feed-swallow-clip';
 import { useSystemFeedHeaderMotion } from '@/hooks/use-system-feed-header-motion';
 import { clearPersistedFeedFilters } from '@/hooks/use-persisted-feed-filter';
@@ -526,13 +527,9 @@ export default function HomePage() {
     
     setIsRefreshing(true);
 
-    // Invalidate feed queries so cards re-render with fresh data (or the
-    // same cached data) — this gives users clear visual feedback even
-    // when nothing new is available.
-    void queryClient.invalidateQueries({ queryKey: ['dehub-live'] });
-    void queryClient.invalidateQueries({ queryKey: ['unified-feed'] });
-    void queryClient.invalidateQueries({ queryKey: ['home-feed'] });
-    void queryClient.invalidateQueries({ queryKey: ['feed'] });
+    // Re-ask for every list the feed tabs draw from, so views, reactions and
+    // comments come back current — the pinned post and Music included.
+    refreshFeedQueries(queryClient);
     
     // Clear prefetch state so feeds will be re-fetched
     clearPrefetchState();
