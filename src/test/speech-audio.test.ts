@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { audioContainer, frameSpeechPcm, prepareSpeechAudio, speechProviderFormat } from '../../supabase/functions/_shared/speech-audio';
+import { audioContainer, frameSpeechPcm, pcmSpeechSamples, prepareSpeechAudio, speechProviderFormat } from '../../supabase/functions/_shared/speech-audio';
 
 const mp3 = new Uint8Array([73, 68, 51, 4, 0, 0, 0, 0, 0, 0, 255, 251, 144, 0]).buffer;
 describe('verified speech audio export', () => {
@@ -38,5 +38,18 @@ describe('verified speech audio export', () => {
     expect(() => frameSpeechPcm(new Uint8Array([0]).buffer, 24000)).toThrow('Invalid PCM');
     const truncated = frameSpeechPcm(new Uint8Array([0, 0]).buffer, 24000).slice(0, 44);
     expect(audioContainer(truncated)).toBeNull();
+  });
+  it('derives duration from complete PCM frames and rejects forged structure', () => {
+    const wave = frameSpeechPcm(new Uint8Array([0, 0, 255, 127]).buffer, 24000);
+    expect(pcmSpeechSamples(wave, 24000)).toEqual({ frames: 2, sampleRate: 24000, durationSeconds: 2 / 24000 });
+    const wrongRate = wave.slice(0); new DataView(wrongRate).setUint32(28, 96000, true);
+    expect(() => pcmSpeechSamples(wrongRate)).toThrow('Invalid');
+    const trailing = new Uint8Array(wave.byteLength + 1); trailing.set(new Uint8Array(wave));
+    new DataView(trailing.buffer).setUint32(4, trailing.byteLength - 8, true);
+    expect(() => pcmSpeechSamples(trailing.buffer)).toThrow('Invalid');
+    const duplicate = new Uint8Array(wave.byteLength + 10); duplicate.set(new Uint8Array(wave));
+    duplicate.set([100, 97, 116, 97, 2, 0, 0, 0, 0, 0], wave.byteLength);
+    new DataView(duplicate.buffer).setUint32(4, duplicate.byteLength - 8, true);
+    expect(() => pcmSpeechSamples(duplicate.buffer)).toThrow('Invalid');
   });
 });
