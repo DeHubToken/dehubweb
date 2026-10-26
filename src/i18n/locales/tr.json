@@ -9034,7 +9034,20 @@
       "failed": "AI bunu şu anda yapamadı. Biraz sonra tekrar dene.",
       "changes": "Yapılan düzenlemeler: {{count}}",
       "undo": "Geri al",
-      "openGenerator": "İncele ve oluştur"
+      "openGenerator": "İncele ve oluştur",
+      "stopped": "Durduruldu. Başka hiçbir şey değişmedi.",
+      "stop": "Durdur",
+      "queue": "Sıraya ekle",
+      "queued": "{{count}} sırada",
+      "restore": "Buraya geri yükle",
+      "restoreHint": "Projeyi bu mesajdan önceki haline döndürür. Geri al ile geri gelir.",
+      "restored": "Proje o mesajdan önceki haline döndürüldü. Yeni sürümü geri getirmek için geri al'a bas.",
+      "rewrite": "İsteğimi netleştir",
+      "rewriteFailed": "Yeniden yazılamadı. Metnin değişmedi.",
+      "feedback": "Bu yardımcı oldu mu?",
+      "good": "İyi yanıt",
+      "bad": "Kötü yanıt",
+      "retryPrefix": "Bu doğru değildi. Bunun yerine, "
     },
     "shape": {
       "rect": "Dikdörtgen",
@@ -9209,7 +9222,9 @@
       "tint": "Renk tonu {{value}}",
       "vignette": "Vinyet {{value}}%",
       "auto": "Otomatik iyileştir",
-      "autoFailed": "Bu fotoğraf analiz edilemedi."
+      "autoFailed": "Bu fotoğraf analiz edilemedi.",
+      "halation": "Halasyon %{{value}}",
+      "scanlines": "Tarama çizgileri %{{value}}"
     },
     "pages": {
       "add": "Sayfa ekle",
@@ -9293,7 +9308,19 @@
       "translateCount": "{{count}} altyazıyı çevir",
       "translationDone": "{{count}} altyazı çevrildi",
       "translationFailed": "Altyazı çevirisi başarısız oldu. Altyazılarınız değiştirilmedi.",
-      "lockedTranslation": "Kilitli altyazıları dahil etmek için kilitlerini açın."
+      "lockedTranslation": "Kilitli altyazıları dahil etmek için kilitlerini açın.",
+      "style": "Altyazı stili",
+      "styles": {
+        "classic": "Klasik",
+        "boxed": "Kutulu",
+        "bold": "Kalın",
+        "wordpop": "Kelime kelime",
+        "rapid": "Hızlı gösterim",
+        "beast": "Canavar modu",
+        "stacked": "Yığılmış",
+        "serif": "Serif",
+        "bubble": "Baloncuk"
+      }
     },
     "multi": {
       "selected": "{{count}} katman seçildi",
