@@ -6518,6 +6518,8 @@
     "creatorEarnsDirect": "Aboneler DeHub tokenleri ile ödeme yapar. Payınız, abone oldukları anda cüzdanınıza düşer ve rozet seviyenizin platform ücreti düşülür."
   },
   "liveOverlay": {
+    "giftedSubs_one": "{{name}} bir abonelik hediye etti!",
+    "giftedSubs_other": "{{name}} {{count}} abonelik hediye etti!",
     "someone": "Birisi",
     "newFollower": "Yeni takipçi: {{name}}",
     "newSubscriber": "Yeni abone: {{name}}",
@@ -6727,6 +6729,7 @@
       "subathon_timer": "Subathon sayacı",
       "points_board": "Sadık izleyiciler",
       "streamer_level": "Yayıncı seviyesi",
+      "hype_train": "Hype treni",
       "tip_jar": "Hediye kavanozu"
     },
     "hints": {
@@ -6751,6 +6754,7 @@
       "subathon_timer": "Hediye, takip ve aboneliklerin geri çekildiği bir geri sayım",
       "points_board": "İzleme ve hediye verme puanlarına göre en iyi izleyicileriniz",
       "streamer_level": "Profilinizden yayıncı seviyeniz ve haftalık seriniz",
+      "hype_train": "Hype treni çalışırken gösterir: beş dakika içinde üç hediye ya da abonelik treni başlatır.",
       "tip_jar": "Ücretli hediyeler geldikçe dolan bir kavanoz"
     },
     "fields": {
@@ -18129,5 +18133,74 @@
     "fingerprint": "Parmak izi",
     "exploreFirst": "Önce keşfet",
     "codeNote": "E-postana bir kod göndeririz, şifre gerekmez."
+  },
+  "liveHype": {
+    "train": {
+      "level": "Hype treni · Seviye {{level}}",
+      "endedLevel": "Hype treni {{level}}. seviyeyi tamamladı!",
+      "ended": "Hype treni sona erdi",
+      "thanks_one": "{{count}} destekçiye teşekkürler",
+      "thanks_other": "{{count}} destekçiye teşekkürler",
+      "top": "Lider: {{name}}"
+    },
+    "chat": {
+      "giftedSubs_one": "bir abonelik hediye etti 🎁",
+      "giftedSubs_other": "{{count}} abonelik hediye etti 🎁"
+    },
+    "gift": {
+      "open": "Abonelik hediye et",
+      "title": "Abonelik hediye et",
+      "plan": "Plan",
+      "mode": {
+        "random": "Sohbetten rastgele izleyiciler",
+        "user": "Belirli bir kişi"
+      },
+      "howMany": "Kaç tane",
+      "randomHint": "Son 30 dakikada sohbete yazan ve henüz abone olmayan kişilere gider.",
+      "who": "Kullanıcı adı veya cüzdan adresi",
+      "whoPlaceholder": "@kullaniciadi",
+      "send_one": "1 abonelik hediye et · ${{price}}",
+      "send_other": "{{count}} abonelik hediye et · ${{price}}",
+      "payHint": "Cüzdanından tek bir transferle DHB olarak ödenir.",
+      "fewer_one": "Şu anda sohbette yalnızca 1 kişi abonelik alabilir, bu yüzden 1 tane ödersin.",
+      "fewer_other": "Şu anda sohbette yalnızca {{count}} kişi abonelik alabilir, bu yüzden {{count}} tane ödersin.",
+      "done_one": "Abonelik hediye edildi!",
+      "done_other": "{{count}} abonelik hediye edildi!",
+      "failed": "Abonelikler hediye edilemedi",
+      "notReady": "Bu plan henüz hediye edilemiyor",
+      "noPlan": "Önce bir plan seç",
+      "noPlans": "{{name}} henüz hediye edilebilecek bir abonelik planına sahip değil.",
+      "cancel": "İptal",
+      "stage": {
+        "preparing": "Hazırlanıyor…",
+        "wallet": "Cüzdanında onayla",
+        "confirming": "İşlem bekleniyor…",
+        "recording": "Tamamlanıyor…"
+      }
+    },
+    "badges": {
+      "title": "Süreli rozetler",
+      "intro": "Birkaç günlüğüne bir rozet sun. Bu sürede abone olan ya da hediye veren herkes rozeti kazanır ve rozet sohbetinde adının yanında kalıcı olarak görünür.",
+      "name": "Rozet adı",
+      "namePlaceholder": "Lansman haftası",
+      "days": "Geçerlilik süresi (gün)",
+      "emoji": "Emoji",
+      "who": "Kimler kazanabilir",
+      "audience": {
+        "both": "Aboneler ve hediye verenler",
+        "subscribers": "Aboneler",
+        "gifters": "Hediye verenler"
+      },
+      "create": "Rozeti sun",
+      "created": "Rozet yayında.",
+      "end": "Şimdi bitir",
+      "ended": "Bitti",
+      "until": "{{date}} tarihine kadar",
+      "holders_one": "{{count}} sahibi",
+      "holders_other": "{{count}} sahibi",
+      "limit": "Aynı anda üç rozet sunulabilir. Yenisini sunmak için birini bitir.",
+      "failed": "Olmadı. Tekrar dene.",
+      "hypeHint": "Bir hype trenine katılan herkes ulaşılan seviyede 🚂 rozetini de kazanır."
+    }
   }
 }
