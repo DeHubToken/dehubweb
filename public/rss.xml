@@ -9,7 +9,15 @@
     <copyright>Copyright 2026 DeHub</copyright>
     <managingEditor>team@dehub.io (DeHub Team)</managingEditor>
     <webMaster>team@dehub.io (DeHub Team)</webMaster>
-    <lastBuildDate>Sun, 25 Oct 2026 20:00:00 GMT</lastBuildDate>
+    <lastBuildDate>Mon, 26 Oct 2026 20:00:00 GMT</lastBuildDate>
+    <item>
+      <title>Top 50 Blockchain Projects 2026, Ranked by GitHub Activity</title>
+      <description>The 50 most active blockchain projects of 2026, ranked by real GitHub commits and developers over 90 days. Solana, Ethereum, Bitcoin, Zcash, Cardano, Base and more.</description>
+      <link>https://dehub.io/guides/top-50-blockchain-projects-2026</link>
+      <guid>https://dehub.io/guides/top-50-blockchain-projects-2026</guid>
+      <pubDate>Mon, 26 Oct 2026 20:00:00 GMT</pubDate>
+      <dc:creator>DeHub Team</dc:creator>
+    </item>
     <item>
       <title>Top 50 Decentralized Social Apps 2026: The DeSoc Index</title>
       <description>The 50 most active decentralized and crypto social apps of 2026, scored on real user numbers, features, public GitHub activity and future potential. Bluesky, Farcaster, Lens, Nostr, Mastodon, Zora and more.</description>
@@ -160,14 +168,6 @@
       <link>https://dehub.io/guides/how-to-buy-dhb-token-uk</link>
       <guid>https://dehub.io/guides/how-to-buy-dhb-token-uk</guid>
       <pubDate>Fri, 03 Jul 2026 11:30:00 GMT</pubDate>
-      <dc:creator>DeHub Team</dc:creator>
-    </item>
-    <item>
-      <title>What is DeHub?</title>
-      <description>DeHub is the open source, user-owned and censorship-resistant social platform for Web3 creators and communities. Who we are, how it works, the DHB token, and how creators earn.</description>
-      <link>https://dehub.io/guides/what-is-dehub</link>
-      <guid>https://dehub.io/guides/what-is-dehub</guid>
-      <pubDate>Tue, 23 Jun 2026 10:30:00 GMT</pubDate>
       <dc:creator>DeHub Team</dc:creator>
     </item>
   </channel>
