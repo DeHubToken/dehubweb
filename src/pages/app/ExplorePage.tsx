@@ -267,6 +267,7 @@ export default function ExplorePage() {
   const [searchQuery, setSearchQuery] = useState(searchParams.get('q') || '');
   const [showFilters, setShowFilters] = useState(false);
   const [exploreCategoryId, setExploreCategoryId] = useState<string | null>(null);
+  const [categoryLimit, setCategoryLimit] = useState(24);
   const [filters, setFilters] = useState<SearchFilterState>(DEFAULT_SEARCH_FILTERS);
 
   // Fetch categories for the carousel
@@ -1035,7 +1036,7 @@ export default function ExplorePage() {
                           : 'bg-zinc-800 text-zinc-400 hover:bg-zinc-700 hover:text-white'
                       )}
                     >{_copy("copy.a52ace420f21", { defaultValue: "All" })}</button>
-                    {exploreCategories.map((cat) => (
+                    {exploreCategories.slice(0, categoryLimit).map((cat) => (
                       <button
                         key={cat.id}
                         onClick={() => {
@@ -1057,6 +1058,12 @@ export default function ExplorePage() {
                         {cat.name}
                       </button>
                     ))}
+                    {categoryLimit < exploreCategories.length && (
+                      <button className="flex-shrink-0 px-4 py-2 rounded-xl text-sm font-medium whitespace-nowrap bg-zinc-800 text-white"
+                        onClick={() => setCategoryLimit(limit => limit + 24)}>
+                        {t('common.loadMore', { defaultValue: 'Load more' })}
+                      </button>
+                    )}
                   </SwipeableCarousel>
                   </div>
                 </div>

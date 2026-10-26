@@ -62,7 +62,6 @@ export function useBrowseListings(category?: string, sort?: string, search?: str
   const query = useInfiniteQuery({
     queryKey: ['store-listings-browse', category, sort, search],
     initialPageParam: 0,
-    getNextPageParam: (lastPage, pages) => lastPage.length === 50 ? pages.length * 50 : undefined,
     queryFn: async ({ pageParam, signal }) => {
       let q = supabase.from('store_listings').select('*, stores(name, avatar_url, wallet_address)').eq('status', 'active');
       if (category && category !== 'all') q = q.eq('category', category);
@@ -78,6 +77,7 @@ export function useBrowseListings(category?: string, sort?: string, search?: str
     // Category/sort/search changes keep the previous grid visible while the
     // new results load instead of flashing skeletons.
     placeholderData: keepPreviousData,
+    getNextPageParam: (lastPage, pages) => lastPage.length === 50 ? pages.length * 50 : undefined,
   });
   return { ...query, data: query.data?.pages.flat() };
 }
