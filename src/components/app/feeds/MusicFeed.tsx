@@ -33,6 +33,7 @@ import { cn } from '@/lib/utils';
 import { RadioSection } from '@/components/app/radio/RadioSection';
 import { StagesChart } from '@/components/app/music/StagesCarousel';
 import { ChartDesk, type ChartDeskRow } from '@/components/app/music/ChartDesk';
+import { useChartSearch } from '@/hooks/use-chart-search';
 import { CinematicMusic } from '@/components/app/music/CinematicMusic';
 import { useCinematicPhone } from '@/hooks/use-cinematic-phone';
 import { openStageModal } from '@/contexts/StageContext';
@@ -44,7 +45,7 @@ import { searchNFTs, getBlockList, type DeHubNFT } from '@/lib/api/dehub';
 import { isBlockedCreator, mapNFTToVideoItem } from '@/lib/music-feed-items';
 import { resolveLikeCount, resolveViewCount } from '@/lib/engagement';
 import { fetchMusicVideoChart, MUSIC_VIDEO_CHART_SORTS, type MusicVideoChartSort } from '@/lib/music-video-chart';
-import { getPrimaryTags, getTopStations } from '@/lib/api/radio-browser';
+import { getPrimaryTags, getStationsByTag, getTopStations, searchStations } from '@/lib/api/radio-browser';
 import { getCuratedCarouselStations, type RadioStation } from '@/lib/api/radio-browser';
 import { useAuth } from '@/contexts/AuthContext';
 import type { VideoItem } from '@/types/feed.types';
@@ -131,8 +132,48 @@ function videoRows(items: VideoItem[], withViews: boolean): ChartDeskRow[] {
   }));
 }
 
+// How many matches a chart search pulls from its whole zone.
+const CHART_SEARCH_SIZE = 20;
+
+/** Every audio upload whose title, description or creator matches. */
+async function searchAudioUploads(query: string): Promise<VideoItem[]> {
+  const [audioRes, feedAudioRes] = await Promise.all([
+    searchNFTs({ postType: 'audio', search: query, unit: CHART_SEARCH_SIZE, sortMode: 'trending' }).catch(() => ({ data: [] as DeHubNFT[] })),
+    searchNFTs({ postType: 'feed-audio', search: query, unit: CHART_SEARCH_SIZE, sortMode: 'trending' }).catch(() => ({ data: [] as DeHubNFT[] })),
+  ]);
+  const seen = new Set<string | number>();
+  return [...(audioRes.data || []), ...(feedAudioRes.data || [])]
+    .filter(nft => {
+      const tid = nft.tokenId || nft.id || nft.token_id;
+      if (seen.has(tid) || isBlockedCreator(nft)) return false;
+      seen.add(tid);
+      return true;
+    })
+    .sort((a, b) => resolveViewCount(b) - resolveViewCount(a))
+    .map((nft, index) => ({ ...mapNFTToVideoItem(nft, index), isAudio: true }));
+}
+
+/** Every music video whose title, description or creator matches. */
+async function searchMusicVideos(query: string): Promise<VideoItem[]> {
+  const res = await searchNFTs({ category: 'Music', postType: 'video', search: query, unit: CHART_SEARCH_SIZE, sortMode: 'trending' });
+  return (res.data || []).filter(nft => !isBlockedCreator(nft)).map((nft, index) => mapNFTToVideoItem(nft, index));
+}
+
+/** Stations whose name or genre matches, from the whole radio directory. */
+async function searchRadio(query: string): Promise<RadioStation[]> {
+  const [byName, byTag] = await Promise.all([
+    searchStations(query, CHART_SEARCH_SIZE).catch(() => [] as RadioStation[]),
+    getStationsByTag(query.toLowerCase(), CHART_SEARCH_SIZE).catch(() => [] as RadioStation[]),
+  ]);
+  const seen = new Set<string>();
+  return [...byName, ...byTag].filter(station => !seen.has(station.stationuuid) && (seen.add(station.stationuuid), true));
+}
+
 function AudioChart({ items, isLoading, sort, onSort }: { items: VideoItem[]; isLoading: boolean; sort: AudioChartSort; onSort: (sort: AudioChartSort) => void }) {
   const { t: _copy } = _useCopy();
+  const [search, setSearch] = useState('');
+  const found = useChartSearch('audio', search, searchAudioUploads);
+  const find = (id: string) => items.find(i => i.id === id) || found.items.find(i => i.id === id);
   return (
     <ChartDesk
       header={<SectionHeader icon={Disc3} title={_copy("copy.302b4ce5c73d", { defaultValue: "Audio Uploads" })} count={items.length} />}
@@ -147,13 +188,20 @@ function AudioChart({ items, isLoading, sort, onSort }: { items: VideoItem[]; is
       rows={videoRows(items, false)}
       isLoading={isLoading}
       empty={{ icon: 'audio', title: _copy("copy.cccec0619e2d", { defaultValue: "No audio uploads yet" }) }}
-      renderSelected={id => { const item = items.find(i => i.id === id); return item ? <VideoCard key={item.id} video={item} hideActions /> : null; }}
+      search={search}
+      onSearchChange={setSearch}
+      moreRows={videoRows(found.items, false)}
+      isSearchingMore={found.isSearching}
+      renderSelected={id => { const item = find(id); return item ? <VideoCard key={item.id} video={item} hideActions /> : null; }}
     />
   );
 }
 
 function MusicVideoChart({ items, isLoading, sort, onSort }: { items: VideoItem[]; isLoading: boolean; sort: MusicVideoChartSort; onSort: (sort: MusicVideoChartSort) => void }) {
   const { t: _copy } = _useCopy();
+  const [search, setSearch] = useState('');
+  const found = useChartSearch('music-videos', search, searchMusicVideos);
+  const find = (id: string) => items.find(i => i.id === id) || found.items.find(i => i.id === id);
   return (
     <ChartDesk
       header={<SectionHeader icon={Play} title={_copy("copy.ab4d6796dbbe", { defaultValue: "Music Videos" })} />}
@@ -165,7 +213,11 @@ function MusicVideoChart({ items, isLoading, sort, onSort }: { items: VideoItem[
       isLoading={isLoading}
       thumbs="wide"
       empty={{ icon: 'videos', title: _copy("copy.26be785e21b7", { defaultValue: "No music videos yet" }) }}
-      renderSelected={id => { const item = items.find(i => i.id === id); return item ? <VideoCard key={item.id} video={item} hideActions /> : null; }}
+      search={search}
+      onSearchChange={setSearch}
+      moreRows={videoRows(found.items, true)}
+      isSearchingMore={found.isSearching}
+      renderSelected={id => { const item = find(id); return item ? <VideoCard key={item.id} video={item} hideActions /> : null; }}
     />
   );
 }
@@ -180,11 +232,25 @@ function RadioChart({ picks }: { picks: RadioStation[] }) {
     enabled: sort !== 'picks',
     staleTime: 60 * 60 * 1000,
   });
-  const stations = useMemo(() => {
+  const [search, setSearch] = useState('');
+  const found = useChartSearch('radio', search, searchRadio);
+  const chartStations = useMemo(() => {
     if (sort === 'picks') return picks;
     const key = sort === 'played' ? 'clickcount' : sort === 'voted' ? 'votes' : 'clicktrend';
     return [...top].sort((a, b) => (b[key] || 0) - (a[key] || 0));
   }, [sort, picks, top]);
+  // Skipping walks the list as shown, search matches from the directory included.
+  const stations = useMemo(() => {
+    if (!search.trim()) return chartStations;
+    const seen = new Set(chartStations.map(s => s.stationuuid));
+    return [...chartStations, ...found.items.filter(s => !seen.has(s.stationuuid))];
+  }, [chartStations, found.items, search]);
+  const stationRow = (station: RadioStation): ChartDeskRow => ({
+    id: station.stationuuid,
+    title: station.name,
+    subtitle: [getPrimaryTags(station.tags).join(', '), station.countrycode].filter(Boolean).join(' · '),
+    thumb: station.favicon || undefined,
+  });
   return (
     <ChartDesk
       header={<SectionHeader icon={Radio} title={_copy("copy.42ee912bff23", { defaultValue: "Radio Stations" })} />}
@@ -197,12 +263,11 @@ function RadioChart({ picks }: { picks: RadioStation[] }) {
       sort={sort}
       onSort={setSort}
       sortLabel={_copy('music.radioChartOrder', { defaultValue: 'Radio chart order' })}
-      rows={stations.map(station => ({
-        id: station.stationuuid,
-        title: station.name,
-        subtitle: [getPrimaryTags(station.tags).join(', '), station.countrycode].filter(Boolean).join(' · '),
-        thumb: station.favicon || undefined,
-      }))}
+      rows={chartStations.map(stationRow)}
+      search={search}
+      onSearchChange={setSearch}
+      moreRows={found.items.map(stationRow)}
+      isSearchingMore={found.isSearching}
       isLoading={sort === 'picks' ? picks.length === 0 : isLoading}
       thumbs="square"
       empty={{ icon: 'audio', title: _copy("copy.7c14e8607c11", { defaultValue: "Loading stations..." }) }}
