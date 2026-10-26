@@ -15,7 +15,9 @@ import { lockBodyScroll } from '@/lib/body-scroll-lock';
  * to ensure proper formatting (bold, italic, lists, etc.)
  */
 
-import { BrandIcon } from '@/components/app/war/WarHudIcon';
+import { BrandIcon, ThemedIcon, type ThemeIconKey } from '@/components/app/war/WarHudIcon';
+import { LiquidOrb, type LiquidOrbMode } from '@/components/app/assistant/LiquidOrb';
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
 import { useState, useRef, useEffect, useCallback } from 'react';
 import { createPortal } from 'react-dom';
 import { useTranslation as useI18n } from 'react-i18next';
@@ -33,6 +35,7 @@ import History from "@/components/ui/cut-icons/history";
 
 import Send from "@/components/ui/cut-icons/send";
 import X from "@/components/ui/cut-icons/close";
+import More from "@/components/ui/cut-icons/more";
 import Plus from "@/components/ui/cut-icons/add";
 import Settings from "@/components/ui/cut-icons/settings";
 import Download from "@/components/ui/cut-icons/download";
@@ -106,7 +109,6 @@ import { SwapActionCard } from '@/components/app/chat/SwapActionCard';
 import { useAIConversation } from '@/hooks/use-ai-conversation';
 import { streamChat } from '@/lib/stream-chat';
 import { useVoiceAssistant } from '@/hooks/use-voice-assistant';
-import { VoiceAssistantOverlay } from '@/components/app/assistant/VoiceAssistantOverlay';
 import { AiToolProcessingSkeleton } from '@/components/app/assistant/AiToolProcessingSkeleton';
 import { useAssistantUserContext } from '@/hooks/use-assistant-user-context';
 import { LiquidGlassBubble } from '@/components/ui/liquid-glass-bubble';
@@ -2044,6 +2046,268 @@ function AssistantPageForAccount() {
     </div>
   );
 
+  // A fresh chat opens on the ball; voice chat stays on it so the ball can
+  // follow the whole conversation, reply included.
+  const isEmptyChat = messages.length === 0 && !isLoading && !isImageLoading && !isVideoLoading && !restoringConversation;
+  const showVoiceStage = isEmptyChat || voiceAssistant.isVoiceMode;
+  const toggleVoiceMode = () => {
+    if (voiceAssistant.isVoiceMode) voiceAssistant.stopVoiceMode();
+    else void voiceAssistant.startVoiceMode();
+  };
+
+  // One message box for both spots: the middle of the empty screen, and the
+  // bottom once a chat is going. Only one is ever mounted, so the refs hold.
+  const composerIconBtn = "h-9 w-9 shrink-0 rounded-full flex items-center justify-center text-white/65 hover:text-white hover:bg-white/10 transition-colors disabled:opacity-30 disabled:hover:bg-transparent";
+  const composer = (
+    <div>
+      {attachedImage && (
+        <div className="mb-2 relative inline-block">
+          <img
+            src={attachedImage}
+            alt={_copy("copy.ac6d9b76a141", { defaultValue: "Attached" })}
+            className="max-h-20 rounded-lg object-contain"
+          />
+          <button
+            onClick={() => setAttachedImage(null)}
+            className="absolute -top-1.5 -right-1.5 w-5 h-5 bg-red-500/90 rounded-full flex items-center justify-center"
+          >
+            <X className="w-3 h-3 text-white" />
+          </button>
+        </div>
+      )}
+      <div
+        data-assistant-input
+        className={`relative flex flex-col gap-1 rounded-[24px] border bg-white/[0.06] backdrop-blur-2xl px-2.5 pt-2.5 pb-2 shadow-[0_10px_40px_rgba(0,0,0,0.35)] transition-all duration-500 ${
+          inputGlow
+            ? 'border-white/60 shadow-[0_0_20px_rgba(255,255,255,0.3)]'
+            : 'border-white/12'
+        }`}
+      >
+        <input
+          ref={fileInputRef}
+          type="file"
+          accept="image/*"
+          onChange={handleImageSelect}
+          className="hidden"
+        />
+
+        {/* Auto-expanding textarea */}
+        <textarea
+          ref={inputRef}
+          value={isRecording ? transcript : input}
+          onChange={(e) => {
+            if (!isRecording) {
+              const newValue = e.target.value;
+              const caret = e.target.selectionStart ?? newValue.length;
+              setInput(newValue);
+              mention.handleInput(newValue, caret);
+              // Slash-skill detection: `/` at start or after whitespace, followed by [a-z0-9-]*
+              const before = newValue.slice(0, caret);
+              const m = before.match(/(?:^|\s)\/([a-z0-9-]{0,32})$/i);
+              if (m) {
+                const tokenStart = caret - m[1].length - 1; // include the `/`
+                setSlashRange({ start: tokenStart, end: caret });
+                setSlashQuery(m[1]);
+                // Auto-open once user types >=2 chars after `/`
+                setSlashOpen(m[1].length >= 2);
+              } else {
+                setSlashOpen(false);
+              }
+              const t = e.target;
+              requestAnimationFrame(() => {
+                t.style.height = 'auto';
+                const maxHeight = window.innerHeight * 0.45;
+                t.style.height = `${Math.min(t.scrollHeight, maxHeight)}px`;
+              });
+            }
+          }}
+          onKeyDown={(e) => {
+            if (slashOpen) {
+              const results = filterSkills(slashQuery, userSkills);
+              if (e.key === 'ArrowDown') { e.preventDefault(); setSlashSelected((i) => Math.min(i + 1, Math.max(0, results.length - 1))); return; }
+              if (e.key === 'ArrowUp') { e.preventDefault(); setSlashSelected((i) => Math.max(i - 1, 0)); return; }
+              if (e.key === 'Escape') { e.preventDefault(); setSlashOpen(false); return; }
+              if ((e.key === 'Enter' || e.key === 'Tab') && results[slashSelected]) {
+                e.preventDefault();
+                const skill = results[slashSelected];
+                const before = input.slice(0, slashRange.start);
+                const after = input.slice(slashRange.end);
+                const insert = `/${skill.slug} `;
+                const next = before + insert + after;
+                setInput(next);
+                setSlashOpen(false);
+                requestAnimationFrame(() => {
+                  const pos = (before + insert).length;
+                  inputRef.current?.focus();
+                  inputRef.current?.setSelectionRange(pos, pos);
+                });
+                return;
+              }
+            }
+            if (mention.isOpen) {
+              const handled = mention.handleKeyDown(e);
+              if (handled) {
+                if (e.key === 'Enter' || e.key === 'Tab') {
+                  e.preventDefault();
+                  const liveResults = (window as any).__mentionResults || [];
+                  if (liveResults[mention.selectedIndex]) {
+                    mention.handleSelect(liveResults[mention.selectedIndex]);
+                  }
+                }
+                return;
+              }
+            }
+            if (e.key === 'Enter' && !e.shiftKey) {
+              e.preventDefault();
+              handleSend();
+            }
+          }}
+          onPaste={handlePaste}
+          placeholder={isRecording ? t('assistant.listening') : attachedImage ? t('assistant.describeEdits') : isEmptyChat ? _copy("copy.bcd7df12c890", { defaultValue: "Ask anything, or type / for skills" }) : t('assistant.askAnything')}
+          className={`w-full bg-transparent text-[15px] text-white placeholder:text-white/45 focus:outline-none min-w-0 resize-none overflow-y-auto leading-relaxed px-1 pt-1 ${
+            isRecording ? 'text-white/60 italic' : ''
+          }`}
+          style={{ 
+            minHeight: isEmptyChat ? '52px' : '26px',
+            maxHeight: '45vh'
+          }}
+          rows={isEmptyChat ? 2 : 1}
+          readOnly={isRecording}
+        />
+
+        {/* Slash Skill Dropdown */}
+        <SlashSkillDropdown
+          isOpen={slashOpen}
+          query={slashQuery}
+          skills={userSkills}
+          selectedIndex={slashSelected}
+          onSelectedIndexChange={setSlashSelected}
+          onSelect={(skill) => {
+            const before = input.slice(0, slashRange.start);
+            const after = input.slice(slashRange.end);
+            const insert = `/${skill.slug} `;
+            const next = before + insert + after;
+            setInput(next);
+            setSlashOpen(false);
+            requestAnimationFrame(() => {
+              const pos = (before + insert).length;
+              inputRef.current?.focus();
+              inputRef.current?.setSelectionRange(pos, pos);
+            });
+          }}
+          onOpenAll={() => { setSlashOpen(false); setSkillsBrowserOpen(true); }}
+          onClose={() => setSlashOpen(false)}
+        />
+
+        {/* User Mention Dropdown */}
+        <UserMentionDropdown
+          query={mention.query}
+          isOpen={mention.isOpen}
+          position={mention.position}
+          selectedIndex={mention.selectedIndex}
+          onSelectedIndexChange={mention.setSelectedIndex}
+          onSelect={mention.handleSelect}
+          onClose={mention.handleClose}
+        />
+
+        
+        <div className="flex items-center gap-0.5">
+          <button
+            type="button"
+            onClick={() => fileInputRef.current?.click()}
+            className={composerIconBtn}
+            aria-label={t('assistant.attachFile')}
+            title={t('assistant.attachFile')}
+          >
+            <Paperclip className="w-[18px] h-[18px]" />
+          </button>
+          {isVoiceSupported && (
+            <button
+              type="button"
+              onClick={isRecording ? stopRecording : startRecording}
+              disabled={isLoading || restoringConversation || voiceAssistant.isVoiceMode}
+              className={cn(composerIconBtn, isRecording && 'text-red-500 hover:text-red-400')}
+              aria-label={isRecording ? t('assistant.stopRecording') : t('assistant.voiceInput')}
+              title={isRecording ? t('assistant.stopRecording') : t('assistant.voiceInput')}
+            >
+              {isRecording ? <Square className="w-3.5 h-3.5 fill-current animate-pulse" /> : <Mic className="w-[18px] h-[18px]" />}
+            </button>
+          )}
+          <button
+            type="button"
+            onClick={toggleVoiceMode}
+            disabled={isLoading && !voiceAssistant.isVoiceMode}
+            className={cn(composerIconBtn, voiceAssistant.isVoiceMode && 'text-white bg-white/10')}
+            aria-label={voiceAssistant.isVoiceMode ? _copy("copy.dd2108f1cda8", { defaultValue: "Stop Voice Chat" }) : _copy("copy.70438fbf1234", { defaultValue: "Voice Chat (AI)" })}
+            title={voiceAssistant.isVoiceMode ? _copy("copy.dd2108f1cda8", { defaultValue: "Stop Voice Chat" }) : _copy("copy.70438fbf1234", { defaultValue: "Voice Chat (AI)" })}
+          >
+            <AudioLines className="w-[18px] h-[18px]" />
+          </button>
+          <span className="flex-1" />
+          {isSpeaking && (
+            <button
+              type="button"
+              onClick={stopSpeaking}
+              className={composerIconBtn}
+              aria-label={t('assistant.stopSpeaking')}
+              title={t('assistant.stopSpeaking')}
+            >
+              <VolumeX className="w-[18px] h-[18px]" />
+            </button>
+          )}
+          <button
+            type="button"
+            onClick={() => handleSend()}
+            disabled={(!input.trim() && !isRecording) || isLoading}
+            className="h-9 w-9 shrink-0 rounded-full flex items-center justify-center bg-white text-black transition-opacity disabled:opacity-25 disabled:cursor-not-allowed"
+            aria-label={_copy("copy.f6f4688ff23d", { defaultValue: "Send" })}
+          >
+            <Send className="w-[17px] h-[17px]" />
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+
+  // The ball is the voice button. It reads the live level every frame, so it
+  // swells with the mic and moves the most while the reply plays.
+  const orbMode: LiquidOrbMode = !voiceAssistant.isVoiceMode ? 'idle'
+    : voiceAssistant.status === 'listening' ? 'listening'
+    : voiceAssistant.status === 'speaking' ? 'speaking'
+    : 'thinking';
+  const voiceStatusLine: Record<LiquidOrbMode, string> = {
+    idle: _copy("copy.1607715e45ed", { defaultValue: "Tap the ball to talk, or type below" }),
+    listening: _copy("copy.2efa9bd92658", { defaultValue: "Listening..." }),
+    thinking: _copy("copy.b4739a4f0865", { defaultValue: "Thinking..." }),
+    speaking: _copy("copy.f2ef1cac7f88", { defaultValue: "Speaking..." }),
+  };
+  const firstName = (user?.displayName || user?.username || '').split(' ')[0];
+  const lastReply = [...messages].reverse().find((m) => m.role === 'assistant' && m.content)?.content ?? '';
+  const startTiles: Array<{ icon: ThemeIconKey; label: string; onClick: () => void }> = [
+    { icon: 'images', label: _copy("copy.1aa4cb0bcca7", { defaultValue: "Image" }), onClick: () => {
+      setInput(t('assistant.generateImageOf'));
+      inputRef.current?.focus();
+      setInputGlow(true);
+      setTimeout(() => setInputGlow(false), 2000);
+    } },
+    { icon: 'videos', label: _copy("copy.d534be829e32", { defaultValue: "Video" }), onClick: () => {
+      setInput(t('assistant.generateVideoOf'));
+      inputRef.current?.focus();
+      setInputGlow(true);
+      setTimeout(() => setInputGlow(false), 2000);
+    } },
+    { icon: 'audio', label: _copy("copy.fea4b5ceffa8", { defaultValue: "Song" }), onClick: () => {
+      setPendingMusicPrompt('');
+      setMusicConfirmOpen(true);
+    } },
+    { icon: 'paint', label: _copy("copy.1ba76ea7e3d9", { defaultValue: "Poster" }), onClick: () => {
+      setPendingPosterPrompt('');
+      setPosterConfigOpen(true);
+    } },
+    { icon: 'wand', label: _copy("copy.c80c9e095878", { defaultValue: "Edit photo" }), onClick: () => fileInputRef.current?.click() },
+    { icon: 'command', label: _copy("copy.bdd254b65baa", { defaultValue: "Build" }), onClick: () => navigate('/builder') },
+  ];
+
   if (!isAuthenticated) {
     return <AuthGate description={t('assistant.loginRequired')} />;
   }
@@ -2094,60 +2358,65 @@ function AssistantPageForAccount() {
           <h1 className="text-lg font-semibold text-white leading-none mt-0.5">{t('assistant.title')}</h1>
         </button>
 
-        <div className="flex items-center gap-4">
-          {/* New Chat Button */}
-          <button
-            onClick={() => {
-              startNewConversation();
-              setMessages([]);
-                        setAttachedImage(null);
-            }}
-            className="p-1.5 rounded-xl text-white/60 hover:text-white transition-colors"
-            title={_copy("copy.db18382a249e", { defaultValue: "New chat" })}
-          >
-            <Plus className="w-5 h-5" />
-          </button>
-
-          {/* History Button */}
+        <div className="flex items-center gap-1">
           <button
             onClick={() => setHistoryDrawerOpen(true)}
-            className="p-1.5 rounded-xl text-white/60 hover:text-white transition-colors"
+            className="p-2 rounded-xl text-white/60 hover:text-white transition-colors"
+            aria-label={_copy("copy.05a05aa2fd48", { defaultValue: "Chat history" })}
           >
             <History className="w-5 h-5" />
           </button>
 
-          {/* Support Button — the desk, not the model. Opens the ticket drawer
-              directly: no quote, no DHB transfer, no paid round trip. The badge
-              counts tickets still waiting on a human. */}
-          <button
-            onClick={() => setSupportDrawerOpen(true)}
-            className="relative p-1.5 rounded-xl text-white/60 hover:text-white transition-colors"
-            title={t('support.title')}
-            aria-label={t('support.title')}
-          >
-            <LifeBuoy className="w-5 h-5" />
-            {!!supportTickets?.openCount && (
-              <span className="absolute -top-0.5 -right-0.5 min-w-[16px] h-4 px-1 rounded-full bg-white text-black text-[10px] font-semibold flex items-center justify-center">
-                {supportTickets.openCount}
-              </span>
-            )}
-          </button>
-
-          {/* Settings Button */}
-          <button
-            onClick={() => setSettingsSheetOpen(true)}
-            className="p-1.5 rounded-xl text-white/60 hover:text-white transition-colors"
-          >
-            <Settings className="w-5 h-5" />
-          </button>
-
-          {/* Style Selector Button */}
-          <button
-            onClick={() => setStyleSheetOpen(true)}
-            className="p-1.5 rounded-xl text-white/60 hover:text-white transition-colors text-xl"
-          >
-            {currentStyle.emoji}
-          </button>
+          {/* One menu for everything that used to crowd the header. Drawers
+              open on the next tick so the menu has let go of focus first. */}
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <button
+                className="relative p-2 rounded-xl text-white/60 hover:text-white transition-colors"
+                aria-label={_copy("copy.d47d7cb0e4f8", { defaultValue: "More" })}
+              >
+                <More className="w-5 h-5" />
+                {!!supportTickets?.openCount && (
+                  <span className="absolute top-1 right-1 w-2 h-2 rounded-full bg-white" />
+                )}
+              </button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end" className="min-w-[210px]">
+              <DropdownMenuItem
+                onSelect={() => {
+                  startNewConversation();
+                  setMessages([]);
+                  setAttachedImage(null);
+                }}
+                className="gap-2.5"
+              >
+                <Plus className="w-4 h-4" />
+                {_copy("copy.db18382a249e", { defaultValue: "New chat" })}
+              </DropdownMenuItem>
+              <DropdownMenuItem onSelect={() => setTimeout(() => setStyleSheetOpen(true), 0)} className="gap-2.5">
+                <span className="w-4 text-center leading-none">{currentStyle.emoji}</span>
+                {t('assistant.aiPersonality')}
+                <span className="ml-auto text-xs opacity-60">{currentStyle.label}</span>
+              </DropdownMenuItem>
+              <DropdownMenuItem onSelect={() => setTimeout(() => setSkillsHubOpen(true), 0)} className="gap-2.5">
+                <Sparkles className="w-4 h-4" />
+                {_copy("copy.66d0f523a379", { defaultValue: "Skills" })}
+              </DropdownMenuItem>
+              <DropdownMenuItem onSelect={() => setTimeout(() => setSettingsSheetOpen(true), 0)} className="gap-2.5">
+                <Settings className="w-4 h-4" />
+                {t('assistant.aiSettings')}
+              </DropdownMenuItem>
+              <DropdownMenuItem onSelect={() => setTimeout(() => setSupportDrawerOpen(true), 0)} className="gap-2.5">
+                <LifeBuoy className="w-4 h-4" />
+                {t('support.title')}
+                {!!supportTickets?.openCount && (
+                  <span className="ml-auto min-w-[18px] h-[18px] px-1 rounded-full bg-white text-black text-[10px] font-semibold flex items-center justify-center">
+                    {supportTickets.openCount}
+                  </span>
+                )}
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
         </div>
 
         {/* Style Drawer */}
@@ -2446,767 +2715,430 @@ function AssistantPageForAccount() {
           <OverviewTab />
         </ScrollArea>
       ) : (
-        <>
-          {/* Messages */}
-          <ScrollArea className="flex-1 px-4 pb-24 sm:pb-0 [&>div>div]:!block [&_[data-radix-scroll-area-scrollbar]]:hidden scrollbar-hide [&_*]:scrollbar-hide" ref={scrollRef}>
-            <div className="py-4 space-y-4">
-              <AnimatePresence mode="popLayout">
-                {messages.map((message) => (
-                  <motion.div
-                    key={message.id}
-                    initial={{ opacity: 0, y: 10 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    exit={{ opacity: 0 }}
-                    className={`flex ${message.role === 'user' ? 'justify-end' : 'justify-start gap-2'}`}
-                  >
-                    {/* AI Avatar for assistant messages - hide for initial welcome message */}
-                    {message.role === 'assistant' && message.id !== 'initial' && (
-                      <img 
-                        src={assistantAvatar} 
-                        alt="" 
-                        className="w-7 h-7 rounded-lg shrink-0 mt-0.5"
-                      />
+        showVoiceStage ? (
+          <div className="flex-1 min-h-0 overflow-y-auto scrollbar-hide px-4 pb-24 lg:pb-6">
+            <div className="mx-auto flex min-h-full w-full max-w-[640px] flex-col items-center justify-center gap-5 lg:gap-6 py-6">
+              <LiquidOrb
+                size={isMobile ? 136 : 176}
+                mode={orbMode}
+                getLevel={voiceAssistant.getLevel}
+                onClick={toggleVoiceMode}
+                disabled={isLoading && !voiceAssistant.isVoiceMode}
+                label={voiceAssistant.isVoiceMode ? _copy("copy.dd2108f1cda8", { defaultValue: "Stop Voice Chat" }) : _copy("copy.70438fbf1234", { defaultValue: "Voice Chat (AI)" })}
+              />
+              {voiceAssistant.isVoiceMode ? (
+                <div className="flex w-full flex-col items-center gap-3 text-center px-2">
+                  <h2 className="text-[22px] lg:text-[28px] font-extrabold leading-tight text-white">{voiceStatusLine[orbMode]}</h2>
+                  {lastReply && (
+                    <p className="max-w-[520px] text-sm text-white/60 leading-relaxed line-clamp-3">{lastReply.replace(/[*#`_>]/g, '')}</p>
+                  )}
+                  <div className="mt-1 flex items-center gap-2">
+                    {voiceAssistant.status === 'speaking' && (
+                      <button
+                        type="button"
+                        onClick={voiceAssistant.stopSpeaking}
+                        className="h-9 px-4 rounded-full border border-white/12 bg-white/[0.06] text-sm font-semibold text-white hover:bg-white/10 transition-colors"
+                      >
+                        {_copy("copy.28d03596d24e", { defaultValue: "Skip" })}
+                      </button>
                     )}
-                    {message.role === 'assistant' && message.audioUrl ? (
-                      /* Audio messages (music/TTS) */
-                      <div className="w-full min-w-0 flex-1 flex flex-col gap-2">
-                        {message.content && (
-                          <div className="rounded-2xl border border-white/[0.12] bg-white/[0.03] backdrop-blur-[24px] px-4 py-2.5 text-white">
-                            <MarkdownText content={message.content} className="text-sm" />
-                          </div>
-                        )}
-                        <GeneratedAudioPlayer audioUrl={message.audioUrl} />
-                      </div>
-                    ) : message.role === 'assistant' && message.isToolProcessing ? (
-                      /* AI tool processing skeleton */
-                      <AiToolProcessingSkeleton content={message.content} />
-                    ) : message.role === 'assistant' && message.videoUrl ? (
-                      /* Video messages */
-                      <div className="max-w-[85%] flex flex-col gap-2">
-                        <div className="relative rounded-lg overflow-hidden">
-                          <video 
-                            src={message.videoUrl}
-                            controls
-                            autoPlay
-                            loop
-                            muted
-                            playsInline
-                            {...{"webkit-playsinline": ""}}
-                            className="max-w-full rounded-lg"
-                          />
-                          {/* Action buttons */}
-                          <div className="absolute bottom-12 right-3 flex items-center gap-2">
-                            {/* Download button */}
-                            <button
-                              onClick={() => { if (message.videoUrl) void downloadVideo({ url: message.videoUrl, title: "dehub-video", username: user?.username }); }}
-                              aria-label={t("postOptions.download")}
-                              className="flex items-center justify-center w-10 h-10 rounded-xl text-white transition-all duration-300 hover:scale-110 active:scale-95
-                                bg-gradient-to-br from-white/25 via-white/15 to-white/5
-                                backdrop-blur-xl border border-white/30
-                                shadow-[0_8px_32px_rgba(0,0,0,0.4),inset_0_2px_0_rgba(255,255,255,0.3),0_0_0_1px_rgba(0,0,0,0.1)]
-                                hover:shadow-[0_12px_40px_rgba(59,130,246,0.4),inset_0_2px_0_rgba(255,255,255,0.4)]
-                                hover:border-blue-400/50 hover:from-blue-500/30 hover:via-blue-400/15 hover:to-transparent"
-                            >
-                              <Download className="w-5 h-5" />
-                            </button>
-                            {/* Post button */}
-                            <button
-                              onClick={() => handlePostVideo(message.videoUrl!)}
-                              className="flex items-center justify-center w-10 h-10 rounded-xl text-white transition-all duration-300 hover:scale-110 active:scale-95
-                                bg-gradient-to-br from-white/25 via-white/15 to-white/5
-                                backdrop-blur-xl border border-white/30
-                                shadow-[0_8px_32px_rgba(0,0,0,0.4),inset_0_2px_0_rgba(255,255,255,0.3),0_0_0_1px_rgba(0,0,0,0.1)]
-                                hover:shadow-[0_12px_40px_rgba(59,130,246,0.4),inset_0_2px_0_rgba(255,255,255,0.4)]
-                                hover:border-blue-400/50 hover:from-blue-500/30 hover:via-blue-400/15 hover:to-transparent"
-                            >
-                              <Plus className="w-5 h-5" />
-                            </button>
-                          </div>
+                    <button
+                      type="button"
+                      onClick={voiceAssistant.stopVoiceMode}
+                      className="h-9 px-4 rounded-full bg-white text-black text-sm font-semibold"
+                    >
+                      {_copy("copy.f84246e1d18f", { defaultValue: "End voice chat" })}
+                    </button>
+                  </div>
+                  {voiceAssistant.exchangesLeft !== undefined && (
+                    <span className="text-xs text-white/45 tabular-nums">
+                      {voiceAssistant.exchangesLeft}{_copy("copy.bce319cfa7b7", { defaultValue: " left" })}
+                    </span>
+                  )}
+                </div>
+              ) : (
+                <>
+                  <div className="text-center px-2">
+                    <h2 className="text-[22px] lg:text-[28px] font-extrabold leading-tight text-white [text-wrap:balance]">
+                      {firstName
+                        ? _copy("copy.71e619f3604f", { defaultValue: "What are we making, {{value1}}?", value1: firstName })
+                        : _copy("copy.9eb64cb30346", { defaultValue: "What are we making?" })}
+                    </h2>
+                    <p className="mt-1.5 text-sm text-white/55">{voiceStatusLine.idle}</p>
+                  </div>
+                  <div className="w-full">{composer}</div>
+                  <div className="grid w-full grid-cols-3 lg:grid-cols-6 gap-2 lg:gap-2.5">
+                    {startTiles.map((tile) => (
+                      <button
+                        key={tile.icon}
+                        type="button"
+                        onClick={tile.onClick}
+                        className="flex flex-col items-center gap-1.5 rounded-2xl border border-white/10 bg-white/[0.04] px-1 py-3 text-xs font-semibold text-white hover:bg-white/[0.08] transition-colors"
+                      >
+                        <ThemedIcon icon={tile.icon} className="w-8 h-8 object-contain" />
+                        {tile.label}
+                      </button>
+                    ))}
+                  </div>
+                </>
+              )}
+            </div>
+          </div>
+        ) : (
+        <>
+            {/* Messages */}
+            <ScrollArea className="flex-1 px-4 pb-24 sm:pb-0 [&>div>div]:!block [&_[data-radix-scroll-area-scrollbar]]:hidden scrollbar-hide [&_*]:scrollbar-hide" ref={scrollRef}>
+              <div className="py-4 space-y-4">
+                <AnimatePresence mode="popLayout">
+                  {messages.map((message) => (
+                    <motion.div
+                      key={message.id}
+                      initial={{ opacity: 0, y: 10 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      exit={{ opacity: 0 }}
+                      className={`flex ${message.role === 'user' ? 'justify-end' : 'justify-start gap-2'}`}
+                    >
+                      {/* AI Avatar for assistant messages - hide for initial welcome message */}
+                      {message.role === 'assistant' && message.id !== 'initial' && (
+                        <img 
+                          src={assistantAvatar} 
+                          alt="" 
+                          className="w-7 h-7 rounded-lg shrink-0 mt-0.5"
+                        />
+                      )}
+                      {message.role === 'assistant' && message.audioUrl ? (
+                        /* Audio messages (music/TTS) */
+                        <div className="w-full min-w-0 flex-1 flex flex-col gap-2">
+                          {message.content && (
+                            <div className="rounded-2xl border border-white/[0.12] bg-white/[0.03] backdrop-blur-[24px] px-4 py-2.5 text-white">
+                              <MarkdownText content={message.content} className="text-sm" />
+                            </div>
+                          )}
+                          <GeneratedAudioPlayer audioUrl={message.audioUrl} />
                         </div>
-                      </div>
-                    ) : message.role === 'assistant' && message.isVideoGenerating ? (
-                      /* Video generating placeholder */
-                      <div className="max-w-[85%] flex flex-col gap-2">
-                        <div className="bg-white/10 text-white rounded-2xl px-4 py-2.5">
-                          <MarkdownText content={message.content} className="text-sm" />
-                        </div>
-                        {/* Video generation loader */}
-                        <div className="relative w-full aspect-video max-w-md rounded-lg overflow-hidden bg-gradient-to-br from-gray-900/80 to-gray-800/60">
-                          {/* Animated gradient background */}
-                          <motion.div 
-                            className="absolute inset-0"
-                            animate={{ 
-                              background: [
-                                'linear-gradient(45deg, rgba(139,92,246,0.3) 0%, rgba(59,130,246,0.3) 50%, rgba(236,72,153,0.3) 100%)',
-                                'linear-gradient(45deg, rgba(236,72,153,0.3) 0%, rgba(139,92,246,0.3) 50%, rgba(59,130,246,0.3) 100%)',
-                                'linear-gradient(45deg, rgba(59,130,246,0.3) 0%, rgba(236,72,153,0.3) 50%, rgba(139,92,246,0.3) 100%)',
-                              ]
-                            }}
-                            transition={{ duration: 4, repeat: Infinity, ease: 'easeInOut' }}
-                          />
-                          {/* Progress bar at bottom */}
-                          <div className="absolute bottom-0 left-0 right-0 h-1 bg-white/10">
-                            <motion.div 
-                              className="h-full bg-gradient-to-r from-violet-500 via-cyan-400 to-pink-500"
-                              animate={{ width: ['0%', '100%'] }}
-                              transition={{ duration: 60, ease: 'linear' }}
+                      ) : message.role === 'assistant' && message.isToolProcessing ? (
+                        /* AI tool processing skeleton */
+                        <AiToolProcessingSkeleton content={message.content} />
+                      ) : message.role === 'assistant' && message.videoUrl ? (
+                        /* Video messages */
+                        <div className="max-w-[85%] flex flex-col gap-2">
+                          <div className="relative rounded-lg overflow-hidden">
+                            <video 
+                              src={message.videoUrl}
+                              controls
+                              autoPlay
+                              loop
+                              muted
+                              playsInline
+                              {...{"webkit-playsinline": ""}}
+                              className="max-w-full rounded-lg"
                             />
+                            {/* Action buttons */}
+                            <div className="absolute bottom-12 right-3 flex items-center gap-2">
+                              {/* Download button */}
+                              <button
+                                onClick={() => { if (message.videoUrl) void downloadVideo({ url: message.videoUrl, title: "dehub-video", username: user?.username }); }}
+                                aria-label={t("postOptions.download")}
+                                className="flex items-center justify-center w-10 h-10 rounded-xl text-white transition-all duration-300 hover:scale-110 active:scale-95
+                                  bg-gradient-to-br from-white/25 via-white/15 to-white/5
+                                  backdrop-blur-xl border border-white/30
+                                  shadow-[0_8px_32px_rgba(0,0,0,0.4),inset_0_2px_0_rgba(255,255,255,0.3),0_0_0_1px_rgba(0,0,0,0.1)]
+                                  hover:shadow-[0_12px_40px_rgba(59,130,246,0.4),inset_0_2px_0_rgba(255,255,255,0.4)]
+                                  hover:border-blue-400/50 hover:from-blue-500/30 hover:via-blue-400/15 hover:to-transparent"
+                              >
+                                <Download className="w-5 h-5" />
+                              </button>
+                              {/* Post button */}
+                              <button
+                                onClick={() => handlePostVideo(message.videoUrl!)}
+                                className="flex items-center justify-center w-10 h-10 rounded-xl text-white transition-all duration-300 hover:scale-110 active:scale-95
+                                  bg-gradient-to-br from-white/25 via-white/15 to-white/5
+                                  backdrop-blur-xl border border-white/30
+                                  shadow-[0_8px_32px_rgba(0,0,0,0.4),inset_0_2px_0_rgba(255,255,255,0.3),0_0_0_1px_rgba(0,0,0,0.1)]
+                                  hover:shadow-[0_12px_40px_rgba(59,130,246,0.4),inset_0_2px_0_rgba(255,255,255,0.4)]
+                                  hover:border-blue-400/50 hover:from-blue-500/30 hover:via-blue-400/15 hover:to-transparent"
+                              >
+                                <Plus className="w-5 h-5" />
+                              </button>
+                            </div>
                           </div>
                         </div>
-                      </div>
-                    ) : message.role === 'assistant' && message.imageUrl ? (
-                      /* Image-only messages - no bubble wrapper */
-                      <div className="max-w-[85%] flex flex-col gap-2">
-                        {message.content && (
+                      ) : message.role === 'assistant' && message.isVideoGenerating ? (
+                        /* Video generating placeholder */
+                        <div className="max-w-[85%] flex flex-col gap-2">
                           <div className="bg-white/10 text-white rounded-2xl px-4 py-2.5">
                             <MarkdownText content={message.content} className="text-sm" />
                           </div>
-                        )}
-                        {/* Image container with button overlay */}
-                        <div className="relative">
-                          <img 
-                            src={message.imageUrl} 
-                            alt={_copy("copy.827ec8d9f99d", { defaultValue: "Generated" })} 
-                            className="max-w-full rounded-lg cursor-zoom-in"
-                            onClick={() => setLightboxImage(message.imageUrl!)}
-                          />
+                          {/* Video generation loader */}
+                          <div className="relative w-full aspect-video max-w-md rounded-lg overflow-hidden bg-gradient-to-br from-gray-900/80 to-gray-800/60">
+                            {/* Animated gradient background */}
+                            <motion.div 
+                              className="absolute inset-0"
+                              animate={{ 
+                                background: [
+                                  'linear-gradient(45deg, rgba(139,92,246,0.3) 0%, rgba(59,130,246,0.3) 50%, rgba(236,72,153,0.3) 100%)',
+                                  'linear-gradient(45deg, rgba(236,72,153,0.3) 0%, rgba(139,92,246,0.3) 50%, rgba(59,130,246,0.3) 100%)',
+                                  'linear-gradient(45deg, rgba(59,130,246,0.3) 0%, rgba(236,72,153,0.3) 50%, rgba(139,92,246,0.3) 100%)',
+                                ]
+                              }}
+                              transition={{ duration: 4, repeat: Infinity, ease: 'easeInOut' }}
+                            />
+                            {/* Progress bar at bottom */}
+                            <div className="absolute bottom-0 left-0 right-0 h-1 bg-white/10">
+                              <motion.div 
+                                className="h-full bg-gradient-to-r from-violet-500 via-cyan-400 to-pink-500"
+                                animate={{ width: ['0%', '100%'] }}
+                                transition={{ duration: 60, ease: 'linear' }}
+                              />
+                            </div>
+                          </div>
+                        </div>
+                      ) : message.role === 'assistant' && message.imageUrl ? (
+                        /* Image-only messages - no bubble wrapper */
+                        <div className="max-w-[85%] flex flex-col gap-2">
+                          {message.content && (
+                            <div className="bg-white/10 text-white rounded-2xl px-4 py-2.5">
+                              <MarkdownText content={message.content} className="text-sm" />
+                            </div>
+                          )}
+                          {/* Image container with button overlay */}
+                          <div className="relative">
+                            <img 
+                              src={message.imageUrl} 
+                              alt={_copy("copy.827ec8d9f99d", { defaultValue: "Generated" })} 
+                              className="max-w-full rounded-lg cursor-zoom-in"
+                              onClick={() => setLightboxImage(message.imageUrl!)}
+                            />
 
-                          {/* Action buttons row */}
-                          <div className="absolute bottom-3 right-3 flex items-center gap-2">
-                            {/* Attach to edit button */}
-                            <button
-                              onClick={() => {
-                                setAttachedImage(message.imageUrl!);
-                                inputRef.current?.focus();
-                                toast.success(t('assistant.imageAttached'));
-                              }}
-                              className="flex items-center justify-center w-10 h-10 rounded-xl text-white transition-all duration-300 hover:scale-110 active:scale-95
-                                bg-gradient-to-br from-white/25 via-white/15 to-white/5
-                                backdrop-blur-xl border border-white/30
-                                shadow-[0_8px_32px_rgba(0,0,0,0.4),inset_0_2px_0_rgba(255,255,255,0.3),0_0_0_1px_rgba(0,0,0,0.1)]
-                                hover:shadow-[0_12px_40px_rgba(168,85,247,0.4),inset_0_2px_0_rgba(255,255,255,0.4)]
-                                hover:border-purple-400/50 hover:from-purple-500/30 hover:via-purple-400/15 hover:to-transparent"
-                            >
-                              <Paperclip className="w-5 h-5" />
-                            </button>
-                            {/* Copy button */}
-                            <button
-                              onClick={async () => {
-                                try {
-                                  const response = await fetch(message.imageUrl!);
-                                  const blob = await response.blob();
-                                  await navigator.clipboard.write([
-                                    new ClipboardItem({ [blob.type]: blob })
-                                  ]);
-                                  toast.success(t('assistant.imageCopied'));
-                                } catch (err) {
-                                  toast.error(t('assistant.imageCopyFailed'));
-                                }
-                              }}
-                              className="flex items-center justify-center w-10 h-10 rounded-xl text-white transition-all duration-300 hover:scale-110 active:scale-95
-                                bg-gradient-to-br from-white/25 via-white/15 to-white/5
-                                backdrop-blur-xl border border-white/30
-                                shadow-[0_8px_32px_rgba(0,0,0,0.4),inset_0_2px_0_rgba(255,255,255,0.3),0_0_0_1px_rgba(0,0,0,0.1)]
-                                hover:shadow-[0_12px_40px_rgba(34,197,94,0.4),inset_0_2px_0_rgba(255,255,255,0.4)]
-                                hover:border-green-400/50 hover:from-green-500/30 hover:via-green-400/15 hover:to-transparent"
-                            >
-                              <Copy className="w-5 h-5" />
-                            </button>
-                            {/* Post button */}
-                            <button
-                              onClick={() => handlePostImage(message.imageUrl!)}
-                              className="flex items-center justify-center w-10 h-10 rounded-xl text-white transition-all duration-300 hover:scale-110 active:scale-95
-                                bg-gradient-to-br from-white/25 via-white/15 to-white/5
-                                backdrop-blur-xl border border-white/30
-                                shadow-[0_8px_32px_rgba(0,0,0,0.4),inset_0_2px_0_rgba(255,255,255,0.3),0_0_0_1px_rgba(0,0,0,0.1)]
-                                hover:shadow-[0_12px_40px_rgba(59,130,246,0.4),inset_0_2px_0_rgba(255,255,255,0.4)]
-                                hover:border-blue-400/50 hover:from-blue-500/30 hover:via-blue-400/15 hover:to-transparent"
-                            >
-                              <Plus className="w-5 h-5" />
-                            </button>
-                          </div>
-                        </div>
-                      </div>
-                    ) : message.isSimulation ? (
-                      /* Transaction simulation card */
-                      <div className="max-w-[85%] flex flex-col gap-2">
-                        {/* Simulation content with markdown */}
-                        <div className="bg-white/5 border border-white/10 rounded-2xl p-4">
-                          <MarkdownText content={message.content} className="text-sm text-white" />
-                          
-                          {/* Approve/Reject buttons - only show if pending */}
-                          {message.simulationStatus === 'pending' && (
-                            <div className="flex items-center gap-3 mt-4 pt-4 border-t border-white/10">
-                              <button
-                                onClick={() => handleSimulationApprove(message.id)}
-                                className="flex-1 flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl
-                                  bg-white/10 hover:bg-white/20
-                                  border border-white/20 hover:border-white/40
-                                  text-white font-medium text-sm transition-all duration-200 hover:scale-[1.02] active:scale-[0.98]"
-                              >
-                                <Check className="w-4 h-4" />
-                                {t('assistant.approve')}
-                              </button>
-                              <button
-                                onClick={() => handleSimulationReject(message.id)}
-                                className="flex-1 flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl
-                                  bg-white/5 hover:bg-white/10
-                                  border border-white/10 hover:border-white/20
-                                  text-white/70 hover:text-white font-medium text-sm transition-all duration-200 hover:scale-[1.02] active:scale-[0.98]"
-                              >
-                                <XCircle className="w-4 h-4" />
-                                {t('assistant.reject')}
-                              </button>
-                            </div>
-                          )}
-                          
-                          {/* Status badge for approved/rejected */}
-                          {message.simulationStatus === 'approved' && message.simulationData && (
-                            <div className="flex flex-col gap-3 mt-4 pt-4 border-t border-white/10">
-                              <div className="flex items-center gap-2 px-3 py-1.5 rounded-xl bg-white/10 border border-white/20 w-fit">
-                                <Check className="w-4 h-4 text-white" />
-                                <span className="text-sm text-white">{t('assistant.transferComplete')}</span>
-                              </div>
-                              <div className="text-xs text-white/60">
-                                <span className="text-white/40">{t('assistant.hash')}: </span>
-                                <code className="font-mono text-white/70">{abbreviateHash(message.simulationData.txHash)}</code>
-                              </div>
-                            </div>
-                          )}
-                          
-                          {message.simulationStatus === 'rejected' && (
-                            <div className="flex items-center gap-2 mt-4 pt-4 border-t border-white/10">
-                              <div className="flex items-center gap-2 px-3 py-1.5 rounded-xl bg-white/10 border border-white/20">
-                                <XCircle className="w-4 h-4 text-white/70" />
-                                <span className="text-sm text-white/70">{t('assistant.transferCancelled')}</span>
-                              </div>
-                            </div>
-                          )}
-                        </div>
-                        
-                        {/* Action buttons below the card - only show for pending */}
-                        {message.simulationStatus === 'pending' && (
-                          <div className="flex items-center gap-2">
-                            <button
-                              onClick={() => setShowPinModal(true)}
-                              className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium transition-all
-                                ${transferPin 
-                                  ? 'bg-white/10 text-white border border-white/20' 
-                                  : 'bg-white/5 text-white/60 border border-white/10 hover:bg-white/10 hover:text-white'
-                                }`}
-                            >
-                              <Lock className="w-3.5 h-3.5" />
-                              {transferPin ? t('assistant.pinSet') : t('assistant.setPin')}
-                            </button>
-                            <button
-                              onClick={() => {
-                                setAutoApproveMode(!autoApproveMode);
-                                toast.success(autoApproveMode ? t('assistant.autoModeDisabled') : t('assistant.autoModeEnabled'));
-                              }}
-                              className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium transition-all
-                                ${autoApproveMode 
-                                  ? 'bg-white/15 text-white border border-white/30' 
-                                  : 'bg-white/5 text-white/60 border border-white/10 hover:bg-white/10 hover:text-white'
-                                }`}
-                            >
-                              <Zap className="w-3.5 h-3.5" />
-                              {t('assistant.autoMode')} {autoApproveMode ? t('assistant.on') : t('assistant.off')}
-                            </button>
-                          </div>
-                        )}
-                      </div>
-                    ) : (
-                      /* Text messages */
-                      <div className={`max-w-[85%] flex flex-col gap-2 ${message.role === 'user' ? 'items-end' : 'items-start'}`}>
-                        {/* Show attached image for user messages */}
-                        {message.attachedImage && (
-                          <img 
-                            src={message.attachedImage} 
-                            alt={_copy("copy.ac6d9b76a141", { defaultValue: "Attached" })} 
-                            className="max-w-full rounded-lg"
-                          />
-                        )}
-                        {message.role === 'user' ? (
-                          /* User message with liquid glass bubble */
-                          <LiquidGlassBubble tail="right">
-                            <p className="text-sm whitespace-pre-wrap text-white">{message.content}</p>
-                          </LiquidGlassBubble>
-                        ) : (
-                          /* Assistant message - no bubble */
-                          <div className="text-white">
-                            <MarkdownText content={message.content} className="text-sm" />
-                            {/* Swap action card */}
-                            {message.swapAction && (
-                              <SwapActionCard action={message.swapAction} autoQuote />
-                            )}
-                            {message.isError && (
+                            {/* Action buttons row */}
+                            <div className="absolute bottom-3 right-3 flex items-center gap-2">
+                              {/* Attach to edit button */}
                               <button
                                 onClick={() => {
-                                  const idx = messages.indexOf(message);
-                                  const lastUserMsg = messages.slice(0, idx).reverse().find(m => m.role === 'user');
-                                  if (lastUserMsg) {
-                                    setMessages(prev => prev.filter(m => m.id !== message.id));
-                                    handleSend(lastUserMsg.content);
+                                  setAttachedImage(message.imageUrl!);
+                                  inputRef.current?.focus();
+                                  toast.success(t('assistant.imageAttached'));
+                                }}
+                                className="flex items-center justify-center w-10 h-10 rounded-xl text-white transition-all duration-300 hover:scale-110 active:scale-95
+                                  bg-gradient-to-br from-white/25 via-white/15 to-white/5
+                                  backdrop-blur-xl border border-white/30
+                                  shadow-[0_8px_32px_rgba(0,0,0,0.4),inset_0_2px_0_rgba(255,255,255,0.3),0_0_0_1px_rgba(0,0,0,0.1)]
+                                  hover:shadow-[0_12px_40px_rgba(168,85,247,0.4),inset_0_2px_0_rgba(255,255,255,0.4)]
+                                  hover:border-purple-400/50 hover:from-purple-500/30 hover:via-purple-400/15 hover:to-transparent"
+                              >
+                                <Paperclip className="w-5 h-5" />
+                              </button>
+                              {/* Copy button */}
+                              <button
+                                onClick={async () => {
+                                  try {
+                                    const response = await fetch(message.imageUrl!);
+                                    const blob = await response.blob();
+                                    await navigator.clipboard.write([
+                                      new ClipboardItem({ [blob.type]: blob })
+                                    ]);
+                                    toast.success(t('assistant.imageCopied'));
+                                  } catch (err) {
+                                    toast.error(t('assistant.imageCopyFailed'));
                                   }
                                 }}
-                                className="mt-2 text-xs text-white/60 hover:text-white/90 underline transition-colors"
+                                className="flex items-center justify-center w-10 h-10 rounded-xl text-white transition-all duration-300 hover:scale-110 active:scale-95
+                                  bg-gradient-to-br from-white/25 via-white/15 to-white/5
+                                  backdrop-blur-xl border border-white/30
+                                  shadow-[0_8px_32px_rgba(0,0,0,0.4),inset_0_2px_0_rgba(255,255,255,0.3),0_0_0_1px_rgba(0,0,0,0.1)]
+                                  hover:shadow-[0_12px_40px_rgba(34,197,94,0.4),inset_0_2px_0_rgba(255,255,255,0.4)]
+                                  hover:border-green-400/50 hover:from-green-500/30 hover:via-green-400/15 hover:to-transparent"
                               >
-                                {t('assistant.retry', 'Retry')}
+                                <Copy className="w-5 h-5" />
                               </button>
+                              {/* Post button */}
+                              <button
+                                onClick={() => handlePostImage(message.imageUrl!)}
+                                className="flex items-center justify-center w-10 h-10 rounded-xl text-white transition-all duration-300 hover:scale-110 active:scale-95
+                                  bg-gradient-to-br from-white/25 via-white/15 to-white/5
+                                  backdrop-blur-xl border border-white/30
+                                  shadow-[0_8px_32px_rgba(0,0,0,0.4),inset_0_2px_0_rgba(255,255,255,0.3),0_0_0_1px_rgba(0,0,0,0.1)]
+                                  hover:shadow-[0_12px_40px_rgba(59,130,246,0.4),inset_0_2px_0_rgba(255,255,255,0.4)]
+                                  hover:border-blue-400/50 hover:from-blue-500/30 hover:via-blue-400/15 hover:to-transparent"
+                              >
+                                <Plus className="w-5 h-5" />
+                              </button>
+                            </div>
+                          </div>
+                        </div>
+                      ) : message.isSimulation ? (
+                        /* Transaction simulation card */
+                        <div className="max-w-[85%] flex flex-col gap-2">
+                          {/* Simulation content with markdown */}
+                          <div className="bg-white/5 border border-white/10 rounded-2xl p-4">
+                            <MarkdownText content={message.content} className="text-sm text-white" />
+                          
+                            {/* Approve/Reject buttons - only show if pending */}
+                            {message.simulationStatus === 'pending' && (
+                              <div className="flex items-center gap-3 mt-4 pt-4 border-t border-white/10">
+                                <button
+                                  onClick={() => handleSimulationApprove(message.id)}
+                                  className="flex-1 flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl
+                                    bg-white/10 hover:bg-white/20
+                                    border border-white/20 hover:border-white/40
+                                    text-white font-medium text-sm transition-all duration-200 hover:scale-[1.02] active:scale-[0.98]"
+                                >
+                                  <Check className="w-4 h-4" />
+                                  {t('assistant.approve')}
+                                </button>
+                                <button
+                                  onClick={() => handleSimulationReject(message.id)}
+                                  className="flex-1 flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl
+                                    bg-white/5 hover:bg-white/10
+                                    border border-white/10 hover:border-white/20
+                                    text-white/70 hover:text-white font-medium text-sm transition-all duration-200 hover:scale-[1.02] active:scale-[0.98]"
+                                >
+                                  <XCircle className="w-4 h-4" />
+                                  {t('assistant.reject')}
+                                </button>
+                              </div>
+                            )}
+                          
+                            {/* Status badge for approved/rejected */}
+                            {message.simulationStatus === 'approved' && message.simulationData && (
+                              <div className="flex flex-col gap-3 mt-4 pt-4 border-t border-white/10">
+                                <div className="flex items-center gap-2 px-3 py-1.5 rounded-xl bg-white/10 border border-white/20 w-fit">
+                                  <Check className="w-4 h-4 text-white" />
+                                  <span className="text-sm text-white">{t('assistant.transferComplete')}</span>
+                                </div>
+                                <div className="text-xs text-white/60">
+                                  <span className="text-white/40">{t('assistant.hash')}: </span>
+                                  <code className="font-mono text-white/70">{abbreviateHash(message.simulationData.txHash)}</code>
+                                </div>
+                              </div>
+                            )}
+                          
+                            {message.simulationStatus === 'rejected' && (
+                              <div className="flex items-center gap-2 mt-4 pt-4 border-t border-white/10">
+                                <div className="flex items-center gap-2 px-3 py-1.5 rounded-xl bg-white/10 border border-white/20">
+                                  <XCircle className="w-4 h-4 text-white/70" />
+                                  <span className="text-sm text-white/70">{t('assistant.transferCancelled')}</span>
+                                </div>
+                              </div>
                             )}
                           </div>
-                        )}
-                      </div>
-                    )}
-                  </motion.div>
-                ))}
-              </AnimatePresence>
-              
-              {/* Quick action buttons - show when not loading */}
-              {!isLoading && !isImageLoading && !isVideoLoading && (
-                <motion.div
-                  initial={{ opacity: 0, y: 10 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  className="relative mt-4 -mx-4 px-4 lg:mx-0 lg:px-0"
-                >
-                  <div 
-                    className="flex flex-nowrap gap-1.5 overflow-x-auto scrollbar-hide pt-2.5 pb-1 pr-8"
-                    style={{
-                      maskImage: 'linear-gradient(to right, black 85%, transparent 100%)',
-                      WebkitMaskImage: 'linear-gradient(to right, black 85%, transparent 100%)'
-                    }}
-                  >
-                    
-                    <LiquidGlassBubble2
-                      label={_copy("copy.b382155b629f", { defaultValue: "🧠 Skills" })}
-                      onClick={() => setSkillsHubOpen(true)}
-                      width="auto"
-                      height="32px"
-                      className={actionBubbleClass}
-                    />
-                    <LiquidGlassBubble2
-                      label={_copy("copy.9d5c64ebd6a0", { defaultValue: "🎨 Make DeHub Poster" })}
-                      onClick={() => {
-                        setPendingPosterPrompt('');
-                        setPosterConfigOpen(true);
-                      }}
-                      width="auto"
-                      height="32px"
-                      className={actionBubbleClass}
-                    />
-                    <LiquidGlassBubble2
-                      label={`🖼️ ${t('assistant.generateImage')}`}
-                      onClick={() => {
-                        setInput(t('assistant.generateImageOf'));
-                        inputRef.current?.focus();
-                        setInputGlow(true);
-                        setTimeout(() => setInputGlow(false), 2000);
-                      }}
-                      width="auto"
-                      height="32px"
-                      className={actionBubbleClass}
-                    />
-                    <LiquidGlassBubble2
-                      label={`✏️ ${t('assistant.editImage')}`}
-                      onClick={() => fileInputRef.current?.click()}
-                      width="auto"
-                      height="32px"
-                      className={actionBubbleClass}
-                    />
-                    <LiquidGlassBubble2
-                      label={`🎥 ${t('assistant.generateVideo')}`}
-                      onClick={() => {
-                        setInput(t('assistant.generateVideoOf'));
-                        inputRef.current?.focus();
-                        setInputGlow(true);
-                        setTimeout(() => setInputGlow(false), 2000);
-                      }}
-                      width="auto"
-                      height="32px"
-                      className={actionBubbleClass}
-                    />
-                    <LiquidGlassBubble2
-                      label={_copy("copy.68845e302faf", { defaultValue: "🎵 Create a song" })}
-                      onClick={() => {
-                        setPendingMusicPrompt('');
-                        setMusicConfirmOpen(true);
-                      }}
-                      width="auto"
-                      height="32px"
-                      className={actionBubbleClass}
-                    />
-                    {/* Builder launch — build a live mini-app from a prompt */}
-                    <LiquidGlassBubble2
-                      label={_copy("copy.c72a1f046be5", { defaultValue: "🧱 Build something" })}
-                      onClick={() => navigate('/builder')}
-                      width="auto"
-                      height="32px"
-                      className={actionBubbleClass}
-                    />
-                  </div>
-                </motion.div>
-              )}
-              {isImageLoading && (
-                <ImageGenerationLoader startTime={imageLoadStartTime} />
-              )}
-              {isLoading && !isImageLoading && (
-                <motion.div
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  className="flex justify-start gap-2"
-                >
-                  <img 
-                    src={assistantAvatar} 
-                    alt="" 
-                    className="w-7 h-7 rounded-lg shrink-0"
-                  />
-                  <div className="bg-white/10 rounded-2xl px-4 py-3 flex items-center gap-2">
-                    <Loader2 className="w-4 h-4 animate-spin text-white/60" />
-                    <span className="text-sm text-white/60">
-                      {activeTools.length > 0
-                        ? describeTools(activeTools)
-                        : t('assistant.thinking')}
-                    </span>
-                  </div>
-                </motion.div>
-              )}
-              {/* Scroll anchor */}
-              <div ref={messagesEndRef} />
-            </div>
-          </ScrollArea>
-
-          {/* Input - Fixed above bottom nav on mobile/tablet, fixed at bottom on desktop */}
-          <div className="fixed bottom-[69px] md:bottom-[75px] left-0 right-0 px-2 z-40 lg:bottom-4 lg:left-auto lg:right-auto lg:px-4 lg:w-full lg:max-w-4xl lg:mx-auto lg:relative lg:z-auto lg:-translate-y-[5.3px]">
-            <div className="mx-auto max-w-[72%] md:max-w-md lg:max-w-none">
-              {/* Attached image preview */}
-              {attachedImage && (
-                <div className="mb-2 relative inline-block">
-                  <img 
-                    src={attachedImage} 
-                    alt={_copy("copy.ac6d9b76a141", { defaultValue: "Attached" })} 
-                    className="max-h-20 rounded-lg object-contain"
-                  />
-                  <button
-                    onClick={() => setAttachedImage(null)}
-                    className="absolute -top-1.5 -right-1.5 w-5 h-5 bg-red-500/90 rounded-full flex items-center justify-center"
-                  >
-                    <X className="w-3 h-3 text-white" />
-                  </button>
-                </div>
-              )}
-              
-              {/* Clean input row with auto-expanding textarea */}
-              {/* Glow effect wrapper */}
-              <div
-                data-assistant-input
-                className={`relative flex flex-col lg:flex-row lg:items-end gap-0 lg:gap-2 bg-zinc-900/10 backdrop-blur-2xl rounded-2xl px-3 py-2 border shadow-xl transition-all duration-500 ${
-                  inputGlow
-                    ? 'border-white/60 shadow-[0_0_20px_rgba(255,255,255,0.3)]'
-                    : 'border-white/10'
-                }`}
-              >
-                {/* Hidden file input */}
-                <input
-                  ref={fileInputRef}
-                  type="file"
-                  accept="image/*"
-                  onChange={handleImageSelect}
-                  className="hidden"
-                />
-                
-                {/* Desktop: buttons inline left of textarea */}
-                <div className="hidden lg:flex items-end gap-0">
-                  {/* Attach button */}
-                  <Tooltip>
-                    <TooltipTrigger asChild>
-                      <button
-                        type="button"
-                        onClick={() => fileInputRef.current?.click()}
-                        className="text-white hover:text-white/80 transition-colors p-1 shrink-0 mb-0.5"
-                      >
-                        <Paperclip className="w-5 h-5" />
-                      </button>
-                    </TooltipTrigger>
-                    <TooltipContent>{t('assistant.attachFile')}</TooltipContent>
-                  </Tooltip>
-                  
-                  {/* Voice recording button (browser Web Speech API) */}
-                  {isVoiceSupported && (
-                    <Tooltip>
-                      <TooltipTrigger asChild>
-                        <button
-                          type="button"
-                          onClick={isRecording ? stopRecording : startRecording}
-                          disabled={isLoading || restoringConversation || voiceAssistant.isVoiceMode}
-                          className={`transition-colors p-1 disabled:opacity-30 shrink-0 mb-0.5 ${
-                            isRecording 
-                              ? 'text-red-500' 
-                              : 'text-white hover:text-white/80'
-                          }`}
-                        >
-                          {isRecording ? (
-                            <div className="w-5 h-5 flex items-center justify-center">
-                              <Square className="w-3.5 h-3.5 fill-current animate-pulse" />
+                        
+                          {/* Action buttons below the card - only show for pending */}
+                          {message.simulationStatus === 'pending' && (
+                            <div className="flex items-center gap-2">
+                              <button
+                                onClick={() => setShowPinModal(true)}
+                                className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium transition-all
+                                  ${transferPin 
+                                    ? 'bg-white/10 text-white border border-white/20' 
+                                    : 'bg-white/5 text-white/60 border border-white/10 hover:bg-white/10 hover:text-white'
+                                  }`}
+                              >
+                                <Lock className="w-3.5 h-3.5" />
+                                {transferPin ? t('assistant.pinSet') : t('assistant.setPin')}
+                              </button>
+                              <button
+                                onClick={() => {
+                                  setAutoApproveMode(!autoApproveMode);
+                                  toast.success(autoApproveMode ? t('assistant.autoModeDisabled') : t('assistant.autoModeEnabled'));
+                                }}
+                                className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium transition-all
+                                  ${autoApproveMode 
+                                    ? 'bg-white/15 text-white border border-white/30' 
+                                    : 'bg-white/5 text-white/60 border border-white/10 hover:bg-white/10 hover:text-white'
+                                  }`}
+                              >
+                                <Zap className="w-3.5 h-3.5" />
+                                {t('assistant.autoMode')} {autoApproveMode ? t('assistant.on') : t('assistant.off')}
+                              </button>
                             </div>
-                          ) : (
-                            <Mic className="w-5 h-5" />
                           )}
-                        </button>
-                      </TooltipTrigger>
-                      <TooltipContent>{isRecording ? t('assistant.stopRecording') : t('assistant.voiceInput')}</TooltipContent>
-                    </Tooltip>
-                  )}
-                  
-                  {/* Voice Assistant Mode (Whisper + Dia TTS) */}
-                  <Tooltip>
-                    <TooltipTrigger asChild>
-                      <button
-                        type="button"
-                        onClick={voiceAssistant.isVoiceMode ? voiceAssistant.stopVoiceMode : voiceAssistant.startVoiceMode}
-                        disabled={isLoading && !voiceAssistant.isVoiceMode}
-                        className={`transition-colors p-1 disabled:opacity-30 shrink-0 mb-0.5 ${
-                          voiceAssistant.isVoiceMode
-                            ? 'text-cyan-400 animate-pulse'
-                            : 'text-white hover:text-white/80'
-                        }`}
-                      >
-                        <AudioLines className="w-5 h-5" />
-                      </button>
-                    </TooltipTrigger>
-                    <TooltipContent>{voiceAssistant.isVoiceMode ? _copy("copy.dd2108f1cda8", { defaultValue: "Stop Voice Chat" }) : _copy("copy.70438fbf1234", { defaultValue: "Voice Chat (AI)" })}</TooltipContent>
-                  </Tooltip>
-                </div>
-                
-                {/* Auto-expanding textarea */}
-                <textarea
-                  ref={inputRef}
-                  value={isRecording ? transcript : input}
-                  onChange={(e) => {
-                    if (!isRecording) {
-                      const newValue = e.target.value;
-                      const caret = e.target.selectionStart ?? newValue.length;
-                      setInput(newValue);
-                      mention.handleInput(newValue, caret);
-                      // Slash-skill detection: `/` at start or after whitespace, followed by [a-z0-9-]*
-                      const before = newValue.slice(0, caret);
-                      const m = before.match(/(?:^|\s)\/([a-z0-9-]{0,32})$/i);
-                      if (m) {
-                        const tokenStart = caret - m[1].length - 1; // include the `/`
-                        setSlashRange({ start: tokenStart, end: caret });
-                        setSlashQuery(m[1]);
-                        // Auto-open once user types >=2 chars after `/`
-                        setSlashOpen(m[1].length >= 2);
-                      } else {
-                        setSlashOpen(false);
-                      }
-                      const t = e.target;
-                      requestAnimationFrame(() => {
-                        t.style.height = 'auto';
-                        const maxHeight = window.innerHeight * 0.45;
-                        t.style.height = `${Math.min(t.scrollHeight, maxHeight)}px`;
-                      });
-                    }
-                  }}
-                  onKeyDown={(e) => {
-                    if (slashOpen) {
-                      const results = filterSkills(slashQuery, userSkills);
-                      if (e.key === 'ArrowDown') { e.preventDefault(); setSlashSelected((i) => Math.min(i + 1, Math.max(0, results.length - 1))); return; }
-                      if (e.key === 'ArrowUp') { e.preventDefault(); setSlashSelected((i) => Math.max(i - 1, 0)); return; }
-                      if (e.key === 'Escape') { e.preventDefault(); setSlashOpen(false); return; }
-                      if ((e.key === 'Enter' || e.key === 'Tab') && results[slashSelected]) {
-                        e.preventDefault();
-                        const skill = results[slashSelected];
-                        const before = input.slice(0, slashRange.start);
-                        const after = input.slice(slashRange.end);
-                        const insert = `/${skill.slug} `;
-                        const next = before + insert + after;
-                        setInput(next);
-                        setSlashOpen(false);
-                        requestAnimationFrame(() => {
-                          const pos = (before + insert).length;
-                          inputRef.current?.focus();
-                          inputRef.current?.setSelectionRange(pos, pos);
-                        });
-                        return;
-                      }
-                    }
-                    if (mention.isOpen) {
-                      const handled = mention.handleKeyDown(e);
-                      if (handled) {
-                        if (e.key === 'Enter' || e.key === 'Tab') {
-                          e.preventDefault();
-                          const liveResults = (window as any).__mentionResults || [];
-                          if (liveResults[mention.selectedIndex]) {
-                            mention.handleSelect(liveResults[mention.selectedIndex]);
-                          }
-                        }
-                        return;
-                      }
-                    }
-                    if (e.key === 'Enter' && !e.shiftKey) {
-                      e.preventDefault();
-                      handleSend();
-                    }
-                  }}
-                  onPaste={handlePaste}
-                  placeholder={isRecording ? t('assistant.listening') : attachedImage ? t('assistant.describeEdits') : t('assistant.askAnything')}
-                  className={`flex-1 bg-transparent text-sm text-white placeholder:text-white/50 focus:outline-none min-w-0 resize-none overflow-y-auto leading-relaxed py-1 pr-20 lg:pr-0 ${
-                    isRecording ? 'text-white/60 italic' : ''
-                  }`}
-                  style={{ 
-                    minHeight: isMobile ? '48px' : '24px',
-                    maxHeight: '45vh'
-                  }}
-                  rows={isMobile ? 2 : 1}
-                  readOnly={isRecording}
-                />
-
-                {/* Slash Skill Dropdown */}
-                <SlashSkillDropdown
-                  isOpen={slashOpen}
-                  query={slashQuery}
-                  skills={userSkills}
-                  selectedIndex={slashSelected}
-                  onSelectedIndexChange={setSlashSelected}
-                  onSelect={(skill) => {
-                    const before = input.slice(0, slashRange.start);
-                    const after = input.slice(slashRange.end);
-                    const insert = `/${skill.slug} `;
-                    const next = before + insert + after;
-                    setInput(next);
-                    setSlashOpen(false);
-                    requestAnimationFrame(() => {
-                      const pos = (before + insert).length;
-                      inputRef.current?.focus();
-                      inputRef.current?.setSelectionRange(pos, pos);
-                    });
-                  }}
-                  onOpenAll={() => { setSlashOpen(false); setSkillsBrowserOpen(true); }}
-                  onClose={() => setSlashOpen(false)}
-                />
-
-                {/* User Mention Dropdown */}
-                <UserMentionDropdown
-                  query={mention.query}
-                  isOpen={mention.isOpen}
-                  position={mention.position}
-                  selectedIndex={mention.selectedIndex}
-                  onSelectedIndexChange={mention.setSelectedIndex}
-                  onSelect={mention.handleSelect}
-                  onClose={mention.handleClose}
-                />
-
-                
-                {/* Mobile: action buttons in bottom-right corner */}
-                <div className="absolute bottom-2 right-2 flex items-center gap-1 lg:hidden">
-                  {/* Attach button */}
-                  <button
-                    type="button"
-                    onClick={() => fileInputRef.current?.click()}
-                    className="text-white/60 hover:text-white transition-colors p-1"
-                  >
-                    <Paperclip className="w-4 h-4" />
-                  </button>
-                  
-                  {/* Voice recording button */}
-                  {isVoiceSupported && (
-                    <button
-                      type="button"
-                      onClick={isRecording ? stopRecording : startRecording}
-                      disabled={isLoading || restoringConversation || voiceAssistant.isVoiceMode}
-                      className={`transition-colors p-1 disabled:opacity-30 ${
-                        isRecording ? 'text-red-500' : 'text-white/60 hover:text-white'
-                      }`}
-                    >
-                      {isRecording ? (
-                        <div className="w-4 h-4 flex items-center justify-center">
-                          <Square className="w-3 h-3 fill-current animate-pulse" />
                         </div>
                       ) : (
-                        <Mic className="w-4 h-4" />
+                        /* Text messages */
+                        <div className={`max-w-[85%] flex flex-col gap-2 ${message.role === 'user' ? 'items-end' : 'items-start'}`}>
+                          {/* Show attached image for user messages */}
+                          {message.attachedImage && (
+                            <img 
+                              src={message.attachedImage} 
+                              alt={_copy("copy.ac6d9b76a141", { defaultValue: "Attached" })} 
+                              className="max-w-full rounded-lg"
+                            />
+                          )}
+                          {message.role === 'user' ? (
+                            /* User message with liquid glass bubble */
+                            <LiquidGlassBubble tail="right">
+                              <p className="text-sm whitespace-pre-wrap text-white">{message.content}</p>
+                            </LiquidGlassBubble>
+                          ) : (
+                            /* Assistant message - no bubble */
+                            <div className="text-white">
+                              <MarkdownText content={message.content} className="text-sm" />
+                              {/* Swap action card */}
+                              {message.swapAction && (
+                                <SwapActionCard action={message.swapAction} autoQuote />
+                              )}
+                              {message.isError && (
+                                <button
+                                  onClick={() => {
+                                    const idx = messages.indexOf(message);
+                                    const lastUserMsg = messages.slice(0, idx).reverse().find(m => m.role === 'user');
+                                    if (lastUserMsg) {
+                                      setMessages(prev => prev.filter(m => m.id !== message.id));
+                                      handleSend(lastUserMsg.content);
+                                    }
+                                  }}
+                                  className="mt-2 text-xs text-white/60 hover:text-white/90 underline transition-colors"
+                                >
+                                  {t('assistant.retry', 'Retry')}
+                                </button>
+                              )}
+                            </div>
+                          )}
+                        </div>
                       )}
-                    </button>
-                  )}
-                  
-                  {/* Voice Assistant Mode (mobile) */}
-                  <button
-                    type="button"
-                    onClick={voiceAssistant.isVoiceMode ? voiceAssistant.stopVoiceMode : voiceAssistant.startVoiceMode}
-                    disabled={isLoading && !voiceAssistant.isVoiceMode}
-                    className={`transition-colors p-1 disabled:opacity-30 ${
-                      voiceAssistant.isVoiceMode
-                        ? 'text-cyan-400 animate-pulse'
-                        : 'text-white/60 hover:text-white'
-                    }`}
+                    </motion.div>
+                  ))}
+                </AnimatePresence>
+              
+                {isImageLoading && (
+                  <ImageGenerationLoader startTime={imageLoadStartTime} />
+                )}
+                {isLoading && !isImageLoading && (
+                  <motion.div
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    className="flex justify-start gap-2"
                   >
-                    <AudioLines className="w-4 h-4" />
-                  </button>
-                  
-                  {/* Stop speaking button */}
-                  {isSpeaking && (
-                    <button
-                      type="button"
-                      onClick={stopSpeaking}
-                      className="text-white hover:text-white/80 transition-colors p-1 animate-pulse"
-                    >
-                      <VolumeX className="w-4 h-4" />
-                    </button>
-                  )}
-                  
-                  {/* Send button */}
-                  <button
-                    type="button"
-                    onClick={() => handleSend()}
-                    disabled={(!input.trim() && !isRecording) || isLoading}
-                    className="text-white hover:text-white/80 transition-colors p-1 disabled:opacity-30 disabled:cursor-not-allowed"
-                  >
-                    <Send className="w-4 h-4" />
-                  </button>
-                </div>
-                
-                {/* Desktop: inline end buttons */}
-                <div className="hidden lg:flex items-end gap-0">
-                  {/* Stop speaking button */}
-                  {isSpeaking && (
-                    <Tooltip>
-                      <TooltipTrigger asChild>
-                        <button
-                          type="button"
-                          onClick={stopSpeaking}
-                          className="text-white hover:text-white/80 transition-colors p-1 animate-pulse shrink-0 mb-0.5"
-                        >
-                          <VolumeX className="w-5 h-5" />
-                        </button>
-                      </TooltipTrigger>
-                      <TooltipContent>{t('assistant.stopSpeaking')}</TooltipContent>
-                    </Tooltip>
-                  )}
-                  
-                  {/* Send button */}
-                  <button
-                    type="button"
-                    onClick={() => handleSend()}
-                    disabled={(!input.trim() && !isRecording) || isLoading}
-                    className="text-white hover:text-white/80 transition-colors p-1 disabled:opacity-30 disabled:cursor-not-allowed shrink-0 mb-0.5"
-                  >
-                    <Send className="w-5 h-5" />
-                  </button>
-                </div>
+                    <img 
+                      src={assistantAvatar} 
+                      alt="" 
+                      className="w-7 h-7 rounded-lg shrink-0"
+                    />
+                    <div className="bg-white/10 rounded-2xl px-4 py-3 flex items-center gap-2">
+                      <Loader2 className="w-4 h-4 animate-spin text-white/60" />
+                      <span className="text-sm text-white/60">
+                        {activeTools.length > 0
+                          ? describeTools(activeTools)
+                          : t('assistant.thinking')}
+                      </span>
+                    </div>
+                  </motion.div>
+                )}
+                {/* Scroll anchor */}
+                <div ref={messagesEndRef} />
               </div>
+            </ScrollArea>
+
+          {/* Message box: above the bottom nav on phones, in the page on desktop */}
+          <div className="fixed bottom-[69px] md:bottom-[75px] left-0 right-0 px-3 z-40 lg:bottom-4 lg:left-auto lg:right-auto lg:px-4 lg:w-full lg:max-w-4xl lg:mx-auto lg:relative lg:z-auto lg:-translate-y-[5.3px]">
+            <div className="mx-auto w-full max-w-[680px] lg:max-w-none">
+              {composer}
             </div>
           </div>
         </>
+        )
       )}
-
-      {/* Voice Assistant Overlay */}
-      <VoiceAssistantOverlay
-        isActive={voiceAssistant.isVoiceMode}
-        status={voiceAssistant.status}
-        recordingDuration={voiceAssistant.recordingDuration}
-        onStop={voiceAssistant.stopVoiceMode}
-        onStopSpeaking={voiceAssistant.stopSpeaking}
-        remainingCredits={voiceAssistant.exchangesLeft}
-      />
 
       <PostModal
         isOpen={postModalOpen}

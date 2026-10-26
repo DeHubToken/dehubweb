@@ -1,0 +1,104 @@
+/* Liquid Orb — the Assistant's voice button. Shape and motion are written per
+   frame by LiquidOrb.tsx; this sheet only paints the metal. */
+
+.liquid-orb {
+  --orb-size: 120px;
+  position: relative;
+  width: var(--orb-size);
+  height: var(--orb-size);
+  flex: none;
+  padding: 0;
+  border: 0;
+  background: none;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
+}
+.liquid-orb:disabled { cursor: default; opacity: 0.6; }
+.liquid-orb:focus-visible { outline: none; }
+.liquid-orb:focus-visible .liquid-orb__blob { outline: 2px solid currentColor; outline-offset: 6px; }
+
+.liquid-orb__glow {
+  position: absolute;
+  inset: 4%;
+  border-radius: 50%;
+  background: radial-gradient(circle, var(--orb-glow) 0%, transparent 68%);
+  filter: blur(calc(var(--orb-size) * 0.09));
+  opacity: 0.35;
+  pointer-events: none;
+  will-change: transform, opacity;
+}
+
+.liquid-orb__blob {
+  position: absolute;
+  inset: 9%;
+  overflow: hidden;
+  border-radius: 50%;
+  background: var(--orb-base);
+  box-shadow:
+    inset calc(var(--orb-size) * -0.05) calc(var(--orb-size) * -0.07) calc(var(--orb-size) * 0.14) rgba(0, 0, 0, 0.55),
+    inset calc(var(--orb-size) * 0.04) calc(var(--orb-size) * 0.05) calc(var(--orb-size) * 0.1) rgba(255, 255, 255, 0.4),
+    0 calc(var(--orb-size) * 0.07) calc(var(--orb-size) * 0.18) var(--orb-drop);
+  will-change: border-radius, transform;
+  transition: box-shadow 0.4s ease;
+}
+
+/* The reflection: chrome mirrors a horizon, bright sky over a dark band.
+   It sways with the liquid, so the line bends as the ball moves. */
+.liquid-orb__sheen {
+  position: absolute;
+  inset: -25%;
+  background: var(--orb-metal);
+  filter: blur(calc(var(--orb-size) * 0.012));
+  will-change: transform;
+}
+
+/* Soft glints that slide round the surface. */
+.liquid-orb__streak {
+  position: absolute;
+  inset: -60%;
+  background: conic-gradient(from 0deg, transparent 0 7%, rgba(255, 255, 255, 0.6) 11%, transparent 15% 46%, rgba(255, 255, 255, 0.35) 50%, transparent 55% 100%);
+  filter: blur(calc(var(--orb-size) * 0.04));
+  mix-blend-mode: screen;
+  will-change: transform;
+}
+
+/* Rounds the bands into a sphere: bright upper left, deep lower right. */
+.liquid-orb__shade {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle at 34% 28%, transparent 22%, rgba(0, 0, 0, 0.18) 55%, rgba(0, 0, 0, 0.62) 92%);
+}
+
+.liquid-orb__spec {
+  position: absolute;
+  left: 17%;
+  top: 11%;
+  width: 40%;
+  height: 25%;
+  border-radius: 50%;
+  background: radial-gradient(ellipse at center, rgba(255, 255, 255, 0.95), rgba(255, 255, 255, 0) 70%);
+  transform: rotate(-24deg);
+  filter: blur(1px);
+}
+
+/* System and the monochrome themes: polished chrome. */
+.liquid-orb[data-palette='chrome'],
+.liquid-orb[data-palette='chrome-light'] {
+  --orb-base: #8d9097;
+  --orb-metal: linear-gradient(172deg, #ffffff 0%, #e4e6ea 18%, #a9adb4 34%, #4b4e55 45%, #0b0c0e 50%, #1d1f23 58%, #5f636b 72%, #c3c6cc 88%, #f4f5f7 100%);
+  --orb-glow: rgba(255, 255, 255, 0.5);
+  --orb-drop: rgba(0, 0, 0, 0.45);
+}
+.liquid-orb[data-palette='chrome-light'] {
+  --orb-glow: rgba(0, 0, 0, 0.25);
+  --orb-drop: rgba(0, 0, 0, 0.22);
+}
+
+/* Colour themes: the same metal, dipped in the theme colour. */
+.liquid-orb[data-palette='tint'] {
+  --orb-base: var(--orb-a);
+  --orb-metal: linear-gradient(172deg, #ffffff 0%, color-mix(in srgb, var(--orb-a) 30%, #ffffff) 16%, var(--orb-a) 34%, color-mix(in srgb, var(--orb-a) 40%, #000000) 45%, color-mix(in srgb, var(--orb-a) 12%, #000000) 50%, color-mix(in srgb, var(--orb-a) 35%, #000000) 60%, var(--orb-a) 76%, color-mix(in srgb, var(--orb-b) 70%, #ffffff) 100%);
+  --orb-glow: var(--orb-a);
+  --orb-drop: color-mix(in srgb, var(--orb-a) 35%, transparent);
+}
