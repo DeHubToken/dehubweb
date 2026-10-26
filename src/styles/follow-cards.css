@@ -4,8 +4,8 @@
    card rules themselves never name a theme. Three families:
    - BOXED (default + the canvas glass themes + Osaka, War, Hacker, Jungle):
      a card with the theme's own surface and ring.
-   - FLAT (System, System Light, Minimal): no box at all, a
-     hairline between cards, the banner keeps a small radius as content does.
+   - QUIET (System, System Light, Minimal): a faint fill and hairline edge per
+     card, no glass.
    The cover banner is content, so it is never tinted. */
 
 [data-follow-cards] {
@@ -187,30 +187,22 @@
   100% { transform: scale(1); }
 }
 
-/* ---------- FLAT: System, System Light, Minimal ---------- */
+/* ---------- System, System Light, Minimal: a quiet bento per card ----------
+   These themes draw no bentos elsewhere, but each suggestion is its own card
+   here: a faint fill and a hairline edge, no glass, so the row reads as a set
+   of profiles rather than one strip cut by divider lines. */
 html:is([data-theme='system'], [data-theme='immersive'], [data-theme='minimal']) [data-follow-cards] {
-  --fc-bg: transparent;
-  --fc-edge: none;
-  --fc-edge-hover: none;
-  --fc-radius: 0px;
-  --fc-cover-radius: 10px;
-  --fc-pad: 0px;
-  --fc-gap: 0px;
-  --fc-ring: #000000;
-  --fc-divider: rgb(255 255 255 / 0.1);
+  --fc-bg: rgb(255 255 255 / 0.045);
+  --fc-edge: inset 0 0 0 1px rgb(255 255 255 / 0.09);
+  --fc-edge-hover: inset 0 0 0 1px rgb(255 255 255 / 0.16);
+  --fc-radius: 18px;
+  --fc-cover-radius: 0px;
+  --fc-pad: 12px;
+  --fc-gap: 10px;
+  --fc-ring: #111112;
+  --fc-divider: transparent;
 }
-html:is([data-theme='system'], [data-theme='immersive'], [data-theme='minimal']) [data-follow-card] {
-  padding-right: 14px; margin-right: 14px;
-  border-right: 1px solid var(--fc-divider);
-  overflow: visible;
-}
-html:is([data-theme='system'], [data-theme='immersive'], [data-theme='minimal']) [data-follow-card]:last-child {
-  border-right: 0; margin-right: 0;
-}
-html:is([data-theme='system'], [data-theme='immersive'], [data-theme='minimal']) [data-follow-card] [data-fc-avatar] {
-  margin-left: 10px;
-}
-html[data-theme='minimal'] [data-follow-cards] { --fc-cover-radius: 0px; }
+html[data-theme='minimal'] [data-follow-cards] { --fc-radius: 0px; --fc-cover-radius: 0px; }
 html[data-theme='minimal'] [data-follow-card] [data-fc-follow] { border-radius: 0; }
 
 /* Light: ink on white. System Light is System with data-system-tone. */
@@ -226,9 +218,12 @@ html[data-theme='light'] [data-follow-cards] {
   --fc-btn-ink: #ffffff;
   --fc-btn-done: rgb(11 11 13 / 0.07);
   --fc-btn-done-ink: #0b0b0d;
-  --fc-ring: #ffffff;
+  --fc-ring: #f4f4f6;
   --fc-avatar-fill: #d4d4d8;
-  --fc-divider: rgb(11 11 13 / 0.09);
+  --fc-divider: transparent;
+  --fc-bg: #f4f4f6;
+  --fc-edge: inset 0 0 0 1px rgb(11 11 13 / 0.07);
+  --fc-edge-hover: inset 0 0 0 1px rgb(11 11 13 / 0.14);
 }
 /* Minimal Light keeps its white bentos. */
 html[data-theme='light'] [data-follow-cards] {
