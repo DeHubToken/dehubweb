@@ -6892,13 +6892,7 @@
       "box": "Wat telefoons zien",
       "hint": "Sleep het kader of gebruik de pijltjestoetsen. Sla op om het op je livestream toe te passen.",
       "live": "LIVE",
-      "watch": "{{name}} live bekijken",
-      "join": "Live meekijken",
-      "react": "Reageren",
-      "gift": "Cadeau",
-      "chat": "Chat",
-      "share": "Delen",
-      "linkCopied": "Link gekopieerd"
+      "watch": "{{name}} live bekijken"
     },
     "destinations": {
       "title": "Multistream-bestemmingen",

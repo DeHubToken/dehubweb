@@ -499,6 +499,8 @@ export function LivePostChat({ tokenId, streamId: liveStreamId, isOffline = fals
       {/* Messages */}
       <div
         ref={messagesContainerRef}
+        // Scrolling the messages is not a swipe to the next short.
+        data-shorts-scrollable
         className={cn(
           'overflow-y-auto overscroll-contain scrollbar-hide',
           overlay

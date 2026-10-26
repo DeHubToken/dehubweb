@@ -6702,13 +6702,7 @@
       "box": "Lo que ven los móviles",
       "hint": "Arrastra el recuadro o usa las flechas. Guarda para aplicarlo a tu directo.",
       "live": "EN DIRECTO",
-      "watch": "Ver a {{name}} en directo",
-      "join": "Unirme al directo",
-      "react": "Reaccionar",
-      "gift": "Regalo",
-      "chat": "Chat",
-      "share": "Compartir",
-      "linkCopied": "Enlace copiado"
+      "watch": "Ver a {{name}} en directo"
     },
     "destinations": {
       "title": "Destinos de multistream",
