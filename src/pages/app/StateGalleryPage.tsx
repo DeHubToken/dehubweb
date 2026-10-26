@@ -1,4 +1,6 @@
 import { translateCopy as _translateCopy } from '@/i18n/copy';
+import { VoiceStripPlayer } from '@/components/app/audio/VoiceStripPlayer';
+import { LiveMicBars } from '@/components/app/audio/LiveMicBars';
 import { DmLockedState, DmUndecryptableRun } from '@/components/app/chat/DmLockedState';
 import { useTranslation as _useCopy } from 'react-i18next';
 import { lazy, Suspense, useEffect, useId, useState } from 'react';
@@ -268,6 +270,24 @@ function CaptureCardGallery() {
  * the profile tabs' "Beam" (glowing line, idle chips dimmed), never a pill.
  */
 const GALLERY_LYRICS_TRACK = { tokenId: 'state-gallery-lyrics', audioUrl: '', title: 'Late night lo-fi', artist: 'juno' };
+
+function VoiceNotesGallery() {
+  const { t: _copy } = _useCopy();
+  return (
+    <section data-page-bento data-voice-notes-gallery className="mb-5 rounded-3xl border border-white/10 bg-white/[0.04] p-4">
+      <h2 className="mb-3 text-sm font-semibold">{_copy("copy.5c2e8a1f0b74", { defaultValue: "Voice notes" })}</h2>
+      <div className="grid gap-3 max-w-md">
+        <VoiceStripPlayer src="/sounds/ooh-ahh.mp3" duration={3} />
+        <VoiceStripPlayer src="/sounds/lol.mp3" duration={2} />
+        <div className="flex items-center gap-2 rounded-xl border border-white/[0.08] bg-white/[0.08] pl-3 pr-1 h-11 min-w-0">
+          <div className="shrink-0 w-2 h-2 bg-red-500 rounded-full animate-pulse" />
+          <span className="shrink-0 text-[11px] font-mono tabular-nums text-red-400">0:07</span>
+          <LiveMicBars stream={null} className="flex-1" />
+        </div>
+      </div>
+    </section>
+  );
+}
 
 function AudioGallery() {
   const { t: _copy } = _useCopy();
@@ -785,6 +805,7 @@ export default function StateGalleryPage() {
         <ToastsGallery />
         <TooltipsGallery />
         <AudioGallery />
+        <VoiceNotesGallery />
         <StageCoversGallery />
         <CaptureCardGallery />
         <LiveAvatarsGallery />
