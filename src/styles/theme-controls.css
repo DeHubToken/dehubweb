@@ -217,6 +217,17 @@ html[data-theme][data-theme] [data-side-panel]
   backdrop-filter: none !important;
 }
 
+/* Side-panel "View all" is a frosted liquid glass button, not a see-through
+   wash: the theme's floating-glass tint over a real blur. Immersive, System
+   Light and Minimal keep their text-only "View all". */
+html[data-theme]:not([data-theme='immersive']):not([data-theme='minimal']):not([data-system-tone='light'])
+  [data-side-panel] :is([data-view-all] [data-theme-control-surface], button[data-view-all]):not(#_):not(#_):not(#_) {
+  background-color: var(--float-glass, rgb(9 9 11 / 0.72)) !important;
+  background-image: linear-gradient(160deg, rgb(255 255 255 / 0.16), rgb(255 255 255 / 0.04)) !important;
+  border: 1px solid rgb(255 255 255 / 0.16) !important;
+  backdrop-filter: var(--float-glass-blur, blur(24px) saturate(160%)) !important;
+}
+
 /* Requests moves between cached routes and a scroll-clipped feed. Its parent
    panels already own the frost; a second backdrop layer on each action can
    retain an empty compositor surface when the cached page becomes visible. */
