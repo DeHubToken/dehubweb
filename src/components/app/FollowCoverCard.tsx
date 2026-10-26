@@ -10,8 +10,8 @@ import { useTranslation as _useCopy } from 'react-i18next';
  *
  * Used by the feed's follow row and by Explore. All colour, radius and glass
  * comes from styles/follow-cards.css, keyed off the theme, so this file only
- * carries structure. System, System Light and the Minimals draw no box at
- * all: the cards stand on the page with a hairline between them.
+ * carries structure. Every theme gives each card its own bento; System,
+ * System Light and the Minimals use a quiet fill and hairline, no glass.
  *
  * The banner is the one their profile shows: their own, or the same default
  * banner the profile page picks for them when they never set one.
