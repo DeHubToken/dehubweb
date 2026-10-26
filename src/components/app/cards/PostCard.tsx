@@ -41,6 +41,7 @@ import { toast } from 'sonner';
 import { cn } from '@/lib/utils';
 import { CardHeader } from './CardHeader';
 import { PostHeaderBoostButton, PostHeaderOptionsButton } from './PostHeaderOptionsButton';
+import { useBoostedPost } from './boosted-post';
 import { MatureContentGate, useMatureGate } from './MatureContentGate';
 import { ContentWarningGate, useContentWarning } from './ContentWarningGate';
 import { ActionBar } from './ActionBar';
@@ -180,6 +181,7 @@ const PostCardBody = memo(function PostCard({ post, threadSlot, onOpenComments }
   const [visibility, setVisibility] = useState<TokenVisibility>('public');
   const isTabletOrMobile = useIsTabletOrMobile();
   const navigate = useNavigate();
+  const boosted = useBoostedPost();
   const queryClient = useQueryClient();
   const bodyNavigationRef = useRef<HTMLDivElement>(null);
   const { walletAddress, openLoginModal } = useAuth();
@@ -474,12 +476,13 @@ const PostCardBody = memo(function PostCard({ post, threadSlot, onOpenComments }
           phone post page the buttons are in the Stage row above; the sheet
           stays mounted here for them. */}
       <div className={stage ? 'hidden' : 'z-10 flex shrink-0 items-start gap-2'}>
-        {isOwnPost && (
+        {(isOwnPost || boosted) && (
           <PostHeaderBoostButton
             rowGap={8}
-            onClick={() => setShowBoostModal(true)}
-            disabled={!postTokenId}
-            aria-label={t('postOptions.boostPost')}
+            lit={boosted}
+            onClick={() => (isOwnPost ? setShowBoostModal(true) : navigate('/app/superpowers'))}
+            disabled={isOwnPost && !postTokenId}
+            aria-label={isOwnPost ? t('postOptions.boostPost') : _copy("copy.c1f1c8819e33", { defaultValue: "Boosted" })}
           />
         )}
         

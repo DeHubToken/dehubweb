@@ -15,6 +15,8 @@ import { useTranslation } from 'react-i18next';
 import { formatTimeAgo } from '@/lib/feed-utils';
 import { LANGUAGE_NAMES } from '@/hooks/use-user-language';
 import { cn } from '@/lib/utils';
+import { useNavigate } from 'react-router-dom';
+import { useBoostedPost } from './boosted-post';
 
 interface PostMetadataProps {
   className?: string;
@@ -44,6 +46,8 @@ interface PostMetadataProps {
 export function PostMetadata({ className, timestamp, viewCount, tokenId, isAd, isAudio, translateControl, watched }: PostMetadataProps) {
   const { t: _copy } = _useCopy();
   const { t, i18n } = useTranslation();
+  const boosted = useBoostedPost();
+  const navigate = useNavigate();
 
   // Format timestamp - if it's an ISO string, convert to relative time
   const formattedTimestamp = timestamp ? (
@@ -110,7 +114,7 @@ export function PostMetadata({ className, timestamp, viewCount, tokenId, isAd, i
     );
   };
 
-  if (!hasMetadata && !translateControl && !isAd) return null;
+  if (!hasMetadata && !translateControl && !isAd && !boosted) return null;
 
   return (
     <div data-post-metadata className={cn("flex items-center gap-x-3 gap-y-1 text-zinc-500 text-xs flex-wrap", className)}>
@@ -122,6 +126,15 @@ export function PostMetadata({ className, timestamp, viewCount, tokenId, isAd, i
           <Clock className="w-3 h-3" />
           <span>{formattedTimestamp}</span>
         </span>
+      )}
+      {boosted && (
+        <button
+          type="button"
+          onClick={(e) => { e.stopPropagation(); navigate('/app/superpowers'); }}
+          className="uppercase tracking-wider text-[11px] text-white/80 hover:text-white transition-colors"
+        >
+          {_copy("copy.c1f1c8819e33", { defaultValue: "Boosted" })}
+        </button>
       )}
       {hasViews && (
         <span className="flex items-center gap-1">
