@@ -34,6 +34,7 @@ import { RulesPanel } from './RulesPanel';
 import { ModerationPanel } from './ModerationPanel';
 import { PollPanel } from './PollPanel';
 import { RecapPanel } from './RecapPanel';
+import { HighlightsPanel } from './HighlightsPanel';
 import { QuickControls } from './QuickControls';
 import { SubathonPanel } from './SubathonPanel';
 import { PointsPanel } from './PointsPanel';
@@ -227,6 +228,8 @@ export function LiveStudio() {
       {justEnded && <RecapPanel address={walletAddress} streamId={justEnded} />}
 
       <QuickControls overlay={data} queryKey={myOverlayKey} />
+
+      <HighlightsPanel address={walletAddress} />
 
       <div className="grid gap-4 lg:grid-cols-[minmax(0,1fr)_340px]">
         <div className="space-y-4">
