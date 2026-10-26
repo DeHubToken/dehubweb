@@ -323,7 +323,9 @@ export default function HomePage() {
   // Back popped the image entry: put the original feed back where it was.
   useEffect(() => {
     const origin = imageReturnRef.current;
-    if (!origin || (location.state as { imageView?: boolean } | null)?.imageView) return;
+    // The open itself (?image=) is not the way back either: it runs in the same
+    // commit that recorded the origin, before the URL is swapped for imageView.
+    if (!origin || pinnedImageId || (location.state as { imageView?: boolean } | null)?.imageView) return;
     // Leaving Home for another page is not the way back.
     if (location.pathname !== '/app' && tabFromPathname(location.pathname) === null) return;
     imageReturnRef.current = null;
