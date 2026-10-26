@@ -941,14 +941,13 @@ const ImageCardBody = memo(function ImageCard({ post, aboveFold = false, onOpenC
   const handleImageClick = (index: number, onPicture = true) => {
     if (wasDrawerJustDismissed()) return;
     const gated = isPPV || isLocked || isSubGated || isW2E || matureGate.isGated;
-    // A tap beside a narrow photo opens the image feed, the same as the picture.
-    // Already in the image feed, it falls through to the full-screen photo.
-    if (!onPicture && !postPage && !imagesFeedScrollView && !gated) {
+    // A plain photo opens as its card in the Images scroll view, the picture
+    // and the space beside a narrow one alike. Already in that view, a tap on
+    // the picture falls through to the full-screen photo.
+    if (!postPage && !imagesFeedScrollView && !gated && (!onPicture || !post.soundtrackUrl)) {
       openPost();
       return;
     }
-    // Phones open a plain photo full screen over the feed, so closing it lands
-    // back on the same card. Desktop still opens the post page.
     if (!postPage && isPhone && !post.soundtrackUrl && !gated) {
       setFullscreenIndex(index);
       setFullscreenOpen(true);
