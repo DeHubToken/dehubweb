@@ -6776,6 +6776,111 @@
     "youAreBanned": "Je kunt niet chatten in deze stream van de creator.",
     "youAreTimedOut": "Je bent even tijd uit."
   },
+  "studioDeck": {
+    "background": {
+      "title": "Achtergrond",
+      "modes": {
+        "none": "Uit",
+        "blur": "Vervagen",
+        "color": "Kleur",
+        "image": "Afbeelding"
+      },
+      "failed": "Achtergrondverwijdering kon niet starten op dit apparaat.",
+      "hint": "Draait op je apparaat. De eerste keer duurt het laden een paar seconden."
+    },
+    "remove": "Verwijderen",
+    "imageTooLarge": "Die afbeelding is te groot. Probeer een kleinere.",
+    "scenes": {
+      "title": "Scènes",
+      "edit": "{{name}} bewerken",
+      "subtitle": "Tweede regel (optioneel)",
+      "picture": "Afbeelding",
+      "countdown": "Aftellen",
+      "noCountdown": "Niet aftellen",
+      "minutes": "{{count}} min",
+      "muteMic": "Mijn microfoon dempen zolang dit aanstaat",
+      "names": {
+        "starting": "We beginnen zo",
+        "chatting": "Gewoon kletsen",
+        "gameplay": "Gameplay",
+        "brb": "Zo terug",
+        "ending": "Stream eindigt"
+      },
+      "hints": {
+        "starting": "Kaart met aftelklok",
+        "chatting": "Camera beeldvullend",
+        "gameplay": "Scherm met je camera",
+        "brb": "Kaart, microfoon gedempt",
+        "ending": "Bedankkaart"
+      },
+      "subtitles": {
+        "starting": "De stream begint over",
+        "brb": "Zo weer terug",
+        "ending": "Bedankt voor het kijken"
+      }
+    },
+    "widgets": {
+      "title": "Widgets in mijn video tonen",
+      "hint": "Meldingen, doelbalken en chat worden in je stream getekend, zodat kijkers op Twitch, YouTube en andere platforms ze ook zien.",
+      "failed": "Kon niet wijzigen waar je widgets verschijnen. Probeer het opnieuw."
+    },
+    "sources": {
+      "title": "Bronnen",
+      "addImage": "Afbeelding of logo",
+      "addCamera": "Tweede camera",
+      "addClip": "Videoclip",
+      "failed": "Kon die bron niet toevoegen.",
+      "empty": "Voeg een logo, een tweede camera of een videoclip toe boven op je stream.",
+      "hint": "Bronnen worden over je beeld getekend voor elke kijker en elk platform.",
+      "image": "Afbeelding",
+      "camera": "Camera",
+      "clip": "Clip",
+      "restart": "Opnieuw",
+      "play": "Afspelen of pauzeren",
+      "show": "Tonen in stream",
+      "loop": "Herhalen",
+      "positions": {
+        "top-left": "Linksboven",
+        "top-right": "Rechtsboven",
+        "bottom-left": "Linksonder",
+        "bottom-right": "Rechtsonder",
+        "center": "Midden"
+      },
+      "sizes": {
+        "small": "Klein",
+        "medium": "Middel",
+        "large": "Groot"
+      },
+      "shapes": {
+        "circle": "Cirkel",
+        "rounded": "Afgerond",
+        "rect": "Vierkant"
+      }
+    },
+    "audio": {
+      "title": "Audiomixer",
+      "unavailable": "Deze browser kan geen audio mixen, dus je microfoon gaat ongewijzigd de stream in.",
+      "mute": "Dempen",
+      "unmute": "Dempen opheffen",
+      "channels": {
+        "mic": "Microfoon",
+        "game": "Game / tabblad",
+        "clip": "Videoclip"
+      },
+      "absent": {
+        "mic": "Geen microfoon",
+        "game": "Deel een scherm met geluid of gebruik een capturekaart",
+        "clip": "Voeg een videoclip toe bij Bronnen"
+      },
+      "gate": "Noise gate",
+      "gateLevels": {
+        "off": "Uit",
+        "low": "Licht",
+        "high": "Sterk"
+      },
+      "gateHint": "Dempt je microfoon tussen woorden, zodat toetsenbord en ventilatoren niet te horen zijn."
+    }
+  },
   "liveStudio": {
     "vertical": {
       "title": "Verticale weergave",
@@ -6926,11 +7031,11 @@
       "showIn": "Toon je widgets",
       "inApp": "In de DeHub-app",
       "inAppHint": "Elke kijker's app tekent ze bovenop je stream. Werkt vanaf je telefoon, de browser, een capturekaart of OBS, en kost je niets.",
-      "inVideo": "In mijn video (OBS)",
+      "inVideo": "In mijn video (OBS of live via DeHub)",
       "inVideoHint": "OBS brandt ze in je beeld, zodat ze in je herhalingen en overal waar je stream wordt bekeken zitten.",
       "warnDoubles": "Je OBS overlay is verbonden, maar je widgets zijn ook ingesteld om in de DeHub-app te worden getoond, dus kijkers zien elke alert twee keer.",
       "switchToVideo": "Toon ze in mijn video in plaats daarvan",
-      "warnNoObs": "Er is momenteel geen OBS overlay verbonden. Tot je de bron van de browser toevoegt, zullen kijkers je widgets niet zien.",
+      "warnNoObs": "Er is geen OBS-overlay verbonden. Ga je live vanuit DeHub in je browser, dan worden je widgets automatisch in de video getekend; vanuit OBS voeg je hieronder de browserbron toe.",
       "link": "Link naar browserbron",
       "oneWidget": "Alleen deze widget",
       "step1": "Voeg in OBS een bron van de browser toe en plak deze link toe.",
