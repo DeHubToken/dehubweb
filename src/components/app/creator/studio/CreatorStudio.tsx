@@ -681,7 +681,7 @@ const CreatorStudioWorkspace = memo(function CreatorStudioWorkspace({ onOpenEdit
   );
   const surfaceEpoch = useSurfaceEpoch();
 
-  const preset = getPreset(presetId);
+  const preset = mode === 'video' && VIDEO_MODELS[videoModel]?.referenceMode === 'extend' ? null : getPreset(presetId);
   const activeVideoModel = VIDEO_MODELS[videoModel];
   const activeImageModel = IMAGE_MODELS[imageModel];
   const activeModel3d = MODEL3D_MODELS[model3dModel];
@@ -803,7 +803,7 @@ const CreatorStudioWorkspace = memo(function CreatorStudioWorkspace({ onOpenEdit
       // switching from a 5s model to Veo does not leave an unrenderable 5.
       setDuration((d) => snapVideoDuration(model, model.defaultDuration ?? d));
     }
-    if (model.requiresVideoInput && currentClip?.seconds) setDuration(Math.ceil(currentClip.seconds));
+    if (model.requiresVideoInput && model.referenceMode !== 'extend' && currentClip?.seconds) setDuration(Math.ceil(currentClip.seconds));
     setVideoAspect((a) => (allowedAspects.includes(a) ? a : allowedAspects[0]));
     // Charging for 1080p on a model that tops out at 720p is a refund waiting
     // to happen — the provider silently renders the lower one.
@@ -932,7 +932,7 @@ const CreatorStudioWorkspace = memo(function CreatorStudioWorkspace({ onOpenEdit
         setVideoModel(seconds > 15 ? 'kling-3-motion' : 'kling-o3-edit');
         setPresetFor('video', seconds > 15 ? 'reference-copy-motion' : 'reference-character-swap');
       }
-      setDuration(Math.ceil(seconds));
+      setDuration(VIDEO_MODELS[videoModel]?.referenceMode === 'extend' ? 4 : Math.ceil(seconds));
       draftReferences.modified();
       assetDraftRef.current = [...latest, { ...asset, seconds }];
       setExtraReferences(prev => ({ ...prev, video: [...prev.video, { ...asset, seconds }] }));
@@ -1164,14 +1164,14 @@ const CreatorStudioWorkspace = memo(function CreatorStudioWorkspace({ onOpenEdit
     if (mode === 'video') {
       const model = VIDEO_MODELS[videoModel];
       if (!model) return t('creator.pickVideoModel');
-      if (model.requiresVideoInput && !currentClip) return t('creator.referenceNeedsClip');
+      if (model.requiresVideoInput && !currentClip) return t(model.referenceMode === 'extend' ? 'creator.extensionNeedsClip' : 'creator.referenceNeedsClip');
       if (currentClip && !model.requiresVideoInput) return t('creator.referenceVideoModel');
       if (currentImages.length > (model.maxReferenceImages ?? 1)) return t('creator.referenceTooMany');
-      if (model.requiresVideoInput && currentClip?.seconds && currentClip.seconds > (model.maxDuration ?? 15)) return t('creator.referenceClipLength');
+      if (model.requiresVideoInput && currentClip?.seconds && currentClip.seconds > (model.maxSourceDuration ?? model.maxDuration ?? 15)) return t('creator.referenceClipLength');
       if (!model.supports.includes('image-to-video') && reference) {
         return t('creator.validation.cannotUseReference', { model: model.name, defaultValue: '{{model}} cannot use a reference image. Remove it or pick another model.' });
       }
-      if (!model.supports.includes('text-to-video') && !reference) {
+      if (model.referenceMode !== 'extend' && !model.supports.includes('text-to-video') && !reference) {
         return t('creator.validation.needsImageToAnimate', { model: model.name, defaultValue: '{{model}} needs an image to animate. Attach one first.' });
       }
     }
@@ -1534,7 +1534,7 @@ const CreatorStudioWorkspace = memo(function CreatorStudioWorkspace({ onOpenEdit
           resolution: activeVideoModel?.supportsResolution
             ? (options?.resolution ?? resolution)
             : undefined,
-          negativePrompt: VIDEO_MODELS[videoModel]?.supportsNegativePrompt ? options?.negativePrompt || preset?.negative : undefined,
+          negativePrompt: activeVideoModel?.supportsNegativePrompt ? options?.negativePrompt || preset?.negative : undefined,
           referenceImageUrls: currentImages.length > 1 || activeVideoModel?.referenceMode === 'edit' ? currentImages.map(a => a.url) : options?.referenceImageUrls,
           endFrameUrl: options?.endFrameUrl,
           audioUrls: options?.audioUrls,
@@ -1645,7 +1645,7 @@ const CreatorStudioWorkspace = memo(function CreatorStudioWorkspace({ onOpenEdit
           return {
             value: m.id,
             label: m.name,
-            detail: m.description,
+            detail: m.referenceMode === 'extend' ? t(m.id.endsWith('forward') ? 'creator.extensionForward' : 'creator.extensionBackward') : m.description,
             meta: m.provider === 'venice' ? t('creator.liveQuote', { defaultValue: 'Live quote' }) : `$${getVideoCostUsd(m, m.defaultDuration ?? 5).toFixed(2)}`,
             disabled: (needsImage && !reference && !m.requiresVideoInput) || (rejectsImage && !!reference),
             disabledReason: t(needsImage ? 'creator.needsAttachedImage' : 'creator.cannotUseAttached'),
@@ -1995,13 +1995,14 @@ const CreatorStudioWorkspace = memo(function CreatorStudioWorkspace({ onOpenEdit
                           setVideoModel(v as VideoModelKey);
                           if (v === 'kling-o3-edit') setPresetId('reference-character-swap');
                           else if (v === 'kling-3-motion') setPresetId('reference-copy-motion');
+                          else if (VIDEO_MODELS[v]?.referenceMode === 'extend') setPresetId(null);
                           else if (preset?.model && VIDEO_MODELS[preset.model]?.requiresVideoInput) setPresetId(null);
                         }
                       }}
                     />
                   )}
-                  {/* Clip workflows retain the source clip's framing. */}
-                  {(mode === 'image' || (mode === 'video' && !effectMode && !activeVideoModel?.requiresVideoInput)) && (
+                  {mode === 'video' && activeVideoModel?.referenceMode === 'extend' && <p className="basis-full text-xs opacity-70">{t('creator.extensionHelp')}</p>}
+                  {(mode === 'image' || (mode === 'video' && !effectMode && (!activeVideoModel?.requiresVideoInput || activeVideoModel.referenceMode === 'extend'))) && (
                     <SelectChip
                       label={t('creator.aspectRatio')}
                       value={aspect}
@@ -2195,7 +2196,7 @@ const CreatorStudioWorkspace = memo(function CreatorStudioWorkspace({ onOpenEdit
 
                   {mode === 'video' && (
                     <>
-                      {activeVideoModel?.requiresVideoInput || effectMode ? <span className="inline-flex items-center rounded-full border border-white/15 px-3 text-xs text-white/65">{t('creator.referenceClipSeconds', { seconds: duration })}</span> : <CounterChip
+                      {activeVideoModel?.requiresVideoInput || effectMode ? <span className="inline-flex items-center rounded-full border border-white/15 px-3 text-xs text-white/65">{t(activeVideoModel?.referenceMode === 'extend' ? 'creator.extensionSeconds' : 'creator.referenceClipSeconds', { seconds: duration })}</span> : <CounterChip
                         draftScope={`creator:duration:${videoModel}`}
                         label={t('creator.secondsUnit')}
                         singular={t('creator.secondUnit')}
