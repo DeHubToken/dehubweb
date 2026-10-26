@@ -11,7 +11,7 @@ import { chargeForJob } from "../_shared/ai-payment-guard.ts";
 import { falQueueUrls } from "../_shared/fal-queue.ts";
 import { CREATOR_FAL_VIDEO_MODELS } from '../_shared/creator-fal-catalog.ts';
 import { buildCreatorFalVideoRequest } from '../_shared/creator-fal-input.ts';
-import { buildSeedance2Input } from '../_shared/seedance2-input.ts';
+import { buildSeedance2Input, buildSeedance2Request } from '../_shared/seedance2-input.ts';
 import { referenceVideoDuration } from '../_shared/creator-reference-video.ts';
 import { requireDeHubAuth } from '../_shared/auth.ts';
 import {
@@ -968,7 +968,7 @@ serve(async (req) => {
     let veniceInput: Record<string, unknown> | undefined;
     if (modelConfig.falFamily === 'seedance') {
       try {
-        validatedDuration = buildSeedance2Input({ prompt, duration, aspectRatio, resolution, sourceImage, endFrameUrl, referenceImageUrls, audioUrls, videoUrls, negativePrompt, seed }).durationSeconds;
+        validatedDuration = buildSeedance2Request(modelConfig, { prompt, duration, aspectRatio, resolution, sourceImage, endFrameUrl, referenceImageUrls, audioUrls, videoUrls, negativePrompt, seed }).durationSeconds;
       } catch (error) {
         return new Response(JSON.stringify({ status: 'failed', error: (error as Error).message }), {
           status: 400, headers: { ...corsHeaders, 'Content-Type': 'application/json' },
@@ -1136,7 +1136,9 @@ async function handleFalGeneration(
 
   const prepared = CREATOR_FAL_VIDEO_MODELS[modelConfig.id]
     ? buildCreatorFalVideoRequest(modelConfig.id, { prompt, sourceImage, duration, aspectRatio, resolution, negativePrompt, referenceImageUrls, endFrameUrl, audioUrls, videoUrls, seed, effect })
-    : undefined;
+    : modelConfig.falFamily === 'seedance'
+      ? buildSeedance2Request(modelConfig, { prompt, sourceImage, duration, aspectRatio, resolution, negativePrompt, referenceImageUrls, endFrameUrl, audioUrls, videoUrls, seed })
+      : undefined;
 
   // Choose the right endpoint: reference-to-video if ref images, image-to-video if source image, else text-to-video
   let appId: string;
@@ -1156,7 +1158,8 @@ async function handleFalGeneration(
   // which silently billed a 30s Seedance 2.5 render as a 15s one.
   const parsedDuration = Math.min(Math.max(parseInt(duration) || 5, 3), 30);
 
-  const input = prepared?.input ?? buildFalInput(modelConfig.falFamily ?? 'seedance', {
+  if (!prepared && !modelConfig.falFamily) throw new Error('No provider input mapping is configured for this video model');
+  const input = prepared?.input ?? buildFalInput(modelConfig.falFamily!, {
     prompt,
     sourceImage,
     duration: parsedDuration,
