@@ -2,11 +2,11 @@ import { describe, expect, it } from 'vitest';
 import { CREATOR_FAL_IMAGE_MODELS, CREATOR_FAL_VIDEO_MODELS, creatorFalImageAspects } from '../../supabase/functions/_shared/creator-fal-catalog';
 import { buildCreatorFalImageRequest, buildCreatorFalVideoRequest, creatorFalImageDimensions, creatorFalImageResult } from '../../supabase/functions/_shared/creator-fal-input';
 import { quotePriceDhb } from '../../supabase/functions/_shared/ai-pricing';
-import fixture from './fixtures/creator-fal-schema.json';
+import fixture from './fixtures/provider-schema-20261026.json';
 import expandFixture from './fixtures/bria-expand-schema.json';
 
 type Schema = Record<string, any>;
-/** Public input contracts captured on 4 and 7 October 2026, independently of our builders. */
+/** Public input contracts captured26 October2026, independently of our builders. */
 function validate(value: unknown, schema: Schema, definitions: Record<string, Schema>): boolean {
   if (schema.$ref) return validate(value, definitions[schema.$ref.split('/').pop()!], definitions);
   if (schema.anyOf && !schema.anyOf.some((s: Schema) => validate(value, s, definitions))) return false;

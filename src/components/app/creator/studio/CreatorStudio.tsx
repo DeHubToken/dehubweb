@@ -24,6 +24,7 @@ import { memo, useCallback, useEffect, useId, useMemo, useRef, useState } from '
 import { MOTION_TEMPLATE_PROMPT, type ViralTemplate } from '@/lib/creator/viralTemplates';
 import { appendCinemaDirection, normalizeCinemaDirection, type CinemaDirection } from '@/lib/creator/cinemaDirection';
 import { CinemaDirectionControls } from './CinemaDirectionControls';
+import { videoQuoteHints } from '@/lib/creator/videoQuoteHints';
 import { useDraftState } from '@/hooks/use-draft-state';
 import { generationDraftForOwner, type GenerationDraft } from '@/lib/editor/generationDraft';
 import { useDraftReferences, type DraftReferenceAdoption } from '@/lib/editor/useDraftReferences';
@@ -1224,7 +1225,8 @@ const CreatorStudioWorkspace = memo(function CreatorStudioWorkspace({ onOpenEdit
 
   const generationQuote = useJobQuote(mode === 'audio'
     ? activeAudioTask.paid && activeAudioTask.quoteModelId ? { kind: 'tool', modelId: activeAudioTask.quoteModelId, quantity: audioUnits } : null
-    : mode === 'video' ? { kind: 'video', modelId: videoModel, durationSeconds: duration, resolution, aspectRatio: aspect }
+    : mode === 'video' ? { kind: 'video', modelId: videoModel, durationSeconds: duration, resolution, aspectRatio: aspect,
+      ...videoQuoteHints({ videoUrls: currentClip ? [currentClip.url] : undefined }) }
     : mode === '3d' ? { kind: 'model3d', modelId: model3dModel, quality: 'standard' }
     : { kind: 'image', modelId: imageModel, quantity: batch });
   // Free starter images: the server claims one per job, this only decides
@@ -1532,7 +1534,7 @@ const CreatorStudioWorkspace = memo(function CreatorStudioWorkspace({ onOpenEdit
           resolution: activeVideoModel?.supportsResolution
             ? (options?.resolution ?? resolution)
             : undefined,
-          negativePrompt: options?.negativePrompt || preset?.negative,
+          negativePrompt: VIDEO_MODELS[videoModel]?.supportsNegativePrompt ? options?.negativePrompt || preset?.negative : undefined,
           referenceImageUrls: currentImages.length > 1 || activeVideoModel?.referenceMode === 'edit' ? currentImages.map(a => a.url) : options?.referenceImageUrls,
           endFrameUrl: options?.endFrameUrl,
           audioUrls: options?.audioUrls,
@@ -2313,6 +2315,7 @@ const CreatorStudioWorkspace = memo(function CreatorStudioWorkspace({ onOpenEdit
             onConfirm={runVideo}
             initialDuration={duration}
             initialResolution={resolution}
+            hasExternalVideoReferences={!!currentClip}
           />
         )}
 

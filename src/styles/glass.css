@@ -162,11 +162,10 @@ html[data-theme='glass'] [data-creator-page] {
   --cr-accent-ink: #efffff;
   --cr-glow: color-mix(in srgb, var(--tint-accent) 40%, transparent);
 }
-html[data-theme='glass'] [data-creator-page] :is([data-clear-top-bar], [data-creator-banner], [data-creator-composer], [data-creator-compact] > div) {
+html[data-theme='glass'] [data-creator-page] :is([data-clear-top-bar], [data-creator-composer], [data-creator-compact] > div) {
   background: var(--glass-highlight), var(--theme-control-fill) !important;
   box-shadow: var(--glass-edge); border-color: transparent; backdrop-filter: var(--glass-blur); color: #efffff;
 }
-html[data-theme='glass'] [data-creator-banner] button { color: #efffff; }
 html[data-theme='glass'] [data-creator-create] { box-shadow: var(--glass-edge-flat); }
 html[data-theme='glass'] .docs-root {
   --foreground: 180 100% 97%; --card-foreground: 180 100% 97%;

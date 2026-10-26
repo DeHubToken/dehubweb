@@ -1,6 +1,6 @@
 import React, { act } from 'react';
 import { createRoot } from 'react-dom/client';
-import { getMediaVolume, getVideoPreferences, setVolume, setMediaMuted, useMediaVolume, useMediaMuted } from '@/lib/video-preferences';
+import { getMediaVolume, getVideoPreferences, openedVideoMuted, setVolume, setMediaMuted, useMediaVolume, useMediaMuted } from '@/lib/video-preferences';
 function Player({ name }: { name: string }) {
   const volume = useMediaVolume(), muted = useMediaMuted();
   return <output data-player={name}>{volume}:{String(muted)}</output>;
@@ -35,4 +35,9 @@ it('saves mute and unmute before app suspension can stop timers', () => {
   expect(JSON.parse(localStorage.getItem('video-preferences')!).mediaMuted).toBe(true);
   setMediaMuted(false);
   expect(JSON.parse(localStorage.getItem('video-preferences')!).mediaMuted).toBe(false);
+});
+it('opens videos with sound until the viewer mutes one themselves', () => {
+  expect(openedVideoMuted()).toBe(getVideoPreferences().mediaMuted === true);
+  setMediaMuted(true); expect(openedVideoMuted()).toBe(true);
+  setMediaMuted(false); expect(openedVideoMuted()).toBe(false);
 });

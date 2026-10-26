@@ -135,7 +135,7 @@ export const VIDEO_COST_USD: Record<string, { base: number; perSecond?: number }
   'luma-ray2': { base: 0.65 },
   'seedance-1.5-pro': { base: 0.65 },
   'kling-3.0': { base: 0.675, perSecond: 0.135 }, // kie pro, audio on (fal was 0.168/s)
-  'seedance-2.0-fast': { base: 0.8, perSecond: 0.16 },
+  'seedance-2.0-fast': { base: 1.2095, perSecond: 0.2419 }, // fal 720p, official pricing checked 26 Oct 2026
   'seedance-2.0': { base: 0.825, perSecond: 0.165 }, // kie 720p (fal was 0.31/s)
   'kling-2.6-pro': { base: 1.1 },
   'veo-3.1': { base: 1.275 }, // kie: flat per video, 1080p ceiling (fal was 0.40/s)
@@ -216,6 +216,8 @@ export const DUB_COST_USD: Record<string, { perSecond: number }> = {
 };
 
 export interface QuoteOptions {
+  /** Derived by the server from required capabilities and configured provider access. */
+  videoProvider?: 'kie' | 'fal';
   /** Video length in seconds, for the models that bill per second. */
   durationSeconds?: number;
   /** Texture quality, for 3D. */
@@ -245,6 +247,9 @@ export function providerCostUsd(kind: JobKind, modelId: string, opts: QuoteOptio
     case 'video': {
       const entry = VIDEO_COST_USD[modelId];
       if (!entry) return null;
+      // Official fal standard 720p T2V $0.3034/s; I2V/R2V $0.3024/s.
+      // One verified ceiling covers the supported fal routes; normal Kie pricing stays unchanged.
+      if (modelId === 'seedance-2.0' && opts.videoProvider === 'fal') return 0.3034 * (opts.durationSeconds ?? 5);
       if (entry.perSecond && opts.durationSeconds) {
         return entry.perSecond * opts.durationSeconds;
       }
