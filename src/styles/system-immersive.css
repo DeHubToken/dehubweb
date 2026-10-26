@@ -42,27 +42,52 @@ html:is([data-theme='system'], [data-theme='immersive'])
   display: none !important;
 }
 
-/* Side panels (desktop menu column and the right rail): content straight on
-   the canvas. The rail's stacked panels split with a hairline. */
-html:is([data-theme='system'], [data-theme='immersive']) [data-side-panel]:not([data-search-bento]):not([data-keep-bento]):not(#_):not(#_) {
+/* Side panels (the desktop menu column and the right rail). System dark gives
+   each panel its own bento on desktop. Immersive and System Light set the
+   content straight on the canvas, with a hairline between the rail's stacked
+   panels; so does System below desktop width. */
+html:is([data-theme='immersive'], [data-theme='system'][data-system-tone='light']) [data-side-panel]:not([data-search-bento]):not([data-keep-bento]):not(#_):not(#_) {
   background: transparent !important;
   border: 0 !important;
   border-radius: 0 !important;
   box-shadow: none !important;
   backdrop-filter: none !important;
 }
-html:is([data-theme='system'], [data-theme='immersive']) [data-side-panel] :is([data-side-panel-tabs], [data-side-panel-tabs] *, [data-view-all], [data-view-all] > *):not(#_) {
+html:is([data-theme='immersive'], [data-theme='system'][data-system-tone='light']) [data-side-panel] :is([data-side-panel-tabs], [data-side-panel-tabs] *, [data-view-all], [data-view-all] > *):not(#_) {
   background: transparent !important;
   background-image: none !important;
   box-shadow: none !important;
 }
-html:is([data-theme='system'], [data-theme='immersive']) [data-search-bento] ~ * [data-side-panel]:not(#_):not(#_) {
+html:is([data-theme='immersive'], [data-theme='system'][data-system-tone='light']) [data-search-bento] ~ * [data-side-panel]:not(#_):not(#_) {
   border-top: 1px solid var(--immersive-hairline) !important;
 }
 
 /* The menu column's bottom fade blends into black, not the old panel grey. */
-html:is([data-theme='system'], [data-theme='immersive']) [data-sidebar-fade] {
+html:is([data-theme='immersive'], [data-theme='system'][data-system-tone='light']) [data-sidebar-fade] {
   background: linear-gradient(to top, #000 0%, rgb(0 0 0 / 0.6) 40%, transparent 100%) !important;
+}
+
+@media (max-width: 1023px) {
+  html[data-theme='system'] [data-side-panel]:not([data-search-bento]):not([data-keep-bento]):not(#_):not(#_) {
+    background: transparent !important;
+    border: 0 !important;
+    border-radius: 0 !important;
+    box-shadow: none !important;
+    backdrop-filter: none !important;
+  }
+  html[data-theme='system'] [data-side-panel] :is([data-side-panel-tabs], [data-side-panel-tabs] *, [data-view-all], [data-view-all] > *):not(#_) {
+    background: transparent !important;
+    background-image: none !important;
+    box-shadow: none !important;
+  }
+  html[data-theme='system'] [data-search-bento] ~ * [data-side-panel]:not(#_):not(#_) {
+    border-top: 1px solid var(--immersive-hairline) !important;
+  }
+
+  /* The menu column's bottom fade blends into black, not the old panel grey. */
+  html[data-theme='system'] [data-sidebar-fade] {
+    background: linear-gradient(to top, #000 0%, rgb(0 0 0 / 0.6) 40%, transparent 100%) !important;
+  }
 }
 
 /* Page kit: sections run edge to edge between hairlines at every width. */
