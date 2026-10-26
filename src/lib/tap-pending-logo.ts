@@ -14,6 +14,8 @@
  * This never moves the render; it only uses the press-to-click gap.
  */
 
+import { isPageGliding, isScrollStopTouch } from './scroll-stop-tap';
+
 const ID = 'dehub-tap-pending';
 /** Quick taps are ~60-120 ms press to click; only a hold or a slow page shows it. */
 const FADE_DELAY_MS = 160;
@@ -75,6 +77,8 @@ let kind: 'back' | 'page' | null = null;
 
 function onPointerDown(e: PointerEvent): void {
   if (e.button !== 0 || e.ctrlKey || e.metaKey || e.shiftKey || e.altKey) return;
+  // A finger that stops a gliding feed opens nothing (see scroll-stop-tap).
+  if (e.pointerType === 'touch' && (isScrollStopTouch() || isPageGliding())) return;
   kind = opensPage(e.target);
   if (!kind) return;
   startX = e.clientX;
