@@ -145,6 +145,18 @@ export function isKidsModePath(pathname: string): boolean {
   return KIDS_MODE_PATHS.some(allowed => pathname === allowed || pathname.startsWith(`${allowed}/`));
 }
 
+// Match the visible Cut artwork to Shorts without changing the tab layout.
+// Keep these optical scales in sync with mobile's FeedNavBar.
+export const FEED_TAB_ICON_SCALE: Record<string, number> = {
+  home: 1.15,
+  shorts: 1,
+  images: 1.16,
+  videos: 1.08,
+  music: 1.09,
+  live: 1,
+  settings: 1.18,
+};
+
 export const FEED_TABS: SearchTab[] = [
   { icon: Home, get label() { return _translateCopy("copy.3a78695388b3", { defaultValue: "Home" }); }, value: 'home' },
   { icon: Shorts, get label() { return _translateCopy("copy.3c784a16cf27", { defaultValue: "Shorts" }); }, value: 'shorts' },
