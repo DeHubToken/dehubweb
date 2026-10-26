@@ -3,6 +3,7 @@ on:
   pull_request:
     paths:
       - 'supabase/migrations/20261026090000_live_costreams.sql'
+      - 'supabase/migrations/20261026100000_live_costream_battle_scores.sql'
       - 'tests/sql/live-costreams*.sql'
       - '.github/workflows/live-costreams.yml'
   workflow_dispatch:
@@ -31,4 +32,5 @@ jobs:
       - run: |
           psql -v ON_ERROR_STOP=1 -f tests/sql/live-costreams-bootstrap.sql
           psql -v ON_ERROR_STOP=1 -f supabase/migrations/20261026090000_live_costreams.sql
-          psql -v ON_ERROR_STOP=1 -f tests/sql/live-costreams.sql
+          psql -v ON_ERROR_STOP=1 -f supabase/migrations/20261026100000_live_costream_battle_scores.sql
+          psql -v ON_ERROR_STOP=1 -v with_scores=1 -f tests/sql/live-costreams.sql
