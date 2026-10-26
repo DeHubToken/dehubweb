@@ -20,7 +20,7 @@ import { SelfBadgeSync } from "@/components/app/SelfBadgeSync";
 import { BadgeShowcaseHost } from "@/components/app/badge-showcase/BadgeShowcaseHost";
 import { ViewingPreferencesSync } from "@/components/app/ViewingPreferencesSync";
 import { FeedDefaultsSync } from "@/components/app/FeedDefaultsSync";
-import { useAuth } from "@/contexts/AuthContext";
+import { useAuth, useLoginSheet } from "@/contexts/AuthContext";
 import { usePreloadIcons } from "@/hooks/use-preload-icons";
 import { useNotificationClickRouting } from "@/hooks/use-notification-click-routing";
 import { useNotificationRealtime } from "@/hooks/use-notification-realtime";
@@ -392,28 +392,13 @@ if (typeof window !== "undefined") {
 }
 
 /**
- * Authenticated app shell — everything that needs WalletProviders / AuthProvider.
- * Only mounted after user has passed the hero (or is a returning user).
+ * The sign-in sheet and the flags that follow it. Its own component so that
+ * opening the sheet re-renders only this, not AppContent and every page under
+ * it, inside the tap.
  */
-function AppContent() {
-  useSwipeBack();
-  const { t: _copy } = _useCopy();
-  const { isLoginModalOpen, closeLoginModal, user, walletAddress, isAuthenticated, isLoading: authLoading, isConnecting, isProcessingRedirect, requiresUsername } = useAuth();
-  const queryClient = useQueryClient();
-  // Guests get the sign-in sheet's chunks after the page has fully loaded, so
-  // their first tap opens onto the real options, not the skeleton.
-  useEffect(() => {
-    if (!authLoading && !isAuthenticated) scheduleLoginPrefetch();
-  }, [authLoading, isAuthenticated]);
-  usePreloadIcons();
-  // Views are recorded by <PageViewTracker /> above <Routes>; this only
-  // attaches the signed-in address to them.
-  usePageViewAddress(walletAddress);
-  // A pushed notification focuses this tab and posts where it wanted to go.
-  useNotificationClickRouting();
-  // Session-wide, not page-wide: the bell count and the cached notifications
-  // page both go stale while the reader is anywhere else in the app.
-  useNotificationRealtime();
+function LoginSheetHost() {
+  const { isLoginModalOpen } = useLoginSheet();
+  const { closeLoginModal, isConnecting, isProcessingRedirect, requiresUsername } = useAuth();
 
   // The login flow is "active" from the modal opening until any
   // connect/redirect it started has finished, which is a little past the sheet
@@ -433,6 +418,44 @@ function AppContent() {
       scheduleBackgroundResume();
     }
   }, [isLoginModalOpen, isConnecting, isProcessingRedirect, requiresUsername]);
+
+  // Always mounted, and closed it costs nothing: ui/drawer keeps vaul's Root
+  // out of the tree until a sheet first opens, so this renders no DOM and
+  // registers no listeners until someone taps "Log in". Mounting it up front
+  // is what buys the slide-up — a vaul Root created with `open` already true
+  // renders at its final position with no transition, which is why the sheet
+  // used to appear rather than come up.
+  //
+  // `requiresUsername` opens it too: an account with no profile finishes
+  // signing up on the sheet's profile step, which used to be a separate
+  // centred dialog on top of the whole viewport. The sheet refuses to close
+  // while that flag is set.
+  return <LoginModal open={isLoginModalOpen || requiresUsername} onOpenChange={closeLoginModal} />;
+}
+
+/**
+ * Authenticated app shell — everything that needs WalletProviders / AuthProvider.
+ * Only mounted after user has passed the hero (or is a returning user).
+ */
+function AppContent() {
+  useSwipeBack();
+  const { t: _copy } = _useCopy();
+  const { user, walletAddress, isAuthenticated, isLoading: authLoading, isConnecting, isProcessingRedirect, requiresUsername } = useAuth();
+  const queryClient = useQueryClient();
+  // Guests get the sign-in sheet's chunks after the page has fully loaded, so
+  // their first tap opens onto the real options, not the skeleton.
+  useEffect(() => {
+    if (!authLoading && !isAuthenticated) scheduleLoginPrefetch();
+  }, [authLoading, isAuthenticated]);
+  usePreloadIcons();
+  // Views are recorded by <PageViewTracker /> above <Routes>; this only
+  // attaches the signed-in address to them.
+  usePageViewAddress(walletAddress);
+  // A pushed notification focuses this tab and posts where it wanted to go.
+  useNotificationClickRouting();
+  // Session-wide, not page-wide: the bell count and the cached notifications
+  // page both go stale while the reader is anywhere else in the app.
+  useNotificationRealtime();
 
   const wallet = walletAddress ?? (user as { walletAddress?: string | null; address?: string | null } | null)?.walletAddress ?? (user as { address?: string | null } | null)?.address ?? null;
 
@@ -464,17 +487,7 @@ function AppContent() {
       <FeedDefaultsSync />
       <GiveawayPrizeModal />
       <ConnectLinkedWalletModal />
-      {/* Always mounted, and closed it costs nothing: ui/drawer keeps vaul's
-          Root out of the tree until a sheet first opens, so this renders no
-          DOM and registers no listeners until someone taps "Log in". Mounting
-          it up front is what buys the slide-up — a vaul Root created with
-          `open` already true renders at its final position with no transition,
-          which is why the sheet used to appear rather than come up. */}
-      {/* `requiresUsername` opens it too: an account with no profile finishes
-          signing up on the sheet's profile step, which used to be a separate
-          centred dialog on top of the whole viewport. The sheet refuses to
-          close while that flag is set. */}
-      <LoginModal open={isLoginModalOpen || requiresUsername} onOpenChange={closeLoginModal} />
+      <LoginSheetHost />
       <Suspense fallback={<PageLoader />}>
         <SurfaceTransition>
           {(loc) => (

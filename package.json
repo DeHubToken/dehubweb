@@ -5,7 +5,7 @@
   "version": "0.0.0",
   "type": "module",
   "scripts": {
-    "postinstall": "node scripts/patch-vaul-scroll.mjs",
+    "postinstall": "node scripts/patch-vaul-scroll.mjs && node scripts/patch-radix-focus-guards.mjs",
     "dev": "vite",
     "build": "node scripts/production-routing.mjs --config-only && node scripts/build-locale-packs.mjs && NODE_OPTIONS=--max-old-space-size=8192 vite build && node scripts/copy-seo-assets.mjs && node scripts/check-entry-bundle.mjs && node scripts/check-seo-build.mjs",
     "build:dev": "NODE_OPTIONS=--max-old-space-size=8192 vite build --mode development",

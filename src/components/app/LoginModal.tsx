@@ -29,7 +29,7 @@ import { DeHubPageLoader } from '@/components/app/DeHubLoader';
 import { LoginBodySkeleton } from '@/components/app/login/LoginBodySkeleton';
 import { Drawer, DrawerContent, DrawerHeader, DrawerTitle, warmDeferredSheets } from '@/components/ui/drawer';
 import { Dialog, DialogContent, DialogTitle } from '@/components/ui/dialog';
-import { useAuth } from '@/contexts/AuthContext';
+import { useAuth, useLoginSheet } from '@/contexts/AuthContext';
 import { type LoginStep, resumingStep, isInlineLoginStep } from '@/components/app/login/steps';
 import { getWalletSetupIntent, setWalletSetupIntent } from '@/lib/wallet-setup-intent';
 import dehubLogo from '@/assets/dehub-logo-white.png';
@@ -62,6 +62,11 @@ function preloadable<P extends object>(load: () => Promise<React.ComponentType<P
 const LoginShortsStack = preloadable(() =>
   import('@/components/app/login/LoginShortsStack').then(m => m.LoginShortsStack),
 );
+
+/** Holds the hero's space until the clips mount, so nothing below jumps. */
+function LoginShortsStackPlaceholder() {
+  return <div className="login-stack" aria-hidden="true"><div className="login-stack__lanes" /></div>;
+}
 
 const LoginModalBody = preloadable(() =>
   import('@/components/app/login/LoginModalBody').then(m => m.LoginModalBody),
@@ -125,6 +130,30 @@ export function warmLoginSheet(): void {
   void import('@/lib/login-probes').then(m => m.warmLoginProbes()).catch(() => {});
 }
 
+// Holds html[data-login-sheet] (see index.css) while a login sheet is up. The
+// newest open owns it, so a quick close and reopen cannot drop it early.
+let loginSheetHold = 0;
+
+function holdLoginSheet(): () => void {
+  const root = document.documentElement;
+  const token = ++loginSheetHold;
+  root.dataset.loginSheet = '';
+  return () => {
+    // Radix lifts its `pointer-events: none` from <body> only after the exit
+    // animation. Letting go before that restyles the whole page, so wait.
+    let frames = 0;
+    const release = () => {
+      if (token !== loginSheetHold) return;
+      if (document.body.style.pointerEvents === 'none' && ++frames < 180) {
+        requestAnimationFrame(release);
+        return;
+      }
+      delete root.dataset.loginSheet;
+    };
+    requestAnimationFrame(release);
+  };
+}
+
 interface LoginModalProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
@@ -132,7 +161,8 @@ interface LoginModalProps {
 
 export function LoginModal({ open, onOpenChange }: LoginModalProps) {
   const { style: keyboardStyle } = useKeyboardSafeSheet(open);
-  const { walletPhase, isProcessingRedirect, loginIntent, requiresUsername } = useAuth();
+  const { walletPhase, isProcessingRedirect, requiresUsername } = useAuth();
+  const { loginIntent } = useLoginSheet();
   const { t } = useTranslation();
 
   // Opening step. A login that is ALREADY in flight must never land on 'main':
@@ -145,6 +175,24 @@ export function LoginModal({ open, onOpenChange }: LoginModalProps) {
     () => resumingStep(walletPhase, isProcessingRedirect) ?? 'main',
   );
   const wasOpen = useRef(open);
+  // A tap paints the sheet itself (backdrop, frame, placeholders) on the next
+  // frame, and only then builds the options and clips into it. Building them
+  // inside the tap is what held the sheet back. A sheet that mounts already
+  // open (a sign-in resuming after a redirect) is filled straight away.
+  const [shownOpen, setShownOpen] = useState(open);
+  const [filled, setFilled] = useState(open);
+  if (open !== shownOpen) {
+    setShownOpen(open);
+    if (open) setFilled(false);
+  }
+  useEffect(() => {
+    if (!open || filled) return;
+    let next = 0;
+    const first = requestAnimationFrame(() => { next = requestAnimationFrame(() => setFilled(true)); });
+    return () => { cancelAnimationFrame(first); cancelAnimationFrame(next); };
+  }, [open, filled]);
+  // Before Radix's own effects lock <body>, so the hold is already in place.
+  useLayoutEffect(() => (open ? holdLoginSheet() : undefined), [open]);
   useEffect(() => {
     if (!open) return;
     if (!readAuthTrace().auth_attempt_id) beginAuthTrace('undecided');
@@ -279,13 +327,17 @@ export function LoginModal({ open, onOpenChange }: LoginModalProps) {
       </DrawerHeader>
 
       <div className="login-stack-scroll flex flex-col flex-1 min-h-0 overflow-y-auto overflow-x-hidden overscroll-contain px-2.5 pb-4">
-        <Suspense fallback={<div className="h-[420px]" aria-hidden="true" />}>
-          <LoginShortsStack />
-        </Suspense>
-        <div className="login-stack-form mt-5">
-          <Suspense fallback={fallback}>
-            <LoginModalBody open={open} step={step} setStep={setStep} layout="stack" />
+        {filled ? (
+          <Suspense fallback={<LoginShortsStackPlaceholder />}>
+            <LoginShortsStack />
           </Suspense>
+        ) : <LoginShortsStackPlaceholder />}
+        <div className="login-stack-form mt-5">
+          {filled ? (
+            <Suspense fallback={fallback}>
+              <LoginModalBody open={open} step={step} setStep={setStep} layout="stack" />
+            </Suspense>
+          ) : fallback}
         </div>
       </div>
 
@@ -321,7 +373,7 @@ export function LoginModal({ open, onOpenChange }: LoginModalProps) {
       </DrawerHeader>
 
       <div className="flex-1 min-h-0 overflow-y-auto overscroll-contain px-6 pb-6">
-        <Suspense fallback={fallback}>
+        {!filled ? fallback : <Suspense fallback={fallback}>
           {/* Kept out of LoginModalBody deliberately: that chunk carries
               wagmi, and the profile step is reached on a plain session
               restore (an account saved without a username) where no wallet
@@ -329,7 +381,7 @@ export function LoginModal({ open, onOpenChange }: LoginModalProps) {
           {step === 'profile'
             ? <LoginProfileStep />
             : <LoginModalBody open={open} step={step} setStep={setStep} />}
-        </Suspense>
+        </Suspense>}
       </div>
 
       <div className="shrink-0 px-6 py-4 bg-black/20 border-t border-white/10 pb-[calc(1rem+env(safe-area-inset-bottom))]">

@@ -39,7 +39,7 @@ vi.mock('@/lib/wallet-core/biometric-unlock', () => ({
   hasBiometricUsableHere: () => true, isPasswordBackupReminderSnoozed: () => false,
   snoozePasswordBackupReminder: vi.fn(), PasskeyCancelledError: class extends Error {},
 }));
-vi.mock('@/contexts/AuthContext', () => ({ useAuth: () => ({ isAuthenticated: false, replaceLostWallet: mocks.replaceLostWallet }) }));
+vi.mock('@/contexts/AuthContext', () => ({ useAuth: () => ({ isAuthenticated: false, replaceLostWallet: mocks.replaceLostWallet }), useLoginSheet: () => ({ isLoginModalOpen: true, loginIntent: 'login' }) }));
 vi.mock('@/lib/wallet-reconnect', () => ({ requestSessionWalletConnect: vi.fn() }));
 vi.mock('@/components/app/DeHubLoader', () => ({ DeHubPageLoader: () => null }));
 vi.mock('@/lib/wallet-core/passwordStrength', () => ({ assessPassword: async () => ({ longEnough: true, acceptable: true, breached: false }), MIN_PASSWORD_LENGTH: 8 }));
