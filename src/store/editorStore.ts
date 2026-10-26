@@ -9,6 +9,7 @@ import { projectEditGate, type ProjectEditLease } from "@/lib/editor/projectEdit
  */
 import { rebaseProjectHistory } from "@/lib/editor/projectHistory";
 import { projectReviewSnapshotKey } from "@/lib/editor/cloudProjectReview";
+import { removeFilmProjectMedia } from '@/lib/editor/filmProject';
 import { create } from "zustand";
 import { nanoid } from "nanoid";
 import type { MediaMeta, StoredMedia } from "@/lib/editor/mediaStore";
@@ -291,7 +292,15 @@ export const useEditorStore = create<EditorState>((set, get) => {
       try { URL.revokeObjectURL(target.url); } catch { /* noop */ }
       if (target.thumbnailUrl) try { URL.revokeObjectURL(target.thumbnailUrl); } catch { /* noop */ }
     }
-    set((s) => ({ media: s.media.filter((m) => m.id !== id) }));
+    set((s) => {
+      const removed = new Set([id]);
+      const clean = (settings: ProjectSettings): ProjectSettings => {
+        const filmProject = removeFilmProjectMedia(settings.filmProject, removed);
+        return filmProject === settings.filmProject ? settings : { ...settings, filmProject };
+      };
+      return { media: s.media.filter((m) => m.id !== id), settings: clean(s.settings),
+        past: s.past.map(value => ({ ...value, settings: clean(value.settings) })), future: s.future.map(value => ({ ...value, settings: clean(value.settings) })) };
+    });
     // Also remove dependent clips through history.
     const orphans = get().clips.filter((c) => "mediaId" in c && c.mediaId === id).map((c) => c.id);
     if (orphans.length) get().rippleDelete(orphans);

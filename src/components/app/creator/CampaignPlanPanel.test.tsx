@@ -1,0 +1,41 @@
+import React from 'react';
+import { cleanup, fireEvent, render, screen } from '@testing-library/react';
+import { afterEach, expect, it, vi } from 'vitest';
+import { AuthContext } from '@/contexts/AuthContext';
+import { CampaignPlanPanel } from './CampaignPlanPanel';
+import { EMPTY_MARKETING_BRIEF } from '@/lib/creator/marketingBrief';
+import { flushDrafts } from '@/lib/draft-cache';
+
+vi.mock('react-i18next', () => ({ useTranslation: () => ({ t: (key: string) => key }) }));
+vi.mock('@/contexts/AuthContext', async () => ({ AuthContext: (await import('react')).createContext(null) }));
+afterEach(cleanup);
+
+it('edits and prepares independent variants, restores saved plans and isolates accounts', () => {
+  const prepare = vi.fn(), brief = { ...EMPTY_MARKETING_BRIEF, product: 'Tea', description: 'Whole leaves in a tin' };
+  const tree = (owner: string) => <AuthContext.Provider value={{ walletAddress: owner } as never}><CampaignPlanPanel brief={brief} onPrepare={prepare} /></AuthContext.Provider>;
+  const ui = render(tree('alice'));
+  fireEvent.change(screen.getByLabelText('creator.campaignTitle'), { target: { value: 'Daily rituals' } });
+  fireEvent.change(screen.getByLabelText('creator.campaignContinuity'), { target: { value: 'Calm voice and warm palette' } });
+  fireEvent.click(screen.getByRole('button', { name: 'creator.campaignAdd' }));
+  fireEvent.change(screen.getByLabelText('creator.marketing.fields.headline'), { target: { value: 'Make time' } });
+  fireEvent.change(screen.getByLabelText('creator.campaignLanguage'), { target: { value: 'Spanish' } });
+  fireEvent.change(screen.getByLabelText('creator.campaignFormat'), { target: { value: 'video' } });
+  expect(prepare).not.toHaveBeenCalled();
+  fireEvent.click(screen.getByRole('button', { name: 'creator.marketing.open' }));
+  expect(prepare).toHaveBeenLastCalledWith(expect.objectContaining({ kind: 'video', aspect: '9:16', prompt: expect.stringContaining('Approved headline: "Make time"') }));
+  fireEvent.click(screen.getByRole('button', { name: 'creator.campaignAdd' }));
+  fireEvent.change(screen.getAllByLabelText('creator.marketing.fields.headline')[1], { target: { value: 'Take a break' } });
+  fireEvent.click(screen.getAllByRole('button', { name: 'creator.marketing.open' })[1]);
+  expect(prepare).toHaveBeenLastCalledWith(expect.objectContaining({ kind: 'image', aspect: '1:1', prompt: expect.stringContaining('Approved headline: "Take a break"') }));
+  fireEvent.click(screen.getAllByRole('button', { name: 'editor.film.remove' })[0]);
+  ui.rerender(tree('bob'));
+  expect(screen.getByLabelText('creator.campaignTitle')).toHaveValue('');
+  expect(screen.queryAllByRole('button', { name: 'creator.marketing.open' })).toHaveLength(0);
+  ui.rerender(tree('alice'));
+  expect(screen.getByLabelText('creator.campaignTitle')).toHaveValue('Daily rituals');
+  expect(screen.getByLabelText('creator.marketing.fields.headline')).toHaveValue('Take a break');
+  flushDrafts(); ui.unmount(); render(tree('alice'));
+  expect(screen.getByLabelText('creator.marketing.fields.headline')).toHaveValue('Take a break');
+  fireEvent.click(screen.getByRole('button', { name: 'creator.campaignClear' }));
+  expect(screen.queryAllByRole('button', { name: 'creator.marketing.open' })).toHaveLength(0);
+});

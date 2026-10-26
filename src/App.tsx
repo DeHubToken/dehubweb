@@ -30,7 +30,7 @@ import { restoreQueryCache, startQueryPersist } from "@/lib/query-persist";
 import { setBackgroundPaused, scheduleBackgroundResume } from "@/lib/background-gate";
 import { AppLayout } from "./components/app/AppLayout";
 import { QuickActionsHost } from "./components/app/QuickActionsHost";
-import { LoginModal } from "@/components/app/LoginModal";
+import { LoginModal, scheduleLoginPrefetch } from "@/components/app/LoginModal";
 import React, { Suspense, useEffect, useState, type ReactNode } from "react";
 import { I18nextProvider } from "react-i18next";
 import i18nInstance from "@/i18n";
@@ -223,6 +223,7 @@ const WorkDisputesPage = React.lazy(() => import("./pages/app/WorkDisputesPage")
 const WorkHistoryPage = React.lazy(() => import("./pages/app/WorkHistoryPage"));
 const BountyLegacyRedirect = React.lazy(() => import("./pages/app/BountyLegacyRedirect"));
 const CreatorEditorHost = React.lazy(() => import("./pages/CreatorEditorHost"));
+const VideoRemix = React.lazy(() => import("./pages/VideoRemix"));
 // Creator Flow (node canvas) is its own chunk: React Flow and its d3 deps are
 // only worth downloading once someone opens the canvas, not with /creator.
 const CreatorFlowPage = React.lazy(() => import("./pages/app/CreatorFlowPage"));
@@ -394,8 +395,13 @@ if (typeof window !== "undefined") {
 function AppContent() {
   useSwipeBack();
   const { t: _copy } = _useCopy();
-  const { isLoginModalOpen, closeLoginModal, user, walletAddress, isAuthenticated, isConnecting, isProcessingRedirect, requiresUsername } = useAuth();
+  const { isLoginModalOpen, closeLoginModal, user, walletAddress, isAuthenticated, isLoading: authLoading, isConnecting, isProcessingRedirect, requiresUsername } = useAuth();
   const queryClient = useQueryClient();
+  // Guests get the sign-in sheet's chunks after the page has fully loaded, so
+  // their first tap opens onto the real options, not the skeleton.
+  useEffect(() => {
+    if (!authLoading && !isAuthenticated) scheduleLoginPrefetch();
+  }, [authLoading, isAuthenticated]);
   usePreloadIcons();
   // Views are recorded by <PageViewTracker /> above <Routes>; this only
   // attaches the signed-in address to them.
@@ -563,6 +569,7 @@ function AppContent() {
           <Route path="/creators" element={<CreatorsPage />} />
           <Route path="/skill.md" element={<SkillPage />} />
           <Route path="/editor" element={<Suspense fallback={<PageLoader />}><CreatorEditorHost /></Suspense>} />
+          <Route path="/creator/remix" element={<Suspense fallback={<PageLoader />}><VideoRemix /></Suspense>} />
           <Route path="/creator" element={<Suspense fallback={<PageLoader />}><CreatorEditorHost /></Suspense>} />
           <Route path="/creator/flow" element={<Suspense fallback={<PageLoader />}><CreatorFlowPage /></Suspense>} />
           <Route path="/creator/remake" element={<Suspense fallback={<PageLoader />}><MaboroshiPage remake /></Suspense>} />

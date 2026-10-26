@@ -13,6 +13,7 @@ import { validDataVisuals } from "./dataVisuals";
 import { validGradientFill } from "./gradientFill";
 import { validQrGraphic } from "./qrGraphic";
 import { EditorError } from "./editorError";
+import { validFilmProject, filmProjectMediaIds, remapFilmProjectMedia } from './filmProject';
 
 export class CloudProjectConflict extends EditorError {}
 /** A live edit that needs recovery. The class marks it, so nothing has to match its wording. */
@@ -119,6 +120,7 @@ export function parseCloudProjectDocument(value: unknown, wallet: string): Cloud
     || !positive(s.settings.width, 16384) || !positive(s.settings.height, 16384) || !positive(s.settings.fps, 16384)
     || !Array.isArray(s.tracks) || s.tracks.length > 200 || !Array.isArray(s.clips) || s.clips.length > 10000 || value.media.length > 2000) fail();
   if (!validBrandStyles(s.settings.brandStyles)) fail();
+  if (s.settings.filmProject !== undefined && !validFilmProject(s.settings.filmProject)) fail();
   if (Array.isArray(s.settings.pageDetails) && s.settings.pageDetails.some(detail => object(detail) && detail.section !== undefined && (typeof detail.section !== "string" || detail.section.length > 80))) fail();
   if (object(s.settings.guides) && s.settings.guides.unit !== undefined && !["px", "in", "cm", "mm"].includes(String(s.settings.guides.unit))) fail();
   if (s.settings.printDpi !== undefined && (typeof s.settings.printDpi !== "number" || !Number.isInteger(s.settings.printDpi) || s.settings.printDpi < 72 || s.settings.printDpi > 600)) fail();
@@ -134,6 +136,11 @@ export function parseCloudProjectDocument(value: unknown, wallet: string): Cloud
       || typeof source.storagePath !== "string" || !new RegExp(`^${wallet}/${source.id}/source\\.[a-z0-9]{1,5}$`).test(source.storagePath)) fail();
     for (const key of ["width", "height", "duration"] as const) if (source[key] !== undefined && !positive(source[key], key === "duration" ? 86400 : 16384)) fail();
     media.set(source.id, source as unknown as CloudProjectMedia);
+  }
+  if (s.settings.filmProject) {
+    const film = s.settings.filmProject as import('./filmProject').FilmProject;
+    for (const id of [...film.referenceMediaIds, ...film.shots.flatMap(shot => shot.referenceMediaIds)]) if (media.get(id)?.kind !== 'image') fail();
+    for (const shot of film.shots) if (shot.resultMediaId && !['image', 'video'].includes(media.get(shot.resultMediaId)?.kind ?? '')) fail();
   }
   for (const clip of s.clips) {
     if (!object(clip) || typeof clip.id !== "string" || !clip.id || clips.has(clip.id) || typeof clip.trackId !== "string" || !tracks.has(clip.trackId)
@@ -212,6 +219,14 @@ export function makeCloudProjectDocument(snapshot: ProjectSnapshot, projectId: s
         clip.videoMatte.sourceMediaId = source.id;
       }
     }
+  }
+  if (copy.settings.filmProject) {
+    const ids = new Map<string, string>();
+    for (const id of filmProjectMediaIds(copy.settings.filmProject)) {
+      const source = uploaded.get(id); if (!source) fail();
+      ids.set(id, source.id); refs.set(source.id, source);
+    }
+    copy.settings.filmProject = remapFilmProjectMedia(copy.settings.filmProject, ids);
   }
   return parseCloudProjectDocument({ version: 1, snapshot: copy, media: [...refs.values()] }, wallet);
 }

@@ -1,6 +1,7 @@
 import { BlogPost } from '@/types/blog';
 import { MILESTONE_CONTENT } from '@/data/milestones';
 import { e2eePost } from './posts/e2eePost';
+import { topDecentralizedSocialApps2026Post } from './posts/topDecentralizedSocialApps2026Post';
 import { creatorVsHiggsfieldPost } from './posts/creatorVsHiggsfieldPost';
 import { maboroshiGenjutsuAlternativePost } from './posts/maboroshiGenjutsuAlternativePost';
 import { howGenjutsuWorksPost } from './posts/howGenjutsuWorksPost';
@@ -284,6 +285,7 @@ const createPost = (
 };
 
 export const blogPosts: BlogPost[] = [
+  topDecentralizedSocialApps2026Post,
   howGenjutsuWorksPost,
   maboroshiGenjutsuAlternativePost,
   debateOnDehubPost,

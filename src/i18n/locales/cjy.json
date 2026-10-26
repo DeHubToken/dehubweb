@@ -1,5 +1,99 @@
 {
   "copy": {
+    "002c7c68468b": "直接推荐",
+    "024eff991771": "请选择图片文件",
+    "040a7637bb56": "已复制 MCP URL",
+    "05408027906c": "搜索音效",
+    "085cd98e8e2e": "复制链接",
+    "13f597e9b138": "发送申诉",
+    "14c5558a8cd9": "无匹配的转录记录",
+    "15e17712534d": "代币铸币地址",
+    "16194a69c43d": "显示原文",
+    "1c5ccbd708df": "赠送礼物",
+    "1dd3d9f671d4": "添加投票",
+    "1ed61b786730": "你的邀请链接",
+    "1f293aa8b15c": "提交失败，请重试",
+    "1ff57a29d7c9": "下一步",
+    "21b90e9de0f4": "更改风格",
+    "2ba9ebf4b84b": "赠送礼物",
+    "2d9c014a222d": "最大值",
+    "2f68e65b4ded": "允许多选",
+    "30a64216eaea": "查看全部",
+    "31fbef162594": "继续",
+    "3b7ea51793e9": "清咾搜寻",
+    "3d08de9152fe": "向 DAO 提出提案",
+    "45989de49fb7": "详情",
+    "486b75f1e0e1": "分享你的链接",
+    "52c6b1284570": "请 DAO 发送资产",
+    "55de39f882a3": "重试",
+    "5697d03daef4": "功能",
+    "591935b15b1c": "公开",
+    "5ae4bb109db7": "暂无转录",
+    "5c39123805ff": "提示词",
+    "600d1c6e47ab": "不是你的数据？试试任意播放量",
+    "62c8b95e8e5e": "成交量 {{value1}}",
+    "666703409dd4": "查看全部直播",
+    "6b8a9141538a": "质押",
+    "6cf2865295e4": "自定义数量与价格",
+    "6e929effed4e": "正在撰写概要…",
+    "6f00156cec07": "黑白",
+    "721164f0dc70": "字幕",
+    "732f4d852708": "创建您的第一个计划",
+    "733df2f6bfd8": "莫尔条纹",
+    "765608de66a0": "安排帖子",
+    "76f613ec06cb": "尚未生成内容",
+    "7858b9baa709": "搜索语言...",
+    "7881e4a3da46": "帖子描述",
+    "7887eb17f548": "试试这些提示",
+    "7bc2840ca04d": "仍要查看",
+    "88d759ea02ce": "原始",
+    "8a7ede6b5f07": "反应",
+    "8fe147696fbf": "翻译",
+    "93100fc44c0a": "@用户名",
+    "9755c8d7d44a": "全部时间",
+    "97ab5d0657d3": "垃圾邮件或误导性内容",
+    "9c7eca1df4f3": "解释术语及 DAO 接受的原因",
+    "9d35e0e6ebe0": "内容将在发布后显示在此处",
+    "9dea3ce2a91b": "请拖放图片文件",
+    "9fddb94edef5": "转录失败：",
+    "a074b23fd5f3": "需附带图像",
+    "a6ba8d7b13f4": "群组名称为必填",
+    "b0c1d4150deb": "代币门槛",
+    "b387e2a92e46": "发布音频",
+    "b764cdc0eab7": "未知",
+    "babc49029a3a": "请先移除视频再添加图片",
+    "badd6941df17": "发送评论",
+    "bc7b631a689b": "缩小",
+    "bd9e3879bc60": "付费观看",
+    "be7e2f201293": "图片",
+    "c32690bd04d1": "请登录以查看关注的创作者",
+    "c5de2b8c2cfe": "3:2 · X 或 YouTube",
+    "c63eb6720c6e": "私密",
+    "ca1844969742": "无法获取",
+    "cbc976c32215": "提个问题…",
+    "cc54b50c5162": "编辑帖子",
+    "d0bd6ec267f9": "文本",
+    "d0f3b9c25380": "生成内容",
+    "d4ea333d8b1f": "分享",
+    "d5cade7ef319": "股价",
+    "d6510650eea7": "创建并保存",
+    "da4c7c208cf4": "去看看",
+    "da8adbe77105": "关注请求",
+    "dbc468a14b60": "常见问题",
+    "dc7a1d57c478": "选择风格",
+    "dc937b598926": "无",
+    "e38adb0be028": "请先移除图片再添加视频",
+    "e5b06b1da4c0": "留空由 AI 决定",
+    "e91de547a0b8": "帖子链接已复制",
+    "ea68771a3994": "互动",
+    "eb4cdebd82bf": "引用",
+    "ebfe8c93e18f": "您认为有什么被忽略了？有关内容的背景信息最有帮助。",
+    "f3b690653334": "发打赏",
+    "f59ab8d1331b": "无标题",
+    "f6a4983ea9c5": "图片额度不可用。请重试",
+    "f6ec7f0c995b": "可视化",
+    "f88c723a216b": "定时发布",
+    "f9c8b16a4071": "市值 {{value1}}",
     "110c7594e507": "侦察",
     "1cff79b7eb0b": "删除成员失败",
     "1e771eecf49a": "取消静音{{value1}}",
@@ -210,7 +304,7 @@
     "0b02fce19568": "应用编辑中",
     "0b3315d1d765": "重新加入主持人身份！",
     "0b4e78022a4a": "尝试重新加载短视频流。",
-    "0b509e6d4c97": "24h",
+    "0b509e6d4c97": "24小时",
     "0b6b539f3e91": "无法添加这些图片",
     "0b94536e63ba": "审核声誉对品牌安全的创作者来说是一个真正的考虑因素",
     "0ba723902f01": "@提及可重用的人工智能角色",
@@ -6307,6 +6401,19 @@
     "heading": "DeHub 短视频"
   },
   "settings": {
+    "channelSpeedNone": "观看某人时更改速度，其视频会一直保持该速度。",
+    "ensLink": "绑",
+    "ensPasteSignature": "粘签名（0x…）",
+    "feedVideoShapeOriginal": "原始",
+    "noSearchResults": "没有匹配的设置",
+    "privacyPolicy": "隐私政策",
+    "reportBug": "报告问题",
+    "reportBugDesc": "报告错误，帮我们修问题",
+    "searchPlaceholder": "搜索设置",
+    "socialConnect": "连接",
+    "socialConnected": "{{platform}} 个已连接",
+    "socialConnectedShort": "已连接",
+    "support": "支持",
     "glass": "玻璃模式",
     "reset": "重置",
     "sessionsRevokedMany": "{{count}} 设备已签出",
@@ -7608,7 +7715,7 @@
     "category": "分类",
     "contentType": "内容类型",
     "bounty": "赏金",
-    "ppv": "PPV",
+    "ppv": "付费观看",
     "gated": "门槛",
     "datePosted": "发布日期",
     "engagement": "互动",
@@ -7927,7 +8034,7 @@
     "statusStillArriving": "付款已通过。代币仍在途中——请稍后检查你的钱包。",
     "paymentMethod": "支付方式",
     "cardBank": "卡/银行",
-    "cardBankDesc": "Visa, Mastercard, Apple Pay",
+    "cardBankDesc": "维萨卡，万事达卡，苹果支付",
     "fiatOnramp": "法币入金",
     "fiatOnrampDesc": "用法币直接买加密",
     "buy": "买 {{symbol}}",
@@ -7993,6 +8100,9 @@
       }
     },
     "tasks": {
+      "activity": "最近动静",
+      "queued": "任务排队中",
+      "refresh": "刷新",
       "actionsProcessed": "动作已处理",
       "allCategories": "每个分类下的所有帖子。无关键词过滤，无三连点任务限制。",
       "cancelSwarm": "取消蜂群",
@@ -9041,6 +9151,7 @@
     "communityDescription": "社区描述...",
     "posts": "帖子",
     "chat": {
+      "pinnedGif": "GIF动图",
       "intervalHour": "1 小时",
       "intervalHours": "{{count}} 小时",
       "intervalMinute": "1 分钟",
@@ -9136,6 +9247,18 @@
     "noMembersFound": "没有找到成员",
     "showMore": "显示更多",
     "manage": {
+      "addRule": "添加规则",
+      "alsoDeleteMessages": "同时删除他们所有消息",
+      "deleteAllMessages": "删除所有消息",
+      "editAdminRights": "编辑管理员权限",
+      "joinRequests": "加入请求",
+      "mutedUntil": "禁言至 {{date}}",
+      "remove": "移除",
+      "rulePlaceholder": "描述规则",
+      "rules": "社群规则",
+      "rulesUpdated": "规则已更新",
+      "saveRules": "保存规则",
+      "slowModeOn": "成员每 {{label}} 可以发送一条消息。管理员除外。",
       "rightNotHeld": "你自己没有这个权利",
       "customTitle": "自定义标题",
       "adminBadge": "管理员",
@@ -9259,6 +9382,7 @@
       "slowMode": "慢速模式",
       "slowModeOff": "成员可以立即发送消息。",
       "recentActions": {
+        "showMore": "显示更多（{{value}}）",
         "permanently": "永久性地",
         "reason": "原因：{{reason}}",
         "noAccess": "您没有权限查看最近的操作。",
@@ -10086,6 +10210,8 @@
     "shopAllowanceUsed": "已使用 {{allowance}} 个中的 {{allowance}} 个。质押更多 DeHub 代币以获得更高的徽章和另一个插槽。"
   },
   "stages": {
+    "liveBadge": "直播中",
+    "transcript": "字幕",
     "allStages": "所有语音房",
     "title": "语音房",
     "tabLive": "直播中",
@@ -10566,6 +10692,15 @@
     "povrPricingIntro": "我们基于层级的线性定价系统可确保公平且可扩展的广告成本，具体取决于受众价值。价值以美元计价，便于管理，但付款将在执行时以 DeHub 代币提示。"
   },
   "launchpad": {
+    "createCoin": "创建硬币",
+    "filterNew": "热门",
+    "filterTrending": "趋势",
+    "launch": "启动",
+    "mcap": "市值",
+    "next": "下一个",
+    "review": "评论",
+    "trending": "热门",
+    "trendingHint": "前 20 · 交易量和社区活动",
     "seoDescription": "将业务代币化在 DeHub 发行平台：浏览实时代币或创建自己的代币。",
     "phaseBadge": "阶段1 · 私密预览",
     "heroTitle": "TOKENISE 商務",
@@ -10659,6 +10794,8 @@
     "createFailed": "创建失败"
   },
   "fractions": {
+    "tabPortfolio": "持仓",
+    "tabPortfolioCount": "持仓（{{count}}）",
     "seoTitle": "分数 | DeHub",
     "seoDescription": "买卖 DeHub 帖子嘞碎片。一个铸造过嘞帖子就是 1000 份链上碎片 — 拥有一段视频、音轨或图片嘞一部分，用 代币 交易。",
     "title": "碎片",
@@ -10801,6 +10938,15 @@
     "sellYourFractions": "出售你的分数（{{held}} 持有）"
   },
   "creator": {
+    "generate": "生成",
+    "live": "直播",
+    "presetDisintegrateName": "分解",
+    "presetDollyZoomName": "推拉镜头",
+    "presetYtSplitName": "前/后缩略图",
+    "processing": "处理中",
+    "promptLabel": "提示词",
+    "seconds": "{{count}} 秒",
+    "untitled": "无标题",
     "libraryEmpty": "你保存的生成内容会显示在这里。",
     "whatToCreate": "要创建什么",
     "startCreatingWith": "用 {{model}} 开始创作",
@@ -11588,6 +11734,7 @@
     }
   },
   "pricing": {
+    "sso": "单点登录",
     "plansForEveryWorkflow": "计划适用于每种工作流程",
     "findTheRightFit": "从个人到企业团队，找到最合适的方案",
     "monthly": "按月",
@@ -11747,6 +11894,9 @@
     "raw": "原始"
   },
   "usernames": {
+    "charCount_one": "{{count}} 个字",
+    "numbersOnly": "光数字",
+    "updateListing": "更新挂牌",
     "seoTitle": "用户名市场 | DeHub",
     "seoDescription": "买卖 DeHub 用户名，使用 代币 进行交易。搜索短号、数字号和原创号码出售，或者发布你自己的——支付清算后，转移立即在链上完成。",
     "title": "用户名",
@@ -11764,7 +11914,7 @@
     "priceDhb": "价格（代币）",
     "bandUnder10k": "小于10,000",
     "band10kTo100k": "10k – 10万",
-    "band100kTo1m": "100k – 1M",
+    "band100kTo1m": "10万 – 100万",
     "band1mPlus": "100万+",
     "clear": "清晰",
     "forSaleCount_one": "{{count}} 出售",
@@ -11869,6 +12019,7 @@
     "boughtToVaultToast": "@{{handle}} 已经在你嘅用户名里了"
   },
   "accounts": {
+    "updateListing": "更新挂牌",
     "seoTitle": "账号市场 — DeHub",
     "seoDescription": "在 DeHub 上买卖 代币 认证账号。按粉丝数、上传量和年龄浏览账号 — 处理、帖子、粉丝和徽章资格均可转让，支付直接给卖家。",
     "title": "账号",
@@ -11887,7 +12038,7 @@
     "priceDhb": "价格（代币）",
     "bandUnder10k": "小于10,000",
     "band10kTo100k": "10k – 10万",
-    "band100kTo1m": "100k – 1M",
+    "band100kTo1m": "10万 – 100万",
     "band1mPlus": "100万+",
     "clear": "清晰",
     "forSaleCount_one": "{{count}} 出售",
@@ -12112,6 +12263,8 @@
     "youAreTimedOut": "你已被短暂超时"
   },
   "liveStudio": {
+    "landscape": "横向",
+    "stageLabel": "您的直播",
     "subathon": {
       "title": "苏巴吞",
       "intro": "在你的直播中倒计时。每一次付费礼物、关注和订阅都会增加时间，让房间保持直播。",
@@ -12209,6 +12362,9 @@
     "loadFailed": "无法加载您的小部件。请刷新页面后重试。",
     "limit": "您已达到 40 个小部件的上限。",
     "obs": {
+      "diagLink": "链接",
+      "switchToVideo": "将它们显示在我的视频中而不是应用中",
+      "title": "与OBS使用",
       "connected": "OBS 已连接",
       "notConnected": "OBS 未连接",
       "showIn": "展示你的小部件",
@@ -12474,6 +12630,7 @@
     }
   },
   "live": {
+    "addSomethingHint": "添加您商店中的商品，观众无需离开直播即可购买。",
     "chatJoined": "加入了",
     "chatSentGift": "送了",
     "shop": "商店",
@@ -12678,6 +12835,7 @@
     "notEnoughTokensForBounty": "代币不足。需要 {{need}} 个代币，但只有 {{have}} 个。"
   },
   "events": {
+    "filterPast": "过去",
     "deleteConfirmTitle": "删除此事件？",
     "deleteConfirmBody": "这个操作将删除该活动、其参与者名单和所有聊天记录，且无法撤销。",
     "seoTitle": "活动 — DeHub 的见面会与社区活动",
@@ -12880,6 +13038,15 @@
     "faqPayInDhbA": "信用卡支付将在发布时可用。使用 DeHub 代币支付即将推出，并将包含折扣。"
   },
   "jobs": {
+    "ambResp5": "提供社区反馈和想法来帮助塑造产品路线图",
+    "ambassadorSubtitle": "社区与推广",
+    "applyAsBdm": "申请BDM",
+    "open": "开放",
+    "otherSocialsPlaceholder": "TikTok, YouTube, Discord 等",
+    "pastExperience": "过往经验",
+    "tagFlexibleHours": "灵活时间",
+    "whatWereLookingFor": "我们在找甚",
+    "whyHireYou": "为甚要录用你？",
     "seoTitle": "DeHub 招聘 — Web3 社交媒体开放职位",
     "seoDescription": "加入 DeHub 团队 —— 商务开发、营销等多个开放职位。",
     "heading": "DeHub 招聘",
@@ -12932,6 +13099,11 @@
     "noRoleFits": "不要找到合适的角色？联系我们：<mail>dev@dehub.io</mail> —— 我们总是寻找有才华的人。"
   },
   "depin": {
+    "deliveryReceipts": "交付收据",
+    "deliveryReceiptsBody": "已验证的字节已发送到实际播放会话。",
+    "faqOfflineQ": "托管节点离线时会发生什么？",
+    "publicContent": "公共内容",
+    "validOutput": "有效输出",
     "seoTitle": "DePin | 社区驱动的媒体基础设施 | DeHub",
     "seoDescription": "DeHub DePin 让人们通过一个坚韧的网络贡献存储、带宽和计算资源，帮助主机、转码和传递媒体。",
     "navAria": "DePin导航",
@@ -13272,6 +13444,12 @@
     "sameLanguage": "这个视频已经是你的语言了。"
   },
   "support": {
+    "newTicket": "新工单",
+    "stepsLabel": "重现步骤 (可选)",
+    "stepsPlaceholder": "1. 打开动态\n2. 点上传\n3. ...",
+    "subjectLabel": "主题",
+    "subjectPlaceholder": "一行描述问题",
+    "title": "支持",
     "subtitle": "您的票券及其状态。无需AI，无费用。",
     "newTicketHint": "告诉我发生了什么以及你原本期望的是什么。",
     "backToTickets": "回到票务",
@@ -13293,11 +13471,14 @@
     "alreadyOpen": "你已经在 {{ref}} 里打开了这个了。",
     "filingFailed": "无法提交此票据。请重试。",
     "status": {
+      "open": "打开",
       "in_progress": "正在进行中",
       "resolved": "已解决",
       "closed": "闭合"
     },
     "severity": {
+      "high": "高",
+      "low": "低",
       "normal": "正常",
       "urgent": "紧急"
     },
@@ -13459,7 +13640,7 @@
     "errorNeedRights": "请确认你拥有此内容的权利",
     "errorClipboard": "无法读取剪贴板 — 请改为手动粘贴",
     "errorQueueFailed": "无法排队那次导入",
-    "publishAs": "Publish as",
+    "publishAs": "发布成",
     "kindVideo": "视频",
     "kindAudio": "音频",
     "kindImage": "图片",
@@ -14740,6 +14921,21 @@
       "undoSelection": "撤销选择"
     },
     "charts": {
+      "scatterLines": "连接散点",
+      "searchTypes": "搜索图表类型",
+      "seriesPatterns": "按系列变化形状和图案",
+      "seriesTotal": "系列总计",
+      "showAxisValues": "显示缩放标签",
+      "showGrid": "显示网格线",
+      "starters": "从示例数据开始",
+      "styleFiles": "传输图表样式",
+      "styleGallery": "图表样式",
+      "transpose": "交换行和列",
+      "treemapExample": "用层级示例替换草稿",
+      "trimCategory": "忽略前导和尾随空格",
+      "useCategorySummary": "用总结替换草稿",
+      "useHierarchy": "使用类别列",
+      "useObservations": "使用观测值",
       "hierarchySample": "欧洲，法国，35",
       "applyDateBounds": "应用日期范围",
       "areaMode": "区域图布局",
@@ -14856,6 +15052,7 @@
       "rowFilters": "显示的行数",
       "sampleDataSize": "{{rows}} 行 · {{series}} 个数值型列",
       "scale": {
+        "auto": "自动",
         "hint": "坐标轴自动缩放范围扩展，使相关图表能共享同一数值范围。超出边界的值仍然可见。",
         "reset": "自动调节",
         "apply": "应用比例范围"
@@ -14888,9 +15085,13 @@
       "bubbleHint": "使用数字X坐标在第一列。多系列模式下，选择Y和大小列；默认使用第一系列的Y，第二系列的大小。面积与大小成比例；零大小的区域隐藏。没有大小系列，气泡大小均等。额外系列保持在源数据中。值标签显示Y/大小。坐标轴和比例可以使用日期和UTC时间。",
       "raceExample": "替换草稿为排名示例",
       "sameCategoryColour": "为所有类别使用",
-      "sampleColours": "使用样本调色板和文本颜色"
+      "sampleColours": "使用样本调色板和文本颜色",
+      "styleFileHint": "传输外观和调色板至设备。图表数据、类型、标题、中心文字和缩放边界保留在目标设计中。",
+      "xDate": "日期和UTC时间"
     },
     "dataImport": {
+      "file": "导入 {{name}}",
+      "numberFormat": "源数字标点符号",
       "sampleCategory": "类别",
       "sampleNorth": "北部",
       "sampleSouth": "南部",
@@ -14905,7 +15106,11 @@
       "previewLimit": "预览显示前六行选定的数据，包括标题行。所有选定的行都将被导入。",
       "ready": "{{rows}} 行和 {{columns}} 列的数据行已准备就绪",
       "separator": "文件分隔符",
-      "skipEmpty": "跳过空数据行"
+      "skipEmpty": "跳过空数据行",
+      "paste": "粘贴表格数据",
+      "pastedName": "粘贴的表格",
+      "selectionPreview": "选定的数据预览",
+      "use": "使用选定的数据"
     },
     "backgrounds": {
       "hint": "复制此页面的照片、渐变或实色背景。锁定的背景保持不变。",
@@ -15065,6 +15270,13 @@
       "swapRatio": "交换高度和宽度"
     },
     "dataCells": {
+      "cleanNumbers": "转换格式化数字",
+      "editCell": "编辑 {{address}}",
+      "go": "执行",
+      "goTo": "跳转至单元格",
+      "pastedCells": "粘贴单元格",
+      "previousCell": "上一个单元格",
+      "startCell": "从单元格开始",
       "actionCount": "已更改 {{changed}}/{{selected}} 个选定的单元格",
       "actionRange": "单元格范围（空白表示所有单元格）",
       "applyPaste": "粘贴到单元格",
@@ -15086,7 +15298,8 @@
     },
     "dataExport": {
       "csv": "下载 CSV",
-      "formulasAsText": "公式被视为文本"
+      "formulasAsText": "公式被视为文本",
+      "copyCells": "复制单元格"
     },
     "dataVisual": {
       "captionHint": "标题和字幕出现在图形内部，保留图形上方和下方的空白空间。SVG 描述随着矢量输出一起出现；其他输出格式保留可见文本。描述主要发现和相关值的替代文本。",
@@ -15125,9 +15338,18 @@
       "textColour": "文字",
       "title": "图表和表格",
       "values": "显示值",
-      "vectorHint": "以透明背景导出此图形。文字保持可编辑，并使用可用的所选字体。"
+      "vectorHint": "以透明背景导出此图形。文字保持可编辑，并使用可用的所选字体。",
+      "accent": "音调",
+      "addColumn": "添加列",
+      "addRow": "添加行",
+      "captionControls": "标题、说明和 SVG 描述",
+      "expandData": "扩展数据编辑器",
+      "expandedData": "编辑图形数据",
+      "fixSource": "使用源数据修正此输入。"
     },
     "designTools": {
+      "replaceAll": "替换所有",
+      "resize": "调整大小",
       "applySize": "应用大小",
       "changeAll": "更改全部",
       "closePanel": "关闭面板",
@@ -15140,9 +15362,16 @@
       "replaceWith": "替换为",
       "replacement": "更换颜色",
       "styleReady": "准备好应聘了！",
-      "toolbar": "设计工具"
+      "toolbar": "设计工具",
+      "copyStyle": "复制样式",
+      "matches": "{{count}} 文本层次结构",
+      "pasteStyle": "粘贴样式"
     },
     "diagrams": {
+      "insert": "插入图表",
+      "preview": "预览图表",
+      "previewAlt": "草稿图表布局",
+      "title": "可编辑图表起始",
       "edgeLabels": "连接器标签，每行一个（可选）",
       "editHint": "每个节点及其文本构成一个组。连接线标签与其线路分组。线路保持为可编辑的独立连接器；移动节点后重新定位它们。空白标签使用默认文本。该图表将填满当前页面并可保存到您的可重用元素库中。",
       "labels": "节点标签，每行一个",
@@ -15153,6 +15382,7 @@
       "vertical": "垂直布局"
     },
     "document": {
+      "numberPreview": "页面编号预览",
       "applyNumbers": "没有找到要翻译的文本。",
       "colour": "页码颜色",
       "numberStyle": "数字样式",
@@ -15172,7 +15402,8 @@
       "start": "从第几页开始",
       "suffix": "后缀",
       "title": "页面编号和重复元素",
-      "total": "显示总页数"
+      "total": "显示总页数",
+      "numberHint": "将可编辑页码添加到整个文档。数字在添加、复制、删除或重新排序页面时更新。锁定数字保持不变。"
     },
     "fills": {
       "angle": "角度",
@@ -15237,6 +15468,10 @@
       "title": "照片网格"
     },
     "groups": {
+      "applyOpacity": "应用于所选图层",
+      "larger": "更大",
+      "scalePercent": "按百分比缩放选择",
+      "ungroup": "取消分组",
       "applyRotation": "旋转选区",
       "applyScale": "尺度选择",
       "group": "群组",
@@ -15251,6 +15486,7 @@
       "smaller": "更小的"
     },
     "guides": {
+      "add": "添加引导线",
       "clear": "清晰",
       "dragHorizontal": "拖动以添加水平导航线。按 Enter 键添加中心导航线。",
       "dragVertical": "向右拖动以添加垂直导航线。按 Enter 键添加中心导航线。",
@@ -15272,7 +15508,10 @@
       "thirds": "三分法",
       "title": "辅助线和边距",
       "vertical": "垂直",
-      "visible": "显示辅助线"
+      "visible": "显示辅助线",
+      "applyGrid": "应用网格",
+      "centre": "居中",
+      "direction": "引导方向"
     },
     "help": {
       "keyboardHint": "快捷键适用于文本域和对话框之外。画布操作需要画布获得焦点。Mac 上的 Cmd 替代 Ctrl。",
@@ -15288,6 +15527,7 @@
       "title": "位置与间距"
     },
     "links": {
+      "title": "链接",
       "apply": "应用链接",
       "contactBuilder": "构建电子邮件、电话或短信链接",
       "copied": "链接目标已复制",
@@ -15297,10 +15537,12 @@
       "hint": "PDF下载保留网页、电子邮件、电话、短信和页面链接。联系链接的处理取决于查看器和设备。导出目的地页面以保持内部链接活跃。",
       "mixed": "选择的艺术作品链接目标混杂，请为其指定统一的链接目标。",
       "openPage": "去到页面 {{number}}",
-      "targetPage": "目的页面"
+      "targetPage": "目的页面",
+      "remove": "移除链接"
     },
     "media": {
-      "replaceWith": "将选定图层替换为 {{name}}"
+      "replaceWith": "将选定图层替换为 {{name}}",
+      "replace": "替换选中层"
     },
     "mediaSelection": {
       "borderColour": "边框颜色",
@@ -15313,7 +15555,10 @@
       "radiusHint": "角角处理适用于矩形媒体框。",
       "removeBorder": "去掉边框",
       "resetColours": "重置颜色调整",
-      "setRadius": "设置圆角半径"
+      "setRadius": "设置圆角半径",
+      "applyFilter": "应用滤镜到选择",
+      "setBorder": "设置边框",
+      "title": "样式选中照片和视频（{{count}}）"
     },
     "mockups": {
       "caption": "地址或照片说明（可选）",
@@ -15332,21 +15577,28 @@
       "resetPlacement": "重新设置位置",
       "rotation": "模拟旋转",
       "size": "页面尺寸",
-      "title": "设备和打印样板"
+      "title": "设备和打印样板",
+      "insert": "插入模板",
+      "preview": "预览模板",
+      "previewAlt": "草稿模板布局",
+      "usePhoto": "用选中照片填充"
     },
     "notes": {
+      "presenter": "演示者笔记",
       "changed": "本页面已更改。重新打开 Notes 之前保存。",
       "hint": "名称和备注会被保存在这个设计中，但不会出现在图片、视频或PDF导出中。",
       "name": "页面名称",
       "saved": "页面笔记已保存",
-      "title": "页面笔记"
+      "title": "页面笔记",
+      "save": "保存页面笔记"
     },
     "orientation": {
       "angle": "绝对角度",
       "hint": "每个选中的层都接收相同的角度在其现有位置。 相对旋转下旋转选择。",
       "setAngle": "设置每一层",
       "title": "设置图层方向",
-      "upright": "直立的"
+      "upright": "直立的",
+      "unflip": "移除翻转"
     },
     "outline": {
       "border": "照片边框",
@@ -15355,7 +15607,8 @@
       "dashLengths": "横线和间隔长度",
       "dashOffset": "横线偏移",
       "pattern": "线条模式",
-      "width": "边框宽度：{{value}}"
+      "width": "边框宽度：{{value}}",
+      "applyPattern": "应用图案"
     },
     "pageAnimation": {
       "apply": "应用动画",
@@ -15603,6 +15856,13 @@
       "weight": "线宽"
     },
     "tables": {
+      "styleFiles": "传输表格样式",
+      "styles": "表格样式",
+      "stylesPasted": "粘贴单元格样式",
+      "summary": "添加摘要行",
+      "summaryRange": "计算单元格范围",
+      "unmergeRange": "解除{{range}}",
+      "wrap": "折行单元格文本",
       "allColumns": "所有列",
       "appendSummary": "追加总结行",
       "applyCellFill": "应用填充",
@@ -15704,13 +15964,17 @@
       "weightsHint": "尺寸是相对的。值2所占空间是1的两倍；表格保持整体尺寸不变。"
     },
     "text": {
+      "bullets": "项目符号列表",
+      "curve": "曲线{{value}}",
+      "strikethrough": "中断",
       "backgroundPerLine": "把背景适配到每一行",
       "echoDistance": "回声距离",
       "editingTools": "文本编辑工具",
       "effects": "效果效果",
       "listStart": "从……开始编号",
       "numbered": "数字列表",
-      "plain": "没有任何内容"
+      "plain": "没有任何内容",
+      "listStyle": "列表样式"
     },
     "textSearch": {
       "emptyAfterReplacement": "这个层将会是空的",
@@ -15750,6 +16014,12 @@
       "search": "搜索工具"
     },
     "vectorSelection": {
+      "applyFill": "设置填充",
+      "noFill": "移除填充",
+      "noOutline": "移除轮廓",
+      "pickFill": "从画布中选择填充颜色",
+      "svgBackground": "包含页面颜色",
+      "svgBounds": "SVG尺寸",
       "applyOutline": "设定大纲",
       "downloadSvg": "选择并下载所选向量为 SVG 格式",
       "exportOptions": "下载矢量艺术作品",
@@ -15763,6 +16033,7 @@
       "width": "轮廓宽度"
     },
     "viewport": {
+      "selection": "选择",
       "fit": "适合",
       "fitShortcut": "适应页面大小（Shift+1）",
       "pan": "画布面板",
@@ -15981,12 +16252,16 @@
     "paused": "链上代币转移目前已暂停，因此此解锁暂时无法进行。请稍后重试。",
     "otherChain": "此帖子将在另一个链上结算，因此您需要在该链上的钱包中拥有 DeHub 代币。",
     "buyCard": "用卡购买代币",
-    "buyCardHint": "Visa, Mastercard, Apple Pay",
+    "buyCardHint": "维萨卡，万事达卡，苹果支付",
     "moveFunds": "转钱进来",
     "moveFundsHint": "从另一条链兑换或存入",
     "notNow": "先不了"
   },
   "glossary": {
+    "postInfoPage": "帖子信息",
+    "private": "私密",
+    "public": "公开",
+    "subtitle": "了解每个图标和功能的意思",
     "fractionsDesc": "在 DeHub 上铸造嘞帖子会变成一个分成 1,000 份碎片嘞 NFT，创作者一开始持有全部 1,000 份 — 对内容 100% 嘞所有权。铸造是可选嘞，可以在发布时进行，也可以以后再铸。",
     "ownershipBarDesc": "帖子信息页上嘞进度条，显示 1,000 份碎片里头创作者还持有多少份、已经分出去或卖掉多少份。",
     "tokenIdDesc": "帖子在区块链上铸造成 NFT 时获得嘞唯一链上标识符。铸造是可选嘞，所以还没铸造嘞帖子暂时没有 Token ID。",
@@ -16256,7 +16531,7 @@
   },
   "emojiPicker": {
     "tabEmoji": "表情",
-    "tabGif": "GIF",
+    "tabGif": "GIF动图",
     "searchEmoji": "搜表情",
     "searchGifs": "搜 GIF...",
     "noEmoji": "没寻着表情",
@@ -17165,7 +17440,7 @@
     "russian-mafia": "俄罗斯黑手党",
     "pirate": "海盗",
     "alien": "外星人",
-    "e-girl": "E-Girl",
+    "e-girl": "电子女孩",
     "chad": "猛男",
     "hopeless-romantic": "无可救药的浪漫派",
     "daddy": "老爸",
@@ -17315,6 +17590,7 @@
     "failed": "无法更新Twitch镜像。请再试一次。"
   },
   "maintenance": {
+    "retry": "再试一下",
     "brand": "德赫布",
     "mode": "维护模式",
     "description": "我们正在进行维护。请稍后再回来。",
@@ -17367,6 +17643,9 @@
     "clay": "粘土角色"
   },
   "walletBackup": {
+    "saveNow": "立即保存",
+    "skipCheck": "跳过检查",
+    "skipForNow": "暂时跳过",
     "backedUpOn": "备份了{{date}}",
     "phraseUnavailable": "恢复短语在此处无法获取。请使用原始登录或设备检查。您仍可备份私钥。",
     "phraseMismatch": "这个备份属于不同的钱包。请使用您的原始登录账号签入以访问正确的备份。",
@@ -17393,6 +17672,15 @@
     "reminderLater": "不是现在"
   },
   "articles": {
+    "addCover": "添加封面",
+    "bodyPlaceholder": "讲述你的故事。选择文本并使用上方的工具栏进行标题、加粗、引用和列表。",
+    "label": "文章",
+    "needBody": "{{count}} 还剩字符",
+    "next": "下一步",
+    "previewEmpty": "尚无预览。",
+    "removeCover": "移除封面",
+    "sharePreview": "分享时的显示效果",
+    "wordCount": "{{count}} 词",
     "cardLabel": "文章 · {{count}} 分钟阅读",
     "readTitle": "阅读 \"{{title}}\"",
     "read": "没有找到需要翻译的文本。",
@@ -17422,6 +17710,10 @@
     "bodyLabel": "没有任何文章内容"
   },
   "liveAudience": {
+    "hereCount": "{{formatted}} 在这里",
+    "hereNow": "现在在这里",
+    "startedAgo": "已开始 {{time}}",
+    "topTippers": "最高打赏者",
     "whosHere": "谁在这里",
     "watchingCount": "{{formatted}} 观看",
     "host": "主机",

@@ -1605,33 +1605,33 @@ const NotificationItem = memo(function NotificationItem({
 });
 
 /**
- * What the reader's notification filters held back (Settings → Notifications
- * → Filter notifications from). Collapsed until opened, and only fetched then,
- * so a reader without filters pays nothing for it.
+ * What the reader's notification filters held back. Lives only in Settings →
+ * Notifications → Filter notifications from, so readers who never use filters
+ * never see it on the notifications page. Collapsed until opened, and only
+ * fetched then, so a reader without filters pays nothing for it.
  */
-function FilteredNotificationsSection({
-  onMarkAsRead,
-  markingNotificationId,
-  enrichedAvatars,
-}: {
-  onMarkAsRead: (id: string) => void;
-  markingNotificationId: string | null;
-  enrichedAvatars: Map<string, EnrichedAvatar>;
-}) {
+export function FilteredNotificationsSection() {
   const { t } = useTranslation();
   const [open, setOpen] = useState(false);
+  const markAsRead = useMarkNotificationAsRead();
+  const [markingNotificationId, setMarkingNotificationId] = useState<string | null>(null);
+  const handleMarkAsRead = useCallback((notificationId: string) => {
+    setMarkingNotificationId(notificationId);
+    markAsRead.mutate(notificationId, { onSettled: () => setMarkingNotificationId(null) });
+  }, [markAsRead.mutate]);
   const { notifications, isLoading, hasNextPage, fetchNextPage, isFetchingNextPage } = useNotifications(undefined, undefined, {
     filtered: true,
     enabled: open,
     notifyOnNew: false,
   });
+  const enrichedAvatars = moduleAvatarCache;
   const bundles = useMemo(
     () => bundleNotifications(notifications.filter(n => n && n.id), enrichedAvatars),
     [notifications, enrichedAvatars],
   );
 
   return (
-    <div data-filtered-notifications className="mt-3 overflow-hidden rounded-2xl border border-white/5 bg-zinc-900">
+    <div data-filtered-notifications data-notifications-page className="mt-4 overflow-hidden rounded-2xl border border-white/5 bg-zinc-900">
       <button
         type="button"
         onClick={() => setOpen(v => !v)}
@@ -1656,7 +1656,7 @@ function FilteredNotificationsSection({
                 key={bundle.primary.id}
                 notification={bundle.primary}
                 bundle={bundle}
-                onMarkAsRead={onMarkAsRead}
+                onMarkAsRead={handleMarkAsRead}
                 isMarkingAsRead={bundle.allIds.includes(markingNotificationId || '')}
                 enrichedAvatars={enrichedAvatars}
               />
@@ -2321,22 +2321,20 @@ export default function NotificationsPage({ inDrawer = false }: { inDrawer?: boo
           ) : undefined}
           tabs={
             <PageTabs
-              afterFirstTab={
+              beforeTabs={
                 <div className="flex shrink-0 items-center gap-1.5">
                   {settingsControl}
-                  {totalUnread > 0 && (
-                <IslandAction
-                  label={t('notifications.markAllRead')}
-                  onClick={handleMarkAllAsRead}
-                  disabled={markAllAsRead.isPending}
-                >
-                  {markAllAsRead.isPending ? (
-                    <Loader2 className="h-[18px] w-[18px] animate-spin text-white" />
-                  ) : (
-                    <Check className="h-[18px] w-[18px] text-white" />
-                  )}
-                </IslandAction>
-              )}
+                  <IslandAction
+                    label={t('notifications.markAllRead')}
+                    onClick={handleMarkAllAsRead}
+                    disabled={totalUnread === 0 || markAllAsRead.isPending}
+                  >
+                    {markAllAsRead.isPending ? (
+                      <Loader2 className="h-[18px] w-[18px] animate-spin text-white" />
+                    ) : (
+                      <Check className="h-[18px] w-[18px] text-white" />
+                    )}
+                  </IslandAction>
                 </div>
               }
               value={activeTab}
@@ -2420,13 +2418,6 @@ export default function NotificationsPage({ inDrawer = false }: { inDrawer?: boo
             </div>
           )}
         </div>
-        {!inDrawer && isAuthenticated && (
-          <FilteredNotificationsSection
-            onMarkAsRead={handleMarkAsRead}
-            markingNotificationId={markingNotificationId}
-            enrichedAvatars={enrichedAvatars}
-          />
-        )}
       </PageBody>
       {/* Followers drawer - opened inline from aggregated follow notifications */}
       {pageWalletAddress && (

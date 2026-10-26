@@ -19,6 +19,7 @@ import EyeOff from "@/components/ui/cut-icons/hidden";
 import Camera from "@/components/ui/cut-icons/camera";
 import Link2 from "@/components/ui/cut-icons/link";
 import Users from "@/components/ui/cut-icons/communities";
+import CreatorIcon from "@/components/ui/cut-icons/creator";
 import Moon from "@/components/ui/cut-icons/appearance";
 import Lock from "@/components/ui/cut-icons/privacy";
 import LayoutGrid from "@/components/ui/cut-icons/apps";
@@ -505,6 +506,7 @@ export default function SettingsPage() {
 function ProfileSettings() {
   const { t: _copy } = _useCopy();
   const { t } = useTranslation();
+  const navigate = useNavigate();
   const { user: authUser, refreshUser, patchUser } = useAuthContext();
   const queryClient = useQueryClient();
   const { suppressGlobalDrop, unsuppressGlobalDrop } = useGlobalDropZone();
@@ -1248,6 +1250,18 @@ function ProfileSettings() {
         <div data-setting-anchor="profiles">
           <ProfilesSection />
         </div>
+
+        {/* The Creator studio's way in, now the Assistant header no longer
+            carries a shortcut to it. Last on the tab Settings opens on. */}
+        <SettingsRow
+          as="button"
+          anchor="creator"
+          icon={<CreatorIcon />}
+          title={t('commandCentre.creator', 'Creator')}
+          description={t('creator.heroSubtitle', 'Images, video, music and 3D. Pay per creation in tokens.')}
+          onClick={() => navigate('/creator')}
+          action={<ExternalLink className="size-4 text-zinc-500" />}
+        />
       </div>
 
     </div>

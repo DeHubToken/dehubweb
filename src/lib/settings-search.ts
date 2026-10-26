@@ -59,6 +59,7 @@ export const SETTINGS_SEARCH_INDEX: SettingsSearchEntry[] = [
   { tab: 'profile', anchor: 'twitch-mirror', label: 'Twitch mirroring', labelKey: 'twitchMirror.title', keywords: 'twitch mirror relay console xbox ps5 playstation aircast automatic stream broadcast' },
   { tab: 'profile', anchor: 'badge-delegation', label: 'Badge delegation', labelKey: 'settings.badgeDelegation', keywords: 'badge lend borrow tier delegate' },
   { tab: 'profile', anchor: 'profiles', label: 'Profiles', labelKey: 'settings.profiles', keywords: 'accounts switch add account multiple' },
+  { tab: 'profile', anchor: 'creator', label: 'Creator', labelKey: 'commandCentre.creator', keywords: 'creator studio create image video song music 3d generate' },
 
   // Appearance
   { tab: 'appearance', anchor: 'theme', label: 'Theme', labelKey: 'settings.theme', keywords: 'dark light mode skin cosmic jungle osaka winter island hacker horror minimal appearance' },
