@@ -14,7 +14,8 @@
 // x-dehub-token, which chargeForJob requires and the browser will not send
 // unless the preflight says they are allowed. A local copy silently drops them.
 import { corsHeaders, rateLimitByIp } from '../_shared/auth.ts';
-import { recordGeneration, settleGeneration, generationTicket } from '../_shared/generation-jobs.ts';
+import { recordGeneration, settleGeneration } from '../_shared/generation-jobs.ts';
+import { authorizeGenerationPoll } from '../_shared/generation-poll-auth.ts';
 import { chargeForJob } from '../_shared/ai-payment-guard.ts';
 import { falQueueUrls } from '../_shared/fal-queue.ts';
 
@@ -288,9 +289,13 @@ Deno.serve(async (req) => {
         windowMs: 60 * 60 * 1000,
       });
       if (pollLimited) return pollLimited;
-      const ticket = await generationTicket('generate-3d', body.predictionId);
-      if (ticket) body.falAppId = ticket.provider_app;
-      return await settleGeneration('generate-3d', body.predictionId, await handleStatusCheck(body.predictionId, body.falAppId, ticket?.result));
+      const authorized = await authorizeGenerationPoll(req, 'generate-3d', body.predictionId);
+      if (!authorized.ok) return authorized.response;
+      const ticket = authorized.ticket;
+      if (['succeeded', 'failed', 'canceled', 'cancelled'].includes(ticket.result?.status)) {
+        return await settleGeneration('generate-3d', body.predictionId, new Response(JSON.stringify(ticket.result), { headers: { ...corsHeaders, 'Content-Type': 'application/json' } }));
+      }
+      return await settleGeneration('generate-3d', body.predictionId, await handleStatusCheck(body.predictionId, ticket.provider_app, ticket.result));
     }
 
     // ─── New generation ───

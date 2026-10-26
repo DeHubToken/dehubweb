@@ -30,6 +30,7 @@ import { useRuleFired } from './rule-bus';
 import { PollWidget } from './poll';
 import { PointsBoard, SubathonTimer } from './subathon';
 import { StreamerLevel, TipJar } from './level-and-jar';
+import { HypeTrainWidget } from './hype-train';
 
 export interface WidgetProps {
   settings: Record<string, unknown>;
@@ -136,6 +137,8 @@ function TipBanner({ item, leaving }: { item: TipItem; leaving: boolean }) {
 interface PersonItem {
   user: StreamJoinUser;
   planName?: string;
+  /** Subscriptions this person bought for others, when it was a gift. */
+  gifted?: number;
 }
 
 const PERSON_EVENT: Partial<Record<OverlayKind, LiveRoomEvent['type']>> = {
@@ -154,6 +157,11 @@ function PersonAlert({ settings, kind }: WidgetProps & { kind: OverlayKind }) {
   const wanted = PERSON_EVENT[kind];
 
   useOverlayEvent((event: LiveRoomEvent) => {
+    // Gifted subscriptions are a subscriber alert: one card for the whole checkout.
+    if (event.type === 'giftSub' && wanted === 'subscribe') {
+      queue.push({ user: event.user, planName: event.planName, gifted: event.count });
+      return;
+    }
     if (event.type !== wanted || !('user' in event) || !event.user) return;
     if (event.type === 'join') {
       const key = event.user.address;
@@ -173,6 +181,8 @@ function PersonBanner({ kind, item, leaving }: { kind: OverlayKind; item: Person
   const line =
     kind === 'follow_alert'
       ? t('liveOverlay.newFollower', { name })
+      : kind === 'subscribe_alert' && item.gifted
+        ? t('liveOverlay.giftedSubs', { name, count: item.gifted })
       : kind === 'subscribe_alert'
         ? item.planName
           ? t('liveOverlay.subscribedTo', { name, plan: item.planName })
@@ -378,7 +388,7 @@ function ReactionCounter({ settings, stats }: WidgetProps) {
 
 interface FeedItem {
   id: number;
-  kind: 'tip' | 'follow' | 'subscribe' | 'share';
+  kind: 'tip' | 'follow' | 'subscribe' | 'share' | 'giftSub';
   user: StreamJoinUser;
   amount?: number;
   planName?: string;
@@ -405,6 +415,8 @@ function EventFeed({ settings }: WidgetProps) {
       item = { kind: event.type, user: event.user };
     } else if (event.type === 'subscribe') {
       item = { kind: 'subscribe', user: event.user, planName: event.planName };
+    } else if (event.type === 'giftSub') {
+      item = { kind: 'giftSub', user: event.user, amount: event.count };
     }
     if (!item) return;
     seq.current += 1;
@@ -428,6 +440,8 @@ function FeedRow({ item }: { item: FeedItem }) {
   const line =
     item.kind === 'tip'
       ? t('liveOverlay.tipped', { name })
+      : item.kind === 'giftSub'
+        ? t('liveOverlay.giftedSubs', { name, count: item.amount ?? 1 })
       : item.kind === 'follow'
         ? t('liveOverlay.newFollower', { name })
         : item.kind === 'subscribe'
@@ -657,6 +671,8 @@ export function OverlayWidgetView({ kind, ...props }: WidgetProps & { kind: Over
       return <StreamerLevel settings={props.settings} />;
     case 'tip_jar':
       return <TipJar settings={props.settings} stats={props.stats} />;
+    case 'hype_train':
+      return <HypeTrainWidget settings={props.settings} />;
     default:
       return null;
   }

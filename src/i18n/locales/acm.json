@@ -10493,8 +10493,6 @@
     "audioTaskSpeechDesc": "تحويل النص إلى كلام بأي صوت",
     "audioTaskSpeechLabel": "كلام",
     "audioTaskSpeechPlaceholder": "اكتب ما يجب أن يقوله الصوت",
-    "bannerCopy": "أطلق حملاتك الإبداعية بشكل أسرع مع أدوات DeHub AI",
-    "closeBanner": "غلق شريط المبدع",
     "consistent": "ثابت",
     "consistentDetail": "قابل للتكرار، أداء أكثر هدوءاً",
     "decrease": "تقليل {{field}}",

@@ -524,6 +524,7 @@ async function pollRender(
     firstAttempt = false;
 
     const poll = await supabase.functions.invoke(config.functionName, {
+      headers: dehubAuthHeaders(),
       body: {
         predictionId: ticket.predictionId,
         provider: ticket.provider,

@@ -45,7 +45,7 @@ Deno.serve(async (req) => {
       } else if (job.prediction_id && ['generate-video','generate-3d','fal-ai-tools'].includes(job.endpoint)) {
         const polled = await fetch(`${Deno.env.get('SUPABASE_URL')}/functions/v1/${job.endpoint}`, {
           method: 'POST',
-          headers: { 'Content-Type': 'application/json', apikey: Deno.env.get('SUPABASE_ANON_KEY')!, ...(job.provider === 'venice' ? { Authorization: `Bearer ${Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')}` } : {}) },
+          headers: { 'Content-Type': 'application/json', apikey: Deno.env.get('SUPABASE_ANON_KEY')!, Authorization: `Bearer ${Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')}` },
           body: JSON.stringify(job.endpoint === 'fal-ai-tools'
             ? { requestId: job.prediction_id, appId: job.provider_app }
             : { predictionId: job.prediction_id, provider: job.provider, falAppId: job.provider_app }),

@@ -516,7 +516,7 @@ describe('surfaces are wired consistently', () => {
 
   it('uses the reaction ladder in the immersive video player too', () => {
     expect(VIDEO_CARD).toContain('disabled: hideActions || !!video.isAudio || isContentGated');
-    expect(VIDEO_CARD).toContain('onSingleTap: feedShortsTarget ? openPost : isImmersive ? () =>');
+    expect(VIDEO_CARD).toContain('onSingleTap: feedPreview ? openPost : isImmersive ? () =>');
     expect(VIDEO_CARD).toContain('onUndoSingleTap: isImmersive ? handlePlayClick : undefined');
     expect(VIDEO_CARD).not.toContain('handleDoubleTapSeek');
     expect(VIDEO_CARD).not.toContain('lastTapRef');

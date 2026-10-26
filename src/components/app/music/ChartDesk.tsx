@@ -39,6 +39,10 @@ export function ChartDesk<S extends string>({
   empty,
   thumbs = 'none',
   renderSelected,
+  search: searchProp,
+  onSearchChange,
+  moreRows,
+  isSearchingMore = false,
 }: {
   header: ReactNode;
   sorts: { value: NoInfer<S>; label: string }[];
@@ -53,11 +57,23 @@ export function ChartDesk<S extends string>({
   thumbs?: 'none' | 'wide' | 'square';
   /** `next` selects the entry after this one, wrapping to the top. */
   renderSelected: (id: string, controls: { next: () => void }) => ReactNode;
+  /** The search text, when the chart's owner also searches beyond the chart. */
+  search?: string;
+  onSearchChange?: (search: string) => void;
+  /** Matches from the whole zone, listed after the chart's own matches. */
+  moreRows?: ChartDeskRow[];
+  isSearchingMore?: boolean;
 }) {
   const { t } = useTranslation();
-  const [search, setSearch] = useState('');
+  const [ownSearch, setOwnSearch] = useState('');
+  const search = onSearchChange ? searchProp ?? '' : ownSearch;
+  const setSearch = onSearchChange ?? setOwnSearch;
   const query = search.trim().toLocaleLowerCase();
-  const matchingRows = rows.filter(row => !query || `${row.title} ${row.subtitle ?? ''}`.toLocaleLowerCase().includes(query));
+  const chartMatches = rows.filter(row => !query || `${row.title} ${row.subtitle ?? ''}`.toLocaleLowerCase().includes(query));
+  const chartIds = new Set(chartMatches.map(row => row.id));
+  const matchingRows = query && moreRows?.length
+    ? [...chartMatches, ...moreRows.filter(row => !chartIds.has(row.id) && (chartIds.add(row.id), true))]
+    : chartMatches;
   const [selectedId, setSelectedId] = useState<string | null>(null);
   const selected = matchingRows.find(row => row.id === selectedId) || matchingRows[0];
   const selectedIndex = selected ? matchingRows.indexOf(selected) : -1;
@@ -97,17 +113,19 @@ export function ChartDesk<S extends string>({
             </div>
           ))}
         </div>
-      ) : rows.length === 0 || !selected ? (
-        <AppState icon={empty.icon} title={query ? t('common.noResults', { defaultValue: 'No results found' }) : empty.title} size="compact" />
+      ) : query && !selected && isSearchingMore ? (
+        <div data-listening-desk-searching className="py-6 text-center text-sm opacity-70">{t('explorePage.searching', { defaultValue: 'Searching...' })}</div>
+      ) : (rows.length === 0 && !query) || !selected ? (
+        <AppState icon={empty.icon} title={query ? t('explorePage.noResults', { defaultValue: 'No results found' }) : empty.title} size="compact" />
       ) : (
         <div data-listening-desk-layout data-chart-thumbs={thumbs}>
           <div data-listening-desk-player>
-            <span data-desk-rank>#{rows.indexOf(selected) + 1}{sortName ? ` · ${sortName}` : ''}</span>
+            {rows.includes(selected) && <span data-desk-rank>#{rows.indexOf(selected) + 1}{sortName ? ` · ${sortName}` : ''}</span>}
             {renderSelected(selected.id, { next })}
           </div>
           <div data-listening-desk-tracks><div data-listening-desk-scroll ref={scrollRef}>
             {matchingRows.map(row => <button type="button" key={row.id} data-selected={row.id === selected.id} onClick={() => setSelectedId(row.id)} aria-pressed={row.id === selected.id}>
-              <span data-track-number>{String(rows.indexOf(row) + 1).padStart(2, '0')}</span>
+              <span data-track-number>{rows.includes(row) ? String(rows.indexOf(row) + 1).padStart(2, '0') : '–'}</span>
               {thumbs !== 'none' && <span data-chart-thumb={thumbs}>{row.thumb ? <img src={row.thumb} alt="" loading="lazy" /> : <Play className="h-4 w-4" />}</span>}
               <span data-track-info><strong>{row.title}</strong>{row.subtitle && <small>{row.subtitle}</small>}</span>
               {row.trailing != null && <span data-track-duration>{row.trailing}</span>}
@@ -119,3 +137,4 @@ export function ChartDesk<S extends string>({
     </div>
   );
 }
+

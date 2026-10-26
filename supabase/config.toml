@@ -350,6 +350,9 @@ project_id = "aigxuutjaqsywioxjefr"
   # summarize-transcript calls with the service key; the worker callback checks DUB_WORKER_SECRET.
   [functions.stage-clips]
     verify_jwt = false
+  # Live clips: viewer clips and streamer highlights. Checks the DeHub token itself.
+  [functions.live-clips]
+    verify_jwt = false
   # Public read-only CoinMarketCap proxy; the CMC key stays server-side.
   [functions.cmc-market-cap]
     verify_jwt = false
@@ -441,4 +444,7 @@ verify_jwt = false
 
 # Private worker authenticates using the existing internal service credential.
 [functions.maboroshi-provider]
+verify_jwt = false
+
+[functions.cashout-webhook]
 verify_jwt = false
