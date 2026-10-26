@@ -6,7 +6,7 @@ ALTER TABLE public.ai_generation_jobs
 CREATE OR REPLACE FUNCTION public.ai_generation_transition(
   p_job_id uuid,p_status text,p_result jsonb,
   p_prediction_id text DEFAULT NULL,p_provider text DEFAULT NULL,p_provider_app text DEFAULT NULL,
-  p_expected_statuses text[] DEFAULT NULL,p_created_before timestamptz DEFAULT NULL,p_refund_not_before timestamptz DEFAULT NULL
+  p_expected_statuses text[] DEFAULT NULL,p_created_before timestamptz DEFAULT NULL
 ) RETURNS jsonb LANGUAGE plpgsql SECURITY DEFINER SET search_path=public AS $$
 DECLARE v_job public.ai_generation_jobs%ROWTYPE; v_next text; v_result jsonb;
 BEGIN
@@ -27,9 +27,23 @@ BEGIN
   END IF;
   UPDATE ai_generation_jobs SET status=v_next,result=v_result,
     prediction_id=COALESCE(p_prediction_id,prediction_id),provider=COALESCE(p_provider,provider),provider_app=COALESCE(p_provider_app,provider_app),
-    refund_lease_until=CASE WHEN v_next='refund_pending' THEN p_refund_not_before ELSE refund_lease_until END,updated_at=clock_timestamp()
+    updated_at=clock_timestamp()
     WHERE id=p_job_id RETURNING * INTO v_job;
   RETURN jsonb_build_object('claimed',true,'job',to_jsonb(v_job));
+END $$;
+
+-- A definitive insufficient-balance response is not an uncertain refund.
+CREATE OR REPLACE FUNCTION public.ai_generation_debit_declined(p_job_id uuid)
+RETURNS jsonb LANGUAGE plpgsql SECURITY DEFINER SET search_path=public AS $$
+DECLARE v_job public.ai_generation_jobs%ROWTYPE;
+BEGIN
+  SELECT * INTO v_job FROM ai_generation_jobs WHERE id=p_job_id FOR UPDATE;
+  IF NOT FOUND THEN RETURN NULL; END IF;
+  IF v_job.status='submitting' AND v_job.payment_source='credits' THEN
+    UPDATE ai_generation_jobs SET status='failed',result=jsonb_build_object('status','failed','error','Not enough credits for this generation.','code','CREDITS_SHORT','paymentRestored',false,'paymentNotTaken',true),updated_at=clock_timestamp()
+      WHERE id=p_job_id RETURNING * INTO v_job;
+  END IF;
+  RETURN to_jsonb(v_job);
 END $$;
 
 CREATE OR REPLACE FUNCTION public.ai_generation_refund_claim(p_job_id uuid,p_token uuid)
@@ -113,13 +127,15 @@ END $$;
 DROP TRIGGER IF EXISTS ai_generation_terminal_guard ON public.ai_generation_jobs;
 CREATE TRIGGER ai_generation_terminal_guard BEFORE UPDATE ON public.ai_generation_jobs FOR EACH ROW EXECUTE FUNCTION public.ai_generation_terminal_guard();
 
-REVOKE ALL ON FUNCTION public.ai_generation_transition(uuid,text,jsonb,text,text,text,text[],timestamptz,timestamptz) FROM PUBLIC,anon,authenticated;
+REVOKE ALL ON FUNCTION public.ai_generation_transition(uuid,text,jsonb,text,text,text,text[],timestamptz) FROM PUBLIC,anon,authenticated;
+REVOKE ALL ON FUNCTION public.ai_generation_debit_declined(uuid) FROM PUBLIC,anon,authenticated;
 REVOKE ALL ON FUNCTION public.ai_generation_refund_claim(uuid,uuid) FROM PUBLIC,anon,authenticated;
 REVOKE ALL ON FUNCTION public.ai_generation_refund_finish(uuid,uuid,boolean) FROM PUBLIC,anon,authenticated;
 REVOKE ALL ON FUNCTION public.ai_generation_save_result(uuid,jsonb,jsonb) FROM PUBLIC,anon,authenticated;
 REVOKE ALL ON FUNCTION public.ai_generation_terminal_guard() FROM PUBLIC,anon,authenticated;
 REVOKE ALL ON FUNCTION public.ai_payment_release(text,text,numeric,text) FROM PUBLIC,anon,authenticated;
-GRANT EXECUTE ON FUNCTION public.ai_generation_transition(uuid,text,jsonb,text,text,text,text[],timestamptz,timestamptz) TO service_role;
+GRANT EXECUTE ON FUNCTION public.ai_generation_transition(uuid,text,jsonb,text,text,text,text[],timestamptz) TO service_role;
+GRANT EXECUTE ON FUNCTION public.ai_generation_debit_declined(uuid) TO service_role;
 GRANT EXECUTE ON FUNCTION public.ai_generation_refund_claim(uuid,uuid) TO service_role;
 GRANT EXECUTE ON FUNCTION public.ai_generation_refund_finish(uuid,uuid,boolean) TO service_role;
 GRANT EXECUTE ON FUNCTION public.ai_generation_save_result(uuid,jsonb,jsonb) TO service_role;

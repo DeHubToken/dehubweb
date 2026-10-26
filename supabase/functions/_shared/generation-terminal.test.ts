@@ -1,5 +1,6 @@
 import { recoverGenerationRefund, refundJournalledGeneration, transitionGeneration } from './generation-terminal.ts';
 import { chargeCredits } from './ai-payment-guard.ts';
+import { refundCreditsOutcome } from './credits.ts';
 function assert(value: unknown, message = 'Assertion failed'): asserts value { if (!value) throw new Error(message); }
 const same = (a: unknown,b: unknown) => assert(JSON.stringify(a)===JSON.stringify(b));
 function fakeDb(responses: unknown[]) {
@@ -17,14 +18,14 @@ Deno.test('a stale failure returns recorded success without attempting a financi
 Deno.test('a competing refund lease never calls the external credit service', async () => {
   const {db,calls}=fakeDb([{claimed:false,job:{id:'job',status:'refund_pending',payment_source:'credits'}}]);
   let refunds=0;
-  const result=await recoverGenerationRefund('job',db,async()=>{refunds++;return true;});
+  const result=await recoverGenerationRefund('job',db,async()=>{refunds++;return 'restored' as const;});
   same(result?.status,'refund_pending'); same(refunds,0); same(calls.length,1);
 });
 
 Deno.test('credit restoration is finalized only after the keyed backend acknowledges it', async () => {
   const {db,calls}=fakeDb([{claimed:true,job:{id:'job',status:'refund_pending',payment_source:'credits',credit_debit_key:'ai:owned'}},
     {id:'job',status:'failed',result:{paymentRestored:true}}]);
-  const result=await recoverGenerationRefund('job',db,async key=>{same(key,'ai:owned');same(calls.length,1);return true;});
+  const result=await recoverGenerationRefund('job',db,async key=>{same(key,'ai:owned');same(calls.length,1);return 'restored' as const;});
   same(result?.result?.paymentRestored,true);
   same(calls.map(call=>call.name),['ai_generation_refund_claim','ai_generation_refund_finish']);
   same(calls[1].args.p_credit_restored,true);
@@ -33,15 +34,38 @@ Deno.test('credit restoration is finalized only after the keyed backend acknowle
 Deno.test('a failed external credit refund leaves its durable decision pending', async () => {
   const {db,calls}=fakeDb([{claimed:true,job:{id:'job',status:'refund_pending',payment_source:'credits',credit_debit_key:'ai:owned'}}]);
   let failed=false;
-  try {await recoverGenerationRefund('job',db,async()=>false);}catch{failed=true;}
+  try {await recoverGenerationRefund('job',db,async()=>'error');}catch{failed=true;}
   assert(failed); same(calls.length,1);
 });
 
 Deno.test('wallet release is delegated to the transactional finalizer instead of a separate receipt call', async () => {
   const {db,calls}=fakeDb([{claimed:true,job:{id:'job',status:'refund_pending',payment_source:'dhb'}},{id:'job',status:'failed',result:{paymentRestored:true}}]);
   let externalCalls=0;
-  await recoverGenerationRefund('job',db,async()=>{externalCalls++;return true;});
+  await recoverGenerationRefund('job',db,async()=>{externalCalls++;return 'restored' as const;});
   same(externalCalls,0); same(calls[1].name,'ai_generation_refund_finish');same(calls[1].args.p_credit_restored,false);
+});
+
+Deno.test('missing or void credit keys never finalize an uncertain debit as restored', async () => {
+  const {db,calls}=fakeDb([{claimed:true,job:{id:'job',status:'refund_pending',payment_source:'credits',credit_debit_key:'ai:unknown'}}]);
+  let pending=false;
+  try{await recoverGenerationRefund('job',db,async()=>'unconfirmed');}catch{pending=true;}
+  assert(pending);same(calls.length,1);
+});
+
+Deno.test('the credit HTTP acknowledgement distinguishes restored, void and missing keys', async () => {
+  const fetcher=globalThis.fetch, secret=Deno.env.get('INTERNAL_SERVICE_SECRET');
+  Deno.env.set('INTERNAL_SERVICE_SECRET','test-fixture');
+  try {
+    globalThis.fetch=async()=>new Response(JSON.stringify({refunded:false}),{status:200});
+    same(await refundCreditsOutcome('fixture'),'unconfirmed');
+    globalThis.fetch=async()=>new Response('{}',{status:404});
+    same(await refundCreditsOutcome('fixture'),'unconfirmed');
+    globalThis.fetch=async()=>new Response(JSON.stringify({refunded:true}),{status:200});
+    same(await refundCreditsOutcome('fixture'),'restored');
+  } finally {
+    globalThis.fetch=fetcher;
+    if(secret===undefined)Deno.env.delete('INTERNAL_SERVICE_SECRET');else Deno.env.set('INTERNAL_SERVICE_SECRET',secret);
+  }
 });
 
 Deno.test('stale sweep decisions carry the expected status and authoritative age condition to SQL', async () => {

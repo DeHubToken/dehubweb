@@ -49,7 +49,11 @@ DO $$ DECLARE r jsonb; old_result jsonb; BEGIN
   PERFORM ai_generation_save_result('00000000-0000-4000-8000-000000000001',old_result,(old_result-'savePending')||'{"libraryId":"saved-one"}');
   r:=ai_generation_save_result('00000000-0000-4000-8000-000000000001',old_result,old_result||'{"savePending":true}');
   IF r#>>'{result,libraryId}'<>'saved-one' OR r#>>'{result,savePending}'='true' THEN RAISE EXCEPTION 'Stale archive overwrote saved result'; END IF;
-  IF has_function_privilege('anon','public.ai_generation_transition(uuid,text,jsonb,text,text,text,text[],timestamptz,timestamptz)','EXECUTE') THEN RAISE EXCEPTION 'Public terminal transition exposed'; END IF;
+  IF has_function_privilege('anon','public.ai_generation_transition(uuid,text,jsonb,text,text,text,text[],timestamptz)','EXECUTE') THEN RAISE EXCEPTION 'Public terminal transition exposed'; END IF;
+  INSERT INTO ai_generation_jobs(id,wallet_address,price_dhb,kind,model,endpoint,payment_source,credit_debit_key)
+    VALUES('00000000-0000-4000-8000-000000000099','owner',100,'image','test','generate-image','credits','ai:declined');
+  r:=ai_generation_debit_declined('00000000-0000-4000-8000-000000000099');
+  IF r->>'status'<>'failed' OR r#>>'{result,paymentNotTaken}'<>'true' OR r#>>'{result,paymentRestored}'<>'false' THEN RAISE EXCEPTION 'Definitive decline was misrepresented as a refund'; END IF;
   INSERT INTO ai_payments(wallet_address,tx_hash,paid_dhb,remaining_dhb) VALUES('owner','voice-receipt',100,40);
   PERFORM ai_payment_release('voice-receipt','owner',20,'legacy-voice-job');
   IF (SELECT remaining_dhb FROM ai_payments WHERE tx_hash='voice-receipt')<>60 THEN RAISE EXCEPTION 'Non-journalled receipt refund regressed'; END IF;
