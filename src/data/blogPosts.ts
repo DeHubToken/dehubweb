@@ -4,6 +4,7 @@ import { e2eePost } from './posts/e2eePost';
 import { topDecentralizedSocialApps2026Post } from './posts/topDecentralizedSocialApps2026Post';
 import { topBlockchainProjects2026Post } from './posts/topBlockchainProjects2026Post';
 import { topOpenSourceProjects2026Post } from './posts/topOpenSourceProjects2026Post';
+import { topCryptoProjects2026Post } from './posts/topCryptoProjects2026Post';
 import { creatorVsHiggsfieldPost } from './posts/creatorVsHiggsfieldPost';
 import { maboroshiGenjutsuAlternativePost } from './posts/maboroshiGenjutsuAlternativePost';
 import { howGenjutsuWorksPost } from './posts/howGenjutsuWorksPost';
@@ -287,6 +288,7 @@ const createPost = (
 };
 
 export const blogPosts: BlogPost[] = [
+  topCryptoProjects2026Post,
   topOpenSourceProjects2026Post,
   topBlockchainProjects2026Post,
   topDecentralizedSocialApps2026Post,
