@@ -611,10 +611,10 @@ function PromptComposer({ initialCategory, focusRequest, onPosted }: { initialCa
             </div>
             <button type="button" disabled={submitMutation.isPending} onClick={() => removeAttachment(index)}
               aria-label={t('features.removePromptAttachment', 'Remove {{name}}', { name: attachment.file.name })}
-              className="absolute right-1 top-1 w-6 h-6 rounded-full bg-black/80 text-white flex items-center justify-center"><X className="w-3.5 h-3.5" /></button>
+              data-keep-dark className="absolute right-1 top-1 w-6 h-6 rounded-full bg-black/80 text-white flex items-center justify-center"><X className="w-3.5 h-3.5" /></button>
             {attachment.file.type.startsWith('image/') && <button type="button" disabled={submitMutation.isPending} onClick={() => setMarkupIndex(index)}
               aria-label={t('editor.draw.heading', 'Draw')}
-              className="absolute left-1 top-1 w-6 h-6 rounded-full bg-black/80 text-white flex items-center justify-center"><Pencil className="w-3.5 h-3.5" /></button>}
+              data-keep-dark className="absolute left-1 top-1 w-6 h-6 rounded-full bg-black/80 text-white flex items-center justify-center"><Pencil className="w-3.5 h-3.5" /></button>}
             <p className="text-[10px] text-zinc-400 truncate mt-1">{attachment.file.name}</p>
           </div>)}
         </div>}
