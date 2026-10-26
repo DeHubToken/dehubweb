@@ -1,5 +1,6 @@
 import { describe, expect, it } from 'vitest';
-import { buildSeedance2Input, buildSeedance2Request, seedance2RoutingDecision } from '../../supabase/functions/_shared/seedance2-input';
+import { buildSeedance2Input, buildSeedance2Request, seedance2RoutingDecision, seedance2QuoteRoute } from '../../supabase/functions/_shared/seedance2-input';
+import { providerCostUsd, quotePriceDhb } from '../../supabase/functions/_shared/ai-pricing';
 import { VIDEO_MODELS } from '../constants/video-models.constants';
 import schemas from './fixtures/seedance2-schema.json';
 
@@ -26,10 +27,10 @@ describe('Seedance 2.0 verified provider contract', () => {
     expect(() => buildSeedance2Input({ prompt: 'Scene', duration: '30s' })).toThrow('4 to 15');
     expect(buildSeedance2Input({ prompt: 'Scene', sourceImage: 'start.jpg', endFrameUrl: 'end.jpg' }).input.end_image_url).toBe('end.jpg');
   });
-  it('routes audio-only, video-only and start-image-plus-audio through the reference endpoint', () => {
+  it('routes video-only and start-image-plus-audio through the reference endpoint', () => {
     for (const prefix of ['bytedance/seedance-2.0', 'bytedance/seedance-2.0/fast']) {
       const routes = { falTextModel: `${prefix}/text-to-video`, falImageModel: `${prefix}/image-to-video`, falReferenceModel: `${prefix}/reference-to-video` };
-      for (const references of [{ audioUrls: ['audio.mp3'] }, { videoUrls: ['clip.mp4'] }, { sourceImage: 'start.jpg', audioUrls: ['audio.mp3'] }]) {
+      for (const references of [{ videoUrls: ['clip.mp4'] }, { sourceImage: 'start.jpg', audioUrls: ['audio.mp3'] }]) {
         const request = buildSeedance2Request(routes, { prompt: 'Scene', ...references });
         expect(request.appId).toBe(routes.falReferenceModel);
         expect(request.mode).toBe('reference');
@@ -40,6 +41,8 @@ describe('Seedance 2.0 verified provider contract', () => {
     }
   });
   it('rejects malformed nullable and array inputs rather than charging a silently changed request', () => {
+    expect(() => buildSeedance2Input({ prompt: 'Scene', audioUrls: ['audio.mp3'] })).toThrow('require an image or video');
+    expect(() => buildSeedance2Input({ prompt: 'Scene', referenceImageUrls: Array.from({ length: 9 }, (_, i) => `${i}.jpg`), audioUrls: ['a.mp3', 'b.mp3', 'c.mp3'], videoUrls: ['clip.mp4'] })).toThrow('12');
     for (const options of [{ sourceImage: null }, { audioUrls: null }, { audioUrls: 'audio.mp3' }, { videoUrls: [42] }, { duration: null }, { negativePrompt: null }]) {
       expect(() => buildSeedance2Input({ prompt: 'Scene', ...options } as never)).toThrow();
     }
@@ -56,6 +59,30 @@ describe('Seedance 2.0 verified provider contract', () => {
     for (const model of ['seedance-2.0', 'seedance-2.0-fast']) {
       expect(VIDEO_MODELS[model].supportsSeed).toBe(false);
       expect(VIDEO_MODELS[model].supportsNegativePrompt).toBe(false);
+      expect(VIDEO_MODELS[model].resolutions).toEqual(['480p', '720p']);
+    }
+  });
+  it('quotes the selected provider while preserving cheaper compatible direct requests', () => {
+    const quote = (model: string, hints: Parameters<typeof seedance2QuoteRoute>[1], available = true) => {
+      const route = seedance2QuoteRoute(model, hints, available);
+      const options = { durationSeconds: 5, videoProvider: route.provider };
+      return { route, cost: providerCostUsd('video', model, options), price: quotePriceDhb('video', model, options) };
+    };
+    expect(quote('seedance-2.0', {}).cost).toBeCloseTo(0.825);
+    for (const hints of [{ hasEndFrame: true }, { hasAudioReferences: true }, { hasVideoReferences: true }, { hasInlineMedia: true }]) {
+      expect(quote('seedance-2.0', hints).route.provider).toBe('fal');
+      expect(quote('seedance-2.0', hints).cost).toBeCloseTo(1.517);
+      expect(quote('seedance-2.0', hints).price).toBeGreaterThan(quote('seedance-2.0', {}).price!);
+    }
+    expect(quote('seedance-2.0', {}, false).route.reason).toBe('direct-provider-unavailable');
+    expect(quote('seedance-2.0-fast', {}).cost).toBeCloseTo(1.2095);
+    expect(quote('seedance-2.0-fast', {}).route.reason).toBe('fast-provider-route');
+  });
+  it('rejects unpriced resolutions and malformed quote hints before debit', () => {
+    for (const model of ['seedance-2.0', 'seedance-2.0-fast']) {
+      expect(() => seedance2QuoteRoute(model, { resolution: '1080p' }, true)).toThrow('priced');
+      expect(() => buildSeedance2Input({ prompt: 'Scene', resolution: '1080p' })).toThrow('priced');
+      expect(() => seedance2QuoteRoute(model, { hasEndFrame: 'false' } as never, true)).toThrow('Invalid');
     }
   });
 });

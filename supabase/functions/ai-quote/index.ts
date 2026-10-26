@@ -20,6 +20,8 @@ import { handleCorsPreflight, jsonResponse } from '../_shared/auth.ts';
 import { DHB_USD_PEG, dhbToUsd, quotePriceDhb, type JobKind } from '../_shared/ai-pricing.ts';
 import { isVeniceImage, isVeniceVideo } from '../_shared/venice-catalog.ts';
 import { quoteVenice } from '../_shared/venice.ts';
+import { seedance2QuoteRoute } from '../_shared/seedance2-input.ts';
+import { kieKey } from '../_shared/kie.ts';
 
 Deno.serve(async (req) => {
   const preflight = handleCorsPreflight(req);
@@ -33,6 +35,11 @@ Deno.serve(async (req) => {
       return jsonResponse({ ...await quoteVenice(modelId, body), pegUsd: DHB_USD_PEG });
     }
 
+    let videoProvider: 'kie' | 'fal' | undefined;
+    if (body.kind === 'video' && ['seedance-2.0', 'seedance-2.0-fast'].includes(modelId)) {
+      try { videoProvider = seedance2QuoteRoute(modelId, body, !!kieKey()).provider; }
+      catch (error) { return jsonResponse({ error: (error as Error).message }, 400); }
+    }
     const priceDhb = quotePriceDhb(
       String(body?.kind ?? '') as JobKind,
       String(body?.modelId ?? ''),
@@ -40,6 +47,7 @@ Deno.serve(async (req) => {
         durationSeconds: body?.durationSeconds,
         quality: body?.quality,
         quantity: body?.quantity,
+        videoProvider,
       },
     );
 

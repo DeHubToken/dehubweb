@@ -29,11 +29,13 @@ export function buildSeedance2Input(options: Seedance2Options) {
   const aspect = options.aspectRatio ?? '16:9';
   if (!['21:9', '16:9', '4:3', '1:1', '3:4', '9:16'].includes(aspect)) throw new Error('Unsupported Seedance aspect ratio');
   const resolution = options.resolution ?? '720p';
-  if (!['480p', '720p', '1080p'].includes(resolution)) throw new Error('Unsupported Seedance resolution');
+  if (!['480p', '720p'].includes(resolution)) throw new Error('Choose a priced Seedance resolution: 480p or 720p');
   const referenceMode = !!(options.referenceImageUrls?.length || options.audioUrls?.length || options.videoUrls?.length);
   if (options.endFrameUrl && (!options.sourceImage || referenceMode)) throw new Error('End frame requires a start image and cannot be combined with other references');
   const images = [...new Set([...(options.sourceImage ? [options.sourceImage] : []), ...(options.referenceImageUrls ?? [])])];
   if (images.length > 9 || (options.audioUrls?.length ?? 0) > 3 || (options.videoUrls?.length ?? 0) > 3) throw new Error('Too many Seedance references');
+  if (images.length + (options.audioUrls?.length ?? 0) + (options.videoUrls?.length ?? 0) > 12) throw new Error('Choose at most 12 Seedance references in total');
+  if (options.audioUrls?.length && !images.length && !options.videoUrls?.length) throw new Error('Audio references require an image or video reference');
   return {
     mode: referenceMode ? 'reference' as const : options.sourceImage ? 'image' as const : 'text' as const,
     durationSeconds: duration,
@@ -73,4 +75,29 @@ export function seedance2RoutingDecision(options: Pick<Seedance2Options, 'resolu
   if (options.seed !== undefined) return { provider: 'fal', reason: 'seed' } as const;
   if (options.negativePrompt !== undefined) return { provider: 'fal', reason: 'negative-prompt' } as const;
   return { provider: 'kie', reason: 'compatible-direct-route' } as const;
+}
+
+export interface Seedance2QuoteHints {
+  resolution?: string;
+  hasEndFrame?: boolean;
+  hasAudioReferences?: boolean;
+  hasVideoReferences?: boolean;
+  hasInlineMedia?: boolean;
+}
+
+/** Used by quote and charge; generation derives these hints from its actual media. */
+export function seedance2QuoteRoute(modelId: string, hints: Seedance2QuoteHints = {}, kieAvailable: boolean) {
+  if (!hints || typeof hints !== 'object' || Array.isArray(hints)) throw new Error('Invalid video quote options');
+  if (hints.resolution !== undefined && !['480p', '720p'].includes(hints.resolution)) throw new Error('Choose a priced Seedance resolution: 480p or 720p');
+  for (const value of [hints.hasEndFrame, hints.hasAudioReferences, hints.hasVideoReferences, hints.hasInlineMedia]) {
+    if (value !== undefined && typeof value !== 'boolean') throw new Error('Invalid video quote options');
+  }
+  if (modelId === 'seedance-2.0-fast') return { provider: 'fal', reason: 'fast-provider-route' } as const;
+  if (!kieAvailable) return { provider: 'fal', reason: 'direct-provider-unavailable' } as const;
+  if (hints.hasInlineMedia) return { provider: 'fal', reason: 'inline-media' } as const;
+  return seedance2RoutingDecision({ resolution: hints.resolution,
+    ...(hints.hasEndFrame ? { endFrameUrl: 'present' } : {}),
+    ...(hints.hasAudioReferences ? { audioUrls: ['present'] } : {}),
+    ...(hints.hasVideoReferences ? { videoUrls: ['present'] } : {}),
+  });
 }
