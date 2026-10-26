@@ -6388,7 +6388,7 @@ async function handleRequest(request, env, ctx) {
     const { handleProfileShareImage } = await import('./server/post-share-image.js');
     return handleProfileShareImage(request, env, ctx, profileCard[1], fetchAccountInfo);
   }
-  const stageCard = pathname.match(/^\/_og\/stage\/v1\/([0-9a-fA-F-]{16,64})\.png$/);
+  const stageCard = pathname.match(/^\/_og\/stage\/v[12]\/([0-9a-fA-F-]{16,64})\.png$/);
   if (stageCard) {
     const { handleStageShareImage } = await import('./server/stage-share-image.js');
     return handleStageShareImage(request, env, ctx, stageCard[1], supabaseLookup);
