@@ -13,6 +13,7 @@ import { nanoid } from "nanoid";
 import { copyDesignSelection, cutDesignSelection, getDesignClipboard, pasteDesignSelection, reportDesignClipboard } from "@/lib/editor/designClipboard";
 import { editorErrorText } from "@/lib/editor/editorErrorText";
 import { translateCopy } from "@/i18n/copy";
+import { readShortcutPreset, shortcutAction } from "@/lib/editor/shortcutPresets";
 
 function isControlKey(event: KeyboardEvent): boolean {
   if (event.defaultPrevented || event.isComposing) return true;
@@ -30,6 +31,20 @@ export function ShortcutsLayer({ active = true }: { active?: boolean }) {
       const s = useEditorStore.getState();
       const fps = s.settings.fps || 30;
       const dur = selectTimelineDuration(s);
+
+      // Another editor's layout, when the creator picked one in Help.
+      const action = useEditorUiStore.getState().canvasFocus ? null : shortcutAction(readShortcutPreset(), e);
+      if (action) {
+        e.preventDefault();
+        if (action === "split") s.splitAtPlayhead();
+        else if (action === "play") { if (dur > 0) { if (s.currentTime >= dur - 0.05) s.setCurrentTime(0); s.setIsPlaying(true); } }
+        else if (action === "pause") s.setIsPlaying(false);
+        else if (action === "back") { s.setIsPlaying(false); s.setCurrentTime(Math.max(0, s.currentTime - 1)); }
+        else if (action === "frameBack" || action === "frameForward") { s.setIsPlaying(false); s.setCurrentTime(stepTimelineFrame(s.currentTime, action === "frameBack" ? -1 : 1, fps, dur)); }
+        else if (action === "start" || action === "end") { s.setIsPlaying(false); s.setCurrentTime(action === "start" ? 0 : dur); }
+        else if (s.selectedClipIds.length) s.rippleDelete();
+        return;
+      }
 
       if (e.shiftKey && !e.metaKey && !e.ctrlKey && !e.altKey && (e.code === "Digit1" || e.code === "Digit2")) {
         e.preventDefault(); window.dispatchEvent(new Event(e.code === "Digit1" ? "editor:fit-page" : "editor:focus-selection")); return;
