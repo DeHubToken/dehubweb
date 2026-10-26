@@ -1,6 +1,7 @@
 import { sampleStroke } from "./freehand";
+import { EditorError } from "./editorError";
 export function simplifyFreehandPoints(input: [number, number][], tolerance: number, closed = false): [number, number][] {
-  if (!Number.isFinite(tolerance) || tolerance < 0.0001 || tolerance > 0.05) throw new Error("Choose a supported path precision");
+  if (!Number.isFinite(tolerance) || tolerance < 0.0001 || tolerance > 0.05) throw new EditorError("copy.4b92b56a55ff", "Choose a supported path precision");
   const original = sampleStroke(input);
   if (original.length < 3) return original;
   const points = closed ? [...original, original[0]] : original, keep = new Uint8Array(points.length), stack: [number, number][] = [[0, points.length - 1]];
@@ -25,8 +26,8 @@ export function simplifyFreehandPoints(input: [number, number][], tolerance: num
 }
 export function straightenFreehandPoints(points: [number, number][]): [number, number][] {
   const valid = sampleStroke(points);
-  if (valid.length < 2) throw new Error("This drawing needs two distinct endpoints");
+  if (valid.length < 2) throw new EditorError("copy.651b4c015b8e", "This drawing needs two distinct endpoints");
   const first = valid[0], last = valid[valid.length - 1];
-  if (Math.hypot(last[0] - first[0], last[1] - first[1]) < 0.00001) throw new Error("This drawing's endpoints overlap. Use simplify instead");
+  if (Math.hypot(last[0] - first[0], last[1] - first[1]) < 0.00001) throw new EditorError("copy.b066becd89a4", "This drawing's endpoints overlap. Use simplify instead");
   return [[...first], [...last]];
 }

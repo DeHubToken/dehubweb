@@ -1,6 +1,7 @@
 import { graphicFontCss, validGraphicFont } from "./graphicFonts";
 import { getPages, pageAt } from "./pages";
 import type { Clip, ProjectSnapshot, ShapeClip, TextClip, Track } from "./types";
+import { EditorError } from "./editorError";
 export type DiagramNode = { label: string; x: number; y: number; w: number; h: number; shape: "rect" | "ellipse" | "hexagon" };
 export const DIAGRAM_TEMPLATES = [
   { id: "process", name: "Four-step process", description: "A sequence of four connected steps", nodes: ["Discover", "Plan", "Create", "Deliver"].map((label, index) => ({ label, x: 0.17 + index * 0.22, y: 0.5, w: 0.16, h: 0.17, shape: "rect" as const })), edges: [[0, 1], [1, 2], [2, 3]] },
@@ -20,9 +21,9 @@ export function diagramNodes(id: DiagramTemplateId, labels: readonly string[], v
 }
 export function putDiagramTemplate(project: ProjectSnapshot, time: number, id: DiagramTemplateId, content: DiagramContent, makeId: () => string) {
   const preset = DIAGRAM_TEMPLATES.find(preset => preset.id === id);
-  if (!preset || ![content.fill, content.ink, content.accent].every(value => /^#[a-f\d]{6}$/i.test(value)) || content.labels.length > 10 || content.labels.some(value => value.length > 120)) throw new Error("Use valid colours and node labels up to 120 characters");
-  if (content.edgeLabels && (content.edgeLabels.length > 9 || content.edgeLabels.some(label => label.length > 80))) throw new Error("Use connector labels up to 80 characters");
-  if (!validGraphicFont(content.fontFamily)) throw new Error("Choose an available diagram font");
+  if (!preset || ![content.fill, content.ink, content.accent].every(value => /^#[a-f\d]{6}$/i.test(value)) || content.labels.length > 10 || content.labels.some(value => value.length > 120)) throw new EditorError("copy.8b97de2abb83", "Use valid colours and node labels up to 120 characters");
+  if (content.edgeLabels && (content.edgeLabels.length > 9 || content.edgeLabels.some(label => label.length > 80))) throw new EditorError("copy.eecd1c0e91ea", "Use connector labels up to 80 characters");
+  if (!validGraphicFont(content.fontFamily)) throw new EditorError("copy.b043d683b3d8", "Choose an available diagram font");
   const nodes = diagramNodes(id, content.labels, content.vertical), page = pageAt(getPages(project.settings, project.clips), time);
   const tracks: Track[] = [], clips: Clip[] = [], timing = { start: page.start, duration: page.end - page.start, trimIn: 0 };
   const W = project.settings.width, H = project.settings.height;
@@ -54,6 +55,6 @@ export function putDiagramTemplate(project: ProjectSnapshot, time: number, id: D
     const text: TextClip = { ...timing, id: makeId(), trackId: track.id, groupId, kind: "text", text: node.label, x: node.x, y: node.y, align: "centre", fontFamily: graphicFontCss(content.fontFamily), fontSize, fontWeight: 600, color: content.ink, lineHeight: 1.2, maxWidth: node.w * (node.shape === "hexagon" ? 0.58 : 0.8), maxHeight: node.h * 0.72 };
     tracks.push(track); clips.push(text);
   }
-  if (project.tracks.length + tracks.length > 200 || project.clips.length + clips.length > 10000 || JSON.stringify(project).length + JSON.stringify(clips).length > 6 * 1024 * 1024) throw new Error("This diagram exceeds the design’s layer or size limits");
+  if (project.tracks.length + tracks.length > 200 || project.clips.length + clips.length > 10000 || JSON.stringify(project).length + JSON.stringify(clips).length > 6 * 1024 * 1024) throw new EditorError("copy.9634be9eb1f8", "This diagram exceeds the design’s layer or size limits");
   return { project: { ...project, tracks: [...project.tracks, ...tracks], clips: [...project.clips, ...clips] }, id: clips.find(clip => clip.kind === "text")?.id ?? clips[0].id };
 }

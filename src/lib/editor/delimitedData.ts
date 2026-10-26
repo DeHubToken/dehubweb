@@ -1,6 +1,7 @@
+import { EditorError } from "./editorError";
 /** Bounded CSV/TSV parser with quoted cells, embedded line breaks, and escaped quotes. */
 export function parseDelimitedData(source: string, maxRows: number, maxColumns: number, separator?: "," | "\t" | ";"): string[][] {
-  if (source.length > 500000) throw new Error("Pasted data is too large");
+  if (source.length > 500000) throw new EditorError("copy.19635bede37d", "Pasted data is too large");
   const text = source.replace(/^\uFEFF/, "").replace(/\r\n?/g, "\n");
   // A tab outside quoted cells identifies spreadsheet TSV; quoted tabs in CSV stay literal.
   let quoted = false, delimiter = separator ?? ",";
@@ -10,10 +11,10 @@ export function parseDelimitedData(source: string, maxRows: number, maxColumns: 
   }
   const rows: string[][] = [];
   let row: string[] = [], cell = "", inQuotes = false, closedQuote = false, cellQuoted = false, rowQuoted = false;
-  const endCell = () => { row.push(cellQuoted ? cell : cell.trim()); rowQuoted = rowQuoted || cellQuoted; cell = ""; cellQuoted = false; closedQuote = false; if (row.length > maxColumns) throw new Error(`Use at most ${maxColumns} columns`); };
+  const endCell = () => { row.push(cellQuoted ? cell : cell.trim()); rowQuoted = rowQuoted || cellQuoted; cell = ""; cellQuoted = false; closedQuote = false; if (row.length > maxColumns) throw new EditorError("copy.6c4bbd9fb1a9", "Use at most {{maximum}} columns", { maximum: maxColumns }); };
   const endRow = () => {
     endCell();
-    if (row.some(value => value.length) || row.length > 1 || rowQuoted) { rows.push(row); if (rows.length > maxRows) throw new Error(`Use at most ${maxRows} rows`); }
+    if (row.some(value => value.length) || row.length > 1 || rowQuoted) { rows.push(row); if (rows.length > maxRows) throw new EditorError("copy.c710eaeac6b8", "Use at most {{maximum}} rows", { maximum: maxRows }); }
     row = []; rowQuoted = false;
   };
   for (let i = 0; i < text.length; i++) {
@@ -25,10 +26,10 @@ export function parseDelimitedData(source: string, maxRows: number, maxColumns: 
     } else if (char === delimiter) endCell();
     else if (char === "\n") endRow();
     else if (char === '"' && !cell.trim() && !closedQuote) { cell = ""; inQuotes = true; cellQuoted = true; }
-    else if (closedQuote) { if (char.trim()) throw new Error("Separate quoted cells with commas or tabs"); }
+    else if (closedQuote) { if (char.trim()) throw new EditorError("copy.44d7ae7e5718", "Separate quoted cells with commas or tabs"); }
     else cell += char;
   }
-  if (inQuotes) throw new Error("Close the quoted cell before applying this data");
+  if (inQuotes) throw new EditorError("copy.bd38960e1d16", "Close the quoted cell before applying this data");
   if (cell.length || row.length || closedQuote) endRow();
   return rows;
 }

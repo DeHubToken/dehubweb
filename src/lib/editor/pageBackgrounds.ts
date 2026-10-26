@@ -1,6 +1,7 @@
 import { getPages, pageAt } from "./pages";
 import { sliceTimelineClip } from "./timelineAgent";
 import type { Clip, ProjectSnapshot, ShapeClip, Track } from "./types";
+import { EditorError } from "./editorError";
 
 /** One background track serves the document; locked page backgrounds are preserved. */
 export function applyBackgroundToAllPages(project: ProjectSnapshot, time: number, makeId: () => string) {
@@ -28,7 +29,7 @@ export function applyBackgroundToAllPages(project: ProjectSnapshot, time: number
     return parts;
   });
   const used = new Set(kept.map(clip => clip.trackId)), tracks = project.tracks.filter(track => !touched.has(track.id) || used.has(track.id));
-  if (tracks.length >= 200 || kept.length + targets.length > 10000) throw new Error("Applying backgrounds would exceed the design’s layer limit");
+  if (tracks.length >= 200 || kept.length + targets.length > 10000) throw new EditorError("copy.120159ba4e48", "Applying backgrounds would exceed the design’s layer limit");
   const track: Track = { id: makeId(), kind: "video", name: "Page backgrounds", muted: false, hidden: false };
   let currentId: string | undefined = lockedPages.has(current.index) ? source?.id : undefined;
   const copies = targets.map(page => {

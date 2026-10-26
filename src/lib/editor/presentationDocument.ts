@@ -1,5 +1,6 @@
 import { designPageLinkIndex, normaliseDesignLink, type DesignPdfLink } from "./designLinks";
 import { zipTextEntry, type ZipEntry } from "./zipArchive";
+import { EditorError } from "./editorError";
 export const PRESENTATION_MIME = "application/vnd.openxmlformats-officedocument.presentationml.presentation";
 export const PRESENTATION_IMAGE_LIMIT = 256 * 1024 * 1024;
 export interface PresentationSlide { index: number; title?: string; notes?: string; hidden?: boolean; links?: readonly DesignPdfLink[] }
@@ -22,16 +23,16 @@ function theme(): string {
 }
 
 export function presentationSlideSize(width: number, height: number) {
-  if (![width, height].every(value => Number.isFinite(value) && value >= 64 && value <= 8192)) throw new Error("Choose a valid page size for the presentation");
+  if (![width, height].every(value => Number.isFinite(value) && value >= 64 && value <= 8192)) throw new EditorError("copy.88b9ab11c4fa", "Choose a valid page size for the presentation");
   const unit = Math.max(914400 / Math.min(width, height), 9144000 / Math.max(width, height));
   const cx = Math.round(unit * width), cy = Math.round(unit * height);
-  if (Math.max(cx, cy) > 51206400) throw new Error("This page aspect ratio is too wide or tall for PowerPoint. Use a ratio within 56:1");
+  if (Math.max(cx, cy) > 51206400) throw new EditorError("copy.5aada6e26fbb", "This page aspect ratio is too wide or tall for PowerPoint. Use a ratio within 56:1");
   return { cx, cy };
 }
 
 /** Package metadata for image-backed slides; image entries are supplied by the export platform. */
 export function presentationDocumentEntries(width: number, height: number, title: string, slides: readonly PresentationSlide[]): ZipEntry[] {
-  if (slides.length < 1 || slides.length > 500 || slides.some(slide => !Number.isInteger(slide.index) || slide.index < 0 || slide.index >= 500) || new Set(slides.map(slide => slide.index)).size !== slides.length) throw new Error("Choose 1–500 valid design pages for the presentation");
+  if (slides.length < 1 || slides.length > 500 || slides.some(slide => !Number.isInteger(slide.index) || slide.index < 0 || slide.index >= 500) || new Set(slides.map(slide => slide.index)).size !== slides.length) throw new EditorError("copy.907244274d44", "Choose 1–500 valid design pages for the presentation");
   const { cx, cy } = presentationSlideSize(width, height);
   const parts: ZipEntry[] = [], overrides: { name: string; type: string }[] = [];
   const add = (name: string, text: string, type?: string) => { parts.push(zipTextEntry(name, text)); if (type) overrides.push({ name, type }); };

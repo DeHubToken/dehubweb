@@ -11,6 +11,7 @@ import { useTranslation } from "react-i18next";
 import { useEditorStore } from "@/store/editorStore";
 import { pageAt } from "@/lib/editor/pages";
 import { designPageOverview, manageDesignPages, moveDesignPagesBefore, type PageManagementAction } from "@/lib/editor/pageManagement";
+import { editorErrorText } from "@/lib/editor/editorErrorText";
 
 export function PagesManagerPanel() {
   const { t } = useTranslation();
@@ -34,9 +35,9 @@ export function PagesManagerPanel() {
       if (result.project !== before && store.applyDesignEdit(before, result.project)) { store.setIsPlaying(false); store.selectClip(null); store.setCurrentTime(result.time); }
       setPicked(result.selected); setQuery(""); setOffset(Math.floor(result.selected[0] / 12) * 12); setError("");
       setMessage(t(`editor.pageManager.result.${action}`, { defaultValue: ({ duplicate: "Duplicated {{count}} pages", delete: "Deleted {{count}} pages", first: "Moved {{count}} pages", last: "Moved {{count}} pages", before: "Moved {{count}} pages" })[action], count: result.count }));
-    } catch (value) { setError(value instanceof Error ? value.message : "Could not change these pages"); }
+    } catch (value) { setError(editorErrorText(value, t("copy.272099654658", { defaultValue: "Could not change these pages" }))); }
   };
-  const visibility = (hidden: boolean) => { try { const store = useEditorStore.getState(), before = store.toSnapshot(); if (before.id !== project.id) return; const next = setPagesPresentationHidden(before, selected, hidden); if (next !== before) store.applyDesignEdit(before, next); setError(""); setMessage(t(hidden ? "editor.pages.hiddenResult" : "editor.pages.shownResult", { defaultValue: hidden ? "Selected pages are hidden in presentations" : "Selected pages are visible in presentations" })); } catch (reason) { setError(reason instanceof Error ? reason.message : "Could not change page visibility"); } };
+  const visibility = (hidden: boolean) => { try { const store = useEditorStore.getState(), before = store.toSnapshot(); if (before.id !== project.id) return; const next = setPagesPresentationHidden(before, selected, hidden); if (next !== before) store.applyDesignEdit(before, next); setError(""); setMessage(t(hidden ? "editor.pages.hiddenResult" : "editor.pages.shownResult", { defaultValue: hidden ? "Selected pages are hidden in presentations" : "Selected pages are visible in presentations" })); } catch (reason) { setError(editorErrorText(reason, t("copy.d696f40e2994", { defaultValue: "Could not change page visibility" }))); } };
   const button = "min-h-9 rounded-lg border border-white/20 px-3 text-xs text-white/75 disabled:opacity-35";
   return <div className="space-y-3">
     <input type="search" value={query} onChange={event => { setQuery(event.target.value); setOffset(0); }} aria-label={t("editor.pageManager.search", { defaultValue: "Find pages by name, number, or headline" })} placeholder={t("editor.pageManager.search", { defaultValue: "Find pages by name, number, or headline" })} className="min-h-9 w-full rounded-lg border border-white/20 bg-white/5 px-3 text-sm text-white" />

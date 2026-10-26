@@ -11,6 +11,8 @@ import { getTransform, isVisualClip, placementPatchAt } from "@/lib/editor/rende
 import { keyAllAt, resolveClipAt } from "@/lib/editor/keyframes";
 import { nanoid } from "nanoid";
 import { copyDesignSelection, cutDesignSelection, getDesignClipboard, pasteDesignSelection, reportDesignClipboard } from "@/lib/editor/designClipboard";
+import { editorErrorText } from "@/lib/editor/editorErrorText";
+import { translateCopy } from "@/i18n/copy";
 
 function isControlKey(event: KeyboardEvent): boolean {
   if (event.defaultPrevented || event.isComposing) return true;
@@ -130,7 +132,7 @@ export function ShortcutsLayer({ active = true }: { active?: boolean }) {
       if (onCanvas && (e.metaKey || e.ctrlKey) && e.key.toLowerCase() === "x" && s.selectedClipIds.length) {
         e.preventDefault();
         try { const before = s.toSnapshot(), next = cutDesignSelection(before, s.selectedClipIds, s.currentTime, () => nanoid(10)); if (next !== before && s.applyDesignEdit(before, next)) { s.selectClip(null); reportDesignClipboard({ kind: "cut", count: getDesignClipboard()?.layers.length ?? 0 }); } }
-        catch (value) { reportDesignClipboard({ kind: "error", message: value instanceof Error ? value.message : "Could not cut these layers" }); }
+        catch (value) { reportDesignClipboard({ kind: "error", message: editorErrorText(value, translateCopy("copy.60183677d43b", { defaultValue: "Could not cut these layers" })) }); }
         return;
       }
       // Copy
@@ -138,8 +140,8 @@ export function ShortcutsLayer({ active = true }: { active?: boolean }) {
         if (!s.selectedClipIds.length) return;
         e.preventDefault();
         if (onCanvas) {
-          try { if (!copyDesignSelection(s.toSnapshot(), s.selectedClipIds, s.currentTime)) reportDesignClipboard({ kind: "error", message: "Select unlocked foreground layers on this page" }); }
-          catch (value) { reportDesignClipboard({ kind: "error", message: value instanceof Error ? value.message : "Could not copy these layers" }); }
+          try { if (!copyDesignSelection(s.toSnapshot(), s.selectedClipIds, s.currentTime)) reportDesignClipboard({ kind: "error", message: translateCopy("editor.clipboard.empty", { defaultValue: "Select unlocked foreground layers on this page" }) }); }
+          catch (value) { reportDesignClipboard({ kind: "error", message: editorErrorText(value, translateCopy("copy.b3f1e2f7f110", { defaultValue: "Could not copy these layers" })) }); }
           return;
         }
         s.copySelectedToClipboard();
@@ -152,7 +154,7 @@ export function ShortcutsLayer({ active = true }: { active?: boolean }) {
           try {
             const before = s.toSnapshot(), result = pasteDesignSelection(before, s.currentTime, getDesignClipboard(), () => nanoid(10));
             if (result && s.applyDesignEdit(before, result.project)) { s.setIsPlaying(false); s.selectMany(result.ids); reportDesignClipboard({ kind: "pasted", count: result.ids.length, skipped: result.skipped }); }
-          } catch (value) { reportDesignClipboard({ kind: "error", message: value instanceof Error ? value.message : "Could not paste these layers" }); }
+          } catch (value) { reportDesignClipboard({ kind: "error", message: editorErrorText(value, translateCopy("copy.dc8b32bff25f", { defaultValue: "Could not paste these layers" })) }); }
           return;
         }
         s.pasteFromClipboard();

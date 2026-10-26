@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useEditorStore } from "@/store/editorStore";
 import { applyDesignGuideGrid, designGuideGridPositions, getDesignGuides, type GuideGridOptions } from "@/lib/editor/designGuides";
+import { editorErrorText } from "@/lib/editor/editorErrorText";
 
 export function GuideGridControls() {
   const { t } = useTranslation(), settings = useEditorStore(s => s.settings);
@@ -11,8 +12,8 @@ export function GuideGridControls() {
   const [unitDrafts, setUnitDrafts] = useState(() => ({ margin: dimensionDisplay(options.margin, unit, dpi), gutter: dimensionDisplay(options.gutter, unit, dpi) }));
   useEffect(() => { setUnitDrafts({ margin: dimensionDisplay(options.margin, unit, dpi), gutter: dimensionDisplay(options.gutter, unit, dpi) }); }, [unit, dpi]);
   let grid: { vertical: number[]; horizontal: number[] } | null = null, error = "";
-  try { grid = designGuideGridPositions(settings.width, settings.height, options); } catch (value) { error = value instanceof Error ? value.message : String(value); }
-  const apply = () => { try { const store = useEditorStore.getState(), before = store.toSnapshot(); store.applyDesignEdit(before, applyDesignGuideGrid(before, options)); setMessage(t("editor.guides.gridApplied", { defaultValue: "Guide grid applied" })); } catch (value) { setMessage(value instanceof Error ? value.message : String(value)); } };
+  try { grid = designGuideGridPositions(settings.width, settings.height, options); } catch (value) { error = editorErrorText(value, t("copy.a3e13b9a4c21", { defaultValue: "Could not create this guide grid" })); }
+  const apply = () => { try { const store = useEditorStore.getState(), before = store.toSnapshot(); store.applyDesignEdit(before, applyDesignGuideGrid(before, options)); setMessage(t("editor.guides.gridApplied", { defaultValue: "Guide grid applied" })); } catch (value) { setMessage(editorErrorText(value, t("copy.a3e13b9a4c21", { defaultValue: "Could not create this guide grid" }))); } };
   return <div className="space-y-3 border-t border-white/10 pt-3">
     <p className="text-xs font-medium text-white/75">{t("editor.guides.gridTitle", { defaultValue: "Layout grid" })}</p>
     <div className="flex flex-wrap items-center gap-3"><svg viewBox={`0 0 ${settings.width} ${settings.height}`} aria-label={t("editor.guides.gridPreview", { defaultValue: "Guide grid preview" })} className="h-20 w-28 shrink-0 rounded-lg border border-white/15 bg-white/5"><rect x="0" y="0" width={settings.width} height={settings.height} fill="#202020" />{grid?.vertical.map(x => <line key={`x${x}`} x1={x * settings.width} x2={x * settings.width} y1="0" y2={settings.height} stroke="#22d3ee" strokeWidth={Math.max(settings.width, settings.height) / 200} />)}{grid?.horizontal.map(y => <line key={`y${y}`} x1="0" x2={settings.width} y1={y * settings.height} y2={y * settings.height} stroke="#22d3ee" strokeWidth={Math.max(settings.width, settings.height) / 200} />)}</svg>

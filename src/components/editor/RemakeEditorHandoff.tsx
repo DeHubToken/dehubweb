@@ -5,6 +5,7 @@ import { useAuth } from '@/contexts/AuthContext';
 import { useEditorQuota } from '@/hooks/use-editor-quota';
 import { loadCloudGenerationPage } from '@/lib/creator/cloudLibrary';
 import { sendJobToEditor } from '@/lib/creator/sendToEditor';
+import { EditorError } from "@/lib/editor/editorError";
 
 /** Route state contains an owned library id, never a private signed URL. */
 export function RemakeEditorHandoff() {
@@ -44,7 +45,7 @@ export function RemakeEditorHandoff() {
         }
         offset = page.nextOffset;
       }
-      throw new Error('Saved output unavailable');
+      throw new EditorError("copy.6e71ae3669b1", "Saved output unavailable");
     })().catch(() => { if (!controller.signal.aborted) setStatus('failed'); });
     return () => controller.abort();
   }, [id, wallet, attempt]);

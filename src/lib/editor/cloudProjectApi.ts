@@ -3,26 +3,24 @@ import type { SupabaseClient } from "@supabase/supabase-js";
 import { cloudProjectReviewApi } from "./cloudProjectReviewApi";
 import { projectReviewWallet } from "./cloudProjectReview";
 import { walletScopedClient } from "@/lib/supabase-wallet-client";
-import { CloudProjectConflict, CLOUD_PROJECT_BUCKET, parseCloudProjectDocument, type CloudProjectDocument, type CloudProjectSaved, type CloudProjectSummary, type CloudProjectVersion } from "./cloudProjectFormat";
+import { CLOUD_PROJECT_BUCKET, cloudServerError, parseCloudProjectDocument, type CloudProjectDocument, type CloudProjectSaved, type CloudProjectSummary, type CloudProjectVersion } from "./cloudProjectFormat";
+import { EditorError } from "./editorError";
 
 export { CloudProjectConflict } from "./cloudProjectFormat";
 
 /** Each call stays pinned to its selected account and requires a signed session. */
 export function cloudProjectApi(address: string) {
   const wallet = address.toLowerCase();
-  if (!/^0x[a-f0-9]{40}$/.test(wallet)) throw new Error("Sign in to access cloud projects");
+  if (!/^0x[a-f0-9]{40}$/.test(wallet)) throw new EditorError("copy.6daa8cfc89c5", "Sign in to access cloud projects");
   const client = walletScopedClient(wallet) as unknown as SupabaseClient;
   async function rpc<T>(name: string, args: Record<string, unknown> = {}): Promise<T> {
     const { data, error } = await client.rpc(name, args);
-    if (error) {
-      if ((error.code === "PT409" || error.code === "40001")) throw new CloudProjectConflict(error.message);
-      throw new Error(error.message);
-    }
+    if (error) throw cloudServerError(error);
     return data as T;
   }
   return {
     drafts: cloudProjectDraftApi(client),
-    review: cloudProjectReviewApi(client, wallet, message => new CloudProjectConflict(message)),
+    review: cloudProjectReviewApi(client, wallet),
     editing: {
       async load(owner: string, id: string): Promise<CloudProjectVersion> {
         const sourceOwner = projectReviewWallet(owner);
@@ -34,7 +32,7 @@ export function cloudProjectApi(address: string) {
       async prepareMedia(owner: string, projectId: string, id: string, size: number, extension: string) {
         const slot = await rpc<{path: string}>("editor_cloud_prepare_shared_media", { p_owner: projectReviewWallet(owner), p_project: projectId, p_id: id, p_size: size, p_extension: extension });
         const { data, error } = await client.storage.from(CLOUD_PROJECT_BUCKET).createSignedUploadUrl(slot.path, { upsert: false });
-        if (error || !data) throw new Error(error?.message || "Shared media upload could not be prepared");
+        if (error || !data) throw error ? cloudServerError(error) : new EditorError("copy.51a049cd9517", "Shared media upload could not be prepared");
         return data;
       },
     },
@@ -51,7 +49,7 @@ export function cloudProjectApi(address: string) {
     checkpointSave(owner: string, id: string, document: CloudProjectDocument, expectedRevision: number, expectedDraftRevision: number, requestId: string) {
       if (!Number.isInteger(expectedRevision) || expectedRevision < 1 || expectedRevision >= 2147483646
         || !Number.isInteger(expectedDraftRevision) || expectedDraftRevision < 0 || expectedDraftRevision >= 2147483646)
-        throw new Error("Invalid saved or live draft baseline");
+        throw new EditorError("copy.3673ae44940d", "Invalid saved or live draft baseline");
       const sourceOwner = projectReviewWallet(owner);
       return rpc<CloudProjectSaved>("editor_cloud_checkpoint_save", { p_owner: sourceOwner, p_id: id,
         p_document: parseCloudProjectDocument(document, sourceOwner), p_expected_revision: expectedRevision,
@@ -63,14 +61,14 @@ export function cloudProjectApi(address: string) {
     async prepareMedia(id: string, size: number, extension: string) {
       const slot = await rpc<{ path: string }>("editor_cloud_prepare_media", { p_id: id, p_size: size, p_extension: extension });
       const { data, error } = await client.storage.from(CLOUD_PROJECT_BUCKET).createSignedUploadUrl(slot.path, { upsert: false });
-      if (error || !data) throw new Error(error?.message || "Cloud media upload could not be prepared");
+      if (error || !data) throw error ? cloudServerError(error) : new EditorError("copy.eaa1b0ca6870", "Cloud media upload could not be prepared");
       return data;
     },
     async sourceUrl(path: string, sourceOwner = wallet) {
       const owner = projectReviewWallet(sourceOwner);
-      if (!path.startsWith(`${owner}/`) || path.includes("..")) throw new Error("Invalid cloud media path");
+      if (!path.startsWith(`${owner}/`) || path.includes("..")) throw new EditorError("copy.452631936343", "Invalid cloud media path");
       const { data, error } = await client.storage.from(CLOUD_PROJECT_BUCKET).createSignedUrl(path, 3600);
-      if (error || !data?.signedUrl) throw new Error(error?.message || "Cloud media is unavailable");
+      if (error || !data?.signedUrl) throw error ? cloudServerError(error) : new EditorError("copy.3fc8c42589ae", "Cloud media is unavailable");
       return data.signedUrl;
     },
   };

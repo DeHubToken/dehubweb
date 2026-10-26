@@ -1,5 +1,6 @@
 import { DEFAULT_TABLE } from "./dataVisualProject";
 import type { TableData } from "./dataVisuals";
+import { EditorError } from "./editorError";
 export interface TableSample { id: string; name: string; description: string; table: TableData }
 const base = (rows: string[][], extra: Partial<TableData> = {}): TableData => ({ ...DEFAULT_TABLE, rows, header: true, fitColumns: true, fitText: true, fitRows: true, padding: 10, headerColour: "#0f172a", headerTextColour: "#ffffff", cellColour: "#f8fafc", textColour: "#0f172a", stripeColour: "#e2e8f0", borderColour: "#cbd5e1", borderWidth: 1, ...extra });
 export const TABLE_SAMPLES: readonly TableSample[] = [
@@ -14,6 +15,6 @@ export const TABLE_SAMPLES: readonly TableSample[] = [
 ];
 export function tableSampleCopy(id: string): TableData {
   const sample = TABLE_SAMPLES.find(sample => sample.id === id);
-  if (!sample) throw new Error("Choose an available table starter");
+  if (!sample) throw new EditorError("copy.9e3b303cb76c", "Choose an available table starter");
   return JSON.parse(JSON.stringify(sample.table)) as TableData;
 }

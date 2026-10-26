@@ -1,8 +1,9 @@
 import { parseChartSource } from "./chartSeries";
 import { formatDelimitedData } from "./delimitedData";
+import { EditorError } from "./editorError";
 export function transposeChartSource(source: string, multiple: boolean): string {
   const chart = parseChartSource(source, multiple);
-  if (chart.rows.length > 6) throw new Error("Switch rows and columns with up to six categories. Each category becomes a data series.");
+  if (chart.rows.length > 6) throw new EditorError("copy.2fbf24a3664b", "Switch rows and columns with up to six categories. Each category becomes a data series.");
   const series = chart.series ?? [{ label: "Series 1", values: chart.rows.map(row => row.value) }];
   const used = new Set<string>();
   const names = chart.rows.map(row => {

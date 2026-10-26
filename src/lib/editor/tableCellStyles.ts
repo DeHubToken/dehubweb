@@ -1,5 +1,6 @@
 import { validChartValueFormat, type ChartValueFormat } from "./chartValueFormat";
 import type { TableMerge } from "./tableMerges";
+import { EditorError } from "./editorError";
 export interface TableCellStyle { verticalAlign?: "top" | "middle" | "bottom"; fontScale?: number; numberFormat?: ChartValueFormat; fill?: string; colour?: string; bold?: boolean; italic?: boolean; align?: "left" | "centre" | "right" }
 export type TableCellStyles = Record<string, TableCellStyle>;
 export function validTableCellStyles(value: unknown): value is TableCellStyles | undefined {
@@ -13,14 +14,14 @@ export function validTableCellStyles(value: unknown): value is TableCellStyles |
 }
 export function tableCellRange(value: string, rows: number, columns: number): TableMerge {
   const match = value.trim().toUpperCase().match(/^([A-L])([1-9]|1\d|20)(?:\s*:\s*([A-L])([1-9]|1\d|20))?$/);
-  if (!match) throw new Error("Enter a cell or range such as A1 or A1:C2");
+  if (!match) throw new EditorError("copy.6c54ede4a8f6", "Enter a cell or range such as A1 or A1:C2");
   const r1 = Number(match[2]) - 1, r2 = Number(match[4] || match[2]) - 1, c1 = match[1].charCodeAt(0) - 65, c2 = (match[3] || match[1]).charCodeAt(0) - 65;
   const range = { row: Math.min(r1, r2), column: Math.min(c1, c2), rowSpan: Math.abs(r2 - r1) + 1, columnSpan: Math.abs(c2 - c1) + 1 };
-  if (range.row + range.rowSpan > rows || range.column + range.columnSpan > columns) throw new Error("Choose cells that exist in the table");
+  if (range.row + range.rowSpan > rows || range.column + range.columnSpan > columns) throw new EditorError("copy.fa546cf5ec53", "Choose cells that exist in the table");
   return range;
 }
 export function applyTableCellStyle(value: TableCellStyles | undefined, range: string, rows: number, columns: number, patch: TableCellStyle | null): TableCellStyles | undefined {
-  if (patch && !validTableCellStyles({ "0:0": patch })) throw new Error("Choose valid cell colours and text styles");
+  if (patch && !validTableCellStyles({ "0:0": patch })) throw new EditorError("copy.1f04dbae8b93", "Choose valid cell colours and text styles");
   const picked = tableCellRange(range, rows, columns), next = { ...value };
   for (let row = picked.row; row < picked.row + picked.rowSpan; row++) for (let column = picked.column; column < picked.column + picked.columnSpan; column++) {
     const key = `${row}:${column}`;

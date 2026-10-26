@@ -1,4 +1,5 @@
 import type { ShapeClip } from "./types";
+import { EditorError } from "./editorError";
 export const DRAWING_SHAPES = ["rect", "ellipse", "triangle", "diamond", "star", "hexagon"] as const;
 export type DrawingShape = typeof DRAWING_SHAPES[number];
 
@@ -23,7 +24,7 @@ export function suggestDrawingShape(points: readonly [number, number][], closed:
 }
 
 export function drawingShapePatch(clip: ShapeClip, target: DrawingShape): Partial<ShapeClip> {
-  if (clip.locked || clip.shape !== "path" || !clip.points?.length || !DRAWING_SHAPES.includes(target)) throw new Error("Select an unlocked freehand drawing and a supported shape");
+  if (clip.locked || clip.shape !== "path" || !clip.points?.length || !DRAWING_SHAPES.includes(target)) throw new EditorError("copy.99c6d51da20c", "Select an unlocked freehand drawing and a supported shape");
   const open = !clip.closedPath;
   return { shape: target, points: undefined, pathSmoothing: undefined, closedPath: undefined, geometry: undefined, radius: 0,
     fill: open ? null : clip.fill, stroke: clip.stroke ?? (open ? { color: clip.fill ?? "#ffffff", width: 8 } : null) };

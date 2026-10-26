@@ -4,6 +4,7 @@ import { appendPage, getPages } from "./pages";
 import { pageDetails } from "./pageDetails";
 import { sliceTimelineClip } from "./timelineAgent";
 import type { Clip, ProjectSnapshot } from "./types";
+import { EditorError } from "./editorError";
 
 export type PageManagementAction = "duplicate" | "delete" | "first" | "last";
 
@@ -31,11 +32,11 @@ function reorderDesignPages(project: ProjectSnapshot, order: number[], makeId: (
   let cursor = 0;
   const starts: number[] = [], destination = new Map<number, number>();
   for (const index of order) { starts.push(cursor); destination.set(index, cursor); cursor += pages[index].end - pages[index].start; }
-  if (project.clips.some(clip => clip.locked && pages.some(page => clip.start < page.end && clip.start + clip.duration > page.start && destination.get(page.index) !== page.start))) throw new Error("Unlock affected layers before deleting or reordering pages");
+  if (project.clips.some(clip => clip.locked && pages.some(page => clip.start < page.end && clip.start + clip.duration > page.start && destination.get(page.index) !== page.start))) throw new EditorError("copy.5658637baea3", "Unlock affected layers before deleting or reordering pages");
   const settings = { ...project.settings, pages: starts, pageEnd: cursor, ...(project.settings.pageDetails ? { pageDetails: order.map(index => pageDetails(project, index)) } : {}) };
   let budget = serializedSize({ ...project, clips: [], settings });
   const used = new Set<string>(), clips: Clip[] = [];
-  const append = (clip: Clip) => { budget += serializedSize(clip) + 1; if (budget > 6 * 1024 * 1024) throw new Error("This change would make the design too large to save"); clips.push(clip); };
+  const append = (clip: Clip) => { budget += serializedSize(clip) + 1; if (budget > 6 * 1024 * 1024) throw new EditorError("copy.069b83833a05", "This change would make the design too large to save"); clips.push(clip); };
   for (const clip of project.clips) {
     if (clip.locked) { append(clip); continue; }
     for (const index of order) {
@@ -46,20 +47,20 @@ function reorderDesignPages(project: ProjectSnapshot, order: number[], makeId: (
       append(sliceTimelineClip(clip, from - clip.start, to - from, id, start + from - page.start));
     }
   }
-  if (clips.length > 10000) throw new Error("This page order would exceed the design’s layer limit");
+  if (clips.length > 10000) throw new EditorError("copy.be285d731bc2", "This page order would exceed the design’s layer limit");
   return { ...project, clips: refreshPageNumberClips(remapDesignPageLinks(clips, order), starts), settings };
 }
 
 export function manageDesignPages(project: ProjectSnapshot, selected: readonly number[], action: PageManagementAction, makeId: () => string) {
   const pages = getPages(project.settings, project.clips), indexes = [...new Set(selected)].sort((a, b) => a - b);
-  if (!indexes.length || indexes.some(index => !Number.isInteger(index) || !pages[index])) throw new Error("Select one or more pages");
+  if (!indexes.length || indexes.some(index => !Number.isInteger(index) || !pages[index])) throw new EditorError("copy.8b4c01e820d3", "Select one or more pages");
   let next = project, picked: number[] = [];
   if (action === "duplicate") {
-    if (pages.length + indexes.length > 500) throw new Error("This batch would exceed the 500-page document limit");
+    if (pages.length + indexes.length > 500) throw new EditorError("copy.67d028f72a20", "This batch would exceed the 500-page document limit");
     let budget = serializedSize(project);
     for (const index of indexes) {
       const page = pages[index]; budget += serializedSize(pageDetails(project, index)) + 256;
-      for (const clip of project.clips) if (clip.start < page.end && clip.start + clip.duration > page.start) { budget += serializedSize(clip) + 256; if (budget > 6 * 1024 * 1024) throw new Error("This batch is too large to save. Duplicate fewer pages"); }
+      for (const clip of project.clips) if (clip.start < page.end && clip.start + clip.duration > page.start) { budget += serializedSize(clip) + 256; if (budget > 6 * 1024 * 1024) throw new EditorError("copy.ff771c078a27", "This batch is too large to save. Duplicate fewer pages"); }
     }
     for (const index of indexes) {
       const page = appendPage(next.settings, next.clips, pages[index].start + Math.min(0.01, (pages[index].end - pages[index].start) / 2), true, makeId);
@@ -69,10 +70,10 @@ export function manageDesignPages(project: ProjectSnapshot, selected: readonly n
     const copiedLinks = new Map(retargetCopiedPageLinks(next.clips.filter(clip => !originalIds.has(clip.id)), destinations).map(clip => [clip.id, clip]));
     next = { ...next, clips: next.clips.map(clip => copiedLinks.get(clip.id) ?? clip) };
     next = { ...next, settings: { ...next.settings, pageDetails: [...pages.map(page => pageDetails(project, page.index)), ...indexes.map(index => pageDetails(project, index))] } };
-    if (next.clips.length > 10000 || getPages(next.settings, next.clips).slice(-1)[0].end > 86400) throw new Error("This batch exceeds the document’s layer or timeline limit");
-    if (serializedSize(next) > 6 * 1024 * 1024) throw new Error("This batch is too large to save. Duplicate fewer pages");
+    if (next.clips.length > 10000 || getPages(next.settings, next.clips).slice(-1)[0].end > 86400) throw new EditorError("copy.9f2ffacdbd31", "This batch exceeds the document’s layer or timeline limit");
+    if (serializedSize(next) > 6 * 1024 * 1024) throw new EditorError("copy.ff771c078a27", "This batch is too large to save. Duplicate fewer pages");
   } else if (action === "delete") {
-    if (indexes.length >= pages.length) throw new Error("Keep at least one page in the design");
+    if (indexes.length >= pages.length) throw new EditorError("copy.efdb304a04c9", "Keep at least one page in the design");
     const chosen = new Set(indexes);
     next = reorderDesignPages(project, pages.map(page => page.index).filter(index => !chosen.has(index)), makeId);
     picked = [Math.min(indexes[0], pages.length - indexes.length - 1)];
@@ -87,9 +88,9 @@ export function manageDesignPages(project: ProjectSnapshot, selected: readonly n
 
 export function moveDesignPagesBefore(project: ProjectSnapshot, selected: readonly number[], target: number, makeId: () => string) {
   const pages = getPages(project.settings, project.clips), indexes = [...new Set(selected)].sort((a, b) => a - b);
-  if (!indexes.length || indexes.some(index => !Number.isInteger(index) || !pages[index]) || !Number.isInteger(target) || target < 0 || target > pages.length) throw new Error("Choose existing pages and a valid destination");
+  if (!indexes.length || indexes.some(index => !Number.isInteger(index) || !pages[index]) || !Number.isInteger(target) || target < 0 || target > pages.length) throw new EditorError("copy.c4e7c76b47c3", "Choose existing pages and a valid destination");
   const chosen = new Set(indexes);
-  if (chosen.has(target)) throw new Error("Choose a destination outside the selected pages");
+  if (chosen.has(target)) throw new EditorError("copy.2b89dd2459e8", "Choose a destination outside the selected pages");
   const remaining = pages.map(page => page.index).filter(index => !chosen.has(index)), at = target === pages.length ? remaining.length : remaining.indexOf(target);
   const order = [...remaining.slice(0, at), ...indexes, ...remaining.slice(at)], next = reorderDesignPages(project, order, makeId);
   const picked = indexes.map(index => order.indexOf(index)), updated = getPages(next.settings, next.clips), page = updated[picked[0]];

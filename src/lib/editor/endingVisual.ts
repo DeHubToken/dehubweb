@@ -1,3 +1,4 @@
+import { EditorError } from "./editorError";
 /** Compares the icon area separately from the surrounding black canvas. */
 export function endingPixelsMatch(actual: Uint8ClampedArray, expected: Uint8ClampedArray, width: number, height: number): boolean {
   const unit = Math.min(width, height);
@@ -32,7 +33,7 @@ export async function legacyEndingBoundary(video: HTMLVideoElement, logo: Canvas
         signal?.removeEventListener("abort", aborted); error ? reject(error) : resolve();
       };
       const seeked = () => finish();
-      const failed = () => finish(new Error("Ending frame did not load"));
+      const failed = () => finish(new EditorError("copy.fd2cbbe8f4ca", "Ending frame did not load"));
       const aborted = () => finish(new DOMException("Download cancelled", "AbortError"));
       const timer = setTimeout(failed, 10000);
       video.addEventListener("seeked", seeked, { once: true }); video.addEventListener("error", failed, { once: true });

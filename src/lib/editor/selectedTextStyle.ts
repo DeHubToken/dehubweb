@@ -3,6 +3,7 @@ import { textFitPatch, textWrapPatch } from "./textFit";
 import { groupedSelection } from "./designGroups";
 import { GOOGLE_FONTS } from "./fontCatalogue";
 import type { Clip, ProjectSnapshot, TextClip } from "./types";
+import { EditorError } from "./editorError";
 export type SelectedTextStyle = { kind: "direction"; value: "auto" | "ltr" | "rtl" } | { kind: "effect"; value: TextEffect } | { kind: "wrap" | "fit" | "balance"; value: boolean } | { kind: "bounds"; width: number; height: number } | { kind: "family"; value: string } | { kind: "size" | "lineHeight" | "letterSpacing" | "paragraphSpacing"; value: number } | { kind: "weight"; value: number } | { kind: "colour"; value: string } | { kind: "align"; value: TextClip["align"] } | { kind: "decoration"; property: "italic" | "underline" | "strikethrough"; value: boolean } | { kind: "regular" };
 export function selectedDesignText(project: ProjectSnapshot, ids: readonly string[], time: number): TextClip[] {
   const chosen = new Set(groupedSelection(project.clips, ids, time)), hidden = new Set(project.tracks.filter(track => track.hidden).map(track => track.id));
@@ -14,20 +15,20 @@ export function selectedTextColour(colour: string | undefined): string {
 }
 export function applySelectedTextStyle(project: ProjectSnapshot, ids: readonly string[], time: number, operation: SelectedTextStyle) {
   const selected = selectedDesignText(project, ids, time);
-  if (!selected.length) throw new Error("Select text layers on the current page");
-  if (selected.length > 100) throw new Error("Format up to 100 text layers at a time");
-  if (selected.some(clip => clip.locked)) throw new Error("Unlock selected text layers before formatting them");
-  if (operation.kind === "effect" && !TEXT_EFFECTS.includes(operation.value)) throw new Error("Choose an available text effect");
-  if (operation.kind === "bounds" && [operation.width, operation.height].some(value => !Number.isFinite(value) || value < 0.01 || value > 1)) throw new Error("Use text box dimensions from 1 to 100 percent of the page");
-  if (operation.kind === "size" && (!Number.isFinite(operation.value) || operation.value < 6 || operation.value > 1000)) throw new Error("Use a text size from 6 to 1,000");
-  if (operation.kind === "lineHeight" && (!Number.isFinite(operation.value) || operation.value < 0.5 || operation.value > 3)) throw new Error("Use line spacing from 0.5 to 3");
-  if (operation.kind === "paragraphSpacing" && (!Number.isFinite(operation.value) || operation.value < 0 || operation.value > 300)) throw new Error("Use paragraph spacing from 0 to 300");
-  if (operation.kind === "letterSpacing" && (!Number.isFinite(operation.value) || operation.value < -10 || operation.value > 80)) throw new Error("Use letter spacing from −10 to 80");
-  if (operation.kind === "weight" && ![100, 200, 300, 400, 500, 600, 700, 800, 900].includes(operation.value)) throw new Error("Choose a supported text weight");
-  if (operation.kind === "family" && (!operation.value.trim() || operation.value.length > 500 || /[\u0000-\u001f\u007f]/.test(operation.value))) throw new Error("Choose a valid font family");
-  if (operation.kind === "colour" && !/^#[a-f0-9]{6}$/i.test(operation.value)) throw new Error("Use a six-digit hex colour");
-  if (operation.kind === "align" && !["left", "centre", "right"].includes(operation.value)) throw new Error("Choose a valid text alignment");
-  if (operation.kind === "direction" && !["auto", "ltr", "rtl"].includes(operation.value)) throw new Error("Choose a supported text direction");
+  if (!selected.length) throw new EditorError("copy.515283319ed9", "Select text layers on the current page");
+  if (selected.length > 100) throw new EditorError("copy.61a1195c2733", "Format up to 100 text layers at a time");
+  if (selected.some(clip => clip.locked)) throw new EditorError("copy.7fbcfeecd6a3", "Unlock selected text layers before formatting them");
+  if (operation.kind === "effect" && !TEXT_EFFECTS.includes(operation.value)) throw new EditorError("copy.a44a90e53f80", "Choose an available text effect");
+  if (operation.kind === "bounds" && [operation.width, operation.height].some(value => !Number.isFinite(value) || value < 0.01 || value > 1)) throw new EditorError("copy.c52db3537f81", "Use text box dimensions from 1 to 100 percent of the page");
+  if (operation.kind === "size" && (!Number.isFinite(operation.value) || operation.value < 6 || operation.value > 1000)) throw new EditorError("copy.32f45ca76ea8", "Use a text size from 6 to 1,000");
+  if (operation.kind === "lineHeight" && (!Number.isFinite(operation.value) || operation.value < 0.5 || operation.value > 3)) throw new EditorError("copy.685352af5d13", "Use line spacing from 0.5 to 3");
+  if (operation.kind === "paragraphSpacing" && (!Number.isFinite(operation.value) || operation.value < 0 || operation.value > 300)) throw new EditorError("copy.85c3a56c70bc", "Use paragraph spacing from 0 to 300");
+  if (operation.kind === "letterSpacing" && (!Number.isFinite(operation.value) || operation.value < -10 || operation.value > 80)) throw new EditorError("copy.10ef67a56618", "Use letter spacing from −10 to 80");
+  if (operation.kind === "weight" && ![100, 200, 300, 400, 500, 600, 700, 800, 900].includes(operation.value)) throw new EditorError("copy.6441f920502f", "Choose a supported text weight");
+  if (operation.kind === "family" && (!operation.value.trim() || operation.value.length > 500 || /[\u0000-\u001f\u007f]/.test(operation.value))) throw new EditorError("copy.bd4418be962a", "Choose a valid font family");
+  if (operation.kind === "colour" && !/^#[a-f0-9]{6}$/i.test(operation.value)) throw new EditorError("copy.a56bbea16871", "Use a six-digit hex colour");
+  if (operation.kind === "align" && !["left", "centre", "right"].includes(operation.value)) throw new EditorError("copy.aff079bf3e36", "Choose a valid text alignment");
+  if (operation.kind === "direction" && !["auto", "ltr", "rtl"].includes(operation.value)) throw new EditorError("copy.4c421471a706", "Choose a supported text direction");
   const picked = new Set(selected.map(clip => clip.id));
   const weight = (clip: TextClip, desired: number, override?: string) => { const family = (override ?? clip.fontFamily).split(",")[0].trim().replace(/^['"]|['"]$/g, ""), font = GOOGLE_FONTS.find(font => font.family.toLowerCase() === family.toLowerCase()); return font ? font.weights.reduce((best, value) => Math.abs(value - desired) < Math.abs(best - desired) ? value : best, font.weights[0]) : desired; };
   const clips = project.clips.map((clip): Clip => {

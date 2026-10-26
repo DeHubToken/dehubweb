@@ -1,11 +1,12 @@
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { parsePageSelection } from "@/lib/editor/pageExports";
+import { editorErrorText } from "@/lib/editor/editorErrorText";
 export function PageRangeSelection({ count, selected, onChange }: { count: number; selected: readonly number[]; onChange: (indexes: number[]) => void }) {
   const { t } = useTranslation(), [range, setRange] = useState(""), [error, setError] = useState("");
   const apply = (action: "replace" | "add" | "remove") => {
     try { const parsed = parsePageSelection(range.replace(/[–—]/g, "-"), count), picked = new Set(parsed); onChange(action === "replace" ? parsed : action === "add" ? [...new Set([...selected, ...parsed])].sort((a, b) => a - b) : selected.filter(index => !picked.has(index))); setError(""); }
-    catch (reason) { setError(reason instanceof Error ? reason.message : "Enter valid page numbers"); }
+    catch (reason) { setError(editorErrorText(reason, t("copy.99ed90773454", { defaultValue: "Enter valid page numbers" }))); }
   };
   return <details className="rounded-lg border border-white/10 p-3"><summary className="cursor-pointer text-xs font-medium text-white/75">{t("editor.pages.selectNumbers", { defaultValue: "Select page numbers" })}</summary><div className="mt-3 space-y-2"><form className="flex flex-wrap items-center gap-2" onSubmit={event => { event.preventDefault(); apply("replace"); }}><input value={range} maxLength={2000} onChange={event => setRange(event.target.value)} aria-label={t("editor.pages.selectionRange", { defaultValue: "Page numbers and ranges" })} placeholder="1,3-8" className="min-h-9 min-w-0 flex-1 rounded-lg border border-white/20 bg-white/5 px-3 text-xs text-white" />{(["replace", "add", "remove"] as const).map(action => <button type="button" key={action} disabled={!range.trim()} onClick={() => apply(action)} className="min-h-9 rounded-lg border border-white/20 px-3 text-xs text-white/75 disabled:opacity-35">{t(`editor.pages.rangeAction.${action}`, { defaultValue: ({ replace: "Select pages", add: "Add to selection", remove: "Remove from selection" })[action] })}</button>)}</form><p className="text-xs text-white/45">{t("editor.pages.rangeHint", { defaultValue: "Use page numbers separated by commas, or ranges such as 3-8." })}</p>{error && <p role="alert" className="text-xs text-red-300">{error}</p>}</div></details>;
 }

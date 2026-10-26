@@ -1,6 +1,7 @@
 import type { SupabaseClient } from "@supabase/supabase-js";
-import { CloudProjectConflict, parseCloudProjectDocument, type CloudProjectDocument } from "./cloudProjectFormat";
+import { cloudServerError, parseCloudProjectDocument, type CloudProjectDocument } from "./cloudProjectFormat";
 import { projectReviewWallet } from "./cloudProjectReview";
+import { EditorError } from "./editorError";
 
 export interface CloudDraftCheckpoint {
   ownerWallet: string; projectId: string; draftRevision: number; anchorRevision: number;
@@ -21,7 +22,7 @@ const integer = (value: unknown, min: number): value is number => typeof value =
 const object = (value: unknown): value is Record<string, unknown> => !!value && typeof value === "object" && !Array.isArray(value);
 const date = (value: unknown): value is string => typeof value === "string" && Number.isFinite(Date.parse(value));
 const id = (value: unknown): value is string => typeof value === "string" && uuid.test(value);
-function fail(): never { throw new Error("Invalid live draft response or request"); }
+function fail(): never { throw new EditorError("copy.c7b51fecb62d", "Invalid live draft response or request"); }
 function scope(owner: string, projectId: string) { const wallet = projectReviewWallet(owner); if (!id(projectId)) fail(); return wallet; }
 
 export function parseCloudDraftCheckpoint(value: unknown, owner: string, projectId: string): CloudDraftCheckpoint {
@@ -39,7 +40,7 @@ export function parseCloudDraftCheckpoint(value: unknown, owner: string, project
 export function cloudProjectDraftApi(client: Pick<SupabaseClient, "rpc">) {
   async function rpc(name: string, args: Record<string, unknown>): Promise<unknown> {
     const { data, error } = await client.rpc(name, args);
-    if (error) throw error.code === "PT409" || error.code === "40001" ? new CloudProjectConflict(error.message) : new Error(error.message);
+    if (error) throw cloudServerError(error);
     return data;
   }
   return {

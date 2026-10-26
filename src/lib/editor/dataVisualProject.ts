@@ -1,6 +1,7 @@
 import { validDataVisuals, type ChartData, type TableData } from "./dataVisuals";
 import type { ProjectSnapshot, ShapeClip, Track } from "./types";
 import { getPages, pageAt } from "./pages";
+import { EditorError } from "./editorError";
 
 export const DEFAULT_CHART: ChartData = { kind: "column", rows: [{ label: "January", value: 40 }, { label: "February", value: 65 }, { label: "March", value: 85 }],
   colours: ["#38bdf8", "#818cf8", "#34d399", "#fbbf24", "#fb7185"], textColour: "#ffffff", showLabels: true, showValues: true };
@@ -9,7 +10,7 @@ export const DEFAULT_TABLE: TableData = { rows: [["Item", "Details", "Status"], 
 
 /** Insert or update one graphic as one layer and one undo step. */
 export function putDataVisual(project: ProjectSnapshot, time: number, data: { chart: ChartData } | { table: TableData }, makeId: () => string, selectedId?: string | null) {
-  if (!validDataVisuals(data)) throw new Error("Invalid chart or table data");
+  if (!validDataVisuals(data)) throw new EditorError("copy.24625e2855e0", "Invalid chart or table data");
   const target = project.clips.find(c => c.id === selectedId);
   if (target?.kind === "shape" && (target.chart || target.table)) {
     if (target.locked) return null;

@@ -1,13 +1,14 @@
 import { exportFilename } from "./exportName";
-export function pageFilenamePatternError(pattern: string): string {
-  if (!pattern.trim()) return "";
-  if (pattern.length > 160) return "Keep the filename pattern within 160 characters";
-  if (/[{}]/.test(pattern.replace(/\{(?:title|name|section|page(?::[1-4])?)\}/g, ""))) return "Use {title}, {name}, {section}, {page}, or padded page numbers such as {page:3}";
-  return "";
+import { EditorError } from "./editorError";
+export function pageFilenamePatternError(pattern: string): EditorError | null {
+  if (!pattern.trim()) return null;
+  if (pattern.length > 160) return new EditorError("copy.ae8f6c0f2b4d", "Keep the filename pattern within 160 characters");
+  if (/[{}]/.test(pattern.replace(/\{(?:title|name|section|page(?::[1-4])?)\}/g, ""))) return new EditorError("copy.a84febe33579", "Use {title}, {name}, {section}, {page}, or padded page numbers such as {{example}}", { example: "{page:3}" });
+  return null;
 }
 export function namedPageExports<T extends { index: number; filename: string }>(frames: T[], pattern: string, title: string, pageNames: readonly (string | undefined)[], extension: string, sections: readonly (string | undefined)[] = []): T[] {
   if (!pattern.trim()) return frames;
-  const error = pageFilenamePatternError(pattern); if (error) throw new Error(error);
+  const error = pageFilenamePatternError(pattern); if (error) throw error;
   const used = new Set<string>();
   return frames.map(frame => {
     const stem = pattern.replace(/\{(title|name|section|page)(?::([1-4]))?\}/g, (_, token: string, padding: string | undefined) => token === "title" ? title || "design" : token === "section" ? sections[frame.index]?.trim() || "Pages" : token === "name" ? pageNames[frame.index]?.trim() || `Page ${frame.index + 1}` : String(frame.index + 1).padStart(Number(padding) || 1, "0"));

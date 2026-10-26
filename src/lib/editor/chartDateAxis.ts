@@ -1,5 +1,6 @@
 import { CHART_NUMBER_LOCALES, chartValueLabel } from "./chartValueFormat";
 import type { ChartData } from "./dataVisuals";
+import { EditorError } from "./editorError";
 export type ChartDateFormat = "short" | "month" | "year" | "time" | "datetime";
 export const CHART_DATE_FORMATS: readonly ChartDateFormat[] = ["short", "month", "year", "time", "datetime"];
 export const CHART_DATE_MIN = -62135596800000;
@@ -33,7 +34,7 @@ export function chartXLabel(value: number, chart: Pick<ChartData, "xAxisMode" | 
 
 export function chartDateBounds(minimum: string, maximum: string): Pick<ChartData, "scaleXMin" | "scaleXMax"> {
   const scaleXMin = minimum.trim() ? chartXValue(minimum, "date") : undefined, scaleXMax = maximum.trim() ? chartXValue(maximum, "date") : undefined;
-  if ([scaleXMin, scaleXMax].some(value => value !== undefined && !Number.isFinite(value))) throw new Error("Use ISO dates such as 2026-01-31 or UTC timestamps such as 2026-01-31T14:30Z");
-  if (scaleXMin !== undefined && scaleXMax !== undefined && scaleXMin >= scaleXMax) throw new Error("The first date must be before the last date");
+  if ([scaleXMin, scaleXMax].some(value => value !== undefined && !Number.isFinite(value))) throw new EditorError("copy.4b26d0c35bb2", "Use ISO dates such as 2026-01-31 or UTC timestamps such as 2026-01-31T14:30Z");
+  if (scaleXMin !== undefined && scaleXMax !== undefined && scaleXMin >= scaleXMax) throw new EditorError("copy.c315fd151ec0", "The first date must be before the last date");
   return { scaleXMin, scaleXMax };
 }

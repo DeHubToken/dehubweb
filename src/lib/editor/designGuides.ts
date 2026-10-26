@@ -1,4 +1,5 @@
 import type { ProjectSettings, ProjectSnapshot } from "./types";
+import { EditorError } from "./editorError";
 
 export type GuideUnit = "px" | "in" | "cm" | "mm";
 export interface DesignGuides { vertical: number[]; horizontal: number[]; margin: number; visible: boolean; snap: boolean; rulers: boolean; spacing: boolean; unit: GuideUnit }
@@ -30,10 +31,10 @@ export function changeDesignGuides(project: ProjectSnapshot, patch: Partial<Desi
 
 export interface GuideGridOptions { columns: number; rows: number; margin: number; gutter: number; replace: boolean }
 export function designGuideGridPositions(width: number, height: number, options: GuideGridOptions): { vertical: number[]; horizontal: number[] } {
-  if (!Number.isInteger(options.columns) || !Number.isInteger(options.rows) || options.columns < 1 || options.columns > 12 || options.rows < 1 || options.rows > 12 || !Number.isFinite(options.margin) || !Number.isFinite(options.gutter) || options.margin < 0 || options.gutter < 0 || width <= 0 || height <= 0) throw new Error("Choose 1–12 columns and rows, with positive margins and gutters");
+  if (!Number.isInteger(options.columns) || !Number.isInteger(options.rows) || options.columns < 1 || options.columns > 12 || options.rows < 1 || options.rows > 12 || !Number.isFinite(options.margin) || !Number.isFinite(options.gutter) || options.margin < 0 || options.gutter < 0 || width <= 0 || height <= 0) throw new EditorError("copy.0b4432ab2f8a", "Choose 1–12 columns and rows, with positive margins and gutters");
   const positions = (dimension: number, count: number) => {
     const usable = dimension - options.margin * 2 - options.gutter * (count - 1);
-    if (usable < count) throw new Error("Margins and gutters leave no room for this grid. Reduce their size or use fewer cells");
+    if (usable < count) throw new EditorError("copy.9f7403f0a684", "Margins and gutters leave no room for this grid. Reduce their size or use fewer cells");
     const size = usable / count, result: number[] = [];
     for (let index = 0; index < count; index++) { const from = options.margin + index * (size + options.gutter); result.push(from / dimension, (from + size) / dimension); }
     return [...new Set(result.map(value => Math.round(value * 1e6) / 1e6))].sort((a, b) => a - b);
@@ -44,6 +45,6 @@ export function applyDesignGuideGrid(project: ProjectSnapshot, options: GuideGri
   const grid = designGuideGridPositions(project.settings.width, project.settings.height, options), before = getDesignGuides(project.settings.guides);
   const merge = (axis: GuideAxis) => [...new Set([...(options.replace ? [] : before[axis]), ...grid[axis]])].sort((a, b) => a - b);
   const vertical = merge("vertical"), horizontal = merge("horizontal");
-  if (vertical.length > 50 || horizontal.length > 50) throw new Error("This grid would exceed 50 guides on one axis. Replace existing guides or clear some first");
+  if (vertical.length > 50 || horizontal.length > 50) throw new EditorError("copy.c0db100c8a8e", "This grid would exceed 50 guides on one axis. Replace existing guides or clear some first");
   return changeDesignGuides(project, { vertical, horizontal, visible: true, rulers: true, ...(options.replace ? { margin: 0 } : {}) });
 }

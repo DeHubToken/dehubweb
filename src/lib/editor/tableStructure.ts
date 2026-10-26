@@ -2,6 +2,7 @@ import { parseTableData, type TableData } from "./dataVisuals";
 import { formatDelimitedData } from "./delimitedData";
 import type { TableMerge } from "./tableMerges";
 import type { TableCellStyles } from "./tableCellStyles";
+import { EditorError } from "./editorError";
 
 export type TableAxis = "row" | "column";
 export type TableStructureAction = "before" | "after" | "duplicate" | "delete" | "earlier" | "later";
@@ -11,17 +12,17 @@ export function editTableStructure(source: string, format: Omit<TableData, "rows
   const input = parseTableData(source), width = Math.max(0, ...input.map(row => row.length));
   const rows = input.map(row => Array.from({ length: width }, (_, column) => row[column] ?? ""));
   const count = axis === "row" ? rows.length : width, maximum = axis === "row" ? 20 : 12;
-  if (!Number.isInteger(index) || index < 0 || index >= count) throw new Error("Choose an existing row or column");
+  if (!Number.isInteger(index) || index < 0 || index >= count) throw new EditorError("copy.72bb9d598de7", "Choose an existing row or column");
   const inserting = ["before", "after", "duplicate"].includes(action);
-  if (inserting && count >= maximum) throw new Error(`Use at most ${maximum} ${axis === "row" ? "rows" : "columns"}`);
-  if (action === "delete" && count <= 1) throw new Error("Keep at least one row and one column in the table");
+  if (inserting && count >= maximum) throw (axis === "row" ? new EditorError("copy.c710eaeac6b8", "Use at most {{maximum}} rows", { maximum }) : new EditorError("copy.6c4bbd9fb1a9", "Use at most {{maximum}} columns", { maximum }));
+  if (action === "delete" && count <= 1) throw new EditorError("copy.1fbb28d8e06b", "Keep at least one row and one column in the table");
   const order: Entry[] = Array.from({ length: count }, (_, source) => ({ source, original: true }));
   const position = action === "before" ? index : index + 1;
   if (inserting) order.splice(position, 0, { source: action === "duplicate" ? index : null, original: false });
   else if (action === "delete") order.splice(index, 1);
   else {
     const target = index + (action === "earlier" ? -1 : 1);
-    if (target < 0 || target >= count) throw new Error("This row or column is already at the edge");
+    if (target < 0 || target >= count) throw new EditorError("copy.b1c2963a502f", "This row or column is already at the edge");
     [order[index], order[target]] = [order[target], order[index]];
   }
   const nextRows = axis === "row"
@@ -33,7 +34,7 @@ export function editTableStructure(source: string, format: Omit<TableData, "rows
     const start = merge[axisKey], span = merge[spanKey], end = start + span;
     let nextStart = start, nextSpan = span;
     if (inserting) {
-      if (action === "duplicate" && index >= start && index < end && span > 1) throw new Error("Unmerge cells crossing this row or column before duplicating it");
+      if (action === "duplicate" && index >= start && index < end && span > 1) throw new EditorError("copy.ed114cbadf30", "Unmerge cells crossing this row or column before duplicating it");
       if (position <= start) nextStart++;
       else if (position < end) nextSpan++;
       if (action === "duplicate" && start === index && span === 1) merges.push({ ...merge, [axisKey]: position });
@@ -42,7 +43,7 @@ export function editTableStructure(source: string, format: Omit<TableData, "rows
       else if (index < end) nextSpan--;
     } else {
       const positions = Array.from({ length: span }, (_, offset) => order.findIndex(entry => entry.original && entry.source === start + offset));
-      if (positions.some((value, offset) => value !== positions[0] + offset)) throw new Error("Unmerge cells crossing these rows or columns before moving them");
+      if (positions.some((value, offset) => value !== positions[0] + offset)) throw new EditorError("copy.6e521a28cad1", "Unmerge cells crossing these rows or columns before moving them");
       nextStart = positions[0];
     }
     const next = { ...merge, [axisKey]: nextStart, [spanKey]: nextSpan };

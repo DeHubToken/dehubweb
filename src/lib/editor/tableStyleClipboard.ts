@@ -1,4 +1,5 @@
 import { tableCellRange, type TableCellStyle, type TableCellStyles } from "./tableCellStyles";
+import { EditorError } from "./editorError";
 
 export type TableStyleClipboard = { rows: number; columns: number; styles: (TableCellStyle | null)[][] };
 export function copyTableCellStyles(value: TableCellStyles | undefined, range: string, rows: number, columns: number): TableStyleClipboard {
@@ -11,8 +12,8 @@ export function copyTableCellStyles(value: TableCellStyles | undefined, range: s
 export function pasteTableCellStyles(value: TableCellStyles | undefined, range: string, rows: number, columns: number, clipboard: TableStyleClipboard): TableCellStyles | undefined {
   const picked = tableCellRange(range, rows, columns), single = picked.rowSpan === 1 && picked.columnSpan === 1;
   const height = single ? clipboard.rows : picked.rowSpan, width = single ? clipboard.columns : picked.columnSpan;
-  if (picked.row + height > rows || picked.column + width > columns) throw new Error("The copied cell styles do not fit here");
-  if (height % clipboard.rows || width % clipboard.columns) throw new Error("Choose a range that fits complete copies of the copied cell styles");
+  if (picked.row + height > rows || picked.column + width > columns) throw new EditorError("copy.7a8aaa863c35", "The copied cell styles do not fit here");
+  if (height % clipboard.rows || width % clipboard.columns) throw new EditorError("copy.4eb613b41822", "Choose a range that fits complete copies of the copied cell styles");
   const next = { ...value };
   for (let row = 0; row < height; row++) for (let column = 0; column < width; column++) {
     const style = clipboard.styles[row % clipboard.rows][column % clipboard.columns], key = `${picked.row + row}:${picked.column + column}`;

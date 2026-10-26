@@ -1,4 +1,5 @@
 import type { ChartData } from "./dataVisuals";
+import { EditorError } from "./editorError";
 export type ChartRowFilter = { enabled?: boolean } & (
   { kind: "label"; operator: "contains" | "equals" | "excludes" | "starts" | "ends"; text: string; caseSensitive?: boolean }
   | { kind: "value"; target: "first" | "total" | "series"; series?: string; minimum?: number; maximum?: number }
@@ -42,6 +43,6 @@ export function filterChartData(chart: ChartData): ChartData {
 export function chartRowFilterDraft(kind: "label" | "value" | "rows", options: { operator: "contains" | "equals" | "excludes" | "starts" | "ends"; text: string; caseSensitive: boolean; target: "first" | "total" | "series"; series?: string; minimum: string; maximum: string; first: string; last: string; enabled: boolean }): ChartRowFilter {
   const number = (value: string) => value.trim() ? Number(value.replace(",", ".")) : undefined;
   const filter: ChartRowFilter = kind === "label" ? { kind, operator: options.operator, text: options.text, caseSensitive: options.caseSensitive, enabled: options.enabled } : kind === "rows" ? { kind, first: Number(options.first), last: Number(options.last), enabled: options.enabled } : { kind, target: options.target, series: options.target === "series" ? options.series : undefined, minimum: number(options.minimum), maximum: number(options.maximum), enabled: options.enabled };
-  if (!validChartRowFilters([filter])) throw new Error(kind === "rows" ? "Choose a source-row range from 1 to 50" : kind === "value" ? "Choose a data series and ordered numeric bounds within ten trillion, or leave bounds blank" : "Use a label condition up to 200 characters");
+  if (!validChartRowFilters([filter])) throw (kind === "rows" ? new EditorError("copy.bc9f8095e156", "Choose a source-row range from 1 to 50") : kind === "value" ? new EditorError("copy.5a2ebe54449a", "Choose a data series and ordered numeric bounds within ten trillion, or leave bounds blank") : new EditorError("copy.a974a311c109", "Use a label condition up to 200 characters"));
   return filter;
 }

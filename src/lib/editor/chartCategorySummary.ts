@@ -1,5 +1,6 @@
 import { parseChartSource } from "./chartSeries";
 import { formatDelimitedData } from "./delimitedData";
+import { EditorError } from "./editorError";
 
 export const CHART_CATEGORY_REDUCERS = ["sum", "average", "count", "minimum", "maximum"] as const;
 export type ChartCategoryReducer = typeof CHART_CATEGORY_REDUCERS[number];
@@ -7,12 +8,12 @@ export interface ChartCategorySummary { source: string; order: number[]; origina
 
 export function summarizeChartCategories(source: string, multiple: boolean, reducer: ChartCategoryReducer, trim: boolean, caseSensitive: boolean): ChartCategorySummary {
   const parsed = parseChartSource(source, multiple);
-  if (!parsed.rows.length) throw new Error("Add chart data before summarizing categories");
+  if (!parsed.rows.length) throw new EditorError("copy.a6676ef56a88", "Add chart data before summarizing categories");
   const series = parsed.series ?? [{ label: "Value", values: parsed.rows.map(row => row.value) }];
   const groups = new Map<string, { label: string; first: number; indices: number[] }>();
   parsed.rows.forEach((row, index) => {
     const label = trim ? row.label.trim() : row.label, key = caseSensitive ? label : label.toLowerCase();
-    if (!label.trim()) throw new Error("Give every category a nonempty label");
+    if (!label.trim()) throw new EditorError("copy.4513b42fa995", "Give every category a nonempty label");
     const group = groups.get(key);
     if (group) group.indices.push(index); else groups.set(key, { label, first: index, indices: [index] });
   });
@@ -21,7 +22,7 @@ export function summarizeChartCategories(source: string, multiple: boolean, redu
     const values = group.indices.map(index => set.values[index]);
     const sum = values.reduce((total, value) => total + value, 0);
     const result = reducer === "count" ? values.length : reducer === "minimum" ? Math.min(...values) : reducer === "maximum" ? Math.max(...values) : reducer === "average" ? values.reduce((mean, value) => mean + value / values.length, 0) : sum;
-    if (!Number.isFinite(result) || Math.abs(result) > 1e12) throw new Error(`The summarized value for ${group.label} exceeds one trillion`);
+    if (!Number.isFinite(result) || Math.abs(result) > 1e12) throw new EditorError("copy.3445923daa8b", "The summarized value for {{label}} exceeds one trillion", { label: group.label });
     return result;
   })]);
   return { source: formatDelimitedData(multiple ? [["Label", ...series.map(set => set.label)], ...rows] : rows, "\t"), order: ordered.map(group => group.first), original: parsed.rows.length, categories: ordered.length, repeated: ordered.filter(group => group.indices.length > 1).length };

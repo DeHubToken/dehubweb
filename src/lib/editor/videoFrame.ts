@@ -1,3 +1,4 @@
+import { EditorError } from "./editorError";
 /** A decoded frame must match the requested source time before drawing. */
 export interface VideoFrameSource {
   currentTime: number;
@@ -97,7 +98,7 @@ export function waitForVideoFrame(source: VideoFrameSource, time: number, option
       options.signal?.removeEventListener("abort", aborted);
       if (error) reject(error); else resolve();
     }
-    function aborted() { const error = new Error("Export cancelled"); error.name = "AbortError"; finish(error); }
+    function aborted() { const error = new EditorError("copy.dbef83d53bfe", "Export cancelled"); error.name = "AbortError"; finish(error); }
     function failed() {
       finish(new Error("Video frame failed to decode" + (source.error?.code ? " (media error " + source.error.code + ")" : "")));
     }
@@ -126,7 +127,7 @@ export function waitForVideoFrame(source: VideoFrameSource, time: number, option
       try { source.load(); } catch (error) { finish(error instanceof Error ? error : new Error(String(error))); return; }
       check();
     }
-    if (!Number.isFinite(time)) { finish(new Error("Invalid video frame time")); return; }
+    if (!Number.isFinite(time)) { finish(new EditorError("copy.63adccf7113f", "Invalid video frame time")); return; }
     timer = setTimeout(() => {
       check();
       if (!done) finish(new Error("Video frame did not load at " + target.toFixed(3) + "s (current " + source.currentTime.toFixed(3) + "s, ready " + source.readyState + ", seeking " + source.seeking + ")"));

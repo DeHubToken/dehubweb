@@ -1,5 +1,6 @@
 import type { MediaProvenance } from "@/lib/editor/mediaStore";
 import { responseToFile } from '@/lib/creator/assetDownload';
+import { EditorError } from "./editorError";
 
 export type FreeAssetKind = "photo" | "video" | "animation" | "graphic" | "gif" | "audio";
 export type FreeAssetOrientation = "all" | "landscape" | "portrait" | "square";
@@ -243,7 +244,7 @@ async function searchDirect(options: SearchFreeAssetsOptions): Promise<FreeAsset
   if (options.kind === "audio") {
     const [openverse, commons] = await Promise.allSettled([searchOpenverse(options), searchWikimedia(options)]);
     const searches = [openverse, commons].flatMap((result) => result.status === "fulfilled" ? [result.value] : []);
-    if (!searches.length) throw new Error("Free audio providers are unavailable");
+    if (!searches.length) throw new EditorError("copy.5e28391dc6bc", "Free audio providers are unavailable");
     return {
       items: searches.flatMap((result) => result.items),
       page: options.page || 1,
@@ -296,7 +297,7 @@ async function fetchAsset(asset: FreeAsset, signal?: AbortSignal): Promise<Respo
     if (signal?.aborted) throw error;
   }
   const root = functionUrl();
-  if (!root) throw new Error("This provider blocked the download");
+  if (!root) throw new EditorError("copy.4a50423960cd", "This provider blocked the download");
   const proxy = new URL(root);
   proxy.searchParams.set("download", asset.downloadUrl);
   const response = await fetch(proxy, { headers: functionHeaders(), signal });
@@ -313,10 +314,10 @@ export async function downloadFreeAsset(asset: FreeAsset, signal?: AbortSignal):
   const expected = asset.kind === 'audio' ? 'audio/' : asset.kind === 'video' || asset.kind === 'animation' ? 'video/' : 'image/';
   if (!type.startsWith(expected)) {
     await response.body?.cancel().catch(() => {});
-    throw new Error('The provider returned an unsupported media format');
+    throw new EditorError("copy.f542bafd66a8", "The provider returned an unsupported media format");
   }
   const file = await responseToFile(response, safeFilename({ ...asset, mimeType: type }), type, { signal });
-  if (!file.size) throw new Error("The provider returned an empty file");
+  if (!file.size) throw new EditorError("copy.55eee5e9b5a2", "The provider returned an empty file");
   return file.type === type ? file : new File([file], file.name, { type, lastModified: Date.now() });
 }
 

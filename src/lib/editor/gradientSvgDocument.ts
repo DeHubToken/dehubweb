@@ -1,7 +1,8 @@
 import { validGradientFill, type GradientFill } from "./gradientFill";
+import { EditorError } from "./editorError";
 export function gradientSvgDocument(fill: GradientFill, width: number, height: number): string {
-  if (!fill || !validGradientFill(fill)) throw new Error("Complete all gradient colours before downloading");
-  if (![width, height].every(value => Number.isFinite(value) && value >= 1 && value <= 16384)) throw new Error("Use page dimensions between 1 and 16,384 pixels");
+  if (!fill || !validGradientFill(fill)) throw new EditorError("copy.c991aafa14f1", "Complete all gradient colours before downloading");
+  if (![width, height].every(value => Number.isFinite(value) && value >= 1 && value <= 16384)) throw new EditorError("copy.46a3d6934110", "Use page dimensions between 1 and 16,384 pixels");
   const number = (value: number) => String(Math.round(value * 1000000) / 1000000);
   const angle = (fill.angle % 360) * Math.PI / 180, x = Math.cos(angle), y = Math.sin(angle), length = Math.abs(width * x) + Math.abs(height * y);
   const cx = (fill.focus?.x ?? 0.5) * width, cy = (fill.focus?.y ?? 0.5) * height;

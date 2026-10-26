@@ -5,6 +5,7 @@ import { getMedia, putMedia } from "./mediaStore";
 import { saveProject } from "./projectStore";
 import { toMediaItem, useEditorStore } from "@/store/editorStore";
 import type { CloudProjectMedia } from "./cloudProjectFormat";
+import { EditorError } from "./editorError";
 
 let linkDatabase: ReturnType<typeof openDB> | undefined;
 const links = () => linkDatabase ??= openDB("dehub-editor-cloud-links", 1, { upgrade(db) { db.createObjectStore("links"); } });
@@ -21,14 +22,14 @@ export function browserCloudProjectSession(address: string, check: () => void) {
     upload: async (localId, cloudId, guard, shared) => {
       const local = await getMedia(localId); guard();
       const live = useEditorStore.getState().media.find(media => media.id === localId);
-      if (!local && !live) throw new Error("A project source is missing from this device");
+      if (!local && !live) throw new EditorError("copy.504dd8463841", "A project source is missing from this device");
       const meta = local || live!;
       let blob = local?.blob;
-      if (!blob) { const response = await fetch(live!.url); guard(); if (!response.ok) throw new Error("A project source could not be downloaded"); blob = await response.blob(); guard(); }
-      if (!blob.size) throw new Error("A project source is empty");
+      if (!blob) { const response = await fetch(live!.url); guard(); if (!response.ok) throw new EditorError("copy.071eb6da4fa9", "A project source could not be downloaded"); blob = await response.blob(); guard(); }
+      if (!blob.size) throw new EditorError("copy.546df01b2889", "A project source is empty");
       const slot = await (shared ? api.editing.prepareMedia(shared.owner, shared.projectId, cloudId, blob.size, extension(meta.name, meta.mimeType)) : api.prepareMedia(cloudId, blob.size, extension(meta.name, meta.mimeType))); guard();
       const response = await fetch(slot.signedUrl, { method: "PUT", headers: { "Content-Type": meta.mimeType || "application/octet-stream", "x-upsert": "false" }, body: blob }); guard();
-      if (!response.ok) throw new Error("A project source could not be uploaded");
+      if (!response.ok) throw new EditorError("copy.56567858b2cb", "A project source could not be uploaded");
       const source: CloudProjectMedia = { id: cloudId, storagePath: slot.path, name: meta.name, kind: meta.kind, mimeType: meta.mimeType, size: blob.size, provenance: meta.provenance };
       for (const field of ["width", "height", "duration"] as const) if ((meta[field] || 0) > 0) source[field] = meta[field];
       return source;
@@ -38,9 +39,9 @@ export function browserCloudProjectSession(address: string, check: () => void) {
       if (!local || local.blob.size !== source.size) {
         const url = await api.sourceUrl(source.storagePath, sourceOwner); guard();
         const response = await fetch(url); guard();
-        if (!response.ok) throw new Error("A saved project source is unavailable");
+        if (!response.ok) throw new EditorError("copy.24897b49c0a1", "A saved project source is unavailable");
         const blob = await response.blob(); guard();
-        if (blob.size !== source.size) throw new Error("A saved project source is incomplete");
+        if (blob.size !== source.size) throw new EditorError("copy.276dc92a8919", "A saved project source is incomplete");
         const { storagePath: _path, ...meta } = source;
         local = { ...meta, blob, createdAt: Date.now() }; await putMedia(local); guard();
       }

@@ -1,5 +1,6 @@
 import type { BulkConnections, BulkField, BulkPageFields } from "./bulkCreate";
 import type { Clip, MediaClip, ShapeClip } from "./types";
+import { EditorError } from "./editorError";
 type Target = "text" | "image" | "link";
 interface Binding { target: Target; name: string; column: string }
 export interface BulkConnectionProfile { kind: "dehub-bulk-connections"; version: 1; name: string; bindings: Binding[]; pageFields: BulkPageFields }
@@ -16,39 +17,39 @@ export function captureBulkConnectionProfile(context: BulkConnectionContext, nam
     for (const clip of fields) {
       const column = connections[clip.id]; if (!context.headers.includes(column)) continue;
       const label = layerName(clip);
-      if (!boundedName(label, 200)) throw new Error("Name each connected layer with up to 200 printable characters before saving its setup");
+      if (!boundedName(label, 200)) throw new EditorError("copy.469f0a8e10f3", "Name each connected layer with up to 200 printable characters before saving its setup");
       const key = target + ":" + normalize(label);
-      if (seen.has(key)) throw new Error("Give connected layers unique names before saving their connection setup");
+      if (seen.has(key)) throw new EditorError("copy.87e60526aef4", "Give connected layers unique names before saving their connection setup");
       seen.add(key); bindings.push({ target, name: label, column });
     }
   }
   const pageFields: BulkPageFields = {};
   for (const key of ["titleColumn", "notesColumn", "sectionColumn"] as const) { const column = context.pageFields[key]; if (column && context.headers.includes(column)) pageFields[key] = column; }
-  if (!bindings.length && !Object.keys(pageFields).length) throw new Error("Connect named layers or page fields before saving a setup");
-  if (bindings.length > 600) throw new Error("Save up to 600 layer connections in one setup");
+  if (!bindings.length && !Object.keys(pageFields).length) throw new EditorError("copy.752b8eea28a1", "Connect named layers or page fields before saving a setup");
+  if (bindings.length > 600) throw new EditorError("copy.c1cbe122409a", "Save up to 600 layer connections in one setup");
   return { kind: "dehub-bulk-connections", version: 1, name: name.replace(/[\u0000-\u001f\u007f]/g, " ").trim().slice(0, 80) || "Bulk connections", bindings, pageFields };
 }
 export function bulkConnectionProfileFile(context: BulkConnectionContext, name: string): string {
   const source = JSON.stringify(captureBulkConnectionProfile(context, name), null, 2) + "\n";
   let bytes = 0;
   for (const character of source) { const point = character.codePointAt(0)!; bytes += point < 128 ? 1 : point < 2048 ? 2 : point < 65536 ? 3 : 4; }
-  if (bytes > 131072) throw new Error("Keep the connection setup within 128 KB");
+  if (bytes > 131072) throw new EditorError("copy.29eb6af38956", "Keep the connection setup within 128 KB");
   return source;
 }
 export function parseBulkConnectionProfile(source: string): BulkConnectionProfile {
-  if (source.length > 131072) throw new Error("Choose a connection setup smaller than 128 KB");
-  let value: unknown; try { value = JSON.parse(source.replace(/^\uFEFF/, "")); } catch { throw new Error("Choose an exported bulk connection JSON file"); }
-  if (!value || typeof value !== "object" || Array.isArray(value)) throw new Error("Choose an exported bulk connection setup");
+  if (source.length > 131072) throw new EditorError("copy.658c8e4a2eed", "Choose a connection setup smaller than 128 KB");
+  let value: unknown; try { value = JSON.parse(source.replace(/^\uFEFF/, "")); } catch { throw new EditorError("copy.17ba3caec671", "Choose an exported bulk connection JSON file"); }
+  if (!value || typeof value !== "object" || Array.isArray(value)) throw new EditorError("copy.035c93b907c4", "Choose an exported bulk connection setup");
   const profile = value as BulkConnectionProfile;
-  if (profile.kind !== "dehub-bulk-connections" || profile.version !== 1 || !boundedName(profile.name, 80) || !Array.isArray(profile.bindings) || profile.bindings.length > 600 || !profile.pageFields || typeof profile.pageFields !== "object" || Array.isArray(profile.pageFields)) throw new Error("Choose a supported bulk connection setup");
+  if (profile.kind !== "dehub-bulk-connections" || profile.version !== 1 || !boundedName(profile.name, 80) || !Array.isArray(profile.bindings) || profile.bindings.length > 600 || !profile.pageFields || typeof profile.pageFields !== "object" || Array.isArray(profile.pageFields)) throw new EditorError("copy.87f3be587622", "Choose a supported bulk connection setup");
   const seen = new Set<string>();
   const bindings = profile.bindings.map(binding => {
-    if (!binding || !["text", "image", "link"].includes(binding.target) || !boundedName(binding.name, 200) || !boundedName(binding.column, 100)) throw new Error("This setup contains invalid layer or column names");
-    const key = binding.target + ":" + normalize(binding.name); if (seen.has(key)) throw new Error("This setup contains duplicate layer bindings"); seen.add(key);
+    if (!binding || !["text", "image", "link"].includes(binding.target) || !boundedName(binding.name, 200) || !boundedName(binding.column, 100)) throw new EditorError("copy.406505d42098", "This setup contains invalid layer or column names");
+    const key = binding.target + ":" + normalize(binding.name); if (seen.has(key)) throw new EditorError("copy.34688f7c5f75", "This setup contains duplicate layer bindings"); seen.add(key);
     return { target: binding.target, name: binding.name, column: binding.column };
   });
   const pageFields: BulkPageFields = {};
-  for (const key of ["titleColumn", "notesColumn", "sectionColumn"] as const) { const column = profile.pageFields[key]; if (column !== undefined) { if (!boundedName(column, 100)) throw new Error("This setup contains an invalid page-field column"); pageFields[key] = column; } }
+  for (const key of ["titleColumn", "notesColumn", "sectionColumn"] as const) { const column = profile.pageFields[key]; if (column !== undefined) { if (!boundedName(column, 100)) throw new EditorError("copy.44e776b75272", "This setup contains an invalid page-field column"); pageFields[key] = column; } }
   return { kind: "dehub-bulk-connections", version: 1, name: profile.name, bindings, pageFields };
 }
 export function planBulkConnectionProfile(profile: BulkConnectionProfile, context: BulkConnectionContext) {
