@@ -64,7 +64,13 @@ export function buildSeedance2Request(routes: { falTextModel?: string; falImageM
 }
 
 /** Kie is retained only where this integration can preserve every requested setting. */
-export function seedance2PreferredProvider(options: Pick<Seedance2Options, 'resolution' | 'audioUrls' | 'videoUrls' | 'endFrameUrl' | 'seed' | 'negativePrompt'>): 'kie' | 'fal' {
-  return options.audioUrls?.length || options.videoUrls?.length || options.endFrameUrl || options.seed !== undefined || options.negativePrompt !== undefined ||
-    (options.resolution !== undefined && !['480p', '720p'].includes(options.resolution)) ? 'fal' : 'kie';
+export function seedance2RoutingDecision(options: Pick<Seedance2Options, 'resolution' | 'audioUrls' | 'videoUrls' | 'endFrameUrl' | 'seed' | 'negativePrompt' | 'referenceImageUrls'>) {
+  if (options.resolution !== undefined && !['480p', '720p'].includes(options.resolution)) return { provider: 'fal', reason: 'requested-resolution' } as const;
+  if (options.audioUrls?.length) return { provider: 'fal', reason: 'audio-reference' } as const;
+  if (options.videoUrls?.length) return { provider: 'fal', reason: 'video-reference' } as const;
+  // These preserve the existing outer Kie guard; ordinary image references still use Kie.
+  if (options.endFrameUrl) return { provider: 'fal', reason: 'end-frame' } as const;
+  if (options.seed !== undefined) return { provider: 'fal', reason: 'seed' } as const;
+  if (options.negativePrompt !== undefined) return { provider: 'fal', reason: 'negative-prompt' } as const;
+  return { provider: 'kie', reason: 'compatible-direct-route' } as const;
 }

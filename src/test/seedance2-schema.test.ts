@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { buildSeedance2Input, buildSeedance2Request, seedance2PreferredProvider } from '../../supabase/functions/_shared/seedance2-input';
+import { buildSeedance2Input, buildSeedance2Request, seedance2RoutingDecision } from '../../supabase/functions/_shared/seedance2-input';
 import { VIDEO_MODELS } from '../constants/video-models.constants';
 import schemas from './fixtures/seedance2-schema.json';
 
@@ -45,11 +45,12 @@ describe('Seedance 2.0 verified provider contract', () => {
     }
   });
   it('keeps compatible direct routing but uses fal whenever a requested setting would be dropped', () => {
-    expect(seedance2PreferredProvider({ resolution: '480p' })).toBe('kie');
-    expect(seedance2PreferredProvider({ resolution: '720p' })).toBe('kie');
-    for (const settings of [{ resolution: '1080p' }, { audioUrls: ['speech.mp3'] }, { videoUrls: ['motion.mp4'] }, { endFrameUrl: 'end.jpg' }]) {
-      expect(seedance2PreferredProvider(settings)).toBe('fal');
-    }
+    expect(seedance2RoutingDecision({ resolution: '480p' })).toEqual({ provider: 'kie', reason: 'compatible-direct-route' });
+    expect(seedance2RoutingDecision({ resolution: '720p', referenceImageUrls: ['person.jpg'] })).toEqual({ provider: 'kie', reason: 'compatible-direct-route' });
+    expect(seedance2RoutingDecision({ resolution: '1080p' })).toEqual({ provider: 'fal', reason: 'requested-resolution' });
+    expect(seedance2RoutingDecision({ audioUrls: ['speech.mp3'] })).toEqual({ provider: 'fal', reason: 'audio-reference' });
+    expect(seedance2RoutingDecision({ videoUrls: ['motion.mp4'] })).toEqual({ provider: 'fal', reason: 'video-reference' });
+    expect(seedance2RoutingDecision({ endFrameUrl: 'end.jpg' })).toEqual({ provider: 'fal', reason: 'end-frame' });
   });
   it('does not advertise seed or negative-prompt controls for these routes', () => {
     for (const model of ['seedance-2.0', 'seedance-2.0-fast']) {
