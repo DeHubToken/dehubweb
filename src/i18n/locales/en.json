@@ -6517,6 +6517,8 @@
     "creatorEarnsDirect": "Subscribers pay in DeHub tokens. Your share lands in your wallet the moment they subscribe, less the platform fee for your badge tier."
   },
   "liveOverlay": {
+    "giftedSubs_one": "{{name}} gifted a sub!",
+    "giftedSubs_other": "{{name}} gifted {{count}} subs!",
     "someone": "Someone",
     "newFollower": "New follower: {{name}}",
     "newSubscriber": "New subscriber: {{name}}",
@@ -6726,6 +6728,7 @@
       "subathon_timer": "Subathon timer",
       "points_board": "Loyal viewers",
       "streamer_level": "Streamer level",
+      "hype_train": "Hype train",
       "tip_jar": "Gift jar"
     },
     "hints": {
@@ -6750,6 +6753,7 @@
       "subathon_timer": "A countdown that gifts, follows and subscriptions push back",
       "points_board": "Your top viewers by points from watching and gifting",
       "streamer_level": "Your streamer level and weekly streak, from your profile",
+      "hype_train": "Shows the hype train while one runs: three gifts or subscriptions within five minutes start it.",
       "tip_jar": "A jar that fills up as paid gifts come in"
     },
     "fields": {
@@ -18103,5 +18107,74 @@
     "fingerprint": "Bio",
     "exploreFirst": "Explore first",
     "codeNote": "We email you a code, no password needed."
+  },
+  "liveHype": {
+    "train": {
+      "level": "Hype Train · Level {{level}}",
+      "endedLevel": "Hype Train finished level {{level}}!",
+      "ended": "Hype Train ended",
+      "thanks_one": "Thanks to {{count}} supporter",
+      "thanks_other": "Thanks to {{count}} supporters",
+      "top": "Top: {{name}}"
+    },
+    "chat": {
+      "giftedSubs_one": "gifted a subscription 🎁",
+      "giftedSubs_other": "gifted {{count}} subscriptions 🎁"
+    },
+    "gift": {
+      "open": "Gift subscriptions",
+      "title": "Gift subscriptions",
+      "plan": "Plan",
+      "mode": {
+        "random": "Random viewers in chat",
+        "user": "Someone specific"
+      },
+      "howMany": "How many",
+      "randomHint": "Goes to people who chatted in the last 30 minutes and are not subscribed yet.",
+      "who": "Username or wallet address",
+      "whoPlaceholder": "@username",
+      "send_one": "Gift 1 sub · ${{price}}",
+      "send_other": "Gift {{count}} subs · ${{price}}",
+      "payHint": "Paid in DHB from your wallet in one transfer.",
+      "fewer_one": "Only 1 person in chat can receive a sub right now, so you pay for 1.",
+      "fewer_other": "Only {{count}} people in chat can receive a sub right now, so you pay for {{count}}.",
+      "done_one": "Subscription gifted!",
+      "done_other": "{{count}} subscriptions gifted!",
+      "failed": "Could not gift subscriptions",
+      "notReady": "Gifting is not available for this plan yet",
+      "noPlan": "Pick a plan first",
+      "noPlans": "{{name}} has no subscription plans to gift yet.",
+      "cancel": "Cancel",
+      "stage": {
+        "preparing": "Preparing…",
+        "wallet": "Confirm in your wallet",
+        "confirming": "Waiting for the transaction…",
+        "recording": "Finishing up…"
+      }
+    },
+    "badges": {
+      "title": "Limited-time badges",
+      "intro": "Offer a badge for a few days. Anyone who subscribes or gifts while it runs earns it, and it shows next to their name in your chat for good.",
+      "name": "Badge name",
+      "namePlaceholder": "Launch week",
+      "days": "Available for (days)",
+      "emoji": "Emoji",
+      "who": "Who can earn it",
+      "audience": {
+        "both": "Subscribers and gifters",
+        "subscribers": "Subscribers",
+        "gifters": "Gifters"
+      },
+      "create": "Offer badge",
+      "created": "Badge is live.",
+      "end": "End now",
+      "ended": "Ended",
+      "until": "Until {{date}}",
+      "holders_one": "{{count}} holder",
+      "holders_other": "{{count}} holders",
+      "limit": "Three badges can run at once. End one to offer another.",
+      "failed": "That did not work. Try again.",
+      "hypeHint": "Everyone who rides a hype train also gets your 🚂 badge at the level it reached."
+    }
   }
 }

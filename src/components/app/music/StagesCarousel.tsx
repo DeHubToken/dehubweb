@@ -1,4 +1,4 @@
-import { fetchStageRecordings, hasStageRecording } from '@/lib/stage-recordings';
+import { fetchStageRecordings, hasStageRecording, searchStageRecordings } from '@/lib/stage-recordings';
 import { useTranslation as _useCopy } from 'react-i18next';
 /**
  * Stages Carousel for Music Feed
@@ -28,6 +28,7 @@ import { useTranslation } from 'react-i18next';
 import { useQuery } from '@tanstack/react-query';
 import { useLiveSpaces, useScheduledSpaces, useStage } from '@/contexts/StageContext';
 import { ChartDesk } from '@/components/app/music/ChartDesk';
+import { useChartSearch } from '@/hooks/use-chart-search';
 import { SwipeableCarousel } from '@/components/app/SwipeableCarousel';
 import { StageHostLink } from '@/components/app/stages/StageHostLink';
 import { PastStageCard } from '@/components/app/stages/PastStageCard';
@@ -275,13 +276,29 @@ export function StagesChart(_props: StagesCarouselProps) {
     : sort === 'listened' ? listened.data || []
     : recent.data || [];
   const isLoading = sort === 'listened' ? listened.isLoading : sort === 'recent' ? recent.isLoading : false;
+  // Search covers every stage: live and upcoming rooms are all loaded already,
+  // recordings are searched on the server.
+  const [search, setSearch] = useState('');
+  const found = useChartSearch('stages', search, searchStageRecordings);
+  const term = search.trim().toLocaleLowerCase();
+  const otherMatches = term.length >= 2
+    ? [...liveSpaces, ...scheduledSpaces, ...found.items].filter(space => `${space.title} ${space.description ?? ''} ${space.host_username ?? ''}`.toLocaleLowerCase().includes(term))
+    : [];
+  const findSpace = (id: string) => spaces.find(s => s.id === id) || otherMatches.find(s => s.id === id);
 
   const subtitle = (space: AudioSpace) => {
     const host = space.host_username ? `@${space.host_username}` : space.host_wallet_address?.slice(0, 6) || '';
-    if (sort === 'live') return `${host} · ${_copy('music.listeningCount', { count: (space.speaker_count || 1) + (space.listener_count || 0) })}`;
-    if (sort === 'upcoming' && space.scheduled_at) return `${host} · ${new Date(space.scheduled_at).toLocaleDateString(undefined, { day: 'numeric', month: 'short' })}`;
+    if (space.status === 'live') return `${host} · ${_copy('music.listeningCount', { count: (space.speaker_count || 1) + (space.listener_count || 0) })}`;
+    if (space.status === 'scheduled' && space.scheduled_at) return `${host} · ${new Date(space.scheduled_at).toLocaleDateString(undefined, { day: 'numeric', month: 'short' })}`;
     return space.total_listens ? `${host} · ${_copy('audioPost.listens', { count: space.total_listens })}` : host;
   };
+
+  const stageRow = (space: AudioSpace) => ({
+    id: space.id,
+    title: space.title,
+    subtitle: subtitle(space),
+    thumb: space.cover_image_url || undefined,
+  });
 
   return (
     <ChartDesk
@@ -302,20 +319,19 @@ export function StagesChart(_props: StagesCarouselProps) {
       sort={sort}
       onSort={setChosen}
       sortLabel={_copy('music.stagesChartOrder', { defaultValue: 'Stages chart order' })}
-      rows={spaces.map(space => ({
-        id: space.id,
-        title: space.title,
-        subtitle: subtitle(space),
-        thumb: space.cover_image_url || undefined,
-      }))}
+      rows={spaces.map(stageRow)}
+      search={search}
+      onSearchChange={setSearch}
+      moreRows={otherMatches.map(stageRow)}
+      isSearchingMore={found.isSearching}
       isLoading={isLoading}
       thumbs="wide"
       empty={{ icon: 'stages', title: sort === 'live' ? _copy("copy.3b59e95daada", { defaultValue: "No live stages right now" }) : _copy('music.noStages', { defaultValue: 'No stages here yet' }) }}
       renderSelected={id => {
-        const space = spaces.find(s => s.id === id);
+        const space = findSpace(id);
         if (!space) return null;
-        if (sort === 'live') return <StageCard space={space} onClick={() => { openModal('live'); joinSpace(space.id); }} wide />;
-        if (sort === 'upcoming') return <UpcomingStagePanel space={space} />;
+        if (space.status === 'live') return <StageCard space={space} onClick={() => { openModal('live'); joinSpace(space.id); }} wide />;
+        if (space.status === 'scheduled') return <UpcomingStagePanel space={space} />;
         return <PastStageCard key={space.id} space={space} />;
       }}
     />

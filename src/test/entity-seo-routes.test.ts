@@ -127,4 +127,14 @@ describe('entity SEO routes', () => {
     expect(WORKER).toContain(String.raw`/^\/communities\/([^/]+)\/?$/`);
     expect(WORKER).toContain('ssrPath = `/app/communities/${bareCommunity[1]}`');
   });
+  /** A host's invite link unfurls with who is asking, not the homepage card. */
+  it('cards a co-stream invite link', () => {
+    const gateJoin = workerRegex(gate(), String.raw`\/app\/live\/join`);
+    const renderJoin = workerRegex(WORKER.slice(WORKER.indexOf('const costreamMatch')), String.raw`\/app\/live\/join`);
+    const id = '0f6d1c9e-6a43-4b0e-9a8d-2d4c3b1a0e9f';
+    expect(gateJoin.test(`/app/live/join/${id}`)).toBe(true);
+    expect(renderJoin.test(`/app/live/join/${id}`)).toBe(true);
+    expect(gateJoin.test('/app/live/join/not-a-room')).toBe(false);
+    expect(gateJoin.test(`/app/live/join/${id}/extra`)).toBe(false);
+  });
 });
