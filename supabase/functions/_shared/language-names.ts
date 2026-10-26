@@ -122,7 +122,7 @@ export const LANGUAGE_NAMES: Record<string, string> = {
   gsw: 'Swiss German',
   ha: 'Hausa',
   jv: 'Javanese',
-  ku: 'Kurdish',
+  ku: 'Kurdish (Kurmanji, Latin script)',
   ky: 'Kyrgyz',
   mag: 'Magahi',
   mg: 'Malagasy',

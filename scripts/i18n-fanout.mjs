@@ -248,7 +248,8 @@ const SCRIPT_OF = {
   as: /[ঀ-৿]/, pa: /[਀-੿]/, gu: /[઀-૿]/, ta: /[஀-௿]/,
   te: /[ఀ-౿]/, kn: /[ಀ-೿]/, ml: /[ഀ-ൿ]/,
   ar: /[؀-ۿ]/, fa: /[؀-ۿ]/, ur: /[؀-ۿ]/, ps: /[؀-ۿ]/,
-  skr: /[؀-ۿ]/, pbt: /[؀-ۿ]/, sd: /[؀-ۿ]/, ku: /[؀-ۿ]/,
+  // ku is Kurmanji, written in Latin, so it has no entry here.
+  skr: /[؀-ۿ]/, pbt: /[؀-ۿ]/, sd: /[؀-ۿ]/,
   acm: /[؀-ۿ]/, acw: /[؀-ۿ]/, aec: /[؀-ۿ]/, ajp: /[؀-ۿ]/,
   ayn: /[؀-ۿ]/, apd: /[؀-ۿ]/, arz: /[؀-ۿ]/, ary: /[؀-ۿ]/,
 };
@@ -478,6 +479,22 @@ function looksLikeLoop(source, candidate) {
 
 const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
 
+/**
+ * Some target languages come back HTML-escaped: `fe&#39;uu` for om and uz, and
+ * the batch separator as `&#10; ` for ku, which made every ku batch misalign
+ * and fall back to one request per line. Unescaped, the apostrophes render as
+ * written and the batch splits on its newlines again.
+ */
+function decodeEntities(text) {
+  return text
+    .replace(/&#10; ?/g, '\n')
+    .replace(/&#39;/g, "'")
+    .replace(/&quot;/g, '"')
+    .replace(/&lt;/g, '<')
+    .replace(/&gt;/g, '>')
+    .replace(/&amp;/g, '&');
+}
+
 async function translateBatch(lines, targetLang, key) {
   // The app's own copy is public, so free tiers that train on input may take it.
   // purpose keeps this traffic out of the translation cache's read counters.
@@ -492,8 +509,8 @@ async function translateBatch(lines, targetLang, key) {
       if (res.status === 429) { await sleep(2000 * attempt); continue; }
       if (!res.ok) { await sleep(600 * attempt); continue; }
       const json = await res.json();
-      const text = json?.translatedText;
-      if (typeof text !== 'string') return null;
+      if (typeof json?.translatedText !== 'string') return null;
+      const text = decodeEntities(json.translatedText);
       const out = text.split('\n');
       // A batch that came back a different shape is unusable as a whole; the
       // caller retries it one line at a time rather than guessing an alignment.

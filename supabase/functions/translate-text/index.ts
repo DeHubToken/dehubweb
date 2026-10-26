@@ -437,8 +437,9 @@ async function translateWithMyMemory(
   targetLang: string,
   sourceLang: string = 'auto'
 ): Promise<TranslateResponse | null> {
-  // MyMemory has no Nigerian Pidgin; let the AI path handle it.
-  if (targetLang === 'pcm') return null;
+  // MyMemory has no Nigerian Pidgin; let the AI path handle it. It reads `ku`
+  // as Sorani in Arabic script, but the apps' ku is Kurmanji in Latin script.
+  if (targetLang === 'pcm' || targetLang === 'ku') return null;
   try {
     console.log('Attempting translation with MyMemory API');
     
