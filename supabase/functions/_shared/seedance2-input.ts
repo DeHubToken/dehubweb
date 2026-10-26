@@ -62,3 +62,9 @@ export function buildSeedance2Request(routes: { falTextModel?: string; falImageM
   if (!appId) throw new Error('The selected Seedance route is not configured');
   return { ...prepared, appId };
 }
+
+/** Kie is retained only where this integration can preserve every requested setting. */
+export function seedance2PreferredProvider(options: Pick<Seedance2Options, 'resolution' | 'audioUrls' | 'videoUrls' | 'endFrameUrl' | 'seed' | 'negativePrompt'>): 'kie' | 'fal' {
+  return options.audioUrls?.length || options.videoUrls?.length || options.endFrameUrl || options.seed !== undefined || options.negativePrompt !== undefined ||
+    (options.resolution !== undefined && !['480p', '720p'].includes(options.resolution)) ? 'fal' : 'kie';
+}

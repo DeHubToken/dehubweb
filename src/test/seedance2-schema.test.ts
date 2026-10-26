@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { buildSeedance2Input, buildSeedance2Request } from '../../supabase/functions/_shared/seedance2-input';
+import { buildSeedance2Input, buildSeedance2Request, seedance2PreferredProvider } from '../../supabase/functions/_shared/seedance2-input';
 import { VIDEO_MODELS } from '../constants/video-models.constants';
 import schemas from './fixtures/seedance2-schema.json';
 
@@ -42,6 +42,13 @@ describe('Seedance 2.0 verified provider contract', () => {
   it('rejects malformed nullable and array inputs rather than charging a silently changed request', () => {
     for (const options of [{ sourceImage: null }, { audioUrls: null }, { audioUrls: 'audio.mp3' }, { videoUrls: [42] }, { duration: null }, { negativePrompt: null }]) {
       expect(() => buildSeedance2Input({ prompt: 'Scene', ...options } as never)).toThrow();
+    }
+  });
+  it('keeps compatible direct routing but uses fal whenever a requested setting would be dropped', () => {
+    expect(seedance2PreferredProvider({ resolution: '480p' })).toBe('kie');
+    expect(seedance2PreferredProvider({ resolution: '720p' })).toBe('kie');
+    for (const settings of [{ resolution: '1080p' }, { audioUrls: ['speech.mp3'] }, { videoUrls: ['motion.mp4'] }, { endFrameUrl: 'end.jpg' }]) {
+      expect(seedance2PreferredProvider(settings)).toBe('fal');
     }
   });
   it('does not advertise seed or negative-prompt controls for these routes', () => {
