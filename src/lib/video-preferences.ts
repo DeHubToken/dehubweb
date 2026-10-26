@@ -176,6 +176,12 @@ export function getMediaVolume(): number {
   return typeof v === 'number' && Number.isFinite(v) ? Math.max(0, Math.min(1, v)) : DEFAULTS.volume;
 }
 export const useMediaVolume = () => useSyncExternalStore(subscribeMedia, getMediaVolume, () => DEFAULTS.volume);
+/**
+ * Whether a video the viewer opened (post page, fullscreen, a tap on play)
+ * should start silent. Only their own mute tap counts: the feed's automatic
+ * muting never wrote here, so with no choice on record it plays with sound.
+ */
+export const openedVideoMuted = () => getVideoPreferences().mediaMuted === true;
 export const useMediaMuted = () => useSyncExternalStore(subscribeMedia, () => getVideoPreferences().mediaMuted === true, () => false);
 export function setMediaMuted(muted: boolean) {
   const prefs = { ...getVideoPreferences(), mediaMuted: muted };
