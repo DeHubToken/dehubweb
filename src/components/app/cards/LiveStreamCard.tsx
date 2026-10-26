@@ -104,6 +104,7 @@ const LiveGiftBuyDrawer = lazy(() => import('@/components/app/live/LiveGiftBuyDr
 const TipPayWith = lazy(() => import('@/components/app/tips/TipPayWith'));
 // The creator's overlay; lazy, most streams have none.
 const LiveOverlayLayer = lazy(() => import('@/components/app/live/overlay/LiveOverlayLayer'));
+const CoStreamViewerLayer = lazy(() => import('@/components/app/live/costream/CoStreamViewerLayer'));
 const ReplayOverlayLayer = lazy(() => import('@/components/app/live/overlay/ReplayOverlayLayer'));
 import { speakTipMessage, warmTipTts, setTipTtsEnabled, MAX_TTS_CHARS } from '@/lib/live/tip-tts';
 import { useAuth } from '@/contexts/AuthContext';
@@ -927,6 +928,16 @@ export function LiveStreamCard({ stream, chatSlot, immersive = false }: LiveStre
   // leave the OS holding a session for a player that is gone.
   useEffect(() => () => releaseMediaSession(videoId), [videoId]);
 
+  // On screen as a guest: the broadcast runs seconds behind, so letting it
+  // play would hand the guest their own voice back. Silence it while the
+  // guest room is open; they unmute themselves after, as with any stream.
+  const quietForGuestRoom = useCallback((open: boolean) => {
+    if (!open) return;
+    const video = videoRef.current;
+    if (video) video.muted = true;
+    setIsMuted(true);
+  }, []);
+
   const toggleMute = useCallback(() => {
     // Whichever video is on screen. An ended stream with a recording plays
     // through `replayRef` and never mounts the live element at all, so this
@@ -1524,6 +1535,11 @@ export function LiveStreamCard({ stream, chatSlot, immersive = false }: LiveStre
           </Suspense>
         )}
         <LiveReactionFlow streamId={stream.streamId} enabled={!!stream.isLive && !streamEnded} bottom={immersive ? 100 : 56} self={selfReaction} />
+        {stream.streamId && stream.isLive && !streamEnded && !isOwnStream && (
+          <Suspense fallback={null}>
+            <CoStreamViewerLayer streamId={stream.streamId} owner={stream.creatorId} onRoomChange={quietForGuestRoom} />
+          </Suspense>
+        )}
 
         {/* Full-bleed chrome. Inside the media container so it travels with
             the picture, and after the overlays so nothing is drawn on top
