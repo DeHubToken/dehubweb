@@ -1,6 +1,7 @@
 import { scaleStrokePaint } from "./strokePatterns";
 import { getDesignGuides } from "./designGuides";
 import type { Clip, ClipKeyframes, ProjectSnapshot } from "./types";
+import { EditorError } from "./editorError";
 export type ResizeContentMode = "relative" | "fit" | "fill";
 export type ResizeAnchor = { x: number; y: number };
 export const RESIZE_ANCHORS = [
@@ -12,13 +13,13 @@ export const RESIZE_ANCHORS = [
 /** Fit the full composition uniformly while retaining editable layers and motion paths. */
 export function resizeComposition(before: ProjectSnapshot, resized: ProjectSnapshot, mode: ResizeContentMode, anchor: ResizeAnchor, sources: ReadonlyMap<string, { width: number; height: number }> = new Map()): ProjectSnapshot {
   if (mode === "relative" || before.settings.width === resized.settings.width && before.settings.height === resized.settings.height) return resized;
-  if (!["fit", "fill"].includes(mode) || ![anchor.x, anchor.y].every(value => Number.isFinite(value) && value >= 0 && value <= 1)) throw new Error("Choose how the artwork should fit the new page");
+  if (!["fit", "fill"].includes(mode) || ![anchor.x, anchor.y].every(value => Number.isFinite(value) && value >= 0 && value <= 1)) throw new EditorError("copy.037a0017b545", "Choose how the artwork should fit the new page");
   const W = resized.settings.width, H = resized.settings.height, oldW = before.settings.width, oldH = before.settings.height;
   const factor = (mode === "fit" ? Math.min : Math.max)(W / oldW, H / oldH), kx = oldW * factor / W, ky = oldH * factor / H;
   const ox = (1 - kx) * anchor.x, oy = (1 - ky) * anchor.y;
   const x = (value: number) => value * kx + ox, y = (value: number) => value * ky + oy;
   const safe = (value: number, minimum: number, maximum: number, label: string) => {
-    if (!Number.isFinite(value) || value < minimum || value > maximum) throw new Error(`This page size would exceed the supported ${label} range. Choose a closer size or scale layers first`);
+    if (!Number.isFinite(value) || value < minimum || value > maximum) throw new EditorError("copy.8ed5192db664", "This page size would put a layer outside its supported range. Choose a closer size or scale layers first");
     return value;
   };
   const clips = before.clips.map<Clip>(clip => {
@@ -27,7 +28,7 @@ export function resizeComposition(before: ProjectSnapshot, resized: ProjectSnaps
     let scaleFactor = 1;
     if (clip.kind === "image" || clip.kind === "video") {
       const size = sources.get(clip.mediaId);
-      if (!size || ![size.width, size.height].every(value => Number.isFinite(value) && value > 0)) throw new Error("Wait for every photo and video to load before fitting artwork to a new page");
+      if (!size || ![size.width, size.height].every(value => Number.isFinite(value) && value > 0)) throw new EditorError("copy.f63b5fe28ca9", "Wait for every photo and video to load before fitting artwork to a new page");
       const edge = (value: number | undefined) => Math.max(0, Math.min(0.9, value ?? 0));
       const left = edge(clip.crop?.left), top = edge(clip.crop?.top), right = Math.min(edge(clip.crop?.right), 0.95 - left), bottom = Math.min(edge(clip.crop?.bottom), 0.95 - top);
       const sw = size.width * (1 - left - right), sh = size.height * (1 - top - bottom), fit = clip.fit === "cover" ? Math.max : Math.min;

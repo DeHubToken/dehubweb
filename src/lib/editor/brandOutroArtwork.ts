@@ -1,5 +1,6 @@
 import type { BrandOutroArtwork } from "./brandOutro";
 import { BRAND_OUTRO_SOURCES } from "./brandOutroSources";
+import { EditorError } from "./editorError";
 
 let artworkPromise: Promise<BrandOutroArtwork> | undefined;
 
@@ -10,7 +11,7 @@ export function loadBrandOutroArtwork(): Promise<BrandOutroArtwork> {
   const mark = new Promise<HTMLImageElement>((resolve, reject) => {
     const image = new Image();
     image.onload = () => resolve(image);
-    image.onerror = () => reject(new Error("Could not load the export icon"));
+    image.onerror = () => reject(new EditorError("copy.0bcb57d02ccf", "Could not load the export icon"));
     image.src = sources.mark;
   });
   const font = typeof FontFace === "function" && document.fonts
@@ -21,7 +22,7 @@ export function loadBrandOutroArtwork(): Promise<BrandOutroArtwork> {
     logo.width = 256;
     logo.height = Math.ceil(256 * 1184 / 908);
     const ctx = logo.getContext("2d");
-    if (!ctx) throw new Error("Could not prepare the export icon");
+    if (!ctx) throw new EditorError("copy.815fab338710", "Could not prepare the export icon");
     ctx.drawImage(image, 502, 236, 908, 1184, 0, 0, logo.width, logo.height);
     return { logo };
   }).catch(error => { artworkPromise = undefined; throw error; });

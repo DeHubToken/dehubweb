@@ -3,6 +3,7 @@ import { groupedSelection } from "./designGroups";
 import { getPages, pageAt } from "./pages";
 import { sliceTimelineClip } from "./timelineAgent";
 import type { Clip, ClipAnimation, ClipAnimationKind, ProjectSnapshot } from "./types";
+import { EditorError } from "./editorError";
 
 export type PageAnimationScope = "page" | "all" | "selection";
 export type PageAnimationEdge = "in" | "out" | "both";
@@ -12,7 +13,7 @@ export interface PageAnimationOptions {
 
 /** Page boundaries isolate motion changes from long layers shared by other pages. */
 export function applyPageAnimation(project: ProjectSnapshot, time: number, selectedIds: readonly string[], options: PageAnimationOptions, makeId: () => string): { project: ProjectSnapshot; count: number } {
-  if (!Number.isFinite(options.duration) || options.duration < 0.05 || options.duration > 10 || (options.kind !== "none" && !ANIMATION_PRESETS.some(preset => preset.kind === options.kind))) throw new Error("Choose a valid animation and duration between 0.05 and 10 seconds");
+  if (!Number.isFinite(options.duration) || options.duration < 0.05 || options.duration > 10 || (options.kind !== "none" && !ANIMATION_PRESETS.some(preset => preset.kind === options.kind))) throw new EditorError("copy.9c6f45684a29", "Choose a valid animation and duration between 0.05 and 10 seconds");
   const pages = getPages(project.settings, project.clips), current = pageAt(pages, time);
   const targets = options.scope === "all" ? pages : [current];
   const selected = new Set(groupedSelection(project.clips, selectedIds, time));
@@ -41,6 +42,6 @@ export function applyPageAnimation(project: ProjectSnapshot, time: number, selec
       return next;
     });
   });
-  if (clips.length > 10000) throw new Error("This animation would exceed the design’s layer limit. Apply it to fewer pages");
+  if (clips.length > 10000) throw new EditorError("copy.717a9c1a9c44", "This animation would exceed the design’s layer limit. Apply it to fewer pages");
   return { project: count ? { ...project, clips } : project, count };
 }

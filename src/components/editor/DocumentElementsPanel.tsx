@@ -9,6 +9,7 @@ import { DEFAULT_PAGE_NUMBER_FORMAT, pageNumberText, type PageNumberFormat } fro
 import { putPageNumbers, removePageNumbers, repeatPageElements, type PageNumberPosition } from "@/lib/editor/documentElements";
 import { getPages } from "@/lib/editor/pages";
 import type { ProjectSnapshot } from "@/lib/editor/types";
+import { editorErrorText } from "@/lib/editor/editorError";
 
 export function DocumentElementsPanel() {
   const { t } = useTranslation();
@@ -18,7 +19,7 @@ export function DocumentElementsPanel() {
   const [position, setPosition] = useState<PageNumberPosition>("bottom-centre"), [skipFirst, setSkipFirst] = useState(false), [colour, setColour] = useState("#ffffff"), [fontSize, setFontSize] = useState(28), [message, setMessage] = useState("");
   const apply = (operation: (project: ProjectSnapshot) => ProjectSnapshot, success: string) => {
     try { const store = useEditorStore.getState(), before = store.toSnapshot(), next = operation(before); if (next !== before) store.applyDesignEdit(before, next); setMessage(success); }
-    catch (error) { setMessage(error instanceof Error ? error.message : String(error)); }
+    catch (error) { setMessage(editorErrorText(error, t("copy.68865e14c4b1", { defaultValue: "Could not add this element" }))); }
   };
   const input = "min-h-9 rounded-lg border border-white/20 bg-neutral-900 px-3 text-xs text-white";
   const count = getPages(settings, clips).length;

@@ -1,4 +1,5 @@
 import { GIF_TIMELINE_RUNTIME } from "./gifTimelineRuntime";
+import { EditorError } from "./editorError";
 
 type GifCanvas = { frame: (seconds: number) => HTMLCanvasElement };
 const createGifCanvas = new Function(GIF_TIMELINE_RUNTIME + "; return createGifCanvas;")() as (bytes: Uint8Array) => GifCanvas;
@@ -6,7 +7,7 @@ const timelines = new WeakMap<HTMLImageElement, GifCanvas>();
 
 export async function prepareGifImage(image: HTMLImageElement, url: string, signal?: AbortSignal): Promise<void> {
   const response = await fetch(url, { signal });
-  if (!response.ok) throw new Error("GIF could not be loaded");
+  if (!response.ok) throw new EditorError("copy.581ba7099271", "GIF could not be loaded");
   const bytes = new Uint8Array(await response.arrayBuffer());
   if (signal?.aborted) throw new DOMException("GIF load cancelled", "AbortError");
   const timeline = createGifCanvas(bytes);

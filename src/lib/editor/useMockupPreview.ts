@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import { requestDesignPagePreview } from "./designPagePreviews";
 import { putMockupTemplate, type MockupTemplateId } from "./mockupTemplates";
 import type { MediaClip, ProjectSnapshot, ProjectSettings } from "./types";
+import { EditorError } from "./editorError";
 export interface MockupPreviewContent { body: string; edge: string; caption: string; usePhoto: boolean; size?: number; rotation?: number; screen?: string; fit?: "fill" | "fit"; fontFamily?: string }
 export type MockupMediaReader = (id: string) => Promise<{ width?: number; height?: number } | null | undefined>;
 export function useMockupPreview(projectId: string, settings: ProjectSettings, source: MediaClip | null, preset: MockupTemplateId, value: MockupPreviewContent | null, readMedia: MockupMediaReader, enabled: boolean) {
@@ -16,7 +17,7 @@ export function useMockupPreview(projectId: string, settings: ProjectSettings, s
         try {
           const photo = value.usePhoto ? source : null;
           let size = photo ? dimensions.current.get(photo.mediaId) : undefined;
-          if (photo && !size) { const media = await readMedia(photo.mediaId); if (controller.signal.aborted) return; if (!media?.width || !media.height) throw new Error("Photo dimensions are unavailable"); size = { width: media.width, height: media.height }; if (dimensions.current.size >= 8) dimensions.current.clear(); dimensions.current.set(photo.mediaId, size); }
+          if (photo && !size) { const media = await readMedia(photo.mediaId); if (controller.signal.aborted) return; if (!media?.width || !media.height) throw new EditorError("copy.6a4d11ee2ea4", "Photo dimensions are unavailable"); size = { width: media.width, height: media.height }; if (dimensions.current.size >= 8) dimensions.current.clear(); dimensions.current.set(photo.mediaId, size); }
           const snapshot: ProjectSnapshot = { id: projectId, title: "Mockup preview", updatedAt: 0, settings: { ...settings, pages: [0], pageEnd: 5 }, tracks: photo ? [{ id: photo.trackId, kind: "video", name: "Photo source", muted: false, hidden: false }] : [], clips: photo ? [{ ...photo, start: 0, duration: 5, locked: false, hidden: false }] : [] };
           const used = new Set([...(photo ? [photo.id, photo.trackId, photo.groupId ?? ""] : [])]); let serial = 0;
           const makeId = () => { let id: string; do { id = "mockup-preview-" + (++serial); } while (used.has(id)); used.add(id); return id; };

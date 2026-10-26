@@ -11,6 +11,8 @@ import { remapDesignGroups } from "./designGroups";
 import { sliceTimelineClip } from "./timelineAgent";
 import { createQrGraphic, type QrGraphic } from "./qrGraphic";
 import type { Clip, ProjectSnapshot, ShapeClip, TextClip } from "./types";
+import { EditorError, editorErrorText } from "./editorError";
+import { translateCopy } from "@/i18n/copy";
 
 export interface BulkData { headers: string[]; rows: string[][] }
 export type BulkConnections = Record<string, string>;
@@ -22,11 +24,11 @@ const TOKEN = /\{\{\s*([^{}]+?)\s*\}\}/g;
 
 export function parseBulkData(source: string): BulkData {
   const [header, ...rows] = parseDelimitedData(source, 51, 20);
-  if (!header || !rows.length) throw new Error("Add a header row and at least one data row");
+  if (!header || !rows.length) throw new EditorError("copy.aae1384faa62", "Add a header row and at least one data row");
   const headers = header.map(value => value.trim());
-  if (headers.some(value => !value || value.length > 100) || new Set(headers).size !== headers.length) throw new Error("Give each column a unique name of 1–100 characters");
-  if (rows.some(row => row.length > headers.length)) throw new Error("Each row must fit the header columns");
-  if (rows.some(row => row.some(cell => cell.length > 10000))) throw new Error("Keep each cell under 10,000 characters");
+  if (headers.some(value => !value || value.length > 100) || new Set(headers).size !== headers.length) throw new EditorError("copy.9103bf0e2557", "Give each column a unique name of 1–100 characters");
+  if (rows.some(row => row.length > headers.length)) throw new EditorError("copy.ce405286a001", "Each row must fit the header columns");
+  if (rows.some(row => row.some(cell => cell.length > 10000))) throw new EditorError("copy.173dc48aa9ec", "Keep each cell under 10,000 characters");
   return { headers, rows: rows.map(row => headers.map((_, index) => row[index] ?? "")) };
 }
 
@@ -57,7 +59,7 @@ export function bulkTextValue(clip: BulkField, headers: string[], row: string[],
 
 export function bulkTextPreviewValue(clip: BulkField, headers: string[], row: string[], connections: BulkConnections): string {
   try { return bulkTextValue(clip, headers, row, connections); }
-  catch (reason) { return reason instanceof Error ? reason.message : "Could not format this data record"; }
+  catch (reason) { return editorErrorText(reason, translateCopy("copy.d96fc07b89f3", { defaultValue: "Could not format this data record" })); }
 }
 
 export function bulkConnected(clip: BulkField, headers: string[], connections: BulkConnections): boolean {
@@ -66,19 +68,19 @@ export function bulkConnected(clip: BulkField, headers: string[], connections: B
 
 /** Append one independent copy of the current page for every selected data row. */
 export function createBulkPages(project: ProjectSnapshot, time: number, data: BulkData, connections: BulkConnections, first: number, last: number, makeId: () => string, pageFields: BulkPageFields = {}, rowFilter: BulkRowFilter = {}, linkConnections: BulkConnections = {}, imageConnections: BulkConnections = {}, mediaSources: readonly ReplacementMedia[] = []): { project: ProjectSnapshot; start: number; count: number } {
-  if (!Number.isInteger(first) || !Number.isInteger(last) || first < 1 || last > data.rows.length || last < first || last - first >= 50) throw new Error("Choose a valid range of up to 50 data rows");
+  if (!Number.isInteger(first) || !Number.isInteger(last) || first < 1 || last > data.rows.length || last < first || last - first >= 50) throw new EditorError("copy.a54b07161139", "Choose a valid range of up to 50 data rows");
   const rows = bulkSelectedRows(data, first, last, rowFilter);
-  if (!rows.length) throw new Error("No rows match this filter in the selected range");
+  if (!rows.length) throw new EditorError("copy.b6719509db87", "No rows match this filter in the selected range");
   const pages = getPages(project.settings, project.clips), template = pageAt(pages, time), count = rows.length;
   const duration = template.end - template.start;
-  if (!Number.isFinite(duration) || duration < 0.05) throw new Error("Give the template page a duration before generating pages");
+  if (!Number.isFinite(duration) || duration < 0.05) throw new EditorError("copy.38f88f44cfff", "Give the template page a duration before generating pages");
   const source = project.clips.filter(clip => clip.start < template.end && clip.start + clip.duration > template.start);
   const fields = bulkTemplateFields(project, time);
-  if (!fields.some(clip => bulkConnected(clip, data.headers, connections)) && !bulkPageFieldsConnected(data.headers, pageFields) && !bulkLinksConnected(project, time, data.headers, linkConnections) && !bulkImageFields(project, time).some(clip => data.headers.includes(imageConnections[clip.id]))) throw new Error("Connect text, a QR code, a page field, a layer link, or a photo to a column, or add a matching {{column}} placeholder");
-  if (pages.length + count > 500 || project.clips.length + source.length * count > 10000) throw new Error("This batch exceeds the design’s page or layer limit. Choose fewer rows");
+  if (!fields.some(clip => bulkConnected(clip, data.headers, connections)) && !bulkPageFieldsConnected(data.headers, pageFields) && !bulkLinksConnected(project, time, data.headers, linkConnections) && !bulkImageFields(project, time).some(clip => data.headers.includes(imageConnections[clip.id]))) throw new EditorError("copy.c1568fd358ae", "Connect text, a QR code, a page field, a layer link, or a photo to a column, or add a matching {{column}} placeholder", { column: "{{column}}" });
+  if (pages.length + count > 500 || project.clips.length + source.length * count > 10000) throw new EditorError("copy.64e9e6f1608c", "This batch exceeds the design’s page or layer limit. Choose fewer rows");
   const photoPlan = planBulkPhotos(project, time, data, first, last, rowFilter, imageConnections), media = new Map(mediaSources.map(source => [source.id, source]));
   const start = pages[pages.length - 1].end, copies: Clip[] = [], starts = pages.map(page => page.start);
-  if (start + count * duration > 86400) throw new Error("This batch exceeds the design’s 24-hour timeline limit. Choose fewer rows");
+  if (start + count * duration > 86400) throw new EditorError("copy.1ff48d064f63", "This batch exceeds the design’s 24-hour timeline limit. Choose fewer rows");
   const details = pages.map(page => pageDetails(project, page.index)), original = pageDetails(project, template.index);
   for (const [offset, index] of rows.entries()) {
     const at = start + offset * duration, row = data.rows[index];
@@ -91,14 +93,14 @@ export function createBulkPages(project: ProjectSnapshot, time: number, data: Bu
       const linkColumn = data.headers.indexOf(linkConnections[clip.id]);
       if (!clip.locked && clip.kind !== "audio" && linkColumn >= 0) {
         const text = (row[linkColumn] ?? "").trim(), href = text ? normaliseDesignLink(text) : undefined;
-        if (href === null) throw new Error(`Row ${index + 1}: use a valid web, email, phone, or page link in ${data.headers[linkColumn]}`);
+        if (href === null) throw new EditorError("copy.83f26bfcfd2a", "Row {{row}}: use a valid web, email, phone, or page link in {{column}}", { row: index + 1, column: data.headers[linkColumn] });
         copy = { ...copy, href };
       }
       if (copy.kind === "shape" && clip.kind === "shape" && clip.qr && !clip.locked) {
         const field = { ...clip, qr: clip.qr };
         if (bulkConnected(field, data.headers, connections)) {
           try { return [{ ...copy, qr: createQrGraphic(bulkTextValue(field, data.headers, row, connections), clip.qr.foreground, clip.qr.background, clip.qr) }]; }
-          catch { throw new Error(`Row ${index + 1}: QR content must contain 1–1,500 characters and fit in a QR code`); }
+          catch { throw new EditorError("copy.4e6c73036632", "Row {{row}}: QR content must contain 1–1,500 characters and fit in a QR code", { row: index + 1 }); }
         }
       }
       return [copy.kind === "text" && clip.kind === "text" && !clip.locked ? { ...copy, text: bulkTextValue(clip, data.headers, row, connections) } : copy];
@@ -113,6 +115,6 @@ export function createBulkPages(project: ProjectSnapshot, time: number, data: Bu
   const next = { ...project, settings: { ...project.settings, pages: starts, pageEnd: start + count * duration, pageDetails: details }, clips: refreshPageNumberClips([...project.clips, ...copies], starts) };
   let bytes = 0;
   for (const char of JSON.stringify(next)) { const point = char.codePointAt(0)!; bytes += point < 128 ? 1 : point < 2048 ? 2 : point < 65536 ? 3 : 4; }
-  if (bytes > 6 * 1024 * 1024) throw new Error("This batch is too large to save. Choose fewer rows");
+  if (bytes > 6 * 1024 * 1024) throw new EditorError("copy.7734523dd2ea", "This batch is too large to save. Choose fewer rows");
   return { project: next, start, count };
 }

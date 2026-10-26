@@ -4,10 +4,11 @@ import { readEndingBoundary } from "./endingFile";
 import { legacyEndingBoundary } from "./endingVisual";
 import { loadBrandOutroArtwork } from "./brandOutroArtwork";
 import { drawBrandOutro } from "./brandOutro";
+import { EditorError } from "./editorError";
 
 export async function renderVideoDownload(request: VideoDownloadRequest, signal: AbortSignal, onProgress?: (fraction: number, label?: string) => void) {
   const { exportProject, isExportSupported } = await import("./exporter");
-  if (!isExportSupported()) throw new Error("Video export is unavailable in this browser");
+  if (!isExportSupported()) throw new EditorError("copy.0b5ecbfe32cf", "Video export is unavailable in this browser");
   signal.throwIfAborted();
   const response = await fetch(request.url, { signal });
   if (!response.ok) throw new Error("Video download failed: " + response.status);
@@ -23,9 +24,9 @@ export async function renderVideoDownload(request: VideoDownloadRequest, signal:
         error ? reject(error) : resolve();
       };
       const abort = () => finish(new DOMException("Download cancelled", "AbortError"));
-      const timer = setTimeout(() => finish(new Error("Video metadata did not load")), 20000);
+      const timer = setTimeout(() => finish(new EditorError("copy.1971325ae20c", "Video metadata did not load")), 20000);
       video.onloadeddata = () => finish();
-      video.onerror = () => finish(new Error("Video could not be decoded"));
+      video.onerror = () => finish(new EditorError("copy.e6ccba39bfc2", "Video could not be decoded"));
       signal.addEventListener("abort", abort, { once: true });
       video.src = url;
       if (signal.aborted) abort();

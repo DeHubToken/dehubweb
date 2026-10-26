@@ -6,6 +6,7 @@ import { pasteDataCells } from "@/lib/editor/dataCellPaste";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { formatDelimitedData, parseDelimitedData } from "@/lib/editor/delimitedData";
+import { editorErrorText } from "@/lib/editor/editorError";
 
 /** A compact spreadsheet view edits the same source data as CSV/TSV mode. */
 export function DataCells({ value, onChange, chart, multiSeries = false, onCellFocus, onStructure, pageSize = 5 }: { value: string; onChange: (value: string) => void; chart: boolean; multiSeries?: boolean; onCellFocus?: (address: string) => void; onStructure?: (axis: TableAxis, index: number, action: TableStructureAction) => void; pageSize?: 5 | 10 | 20 }) {
@@ -13,7 +14,7 @@ export function DataCells({ value, onChange, chart, multiSeries = false, onCellF
   const [offset, setOffset] = useState(0), [address, setAddress] = useState("A1"), [pasteError, setPasteError] = useState("");
   const inputRefs = useRef(new Map<string, HTMLInputElement>()), pendingFocus = useRef<{ row: number; column: number } | null>(null);
   const maxRows = chart ? multiSeries ? 51 : 50 : 20, maxColumns = chart ? multiSeries ? 7 : 2 : 12;
-  const parsed = useMemo(() => { try { return { rows: parseDelimitedData(value, chart ? multiSeries ? 51 : 50 : 20, chart ? multiSeries ? 7 : 2 : 12), error: "" }; } catch (error) { return { rows: [], error: error instanceof Error ? error.message : "Invalid data" }; } }, [value, chart, multiSeries]);
+  const parsed = useMemo(() => { try { return { rows: parseDelimitedData(value, chart ? multiSeries ? 51 : 50 : 20, chart ? multiSeries ? 7 : 2 : 12), error: "" }; } catch (error) { return { rows: [], error: editorErrorText(error, t("copy.26130482ca65", { defaultValue: "Invalid data" })) }; } }, [value, chart, multiSeries]);
   const rows = parsed.rows.length ? parsed.rows : [["", ""]];
   const columns = chart && !multiSeries ? 2 : Math.max(chart ? 2 : 1, ...rows.map(row => row.length));
   const activePosition = dataCellPosition(address, rows.length, columns) ?? { row: 0, column: 0 };
@@ -44,7 +45,7 @@ export function DataCells({ value, onChange, chart, multiSeries = false, onCellF
     <div className="overflow-x-auto rounded-lg border border-white/20"><table className="w-full border-collapse text-xs"><thead><tr><th className="w-8 bg-white/5 p-1 text-white/40">#</th>{Array.from({ length: columns }, (_, c) => <th key={c} className="min-w-28 border-l border-white/10 bg-white/5 p-1 font-medium text-white/60">{chart && !multiSeries ? t(c === 0 ? "editor.dataVisual.label" : "editor.dataVisual.value", { defaultValue: c === 0 ? "Label" : "Value" }) : String.fromCharCode(65 + c)}</th>)}<th /></tr></thead><tbody>
       {rows.slice(start, start + pageSize).map((row, r) => <tr key={start + r}><td className="border-t border-white/10 p-1 text-center tabular-nums text-white/40">{start + r + 1}</td>{Array.from({ length: columns }, (_, c) => <td key={c} className="border-l border-t border-white/10"><input ref={element => { const key = `${start + r}:${c}`; if (element) inputRefs.current.set(key, element); else inputRefs.current.delete(key); }} onFocus={() => { const address = `${String.fromCharCode(65 + c)}${start + r + 1}`; setAddress(address); onCellFocus?.(address); }} onPaste={event => {
         const text = event.clipboardData.getData("text/plain"); if (!/[\t\r\n]/.test(text)) return;
-        event.preventDefault(); try { const result = pasteDataCells(value, text, `${String.fromCharCode(65 + c)}${start + r + 1}`, maxRows, maxColumns); onChange(result.source); setPasteError(""); } catch (error) { setPasteError(error instanceof Error ? error.message : String(error)); }
+        event.preventDefault(); try { const result = pasteDataCells(value, text, `${String.fromCharCode(65 + c)}${start + r + 1}`, maxRows, maxColumns); onChange(result.source); setPasteError(""); } catch (error) { setPasteError(editorErrorText(error, t("copy.80c5fecc40ee", { defaultValue: "Could not paste these cells" }))); }
       }} onKeyDown={event => {
         if (event.nativeEvent.isComposing || event.ctrlKey || event.metaKey || event.altKey) return;
         const rowIndex = start + r, input = event.currentTarget, collapsed = input.selectionStart === input.selectionEnd;

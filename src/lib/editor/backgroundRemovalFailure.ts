@@ -1,4 +1,5 @@
 import type { Clip } from "./types";
+import { editorErrorText } from "./editorError";
 
 export interface BackgroundRemovalScope {
   projectId: string;
@@ -25,6 +26,7 @@ export function matchesBackgroundRemovalScope(scope: BackgroundRemovalScope | nu
   return !!scope && !!current && scope.projectId === current.projectId && scope.clipId === current.clipId && scope.mediaId === current.mediaId && scope.kind === current.kind && scope.trimIn === current.trimIn && scope.duration === current.duration && scope.speed === current.speed;
 }
 
+/** A known editor reason in the reader's language; a worker or browser error shows the translated fallback instead. */
 export function backgroundRemovalFailureMessage(error: unknown, fallback: string): string {
-  return (error instanceof Error && error.message.trim() ? error.message : fallback).slice(0, 1000);
+  return editorErrorText(error, fallback).slice(0, 1000);
 }

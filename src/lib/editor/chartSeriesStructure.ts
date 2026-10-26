@@ -1,13 +1,14 @@
 import { parseChartSource } from "./chartSeries";
 import { formatDelimitedData } from "./delimitedData";
 import { chartCategoryColour } from "./chartCategoryColours";
+import { EditorError } from "./editorError";
 export type ChartSeriesAction = "before" | "after" | "duplicate" | "delete" | "earlier" | "later";
 export function editChartSeries(source: string, index: number, action: ChartSeriesAction) {
   const chart = parseChartSource(source, true), series = chart.series!;
-  if (!Number.isInteger(index) || !series[index]) throw new Error("Choose an existing chart series");
+  if (!Number.isInteger(index) || !series[index]) throw new EditorError("copy.0053e4461f71", "Choose an existing chart series");
   const inserting = ["before", "after", "duplicate"].includes(action);
-  if (inserting && series.length >= 6) throw new Error("Use at most six data series");
-  if (action === "delete" && series.length <= 1) throw new Error("Keep at least one data series");
+  if (inserting && series.length >= 6) throw new EditorError("copy.507267da8350", "Use at most six data series");
+  if (action === "delete" && series.length <= 1) throw new EditorError("copy.6b509a58d82e", "Keep at least one data series");
   const entries = series.map((item, source) => ({ label: item.label, values: [...item.values], source: source as number | null }));
   let selected = index;
   if (inserting) {
@@ -18,7 +19,7 @@ export function editChartSeries(source: string, index: number, action: ChartSeri
     entries.splice(selected, 0, { label: name, values: action === "duplicate" ? [...series[index].values] : chart.rows.map(() => 0), source: null });
   } else if (action === "delete") { entries.splice(index, 1); selected = Math.min(index, entries.length - 1); }
   else {
-    const next = index + (action === "earlier" ? -1 : 1); if (next < 0 || next >= entries.length) throw new Error("This series is already at the edge");
+    const next = index + (action === "earlier" ? -1 : 1); if (next < 0 || next >= entries.length) throw new EditorError("copy.4ea9a1696d1f", "This series is already at the edge");
     [entries[index], entries[next]] = [entries[next], entries[index]]; selected = next;
   }
   return { selected, colourOrder: entries.map(item => item.source), source: formatDelimitedData([["Label", ...entries.map(item => item.label)], ...chart.rows.map((row, index) => [row.label, ...entries.map(item => item.values[index])])], "\t") };

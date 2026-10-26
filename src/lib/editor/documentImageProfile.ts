@@ -1,3 +1,4 @@
+import { EditorError } from "./editorError";
 export const DOCUMENT_IMAGE_PROFILES = [
   { id: "compact", label: "Smaller file", quality: 0.8, maxEdge: 1600 },
   { id: "standard", label: "Balanced", quality: 0.95, maxEdge: 2048 },
@@ -6,6 +7,6 @@ export const DOCUMENT_IMAGE_PROFILES = [
 export type DocumentImageProfile = typeof DOCUMENT_IMAGE_PROFILES[number]["id"];
 export function documentImageProfile(id: unknown) { return DOCUMENT_IMAGE_PROFILES.find(profile => profile.id === id) ?? DOCUMENT_IMAGE_PROFILES[1]; }
 export function documentImageScale(width: number, height: number, requested: number, id: unknown): number {
-  if (![width, height, requested].every(value => Number.isFinite(value) && value > 0)) throw new Error("Choose valid export dimensions");
+  if (![width, height, requested].every(value => Number.isFinite(value) && value > 0)) throw new EditorError("copy.915e194f044f", "Choose valid export dimensions");
   return Math.min(requested, documentImageProfile(id).maxEdge / Math.max(width, height));
 }

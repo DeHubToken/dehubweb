@@ -1,11 +1,12 @@
 import { parseTableData, type TableData } from "./dataVisuals";
 import { editTableStructure } from "./tableStructure";
+import { EditorError } from "./editorError";
 export interface TableRowCleanupOptions { action: "empty" | "duplicates"; column: number; matchCase: boolean; trim: boolean }
 export function cleanTableRows(source: string, format: Omit<TableData, "rows">, options: TableRowCleanupOptions): { source: string; format: Omit<TableData, "rows">; removed: number } {
   const rows = parseTableData(source), columns = Math.max(0, ...rows.map(row => row.length));
-  if (!rows.length) throw new Error("Add table rows before cleaning them");
-  if (options.action === "duplicates" && (!Number.isInteger(options.column) || options.column < -1 || options.column >= columns)) throw new Error("Choose an existing column or all columns");
-  if (format.merges?.some(merge => merge.rowSpan > 1)) throw new Error("Unmerge cells spanning multiple rows before removing empty or duplicate rows");
+  if (!rows.length) throw new EditorError("copy.2ea7f628e03b", "Add table rows before cleaning them");
+  if (options.action === "duplicates" && (!Number.isInteger(options.column) || options.column < -1 || options.column >= columns)) throw new EditorError("copy.a62cf365a0a4", "Choose an existing column or all columns");
+  if (format.merges?.some(merge => merge.rowSpan > 1)) throw new EditorError("copy.ae2411c9305b", "Unmerge cells spanning multiple rows before removing empty or duplicate rows");
   const normalize = (value: string) => { const text = options.trim ? value.trim() : value; return options.matchCase ? text : text.toLowerCase(); };
   const seen = new Set<string>(), removed: number[] = [], first = format.header ? 1 : 0;
   rows.forEach((row, index) => {

@@ -5,6 +5,7 @@ import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useEditorStore } from "@/store/editorStore";
 import { DESIGN_UNITS, DOCUMENT_SIZE_PRESETS, dimensionDisplay, resizeDocument, type DesignUnit } from "@/lib/editor/documentDimensions";
+import { editorErrorText } from "@/lib/editor/editorError";
 
 export function ResizeDesignPanel() {
   const { t } = useTranslation();
@@ -12,7 +13,7 @@ export function ResizeDesignPanel() {
   const { unit, dpi, width, height, locked, pixels, valid, setDpi, change, changeUnit, toggleLock, swap } = useDocumentSize(settings);
   const [error, setError] = useState("");
   const [mode, setMode] = useState<ResizeContentMode>("relative"), [anchor, setAnchor] = useState("centre");
-  const apply = (w: number, h: number, resolution: number) => { try { const store = useEditorStore.getState(), before = store.toSnapshot(); const resized = resizeDocument(before, w, h, resolution); store.applyDesignEdit(before, resizeComposition(before, resized, mode, RESIZE_ANCHORS.find(value => value.id === anchor) ?? RESIZE_ANCHORS[4], new Map(store.media.map(item => [item.id, { width: item.width ?? 0, height: item.height ?? 0 }])))); setError(""); } catch (value) { setError(value instanceof Error ? value.message : "Could not resize this design"); } };
+  const apply = (w: number, h: number, resolution: number) => { try { const store = useEditorStore.getState(), before = store.toSnapshot(); const resized = resizeDocument(before, w, h, resolution); store.applyDesignEdit(before, resizeComposition(before, resized, mode, RESIZE_ANCHORS.find(value => value.id === anchor) ?? RESIZE_ANCHORS[4], new Map(store.media.map(item => [item.id, { width: item.width ?? 0, height: item.height ?? 0 }])))); setError(""); } catch (value) { setError(editorErrorText(value, t("copy.2f4123dc9a35", { defaultValue: "Could not resize this design" }))); } };
   return <div className="space-y-3">
     <ResizeContentControls mode={mode} anchor={anchor} onMode={setMode} onAnchor={setAnchor} />
     <div className="grid grid-cols-2 gap-2 sm:grid-cols-4">{DOCUMENT_SIZE_PRESETS.map(size => <button key={size.id} type="button" onClick={() => apply(size.width, size.height, size.dpi)} className="rounded-lg border border-white/15 p-2 text-left text-xs hover:bg-white/10"><span className="block font-medium">{t(`editor.designTools.size.${size.id}`, { defaultValue: size.label })}</span><span className="text-white/45">{size.width} × {size.height} px</span></button>)}</div>

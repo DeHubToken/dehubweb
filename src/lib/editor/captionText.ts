@@ -1,5 +1,6 @@
 import { subtitleClips } from "./subtitles";
 import type { Clip, Track } from "./types";
+import { EditorError } from "./editorError";
 
 export type CaptionTextProject = { clips: Clip[]; tracks: Track[] };
 export interface CaptionTextPlan { sourceKey: string; updates: { id: string; text: string }[] }
@@ -9,7 +10,7 @@ const literal = (query: string, matchCase: boolean) => new RegExp(query.replace(
 export const captionTextContains = (text: string, query: string, matchCase: boolean) => !query || literal(query, matchCase).test(text);
 
 export function captionReplacement(project: CaptionTextProject, query: string, replacement: string, matchCase = false): CaptionTextPlan {
-  if (query.length > 20_000 || replacement.length > 20_000) throw new Error("Caption text is too long");
+  if (query.length > 20_000 || replacement.length > 20_000) throw new EditorError("copy.9d01d842886d", "Caption text is too long");
   const updates = query ? editableCaptionText(project).flatMap(clip => {
     const text = clip.text.replace(literal(query, matchCase), () => replacement);
     return text === clip.text ? [] : [{ id: clip.id, text }];
@@ -21,11 +22,11 @@ export function captionReplacement(project: CaptionTextProject, query: string, r
 
 /** Validate every requested correction before changing any layer. */
 export function applyCaptionText<T extends CaptionTextProject>(project: T, plan: CaptionTextPlan): T {
-  if (captionTextKey(project) !== plan.sourceKey) throw new Error("Captions changed while editing");
+  if (captionTextKey(project) !== plan.sourceKey) throw new EditorError("copy.94a2743059ba", "Captions changed while editing");
   const captions = editableCaptionText(project), allowed = new Set(captions.map(clip => clip.id));
   const texts = new Map(plan.updates.map(update => [update.id, update.text]));
   if (new Set(project.clips.map(clip => clip.id)).size !== project.clips.length || allowed.size !== captions.length || texts.size !== plan.updates.length || plan.updates.some(update => !allowed.has(update.id) || typeof update.text !== "string" || update.text.length > 20_000)) {
-    throw new Error("Caption correction is invalid");
+    throw new EditorError("copy.96a977eee3c4", "Caption correction is invalid");
   }
   let changed = false;
   const clips = project.clips.map(clip => {

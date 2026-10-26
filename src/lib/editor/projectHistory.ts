@@ -1,29 +1,30 @@
 import { mergeEntityValues, type EntityMergeConflict } from "./entityMerge";
 import type { ProjectSnapshot } from "./types";
+import { EditorError } from "./editorError";
 
 export interface ProjectHistory { current: ProjectSnapshot; past: ProjectSnapshot[]; future: ProjectSnapshot[] }
 export interface RebasedProjectHistory extends ProjectHistory { protectedPaths: EntityMergeConflict[] }
 
 function copy(snapshot: ProjectSnapshot): ProjectSnapshot {
   const value = JSON.parse(JSON.stringify(snapshot, (_key, part) => {
-    if (typeof part === "number" && !Number.isFinite(part)) throw new Error("Invalid project history value");
+    if (typeof part === "number" && !Number.isFinite(part)) throw new EditorError("copy.3160b14be4ed", "Invalid project history value");
     return part;
   })) as ProjectSnapshot;
-  if (!value.id || !Array.isArray(value.clips) || !Array.isArray(value.tracks) || !value.settings) throw new Error("Invalid project history");
+  if (!value.id || !Array.isArray(value.clips) || !Array.isArray(value.tracks) || !value.settings) throw new EditorError("copy.f6a60f49f66c", "Invalid project history");
   const ids = new Set(value.tracks.map(track => track.id));
   if (ids.size !== value.tracks.length || value.tracks.some(track => !track.id)
     || new Set(value.clips.map(clip => clip.id)).size !== value.clips.length
-    || value.clips.some(clip => !clip.id || !ids.has(clip.trackId))) throw new Error("Invalid project history references");
+    || value.clips.some(clip => !clip.id || !ids.has(clip.trackId))) throw new EditorError("copy.38e7daaa2e22", "Invalid project history references");
   if (value.settings.fps <= 0 || value.settings.width <= 0 || value.settings.height <= 0
     || value.clips.some(clip => clip.duration <= 0 || clip.start < 0 || clip.trimIn < 0
-      || ((clip.kind === "video" || clip.kind === "audio") && (clip.speed ?? 1) <= 0))) throw new Error("Invalid project history timing");
+      || ((clip.kind === "video" || clip.kind === "audio") && (clip.speed ?? 1) <= 0))) throw new EditorError("copy.36b7df6d3c54", "Invalid project history timing");
   return value;
 }
 
 /** Undo changes local work while received edits remain present in every history state. */
 export function rebaseProjectHistory(history: ProjectHistory, incoming: ProjectSnapshot): RebasedProjectHistory {
   const current = copy(history.current), received = copy(incoming);
-  if (current.id !== received.id || [...history.past, ...history.future].some(snapshot => snapshot.id !== current.id)) throw new Error("Project changed during shared update");
+  if (current.id !== received.id || [...history.past, ...history.future].some(snapshot => snapshot.id !== current.id)) throw new EditorError("copy.ac513766f8a9", "Project changed during shared update");
   const withoutTime = (snapshot: ProjectSnapshot) => ({ version: 1, snapshot: { ...snapshot, updatedAt: 0 } });
   const protectedPaths: EntityMergeConflict[] = [];
   function rebase(snapshot: ProjectSnapshot) {
@@ -57,7 +58,7 @@ export function rebaseProjectHistory(history: ProjectHistory, incoming: ProjectS
 /** Local IDs stay local; only validated cloud documents enter the projection step. */
 export function mergeLocalProjectEdits(base: ProjectSnapshot, local: ProjectSnapshot, remote: ProjectSnapshot): { snapshot: ProjectSnapshot | null; conflicts: EntityMergeConflict[] } {
   const checked = [base, local, remote].map(copy);
-  if (checked.some(snapshot => snapshot.id !== base.id)) throw new Error("Project changed during shared update");
+  if (checked.some(snapshot => snapshot.id !== base.id)) throw new EditorError("copy.ac513766f8a9", "Project changed during shared update");
   const wrapped = checked.map(snapshot => ({ version: 1, snapshot: { ...snapshot, updatedAt: 0 } }));
   const result = mergeEntityValues(wrapped[0], wrapped[1], wrapped[2]);
   if (result.conflicts.length) return { snapshot: null, conflicts: result.conflicts };

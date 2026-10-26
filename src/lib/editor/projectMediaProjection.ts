@@ -1,11 +1,12 @@
 import { parseCloudProjectDocument, type CloudProjectDocument, type CloudProjectMedia } from "./cloudProjectFormat";
 import { videoMatteMediaIds } from "./videoMatte";
 import type { ProjectSnapshot } from "./types";
+import { EditorError } from "./editorError";
 
 /** Map private cloud sources back onto stable device IDs before applying shared edits. */
 export function projectMediaProjection(document: CloudProjectDocument, owner: string, localId: string, bindings: Record<string, CloudProjectMedia>, uuid: () => string): { snapshot: ProjectSnapshot; media: CloudProjectMedia[]; bindings: Record<string, CloudProjectMedia> } {
   const checked = parseCloudProjectDocument(document, owner);
-  if (!/^[a-zA-Z0-9_-]{1,80}$/.test(localId)) throw new Error("Invalid local project ID");
+  if (!/^[a-zA-Z0-9_-]{1,80}$/.test(localId)) throw new EditorError("copy.cefe6347af43", "Invalid local project ID");
   const next = { ...bindings }, byCloudId = new Map<string, string>();
   for (const [id, source] of Object.entries(bindings)) if (!byCloudId.has(source.id)) byCloudId.set(source.id, id);
   const sources = new Map(checked.media.map(source => [source.id, source]));
@@ -14,10 +15,10 @@ export function projectMediaProjection(document: CloudProjectDocument, owner: st
     let id = byCloudId.get(source.id);
     if (id) {
       const previous = next[id];
-      if (previous.storagePath !== source.storagePath || previous.size !== source.size || previous.kind !== source.kind || previous.mimeType !== source.mimeType) throw new Error("A shared media reference changed");
+      if (previous.storagePath !== source.storagePath || previous.size !== source.size || previous.kind !== source.kind || previous.mimeType !== source.mimeType) throw new EditorError("copy.40e34960e5eb", "A shared media reference changed");
     } else {
       id = uuid();
-      if (!/^[a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12}$/.test(id) || Object.prototype.hasOwnProperty.call(next,id)) throw new Error("Invalid local source ID");
+      if (!/^[a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12}$/.test(id) || Object.prototype.hasOwnProperty.call(next,id)) throw new EditorError("copy.1c1db59fcf11", "Invalid local source ID");
       byCloudId.set(source.id, id);
     }
     next[id] = source; media.push({ ...source, id });

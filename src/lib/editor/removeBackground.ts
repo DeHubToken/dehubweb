@@ -13,6 +13,7 @@ import { importOneFile } from "./importFiles";
 import { processVideoMatte } from "./processVideoMatte";
 import { VIDEO_MATTE_ASSET_PREFIX, videoMattePlan } from "./videoMatte";
 import { deleteMedia } from "./mediaStore";
+import { EditorError } from "./editorError";
 
 export type BgRemovalProgress =
   | { stage: "download"; loaded: number; total: number }
@@ -120,7 +121,7 @@ export async function removeLayerBackground(
         const png = await (await fetch(page.dataUrl)).blob();
         // Auxiliary pages upload with the private project manifest after completion.
         const id = await importOneFile(new File([png], `${VIDEO_MATTE_ASSET_PREFIX}${crypto.randomUUID()}.png`, { type: "image/png" }));
-        if (!id) throw new Error("Background page could not be stored");
+        if (!id) throw new EditorError("copy.d11f090b913a", "Background page could not be stored");
         if (!current()) { await discard(id); throw new DOMException("Background removal cancelled", "AbortError"); }
         stored.push(id); return id;
       });

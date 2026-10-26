@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { captionReplacement, captionTextContains, captionTextKey, editableCaptionText, type CaptionTextPlan, type CaptionTextProject } from "./captionText";
 import type { TextClip } from "./types";
+import { EditorError } from "./editorError";
 
 export function useCaptionTextEditor(project: CaptionTextProject, disabled: boolean, onApply: (plan: CaptionTextPlan) => boolean | Promise<boolean>, onSeek: (clip: TextClip) => void) {
   const [query, setQuery] = useState(""), [replacement, setReplacement] = useState(""), [matchCase, setMatchCase] = useState(false);
@@ -24,7 +25,7 @@ export function useCaptionTextEditor(project: CaptionTextProject, disabled: bool
     if (blocked) return;
     setWorking(true); setStatus(null);
     try {
-      if (!await onApply(plan)) throw new Error("Caption correction unavailable");
+      if (!await onApply(plan)) throw new EditorError("copy.ff1200b8a4bf", "Caption correction unavailable");
       if (mounted.current) { setDraft(null); setStatus("textSaved"); }
     } catch { if (mounted.current) setStatus("textChanged"); }
     finally { if (mounted.current) setWorking(false); }

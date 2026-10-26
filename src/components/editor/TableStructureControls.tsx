@@ -2,6 +2,7 @@ import { useEffect, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { parseTableData, type TableData } from "@/lib/editor/dataVisuals";
 import { editTableStructure, type TableAxis, type TableStructureAction } from "@/lib/editor/tableStructure";
+import { editorErrorText } from "@/lib/editor/editorError";
 
 export function TableStructureControls({ value, source, onChange, onSource, focusedCell }: {
   value: Omit<TableData, "rows">; source: string; focusedCell?: string; onChange: (value: Omit<TableData, "rows">) => void; onSource: (source: string) => void;
@@ -18,7 +19,7 @@ export function TableStructureControls({ value, source, onChange, onSource, focu
   const disabled = (action: TableStructureAction) => !total || (["before", "after", "duplicate"].includes(action) && total >= (axis === "row" ? 20 : 12)) || action === "delete" && total <= 1 || action === "earlier" && selected === 0 || action === "later" && selected === total - 1;
   const change = (action: TableStructureAction) => {
     try { const next = editTableStructure(source, value, axis, selected, action); onChange(next.format); onSource(next.source); setIndex(next.selected); setError(""); }
-    catch (reason) { setError(reason instanceof Error ? reason.message : "Could not change this table"); }
+    catch (reason) { setError(editorErrorText(reason, t("copy.dd51bc6b2b1d", { defaultValue: "Could not change this table" }))); }
   };
   return <div className="space-y-2 border-t border-white/10 pt-3">
     <p className="text-xs font-medium text-white/80">{t("editor.tables.structure", { defaultValue: "Rows and columns" })}</p>

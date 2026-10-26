@@ -1,5 +1,6 @@
 import { equal, mergeEntityValues } from "./entityMerge";
 import type { ProjectSnapshot } from "./types";
+import { EditorError } from "./editorError";
 
 export interface CommandHistoryAdapter<Entry> {
   read(): { current: ProjectSnapshot; past: Entry[]; future: Entry[] };
@@ -51,7 +52,7 @@ export function projectCommandHistory<Entry>(adapter: CommandHistoryAdapter<Entr
   };
   const withoutChanges = (snapshot: ProjectSnapshot) => changes.reduceRight((value, change) => reverse(change, value), snapshot);
   function capture<Result>(write: () => Result): Result {
-    if (!isCurrent()) throw new Error("The pending command changed or was undone");
+    if (!isCurrent()) throw new EditorError("copy.76437e81abc1", "The pending command changed or was undone");
     if (depth) return write();
     const before = adapter.read(); depth++;
     try { return write(); }
@@ -63,7 +64,7 @@ export function projectCommandHistory<Entry>(adapter: CommandHistoryAdapter<Entr
           adapter.write({ past: before.past, future: before.future });
         } else {
           const index = marker === null ? before.past.length : before.past.indexOf(marker);
-          if (index < 0) throw new Error("The pending command changed or was undone");
+          if (index < 0) throw new EditorError("copy.76437e81abc1", "The pending command changed or was undone");
           const prefix = before.past.slice(0, index);
           const independent = before.past.slice(index + (marker === null ? 0 : 1)).map(entry => adapter.entry(withoutChanges(adapter.snapshot(entry))));
           changes.push({ before: before.current, after: after.current });

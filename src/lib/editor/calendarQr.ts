@@ -1,19 +1,20 @@
+import { EditorError } from "./editorError";
 export interface CalendarQrDetails { eventTitle: string; eventStart: string; eventEnd: string; eventLocation: string; eventNotes: string }
 export function calendarQrContent(value: CalendarQrDetails, allDay = false, now = new Date()): string {
   const title = value.eventTitle.trim(), location = value.eventLocation.trim(), notes = value.eventNotes.trim();
-  if (!title || title.length > 120 || location.length > 200 || notes.length > 500) throw new Error("Enter an event title, with location up to 200 characters and notes up to 500 characters");
-  if (/[\u0000-\u001f\u007f]/.test(title + location) || /[\u0000-\u0008\u000b\u000c\u000e-\u001f\u007f]/.test(notes)) throw new Error("Remove control characters from the event details");
+  if (!title || title.length > 120 || location.length > 200 || notes.length > 500) throw new EditorError("copy.be7577fd22a9", "Enter an event title, with location up to 200 characters and notes up to 500 characters");
+  if (/[\u0000-\u001f\u007f]/.test(title + location) || /[\u0000-\u0008\u000b\u000c\u000e-\u001f\u007f]/.test(notes)) throw new EditorError("copy.7dabfacd8273", "Remove control characters from the event details");
   const parse = (text: string): Date => {
     const input = text.trim(), pattern = allDay ? /^\d{4}-\d{2}-\d{2}$/ : /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}(?::\d{2})?$/;
-    if (!pattern.test(input) || input.startsWith("0000")) throw new Error(allDay ? "Use real dates in YYYY-MM-DD format" : "Use UTC dates and times in YYYY-MM-DDTHH:mm format");
+    if (!pattern.test(input) || input.startsWith("0000")) throw (allDay ? new EditorError("copy.69ac464a4313", "Use real dates in YYYY-MM-DD format") : new EditorError("copy.d839a1241abd", "Use UTC dates and times in YYYY-MM-DDTHH:mm format"));
     const date = new Date(input + (allDay ? "T00:00:00Z" : input.length === 16 ? ":00Z" : "Z"));
-    if (!Number.isFinite(date.getTime()) || date.toISOString().slice(0, input.length) !== input) throw new Error("Choose a valid calendar date and time");
+    if (!Number.isFinite(date.getTime()) || date.toISOString().slice(0, input.length) !== input) throw new EditorError("copy.751d1192c7e6", "Choose a valid calendar date and time");
     return date;
   };
   const start = parse(value.eventStart), end = parse(value.eventEnd);
-  if (allDay ? end < start : end <= start) throw new Error(allDay ? "The last day must be on or after the first day" : "The event end must be later than its start");
-  if (allDay) { end.setUTCDate(end.getUTCDate() + 1); if (end.getUTCFullYear() > 9999) throw new Error("Choose an event ending before 31 December 9999"); }
-  if (!Number.isFinite(now.getTime()) || now.getUTCFullYear() < 1 || now.getUTCFullYear() > 9999) throw new Error("Could not determine the calendar creation time");
+  if (allDay ? end < start : end <= start) throw (allDay ? new EditorError("copy.1f00ac137bbc", "The last day must be on or after the first day") : new EditorError("copy.58962f2b802f", "The event end must be later than its start"));
+  if (allDay) { end.setUTCDate(end.getUTCDate() + 1); if (end.getUTCFullYear() > 9999) throw new EditorError("copy.12b23d3dcb3b", "Choose an event ending before 31 December 9999"); }
+  if (!Number.isFinite(now.getTime()) || now.getUTCFullYear() < 1 || now.getUTCFullYear() > 9999) throw new EditorError("copy.28addae444ca", "Could not determine the calendar creation time");
   const format = (date: Date) => date.toISOString().replace(/[-:]/g, "").replace(/\.\d{3}Z$/, "Z");
   const escape = (text: string) => text.replace(/\\/g, "\\\\").replace(/\r\n|\r|\n/g, "\\n").replace(/;/g, "\\;").replace(/,/g, "\\,");
   const identity = JSON.stringify([title, format(start), format(end), allDay, location, notes]);

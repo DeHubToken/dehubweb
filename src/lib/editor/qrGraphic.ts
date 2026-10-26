@@ -1,15 +1,16 @@
 import qrcode from "qrcode-generator";
 import type { ProjectSnapshot, ShapeClip, Track } from "./types";
 import { getPages, pageAt } from "./pages";
+import { EditorError } from "./editorError";
 
 export const QR_ERROR_CORRECTION = ["L", "M", "Q", "H"] as const;
 export interface QrGraphic { content: string; foreground: string; background: string; cells: string[]; errorCorrection?: typeof QR_ERROR_CORRECTION[number]; quietZone?: number }
 
 export function createQrGraphic(content: string, foreground = "#000000", background = "#ffffff", options: Pick<QrGraphic, "errorCorrection" | "quietZone"> = {}): QrGraphic {
-  if (!content.trim() || content.length > 1500 || !/^#[0-9a-f]{6}$/i.test(foreground) || !/^#[0-9a-f]{6}$/i.test(background) || foreground.toLowerCase() === background.toLowerCase()) throw new Error("Enter text or a link and two different hex colours");
+  if (!content.trim() || content.length > 1500 || !/^#[0-9a-f]{6}$/i.test(foreground) || !/^#[0-9a-f]{6}$/i.test(background) || foreground.toLowerCase() === background.toLowerCase()) throw new EditorError("copy.1aabe6ce8f5a", "Enter text or a link and two different hex colours");
   const previous = qrcode.stringToBytes;
   const errorCorrection = options.errorCorrection ?? "M", quietZone = options.quietZone ?? 4;
-  if (!QR_ERROR_CORRECTION.includes(errorCorrection) || !Number.isInteger(quietZone) || quietZone < 4 || quietZone > 8) throw new Error("Choose a valid correction level and a quiet zone from 4 to 8 modules");
+  if (!QR_ERROR_CORRECTION.includes(errorCorrection) || !Number.isInteger(quietZone) || quietZone < 4 || quietZone > 8) throw new EditorError("copy.f51c7254bdb3", "Choose a valid correction level and a quiet zone from 4 to 8 modules");
   try {
     qrcode.stringToBytes = text => {
       const bytes: number[] = [];

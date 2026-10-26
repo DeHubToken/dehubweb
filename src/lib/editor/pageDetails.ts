@@ -1,5 +1,6 @@
 import { getPages } from "./pages";
 import type { ProjectSnapshot } from "./types";
+import { EditorError } from "./editorError";
 
 export interface PageDetails { title: string; notes: string; section?: string; presentationHidden?: boolean }
 
@@ -24,7 +25,7 @@ export function setPagesPresentationHidden(project: ProjectSnapshot, indexes: re
   if (!selected.size) return project;
   const details = pages.map(page => pageDetails(project, page.index));
   const next = details.map((detail, index) => selected.has(index) ? { ...detail, presentationHidden: hidden } : detail);
-  if (next.every(detail => detail.presentationHidden)) throw new Error("Keep at least one page visible in the presentation");
+  if (next.every(detail => detail.presentationHidden)) throw new EditorError("copy.7f5cbad83f2f", "Keep at least one page visible in the presentation");
   if (details.every((detail, index) => !!detail.presentationHidden === !!next[index].presentationHidden)) return project;
   return { ...project, settings: { ...project.settings, pageDetails: next } };
 }
@@ -54,15 +55,15 @@ export function nameDesignPagesFromHeadings(project: ProjectSnapshot, indexes: r
 
 export function setDesignPageSections(project: ProjectSnapshot, indexes: readonly number[], name: string) {
   const pages = getPages(project.settings, project.clips), chosen = new Set(indexes);
-  if (!chosen.size || [...chosen].some(index => !Number.isInteger(index) || !pages[index])) throw new Error("Choose existing pages to organize");
-  if (name.length > 80) throw new Error("Keep section names within 80 characters");
+  if (!chosen.size || [...chosen].some(index => !Number.isInteger(index) || !pages[index])) throw new EditorError("copy.51f8ca78c487", "Choose existing pages to organize");
+  if (name.length > 80) throw new EditorError("copy.9d50a4c30916", "Keep section names within 80 characters");
   const section = name.replace(/[\u0000-\u001f\u007f]/g, " ").trim() || undefined;
   const details = pages.map(page => pageDetails(project, page.index)); let count = 0;
   const next = details.map((detail, index) => { if (!chosen.has(index) || detail.section === section) return detail; count++; return { ...detail, section }; });
   if (!count) return { project, count };
   const updated = { ...project, settings: { ...project.settings, pageDetails: next } };
   let bytes = 0; for (const char of JSON.stringify(updated)) { const value = char.codePointAt(0)!; bytes += value < 128 ? 1 : value < 2048 ? 2 : value < 65536 ? 3 : 4; }
-  if (bytes > 6 * 1024 * 1024) throw new Error("This section change would make the design too large to save");
+  if (bytes > 6 * 1024 * 1024) throw new EditorError("copy.10c767586341", "This section change would make the design too large to save");
   return { project: updated, count };
 }
 

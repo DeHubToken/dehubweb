@@ -56,6 +56,7 @@ import { DEFAULT_CHART, DEFAULT_TABLE, putDataVisual } from "@/lib/editor/dataVi
 import { validDataVisuals, parseTableData, type ChartKind, type ChartData, type TableData } from "@/lib/editor/dataVisuals";
 import { useEditorStore } from "@/store/editorStore";
 import { nanoid } from "nanoid";
+import { EditorError, editorErrorText } from "@/lib/editor/editorError";
 
 export function DataVisualPanel() {
   const { t } = useTranslation();
@@ -89,12 +90,12 @@ export function DataVisualPanel() {
     if (!file) return;
     const request = ++importRequest.current;
     try {
-      if (!/\.(csv|tsv|txt)$/i.test(file.name)) throw new Error("Choose a CSV or TSV file");
-      if (file.size > 500000) throw new Error("Choose a CSV or TSV file smaller than 500 KB");
+      if (!/\.(csv|tsv|txt)$/i.test(file.name)) throw new EditorError("copy.fd8db2caa7dc", "Choose a CSV or TSV file");
+      if (file.size > 500000) throw new EditorError("copy.0a8252e45427", "Choose a CSV or TSV file smaller than 500 KB");
       const text = await file.text();
       if (request !== importRequest.current || useEditorStore.getState().projectId !== projectId) return;
       setPendingImport({ id: request, scope: importScope, source: text.replace(/^\uFEFF/, ""), name: file.name }); setError("");
-    } catch (error) { if (request === importRequest.current) setError(error instanceof Error ? error.message : "Could not read this file"); }
+    } catch (error) { if (request === importRequest.current) setError(editorErrorText(error, t("copy.90399c23ef68", { defaultValue: "Could not read this file" }))); }
   };
   useEffect(() => {
     importRequest.current++; historyGeneration.current++;
@@ -167,7 +168,7 @@ export function DataVisualPanel() {
   const changeTableStructure = (axis: TableAxis, index: number, action: TableStructureAction) => {
     importRequest.current++;
     try { const next = editTableStructure(data, { ...tableFormat, header: showLabels }, axis, index, action); setTableFormat(next.format); setData(next.source); setFocusedCell(axis === "row" ? `A${next.selected + 1}` : `${String.fromCharCode(65 + next.selected)}1`); setError(""); }
-    catch (reason) { setError(reason instanceof Error ? reason.message : "Could not change this table"); }
+    catch (reason) { setError(editorErrorText(reason, t("copy.dd51bc6b2b1d", { defaultValue: "Could not change this table" }))); }
   };
   const convertDraft = () => {
     importRequest.current++;
@@ -177,7 +178,7 @@ export function DataVisualPanel() {
       if (next.mode === "table") setShowLabels(next.header);
       else if (next.xAxisTitle) setChartAppearance(previous => ({ ...previous, xAxisTitle: next.xAxisTitle }));
       setError(""); setDataView("cells");
-    } catch (reason) { setError(reason instanceof Error ? reason.message : "Could not convert this data"); }
+    } catch (reason) { setError(editorErrorText(reason, t("copy.40be90e566a7", { defaultValue: "Could not convert this data" }))); }
   };
   const previewValue = useMemo(() => {
     try {
@@ -193,20 +194,20 @@ export function DataVisualPanel() {
       const value: { chart: ChartData } | { table: TableData } = mode === "chart" ? { chart: { ...(chart ?? DEFAULT_CHART), kind, ...parseChartSource(data, multiple), ...chartAppearance, stacked, stackPercent, showLegend,
         colours: [accent, ...chartPalette.slice(1)], textColour: foreground, showLabels, showValues } }
         : { table: { ...tableFormat, rows: parseTableData(data), textColour: foreground, headerColour: accent, header: showLabels } };
-      if ("chart" in value && (kind === "scatter" || kind === "bubble") && value.chart.rows.some(row => !Number.isFinite(chartXValue(row.label, chartAppearance.xAxisMode)))) throw new Error(chartAppearance.xAxisMode === "date" ? "Use ISO dates or UTC timestamps in the first data column" : "Scatter and bubble charts need numeric X coordinates in the first column, within one trillion");
-      if ("chart" in value && kind === "funnel" && (value.chart.rows.some(row => row.value < 0) || !value.chart.rows.some(row => row.value > 0))) throw new Error("Funnel stages need nonnegative values and at least one positive stage");
-      if ("chart" in value && kind === "area" && chartAppearance.areaMode && chartAppearance.areaMode !== "overlay" && (value.chart.rows.some(row => row.value < 0) || value.chart.series?.some(series => series.values.some(value => value < 0)))) throw new Error("Stacked, proportional and streamgraph areas need nonnegative source values. Use overlapping areas for negative data");
-      if ("chart" in value && kind === "bubble") { const sizes = value.chart.series?.[value.chart.bubbleSizeSeries ?? 1]; if (sizes && (sizes.values.some(size => size < 0) || !sizes.values.some(size => size > 0))) throw new Error("Bubble sizes need nonnegative values and at least one positive size"); }
-      if ("chart" in value && (kind === "treemap" || kind === "packed-circles")) { const issue = treemapDataError(value.chart.rows); if (issue) throw new Error(issue); }
-      if ("chart" in value && kind === "pictogram" && value.chart.pictogramMode !== "progress" && (value.chart.rows.some(row => row.value < 0) || !value.chart.rows.some(row => row.value > 0))) throw new Error("Pictograms need nonnegative values and at least one positive category");
-      if ("chart" in value && kind === "race" && (!value.chart.series || value.chart.series.length < 2 || value.chart.series.some(frame => frame.values.some(number => number < 0)) || !value.chart.series.some(frame => frame.values.some(number => number > 0)))) throw new Error("Bar chart races need at least two nonnegative frame columns and one positive value");
-      if ("chart" in value && isProgressChart(kind) && (value.chart.rows[0]?.value < 0 || value.chart.rows[0]?.value > 100)) throw new Error("Progress charts need a first value from 0 to 100");
-      if ("chart" in value && kind === "pictogram" && value.chart.pictogramMode === "progress" && (!Number.isInteger(value.chart.rows[0]?.value) || value.chart.rows[0]?.value < 0 || value.chart.rows[0]?.value > (value.chart.pictogramCount ?? 100))) throw new Error("Use a whole filled-item count between zero and the total symbols");
-      if (!validDataVisuals(value)) throw new Error("Use valid colours and table formatting");
-      if (("chart" in value && !value.chart.rows.length) || ("table" in value && !value.table.rows.length)) throw new Error("Enter at least one row");
+      if ("chart" in value && (kind === "scatter" || kind === "bubble") && value.chart.rows.some(row => !Number.isFinite(chartXValue(row.label, chartAppearance.xAxisMode)))) throw (chartAppearance.xAxisMode === "date" ? new EditorError("copy.e0753cf9899f", "Use ISO dates or UTC timestamps in the first data column") : new EditorError("copy.7c202bc2a263", "Scatter and bubble charts need numeric X coordinates in the first column, within one trillion"));
+      if ("chart" in value && kind === "funnel" && (value.chart.rows.some(row => row.value < 0) || !value.chart.rows.some(row => row.value > 0))) throw new EditorError("copy.f28d329e1cb9", "Funnel stages need nonnegative values and at least one positive stage");
+      if ("chart" in value && kind === "area" && chartAppearance.areaMode && chartAppearance.areaMode !== "overlay" && (value.chart.rows.some(row => row.value < 0) || value.chart.series?.some(series => series.values.some(value => value < 0)))) throw new EditorError("copy.6f3e704b4d27", "Stacked, proportional and streamgraph areas need nonnegative source values. Use overlapping areas for negative data");
+      if ("chart" in value && kind === "bubble") { const sizes = value.chart.series?.[value.chart.bubbleSizeSeries ?? 1]; if (sizes && (sizes.values.some(size => size < 0) || !sizes.values.some(size => size > 0))) throw new EditorError("copy.482ad6f6e97a", "Bubble sizes need nonnegative values and at least one positive size"); }
+      if ("chart" in value && (kind === "treemap" || kind === "packed-circles")) { const issue = treemapDataError(value.chart.rows); if (issue) throw issue; }
+      if ("chart" in value && kind === "pictogram" && value.chart.pictogramMode !== "progress" && (value.chart.rows.some(row => row.value < 0) || !value.chart.rows.some(row => row.value > 0))) throw new EditorError("copy.77d96d49c59a", "Pictograms need nonnegative values and at least one positive category");
+      if ("chart" in value && kind === "race" && (!value.chart.series || value.chart.series.length < 2 || value.chart.series.some(frame => frame.values.some(number => number < 0)) || !value.chart.series.some(frame => frame.values.some(number => number > 0)))) throw new EditorError("copy.436e178fb594", "Bar chart races need at least two nonnegative frame columns and one positive value");
+      if ("chart" in value && isProgressChart(kind) && (value.chart.rows[0]?.value < 0 || value.chart.rows[0]?.value > 100)) throw new EditorError("copy.62adffa0af87", "Progress charts need a first value from 0 to 100");
+      if ("chart" in value && kind === "pictogram" && value.chart.pictogramMode === "progress" && (!Number.isInteger(value.chart.rows[0]?.value) || value.chart.rows[0]?.value < 0 || value.chart.rows[0]?.value > (value.chart.pictogramCount ?? 100))) throw new EditorError("copy.6b7ef8443530", "Use a whole filled-item count between zero and the total symbols");
+      if (!validDataVisuals(value)) throw new EditorError("copy.b9283e4eea27", "Use valid colours and table formatting");
+      if (("chart" in value && !value.chart.rows.length) || ("table" in value && !value.table.rows.length)) throw new EditorError("copy.da3c1f8516ce", "Enter at least one row");
       const result = putDataVisual(before, s.currentTime, value, () => nanoid(10), s.selectedClipIds.length === 1 ? s.selectedClipIds[0] : null);
       if (result && s.applyDesignEdit(before, result.project)) s.selectClip(result.id);
-    } catch (e) { setError(e instanceof Error ? e.message : "Invalid data"); }
+    } catch (e) { setError(editorErrorText(e, t("copy.26130482ca65", { defaultValue: "Invalid data" }))); }
   };
   return <div className="space-y-3">
     <div className="flex flex-wrap items-center gap-2">

@@ -1,5 +1,6 @@
 import { DESIGN_SIZES, resizeDesign } from "./designTools";
 import type { ProjectSnapshot } from "./types";
+import { EditorError } from "./editorError";
 
 export const DESIGN_UNITS = ["px", "in", "cm", "mm"] as const;
 export type DesignUnit = typeof DESIGN_UNITS[number];
@@ -21,7 +22,7 @@ export const DOCUMENT_SIZE_PRESETS = [
 ];
 
 export function resizeDocument(project: ProjectSnapshot, width: number, height: number, dpi: number): ProjectSnapshot {
-  if (![width, height].every(value => Number.isInteger(value) && value >= 64 && value <= 8192) || !Number.isInteger(dpi) || dpi < 72 || dpi > 600) throw new Error("Use a canvas of 64–8,192 pixels per side and a print resolution of 72–600 pixels per inch");
+  if (![width, height].every(value => Number.isInteger(value) && value >= 64 && value <= 8192) || !Number.isInteger(dpi) || dpi < 72 || dpi > 600) throw new EditorError("copy.626567c83e73", "Use a canvas of 64–8,192 pixels per side and a print resolution of 72–600 pixels per inch");
   if (width === project.settings.width && height === project.settings.height && project.settings.printDpi === dpi) return project;
   const next = resizeDesign(project, width, height);
   return { ...next, settings: { ...next.settings, printDpi: dpi } };

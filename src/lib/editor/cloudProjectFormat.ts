@@ -12,8 +12,64 @@ import type { ProjectSnapshot } from "./types";
 import { validDataVisuals } from "./dataVisuals";
 import { validGradientFill } from "./gradientFill";
 import { validQrGraphic } from "./qrGraphic";
+import { EditorError } from "./editorError";
 
-export class CloudProjectConflict extends Error {}
+export class CloudProjectConflict extends EditorError {}
+/** A live edit that needs recovery. The class marks it, so nothing has to match its wording. */
+export class CloudDraftRecovery extends EditorError {}
+
+/** Server failures written for people, by translation key. Any other server text shows the screen's own fallback. */
+export const CLOUD_SERVER_MESSAGES: Readonly<Record<string, string>> = {
+  "A newer cloud version exists. Open it or save a separate copy.": "copy.b526ec2f49f0",
+  "A newer shared version exists. Open it or save your edit as a separate copy.": "copy.89c488b4bc9c",
+  "Newer live edits exist. Receive them before saving or save a separate copy.": "copy.9576ba3a6ddd",
+  "Newer live edits exist. Reconcile the exact draft before saving.": "copy.6c074a6da07b",
+  "This project is in Trash. Restore it or save a separate copy.": "copy.c2f3a3c8bbc3",
+  "This project has newer edits. Refresh before moving it.": "copy.8f4153019945",
+  "This project moved since you viewed it. Refresh before moving it.": "copy.e897b23a4f75",
+  "This comment changed. Refresh before resolving.": "copy.96a4cb5812f2",
+  "Project access changed. Refresh before sharing.": "copy.facc17462e55",
+  "Project invitation changed. Refresh before accepting.": "copy.620f63ae3528",
+  "Project invitation changed. Refresh before leaving.": "copy.610f1f6a95a6",
+  "Live draft changed. Reconcile the exact baseline before saving.": "copy.17a07c54732b",
+  "Live draft receipt storage is full. Preserve your local edit.": "copy.582eb31d80f0",
+  "Live draft sequence was superseded. Preserve your local edit before recovering.": "copy.3e94187a4c7e",
+  "Live draft writer expired. Preserve your local edit and join again.": "copy.4da4b7da3d2c",
+  "Live draft writer limit reached": "copy.d9098cd02653",
+  "Live draft revision limit reached": "copy.5f7a23906702",
+  "Live draft storage is full": "copy.caf48dd8019d",
+  "Cloud project limit reached": "copy.1549da664964",
+  "Cloud project history storage is full": "copy.67bc59c1db3b",
+  "Cloud project media storage is full": "copy.6db77fd9cb8a",
+  "Cloud project has too many layers or sources": "copy.ab31bcda62d0",
+  "Cloud project was not found": "copy.8bf1b446c98b",
+  "Cloud project is unavailable": "copy.695f0a41ec7d",
+  "Cloud project version was not found": "copy.3eebb1d03aa3",
+  "Project version is unavailable": "copy.a34d004f8396",
+  "Project comment limit reached": "copy.bef3dc176948",
+  "Project reviewer limit reached": "copy.e271a6b955e0",
+  "Reviewer invitation limit reached": "copy.070bc4462451",
+  "Project invitation is unavailable": "copy.ad655ccc4133",
+  "Project invitation was not found": "copy.472547f900ad",
+  "Project review is unavailable": "copy.a24c4be46c63",
+  "Sign in again to access cloud projects": "copy.798008ff479e",
+  "Your cloud project session has expired": "copy.d57a7b87e9d0",
+  "Upload every project source before saving": "copy.16035a1f6943",
+  "Live editing access is unavailable": "copy.86e86bd937b3",
+  "Project editing access is unavailable": "copy.63e6bea627d9",
+  "Comment access is unavailable": "copy.bba6b5124dbd",
+  "Only the owner, author or assignee can resolve this thread": "copy.780803af1964",
+};
+/** Server refusals that leave a live edit waiting on recovery rather than in conflict. */
+const CLOUD_SERVER_RECOVERY = new Set(["Live draft receipt storage is full. Preserve your local edit.", "Live draft sequence was superseded. Preserve your local edit before recovering.", "Live draft writer expired. Preserve your local edit and join again."]);
+
+/** A cloud RPC failure as the editor raises it: conflicts and recoveries by class, people-facing server text with its translation key. */
+export function cloudServerError(error: { code?: string; message: string }): Error {
+  const key = CLOUD_SERVER_MESSAGES[error.message];
+  if (error.code === "PT409" || error.code === "40001") return key ? new CloudProjectConflict(key, error.message) : new CloudProjectConflict("copy.ecece72ab646", "The cloud project changed during this request. Your local draft was kept; try again.");
+  if (key) return CLOUD_SERVER_RECOVERY.has(error.message) ? new CloudDraftRecovery(key, error.message) : new EditorError(key, error.message);
+  return new Error(error.message);
+}
 
 export const CLOUD_PROJECT_BUCKET = "editor-project-media";
 export const CLOUD_PROJECT_MAX_BYTES = 8 * 1024 * 1024;
@@ -38,7 +94,7 @@ export interface CloudProjectVersion { projectId: string; revision: number; head
 export interface CloudProjectSaved { projectId: string; revision: number; savedAt: string }
 export interface CloudProjectBinding { wallet: string; projectId: string; revision: number }
 
-function fail(): never { throw new Error("Invalid or incomplete cloud project"); }
+function fail(): never { throw new EditorError("copy.3154e16634a3", "Invalid or incomplete cloud project"); }
 function object(value: unknown): value is Record<string, unknown> { return !!value && typeof value === "object" && !Array.isArray(value); }
 function positive(value: unknown, limit: number): boolean { return typeof value === "number" && Number.isFinite(value) && value > 0 && value <= limit; }
 function utf8Length(value: string): number {

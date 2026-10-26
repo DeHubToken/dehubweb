@@ -1,11 +1,12 @@
 import { BRAND_OUTRO_DURATION } from "./brandOutro";
+import { EditorError } from "./editorError";
 
 // A terminal MP4 UUID box or WebM Void element records the content boundary.
 // Players ignore it; downloads replace the ending rather than adding another.
 const SIGNATURE = [68, 69, 72, 85, 66, 79, 85, 84, 82, 79, 48, 49];
 const UUID = [93, 210, 108, 48, 154, 38, 75, 163, 167, 60, 219, 62, 157, 70, 52, 17];
 export function endingBytes(contentDuration: number, format: "mp4" | "webm"): Uint8Array {
-  if (!Number.isFinite(contentDuration) || contentDuration <= 0) throw new Error("Invalid content duration");
+  if (!Number.isFinite(contentDuration) || contentDuration <= 0) throw new EditorError("copy.494bbff655ee", "Invalid content duration");
   const offset = format === "mp4" ? 24 : 2;
   const bytes = new Uint8Array(offset + 24);
   const view = new DataView(bytes.buffer);

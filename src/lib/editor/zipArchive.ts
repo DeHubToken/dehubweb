@@ -1,3 +1,4 @@
+import { EditorError } from "./editorError";
 /** Stored ZIP entries stream in bounded chunks, with CRCs in data descriptors. */
 export interface ZipEntry { name: string; size: number; read: (offset: number, length: number) => Promise<Uint8Array> }
 export const ZIP_DOWNLOAD_LIMIT = 512 * 1024 * 1024;
@@ -23,11 +24,11 @@ export function zipTextEntry(name: string, text: string): ZipEntry {
   return { name, size: bytes.length, read: async (offset, length) => bytes.subarray(offset, offset + length) };
 }
 export async function writeZipArchive(entries: ZipEntry[], write: (bytes: Uint8Array) => void | Promise<void>, signal?: AbortSignal): Promise<void> {
-  if (!entries.length || entries.length > 65535 || new Set(entries.map(e => e.name)).size !== entries.length) throw new Error("Invalid ZIP entries");
+  if (!entries.length || entries.length > 65535 || new Set(entries.map(e => e.name)).size !== entries.length) throw new EditorError("copy.30495285a53e", "Invalid ZIP entries");
   const names = entries.map(e => utf8(e.name));
   const estimated = entries.reduce((sum, e, i) => sum + e.size + 92 + 2 * names[i].length, 22);
-  if (entries.some((e, i) => !Number.isSafeInteger(e.size) || e.size < 0 || names[i].length > 65535) || estimated > ZIP_DOWNLOAD_LIMIT) throw new Error("Download archive exceeds 512 MiB");
-  const abort = () => { if (signal?.aborted) { const error = new Error("Download cancelled"); error.name = "AbortError"; throw error; } };
+  if (entries.some((e, i) => !Number.isSafeInteger(e.size) || e.size < 0 || names[i].length > 65535) || estimated > ZIP_DOWNLOAD_LIMIT) throw new EditorError("copy.b9e2ee462115", "Download archive exceeds 512 MiB");
+  const abort = () => { if (signal?.aborted) { const error = new EditorError("copy.08d3cb1b35c6", "Download cancelled"); error.name = "AbortError"; throw error; } };
   const central: Uint8Array[] = []; let offset = 0;
   for (let i = 0; i < entries.length; i++) {
     abort(); const entry = entries[i], name = names[i], start = offset;
@@ -38,7 +39,7 @@ export async function writeZipArchive(entries: ZipEntry[], write: (bytes: Uint8A
     for (let position = 0; position < entry.size;) {
       abort(); const length = Math.min(768 * 1024, entry.size - position);
       const bytes = await entry.read(position, length);
-      if (bytes.length !== length) throw new Error("Incomplete ZIP source");
+      if (bytes.length !== length) throw new EditorError("copy.2e8152770e82", "Incomplete ZIP source");
       for (const byte of bytes) crc = CRC_TABLE[(crc ^ byte) & 255] ^ (crc >>> 8);
       abort(); await write(bytes); position += length; offset += length;
     }

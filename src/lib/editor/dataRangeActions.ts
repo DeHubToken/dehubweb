@@ -1,6 +1,7 @@
 import { CHART_CURRENCIES } from "./chartValueFormat";
 import { dataCellAddress } from "./dataCellPaste";
 import { formatDelimitedData, parseDelimitedData } from "./delimitedData";
+import { EditorError } from "./editorError";
 export const DATA_NUMBER_FORMATS = ["dot-comma", "comma-dot", "dot-space"] as const;
 export type DataNumberFormat = typeof DATA_NUMBER_FORMATS[number];
 export function cleanDataNumber(input: string, format: DataNumberFormat): string | null {
@@ -17,12 +18,12 @@ export function cleanDataNumber(input: string, format: DataNumberFormat): string
 }
 export function editDataRange(source: string, address: string, maxRows: number, maxColumns: number, action: "fill" | "clear" | "numbers", value = "", numberFormat: DataNumberFormat = "dot-comma"): { source: string; changed: number; selected: number } {
   const rows = parseDelimitedData(source, maxRows, maxColumns);
-  if (!rows.length) throw new Error("Add data before editing a range");
+  if (!rows.length) throw new EditorError("copy.54cae7a1b65a", "Add data before editing a range");
   const columns = Math.max(...rows.map(row => row.length));
   const parts = address.trim() ? address.trim().toUpperCase().split(":") : [];
-  if (parts.length > 2) throw new Error("Enter a cell range such as B2:C6, or leave blank for all cells");
+  if (parts.length > 2) throw new EditorError("copy.eb7e789f3c3d", "Enter a cell range such as B2:C6, or leave blank for all cells");
   const first = parts.length ? dataCellAddress(parts[0], rows.length, columns) : { row: 0, column: 0 }, last = parts.length ? dataCellAddress(parts[1] ?? parts[0], rows.length, columns) : { row: rows.length - 1, column: columns - 1 };
-  if (value.length > 200) throw new Error("Use at most 200 characters in a cell");
+  if (value.length > 200) throw new EditorError("copy.40b65d63c266", "Use at most 200 characters in a cell");
   const top = Math.min(first.row, last.row), bottom = Math.max(first.row, last.row), left = Math.min(first.column, last.column), right = Math.max(first.column, last.column), next = rows.map(row => [...row]);
   let changed = 0;
   for (let row = top; row <= bottom; row++) for (let column = left; column <= right; column++) {
