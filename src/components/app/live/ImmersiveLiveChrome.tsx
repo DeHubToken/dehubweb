@@ -108,6 +108,8 @@ export interface ImmersiveLiveChromeProps {
   hidden: boolean;
   /** For the Who's here sheet and the faces on its pill. */
   streamId?: string;
+  /** What the close button does instead of going back, e.g. leaving the Shorts viewer. */
+  onClose?: () => void;
 }
 
 export function ImmersiveLiveChrome({
@@ -129,6 +131,7 @@ export function ImmersiveLiveChrome({
   onSeek,
   hidden,
   streamId,
+  onClose,
 }: ImmersiveLiveChromeProps) {
   const { t } = useTranslation();
   const navigate = useNavigate();
@@ -326,7 +329,7 @@ export function ImmersiveLiveChrome({
           {optionsSlot}
           <button
             type="button"
-            onClick={goBack}
+            onClick={onClose ?? goBack}
             data-swipe-back
             aria-label={t('common.close', 'Close')}
             className={CIRCLE}

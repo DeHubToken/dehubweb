@@ -6726,13 +6726,7 @@
       "box": "What phones see",
       "hint": "Drag the box, or use the arrow keys. Save to apply it to your live stream.",
       "live": "LIVE",
-      "watch": "Watch {{name}} live",
-      "join": "Join live",
-      "react": "React",
-      "gift": "Gift",
-      "chat": "Chat",
-      "share": "Share",
-      "linkCopied": "Link copied"
+      "watch": "Watch {{name}} live"
     },
     "subathon": {
       "title": "Subathon",

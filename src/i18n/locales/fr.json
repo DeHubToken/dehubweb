@@ -6706,13 +6706,7 @@
       "box": "Ce que voient les mobiles",
       "hint": "Fais glisser le cadre ou utilise les flèches. Enregistre pour l'appliquer à ton live.",
       "live": "EN DIRECT",
-      "watch": "Regarder {{name}} en direct",
-      "join": "Rejoindre le live",
-      "react": "Réagir",
-      "gift": "Cadeau",
-      "chat": "Chat",
-      "share": "Partager",
-      "linkCopied": "Lien copié"
+      "watch": "Regarder {{name}} en direct"
     },
     "destinations": {
       "title": "Destinations multistream",

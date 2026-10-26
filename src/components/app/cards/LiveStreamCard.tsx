@@ -22,7 +22,7 @@ import {
   releaseMediaSession,
   setMediaSessionPlaying,
 } from '@/lib/media-session';
-import { useLocation, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import MoreVertical from "@/components/ui/cut-icons/morevertical";
 import { Heart, StopCircle, Activity, Loader2 } from "lucide-react";
 import AssistantNavIcon from "@/components/ui/AssistantNavIcon";
@@ -51,6 +51,7 @@ import { CommentsWrapper } from './CommentsWrapper';
 import { LiveEndedMedia } from './LiveEndedMedia';
 import { StreamShopPinnedCard } from '../live/StreamShop';
 import { ImmersiveLiveChrome } from '../live/ImmersiveLiveChrome';
+import { verticalCropStyle, type VerticalCrop } from '@/lib/live-overlay/vertical-crop';
 import { LiveClearedLayer } from '../live/LiveClearedLayer';
 import { LiveViewerActionsProvider } from '../live/live-viewer-actions';
 import { ClipButton } from '../live/ClipButton';
@@ -176,12 +177,19 @@ interface LiveStreamCardProps {
    * ladder, the presence socket and the gift flow.
    */
   immersive?: boolean;
+  /**
+   * Set when the stream is a slide in the Shorts swipe viewer: the viewer's
+   * swipe owns the vertical drag (so the chrome clears on a tap only), the
+   * close button leaves the viewer, and the picture is cropped to the
+   * creator's Vertical view box instead of letterboxed.
+   */
+  swipeFeed?: { onClose: () => void; verticalCrop: VerticalCrop | null };
 }
 
 /** What a gift of `dhb` costs in a dollar stablecoin, at the DHB sale peg. */
 const giftCostIn = (dhb: number) => Math.round(dhb * DHB_PRELISTING_USD * 1e6) / 1e6;
 
-export function LiveStreamCard({ stream, chatSlot, immersive = false }: LiveStreamCardProps) {
+export function LiveStreamCard({ stream, chatSlot, immersive = false, swipeFeed }: LiveStreamCardProps) {
   const { t: _copy } = _useCopy();
   const keyboardOpen = useKeyboardOpen(immersive);
   // Full-bleed sits `fixed` over the post page, so a swipe on it (or past the
@@ -216,9 +224,7 @@ export function LiveStreamCard({ stream, chatSlot, immersive = false }: LiveStre
   const [showAIChat, setShowAIChat] = useState(false);
   const [showReportModal, setShowReportModal] = useState(false);
   const [showActivityLog, setShowActivityLog] = useState(false);
-  const location = useLocation();
-  // Gift on a live slide in Shorts brings the viewer here with the gift sheet already open.
-  const [showGiftDrawer, setShowGiftDrawer] = useState(() => (location.state as { openGift?: boolean } | null)?.openGift === true);
+  const [showGiftDrawer, setShowGiftDrawer] = useState(false);
   const [showGiftSubs, setShowGiftSubs] = useState(false);
   // Offered once the stream API takes gift checkouts; asked when the gift sheet first opens.
   const { data: giftSubsReady } = useQuery({
@@ -355,6 +361,9 @@ export function LiveStreamCard({ stream, chatSlot, immersive = false }: LiveStre
   // Chrome, in fullscreen), else the picture is turned a quarter in CSS
   // (iPhone Safari has no orientation lock).
   const [rotation, setRotation] = useState<'none' | 'native' | 'css'>('none');
+  // In the Shorts swipe a landscape stream fills the phone, cropped to the box
+  // the creator chose. Turned to landscape it is the whole picture again.
+  const cropToVertical = immersive && rotation === 'none' && swipeFeed?.verticalCrop?.enabled ? swipeFeed.verticalCrop : null;
   const unrotate = useCallback(() => {
     setRotation((current) => {
       if (current === 'native') {
@@ -1440,7 +1449,8 @@ export function LiveStreamCard({ stream, chatSlot, immersive = false }: LiveStre
           <>
             <video
               ref={videoRef}
-              className="w-full h-full object-contain"
+              className={cropToVertical ? 'object-cover' : 'w-full h-full object-contain'}
+              style={cropToVertical ? verticalCropStyle(cropToVertical) : undefined}
               autoPlay
               playsInline
               {...{"webkit-playsinline": ""}}
@@ -1589,8 +1599,8 @@ export function LiveStreamCard({ stream, chatSlot, immersive = false }: LiveStre
             data-no-navigate
             data-live-swipe-zone
             className="absolute inset-0 z-[15] touch-pan-x"
-            onTouchStart={onSwipeStart}
-            onTouchEnd={(e) => onSwipeEnd(e, 'down')}
+            onTouchStart={swipeFeed ? undefined : onSwipeStart}
+            onTouchEnd={swipeFeed ? undefined : (e) => onSwipeEnd(e, 'down')}
             onClick={(e) => { e.stopPropagation(); setHidden(true); }}
           />
         )}
@@ -1598,8 +1608,8 @@ export function LiveStreamCard({ stream, chatSlot, immersive = false }: LiveStre
           <LiveClearedLayer
             onRestore={() => setHidden(false)}
             onRotate={() => void toggleRotation()}
-            onTouchStart={onSwipeStart}
-            onTouchEnd={(e) => onSwipeEnd(e, 'up')}
+            onTouchStart={swipeFeed ? undefined : onSwipeStart}
+            onTouchEnd={swipeFeed ? undefined : (e) => onSwipeEnd(e, 'up')}
           />
         )}
         {immersive && (
@@ -1623,6 +1633,7 @@ export function LiveStreamCard({ stream, chatSlot, immersive = false }: LiveStre
             onSeek={streamEnded && stream.replayUrl ? seekReplay : undefined}
             hidden={chromeHidden}
             streamId={stream.streamId}
+            onClose={swipeFeed?.onClose}
           />
         )}
       </div>
