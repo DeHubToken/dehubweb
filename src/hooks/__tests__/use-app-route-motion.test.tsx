@@ -2,7 +2,7 @@ import { act, fireEvent, renderHook } from '@testing-library/react';
 import { afterEach, beforeEach, expect, it, vi } from 'vitest';
 import type { Location } from 'react-router-dom';
 import { notifyRouteContentReady } from '@/lib/route-loading-shell';
-import { useAppRouteMotion } from '../use-app-route-motion';
+import { useAppRouteMotion, usesLoadingCover } from '../use-app-route-motion';
 
 const { t } = vi.hoisted(() => ({ t: (_: string, options: { defaultValue: string }) => options.defaultValue }));
 vi.mock('react-i18next', () => ({ useTranslation: () => ({ t }) }));
@@ -76,7 +76,7 @@ it('keeps only the latest destination and ignores stale ready signals', () => {
   const from = location('/app', 'feed');
   const { result, rerender } = renderHook(({ route }) => useAppRouteMotion(route, false), { initialProps: { route: from } });
   rerender({ route: location('/app/post/1', 'post') });
-  const profile = location('/creator', 'profile');
+  const profile = location('/app/post/2', 'profile');
   rerender({ route: profile });
   expect(document.querySelectorAll('.app-route-loading-shell')).toHaveLength(1);
   paintThenRender();
@@ -91,7 +91,7 @@ it('does not require View Transitions and removes reduced-motion loading immedia
   document.documentElement.classList.add('reduce-motion');
   const from = location('/app', 'feed');
   const { result, rerender } = renderHook(({ route }) => useAppRouteMotion(route, true), { initialProps: { route: from } });
-  const to = location('/creator', 'profile');
+  const to = location('/app/post/2', 'profile');
   rerender({ route: to });
   paintThenRender();
   expect(result.current).toBe(to);
@@ -116,4 +116,19 @@ it.each(['/app', '/docs'])('commits query-only changes or another surface direct
   rerender({ route: to });
   expect(result.current).toBe(to);
   expect(document.querySelector('.app-route-loading-shell')).toBeNull();
+});
+
+it.each(['/app/messages', '/app/profile', '/r2r', '/music', '/editor'])('switches to %s at once with no loading cover', path => {
+  const from = location('/app', 'feed');
+  const { result, rerender } = renderHook(({ route }) => useAppRouteMotion(route, false), { initialProps: { route: from } });
+  const to = location(path, 'next');
+  rerender({ route: to });
+  expect(result.current).toBe(to);
+  expect(document.querySelector('.app-route-loading-shell')).toBeNull();
+});
+
+it('covers only post opens', () => {
+  expect(usesLoadingCover('/app/post/1')).toBe(true);
+  expect(usesLoadingCover('/video/2')).toBe(true);
+  for (const path of ['/app', '/app/profile', '/r2r', '/app/messages', '/editor']) expect(usesLoadingCover(path)).toBe(false);
 });
