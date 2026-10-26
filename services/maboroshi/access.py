@@ -16,8 +16,11 @@ from fastapi import HTTPException
 DATA = Path(os.environ.get('MABOROSHI_DATA', '/var/lib/dehub-maboroshi'))
 PUBLIC = os.environ.get('MABOROSHI_PUBLIC_URL', 'https://live.dehub.io/maboroshi').rstrip('/')
 MODES = ('depth', 'face_mesh', 'depth_mesh')
+# One complete render from the original clip: no paid preparation or HD stage.
+ONE_PASS = ('kling', 'wan', 'seedance-direct')
+RENDERERS = ('seedance',) + ONE_PASS
 FILES = ('upload.mp4', 'original.mp4', 'depth.mp4', 'mask.mp4', 'composite-silent.mp4',
-         'seedance-input.mp4', 'final-preview.mp4', 'hd/final-preview.mp4', 'remake-result.mp4',
+         'seedance-input.mp4', 'kie-input.mp4', 'final-preview.mp4', 'hd/final-preview.mp4', 'remake-result.mp4',
          'vocals.wav', 'vocals-plus3.wav', 'music.wav')
 
 
@@ -111,9 +114,32 @@ def readiness():
     return all(os.environ.get(key) for key in required) and ready()
 
 
+# Renderer: (env name, default micros per started source second, overhead, provider micros per source second).
+# kie's 720p rates with a video input are Seedance 2.5 $0.19/s and Wan 3.0 $0.08/s,
+# each billed on input plus output, so a source second costs twice that.
+KIE_TARIFFS = {
+    'seedance-direct': ('SEEDANCE_DIRECT', 520000, 350000, 380000),
+    'wan': ('WAN', 220000, 250000, 160000),
+}
+
+
 def price(row, stage):
     try:
-        if row.get('renderer', 'seedance') == 'kling':
+        renderer = row.get('renderer', 'seedance')
+        if renderer in KIE_TARIFFS:
+            if stage != 'draft':
+                raise HTTPException(400, 'This option uses one complete render, with no preparation or HD charge.')
+            name, rate, overhead, cost = KIE_TARIFFS[renderer]
+            rate = int(os.environ.get(f'MABOROSHI_{name}_MICROS_PER_SECOND', str(rate)))
+            overhead = int(os.environ.get(f'MABOROSHI_{name}_OVERHEAD_MICROS', str(overhead)))
+            # The provider bills input plus output seconds; keep 25% before the processing reserve.
+            if rate < math.ceil(cost / .75) or overhead < 250000 or not 3 <= row['seconds'] <= 15 or row['reference_seconds']:
+                raise ValueError('Invalid one-pass tariff or input')
+            result = math.ceil(row['seconds']) * rate + overhead
+            if result <= 0 or result > 100_000_000:
+                raise ValueError('Invalid configured price')
+            return result
+        if renderer == 'kling':
             if stage != 'draft':
                 raise HTTPException(400, 'Kling uses one complete render, with no preparation or HD charge.')
             rate = int(os.environ.get('MABOROSHI_KLING_MICROS_PER_SECOND', '280000'))

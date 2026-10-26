@@ -6,7 +6,7 @@ import shutil
 import time
 import requests
 from media_host import upload
-from providers import call
+from providers import ProviderFailed, call
 from audio_workflow import finish_preview
 
 
@@ -80,7 +80,7 @@ def wait_and_finish(folder, request_id, status=print):
             finish_preview(folder / 'seedance-result.mp4', folder)
             return
         if result.get('status') in ('FAILED', 'CANCELED'):
-            raise RuntimeError('Generation failed.')
+            raise ProviderFailed('Generation failed.')
         time.sleep(10)
     raise TimeoutError('Generation pending. Its request ID is saved; do not resubmit.')
 

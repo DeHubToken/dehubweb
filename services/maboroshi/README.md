@@ -22,6 +22,27 @@ provider submissions automatically. Review provider charges, processing,
 payment fees and charged failures before changing these tariffs.
 Provider reference: https://fal.ai/models/fal-ai/kling-video/o3/pro/video-to-video/edit
 
+Two cheaper one-render options run on kie through the same private bridge
+(`KIE_API_KEY`, already used by Creator), with the same source review, image
+references, 3–15 second limit and restored original soundtrack:
+
+- **Wan 3.0** (`wan/3-0-video`, 720p): $0.22 per started source second plus
+  $0.25 ($2.45 for 10 seconds). kie bills $0.08/s on input plus output.
+- **Seedance 720p** (`bytedance/seedance-2-5`, 720p, video reference): $0.52
+  per started source second plus $0.35 ($5.55 for 10 seconds). kie bills
+  $0.19/s on input plus output, against fal's $0.2838/s for the same render.
+
+Override with `MABOROSHI_WAN_*` and `MABOROSHI_SEEDANCE_DIRECT_*`
+(`_MICROS_PER_SECOND`, `_OVERHEAD_MICROS`); the server refuses a rate that
+keeps less than 25% of the provider cost or a reserve under $0.25. The source is
+re-encoded to a silent 24 fps, roughly 0.64 MP copy that fits kie's reference
+video limits, and the render is fitted to the source length before the
+original audio is restored. Provider references:
+https://kie.ai/wan-3-0 and https://kie.ai/seedance-2-5
+
+A render the provider settles as failed is not billed by fal or kie, so that
+stage is refunded automatically. Uncertain outcomes still become `attention`.
+
 Find Maboroshi in Creator's video model search, alongside Kling Character Swap
 and Motion Control. The composer has no separate shortcut row.
 
