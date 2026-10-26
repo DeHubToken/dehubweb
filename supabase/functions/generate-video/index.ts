@@ -11,7 +11,7 @@ import { chargeForJob } from "../_shared/ai-payment-guard.ts";
 import { falQueueUrls } from "../_shared/fal-queue.ts";
 import { CREATOR_FAL_VIDEO_MODELS } from '../_shared/creator-fal-catalog.ts';
 import { buildCreatorFalVideoRequest } from '../_shared/creator-fal-input.ts';
-import { buildSeedance2Input, buildSeedance2Request, seedance2PreferredProvider } from '../_shared/seedance2-input.ts';
+import { buildSeedance2Input, buildSeedance2Request, seedance2RoutingDecision } from '../_shared/seedance2-input.ts';
 import { referenceVideoDuration } from '../_shared/creator-reference-video.ts';
 import { requireDeHubAuth } from '../_shared/auth.ts';
 import {
@@ -679,7 +679,7 @@ function buildKieVideoTask(
     case 'seedance-2.0':
     case 'seedance-2.5': {
       const is25 = model === 'seedance-2.5';
-      if (!is25 && seedance2PreferredProvider(o) !== 'kie') return null;
+      if (!is25 && seedance2RoutingDecision(o).provider !== 'kie') return null;
       return {
         model: is25 ? 'bytedance/seedance-2-5' : 'bytedance/seedance-2',
         input: {
@@ -800,6 +800,13 @@ async function tryKieGeneration(
 ): Promise<Response | null> {
   const key = kieKey();
   if (!key) return null;
+  if (model === 'seedance-2.0') {
+    const route = seedance2RoutingDecision(o);
+    if (route.provider === 'fal') {
+      console.info('[video-routing]', { model, provider: route.provider, reason: route.reason });
+      return null;
+    }
+  }
   // Use the full-capability route when kie would silently omit a control.
   if (o.seed !== undefined || o.negativePrompt || o.endFrameUrl) return null;
 
