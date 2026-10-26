@@ -20,6 +20,7 @@ const corsHeaders = {
 import { checkRateLimit, requireDeHubAuth, serviceClient } from '../_shared/auth.ts';
 import { refuseForeignVoice } from '../_shared/voice-ownership.ts';
 import { isChirpVoice, synthesizeChirp } from '../_shared/chirp-tts.ts';
+import { prepareSpeechAudio, speechProviderFormat } from '../_shared/speech-audio.ts';
 
 /**
  * Kept in step with MAX_SPEECH_CHARS in audio-models.constants.ts.
@@ -37,8 +38,6 @@ const ALLOWED_MODELS = new Set([
   'eleven_turbo_v2_5',
   'eleven_flash_v2_5',
 ]);
-
-const ALLOWED_FORMATS = new Set(['mp3_44100_128', 'mp3_44100_192', 'pcm_44100']);
 
 /** Clamp into range and fall back to `fallback` for anything non-numeric. */
 function num(value: unknown, min: number, max: number, fallback: number): number {
@@ -104,7 +103,10 @@ Deno.serve(async (req) => {
       });
     }
 
-    if (isChirpVoice(voiceId)) return await synthesizeChirp(text, voiceId, corsHeaders);
+    if (isChirpVoice(voiceId)) {
+      if (outputFormat === 'wav_24000' || outputFormat === 'pcm_44100') return new Response(JSON.stringify({ error: 'This voice supports MP3 export. Select an ElevenLabs voice for WAV.' }), { status: 400, headers: { ...corsHeaders, 'Content-Type': 'application/json' } });
+      return await synthesizeChirp(text, voiceId, corsHeaders);
+    }
 
     // Authenticating the endpoint stopped strangers using it. It did not stop
     // one signed-in user naming another's cloned voice, which is the half that
@@ -121,7 +123,7 @@ Deno.serve(async (req) => {
     }
 
     const model = ALLOWED_MODELS.has(modelId) ? modelId : 'eleven_turbo_v2_5';
-    const format = ALLOWED_FORMATS.has(outputFormat) ? outputFormat : 'mp3_44100_128';
+    const format = speechProviderFormat(outputFormat);
 
     const settings: Record<string, unknown> = {
       stability: num(voiceSettings?.stability, 0, 1, 0.5),
@@ -176,12 +178,17 @@ Deno.serve(async (req) => {
       );
     }
 
-    const audioBuffer = await response.arrayBuffer();
+    let prepared: ReturnType<typeof prepareSpeechAudio>;
+    try {
+      prepared = prepareSpeechAudio(await response.arrayBuffer(), outputFormat, response.headers.get('Content-Type'));
+    } catch {
+      return new Response(JSON.stringify({ error: 'The speech provider returned invalid audio for the requested format.' }), { status: 502, headers: { ...corsHeaders, 'Content-Type': 'application/json' } });
+    }
 
-    return new Response(audioBuffer, {
+    return new Response(prepared.buffer, {
       headers: {
         ...corsHeaders,
-        'Content-Type': format.startsWith('pcm') ? 'audio/wav' : 'audio/mpeg',
+        'Content-Type': prepared.contentType,
       },
     });
   } catch (err) {
