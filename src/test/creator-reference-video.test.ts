@@ -23,7 +23,7 @@ function clip(seconds: number, tail = false) {
   return new Uint8Array([...box('ftyp', new Uint8Array(8)), ...(tail ? [...media, ...metadata] : [...metadata, ...media])]);
 }
 function fetchClip(bytes: Uint8Array) {
-  return vi.fn(async (_url: string, options: { headers: { Range: string } }) => {
+  return vi.fn(async (_url: string, options: { headers: { Range: string }; redirect?: string }) => {
     const [start, requestedEnd] = options.headers.Range.replace('bytes=', '').split('-').map(Number), end = Math.min(requestedEnd, bytes.length - 1);
     return new Response(bytes.slice(start, end + 1), { status: 206, headers: { 'Content-Range': `bytes ${start}-${end}/${bytes.length}` } });
   });
