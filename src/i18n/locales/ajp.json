@@ -3173,6 +3173,7 @@
     "statsLoadFailed": "مشيت تحميل إحصائيات الاستيكينج"
   },
   "communities": {
+    "shareLink": "شارك الرابط",
     "chatTab": "الدردشة",
     "followerInvites": {
       "title": "دعي المتابعين",

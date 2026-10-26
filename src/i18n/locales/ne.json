@@ -3234,6 +3234,7 @@
     "statsLoadFailed": "स्टेकिङ्ग सङ्ख्या लोड गर्न नसक्यो"
   },
   "communities": {
+    "shareLink": "लिङ्क सेयर गर्नुहोस्",
     "chatTab": "च्याट",
     "followerInvites": {
       "title": "अनुयायीहरूको आमन्त्रण",

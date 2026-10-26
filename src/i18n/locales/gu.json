@@ -3221,6 +3221,7 @@
     "statsLoadFailed": "સ્ટેકિંગ સ્ટેટ્સ લોડ ન થઈ શક્યા"
   },
   "communities": {
+    "shareLink": "લિંક શેર કરો",
     "chatTab": "ચેટ",
     "followerInvites": {
       "title": "અનુયાયીઓને આમંત્રિત કરો",

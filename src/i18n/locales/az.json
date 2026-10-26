@@ -3222,6 +3222,7 @@
     "statsLoadFailed": "Staking statistikalarını yükləmək mümkün deyildi"
   },
   "communities": {
+    "shareLink": "Linki paylaşın",
     "chatTab": "Söhbət",
     "followerInvites": {
       "title": "Təqibçiləri dəvət edin",

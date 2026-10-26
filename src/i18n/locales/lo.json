@@ -3209,6 +3209,7 @@
     "statsLoadFailed": "ບໍ່ສາມາດໂຫຼດສະຖິຕິ staking ໄດ້"
   },
   "communities": {
+    "shareLink": "ແບ່ງປັນລິ້ງ",
     "chatTab": "ແຊັດ",
     "followerInvites": {
       "title": "ກະສິນທີ່ຫານາງຂາຍ",

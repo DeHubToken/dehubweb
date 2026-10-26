@@ -3156,6 +3156,7 @@
     "pendingSubmitted": "{{amount}} 粒代币已提交。正在检查确认。请勿重复发送。"
   },
   "communities": {
+    "shareLink": "分享链接",
     "chatTab": "聊天",
     "followerInvites": {
       "detail": "选择每批不超过50个粉丝。付费或关闭的私信会被跳过。检查聊天记录前先确认发送。",

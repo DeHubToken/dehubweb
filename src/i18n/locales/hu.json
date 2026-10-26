@@ -3229,6 +3229,7 @@
     "statsLoadFailed": "Nem sikerült betölteni a staking statisztikákat"
   },
   "communities": {
+    "shareLink": "Link megosztása",
     "chatTab": "Csevegés",
     "followerInvites": {
       "title": "Újra invitálja a követőket",

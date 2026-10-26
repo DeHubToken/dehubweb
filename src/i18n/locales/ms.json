@@ -3478,6 +3478,7 @@
     "statsLoadFailed": "Tidak dapat memuat staking statistik"
   },
   "communities": {
+    "shareLink": "Kongsi pautan",
     "chatTab": "Sembang",
     "followerInvites": {
       "title": "Undang pengikut",

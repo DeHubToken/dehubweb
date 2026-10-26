@@ -3302,6 +3302,7 @@
     "statsLoadFailed": "স্টেকিং স্ট্যাটস লোড করতে পারিনা"
   },
   "communities": {
+    "shareLink": "লিঙ্ক শেয়ার করুন",
     "chatTab": "চ্যাট",
     "followerInvites": {
       "title": "ফলোয়ার্স ইনভাইট করুন",

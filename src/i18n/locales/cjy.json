@@ -3210,6 +3210,7 @@
     "statsLoadFailed": "无法加载质押统计"
   },
   "communities": {
+    "shareLink": "分享链接",
     "chatTab": "聊天",
     "followerInvites": {
       "title": "邀请粉丝",

@@ -3228,6 +3228,7 @@
     "statsLoadFailed": "Није могуће учитати статистике стакинга"
   },
   "communities": {
+    "shareLink": "Подијели link",
     "chatTab": "Ћаскање",
     "followerInvites": {
       "title": "Позови пратитеље",

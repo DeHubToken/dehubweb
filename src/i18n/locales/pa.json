@@ -3225,6 +3225,7 @@
     "statsLoadFailed": "ਸਟੈਕਿੰਗ ਸਟੈਟਸ ਲੋਡ ਨਹੀਂ ਹੋ ਸਕੇ"
   },
   "communities": {
+    "shareLink": "ਲਿੰਕ ਸਾਂਝਾ ਕਰੋ",
     "chatTab": "ਚੈਟ",
     "followerInvites": {
       "title": "ਚੇਲਿਆਂ ਨੂੰ ਸੱਦਾ ਦਿਓ",
