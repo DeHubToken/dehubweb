@@ -49,6 +49,8 @@ import { getMyPoll } from '@/lib/api/dehub/live-polls';
 import { samplePoll, type LivePoll } from '@/lib/live-overlay/polls';
 import { StudioStage } from './StudioStage';
 import { WidgetSettings } from './WidgetSettings';
+import { VerticalCropPanel } from './VerticalCropPanel';
+import type { VerticalCrop } from '@/lib/live-overlay/vertical-crop';
 
 export const myOverlayKey = ['my-overlay'] as const;
 
@@ -73,6 +75,7 @@ export function LiveStudio() {
 
   const [widgets, setWidgets] = useState<OverlayWidget[]>([]);
   const [renderIn, setRenderIn] = useState<OverlayRenderIn>('app');
+  const [verticalCrop, setVerticalCrop] = useState<VerticalCrop | null>(null);
   const [dirty, setDirty] = useState(false);
   const [selectedId, setSelectedId] = useState<string | null>(null);
   const [portrait, setPortrait] = useState(false);
@@ -87,7 +90,13 @@ export function LiveStudio() {
     loadedVersion.current = data.version;
     setWidgets(data.widgets);
     setRenderIn(data.renderIn);
+    setVerticalCrop(data.verticalCrop ?? null);
   }, [data, dirty]);
+
+  const chooseVerticalCrop = (next: VerticalCrop) => {
+    setVerticalCrop(next);
+    setDirty(true);
+  };
 
   const chooseRenderIn = (next: OverlayRenderIn) => {
     setRenderIn(next);
@@ -121,7 +130,7 @@ export function LiveStudio() {
   const move = (id: string, rect: OverlayRect) => update(id, portrait ? { portrait: rect } : { landscape: rect });
 
   const save = useMutation({
-    mutationFn: () => saveMyOverlay({ renderIn, widgets }),
+    mutationFn: () => saveMyOverlay({ renderIn, widgets, verticalCrop }),
     onSuccess: (saved) => {
       loadedVersion.current = saved.version;
       queryClient.setQueryData(myOverlayKey, saved);
@@ -293,6 +302,8 @@ export function LiveStudio() {
             </OverlayEventContext.Provider>
             <p className="mt-3 text-xs text-zinc-500">{t('liveStudio.layoutHint')}</p>
           </PageSection>
+
+          <VerticalCropPanel crop={verticalCrop} onChange={chooseVerticalCrop} />
 
           <PageSection title={t('liveStudio.test')}>
             <p className="mb-3 text-xs text-zinc-500">{t('liveStudio.testHint')}</p>

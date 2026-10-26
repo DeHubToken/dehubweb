@@ -6587,6 +6587,18 @@
     "youAreTimedOut": "Vous êtes en temps d'attente pour un moment"
   },
   "liveStudio": {
+    "vertical": {
+      "title": "Vue verticale",
+      "intro": "Sur mobile, ton live s'affiche dans le fil vertical. Fais glisser le cadre pour choisir la partie de ton image qu'ils voient.",
+      "enabled": "Afficher mon live dans le fil vertical",
+      "zoom": "Zoom",
+      "centre": "Centrer",
+      "frame": "Ton image horizontale",
+      "box": "Ce que voient les mobiles",
+      "hint": "Fais glisser le cadre ou utilise les flèches. Enregistre pour l'appliquer à ton live.",
+      "live": "EN DIRECT",
+      "watch": "Regarder {{name}} en direct"
+    },
     "destinations": {
       "title": "Destinations multistream",
       "intro": "Lancez votre live une seule fois sur DeHub et nous le diffusons gratuitement sur chaque plateforme activée ici. Cela démarre quelques secondes après le début du live.",

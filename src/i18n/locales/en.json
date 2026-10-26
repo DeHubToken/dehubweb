@@ -6607,6 +6607,18 @@
         "error": "Error"
       }
     },
+    "vertical": {
+      "title": "Vertical view",
+      "intro": "Phones watch your stream in the vertical feed. Drag the box to choose the part of your picture they see.",
+      "enabled": "Show my stream in the vertical feed",
+      "zoom": "Zoom",
+      "centre": "Centre",
+      "frame": "Your landscape picture",
+      "box": "What phones see",
+      "hint": "Drag the box, or use the arrow keys. Save to apply it to your live stream.",
+      "live": "LIVE",
+      "watch": "Watch {{name}} live"
+    },
     "subathon": {
       "title": "Subathon",
       "intro": "A countdown on your stream. Every paid gift, follow and subscription adds time, so the room keeps you live.",
