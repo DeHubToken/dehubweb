@@ -18938,7 +18938,11 @@
     "127053546dd4": "Bu dosya indirilemedi",
     "d14896aa4bf8": "Ücretsiz kütüphane yüklenemedi. Bağlantınızı kontrol edin ve tekrar deneyin.",
     "953e708b2287": "Ses oluşturma başarısız oldu.",
-    "4a52cdd6ac72": "Bu katmanlar çoğaltılamadı"
+    "4a52cdd6ac72": "Bu katmanlar çoğaltılamadı",
+    "a3f938cda315": "Ad kalıbında {name}, {text}, {type}, {n} veya {nn} kullanın",
+    "d0e941227a2f": "{{minimum}} ile {{maximum}} arasında bir sayı kullanın",
+    "a2471efa33fd": "Geçerli içe aktarma sütunları ve satırları seçin",
+    "6e71ae3669b1": "Kaydedilen çıktı kullanılamıyor"
   },
   "articles": {
     "cardLabel": "Makale ·{{count}} dk. okuma",
