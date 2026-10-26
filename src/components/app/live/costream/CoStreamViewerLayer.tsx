@@ -12,8 +12,10 @@ import { useTranslation } from 'react-i18next';
 import { Hand, Loader2 } from 'lucide-react';
 import { toast } from 'sonner';
 import { useAuth } from '@/contexts/AuthContext';
+import { CoStreamBattleBar } from './CoStreamBattleBar';
 import {
   acceptInvite,
+  battlePhase,
   declineInvite,
   getCoStreamForStream,
   requestToJoin,
@@ -47,7 +49,9 @@ export function CoStreamViewerLayer({
   const [roomOpen, setRoomOpen] = useState(false);
 
   const seat = me ? state?.seats.find((s) => s.wallet === me) ?? null : null;
-  const pending = seat?.status === 'requested' || seat?.status === 'invited' || seat?.status === 'accepted';
+  // A running round moves the bar every few seconds; poll at that pace.
+  const pending = seat?.status === 'requested' || seat?.status === 'invited' || seat?.status === 'accepted'
+    || battlePhase(state?.room) !== 'idle';
 
   const load = useCallback(async () => {
     const next = await getCoStreamForStream(streamId, owner);
@@ -84,12 +88,14 @@ export function CoStreamViewerLayer({
   const room = state.room;
   // The host and their live partners run this from their own broadcaster.
   if (me && (room.host_wallet === me || (seat?.status === 'accepted' && seat.stream_id))) return null;
+  const battling = battlePhase(room) !== 'idle';
 
   const host = participantLabel(room.host_username, room.host_wallet);
 
   return (
     <>
       <div className="pointer-events-none absolute left-1/2 top-[max(3.25rem,calc(env(safe-area-inset-top)+3.25rem))] z-30 flex -translate-x-1/2 flex-col items-center gap-2">
+        {battling && <CoStreamBattleBar state={state} streamId={streamId} />}
         {seat?.status === 'invited' && (
           <div className="pointer-events-auto flex items-center gap-2 rounded-2xl border border-white/20 bg-black/60 px-3 py-2 text-xs text-white backdrop-blur-xl">
             <span>{t('costream.hostInvitedYou', { defaultValue: '{{name}} invited you on screen', name: host })}</span>

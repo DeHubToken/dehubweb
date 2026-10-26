@@ -7,12 +7,12 @@
  */
 import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Check, Copy, Loader2, Mic, MicOff, UserPlus, X } from 'lucide-react';
+import { Check, Copy, Loader2, Mic, MicOff, Swords, UserPlus, Users, X } from 'lucide-react';
 import { toast } from 'sonner';
 import { cn } from '@/lib/utils';
 import { searchUsers } from '@/lib/api/dehub/users';
 import type { DeHubUser } from '@/lib/api/dehub/types';
-import { costreamJoinPath, MAX_COSTREAM_GUESTS } from '@/lib/live/costream-api';
+import { battlePhase, battleSides, BATTLE_DURATIONS_S, costreamJoinPath, MAX_COSTREAM_GUESTS } from '@/lib/live/costream-api';
 import { participantLabel, type UseCoStreamHost } from '@/hooks/use-costream-host';
 
 const ROW = 'flex items-center gap-2 rounded-lg bg-white/5 px-2.5 py-2 text-xs text-white';
@@ -38,6 +38,65 @@ function useUserSearch(query: string) {
     return () => { cancelled = true; window.clearTimeout(timer); };
   }, [query]);
   return { results, loading };
+}
+
+function FindPartner({ co }: { co: UseCoStreamHost }) {
+  const { t } = useTranslation();
+  if (co.searching) {
+    return (
+      <div className={ROW}>
+        <Loader2 className="h-3.5 w-3.5 shrink-0 animate-spin" />
+        <span className="min-w-0 flex-1">
+          {co.searching.waiting > 1
+            ? t('costream.searchingCount', { defaultValue: 'Looking for a co-streamer… {{count}} creators searching', count: co.searching.waiting })
+            : t('costream.searching', { defaultValue: 'Looking for a co-streamer…' })}
+        </span>
+        <button type="button" className={TEXT_BTN} disabled={co.busy} onClick={() => void co.cancelFind()}>
+          {t('costream.cancel', { defaultValue: 'Cancel' })}
+        </button>
+      </div>
+    );
+  }
+  return (
+    <button type="button" className={cn(TEXT_BTN, 'h-9 w-full text-xs')} disabled={co.busy} onClick={() => void co.findPartner()}>
+      <Users className="h-3.5 w-3.5" />
+      {t('costream.findPartner', { defaultValue: 'Find a co-streamer' })}
+    </button>
+  );
+}
+
+function BattleControls({ co }: { co: UseCoStreamHost }) {
+  const { t } = useTranslation();
+  const sides = battleSides(co.state);
+  if (!sides) return null;
+  const running = battlePhase(co.state?.room) === 'running';
+  return (
+    <div className="space-y-1.5">
+      <p className="text-[11px] font-medium uppercase tracking-wide text-zinc-500">
+        {t('costream.battle', { defaultValue: 'Gift battle' })}
+      </p>
+      {running ? (
+        <button type="button" className={cn(TEXT_BTN, 'h-9 w-full text-xs')} disabled={co.busy} onClick={() => void co.endBattle()}>
+          {t('costream.endBattle', { defaultValue: 'End the round now' })}
+        </button>
+      ) : (
+        <div className="flex gap-1.5">
+          {BATTLE_DURATIONS_S.map((seconds) => (
+            <button key={seconds} type="button" className={cn(TEXT_BTN, 'h-9 flex-1 text-xs')} disabled={co.busy}
+              onClick={() => void co.battle(seconds)}>
+              <Swords className="h-3.5 w-3.5" />
+              {t('costream.battleMinutes', { defaultValue: '{{count}} min', count: seconds / 60 })}
+            </button>
+          ))}
+        </div>
+      )}
+      <p className="text-[11px] text-zinc-500">
+        {t('costream.battleHint', {
+          defaultValue: 'Each side scores the gifts its own stream is paid during the round. Both audiences see the bar.',
+        })}
+      </p>
+    </div>
+  );
 }
 
 export function CoStreamHostPanel({ co, className }: { co: UseCoStreamHost; className?: string }) {
@@ -100,6 +159,10 @@ export function CoStreamHostPanel({ co, className }: { co: UseCoStreamHost; clas
           {co.busy ? <Loader2 className="h-3.5 w-3.5 animate-spin" /> : <UserPlus className="h-3.5 w-3.5" />}
           {t('costream.openSeats', { defaultValue: 'Open guest seats' })}
         </button>
+        <FindPartner co={co} />
+        <p className="text-[11px] text-zinc-500">
+          {t('costream.findHint', { defaultValue: 'Pairs you with another creator who is live right now, ready for a gift battle.' })}
+        </p>
       </div>
     );
   }
@@ -188,6 +251,9 @@ export function CoStreamHostPanel({ co, className }: { co: UseCoStreamHost; clas
       )}
 
       <OnScreenList co={co} canManage />
+
+      <BattleControls co={co} />
+      {co.onScreen.length === 0 && <FindPartner co={co} />}
 
       {co.invited.length > 0 && (
         <div className="space-y-1.5">
