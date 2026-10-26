@@ -54,6 +54,15 @@ DO $$ DECLARE r jsonb; old_result jsonb; BEGIN
     VALUES('00000000-0000-4000-8000-000000000099','owner',100,'image','test','generate-image','credits','ai:declined');
   r:=ai_generation_debit_declined('00000000-0000-4000-8000-000000000099');
   IF r->>'status'<>'failed' OR r#>>'{result,paymentNotTaken}'<>'true' OR r#>>'{result,paymentRestored}'<>'false' THEN RAISE EXCEPTION 'Definitive decline was misrepresented as a refund'; END IF;
+  INSERT INTO ai_generation_jobs(id,wallet_address,price_dhb,kind,model,endpoint,payment_source,credit_debit_key)
+    VALUES('00000000-0000-4000-8000-000000000098','owner',100,'image','test','generate-image','credits','ai:canceled-before-debit');
+  PERFORM ai_generation_transition('00000000-0000-4000-8000-000000000098','failed','{"status":"failed"}');
+  PERFORM ai_generation_refund_claim('00000000-0000-4000-8000-000000000098','30000000-0000-4000-8000-000000000001');
+  r:=ai_generation_debit_canceled('00000000-0000-4000-8000-000000000098','30000000-0000-4000-8000-000000000002');
+  IF r->>'status'<>'refund_pending' THEN RAISE EXCEPTION 'Wrong owner finalized a canceled debit'; END IF;
+  r:=ai_generation_debit_canceled('00000000-0000-4000-8000-000000000098','30000000-0000-4000-8000-000000000001');
+  IF r->>'status'<>'failed' OR r#>>'{result,paymentNotTaken}'<>'true' OR r#>>'{result,paymentRestored}'<>'false' THEN RAISE EXCEPTION 'Canceled debit was misrepresented as restored'; END IF;
+  IF has_function_privilege('authenticated','public.ai_generation_debit_canceled(uuid,uuid)','EXECUTE') THEN RAISE EXCEPTION 'Public no-charge finalizer exposed'; END IF;
   INSERT INTO ai_payments(wallet_address,tx_hash,paid_dhb,remaining_dhb) VALUES('owner','voice-receipt',100,40);
   PERFORM ai_payment_release('voice-receipt','owner',20,'legacy-voice-job');
   IF (SELECT remaining_dhb FROM ai_payments WHERE tx_hash='voice-receipt')<>60 THEN RAISE EXCEPTION 'Non-journalled receipt refund regressed'; END IF;
