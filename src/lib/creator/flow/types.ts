@@ -14,10 +14,12 @@ export type FlowNodeType =
   | 'videoInputNode'
   | 'imageGenNode'
   | 'videoGenNode'
+  | 'audioInputNode'
+  | 'audioGenNode'
   | 'assistantNode'
   | 'groupNode';
 
-export const GEN_NODE_TYPES: ReadonlySet<string> = new Set(['imageGenNode', 'videoGenNode', 'assistantNode']);
+export const GEN_NODE_TYPES: ReadonlySet<string> = new Set(['imageGenNode', 'videoGenNode', 'audioGenNode', 'assistantNode']);
 
 /** A previous result of a generator node; `null` while its slot is rendering. */
 export type GenEntry = string | { error: string } | null;
@@ -49,6 +51,12 @@ export interface NodeData extends Record<string, unknown> {
   // ── video (input or output) ──
   videoUrl?: string;
   videoDuration?: number;
+  audioTask?: 'speech' | 'sfx' | 'transcribe' | 'isolate';
+  audioAssetId?: string;
+  audioUrl?: string;
+  inputAssetId?: string;
+  outputAssetId?: string;
+  voiceId?: string;
   /** A still pulled from the video, used when it feeds an image handle. */
   capturedFrameUrl?: string;
   captureSeconds?: number;

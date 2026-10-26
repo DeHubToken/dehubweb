@@ -14,14 +14,17 @@
  */
 import { fetchJobQuote } from '@/hooks/use-ai-quote';
 import { payForJob } from '@/lib/ai-payment';
-import { hostDataUrl } from '@/lib/creator/generationEngine';
+import { DEFAULT_VOICE_ID, hostDataUrl, type AudioRequest } from '@/lib/creator/generationEngine';
+import { graphOrder, AUDIO_TASKS } from './graphContract';
+import { assetNodePatch, flowAssetId, loadFlowAssets } from './assets';
+import { assetToFile } from '@/lib/creator/assetDownload';
 import { IMAGE_MODELS } from '@/constants/image-models.constants';
 import { VIDEO_MODELS, snapVideoDuration, getVideoResolutions } from '@/constants/video-models.constants';
 import { useGenerationStore, type GenerationJob } from '@/store/generationStore';
 import { useCreatorFlowStore } from '@/store/creatorFlowStore';
 import { buildPipelineWaves, resolveInputs, resolveMentions } from './executor';
 import { streamAssistant, type AssistantModelId } from './assistant';
-import type { FlowNode, GenEntry } from './types';
+import { GEN_NODE_TYPES, type FlowNode, type GenEntry } from './types';
 import i18n from '@/i18n';
 import { translateCopy as _translateCopy } from '@/i18n/copy';
 
@@ -37,7 +40,7 @@ export class FlowRunError extends Error {
 export interface PlanItem {
   nodeId: string;
   label: string;
-  kind: 'image' | 'video' | 'assistant';
+  kind: 'image' | 'video' | 'audio' | 'assistant';
   model: string;
   modelName: string;
   priceDhb: number;
@@ -70,6 +73,19 @@ export function findIssues(nodeIds: string[]): NodeIssue[] {
   for (const id of nodeIds) {
     const node = byId.get(id);
     if (!node) continue;
+    if (node.type === 'audioGenNode') {
+      const task = node.data.audioTask || 'speech';
+      const upstream = resolveInputs(id, nodes, edges);
+      if (!AUDIO_TASKS.includes(task)) issues.push({ nodeId: id, key: 'creatorFlow.invalidGraph' });
+      if (task === 'transcribe' || task === 'isolate') {
+        const wire = edges.find(edge => edge.target === id && edge.targetHandle === 'audio');
+        const source = nodes.find(source => source.id === wire?.source);
+        if (!source || (!source.data.audioUrl && !(source.type === 'audioGenNode' && nodeIds.includes(source.id)))) issues.push({ nodeId: id, key: 'creatorFlow.issueInputEmpty' });
+      } else if (!upstream.prompt?.trim() && !edges.some(edge => edge.target === id && edge.targetHandle === 'prompt' && nodes.some(source => source.id === edge.source && GEN_NODE_TYPES.has(source.type || '')))) {
+        issues.push({ nodeId: id, key: 'creatorFlow.issuePromptEmpty' });
+      }
+      continue;
+    }
     if (node.type === 'assistantNode') {
       const upstream = resolveInputs(id, nodes, edges);
       if (!(upstream.prompt ?? (node.data.localPrompt as string | undefined) ?? '').trim()) {
@@ -138,6 +154,20 @@ async function stageInlineInputs(nodeIds: string[]) {
 /** Price every paid node in the run. Throws when signed out. */
 export async function planRun(nodeIds: string[]): Promise<RunPlan> {
   const { nodes, edges } = store();
+  try { graphOrder(nodes, edges); } catch { throw new FlowRunError(i18n.t('creatorFlow.invalidGraph'), 'INVALID'); }
+  const wallet = localStorage.getItem('dehub_wallet')?.toLowerCase();
+  const inputs = nodes.filter(node => edges.some(edge => edge.source === node.id && nodeIds.includes(edge.target)) && !(GEN_NODE_TYPES.has(node.type || '') && nodeIds.includes(node.id)));
+  const ids = inputs.map(flowAssetId).filter(Boolean);
+  if (ids.length) {
+    if (!wallet) throw new FlowRunError('SIGN_IN_REQUIRED', 'SIGN_IN_REQUIRED');
+    const assets = await loadFlowAssets(wallet, ids);
+    for (const node of inputs) {
+      const id = flowAssetId(node); if (!id) continue;
+      const asset = assets.get(id);
+      if (!asset) throw new FlowRunError(i18n.t('creatorFlow.issueInputEmpty'), 'INVALID');
+      store().updateNodeData(node.id, assetNodePatch(node, asset));
+    }
+  }
   const scoped = nodes.filter((n) => nodeIds.includes(n.id));
   const waves = buildPipelineWaves(scoped, edges);
   if (waves.length === 0) throw new FlowRunError('Nothing to run', 'EMPTY');
@@ -145,7 +175,7 @@ export async function planRun(nodeIds: string[]): Promise<RunPlan> {
   const issues = findIssues(nodeIds);
   if (issues.length > 0) throw new FlowRunError(_translateCopy(issues[0].key, { defaultValue: issues[0].key }), 'INVALID');
 
-  const paid = scoped.filter((n) => n.type === 'imageGenNode' || n.type === 'videoGenNode');
+  const paid = scoped.filter((n) => n.type === 'imageGenNode' || n.type === 'videoGenNode' || n.type === 'audioGenNode');
   if (paid.length > 0 && !localStorage.getItem('dehub_token')) {
     throw new FlowRunError('Sign in to generate', 'SIGN_IN_REQUIRED');
   }
@@ -154,6 +184,11 @@ export async function planRun(nodeIds: string[]): Promise<RunPlan> {
 
   const items: PlanItem[] = [];
   for (const n of scoped) {
+    if (n.type === 'audioGenNode') {
+      const task = n.data.audioTask || 'speech';
+      items.push({ nodeId: n.id, label: n.data.label, kind: 'audio', model: task, modelName: i18n.t(`creator.audioTask${task === 'sfx' ? 'Sfx' : task === 'transcribe' ? 'Transcribe' : task === 'isolate' ? 'Isolate' : 'Speech'}Label`), priceDhb: 0 });
+      continue;
+    }
     if (n.type === 'assistantNode') {
       items.push({ nodeId: n.id, label: n.data.label, kind: 'assistant', model: (n.data.assistantModel as string) || 'gemini-flash', modelName: _translateCopy("copy.391e40515277", { defaultValue: "Assistant" }), priceDhb: 0 });
       continue;
@@ -180,6 +215,43 @@ export async function planRun(nodeIds: string[]): Promise<RunPlan> {
   }
   const totalDhb = items.reduce((s, i) => s + i.priceDhb, 0);
   return { items, waves, totalDhb };
+}
+
+async function runAudioNode(node: FlowNode) {
+  const { nodes, edges, updateNodeData } = store();
+  const input = resolveInputs(node.id, nodes, edges), task = node.data.audioTask || 'speech';
+  let request: AudioRequest;
+  if (task === 'transcribe' || task === 'isolate') {
+    if (!input.audioUrl) throw new Error(i18n.t('creatorFlow.issueInputEmpty'));
+    const file = await assetToFile(input.audioUrl, 'flow-audio.mp3', 'audio/mpeg', { maxBytes: 50 * 1024 * 1024 });
+    if (!file.type.startsWith('audio/') || !file.size) throw new Error(i18n.t('creatorFlow.issueInputEmpty'));
+    request = { task, file };
+  } else {
+    const text = input.prompt?.trim() || '';
+    if (!text) throw new Error(i18n.t('creatorFlow.issuePromptEmpty'));
+    request = task === 'sfx' ? { task, text, durationSeconds: node.data.duration } : { task: 'speech', text, voiceId: node.data.voiceId || DEFAULT_VOICE_ID };
+  }
+  const slot = pushGeneration(node.id, null);
+  updateNodeData(node.id, { status: 'running', errorMsg: undefined });
+  const jobId = useGenerationStore.getState().startAudio(request, { prompt: input.prompt || task, resolvedPrompt: input.prompt || task, modelName: task, aspect: 'audio' });
+  updateNodeData(node.id, { jobId });
+  const job = await waitForJob(jobId);
+  if (job.status !== 'done') throw new Error(job.error || i18n.t('creator.editorImportFailed'));
+  // The generation store saves audio bytes privately. Wait for that existing
+  // save rather than issuing a second upload or storing a temporary blob URL.
+  const saved = await new Promise<GenerationJob>((resolve, reject) => {
+    let unsubscribe: (() => void) | undefined;
+    const timeout = setTimeout(() => { unsubscribe?.(); reject(new Error(i18n.t('creatorFlow.audioSavePending'))); }, 60_000);
+    const check = () => {
+      const current = useGenerationStore.getState().jobs.find(job => job.id === jobId);
+      if (current?.cloudSaved) { clearTimeout(timeout); unsubscribe?.(); resolve(current); return true; }
+      if (!current || current.saveError) { clearTimeout(timeout); unsubscribe?.(); reject(new Error(i18n.t('creatorFlow.audioSavePending'))); return true; }
+      return false;
+    };
+    if (!check()) unsubscribe = useGenerationStore.subscribe(check);
+  });
+  settleGeneration(node.id, slot, saved.transcript || saved.url || '');
+  updateNodeData(node.id, { status: 'done', audioAssetId: saved.id, audioUrl: saved.url, outputText: saved.transcript, jobId: undefined });
 }
 
 /** Wait for a queued job to settle. */
@@ -365,6 +437,7 @@ export async function executeRun(plan: RunPlan, txHash: string | undefined, prog
             if (node.type === 'imageGenNode') await runImageNode(node, txHash);
             else if (node.type === 'videoGenNode') await runVideoNode(node, txHash);
             else if (node.type === 'assistantNode') await runAssistantNode(node);
+            else if (node.type === 'audioGenNode') await runAudioNode(node);
             log(_translateCopy("copy.59c7c1fa6f67", { defaultValue: "[{{value1}}] done", value1: node.data.label }));
           } catch (e) {
             failed.add(id);

@@ -85,6 +85,7 @@ export interface ResolvedInputs {
   startFrameUrl?: string;
   endFrameUrl?: string;
   referenceVideoUrls: string[];
+  audioUrl?: string;
 }
 
 /** Resolve upstream prompt and media for a target node. */
@@ -99,6 +100,7 @@ export function resolveInputs(nodeId: string, nodes: FlowNode[], edges: FlowEdge
 
     if (src.type === 'promptNode') result.prompt = src.data.prompt as string | undefined;
     if (src.type === 'assistantNode') result.prompt = src.data.outputText as string | undefined;
+    if (src.type === 'audioGenNode' && src.data.audioTask === 'transcribe') result.prompt = src.data.outputText as string | undefined;
 
     switch (edge.targetHandle) {
       case 'image': {
@@ -126,6 +128,10 @@ export function resolveInputs(nodeId: string, nodes: FlowNode[], edges: FlowEdge
       case 'referenceVideo': {
         const url = videoUrlOf(src);
         if (url) result.referenceVideoUrls.push(url);
+        break;
+      }
+      case 'audio': {
+        if (typeof src.data.audioUrl === 'string') result.audioUrl = src.data.audioUrl;
         break;
       }
       default:
