@@ -1160,8 +1160,10 @@ const VideoCardBody = memo(function VideoCard({ video, postPage = false, onBack,
               // onto a clip must never be what makes sound.
               // An opened post is not scrolled onto: it has sound unless the
               // viewer muted a video themselves.
+              // A post link opened straight from outside has had no tap yet,
+              // and the browser would refuse to start it with sound at all.
               const shouldMute = openedRef.current
-                ? openedVideoMuted() || !ownsAudio
+                ? openedVideoMuted() || !ownsAudio || navigator.userActivation?.hasBeenActive === false
                 : feedPreviewRef.current || autoplayMutedRef.current || videoPlaybackManager.globalMuted || !ownsAudio;
               autoMutedRef.current = shouldMute && !prominent && !autoplayMutedRef.current && !videoPlaybackManager.globalMuted;
               vid.muted = shouldMute;
