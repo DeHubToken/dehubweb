@@ -41,6 +41,16 @@ export function buildCreatorFalVideoRequest(modelId: string, o: CreatorFalVideoO
   if (m.maxPromptLength && o.prompt.length > m.maxPromptLength) throw new Error(`Use a prompt of up to ${m.maxPromptLength} characters for ${m.name}`);
   if (m.requiresVideoInput) {
     if (o.videoUrls?.length !== 1) throw new Error('Attach one MP4 or MOV reference clip');
+    if (m.referenceMode === 'extend') {
+      if (o.sourceImage || o.referenceImageUrls?.length || o.endFrameUrl || o.audioUrls?.length || o.negativePrompt || o.seed !== undefined || o.effect || resolution !== '720p') throw new Error('Extension takes one source clip and a continuation prompt');
+      return { appId: m.falTextModel, input: {
+        prompt: o.prompt, video_url: o.videoUrls[0], extend_direction: m.extensionDirection,
+        num_frames: 121, num_context_frames: 25, frames_per_second: 24, match_input_fps: false,
+        resolution: aspect === '9:16' ? { width: 720, height: 1280 } : { width: 1280, height: 720 },
+        video_strength: 1, num_inference_steps: 15, guidance_scale: 1, generate_audio: true,
+        enable_prompt_expansion: false, enable_safety_checker: true,
+      }, durationSeconds: 4 };
+    }
     const images = [...new Set([...(o.sourceImage ? [o.sourceImage] : []), ...(o.referenceImageUrls ?? [])])];
     if (!images.length) throw new Error('Attach a character or reference image');
     if (images.length > (m.maxReferenceImages ?? 1)) throw new Error(`Attach up to ${m.maxReferenceImages ?? 1} images`);

@@ -40,7 +40,7 @@ describe('creator fal video requests', () => {
     it(`${model.name} accepts the options exposed by the creator`, () => {
       const durations = model.allowedDurations ?? [model.minDuration, model.defaultDuration, model.maxDuration];
       for (const duration of durations) for (const resolution of model.resolutions) for (const aspectRatio of model.aspectRatios) {
-        for (const sourceImage of model.requiresVideoInput || !model.supports.includes('text-to-video') ? ['https://example.com/start.jpg'] : [undefined, 'https://example.com/start.jpg']) {
+        for (const sourceImage of model.referenceMode === 'extend' ? [undefined] : model.requiresVideoInput || !model.supports.includes('text-to-video') ? ['https://example.com/start.jpg'] : [undefined, 'https://example.com/start.jpg']) {
           const request = buildCreatorFalVideoRequest(model.id, { prompt: 'A red panda walks along a mossy log.', sourceImage, duration: `${duration}s`, resolution, aspectRatio, ...(model.family === 'pixverseeffects' ? { effect: 'Earth Zoom' } : {}), ...(model.requiresVideoInput ? { videoUrls: ['https://example.com/clip.mp4'] } : {}) });
           expect(request.durationSeconds).toBe(duration);
           assertContract(request);
