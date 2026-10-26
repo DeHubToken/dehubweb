@@ -38,7 +38,7 @@ interface Props {
 
 const CHAT_LINES = 4;
 const RAIL_BUTTON =
-  'flex h-12 w-12 items-center justify-center rounded-xl border border-white/20 bg-white/10 text-white backdrop-blur-md active:scale-95';
+  'flex h-12 w-12 items-center justify-center rounded-xl border border-white/20 bg-black/35 text-white backdrop-blur-md active:scale-95';
 
 /** Plays a live HLS stream: Safari natively, everything else through hls.js. */
 function useLivePlayback(video: HTMLVideoElement | null, url: string, load: boolean, play: boolean) {
@@ -164,7 +164,7 @@ export const LiveSwipeSlide = memo(function LiveSwipeSlide({ stream, isActive, p
         </ul>
       )}
 
-      <div className="absolute bottom-40 right-3 flex flex-col items-center gap-3 text-[11px] text-white/90">
+      <div className="absolute bottom-40 right-3 flex flex-col items-center gap-3 text-[11px] text-white/90 [text-shadow:0_1px_2px_rgba(0,0,0,.7)]">
         <button
           type="button"
           aria-label={t('liveStudio.vertical.react')}
