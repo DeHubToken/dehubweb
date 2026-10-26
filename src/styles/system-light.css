@@ -77,7 +77,7 @@ html[data-theme="system"][data-system-tone="light"]:not(#_):not(#_):not(#_):not(
 /* Logo turns ink */
 html[data-theme="system"][data-system-tone="light"] header:not([data-docs-header]) img[alt*="DeHub" i], html[data-theme="system"][data-system-tone="light"] [data-island-logo] img { filter: invert(1); }
 /* Media keeps its own white chrome */
-html[data-theme="system"][data-system-tone="light"]:not(#_):not(#_):not(#_):not(#_) :is([data-media-full], [data-on-media], [data-video-controls], [data-video-topbar]) :is(*, svg) { color: #fff !important; }
+html[data-theme="system"][data-system-tone="light"]:not(#_):not(#_):not(#_):not(#_) :is([data-media-full], [data-on-media], [data-video-controls], [data-video-topbar]) :is(*, svg):not([data-shorts-panel] *) { color: #fff !important; }
 
 html[data-theme="system"][data-system-tone="light"]:not(#_):not(#_):not(#_) :is([data-feed-nav], [data-bottom-nav] > nav)::before,
 html[data-theme="system"][data-system-tone="light"]:not(#_):not(#_):not(#_) :is([data-feed-nav], [data-bottom-nav] > nav)::after { display:none !important; }
@@ -233,3 +233,8 @@ html:is([data-theme="light"], [data-system-tone="light"]):not(#_):not(#_):not(#_
 html:is([data-theme="light"], [data-system-tone="light"]):not(#_):not(#_):not(#_) [data-shorts-viewer]:not([data-media-full]) :is(.text-white, .text-zinc-100, .text-zinc-200, .text-zinc-300):not([data-media-full] *) { color: var(--sl-ink, #0b0b0d) !important; }
 html:is([data-theme="light"], [data-system-tone="light"]):not(#_):not(#_):not(#_) [data-shorts-viewer]:not([data-media-full]) > div > div > button.bg-zinc-800\/80 { background-color: #fff !important; color: var(--sl-ink, #0b0b0d) !important; box-shadow: 0 0 0 .5px rgba(11,11,13,.08), 0 2px 10px rgba(11,11,13,.08) !important; }
 html:is([data-theme="light"], [data-system-tone="light"]):not(#_):not(#_):not(#_) [data-shorts-viewer]:not([data-media-full]) > div > div > button.bg-zinc-800\/80 svg { color: inherit !important; }
+/* Phone shorts comments sheet: it sits inside the full-bleed viewer, so every
+   media rule above kept its text white on the light sheet. Ink it like a page. */
+html[data-theme="system"][data-system-tone="light"]:not(#_):not(#_):not(#_):not(#_) [data-shorts-panel] { color: var(--sl-ink, #0b0b0d); }
+html[data-theme="system"][data-system-tone="light"]:not(#_):not(#_):not(#_):not(#_) [data-shorts-panel] :is([class*="text-white/"], .text-zinc-400, .text-zinc-500, .text-zinc-600) { color: var(--sl-ink-2, rgba(11,11,13,.74)) !important; }
+html[data-theme="system"][data-system-tone="light"]:not(#_):not(#_):not(#_):not(#_) [data-shorts-panel] :is(.text-white, .text-zinc-100, .text-zinc-200, .text-zinc-300) { color: var(--sl-ink, #0b0b0d) !important; }

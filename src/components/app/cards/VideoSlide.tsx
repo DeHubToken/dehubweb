@@ -26,6 +26,7 @@ import type { ShortVideo } from '@/types/feed.types';
 import { cn } from '@/lib/utils';
 import { useResolvedThumbnail } from '@/lib/thumbnail-fallback';
 import { useTapGestures } from '@/hooks/use-tap-gestures';
+import { useShortsSideGestures } from '@/hooks/use-shorts-side-gestures';
 import { useTranslation } from 'react-i18next';
 import { TapReactionBurst } from '@/components/app/cards/TapReactionBurst';
 import { StoryboardPreview } from '@/components/app/video/StoryboardPreview';
@@ -93,6 +94,13 @@ interface VideoSlideProps {
   playbackSrc?: string | null;
   /** Called when playback fails for good, so a lapsed signature can be renewed. */
   onPlaybackFailed?: () => void;
+  /**
+   * Phones only: hold the left/right third to rewind/fast forward, double tap
+   * them to jump 10s. See useShortsSideGestures.
+   */
+  sideGestures?: boolean;
+  /** A side hold owns the finger, so the pager must not page under it. */
+  onHoldChange?: (active: boolean) => void;
 }
 
 const VideoSlideBody = memo(function VideoSlideBody({
@@ -113,6 +121,8 @@ const VideoSlideBody = memo(function VideoSlideBody({
   progressLayer = null,
   playbackSrc,
   onPlaybackFailed,
+  sideGestures = false,
+  onHoldChange,
 }: VideoSlideProps) {
   const { t: _copy } = _useCopy();
   const isLooping = useMediaLooping();
@@ -174,6 +184,15 @@ const VideoSlideBody = memo(function VideoSlideBody({
     // instant as it was before the ladder existed.
     onSingleTap: (event) => onTap?.(event),
     onUndoSingleTap: () => (onTapUndo ?? onTap)?.(),
+  });
+  const side = useShortsSideGestures(tapGestures, {
+    enabled: sideGestures && !short.imageUrls?.length,
+    isActive,
+    videoRef,
+    playbackRate,
+    onSingleTap: event => onTap?.(event),
+    onUndoSingleTap: () => (onTapUndo ?? onTap)?.(),
+    onHoldChange,
   });
 
   // Handle video metadata load to detect aspect ratio
@@ -496,7 +515,21 @@ const VideoSlideBody = memo(function VideoSlideBody({
           ladder, off pointer events. Desktop used to bind a competing onClick
           for centre-double-tap fullscreen; fullscreen kept its button and gave
           the gesture up, because one gesture cannot mean two things. */}
-      <div data-shorts-media-slot className="absolute inset-0 z-[2]" {...tapGestures}>
+      <div data-shorts-media-slot className="absolute inset-0 z-[2]" {...tapGestures} {...side.handlers}>
+        {/* A hold's speed-up shows nothing: the picture speeding up is the
+            feedback. A double-tap jump shows a soft count on its side. */}
+        {side.seekFlash && (
+          <span
+            key={side.seekFlash.run}
+            data-shorts-seek-flash
+            className={cn(
+              'pointer-events-none absolute top-1/2 z-10 -translate-y-1/2 text-xl font-bold text-white [text-shadow:0_1px_6px_rgba(0,0,0,0.45)] animate-[shorts-seek-flash_800ms_ease-out_forwards]',
+              side.seekFlash.side < 0 ? 'left-[10%]' : 'right-[10%]',
+            )}
+          >
+            {side.seekFlash.side < 0 ? '−' : '+'}{side.seekFlash.total}s
+          </span>
+        )}
         {short.imageUrls?.length ? (
           <Suspense fallback={<img src={short.imageUrls[0]} alt="" className="w-full h-full object-contain" />}>
             <ShortsPhotoPager images={short.imageUrls} galleryKey={String(short.id)} />
