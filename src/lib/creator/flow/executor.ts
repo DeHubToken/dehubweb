@@ -8,6 +8,7 @@
  */
 import type { FlowEdge, FlowNode } from './types';
 import { GEN_NODE_TYPES } from './types';
+import { inputRules } from './graphContract';
 
 /** Topological sort — node ids in execution order. */
 export function topoSort(nodes: FlowNode[], edges: FlowEdge[]): string[] {
@@ -221,6 +222,6 @@ export function resolveMentions(
 
 /** True when the node can receive a text prompt on a free `prompt` handle. */
 export function nodeAcceptsPromptInput(node: FlowNode, edges: FlowEdge[]): boolean {
-  if (node.type !== 'imageGenNode' && node.type !== 'videoGenNode') return false;
+  if (!inputRules(node).prompt) return false;
   return !edges.some((e) => e.target === node.id && e.targetHandle === 'prompt');
 }
