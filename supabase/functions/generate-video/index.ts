@@ -1064,8 +1064,12 @@ serve(async (req) => {
         videoUrls,
         seed,
       });
-      // A cheaper direct-route quote does not authorize a more expensive fallback.
-      if (seedanceRoute?.provider === 'kie' && !kieResponse) throw new Error('The selected video provider could not start this job. Please try again later.');
+      // Preserve the existing availability fallback at the accepted price. A provider
+      // failure never authorizes another debit; the platform absorbs this difference.
+      if (seedanceRoute?.provider === 'kie' && !kieResponse) console.warn('[video-routing]', {
+        model, provider: 'fal', reason: 'direct-provider-submit-failed', quotedProvider: 'kie',
+        absorbedProviderCostUsd: (0.3034 - 0.165) * (validatedDuration ?? 5),
+      });
       const response = kieResponse
         ?? (modelConfig.provider === 'fal'
           ? await handleFalGeneration(modelConfig, prompt, sourceImage, duration, aspectRatio, negativePrompt, resolution, referenceImageUrls, endFrameUrl, audioUrls, videoUrls, seed, effect)
