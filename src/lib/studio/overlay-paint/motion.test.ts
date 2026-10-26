@@ -104,16 +104,24 @@ describe('AlertQueue', () => {
 describe('alertPose', () => {
   const slot = { start: 0, hold: 3000 };
 
-  it('enters from below, faded and small', () => {
+  it('enters from below, faded, small and blurred', () => {
     const pose = alertPose(slot, 0, newPose());
     expect(pose.alpha).toBe(0);
-    expect(pose.dy).toBeCloseTo(0.3);
-    expect(pose.scale).toBeCloseTo(0.92);
+    expect(pose.dy).toBeCloseTo(0.24);
+    expect(pose.scale).toBeCloseTo(0.94);
+    expect(pose.blur).toBeCloseTo(6);
+  });
+
+  it('is opaque and sharp 60% of the way in, still settling', () => {
+    const pose = alertPose(slot, ALERT_ENTER_MS * 0.6, newPose());
+    expect(pose.alpha).toBe(1);
+    expect(pose.blur).toBe(0);
+    expect(pose.scale).toBeLessThan(1);
   });
 
   it('sits still while it holds', () => {
-    expect(alertPose(slot, ALERT_ENTER_MS + 1, newPose())).toEqual({ alpha: 1, dy: 0, scale: 1 });
-    expect(alertPose(slot, 2999, newPose())).toEqual({ alpha: 1, dy: 0, scale: 1 });
+    expect(alertPose(slot, ALERT_ENTER_MS + 1, newPose())).toEqual({ alpha: 1, dy: 0, scale: 1, blur: 0 });
+    expect(alertPose(slot, 2999, newPose())).toEqual({ alpha: 1, dy: 0, scale: 1, blur: 0 });
   });
 
   it('never shows more than full opacity while overshooting', () => {

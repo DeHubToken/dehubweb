@@ -110,6 +110,18 @@ describe('TextKit', () => {
     expect(sets).toBe(3);
   });
 
+  it('tracks letters by hand, trailing space included, as CSS letter-spacing does', () => {
+    const ctx = fakeCtx();
+    const kit = new TextKit();
+    kit.use(ctx as unknown as CanvasRenderingContext2D);
+    kit.font('f');
+    expect(kit.trackedWidth('ABC', 2)).toBe(36);
+    expect(kit.drawTracked('AB', 5, 0, 2)).toBe(24);
+    expect(ctx.fillText.mock.calls.map((c) => c[1])).toEqual([5, 17]);
+    // Fitting counts the tracking: 'ABCD…' would be 60, too wide for 55.
+    expect(kit.fitTracked('ABCDEFGH', 55, 2)).toBe('ABC…');
+  });
+
   it('draws digits in equal cells so a clock does not jitter', () => {
     const ctx = fakeCtx();
     ctx.measureText.mockImplementation((s: string) => ({ width: s === '1' ? 4 : 10 }));

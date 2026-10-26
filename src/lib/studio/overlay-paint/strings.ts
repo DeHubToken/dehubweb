@@ -13,6 +13,13 @@ export type Translate = (key: string, options?: Record<string, unknown>) => stri
 
 /** English for every key the painter reads, `_one` / `_other` for the counted ones. */
 const ENGLISH: Record<string, string> = {
+  'liveOverlay.eyebrow.follow': 'New follower',
+  'liveOverlay.eyebrow.subscribe': 'New subscriber',
+  'liveOverlay.eyebrow.subscribedTo': 'Subscribed · {{plan}}',
+  'liveOverlay.eyebrow.gifted_one': 'Gifted a sub',
+  'liveOverlay.eyebrow.gifted_other': 'Gifted {{count}} subs',
+  'liveOverlay.eyebrow.share': 'Shared the stream',
+  'liveOverlay.eyebrow.join': 'Just joined',
   'liveOverlay.giftedSubs_one': '{{name}} gifted a sub!',
   'liveOverlay.giftedSubs_other': '{{name}} gifted {{count}} subs!',
   'liveOverlay.someone': 'Someone',
