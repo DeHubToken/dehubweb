@@ -15,7 +15,7 @@ import { useSurfaceDraft } from '@/hooks/use-surface-draft';
  * ```
  */
 
-import { useState, useMemo, useRef, useEffect, useLayoutEffect, useCallback, createContext, useContext, lazy, Suspense, memo } from 'react';
+import { useState, useMemo, useRef, useEffect, useLayoutEffect, useCallback, createContext, useContext, memo } from 'react';
 import { useDragTabIndicator } from '@/hooks/use-drag-tab-indicator';
 import { commentDraftKey, saveDraft, loadDraft, clearDraft, type CommentDraft } from '@/lib/comment-draft-cache';
 import { useTabIndicator } from '@/hooks/use-tab-indicator';
@@ -42,8 +42,6 @@ import Search from "@/components/ui/cut-icons/search";
 import ThumbsUp from "@/components/ui/cut-icons/like";
 import MessageSquare from "@/components/ui/cut-icons/messages";
 import Mic from "@/components/ui/cut-icons/mic";
-import Play from "@/components/ui/cut-icons/play";
-import Pause from "@/components/ui/cut-icons/pause";
 import Share2 from "@/components/ui/cut-icons/feedshare";
 import Repeat2 from "@/components/ui/cut-icons/repost";
 import ChevronRight from "@/components/ui/cut-icons/next";
@@ -54,7 +52,8 @@ import { useKidsModeLock } from '@/hooks/use-kids-mode';
 import { cn } from '@/lib/utils';
 import { createPortal, flushSync } from 'react-dom';
 import { POST_STAGE_COMPOSE_EVENT } from '@/components/app/post-stage/post-stage-context';
-import { registerOffDocumentMedia } from '@/lib/pause-media-in';
+import { VoiceStripPlayer } from '../audio/VoiceStripPlayer';
+import { LiveMicBars } from '../audio/LiveMicBars';
 import { useFocusComment } from '@/lib/focus-comment';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Input } from '@/components/ui/input';
@@ -84,11 +83,6 @@ import { DehubLinkEmbeds, useDehubLinks } from '@/components/app/cards/DehubLink
 import { FeedLinkPreviews } from '@/components/app/cards/FeedLinkPreviews';
 import { AssetRefCards, useAssetRefsInText } from '@/components/app/cards/AssetRefCards';
 import { AppState } from '@/components/app/AppState';
-/** Lazy for the same reason VideoCard is: the visualizer only appears once a
- *  voice note has been recorded, and it drags ~50 KB of canvas painters. */
-const AudioVisualizer = lazy(() =>
-  import('../audio/AudioVisualizer').then((m) => ({ default: m.AudioVisualizer }))
-);
 import { checkImpersonation } from '@/lib/impersonation';
 import { useAuth } from '@/contexts/AuthContext';
 import { useBookBoost, useSuperpowers } from '@/hooks/use-superpowers';
@@ -375,65 +369,6 @@ interface CommentItemProps {
    * a self-report, so the row does not show a door that only ever fails.
    */
   onReport?: (commentId: string) => void;
-}
-
-interface VoiceNotePlayerProps {
-  voiceNote: VoiceNote;
-}
-
-function VoiceNotePlayer({ voiceNote }: VoiceNotePlayerProps) {
-  const { t } = useI18n();
-  const [isPlaying, setIsPlaying] = useState(false);
-  const audioRef = useRef<HTMLAudioElement | null>(null);
-  const buttonRef = useRef<HTMLButtonElement>(null);
-  /**
-   * The element is never put in the document — the button is the only part of
-   * this player on screen. PersistentPageCache pauses a page's media by walking
-   * its subtree, so it could not see this one at all: a voice note started here
-   * played on through every later navigation. Registering it against the button
-   * is what puts it on that page's books.
-   */
-  const unregisterMediaRef = useRef<(() => void) | null>(null);
-
-  const togglePlay = () => {
-    if (!audioRef.current) {
-      const el = new Audio(voiceNote.url);
-      el.onended = () => setIsPlaying(false);
-      unregisterMediaRef.current = registerOffDocumentMedia(el, () => buttonRef.current);
-      audioRef.current = el;
-    }
-
-    if (isPlaying) {
-      audioRef.current.pause();
-      audioRef.current.currentTime = 0;
-      setIsPlaying(false);
-    } else {
-      audioRef.current.play();
-      setIsPlaying(true);
-    }
-  };
-
-  useEffect(() => {
-    return () => {
-      unregisterMediaRef.current?.();
-      unregisterMediaRef.current = null;
-      if (audioRef.current) {
-        audioRef.current.pause();
-        audioRef.current = null;
-      }
-    };
-  }, []);
-
-  return (
-    <button
-      ref={buttonRef}
-      onClick={togglePlay}
-      className="flex items-center gap-1.5 bg-zinc-700/50 px-2 py-1 rounded-full text-xs text-zinc-300 hover:bg-zinc-700 transition-colors"
-    >
-      {isPlaying ? <Pause className="w-3 h-3" /> : <Play className="w-3 h-3" />}
-      <span>{t("copy.e46818576648", { defaultValue: "{{value1}}s", value1: voiceNote.duration })}</span>
-    </button>
-  );
 }
 
 /**
@@ -735,7 +670,7 @@ const CommentItemBody = memo(function CommentItem({ comment, tokenId, onLike, on
             )}
             {comment.voiceNote && (
               <div className="mt-1">
-                <VoiceNotePlayer voiceNote={comment.voiceNote} />
+                <VoiceStripPlayer src={comment.voiceNote.url} duration={comment.voiceNote.duration} />
               </div>
             )}
           </>
@@ -1156,16 +1091,14 @@ function CommentsSectionForAccount({ tokenId, onClose, initialTab, embedded = fa
   
   // Voice note recording state
   const [isRecording, setIsRecording] = useState(false);
+  const [recordingStream, setRecordingStream] = useState<MediaStream | null>(null);
+  const discardRecordingRef = useRef(false);
   const [recordingTime, setRecordingTime] = useState(0);
   const [voiceNote, setVoiceNote] = useState<VoiceNote | null>(null);
   const mediaRecorderRef = useRef<MediaRecorder | null>(null);
   const chunksRef = useRef<Blob[]>([]);
   const timerRef = useRef<NodeJS.Timeout | null>(null);
   const recordingTimeRef = useRef(0);
-  const playbackAudioRef = useRef<HTMLAudioElement | null>(null);
-  /** The preview's claim on this page — see {@link VoiceNotePlayer} above. */
-  const unregisterPreviewRef = useRef<(() => void) | null>(null);
-  const [isPlayingPreview, setIsPlayingPreview] = useState(false);
   const [commentImage, setCommentImage] = useState<File | null>(null);
   const [commentImagePreview, setCommentImagePreview] = useState<string | null>(null);
   // A GIF is already hosted (GIPHY), so unlike commentImage it needs no
@@ -1626,12 +1559,6 @@ function CommentsSectionForAccount({ tokenId, onClose, initialTab, embedded = fa
         if (recorder.state !== 'inactive') recorder.stop();
         recorder.stream.getTracks().forEach(track => track.stop());
       }
-      unregisterPreviewRef.current?.();
-      unregisterPreviewRef.current = null;
-      if (playbackAudioRef.current) {
-        playbackAudioRef.current.pause();
-        playbackAudioRef.current = null;
-      }
     };
   }, []);
 
@@ -1647,6 +1574,8 @@ function CommentsSectionForAccount({ tokenId, onClose, initialTab, embedded = fa
       const mediaRecorder = createVoiceRecorder(stream);
       mediaRecorderRef.current = mediaRecorder;
       chunksRef.current = [];
+      discardRecordingRef.current = false;
+      setRecordingStream(stream);
 
       mediaRecorder.ondataavailable = (e) => {
         if (e.data.size > 0) {
@@ -1656,11 +1585,12 @@ function CommentsSectionForAccount({ tokenId, onClose, initialTab, embedded = fa
 
       mediaRecorder.onstop = () => {
         stream.getTracks().forEach(track => track.stop());
+        setRecordingStream(null);
         // Stopped by the unmount cleanup: there is no composer left to take
         // the note, and an object URL minted now would only leak.
         if (unmountedRef.current) return;
         const blob = voiceRecordingBlob(chunksRef.current, mediaRecorder.mimeType);
-        if (blob.size > 0) {
+        if (blob.size > 0 && !discardRecordingRef.current) {
           const url = URL.createObjectURL(blob);
           setVoiceNote({ url, duration: recordingTimeRef.current });
         }
@@ -1689,6 +1619,12 @@ function CommentsSectionForAccount({ tokenId, onClose, initialTab, embedded = fa
     }
   };
 
+  /** Bin the take: stop the microphone and keep nothing. */
+  const cancelRecording = () => {
+    discardRecordingRef.current = true;
+    stopRecording();
+  };
+
   const stopRecording = () => {
     if (mediaRecorderRef.current && mediaRecorderRef.current.state !== 'inactive') {
       mediaRecorderRef.current.stop();
@@ -1699,25 +1635,7 @@ function CommentsSectionForAccount({ tokenId, onClose, initialTab, embedded = fa
     }
   };
 
-  /**
-   * Drop the composer's preview player.
-   *
-   * It is built once, on the first play, from whichever note was there at the
-   * time — so kept past that note, the next recording's play button replayed
-   * the old one. Called whenever the note leaves the composer.
-   */
-  const releasePreviewAudio = () => {
-    unregisterPreviewRef.current?.();
-    unregisterPreviewRef.current = null;
-    if (playbackAudioRef.current) {
-      playbackAudioRef.current.pause();
-      playbackAudioRef.current = null;
-    }
-    setIsPlayingPreview(false);
-  };
-
   const removeVoiceNote = () => {
-    releasePreviewAudio();
     if (voiceNote) {
       URL.revokeObjectURL(voiceNote.url);
       setVoiceNote(null);
@@ -1780,29 +1698,6 @@ function CommentsSectionForAccount({ tokenId, onClose, initialTab, embedded = fa
   };
 
   const removeCommentGif = () => setCommentGifUrl(null);
-
-  const togglePreviewPlayback = () => {
-    if (!voiceNote) return;
-
-    if (!playbackAudioRef.current) {
-      const el = new Audio(voiceNote.url);
-      el.onended = () => setIsPlayingPreview(false);
-      // Anchored on the section root rather than a button: the composer's own
-      // preview outlives every row in the list, because an unsent draft keeps
-      // it alive across a tab switch.
-      unregisterPreviewRef.current = registerOffDocumentMedia(el, () => sectionRef.current);
-      playbackAudioRef.current = el;
-    }
-
-    if (isPlayingPreview) {
-      playbackAudioRef.current.pause();
-      playbackAudioRef.current.currentTime = 0;
-      setIsPlayingPreview(false);
-    } else {
-      playbackAudioRef.current.play();
-      setIsPlayingPreview(true);
-    }
-  };
 
   /**
    * Showing the linked thread on its own, with the rest a tap away.
@@ -2325,8 +2220,7 @@ function CommentsSectionForAccount({ tokenId, onClose, initialTab, embedded = fa
       setNewComment.complete(submittedText, '');
       setVoiceNote(current => current === audioNote ? null : current);
       // Not removeVoiceNote: the URL has to outlive this, to be put back if the
-      // post fails. The player built on it goes now, though.
-      releasePreviewAudio();
+      // post fails.
       setCommentImage(current => current === imageFile ? null : current);
       setCommentImagePreview(current => current === commentImagePreview ? null : current);
       setCommentGifUrl(current => current === gifUrl ? null : current);
@@ -3000,28 +2894,18 @@ function CommentsSectionForAccount({ tokenId, onClose, initialTab, embedded = fa
             </div>
           )}
 
-          {/* Voice note preview with visualizer */}
+          {/* Voice note review: hear it back, scrub it, or bin it before posting. */}
           {voiceNote && (
-            <div className="mb-3 w-full md:max-w-[320px] rounded-xl overflow-hidden bg-zinc-800">
-              <Suspense fallback={<div className="w-full h-32 rounded-xl bg-black/40" />}>
-                <AudioVisualizer
-                  audioUrl={voiceNote.url}
-                  isPlaying={isPlayingPreview}
-                  onPlayPause={togglePreviewPlayback}
-                  className="w-full h-32"
-                  showStylePicker={true}
-                />
-              </Suspense>
-              <div className="flex items-center justify-between px-3 py-2 bg-zinc-800">
-                <span className="text-xs text-zinc-400">{t('comments.voiceNoteDuration', { duration: voiceNote.duration })}</span>
-                <button
-                  onClick={removeVoiceNote}
-                  className="flex items-center gap-1.5 text-red-400 hover:text-red-300 transition-colors text-xs"
-                >
-                  <Trash2 className="w-3.5 h-3.5" />
-                  {t('comments.remove')}
-                </button>
-              </div>
+            <div data-voice-review className="mb-3 flex items-center gap-1.5 w-full md:max-w-[380px]">
+              <button
+                type="button"
+                onClick={removeVoiceNote}
+                aria-label={t('comments.remove')}
+                className="shrink-0 w-8 h-8 rounded-[10px] border border-white/10 bg-white/[0.08] text-white/70 hover:text-white flex items-center justify-center transition-colors"
+              >
+                <Trash2 className="w-3.5 h-3.5" />
+              </button>
+              <VoiceStripPlayer src={voiceNote.url} duration={voiceNote.duration} className="flex-1 max-w-none" />
             </div>
           )}
 
@@ -3085,16 +2969,26 @@ function CommentsSectionForAccount({ tokenId, onClose, initialTab, embedded = fa
               onPostAnyway={canPost ? () => { void handlePostComment(); } : undefined}
             />
             {isRecording ? (
-              /* Recording indicator */
-              <div data-comment-recording className="flex-1 flex items-center gap-2 bg-red-500/10 rounded-xl px-4 h-10">
-                <div data-live-pulse className="w-2 h-2 bg-red-500 rounded-full animate-pulse" />
-                <span className="text-sm text-red-400 flex-1">{t("copy.d11f9dace97e", { defaultValue: "{{value1}}s / {{value2}}s", value1: recordingTime, value2: MAX_VOICE_DURATION })}</span>
+              /* Recording: live bars of what you're saying, bin or stop. */
+              <div data-comment-recording className="flex-1 flex items-center gap-2 rounded-xl border border-white/[0.08] bg-white/[0.08] pl-3 pr-1 h-11 min-w-0">
+                <div data-live-pulse className="shrink-0 w-2 h-2 bg-red-500 rounded-full animate-pulse" />
+                <span className="shrink-0 text-[11px] font-mono tabular-nums text-red-400">{`0:${String(recordingTime).padStart(2, '0')}`}</span>
+                <LiveMicBars stream={recordingStream} className="flex-1" />
                 <button
+                  type="button"
+                  onClick={cancelRecording}
+                  aria-label={t('comments.remove')}
+                  className="shrink-0 w-8 h-8 rounded-[10px] border border-white/10 bg-white/[0.08] text-white/70 hover:text-white flex items-center justify-center"
+                >
+                  <Trash2 className="w-3.5 h-3.5" />
+                </button>
+                <button
+                  type="button"
                   onClick={stopRecording}
-                  className="flex items-center gap-1 text-red-400 hover:text-red-300 text-xs font-medium"
+                  aria-label={t('comments.stopRecording')}
+                  className="shrink-0 w-8 h-8 rounded-[10px] bg-white text-black flex items-center justify-center"
                 >
                   <Square className="w-3 h-3 fill-current" />
-                  {t('comments.stopRecording')}
                 </button>
               </div>
             ) : (

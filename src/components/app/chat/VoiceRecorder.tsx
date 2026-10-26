@@ -5,6 +5,7 @@ import { Square } from "lucide-react";
 import Mic from "@/components/ui/cut-icons/mic";
 
 import { toast } from 'sonner';
+import { LiveMicBars } from '@/components/app/audio/LiveMicBars';
 import { createVoiceRecorder, voiceRecordingBlob, VOICE_RECORDING_SECONDS } from '@/lib/voice-recording';
 
 interface VoiceRecorderProps {
@@ -17,6 +18,7 @@ export function VoiceRecorder({ onRecordingComplete, disabled, maxDuration = VOI
   const { t: _copy } = _useCopy();
   const [isRecording, setIsRecording] = useState(false);
   const [recordingDuration, setRecordingDuration] = useState(0);
+  const [liveStream, setLiveStream] = useState<MediaStream | null>(null);
   const mediaRecorderRef = useRef<MediaRecorder | null>(null);
   const chunksRef = useRef<Blob[]>([]);
   const timerRef = useRef<NodeJS.Timeout | null>(null);
@@ -85,6 +87,7 @@ export function VoiceRecorder({ onRecordingComplete, disabled, maxDuration = VOI
         }
         
         setRecordingDuration(0);
+        setLiveStream(null);
         setIsRecording(false);
       };
 
@@ -95,11 +98,13 @@ export function VoiceRecorder({ onRecordingComplete, disabled, maxDuration = VOI
         if (timerRef.current) clearInterval(timerRef.current);
         if (mountedRef.current) {
           setIsRecording(false);
+          setLiveStream(null);
           toast.error(_copy("copy.a754a5c36acf", { defaultValue: "Could not access microphone" }));
         }
       };
       
       mediaRecorder.start(100); // Collect data every 100ms
+      setLiveStream(stream);
       setIsRecording(true);
       
       // Start duration timer
@@ -133,13 +138,14 @@ export function VoiceRecorder({ onRecordingComplete, disabled, maxDuration = VOI
 
   if (isRecording) {
     return (
-      <div className="flex items-center gap-2">
-        <div className="flex items-center gap-2">
+      <div data-voice-recording className="flex items-center gap-2 rounded-xl border border-white/[0.08] bg-white/[0.06] pl-2.5 pr-0.5 h-9">
+        <div className="flex items-center gap-2 shrink-0">
           <div className="w-2 h-2 rounded-full bg-red-500 animate-pulse" />
-          <span className="text-xs text-red-400 font-medium tabular-nums">
+          <span className="text-xs text-red-400 font-mono tabular-nums">
             {formatDuration(recordingDuration)}
           </span>
         </div>
+        <LiveMicBars stream={liveStream} className="w-24 h-[22px]" />
         <Button
           type="button"
           variant="ghost"

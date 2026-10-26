@@ -26,7 +26,6 @@ import Reply from "@/components/ui/cut-icons/reply";
 import ArrowLeft from "@/components/ui/cut-icons/back";
 import Settings from "@/components/ui/cut-icons/settings";
 import Play from "@/components/ui/cut-icons/play";
-import Pause from "@/components/ui/cut-icons/pause";
 import Search from "@/components/ui/cut-icons/search";
 import X from "@/components/ui/cut-icons/close";
 import Gem from "@/components/ui/cut-icons/diamond";
@@ -113,7 +112,7 @@ import { dismissKeyboard } from '@/hooks/use-keyboard-open';
 import { formatUnreadCount } from '@/lib/unread-count';
 import { isDmCallNotice } from '@/lib/dm-call-notice';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
-import { registerOffDocumentMedia } from '@/lib/pause-media-in';
+import { VoiceStripPlayer } from '@/components/app/audio/VoiceStripPlayer';
 import { QUICK_CHAT_REACTIONS } from './reaction-options';
 import { MoreReactionsButton } from './MoreReactionsButton';
 
@@ -145,43 +144,6 @@ function VoiceMessagePlayer({
   isPending: boolean;
 }) {
   const { t: _copy } = _useCopy();
-  const [isPlaying, setIsPlaying] = useState(false);
-  const audioRef = useRef<HTMLAudioElement | null>(null);
-  const buttonRef = useRef<HTMLButtonElement>(null);
-  /**
-   * The element is never put in the document — the button is the only part of
-   * this player on screen, so PersistentPageCache's subtree walk could not see
-   * it and a voice message played here carried on through every later
-   * navigation. The button is what puts it on the page's books.
-   */
-  const unregisterMediaRef = useRef<(() => void) | null>(null);
-
-  const togglePlay = () => {
-    if (!audioUrl) return;
-    if (!audioRef.current) {
-      const el = new Audio(audioUrl);
-      el.onended = () => setIsPlaying(false);
-      unregisterMediaRef.current = registerOffDocumentMedia(el, () => buttonRef.current);
-      audioRef.current = el;
-    }
-    if (isPlaying) {
-      audioRef.current.pause();
-      audioRef.current.currentTime = 0;
-      setIsPlaying(false);
-    } else {
-      audioRef.current.play();
-      setIsPlaying(true);
-    }
-  };
-
-  useEffect(() => () => {
-    unregisterMediaRef.current?.();
-    unregisterMediaRef.current = null;
-    if (audioRef.current) {
-      audioRef.current.pause();
-      audioRef.current = null;
-    }
-  }, []);
 
   if (isPending) {
     return (
@@ -192,20 +154,8 @@ function VoiceMessagePlayer({
     );
   }
 
-  return (
-    <div className="flex items-center gap-2 min-w-[120px]">
-      <button
-        ref={buttonRef}
-        type="button"
-        onClick={togglePlay}
-        className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-zinc-700/50 hover:bg-zinc-600/50 transition-colors text-sm"
-      >
-        {isPlaying ? <Pause className="w-4 h-4" /> : <Play className="w-4 h-4" />}
-        <span>{_copy("copy.e7d42aa1a046", { defaultValue: "🎤 Voice" })}</span>
-        {duration != null && <span className="text-xs text-zinc-400">{_copy("copy.e46818576648", { defaultValue: "{{value1}}s", value1: duration })}</span>}
-      </button>
-    </div>
-  );
+  if (!audioUrl) return null;
+  return <VoiceStripPlayer src={audioUrl} duration={duration ?? undefined} className="min-w-[220px]" />;
 }
 
 /** Bubble size for an attachment of w×h, inside the 280×256 a plain image gets. */
