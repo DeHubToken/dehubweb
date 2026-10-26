@@ -743,6 +743,7 @@ const CommentItemBody = memo(function CommentItem({ comment, tokenId, onLike, on
         {/* Shown but inert on a pending row, so it looks the same as when it
             lands and nothing jumps when the real one replaces it. */}
         <div
+          data-comment-actions
           className={cn("flex items-center justify-between mt-2", isPending && "pointer-events-none")}
           aria-hidden={isPending || undefined}
         >
@@ -2498,6 +2499,12 @@ function CommentsSectionForAccount({ tokenId, onClose, initialTab, embedded = fa
     );
   };
 
+  // Comments laid on a page (not a sheet someone opened) show nothing at all
+  // until there is a comment: no header, no "No comments yet" art. The
+  // composer stays, so Comment still opens it.
+  const hideEmptyInline = !!page && !isLoading && !error && activeTab === 'replies'
+    && !isAssistantReplying && filteredGroupedComments.length === 0;
+
   return (
     <PostCreatorContext.Provider value={postCreator}>
     <motion.div
@@ -2520,7 +2527,7 @@ function CommentsSectionForAccount({ tokenId, onClose, initialTab, embedded = fa
     >
 
       {/* Tab Switcher - Left: Replies, Quotes, Search, Sort | Right: Like, Dislike, Bookmark, Share (desktop/tablet only) */}
-      {stage ? (
+      {hideEmptyInline ? null : stage ? (
         /* Stage header: the count, sort and search. Quotes and reposts open
            from the repost sheet and get a back arrow to the comments. */
         <div data-stage-comments-head className="flex items-center justify-between gap-2 pb-1 pt-3">
@@ -2730,7 +2737,7 @@ function CommentsSectionForAccount({ tokenId, onClose, initialTab, embedded = fa
                 )}
                 {filteredGroupedComments.length > 0 ? (
                   filteredGroupedComments.map(renderThread)
-                ) : (
+                ) : hideEmptyInline ? null : (
                   <AppState icon="posts" title={t('comments.emptyRepliesTitle')} description={t('comments.emptyRepliesBody')} size="section" />
                 )}
               </AnimatePresence>
