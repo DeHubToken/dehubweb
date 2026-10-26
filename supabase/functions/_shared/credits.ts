@@ -36,10 +36,11 @@ export async function debitCredits(address: string, usdMicros: number, key: stri
   }
 }
 
-/** True when the backend holds no live debit for the key any more. */
-export async function refundCredits(key: string): Promise<boolean> {
+export type CreditRefundOutcome = 'restored' | 'canceled' | 'unconfirmed' | 'error';
+/** Only an explicit refunded acknowledgement proves a keyed movement was reversed. */
+export async function refundCreditsOutcome(key: string): Promise<CreditRefundOutcome> {
   const cfg = creditsConfig();
-  if (!cfg) { console.error('[credits] INTERNAL_SERVICE_SECRET missing'); return false; }
+  if (!cfg) { console.error('[credits] INTERNAL_SERVICE_SECRET missing'); return 'error'; }
   try {
     const res = await fetch(`${cfg.base}/api/internal/credits/refund`, {
       method: 'POST',
@@ -47,12 +48,21 @@ export async function refundCredits(key: string): Promise<boolean> {
       body: JSON.stringify({ key }),
       signal: AbortSignal.timeout(15000),
     });
-    // 404: no debit under this key, so nothing was ever taken.
-    if (res.status === 200 || res.status === 404) return true;
+    if (res.status === 200) {
+      const body = await res.json().catch(() => null);
+      return body?.refunded === true ? 'restored' : body?.canceled === true && body?.refunded === false ? 'canceled' : 'unconfirmed';
+    }
+    // A missing/void key does not fence a debit still arriving at the backend.
+    if (res.status === 404) return 'unconfirmed';
     console.error(`[credits] refund HTTP ${res.status}`, key);
-    return false;
+    return 'error';
   } catch (error) {
     console.error('[credits] refund failed', key, String(error));
-    return false;
+    return 'error';
   }
+}
+
+/** Legacy non-journalled callers keep their existing missing-key behavior. */
+export async function refundCredits(key: string): Promise<boolean> {
+  return (await refundCreditsOutcome(key)) !== 'error';
 }

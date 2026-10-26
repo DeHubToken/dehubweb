@@ -886,7 +886,7 @@ serve(async (req) => {
   if (!response.ok) {
     const failure = await response.clone().json().catch(() => ({}));
     if (failure.code === 'SUBMISSION_UNCONFIRMED') {
-      await serviceClient().from('ai_generation_jobs').update({ provider: 'venice', result: { error: failure.error, submissionUnconfirmed: true }, updated_at: new Date().toISOString() }).eq('id', charged.jobId);
+      await serviceClient().from('ai_generation_jobs').update({ provider: 'venice', result: { error: failure.error, submissionUnconfirmed: true }, updated_at: new Date().toISOString() }).eq('id', charged.jobId).eq('status', 'submitting');
     } else await charged.refund();
   }
   return await recordGeneration(charged, response);

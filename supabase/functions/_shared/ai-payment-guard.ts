@@ -21,6 +21,7 @@ import { claimFree, freeEligible, releaseFree } from './ai-free.ts';
 import { quotePriceDhb, type JobKind, type QuoteOptions } from './ai-pricing.ts';
 import { claimDhbPayment } from './dhb-transfer.ts';
 import { debitCredits, refundCredits } from './credits.ts';
+import { refundJournalledGeneration, transitionGeneration } from './generation-terminal.ts';
 
 export interface ChargeRequest extends QuoteOptions {
   /** Server-fetched provider quote. Never populated from a client price field. */
@@ -231,6 +232,10 @@ export async function chargeForJob(req: Request, opts: ChargeRequest): Promise<C
     priceDhb,
     jobId,
     refund: async () => {
+      if (journalled) {
+        try { return await refundJournalledGeneration(jobId, supabase); }
+        catch (error) { console.error('[ai-payment] payment recovery pending', jobId, String(error)); return false; }
+      }
       const { error: refundError } = await supabase.rpc('ai_payment_release', {
         p_tx_hash: txHash,
         p_wallet: guard.wallet,
@@ -238,13 +243,6 @@ export async function chargeForJob(req: Request, opts: ChargeRequest): Promise<C
         p_job_id: jobId,
       });
       const restored = !refundError || String(refundError.message || '').includes('REFUND_ALREADY_APPLIED');
-      if (journalled) {
-        await supabase.from('ai_generation_jobs').update({
-          status: restored ? 'failed' : 'refund_pending',
-          result: { status: 'failed', error: 'Generation could not be completed', paymentRestored: restored },
-          updated_at: new Date().toISOString(),
-        }).eq('id', jobId);
-      }
       // A failed release must not mask the provider error that triggered it.
       if (!restored) {
         console.error(`[ai-payment] release failed for job ${jobId}:`, refundError);
@@ -258,13 +256,14 @@ const JOURNALLED = ['generate-image', 'generate-video', 'generate-3d', 'fal-ai-t
 const UUID_V4 = /^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
 
 /** Pay from the backend credit balance instead of a DHB transfer. */
-async function chargeCredits(
+export async function chargeCredits(
   wallet: string,
   priceDhb: number,
   opts: ChargeRequest,
   body: { clientJobId?: unknown; prompt?: unknown; aspectRatio?: unknown },
+  dependencies: { db?: ReturnType<typeof serviceClient>; debit?: typeof debitCredits } = {},
 ): Promise<ChargeResult> {
-  const supabase = serviceClient();
+  const supabase = dependencies.db || serviceClient();
   const jobId = typeof body.clientJobId === 'string' && UUID_V4.test(body.clientJobId) ? body.clientJobId : crypto.randomUUID();
   const key = `ai:${jobId}`;
   // $0.001 per DHB: 1 DHB = 1000 micro-dollars.
@@ -278,14 +277,6 @@ async function chargeCredits(
       if (job.wallet_address !== wallet || job.payment_source !== 'credits' || job.model !== opts.modelId || job.endpoint !== opts.actionType) return { ok: false, response: jsonResponse({ error: 'Generation id is already in use.' }, 409) };
       return { ok: false, response: jsonResponse(job.result || { error: 'This generation is already being submitted. Check your library before retrying.' }, job.result ? 200 : 409) };
     }
-  }
-
-  const outcome = await debitCredits(wallet, usdMicros, key);
-  if (outcome === 'short') {
-    return { ok: false, response: jsonResponse({ error: 'Not enough credits for this generation.', code: 'CREDITS_SHORT', priceDhb, priceUsd: priceDhb / 1000 }, 402) };
-  }
-  if (outcome !== 'debited') {
-    return { ok: false, response: jsonResponse({ error: 'Could not take payment from credits. Nothing has been charged.' }, 503) };
   }
 
   const journalled = JOURNALLED.includes(opts.actionType);
@@ -302,9 +293,31 @@ async function chargeCredits(
     });
     if (error) {
       console.error('[ai-payment] credits job record failed:', error);
-      await refundCredits(key);
-      return { ok: false, response: jsonResponse({ error: 'Could not take payment from credits. Nothing has been charged.' }, 503) };
+      // Only the unique reservation winner may debit this key. A competing
+      // request must not refund the winner or submit a second provider job.
+      const previous = await supabase.from('ai_generation_jobs').select('*').eq('id', jobId).maybeSingle();
+      if (!previous.error && previous.data?.wallet_address === wallet && previous.data?.credit_debit_key === key
+        && previous.data.model === opts.modelId && previous.data.endpoint === opts.actionType) {
+        return { ok: false, response: jsonResponse(previous.data.result || { error: 'This generation is already being submitted. Check your library before retrying.' }, previous.data.result ? 200 : 409) };
+      }
+      return { ok: false, response: jsonResponse({ error: 'Could not reserve this generation. Check your library before retrying.' }, 503) };
     }
+  }
+
+  const outcome = await (dependencies.debit || debitCredits)(wallet, usdMicros, key);
+  if (outcome !== 'debited') {
+    if (journalled) {
+      try {
+        if (outcome === 'short') {
+          const declined = await supabase.rpc('ai_generation_debit_declined', { p_job_id: jobId });
+          if (declined.error) throw declined.error;
+        } else {
+          await transitionGeneration(jobId, 'failed', { status: 'failed', error: 'Payment confirmation was interrupted. Recovery is pending.', debitUnconfirmed: true }, { expectedStatuses: ['submitting'] }, supabase);
+        }
+      } catch (error) { console.error('[ai-payment] credit confirmation recovery pending', jobId, String(error)); }
+    }
+    if (outcome === 'short') return { ok: false, response: jsonResponse({ error: 'Not enough credits for this generation.', code: 'CREDITS_SHORT', priceDhb, priceUsd: priceDhb / 1000 }, 402) };
+    return { ok: false, response: jsonResponse({ error: 'Payment confirmation was interrupted. Check recovery before paying again.' }, 503) };
   }
 
   return {
@@ -313,14 +326,11 @@ async function chargeCredits(
     priceDhb,
     jobId,
     refund: async () => {
-      const restored = await refundCredits(key);
       if (journalled) {
-        await supabase.from('ai_generation_jobs').update({
-          status: restored ? 'failed' : 'refund_pending',
-          result: { status: 'failed', error: 'Generation could not be completed', paymentRestored: restored },
-          updated_at: new Date().toISOString(),
-        }).eq('id', jobId);
+        try { return await refundJournalledGeneration(jobId, supabase); }
+        catch (error) { console.error('[ai-payment] credits recovery pending', jobId, String(error)); return false; }
       }
+      const restored = await refundCredits(key);
       if (!restored) console.error(`[ai-payment] credits refund failed for job ${jobId}`);
       return restored;
     },
