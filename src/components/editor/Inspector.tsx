@@ -30,6 +30,7 @@ import { applyAutoEnhance } from "@/lib/editor/applyAutoEnhance";
 import { useCaptionsStore } from "@/store/editorCaptionsStore";
 import { CAPTION_STYLES, CAPTION_STYLE_LABELS, type CaptionStyle } from "@/lib/editor/captionLayout";
 import { ShotTools } from "@/components/editor/ShotTools";
+import { ClipFixTools } from "@/components/editor/ClipFixTools";
 import { HighlightTools } from "@/components/editor/HighlightTools";
 import { AudioTools } from "@/components/editor/AudioTools";
 import { TextFitControls } from "@/components/editor/TextFitControls";
@@ -304,6 +305,7 @@ export function Inspector() {
           </div>
         )}
 
+        {mediaClip?.kind === "video" && <ClipFixTools key={`fix-${mediaClip.id}`} clip={mediaClip} />}
         {mediaClip?.kind === "video" && <ShotTools key={mediaClip.id} clip={mediaClip} />}
         {mediaClip?.kind === "video" && <HighlightTools key={`highlights-${mediaClip.id}`} clip={mediaClip} />}
 
