@@ -1,15 +1,12 @@
-import { useTranslation as _useCopy } from 'react-i18next';
-import { useState, useRef, useEffect, useCallback } from 'react';
-import { Clock, ChevronLeft } from "lucide-react";
-import Check from "@/components/ui/cut-icons/check";
-
-import X from "@/components/ui/cut-icons/close";
-import ChevronRight from "@/components/ui/cut-icons/next";
-
-import { motion } from 'framer-motion';
+import { useTranslation } from 'react-i18next';
+import { useEffect, useMemo, useRef, useState } from 'react';
+import { Clock, Minus, Plus, Sparkles } from "lucide-react";
+import X from '@/components/ui/cut-icons/close';
 import { Drawer, DrawerContent, DrawerHeader, DrawerTitle } from '@/components/ui/drawer';
 import { cn } from '@/lib/utils';
-import { format, startOfMonth, endOfMonth, eachDayOfInterval, isSameDay, isBefore, startOfToday } from 'date-fns';
+import { parseWhen } from '@/lib/schedule/parseWhen';
+
+export type ScheduleKind = 'post' | 'live' | 'stage';
 
 interface ScheduleSheetProps {
   isOpen: boolean;
@@ -18,394 +15,240 @@ interface ScheduleSheetProps {
   onSchedule: (date: Date | null) => void;
   title?: string;
   minimumMinutes?: number;
+  /** Words on the picks and the main button. Defaults to a post. */
+  kind?: ScheduleKind;
 }
 
-// Convert 24h to 12h format
-const to12Hour = (hour24: number): { hour12: number; period: 'AM' | 'PM' } => {
-  const period: 'AM' | 'PM' = hour24 >= 12 ? 'PM' : 'AM';
-  const hour12 = hour24 % 12 || 12;
-  return { hour12, period };
+const STEP = 15;
+const DAYS_SHOWN = 14;
+
+const startOfDay = (d: Date) => new Date(d.getFullYear(), d.getMonth(), d.getDate());
+const addDays = (d: Date, n: number) => new Date(d.getFullYear(), d.getMonth(), d.getDate() + n);
+const atMinutes = (day: Date, minutes: number) => new Date(day.getFullYear(), day.getMonth(), day.getDate(), Math.floor(minutes / 60), minutes % 60);
+const sameDay = (a: Date, b: Date) => a.getFullYear() === b.getFullYear() && a.getMonth() === b.getMonth() && a.getDate() === b.getDate();
+/** The next quarter hour after `minAhead` minutes from now. */
+const firstSlot = (minAhead: number) => {
+  const d = new Date(Date.now() + Math.max(minAhead, 0) * 60_000 + 60_000);
+  const m = Math.ceil((d.getHours() * 60 + d.getMinutes()) / STEP) * STEP;
+  return atMinutes(startOfDay(d), m);
 };
 
-// Convert 12h to 24h format
-const to24Hour = (hour12: number, period: 'AM' | 'PM') => {
-  if (period === 'AM') {
-    return hour12 === 12 ? 0 : hour12;
-  }
-  return hour12 === 12 ? 12 : hour12 + 12;
-};
-
-// iOS-style wheel column component
-interface WheelColumnProps {
-  items: (string | number)[];
-  selectedIndex: number;
-  onSelect: (index: number) => void;
-  itemHeight?: number;
-  visibleItems?: number;
-}
-
-function WheelColumn({ items, selectedIndex, onSelect, itemHeight = 40, visibleItems = 5 }: WheelColumnProps) {
-  const containerRef = useRef<HTMLDivElement>(null);
-  const [isScrolling, setIsScrolling] = useState(false);
-  const scrollTimeoutRef = useRef<NodeJS.Timeout | null>(null);
-
-  const centerOffset = Math.floor(visibleItems / 2);
-  const containerHeight = itemHeight * visibleItems;
-
-  // Scroll to selected item on mount and when selection changes
-  useEffect(() => {
-    if (containerRef.current && !isScrolling) {
-      containerRef.current.scrollTop = selectedIndex * itemHeight;
-    }
-  }, [selectedIndex, itemHeight, isScrolling]);
-
-  const handleScroll = useCallback(() => {
-    if (!containerRef.current) return;
-    
-    setIsScrolling(true);
-    
-    if (scrollTimeoutRef.current) {
-      clearTimeout(scrollTimeoutRef.current);
-    }
-
-    scrollTimeoutRef.current = setTimeout(() => {
-      if (!containerRef.current) return;
-      
-      const scrollTop = containerRef.current.scrollTop;
-      const newIndex = Math.round(scrollTop / itemHeight);
-      const clampedIndex = Math.max(0, Math.min(newIndex, items.length - 1));
-      
-      // Snap to nearest item
-      containerRef.current.scrollTo({
-        top: clampedIndex * itemHeight,
-        behavior: 'smooth'
-      });
-      
-      if (clampedIndex !== selectedIndex) {
-        onSelect(clampedIndex);
-      }
-      
-      setIsScrolling(false);
-    }, 100);
-  }, [itemHeight, items.length, selectedIndex, onSelect]);
-
-  return (
-    <div 
-      className="relative overflow-hidden pointer-events-auto"
-      style={{ height: containerHeight }}
-      onPointerDown={(e) => e.stopPropagation()}
-      onTouchStart={(e) => e.stopPropagation()}
-      onWheel={(e) => e.stopPropagation()}
-    >
-      {/* Selection highlight bar - subtle transparent */}
-      <div 
-        className="absolute left-0 right-0 pointer-events-none z-10 bg-white/[0.08] rounded-xl border border-white/10"
-        style={{ 
-          top: centerOffset * itemHeight,
-          height: itemHeight,
-        }}
-      />
-      
-      {/* Scrollable area */}
-      <div
-        ref={containerRef}
-        className="h-full overflow-y-auto scrollbar-hide snap-y snap-mandatory touch-pan-y"
-        style={{ 
-          scrollbarWidth: 'none',
-          msOverflowStyle: 'none',
-          paddingTop: centerOffset * itemHeight,
-          paddingBottom: centerOffset * itemHeight,
-          WebkitOverflowScrolling: 'touch',
-        }}
-        onScroll={handleScroll}
-      >
-        {items.map((item, index) => {
-          const distance = Math.abs(index - selectedIndex);
-          // Smooth opacity falloff based on distance
-          const opacity = distance === 0 ? 1 : distance === 1 ? 0.45 : distance === 2 ? 0.25 : 0.12;
-          const scale = distance === 0 ? 1 : distance === 1 ? 0.92 : 0.85;
-          
-          return (
-            <div
-              key={index}
-              className="flex items-center justify-center snap-center cursor-pointer transition-all duration-200 pointer-events-auto"
-              style={{ 
-                height: itemHeight,
-                opacity,
-                transform: `scale(${scale})`,
-              }}
-              onClick={(e) => {
-                e.stopPropagation();
-                onSelect(index);
-                if (containerRef.current) {
-                  containerRef.current.scrollTo({
-                    top: index * itemHeight,
-                    behavior: 'smooth'
-                  });
-                }
-              }}
-            >
-              <span className="text-xl font-medium text-white">
-                {item}
-              </span>
-            </div>
-          );
-        })}
-      </div>
-    </div>
-  );
-}
-
-// Wheel Time Picker component
-interface WheelTimePickerProps {
-  hour: number;
-  minute: number;
-  period: 'AM' | 'PM';
-  onHourChange: (hour: number) => void;
-  onMinuteChange: (minute: number) => void;
-  onPeriodChange: (period: 'AM' | 'PM') => void;
-}
-
-function WheelTimePicker({ 
-  hour, 
-  minute, 
-  period, 
-  onHourChange, 
-  onMinuteChange, 
-  onPeriodChange 
-}: WheelTimePickerProps) {
-  const hours = Array.from({ length: 12 }, (_, i) => i + 1);
-  const minutes = Array.from({ length: 60 }, (_, i) => i);
-  const periods: ('AM' | 'PM')[] = ['AM', 'PM'];
-
-  const hourIndex = hours.indexOf(hour);
-  const minuteIndex = minute;
-  const periodIndex = periods.indexOf(period);
-
-  return (
-    <div className="flex items-center justify-center gap-2 px-4 py-2">
-      {/* Hour wheel */}
-      <div className="flex-1 max-w-[80px]">
-        <WheelColumn
-          items={hours}
-          selectedIndex={hourIndex >= 0 ? hourIndex : 0}
-          onSelect={(index) => onHourChange(hours[index])}
-        />
-      </div>
-      
-      {/* Separator */}
-      <span className="text-2xl font-bold text-white">:</span>
-      
-      {/* Minute wheel */}
-      <div className="flex-1 max-w-[80px]">
-        <WheelColumn
-          items={minutes.map(m => String(m).padStart(2, '0'))}
-          selectedIndex={minuteIndex}
-          onSelect={(index) => onMinuteChange(index)}
-        />
-      </div>
-      
-      {/* AM/PM wheel */}
-      <div className="flex-1 max-w-[80px]">
-        <WheelColumn
-          items={periods}
-          selectedIndex={periodIndex}
-          onSelect={(index) => onPeriodChange(periods[index])}
-          visibleItems={3}
-        />
-      </div>
-    </div>
-  );
-}
-
-
-export function ScheduleSheet({ isOpen, onClose, scheduledDate, onSchedule, title: titleProp, minimumMinutes = 0 }: ScheduleSheetProps) {
-  const { t: _copy } = _useCopy();
-  const title = titleProp ?? _copy("copy.765608de66a0", { defaultValue: "Schedule Post" });
-  const today = startOfToday();
-  const [currentMonth, setCurrentMonth] = useState(scheduledDate || today);
-  const [selectedDate, setSelectedDate] = useState<Date | null>(scheduledDate);
-  
-  const initialHour = scheduledDate?.getHours() ?? 12;
-  const { hour12: initHour12, period: initPeriod } = to12Hour(initialHour);
-  
-  const [selectedHour12, setSelectedHour12] = useState(initHour12);
-  const [selectedPeriod, setSelectedPeriod] = useState<'AM' | 'PM'>(initPeriod);
-  const [selectedMinute, setSelectedMinute] = useState(
-    scheduledDate ? Math.floor(scheduledDate.getMinutes() / 5) * 5 : 0
-  );
+/**
+ * The "When?" sheet for posts, Lives and Stages: type a time, tap a pick, or
+ * choose a day from the strip and step the time. Kit chips and buttons, so
+ * every theme styles it like the rest of the app.
+ */
+export function ScheduleSheet({ isOpen, onClose, scheduledDate, onSchedule, title: titleProp, minimumMinutes = 0, kind = 'post' }: ScheduleSheetProps) {
+  const { t, i18n } = useTranslation();
+  const title = titleProp ?? t('whenSheet.title', { defaultValue: 'When?' });
+  const locale = i18n.language || undefined;
+  const [day, setDay] = useState<Date>(() => startOfDay(new Date()));
+  const [minutes, setMinutes] = useState(19 * 60 + 30);
+  const [typed, setTyped] = useState('');
+  const stripRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     if (!isOpen) return;
-    const when = scheduledDate ?? new Date(Date.now() + 60 * 60 * 1000);
-    setCurrentMonth(when);
-    setSelectedDate(scheduledDate);
-    const { hour12, period } = to12Hour(when.getHours());
-    setSelectedHour12(hour12);
-    setSelectedPeriod(period);
-    setSelectedMinute(Math.floor(when.getMinutes() / 5) * 5);
-  }, [isOpen, scheduledDate]);
+    const when = scheduledDate ?? firstSlot(Math.max(minimumMinutes, 60));
+    setDay(startOfDay(when));
+    setMinutes(when.getHours() * 60 + when.getMinutes());
+    setTyped('');
+  }, [isOpen, scheduledDate, minimumMinutes]);
 
-  const selectedAt = selectedDate ? new Date(selectedDate) : null;
-  selectedAt?.setHours(to24Hour(selectedHour12, selectedPeriod), selectedMinute, 0, 0);
-  const validTime = !!selectedAt && selectedAt.getTime() > Date.now() + minimumMinutes * 60 * 1000;
+  const earliest = Date.now() + minimumMinutes * 60_000;
+  const selectedAt = atMinutes(day, minutes);
+  const validTime = selectedAt.getTime() > earliest;
 
-  const monthStart = startOfMonth(currentMonth);
-  const monthEnd = endOfMonth(currentMonth);
-  const daysInMonth = eachDayOfInterval({ start: monthStart, end: monthEnd });
-  
-  // Pad start of month
-  const startDay = monthStart.getDay();
-  const paddedDays = Array(startDay).fill(null).concat(daysInMonth);
+  const parsed = useMemo(() => (typed.trim() ? parseWhen(typed) : null), [typed]);
+  useEffect(() => {
+    if (!parsed) return;
+    setDay(startOfDay(parsed.at));
+    if (parsed.hasTime) setMinutes(parsed.at.getHours() * 60 + parsed.at.getMinutes());
+  }, [parsed]);
 
-  const handlePrevMonth = () => {
-    setCurrentMonth(prev => new Date(prev.getFullYear(), prev.getMonth() - 1, 1));
+  const today = startOfDay(new Date());
+  const days = useMemo(() => Array.from({ length: DAYS_SHOWN }, (_, i) => addDays(today, i)), [today.getTime()]);
+  const dayIndex = days.findIndex(d => sameDay(d, day));
+  useEffect(() => {
+    if (!isOpen || dayIndex < 0) return;
+    stripRef.current?.querySelector<HTMLElement>(`[data-day-index="${dayIndex}"]`)?.scrollIntoView({ block: 'nearest', inline: 'center', behavior: 'smooth' });
+  }, [isOpen, dayIndex]);
+
+  const picks = useMemo(() => {
+    const now = new Date();
+    const nextWeekday = (wd: number) => addDays(today, ((wd - now.getDay() + 7) % 7) || 7);
+    const tonight = atMinutes(today, 20 * 60);
+    const prime = (() => {
+      const d = atMinutes(today, 19 * 60 + 30);
+      return d.getTime() > earliest ? d : atMinutes(addDays(today, 1), 19 * 60 + 30);
+    })();
+    const friday = now.getDay() === 5 ? atMinutes(addDays(today, 1), 19 * 60) : atMinutes(nextWeekday(5), 19 * 60);
+    const list = [
+      tonight.getTime() > earliest
+        ? { id: 'tonight', label: t('whenSheet.tonight', { defaultValue: 'Tonight' }), at: tonight }
+        : { id: 'soon', label: t('whenSheet.inAnHour', { defaultValue: 'In an hour' }), at: firstSlot(Math.max(minimumMinutes, 60)) },
+      { id: 'tomorrow', label: t('whenSheet.tomorrow', { defaultValue: 'Tomorrow' }), at: atMinutes(addDays(today, 1), 9 * 60) },
+      { id: 'weekend', label: friday.toLocaleDateString(locale, { weekday: 'long' }), at: friday },
+      { id: 'prime', label: t('whenSheet.primeTime', { defaultValue: 'Prime time' }), at: prime, prime: true },
+    ];
+    return list;
+  }, [today.getTime(), earliest, locale, minimumMinutes, t]);
+
+  const timeLabel = (d: Date) => d.toLocaleTimeString(locale, { hour: 'numeric', minute: '2-digit' });
+  const dayLabel = (d: Date) => (sameDay(d, today)
+    ? t('whenSheet.today', { defaultValue: 'Today' })
+    : sameDay(d, addDays(today, 1))
+      ? t('whenSheet.tomorrow', { defaultValue: 'Tomorrow' })
+      : d.toLocaleDateString(locale, { weekday: 'short', day: 'numeric', month: 'short' }));
+  const zone = (() => {
+    try {
+      return new Intl.DateTimeFormat(locale, { timeZoneName: 'short' }).formatToParts(new Date()).find(p => p.type === 'timeZoneName')?.value ?? '';
+    } catch { return ''; }
+  })();
+
+  const step = (delta: number) => {
+    const next = atMinutes(day, minutes + delta);
+    setDay(startOfDay(next));
+    setMinutes(next.getHours() * 60 + next.getMinutes());
+    setTyped('');
   };
-
-  const handleNextMonth = () => {
-    setCurrentMonth(prev => new Date(prev.getFullYear(), prev.getMonth() + 1, 1));
+  const choose = (at: Date) => {
+    setDay(startOfDay(at));
+    setMinutes(at.getHours() * 60 + at.getMinutes());
+    setTyped('');
   };
 
   const handleConfirm = () => {
     if (!validTime) return;
-    if (selectedDate) {
-      const date = new Date(selectedDate);
-      const hour24 = to24Hour(selectedHour12, selectedPeriod);
-      date.setHours(hour24, selectedMinute, 0, 0);
-      onSchedule(date);
-    }
+    onSchedule(selectedAt);
     onClose();
   };
-
   const handleClear = () => {
     onSchedule(null);
-    setSelectedDate(null);
     onClose();
   };
 
-  // Format time for display
-  const formatTimeDisplay = () => {
-    const hourStr = String(selectedHour12);
-    const minStr = String(selectedMinute).padStart(2, '0');
-    return `${hourStr}:${minStr} ${selectedPeriod}`;
-  };
+  const confirmText = t('whenSheet.scheduleFor', { defaultValue: 'Schedule for {{when}}', when: `${dayLabel(day)}, ${timeLabel(selectedAt)}` });
+  const kindTip = kind === 'live'
+    ? t('whenSheet.liveTip', { defaultValue: 'Your followers can set a reminder. You start the Live yourself when it is time.' })
+    : kind === 'stage'
+      ? t('whenSheet.stageTip', { defaultValue: 'It goes on the Upcoming shelf straight away, so people can tap Remind me.' })
+      : null;
 
   return (
     <Drawer open={isOpen} onOpenChange={(open) => !open && onClose()}>
-      <DrawerContent
-        glass
-        hideHandle
-        column
-        scrollable
-        className="max-h-[90dvh] px-4 pb-2"
-      >
-        <DrawerHeader className="relative pb-4 border-b border-white/10 px-0">
+      <DrawerContent glass hideHandle column scrollable className="max-h-[92dvh] px-4 pb-2" data-when-sheet>
+        <DrawerHeader className="relative mx-auto w-full max-w-[440px] px-0 pb-3">
           <div className="flex items-center justify-between">
-            <button onClick={onClose} className="p-2 -ml-2 hover:bg-white/10 rounded-xl transition-colors">
-              <X className="w-5 h-5 text-zinc-400" />
+            <button type="button" onClick={onClose} aria-label={t('common.close', { defaultValue: 'Close' })} className="-ml-2 rounded-xl p-2 transition-colors hover:bg-white/10">
+              <X className="h-5 w-5 text-white/70" />
             </button>
-            <DrawerTitle className="text-white font-semibold absolute left-1/2 -translate-x-1/2">
-              {title}
-            </DrawerTitle>
-            <button
-              onClick={handleConfirm}
-              disabled={!validTime}
-              className={cn(
-                "flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-medium transition-all",
-                validTime
-                  ? "bg-white/10 text-white border border-white/20 hover:bg-white/20"
-                  : "bg-white/5 text-zinc-500 border border-white/10 cursor-not-allowed"
-              )}
-            >
-              <Check className="w-4 h-4" />{_copy("copy.eebdd24a77d9", { defaultValue: "Confirm" })}</button>
+            <DrawerTitle className="absolute left-1/2 -translate-x-1/2 font-semibold text-white">{title}</DrawerTitle>
+            <span className="w-9" />
           </div>
         </DrawerHeader>
 
-        <div className="relative pt-3 space-y-2 sm:space-y-2">
-          {minimumMinutes > 0 && <p className="text-center text-xs text-white/60">{_copy("copy.b588ce2506cf", { defaultValue: "Choose a time at least " })}{minimumMinutes}{_copy("copy.b94d761b18dd", { defaultValue: " minutes from now." })}</p>}
-          {selectedDate && !validTime && <p role="alert" className="text-center text-xs text-amber-400">{_copy("copy.41d41d6474c0", { defaultValue: "Choose a future time" })}{minimumMinutes > 0 ? _copy("copy.62f3a3b868d9", { defaultValue: " at least {{value1}} minutes from now", value1: minimumMinutes }) : ''}.</p>}
-          {/* Calendar Header */}
-          <div className="flex items-center justify-between px-2">
-            <button
-              onClick={handlePrevMonth}
-              className="p-1.5 hover:bg-white/10 rounded-xl transition-colors"
-            >
-              <ChevronLeft className="w-4 h-4 text-white" />
-            </button>
-            <h3 className="text-white font-semibold text-sm">
-              {format(currentMonth, 'MMMM yyyy')}
-            </h3>
-            <button
-              onClick={handleNextMonth}
-              className="p-1.5 hover:bg-white/10 rounded-xl transition-colors"
-            >
-              <ChevronRight className="w-4 h-4 text-white" />
-            </button>
-          </div>
+        <div className="mx-auto w-full max-w-[440px] space-y-4">
+          <label className="!flex !h-11 w-full !justify-start !gap-2 !rounded-[10px] !px-3 text-white" data-kit-chip style={{ cursor: 'text' }}>
+            <Clock className="h-4 w-4 shrink-0 opacity-60" />
+            <input
+              value={typed}
+              onChange={(e) => setTyped(e.target.value)}
+              onKeyDown={(e) => { if (e.key === 'Enter' && parsed) { e.preventDefault(); (e.target as HTMLInputElement).blur(); } }}
+              placeholder={t('whenSheet.typePlaceholder', { defaultValue: 'Type a time, like "fri 8pm" or "in 2 hours"' })}
+              aria-label={t('whenSheet.typeLabel', { defaultValue: 'Type a time' })}
+              className="min-w-0 flex-1 bg-transparent text-sm font-medium text-inherit outline-none placeholder:text-white/45"
+              enterKeyHint="done"
+              autoComplete="off"
+            />
+          </label>
+          {parsed && (
+            <p className="-mt-2 text-xs font-semibold text-white">{dayLabel(parsed.at)}{parsed.hasTime ? `, ${timeLabel(parsed.at)}` : ''}</p>
+          )}
+          {typed.trim() && !parsed && (
+            <p className="-mt-2 text-xs text-white/60">{t('whenSheet.typeHelp', { defaultValue: 'Try "tonight", "tomorrow 9am", "sat noon" or "30 oct 7pm".' })}</p>
+          )}
 
-          {/* Day labels */}
-          <div className="grid grid-cols-7 gap-0.5 px-2">
-            {['Su', 'Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa'].map(day => (
-              <div key={day} className="text-center text-xs text-zinc-500 py-1">
-                {day}
-              </div>
-            ))}
-          </div>
-
-          {/* Calendar Grid */}
-          <div className="grid grid-cols-7 gap-0.5 px-2">
-            {paddedDays.map((day, i) => {
-              if (!day) return <div key={`empty-${i}`} />;
-              
-              const isPast = isBefore(day, today);
-              const isSelected = selectedDate && isSameDay(day, selectedDate);
-              const isToday = isSameDay(day, today);
-              
+          <div className="grid grid-cols-2 gap-2">
+            {picks.map(pick => {
+              const tooSoon = pick.at.getTime() <= earliest;
+              const active = sameDay(pick.at, day) && pick.at.getHours() * 60 + pick.at.getMinutes() === minutes;
               return (
-                <motion.button
-                  key={day.toISOString()}
-                  onClick={() => !isPast && setSelectedDate(day)}
-                  disabled={isPast}
-                  whileTap={{ scale: 0.95 }}
-                  className={cn(
-                    "aspect-square flex items-center justify-center rounded-full text-xs font-medium transition-all",
-                    isPast && "text-zinc-600 cursor-not-allowed",
-                    !isPast && !isSelected && "text-white hover:bg-white/10",
-                    isToday && !isSelected && "ring-1 ring-white/30",
-                    isSelected && "bg-white text-black"
-                  )}
+                <button
+                  key={pick.id}
+                  type="button"
+                  data-kit-chip
+                  data-active={active ? 'true' : undefined}
+                  disabled={tooSoon}
+                  onClick={() => choose(pick.at)}
+                  className="!h-auto !flex-col !items-start !justify-center !gap-0.5 !rounded-[10px] !px-3 !py-2.5 text-left disabled:opacity-40"
                 >
-                  {format(day, 'd')}
-                </motion.button>
+                  <span className="flex items-center gap-1 text-sm font-semibold">{pick.prime && <Sparkles className="h-3.5 w-3.5" />}{pick.label}</span>
+                  <span className="text-xs font-medium opacity-70">{pick.id === 'weekend' ? `${pick.at.toLocaleDateString(locale, { day: 'numeric', month: 'short' })} · ${timeLabel(pick.at)}` : pick.id === 'prime' ? `${dayLabel(pick.at)} · ${timeLabel(pick.at)}` : timeLabel(pick.at)}</span>
+                </button>
               );
             })}
           </div>
 
-          {/* iOS-style Time Wheel Picker */}
-          <div className="border-t border-white/10 pt-2">
-            <WheelTimePicker
-              hour={selectedHour12}
-              minute={selectedMinute}
-              period={selectedPeriod}
-              onHourChange={setSelectedHour12}
-              onMinuteChange={setSelectedMinute}
-              onPeriodChange={setSelectedPeriod}
-            />
+          <div>
+            <p className="mb-2 text-[11px] font-semibold uppercase tracking-[0.12em] text-white/50">{t('whenSheet.orPickDay', { defaultValue: 'Or pick a day' })}</p>
+            <div ref={stripRef} role="tablist" className="scrollbar-hide -mx-1 flex gap-1 overflow-x-auto px-1 pb-2">
+              {days.map((d, i) => {
+                const active = i === dayIndex;
+                return (
+                  <button
+                    key={d.getTime()}
+                    type="button"
+                    role="tab"
+                    aria-selected={active}
+                    data-day-index={i}
+                    onClick={() => { setDay(d); setTyped(''); }}
+                    className={cn('relative flex w-12 shrink-0 flex-col items-center gap-0.5 py-1.5 text-white transition-opacity', active ? 'opacity-100' : 'opacity-55 hover:opacity-80')}
+                  >
+                    <span className="text-[11px] font-medium">{i === 0 ? t('whenSheet.today', { defaultValue: 'Today' }) : d.toLocaleDateString(locale, { weekday: 'short' })}</span>
+                    <span className={cn('text-lg leading-none tabular-nums', active ? 'font-extrabold' : 'font-semibold')}>{d.getDate()}</span>
+                    {active && (
+                      <span aria-hidden className="absolute bottom-0 left-1/2 h-[3px] w-5 -translate-x-1/2 rounded-[3px]" style={{ background: 'currentColor', boxShadow: '0 0 10px currentColor, 0 0 2px currentColor' }} />
+                    )}
+                  </button>
+                );
+              })}
+            </div>
           </div>
 
+          <div className="flex items-center justify-center gap-5 text-white">
+            <button type="button" data-kit-button="quiet" onClick={() => step(-STEP)} aria-label={t('whenSheet.earlier', { defaultValue: '15 minutes earlier' })} className="!h-10 !w-10 !rounded-full !p-0">
+              <Minus className="h-4 w-4" />
+            </button>
+            <span className="min-w-[7.5rem] text-center text-[28px] font-extrabold tabular-nums tracking-tight">{timeLabel(selectedAt)}</span>
+            <button type="button" data-kit-button="quiet" onClick={() => step(STEP)} aria-label={t('whenSheet.later', { defaultValue: '15 minutes later' })} className="!h-10 !w-10 !rounded-full !p-0">
+              <Plus className="h-4 w-4" />
+            </button>
+          </div>
 
-          {/* Clear button */}
-          {scheduledDate && (
-            <button
-              onClick={(e) => {
-                e.stopPropagation();
-                handleClear();
-              }}
-              className="w-full py-3 text-red-400 hover:text-red-300 text-sm font-medium transition-colors pointer-events-auto"
-            >{_copy("copy.990f1648e771", { defaultValue: "Remove Schedule" })}</button>
-          )}
+          <div className="space-y-1 text-center text-xs text-white/60">
+            {!validTime ? (
+              <p role="alert" className="text-amber-400">
+                {minimumMinutes > 0
+                  ? t('whenSheet.tooSoonMin', { defaultValue: 'Pick a time at least {{count}} minutes from now.', count: minimumMinutes })
+                  : t('whenSheet.tooSoon', { defaultValue: 'Pick a time in the future.' })}
+              </p>
+            ) : (
+              <p>{t('whenSheet.zone', { defaultValue: 'Your time ({{zone}}). Everyone else sees it in their own time.', zone })}</p>
+            )}
+            {kindTip && <p>{kindTip}</p>}
+          </div>
 
-          {/* Safe area padding for notched devices */}
+          <div className="flex flex-col gap-2 pb-1">
+            <button type="button" data-kit-button="primary" onClick={handleConfirm} disabled={!validTime} className="w-full">
+              {confirmText}
+            </button>
+            {scheduledDate && (
+              <button type="button" data-kit-button="quiet" onClick={handleClear} className="w-full">
+                {t('whenSheet.remove', { defaultValue: 'Remove schedule' })}
+              </button>
+            )}
+          </div>
           <div className="h-[env(safe-area-inset-bottom,0px)]" />
         </div>
       </DrawerContent>
