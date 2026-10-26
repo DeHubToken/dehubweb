@@ -41,7 +41,8 @@ import { useScrollFadeMask } from '@/components/app/feeds/useScrollFadeMask';
 const ShortsViewer = lazy(() =>
   import('@/components/app/cards/ShortsViewer').then(m => ({ default: m.ShortsViewer })),
 );
-import { useDeHubFeed } from '@/hooks/use-dehub-feed';
+import { useDeHubFeed, useDeHubLive, mapApiLiveStreamToLocal } from '@/hooks/use-dehub-feed';
+import { LiveShortTile } from '@/components/app/feeds/LiveShortTile';
 import { useUnifiedFeed } from '@/hooks/use-unified-feed';
 import { getCategories, type DeHubCategory, type DeHubNFT } from '@/lib/api/dehub';
 import { useAuth } from '@/contexts/AuthContext';
@@ -442,6 +443,24 @@ export function ShortsFeed({ showFilters = false, isRefreshing = false, refreshK
     return interleaveShorts(videos, photos);
   }, [apiData, unifiedData, isFollowingMode, photosFeed.data]);
 
+  // Dual-format live: streams on air right now lead the grid in their vertical
+  // view. Same query (and cache) as the Live tab. Gated or mature streams stay
+  // off, as pay-per-view does for shorts.
+  const liveQuery = useDeHubLive();
+  const liveShorts = useMemo(() => {
+    const streams = liveQuery.data?.pages.flatMap((page) => page.data || []) || [];
+    return streams
+      .map(mapApiLiveStreamToLocal)
+      .filter((stream) =>
+        stream.isLive &&
+        !stream.isPPV &&
+        !stream.isLocked &&
+        !stream.subscriberPlans?.length &&
+        (!stream.contentRating || stream.contentRating === 'safe') &&
+        !!(stream.playbackUrl || stream.playbackUrls?.length),
+      )
+      .slice(0, 6);
+  }, [liveQuery.data]);
   // Apply date filter on raw NFTs, then sort and map to ShortVideo array
   const allShorts = useMemo(() => {
     const dateFiltered = isFollowingMode ? allRawNFTs : filterByDate(allRawNFTs, selectedUploadDate.value);
@@ -605,6 +624,9 @@ export function ShortsFeed({ showFilters = false, isRefreshing = false, refreshK
           <div key={`${selectedSort.value}-${selectedUploadDate.value}`}>
             {/* Shorts Grid - TikTok Style */}
             <div className={cn("grid gap-2 sm:gap-3", isCollapsed ? "grid-cols-2 lg:grid-cols-3" : "grid-cols-2")}>
+              {!hasActiveFilters && liveShorts.map((stream) => (
+                <LiveShortTile key={`live-${stream.id}`} stream={stream} disabled={viewerOpen} />
+              ))}
               {shorts.map((short, index) => (
                 <div
                   key={short.id}
