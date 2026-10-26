@@ -9,6 +9,7 @@ import { recoverFromChunkError } from "./lib/lazy-with-retry";
 import { registerServiceWorker } from "./lib/register-sw";
 import { installScrollFreezeWatchdog } from "./lib/scroll-freeze-watchdog";
 import { installTapPendingLogo } from "./lib/tap-pending-logo";
+import { installScrollStopTap } from "./lib/scroll-stop-tap";
 import { installSupabaseInterceptor } from "./lib/supabase-interceptor";
 import { installImageOriginFallback } from "./lib/image-origin-fallback";
 import { installWalletSessionFetch } from "./lib/wallet-session";
@@ -128,6 +129,10 @@ registerServiceWorker();
 // stuck overlay — report what caused it and put it back on desktop and touch.
 // See lib/scroll-freeze-watchdog.ts.
 installScrollFreezeWatchdog();
+
+// A touch that stops a gliding feed only stops it, like a native app.
+// See lib/scroll-stop-tap.ts.
+installScrollStopTap();
 
 // Press a profile, post, link or Back and the logo is ready before the page
 // builds. See lib/tap-pending-logo.ts.
