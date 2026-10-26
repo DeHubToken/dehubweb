@@ -1,3 +1,4 @@
+import { BoostedPostContext } from '@/components/app/cards/boosted-post';
 import { WindowedFeedItem } from '@/components/app/feeds/WindowedFeedItem';
 import { RetainedPostSurface } from '@/components/app/feeds/RetainedPostSurface';
 import { useTranslation as _useCopy } from 'react-i18next';
@@ -1590,13 +1591,9 @@ export function HomeFeed({ active = true, shuffleKey, isRefreshing, showFilters 
       'data-cinematic-first': firstFeedPost ? '' : undefined,
       className: 'rounded-2xl border border-white/[0.12] bg-white/[0.03] p-3',
     };
-    const boostLabel = index >= 0 && queuedBoostIds.includes(String((item.data as any)?.id)) ? (
-      <button type="button" onClick={() => navigate('/app/superpowers')}
-        className="flex items-center gap-1.5 pb-1.5 rounded-sm text-[11px] uppercase tracking-wider text-muted-foreground transition-colors hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring">
-        <ThemedIcon icon="superpowers" alt="" className="w-4 h-4 object-contain opacity-70" />
-        <span>{t('superpowers.boostedLabel')}</span>
-      </button>
-    ) : null;
+    // A boosted card marks itself (lit corner bolt, "Boosted" in the time row).
+    const boosted = (section === 'pinned' && isBoosted)
+      || (index >= 0 && queuedBoostIds.includes(String((item.data as any)?.id)));
     return (
       <WindowedFeedItem
         key={key}
@@ -1604,9 +1601,11 @@ export function HomeFeed({ active = true, shuffleKey, isRefreshing, showFilters 
         eager={index < 3} estimatedHeight={parseInt(intrinsicH, 10)}
         vanishOnDislike={item.type === 'ad' ? undefined : (item.data as any)?.id}
       >
-        {retained
-          ? <RetainedPostSurface id={String(item.data.id)} frameProps={frameProps} leading={boostLabel}>{card}</RetainedPostSurface>
-          : <>{boostLabel}{card}</>}
+        <BoostedPostContext.Provider value={boosted}>
+          {retained
+            ? <RetainedPostSurface id={String(item.data.id)} frameProps={frameProps}>{card}</RetainedPostSurface>
+            : card}
+        </BoostedPostContext.Provider>
       </WindowedFeedItem>
     );
   };
@@ -2059,25 +2058,6 @@ export function HomeFeed({ active = true, shuffleKey, isRefreshing, showFilters 
               {/* Render the featured post — pinned by link, or boosted */}
               {pinnedItem && (
                 <div className="mb-3">
-                  {/*
-                    A boosted post says so. Not a legal point, a product one:
-                    the feed's whole pitch is that engagement decides reach, and
-                    an unlabelled paid slot at position zero makes that untrue.
-                    Labelled, it stays true — this is somebody spending a badge,
-                    and the label is what says so.
-                  */}
-                  {isBoosted && (
-                    <div className="flex items-center gap-1.5 px-1 pb-1.5">
-                      <button
-                        type="button"
-                        onClick={() => navigate('/app/superpowers')}
-                        className="flex items-center gap-1.5 rounded-sm text-[11px] uppercase tracking-wider text-muted-foreground transition-colors hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
-                      >
-                        <ThemedIcon icon="superpowers" alt="" className="w-4 h-4 object-contain opacity-70" />
-                        <span>{t('superpowers.boostedLabel')}</span>
-                      </button>
-                    </div>
-                  )}
                   {renderMasonryGrid([renderFeedItem(pinnedItem, 0, 'pinned')], [pinnedItem])}
                 </div>
               )}
