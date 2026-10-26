@@ -1,0 +1,1612 @@
+/**
+ * Every overlay widget kind, painted.
+ *
+ * One class per widget in overlay-widgets.tsx (and poll, subathon, hype-train,
+ * level-and-jar), holding the same state the component holds — its alert
+ * queue, the tips counted since the server's last figure, the chat lines on
+ * screen — and drawing what the component renders, at the sizes
+ * live-overlay.css gives it. Sizes are shares of the widget's box exactly as
+ * the CSS writes them (`--ow-h` is `box.h` here), so a widget lands the same
+ * in a 720p, 1080p or portrait picture.
+ *
+ * Strings a widget shows are built when what they say changes — an event, a
+ * new second on a clock — never per frame: formatting a number and running it
+ * through i18next is cheap once, not thirty times a second for every widget.
+ */
+import type { LiveRoomEvent, StreamJoinUser } from '@/lib/api/dehub/stream-presence';
+import type { HypeTrain } from '@/lib/api/dehub/live-hype';
+import type { PointsRow } from '@/lib/api/dehub/live-subathon';
+import { tierFromGift } from '@/lib/live/gift-tiers';
+import { isPollOpen, pollLeaders, pollShares, type LivePoll } from '@/lib/live-overlay/polls';
+import { setting, type OverlayKind } from '@/lib/live-overlay/registry';
+import { WHEEL_SPIN_MS, type RuleFired } from '@/lib/live-overlay/rules';
+import type { OverlayStats } from '@/lib/live-overlay/types';
+import {
+  AlertQueue,
+  Tween,
+  alertPose,
+  clamp01,
+  cubicBezier,
+  easeOut,
+  keyframes,
+  newPose,
+  rowEnter,
+  type Pose,
+} from './motion';
+import {
+  GLASS,
+  accentOf,
+  drawAvatar,
+  drawCoin,
+  drawIcon,
+  glassPanel,
+  makeCanvas,
+  mixWithWhite,
+  noShadow,
+  roundRectPath,
+  shadow,
+  white,
+  withAlpha,
+  type EmojiSprites,
+  type IconName,
+  type ImageStore,
+  type Raster,
+} from './draw';
+import { LINE_HEIGHT, ellipsize, fontOf, type TextKit } from './text';
+import { MAX_CELEBRATIONS, celebrationLife, paintCelebration, type Celebration } from './celebration';
+import type { Translate } from './strings';
+
+type Ctx = CanvasRenderingContext2D;
+
+// ─── What widgets share ──────────────────────────────────────────────────────
+
+/** The stream's subathon as useStreamSubathon keeps it. `lastAdd.at` is wall-clock ms. */
+export interface PainterSubathon {
+  running: boolean;
+  endsAt: string | null;
+  lastAdd: { seconds: number; at: number } | null;
+}
+
+/** A row of the live audience's top tippers. */
+export interface SupporterRow {
+  address: string;
+  displayName?: string;
+  username?: string;
+  total: number;
+}
+
+/** The parts of a streamer's progress the level widget shows. */
+export interface StreamerLevelData {
+  level: number;
+  progressToNext: number;
+  currentStreakWeeks: number;
+}
+
+/**
+ * State the painter owns and every widget reads: the drawing kit, the clocks
+ * for this frame, and the stream data the DOM widgets get from contexts and
+ * queries.
+ */
+export interface Shared {
+  t: Translate;
+  /** Bumped when `t` changes, so cached strings know to rebuild. */
+  lang: number;
+  text: TextKit;
+  images: ImageStore;
+  sprites: EmojiSprites;
+  ctx: Ctx;
+  /** The painter's monotonic clock (performance.now) for this frame. */
+  now: number;
+  /** Wall-clock ms for this frame, for anything counted against a server time. */
+  wall: number;
+  /** A CSS pixel at this picture size: 1 at 720p, 1.5 at 1080p. */
+  unit: number;
+  /** A hairline border, never thinner than a device pixel. */
+  hair: number;
+  stats: OverlayStats;
+  viewers: number;
+  poll: LivePoll | null;
+  subathon: PainterSubathon | null;
+  hype: HypeTrain | null;
+  supporters: SupporterRow[];
+  supportersVersion: number;
+  points: PointsRow[];
+  pointsVersion: number;
+  level: StreamerLevelData | null;
+}
+
+export interface Box {
+  x: number;
+  y: number;
+  w: number;
+  h: number;
+}
+
+export interface Widget {
+  settings: Record<string, unknown>;
+  onEvent?(event: LiveRoomEvent, now: number): void;
+  onRule?(fired: RuleFired, now: number): void;
+  paint(box: Box): void;
+}
+
+const nameOf = (sh: Shared, user: StreamJoinUser | undefined) => user?.displayName || user?.username || sh.t('liveOverlay.someone');
+
+/** Text drawn at its line's middle: the painter sets `textBaseline = 'middle'` once per frame. */
+const lineMid = (top: number, px: number) => top + (px * LINE_HEIGHT) / 2;
+
+/** Scale and fade a box about its centre for an alert pose. Call inside a save/restore. */
+function applyPose(ctx: Ctx, box: Box, pose: Pose) {
+  const cx = box.x + box.w / 2;
+  const cy = box.y + box.h / 2;
+  ctx.globalAlpha = pose.alpha;
+  ctx.translate(cx, cy + pose.dy * box.h);
+  if (pose.scale !== 1) ctx.scale(pose.scale, pose.scale);
+  ctx.translate(-cx, -cy);
+}
+
+/**
+ * A figure the server keeps plus what this widget has counted since the server
+ * last sent it. A fresh figure already includes everything counted here, so it
+ * starts the count again — the DOM widgets' `useEffect(() => setDelta(0), [base])`.
+ */
+class Counted {
+  private delta = 0;
+
+  constructor(private base: number) {}
+
+  add(base: number, n: number): void {
+    this.value(base);
+    this.delta += n;
+  }
+
+  value(base: number): number {
+    if (base !== this.base) {
+      this.base = base;
+      this.delta = 0;
+    }
+    return base + this.delta;
+  }
+}
+
+// ─── The alert card (`[data-ow-alert] [data-ow-card]`) ───────────────────────
+
+interface CardContent {
+  user?: StreamJoinUser;
+  /** An emoji instead of an avatar (tip banners). */
+  emoji?: string;
+  title: string;
+  sub?: string;
+  subCoin?: boolean;
+  message?: string;
+}
+
+function paintCard(sh: Shared, box: Box, card: CardContent, pose: Pose) {
+  const { ctx, text } = sh;
+  const h = box.h;
+  ctx.save();
+  applyPose(ctx, box, pose);
+
+  shadow(ctx, 'rgba(0,0,0,0.35)', 24 * sh.unit, 6 * sh.unit);
+  roundRectPath(ctx, box.x, box.y, box.w, h, h * 0.22);
+  ctx.fillStyle = GLASS;
+  ctx.fill();
+  noShadow(ctx);
+  glassPanel(ctx, box.x, box.y, box.w, h, h * 0.22, sh.hair, 'rgba(0,0,0,0)');
+
+  const padX = h * 0.18;
+  const gap = h * 0.12;
+  let x = box.x + padX;
+  if (card.emoji) {
+    const px = h * 0.48;
+    text.font(fontOf(400, px));
+    const w = Math.max(px, text.width(card.emoji));
+    sh.sprites.draw(ctx, card.emoji, x + w / 2, box.y + h / 2, px);
+    x += w + gap;
+  } else {
+    const size = h * 0.62;
+    drawAvatar(ctx, sh.images, card.user, x, box.y + (h - size) / 2, size);
+    x += size + gap;
+  }
+
+  const maxW = box.x + box.w - padX - x;
+  if (maxW > 0) {
+    const titlePx = h * 0.26;
+    const subPx = h * 0.19;
+    const msgPx = h * 0.18;
+    text.font(fontOf(400, msgPx));
+    const message = card.message ? text.wrap(card.message, maxW, 2) : NONE;
+    const blockH =
+      titlePx * LINE_HEIGHT +
+      (card.sub ? h * 0.04 + subPx * LINE_HEIGHT : 0) +
+      (message.length ? h * 0.04 + message.length * msgPx * LINE_HEIGHT : 0);
+    let top = box.y + (h - blockH) / 2;
+
+    text.font(fontOf(700, titlePx));
+    ctx.fillStyle = '#fff';
+    ctx.fillText(text.fit(card.title, maxW), x, lineMid(top, titlePx));
+    top += titlePx * LINE_HEIGHT;
+
+    if (card.sub) {
+      top += h * 0.04;
+      text.font(fontOf(400, subPx));
+      ctx.fillStyle = white(0.78);
+      const coin = card.subCoin ? subPx * 1.4 : 0;
+      const sub = text.fit(card.sub, maxW - coin);
+      ctx.fillText(sub, x, lineMid(top, subPx));
+      if (coin) drawCoin(ctx, sh.images, x + text.width(sub) + subPx * 0.25, lineMid(top, subPx), subPx);
+      top += subPx * LINE_HEIGHT;
+    }
+    if (message.length) {
+      top += h * 0.04;
+      text.font(fontOf(400, msgPx));
+      ctx.fillStyle = white(0.9);
+      for (const line of message) {
+        ctx.fillText(line, x, lineMid(top, msgPx));
+        top += msgPx * LINE_HEIGHT;
+      }
+    }
+  }
+  ctx.restore();
+  text.use(ctx);
+}
+const NONE: string[] = [];
+
+// ─── Tip alert ───────────────────────────────────────────────────────────────
+
+interface TipItem {
+  amount: number;
+  selectedTier?: string;
+  user: StreamJoinUser;
+  message?: string;
+}
+
+/** An unconfirmed tip waits this long for its payment when only paid tips are shown, then is dropped. */
+const CONFIRM_WAIT_MS = 120_000;
+
+class TipAlert implements Widget {
+  private banner = new AlertQueue<CardContent & { durationMs: number }>((item) => item.durationMs);
+  private celebrations: Celebration[] = [];
+  private held = new Map<string, { item: TipItem; at: number }>();
+  private seq = 0;
+  private pose = newPose();
+
+  constructor(
+    private sh: Shared,
+    public settings: Record<string, unknown>,
+  ) {}
+
+  onEvent(event: LiveRoomEvent, now: number) {
+    const confirmedOnly = setting(this.settings, 'confirmedOnly', false);
+    if (event.type === 'tip') {
+      const item = { amount: event.amount, selectedTier: event.selectedTier, user: event.user, message: event.message };
+      if (!confirmedOnly) return this.play(item, now);
+      if (!event.transactionHash) return;
+      const wall = Date.now();
+      for (const [hash, entry] of this.held) if (wall - entry.at > CONFIRM_WAIT_MS) this.held.delete(hash);
+      this.held.set(event.transactionHash, { item, at: wall });
+    } else if (event.type === 'tipConfirmed' && confirmedOnly) {
+      const entry = this.held.get(event.transactionHash);
+      if (!entry) return;
+      this.held.delete(event.transactionHash);
+      // The paid amount, not the claim, and the tier that amount actually buys.
+      this.play({ ...entry.item, amount: event.paidAmount, selectedTier: undefined }, now);
+    }
+  }
+
+  private play(item: TipItem, now: number) {
+    if (item.amount < setting(this.settings, 'minAmount', 0)) return;
+    const message = setting(this.settings, 'showMessage', true) ? item.message : undefined;
+    const tier = tierFromGift(item);
+    const label = this.sh.t(tier.labelKey, { defaultValue: tier.name });
+    const name = nameOf(this.sh, item.user);
+    if (setting(this.settings, 'style', 'celebration') === 'banner') {
+      this.banner.push(
+        { emoji: tier.emoji, title: name, sub: `${label} · ${item.amount.toLocaleString()}`, subCoin: true, message, durationMs: tier.durationMs },
+        now,
+      );
+      return;
+    }
+    const amount = Number(item.amount) || 0;
+    if (amount <= 0) return;
+    this.seq += 1;
+    const username = item.user.displayName || item.user.username;
+    this.celebrations.push({
+      id: this.seq,
+      tier,
+      amount,
+      title: `${tier.emoji} ${label}`,
+      sub: `${username ? `${username} · ` : ''}${amount.toLocaleString()}`,
+      message,
+      start: now,
+      end: now + celebrationLife(tier),
+    });
+    // The newest plays on top; past two, the oldest goes.
+    while (this.celebrations.length > MAX_CELEBRATIONS) this.celebrations.shift();
+  }
+
+  paint(box: Box) {
+    const { sh } = this;
+    if (this.celebrations.length) {
+      this.celebrations = this.celebrations.filter((c) => c.end > sh.now);
+      for (const c of this.celebrations) {
+        // The DOM's caption is fixed-size type in a stage up to 340px wide; it keeps that share of the box here.
+        const unit = Math.min(sh.unit * 2, Math.max(sh.unit, box.w / 340));
+        paintCelebration(sh.ctx, c, box.x, box.y, box.w, box.h, sh.now, unit, sh.sprites, sh.images, sh.text);
+      }
+    }
+    const slot = this.banner.at(sh.now);
+    if (slot) paintCard(sh, box, slot.item, alertPose(slot, sh.now, this.pose));
+  }
+}
+
+// ─── Follow, subscribe, share, join ──────────────────────────────────────────
+
+const PERSON_EVENT: Partial<Record<OverlayKind, LiveRoomEvent['type']>> = {
+  follow_alert: 'follow',
+  subscribe_alert: 'subscribe',
+  share_alert: 'share',
+  join_alert: 'join',
+};
+
+class PersonAlert implements Widget {
+  private queue = new AlertQueue<CardContent>(() => setting(this.settings, 'durationMs', 5000));
+  /** The gateway re-sends a viewer's join on every reconnect. Each person arrives once. */
+  private seen = new Set<string>();
+  private pose = newPose();
+
+  constructor(
+    private sh: Shared,
+    private kind: OverlayKind,
+    public settings: Record<string, unknown>,
+  ) {}
+
+  onEvent(event: LiveRoomEvent, now: number) {
+    const { t } = this.sh;
+    const wanted = PERSON_EVENT[this.kind];
+    // Gifted subscriptions are a subscriber alert: one card for the whole checkout.
+    if (event.type === 'giftSub' && wanted === 'subscribe') {
+      const name = nameOf(this.sh, event.user);
+      this.queue.push({ user: event.user, title: t('liveOverlay.giftedSubs', { name, count: event.count }) }, now);
+      return;
+    }
+    if (event.type !== wanted || !('user' in event) || !event.user) return;
+    if (event.type === 'join') {
+      const key = event.user.address;
+      if (!key || this.seen.has(key)) return;
+      this.seen.add(key);
+    }
+    const name = nameOf(this.sh, event.user);
+    const title =
+      event.type === 'follow'
+        ? t('liveOverlay.newFollower', { name })
+        : event.type === 'subscribe'
+          ? event.planName
+            ? t('liveOverlay.subscribedTo', { name, plan: event.planName })
+            : t('liveOverlay.newSubscriber', { name })
+          : event.type === 'share'
+            ? t('liveOverlay.shared', { name })
+            : t('liveOverlay.joined', { name });
+    this.queue.push({ user: event.user, title }, now);
+  }
+
+  paint(box: Box) {
+    const slot = this.queue.at(this.sh.now);
+    if (slot) paintCard(this.sh, box, slot.item, alertPose(slot, this.sh.now, this.pose));
+  }
+}
+
+// ─── Rule alert ──────────────────────────────────────────────────────────────
+
+class RuleAlert implements Widget {
+  private queue = new AlertQueue<CardContent & { durationMs: number }>((item) => item.durationMs);
+  /** Alerts naming where a wheel stopped wait until it has stopped. */
+  private delayed: Array<{ at: number; fired: RuleFired }> = [];
+  private pose = newPose();
+
+  constructor(
+    private sh: Shared,
+    public settings: Record<string, unknown>,
+  ) {}
+
+  onRule(fired: RuleFired, now: number) {
+    if (fired.wheels.length) this.delayed.push({ at: now + WHEEL_SPIN_MS, fired });
+    else this.show(fired, now);
+  }
+
+  private show(fired: RuleFired, at: number) {
+    for (const alert of fired.alerts) this.queue.push({ user: fired.user, title: alert.text, durationMs: alert.durationMs }, at);
+  }
+
+  paint(box: Box) {
+    const { now } = this.sh;
+    while (this.delayed.length && this.delayed[0].at <= now) {
+      const next = this.delayed.shift()!;
+      this.show(next.fired, next.at);
+    }
+    const slot = this.queue.at(now);
+    if (slot) paintCard(this.sh, box, slot.item, alertPose(slot, now, this.pose));
+  }
+}
+
+// ─── Spin wheel ──────────────────────────────────────────────────────────────
+
+const WHEEL_COLORS = ['#f43f5e', '#f59e0b', '#22c55e', '#3b82f6', '#a855f7', '#14b8a6', '#ec4899', '#eab308', '#6366f1', '#10b981', '#ef4444', '#0ea5e9'];
+/** How long the result stays up after the wheel lands. */
+const WHEEL_HOLD_MS = 4000;
+const WHEEL_EASE = cubicBezier(0.12, 0.8, 0.12, 1);
+const WHEEL_ENTER_MS = 300;
+
+interface SpinItem {
+  segments: string[];
+  result: number;
+  user: StreamJoinUser;
+  /** "name spun: result", built when the wheel was queued. */
+  line: string;
+}
+
+/**
+ * The disc with its slices and labels, drawn once per wheel into a sprite and
+ * then only turned each frame. `ctx` is the sprite's (or the frame's, where no
+ * scratch canvas exists).
+ */
+function drawDisc(ctx: Ctx | OffscreenCanvasRenderingContext2D, segments: string[], cx: number, cy: number, d: number) {
+  const n = segments.length;
+  const r = d / 2;
+  const slice = (Math.PI * 2) / n;
+  for (let i = 0; i < n; i++) {
+    ctx.beginPath();
+    ctx.moveTo(cx, cy);
+    // Slice 0 starts at twelve o'clock, as `conic-gradient` does.
+    ctx.arc(cx, cy, r, -Math.PI / 2 + i * slice, -Math.PI / 2 + (i + 1) * slice);
+    ctx.closePath();
+    ctx.fillStyle = WHEEL_COLORS[i % WHEEL_COLORS.length];
+    ctx.fill();
+  }
+  const border = d * 0.015;
+  ctx.beginPath();
+  ctx.arc(cx, cy, r - border / 2, 0, Math.PI * 2);
+  ctx.lineWidth = border;
+  ctx.strokeStyle = 'rgba(255,255,255,0.9)';
+  ctx.stroke();
+
+  // Each label on its slice's centre line, reading from the rim toward the hub.
+  const px = d * 0.055;
+  ctx.font = fontOf(700, px);
+  ctx.textAlign = 'left';
+  ctx.textBaseline = 'middle';
+  ctx.fillStyle = '#fff';
+  ctx.shadowColor = 'rgba(0,0,0,0.6)';
+  ctx.shadowBlur = px * 0.3;
+  const measure = (s: string) => ctx.measureText(s).width;
+  for (let i = 0; i < n; i++) {
+    ctx.save();
+    ctx.translate(cx, cy);
+    ctx.rotate((i + 0.5) * slice);
+    ctx.translate(0, -r + border + d * 0.06);
+    ctx.rotate(Math.PI / 2);
+    ctx.fillText(ellipsize(segments[i], d * 0.34, measure), 0, 0);
+    ctx.restore();
+  }
+  ctx.shadowColor = 'transparent';
+  ctx.shadowBlur = 0;
+}
+
+class SpinWheel implements Widget {
+  private queue = new AlertQueue<SpinItem>(() => WHEEL_SPIN_MS + WHEEL_HOLD_MS);
+  private pose = newPose();
+  private sprite: { id: number; d: number; raster: Raster | null } | null = null;
+
+  constructor(
+    private sh: Shared,
+    public settings: Record<string, unknown>,
+  ) {}
+
+  onRule(fired: RuleFired, now: number) {
+    const name = nameOf(this.sh, fired.user);
+    for (const wheel of fired.wheels) {
+      const line = this.sh.t('liveOverlay.wheelLanded', { name, result: wheel.segments[wheel.result] });
+      this.queue.push({ ...wheel, user: fired.user, line }, now);
+    }
+  }
+
+  paint(box: Box) {
+    const { sh } = this;
+    const { ctx, text } = sh;
+    const slot = this.queue.at(sh.now);
+    if (!slot) {
+      this.sprite = null;
+      return;
+    }
+    const item = slot.item;
+    const d = Math.min(box.w, box.h * 0.82);
+    if (d <= 0) return;
+    const resultPx = d * 0.06;
+    const pillH = resultPx * LINE_HEIGHT + d * 0.04;
+    const stackH = d + d * 0.04 + pillH;
+    const top = box.y + (box.h - stackH) / 2;
+    const cx = box.x + box.w / 2;
+    const cy = top + d / 2;
+
+    ctx.save();
+    applyPose(ctx, box, alertPose(slot, sh.now, this.pose, WHEEL_ENTER_MS, easeOut));
+
+    // Five full turns, then the chosen slice's middle under the pointer at the top.
+    const n = item.segments.length;
+    const target = 360 * 5 + (360 - (item.result + 0.5) * (360 / n));
+    const angle = target * WHEEL_EASE(clamp01((sh.now - slot.start) / WHEEL_SPIN_MS));
+
+    if (!this.sprite || this.sprite.id !== slot.id || Math.abs(this.sprite.d - d) > 2) {
+      const pad = Math.ceil(d * 0.1);
+      const scratch = makeCanvas(d + pad * 2, d + pad * 2);
+      if (scratch) {
+        const s = scratch.ctx;
+        s.shadowColor = 'rgba(0,0,0,0.45)';
+        s.shadowBlur = d * 0.06;
+        s.beginPath();
+        s.arc(pad + d / 2, pad + d / 2, d / 2, 0, Math.PI * 2);
+        s.fillStyle = '#000';
+        s.fill();
+        s.shadowColor = 'transparent';
+        s.shadowBlur = 0;
+        drawDisc(s, item.segments, pad + d / 2, pad + d / 2, d);
+      }
+      this.sprite = { id: slot.id, d, raster: scratch?.canvas ?? null };
+    }
+    ctx.save();
+    ctx.translate(cx, cy);
+    ctx.rotate((angle * Math.PI) / 180);
+    if (this.sprite.raster) {
+      const side = this.sprite.raster.width * (d / this.sprite.d);
+      ctx.drawImage(this.sprite.raster, -side / 2, -side / 2, side, side);
+    } else {
+      drawDisc(ctx, item.segments, 0, 0, d);
+      text.use(ctx);
+    }
+    ctx.restore();
+
+    // The pointer, over the disc at twelve o'clock.
+    shadow(ctx, 'rgba(0,0,0,0.5)', 4 * sh.unit, 2 * sh.unit);
+    ctx.beginPath();
+    ctx.moveTo(cx - d * 0.05, top - d * 0.02);
+    ctx.lineTo(cx + d * 0.05, top - d * 0.02);
+    ctx.lineTo(cx, top - d * 0.02 + d * 0.09);
+    ctx.closePath();
+    ctx.fillStyle = '#fff';
+    ctx.fill();
+    noShadow(ctx);
+
+    // The result, once it has landed.
+    const landedFor = sh.now - slot.start - WHEEL_SPIN_MS;
+    if (landedFor > 0) {
+      const e = easeOut(clamp01(landedFor / 250));
+      text.font(fontOf(700, resultPx));
+      const padX = d * 0.05;
+      const line = text.fit(item.line, box.w - padX * 2);
+      const pillW = Math.min(box.w, text.width(line) + padX * 2);
+      const pillTop = top + d + d * 0.04 + 4 * sh.unit * (1 - e);
+      ctx.globalAlpha *= e;
+      roundRectPath(ctx, cx - pillW / 2, pillTop, pillW, pillH, pillH / 2);
+      ctx.fillStyle = 'rgba(10,10,12,0.78)';
+      ctx.fill();
+      ctx.lineWidth = sh.hair;
+      ctx.strokeStyle = white(0.16);
+      ctx.stroke();
+      ctx.fillStyle = '#fff';
+      ctx.fillText(line, cx - pillW / 2 + padX, pillTop + pillH / 2);
+    }
+    ctx.restore();
+  }
+}
+
+// ─── Goal-bar look: goal bar, streamer level, hype train ─────────────────────
+
+const GOAL_FILL_EASE = cubicBezier(0.2, 0.8, 0.2, 1);
+
+function paintGoal(sh: Shared, box: Box, left: string, right: string, rightCoin: boolean, progress: number, accent: string) {
+  const { ctx, text } = sh;
+  const h = box.h;
+  glassPanel(ctx, box.x, box.y, box.w, h, h * 0.22, sh.hair);
+  const pad = h * 0.2;
+  const innerW = box.w - pad * 2;
+  if (innerW <= 0) return;
+  const px = h * 0.22;
+  const headH = px * LINE_HEIGHT;
+  const trackH = h * 0.2;
+  const top = box.y + (h - (headH + h * 0.1 + trackH)) / 2;
+  const mid = lineMid(top, px);
+
+  text.font(fontOf(600, px));
+  const coinW = rightCoin ? px * 0.25 + px * 1.15 : 0;
+  const rightText = text.fit(right, innerW - coinW);
+  const rightW = text.width(rightText) + coinW;
+  const rx = box.x + box.w - pad - rightW;
+  ctx.fillStyle = white(0.85);
+  ctx.fillText(rightText, rx, mid);
+  if (rightCoin) drawCoin(ctx, sh.images, rx + text.width(rightText) + px * 0.25, mid, px);
+
+  text.font(fontOf(700, px));
+  ctx.fillStyle = '#fff';
+  ctx.fillText(text.fit(left, innerW - rightW - h * 0.15), box.x + pad, mid);
+
+  const trackY = top + headH + h * 0.1;
+  ctx.save();
+  roundRectPath(ctx, box.x + pad, trackY, innerW, trackH, trackH / 2);
+  ctx.fillStyle = white(0.14);
+  ctx.fill();
+  ctx.clip();
+  if (progress > 0) {
+    ctx.fillStyle = accent;
+    ctx.fillRect(box.x + pad, trackY, innerW * clamp01(progress), trackH);
+  }
+  ctx.restore();
+}
+
+class GoalBar implements Widget {
+  private count: Counted;
+  private fill = new Tween(700, GOAL_FILL_EASE);
+  private key = '';
+  private left = '';
+  private right = '';
+
+  constructor(
+    private sh: Shared,
+    public settings: Record<string, unknown>,
+  ) {
+    this.count = new Counted(this.base);
+  }
+
+  private get metric() {
+    return setting(this.settings, 'metric', 'tips') === 'followers' ? 'followers' : 'tips';
+  }
+
+  private get base() {
+    return Number(this.metric === 'tips' ? this.sh.stats.totalTips : this.sh.stats.followers) || 0;
+  }
+
+  onEvent(event: LiveRoomEvent) {
+    if (this.metric === 'tips' && event.type === 'tipConfirmed') this.count.add(this.base, event.paidAmount);
+    if (this.metric === 'followers' && event.type === 'follow') this.count.add(this.base, 1);
+  }
+
+  paint(box: Box) {
+    const { sh } = this;
+    const metric = this.metric;
+    const target = Math.max(1, setting(this.settings, 'target', metric === 'tips' ? 1_000_000 : 1000));
+    const value = this.count.value(this.base);
+    const reached = value >= target;
+    const title = setting(this.settings, 'title', '');
+    const key = `${sh.lang}|${Math.floor(value)}|${target}|${metric}|${title}`;
+    if (key !== this.key) {
+      this.key = key;
+      this.left = reached ? sh.t('liveOverlay.goalReached') : title;
+      this.right = `${Math.floor(value).toLocaleString()} / ${target.toLocaleString()}${metric === 'tips' ? '' : ` ${sh.t('liveOverlay.followersUnit')}`}`;
+    }
+    this.fill.set(Math.min(1, value / target), sh.now);
+    paintGoal(sh, box, this.left, this.right, metric === 'tips', this.fill.get(sh.now), accentOf(this.settings));
+  }
+}
+
+class StreamerLevel implements Widget {
+  private fill = new Tween(700, GOAL_FILL_EASE);
+  private key = '';
+  private left = '';
+  private right = '';
+
+  constructor(
+    private sh: Shared,
+    public settings: Record<string, unknown>,
+  ) {}
+
+  paint(box: Box) {
+    const { sh } = this;
+    const data = sh.level;
+    if (!data) return;
+    const streak = setting(this.settings, 'showStreak', true) && data.currentStreakWeeks > 0 ? data.currentStreakWeeks : 0;
+    const key = `${sh.lang}|${data.level}|${streak}`;
+    if (key !== this.key) {
+      this.key = key;
+      this.left = sh.t('liveOverlay.level', { level: data.level });
+      this.right = streak ? sh.t('liveOverlay.streak', { count: streak }) : '';
+    }
+    this.fill.set(clamp01(Number(data.progressToNext) || 0), sh.now);
+    paintGoal(sh, box, this.left, this.right, false, this.fill.get(sh.now), accentOf(this.settings));
+  }
+}
+
+const mmss = (s: number) => `${Math.floor(s / 60)}:${String(s % 60).padStart(2, '0')}`;
+
+class HypeTrainWidget implements Widget {
+  private fill = new Tween(700, GOAL_FILL_EASE);
+  private key = '';
+  private left = '';
+  private right = '';
+
+  constructor(
+    private sh: Shared,
+    public settings: Record<string, unknown>,
+  ) {}
+
+  paint(box: Box) {
+    const { sh } = this;
+    const train = sh.hype;
+    if (!train) return;
+    const left = train.ended ? 0 : Math.max(0, Math.ceil((Date.parse(train.expiresAt) - sh.wall) / 1000) || 0);
+    const key = `${sh.lang}|${train.level}|${train.ended}|${train.completed}|${train.contributors}|${left}`;
+    if (key !== this.key) {
+      this.key = key;
+      const t = sh.t;
+      this.left = `🚂 ${
+        train.ended
+          ? train.completed > 0
+            ? t('liveHype.train.endedLevel', { level: train.completed })
+            : t('liveHype.train.ended')
+          : t('liveHype.train.level', { level: train.level })
+      }`;
+      this.right = train.ended ? t('liveHype.train.thanks', { count: train.contributors }) : mmss(left);
+    }
+    this.fill.set(train.ended ? 1 : Math.min(1, train.into / Math.max(1, train.need)), sh.now);
+    paintGoal(sh, box, this.left, this.right, false, this.fill.get(sh.now), accentOf(this.settings, '#f97316'));
+  }
+}
+
+// ─── Lists: top supporters, points board, event feed ─────────────────────────
+
+interface ListRow {
+  rank: string;
+  name: string;
+  amount: string;
+  coin: boolean;
+  /** When it arrived, for the slide-in; 0 for rows that never animate. */
+  addedAt: number;
+}
+
+function paintList(sh: Shared, box: Box, title: string, rows: readonly ListRow[], divisor: number, pose: Pose) {
+  const { ctx, text } = sh;
+  const row = box.h / divisor;
+  glassPanel(ctx, box.x, box.y, box.w, box.h, row * 0.4, sh.hair);
+  const padX = row * 0.45;
+  const innerW = box.w - padX * 2;
+  if (innerW <= 0) return;
+  let top = box.y + row * 0.35;
+  if (title) {
+    const px = row * 0.42;
+    text.font(fontOf(700, px));
+    ctx.fillStyle = '#fff';
+    ctx.fillText(text.fit(title, innerW), box.x + padX, lineMid(top, px));
+    top += px * LINE_HEIGHT + row * 0.2;
+  }
+  const px = row * 0.4;
+  const gap = row * 0.3;
+  for (const r of rows) {
+    if (top > box.y + box.h) break;
+    let dy = 0;
+    if (r.addedAt) {
+      rowEnter(r.addedAt, sh.now, pose);
+      ctx.globalAlpha = pose.alpha;
+      dy = pose.dy * row;
+    }
+    const mid = top + row / 2 + dy;
+    let x = box.x + padX;
+    let right = box.x + box.w - padX;
+    if (r.rank) {
+      text.font(fontOf(700, px));
+      const rankW = px * 1.4;
+      ctx.fillStyle = white(0.7);
+      ctx.textAlign = 'center';
+      ctx.fillText(r.rank, x + rankW / 2, mid);
+      ctx.textAlign = 'left';
+      x += rankW + gap;
+    }
+    if (r.amount) {
+      text.font(fontOf(600, px));
+      const coinW = r.coin ? px * 0.25 + px * 1.15 : 0;
+      const amountW = text.width(r.amount) + coinW;
+      ctx.fillStyle = '#fff';
+      ctx.fillText(r.amount, right - amountW, mid);
+      if (r.coin) drawCoin(ctx, sh.images, right - coinW + px * 0.25, mid, px);
+      right -= amountW + gap;
+    }
+    text.font(fontOf(400, px));
+    ctx.fillStyle = '#fff';
+    ctx.fillText(text.fit(r.name, right - x), x, mid);
+    ctx.globalAlpha = 1;
+    top += row;
+  }
+}
+
+class TopSupporters implements Widget {
+  private rows: ListRow[] = [];
+  private key = '';
+  private pose = newPose();
+
+  constructor(
+    private sh: Shared,
+    public settings: Record<string, unknown>,
+  ) {}
+
+  paint(box: Box) {
+    const { sh } = this;
+    const count = Math.min(10, Math.max(1, setting(this.settings, 'count', 3)));
+    const key = `${sh.lang}|${sh.supportersVersion}|${count}`;
+    if (key !== this.key) {
+      this.key = key;
+      this.rows = sh.supporters.slice(0, count).map((s, i) => ({
+        rank: String(i + 1),
+        name: s.displayName || s.username || sh.t('liveOverlay.someone'),
+        amount: Math.floor(Number(s.total) || 0).toLocaleString(),
+        coin: true,
+        addedAt: 0,
+      }));
+    }
+    const title = setting(this.settings, 'title', '') || sh.t('liveOverlay.topSupporters');
+    paintList(sh, box, title, this.rows, count + 1, this.pose);
+  }
+}
+
+class PointsBoard implements Widget {
+  private rows: ListRow[] = [];
+  private key = '';
+  private pose = newPose();
+
+  constructor(
+    private sh: Shared,
+    public settings: Record<string, unknown>,
+  ) {}
+
+  paint(box: Box) {
+    const { sh } = this;
+    const count = Math.min(10, Math.max(1, setting(this.settings, 'count', 5)));
+    const key = `${sh.lang}|${sh.pointsVersion}|${count}`;
+    if (key !== this.key) {
+      this.key = key;
+      this.rows = sh.points.slice(0, count).map((r, i) => ({
+        rank: String(i + 1),
+        name: r.displayName || r.username || `${r.address.slice(0, 6)}…`,
+        amount: sh.t('liveOverlay.points', { count: r.points, formatted: r.points.toLocaleString() }),
+        coin: false,
+        addedAt: 0,
+      }));
+    }
+    if (!this.rows.length) return;
+    const title = setting(this.settings, 'title', '') || sh.t('liveOverlay.pointsTitle');
+    paintList(sh, box, title, this.rows, count + 1, this.pose);
+  }
+}
+
+class EventFeed implements Widget {
+  private rows: ListRow[] = [];
+  /** Tips are listed once PAID; the claim that came first is the fallback for the sender's name. */
+  private tippers = new Map<string, StreamJoinUser>();
+  private pose = newPose();
+
+  constructor(
+    private sh: Shared,
+    public settings: Record<string, unknown>,
+  ) {}
+
+  private get count() {
+    return Math.min(8, Math.max(1, setting(this.settings, 'count', 4)));
+  }
+
+  onEvent(event: LiveRoomEvent, now: number) {
+    const { t } = this.sh;
+    let name = '';
+    let amount = '';
+    if (event.type === 'tip' && event.transactionHash) {
+      this.tippers.set(event.transactionHash, event.user);
+      if (this.tippers.size > 50) this.tippers.delete(this.tippers.keys().next().value as string);
+      return;
+    } else if (event.type === 'tipConfirmed') {
+      const user = event.user ?? this.tippers.get(event.transactionHash) ?? { address: event.address };
+      name = t('liveOverlay.tipped', { name: nameOf(this.sh, user) });
+      amount = Math.floor(event.paidAmount).toLocaleString();
+    } else if (event.type === 'follow') {
+      name = t('liveOverlay.newFollower', { name: nameOf(this.sh, event.user) });
+    } else if (event.type === 'share') {
+      name = t('liveOverlay.shared', { name: nameOf(this.sh, event.user) });
+    } else if (event.type === 'subscribe') {
+      const who = nameOf(this.sh, event.user);
+      name = event.planName ? t('liveOverlay.subscribedTo', { name: who, plan: event.planName }) : t('liveOverlay.newSubscriber', { name: who });
+    } else if (event.type === 'giftSub') {
+      name = t('liveOverlay.giftedSubs', { name: nameOf(this.sh, event.user), count: event.count });
+    } else {
+      return;
+    }
+    this.rows = [{ rank: '', name, amount, coin: !!amount, addedAt: now }, ...this.rows].slice(0, this.count);
+  }
+
+  paint(box: Box) {
+    const title = setting(this.settings, 'title', '');
+    const count = this.count;
+    if (this.rows.length > count) this.rows = this.rows.slice(0, count);
+    paintList(this.sh, box, title, this.rows, count + (title ? 1 : 0), this.pose);
+  }
+}
+
+// ─── Counters: viewers, stream timer, reactions ──────────────────────────────
+
+function paintCounter(sh: Shared, box: Box, icon: IconName, iconColor: string, label: string, value: string) {
+  const { ctx, text } = sh;
+  const h = box.h;
+  const px = h * 0.42;
+  const pad = h * 0.25;
+  const gap = h * 0.15;
+  text.font(fontOf(600, px));
+  const labelW = label ? text.width(label) : 0;
+  text.font(fontOf(700, px));
+  const valueW = text.tabularWidth(value);
+  const width = Math.min(box.w, pad * 2 + px + gap + (label ? labelW + gap : 0) + valueW);
+  glassPanel(ctx, box.x, box.y, width, h, h / 2, sh.hair);
+  const mid = box.y + h / 2;
+  let x = box.x + pad;
+  drawIcon(ctx, icon, x, mid - px / 2, px, iconColor);
+  x += px + gap;
+  if (label) {
+    text.font(fontOf(600, px));
+    ctx.fillStyle = white(0.8);
+    ctx.fillText(label, x, mid);
+    x += labelW + gap;
+    text.font(fontOf(700, px));
+  }
+  ctx.fillStyle = '#fff';
+  text.drawTabular(value, x, mid);
+}
+
+class ViewerCount implements Widget {
+  private shown = NaN;
+  private value = '';
+
+  constructor(
+    private sh: Shared,
+    public settings: Record<string, unknown>,
+  ) {}
+
+  paint(box: Box) {
+    if (this.sh.viewers !== this.shown) {
+      this.shown = this.sh.viewers;
+      this.value = this.shown.toLocaleString();
+    }
+    paintCounter(this.sh, box, 'eye', '#ffffff', '', this.value);
+  }
+}
+
+function formatElapsed(ms: number): string {
+  const total = Math.max(0, Math.floor(ms / 1000));
+  const h = Math.floor(total / 3600);
+  const m = Math.floor((total % 3600) / 60);
+  const s = String(total % 60).padStart(2, '0');
+  return h ? `${h}:${String(m).padStart(2, '0')}:${s}` : `${m}:${s}`;
+}
+
+class StreamTimer implements Widget {
+  /** With no start time from the server, it counts from when it was first drawn, as a preview does. */
+  private drawnAt = Date.now();
+  private second = -1;
+  private value = '';
+
+  constructor(
+    private sh: Shared,
+    public settings: Record<string, unknown>,
+  ) {}
+
+  paint(box: Box) {
+    const { sh } = this;
+    const startedAt = sh.stats.startedAt ? Date.parse(sh.stats.startedAt) : NaN;
+    const from = Number.isFinite(startedAt) ? startedAt : this.drawnAt;
+    const second = Math.floor((sh.wall - from) / 1000);
+    if (second !== this.second) {
+      this.second = second;
+      this.value = formatElapsed(sh.wall - from);
+    }
+    paintCounter(sh, box, 'clock', accentOf(this.settings), setting(this.settings, 'label', ''), this.value);
+  }
+}
+
+class ReactionCounter implements Widget {
+  private count: Counted;
+  private shown = NaN;
+  private value = '';
+
+  constructor(
+    private sh: Shared,
+    public settings: Record<string, unknown>,
+  ) {
+    this.count = new Counted(this.base);
+  }
+
+  private get base() {
+    return Number(this.sh.stats.reactions) || 0;
+  }
+
+  onEvent(event: LiveRoomEvent) {
+    if (event.type === 'reaction') this.count.add(this.base, 1);
+  }
+
+  paint(box: Box) {
+    const total = this.count.value(this.base);
+    if (total !== this.shown) {
+      this.shown = total;
+      this.value = total.toLocaleString();
+    }
+    paintCounter(this.sh, box, 'heart', accentOf(this.settings), '', this.value);
+  }
+}
+
+// ─── Text, lower third, frame, ticker ────────────────────────────────────────
+
+class TextWidget implements Widget {
+  private gradient: { key: string; g: CanvasGradient } | null = null;
+
+  constructor(
+    private sh: Shared,
+    public settings: Record<string, unknown>,
+  ) {}
+
+  paint(box: Box) {
+    const { ctx, text } = this.sh;
+    const lowerThird = setting(this.settings, 'style', 'plain') === 'lower_third';
+    const main = setting(this.settings, 'text', '');
+    const sub = setting(this.settings, 'subtext', '');
+    if (!main && !sub) return;
+    const h = box.h;
+    let x = box.x;
+    let maxW = box.w;
+    const px = h * (lowerThird ? 0.32 : 0.5);
+    const subPx = h * 0.19;
+
+    if (lowerThird) {
+      const key = `${box.x | 0},${box.w | 0}`;
+      if (!this.gradient || this.gradient.key !== key) {
+        const g = ctx.createLinearGradient(box.x, 0, box.x + box.w, 0);
+        g.addColorStop(0, 'rgba(10,10,12,0.82)');
+        g.addColorStop(1, 'rgba(10,10,12,0.45)');
+        this.gradient = { key, g };
+      }
+      ctx.fillStyle = this.gradient.g;
+      ctx.fillRect(box.x, box.y, box.w, h);
+      const border = h * 0.07;
+      ctx.fillStyle = accentOf(this.settings);
+      ctx.fillRect(box.x, box.y, border, h);
+      x = box.x + border + h * 0.25;
+      maxW = box.w - border - h * 0.5;
+    } else {
+      shadow(ctx, 'rgba(0,0,0,0.6)', 10 * this.sh.unit, 2 * this.sh.unit);
+    }
+    if (maxW <= 0) return;
+
+    // The heading wraps, as a block of text does; the subtext is one line, cut short.
+    text.font(fontOf(800, px));
+    const lines = main ? text.wrap(main, maxW, Math.max(1, Math.floor(h / (px * LINE_HEIGHT)))) : NONE;
+    const blockH = lines.length * px * LINE_HEIGHT + (sub ? h * 0.04 + subPx * LINE_HEIGHT : 0);
+    let top = box.y + (h - blockH) / 2;
+    ctx.fillStyle = '#fff';
+    for (const line of lines) {
+      ctx.fillText(line, x, lineMid(top, px));
+      top += px * LINE_HEIGHT;
+    }
+    if (sub) {
+      top += h * 0.04;
+      text.font(fontOf(500, subPx));
+      ctx.fillStyle = white(0.78);
+      ctx.fillText(text.fit(sub, maxW), x, lineMid(top, subPx));
+    }
+    noShadow(ctx);
+  }
+}
+
+class Frame implements Widget {
+  private glow: { key: string; raster: Raster | null } | null = null;
+
+  constructor(
+    private sh: Shared,
+    public settings: Record<string, unknown>,
+  ) {}
+
+  paint(box: Box) {
+    const { ctx } = this.sh;
+    const glow = setting(this.settings, 'style', 'solid') === 'glow';
+    // Thickness and rounding are thousandths of the widget's height.
+    const thickness = (Math.min(80, Math.max(1, setting(this.settings, 'thickness', 6))) / 1000) * box.h;
+    const radius = (Math.min(300, Math.max(0, setting(this.settings, 'radius', 0))) / 1000) * box.h;
+    const accent = accentOf(this.settings);
+    if (!glow) {
+      strokeFrame(ctx, box.x, box.y, box.w, box.h, thickness, radius, accent);
+      return;
+    }
+    // A glow is a big blur: drawn once into a sprite, then copied each frame.
+    const key = `${box.w | 0}x${box.h | 0}|${thickness}|${radius}|${accent}`;
+    if (!this.glow || this.glow.key !== key) {
+      const scratch = makeCanvas(box.w, box.h);
+      if (scratch) {
+        const s = scratch.ctx as Ctx;
+        s.shadowColor = accent;
+        s.shadowBlur = thickness * 3;
+        strokeFrame(s, 0, 0, box.w, box.h, thickness, radius, accent);
+        strokeFrame(s, 0, 0, box.w, box.h, thickness, radius, accent);
+      }
+      this.glow = { key, raster: scratch?.canvas ?? null };
+    }
+    if (this.glow.raster) ctx.drawImage(this.glow.raster, box.x, box.y, box.w, box.h);
+    else strokeFrame(ctx, box.x, box.y, box.w, box.h, thickness, radius, accent);
+  }
+}
+
+function strokeFrame(ctx: Ctx, x: number, y: number, w: number, h: number, thickness: number, radius: number, color: string) {
+  roundRectPath(ctx, x + thickness / 2, y + thickness / 2, w - thickness, h - thickness, Math.max(0, radius - thickness / 2));
+  ctx.lineWidth = thickness;
+  ctx.strokeStyle = color;
+  ctx.stroke();
+}
+
+const TICKER_SECONDS: Record<string, number> = { slow: 30, normal: 18, fast: 10 };
+
+class Ticker implements Widget {
+  constructor(
+    private sh: Shared,
+    public settings: Record<string, unknown>,
+  ) {}
+
+  paint(box: Box) {
+    const { ctx, text, now } = this.sh;
+    const value = setting(this.settings, 'text', '');
+    if (!value) return;
+    const seconds = TICKER_SECONDS[setting(this.settings, 'speed', 'normal')] ?? TICKER_SECONDS.normal;
+    const h = box.h;
+    const border = h * 0.06;
+    ctx.fillStyle = GLASS;
+    ctx.fillRect(box.x, box.y, box.w, h);
+    ctx.fillStyle = accentOf(this.settings);
+    ctx.fillRect(box.x, box.y, box.w, border);
+    const px = h * 0.48;
+    text.font(fontOf(700, px));
+    // Two copies side by side, moved by one copy's width: the loop never jumps.
+    const copy = text.width(value) + px * 4;
+    const offset = ((now / 1000) % seconds) / seconds * copy;
+    const mid = box.y + border + (h - border) / 2;
+    ctx.fillStyle = '#fff';
+    ctx.fillText(value, box.x - offset, mid);
+    ctx.fillText(value, box.x - offset + copy, mid);
+  }
+}
+
+// ─── Chat box ────────────────────────────────────────────────────────────────
+
+interface ChatLine {
+  id: string;
+  user: StreamJoinUser;
+  name: string;
+  text: string;
+  addedAt: number;
+}
+
+class ChatBox implements Widget {
+  private lines: ChatLine[] = [];
+  private pose = newPose();
+
+  constructor(
+    private sh: Shared,
+    public settings: Record<string, unknown>,
+  ) {}
+
+  private get count() {
+    return Math.min(12, Math.max(1, setting(this.settings, 'count', 6)));
+  }
+
+  onEvent(event: LiveRoomEvent, now: number) {
+    if (event.type === 'chat') {
+      if (this.lines.some((l) => l.id === event.id)) return;
+      this.lines = [...this.lines, { id: event.id, user: event.user, name: nameOf(this.sh, event.user), text: event.text, addedAt: now }].slice(-this.count);
+    } else if (event.type === 'chatDeleted') {
+      this.lines = this.lines.filter((l) => l.id !== event.id);
+    }
+  }
+
+  paint(box: Box) {
+    const { sh } = this;
+    const { ctx, text } = sh;
+    const count = this.count;
+    if (this.lines.length > count) this.lines = this.lines.slice(-count);
+    const row = box.h / count;
+    const lineH = row * 0.9;
+    const gap = row * 0.08;
+    const padX = row * 0.3;
+    const inner = row * 0.25;
+    const px = row * 0.4;
+    const avatar = setting(this.settings, 'showAvatars', true) ? row * 0.6 : 0;
+    // Newest at the bottom, the rest stacked up above it.
+    let bottom = box.y + box.h;
+    for (let i = this.lines.length - 1; i >= 0 && bottom > box.y; i--) {
+      const line = this.lines[i];
+      rowEnter(line.addedAt, sh.now, this.pose);
+      const top = bottom - lineH + this.pose.dy * lineH;
+      const mid = top + lineH / 2;
+
+      text.font(fontOf(700, px));
+      const name = text.fit(line.name, box.w * 0.5);
+      const nameW = text.width(name);
+      text.font(fontOf(400, px));
+      const fixed = padX * 2 + (avatar ? avatar + inner : 0) + nameW + inner;
+      const message = text.fit(line.text, box.w - fixed);
+      const width = Math.min(box.w, fixed + text.width(message));
+
+      ctx.globalAlpha = this.pose.alpha;
+      roundRectPath(ctx, box.x, top, width, lineH, row * 0.45);
+      ctx.fillStyle = 'rgba(10,10,12,0.62)';
+      ctx.fill();
+      let x = box.x + padX;
+      if (avatar) {
+        drawAvatar(ctx, sh.images, line.user, x, mid - avatar / 2, avatar);
+        x += avatar + inner;
+      }
+      text.font(fontOf(700, px));
+      ctx.fillStyle = white(0.75);
+      ctx.fillText(name, x, mid);
+      x += nameW + inner;
+      text.font(fontOf(400, px));
+      ctx.fillStyle = '#fff';
+      ctx.fillText(message, x, mid);
+      ctx.globalAlpha = 1;
+      bottom -= lineH + gap;
+    }
+  }
+}
+
+// ─── Poll (read-only: viewers of the video vote with `!vote 2`) ──────────────
+
+const POLL_FILL_EASE = cubicBezier(0.2, 0.8, 0.2, 1);
+
+class PollPainter implements Widget {
+  private pollId = '';
+  private fills: Tween[] = [];
+  private key = '';
+  private time = '';
+  private foot = '';
+
+  constructor(
+    private sh: Shared,
+    public settings: Record<string, unknown>,
+  ) {}
+
+  paint(box: Box) {
+    const { sh } = this;
+    const { ctx, text } = sh;
+    const poll = sh.poll;
+    if (!poll) return;
+    if (poll.id !== this.pollId) {
+      this.pollId = poll.id;
+      this.fills = poll.options.map(() => new Tween(600, POLL_FILL_EASE));
+    }
+    const seconds = Math.max(0, Math.ceil((Date.parse(poll.endsAt) - sh.wall) / 1000) || 0);
+    const open = isPollOpen(poll, sh.wall) && seconds > 0;
+    const key = `${sh.lang}|${seconds}|${open}|${poll.total}`;
+    if (key !== this.key) {
+      this.key = key;
+      this.time = open ? `${Math.floor(seconds / 60)}:${String(seconds % 60).padStart(2, '0')}` : sh.t('liveOverlay.poll.closed');
+      this.foot = open
+        ? sh.t('liveOverlay.poll.howToVote', { count: poll.total, command: '!vote' })
+        : sh.t('liveOverlay.poll.votes', { count: poll.total });
+    }
+    const shares = pollShares(poll);
+    const leaders = open ? null : pollLeaders(poll);
+    const accent = accentOf(this.settings);
+
+    const n = poll.options.length;
+    const row = box.h / (n + 2);
+    glassPanel(ctx, box.x, box.y, box.w, box.h, row * 0.4, sh.hair);
+    const padX = row * 0.4;
+    const padY = row * 0.3;
+    const gap = row * 0.14;
+    const innerW = box.w - padX * 2;
+    if (innerW <= 0) return;
+    const x = box.x + padX;
+    let top = box.y + padY;
+
+    // Question and countdown.
+    const headPx = row * 0.46;
+    text.font(fontOf(600, headPx));
+    const timeW = text.width(this.time);
+    ctx.fillStyle = white(0.75);
+    ctx.fillText(this.time, x + innerW - timeW, lineMid(top, headPx));
+    text.font(fontOf(700, headPx));
+    ctx.fillStyle = '#fff';
+    ctx.fillText(text.fit(poll.question, innerW - timeW - row * 0.3), x, lineMid(top, headPx));
+    top += headPx * LINE_HEIGHT + gap;
+
+    const footPx = row * 0.32;
+    const footH = footPx * LINE_HEIGHT;
+    const optionsH = box.y + box.h - padY - footH - gap - top;
+    const optGap = row * 0.12;
+    const optH = (optionsH - optGap * (n - 1)) / n;
+    const px = row * 0.4;
+    for (let i = 0; i < n && optH > 0; i++) {
+      const oy = top + i * (optH + optGap);
+      const mid = oy + optH / 2;
+      ctx.save();
+      roundRectPath(ctx, x, oy, innerW, optH, row * 0.25);
+      ctx.fillStyle = white(0.1);
+      ctx.fill();
+      ctx.clip();
+      const fill = this.fills[i];
+      fill?.set(shares[i] / 100, sh.now);
+      const share = fill ? fill.get(sh.now) : shares[i] / 100;
+      if (share > 0) {
+        ctx.globalAlpha = 0.28;
+        ctx.fillStyle = accent;
+        ctx.fillRect(x, oy, innerW * share, optH);
+        ctx.globalAlpha = 1;
+      }
+      ctx.restore();
+
+      let ox = x + row * 0.3;
+      const numPx = px * 0.8;
+      const disc = numPx * 1.4;
+      ctx.beginPath();
+      ctx.arc(ox + disc / 2, mid, disc / 2, 0, Math.PI * 2);
+      ctx.fillStyle = white(0.16);
+      ctx.fill();
+      text.font(fontOf(700, numPx));
+      ctx.fillStyle = '#fff';
+      ctx.textAlign = 'center';
+      ctx.fillText(String(i + 1), ox + disc / 2, mid);
+      ctx.textAlign = 'left';
+      ox += disc + row * 0.25;
+
+      text.font(fontOf(600, px));
+      const pct = `${shares[i]}%`;
+      const pctW = text.width(pct);
+      const pctX = x + innerW - row * 0.3 - pctW;
+      ctx.fillText(pct, pctX, mid);
+      text.font(fontOf(leaders?.has(i) ? 700 : 400, px));
+      ctx.fillText(text.fit(poll.options[i].text, pctX - row * 0.25 - ox), ox, mid);
+    }
+
+    text.font(fontOf(400, footPx));
+    ctx.fillStyle = white(0.75);
+    ctx.fillText(text.fit(this.foot, innerW), x, lineMid(box.y + box.h - padY - footH, footPx));
+  }
+}
+
+// ─── Subathon timer ──────────────────────────────────────────────────────────
+
+const FLASH_MS = 2500;
+const FLASH_AT = [0, 0.15, 0.8, 1];
+const FLASH_OP = [0, 1, 1, 0];
+const FLASH_Y = [-0.2, -0.5, -0.8, -1.1];
+const FLASH_S = [0.8, 1, 1, 1];
+
+export function clockOf(totalSeconds: number): string {
+  const s = Math.max(0, Math.floor(totalSeconds));
+  const h = Math.floor(s / 3600);
+  const m = Math.floor((s % 3600) / 60);
+  return `${h}:${String(m).padStart(2, '0')}:${String(s % 60).padStart(2, '0')}`;
+}
+
+class SubathonTimer implements Widget {
+  private key = '';
+  private label = '';
+  private clock = '';
+  private flash = '';
+
+  constructor(
+    private sh: Shared,
+    public settings: Record<string, unknown>,
+  ) {}
+
+  paint(box: Box) {
+    const { sh } = this;
+    const { ctx, text } = sh;
+    const sub = sh.subathon;
+    if (!sub?.running || !sub.endsAt) return;
+    const left = Math.max(0, Math.ceil((Date.parse(sub.endsAt) - sh.wall) / 1000) || 0);
+    const custom = setting(this.settings, 'label', '');
+    const added = sub.lastAdd && sh.wall - sub.lastAdd.at < FLASH_MS ? sub.lastAdd.seconds : 0;
+    const key = `${sh.lang}|${left}|${custom}|${added}`;
+    if (key !== this.key) {
+      this.key = key;
+      this.label = custom || sh.t('liveOverlay.subathon');
+      this.clock = left === 0 ? sh.t('liveOverlay.subathonOver') : clockOf(left);
+      this.flash = added ? `+${clockOf(added).replace(/^0:/, '')}` : '';
+    }
+    const h = box.h;
+    glassPanel(ctx, box.x, box.y, box.w, h, h * 0.22, sh.hair);
+    const pad = h * 0.2;
+    const innerW = box.w - pad * 2;
+    if (innerW <= 0) return;
+    const labelPx = h * 0.2;
+    const clockPx = h * (left === 0 ? 0.3 : 0.42);
+    const blockH = labelPx * LINE_HEIGHT + clockPx * 1.05;
+    let top = box.y + (h - blockH) / 2;
+    text.font(fontOf(600, labelPx));
+    ctx.fillStyle = white(0.75);
+    ctx.fillText(text.fit(this.label, innerW), box.x + pad, lineMid(top, labelPx));
+    top += labelPx * LINE_HEIGHT;
+    text.font(fontOf(800, clockPx));
+    ctx.fillStyle = accentOf(this.settings);
+    if (left === 0) ctx.fillText(text.fit(this.clock, innerW), box.x + pad, top + (clockPx * 1.05) / 2);
+    else text.drawTabular(this.clock, box.x + pad, top + (clockPx * 1.05) / 2);
+
+    if (this.flash && sub.lastAdd) {
+      // `ow-subathon-add`: "+1:30" floats up the right edge and fades.
+      const p = clamp01((sh.wall - sub.lastAdd.at) / FLASH_MS);
+      const e = easeOut(p);
+      const px = h * 0.3;
+      text.font(fontOf(800, px));
+      const w = text.width(this.flash);
+      const s = keyframes(e, FLASH_AT, FLASH_S);
+      const lineH = px * LINE_HEIGHT;
+      ctx.save();
+      ctx.globalAlpha = keyframes(e, FLASH_AT, FLASH_OP);
+      ctx.translate(box.x + box.w - pad - w / 2, box.y + h / 2 + keyframes(e, FLASH_AT, FLASH_Y) * lineH + lineH / 2);
+      ctx.scale(s, s);
+      shadow(ctx, 'rgba(0,0,0,0.5)', 6 * sh.unit, 1 * sh.unit);
+      ctx.fillStyle = '#4ade80';
+      ctx.fillText(this.flash, -w / 2, 0);
+      ctx.restore();
+    }
+  }
+}
+
+// ─── Tip jar ─────────────────────────────────────────────────────────────────
+
+const DROP_MS = 1200;
+const JAR_FILL_EASE = cubicBezier(0.2, 0.8, 0.2, 1);
+const DROP_OP_AT = [0, 0.2, 1];
+const DROP_OP = [0, 1, 0];
+
+class TipJar implements Widget {
+  private count: Counted;
+  private drops: number[] = [];
+  private fill = new Tween(800, JAR_FILL_EASE);
+  private key = '';
+  private title = '';
+  private line = '';
+  private gradient: { key: string; g: CanvasGradient } | null = null;
+
+  constructor(
+    private sh: Shared,
+    public settings: Record<string, unknown>,
+  ) {
+    this.count = new Counted(this.base);
+  }
+
+  private get base() {
+    return Number(this.sh.stats.totalTips) || 0;
+  }
+
+  onEvent(event: LiveRoomEvent, now: number) {
+    if (event.type !== 'tipConfirmed') return;
+    this.count.add(this.base, event.paidAmount);
+    this.drops = [...this.drops.slice(-4), now];
+  }
+
+  paint(box: Box) {
+    const { sh } = this;
+    const { ctx, text } = sh;
+    const target = Math.max(1, setting(this.settings, 'target', 100_000));
+    const value = this.count.value(this.base);
+    const custom = setting(this.settings, 'title', '');
+    const key = `${sh.lang}|${Math.floor(value)}|${target}|${custom}`;
+    if (key !== this.key) {
+      this.key = key;
+      this.title = custom || sh.t('liveOverlay.tipJar');
+      this.line = `${Math.floor(value).toLocaleString()} / ${target.toLocaleString()} DHB`;
+    }
+    const accent = accentOf(this.settings, '#facc15');
+    const w = box.w;
+    const capPx = w * 0.09;
+    const captionH = capPx * LINE_HEIGHT * 2;
+    const glassH = box.h - captionH - w * 0.04;
+    const glassW = w * 0.7;
+    const gx = box.x + (w - glassW) / 2;
+    const gy = box.y;
+
+    if (glassH > 0) {
+      const border = w * 0.025;
+      shadow(ctx, 'rgba(0,0,0,0.35)', 24 * sh.unit, 6 * sh.unit);
+      roundRectPath(ctx, gx, gy, glassW, glassH, w * 0.08, w * 0.2);
+      ctx.fillStyle = white(0.08);
+      ctx.fill();
+      noShadow(ctx);
+      ctx.save();
+      ctx.clip();
+      this.fill.set(Math.min(1, value / target), sh.now);
+      const fillH = glassH * this.fill.get(sh.now);
+      if (fillH > 0) {
+        const gkey = `${gy | 0},${glassH | 0},${accent}`;
+        if (!this.gradient || this.gradient.key !== gkey) {
+          const g = ctx.createLinearGradient(0, gy + glassH, 0, gy);
+          g.addColorStop(0, accent);
+          g.addColorStop(1, mixWithWhite(accent, 0.4));
+          this.gradient = { key: gkey, g };
+        }
+        ctx.globalAlpha = 0.85;
+        ctx.fillStyle = this.gradient.g;
+        ctx.fillRect(gx, gy + glassH - fillH, glassW, fillH);
+        ctx.globalAlpha = 1;
+      }
+      // Coins falling in.
+      this.drops = this.drops.filter((at) => sh.now - at < DROP_MS);
+      const coinPx = w * 0.16;
+      for (let i = 0; i < this.drops.length; i++) {
+        const p = (sh.now - this.drops[i]) / DROP_MS;
+        const e = p * p; // ease-in
+        const cy = gy + (-1.2 * coinPx * LINE_HEIGHT) * (1 - e) + box.h * 0.6 * e + (coinPx * LINE_HEIGHT) / 2;
+        ctx.globalAlpha = keyframes(p, DROP_OP_AT, DROP_OP);
+        sh.sprites.draw(ctx, '🪙', gx + glassW * ((20 + ((i * 23) % 60)) / 100) + coinPx / 2, cy, coinPx);
+      }
+      ctx.globalAlpha = 1;
+      ctx.restore();
+      roundRectPath(ctx, gx + border / 2, gy + border / 2, glassW - border, glassH - border, w * 0.08, w * 0.2);
+      ctx.lineWidth = border;
+      ctx.strokeStyle = white(0.75);
+      ctx.stroke();
+      // `inset 0 0 8% white/15`, as a soft inner rim.
+      ctx.lineWidth = border * 1.5;
+      ctx.strokeStyle = withAlpha('#ffffff', 0.08);
+      ctx.stroke();
+    }
+
+    const cx = box.x + w / 2;
+    const capTop = box.y + box.h - captionH;
+    shadow(ctx, 'rgba(0,0,0,0.6)', 6 * sh.unit, 1 * sh.unit);
+    ctx.textAlign = 'center';
+    text.font(fontOf(700, capPx));
+    ctx.fillStyle = '#fff';
+    ctx.fillText(text.fit(this.title, w), cx, lineMid(capTop, capPx));
+    text.font(fontOf(600, capPx));
+    ctx.fillStyle = white(0.85);
+    ctx.fillText(text.fit(this.line, w), cx, lineMid(capTop + capPx * LINE_HEIGHT, capPx));
+    ctx.textAlign = 'left';
+    noShadow(ctx);
+  }
+}
+
+// ─── Registry ────────────────────────────────────────────────────────────────
+
+export function createWidget(kind: OverlayKind, sh: Shared, settings: Record<string, unknown>): Widget {
+  switch (kind) {
+    case 'tip_alert':
+      return new TipAlert(sh, settings);
+    case 'follow_alert':
+    case 'subscribe_alert':
+    case 'share_alert':
+    case 'join_alert':
+      return new PersonAlert(sh, kind, settings);
+    case 'goal_bar':
+      return new GoalBar(sh, settings);
+    case 'top_supporters':
+      return new TopSupporters(sh, settings);
+    case 'viewer_count':
+      return new ViewerCount(sh, settings);
+    case 'text':
+      return new TextWidget(sh, settings);
+    case 'frame':
+      return new Frame(sh, settings);
+    case 'stream_timer':
+      return new StreamTimer(sh, settings);
+    case 'reaction_counter':
+      return new ReactionCounter(sh, settings);
+    case 'event_feed':
+      return new EventFeed(sh, settings);
+    case 'chat_box':
+      return new ChatBox(sh, settings);
+    case 'ticker':
+      return new Ticker(sh, settings);
+    case 'rule_alert':
+      return new RuleAlert(sh, settings);
+    case 'poll':
+      return new PollPainter(sh, settings);
+    case 'spin_wheel':
+      return new SpinWheel(sh, settings);
+    case 'subathon_timer':
+      return new SubathonTimer(sh, settings);
+    case 'points_board':
+      return new PointsBoard(sh, settings);
+    case 'streamer_level':
+      return new StreamerLevel(sh, settings);
+    case 'tip_jar':
+      return new TipJar(sh, settings);
+    case 'hype_train':
+      return new HypeTrainWidget(sh, settings);
+  }
+}
