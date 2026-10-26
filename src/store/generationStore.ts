@@ -62,6 +62,8 @@ export interface GenerationJob {
   /** Provider-rendered 3D still or video poster, when available. */
   posterUrl?: string;
   cloudSaved?: boolean;
+  favorite?: boolean;
+  hidden?: boolean;
   saveError?: string;
   error?: string;
   createdAt: number;
@@ -115,6 +117,8 @@ type PersistedJob = Pick<
   | 'ticket'
   | 'transcript'
   | 'segments'
+  | 'favorite'
+  | 'hidden'
 >;
 
 /**
@@ -272,12 +276,12 @@ function loadPersisted(): GenerationJob[] {
 }
 
 function toPersisted(j: GenerationJob): PersistedJob {
-  const { id, kind, prompt, resolvedPrompt, model, modelName, presetId, aspect, url, posterUrl, exportFormat, createdAt, finishedAt, status, ticket, transcript, segments } = j;
+  const { id, kind, prompt, resolvedPrompt, model, modelName, presetId, aspect, url, posterUrl, exportFormat, createdAt, finishedAt, status, ticket, transcript, segments, favorite, hidden } = j;
   // A blob: URL is dead the moment the tab reloads, and writing one back means
   // a card that renders a player pointed at nothing. Transcripts have no such
   // problem, which is why the row is kept and only the URL is dropped.
   const durableUrl = url?.startsWith('blob:') ? undefined : url;
-  return { id, kind, prompt, resolvedPrompt, model, modelName, presetId, aspect, url: durableUrl, posterUrl, exportFormat, createdAt, finishedAt, status, ticket, transcript, segments };
+  return { id, kind, prompt, resolvedPrompt, model, modelName, presetId, aspect, url: durableUrl, posterUrl, exportFormat, createdAt, finishedAt, status, ticket, transcript, segments, favorite, hidden };
 }
 
 /**
@@ -354,6 +358,7 @@ interface GenerationState {
   jobs: GenerationJob[];
   syncLibrary: () => Promise<void>;
   save: (id: string) => Promise<void>;
+  applyLibraryPreferences: (ids: string[], patch: { favorite?: boolean; hidden?: boolean }) => void;
   /** Currently open in the result viewer, or null. */
   focusedId: string | null;
 
@@ -450,6 +455,12 @@ export const useGenerationStore = create<GenerationState>((set, get) => {
   return {
     jobs: loadPersisted(),
     focusedId: null,
+    applyLibraryPreferences: (ids, next) => {
+      const selected = new Set(ids);
+      set(s => ({ jobs: s.jobs.map(job => selected.has(job.id) ? { ...job, ...next } : job),
+        focusedId: next.hidden && s.focusedId && selected.has(s.focusedId) ? null : s.focusedId }));
+      persist(get().jobs);
+    },
 
     save: async (id) => {
       const scope = storageKey;
@@ -675,7 +686,7 @@ export const useGenerationStore = create<GenerationState>((set, get) => {
 
     clearFinished: () => {
       for (const job of get().jobs) {
-        if (job.status === 'running') continue;
+        if (job.status === 'running' || job.hidden) continue;
         const wallet = storageKey.slice(STORAGE_PREFIX.length + 1);
         void removeCachedGeneration(storageKey, job.id).catch(() => {});
         if (wallet !== 'anon') void removeCloudGeneration(wallet, job.id).catch(() => {});
@@ -687,7 +698,7 @@ export const useGenerationStore = create<GenerationState>((set, get) => {
           }
         }
       }
-      set((s) => ({ jobs: s.jobs.filter((j) => j.status === 'running'), focusedId: null }));
+      set((s) => ({ jobs: s.jobs.filter((j) => j.status === 'running' || j.hidden), focusedId: null }));
       persist(get().jobs);
     },
 
