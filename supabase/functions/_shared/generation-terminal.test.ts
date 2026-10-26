@@ -38,6 +38,14 @@ Deno.test('a failed external credit refund leaves its durable decision pending',
   assert(failed); same(calls.length,1);
 });
 
+Deno.test('an explicit permanent cancellation finishes as not charged rather than restored', async () => {
+  const {db,calls}=fakeDb([{claimed:true,job:{id:'job',status:'refund_pending',payment_source:'credits',credit_debit_key:'ai:canceled'}},
+    {id:'job',status:'failed',result:{paymentNotTaken:true,paymentRestored:false}}]);
+  const result=await recoverGenerationRefund('job',db,async()=>'canceled');
+  same(result?.result?.paymentNotTaken,true);same(result?.result?.paymentRestored,false);
+  same(calls.map(call=>call.name),['ai_generation_refund_claim','ai_generation_debit_canceled']);
+});
+
 Deno.test('wallet release is delegated to the transactional finalizer instead of a separate receipt call', async () => {
   const {db,calls}=fakeDb([{claimed:true,job:{id:'job',status:'refund_pending',payment_source:'dhb'}},{id:'job',status:'failed',result:{paymentRestored:true}}]);
   let externalCalls=0;
@@ -62,6 +70,8 @@ Deno.test('the credit HTTP acknowledgement distinguishes restored, void and miss
     same(await refundCreditsOutcome('fixture'),'unconfirmed');
     globalThis.fetch=async()=>new Response(JSON.stringify({refunded:true}),{status:200});
     same(await refundCreditsOutcome('fixture'),'restored');
+    globalThis.fetch=async()=>new Response(JSON.stringify({refunded:false,canceled:true}),{status:200});
+    same(await refundCreditsOutcome('fixture'),'canceled');
   } finally {
     globalThis.fetch=fetcher;
     if(secret===undefined)Deno.env.delete('INTERNAL_SERVICE_SECRET');else Deno.env.set('INTERNAL_SERVICE_SECRET',secret);

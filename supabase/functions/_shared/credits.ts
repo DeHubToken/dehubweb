@@ -36,7 +36,7 @@ export async function debitCredits(address: string, usdMicros: number, key: stri
   }
 }
 
-export type CreditRefundOutcome = 'restored' | 'unconfirmed' | 'error';
+export type CreditRefundOutcome = 'restored' | 'canceled' | 'unconfirmed' | 'error';
 /** Only an explicit refunded acknowledgement proves a keyed movement was reversed. */
 export async function refundCreditsOutcome(key: string): Promise<CreditRefundOutcome> {
   const cfg = creditsConfig();
@@ -50,7 +50,7 @@ export async function refundCreditsOutcome(key: string): Promise<CreditRefundOut
     });
     if (res.status === 200) {
       const body = await res.json().catch(() => null);
-      return body?.refunded === true ? 'restored' : 'unconfirmed';
+      return body?.refunded === true ? 'restored' : body?.canceled === true && body?.refunded === false ? 'canceled' : 'unconfirmed';
     }
     // A missing/void key does not fence a debit still arriving at the backend.
     if (res.status === 404) return 'unconfirmed';

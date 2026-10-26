@@ -27,7 +27,13 @@ export async function recoverGenerationRefund(id: string, db: Db = serviceClient
   const job = decision.job;
   let creditRestored = false;
   if (job.payment_source === 'credits') {
-    creditRestored = (await refund(job.credit_debit_key)) === 'restored';
+    const outcome = await refund(job.credit_debit_key);
+    if (outcome === 'canceled') {
+      const canceled = await db.rpc('ai_generation_debit_canceled', { p_job_id: id, p_token: token });
+      if (canceled.error) throw new Error('Payment recovery is pending. Reconnect without paying again.');
+      return canceled.data as GenerationJournal | null;
+    }
+    creditRestored = outcome === 'restored';
     if (!creditRestored) throw new Error('Payment recovery is pending. Reconnect without paying again.');
   }
   // For wallet receipts, release and finalization share this SQL transaction.

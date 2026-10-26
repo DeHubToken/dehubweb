@@ -103,6 +103,23 @@ BEGIN
   RETURN to_jsonb(v_job);
 END $$;
 
+-- The main backend explicitly confirmed a permanent pre-debit cancellation.
+-- This is distinct from a countercredit and may only finalize the current lease.
+CREATE OR REPLACE FUNCTION public.ai_generation_debit_canceled(p_job_id uuid,p_token uuid)
+RETURNS jsonb LANGUAGE plpgsql SECURITY DEFINER SET search_path=public AS $$
+DECLARE v_job public.ai_generation_jobs%ROWTYPE;
+BEGIN
+  IF p_token IS NULL THEN RAISE EXCEPTION 'INVALID_REFUND_TOKEN'; END IF;
+  SELECT * INTO v_job FROM ai_generation_jobs WHERE id=p_job_id FOR UPDATE;
+  IF NOT FOUND THEN RETURN NULL; END IF;
+  IF v_job.payment_source<>'credits' OR v_job.status<>'refund_pending' OR v_job.refund_token IS DISTINCT FROM p_token
+    OR v_job.refund_lease_until IS NULL OR v_job.refund_lease_until<=clock_timestamp() THEN RETURN to_jsonb(v_job); END IF;
+  UPDATE ai_generation_jobs SET status=CASE WHEN result->>'status' IN ('canceled','cancelled') THEN result->>'status' ELSE 'failed' END,
+    result=COALESCE(result,'{}'::jsonb)||jsonb_build_object('paymentNotTaken',true,'paymentRestored',false),
+    refund_token=NULL,refund_lease_until=NULL,updated_at=clock_timestamp() WHERE id=p_job_id RETURNING * INTO v_job;
+  RETURN to_jsonb(v_job);
+END $$;
+
 CREATE OR REPLACE FUNCTION public.ai_generation_save_result(p_job_id uuid,p_expected_result jsonb,p_result jsonb)
 RETURNS jsonb LANGUAGE plpgsql SECURITY DEFINER SET search_path=public AS $$
 DECLARE v_job public.ai_generation_jobs%ROWTYPE;
@@ -131,6 +148,7 @@ REVOKE ALL ON FUNCTION public.ai_generation_transition(uuid,text,jsonb,text,text
 REVOKE ALL ON FUNCTION public.ai_generation_debit_declined(uuid) FROM PUBLIC,anon,authenticated;
 REVOKE ALL ON FUNCTION public.ai_generation_refund_claim(uuid,uuid) FROM PUBLIC,anon,authenticated;
 REVOKE ALL ON FUNCTION public.ai_generation_refund_finish(uuid,uuid,boolean) FROM PUBLIC,anon,authenticated;
+REVOKE ALL ON FUNCTION public.ai_generation_debit_canceled(uuid,uuid) FROM PUBLIC,anon,authenticated;
 REVOKE ALL ON FUNCTION public.ai_generation_save_result(uuid,jsonb,jsonb) FROM PUBLIC,anon,authenticated;
 REVOKE ALL ON FUNCTION public.ai_generation_terminal_guard() FROM PUBLIC,anon,authenticated;
 REVOKE ALL ON FUNCTION public.ai_payment_release(text,text,numeric,text) FROM PUBLIC,anon,authenticated;
@@ -138,5 +156,6 @@ GRANT EXECUTE ON FUNCTION public.ai_generation_transition(uuid,text,jsonb,text,t
 GRANT EXECUTE ON FUNCTION public.ai_generation_debit_declined(uuid) TO service_role;
 GRANT EXECUTE ON FUNCTION public.ai_generation_refund_claim(uuid,uuid) TO service_role;
 GRANT EXECUTE ON FUNCTION public.ai_generation_refund_finish(uuid,uuid,boolean) TO service_role;
+GRANT EXECUTE ON FUNCTION public.ai_generation_debit_canceled(uuid,uuid) TO service_role;
 GRANT EXECUTE ON FUNCTION public.ai_generation_save_result(uuid,jsonb,jsonb) TO service_role;
 GRANT EXECUTE ON FUNCTION public.ai_payment_release(text,text,numeric,text) TO service_role;
