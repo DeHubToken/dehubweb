@@ -126,7 +126,7 @@ export async function toggleFollowFor(
       revertFollowOverride(address, undefined);
       patchProfileCaches(queryClient, address, false, -1);
       await queryClient.invalidateQueries({ queryKey: ['user-follow-status'], predicate: query => query.queryKey[2] === lower });
-      if (!opts.silent) toast.success(_translateCopy('follow.requestSentTo', { name: name || _translateCopy('follow.someone') }));
+      if (!opts.silent) toast.success(_translateCopy('follow.requestSentTo', { defaultValue: 'Follow request sent to {{name}}', name: name || _translateCopy('follow.someone', { defaultValue: 'this person' }) }));
       opts.onSuccess?.(false);
       return true;
     }
@@ -145,7 +145,7 @@ export async function toggleFollowFor(
       revertFollowOverride(address, undefined);
       patchProfileCaches(queryClient, address, false, -1);
       await queryClient.invalidateQueries({ queryKey: ['user-follow-status'], predicate: query => query.queryKey[2] === lower });
-      if (!opts.silent) toast.info(_translateCopy('follow.requestAlreadyPending'));
+      if (!opts.silent) toast.info(_translateCopy('follow.requestAlreadyPending', { defaultValue: 'Follow request already pending. Waiting for approval.' }));
       opts.onSuccess?.(false);
       return true;
     }
