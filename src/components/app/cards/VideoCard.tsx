@@ -1487,16 +1487,16 @@ const VideoCardBody = memo(function VideoCard({ video, postPage = false, onBack,
       .catch(() => {});
   }, [isFullscreen, swipeToShorts, queryClient]);
 
-  // Feeds show the clip as it is, on every screen size: muted autoplay (or a
-  // still frame with autoplay off), an unmute button in the corner and
-  // nothing else. There is no play or pause in a feed. A tap anywhere else
-  // opens it in the shorts viewer (the post page with Shorts off), where the
-  // full controls are. The post page and gated or live posts keep the player.
+  // Phone feeds show the clip as it is: muted autoplay (or a still frame with
+  // autoplay off), an unmute button in the corner and nothing else, no play
+  // or pause. A tap anywhere else opens it in the shorts viewer (the post
+  // page with Shorts off), where the full controls are. Desktop keeps normal
+  // in-feed playback with hover controls, and its posts open the post page.
   const isPhone = useIsMobile();
-  const feedShortsTarget = shortsEnabled && !postPage && !isImmersive && !isFullscreen && !hideActions
+  const feedShortsTarget = isPhone && shortsEnabled && !postPage && !isImmersive && !isFullscreen && !hideActions
     && !video.isAudio && !video.isAd && !(video.isLivePost && video.isLiveNow) && !!video.videoUrl
     && !isContentGated && !isVideoNotReady;
-  const feedPreview = !postPage && !isImmersive && !isFullscreen && !hideActions
+  const feedPreview = isPhone && !postPage && !isImmersive && !isFullscreen && !hideActions
     && !video.isAudio && !video.isAd && !(video.isLivePost && video.isLiveNow) && !!video.videoUrl
     && !isContentGated && !isVideoNotReady;
   feedPreviewRef.current = feedPreview;
