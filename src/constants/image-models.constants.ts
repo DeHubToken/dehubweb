@@ -22,6 +22,8 @@ export interface ImageModel {
    * after the DHB had already been spent.
    */
   supportsEdit?: boolean;
+  requiresImage?: boolean;
+  outpaint?: boolean;
 }
 
 /** Whether a reference image can be handed to this model. */
@@ -70,6 +72,8 @@ export const IMAGE_MODELS: Record<string, ImageModel> = {
     emoji: '◈', tier: 'fast' as const, baseCostUsd: model.baseCostUsd, supportsEdit: false,
   }])),
   ...CREATOR_FAL_IMAGE_MODELS,
+  'bria-expand': { ...CREATOR_FAL_IMAGE_MODELS['bria-expand'],
+    get description() { return _translateCopy('creator.expandDescription', { defaultValue: 'Generate new image borders. Optional English prompt; one source image.' }); } },
   'gemini-2.5-flash': {
     id: 'gemini-2.5-flash',
     name: 'Gemini 2.5 Flash',
