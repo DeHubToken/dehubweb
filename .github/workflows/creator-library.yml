@@ -1,0 +1,32 @@
+name: Private Creator library
+on:
+  pull_request:
+    paths: ['supabase/functions/creator-library/**', 'supabase/migrations/20261026010000_creator_library_preferences.sql', 'tests/sql/creator-library-preferences.sql', '.github/workflows/creator-library.yml']
+  workflow_dispatch:
+jobs:
+  preferences:
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:17
+        env: { POSTGRES_PASSWORD: postgres }
+        ports: ['5432:5432']
+        options: --health-cmd pg_isready --health-interval 5s --health-timeout 5s --health-retries 10
+    env: { PGHOST: localhost, PGPORT: 5432, PGUSER: postgres, PGPASSWORD: postgres, PGDATABASE: postgres }
+    steps:
+      - uses: actions/checkout@v4
+      - uses: denoland/setup-deno@v2
+        with: { deno-version: v2.x }
+      - run: deno test supabase/functions/creator-library/actions_test.ts
+      - run: deno check supabase/functions/creator-library/index.ts
+      - run: |
+          psql -v ON_ERROR_STOP=1 <<'SQL'
+          CREATE ROLE anon; CREATE ROLE authenticated; CREATE ROLE service_role BYPASSRLS;
+          CREATE TABLE public.creator_assets(id text NOT NULL,wallet_address text NOT NULL,storage_path text,metadata jsonb NOT NULL DEFAULT '{}',ready boolean NOT NULL DEFAULT false,created_at timestamptz NOT NULL DEFAULT now(),PRIMARY KEY(wallet_address,id));
+          ALTER TABLE public.creator_assets ENABLE ROW LEVEL SECURITY;
+          REVOKE ALL ON public.creator_assets FROM anon,authenticated;
+          GRANT ALL ON public.creator_assets TO service_role;
+          SQL
+          psql -v ON_ERROR_STOP=1 -f supabase/migrations/20261026010000_creator_library_preferences.sql
+          psql -v ON_ERROR_STOP=1 -f supabase/migrations/20261026010000_creator_library_preferences.sql
+          psql -v ON_ERROR_STOP=1 -f tests/sql/creator-library-preferences.sql
