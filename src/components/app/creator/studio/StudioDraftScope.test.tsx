@@ -2,6 +2,8 @@ import React, { useEffect, useState } from 'react';
 import { cleanup, fireEvent, render, screen } from '@testing-library/react';
 import { afterEach, beforeEach, expect, it } from 'vitest';
 import { readStudioSnapshot, StudioDraftScope, writeStudioSnapshot } from './StudioDraftScope';
+import { useMarketingHandoff } from '@/hooks/use-marketing-handoff';
+import { __resetDraftCacheForTests } from '@/lib/draft-cache';
 
 function Draft({ storageKey, initial = '' }: { storageKey: string; initial?: string }) {
   const [text, setText] = useState(() => {
@@ -11,7 +13,7 @@ function Draft({ storageKey, initial = '' }: { storageKey: string; initial?: str
   useEffect(() => { writeStudioSnapshot(storageKey, { prompt: text }); }, [storageKey, text]);
   return <input aria-label="Draft" value={text} onChange={event => setText(event.target.value)} />;
 }
-beforeEach(() => localStorage.clear());
+beforeEach(() => { localStorage.clear(); __resetDraftCacheForTests(); });
 afterEach(cleanup);
 
 it('isolates cached account and campaign drafts across mounted transitions and remounts', () => {
@@ -41,4 +43,35 @@ it('does not restore legacy unowned snapshot contents into another account', () 
   localStorage.setItem('dehub:creator-studio:v1', JSON.stringify({ prompt: 'Unowned private brief' }));
   render(<StudioDraftScope owner="bob">{storageKey => <Draft storageKey={storageKey} />}</StudioDraftScope>);
   expect(screen.getByLabelText('Draft')).toHaveValue('');
+});
+
+function CampaignPage({ owner }: { owner: string | null }) {
+  const { active, prepare, leave } = useMarketingHandoff(owner);
+  return <>
+    <button onClick={() => prepare({ kind: 'image', prompt: 'Prepared campaign', aspect: '1:1' })}>Prepare</button>
+    <button onClick={leave}>Return</button>
+    <StudioDraftScope owner={owner} scope={active ? `campaign:${active.id}` : 'main'}>{storageKey => <Draft storageKey={storageKey} initial={active?.draft.prompt} />}</StudioDraftScope>
+  </>;
+}
+
+it('restores the active campaign and its edits after a page reload, then returns to the original studio draft', () => {
+  const ui = render(<CampaignPage owner="alice" />);
+  fireEvent.change(screen.getByLabelText('Draft'), { target: { value: 'Original studio draft' } });
+  fireEvent.click(screen.getByRole('button', { name: 'Prepare' }));
+  expect(screen.getByLabelText('Draft')).toHaveValue('Prepared campaign');
+  fireEvent.change(screen.getByLabelText('Draft'), { target: { value: 'Edited campaign after review' } });
+  ui.unmount();
+  __resetDraftCacheForTests();
+  const reloaded = render(<CampaignPage owner="alice" />);
+  expect(screen.getByLabelText('Draft')).toHaveValue('Edited campaign after review');
+  reloaded.rerender(<CampaignPage owner="bob" />);
+  expect(screen.getByLabelText('Draft')).toHaveValue('');
+  reloaded.rerender(<CampaignPage owner="alice" />);
+  expect(screen.getByLabelText('Draft')).toHaveValue('Edited campaign after review');
+  fireEvent.click(screen.getByRole('button', { name: 'Return' }));
+  expect(screen.getByLabelText('Draft')).toHaveValue('Original studio draft');
+  reloaded.unmount();
+  __resetDraftCacheForTests();
+  render(<CampaignPage owner="alice" />);
+  expect(screen.getByLabelText('Draft')).toHaveValue('Original studio draft');
 });
