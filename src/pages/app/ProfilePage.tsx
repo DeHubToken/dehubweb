@@ -481,12 +481,14 @@ export default function ProfilePage() {
   // Also wait if auth is still loading or the profile is refetching
   // (race condition: private profiles return empty shell before auth token is available).
   if (!data.profile && (data.isAuthLoading || data.isLoadingProfile || data.isFetchingProfile)) {
-    return <div className="relative"><PageHeader overlay plainBack /><ProfileSkeleton /></div>;
+    // The loaded page's own top bar, so the back arrow is already where it
+    // stays instead of a lone arrow that jumps when the profile arrives.
+    return <div className="relative"><CollapsingProfileHeader headerRef={profileHeaderRef} name="" handle="" /><ProfileSkeleton /></div>;
   }
 
   // Auth gate for own profile
   if (data.isOwnProfile && !data.isAuthenticated) {
-    return <div className="relative"><PageHeader overlay plainBack /><AuthGate description={t('profile.loginDescription')} /></div>;
+    return <div className="relative"><CollapsingProfileHeader headerRef={profileHeaderRef} name="" handle="" /><AuthGate description={t('profile.loginDescription')} /></div>;
   }
 
   // No profile found
