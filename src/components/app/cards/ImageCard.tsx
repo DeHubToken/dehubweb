@@ -1382,8 +1382,8 @@ const ImageCardBody = memo(function ImageCard({ post, aboveFold = false, onOpenC
               </div>
             </div>
           </>
-        ) : (
-          <SwipeableCarousel>
+        ) : (() => {
+          const carousel = (
             <ImageCarousel
               images={images}
               descriptions={post.mediaDescriptions}
@@ -1395,8 +1395,11 @@ const ImageCardBody = memo(function ImageCard({ post, aboveFold = false, onOpenC
               overlay={fullscreenOpen ? undefined : soundtrackControl}
               soundPlaying={soundtrack.playing && !fullscreenOpen}
             />
-          </SwipeableCarousel>
-        )}
+          );
+          // Only a gallery keeps sideways swipes; a single photo lets the
+          // Home tab swipe through.
+          return images.length > 1 ? <SwipeableCarousel>{carousel}</SwipeableCarousel> : carousel;
+        })()}
 
 
         {/* Content Type Badges - Bounty only (PPV/Lock are shown via centered overlay) */}
