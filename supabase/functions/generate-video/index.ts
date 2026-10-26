@@ -1078,7 +1078,7 @@ serve(async (req) => {
       return await recordGeneration(charged, response);
     } catch (providerError) {
       if (providerError instanceof VeniceError && providerError.uncertain) {
-        await serviceClient().from('ai_generation_jobs').update({ status: 'starting', provider: 'venice', result: { status: 'processing', error: providerError.message, submissionUnconfirmed: true }, updated_at: new Date().toISOString() }).eq('id', charged.jobId);
+        await serviceClient().from('ai_generation_jobs').update({ status: 'starting', provider: 'venice', result: { status: 'processing', error: providerError.message, submissionUnconfirmed: true }, updated_at: new Date().toISOString() }).eq('id', charged.jobId).eq('status', 'submitting');
         return new Response(JSON.stringify({ error: providerError.message, code: 'SUBMISSION_UNCONFIRMED', paymentRestored: false }), { status: 503, headers: { ...corsHeaders, 'Content-Type': 'application/json' } });
       }
       // The provider refused the job before it started, so nothing was
