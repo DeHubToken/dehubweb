@@ -10,7 +10,7 @@ import { useSurfaceDraft } from '@/hooks/use-surface-draft';
  */
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { ArrowUp, Loader2, RotateCcw, Wand2 } from "lucide-react";
+import { ArrowUp, History, Loader2, RotateCcw, Square, ThumbsDown, ThumbsUp, Wand2, X } from "lucide-react";
 import Sparkles from "@/components/ui/cut-icons/assistant";
 import Trash2 from "@/components/ui/cut-icons/delete";
 
@@ -20,6 +20,7 @@ import { useEditorUiStore } from '@/store/editorUiStore';
 import { useEditorAgentStore, type AgentChatEntry } from '@/store/editorAgentStore';
 import { useEditorQuota } from '@/hooks/use-editor-quota';
 import { applyOps, askAgent, askSceneAgent, type AgentMessage } from '@/lib/editor/agent';
+import { rewritePrompt } from '@/lib/editor/promptRewrite';
 import { highlightChatRequest, highlightVisualScope, type HighlightChatResult } from '@/lib/editor/highlightChat';
 import { useHighlightChat } from '@/lib/editor/useHighlightChat';
 import { getMedia } from '@/lib/editor/mediaStore';
@@ -46,6 +47,9 @@ export function AgentPanel() {
   const push = useEditorAgentStore((s) => s.push);
   const setBusy = useEditorAgentStore((s) => s.setBusy);
   const clear = useEditorAgentStore((s) => s.clear);
+  const queue = useEditorAgentStore((s) => s.queue);
+  const abortRef = useRef<AbortController | null>(null);
+  const [rewriting, setRewriting] = useState(false);
   const undo = useEditorStore((s) => s.undo);
   const quota = useEditorQuota();
   const latestQuota = useRef(quota); latestQuota.current = quota;
@@ -138,8 +142,12 @@ export function AgentPanel() {
 
   const send = useCallback(async (text: string) => {
     const prompt = text.trim();
-    if (!prompt || busy || highlights.state.busy || assembly.state.busy) return;
-    push({ id: nextId(), role: 'user', content: prompt });
+    if (!prompt) return;
+    if (busy || highlights.state.busy || assembly.state.busy) {
+      // Cardboard-style queue: keep typing while the assistant works.
+      useEditorAgentStore.getState().enqueue(prompt); setDraft.complete(text, ''); return;
+    }
+    push({ id: nextId(), role: 'user', content: prompt, checkpoint: useEditorStore.getState().toSnapshot() });
     const draftRequest = assemblyRequest(prompt);
     if (draftRequest || assembly.state.sourceId) {
       previewEnd.current = null; useEditorStore.getState().setIsPlaying(false);
@@ -162,6 +170,8 @@ export function AgentPanel() {
     const sourceKey = projectReviewSnapshotKey(source.toSnapshot());
     const task = projectTask(source.holdEdits());
     pendingTask.current = task;
+    const controller = new AbortController();
+    abortRef.current = controller;
     setBusy(true);
     try {
       const history: AgentMessage[] = [
@@ -169,7 +179,7 @@ export function AgentPanel() {
           .filter((e) => !e.error)
           .map(({ role, content }) => ({ role, content })),
       ];
-      const { reply, ops } = await askAgent(history);
+      const { reply, ops } = await askAgent(history, controller.signal);
       if (!task!.isCurrent()) return;
       if (projectReviewSnapshotKey(useEditorStore.getState().toSnapshot()) !== sourceKey) throw new Error('project changed');
       const report = ops.length ? await applyOps(ops, { wallet: quota.walletAddress,
@@ -195,11 +205,45 @@ export function AgentPanel() {
       });
     } finally {
       task!.release();
+      if (abortRef.current === controller) abortRef.current = null;
       if (pendingTask.current === task) {
         pendingTask.current = null; setBusy(false); inputRef.current?.focus();
       }
     }
   }, [useVisual, visualScope, busy, highlightState.busy, assemblyState.busy, assembly, highlights, recordHighlights, push, setBusy, quota.walletAddress, t, setDraft]);
+
+  const stop = () => {
+    abortRef.current?.abort(); abortRef.current = null;
+    pendingTask.current?.release(); pendingTask.current = null;
+    if (highlightState.busy) closeHighlights();
+    if (assemblyState.busy) closeAssembly();
+    setBusy(false);
+    push({ id: nextId(), role: 'assistant', content: t('editor.agent.stopped') });
+  };
+
+  // Send queued requests one at a time once the assistant is free.
+  useEffect(() => {
+    if (working || !queue.length) return;
+    const next = useEditorAgentStore.getState().dequeue();
+    if (next) void send(next);
+  }, [working, queue.length, send]);
+
+  const restore = (entry: AgentChatEntry) => {
+    const s = useEditorStore.getState();
+    const current = s.toSnapshot();
+    if (!entry.checkpoint || entry.checkpoint.id !== current.id || working) return;
+    const ok = s.applyDesignEdit(current, { ...entry.checkpoint, title: current.title });
+    push({ id: nextId(), role: 'assistant', content: t(ok ? 'editor.agent.restored' : 'editor.agent.failed'), error: !ok });
+  };
+
+  const rewrite = async () => {
+    const rough = draft.trim();
+    if (!rough || rewriting || working) return;
+    setRewriting(true);
+    try { setDraft(await rewritePrompt(rough)); }
+    catch { push({ id: nextId(), role: 'assistant', content: t('editor.agent.rewriteFailed'), error: true }); }
+    finally { setRewriting(false); inputRef.current?.focus(); }
+  };
 
   return (
     <div className="flex h-full min-h-0 flex-col">
@@ -238,6 +282,11 @@ export function AgentPanel() {
             key={e.id}
             entry={e}
             onUndo={undo}
+            onRestore={e.checkpoint && !working ? () => restore(e) : undefined}
+            onRate={(rating) => {
+              useEditorAgentStore.getState().rate(e.id, rating);
+              if (rating === 'down' && e.rating !== 'down' && !draft.trim()) { setDraft(t('editor.agent.retryPrefix')); inputRef.current?.focus(); }
+            }}
             onOpenGenerator={() => {
               if (!e.report?.generate) return;
               useEditorUiStore.getState().setGeneratePrefill(e.report.generate);
@@ -283,6 +332,17 @@ export function AgentPanel() {
           <label className="flex items-center gap-2 text-[11px] text-white/75"><input type="checkbox" checked={useVisual} onChange={event => setVisualConsent(event.target.checked ? visualScope : null)} />{t('editor.highlights.visual')}</label>
           {useVisual && <p className="text-[10px] leading-relaxed text-white/50">{t('editor.highlights.visualPrivacy')}</p>}
         </fieldset>}
+        {queue.length > 0 && (
+          <div className="mb-2 space-y-1 px-1" aria-label={t('editor.agent.queued', { count: queue.length })}>
+            <p className="text-[10px] text-white/50">{t('editor.agent.queued', { count: queue.length })}</p>
+            {queue.map((q, i) => (
+              <div key={`${i}-${q}`} className="flex items-center gap-1.5 rounded-lg border border-white/10 px-2 py-1 text-[11px] text-white/70">
+                <span className="min-w-0 flex-1 truncate">{q}</span>
+                <button type="button" aria-label={t('common.remove', { defaultValue: 'Remove' })} onClick={() => useEditorAgentStore.getState().unqueue(i)} className="text-white/45 hover:text-white"><X className="h-3 w-3" /></button>
+              </div>
+            ))}
+          </div>
+        )}
         <div className="flex items-end gap-1.5 rounded-xl border border-white/15 bg-white/[0.04] p-1.5 focus-within:border-white/30">
           <textarea
             ref={inputRef}
@@ -301,12 +361,34 @@ export function AgentPanel() {
             className="max-h-40 min-h-[2.5rem] flex-1 resize-none bg-transparent px-1.5 py-1 text-[12px] text-white placeholder:text-white/35 focus:outline-none"
           />
           <button
+            type="button"
+            onClick={() => void rewrite()}
+            disabled={working || rewriting || !draft.trim()}
+            title={t('editor.agent.rewrite')}
+            aria-label={t('editor.agent.rewrite')}
+            className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg border border-white/15 text-white/75 transition hover:bg-white/10 disabled:opacity-30"
+          >
+            {rewriting ? <Loader2 className="h-4 w-4 animate-spin" /> : <Wand2 className="h-4 w-4" />}
+          </button>
+          {working && (
+            <button
+              type="button"
+              onClick={stop}
+              aria-label={t('editor.agent.stop')}
+              title={t('editor.agent.stop')}
+              className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg border border-white/25 text-white transition hover:bg-white/10"
+            >
+              <Square className="h-3.5 w-3.5 fill-current" />
+            </button>
+          )}
+          <button
             type="submit"
-            disabled={working || !draft.trim()}
-            aria-label={t('editor.agent.send')}
+            disabled={!draft.trim()}
+            aria-label={t(working ? 'editor.agent.queue' : 'editor.agent.send')}
+            title={working ? t('editor.agent.queue') : undefined}
             className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-white text-black transition disabled:opacity-30"
           >
-            {working ? <Loader2 className="h-4 w-4 animate-spin" /> : <ArrowUp className="h-4 w-4" />}
+            <ArrowUp className="h-4 w-4" />
           </button>
         </div>
         <div className="mt-1 flex items-center justify-between px-1 text-[10px] text-white/35">
@@ -325,10 +407,14 @@ export function AgentPanel() {
 function ChatBubble({
   entry,
   onUndo,
+  onRestore,
+  onRate,
   onOpenGenerator,
 }: {
   entry: AgentChatEntry;
   onUndo: () => void;
+  onRestore?: () => void;
+  onRate: (rating: 'up' | 'down') => void;
   onOpenGenerator: () => void;
 }) {
   const { t } = useTranslation();
@@ -344,6 +430,26 @@ function ChatBubble({
         )}
       >
         <p className="whitespace-pre-wrap">{entry.content}</p>
+        {mine && onRestore && (
+          <button type="button" onClick={onRestore} title={t('editor.agent.restoreHint')}
+            className="mt-1 flex items-center gap-1 text-[10px] font-medium text-black/55 hover:text-black">
+            <History className="h-3 w-3" /> {t('editor.agent.restore')}
+          </button>
+        )}
+        {!mine && !entry.error && (
+          <div className="mt-1 flex items-center gap-1" role="group" aria-label={t('editor.agent.feedback')}>
+            {(['up', 'down'] as const).map((rating) => {
+              const Icon = rating === 'up' ? ThumbsUp : ThumbsDown;
+              return (
+                <button key={rating} type="button" aria-pressed={entry.rating === rating} onClick={() => onRate(rating)}
+                  aria-label={t(rating === 'up' ? 'editor.agent.good' : 'editor.agent.bad')}
+                  className={cn('rounded p-0.5 transition hover:text-white', entry.rating === rating ? 'text-white' : 'text-white/35')}>
+                  <Icon className={cn('h-3 w-3', entry.rating === rating && 'fill-current')} />
+                </button>
+              );
+            })}
+          </div>
+        )}
         {r && (r.applied > 0 || r.generate) && (
           <div className="mt-1.5 flex flex-wrap items-center gap-1.5">
             {r.applied > 0 && (

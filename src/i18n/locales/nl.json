@@ -9226,7 +9226,20 @@
       "failed": "De AI kon dat nu niet doen. Probeer het zo opnieuw.",
       "changes": "Bewerkingen: {{count}}",
       "undo": "Ongedaan maken",
-      "openGenerator": "Bekijken en genereren"
+      "openGenerator": "Bekijken en genereren",
+      "stopped": "Gestopt. Er is verder niets veranderd.",
+      "stop": "Stoppen",
+      "queue": "Aan wachtrij toevoegen",
+      "queued": "{{count}} in de wachtrij",
+      "restore": "Hierheen terugzetten",
+      "restoreHint": "Zet het project terug zoals het was vóór dit bericht. Ongedaan maken haalt het terug.",
+      "restored": "Project teruggezet naar vóór dat bericht. Druk op ongedaan maken om de nieuwere versie terug te halen.",
+      "rewrite": "Mijn verzoek duidelijker maken",
+      "rewriteFailed": "Herschrijven lukte niet. Je tekst is ongewijzigd.",
+      "feedback": "Was dit nuttig?",
+      "good": "Goed antwoord",
+      "bad": "Slecht antwoord",
+      "retryPrefix": "Dat klopte niet. In plaats daarvan, "
     },
     "shape": {
       "rect": "Rechthoek",
@@ -9401,7 +9414,9 @@
       "tint": "Tint {{value}}",
       "vignette": "Vignet {{value}}%",
       "auto": "Automatisch verbeteren",
-      "autoFailed": "Deze foto kon niet worden geanalyseerd."
+      "autoFailed": "Deze foto kon niet worden geanalyseerd.",
+      "halation": "Halatie {{value}}%",
+      "scanlines": "Scanlijnen {{value}}%"
     },
     "pages": {
       "add": "Pagina toevoegen",
@@ -9485,7 +9500,19 @@
       "translateCount": "{{count}} ondertitels vertalen",
       "translationDone": "{{count}} ondertitels vertaald",
       "translationFailed": "De vertaling is mislukt. Je ondertitels zijn niet gewijzigd.",
-      "lockedTranslation": "Ontgrendel vergrendelde ondertitels om ze mee te nemen."
+      "lockedTranslation": "Ontgrendel vergrendelde ondertitels om ze mee te nemen.",
+      "style": "Ondertitelstijl",
+      "styles": {
+        "classic": "Klassiek",
+        "boxed": "In een kader",
+        "bold": "Vet",
+        "wordpop": "Woord voor woord",
+        "rapid": "Snel onthullen",
+        "beast": "Beast-modus",
+        "stacked": "Gestapeld",
+        "serif": "Schreef",
+        "bubble": "Bubbel"
+      }
     },
     "multi": {
       "selected": "{{count}} lagen geselecteerd",
