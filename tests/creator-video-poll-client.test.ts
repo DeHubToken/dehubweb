@@ -5,7 +5,7 @@ vi.mock('@/lib/ai-invoke', () => ({ invokeAi: vi.fn(), dehubAuthHeaders: mocks.h
 vi.mock('@/lib/ai-payment', () => ({ forgetPayment: vi.fn() }));
 vi.mock('@/lib/api/dehub/core', () => ({ ensureFreshToken: vi.fn() }));
 vi.mock('@/i18n/copy', () => ({ translateCopy: (key: string) => key }));
-import { pollVideo } from '../src/lib/creator/generationEngine';
+import { poll3d, pollVideo } from '../src/lib/creator/generationEngine';
 beforeEach(() => {
   vi.clearAllMocks();
   mocks.headers.mockReturnValue({ 'x-dehub-token': 'verified-session', 'x-wallet-address': 'owner' });
@@ -21,3 +21,8 @@ for (const provider of ['replicate', 'fal', 'kie', 'kie-veo', 'venice']) {
     });
   });
 }
+it('authenticates a resumed private 3D poll', async () => {
+  mocks.invoke.mockResolvedValue({ data: { status: 'succeeded', modelUrl: 'https://media.test/owned.glb' }, error: null });
+  await expect(poll3d({ predictionId: 'owned-3d', provider: 'fal', startedAt: Date.now() })).resolves.toBe('https://media.test/owned.glb');
+  expect(mocks.invoke).toHaveBeenCalledExactlyOnceWith('generate-3d', expect.objectContaining({ headers: { 'x-dehub-token': 'verified-session', 'x-wallet-address': 'owner' } }));
+});
