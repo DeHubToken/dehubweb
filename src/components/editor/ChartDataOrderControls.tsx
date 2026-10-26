@@ -2,7 +2,7 @@ import { useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { parseChartSource } from "@/lib/editor/chartSeries";
 import { orderChartSource, type ChartOrderTarget } from "@/lib/editor/chartDataOrder";
-import { editorErrorText } from "@/lib/editor/editorError";
+import { editorErrorText } from "@/lib/editor/editorErrorText";
 
 export function ChartDataOrderControls({ source, multiple, onChange, scatter = false, xAxisMode }: { xAxisMode?: "number" | "date"; scatter?: boolean; source: string; multiple: boolean; onChange: (source: string, order: number[]) => void }) {
   const { t } = useTranslation(), [open, setOpen] = useState(false), [target, setTarget] = useState<ChartOrderTarget>("label"), [error, setError] = useState("");

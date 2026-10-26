@@ -1,7 +1,7 @@
 import { useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { hierarchyImportSource } from "@/lib/editor/hierarchyImport";
-import { editorErrorText } from "@/lib/editor/editorError";
+import { editorErrorText } from "@/lib/editor/editorErrorText";
 export function HierarchyImportControls({ onChange }: { onChange: (source: string) => void }) {
   const { t } = useTranslation(), [open, setOpen] = useState(false), [source, setSource] = useState(""), [header, setHeader] = useState(false), [error, setError] = useState("");
   const parsed = useMemo(() => { try { return hierarchyImportSource(source, header); } catch { return null; } }, [source, header]);

@@ -5,7 +5,7 @@ import { nanoid } from "nanoid";
 import { useTranslation } from "react-i18next";
 import { useEditorStore } from "@/store/editorStore";
 import { DIAGRAM_TEMPLATES, diagramDefaultEdgeLabels, putDiagramTemplate, type DiagramTemplateId } from "@/lib/editor/diagramTemplates";
-import { editorErrorText } from "@/lib/editor/editorError";
+import { editorErrorText } from "@/lib/editor/editorErrorText";
 export function DiagramTemplatesPanel() {
   const { t } = useTranslation(), settings = useEditorStore(store => store.settings);
   const [preset, setPreset] = useState<DiagramTemplateId>("process"), [labels, setLabels] = useState(DIAGRAM_TEMPLATES[0].nodes.map(node => node.label).join("\n"));

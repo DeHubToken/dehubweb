@@ -2,7 +2,7 @@ import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { usePresentationStopwatch } from "@/lib/editor/usePresentationStopwatch";
 import { usePresentationCountdown } from "@/lib/editor/usePresentationCountdown";
-import { editorErrorText } from "@/lib/editor/editorError";
+import { editorErrorText } from "@/lib/editor/editorErrorText";
 export function PresentationStopwatch({ foreground }: { foreground: boolean }) {
   const { t } = useTranslation(), [mode, setMode] = useState<"elapsed" | "countdown">("elapsed"), [minutes, setMinutes] = useState("5"), [error, setError] = useState("");
   const elapsed = usePresentationStopwatch(foreground), countdown = usePresentationCountdown(foreground && mode === "countdown"), clock = mode === "elapsed" ? elapsed : countdown;

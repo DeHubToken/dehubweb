@@ -3,7 +3,7 @@ import { useTranslation } from "react-i18next";
 import { applyTableColourScale, TABLE_COLOUR_SCALES } from "@/lib/editor/tableColourScale";
 import type { TableCellStyles } from "@/lib/editor/tableCellStyles";
 import type { TableMerge } from "@/lib/editor/tableMerges";
-import { editorErrorText } from "@/lib/editor/editorError";
+import { editorErrorText } from "@/lib/editor/editorErrorText";
 export function TableColourScaleControls({ source, range, value, merges, onChange }: { source: string; range: string; value?: TableCellStyles; merges?: TableMerge[]; onChange: (value: TableCellStyles) => void }) {
   const { t } = useTranslation(), [palette, setPalette] = useState("blue"), [centred, setCentred] = useState(false), [ink, setInk] = useState(true), [error, setError] = useState(""), [count, setCount] = useState(0);
   const apply = () => { try { const next = applyTableColourScale(source, range, value, palette, centred, ink, merges); onChange(next.styles); setCount(next.count); setError(""); } catch (reason) { setCount(0); setError(editorErrorText(reason, t("copy.050f9448691b", { defaultValue: "Could not apply colour scale" }))); } };

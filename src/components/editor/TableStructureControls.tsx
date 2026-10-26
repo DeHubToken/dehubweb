@@ -2,7 +2,7 @@ import { useEffect, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { parseTableData, type TableData } from "@/lib/editor/dataVisuals";
 import { editTableStructure, type TableAxis, type TableStructureAction } from "@/lib/editor/tableStructure";
-import { editorErrorText } from "@/lib/editor/editorError";
+import { editorErrorText } from "@/lib/editor/editorErrorText";
 
 export function TableStructureControls({ value, source, onChange, onSource, focusedCell }: {
   value: Omit<TableData, "rows">; source: string; focusedCell?: string; onChange: (value: Omit<TableData, "rows">) => void; onSource: (source: string) => void;

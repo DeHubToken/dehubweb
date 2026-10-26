@@ -1,5 +1,5 @@
 import type { Clip } from "./types";
-import { editorErrorText } from "./editorError";
+import { editorErrorText } from "./editorErrorText";
 
 export interface BackgroundRemovalScope {
   projectId: string;

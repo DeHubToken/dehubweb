@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { chartScaleDraft, type ChartScale } from "@/lib/editor/chartScale";
-import { editorErrorText } from "@/lib/editor/editorError";
+import { editorErrorText } from "@/lib/editor/editorErrorText";
 export function ChartScaleControls({ value, onChange, axis = "value" }: { axis?: "value" | "x"; value: ChartScale; onChange: (value: ChartScale) => void }) {
   const { t } = useTranslation(), [open, setOpen] = useState(false), [minimum, setMinimum] = useState(""), [maximum, setMaximum] = useState(""), [error, setError] = useState("");
   useEffect(() => { setMinimum(value.scaleMin === undefined ? "" : String(value.scaleMin)); setMaximum(value.scaleMax === undefined ? "" : String(value.scaleMax)); setError(""); }, [value.scaleMin, value.scaleMax]);

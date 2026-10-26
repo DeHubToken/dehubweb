@@ -4,7 +4,7 @@ import { usePhotoLooks } from "@/lib/editor/usePhotoLooks";
 import { photoLookAtStrength } from "@/lib/editor/photoLooks";
 import type { ClipEffects } from "@/lib/editor/types";
 import { PhotoLookFileControls } from "./PhotoLookFileControls";
-import { editorErrorText } from "@/lib/editor/editorError";
+import { editorErrorText } from "@/lib/editor/editorErrorText";
 export function SavedPhotoLooks(props: { value: ClipEffects; disabled?: boolean; selectionCount?: number; onApply: (effects: ClipEffects) => boolean | void }) {
   const library = usePhotoLooks(); return <PhotoLookLibrary key={library.scope} {...props} library={library} />;
 }

@@ -1,7 +1,8 @@
 import { useEffect, useRef, useState } from "react";
 import { cloudDraftController, type CloudDraftEditor, type CloudDraftControllerState } from "./cloudDraftController";
 import type { cloudProjectSession } from "./cloudProjectSession";
-import { EditorError, editorErrorText } from "./editorError";
+import { EditorError } from "./editorError";
+import { editorErrorText } from "./editorErrorText";
 import { translateCopy } from "@/i18n/copy";
 
 type Factory=(wallet:string,check:()=>void)=>{session:ReturnType<typeof cloudProjectSession>};

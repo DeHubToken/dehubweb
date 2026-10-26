@@ -56,7 +56,8 @@ import { DEFAULT_CHART, DEFAULT_TABLE, putDataVisual } from "@/lib/editor/dataVi
 import { validDataVisuals, parseTableData, type ChartKind, type ChartData, type TableData } from "@/lib/editor/dataVisuals";
 import { useEditorStore } from "@/store/editorStore";
 import { nanoid } from "nanoid";
-import { EditorError, editorErrorText } from "@/lib/editor/editorError";
+import { EditorError } from "@/lib/editor/editorError";
+import { editorErrorText } from "@/lib/editor/editorErrorText";
 
 export function DataVisualPanel() {
   const { t } = useTranslation();

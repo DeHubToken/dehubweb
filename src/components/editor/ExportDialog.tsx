@@ -44,7 +44,8 @@ import { writePdfDocument } from "@/lib/editor/pdfDocument";
 import { exportPresentation } from "@/lib/editor/exportPresentation";
 import { startExportJournal } from "@/lib/editor/exportJournal";
 import { uploadEditorAsset } from "@/lib/editor/cloudMedia";
-import { EditorError, editorErrorText } from "@/lib/editor/editorError";
+import { EditorError } from "@/lib/editor/editorError";
+import { editorErrorText } from "@/lib/editor/editorErrorText";
 
 /** Finished exports up to this size are also kept in the creator's cloud storage. */
 const BACKUP_LIMIT = 200 * 1024 * 1024;

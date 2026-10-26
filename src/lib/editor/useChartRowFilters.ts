@@ -2,7 +2,8 @@ import { formatDelimitedData } from "./delimitedData";
 import { useEffect, useMemo, useState } from "react";
 import { parseChartSource } from "./chartSeries";
 import { chartFilteredIndices, chartRowFilterDraft, type ChartRowFilter } from "./chartRowFilters";
-import { EditorError, editorErrorText } from "./editorError";
+import { EditorError } from "./editorError";
+import { editorErrorText } from "./editorErrorText";
 import { translateCopy } from "@/i18n/copy";
 export function useChartRowFilters(source: string, multiple: boolean, value: ChartRowFilter[] | undefined, onChange: (value?: ChartRowFilter[]) => void) {
   const parsed = useMemo(() => { try { return { ...parseChartSource(source, multiple), error: "" }; } catch (reason) { return { rows: [], series: undefined, error: editorErrorText(reason, translateCopy("copy.9bf28df2859d", { defaultValue: "Correct the source data to inspect matching rows" })) }; } }, [source, multiple]);

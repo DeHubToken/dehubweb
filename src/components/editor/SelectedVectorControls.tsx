@@ -6,7 +6,7 @@ import { useEditorStore } from "@/store/editorStore";
 import { selectedTextColour } from "@/lib/editor/selectedTextStyle";
 import { applySelectedVectorStyle, selectedDesignVectors, vectorSupportsFill, type SelectedVectorStyle } from "@/lib/editor/selectedVectorStyle";
 import { ColourPickerButton } from "./ColourPickerButton";
-import { editorErrorText } from "@/lib/editor/editorError";
+import { editorErrorText } from "@/lib/editor/editorErrorText";
 export function SelectedVectorControls() {
   const { t } = useTranslation(), ids = useEditorStore(store => store.selectedClipIds), clips = useEditorStore(store => store.clips), tracks = useEditorStore(store => store.tracks), time = useEditorStore(store => store.currentTime), projectId = useEditorStore(store => store.projectId);
   const selected = useMemo(() => selectedDesignVectors(useEditorStore.getState().toSnapshot(), ids, time), [ids, clips, tracks, time, projectId]), first = selected[0], hasFill = selected.some(vectorSupportsFill), locked = selected.some(clip => clip.locked);

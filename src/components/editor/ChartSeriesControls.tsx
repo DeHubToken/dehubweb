@@ -2,7 +2,7 @@ import { useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { parseChartSource } from "@/lib/editor/chartSeries";
 import { editChartSeries, type ChartSeriesAction } from "@/lib/editor/chartSeriesStructure";
-import { editorErrorText } from "@/lib/editor/editorError";
+import { editorErrorText } from "@/lib/editor/editorErrorText";
 export function ChartSeriesControls({ source, onChange }: { source: string; onChange: (source: string, order: (number | null)[]) => void }) {
   const { t } = useTranslation(), [open, setOpen] = useState(false), [index, setIndex] = useState(0), [error, setError] = useState("");
   const names = useMemo(() => { try { return parseChartSource(source, true).series?.map(item => item.label) ?? []; } catch { return []; } }, [source]), selected = Math.min(index, Math.max(0, names.length - 1));

@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { DATA_NUMBER_FORMATS, editDataRange, type DataNumberFormat } from "@/lib/editor/dataRangeActions";
-import { editorErrorText } from "@/lib/editor/editorError";
+import { editorErrorText } from "@/lib/editor/editorErrorText";
 export function DataRangeControls({ source, onChange, chart, multiple }: { source: string; onChange: (source: string) => void; chart: boolean; multiple: boolean }) {
   const { t } = useTranslation(), [range, setRange] = useState(""), [value, setValue] = useState(""), [format, setFormat] = useState<DataNumberFormat>("dot-comma"), [message, setMessage] = useState(""), [error, setError] = useState("");
   const [history, setHistory] = useState<{ before: string; after: string } | null>(null);

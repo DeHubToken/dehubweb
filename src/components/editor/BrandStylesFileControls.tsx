@@ -3,7 +3,8 @@ import { useTranslation } from "react-i18next";
 import { brandStylesFile, parseBrandStylesFile, type BrandStylesFile } from "@/lib/editor/brandStylesFile";
 import { exportFilename } from "@/lib/editor/exportName";
 import type { BrandStyles } from "@/lib/editor/brandStyles";
-import { EditorError, editorErrorText } from "@/lib/editor/editorError";
+import { EditorError } from "@/lib/editor/editorError";
+import { editorErrorText } from "@/lib/editor/editorErrorText";
 
 export function BrandStylesFileControls({ value, name, onImport }: { value: BrandStyles; name: string; onImport: (file: BrandStylesFile) => void }) {
   const { t } = useTranslation(), [busy, setBusy] = useState(false), [error, setError] = useState(""), [message, setMessage] = useState("");

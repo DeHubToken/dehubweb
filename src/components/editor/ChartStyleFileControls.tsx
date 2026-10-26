@@ -3,7 +3,8 @@ import { useTranslation } from "react-i18next";
 import { chartStyleFile, parseChartStyleFile, type PortableChartStyle } from "@/lib/editor/chartStyleFile";
 import type { ChartData } from "@/lib/editor/dataVisuals";
 import { exportFilename } from "@/lib/editor/exportName";
-import { EditorError, editorErrorText } from "@/lib/editor/editorError";
+import { EditorError } from "@/lib/editor/editorError";
+import { editorErrorText } from "@/lib/editor/editorErrorText";
 export function ChartStyleFileControls({ value, title, onApply }: { value: ChartData | null; title: string; onApply: (style: PortableChartStyle, numberFormat: boolean) => void }) {
   const { t } = useTranslation(), [pending, setPending] = useState<ReturnType<typeof parseChartStyleFile> | null>(null), [numbers, setNumbers] = useState(false), [busy, setBusy] = useState(false), [error, setError] = useState(""), [message, setMessage] = useState(""), request = useRef(0);
   useEffect(() => () => { request.current++; }, []);

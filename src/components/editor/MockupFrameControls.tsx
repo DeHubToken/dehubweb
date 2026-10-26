@@ -7,7 +7,7 @@ import { nanoid } from "nanoid";
 import { useTranslation } from "react-i18next";
 import { useEditorStore } from "@/store/editorStore";
 import { MOCKUP_TEMPLATES, putMockupTemplate, selectedMockupPhoto, type MockupTemplateId } from "@/lib/editor/mockupTemplates";
-import { editorErrorText } from "@/lib/editor/editorError";
+import { editorErrorText } from "@/lib/editor/editorErrorText";
 export function MockupFrameControls() {
   const { t } = useTranslation(), ids = useEditorStore(store => store.selectedClipIds), clips = useEditorStore(store => store.clips), tracks = useEditorStore(store => store.tracks), time = useEditorStore(store => store.currentTime), projectId = useEditorStore(store => store.projectId);
   const photo = useMemo(() => selectedMockupPhoto(useEditorStore.getState().toSnapshot(), ids, time), [ids, clips, tracks, time, projectId]);

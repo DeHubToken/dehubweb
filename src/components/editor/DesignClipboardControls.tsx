@@ -3,7 +3,7 @@ import { nanoid } from "nanoid";
 import { useTranslation } from "react-i18next";
 import { useEditorStore } from "@/store/editorStore";
 import { copyDesignSelection, cutDesignSelection, getDesignClipboard, getDesignClipboardSnapshot, pasteDesignSelection, reportDesignClipboard, subscribeDesignClipboard } from "@/lib/editor/designClipboard";
-import { editorErrorText } from "@/lib/editor/editorError";
+import { editorErrorText } from "@/lib/editor/editorErrorText";
 
 export function DesignClipboardControls() {
   const { t } = useTranslation();

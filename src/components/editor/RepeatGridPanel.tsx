@@ -6,7 +6,7 @@ import { fitRepeatGridGaps, repeatDesignGrid, type RepeatGridOptions } from "@/l
 import { groupedSelection } from "@/lib/editor/designGroups";
 import { clipBoxForSize } from "@/lib/editor/render";
 import { resolveClipAt } from "@/lib/editor/keyframes";
-import { editorErrorText } from "@/lib/editor/editorError";
+import { editorErrorText } from "@/lib/editor/editorErrorText";
 
 export function RepeatGridPanel() {
   const { t } = useTranslation(), ids = useEditorStore(store => store.selectedClipIds);

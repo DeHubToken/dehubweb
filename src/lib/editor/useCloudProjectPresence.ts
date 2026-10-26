@@ -1,7 +1,8 @@
 import { useEffect, useRef, useState } from "react";
 import { cloudProjectPresence, emptyPresence, type PresenceState, type PresenceSocket } from "./cloudProjectPresence";
 import { onCloudProjectDraftStored, onCloudProjectSaved } from "./cloudProjectEvents";
-import { EditorError, editorErrorText } from "./editorError";
+import { EditorError } from "./editorError";
+import { editorErrorText } from "./editorErrorText";
 import { translateCopy } from "@/i18n/copy";
 type Factory = (wallet: string, check: () => void) => { session: { binding(id: string): Promise<{ owner: string; projectId: string; revision: number } | null> } };
 /** Account and local-project changes always leave; joining never uploads edits. */

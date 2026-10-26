@@ -4,7 +4,8 @@ import { useTranslation } from "react-i18next";
 import { nanoid } from "nanoid";
 import { useEditorStore } from "@/store/editorStore";
 import { insertSvgPathDrawing, parseSvgPathDrawing } from "@/lib/editor/svgPathImport";
-import { EditorError, editorErrorText } from "@/lib/editor/editorError";
+import { EditorError } from "@/lib/editor/editorError";
+import { editorErrorText } from "@/lib/editor/editorErrorText";
 const SAMPLE_PATH = "M 10 10 L 90 10 L 50 90 Z";
 
 export function SvgPathImportControls() {

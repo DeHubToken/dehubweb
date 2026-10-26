@@ -8,7 +8,8 @@ import { useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { parseTableData, type TableData } from "@/lib/editor/dataVisuals";
 import { sortTableSource, transposeTableSource } from "@/lib/editor/tableOperations";
-import { EditorError, editorErrorText } from "@/lib/editor/editorError";
+import { EditorError } from "@/lib/editor/editorError";
+import { editorErrorText } from "@/lib/editor/editorErrorText";
 
 export function TableFormattingPanel({ value, source, onChange, onSource, focusedCell }: {
   value: Omit<TableData, "rows">; source: string; focusedCell?: string; onChange: (value: Omit<TableData, "rows">) => void; onSource: (value: string) => void;

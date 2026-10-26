@@ -6,7 +6,7 @@ import { pasteDataCells } from "@/lib/editor/dataCellPaste";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { formatDelimitedData, parseDelimitedData } from "@/lib/editor/delimitedData";
-import { editorErrorText } from "@/lib/editor/editorError";
+import { editorErrorText } from "@/lib/editor/editorErrorText";
 
 /** A compact spreadsheet view edits the same source data as CSV/TSV mode. */
 export function DataCells({ value, onChange, chart, multiSeries = false, onCellFocus, onStructure, pageSize = 5 }: { value: string; onChange: (value: string) => void; chart: boolean; multiSeries?: boolean; onCellFocus?: (address: string) => void; onStructure?: (axis: TableAxis, index: number, action: TableStructureAction) => void; pageSize?: 5 | 10 | 20 }) {

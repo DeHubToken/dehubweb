@@ -2,7 +2,8 @@ import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { STROKE_PATTERNS, parseStrokePattern, strokePatternId } from "@/lib/editor/strokePatterns";
 import type { TextStroke } from "@/lib/editor/types";
-import { EditorError, editorErrorText } from "@/lib/editor/editorError";
+import { EditorError } from "@/lib/editor/editorError";
+import { editorErrorText } from "@/lib/editor/editorErrorText";
 
 export function StrokePattern({ stroke, onChange }: { stroke: TextStroke; onChange: (value: TextStroke) => void }) {
   const { t } = useTranslation(), pattern = strokePatternId(stroke.dash), key = (stroke.dash ?? []).join(" ");

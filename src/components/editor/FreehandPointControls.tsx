@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { simplifyFreehandPoints, straightenFreehandPoints } from "@/lib/editor/freehandPointEditing";
-import { editorErrorText } from "@/lib/editor/editorError";
+import { editorErrorText } from "@/lib/editor/editorErrorText";
 export function FreehandPointControls({ points, closed, disabled, onChange }: { points: [number, number][]; closed: boolean; disabled: boolean; onChange: (points: [number, number][]) => void }) {
   const { t } = useTranslation(), [precision, setPrecision] = useState(0.002), [error, setError] = useState("");
   const apply = (kind: "simplify" | "reverse" | "straighten") => { try { const next = kind === "simplify" ? simplifyFreehandPoints(points, precision, closed) : kind === "reverse" ? [...points].reverse().map(point => [...point] as [number, number]) : straightenFreehandPoints(points); if (JSON.stringify(next) !== JSON.stringify(points)) onChange(next); setError(""); } catch (reason) { setError(editorErrorText(reason, t("copy.44077af224df", { defaultValue: "Could not edit drawing points" }))); } };

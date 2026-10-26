@@ -5,7 +5,7 @@ import { useEditorStore } from "@/store/editorStore";
 import { ANIMATION_PRESETS } from "@/lib/editor/animationPresets";
 import { applyPageAnimation, type PageAnimationEdge, type PageAnimationScope } from "@/lib/editor/pageAnimations";
 import type { ClipAnimationKind } from "@/lib/editor/types";
-import { editorErrorText } from "@/lib/editor/editorError";
+import { editorErrorText } from "@/lib/editor/editorErrorText";
 
 export function PageAnimationPanel() {
   const { t } = useTranslation();

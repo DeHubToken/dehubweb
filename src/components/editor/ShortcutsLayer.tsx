@@ -11,7 +11,7 @@ import { getTransform, isVisualClip, placementPatchAt } from "@/lib/editor/rende
 import { keyAllAt, resolveClipAt } from "@/lib/editor/keyframes";
 import { nanoid } from "nanoid";
 import { copyDesignSelection, cutDesignSelection, getDesignClipboard, pasteDesignSelection, reportDesignClipboard } from "@/lib/editor/designClipboard";
-import { editorErrorText } from "@/lib/editor/editorError";
+import { editorErrorText } from "@/lib/editor/editorErrorText";
 import { translateCopy } from "@/i18n/copy";
 
 function isControlKey(event: KeyboardEvent): boolean {

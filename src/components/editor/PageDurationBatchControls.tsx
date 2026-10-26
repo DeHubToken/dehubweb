@@ -3,7 +3,7 @@ import { nanoid } from "nanoid";
 import { useTranslation } from "react-i18next";
 import { useEditorStore } from "@/store/editorStore";
 import { setDesignPageDurations } from "@/lib/editor/pageDurationBatch";
-import { editorErrorText } from "@/lib/editor/editorError";
+import { editorErrorText } from "@/lib/editor/editorErrorText";
 export function PageDurationBatchControls({ projectId, selected }: { projectId: string; selected: readonly number[] }) {
   const { t } = useTranslation(), [open, setOpen] = useState(false), [seconds, setSeconds] = useState("5"), [error, setError] = useState(""), [status, setStatus] = useState("");
   const value = Number(seconds), valid = seconds.trim() !== "" && Number.isFinite(value) && value >= 0.1 && value <= 3600;

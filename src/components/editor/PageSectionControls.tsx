@@ -2,7 +2,7 @@ import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useEditorStore } from "@/store/editorStore";
 import { designPageSectionIndexes, setDesignPageSections } from "@/lib/editor/pageDetails";
-import { editorErrorText } from "@/lib/editor/editorError";
+import { editorErrorText } from "@/lib/editor/editorErrorText";
 export function PageSectionControls({ projectId, selected, onSelectPages }: { projectId: string; selected: readonly number[]; onSelectPages: (indexes: number[]) => void }) {
   const { t } = useTranslation(), details = useEditorStore(store => store.settings.pageDetails), [open, setOpen] = useState(false), [name, setName] = useState(""), [error, setError] = useState(""), [status, setStatus] = useState("");
   const sections = [...new Set(details?.map(detail => detail.section || "").filter(Boolean) ?? [])].sort((a, b) => a.localeCompare(b));

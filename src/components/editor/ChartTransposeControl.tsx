@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { transposeChartSource } from "@/lib/editor/chartTranspose";
-import { editorErrorText } from "@/lib/editor/editorError";
+import { editorErrorText } from "@/lib/editor/editorErrorText";
 export function ChartTransposeControl({ source, multiple, disabled = false, onChange }: { source: string; multiple: boolean; disabled?: boolean; onChange: (source: string) => void }) {
   const { t } = useTranslation(), [error, setError] = useState("");
   const apply = () => { try { const next = transposeChartSource(source, multiple); onChange(next); setError(""); } catch (reason) { setError(editorErrorText(reason, t("copy.67b748dae388", { defaultValue: "Could not switch chart data" }))); } };

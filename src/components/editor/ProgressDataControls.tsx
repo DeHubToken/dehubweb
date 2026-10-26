@@ -2,7 +2,7 @@ import { useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { parseChartSource } from "@/lib/editor/chartSeries";
 import { setProgressChartSource } from "@/lib/editor/progressChartSource";
-import { editorErrorText } from "@/lib/editor/editorError";
+import { editorErrorText } from "@/lib/editor/editorErrorText";
 export function ProgressDataControls({ source, multiple, onChange, total = 100, items = false }: { total?: number; items?: boolean; source: string; multiple: boolean; onChange: (source: string) => void }) {
   const { t } = useTranslation(), [error, setError] = useState("");
   const value = useMemo(() => { try { return parseChartSource(source, multiple).rows[0]?.value ?? null; } catch { return null; } }, [source, multiple]);

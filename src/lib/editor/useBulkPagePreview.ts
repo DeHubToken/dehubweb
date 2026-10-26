@@ -5,7 +5,8 @@ import { requestDesignPagePreview } from "./designPagePreviews";
 import { getPages } from "./pages";
 import type { ReplacementMedia } from "./replaceMedia";
 import type { ProjectSnapshot } from "./types";
-import { EditorError, editorErrorText } from "./editorError";
+import { EditorError } from "./editorError";
+import { editorErrorText } from "./editorErrorText";
 import { translateCopy } from "@/i18n/copy";
 
 export interface BulkPagePreviewOptions {

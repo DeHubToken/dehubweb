@@ -15,7 +15,7 @@ import { resolveClipAt } from "@/lib/editor/keyframes";
 import { groupedSelection } from "@/lib/editor/designGroups";
 import { measureSelectionBounds, planSelectionTransform, type SelectionTransform } from "@/lib/editor/selectionTransforms";
 import type { Clip } from "@/lib/editor/types";
-import { editorErrorText } from "@/lib/editor/editorError";
+import { editorErrorText } from "@/lib/editor/editorErrorText";
 
 function measuredSelectionBoxes() {
   const store = useEditorStore.getState(), before = store.toSnapshot(), context = document.createElement("canvas").getContext("2d"); if (!context) return [];

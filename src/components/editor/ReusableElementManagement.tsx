@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import type { ReusableDesignElement } from "@/lib/editor/reusableElements";
-import { editorErrorText } from "@/lib/editor/editorError";
+import { editorErrorText } from "@/lib/editor/editorErrorText";
 
 export function ReusableElementManagement({ element, onRename, onReplace, canReplace }: { element: ReusableDesignElement; onRename: (name: string) => void; onReplace: () => void; canReplace: boolean }) {
   const { t } = useTranslation(), [editing, setEditing] = useState(false), [name, setName] = useState(element.name), [error, setError] = useState("");

@@ -5,7 +5,7 @@ import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useEditorStore } from "@/store/editorStore";
 import { DESIGN_UNITS, DOCUMENT_SIZE_PRESETS, dimensionDisplay, resizeDocument, type DesignUnit } from "@/lib/editor/documentDimensions";
-import { editorErrorText } from "@/lib/editor/editorError";
+import { editorErrorText } from "@/lib/editor/editorErrorText";
 
 export function ResizeDesignPanel() {
   const { t } = useTranslation();

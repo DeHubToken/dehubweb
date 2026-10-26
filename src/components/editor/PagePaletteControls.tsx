@@ -4,7 +4,7 @@ import { useTranslation } from "react-i18next";
 import { useEditorStore } from "@/store/editorStore";
 import { extractDesignPagePalette } from "@/lib/editor/extractDesignPagePalette";
 import { applyDesignPalette } from "@/lib/editor/designTools";
-import { editorErrorText } from "@/lib/editor/editorError";
+import { editorErrorText } from "@/lib/editor/editorErrorText";
 
 export function PagePaletteControls({ onPick, canPick }: { canPick: boolean; onPick: (colour: string) => void }) {
   const { t } = useTranslation(), projectId = useEditorStore(store => store.projectId), time = useEditorStore(store => store.currentTime);

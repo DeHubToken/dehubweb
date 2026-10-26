@@ -5,7 +5,7 @@ import { useEditorStore } from "@/store/editorStore";
 import { parsePageSelection } from "@/lib/editor/pageExports";
 import { getPages } from "@/lib/editor/pages";
 import { transferDesignSelection } from "@/lib/editor/pageLayerTransfer";
-import { editorErrorText } from "@/lib/editor/editorError";
+import { editorErrorText } from "@/lib/editor/editorErrorText";
 
 export function PageLayerTransferControls() {
   const { t } = useTranslation(), ids = useEditorStore(store => store.selectedClipIds);
