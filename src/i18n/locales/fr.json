@@ -9038,7 +9038,20 @@
       "failed": "L'IA n'a pas pu le faire pour le moment. Réessayez dans un instant.",
       "changes": "Modifications effectuées : {{count}}",
       "undo": "Annuler",
-      "openGenerator": "Vérifier et générer"
+      "openGenerator": "Vérifier et générer",
+      "stopped": "Arrêté. Rien d'autre n'a été modifié.",
+      "stop": "Arrêter",
+      "queue": "Ajouter à la file",
+      "queued": "{{count}} en attente",
+      "restore": "Restaurer à ce point",
+      "restoreHint": "Remet le projet tel qu'il était avant ce message. Annuler le rétablit.",
+      "restored": "Projet restauré à l'état précédant ce message. Appuyez sur annuler pour retrouver la version la plus récente.",
+      "rewrite": "Clarifier ma demande",
+      "rewriteFailed": "Impossible de reformuler. Votre texte est inchangé.",
+      "feedback": "Cette réponse vous a-t-elle aidé ?",
+      "good": "Bonne réponse",
+      "bad": "Mauvaise réponse",
+      "retryPrefix": "Ce n'était pas ça. À la place, "
     },
     "shape": {
       "rect": "Rectangle",
@@ -9213,7 +9226,9 @@
       "tint": "Teinte {{value}}",
       "vignette": "Vignetage {{value}} %",
       "auto": "Amélioration auto",
-      "autoFailed": "Impossible d'analyser cette image."
+      "autoFailed": "Impossible d'analyser cette image.",
+      "halation": "Halo {{value}} %",
+      "scanlines": "Lignes de balayage {{value}} %"
     },
     "pages": {
       "add": "Ajouter une page",
@@ -9297,7 +9312,19 @@
       "translateCount": "Traduire {{count}} sous-titres",
       "translationDone": "{{count}} sous-titres traduits",
       "translationFailed": "La traduction a échoué. Vos sous-titres restent inchangés.",
-      "lockedTranslation": "Déverrouillez les sous-titres verrouillés pour les inclure."
+      "lockedTranslation": "Déverrouillez les sous-titres verrouillés pour les inclure.",
+      "style": "Style des sous-titres",
+      "styles": {
+        "classic": "Classique",
+        "boxed": "Encadré",
+        "bold": "Gras",
+        "wordpop": "Mot par mot",
+        "rapid": "Apparition rapide",
+        "beast": "Mode bête",
+        "stacked": "Empilé",
+        "serif": "Serif",
+        "bubble": "Bulle"
+      }
     },
     "multi": {
       "selected": "{{count}} calques sélectionnés",

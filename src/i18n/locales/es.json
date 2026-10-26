@@ -9034,7 +9034,20 @@
       "failed": "La IA no ha podido hacerlo ahora. Vuelve a intentarlo en un momento.",
       "changes": "Cambios realizados: {{count}}",
       "undo": "Deshacer",
-      "openGenerator": "Revisar y generar"
+      "openGenerator": "Revisar y generar",
+      "stopped": "Detenido. No se cambió nada más.",
+      "stop": "Detener",
+      "queue": "Añadir a la cola",
+      "queued": "{{count}} en cola",
+      "restore": "Restaurar hasta aquí",
+      "restoreHint": "Devuelve el proyecto a como estaba antes de este mensaje. Deshacer lo recupera.",
+      "restored": "Proyecto restaurado a antes de ese mensaje. Pulsa deshacer para recuperar la versión más reciente.",
+      "rewrite": "Aclarar mi petición",
+      "rewriteFailed": "No se pudo reescribir. Tu texto no ha cambiado.",
+      "feedback": "¿Te ha sido útil?",
+      "good": "Buena respuesta",
+      "bad": "Mala respuesta",
+      "retryPrefix": "Eso no era lo que quería. En su lugar, "
     },
     "shape": {
       "rect": "Rectángulo",
@@ -9209,7 +9222,9 @@
       "tint": "Matiz {{value}}",
       "vignette": "Viñeta {{value}}%",
       "auto": "Mejora automática",
-      "autoFailed": "No se pudo analizar esta imagen."
+      "autoFailed": "No se pudo analizar esta imagen.",
+      "halation": "Halación {{value}}%",
+      "scanlines": "Líneas de escaneo {{value}}%"
     },
     "pages": {
       "add": "Añadir página",
@@ -9293,7 +9308,19 @@
       "translateCount": "Traducir {{count}} subtítulos",
       "translationDone": "{{count}} subtítulos traducidos",
       "translationFailed": "La traducción ha fallado. Tus subtítulos no han cambiado.",
-      "lockedTranslation": "Desbloquea los subtítulos bloqueados para incluirlos."
+      "lockedTranslation": "Desbloquea los subtítulos bloqueados para incluirlos.",
+      "style": "Estilo de subtítulos",
+      "styles": {
+        "classic": "Clásico",
+        "boxed": "En caja",
+        "bold": "Negrita",
+        "wordpop": "Palabra a palabra",
+        "rapid": "Revelado rápido",
+        "beast": "Modo bestia",
+        "stacked": "Apilado",
+        "serif": "Serif",
+        "bubble": "Burbuja"
+      }
     },
     "multi": {
       "selected": "{{count}} capas seleccionadas",
