@@ -5290,6 +5290,8 @@
                                       "video":  "Verticale video"
                                   }
                   },
+    "audioInvalidResponse":  "De audiodienst gaf een ongeldig resultaat terug.",
+      "audioResultTooLarge":  "Het audioresultaat is leeg of groter dan 128 MB.",
     "cinema":  {
                    "title":  "Filmregie",
                    "hint":  "Bepaal de visuele stijl van je volgende afbeelding of video. De resultaten verschillen per model.",
