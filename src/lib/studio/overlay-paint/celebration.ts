@@ -448,8 +448,7 @@ export function paintCelebration(
     for (const spec of fx.washes) {
       ctx.globalAlpha = washAlpha;
       if (spec.screen) ctx.globalCompositeOperation = 'screen';
-      ctx.fillStyle = gradientFor(ctx, spec, x, y, w, h);
-      ctx.fillRect(x, y, w, h);
+      ctx.drawImage(softWash(spec, w, h), x, y, w, h);
       ctx.globalCompositeOperation = 'source-over';
     }
     if (fx.siren) {
@@ -502,6 +501,47 @@ const GLINT_AT = [0, 0.5, 1];
 const GLINT_OP = [0, 0.85, 0];
 
 const gradients = new WeakMap<WashSpec, { key: string; g: CanvasGradient }>();
+
+/** How far in from each side a wash fades to nothing, as a share of the box. */
+const WASH_FEATHER = 0.22;
+const softWashes = new WeakMap<WashSpec, { key: string; canvas: HTMLCanvasElement | OffscreenCanvas }>();
+
+/**
+ * A wash with feathered edges, drawn once per size and reused. In the app the
+ * wash sits over a player that is already framed, so its box edge reads as
+ * part of the layout; burned into a camera picture the same hard edge looks
+ * like a tinted rectangle pasted on the creator. Fading every side to nothing
+ * makes it a glow instead.
+ */
+function softWash(spec: WashSpec, w: number, h: number): CanvasImageSource {
+  const width = Math.max(1, Math.round(w));
+  const height = Math.max(1, Math.round(h));
+  const key = `${width}x${height}`;
+  const cached = softWashes.get(spec);
+  if (cached && cached.key === key) return cached.canvas;
+  const canvas: HTMLCanvasElement | OffscreenCanvas =
+    typeof OffscreenCanvas !== 'undefined' ? new OffscreenCanvas(width, height) : Object.assign(document.createElement('canvas'), { width, height });
+  const c = canvas.getContext('2d') as CanvasRenderingContext2D | null;
+  if (c) {
+    c.fillStyle = gradientFor(c, spec, 0, 0, width, height);
+    c.fillRect(0, 0, width, height);
+    c.globalCompositeOperation = 'destination-in';
+    for (const [x1, y1] of [
+      [width, 0],
+      [0, height],
+    ] as const) {
+      const edge = c.createLinearGradient(0, 0, x1, y1);
+      edge.addColorStop(0, 'rgba(0,0,0,0)');
+      edge.addColorStop(WASH_FEATHER, 'rgba(0,0,0,1)');
+      edge.addColorStop(1 - WASH_FEATHER, 'rgba(0,0,0,1)');
+      edge.addColorStop(1, 'rgba(0,0,0,0)');
+      c.fillStyle = edge;
+      c.fillRect(0, 0, width, height);
+    }
+  }
+  softWashes.set(spec, { key, canvas });
+  return canvas;
+}
 
 function gradientFor(ctx: Ctx, spec: WashSpec, x: number, y: number, w: number, h: number): CanvasGradient {
   const key = `${x | 0},${y | 0},${w | 0},${h | 0}`;
