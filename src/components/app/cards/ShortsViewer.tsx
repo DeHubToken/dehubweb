@@ -1363,9 +1363,7 @@ export function ShortsViewer({ shorts, initialIndex, onClose, onLoadMore, hasMor
 
   // What the overlay actually reads. The gesture handlers stay keyed on
   // `overlaysHidden` alone, so the tap-to-restore band belongs to the swipe.
-  // A live slide passes no taps back to bring the chrome up again, so back and
-  // mute stay on screen over it.
-  const chromeHidden = !isLiveSlide && (overlaysHidden || autoHidden);
+  const chromeHidden = overlaysHidden || autoHidden;
 
   const handleCopyLink = () => {
     const url = viewerShareUrl(`${window.location.origin}/app/post/${currentShort.id}`);
@@ -1553,13 +1551,7 @@ export function ShortsViewer({ shorts, initialIndex, onClose, onLoadMore, hasMor
                   >
                     <motion.div className="absolute inset-0" style={{ y: dragOffset }}>
                     {short.live ? (
-                      <LiveSwipeSlide
-                        stream={short.live}
-                        isActive={isActive && !isPaused}
-                        preload={offset === 1}
-                        isMuted={isMuted}
-                        onLeave={onClose}
-                      />
+                      <LiveSwipeSlide stream={short.live} isActive={isActive} onClose={onClose} />
                     ) : (
                     <VideoSlide
                       short={short}
@@ -1598,15 +1590,16 @@ export function ShortsViewer({ shorts, initialIndex, onClose, onLoadMore, hasMor
               action bar evenly spread across the bottom (replaces the old left
               side panel of buttons). The wrapper is pointer-events-none and
               carries the bottom padding so the timeline seek bar at the very
-              bottom stays reachable. */}
+              bottom stays reachable. A live slide brings its own. */}
           {!isMobile && (
             <>
+              {!isLiveSlide && <>
               {/* Options, fullscreen and mute, in that order, parked left of each
                   other. Fullscreen used to be drawn by the slide, which the carousel
                   translates — so it slid away with the video on every step
                   while its neighbour here held still. All three live in the
                   container now, and none of them moves. */}
-              {!isLiveSlide && <button
+              <button
                 onClick={() => {
                   // The options drawer portals to <body>, which cannot paint
                   // over a native-fullscreen element, so leave fullscreen first.
@@ -1623,7 +1616,7 @@ export function ShortsViewer({ shorts, initialIndex, onClose, onLoadMore, hasMor
                 aria-label={t('postOptions.options')}
               >
                 <MoreHorizontal className="w-5 h-5" />
-              </button>}
+              </button>
 
               <button
                 onClick={toggleFullscreen}
@@ -1659,7 +1652,7 @@ export function ShortsViewer({ shorts, initialIndex, onClose, onLoadMore, hasMor
                 )}
               </button>
 
-              {!isLiveSlide && <div
+              <div
                 className={cn(
                   "absolute inset-x-0 bottom-0 z-10 pb-4 pointer-events-none transition-[opacity,padding] duration-300",
                   chromeHidden && "opacity-0",
@@ -1789,7 +1782,8 @@ export function ShortsViewer({ shorts, initialIndex, onClose, onLoadMore, hasMor
                     </motion.button>
                   </span>
                 </div>
-              </div>}
+              </div>
+              </>}
             </>
           )}
 
@@ -2205,8 +2199,9 @@ export function ShortsViewer({ shorts, initialIndex, onClose, onLoadMore, hasMor
         </div>
       </div>}
 
-      {/* Mobile top header controls - TikTok style - animated with chromeHidden */}
-      {isMobile && (
+      {/* Mobile top header controls - TikTok style - animated with chromeHidden.
+          A live slide is the stream's own room, with its own close and sound. */}
+      {isMobile && !isLiveSlide && (
         <motion.div
           className="pointer-events-auto"
           animate={{ opacity: (chromeHidden || showComments) ? 0 : 1 }}
@@ -2224,7 +2219,7 @@ export function ShortsViewer({ shorts, initialIndex, onClose, onLoadMore, hasMor
           
           {/* Right side controls */}
           <div className="absolute top-4 right-4 z-20 flex items-center gap-3">
-            {document.pictureInPictureEnabled && !isLiveSlide && !currentShort?.imageUrls?.length && <button
+            {document.pictureInPictureEnabled && !currentShort?.imageUrls?.length && <button
               className={VIEWER_CONTROL}
               aria-label={_copy("copy.c49677dc5ccd", { defaultValue: "Picture in picture" })}
               onClick={(event) => {
@@ -2234,7 +2229,7 @@ export function ShortsViewer({ shorts, initialIndex, onClose, onLoadMore, hasMor
               }}
             ><PictureInPicture2 className="w-5 h-5" /></button>}
             {/* Playback speed */}
-            {!isLiveSlide && <button
+            <button
               onClick={(event) => {
                 event.stopPropagation();
                 const currentIdx = PLAYBACK_RATES.indexOf(getPlaybackRateFor(currentShort?.creatorId) as any);
@@ -2250,7 +2245,7 @@ export function ShortsViewer({ shorts, initialIndex, onClose, onLoadMore, hasMor
               aria-label={_copy("copy.afec2b22114c", { defaultValue: "Playback speed" })}
             >
               <span className="text-white text-[11px] font-bold leading-none">{formatRate(playbackRate)}x</span>
-            </button>}
+            </button>
 
             {/* Mute button */}
             <button
@@ -2265,12 +2260,12 @@ export function ShortsViewer({ shorts, initialIndex, onClose, onLoadMore, hasMor
             </button>
             
             {/* More options button */}
-            {!isLiveSlide && <button
+            <button
               onClick={() => setShareSheetOpen(true)}
               className={VIEWER_CONTROL}
             >
               <MoreHorizontal className="w-5 h-5 text-white" />
-            </button>}
+            </button>
           </div>
         </motion.div>
       )}
