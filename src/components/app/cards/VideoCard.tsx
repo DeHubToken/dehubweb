@@ -2783,7 +2783,7 @@ const VideoCardBody = memo(function VideoCard({ video, postPage = false, onBack,
             onClick={(event) => { event.stopPropagation(); showControlsBriefly(); handlePlayClick(); }}
             className="absolute left-1/2 top-1/2 z-20 flex h-14 w-14 -translate-x-1/2 -translate-y-1/2 items-center justify-center bg-transparent text-white"
           >
-            {hasError ? <span className="rounded-full bg-black/70 px-4 py-2 text-sm">{t('common.retry')}</span> : <MediaControlIcon icon={isPlaying ? Pause : Play} size={32} />}
+            {hasError ? <span className="rounded-full bg-black/70 px-4 py-2 text-sm">{t('common.retry')}</span> : <MediaControlIcon icon={isPlaying ? Pause : Play} size={32} plain />}
           </button>
         )}
 
