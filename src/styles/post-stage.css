@@ -393,3 +393,22 @@ html:is([data-theme='system'], [data-theme='immersive']) [data-stage-sheet] [dat
   border-block: 1px solid var(--stage-border);
   border-radius: 0;
 }
+
+/* Opening a feed post on a phone: the card rises into place the way a pushed
+   page does (the app's fade_from_bottom), over a fading backing. */
+@media (max-width: 639px) and (prefers-reduced-motion: no-preference) {
+  [data-post-rise] {
+    animation: post-rise-in 220ms cubic-bezier(0.2, 0.8, 0.2, 1) both;
+  }
+  [data-post-overlay-backdrop] {
+    animation: post-backing-in 180ms ease-out both;
+  }
+}
+@keyframes post-rise-in {
+  from { opacity: 0; transform: translateY(24px); }
+  to { opacity: 1; transform: none; }
+}
+@keyframes post-backing-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
