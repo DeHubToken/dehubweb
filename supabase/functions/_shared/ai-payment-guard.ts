@@ -308,11 +308,12 @@ export async function chargeCredits(
   if (outcome !== 'debited') {
     if (journalled) {
       try {
-        await transitionGeneration(jobId, 'failed', { status: 'failed', error: outcome === 'short' ? 'Not enough credits for this generation.' : 'Payment confirmation was interrupted. Recovery is pending.' }, {
-          expectedStatuses: ['submitting'],
-          ...(outcome === 'error' ? { refundNotBefore: new Date(Date.now() + 60_000).toISOString() } : {}),
-        }, supabase);
-        if (outcome === 'short') await refundJournalledGeneration(jobId, supabase);
+        if (outcome === 'short') {
+          const declined = await supabase.rpc('ai_generation_debit_declined', { p_job_id: jobId });
+          if (declined.error) throw declined.error;
+        } else {
+          await transitionGeneration(jobId, 'failed', { status: 'failed', error: 'Payment confirmation was interrupted. Recovery is pending.', debitUnconfirmed: true }, { expectedStatuses: ['submitting'] }, supabase);
+        }
       } catch (error) { console.error('[ai-payment] credit confirmation recovery pending', jobId, String(error)); }
     }
     if (outcome === 'short') return { ok: false, response: jsonResponse({ error: 'Not enough credits for this generation.', code: 'CREDITS_SHORT', priceDhb, priceUsd: priceDhb / 1000 }, 402) };
