@@ -6586,6 +6586,17 @@
     "youAreTimedOut": "You are timed out for a moment"
   },
   "studioDeck": {
+    "background": {
+      "title": "Background",
+      "modes": {
+        "none": "Off",
+        "blur": "Blur",
+        "color": "Colour",
+        "image": "Picture"
+      },
+      "failed": "Background removal couldn't start on this device.",
+      "hint": "Runs on your device. The first time takes a few seconds to load."
+    },
     "remove": "Remove",
     "imageTooLarge": "That picture is too big. Try a smaller one.",
     "scenes": {

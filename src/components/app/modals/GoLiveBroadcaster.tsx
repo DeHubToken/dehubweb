@@ -47,6 +47,13 @@ import {
   type CameraBubble,
 } from '@/lib/livepeer/compositor';
 import { startVideoEffect, type VideoEffectStage } from '@/lib/livepeer/video-effects';
+import {
+  backgroundRemovalSupported,
+  startBackgroundStage,
+  type BackgroundMode,
+  type BackgroundOptions,
+  type BackgroundStage,
+} from '@/lib/studio/background';
 import { createGuestMixer } from '@/lib/livepeer/guest-mixer';
 import { createProgramOutput } from '@/lib/studio/program';
 import { createAudioDesk, DESK_CHANNELS, type AudioDesk, type DeskChannel, type GateStrength } from '@/lib/studio/audio-desk';
@@ -60,7 +67,7 @@ import {
   type SceneId,
 } from '@/lib/studio/scenes';
 import { loadImage } from '@/lib/studio/sources';
-import { AudioPanel, ScenesPanel, SourcesPanel, type DeskState } from '@/components/app/live/studio-deck/StudioDeckPanels';
+import { AudioPanel, BackgroundPicker, ScenesPanel, SourcesPanel, type DeskState } from '@/components/app/live/studio-deck/StudioDeckPanels';
 import { useStudioSources } from '@/components/app/live/studio-deck/use-studio-sources';
 import { useOverlayPainter } from '@/hooks/use-overlay-painter';
 import { getMyOverlay, saveMyOverlay } from '@/lib/api/dehub/live-overlay';
@@ -558,6 +565,12 @@ export function GoLiveBroadcaster({
   // these blanks the broadcast, so they are held apart on purpose.
   const lookStageRef = useRef<VideoEffectStage | null>(null);
   const lookSourceRef = useRef<MediaStreamTrack | null>(null);
+  // Background removal runs between the camera and the look's canvas: the
+  // look stage's source is this stage's output while it is on.
+  const bgStageRef = useRef<BackgroundStage | null>(null);
+  const bgModeRef = useRef<BackgroundMode>('none');
+  const bgOptionsRef = useRef<BackgroundOptions>({});
+  const [bgMode, setBgMode] = useState<BackgroundMode>('none');
   // The handed-over capture is consumed exactly once, on mount.
   const initialScreenRef = useRef<MediaStream | null>(initialScreenStream);
   // Mirrors for the async swap paths, which run long after their closures were
@@ -761,6 +774,10 @@ export function GoLiveBroadcaster({
     if (!stage) return;
     lookStageRef.current = null;
     lookSourceRef.current = null;
+    // The background stage feeds the look's canvas, so it goes with it. Its
+    // mode is remembered and comes back when the camera does.
+    bgStageRef.current?.stop();
+    bgStageRef.current = null;
 
     const stream = streamRef.current;
     const session = sessionRef.current;
@@ -939,7 +956,23 @@ export function GoLiveBroadcaster({
        */
       const stage = lookStageRef.current;
       if (stage) {
-        await stage.setSource(track);
+        // With the background on, the new camera gets its own background
+        // stage and the canvas follows that instead of the bare camera.
+        const oldBg = bgStageRef.current;
+        if (oldBg) {
+          try {
+            const nextBg = await startBackgroundStage(track, bgModeRef.current, bgOptionsRef.current);
+            await stage.setSource(nextBg.track);
+            bgStageRef.current = nextBg;
+          } catch (error) {
+            logger.warn('Background removal could not follow the camera switch', error);
+            await stage.setSource(track);
+            bgStageRef.current = null;
+          }
+          oldBg.stop();
+        } else {
+          await stage.setSource(track);
+        }
         const previousSource = lookSourceRef.current;
         lookSourceRef.current = track;
         if (stopPrevious) previousSource?.stop();
@@ -987,7 +1020,9 @@ export function GoLiveBroadcaster({
       if (!streamRef.current || !sessionRef.current) return;
 
       const running = lookStageRef.current;
-      if (running && next !== 'none') {
+      // With the background on, "no look" still needs the canvas — the
+      // background is drawn through it — so the look is only cleared.
+      if (running && (next !== 'none' || bgStageRef.current)) {
         running.setEffect(next);
         return;
       }
@@ -1082,6 +1117,79 @@ export function GoLiveBroadcaster({
     }
   }, [backgroundBlur, liveCameraTrack]);
 
+  /**
+   * Background removal on the camera: blur, a colour or a picture behind the
+   * creator. It rides the look's canvas — the canvas is the stable published
+   * track — so turning it on starts a pass-through look if none is running,
+   * and the canvas's source becomes the background stage's output.
+   */
+  const applyBackgroundRef = useRef<((mode: BackgroundMode, opts?: BackgroundOptions) => Promise<void>) | null>(null);
+  const applyBackground = useCallback(
+    async (mode: BackgroundMode, opts: BackgroundOptions = {}) => {
+      bgModeRef.current = mode;
+      bgOptionsRef.current = { ...bgOptionsRef.current, ...opts };
+      setBgMode(mode);
+      if (captureModeRef.current !== 'camera') return;
+      if (!streamRef.current || !sessionRef.current) return;
+
+      const running = bgStageRef.current;
+      if (mode === 'none') {
+        if (!running) return;
+        bgStageRef.current = null;
+        const camera = lookSourceRef.current;
+        if (camera) await lookStageRef.current?.setSource(camera);
+        running.stop();
+        if (videoLookRef.current === 'none') await releaseLook(true);
+        return;
+      }
+      if (running) {
+        running.setMode(mode, bgOptionsRef.current);
+        return;
+      }
+      if (videoSwapRef.current) return;
+      videoSwapRef.current = true;
+      setSwitchingLook(true);
+      try {
+        if (!lookStageRef.current) {
+          const camera = streamRef.current.getVideoTracks()[0];
+          if (!camera) return;
+          const stage = await startVideoEffect({ source: camera, effect: videoLookRef.current });
+          if (!streamRef.current || !sessionRef.current) {
+            stage.stop();
+            return;
+          }
+          await sessionRef.current.replaceTrack('video', stage.track);
+          streamRef.current.removeTrack(camera);
+          streamRef.current.addTrack(stage.track);
+          stage.track.enabled = videoOnRef.current;
+          if (videoRef.current) videoRef.current.srcObject = streamRef.current;
+          lookStageRef.current = stage;
+          lookSourceRef.current = camera;
+        }
+        const camera = lookSourceRef.current;
+        const stage = lookStageRef.current;
+        if (!camera || !stage) return;
+        const bg = await startBackgroundStage(camera, mode, bgOptionsRef.current);
+        if (!lookStageRef.current) {
+          bg.stop();
+          return;
+        }
+        await stage.setSource(bg.track);
+        bgStageRef.current = bg;
+      } catch (error) {
+        logger.warn('Background removal could not start', error);
+        bgModeRef.current = 'none';
+        setBgMode('none');
+        toast.error(t('studioDeck.background.failed'));
+      } finally {
+        setSwitchingLook(false);
+        videoSwapRef.current = false;
+      }
+    },
+    [releaseLook, t]
+  );
+  applyBackgroundRef.current = applyBackground;
+
   const releaseScreenCapture = useCallback(() => {
     screenStreamRef.current?.getTracks().forEach((t) => t.stop());
     screenStreamRef.current = null;
@@ -1146,6 +1254,9 @@ export function GoLiveBroadcaster({
     // share. Outside the lock above, because applyLook takes it too.
     if (videoLookRef.current !== 'none' && captureModeRef.current === 'camera') {
       await applyLook(videoLookRef.current);
+    }
+    if (bgModeRef.current !== 'none' && captureModeRef.current === 'camera') {
+      await applyBackgroundRef.current?.(bgModeRef.current, bgOptionsRef.current);
     }
   }, [swapVideoTrack, applySystemAudio, releaseScreenCapture, releaseBubble, applyLook]);
 
@@ -2627,6 +2738,13 @@ export function GoLiveBroadcaster({
             onToggleBackgroundBlur={() => void toggleBackgroundBlur()}
           />
           <p className="mt-2 text-[11px] text-zinc-500">{t('videoLooks.hint')}</p>
+          {backgroundRemovalSupported() && (
+            <BackgroundPicker
+              mode={bgMode}
+              color={bgOptionsRef.current.color ?? '#00b140'}
+              onChange={(mode, opts) => void applyBackground(mode, opts)}
+            />
+          )}
         </div>
       )}
 

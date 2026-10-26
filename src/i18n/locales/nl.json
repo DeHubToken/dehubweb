@@ -6777,6 +6777,17 @@
     "youAreTimedOut": "Je bent even tijd uit."
   },
   "studioDeck": {
+    "background": {
+      "title": "Achtergrond",
+      "modes": {
+        "none": "Uit",
+        "blur": "Vervagen",
+        "color": "Kleur",
+        "image": "Afbeelding"
+      },
+      "failed": "Achtergrondverwijdering kon niet starten op dit apparaat.",
+      "hint": "Draait op je apparaat. De eerste keer duurt het laden een paar seconden."
+    },
     "remove": "Verwijderen",
     "imageTooLarge": "Die afbeelding is te groot. Probeer een kleinere.",
     "scenes": {

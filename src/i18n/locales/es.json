@@ -6587,6 +6587,17 @@
     "youAreTimedOut": "Estás en tiempo de espera por un momento"
   },
   "studioDeck": {
+    "background": {
+      "title": "Fondo",
+      "modes": {
+        "none": "Desactivado",
+        "blur": "Desenfocar",
+        "color": "Color",
+        "image": "Imagen"
+      },
+      "failed": "No se pudo activar la eliminación de fondo en este dispositivo.",
+      "hint": "Funciona en tu dispositivo. La primera vez tarda unos segundos en cargar."
+    },
     "remove": "Quitar",
     "imageTooLarge": "Esa imagen es demasiado grande. Prueba con una más pequeña.",
     "scenes": {
