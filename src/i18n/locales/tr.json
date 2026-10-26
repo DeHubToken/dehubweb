@@ -6583,6 +6583,18 @@
     "youAreTimedOut": "Bir an için zaman aşımına uğradınız"
   },
   "liveStudio": {
+    "vertical": {
+      "title": "Dikey görünüm",
+      "intro": "Telefonlar yayınını dikey akışta izler. Görüntünün hangi kısmını göreceklerini seçmek için kutuyu sürükle.",
+      "enabled": "Yayınımı dikey akışta göster",
+      "zoom": "Yakınlaştır",
+      "centre": "Ortala",
+      "frame": "Yatay görüntün",
+      "box": "Telefonların gördüğü",
+      "hint": "Kutuyu sürükle ya da ok tuşlarını kullan. Canlı yayınına uygulamak için kaydet.",
+      "live": "CANLI",
+      "watch": "{{name}} canlı izle"
+    },
     "destinations": {
       "title": "Çoklu yayın hedefleri",
       "intro": "DeHub'da bir kez yayına başla, yayınını burada açık olan her platforma ücretsiz gönderelim. Yayına başladıktan birkaç saniye sonra başlar.",
