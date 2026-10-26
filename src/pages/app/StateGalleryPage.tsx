@@ -36,6 +36,7 @@ import type { PostReaction, ReactionCounts } from '@/lib/reactions';
 import { ReactionEmoji } from '@/components/app/cards/ReactionEmoji';
 import { AuthContext, type AuthContextType } from '@/contexts/AuthContext';
 import { KitButton, PageEmpty, PageSection, PageTabs } from '@/components/app/page-kit/PageKit';
+import { ScheduleSheet, type ScheduleKind } from '@/features/post/components/ScheduleSheet';
 import { FeedTabBarSkeleton } from '@/components/app/PageSkeletons';
 import { FeedCardSkeletonList } from '@/components/app/cards/FeedCardSkeleton';
 import { STREAMER_BADGE_IDS, badgeMaterial, streamerBadgeSvg } from '@/lib/streamer-badge-art';
@@ -365,6 +366,22 @@ function StageCoversGallery() {
  * Toasts: raises the real "new version" toast (and a plain one) so its text
  * and buttons can be checked against every theme's toast glass.
  */
+function WhenSheetGallery() {
+  const { t } = useTranslation();
+  const [kind, setKind] = useState<ScheduleKind | null>(null);
+  return (
+    <section data-page-bento data-when-sheet-gallery className="mb-5 rounded-3xl border border-white/10 bg-white/[0.04] p-4">
+      <h2 className="mb-3 text-sm font-semibold">{t('whenSheet.title', { defaultValue: 'When?' })}</h2>
+      <div className="flex flex-wrap gap-2">
+        {(['post', 'live', 'stage'] as const).map(k => (
+          <button key={k} type="button" data-kit-button="quiet" data-when-open={k} onClick={() => setKind(k)}>{k}</button>
+        ))}
+      </div>
+      <ScheduleSheet isOpen={!!kind} onClose={() => setKind(null)} scheduledDate={null} onSchedule={() => {}} kind={kind ?? 'post'} minimumMinutes={kind === 'live' ? 30 : 0} />
+    </section>
+  );
+}
+
 function ToastsGallery() {
   const { t } = useTranslation();
   const showUpdate = () => {
@@ -764,6 +781,7 @@ export default function StateGalleryPage() {
           </div>
         </section>
 
+        <WhenSheetGallery />
         <ToastsGallery />
         <TooltipsGallery />
         <AudioGallery />

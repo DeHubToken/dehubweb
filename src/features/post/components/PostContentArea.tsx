@@ -926,6 +926,7 @@ export function PostContentArea({
         onSchedule={onSchedule}
         title={liveMode === 'townhall' ? _copy("copy.e6c671395de3", { defaultValue: "Schedule stage" }) : liveMode === 'video' ? _copy("copy.e8b72dfec3eb", { defaultValue: "Schedule livestream" }) : _copy("copy.765608de66a0", { defaultValue: "Schedule Post" })}
         minimumMinutes={liveMode === 'video' ? 30 : 0}
+        kind={liveMode === 'townhall' ? 'stage' : liveMode === 'video' ? 'live' : 'post'}
       />
 
       {/* Drafts Sheet */}
