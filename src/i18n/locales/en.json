@@ -9207,6 +9207,8 @@
       "warmth": "Warmth {{value}}",
       "tint": "Tint {{value}}",
       "vignette": "Vignette {{value}}%",
+      "halation": "Halation {{value}}%",
+      "scanlines": "Scanlines {{value}}%",
       "auto": "Auto enhance",
       "autoFailed": "Couldn't analyse this picture."
     },
@@ -9282,6 +9284,18 @@
       "reloadText": "Reload caption",
       "textSaved": "Caption changes saved.",
       "action": "Auto captions",
+      "style": "Caption style",
+      "styles": {
+        "classic": "Classic",
+        "boxed": "Boxed",
+        "bold": "Bold",
+        "wordpop": "Word Pop",
+        "rapid": "Rapid Reveal",
+        "beast": "Beast Mode",
+        "stacked": "Stacked",
+        "serif": "Serif",
+        "bubble": "Bubble"
+      },
       "working": "Listening… {{percent}}%",
       "downloading": "Getting the speech model ready… {{percent}}%",
       "hint": "Turns speech into timed captions you can restyle. Runs on your device: free and private. The first use downloads the model.",

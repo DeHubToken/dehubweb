@@ -19,7 +19,7 @@ import { prepareGifImage, releaseGifImage } from "./gifImage";
 import { stampEnding } from "./endingFile";
 import type { MediaClip, ProjectSnapshot } from "./types";
 import type { MediaItem } from "@/store/editorStore";
-import { computeRenderOps } from "./transitions";
+import { applyRenderOpMotion, computeRenderOps } from "./transitions";
 import { drawClip, clipBox, getTransform } from "./render";
 import { timelineDuration } from "./pages";
 import { loadBrandOutroArtwork } from "./brandOutroArtwork";
@@ -456,7 +456,7 @@ export async function exportProject(opts: ExportOptions): Promise<ExportResult> 
       }
       // Draw before seeking another cut that may share this decoder.
       ctx.save();
-      if (op.translateX) ctx.translate(op.translateX, 0);
+      applyRenderOpMotion(ctx, op, width, height);
       if (op.clipRect) {
         ctx.beginPath();
         ctx.rect(op.clipRect.x, 0, op.clipRect.w, canvas.height);
@@ -594,7 +594,7 @@ async function exportGif(opts: ExportOptions): Promise<ExportResult> {
           if (video) await waitForVideoFrame(video, op.localTimeOverride ?? op.clip.trimIn + (time - op.clip.start) * (op.clip.speed || 1), { signal, forCanvasRead: true });
         }
         ctx.save();
-        if (op.translateX) ctx.translate(op.translateX, 0);
+        applyRenderOpMotion(ctx, op, plan.width, plan.height);
         if (op.clipRect) { ctx.beginPath(); ctx.rect(op.clipRect.x, 0, op.clipRect.w, plan.height); ctx.clip(); }
         ctx.globalAlpha = op.alpha;
         drawClip(ctx, plan.width, plan.height, op.clip, time, { videos, images }, op.localTimeOverride); ctx.restore();
@@ -682,7 +682,7 @@ export async function exportStill(opts: StillOptions): Promise<ExportResult> {
       if (v) await waitForVideoFrame(v, op.localTimeOverride !== undefined ? op.localTimeOverride : mc.trimIn + (t - mc.start) * (mc.speed || 1), { forCanvasRead: true });
     }
     ctx.save();
-    if (op.translateX) ctx.translate(op.translateX, 0);
+    applyRenderOpMotion(ctx, op, width, height);
     if (op.clipRect) {
       ctx.beginPath();
       ctx.rect(op.clipRect.x, 0, op.clipRect.w, height);

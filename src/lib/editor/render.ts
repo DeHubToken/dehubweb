@@ -316,7 +316,44 @@ function scratchCanvas(w: number, h: number): OffscreenCanvas | HTMLCanvasElemen
 }
 
 export function needsGrade(e: MediaClip["effects"]): boolean {
-  return !!e && (!!e.warmth || !!e.tint || !!e.vignette || needsPhotoTone(e));
+  return !!e && (!!e.warmth || !!e.tint || !!e.vignette || !!e.scanlines || !!e.halation || needsPhotoTone(e));
+}
+
+let glowScratch: OffscreenCanvas | HTMLCanvasElement | null = null;
+
+/** Red glow from a tiny copy of the frame scaled back up, so it costs no canvas filter. */
+function drawHalation(g: Ctx2D, source: CanvasImageSource, cw: number, ch: number, amount: number) {
+  const sw = Math.max(1, Math.round(cw / 24)), sh = Math.max(1, Math.round(ch / 24));
+  if (!glowScratch) glowScratch = typeof OffscreenCanvas !== "undefined" ? new OffscreenCanvas(sw, sh) : typeof document !== "undefined" ? document.createElement("canvas") : null;
+  if (!glowScratch) return;
+  if (glowScratch.width !== sw) glowScratch.width = sw;
+  if (glowScratch.height !== sh) glowScratch.height = sh;
+  const s = glowScratch.getContext("2d") as Ctx2D | null;
+  if (!s) return;
+  s.globalCompositeOperation = "copy";
+  s.globalAlpha = 1;
+  s.drawImage(source, 0, 0, sw, sh);
+  // Keep the glow warm: tint the small copy red before it is screened back.
+  s.globalCompositeOperation = "multiply";
+  s.fillStyle = "#ff5a3c";
+  s.fillRect(0, 0, sw, sh);
+  g.globalCompositeOperation = "screen";
+  g.globalAlpha = Math.min(1, amount) * 0.6;
+  g.imageSmoothingEnabled = true;
+  g.drawImage(glowScratch, 0, 0, sw, sh, -cw * 0.02, -ch * 0.02, cw * 1.04, ch * 1.04);
+}
+
+function drawScanlines(g: Ctx2D, cw: number, ch: number, amount: number) {
+  // Coarse, soft-edged lines so a scaled-down preview doesn't turn them into moire bands.
+  const pitch = Math.max(3, ch / 160);
+  g.globalCompositeOperation = "source-over";
+  g.fillStyle = "#000000";
+  for (let y = 0; y < ch; y += pitch) {
+    g.globalAlpha = Math.min(1, amount) * 0.4;
+    g.fillRect(0, y, cw, pitch * 0.35);
+    g.globalAlpha = Math.min(1, amount) * 0.18;
+    g.fillRect(0, y + pitch * 0.35, cw, pitch * 0.2);
+  }
 }
 
 function grade(el: CanvasImageSource, sx: number, sy: number, sw: number, sh: number, w: number, h: number, e: NonNullable<MediaClip["effects"]>) {
@@ -362,6 +399,10 @@ function grade(el: CanvasImageSource, sx: number, sy: number, sw: number, sh: nu
     g.fillStyle = grad;
     g.fillRect(0, 0, cw, ch);
   }
+  const halation = Math.max(0, Math.min(1, e.halation ?? 0));
+  if (halation) drawHalation(g, cvs, cw, ch, halation);
+  const scanlines = Math.max(0, Math.min(1, e.scanlines ?? 0));
+  if (scanlines) drawScanlines(g, cw, ch, scanlines);
   // Put the source's own transparency back.
   g.globalCompositeOperation = "destination-in";
   g.globalAlpha = 1;
