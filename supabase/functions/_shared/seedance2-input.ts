@@ -14,7 +14,15 @@ interface Seedance2Options {
 
 /** Seedance 2.0 and Fast public fal input schemas, checked 26 October 2026. */
 export function buildSeedance2Input(options: Seedance2Options) {
-  if (options.seed !== undefined || options.negativePrompt) throw new Error('Seedance 2.0 does not support seeds or negative prompts');
+  if (!options || typeof options !== 'object' || Array.isArray(options) || typeof options.prompt !== 'string' || !options.prompt.trim()) throw new Error('A prompt is required');
+  if (options.seed !== undefined || options.negativePrompt !== undefined) throw new Error('Seedance 2.0 does not support seeds or negative prompts');
+  for (const value of [options.sourceImage, options.endFrameUrl, options.aspectRatio, options.resolution]) {
+    if (value !== undefined && (typeof value !== 'string' || !value.trim())) throw new Error('Invalid Seedance input');
+  }
+  for (const list of [options.referenceImageUrls, options.audioUrls, options.videoUrls]) {
+    if (list !== undefined && (!Array.isArray(list) || list.some(value => typeof value !== 'string' || !value.trim()))) throw new Error('Invalid Seedance reference list');
+  }
+  if (options.duration !== undefined && typeof options.duration !== 'number' && typeof options.duration !== 'string') throw new Error('Invalid Seedance duration');
   const rawDuration = String(options.duration ?? 5).replace(/s$/, '');
   const duration = Number(rawDuration);
   if (!/^\d+$/.test(rawDuration) || !Number.isInteger(duration) || duration < 4 || duration > 15) throw new Error('Choose a duration from 4 to 15 seconds');
@@ -27,6 +35,7 @@ export function buildSeedance2Input(options: Seedance2Options) {
   const images = [...new Set([...(options.sourceImage ? [options.sourceImage] : []), ...(options.referenceImageUrls ?? [])])];
   if (images.length > 9 || (options.audioUrls?.length ?? 0) > 3 || (options.videoUrls?.length ?? 0) > 3) throw new Error('Too many Seedance references');
   return {
+    mode: referenceMode ? 'reference' as const : options.sourceImage ? 'image' as const : 'text' as const,
     durationSeconds: duration,
     input: {
       prompt: options.prompt,
@@ -44,4 +53,12 @@ export function buildSeedance2Input(options: Seedance2Options) {
       }),
     } as Record<string, unknown>,
   };
+}
+
+/** The same mode decides both the payload shape and the provider endpoint. */
+export function buildSeedance2Request(routes: { falTextModel?: string; falImageModel?: string; falReferenceModel?: string }, options: Seedance2Options) {
+  const prepared = buildSeedance2Input(options);
+  const appId = prepared.mode === 'reference' ? routes.falReferenceModel : prepared.mode === 'image' ? routes.falImageModel : routes.falTextModel;
+  if (!appId) throw new Error('The selected Seedance route is not configured');
+  return { ...prepared, appId };
 }
