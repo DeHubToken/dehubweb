@@ -1363,7 +1363,9 @@ export function ShortsViewer({ shorts, initialIndex, onClose, onLoadMore, hasMor
 
   // What the overlay actually reads. The gesture handlers stay keyed on
   // `overlaysHidden` alone, so the tap-to-restore band belongs to the swipe.
-  const chromeHidden = overlaysHidden || autoHidden;
+  // A live slide passes no taps back to bring the chrome up again, so back and
+  // mute stay on screen over it.
+  const chromeHidden = !isLiveSlide && (overlaysHidden || autoHidden);
 
   const handleCopyLink = () => {
     const url = viewerShareUrl(`${window.location.origin}/app/post/${currentShort.id}`);
