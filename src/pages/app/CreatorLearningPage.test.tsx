@@ -1,0 +1,42 @@
+import React from 'react';
+import { cleanup, fireEvent, render, screen } from '@testing-library/react';
+import { afterEach, expect, it, vi } from 'vitest';
+import { MemoryRouter } from 'react-router-dom';
+import { AuthContext } from '@/contexts/AuthContext';
+import { __resetDraftCacheForTests, flushDrafts } from '@/lib/draft-cache';
+import CreatorLearningPage from './CreatorLearningPage';
+
+vi.mock('react-i18next', () => ({ useTranslation: () => ({ t: (key: string) => key }) }));
+vi.mock('@/contexts/AuthContext', async () => { const react = await import('react'); const context = react.createContext({ walletAddress: null }); return { AuthContext: context, useAuth: () => react.useContext(context) }; });
+vi.mock('@/components/SEOHead', () => ({ SEOHead: () => null }));
+vi.mock('@/components/app/creator/studio/CreatorStudio', () => ({ CreatorStudio: (props: unknown) => <pre aria-label="Exercise draft">{JSON.stringify(props)}</pre> }));
+afterEach(cleanup);
+
+it('checks knowledge, restores account progress and opens only the selected isolated exercise', () => {
+  __resetDraftCacheForTests(); localStorage.clear();
+  const tree = (owner: string) => <MemoryRouter><AuthContext.Provider value={{ walletAddress: owner } as never}><CreatorLearningPage /></AuthContext.Provider></MemoryRouter>;
+  const ui = render(tree('alice'));
+  expect(screen.queryByLabelText('Exercise draft')).not.toBeInTheDocument();
+  expect(screen.getByRole('button', { name: 'creator.learn.check' })).toBeDisabled();
+  fireEvent.click(screen.getByRole('radio', { name: 'creator.learn.brief.answer2' }));
+  fireEvent.click(screen.getByRole('button', { name: 'creator.learn.check' }));
+  expect(screen.getByRole('status')).toHaveTextContent('creator.learn.retry');
+  fireEvent.click(screen.getByRole('radio', { name: 'creator.learn.brief.answer0' }));
+  fireEvent.click(screen.getByRole('button', { name: 'creator.learn.check' }));
+  expect(screen.getByRole('status')).toHaveTextContent('creator.learn.correct');
+  fireEvent.click(screen.getByRole('button', { name: 'creator.learn.openExercise' }));
+  expect(screen.getByLabelText('Exercise draft')).toHaveTextContent('"workspaceId":"learn-brief"');
+  expect(screen.getByLabelText('Exercise draft')).toHaveTextContent('"owner":"alice"');
+  fireEvent.click(screen.getByRole('button', { name: /creator.learn.continuity.title/ }));
+  fireEvent.click(screen.getByRole('button', { name: 'creator.learn.openExercise' }));
+  expect(screen.getByLabelText('Exercise draft')).toHaveTextContent('"kind":"video"');
+  expect(screen.getByLabelText('Exercise draft')).toHaveTextContent('"workspaceId":"learn-continuity"');
+  ui.rerender(tree('bob'));
+  expect(screen.queryByLabelText('Exercise draft')).not.toBeInTheDocument();
+  expect(screen.queryByRole('status')).not.toBeInTheDocument();
+  ui.rerender(tree('alice'));
+  flushDrafts(); ui.unmount(); render(tree('alice'));
+  expect(screen.getByLabelText('Exercise draft')).toHaveTextContent('"workspaceId":"learn-continuity"');
+  fireEvent.click(screen.getByRole('button', { name: /creator.learn.brief.title/ }));
+  expect(screen.getByRole('status')).toHaveTextContent('creator.learn.correct');
+});

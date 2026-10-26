@@ -66,13 +66,50 @@ function gateMode(): "enforce" | "report" {
  * live has nobody in it to talk to — so the status check would only add a race
  * against the client's own "flip to live, then fetch a token" ordering.
  */
-async function mayPublish(channelName: string, wallet: string): Promise<boolean> {
+/**
+ * The Agora uid a wallet must use on a co-stream channel.
+ *
+ * The host's browser maps each remote uid back to a seat to decide who goes
+ * into the picture, so the uid has to be a function of the wallet rather than
+ * whatever the caller asks for. Mirrors costreamUid in
+ * src/lib/live/costream-api.ts.
+ */
+function costreamUid(wallet: string): number {
+  return (parseInt(wallet.slice(2, 10), 16) >>> 1) || 1;
+}
+
+async function mayPublish(channelName: string, wallet: string, uid: number): Promise<boolean> {
   const { createClient } = await import("https://esm.sh/@supabase/supabase-js@2");
   const admin = createClient(
     Deno.env.get("SUPABASE_URL")!,
     Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!,
     { auth: { persistSession: false } },
   );
+
+  /**
+   * A co-stream: guests on screen with a live video host. Channel
+   * `costream-<live_costreams.id>`. The host of an open room and its accepted
+   * guests publish; a removed guest's next token is refused, and the uid is
+   * pinned to the wallet so the host can tell who is who.
+   */
+  const costream = channelName.match(/^costream-([0-9a-fA-F-]{36})$/);
+  if (costream) {
+    if (uid !== costreamUid(wallet)) return false;
+    const { data: room } = await admin
+      .from("live_costreams")
+      .select("id, host_wallet, status")
+      .eq("id", costream[1])
+      .maybeSingle();
+    if (!room || room.status !== "active") return false;
+    if ((room.host_wallet || "").toLowerCase() === wallet) return true;
+    const { data: seat } = await admin
+      .from("live_costream_guests")
+      .select("status")
+      .eq("costream_id", room.id)
+      .eq("wallet", wallet)
+      .maybeSingle();
+    return seat?.status === "accepted";
+  }
 
   /**
    * A one-to-one call is not a stage and has no row in `audio_spaces`.
@@ -175,7 +212,7 @@ serve(async (req) => {
         const gateCheck = (async (): Promise<string | null> => {
           const auth = await requireDeHubAuth(req);
           if (!auth.ok) return "no valid DeHub token";
-          if (!(await mayPublish(channelName, auth.wallet))) {
+          if (!(await mayPublish(channelName, auth.wallet, Number(userUid)))) {
             return `wallet ${auth.wallet} is not a party to this channel`;
           }
           return null;
