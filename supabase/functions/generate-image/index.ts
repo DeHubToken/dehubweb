@@ -11,7 +11,7 @@ import { chargeForJob } from '../_shared/ai-payment-guard.ts';
 import { aiChat } from '../_shared/ai-chat.ts';
 import { gatewayImage, resilientImage, ImageProviderError, IMAGE_UNAVAILABLE } from '../_shared/image-provider-fallback.ts';
 import { CREATOR_FAL_IMAGE_MODELS } from '../_shared/creator-fal-catalog.ts';
-import { buildCreatorFalImageRequest } from '../_shared/creator-fal-input.ts';
+import { buildCreatorFalImageRequest, creatorFalImageResult } from '../_shared/creator-fal-input.ts';
 // The shared list — the only one that names x-wallet-address and x-dehub-token,
 // which chargeForJob requires and the browser will not send unless the preflight
 // says they are allowed. A local copy silently drops them; see auth.ts.
@@ -350,10 +350,7 @@ async function generateWithFal(
     throw new ImageProviderError(res.status, text);
   }
 
-  const data = (await res.json()) as { images?: { url?: string }[] };
-  const url = data.images?.[0]?.url;
-  if (!url) throw new Error('The model returned no image');
-  return url;
+  return creatorFalImageResult(model, await res.json());
 }
 
 /**
@@ -378,7 +375,9 @@ const handleGenerateImage = async (req: Request): Promise<Response> => {
   try {
     let { prompt, sourceImage, referenceImageUrls, logoImage, headline: requestHeadline, conversationHistory = [], model = 'gemini-2.5-flash', bannerRenderer, bannerFormat, aspectRatio } = await req.json() as GenerateImageRequest;
 
-    if (!prompt) {
+    const outpaint = !!CREATOR_FAL_IMAGE_MODELS[model]?.outpaint;
+    if (outpaint && prompt == null) prompt = '';
+    if (!prompt && !outpaint) {
       throw new Error('Prompt is required');
     }
 
@@ -401,7 +400,7 @@ const handleGenerateImage = async (req: Request): Promise<Response> => {
 
     // Build context from conversation history
     let contextualPrompt = prompt;
-    if (conversationHistory.length > 0) {
+    if (conversationHistory.length > 0 && !outpaint) {
       const recentHistory = conversationHistory.slice(-6);
       const contextSummary = recentHistory
         .map(m => `${m.role === 'user' ? 'User' : 'AI'}: ${m.content}`)
@@ -417,12 +416,12 @@ const handleGenerateImage = async (req: Request): Promise<Response> => {
     //    from GeneralAIChat), promote it to `logoImage` so the brand pipeline runs
     //    and composites correctly instead of being bypassed as a generic edit.
     const brandKeywordHit = /\bde\s*hub\b/i.test(prompt) && /\b(posters?|banners?|thumbnails?|content|cards?|announc(?:e|ement|ements?)|flyers?|artworks?|social|covers?|graphics?|ads?|adverts?|images?|logos?|wallpapers?|memes?|promos?|campaigns?)\b/i.test(prompt);
-    if (brandKeywordHit && sourceImage && !logoImage && !referenceImageUrls?.length) {
+    if (!outpaint && brandKeywordHit && sourceImage && !logoImage && !referenceImageUrls?.length) {
       logoImage = sourceImage;
       sourceImage = undefined;
       console.log('[dehub-poster] Promoted sourceImage → logoImage for brand pipeline');
     }
-    const brandIntent = brandKeywordHit || !!logoImage;
+    const brandIntent = !outpaint && (brandKeywordHit || !!logoImage);
     let brandPromptOverride: string | null = null;
     // Brand intent ALWAYS runs the brand pipeline. Previously we bypassed it when
     // a sourceImage was present without an explicit logoImage — that dropped every
@@ -788,6 +787,7 @@ ART DIRECTION: ${enhancedUserRequest}`;
 
     if (FAL_IMAGE_MODELS[model]) {
       const appId = sourceImage ? FAL_IMAGE_MODELS[model].edit! : FAL_IMAGE_MODELS[model].text;
+      if (outpaint) return success({ imageUrl: await generateWithFal(model, prompt, sourceImage, bannerFormat, aspectRatio, referenceImageUrls), provider: 'fal', model: appId });
       return success(await resilientImage(imageRequest, {
         provider: 'fal', model: appId,
         generate: async signal => ({ imageUrl: await generateWithFal(model, contextualPrompt, sourceImage,

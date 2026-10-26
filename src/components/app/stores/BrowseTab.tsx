@@ -53,7 +53,7 @@ export function BrowseTab() {
   const [maxPrice, setMaxPrice] = useSurfaceDraft("components/app/stores/BrowseTab.tsx:maxPrice", '');
   const [filterOpen, setFilterOpen] = useState(false);
 
-  const { data: listings = [], isLoading } = useBrowseListings(category, sort, search);
+  const { data: listings = [], isLoading, hasNextPage, fetchNextPage, isFetching, isError, refetch } = useBrowseListings(category, sort, search);
 
   const hasPriceFilter = minPrice !== '' || maxPrice !== '';
   const hasActiveFilters = hasPriceFilter || sort !== 'newest';
@@ -277,6 +277,9 @@ export function BrowseTab() {
           ))}
         </div>
       )}
+
+      {isError && <Button variant="outline" onClick={() => refetch()}>{t('common.retry')}</Button>}
+      {hasNextPage && <Button variant="outline" disabled={isFetching} onClick={() => fetchNextPage()}>{t('common.loadMore', { defaultValue: 'Load more' })}</Button>}
 
       <ListingDetailDrawer
         listing={selectedListing}

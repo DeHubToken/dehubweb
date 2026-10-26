@@ -1,4 +1,5 @@
-import { useState } from 'react';
+import { useState, useContext } from 'react';
+import { CachedPageActiveContext } from '@/contexts/CachedPageActiveContext';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
@@ -62,7 +63,9 @@ export function AgentTasksPanel({ wallet, agents }: { wallet: string; agents: { 
   const active = agents.filter(agent => agent.is_active);
   const agentId = active.some(agent => agent.id === chosen) ? chosen : active[0]?.id;
   const swarmIds = active.filter(agent => selected.includes(agent.id)).map(agent => agent.id);
-  const tasks = useQuery({ queryKey: ['agent-tasks', wallet], refetchInterval: 10000,
+  const pageActive = useContext(CachedPageActiveContext);
+  const tasks = useQuery({ queryKey: ['agent-tasks', wallet], enabled: pageActive,
+    refetchInterval: query => pageActive && query.state.data?.tasks.some(task => ['queued', 'running'].includes(task.status)) ? 10000 : false,
     queryFn: () => agentTaskRequest<{ tasks: AgentTask[] }>(wallet, { operation: 'list' }) });
   const refresh = () => { client.invalidateQueries({ queryKey: ['agent-tasks', wallet] }); client.invalidateQueries({ queryKey: ['agent-task-history', wallet] }); };
   const create = useMutation({ mutationFn: (text: string) => agentTaskRequest(wallet, { operation: swarm ? 'create_swarm' : 'create',
@@ -193,7 +196,9 @@ export function AgentTasksPanel({ wallet, agents }: { wallet: string; agents: { 
 export function AgentActivity({ wallet, agentId, lastActive }: { wallet: string; agentId: string; lastActive: string | null }) {
   const { t } = useTranslation();
   const client = useQueryClient();
-  const tasks = useQuery({ queryKey: ['agent-tasks', wallet], refetchInterval: 10000,
+  const pageActive = useContext(CachedPageActiveContext);
+  const tasks = useQuery({ queryKey: ['agent-tasks', wallet], enabled: pageActive,
+    refetchInterval: query => pageActive && query.state.data?.tasks.some(task => ['queued', 'running'].includes(task.status)) ? 10000 : false,
     queryFn: () => agentTaskRequest<{ tasks: AgentTask[] }>(wallet, { operation: 'list' }) });
   const control = useMutation({ mutationFn: ({ id, operation }: { id: string; operation: string }) => agentTaskRequest(wallet, { operation, task_id: id }),
     onSuccess: () => { client.invalidateQueries({ queryKey: ['agent-tasks', wallet] }); }, onError: (error: Error) => toast.error(error.message) });
