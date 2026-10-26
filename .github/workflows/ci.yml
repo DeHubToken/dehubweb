@@ -380,6 +380,9 @@ jobs:
       - name: Stage clip picks and caption timing
         run: node --experimental-strip-types --test supabase/functions/stage-clips/highlights.test.ts
 
+      - name: Live clip highlight detection
+        run: node --experimental-strip-types --test supabase/functions/live-clips/spikes.test.ts
+
   boot-path:
     name: Boot path
     runs-on: ubuntu-latest

@@ -1903,7 +1903,7 @@ function entityImageMetaTags(imageUrl, alt) {
  * a group chat should see what they shared — it is the search index it does not
  * belong in.
  */
-function entityHtml({ canonicalUrl, title, description, image, jsonLd, breadcrumb, heading, bodyHtml, ogType = 'website', noindex = false }) {
+function entityHtml({ canonicalUrl, title, description, image, jsonLd, breadcrumb, heading, bodyHtml, ogType = 'website', noindex = false, extraHead = '' }) {
   // Every title here is `${name} — DeHub <section>` with `name` straight out
   // of a user-editable column, so it inherits that column's newlines and
   // length. Callers already cap the description; capping both in one place is
@@ -1929,7 +1929,7 @@ ${ogLocaleTag()}
 <meta property="og:description" content="${escHtml(description)}">
 ${twitterTextTags(title, description)}
 ${entityImageMetaTags(image, title)}
-<meta name="twitter:site" content="@dehub_official">
+<meta name="twitter:site" content="@dehub_official">${extraHead}
 <script type="application/ld+json">${jsonLdScript(jsonLd)}</script>
 ${breadcrumbScript([...crumbsFromHtml(breadcrumb), { name: truncate(heading, 110), url: canonicalUrl }])}
 </head>
@@ -3420,6 +3420,51 @@ ${when ? `<p><strong>${escHtml(when)}</strong></p>` : ''}
   });
 }
 
+/** A posted live clip, /clip/<n>. Columns are the ones anon may read. */
+const LIVE_CLIP_PATH = /^\/clip\/(\d{1,15})\/?$/;
+const LIVE_CLIP_COLUMNS = 'short_id,title,stream_title,stream_token_id,streamer_username,clipper_username,kind,video_url,poster_url,card_url,duration_seconds,post_token_id,posted_at';
+
+function buildClipHtml(clip) {
+  const canonicalUrl = `${APP_URL}/clip/${clip.short_id}`;
+  const name = clip.title || clip.stream_title || 'Live clip';
+  const streamer = clip.streamer_username ? `@${clip.streamer_username}` : 'a DeHub streamer';
+  const by = clip.kind === 'viewer' && clip.clipper_username ? `, clipped by @${clip.clipper_username}` : '';
+  const description = truncate(`A clip from ${streamer}'s live stream on DeHub${by}. Watch it, then catch the next stream live.`, 200);
+  const video = clip.video_url || '';
+  const extraHead = video
+    ? `
+<meta property="og:video" content="${escHtml(video)}">
+<meta property="og:video:secure_url" content="${escHtml(video)}">
+<meta property="og:video:type" content="video/mp4">
+<meta property="og:video:width" content="1080">
+<meta property="og:video:height" content="1920">`
+    : '';
+  return entityHtml({
+    canonicalUrl,
+    title: `${name} — Clip on DeHub`,
+    description,
+    image: clip.card_url || clip.poster_url || '',
+    ogType: 'video.other',
+    extraHead,
+    heading: name,
+    breadcrumb: `<a href="${APP_URL}">DeHub</a> › <a href="${APP_URL}/shorts">Shorts</a>`,
+    bodyHtml: `<p>${escHtml(description)}</p>
+${video ? `<video src="${escHtml(video)}" poster="${escHtml(clip.poster_url || '')}" controls playsinline style="max-width:360px;width:100%"></video>` : ''}
+<p><a href="${APP_URL}/post/${escHtml(String(clip.stream_token_id))}">Watch the stream</a>${clip.post_token_id != null ? ` · <a href="${APP_URL}/post/${escHtml(String(clip.post_token_id))}">Open the Short</a>` : ''}</p>`,
+    jsonLd: {
+      '@context': 'https://schema.org',
+      '@type': 'VideoObject',
+      name,
+      description,
+      url: canonicalUrl,
+      ...(clip.poster_url || clip.card_url ? { thumbnailUrl: clip.poster_url || clip.card_url } : {}),
+      ...(video ? { contentUrl: video } : {}),
+      ...(clip.posted_at ? { uploadDate: clip.posted_at } : {}),
+      ...(clip.duration_seconds ? { duration: `PT${Math.round(Number(clip.duration_seconds))}S` } : {}),
+    },
+  });
+}
+
 /**
  * A single mini app, /apps/<slug>.
  *
@@ -4677,6 +4722,9 @@ function shouldServeSSR(pathname) {
   // /stages/1/ fall back to the homepage card while /stages/1 rendered.
   if (/^\/stage\/[0-9a-fA-F-]{16,}\/?$/.test(pathname)) return true;
   if (/^\/stages\/\d+\/?$/.test(pathname)) return true;
+  // A posted live clip. `clip` is a reserved ROUTE_SEGMENT, so without this
+  // the profile fall-through rejects it and the SPA shell goes out instead.
+  if (LIVE_CLIP_PATH.test(pathname)) return true;
   // Bounties, /bounty/<job_number>. Needed here for exactly the reason stages
   // were: `bounty` is a reserved ROUTE_SEGMENT, so the profile fall-through at
   // the foot of this function rejects it and the SPA shell would go out under
@@ -6812,6 +6860,15 @@ async function handleRequest(request, env, ctx) {
       }));
     }
     return entityMiss(event);
+  }
+
+  // A posted live clip: its title, share card and og:video. Only posted rows
+  // are readable with the anon key, so a draft or a dismissed highlight is a 404.
+  const liveClipMatch = cleanPath.match(LIVE_CLIP_PATH);
+  if (liveClipMatch) {
+    const clip = await supabaseLookup(`live_clips?short_id=eq.${liveClipMatch[1]}&status=eq.posted&select=${LIVE_CLIP_COLUMNS}&limit=1`);
+    if (clip) return guard(new Response(buildClipHtml(clip), { status: 200, headers: blogHeaders }));
+    return entityMiss(clip);
   }
 
   // Stage invite links: /stages/<n> is the short share form

@@ -204,6 +204,7 @@ const BuilderPage = React.lazy(() => import("./pages/app/BuilderPage"));
 const BuilderPreviewPage = React.lazy(() => import("./pages/app/BuilderPreviewPage"));
 const PairTestPage = React.lazy(() => import("./pages/app/PairTestPage"));
 const StageDeepLinkPage = React.lazy(() => import("./pages/app/StageDeepLinkPage"));
+const ClipPage = React.lazy(() => import("./pages/app/ClipPage"));
 const CoStreamJoinPage = React.lazy(() => import("./pages/app/CoStreamJoinPage"));
 const MobilePreview = React.lazy(() => import("./pages/MobilePreview"));
 const GuidePage = React.lazy(() => import("./pages/GuidePage"));
@@ -832,6 +833,8 @@ function AppContent() {
             {/* Stage 15 was replaced by stage 18; old links land on the new one. */}
             <Route path="/stages/15" element={<Navigate to="/stages/18" replace />} />
             <Route path="/stages/:id" element={<Suspense fallback={<PageLoader />}><StageDeepLinkPage /></Suspense>} />
+            {/* A posted live clip, /clip/<n> (live_clips.short_id). */}
+            <Route path="/clip/:id" element={<Suspense fallback={<PageLoader />}><ClipPage /></Suspense>} />
             {/* An off-chain post's own URL — the canonical share form is top-level. */}
             <Route path="/newpost/:n" element={<Suspense fallback={<PageLoader />}><NewPostPage /></Suspense>} />
 
