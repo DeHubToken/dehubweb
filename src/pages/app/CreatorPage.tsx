@@ -10,7 +10,7 @@ import { PricingSection } from '@/components/pricing/PricingSection';
 import { SubscriptionCreditsPill } from '@/components/app/credits/SubscriptionCreditsWidget';
 import { CreatorStudio } from '@/components/app/creator/studio/CreatorStudio';
 import { MarketingWorkspace } from '@/components/app/creator/MarketingWorkspace';
-import type { GenerationDraft } from '@/lib/editor/generationDraft';
+import { useMarketingHandoff } from '@/hooks/use-marketing-handoff';
 import { ModelMarquee } from '@/components/app/creator/ModelMarquee';
 import dehubIcon from '@/assets/dehub-logo-compact.png';
 import { ArrowUpRight, Bot, Clapperboard, Film, ImageIcon, Mic2, PanelsTopLeft, PenTool, Wand2, Workflow } from "lucide-react";
@@ -201,8 +201,7 @@ export default function CreatorPage() {
   const { t } = useTranslation();
   const navigate = useNavigate();
   const { isAuthenticated, openLoginModal, walletAddress } = useAuth();
-  const [marketingDraft, setMarketingDraft] = useState<{ id: string; owner: string | null; draft: GenerationDraft } | null>(null);
-  const activeMarketingDraft = marketingDraft && marketingDraft.owner === walletAddress ? marketingDraft : null;
+  const { active: activeMarketingDraft, prepare: prepareMarketingDraft, leave: leaveMarketingDraft } = useMarketingHandoff(walletAddress);
   const [activeCategory, setActiveCategory] = useState<typeof categories[number]>('All');
   const [activeNav, setActiveNav] = useState<typeof navItems[number]>('Explore');
   const [bannerDismissed, setBannerDismissed] = useState(false);
@@ -392,9 +391,9 @@ export default function CreatorPage() {
         <CreatorHeroWall />
         <CreatorStudio onOpenEditor={openEditor} stickyTop={headerHeight} generationDraft={activeMarketingDraft?.draft}
           snapshotScope={activeMarketingDraft ? `campaign:${activeMarketingDraft.id}` : 'main'} generationDraftId={activeMarketingDraft?.id} />
-        {activeMarketingDraft && <button type="button" className="mx-4 mt-2 text-sm underline" onClick={() => setMarketingDraft(null)}>{t('creator.marketing.return')}</button>}
+        {activeMarketingDraft && <button type="button" className="mx-4 mt-2 text-sm underline" onClick={leaveMarketingDraft}>{t('creator.marketing.return')}</button>}
         <MarketingWorkspace onPrepare={(draft) => {
-          setMarketingDraft({ id: `campaign-${Date.now()}-${Math.random().toString(36).slice(2, 10)}`, owner: walletAddress, draft });
+          prepareMarketingDraft(draft);
           document.querySelector('[data-creator-composer]')?.scrollIntoView({ behavior: 'smooth', block: 'center' });
         }} />
         <div>
