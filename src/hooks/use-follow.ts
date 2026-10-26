@@ -121,8 +121,15 @@ export async function toggleFollowFor(
   patchProfileCaches(queryClient, address, next, next ? 1 : -1);
 
   try {
-    if (next) await followUser(address);
-    else await unfollowUser(address);
+    const response = next ? await followUser(address) : await unfollowUser(address);
+    if (next && 'status' in response && response.status === 'pending') {
+      revertFollowOverride(address, undefined);
+      patchProfileCaches(queryClient, address, false, -1);
+      await queryClient.invalidateQueries({ queryKey: ['user-follow-status'], predicate: query => query.queryKey[2] === lower });
+      if (!opts.silent) toast.success(_translateCopy('follow.requestSentTo', { name: name || _translateCopy('follow.someone') }));
+      opts.onSuccess?.(false);
+      return true;
+    }
     if (!opts.silent) {
       if (next) {
         toast.success(name ? _translateCopy("copy.97e3f1368597", { defaultValue: "Following {{value1}}!", value1: name }) : _translateCopy("copy.01830e9a6f0f", { defaultValue: "Following user!" }));
@@ -134,6 +141,14 @@ export async function toggleFollowFor(
     return true;
   } catch (error: unknown) {
     const msg = (error instanceof Error ? error.message : String(error)).toLowerCase();
+    if (next && msg.includes('pending')) {
+      revertFollowOverride(address, undefined);
+      patchProfileCaches(queryClient, address, false, -1);
+      await queryClient.invalidateQueries({ queryKey: ['user-follow-status'], predicate: query => query.queryKey[2] === lower });
+      if (!opts.silent) toast.info(_translateCopy('follow.requestAlreadyPending'));
+      opts.onSuccess?.(false);
+      return true;
+    }
     if (next && (msg.includes('already') || msg.includes('following'))) {
       // Server already agrees — keep the optimistic "following" state
       if (!opts.silent) toast.info(name ? _translateCopy("copy.65ae469907b9", { defaultValue: "Already following {{value1}}", value1: name }) : _translateCopy("copy.5ca81f0afb5f", { defaultValue: "Already following user" }));
