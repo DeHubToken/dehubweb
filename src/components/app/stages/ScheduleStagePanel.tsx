@@ -29,6 +29,7 @@ import Send from "@/components/ui/cut-icons/send";
 
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
+import { ScheduleSheet } from '@/features/post/components/ScheduleSheet';
 import { Textarea } from '@/components/ui/textarea';
 import { cn } from '@/lib/utils';
 import { useStage } from '@/contexts/StageContext';
@@ -75,6 +76,7 @@ export function ScheduleStagePanel({
     return toLocalInputValue(d);
   });
 
+  const [pickerOpen, setPickerOpen] = useState(false);
   const [coverFile, setCoverFile] = useState<File | null>(null);
   const [coverPreview, setCoverPreview] = useState<string | null>(null);
   const [uploading, setUploading] = useState(false);
@@ -235,12 +237,24 @@ export function ScheduleStagePanel({
       <div className="space-y-2">
         <label className="text-sm text-white/60 flex items-center gap-1.5">
           <Calendar className="w-3.5 h-3.5" />{_copy("copy.bdb2527c8a90", { defaultValue: "Starts at *" })}</label>
-        <Input
-          type="datetime-local"
-          value={when}
-          min={toLocalInputValue(new Date())}
-          onChange={(e) => setWhen(e.target.value)}
-          className="bg-white/10 border-white/10 text-white rounded-xl [color-scheme:dark]"
+        <button
+          type="button"
+          data-kit-chip
+          onClick={() => setPickerOpen(true)}
+          className="!h-11 w-full !justify-between !rounded-xl !px-3 text-left"
+        >
+          <span className="text-sm font-semibold">
+            {when ? format(new Date(when), 'EEE d MMM, p') : _copy("copy.bdb2527c8a90", { defaultValue: "Starts at *" })}
+          </span>
+          <Calendar className="h-4 w-4 opacity-70" />
+        </button>
+        <ScheduleSheet
+          isOpen={pickerOpen}
+          onClose={() => setPickerOpen(false)}
+          scheduledDate={when ? new Date(when) : null}
+          onSchedule={(date) => { if (date) setWhen(toLocalInputValue(date)); }}
+          title={_copy("copy.e6c671395de3", { defaultValue: "Schedule stage" })}
+          kind="stage"
         />
         {when && !isValidTime && (
           <p className="text-xs text-red-400">{t('stages.pickFutureTime')}</p>
