@@ -11,7 +11,7 @@
  * load the stream, so swiping past a live slide costs nothing.
  */
 import { memo, useEffect, useRef, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { toast } from 'sonner';
 import { Gem, MessageCircle, Share2, ThumbsUp } from 'lucide-react';
@@ -82,6 +82,7 @@ function useLivePlayback(video: HTMLVideoElement | null, url: string, load: bool
 export const LiveSwipeSlide = memo(function LiveSwipeSlide({ stream, isActive, preload, isMuted, onLeave }: Props) {
   const { t } = useTranslation();
   const navigate = useNavigate();
+  const location = useLocation();
   const [video, setVideo] = useState<HTMLVideoElement | null>(null);
   const [playing, setPlaying] = useState(false);
   const url = stream.playbackUrl || stream.playbackUrls?.[0] || '';
@@ -99,6 +100,9 @@ export const LiveSwipeSlide = memo(function LiveSwipeSlide({ stream, isActive, p
   const likeBurst = useRef(0);
 
   const open = (state: Record<string, unknown> = {}) => {
+    // Point the page being left at this slide first (`?short=` is how Home
+    // opens the Shorts viewer on one slide), so Back lands here, not at the top.
+    navigate({ pathname: location.pathname, search: `?short=live-${stream.id}` }, { replace: true });
     onLeave();
     navigate(`/app/post/${stream.id}`, { state: { fromFeed: true, ...state } });
   };
