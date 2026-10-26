@@ -1,0 +1,39 @@
+name: Generation terminal ownership
+on:
+  pull_request:
+    paths: ['supabase/functions/_shared/generation-terminal*', 'supabase/functions/_shared/generation-jobs.ts', 'supabase/functions/_shared/ai-payment-guard.ts', 'supabase/functions/creator-reconcile/**', 'supabase/migrations/20261026020000_generation_terminal_ownership.sql', 'tests/sql/generation-terminal*', '.github/workflows/generation-terminal.yml']
+  workflow_dispatch:
+jobs:
+  terminal:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    services:
+      postgres:
+        image: postgres:17
+        env: { POSTGRES_PASSWORD: postgres }
+        ports: ['5432:5432']
+        options: --health-cmd pg_isready --health-interval 5s --health-timeout 5s --health-retries 10
+    env: { PGHOST: localhost, PGPORT: 5432, PGUSER: postgres, PGPASSWORD: postgres, PGDATABASE: postgres }
+    steps:
+      - uses: actions/checkout@v4
+      - uses: denoland/setup-deno@v2
+        with: { deno-version: v2.x }
+      - run: deno test --node-modules-dir=none --allow-env supabase/functions/_shared/generation-terminal.test.ts
+      - run: deno check --node-modules-dir=none supabase/functions/_shared/generation-jobs.ts supabase/functions/_shared/ai-payment-guard.ts supabase/functions/creator-reconcile/index.ts
+      - run: |
+          psql -v ON_ERROR_STOP=1 -f tests/sql/generation-terminal-bootstrap.sql
+          psql -v ON_ERROR_STOP=1 -f supabase/migrations/20261026020000_generation_terminal_ownership.sql
+          psql -v ON_ERROR_STOP=1 -f supabase/migrations/20261026020000_generation_terminal_ownership.sql
+          psql -v ON_ERROR_STOP=1 -f tests/sql/generation-terminal.sql
+      - name: Race success and failure decisions against the same jobs
+        run: |
+          for i in $(seq 10 30); do
+            id="00000000-0000-4000-8000-$(printf '%012d' "$i")"
+            psql -v ON_ERROR_STOP=1 -c "SELECT ai_generation_transition('$id','succeeded','{\"status\":\"succeeded\",\"videoUrl\":\"https://media.test/race.mp4\"}')" >/dev/null &
+            first=$!
+            psql -v ON_ERROR_STOP=1 -c "SELECT ai_generation_transition('$id','failed','{\"status\":\"failed\"}')" >/dev/null &
+            second=$!
+            wait "$first"
+            wait "$second"
+          done
+          psql -v ON_ERROR_STOP=1 -f tests/sql/generation-terminal-race.sql
