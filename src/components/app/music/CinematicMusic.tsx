@@ -22,9 +22,10 @@ import Share2 from "@/components/ui/cut-icons/feedshare";
 import { toast } from 'sonner';
 import { cn } from '@/lib/utils';
 import { useRadioPlayer } from '@/hooks/use-radio-player';
-import { getPrimaryTags, searchStations, type RadioStation } from '@/lib/api/radio-browser';
+import { getPrimaryTags, type RadioStation } from '@/lib/api/radio-browser';
+import { searchAllMusic, searchMusicVideos, searchRadio } from '@/lib/music-search';
+import { useChartSearch } from '@/hooks/use-chart-search';
 import { Input } from '@/components/ui/input';
-import { useDebouncedValue } from '@/hooks/use-debounced-value';
 import { getCustomLogo } from '@/components/app/radio/RadioStationCard';
 import { StagesChart } from '@/components/app/music/StagesCarousel';
 import { openStageModal } from '@/contexts/StageContext';
@@ -182,7 +183,8 @@ function RadioHero({ station }: { station: RadioStation }) {
 // ============================================================================
 
 function ChartRow({ rank, image, title, subtitle, trailing, onClick, active }: {
-  rank: number;
+  /** Chart position; null for a search match from outside the chart. */
+  rank: number | null;
   image?: string;
   title: string;
   subtitle: string;
@@ -193,7 +195,7 @@ function ChartRow({ rank, image, title, subtitle, trailing, onClick, active }: {
   const [failed, setFailed] = useState(false);
   return (
     <button onClick={onClick} className="flex w-full items-center gap-3 border-b border-white/[0.12] px-3.5 py-2.5 text-left active:bg-white/5">
-      <span className={cn('w-[22px] shrink-0 text-center text-base font-bold', rank <= 3 ? 'text-white' : 'text-zinc-500')}>{rank}</span>
+      <span className={cn('w-[22px] shrink-0 text-center text-base font-bold', rank != null && rank <= 3 ? 'text-white' : 'text-zinc-500')}>{rank ?? '–'}</span>
       <span className="h-12 w-12 shrink-0 overflow-hidden rounded-lg bg-zinc-800">
         {image && !failed ? (
           <img src={image} alt="" loading="lazy" className="h-full w-full object-cover" onError={() => setFailed(true)} />
@@ -284,14 +286,13 @@ export function CinematicMusic({ radioStations, blockedAddresses, showFilters = 
   const [searches, setSearches] = useState<Partial<Record<Chip, string>>>({});
   const search = searches[chip] ?? '';
   const query = search.trim().toLocaleLowerCase();
-  const radioQuery = useDebouncedValue(chip === 'radio' ? search.trim() : '', 300);
-  const { data: radioMatches = [], isLoading: searchingRadio } = useQuery({
-    queryKey: ['radio-search', radioQuery],
-    queryFn: () => searchStations(radioQuery, 50),
-    enabled: chip === 'radio' && !!radioQuery,
-    staleTime: 60_000,
-  });
-  const stations = radioQuery ? radioMatches : radioStations;
+  // Searches reach the whole zone on the server, not just the chart on screen.
+  const radioFound = useChartSearch('radio', chip === 'radio' ? search : '', searchRadio);
+  const musicFound = useChartSearch('music', chip === 'top' || chip === 'new' ? search : '', searchAllMusic);
+  const videosFound = useChartSearch('music-videos', chip === 'videos' ? search : '', searchMusicVideos);
+  const radioQuery = chip === 'radio' && search.trim().length >= 2;
+  const searchingRadio = radioFound.isSearching && radioFound.items.length === 0;
+  const stations = radioQuery ? radioFound.items : radioStations;
   const { currentStation, isPlaying, play, togglePlayPause } = useRadioPlayer();
 
   const top = useMusicChart('trending', blockedAddresses, chip === 'top');
@@ -304,17 +305,26 @@ export function CinematicMusic({ radioStations, blockedAddresses, showFilters = 
 
   const openPost = (item: VideoItem) => navigate(`/app/post/${item.id}`, { state: { fromFeed: true } });
 
-  const renderTracks = (list: { items: VideoItem[]; isLoading: boolean }, title: string, header?: React.ReactNode) => (
+  const renderTracks = (chart: { items: VideoItem[]; isLoading: boolean }, title: string, found: { items: VideoItem[]; isSearching: boolean }, header?: React.ReactNode) => {
+    // Chart matches keep their rank; matches from the rest of the zone follow.
+    const chartMatches = chart.items.map((item, i) => ({ item, rank: i + 1 as number | null }))
+      .filter(({ item }) => !query || `${item.title} ${item.channel}`.toLocaleLowerCase().includes(query));
+    const shown = new Set(chartMatches.map(({ item }) => item.id));
+    const rows = query.length >= 2
+      ? [...chartMatches, ...found.items.filter(item => !shown.has(item.id) && (shown.add(item.id), true)).map(item => ({ item, rank: null }))]
+      : chartMatches;
+    const list = { items: chart.items, isLoading: chart.isLoading || (rows.length === 0 && found.isSearching) };
+    return (
     <>
       <SectionTitle title={title} action={list.items.length > 0 ? _copy("copy.12e7b8220dc7", { defaultValue: "Play all" }) : undefined} onAction={() => list.items[0] && openPost(list.items[0])} />
       {header}
       <div className="-mx-2 border-t border-white/[0.12]">
         {list.isLoading ? (
           <ChartSkeleton />
-        ) : !list.items.some(item => !query || `${item.title} ${item.channel}`.toLocaleLowerCase().includes(query)) ? (
-          <p className="px-3.5 py-8 text-center text-sm text-zinc-500">{query ? _copy('common.noResults', { defaultValue: 'No results found' }) : _copy("copy.2de5247a982a", { defaultValue: "Nothing here yet." })}</p>
+        ) : rows.length === 0 ? (
+          <p className="px-3.5 py-8 text-center text-sm text-zinc-500">{query ? _copy('explorePage.noResults', { defaultValue: 'No results found' }) : _copy("copy.2de5247a982a", { defaultValue: "Nothing here yet." })}</p>
         ) : (
-          list.items.map((item, i) => ({ item, rank: i + 1 })).filter(({ item }) => !query || `${item.title} ${item.channel}`.toLocaleLowerCase().includes(query)).map(({ item, rank }) => (
+          rows.map(({ item, rank }) => (
             <ChartRow
               key={item.id}
               rank={rank}
@@ -328,7 +338,8 @@ export function CinematicMusic({ radioStations, blockedAddresses, showFilters = 
         )}
       </div>
     </>
-  );
+    );
+  };
 
   return (
     <div data-cinematic-music className="pb-32">
@@ -357,9 +368,9 @@ export function CinematicMusic({ radioStations, blockedAddresses, showFilters = 
       </div>}
 
       {chip !== 'stages' && <Input type="search" value={search} onChange={event => setSearches(previous => ({ ...previous, [chip]: event.target.value }))} aria-label={_copy('common.search', { defaultValue: 'Search' })} placeholder={_copy('common.search', { defaultValue: 'Search' })} className="my-3" />}
-      {chip === 'top' && renderTracks(top, _copy("copy.50ea9e32e19c", { defaultValue: "Top 50" }))}
-      {chip === 'new' && renderTracks(fresh, _copy("copy.136dfb88fd85", { defaultValue: "New releases" }))}
-      {chip === 'videos' && renderTracks(videos, _copy('music.videoCharts', { defaultValue: 'Music Video Charts' }), (
+      {chip === 'top' && renderTracks(top, _copy("copy.50ea9e32e19c", { defaultValue: "Top 50" }), musicFound)}
+      {chip === 'new' && renderTracks(fresh, _copy("copy.136dfb88fd85", { defaultValue: "New releases" }), musicFound)}
+      {chip === 'videos' && renderTracks(videos, _copy('music.videoCharts', { defaultValue: 'Music Video Charts' }), videosFound, (
         <div data-no-swipe data-music-chart-kind role="group" aria-label={_copy('music.videoChartOrder', { defaultValue: 'Music video chart order' })} className="overflow-x-auto px-0.5 scrollbar-hide">
           {MUSIC_VIDEO_CHART_SORTS.map((sort) => (
             <button key={sort.value} type="button" aria-selected={videoSort === sort.value} onClick={() => setVideoSort(sort.value)} className="shrink-0 whitespace-nowrap">
@@ -376,14 +387,14 @@ export function CinematicMusic({ radioStations, blockedAddresses, showFilters = 
             {searchingRadio ? (
               <ChartSkeleton />
             ) : stations.length === 0 ? (
-              <p className="px-3.5 py-8 text-center text-sm text-zinc-500">{_copy('common.noResults', { defaultValue: 'No results found' })}</p>
+              <p className="px-3.5 py-8 text-center text-sm text-zinc-500">{_copy('explorePage.noResults', { defaultValue: 'No results found' })}</p>
             ) : (
               stations.map((station, i) => {
                 const current = currentStation?.stationuuid === station.stationuuid;
                 return (
                   <ChartRow
                     key={station.stationuuid}
-                    rank={i + 1}
+                    rank={radioQuery ? null : i + 1}
                     image={stationLogo(station)}
                     title={station.name}
                     subtitle={getPrimaryTags(station.tags).join(', ') || _copy("copy.2a7dfeb2f2b0", { defaultValue: "Radio" })}
