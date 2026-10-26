@@ -166,6 +166,18 @@ export function createOverlayPainter(options: OverlayPainterOptions = {}): Overl
   let overlay: PublicOverlay | CreatorOverlay | null = null;
   let placed: Placed[] = [];
   let disposed = false;
+
+  // Widths measured before Exo finished loading are the fallback font's.
+  // Ask for the weights the widgets use, and re-measure once fonts land.
+  const fonts = typeof document !== 'undefined' ? document.fonts : undefined;
+  const onFontsLoaded = () => {
+    sh.text.flush();
+    sh.sprites.clear();
+  };
+  if (fonts) {
+    for (const weight of [500, 600, 700, 800]) void fonts.load(`${weight} 16px Exo`).catch(() => undefined);
+    fonts.addEventListener?.('loadingdone', onFontsLoaded);
+  }
   // Start the coin's download now, so the first gift has it.
   images.get(COIN_URL);
 
@@ -286,6 +298,7 @@ export function createOverlayPainter(options: OverlayPainterOptions = {}): Overl
 
     dispose() {
       disposed = true;
+      fonts?.removeEventListener?.('loadingdone', onFontsLoaded);
       placed = [];
       overlay = null;
       images.dispose();

@@ -12,8 +12,13 @@
  */
 
 /** The app's font stack (index.css), emoji fonts included so names with emoji draw in colour. */
+// The app's CSS stack, with one change: the plain sans-serif comes before the
+// emoji fonts. A canvas only uses a web font that has already finished
+// loading, and until Exo has, an emoji font listed first wins every digit and
+// space (they are keycap glyphs there) — grey, double-width numbers on stream.
+// Emoji still reach their own fonts through per-glyph fallback.
 export const FONT_FAMILY =
-  "Exo, 'Exo Fallback', 'DeHub Pistol', 'Apple Color Emoji', 'Noto Color Emoji', 'Segoe UI Emoji', sans-serif";
+  "Exo, 'Exo Fallback', 'DeHub Pistol', system-ui, sans-serif, 'Apple Color Emoji', 'Noto Color Emoji', 'Segoe UI Emoji'";
 
 /** CSS `line-height: 1.15` on every widget. */
 export const LINE_HEIGHT = 1.15;
