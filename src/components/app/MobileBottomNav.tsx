@@ -377,10 +377,9 @@ export function MobileBottomNav() {
                     aria-hidden="true"
                     className="pointer-events-none absolute inset-0 rounded-xl border border-white/30 shadow-[inset_0_1px_1px_rgba(255,255,255,0.2),0_2px_8px_rgba(0,0,0,0.3)]"
                     style={{
-                      // Solid-ish white fallback for iOS 15 / browsers without backdrop-filter
+                      // The bar behind it is already the blur; a second one
+                      // inside it doubles Safari's work for no visible change.
                       backgroundColor: 'rgba(255,255,255,0.18)',
-                      backdropFilter: 'blur(24px)',
-                      WebkitBackdropFilter: 'blur(24px)',
                     }}
                   />
                   <Plus
