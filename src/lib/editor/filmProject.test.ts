@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
-import { filmProjectMediaIds, filmShotDraft, validFilmProject, type FilmProject } from './filmProject';
-import { generationDraft } from './generationDraft';
+import { filmProjectMediaIds, filmShotDraft, removeFilmProjectMedia, validFilmProject, type FilmProject } from './filmProject';
+import { generationDraft, generationDraftForOwner } from './generationDraft';
 import { makeCloudProjectDocument, parseCloudProjectDocument, type CloudProjectMedia } from './cloudProjectFormat';
 import { projectMediaProjection } from './projectMediaProjection';
 import { cloudProjectMediaIds } from './cloudProjectSession';
@@ -43,15 +43,31 @@ describe('portable film project', () => {
     expect(() => parseCloudProjectDocument({ ...doc, media: [{ ...doc.media[0], kind: 'audio' }, doc.media[1]] }, wallet)).toThrow();
   });
   it('prepares reviewed references, direction, duration and isolated shot workspaces without generation', () => {
-    const image = filmShotDraft(film(), 'shot-one', 'image', media, '16:9', 'film-local')!;
+    const image = filmShotDraft(film(), 'shot-one', 'image', media, '16:9', 'film-local', 'alice')!;
     expect(image.references).toEqual([{ url: 'blob:reference', label: 'Botanist' }]);
     expect(image.cinemaDirection).toMatchObject({ era: '1980s' });
-    const video = filmShotDraft(film(), 'shot-one', 'video', media, '16:9', 'film-local')!;
+    expect(generationDraftForOwner(image, 'bob')).toBeNull();
+    expect(generationDraftForOwner(image, null)).toBeNull();
+    expect(generationDraftForOwner(image, 'alice')?.references).toHaveLength(1);
+    const video = filmShotDraft(film(), 'shot-one', 'video', media, '16:9', 'film-local', 'alice')!;
     expect(video.references).toHaveLength(2);
     expect(video.durationSeconds).toBe(5);
     expect(video.workspaceId).not.toBe(image.workspaceId);
-    expect(filmShotDraft(film(), 'shot-one', 'image', media.map(item => ({ ...item, url: 'blob:rehydrated' })), '16:9', 'film-local')?.draftId).toBe(image.draftId);
-    expect(filmShotDraft(film(), 'shot-one', 'image', [], '16:9', 'film-local')).toBeNull();
+    expect(filmShotDraft(film(), 'shot-one', 'image', media.map(item => ({ ...item, url: 'blob:rehydrated' })), '16:9', 'film-local', 'alice')?.draftId).toBe(image.draftId);
+    expect(filmShotDraft(film(), 'shot-one', 'image', [], '16:9', 'film-local', 'alice')).toBeNull();
     expect(generationDraft({ ...image, references: [{ url: 'javascript:unsafe', label: 'Bad' }] })).toBeNull();
+  });
+  it('removes deleted references and results while preserving the rest of the film plan', () => {
+    const original = film(); original.shots[0].referenceMediaIds = ['reference-local'];
+    const clean = removeFilmProjectMedia(original, new Set(['reference-local', 'result-local']))!;
+    expect(clean.referenceMediaIds).toEqual([]);
+    expect(clean.shots[0].referenceMediaIds).toEqual([]);
+    expect(clean.shots[0].resultMediaId).toBeUndefined();
+    expect(clean.shots[0].prompt).toBe(original.shots[0].prompt);
+    expect(clean.future).toEqual(original.future);
+    expect(clean.shots[0].futureShot).toBe('retained');
+    expect(filmProjectMediaIds(original)).toHaveLength(2);
+    const project = snapshot(); project.settings.filmProject = clean;
+    expect(makeCloudProjectDocument(project, projectId, wallet, new Map()).media).toEqual([]);
   });
 });

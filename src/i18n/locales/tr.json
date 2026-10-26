@@ -8637,7 +8637,8 @@
     "priceChartCleared": "Fiyat grafiği temizlendi. Sabit referans fiyatı: 0.0001 $. Uygulama fiyatları mevcut siparişlere bağlıdır."
   },
   "editor": {
-    "film":  {
+    "film": {
+        "repairRefs": "Eksik medya bağlantılarını kaldır",
                  "title":  "Film projesi",
                  "intro":  "Yeniden kullanılabilir referans görselleriyle çekimleri planlayın. Özetiniz, çekim sırası ve seçilen sonuçlar bu projeyle kaydedilir.",
                  "create":  "Film planı oluştur",

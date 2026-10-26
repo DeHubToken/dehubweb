@@ -3,8 +3,8 @@ import { useTranslation } from 'react-i18next';
 import { useAuth } from '@/contexts/AuthContext';
 import { useEditorStore } from '@/store/editorStore';
 import { useEditorUiStore } from '@/store/editorUiStore';
-import { saveProject } from '@/lib/editor/mediaStore';
-import { filmShotDraft, validFilmProject, type FilmProject, type FilmShot } from '@/lib/editor/filmProject';
+import { saveProject } from '@/lib/editor/projectStore';
+import { filmShotDraft, filmProjectMediaIds, removeFilmProjectMedia, validFilmProject, type FilmProject, type FilmShot } from '@/lib/editor/filmProject';
 import { CinemaDirectionControls } from '../app/creator/studio/CinemaDirectionControls';
 
 export function FilmProjectPanel() {
@@ -26,6 +26,7 @@ export function FilmProjectPanel() {
     <button type="button" className={button} onClick={() => update({ version: 1, title: '', brief: '', referenceMediaIds: [], shots: [] })}>{t('editor.film.create')}</button>
   </section>;
   const shot = film.shots.find(item => item.id === selected) ?? film.shots[0];
+  const missing = new Set(filmProjectMediaIds(film).filter(id => !media.some(item => item.id === id)));
   const changeShot = (patch: Partial<FilmShot>) => update({ ...film, shots: film.shots.map(item => item.id === shot?.id ? { ...item, ...patch } : item) });
   const chooseReferences = (value: string[], apply: (ids: string[]) => void) => { if (value.length <= 4) apply(value); };
   const references = (value: string[], apply: (ids: string[]) => void, label: string) => <label className="mt-3 block text-xs">{label}
@@ -36,7 +37,7 @@ export function FilmProjectPanel() {
   const prepare = async (kind: 'image' | 'video') => {
     if (preparing || !shot) return;
     const store = useEditorStore.getState(), snapshot = store.toSnapshot(), capturedOwner = owner.current;
-    const draft = filmShotDraft(film, shot.id, kind, media, settings.aspectPreset, snapshot.id);
+    const draft = filmShotDraft(film, shot.id, kind, media, settings.aspectPreset, snapshot.id, capturedOwner);
     if (!draft) { setIssue(true); return; }
     setPreparing(true);
     try {
@@ -50,6 +51,7 @@ export function FilmProjectPanel() {
   return <section className="my-4 rounded-2xl border border-white/15 p-3">
     <h3 className="font-semibold">{t('editor.film.title')}</h3>
     <p className="my-2 text-xs opacity-70">{t('editor.film.intro')}</p>
+    {missing.size > 0 && <button type="button" className={button} onClick={() => { const clean = removeFilmProjectMedia(film, missing); if (clean) update(clean); }}>{t('editor.film.repairRefs')}</button>}
     <label className="mt-3 block text-xs">{t('editor.film.name')}<input className={`${input} mt-1`} value={film.title} maxLength={200} onChange={event => update({ ...film, title: event.target.value })} /></label>
     <label className="mt-3 block text-xs">{t('editor.film.brief')}<textarea className={`${input} mt-1`} rows={3} value={film.brief} maxLength={3000} onChange={event => update({ ...film, brief: event.target.value })} /></label>
     {references(film.referenceMediaIds, ids => update({ ...film, referenceMediaIds: ids }), t('editor.film.sharedReferences'))}

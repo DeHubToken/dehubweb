@@ -8641,7 +8641,8 @@
     "priceChartCleared": "Graphe des prix effacé. Prix de référence corrigé : $0.0001. Les prix d'exécution dépendent des ordres disponibles."
   },
   "editor": {
-    "film":  {
+    "film": {
+        "repairRefs": "Retirer les liens vers les médias manquants",
                  "title":  "Projet de film",
                  "intro":  "Planifiez les plans avec des images de référence réutilisables. Le brief, l’ordre des plans et les résultats choisis sont enregistrés avec ce projet.",
                  "create":  "Créer un plan de film",

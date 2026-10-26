@@ -8636,7 +8636,8 @@
     "priceChartCleared": "Price chart cleared. Fixed reference price: $0.0001. Execution prices depend on available orders."
   },
   "editor": {
-    "film":  {
+    "film": {
+        "repairRefs": "Remove missing media links",
                  "title":  "Film project",
                  "intro":  "Plan shots with reusable image references. Your brief, shot order and selected results save with this project.",
                  "create":  "Create film plan",
