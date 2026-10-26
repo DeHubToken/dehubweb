@@ -53,6 +53,7 @@ import { StreamShopPinnedCard } from '../live/StreamShop';
 import { ImmersiveLiveChrome } from '../live/ImmersiveLiveChrome';
 import { LiveClearedLayer } from '../live/LiveClearedLayer';
 import { LiveViewerActionsProvider } from '../live/live-viewer-actions';
+import { ClipButton } from '../live/ClipButton';
 import { ShopBoardLazy } from '../live/ShopBoardLazy';
 import { PostAIChatLazy } from './PostAIChatLazy';
 import { ReportModal } from '../modals/ReportModal';
@@ -403,6 +404,16 @@ export function LiveStreamCard({ stream, chatSlot, immersive = false }: LiveStre
     el.currentTime = ratio * el.duration;
     setReplayProgress(ratio);
   }, []);
+  /**
+   * Clip: on air, or on a replay that exists. Never on a stream sold per view
+   * or locked — a free Short of it would give the paid part away. The server
+   * refuses those too; this only keeps the button off them.
+   */
+  const clippable = !!stream.id && !stream.isPPV && !stream.isLocked && (streamEnded ? !!stream.replayUrl : !!stream.isLive);
+  const getReplayTime = useCallback(
+    () => (streamEnded && replayRef.current ? replayRef.current.currentTime : undefined),
+    [streamEnded],
+  );
   const containerRef = useRef<HTMLDivElement>(null);
   const { isFullscreen, toggleFullscreen } = useVideoFullscreen(videoRef, containerRef, { escapeAncestors: true });
   // Records the view once the player has been on screen long enough to mean it.
@@ -1601,6 +1612,14 @@ export function LiveStreamCard({ stream, chatSlot, immersive = false }: LiveStre
         >
           <LiveViewerActionsProvider
             value={
+              <>
+              {clippable && (
+                <ClipButton
+                  tokenId={stream.id}
+                  getReplayTime={getReplayTime}
+                  className="h-9 w-9 shrink-0 rounded-full text-white hover:bg-white/10"
+                />
+              )}
               <ActionBar
                 compact
                 onLiveReaction={sendLiveReaction}
@@ -1616,6 +1635,7 @@ export function LiveStreamCard({ stream, chatSlot, immersive = false }: LiveStre
                 tipCount={tipCount}
                 onTip={() => setShowGiftDrawer(true)}
               />
+              </>
             }
           >
             {chatSlot}
@@ -1640,6 +1660,15 @@ export function LiveStreamCard({ stream, chatSlot, immersive = false }: LiveStre
             onComment={() => setShowComments(prev => !prev)}
             className="p-0 mb-2"
           />
+          {clippable && (
+            <ClipButton
+              tokenId={stream.id}
+              getReplayTime={getReplayTime}
+              className="mb-2 gap-1.5 rounded-full bg-white/10 px-3 py-1.5 text-xs font-medium text-white hover:bg-white/15"
+              iconClassName="h-4 w-4"
+              withLabel
+            />
+          )}
           {!streamEnded && (
             // "Tuned in" is everyone who has ever opened this live, not the
             // room right now; the room is the "watching" figure in the chat.
