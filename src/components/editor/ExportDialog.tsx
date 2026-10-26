@@ -46,6 +46,7 @@ import { startExportJournal } from "@/lib/editor/exportJournal";
 import { uploadEditorAsset } from "@/lib/editor/cloudMedia";
 import { EditorError } from "@/lib/editor/editorError";
 import { editorErrorText } from "@/lib/editor/editorErrorText";
+import { nleExport } from "@/lib/editor/nleExport";
 
 /** Finished exports up to this size are also kept in the creator's cloud storage. */
 const BACKUP_LIMIT = 200 * 1024 * 1024;
@@ -55,7 +56,7 @@ interface Props {
   onOpenChange: (v: boolean) => void;
 }
 
-type Format = ExportFormat | StillFormat | "pdf" | "pptx" | "notes";
+type Format = ExportFormat | StillFormat | "pdf" | "pptx" | "notes" | "nle";
 
 const QUALITY_PRESETS = {
   low: 2_500_000,
@@ -109,6 +110,7 @@ export function ExportDialog({ open, onOpenChange }: Props) {
   const videoSupported = isExportSupported();
   const still = isStill(format);
   const gif = format === "gif";
+  const nle = format === "nle";
   const scale = format === "pdf" || format === "pptx" ? documentImageScale(settings.width, settings.height, parseFloat(scaleKey), documentQuality) : parseFloat(scaleKey);
   const gifOutput = gifPlan(settings.width, settings.height, scale, BRAND_OUTRO_DURATION, settings.fps);
   const outW = gif ? gifOutput.width : Math.round(settings.width * scale);
@@ -228,6 +230,42 @@ export function ExportDialog({ open, onOpenChange }: Props) {
     }
   };
 
+  // Timeline plus its media, for finishing in Premiere, Final Cut or Resolve.
+  const handleNle = async () => {
+    const snapshot = toSnapshot();
+    if (duration <= 0 || !snapshot.clips.some(c => "mediaId" in c)) { toast.error(t("editor.export.empty")); return; }
+    setBusy(true); setProgress(0); setLabel(t("editor.export.preparing"));
+    const ctl = new AbortController(); abortRef.current = ctl;
+    try {
+      const used = media.filter(m => snapshot.clips.some(c => "mediaId" in c && c.mediaId === m.id));
+      const xml = nleExport(snapshot, used);
+      const files: { name: string; blob: Blob }[] = [
+        { name: exportFilename(snapshot.title, "fcpxml", "", "video"), blob: new Blob([xml.fcpxml], { type: "application/xml" }) },
+        { name: exportFilename(snapshot.title, "xml", "-premiere", "video"), blob: new Blob([xml.premiere], { type: "application/xml" }) },
+      ];
+      let size = 0;
+      for (const [index, item] of used.entries()) {
+        if (ctl.signal.aborted) throw new DOMException("Export cancelled", "AbortError");
+        setProgress(Math.round((index / used.length) * 90));
+        const blob = await (await fetch(item.url, { signal: ctl.signal })).blob();
+        size += blob.size;
+        if (size > ZIP_DOWNLOAD_LIMIT) throw new EditorError("editor.export.archiveTooLarge", "The download exceeds 512 MiB. Export fewer clips or choose a lower resolution.");
+        files.push({ name: `media/${xml.mediaNames[item.id]}`, blob });
+      }
+      const zip = await zipDownloadFiles(files, ctl.signal);
+      if (ctl.signal.aborted) throw new DOMException("Export cancelled", "AbortError");
+      setProgress(100);
+      download(zip, exportFilename(snapshot.title, "zip", "-edit", "video"));
+      onOpenChange(false);
+    } catch (e) {
+      if ((e as Error).name === "AbortError") toast.message(t("editor.export.cancelled"));
+      else { toast.error(editorErrorText(e, t("editor.export.failed"))); console.error("NLE export failed:", e); }
+    } finally {
+      if (abortRef.current === ctl) abortRef.current = null;
+      setBusy(false);
+    }
+  };
+
   const handleVideo = async (cutEndAt?: number) => {
     const exportDuration = cutEndAt !== undefined && cutEndAt > 0 ? Math.min(cutEndAt, duration) : duration;
     if (exportDuration <= 0) {
@@ -308,7 +346,7 @@ export function ExportDialog({ open, onOpenChange }: Props) {
   const filenameError = format === "png" || format === "jpg" ? pageFilenamePatternError(filenamePattern) : null;
   let pageOrderError = "";
   if (still && pageScope === "custom") { try { parsePageExportOrder(pageSelection, pages.length); } catch (reason) { pageOrderError = editorErrorText(reason, t("copy.35b43efb36c1", { defaultValue: "Choose existing pages" })); } }
-  const canDownload = !pageOrderError && !filenameError && !(still && pageScope === "section" && !effectiveSection) && duration > 0 && (still || motionSupported) && (still || scope === "timeline" || ranges.length > 0) && !gifTooLong;
+  const canDownload = nle ? duration > 0 : !pageOrderError && !filenameError && !(still && pageScope === "section" && !effectiveSection) && duration > 0 && (still || motionSupported) && (still || scope === "timeline" || ranges.length > 0) && !gifTooLong;
 
   return (
     <Dialog open={open} onOpenChange={(v) => { if (!busy) onOpenChange(v); }}>
@@ -320,7 +358,7 @@ export function ExportDialog({ open, onOpenChange }: Props) {
           </DialogDescription>
         </DialogHeader>
 
-        {!still && !motionSupported && (
+        {!still && !nle && !motionSupported && (
           <p className="rounded-md border border-amber-500/30 bg-amber-500/10 p-2.5 text-xs text-amber-200">
             {t("editor.export.unsupported")}
           </p>
@@ -340,10 +378,12 @@ export function ExportDialog({ open, onOpenChange }: Props) {
                   <SelectItem value="mp4">{t("editor.export.mp4")}</SelectItem>
                   <SelectItem value="webm">{t("editor.export.webm")}</SelectItem>
                   <SelectItem value="gif">{t("emojiPicker.tabGif")}</SelectItem>
+                  <SelectItem value="nle">{t("editor.export.nle")}</SelectItem>
                 </SelectContent>
               </Select>
             </Row>
-            {!still && allRanges.length > 0 && (
+            {nle && <p className="text-xs text-white/55">{t("editor.export.nleHint")}</p>}
+            {!still && !nle && allRanges.length > 0 && (
               <Row label={t("editor.export.scope")}>
                 <Select value={scope} onValueChange={v => setScope(v as ExportScope)}>
                   <SelectTrigger className="h-9 border-white/10 bg-white/5 text-white"><SelectValue /></SelectTrigger>
@@ -355,7 +395,7 @@ export function ExportDialog({ open, onOpenChange }: Props) {
                 </Select>
               </Row>
             )}
-            {format !== "notes" && <Row label={t("editor.export.resolution")}>
+            {format !== "notes" && !nle && <Row label={t("editor.export.resolution")}>
               <Select value={scaleKey} onValueChange={setScaleKey}>
                 <SelectTrigger className="h-9 border-white/10 bg-white/5 text-white"><SelectValue /></SelectTrigger>
                 <SelectContent className="border-white/10 bg-black/90 text-white backdrop-blur-[24px]">
@@ -396,7 +436,7 @@ export function ExportDialog({ open, onOpenChange }: Props) {
             {still && multiPage && pageScope === "custom" && <p className="text-[10px] text-white/45">{t("editor.export.pageOrderHint", { defaultValue: "Pages follow the order entered. Use 3,1-2 to start with page 3, or 5-1 to reverse a range. Repeated page numbers appear once." })}</p>}
             {still && pageOrderError && <p role="alert" className="text-xs text-red-300">{pageOrderError}</p>}
             {still && multiPage && pageScope === "custom" && <Row label={t("editor.pages.pageNumbers", { defaultValue: "Page numbers" })}><Input value={pageSelection} onChange={e => setPageSelection(e.target.value)} placeholder="1,3-5" aria-label={t("editor.pages.pageNumbers", { defaultValue: "Page numbers" })} className="h-9 border-white/10 bg-white/5 text-white" /></Row>}
-            {!still && !gif && (
+            {!still && !gif && !nle && (
               <Row label={t("editor.export.quality")}>
                 <Select value={qualityKey} onValueChange={(v) => setQualityKey(v as Quality)}>
                   <SelectTrigger className="h-9 border-white/10 bg-white/5 text-white"><SelectValue /></SelectTrigger>
@@ -410,7 +450,7 @@ export function ExportDialog({ open, onOpenChange }: Props) {
               </Row>
             )}
 
-            <div className="rounded-md border border-white/10 bg-white/5 p-2.5 text-xs text-white/70">
+            {!nle && <div className="rounded-md border border-white/10 bg-white/5 p-2.5 text-xs text-white/70">
               {format === "notes" ? <div>{t("editor.export.notesText", { defaultValue: "Presenter notes (.txt)" })}</div> : still ? (
                 <div>{t("editor.export.frameAt", { time: Math.min(currentTime, duration).toFixed(2) })}</div>
               ) : (
@@ -427,7 +467,7 @@ export function ExportDialog({ open, onOpenChange }: Props) {
                   : t("editor.export.outputVideo", { width: outW, height: outH, fps: gif ? gifOutput.fps : settings.fps })}
               </div>}
               {gifTooLong && <div>{t("editor.export.gifTooLong")}</div>}
-            </div>
+            </div>}
           </div>
         )}
 
@@ -453,7 +493,7 @@ export function ExportDialog({ open, onOpenChange }: Props) {
                 className="rounded-lg text-white/80 hover:bg-white/10 hover:text-white">
                 {t("editor.export.cancel")}
               </Button>
-              {!still && scope === "timeline" && (
+              {!still && !nle && scope === "timeline" && (
                 <Button variant="ghost" onClick={() => handleVideo(currentTime)}
                   disabled={!motionSupported || duration <= 0 || currentTime <= 0 || (gif && Math.min(currentTime, duration) > GIF_CONTENT_LIMIT)}
                   className="rounded-lg text-white/80 hover:bg-white/10 hover:text-white disabled:opacity-40">
@@ -463,7 +503,7 @@ export function ExportDialog({ open, onOpenChange }: Props) {
               <LiquidGlassBubble2
                 label={t("editor.export.download")}
                 icon={<Download className="h-4 w-4" />}
-                onClick={() => (still ? handleStill() : handleVideo())}
+                onClick={() => (nle ? handleNle() : still ? handleStill() : handleVideo())}
                 disabled={!canDownload}
                 width="130px"
                 height="36px"
