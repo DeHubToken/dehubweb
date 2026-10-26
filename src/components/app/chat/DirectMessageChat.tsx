@@ -65,6 +65,8 @@ import { GroupSettingsDrawer } from './GroupSettingsDrawer';
 import { FullscreenImageViewerLazy } from '@/components/app/cards/FullscreenImageViewerLazy';
 import { AppState } from '@/components/app/AppState';
 import { DmTipDialog } from './DmTipDialog';
+import { DmPollDialog } from './DmPollDialog';
+import { PollCard } from '@/components/app/cards/PollCard';
 import { DmFeeInfoBanner } from './DmFeeInfoBanner';
 import { formatDistanceToNow } from 'date-fns';
 import {
@@ -566,8 +568,15 @@ const MessageBubble = memo(function MessageBubble({
           </div>
         )}
 
+        {/* Poll message — the same card a post's poll uses; members vote in place. */}
+        {message.msgType === 'poll' && message.poll && !message.isDeleted && (
+          <div className="w-[300px] max-w-full text-left">
+            <PollCard tokenId={message.poll.tokenId} />
+          </div>
+        )}
+
         {/* Regular message bubble */}
-        {message.msgType !== 'tip' && !message.isDeleted && (
+        {message.msgType !== 'tip' && !(message.msgType === 'poll' && message.poll) && !message.isDeleted && (
           <div
             /* Mine vs theirs is carried by fill-vs-outline rather than by a
                glass stack: a filled block with no border for own messages, a
@@ -1056,6 +1065,7 @@ export function DirectMessageChat({ conversation, onBack, initialComposerText, d
   const [isBlockProcessing, setIsBlockProcessing] = useState(false);
   const [showGroupSettings, setShowGroupSettings] = useState(false);
   const [showTipDialog, setShowTipDialog] = useState(false);
+  const [showPollDialog, setShowPollDialog] = useState(false);
   const [showSearchBar, setShowSearchBar] = useState(false);
   const [searchQuery, setSearchQuery] = useSurfaceDraft("components/app/chat/DirectMessageChat.tsx:searchQuery", '');
   const [fullscreenImage, setFullscreenImage] = useState<string | null>(null);
@@ -2469,6 +2479,7 @@ export function DirectMessageChat({ conversation, onBack, initialComposerText, d
         replyTo={composerReplyTo}
         onCancelReply={() => setReplyTarget.complete(replyTarget, null)}
         onTipClick={feeRequired ? undefined : openTipDialog}
+        onPollClick={isVirtualConv ? undefined : () => setShowPollDialog(true)}
         canSend={planAllowsSend}
         sendDisabled={accountBanned || !!feeSendDisabled || (initError && isVirtualConv)}
         sendDisabledReason={
@@ -2540,6 +2551,13 @@ export function DirectMessageChat({ conversation, onBack, initialComposerText, d
         recipientName={displayName}
         conversationId={resolvedConversationId}
         minAmount={planMinTip}
+      />
+
+      <DmPollDialog
+        open={showPollDialog}
+        onOpenChange={setShowPollDialog}
+        conversationId={resolvedConversationId}
+        onSent={scrollToBottom}
       />
 
       {/* DM Gated Banner */}

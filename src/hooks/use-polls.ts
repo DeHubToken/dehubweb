@@ -157,7 +157,7 @@ export function useCreatePoll() {
       // The post had no poll a moment ago and that answer is remembered as
       // permanent — it has to be dropped now, or the poll just created stays
       // invisible.
-      forgetEmpty(variables.tokenId);
+      if (variables.tokenId) forgetEmpty(variables.tokenId);
       queryClient.invalidateQueries({ queryKey: [POLLS_KEY] });
       toast.success(_copy("copy.05ea13855698", { defaultValue: "Poll created" }));
     },

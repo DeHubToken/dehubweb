@@ -57,7 +57,7 @@ export interface DeHubDMMessage {
 
 // ─── New types (DeHub DM API v2) ──────────────────────────────────────────────
 
-export type DmMsgType = 'msg' | 'media' | 'gif' | 'voice' | 'tip';
+export type DmMsgType = 'msg' | 'media' | 'gif' | 'voice' | 'tip' | 'poll';
 
 export interface DmSender {
   _id: string;
@@ -115,6 +115,8 @@ export interface DmMessage {
   paymentTxHash: string | null;
   tipAmount: number | null;
   tipSymbol: string | null;
+  /** Only set when msgType === 'poll'; votes are read from the poll itself. */
+  poll?: { tokenId: number; question: string } | null;
   isDeleted: boolean;
   author: 'me' | 'other';
   createdAt: string;
@@ -291,6 +293,7 @@ function parseDmMessage(raw: any, myAddress: string): DmMessage {
     paymentTxHash: raw.paymentTxHash ?? null,
     tipAmount: raw.tipAmount ?? null,
     tipSymbol: raw.tipSymbol ?? null,
+    poll: raw.poll && typeof raw.poll.tokenId === 'number' ? { tokenId: raw.poll.tokenId, question: raw.poll.question || '' } : null,
     isDeleted: raw.isDeleted ?? false,
     author,
     createdAt: raw.createdAt || new Date().toISOString(),
