@@ -305,7 +305,7 @@ export function GlobalFeedNav({ postPage = false, profilePage = false, compactPr
                 data-profile-nav-back={profilePage ? '' : undefined}
                 data-swipe-back
                 onClick={handleBack}
-                className="relative flex items-center justify-center px-3 py-2.5 rounded-xl transition-colors text-zinc-400 hover:text-white hover:bg-white/5"
+                className="relative flex items-center justify-center px-3 py-2.5 rounded-xl transition-colors text-zinc-400 [@media(hover:hover)]:hover:text-white [@media(hover:hover)]:hover:bg-white/5"
                 aria-label={_copy("copy.76900f1bfd16", { defaultValue: "Back" })}
               >
                 <ArrowLeft className="relative z-10 w-4 h-4" />
@@ -314,7 +314,7 @@ export function GlobalFeedNav({ postPage = false, profilePage = false, compactPr
               <button
                 onClick={handleSettingsClick}
                 data-swipe-back={imagesScrollView ? '' : undefined}
-                className="relative flex items-center justify-center px-3 py-2.5 rounded-xl transition-colors text-zinc-400 hover:text-white hover:bg-white/5"
+                className="relative flex items-center justify-center px-3 py-2.5 rounded-xl transition-colors text-zinc-400 [@media(hover:hover)]:hover:text-white [@media(hover:hover)]:hover:bg-white/5"
                 aria-label={imagesScrollView ? _copy("copy.68f5b97c66d9", { defaultValue: "Back to grid" }) : _copy("copy.2ffafd1aa697", { defaultValue: "Feed settings" })}
               >
                 {imagesScrollView
