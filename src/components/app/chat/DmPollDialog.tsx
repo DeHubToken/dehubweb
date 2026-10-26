@@ -65,8 +65,9 @@ export function DmPollDialog({ open, onOpenChange, conversationId, onSent }: DmP
   return (
     <Drawer open={open} onOpenChange={onOpenChange}>
       <DrawerContent scrollable column glass className="px-4 pb-6">
-        <DrawerHeader className="pb-1 flex-row items-center justify-between gap-3 px-0">
-          <DrawerTitle className="text-white text-lg">{_copy("copy.b2b9c2e81c4c", { defaultValue: "Create Poll" })}</DrawerTitle>
+        <DrawerHeader className="px-0 pb-1">
+          <div className="flex items-center justify-between gap-3">
+          <DrawerTitle className="text-white text-lg text-left">{_copy("copy.b2b9c2e81c4c", { defaultValue: "Create Poll" })}</DrawerTitle>
           <Button
             type="button"
             size="sm"
@@ -76,6 +77,7 @@ export function DmPollDialog({ open, onOpenChange, conversationId, onSent }: DmP
           >
             {createPoll.isPending ? <Loader2 className="w-4 h-4 animate-spin" /> : _copy("copy.4759498ac2a7", { defaultValue: "Create" })}
           </Button>
+          </div>
         </DrawerHeader>
         <PollEditor poll={poll} onChange={setPoll} onRemove={() => onOpenChange(false)} />
       </DrawerContent>
