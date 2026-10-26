@@ -1,5 +1,6 @@
 import { videoMatteFrame } from "./videoMatte";
 import type { Clip } from "./types";
+import { EditorError } from "./editorError";
 export interface VideoMatteDecodedImage { naturalWidth: number; naturalHeight: number }
 export type VideoMatteFrame = NonNullable<ReturnType<typeof videoMatteFrame>>;
 /** Only selected pages stay decoded, with one page load in flight across rapid seeks. */
@@ -21,7 +22,7 @@ export function createVideoMattePageCache<T extends VideoMatteDecodedImage>(imag
       let image: T | undefined;
       try {
         image = await load(next);
-        if (image.naturalWidth !== next.atlasWidth || image.naturalHeight !== next.atlasHeight) throw new Error("Background page dimensions do not match");
+        if (image.naturalWidth !== next.atlasWidth || image.naturalHeight !== next.atlasHeight) throw new EditorError("copy.9fab2a75a2e4", "Background page dimensions do not match");
       } catch (error) {
         if (image) release(image);
         if (disposed) return;
@@ -40,11 +41,11 @@ export function createVideoMattePageCache<T extends VideoMatteDecodedImage>(imag
   }
   return {
     select: function(frames: VideoMatteFrame[]) {
-      if (disposed) return Promise.reject(new Error("Background page cache closed"));
+      if (disposed) return Promise.reject(new EditorError("copy.ed48fd284d0e", "Background page cache closed"));
       desired = new Map(frames.map(function(frame) { return [frame.mediaId, frame]; })); evict();
       for (var frame of frames) {
         var image = images.get(frame.mediaId);
-        if (image && (image.naturalWidth !== frame.atlasWidth || image.naturalHeight !== frame.atlasHeight)) return Promise.reject(new Error("Background page dimensions do not match"));
+        if (image && (image.naturalWidth !== frame.atlasWidth || image.naturalHeight !== frame.atlasHeight)) return Promise.reject(new EditorError("copy.9fab2a75a2e4", "Background page dimensions do not match"));
       }
       if (failure && desired.has(failure.id)) return Promise.reject(failure.error);
       failure = null;
@@ -64,7 +65,7 @@ export function videoMatteFramesForOps(ops: { clip: Clip; localTimeOverride?: nu
   const frames: VideoMatteFrame[] = [];
   for (const op of ops) if (op.clip.kind === "video" && op.clip.videoMatte) {
     const frame = videoMatteFrame(op.clip, op.localTimeOverride ?? op.clip.trimIn + (time - op.clip.start) * (op.clip.speed ?? 1));
-    if (!frame) throw new Error("Background-removal frames are missing for this range");
+    if (!frame) throw new EditorError("copy.002fc4f1ad43", "Background-removal frames are missing for this range");
     frames.push(frame);
   }
   return frames;

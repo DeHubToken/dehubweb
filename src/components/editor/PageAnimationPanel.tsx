@@ -5,6 +5,7 @@ import { useEditorStore } from "@/store/editorStore";
 import { ANIMATION_PRESETS } from "@/lib/editor/animationPresets";
 import { applyPageAnimation, type PageAnimationEdge, type PageAnimationScope } from "@/lib/editor/pageAnimations";
 import type { ClipAnimationKind } from "@/lib/editor/types";
+import { editorErrorText } from "@/lib/editor/editorErrorText";
 
 export function PageAnimationPanel() {
   const { t } = useTranslation();
@@ -18,7 +19,7 @@ export function PageAnimationPanel() {
       const result = applyPageAnimation(before, store.currentTime, store.selectedClipIds, { scope, edge, kind, duration: Number(duration) }, () => nanoid(10));
       if (result.project !== before && store.applyDesignEdit(before, result.project)) { store.setIsPlaying(false); store.selectClip(null); }
       setError(""); setMessage(result.count ? t("editor.pageAnimation.updated", { defaultValue: "Updated {{count}} layers", count: result.count }) : t("editor.pageAnimation.noChange", { defaultValue: "No editable layers needed changing" }));
-    } catch (value) { setError(value instanceof Error ? value.message : "Could not apply animation"); }
+    } catch (value) { setError(editorErrorText(value, t("copy.235ef181c079", { defaultValue: "Could not apply animation" }))); }
   };
   const chip = (label: string, active: boolean, onClick: () => void, disabled = false) => <button key={label} type="button" aria-pressed={active} disabled={disabled} onClick={() => { onClick(); setMessage(""); }} className={`min-h-9 rounded-lg border px-3 text-xs disabled:opacity-35 ${active ? "border-white bg-white text-black" : "border-white/20 text-white/75 hover:bg-white/10"}`}>{label}</button>;
   return <div className="space-y-3">

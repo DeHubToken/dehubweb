@@ -1,6 +1,7 @@
 import { getPages, pageAt } from "./pages";
 import { replaceDesignMedia, type ReplacementMedia } from "./replaceMedia";
 import type { MediaClip, ProjectSnapshot } from "./types";
+import { EditorError } from "./editorError";
 
 export function designPagePhotos(project: ProjectSnapshot, time: number, groupId?: string) {
   const page = pageAt(getPages(project.settings, project.clips), time), hidden = new Set(project.tracks.filter(track => track.hidden).map(track => track.id));
@@ -10,11 +11,11 @@ export function designPagePhotos(project: ProjectSnapshot, time: number, groupId
 
 /** Move photo sources between existing frames; the frames retain their placement and appearance. */
 export function arrangeDesignPhotos(project: ProjectSnapshot, ids: readonly string[], sourceOrder: readonly number[], metadata: ReadonlyMap<string, ReplacementMedia>): ProjectSnapshot {
-  if (ids.length < 2 || ids.length > 100 || new Set(ids).size !== ids.length || sourceOrder.length !== ids.length || new Set(sourceOrder).size !== ids.length || sourceOrder.some(index => !Number.isInteger(index) || index < 0 || index >= ids.length)) throw new Error("Choose 2–100 photo frames to rearrange");
+  if (ids.length < 2 || ids.length > 100 || new Set(ids).size !== ids.length || sourceOrder.length !== ids.length || new Set(sourceOrder).size !== ids.length || sourceOrder.some(index => !Number.isInteger(index) || index < 0 || index >= ids.length)) throw new EditorError("copy.d58a985b3aec", "Choose 2–100 photo frames to rearrange");
   const slots = ids.map(id => project.clips.find(clip => clip.id === id));
-  if (slots.some(clip => !clip || clip.kind !== "image" || clip.locked || clip.hidden || clip.isPageBackground)) throw new Error("Choose unlocked photo frames");
+  if (slots.some(clip => !clip || clip.kind !== "image" || clip.locked || clip.hidden || clip.isPageBackground)) throw new EditorError("copy.0e7edd60ead7", "Choose unlocked photo frames");
   const photos = slots as MediaClip[];
-  if (photos.some(clip => { const source = metadata.get(clip.mediaId); return !source || source.kind !== "image" || ![source.width, source.height].every(value => typeof value === "number" && Number.isFinite(value) && value > 0); })) throw new Error("Wait for the photo dimensions to load before rearranging frames");
+  if (photos.some(clip => { const source = metadata.get(clip.mediaId); return !source || source.kind !== "image" || ![source.width, source.height].every(value => typeof value === "number" && Number.isFinite(value) && value > 0); })) throw new EditorError("copy.1f7ab3271680", "Wait for the photo dimensions to load before rearranging frames");
   let next = project;
   photos.forEach((slot, index) => {
     const source = photos[sourceOrder[index]];

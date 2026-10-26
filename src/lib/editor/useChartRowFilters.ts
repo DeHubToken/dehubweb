@@ -2,8 +2,11 @@ import { formatDelimitedData } from "./delimitedData";
 import { useEffect, useMemo, useState } from "react";
 import { parseChartSource } from "./chartSeries";
 import { chartFilteredIndices, chartRowFilterDraft, type ChartRowFilter } from "./chartRowFilters";
+import { EditorError } from "./editorError";
+import { editorErrorText } from "./editorErrorText";
+import { translateCopy } from "@/i18n/copy";
 export function useChartRowFilters(source: string, multiple: boolean, value: ChartRowFilter[] | undefined, onChange: (value?: ChartRowFilter[]) => void) {
-  const parsed = useMemo(() => { try { return { ...parseChartSource(source, multiple), error: "" }; } catch (reason) { return { rows: [], series: undefined, error: reason instanceof Error ? reason.message : "Correct the source data to inspect matching rows" }; } }, [source, multiple]);
+  const parsed = useMemo(() => { try { return { ...parseChartSource(source, multiple), error: "" }; } catch (reason) { return { rows: [], series: undefined, error: editorErrorText(reason, translateCopy("copy.9bf28df2859d", { defaultValue: "Correct the source data to inspect matching rows" })) }; } }, [source, multiple]);
   const [editing, setEditing] = useState<number | null>(null), [kind, setKind] = useState<ChartRowFilter["kind"]>("label"), [operator, setOperator] = useState<Extract<ChartRowFilter, { kind: "label" }>["operator"]>("contains"), [text, setText] = useState(""), [caseSensitive, setCaseSensitive] = useState(false), [target, setTarget] = useState("first"), [minimum, setMinimum] = useState(""), [maximum, setMaximum] = useState(""), [first, setFirst] = useState("1"), [last, setLast] = useState("50"), [error, setError] = useState("");
   const filters = value ?? [], names = parsed.series?.map(series => series.label) ?? [];
   useEffect(() => { setEditing(null); setError(""); }, [value]);
@@ -17,12 +20,12 @@ export function useChartRowFilters(source: string, multiple: boolean, value: Cha
   const save = () => {
     try {
       const named = target.startsWith("series:"), name = named ? target.slice(7) : undefined;
-      if (kind === "value" && named && names.filter(series => series === name).length !== 1) throw new Error("Choose a current data series for the filter");
+      if (kind === "value" && named && names.filter(series => series === name).length !== 1) throw new EditorError("copy.841521f6ad52", "Choose a current data series for the filter");
       const filter = chartRowFilterDraft(kind, { operator, text, caseSensitive, target: named ? "series" : target === "total" ? "total" : "first", series: name, minimum, maximum, first, last, enabled: editing === null ? true : filters[editing]?.enabled !== false });
-      if (editing === null && filters.length >= 3) throw new Error("Keep up to three chart filters");
+      if (editing === null && filters.length >= 3) throw new EditorError("copy.f74e682e795e", "Keep up to three chart filters");
       onChange(editing === null ? [...filters, filter] : filters.map((previous, index) => index === editing ? filter : previous));
       setEditing(null); setText(""); setError("");
-    } catch (reason) { setError(reason instanceof Error ? reason.message : "Could not save this chart filter"); }
+    } catch (reason) { setError(editorErrorText(reason, translateCopy("copy.d188c8e6ee3c", { defaultValue: "Could not save this chart filter" }))); }
   };
   const edit = (index: number) => {
     const filter = filters[index]; if (!filter) return;

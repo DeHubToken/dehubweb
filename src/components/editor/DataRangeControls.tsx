@@ -1,12 +1,13 @@
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { DATA_NUMBER_FORMATS, editDataRange, type DataNumberFormat } from "@/lib/editor/dataRangeActions";
+import { editorErrorText } from "@/lib/editor/editorErrorText";
 export function DataRangeControls({ source, onChange, chart, multiple }: { source: string; onChange: (source: string) => void; chart: boolean; multiple: boolean }) {
   const { t } = useTranslation(), [range, setRange] = useState(""), [value, setValue] = useState(""), [format, setFormat] = useState<DataNumberFormat>("dot-comma"), [message, setMessage] = useState(""), [error, setError] = useState("");
   const [history, setHistory] = useState<{ before: string; after: string } | null>(null);
   const apply = (action: "fill" | "clear" | "numbers") => {
     try { const next = editDataRange(source, range, chart ? multiple ? 51 : 50 : 20, chart ? multiple ? 7 : 2 : 12, action, value, format); if (next.changed) { setHistory({ before: source, after: next.source }); onChange(next.source); } setError(""); setMessage(t("editor.dataCells.actionCount", { defaultValue: "Changed {{changed}} of {{selected}} selected cells", changed: next.changed, selected: next.selected })); }
-    catch (reason) { setMessage(""); setError(reason instanceof Error ? reason.message : "Could not edit this data range"); }
+    catch (reason) { setMessage(""); setError(editorErrorText(reason, t("copy.bc03912578e7", { defaultValue: "Could not edit this data range" }))); }
   };
   const restore = (redo: boolean) => { if (!history || source !== (redo ? history.before : history.after)) return; onChange(redo ? history.after : history.before); setMessage(t(redo ? "editor.dataCells.actionRedone" : "editor.dataCells.actionUndone", { defaultValue: redo ? "Redid data action" : "Undid data action" })); setError(""); };
   const button = "min-h-9 rounded-lg border border-white/20 px-3 text-xs text-white/75 disabled:opacity-35";

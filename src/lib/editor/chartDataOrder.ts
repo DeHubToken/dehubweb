@@ -2,14 +2,15 @@ import { chartXValue } from "./chartDateAxis";
 import { chartCategoryColour } from "./chartCategoryColours";
 import { parseChartSource } from "./chartSeries";
 import { formatDelimitedData } from "./delimitedData";
+import { EditorError } from "./editorError";
 
 export type ChartOrderTarget = "label" | "x" | "total" | number;
 export function orderChartSource(source: string, multiple: boolean, target: ChartOrderTarget, descending: boolean, reverse = false, xAxisMode?: "number" | "date"): { source: string; order: number[] } {
   const parsed = parseChartSource(source, multiple), count = parsed.rows.length;
-  if (!count) throw new Error("Add chart data before changing its order");
+  if (!count) throw new EditorError("copy.c004ff73eef3", "Add chart data before changing its order");
   const series = parsed.series ?? [{ label: "Value", values: parsed.rows.map(row => row.value) }];
-  if (typeof target === "number" && (!Number.isInteger(target) || !series[target])) throw new Error("Choose an existing data series");
-  if (!reverse && target === "x" && parsed.rows.some(row => !Number.isFinite(chartXValue(row.label, xAxisMode)))) throw new Error(xAxisMode === "date" ? "Use valid ISO dates or UTC timestamps before sorting by X" : "Use numeric X coordinates within one trillion before sorting by X");
+  if (typeof target === "number" && (!Number.isInteger(target) || !series[target])) throw new EditorError("copy.7556e418a762", "Choose an existing data series");
+  if (!reverse && target === "x" && parsed.rows.some(row => !Number.isFinite(chartXValue(row.label, xAxisMode)))) throw (xAxisMode === "date" ? new EditorError("copy.357e122acda8", "Use valid ISO dates or UTC timestamps before sorting by X") : new EditorError("copy.adc9ecc2d7d2", "Use numeric X coordinates within one trillion before sorting by X"));
   const order = Array.from({ length: count }, (_, index) => index);
   if (reverse) order.reverse();
   else order.sort((a, b) => {

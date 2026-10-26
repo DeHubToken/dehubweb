@@ -1,6 +1,7 @@
 import { parseChartSource } from "./chartSeries";
 import { parseTableData } from "./dataVisuals";
 import { formatDelimitedData, parseDelimitedData } from "./delimitedData";
+import { EditorError } from "./editorError";
 
 export function dataVisualExport(source: string, mode: "chart" | "table", multiple: boolean, delimiter: "," | "\t", formulasAsText = true): string {
   let rows: (string | number)[][];
@@ -11,7 +12,7 @@ export function dataVisualExport(source: string, mode: "chart" | "table", multip
       ? [[parseDelimitedData(source, 51, 7)[0]?.[0] || "Label", ...chart.series.map(series => series.label)], ...chart.rows.map((row, index) => [row.label, ...chart.series!.map(series => series.values[index])])]
       : chart.rows.map(row => [row.label, row.value]);
   }
-  if (!rows.length) throw new Error("Enter at least one data row before exporting");
+  if (!rows.length) throw new EditorError("copy.92ecac1a9b1d", "Enter at least one data row before exporting");
   const safe = (value: string | number) => {
     if (!formulasAsText || typeof value !== "string" || !/^[\u0000-\u0020]*[=+@-]/.test(value)) return value;
     if (value.trim() !== "" && Number.isFinite(Number(value))) return value;

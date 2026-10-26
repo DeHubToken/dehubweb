@@ -25,6 +25,7 @@ import { useEditorStore, selectTimelineDuration } from "@/store/editorStore";
 import { exportProject, isExportSupported } from "@/lib/editor/exporter";
 import { startExportJournal } from "@/lib/editor/exportJournal";
 import { preserveEditorAssets, uploadEditorAsset } from "@/lib/editor/cloudMedia";
+import { editorErrorText } from "@/lib/editor/editorErrorText";
 
 
 function filesToFileList(files: File[]): FileList {
@@ -79,7 +80,7 @@ export function PostToDeHub({ iconOnly = false }: { iconOnly?: boolean }) {
     if (!isAuthenticated) {
       setPending(true);
       openLoginModal?.();
-      toast.message("Sign in to post to DeHub. Your video will render after sign-in.");
+      toast.message(_copy("copy.a8d29dcb8caa", { defaultValue: "Sign in to post to DeHub. Your video will render after sign-in." }));
       return;
     }
     void startRender();
@@ -133,9 +134,9 @@ export function PostToDeHub({ iconOnly = false }: { iconOnly?: boolean }) {
     } catch (e) {
       journal.failed(e);
       if ((e as Error).name === "AbortError") {
-        toast.message("Cancelled");
+        toast.message(_copy("copy.d353a99eb455", { defaultValue: "Cancelled" }));
       } else {
-        const msg = e instanceof Error ? e.message : "Render failed";
+        const msg = editorErrorText(e, _copy("copy.b704deeb5e68", { defaultValue: "Render failed" }));
         toast.error(msg);
         // eslint-disable-next-line no-console
         console.error("Post-to-DeHub render failed:", e);

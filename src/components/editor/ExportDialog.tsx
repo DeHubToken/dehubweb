@@ -44,6 +44,8 @@ import { writePdfDocument } from "@/lib/editor/pdfDocument";
 import { exportPresentation } from "@/lib/editor/exportPresentation";
 import { startExportJournal } from "@/lib/editor/exportJournal";
 import { uploadEditorAsset } from "@/lib/editor/cloudMedia";
+import { EditorError } from "@/lib/editor/editorError";
+import { editorErrorText } from "@/lib/editor/editorErrorText";
 
 /** Finished exports up to this size are also kept in the creator's cloud storage. */
 const BACKUP_LIMIT = 200 * 1024 * 1024;
@@ -219,7 +221,7 @@ export function ExportDialog({ open, onOpenChange }: Props) {
       onOpenChange(false);
     } catch (e) {
       if ((e as Error).name === "AbortError") toast.message(t("editor.export.cancelled"));
-      else { toast.error(e instanceof Error ? e.message : t("editor.export.failed")); console.error("Still export failed:", e); }
+      else { toast.error(editorErrorText(e, t("editor.export.failed"))); console.error("Still export failed:", e); }
     } finally {
       if (abortRef.current === ctl) abortRef.current = null;
       setBusy(false);
@@ -264,7 +266,7 @@ export function ExportDialog({ open, onOpenChange }: Props) {
             },
           });
           size += result.blob.size;
-          if (size > ZIP_DOWNLOAD_LIMIT) throw new Error(t("editor.export.archiveTooLarge"));
+          if (size > ZIP_DOWNLOAD_LIMIT) throw new EditorError("editor.export.archiveTooLarge", "The download exceeds 512 MiB. Export fewer clips or choose a lower resolution.");
           files.push({ name: exportFilename(range.name, format), blob: result.blob });
         }
         const blob = files.length === 1 ? files[0].blob : await zipDownloadFiles(files, ctl.signal);
@@ -286,7 +288,7 @@ export function ExportDialog({ open, onOpenChange }: Props) {
       if ((e as Error).name === "AbortError") {
         toast.message(t("editor.export.cancelled"));
       } else {
-        toast.error(e instanceof Error ? e.message : t("editor.export.failed"));
+        toast.error(editorErrorText(e, t("editor.export.failed")));
         console.error("Export failed:", e);
       }
     } finally {
@@ -303,9 +305,9 @@ export function ExportDialog({ open, onOpenChange }: Props) {
   };
   const scales = still ? ["0.5", "1", "2"] : ["1", "0.75", "0.5"];
   const gifTooLong = gif && (scope === "timeline" ? duration > GIF_CONTENT_LIMIT : ranges.some(r => r.end - r.start > GIF_CONTENT_LIMIT));
-  const filenameError = format === "png" || format === "jpg" ? pageFilenamePatternError(filenamePattern) : "";
+  const filenameError = format === "png" || format === "jpg" ? pageFilenamePatternError(filenamePattern) : null;
   let pageOrderError = "";
-  if (still && pageScope === "custom") { try { parsePageExportOrder(pageSelection, pages.length); } catch (reason) { pageOrderError = reason instanceof Error ? reason.message : "Choose existing pages"; } }
+  if (still && pageScope === "custom") { try { parsePageExportOrder(pageSelection, pages.length); } catch (reason) { pageOrderError = editorErrorText(reason, t("copy.35b43efb36c1", { defaultValue: "Choose existing pages" })); } }
   const canDownload = !pageOrderError && !filenameError && !(still && pageScope === "section" && !effectiveSection) && duration > 0 && (still || motionSupported) && (still || scope === "timeline" || ranges.length > 0) && !gifTooLong;
 
   return (
@@ -372,7 +374,7 @@ export function ExportDialog({ open, onOpenChange }: Props) {
             {format === "pdf" && <label className="flex min-h-9 items-center gap-2 text-xs text-white/75"><input type="checkbox" checked={cropMarks} onChange={event => setCropMarks(event.target.checked)} />{t("editor.export.cropMarks", { defaultValue: "Crop marks and print margins" })}</label>}
             {format === "pdf" && multiPage && <label className="flex min-h-9 items-center gap-2 text-xs text-white/75"><input type="checkbox" checked={bookmarks} onChange={event => setBookmarks(event.target.checked)} />{t("editor.export.pageBookmarks", { defaultValue: "Page-name bookmarks" })}</label>}
             {format === "pdf" && cropMarks && <p className="text-xs text-white/45">{t("editor.export.cropMarkHint", { defaultValue: "Adds cutting marks outside the artwork. The saved print resolution sets the finished page size." })}</p>}
-            {(format === "png" || format === "jpg") && <div className="space-y-2"><label className="text-xs text-white/65">{t("editor.export.filenamePattern", { defaultValue: "Page filename pattern" })}<Input value={filenamePattern} maxLength={160} onChange={event => setFilenamePattern(event.target.value)} placeholder="{title}-{page:2}-{name}" className="mt-2 h-9 border-white/10 bg-white/5 text-white" /></label><div className="flex flex-wrap gap-2">{[["", "Default"], ["{title}-{page:2}", "Title and number"], ["{page:2}-{name}", "Page names"]].map(([pattern, label]) => <button type="button" key={label} onClick={() => setFilenamePattern(pattern)} className="min-h-8 rounded-lg border border-white/20 px-3 text-xs text-white/65">{t(`editor.export.filenamePreset.${label}`, { defaultValue: label })}</button>)}</div><p className="text-[10px] text-white/45">{t("editor.export.filenameHint", { defaultValue: "Leave blank for default names. Use {title}, {name}, {section}, {page}, or {page:3}. Add a prefix as plain text. Duplicate names receive a page-number suffix." })}</p>{filenameError && <p role="alert" className="text-xs text-red-300">{filenameError}</p>}</div>}
+            {(format === "png" || format === "jpg") && <div className="space-y-2"><label className="text-xs text-white/65">{t("editor.export.filenamePattern", { defaultValue: "Page filename pattern" })}<Input value={filenamePattern} maxLength={160} onChange={event => setFilenamePattern(event.target.value)} placeholder="{title}-{page:2}-{name}" className="mt-2 h-9 border-white/10 bg-white/5 text-white" /></label><div className="flex flex-wrap gap-2">{[["", "Default"], ["{title}-{page:2}", "Title and number"], ["{page:2}-{name}", "Page names"]].map(([pattern, label]) => <button type="button" key={label} onClick={() => setFilenamePattern(pattern)} className="min-h-8 rounded-lg border border-white/20 px-3 text-xs text-white/65">{t(`editor.export.filenamePreset.${label}`, { defaultValue: label })}</button>)}</div><p className="text-[10px] text-white/45">{t("editor.export.filenameHint", { defaultValue: "Leave blank for default names. Use {title}, {name}, {section}, {page}, or {page:3}. Add a prefix as plain text. Duplicate names receive a page-number suffix." })}</p>{filenameError && <p role="alert" className="text-xs text-red-300">{editorErrorText(filenameError, "")}</p>}</div>}
             {format === "jpg" && <JpegQualityControl value={jpegQuality} onChange={setJpegQuality} />}
             {format === "png" && <label className="flex min-h-9 items-center gap-2 text-xs text-white/75"><input type="checkbox" checked={transparent} onChange={e => setTransparent(e.target.checked)} />{t("editor.export.transparent", { defaultValue: "Transparent background" })}</label>}
             {format === "notes" && <p className="text-xs text-white/55">{t("editor.export.notesTextHint", { defaultValue: "Downloads section headings, original page numbers, page names, and presenter notes as a text file." })}</p>}

@@ -8,6 +8,7 @@ import { shapePolygon } from "./shapeGeometry";
 import { strokeDashOffset } from "./strokePatterns";
 import { VECTOR_SYMBOLS } from "./vectorSymbols";
 import type { ProjectSnapshot, ShapeClip } from "./types";
+import { EditorError } from "./editorError";
 const n = (value: number) => String(Number(value.toFixed(5)));
 const xml = (value: string) => value.replace(/[\u0000-\u001f\u007f]/g, " ").replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
 const colour = (value: string | null | undefined) => value && /^#(?:[a-f\d]{3}|[a-f\d]{6})$/i.test(value) ? value : "none";
@@ -18,7 +19,7 @@ function vectorPath(clip: ShapeClip, w: number, h: number, k: number): string {
   if (clip.connector) return connectorSvgPath(w, h, clip.connector);
   if (clip.symbol) {
     const symbol = VECTOR_SYMBOLS.find(symbol => symbol.id === clip.symbol);
-    if (!symbol) throw new Error("This symbol is unavailable in the vector catalogue");
+    if (!symbol) throw new EditorError("copy.9e8541614967", "This symbol is unavailable in the vector catalogue");
     const x = (value: number) => (value / 24 - 0.5) * w, y = (value: number) => (value / 24 - 0.5) * h;
     return symbol.parts.map(part => part.ellipse ? ellipsePath(x(part.ellipse[0]), y(part.ellipse[1]), part.ellipse[2] / 24 * w, part.ellipse[3] / 24 * h) : (part.points ?? []).map((point, index) => `${index ? "L" : "M"}${n(x(point[0]))} ${n(y(point[1]))}`).join(" ") + (part.closed ? " Z" : "")).join(" ");
   }
@@ -33,30 +34,30 @@ function vectorPath(clip: ShapeClip, w: number, h: number, k: number): string {
     const line = `M${n(-a)} 0 L${n(a)} 0`, head = Math.min(w * 0.3, Math.max(h * 1.5, 12));
     return line + (clip.shape === "arrow" ? ` M${n(a - head)} ${n(-head * 0.6)} L${n(a)} 0 L${n(a - head)} ${n(head * 0.6)}` : "");
   }
-  if (clip.shape !== "rect") throw new Error("This shape does not support vector export");
+  if (clip.shape !== "rect") throw new EditorError("copy.ea81d7f6ce7c", "This shape does not support vector export");
   const r = Math.max(0, Math.min((clip.radius ?? 0) * k, a, b));
   return r ? `M${n(-a + r)} ${n(-b)} H${n(a - r)} A${n(r)} ${n(r)} 0 0 1 ${n(a)} ${n(-b + r)} V${n(b - r)} A${n(r)} ${n(r)} 0 0 1 ${n(a - r)} ${n(b)} H${n(-a + r)} A${n(r)} ${n(r)} 0 0 1 ${n(-a)} ${n(b - r)} V${n(-b + r)} A${n(r)} ${n(r)} 0 0 1 ${n(-a + r)} ${n(-b)} Z` : `M${n(-a)} ${n(-b)} H${n(a)} V${n(b)} H${n(-a)} Z`;
 }
 export interface VectorArtworkSvgOptions { scope?: "selection" | "page"; background?: boolean; padding?: number }
 export function vectorArtworkSvgDocument(project: ProjectSnapshot, ids: readonly string[], time: number, options: VectorArtworkSvgOptions = {}): string {
   const padding = options.padding ?? 0;
-  if (options.scope !== undefined && !["selection", "page"].includes(options.scope) || !Number.isFinite(padding) || padding < 0 || padding > 128 || options.background !== undefined && typeof options.background !== "boolean") throw new Error("Choose valid vector export dimensions, padding and background options");
+  if (options.scope !== undefined && !["selection", "page"].includes(options.scope) || !Number.isFinite(padding) || padding < 0 || padding > 128 || options.background !== undefined && typeof options.background !== "boolean") throw new EditorError("copy.663c04bfe56e", "Choose valid vector export dimensions, padding and background options");
   const vectors = selectedDesignVectors(project, ids, time).filter(clip => !clip.photoFrame);
-  if (!vectors.length || vectors.length > 100) throw new Error("Select one to 100 ordinary vector layers to download");
+  if (!vectors.length || vectors.length > 100) throw new EditorError("copy.8e1e188d0ece", "Select one to 100 ordinary vector layers to download");
   const W = project.settings.width, H = project.settings.height, k = H / 1080;
-  if (![W, H].every(value => Number.isFinite(value) && value >= 1 && value <= 16384)) throw new Error("Use a supported page size for vector export");
+  if (![W, H].every(value => Number.isFinite(value) && value >= 1 && value <= 16384)) throw new EditorError("copy.aab7a812f846", "Use a supported page size for vector export");
   const order = new Map(project.tracks.map((track, index) => [track.id, index]));
   const definitions: string[] = [], layers: string[] = [], bounds: { left: number; top: number; right: number; bottom: number }[] = [];
   vectors.sort((a, b) => (order.get(a.trackId) ?? 0) - (order.get(b.trackId) ?? 0)).forEach((source, index) => {
     const clip = resolveClipAt(source, time) as ShapeClip, tr = { x: 0.5, y: 0.5, scale: 1, rotation: 0, ...clip.transform }, w = Math.max(1, clip.w * W * tr.scale), h = Math.max(1, clip.h * H * tr.scale);
-    if (![w, h, tr.x, tr.y, tr.rotation].every(Number.isFinite) || w > 65536 || h > 65536) throw new Error("Choose vector layers within the supported dimensions");
-    if (clip.blend && !["normal", "multiply", "screen", "overlay", "darken", "lighten", "color-dodge", "color-burn", "hard-light", "soft-light", "difference", "exclusion", "hue", "saturation", "color", "luminosity"].includes(clip.blend)) throw new Error("Use a standard colour blend mode before downloading this vector artwork");
+    if (![w, h, tr.x, tr.y, tr.rotation].every(Number.isFinite) || w > 65536 || h > 65536) throw new EditorError("copy.b057653781dd", "Choose vector layers within the supported dimensions");
+    if (clip.blend && !["normal", "multiply", "screen", "overlay", "darken", "lighten", "color-dodge", "color-burn", "hard-light", "soft-light", "difference", "exclusion", "hue", "saturation", "color", "luminosity"].includes(clip.blend)) throw new EditorError("copy.9684c64a3c6f", "Use a standard colour blend mode before downloading this vector artwork");
     const open = !!clip.connector || clip.shape === "line" || clip.shape === "arrow" || clip.shape === "path" && !clip.closedPath;
     const stroke = clip.stroke ?? (open ? { color: clip.fill ?? "#ffffff", width: 8 } : null), strokeWidth = Math.max(0, stroke?.width ?? 0) * k;
     let fill = colour(clip.fill), line = colour(stroke?.color), filter = "";
     if (clip.gradient) {
       const id = "vector-paint-" + index, document = gradientSvgDocument(clip.gradient, w, h), definition = /<defs>([\s\S]*?)<\/defs>/.exec(document)?.[1];
-      if (!definition) throw new Error("Complete the gradient before downloading this vector");
+      if (!definition) throw new EditorError("copy.2ccfdd47b2c1", "Complete the gradient before downloading this vector");
       definitions.push(definition.replace(/id="paint"/g, `id="${id}"`).replace(/<(linearGradient|radialGradient) /, `<$1 gradientTransform="translate(${n(-w / 2)} ${n(-h / 2)})" `));
       if (!clip.symbol || clip.fill) fill = `url(#${id})`;
       if (open || clip.symbol && !clip.fill) line = `url(#${id})`;
@@ -86,6 +87,6 @@ export function vectorArtworkSvgDocument(project: ProjectSnapshot, ids: readonly
   const background = options.background ? `<rect x="${n(left)}" y="${n(top)}" width="${n(width)}" height="${n(height)}" fill="${colour(project.settings.background)}"/>` : "";
   const scale = Math.min(1, 8192 / Math.max(width, height));
   const document = `<?xml version="1.0" encoding="UTF-8"?>\n<svg xmlns="http://www.w3.org/2000/svg" width="${n(width * scale)}" height="${n(height * scale)}" viewBox="${n(left)} ${n(top)} ${n(width)} ${n(height)}" role="img" aria-labelledby="vector-title"><title id="vector-title">${xml(project.title || "Vector artwork")}</title><defs>${definitions.join("")}</defs><g style="isolation:isolate">${background}${layers.join("")}</g></svg>\n`;
-  if (document.length > 2 * 1024 * 1024) throw new Error("Choose fewer vector layers to keep the SVG within two megabytes");
+  if (document.length > 2 * 1024 * 1024) throw new EditorError("copy.49c11e509b8b", "Choose fewer vector layers to keep the SVG within two megabytes");
   return document;
 }

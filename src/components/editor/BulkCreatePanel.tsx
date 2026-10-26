@@ -17,6 +17,8 @@ import { nanoid } from "nanoid";
 import { useTranslation } from "react-i18next";
 import { useEditorStore } from "@/store/editorStore";
 import { bulkLinkFields, bulkPageFieldsConnected, type BulkPageFields, bulkConnected, bulkFieldText, bulkTemplateFields, bulkTextPreviewValue, createBulkPages, parseBulkData, type BulkConnections } from "@/lib/editor/bulkCreate";
+import { EditorError } from "@/lib/editor/editorError";
+import { editorErrorText } from "@/lib/editor/editorErrorText";
 
 export function BulkCreatePanel() {
   const { t } = useTranslation();
@@ -34,7 +36,7 @@ export function BulkCreatePanel() {
   const [pendingImport, setPendingImport] = useState<{ id: number; projectId: string; source: string; name: string } | null>(null);
   const request = useRef(0);
   useEffect(() => { request.current++; setPendingImport(null); return () => { request.current++; }; }, [projectId]);
-  const parsed = useMemo(() => { try { return { data: parseBulkData(source), error: "" }; } catch (value) { return { data: null, error: value instanceof Error ? value.message : "Invalid spreadsheet data" }; } }, [source]);
+  const parsed = useMemo(() => { try { return { data: parseBulkData(source), error: "" }; } catch (value) { return { data: null, error: editorErrorText(value, t("copy.9895c54188f7", { defaultValue: "Invalid spreadsheet data" })) }; } }, [source]);
   const imageFields = useMemo(() => bulkImageFields({ ...useEditorStore.getState().toSnapshot(), clips, settings }, time), [clips, settings, time]);
   const photoNames = useMemo(() => bulkPhotoNames({ ...useEditorStore.getState().toSnapshot(), clips, settings }), [clips, settings]);
   const linkFields = useMemo(() => bulkLinkFields({ ...useEditorStore.getState().toSnapshot(), clips, settings }, time), [clips, settings, time]);
@@ -49,11 +51,11 @@ export function BulkCreatePanel() {
   const importFile = async (file: File) => {
     const token = ++request.current;
     try {
-      if (!/\.(csv|tsv|txt)$/i.test(file.name)) throw new Error("Choose a CSV or TSV file");
-      if (file.size > 500000) throw new Error("Choose a CSV or TSV file smaller than 500 KB");
+      if (!/\.(csv|tsv|txt)$/i.test(file.name)) throw new EditorError("copy.fd8db2caa7dc", "Choose a CSV or TSV file");
+      if (file.size > 500000) throw new EditorError("copy.0a8252e45427", "Choose a CSV or TSV file smaller than 500 KB");
       const text = await file.text();
       if (token === request.current && useEditorStore.getState().projectId === projectId) { setPendingImport({ id: token, projectId, source: text, name: file.name }); setError(""); }
-    } catch (value) { if (token === request.current) setError(value instanceof Error ? value.message : "Could not read this file"); }
+    } catch (value) { if (token === request.current) setError(editorErrorText(value, t("copy.90399c23ef68", { defaultValue: "Could not read this file" }))); }
   };
   const generate = () => {
     try {
@@ -65,7 +67,7 @@ export function BulkCreatePanel() {
         store.setIsPlaying(false); store.setCurrentTime(result.start + 0.01); store.selectClip(null);
         setMessage(t("editor.bulk.created", { defaultValue: "Created {{count}} pages. Undo restores the original design.", count: result.count })); setError("");
       }
-    } catch (value) { setError(value instanceof Error ? value.message : "Could not generate pages"); }
+    } catch (value) { setError(editorErrorText(value, t("copy.18c3cef87d0b", { defaultValue: "Could not generate pages" }))); }
   };
   const button = "min-h-9 rounded-lg border border-white/20 px-3 text-xs text-white disabled:opacity-35";
   const page = Math.min(fieldPage, Math.max(0, Math.ceil(fields.length / 8) - 1));

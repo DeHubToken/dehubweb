@@ -30,6 +30,8 @@ import {
   type Track,
   type TrackKind,
 } from "@/lib/editor/types";
+import { EditorError } from "@/lib/editor/editorError";
+import { editorErrorText } from "@/lib/editor/editorErrorText";
 
 /** A partial update to any kind of clip. */
 export type ClipPatch = Partial<MediaClip> | Partial<TextClip> | Partial<ShapeClip>;
@@ -243,7 +245,7 @@ export const useEditorStore = create<EditorState>((set, get) => {
   },
   applySharedSnapshot: (snap, expectedKey) => {
     const s = get(), current = s.toSnapshot();
-    if (s.editing || batchedEdits || current.id !== snap.id || projectReviewSnapshotKey(current) !== expectedKey) throw new Error("The current project changed during transfer");
+    if (s.editing || batchedEdits || current.id !== snap.id || projectReviewSnapshotKey(current) !== expectedKey) throw new EditorError("copy.91e28d9a7136", "The current project changed during transfer");
     const full = (editable: EditableState): ProjectSnapshot => ({ ...current, ...editable });
     const next = rebaseProjectHistory({ current, past: s.past.map(full), future: s.future.map(full) }, snap);
     const editable = (value: ProjectSnapshot): EditableState => ({ tracks: value.tracks, clips: value.clips, settings: value.settings });
@@ -697,7 +699,7 @@ export const useEditorStore = create<EditorState>((set, get) => {
     try {
       const result = duplicateDesignPageSelection(before, store.selectedClipIds, store.currentTime, () => nanoid(10));
       if (result && store.applyDesignEdit(before, result.project)) { get().setIsPlaying(false); get().selectMany(result.ids); }
-    } catch (error) { reportDesignClipboard({ kind: "error", message: error instanceof Error ? error.message : String(error) }); }
+    } catch (error) { reportDesignClipboard({ kind: "error", message: editorErrorText(error, _translateCopy("copy.4a52cdd6ac72", { defaultValue: "Could not duplicate these layers" })) }); }
   },
 
   copySelectedToClipboard: () => {

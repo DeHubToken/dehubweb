@@ -4,6 +4,7 @@
  * Architecture inspired by OpenCut (MIT) — see LICENSE-OpenCut.
  */
 import { openDB, type IDBPDatabase } from "idb";
+import { EditorError } from "./editorError";
 
 export type MediaKind = "video" | "audio" | "image";
 
@@ -101,7 +102,7 @@ export function probeDuration(file: File, kind: "video" | "audio"): Promise<numb
     };
     el.onerror = () => {
       cleanup();
-      reject(new Error("Failed to read media metadata"));
+      reject(new EditorError("copy.d5fd744d8c6b", "Failed to read media metadata"));
     };
     el.src = url;
   });
@@ -119,7 +120,7 @@ export function probeImage(file: File): Promise<{ width: number; height: number 
     };
     img.onerror = () => {
       URL.revokeObjectURL(url);
-      reject(new Error("Failed to read image"));
+      reject(new EditorError("copy.7625fb42431a", "Failed to read image"));
     };
     img.src = url;
   });
@@ -156,13 +157,13 @@ export function captureVideoThumbnail(
         canvas.width = Math.max(1, Math.round(w * scale));
         canvas.height = Math.max(1, Math.round(h * scale));
         const ctx = canvas.getContext("2d");
-        if (!ctx) throw new Error("No canvas context");
+        if (!ctx) throw new EditorError("copy.2521c071f4e4", "No canvas context");
         ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
         canvas.toBlob(
           (blob) => {
             if (!blob) {
               cleanup();
-              reject(new Error("Failed to encode thumbnail"));
+              reject(new EditorError("copy.1c60ed6feade", "Failed to encode thumbnail"));
               return;
             }
             const result = { thumbnail: blob, width: w, height: h, duration: video.duration || 0 };
@@ -174,12 +175,12 @@ export function captureVideoThumbnail(
         );
       } catch (e) {
         cleanup();
-        reject(e instanceof Error ? e : new Error("Thumbnail capture failed"));
+        reject(e instanceof Error ? e : new EditorError("copy.daad700e8c06", "Thumbnail capture failed"));
       }
     };
     video.onerror = () => {
       cleanup();
-      reject(new Error("Failed to load video"));
+      reject(new EditorError("copy.ac546dda1b0f", "Failed to load video"));
     };
     video.src = url;
   });
@@ -204,12 +205,12 @@ export function captureImageThumbnail(
         canvas.width = Math.max(1, Math.round(w * scale));
         canvas.height = Math.max(1, Math.round(h * scale));
         const ctx = canvas.getContext("2d");
-        if (!ctx) throw new Error("No canvas context");
+        if (!ctx) throw new EditorError("copy.2521c071f4e4", "No canvas context");
         ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
         canvas.toBlob(
           (blob) => {
             URL.revokeObjectURL(url);
-            if (!blob) return reject(new Error("Failed to encode thumbnail"));
+            if (!blob) return reject(new EditorError("copy.1c60ed6feade", "Failed to encode thumbnail"));
             resolve({ thumbnail: blob, width: w, height: h });
           },
           type,
@@ -217,12 +218,12 @@ export function captureImageThumbnail(
         );
       } catch (e) {
         URL.revokeObjectURL(url);
-        reject(e instanceof Error ? e : new Error("Thumbnail capture failed"));
+        reject(e instanceof Error ? e : new EditorError("copy.daad700e8c06", "Thumbnail capture failed"));
       }
     };
     img.onerror = () => {
       URL.revokeObjectURL(url);
-      reject(new Error("Failed to load image"));
+      reject(new EditorError("copy.af2035a41750", "Failed to load image"));
     };
     img.src = url;
   });

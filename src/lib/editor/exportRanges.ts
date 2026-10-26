@@ -1,6 +1,7 @@
 import { exportBaseName } from "./exportName";
 import type { MediaClip, ProjectSnapshot } from "./types";
 import { EXPORT_RANGES_RUNTIME } from "./exportRangesRuntime";
+import { EditorError } from "./editorError";
 
 export type ExportScope = "timeline" | "selection" | "clips";
 export interface ExportRange { start: number; end: number }
@@ -22,7 +23,7 @@ export function clipExportRanges(snapshot: ProjectSnapshot, selectedIds?: string
   const visible = new Set(snapshot.tracks.filter(t => !t.hidden && t.kind !== "audio").map(t => t.id));
   const clips = snapshot.clips.filter(c => c.kind === "video" && !c.hidden && visible.has(c.trackId) && (!selected || selected.has(c.id)));
   return [...clips].sort((a, b) => a.start - b.start || snapshot.tracks.findIndex(t => t.id === a.trackId) - snapshot.tracks.findIndex(t => t.id === b.trackId) || a.id.localeCompare(b.id)).map((clip, i) => {
-    if (!Number.isFinite(clip.start) || clip.start < 0 || !Number.isFinite(clip.duration) || clip.duration <= 0) throw new Error("Invalid clip range");
+    if (!Number.isFinite(clip.start) || clip.start < 0 || !Number.isFinite(clip.duration) || clip.duration <= 0) throw new EditorError("copy.28adf6355e29", "Invalid clip range");
     return { clipId: clip.id, start: clip.start, end: clip.start + clip.duration, name: exportBaseName(snapshot.title, "video", `-clip-${String(i + 1).padStart(3, "0")}`) };
   });
 }

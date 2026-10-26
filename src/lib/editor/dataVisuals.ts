@@ -22,6 +22,7 @@ import { validTableMerges, type TableMerge } from "./tableMerges";
 import { parseDelimitedData } from "./delimitedData";
 import { drawMultiSeriesChart } from "./multiSeriesCharts";
 import { drawEditableTable } from "./tableRendering";
+import { EditorError } from "./editorError";
 export const CHART_KINDS = ["column", "bar", "line", "area", "lollipop", "dot", "pie", "donut", "radar", "scatter", "bubble", "funnel", "histogram", "treemap", "pictogram", "race", "progress-bar", "progress-ring", "radial-progress", "progress-dial", "packed-circles"] as const;
 export type ChartKind = typeof CHART_KINDS[number];
 export interface ChartData {
@@ -295,10 +296,10 @@ export function drawDataVisual(ctx: DataVisualContext, width: number, height: nu
 
 export function parseChartData(text: string): ChartData["rows"] {
   return parseDelimitedData(text, 50, 12).map(row => {
-    if (row.length < 2) throw new Error("Use one label,value pair per line");
+    if (row.length < 2) throw new EditorError("copy.5924a673ef02", "Use one label,value pair per line");
     const label = row.slice(0, -1).join(",").slice(0, 200), raw = row[row.length - 1];
     const value = Number(raw);
-    if (!label || !raw || !Number.isFinite(value) || Math.abs(value) > 1e12) throw new Error("Each chart row needs a label and a number");
+    if (!label || !raw || !Number.isFinite(value) || Math.abs(value) > 1e12) throw new EditorError("copy.3cf8b7bb6fd1", "Each chart row needs a label and a number");
     return { label, value };
   });
 }

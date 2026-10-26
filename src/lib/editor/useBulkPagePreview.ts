@@ -5,6 +5,9 @@ import { requestDesignPagePreview } from "./designPagePreviews";
 import { getPages } from "./pages";
 import type { ReplacementMedia } from "./replaceMedia";
 import type { ProjectSnapshot } from "./types";
+import { EditorError } from "./editorError";
+import { editorErrorText } from "./editorErrorText";
+import { translateCopy } from "@/i18n/copy";
 
 export interface BulkPagePreviewOptions {
   data: BulkData; row: number; time: number; connections: BulkConnections; pageFields: BulkPageFields;
@@ -17,12 +20,12 @@ export function useBulkPagePreview(project: ProjectSnapshot, options: BulkPagePr
     if (!enabled) { setResult({ image: null, busy: false, error: "" }); return; }
     const controller = new AbortController();
     setResult(previous => ({ ...previous, busy: true, error: "" }));
-    const timeout = setTimeout(() => { controller.abort(); setResult({ image: null, busy: false, error: "The page preview took too long. Edit the draft or reopen the preview to try again." }); }, 10000);
+    const timeout = setTimeout(() => { controller.abort(); setResult({ image: null, busy: false, error: translateCopy("copy.db459b2769ef", { defaultValue: "The page preview took too long. Edit the draft or reopen the preview to try again." }) }); }, 10000);
     const timer = setTimeout(() => {
       void (async () => {
         try {
           const { data, row, time, connections, pageFields, linkConnections, imageConnections } = options;
-          if (!Number.isInteger(row) || row < 0 || row >= data.rows.length) throw new Error("Choose an existing data record to preview");
+          if (!Number.isInteger(row) || row < 0 || row >= data.rows.length) throw new EditorError("copy.38c97f1a5e7d", "Choose an existing data record to preview");
           const plan = planBulkPhotos(project, time, data, row + 1, row + 1, {}, imageConnections);
           const sources = await Promise.all(plan.mediaIds.map(id => readMedia(id)));
           if (controller.signal.aborted) return;
@@ -31,7 +34,7 @@ export function useBulkPagePreview(project: ProjectSnapshot, options: BulkPagePr
           const generated = createBulkPages(project, time, data, connections, row + 1, row + 1, makeId, pageFields, {}, linkConnections, imageConnections, sources.filter((source): source is ReplacementMedia => !!source));
           const pages = getPages(generated.project.settings, generated.project.clips), image = await requestDesignPagePreview(generated.project, pages.length - 1, 512, controller.signal);
           if (!controller.signal.aborted) setResult({ image, busy: false, error: image ? "" : "The canvas preview is unavailable. Your data and connections remain editable." });
-        } catch (reason) { if (!controller.signal.aborted) setResult({ image: null, busy: false, error: reason instanceof Error ? reason.message.slice(0, 300) : "Could not preview this data record" }); }
+        } catch (reason) { if (!controller.signal.aborted) setResult({ image: null, busy: false, error: editorErrorText(reason, translateCopy("copy.11e19c108aa8", { defaultValue: "Could not preview this data record" })) }); }
         finally { clearTimeout(timeout); }
       })();
     }, 350);

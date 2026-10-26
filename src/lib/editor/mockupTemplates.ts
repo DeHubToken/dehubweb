@@ -4,6 +4,7 @@ import { replaceDesignMedia } from "./replaceMedia";
 import { readableTableInk } from "./tableColourScale";
 import { groupedSelection } from "./designGroups";
 import type { Clip, MediaClip, ProjectSnapshot, ShapeClip, TextClip, Track } from "./types";
+import { EditorError } from "./editorError";
 export const MOCKUP_TEMPLATES = [
   { id: "phone", name: "Phone", width: 360, height: 740, radius: 48, body: "#111827", screen: [18, 24, 324, 692, 32] },
   { id: "tablet", name: "Tablet", width: 760, height: 1020, radius: 40, body: "#111827", screen: [24, 40, 712, 940, 18] },
@@ -21,14 +22,14 @@ export function selectedMockupPhoto(project: ProjectSnapshot, ids: readonly stri
 }
 export function putMockupTemplate(project: ProjectSnapshot, time: number, id: MockupTemplateId, options: MockupOptions, makeId: () => string) {
   const preset = MOCKUP_TEMPLATES.find(preset => preset.id === id);
-  if (!preset || ![options.body, options.edge].every(colour => /^#[a-f\d]{6}$/i.test(colour)) || options.caption.length > 80) throw new Error("Use valid frame colours and a caption up to 80 characters");
-  if (options.screen !== undefined && !/^#[a-f\d]{6}$/i.test(options.screen) || options.fit !== undefined && !["fill", "fit"].includes(options.fit) || !validGraphicFont(options.fontFamily)) throw new Error("Choose valid screen, photo fit and caption font options");
+  if (!preset || ![options.body, options.edge].every(colour => /^#[a-f\d]{6}$/i.test(colour)) || options.caption.length > 80) throw new EditorError("copy.83a714424ee9", "Use valid frame colours and a caption up to 80 characters");
+  if (options.screen !== undefined && !/^#[a-f\d]{6}$/i.test(options.screen) || options.fit !== undefined && !["fill", "fit"].includes(options.fit) || !validGraphicFont(options.fontFamily)) throw new EditorError("copy.ee0413d03307", "Choose valid screen, photo fit and caption font options");
   const size = options.size ?? 0.8, rotation = options.rotation ?? 0;
-  if (!Number.isFinite(size) || size < 0.2 || size > 0.95 || !Number.isFinite(rotation) || rotation < -180 || rotation > 180) throw new Error("Choose a mockup size from 20 to 95 percent and rotation from -180 to 180 degrees");
+  if (!Number.isFinite(size) || size < 0.2 || size > 0.95 || !Number.isFinite(rotation) || rotation < -180 || rotation > 180) throw new EditorError("copy.ea35189030fc", "Choose a mockup size from 20 to 95 percent and rotation from -180 to 180 degrees");
   const radians = rotation * Math.PI / 180, cosine = Math.cos(radians), sine = Math.sin(radians);
   const source = options.photo ? project.clips.find((clip): clip is MediaClip => clip.id === options.photo!.clipId && clip.kind === "image") : undefined;
-  if (options.photo && (!source || source.locked || source.hidden || source.mediaId !== options.photo.mediaId || time < source.start || time >= source.start + source.duration || project.tracks.find(track => track.id === source.trackId)?.hidden)) throw new Error("Choose an unlocked visible photo on the current page");
-  if (options.photo && (![options.photo.width, options.photo.height].every(value => Number.isFinite(value) && value > 0))) throw new Error("The photo dimensions are unavailable. Insert an empty screen instead");
+  if (options.photo && (!source || source.locked || source.hidden || source.mediaId !== options.photo.mediaId || time < source.start || time >= source.start + source.duration || project.tracks.find(track => track.id === source.trackId)?.hidden)) throw new EditorError("copy.6239346f2ec6", "Choose an unlocked visible photo on the current page");
+  if (options.photo && (![options.photo.width, options.photo.height].every(value => Number.isFinite(value) && value > 0))) throw new EditorError("copy.e5ce5bd7ba56", "The photo dimensions are unavailable. Insert an empty screen instead");
   const W = project.settings.width, H = project.settings.height, scale = Math.min(W * size / (Math.abs(cosine) * preset.width + Math.abs(sine) * preset.height), H * size / (Math.abs(sine) * preset.width + Math.abs(cosine) * preset.height)), x0 = (W - preset.width * scale) / 2, y0 = (H - preset.height * scale) / 2;
   const page = pageAt(getPages(project.settings, project.clips), time), groupId = makeId(), tracks: Track[] = [], clips: Clip[] = [], timing = { start: page.start, duration: page.end - page.start, trimIn: 0 };
   const shape = (name: string, x: number, y: number, width: number, height: number, fill: string, radius = 0, ellipse = false) => {
@@ -67,7 +68,7 @@ export function putMockupTemplate(project: ProjectSnapshot, time: number, id: Mo
       const horizontal = crop.left + crop.right, vertical = crop.top + crop.bottom, focalX = (original.left + 1 - original.right) / 2, focalY = (original.top + 1 - original.bottom) / 2;
       const left = Math.max(0, Math.min(horizontal, focalX - (1 - horizontal) / 2)), top = Math.max(0, Math.min(vertical, focalY - (1 - vertical) / 2));
       const aspect = options.photo!.width * (1 - horizontal) / (options.photo!.height * (1 - vertical));
-      if (Math.abs(aspect / (photoWidth / photoHeight) - 1) > 0.001) throw new Error("This photo is too wide or tall for the screen. Choose Fit photo, another mockup or an empty screen");
+      if (Math.abs(aspect / (photoWidth / photoHeight) - 1) > 0.001) throw new EditorError("copy.2b59d0d8ee02", "This photo is too wide or tall for the screen. Choose Fit photo, another mockup or an empty screen");
       return { ...clip, crop: contain ? { ...original } : { left, right: horizontal - left, top, bottom: vertical - top }, effects: source.effects ? { ...source.effects, ...(source.effects.duotone ? { duotone: { ...source.effects.duotone } } : {}) } : undefined, href: source.href, transform: { x: 0.5, y: 0.5, scale: 1, rotation: 0, ...clip.transform, opacity: source.transform?.opacity, flipH: source.transform?.flipH, flipV: source.transform?.flipV } };
     }) };
   }
@@ -79,6 +80,6 @@ export function putMockupTemplate(project: ProjectSnapshot, time: number, id: Mo
     if (clip.kind === "text") return { ...clip, x, y, transform: { ...transform, rotation: transform.rotation + rotation } };
     return { ...clip, transform: { ...transform, x, y, rotation: transform.rotation + rotation } };
   }) };
-  if (next.tracks.length > 200 || next.clips.length > 10000 || JSON.stringify(next).length > 6 * 1024 * 1024) throw new Error("This mockup exceeds the design’s layer or size limits");
+  if (next.tracks.length > 200 || next.clips.length > 10000 || JSON.stringify(next).length > 6 * 1024 * 1024) throw new EditorError("copy.a30ab9b3a4a2", "This mockup exceeds the design’s layer or size limits");
   return { project: next, id: screen.id };
 }

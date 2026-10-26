@@ -8,6 +8,7 @@ import { graphicFontCss } from "./graphicFonts";
 
 import { GOOGLE_FONTS, type GoogleFont } from "./fontCatalogue";
 import type { Clip } from "./types";
+import { EditorError } from "./editorError";
 export { GOOGLE_FONTS };
 export type { GoogleFont };
 
@@ -37,9 +38,9 @@ function requestFontStylesheet(family: string, weights: number[]): Promise<void>
   link.href = url;
   link.setAttribute("data-google-font", family);
   const promise = new Promise<void>((resolve, reject) => {
-    const timer = window.setTimeout(() => { link.onload = null; link.onerror = null; loaded.delete(key); link.remove(); reject(new Error(`Could not load ${family}`)); }, 8000);
+    const timer = window.setTimeout(() => { link.onload = null; link.onerror = null; loaded.delete(key); link.remove(); reject(new EditorError("copy.63b4afedc78a", "Could not load {{family}}", { family })); }, 8000);
     link.onload = () => { window.clearTimeout(timer); link.onload = null; link.onerror = null; resolve(); };
-    link.onerror = () => { window.clearTimeout(timer); link.onload = null; link.onerror = null; loaded.delete(key); link.remove(); reject(new Error(`Could not load ${family}`)); };
+    link.onerror = () => { window.clearTimeout(timer); link.onload = null; link.onerror = null; loaded.delete(key); link.remove(); reject(new EditorError("copy.63b4afedc78a", "Could not load {{family}}", { family })); };
   });
   loaded.set(key, promise);
   document.head.appendChild(link);
@@ -67,7 +68,7 @@ export async function ensureProjectFonts(clips: readonly Clip[]): Promise<void> 
     let timer: ReturnType<typeof setTimeout> | undefined;
     try {
       await Promise.race([Promise.all([...weights].map(weight => document.fonts.load(`${weight} 16px "${font.family}"`, sample || "Design"))),
-        new Promise<never>((_, reject) => { timer = setTimeout(() => reject(new Error(`Could not load ${font.family}`)), 8000); })]);
+        new Promise<never>((_, reject) => { timer = setTimeout(() => reject(new EditorError("copy.63b4afedc78a", "Could not load {{family}}", { family: font.family })), 8000); })]);
     } finally { if (timer !== undefined) clearTimeout(timer); }
   }));
 }
@@ -103,6 +104,6 @@ export async function ensureGraphicFont(family?: string, sample = "Design"): Pro
   const font = findFontByCss(graphicFontCss(family)); if (!font) return;
   await requestFontStylesheet(font.family, font.weights);
   let timer: ReturnType<typeof setTimeout> | undefined;
-  try { await Promise.race([Promise.all([400, 500, 600, 700].map(weight => document.fonts.load(`${weight} 16px "${font.family}"`, sample || "Design"))), new Promise<never>((_, reject) => { timer = setTimeout(() => reject(new Error("Could not load the graphic font")), 8000); })]); }
+  try { await Promise.race([Promise.all([400, 500, 600, 700].map(weight => document.fonts.load(`${weight} 16px "${font.family}"`, sample || "Design"))), new Promise<never>((_, reject) => { timer = setTimeout(() => reject(new EditorError("copy.a65ac14a2e07", "Could not load the graphic font")), 8000); })]); }
   finally { if (timer !== undefined) clearTimeout(timer); }
 }

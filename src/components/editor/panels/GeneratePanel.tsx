@@ -55,6 +55,7 @@ import { useCloseOnSurfaceSwitch, useSurfaceEpoch } from '@/hooks/use-surface-sw
 import { SelectChip, CounterChip, ToggleChip, type ChipOption } from '@/components/app/creator/studio/StudioChip';
 import { soundEffectRequest, SFX_MAX_PROMPT_CHARS } from '@/lib/editor/soundEffectDraft';
 import { PanelHeading } from './DesignPanel';
+import { editorErrorText } from "@/lib/editor/editorErrorText";
 
 type GenKind = 'image' | 'video' | 'voice' | 'music' | 'sfx';
 
@@ -178,7 +179,7 @@ export function GeneratePanel() {
       }
     } catch (e) {
       console.error('[editor] voiceover failed', e);
-      toast.error(e instanceof Error ? e.message : 'Voice generation failed.');
+      toast.error(editorErrorText(e, t("copy.953e708b2287", { defaultValue: "Voice generation failed." })));
     } finally {
       setVoiceBusy(false);
     }

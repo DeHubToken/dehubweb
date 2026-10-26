@@ -37,7 +37,7 @@ function setup(asOwner:boolean){
         beforeSend();
         const known=receipts.get(nonce);
         if(known){expect(args).toEqual(known.args);return known.saved;}
-        if(head!==revision||draftRevision!==expectedDraft)throw new CloudProjectConflict("Newer live draft");
+        if(head!==revision||draftRevision!==expectedDraft)throw new CloudProjectConflict("copy.test", "Newer live draft");
         versions.set(++head,clone(document));live=clone(document);draftRevision++;anchor=head;
         const saved={projectId,revision:head,savedAt:"2026-10-10"};receipts.set(nonce,{args,saved});
         if(lose){lose=false;throw new Error("Lost response");}return saved;

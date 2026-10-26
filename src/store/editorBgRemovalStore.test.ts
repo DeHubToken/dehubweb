@@ -8,6 +8,7 @@ vi.mock("@/store/editorStore", () => ({ useEditorStore: { getState: () => mocks.
 vi.mock("sonner", () => ({ toast: { success: mocks.success, error: mocks.error } }));
 vi.mock("@/i18n", () => ({ default: { t: (key: string) => key } }));
 import { useBgRemovalStore } from "./editorBgRemovalStore";
+import { EditorError } from "@/lib/editor/editorError";
 
 beforeEach(() => {
   vi.clearAllMocks();
@@ -16,7 +17,7 @@ beforeEach(() => {
 });
 
 it("keeps the reason after progress ends, clears it on retry and prevents parallel work", async () => {
-  mocks.remove.mockRejectedValueOnce(new Error("Frame 78 could not be decoded"));
+  mocks.remove.mockRejectedValueOnce(new EditorError("copy.test", "Frame 78 could not be decoded"));
   await expect(useBgRemovalStore.getState().run("clip")).resolves.toBe(false);
   expect(useBgRemovalStore.getState()).toMatchObject({ clipId: null, progress: null, failure: { projectId: "project", clipId: "clip", message: "Frame 78 could not be decoded" } });
   let finish!: (value: boolean) => void;
@@ -27,6 +28,13 @@ it("keeps the reason after progress ends, clears it on retry and prevents parall
   expect(mocks.remove).toHaveBeenCalledTimes(2);
   finish(true); await retry;
   expect(useBgRemovalStore.getState().failure).toBeNull();
+});
+
+it("shows the translated fallback instead of a raw worker error", async () => {
+  mocks.remove.mockRejectedValueOnce(new Error("RuntimeError: unreachable"));
+  await useBgRemovalStore.getState().run("clip");
+  expect(useBgRemovalStore.getState().failure?.message).toBe("editor.bgRemove.failed");
+  expect(mocks.error).toHaveBeenCalledWith("editor.bgRemove.failed");
 });
 
 it("retains a failed result without an exception until dismissed", async () => {

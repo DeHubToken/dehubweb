@@ -1,5 +1,6 @@
 import { subtitleClips } from "./subtitles";
 import type { Clip, Track } from "./types";
+import { EditorError } from "./editorError";
 
 type CaptionProject = { clips: Clip[]; tracks: Track[] };
 export interface CaptionTranslationPlan { sourceKey: string; cues: { id: string; text: string }[] }
@@ -10,13 +11,13 @@ export const captionTranslationKey = (project: CaptionProject) => JSON.stringify
 export function planCaptionTranslation(project: CaptionProject): CaptionTranslationPlan {
   const captions = editableCaptions(project);
   if (!captions.length || captions.some(clip => clip.text.length > 20_000) || new Set(captions.map(clip => clip.id)).size !== captions.length) {
-    throw new Error("Caption translation source is unavailable");
+    throw new EditorError("copy.2216d61b5577", "Caption translation source is unavailable");
   }
   return { sourceKey: JSON.stringify(captions), cues: captions.map(({ id, text }) => ({ id, text })) };
 }
 
 function cancelled(): Error {
-  const error = new Error("Caption translation cancelled");
+  const error = new EditorError("copy.6b6c946eb61a", "Caption translation cancelled");
   error.name = "AbortError";
   return error;
 }
@@ -39,7 +40,7 @@ export async function translateCaptionPlan(plan: CaptionTranslationPlan, targetL
   translate: (text: string, targetLang: string) => Promise<unknown>;
   onProgress?: (done: number, total: number) => void;
 }): Promise<CaptionTranslationUpdate[]> {
-  if (!/^[a-z]{2,8}(?:[_-][a-z]{2,8})?$/.test(targetLang) || !plan.cues.length) throw new Error("Caption translation target is unavailable");
+  if (!/^[a-z]{2,8}(?:[_-][a-z]{2,8})?$/.test(targetLang) || !plan.cues.length) throw new EditorError("copy.beaa3e19bcc3", "Caption translation target is unavailable");
   const translated = new Map<string, string>();
   const updates: CaptionTranslationUpdate[] = [];
   options.onProgress?.(0, plan.cues.length);
@@ -48,7 +49,7 @@ export async function translateCaptionPlan(plan: CaptionTranslationPlan, targetL
     let text = translated.get(cue.text);
     if (text === undefined) {
       const result = await abortable(() => options.translate(cue.text, targetLang), options.signal);
-      if (typeof result !== "string" || !result.trim() || result.length > 20_000) throw new Error("Caption translation returned invalid text");
+      if (typeof result !== "string" || !result.trim() || result.length > 20_000) throw new EditorError("copy.7991f49be4ff", "Caption translation returned invalid text");
       text = result;
       translated.set(cue.text, text);
     }
@@ -61,12 +62,12 @@ export async function translateCaptionPlan(plan: CaptionTranslationPlan, targetL
 
 /** Accept the complete result once; stale, locked or changed cues cannot be overwritten. */
 export function applyCaptionTranslation<T extends CaptionProject>(project: T, plan: CaptionTranslationPlan, updates: CaptionTranslationUpdate[]): T {
-  if (captionTranslationKey(project) !== plan.sourceKey) throw new Error("Captions changed during translation");
+  if (captionTranslationKey(project) !== plan.sourceKey) throw new EditorError("copy.7a2edc0ce7b5", "Captions changed during translation");
   const texts = new Map(updates.map(update => [update.id, update.text]));
   if (texts.size !== plan.cues.length || updates.length !== plan.cues.length || plan.cues.some(cue => {
     const text = texts.get(cue.id);
     return typeof text !== "string" || !text.trim() || text.length > 20_000;
-  })) throw new Error("Caption translation is incomplete");
+  })) throw new EditorError("copy.e8fdd978d1f4", "Caption translation is incomplete");
   let changed = false;
   const clips = project.clips.map(clip => {
     const text = texts.get(clip.id);

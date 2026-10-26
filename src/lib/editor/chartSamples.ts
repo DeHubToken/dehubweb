@@ -1,5 +1,6 @@
 import { DEFAULT_CHART } from "./dataVisualProject";
 import type { ChartData } from "./dataVisuals";
+import { EditorError } from "./editorError";
 export interface ChartSample { id: string; name: string; description: string; chart: ChartData }
 const palette = ["#38bdf8", "#a78bfa", "#34d399", "#fbbf24", "#fb7185", "#22d3ee"];
 const base = (kind: ChartData["kind"], labels: readonly string[], values: readonly number[], extra: Partial<ChartData> = {}): ChartData => ({ ...DEFAULT_CHART, kind, rows: labels.map((label, index) => ({ label, value: values[index] })), colours: [...palette], showGrid: true, showAxisValues: true, showLegend: true, ...extra });
@@ -33,6 +34,6 @@ export const CHART_SAMPLES: readonly ChartSample[] = [
 ];
 export function chartSampleCopy(id: string): ChartData {
   const sample = CHART_SAMPLES.find(sample => sample.id === id);
-  if (!sample) throw new Error("Choose an available chart starter");
+  if (!sample) throw new EditorError("copy.486c3fb8b1d0", "Choose an available chart starter");
   return JSON.parse(JSON.stringify(sample.chart)) as ChartData;
 }
