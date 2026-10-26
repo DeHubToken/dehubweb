@@ -91,15 +91,16 @@ function useIsPhone() {
 }
 
 function useAdaptiveDrawerHeight(enabled: boolean) {
-  const [drawerHeight, setDrawerHeight] = useState('56dvh');
+  const [drawerHeight, setDrawerHeight] = useState('78dvh');
 
   useEffect(() => {
     if (!enabled) return;
 
     const calculateHeight = () => {
       const viewportHeight = window.visualViewport?.height ?? window.innerHeight;
-      const calculated = Math.round(viewportHeight * 0.56);
-      const clamped = Math.min(Math.max(calculated, 340), 560);
+      // Tall enough for five comments; 56% (max 560px) showed about two.
+      const calculated = Math.round(viewportHeight * 0.78);
+      const clamped = Math.min(Math.max(calculated, 420), 760);
       const finalHeight = Math.min(clamped, Math.round(viewportHeight - 24));
       setDrawerHeight(`${finalHeight}px`);
     };
