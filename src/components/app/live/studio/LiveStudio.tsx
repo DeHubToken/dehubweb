@@ -34,16 +34,23 @@ import { RulesPanel } from './RulesPanel';
 import { ModerationPanel } from './ModerationPanel';
 import { PollPanel } from './PollPanel';
 import { RecapPanel } from './RecapPanel';
+import { HighlightsPanel } from './HighlightsPanel';
 import { QuickControls } from './QuickControls';
 import { SubathonPanel } from './SubathonPanel';
 import { PointsPanel } from './PointsPanel';
 import { OverlayCreatorContext, SubathonContext } from '../overlay/subathon';
+import { HypeContext } from '../overlay/hype-train';
+import { BadgesPanel } from './BadgesPanel';
+import { DestinationsPanel } from './DestinationsPanel';
+import type { HypeTrain } from '@/lib/api/dehub/live-hype';
 import { getMySubathon, type MySubathon } from '@/lib/api/dehub/live-subathon';
 import { PollContext } from '../overlay/poll';
 import { getMyPoll } from '@/lib/api/dehub/live-polls';
 import { samplePoll, type LivePoll } from '@/lib/live-overlay/polls';
 import { StudioStage } from './StudioStage';
 import { WidgetSettings } from './WidgetSettings';
+import { VerticalCropPanel } from './VerticalCropPanel';
+import type { VerticalCrop } from '@/lib/live-overlay/vertical-crop';
 
 export const myOverlayKey = ['my-overlay'] as const;
 
@@ -68,6 +75,7 @@ export function LiveStudio() {
 
   const [widgets, setWidgets] = useState<OverlayWidget[]>([]);
   const [renderIn, setRenderIn] = useState<OverlayRenderIn>('app');
+  const [verticalCrop, setVerticalCrop] = useState<VerticalCrop | null>(null);
   const [dirty, setDirty] = useState(false);
   const [selectedId, setSelectedId] = useState<string | null>(null);
   const [portrait, setPortrait] = useState(false);
@@ -82,7 +90,13 @@ export function LiveStudio() {
     loadedVersion.current = data.version;
     setWidgets(data.widgets);
     setRenderIn(data.renderIn);
+    setVerticalCrop(data.verticalCrop ?? null);
   }, [data, dirty]);
+
+  const chooseVerticalCrop = (next: VerticalCrop) => {
+    setVerticalCrop(next);
+    setDirty(true);
+  };
 
   const chooseRenderIn = (next: OverlayRenderIn) => {
     setRenderIn(next);
@@ -116,7 +130,7 @@ export function LiveStudio() {
   const move = (id: string, rect: OverlayRect) => update(id, portrait ? { portrait: rect } : { landscape: rect });
 
   const save = useMutation({
-    mutationFn: () => saveMyOverlay({ renderIn, widgets }),
+    mutationFn: () => saveMyOverlay({ renderIn, widgets, verticalCrop }),
     onSuccess: (saved) => {
       loadedVersion.current = saved.version;
       queryClient.setQueryData(myOverlayKey, saved);
@@ -158,6 +172,16 @@ export function LiveStudio() {
         ? { running: true, endsAt: subathon.endsAt, lastAdd: null }
         : { running: true, endsAt: new Date(Date.now() + 3_600_000).toISOString(), lastAdd: null },
     [subathon],
+  );
+
+  // A train two-thirds into level 2, so the widget has something to show while it is placed.
+  const previewHype = useMemo<HypeTrain>(
+    () => ({
+      streamId: 'preview', active: true, points: 2300, level: 2, completed: 1, into: 1300, need: 2000,
+      startedAt: new Date().toISOString(), expiresAt: new Date(Date.now() + 4 * 60_000).toISOString(),
+      contributors: 6, top: [],
+    }),
+    [],
   );
 
   const previewPoll = useMemo(
@@ -228,6 +252,10 @@ export function LiveStudio() {
 
       <QuickControls overlay={data} queryKey={myOverlayKey} />
 
+      <DestinationsPanel address={walletAddress} />
+
+      <HighlightsPanel address={walletAddress} />
+
       <div className="grid gap-4 lg:grid-cols-[minmax(0,1fr)_340px]">
         <div className="space-y-4">
           <PageSection
@@ -256,6 +284,7 @@ export function LiveStudio() {
                 <RuleAudio playLive={false} />
                 <PollContext.Provider value={{ poll: previewPoll, myVote: null, interactive: false }}>
                 <SubathonContext.Provider value={previewSubathon}>
+                <HypeContext.Provider value={previewHype}>
                 <OverlayCreatorContext.Provider value={walletAddress ?? ''}>
                   <StudioStage
                     widgets={widgets}
@@ -266,12 +295,15 @@ export function LiveStudio() {
                     onMove={move}
                   />
                 </OverlayCreatorContext.Provider>
+                </HypeContext.Provider>
                 </SubathonContext.Provider>
                 </PollContext.Provider>
               </RuleBusContext.Provider>
             </OverlayEventContext.Provider>
             <p className="mt-3 text-xs text-zinc-500">{t('liveStudio.layoutHint')}</p>
           </PageSection>
+
+          <VerticalCropPanel crop={verticalCrop} onChange={chooseVerticalCrop} />
 
           <PageSection title={t('liveStudio.test')}>
             <p className="mb-3 text-xs text-zinc-500">{t('liveStudio.testHint')}</p>
@@ -369,6 +401,8 @@ export function LiveStudio() {
       <SubathonPanel subathon={subathon} onChange={setSubathon} />
 
       <PointsPanel address={walletAddress} />
+
+      <BadgesPanel />
 
       {!justEnded && <RecapPanel address={walletAddress} />}
 

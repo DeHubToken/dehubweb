@@ -114,7 +114,7 @@ import {
   abortProfileSwitch,
   removeProfile,
 } from '@/lib/profiles';
-import { AuthContext, type SocialProvider, type WalletProvider, type WalletPhase } from './AuthContext';
+import { AuthContext, LoginSheetContext, type SocialProvider, type WalletProvider, type WalletPhase } from './AuthContext';
 import { finishWalletUnlock, setWalletUnlockPrompt } from '@/lib/wallet-unlock-flow';
 import { hasLegacyBrowserResidue, checkLegacyAccount } from '@/lib/wallet-core/legacy-detect';
 import { getWalletSetupIntent } from '@/lib/wallet-setup-intent';
@@ -3588,8 +3588,6 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     connectionSource,
     walletPhase,
     supabaseUserId,
-    isLoginModalOpen,
-    loginIntent,
     ...stableCallbacks,
   }), [
     user,
@@ -3603,10 +3601,13 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     connectionSource,
     walletPhase,
     supabaseUserId,
-    isLoginModalOpen,
-    loginIntent,
     stableCallbacks,
   ]);
+  const loginSheet = React.useMemo(() => ({ isLoginModalOpen, loginIntent }), [isLoginModalOpen, loginIntent]);
 
-  return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
+  return (
+    <AuthContext.Provider value={value}>
+      <LoginSheetContext.Provider value={loginSheet}>{children}</LoginSheetContext.Provider>
+    </AuthContext.Provider>
+  );
 }

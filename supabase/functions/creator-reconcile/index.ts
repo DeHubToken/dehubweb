@@ -1,6 +1,6 @@
 import { checkRateLimit, jsonResponse, serviceClient, handleCorsPreflight } from '../_shared/auth.ts';
 import { retryGenerationSave } from '../_shared/generation-jobs.ts';
-import { refundCredits } from '../_shared/credits.ts';
+import { recoverGenerationRefund, transitionGeneration } from '../_shared/generation-terminal.ts';
 
 // The sweep accepts no caller-selected jobs, wallets, prices or provider URLs.
 // Its global budget makes a public scheduler trigger harmless to repeat.
@@ -27,25 +27,25 @@ Deno.serve(async (req) => {
       if ((job.status === 'starting' || job.status === 'processing') && new Date(job.created_at).getTime() < abandonedBefore) {
         // Only refund if the row was still running: a render that settled since
         // the select above must not be paid back as well.
-        const { data: marked, error: markError } = await db.from('ai_generation_jobs').update({ status: 'refund_pending' })
-          .eq('id', job.id).in('status', ['starting', 'processing']).select('id');
-        if (markError) throw markError;
-        if (marked?.length) job.status = 'refund_pending';
+        const marked = await transitionGeneration(job.id, 'failed', { status: 'failed', error: 'The render did not finish in time.' }, {
+          expectedStatuses: ['starting','processing'], createdBefore: new Date(abandonedBefore).toISOString(),
+        }, db);
+        if (marked.job) Object.assign(job, marked.job);
       }
-      if (job.status === 'refund_pending' || job.status === 'submitting') {
-        if (job.payment_source === 'credits') {
-          if (!(await refundCredits(job.credit_debit_key))) throw new Error('credits refund failed');
-        } else {
-          const released = await db.rpc('ai_payment_release', { p_tx_hash: job.tx_hash, p_wallet: job.wallet_address, p_dhb: job.price_dhb, p_job_id: job.id });
-          if (released.error && !released.error.message.includes('REFUND_ALREADY_APPLIED')) throw released.error;
-        }
-        await db.from('ai_generation_jobs').update({ status: 'failed', result: { ...job.result, paymentRestored: true } }).eq('id', job.id);
+      if (job.status === 'submitting') {
+        const marked = await transitionGeneration(job.id, 'failed', { status: 'failed', error: 'Submission confirmation was interrupted.' }, {
+          expectedStatuses: ['submitting'], createdBefore: stale,
+        }, db);
+        if (marked.job) Object.assign(job, marked.job);
+      }
+      if (job.status === 'refund_pending') {
+        await recoverGenerationRefund(job.id, db);
       } else if (job.status === 'succeeded' && job.result) {
         await retryGenerationSave(job);
       } else if (job.prediction_id && ['generate-video','generate-3d','fal-ai-tools'].includes(job.endpoint)) {
         const polled = await fetch(`${Deno.env.get('SUPABASE_URL')}/functions/v1/${job.endpoint}`, {
           method: 'POST',
-          headers: { 'Content-Type': 'application/json', apikey: Deno.env.get('SUPABASE_ANON_KEY')!, ...(job.provider === 'venice' ? { Authorization: `Bearer ${Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')}` } : {}) },
+          headers: { 'Content-Type': 'application/json', apikey: Deno.env.get('SUPABASE_ANON_KEY')!, Authorization: `Bearer ${Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')}` },
           body: JSON.stringify(job.endpoint === 'fal-ai-tools'
             ? { requestId: job.prediction_id, appId: job.provider_app }
             : { predictionId: job.prediction_id, provider: job.provider, falAppId: job.provider_app }),

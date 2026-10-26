@@ -1,5 +1,4 @@
 import { useTranslation as _useCopy } from 'react-i18next';
-import { useRouteContentReady } from '@/hooks/use-route-content-ready';
 import { useSurfaceDraft } from '@/hooks/use-surface-draft';
 import { tokenLabel } from '@/lib/token-label';
 import { useState, useMemo, useRef, useCallback, useEffect } from 'react';
@@ -45,7 +44,7 @@ import { buildAvatarUrl, extractAvatarPath, buildImageUrl, buildFeedImageUrls, b
 import { ProfileHeader } from '@/components/app/profile/ProfileHeader';
 import { ProfileTabContent } from '@/components/app/profile/ProfileTabContent';
 import { ProfileContentToolbar } from '@/components/app/profile/ProfileContentToolbar';
-import { QuietPostLoading } from '@/components/app/QuietPostLoading';
+import { ProfileSkeleton } from '@/components/app/PageSkeletons';
 import { ProfileOptionsContent } from '@/components/app/profile/ProfileOptionsDrawer';
 import { getDefaultBanner, parseDefaultProfileTab, isProfileTabValue, type TabValue } from '@/components/app/profile/ProfileConstants';
 import { useScrollFadeMask } from '@/components/app/feeds/useScrollFadeMask';
@@ -230,7 +229,6 @@ function PinnedPostSection({ profileAddress }: { profileAddress: string }) {
 }
 
 export default function ProfilePage() {
-  useRouteContentReady();
   const { t: _copy } = _useCopy();
   const { t } = useTranslation();
   const { theme } = useAppTheme();
@@ -478,16 +476,19 @@ export default function ProfilePage() {
     );
   };
 
-  // Keep the existing profile during refresh; a cold load only needs quiet dots.
+  // Keep the existing profile during refresh; a cold load shows the same
+  // skeleton the route shows while its code loads, so there is one loader.
   // Also wait if auth is still loading or the profile is refetching
   // (race condition: private profiles return empty shell before auth token is available).
   if (!data.profile && (data.isAuthLoading || data.isLoadingProfile || data.isFetchingProfile)) {
-    return <div className="relative"><PageHeader overlay plainBack /><QuietPostLoading /></div>;
+    // The loaded page's own top bar, so the back arrow is already where it
+    // stays instead of a lone arrow that jumps when the profile arrives.
+    return <div className="relative"><CollapsingProfileHeader headerRef={profileHeaderRef} name="" handle="" /><ProfileSkeleton /></div>;
   }
 
   // Auth gate for own profile
   if (data.isOwnProfile && !data.isAuthenticated) {
-    return <div className="relative"><PageHeader overlay plainBack /><AuthGate description={t('profile.loginDescription')} /></div>;
+    return <div className="relative"><CollapsingProfileHeader headerRef={profileHeaderRef} name="" handle="" /><AuthGate description={t('profile.loginDescription')} /></div>;
   }
 
   // No profile found

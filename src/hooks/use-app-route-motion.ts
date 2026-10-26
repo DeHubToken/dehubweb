@@ -6,6 +6,16 @@ import { getRetainedPost, retainedPostId } from '@/lib/retained-post-surface';
 import { isHomeFeedRoute } from '@/lib/home-routes';
 import { ROUTE_CONTENT_READY, showRouteLoadingShell, type RouteLoadingShell } from '@/lib/route-loading-shell';
 
+/**
+ * Only opening a post gets the loading cover: its page announces readiness and
+ * its body is heavy. Tabs, profiles and every other page switch commit straight
+ * away and show their own skeleton, so a tab tap never flashes a cover first.
+ */
+const COVERED_ROUTE = /^\/(?:app\/)?(?:post|posts|video|newpost)\//;
+export function usesLoadingCover(pathname: string): boolean {
+  return COVERED_ROUTE.test(pathname);
+}
+
 function historyIndex(): number {
   return typeof history.state?.idx === 'number' ? history.state.idx : 0;
 }
@@ -32,8 +42,7 @@ export function useAppRouteMotion(location: Location, reducedMotion: boolean | n
       pendingKey.current = null;
       generation.current++;
       if (cancelled) setDisplayed(location);
-      const waitsForCode = /^\/(?:app\/)?(?:post|posts|video|newpost|profile)(?:\/|$)/.test(location.pathname) || /^\/[^/]+$/.test(location.pathname);
-      if (cancelled || !waitsForCode || readyKey.current === location.key) shell.current?.reveal();
+      if (cancelled || !usesLoadingCover(location.pathname) || readyKey.current === location.key) shell.current?.reveal();
       return;
     }
 
@@ -41,8 +50,6 @@ export function useAppRouteMotion(location: Location, reducedMotion: boolean | n
     pendingKey.current = location.key;
     shell.current?.remove();
     shell.current = null;
-    const sameProfile = !/^\/(app\/)?profile\/?$/.test(location.pathname) ||
-      new URLSearchParams(displayed.search).get('id') === new URLSearchParams(location.search).get('id');
     const commit = () => {
       setDisplayed(previous => generation.current === token ? location : previous);
     };
@@ -54,17 +61,12 @@ export function useAppRouteMotion(location: Location, reducedMotion: boolean | n
       commit();
       return;
     }
-    if (!appNavigation || (displayed.pathname === location.pathname && sameProfile)) {
+    if (!appNavigation || !usesLoadingCover(location.pathname) || displayed.pathname === location.pathname) {
       commit();
       return;
     }
 
-    const post = /^\/(?:app\/)?(?:post|posts|video|newpost)\//.test(location.pathname);
-    const profile = /^\/(?:app\/)?profile\/?$/.test(location.pathname);
-    const title = post ? t('sidebar.post', { defaultValue: 'Post' })
-      : profile ? t('nav.profile', { defaultValue: 'Profile' })
-      : t('common.loading', { defaultValue: 'Loading…' });
-    shell.current = showRouteLoadingShell(title, t('common.back', { defaultValue: 'Back' }), backwards);
+    shell.current = showRouteLoadingShell(t('sidebar.post', { defaultValue: 'Post' }), t('common.back', { defaultValue: 'Back' }), backwards);
     if (!shell.current) {
       commit();
       return;

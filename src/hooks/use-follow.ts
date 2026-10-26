@@ -16,7 +16,7 @@
 import { useCallback, useSyncExternalStore } from 'react';
 import { toast } from 'sonner';
 import { useQueryClient, type QueryClient } from '@tanstack/react-query';
-import { followUser, unfollowUser } from '@/lib/api/dehub';
+import { AuthenticationError, followUser, unfollowUser } from '@/lib/api/dehub';
 import type { ProfileData } from '@/hooks/use-dehub-profile';
 import { translateCopy as _translateCopy } from '@/i18n/copy';
 
@@ -95,6 +95,34 @@ export interface ToggleFollowOptions {
    */
   onError?: (error: unknown, info: { handled: boolean }) => void;
   onSuccess?: (isFollowing: boolean) => void;
+  /**
+   * Try the call again this many times before rolling back, waiting a little
+   * longer each time. The optimistic state holds while it retries, so a blip
+   * or a moment of rate limiting never shows on screen.
+   */
+  retries?: number;
+}
+
+/** Waits between retries: long enough to clear the 10s rate-limit window. */
+const RETRY_DELAYS_MS = [1500, 4000, 8000];
+
+/** Answers that will not change on a second try. */
+function isFinalAnswer(error: unknown) {
+  if (error instanceof AuthenticationError) return true;
+  const msg = (error instanceof Error ? error.message : String(error)).toLowerCase();
+  return msg.includes('pending') || msg.includes('already') || msg.includes('following');
+}
+
+async function withRetries<T>(call: () => Promise<T>, retries: number): Promise<T> {
+  for (let attempt = 0; ; attempt++) {
+    try {
+      return await call();
+    } catch (error) {
+      if (attempt >= retries || isFinalAnswer(error)) throw error;
+      const wait = RETRY_DELAYS_MS[Math.min(attempt, RETRY_DELAYS_MS.length - 1)];
+      await new Promise((resolve) => setTimeout(resolve, wait));
+    }
+  }
 }
 
 /**
@@ -121,8 +149,15 @@ export async function toggleFollowFor(
   patchProfileCaches(queryClient, address, next, next ? 1 : -1);
 
   try {
-    if (next) await followUser(address);
-    else await unfollowUser(address);
+    const response = await withRetries(() => (next ? followUser(address) : unfollowUser(address)), opts.retries ?? 0);
+    if (next && 'status' in response && response.status === 'pending') {
+      revertFollowOverride(address, undefined);
+      patchProfileCaches(queryClient, address, false, -1);
+      await queryClient.invalidateQueries({ queryKey: ['user-follow-status'], predicate: query => query.queryKey[2] === lower });
+      if (!opts.silent) toast.success(_translateCopy('follow.requestSentTo', { defaultValue: 'Follow request sent to {{name}}', name: name || _translateCopy('follow.someone', { defaultValue: 'this person' }) }));
+      opts.onSuccess?.(false);
+      return true;
+    }
     if (!opts.silent) {
       if (next) {
         toast.success(name ? _translateCopy("copy.97e3f1368597", { defaultValue: "Following {{value1}}!", value1: name }) : _translateCopy("copy.01830e9a6f0f", { defaultValue: "Following user!" }));
@@ -134,6 +169,14 @@ export async function toggleFollowFor(
     return true;
   } catch (error: unknown) {
     const msg = (error instanceof Error ? error.message : String(error)).toLowerCase();
+    if (next && msg.includes('pending')) {
+      revertFollowOverride(address, undefined);
+      patchProfileCaches(queryClient, address, false, -1);
+      await queryClient.invalidateQueries({ queryKey: ['user-follow-status'], predicate: query => query.queryKey[2] === lower });
+      if (!opts.silent) toast.info(_translateCopy('follow.requestAlreadyPending', { defaultValue: 'Follow request already pending. Waiting for approval.' }));
+      opts.onSuccess?.(false);
+      return true;
+    }
     if (next && (msg.includes('already') || msg.includes('following'))) {
       // Server already agrees — keep the optimistic "following" state
       if (!opts.silent) toast.info(name ? _translateCopy("copy.65ae469907b9", { defaultValue: "Already following {{value1}}", value1: name }) : _translateCopy("copy.5ca81f0afb5f", { defaultValue: "Already following user" }));

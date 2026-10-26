@@ -33,6 +33,7 @@ import { cn } from '@/lib/utils';
 import { RadioSection } from '@/components/app/radio/RadioSection';
 import { StagesChart } from '@/components/app/music/StagesCarousel';
 import { ChartDesk, type ChartDeskRow } from '@/components/app/music/ChartDesk';
+import { useChartSearch } from '@/hooks/use-chart-search';
 import { CinematicMusic } from '@/components/app/music/CinematicMusic';
 import { useCinematicPhone } from '@/hooks/use-cinematic-phone';
 import { openStageModal } from '@/contexts/StageContext';
@@ -45,6 +46,7 @@ import { isBlockedCreator, mapNFTToVideoItem } from '@/lib/music-feed-items';
 import { resolveLikeCount, resolveViewCount } from '@/lib/engagement';
 import { fetchMusicVideoChart, MUSIC_VIDEO_CHART_SORTS, type MusicVideoChartSort } from '@/lib/music-video-chart';
 import { getPrimaryTags, getTopStations } from '@/lib/api/radio-browser';
+import { searchAudioUploads, searchMusicVideos, searchRadio } from '@/lib/music-search';
 import { getCuratedCarouselStations, type RadioStation } from '@/lib/api/radio-browser';
 import { useAuth } from '@/contexts/AuthContext';
 import type { VideoItem } from '@/types/feed.types';
@@ -133,6 +135,9 @@ function videoRows(items: VideoItem[], withViews: boolean): ChartDeskRow[] {
 
 function AudioChart({ items, isLoading, sort, onSort }: { items: VideoItem[]; isLoading: boolean; sort: AudioChartSort; onSort: (sort: AudioChartSort) => void }) {
   const { t: _copy } = _useCopy();
+  const [search, setSearch] = useState('');
+  const found = useChartSearch('audio', search, searchAudioUploads);
+  const find = (id: string) => items.find(i => i.id === id) || found.items.find(i => i.id === id);
   return (
     <ChartDesk
       header={<SectionHeader icon={Disc3} title={_copy("copy.302b4ce5c73d", { defaultValue: "Audio Uploads" })} count={items.length} />}
@@ -147,13 +152,20 @@ function AudioChart({ items, isLoading, sort, onSort }: { items: VideoItem[]; is
       rows={videoRows(items, false)}
       isLoading={isLoading}
       empty={{ icon: 'audio', title: _copy("copy.cccec0619e2d", { defaultValue: "No audio uploads yet" }) }}
-      renderSelected={id => { const item = items.find(i => i.id === id); return item ? <VideoCard key={item.id} video={item} hideActions /> : null; }}
+      search={search}
+      onSearchChange={setSearch}
+      moreRows={videoRows(found.items, false)}
+      isSearchingMore={found.isSearching}
+      renderSelected={id => { const item = find(id); return item ? <VideoCard key={item.id} video={item} hideActions /> : null; }}
     />
   );
 }
 
 function MusicVideoChart({ items, isLoading, sort, onSort }: { items: VideoItem[]; isLoading: boolean; sort: MusicVideoChartSort; onSort: (sort: MusicVideoChartSort) => void }) {
   const { t: _copy } = _useCopy();
+  const [search, setSearch] = useState('');
+  const found = useChartSearch('music-videos', search, searchMusicVideos);
+  const find = (id: string) => items.find(i => i.id === id) || found.items.find(i => i.id === id);
   return (
     <ChartDesk
       header={<SectionHeader icon={Play} title={_copy("copy.ab4d6796dbbe", { defaultValue: "Music Videos" })} />}
@@ -165,7 +177,11 @@ function MusicVideoChart({ items, isLoading, sort, onSort }: { items: VideoItem[
       isLoading={isLoading}
       thumbs="wide"
       empty={{ icon: 'videos', title: _copy("copy.26be785e21b7", { defaultValue: "No music videos yet" }) }}
-      renderSelected={id => { const item = items.find(i => i.id === id); return item ? <VideoCard key={item.id} video={item} hideActions /> : null; }}
+      search={search}
+      onSearchChange={setSearch}
+      moreRows={videoRows(found.items, true)}
+      isSearchingMore={found.isSearching}
+      renderSelected={id => { const item = find(id); return item ? <VideoCard key={item.id} video={item} hideActions /> : null; }}
     />
   );
 }
@@ -180,11 +196,25 @@ function RadioChart({ picks }: { picks: RadioStation[] }) {
     enabled: sort !== 'picks',
     staleTime: 60 * 60 * 1000,
   });
-  const stations = useMemo(() => {
+  const [search, setSearch] = useState('');
+  const found = useChartSearch('radio', search, searchRadio);
+  const chartStations = useMemo(() => {
     if (sort === 'picks') return picks;
     const key = sort === 'played' ? 'clickcount' : sort === 'voted' ? 'votes' : 'clicktrend';
     return [...top].sort((a, b) => (b[key] || 0) - (a[key] || 0));
   }, [sort, picks, top]);
+  // Skipping walks the list as shown, search matches from the directory included.
+  const stations = useMemo(() => {
+    if (!search.trim()) return chartStations;
+    const seen = new Set(chartStations.map(s => s.stationuuid));
+    return [...chartStations, ...found.items.filter(s => !seen.has(s.stationuuid))];
+  }, [chartStations, found.items, search]);
+  const stationRow = (station: RadioStation): ChartDeskRow => ({
+    id: station.stationuuid,
+    title: station.name,
+    subtitle: [getPrimaryTags(station.tags).join(', '), station.countrycode].filter(Boolean).join(' · '),
+    thumb: station.favicon || undefined,
+  });
   return (
     <ChartDesk
       header={<SectionHeader icon={Radio} title={_copy("copy.42ee912bff23", { defaultValue: "Radio Stations" })} />}
@@ -197,12 +227,11 @@ function RadioChart({ picks }: { picks: RadioStation[] }) {
       sort={sort}
       onSort={setSort}
       sortLabel={_copy('music.radioChartOrder', { defaultValue: 'Radio chart order' })}
-      rows={stations.map(station => ({
-        id: station.stationuuid,
-        title: station.name,
-        subtitle: [getPrimaryTags(station.tags).join(', '), station.countrycode].filter(Boolean).join(' · '),
-        thumb: station.favicon || undefined,
-      }))}
+      rows={chartStations.map(stationRow)}
+      search={search}
+      onSearchChange={setSearch}
+      moreRows={found.items.map(stationRow)}
+      isSearchingMore={found.isSearching}
       isLoading={sort === 'picks' ? picks.length === 0 : isLoading}
       thumbs="square"
       empty={{ icon: 'audio', title: _copy("copy.7c14e8607c11", { defaultValue: "Loading stations..." }) }}
@@ -360,7 +389,6 @@ function MusicVideosSection({ walletAddress }: { walletAddress: string | null })
 
 interface MusicFeedProps {
   showFilters?: boolean;
-  isRefreshing?: boolean;
   refreshKey?: number;
   /** Open on this sub-tab, e.g. /music?tab=radio from Home's radio "See all". Unknown values are ignored. */
   tab?: string | null;
@@ -368,7 +396,7 @@ interface MusicFeedProps {
   tabRequest?: string;
 }
 
-export function MusicFeed({ showFilters = false, isRefreshing = false, tab, tabRequest }: MusicFeedProps) {
+export function MusicFeed({ showFilters = false, tab, tabRequest }: MusicFeedProps) {
   const [activeSubTab, setActiveSubTab] = usePersistedFeedFilter<MusicSubTab>('music', 'subTab', 'all', MUSIC_SUB_TAB_VALUES);
   useEffect(() => {
     const requested = MUSIC_SUB_TAB_VALUES.find(value => value === tab);
@@ -466,18 +494,10 @@ export function MusicFeed({ showFilters = false, isRefreshing = false, tab, tabR
   });
 
   // System theme on phones: radio hero and a chart instead of carousels.
-  if (cinematic && !isRefreshing) {
+  if (cinematic) {
     return (
       <div className="px-2">
         <CinematicMusic radioStations={radioStations} blockedAddresses={blockedAddresses} showFilters={showFilters} />
-      </div>
-    );
-  }
-
-  if (isRefreshing) {
-    return (
-      <div className="p-2 sm:p-3">
-        <MusicFeedSkeleton />
       </div>
     );
   }

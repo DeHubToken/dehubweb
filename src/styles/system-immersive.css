@@ -99,3 +99,16 @@ html:is([data-theme='system'], [data-theme='immersive']) [data-kit-section] [dat
     border-bottom: 0 !important;
   }
 }
+
+/* Post time and view counts read in the same grey as their clock and eye
+   icons, not the white (or ink black in System Light) the muted-text lift
+   gives them. The translate icon matches them; the ad badge and translate error keep their own colours. */
+html[data-theme='system']:not(#_):not(#_):not(#_):not(#_) [data-post-metadata] > :is(span:not([class*='bg-']), button:not(.text-red-400)),
+html[data-theme='system']:not(#_):not(#_):not(#_):not(#_) [data-post-metadata] > :is(span:not([class*='bg-']), button:not(.text-red-400)) * {
+  color: #a1a1aa !important;
+}
+
+html[data-theme='system'][data-system-tone='light']:not(#_):not(#_):not(#_):not(#_) [data-post-metadata] > :is(span:not([class*='bg-']), button:not(.text-red-400)),
+html[data-theme='system'][data-system-tone='light']:not(#_):not(#_):not(#_):not(#_) [data-post-metadata] > :is(span:not([class*='bg-']), button:not(.text-red-400)) * {
+  color: #71717a !important;
+}

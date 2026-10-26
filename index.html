@@ -593,6 +593,10 @@
 </head>
 
   <body>
+    <!-- Radix's leading focus guard, kept here for good (see
+         scripts/patch-radix-focus-guards.mjs): inserting or removing a node in
+         front of #root restyles the whole page, which every sheet open paid. -->
+    <span data-radix-focus-guard data-guard-static tabindex="-1" style="outline:none;opacity:0;position:fixed;pointer-events:none"></span>
     <!-- Boot skeleton — see the .bskel rules in the critical CSS above.
          Inside #root on purpose: createRoot() clears its container on first
          render, so React replaces this in the same commit that paints the app.

@@ -24,7 +24,7 @@ import { useQueryClient } from '@tanstack/react-query';
 import Settings2 from "@/components/ui/cut-icons/settings";
 import ArrowLeft from "@/components/ui/cut-icons/back";
 
-import { FEED_TABS } from '@/constants/app.constants';
+import { FEED_TABS, FEED_TAB_ICON_SCALE } from '@/constants/app.constants';
 import { useShortsEnabled } from '@/contexts/ShortsEnabledContext';
 import { useAppTheme } from '@/contexts/ThemeContext';
 import { FeedFilterAnchor } from '@/components/app/navigation/FeedFilterAnchor';
@@ -39,6 +39,7 @@ import { setImagesFeedScrollView, IMAGES_BACK_TO_COLLAGE_EVENT } from '@/lib/ima
 import { setTabSwitchTime } from '@/lib/gesture-state';
 import { getLiteMode } from '@/hooks/use-connection-quality';
 import { clearPrefetchState } from '@/hooks/use-feed-prefetch';
+import { refreshFeedQueries } from '@/lib/feed-refresh-queries';
 import { useFeedSwallowClip } from '@/hooks/use-feed-swallow-clip';
 import { useSystemFeedHeaderMotion } from '@/hooks/use-system-feed-header-motion';
 import { clearPersistedFeedFilters } from '@/hooks/use-persisted-feed-filter';
@@ -526,13 +527,9 @@ export default function HomePage() {
     
     setIsRefreshing(true);
 
-    // Invalidate feed queries so cards re-render with fresh data (or the
-    // same cached data) — this gives users clear visual feedback even
-    // when nothing new is available.
-    void queryClient.invalidateQueries({ queryKey: ['dehub-live'] });
-    void queryClient.invalidateQueries({ queryKey: ['unified-feed'] });
-    void queryClient.invalidateQueries({ queryKey: ['home-feed'] });
-    void queryClient.invalidateQueries({ queryKey: ['feed'] });
+    // Re-ask for every list the feed tabs draw from, so views, reactions and
+    // comments come back current — the pinned post and Music included.
+    refreshFeedQueries(queryClient);
     
     // Clear prefetch state so feeds will be re-fetched
     clearPrefetchState();
@@ -1143,7 +1140,7 @@ export default function HomePage() {
                       transition={{ duration: 0.25, ease: "easeInOut" }}
                       className="relative z-10"
                     >
-                      <Settings2 className="w-4 h-4" />
+                      <Settings2 className="w-4 h-4" style={{ transform: `scale(${FEED_TAB_ICON_SCALE.settings})` }} />
                     </motion.div>
                   )}
                 </AnimatePresence>
@@ -1170,7 +1167,7 @@ export default function HomePage() {
                       isActive ? 'text-white' : 'text-zinc-400 hover:text-white'
                     )}
                   >
-                    <tab.icon data-home-nav-glyph={tab.value === 'home' || undefined} className={cn('relative z-10 w-4 h-4', tab.value === 'home' && 'origin-center max-lg:scale-[1.125]')} />
+                    <tab.icon data-home-nav-glyph={tab.value === 'home' || undefined} className="relative z-10 w-4 h-4 origin-center" style={{ transform: `scale(${FEED_TAB_ICON_SCALE[tab.value] ?? 1})` }} />
                   </button>
 
                 );
@@ -1240,7 +1237,7 @@ export default function HomePage() {
           <div className={isCollapsed ? 'pt-2' : undefined} style={{ display: deferredTab === 'videos' ? 'block' : 'none' }}>
             <CachedPageActiveContext.Provider value={pageActive && deferredTab === 'videos'}>
             <Suspense fallback={<FeedBodySkeleton />}>
-              <MemoVideosFeed showFilters={showVideosFilters} isRefreshing={isRefreshing} refreshKey={refreshKey} />
+              <MemoVideosFeed showFilters={showVideosFilters} refreshKey={refreshKey} />
             </Suspense>
             </CachedPageActiveContext.Provider>
           </div>
@@ -1283,7 +1280,7 @@ export default function HomePage() {
           <div className={isCollapsed ? 'pt-2' : undefined} style={{ display: deferredTab === 'music' ? 'block' : 'none' }}>
             <CachedPageActiveContext.Provider value={pageActive && deferredTab === 'music'}>
             <Suspense fallback={<FeedBodySkeleton />}>
-              <MemoMusicFeed showFilters={showMusicFilters} isRefreshing={isRefreshing} refreshKey={refreshKey} />
+              <MemoMusicFeed showFilters={showMusicFilters} refreshKey={refreshKey} />
             </Suspense>
             </CachedPageActiveContext.Provider>
           </div>

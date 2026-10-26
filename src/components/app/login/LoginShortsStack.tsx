@@ -12,28 +12,31 @@ import '@/styles/login-stack.css';
 type ClipName = typeof LOGIN_CLIP_IDS[number];
 
 /**
- * Loads and plays only while on screen. The sheet mounts every clip at once,
- * and each one fetching its MP4 on open is what made the sheet feel slow to
- * arrive. Until a tile is near the viewport it shows its poster frame only;
- * once loaded, its source stays so scrolling back does not refetch.
+ * Loads and plays only while on screen. A tile fetches nothing (no clip, no
+ * poster) until it is actually in view, so opening the sheet costs only the
+ * handful of clips you can see; the rest load as the lanes drift them in.
+ * Each clip fades in once its first frame is ready, over the empty tile.
+ * Once loaded, its source stays so drifting back does not refetch.
  */
 function Clip({ name }: { name: ClipName }) {
   const ref = useRef<HTMLVideoElement>(null);
   const [loaded, setLoaded] = useState(false);
   const [visible, setVisible] = useState(false);
+  const [ready, setReady] = useState(false);
   useEffect(() => {
     const video = ref.current;
     if (!video) return;
     // React does not reflect `muted` as an attribute, and Safari refuses to
     // autoplay a video it cannot see is muted.
     video.muted = true;
-    if (window.matchMedia?.('(prefers-reduced-motion: reduce)').matches) return;
+    // Reduced motion: still frames only, shown as they are.
+    if (window.matchMedia?.('(prefers-reduced-motion: reduce)').matches) { setLoaded(true); setReady(true); return; }
     // Older engines (and jsdom) have no observer: treat every tile as visible.
     if (typeof IntersectionObserver === 'undefined') { setLoaded(true); setVisible(true); return; }
     const io = new IntersectionObserver(([entry]) => {
       setVisible(entry.isIntersecting);
       if (entry.isIntersecting) setLoaded(true);
-    }, { rootMargin: '120px 0px' });
+    });
     io.observe(video);
     return () => io.disconnect();
   }, []);
@@ -48,14 +51,15 @@ function Clip({ name }: { name: ClipName }) {
     <video
       ref={ref}
       src={loaded ? `/login-stack/${name}.mp4` : undefined}
-      poster={`/login-stack/${name}.jpg`}
+      poster={loaded ? `/login-stack/${name}.jpg` : undefined}
+      onLoadedData={() => setReady(true)}
       muted
       loop
       playsInline
       preload={loaded ? 'metadata' : 'none'}
       aria-hidden="true"
       tabIndex={-1}
-      className="login-stack__video"
+      className={ready ? 'login-stack__video is-ready' : 'login-stack__video'}
     />
   );
 }

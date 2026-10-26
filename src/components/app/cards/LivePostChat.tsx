@@ -52,6 +52,7 @@ import { useStreamChatJoins } from '@/hooks/use-stream-chat-joins';
 import { DhbAmount } from '@/components/app/DhbAmount';
 import { useTranslation as useI18n } from 'react-i18next';
 import { LANGUAGE_NAMES } from '@/hooks/use-user-language';
+import type { ChatCreatorBadge } from '@/lib/live/chat-badges';
 
 /** Avatar with cascading fallback: primary → CDN → initials */
 function LiveChatAvatar({ src, address, name }: { src?: string | null; address?: string; name: string }) {
@@ -72,6 +73,20 @@ function LiveChatAvatar({ src, address, name }: { src?: string | null; address?:
         {name[0]?.toUpperCase()}
       </AvatarFallback>
     </Avatar>
+  );
+}
+
+/** Badges earned from this stream's creator: their limited-time badges and the hype train badge. */
+function CreatorBadges({ badges }: { badges?: ChatCreatorBadge[] }) {
+  if (!badges?.length) return null;
+  return (
+    <span className="inline-flex shrink-0 items-baseline gap-0.5">
+      {badges.map((b) => (
+        <span key={b.id} title={b.name} aria-label={b.name} role="img" className="text-[0.9em] leading-none">
+          {b.emoji}
+        </span>
+      ))}
+    </span>
   );
 }
 
@@ -226,7 +241,11 @@ export function LivePostChat({ tokenId, streamId: liveStreamId, isOffline = fals
       id: `system:${moment.id}`, room_id: streamId, sender_address: moment.address || '',
       sender_username: moment.username || null, sender_display_name: null,
       sender_avatar_url: moment.avatarUrl || null,
-      content: moment.type === 'gift' ? (moment.message || '') : t('live.chatJoined'),
+      content: moment.type === 'gift'
+        ? (moment.message || '')
+        : moment.type === 'giftSub'
+          ? t('liveHype.chat.giftedSubs', { count: moment.giftCount ?? 1 })
+          : t('live.chatJoined'),
       message_type: 'system', image_url: null, is_pinned: false, created_at: moment.timestamp,
     })),
   ].sort((a, b) => Date.parse(a.created_at) - Date.parse(b.created_at));
@@ -546,6 +565,7 @@ export function LivePostChat({ tokenId, streamId: liveStreamId, isOffline = fals
                           {displayName}
                         </span>
                         <LiveChatBadge badgeBalance={msg.sender_badge_balance} username={msg.sender_username} />
+                        <CreatorBadges badges={msg.sender_creator_badges} />
                       </span>
                       {isPinned && <Pin className="w-2.5 h-2.5 text-blue-400 fill-current shrink-0" />}
                     </div>

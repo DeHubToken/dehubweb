@@ -60,7 +60,8 @@ export interface VideoModel {
   /** Whether the model supports video-to-video restyling */
   supportsVideoInput?: boolean;
   requiresVideoInput?: boolean;
-  referenceMode?: 'edit' | 'motion';
+  referenceMode?: 'edit' | 'motion' | 'extend';
+  maxSourceDuration?: number;
   /** Whether the model supports seed for reproducibility */
   supportsSeed?: boolean;
   /** Short tips/help for using this model effectively */
@@ -313,7 +314,7 @@ export const VIDEO_MODELS: Record<string, VideoModel> = {
     minDuration: 4,
     maxDuration: 15,
     hasAudio: true,
-    supportsNegativePrompt: true,
+    supportsNegativePrompt: false,
     supportsResolution: true,
     resolutions: ['480p', '720p'],
     provider: 'fal',
@@ -322,7 +323,7 @@ export const VIDEO_MODELS: Record<string, VideoModel> = {
     supportsEndFrame: true,
     supportsAudioInput: true,
     supportsVideoInput: true,
-    supportsSeed: true,
+    supportsSeed: false,
     aspectRatios: ['16:9', '9:16', '1:1'],
     get tips() {
       return [
@@ -343,21 +344,22 @@ export const VIDEO_MODELS: Record<string, VideoModel> = {
     duration: '4-15s',
     tier: 'standard',
     emoji: '⚡',
-    baseCostUsd: 0.80,
-    perSecondCostUsd: 0.16,
+    baseCostUsd: 1.2095,
+    perSecondCostUsd: 0.2419,
     defaultDuration: 5,
     minDuration: 4,
     maxDuration: 15,
     hasAudio: true,
-    supportsNegativePrompt: true,
+    supportsNegativePrompt: false,
     supportsResolution: true,
+    resolutions: ['480p', '720p'],
     provider: 'fal',
     supportsReferenceImages: true,
     maxReferenceImages: 9,
     supportsEndFrame: true,
     supportsAudioInput: true,
     supportsVideoInput: true,
-    supportsSeed: true,
+    supportsSeed: false,
     aspectRatios: ['16:9', '9:16', '1:1'],
     get tips() {
       return [

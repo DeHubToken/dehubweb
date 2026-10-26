@@ -62,7 +62,6 @@ import { toStoryboard } from '@/lib/storyboard';
 
 interface VideosFeedProps {
   showFilters?: boolean;
-  isRefreshing?: boolean;
   refreshKey?: number;
 }
 
@@ -443,7 +442,7 @@ function CategoryFilterSection({
 // MAIN COMPONENT
 // ============================================================================
 
-export function VideosFeed({ showFilters = false, isRefreshing = false, refreshKey = 0 }: VideosFeedProps) {
+export function VideosFeed({ showFilters = false, refreshKey = 0 }: VideosFeedProps) {
   const { t: _copy } = _useCopy();
   const navigate = useNavigate();
   const { t } = useI18n();
@@ -777,8 +776,9 @@ export function VideosFeed({ showFilters = false, isRefreshing = false, refreshK
     refetch,
   });
 
-  // Show loading during initial load or while auto-fetching for duration filter
-  if ((isRefreshing || isApiLoading || isAutoFetching || isAutoRetrying) && !showFilters) {
+  // Show loading during initial load or while auto-fetching for duration filter.
+  // A pull-to-refresh keeps the cards on screen while the fresh page loads.
+  if ((isApiLoading || isAutoFetching || isAutoRetrying) && !showFilters) {
     return (
       <div className="p-2 sm:p-3 pt-0 sm:pt-0">
         <VideosFeedSkeleton />
@@ -847,7 +847,7 @@ export function VideosFeed({ showFilters = false, isRefreshing = false, refreshK
       {/* Video Grid, filter loader or Empty State. The loader sits BELOW the
           filter panel, not in place of the whole feed, so the chips the user is
           working with stay on screen and clickable while the request runs. */}
-      {isRefreshing || isApiLoading || isAutoFetching || isAutoRetrying ? (
+      {isApiLoading || isAutoFetching || isAutoRetrying ? (
         <VideosFeedSkeleton />
       ) : filterTransition.active ? (
         <FeedFilterLoader className="mt-3" />

@@ -26,15 +26,20 @@ export async function saveCloudGeneration(wallet: string, job: GenerationJob): P
   await call(wallet, { action: 'complete', id: job.id });
 }
 
-export async function loadCloudGenerationPage(wallet: string, offset = 0): Promise<{ jobs: GenerationJob[]; nextOffset: number | null }> {
+export type LibraryOperation = 'favorite' | 'unfavorite' | 'hide' | 'restore';
+export async function updateLibrarySelection(wallet: string, ids: string[], operation: LibraryOperation): Promise<{ completedIds: string[]; incompleteIds: string[] }> {
+  return call(wallet, { action: 'update-selection', ids, operation });
+}
+
+export async function loadCloudGenerationPage(wallet: string, offset = 0, filter: { hidden?: boolean; favorites?: boolean; includeHidden?: boolean } = {}): Promise<{ jobs: GenerationJob[]; nextOffset: number | null }> {
   if (!Number.isInteger(offset) || offset < 0 || offset > 10000) throw new Error('Invalid library page');
-  const data = await call(wallet, { action: 'list', offset });
+  const data = await call(wallet, { action: 'list', offset, ...filter });
   const next = data.nextOffset;
   return { jobs: Array.isArray(data.jobs) ? data.jobs.slice(0, 100) : [], nextOffset: Number.isInteger(next) && next > offset && next <= 10000 ? next : null };
 }
 
 export async function loadCloudGenerations(wallet: string): Promise<GenerationJob[]> {
-  return (await loadCloudGenerationPage(wallet)).jobs;
+  return (await loadCloudGenerationPage(wallet, 0, { includeHidden: true })).jobs;
 }
 
 export async function saveGenerationPreview(wallet: string, id: string, preview: Blob): Promise<string> {

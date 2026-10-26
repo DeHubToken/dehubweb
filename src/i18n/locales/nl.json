@@ -1911,6 +1911,10 @@
   "notifications": {
     "title": "Meldingen",
     "markAllRead": "Alles als gelezen markeren",
+    "groupNew": "Nieuw",
+    "groupToday": "Vandaag",
+    "groupThisWeek": "Deze week",
+    "groupEarlier": "Eerder",
     "settings": "Meldingsinstellingen",
     "actions": "Acties",
     "markAllAsRead": "Alles als gelezen markeren",
@@ -3407,6 +3411,7 @@
     "statsLoadFailed": "Kon stakingstatistieken niet laden"
   },
   "communities": {
+    "shareLink": "Link delen",
     "chatTab": "Chat",
     "followerInvites": {
       "title": "Volgers uitnodigen",
@@ -5244,6 +5249,19 @@
     "sellYourFractions": "Verkoop uw fracties ({{held}} in bezit)"
   },
   "creator": {
+    "audioExportFormat": "Exportformaat",
+    "audioExportMp3": "MP3 · 128 kbit/s",
+    "audioExportWav": "WAV · 24 kHz · mono",
+    "extensionNeedsClip": "Voeg één bronclip toe om te verlengen.",
+    "extensionSeconds": "+{{seconds}} s nieuw beeld",
+    "extensionHelp": "Geeft de bronclip terug met ongeveer vier nieuwe seconden. De uitvoer wordt aangepast tot maximaal 720p bij 24 fps. Voor de uitbreiding wordt nieuw geluid gemaakt.",
+    "extensionForward": "Voeg ongeveer vier seconden na de bronclip toe",
+    "extensionBackward": "Voeg ongeveer vier seconden vóór de bronclip toe",
+    "expandDescription": "Genereer nieuwe inhoud buiten de beeldranden. Eén bronafbeelding en een optionele Engelse beschrijving.",
+    "expandPromptHint": "Voeg één afbeelding toe en kies de nieuwe beeldverhouding. Een Engelse beschrijving is optioneel.",
+    "expandEnglishOnly": "Dit uitbreidingsmodel accepteert Engelse beschrijvingen. Laat het veld leeg voor automatische uitbreiding.",
+    "expandNeedsImage": "Voeg een afbeelding toe om uit te breiden.",
+    "learn": {"title":"Lessen voor makers","intro":"Korte lessen met een kennistoets en een bewerkbare oefening. Je voortgang wordt op dit apparaat voor je account bewaard.","back":"Terug naar Creator","lessons":"Lessen","progress":"{{completed}} van {{total}} kennistoetsen behaald","check":"Antwoord controleren","correct":"Kennistoets behaald","retry":"Probeer opnieuw. Lees de les hierboven nog eens.","exerciseTitle":"Praktische oefening","exerciseHint":"Open een bewerkbaar voorbeeld in je eigen studio. Een concept openen is gratis; genereren vereist jouw controle en een aparte prijsopgave. Bewerk het voorbeeld voordat je genereert.","openExercise":"Oefenconcept openen","closeExercise":"Oefening sluiten","brief":{"title":"Schrijf een duidelijke visuele briefing","body1":"Beschrijf een concreet onderwerp, de handeling en de omgeving. Voeg kadrering of camerabeweging toe wanneer dat de scène helpt. Bewaar losse ideeën voor een ander concept.","body2":"Aanwijzingen voor licht, lens en stijl sturen het model. Ze garanderen geen fysiek cameragedrag of exact beeld. Verander één onderdeel tegelijk om versies te vergelijken.","body3":"Controleer vóór het genereren het gekozen model, ondersteunde bijlagen, afmetingen en de prijs. Bewaar het oorspronkelijke concept om ernaar terug te kunnen keren.","question":"Welke briefing is het makkelijkst te herzien?","answer0":"Een duidelijk onderwerp, handeling en omgeving","answer1":"Alleen een modelnaam","answer2":"Een lijst met tegenstrijdige stijlen","exercise":"Een keramische theepot op een houten tafel naast een raam. Zacht ochtendlicht, mediumkadrering en een eenvoudige achtergrond. Houd de theepot duidelijk als hoofdonderwerp."},"continuity":{"title":"Plan shots en controleer continuïteit","body1":"Gebruik het Film-paneel in de editor om een briefing en geordende shots te bewaren. Bereid elk beeld of clip apart voor, controleer de prijsopgave en kies een geaccepteerd resultaat.","body2":"Voeg alleen referenties toe die het gekozen model ondersteunt. Een hergebruikte referentie kan het uiterlijk sturen; die traint geen identiteit en garandeert geen overeenkomst. Personages en stemmen kunnen per generatie verschillen.","body3":"Bewaar geslaagde takes en monteer ze op de tijdlijn. Controleer beweging, gezichten, dialoog en overgangen voordat je exporteert.","question":"Wat helpt de continuïteit tussen shots?","answer0":"Meer ongerelateerde prompts","answer1":"Goedgekeurde referenties en gecontroleerde shotnotities","answer2":"Aannemen dat de identiteit van een personage gegarandeerd is","exercise":"Een wijd shot van een eenzame reiziger die bij zonsopkomst een stille kust bereikt. Langzame camerabeweging naar voren, rustige sfeer. Eén doorlopend shot."},"campaign":{"title":"Gebruik goedgekeurde productfeiten","body1":"Begin met controleerbare productfeiten. Controleer geïmporteerde metadata voordat je die gebruikt. Schrijf de kop en oproep tot actie expliciet; verzin geen prijzen, reviews of prestatieclaims.","body2":"Gebruik bewaarde campagnevarianten om gedeelde notities en afzonderlijke hooks, scripts, talen en formaten bij elkaar te houden. Bereid telkens één gecontroleerd item voor en controleer de prijsopgave in de studio.","body3":"Controleer zichtbare tekst, het productuiterlijk en gesproken claims in het resultaat. Een prompt bewijst geen productnauwkeurigheid of marketingprestatie.","question":"Wanneer mag je een productclaim opnemen?","answer0":"Zodra die overtuigend klinkt","answer1":"Nadat je een vijfsterrenreview hebt verzonnen","answer2":"Wanneer die uit goedgekeurde productfeiten komt","exercise":"Maak een staande productadvertentie voor losse thee in een herbruikbaar blik. Goedgekeurde kop: Maak tijd voor thee. Goedgekeurde oproep: Ontdek de collectie. Gebruik alleen deze feiten; verzin geen kortingen, reviews of gezondheidsclaims."}},
     "campaignPlanTitle": "Campagnevarianten en afleveringen",
     "campaignPlanIntro": "Bewaar maximaal 12 varianten of afleveringen. Elk opent de studio voor een eigen controle en prijsopgave. Gedeelde notities sturen de continuïteit; productuiterlijk, personages en stemmen kunnen per generatie verschillen.",
     "campaignTitle": "Naam van campagne of serie",
@@ -5413,6 +5431,9 @@
                },
     "batchPaymentHelp":  "Elke ingediende afbeelding wordt apart berekend. Als een reeks stopt, worden ongebruikte DHB van die betaling automatisch hergebruikt voor een latere generatie die daarmee kan worden betaald.",
     "invalidSeed":  "De seed moet een geheel getal van 0 tot en met 2147483647 zijn.",
+    "libraryFavorites": "Favorieten",
+    "libraryFavoriteAdd": "Toevoegen aan favorieten",
+    "libraryFavoriteRemove": "Verwijderen uit favorieten",
     "libraryEmpty": "Je opgeslagen generaties verschijnen hier.",
     "toolRemake": "Remake",
     "toolMaboroshi": "Maboroshi",
@@ -5987,8 +6008,6 @@
     "decrease": "Afname {{field}}",
     "increase": "Toename {{field}}",
     "srHeading": "DeHub Creator Studio",
-    "bannerCopy": "Creatieve campagnes sneller lanceren met DeHub AI-tools",
-    "closeBanner": "Banner van maker sluiten",
     "openApp": "DeHub-app openen",
     "navExplore": "Verkennen",
     "navImage": "Afbeelding",
@@ -6708,6 +6727,8 @@
     "creatorEarnsDirect": "Abonnees betalen in DeHub-tokens. Je aandeel komt in je portemonnee terecht op het moment dat ze zich abonneren, minus de platformkosten voor je badge-niveau."
   },
   "liveOverlay": {
+    "giftedSubs_one": "{{name}} gaf een abonnement cadeau!",
+    "giftedSubs_other": "{{name}} gaf {{count}} abonnementen cadeau!",
     "someone": "Iemand",
     "newFollower": "Nieuwe volger: {{name}}",
     "newSubscriber": "Nieuwe abonnee: {{name}}",
@@ -6756,6 +6777,43 @@
     "youAreTimedOut": "Je bent even tijd uit."
   },
   "liveStudio": {
+    "vertical": {
+      "title": "Verticale weergave",
+      "intro": "Op telefoons wordt je stream in de verticale feed bekeken. Sleep het kader om te kiezen welk deel van je beeld ze zien.",
+      "enabled": "Mijn stream tonen in de verticale feed",
+      "zoom": "Zoom",
+      "centre": "Centreren",
+      "frame": "Je liggende beeld",
+      "box": "Wat telefoons zien",
+      "hint": "Sleep het kader of gebruik de pijltjestoetsen. Sla op om het op je livestream toe te passen.",
+      "live": "LIVE",
+      "watch": "{{name}} live bekijken"
+    },
+    "destinations": {
+      "title": "Multistream-bestemmingen",
+      "intro": "Ga één keer live op DeHub en wij sturen je stream gratis door naar elk platform dat hier aanstaat. Het start binnen een paar seconden nadat je live gaat.",
+      "add": "Bestemming toevoegen",
+      "empty": "Nog geen bestemmingen. Voeg Twitch, YouTube, Kick of een RTMP-server toe.",
+      "platform": "Platform",
+      "label": "Naam (optioneel)",
+      "server": "Server-URL",
+      "key": "Streamsleutel",
+      "findKey": "Vind je {{name}}-server en -sleutel",
+      "customHint": "Plak de RTMP-server en sleutel van je platform.",
+      "keyNote": "Je sleutel wordt versleuteld op onze servers bewaard en nooit meer getoond.",
+      "save": "Toevoegen",
+      "cancel": "Annuleren",
+      "added": "{{name}} toegevoegd",
+      "saveFailed": "Bestemming opslaan mislukt",
+      "toggle": "Naar deze bestemming streamen",
+      "states": {
+        "off": "Uit",
+        "idle": "Klaar",
+        "connecting": "Verbinden",
+        "live": "Live",
+        "error": "Fout"
+      }
+    },
     "subathon": {
       "title": "Subathon",
       "intro": "Een afteller op je stream. Elke betaalde gift, follow en abonnement voegt tijd toe, zodat de kamer je live houdt.",
@@ -6917,6 +6975,7 @@
       "subathon_timer": "Subathon-timer",
       "points_board": "Loyale kijkers",
       "streamer_level": "Streamer-niveau",
+      "hype_train": "Hype train",
       "tip_jar": "Geschenkpot"
     },
     "hints": {
@@ -6941,6 +7000,7 @@
       "subathon_timer": "Een afteller die gifts, follows en abonnementen terugzet",
       "points_board": "Je topkijkers op basis van punten van kijken en geven",
       "streamer_level": "Je streamer-niveau en wekelijkse reeks, vanuit je profiel",
+      "hype_train": "Toont de hype train zolang die rijdt: drie cadeaus of abonnementen binnen vijf minuten zetten hem in gang.",
       "tip_jar": "Een pot die volloopt als betaalde geschenken binnenkomen"
     },
     "fields": {
@@ -18454,5 +18514,74 @@
     "fingerprint": "Vingerafdruk",
     "exploreFirst": "Eerst rondkijken",
     "codeNote": "We mailen je een code, geen wachtwoord nodig."
+  },
+  "liveHype": {
+    "train": {
+      "level": "Hype train · Level {{level}}",
+      "endedLevel": "De hype train haalde level {{level}}!",
+      "ended": "De hype train is voorbij",
+      "thanks_one": "Dank aan {{count}} supporter",
+      "thanks_other": "Dank aan {{count}} supporters",
+      "top": "Top: {{name}}"
+    },
+    "chat": {
+      "giftedSubs_one": "gaf een abonnement cadeau 🎁",
+      "giftedSubs_other": "gaf {{count}} abonnementen cadeau 🎁"
+    },
+    "gift": {
+      "open": "Abonnementen cadeau geven",
+      "title": "Abonnementen cadeau geven",
+      "plan": "Abonnement",
+      "mode": {
+        "random": "Willekeurige kijkers in de chat",
+        "user": "Iemand specifiek"
+      },
+      "howMany": "Hoeveel",
+      "randomHint": "Gaat naar mensen die de afgelopen 30 minuten in de chat schreven en nog niet geabonneerd zijn.",
+      "who": "Gebruikersnaam of walletadres",
+      "whoPlaceholder": "@gebruikersnaam",
+      "send_one": "1 abonnement cadeau · ${{price}}",
+      "send_other": "{{count}} abonnementen cadeau · ${{price}}",
+      "payHint": "Betaald in DHB vanuit je wallet, in één overboeking.",
+      "fewer_one": "Er kan nu maar 1 persoon in de chat een abonnement krijgen, dus je betaalt er 1.",
+      "fewer_other": "Er kunnen nu maar {{count}} mensen in de chat een abonnement krijgen, dus je betaalt er {{count}}.",
+      "done_one": "Abonnement cadeau gegeven!",
+      "done_other": "{{count}} abonnementen cadeau gegeven!",
+      "failed": "Abonnementen cadeau geven is niet gelukt",
+      "notReady": "Dit abonnement kan nog niet cadeau worden gegeven",
+      "noPlan": "Kies eerst een abonnement",
+      "noPlans": "{{name}} heeft nog geen abonnementen om cadeau te geven.",
+      "cancel": "Annuleren",
+      "stage": {
+        "preparing": "Voorbereiden…",
+        "wallet": "Bevestig in je wallet",
+        "confirming": "Wachten op de transactie…",
+        "recording": "Afronden…"
+      }
+    },
+    "badges": {
+      "title": "Tijdelijke badges",
+      "intro": "Bied een paar dagen een badge aan. Wie in die tijd abonneert of iets cadeau geeft, krijgt hem, en hij staat voorgoed naast hun naam in je chat.",
+      "name": "Naam van de badge",
+      "namePlaceholder": "Lanceerweek",
+      "days": "Beschikbaar (dagen)",
+      "emoji": "Emoji",
+      "who": "Wie kan hem verdienen",
+      "audience": {
+        "both": "Abonnees en gevers",
+        "subscribers": "Abonnees",
+        "gifters": "Gevers"
+      },
+      "create": "Badge aanbieden",
+      "created": "De badge is live.",
+      "end": "Nu stoppen",
+      "ended": "Gestopt",
+      "until": "Tot {{date}}",
+      "holders_one": "{{count}} houder",
+      "holders_other": "{{count}} houders",
+      "limit": "Er kunnen drie badges tegelijk lopen. Stop er een om een nieuwe aan te bieden.",
+      "failed": "Dat lukte niet. Probeer het opnieuw.",
+      "hypeHint": "Iedereen die meerijdt op een hype train krijgt ook je 🚂-badge op het gehaalde level."
+    }
   }
 }

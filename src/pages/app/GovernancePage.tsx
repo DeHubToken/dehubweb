@@ -665,7 +665,7 @@ export default function GovernancePage() {
     setDrawerOpen(true);
   };
 
-  const { data: totalCount = proposals.length } = useTotalGovernanceCount();
+  const { data: totalCount } = useTotalGovernanceCount();
   const passedProposals = useMemo(() => (completedProposals ?? []).filter(p => verdictOf(p) === 'passed'), [completedProposals]);
   const rejectedProposals = useMemo(() => (completedProposals ?? []).filter(p => verdictOf(p) === 'rejected'), [completedProposals]);
   const passedCount = passedProposals.length;
@@ -678,7 +678,7 @@ export default function GovernancePage() {
       <PageIsland
         icon={<BrandIcon src={governanceShieldIcon} alt={_copy("copy.86f8a694159b", { defaultValue: "Governance" })} className="h-8 w-8 object-contain brightness-75" />}
         title={t('governance.title')}
-        subtitle={t('governance.proposalCount', { count: totalCount })}
+        subtitle={totalCount === undefined ? t('common.loading', { defaultValue: 'Loading...' }) : t('governance.proposalCount', { count: totalCount })}
         actions={
           <IslandAction label={t('governance.propose')} onClick={handleSubmitClick}>
             <Plus className="h-[18px] w-[18px]" />

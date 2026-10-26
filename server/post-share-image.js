@@ -1,10 +1,9 @@
-import { Resvg, initWasm } from '@resvg/resvg-wasm';
-import wasm from '@resvg/resvg-wasm/index_bg.wasm';
+import { Resvg } from '@resvg/resvg-wasm';
+import { resvgReady } from './resvg.js';
 import { POST_CARD_TTL, POST_CARD_VERSION, PROFILE_CARD_VERSION, postCardData, profileCardData, renderPostCardSvg, renderProfileCardSvg } from './post-share-card.js';
 import { loadPostShareDetails, streamerShareSvg } from './post-share-details.js';
 
 const SHARE_IMAGE = 'https://dehub.io/og/dehub-social-share.png';
-let initialized;
 let assets;
 const RENDER_REVISION = 8;
 const bytesToUri = (bytes, type) => {
@@ -107,9 +106,8 @@ export async function handlePostShareImage(request, env, ctx, tokenId, fetchReco
       hit.headers.set('Cache-Control', publicCache);
       return hit;
     }
-    initialized ??= initWasm(wasm).catch((error) => { initialized = undefined; throw error; });
     const [, [font, mark, chrome], avatar, media, badges] = await Promise.all([
-      initialized, loadAssets(env), loadAvatar(data.avatar), loadPostMedia(data.media),
+      resvgReady(), loadAssets(env), loadAvatar(data.avatar), loadPostMedia(data.media),
       Promise.all(data.badges.map(async badge => {
         if (badge.kind === 'new') return badge;
         if (badge.kind === 'streamer') return { ...badge, uri: bytesToUri(new TextEncoder().encode(streamerShareSvg(badge)), 'image/svg+xml') };
@@ -170,8 +168,7 @@ export async function handleProfileShareImage(request, env, ctx, handle, fetchAc
       hit.headers.set('Cache-Control', publicCache);
       return hit;
     }
-    initialized ??= initWasm(wasm).catch((error) => { initialized = undefined; throw error; });
-    const [, [font, mark, chrome], avatar] = await Promise.all([initialized, loadAssets(env), loadAvatar(data.avatar)]);
+    const [, [font, mark, chrome], avatar] = await Promise.all([resvgReady(), loadAssets(env), loadAvatar(data.avatar)]);
     const png = renderPng(renderProfileCardSvg(data, { logo: bytesToUri(mark, 'image/png'), chrome: bytesToUri(chrome, 'image/png'), avatar }), font);
     const cacheable = !data.avatar || !!avatar;
     const response = new Response(png, { headers: {
