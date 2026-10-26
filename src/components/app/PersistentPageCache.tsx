@@ -113,7 +113,7 @@ const CACHED_PAGES: CachedPageConfig[] = [
   { key: 'glossary', path: ['/app/glossary', '/glossary'], component: GlossaryPage, skeleton: GenericPageSkeleton },
   { key: 'stats', path: ['/stats', '/app/stats'], component: StatsPage, skeleton: GenericPageSkeleton },
   { key: 'live-studio', path: ['/live-studio', '/app/live-studio'], component: LiveStudioPage, skeleton: GenericPageSkeleton },
-  { key: 'planned', path: ['/app/planned'], component: PlannedPage, skeleton: GenericPageSkeleton },
+  { key: 'planned', path: ['/app/planned', '/planned'], component: PlannedPage, skeleton: GenericPageSkeleton },
   { key: 'feedback', path: ['/feedback', '/app/feedback'], component: FeedbackPage, skeleton: GenericPageSkeleton },
   { key: 'stake', path: ['/app/stake', '/stake'], component: StakingPage, skeleton: GenericPageSkeleton },
   { key: 'bridge', path: ['/app/bridge', '/bridge'], component: BridgePage, skeleton: GenericPageSkeleton },

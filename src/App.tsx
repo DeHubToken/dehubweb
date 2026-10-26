@@ -812,6 +812,7 @@ function AppContent() {
             <Route path="/stores" element={null} />
             <Route path="/stores/:storeId" element={<Suspense fallback={<PageLoader />}><StoreDetailPage /></Suspense>} />
             <Route path="/fractions" element={null} />
+            <Route path="/planned" element={null} />
             <Route path="/superpowers" element={<Suspense fallback={<PageLoader />}><SuperPowersPage /></Suspense>} />
             <Route path="/ads" element={null} />
             {/* PersistentPageCache had already been given the `/glossary` alias
