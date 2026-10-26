@@ -1,4 +1,5 @@
 import { fetchStageRecordings, hasStageRecording } from '@/lib/stage-recordings';
+import { countdownParts, useMinuteTick } from '@/lib/schedule/countdown';
 import { useTranslation as _useCopy } from 'react-i18next';
 /**
  * Stages Page
@@ -96,7 +97,9 @@ function ScheduledStageCard({
   const { t: _copy } = _useCopy();
   const { t } = useTranslation();
   const startsAt = space.scheduled_at ? new Date(space.scheduled_at) : null;
-  const isOverdue = !!startsAt && startsAt.getTime() < Date.now();
+  const now = useMinuteTick();
+  const isOverdue = !!startsAt && startsAt.getTime() < now;
+  const countdown = countdownParts(startsAt, now);
   const avatar =
     buildAvatarUrl(space.host_wallet_address || '', space.host_avatar) ||
     buildAvatarCdnFallbackUrl(space.host_wallet_address || '');
@@ -116,7 +119,7 @@ function ScheduledStageCard({
           <div className="flex items-center gap-1.5 px-2 py-1 rounded-lg bg-white/10">
             <CalendarDays className="w-3 h-3 text-zinc-300" />
             <span className="text-zinc-300 text-xs font-medium">
-              {isOverdue ? t('stages.startingSoon') : t('stages.upcoming')}
+              {isOverdue || !countdown ? t('stages.startingSoon') : t('whenSheet.startsIn', { defaultValue: 'Starts in {{time}}', time: countdown })}
             </span>
           </div>
           <div className="flex items-center gap-1">
