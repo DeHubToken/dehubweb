@@ -6886,12 +6886,6 @@ html:root [data-stage-generated-cover] [data-gsc-chrome] {
   color: transparent !important;
 }
 
-/* Bell drawer close button: white on the dark sheets, ink on the paper ones. */
-html[data-theme="light"] [data-notifications-close],
-html[data-system-tone="light"] [data-notifications-close] {
-  color: rgb(24 24 27 / 0.8);
-}
-
 /* Only measured, single-column wide feeds opt in. Creator, copy and actions
    share the left column; the portrait video starts at the top on the right. */
 [data-video-card][data-tablet-portrait]:not(#_):not(#_) {
@@ -6971,4 +6965,15 @@ html[data-theme="immersive"] [data-tablet-portrait] > [data-media-full]:not(#_):
 }
 @media (prefers-reduced-motion: reduce) {
   [data-boost-lit] svg { animation: none; filter: drop-shadow(0 0 5px color-mix(in srgb, currentColor 50%, transparent)); }
+}
+
+/* Bell drawer (phones): the glass sheet already sits behind the pill, so the
+   page-gap strip above it would only read as a dark band under the handle. */
+html:not(#_):not(#_):not(#_):not(#_):not(#_):not(#_):not(#_) [data-notifications-drawer] [data-feed-nav-outer]::before {
+  display: none !important;
+}
+
+/* Drawer handle on the paper sheets: the white bar vanishes on pale frost. */
+html:is([data-theme="light"], [data-system-tone="light"]):not(#_):not(#_):not(#_):not(#_):not(#_) [data-drawer-handle] {
+  background-color: rgb(24 24 27 / 0.25) !important;
 }

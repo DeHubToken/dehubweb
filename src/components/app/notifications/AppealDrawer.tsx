@@ -81,7 +81,7 @@ export function AppealDrawer({
 
   return (
     <Drawer open={open} onOpenChange={onOpenChange}>
-      <DrawerContent column glass className="max-h-[85dvh]">
+      <DrawerContent column glass hideHandle={false} handleClassName="lg:hidden" className="max-h-[85dvh]">
         <DrawerHeader className="text-left">
           <DrawerTitle className="flex items-center gap-2 text-white">
             <Scale className="w-5 h-5" />{_copy("copy.3c7e8ac23a6f", { defaultValue: "Appeal this decision" })}</DrawerTitle>
