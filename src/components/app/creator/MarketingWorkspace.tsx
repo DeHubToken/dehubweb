@@ -4,6 +4,7 @@ import { useSurfaceDraft } from '@/hooks/use-surface-draft';
 import type { GenerationDraft } from '@/lib/editor/generationDraft';
 import { EMPTY_MARKETING_BRIEF, MARKETING_FIELDS, MARKETING_FORMATS, marketingFieldLimit, marketingGenerationDraft, normalizeMarketingBrief, type MarketingBrief, type MarketingField } from '@/lib/creator/marketingBrief';
 import { MarketingProductImport } from './MarketingProductImport';
+import { CampaignPlanPanel } from './CampaignPlanPanel';
 
 export function MarketingWorkspace({ onPrepare }: { onPrepare: (draft: GenerationDraft) => void }) {
   const { t } = useTranslation();
@@ -45,6 +46,7 @@ export function MarketingWorkspace({ onPrepare }: { onPrepare: (draft: Generatio
           </article>)}
         </div>
       </div>}
+      <CampaignPlanPanel brief={brief} onPrepare={onPrepare} />
     </section>
   );
 }

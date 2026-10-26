@@ -1,5 +1,7 @@
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
-import { recordGeneration, settleGeneration, generationTicket } from '../_shared/generation-jobs.ts';
+import { recordGeneration, settleGeneration } from '../_shared/generation-jobs.ts';
+import { authorizeGenerationPoll } from '../_shared/generation-poll-auth.ts';
+import { falQueueUrls } from '../_shared/fal-queue.ts';
 import { chargeForJob } from "../_shared/ai-payment-guard.ts";
 // The shared list — the only one that names x-wallet-address and x-dehub-token,
 // which chargeForJob requires and the browser will not send unless the preflight
@@ -222,8 +224,16 @@ serve(async (req) => {
     // txHash and purpose are payment fields, not tool inputs — pulled out here
     // so they never reach buildInput and get forwarded to the provider.
     if (body.requestId) {
-      const ticket = await generationTicket('fal-ai-tools', body.requestId);
-      if (ticket) { body.appId = ticket.provider_app; body.statusUrl = ticket.result?.statusUrl; body.responseUrl = ticket.result?.responseUrl; }
+      const authorized = await authorizeGenerationPoll(req, 'fal-ai-tools', body.requestId);
+      if (!authorized.ok) return authorized.response;
+      const ticket = authorized.ticket;
+      if (['succeeded', 'failed', 'canceled', 'cancelled'].includes(ticket.result?.status)) {
+        return await settleGeneration('fal-ai-tools', body.requestId, new Response(JSON.stringify(ticket.result), { headers: { ...corsHeaders, 'Content-Type': 'application/json' } }));
+      }
+      body.appId = ticket.provider_app;
+      const urls = falQueueUrls(ticket.provider_app, body.requestId, ticket.result);
+      body.statusUrl = urls.statusUrl;
+      body.responseUrl = urls.responseUrl;
     }
     const { tool, requestId, appId: statusAppId, statusUrl, responseUrl, txHash: _txHash, purpose: _purpose, ...params } = body;
 

@@ -25,6 +25,10 @@ export interface QuoteRequest {
   quantity?: number;
   resolution?: string;
   aspectRatio?: string;
+  hasEndFrame?: boolean;
+  hasAudioReferences?: boolean;
+  hasVideoReferences?: boolean;
+  hasInlineMedia?: boolean;
 }
 
 /**
@@ -56,6 +60,10 @@ export function useJobQuote(request: QuoteRequest | null, enabled = true) {
       request?.quantity,
       request?.resolution,
       request?.aspectRatio,
+      request?.hasEndFrame,
+      request?.hasAudioReferences,
+      request?.hasVideoReferences,
+      request?.hasInlineMedia,
     ],
     queryFn: () => fetchJobQuote(request!),
     enabled: enabled && !!request?.modelId,
