@@ -1,0 +1,212 @@
+[
+    {
+        "endpoint":  "bytedance/seedance-2.0/text-to-video",
+        "sourceUrl":  "https://fal.ai/api/openapi/queue/openapi.json?endpoint_id=bytedance%2Fseedance-2.0%2Ftext-to-video",
+        "checkedAt":  "2026-10-26T00:47:17.9901439Z",
+        "properties":  [
+                           "end_user_id",
+                           "generate_audio",
+                           "prompt",
+                           "bitrate_mode",
+                           "aspect_ratio",
+                           "duration",
+                           "resolution",
+                           "codec"
+                       ],
+        "durationEnum":  [
+                             "auto",
+                             "4",
+                             "5",
+                             "6",
+                             "7",
+                             "8",
+                             "9",
+                             "10",
+                             "11",
+                             "12",
+                             "13",
+                             "14",
+                             "15"
+                         ],
+        "required":  [
+                         "prompt"
+                     ]
+    },
+    {
+        "endpoint":  "bytedance/seedance-2.0/image-to-video",
+        "sourceUrl":  "https://fal.ai/api/openapi/queue/openapi.json?endpoint_id=bytedance%2Fseedance-2.0%2Fimage-to-video",
+        "checkedAt":  "2026-10-26T00:47:18.7494674Z",
+        "properties":  [
+                           "end_user_id",
+                           "generate_audio",
+                           "prompt",
+                           "bitrate_mode",
+                           "end_image_url",
+                           "duration",
+                           "aspect_ratio",
+                           "resolution",
+                           "image_url",
+                           "codec"
+                       ],
+        "durationEnum":  [
+                             "auto",
+                             "4",
+                             "5",
+                             "6",
+                             "7",
+                             "8",
+                             "9",
+                             "10",
+                             "11",
+                             "12",
+                             "13",
+                             "14",
+                             "15"
+                         ],
+        "required":  [
+                         "prompt",
+                         "image_url"
+                     ]
+    },
+    {
+        "endpoint":  "bytedance/seedance-2.0/reference-to-video",
+        "sourceUrl":  "https://fal.ai/api/openapi/queue/openapi.json?endpoint_id=bytedance%2Fseedance-2.0%2Freference-to-video",
+        "checkedAt":  "2026-10-26T00:47:18.7528258Z",
+        "properties":  [
+                           "end_user_id",
+                           "generate_audio",
+                           "prompt",
+                           "aspect_ratio",
+                           "video_urls",
+                           "duration",
+                           "audio_urls",
+                           "bitrate_mode",
+                           "resolution",
+                           "image_urls",
+                           "codec"
+                       ],
+        "durationEnum":  [
+                             "auto",
+                             "4",
+                             "5",
+                             "6",
+                             "7",
+                             "8",
+                             "9",
+                             "10",
+                             "11",
+                             "12",
+                             "13",
+                             "14",
+                             "15"
+                         ],
+        "required":  [
+                         "prompt"
+                     ]
+    },
+    {
+        "endpoint":  "bytedance/seedance-2.0/fast/text-to-video",
+        "sourceUrl":  "https://fal.ai/api/openapi/queue/openapi.json?endpoint_id=bytedance%2Fseedance-2.0%2Ffast%2Ftext-to-video",
+        "checkedAt":  "2026-10-26T00:47:19.4820860Z",
+        "properties":  [
+                           "end_user_id",
+                           "generate_audio",
+                           "prompt",
+                           "bitrate_mode",
+                           "aspect_ratio",
+                           "duration",
+                           "resolution",
+                           "codec"
+                       ],
+        "durationEnum":  [
+                             "auto",
+                             "4",
+                             "5",
+                             "6",
+                             "7",
+                             "8",
+                             "9",
+                             "10",
+                             "11",
+                             "12",
+                             "13",
+                             "14",
+                             "15"
+                         ],
+        "required":  [
+                         "prompt"
+                     ]
+    },
+    {
+        "endpoint":  "bytedance/seedance-2.0/fast/image-to-video",
+        "sourceUrl":  "https://fal.ai/api/openapi/queue/openapi.json?endpoint_id=bytedance%2Fseedance-2.0%2Ffast%2Fimage-to-video",
+        "checkedAt":  "2026-10-26T00:47:19.6777018Z",
+        "properties":  [
+                           "end_user_id",
+                           "generate_audio",
+                           "prompt",
+                           "bitrate_mode",
+                           "end_image_url",
+                           "duration",
+                           "aspect_ratio",
+                           "resolution",
+                           "image_url",
+                           "codec"
+                       ],
+        "durationEnum":  [
+                             "auto",
+                             "4",
+                             "5",
+                             "6",
+                             "7",
+                             "8",
+                             "9",
+                             "10",
+                             "11",
+                             "12",
+                             "13",
+                             "14",
+                             "15"
+                         ],
+        "required":  [
+                         "prompt",
+                         "image_url"
+                     ]
+    },
+    {
+        "endpoint":  "bytedance/seedance-2.0/fast/reference-to-video",
+        "sourceUrl":  "https://fal.ai/api/openapi/queue/openapi.json?endpoint_id=bytedance%2Fseedance-2.0%2Ffast%2Freference-to-video",
+        "checkedAt":  "2026-10-26T00:47:20.3346373Z",
+        "properties":  [
+                           "end_user_id",
+                           "generate_audio",
+                           "prompt",
+                           "aspect_ratio",
+                           "video_urls",
+                           "duration",
+                           "audio_urls",
+                           "bitrate_mode",
+                           "resolution",
+                           "image_urls",
+                           "codec"
+                       ],
+        "durationEnum":  [
+                             "auto",
+                             "4",
+                             "5",
+                             "6",
+                             "7",
+                             "8",
+                             "9",
+                             "10",
+                             "11",
+                             "12",
+                             "13",
+                             "14",
+                             "15"
+                         ],
+        "required":  [
+                         "prompt"
+                     ]
+    }
+]

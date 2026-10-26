@@ -7,6 +7,7 @@ from threading import BoundedSemaphore
 from fastapi import FastAPI, Header, HTTPException
 
 import clips
+import live_clips
 from handler import handler
 
 app = FastAPI(docs_url=None, redoc_url=None, openapi_url=None)
@@ -16,11 +17,15 @@ executor = ThreadPoolExecutor(max_workers=1)
 # room for one more stage to wait its turn.
 clip_slots = BoundedSemaphore(2)
 clip_executor = ThreadPoolExecutor(max_workers=1)
+# Live clips: a grab is a few seconds of downloads, a render half a minute of
+# ffmpeg. Two at a time, a short line behind them; a viewer waits on these.
+live_clip_slots = BoundedSemaphore(6)
+live_clip_executor = ThreadPoolExecutor(max_workers=2)
 
 
 @app.get("/")
 def health():
-    return {"service": "video-dubs", "provider": "chatterbox-multilingual-v3", "clips": True}
+    return {"service": "video-dubs", "provider": "chatterbox-multilingual-v3", "clips": True, "liveClips": True}
 
 
 def authorized(authorization: str) -> str:
@@ -35,6 +40,13 @@ def run(job):
         handler({"input": job})
     finally:
         slots.release()
+
+
+def run_live_clip(job):
+    try:
+        live_clips.handler(job)
+    finally:
+        live_clip_slots.release()
 
 
 def run_clips(job):
@@ -76,3 +88,20 @@ def submit_clips(body: dict, authorization: str = Header(default="")):
         clip_slots.release()
         raise
     return {"id": job["stageId"]}
+
+
+@app.post("/live-clips", status_code=202)
+def submit_live_clip(body: dict, authorization: str = Header(default="")):
+    secret = authorized(authorization)
+    job = body.get("input") or {}
+    if not live_clips.valid(job):
+        raise HTTPException(400, "Incomplete job")
+    if not live_clip_slots.acquire(blocking=False):
+        raise HTTPException(503, "Worker busy", headers={"Retry-After": "30"})
+    job["secret"] = secret
+    try:
+        live_clip_executor.submit(run_live_clip, job)
+    except Exception:
+        live_clip_slots.release()
+        raise
+    return {"id": job["jobId"]}

@@ -11,6 +11,7 @@ import {
 } from './stream-presence';
 import { parseRuleFired, type RuleFired } from '@/lib/live-overlay/rules';
 import { parsePoll, type LivePoll } from '@/lib/live-overlay/polls';
+import { parseHypeTrain, type HypeTrain } from './live-hype';
 
 /**
  * A creator's overlay control room, `overlay:<token>`.
@@ -234,6 +235,38 @@ export function watchStreamSubathon(streamId: string, onUpdate: (update: Subatho
       left = true;
       s.off('connect', join);
       s.off('stream.subathon', onEvent);
+      releaseStreamSocket(conn);
+    },
+  };
+}
+
+/** A hype train starting, moving or ending: `stream.hype` in the stream's room. */
+export function watchStreamHype(streamId: string, onUpdate: (train: HypeTrain) => void): StreamPresence {
+  if (!streamId) return { leave: () => undefined };
+
+  const conn = acquireStreamSocket();
+  const s = conn.socket;
+  let left = false;
+
+  const join = () => {
+    if (!left) s.emit('stream.join.room', { streamId });
+  };
+  const onEvent = (data: any) => {
+    if (String(data?.streamId ?? '') !== streamId) return;
+    const train = parseHypeTrain(data);
+    if (train) onUpdate(train);
+  };
+
+  s.on('connect', join);
+  s.on('stream.hype', onEvent);
+  if (s.connected) join();
+
+  return {
+    leave: () => {
+      if (left) return;
+      left = true;
+      s.off('connect', join);
+      s.off('stream.hype', onEvent);
       releaseStreamSocket(conn);
     },
   };

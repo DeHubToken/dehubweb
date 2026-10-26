@@ -21,3 +21,21 @@ export async function fetchStageRecordings(
   if (error) throw error;
   return ((data as AudioSpace[]) || []).filter(hasStageRecording);
 }
+
+/** Stage recordings whose title, description or host matches, most listened first. */
+export async function searchStageRecordings(query: string, limit = 20): Promise<AudioSpace[]> {
+  // PostgREST reads , ( ) as filter syntax and % * as wildcards.
+  const term = query.replace(/[,()%*\\]/g, ' ').trim();
+  if (!term) return [];
+  const { data, error } = await supabase
+    .from('audio_spaces')
+    .select('*')
+    .eq('status', 'ended')
+    .not('recording_url', 'is', null)
+    .neq('recording_url', '')
+    .or(`title.ilike.%${term}%,description.ilike.%${term}%,host_username.ilike.%${term}%`)
+    .order('total_listens', { ascending: false, nullsFirst: false })
+    .limit(limit);
+  if (error) throw error;
+  return ((data as AudioSpace[]) || []).filter(hasStageRecording);
+}

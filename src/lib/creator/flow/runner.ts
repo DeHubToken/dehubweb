@@ -171,6 +171,9 @@ export async function planRun(nodeIds: string[]): Promise<RunPlan> {
         kind: 'video',
         modelId: model,
         durationSeconds: duration,
+        // Include wired upstream outputs that are produced later in this run.
+        hasEndFrame: store().edges.some(edge => edge.target === n.id && edge.targetHandle === 'endFrame'),
+        hasVideoReferences: store().edges.some(edge => edge.target === n.id && edge.targetHandle === 'referenceVideo'),
         resolution: (n.data.resolution as string) || '720p',
         aspectRatio: (n.data.aspectRatio as string) || '16:9',
         quality: cfg?.supportsResolution ? priceQualityFor(n.data.resolution as string | undefined) : undefined,

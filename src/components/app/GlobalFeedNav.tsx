@@ -17,7 +17,7 @@ import { isHomePath } from '@/lib/home-path';
 import Settings2 from "@/components/ui/cut-icons/settings";
 import ArrowLeft from "@/components/ui/cut-icons/back";
 
-import { FEED_TABS } from '@/constants/app.constants';
+import { FEED_TABS, FEED_TAB_ICON_SCALE } from '@/constants/app.constants';
 import { useShortsEnabled } from '@/contexts/ShortsEnabledContext';
 import { useGlobalFeedNav } from '@/contexts/GlobalFeedNavContext';
 import { useAppTheme } from '@/contexts/ThemeContext';
@@ -319,7 +319,7 @@ export function GlobalFeedNav({ postPage = false, profilePage = false, compactPr
               >
                 {imagesScrollView
                   ? <ArrowLeft className="relative z-10 w-4 h-4" />
-                  : <Settings2 className="relative z-10 w-4 h-4" />}
+                  : <Settings2 className="relative z-10 w-4 h-4" style={{ transform: `scale(${FEED_TAB_ICON_SCALE.settings})` }} />}
               </button>
             )}
             {feedTabs.map((tab) => {
@@ -343,7 +343,7 @@ export function GlobalFeedNav({ postPage = false, profilePage = false, compactPr
                     isActive ? 'text-white' : 'text-zinc-400 hover:text-white'
                   )}
                 >
-                  <tab.icon data-home-nav-glyph={tab.value === 'home' || undefined} className={cn('relative z-10 w-4 h-4', tab.value === 'home' && 'origin-center max-lg:scale-[1.125]')} />
+                  <tab.icon data-home-nav-glyph={tab.value === 'home' || undefined} className="relative z-10 w-4 h-4 origin-center" style={{ transform: `scale(${FEED_TAB_ICON_SCALE[tab.value] ?? 1})` }} />
                 </button>
               );
             })}

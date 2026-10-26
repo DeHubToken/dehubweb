@@ -24,14 +24,17 @@
  * Bump VERSION to invalidate every cache on the next activate.
  */
 
-// v3 flushes asset entries poisoned by the bug fixed below: a chunk from a
-// superseded deploy was answered by the SPA catch-all with index.html at 200,
-// and CacheFirst stored that HTML under the chunk's URL permanently.
-const VERSION = 'dehub-sw-v3';
+// v3 flushed asset entries poisoned by an SPA-fallback bug (see isRealAsset).
+// v4 drops the unbounded v3 asset cache: it kept every chunk of every deploy
+// (over 1GB on a regular visitor), which made each cache lookup slow enough to
+// hold page chunks for several seconds behind the worker.
+const VERSION = 'dehub-sw-v4';
 const SHELL_CACHE = `${VERSION}-shell`;
 const ASSET_CACHE = `${VERSION}-assets`;
 const MEDIA_CACHE = `${VERSION}-media`;
 const CONTENT_CACHE = `${VERSION}-content`;
+// Roughly two deploys' worth of chunks; older builds' files are never asked for again.
+const ASSET_MAX_ENTRIES = 1500;
 const MEDIA_MAX_ENTRIES = 250;
 const CONTENT_MAX_ENTRIES = 60;
 
@@ -60,8 +63,19 @@ self.addEventListener('activate', (event) => {
   );
 });
 
-// FIFO eviction to keep the media cache bounded (oldest inserted go first).
-async function trimCache(name, max) {
+// FIFO eviction keeps each cache bounded (oldest inserted go first). One trim
+// per cache at a time, a few seconds after the last write: a page load stores
+// hundreds of chunks, and a full keys() walk per stored file starved the very
+// fetches the cache exists to speed up.
+const trimTimers = new Map();
+function trimCache(name, max) {
+  clearTimeout(trimTimers.get(name));
+  trimTimers.set(name, setTimeout(() => {
+    trimTimers.delete(name);
+    runTrim(name, max).catch(() => {});
+  }, 5000));
+}
+async function runTrim(name, max) {
   const cache = await caches.open(name);
   const keys = await cache.keys();
   const overflow = keys.length - max;
@@ -150,7 +164,7 @@ self.addEventListener('fetch', (event) => {
 
   // 2. Hashed build assets → CacheFirst, never storing an SPA-fallback shell.
   if (url.origin === self.location.origin && url.pathname.startsWith('/assets/')) {
-    event.respondWith(cacheFirst(req, ASSET_CACHE, 0, isRealAsset));
+    event.respondWith(cacheFirst(req, ASSET_CACHE, ASSET_MAX_ENTRIES, isRealAsset));
     return;
   }
 
