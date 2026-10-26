@@ -181,7 +181,7 @@ export function RadioMiniPlayer() {
         >
           <button
             onClick={() => { if (!isDragging.current) togglePlayPause(); }}
-            className="relative w-14 h-14 rounded-xl overflow-hidden bg-black/40 backdrop-blur-[24px] saturate-[180%] border border-white/10 shadow-2xl group"
+            className="relative w-14 h-14 rounded-xl overflow-hidden bg-black/40 backdrop-blur-[24px] backdrop-saturate-[180%] border border-white/10 shadow-2xl group"
           >
             {/* Station Logo */}
             {currentStation.favicon ? (
@@ -223,7 +223,7 @@ export function RadioMiniPlayer() {
           {/* Expand Button */}
           <button
             onClick={() => { if (!isDragging.current) setIsMinimized(false); }}
-            className="absolute -top-2 -right-2 w-6 h-6 rounded-lg bg-black/40 backdrop-blur-[24px] saturate-[180%] border border-white/10 flex items-center justify-center shadow-lg"
+            className="absolute -top-2 -right-2 w-6 h-6 rounded-lg bg-black/40 backdrop-blur-[24px] backdrop-saturate-[180%] border border-white/10 flex items-center justify-center shadow-lg"
           >
             <Maximize2 className="w-3 h-3 text-white" />
           </button>
@@ -258,7 +258,7 @@ export function RadioMiniPlayer() {
             'left-[2.5%] right-[2.5%]',
             'md:left-0 md:right-[3px] md:mx-auto md:max-w-[446px]',
             'lg:left-auto lg:right-4 lg:mx-0 lg:w-[400px] lg:max-w-none',
-            'bg-black/30 backdrop-blur-[40px] saturate-[180%] border border-white/[0.08]',
+            'bg-black/30 backdrop-blur-[40px] backdrop-saturate-[180%] border border-white/[0.08]',
             'rounded-2xl shadow-2xl',
             isResizing && 'pointer-events-auto'
           )}
@@ -315,7 +315,7 @@ export function RadioMiniPlayer() {
               {/* Play/Pause Button */}
               <button
                 onClick={togglePlayPause}
-                className="w-9 h-9 rounded-xl bg-black/40 backdrop-blur-[24px] saturate-[180%] border border-white/10 flex items-center justify-center flex-shrink-0 hover:bg-white/10 transition-colors"
+                className="w-9 h-9 rounded-xl bg-black/40 backdrop-blur-[24px] backdrop-saturate-[180%] border border-white/10 flex items-center justify-center flex-shrink-0 hover:bg-white/10 transition-colors"
               >
                 {isLoading ? (
                   <Loader2 className="w-4 h-4 text-white animate-spin" />
@@ -331,7 +331,7 @@ export function RadioMiniPlayer() {
                 <TooltipTrigger asChild>
                   <button
                     onClick={() => setShowVisualizer(true)}
-                    className="w-8 h-8 rounded-xl bg-black/40 backdrop-blur-[24px] saturate-[180%] border border-white/10 flex items-center justify-center hover:bg-white/10 transition-colors"
+                    className="w-8 h-8 rounded-xl bg-black/40 backdrop-blur-[24px] backdrop-saturate-[180%] border border-white/10 flex items-center justify-center hover:bg-white/10 transition-colors"
                   >
                     <Maximize2 className="w-4 h-4 text-zinc-400" />
                   </button>
@@ -344,7 +344,7 @@ export function RadioMiniPlayer() {
                 <TooltipTrigger asChild>
                   <button
                     onClick={() => setIsMinimized(true)}
-                    className="w-8 h-8 rounded-xl bg-black/40 backdrop-blur-[24px] saturate-[180%] border border-white/10 flex items-center justify-center hover:bg-white/10 transition-colors"
+                    className="w-8 h-8 rounded-xl bg-black/40 backdrop-blur-[24px] backdrop-saturate-[180%] border border-white/10 flex items-center justify-center hover:bg-white/10 transition-colors"
                   >
                     <Minus className="w-4 h-4 text-zinc-400" />
                   </button>
@@ -355,7 +355,7 @@ export function RadioMiniPlayer() {
               {/* Close Button */}
               <button
                 onClick={stop}
-                className="w-8 h-8 rounded-xl bg-black/40 backdrop-blur-[24px] saturate-[180%] border border-white/10 flex items-center justify-center hover:bg-white/10 transition-colors"
+                className="w-8 h-8 rounded-xl bg-black/40 backdrop-blur-[24px] backdrop-saturate-[180%] border border-white/10 flex items-center justify-center hover:bg-white/10 transition-colors"
               >
                 <X className="w-4 h-4 text-zinc-400" />
               </button>

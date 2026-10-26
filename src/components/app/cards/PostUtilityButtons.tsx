@@ -41,7 +41,7 @@ interface PostUtilityButtonsProps {
 
 /** Glass pill matching FullscreenImageViewer's top-right controls. */
 const CHIP_BASE =
-  'w-10 h-10 rounded-xl bg-black/60 backdrop-blur-[24px] saturate-[180%] border border-white/20 flex items-center justify-center text-white hover:bg-black/80 transition-colors';
+  'w-10 h-10 rounded-xl bg-black/60 backdrop-blur-[24px] backdrop-saturate-[180%] border border-white/20 flex items-center justify-center text-white hover:bg-black/80 transition-colors';
 
 export function PostUtilityButtons({
   postId,

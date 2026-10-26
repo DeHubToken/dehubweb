@@ -35,7 +35,7 @@ export function MinimizedAIChats({ onRestore }: MinimizedAIChatsProps) {
               removeChat(chat.id);
               onRestore?.(chat);
             }}
-            className="w-12 h-12 rounded-xl bg-black/60 backdrop-blur-[24px] saturate-[180%] border border-white/10 shadow-2xl flex items-center justify-center hover:bg-black/80 transition-colors relative group"
+            className="w-12 h-12 rounded-xl bg-black/60 backdrop-blur-[24px] backdrop-saturate-[180%] border border-white/10 shadow-2xl flex items-center justify-center hover:bg-black/80 transition-colors relative group"
           >
             <img
               src={chat.avatar || assistantAvatar}

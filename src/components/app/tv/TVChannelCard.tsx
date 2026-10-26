@@ -464,7 +464,7 @@ export function TVChannelCard({ channel }: TVChannelCardProps) {
     <div
       data-glass-media-card
       className={cn(
-        'w-full bg-black/40 backdrop-blur-[24px] saturate-[180%] border border-white/10',
+        'w-full bg-black/40 backdrop-blur-[24px] backdrop-saturate-[180%] border border-white/10',
         'rounded-2xl overflow-hidden',
         'hover:bg-white/5 transition-all duration-200 cursor-pointer',
         isActive && 'ring-1 ring-white/20 bg-white/5'
@@ -546,7 +546,7 @@ export function TVChannelCard({ channel }: TVChannelCardProps) {
         {/* Play/Pause/Resume Center Icon */}
         {!isLoading && !hasError && (
           <div className="absolute inset-0 flex items-center justify-center opacity-0 hover:opacity-100 transition-opacity">
-            <div className="w-16 h-16 rounded-xl bg-black/40 backdrop-blur-[24px] saturate-[180%] flex items-center justify-center border border-white/10">
+            <div className="w-16 h-16 rounded-xl bg-black/40 backdrop-blur-[24px] backdrop-saturate-[180%] flex items-center justify-center border border-white/10">
               {isPlaying ? (
                 <Pause className="w-8 h-8 text-white fill-white" />
               ) : (
@@ -562,7 +562,7 @@ export function TVChannelCard({ channel }: TVChannelCardProps) {
             {/* Mute Button */}
             <button
               onClick={handleMuteToggle}
-              className="w-10 h-10 rounded-xl bg-black/40 backdrop-blur-[24px] saturate-[180%] border border-white/10 flex items-center justify-center hover:bg-black/60 transition-colors"
+              className="w-10 h-10 rounded-xl bg-black/40 backdrop-blur-[24px] backdrop-saturate-[180%] border border-white/10 flex items-center justify-center hover:bg-black/60 transition-colors"
             >
               {isMuted ? (
                 <VolumeX className="w-5 h-5 text-white" />
@@ -593,7 +593,7 @@ export function TVChannelCard({ channel }: TVChannelCardProps) {
                 }
               }}
               className={cn(
-                "w-10 h-10 rounded-xl backdrop-blur-[24px] saturate-[180%] border border-white/10 flex items-center justify-center hover:bg-black/60 transition-colors",
+                "w-10 h-10 rounded-xl backdrop-blur-[24px] backdrop-saturate-[180%] border border-white/10 flex items-center justify-center hover:bg-black/60 transition-colors",
                 isPiP(channel.id) ? "bg-white/20" : "bg-black/40"
               )}
             >
@@ -610,7 +610,7 @@ export function TVChannelCard({ channel }: TVChannelCardProps) {
                 setPlaybackRate(nextRate);
                 vpSetPlaybackRate(nextRate);
               }}
-              className="h-10 w-[58px] rounded-xl bg-black/40 backdrop-blur-[24px] saturate-[180%] border border-white/10 flex items-center justify-center hover:bg-black/60 transition-colors text-white text-sm font-medium"
+              className="h-10 w-[58px] rounded-xl bg-black/40 backdrop-blur-[24px] backdrop-saturate-[180%] border border-white/10 flex items-center justify-center hover:bg-black/60 transition-colors text-white text-sm font-medium"
             >
               {formatRate(playbackRate)}x
             </button>
@@ -618,7 +618,7 @@ export function TVChannelCard({ channel }: TVChannelCardProps) {
             {/* Fullscreen Button */}
             <button
               onClick={handleFullscreen}
-              className="w-10 h-10 rounded-xl bg-black/40 backdrop-blur-[24px] saturate-[180%] border border-white/10 flex items-center justify-center hover:bg-black/60 transition-colors"
+              className="w-10 h-10 rounded-xl bg-black/40 backdrop-blur-[24px] backdrop-saturate-[180%] border border-white/10 flex items-center justify-center hover:bg-black/60 transition-colors"
             >
               {isFullscreen ? (
                 <Minimize className="w-5 h-5 text-white" />

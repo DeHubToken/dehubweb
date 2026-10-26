@@ -134,7 +134,7 @@ export function ShortsReel({ shorts }: ShortsReelProps) {
                   />
                 )}
                 <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-black/60" />
-                <div className="absolute top-2 left-2 right-2 flex items-center gap-1 text-[10px] md:text-xs text-white drop-shadow-md">
+                <div className="absolute top-2 left-2 right-2 flex items-center gap-1 text-[10px] md:text-xs text-white [text-shadow:0_4px_3px_rgb(0_0_0/0.07),0_2px_2px_rgb(0_0_0/0.06)]">
                   <ShortAvatar avatar={short.avatar} username={short.displayName || short.username} />
                   <BadgedName
                     lookupId={short.creatorUsername || short.creatorId || short.username}

@@ -333,7 +333,7 @@ export function VideoTrimmer({
               className="absolute inset-0 flex items-center justify-center group"
             >
               <div className={cn(
-                "w-14 h-14 rounded-xl bg-black/40 backdrop-blur-[24px] saturate-[180%] flex items-center justify-center border border-white/10 transition-all",
+                "w-14 h-14 rounded-xl bg-black/40 backdrop-blur-[24px] backdrop-saturate-[180%] flex items-center justify-center border border-white/10 transition-all",
                 isPlaying ? 'opacity-0 group-hover:opacity-100' : 'opacity-100'
               )}>
                 {isPlaying ? (

@@ -552,7 +552,7 @@ export function PostAIChat({ isOpen, onClose, postContext }: PostAIChatProps) {
           /* Same opt-out the mobile drawer already carries — without it this
              panel is a see-through wash on paper. */
           data-ai-chat
-          className="fixed bottom-4 z-50 flex flex-col bg-black/60 backdrop-blur-[24px] saturate-[180%] border border-white/10 shadow-2xl rounded-2xl overflow-hidden"
+          className="fixed bottom-4 z-50 flex flex-col bg-black/60 backdrop-blur-[24px] backdrop-saturate-[180%] border border-white/10 shadow-2xl rounded-2xl overflow-hidden"
           style={{
             right: `${rightOffset}px`,
             width: `${chatWidth}px`,

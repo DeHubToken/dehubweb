@@ -247,7 +247,7 @@ function DmDockPanel({ dm }: { dm: DockedDm }) {
            blur, i.e. a see-through window. [data-ai-chat] is the opt-out that
            repaints a floating chat panel as opaque paper. */
         data-ai-chat
-        className="fixed bottom-4 z-50 flex flex-col bg-black/60 backdrop-blur-[24px] saturate-[180%] border border-white/10 shadow-2xl rounded-2xl overflow-hidden"
+        className="fixed bottom-4 z-50 flex flex-col bg-black/60 backdrop-blur-[24px] backdrop-saturate-[180%] border border-white/10 shadow-2xl rounded-2xl overflow-hidden"
         style={{ right: `${rightOffset}px`, width: `${chatWidth}px`, height: '520px' }}
       >
         {/* Resize handles — top-left corner and left edge, as on the AI chat. */}

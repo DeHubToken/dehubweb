@@ -641,7 +641,7 @@ function ImmersiveVideoHeader({
         onClick={handleBack}
         data-swipe-back
         data-on-media
-        className="h-8 w-8 rounded-xl bg-black/50 backdrop-blur-[24px] saturate-[180%] border border-white/10 hover:bg-black/60 transition-colors flex items-center justify-center"
+        className="h-8 w-8 rounded-xl bg-black/50 backdrop-blur-[24px] backdrop-saturate-[180%] border border-white/10 hover:bg-black/60 transition-colors flex items-center justify-center"
         aria-label={_copy("copy.6aadac2f2b7a", { defaultValue: "Go back" })}
       >
         <ArrowLeft className="w-4 h-4 text-white" />

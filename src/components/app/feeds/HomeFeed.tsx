@@ -363,7 +363,7 @@ function RadioCarouselSection({ stations }: { stations: RadioStation[] }) {
   if (stations.length === 0) return null;
 
   return (
-    <div className="bg-black/50 backdrop-blur-[24px] saturate-[180%] border border-white/[0.12] rounded-xl p-3">
+    <div className="bg-black/50 backdrop-blur-[24px] backdrop-saturate-[180%] border border-white/[0.12] rounded-xl p-3">
       <div className="flex items-center justify-between mb-3">
         <h3 className="font-bold text-white flex items-center gap-2">
           <Radio className="w-5 h-5" />

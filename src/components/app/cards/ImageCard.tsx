@@ -588,7 +588,7 @@ function ImageCarousel({
               data-on-media
               data-keep-dark
               style={arrowTop}
-              className="hidden lg:flex absolute left-2 top-1/2 -translate-y-1/2 w-10 h-10 rounded-xl bg-black/55 backdrop-blur-[24px] saturate-[180%] border border-white/25 shadow-[0_2px_12px_rgba(0,0,0,0.35)] items-center justify-center text-white hover:bg-black/70 transition-colors"
+              className="hidden lg:flex absolute left-2 top-1/2 -translate-y-1/2 w-10 h-10 rounded-xl bg-black/55 backdrop-blur-[24px] backdrop-saturate-[180%] border border-white/25 shadow-[0_2px_12px_rgba(0,0,0,0.35)] items-center justify-center text-white hover:bg-black/70 transition-colors"
               aria-label={_copy("copy.f0a859a7ecd7", { defaultValue: "Previous image" })}
             >
               <ChevronLeft className="w-5 h-5" />
@@ -600,7 +600,7 @@ function ImageCarousel({
               data-on-media
               data-keep-dark
               style={arrowTop}
-              className="hidden lg:flex absolute right-2 top-1/2 -translate-y-1/2 w-10 h-10 rounded-xl bg-black/55 backdrop-blur-[24px] saturate-[180%] border border-white/25 shadow-[0_2px_12px_rgba(0,0,0,0.35)] items-center justify-center text-white hover:bg-black/70 transition-colors"
+              className="hidden lg:flex absolute right-2 top-1/2 -translate-y-1/2 w-10 h-10 rounded-xl bg-black/55 backdrop-blur-[24px] backdrop-saturate-[180%] border border-white/25 shadow-[0_2px_12px_rgba(0,0,0,0.35)] items-center justify-center text-white hover:bg-black/70 transition-colors"
               aria-label={_copy("copy.a4903f732746", { defaultValue: "Next image" })}
             >
               <ChevronRight className="w-5 h-5" />
@@ -1260,10 +1260,10 @@ const ImageCardBody = memo(function ImageCard({ post, aboveFold = false, onOpenC
                 }}
               >
                 <div className="flex items-center gap-3 mb-3">
-                  <div className="w-14 h-14 rounded-2xl bg-black/40 backdrop-blur-[24px] saturate-[180%] flex items-center justify-center border border-white/10">
+                  <div className="w-14 h-14 rounded-2xl bg-black/40 backdrop-blur-[24px] backdrop-saturate-[180%] flex items-center justify-center border border-white/10">
                     <Ticket className="h-6 w-6 text-white" />
                   </div>
-                  <div className="w-14 h-14 rounded-2xl bg-black/40 backdrop-blur-[24px] saturate-[180%] flex items-center justify-center border border-white/10">
+                  <div className="w-14 h-14 rounded-2xl bg-black/40 backdrop-blur-[24px] backdrop-saturate-[180%] flex items-center justify-center border border-white/10">
                     <Lock className="h-6 w-6 text-white" />
                   </div>
                 </div>
@@ -1299,7 +1299,7 @@ const ImageCardBody = memo(function ImageCard({ post, aboveFold = false, onOpenC
                   if (Math.abs(touch.clientX - start.x) < 10 && Math.abs(touch.clientY - start.y) < 10) { e.preventDefault(); setShowPPVDrawer(true); }
                 }}
               >
-                <div className="w-16 h-16 rounded-2xl bg-black/40 backdrop-blur-[24px] saturate-[180%] flex items-center justify-center border border-white/10 mb-3">
+                <div className="w-16 h-16 rounded-2xl bg-black/40 backdrop-blur-[24px] backdrop-saturate-[180%] flex items-center justify-center border border-white/10 mb-3">
                   <Ticket className="h-7 w-7 text-white" />
                 </div>
                 <p className="text-white font-semibold text-sm mb-1">{_copy("copy.48e072480fc5", { defaultValue: "Pay-Per-View Content" })}</p>
@@ -1336,7 +1336,7 @@ const ImageCardBody = memo(function ImageCard({ post, aboveFold = false, onOpenC
                   if (Math.abs(touch.clientX - start.x) < 10 && Math.abs(touch.clientY - start.y) < 10) { e.preventDefault(); setShowSubDrawer(true); }
                 }}
               >
-                <div className="w-16 h-16 rounded-2xl bg-black/40 backdrop-blur-[24px] saturate-[180%] flex items-center justify-center border border-white/10 mb-3">
+                <div className="w-16 h-16 rounded-2xl bg-black/40 backdrop-blur-[24px] backdrop-saturate-[180%] flex items-center justify-center border border-white/10 mb-3">
                   <Star className="h-7 w-7 text-white" />
                 </div>
                 <p className="text-white font-semibold text-sm mb-1">{_copy("copy.109ddfc1cc4a", { defaultValue: "Subscribers only" })}</p>
@@ -1376,7 +1376,7 @@ const ImageCardBody = memo(function ImageCard({ post, aboveFold = false, onOpenC
                   if (Math.abs(touch.clientX - start.x) < 10 && Math.abs(touch.clientY - start.y) < 10) { e.preventDefault(); setShowLockedDrawer(true); }
                 }}
               >
-                <div className="w-16 h-16 rounded-2xl bg-black/40 backdrop-blur-[24px] saturate-[180%] flex items-center justify-center border border-white/10 mb-3">
+                <div className="w-16 h-16 rounded-2xl bg-black/40 backdrop-blur-[24px] backdrop-saturate-[180%] flex items-center justify-center border border-white/10 mb-3">
                   <Lock className="h-7 w-7 text-white" />
                 </div>
                 <p className="text-white font-semibold text-sm mb-1">{_copy("copy.490f4babbf34", { defaultValue: "Holdings Required" })}</p>
@@ -1412,7 +1412,7 @@ const ImageCardBody = memo(function ImageCard({ post, aboveFold = false, onOpenC
             {/* Bounty Badge */}
             {isW2E && (
               <button 
-                className="flex items-center gap-1 bg-black/40 backdrop-blur-[24px] saturate-[180%] px-2 py-1 rounded-lg border border-white/10 hover:bg-black/60 transition-colors"
+                className="flex items-center gap-1 bg-black/40 backdrop-blur-[24px] backdrop-saturate-[180%] px-2 py-1 rounded-lg border border-white/10 hover:bg-black/60 transition-colors"
                 onClick={(e) => { e.stopPropagation(); setShowBountyDrawer(true); }}
               >
                 <Gift className="w-3 h-3 text-white" />

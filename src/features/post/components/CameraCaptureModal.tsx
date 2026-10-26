@@ -331,7 +331,7 @@ export function CameraCaptureModal({ isOpen, onClose, onVideoRecorded, onPhotoCa
                 disabled={isInitializing || isRecording}
                 className={cn(
                   'w-16 h-16 rounded-xl flex items-center justify-center transition-all',
-                  'bg-white/10 backdrop-blur-[24px] saturate-[180%] border border-white/20',
+                  'bg-white/10 backdrop-blur-[24px] backdrop-saturate-[180%] border border-white/20',
                   'hover:bg-white/20 disabled:opacity-50'
                 )}
               >
@@ -344,7 +344,7 @@ export function CameraCaptureModal({ isOpen, onClose, onVideoRecorded, onPhotoCa
                 disabled={isInitializing}
                 className={cn(
                   'w-16 h-16 rounded-xl flex items-center justify-center transition-all',
-                  'bg-white/10 backdrop-blur-[24px] saturate-[180%] border border-white/20',
+                  'bg-white/10 backdrop-blur-[24px] backdrop-saturate-[180%] border border-white/20',
                   'hover:bg-white/20 disabled:opacity-50',
                   isRecording && 'bg-red-500/20 border-red-500/40'
                 )}
@@ -360,14 +360,14 @@ export function CameraCaptureModal({ isOpen, onClose, onVideoRecorded, onPhotoCa
             <div className="flex items-center gap-4 w-full">
               <button
                 onClick={retake}
-                className="flex-1 h-14 rounded-xl bg-red-500/20 backdrop-blur-[24px] saturate-[180%] border border-red-500/40 flex items-center justify-center gap-2 hover:bg-red-500/30 transition-all"
+                className="flex-1 h-14 rounded-xl bg-red-500/20 backdrop-blur-[24px] backdrop-saturate-[180%] border border-red-500/40 flex items-center justify-center gap-2 hover:bg-red-500/30 transition-all"
               >
                 <Trash2 className="w-5 h-5 text-red-400" />
                 <span className="text-red-400 font-medium">{_copy("copy.e2d0a54968ea", { defaultValue: "Delete" })}</span>
               </button>
               <button
                 onClick={confirmVideo}
-                className="flex-1 h-14 rounded-xl bg-white/10 backdrop-blur-[24px] saturate-[180%] border border-white/20 flex items-center justify-center gap-2 hover:bg-white/20 transition-all"
+                className="flex-1 h-14 rounded-xl bg-white/10 backdrop-blur-[24px] backdrop-saturate-[180%] border border-white/20 flex items-center justify-center gap-2 hover:bg-white/20 transition-all"
               >
                 <Check className="w-5 h-5 text-white" />
                 <span className="text-white font-medium">{_copy("copy.30be3ea2fb19", { defaultValue: "Use Video" })}</span>

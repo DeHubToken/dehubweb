@@ -56,7 +56,7 @@ export const ProfileImageGrid = memo(function ProfileImageGrid({ images }: Profi
               {/* PPV overlay */}
               {post.isPPV && (
                 <div className="absolute inset-0 flex items-center justify-center bg-black/30">
-                  <div className="w-10 h-10 rounded-xl bg-black/40 backdrop-blur-[24px] saturate-[180%] flex items-center justify-center border border-white/10">
+                  <div className="w-10 h-10 rounded-xl bg-black/40 backdrop-blur-[24px] backdrop-saturate-[180%] flex items-center justify-center border border-white/10">
                     <Ticket className="h-5 w-5 text-white" />
                   </div>
                 </div>
