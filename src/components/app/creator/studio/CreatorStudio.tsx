@@ -1147,8 +1147,9 @@ const CreatorStudioWorkspace = memo(function CreatorStudioWorkspace({ onOpenEdit
     // Four of the audio tasks work entirely from an upload and have no text
     // box at all, so an empty prompt is the normal state rather than a gap.
     if (mode === 'audio') return activeAudioTask.promptRole !== 'none' && !resolvedPrompt.trim();
+    if (mode === 'image' && IMAGE_MODELS[imageModel]?.outpaint) return false;
     return (mode !== '3d' || !reference) && !resolvedPrompt.trim();
-  }, [mode, reference, resolvedPrompt, activeAudioTask]);
+  }, [mode, imageModel, reference, resolvedPrompt, activeAudioTask]);
 
   /** Guardrails that would otherwise only surface as a paid-for failure. */
   const blockingIssue = useMemo(() => {
@@ -1159,6 +1160,8 @@ const CreatorStudioWorkspace = memo(function CreatorStudioWorkspace({ onOpenEdit
     }
     if (mode === 'image') {
       const model = IMAGE_MODELS[imageModel];
+      if (model?.requiresImage && !reference) return t('creator.expandNeedsImage');
+      if (model?.outpaint && /[^\x09\x0a\x0d\x20-\x7e]/.test(resolvedPrompt)) return t('creator.expandEnglishOnly');
       if (currentImages.length > (CREATOR_FAL_IMAGE_MODELS[imageModel]?.maxReferenceImages ?? 4)) return t('creator.referenceTooMany');
       if (currentImages.length > 1 && !CREATOR_FAL_IMAGE_MODELS[imageModel]?.editUsesPlural) return t('creator.referenceMultiModel');
       if (model && reference && !imageModelSupportsEdit(model)) {
@@ -1903,7 +1906,7 @@ const CreatorStudioWorkspace = memo(function CreatorStudioWorkspace({ onOpenEdit
                         }
                       }}
                       rows={audioTask === 'dialogue' && mode === 'audio' ? 4 : 2}
-                      placeholder={placeholder}
+                      placeholder={mode === 'image' && IMAGE_MODELS[imageModel]?.outpaint ? t('creator.expandPromptHint') : placeholder}
                       className="min-h-[3.25rem] min-w-0 flex-1 resize-y bg-transparent py-1 text-[16px] leading-relaxed text-white outline-none placeholder:text-white/35 sm:text-[15px]"
                     />
                   </>

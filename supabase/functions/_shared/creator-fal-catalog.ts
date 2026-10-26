@@ -248,6 +248,8 @@ export interface CreatorFalImageModel {
   tier: 'premium' | 'standard' | 'fast';
   baseCostUsd: number;
   supportsEdit: boolean;
+  requiresImage?: boolean;
+  outpaint?: boolean;
   text: string;
   edit?: string;
   sizing: 'image_size' | 'aspect_ratio';
@@ -263,6 +265,14 @@ export interface CreatorFalImageModel {
   aspectRatios?: string[];
 }
 export const CREATOR_FAL_IMAGE_MODELS: Record<string, CreatorFalImageModel> = {
+  'bria-expand': {
+    id: 'bria-expand', name: 'Bria Expand', vendor: 'Bria', emoji: '↔', tier: 'standard',
+    description: 'Generate new image borders. Optional English prompt; one source image.',
+    baseCostUsd: 0.04, supportsEdit: true, requiresImage: true, outpaint: true,
+    text: 'fal-ai/bria/expand', edit: 'fal-ai/bria/expand', sizing: 'aspect_ratio',
+    aspectRatios: ['1:1', '4:5', '16:9', '9:16', '3:2', '2:3', '4:3', '3:4'],
+    maxReferenceImages: 1, maxPromptLength: 1000,
+  },
   'flux-schnell': {
     id: 'flux-schnell', name: 'FLUX.1 Schnell', vendor: 'Black Forest Labs', emoji: '🎨', tier: 'fast',
     description: 'Near-instant compositions and inexpensive drafts', baseCostUsd: 0.003, supportsEdit: false,

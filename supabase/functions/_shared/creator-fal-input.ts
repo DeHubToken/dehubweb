@@ -175,12 +175,27 @@ export function creatorFalImageDimensions(aspect = '1:1'): { width: number; heig
   return { width: size[0], height: size[1] };
 }
 
+export function creatorFalImageResult(modelId: string, data: { images?: { url?: string }[]; image?: { url?: string } }): string {
+  const url = CREATOR_FAL_IMAGE_MODELS[modelId]?.outpaint ? data.image?.url : data.images?.[0]?.url;
+  if (typeof url !== 'string' || !url) throw new Error('The model returned no image');
+  return url;
+}
+
 export function buildCreatorFalImageRequest(modelId: string, prompt: string, sourceImage?: string, aspect?: string, referenceImageUrls?: string[]) {
   const m = CREATOR_FAL_IMAGE_MODELS[modelId];
   const images = [...new Set([...(sourceImage ? [sourceImage] : []), ...(referenceImageUrls ?? [])])];
   sourceImage = images[0];
   if (!m || (sourceImage && !m.edit)) throw new Error('This model cannot edit an image');
   if (images.length > (m.maxReferenceImages ?? 4) || (images.length > 1 && !m.editUsesPlural)) throw new Error(`Choose a model supporting these references (up to ${m.maxReferenceImages ?? 4})`);
+  if (m.outpaint) {
+    if (!sourceImage) throw new Error('Attach one image to expand');
+    const ratio = aspect ?? '1:1';
+    if (!m.aspectRatios?.includes(ratio)) throw new Error('Unsupported expansion aspect ratio');
+    if (typeof prompt !== 'string' || prompt.length > 1000 || /[^\x09\x0a\x0d\x20-\x7e]/.test(prompt)) throw new Error('Expansion accepts an optional English prompt of up to 1000 characters');
+    const { width, height } = creatorFalImageDimensions(ratio);
+    return { appId: m.edit!, input: { image_url: sourceImage, canvas_size: [width, height], aspect_ratio: ratio,
+      ...(prompt.trim() ? { prompt: prompt.trim() } : {}) } };
+  }
   const limit = m.maxPromptLength ?? 4000;
   if (!prompt.trim() || prompt.length > limit) throw new Error(`Use an image prompt of 1 to ${limit} characters`);
   const input: Record<string, unknown> = { prompt, ...(sourceImage ? m.editExtra ?? m.extra : m.extra) };
