@@ -1576,6 +1576,7 @@ const VideoCardBody = memo(function VideoCard({ video, postPage = false, onBack,
   // the transport bar only shows on hover or while paused, over the picture.
   const desktopFeedHug = !isPhone && !isImmersive && !isFullscreen && !video.isAudio;
   const splitControls = bareControls && !isContentGated && !feedPreview && !desktopFeedHug;
+  const showCenterPlay = !feedPreview && !splitControls && !isLoading && !!video.videoUrl && !video.isAudio && !isVideoNotReady && !(video.isLivePost && video.isLiveNow);
   const controlsVisible = splitControls || !isPlaying || showControls || subsMenuOpen || volumeOpen;
   useEffect(() => {
     if (controlsVisible && videoRef.current) setCurrentTime(videoRef.current.currentTime);
@@ -2698,9 +2699,13 @@ const VideoCardBody = memo(function VideoCard({ video, postPage = false, onBack,
             className="absolute inset-0 z-[5] flex items-center justify-center bg-gradient-to-b from-zinc-800 to-black pointer-events-none"
             aria-hidden="true"
           >
-            <div className="w-16 h-16 rounded-2xl bg-black/40 backdrop-blur-[24px] saturate-[180%] border border-white/10 flex items-center justify-center">
-              <Play className="w-7 h-7 text-white fill-current ml-1" />
-            </div>
+            {/* The centre control already draws a play glyph; a second one
+                here stacked two triangles on top of each other. */}
+            {!showCenterPlay && (
+              <div className="w-16 h-16 rounded-2xl bg-black/40 backdrop-blur-[24px] saturate-[180%] border border-white/10 flex items-center justify-center">
+                <Play className="w-7 h-7 text-white fill-current ml-1" />
+              </div>
+            )}
           </div>
         )}
 
@@ -2771,7 +2776,7 @@ const VideoCardBody = memo(function VideoCard({ video, postPage = false, onBack,
           <VideoGlitchLoader poster={thumbnail} />
         )}
         
-        {!feedPreview && !splitControls && !isLoading && video.videoUrl && !video.isAudio && !isVideoNotReady && !(video.isLivePost && video.isLiveNow) && (
+        {showCenterPlay && (
           <button
             data-video-controls data-video-bare data-video-center
             data-controls-hidden={isPlaying && !controlsVisible ? 'true' : undefined}
