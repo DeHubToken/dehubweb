@@ -17,6 +17,7 @@
  */
 
 import { getSubscriptionCredits } from '@/lib/api/dehub/credits';
+import { largestJobReceipt } from './job-payment-balance';
 import { Interface } from 'ethers';
 import { useQuery } from '@tanstack/react-query';
 import i18n from '@/i18n';
@@ -236,7 +237,10 @@ export function useSpendableDhb() {
       // go ahead when they cover it. Still one source per job: the larger.
       const credits = await getSubscriptionCredits(walletAddress).catch(() => null);
       const creditsDhb = credits ? (credits.usd * 1_000_000) / USD_MICROS_PER_DHB : 0;
-      return Math.max(onChain, creditsDhb);
+      const banked = await fetchUnspentPayments();
+      const receiptAccount = await getWalletAddress();
+      const bankedDhb = largestJobReceipt(walletAddress, receiptAccount, banked.map(payment => ({ remainingDhb: payment.dhb })));
+      return Math.max(onChain, creditsDhb, bankedDhb);
     },
     enabled: !!walletAddress && isAuthenticated,
     staleTime: 60_000,

@@ -3490,6 +3490,40 @@ async function fetchBuilderAppMeta(id) {
   }
 }
 
+/**
+ * A co-stream invite, /app/live/join/<uuid>: a host asking someone onto
+ * their live. Never indexed — it is an invitation, not a page — but it
+ * unfurls with the host's name so the person it was sent to knows who is
+ * asking. Title mirrors src/pages/app/CoStreamJoinPage.tsx.
+ */
+function buildCoStreamHtml(room) {
+  const canonicalUrl = `${APP_URL}/app/live/join/${room.id}`;
+  const name = room.host_username ? `@${String(room.host_username).replace(/^@/, '')}` : '';
+  const live = room.status === 'active';
+  const title = name ? `Join ${name} live on DeHub` : 'Join a live on DeHub';
+  const description = live
+    ? 'You have been invited on screen in a live video stream on DeHub. Open the link to join with your camera.'
+    : 'This live has ended. The host has closed their guest seats.';
+  return entityHtml({
+    canonicalUrl,
+    title,
+    description,
+    image: SHARE_IMAGE,
+    noindex: true,
+    heading: title,
+    breadcrumb: `<a href="${APP_URL}">DeHub</a>`,
+    bodyHtml: `<p>${escHtml(description)}</p>`,
+    jsonLd: {
+      '@context': 'https://schema.org',
+      '@type': 'WebPage',
+      name: title,
+      description,
+      url: canonicalUrl,
+      isPartOf: { '@type': 'WebSite', name: 'DeHub', url: APP_URL },
+    },
+  });
+}
+
 function buildBuilderPreviewHtml(id, appMeta) {
   const canonicalUrl = `${APP_URL}/builder/preview/${id}`;
   const name = truncate((appMeta && appMeta.title) || '', 80);
@@ -4598,6 +4632,8 @@ function shouldServeSSR(pathname) {
   // card as the long one rather than the SPA shell.
   if (/^\/(?:app\/)?stores\/[^/]+/.test(pathname)) return true;
   if (/^\/(?:app\/)?events\/\d+/.test(pathname)) return true;
+  // A co-stream invite link, rendered from PostgREST below.
+  if (/^\/app\/live\/join\/[0-9a-fA-F-]{36}\/?$/.test(pathname)) return true;
   // A single governance proposal, rendered from PostgREST below.
   if (/^\/(?:app\/)?governance\/(?:\d{1,9}|[0-9a-fA-F-]{8,})\/?$/.test(pathname)) return true;
   // A shared Creator Flow, /creator/flow/<id>. `creator` is a reserved
@@ -6800,6 +6836,20 @@ async function handleRequest(request, env, ctx) {
       }));
     }
     return entityMiss(stage);
+  }
+
+  const costreamMatch = cleanPath.match(/^\/app\/live\/join\/([0-9a-fA-F-]{36})$/);
+  if (costreamMatch) {
+    const room = await supabaseLookup(
+      `live_costreams?id=eq.${encodeURIComponent(costreamMatch[1])}&select=id,host_username,status&limit=1`,
+    );
+    if (room) {
+      return guard(new Response(buildCoStreamHtml(room), {
+        status: 200,
+        headers: { ...blogHeaders, 'X-Robots-Tag': 'noindex, follow' },
+      }));
+    }
+    return entityMiss(room);
   }
 
   // A community DEX pool, /dex/<chain>/<token>. The share image is the picture

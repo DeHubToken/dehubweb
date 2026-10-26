@@ -1,5 +1,5 @@
 
-import React, { useRef, useEffect, useLayoutEffect } from 'react';
+import React, { useRef, useEffect, useLayoutEffect, useMemo } from 'react';
 import { BlogSEOHelper } from '@/components/blog/BlogSEOHelper';
 import { BlogHeader } from '@/components/blog/sections/BlogHeader';
 import { BlogFeaturedSection } from '@/components/blog/sections/BlogFeaturedSection';
@@ -47,6 +47,18 @@ const Blog = () => {
     scrollDocumentTo(0);
   }, [selectedTag]);
 
+  // The Featured row shows the top two featured posts (only when no tag is
+  // picked), so leave those out of the list below to avoid showing them twice.
+  const shownFeatured = useMemo(
+    () => (selectedTag ? [] : featuredPosts.slice(0, 2)),
+    [featuredPosts, selectedTag]
+  );
+  const listPosts = useMemo(() => {
+    if (!shownFeatured.length) return filteredPosts;
+    const featuredSlugs = new Set(shownFeatured.map(post => post.slug));
+    return filteredPosts.filter(post => !featuredSlugs.has(post.slug));
+  }, [filteredPosts, shownFeatured]);
+
   // Post search lives in the docs header search (⌘K / top-right), which
   // indexes every blog post — the old in-page search pill is gone.
   return (
@@ -56,12 +68,12 @@ const Blog = () => {
         <BlogHeader />
 
         <BlogFeaturedSection
-          featuredPosts={featuredPosts}
+          featuredPosts={shownFeatured}
           shouldShow={!selectedTag}
         />
 
         <BlogAllPostsSection
-          filteredPosts={filteredPosts}
+          filteredPosts={listPosts}
           searchQuery=""
           selectedTag={selectedTag}
           onClearFilter={() => setSelectedTag('')}

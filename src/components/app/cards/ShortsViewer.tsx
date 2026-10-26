@@ -77,6 +77,7 @@ import { resolveMyReaction } from '@/lib/engagement';
 import { ReactionPicker } from './ReactionPicker';
 import { ReactionInfoDrawer } from './ReactionInfoDrawer';
 import { PostUtilityMenuItems } from './PostUtilityMenuItems';
+import { RemixMenuItems } from './RemixMenuItems';
 import { useFollowOverrides, toggleFollowFor } from '@/hooks/use-follow';
 import { toast } from 'sonner';
 import { CommentsSection } from './CommentsSection';
@@ -2278,6 +2279,14 @@ export function ShortsViewer({ shorts, initialIndex, onClose, onLoadMore, hasMor
             <DrawerTitle className="text-white text-lg">{_copy("copy.d0db8b5e364b", { defaultValue: "Options" })}</DrawerTitle>
           </DrawerHeader>
           <div className="flex flex-col gap-1">
+            {!!currentShort.videoUrl && !currentShort.imageUrls?.length && !currentShort.gated
+              && !downloadGate.isGated && !currentShort.spoilerText
+              && visibility === 'public' && (!currentShort.visibility || currentShort.visibility === 'public')
+              && (isOwnShort || !currentShort.quotePolicy || currentShort.quotePolicy === 'public') && (
+              <RemixMenuItems source={{ videoUrl: currentShort.videoUrl, sourceUrl: `https://dehub.io/app/post/${currentShort.id}`,
+                title: currentShort.title || 'Video', creator: currentShort.creatorUsername || currentShort.username }}
+                onStart={() => { setIsPaused(true); setShareSheetOpen(false); onClose(); }} />
+            )}
             {visibility === 'public' && (!currentShort.visibility || currentShort.visibility === 'public') && (
               <button
                 onClick={() => {

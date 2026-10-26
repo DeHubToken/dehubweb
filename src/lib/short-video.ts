@@ -53,6 +53,10 @@ export function mapToShortVideo(nft: any, index: number): ShortVideo & { duratio
   return {
     id,
     type: 'short',
+    visibility: nft.visibility,
+    quotePolicy: nft.quotePolicy,
+    spoilerText: nft.spoilerText,
+    contentRating: nft.contentRating,
     username: nft.minterDisplayName || nft.minterUsername || nft.mintername || nft.creator?.username || 'user',
     // Use minterUsername for the @handle, not display name
     handle: nft.minterUsername || nft.mintername || nft.creator?.username || 'user',
@@ -100,6 +104,9 @@ export function videoItemToShort(video: VideoItem): ShortVideo {
   return {
     id: video.id,
     type: 'short',
+    visibility: video.visibility,
+    quotePolicy: video.quotePolicy,
+    spoilerText: video.spoilerText,
     username: video.channel || video.creatorUsername || 'user',
     verified: !!video.verified,
     avatar: video.channelAvatar?.startsWith('http') ? video.channelAvatar : undefined,

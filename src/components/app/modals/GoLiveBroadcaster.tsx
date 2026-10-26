@@ -14,7 +14,7 @@ import { useTranslation as _useCopy } from 'react-i18next';
 
 import { useState, useRef, useEffect, useCallback, lazy, Suspense } from 'react';
 import { useTranslation } from 'react-i18next';
-import { SwitchCamera, Cable, ScreenShare, ScreenShareOff, PictureInPicture2, Move, Wand2, Palette, Heart, Loader2, AlertTriangle, SignalLow } from "lucide-react";
+import { SwitchCamera, Cable, ScreenShare, ScreenShareOff, PictureInPicture2, Move, Wand2, Palette, Heart, Loader2, AlertTriangle, SignalLow, UserPlus } from "lucide-react";
 import MicOff from "@/components/ui/cut-icons/mic-off";
 import Video from "@/components/ui/cut-icons/video";
 import VideoOff from "@/components/ui/cut-icons/video-off";
@@ -46,6 +46,12 @@ import {
   type CameraBubble,
 } from '@/lib/livepeer/compositor';
 import { startVideoEffect, type VideoEffectStage } from '@/lib/livepeer/video-effects';
+import { createGuestMixer } from '@/lib/livepeer/guest-mixer';
+import { useCoStreamHost } from '@/hooks/use-costream-host';
+import { CoStreamHostPanel } from '@/components/app/live/costream/CoStreamHostPanel';
+import { CoStreamBattleBar } from '@/components/app/live/costream/CoStreamBattleBar';
+import { useBattleTally } from '@/hooks/use-battle-tally';
+import { useAuth } from '@/contexts/AuthContext';
 import type { VideoEffectId } from '@/constants/video-effects.constants';
 import { VideoEffectSelector } from '@/components/app/live/VideoEffectSelector';
 import { useVoiceEffects } from '@/hooks/use-voice-effects';
@@ -436,7 +442,7 @@ export function GoLiveBroadcaster({
   const [starved, setStarved] = useState(false);
   // Only one drawer of extras at a time — the broadcast preview is the point
   // of this panel and two open boards would push it off a laptop screen.
-  const [openPanel, setOpenPanel] = useState<'none' | 'voice' | 'looks' | 'sounds' | 'chat'>(
+  const [openPanel, setOpenPanel] = useState<'none' | 'voice' | 'looks' | 'sounds' | 'chat' | 'guests'>(
     'none'
   );
   const [effect, setEffect] = useState<VoiceEffectId>('none');
@@ -454,6 +460,9 @@ export function GoLiveBroadcaster({
 
   const videoRef = useRef<HTMLVideoElement>(null);
   const streamRef = useRef<MediaStream | null>(null);
+  // Sits between this screen and the WHIP sender; transparent until a guest
+  // is on screen, then it sends host-plus-guests instead.
+  const [guestMixer] = useState(createGuestMixer);
   const sessionRef = useRef<WhipSession | null>(null);
   const wakeLockRef = useRef<WakeLockSentinel | null>(null);
   // One lock for every video-source change — flip, share, unshare. Two of them
@@ -707,6 +716,9 @@ export function GoLiveBroadcaster({
     // camera is NOT in that stream — the canvas is — so it would otherwise
     // survive the teardown with its light on.
     await releaseLook(false);
+    // The guests' mix goes with the session: nothing is left to send it to.
+    guestMixer.release();
+    await guestMixer.stop();
     await sessionRef.current?.stop();
     sessionRef.current = null;
     streamRef.current?.getTracks().forEach((t) => t.stop());
@@ -729,7 +741,7 @@ export function GoLiveBroadcaster({
     audioMixRef.current?.track.stop();
     void audioMixRef.current?.ctx.close().catch(() => undefined);
     audioMixRef.current = null;
-  }, [releaseWakeLock, releaseBubble, releaseLook, cleanupVoice]);
+  }, [releaseWakeLock, releaseBubble, releaseLook, cleanupVoice, guestMixer]);
 
   /**
    * Captures the mic and runs it through the voice-effect graph. What comes
@@ -1371,7 +1383,7 @@ export function GoLiveBroadcaster({
           livepeerFallbackUsed = true;
           setPhase('connecting');
           await dead?.stop().catch(() => undefined);
-          if (sessionRef.current === dead) sessionRef.current = null;
+          if (guestMixer.unwrap(sessionRef.current) === dead) sessionRef.current = null;
           if (cancelled) return true;
           try {
             const moved = await ask();
@@ -1402,7 +1414,7 @@ export function GoLiveBroadcaster({
               await next.stop();
               return true;
             }
-            sessionRef.current = next;
+            sessionRef.current = guestMixer.wrap(next, stream);
             await acquireWakeLock();
             return true;
           } catch (error) {
@@ -1531,7 +1543,7 @@ export function GoLiveBroadcaster({
         ): Promise<void> => {
           setPhase('connecting');
           await dead?.stop().catch(() => undefined);
-          if (sessionRef.current === dead) sessionRef.current = null;
+          if (guestMixer.unwrap(sessionRef.current) === dead) sessionRef.current = null;
           if (cancelled) return;
           try {
             const next = await openSession(viaRelay);
@@ -1539,7 +1551,7 @@ export function GoLiveBroadcaster({
               await next.stop();
               return;
             }
-            sessionRef.current = next;
+            sessionRef.current = guestMixer.wrap(next, stream);
             await acquireWakeLock();
           } catch (error) {
             logger.error('Media fallback failed', { viaRelay }, error);
@@ -1605,7 +1617,7 @@ export function GoLiveBroadcaster({
           await session.stop();
           return;
         }
-        sessionRef.current = session;
+        sessionRef.current = guestMixer.wrap(session, stream);
 
         // Without this a phone screen-locks mid-stream and the broadcast dies.
         await acquireWakeLock();
@@ -1876,6 +1888,26 @@ export function GoLiveBroadcaster({
    */
   const fullBleed = useIsMobile();
 
+  const { walletAddress, user } = useAuth();
+  const onAir = phase === 'live' || phase === 'reconnecting';
+  const coStream = useCoStreamHost({
+    wallet: walletAddress,
+    username: user?.username,
+    streamId,
+    mixer: guestMixer,
+    live: onAir,
+  });
+  // The preview shows what viewers get: the composite, once anyone joins.
+  const mixing = onAir && coStream.onScreen.length > 0;
+  const mixPreviewRef = useRef<HTMLVideoElement | null>(null);
+  useEffect(() => {
+    const el = mixPreviewRef.current;
+    if (!el) return;
+    el.srcObject = mixing ? guestMixer.preview() : null;
+  }, [mixing, guestMixer, coStream.onScreen.length]);
+  const guestNudge = coStream.incoming.length + coStream.requests.length;
+  useBattleTally(walletAddress, coStream.state, coStream.role === 'host');
+
   return (
     <div className={cn(fullBleed ? 'absolute inset-0 bg-black' : 'space-y-4 pb-4')}>
       <div
@@ -1901,7 +1933,25 @@ export function GoLiveBroadcaster({
           )}
         />
 
+        {mixing && (
+          <video
+            ref={mixPreviewRef}
+            autoPlay
+            muted
+            playsInline
+            className="absolute inset-0 h-full w-full bg-black object-contain"
+          />
+        )}
+
         <LiveReactionFlow streamId={streamId} enabled={phase === 'live' || phase === 'reconnecting'} bottom={fullBleed ? 100 : 24} />
+
+        {onAir && (
+          <CoStreamBattleBar
+            state={coStream.state}
+            streamId={streamId}
+            className="absolute left-1/2 top-[calc(max(0.75rem,env(safe-area-inset-top))+5.5rem)] z-20 -translate-x-1/2"
+          />
+        )}
 
         {!videoOn && phase !== 'error' && (
           <div className="absolute inset-0 flex flex-col items-center justify-center gap-2 text-zinc-500">
@@ -2138,6 +2188,25 @@ export function GoLiveBroadcaster({
           </ControlButton>
         )}
 
+        {streamId && (
+          <span className="relative inline-flex shrink-0">
+            <ControlButton
+              floating={fullBleed}
+              active={openPanel !== 'guests'}
+              onClick={() => setOpenPanel((p) => (p === 'guests' ? 'none' : 'guests'))}
+              disabled={phase === 'error'}
+              label={t('costream.title', { defaultValue: 'Guests' })}
+            >
+              <UserPlus className="h-5 w-5" />
+            </ControlButton>
+            {guestNudge > 0 && (
+              <span className="pointer-events-none absolute -right-0.5 -top-0.5 flex h-4 min-w-4 items-center justify-center rounded-full bg-white px-1 text-[10px] font-semibold text-black">
+                {guestNudge}
+              </span>
+            )}
+          </span>
+        )}
+
         {/* A new tab: leaving this page would end the broadcast. */}
         <ControlButton
           floating={fullBleed}
@@ -2275,6 +2344,17 @@ export function GoLiveBroadcaster({
             onToggleBackgroundBlur={() => void toggleBackgroundBlur()}
           />
           <p className="mt-2 text-[11px] text-zinc-500">{t('videoLooks.hint')}</p>
+        </div>
+      )}
+
+      {openPanel === 'guests' && (
+        <div
+          className={cn(
+            'rounded-xl border border-white/10 bg-white/5 p-3',
+            fullBleed && 'absolute inset-x-3 bottom-24 z-20 max-h-[60vh] overflow-y-auto bg-black/80 backdrop-blur-xl'
+          )}
+        >
+          <CoStreamHostPanel co={coStream} />
         </div>
       )}
 
