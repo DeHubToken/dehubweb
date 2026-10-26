@@ -1,4 +1,5 @@
 import { useTranslation as _useCopy } from 'react-i18next';
+import BarChart3 from "@/components/ui/cut-icons/stats";
 import { useEffect, useState, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Button } from '@/components/ui/button';
@@ -46,6 +47,8 @@ export interface ChatInputSendArgs {
 interface ChatInputProps {
   onSendMessage: (args: ChatInputSendArgs) => Promise<boolean>;
   onTipClick?: () => void;
+  /** Opens the create-poll drawer. */
+  onPollClick?: () => void;
   /** Externally disable the send button (e.g. insufficient fee balance) */
   sendDisabled?: boolean;
   /** Label shown on disabled send tooltip */
@@ -102,7 +105,7 @@ interface ChatInputProps {
   voiceMaxDuration?: number;
 }
 
-export function ChatInput({ onSendMessage, onTipClick, sendDisabled, sendDisabledReason, isSendingFee, feeAmount, confirmBeforeSend, canSend, replyTo, onCancelReply, initialText, thread, peerName, draftKey, allowDocuments = true, voiceMaxDuration = 59 }: ChatInputProps) {
+export function ChatInput({ onSendMessage, onTipClick, onPollClick, sendDisabled, sendDisabledReason, isSendingFee, feeAmount, confirmBeforeSend, canSend, replyTo, onCancelReply, initialText, thread, peerName, draftKey, allowDocuments = true, voiceMaxDuration = 59 }: ChatInputProps) {
   const { t: _copy } = _useCopy();
   const { t } = useTranslation();
   const [message, setMessage] = useDraft(draftKey, initialText ?? '');
@@ -663,6 +666,24 @@ export function ChatInput({ onSendMessage, onTipClick, sendDisabled, sendDisable
                 </Button>
               </TooltipTrigger>
               <TooltipContent>{_copy("copy.3dd188029374", { defaultValue: "Send a tip" })}</TooltipContent>
+            </Tooltip>
+          )}
+
+          {onPollClick && (
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <Button
+                  type="button"
+                  variant="ghost"
+                  size="icon"
+                  aria-label={_copy("copy.b2b9c2e81c4c", { defaultValue: "Create Poll" })}
+                  className="h-8 w-8 text-zinc-400 hover:text-white hover:bg-zinc-700"
+                  onClick={onPollClick}
+                >
+                  <BarChart3 className="w-5 h-5" />
+                </Button>
+              </TooltipTrigger>
+              <TooltipContent>{_copy("copy.b2b9c2e81c4c", { defaultValue: "Create Poll" })}</TooltipContent>
             </Tooltip>
           )}
 
