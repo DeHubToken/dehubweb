@@ -40,3 +40,7 @@
 @media (prefers-reduced-motion: reduce) {
   [data-shorts-viewer] { transform: none !important; }
 }
+
+/* Phone comments sheet: tighter rows so five comments fit on open. */
+[data-shorts-panel] [data-comment-id] { padding-top: 0.5rem; padding-bottom: 0.5rem; }
+[data-shorts-panel] [data-comment-actions] { margin-top: 0.25rem; }
