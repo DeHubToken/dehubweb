@@ -11,7 +11,7 @@ import { chargeForJob } from "../_shared/ai-payment-guard.ts";
 import { falQueueUrls } from "../_shared/fal-queue.ts";
 import { CREATOR_FAL_VIDEO_MODELS } from '../_shared/creator-fal-catalog.ts';
 import { buildCreatorFalVideoRequest } from '../_shared/creator-fal-input.ts';
-import { buildSeedance2Input, buildSeedance2Request } from '../_shared/seedance2-input.ts';
+import { buildSeedance2Input, buildSeedance2Request, seedance2PreferredProvider } from '../_shared/seedance2-input.ts';
 import { referenceVideoDuration } from '../_shared/creator-reference-video.ts';
 import { requireDeHubAuth } from '../_shared/auth.ts';
 import {
@@ -679,6 +679,7 @@ function buildKieVideoTask(
     case 'seedance-2.0':
     case 'seedance-2.5': {
       const is25 = model === 'seedance-2.5';
+      if (!is25 && seedance2PreferredProvider(o) !== 'kie') return null;
       return {
         model: is25 ? 'bytedance/seedance-2-5' : 'bytedance/seedance-2',
         input: {
@@ -944,7 +945,11 @@ serve(async (req) => {
     // ─── New generation ───
     const { prompt, model, sourceImage, duration = '5s', aspectRatio = '16:9', negativePrompt, resolution, referenceImageUrls, endFrameUrl, audioUrls, videoUrls, seed, effect } = body as GenerateVideoRequest;
 
-    if (!prompt) throw new Error('Prompt is required');
+    if (typeof prompt !== 'string' || !prompt.trim()) {
+      return new Response(JSON.stringify({ status: 'failed', error: 'A text prompt is required' }), {
+        status: 400, headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+      });
+    }
     if (!model || !VIDEO_MODELS[model]) {
       throw new Error(`Invalid model. Available: ${Object.keys(VIDEO_MODELS).join(', ')}`);
     }
