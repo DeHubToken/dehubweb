@@ -59,22 +59,33 @@ export function PostHeaderOptionsButton({
  */
 export function PostHeaderBoostButton({
   rowGap,
+  lit,
   className,
   style,
   ...props
-}: ButtonHTMLAttributes<HTMLButtonElement> & { rowGap: number }) {
+}: ButtonHTMLAttributes<HTMLButtonElement> & {
+  rowGap: number;
+  /** The post is boosted: a solid bolt that glows, in the same spot. */
+  lit?: boolean;
+}) {
   return (
     <button
       type="button"
       data-head-boost
+      data-boost-lit={lit ? '' : undefined}
       {...props}
-      className={cn('shrink-0 text-zinc-400 hover:text-white transition-colors active:scale-95 disabled:opacity-40', className)}
+      className={cn(
+        'shrink-0 transition-colors active:scale-95 disabled:opacity-40',
+        lit ? 'text-white' : 'text-zinc-400 hover:text-white',
+        className,
+      )}
       // The dots are pushed CORNER_INSET short of their own shift, so the
       // bolt keeps 14px between the two glyph boxes.
       style={{ marginRight: 14 - rowGap - dotsShiftX(HEADER_ICON_SIZE, true), ...style }}
     >
       <Zap
         data-corner-dots=""
+        fill={lit ? 'currentColor' : 'none'}
         style={{ width: HEADER_ICON_SIZE, height: HEADER_ICON_SIZE, translate: `0 ${cornerDrop(HEADER_ICON_SIZE)}px` }}
       />
     </button>
