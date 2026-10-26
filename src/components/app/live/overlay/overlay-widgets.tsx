@@ -121,11 +121,12 @@ function TipBanner({ item, leaving }: { item: TipItem; leaving: boolean }) {
       <div data-ow-card>
         <span data-ow-emoji aria-hidden>{tier.emoji}</span>
         <div data-ow-lines>
+          <div data-ow-eyebrow>{t(tier.labelKey, tier.name)}</div>
           <div data-ow-title>{name}</div>
-          <div data-ow-sub>
-            {t(tier.labelKey, tier.name)} · {item.amount.toLocaleString()} <DhbCoin />
-          </div>
           {item.message && <div data-ow-message>{item.message}</div>}
+        </div>
+        <div data-ow-figure>
+          {item.amount.toLocaleString()} <DhbCoin />
         </div>
       </div>
     </div>
@@ -178,24 +179,26 @@ function PersonAlert({ settings, kind }: WidgetProps & { kind: OverlayKind }) {
 function PersonBanner({ kind, item, leaving }: { kind: OverlayKind; item: PersonItem; leaving: boolean }) {
   const { t } = useTranslation();
   const name = useName(item.user);
-  const line =
+  // A small label over the name: the name is what the room reads first.
+  const eyebrow =
     kind === 'follow_alert'
-      ? t('liveOverlay.newFollower', { name })
+      ? t('liveOverlay.eyebrow.follow')
       : kind === 'subscribe_alert' && item.gifted
-        ? t('liveOverlay.giftedSubs', { name, count: item.gifted })
+        ? t('liveOverlay.eyebrow.gifted', { count: item.gifted })
       : kind === 'subscribe_alert'
         ? item.planName
-          ? t('liveOverlay.subscribedTo', { name, plan: item.planName })
-          : t('liveOverlay.newSubscriber', { name })
+          ? t('liveOverlay.eyebrow.subscribedTo', { plan: item.planName })
+          : t('liveOverlay.eyebrow.subscribe')
         : kind === 'share_alert'
-          ? t('liveOverlay.shared', { name })
-          : t('liveOverlay.joined', { name });
+          ? t('liveOverlay.eyebrow.share')
+          : t('liveOverlay.eyebrow.join');
   return (
     <div data-ow-alert data-leaving={leaving || undefined}>
       <div data-ow-card>
         <Avatar user={item.user} />
         <div data-ow-lines>
-          <div data-ow-title>{line}</div>
+          <div data-ow-eyebrow>{eyebrow}</div>
+          <div data-ow-title>{name}</div>
         </div>
       </div>
     </div>
@@ -274,7 +277,7 @@ function TopSupporters({ settings, streamId }: WidgetProps) {
       <div data-ow-list-title>{title}</div>
       {rows.map((row, i) => (
         <div data-ow-list-row key={row.address}>
-          <span data-ow-rank>{i + 1}</span>
+          <span data-ow-rank data-place={i + 1}>{i + 1}</span>
           <span data-ow-name>{row.displayName || row.username || t('liveOverlay.someone')}</span>
           <span data-ow-amount>
             {Math.floor(row.total).toLocaleString()} <DhbCoin />
@@ -293,7 +296,7 @@ function ViewerCount({ initialViewers }: WidgetProps) {
     if (event.type === 'viewers') setCount(event.count);
   });
   return (
-    <div data-ow-counter>
+    <div data-ow-counter data-live>
       <Eye aria-hidden />
       {count.toLocaleString()}
     </div>

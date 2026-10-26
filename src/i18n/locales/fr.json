@@ -6541,6 +6541,15 @@
     "creatorEarnsDirect": "Les abonnés paient en jetons DeHub. Votre part atterrit dans votre portefeuille au moment où ils s'abonnent, moins les frais de plateforme pour votre niveau de badge."
   },
   "liveOverlay": {
+    "eyebrow": {
+      "follow": "Nouvel abonné",
+      "subscribe": "Nouveau membre",
+      "subscribedTo": "Abonné · {{plan}}",
+      "gifted_one": "A offert un abonnement",
+      "gifted_other": "A offert {{count}} abonnements",
+      "share": "A partagé le live",
+      "join": "Vient d'arriver"
+    },
     "giftedSubs_one": "{{name}} a offert un abonnement !",
     "giftedSubs_other": "{{name}} a offert {{count}} abonnements !",
     "someone": "Quelqu'un",

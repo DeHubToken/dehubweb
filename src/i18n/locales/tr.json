@@ -6537,6 +6537,15 @@
     "creatorEarnsDirect": "Aboneler DeHub tokenleri ile ödeme yapar. Payınız, abone oldukları anda cüzdanınıza düşer ve rozet seviyenizin platform ücreti düşülür."
   },
   "liveOverlay": {
+    "eyebrow": {
+      "follow": "Yeni takipçi",
+      "subscribe": "Yeni abone",
+      "subscribedTo": "Abone oldu · {{plan}}",
+      "gifted_one": "Bir abonelik hediye etti",
+      "gifted_other": "{{count}} abonelik hediye etti",
+      "share": "Yayını paylaştı",
+      "join": "Yeni katıldı"
+    },
     "giftedSubs_one": "{{name}} bir abonelik hediye etti!",
     "giftedSubs_other": "{{name}} {{count}} abonelik hediye etti!",
     "someone": "Birisi",
