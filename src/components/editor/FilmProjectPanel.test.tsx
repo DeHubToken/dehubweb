@@ -15,7 +15,7 @@ vi.mock('../app/creator/studio/CinemaDirectionControls', () => ({ CinemaDirectio
 
 beforeEach(() => {
   const reference: MediaItem = { id: 'ref', name: 'Character reference', kind: 'image', mimeType: 'image/png', width: 64, height: 64, size: 1, createdAt: 1, url: 'blob:reference' };
-  useEditorStore.setState({ projectId: 'film-project', title: 'Film', settings: { ...DEFAULT_SETTINGS, filmProject: { version: 1, title: 'Film', brief: 'A journey', referenceMediaIds: ['ref'], shots: [{ id: 'shot', title: 'Arrival', prompt: 'Arrive at the coast', seconds: 5, referenceMediaIds: ['ref'], resultMediaId: 'result' }] } }, tracks: [], clips: [], media: [reference, { ...reference, id: 'result', name: 'Accepted result', url: 'blob:result' }], past: [], future: [] });
+  useEditorStore.setState({ projectId: 'film-project', projectTitle: 'Film', settings: { ...DEFAULT_SETTINGS, filmProject: { version: 1, title: 'Film', brief: 'A journey', referenceMediaIds: ['ref'], shots: [{ id: 'shot', title: 'Arrival', prompt: 'Arrive at the coast', seconds: 5, referenceMediaIds: ['ref'], resultMediaId: 'result' }] } }, tracks: [], clips: [], media: [reference, { ...reference, id: 'result', name: 'Accepted result', url: 'blob:result' }], past: [], future: [] });
   useEditorUiStore.setState({ generatePrefill: null, generatorWindow: 'closed' });
   mock.save.mockClear();
 });
