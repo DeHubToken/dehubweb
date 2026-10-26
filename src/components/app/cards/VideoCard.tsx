@@ -92,6 +92,7 @@ import ppvTicketIcon from '@/assets/ppv-ticket-icon.png';
 import { motion, AnimatePresence } from 'framer-motion';
 import { CardHeader } from './CardHeader';
 import { PostHeaderBoostButton, PostHeaderOptionsButton } from './PostHeaderOptionsButton';
+import { useBoostedPost } from './boosted-post';
 import { MatureContentGate, useMatureGate } from './MatureContentGate';
 import { ContentWarningGate, useContentWarning } from './ContentWarningGate';
 import { BadgedName } from '@/components/app/BadgedName';
@@ -833,6 +834,7 @@ const VideoCardBody = memo(function VideoCard({ video, postPage = false, onBack,
   const autoMutedRef = useRef(false);
   const isTabletOrMobile = useIsTabletOrMobile();
   const navigate = useNavigate();
+  const boosted = useBoostedPost();
   const queryClient = useQueryClient();
   const { walletAddress, openLoginModal } = useAuth();
   const { selfReaction, sendLiveReaction } = useLiveReaction(video.liveStreamId, !!video.isLivePost && !!video.isLiveNow);
@@ -2298,11 +2300,12 @@ const VideoCardBody = memo(function VideoCard({ video, postPage = false, onBack,
             badgeBalance={video.creatorBadgeBalance}
           />
           {!postPage && <div className="flex items-center gap-1">
-            {isOwnPost && (
+            {(isOwnPost || boosted) && (
               <PostHeaderBoostButton
                 rowGap={4}
-                onClick={() => setShowBoostModal(true)}
-                aria-label={t('postOptions.boostPost')}
+                lit={boosted}
+                onClick={() => (isOwnPost ? setShowBoostModal(true) : navigate('/app/superpowers'))}
+                aria-label={isOwnPost ? t('postOptions.boostPost') : _copy("copy.c1f1c8819e33", { defaultValue: "Boosted" })}
               />
             )}
             {/* Plain button, not DrawerTrigger — see PostCard: a trigger pins

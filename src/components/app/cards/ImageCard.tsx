@@ -57,6 +57,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import dehubCoin from '@/assets/dehub-coin.png';
 import { CardHeader } from './CardHeader';
 import { PostHeaderBoostButton, PostHeaderOptionsButton } from './PostHeaderOptionsButton';
+import { useBoostedPost } from './boosted-post';
 import { MatureContentGate, useMatureGate } from './MatureContentGate';
 import { ContentWarningGate, useContentWarning } from './ContentWarningGate';
 import { ActionBar } from './ActionBar';
@@ -807,6 +808,7 @@ const ImageCardBody = memo(function ImageCard({ post, aboveFold = false, onOpenC
   const { data: tipCount = 0 } = usePostTipCount(post.id, post.totalTips);
   const isTabletOrMobile = useIsTabletOrMobile();
   const navigate = useNavigate();
+  const boosted = useBoostedPost();
   const queryClient = useQueryClient();
   const { walletAddress, openLoginModal } = useAuth();
   const registerOptions = stage?.registerOptions;
@@ -1074,12 +1076,13 @@ const ImageCardBody = memo(function ImageCard({ post, aboveFold = false, onOpenC
       )}
       {/* The phone menu sits beside Recent; its drawer remains owned by this card. */}
       <div className={stage ? 'hidden' : 'flex items-center gap-1 pb-2'}>
-        {isOwnPost && (
+        {(isOwnPost || boosted) && (
           <PostHeaderBoostButton
             rowGap={4}
-            onClick={() => setShowBoostModal(true)}
-            disabled={!postTokenId}
-            aria-label={t('postOptions.boostPost')}
+            lit={boosted}
+            onClick={() => (isOwnPost ? setShowBoostModal(true) : navigate('/app/superpowers'))}
+            disabled={isOwnPost && !postTokenId}
+            aria-label={isOwnPost ? t('postOptions.boostPost') : _copy("copy.c1f1c8819e33", { defaultValue: "Boosted" })}
           />
         )}
         <Drawer open={showOptionsDrawer} onOpenChange={setShowOptionsDrawer}>

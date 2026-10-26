@@ -1108,7 +1108,9 @@ export default function HomePage() {
                   "relative flex items-center justify-center px-3 h-[35px] rounded-xl transition-colors overflow-hidden",
                   hasActiveFilters
                     ? "text-white"
-                    : "text-zinc-400 hover:text-white hover:bg-white/5"
+                    // Hover only where a real pointer hovers: phones keep
+                    // :hover after a tap, which left a stuck bubble here.
+                    : "text-zinc-400 [@media(hover:hover)]:hover:text-white [@media(hover:hover)]:hover:bg-white/5"
                 )}
                 aria-label={isPostOverlayActive ? _copy("copy.34c445f7d739", { defaultValue: "Back to feed" }) : isImagesScrollView ? _copy("copy.68f5b97c66d9", { defaultValue: "Back to grid" }) : _copy("copy.2ffafd1aa697", { defaultValue: "Feed settings" })}
                 aria-expanded={showNavBack ? undefined : islandFiltersOpen}
