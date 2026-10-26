@@ -115,7 +115,7 @@ import { usePostTipCount } from '@/hooks/use-post-tip-count';
 // via useTipPayment — wallet modules load dynamically inside tip()); the
 // /api/live gift endpoint only records it afterwards for the activity feed.
 import { useTipPayment, MIN_TIP_DHB } from '@/hooks/use-tip-payment';
-import { useQueryClient } from '@tanstack/react-query';
+import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { toast } from 'sonner';
 import { fundTipFromSource } from '@/lib/tip-funding-run';
 import type { DirectTipToken } from '@/lib/direct-tip-tokens';
@@ -216,6 +216,14 @@ export function LiveStreamCard({ stream, chatSlot, immersive = false }: LiveStre
   const [showActivityLog, setShowActivityLog] = useState(false);
   const [showGiftDrawer, setShowGiftDrawer] = useState(false);
   const [showGiftSubs, setShowGiftSubs] = useState(false);
+  // Offered once the stream API takes gift checkouts; asked when the gift sheet first opens.
+  const { data: giftSubsReady } = useQuery({
+    queryKey: ['live-hype-supported'],
+    queryFn: () => import('@/lib/api/dehub/live-hype').then((m) => m.liveHypeSupported()),
+    enabled: showGiftDrawer,
+    staleTime: Infinity,
+    retry: false,
+  });
   const [showBuyDrawer, setShowBuyDrawer] = useState(false);
   const [giftBalanceVersion, setGiftBalanceVersion] = useState(0);
   const [isPlaying, setIsPlaying] = useState(false);
@@ -1822,7 +1830,7 @@ export function LiveStreamCard({ stream, chatSlot, immersive = false }: LiveStre
               >
                 {isSendingGift || fundingGift ? <Loader2 className="w-4 h-4 mr-2 animate-spin" /> : <Gem className="w-4 h-4 mr-2" />}{_copy("copy.1c5ccbd708df", { defaultValue: "Send Gift" })}
                 {giftDirect && Number(giftAmount) > 0 ? <span className="ml-1.5 tabular-nums">· {giftCostIn(Number(giftAmount))} <span>{giftDirect.symbol}</span></span> : null}</Button>
-              {stream.creatorId && !isOwnStream && (
+              {giftSubsReady && stream.creatorId && !isOwnStream && (
                 <Button
                   variant="glass"
                   className="w-full py-5 rounded-xl"

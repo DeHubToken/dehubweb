@@ -216,3 +216,16 @@ export async function getCreatorEventBadges(creator: string): Promise<EventBadge
 }
 
 export { parseChatBadges, type ChatCreatorBadge } from '@/lib/live/chat-badges';
+
+/**
+ * Whether the stream API serves gifts, hype trains and badges yet. Asked once
+ * per session, so the gift sheet never offers a checkout the API cannot take.
+ */
+export async function liveHypeSupported(): Promise<boolean> {
+  try {
+    await apiCall('/api/live-hype/stream/000000000000000000000000');
+    return true;
+  } catch {
+    return false;
+  }
+}
