@@ -313,7 +313,7 @@ export const VIDEO_MODELS: Record<string, VideoModel> = {
     minDuration: 4,
     maxDuration: 15,
     hasAudio: true,
-    supportsNegativePrompt: true,
+    supportsNegativePrompt: false,
     supportsResolution: true,
     resolutions: ['480p', '720p'],
     provider: 'fal',
@@ -322,7 +322,7 @@ export const VIDEO_MODELS: Record<string, VideoModel> = {
     supportsEndFrame: true,
     supportsAudioInput: true,
     supportsVideoInput: true,
-    supportsSeed: true,
+    supportsSeed: false,
     aspectRatios: ['16:9', '9:16', '1:1'],
     get tips() {
       return [
@@ -349,7 +349,7 @@ export const VIDEO_MODELS: Record<string, VideoModel> = {
     minDuration: 4,
     maxDuration: 15,
     hasAudio: true,
-    supportsNegativePrompt: true,
+    supportsNegativePrompt: false,
     supportsResolution: true,
     provider: 'fal',
     supportsReferenceImages: true,
@@ -357,7 +357,7 @@ export const VIDEO_MODELS: Record<string, VideoModel> = {
     supportsEndFrame: true,
     supportsAudioInput: true,
     supportsVideoInput: true,
-    supportsSeed: true,
+    supportsSeed: false,
     aspectRatios: ['16:9', '9:16', '1:1'],
     get tips() {
       return [

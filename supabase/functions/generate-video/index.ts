@@ -11,6 +11,7 @@ import { chargeForJob } from "../_shared/ai-payment-guard.ts";
 import { falQueueUrls } from "../_shared/fal-queue.ts";
 import { CREATOR_FAL_VIDEO_MODELS } from '../_shared/creator-fal-catalog.ts';
 import { buildCreatorFalVideoRequest } from '../_shared/creator-fal-input.ts';
+import { buildSeedance2Input } from '../_shared/seedance2-input.ts';
 import { referenceVideoDuration } from '../_shared/creator-reference-video.ts';
 import { requireDeHubAuth } from '../_shared/auth.ts';
 import {
@@ -482,23 +483,8 @@ function buildFalInput(family: FalFamily, o: FalInputOptions): Record<string, un
   } = o;
 
   switch (family) {
-    // Unchanged from the original single-family implementation, so the two
-    // Seedance models keep behaving exactly as they did.
     case 'seedance':
-      return {
-        prompt,
-        duration: Math.min(Math.max(duration, 4), 15),
-        aspect_ratio: aspectRatio,
-        resolution: resolution || '720p',
-        generate_audio: true,
-        ...(sourceImage && { image_url: sourceImage }),
-        ...(negativePrompt && { negative_prompt: negativePrompt }),
-        ...(endFrameUrl && { last_image_url: endFrameUrl }),
-        ...(referenceImageUrls?.length && { image_urls: referenceImageUrls }),
-        ...(audioUrls?.length && { audio_urls: audioUrls }),
-        ...(videoUrls?.length && { video_urls: videoUrls }),
-        ...(seed !== undefined && seed !== null && { seed }),
-      };
+      return buildSeedance2Input({ prompt, duration, aspectRatio, resolution, sourceImage, endFrameUrl, referenceImageUrls, audioUrls, videoUrls, negativePrompt, seed }).input;
 
     // duration is '4s' | '6s' | '8s'; aspect ratio is 16:9 or 9:16 only.
     case 'veo':
@@ -980,6 +966,15 @@ serve(async (req) => {
     let validatedDuration: number | undefined;
     let providerPriceDhb: number | undefined;
     let veniceInput: Record<string, unknown> | undefined;
+    if (modelConfig.falFamily === 'seedance') {
+      try {
+        validatedDuration = buildSeedance2Input({ prompt, duration, aspectRatio, resolution, sourceImage, endFrameUrl, referenceImageUrls, audioUrls, videoUrls, negativePrompt, seed }).durationSeconds;
+      } catch (error) {
+        return new Response(JSON.stringify({ status: 'failed', error: (error as Error).message }), {
+          status: 400, headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+        });
+      }
+    }
     if (isVeniceVideo(model)) {
       const seconds = Number(String(duration).replace(/s$/, ''));
       try {
