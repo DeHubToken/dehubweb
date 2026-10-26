@@ -1721,6 +1721,10 @@
   "notifications": {
     "title": "Bildirimler",
     "markAllRead": "Tümünü okundu işaretle",
+    "groupNew": "Yeni",
+    "groupToday": "Bugün",
+    "groupThisWeek": "Bu hafta",
+    "groupEarlier": "Daha önce",
     "settings": "Bildirim Ayarları",
     "actions": "İşlemler",
     "markAllAsRead": "Tümünü okundu işaretle",
