@@ -327,7 +327,7 @@ export function TVPreviewCard({ channel }: TVPreviewCardProps) {
     <div
       data-glass-media-card
       className={cn(
-        'w-full bg-black/40 backdrop-blur-[24px] saturate-[180%] border border-white/10',
+        'w-full bg-black/40 backdrop-blur-[24px] backdrop-saturate-[180%] border border-white/10',
         'rounded-2xl overflow-hidden',
         'hover:bg-white/5 transition-all duration-200'
       )}
@@ -379,7 +379,7 @@ export function TVPreviewCard({ channel }: TVPreviewCardProps) {
 
         {/* Play/Pause center overlay on hover */}
         <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
-          <div className="w-12 h-12 rounded-xl bg-black/40 backdrop-blur-[24px] saturate-[180%] flex items-center justify-center border border-white/10">
+          <div className="w-12 h-12 rounded-xl bg-black/40 backdrop-blur-[24px] backdrop-saturate-[180%] flex items-center justify-center border border-white/10">
             {isPlaying ? (
               <Pause className="w-6 h-6 text-white fill-white" />
             ) : (
@@ -393,7 +393,7 @@ export function TVPreviewCard({ channel }: TVPreviewCardProps) {
           <div className="absolute bottom-2 right-2 flex items-center gap-1.5 opacity-0 group-hover:opacity-100 transition-opacity">
             <button
               onClick={handleMuteToggle}
-              className="w-8 h-8 rounded-xl bg-black/40 backdrop-blur-[24px] saturate-[180%] border border-white/10 flex items-center justify-center hover:bg-black/60 transition-colors"
+              className="w-8 h-8 rounded-xl bg-black/40 backdrop-blur-[24px] backdrop-saturate-[180%] border border-white/10 flex items-center justify-center hover:bg-black/60 transition-colors"
             >
               {isMuted ? (
                 <VolumeX className="w-4 h-4 text-white" />
@@ -417,7 +417,7 @@ export function TVPreviewCard({ channel }: TVPreviewCardProps) {
                 }
               }}
               className={cn(
-                "w-8 h-8 rounded-xl backdrop-blur-[24px] saturate-[180%] border border-white/10 flex items-center justify-center hover:bg-black/60 transition-colors",
+                "w-8 h-8 rounded-xl backdrop-blur-[24px] backdrop-saturate-[180%] border border-white/10 flex items-center justify-center hover:bg-black/60 transition-colors",
                 isPiP(channel.id) ? "bg-white/20" : "bg-black/40"
               )}
             >
@@ -425,7 +425,7 @@ export function TVPreviewCard({ channel }: TVPreviewCardProps) {
             </button>
             <button
               onClick={handleFullscreen}
-              className="w-8 h-8 rounded-xl bg-black/40 backdrop-blur-[24px] saturate-[180%] border border-white/10 flex items-center justify-center hover:bg-black/60 transition-colors"
+              className="w-8 h-8 rounded-xl bg-black/40 backdrop-blur-[24px] backdrop-saturate-[180%] border border-white/10 flex items-center justify-center hover:bg-black/60 transition-colors"
             >
               {isFullscreen ? (
                 <Minimize className="w-4 h-4 text-white" />

@@ -478,7 +478,7 @@ function MobileCreatorInfo({
               {/* PPV Badge - icon only on mobile */}
               {isPPV && ppvPrice && (
                 <button 
-                  className="flex items-center justify-center bg-black/40 backdrop-blur-[24px] saturate-[180%] w-7 h-7 rounded-lg border border-white/10 hover:bg-black/60 transition-colors"
+                  className="flex items-center justify-center bg-black/40 backdrop-blur-[24px] backdrop-saturate-[180%] w-7 h-7 rounded-lg border border-white/10 hover:bg-black/60 transition-colors"
                   onClick={(e) => {
                     e.stopPropagation();
                     setShowPPVDrawer(true);
@@ -491,7 +491,7 @@ function MobileCreatorInfo({
               {/* Bounty Badge - keep text for bounty */}
               {isW2E && (
                 <button 
-                  className="flex items-center gap-1 bg-black/40 backdrop-blur-[24px] saturate-[180%] px-2 py-1 rounded-lg border border-white/10 hover:bg-black/60 transition-colors"
+                  className="flex items-center gap-1 bg-black/40 backdrop-blur-[24px] backdrop-saturate-[180%] px-2 py-1 rounded-lg border border-white/10 hover:bg-black/60 transition-colors"
                   onClick={(e) => {
                     e.stopPropagation();
                     setShowBountyDrawer(true);
@@ -509,7 +509,7 @@ function MobileCreatorInfo({
               {/* Locked Badge - icon only on mobile */}
               {isLocked && (
                 <button 
-                  className="flex items-center justify-center bg-black/40 backdrop-blur-[24px] saturate-[180%] w-7 h-7 rounded-lg border border-white/10 hover:bg-black/60 transition-colors"
+                  className="flex items-center justify-center bg-black/40 backdrop-blur-[24px] backdrop-saturate-[180%] w-7 h-7 rounded-lg border border-white/10 hover:bg-black/60 transition-colors"
                   onClick={(e) => {
                     e.stopPropagation();
                     setShowLockedDrawer(true);
@@ -2435,10 +2435,10 @@ const VideoCardBody = memo(function VideoCard({ video, postPage = false, onBack,
               }}
             >
               <div className="flex items-center gap-3 mb-3">
-                <div className="w-14 h-14 rounded-2xl bg-black/40 backdrop-blur-[24px] saturate-[180%] flex items-center justify-center border border-white/10">
+                <div className="w-14 h-14 rounded-2xl bg-black/40 backdrop-blur-[24px] backdrop-saturate-[180%] flex items-center justify-center border border-white/10">
                   <Ticket className="h-6 w-6 text-white" />
                 </div>
-                <div className="w-14 h-14 rounded-2xl bg-black/40 backdrop-blur-[24px] saturate-[180%] flex items-center justify-center border border-white/10">
+                <div className="w-14 h-14 rounded-2xl bg-black/40 backdrop-blur-[24px] backdrop-saturate-[180%] flex items-center justify-center border border-white/10">
                   <Lock className="h-6 w-6 text-white" />
                 </div>
               </div>
@@ -2466,7 +2466,7 @@ const VideoCardBody = memo(function VideoCard({ video, postPage = false, onBack,
                 if (Math.abs(touch.clientX - start.x) < 10 && Math.abs(touch.clientY - start.y) < 10) { e.stopPropagation(); e.preventDefault(); setShowPPVDrawer(true); }
               }}
             >
-              <div className="w-16 h-16 rounded-2xl bg-black/40 backdrop-blur-[24px] saturate-[180%] flex items-center justify-center border border-white/10 mb-3">
+              <div className="w-16 h-16 rounded-2xl bg-black/40 backdrop-blur-[24px] backdrop-saturate-[180%] flex items-center justify-center border border-white/10 mb-3">
                 <Ticket className="h-7 w-7 text-white" />
               </div>
               <p className="text-white font-semibold text-sm mb-1">{t('drawers.ppvTitle')}</p>
@@ -2495,7 +2495,7 @@ const VideoCardBody = memo(function VideoCard({ video, postPage = false, onBack,
                 if (Math.abs(touch.clientX - start.x) < 10 && Math.abs(touch.clientY - start.y) < 10) { e.stopPropagation(); e.preventDefault(); setShowSubDrawer(true); }
               }}
             >
-              <div className="w-16 h-16 rounded-2xl bg-black/40 backdrop-blur-[24px] saturate-[180%] flex items-center justify-center border border-white/10 mb-3">
+              <div className="w-16 h-16 rounded-2xl bg-black/40 backdrop-blur-[24px] backdrop-saturate-[180%] flex items-center justify-center border border-white/10 mb-3">
                 <Star className="h-7 w-7 text-white" />
               </div>
               <p className="text-white font-semibold text-sm mb-1">{_copy("copy.109ddfc1cc4a", { defaultValue: "Subscribers only" })}</p>
@@ -2526,7 +2526,7 @@ const VideoCardBody = memo(function VideoCard({ video, postPage = false, onBack,
                 if (Math.abs(touch.clientX - start.x) < 10 && Math.abs(touch.clientY - start.y) < 10) { e.stopPropagation(); e.preventDefault(); setShowLockedDrawer(true); }
               }}
             >
-              <div className="w-16 h-16 rounded-2xl bg-black/40 backdrop-blur-[24px] saturate-[180%] flex items-center justify-center border border-white/10 mb-3">
+              <div className="w-16 h-16 rounded-2xl bg-black/40 backdrop-blur-[24px] backdrop-saturate-[180%] flex items-center justify-center border border-white/10 mb-3">
                 <Lock className="h-7 w-7 text-white" />
               </div>
               <p className="text-white font-semibold text-sm mb-1">{_copy("copy.490f4babbf34", { defaultValue: "Holdings Required" })}</p>
@@ -2551,7 +2551,7 @@ const VideoCardBody = memo(function VideoCard({ video, postPage = false, onBack,
                 if (Math.abs(touch.clientX - start.x) < 10 && Math.abs(touch.clientY - start.y) < 10) { e.stopPropagation(); e.preventDefault(); setShowBountyDrawer(true); }
               }}
             >
-              <div className="w-16 h-16 rounded-2xl bg-black/40 backdrop-blur-[24px] saturate-[180%] flex items-center justify-center border border-white/10 mb-3">
+              <div className="w-16 h-16 rounded-2xl bg-black/40 backdrop-blur-[24px] backdrop-saturate-[180%] flex items-center justify-center border border-white/10 mb-3">
                 <Gift className="h-7 w-7 text-white" />
               </div>
               <p className="text-white font-semibold text-sm mb-1">{t('drawers.bountyTitle')}</p>
@@ -2702,7 +2702,7 @@ const VideoCardBody = memo(function VideoCard({ video, postPage = false, onBack,
             {/* The centre control already draws a play glyph; a second one
                 here stacked two triangles on top of each other. */}
             {!showCenterPlay && (
-              <div className="w-16 h-16 rounded-2xl bg-black/40 backdrop-blur-[24px] saturate-[180%] border border-white/10 flex items-center justify-center">
+              <div className="w-16 h-16 rounded-2xl bg-black/40 backdrop-blur-[24px] backdrop-saturate-[180%] border border-white/10 flex items-center justify-center">
                 <Play className="w-7 h-7 text-white fill-current ml-1" />
               </div>
             )}
@@ -2738,7 +2738,7 @@ const VideoCardBody = memo(function VideoCard({ video, postPage = false, onBack,
           <button
             type="button"
             aria-label={t('drawers.bountyTitle')}
-            className={cn("absolute left-2 z-10 flex items-center gap-1 bg-black/40 backdrop-blur-[24px] saturate-[180%] px-2 py-1 rounded-lg border border-white/10 hover:bg-black/60 transition-colors", onBack ? "top-11" : "top-2")}
+            className={cn("absolute left-2 z-10 flex items-center gap-1 bg-black/40 backdrop-blur-[24px] backdrop-saturate-[180%] px-2 py-1 rounded-lg border border-white/10 hover:bg-black/60 transition-colors", onBack ? "top-11" : "top-2")}
             onClick={(e) => { e.stopPropagation(); setShowBountyDrawer(true); }}
           >
             <Gift className="w-3 h-3 text-white" />
@@ -2864,7 +2864,7 @@ const VideoCardBody = memo(function VideoCard({ video, postPage = false, onBack,
               </button>
               {volumeOpen && (
                 <div className="absolute top-full right-0 pt-1.5" onClick={(e) => e.stopPropagation()}>
-                  <div className="h-[104px] w-8 bg-black/40 backdrop-blur-[24px] saturate-[180%] rounded-xl border border-white/10 flex items-center justify-center">
+                  <div className="h-[104px] w-8 bg-black/40 backdrop-blur-[24px] backdrop-saturate-[180%] rounded-xl border border-white/10 flex items-center justify-center">
                     <input
                       type="range"
                       min={0}
@@ -2947,7 +2947,7 @@ const VideoCardBody = memo(function VideoCard({ video, postPage = false, onBack,
               </button>
               {volumeOpen && (
                 <div className="absolute bottom-full left-0 pb-1.5" onClick={(e) => e.stopPropagation()}>
-                  <div className="h-[104px] w-8 bg-black/40 backdrop-blur-[24px] saturate-[180%] rounded-xl border border-white/10 flex items-center justify-center">
+                  <div className="h-[104px] w-8 bg-black/40 backdrop-blur-[24px] backdrop-saturate-[180%] rounded-xl border border-white/10 flex items-center justify-center">
                     <input
                       type="range"
                       min={0}
@@ -3108,7 +3108,7 @@ const VideoCardBody = memo(function VideoCard({ video, postPage = false, onBack,
               exit={{ opacity: 0, scale: 0.8 }}
               className={`absolute top-1/2 -translate-y-1/2 ${seekIndicator === 'right' ? 'right-8' : 'left-8'}`}
             >
-              <div className="w-12 h-12 rounded-xl bg-black/40 backdrop-blur-[24px] saturate-[180%] flex items-center justify-center border border-white/10">
+              <div className="w-12 h-12 rounded-xl bg-black/40 backdrop-blur-[24px] backdrop-saturate-[180%] flex items-center justify-center border border-white/10">
                 {seekIndicator === 'right' ? (
                   <FastForward className="h-6 w-6 text-white" />
                 ) : (
@@ -3125,7 +3125,7 @@ const VideoCardBody = memo(function VideoCard({ video, postPage = false, onBack,
 
         {/* Duration badge for gated content - always visible on locked thumbnails */}
         {isContentGated && video.duration && (
-          <div className={`absolute bottom-2 right-2 bg-black/40 backdrop-blur-[24px] saturate-[180%] px-1.5 py-0.5 rounded border border-white/10 text-xs text-white font-medium z-10`}>
+          <div className={`absolute bottom-2 right-2 bg-black/40 backdrop-blur-[24px] backdrop-saturate-[180%] px-1.5 py-0.5 rounded border border-white/10 text-xs text-white font-medium z-10`}>
             {video.duration}
           </div>
         )}

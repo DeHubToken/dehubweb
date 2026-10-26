@@ -195,7 +195,7 @@ function CreatorsPageInner() {
           <Button
             type="submit"
             disabled={isSubmitting}
-            className="w-full h-12 bg-black/40 backdrop-blur-[24px] saturate-[180%] border border-white/10 text-white hover:bg-black/60 font-semibold rounded-xl"
+            className="w-full h-12 bg-black/40 backdrop-blur-[24px] backdrop-saturate-[180%] border border-white/10 text-white hover:bg-black/60 font-semibold rounded-xl"
           >
             {isSubmitting ? (
               <>

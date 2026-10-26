@@ -2296,7 +2296,7 @@ export default function NotificationsPage({ inDrawer = false }: { inDrawer?: boo
       <SheetContent
         side="bottom"
         data-notifications-page
-        className="bg-black/60 backdrop-blur-[24px] saturate-[180%] border-t border-white/10 rounded-t-3xl max-h-[85vh] overflow-y-auto"
+        className="bg-black/60 backdrop-blur-[24px] backdrop-saturate-[180%] border-t border-white/10 rounded-t-3xl max-h-[85vh] overflow-y-auto"
       >
         <SheetHeader className="pb-4">
           <SheetTitle className="text-white text-lg font-bold flex items-center gap-2">

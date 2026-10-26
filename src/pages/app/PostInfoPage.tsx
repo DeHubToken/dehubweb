@@ -258,7 +258,7 @@ export default function PostInfoPage() {
     return (
       <div data-glass-page className="min-h-screen bg-black">
         <div className="sticky top-11 lg:top-0 z-50 px-4 pt-1 pb-3 sm:px-4 sm:pt-3 sm:pb-3">
-          <div className="flex items-center gap-3 rounded-2xl bg-black/60 backdrop-blur-[24px] saturate-[180%] px-3 py-2">
+          <div className="flex items-center gap-3 rounded-2xl bg-black/60 backdrop-blur-[24px] backdrop-saturate-[180%] px-3 py-2">
             <button
               data-swipe-back onClick={() => navigate(-1)}
               className="p-2 rounded-xl hover:bg-white/10 transition-colors"
@@ -320,7 +320,7 @@ export default function PostInfoPage() {
     return (
       <div data-glass-page className="min-h-screen bg-black">
         <div className="sticky top-11 lg:top-0 z-50 px-4 pt-1 pb-3 sm:px-4 sm:pt-3 sm:pb-3">
-          <div className="flex items-center gap-3 rounded-2xl bg-black/60 backdrop-blur-[24px] saturate-[180%] px-3 py-2">
+          <div className="flex items-center gap-3 rounded-2xl bg-black/60 backdrop-blur-[24px] backdrop-saturate-[180%] px-3 py-2">
             <button
               data-swipe-back onClick={() => navigate(-1)}
               className="p-2 rounded-xl hover:bg-white/10 transition-colors"
@@ -366,7 +366,7 @@ export default function PostInfoPage() {
       <SEOHead title={_copy("copy.f47d2472ba8f", { defaultValue: "Post #{{value1}} — DeHub", value1: nftInfo.tokenId })} description={_copy("copy.c3d7095600bf", { defaultValue: "On-chain post info for token #{{value1}} on DeHub. View mint transaction, creator wallet, and holders.", value1: nftInfo.tokenId })} url={`https://dehub.io/app/post/${postId}/info`} />
       {/* Header */}
       <div className="sticky top-0 z-50 px-4 pt-0 pb-3 sm:px-4 sm:pt-3 sm:pb-3">
-        <div className="flex items-center gap-3 rounded-2xl bg-black/60 backdrop-blur-[24px] saturate-[180%] px-3 py-2">
+        <div className="flex items-center gap-3 rounded-2xl bg-black/60 backdrop-blur-[24px] backdrop-saturate-[180%] px-3 py-2">
           <button
             data-swipe-back onClick={() => navigate(-1)}
             className="p-2 rounded-xl hover:bg-white/10 transition-colors"

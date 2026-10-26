@@ -326,7 +326,7 @@ export function RadioFullscreenVisualizer({
 
                 <button
                   onClick={onClose}
-                  className="w-10 h-10 sm:w-12 sm:h-12 rounded-xl bg-black/40 backdrop-blur-[24px] saturate-[180%] flex items-center justify-center border border-white/10 hover:bg-black/60 transition-colors"
+                  className="w-10 h-10 sm:w-12 sm:h-12 rounded-xl bg-black/40 backdrop-blur-[24px] backdrop-saturate-[180%] flex items-center justify-center border border-white/10 hover:bg-black/60 transition-colors"
                 >
                   <Minimize2 className="w-5 h-5 sm:w-6 sm:h-6 text-white" />
                 </button>
@@ -337,7 +337,7 @@ export function RadioFullscreenVisualizer({
               <div className="flex items-center justify-center gap-4 mb-4">
                 <button
                   onClick={prevStyle}
-                  className="w-10 h-10 rounded-xl bg-black/40 backdrop-blur-[24px] saturate-[180%] flex items-center justify-center border border-white/10 hover:bg-black/60 transition-colors"
+                  className="w-10 h-10 rounded-xl bg-black/40 backdrop-blur-[24px] backdrop-saturate-[180%] flex items-center justify-center border border-white/10 hover:bg-black/60 transition-colors"
                 >
                   <ChevronLeft className="w-5 h-5 text-white" />
                 </button>
@@ -349,7 +349,7 @@ export function RadioFullscreenVisualizer({
                 
                 <button
                   onClick={nextStyle}
-                  className="w-10 h-10 rounded-xl bg-black/40 backdrop-blur-[24px] saturate-[180%] flex items-center justify-center border border-white/10 hover:bg-black/60 transition-colors"
+                  className="w-10 h-10 rounded-xl bg-black/40 backdrop-blur-[24px] backdrop-saturate-[180%] flex items-center justify-center border border-white/10 hover:bg-black/60 transition-colors"
                 >
                   <ChevronRight className="w-5 h-5 text-white" />
                 </button>
@@ -363,7 +363,7 @@ export function RadioFullscreenVisualizer({
                     "w-9 h-9 rounded-xl flex items-center justify-center border transition-colors",
                     lavaMode
                       ? "bg-white/20 border-white/30 text-white"
-                      : "bg-black/40 backdrop-blur-[24px] saturate-[180%] border-white/10 text-zinc-400 hover:text-white"
+                      : "bg-black/40 backdrop-blur-[24px] backdrop-saturate-[180%] border-white/10 text-zinc-400 hover:text-white"
                   )}
                 >
                   <BrandIcon src={lavaLampIcon} alt={_copy("copy.99ad7da8e9da", { defaultValue: "Lava mode" })} className="w-4 h-4 invert" />

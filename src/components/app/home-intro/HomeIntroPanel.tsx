@@ -322,7 +322,7 @@ export function HomeIntroPanel({
               <span
                 key={`${i}-${runId}`}
                 className={cn('block h-full rounded-full bg-white', i === active && 'motion-safe:animate-[dehub-pill_var(--pill-ms)_linear_forwards]')}
-                style={{ '--pill-ms': `${SLIDE_MS}ms`, width: i > active ? '0%' : '100%' } as CSSProperties}
+                style={{ '--pill-ms': `${SLIDE_MS}ms`, transform: i > active ? 'translateX(-100%)' : 'none' } as CSSProperties}
               />
             </button>
           ))}

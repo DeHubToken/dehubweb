@@ -130,7 +130,7 @@ export const LeaderboardCarousel = memo(function LeaderboardCarousel() {
   if (!isLoading && !isError && entries.length === 0) return null;
 
   return (
-    <div className="bg-black/40 backdrop-blur-[24px] saturate-[180%] border border-white/[0.08] rounded-xl p-3">
+    <div className="bg-black/40 backdrop-blur-[24px] backdrop-saturate-[180%] border border-white/[0.08] rounded-xl p-3">
       <div className="flex items-center justify-between mb-3">
         <h3 className="font-bold text-white flex items-center gap-2">
           <Trophy className="w-5 h-5 text-yellow-500" aria-hidden="true" />

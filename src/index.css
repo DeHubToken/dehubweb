@@ -558,10 +558,13 @@ html {
 /* Story-slide progress pill on the signed-out home welcome panel
    (components/app/HomeIntro.tsx), mirroring the mobile app's ProgressPill.
    Applied via motion-safe: — a reduced-motion viewer gets no auto-advance, and
-   the pill's inline width already resolves to 100% for the active slide. */
+   the pill's inline transform already resolves to full for the active slide.
+   Slides the full-width fill in under the button's rounded clip instead of
+   growing its width: a width keyframe re-laid out the page on every frame,
+   which in Safari also repainted every glass layer (~360ms frames vs ~40ms). */
 @keyframes dehub-pill {
-  from { width: 0%; }
-  to { width: 100%; }
+  from { transform: translateX(-100%); }
+  to { transform: translateX(0); }
 }
 
 /* Signed-out home welcome panel (components/app/HomeIntro.tsx) sizes itself to
