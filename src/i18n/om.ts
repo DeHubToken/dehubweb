@@ -1925,7 +1925,7 @@ export const om = {
   termsOfService: {
     title: 'Haala Tajaajilaa DeHub',
     lastUpdated: 'Dhuma irratti haaromfame:',
-    lastUpdatedDate: 'Muddee 2, 2024',
+    lastUpdatedDate: '25 Waxabajjii 2026',
     effective: 'Hojii irra kan oolu:',
     effectiveDate: 'Muddee 2, 2024',
     welcomeTitle: 'Baga Nagaan DeHub tti Dhuftan!',
@@ -1934,8 +1934,10 @@ export const om = {
     ourServiceText1: "Tajaajilli qabiyyee naannoo guutuummaan giddugaleessa hin qabne keessatti argachuu, qooduu fi maallaqa argachuu si dandeessisa.",
     ourServiceText2: 'DeHub akka pirootokolii giddugaleessa hin qabneetti hojjeta bakka to\'annoon qabiyyee bulchiinsa hawaasaan gaggeeffamu.',
     softwareDevelopers: 'Eenyutu DeHub Bulcha',
-    softwareDevText1: 'DeHub DAO walaba ta&#39;eedha. Dhaabbanni Tajaajilicha hin qabu, hin hojjetu ykn hin to’atu. Pirootokooliin, waltajjiin fi kaaznaa abbootii token DeHubtiin karaa pirootokoolii bulchiinsa DeHub sansalataan kan bulfamu yoo ta&#39;u, kunis kallattiin kan argamudha: yaadonni ka&#39;anii appii keessatti sagalee kan kennan yoo ta&#39;u, bu&#39;aan isaas sirna ikoo hidhuudha. Waliigaltee kana keessatti &quot;DeHub&quot;, &quot;nuti&quot;, &quot;nuti&quot; fi &quot;keenya&quot; jechuun DAO fi pirootokoolii inni bulchu jechuudha malee dhaabbata miti.',
+    softwareDevText1: 'DeHub DAO walaba fi bilisaa ta\'eedha. Dhaabbanni Tajaajilicha hin qabu, hin hojjetu yookaan hin to\'atu. Pirootokoolii, waltajjii fi kaaznaa abbootiin token DeHub karaa pirootokoolii bulchiinsa DeHub sansalata irratti (on-chain) bulchu, kunis amma hojii irra jira: yaadonni appii keessatti ka\'anii sagalee kennamu, bu\'aan isaas eekosistemii hunda ni hidhata. Waliigaltee kana keessatti "DeHub", "nuti", "keenya" fi "nu" jechuun DAO fi pirootokoolii inni bulchu malee dhaabbata miti.',
     softwareDevText2: 'Misoomni gumaachitoota fi istuudiyoowwan of-danda\'oo DAOn qacaruun raawwatama. Isaan keessaa namni tokkollee sirna DeHub hin qabu, aangoo murtee irrattis hin qabu, kamiyyuu sagalee bulchiinsaan bakka bu\'uu yookaan kaafamuu ni danda\'a. Adeemsa kanaan ala namni kamiyyuu piroxookoolii, tookenii yookaan Haalawwan kana jijjiiruu hin danda\'u.',
+    softwareDevText3: 'Delabs Association garee misoomtoota ta\'e dha, kanneen teeknooloojii DeHubiif ijaaruuf fi waltajjii sana tajaajila ol\'aanaa akka Google Play Store fa\'i waliin walitti hidhuuf qabamanii jiran. Delabs Association DAO wajjin qunnamtii tokko iyyuu hin qabu, DAO\'f bulchuu, to\'achuu ykn murtee gochuu hin danda\'u.',
+    wyomingDaoText: 'DeHub amma Mootummaa Wyoming, USA keessatti DAO galmeessuu irra jira.',
     whoMayUse: 'Eenyutu Tajaajila Fayyadamuu Danda\'a?',
     ageRequirements: 'Ulaagaa Umrii',
     ageRequirementsText: "Yoo umriin kee waggaa 14 yookiin sanaa olii ta'e Tajaajila fayyadamuu dandeessa.",
@@ -2311,6 +2313,7 @@ export const om = {
     efficient: "Bulchiisa paakeejii bu'a qabeessa",
   },
   quickStart: {
+    nextFaqTitle: 'Gaaffilee Yeroo Baay\'ee Gaafataman',
     title: 'Qajeelfama Jalqabbii Ariifataa',
     breadcrumbDocs: 'Galmee',
     breadcrumbGettingStarted: 'Jalqabuu',

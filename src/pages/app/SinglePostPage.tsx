@@ -94,7 +94,7 @@ import { canonicalUrl } from '@/lib/seo/route-meta';
 import { usePostStagePhone } from '@/hooks/use-post-stage-phone';
 import { StageRelated } from '@/components/app/post-stage/StageRelated';
 import { PostStagePhone } from '@/components/app/post-stage/PostStagePhone';
-import type { PostStageValue } from '@/components/app/post-stage/post-stage-context';
+import { POST_STAGE_COMPOSE_EVENT, type PostStageValue } from '@/components/app/post-stage/post-stage-context';
 import { viewerShareUrl } from '@/lib/share-url';
 import { trackShare } from '@/lib/analytics';
 import { toStoryboard } from '@/lib/storyboard';
@@ -1187,14 +1187,13 @@ function SinglePostPageContent({ inOverlay = false, overrideId, detailsOnly = fa
     navigate(`/app?image=${encodeURIComponent(id)}`, { replace: true });
   }, [isStagePhone, post, contentType, id, navigate]);
   const revealStageComments = useCallback((focusComposer: boolean) => {
-    // Twice: once now, and once the section has re-rendered with its new tab.
-    const run = () => {
+    // The composer is put away until asked for. Raised inside the tap so the
+    // focus it takes still opens the keyboard.
+    if (focusComposer) window.dispatchEvent(new Event(POST_STAGE_COMPOSE_EVENT));
+    // After the section has re-rendered with its new tab.
+    requestAnimationFrame(() => {
       document.querySelector('[data-stage-comments]')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
-      if (focusComposer) {
-        document.querySelector<HTMLTextAreaElement>('[data-stage-composer] textarea')?.focus({ preventScroll: true });
-      }
-    };
-    requestAnimationFrame(run);
+    });
   }, []);
   const stageValue = useMemo<PostStageValue>(() => ({
     onBack: goBack,

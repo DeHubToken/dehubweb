@@ -98,7 +98,7 @@
       <div id="remake-shots" class="remake-shots"></div>
       <p id="remake-summary" class="hint" role="status"></p>
       <button id="remake-assemble" type="button" hidden>Assemble edit · no generation charge</button>
-      <div id="remake-output" hidden><h3 id="remake-output-title">Your finished edit</h3><video id="remake-result" controls playsinline preload="metadata"></video><a id="remake-download" download>Download edit</a></div>
+      <div id="remake-output" hidden><h3 id="remake-output-title">Your finished edit</h3><video id="remake-result" controls playsinline preload="metadata"></video><a id="remake-download" download>Download edit</a><button id="remake-save-library" type="button" hidden>Save to library</button></div>
     </section>
     <section id="draft-section" class="stage-panel" hidden>
       <p class="eyebrow">BRING THE CHARACTER IN</p><h2>Create your preview</h2><p id="draft-guidance">Approve the prepared clip and choose a character to continue.</p>
@@ -107,10 +107,11 @@
     </section>
     <section id="export-section" class="stage-panel" hidden>
       <p class="eyebrow">YOUR RESULT</p><h2>Watch it. Make it yours.</h2>
-      <div class="tabs" id="result-tabs" role="group" aria-label="Result preview"></div><video id="result" controls playsinline preload="metadata"></video><a id="result-download" download>Download video</a>
+      <div class="tabs" id="result-tabs" role="group" aria-label="Result preview"></div><video id="result" controls playsinline preload="metadata"></video><a id="result-download" download>Download video</a><button id="result-save-library" type="button" hidden>Save to library</button>
       <p id="export-guidance">Your full original soundtrack is restored. You can download the preview as it is, or approve HD within six days.</p><p id="duration-note" class="hint" hidden></p>
       <label class="check" id="hd-review"><input id="draft-reviewed" type="checkbox">I approve this preview and want to purchase the 1080p version.</label><button id="hd" disabled>Generate 1080p</button>
     </section>
+    <p id="library-save-status" role="status" aria-live="polite"></p>
   </div>
   <dialog id="discard-dialog" aria-labelledby="discard-title"><h2 id="discard-title">Leave these changes?</h2><p>Your selected files or character changes have not been saved.</p><div class="row"><button id="keep-editing" type="button">Keep editing</button><button id="discard-changes" class="secondary" type="button">Leave without saving</button></div></dialog>
   <footer>Saved to your DeHub account. Continue on web or mobile.</footer>

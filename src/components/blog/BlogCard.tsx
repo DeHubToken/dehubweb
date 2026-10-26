@@ -7,7 +7,7 @@ import Calendar from "@/components/ui/cut-icons/events";
 import { BlogPost } from '@/types/blog';
 import { formatDate } from '@/utils/blogUtils';
 import { getDocumentScrollTop } from '@/lib/document-scroll';
-import { mediaImage, mediaImageSrcSet } from '@/lib/media-url';
+import { BlogBanner } from '@/components/blog/BlogBanner';
 import { usePublicPageLocale } from '@/hooks/usePublicPageLocale';
 import { localizedPageUrl } from '@/lib/seo/public-locales';
 
@@ -97,17 +97,14 @@ const BlogCard: React.FC<BlogCardProps> = ({ post, featured = false }) => {
     <article className={`group bg-card rounded-xl border border-border hover:border-primary/40 transition-all duration-200 hover:shadow-lg overflow-hidden ${featured ? 'lg:col-span-2' : ''}`}>
       <Link to={href} className="block" onClick={handleLinkClick}>
         <div className="relative">
-          <img
-            src={mediaImage(getBannerImage(), { width: 736 })}
-            srcSet={mediaImageSrcSet(getBannerImage(), [360, 480, 736, 1100])}
+          <BlogBanner
+            src={getBannerImage()}
+            width={736}
+            widths={[360, 480, 736, 1100]}
             // One column below lg, two above it.
             sizes="(min-width: 1024px) 560px, 100vw"
             alt={translatedPage.data?.h1 || post.bannerImageAlt}
-            width={1200}
-            height={630}
-            loading="lazy"
-            decoding="async"
-            className="w-full aspect-[40/21] object-cover transition-transform duration-200 group-hover:scale-105"
+            imgClassName="transition-transform duration-200 group-hover:scale-105"
           />
         </div>
 
