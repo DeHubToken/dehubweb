@@ -1,4 +1,5 @@
-export const MAX_AUDIO_RESULT_BYTES = 50 * 1024 * 1024;
+// Allows the full five-minute paid music track even as uncompressed stereo PCM.
+export const MAX_AUDIO_RESULT_BYTES = 128 * 1024 * 1024;
 
 export function audioResultIssue(contentType: string | null, bytes: number): string | null {
   if (!contentType || !/^audio\/(mpeg|mp3|mp4|wav|x-wav|ogg)(?:;|$)/i.test(contentType)) return 'creator.audioInvalidResponse';

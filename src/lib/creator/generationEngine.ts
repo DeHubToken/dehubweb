@@ -765,7 +765,7 @@ async function callAudioFunction(
   if (!response.ok) throw new Error(await readFunctionError(response, fallbackError));
 
   const declaredBytes = Number(response.headers.get('Content-Length'));
-  if (declaredBytes > MAX_AUDIO_RESULT_BYTES) throw new Error(_translateCopy('creator.audioResultTooLarge', { defaultValue: 'The audio result is empty or exceeds 50 MB.' }));
+  if (declaredBytes > MAX_AUDIO_RESULT_BYTES) throw new Error(_translateCopy('creator.audioResultTooLarge', { defaultValue: 'The audio result is empty or exceeds 128 MB.' }));
   const blob = await response.blob();
   const audioIssue = audioResultIssue(response.headers.get('Content-Type'), blob.size);
   if (audioIssue) throw new Error(_translateCopy(audioIssue, { defaultValue: 'The audio service returned an invalid result.' }));
