@@ -1180,12 +1180,6 @@ function SinglePostPageContent({ inOverlay = false, overrideId, detailsOnly = fa
    */
   const useStage = isStagePhone && !!post && post.status !== 'pending' && contentType !== 'live';
 
-  // On phones an image post opens in the Images tab's scroll view, not on this
-  // page. Desktop and tablet keep the post page, and so do video, audio, text.
-  useEffect(() => {
-    if (!isStagePhone || !post || post.status === 'pending' || contentType !== 'image' || !id) return;
-    navigate(`/app?image=${encodeURIComponent(id)}`, { replace: true });
-  }, [isStagePhone, post, contentType, id, navigate]);
   const revealStageComments = useCallback((focusComposer: boolean) => {
     // The composer is put away until asked for. Raised inside the tap so the
     // focus it takes still opens the keyboard.

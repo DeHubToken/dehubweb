@@ -100,6 +100,7 @@ import { useMuteAuthor } from '@/hooks/use-mute-author';
 import { HandoffImage } from './HandoffImage';
 import { galleryIndex, rememberGalleryIndex, subscribeGallery } from '@/lib/media-presentation';
 import { warmPostPage } from '@/lib/preload-post-page';
+import { cacheImageForNavigation } from '@/lib/post-cache';
 import { openBrainrotFeed } from '@/lib/brainrot-feed';
 import { FEED_IMAGE_MAX_HEIGHT } from '@/lib/feed-image-layout';
 import { chainVerticalWheel } from '@/lib/chain-vertical-wheel';
@@ -933,16 +934,18 @@ const ImageCardBody = memo(function ImageCard({ post, aboveFold = false, onOpenC
   const openPost = useCallback(() => {
     if (wasDrawerJustDismissed() || showPPVDrawer || showBountyDrawer || showLockedDrawer) return;
     if (window.location.pathname === `/app/post/${post.id}`) return;
-    // A picture opens in the Images tab's scroll view, in place, so the top nav
-    // stays mounted and its back slot returns to the feed. Same on every screen.
-    navigate(`/app?image=${encodeURIComponent(post.id)}`);
-  }, [navigate, post.id, showPPVDrawer, showBountyDrawer, showLockedDrawer]);
+    // Opens its own post page like a text post: the feed keeps this very card
+    // (RetainedPostSurface) and the page shows it as it was, under the same
+    // top bar, with Back in the pill.
+    cacheImageForNavigation(queryClient, post);
+    navigate(`/app/post/${post.id}`, { state: { fromFeed: true } });
+  }, [navigate, queryClient, post, showPPVDrawer, showBountyDrawer, showLockedDrawer]);
 
   const handleImageClick = (index: number, onPicture = true) => {
     if (wasDrawerJustDismissed()) return;
     const gated = isPPV || isLocked || isSubGated || isW2E || matureGate.isGated;
     // The picture itself opens full screen; the bento around it (here, the
-    // space beside a narrow photo) opens the post in the Images scroll view.
+    // space beside a narrow photo) opens the post page.
     if (!onPicture && !postPage && !imagesFeedScrollView && !gated) {
       openPost();
       return;
