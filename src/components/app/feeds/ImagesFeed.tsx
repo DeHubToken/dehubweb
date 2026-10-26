@@ -251,7 +251,7 @@ function CollageView({ posts, onImageClick, loaderRef, isFetchingNextPage, hasNe
                   </div>
                 </div>
               )}
-              <div className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-3 sm:gap-5">
+              <div data-grid-hover className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-3 sm:gap-5">
                 <div className="flex items-center gap-1 sm:gap-1.5 text-white">
                   <ThumbsUp className="w-4 h-4 sm:w-5 sm:h-5" />
                   <span className="font-semibold text-xs sm:text-sm">{post.likes.toLocaleString()}</span>
@@ -365,13 +365,14 @@ function EndlessScrollView({
   }, [startFromId]);
 
   return (
-    <div data-feed-root className="p-2 sm:p-3 pt-0 sm:pt-0 space-y-3 relative">
+    // The scroll anchor is the first child, so space-y would hand the first
+    // card a 12px top margin and the gap under the pill would double against
+    // the home feed's. The card right after the anchor keeps no margin.
+    <div data-feed-root className="p-2 sm:p-3 pt-0 sm:pt-0 space-y-3 relative [&>[data-scroll-anchor]+*]:!mt-0">
       {/* Returning to the grid is the nav pill's left slot (it swaps its
           settings icon for a back arrow while this view is up), so there is no
           floating button over the feed. */}
-      {/* `hidden` keeps this anchor out of space-y, so the first card sits the
-          same distance under the nav pill as the first card on Home. */}
-      <div ref={scrollTargetRef} hidden />
+      <div ref={scrollTargetRef} data-scroll-anchor />
       {visiblePosts.map((post, index) => (
         <Fragment key={post.id}>
           <WindowedFeedItem

@@ -22,7 +22,7 @@ import dhbCoinImage from '@/assets/dehub-coin.png';
 import { useAuth } from '@/contexts/AuthContext';
 
 import { payForJob, useSpendableDhb } from '@/lib/ai-payment';
-import { useJobQuote } from '@/hooks/use-ai-quote';
+import { useJobQuote, fetchJobQuote, type QuoteRequest } from '@/hooks/use-ai-quote';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'sonner';
 import { dhbText } from '@/lib/dhb-toast';
@@ -56,6 +56,7 @@ interface VideoPaywallModalProps {
    */
   initialDuration?: number;
   initialResolution?: string;
+  hasExternalVideoReferences?: boolean;
 }
 
 /** Upload a file to Supabase storage and return its public URL */
@@ -78,6 +79,7 @@ export function VideoPaywallModal({
   isGenerating = false,
   initialDuration,
   initialResolution,
+  hasExternalVideoReferences = false,
 }: VideoPaywallModalProps) {
   const { t: _copy } = _useCopy();
   const [dhbPrice, setDhbPrice] = useState<number | null>(null);
@@ -201,11 +203,16 @@ export function VideoPaywallModal({
   // exactly this number and generate-video verifies that the transfer covers
   // its own quote, so a client-side price that drifted by a single DHB would
   // fail at the chain rather than merely look wrong.
+  const quoteRequest: QuoteRequest = { kind: 'video', modelId: selectedModelKey, durationSeconds: duration, resolution,
+    hasEndFrame: !!endFrameFile, hasAudioReferences: audioFiles.length > 0, hasVideoReferences: hasExternalVideoReferences || videoFiles.length > 0 };
+  const quoteKey = JSON.stringify(quoteRequest);
+  const latestQuoteKey = useRef(quoteKey);
+  latestQuoteKey.current = quoteKey;
   const { priceDhb: costDhb, priceUsd: quotedUsd, isLoading: isQuoting, error: quoteError } = useJobQuote(
-    { kind: 'video', modelId: selectedModelKey, durationSeconds: duration, resolution },
+    quoteRequest,
     open,
   );
-  const costUsd = model.provider === 'venice' ? quotedUsd : getVideoCostUsd(model, isPerSecond ? duration : undefined);
+  const costUsd = model.provider === 'venice' || selectedModelKey === 'seedance-2.0' || selectedModelKey === 'seedance-2.0-fast' ? quotedUsd : getVideoCostUsd(model, isPerSecond ? duration : undefined);
   // Offering a payment someone cannot make would only fail at the signature,
   // so a wallet short of the price is sent to buy instead.
   const needsTokens = !isWalletLoading && costDhb > 0 && walletDhb < costDhb;
@@ -256,7 +263,11 @@ export function VideoPaywallModal({
   };
 
   const handlePayAndGenerate = async () => {
-    if (costDhb <= 0) return;
+    if (costDhb <= 0 || isQuoting || quoteError) return;
+    if (model.supportsSeed && seed.trim() && (!/^\d+$/.test(seed.trim()) || !Number.isSafeInteger(Number(seed)) || Number(seed) > 2147483647)) {
+      toast.error(_copy('creator.invalidSeed', { defaultValue: 'Seed must be a whole number from 0 to 2147483647.' }));
+      return;
+    }
     setIsPaying(true);
     try {
       // Uploads happen BEFORE the transfer. They used to run after it, inside
@@ -267,7 +278,7 @@ export function VideoPaywallModal({
       if (model.minDuration && model.maxDuration) options.duration = duration;
       if (model.supportsResolution) options.resolution = resolution;
       if (model.supportsNegativePrompt && negativePrompt.trim()) options.negativePrompt = negativePrompt.trim();
-      if (model.supportsSeed && seed.trim()) options.seed = parseInt(seed.trim()) || undefined;
+      if (model.supportsSeed && seed.trim()) options.seed = Number(seed.trim());
 
       const hasUploads =
         referenceImages.length > 0 || !!endFrameFile || audioFiles.length > 0 || videoFiles.length > 0;
@@ -320,6 +331,8 @@ export function VideoPaywallModal({
       }
 
       toast.loading(t('tokenPaywall.paying', { amount: formatDhb(costDhb) }), { id: 'video-gen-payment' });
+      const freshQuote = await fetchJobQuote(quoteRequest);
+      if (latestQuoteKey.current !== quoteKey || freshQuote.priceDhb !== costDhb) throw new Error(t('creator.priceRetry'));
       const txHash = await payForJob(costDhb);
 
       toast.dismiss('video-gen-payment');
@@ -436,7 +449,7 @@ export function VideoPaywallModal({
                   <span className="text-zinc-400">{_copy("copy.4fc52a3c4c55", { defaultValue: "Duration" })}</span>
                   <span className="text-white font-medium">
                     {duration}s
-                    {isPerSecond && <span className="text-zinc-500 ml-1 text-[10px]">(${getVideoCostUsd(model, duration).toFixed(2)})</span>}
+                    {isPerSecond && <span className="text-zinc-500 ml-1 text-[10px]">(${costUsd.toFixed(2)})</span>}
                   </span>
                 </div>
                 {model.allowedDurations?.length ? (
@@ -755,7 +768,7 @@ export function VideoPaywallModal({
                 <span className="text-zinc-400">{_copy("copy.2f51aac56113", { defaultValue: "Video Cost" })}</span>
                 <span className="text-zinc-300">
                   ${costUsd.toFixed(2)}
-                  {isPerSecond && <span className="text-zinc-500 ml-1 text-[10px]">({duration}s × ${getVideoCostUsd(model, 1).toFixed(3)}/s)</span>}
+                  {isPerSecond && <span className="text-zinc-500 ml-1 text-[10px]">({duration}s × ${(costUsd / duration).toFixed(3)}/s)</span>}
                 </span>
               </div>
               <div className="flex items-center justify-between text-sm">

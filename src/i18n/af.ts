@@ -104,6 +104,12 @@ export const af = {
     disclaimerText: 'DeHub-tokens dien as nuttokens binne ons ekosisteem en is nie beleggingsinstrumente nie.',
   },
   dapp: {
+    aiSuiteTitle: 'KI-pakket',
+    appsB2: 'Android-toep:',
+    spTierTortoise: 'Reuseskilpad',
+    tocAi: 'KI-pakket',
+    tvRadioB3: 'Radiostasies:',
+    walletHubB5: 'Solana-beursie:',
     title: '\'n Volledige ekosisteem',
     intro1: 'DeHub is \'n sensuurbestande, open source alternatief vir nalatenskapsmedia-platforms wat die inhoudskepping-, stroom- en spelbedryf bedien. \'N Ekosisteem waar enigiemand vanuit die eerste oogopslag kan verdien, sonder vrees om ontplooi, skaduwee verban, stilgemaak of gemanipuleer te word om in elk geval alles behalwe hul ware self te wees. Om vry te praat en te dink, weg van die korf, uitdruk soos verlang.',
     intro2: 'Die inligting is afgeskaal deur \'n gedesentraliseerde mynwerker netwerk, die verskaffing van gedeelde rekenaar krag te gasheer, transkodeer, en lewer inhoud wat deur ontwerp, moet vir ewig lewe.',
@@ -1031,6 +1037,7 @@ export const af = {
     moreB3Desc: 'Regstreekse werfstatistieke — besoekers, bladsybesigtigings en gemeenskapsnommers, per dag, jaar of alle tye — gepubliseer eerder as intern gehou. Dieselfde bladsy toon DeHub se inkomste en koste, gebou uit die daaglikse inkomste totaal en die koste wat ons verskaffers eintlik aangeteken het, so die finansies is so publiek soos die verkeer.',
   },
   games: {
+    trenchTitle: 'Chartopia',
     title: 'Speletjies',
     subtitle: 'By die immer verweefde kruising van spel en streaming.',
     intro1: 'As \'n span vol gamers en streamers het ons \'n aantal prettige, gratis arkadespeletjies gebou en vrygestel en werk ons aan ons eerste vlagskipspel, Last Chad Standing, die eerste MMA Battle Royale, met \'n span devs van Ubisoft, sowel as \'n stigterspan wat baie betrokke is by UFC-, Oktagon- en PFL-sterre, nadat ons dokumentêre films met kampioene soos Jorge Masvidal verfilm het en opgelei is onder Conor Mcgregor se afrigter Kavannah. Die dokumentêre films is ook verfilm deur Luke Barnatt, die hoof van Andrew Tate\'s War kamer en voormalige UFC slugger, namens DeHub.',
@@ -1066,6 +1073,7 @@ export const af = {
     submitGames: 'Ontwikkelaars kan hul eie speletjies aan die arcade voorlê, en elkeen word hersien voordat dit gelys word.',
   },
   tokenOverview: {
+    disclaimer: 'Vrywaring',
     title: 'Oorsig',
     subtitle: 'Die geldeenheid wat magte DeHub',
     intro: 'DeHub-tokens is die inheemse geldeenheid van die DeHub-netwerk; DHB is hul tikker simbool. Hulle is die enkele rekeneenheid in elke app — die ding waarmee u tik, inhoud ontsluit, verdien om te kyk en te skep, en spandeer op AI-generasie. omdat hulle lewe op ketting elke beweging van waarde in die ecosystem is publiek verifiable eerder as vergadering in \'n private ledger jy het te neem ons woord vir',
@@ -1095,6 +1103,7 @@ export const af = {
     useAiDesc: 'Betaal vir AI-generasie oor die Skepper Studio — beeld, video, klank en 3D — in DeHub-tokens, teen \'n prys wat aangehaal word voordat elke werk loop, in plaas daarvan om \'n aparte intekening per instrument te hou.',
   },
   tokenEconomics: {
+    disclaimer: 'Vrywaring',
     title: 'Ekonomie & Emissies',
     supplyDistribution: 'Verskaf Verspreiding',
     totalSupply: 'Totaal: 8,000,000,000 tekens',
@@ -1109,6 +1118,7 @@ export const af = {
     disclaimerText: 'Dehub tokens is streng vir utility doeleindes in die dieselfde manier wat \'n in spel of in app digitale tokens of currencies behalwe waar soos ons s\'n bedryf op ketting ons kan bied bygevoeg utility soos goed soos unprecedented vlakke van verifiable transparency Bogenoemde data is uitsluitlik saamgestel vir deursigtigheid, opvoedkundige en insiggewende doeleindes. DeHub en alle affiliasies hou geen aanspreeklikheid vir finansiële verliese wat aangegaan word deur die aankoop van enige tokens of NFT\'s wat ons vrystel nie. Markte is baie wisselvallig. Jy kan ook al jou geld verloor as gevolg van enige onvoorsiene gebeure soos hacks, bevoegdheid mislukkings of tegniese foute. Daarom moet jy net belê wat jy kan bekostig om te verloor.',
   },
   tokenUtility: {
+    disclaimer: 'Vrywaring',
     title: 'Nut / Houer Voordele',
     subtitle: 'Wat is voor jou in?',
     benefitsTitle: 'Tekensvoordele',
@@ -1124,6 +1134,8 @@ export const af = {
     disclaimerText: 'DeHub-tokens is streng vir nutdoeleindes op dieselfde manier as enige in-game of in-app digitale tokens of geldeenhede en streng nie \'n belegging nie. soos ons verborge lewe op ketting ons kan bied bygevoeg utility soos goed soos unprecedented vlakke van verifiable transparency Bogenoemde data is uitsluitlik saamgestel vir deursigtigheid, opvoedkundige en insiggewende doeleindes. DeHub en alle affiliasies hou geen aanspreeklikheid vir finansiële verliese wat aangegaan word deur die aankoop van enige tokens of NFT\'s wat ons vrystel nie. Markte is baie wisselvallig. Jy kan ook al jou geld verloor as gevolg van enige onvoorsiene foute soos bevoegdheidsmislukkings, tegniese foute, hacks en so aan. Daarom moet jy altyd net spandeer wat jy kan bekostig om te verloor.',
   },
   tokenWhereToBuy: {
+    dexs: 'Gedesentraliseerde beurse',
+    disclaimer: 'Vrywaring',
     title: 'Waar om te koop',
     dexNote: 'Dehub provides sy amptelike liquidity op decentralized exchanges dexs waar elke transaction is publiek verifiable op ketting Gesentraliseerde plekke wat hieronder gelys word, bestuur hul eie bestelboeke onafhanklik van DeHub.',
     cexs: 'CEXs',
@@ -1141,6 +1153,7 @@ export const af = {
     disclaimerText: 'DeHub-tokens is streng vir nutdoeleindes op dieselfde manier as enige in-game of in-app digitale tokens of geldeenhede en streng nie \'n belegging nie. soos ons verborge lewe op ketting ons kan bied bygevoeg utility soos goed soos unprecedented vlakke van verifiable transparency Bogenoemde data is uitsluitlik saamgestel vir deursigtigheid, opvoedkundige en insiggewende doeleindes. DeHub en alle affiliasies hou geen aanspreeklikheid vir finansiële verliese wat aangegaan word deur die aankoop van enige tokens of NFT\'s wat ons vrystel nie. Markte is baie wisselvallig. Jy kan ook al jou geld verloor as gevolg van enige onvoorsiene foute soos bevoegdheidsmislukkings, tegniese foute, hacks en so aan. Daarom moet jy altyd net spandeer wat jy kan bekostig om te verloor.',
   },
   tokenGovernance: {
+    disclaimer: 'Vrywaring',
     title: 'Regering',
     subtitle: 'Bevestig token bestuur met \'n nuwe oplossing',
     fairVoting: 'Regverdige stemmery',
@@ -1156,6 +1169,7 @@ export const af = {
     disclaimerText: 'DeHub-tokens is streng vir nutdoeleindes op dieselfde manier as enige in-game of in-app digitale tokens of geldeenhede en streng nie \'n belegging nie. soos ons verborge lewe op ketting ons kan bied bygevoeg utility soos goed soos unprecedented vlakke van verifiable transparency Bogenoemde data is uitsluitlik saamgestel vir deursigtigheid, opvoedkundige en insiggewende doeleindes. DeHub en alle affiliasies hou geen aanspreeklikheid vir finansiële verliese wat aangegaan word deur die aankoop van enige tokens of NFT\'s wat ons vrystel nie. Markte is baie wisselvallig. Jy kan ook al jou geld verloor as gevolg van enige onvoorsiene foute soos bevoegdheidsmislukkings, tegniese foute, hacks en so aan. Daarom moet jy altyd net spandeer wat jy kan bekostig om te verloor.',
   },
   tokenStake: {
+    disclaimer: 'Vrywaring',
     title: 'Stake',
     stakeNow: 'Stak Nou',
     introDesc: 'Staak om toegang tot verskillende klubvlakke te verkry tot die verbeterde funksies in alle app\'s en bied u rekenaarkrag of stoorplek van met min as \'n selfoon om u deel van die protokolinkomste te myn.',
@@ -1236,6 +1250,8 @@ export const af = {
     copyFailedDesc: 'Kopieer asseblief die adres handmatig.',
   },
   tokenSecurity: {
+    bugBounty: 'Foutjagbeloning',
+    disclaimer: 'Vrywaring',
     title: 'Sekuriteit',
     subtitle: 'Kontrak sekuriteitsmaatreëls en protokolle',
     contractSecurity: 'Kontrak Sekuriteit',
@@ -1243,6 +1259,7 @@ export const af = {
     disclaimerText: 'DeHub-tokens is streng vir nutdoeleindes op dieselfde manier as enige in-game of in-app digitale tokens of geldeenhede en streng nie \'n belegging nie. soos ons verborge lewe op ketting ons kan bied bygevoeg utility soos goed soos unprecedented vlakke van verifiable transparency Bogenoemde data is uitsluitlik saamgestel vir deursigtigheid, opvoedkundige en insiggewende doeleindes. DeHub en alle affiliasies hou geen aanspreeklikheid vir finansiële verliese wat aangegaan word deur die aankoop van enige tokens of NFT\'s wat ons vrystel nie. Markte is baie wisselvallig. Jy kan ook al jou geld verloor as gevolg van enige onvoorsiene foute soos bevoegdheidsmislukkings, tegniese foute, hacks en so aan. Daarom moet jy altyd net spandeer wat jy kan bekostig om te verloor.',
   },
   depin: {
+    mobileTasks: 'Gasheerdienste',
     title: 'DePIN',
     subtitle: '\'N Gedesentraliseerde fisiese infrastruktuurnetwerk (DePIN) van gedeelde rekenaarkrag vir ware sensuurweerstand',
     abstract: 'Abstrakte',
@@ -1328,6 +1345,7 @@ export const af = {
     diagramMinersRole2: 'in ruil vir DeHub-tokens',
   },
   e2ee: {
+    msgPrep: '1. Boodskapvoorbereiding',
     title: 'Einde aan einde enkripsie (E2EE)',
     howWorksTitle: 'Hoe DeHub se end-tot-end enkripsie werk',
     whatSecureTitle: '🛡️ Wat maak ons E2EE veilig?',
@@ -1594,6 +1612,7 @@ export const af = {
     baileyExp3: 'Voormalige professionele gamer, wêreldwyd in die top 3 COD MW2 en top 100 op Warzone onder die tag RickyBobby',
   },
   roadmap: {
+    q4_2023: 'K4 2023',
     title: 'DeHub Padkaart',
     subtitle: 'Van nederige begin tot \'n volledige platform - ons reis deur die ups',
     completed: 'Voltooid',
@@ -1884,7 +1903,7 @@ export const af = {
   termsOfService: {
     title: 'DeHub Diensbepalings',
     lastUpdated: 'Laas opgedateer:',
-    lastUpdatedDate: '7 Julie 2026',
+    lastUpdatedDate: '25 Oktober 2026',
     effective: 'Effektief:',
     effectiveDate: '2 Desember 2024',
     welcomeTitle: 'Welkom op DeHub!',
@@ -1893,8 +1912,10 @@ export const af = {
     ourServiceText1: 'Die diens laat jou toe om inhoud in \'n heeltemal gedesentraliseerde omgewing te ontdek, te deel en te monetiseer, bied \'n forum vir mense om ander regoor die wêreld te verbind, in te lig en te inspireer, en dien as \'n verspreidingsplatform vir oorspronklike inhoudskeppers sonder gesentraliseerde beperkings. Ons bied \'n sensuurbestande platform waar almal hul inhoud kan verdien deur gemeenskapsbestuur eerder as korporatiewe beheer.',
     ourServiceText2: 'DeHub funksioneer as \'n gedesentraliseerde protokol waar moderering van inhoud deur gemeenskapsbestuur hanteer word, en verseker dat slegs onwettige inhoud of inhoud wat gemeenskapsgoedgekeurde riglyne oortree, beperk kan word.',
     softwareDevelopers: 'Wie bedryf DeHub',
-    softwareDevText1: 'DeHub is \'n onafhanklike DAO. Geen maatskappy besit, bedryf of beheer die diens nie. die protokol die platform en die treasury is regulated op ketting deur dehub verborge holders deur die dehub governance protokol wat is lewe proposals is opgewek en stemme op in die app en die resultaat bind die ecosystem In hierdie ooreenkoms beteken "DeHub", "ons", "ons" en "ons" die DAO en die protokol wat dit beheer, nie \'n maatskappy nie.',
-    softwareDevText2: 'Ontwikkeling word uitgevoer deur onafhanklike bydraers en ateljees wat deur die DAO betrokke is. Nie een van hulle besit die DeHub-ekosisteem of hou besluitnemingsmag daaroor nie, en enige van hulle kan vervang of verwyder word deur \'n bestuurstem. Niemand kan die protokol, die teken of hierdie bepalings buite die proses verander nie.',
+    softwareDevText1: 'DeHub is \'n onafhanklike, nie-winsgewende DAO. Geen maatskappy besit, bedryf of beheer die Diens nie. Die protokol, die platform en die tesourie word op die ketting bestuur deur DeHub-tokenhouers via die DeHub-bestuursprotokol, wat tans in werking is: voorstelle word in die app ingedien en daaroor word gestem, en die uitslag bind die ekosisteem. In hierdie Ooreenkoms verwys "DeHub", "ons" en "ons s\'n" na die DAO en die protokol wat dit beheer, nie na \'n maatskappy nie.',
+    softwareDevText2: 'DeHub is \'n projek wat deur die gemeenskap bestuur word en deur honderde bydraers ondersteun word. Geen enkele entiteit, maatskappy of individu beheer die DAO nie, en geen maatskappy is betrokke by die bestuur of besluite daarvan nie. Niemand kan die protokol, die token of hierdie Bepalings buite die bestuursproses verander nie.',
+    softwareDevText3: 'Delabs Association is \'n groep ontwikkelaars wat ingeskakel is om tegnologie vir DeHub te bou en die platform aan hoofstroomdienste soos die Google Play Store te koppel. Delabs Association is op geen manier by die DAO betrokke nie en bestuur, beheer of neem nie besluite vir die DAO nie.',
+    wyomingDaoText: 'DeHub is tans besig om \'n DAO in die staat Wyoming, USA, te registreer.',
     whoMayUse: 'Wie mag die dienste gebruik?',
     ageRequirements: 'Ouderdomsvereistes',
     ageRequirementsText: 'U mag die diens slegs gebruik as u ten minste 16 jaar oud is.',

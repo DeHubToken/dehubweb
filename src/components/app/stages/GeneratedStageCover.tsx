@@ -3,8 +3,8 @@ import { useTranslation as _useCopy } from 'react-i18next';
  * GeneratedStageCover — the poster a stage gets when the host set no cover
  * ========================================================================
  * Drawn from the stage's own details (see lib/stage-cover), so the same stage
- * shows the same poster everywhere, on web and in the app: a ticket with a
- * tear-off date stub, in DeHub's monochrome poster style.
+ * shows the same poster everywhere, on web and in the app: "Chrome Mic", a
+ * DeHub banner with the stage's title in chrome and the 3D mic beside it.
  *
  * The art is a picture, like an uploaded cover, so it stays dark in every
  * theme: [data-keep-dark] keeps the light themes from re-inking its text, and
@@ -12,15 +12,14 @@ import { useTranslation as _useCopy } from 'react-i18next';
  *
  * Sizes are in container units, so a 176px thumbnail and a full-width stage
  * page show the same composition at different scales. Under 300px the corner
- * tags, the status line and the barcode drop out (index.css), which would
+ * tag, the host line and the dehub.io box drop out (index.css), which would
  * otherwise be too small to read.
  *
  * The // tags are brand decoration, written like the App Store posters, and
  * are hidden from screen readers; the label carries the stage's title.
  *
- * [data-gsc-ink] marks the white paper parts (logo pill, date stub): their
- * text is dark ink, which index.css shields from the light themes' "keep
- * dark means white text" rule.
+ * [data-gsc-chrome] marks the chrome title, whose see-through text index.css
+ * shields from the light themes' "keep dark means white text" rule.
  */
 
 import { useMemo, type CSSProperties } from 'react';
@@ -28,32 +27,29 @@ import { cn } from '@/lib/utils';
 import { buildStageCover, stageCoverTitleScale, type StageCoverSource } from '@/lib/stage-cover';
 
 const BASE = '#050506';
-const PAPER = '#f4f4f5';
-const INK = '#09090b';
 const MONO = 'ui-monospace, SFMono-Regular, Menlo, Consolas, "Liberation Mono", monospace';
-
-/** The DeHub mark (assets/brand/bimi-logo.svg in the app). */
-function DehubMark({ size }: { size: string }) {
-  return (
-    <svg viewBox="0 0 512 512" style={{ width: size, height: size }} aria-hidden>
-      <g fill="none" stroke={INK} strokeWidth={60} strokeLinecap="round">
-        <path d="M112 176v116c0 70 39 128 103 150" />
-        <path d="M400 176v116c0 70-39 128-103 150" />
-        <path d="M256 86v213" />
-      </g>
-    </svg>
-  );
-}
+const KIT = '/brand-kit';
 
 const corner = (pos: CSSProperties): CSSProperties => ({
   position: 'absolute',
-  width: '0.9cqw',
-  height: '0.9cqw',
-  borderColor: 'rgba(255,255,255,0.5)',
+  width: '1cqw',
+  height: '1cqw',
+  borderColor: 'rgba(255,255,255,0.55)',
   borderStyle: 'solid',
   borderWidth: 0,
   ...pos,
 });
+
+/** A thin four-point twinkle, like the ones on the banners. */
+function Sparkle({ x, y, size }: { x: number; y: number; size: number }) {
+  const line = 'rgba(255,255,255,0.9)';
+  return (
+    <span aria-hidden className="absolute" style={{ left: `${x * 100}%`, top: `${y * 100}%`, width: `${size}cqw`, height: `${size}cqw`, transform: 'translate(-50%, -50%)' }}>
+      <span className="absolute left-0 top-1/2 w-full -translate-y-1/2" style={{ height: '0.12cqw', background: `linear-gradient(90deg, transparent, ${line}, transparent)` }} />
+      <span className="absolute top-0 left-1/2 h-full -translate-x-1/2" style={{ width: '0.12cqw', background: `linear-gradient(180deg, transparent, ${line}, transparent)` }} />
+    </span>
+  );
+}
 
 export function GeneratedStageCover({
   stage,
@@ -70,14 +66,6 @@ export function GeneratedStageCover({
     [stage.id, stage.title, stage.host_username, stage.host_wallet_address, stage.scheduled_at, stage.started_at, stage.created_at, stage.ended_at, stage.status, _copy],
   );
   const titleSize = stageCoverTitleScale(m.title) * 100;
-  const barW = 1000 / m.bars.length;
-  const barcode = m.bars
-    .map((h, i) => {
-      const bh = h * 100;
-      return `M${(i * barW + barW * 0.22).toFixed(1)} ${(50 - bh / 2).toFixed(1)}h${(barW * 0.56).toFixed(1)}v${bh.toFixed(1)}h-${(barW * 0.56).toFixed(1)}z`;
-    })
-    .join('');
-  const dot = m.status === 'live' ? '#ef4444' : m.status === 'replay' ? '#a1a1aa' : '#ffffff';
 
   return (
     <div
@@ -89,125 +77,90 @@ export function GeneratedStageCover({
       className={cn('relative w-full aspect-video overflow-hidden select-none', className)}
       style={{ containerType: 'inline-size', backgroundColor: BASE, color: '#fff', fontFamily: 'Exo, system-ui, sans-serif' }}
     >
-      {m.streaks.map((s, i) => (
-        <div
-          key={i}
-          aria-hidden
-          className="absolute rounded-full"
-          style={{
-            left: `${s.x * 100}%`,
-            top: `${s.y * 100}%`,
-            width: `${s.w * 100}cqw`,
-            height: `${s.h * 100}cqw`,
-            transform: `translate(-50%, -50%) rotate(${s.rotate}deg)`,
-            background: `radial-gradient(closest-side, rgba(255,255,255,${s.opacity.toFixed(2)}), rgba(255,255,255,0))`,
-            filter: 'blur(2.2cqw)',
-          }}
-        />
-      ))}
+      <img aria-hidden alt="" src={`${KIT}/bg/${m.background}.jpg`} loading="lazy" decoding="async" className="absolute inset-0 h-full w-full object-cover" />
+      <div aria-hidden className="absolute inset-0" style={{ background: 'linear-gradient(90deg, rgba(5,5,6,0.8) 0%, rgba(5,5,6,0.45) 60%, rgba(5,5,6,0.3) 100%)' }} />
       <div
         aria-hidden
         className="absolute inset-0"
-        style={{
-          backgroundImage: 'radial-gradient(circle, rgba(255,255,255,0.22) 0.09cqw, transparent 0.14cqw)',
-          backgroundSize: '3.4cqw 3.4cqw',
-          backgroundPosition: '1.7cqw 1.7cqw',
-        }}
+        style={{ backgroundImage: 'radial-gradient(circle, rgba(255,255,255,0.28) 0.1cqw, transparent 0.15cqw)', backgroundSize: '3.4cqw 3.4cqw' }}
       />
+      <div aria-hidden className="absolute inset-0" style={{ backgroundImage: `url(${KIT}/brand/grain-web.webp)`, backgroundSize: '30cqw', opacity: 0.18, mixBlendMode: 'overlay' }} />
       <div aria-hidden className="absolute" style={{ inset: '1.4cqw', borderRadius: '2cqw', border: '0.12cqw solid rgba(255,255,255,0.16)' }} />
 
-      <div data-gsc-tags aria-hidden className="absolute flex items-center justify-between" style={{ left: '4.2cqw', right: '4.2cqw', top: '3.6cqw' }}>
-        <span
-          data-gsc-ink
-          className="flex items-center font-black"
-          style={{ gap: '0.7cqw', padding: '0.7cqw 1.5cqw', borderRadius: '0.9cqw', background: PAPER, color: INK, fontSize: '1.7cqw', letterSpacing: '0.22em' }}
-        >
-          <DehubMark size="1.9cqw" />
-          DEHUB
+      <img
+        aria-hidden
+        alt=""
+        src={`${KIT}/icons/mic-480.webp`}
+        srcSet={`${KIT}/icons/mic-240.webp 240w, ${KIT}/icons/mic-480.webp 480w`}
+        sizes="33cqw"
+        loading="lazy"
+        decoding="async"
+        className="absolute"
+        style={{
+          right: '4cqw',
+          top: '50%',
+          width: '33cqw',
+          transform: `translateY(-46%) rotate(${m.tilt}deg)${m.flip ? ' scaleX(-1)' : ''}`,
+          filter: 'drop-shadow(0 2cqw 3cqw rgba(0,0,0,0.7))',
+        }}
+      />
+      {m.sparkles.map((sp, i) => <Sparkle key={i} {...sp} />)}
+
+      <span
+        aria-hidden
+        className="absolute flex"
+        style={{ left: '4.4cqw', top: '4.2cqw', padding: '0.9cqw 1.4cqw', borderRadius: '0.9cqw', background: '#f4f4f5' }}
+      >
+        <img alt="" src={`${KIT}/brand/wordmark-black-web.webp`} style={{ height: '2.2cqw', width: 'auto', display: 'block' }} />
+      </span>
+      <span data-gsc-tags aria-hidden className="absolute" style={{ right: '4.4cqw', top: '4.2cqw', padding: '0.6cqw 1.3cqw', fontFamily: MONO, fontSize: '1.5cqw', color: 'rgba(255,255,255,0.82)' }}>
+        <span style={corner({ left: 0, top: 0, borderLeftWidth: '0.13cqw', borderTopWidth: '0.13cqw' })} />
+        <span style={corner({ right: 0, bottom: 0, borderRightWidth: '0.13cqw', borderBottomWidth: '0.13cqw' })} />
+        {`// type = "${_copy('stageCover.stage')}"`}
+      </span>
+
+      <div className="absolute flex flex-col" style={{ left: '4.4cqw', width: '56cqw', top: '50%', transform: 'translateY(-50%)', gap: '1.6cqw' }}>
+        <span aria-hidden className="flex items-center font-medium uppercase" style={{ fontSize: '2.1cqw', color: 'rgba(255,255,255,0.92)' }}>
+          {m.status === 'live' && (
+            <span className="rounded-full shrink-0" style={{ width: '1.1cqw', height: '1.1cqw', marginRight: '0.9cqw', background: '#ef4444', boxShadow: '0 0 1.2cqw #ef4444' }} />
+          )}
+          {m.statusTag}
         </span>
-        <span className="relative font-bold" style={{ padding: '0.5cqw 1.2cqw', fontFamily: MONO, fontSize: '1.35cqw', color: 'rgba(255,255,255,0.78)' }}>
-          <span style={corner({ left: 0, top: 0, borderLeftWidth: '0.12cqw', borderTopWidth: '0.12cqw' })} />
-          <span style={corner({ right: 0, bottom: 0, borderRightWidth: '0.12cqw', borderBottomWidth: '0.12cqw' })} />
-          {`// type = "${_copy('stageCover.stage')}"`}
-        </span>
+        {m.title && (
+          <p
+            data-gsc-chrome
+            className="font-bold uppercase line-clamp-3 break-words"
+            style={{
+              fontSize: `${titleSize}cqw`,
+              lineHeight: 0.98,
+              letterSpacing: '-0.01em',
+              background: 'linear-gradient(180deg, #ffffff 0%, #ececef 40%, #8e8e97 100%)',
+              WebkitBackgroundClip: 'text',
+              backgroundClip: 'text',
+              color: 'transparent',
+              filter: 'drop-shadow(0 0.4cqw 1.2cqw rgba(0,0,0,0.6))',
+            }}
+          >
+            {m.title}
+          </p>
+        )}
+        {(m.host || m.detail) && (
+          <span data-gsc-when aria-hidden className="truncate" style={{ fontFamily: MONO, fontSize: '1.5cqw', color: 'rgba(255,255,255,0.6)' }}>
+            {m.host && <>host = <span style={{ color: '#fff' }}>{m.host}</span></>}
+            {m.host && m.detail && ' · '}
+            {m.detail}
+          </span>
+        )}
       </div>
 
-      <div data-gsc-ticket className="absolute flex" style={{ left: '4.2cqw', right: '4.2cqw', top: '9.4cqw', bottom: '8.6cqw' }}>
-        <div
-          className="relative flex-1 min-w-0 flex flex-col justify-between"
-          style={{
-            borderRadius: '1.8cqw 0 0 1.8cqw',
-            background: 'rgba(255,255,255,0.05)',
-            border: '0.12cqw solid rgba(255,255,255,0.22)',
-            borderRight: 'none',
-            padding: '2.8cqw 3.2cqw',
-            gap: '1.5cqw',
-          }}
-        >
-          <span data-gsc-status aria-hidden className="flex items-center font-bold" style={{ gap: '0.8cqw', fontFamily: MONO, fontSize: '1.45cqw', color: 'rgba(255,255,255,0.8)' }}>
-            <span className="rounded-full shrink-0" style={{ width: '0.9cqw', height: '0.9cqw', background: dot }} />
-            {m.statusTag}
-          </span>
-          {m.title && (
-            <p
-              className="font-bold uppercase line-clamp-3 break-words"
-              style={{
-                fontSize: `${titleSize}cqw`,
-                lineHeight: 1.02,
-                letterSpacing: '-0.01em',
-                background: 'linear-gradient(180deg, #ffffff 0%, #e4e4e7 45%, #9d9da6 100%)',
-                WebkitBackgroundClip: 'text',
-                backgroundClip: 'text',
-                color: 'transparent',
-              }}
-            >
-              {m.title}
-            </p>
-          )}
-          {m.host && (
-            <span className="font-semibold truncate" style={{ fontSize: 'max(7px, 2cqw)', color: 'rgba(255,255,255,0.7)' }}>
-              {'//'}
-              <span className="font-bold" style={{ color: '#fff' }}>{m.host}</span>
-            </span>
-          )}
-        </div>
-        <div aria-hidden className="relative" style={{ width: 0, borderLeft: '0.3cqw dashed rgba(255,255,255,0.35)', zIndex: 1 }}>
-          <div className="absolute rounded-full" style={{ left: '-1.6cqw', top: '-1.6cqw', width: '3.2cqw', height: '3.2cqw', background: BASE }} />
-          <div className="absolute rounded-full" style={{ left: '-1.6cqw', bottom: '-1.6cqw', width: '3.2cqw', height: '3.2cqw', background: BASE }} />
-        </div>
-        <div
-          data-gsc-ink
-          className="shrink-0 flex flex-col items-center justify-center"
-          style={{ width: '22cqw', borderRadius: '0 1.8cqw 1.8cqw 0', background: PAPER, color: INK, padding: '2.4cqw 2cqw', gap: '0.6cqw' }}
-        >
-          {m.day ? (
-            <>
-              <span className="font-bold" style={{ fontFamily: MONO, fontSize: '1.6cqw', letterSpacing: '0.18em' }}>{m.month}</span>
-              <span className="font-black" style={{ fontSize: '10.5cqw', lineHeight: 0.88, letterSpacing: '-0.04em' }}>{m.day}</span>
-              <span data-gsc-when className="font-bold whitespace-nowrap" style={{ fontFamily: MONO, fontSize: '1.4cqw' }}>
-                {m.weekday} · {m.time}
-              </span>
-            </>
-          ) : (
-            <DehubMark size="8cqw" />
-          )}
-          <svg data-gsc-barcode viewBox="0 0 1000 100" preserveAspectRatio="none" style={{ width: '100%', height: '4cqw', marginTop: '1cqw' }} aria-hidden>
-            <path d={barcode} fill={INK} />
-          </svg>
-          <span data-gsc-stubline aria-hidden className="font-bold" style={{ fontFamily: MONO, fontSize: '1cqw', letterSpacing: '0.28em', opacity: 0.55 }}>
-            {m.stubLine}
-          </span>
-        </div>
-      </div>
-
-      <div data-gsc-site aria-hidden className="absolute inset-x-0 flex justify-center" style={{ bottom: '3.3cqw' }}>
-        <span
-          className="font-bold"
-          style={{ padding: '0.5cqw 1.2cqw', border: '0.12cqw solid rgba(255,255,255,0.3)', borderRadius: '0.5cqw', background: 'rgba(0,0,0,0.4)', fontFamily: MONO, fontSize: '1.3cqw', color: 'rgba(255,255,255,0.85)' }}
-        >
-          {'// dehub.io'}
-        </span>
-      </div>
+      <span
+        data-gsc-site
+        aria-hidden
+        className="absolute"
+        style={{ left: '4.4cqw', bottom: '4.2cqw', padding: '0.6cqw 1.4cqw', border: '0.12cqw solid rgba(255,255,255,0.3)', borderRadius: '0.5cqw', background: 'rgba(0,0,0,0.35)', fontFamily: MONO, fontSize: '1.5cqw', color: 'rgba(255,255,255,0.85)' }}
+      >
+        {'// dehub.io/stages'}
+      </span>
     </div>
   );
 }

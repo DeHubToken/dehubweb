@@ -16,6 +16,7 @@ import { forgetPayment } from '@/lib/ai-payment';
 import { ensureFreshToken } from '@/lib/api/dehub/core';
 import { isImageProviderUnavailable } from '@/lib/image-provider-error';
 import { translateCopy as _translateCopy } from '@/i18n/copy';
+import { audioResultIssue, MAX_AUDIO_RESULT_BYTES } from './audioResult';
 
 export type GenerationKind = 'image' | 'video' | 'audio' | 'model3d';
 
@@ -523,6 +524,7 @@ async function pollRender(
     firstAttempt = false;
 
     const poll = await supabase.functions.invoke(config.functionName, {
+      headers: dehubAuthHeaders(),
       body: {
         predictionId: ticket.predictionId,
         provider: ticket.provider,
@@ -763,7 +765,11 @@ async function callAudioFunction(
 
   if (!response.ok) throw new Error(await readFunctionError(response, fallbackError));
 
+  const declaredBytes = Number(response.headers.get('Content-Length'));
+  if (declaredBytes > MAX_AUDIO_RESULT_BYTES) throw new Error(_translateCopy('creator.audioResultTooLarge', { defaultValue: 'The audio result is empty or exceeds 128 MB.' }));
   const blob = await response.blob();
+  const audioIssue = audioResultIssue(response.headers.get('Content-Type'), blob.size);
+  if (audioIssue) throw new Error(_translateCopy(audioIssue, { defaultValue: 'The audio service returned an invalid result.' }));
   if (!blob.size) throw new Error(_translateCopy("copy.e645a7fb7891", { defaultValue: "The audio service returned an empty clip" }));
   return blob;
 }

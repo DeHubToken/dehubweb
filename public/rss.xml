@@ -9,7 +9,15 @@
     <copyright>Copyright 2026 DeHub</copyright>
     <managingEditor>team@dehub.io (DeHub Team)</managingEditor>
     <webMaster>team@dehub.io (DeHub Team)</webMaster>
-    <lastBuildDate>Sat, 24 Oct 2026 06:00:00 GMT</lastBuildDate>
+    <lastBuildDate>Sun, 25 Oct 2026 20:00:00 GMT</lastBuildDate>
+    <item>
+      <title>Top 50 Decentralized Social Apps 2026: The DeSoc Index</title>
+      <description>The 50 most active decentralized and crypto social apps of 2026, scored on real user numbers, features, public GitHub activity and future potential. Bluesky, Farcaster, Lens, Nostr, Mastodon, Zora and more.</description>
+      <link>https://dehub.io/guides/top-50-decentralized-social-apps-2026</link>
+      <guid>https://dehub.io/guides/top-50-decentralized-social-apps-2026</guid>
+      <pubDate>Sun, 25 Oct 2026 20:00:00 GMT</pubDate>
+      <dc:creator>DeHub Team</dc:creator>
+    </item>
     <item>
       <title>How Does Higgsfield Genjutsu Work? And How Maboroshi Does the Same Job for Less (2026)</title>
       <description>Genjutsu explained step by step: depth, masks, face mesh, render and original audio, with real frames from each step. Plus Katana-style scene changes and a cheaper per-clip way to do it.</description>
@@ -160,14 +168,6 @@
       <link>https://dehub.io/guides/what-is-dehub</link>
       <guid>https://dehub.io/guides/what-is-dehub</guid>
       <pubDate>Tue, 23 Jun 2026 10:30:00 GMT</pubDate>
-      <dc:creator>DeHub Team</dc:creator>
-    </item>
-    <item>
-      <title>What Is Watch-to-Earn? How DeHub Actually Pays You to Watch (2026)</title>
-      <description>What is watch to earn? A plain-English guide to how watch-to-earn works, why it exists, honest earnings caveats, and how DeHub pays you to watch on-chain.</description>
-      <link>https://dehub.io/guides/what-is-watch-to-earn</link>
-      <guid>https://dehub.io/guides/what-is-watch-to-earn</guid>
-      <pubDate>Fri, 12 Jun 2026 14:00:00 GMT</pubDate>
       <dc:creator>DeHub Team</dc:creator>
     </item>
   </channel>

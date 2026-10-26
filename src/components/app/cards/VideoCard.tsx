@@ -136,7 +136,7 @@ const LiveFeedPreview = lazy(() => import('./LiveFeedPreview').then(m => ({ defa
 import { useVideoViewTracking } from '@/hooks/use-view-tracking';
 import { usePostTipCount } from '@/hooks/use-post-tip-count';
 import { videoPlaybackManager } from '@/lib/video-playback-manager';
-import { getVideoPreferences, useMediaVolume, getPlaybackRateFor, setPlaybackRate as vpSetPlaybackRate, setIsLooping as vpSetIsLooping, setVolume as vpSetVolume, PLAYBACK_RATES } from '@/lib/video-preferences';
+import { getVideoPreferences, openedVideoMuted, useMediaVolume, getPlaybackRateFor, setPlaybackRate as vpSetPlaybackRate, setIsLooping as vpSetIsLooping, setVolume as vpSetVolume, PLAYBACK_RATES } from '@/lib/video-preferences';
 import { useAuth } from '@/contexts/AuthContext';
 import { usePostLinkCopyCount, useTrackPostLinkCopy } from '@/hooks/use-link-copy-count';
 import { useAutoplay } from '@/contexts/AutoplayContext';
@@ -161,6 +161,7 @@ const SubscriberGateDrawer = lazy(() =>
 );
 import { isTokenUnlocked, markTokenUnlocked } from '@/lib/unlocked-tokens-store';
 import { PostUtilityMenuItems } from './PostUtilityMenuItems';
+import { RemixMenuItems } from './RemixMenuItems';
 import { useBlockAuthor } from '@/hooks/use-block-author';
 import { useMuteAuthor } from '@/hooks/use-mute-author';
 import { useBlankPoster, BLANK_PROBE_WIDTH } from '@/hooks/use-blank-poster';
@@ -1039,6 +1040,9 @@ const VideoCardBody = memo(function VideoCard({ video, postPage = false, onBack,
     videoPlaybackManager.stop(instanceId);
   }, [autoplayEnabled, pauseVideo, instanceId]);
   const autoplayMutedRef = useRef(autoplayMuted);
+  // The post page and the immersive player are videos the viewer opened.
+  const openedRef = useRef(postPage || isImmersive);
+  openedRef.current = postPage || isImmersive;
   // Phone feed preview (set further down): autoplay there is always silent.
   const feedPreviewRef = useRef(false);
   autoplayMutedRef.current = autoplayMuted;
@@ -1154,7 +1158,13 @@ const VideoCardBody = memo(function VideoCard({ video, postPage = false, onBack,
               const ownsAudio = prominent ? videoPlaybackManager.play(instanceId) : videoPlaybackManager.playMuted(instanceId);
               // "Start autoplay muted" beats an earlier unmute: scrolling
               // onto a clip must never be what makes sound.
-              const shouldMute = feedPreviewRef.current || autoplayMutedRef.current || videoPlaybackManager.globalMuted || !ownsAudio;
+              // An opened post is not scrolled onto: it has sound unless the
+              // viewer muted a video themselves.
+              // A post link opened straight from outside has had no tap yet,
+              // and the browser would refuse to start it with sound at all.
+              const shouldMute = openedRef.current
+                ? openedVideoMuted() || !ownsAudio || navigator.userActivation?.hasBeenActive === false
+                : feedPreviewRef.current || autoplayMutedRef.current || videoPlaybackManager.globalMuted || !ownsAudio;
               autoMutedRef.current = shouldMute && !prominent && !autoplayMutedRef.current && !videoPlaybackManager.globalMuted;
               vid.muted = shouldMute;
               setIsMuted(shouldMute);
@@ -1163,7 +1173,14 @@ const VideoCardBody = memo(function VideoCard({ video, postPage = false, onBack,
               // of play() is the flash seen while scrolling.
               setIsLoading(vid.readyState < HTMLMediaElement.HAVE_CURRENT_DATA);
               autoStartedRef.current = true;
-              requestVideoPlayback(vid).then(() => {
+              requestVideoPlayback(vid).catch((error) => {
+                // Landed on a post link with no tap yet: the browser refuses
+                // sound, so start it silent rather than not at all.
+                if (error?.name !== 'NotAllowedError' || vid.muted) throw error;
+                vid.muted = true;
+                setIsMuted(true);
+                return vid.play();
+              }).then(() => {
                 // Scroll-away race: if the card left the viewport while play() was
                 // pending, the pause branch above was skipped (isPlayingRef was
                 // still false), so bail here to avoid playing/holding audio off-screen.
@@ -1387,7 +1404,7 @@ const VideoCardBody = memo(function VideoCard({ video, postPage = false, onBack,
       // Claim audio ownership for this video (user-initiated play)
       if (videoRef.current) delete videoRef.current.dataset.userPaused;
       videoPlaybackManager.claimAudio(instanceId);
-      const shouldMute = videoPlaybackManager.globalMuted;
+      const shouldMute = openedVideoMuted();
       setIsMuted(shouldMute);
       if (videoRef.current) {
         videoRef.current.muted = shouldMute;
@@ -1449,6 +1466,16 @@ const VideoCardBody = memo(function VideoCard({ video, postPage = false, onBack,
     preferContainer: swipeToShorts,
   });
 
+  // Going fullscreen opens the video: a clip the feed muted gets its sound,
+  // unless the viewer muted it themselves.
+  useEffect(() => {
+    const vid = videoRef.current;
+    if (!isFullscreen || !vid || !vid.muted || openedVideoMuted() || video.isAudio) return;
+    vid.muted = false;
+    setIsMuted(false);
+    videoPlaybackManager.claimAudio(instanceId);
+  }, [isFullscreen, instanceId, video.isAudio]);
+
   // Fullscreen on a phone is one swipe from the shorts feed: warm it up now so
   // that swipe lands on a playing clip rather than a spinner.
   useEffect(() => {
@@ -1458,15 +1485,16 @@ const VideoCardBody = memo(function VideoCard({ video, postPage = false, onBack,
       .catch(() => {});
   }, [isFullscreen, swipeToShorts, queryClient]);
 
-  // Phone feeds show the clip as it is: muted autoplay, an unmute button in
-  // the corner and nothing else. A tap anywhere opens it in the shorts viewer
-  // (full controls there), which then carries on into more shorts. Desktop,
-  // the post page and gated or live posts keep the full player.
+  // Feeds show the clip as it is, on every screen size: muted autoplay (or a
+  // still frame with autoplay off), an unmute button in the corner and
+  // nothing else. There is no play or pause in a feed. A tap anywhere else
+  // opens it in the shorts viewer (the post page with Shorts off), where the
+  // full controls are. The post page and gated or live posts keep the player.
   const isPhone = useIsMobile();
   const feedShortsTarget = shortsEnabled && !postPage && !isImmersive && !isFullscreen && !hideActions
     && !video.isAudio && !video.isAd && !(video.isLivePost && video.isLiveNow) && !!video.videoUrl
     && !isContentGated && !isVideoNotReady;
-  const feedPreview = isPhone && shortsEnabled && !isImmersive && !isFullscreen && !hideActions
+  const feedPreview = !postPage && !isImmersive && !isFullscreen && !hideActions
     && !video.isAudio && !video.isAd && !(video.isLivePost && video.isLiveNow) && !!video.videoUrl
     && !isContentGated && !isVideoNotReady;
   feedPreviewRef.current = feedPreview;
@@ -1474,7 +1502,7 @@ const VideoCardBody = memo(function VideoCard({ video, postPage = false, onBack,
   // muted with only unmute in the corner, and a tap opens the live page.
   const liveFeedPreview = isPhone && !isImmersive && !isFullscreen && !hideActions
     && !!video.isLivePost && !!video.isLiveNow && !isContentGated;
-  const phoneFeedFrame = feedPreview || liveFeedPreview;
+  const phoneFeedFrame = (isPhone && shortsEnabled && feedPreview) || liveFeedPreview;
   const [liveSoundOn, setLiveSoundOn] = useState(false);
   useEffect(() => {
     if (!feedShortsTarget || !bootSettled || !nearViewport || liteMode) return;
@@ -1804,7 +1832,16 @@ const VideoCardBody = memo(function VideoCard({ video, postPage = false, onBack,
       setNearViewport(true);
       isPlayingRef.current = !el.paused;
       setIsPlaying(!el.paused);
-      setIsMuted(video.soundtrackUrl ? handoffAudioFor(`synced:${video.id}:${video.soundtrackUrl}`)?.muted ?? el.muted : el.muted);
+      const handedMuted = video.soundtrackUrl ? handoffAudioFor(`synced:${video.id}:${video.soundtrackUrl}`)?.muted ?? el.muted : el.muted;
+      // Opened from a feed that played it silently: the sound comes on here,
+      // unless the viewer muted it themselves.
+      if (openedRef.current && handedMuted && !openedVideoMuted() && !video.soundtrackUrl) {
+        el.muted = false;
+        setIsMuted(false);
+        if (!el.paused) videoPlaybackManager.claimAudio(instanceId);
+      } else {
+        setIsMuted(handedMuted);
+      }
       setPlaybackRate(el.playbackRate);
       setIsLooping(el.loop);
       setCurrentTime(el.currentTime);
@@ -1992,7 +2029,7 @@ const VideoCardBody = memo(function VideoCard({ video, postPage = false, onBack,
    */
   const tapGestures = useTapGestures({
     postId: video.id,
-    singleTapOnly: feedShortsTarget,
+    singleTapOnly: feedPreview,
     reactionArea: isImmersive || isFullscreen ? 'surface' : 'center',
     // A gated card (PPV, holdings/subscriber lock, mature warning) draws no
     // burst — TapReactionBurst lives inside the isContentGated block further
@@ -2001,7 +2038,7 @@ const VideoCardBody = memo(function VideoCard({ video, postPage = false, onBack,
     // already behaves this way: its gate branch replaces the carousel that
     // carries the gesture, so this only brings video into line.
     disabled: hideActions || !!video.isAudio || isContentGated || liveFeedPreview,
-    onSingleTap: feedShortsTarget ? openPost : isImmersive ? () => {
+    onSingleTap: feedPreview ? openPost : isImmersive ? () => {
       showControlsBriefly();
       handlePlayClick();
     } : undefined,
@@ -2028,7 +2065,7 @@ const VideoCardBody = memo(function VideoCard({ video, postPage = false, onBack,
   // Playback and reactions run from pointer events above. The compatibility
   // click only keeps the visible controls awake; it must never toggle twice.
   const handleVideoAreaClick = useCallback(() => {
-    if (feedShortsTarget) return; // Pointer release owns viewer navigation.
+    if (feedPreview) return; // Pointer release owns viewer navigation.
     if (liveFeedPreview) {
       openPost();
       return;
@@ -2039,7 +2076,7 @@ const VideoCardBody = memo(function VideoCard({ video, postPage = false, onBack,
       return;
     }
     showControlsBriefly();
-  }, [isImmersive, showControlsBriefly, handlePlayClick, feedShortsTarget, liveFeedPreview, openPost]);
+  }, [isImmersive, showControlsBriefly, handlePlayClick, feedPreview, liveFeedPreview, openPost]);
 
   // Both the click and the touch handler are bound unconditionally on the player.
   // `isTouchDevice` is a width check, not a capability one, so gating the click on
@@ -2092,7 +2129,7 @@ const VideoCardBody = memo(function VideoCard({ video, postPage = false, onBack,
       return;
     }
 
-    if (feedShortsTarget) {
+    if (feedPreview) {
       // Pointer release opens the viewer without a multi-tap delay.
       e.preventDefault();
       return;
@@ -2115,7 +2152,7 @@ const VideoCardBody = memo(function VideoCard({ video, postPage = false, onBack,
     // compatibility click so touch cannot run a second playback action.
     e.preventDefault();
     showControlsBriefly();
-  }, [isImmersive, showControlsBriefly, handlePlayClick, isFullscreen, swipeToShorts, swipeIntoShorts, feedShortsTarget, liveFeedPreview, openPost]);
+  }, [isImmersive, showControlsBriefly, handlePlayClick, isFullscreen, swipeToShorts, swipeIntoShorts, feedPreview, liveFeedPreview, openPost]);
 
   const formatTime = (seconds: number) => {
     const mins = Math.floor(seconds / 60);
@@ -2134,7 +2171,8 @@ const VideoCardBody = memo(function VideoCard({ video, postPage = false, onBack,
 
   // Keyboard shortcuts
   useEffect(() => {
-    if (!isFocused || !isPlaying) return;
+    // A feed preview has no transport: its only control is mute.
+    if (!isFocused || !isPlaying || feedPreview) return;
     
     const handleKeyDown = (e: KeyboardEvent) => {
       const tag = (e.target as HTMLElement)?.tagName;
@@ -2185,7 +2223,7 @@ const VideoCardBody = memo(function VideoCard({ video, postPage = false, onBack,
     
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [isFocused, isPlaying, handlePlayClick, seekBy, adjustVolume]);
+  }, [isFocused, isPlaying, feedPreview, handlePlayClick, seekBy, adjustVolume]);
   // Navigate to single post page when clicking non-interactive areas (header only)
   // Pre-cache video data for instant display on the single post page
   const handleCardClick = useCallback((e: React.MouseEvent) => {
@@ -3391,6 +3429,13 @@ const VideoCardBody = memo(function VideoCard({ video, postPage = false, onBack,
             <DrawerTitle className="text-white text-lg">{t('postOptions.options')}</DrawerTitle>
           </DrawerHeader>
           <div className="flex flex-col gap-1">
+            {!video.isAudio && !video.isLivePost && !video.isAd && !isContentGated && !requiresVideoAccess && !accessFallback
+              && !contentWarning.hidden && (!video.visibility || video.visibility === 'public')
+              && (isOwnPost || !video.quotePolicy || video.quotePolicy === 'public') && playableVideoUrl && (
+              <RemixMenuItems source={{ videoUrl: playableVideoUrl, sourceUrl: `https://dehub.io/app/post/${video.id}`,
+                title: video.title || 'Video', creator: video.creatorUsername }}
+                onStart={() => { videoRef.current?.pause(); setShowOptionsDrawer(false); }} />
+            )}
             {/* Bookmark / pin / post info. Also on the action bar as icons on
                 desktop — both surfaces read the same state, so the menu is a
                 reliable place to find them at every width. */}

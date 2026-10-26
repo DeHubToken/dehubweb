@@ -1,7 +1,7 @@
 import { useTranslation as _useCopy } from 'react-i18next';
 import { useSurfaceDraft } from '@/hooks/use-surface-draft';
-import { useState } from 'react';
-import { CreditCard, ArrowDownToLine, ArrowUpFromLine, Globe } from "lucide-react";
+import { useEffect, useState } from 'react';
+import { CreditCard, ArrowDownToLine, ArrowUpFromLine, Globe, Landmark } from "lucide-react";
 import Copy from "@/components/ui/cut-icons/copy";
 import Check from "@/components/ui/cut-icons/check";
 import Wallet from "@/components/ui/cut-icons/wallet";
@@ -17,6 +17,8 @@ import { useAuth } from '@/contexts/AuthContext';
 import { toast } from 'sonner';
 import { SwapDrawer } from './SwapDrawer';
 import { CrossChainDepositDrawer } from './CrossChainDepositDrawer';
+import { CashOutDrawer } from './CashOutDrawer';
+import { getCashoutConfig, type CashoutConfig } from '@/lib/cashout';
 import { useWalletAddresses } from '@/hooks/use-wallet-addresses';
 import { CopyAddressRows } from '@/components/app/wallet/CopyAddressRows';
 
@@ -36,6 +38,15 @@ export function FundActions() {
   const [withdrawTarget, setWithdrawTarget] = useSurfaceDraft("components/app/command-centre/FundActions.tsx:withdrawTarget", '');
   const [swapOpen, setSwapOpen] = useState(false);
   const [crossChainOpen, setCrossChainOpen] = useState(false);
+  const [cashOutOpen, setCashOutOpen] = useState(false);
+  // Bank cash-out stays hidden until the payout partner is configured server-side.
+  const [cashout, setCashout] = useState<CashoutConfig | null>(null);
+
+  useEffect(() => {
+    let live = true;
+    getCashoutConfig().then(cfg => { if (live && cfg?.enabled) setCashout(cfg); }).catch(() => {});
+    return () => { live = false; };
+  }, []);
 
   const handleBuy = () => {
     setAddFundsOpen(false);
@@ -61,6 +72,18 @@ export function FundActions() {
       <Button variant="glass" className="flex-1 h-9 rounded-xl flex items-center justify-center" onClick={() => setWithdrawOpen(true)}>
         <ArrowUpFromLine className="w-4 h-4" />
       </Button>
+
+      {/* Cash out to bank */}
+      {cashout && (
+        <Button
+          variant="glass"
+          className="flex-1 h-9 rounded-xl flex items-center justify-center"
+          aria-label={_copy("copy.f246590c4765", { defaultValue: "Cash out to bank" })}
+          onClick={() => setCashOutOpen(true)}
+        >
+          <Landmark className="w-4 h-4" />
+        </Button>
+      )}
 
       {/* Add Funds Drawer */}
       <Drawer open={addFundsOpen} onOpenChange={open => { setAddFundsOpen(open); if (!open) setPickingNetwork(false); }}>
@@ -133,15 +156,16 @@ export function FundActions() {
               </div>
             </button>
             <button
-              disabled
-              className="w-full flex items-center gap-3 p-3.5 rounded-xl bg-white/[0.06] border border-white/10 opacity-50 cursor-not-allowed"
+              disabled={!cashout}
+              onClick={() => { setWithdrawOpen(false); setTimeout(() => setCashOutOpen(true), 200); }}
+              className={`w-full flex items-center gap-3 p-3.5 rounded-xl bg-white/[0.06] border border-white/10 transition-colors ${cashout ? 'hover:bg-white/[0.10] backdrop-blur-sm' : 'opacity-50 cursor-not-allowed'}`}
             >
-              <Wallet className="w-5 h-5 text-white/70" />
+              <Landmark className="w-5 h-5 text-white/70" />
               <div className="text-left flex-1">
                 <span className="text-sm font-medium text-white">{t('commandCentre.bankCard')}</span>
                 <p className="text-xs text-white/40">{t('commandCentre.withdrawToBank')}</p>
               </div>
-              <span className="text-[10px] text-white/30 font-medium bg-white/[0.06] px-2 py-0.5 rounded">{t('commandCentre.soon')}</span>
+              {!cashout && <span className="text-[10px] text-white/30 font-medium bg-white/[0.06] px-2 py-0.5 rounded">{t('commandCentre.soon')}</span>}
             </button>
           </div>
         </DrawerContent>
@@ -181,6 +205,7 @@ export function FundActions() {
       <SwapDrawer open={swapOpen} onOpenChange={setSwapOpen} />
       {/* Cross-Chain Deposit Drawer */}
       <CrossChainDepositDrawer open={crossChainOpen} onOpenChange={setCrossChainOpen} />
+      {cashout && <CashOutDrawer open={cashOutOpen} onOpenChange={setCashOutOpen} config={cashout} />}
     </>
   );
 }

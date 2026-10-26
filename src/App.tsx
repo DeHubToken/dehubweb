@@ -37,7 +37,7 @@ import i18nInstance from "@/i18n";
 import { HelmetProvider } from "react-helmet-async";
 import { SEOHead } from "@/components/SEOHead";
 import { ClientNavigateBridge } from "@/components/app/ClientNavigateBridge";
-import { HomeShellSkeleton } from "@/components/app/PageSkeletons";
+import { HomeShellSkeleton, ProfileSkeleton } from "@/components/app/PageSkeletons";
 import { ThemePreviewProvider, ThemeProvider, useAppTheme } from "@/contexts/ThemeContext";
 import { UserPreferencesProvider } from "@/contexts/UserPreferencesContext";
 import { lazyWithRetry } from "@/lib/lazy-with-retry";
@@ -204,6 +204,8 @@ const BuilderPage = React.lazy(() => import("./pages/app/BuilderPage"));
 const BuilderPreviewPage = React.lazy(() => import("./pages/app/BuilderPreviewPage"));
 const PairTestPage = React.lazy(() => import("./pages/app/PairTestPage"));
 const StageDeepLinkPage = React.lazy(() => import("./pages/app/StageDeepLinkPage"));
+const ClipPage = React.lazy(() => import("./pages/app/ClipPage"));
+const CoStreamJoinPage = React.lazy(() => import("./pages/app/CoStreamJoinPage"));
 const MobilePreview = React.lazy(() => import("./pages/MobilePreview"));
 const GuidePage = React.lazy(() => import("./pages/GuidePage"));
 const BestDecentralizedStreaming = React.lazy(() => import("./pages/BestDecentralizedStreaming"));
@@ -223,8 +225,10 @@ const WorkDisputesPage = React.lazy(() => import("./pages/app/WorkDisputesPage")
 const WorkHistoryPage = React.lazy(() => import("./pages/app/WorkHistoryPage"));
 const BountyLegacyRedirect = React.lazy(() => import("./pages/app/BountyLegacyRedirect"));
 const CreatorEditorHost = React.lazy(() => import("./pages/CreatorEditorHost"));
+const VideoRemix = React.lazy(() => import("./pages/VideoRemix"));
 // Creator Flow (node canvas) is its own chunk: React Flow and its d3 deps are
 // only worth downloading once someone opens the canvas, not with /creator.
+const CreatorLearningPage = React.lazy(() => import("./pages/app/CreatorLearningPage"));
 const CreatorFlowPage = React.lazy(() => import("./pages/app/CreatorFlowPage"));
 const CreatorFlowPublicPage = React.lazy(() => import("./pages/app/CreatorFlowPublicPage"));
 const MaboroshiPage = React.lazy(() => import("./pages/app/MaboroshiPage"));
@@ -568,7 +572,9 @@ function AppContent() {
           <Route path="/creators" element={<CreatorsPage />} />
           <Route path="/skill.md" element={<SkillPage />} />
           <Route path="/editor" element={<Suspense fallback={<PageLoader />}><CreatorEditorHost /></Suspense>} />
+          <Route path="/creator/remix" element={<Suspense fallback={<PageLoader />}><VideoRemix /></Suspense>} />
           <Route path="/creator" element={<Suspense fallback={<PageLoader />}><CreatorEditorHost /></Suspense>} />
+          <Route path="/creator/learn" element={<Suspense fallback={<PageLoader />}><CreatorLearningPage /></Suspense>} />
           <Route path="/creator/flow" element={<Suspense fallback={<PageLoader />}><CreatorFlowPage /></Suspense>} />
           <Route path="/creator/remake" element={<Suspense fallback={<PageLoader />}><MaboroshiPage remake /></Suspense>} />
           <Route path="/creator/maboroshi" element={<Suspense fallback={<PageLoader />}><MaboroshiPage /></Suspense>} />
@@ -823,10 +829,14 @@ function AppContent() {
             {/* Stage invite links. /stages/:id is the short numeric share form
                 (audio_spaces.short_id); the exact /stages path below still opens
                 the hub page — a param segment never matches the bare route. */}
+            {/* Co-stream invite links: a host bringing someone on screen. */}
+            <Route path="/app/live/join/:id" element={<Suspense fallback={<PageLoader />}><CoStreamJoinPage /></Suspense>} />
             <Route path="/stage/:id" element={<Suspense fallback={<PageLoader />}><StageDeepLinkPage /></Suspense>} />
             {/* Stage 15 was replaced by stage 18; old links land on the new one. */}
             <Route path="/stages/15" element={<Navigate to="/stages/18" replace />} />
             <Route path="/stages/:id" element={<Suspense fallback={<PageLoader />}><StageDeepLinkPage /></Suspense>} />
+            {/* A posted live clip, /clip/<n> (live_clips.short_id). */}
+            <Route path="/clip/:id" element={<Suspense fallback={<PageLoader />}><ClipPage /></Suspense>} />
             {/* An off-chain post's own URL — the canonical share form is top-level. */}
             <Route path="/newpost/:n" element={<Suspense fallback={<PageLoader />}><NewPostPage /></Suspense>} />
 
@@ -874,7 +884,7 @@ function AppContent() {
             <Route path="/radio" element={<Navigate to="/music" replace />} />
 
             {/* Username profiles — inside shared layout so header never remounts */}
-            <Route path="/:username" element={<Suspense fallback={<PageLoader />}><ProfilePage /></Suspense>} />
+            <Route path="/:username" element={<Suspense fallback={<ProfileSkeleton />}><ProfilePage /></Suspense>} />
           </Route>
 
           <Route path="*" element={<NotFound />} />

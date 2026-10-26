@@ -22,7 +22,12 @@ import { useTranslation as _useCopy } from 'react-i18next';
  */
 import { memo, useCallback, useEffect, useId, useMemo, useRef, useState } from 'react';
 import { MOTION_TEMPLATE_PROMPT, type ViralTemplate } from '@/lib/creator/viralTemplates';
-import type { GenerationDraft } from '@/lib/editor/generationDraft';
+import { appendCinemaDirection, normalizeCinemaDirection, type CinemaDirection } from '@/lib/creator/cinemaDirection';
+import { CinemaDirectionControls } from './CinemaDirectionControls';
+import { videoQuoteHints } from '@/lib/creator/videoQuoteHints';
+import { useDraftState } from '@/hooks/use-draft-state';
+import { generationDraftForOwner, type GenerationDraft } from '@/lib/editor/generationDraft';
+import { useDraftReferences, type DraftReferenceAdoption } from '@/lib/editor/useDraftReferences';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 import i18n from '@/i18n';
@@ -113,6 +118,7 @@ import { remapAssetMentions } from '@/lib/creator/assetMentions';
 import { CREATOR_FAL_IMAGE_MODELS, CREATOR_FAL_VIDEO_MODELS, creatorFalImageAspects } from '../../../../../supabase/functions/_shared/creator-fal-catalog';
 import { ResultsFeed } from './ResultsFeed';
 import { VoiceDesignDrawer } from './VoiceDesignDrawer';
+import { readStudioSnapshot, writeStudioSnapshot, StudioDraftScope } from './StudioDraftScope';
 import { StudioVoicePicker } from './StudioVoicePicker';
 
 type Mode = 'image' | 'video' | 'audio' | '3d';
@@ -141,7 +147,6 @@ const MODES: { id: Mode; labelKey: string; icon: React.ComponentType<{ className
 
 // ─── Cached workspace state ─────────────────────────────────────────────────
 
-const STORAGE_KEY = 'dehub:creator-studio:v1';
 
 /**
  * Attachments above this are kept in memory but left out of the cache.
@@ -153,6 +158,8 @@ const STORAGE_KEY = 'dehub:creator-studio:v1';
 const MAX_PERSISTED_REFERENCE_BYTES = 512 * 1024;
 
 interface StudioSnapshot {
+  draftReferenceAdoption?: DraftReferenceAdoption | null;
+  generationDraftId?: string;
   mode: Mode;
   prompts: ByMode<string>;
   presetIds: ByMode<string | null>;
@@ -228,11 +235,11 @@ function isMode(v: unknown): v is Mode {
 }
 
 /** Restore the cached workspace, discarding anything that no longer type-checks. */
-function readSnapshot(): StudioSnapshot {
+function readSnapshot(storageKey: string): StudioSnapshot {
   if (typeof window === 'undefined') return DEFAULT_SNAPSHOT;
   let raw: string | null = null;
   try {
-    raw = window.localStorage.getItem(STORAGE_KEY);
+    raw = readStudioSnapshot(storageKey);
   } catch {
     // Private-mode Safari throws on read as well as write.
     return DEFAULT_SNAPSHOT;
@@ -260,6 +267,8 @@ function readSnapshot(): StudioSnapshot {
       typeof v === 'string' && v in registry ? (v as T) : fallback;
 
     return {
+      generationDraftId: typeof saved.generationDraftId === 'string' ? saved.generationDraftId : undefined,
+      draftReferenceAdoption: saved.draftReferenceAdoption && typeof saved.draftReferenceAdoption.id === 'string' && typeof saved.draftReferenceAdoption.modified === 'boolean' ? saved.draftReferenceAdoption : null,
       mode: isMode(saved.mode) ? saved.mode : DEFAULT_SNAPSHOT.mode,
       prompts: byMode(saved.prompts, DEFAULT_SNAPSHOT.prompts),
       presetIds: byMode(saved.presetIds, DEFAULT_SNAPSHOT.presetIds),
@@ -460,6 +469,8 @@ function ModeToggle({
 interface CreatorStudioProps {
   embedded?: boolean;
   generationDraft?: GenerationDraft | null;
+  snapshotScope?: string;
+  generationDraftId?: string;
   onJobStarted?: (id: string) => void;
   /** Switches the host to /editor after a result is sent to the timeline. */
   onOpenEditor: () => void;
@@ -470,7 +481,13 @@ interface CreatorStudioProps {
   stickyTop?: number;
 }
 
-export const CreatorStudio = memo(function CreatorStudio({ onOpenEditor, stickyTop = 60, embedded = false, generationDraft, onJobStarted }: CreatorStudioProps) {
+export const CreatorStudio = memo(function CreatorStudio(props: CreatorStudioProps) {
+  const { walletAddress } = useAuth();
+  const draft = useMemo(() => generationDraftForOwner(props.generationDraft, walletAddress), [props.generationDraft, walletAddress]);
+  return <StudioDraftScope owner={walletAddress} scope={props.snapshotScope}>{storageKey => <CreatorStudioWorkspace {...props} generationDraft={draft} storageKey={storageKey} />}</StudioDraftScope>;
+});
+
+const CreatorStudioWorkspace = memo(function CreatorStudioWorkspace({ onOpenEditor, stickyTop = 60, embedded = false, generationDraft, generationDraftId, snapshotScope, onJobStarted, storageKey }: CreatorStudioProps & { storageKey: string }) {
   const promptId = useId();
   const navigate = useNavigate();
   const { t: _copy } = _useCopy();
@@ -491,7 +508,13 @@ export const CreatorStudio = memo(function CreatorStudio({ onOpenEditor, stickyT
   const runningCount = useGenerationStore((s) => s.jobs.filter((j) => j.status === 'running').length);
 
   // One read of the cache, on mount, shared by every slice below.
-  const [restored] = useState(readSnapshot);
+  const [restored] = useState(() => readSnapshot(storageKey));
+  const latestSnapshot = useRef(restored);
+  const [appliedGenerationDraftId, setAppliedGenerationDraftId] = useState(restored.generationDraftId);
+  const [referenceAdoption, setReferenceAdoption] = useState(restored.draftReferenceAdoption ?? null);
+  const draftReferences = useDraftReferences(referenceAdoption, setReferenceAdoption, storageKey);
+  useEffect(() => () => writeStudioSnapshot(storageKey, latestSnapshot.current), [storageKey]);
+  const [cinemaDirections, setCinemaDirections] = useDraftState<ByMode<CinemaDirection>>(snapshotScope && snapshotScope !== 'main' ? `creator:cinema-direction:${storageKey}` : 'creator:cinema-direction', { image: {}, video: {}, audio: {}, '3d': {} });
 
   const [mode, setMode] = useState<Mode>(restored.mode);
 
@@ -540,13 +563,21 @@ export const CreatorStudio = memo(function CreatorStudio({ onOpenEditor, stickyT
   useEffect(() => {
     if (!generationDraft) return;
     const nextMode: Mode = generationDraft.kind === 'image' ? 'image' : generationDraft.kind === 'video' ? 'video' : 'audio';
+    if (generationDraft.references && (nextMode === 'image' || nextMode === 'video') && draftReferences.adopt(generationDraftId, Boolean(generationDraftId && appliedGenerationDraftId === generationDraftId))) {
+      setReferences(previous => ({ ...previous, [nextMode]: null }));
+      setExtraReferences(previous => ({ ...previous, [nextMode]: generationDraft.references!.map(reference => ({ ...reference, kind: 'image' as const })) }));
+    }
+    if (generationDraftId && appliedGenerationDraftId === generationDraftId) return;
+    if (generationDraft.cinemaDirection) setCinemaDirections(previous => ({ ...previous, [nextMode]: normalizeCinemaDirection(generationDraft.cinemaDirection) }));
     setMode(nextMode);
     setPrompts(previous => ({ ...previous, [nextMode]: generationDraft.prompt }));
     setPresetIds(previous => ({ ...previous, [nextMode]: null }));
     if (nextMode === 'audio') setAudioTask(generationDraft.kind === 'voice' ? 'speech' : generationDraft.kind as AudioTask);
     if (generationDraft.aspect && nextMode === 'image') setImageAspect(generationDraft.aspect);
     if (generationDraft.aspect && nextMode === 'video') setVideoAspect(generationDraft.aspect);
-  }, [generationDraft]);
+    if (generationDraft.durationSeconds && nextMode === 'video') setDuration(snapVideoDuration(VIDEO_MODELS[videoModel], generationDraft.durationSeconds));
+    setAppliedGenerationDraftId(generationDraftId);
+  }, [generationDraft, generationDraftId, appliedGenerationDraftId]);
 
   const activeAudioTask = AUDIO_TASKS[audioTask];
 
@@ -569,6 +600,7 @@ export const CreatorStudio = memo(function CreatorStudio({ onOpenEditor, stickyT
     setPresetIds((p) => ({ ...p, [m]: value }) as ByMode<string | null>);
   }, []);
   const setReferenceFor = useCallback((m: Mode, value: Reference) => {
+    draftReferences.modified();
     setReferences((p) => ({ ...p, [m]: value }) as ByMode<Reference>);
   }, []);
 
@@ -621,6 +653,7 @@ export const CreatorStudio = memo(function CreatorStudio({ onOpenEditor, stickyT
     if (!VIRAL_EFFECTS.some(effect => effect.name === prompts.video)) setPromptFor('video', selectedEffect.name);
   }, [videoModel, prompts.video, selectedEffect.name, setPresetFor, setPromptFor]);
   const pickEffect = (effect: ViralTemplate) => {
+    draftReferences.modified();
     setMode('video'); setPresetFor('video', null);
     if (effect.motionSeconds && effect.preview) {
       setVideoModel('kling-3-motion'); setPromptFor('video', MOTION_TEMPLATE_PROMPT);
@@ -660,6 +693,8 @@ export const CreatorStudio = memo(function CreatorStudio({ onOpenEditor, stickyT
   // ── Cache the workspace ───────────────────────────────────────────────────
   useEffect(() => {
     const snapshot: StudioSnapshot = {
+      generationDraftId: appliedGenerationDraftId,
+      draftReferenceAdoption: referenceAdoption,
       mode,
       prompts,
       presetIds,
@@ -695,16 +730,13 @@ export const CreatorStudio = memo(function CreatorStudio({ onOpenEditor, stickyT
       dubTargetLang,
       speechLang,
     };
-    const timer = window.setTimeout(() => {
-    try {
-      window.localStorage.setItem(STORAGE_KEY, JSON.stringify(snapshot));
-    } catch {
-      // Over quota or storage disabled. The workspace still works for this
-      // session; it just will not survive a reload.
-    }
-    }, 300);
+    latestSnapshot.current = snapshot;
+    const timer = window.setTimeout(() => writeStudioSnapshot(storageKey, snapshot), 300);
     return () => window.clearTimeout(timer);
   }, [
+    storageKey,
+    appliedGenerationDraftId,
+    referenceAdoption,
     mode,
     prompts,
     presetIds,
@@ -786,7 +818,7 @@ export const CreatorStudio = memo(function CreatorStudio({ onOpenEditor, stickyT
         : mode === 'audio'
           ? AUDIO_ASPECT
           : MODEL3D_ASPECT;
-  const resolvedPrompt = useMemo(() => applyPreset(preset, prompt), [preset, prompt]);
+  const resolvedPrompt = useMemo(() => appendCinemaDirection(applyPreset(preset, prompt), cinemaDirections[mode], mode), [preset, prompt, cinemaDirections, mode]);
 
   /** Applying a preset also adopts the model and aspect it was tuned for. */
   const pickPreset = useCallback((next: CreatorPreset | null) => {
@@ -901,18 +933,21 @@ export const CreatorStudio = memo(function CreatorStudio({ onOpenEditor, stickyT
         setPresetFor('video', seconds > 15 ? 'reference-copy-motion' : 'reference-character-swap');
       }
       setDuration(Math.ceil(seconds));
+      draftReferences.modified();
       assetDraftRef.current = [...latest, { ...asset, seconds }];
       setExtraReferences(prev => ({ ...prev, video: [...prev.video, { ...asset, seconds }] }));
       return;
     }
     if (mode === '3d') { setReference(asset); return; }
     if (images.length >= 4) { toast.error(t('creator.referenceFourImages')); return; }
+    draftReferences.modified();
     assetDraftRef.current = [...latest, asset];
     if (!images.length) setReference(asset);
     else setExtraReferences(prev => ({ ...prev, [mode]: [...prev[mode], asset] }));
     if (mode === 'image' && images.length && !CREATOR_FAL_IMAGE_MODELS[imageModel]?.editUsesPlural) setImageModel('flux-3-image');
   }, [currentAssets, currentClip, currentImages.length, mode, reference, setReference, setPresetFor, imageModel, videoModel, t]);
   const removeAsset = useCallback((asset: CreatorReferenceAsset) => {
+    draftReferences.modified();
     const remaining = currentAssets.filter(item => item.url !== asset.url);
     editPrompt(remapAssetMentions(prompt, currentAssets.map(item => ({ key: item.url, kind: item.kind })), remaining.map(item => ({ key: item.url, kind: item.kind }))));
     assetDraftRef.current = remaining;
@@ -961,6 +996,7 @@ export const CreatorStudio = memo(function CreatorStudio({ onOpenEditor, stickyT
   }, []);
 
   const pickMotionClip = useCallback((clip: MotionClip, workflow: 'swap' | 'motion') => {
+    draftReferences.modified();
     const model = motionModel(clip, workflow);
     setMode('video');
     setVideoModel(model);
@@ -1186,7 +1222,8 @@ export const CreatorStudio = memo(function CreatorStudio({ onOpenEditor, stickyT
 
   const generationQuote = useJobQuote(mode === 'audio'
     ? activeAudioTask.paid && activeAudioTask.quoteModelId ? { kind: 'tool', modelId: activeAudioTask.quoteModelId, quantity: audioUnits } : null
-    : mode === 'video' ? { kind: 'video', modelId: videoModel, durationSeconds: duration, resolution, aspectRatio: aspect }
+    : mode === 'video' ? { kind: 'video', modelId: videoModel, durationSeconds: duration, resolution, aspectRatio: aspect,
+      ...videoQuoteHints({ videoUrls: currentClip ? [currentClip.url] : undefined }) }
     : mode === '3d' ? { kind: 'model3d', modelId: model3dModel, quality: 'standard' }
     : { kind: 'image', modelId: imageModel, quantity: batch });
   // Free starter images: the server claims one per job, this only decides
@@ -1374,7 +1411,7 @@ export const CreatorStudio = memo(function CreatorStudio({ onOpenEditor, stickyT
       try {
         const hosted = await Promise.all(currentAssets.map(async asset => {
           const file = asset.file ?? (asset.sourceClipId ? await downloadMotionSource(asset.sourceClipId) : undefined);
-          const url = file ? await hostCreatorFile(file) : asset.url.startsWith('data:') ? await hostDataUrl(asset.url) : asset.url;
+          const url = file ? await hostCreatorFile(file) : /^(data:|blob:)/.test(asset.url) ? await hostDataUrl(asset.url) : asset.url;
           return { ...asset, file: undefined, sourceClipId: undefined, url };
         }));
         currentAssets.forEach(asset => { if (asset.file) URL.revokeObjectURL(asset.url); });
@@ -1494,7 +1531,7 @@ export const CreatorStudio = memo(function CreatorStudio({ onOpenEditor, stickyT
           resolution: activeVideoModel?.supportsResolution
             ? (options?.resolution ?? resolution)
             : undefined,
-          negativePrompt: options?.negativePrompt || preset?.negative,
+          negativePrompt: VIDEO_MODELS[videoModel]?.supportsNegativePrompt ? options?.negativePrompt || preset?.negative : undefined,
           referenceImageUrls: currentImages.length > 1 || activeVideoModel?.referenceMode === 'edit' ? currentImages.map(a => a.url) : options?.referenceImageUrls,
           endFrameUrl: options?.endFrameUrl,
           audioUrls: options?.audioUrls,
@@ -1822,6 +1859,8 @@ export const CreatorStudio = memo(function CreatorStudio({ onOpenEditor, stickyT
               )}
 
               {mode !== 'audio' && <ReferenceAssets assets={currentAssets} onAdd={asset => void addAsset(asset)} onRemove={removeAsset} onMention={insertAssetMention} allowVideo={mode === 'video'} singleImage={mode === '3d'} libraryOpen={referenceLibraryOpen} onLibraryOpenChange={setReferenceLibraryOpen} />}
+
+              <CinemaDirectionControls value={cinemaDirections[mode]} mode={mode} onChange={value => setCinemaDirections(previous => ({ ...previous, [mode]: normalizeCinemaDirection(value) }))} />
 
               <div className="flex items-start gap-2">
                 {activeAudioTask.promptRole === 'none' && mode === 'audio' ? (
@@ -2273,6 +2312,7 @@ export const CreatorStudio = memo(function CreatorStudio({ onOpenEditor, stickyT
             onConfirm={runVideo}
             initialDuration={duration}
             initialResolution={resolution}
+            hasExternalVideoReferences={!!currentClip}
           />
         )}
 

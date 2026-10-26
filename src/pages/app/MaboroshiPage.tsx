@@ -17,6 +17,8 @@ import { completeMaboroshiPayment, getMaboroshiQuote, isMaboroshiPaymentRequest,
 import { MotionLibraryShowcase } from '@/components/app/creator/MotionLibraryShowcase';
 import { findMotionClip, type MotionClip } from '@/lib/creator/motionLibrary';
 import { maboroshiStudioUrl } from '@/lib/maboroshi-studio';
+import { isMaboroshiDelivery, maboroshiAssetId, maboroshiAspect } from '@/lib/maboroshi-delivery';
+import { saveCloudGeneration } from '@/lib/creator/cloudLibrary';
 
 const ORIGIN = 'https://live.dehub.io';
 
@@ -37,6 +39,9 @@ export default function MaboroshiPage({ remake = false }: { remake?: boolean }) 
   const [paying, setPaying] = useState(false);
   const pending = useRef<string | null>(null);
   const paymentInFlight = useRef(false);
+  const deliveryInFlight = useRef(false);
+  const [deliveryStatus, setDeliveryStatus] = useState('');
+  const [savedAsset, setSavedAsset] = useState<{ id: string; wallet: string } | null>(null);
   const activeWallet = useRef('');
   activeWallet.current = isAuthenticated ? (walletAddress || '').toLowerCase() : '';
   const reply = useCallback((requestId: string, error?: string, cancelled = false) => {
@@ -45,13 +50,35 @@ export default function MaboroshiPage({ remake = false }: { remake?: boolean }) 
   const session = useCallback(() => {
     frame.current?.contentWindow?.postMessage({ type: 'maboroshi:session',
       token: isAuthenticated ? getAuthToken() || '' : '', wallet: walletAddress || '',
-      paymentBridge: 1, allowPayments: true,
+      paymentBridge: 1, libraryBridge: 1, allowPayments: true,
     }, ORIGIN);
   }, [isAuthenticated, walletAddress]);
 
   useEffect(() => {
     const receive = (event: MessageEvent) => {
       if (event.origin !== ORIGIN || event.source !== frame.current?.contentWindow) return;
+      if (isMaboroshiDelivery(event.data)) {
+        const input = event.data;
+        if (deliveryInFlight.current || !activeWallet.current || input.wallet !== activeWallet.current) return;
+        deliveryInFlight.current = true;
+        setDeliveryStatus(t('common.saving', 'Saving…'));
+        void (async () => {
+          const id = await maboroshiAssetId(input);
+          if (activeWallet.current !== input.wallet) return;
+          await saveCloudGeneration(input.wallet, { id, kind: 'video', prompt: 'Remake video', resolvedPrompt: '',
+            model: 'remake', modelName: 'Remake', aspect: maboroshiAspect(input), status: 'done', stage: '',
+            url: input.url, createdAt: input.createdAt });
+          if (activeWallet.current !== input.wallet) return;
+          setDeliveryStatus(t('copy.922cb35a34dc', 'Saved to your account'));
+          setSavedAsset({ id, wallet: input.wallet });
+          frame.current?.contentWindow?.postMessage({ type: 'maboroshi:save-result', requestId: input.requestId }, ORIGIN);
+        })().catch(() => {
+          if (activeWallet.current !== input.wallet) return;
+          setDeliveryStatus(t('copy.472d4637d255', 'Cloud save pending. Retry saving'));
+          frame.current?.contentWindow?.postMessage({ type: 'maboroshi:save-result', requestId: input.requestId, error: 'Could not save. Your project is retained; try again.' }, ORIGIN);
+        }).finally(() => { deliveryInFlight.current = false; });
+        return;
+      }
       if (event.data?.type === 'maboroshi:ready') {
         setConnected(true); session();
         if (selectedClipRef.current) frame.current?.contentWindow?.postMessage({ type: 'maboroshi:clip', clip: selectedClipRef.current }, ORIGIN);
@@ -67,7 +94,7 @@ export default function MaboroshiPage({ remake = false }: { remake?: boolean }) 
     };
     window.addEventListener('message', receive);
     return () => window.removeEventListener('message', receive);
-  }, [session, reply]);
+  }, [session, reply, t]);
   useEffect(() => { session(); }, [session]);
   useEffect(() => {
     const clipId = searchParams.get('clip');
@@ -80,6 +107,7 @@ export default function MaboroshiPage({ remake = false }: { remake?: boolean }) 
     if (connected && selectedClip) frame.current?.contentWindow?.postMessage({ type: 'maboroshi:clip', clip: selectedClip }, ORIGIN);
   }, [connected, selectedClip, isAuthenticated, walletAddress]);
   useEffect(() => { setQuote(null); pending.current = null; }, [walletAddress]);
+  useEffect(() => { setDeliveryStatus(''); setSavedAsset(null); }, [walletAddress]);
   const confirm = async () => {
     if (!quote || paymentInFlight.current) return;
     paymentInFlight.current = true;
@@ -105,6 +133,7 @@ export default function MaboroshiPage({ remake = false }: { remake?: boolean }) 
         </div>
       </header>
       <MotionLibraryShowcase onPick={clip => { setSelectedClip(clip); frame.current?.scrollIntoView({ behavior: 'smooth', block: 'start' }); }} />
+      {deliveryStatus && <p role="status" className="px-4 py-3 text-sm">{deliveryStatus} <Link to="/creator" className="underline">{t('creator.referenceLibrary')}</Link>{savedAsset && <> · <Link to="/editor" state={{ remakeAssetId: savedAsset.id, wallet: savedAsset.wallet }} className="underline">{t('creator.editInTimeline')}</Link></>}</p>}
       {!connected && <p role="status" className="px-4 py-3 text-sm text-white/60">{t('common.loading', 'Loading…')}{_copy("copy.8f3a26244094", { defaultValue: " Maboroshi" })}</p>}
       <iframe key={`${walletAddress || 'guest'}:${attempt}:${remake}`} ref={frame} src={studioUrl} title={studioName}
         className="w-full flex-1 border-0" style={{ minHeight: 'calc(100dvh - 65px)' }}
