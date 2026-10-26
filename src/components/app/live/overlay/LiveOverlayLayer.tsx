@@ -25,6 +25,7 @@ import { OverlayWidgetView } from './overlay-widgets';
 import { createRuleBus, RuleAudio, RuleBusContext } from './rule-bus';
 import { PollContext, PollWidget, useStreamPoll } from './poll';
 import { OverlayCreatorContext, SubathonContext, useStreamSubathon } from './subathon';
+import { HypeContext, useStreamHype } from './hype-train';
 
 interface Props {
   streamId: string;
@@ -61,6 +62,8 @@ export default function LiveOverlayLayer({ streamId, tokenId, overlay, videoRef,
   // and covers it with buttons. Where the creator placed it, or the default spot.
   const polls = useStreamPoll(streamId, true);
   const subathon = useStreamSubathon(streamId, overlay.subathon);
+  // Only fetched when the creator placed the widget: the player's own bar covers everyone else.
+  const hype = useStreamHype(overlay.widgets.some((w) => w.enabled && w.kind === 'hype_train') ? streamId : null);
   const pollWidget = useMemo(
     () => overlay.widgets.find((w) => w.enabled && w.kind === 'poll') ?? newWidget('poll', []),
     [overlay],
@@ -99,6 +102,7 @@ export default function LiveOverlayLayer({ streamId, tokenId, overlay, videoRef,
   return (
     <OverlayEventContext.Provider value={bus}>
     <SubathonContext.Provider value={subathon}>
+    <HypeContext.Provider value={hype}>
     <OverlayCreatorContext.Provider value={creator ?? ''}>
       <RuleBusContext.Provider value={rules}>
         {inApp && <RuleAudio playLive />}
@@ -127,6 +131,7 @@ export default function LiveOverlayLayer({ streamId, tokenId, overlay, videoRef,
         )}
       </RuleBusContext.Provider>
     </OverlayCreatorContext.Provider>
+    </HypeContext.Provider>
     </SubathonContext.Provider>
     </OverlayEventContext.Provider>
   );

@@ -5244,6 +5244,175 @@
     "sellYourFractions": "Verkoop uw fracties ({{held}} in bezit)"
   },
   "creator": {
+    "campaignPlanTitle": "Campagnevarianten en afleveringen",
+    "campaignPlanIntro": "Bewaar maximaal 12 varianten of afleveringen. Elk opent de studio voor een eigen controle en prijsopgave. Gedeelde notities sturen de continuïteit; productuiterlijk, personages en stemmen kunnen per generatie verschillen.",
+    "campaignTitle": "Naam van campagne of serie",
+    "campaignContinuity": "Gedeelde notities over personages, stem en stijl",
+    "campaignVariantTitle": "Naam van variant of aflevering",
+    "campaignHook": "Openingshaak",
+    "campaignLanguage": "Taal van de uitvoer",
+    "campaignScript": "Goedgekeurd script of scènevolgorde",
+    "campaignAdd": "Variant of aflevering toevoegen",
+    "campaignClear": "Plan wissen",
+    "campaignFormat": "Uitvoerformaat",
+    "marketing": {
+    "import":  {
+                   "url":  "URL van productpagina",
+                   "action":  "Productpagina lezen",
+                   "loading":  "Pagina wordt gelezen…",
+                   "hint":  "Importeer tekst van een openbare productpagina. Controleer de gegevens voordat je ze gebruikt en voeg productafbeeldingen apart toe in de studio.",
+                   "source":  "Geïmporteerde bron",
+                   "review":  "Kies een product om naar je bewerkbare brief te kopiëren. Je kop, merkstem en merkkleuren blijven behouden.",
+                   "use":  "Deze gegevens gebruiken",
+                   "errors":  {
+                                  "signIn":  "Log in om een productpagina te importeren.",
+                                  "url":  "Gebruik een openbare HTTPS-productpagina.",
+                                  "empty":  "Er zijn geen bruikbare productgegevens gevonden. Voeg ze handmatig toe.",
+                                  "busy":  "Er zijn te veel importtaken actief. Probeer het zo nog eens.",
+                                  "unavailable":  "Deze pagina kon niet worden geïmporteerd. Voeg de productgegevens handmatig toe.",
+                                  "failed":  "Importeren is mislukt. Je brief is opgeslagen; probeer het opnieuw of voer de gegevens handmatig in."
+                              }
+               },
+        "return": "Terug naar studioconcept",
+                      "title":  "Campagnebrief",
+                      "intro":  "Beschrijf je product en merk en bereid bijpassende advertentieformaten voor.",
+                      "saved":  "Je brief wordt op dit apparaat voor dit account opgeslagen.",
+                      "preview":  "Formaten voorbereiden",
+                      "clear":  "Brief wissen",
+                      "required":  "Voeg een productnaam en beschrijving toe om formaten voor te bereiden.",
+                      "variants":  "Campagneformaten",
+                      "reviewHint":  "Controleer het model, de prijs en de productreferentie in de studio voordat je genereert. Elk formaat is een aparte generatie.",
+                      "open":  "Controleren in studio",
+                      "fields":  {
+                                     "product":  "Productnaam (verplicht)",
+                                     "description":  "Productfeiten (verplicht)",
+                                     "brand":  "Merknaam",
+                                     "audience":  "Doelgroep",
+                                     "benefit":  "Belangrijkste voordeel",
+                                     "voice":  "Merkstem",
+                                     "palette":  "Merkkleuren",
+                                     "headline":  "Goedgekeurde kop",
+                                     "cta":  "Oproep tot actie"
+                                 },
+                      "formats":  {
+                                      "square":  "Vierkante advertentie",
+                                      "portrait":  "Staande advertentie",
+                                      "story":  "Verhaalafbeelding",
+                                      "video":  "Verticale video"
+                                  }
+                  },
+    "audioInvalidResponse":  "De audiodienst gaf een ongeldig resultaat terug.",
+      "audioResultTooLarge":  "Het audioresultaat is leeg of groter dan 128 MB.",
+    "cinema":  {
+                   "title":  "Filmregie",
+                   "hint":  "Bepaal de visuele stijl van je volgende afbeelding of video. De resultaten verschillen per model.",
+                   "none":  "Geen aanwijzing",
+                   "reset":  "Aanwijzingen wissen",
+                   "close":  "Sluiten",
+                   "camera":  {
+                                  "label":  "Cameralook",
+                                  "0":  "Digitale cinema",
+                                  "1":  "35mm-film",
+                                  "2":  "16mm-film",
+                                  "3":  "Grootformaat",
+                                  "4":  "Oude camcorder"
+                              },
+                   "lens":  {
+                                "label":  "Lenslook",
+                                "0":  "Sferisch",
+                                "1":  "Anamorf",
+                                "2":  "Zacht vintageglas",
+                                "3":  "Macro",
+                                "4":  "Tilt-shift"
+                            },
+                   "focalLength":  {
+                                       "label":  "Brandpuntsafstand",
+                                       "0":  "18 mm groothoek",
+                                       "1":  "24 mm groothoek",
+                                       "2":  "35 mm natuurlijk",
+                                       "3":  "50 mm standaard",
+                                       "4":  "85 mm portret",
+                                       "5":  "135 mm telelens"
+                                   },
+                   "aperture":  {
+                                    "label":  "Scherptediepte",
+                                    "0":  "f/1.4 zeer ondiep",
+                                    "1":  "f/2.8 ondiep",
+                                    "2":  "f/5.6 gemiddeld",
+                                    "3":  "f/11 grote scherptediepte"
+                                },
+                   "movement":  {
+                                    "label":  "Camerabeweging",
+                                    "0":  "Vast statief",
+                                    "1":  "Langzaam naar voren rijden",
+                                    "2":  "Langzaam achteruit rijden",
+                                    "3":  "Zijwaartse volgbeweging",
+                                    "4":  "Rond het onderwerp draaien",
+                                    "5":  "Camera uit de hand",
+                                    "6":  "Kraan omhoog",
+                                    "7":  "Langzame pan"
+                                },
+                   "lighting":  {
+                                    "label":  "Belichting",
+                                    "0":  "Zacht daglicht",
+                                    "1":  "Gouden uur",
+                                    "2":  "Donker clair-obscur",
+                                    "3":  "Heldere studio",
+                                    "4":  "Neonlicht in de scène",
+                                    "5":  "Silhouet met tegenlicht",
+                                    "6":  "Diffuus bewolkt licht"
+                                },
+                   "tempo":  {
+                                 "label":  "Shottempo",
+                                 "0":  "Eén doorlopend shot",
+                                 "1":  "Rustige, ongedwongen actie",
+                                 "2":  "Dynamische, energieke actie",
+                                 "3":  "Chaotische, hectische actie"
+                             },
+                   "era":  {
+                               "label":  "Tijdperk",
+                               "0":  "Jaren 1920",
+                               "1":  "Jaren 1950",
+                               "2":  "Jaren 1960",
+                               "3":  "Jaren 1970",
+                               "4":  "Jaren 1980",
+                               "5":  "Jaren 1990",
+                               "6":  "Heden",
+                               "7":  "Nabije toekomst"
+                           },
+                   "genre":  {
+                                 "label":  "Genre",
+                                 "0":  "Documentaire",
+                                 "1":  "Drama",
+                                 "2":  "Film noir",
+                                 "3":  "Sciencefiction",
+                                 "4":  "Fantasie",
+                                 "5":  "Romantische komedie",
+                                 "6":  "Thriller",
+                                 "7":  "Western"
+                             },
+                   "performance":  {
+                                       "label":  "Acteerspel",
+                                       "0":  "Vrolijk",
+                                       "1":  "Melancholisch",
+                                       "2":  "Angstig",
+                                       "3":  "Zelfverzekerd",
+                                       "4":  "Vol ontzag",
+                                       "5":  "Ingetogen",
+                                       "6":  "Speels"
+                                   },
+                   "palette":  {
+                                   "label":  "Kleurenpalet",
+                                   "0":  "Warm amber",
+                                   "1":  "Koel blauw",
+                                   "2":  "Gedempte aardetinten",
+                                   "3":  "Pastel",
+                                   "4":  "Monochroom met hoog contrast",
+                                   "5":  "Verzadigde primaire kleuren"
+                               }
+               },
+    "batchPaymentHelp":  "Elke ingediende afbeelding wordt apart berekend. Als een reeks stopt, worden ongebruikte DHB van die betaling automatisch hergebruikt voor een latere generatie die daarmee kan worden betaald.",
+    "invalidSeed":  "De seed moet een geheel getal van 0 tot en met 2147483647 zijn.",
     "libraryEmpty": "Je opgeslagen generaties verschijnen hier.",
     "toolRemake": "Remake",
     "toolMaboroshi": "Maboroshi",
@@ -6537,6 +6706,8 @@
     "creatorEarnsDirect": "Abonnees betalen in DeHub-tokens. Je aandeel komt in je portemonnee terecht op het moment dat ze zich abonneren, minus de platformkosten voor je badge-niveau."
   },
   "liveOverlay": {
+    "giftedSubs_one": "{{name}} gaf een abonnement cadeau!",
+    "giftedSubs_other": "{{name}} gaf {{count}} abonnementen cadeau!",
     "someone": "Iemand",
     "newFollower": "Nieuwe volger: {{name}}",
     "newSubscriber": "Nieuwe abonnee: {{name}}",
@@ -6746,6 +6917,7 @@
       "subathon_timer": "Subathon-timer",
       "points_board": "Loyale kijkers",
       "streamer_level": "Streamer-niveau",
+      "hype_train": "Hype train",
       "tip_jar": "Geschenkpot"
     },
     "hints": {
@@ -6770,6 +6942,7 @@
       "subathon_timer": "Een afteller die gifts, follows en abonnementen terugzet",
       "points_board": "Je topkijkers op basis van punten van kijken en geven",
       "streamer_level": "Je streamer-niveau en wekelijkse reeks, vanuit je profiel",
+      "hype_train": "Toont de hype train zolang die rijdt: drie cadeaus of abonnementen binnen vijf minuten zetten hem in gang.",
       "tip_jar": "Een pot die volloopt als betaalde geschenken binnenkomen"
     },
     "fields": {
@@ -8669,6 +8842,33 @@
     "priceChartCleared": "Prijsgrafiek is geleegd. Referentieprijs is vastgesteld op $0.0001. Uitvoeringsprijzen zijn afhankelijk van beschikbare orders."
   },
   "editor": {
+    "film": {
+        "repairRefs": "Ontbrekende mediakoppelingen verwijderen",
+                 "title":  "Filmproject",
+                 "intro":  "Plan shots met herbruikbare referentiebeelden. Je brief, shotvolgorde en gekozen resultaten worden met dit project opgeslagen.",
+                 "create":  "Filmplan maken",
+                 "name":  "Filmnaam",
+                 "brief":  "Filmbrief",
+                 "sharedReferences":  "Gedeelde referentiebeelden (maximaal 4)",
+                 "shot":  "Shot",
+                 "addShot":  "Shot toevoegen",
+                 "shotName":  "Shotnaam",
+                 "action":  "Actie en compositie van het shot",
+                 "seconds":  "Gewenste videoduur in seconden",
+                 "shotReferences":  "Extra referentiebeelden (samen maximaal 4)",
+                 "frame":  "Beeld voorbereiden",
+                 "video":  "Video voorbereiden",
+                 "review":  "Controleer het model, de referenties, de videoduur en de prijs in de studio voordat je genereert.",
+                 "result":  "Goedgekeurd shotresultaat",
+                 "noResult":  "Geen resultaat geselecteerd",
+                 "resultHint":  "Kies een goedgekeurde afbeelding of video uit Uploads. De koppeling wordt met het shot opgeslagen; monteer de film op de tijdlijn.",
+                 "earlier":  "Eerder plaatsen",
+                 "later":  "Later plaatsen",
+                 "remove":  "Shot verwijderen",
+                 "issue":  "Controleer de shotbeschrijving en referentiemedia en probeer het opnieuw. Houd het project open als opslaan is mislukt.",
+                 "searchMedia":  "Media zoeken op naam",
+                 "refreshMedia":  "Media vernieuwen"
+             },
     "video": {
       "tFade": "Overvloeien",
       "none": "Geen",
@@ -18180,5 +18380,74 @@
     "fingerprint": "Vingerafdruk",
     "exploreFirst": "Eerst rondkijken",
     "codeNote": "We mailen je een code, geen wachtwoord nodig."
+  },
+  "liveHype": {
+    "train": {
+      "level": "Hype train · Level {{level}}",
+      "endedLevel": "De hype train haalde level {{level}}!",
+      "ended": "De hype train is voorbij",
+      "thanks_one": "Dank aan {{count}} supporter",
+      "thanks_other": "Dank aan {{count}} supporters",
+      "top": "Top: {{name}}"
+    },
+    "chat": {
+      "giftedSubs_one": "gaf een abonnement cadeau 🎁",
+      "giftedSubs_other": "gaf {{count}} abonnementen cadeau 🎁"
+    },
+    "gift": {
+      "open": "Abonnementen cadeau geven",
+      "title": "Abonnementen cadeau geven",
+      "plan": "Abonnement",
+      "mode": {
+        "random": "Willekeurige kijkers in de chat",
+        "user": "Iemand specifiek"
+      },
+      "howMany": "Hoeveel",
+      "randomHint": "Gaat naar mensen die de afgelopen 30 minuten in de chat schreven en nog niet geabonneerd zijn.",
+      "who": "Gebruikersnaam of walletadres",
+      "whoPlaceholder": "@gebruikersnaam",
+      "send_one": "1 abonnement cadeau · ${{price}}",
+      "send_other": "{{count}} abonnementen cadeau · ${{price}}",
+      "payHint": "Betaald in DHB vanuit je wallet, in één overboeking.",
+      "fewer_one": "Er kan nu maar 1 persoon in de chat een abonnement krijgen, dus je betaalt er 1.",
+      "fewer_other": "Er kunnen nu maar {{count}} mensen in de chat een abonnement krijgen, dus je betaalt er {{count}}.",
+      "done_one": "Abonnement cadeau gegeven!",
+      "done_other": "{{count}} abonnementen cadeau gegeven!",
+      "failed": "Abonnementen cadeau geven is niet gelukt",
+      "notReady": "Dit abonnement kan nog niet cadeau worden gegeven",
+      "noPlan": "Kies eerst een abonnement",
+      "noPlans": "{{name}} heeft nog geen abonnementen om cadeau te geven.",
+      "cancel": "Annuleren",
+      "stage": {
+        "preparing": "Voorbereiden…",
+        "wallet": "Bevestig in je wallet",
+        "confirming": "Wachten op de transactie…",
+        "recording": "Afronden…"
+      }
+    },
+    "badges": {
+      "title": "Tijdelijke badges",
+      "intro": "Bied een paar dagen een badge aan. Wie in die tijd abonneert of iets cadeau geeft, krijgt hem, en hij staat voorgoed naast hun naam in je chat.",
+      "name": "Naam van de badge",
+      "namePlaceholder": "Lanceerweek",
+      "days": "Beschikbaar (dagen)",
+      "emoji": "Emoji",
+      "who": "Wie kan hem verdienen",
+      "audience": {
+        "both": "Abonnees en gevers",
+        "subscribers": "Abonnees",
+        "gifters": "Gevers"
+      },
+      "create": "Badge aanbieden",
+      "created": "De badge is live.",
+      "end": "Nu stoppen",
+      "ended": "Gestopt",
+      "until": "Tot {{date}}",
+      "holders_one": "{{count}} houder",
+      "holders_other": "{{count}} houders",
+      "limit": "Er kunnen drie badges tegelijk lopen. Stop er een om een nieuwe aan te bieden.",
+      "failed": "Dat lukte niet. Probeer het opnieuw.",
+      "hypeHint": "Iedereen die meerijdt op een hype train krijgt ook je 🚂-badge op het gehaalde level."
+    }
   }
 }

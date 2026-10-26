@@ -22,7 +22,7 @@ export default function PricingPage() {
             {
               '@type': 'Product',
               name: 'DeHub Ultra',
-              description: `For creators building AI projects — ${monthlyTokens('ultra', 'annual')} tokens/mo with annual billing, or ${monthlyTokens('ultra', 'monthly')} tokens/mo with monthly billing. Access to all models including Seedance 2.0 and Nano Banana Pro.`,
+              description: `For creators building AI projects — ${monthlyTokens('ultra', 'annual')} tokens/mo with annual billing, or ${monthlyTokens('ultra', 'monthly')} tokens/mo with monthly billing. Tokens are delivered to the subscriber wallet for supported generation tasks.`,
               brand: { '@type': 'Brand', name: 'DeHub' },
               offers: {
                 '@type': 'Offer',
@@ -42,7 +42,7 @@ export default function PricingPage() {
             {
               '@type': 'Product',
               name: 'DeHub Team',
-              description: `For agencies and small teams — ${monthlyTokens('team', 'annual')} tokens per seat/mo with annual billing, or ${monthlyTokens('team', 'monthly')} with monthly billing. 2–9 seats, shared workspace and priority support.`,
+              description: `For agencies and small teams — ${monthlyTokens('team', 'annual')} tokens per seat/mo with annual billing, or ${monthlyTokens('team', 'monthly')} with monthly billing. 2–9 billed seats; the combined token allowance is delivered to the subscriber wallet.`,
               brand: { '@type': 'Brand', name: 'DeHub' },
               offers: {
                 '@type': 'Offer',
@@ -62,7 +62,7 @@ export default function PricingPage() {
             {
               '@type': 'Product',
               name: 'DeHub Scale',
-              description: `Designed for growing creative teams — ${monthlyTokens('scale', 'annual')} tokens per seat/mo with annual billing, or ${monthlyTokens('scale', 'monthly')} with monthly billing. 5–15 seats, SSO, priority queue and advanced admin controls.`,
+              description: `Designed for growing creative teams — ${monthlyTokens('scale', 'annual')} tokens per seat/mo with annual billing, or ${monthlyTokens('scale', 'monthly')} with monthly billing. 5–15 billed seats; the combined token allowance is delivered to the subscriber wallet.`,
               brand: { '@type': 'Brand', name: 'DeHub' },
               offers: {
                 '@type': 'Offer',
@@ -82,7 +82,7 @@ export default function PricingPage() {
             {
               '@type': 'Product',
               name: 'DeHub Creator',
-              description: `For getting started with AI creation — ${monthlyTokens('creator', 'annual')} tokens/mo with annual billing, or ${monthlyTokens('creator', 'monthly')} tokens/mo with monthly billing. Access to all models and features.`,
+              description: `For getting started with AI creation — ${monthlyTokens('creator', 'annual')} tokens/mo with annual billing, or ${monthlyTokens('creator', 'monthly')} tokens/mo with monthly billing. Tokens are delivered to the subscriber wallet for supported generation tasks.`,
               brand: { '@type': 'Brand', name: 'DeHub' },
               offers: {
                 '@type': 'Offer',

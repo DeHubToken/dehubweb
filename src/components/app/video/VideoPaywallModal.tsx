@@ -257,6 +257,10 @@ export function VideoPaywallModal({
 
   const handlePayAndGenerate = async () => {
     if (costDhb <= 0) return;
+    if (model.supportsSeed && seed.trim() && (!/^\d+$/.test(seed.trim()) || !Number.isSafeInteger(Number(seed)) || Number(seed) > 2147483647)) {
+      toast.error(_copy('creator.invalidSeed', { defaultValue: 'Seed must be a whole number from 0 to 2147483647.' }));
+      return;
+    }
     setIsPaying(true);
     try {
       // Uploads happen BEFORE the transfer. They used to run after it, inside
@@ -267,7 +271,7 @@ export function VideoPaywallModal({
       if (model.minDuration && model.maxDuration) options.duration = duration;
       if (model.supportsResolution) options.resolution = resolution;
       if (model.supportsNegativePrompt && negativePrompt.trim()) options.negativePrompt = negativePrompt.trim();
-      if (model.supportsSeed && seed.trim()) options.seed = parseInt(seed.trim()) || undefined;
+      if (model.supportsSeed && seed.trim()) options.seed = Number(seed.trim());
 
       const hasUploads =
         referenceImages.length > 0 || !!endFrameFile || audioFiles.length > 0 || videoFiles.length > 0;

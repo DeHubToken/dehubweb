@@ -32,6 +32,7 @@ export const OVERLAY_KINDS = [
   'points_board',
   'streamer_level',
   'tip_jar',
+  'hype_train',
 ] as const;
 
 export type OverlayKind = (typeof OVERLAY_KINDS)[number];
@@ -161,6 +162,11 @@ export const WIDGET_TEMPLATES: Record<OverlayKind, WidgetTemplate> = {
     landscape: { x: 0.86, y: 0.6, w: 0.12, h: 0.3 },
     portrait: { x: 0.75, y: 0.5, w: 0.2, h: 0.18 },
     settings: { target: 100000, title: '', accent: '#facc15' },
+  },
+  hype_train: {
+    landscape: { x: 0.3, y: 0.86, w: 0.4, h: 0.09 },
+    portrait: { x: 0.05, y: 0.08, w: 0.9, h: 0.06 },
+    settings: { accent: '#f97316' },
   },
 };
 
