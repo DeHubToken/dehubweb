@@ -40,3 +40,7 @@
 @media (prefers-reduced-motion: reduce) {
   [data-shorts-viewer] { transform: none !important; }
 }
+@keyframes shorts-seek-flash {
+  0%, 40% { opacity: 1; }
+  100% { opacity: 0; }
+}
