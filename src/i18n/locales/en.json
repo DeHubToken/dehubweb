@@ -5053,7 +5053,36 @@
     "sellYourFractions": "Sell your fractions ({{held}} held)"
   },
   "creator": {
+    "learn": {"title":"Creator lessons","intro":"Short lessons, a knowledge check and an editable exercise for each. Progress is saved on this device for your account.","back":"Back to Creator","lessons":"Lessons","progress":"{{completed}} of {{total}} knowledge checks passed","check":"Check answer","correct":"Knowledge check passed","retry":"Try again. Review the lesson above.","exerciseTitle":"Practical exercise","exerciseHint":"Open an editable example in your own studio workspace. Opening a draft is free; generation needs your review and its own quote. Edit the example before generating.","openExercise":"Open exercise draft","closeExercise":"Close exercise","brief":{"title":"Write a clear visual brief","body1":"Describe a concrete subject, its action and the setting. Add framing or camera movement when it helps the scene. Keep unrelated ideas for another draft.","body2":"Lighting, lens and style directions guide the model. They do not guarantee physical camera behavior or an exact image. Change one part at a time so you can compare revisions.","body3":"Before generating, review the selected model, supported attachments, dimensions and price. Keep the original draft so you can return to it.","question":"Which brief is easiest to revise?","answer0":"A clear subject, action and setting","answer1":"Only a model name","answer2":"A list of contradictory styles","exercise":"A ceramic teapot on a wooden table beside a window. Soft morning light, medium framing, simple background. Keep the teapot as the clear subject."},"continuity":{"title":"Plan shots and review continuity","body1":"Use the Film panel in the editor to save a brief and ordered shots. Prepare each frame or clip separately, review its quote, and select an accepted result.","body2":"Attach only references accepted by your chosen model. Reusing a reference can guide appearance; it does not train an identity or guarantee a match. Characters and voices can vary between generations.","body3":"Keep successful takes and assemble them in the timeline. Review motion, faces, dialogue and transitions before export.","question":"What supports continuity across shots?","answer0":"More unrelated prompts","answer1":"Approved references and reviewed shot notes","answer2":"Assuming character identity is guaranteed","exercise":"Wide shot of a lone traveler reaching a quiet coast at sunrise. Slow forward camera movement, calm atmosphere. One continuous shot."},"campaign":{"title":"Use approved product facts","body1":"Start with product facts you can verify. Review imported metadata before using it. Write the headline and call to action explicitly; do not invent prices, reviews or performance claims.","body2":"Use saved campaign variants to keep shared notes and individual hooks, scripts, languages and formats together. Prepare one reviewed item at a time and check its quote in the studio.","body3":"Review visible text, product appearance and any spoken claims in the result. A prompt is not proof of product accuracy or marketing performance.","question":"When should a product claim be included?","answer0":"Whenever it sounds convincing","answer1":"After inventing a five-star review","answer2":"When it comes from approved product facts","exercise":"Create a portrait product advertisement for whole-leaf tea sold in a reusable tin. Approved headline: Make time for tea. Approved CTA: Explore the collection. Use only these facts; do not invent discounts, reviews or health claims."}},
+    "campaignPlanTitle": "Campaign variants and episodes",
+    "campaignPlanIntro": "Save up to 12 variations or episodes. Each opens the studio for its own review and quote. Shared notes guide continuity; product appearance, characters and voices can vary between generations.",
+    "campaignTitle": "Campaign or series name",
+    "campaignContinuity": "Shared character, voice and style notes",
+    "campaignVariantTitle": "Variant or episode name",
+    "campaignHook": "Opening hook",
+    "campaignLanguage": "Output language",
+    "campaignScript": "Approved script or scene sequence",
+    "campaignAdd": "Add variant or episode",
+    "campaignClear": "Clear plan",
+    "campaignFormat": "Output format",
     "marketing": {
+    "import":  {
+                   "url":  "Product page URL",
+                   "action":  "Read product page",
+                   "loading":  "Reading page…",
+                   "hint":  "Import text from a public product page. Review details before using them; attach product images separately in the studio.",
+                   "source":  "Imported source",
+                   "review":  "Choose a product to copy into your editable brief. Your headline, voice and brand colors stay unchanged.",
+                   "use":  "Use these details",
+                   "errors":  {
+                                  "signIn":  "Sign in to import a product page.",
+                                  "url":  "Use a public HTTPS product URL.",
+                                  "empty":  "No usable product details were found. Add them manually.",
+                                  "busy":  "Too many imports are running. Try again shortly.",
+                                  "unavailable":  "This page could not be imported. Add the product details manually.",
+                                  "failed":  "Import failed. Your brief is saved; try again or enter details manually."
+                              }
+               },
         "return": "Return to studio draft",
                       "title":  "Campaign brief",
                       "intro":  "Describe your product and brand, then prepare matching ad formats.",
@@ -5082,6 +5111,8 @@
                                       "video":  "Vertical video"
                                   }
                   },
+    "audioInvalidResponse":  "The audio service returned an invalid result.",
+      "audioResultTooLarge":  "The audio result is empty or exceeds 128 MB.",
     "batchPaymentHelp": "Each submitted image is charged separately. If a batch stops, unused DHB from its payment is reused automatically for a later generation that it covers.",
     "invalidSeed": "Seed must be a whole number from 0 to 2147483647.",
     "cinema": {
@@ -5766,8 +5797,6 @@
     "decrease": "Decrease {{field}}",
     "increase": "Increase {{field}}",
     "srHeading": "DeHub Creator Studio",
-    "bannerCopy": "Launch creative campaigns faster with DeHub AI tools",
-    "closeBanner": "Close creator banner",
     "openApp": "Open DeHub app",
     "navExplore": "Explore",
     "navImage": "Image",
@@ -6487,6 +6516,8 @@
     "creatorEarnsDirect": "Subscribers pay in DeHub tokens. Your share lands in your wallet the moment they subscribe, less the platform fee for your badge tier."
   },
   "liveOverlay": {
+    "giftedSubs_one": "{{name}} gifted a sub!",
+    "giftedSubs_other": "{{name}} gifted {{count}} subs!",
     "someone": "Someone",
     "newFollower": "New follower: {{name}}",
     "newSubscriber": "New subscriber: {{name}}",
@@ -6696,6 +6727,7 @@
       "subathon_timer": "Subathon timer",
       "points_board": "Loyal viewers",
       "streamer_level": "Streamer level",
+      "hype_train": "Hype train",
       "tip_jar": "Gift jar"
     },
     "hints": {
@@ -6720,6 +6752,7 @@
       "subathon_timer": "A countdown that gifts, follows and subscriptions push back",
       "points_board": "Your top viewers by points from watching and gifting",
       "streamer_level": "Your streamer level and weekly streak, from your profile",
+      "hype_train": "Shows the hype train while one runs: three gifts or subscriptions within five minutes start it.",
       "tip_jar": "A jar that fills up as paid gifts come in"
     },
     "fields": {
@@ -8617,6 +8650,33 @@
     "priceChartCleared": "Price chart cleared. Fixed reference price: $0.0001. Execution prices depend on available orders."
   },
   "editor": {
+    "film": {
+        "repairRefs": "Remove missing media links",
+                 "title":  "Film project",
+                 "intro":  "Plan shots with reusable image references. Your brief, shot order and selected results save with this project.",
+                 "create":  "Create film plan",
+                 "name":  "Film name",
+                 "brief":  "Film brief",
+                 "sharedReferences":  "Shared image references (up to 4)",
+                 "shot":  "Shot",
+                 "addShot":  "Add shot",
+                 "shotName":  "Shot name",
+                 "action":  "Shot action and composition",
+                 "seconds":  "Requested video seconds",
+                 "shotReferences":  "Extra image references (combined limit 4)",
+                 "frame":  "Prepare frame",
+                 "video":  "Prepare video",
+                 "review":  "Review the model, references, video duration and price in the studio before generating.",
+                 "result":  "Accepted shot result",
+                 "noResult":  "No result selected",
+                 "resultHint":  "Choose an accepted image or video from Uploads. Its link saves with this shot; use the timeline to assemble the film.",
+                 "earlier":  "Move earlier",
+                 "later":  "Move later",
+                 "remove":  "Remove shot",
+                 "issue":  "Check the shot description and reference media, then try again. Keep the project open if it could not be saved.",
+                 "searchMedia":  "Find media by name",
+                 "refreshMedia":  "Refresh media"
+             },
     "video": {
       "tFade": "Cross-dissolve",
       "none": "None",
@@ -18046,5 +18106,74 @@
     "fingerprint": "Bio",
     "exploreFirst": "Explore first",
     "codeNote": "We email you a code, no password needed."
+  },
+  "liveHype": {
+    "train": {
+      "level": "Hype Train · Level {{level}}",
+      "endedLevel": "Hype Train finished level {{level}}!",
+      "ended": "Hype Train ended",
+      "thanks_one": "Thanks to {{count}} supporter",
+      "thanks_other": "Thanks to {{count}} supporters",
+      "top": "Top: {{name}}"
+    },
+    "chat": {
+      "giftedSubs_one": "gifted a subscription 🎁",
+      "giftedSubs_other": "gifted {{count}} subscriptions 🎁"
+    },
+    "gift": {
+      "open": "Gift subscriptions",
+      "title": "Gift subscriptions",
+      "plan": "Plan",
+      "mode": {
+        "random": "Random viewers in chat",
+        "user": "Someone specific"
+      },
+      "howMany": "How many",
+      "randomHint": "Goes to people who chatted in the last 30 minutes and are not subscribed yet.",
+      "who": "Username or wallet address",
+      "whoPlaceholder": "@username",
+      "send_one": "Gift 1 sub · ${{price}}",
+      "send_other": "Gift {{count}} subs · ${{price}}",
+      "payHint": "Paid in DHB from your wallet in one transfer.",
+      "fewer_one": "Only 1 person in chat can receive a sub right now, so you pay for 1.",
+      "fewer_other": "Only {{count}} people in chat can receive a sub right now, so you pay for {{count}}.",
+      "done_one": "Subscription gifted!",
+      "done_other": "{{count}} subscriptions gifted!",
+      "failed": "Could not gift subscriptions",
+      "notReady": "Gifting is not available for this plan yet",
+      "noPlan": "Pick a plan first",
+      "noPlans": "{{name}} has no subscription plans to gift yet.",
+      "cancel": "Cancel",
+      "stage": {
+        "preparing": "Preparing…",
+        "wallet": "Confirm in your wallet",
+        "confirming": "Waiting for the transaction…",
+        "recording": "Finishing up…"
+      }
+    },
+    "badges": {
+      "title": "Limited-time badges",
+      "intro": "Offer a badge for a few days. Anyone who subscribes or gifts while it runs earns it, and it shows next to their name in your chat for good.",
+      "name": "Badge name",
+      "namePlaceholder": "Launch week",
+      "days": "Available for (days)",
+      "emoji": "Emoji",
+      "who": "Who can earn it",
+      "audience": {
+        "both": "Subscribers and gifters",
+        "subscribers": "Subscribers",
+        "gifters": "Gifters"
+      },
+      "create": "Offer badge",
+      "created": "Badge is live.",
+      "end": "End now",
+      "ended": "Ended",
+      "until": "Until {{date}}",
+      "holders_one": "{{count}} holder",
+      "holders_other": "{{count}} holders",
+      "limit": "Three badges can run at once. End one to offer another.",
+      "failed": "That did not work. Try again.",
+      "hypeHint": "Everyone who rides a hype train also gets your 🚂 badge at the level it reached."
+    }
   }
 }

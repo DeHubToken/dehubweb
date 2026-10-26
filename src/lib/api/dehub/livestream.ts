@@ -30,13 +30,15 @@ export interface StreamKeyInfo {
 
 export interface StreamActivity {
   id: string;
-  type: 'join' | 'leave' | 'like' | 'gift' | 'comment' | 'start' | 'end' | 'paused' | 'resumed' | 'reaction' | 'message';
+  type: 'join' | 'leave' | 'like' | 'gift' | 'giftSub' | 'comment' | 'start' | 'end' | 'paused' | 'resumed' | 'reaction' | 'message';
   address: string;
   username?: string;
   avatarUrl?: string;
   message?: string;
   giftAmount?: number;
   giftCurrency?: string;
+  /** Subscriptions bought for others, on a `giftSub` moment. */
+  giftCount?: number;
   timestamp: string;
 }
 

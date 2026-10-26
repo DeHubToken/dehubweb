@@ -5054,7 +5054,36 @@
     "sellYourFractions": "Vender tus fracciones ({{held}} en cartera)"
   },
   "creator": {
+    "learn": {"title":"Lecciones para creadores","intro":"Lecciones breves con una comprobación de conocimientos y un ejercicio editable. El progreso se guarda en este dispositivo para tu cuenta.","back":"Volver a Creator","lessons":"Lecciones","progress":"{{completed}} de {{total}} comprobaciones superadas","check":"Comprobar respuesta","correct":"Comprobación superada","retry":"Inténtalo de nuevo. Repasa la lección anterior.","exerciseTitle":"Ejercicio práctico","exerciseHint":"Abre un ejemplo editable en tu espacio de estudio. Abrir un borrador es gratis; generar requiere tu revisión y un presupuesto propio. Edita el ejemplo antes de generar.","openExercise":"Abrir borrador del ejercicio","closeExercise":"Cerrar ejercicio","brief":{"title":"Escribe una descripción visual clara","body1":"Describe un sujeto concreto, su acción y el entorno. Añade encuadre o movimiento de cámara cuando ayude a la escena. Guarda las ideas ajenas para otro borrador.","body2":"Las indicaciones de luz, lente y estilo orientan al modelo. No garantizan el comportamiento físico de una cámara ni una imagen exacta. Cambia una parte cada vez para comparar revisiones.","body3":"Antes de generar, revisa el modelo elegido, los archivos admitidos, las dimensiones y el precio. Conserva el borrador original para poder recuperarlo.","question":"¿Qué descripción es más fácil de revisar?","answer0":"Un sujeto, una acción y un entorno claros","answer1":"Solo el nombre de un modelo","answer2":"Una lista de estilos contradictorios","exercise":"Una tetera de cerámica sobre una mesa de madera junto a una ventana. Luz suave de la mañana, encuadre medio y fondo sencillo. La tetera debe ser el sujeto principal."},"continuity":{"title":"Planifica planos y revisa la continuidad","body1":"Usa el panel Film del editor para guardar una descripción y planos ordenados. Prepara cada imagen o clip por separado, revisa su presupuesto y selecciona un resultado aceptado.","body2":"Adjunta solo referencias admitidas por el modelo elegido. Reutilizar una referencia puede orientar la apariencia; no entrena una identidad ni garantiza coincidencias. Los personajes y las voces pueden variar entre generaciones.","body3":"Conserva las tomas válidas y móntalas en la línea de tiempo. Revisa el movimiento, los rostros, el diálogo y las transiciones antes de exportar.","question":"¿Qué ayuda a mantener la continuidad entre planos?","answer0":"Más instrucciones sin relación","answer1":"Referencias aprobadas y notas de planos revisadas","answer2":"Suponer que la identidad del personaje está garantizada","exercise":"Plano general de una persona viajera que llega sola a una costa tranquila al amanecer. Movimiento lento de cámara hacia delante y ambiente sereno. Un único plano continuo."},"campaign":{"title":"Usa datos de producto aprobados","body1":"Empieza con datos de producto verificables. Revisa los metadatos importados antes de usarlos. Escribe el titular y la llamada a la acción de forma explícita; no inventes precios, reseñas ni afirmaciones de rendimiento.","body2":"Usa variantes de campaña guardadas para reunir notas compartidas y ganchos, guiones, idiomas y formatos individuales. Prepara un elemento revisado cada vez y comprueba su presupuesto en el estudio.","body3":"Revisa el texto visible, el aspecto del producto y las afirmaciones habladas del resultado. Una instrucción no demuestra exactitud del producto ni rendimiento comercial.","question":"¿Cuándo debe incluirse una afirmación sobre el producto?","answer0":"Siempre que suene convincente","answer1":"Después de inventar una reseña de cinco estrellas","answer2":"Cuando proceda de datos de producto aprobados","exercise":"Crea un anuncio vertical de té de hoja entera vendido en una lata reutilizable. Titular aprobado: Haz tiempo para el té. Llamada a la acción aprobada: Explora la colección. Usa solo estos datos; no inventes descuentos, reseñas ni beneficios para la salud."}},
+    "campaignPlanTitle": "Variantes y episodios de campaña",
+    "campaignPlanIntro": "Guarda hasta 12 variantes o episodios. Cada uno abre el estudio para su propia revisión y presupuesto. Las notas compartidas guían la continuidad; el aspecto del producto, los personajes y las voces pueden variar entre generaciones.",
+    "campaignTitle": "Nombre de la campaña o serie",
+    "campaignContinuity": "Notas compartidas sobre personajes, voz y estilo",
+    "campaignVariantTitle": "Nombre de la variante o episodio",
+    "campaignHook": "Gancho inicial",
+    "campaignLanguage": "Idioma de salida",
+    "campaignScript": "Guion aprobado o secuencia de escenas",
+    "campaignAdd": "Añadir variante o episodio",
+    "campaignClear": "Borrar plan",
+    "campaignFormat": "Formato de salida",
     "marketing": {
+    "import":  {
+                   "url":  "URL de la página del producto",
+                   "action":  "Leer página del producto",
+                   "loading":  "Leyendo la página…",
+                   "hint":  "Importa texto de una página pública de producto. Revisa los datos antes de usarlos y adjunta las imágenes por separado en el estudio.",
+                   "source":  "Fuente importada",
+                   "review":  "Elige un producto para copiarlo a tu brief editable. El titular, el tono y los colores de marca se conservan.",
+                   "use":  "Usar estos datos",
+                   "errors":  {
+                                  "signIn":  "Inicia sesión para importar una página de producto.",
+                                  "url":  "Usa una URL HTTPS de una página pública de producto.",
+                                  "empty":  "No se encontraron datos de producto utilizables. Añádelos manualmente.",
+                                  "busy":  "Hay demasiadas importaciones en curso. Inténtalo en un momento.",
+                                  "unavailable":  "No se pudo importar esta página. Añade los datos del producto manualmente.",
+                                  "failed":  "La importación falló. Tu brief está guardado; inténtalo de nuevo o introduce los datos manualmente."
+                              }
+               },
         "return": "Volver al borrador del estudio",
                       "title":  "Brief de campaña",
                       "intro":  "Describe tu producto y marca y prepara formatos de anuncio coherentes.",
@@ -5083,6 +5112,8 @@
                                       "video":  "Vídeo vertical"
                                   }
                   },
+    "audioInvalidResponse":  "El servicio de audio devolvió un resultado no válido.",
+      "audioResultTooLarge":  "El resultado de audio está vacío o supera los 128 MB.",
     "cinema":  {
                    "title":  "Dirección cinematográfica",
                    "hint":  "Define el estilo visual de tu próxima imagen o vídeo. Los resultados varían según el modelo.",
@@ -5767,8 +5798,6 @@
     "decrease": "Reducir {{field}}",
     "increase": "Aumentar {{field}}",
     "srHeading": "Estudio de creación de DeHub",
-    "bannerCopy": "Lanza campañas creativas más rápido con las herramientas de IA de DeHub",
-    "closeBanner": "Cerrar el aviso de creador",
     "openApp": "Abrir la app de DeHub",
     "navExplore": "Explorar",
     "navImage": "Imagen",
@@ -6488,6 +6517,8 @@
     "creatorEarnsDirect": "Los suscriptores pagan en tokens DeHub. Tu acción llega a tu billetera en el momento en que se suscriben, menos la tarifa de la plataforma para tu nivel de insignia."
   },
   "liveOverlay": {
+    "giftedSubs_one": "¡{{name}} regaló una suscripción!",
+    "giftedSubs_other": "¡{{name}} regaló {{count}} suscripciones!",
     "someone": "Alguien",
     "newFollower": "Nuevo seguidor: {{name}}",
     "newSubscriber": "Nuevo suscriptor: {{name}}",
@@ -6697,6 +6728,7 @@
       "subathon_timer": "Cronómetro Subathon",
       "points_board": "Espectadores leales",
       "streamer_level": "Nivel de streamer",
+      "hype_train": "Hype train",
       "tip_jar": "Tarro de regalo"
     },
     "hints": {
@@ -6721,6 +6753,7 @@
       "subathon_timer": "Un conteo regresivo que los regalos, seguimientos y suscripciones hacen retroceder",
       "points_board": "Tus espectadores más destacados por puntos de ver y regalar",
       "streamer_level": "Tu nivel de streamer y racha semanal, desde tu perfil",
+      "hype_train": "Muestra el hype train mientras está activo: tres regalos o suscripciones en cinco minutos lo ponen en marcha.",
       "tip_jar": "Un frasco que se llena a medida que llegan los regalos pagados"
     },
     "fields": {
@@ -8618,6 +8651,33 @@
     "priceChartCleared": "Gráfico de precios borrado. Precio de referencia fijo: $0.0001. Los precios de ejecución dependen de las órdenes disponibles."
   },
   "editor": {
+    "film": {
+        "repairRefs": "Quitar vínculos a archivos ausentes",
+                 "title":  "Proyecto de película",
+                 "intro":  "Planifica planos con imágenes de referencia reutilizables. El brief, el orden de los planos y los resultados elegidos se guardan con este proyecto.",
+                 "create":  "Crear plan de película",
+                 "name":  "Nombre de la película",
+                 "brief":  "Brief de la película",
+                 "sharedReferences":  "Referencias de imagen compartidas (hasta 4)",
+                 "shot":  "Plano",
+                 "addShot":  "Añadir plano",
+                 "shotName":  "Nombre del plano",
+                 "action":  "Acción y composición del plano",
+                 "seconds":  "Duración de vídeo solicitada en segundos",
+                 "shotReferences":  "Referencias de imagen adicionales (límite total: 4)",
+                 "frame":  "Preparar fotograma",
+                 "video":  "Preparar vídeo",
+                 "review":  "Revisa el modelo, las referencias, la duración y el precio en el estudio antes de generar.",
+                 "result":  "Resultado aprobado del plano",
+                 "noResult":  "Sin resultado seleccionado",
+                 "resultHint":  "Elige una imagen o vídeo aprobado en Archivos subidos. Su vínculo se guarda con el plano; utiliza la línea de tiempo para montar la película.",
+                 "earlier":  "Mover antes",
+                 "later":  "Mover después",
+                 "remove":  "Eliminar plano",
+                 "issue":  "Revisa la descripción del plano y las referencias e inténtalo de nuevo. Mantén el proyecto abierto si no se pudo guardar.",
+                 "searchMedia":  "Buscar archivos por nombre",
+                 "refreshMedia":  "Actualizar archivos"
+             },
     "video": {
       "tFade": "Fundido cruzado",
       "none": "Ninguna",
@@ -18072,5 +18132,74 @@
     "fingerprint": "Huella",
     "exploreFirst": "Explorar primero",
     "codeNote": "Te enviamos un código por correo, sin contraseña."
+  },
+  "liveHype": {
+    "train": {
+      "level": "Hype train · Nivel {{level}}",
+      "endedLevel": "¡El hype train completó el nivel {{level}}!",
+      "ended": "El hype train terminó",
+      "thanks_one": "Gracias a {{count}} fan",
+      "thanks_other": "Gracias a {{count}} fans",
+      "top": "Top: {{name}}"
+    },
+    "chat": {
+      "giftedSubs_one": "regaló una suscripción 🎁",
+      "giftedSubs_other": "regaló {{count}} suscripciones 🎁"
+    },
+    "gift": {
+      "open": "Regalar suscripciones",
+      "title": "Regalar suscripciones",
+      "plan": "Plan",
+      "mode": {
+        "random": "Espectadores al azar del chat",
+        "user": "Una persona concreta"
+      },
+      "howMany": "Cuántas",
+      "randomHint": "Van a personas que escribieron en el chat en los últimos 30 minutos y aún no están suscritas.",
+      "who": "Nombre de usuario o dirección de billetera",
+      "whoPlaceholder": "@usuario",
+      "send_one": "Regalar 1 suscripción · ${{price}}",
+      "send_other": "Regalar {{count}} suscripciones · ${{price}}",
+      "payHint": "Se paga en DHB desde tu billetera en una sola transferencia.",
+      "fewer_one": "Ahora mismo solo 1 persona del chat puede recibir una suscripción, así que pagas 1.",
+      "fewer_other": "Ahora mismo solo {{count}} personas del chat pueden recibir una suscripción, así que pagas {{count}}.",
+      "done_one": "¡Suscripción regalada!",
+      "done_other": "¡{{count}} suscripciones regaladas!",
+      "failed": "No se pudieron regalar las suscripciones",
+      "notReady": "Todavía no se puede regalar este plan",
+      "noPlan": "Primero elige un plan",
+      "noPlans": "{{name}} aún no tiene planes de suscripción para regalar.",
+      "cancel": "Cancelar",
+      "stage": {
+        "preparing": "Preparando…",
+        "wallet": "Confirma en tu billetera",
+        "confirming": "Esperando la transacción…",
+        "recording": "Terminando…"
+      }
+    },
+    "badges": {
+      "title": "Insignias por tiempo limitado",
+      "intro": "Ofrece una insignia durante unos días. Quien se suscriba o regale mientras esté disponible la consigue, y aparecerá junto a su nombre en tu chat para siempre.",
+      "name": "Nombre de la insignia",
+      "namePlaceholder": "Semana de lanzamiento",
+      "days": "Disponible durante (días)",
+      "emoji": "Emoji",
+      "who": "Quién puede conseguirla",
+      "audience": {
+        "both": "Suscriptores y quienes regalan",
+        "subscribers": "Suscriptores",
+        "gifters": "Quienes regalan"
+      },
+      "create": "Ofrecer insignia",
+      "created": "La insignia ya está disponible.",
+      "end": "Terminar ahora",
+      "ended": "Terminada",
+      "until": "Hasta el {{date}}",
+      "holders_one": "{{count}} persona la tiene",
+      "holders_other": "{{count}} personas la tienen",
+      "limit": "Puede haber tres insignias a la vez. Termina una para ofrecer otra.",
+      "failed": "No funcionó. Inténtalo de nuevo.",
+      "hypeHint": "Quien participe en un hype train también recibe tu insignia 🚂 del nivel alcanzado."
+    }
   }
 }

@@ -3,6 +3,8 @@ import { useTranslation } from 'react-i18next';
 import { useSurfaceDraft } from '@/hooks/use-surface-draft';
 import type { GenerationDraft } from '@/lib/editor/generationDraft';
 import { EMPTY_MARKETING_BRIEF, MARKETING_FIELDS, MARKETING_FORMATS, marketingFieldLimit, marketingGenerationDraft, normalizeMarketingBrief, type MarketingBrief, type MarketingField } from '@/lib/creator/marketingBrief';
+import { MarketingProductImport } from './MarketingProductImport';
+import { CampaignPlanPanel } from './CampaignPlanPanel';
 
 export function MarketingWorkspace({ onPrepare }: { onPrepare: (draft: GenerationDraft) => void }) {
   const { t } = useTranslation();
@@ -16,6 +18,8 @@ export function MarketingWorkspace({ onPrepare }: { onPrepare: (draft: Generatio
       <h2 className="text-xl font-bold">{t('creator.marketing.title')}</h2>
       <p className="mt-2 text-sm opacity-75">{t('creator.marketing.intro')}</p>
       <p className="mt-1 text-xs opacity-60">{t('creator.marketing.saved')}</p>
+      <MarketingProductImport onUse={(product, sourceUrl) => { setSaved(normalizeMarketingBrief({ ...brief, product: product.name, description: product.description, brand: product.brand || brief.brand, sourceUrl })); setPreview(false); }} />
+      {brief.sourceUrl && <p className="mt-3 break-all text-xs opacity-60">{t('creator.marketing.import.source')}: {brief.sourceUrl}</p>}
       <div className="mt-5 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
         {MARKETING_FIELDS.map((field) => <label key={field} className={field === 'description' ? 'sm:col-span-2 lg:col-span-2' : ''}>
           <span className="mb-1.5 block text-sm font-medium">{t(`creator.marketing.fields.${field}`)}</span>
@@ -42,6 +46,7 @@ export function MarketingWorkspace({ onPrepare }: { onPrepare: (draft: Generatio
           </article>)}
         </div>
       </div>}
+      <CampaignPlanPanel brief={brief} onPrepare={onPrepare} />
     </section>
   );
 }

@@ -42,6 +42,24 @@ Seedance submission, an explicit 1080p approval and complete source audio.
 
 ## Hosted operation
 
+Campaign product metadata uses `POST /marketing/import-product` with the same
+verified `x-dehub-token` session and a form `url` field. It returns up to five
+JSON-LD Product or page-metadata candidates, their source URLs and retrieval
+time for explicit review. It never starts a generation, stores page HTML or
+downloads suggested product images. Brand voice, benefits and colors remain
+editable user input rather than invented extraction results.
+
+The importer accepts only public HTTPS pages. Every connection pins a checked
+public DNS address while retaining certificate hostname verification and SNI;
+redirects repeat the checks. Private/reserved and translated destinations are
+rejected. Responses have a two-megabyte cap and a ten-second total deadline,
+including a socket watchdog for slow headers or body streams. Compressed and
+non-HTML responses require manual entry. Two imports may run concurrently;
+each verified owner may submit ten imports per ten minutes. No browser script,
+image, stylesheet, frame or provider generation is executed by import.
+
+Deploy this route from the reviewed release before enabling client URL import.
+
 Run one process on the existing backend host, behind the checked-in nginx
 location, using `dehub-maboroshi.service`. It binds to loopback, is capped at
 one CPU and 3 GB RAM, and stores private jobs in `/var/lib/dehub-maboroshi`.

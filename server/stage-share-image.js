@@ -1,11 +1,33 @@
 import { Resvg, initWasm } from '@resvg/resvg-wasm';
 import wasm from '@resvg/resvg-wasm/index_bg.wasm';
-import { STAGE_CARD_VERSION, renderStageCardSvg, stageCardSource } from './stage-share-card.js';
+import { STAGE_CARD_VERSION, renderStageCardSvg, stageCardAssetPaths, stageCardSource } from './stage-share-card.js';
 
 const SHARE_IMAGE = 'https://dehub.io/og/dehub-social-share.png';
 const FONTS = ['/brand-kit/font/exo-500.ttf', '/brand-kit/font/exo-700.ttf', '/brand-kit/font/mono.ttf'];
 let initialized;
 let fonts;
+
+const TYPES = { jpg: 'image/jpeg', png: 'image/png', webp: 'image/webp' };
+const images = new Map();
+
+/** A brand-kit picture as a data URI, cached per path; null when it can't be read. */
+function loadImage(env, path) {
+  if (!images.has(path)) images.set(path, (async () => {
+    const response = await env.ASSETS.fetch(new Request(`https://dehub.io${path}`));
+    if (!response.ok || response.headers.get('Content-Type')?.includes('text/html')) throw new Error(`Stage card image unavailable: ${path}`);
+    const bytes = new Uint8Array(await response.arrayBuffer());
+    let binary = '';
+    for (let i = 0; i < bytes.length; i += 0x8000) binary += String.fromCharCode(...bytes.subarray(i, i + 0x8000));
+    return `data:${TYPES[path.split('.').pop()] || 'application/octet-stream'};base64,${btoa(binary)}`;
+  })().catch((error) => { images.delete(path); console.error('[Stage share image]', error); return null; }));
+  return images.get(path);
+}
+
+async function loadImages(env, stage) {
+  const paths = stageCardAssetPaths(stage);
+  const entries = await Promise.all(Object.entries(paths).map(async ([key, path]) => [key, await loadImage(env, path)]));
+  return Object.fromEntries(entries.filter(([, uri]) => uri));
+}
 
 function loadFonts(env) {
   if (!fonts) fonts = Promise.all(FONTS.map(async (path) => {
@@ -17,7 +39,7 @@ function loadFonts(env) {
 }
 
 /**
- * /_og/stage/v1/<id>.png — the generated ticket for a stage with no cover.
+ * /_og/stage/v2/<id>.png — the generated Chrome Mic banner for a stage with no cover.
  * Rendered from the live row, so a stage going live or ending changes its
  * card; cached under a fingerprint of the fields the card reads.
  */
@@ -41,8 +63,8 @@ export async function handleStageShareImage(request, env, ctx, id, lookup) {
       return hit;
     }
     initialized ??= initWasm(wasm).catch((error) => { initialized = undefined; throw error; });
-    const [, fontBuffers] = await Promise.all([initialized, loadFonts(env)]);
-    const renderer = new Resvg(renderStageCardSvg(stage), { font: { fontBuffers, defaultFontFamily: 'Exo' } });
+    const [, fontBuffers, pictures] = await Promise.all([initialized, loadFonts(env), loadImages(env, stage)]);
+    const renderer = new Resvg(renderStageCardSvg(stage, pictures), { font: { fontBuffers, defaultFontFamily: 'Exo' } });
     let png;
     try { const rendered = renderer.render(); png = rendered.asPng(); rendered.free(); }
     finally { renderer.free(); }

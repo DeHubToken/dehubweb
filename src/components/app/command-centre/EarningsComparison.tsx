@@ -28,7 +28,6 @@ import { useSurfaceDraft } from '@/hooks/use-surface-draft';
 
 import { useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { DhbAmount } from '@/components/app/DhbAmount';
 import { useQuery } from '@tanstack/react-query';
 import { Loader2 } from "lucide-react";
 import Info from "@/components/ui/cut-icons/information";
@@ -181,10 +180,7 @@ export function EarningsComparison() {
             <div className="rounded-xl bg-white/[0.03] border border-white/10 p-3">
               <p className="text-zinc-500 text-[11px]">{_copy("copy.1dc1e547e65f", { defaultValue: "Earned on DeHub" })}</p>
               <p className="text-white text-lg font-bold mt-0.5">
-                {priceKnown ? usd(dehubUsd) : <DhbAmount amount={compact(tipsEarnedDhb)} />}
-              </p>
-              <p className="text-zinc-600 text-[10px] mt-0.5">
-                {priceKnown ? <DhbAmount amount={compact(tipsEarnedDhb)} /> : _copy("copy.6e31723e40c6", { defaultValue: "USD price unavailable" })}
+                {priceKnown ? usd(dehubUsd) : '—'}
               </p>
             </div>
             <div className="rounded-xl bg-white/[0.03] border border-white/10 p-3">
