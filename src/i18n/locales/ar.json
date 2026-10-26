@@ -1721,6 +1721,10 @@
   "notifications": {
     "title": "الإشعارات",
     "markAllRead": "تحديد الكل كمقروء",
+    "groupNew": "جديد",
+    "groupToday": "اليوم",
+    "groupThisWeek": "هذا الأسبوع",
+    "groupEarlier": "سابقًا",
     "settings": "إعدادات الإشعارات",
     "actions": "إجراءات",
     "markAllAsRead": "تحديد الكل كمقروء",
