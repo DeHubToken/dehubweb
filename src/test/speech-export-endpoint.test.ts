@@ -1,4 +1,5 @@
 import { beforeAll, beforeEach, afterAll, expect, it, vi } from 'vitest';
+import { frameSpeechPcm } from '../../supabase/functions/_shared/speech-audio';
 vi.mock('../../supabase/functions/_shared/auth.ts', () => ({
   requireDeHubAuth: vi.fn(async () => ({ ok: true, wallet: 'owner' })),
   checkRateLimit: vi.fn(async () => ({ allowed: true })), serviceClient: vi.fn(() => ({})),
@@ -16,10 +17,10 @@ beforeEach(() => { upstream.mockReset(); vi.stubGlobal('fetch', upstream); });
 afterAll(() => vi.unstubAllGlobals());
 const request = (outputFormat?: string) => new Request('https://backend.test/tts', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ text: 'Hello', voiceId: 'stock', outputFormat }) });
 
-it('maps requested WAV to verified PCM and returns a playable framed WAV', async () => {
-  upstream.mockResolvedValue(new Response(new Uint8Array([0, 0, 255, 127]), { headers: { 'Content-Type': 'audio/pcm' } }));
+it('requests a real WAV container and validates its bytes despite a generic provider MIME', async () => {
+  upstream.mockResolvedValue(new Response(frameSpeechPcm(new Uint8Array([0, 0, 255, 127]).buffer, 24000), { headers: { 'Content-Type': 'audio/mpeg' } }));
   const result = await handler(request('wav_24000'));
-  expect(upstream.mock.calls[0][0]).toContain('output_format=pcm_24000');
+  expect(upstream.mock.calls[0][0]).toContain('output_format=wav_24000');
   expect(result.headers.get('Content-Type')).toBe('audio/wav');
   const bytes = await result.arrayBuffer();
   expect(new TextDecoder().decode(bytes.slice(0, 4))).toBe('RIFF');
