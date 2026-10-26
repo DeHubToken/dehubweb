@@ -2163,7 +2163,7 @@ function AssistantPageForAccount() {
             }
           }}
           onPaste={handlePaste}
-          placeholder={isRecording ? t('assistant.listening') : attachedImage ? t('assistant.describeEdits') : isEmptyChat ? _copy("copy.bcd7df12c890", { defaultValue: "Ask anything, or type / for skills" }) : t('assistant.askAnything')}
+          placeholder={isRecording ? t('assistant.listening') : attachedImage ? t('assistant.describeEdits') : t('assistant.askAnything')}
           className={`w-full bg-transparent text-[15px] text-white placeholder:text-white/45 focus:outline-none min-w-0 resize-none overflow-y-auto leading-relaxed px-1 pt-1 ${
             isRecording ? 'text-white/60 italic' : ''
           }`}
@@ -2281,7 +2281,6 @@ function AssistantPageForAccount() {
     thinking: _copy("copy.b4739a4f0865", { defaultValue: "Thinking..." }),
     speaking: _copy("copy.f2ef1cac7f88", { defaultValue: "Speaking..." }),
   };
-  const firstName = (user?.displayName || user?.username || '').split(' ')[0];
   const lastReply = [...messages].reverse().find((m) => m.role === 'assistant' && m.content)?.content ?? '';
   const startTiles: Array<{ icon: ThemeIconKey; label: string; onClick: () => void }> = [
     { icon: 'images', label: _copy("copy.1aa4cb0bcca7", { defaultValue: "Image" }), onClick: () => {
@@ -2296,7 +2295,7 @@ function AssistantPageForAccount() {
       setInputGlow(true);
       setTimeout(() => setInputGlow(false), 2000);
     } },
-    { icon: 'audio', label: _copy("copy.fea4b5ceffa8", { defaultValue: "Song" }), onClick: () => {
+    { icon: 'audio', label: t('feed.music'), onClick: () => {
       setPendingMusicPrompt('');
       setMusicConfirmOpen(true);
     } },
@@ -2304,8 +2303,8 @@ function AssistantPageForAccount() {
       setPendingPosterPrompt('');
       setPosterConfigOpen(true);
     } },
-    { icon: 'wand', label: _copy("copy.c80c9e095878", { defaultValue: "Edit photo" }), onClick: () => fileInputRef.current?.click() },
-    { icon: 'command', label: _copy("copy.bdd254b65baa", { defaultValue: "Build" }), onClick: () => navigate('/builder') },
+    { icon: 'wand', label: t('assistant.editImage'), onClick: () => fileInputRef.current?.click() },
+    { icon: 'command', label: t('affiliateLanding.presets.build'), onClick: () => navigate('/builder') },
   ];
 
   if (!isAuthenticated) {
@@ -2362,7 +2361,7 @@ function AssistantPageForAccount() {
           <button
             onClick={() => setHistoryDrawerOpen(true)}
             className="p-2 rounded-xl text-white/60 hover:text-white transition-colors"
-            aria-label={_copy("copy.05a05aa2fd48", { defaultValue: "Chat history" })}
+            aria-label={t('bookmarks.history')}
           >
             <History className="w-5 h-5" />
           </button>
@@ -2373,7 +2372,7 @@ function AssistantPageForAccount() {
             <DropdownMenuTrigger asChild>
               <button
                 className="relative p-2 rounded-xl text-white/60 hover:text-white transition-colors"
-                aria-label={_copy("copy.d47d7cb0e4f8", { defaultValue: "More" })}
+                aria-label={t('postStage.more')}
               >
                 <More className="w-5 h-5" />
                 {!!supportTickets?.openCount && (
@@ -2400,7 +2399,7 @@ function AssistantPageForAccount() {
               </DropdownMenuItem>
               <DropdownMenuItem onSelect={() => setTimeout(() => setSkillsHubOpen(true), 0)} className="gap-2.5">
                 <Sparkles className="w-4 h-4" />
-                {_copy("copy.66d0f523a379", { defaultValue: "Skills" })}
+                {t('skills.skills')}
               </DropdownMenuItem>
               <DropdownMenuItem onSelect={() => setTimeout(() => setSettingsSheetOpen(true), 0)} className="gap-2.5">
                 <Settings className="w-4 h-4" />
@@ -2747,7 +2746,7 @@ function AssistantPageForAccount() {
                       onClick={voiceAssistant.stopVoiceMode}
                       className="h-9 px-4 rounded-full bg-white text-black text-sm font-semibold"
                     >
-                      {_copy("copy.f84246e1d18f", { defaultValue: "End voice chat" })}
+                      {_copy("copy.dd2108f1cda8", { defaultValue: "Stop Voice Chat" })}
                     </button>
                   </div>
                   {voiceAssistant.exchangesLeft !== undefined && (
@@ -2760,9 +2759,7 @@ function AssistantPageForAccount() {
                 <>
                   <div className="text-center px-2">
                     <h2 className="text-[22px] lg:text-[28px] font-extrabold leading-tight text-white [text-wrap:balance]">
-                      {firstName
-                        ? _copy("copy.71e619f3604f", { defaultValue: "What are we making, {{value1}}?", value1: firstName })
-                        : _copy("copy.9eb64cb30346", { defaultValue: "What are we making?" })}
+                      {t('creatorFlow.assistantEmptyTitle')}
                     </h2>
                     <p className="mt-1.5 text-sm text-white/55">{voiceStatusLine.idle}</p>
                   </div>

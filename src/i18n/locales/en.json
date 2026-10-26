@@ -12048,17 +12048,7 @@
     "reminderLater": "Not now"
   },
   "copy": {
-    "bcd7df12c890": "Ask anything, or type / for skills",
     "1607715e45ed": "Tap the ball to talk, or type below",
-    "fea4b5ceffa8": "Song",
-    "c80c9e095878": "Edit photo",
-    "bdd254b65baa": "Build",
-    "05a05aa2fd48": "Chat history",
-    "d47d7cb0e4f8": "More",
-    "66d0f523a379": "Skills",
-    "f84246e1d18f": "End voice chat",
-    "71e619f3604f": "What are we making, {{value1}}?",
-    "9eb64cb30346": "What are we making?",
     "00140a37bd26": "Transactions on that network are temporarily unavailable. Please try again.",
     "002286513398": "You do not have permission to manage events",
     "002d8f205c6a": "Rejected {{value1}}'s follow request",
