@@ -25,7 +25,6 @@ import Settings from "@/components/ui/cut-icons/settings";
 import Home from "@/components/ui/cut-icons/home";
 
 import { ScrollArea } from '@/components/ui/scroll-area';
-import { Button } from '@/components/ui/button';
 import { SearchTrigger } from '@/components/search/SearchTrigger';
 import { useTextHighlight } from '@/hooks/useTextHighlight';
 import { useDocsSearch } from '@/hooks/useDocsSearch';
@@ -396,89 +395,59 @@ const DocsLayoutContent = () => {
     setSidebarOpen(false);
   };
 
+  const logo = <Link to="/app" className="flex items-center gap-2 shrink-0 text-foreground">
+      <img src="/media/bca432dc-7ef2-4a07-99b6-fac376265184.png" alt={_copy("copy.148ca13e91cd", { defaultValue: "DeHub Logo" })} className="w-6 h-6 dark:invert" />
+      <span className="text-[15px] font-semibold tracking-tight">{_copy("nav.docs", { defaultValue: "Docs" })}</span>
+    </Link>;
+
   return <div className="docs-root min-h-screen bg-background">
-      {/* Header */}
-      <header data-docs-header className="bg-background backdrop-blur-sm border-b border-border sticky top-0 z-40">
-        <div className="flex items-center justify-between px-4 h-16">
-          {/* Mobile Layout */}
-          <div className="flex items-center lg:hidden w-full">
-            {/* Left: Hamburger Menu */}
-            <div className="flex items-center">
-              <button onClick={() => setSidebarOpen(!sidebarOpen)} aria-label={t(sidebarOpen ? 'nav.docsMenuClose' : 'nav.docsMenuOpen')} aria-expanded={sidebarOpen} aria-controls="docs-navigation" className="p-2 rounded-md hover:bg-muted transition-colors">
-                {sidebarOpen ? <X className="w-5 h-5 text-foreground" /> : <Menu className="w-5 h-5 text-foreground" />}
-              </button>
-            </div>
-            
-            {/* Center: Logo */}
-            <div className="flex-1 flex justify-center">
-              <Link to="/app" className="flex items-center space-x-2 font-bold text-xl text-foreground">
-                <img src="/media/bca432dc-7ef2-4a07-99b6-fac376265184.png" alt={_copy("copy.148ca13e91cd", { defaultValue: "DeHub Logo" })} className="w-6 h-6 dark:invert" />
-              </Link>
-            </div>
-            
-            {/* Right: Search Button */}
-            <Button
-              variant="ghost"
-              size="sm"
-              onClick={() => setIsOpen(true)}
-              aria-label={t('common.search')}
-              className="p-2"
-            >
-              <Search className="w-5 h-5 text-foreground" />
-            </Button>
-          </div>
-
-          {/* Desktop Layout */}
-          <div className="hidden lg:flex items-center space-x-3">
-            <Link to="/app" className="flex items-center space-x-2 font-bold text-xl text-foreground">
-              <img src="/media/bca432dc-7ef2-4a07-99b6-fac376265184.png" alt={_copy("copy.148ca13e91cd", { defaultValue: "DeHub Logo" })} className="w-6 h-6 dark:invert" />
-            </Link>
-          </div>
-
-          {/* Desktop Search Bar - Positioned at far right */}
-          <div className="hidden lg:block">
-            <div className="w-64">
-              <SearchTrigger />
-            </div>
-          </div>
+      {/* Phone top bar. Desktop has none: the logo lives in the side rail. */}
+      <header data-docs-header className="lg:hidden bg-background backdrop-blur-sm border-b border-border sticky top-0 z-40">
+        <div className="flex items-center gap-2 px-3 h-14">
+          <button onClick={() => setSidebarOpen(true)} aria-label={t('nav.docsMenuOpen')} aria-expanded={sidebarOpen} aria-controls="docs-navigation" className="inline-flex items-center justify-center w-9 h-9 rounded-lg hover:bg-muted transition-colors">
+            <Menu className="w-5 h-5 text-foreground" />
+          </button>
+          {logo}
+          <div className="flex-1" />
+          <button onClick={() => setIsOpen(true)} aria-label={t('common.search')} className="inline-flex items-center justify-center w-9 h-9 rounded-lg hover:bg-muted transition-colors">
+            <Search className="w-[18px] h-[18px] text-foreground" />
+          </button>
         </div>
       </header>
 
       <div className="flex">
-        {/* Sidebar — the docs LEFT PANEL. On desktop it slides in from the left
-            after the app shell has left (surface transition); framer controls
-            the x-transform there, so we drop the class-based transform to avoid
-            double-animating. On mobile it stays the class-driven hamburger
-            drawer (framer only touches opacity — see docsAsideVariants). */}
+        {/* Sidebar — the docs LEFT PANEL, full height. Logo, language and the
+            light/dark toggle share its first line, search sits under them.
+            On desktop it slides in from the left after the app shell has left
+            (surface transition); framer controls the x-transform there, so we
+            drop the class-based transform to avoid double-animating. On phones
+            it is the hamburger drawer and opens above the top bar. */}
         <motion.aside
           id="docs-navigation"
           data-docs-sidebar
           aria-hidden={!isDesktop && !sidebarOpen}
           variants={asideVariants}
           className={`
-          fixed top-16 bottom-0 lg:sticky lg:top-16 lg:bottom-auto left-0 z-30 w-64 h-[calc(100dvh-4rem)] lg:h-[calc(100vh-4rem)] bg-card/95 backdrop-blur-sm border-r border-border
+          fixed inset-y-0 lg:sticky lg:top-0 left-0 z-50 lg:z-30 w-[min(20rem,86vw)] lg:w-64 h-[100dvh] lg:h-screen bg-card/95 backdrop-blur-sm border-r border-border
           ${isDesktop ? '' : `transform transition-transform duration-300 ease-in-out ${sidebarOpen ? 'translate-x-0' : '-translate-x-full'}`}
         `}>
           <div className="h-full flex flex-col">
-            {/* Mobile close button */}
-            <div className="lg:hidden flex justify-between items-center p-4 border-b border-border">
-              <div className="flex-1">
-                <SearchTrigger />
-              </div>
-              <button onClick={closeSidebar} aria-label={t('nav.docsMenuClose')} className="p-2 rounded-md hover:bg-muted transition-colors ml-2">
+            <div className="flex items-center gap-2 h-14 lg:h-16 px-4 shrink-0">
+              {logo}
+              <div className="flex-1" />
+              <LanguageSelector compact />
+              {!docsThemePinned && <DarkModeToggle compact />}
+              <button onClick={closeSidebar} aria-label={t('nav.docsMenuClose')} className="lg:hidden inline-flex items-center justify-center w-9 h-9 rounded-lg hover:bg-muted transition-colors">
                 <X className="w-5 h-5 text-foreground" />
               </button>
             </div>
-            
-            {/* Dark Mode Toggle & Language Selector at top */}
-            <div className="px-4 py-3 border-b border-border flex items-center gap-2 min-w-0">
-              {!docsThemePinned && <div className="flex-shrink-0"><DarkModeToggle /></div>}
-              <div className="flex-1 min-w-0 overflow-hidden"><LanguageSelector /></div>
+            <div className="px-3 pb-3 shrink-0 [&_button]:!w-full">
+              <SearchTrigger />
             </div>
-            
-            <ScrollArea className="flex-1 overscroll-contain">
-              <div className="py-6">
-                <nav className="px-4 space-y-6">
+
+            <ScrollArea className="flex-1 min-h-0 overscroll-contain">
+              <div className="pt-2 pb-[calc(env(safe-area-inset-bottom,0px)+6rem)] lg:pb-8">
+                <nav className="px-3 space-y-6">
                   {menuItems.map(section => <div key={section.titleKey || section.title}>
                       {section.titleKey !== 'Main' && section.title && <h3 className="text-sm font-semibold text-muted-foreground uppercase tracking-wider mb-3">
                           {section.title}
@@ -535,7 +504,7 @@ const DocsLayoutContent = () => {
         </motion.aside>
 
         {/* Overlay for mobile */}
-        {sidebarOpen && <div className="fixed inset-0 bg-background/80 backdrop-blur-sm z-20 lg:hidden" onClick={closeSidebar} />}
+        {sidebarOpen && <div className="fixed inset-0 bg-background/80 backdrop-blur-sm z-40 lg:hidden" onClick={closeSidebar} />}
 
         {/* Main content — soft fade-up as the docs surface arrives. */}
         <main className="flex-1 min-w-0">
