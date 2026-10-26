@@ -1721,6 +1721,10 @@
   "notifications": {
     "title": "Notifications",
     "markAllRead": "Mark all read",
+    "groupNew": "New",
+    "groupToday": "Today",
+    "groupThisWeek": "This week",
+    "groupEarlier": "Earlier",
     "settings": "Notification Settings",
     "actions": "Actions",
     "markAllAsRead": "Mark all as read",
@@ -5056,6 +5060,11 @@
     "audioExportFormat": "Export format",
     "audioExportMp3": "MP3 · 128 kbps",
     "audioExportWav": "WAV · 24 kHz · mono",
+    "extensionNeedsClip": "Attach one source clip to extend.",
+    "extensionSeconds": "+{{seconds}}s new footage",
+    "extensionHelp": "Returns your source clip with about four new seconds. Output is resized up to 720p at 24 fps. New audio is generated for the extension.",
+    "extensionForward": "Add about four seconds after your source clip",
+    "extensionBackward": "Add about four seconds before your source clip",
     "expandDescription": "Generate new image borders. Optional English prompt; one source image.",
     "expandPromptHint": "Attach one image and choose its new aspect ratio. English prompt optional.",
     "expandEnglishOnly": "This expansion model accepts English prompts. Leave the prompt empty for automatic expansion.",
@@ -6573,6 +6582,31 @@
     "youAreTimedOut": "You are timed out for a moment"
   },
   "liveStudio": {
+    "destinations": {
+      "title": "Multistream destinations",
+      "intro": "Go live on DeHub once and we push your stream to every platform switched on here, free. It starts within a few seconds of you going live.",
+      "add": "Add destination",
+      "empty": "No destinations yet. Add Twitch, YouTube, Kick or any RTMP server.",
+      "platform": "Platform",
+      "label": "Name (optional)",
+      "server": "Server URL",
+      "key": "Stream key",
+      "findKey": "Find your {{name}} server and key",
+      "customHint": "Paste the RTMP server and key your platform gives you.",
+      "keyNote": "Your key is stored encrypted on our servers and is never shown again.",
+      "save": "Add",
+      "cancel": "Cancel",
+      "added": "{{name}} added",
+      "saveFailed": "Could not save the destination",
+      "toggle": "Stream to this destination",
+      "states": {
+        "off": "Off",
+        "idle": "Ready",
+        "connecting": "Connecting",
+        "live": "Live",
+        "error": "Error"
+      }
+    },
     "subathon": {
       "title": "Subathon",
       "intro": "A countdown on your stream. Every paid gift, follow and subscription adds time, so the room keeps you live.",

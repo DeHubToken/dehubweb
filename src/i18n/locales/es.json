@@ -1721,6 +1721,10 @@
   "notifications": {
     "title": "Notificaciones",
     "markAllRead": "Marcar todo leído",
+    "groupNew": "Nuevas",
+    "groupToday": "Hoy",
+    "groupThisWeek": "Esta semana",
+    "groupEarlier": "Anteriores",
     "settings": "Configuración de notificaciones",
     "actions": "Acciones",
     "markAllAsRead": "Marcar todo como leído",
@@ -5057,6 +5061,11 @@
     "audioExportFormat": "Formato de exportación",
     "audioExportMp3": "MP3 · 128 kbps",
     "audioExportWav": "WAV · 24 kHz · mono",
+    "extensionNeedsClip": "Adjunta un clip de origen para ampliarlo.",
+    "extensionSeconds": "+{{seconds}} s de vídeo nuevo",
+    "extensionHelp": "Devuelve el clip original con unos cuatro segundos nuevos. La salida se redimensiona hasta 720p a 24 fps. Se genera audio nuevo para la ampliación.",
+    "extensionForward": "Añade unos cuatro segundos después del clip original",
+    "extensionBackward": "Añade unos cuatro segundos antes del clip original",
     "expandDescription": "Genera contenido fuera de los bordes. Una imagen de origen y un texto opcional en inglés.",
     "expandPromptHint": "Adjunta una imagen y elige su nueva relación de aspecto. El texto en inglés es opcional.",
     "expandEnglishOnly": "Este modelo de expansión acepta textos en inglés. Déjalo vacío para ampliar automáticamente.",
@@ -6574,6 +6583,31 @@
     "youAreTimedOut": "Estás en tiempo de espera por un momento"
   },
   "liveStudio": {
+    "destinations": {
+      "title": "Destinos de multistream",
+      "intro": "Transmite en DeHub una sola vez y enviamos tu directo gratis a cada plataforma activada aquí. Empieza a los pocos segundos de salir en vivo.",
+      "add": "Añadir destino",
+      "empty": "Aún no hay destinos. Añade Twitch, YouTube, Kick o cualquier servidor RTMP.",
+      "platform": "Plataforma",
+      "label": "Nombre (opcional)",
+      "server": "URL del servidor",
+      "key": "Clave de transmisión",
+      "findKey": "Busca tu servidor y clave de {{name}}",
+      "customHint": "Pega el servidor RTMP y la clave que te da tu plataforma.",
+      "keyNote": "Tu clave se guarda cifrada en nuestros servidores y no se vuelve a mostrar.",
+      "save": "Añadir",
+      "cancel": "Cancelar",
+      "added": "{{name}} añadido",
+      "saveFailed": "No se pudo guardar el destino",
+      "toggle": "Transmitir a este destino",
+      "states": {
+        "off": "Apagado",
+        "idle": "Listo",
+        "connecting": "Conectando",
+        "live": "En vivo",
+        "error": "Error"
+      }
+    },
     "subathon": {
       "title": "Subatón",
       "intro": "Un conteo regresivo en tu transmisión. Cada regalo pagado, seguimiento y suscripción añade tiempo, así que la sala te mantiene en vivo.",

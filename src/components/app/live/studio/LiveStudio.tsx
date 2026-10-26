@@ -41,6 +41,7 @@ import { PointsPanel } from './PointsPanel';
 import { OverlayCreatorContext, SubathonContext } from '../overlay/subathon';
 import { HypeContext } from '../overlay/hype-train';
 import { BadgesPanel } from './BadgesPanel';
+import { DestinationsPanel } from './DestinationsPanel';
 import type { HypeTrain } from '@/lib/api/dehub/live-hype';
 import { getMySubathon, type MySubathon } from '@/lib/api/dehub/live-subathon';
 import { PollContext } from '../overlay/poll';
@@ -241,6 +242,8 @@ export function LiveStudio() {
       {justEnded && <RecapPanel address={walletAddress} streamId={justEnded} />}
 
       <QuickControls overlay={data} queryKey={myOverlayKey} />
+
+      <DestinationsPanel address={walletAddress} />
 
       <HighlightsPanel address={walletAddress} />
 

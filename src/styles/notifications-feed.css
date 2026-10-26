@@ -1,0 +1,94 @@
+/* Notifications "clean feed": rows sit straight on the page like feed posts.
+   No filled block per row, no square tiles. Unread is a solid dot in the
+   theme's colour, the type badge is a small round chip on the avatar, and
+   pills replace the old rounded-square buttons.
+
+   Theme sheets (osaka, jungle, war, glass, minimal, light) paint
+   [data-notification-row] fills with id weight and !important; the two
+   :not(#_) here outrank all of them. */
+
+[data-notifications-page] {
+  --nf-accent: #ffffff;
+  --nf-accent-ink: #000000;
+  --nf-badge: #1c1c1e;
+  --nf-badge-ink: rgba(255, 255, 255, 0.85);
+  --nf-ring: #000000;
+  --nf-hover: rgba(255, 255, 255, 0.03);
+  --nf-line: rgba(255, 255, 255, 0.2);
+  --nf-mute: rgba(255, 255, 255, 0.5);
+}
+html:not([data-theme="system"]):not([data-theme="light"]):not([data-theme="minimal"]) [data-notifications-page] {
+  --nf-accent: color-mix(in srgb, var(--tint-accent) 70%, white);
+  --nf-accent-ink: #120a1c;
+  --nf-badge: color-mix(in srgb, var(--tint-accent) 22%, #121014);
+  --nf-ring: color-mix(in srgb, var(--tint-accent) 12%, #0b0a0e);
+}
+html[data-theme="light"] [data-notifications-page],
+html[data-system-tone="light"] [data-notifications-page] {
+  --nf-accent: #0b0b0d;
+  --nf-accent-ink: #ffffff;
+  --nf-badge: #f1f1f3;
+  --nf-badge-ink: rgba(11, 11, 13, 0.8);
+  --nf-ring: #ffffff;
+  --nf-hover: rgba(11, 11, 13, 0.03);
+  --nf-line: rgba(11, 11, 13, 0.18);
+  --nf-mute: rgba(11, 11, 13, 0.5);
+}
+
+html [data-notification-row][data-feed-row]:not(#_):not(#_),
+html [data-notification-row][data-feed-row][data-unread]:not(#_):not(#_) {
+  background: transparent !important;
+  background-color: transparent !important;
+  border: 0 !important;
+  box-shadow: none !important;
+}
+@media (hover: hover) {
+  html [data-notification-row][data-feed-row]:not(#_):not(#_):hover {
+    background-color: var(--nf-hover) !important;
+  }
+}
+
+/* Secondary text stays quiet on every theme (the readability sheets lift
+   zinc-500 to white elsewhere). */
+html :is([data-feed-group-label], [data-feed-time], [data-feed-quote]):not(#_):not(#_) {
+  color: var(--nf-mute) !important;
+}
+
+[data-feed-unread-dot] > span {
+  background: var(--nf-accent);
+  box-shadow: 0 0 8px var(--nf-accent);
+}
+
+html [data-feed-type-badge]:not(#_) {
+  background: var(--nf-badge) !important;
+  color: var(--nf-badge-ink) !important;
+  border: 2px solid var(--nf-ring) !important;
+}
+html [data-feed-type-badge]:not(#_) svg {
+  color: inherit !important;
+}
+
+html [data-feed-pill="primary"]:not(#_) {
+  background: var(--nf-accent) !important;
+  color: var(--nf-accent-ink) !important;
+}
+html [data-feed-pill="ghost"]:not(#_) {
+  background: transparent !important;
+  border-color: var(--nf-line) !important;
+}
+
+/* The list itself is not a box: no zinc slab on any theme. Canvas themes keep
+   the page-kit glass behind it so text stays readable over the backdrop. */
+html[data-theme="system"] [data-notification-list]:not(#_),
+html[data-theme="light"] [data-notification-list]:not(#_),
+html[data-theme="minimal"] [data-notification-list]:not(#_) {
+  background: transparent !important;
+  border: 0 !important;
+  box-shadow: none !important;
+}
+
+/* The DeHub mark is white artwork; its tile stays black on the paper themes. */
+html [data-feed-platform-mark]:not(#_):not(#_) {
+  background-color: #000 !important;
+  border-color: rgba(255, 255, 255, 0.12) !important;
+}
