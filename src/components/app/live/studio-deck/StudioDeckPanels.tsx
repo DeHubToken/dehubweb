@@ -25,6 +25,7 @@ import {
   describeRect,
   newSourceId,
   placeSource,
+  loadImage,
   readImageFile,
   type SourceConfig,
   type SourcePosition,
@@ -32,6 +33,7 @@ import {
 } from '@/lib/studio/sources';
 import { DESK_CHANNELS, MAX_VOLUME, type AudioDesk, type DeskChannel, type GateStrength } from '@/lib/studio/audio-desk';
 import type { StudioSources } from './use-studio-sources';
+import type { BackgroundMode, BackgroundOptions } from '@/lib/studio/background';
 
 const chip = (on: boolean) =>
   cn(
@@ -471,6 +473,63 @@ export function AudioPanel({
           <p className="text-[11px] text-white/50">{t('studioDeck.audio.gateHint')}</p>
         </Section>
       )}
+    </div>
+  );
+}
+
+/* ───────────────────────── Background ───────────────────────── */
+
+export function BackgroundPicker({
+  mode,
+  color,
+  onChange,
+}: {
+  mode: BackgroundMode;
+  color: string;
+  onChange: (mode: BackgroundMode, opts?: BackgroundOptions) => void;
+}) {
+  const { t } = useTranslation();
+  const fileRef = useRef<HTMLInputElement>(null);
+
+  const pickImage = async (file: File | undefined) => {
+    if (!file) return;
+    try {
+      const img = await loadImage(await readImageFile(file));
+      onChange('image', { image: img });
+    } catch {
+      toast.error(t('studioDeck.imageTooLarge'));
+    }
+  };
+
+  return (
+    <div className="mt-3 space-y-2 border-t border-white/10 pt-3">
+      <p className="text-xs font-semibold uppercase tracking-wide text-white/60">{t('studioDeck.background.title')}</p>
+      <div className="flex flex-wrap gap-1.5">
+        {(['none', 'blur', 'color'] as const).map((m) => (
+          <button key={m} type="button" className={chip(mode === m)} onClick={() => onChange(m, m === 'color' ? { color } : undefined)}>
+            {t(`studioDeck.background.modes.${m}`)}
+          </button>
+        ))}
+        <button type="button" className={chip(mode === 'image')} onClick={() => fileRef.current?.click()}>
+          {t('studioDeck.background.modes.image')}
+        </button>
+        <input ref={fileRef} type="file" accept="image/*" hidden onChange={(e) => void pickImage(e.target.files?.[0])} />
+      </div>
+      {mode === 'color' && (
+        <div className="flex gap-2">
+          {['#00b140', '#0b0b0f', '#ffffff', ...SCENE_BACKGROUNDS.slice(1)].map((c) => (
+            <button
+              key={c}
+              type="button"
+              aria-label={c}
+              onClick={() => onChange('color', { color: c })}
+              className={cn('h-7 w-7 rounded-full border-2', color === c ? 'border-white' : 'border-white/20')}
+              style={{ background: c }}
+            />
+          ))}
+        </div>
+      )}
+      <p className="text-[11px] text-white/50">{t('studioDeck.background.hint')}</p>
     </div>
   );
 }

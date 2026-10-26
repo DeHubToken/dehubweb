@@ -6587,6 +6587,17 @@
     "youAreTimedOut": "Bir an için zaman aşımına uğradınız"
   },
   "studioDeck": {
+    "background": {
+      "title": "Arka plan",
+      "modes": {
+        "none": "Kapalı",
+        "blur": "Bulanık",
+        "color": "Renk",
+        "image": "Görsel"
+      },
+      "failed": "Bu cihazda arka plan kaldırma başlatılamadı.",
+      "hint": "Cihazında çalışır. İlk seferde yüklenmesi birkaç saniye sürer."
+    },
     "remove": "Kaldır",
     "imageTooLarge": "Bu görsel çok büyük. Daha küçük bir tane dene.",
     "scenes": {

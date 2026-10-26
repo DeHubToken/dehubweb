@@ -6591,6 +6591,17 @@
     "youAreTimedOut": "Vous êtes en temps d'attente pour un moment"
   },
   "studioDeck": {
+    "background": {
+      "title": "Arrière-plan",
+      "modes": {
+        "none": "Désactivé",
+        "blur": "Flou",
+        "color": "Couleur",
+        "image": "Image"
+      },
+      "failed": "Impossible d'activer la suppression d'arrière-plan sur cet appareil.",
+      "hint": "Fonctionne sur votre appareil. La première fois, le chargement prend quelques secondes."
+    },
     "remove": "Retirer",
     "imageTooLarge": "Cette image est trop lourde. Essayez-en une plus petite.",
     "scenes": {
