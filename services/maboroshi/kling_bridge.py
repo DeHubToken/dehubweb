@@ -5,7 +5,7 @@ from pathlib import Path
 
 import requests
 
-from providers import call
+from providers import ProviderFailed, call
 from media_host import upload
 from mask_review import require_approved
 from audio_workflow import finish_preview
@@ -58,6 +58,6 @@ def wait_and_finish(folder, request_id, status=print):
                 finish_preview(generated, folder)
             return
         if result.get('status') in ('FAILED', 'CANCELED'):
-            raise RuntimeError('Generation failed.')
+            raise ProviderFailed('Generation failed.')
         time.sleep(10)
     raise TimeoutError('Generation pending. Its request ID is saved; do not resubmit.')
