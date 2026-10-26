@@ -3208,6 +3208,7 @@
     "statsLoadFailed": "පිරිනැමීම් සංඛ්‍යා නවත්ත නොහැක"
   },
   "communities": {
+    "shareLink": "සබැඳිය බෙදා ගන්න",
     "chatTab": "කතාබහ",
     "followerInvites": {
       "title": "අනුරෝධ අත්වාසිය",

@@ -3268,6 +3268,7 @@
     "pendingSubmitted": "{{amount}} টোকেন সাবমিট করিয়ি আছে। কনফার্মেশন চেক করিয়ি আছে। আবার পাঠাইবা না।"
   },
   "communities": {
+    "shareLink": "লিঙ্ক শেয়ার করুন",
     "chatTab": "চ্যাট",
     "followerInvites": {
       "title": "অনুসারীদের আমন্ত্রণ জানান",

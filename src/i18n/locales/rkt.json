@@ -3362,6 +3362,7 @@
     "statsLoadFailed": "স্টেকিং স্ট্যাটস লোড করা যায়নি"
   },
   "communities": {
+    "shareLink": "লিঙ্ক শেয়ার করুন",
     "chatTab": "চ্যাট",
     "followerInvites": {
       "title": "আপনার অনুসারীদের আমন্ত্রণ জানান",

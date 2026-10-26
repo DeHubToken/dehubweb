@@ -3236,6 +3236,7 @@
     "statsLoadFailed": "स्टेकिंग स्टैट्स लोड करने में असमर्थ"
   },
   "communities": {
+    "shareLink": "लिंक शेयर करें",
     "chatTab": "चैट",
     "followerInvites": {
       "title": "फॉलोवर्स को आमंत्रित करें",

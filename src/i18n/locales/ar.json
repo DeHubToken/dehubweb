@@ -3229,6 +3229,7 @@
     "statsLoadFailed": "تعذر تحميل إحصائيات الستيكينغ"
   },
   "communities": {
+    "shareLink": "مشاركة الرابط",
     "chatTab": "دردشة",
     "followerInvites": {
       "title": "دعوة المتابعين",

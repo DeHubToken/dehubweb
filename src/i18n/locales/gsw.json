@@ -3239,6 +3239,7 @@
     "statsLoadFailed": "Köönnte Staking-Statistike nid läde"
   },
   "communities": {
+    "shareLink": "Link teile",
     "chatTab": "Chat",
     "followerInvites": {
       "title": "Lade Follower i",

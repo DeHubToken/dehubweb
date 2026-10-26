@@ -3225,6 +3225,7 @@
     "statsLoadFailed": "Nije uspjelo učitati statistike stakinga"
   },
   "communities": {
+    "shareLink": "Podijeli poveznicu",
     "chatTab": "Razgovor",
     "followerInvites": {
       "title": "Upozorite sledbenike",

@@ -3224,6 +3224,7 @@
     "statsLoadFailed": "Nu s-au putut încărca statisticile de mizare"
   },
   "communities": {
+    "shareLink": "Distribuie linkul",
     "chatTab": "Discută",
     "followerInvites": {
       "title": "Invită urmăritori",

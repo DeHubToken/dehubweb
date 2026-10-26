@@ -3184,6 +3184,7 @@
     "pendingSubmitted": "{{amount}} توكن تم إرسالها. التأكيد لا يزال قيد الفحص. لا ترسلها مرة أخرى."
   },
   "communities": {
+    "shareLink": "شارك الرابط",
     "chatTab": "الدردشة",
     "followerInvites": {
       "title": "دعوة المتابعين",

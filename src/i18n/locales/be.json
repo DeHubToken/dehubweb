@@ -3236,6 +3236,7 @@
     "statsLoadFailed": "Няма магчымасці загрузіць інфармацыю аб стэкінгу"
   },
   "communities": {
+    "shareLink": "Падзяліцца спасылкай",
     "chatTab": "Чат",
     "followerInvites": {
       "title": "Прапануем сваім фолловерам",

@@ -3227,6 +3227,7 @@
     "statsLoadFailed": "ステーキング統計の読み込みに失敗しました"
   },
   "communities": {
+    "shareLink": "URLをシェア",
     "chatTab": "チャット",
     "followerInvites": {
       "title": "フォロワーを招待する",

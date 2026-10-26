@@ -3229,6 +3229,7 @@
     "statsLoadFailed": "Не можаха да се заредят данните за стейкинг"
   },
   "communities": {
+    "shareLink": "Споделяне на връзка",
     "chatTab": "Чат",
     "followerInvites": {
       "title": "Пригласете следователи",
