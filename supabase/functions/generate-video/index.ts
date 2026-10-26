@@ -6,11 +6,14 @@ import Replicate from "https://esm.sh/replicate@0.25.2";
 import { corsHeaders, rateLimitByIp, serviceClient } from "../_shared/auth.ts";
 import { isVeniceVideo, VENICE_VIDEO_MODELS, veniceVideoOptions } from '../_shared/venice-catalog.ts';
 import { quoteVenice, veniceFetch, VeniceError } from '../_shared/venice.ts';
-import { recordGeneration, settleGeneration, generationTicket } from '../_shared/generation-jobs.ts';
+import { recordGeneration, settleGeneration } from '../_shared/generation-jobs.ts';
+import { authorizeGenerationPoll } from '../_shared/generation-poll-auth.ts';
 import { chargeForJob } from "../_shared/ai-payment-guard.ts";
 import { falQueueUrls } from "../_shared/fal-queue.ts";
 import { CREATOR_FAL_VIDEO_MODELS } from '../_shared/creator-fal-catalog.ts';
 import { buildCreatorFalVideoRequest } from '../_shared/creator-fal-input.ts';
+import { buildSeedance2Input, buildSeedance2Request, seedance2RoutingDecision, seedance2QuoteRoute } from '../_shared/seedance2-input.ts';
+import { quotePriceDhb } from '../_shared/ai-pricing.ts';
 import { referenceVideoDuration } from '../_shared/creator-reference-video.ts';
 import { requireDeHubAuth } from '../_shared/auth.ts';
 import {
@@ -482,23 +485,8 @@ function buildFalInput(family: FalFamily, o: FalInputOptions): Record<string, un
   } = o;
 
   switch (family) {
-    // Unchanged from the original single-family implementation, so the two
-    // Seedance models keep behaving exactly as they did.
     case 'seedance':
-      return {
-        prompt,
-        duration: Math.min(Math.max(duration, 4), 15),
-        aspect_ratio: aspectRatio,
-        resolution: resolution || '720p',
-        generate_audio: true,
-        ...(sourceImage && { image_url: sourceImage }),
-        ...(negativePrompt && { negative_prompt: negativePrompt }),
-        ...(endFrameUrl && { last_image_url: endFrameUrl }),
-        ...(referenceImageUrls?.length && { image_urls: referenceImageUrls }),
-        ...(audioUrls?.length && { audio_urls: audioUrls }),
-        ...(videoUrls?.length && { video_urls: videoUrls }),
-        ...(seed !== undefined && seed !== null && { seed }),
-      };
+      return buildSeedance2Input({ prompt, duration, aspectRatio, resolution, sourceImage, endFrameUrl, referenceImageUrls, audioUrls, videoUrls, negativePrompt, seed }).input;
 
     // duration is '4s' | '6s' | '8s'; aspect ratio is 16:9 or 9:16 only.
     case 'veo':
@@ -693,6 +681,7 @@ function buildKieVideoTask(
     case 'seedance-2.0':
     case 'seedance-2.5': {
       const is25 = model === 'seedance-2.5';
+      if (!is25 && seedance2RoutingDecision(o).provider !== 'kie') return null;
       return {
         model: is25 ? 'bytedance/seedance-2-5' : 'bytedance/seedance-2',
         input: {
@@ -813,6 +802,13 @@ async function tryKieGeneration(
 ): Promise<Response | null> {
   const key = kieKey();
   if (!key) return null;
+  if (model === 'seedance-2.0') {
+    const route = seedance2RoutingDecision(o);
+    if (route.provider === 'fal') {
+      console.info('[video-routing]', { model, provider: route.provider, reason: route.reason });
+      return null;
+    }
+  }
   // Use the full-capability route when kie would silently omit a control.
   if (o.seed !== undefined || o.negativePrompt || o.endFrameUrl) return null;
 
@@ -926,20 +922,17 @@ serve(async (req) => {
       });
       if (pollLimited) return pollLimited;
 
-      const ticket = await generationTicket('generate-video', body.predictionId);
-      const provider = ticket?.provider || body.provider || 'replicate';
-      if (ticket) body.falAppId = ticket.provider_app;
+      const authorized = await authorizeGenerationPoll(req, 'generate-video', body.predictionId);
+      if (!authorized.ok) return authorized.response;
+      const ticket = authorized.ticket;
+      const provider = ticket.provider;
+      body.falAppId = ticket.provider_app;
+      if (['succeeded', 'failed', 'canceled', 'cancelled'].includes(ticket.result?.status)) {
+        const recorded = new Response(JSON.stringify(ticket.result), { headers: { ...corsHeaders, 'Content-Type': 'application/json' } });
+        return await settleGeneration('generate-video', body.predictionId, recorded);
+      }
 
       if (provider === 'venice') {
-        const serviceKey = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY');
-        const internal = !!serviceKey && req.headers.get('Authorization') === `Bearer ${serviceKey}`;
-        if (!internal) {
-          const auth = await requireDeHubAuth(req);
-          if (!auth.ok) return auth.response;
-          if (!ticket || ticket.wallet_address !== auth.wallet) return new Response(JSON.stringify({ error: 'Render not found' }), { status: 404, headers: { ...corsHeaders, 'Content-Type': 'application/json' } });
-        }
-        if (!ticket) throw new Error('Render not found');
-        if (['succeeded', 'failed'].includes(ticket.result?.status)) return new Response(JSON.stringify(ticket.result), { headers: { ...corsHeaders, 'Content-Type': 'application/json' } });
         return await settleGeneration('generate-video', body.predictionId, await handleVeniceStatus(body.predictionId, ticket.result, ticket.wallet_address));
       }
 
@@ -958,7 +951,11 @@ serve(async (req) => {
     // ─── New generation ───
     const { prompt, model, sourceImage, duration = '5s', aspectRatio = '16:9', negativePrompt, resolution, referenceImageUrls, endFrameUrl, audioUrls, videoUrls, seed, effect } = body as GenerateVideoRequest;
 
-    if (!prompt) throw new Error('Prompt is required');
+    if (typeof prompt !== 'string' || !prompt.trim()) {
+      return new Response(JSON.stringify({ status: 'failed', error: 'A text prompt is required' }), {
+        status: 400, headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+      });
+    }
     if (!model || !VIDEO_MODELS[model]) {
       throw new Error(`Invalid model. Available: ${Object.keys(VIDEO_MODELS).join(', ')}`);
     }
@@ -979,7 +976,25 @@ serve(async (req) => {
 
     let validatedDuration: number | undefined;
     let providerPriceDhb: number | undefined;
+    let seedanceRoute: ReturnType<typeof seedance2QuoteRoute> | undefined;
     let veniceInput: Record<string, unknown> | undefined;
+    if (modelConfig.falFamily === 'seedance') {
+      try {
+        validatedDuration = buildSeedance2Request(modelConfig, { prompt, duration, aspectRatio, resolution, sourceImage, endFrameUrl, referenceImageUrls, audioUrls, videoUrls, negativePrompt, seed }).durationSeconds;
+        seedanceRoute = seedance2QuoteRoute(model, {
+          resolution, hasEndFrame: !!endFrameUrl, hasAudioReferences: !!audioUrls?.length,
+          hasVideoReferences: !!videoUrls?.length,
+          hasInlineMedia: ![sourceImage, endFrameUrl, ...(referenceImageUrls ?? []), ...(audioUrls ?? []), ...(videoUrls ?? [])].filter(Boolean).every(kieUsableUrl),
+        }, !!kieKey());
+        providerPriceDhb = quotePriceDhb('video', model, { durationSeconds: validatedDuration, videoProvider: seedanceRoute.provider }) ?? undefined;
+        if (!providerPriceDhb) throw new Error('The selected video route has no verified price');
+        console.log('[video-routing]', { model, ...seedanceRoute });
+      } catch (error) {
+        return new Response(JSON.stringify({ status: 'failed', error: (error as Error).message }), {
+          status: 400, headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+        });
+      }
+    }
     if (isVeniceVideo(model)) {
       const seconds = Number(String(duration).replace(/s$/, ''));
       try {
@@ -1034,7 +1049,7 @@ serve(async (req) => {
           providerCostUsd: charged.priceDhb / 1000, markup: 0,
         }), { headers: { ...corsHeaders, 'Content-Type': 'application/json' } }));
       }
-      const kieResponse = await tryKieGeneration(model, {
+      const kieResponse = seedanceRoute?.provider === 'fal' ? null : await tryKieGeneration(model, {
         prompt,
         sourceImage,
         duration: Math.min(Math.max(parseInt(duration) || 5, 3), 30),
@@ -1046,6 +1061,12 @@ serve(async (req) => {
         audioUrls,
         videoUrls,
         seed,
+      });
+      // Preserve the existing availability fallback at the accepted price. A provider
+      // failure never authorizes another debit; the platform absorbs this difference.
+      if (seedanceRoute?.provider === 'kie' && !kieResponse) console.warn('[video-routing]', {
+        model, provider: 'fal', reason: 'direct-provider-submit-failed', quotedProvider: 'kie',
+        absorbedProviderCostUsd: (0.3034 - 0.165) * (validatedDuration ?? 5),
       });
       const response = kieResponse
         ?? (modelConfig.provider === 'fal'
@@ -1141,7 +1162,9 @@ async function handleFalGeneration(
 
   const prepared = CREATOR_FAL_VIDEO_MODELS[modelConfig.id]
     ? buildCreatorFalVideoRequest(modelConfig.id, { prompt, sourceImage, duration, aspectRatio, resolution, negativePrompt, referenceImageUrls, endFrameUrl, audioUrls, videoUrls, seed, effect })
-    : undefined;
+    : modelConfig.falFamily === 'seedance'
+      ? buildSeedance2Request(modelConfig, { prompt, sourceImage, duration, aspectRatio, resolution, negativePrompt, referenceImageUrls, endFrameUrl, audioUrls, videoUrls, seed })
+      : undefined;
 
   // Choose the right endpoint: reference-to-video if ref images, image-to-video if source image, else text-to-video
   let appId: string;
@@ -1161,7 +1184,8 @@ async function handleFalGeneration(
   // which silently billed a 30s Seedance 2.5 render as a 15s one.
   const parsedDuration = Math.min(Math.max(parseInt(duration) || 5, 3), 30);
 
-  const input = prepared?.input ?? buildFalInput(modelConfig.falFamily ?? 'seedance', {
+  if (!prepared && !modelConfig.falFamily) throw new Error('No provider input mapping is configured for this video model');
+  const input = prepared?.input ?? buildFalInput(modelConfig.falFamily!, {
     prompt,
     sourceImage,
     duration: parsedDuration,

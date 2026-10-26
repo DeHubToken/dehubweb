@@ -11814,8 +11814,6 @@
     "nothingMatches": "ไม่มีอะไรตรงกับ “{{query}}”",
     "decrease": "ลด {{field}}",
     "increase": "เพิ่ม {{field}}",
-    "bannerCopy": "เปิดตัวแคมเปญสร้างสรรค์ได้เร็วขึ้นด้วยเครื่องมือ DeHub AI",
-    "closeBanner": "ปิดแบนเนอร์ครีเอเตอร์",
     "openApp": "เปิดแอป DeHub",
     "navExplore": "สำรวจ",
     "navImage": "รูปภาพ",

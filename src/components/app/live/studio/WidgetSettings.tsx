@@ -378,6 +378,7 @@ export function WidgetSettings({ widget, onChange }: Props) {
       break;
 
     case 'reaction_counter':
+    case 'hype_train':
       body = accentField;
       break;
 
