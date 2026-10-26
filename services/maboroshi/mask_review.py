@@ -12,7 +12,7 @@ def fingerprint(folder):
     digest=hashlib.sha256()
     names=list(('workflow-mode.json','original.mp4','face-landmarks.json','composite-silent.mp4','seedance-input.mp4') if is_mesh(folder) else FILES)
     mode=Path(folder)/'workflow-mode.json'
-    if mode.exists() and json.loads(mode.read_text()).get('mode')=='kling':names=['workflow-mode.json','upload.mp4','seedance-input.mp4']
+    if mode.exists() and json.loads(mode.read_text()).get('mode') in ('kling','one_pass'):names=['workflow-mode.json','upload.mp4','seedance-input.mp4']
     if is_mesh(folder) and json.loads((Path(folder)/'workflow-mode.json').read_text()).get('mode')=='depth_mesh':names+=['depth.mp4','mask.mp4','depth-composite-silent.mp4']
     for name in names:
         path=Path(folder)/name
@@ -29,7 +29,7 @@ def state(folder):
     except ValueError:return {'approved':False,'status':'unavailable','note':'Prepare the video first.'}
     if saved.get('fingerprint')!=current:
         mode=Path(folder)/'workflow-mode.json'
-        kling=mode.exists() and json.loads(mode.read_text()).get('mode')=='kling'
+        kling=mode.exists() and json.loads(mode.read_text()).get('mode') in ('kling','one_pass')
         return {'approved':False,'status':'pending','note':'Review the whole original source clip, including its soundtrack.' if kling else 'Review the entire prepared input: mask coverage for depth mode; facial tracking and overlay alignment for fast mode.','fingerprint':current}
     return saved
 

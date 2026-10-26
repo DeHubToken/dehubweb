@@ -86,6 +86,15 @@ describe('Maboroshi creator journey', () => {
     expect(el('render-hint').textContent).toContain('No preparation');
     expect(el('reference').accept).not.toContain('video/');
   });
+  it('offers one complete Wan 3.0 render at the lowest price', async () => {
+    saved = project({ renderer: 'wan', state: 'prepared', hasReference: true, review: { approved: true }, quotes: { draft: 2450000 }, files: { ...project().files, 'seedance-input.mp4': 'https://live.dehub.io/maboroshi/media/input.mp4' } });
+    await connected();
+    expect(el('draft').textContent).toContain('Generate Wan 3.0 video');
+    expect(el('draft').textContent).toContain('2.45');
+    expect(el('prepare').hidden).toBe(true);
+    expect(el('hd').hidden).toBe(true);
+    expect(el('reference').accept).not.toContain('video/');
+  });
   it('imports a library source into a new project without sending a paid request or credentials to the media host', async () => {
     await connected();
     el('new-project').click(); await vi.waitFor(() => expect(el('project').hidden).toBe(true));

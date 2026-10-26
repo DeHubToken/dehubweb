@@ -19,14 +19,17 @@ from fastapi.middleware.cors import CORSMiddleware
 from PIL import Image
 
 import access
+import kie_bridge
 import remake
 import product_import
+from providers import ProviderFailed
 from mask_review import state as review_state, review, require_approved
 
 ROOT = Path(__file__).resolve().parent
 LIMIT = 100 * 1024 * 1024
 lock = threading.RLock()
 executor = ThreadPoolExecutor(max_workers=1)
+ONE_PASS_LABELS = {'kling': 'Kling', **kie_bridge.LABELS}
 log = logging.getLogger('maboroshi')
 
 
@@ -56,6 +59,10 @@ def run_stage(ident, stage, resume=False):
         else:
             if row.get('renderer') == 'kling':
                 from kling_bridge import submit, wait_and_finish
+            elif row.get('renderer') in kie_bridge.MODELS:
+                from functools import partial
+                from kie_bridge import wait_and_finish
+                submit = partial(kie_bridge.submit, renderer=row['renderer'])
             else:
                 from seedance_bridge import submit, submit_hd, wait_and_finish
             target = folder / 'hd' if stage == 'hd' else folder
@@ -68,10 +75,10 @@ def run_stage(ident, stage, resume=False):
             else:
                 request_id = submit_hd(folder)
             wait_and_finish(target, request_id, progress)
-            complete = stage == 'hd' or row.get('renderer') == 'kling'
+            complete = stage == 'hd' or row.get('renderer') in access.ONE_PASS
             access.update(ident, state='complete' if complete else 'draft',
                           status='Video ready with the complete original audio.' if complete else 'Draft ready with original audio. Review before approving 1080p.')
-    except Exception:
+    except Exception as error:
         # Provider response bodies and signed URLs stay out of user-visible errors.
         log.exception('Maboroshi %s failed for %s', stage, ident)
         if stage == 'assemble':
@@ -80,7 +87,7 @@ def run_stage(ident, stage, resume=False):
         target = folder / 'hd' if stage == 'hd' else folder
         response_path = target / ('response.json' if stage == 'hd' else 'seedance-response.json')
         submitted = response_path.exists() or (target / 'submission-attempted.json').exists()
-        if submitted:
+        if submitted and not isinstance(error, ProviderFailed):
             access.update(ident, state='attention', status='Generation needs attention. Its payment and submission references are saved; no duplicate request will be sent.')
         else:
             refunded = access.refund(ident, stage)
@@ -154,9 +161,11 @@ def snapshot(row):
     if row['renderer'] == 'kling':
         from kling_bridge import resolved_prompt as kling_prompt
         result['resolvedPrompt'] = kling_prompt(row['prompt'], bool(row['second_reference'])) if row['reference'] else ''
+    elif row['renderer'] in kie_bridge.MODELS:
+        result['resolvedPrompt'] = kie_bridge.resolved_prompt(row['prompt'], bool(row['second_reference'])) if row['reference'] else ''
     else:
         result['resolvedPrompt'] = resolved_prompt(folder, row['prompt'], bool(row['reference_seconds']), bool(row['second_reference'])) if row['reference'] else ''
-    stages = ('draft',) if row['renderer'] == 'kling' else ('prepare', 'draft', 'hd')
+    stages = ('draft',) if row['renderer'] in access.ONE_PASS else ('prepare', 'draft', 'hd')
     result['remake'] = remake.snapshot(row)
     result['workflow'] = 'remake' if result['remake'] or (folder / 'remake-intent.json').exists() else ''
     result['quotes'] = {stage: access.price(row, stage) for stage in stages} if not result['remake'] and access.readiness() else {}
@@ -222,8 +231,8 @@ def validate_video(path, audio=False):
 
 @app.post('/jobs', status_code=201)
 def create_job(video: UploadFile = File(...), mode: str = Form('depth'), subject: str = Form('person'), renderer: str = Form('seedance'), workflow: str = Form(''), wallet=Depends(owner)):
-    if renderer not in ('seedance', 'kling'):
-        raise HTTPException(400, 'Choose Kling or Seedance Premium.')
+    if renderer not in access.RENDERERS:
+        raise HTTPException(400, 'Choose a rendering option.')
     if workflow not in ('', 'remake') or workflow == 'remake' and renderer != 'kling':
         raise HTTPException(400, 'Remake uses Kling with image references.')
     if mode not in access.MODES or not 1 <= len(subject.strip()) <= 200:
@@ -246,13 +255,16 @@ def create_job(video: UploadFile = File(...), mode: str = Form('depth'), subject
                     stream = source.streams.video[0]
                     if not 3 <= seconds <= 15 or min(stream.width, stream.height) < 720 or Path(video.filename or '').suffix.lower() not in ('.mp4', '.mov'):
                         raise HTTPException(400, 'Kling needs a 3–15 second MP4 or MOV, at least 720 pixels on each side. Use Seedance Premium for other clips.')
+            elif renderer in kie_bridge.MODELS and not 3 <= seconds <= 15:
+                raise HTTPException(400, f'{kie_bridge.LABELS[renderer]} needs a 3–15 second clip. Use Seedance Premium for longer clips.')
+            if renderer in access.ONE_PASS:
                 shutil.copy2(folder / 'upload.mp4', folder / 'seedance-input.mp4')
-                (folder / 'workflow-mode.json').write_text(json.dumps({'mode': 'kling'}))
+                (folder / 'workflow-mode.json').write_text(json.dumps({'mode': 'kling' if renderer == 'kling' else 'one_pass'}))
             if workflow == 'remake':
                 (folder / 'remake-intent.json').write_text('{"version":1}')
             db.execute('INSERT INTO jobs (id,wallet,created,state,stage,status,mode,subject,seconds,renderer) VALUES (?,?,?,?,?,?,?,?,?,?)',
-                (ident, wallet, int(time.time()), 'prepared' if renderer == 'kling' else 'uploaded', '',
-                 'Review your source clip, then generate with Kling.' if renderer == 'kling' else 'Source saved. Review the preparation price to continue.', mode, subject.strip(), seconds, renderer))
+                (ident, wallet, int(time.time()), 'prepared' if renderer in access.ONE_PASS else 'uploaded', '',
+                 f'Review your source clip, then generate with {ONE_PASS_LABELS[renderer]}.' if renderer in access.ONE_PASS else 'Source saved. Review the preparation price to continue.', mode, subject.strip(), seconds, renderer))
         except Exception:
             shutil.rmtree(folder)
             raise
@@ -280,8 +292,8 @@ def references(ident: str, prompt: str = Form(...), reference: UploadFile | None
                 allowed = ('.png', '.jpg', '.jpeg', '.webp') + (('.mp4', '.mov', '.webm') if index == 0 else ())
                 if suffix not in allowed:
                     raise HTTPException(400, 'Choose a PNG, JPG or WebP reference; the first reference can also be a video.')
-                if row['renderer'] == 'kling' and suffix in ('.mp4', '.mov', '.webm'):
-                    raise HTTPException(400, 'Kling uses image character references. Use Seedance Premium for video references.')
+                if row['renderer'] in access.ONE_PASS and suffix in ('.mp4', '.mov', '.webm'):
+                    raise HTTPException(400, f'{ONE_PASS_LABELS[row["renderer"]]} uses image character references. Use Seedance Premium for video references.')
                 name = f'reference-{index}-{uuid.uuid4().hex}{suffix}'
                 target = folder / name
                 saved.append(name)
@@ -347,8 +359,8 @@ def stage_quote(ident, stage, wallet):
             raise HTTPException(409, 'Finish saving the parent shot plan before generating.')
         if not any(shot['id'] == ident for shot in plan['shots']):
             raise HTTPException(409, 'Only the selected version of a shot can start a new render.')
-    if row['renderer'] == 'kling' and stage != 'draft':
-        raise HTTPException(400, 'Kling has one complete render and no separate preparation or HD step.')
+    if row['renderer'] in access.ONE_PASS and stage != 'draft':
+        raise HTTPException(400, 'This option has one complete render and no separate preparation or HD step.')
     expected = {'prepare': 'uploaded', 'draft': 'prepared', 'hd': 'draft'}[stage]
     if row['state'] != expected:
         raise HTTPException(409, 'This step has already started or its earlier step is incomplete.')

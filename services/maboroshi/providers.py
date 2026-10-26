@@ -10,6 +10,10 @@ BRIDGE = 'https://aigxuutjaqsywioxjefr.supabase.co/functions/v1/maboroshi-provid
 _health = (0, False)
 
 
+class ProviderFailed(RuntimeError):
+    """The provider settled the request as failed; nothing was billed for it."""
+
+
 def call(operation, **values):
     response = requests.post(BRIDGE,
         headers={'x-internal-secret': os.environ['INTERNAL_SERVICE_SECRET']},
