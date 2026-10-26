@@ -6,6 +6,10 @@ import { Drawer, DrawerContent, DrawerHeader, DrawerTitle } from '@/components/u
 import { Link } from 'react-router-dom';
 import { cn } from '@/lib/utils';
 import { parseWhen } from '@/lib/schedule/parseWhen';
+import { bestTime, toLocalGrid } from '@/lib/schedule/fansOnline';
+import { getFansOnline } from '@/lib/api/dehub/scheduled';
+import { useAuth } from '@/contexts/AuthContext';
+import { useQuery } from '@tanstack/react-query';
 
 export type ScheduleKind = 'post' | 'live' | 'stage';
 
@@ -49,6 +53,16 @@ export function ScheduleSheet({ isOpen, onClose, scheduledDate, onSchedule, titl
   const [minutes, setMinutes] = useState(19 * 60 + 30);
   const [typed, setTyped] = useState('');
   const stripRef = useRef<HTMLDivElement>(null);
+  const [showFans, setShowFans] = useState(false);
+  const { walletAddress } = useAuth();
+  const fans = useQuery({
+    queryKey: ['fans-online', walletAddress],
+    queryFn: getFansOnline,
+    enabled: isOpen && !!walletAddress,
+    staleTime: 30 * 60_000,
+    retry: false,
+  });
+  const fansGrid = useMemo(() => (fans.data ? toLocalGrid(fans.data.grid) : null), [fans.data]);
 
   useEffect(() => {
     if (!isOpen) return;
@@ -81,7 +95,8 @@ export function ScheduleSheet({ isOpen, onClose, scheduledDate, onSchedule, titl
     const now = new Date();
     const nextWeekday = (wd: number) => addDays(today, ((wd - now.getDay() + 7) % 7) || 7);
     const tonight = atMinutes(today, 20 * 60);
-    const prime = (() => {
+    const best = fansGrid ? bestTime(fansGrid, earliest, now) : null;
+    const prime = best ?? (() => {
       const d = atMinutes(today, 19 * 60 + 30);
       return d.getTime() > earliest ? d : atMinutes(addDays(today, 1), 19 * 60 + 30);
     })();
@@ -92,10 +107,12 @@ export function ScheduleSheet({ isOpen, onClose, scheduledDate, onSchedule, titl
         : { id: 'soon', label: t('whenSheet.inAnHour', { defaultValue: 'In an hour' }), at: firstSlot(Math.max(minimumMinutes, 60)) },
       { id: 'tomorrow', label: t('whenSheet.tomorrow', { defaultValue: 'Tomorrow' }), at: atMinutes(addDays(today, 1), 9 * 60) },
       { id: 'weekend', label: friday.toLocaleDateString(locale, { weekday: 'long' }), at: friday },
-      { id: 'prime', label: t('whenSheet.primeTime', { defaultValue: 'Prime time' }), at: prime, prime: true },
+      best
+        ? { id: 'prime', label: t('whenSheet.bestTime', { defaultValue: 'Best time' }), at: prime, prime: true }
+        : { id: 'prime', label: t('whenSheet.primeTime', { defaultValue: 'Prime time' }), at: prime, prime: true },
     ];
     return list;
-  }, [today.getTime(), earliest, locale, minimumMinutes, t]);
+  }, [today.getTime(), earliest, locale, minimumMinutes, t, fansGrid]);
 
   const timeLabel = (d: Date) => d.toLocaleTimeString(locale, { hour: 'numeric', minute: '2-digit' });
   const dayLabel = (d: Date) => (sameDay(d, today)
@@ -192,6 +209,60 @@ export function ScheduleSheet({ isOpen, onClose, scheduledDate, onSchedule, titl
               );
             })}
           </div>
+
+          {fansGrid && (
+            <div data-fans-online>
+              <button
+                type="button"
+                onClick={() => setShowFans(v => !v)}
+                aria-expanded={showFans}
+                className="flex w-full items-center justify-between py-1 text-left text-xs font-semibold text-white/75 hover:text-white"
+              >
+                <span className="flex items-center gap-1.5"><Sparkles className="h-3.5 w-3.5" />{t('whenSheet.fansOnline', { defaultValue: 'When are my fans online?' })}</span>
+                <span className="text-white/45">{showFans ? t('whenSheet.hide', { defaultValue: 'Hide' }) : t('whenSheet.show', { defaultValue: 'Show' })}</span>
+              </button>
+              {showFans && (() => {
+                const max = Math.max(1, ...fansGrid.flat());
+                return (
+                  <div className="mt-2 space-y-[3px]">
+                    {Array.from({ length: 7 }, (_, i) => addDays(today, i)).map(d => (
+                      <div key={d.getTime()} className="flex items-center gap-1.5">
+                        <span className="w-9 shrink-0 text-[10px] font-medium text-white/55">{sameDay(d, today) ? t('whenSheet.today', { defaultValue: 'Today' }) : d.toLocaleDateString(locale, { weekday: 'short' })}</span>
+                        <div className="grid flex-1 grid-cols-24 gap-[2px]" style={{ gridTemplateColumns: 'repeat(24, minmax(0, 1fr))' }}>
+                          {fansGrid[d.getDay()].map((count, hour) => {
+                            const at = atMinutes(d, hour * 60);
+                            const past = at.getTime() <= earliest;
+                            const picked = sameDay(at, day) && minutes === hour * 60;
+                            return (
+                              <button
+                                key={hour}
+                                type="button"
+                                disabled={past}
+                                onClick={() => choose(at)}
+                                aria-label={`${dayLabel(at)} ${timeLabel(at)}: ${count}`}
+                                className={cn('h-4 rounded-[3px] text-white disabled:opacity-25', picked && 'ring-1 ring-white')}
+                                style={{ background: 'currentColor', opacity: past ? undefined : 0.12 + 0.88 * (count / max) }}
+                              />
+                            );
+                          })}
+                        </div>
+                      </div>
+                    ))}
+                    <div className="flex justify-between pl-[42px] text-[10px] text-white/45">
+                      <span>{timeLabel(atMinutes(today, 0))}</span>
+                      <span>{timeLabel(atMinutes(today, 12 * 60))}</span>
+                      <span>{timeLabel(atMinutes(today, 23 * 60))}</span>
+                    </div>
+                    <p className="pt-1 text-[11px] text-white/50">
+                      {fans.data?.basis === 'followers'
+                        ? t('whenSheet.fansBasis', { defaultValue: 'Brighter means more of your followers were watching, last {{count}} days.', count: fans.data.days })
+                        : t('whenSheet.everyoneBasis', { defaultValue: 'Not enough follower activity yet, so this is everyone on DeHub.' })}
+                    </p>
+                  </div>
+                );
+              })()}
+            </div>
+          )}
 
           <div>
             <p className="mb-2 text-[11px] font-semibold uppercase tracking-[0.12em] text-white/50">{t('whenSheet.orPickDay', { defaultValue: 'Or pick a day' })}</p>
