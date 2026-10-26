@@ -1,3 +1,4 @@
+import { AGENT_RECIPES } from "@/lib/editor/agentRecipes";
 import { projectTask } from "@/lib/editor/projectTask";
 import { projectReviewSnapshotKey } from "@/lib/editor/cloudProjectReview";
 import { useSurfaceDraft } from '@/hooks/use-surface-draft';
@@ -273,6 +274,19 @@ export function AgentPanel() {
                   {s}
                 </button>
               ))}
+            </div>
+            <div className="space-y-1.5">
+              <p className="text-[10px] font-semibold uppercase tracking-wide text-white/40">{t('editor.agent.recipesTitle')}</p>
+              <div className="grid grid-cols-2 gap-1.5">
+                {AGENT_RECIPES.map((id) => (
+                  <button key={id} type="button" onClick={() => void send(t(`editor.agent.recipe.${id}.prompt`))}
+                    title={t(`editor.agent.recipe.${id}.prompt`)}
+                    className="rounded-lg border border-white/10 bg-white/[0.03] px-2.5 py-2 text-left transition hover:bg-white/5">
+                    <span className="block text-[11px] font-semibold text-white/85">{t(`editor.agent.recipe.${id}.label`)}</span>
+                    <span className="mt-0.5 line-clamp-2 block text-[10px] leading-snug text-white/50">{t(`editor.agent.recipe.${id}.prompt`)}</span>
+                  </button>
+                ))}
+              </div>
             </div>
           </div>
         )}
