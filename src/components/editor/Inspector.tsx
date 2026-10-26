@@ -8,7 +8,7 @@ import { ScreenSwitch } from "@/components/editor/ScreenSwitch";
  * Right-hand inspector: project canvas settings + selected-clip properties (text).
  * Architecture inspired by OpenCut (MIT) — see LICENSE-OpenCut.
  */
-import { useEffect, useMemo } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -28,6 +28,7 @@ import { MultiSelectSection } from "@/components/editor/inspector/MultiSelectSec
 import { MotionSection } from "@/components/editor/inspector/MotionSection";
 import { applyAutoEnhance } from "@/lib/editor/applyAutoEnhance";
 import { useCaptionsStore } from "@/store/editorCaptionsStore";
+import { CAPTION_STYLES, CAPTION_STYLE_LABELS, type CaptionStyle } from "@/lib/editor/captionLayout";
 import { ShotTools } from "@/components/editor/ShotTools";
 import { HighlightTools } from "@/components/editor/HighlightTools";
 import { AudioTools } from "@/components/editor/AudioTools";
@@ -61,6 +62,7 @@ export function Inspector() {
   const captionsClipId = useCaptionsStore((s) => s.clipId);
   const captionsProgress = useCaptionsStore((s) => s.progress);
   const runCaptions = useCaptionsStore((s) => s.run);
+  const [captionStyle, setCaptionStyle] = useState<CaptionStyle>("classic");
 
   // Single-layer controls only; several layers get MultiSelectSection instead.
   const selected = useMemo(
@@ -258,6 +260,10 @@ export function Inspector() {
             <EffectSlider label={t("editor.adjust.vignette", { value: Math.round((visualMedia.effects?.vignette ?? 0) * 100) })}
               value={visualMedia.effects?.vignette ?? 0} min={0} max={1} step={0.01}
               onChange={(v) => updateMediaClip(visualMedia.id, { effects: { ...visualMedia.effects, vignette: v } })} />
+            {(["halation", "scanlines"] as const).map(key => <EffectSlider key={key}
+              label={t(`editor.adjust.${key}`, { value: Math.round((visualMedia.effects?.[key] ?? 0) * 100), defaultValue: `${key === "halation" ? "Halation" : "Scanlines"} {{value}}%` })}
+              value={visualMedia.effects?.[key] ?? 0} min={0} max={1} step={0.01}
+              onChange={(v) => { if (!visualMedia.locked) updateMediaClip(visualMedia.id, { effects: { ...visualMedia.effects, [key]: v } }); }} />)}
             {visualMedia.kind === "image" && (
               <Button size="sm" variant="ghost"
                 onClick={async () => {
@@ -303,8 +309,19 @@ export function Inspector() {
 
         {hasAudio && (
           <div className="space-y-1.5 pt-2">
+            {!captionsClipId && (
+              <div role="radiogroup" aria-label={t("editor.captions.style")} className="flex flex-wrap gap-1">
+                {CAPTION_STYLES.map(style => (
+                  <button key={style} type="button" role="radio" aria-checked={captionStyle === style}
+                    onClick={() => setCaptionStyle(style)}
+                    className={`h-6 rounded-md px-2 text-[10px] font-semibold transition-colors ${captionStyle === style ? "bg-white text-black" : "bg-white/[0.06] text-white/70 hover:bg-white/10"}`}>
+                    {t(`editor.captions.styles.${style}`, { defaultValue: CAPTION_STYLE_LABELS[style] })}
+                  </button>
+                ))}
+              </div>
+            )}
             <Button size="sm" variant="ghost" disabled={!!captionsClipId}
-              onClick={() => void runCaptions(hasAudio.id)}
+              onClick={() => void runCaptions(hasAudio.id, captionStyle)}
               className="h-8 w-full gap-1.5 rounded-md bg-white text-[11px] font-semibold text-black hover:bg-white/90 disabled:opacity-60">
               {captionsClipId === hasAudio.id ? <Loader2 className="h-3.5 w-3.5 animate-spin" /> : <Captions className="h-3.5 w-3.5" />}
               {captionsClipId === hasAudio.id
