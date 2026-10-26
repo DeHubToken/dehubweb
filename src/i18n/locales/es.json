@@ -6586,6 +6586,100 @@
     "youAreBanned": "No puedes chatear en los streams de este creador",
     "youAreTimedOut": "Estás en tiempo de espera por un momento"
   },
+  "studioDeck": {
+    "remove": "Quitar",
+    "imageTooLarge": "Esa imagen es demasiado grande. Prueba con una más pequeña.",
+    "scenes": {
+      "title": "Escenas",
+      "edit": "Editar {{name}}",
+      "subtitle": "Segunda línea (opcional)",
+      "picture": "Imagen",
+      "countdown": "Cuenta atrás",
+      "noCountdown": "Sin cuenta atrás",
+      "minutes": "{{count}} min",
+      "muteMic": "Silenciar mi micro mientras esté activa",
+      "names": {
+        "starting": "Empezamos pronto",
+        "chatting": "Charlando",
+        "gameplay": "Partida",
+        "brb": "Vuelvo enseguida",
+        "ending": "Fin del directo"
+      },
+      "hints": {
+        "starting": "Tarjeta con cuenta atrás",
+        "chatting": "Cámara a pantalla completa",
+        "gameplay": "Pantalla con tu cámara",
+        "brb": "Tarjeta, micro silenciado",
+        "ending": "Tarjeta de agradecimiento"
+      },
+      "subtitles": {
+        "starting": "El directo empieza en",
+        "brb": "Vuelvo en un momento",
+        "ending": "Gracias por ver el directo"
+      }
+    },
+    "widgets": {
+      "title": "Mostrar widgets en mi vídeo",
+      "hint": "Las alertas, barras de meta y el chat se dibujan en tu directo, así que también los ven en Twitch, YouTube y las demás plataformas.",
+      "failed": "No se pudo cambiar dónde se muestran tus widgets. Inténtalo de nuevo."
+    },
+    "sources": {
+      "title": "Fuentes",
+      "addImage": "Imagen o logo",
+      "addCamera": "Segunda cámara",
+      "addClip": "Clip de vídeo",
+      "failed": "No se pudo añadir esa fuente.",
+      "empty": "Añade un logo, una segunda cámara o un clip de vídeo sobre tu directo.",
+      "hint": "Las fuentes se dibujan sobre tu imagen para todos los espectadores y plataformas.",
+      "image": "Imagen",
+      "camera": "Cámara",
+      "clip": "Clip",
+      "restart": "Reiniciar",
+      "play": "Reproducir o pausar",
+      "show": "Mostrar en el directo",
+      "loop": "En bucle",
+      "positions": {
+        "top-left": "Arriba izq.",
+        "top-right": "Arriba der.",
+        "bottom-left": "Abajo izq.",
+        "bottom-right": "Abajo der.",
+        "center": "Centro"
+      },
+      "sizes": {
+        "small": "Pequeño",
+        "medium": "Mediano",
+        "large": "Grande"
+      },
+      "shapes": {
+        "circle": "Círculo",
+        "rounded": "Redondeado",
+        "rect": "Cuadrado"
+      }
+    },
+    "audio": {
+      "title": "Mezclador de audio",
+      "unavailable": "Este navegador no puede mezclar audio, así que tu micro sale tal cual.",
+      "mute": "Silenciar",
+      "unmute": "Activar sonido",
+      "channels": {
+        "mic": "Micro",
+        "game": "Juego / pestaña",
+        "clip": "Clip de vídeo"
+      },
+      "absent": {
+        "mic": "Sin micrófono",
+        "game": "Comparte una pantalla con audio o usa una capturadora",
+        "clip": "Añade un clip de vídeo en Fuentes"
+      },
+      "gate": "Puerta de ruido",
+      "gateLevels": {
+        "off": "Desactivada",
+        "low": "Suave",
+        "high": "Fuerte"
+      },
+      "gateHint": "Silencia tu micro entre palabras para que el teclado y los ventiladores no se oigan."
+    }
+  },
   "liveStudio": {
     "vertical": {
       "title": "Vista vertical",
@@ -6730,11 +6824,11 @@
       "showIn": "Mostrar tus widgets",
       "inApp": "En la aplicación DeHub",
       "inAppHint": "La aplicación de cada espectador los dibuja sobre tu transmisión. Funciona desde tu teléfono, el navegador, una tarjeta de captura u OBS, y no te cuesta nada.",
-      "inVideo": "En mi vídeo (OBS)",
+      "inVideo": "En mi vídeo (OBS o directo de DeHub)",
       "inVideoHint": "OBS los graba en su imagen, por lo que están en sus repeticiones y en cualquier lugar donde se vea su transmisión.",
       "warnDoubles": "Tu superposición OBS está conectada, pero tus widgets también están configurados para mostrarse en la aplicación DeHub, por lo que los espectadores ven cada alerta dos veces.",
       "switchToVideo": "Mostrarlas en mi vídeo en su lugar",
-      "warnNoObs": "No hay ninguna superposición de OBS conectada en este momento. Hasta que añadas la fuente del navegador, los espectadores no verán tus widgets.",
+      "warnNoObs": "No hay ninguna superposición de OBS conectada. Si sales en directo desde DeHub en el navegador, tus widgets se dibujan en el vídeo automáticamente; desde OBS, añade la fuente de navegador de abajo.",
       "link": "Enlace de origen del navegador",
       "oneWidget": "Solo este widget",
       "step1": "En OBS, añada un origen de navegador y pegue este enlace.",

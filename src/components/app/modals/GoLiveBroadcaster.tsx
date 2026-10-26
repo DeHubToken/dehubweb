@@ -14,7 +14,7 @@ import { useTranslation as _useCopy } from 'react-i18next';
 
 import { useState, useRef, useEffect, useCallback, lazy, Suspense } from 'react';
 import { useTranslation } from 'react-i18next';
-import { SwitchCamera, Cable, ScreenShare, ScreenShareOff, PictureInPicture2, Move, Wand2, Palette, Heart, Loader2, AlertTriangle, SignalLow, UserPlus } from "lucide-react";
+import { SwitchCamera, Cable, ScreenShare, ScreenShareOff, PictureInPicture2, Move, Wand2, Palette, Heart, Loader2, AlertTriangle, SignalLow, UserPlus, LayoutTemplate, Layers, SlidersHorizontal } from "lucide-react";
 import MicOff from "@/components/ui/cut-icons/mic-off";
 import Video from "@/components/ui/cut-icons/video";
 import VideoOff from "@/components/ui/cut-icons/video-off";
@@ -29,6 +29,7 @@ import StudioIcon from "@/components/ui/cut-icons/command";
 import X from "@/components/ui/cut-icons/close";
 
 import { cn } from '@/lib/utils';
+import { toast } from 'sonner';
 import { useIsMobile } from '@/hooks/use-mobile';
 import {
   publishToWhip,
@@ -47,6 +48,22 @@ import {
 } from '@/lib/livepeer/compositor';
 import { startVideoEffect, type VideoEffectStage } from '@/lib/livepeer/video-effects';
 import { createGuestMixer } from '@/lib/livepeer/guest-mixer';
+import { createProgramOutput } from '@/lib/studio/program';
+import { createAudioDesk, DESK_CHANNELS, type AudioDesk, type DeskChannel, type GateStrength } from '@/lib/studio/audio-desk';
+import {
+  SCENES,
+  cardForScene,
+  loadSceneCustoms,
+  saveSceneCustoms,
+  sceneMutesMic,
+  type SceneCustom,
+  type SceneId,
+} from '@/lib/studio/scenes';
+import { loadImage } from '@/lib/studio/sources';
+import { AudioPanel, ScenesPanel, SourcesPanel, type DeskState } from '@/components/app/live/studio-deck/StudioDeckPanels';
+import { useStudioSources } from '@/components/app/live/studio-deck/use-studio-sources';
+import { useOverlayPainter } from '@/hooks/use-overlay-painter';
+import { getMyOverlay, saveMyOverlay } from '@/lib/api/dehub/live-overlay';
 import { useCoStreamHost } from '@/hooks/use-costream-host';
 import { CoStreamHostPanel } from '@/components/app/live/costream/CoStreamHostPanel';
 import { CoStreamBattleBar } from '@/components/app/live/costream/CoStreamBattleBar';
@@ -392,6 +409,40 @@ function mixAudio(tracks: MediaStreamTrack[]): AudioMix | null {
   }
 }
 
+const DESK_STORAGE_KEY = 'dehub.studio.desk.v1';
+
+/** The mixer settings a creator left last time, so their levels carry over. */
+function loadDeskState(): DeskState {
+  const fallback: DeskState = {
+    volume: { mic: 1, game: 1, clip: 1 },
+    muted: { mic: false, game: false, clip: false },
+    gate: 'off',
+  };
+  try {
+    const raw = JSON.parse(window.localStorage.getItem(DESK_STORAGE_KEY) || 'null');
+    if (!raw || typeof raw !== 'object') return fallback;
+    const volume = { ...fallback.volume };
+    for (const c of DESK_CHANNELS) {
+      const v = Number(raw.volume?.[c]);
+      if (Number.isFinite(v)) volume[c] = Math.min(2, Math.max(0, v));
+    }
+    const gate: GateStrength = raw.gate === 'low' || raw.gate === 'high' ? raw.gate : 'off';
+    // Mutes are not remembered: starting a stream muted by accident is worse
+    // than re-muting a channel.
+    return { volume, muted: fallback.muted, gate };
+  } catch {
+    return fallback;
+  }
+}
+
+function saveDeskState(state: DeskState) {
+  try {
+    window.localStorage.setItem(DESK_STORAGE_KEY, JSON.stringify({ volume: state.volume, gate: state.gate }));
+  } catch {
+    /* private mode: levels simply are not remembered */
+  }
+}
+
 export function GoLiveBroadcaster({
   streamKey,
   playbackId,
@@ -442,7 +493,7 @@ export function GoLiveBroadcaster({
   const [starved, setStarved] = useState(false);
   // Only one drawer of extras at a time — the broadcast preview is the point
   // of this panel and two open boards would push it off a laptop screen.
-  const [openPanel, setOpenPanel] = useState<'none' | 'voice' | 'looks' | 'sounds' | 'chat' | 'guests'>(
+  const [openPanel, setOpenPanel] = useState<'none' | 'voice' | 'looks' | 'sounds' | 'chat' | 'guests' | 'scenes' | 'sources' | 'audio'>(
     'none'
   );
   const [effect, setEffect] = useState<VoiceEffectId>('none');
@@ -463,6 +514,23 @@ export function GoLiveBroadcaster({
   // Sits between this screen and the WHIP sender; transparent until a guest
   // is on screen, then it sends host-plus-guests instead.
   const [guestMixer] = useState(createGuestMixer);
+  // The studio's last stage: scene cards, extra sources and burned-in widgets
+  // over whatever the broadcaster puts on air. See lib/studio/program.
+  const [program] = useState(createProgramOutput);
+  const [programActive, setProgramActive] = useState(false);
+  useEffect(() => program.onActiveChange(setProgramActive), [program]);
+  const programPreviewRef = useRef<HTMLVideoElement | null>(null);
+  // One mixer for mic, game audio and clips; null where Web Audio is missing,
+  // and the old mix-on-demand path carries on.
+  const deskRef = useRef<AudioDesk | null>(null);
+  const [desk, setDesk] = useState<AudioDesk | null>(null);
+  const [deskState, setDeskState] = useState<DeskState>(loadDeskState);
+  const [activeScene, setActiveScene] = useState<SceneId | null>(null);
+  const [sceneBusy, setSceneBusy] = useState(false);
+  const [sceneCustoms, setSceneCustoms] = useState<Partial<Record<SceneId, SceneCustom>>>(loadSceneCustoms);
+  const sceneMutedMicRef = useRef(false);
+  const deskStateRef = useRef(deskState);
+  deskStateRef.current = deskState;
   const sessionRef = useRef<WhipSession | null>(null);
   const wakeLockRef = useRef<WakeLockSentinel | null>(null);
   // One lock for every video-source change — flip, share, unshare. Two of them
@@ -719,6 +787,8 @@ export function GoLiveBroadcaster({
     // The guests' mix goes with the session: nothing is left to send it to.
     guestMixer.release();
     await guestMixer.stop();
+    program.release();
+    await program.stop();
     await sessionRef.current?.stop();
     sessionRef.current = null;
     streamRef.current?.getTracks().forEach((t) => t.stop());
@@ -741,7 +811,9 @@ export function GoLiveBroadcaster({
     audioMixRef.current?.track.stop();
     void audioMixRef.current?.ctx.close().catch(() => undefined);
     audioMixRef.current = null;
-  }, [releaseWakeLock, releaseBubble, releaseLook, cleanupVoice, guestMixer]);
+    deskRef.current?.close();
+    deskRef.current = null;
+  }, [releaseWakeLock, releaseBubble, releaseLook, cleanupVoice, guestMixer, program]);
 
   /**
    * Captures the mic and runs it through the voice-effect graph. What comes
@@ -814,6 +886,16 @@ export function GoLiveBroadcaster({
     // Remembered so a voice-effect switch, which produces a brand-new mic
     // track, can rebuild the same mix without being handed the share again.
     systemAudioRef.current = systemTrack;
+
+    // With the desk, the published track never changes: only its inputs do.
+    const deskNow = deskRef.current;
+    if (deskNow) {
+      deskNow.setInput('mic', mic);
+      deskNow.setInput('game', systemTrack);
+      // Re-render so the mixer shows which channels have something on them.
+      setDeskState((s) => ({ ...s }));
+      return;
+    }
 
     const mix = systemTrack && mic ? mixAudio([mic, systemTrack]) : null;
     audioMixRef.current = mix;
@@ -1311,12 +1393,37 @@ export function GoLiveBroadcaster({
         setHasMic(!!micTrack);
         setMicOn(!!micTrack);
 
-        const mix = systemAudio && micTrack ? mixAudio([micTrack, systemAudio]) : null;
+        // The desk owns the published sound from the first frame, so the
+        // creator's levels apply at once and a silent start can still gain
+        // sound later. Without Web Audio the old two-input mix carries on.
+        let builtDesk: AudioDesk | null = null;
+        try {
+          builtDesk = await createAudioDesk();
+        } catch (error) {
+          logger.warn('Audio desk unavailable; mixing the old way', error);
+        }
+        if (cancelled) {
+          builtDesk?.close();
+          return;
+        }
+        if (builtDesk) {
+          builtDesk.setInput('mic', micTrack);
+          builtDesk.setInput('game', systemAudio);
+          for (const c of DESK_CHANNELS) {
+            builtDesk.setVolume(c, deskStateRef.current.volume[c]);
+            builtDesk.setMuted(c, deskStateRef.current.muted[c]);
+          }
+          builtDesk.setGate(deskStateRef.current.gate);
+          deskRef.current = builtDesk;
+          setDesk(builtDesk);
+        }
+
+        const mix = !builtDesk && systemAudio && micTrack ? mixAudio([micTrack, systemAudio]) : null;
         audioMixRef.current = mix;
 
         const stream = new MediaStream();
         if (videoTrack) stream.addTrack(videoTrack);
-        const audioTrack = mix?.track ?? micTrack ?? systemAudio;
+        const audioTrack = builtDesk?.track ?? mix?.track ?? micTrack ?? systemAudio;
         if (audioTrack) stream.addTrack(audioTrack);
 
         streamRef.current = stream;
@@ -1383,7 +1490,7 @@ export function GoLiveBroadcaster({
           livepeerFallbackUsed = true;
           setPhase('connecting');
           await dead?.stop().catch(() => undefined);
-          if (guestMixer.unwrap(sessionRef.current) === dead) sessionRef.current = null;
+          if (program.unwrap(guestMixer.unwrap(sessionRef.current)) === dead) sessionRef.current = null;
           if (cancelled) return true;
           try {
             const moved = await ask();
@@ -1414,7 +1521,7 @@ export function GoLiveBroadcaster({
               await next.stop();
               return true;
             }
-            sessionRef.current = guestMixer.wrap(next, stream);
+            sessionRef.current = guestMixer.wrap(program.wrap(next, stream), stream);
             await acquireWakeLock();
             return true;
           } catch (error) {
@@ -1543,7 +1650,7 @@ export function GoLiveBroadcaster({
         ): Promise<void> => {
           setPhase('connecting');
           await dead?.stop().catch(() => undefined);
-          if (guestMixer.unwrap(sessionRef.current) === dead) sessionRef.current = null;
+          if (program.unwrap(guestMixer.unwrap(sessionRef.current)) === dead) sessionRef.current = null;
           if (cancelled) return;
           try {
             const next = await openSession(viaRelay);
@@ -1551,7 +1658,7 @@ export function GoLiveBroadcaster({
               await next.stop();
               return;
             }
-            sessionRef.current = guestMixer.wrap(next, stream);
+            sessionRef.current = guestMixer.wrap(program.wrap(next, stream), stream);
             await acquireWakeLock();
           } catch (error) {
             logger.error('Media fallback failed', { viaRelay }, error);
@@ -1617,7 +1724,7 @@ export function GoLiveBroadcaster({
           await session.stop();
           return;
         }
-        sessionRef.current = guestMixer.wrap(session, stream);
+        sessionRef.current = guestMixer.wrap(program.wrap(session, stream), stream);
 
         // Without this a phone screen-locks mid-stream and the broadcast dies.
         await acquireWakeLock();
@@ -1710,7 +1817,8 @@ export function GoLiveBroadcaster({
     let cancelled = false;
 
     const capture = async () => {
-      const video = videoRef.current;
+      // The studio's output when it is drawing, else the plain preview.
+      const video = programPreviewRef.current?.videoWidth ? programPreviewRef.current : videoRef.current;
       if (cancelled || !video || !video.videoWidth) return;
       // A hidden tab stops feeding the element — the best a capture gets there
       // is the last painted frame, and the worst is a blank one.
@@ -1908,6 +2016,139 @@ export function GoLiveBroadcaster({
   const guestNudge = coStream.incoming.length + coStream.requests.length;
   useBattleTally(walletAddress, coStream.state, coStream.role === 'host');
 
+  /* ───────────── Studio: mixer, scenes, sources, widgets ───────────── */
+
+  const updateDesk = (change: (s: DeskState) => DeskState) => {
+    setDeskState((prev) => {
+      const next = change(prev);
+      saveDeskState(next);
+      return next;
+    });
+  };
+  const setChannelVolume = (channel: DeskChannel, volume: number) => {
+    deskRef.current?.setVolume(channel, volume);
+    updateDesk((s) => ({ ...s, volume: { ...s.volume, [channel]: volume } }));
+  };
+  const setChannelMuted = (channel: DeskChannel, muted: boolean) => {
+    deskRef.current?.setMuted(channel, muted);
+    updateDesk((s) => ({ ...s, muted: { ...s.muted, [channel]: muted } }));
+  };
+  const setGate = (gate: GateStrength) => {
+    deskRef.current?.setGate(gate);
+    updateDesk((s) => ({ ...s, gate }));
+  };
+
+  const studioSources = useStudioSources(program, desk, onAir);
+
+  /** A scene that muted the mic gives it back when the creator moves on. */
+  const restoreSceneMic = () => {
+    if (!sceneMutedMicRef.current) return;
+    sceneMutedMicRef.current = false;
+    if (rawMicStreamRef.current) {
+      setRawMicEnabled(true);
+      setMicOn(true);
+    }
+  };
+
+  const sceneDefaults = (id: SceneId) => ({
+    title: t(`studioDeck.scenes.names.${id}`),
+    subtitle: SCENES[id].kind === 'card' ? t(`studioDeck.scenes.subtitles.${id}`) : undefined,
+  });
+
+  const sceneStartedAtRef = useRef(0);
+  const showCard = async (id: SceneId, customs: Partial<Record<SceneId, SceneCustom>>) => {
+    const custom = customs[id];
+    const image = custom?.image ? await loadImage(custom.image).catch(() => null) : null;
+    program.setCard(cardForScene(id, custom, sceneDefaults(id), image, sceneStartedAtRef.current));
+  };
+
+  const applyScene = async (id: SceneId) => {
+    if (sceneBusy) return;
+    const def = SCENES[id];
+    setSceneBusy(true);
+    try {
+      if (def.kind === 'card') {
+        sceneStartedAtRef.current = Date.now();
+        await showCard(id, sceneCustoms);
+        if (sceneMutesMic(id, sceneCustoms[id])) {
+          if (micOn && rawMicStreamRef.current) {
+            sceneMutedMicRef.current = true;
+            setRawMicEnabled(false);
+            setMicOn(false);
+          }
+        } else {
+          restoreSceneMic();
+        }
+      } else {
+        // Layout first, card off last: the card covers the switch, so viewers
+        // never see the picker or a frame of the old layout.
+        if (def.layout === 'camera') {
+          if (captureModeRef.current === 'screen') await stopScreenShare();
+          else if (captureModeRef.current === 'card' && bubbleRef.current) await toggleCameraBubble();
+        } else if (def.layout === 'screen-bubble') {
+          if (captureModeRef.current === 'camera') await startScreenShare();
+          if (captureModeRef.current !== 'camera' && !bubbleRef.current) await toggleCameraBubble();
+        }
+        program.setCard(null);
+        restoreSceneMic();
+      }
+      setActiveScene(id);
+    } finally {
+      setSceneBusy(false);
+    }
+  };
+
+  const customizeScene = (id: SceneId, change: SceneCustom) => {
+    const next = { ...sceneCustoms, [id]: { ...sceneCustoms[id], ...change } };
+    setSceneCustoms(next);
+    if (!saveSceneCustoms(next)) toast.error(t('studioDeck.imageTooLarge'));
+    // The card on air follows the edit.
+    if (activeScene === id && SCENES[id].kind === 'card') void showCard(id, next);
+  };
+
+  // Widgets burned into the video. "In my video" is the same switch OBS
+  // users flip: while it is on, DeHub viewers' apps stop drawing their own
+  // copy, so nobody sees an alert twice.
+  const { data: myOverlay, refetch: refetchMyOverlay } = useQuery({
+    queryKey: ['my-overlay'],
+    queryFn: getMyOverlay,
+    enabled: Boolean(streamId),
+    staleTime: 30_000,
+  });
+  const burnWidgets = myOverlay?.renderIn === 'video';
+  const setBurnWidgets = async (on: boolean) => {
+    if (!myOverlay) return;
+    try {
+      await saveMyOverlay({
+        renderIn: on ? 'video' : 'app',
+        widgets: myOverlay.widgets,
+        verticalCrop: myOverlay.verticalCrop ?? null,
+      });
+      await refetchMyOverlay();
+    } catch {
+      toast.error(t('studioDeck.widgets.failed'));
+    }
+  };
+  const painter = useOverlayPainter({
+    streamId: streamId ?? null,
+    tokenId: tokenId ?? null,
+    creator: walletAddress ?? null,
+    enabled: onAir && burnWidgets,
+  });
+  useEffect(() => {
+    program.setPainter(onAir && burnWidgets && painter ? painter.paint : null);
+  }, [program, painter, onAir, burnWidgets]);
+
+  useEffect(() => {
+    const el = programPreviewRef.current;
+    if (!el) return;
+    el.srcObject = programActive ? program.preview() : null;
+  }, [programActive, program]);
+
+  const baseSettings = program.base()?.getSettings?.();
+  const frameAspect =
+    baseSettings?.width && baseSettings?.height ? baseSettings.width / baseSettings.height : 16 / 9;
+
   return (
     <div className={cn(fullBleed ? 'absolute inset-0 bg-black' : 'space-y-4 pb-4')}>
       <div
@@ -1936,6 +2177,18 @@ export function GoLiveBroadcaster({
         {mixing && (
           <video
             ref={mixPreviewRef}
+            autoPlay
+            muted
+            playsInline
+            className="absolute inset-0 h-full w-full bg-black object-contain"
+          />
+        )}
+
+        {/* The studio's output — scene card, sources and widgets over the
+            picture — is what viewers get, so it is what the creator sees. */}
+        {programActive && (
+          <video
+            ref={programPreviewRef}
             autoPlay
             muted
             playsInline
@@ -2176,6 +2429,36 @@ export function GoLiveBroadcaster({
           <Music className="h-5 w-5" />
         </ControlButton>
 
+        <ControlButton
+          floating={fullBleed}
+          active={openPanel !== 'scenes'}
+          onClick={() => setOpenPanel((p) => (p === 'scenes' ? 'none' : 'scenes'))}
+          disabled={phase === 'error' || !onAir}
+          label={t('studioDeck.scenes.title')}
+        >
+          <LayoutTemplate className="h-5 w-5" />
+        </ControlButton>
+
+        <ControlButton
+          floating={fullBleed}
+          active={openPanel !== 'sources'}
+          onClick={() => setOpenPanel((p) => (p === 'sources' ? 'none' : 'sources'))}
+          disabled={phase === 'error' || !onAir}
+          label={t('studioDeck.sources.title')}
+        >
+          <Layers className="h-5 w-5" />
+        </ControlButton>
+
+        <ControlButton
+          floating={fullBleed}
+          active={openPanel !== 'audio'}
+          onClick={() => setOpenPanel((p) => (p === 'audio' ? 'none' : 'audio'))}
+          disabled={phase === 'error'}
+          label={t('studioDeck.audio.title')}
+        >
+          <SlidersHorizontal className="h-5 w-5" />
+        </ControlButton>
+
         {streamId && (
           <ControlButton
             floating={fullBleed}
@@ -2344,6 +2627,48 @@ export function GoLiveBroadcaster({
             onToggleBackgroundBlur={() => void toggleBackgroundBlur()}
           />
           <p className="mt-2 text-[11px] text-zinc-500">{t('videoLooks.hint')}</p>
+        </div>
+      )}
+
+      {openPanel === 'scenes' && (
+        <div
+          className={cn(
+            'rounded-xl border border-white/10 bg-white/5 p-3',
+            fullBleed && 'absolute inset-x-3 bottom-24 z-20 max-h-[60vh] overflow-y-auto bg-black/80 backdrop-blur-xl'
+          )}
+        >
+          <ScenesPanel
+            active={activeScene}
+            customs={sceneCustoms}
+            busy={sceneBusy}
+            canShareScreen={canShareScreen || isCard}
+            burnWidgets={burnWidgets}
+            onBurnWidgets={(on) => void setBurnWidgets(on)}
+            onSelect={(id) => void applyScene(id)}
+            onCustomize={customizeScene}
+          />
+        </div>
+      )}
+
+      {openPanel === 'sources' && (
+        <div
+          className={cn(
+            'rounded-xl border border-white/10 bg-white/5 p-3',
+            fullBleed && 'absolute inset-x-3 bottom-24 z-20 max-h-[60vh] overflow-y-auto bg-black/80 backdrop-blur-xl'
+          )}
+        >
+          <SourcesPanel sources={studioSources} frameAspect={frameAspect} />
+        </div>
+      )}
+
+      {openPanel === 'audio' && (
+        <div
+          className={cn(
+            'rounded-xl border border-white/10 bg-white/5 p-3',
+            fullBleed && 'absolute inset-x-3 bottom-24 z-20 max-h-[60vh] overflow-y-auto bg-black/80 backdrop-blur-xl'
+          )}
+        >
+          <AudioPanel desk={desk} state={deskState} onVolume={setChannelVolume} onMute={setChannelMuted} onGate={setGate} />
         </div>
       )}
 
