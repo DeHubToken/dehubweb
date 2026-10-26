@@ -4628,20 +4628,27 @@ html[data-theme="light"] [data-feed-root] [data-feed-item]:last-child::after {
   display: none;
 }
 
-/* The shorts rail reaches the feed edges and provides its own separation. */
+/* The shorts rail scrolls out to the feed edges and provides its own
+   separation, but its first and last tiles rest in line with the posts. */
 [data-feed-root] [data-shorts-carousel] {
+  --shorts-bleed: 0px;
+  margin-inline: calc(-1 * var(--shorts-bleed));
   border: 0 !important;
   background: transparent !important;
   box-shadow: none !important;
 }
+[data-feed-root] [data-shorts-carousel] > * {
+  padding-inline: var(--shorts-bleed);
+  scroll-padding-inline: var(--shorts-bleed);
+}
 @media (max-width: 1023px) {
   [data-feed-root] [data-shorts-carousel] {
-    margin-inline: -0.75rem;
+    --shorts-bleed: 0.75rem;
   }
 }
 @media (max-width: 639px) {
   [data-feed-root] [data-shorts-carousel] {
-    margin-inline: -0.5rem;
+    --shorts-bleed: 0.5rem;
   }
 }
 
