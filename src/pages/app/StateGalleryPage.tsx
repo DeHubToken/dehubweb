@@ -99,7 +99,7 @@ function FollowCardsGallery() {
       <div data-follow-cards className="-mx-4">
         <div className="fc-rail flex overflow-x-auto scrollbar-hide px-4 pb-2">
           {users.map((user, i) => (
-            <FollowCoverCard key={user.address} user={user} followed={i === 3} onOpen={noop} onFollow={noop} onDismiss={noop} />
+            <FollowCoverCard key={user.address} user={user} phase={i === 3 ? 'following' : undefined} onOpen={noop} onFollow={noop} onDismiss={noop} />
           ))}
         </div>
       </div>
