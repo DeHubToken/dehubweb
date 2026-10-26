@@ -37,7 +37,7 @@ import i18nInstance from "@/i18n";
 import { HelmetProvider } from "react-helmet-async";
 import { SEOHead } from "@/components/SEOHead";
 import { ClientNavigateBridge } from "@/components/app/ClientNavigateBridge";
-import { HomeShellSkeleton } from "@/components/app/PageSkeletons";
+import { HomeShellSkeleton, ProfileSkeleton } from "@/components/app/PageSkeletons";
 import { ThemePreviewProvider, ThemeProvider, useAppTheme } from "@/contexts/ThemeContext";
 import { UserPreferencesProvider } from "@/contexts/UserPreferencesContext";
 import { lazyWithRetry } from "@/lib/lazy-with-retry";
@@ -879,7 +879,7 @@ function AppContent() {
             <Route path="/radio" element={<Navigate to="/music" replace />} />
 
             {/* Username profiles — inside shared layout so header never remounts */}
-            <Route path="/:username" element={<Suspense fallback={<PageLoader />}><ProfilePage /></Suspense>} />
+            <Route path="/:username" element={<Suspense fallback={<ProfileSkeleton />}><ProfilePage /></Suspense>} />
           </Route>
 
           <Route path="*" element={<NotFound />} />
