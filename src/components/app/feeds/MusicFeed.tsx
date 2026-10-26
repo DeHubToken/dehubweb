@@ -389,7 +389,6 @@ function MusicVideosSection({ walletAddress }: { walletAddress: string | null })
 
 interface MusicFeedProps {
   showFilters?: boolean;
-  isRefreshing?: boolean;
   refreshKey?: number;
   /** Open on this sub-tab, e.g. /music?tab=radio from Home's radio "See all". Unknown values are ignored. */
   tab?: string | null;
@@ -397,7 +396,7 @@ interface MusicFeedProps {
   tabRequest?: string;
 }
 
-export function MusicFeed({ showFilters = false, isRefreshing = false, tab, tabRequest }: MusicFeedProps) {
+export function MusicFeed({ showFilters = false, tab, tabRequest }: MusicFeedProps) {
   const [activeSubTab, setActiveSubTab] = usePersistedFeedFilter<MusicSubTab>('music', 'subTab', 'all', MUSIC_SUB_TAB_VALUES);
   useEffect(() => {
     const requested = MUSIC_SUB_TAB_VALUES.find(value => value === tab);
@@ -495,18 +494,10 @@ export function MusicFeed({ showFilters = false, isRefreshing = false, tab, tabR
   });
 
   // System theme on phones: radio hero and a chart instead of carousels.
-  if (cinematic && !isRefreshing) {
+  if (cinematic) {
     return (
       <div className="px-2">
         <CinematicMusic radioStations={radioStations} blockedAddresses={blockedAddresses} showFilters={showFilters} />
-      </div>
-    );
-  }
-
-  if (isRefreshing) {
-    return (
-      <div className="p-2 sm:p-3">
-        <MusicFeedSkeleton />
       </div>
     );
   }

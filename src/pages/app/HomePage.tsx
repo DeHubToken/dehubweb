@@ -1237,7 +1237,7 @@ export default function HomePage() {
           <div className={isCollapsed ? 'pt-2' : undefined} style={{ display: deferredTab === 'videos' ? 'block' : 'none' }}>
             <CachedPageActiveContext.Provider value={pageActive && deferredTab === 'videos'}>
             <Suspense fallback={<FeedBodySkeleton />}>
-              <MemoVideosFeed showFilters={showVideosFilters} isRefreshing={isRefreshing} refreshKey={refreshKey} />
+              <MemoVideosFeed showFilters={showVideosFilters} refreshKey={refreshKey} />
             </Suspense>
             </CachedPageActiveContext.Provider>
           </div>
@@ -1280,7 +1280,7 @@ export default function HomePage() {
           <div className={isCollapsed ? 'pt-2' : undefined} style={{ display: deferredTab === 'music' ? 'block' : 'none' }}>
             <CachedPageActiveContext.Provider value={pageActive && deferredTab === 'music'}>
             <Suspense fallback={<FeedBodySkeleton />}>
-              <MemoMusicFeed showFilters={showMusicFilters} isRefreshing={isRefreshing} refreshKey={refreshKey} />
+              <MemoMusicFeed showFilters={showMusicFilters} refreshKey={refreshKey} />
             </Suspense>
             </CachedPageActiveContext.Provider>
           </div>
