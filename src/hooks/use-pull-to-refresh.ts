@@ -26,8 +26,8 @@ export function usePullToRefresh({ enabled = false, pullThreshold = 80, onRefres
   const publish = useCallback((value: number, pulling: boolean) => {
     const node = motion.current.motionRef?.current;
     if (node && !animation.current) {
-      node.style.transform = value > 0 ? `translate3d(0, ${value}px, 0)` : '';
-      node.style.willChange = value > 0 ? 'transform' : '';
+      node.style.transform = value !== 0 ? `translate3d(0, ${value}px, 0)` : '';
+      node.style.willChange = value !== 0 ? 'transform' : '';
     }
     if (motion.current.onMotion) motion.current.onMotion(value, pulling);
     else setPullDistance(value);
@@ -59,8 +59,9 @@ export function usePullToRefresh({ enabled = false, pullThreshold = 80, onRefres
     const tick = (now: number) => {
       const p = Math.min(1, (now - began) / duration);
       distance.current = from * (1 - pullSpringProgress(p));
-      // Finish the invisible tail instead of repainting subpixel movement.
-      if (distance.current < 0.5 || p === 1) { reset(); return; }
+      // The spring passes rest once; finish the invisible tail after that
+      // instead of repainting subpixel movement.
+      if (p === 1 || (p > .75 && Math.abs(distance.current) < 0.5)) { reset(); return; }
       publish(distance.current, false);
       frame.current = requestAnimationFrame(tick);
     };
