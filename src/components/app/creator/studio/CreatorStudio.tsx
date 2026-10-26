@@ -680,7 +680,7 @@ const CreatorStudioWorkspace = memo(function CreatorStudioWorkspace({ onOpenEdit
   );
   const surfaceEpoch = useSurfaceEpoch();
 
-  const preset = getPreset(presetId);
+  const preset = mode === 'video' && VIDEO_MODELS[videoModel]?.referenceMode === 'extend' ? null : getPreset(presetId);
   const activeVideoModel = VIDEO_MODELS[videoModel];
   const activeImageModel = IMAGE_MODELS[imageModel];
   const activeModel3d = MODEL3D_MODELS[model3dModel];
@@ -1529,7 +1529,7 @@ const CreatorStudioWorkspace = memo(function CreatorStudioWorkspace({ onOpenEdit
           resolution: activeVideoModel?.supportsResolution
             ? (options?.resolution ?? resolution)
             : undefined,
-          negativePrompt: options?.negativePrompt || preset?.negative,
+          negativePrompt: activeVideoModel?.supportsNegativePrompt ? options?.negativePrompt || preset?.negative : undefined,
           referenceImageUrls: currentImages.length > 1 || activeVideoModel?.referenceMode === 'edit' ? currentImages.map(a => a.url) : options?.referenceImageUrls,
           endFrameUrl: options?.endFrameUrl,
           audioUrls: options?.audioUrls,
@@ -1990,6 +1990,7 @@ const CreatorStudioWorkspace = memo(function CreatorStudioWorkspace({ onOpenEdit
                           setVideoModel(v as VideoModelKey);
                           if (v === 'kling-o3-edit') setPresetId('reference-character-swap');
                           else if (v === 'kling-3-motion') setPresetId('reference-copy-motion');
+                          else if (VIDEO_MODELS[v]?.referenceMode === 'extend') setPresetId(null);
                           else if (preset?.model && VIDEO_MODELS[preset.model]?.requiresVideoInput) setPresetId(null);
                         }
                       }}
