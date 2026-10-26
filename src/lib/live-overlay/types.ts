@@ -1,3 +1,5 @@
+import type { VerticalCrop } from './vertical-crop';
+
 /**
  * A creator's stream overlay, as the stream API stores it.
  *
@@ -50,12 +52,15 @@ export interface PublicOverlay {
   /** Missing from an older API: read as all off. */
   controls?: OverlayControls;
   subathon?: OverlaySubathon | null;
+  /** The creator's 9:16 window for the vertical feed. Null or missing: centred. */
+  verticalCrop?: VerticalCrop | null;
 }
 
 export interface CreatorOverlay {
   token: string;
   renderIn: OverlayRenderIn;
   widgets: OverlayWidget[];
+  verticalCrop?: VerticalCrop | null;
   version: number;
   obsConnected: boolean;
   controls?: OverlayControls;
