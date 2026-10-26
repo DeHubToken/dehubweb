@@ -28,15 +28,17 @@ export async function recordGeneration(charge: Extract<ChargeResult, { ok: true 
   try {
     const result = await response.clone().json();
     const predictionId = result.predictionId || result.requestId;
-    if (!predictionId) result.savePending = true;
+    const completed = !predictionId || result.status === 'succeeded';
+    if (completed) result.savePending = true;
     const db = serviceClient();
-    const decision = await transitionGeneration(charge.jobId, predictionId ? 'starting' : 'succeeded', result, {
+    const decision = await transitionGeneration(charge.jobId, completed ? 'succeeded' : 'starting', result, {
       predictionId, provider: result.provider || (result.appId ? 'fal' : 'replicate'), providerApp: result.falAppId || result.appId,
     }, db);
     if (!decision.claimed && decision.job && ['succeeded','failed','canceled','cancelled','refund_pending'].includes(decision.job.status)) {
-      return new Response(JSON.stringify(decision.job.result), { status: response.status, headers: response.headers });
+      return new Response(JSON.stringify(decision.job.result || { status: decision.job.status === 'refund_pending' ? 'failed' : decision.job.status,
+        error: 'Check your saved generation before paying again.', paymentRestored: false }), { status: response.status, headers: response.headers });
     }
-    if (!predictionId && decision.job?.status === 'succeeded') {
+    if (completed && decision.job?.status === 'succeeded') {
       const job = decision.job;
       const saving = retryGenerationSave(job).catch((error) => console.error('[generation] deferred save', String(error)));
       const runtime = (globalThis as unknown as { EdgeRuntime?: { waitUntil: (promise: Promise<void>) => void } }).EdgeRuntime;

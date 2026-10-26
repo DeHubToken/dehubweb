@@ -64,7 +64,7 @@ Deno.test('concurrent credit submissions reserve once before debiting and never 
       return{data:null,error:null};
     },
   } as unknown as NonNullable<Parameters<typeof chargeCredits>[4]>['db'];
-  const options={kind:'image' as const,modelId:'test',actionType:'generate-image'};
+  const options={kind:'image' as const,modelId:'test',actionType:'generate-image',rateLimit:{limit:1,windowMs:60_000}};
   const dependencies={db,debit:async()=>{debits++;return'debited' as const;}};
   const results=await Promise.all([chargeCredits(wallet,10,options,{clientJobId:id},dependencies),chargeCredits(wallet,10,options,{clientJobId:id},dependencies)]);
   same(debits,1);same(results.filter(result=>result.ok).length,1);
