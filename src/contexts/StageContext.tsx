@@ -102,6 +102,8 @@ interface StageContextType {
   scheduleSpace: (input: ScheduleSpaceInput) => Promise<AudioSpace | null>;
   startScheduledSpace: (spaceId: string) => Promise<boolean>;
   cancelScheduledSpace: (spaceId: string) => Promise<void>;
+  /** Move a scheduled stage to a new start. Host only. */
+  rescheduleScheduledSpace: (spaceId: string, at: Date) => Promise<boolean>;
   refreshScheduledSpaces: () => Promise<void>;
   joinSpace: (spaceId: string) => Promise<boolean>;
   /**
@@ -1580,6 +1582,31 @@ export function StageProvider({ children }: { children: ReactNode }) {
     [walletAddress, refreshScheduledSpaces, _copy],
   );
 
+  const rescheduleScheduledSpace = useCallback(
+    async (spaceId: string, at: Date): Promise<boolean> => {
+      if (!walletAddress) return false;
+      try {
+        const { error } = await signed(
+          supabase
+            .from('audio_spaces')
+            .update({ scheduled_at: at.toISOString() })
+            .eq('id', spaceId)
+            .eq('status', 'scheduled')
+            .select('id')
+            .single(),
+        );
+        if (error) throw error;
+        await refreshScheduledSpaces();
+        return true;
+      } catch (err) {
+        stageLogger.error('Scheduled stage failed to move', { spaceId }, err);
+        toast.error(_copy('planned.moveFailed', { defaultValue: 'Could not move it. Try again.' }));
+        return false;
+      }
+    },
+    [walletAddress, signed, refreshScheduledSpaces, _copy],
+  );
+
   // ─── Join stage ──────────────────────────────────────────────────────────
 
   const joinSpace = useCallback(
@@ -2893,6 +2920,7 @@ export function StageProvider({ children }: { children: ReactNode }) {
       scheduleSpace,
       startScheduledSpace,
       cancelScheduledSpace,
+      rescheduleScheduledSpace,
       refreshScheduledSpaces,
       joinSpace,
       guestListen,
@@ -2933,7 +2961,7 @@ export function StageProvider({ children }: { children: ReactNode }) {
       liveSpaces, scheduledSpaces, currentSpace, participants, handRequests, isLoading,
       isConnected, isMuted, myRole, hasRaisedHand, voiceEffect, setVoiceEffect,
       isModalOpen, openModal, closeModal, initialModalView, createSpace,
-      scheduleSpace, startScheduledSpace, cancelScheduledSpace, refreshScheduledSpaces,
+      scheduleSpace, startScheduledSpace, cancelScheduledSpace, rescheduleScheduledSpace, refreshScheduledSpaces,
       joinSpace, guestListen, guestStopListening, guestSpace, leaveSpace, endSpace, endStageById,
       toggleMute, raiseHand, lowerHand,
       approveSpeaker, removeSpeaker, inviteSpeaker, refreshSpaces, injectAudio,

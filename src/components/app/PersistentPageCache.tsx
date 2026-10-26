@@ -56,6 +56,7 @@ const CareersPage = lazyWithRetry(() => import('@/pages/app/CareersPage'));
 const GlossaryPage = lazyWithRetry(() => import('@/pages/app/GlossaryPage'));
 const StatsPage = lazyWithRetry(() => import('@/pages/app/StatsPage'));
 const LiveStudioPage = lazyWithRetry(() => import('@/pages/app/LiveStudioPage'));
+const PlannedPage = lazyWithRetry(() => import('@/pages/app/PlannedPage'));
 const FeedbackPage = lazyWithRetry(() => import('@/pages/app/FeedbackPage'));
 const StakingPage = lazyWithRetry(() => import('@/pages/app/StakingPage'));
 const BridgePage = lazyWithRetry(() => import('@/pages/app/BridgePage'));
@@ -112,6 +113,7 @@ const CACHED_PAGES: CachedPageConfig[] = [
   { key: 'glossary', path: ['/app/glossary', '/glossary'], component: GlossaryPage, skeleton: GenericPageSkeleton },
   { key: 'stats', path: ['/stats', '/app/stats'], component: StatsPage, skeleton: GenericPageSkeleton },
   { key: 'live-studio', path: ['/live-studio', '/app/live-studio'], component: LiveStudioPage, skeleton: GenericPageSkeleton },
+  { key: 'planned', path: ['/app/planned'], component: PlannedPage, skeleton: GenericPageSkeleton },
   { key: 'feedback', path: ['/feedback', '/app/feedback'], component: FeedbackPage, skeleton: GenericPageSkeleton },
   { key: 'stake', path: ['/app/stake', '/stake'], component: StakingPage, skeleton: GenericPageSkeleton },
   { key: 'bridge', path: ['/app/bridge', '/bridge'], component: BridgePage, skeleton: GenericPageSkeleton },

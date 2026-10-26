@@ -65,6 +65,7 @@ const PRELOADERS: Record<string, Preloader | Preloader[]> = {
   '/live-studio': () => import('@/pages/app/LiveStudioPage'),
   '/feedback': () => import('@/pages/app/FeedbackPage'),
   '/app/feedback': () => import('@/pages/app/FeedbackPage'),
+  '/app/planned': () => import('@/pages/app/PlannedPage'),
   '/app/stake': () => import('@/pages/app/StakingPage'),
   '/stake': () => import('@/pages/app/StakingPage'),
   '/app/bridge': () => import('@/pages/app/BridgePage'),
