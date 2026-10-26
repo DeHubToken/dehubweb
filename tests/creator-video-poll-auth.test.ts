@@ -2,7 +2,8 @@ import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 const mocks = vi.hoisted(() => ({ auth: vi.fn(), ticket: vi.fn() }));
 vi.mock('../supabase/functions/_shared/auth.ts', () => ({ corsHeaders: {}, requireDeHubAuth: mocks.auth }));
 vi.mock('../supabase/functions/_shared/generation-jobs.ts', () => ({ generationTicket: mocks.ticket }));
-import { authorizeVideoPoll } from '../supabase/functions/_shared/generation-poll-auth';
+import { authorizeGenerationPoll } from '../supabase/functions/_shared/generation-poll-auth';
+const authorizeVideoPoll = (req: Request, id: unknown) => authorizeGenerationPoll(req, 'generate-video', id);
 const OWNER = '0x1111111111111111111111111111111111111111';
 afterEach(() => vi.unstubAllGlobals());
 beforeEach(() => {
@@ -31,7 +32,7 @@ describe('private Creator video polling', () => {
     expect(mocks.ticket).not.toHaveBeenCalled();
   });
   it('allows the authenticated scheduler while still requiring a journalled provider', async () => {
-    mocks.ticket.mockResolvedValue({ provider: 'fal', wallet_address: OWNER });
+    mocks.ticket.mockResolvedValue({ provider: 'fal', provider_app: 'owned-model', wallet_address: OWNER });
     expect((await authorizeVideoPoll(new Request('https://edge.test', { headers: { Authorization: 'Bearer service-fixture' } }), 'ticket')).ok).toBe(true);
     expect(mocks.auth).not.toHaveBeenCalled();
     mocks.ticket.mockResolvedValue(null);
@@ -53,4 +54,20 @@ describe('private Creator video polling', () => {
     expect((await authorizeVideoPoll(new Request('https://edge.test', { headers: { Authorization: 'Bearer undefined' } }), 'ticket')).ok).toBe(false);
     expect(mocks.ticket).not.toHaveBeenCalled();
   });
+  for (const endpoint of ['generate-3d', 'fal-ai-tools'] as const) {
+    it(`scopes ${endpoint} lookup and provider routing to its verified owner`, async () => {
+      mocks.ticket.mockResolvedValue({ provider: 'fal', provider_app: 'owned-model', wallet_address: OWNER, result: { statusUrl: 'https://queue.fal.run/owned/status' } });
+      expect((await authorizeGenerationPoll(new Request('https://edge.test'), endpoint, 'ticket')).ok).toBe(true);
+      expect(mocks.ticket).toHaveBeenCalledWith(endpoint, 'ticket');
+      mocks.auth.mockResolvedValue({ ok: true, wallet: 'another-account' });
+      const other = await authorizeGenerationPoll(new Request('https://edge.test'), endpoint, 'ticket');
+      if (!other.ok) expect(other.response.status).toBe(404);
+      else throw new Error('Another account accessed a private ticket');
+      mocks.auth.mockResolvedValue({ ok: true, wallet: OWNER });
+      mocks.ticket.mockResolvedValue({ provider: 'replicate', wallet_address: OWNER });
+      const wrongRoute = await authorizeGenerationPoll(new Request('https://edge.test'), endpoint, 'ticket');
+      if (!wrongRoute.ok) expect(wrongRoute.response.status).toBe(503);
+      else throw new Error('Endpoint accepted an unsupported provider');
+    });
+  }
 });

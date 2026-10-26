@@ -4,6 +4,8 @@ on:
     paths:
       - 'supabase/functions/_shared/generation-poll-auth.ts'
       - 'supabase/functions/generate-video/**'
+      - 'supabase/functions/generate-3d/**'
+      - 'supabase/functions/fal-ai-tools/**'
       - 'supabase/functions/creator-reconcile/**'
       - '.github/workflows/creator-video-poll.yml'
 jobs:

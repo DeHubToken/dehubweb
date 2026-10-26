@@ -7,7 +7,7 @@ import { corsHeaders, rateLimitByIp, serviceClient } from "../_shared/auth.ts";
 import { isVeniceVideo, VENICE_VIDEO_MODELS, veniceVideoOptions } from '../_shared/venice-catalog.ts';
 import { quoteVenice, veniceFetch, VeniceError } from '../_shared/venice.ts';
 import { recordGeneration, settleGeneration } from '../_shared/generation-jobs.ts';
-import { authorizeVideoPoll } from '../_shared/generation-poll-auth.ts';
+import { authorizeGenerationPoll } from '../_shared/generation-poll-auth.ts';
 import { chargeForJob } from "../_shared/ai-payment-guard.ts";
 import { falQueueUrls } from "../_shared/fal-queue.ts";
 import { CREATOR_FAL_VIDEO_MODELS } from '../_shared/creator-fal-catalog.ts';
@@ -927,7 +927,7 @@ serve(async (req) => {
       });
       if (pollLimited) return pollLimited;
 
-      const authorized = await authorizeVideoPoll(req, body.predictionId);
+      const authorized = await authorizeGenerationPoll(req, 'generate-video', body.predictionId);
       if (!authorized.ok) return authorized.response;
       const ticket = authorized.ticket;
       const provider = ticket.provider;
