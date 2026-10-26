@@ -728,6 +728,12 @@ function postSeoUrl(id?: string): string {
   return canonicalUrl(`/app/post/${id}`);
 }
 
+/** The app shares comment links as ?c=, web as ?comment=. */
+function commentFromSearch(search: string): string | undefined {
+  const params = new URLSearchParams(search);
+  return params.get('comment') || params.get('c') || undefined;
+}
+
 /**
  * Publishes the deep-linked comment to everything under the page — the
  * comments list included, which sits behind five card components and a lazy
@@ -740,7 +746,7 @@ export default function SinglePostPage(props: SinglePostPageProps = {}) {
   const { postId, tokenId, commentId } = useParams<{ postId?: string; tokenId?: string; commentId?: string }>();
   const { search } = useLocation();
   const id = props.overrideId || postId || tokenId;
-  const focusCommentId = commentId || new URLSearchParams(search).get('comment') || undefined;
+  const focusCommentId = commentId || commentFromSearch(search);
 
   return (
     <FocusCommentProvider tokenId={id} commentId={focusCommentId}>
@@ -758,8 +764,8 @@ function SinglePostPageContent({ inOverlay = false, overrideId, detailsOnly = fa
   const location = useLocation();
 
   // Deep link to one comment: the thread-entry form (/posts/1/b/55) carries it
-  // as a path segment; the legacy share form (?comment=55) keeps working too.
-  const focusCommentId = commentId || new URLSearchParams(location.search).get('comment') || undefined;
+  // as a path segment; the share forms (?comment=55, and the app's ?c=55) keep working too.
+  const focusCommentId = commentId || commentFromSearch(location.search);
   const [highlightCommentId, setHighlightCommentId] = useState<string | undefined>(focusCommentId);
   useEffect(() => {
     setHighlightCommentId(focusCommentId);
