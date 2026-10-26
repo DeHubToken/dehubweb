@@ -66,6 +66,7 @@ const LiquidGlassBubble2 = React.forwardRef<HTMLDivElement, LiquidGlassBubble2Pr
         )}
         style={{ width, height }}
         aria-label={label}
+        aria-disabled={isDisabled || undefined}
         data-theme-control-active={active || undefined}
       >
         <span data-theme-control-label className={cn(
