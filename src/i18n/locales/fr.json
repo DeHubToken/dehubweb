@@ -5058,7 +5058,8 @@
     "sellYourFractions": "Vendez vos fractions ({{held}} détenus)"
   },
   "creator": {
-    "marketing":  {
+    "marketing": {
+        "return": "Revenir au brouillon du studio",
                       "title":  "Brief de campagne",
                       "intro":  "Décrivez votre produit et votre marque, puis préparez des formats publicitaires cohérents.",
                       "saved":  "Votre brief est enregistré sur cet appareil pour ce compte.",

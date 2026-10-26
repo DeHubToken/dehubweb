@@ -5054,7 +5054,8 @@
     "sellYourFractions": "Vender tus fracciones ({{held}} en cartera)"
   },
   "creator": {
-    "marketing":  {
+    "marketing": {
+        "return": "Volver al borrador del estudio",
                       "title":  "Brief de campaña",
                       "intro":  "Describe tu producto y marca y prepara formatos de anuncio coherentes.",
                       "saved":  "Tu brief se guarda en este dispositivo para esta cuenta.",

@@ -5244,7 +5244,8 @@
     "sellYourFractions": "Verkoop uw fracties ({{held}} in bezit)"
   },
   "creator": {
-    "marketing":  {
+    "marketing": {
+        "return": "Terug naar studioconcept",
                       "title":  "Campagnebrief",
                       "intro":  "Beschrijf je product en merk en bereid bijpassende advertentieformaten voor.",
                       "saved":  "Je brief wordt op dit apparaat voor dit account opgeslagen.",

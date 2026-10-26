@@ -116,6 +116,7 @@ import { remapAssetMentions } from '@/lib/creator/assetMentions';
 import { CREATOR_FAL_IMAGE_MODELS, CREATOR_FAL_VIDEO_MODELS, creatorFalImageAspects } from '../../../../../supabase/functions/_shared/creator-fal-catalog';
 import { ResultsFeed } from './ResultsFeed';
 import { VoiceDesignDrawer } from './VoiceDesignDrawer';
+import { readStudioSnapshot, writeStudioSnapshot, StudioDraftScope } from './StudioDraftScope';
 import { StudioVoicePicker } from './StudioVoicePicker';
 
 type Mode = 'image' | 'video' | 'audio' | '3d';
@@ -144,7 +145,6 @@ const MODES: { id: Mode; labelKey: string; icon: React.ComponentType<{ className
 
 // ─── Cached workspace state ─────────────────────────────────────────────────
 
-const STORAGE_KEY = 'dehub:creator-studio:v1';
 
 /**
  * Attachments above this are kept in memory but left out of the cache.
@@ -156,6 +156,7 @@ const STORAGE_KEY = 'dehub:creator-studio:v1';
 const MAX_PERSISTED_REFERENCE_BYTES = 512 * 1024;
 
 interface StudioSnapshot {
+  generationDraftId?: string;
   mode: Mode;
   prompts: ByMode<string>;
   presetIds: ByMode<string | null>;
@@ -231,11 +232,11 @@ function isMode(v: unknown): v is Mode {
 }
 
 /** Restore the cached workspace, discarding anything that no longer type-checks. */
-function readSnapshot(): StudioSnapshot {
+function readSnapshot(storageKey: string): StudioSnapshot {
   if (typeof window === 'undefined') return DEFAULT_SNAPSHOT;
   let raw: string | null = null;
   try {
-    raw = window.localStorage.getItem(STORAGE_KEY);
+    raw = readStudioSnapshot(storageKey);
   } catch {
     // Private-mode Safari throws on read as well as write.
     return DEFAULT_SNAPSHOT;
@@ -263,6 +264,7 @@ function readSnapshot(): StudioSnapshot {
       typeof v === 'string' && v in registry ? (v as T) : fallback;
 
     return {
+      generationDraftId: typeof saved.generationDraftId === 'string' ? saved.generationDraftId : undefined,
       mode: isMode(saved.mode) ? saved.mode : DEFAULT_SNAPSHOT.mode,
       prompts: byMode(saved.prompts, DEFAULT_SNAPSHOT.prompts),
       presetIds: byMode(saved.presetIds, DEFAULT_SNAPSHOT.presetIds),
@@ -463,6 +465,8 @@ function ModeToggle({
 interface CreatorStudioProps {
   embedded?: boolean;
   generationDraft?: GenerationDraft | null;
+  snapshotScope?: string;
+  generationDraftId?: string;
   onJobStarted?: (id: string) => void;
   /** Switches the host to /editor after a result is sent to the timeline. */
   onOpenEditor: () => void;
@@ -473,7 +477,12 @@ interface CreatorStudioProps {
   stickyTop?: number;
 }
 
-export const CreatorStudio = memo(function CreatorStudio({ onOpenEditor, stickyTop = 60, embedded = false, generationDraft, onJobStarted }: CreatorStudioProps) {
+export const CreatorStudio = memo(function CreatorStudio(props: CreatorStudioProps) {
+  const { walletAddress } = useAuth();
+  return <StudioDraftScope owner={walletAddress} scope={props.snapshotScope}>{storageKey => <CreatorStudioWorkspace {...props} storageKey={storageKey} />}</StudioDraftScope>;
+});
+
+const CreatorStudioWorkspace = memo(function CreatorStudioWorkspace({ onOpenEditor, stickyTop = 60, embedded = false, generationDraft, generationDraftId, onJobStarted, storageKey }: CreatorStudioProps & { storageKey: string }) {
   const promptId = useId();
   const navigate = useNavigate();
   const { t: _copy } = _useCopy();
@@ -494,7 +503,10 @@ export const CreatorStudio = memo(function CreatorStudio({ onOpenEditor, stickyT
   const runningCount = useGenerationStore((s) => s.jobs.filter((j) => j.status === 'running').length);
 
   // One read of the cache, on mount, shared by every slice below.
-  const [restored] = useState(readSnapshot);
+  const [restored] = useState(() => readSnapshot(storageKey));
+  const latestSnapshot = useRef(restored);
+  const [appliedGenerationDraftId, setAppliedGenerationDraftId] = useState(restored.generationDraftId);
+  useEffect(() => () => writeStudioSnapshot(storageKey, latestSnapshot.current), [storageKey]);
   const [cinemaDirections, setCinemaDirections] = useDraftState<ByMode<CinemaDirection>>('creator:cinema-direction', { image: {}, video: {}, audio: {}, '3d': {} });
 
   const [mode, setMode] = useState<Mode>(restored.mode);
@@ -542,7 +554,7 @@ export const CreatorStudio = memo(function CreatorStudio({ onOpenEditor, stickyT
   const [audioFile, setAudioFile] = useState<{ file: File; seconds: number | null } | null>(null);
 
   useEffect(() => {
-    if (!generationDraft) return;
+    if (!generationDraft || (generationDraftId && appliedGenerationDraftId === generationDraftId)) return;
     const nextMode: Mode = generationDraft.kind === 'image' ? 'image' : generationDraft.kind === 'video' ? 'video' : 'audio';
     setMode(nextMode);
     setPrompts(previous => ({ ...previous, [nextMode]: generationDraft.prompt }));
@@ -550,7 +562,8 @@ export const CreatorStudio = memo(function CreatorStudio({ onOpenEditor, stickyT
     if (nextMode === 'audio') setAudioTask(generationDraft.kind === 'voice' ? 'speech' : generationDraft.kind as AudioTask);
     if (generationDraft.aspect && nextMode === 'image') setImageAspect(generationDraft.aspect);
     if (generationDraft.aspect && nextMode === 'video') setVideoAspect(generationDraft.aspect);
-  }, [generationDraft]);
+    setAppliedGenerationDraftId(generationDraftId);
+  }, [generationDraft, generationDraftId, appliedGenerationDraftId]);
 
   const activeAudioTask = AUDIO_TASKS[audioTask];
 
@@ -664,6 +677,7 @@ export const CreatorStudio = memo(function CreatorStudio({ onOpenEditor, stickyT
   // ── Cache the workspace ───────────────────────────────────────────────────
   useEffect(() => {
     const snapshot: StudioSnapshot = {
+      generationDraftId: appliedGenerationDraftId,
       mode,
       prompts,
       presetIds,
@@ -699,16 +713,12 @@ export const CreatorStudio = memo(function CreatorStudio({ onOpenEditor, stickyT
       dubTargetLang,
       speechLang,
     };
-    const timer = window.setTimeout(() => {
-    try {
-      window.localStorage.setItem(STORAGE_KEY, JSON.stringify(snapshot));
-    } catch {
-      // Over quota or storage disabled. The workspace still works for this
-      // session; it just will not survive a reload.
-    }
-    }, 300);
+    latestSnapshot.current = snapshot;
+    const timer = window.setTimeout(() => writeStudioSnapshot(storageKey, snapshot), 300);
     return () => window.clearTimeout(timer);
   }, [
+    storageKey,
+    appliedGenerationDraftId,
     mode,
     prompts,
     presetIds,
