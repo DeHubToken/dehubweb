@@ -8,7 +8,9 @@ import { createOverlayPainter, visibleWidgets, widgetBox } from './overlay-paint
 
 /**
  * A 2D context that records what was drawn. Text is ten pixels a character at
- * any size, which is all the layout needs to be checked.
+ * any size, which is all the layout needs to be checked. Tracked labels and
+ * tabular figures are drawn a character at a time, so assertions read the
+ * joined text.
  */
 function fakeContext() {
   const texts: string[] = [];
@@ -40,6 +42,7 @@ function fakeContext() {
     fill: noop,
     stroke: noop,
     fillRect: noop,
+    clearRect: noop,
     clip: noop,
     translate: noop,
     scale: noop,
@@ -53,7 +56,7 @@ function fakeContext() {
     createLinearGradient: () => gradient,
     createRadialGradient: () => gradient,
   };
-  return { ctx: ctx as unknown as CanvasRenderingContext2D, texts, clips };
+  return { ctx: ctx as unknown as CanvasRenderingContext2D, texts, clips, drawn: () => texts.join('') };
 }
 
 function widget(kind: OverlayKind, patch: Partial<OverlayWidget> = {}): OverlayWidget {
@@ -148,13 +151,14 @@ describe('createOverlayPainter', () => {
     const frame = () => {
       const f = fakeContext();
       painter.paint(f.ctx, 1280, 720, now);
-      return f.texts;
+      return f.drawn();
     };
-    expect(frame()).toContain('New follower: Ann');
+    // A tracked upper-case eyebrow over the name.
+    expect(frame()).toBe('NEW FOLLOWERAnn');
     now += 2000 + ALERT_LEAVE_MS;
-    expect(frame()).toEqual(['New follower: Bo']);
+    expect(frame()).toBe('NEW FOLLOWERBo');
     now += 2000 + ALERT_LEAVE_MS;
-    expect(frame()).toEqual([]);
+    expect(frame()).toBe('');
   });
 
   it('hears nothing for alerts while they are paused', () => {
@@ -176,7 +180,7 @@ describe('createOverlayPainter', () => {
     painter.setOverlay(overlayOf([{ ...follow, landscape: { x: 0, y: 0, w: 0.5, h: 0.1 } }]));
     const { ctx, texts } = fakeContext();
     painter.paint(ctx, 1280, 720, now);
-    expect(texts).toContain('New follower: Ann');
+    expect(texts).toContain('Ann');
   });
 
   it('counts paid tips onto the goal and starts again from a fresh server figure', () => {
@@ -186,11 +190,12 @@ describe('createOverlayPainter', () => {
     painter.publish({ type: 'tipConfirmed', paidAmount: 250, address: '0x1', transactionHash: '0xa' });
     let f = fakeContext();
     painter.paint(f.ctx, 1280, 720, now);
-    expect(f.texts).toContain((250).toLocaleString() + ' / ' + (1000).toLocaleString());
+    expect(f.drawn()).toContain((250).toLocaleString() + ' / ' + (1000).toLocaleString());
+    expect(f.drawn()).toContain('GOAL');
     painter.setOverlay(overlayOf([goal], { stats: { totalTips: 400, followers: 0 } }));
     f = fakeContext();
     painter.paint(f.ctx, 1280, 720, now);
-    expect(f.texts).toContain('400 / ' + (1000).toLocaleString());
+    expect(f.drawn()).toContain('400 / ' + (1000).toLocaleString());
   });
 
   it('ignores what is not a room event', () => {
