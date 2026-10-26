@@ -5100,6 +5100,8 @@
                                       "video":  "Vídeo vertical"
                                   }
                   },
+    "audioInvalidResponse":  "El servicio de audio devolvió un resultado no válido.",
+      "audioResultTooLarge":  "El resultado de audio está vacío o supera los 50 MB.",
     "cinema":  {
                    "title":  "Dirección cinematográfica",
                    "hint":  "Define el estilo visual de tu próxima imagen o vídeo. Los resultados varían según el modelo.",
