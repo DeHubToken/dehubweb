@@ -40,14 +40,12 @@ describe('author thread entries', () => {
     expect(selectAuthorThreadEntries(rows, AUTHOR).map(r => r.id)).toEqual(['1', '2']);
   });
 
-  it('leaves the author out once somebody else has commented', () => {
-    // The reported case: early comments, the author says thanks two minutes
-    // later. That "thanks" belongs under early's comment, not above the post.
+  it('keeps the author\'s later straight comments in the thread after somebody else spoke', () => {
     const rows = [
       row({ id: '1575', createdAt: '2026-08-30T16:22:11Z', address: OTHER }),
       row({ id: '1576', createdAt: '2026-08-30T16:24:54Z' }),
     ];
-    expect(selectAuthorThreadEntries(rows, AUTHOR)).toEqual([]);
+    expect(selectAuthorThreadEntries(rows, AUTHOR).map(r => r.id)).toEqual(['1576']);
   });
 
   it('leaves out an entry somebody replied to, so the reply keeps its parent', () => {
@@ -58,11 +56,21 @@ describe('author thread entries', () => {
     expect(selectAuthorThreadEntries(rows, AUTHOR)).toEqual([]);
   });
 
-  it('stops at the author\'s own first reply rather than skipping past it', () => {
+  it('skips the author\'s replies and other people\'s comments', () => {
     const rows = [
       row({ id: '1', createdAt: '2026-01-01T00:01:00Z' }),
       row({ id: '2', createdAt: '2026-01-01T00:02:00Z', address: OTHER }),
       row({ id: '3', createdAt: '2026-01-01T00:03:00Z', parentId: 2 }),
+      row({ id: '4', createdAt: '2026-01-01T00:04:00Z' }),
+    ];
+    expect(selectAuthorThreadEntries(rows, AUTHOR).map(r => r.id)).toEqual(['1', '4']);
+  });
+
+  it('stops at the first entry somebody replied to, so the order holds', () => {
+    const rows = [
+      row({ id: '1', createdAt: '2026-01-01T00:01:00Z' }),
+      row({ id: '2', createdAt: '2026-01-01T00:02:00Z', replyIds: [3] }),
+      row({ id: '3', createdAt: '2026-01-01T00:03:00Z', address: OTHER, parentId: 2 }),
       row({ id: '4', createdAt: '2026-01-01T00:04:00Z' }),
     ];
     expect(selectAuthorThreadEntries(rows, AUTHOR).map(r => r.id)).toEqual(['1']);
