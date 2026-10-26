@@ -140,6 +140,32 @@ export function useToggleRsvp() {
   const queryClient = useQueryClient();
 
   return useMutation({
+    mutationKey: ['event-rsvp-write', walletAddress],
+    onMutate: async ({ eventId, status }) => {
+      const event = queryClient.getQueryData<CommunityEvent>(['event', eventId]) ??
+        queryClient.getQueriesData<CommunityEvent[]>({ queryKey: ['events'] }).flatMap(([, rows]) => rows ?? []).find(row => row.id === eventId);
+      if (!walletAddress || !event || event.is_private || event.gate_fee > 0 || status === 'pending') return;
+      const key = ['event-rsvp', eventId, walletAddress];
+      await Promise.all([queryClient.cancelQueries({ queryKey: key }), queryClient.cancelQueries({ queryKey: ['events'] }), queryClient.cancelQueries({ queryKey: ['event', eventId] })]);
+      const previous = queryClient.getQueryData<EventRsvp | null>(key);
+      // Unknown prior status cannot safely determine the count delta.
+      if (previous === undefined) return;
+      const counts = {
+        going_count: Math.max(0, event.going_count + Number(status === 'going') - Number(previous?.status === 'going' || previous?.status === 'approved')),
+        interested_count: Math.max(0, event.interested_count + Number(status === 'interested') - Number(previous?.status === 'interested')),
+      };
+      queryClient.setQueryData(key, status === 'remove' ? null : { ...previous, event_id: eventId, wallet_address: walletAddress.toLowerCase(), status });
+      queryClient.setQueriesData<CommunityEvent[]>({ queryKey: ['events'] }, rows => rows?.map(row => row.id === eventId ? { ...row, ...counts } : row));
+      queryClient.setQueryData<CommunityEvent>(['event', eventId], row => row ? { ...row, ...counts } : row);
+      return { key, previous, event };
+    },
+    onError: (_error, { eventId }, context) => {
+      if (!context) return;
+      queryClient.setQueryData(context.key, context.previous);
+      const counts = { going_count: context.event.going_count, interested_count: context.event.interested_count };
+      queryClient.setQueriesData<CommunityEvent[]>({ queryKey: ['events'] }, rows => rows?.map(row => row.id === eventId ? { ...row, ...counts } : row));
+      queryClient.setQueryData<CommunityEvent>(['event', eventId], row => row ? { ...row, ...counts } : row);
+    },
     mutationFn: async ({ eventId, status }: { eventId: string; status: 'going' | 'interested' | 'pending' | 'remove' }) => {
       if (!walletAddress) throw new Error(_translateCopy("copy.76d1efbeed2d", { defaultValue: "Not authenticated" }));
       const addr = walletAddress.toLowerCase();
@@ -172,11 +198,12 @@ export function useToggleRsvp() {
       if (error) throw error;
       return data;
     },
-    onSuccess: (_, variables) => {
+    onSuccess: (data, variables) => {
+      queryClient.setQueryData(['event-rsvp', variables.eventId, walletAddress], data);
       queryClient.invalidateQueries({ queryKey: ['event-rsvp', variables.eventId] });
       queryClient.invalidateQueries({ queryKey: ['event-rsvps', variables.eventId] });
       queryClient.invalidateQueries({ queryKey: ['event', variables.eventId] });
-      queryClient.invalidateQueries({ queryKey: ['events'] });
+      queryClient.invalidateQueries({ queryKey: ['events'], refetchType: 'none' });
     },
   });
 }
