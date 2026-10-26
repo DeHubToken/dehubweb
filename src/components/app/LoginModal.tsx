@@ -402,7 +402,7 @@ export function LoginModal({ open, onOpenChange }: LoginModalProps) {
           style={keyboardStyle ?? undefined}
           hideCloseButton
           onEscapeKeyDown={(e) => { if (requiresUsername) e.preventDefault(); }}
-          className="bg-black/60 backdrop-blur-2xl saturate-[180%] border border-white/10 p-0 gap-0 rounded-2xl overflow-clip z-[2147483646] flex flex-col max-h-[90dvh] sm:left-[calc(var(--app-main-left,0px)+var(--app-main-width,100vw)/2)] sm:w-[min(32rem,calc(var(--app-main-width,100vw)-2rem))] sm:max-w-none"
+          className="bg-black/60 backdrop-blur-2xl backdrop-saturate-[180%] border border-white/10 p-0 gap-0 rounded-2xl overflow-clip z-[2147483646] flex flex-col max-h-[90dvh] sm:left-[calc(var(--app-main-left,0px)+var(--app-main-width,100vw)/2)] sm:w-[min(32rem,calc(var(--app-main-width,100vw)-2rem))] sm:max-w-none"
           overlayClassName="z-[2147483645] login-modal-overlay bg-black/40 backdrop-blur-xl"
         >
           {sheetBody}
@@ -426,10 +426,10 @@ export function LoginModal({ open, onOpenChange }: LoginModalProps) {
         onEscapeKeyDown={(e) => { if (requiresUsername) e.preventDefault(); }}
         data-login-stack-sheet={stackSheet ? '' : undefined}
         className={stackSheet
-          ? "bg-black/80 backdrop-blur-2xl saturate-[180%] border-0 p-0 gap-0 rounded-none overflow-clip z-[2147483646] flex flex-col mt-0 h-[100dvh] max-h-[100dvh]"
+          ? "bg-black/80 backdrop-blur-2xl backdrop-saturate-[180%] border-0 p-0 gap-0 rounded-none overflow-clip z-[2147483646] flex flex-col mt-0 h-[100dvh] max-h-[100dvh]"
           : stackLayout
-          ? "bg-black/60 backdrop-blur-2xl saturate-[180%] border border-white/10 border-b-0 p-0 gap-0 rounded-t-2xl overflow-clip z-[2147483646] flex flex-col h-[90dvh] max-h-[90dvh]"
-          : "bg-black/60 backdrop-blur-2xl saturate-[180%] border border-white/10 border-b-0 p-0 gap-0 rounded-t-2xl overflow-clip z-[2147483646] flex flex-col max-h-[90dvh]"}
+          ? "bg-black/60 backdrop-blur-2xl backdrop-saturate-[180%] border border-white/10 border-b-0 p-0 gap-0 rounded-t-2xl overflow-clip z-[2147483646] flex flex-col h-[90dvh] max-h-[90dvh]"
+          : "bg-black/60 backdrop-blur-2xl backdrop-saturate-[180%] border border-white/10 border-b-0 p-0 gap-0 rounded-t-2xl overflow-clip z-[2147483646] flex flex-col max-h-[90dvh]"}
         overlayClassName="z-[2147483645] login-modal-overlay backdrop-blur-xl md:bg-black/40"
       >
         {sheetBody}

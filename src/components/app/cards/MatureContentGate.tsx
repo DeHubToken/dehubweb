@@ -75,7 +75,7 @@ export function MatureContentGate({
         <div className="w-full h-56 bg-zinc-900" />
       )}
       <div className="absolute inset-0 flex flex-col items-center justify-center bg-black/50 px-6 text-center">
-        <div className="w-16 h-16 rounded-2xl bg-black/40 backdrop-blur-[24px] saturate-[180%] flex items-center justify-center border border-white/10 mb-3">
+        <div className="w-16 h-16 rounded-2xl bg-black/40 backdrop-blur-[24px] backdrop-saturate-[180%] flex items-center justify-center border border-white/10 mb-3">
           <EyeOff className="h-7 w-7 text-white" />
         </div>
         <p className="text-white font-semibold text-sm mb-1">{_copy("copy.9b8b53102e77", { defaultValue: "Mature content" })}</p>

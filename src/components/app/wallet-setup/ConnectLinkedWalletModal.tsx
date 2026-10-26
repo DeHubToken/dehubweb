@@ -89,7 +89,7 @@ export function ConnectLinkedWalletModal() {
         // Raised with a tip, gift or checkout drawer already open (z-[100]); at
         // the dialog default of z-50 it opened behind it. Same layer as LoginModal.
         overlayClassName="z-[2147483645]"
-        className="z-[2147483646] sm:max-w-md border border-white/10 bg-black/60 backdrop-blur-[24px] saturate-[180%] rounded-2xl shadow-[0_8px_32px_rgba(0,0,0,0.4)]">
+        className="z-[2147483646] sm:max-w-md border border-white/10 bg-black/60 backdrop-blur-[24px] backdrop-saturate-[180%] rounded-2xl shadow-[0_8px_32px_rgba(0,0,0,0.4)]">
         <DialogHeader>
           <DialogTitle className="text-xl text-white">{_copy("copy.5a05d2f89a04", { defaultValue: "Connect your wallet" })}</DialogTitle>
           <DialogDescription className="text-zinc-400">

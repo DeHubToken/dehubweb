@@ -495,7 +495,7 @@ export function VideoSubtitleOverlay({ tokenId, videoRef, buttonClassName, butto
           style={{ bottom: `${48 + Math.max(0, sizePx - 11) * 2}px` }}
         >
           <span
-            className="inline-block max-w-[90%] bg-black/40 backdrop-blur-[24px] saturate-[180%] border border-white/10 text-white px-1.5 py-0.5 rounded"
+            className="inline-block max-w-[90%] bg-black/40 backdrop-blur-[24px] backdrop-saturate-[180%] border border-white/10 text-white px-1.5 py-0.5 rounded"
             style={{ textShadow: '0 1px 2px rgba(0,0,0,0.8)', fontSize: `${sizePx}px`, lineHeight: 1.3 }}
           >
             {currentText}

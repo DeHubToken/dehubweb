@@ -454,7 +454,7 @@ export function AudioTrimmer({
               onClick={togglePlayPause}
               disabled={isLoading}
               className="w-12 h-12 sm:w-14 sm:h-14 rounded-xl flex items-center justify-center transition-all duration-300 hover:scale-105
-                bg-black/40 backdrop-blur-[24px] saturate-[180%] border border-white/10
+                bg-black/40 backdrop-blur-[24px] backdrop-saturate-[180%] border border-white/10
                 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100"
             >
               {isPlaying ? (

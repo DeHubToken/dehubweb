@@ -1413,7 +1413,7 @@ export function LiveStreamCard({ stream, chatSlot, immersive = false, swipeFeed 
                     is a 12px-radius square, and a lone disc read as a different
                     app's play button. */}
                 {!replayPlaying && (
-                  <span className="flex h-16 w-16 items-center justify-center rounded-xl bg-black/40 backdrop-blur-[24px] saturate-[180%] border border-white/10">
+                  <span className="flex h-16 w-16 items-center justify-center rounded-xl bg-black/40 backdrop-blur-[24px] backdrop-saturate-[180%] border border-white/10">
                     <Play className="ml-1 h-8 w-8 fill-white text-white" />
                   </span>
                 )}
@@ -1474,7 +1474,7 @@ export function LiveStreamCard({ stream, chatSlot, immersive = false, swipeFeed 
               <button
                 type="button"
                 onClick={toggleMute}
-                className="absolute top-3 left-3 z-10 flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-black/50 backdrop-blur-[24px] saturate-[180%] border border-white/10 text-white text-xs font-medium hover:bg-black/70 transition-colors"
+                className="absolute top-3 left-3 z-10 flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-black/50 backdrop-blur-[24px] backdrop-saturate-[180%] border border-white/10 text-white text-xs font-medium hover:bg-black/70 transition-colors"
                 aria-label={t('stages.unmute', 'Unmute')}
               >
                 <VolumeX className="w-4 h-4" />
@@ -1495,7 +1495,7 @@ export function LiveStreamCard({ stream, chatSlot, immersive = false, swipeFeed 
               <button
                 onClick={togglePlay}
                 aria-label={isPlaying ? t('audioPost.pause', 'Pause') : t('audioPost.play', 'Play')}
-                className="w-16 h-16 rounded-xl bg-black/40 backdrop-blur-[24px] saturate-[180%] flex items-center justify-center border border-white/10 hover:bg-black/60 transition-colors"
+                className="w-16 h-16 rounded-xl bg-black/40 backdrop-blur-[24px] backdrop-saturate-[180%] flex items-center justify-center border border-white/10 hover:bg-black/60 transition-colors"
               >
                 {isPlaying ? <Pause className="w-8 h-8 text-white fill-white" /> : <Play className="w-8 h-8 text-white fill-white ml-1" />}
               </button>

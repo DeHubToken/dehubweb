@@ -104,7 +104,7 @@ export function PageHeader({
       className
     )}>
       <div className={cn(
-        'flex items-center gap-3 rounded-2xl bg-black/60 backdrop-blur-[24px] saturate-[180%] px-3 py-2',
+        'flex items-center gap-3 rounded-2xl bg-black/60 backdrop-blur-[24px] backdrop-saturate-[180%] px-3 py-2',
         innerClassName
       )}>
         {showBack && (

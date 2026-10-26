@@ -143,7 +143,7 @@ export function GatedMedia({ gate, preview, className, children }: GatedMediaPro
           onOpen();
         }}
       >
-        <div className="w-16 h-16 rounded-2xl bg-black/40 backdrop-blur-[24px] saturate-[180%] flex items-center justify-center border border-white/10 mb-3">
+        <div className="w-16 h-16 rounded-2xl bg-black/40 backdrop-blur-[24px] backdrop-saturate-[180%] flex items-center justify-center border border-white/10 mb-3">
           {icon}
         </div>
         <p className="text-white font-semibold text-sm mb-1 flex items-center justify-center gap-1 flex-wrap">{heading}</p>

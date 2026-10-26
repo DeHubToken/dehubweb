@@ -79,7 +79,7 @@ export function SettingDrawerSelect({
           <ChevronDown className="size-4 shrink-0 text-zinc-500" aria-hidden="true" />
         </button>
       </DrawerTrigger>
-      <DrawerContent column className="bg-black/60 backdrop-blur-[24px] saturate-[180%] border-t border-white/10" hideHandle={searchable}>
+      <DrawerContent column className="bg-black/60 backdrop-blur-[24px] backdrop-saturate-[180%] border-t border-white/10" hideHandle={searchable}>
         {searchable ? (
           <div className="px-4 pt-4 pb-2">
             <div className="relative">

@@ -95,7 +95,7 @@ export function QuotedPostMedia({ post, className }: { post: DeHubNFT; className
       )}
       {gated && (
         <div className="absolute inset-0 flex flex-col items-center justify-center bg-black/40">
-          <div className="w-10 h-10 rounded-xl bg-black/40 backdrop-blur-[24px] saturate-[180%] flex items-center justify-center border border-white/10 mb-1.5">
+          <div className="w-10 h-10 rounded-xl bg-black/40 backdrop-blur-[24px] backdrop-saturate-[180%] flex items-center justify-center border border-white/10 mb-1.5">
             {isPPV ? <Ticket className="w-5 h-5 text-white" /> : <Lock className="w-5 h-5 text-white" />}
           </div>
           <p className="text-white font-semibold text-xs">
