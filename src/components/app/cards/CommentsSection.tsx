@@ -283,6 +283,15 @@ function useStableCallback<A extends unknown[], R>(fn: (...args: A) => R): (...a
 // relationship, so a deep chain costs no width. `depth` survives only as
 // reading order.
 //
+/**
+ * A straight comment the post's author left on their own post — not a reply,
+ * and not a reply promoted to the top because its parent is on another page.
+ * These lead the list in posting order, tied together like an X thread.
+ */
+function isAuthorThreadRoot(comment: Comment, authorAddress?: string | null): boolean {
+  return !!authorAddress && !comment.replyToId && comment.address?.toLowerCase() === authorAddress.toLowerCase();
+}
+
 // How many replies a thread shows before it needs a tap to open up.
 const REPLIES_SHOWN_COLLAPSED = 1;
 
@@ -1842,16 +1851,18 @@ function CommentsSectionForAccount({ tokenId, onClose, initialTab, embedded = fa
      * a specific order, and a ranking signal has no business overriding it.
      */
     const now = Date.now();
-    const lift = ({ comment }: CommentThread) => {
-      if (comment.isPinned) return 0;
-      if (comment.anchoredUntil && comment.anchoredUntil.getTime() > now) return 1;
-      const tipped = topTippedIds.indexOf(comment.id);
-      if (tipped !== -1) return 2 + tipped;
-      const answered = sortBy === 'recent' ? creatorLiftRanks.get(comment.id) : undefined;
-      return answered === undefined ? Number.MAX_SAFE_INTEGER : 2 + topTippedIds.length + answered;
-    };
-
+    // The author's own thread rides above even the pin: every straight comment
+    // the creator left on their own post, oldest first, read like an X thread.
+    const author = postCreator?.address;
     return [...filtered].sort((a, b) => {
+      const aAuthor = isAuthorThreadRoot(a.comment, author);
+      const bAuthor = isAuthorThreadRoot(b.comment, author);
+      if (aAuthor !== bAuthor) return aAuthor ? -1 : 1;
+      if (aAuthor) return a.comment.createdAt.getTime() - b.comment.createdAt.getTime();
+      return rest(a, b);
+    });
+
+    function rest(a: CommentThread, b: CommentThread) {
       const lifted = lift(a) - lift(b);
       if (lifted !== 0) return lifted;
       if (sortBy === 'liked') {
@@ -1864,8 +1875,17 @@ function CommentsSectionForAccount({ tokenId, onClose, initialTab, embedded = fa
       }
       // Default: sort by most recent (newest first)
       return b.comment.createdAt.getTime() - a.comment.createdAt.getTime();
-    });
-  }, [groupedComments, searchQuery, sortBy, focusOnlyThread, focusThreadId, topTippedIds, creatorLiftRanks]);
+    }
+
+    function lift({ comment }: CommentThread) {
+      if (comment.isPinned) return 0;
+      if (comment.anchoredUntil && comment.anchoredUntil.getTime() > now) return 1;
+      const tipped = topTippedIds.indexOf(comment.id);
+      if (tipped !== -1) return 2 + tipped;
+      const answered = sortBy === 'recent' ? creatorLiftRanks.get(comment.id) : undefined;
+      return answered === undefined ? Number.MAX_SAFE_INTEGER : 2 + topTippedIds.length + answered;
+    }
+  }, [groupedComments, searchQuery, sortBy, focusOnlyThread, focusThreadId, topTippedIds, creatorLiftRanks, postCreator?.address]);
 
   /**
    * Bring the linked comment into view once it has actually rendered.
@@ -2391,7 +2411,13 @@ function CommentsSectionForAccount({ tokenId, onClose, initialTab, embedded = fa
    * Both the replies tab and the search tab render threads, so this lives here
    * rather than being written twice.
    */
-  const renderThread = ({ comment, replies }: CommentThread) => {
+  const renderThread = ({ comment, replies }: CommentThread, index: number, list: CommentThread[]) => {
+    // Consecutive author-thread comments are tied pfp to pfp by the same line
+    // that runs through a thread's replies, so the run reads as one thread.
+    const author = postCreator?.address;
+    const isAuthorEntry = isAuthorThreadRoot(comment, author);
+    const joinsAbove = isAuthorEntry && index > 0 && isAuthorThreadRoot(list[index - 1].comment, author);
+    const joinsBelow = isAuthorEntry && index < list.length - 1 && isAuthorThreadRoot(list[index + 1].comment, author);
     // A search hit can be the reply itself — collapsing the thread would hide
     // the very row the query matched, so searching opens every thread.
     const isExpanded = expandedThreads.has(comment.id) || !!searchQuery.trim();
@@ -2421,7 +2447,8 @@ function CommentsSectionForAccount({ tokenId, onClose, initialTab, embedded = fa
           // Root comments only — a reply is sorted inside a subtree nothing
           // re-orders, so pinning one would move nothing.
           onPin={isOwnThread ? handlePinComment : undefined}
-          threadLineBelow={shown.length > 0}
+          threadLineAbove={joinsAbove}
+          threadLineBelow={shown.length > 0 || joinsBelow}
           isThreadEntry={authorThreadIds.has(comment.id)}
           highlighted={comment.id === focusCommentId}
           onReport={isAuthenticated ? handleReportComment : undefined}
@@ -2446,7 +2473,7 @@ function CommentsSectionForAccount({ tokenId, onClose, initialTab, embedded = fa
             threadLineAbove
             // The line has to reach the "show more" row too, or it stops dead
             // above a control that belongs to the thread.
-            threadLineBelow={i < shown.length - 1 || hiddenCount > 0}
+            threadLineBelow={i < shown.length - 1 || hiddenCount > 0 || joinsBelow}
             isOwnComment={reply.address?.toLowerCase() === walletAddress?.toLowerCase()}
             highlighted={reply.id === focusCommentId}
             onReport={isAuthenticated ? handleReportComment : undefined}
@@ -2460,7 +2487,7 @@ function CommentsSectionForAccount({ tokenId, onClose, initialTab, embedded = fa
             // starts on the same 44px text column as every comment body.
             className="relative flex h-8 items-center pl-11 mb-1 text-xs text-zinc-400 hover:text-white transition-colors"
           >
-            <span aria-hidden className="absolute left-4 -ml-px top-0 bottom-1/2 w-px bg-white/20" />
+            <span aria-hidden className={cn('absolute left-4 -ml-px top-0 w-px bg-white/20', joinsBelow ? 'bottom-0' : 'bottom-1/2')} />
             <span aria-hidden className="absolute left-4 top-1/2 -mt-px w-5 h-px bg-white/20" />
             {hiddenCount === 1 ? t('features.showOneMoreReply') : t('features.showMoreReplies', { count: hiddenCount })}
           </button>
