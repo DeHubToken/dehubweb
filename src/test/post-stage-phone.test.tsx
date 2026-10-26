@@ -83,7 +83,7 @@ afterEach(() => {
 });
 
 describe('the phone post page bar', () => {
-  it('is five tiles — like, comments, repost, tip, save — with no share, dislike or info', () => {
+  it('is the feed row — tip, share, comments, like, save and info — with no boxed tiles', () => {
     render(wrap(
       <ActionBar
         postId="1234"
@@ -94,32 +94,32 @@ describe('the phone post page bar', () => {
         commentCount={128}
         repostCount={46}
         onTip={vi.fn()}
+        utilityDesktopAnchor
       />,
     ));
-    const bar = document.querySelector('[data-stage-bar]') as HTMLElement;
-    expect(bar).not.toBeNull();
-    const tiles = bar.querySelectorAll('[data-stage-tile]');
-    expect(tiles).toHaveLength(5);
-    expect([...tiles].map((t) => t.getAttribute('data-stage-action'))).toEqual(['like', 'comments', 'repost', 'tip', 'save']);
-    expect(within(bar).queryByRole('button', { name: 'Share' })).toBeNull();
-    expect(within(bar).queryByRole('button', { name: /^Dislike/ })).toBeNull();
-    expect(within(bar).queryByRole('button', { name: 'Post info' })).toBeNull();
-    // The like tile keeps the hold-to-react thumb.
-    expect(within(bar).getByRole('button', { name: /hold to react/ })).toHaveAttribute('aria-haspopup', 'menu');
-    expect(within(bar).getByRole('button', { name: 'Repost (46)' })).toBeInTheDocument();
+    expect(document.querySelector('[data-stage-bar]')).toBeNull();
+    expect(document.querySelector('[data-stage-tile]')).toBeNull();
+    expect(screen.getByRole('button', { name: 'Tips' })).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: 'Share' })).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: 'Comment' })).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: 'Post info' })).toBeInTheDocument();
+    // The like keeps the hold-to-react thumb, and the mini player can find it.
+    const like = screen.getByRole('button', { name: /hold to react/ });
+    expect(like).toHaveAttribute('aria-haspopup', 'menu');
+    expect(like).toHaveAttribute('data-stage-like');
   });
 
-  it('sends the comments tile to the comments and composer', () => {
+  it('sends the comment button to the comments and composer', () => {
     const stage = stageValue();
     render(wrap(<ActionBar postId="1234" stage={stage} commentCount={3} />));
-    fireEvent.click(screen.getByRole('button', { name: 'Comments (3)' }));
+    fireEvent.click(screen.getByRole('button', { name: 'Comment' }));
     expect(stage.openComments).toHaveBeenCalledOnce();
   });
 
-  it('opens "Repost & share" from the repost tile, with view quotes and view reposts', async () => {
+  it('opens "Repost & share" from the share button, with view quotes and view reposts', async () => {
     const stage = stageValue();
     render(wrap(<ActionBar postId="1234" tokenId={1234} stage={stage} repostCount={46} onRepost={vi.fn()} onQuote={vi.fn()} />));
-    fireEvent.click(screen.getByRole('button', { name: 'Repost (46)' }));
+    fireEvent.click(screen.getByRole('button', { name: 'Share' }));
     const sheet = await screen.findByText('Repost & share');
     expect(sheet).toBeInTheDocument();
     const quotes = document.querySelector('[data-stage-view="quotes"]') as HTMLElement;
@@ -137,9 +137,9 @@ describe('the phone post page bar', () => {
 });
 
 describe('feed and desktop bars are untouched', () => {
-  it('renders the usual row with its share button and no stage tiles', () => {
+  it('renders the usual row with its share button and no stage markers', () => {
     render(wrap(<ActionBar postId="1234" tokenId={1234} likeCount={1} utilityDesktopAnchor />));
-    expect(document.querySelector('[data-stage-bar]')).toBeNull();
+    expect(document.querySelector('[data-stage-like]')).toBeNull();
     expect(screen.getByRole('button', { name: 'Share' })).toBeInTheDocument();
   });
 });
@@ -203,6 +203,9 @@ describe('the stage page shell', () => {
     // Portalled, so a theme's filtered page frame cannot re-anchor `fixed`.
     expect(src).toContain('createPortal(el, document.body)');
     expect(src).not.toContain('<div data-stage-composer-fade');
+    // Put away until Comment or Reply is pressed; hidden, not unmounted.
+    expect(src).toContain('stageComposerHidden && "hidden"');
+    expect(src).toContain('window.addEventListener(POST_STAGE_COMPOSE_EVENT, open)');
   });
 
   it('keeps image post options beside Follow and Back in the pinned strip', () => {

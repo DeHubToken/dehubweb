@@ -2040,9 +2040,10 @@ export const ro = {
     disclaimerText: 'Acest document nu constituie o ofertă sau invitație de a cumpăra sau vinde valori mobiliare în nicio jurisdicție.',
   },
   termsOfService: {
+    contact: 'Contactați-ne',
     title: 'Termeni și Condiții',
     lastUpdated: 'Ultima Actualizare',
-    lastUpdatedDate: '15 Ianuarie 2025',
+    lastUpdatedDate: '25 octombrie 2026',
     effective: 'În vigoare',
     effectiveDate: '15 Ianuarie 2025',
     heading: 'Termeni și Condiții',
@@ -2062,8 +2063,10 @@ export const ro = {
     ourServiceText1: 'Serviciul îți permite să descoperi, să partajezi și să monetizezi conținut într-un mediu complet descentralizat, oferă un forum pentru ca oamenii să se conecteze, să informeze și să inspire pe alții din întreaga lume și acționează ca o platformă de distribuție pentru creatorii de conținut original fără restricții centralizate. Oferim o platformă rezistentă la cenzură, unde oricine își poate valorifica conținutul prin guvernanța comunității, mai degrabă decât prin controlul corporativ.',
     ourServiceText2: 'DeHub funcționează ca un protocol descentralizat în care moderarea conținutului este gestionată de guvernanța comunității, asigurându-se că numai conținutul ilegal sau conținutul care încalcă regulile aprobate de comunitate poate fi restricționat.',
     softwareDevelopers: 'Cine operează DeHub',
-    softwareDevText1: 'DeHub este o DAO independentă. Nicio companie nu deține, nu operează și nu controlează Serviciul. Protocolul, platforma și trezoreria sunt guvernate în lanț de deținătorii de token-uri DeHub prin protocolul de guvernare DeHub, care este live: propunerile sunt ridicate și votate în aplicație, iar rezultatul leagă ecosistemul. În prezentul acord, „DeHub”, „noi”, „nouă” și „nostru” înseamnă DAO și protocolul pe care îl guvernează, nu o companie.',
-    softwareDevText2: 'Dezvoltarea este realizată de colaboratori independenți și studiouri angajate de DAO. Niciuna dintre ele nu deține ecosistemul DeHub sau nu are putere de decizie asupra acestuia și oricare dintre ele poate fi înlocuită sau eliminată printr-un vot de guvernare. Nimeni nu poate modifica protocolul, tokenul sau aceste Condiții în afara acestui proces.',
+    softwareDevText1: 'DeHub este un DAO independent, fără scop lucrativ. Nicio companie nu deține, nu operează și nu controlează Serviciul. Protocolul, platforma și trezoreria sunt guvernate în lanț de deținătorii de token-uri DeHub prin protocolul de guvernare DeHub, care este live: propunerile sunt ridicate și votate în aplicație, iar rezultatul leagă ecosistemul. În prezentul acord, „DeHub”, „noi”, „nouă” și „nostru” înseamnă DAO și protocolul pe care îl guvernează, nu o companie.',
+    softwareDevText2: 'DeHub este un proiect administrat de comunitate, gestionat de sute de colaboratori. Nicio entitate, companie sau persoană nu controlează DAO, iar nicio companie nu este implicată în guvernarea sau deciziile acestuia. Nimeni nu poate modifica protocolul, tokenul sau acești Termeni în afara procesului de guvernare.',
+    softwareDevText3: 'Delabs Association este un grup de dezvoltatori angajați să construiască tehnologie pentru DeHub și să conecteze platforma la servicii consacrate, precum Google Play Store. Delabs Association nu are nicio legătură cu DAO și nu o guvernează, nu o controlează și nu ia decizii în numele acesteia.',
+    wyomingDaoText: 'DeHub se află în prezent în procesul de înregistrare a unui DAO în Statul Wyoming, USA.',
     whoMayUse: 'Cine poate utiliza serviciul?',
     ageRequirements: 'Cerințe privind vârsta',
     ageRequirementsText: 'Puteți utiliza Serviciul numai dacă aveți cel puțin 16 ani.',
@@ -2165,6 +2168,7 @@ export const ro = {
     contactText: 'Pentru întrebări despre aceste Condiții de utilizare, vă rugăm să luați legătura cu canalele noastre de guvernanță comunitară sau să trimiteți propuneri prin mecanismul DAO.',
   },
   privacyPolicy: {
+    dataSovereigntyItem6: 'Îți poți șterge singur contul din Setări; profilul, încărcările și conținutul media stocat, inclusiv copiile de rezervă, sunt șterse',
     title: 'Politica de Confidențialitate',
     lastUpdated: 'Ultima Actualizare',
     effective: 'În vigoare',
@@ -2268,6 +2272,7 @@ export const ro = {
     dataSovereigntyItem5: 'Puteți alege dacă sistemele AI pot fi antrenate cu munca dvs. Aceasta este permisă până când o dezactivați în Setări, iar alegerea dvs. este publicată către crawlerele de pe paginile pe care le controlăm.',
   },
   contact: {
+    hindi: 'Limba hindi',
     title: 'Contactează-ne',
     subtitle: 'Ia Legătura',
     description: 'Există mai multe modalități de a ne contacta.',
@@ -2318,6 +2323,8 @@ export const ro = {
     joinDiscord: 'Alăturați-vă Discord',
   },
   faq: {
+    a28: 'Da. Aplicația Android este pe Google Play, iar cea mai recentă versiune este disponibilă și ca descărcare APK directă de pe dehub.io/apk. Aplicația web de la dehub.io se instalează pe ecranul de pornire pe orice dispozitiv. Contul, insigna și soldul tău sunt aceleași pe toate.',
+    q12: 'Care este oferta totală de tokenuri DeHub?',
     title: 'Întrebări Frecvente',
     subtitle: 'Găsește răspunsuri la întrebările frecvente despre DeHub',
     q1: 'Ce este DeHub?',
@@ -2481,6 +2488,7 @@ export const ro = {
     bugBounty: 'Premiul de bug',
   },
   communityGuidelines: {
+    contact: 'Contactați-ne',
     title: 'Regulile comunității',
     lastUpdated: 'Ultima actualizare:',
     lastUpdatedDate: '26 august 2026',
@@ -2600,6 +2608,7 @@ export const ro = {
     nextFaqDesc: 'Răspunsuri la cele mai frecvente întrebări',
   },
   apiEndpoints: {
+    type: 'Tip',
     title: 'Puncte finale API',
     subtitle: 'Referință completă pentru toate punctele finale API disponibile cu exemple și scheme de răspuns.',
     breadcrumbDocs: 'Documentație',

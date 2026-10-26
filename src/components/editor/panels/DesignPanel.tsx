@@ -13,6 +13,7 @@ import { TEMPLATES, applyTemplate, type EditorTemplate } from '@/lib/editor/temp
 import { loadGoogleFont } from '@/lib/editor/googleFonts';
 import { VIDEO_TEMPLATE_FORMATS, videoTemplatePageStarts, type VideoTemplateAspect } from '@/lib/editor/videoTemplates';
 import { BrandSection } from './BrandSection';
+import { FilmProjectPanel } from '../FilmProjectPanel';
 import {
   AlertDialog,
   AlertDialogAction,
@@ -154,6 +155,7 @@ export function DesignPanel() {
       <p className="mt-2 px-0.5 text-[10px] leading-relaxed text-white/40">{t('editor.templates.hint')}</p>
 
       <BrandSection />
+      <FilmProjectPanel />
 
       <AlertDialog open={!!pending} onOpenChange={(open) => { if (!open) setPending(null); }}>
         <AlertDialogContent className="border-white/10 bg-black/90 text-white backdrop-blur-[24px]">

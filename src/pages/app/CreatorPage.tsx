@@ -9,6 +9,8 @@ import { SEOHead } from '@/components/SEOHead';
 import { PricingSection } from '@/components/pricing/PricingSection';
 import { SubscriptionCreditsPill } from '@/components/app/credits/SubscriptionCreditsWidget';
 import { CreatorStudio } from '@/components/app/creator/studio/CreatorStudio';
+import { MarketingWorkspace } from '@/components/app/creator/MarketingWorkspace';
+import { useMarketingHandoff } from '@/hooks/use-marketing-handoff';
 import { ModelMarquee } from '@/components/app/creator/ModelMarquee';
 import dehubIcon from '@/assets/dehub-logo-compact.png';
 import { ArrowUpRight, Bot, Clapperboard, Film, ImageIcon, Mic2, PanelsTopLeft, PenTool, Wand2, Workflow } from "lucide-react";
@@ -198,15 +200,14 @@ const tools: Tool[] = [
 export default function CreatorPage() {
   const { t } = useTranslation();
   const navigate = useNavigate();
-  const { isAuthenticated, openLoginModal } = useAuth();
+  const { isAuthenticated, openLoginModal, walletAddress } = useAuth();
+  const { active: activeMarketingDraft, prepare: prepareMarketingDraft, leave: leaveMarketingDraft } = useMarketingHandoff(walletAddress);
   const [activeCategory, setActiveCategory] = useState<typeof categories[number]>('All');
   const [activeNav, setActiveNav] = useState<typeof navItems[number]>('Explore');
-  const [bannerDismissed, setBannerDismissed] = useState(false);
-
   /**
    * The studio composer parks directly under this header once it scrolls past,
-   * so it needs the header's live height — dismissing the promo banner changes
-   * it by 32px, and a hard-coded offset would leave a gap or a clipped bar.
+   * so it needs the header's live height, and a hard-coded offset would leave
+   * a gap or a clipped bar.
    */
   const headerRef = useRef<HTMLDivElement>(null);
   const [headerHeight, setHeaderHeight] = useState(60);
@@ -252,8 +253,7 @@ export default function CreatorPage() {
     } else if (item === 'Apps') navigate('/builder');
     else if (item === 'Agents') navigate('/app/agents');
     else if (item === 'Marketing') {
-      setActiveCategory('Image');
-      window.dispatchEvent(new CustomEvent('creator:preset', { detail: 'ad-headline' }));
+      document.querySelector('[data-creator-marketing]')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
     }
     else {
       setActiveCategory('Studio');
@@ -281,20 +281,6 @@ export default function CreatorPage() {
         <h1 className="sr-only">{t('creator.srHeading')}</h1>
 
         <div ref={headerRef} className="sticky top-0 z-50">
-        {!bannerDismissed && (
-          <div data-creator-banner className="relative flex h-8 items-center justify-center px-10 text-center text-[12px] font-black uppercase tracking-[0.08em] text-black" style={metallicStyle}>
-            <span>{t('creator.bannerCopy')}</span>
-            <button
-              type="button"
-              onClick={() => setBannerDismissed(true)}
-              aria-label={t('creator.closeBanner')}
-              className="absolute right-3 top-1/2 -translate-y-1/2 text-black/80 hover:text-black"
-            >
-              ×
-            </button>
-          </div>
-        )}
-
           <header data-clear-top-bar className="border-b border-white/10 px-3 py-3 backdrop-blur-xl sm:px-4" style={{ backgroundColor: 'rgba(9,10,11,0.95)' }}>
             <div className="flex items-center gap-3">
               <button
@@ -387,7 +373,14 @@ export default function CreatorPage() {
 
         {/* The hero's wall of community work sits behind the studio's headline and composer. */}
         <CreatorHeroWall />
-        <CreatorStudio onOpenEditor={openEditor} stickyTop={headerHeight} />
+        <CreatorStudio onOpenEditor={openEditor} stickyTop={headerHeight} generationDraft={activeMarketingDraft?.draft}
+          snapshotScope={activeMarketingDraft ? `campaign:${activeMarketingDraft.id}` : 'main'} generationDraftId={activeMarketingDraft?.id} />
+        {activeMarketingDraft && <button type="button" className="mx-4 mt-2 text-sm underline" onClick={leaveMarketingDraft}>{t('creator.marketing.return')}</button>}
+        <Link to="/creator/learn" className="mx-4 mt-5 inline-block rounded-xl border border-current px-4 py-2 text-sm">{t('creator.learn.title')}</Link>
+        <MarketingWorkspace onPrepare={(draft) => {
+          prepareMarketingDraft(draft);
+          document.querySelector('[data-creator-composer]')?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }} />
         <div>
         <MediumDoors />
 

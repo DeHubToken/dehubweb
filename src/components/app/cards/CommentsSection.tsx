@@ -52,7 +52,8 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { useTranslation as useI18n } from 'react-i18next';
 import { useKidsModeLock } from '@/hooks/use-kids-mode';
 import { cn } from '@/lib/utils';
-import { createPortal } from 'react-dom';
+import { createPortal, flushSync } from 'react-dom';
+import { POST_STAGE_COMPOSE_EVENT } from '@/components/app/post-stage/post-stage-context';
 import { registerOffDocumentMedia } from '@/lib/pause-media-in';
 import { useFocusComment } from '@/lib/focus-comment';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
@@ -1094,6 +1095,11 @@ function CommentsSectionForAccount({ tokenId, onClose, initialTab, embedded = fa
     }
   };
   const [replyTo, setReplyTo] = useState<Comment | null>(() => draftReplyTarget(restoredDraft));
+  // Phone post page: the docked composer stays out of the way until the reader
+  // taps Comment (the post's bar) or Reply (a comment). A draft, a reply target
+  // or an attachment keeps it up.
+  const [stageComposerOpen, setStageComposerOpen] = useState(false);
+  const composerRootRef = useRef<HTMLDivElement>(null);
   const [tipComment, setTipComment] = useState<Comment | null>(null);
   // Which of the viewer's own comments has its likers drawer open.
   const [likersCommentId, setLikersCommentId] = useState<string | null>(null);
@@ -1156,8 +1162,21 @@ function CommentsSectionForAccount({ tokenId, onClose, initialTab, embedded = fa
   // A GIF is already hosted (GIPHY), so unlike commentImage it needs no
   // upload step — just the URL, carried straight through to comment_image.
   const [commentGifUrl, setCommentGifUrl] = useState<string | null>(restoredDraft?.gifUrl ?? null);
+  const stageComposerHidden = stage && !stageComposerOpen && !replyTo && !newComment.trim()
+    && !voiceNote && !isRecording && !commentImage && !commentGifUrl;
   const imageInputRef = useRef<HTMLInputElement>(null);
   const inputRef = useRef<HTMLTextAreaElement>(null);
+  // The post's Comment button asks for the composer. Synchronous, so the
+  // focus still lands inside the tap and phones raise the keyboard.
+  useEffect(() => {
+    if (!stage) return;
+    const open = () => {
+      flushSync(() => setStageComposerOpen(true));
+      inputRef.current?.focus({ preventScroll: true });
+    };
+    window.addEventListener(POST_STAGE_COMPOSE_EVENT, open);
+    return () => window.removeEventListener(POST_STAGE_COMPOSE_EVENT, open);
+  }, [stage]);
   // A restored draft opens the composer already expanded: the collapsed well is
   // one line tall, so anything longer would come back apparently truncated.
   const [isInputExpanded, setIsInputExpanded] = useState(() => Boolean(restoredDraft?.text));
@@ -2083,6 +2102,7 @@ function CommentsSectionForAccount({ tokenId, onClose, initialTab, embedded = fa
     if (commentId.startsWith('temp-')) return;
     const found = allComments.find(c => c.id === commentId);
     if (found) {
+      if (stage) setStageComposerOpen(true);
       setReplyTo(found);
       setNewComment(`@${found.username} `);
       // Just focus - let mobile browsers handle keyboard viewport adjustment natively
@@ -2496,10 +2516,10 @@ function CommentsSectionForAccount({ tokenId, onClose, initialTab, embedded = fa
             </h2>
           )}
           {activeTab !== 'quotes' && activeTab !== 'reposts' && (
-            <div className="flex items-center gap-1.5">
+            <div className="flex items-center gap-2">
               <button
                 type="button"
-                data-stage-chip
+                data-stage-plain
                 data-active={activeTab === 'search' ? 'true' : undefined}
                 onClick={() => {
                   const next = activeTab === 'search' ? 'replies' : 'search';
@@ -2507,16 +2527,16 @@ function CommentsSectionForAccount({ tokenId, onClose, initialTab, embedded = fa
                   onStageTabChange?.(next);
                 }}
                 aria-label={t('comments.tabSearch')}
-                className="flex h-8 w-8 items-center justify-center rounded-lg"
+                className="flex h-8 w-8 items-center justify-center"
               >
-                <Search className="h-4 w-4" />
+                <Search className="h-[18px] w-[18px]" />
               </button>
               <button
                 type="button"
-                data-stage-chip
+                data-stage-plain
                 onClick={() => setSortBy(prev => prev === 'recent' ? 'oldest' : prev === 'oldest' ? 'liked' : 'recent')}
                 aria-label={t(sortOption.sortedBy)}
-                className="flex h-8 items-center gap-1.5 rounded-lg px-2.5 text-xs font-bold"
+                className="flex h-8 items-center gap-1 px-1 text-xs font-semibold"
               >
                 <ArrowUpDown className="h-3.5 w-3.5" />
                 {t(sortOption.short)}
@@ -2900,7 +2920,11 @@ function CommentsSectionForAccount({ tokenId, onClose, initialTab, embedded = fa
           data-comment-composer
           data-comment-composer-pin={page || undefined}
           data-stage-composer={stage || undefined}
+          ref={stage ? composerRootRef : undefined}
           className={cn(
+            // Hidden, not unmounted: a photo picker opened from it must still
+            // be able to hand its file back.
+            stageComposerHidden && "hidden",
             stage
               // Docked to the bottom of the screen for the whole page, over a
               // translucent blur (post-stage.css). The bottom nav is hidden here.
@@ -3081,6 +3105,9 @@ function CommentsSectionForAccount({ tokenId, onClose, initialTab, embedded = fa
                       setTimeout(() => {
                         setIsInputExpanded(false);
                         if (inputRef.current) inputRef.current.style.height = '';
+                        // Left empty: the phone post page puts the composer away
+                        // again, unless focus only moved to one of its own buttons.
+                        if (stage && !composerRootRef.current?.contains(document.activeElement)) setStageComposerOpen(false);
                       }, 150);
                     }
                   }}

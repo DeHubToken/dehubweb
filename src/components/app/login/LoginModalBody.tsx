@@ -866,7 +866,7 @@ function LoginModalBodyInner({ open, step, setStep, layout = 'default' }: LoginM
       )}
 
       <div className="login-stack-method" data-login-method={step}>
-        {step !== 'main' && step !== 'email' && (
+        {step !== 'main' && step !== 'email' && step !== 'email-waiting' && (
           <button type="button" onClick={() => chooseInlineStep('main')} disabled={isConnecting} className="mb-2 text-xs text-white/60 hover:text-white underline underline-offset-4">
             {t('loginModal.continueEmail')}
           </button>
@@ -1004,38 +1004,13 @@ function LoginModalBodyInner({ open, step, setStep, layout = 'default' }: LoginM
 
   const renderEmailWaitingStep = () => (
     <div className="space-y-5">
-      <div className="mx-auto w-14 h-14 rounded-full bg-white/10 border border-white/10 flex items-center justify-center">
-        <Mail className="w-8 h-8" aria-hidden="true" />
-      </div>
-      <div className="space-y-2 text-center">
-        <p className="text-white text-sm">
-          {t('loginModal.magicLinkSentTo', 'We sent a magic link to')}{' '}
-          <span className="font-medium">{email}</span>
-        </p>
-        <p className="text-white/50 text-xs leading-relaxed">
-          {t(
-            'loginModal.magicLinkWaiting',
-            'Open the email on any device and tap the button — you\'ll be signed in here automatically, plus on the device where you opened the link.'
-          )}
-        </p>
-      </div>
-
-      <div className="flex items-center justify-center gap-2 text-white/50 text-xs">
-        <Loader2 className="w-3.5 h-3.5 animate-spin" />
-        {t('loginModal.waitingForLink', 'Waiting for you to confirm…')}
-      </div>
-
-      <div className="flex items-center gap-3">
-        <div className="h-px flex-1 bg-white/10" />
-        <span className="text-white/40 text-xs">{t('loginModal.or', 'or')}</span>
-        <div className="h-px flex-1 bg-white/10" />
-      </div>
-
       <form onSubmit={handleEmailCodeSubmit} className="space-y-3">
-        <p className="text-white/50 text-xs text-center">
+        <label htmlFor="login-email-code" className="sr-only">
           {t('loginModal.enterCodeFromEmail', 'Enter the 6-digit code from the email')}
-        </p>
+        </label>
         <Input
+          id="login-email-code"
+          autoFocus
           type="text"
           inputMode="numeric"
           autoComplete="one-time-code"

@@ -8,6 +8,37 @@ import type { BlogPost } from '@/types/blog';
 // getPublishedPosts() corpus: overrides applied, published only, newest first.
 export const blogPostsMetadata: BlogPost[] = [
   {
+    "id": "top-50-decentralized-social-apps-2026",
+    "slug": "top-50-decentralized-social-apps-2026",
+    "title": "Top 50 Decentralized Social Apps 2026: The DeSoc Index",
+    "seoTitle": "Top 50 Decentralized Social Media Apps 2026, Ranked | DeHub",
+    "seoDescription": "The 50 most active decentralized and crypto social apps of 2026, scored on real user numbers, features, public GitHub activity and future potential. Bluesky, Farcaster, Lens, Nostr, Mastodon, Zora and more.",
+    "excerpt": "We ranked the 50 most active decentralized and crypto social apps of 2026, from Bluesky and Mastodon to Farcaster, Lens, Zora and Nostr, on users, features, public GitHub activity and future potential. Every number is sourced.",
+    "content": "",
+    "bannerImage": "/media/top-50-decentralized-social-apps-2026-banner.png",
+    "bannerImageAlt": "Top 50 decentralized social apps 2026, the DeSoc Index by DeHub",
+    "author": {
+      "name": "DeHub Team"
+    },
+    "publishedAt": "2026-10-25T20:00:00.000Z",
+    "tags": [
+      "decentralized social media",
+      "top 50",
+      "web3 social",
+      "crypto social apps",
+      "SocialFi",
+      "Bluesky",
+      "Farcaster",
+      "Nostr",
+      "Lens Protocol",
+      "Mastodon",
+      "DeHub"
+    ],
+    "readingTime": 31,
+    "featured": true,
+    "status": "published"
+  },
+  {
     "id": "how-does-higgsfield-genjutsu-work",
     "slug": "how-does-higgsfield-genjutsu-work",
     "title": "How Does Higgsfield Genjutsu Work? And How Maboroshi Does the Same Job for Less (2026)",
@@ -3528,35 +3559,35 @@ export const newPostsMetadata: BlogPost[] = [
 
 // getLatestPost() result — docs home hero.
 export const latestPostMetadata: BlogPost | undefined = {
-  "id": "how-does-higgsfield-genjutsu-work",
-  "slug": "how-does-higgsfield-genjutsu-work",
-  "title": "How Does Higgsfield Genjutsu Work? And How Maboroshi Does the Same Job for Less (2026)",
-  "excerpt": "Genjutsu looks like magic, but it is a chain of eight well-known steps. Here is every step in detail, with real frames from each one, plus how to change any scene with Remake and Kling O3, what it all costs, and where the finished clip goes next.",
+  "id": "top-50-decentralized-social-apps-2026",
+  "slug": "top-50-decentralized-social-apps-2026",
+  "title": "Top 50 Decentralized Social Apps 2026: The DeSoc Index",
+  "seoTitle": "Top 50 Decentralized Social Media Apps 2026, Ranked | DeHub",
+  "seoDescription": "The 50 most active decentralized and crypto social apps of 2026, scored on real user numbers, features, public GitHub activity and future potential. Bluesky, Farcaster, Lens, Nostr, Mastodon, Zora and more.",
+  "excerpt": "We ranked the 50 most active decentralized and crypto social apps of 2026, from Bluesky and Mastodon to Farcaster, Lens, Zora and Nostr, on users, features, public GitHub activity and future potential. Every number is sourced.",
   "content": "",
-  "bannerImage": "/media/maboroshi-how-genjutsu-works-banner.jpg",
-  "bannerImageAlt": "How Higgsfield Genjutsu works, and how DeHub Maboroshi does the same job for less",
+  "bannerImage": "/media/top-50-decentralized-social-apps-2026-banner.png",
+  "bannerImageAlt": "Top 50 decentralized social apps 2026, the DeSoc Index by DeHub",
   "author": {
     "name": "DeHub Team"
   },
-  "publishedAt": "2026-10-24T06:00:00.000Z",
+  "publishedAt": "2026-10-25T20:00:00.000Z",
   "tags": [
-    "AI",
-    "AI video",
-    "Creator Studio",
-    "Higgsfield",
-    "Genjutsu",
-    "Katana",
-    "Maboroshi",
-    "Kling",
-    "Seedance",
-    "Video editor",
-    "Pricing"
+    "decentralized social media",
+    "top 50",
+    "web3 social",
+    "crypto social apps",
+    "SocialFi",
+    "Bluesky",
+    "Farcaster",
+    "Nostr",
+    "Lens Protocol",
+    "Mastodon",
+    "DeHub"
   ],
-  "readingTime": 11,
+  "readingTime": 31,
   "featured": true,
-  "status": "published",
-  "seoTitle": "How Does Higgsfield Genjutsu Work? Step by Step, and a Cheaper Way | DeHub",
-  "seoDescription": "Genjutsu explained step by step: depth, masks, face mesh, render and original audio, with real frames from each step. Plus Katana-style scene changes and a cheaper per-clip way to do it."
+  "status": "published"
 };
 
 export const excludedTitles: string[] = [

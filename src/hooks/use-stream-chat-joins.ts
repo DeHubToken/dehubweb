@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { getStreamActivities, type StreamActivity } from '@/lib/api/dehub/livestream';
-import { watchStreamGifts, watchStreamJoins } from '@/lib/api/dehub/stream-presence';
+import { watchLiveRoomEvents, watchStreamGifts, watchStreamJoins } from '@/lib/api/dehub/stream-presence';
 
 /**
  * Keep the FIRST arrival per identified viewer; reconnects are not new people.
@@ -74,6 +74,18 @@ export function useStreamChatJoins(streamId?: string, offline = false) {
         timestamp: new Date().toISOString(),
       });
     });
+    // Gifted subscriptions: one line per checkout, however many it bought.
+    const giftSubs = offline ? null : watchLiveRoomEvents(streamId, (event) => {
+      if (event.type !== 'giftSub') return;
+      push({
+        id: `giftSub:${streamId}:${++sequence}`,
+        type: 'giftSub', address: event.user.address || '',
+        username: event.user.displayName || event.user.username,
+        avatarUrl: event.user.avatarImageUrl || undefined,
+        giftCount: event.count,
+        timestamp: new Date().toISOString(),
+      });
+    });
     getStreamActivities(streamId, { unit: 200 }).then(({ result }) => {
       if (cancelled) return;
       const history = result.filter(isMoment);
@@ -82,7 +94,7 @@ export function useStreamChatJoins(streamId?: string, offline = false) {
     }).catch(() => {
       if (!cancelled) setState({ streamId, joins: uniqueStreamJoins(pending) });
     }).finally(() => { loaded = true; });
-    return () => { cancelled = true; joins?.leave(); gifts?.leave(); };
+    return () => { cancelled = true; joins?.leave(); gifts?.leave(); giftSubs?.leave(); };
   }, [streamId, offline]);
   return state.streamId === streamId ? state.joins : [];
 }
