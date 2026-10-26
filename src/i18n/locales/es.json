@@ -6576,6 +6576,31 @@
     "youAreTimedOut": "Estás en tiempo de espera por un momento"
   },
   "liveStudio": {
+    "destinations": {
+      "title": "Destinos de multistream",
+      "intro": "Transmite en DeHub una sola vez y enviamos tu directo gratis a cada plataforma activada aquí. Empieza a los pocos segundos de salir en vivo.",
+      "add": "Añadir destino",
+      "empty": "Aún no hay destinos. Añade Twitch, YouTube, Kick o cualquier servidor RTMP.",
+      "platform": "Plataforma",
+      "label": "Nombre (opcional)",
+      "server": "URL del servidor",
+      "key": "Clave de transmisión",
+      "findKey": "Busca tu servidor y clave de {{name}}",
+      "customHint": "Pega el servidor RTMP y la clave que te da tu plataforma.",
+      "keyNote": "Tu clave se guarda cifrada en nuestros servidores y no se vuelve a mostrar.",
+      "save": "Añadir",
+      "cancel": "Cancelar",
+      "added": "{{name}} añadido",
+      "saveFailed": "No se pudo guardar el destino",
+      "toggle": "Transmitir a este destino",
+      "states": {
+        "off": "Apagado",
+        "idle": "Listo",
+        "connecting": "Conectando",
+        "live": "En vivo",
+        "error": "Error"
+      }
+    },
     "subathon": {
       "title": "Subatón",
       "intro": "Un conteo regresivo en tu transmisión. Cada regalo pagado, seguimiento y suscripción añade tiempo, así que la sala te mantiene en vivo.",

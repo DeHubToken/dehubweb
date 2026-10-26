@@ -6766,6 +6766,31 @@
     "youAreTimedOut": "Je bent even tijd uit."
   },
   "liveStudio": {
+    "destinations": {
+      "title": "Multistream-bestemmingen",
+      "intro": "Ga één keer live op DeHub en wij sturen je stream gratis door naar elk platform dat hier aanstaat. Het start binnen een paar seconden nadat je live gaat.",
+      "add": "Bestemming toevoegen",
+      "empty": "Nog geen bestemmingen. Voeg Twitch, YouTube, Kick of een RTMP-server toe.",
+      "platform": "Platform",
+      "label": "Naam (optioneel)",
+      "server": "Server-URL",
+      "key": "Streamsleutel",
+      "findKey": "Vind je {{name}}-server en -sleutel",
+      "customHint": "Plak de RTMP-server en sleutel van je platform.",
+      "keyNote": "Je sleutel wordt versleuteld op onze servers bewaard en nooit meer getoond.",
+      "save": "Toevoegen",
+      "cancel": "Annuleren",
+      "added": "{{name}} toegevoegd",
+      "saveFailed": "Bestemming opslaan mislukt",
+      "toggle": "Naar deze bestemming streamen",
+      "states": {
+        "off": "Uit",
+        "idle": "Klaar",
+        "connecting": "Verbinden",
+        "live": "Live",
+        "error": "Fout"
+      }
+    },
     "subathon": {
       "title": "Subathon",
       "intro": "Een afteller op je stream. Elke betaalde gift, follow en abonnement voegt tijd toe, zodat de kamer je live houdt.",
