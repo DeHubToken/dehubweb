@@ -23,7 +23,7 @@ describe('private generation management', () => {
   it('applies only acknowledged rows and leaves incomplete selections available for retry', async () => {
     mocks.update.mockResolvedValue({ completedIds: ['first-asset'], incompleteIds: ['second-asset'] });
     render(<LibraryManager wallet="owner" />); await open();
-    fireEvent.click(screen.getAllByRole('button', { name: 'common.save' }).at(-1)!);
+    fireEvent.click(screen.getByRole('button', { name: 'creator.libraryFavoriteAdd' }));
     await screen.findByText('1/100');
     expect(mocks.apply).toHaveBeenCalledWith(['first-asset'], { favorite: true });
     expect((screen.getByLabelText('Second take') as HTMLInputElement).checked).toBe(true);
@@ -61,5 +61,16 @@ describe('private generation management', () => {
     fireEvent.click(screen.getByRole('button', { name: 'copy.a76e13b98392' }));
     await waitFor(() => expect(mocks.apply).toHaveBeenCalledWith(['first-asset', 'second-asset'], { hidden: false }));
     expect(mocks.update).toHaveBeenCalledWith('owner', ['first-asset', 'second-asset'], 'restore');
+  });
+  it('reconciles the next page after selected rows leave the server filter', async () => {
+    mocks.list.mockResolvedValueOnce({ jobs: rows, nextOffset: 2 });
+    mocks.update.mockResolvedValue({ completedIds: rows.map(row => row.id), incompleteIds: [] });
+    render(<LibraryManager wallet="owner" />); await open();
+    fireEvent.click(screen.getByRole('button', { name: 'editor.layers.hide' }));
+    await screen.findByText('0/100');
+    mocks.list.mockResolvedValue({ jobs: [{ id: 'remaining-asset', prompt: 'Remaining take', hidden: false }], nextOffset: null });
+    fireEvent.click(screen.getByRole('button', { name: 'common.loadMore' }));
+    await screen.findByLabelText('Remaining take');
+    expect(mocks.list).toHaveBeenLastCalledWith('owner', 0, { hidden: false, favorites: false });
   });
 });
