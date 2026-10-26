@@ -1,5 +1,5 @@
 {
-  "version": "3f59b6702fdd0198",
+  "version": "c1a00cc793185019",
   "routes": {
     "/": [
       "ar",
@@ -1311,6 +1311,13 @@
       "tr"
     ],
     "/guides/top-50-decentralized-social-apps-2026": [
+      "ar",
+      "es",
+      "fr",
+      "nl",
+      "tr"
+    ],
+    "/guides/top-50-most-active-open-source-projects-2026": [
       "ar",
       "es",
       "fr",
