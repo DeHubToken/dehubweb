@@ -3002,6 +3002,7 @@ function CommentsSectionForAccount({ tokenId, onClose, initialTab, embedded = fa
             <div
                 data-vaul-no-drag
                 data-comment-field
+                data-glass-stack
                 data-expanded={isInputExpanded || undefined}
                 /* War dresses this as a chamfered HUD well; the hook is inert
                    under every other theme. See war-comments.css section 2. */

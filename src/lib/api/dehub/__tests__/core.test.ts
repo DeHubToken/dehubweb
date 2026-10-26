@@ -33,6 +33,12 @@ describe('getMediaUrl', () => {
   it('prepends CDN base for relative paths', () => {
     expect(getMediaUrl('images/123.jpg')).toBe(`${DEHUB_CDN_BASE}images/123.jpg`);
   });
+
+  it('adds the .mp4 an old post\'s bare video key is missing', () => {
+    expect(getMediaUrl('videos/2008')).toBe(`${DEHUB_CDN_BASE}videos/2008.mp4`);
+    expect(getMediaUrl('videos/2008.mp4')).toBe(`${DEHUB_CDN_BASE}videos/2008.mp4`);
+    expect(getMediaUrl('videos/6969/hls/abc/master.m3u8')).toBe(`${DEHUB_CDN_BASE}videos/6969/hls/abc/master.m3u8`);
+  });
 });
 
 // ── AuthenticationError ──
