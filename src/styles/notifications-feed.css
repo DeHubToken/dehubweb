@@ -15,6 +15,7 @@
   --nf-ring: #000000;
   --nf-hover: rgba(255, 255, 255, 0.03);
   --nf-line: rgba(255, 255, 255, 0.2);
+  --nf-mute: rgba(255, 255, 255, 0.5);
 }
 html:not([data-theme="system"]):not([data-theme="light"]):not([data-theme="minimal"]) [data-notifications-page] {
   --nf-accent: color-mix(in srgb, var(--tint-accent) 70%, white);
@@ -31,6 +32,7 @@ html[data-system-tone="light"] [data-notifications-page] {
   --nf-ring: #ffffff;
   --nf-hover: rgba(11, 11, 13, 0.03);
   --nf-line: rgba(11, 11, 13, 0.18);
+  --nf-mute: rgba(11, 11, 13, 0.5);
 }
 
 html [data-notification-row][data-feed-row]:not(#_):not(#_),
@@ -44,6 +46,12 @@ html [data-notification-row][data-feed-row][data-unread]:not(#_):not(#_) {
   html [data-notification-row][data-feed-row]:not(#_):not(#_):hover {
     background-color: var(--nf-hover) !important;
   }
+}
+
+/* Secondary text stays quiet on every theme (the readability sheets lift
+   zinc-500 to white elsewhere). */
+html :is([data-feed-group-label], [data-feed-time], [data-feed-quote]):not(#_):not(#_) {
+  color: var(--nf-mute) !important;
 }
 
 [data-feed-unread-dot] > span {
@@ -77,4 +85,10 @@ html[data-theme="minimal"] [data-notification-list]:not(#_) {
   background: transparent !important;
   border: 0 !important;
   box-shadow: none !important;
+}
+
+/* The DeHub mark is white artwork; its tile stays black on the paper themes. */
+html [data-feed-platform-mark]:not(#_):not(#_) {
+  background-color: #000 !important;
+  border-color: rgba(255, 255, 255, 0.12) !important;
 }

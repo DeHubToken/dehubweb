@@ -1368,7 +1368,7 @@ const NotificationItem = memo(function NotificationItem({
           // instead of reading as somebody's round profile picture.
           if (isPlatformNotice) {
             return (
-              <div data-feed-platform-mark className="w-[46px] h-[46px] shrink-0 rounded-full bg-black border border-white/10 flex items-center justify-center">
+              <div data-feed-platform-mark data-keep-dark className="w-[46px] h-[46px] shrink-0 rounded-lg bg-black border border-white/10 flex items-center justify-center">
                 <img
                   src={DEHUB_MARK_SRC}
                   alt="DeHub"
@@ -1435,12 +1435,12 @@ const NotificationItem = memo(function NotificationItem({
           if (!previewText) return null;
           return (
             <>
-              <p className="text-[13.5px] text-zinc-500 mt-0.5 line-clamp-1">
+              <p data-feed-quote className="text-[13.5px] text-zinc-500 mt-0.5 line-clamp-1">
                 {previewText}
               </p>
               {/* Secondary post title context for reply/mention */}
               {isReplyOrMention && notification.tokenTitle && (
-                <p className="text-xs text-zinc-500 mt-0.5 line-clamp-1">{_copy("copy.2c26ae1e5724", { defaultValue: "on: " })}{notification.tokenTitle}
+                <p data-feed-quote className="text-xs text-zinc-500 mt-0.5 line-clamp-1">{_copy("copy.2c26ae1e5724", { defaultValue: "on: " })}{notification.tokenTitle}
                 </p>
               )}
             </>
