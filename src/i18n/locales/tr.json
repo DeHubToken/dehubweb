@@ -5101,7 +5101,7 @@
                                   }
                   },
     "audioInvalidResponse":  "Ses hizmeti geçersiz bir sonuç döndürdü.",
-      "audioResultTooLarge":  "Ses sonucu boş veya 50 MB sınırını aşıyor.",
+      "audioResultTooLarge":  "Ses sonucu boş veya 128 MB sınırını aşıyor.",
     "cinema":  {
                    "title":  "Sinematik yönlendirme",
                    "hint":  "Sonraki görselinizin veya videonuzun görsel tarzını belirleyin. Sonuçlar modele göre değişir.",

@@ -5105,7 +5105,7 @@
                                   }
                   },
     "audioInvalidResponse":  "Le service audio a renvoyé un résultat non valide.",
-      "audioResultTooLarge":  "Le résultat audio est vide ou dépasse 50 Mo.",
+      "audioResultTooLarge":  "Le résultat audio est vide ou dépasse 128 Mo.",
     "cinema":  {
                    "title":  "Direction cinématographique",
                    "hint":  "Définissez le style visuel de votre prochaine image ou vidéo. Les résultats varient selon le modèle.",
