@@ -1508,7 +1508,7 @@ const CreatorStudioWorkspace = memo(function CreatorStudioWorkspace({ onOpenEdit
           resolution: activeVideoModel?.supportsResolution
             ? (options?.resolution ?? resolution)
             : undefined,
-          negativePrompt: options?.negativePrompt || preset?.negative,
+          negativePrompt: VIDEO_MODELS[videoModel]?.supportsNegativePrompt ? options?.negativePrompt || preset?.negative : undefined,
           referenceImageUrls: currentImages.length > 1 || activeVideoModel?.referenceMode === 'edit' ? currentImages.map(a => a.url) : options?.referenceImageUrls,
           endFrameUrl: options?.endFrameUrl,
           audioUrls: options?.audioUrls,
