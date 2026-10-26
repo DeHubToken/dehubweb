@@ -482,7 +482,7 @@ export const CreatorStudio = memo(function CreatorStudio(props: CreatorStudioPro
   return <StudioDraftScope owner={walletAddress} scope={props.snapshotScope}>{storageKey => <CreatorStudioWorkspace {...props} storageKey={storageKey} />}</StudioDraftScope>;
 });
 
-const CreatorStudioWorkspace = memo(function CreatorStudioWorkspace({ onOpenEditor, stickyTop = 60, embedded = false, generationDraft, generationDraftId, onJobStarted, storageKey }: CreatorStudioProps & { storageKey: string }) {
+const CreatorStudioWorkspace = memo(function CreatorStudioWorkspace({ onOpenEditor, stickyTop = 60, embedded = false, generationDraft, generationDraftId, snapshotScope, onJobStarted, storageKey }: CreatorStudioProps & { storageKey: string }) {
   const promptId = useId();
   const navigate = useNavigate();
   const { t: _copy } = _useCopy();
@@ -507,7 +507,7 @@ const CreatorStudioWorkspace = memo(function CreatorStudioWorkspace({ onOpenEdit
   const latestSnapshot = useRef(restored);
   const [appliedGenerationDraftId, setAppliedGenerationDraftId] = useState(restored.generationDraftId);
   useEffect(() => () => writeStudioSnapshot(storageKey, latestSnapshot.current), [storageKey]);
-  const [cinemaDirections, setCinemaDirections] = useDraftState<ByMode<CinemaDirection>>('creator:cinema-direction', { image: {}, video: {}, audio: {}, '3d': {} });
+  const [cinemaDirections, setCinemaDirections] = useDraftState<ByMode<CinemaDirection>>(snapshotScope && snapshotScope !== 'main' ? `creator:cinema-direction:${storageKey}` : 'creator:cinema-direction', { image: {}, video: {}, audio: {}, '3d': {} });
 
   const [mode, setMode] = useState<Mode>(restored.mode);
 
@@ -554,14 +554,21 @@ const CreatorStudioWorkspace = memo(function CreatorStudioWorkspace({ onOpenEdit
   const [audioFile, setAudioFile] = useState<{ file: File; seconds: number | null } | null>(null);
 
   useEffect(() => {
-    if (!generationDraft || (generationDraftId && appliedGenerationDraftId === generationDraftId)) return;
+    if (!generationDraft) return;
     const nextMode: Mode = generationDraft.kind === 'image' ? 'image' : generationDraft.kind === 'video' ? 'video' : 'audio';
+    if (generationDraft.references && (nextMode === 'image' || nextMode === 'video')) {
+      setReferences(previous => ({ ...previous, [nextMode]: null }));
+      setExtraReferences(previous => ({ ...previous, [nextMode]: generationDraft.references!.map(reference => ({ ...reference, kind: 'image' as const })) }));
+    }
+    if (generationDraftId && appliedGenerationDraftId === generationDraftId) return;
+    if (generationDraft.cinemaDirection) setCinemaDirections(previous => ({ ...previous, [nextMode]: normalizeCinemaDirection(generationDraft.cinemaDirection) }));
     setMode(nextMode);
     setPrompts(previous => ({ ...previous, [nextMode]: generationDraft.prompt }));
     setPresetIds(previous => ({ ...previous, [nextMode]: null }));
     if (nextMode === 'audio') setAudioTask(generationDraft.kind === 'voice' ? 'speech' : generationDraft.kind as AudioTask);
     if (generationDraft.aspect && nextMode === 'image') setImageAspect(generationDraft.aspect);
     if (generationDraft.aspect && nextMode === 'video') setVideoAspect(generationDraft.aspect);
+    if (generationDraft.durationSeconds && nextMode === 'video') setDuration(snapVideoDuration(VIDEO_MODELS[videoModel], generationDraft.durationSeconds));
     setAppliedGenerationDraftId(generationDraftId);
   }, [generationDraft, generationDraftId, appliedGenerationDraftId]);
 
@@ -1388,7 +1395,7 @@ const CreatorStudioWorkspace = memo(function CreatorStudioWorkspace({ onOpenEdit
       try {
         const hosted = await Promise.all(currentAssets.map(async asset => {
           const file = asset.file ?? (asset.sourceClipId ? await downloadMotionSource(asset.sourceClipId) : undefined);
-          const url = file ? await hostCreatorFile(file) : asset.url.startsWith('data:') ? await hostDataUrl(asset.url) : asset.url;
+          const url = file ? await hostCreatorFile(file) : /^(data:|blob:)/.test(asset.url) ? await hostDataUrl(asset.url) : asset.url;
           return { ...asset, file: undefined, sourceClipId: undefined, url };
         }));
         currentAssets.forEach(asset => { if (asset.file) URL.revokeObjectURL(asset.url); });
