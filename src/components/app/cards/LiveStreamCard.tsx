@@ -1649,12 +1649,14 @@ export function LiveStreamCard({ stream, chatSlot, immersive = false }: LiveStre
         >
           <LiveViewerActionsProvider
             value={
-              <>
+              /* One row with the composer: Clip first, sized and filled like
+                 the gift, share and thumb buttons beside it. */
+              <div className="flex items-center gap-2">
               {clippable && (
                 <ClipButton
                   tokenId={stream.id}
                   getReplayTime={getReplayTime}
-                  className="h-9 w-9 shrink-0 rounded-full text-white hover:bg-white/10"
+                  className="h-[46px] w-[46px] shrink-0 rounded-xl border border-white/15 bg-black/40 text-white backdrop-blur-md hover:bg-black/60"
                 />
               )}
               <ActionBar
@@ -1672,7 +1674,7 @@ export function LiveStreamCard({ stream, chatSlot, immersive = false }: LiveStre
                 tipCount={tipCount}
                 onTip={() => setShowGiftDrawer(true)}
               />
-              </>
+              </div>
             }
           >
             {chatSlot}
