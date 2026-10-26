@@ -24,14 +24,9 @@
   background: color-mix(in srgb, currentColor 8%, transparent);
 }
 .app-route-loading-shell > header svg { width: 22px; height: 22px; }
-.app-route-loading-body { margin: 16px; padding: 20px; border-radius: 20px; background: color-mix(in srgb, currentColor 6%, transparent); }
-.app-route-loading-author { display: flex; align-items: center; gap: 12px; margin-bottom: 24px; }
-.app-route-loading-author i { display: block; width: 40px; height: 40px; border-radius: 12px; }
-.app-route-loading-author span { display: block; width: 38%; height: 14px; border-radius: 6px; }
-.app-route-loading-line { height: 12px; margin-top: 14px; border-radius: 6px; }
-.app-route-loading-line:nth-last-child(2) { width: 65%; }
-.app-route-loading-media { margin-top: 28px; height: 180px; border-radius: 14px; }
-.app-route-loading-author i, .app-route-loading-author span, .app-route-loading-line, .app-route-loading-media { background: color-mix(in srgb, currentColor 12%, transparent); }
+/* Quick trips never flash the dots before the page's own skeleton. */
+.app-route-loading-shell .post-quiet-loader { animation: app-route-dots-in 160ms ease-out 350ms both; }
+@keyframes app-route-dots-in { from { opacity: 0; } to { opacity: 1; } }
 .app-route-loading-shell[data-leaving] { animation: app-route-shell-leave 120ms ease-out both; }
 @keyframes app-route-shell-enter { from { opacity: 0; transform: translateY(12px) scale(.94); } to { opacity: 1; transform: translateY(0) scale(1); } }
 @keyframes app-route-shell-return { from { opacity: .35; transform: scale(1.03); } to { opacity: 1; transform: scale(1); } }
