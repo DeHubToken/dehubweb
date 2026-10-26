@@ -8946,7 +8946,9 @@
       "pptx": "Présentation PowerPoint",
       "pptxHint": "Chaque page devient une image de diapositive, avec les notes du présentateur et les liens. Modifiez le texte et les éléments individuels dans le design original.",
       "section": "Section nommée",
-      "transparent": "Arrière-plan transparent"
+      "transparent": "Arrière-plan transparent",
+      "nle": "Premiere / Final Cut / Resolve (XML)",
+      "nleHint": "Télécharge un ZIP contenant votre timeline en FCPXML et XML Premiere ainsi que tous les médias, pour terminer le montage dans Premiere Pro, Final Cut Pro ou DaVinci Resolve. Le texte devient des marqueurs ; les effets restent dans DeHub."
     },
     "inspector": {
       "selectHint": "Sélectionnez un calque sur la zone de dessin ou un clip sur la chronologie.",
@@ -10693,6 +10695,32 @@
       "zoomOut": "Zoom arrière sur la toile",
       "fit": "Ajuster",
       "pan": "Déplacer le canevas"
+    },
+    "clipFix": {
+      "detach": "Détacher l'audio",
+      "detached": "L'audio est maintenant un clip séparé",
+      "detachFailed": "Impossible de détacher l'audio de ce clip",
+      "removeBars": "Retirer les bandes noires",
+      "scanning": "Analyse des images…",
+      "noBars": "Aucune bande noire trouvée",
+      "barsRemoved": "Bandes noires rognées",
+      "barsFailed": "Impossible d'analyser les bandes noires de cette vidéo"
+    },
+    "shortcuts": {
+      "preset": "Disposition des raccourcis",
+      "presetHint": "Utilisez les touches de timeline de l'éditeur que vous connaissez. Les raccourcis DeHub fonctionnent toujours pour le reste.",
+      "action": {
+        "split": "Couper",
+        "play": "Lecture",
+        "pause": "Pause",
+        "back": "Reculer d'1 seconde",
+        "frameBack": "Image précédente",
+        "frameForward": "Image suivante",
+        "rippleDelete": "Supprimer le clip",
+        "liftDelete": "Supprimer le clip",
+        "start": "Aller au début",
+        "end": "Aller à la fin"
+      }
     }
   },
   "jungleMood": {

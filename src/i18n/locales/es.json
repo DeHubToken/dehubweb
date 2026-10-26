@@ -8942,7 +8942,9 @@
       "pptx": "Presentación de PowerPoint",
       "pptxHint": "Cada página se convierte en una imagen de diapositiva, con notas del presentador y enlaces. Edite texto individual y elementos en el diseño original.",
       "section": "Sección nombrada",
-      "transparent": "Fondo transparente"
+      "transparent": "Fondo transparente",
+      "nle": "Premiere / Final Cut / Resolve (XML)",
+      "nleHint": "Descarga un ZIP con tu línea de tiempo en FCPXML y XML de Premiere junto con todos los archivos, para terminar la edición en Premiere Pro, Final Cut Pro o DaVinci Resolve. El texto se convierte en marcadores; los efectos se quedan en DeHub."
     },
     "inspector": {
       "selectHint": "Selecciona una capa en el lienzo o un clip en la línea de tiempo.",
@@ -10689,6 +10691,32 @@
     },
     "filters": {
       "strength": "Intensidad del filtro: {{value}} %"
+    },
+    "clipFix": {
+      "detach": "Separar audio",
+      "detached": "El audio ahora es un clip aparte",
+      "detachFailed": "No se pudo separar el audio de este clip",
+      "removeBars": "Quitar barras negras",
+      "scanning": "Revisando fotogramas…",
+      "noBars": "No se encontraron barras negras",
+      "barsRemoved": "Barras negras recortadas",
+      "barsFailed": "No se pudo revisar si este vídeo tiene barras negras"
+    },
+    "shortcuts": {
+      "preset": "Distribución de atajos",
+      "presetHint": "Usa las teclas de línea de tiempo del editor que ya conoces. Los atajos de DeHub siguen funcionando para todo lo demás.",
+      "action": {
+        "split": "Dividir",
+        "play": "Reproducir",
+        "pause": "Pausa",
+        "back": "Atrás 1 segundo",
+        "frameBack": "Fotograma anterior",
+        "frameForward": "Fotograma siguiente",
+        "rippleDelete": "Eliminar clip",
+        "liftDelete": "Eliminar clip",
+        "start": "Ir al inicio",
+        "end": "Ir al final"
+      }
     }
   },
   "jungleMood": {

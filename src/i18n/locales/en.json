@@ -8941,7 +8941,9 @@
       "pptx": "PowerPoint presentation",
       "pptxHint": "Each page becomes one slide image, with presenter notes and links. Edit individual text and elements in the original design.",
       "section": "Named section",
-      "transparent": "Transparent background"
+      "transparent": "Transparent background",
+      "nle": "Premiere / Final Cut / Resolve (XML)",
+      "nleHint": "Downloads a ZIP with your timeline as FCPXML and Premiere XML plus every media file, so you can finish the edit in Premiere Pro, Final Cut Pro or DaVinci Resolve. Text becomes markers; effects stay in DeHub."
     },
     "inspector": {
       "selectHint": "Select a layer on the canvas or a clip on the timeline.",
@@ -10688,6 +10690,32 @@
       "toolbar": "Canvas navigation",
       "zoomIn": "Zoom canvas in",
       "zoomOut": "Zoom canvas out"
+    },
+    "clipFix": {
+      "detach": "Detach audio",
+      "detached": "Audio moved to its own clip",
+      "detachFailed": "Could not detach this clip's audio",
+      "removeBars": "Remove black bars",
+      "scanning": "Checking frames…",
+      "noBars": "No black bars found",
+      "barsRemoved": "Black bars cropped",
+      "barsFailed": "Could not check this video for black bars"
+    },
+    "shortcuts": {
+      "preset": "Keyboard layout",
+      "presetHint": "Use the timeline keys from the editor you know. DeHub's own shortcuts keep working for everything else.",
+      "action": {
+        "split": "Split",
+        "play": "Play",
+        "pause": "Pause",
+        "back": "Back 1 second",
+        "frameBack": "Previous frame",
+        "frameForward": "Next frame",
+        "rippleDelete": "Delete clip",
+        "liftDelete": "Delete clip",
+        "start": "Go to start",
+        "end": "Go to end"
+      }
     }
   },
   "jungleMood": {
