@@ -63,9 +63,13 @@ const LoginShortsStack = preloadable(() =>
   import('@/components/app/login/LoginShortsStack').then(m => m.LoginShortsStack),
 );
 
-/** Holds the hero's space until the clips mount, so nothing below jumps. */
+/**
+ * Holds the hero's space until the clips mount, so nothing below jumps. Sized
+ * inline because login-stack.css arrives with the clips' chunk, and on a first
+ * open the placeholder can paint before it.
+ */
 function LoginShortsStackPlaceholder() {
-  return <div className="login-stack" aria-hidden="true"><div className="login-stack__lanes" /></div>;
+  return <div className="login-stack" aria-hidden="true" style={{ flex: '1 0 200px', minHeight: 200 }} />;
 }
 
 const LoginModalBody = preloadable(() =>
