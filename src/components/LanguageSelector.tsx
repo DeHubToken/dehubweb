@@ -18,7 +18,7 @@ import { useLanguage, languages, type LanguageOption } from "@/contexts/Language
 // Intl names the two Chinese scripts, not the bundle codes.
 const INTL_CODE: Partial<Record<string, string>> = { zh: 'zh-Hans', zh_tw: 'zh-Hant' };
 
-export function LanguageSelector() {
+export function LanguageSelector({ compact = false }: { compact?: boolean }) {
   const { t: _copy } = _useCopy();
   const { language, setLanguage } = useLanguage();
   const [open, setOpen] = useState(false);
@@ -58,10 +58,23 @@ export function LanguageSelector() {
   return (
     <Drawer open={open} onOpenChange={setOpen}>
       <DrawerTrigger asChild>
-        <button className="flex items-center gap-1.5 w-full text-sm text-foreground hover:opacity-80 transition-opacity px-1 py-1 min-w-0">
-          <Globe className="w-4 h-4 flex-shrink-0" />
-          <span className="truncate">{current?.nativeLabel}</span>
-        </button>
+        {compact ? (
+          <button
+            type="button"
+            aria-label={current?.nativeLabel}
+            title={current?.nativeLabel}
+            data-docs-chip
+            className="inline-flex items-center gap-1.5 h-9 px-2.5 rounded-lg text-xs font-semibold uppercase tracking-wide text-foreground hover:bg-muted transition-colors"
+          >
+            <Globe className="w-4 h-4 flex-shrink-0" />
+            <span>{(current?.code ?? 'en').split('_')[0]}</span>
+          </button>
+        ) : (
+          <button className="flex items-center gap-1.5 w-full text-sm text-foreground hover:opacity-80 transition-opacity px-1 py-1 min-w-0">
+            <Globe className="w-4 h-4 flex-shrink-0" />
+            <span className="truncate">{current?.nativeLabel}</span>
+          </button>
+        )}
       </DrawerTrigger>
       <DrawerContent
         className="border-t border-white/10 max-h-[85dvh]"
