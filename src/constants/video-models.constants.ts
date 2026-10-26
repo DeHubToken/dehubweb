@@ -60,7 +60,8 @@ export interface VideoModel {
   /** Whether the model supports video-to-video restyling */
   supportsVideoInput?: boolean;
   requiresVideoInput?: boolean;
-  referenceMode?: 'edit' | 'motion';
+  referenceMode?: 'edit' | 'motion' | 'extend';
+  maxSourceDuration?: number;
   /** Whether the model supports seed for reproducibility */
   supportsSeed?: boolean;
   /** Short tips/help for using this model effectively */
