@@ -84,8 +84,8 @@ export interface CommentLikeResponse {
   likeCount?: number;
 }
 
-export async function followUser(walletAddress: string): Promise<{ result: boolean }> {
-  return apiCall<{ result: boolean }>("/api/request_follow", {
+export async function followUser(walletAddress: string): Promise<{ result: boolean; status?: string; isPrivateAccount?: boolean }> {
+  return apiCall<{ result: boolean; status?: string; isPrivateAccount?: boolean }>("/api/request_follow", {
     method: "POST",
     body: { following: walletAddress.toLowerCase() },
     requiresAuth: true,
