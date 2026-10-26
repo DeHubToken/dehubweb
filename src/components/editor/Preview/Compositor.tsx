@@ -63,7 +63,7 @@ import { cn } from "@/lib/utils";
 import { selectTimelineDuration, useEditorStore } from "@/store/editorStore";
 import { recordOpts, useEditorUiStore } from "@/store/editorUiStore";
 import type { Clip, ClipTransform, MediaClip, TextClip } from "@/lib/editor/types";
-import { computeRenderOps, type RenderOp } from "@/lib/editor/transitions";
+import { applyRenderOpMotion, computeRenderOps, type RenderOp } from "@/lib/editor/transitions";
 import { clipBox, drawClip, getTransform, isVisualClip, placementPatch, placementPatchAt, pointInBox, type ClipBox } from "@/lib/editor/render";
 import { isAnimated, keyTimes, resolveClipAt } from "@/lib/editor/keyframes";
 import { useCloseOnSurfaceSwitch } from "@/hooks/use-surface-switch";
@@ -413,7 +413,7 @@ export function Compositor() {
 
           for (const op of ordered) {
             ctx.save();
-            if (op.translateX) ctx.translate(op.translateX, 0);
+            applyRenderOpMotion(ctx, op, W, H);
             if (op.clipRect) {
               ctx.beginPath();
               ctx.rect(op.clipRect.x, 0, op.clipRect.w, H);
