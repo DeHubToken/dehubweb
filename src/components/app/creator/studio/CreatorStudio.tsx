@@ -25,7 +25,8 @@ import { MOTION_TEMPLATE_PROMPT, type ViralTemplate } from '@/lib/creator/viralT
 import { appendCinemaDirection, normalizeCinemaDirection, type CinemaDirection } from '@/lib/creator/cinemaDirection';
 import { CinemaDirectionControls } from './CinemaDirectionControls';
 import { useDraftState } from '@/hooks/use-draft-state';
-import type { GenerationDraft } from '@/lib/editor/generationDraft';
+import { generationDraftForOwner, type GenerationDraft } from '@/lib/editor/generationDraft';
+import { useDraftReferences, type DraftReferenceAdoption } from '@/lib/editor/useDraftReferences';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 import i18n from '@/i18n';
@@ -156,6 +157,7 @@ const MODES: { id: Mode; labelKey: string; icon: React.ComponentType<{ className
 const MAX_PERSISTED_REFERENCE_BYTES = 512 * 1024;
 
 interface StudioSnapshot {
+  draftReferenceAdoption?: DraftReferenceAdoption | null;
   generationDraftId?: string;
   mode: Mode;
   prompts: ByMode<string>;
@@ -265,6 +267,7 @@ function readSnapshot(storageKey: string): StudioSnapshot {
 
     return {
       generationDraftId: typeof saved.generationDraftId === 'string' ? saved.generationDraftId : undefined,
+      draftReferenceAdoption: saved.draftReferenceAdoption && typeof saved.draftReferenceAdoption.id === 'string' && typeof saved.draftReferenceAdoption.modified === 'boolean' ? saved.draftReferenceAdoption : null,
       mode: isMode(saved.mode) ? saved.mode : DEFAULT_SNAPSHOT.mode,
       prompts: byMode(saved.prompts, DEFAULT_SNAPSHOT.prompts),
       presetIds: byMode(saved.presetIds, DEFAULT_SNAPSHOT.presetIds),
@@ -479,7 +482,8 @@ interface CreatorStudioProps {
 
 export const CreatorStudio = memo(function CreatorStudio(props: CreatorStudioProps) {
   const { walletAddress } = useAuth();
-  return <StudioDraftScope owner={walletAddress} scope={props.snapshotScope}>{storageKey => <CreatorStudioWorkspace {...props} storageKey={storageKey} />}</StudioDraftScope>;
+  const draft = useMemo(() => generationDraftForOwner(props.generationDraft, walletAddress), [props.generationDraft, walletAddress]);
+  return <StudioDraftScope owner={walletAddress} scope={props.snapshotScope}>{storageKey => <CreatorStudioWorkspace {...props} generationDraft={draft} storageKey={storageKey} />}</StudioDraftScope>;
 });
 
 const CreatorStudioWorkspace = memo(function CreatorStudioWorkspace({ onOpenEditor, stickyTop = 60, embedded = false, generationDraft, generationDraftId, snapshotScope, onJobStarted, storageKey }: CreatorStudioProps & { storageKey: string }) {
@@ -506,6 +510,8 @@ const CreatorStudioWorkspace = memo(function CreatorStudioWorkspace({ onOpenEdit
   const [restored] = useState(() => readSnapshot(storageKey));
   const latestSnapshot = useRef(restored);
   const [appliedGenerationDraftId, setAppliedGenerationDraftId] = useState(restored.generationDraftId);
+  const [referenceAdoption, setReferenceAdoption] = useState(restored.draftReferenceAdoption ?? null);
+  const draftReferences = useDraftReferences(referenceAdoption, setReferenceAdoption, storageKey);
   useEffect(() => () => writeStudioSnapshot(storageKey, latestSnapshot.current), [storageKey]);
   const [cinemaDirections, setCinemaDirections] = useDraftState<ByMode<CinemaDirection>>(snapshotScope && snapshotScope !== 'main' ? `creator:cinema-direction:${storageKey}` : 'creator:cinema-direction', { image: {}, video: {}, audio: {}, '3d': {} });
 
@@ -556,7 +562,7 @@ const CreatorStudioWorkspace = memo(function CreatorStudioWorkspace({ onOpenEdit
   useEffect(() => {
     if (!generationDraft) return;
     const nextMode: Mode = generationDraft.kind === 'image' ? 'image' : generationDraft.kind === 'video' ? 'video' : 'audio';
-    if (generationDraft.references && (nextMode === 'image' || nextMode === 'video')) {
+    if (generationDraft.references && (nextMode === 'image' || nextMode === 'video') && draftReferences.adopt(generationDraftId, Boolean(generationDraftId && appliedGenerationDraftId === generationDraftId))) {
       setReferences(previous => ({ ...previous, [nextMode]: null }));
       setExtraReferences(previous => ({ ...previous, [nextMode]: generationDraft.references!.map(reference => ({ ...reference, kind: 'image' as const })) }));
     }
@@ -593,6 +599,7 @@ const CreatorStudioWorkspace = memo(function CreatorStudioWorkspace({ onOpenEdit
     setPresetIds((p) => ({ ...p, [m]: value }) as ByMode<string | null>);
   }, []);
   const setReferenceFor = useCallback((m: Mode, value: Reference) => {
+    draftReferences.modified();
     setReferences((p) => ({ ...p, [m]: value }) as ByMode<Reference>);
   }, []);
 
@@ -645,6 +652,7 @@ const CreatorStudioWorkspace = memo(function CreatorStudioWorkspace({ onOpenEdit
     if (!VIRAL_EFFECTS.some(effect => effect.name === prompts.video)) setPromptFor('video', selectedEffect.name);
   }, [videoModel, prompts.video, selectedEffect.name, setPresetFor, setPromptFor]);
   const pickEffect = (effect: ViralTemplate) => {
+    draftReferences.modified();
     setMode('video'); setPresetFor('video', null);
     if (effect.motionSeconds && effect.preview) {
       setVideoModel('kling-3-motion'); setPromptFor('video', MOTION_TEMPLATE_PROMPT);
@@ -685,6 +693,7 @@ const CreatorStudioWorkspace = memo(function CreatorStudioWorkspace({ onOpenEdit
   useEffect(() => {
     const snapshot: StudioSnapshot = {
       generationDraftId: appliedGenerationDraftId,
+      draftReferenceAdoption: referenceAdoption,
       mode,
       prompts,
       presetIds,
@@ -726,6 +735,7 @@ const CreatorStudioWorkspace = memo(function CreatorStudioWorkspace({ onOpenEdit
   }, [
     storageKey,
     appliedGenerationDraftId,
+    referenceAdoption,
     mode,
     prompts,
     presetIds,
@@ -922,18 +932,21 @@ const CreatorStudioWorkspace = memo(function CreatorStudioWorkspace({ onOpenEdit
         setPresetFor('video', seconds > 15 ? 'reference-copy-motion' : 'reference-character-swap');
       }
       setDuration(Math.ceil(seconds));
+      draftReferences.modified();
       assetDraftRef.current = [...latest, { ...asset, seconds }];
       setExtraReferences(prev => ({ ...prev, video: [...prev.video, { ...asset, seconds }] }));
       return;
     }
     if (mode === '3d') { setReference(asset); return; }
     if (images.length >= 4) { toast.error(t('creator.referenceFourImages')); return; }
+    draftReferences.modified();
     assetDraftRef.current = [...latest, asset];
     if (!images.length) setReference(asset);
     else setExtraReferences(prev => ({ ...prev, [mode]: [...prev[mode], asset] }));
     if (mode === 'image' && images.length && !CREATOR_FAL_IMAGE_MODELS[imageModel]?.editUsesPlural) setImageModel('flux-3-image');
   }, [currentAssets, currentClip, currentImages.length, mode, reference, setReference, setPresetFor, imageModel, videoModel, t]);
   const removeAsset = useCallback((asset: CreatorReferenceAsset) => {
+    draftReferences.modified();
     const remaining = currentAssets.filter(item => item.url !== asset.url);
     editPrompt(remapAssetMentions(prompt, currentAssets.map(item => ({ key: item.url, kind: item.kind })), remaining.map(item => ({ key: item.url, kind: item.kind }))));
     assetDraftRef.current = remaining;
@@ -982,6 +995,7 @@ const CreatorStudioWorkspace = memo(function CreatorStudioWorkspace({ onOpenEdit
   }, []);
 
   const pickMotionClip = useCallback((clip: MotionClip, workflow: 'swap' | 'motion') => {
+    draftReferences.modified();
     const model = motionModel(clip, workflow);
     setMode('video');
     setVideoModel(model);

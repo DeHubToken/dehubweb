@@ -8637,7 +8637,8 @@
     "priceChartCleared": "Gráfico de precios borrado. Precio de referencia fijo: $0.0001. Los precios de ejecución dependen de las órdenes disponibles."
   },
   "editor": {
-    "film":  {
+    "film": {
+        "repairRefs": "Quitar vínculos a archivos ausentes",
                  "title":  "Proyecto de película",
                  "intro":  "Planifica planos con imágenes de referencia reutilizables. El brief, el orden de los planos y los resultados elegidos se guardan con este proyecto.",
                  "create":  "Crear plan de película",
