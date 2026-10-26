@@ -1,5 +1,5 @@
 {
-  "version": "1552f4874a16b704",
+  "version": "3f59b6702fdd0198",
   "routes": {
     "/": [
       "ar",
@@ -1297,6 +1297,13 @@
       "tr"
     ],
     "/guides/tokenized-subscriptions-explained": [
+      "ar",
+      "es",
+      "fr",
+      "nl",
+      "tr"
+    ],
+    "/guides/top-50-blockchain-projects-2026": [
       "ar",
       "es",
       "fr",

@@ -8,6 +8,36 @@ import type { BlogPost } from '@/types/blog';
 // getPublishedPosts() corpus: overrides applied, published only, newest first.
 export const blogPostsMetadata: BlogPost[] = [
   {
+    "id": "top-50-blockchain-projects-2026",
+    "slug": "top-50-blockchain-projects-2026",
+    "title": "Top 50 Blockchain Projects 2026, Ranked by GitHub Activity",
+    "seoTitle": "Top 50 Most Active Blockchain Projects 2026 by GitHub Activity | DeHub",
+    "seoDescription": "The 50 most active blockchain projects of 2026, ranked by real GitHub commits and developers over 90 days. Solana, Ethereum, Bitcoin, Zcash, Cardano, Base and more.",
+    "excerpt": "We counted every commit and every active developer across 123 public GitHub repos behind 86 blockchains over 90 days, then ranked the 50 most active. Solana leads, Ethereum has the biggest team, and some big names have gone quiet.",
+    "content": "",
+    "bannerImage": "/media/top-50-blockchain-projects-2026-banner.png",
+    "bannerImageAlt": "Top 50 blockchain projects 2026 ranked by GitHub activity, by DeHub",
+    "author": {
+      "name": "DeHub Team"
+    },
+    "publishedAt": "2026-10-26T20:00:00.000Z",
+    "tags": [
+      "blockchain",
+      "top 50",
+      "GitHub activity",
+      "crypto developers",
+      "Solana",
+      "Ethereum",
+      "Bitcoin",
+      "Layer 2",
+      "open source",
+      "DeHub"
+    ],
+    "readingTime": 11,
+    "featured": true,
+    "status": "published"
+  },
+  {
     "id": "top-50-decentralized-social-apps-2026",
     "slug": "top-50-decentralized-social-apps-2026",
     "title": "Top 50 Decentralized Social Apps 2026: The DeSoc Index",
@@ -3559,33 +3589,32 @@ export const newPostsMetadata: BlogPost[] = [
 
 // getLatestPost() result — docs home hero.
 export const latestPostMetadata: BlogPost | undefined = {
-  "id": "top-50-decentralized-social-apps-2026",
-  "slug": "top-50-decentralized-social-apps-2026",
-  "title": "Top 50 Decentralized Social Apps 2026: The DeSoc Index",
-  "seoTitle": "Top 50 Decentralized Social Media Apps 2026, Ranked | DeHub",
-  "seoDescription": "The 50 most active decentralized and crypto social apps of 2026, scored on real user numbers, features, public GitHub activity and future potential. Bluesky, Farcaster, Lens, Nostr, Mastodon, Zora and more.",
-  "excerpt": "We ranked the 50 most active decentralized and crypto social apps of 2026, from Bluesky and Mastodon to Farcaster, Lens, Zora and Nostr, on users, features, public GitHub activity and future potential. Every number is sourced.",
+  "id": "top-50-blockchain-projects-2026",
+  "slug": "top-50-blockchain-projects-2026",
+  "title": "Top 50 Blockchain Projects 2026, Ranked by GitHub Activity",
+  "seoTitle": "Top 50 Most Active Blockchain Projects 2026 by GitHub Activity | DeHub",
+  "seoDescription": "The 50 most active blockchain projects of 2026, ranked by real GitHub commits and developers over 90 days. Solana, Ethereum, Bitcoin, Zcash, Cardano, Base and more.",
+  "excerpt": "We counted every commit and every active developer across 123 public GitHub repos behind 86 blockchains over 90 days, then ranked the 50 most active. Solana leads, Ethereum has the biggest team, and some big names have gone quiet.",
   "content": "",
-  "bannerImage": "/media/top-50-decentralized-social-apps-2026-banner.png",
-  "bannerImageAlt": "Top 50 decentralized social apps 2026, the DeSoc Index by DeHub",
+  "bannerImage": "/media/top-50-blockchain-projects-2026-banner.png",
+  "bannerImageAlt": "Top 50 blockchain projects 2026 ranked by GitHub activity, by DeHub",
   "author": {
     "name": "DeHub Team"
   },
-  "publishedAt": "2026-10-25T20:00:00.000Z",
+  "publishedAt": "2026-10-26T20:00:00.000Z",
   "tags": [
-    "decentralized social media",
+    "blockchain",
     "top 50",
-    "web3 social",
-    "crypto social apps",
-    "SocialFi",
-    "Bluesky",
-    "Farcaster",
-    "Nostr",
-    "Lens Protocol",
-    "Mastodon",
+    "GitHub activity",
+    "crypto developers",
+    "Solana",
+    "Ethereum",
+    "Bitcoin",
+    "Layer 2",
+    "open source",
     "DeHub"
   ],
-  "readingTime": 31,
+  "readingTime": 11,
   "featured": true,
   "status": "published"
 };
