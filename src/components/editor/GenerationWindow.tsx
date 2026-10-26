@@ -63,7 +63,7 @@ export function GenerationWindow() {
       </header>
       <div className="min-h-0 flex-1 overflow-y-auto py-3">
         <Suspense fallback={<p role="status" className="p-4 text-sm">{t('common.loading')}</p>}>
-          <CreatorStudio embedded generationDraft={draft} onJobStarted={track} onOpenEditor={() => setWindow('minimized')} />
+          <CreatorStudio embedded generationDraft={draft} snapshotScope={draft?.workspaceId ?? 'editor-generator'} generationDraftId={draft?.draftId} onJobStarted={track} onOpenEditor={() => setWindow('minimized')} />
         </Suspense>
       </div>
     </section>}
