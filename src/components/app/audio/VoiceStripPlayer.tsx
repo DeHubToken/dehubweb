@@ -3,9 +3,10 @@
  * ================
  * The one player for every voice note: comment replies, DMs, community, event
  * and live chats. It is the Stages recording scrubber shrunk into a reply: a
- * glass row, a square play key, thin mirrored bars cut from the note's own
+ * square play key, thin mirrored bars cut from the note's own
  * loudness, the time left and a speed chip. Bars around the playhead bounce
- * while it plays; drag anywhere on them to scrub.
+ * while it plays; drag anywhere on them to scrub. It sits bare in the row,
+ * with no box of its own.
  *
  * Bars and text are drawn in currentColor from text-white classes, so the
  * light tones' ink remaps paint them dark without a rule of their own.
@@ -185,11 +186,10 @@ export const VoiceStripPlayer = memo(function VoiceStripPlayer({ src, duration: 
     <div
       ref={rootRef}
       data-voice-strip
-      data-glass-playback-surface
       data-no-navigate
       onClick={(e) => e.stopPropagation()}
       className={cn(
-        'flex items-center gap-2 w-full max-w-[340px] min-w-0 rounded-xl border border-white/[0.08] bg-white/[0.05] py-1.5 pl-1.5 pr-2 text-white',
+        'flex items-center gap-2 w-full max-w-[340px] min-w-0 py-0.5 text-white',
         className,
       )}
     >
