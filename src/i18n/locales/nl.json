@@ -5244,6 +5244,9 @@
     "sellYourFractions": "Verkoop uw fracties ({{held}} in bezit)"
   },
   "creator": {
+    "audioExportFormat": "Exportformaat",
+    "audioExportMp3": "MP3 · 128 kbit/s",
+    "audioExportWav": "WAV · 24 kHz · mono",
     "marketing": {
     "import":  {
                    "url":  "URL van productpagina",

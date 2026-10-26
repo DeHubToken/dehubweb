@@ -5058,6 +5058,9 @@
     "sellYourFractions": "Vendez vos fractions ({{held}} détenus)"
   },
   "creator": {
+    "audioExportFormat": "Format d’exportation",
+    "audioExportMp3": "MP3 · 128 kbit/s",
+    "audioExportWav": "WAV · 24 kHz · mono",
     "marketing": {
     "import":  {
                    "url":  "URL de la page produit",
