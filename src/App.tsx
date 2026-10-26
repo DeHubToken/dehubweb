@@ -569,7 +569,7 @@ function AppContent() {
           <Route path="/creators" element={<CreatorsPage />} />
           <Route path="/skill.md" element={<SkillPage />} />
           <Route path="/editor" element={<Suspense fallback={<PageLoader />}><CreatorEditorHost /></Suspense>} />
-          <Route path="/remix" element={<Suspense fallback={<PageLoader />}><VideoRemix /></Suspense>} />
+          <Route path="/creator/remix" element={<Suspense fallback={<PageLoader />}><VideoRemix /></Suspense>} />
           <Route path="/creator" element={<Suspense fallback={<PageLoader />}><CreatorEditorHost /></Suspense>} />
           <Route path="/creator/flow" element={<Suspense fallback={<PageLoader />}><CreatorFlowPage /></Suspense>} />
           <Route path="/creator/remake" element={<Suspense fallback={<PageLoader />}><MaboroshiPage remake /></Suspense>} />

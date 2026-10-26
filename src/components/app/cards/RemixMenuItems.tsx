@@ -16,7 +16,7 @@ export function RemixMenuItems({ source, onStart }: { source: RemixSource; onSta
     <summary className="cursor-pointer px-4 py-3 text-white">{t('videoRemix.menu', { defaultValue: 'Remix' })}</summary>
     {modes.map(([mode, label, Icon]) => <button key={mode} type="button"
       className="flex w-full items-center gap-3 rounded-xl px-4 py-3 text-left text-white hover:bg-white/10"
-      onClick={() => { onStart(); navigate('/remix', { state: { ...source, mode: mode as RemixMode } }); }}>
+      onClick={() => { onStart(); navigate('/creator/remix', { state: { ...source, mode: mode as RemixMode } }); }}>
       <Icon className="h-5 w-5" />{t(`videoRemix.${mode}`, { defaultValue: label })}
     </button>)}
   </details>;
