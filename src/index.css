@@ -6739,7 +6739,7 @@ html body [data-video-card] [data-video-inline-tools] button {
 }
 
 @media (max-width: 767px) {
-  html[data-theme="immersive"] [data-cinematic]:not([data-cinematic-first]) [data-video-card] [data-head-boost] { display: none; }
+  html[data-theme="immersive"] [data-cinematic]:not([data-cinematic-first]) [data-video-card] [data-head-boost]:not([data-boost-lit]) { display: none; }
   html[data-theme="immersive"] [data-cinematic] [data-video-card] [data-card-info] > [data-video-caption-actions] { width: auto; }
   html[data-theme="immersive"] [data-cinematic]:not([data-cinematic-first]) [data-video-card] [data-video-caption-actions][data-has-boost] + .relative { padding-right: 4rem; }
 }
@@ -6960,4 +6960,15 @@ html[data-theme="immersive"] [data-tablet-portrait] > [data-media-full]:not(#_):
   html[data-theme="immersive"] [data-feed-root] [data-feed-item][data-cinematic-first]:has(> [data-tablet-portrait]):not(#_) {
     padding-top: calc(env(safe-area-inset-top, 0px) + 3.75rem) !important;
   }
+}
+
+/* Boosted post: the corner bolt glows in its own colour (white on dark
+   themes, black on System Light) with a slow breath. */
+[data-boost-lit] svg { animation: boost-lit-glow 2.6s ease-in-out infinite; }
+@keyframes boost-lit-glow {
+  0%, 100% { filter: drop-shadow(0 0 2px currentColor) drop-shadow(0 0 7px color-mix(in srgb, currentColor 55%, transparent)); }
+  50% { filter: drop-shadow(0 0 1px currentColor) drop-shadow(0 0 3px color-mix(in srgb, currentColor 30%, transparent)); }
+}
+@media (prefers-reduced-motion: reduce) {
+  [data-boost-lit] svg { animation: none; filter: drop-shadow(0 0 5px color-mix(in srgb, currentColor 50%, transparent)); }
 }
