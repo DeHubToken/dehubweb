@@ -28,6 +28,7 @@ import { useTranslation } from 'react-i18next';
 import { useQuery } from '@tanstack/react-query';
 import { useLiveSpaces, useScheduledSpaces, useStage } from '@/contexts/StageContext';
 import { ChartDesk } from '@/components/app/music/ChartDesk';
+import { countdownParts, useMinuteTick } from '@/lib/schedule/countdown';
 import { useChartSearch } from '@/hooks/use-chart-search';
 import { SwipeableCarousel } from '@/components/app/SwipeableCarousel';
 import { StageHostLink } from '@/components/app/stages/StageHostLink';
@@ -237,6 +238,8 @@ function UpcomingStagePanel({ space }: { space: AudioSpace }) {
   const { t: _copy } = _useCopy();
   const navigate = useNavigate();
   const when = space.scheduled_at ? new Date(space.scheduled_at) : null;
+  const now = useMinuteTick();
+  const countdown = when ? countdownParts(when, now) : null;
   return (
     <button
       type="button"
@@ -248,6 +251,7 @@ function UpcomingStagePanel({ space }: { space: AudioSpace }) {
         <p className="text-zinc-400 text-[11px] font-medium">
           {_copy('music.upcoming', { defaultValue: 'Upcoming' })}
           {when && ` · ${when.toLocaleString(undefined, { weekday: 'short', day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit' })}`}
+          {countdown && ` · ${_copy('whenSheet.startsIn', { defaultValue: 'Starts in {{time}}', time: countdown })}`}
         </p>
         <h4 className="text-white font-semibold text-sm line-clamp-2">{space.title}</h4>
       </div>

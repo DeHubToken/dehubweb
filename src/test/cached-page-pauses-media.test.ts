@@ -338,28 +338,10 @@ describe('AudioVisualizer puts its element on the page cache books', () => {
  */
 const OFF_DOCUMENT_PLAYERS = [
   {
-    what: 'a voice note on a comment',
-    file: '../components/app/cards/CommentsSection.tsx',
-    registers: /registerOffDocumentMedia\(el, \(\) => buttonRef\.current\)/,
-    releases: /unregisterMediaRef\.current\?\.\(\);\s*\n\s*unregisterMediaRef\.current = null;/,
-  },
-  {
-    what: "the comment composer's own preview",
-    file: '../components/app/cards/CommentsSection.tsx',
-    registers: /registerOffDocumentMedia\(el, \(\) => sectionRef\.current\)/,
-    releases: /unregisterPreviewRef\.current\?\.\(\);\s*\n\s*unregisterPreviewRef\.current = null;/,
-  },
-  {
-    what: 'a DM voice message waveform',
-    file: '../components/app/chat/VoiceWaveformPlayer.tsx',
-    registers: /registerOffDocumentMedia\(audio, \(\) => canvasRef\.current\)/,
+    what: 'a voice note on a comment or in a chat',
+    file: '../components/app/audio/VoiceStripPlayer.tsx',
+    registers: /registerOffDocumentMedia\(audio, \(\) => rootRef\.current\)/,
     releases: /return \(\) => \{\s*\n\s*unregisterMedia\(\);/,
-  },
-  {
-    what: 'a DM voice message bubble',
-    file: '../components/app/chat/DirectMessageChat.tsx',
-    registers: /registerOffDocumentMedia\(el, \(\) => buttonRef\.current\)/,
-    releases: /unregisterMediaRef\.current\?\.\(\);\s*\n\s*unregisterMediaRef\.current = null;/,
   },
   {
     what: 'a track the assistant generated',

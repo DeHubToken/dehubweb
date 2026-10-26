@@ -47,7 +47,7 @@ import Share2 from "@/components/ui/cut-icons/feedshare";
 import Send from "@/components/ui/cut-icons/send";
 import Gem from "@/components/ui/cut-icons/diamond";
 
-import { motion, AnimatePresence, PanInfo, useMotionValue, animate } from 'framer-motion';
+import { motion, AnimatePresence, PanInfo, useMotionValue, useTransform, animate } from 'framer-motion';
 import { useTranslation as useContentTranslation, splitTranslatedTitleAndBody } from '../TranslatableText';
 import { useTranslation as useI18n } from 'react-i18next';
 import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
@@ -104,7 +104,7 @@ import { setVoteCache, getVoteCache } from '@/lib/vote-cache';
 import { getVideoPreferences, getPlaybackRateFor, setPlaybackRate as vpSetPlaybackRate, PLAYBACK_RATES, formatRate, useMediaMuted } from '@/lib/video-preferences';
 import { videoPlaybackManager } from '@/lib/video-playback-manager';
 import { createWheelGesture } from '@/lib/wheel-gesture';
-import { completesSwipeBack } from '@/lib/swipe-back';
+import { commitsDismiss } from '@/lib/video-hold-gestures';
 import { useAnyOverlayOpen } from '@/lib/overlay-open';
 import { UserMentionDropdown } from '@/components/app/mentions';
 import { usePostLinkCopyCount, useLinkCopyFloor, useTrackPostLinkCopy } from '@/hooks/use-link-copy-count';
@@ -342,7 +342,12 @@ const PAUSE_ZONE_END = 2 / 3;
 const AUTO_HIDE_MS = 3000;
 
 /** How far in from the left edge a swipe-back may start (the shell uses 28). */
-const EDGE_SWIPE_ZONE_PX = 32;
+const EDGE_SWIPE_ZONE_PX = 44;
+/** Sideways travel before an edge drag counts as a swipe back. */
+const EDGE_SWIPE_CLAIM_PX = 12;
+/** The settle after letting go of a drag-to-leave that did not commit. */
+const DISMISS_SPRING = { type: 'spring', stiffness: 420, damping: 38, mass: 0.8 } as const;
+const DISMISS_OUT = { duration: 0.2, ease: 'easeOut' } as const;
 
 // The same idea on desktop, where there is a pointer to key off: the chrome
 // clears once the mouse has been still for this long, and the moment it leaves
@@ -506,7 +511,28 @@ export function ShortsViewer({ shorts, initialIndex, onClose, onLoadMore, hasMor
     // rather than a dead button.
     allowSimulated: true,
   });
-  const mini = useInAppVideoMini(containerRef, currentIndex, !isFullscreen && !showComments);
+  const mini = useInAppVideoMini(containerRef, currentIndex, !isFullscreen && !showComments, isMobile);
+  // The whole viewer follows a drag-to-leave on phones: right from the left
+  // edge, or down on the first short. The page underneath shows as it goes.
+  const leaveX = useMotionValue(0);
+  const leaveY = useMotionValue(0);
+  const viewerY = useTransform([mini.y, leaveY], ([a, b]: number[]) => a + b);
+  const leaveScale = useTransform([leaveX, leaveY], ([x, y]: number[]) =>
+    1 - 0.08 * Math.min(1, Math.max(x / Math.max(1, window.innerWidth), y / Math.max(1, window.innerHeight))));
+  const viewerScale = useTransform([mini.scale, leaveScale], ([a, b]: number[]) => a * b);
+  const leaveRadius = useTransform([leaveX, leaveY], ([x, y]: number[]) => Math.min(28, (x + y) / 4));
+  const leaving = useRef(false);
+  const leaveViewer = useCallback((axis: 'x' | 'y') => {
+    if (leaving.current) return;
+    leaving.current = true;
+    const value = axis === 'x' ? leaveX : leaveY;
+    animate(value, axis === 'x' ? window.innerWidth : window.innerHeight, { ...DISMISS_OUT, onComplete: () => onClose() });
+  }, [leaveX, leaveY, onClose]);
+  /** A side hold (speed up / rewind) owns this finger, so the pager stays put. */
+  const holdOwnsGesture = useRef(false);
+  const handleHoldChange = useCallback((active: boolean) => {
+    if (active) holdOwnsGesture.current = true;
+  }, []);
   const minimizedRef = useRef(mini.minimized);
   minimizedRef.current = mini.minimized;
 
@@ -1032,15 +1058,37 @@ export function ShortsViewer({ shorts, initialIndex, onClose, onLoadMore, hasMor
       info.offset.y < -16 && Math.abs(info.offset.y) > Math.abs(info.offset.x);
   }, [isMobile, overlaysHidden, autoHidden, showComments, videoContainer]);
 
+  /** Phones: a drag down on the first short leaves, instead of paging back to nothing. */
+  const dragLeaves = useCallback((info: PanInfo) =>
+    isMobile && currentIndex === 0 && info.offset.y > 0 && Math.abs(info.offset.y) > Math.abs(info.offset.x),
+  [isMobile, currentIndex]);
+
   const handleDrag = useCallback((_: any, info: PanInfo) => {
+    if (holdOwnsGesture.current) { setDragOffset(0); return; }
     if (mini.drag(info)) { setDragOffset(0); return; }
+    if (dragLeaves(info)) {
+      setDragOffset(0);
+      leaveY.set(info.offset.y);
+      return;
+    }
+    leaveY.set(0);
     setDragOffset(Math.abs(info.offset.x) > Math.abs(info.offset.y) ? 0 : info.offset.y);
-  }, [setDragOffset, mini.drag]);
+  }, [setDragOffset, mini.drag, dragLeaves, leaveY]);
 
   const handleDragEnd = useCallback((_: any, info: PanInfo) => {
     resetDragOffset();
-    if (_.type === 'pointercancel' || _.type === 'touchcancel') { mini.cancel(); return; }
+    if (holdOwnsGesture.current) { mini.cancel(); return; }
+    if (_.type === 'pointercancel' || _.type === 'touchcancel') {
+      mini.cancel();
+      animate(leaveY, 0, DISMISS_SPRING);
+      return;
+    }
     if (mini.finish(info)) return;
+    if (leaveY.get() > 0 || dragLeaves(info)) {
+      if (dragLeaves(info) && commitsDismiss(info.offset.y, info.velocity.y, window.innerHeight)) leaveViewer('y');
+      else animate(leaveY, 0, DISMISS_SPRING);
+      return;
+    }
 
     // Restoring the caption must not consume a valid navigation flick.
     if (isRestoreDrag(info)) {
@@ -1060,7 +1108,7 @@ export function ShortsViewer({ shorts, initialIndex, onClose, onLoadMore, hasMor
     } else if (info.offset.y > swipeThreshold || info.velocity.y > velocityThreshold) {
       goToPrev();
     }
-  }, [goToNext, goToPrev, isRestoreDrag, resetDragOffset, mini.finish, mini.cancel]);
+  }, [goToNext, goToPrev, isRestoreDrag, resetDragOffset, mini.finish, mini.cancel, dragLeaves, leaveY, leaveViewer]);
 
   // Toggle play/pause - only shows indicator on explicit tap
   /**
@@ -1145,7 +1193,8 @@ export function ShortsViewer({ shorts, initialIndex, onClose, onLoadMore, hasMor
 
   /**
    * Swipe back: a drag that starts at the left edge and runs right closes the
-   * viewer, back to the tab it was opened from. The shell's own swipe-back
+   * viewer, back to the tab it was opened from. The viewer follows the finger,
+   * so it can be dragged part way and let go to spring back. The shell's own swipe-back
    * (useSwipeBack) is told to ignore the viewer, because it clicks the last
    * visible back control and this one fades out with the chrome, which would
    * leave it pressing the page's back button underneath instead.
@@ -1154,7 +1203,7 @@ export function ShortsViewer({ shorts, initialIndex, onClose, onLoadMore, hasMor
    * tap ladder on the video are untouched: both give up on a horizontal move.
    */
   const anyOverlayOpen = useAnyOverlayOpen();
-  const edgeSwipe = useRef<{ id: number; x: number; y: number; at: number } | null>(null);
+  const edgeSwipe = useRef<{ id: number; x: number; y: number; at: number; claimed: boolean; lastX: number; lastAt: number; velocity: number } | null>(null);
   const swipeDirection = typeof document !== 'undefined' && document.documentElement.dir === 'rtl' ? -1 : 1;
 
   // Prevent touch events from bubbling to parent page
@@ -1165,24 +1214,46 @@ export function ShortsViewer({ shorts, initialIndex, onClose, onLoadMore, hasMor
     const touch = e.touches[0];
     const edge = swipeDirection < 0 ? window.innerWidth - touch.clientX : touch.clientX;
     if (edge < 0 || edge > EDGE_SWIPE_ZONE_PX) return;
-    edgeSwipe.current = { id: touch.identifier, x: touch.clientX, y: touch.clientY, at: performance.now() };
+    const now = performance.now();
+    edgeSwipe.current = { id: touch.identifier, x: touch.clientX, y: touch.clientY, at: now, claimed: false, lastX: touch.clientX, lastAt: now, velocity: 0 };
   };
 
   const handleTouchMove = (e: React.TouchEvent) => {
     e.stopPropagation();
-    if (e.touches.length !== 1) edgeSwipe.current = null;
+    const origin = edgeSwipe.current;
+    if (!origin) return;
+    const touch = Array.from(e.touches).find(t => t.identifier === origin.id);
+    if (e.touches.length !== 1 || !touch) {
+      edgeSwipe.current = null;
+      if (origin.claimed) animate(leaveX, 0, DISMISS_SPRING);
+      return;
+    }
+    const dx = (touch.clientX - origin.x) * swipeDirection;
+    const dy = touch.clientY - origin.y;
+    if (!origin.claimed) {
+      // Vertical first: the pager keeps the flick, and the edge gives up.
+      if (Math.abs(dy) > EDGE_SWIPE_CLAIM_PX && Math.abs(dy) > dx) { edgeSwipe.current = null; return; }
+      if (dx < EDGE_SWIPE_CLAIM_PX) return;
+      origin.claimed = true;
+      resetDragOffset();
+    }
+    const now = performance.now();
+    if (now > origin.lastAt) {
+      origin.velocity = ((touch.clientX - origin.lastX) * swipeDirection) / (now - origin.lastAt) * 1000;
+      origin.lastX = touch.clientX;
+      origin.lastAt = now;
+    }
+    leaveX.set(Math.max(0, dx - EDGE_SWIPE_CLAIM_PX) * swipeDirection);
   };
 
   const handleTouchEnd = (e: React.TouchEvent) => {
     e.stopPropagation();
     const origin = edgeSwipe.current;
     edgeSwipe.current = null;
-    if (!origin) return;
-    const touch = Array.from(e.changedTouches).find(t => t.identifier === origin.id);
-    if (!touch) return;
-    const dx = (touch.clientX - origin.x) * swipeDirection;
-    const elapsed = Math.max(1, performance.now() - origin.at);
-    if (completesSwipeBack(dx, touch.clientY - origin.y, dx / elapsed * 1000)) onClose();
+    if (!origin?.claimed) return;
+    const travelled = Math.abs(leaveX.get());
+    if (e.type !== 'touchcancel' && commitsDismiss(travelled, origin.velocity, window.innerWidth)) leaveViewer('x');
+    else animate(leaveX, 0, DISMISS_SPRING);
   };
 
   // Overlay hide/show gesture handlers - integrated with drag system
@@ -1432,8 +1503,10 @@ export function ShortsViewer({ shorts, initialIndex, onClose, onLoadMore, hasMor
       // drag (it sets `touch-action: pan-x` on the drag layer itself).
       style={{
         overscrollBehavior: 'contain',
-        scale: mini.scale,
-        y: mini.y,
+        scale: viewerScale,
+        x: leaveX,
+        y: viewerY,
+        borderRadius: leaveRadius,
         ...{ ['--shorts-drag-chrome-opacity' as string]: mini.chromeOpacity },
         ...(commentsViewport.height !== null ? {
           top: commentsViewport.offsetTop,
@@ -1445,6 +1518,7 @@ export function ShortsViewer({ shorts, initialIndex, onClose, onLoadMore, hasMor
       onTouchStart={mini.minimized ? undefined : handleTouchStart}
       onTouchMove={mini.minimized ? undefined : handleTouchMove}
       onTouchEnd={mini.minimized ? undefined : handleTouchEnd}
+      onTouchCancel={mini.minimized ? undefined : handleTouchEnd}
     >
       {mini.dragging && <motion.div data-shorts-drag-backdrop className="absolute inset-0 bg-black pointer-events-none" style={{ opacity: mini.backdropOpacity }} />}
       {theme === 'glass' && !isMobile && <GlassBackground />}
@@ -1509,6 +1583,7 @@ export function ShortsViewer({ shorts, initialIndex, onClose, onLoadMore, hasMor
           // Comments get 75%: at half height the sheet held barely two comments.
           animate={isMobile ? { height: showComments ? '25%' : '100%' } : undefined}
           transition={SMOOTH_TRANSITION}
+          onPointerDownCapture={() => { holdOwnsGesture.current = false; }}
           onPointerCancelCapture={() => { mini.cancel(); resetDragOffset(); endTimelineSeek(); }}
           onMouseMove={isMobile ? undefined : handleDesktopPointerMove}
           onMouseLeave={isMobile ? undefined : handleDesktopPointerLeave}
@@ -1563,6 +1638,8 @@ export function ShortsViewer({ shorts, initialIndex, onClose, onLoadMore, hasMor
                       onTimeUpdate={isActive ? trackView : undefined}
                       onTap={handleVideoTap}
                       onTapUndo={undoVideoTap}
+                      sideGestures={isMobile}
+                      onHoldChange={handleHoldChange}
                       onSeekStart={beginTimelineSeek}
                       onSeekEnd={endTimelineSeek}
                       showPlayIndicator={isActive ? showPlayIndicator : null}
