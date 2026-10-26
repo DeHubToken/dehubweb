@@ -10,6 +10,10 @@ export const TRANSITION_OPTIONS: { kind: TransitionKind; label: string }[] = [
   { kind: "slide-right", label: "Slide right" },
   { kind: "wipe-left", label: "Wipe left" },
   { kind: "wipe-right", label: "Wipe right" },
+  { kind: "zoom-in", label: "Zoom in" },
+  { kind: "zoom-out", label: "Zoom out" },
+  { kind: "fly-up", label: "Fly up" },
+  { kind: "fly-down", label: "Fly down" },
 ];
 
 export const DEFAULT_TRANSITION_DURATION = 0.5;
@@ -54,8 +58,26 @@ export interface RenderOp {
   localTimeOverride?: number;
   alpha: number;
   translateX: number; // pixels in canvas space
+  /** Vertical offset as a fraction of the canvas height. */
+  shiftY?: number;
+  /** Uniform scale about the canvas centre. */
+  scale?: number;
   clipRect?: { x: number; w: number };
 }
+
+type OpStyling = Pick<RenderOp, "alpha" | "translateX" | "shiftY" | "scale" | "clipRect">;
+
+/** Apply an op's offset and scale before drawing its clip. */
+export function applyRenderOpMotion(ctx: CanvasRenderingContext2D | OffscreenCanvasRenderingContext2D, op: Pick<RenderOp, "translateX" | "shiftY" | "scale">, width: number, height: number) {
+  if (op.translateX || op.shiftY) ctx.translate(op.translateX || 0, (op.shiftY || 0) * height);
+  if (op.scale && op.scale !== 1) {
+    ctx.translate(width / 2, height / 2);
+    ctx.scale(op.scale, op.scale);
+    ctx.translate(-width / 2, -height / 2);
+  }
+}
+
+const easeOut = (p: number) => 1 - (1 - p) * (1 - p);
 
 interface PairContext { canvasWidth: number; }
 
@@ -65,7 +87,7 @@ export function outgoingOps(
   tr: Transition,
   progress: number,
   ctx: PairContext,
-): Pick<RenderOp, "alpha" | "translateX" | "clipRect"> {
+): OpStyling {
   const p = Math.max(0, Math.min(1, progress));
   const W = ctx.canvasWidth;
   switch (tr.kind) {
@@ -79,6 +101,14 @@ export function outgoingOps(
       return { alpha: 1, translateX: 0, clipRect: { x: 0, w: W * (1 - p) } };
     case "wipe-right":
       return { alpha: 1, translateX: 0, clipRect: { x: W * p, w: W * (1 - p) } };
+    case "zoom-in":
+      return { alpha: 1 - p, translateX: 0, scale: 1 + 0.25 * easeOut(p) };
+    case "zoom-out":
+      return { alpha: 1 - p, translateX: 0, scale: 1 - 0.2 * easeOut(p) };
+    case "fly-up":
+      return { alpha: 1 - p * 0.4, translateX: 0, shiftY: -easeOut(p), scale: 1 - 0.1 * p };
+    case "fly-down":
+      return { alpha: 1 - p * 0.4, translateX: 0, shiftY: easeOut(p), scale: 1 - 0.1 * p };
     default:
       return { alpha: 1, translateX: 0 };
   }
@@ -90,7 +120,7 @@ export function incomingOps(
   tr: Transition,
   progress: number,
   ctx: PairContext,
-): Pick<RenderOp, "alpha" | "translateX" | "clipRect"> {
+): OpStyling {
   const p = Math.max(0, Math.min(1, progress));
   const W = ctx.canvasWidth;
   switch (tr.kind) {
@@ -104,6 +134,14 @@ export function incomingOps(
       return { alpha: 1, translateX: 0, clipRect: { x: W * (1 - p), w: W * p } };
     case "wipe-right":
       return { alpha: 1, translateX: 0, clipRect: { x: 0, w: W * p } };
+    case "zoom-in":
+      return { alpha: p, translateX: 0, scale: 0.8 + 0.2 * easeOut(p) };
+    case "zoom-out":
+      return { alpha: p, translateX: 0, scale: 1.25 - 0.25 * easeOut(p) };
+    case "fly-up":
+      return { alpha: 1, translateX: 0, shiftY: 1 - easeOut(p) };
+    case "fly-down":
+      return { alpha: 1, translateX: 0, shiftY: -(1 - easeOut(p)) };
     default:
       return { alpha: 1, translateX: 0 };
   }
