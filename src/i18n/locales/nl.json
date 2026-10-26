@@ -5244,6 +5244,10 @@
     "sellYourFractions": "Verkoop uw fracties ({{held}} in bezit)"
   },
   "creator": {
+    "expandDescription": "Genereer nieuwe inhoud buiten de beeldranden. Eén bronafbeelding en een optionele Engelse beschrijving.",
+    "expandPromptHint": "Voeg één afbeelding toe en kies de nieuwe beeldverhouding. Een Engelse beschrijving is optioneel.",
+    "expandEnglishOnly": "Dit uitbreidingsmodel accepteert Engelse beschrijvingen. Laat het veld leeg voor automatische uitbreiding.",
+    "expandNeedsImage": "Voeg een afbeelding toe om uit te breiden.",
     "marketing": {
     "import":  {
                    "url":  "URL van productpagina",
