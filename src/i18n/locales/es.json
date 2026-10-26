@@ -6518,6 +6518,8 @@
     "creatorEarnsDirect": "Los suscriptores pagan en tokens DeHub. Tu acción llega a tu billetera en el momento en que se suscriben, menos la tarifa de la plataforma para tu nivel de insignia."
   },
   "liveOverlay": {
+    "giftedSubs_one": "¡{{name}} regaló una suscripción!",
+    "giftedSubs_other": "¡{{name}} regaló {{count}} suscripciones!",
     "someone": "Alguien",
     "newFollower": "Nuevo seguidor: {{name}}",
     "newSubscriber": "Nuevo suscriptor: {{name}}",
@@ -6727,6 +6729,7 @@
       "subathon_timer": "Cronómetro Subathon",
       "points_board": "Espectadores leales",
       "streamer_level": "Nivel de streamer",
+      "hype_train": "Hype train",
       "tip_jar": "Tarro de regalo"
     },
     "hints": {
@@ -6751,6 +6754,7 @@
       "subathon_timer": "Un conteo regresivo que los regalos, seguimientos y suscripciones hacen retroceder",
       "points_board": "Tus espectadores más destacados por puntos de ver y regalar",
       "streamer_level": "Tu nivel de streamer y racha semanal, desde tu perfil",
+      "hype_train": "Muestra el hype train mientras está activo: tres regalos o suscripciones en cinco minutos lo ponen en marcha.",
       "tip_jar": "Un frasco que se llena a medida que llegan los regalos pagados"
     },
     "fields": {
@@ -18129,5 +18133,74 @@
     "fingerprint": "Huella",
     "exploreFirst": "Explorar primero",
     "codeNote": "Te enviamos un código por correo, sin contraseña."
+  },
+  "liveHype": {
+    "train": {
+      "level": "Hype train · Nivel {{level}}",
+      "endedLevel": "¡El hype train completó el nivel {{level}}!",
+      "ended": "El hype train terminó",
+      "thanks_one": "Gracias a {{count}} fan",
+      "thanks_other": "Gracias a {{count}} fans",
+      "top": "Top: {{name}}"
+    },
+    "chat": {
+      "giftedSubs_one": "regaló una suscripción 🎁",
+      "giftedSubs_other": "regaló {{count}} suscripciones 🎁"
+    },
+    "gift": {
+      "open": "Regalar suscripciones",
+      "title": "Regalar suscripciones",
+      "plan": "Plan",
+      "mode": {
+        "random": "Espectadores al azar del chat",
+        "user": "Una persona concreta"
+      },
+      "howMany": "Cuántas",
+      "randomHint": "Van a personas que escribieron en el chat en los últimos 30 minutos y aún no están suscritas.",
+      "who": "Nombre de usuario o dirección de billetera",
+      "whoPlaceholder": "@usuario",
+      "send_one": "Regalar 1 suscripción · ${{price}}",
+      "send_other": "Regalar {{count}} suscripciones · ${{price}}",
+      "payHint": "Se paga en DHB desde tu billetera en una sola transferencia.",
+      "fewer_one": "Ahora mismo solo 1 persona del chat puede recibir una suscripción, así que pagas 1.",
+      "fewer_other": "Ahora mismo solo {{count}} personas del chat pueden recibir una suscripción, así que pagas {{count}}.",
+      "done_one": "¡Suscripción regalada!",
+      "done_other": "¡{{count}} suscripciones regaladas!",
+      "failed": "No se pudieron regalar las suscripciones",
+      "notReady": "Todavía no se puede regalar este plan",
+      "noPlan": "Primero elige un plan",
+      "noPlans": "{{name}} aún no tiene planes de suscripción para regalar.",
+      "cancel": "Cancelar",
+      "stage": {
+        "preparing": "Preparando…",
+        "wallet": "Confirma en tu billetera",
+        "confirming": "Esperando la transacción…",
+        "recording": "Terminando…"
+      }
+    },
+    "badges": {
+      "title": "Insignias por tiempo limitado",
+      "intro": "Ofrece una insignia durante unos días. Quien se suscriba o regale mientras esté disponible la consigue, y aparecerá junto a su nombre en tu chat para siempre.",
+      "name": "Nombre de la insignia",
+      "namePlaceholder": "Semana de lanzamiento",
+      "days": "Disponible durante (días)",
+      "emoji": "Emoji",
+      "who": "Quién puede conseguirla",
+      "audience": {
+        "both": "Suscriptores y quienes regalan",
+        "subscribers": "Suscriptores",
+        "gifters": "Quienes regalan"
+      },
+      "create": "Ofrecer insignia",
+      "created": "La insignia ya está disponible.",
+      "end": "Terminar ahora",
+      "ended": "Terminada",
+      "until": "Hasta el {{date}}",
+      "holders_one": "{{count}} persona la tiene",
+      "holders_other": "{{count}} personas la tienen",
+      "limit": "Puede haber tres insignias a la vez. Termina una para ofrecer otra.",
+      "failed": "No funcionó. Inténtalo de nuevo.",
+      "hypeHint": "Quien participe en un hype train también recibe tu insignia 🚂 del nivel alcanzado."
+    }
   }
 }
