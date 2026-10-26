@@ -56,6 +56,11 @@ interface UseVoiceAssistantReturn {
   recordingDuration: number;
   /** Exchanges left on the prepaid session, or undefined before one is bought. */
   exchangesLeft?: number;
+  /**
+   * Loudness right now, 0–1: the mic while listening, the reply while it
+   * plays. Read it every animation frame; it never re-renders.
+   */
+  getLevel: () => number;
 }
 
 export function useVoiceAssistant(options: UseVoiceAssistantOptions): UseVoiceAssistantReturn {
@@ -83,6 +88,12 @@ export function useVoiceAssistant(options: UseVoiceAssistantOptions): UseVoiceAs
   const analyserRef = useRef<AnalyserNode | null>(null);
   const audioContextRef = useRef<AudioContext | null>(null);
   const silenceCheckRef = useRef<NodeJS.Timeout | null>(null);
+  const statusRef = useRef<VoiceStatus>('idle');
+  // Taps the reply's audio so the orb can move with the voice. Null when the
+  // clip could not be routed through the page's AudioContext.
+  const replyAnalyserRef = useRef<AnalyserNode | null>(null);
+  const replyObjectUrlRef = useRef<string | null>(null);
+  const levelBufRef = useRef<Uint8Array | null>(null);
 
   // Keep refs in sync
   const onTranscriptRef = useRef(onTranscript);
@@ -100,6 +111,7 @@ export function useVoiceAssistant(options: UseVoiceAssistantOptions): UseVoiceAs
   }, [onTranscript, onPaymentRequired, onSpeakStart, onSpeakEnd, onStatusChange]);
 
   const updateStatus = useCallback((s: VoiceStatus) => {
+    statusRef.current = s;
     setStatus(s);
     onStatusChangeRef.current?.(s);
   }, []);
@@ -168,17 +180,55 @@ export function useVoiceAssistant(options: UseVoiceAssistantOptions): UseVoiceAs
     return data.audioUrl;
   }, []);
 
-  // Play audio URL and return a promise that resolves when done
-  const playAudio = useCallback((url: string): Promise<void> => {
-    return new Promise((resolve, reject) => {
-      // Stop any existing audio
-      if (audioRef.current) {
-        audioRef.current.pause();
-        audioRef.current = null;
-      }
+  const releaseReplyAudio = useCallback(() => {
+    replyAnalyserRef.current = null;
+    if (replyObjectUrlRef.current) {
+      URL.revokeObjectURL(replyObjectUrlRef.current);
+      replyObjectUrlRef.current = null;
+    }
+  }, []);
 
-      const audio = new Audio(url);
+  // Play audio URL and return a promise that resolves when done
+  const playAudio = useCallback(async (url: string): Promise<void> => {
+    // Stop any existing audio
+    if (audioRef.current) {
+      audioRef.current.pause();
+      audioRef.current = null;
+    }
+    releaseReplyAudio();
+
+    // A same-origin copy of the clip can be measured; a cross-origin one routed
+    // through Web Audio would play as silence. If the copy fails, the clip
+    // plays straight from its URL and the orb falls back to a speech rhythm.
+    let src = url;
+    try {
+      const res = await fetch(url);
+      if (res.ok) {
+        src = URL.createObjectURL(await res.blob());
+        replyObjectUrlRef.current = src;
+      }
+    } catch {
+      // Keep the original URL.
+    }
+
+    return new Promise((resolve, reject) => {
+      const audio = new Audio(src);
       audioRef.current = audio;
+
+      const ctx = audioContextRef.current;
+      if (replyObjectUrlRef.current && ctx && ctx.state === 'running') {
+        try {
+          const source = ctx.createMediaElementSource(audio);
+          const analyser = ctx.createAnalyser();
+          analyser.fftSize = 256;
+          analyser.smoothingTimeConstant = 0.5;
+          source.connect(analyser);
+          analyser.connect(ctx.destination);
+          replyAnalyserRef.current = analyser;
+        } catch {
+          replyAnalyserRef.current = null;
+        }
+      }
 
       audio.onplay = () => {
         setIsSpeaking(true);
@@ -189,17 +239,57 @@ export function useVoiceAssistant(options: UseVoiceAssistantOptions): UseVoiceAs
         setIsSpeaking(false);
         onSpeakEndRef.current?.();
         audioRef.current = null;
+        releaseReplyAudio();
         resolve();
       };
 
       audio.onerror = () => {
         setIsSpeaking(false);
         audioRef.current = null;
+        releaseReplyAudio();
         reject(new Error('Audio playback failed'));
       };
 
       audio.play().catch(reject);
     });
+  }, [releaseReplyAudio]);
+
+  const getLevel = useCallback((): number => {
+    const s = statusRef.current;
+    if (s === 'speaking') {
+      const audio = audioRef.current;
+      if (!audio || audio.paused) return 0;
+      const analyser = replyAnalyserRef.current;
+      if (!analyser) {
+        // No tap on the clip: a syllable-like rhythm keeps the orb talking.
+        const t = performance.now() / 1000;
+        return 0.35 + 0.45 * Math.abs(Math.sin(t * 8.7)) * Math.abs(Math.sin(t * 2.3 + 1));
+      }
+      if (!levelBufRef.current || levelBufRef.current.length !== analyser.fftSize) {
+        levelBufRef.current = new Uint8Array(analyser.fftSize);
+      }
+      const buf = levelBufRef.current;
+      analyser.getByteTimeDomainData(buf);
+      let sum = 0;
+      for (let i = 0; i < buf.length; i++) {
+        const v = (buf[i] - 128) / 128;
+        sum += v * v;
+      }
+      return Math.min(1, Math.sqrt(sum / buf.length) * 4);
+    }
+    if (s === 'listening') {
+      const analyser = analyserRef.current;
+      if (!analyser) return 0;
+      if (!levelBufRef.current || levelBufRef.current.length !== analyser.frequencyBinCount) {
+        levelBufRef.current = new Uint8Array(analyser.frequencyBinCount);
+      }
+      const buf = levelBufRef.current;
+      analyser.getByteFrequencyData(buf);
+      let sum = 0;
+      for (let i = 0; i < buf.length; i++) sum += buf[i];
+      return Math.min(1, sum / buf.length / 70);
+    }
+    return 0;
   }, []);
 
   const stopSpeaking = useCallback(() => {
@@ -207,8 +297,9 @@ export function useVoiceAssistant(options: UseVoiceAssistantOptions): UseVoiceAs
       audioRef.current.pause();
       audioRef.current = null;
     }
+    releaseReplyAudio();
     setIsSpeaking(false);
-  }, []);
+  }, [releaseReplyAudio]);
 
   // Start recording with silence detection
   const startListening = useCallback(async () => {
@@ -486,5 +577,6 @@ export function useVoiceAssistant(options: UseVoiceAssistantOptions): UseVoiceAs
     isSpeaking,
     recordingDuration,
     exchangesLeft,
+    getLevel,
   };
 }

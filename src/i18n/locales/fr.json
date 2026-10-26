@@ -12053,6 +12053,7 @@
     "reminderLater": "Pas maintenant"
   },
   "copy": {
+    "1607715e45ed": "Touchez la boule pour parler, ou écrivez en dessous",
     "00140a37bd26": "Transactions sur ce réseau sont temporairement indisponibles. Veuillez réessayer.",
     "002286513398": "Vous n'avez pas la permission de gérer les événements",
     "002d8f205c6a": "Demande de suivi de {{value1}} rejetée",
