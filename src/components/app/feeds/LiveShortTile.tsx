@@ -1,7 +1,7 @@
 /**
  * A live stream as a tile in the Shorts grid: the creator's 9:16 window of their
  * landscape picture, cropped on this device (dual-format live). Tapping opens
- * the full stream.
+ * it in the swipe viewer, or the full stream where there is no viewer.
  *
  * No crop set means the middle of the picture, which is exactly what a 9:16
  * tile with object-cover already shows, and is also right for a stream that is
@@ -20,9 +20,11 @@ import type { LiveStream } from '@/types/feed.types';
 interface Props {
   stream: LiveStream;
   disabled?: boolean;
+  /** Open the stream in the swipe viewer. Without it a tap goes to the stream page. */
+  onOpen?: () => void;
 }
 
-export const LiveShortTile = memo(function LiveShortTile({ stream, disabled }: Props) {
+export const LiveShortTile = memo(function LiveShortTile({ stream, disabled, onOpen }: Props) {
   const { t } = useTranslation();
   const navigate = useNavigate();
   const { data: overlay, isLoading } = useStreamOverlay(stream.streamId, true);
@@ -39,7 +41,7 @@ export const LiveShortTile = memo(function LiveShortTile({ stream, disabled }: P
       data-media-tile
       data-media-scrim
       data-live-short
-      onClick={() => navigate(`/app/post/${stream.id}`, { state: { fromFeed: true } })}
+      onClick={() => (onOpen ? onOpen() : navigate(`/app/post/${stream.id}`, { state: { fromFeed: true } }))}
       aria-label={t('liveStudio.vertical.watch', { name: stream.streamer })}
       className="relative aspect-[9/16] overflow-hidden rounded-xl bg-zinc-900 text-left"
     >

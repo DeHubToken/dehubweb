@@ -533,6 +533,11 @@ export interface ShortVideo extends BaseFeedItem {
   myReaction?: PostReaction | null;
   /** Per-reaction totals — the most-used one leads on the card. */
   reactionCounts?: ReactionCounts | null;
+  /**
+   * Set when this slide is a stream that is live right now rather than a
+   * short (dual-format live). The swipe viewer draws it as a live slide.
+   */
+  live?: LiveStream;
 }
 
 /**
