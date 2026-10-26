@@ -95,6 +95,7 @@ import { cn } from '@/lib/utils';
 import type { ShortVideo } from '@/types/feed.types';
 import { useQueryClient } from '@tanstack/react-query';
 import { VideoSlide } from './VideoSlide';
+import { LiveSwipeSlide } from './LiveSwipeSlide';
 import { pauseMediaIn, resumeMedia } from '@/lib/pause-media-in';
 import { useVideoFullscreen } from '@/hooks/use-video-fullscreen';
 import { useInAppVideoMini } from '@/hooks/use-in-app-video-mini';
@@ -541,6 +542,11 @@ export function ShortsViewer({ shorts, initialIndex, onClose, onLoadMore, hasMor
   const voteWeight = useEngagementWeight();
 
   const currentShort = shorts[currentIndex];
+  // A stream that is live right now, mixed in among the shorts. It draws its
+  // own chrome, and none of the post machinery below (votes, tips, comments,
+  // views) applies to it, so those get no id while it is on screen.
+  const isLiveSlide = !!currentShort?.live;
+  const postId = isLiveSlide ? undefined : currentShort?.id;
   const downloadVideo = useVideoDownload();
   const downloadGate = useMatureGate(currentShort?.contentRating);
   const isOwnShort = !!walletAddress && currentShort?.creatorId?.toLowerCase() === walletAddress.toLowerCase();
@@ -559,7 +565,7 @@ export function ShortsViewer({ shorts, initialIndex, onClose, onLoadMore, hasMor
     setReactionInfoOpen(true);
   };
   const [showTipModal, setShowTipModal] = useState(false);
-  const { data: tipCount = 0 } = usePostTipCount(currentShort?.id, currentShort?.totalTips);
+  const { data: tipCount = 0 } = usePostTipCount(postId, currentShort?.totalTips);
 
   // Share counter = reposts + link copies.
   //
@@ -568,8 +574,8 @@ export function ShortsViewer({ shorts, initialIndex, onClose, onLoadMore, hasMor
   // max() rather than added: a delta would be added on top of the server total
   // again as soon as the count query refetched and already contained that same
   // copy, whereas a floor is absorbed the moment the server catches up.
-  const { data: linkCopyCount = 0 } = usePostLinkCopyCount(currentShort?.id);
-  const linkCopyFloor = useLinkCopyFloor(currentShort?.id);
+  const { data: linkCopyCount = 0 } = usePostLinkCopyCount(postId);
+  const linkCopyFloor = useLinkCopyFloor(postId);
   const trackLinkCopy = useTrackPostLinkCopy();
   const [shareDelta, setShareDelta] = useState(0);
   const displayShareCount =
@@ -578,7 +584,7 @@ export function ShortsViewer({ shorts, initialIndex, onClose, onLoadMore, hasMor
     Math.max(linkCopyCount, linkCopyFloor);
   
   // View tracking for the current short
-  const { onTimeUpdate: trackView } = useVideoViewTracking(currentShort?.id);
+  const { onTimeUpdate: trackView } = useVideoViewTracking(postId);
   
   // Compute visible indices for the 3-video window, plus whichever slide the
   // pointer is still latched to.
@@ -651,7 +657,7 @@ export function ShortsViewer({ shorts, initialIndex, onClose, onLoadMore, hasMor
   }, [currentShort, isAuthenticated, openLoginModal, isCreatorFollowed, queryClient, _copy]);
 
   // Bookmark hook
-  const { isBookmarked, isLoading: isBookmarkLoading, toggleBookmark } = useBookmarkPost(currentShort?.id || '');
+  const { isBookmarked, isLoading: isBookmarkLoading, toggleBookmark } = useBookmarkPost(postId || '');
   
   // Sync voting state from short data when changing videos
   // Check vote cache first to preserve optimistic updates across scroll
@@ -1544,6 +1550,15 @@ export function ShortsViewer({ shorts, initialIndex, onClose, onLoadMore, hasMor
                     style={{ zIndex: isActive ? 2 : 1 }}
                   >
                     <motion.div className="absolute inset-0" style={{ y: dragOffset }}>
+                    {short.live ? (
+                      <LiveSwipeSlide
+                        stream={short.live}
+                        isActive={isActive && !isPaused}
+                        preload={offset === 1}
+                        isMuted={isMuted}
+                        onLeave={onClose}
+                      />
+                    ) : (
                     <VideoSlide
                       short={short}
                       isActive={isActive && !isPaused}
@@ -1569,6 +1584,7 @@ export function ShortsViewer({ shorts, initialIndex, onClose, onLoadMore, hasMor
                       // three videos fighting for bandwidth on the active one.
                       preload={offset === 0 || offset === 1 ? 'auto' : 'metadata'}
                     />
+                    )}
                     </motion.div>
                   </motion.div>
                 );
@@ -1588,7 +1604,7 @@ export function ShortsViewer({ shorts, initialIndex, onClose, onLoadMore, hasMor
                   translates — so it slid away with the video on every step
                   while its neighbour here held still. All three live in the
                   container now, and none of them moves. */}
-              <button
+              {!isLiveSlide && <button
                 onClick={() => {
                   // The options drawer portals to <body>, which cannot paint
                   // over a native-fullscreen element, so leave fullscreen first.
@@ -1605,7 +1621,7 @@ export function ShortsViewer({ shorts, initialIndex, onClose, onLoadMore, hasMor
                 aria-label={t('postOptions.options')}
               >
                 <MoreHorizontal className="w-5 h-5" />
-              </button>
+              </button>}
 
               <button
                 onClick={toggleFullscreen}
@@ -1641,7 +1657,7 @@ export function ShortsViewer({ shorts, initialIndex, onClose, onLoadMore, hasMor
                 )}
               </button>
 
-              <div
+              {!isLiveSlide && <div
                 className={cn(
                   "absolute inset-x-0 bottom-0 z-10 pb-4 pointer-events-none transition-[opacity,padding] duration-300",
                   chromeHidden && "opacity-0",
@@ -1771,7 +1787,7 @@ export function ShortsViewer({ shorts, initialIndex, onClose, onLoadMore, hasMor
                     </motion.button>
                   </span>
                 </div>
-              </div>
+              </div>}
             </>
           )}
 
@@ -1814,7 +1830,7 @@ export function ShortsViewer({ shorts, initialIndex, onClose, onLoadMore, hasMor
                   handler from turning a scroll through the thread into a jump
                   to the next short. */}
               <AnimatePresence>
-                {showComments && currentShort?.id && (
+                {showComments && postId && (
                   <motion.div
                     key="fullscreen-comments"
                     data-shorts-panel
@@ -1857,7 +1873,7 @@ export function ShortsViewer({ shorts, initialIndex, onClose, onLoadMore, hasMor
           )}
 
           {/* Mobile-only overlays - TikTok-style layout */}
-          {isMobile && (
+          {isMobile && !isLiveSlide && (
             <>
               {/* Lower-area upward swipes restore through the carousel; a tap
                   outside the centre restores through handleVideoTap. */}
@@ -2038,7 +2054,7 @@ export function ShortsViewer({ shorts, initialIndex, onClose, onLoadMore, hasMor
             video's bottom edge stay together the whole way, both directions. */}
         {isMobile && (
           <AnimatePresence>
-            {showComments && currentShort?.id && (
+            {showComments && postId && (
               <motion.div
                 key="mobile-comments-split"
                 data-shorts-panel
@@ -2100,7 +2116,8 @@ export function ShortsViewer({ shorts, initialIndex, onClose, onLoadMore, hasMor
             Fullscreen drops it — it is a sibling of the fullscreened container
             and could not paint there — and moves both onto the video instead. */}
         {!isMobile && !isFullscreen && (
-          <div className="w-[268px] lg:w-[320px] h-full py-4 flex flex-col">
+          // A live slide has no post to describe or comment on.
+          isLiveSlide ? null : <div className="w-[268px] lg:w-[320px] h-full py-4 flex flex-col">
             {/* Creator Info - Top */}
             <div data-shorts-panel className="bg-zinc-900/50 rounded-2xl p-3 lg:p-4 mb-3 relative">
               <div className="absolute top-3 right-3 lg:top-4 lg:right-4 flex items-center gap-1.5">
@@ -2205,7 +2222,7 @@ export function ShortsViewer({ shorts, initialIndex, onClose, onLoadMore, hasMor
           
           {/* Right side controls */}
           <div className="absolute top-4 right-4 z-20 flex items-center gap-3">
-            {document.pictureInPictureEnabled && !currentShort?.imageUrls?.length && <button
+            {document.pictureInPictureEnabled && !isLiveSlide && !currentShort?.imageUrls?.length && <button
               className={VIEWER_CONTROL}
               aria-label={_copy("copy.c49677dc5ccd", { defaultValue: "Picture in picture" })}
               onClick={(event) => {
@@ -2215,7 +2232,7 @@ export function ShortsViewer({ shorts, initialIndex, onClose, onLoadMore, hasMor
               }}
             ><PictureInPicture2 className="w-5 h-5" /></button>}
             {/* Playback speed */}
-            <button
+            {!isLiveSlide && <button
               onClick={(event) => {
                 event.stopPropagation();
                 const currentIdx = PLAYBACK_RATES.indexOf(getPlaybackRateFor(currentShort?.creatorId) as any);
@@ -2231,7 +2248,7 @@ export function ShortsViewer({ shorts, initialIndex, onClose, onLoadMore, hasMor
               aria-label={_copy("copy.afec2b22114c", { defaultValue: "Playback speed" })}
             >
               <span className="text-white text-[11px] font-bold leading-none">{formatRate(playbackRate)}x</span>
-            </button>
+            </button>}
 
             {/* Mute button */}
             <button
@@ -2246,12 +2263,12 @@ export function ShortsViewer({ shorts, initialIndex, onClose, onLoadMore, hasMor
             </button>
             
             {/* More options button */}
-            <button
+            {!isLiveSlide && <button
               onClick={() => setShareSheetOpen(true)}
               className={VIEWER_CONTROL}
             >
               <MoreHorizontal className="w-5 h-5 text-white" />
-            </button>
+            </button>}
           </div>
         </motion.div>
       )}
