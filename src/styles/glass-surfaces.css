@@ -431,3 +431,14 @@ html[data-theme] [data-glass-menu]:not(html[data-theme='osaka'] [data-inline-pop
     backdrop-filter: none !important;
   }
 }
+
+/* One blur per glass stack. Glass sitting on glass (a radio card inside the
+   radio panel, a tool button inside the comment field) re-blurs pixels the
+   outer layer already frosted: no visible change, but Safari renders every
+   nested backdrop as its own offscreen pass on each scroll frame. Mark the
+   outer surface with data-glass-stack and its children keep their tint and
+   rim, sharing the one blur. Never put it on a surface whose children float
+   beyond its edges (menus, popovers): those need their own blur. */
+[data-glass-stack] [class*="backdrop-blur"] {
+  backdrop-filter: none !important;
+}
