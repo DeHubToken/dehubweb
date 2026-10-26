@@ -1580,7 +1580,8 @@ export function ShortsViewer({ shorts, initialIndex, onClose, onLoadMore, hasMor
                 // bites — the frame letterboxes instead.
                 : "shrink-0 h-full aspect-[9/16] w-auto max-w-[calc(100vw-8rem)] bg-zinc-900 rounded-none"
           )}
-          animate={isMobile ? { height: showComments ? '50%' : '100%' } : undefined}
+          // Comments get 75%: at half height the sheet held barely two comments.
+          animate={isMobile ? { height: showComments ? '25%' : '100%' } : undefined}
           transition={SMOOTH_TRANSITION}
           onPointerDownCapture={() => { holdOwnsGesture.current = false; }}
           onPointerCancelCapture={() => { mini.cancel(); resetDragOffset(); endTimelineSeek(); }}
@@ -2144,24 +2145,17 @@ export function ShortsViewer({ shorts, initialIndex, onClose, onLoadMore, hasMor
                 // ever behind this panel is the viewer's own black floor, so
                 // the blur drew nothing, yet it was re-run every frame of the
                 // slide.
-                className="absolute inset-x-0 bottom-0 h-1/2 flex flex-col overflow-hidden bg-black border-t border-white/[0.08] rounded-t-2xl z-30 will-change-transform"
+                className="absolute inset-x-0 bottom-0 h-[75%] flex flex-col overflow-hidden bg-black border-t border-white/[0.08] rounded-t-2xl z-30 will-change-transform"
               >
-                {/* Grab handle + close */}
+                {/* Grab handle. The tab row below carries the close button. */}
                 <motion.div
-                  className="relative h-11 flex items-center justify-center flex-shrink-0 cursor-grab active:cursor-grabbing"
+                  className="relative h-5 flex items-center justify-center flex-shrink-0 cursor-grab active:cursor-grabbing"
                   style={{ touchAction: 'none' }}
                   onPanEnd={(_, info) => {
                     if (info.offset.y > 60 || info.velocity.y > 500) setShowComments(false);
                   }}
                 >
                   <div className="h-1 w-10 rounded-full bg-white/25" />
-                  <button
-                    onClick={() => setShowComments(false)}
-                    className="absolute right-3 top-1.5 w-8 h-8 rounded-lg bg-white/[0.08] hover:bg-white/15 flex items-center justify-center transition-colors"
-                    aria-label={_copy("copy.3530ee6dc03c", { defaultValue: "Close comments" })}
-                  >
-                    <ChevronDown className="w-5 h-5 text-white/70" />
-                  </button>
                 </motion.div>
                 <div
                   className="flex-1 min-h-0 px-1 pb-[env(safe-area-inset-bottom)]"
