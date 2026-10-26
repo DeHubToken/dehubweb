@@ -202,10 +202,11 @@ export function VideoPaywallModal({
   // its own quote, so a client-side price that drifted by a single DHB would
   // fail at the chain rather than merely look wrong.
   const { priceDhb: costDhb, priceUsd: quotedUsd, isLoading: isQuoting, error: quoteError } = useJobQuote(
-    { kind: 'video', modelId: selectedModelKey, durationSeconds: duration, resolution },
+    { kind: 'video', modelId: selectedModelKey, durationSeconds: duration, resolution,
+      hasEndFrame: !!endFrameFile, hasAudioReferences: audioFiles.length > 0, hasVideoReferences: videoFiles.length > 0 },
     open,
   );
-  const costUsd = model.provider === 'venice' ? quotedUsd : getVideoCostUsd(model, isPerSecond ? duration : undefined);
+  const costUsd = model.provider === 'venice' || selectedModelKey === 'seedance-2.0' || selectedModelKey === 'seedance-2.0-fast' ? quotedUsd : getVideoCostUsd(model, isPerSecond ? duration : undefined);
   // Offering a payment someone cannot make would only fail at the signature,
   // so a wallet short of the price is sent to buy instead.
   const needsTokens = !isWalletLoading && costDhb > 0 && walletDhb < costDhb;
@@ -440,7 +441,7 @@ export function VideoPaywallModal({
                   <span className="text-zinc-400">{_copy("copy.4fc52a3c4c55", { defaultValue: "Duration" })}</span>
                   <span className="text-white font-medium">
                     {duration}s
-                    {isPerSecond && <span className="text-zinc-500 ml-1 text-[10px]">(${getVideoCostUsd(model, duration).toFixed(2)})</span>}
+                    {isPerSecond && <span className="text-zinc-500 ml-1 text-[10px]">(${costUsd.toFixed(2)})</span>}
                   </span>
                 </div>
                 {model.allowedDurations?.length ? (
@@ -759,7 +760,7 @@ export function VideoPaywallModal({
                 <span className="text-zinc-400">{_copy("copy.2f51aac56113", { defaultValue: "Video Cost" })}</span>
                 <span className="text-zinc-300">
                   ${costUsd.toFixed(2)}
-                  {isPerSecond && <span className="text-zinc-500 ml-1 text-[10px]">({duration}s × ${getVideoCostUsd(model, 1).toFixed(3)}/s)</span>}
+                  {isPerSecond && <span className="text-zinc-500 ml-1 text-[10px]">({duration}s × ${(costUsd / duration).toFixed(3)}/s)</span>}
                 </span>
               </div>
               <div className="flex items-center justify-between text-sm">

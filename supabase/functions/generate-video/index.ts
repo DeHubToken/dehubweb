@@ -11,7 +11,8 @@ import { chargeForJob } from "../_shared/ai-payment-guard.ts";
 import { falQueueUrls } from "../_shared/fal-queue.ts";
 import { CREATOR_FAL_VIDEO_MODELS } from '../_shared/creator-fal-catalog.ts';
 import { buildCreatorFalVideoRequest } from '../_shared/creator-fal-input.ts';
-import { buildSeedance2Input, buildSeedance2Request, seedance2RoutingDecision } from '../_shared/seedance2-input.ts';
+import { buildSeedance2Input, buildSeedance2Request, seedance2RoutingDecision, seedance2QuoteRoute } from '../_shared/seedance2-input.ts';
+import { quotePriceDhb } from '../_shared/ai-pricing.ts';
 import { referenceVideoDuration } from '../_shared/creator-reference-video.ts';
 import { requireDeHubAuth } from '../_shared/auth.ts';
 import {
@@ -977,10 +978,19 @@ serve(async (req) => {
 
     let validatedDuration: number | undefined;
     let providerPriceDhb: number | undefined;
+    let seedanceRoute: ReturnType<typeof seedance2QuoteRoute> | undefined;
     let veniceInput: Record<string, unknown> | undefined;
     if (modelConfig.falFamily === 'seedance') {
       try {
         validatedDuration = buildSeedance2Request(modelConfig, { prompt, duration, aspectRatio, resolution, sourceImage, endFrameUrl, referenceImageUrls, audioUrls, videoUrls, negativePrompt, seed }).durationSeconds;
+        seedanceRoute = seedance2QuoteRoute(model, {
+          resolution, hasEndFrame: !!endFrameUrl, hasAudioReferences: !!audioUrls?.length,
+          hasVideoReferences: !!videoUrls?.length,
+          hasInlineMedia: ![sourceImage, endFrameUrl, ...(referenceImageUrls ?? []), ...(audioUrls ?? []), ...(videoUrls ?? [])].filter(Boolean).every(kieUsableUrl),
+        }, !!kieKey());
+        providerPriceDhb = quotePriceDhb('video', model, { durationSeconds: validatedDuration, videoProvider: seedanceRoute.provider }) ?? undefined;
+        if (!providerPriceDhb) throw new Error('The selected video route has no verified price');
+        console.log('[video-routing]', { model, ...seedanceRoute });
       } catch (error) {
         return new Response(JSON.stringify({ status: 'failed', error: (error as Error).message }), {
           status: 400, headers: { ...corsHeaders, 'Content-Type': 'application/json' },
@@ -1041,7 +1051,7 @@ serve(async (req) => {
           providerCostUsd: charged.priceDhb / 1000, markup: 0,
         }), { headers: { ...corsHeaders, 'Content-Type': 'application/json' } }));
       }
-      const kieResponse = await tryKieGeneration(model, {
+      const kieResponse = seedanceRoute?.provider === 'fal' ? null : await tryKieGeneration(model, {
         prompt,
         sourceImage,
         duration: Math.min(Math.max(parseInt(duration) || 5, 3), 30),
@@ -1054,6 +1064,8 @@ serve(async (req) => {
         videoUrls,
         seed,
       });
+      // A cheaper direct-route quote does not authorize a more expensive fallback.
+      if (seedanceRoute?.provider === 'kie' && !kieResponse) throw new Error('The selected video provider could not start this job. Please try again later.');
       const response = kieResponse
         ?? (modelConfig.provider === 'fal'
           ? await handleFalGeneration(modelConfig, prompt, sourceImage, duration, aspectRatio, negativePrompt, resolution, referenceImageUrls, endFrameUrl, audioUrls, videoUrls, seed, effect)
