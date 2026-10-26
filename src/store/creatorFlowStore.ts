@@ -23,6 +23,7 @@ import type { Flow, FlowEdge, FlowNode, NodeData, Viewport } from '@/lib/creator
 import { nodeLabel, uid } from '@/lib/creator/flow/types';
 import { edgeStyle } from '@/lib/creator/flow/edgeStyles';
 import { requestFlowSync } from '@/lib/creator/flow/syncBus';
+import { durableFlowNodes } from '@/lib/creator/flow/graphContract';
 
 const STORAGE_PREFIX = 'dehub-creator-flow-v1';
 const MAX_UNDO = 50;
@@ -71,7 +72,7 @@ function syncFlow(
 
 /** Inline data URLs are session-only; only durable URLs are written. */
 function stripInline(nodes: FlowNode[]): FlowNode[] {
-  return nodes.map((n) => ({ ...n, data: { ...n.data, inputImage: undefined } }));
+  return durableFlowNodes(nodes).map((n) => ({ ...n, data: { ...n.data, inputImage: undefined } }));
 }
 
 interface Persisted {

@@ -115,6 +115,8 @@ export function nodeLabel(type: string, n: number): string {
     videoInputNode: 'VIDEO',
     imageGenNode: 'IMAGE GEN',
     videoGenNode: 'VIDEO GEN',
+    audioInputNode: 'AUDIO',
+    audioGenNode: 'AUDIO GEN',
     groupNode: 'GROUP',
   };
   return `${names[type] ?? type} #${n}`;

@@ -14,15 +14,17 @@ import { AboveLabel, CornerResizer, IoHandle, NodeCard, useHandleConnected } fro
 const TASK_KEYS = { speech: 'creator.audioTaskSpeechLabel', sfx: 'creator.audioTaskSfxLabel', transcribe: 'creator.audioTaskTranscribeLabel', isolate: 'creator.audioTaskIsolateLabel' };
 function AudioResult({ data }: { data: NodeData }) {
   const { walletAddress } = useAuth();
-  const [url, setUrl] = useState(data.audioUrl);
+  const [resolved, setResolved] = useState<{ wallet: string; asset: string; url?: string }>();
   useEffect(() => {
-    setUrl(data.audioUrl); let closed = false;
+    setResolved(undefined); let closed = false;
     if (!walletAddress || !data.audioAssetId) return;
+    const wallet = walletAddress, asset = data.audioAssetId;
     void loadFlowAssets(walletAddress, [data.audioAssetId]).then(assets => {
-      if (!closed) setUrl(assets.get(data.audioAssetId!)?.url);
-    }).catch(() => { if (!closed) setUrl(undefined); });
+      if (!closed) setResolved({ wallet, asset, url: assets.get(asset)?.url });
+    }).catch(() => { if (!closed) setResolved(undefined); });
     return () => { closed = true; };
-  }, [walletAddress, data.audioAssetId, data.audioUrl]);
+  }, [walletAddress, data.audioAssetId]);
+  const url = resolved?.wallet === walletAddress && resolved?.asset === data.audioAssetId ? resolved.url : undefined;
   return data.audioTask === 'transcribe' ? <p className="whitespace-pre-wrap p-3 text-xs">{data.outputText}</p>
     : url ? <audio controls preload="none" src={url} className="nodrag nowheel w-full" /> : null;
 }
