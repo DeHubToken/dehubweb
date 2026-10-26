@@ -6853,17 +6853,15 @@ html[data-theme="minimal"] [data-profile-single-row] [data-feed-tab-btn] {
   opacity: 1;
 }
 
-/* Generated stage covers: thumbnails keep only the ticket (title, host, date
-   stub); the corner tags, status line and barcode are too small to read. */
+/* Generated stage covers: thumbnails keep the wordmark, status, title and
+   mic; the corner tag, host line and dehub.io box are too small to read. */
 @container (max-width: 300px) {
-  [data-gsc-tags], [data-gsc-site], [data-gsc-status], [data-gsc-barcode], [data-gsc-stubline], [data-gsc-when] { display: none !important; }
-  [data-gsc-ticket] { top: 5cqw !important; bottom: 5cqw !important; }
+  [data-gsc-tags], [data-gsc-site], [data-gsc-when] { display: none !important; }
 }
-/* The cover's paper parts keep dark ink in every theme; the light themes turn
-   all text inside [data-keep-dark] white, which would blank the date stub. */
-html:root [data-stage-generated-cover] [data-gsc-ink],
-html:root [data-stage-generated-cover] [data-gsc-ink] * {
-  color: #09090b !important;
+/* The chrome title is gradient-clipped text; the light themes turn all text
+   inside [data-keep-dark] white, which would flatten the chrome. */
+html:root [data-stage-generated-cover] [data-gsc-chrome] {
+  color: transparent !important;
 }
 
 /* Bell drawer close button: white on the dark sheets, ink on the paper ones. */
