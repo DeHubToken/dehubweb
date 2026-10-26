@@ -238,8 +238,10 @@ function ImageSlide({
     reactionArea: immersive ? 'surface' : 'center',
     onSingleTap: (event) => {
       // A narrow photo sits left-aligned in its frame, so a tap can land beside
-      // it. Report whether it landed on the picture itself.
-      const rect = (event.currentTarget as HTMLElement).querySelector('img')?.getBoundingClientRect();
+      // it. Report whether it landed on the picture itself. The tap can resolve
+      // after a double-tap window, when React has already cleared
+      // event.currentTarget, so read the frame from its ref.
+      const rect = slideRef.current?.querySelector('img')?.getBoundingClientRect();
       const onPicture = !rect
         || (event.clientX >= rect.left && event.clientX <= rect.right && event.clientY >= rect.top && event.clientY <= rect.bottom);
       onImageClick(idx, onPicture);
