@@ -4,6 +4,7 @@ import { afterEach, describe, expect, it, vi } from 'vitest';
 import { MarketingWorkspace } from './MarketingWorkspace';
 
 vi.mock('react-i18next', () => ({ useTranslation: () => ({ t: (key: string) => key }) }));
+vi.mock('./MarketingProductImport', () => ({ MarketingProductImport: () => null }));
 vi.mock('@/hooks/use-surface-draft', async () => {
   const { useState } = await import('react');
   return { useSurfaceDraft: (_field: string, initial: object) => {
