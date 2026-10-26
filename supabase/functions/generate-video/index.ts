@@ -1012,7 +1012,9 @@ serve(async (req) => {
         if (CREATOR_FAL_VIDEO_MODELS[model].requiresVideoInput) {
           const auth = await requireDeHubAuth(req);
           if (!auth.ok) return auth.response;
-          validatedDuration = await referenceVideoDuration(videoUrls![0], CREATOR_FAL_VIDEO_MODELS[model].maxDuration, new URL(Deno.env.get('SUPABASE_URL')!).hostname);
+          const metadata = CREATOR_FAL_VIDEO_MODELS[model];
+          const sourceSeconds = await referenceVideoDuration(videoUrls![0], metadata.maxSourceDuration ?? metadata.maxDuration, new URL(Deno.env.get('SUPABASE_URL')!).hostname);
+          if (metadata.referenceMode !== 'extend') validatedDuration = sourceSeconds;
         }
       } catch (error) {
         return new Response(JSON.stringify({ status: 'failed', error: (error as Error).message }), {
