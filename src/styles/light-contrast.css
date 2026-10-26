@@ -44,3 +44,58 @@ html:is([data-theme='light'], [data-system-tone='light']):not(#_):not(#_):not(#_
   background: #e4e4e7 !important;
   color: #18181b !important;
 }
+
+/* Minimal Light bottom bar: it is not in the liquid-glass theme list, so it
+   sat at 5% black with no blur and its ink icons vanished over dark artwork
+   (Stages covers, Arcade keys). Same pale frost as System Light. */
+html[data-theme='light']:not(#_):not(#_):not(#_) [data-bottom-nav] > nav {
+  background: rgba(249, 248, 244, 0.86) !important;
+  -webkit-backdrop-filter: blur(20px) saturate(1.4) !important;
+  backdrop-filter: blur(20px) saturate(1.4) !important;
+  border-color: rgba(11, 11, 13, 0.08) !important;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.9), 0 8px 20px -6px rgba(11, 11, 13, 0.12), 0 22px 44px -14px rgba(11, 11, 13, 0.16) !important;
+}
+
+/* Bright 500/600 text was written for black; on paper it reads at 2-3:1.
+   Icons keep their colour (stars, dots); words take the deep shade. */
+html:is([data-theme='light'], [data-system-tone='light']) body :is(.text-yellow-500, .text-amber-500, .text-amber-600):not(svg):not(:where([data-keep-dark] *, [data-on-media], [data-on-media] *, [data-media-full] *, [data-media-scrim] *)):not(#_):not(#_) { color: #92400e !important; }
+html:is([data-theme='light'], [data-system-tone='light']) body :is(.text-green-500, .text-emerald-500, .text-green-600):not(svg):not(:where([data-keep-dark] *, [data-on-media], [data-on-media] *, [data-media-full] *, [data-media-scrim] *)):not(#_):not(#_) { color: #047857 !important; }
+html:is([data-theme='light'], [data-system-tone='light']) body .text-sky-500:not(svg):not(:where([data-keep-dark] *, [data-on-media], [data-on-media] *, [data-media-full] *, [data-media-scrim] *)):not(#_):not(#_) { color: #0369a1 !important; }
+
+/* Small black chips over pictures (Fractions "1000 / 1000") keep white type. */
+html:is([data-theme='light'], [data-system-tone='light']):not(#_):not(#_):not(#_):not(#_):not(#_) [data-on-media][class*='bg-black/'] { color: #fff !important; background-color: rgba(0, 0, 0, 0.7) !important; }
+
+/* Unselected glass chips are dimmed to 60% (Fractions sort, Store
+   categories). Fine on black, grey-on-grey on paper: lift them. */
+html:is([data-theme='light'], [data-system-tone='light']) :is(.opacity-60, .opacity-50):has(> [data-theme-control-surface]):not(#_):not(#_) { opacity: 1 !important; }
+
+/* Placeholders: the dark theme's white/30 hints turned near-white on paper. */
+html:is([data-theme='light'], [data-system-tone='light']):not(#_):not(#_):not(#_) :is(input, textarea):not(:where([data-keep-dark] *, [data-on-media] *, [data-media-full] *))::placeholder {
+  color: rgba(11, 11, 13, 0.62) !important;
+  opacity: 1 !important;
+}
+
+/* Muted zinc-500 copy (right rail counts, list numbers) sat at 3:1. */
+html:is([data-theme='light'], [data-system-tone='light']) body .text-zinc-500:not(:where(.docs-root *, [data-keep-dark], [data-keep-dark] *, [data-on-media], [data-on-media] *, [data-media-full] *, [data-media-scrim] *)):not(#_):not(#_) {
+  color: var(--ink-muted, #444) !important;
+}
+
+/* Back button over a profile cover: white on paper when there is no cover.
+   A small dark chip reads on both. */
+html:is([data-theme='light'], [data-system-tone='light']):not(#_):not(#_):not(#_):not(#_) [data-swipe-back][data-on-media] {
+  background: rgba(0, 0, 0, 0.5) !important;
+  border-radius: 9999px !important;
+  color: #fff !important;
+}
+html:is([data-theme='light'], [data-system-tone='light']):not(#_):not(#_):not(#_):not(#_) [data-swipe-back][data-on-media] svg { color: #fff !important; }
+
+/* System Light feed filters drawer: the pale glass let the dark video tiles
+   under it smear behind the labels. Near-solid paper keeps the frost. */
+html[data-theme='system'][data-system-tone='light']:not(#_):not(#_):not(#_):not(#_) [data-feed-island-surface] {
+  background: rgba(255, 255, 255, 0.95) !important;
+}
+
+/* Profile tab counts (14, 10, 6) under the tab icons. */
+html:is([data-theme='light'], [data-system-tone='light']):not(#_):not(#_):not(#_):not(#_) [data-feed-tab-btn] > span.text-\[10px\] {
+  color: var(--ink-muted, #444) !important;
+}
