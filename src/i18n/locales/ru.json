@@ -7624,6 +7624,10 @@
   "notifications": {
     "title": "Уведомления",
     "markAllRead": "Прочитать все",
+    "groupNew": "Новые",
+    "groupToday": "Сегодня",
+    "groupThisWeek": "На этой неделе",
+    "groupEarlier": "Ранее",
     "settings": "Настройки уведомлений",
     "actions": "Действия",
     "markAllAsRead": "Отметить все как прочитанные",

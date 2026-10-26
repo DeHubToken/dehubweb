@@ -1721,6 +1721,10 @@
   "notifications": {
     "title": "Notifications",
     "markAllRead": "Mark all read",
+    "groupNew": "New",
+    "groupToday": "Today",
+    "groupThisWeek": "This week",
+    "groupEarlier": "Earlier",
     "settings": "Notification Settings",
     "actions": "Actions",
     "markAllAsRead": "Mark all as read",

@@ -1911,6 +1911,10 @@
   "notifications": {
     "title": "Meldingen",
     "markAllRead": "Alles als gelezen markeren",
+    "groupNew": "Nieuw",
+    "groupToday": "Vandaag",
+    "groupThisWeek": "Deze week",
+    "groupEarlier": "Eerder",
     "settings": "Meldingsinstellingen",
     "actions": "Acties",
     "markAllAsRead": "Alles als gelezen markeren",
