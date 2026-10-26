@@ -1,5 +1,5 @@
 import { useTranslation } from 'react-i18next';
-import { useEffect, useMemo, useRef, useState } from 'react';
+import { useContext, useEffect, useMemo, useRef, useState } from 'react';
 import { Clock, Minus, Plus, Sparkles } from "lucide-react";
 import X from '@/components/ui/cut-icons/close';
 import { Drawer, DrawerContent, DrawerHeader, DrawerTitle } from '@/components/ui/drawer';
@@ -8,7 +8,7 @@ import { cn } from '@/lib/utils';
 import { parseWhen } from '@/lib/schedule/parseWhen';
 import { bestTime, toLocalGrid } from '@/lib/schedule/fansOnline';
 import { getFansOnline } from '@/lib/api/dehub/scheduled';
-import { useAuth } from '@/contexts/AuthContext';
+import { AuthContext } from '@/contexts/AuthContext';
 import { useQuery } from '@tanstack/react-query';
 
 export type ScheduleKind = 'post' | 'live' | 'stage';
@@ -54,7 +54,8 @@ export function ScheduleSheet({ isOpen, onClose, scheduledDate, onSchedule, titl
   const [typed, setTyped] = useState('');
   const stripRef = useRef<HTMLDivElement>(null);
   const [showFans, setShowFans] = useState(false);
-  const { walletAddress } = useAuth();
+  // Optional: the state gallery renders this sheet without an AuthProvider.
+  const walletAddress = useContext(AuthContext)?.walletAddress;
   const fans = useQuery({
     queryKey: ['fans-online', walletAddress],
     queryFn: getFansOnline,
