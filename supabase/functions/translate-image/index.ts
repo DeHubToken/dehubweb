@@ -119,7 +119,7 @@ const langNameMap: Record<string, string> = {
   gsw: 'Swiss German',
   ha: 'Hausa',
   jv: 'Javanese',
-  ku: 'Kurdish',
+  ku: 'Kurdish (Kurmanji, Latin script)',
   ky: 'Kyrgyz',
   mag: 'Magahi',
   mi: 'Maori',
