@@ -73,9 +73,10 @@ function FollowCoverCardInner({ user, phase, onOpen, onFollow, onDismiss }: Foll
       onClick={() => onOpen(user)}
       className="snap-start"
     >
-      <div data-fc-cover aria-hidden="true">
+      {/* The skip X lives inside the banner so it is inset from the banner's
+          own corner in every theme (the flat themes pad the card, not it). */}
+      <div data-fc-cover>
         <img src={cover} alt="" loading="lazy" decoding="async" />
-      </div>
       <button
         type="button"
         data-fc-dismiss
@@ -87,6 +88,7 @@ function FollowCoverCardInner({ user, phase, onOpen, onFollow, onDismiss }: Foll
       >
         <X className="w-4 h-4" />
       </button>
+      </div>
 
       <Avatar data-fc-avatar className="w-14 h-14 rounded-2xl">
         {avatar && <AvatarImage src={avatar} alt="" className="rounded-2xl object-cover" />}
