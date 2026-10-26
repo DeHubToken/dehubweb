@@ -185,6 +185,7 @@ export function PostToDeHub({ iconOnly = false }: { iconOnly?: boolean }) {
         isOpen={postOpen}
         onClose={() => { setPostOpen(false); setFiles(null); }}
         initialFiles={files}
+        initialText={settings.remixSource ? `Remix of ${settings.remixSource.creator ? '@' + settings.remixSource.creator : settings.remixSource.title}\n${settings.remixSource.url}` : undefined}
         onFilesProcessed={() => setFiles(null)}
       />
     </>

@@ -337,6 +337,8 @@ export type Clip = MediaClip | TextClip | ShapeClip;
 export type AspectPreset = "16:9" | "9:16" | "1:1" | "4:5" | "custom";
 
 export interface ProjectSettings {
+  /** Original post retained when a recorded remix is edited and published. */
+  remixSource?: { url: string; creator?: string; title: string };
   /** Physical page sizing for PDF downloads. */
   printDpi?: number;
   width: number;
