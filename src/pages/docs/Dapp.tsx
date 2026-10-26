@@ -110,6 +110,7 @@ const Dapp = () => {
     { id: 'governance', label: t('dapp.tocGovernance') },
     { id: 'dao-treasury', label: t('dapp.tocDao') },
     { id: 'live-streaming', label: t('dapp.liveStreamingTitle') },
+    { id: 'live-studio', label: t('dapp.tocLiveStudio') },
     { id: 'subscriptions', label: t('dapp.subscriptionsTitle') },
     { id: 'messages', label: t('dapp.messagesTitle') },
     { id: 'superpowers', label: t('dapp.superPowersTitle') },
@@ -1231,7 +1232,23 @@ const Dapp = () => {
             </CardContent>
           </Card>
 
-          <section id="subscriptions" className="mt-12 scroll-mt-32">
+                    <GuideSection
+            id="live-studio"
+            title="dapp.liveStudioTitle"
+            paras={['dapp.liveStudioDesc']}
+            bullets={[
+              ['dapp.liveStudioB1', 'dapp.liveStudioB1Desc'],
+              ['dapp.liveStudioB2', 'dapp.liveStudioB2Desc'],
+              ['dapp.liveStudioB3', 'dapp.liveStudioB3Desc'],
+              ['dapp.liveStudioB4', 'dapp.liveStudioB4Desc'],
+              ['dapp.liveStudioB5', 'dapp.liveStudioB5Desc'],
+              ['dapp.liveStudioB6', 'dapp.liveStudioB6Desc'],
+              ['dapp.liveStudioB7', 'dapp.liveStudioB7Desc'],
+              ['dapp.liveStudioB8', 'dapp.liveStudioB8Desc']
+            ]}
+          />
+
+<section id="subscriptions" className="mt-12 scroll-mt-32">
             <h2 className="text-3xl font-bold text-foreground mb-6 font-exo flex items-center gap-3">
               <Crown className="w-8 h-8" />
               {t('dapp.subscriptionsTitle')}
