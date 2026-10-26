@@ -32,3 +32,17 @@ export async function moveScheduledLive(streamId: string, at: Date): Promise<voi
     requiresAuth: true,
   });
 }
+
+export interface FansOnline {
+  /** 7 x 24, UTC, Sunday first: distinct people watching in each hour. */
+  grid: number[][];
+  /** 'everyone' when the account had too few active followers to go on. */
+  basis: 'followers' | 'everyone';
+  followers: number;
+  days: number;
+}
+
+export async function getFansOnline(): Promise<FansOnline | null> {
+  const res = await apiCall<{ result: FansOnline }>('/api/scheduled_posts/fans_online', { requiresAuth: true });
+  return res?.result ?? null;
+}
