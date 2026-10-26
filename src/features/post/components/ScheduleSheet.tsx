@@ -3,6 +3,7 @@ import { useEffect, useMemo, useRef, useState } from 'react';
 import { Clock, Minus, Plus, Sparkles } from "lucide-react";
 import X from '@/components/ui/cut-icons/close';
 import { Drawer, DrawerContent, DrawerHeader, DrawerTitle } from '@/components/ui/drawer';
+import { Link } from 'react-router-dom';
 import { cn } from '@/lib/utils';
 import { parseWhen } from '@/lib/schedule/parseWhen';
 
@@ -17,6 +18,8 @@ interface ScheduleSheetProps {
   minimumMinutes?: number;
   /** Words on the picks and the main button. Defaults to a post. */
   kind?: ScheduleKind;
+  /** Moving something already planned: no "Remove schedule", no Planned link. */
+  moving?: boolean;
 }
 
 const STEP = 15;
@@ -38,7 +41,7 @@ const firstSlot = (minAhead: number) => {
  * choose a day from the strip and step the time. Kit chips and buttons, so
  * every theme styles it like the rest of the app.
  */
-export function ScheduleSheet({ isOpen, onClose, scheduledDate, onSchedule, title: titleProp, minimumMinutes = 0, kind = 'post' }: ScheduleSheetProps) {
+export function ScheduleSheet({ isOpen, onClose, scheduledDate, onSchedule, title: titleProp, minimumMinutes = 0, kind = 'post', moving = false }: ScheduleSheetProps) {
   const { t, i18n } = useTranslation();
   const title = titleProp ?? t('whenSheet.title', { defaultValue: 'When?' });
   const locale = i18n.language || undefined;
@@ -243,10 +246,15 @@ export function ScheduleSheet({ isOpen, onClose, scheduledDate, onSchedule, titl
             <button type="button" data-kit-button="primary" onClick={handleConfirm} disabled={!validTime} className="w-full">
               {confirmText}
             </button>
-            {scheduledDate && (
+            {scheduledDate && !moving && (
               <button type="button" data-kit-button="quiet" onClick={handleClear} className="w-full">
                 {t('whenSheet.remove', { defaultValue: 'Remove schedule' })}
               </button>
+            )}
+            {!moving && (
+              <Link to="/app/planned" onClick={onClose} className="mx-auto py-1.5 text-[12px] text-white/55 hover:text-white">
+                {t('planned.seeAll', { defaultValue: 'See everything you have planned' })}
+              </Link>
             )}
           </div>
           <div className="h-[env(safe-area-inset-bottom,0px)]" />
