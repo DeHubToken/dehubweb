@@ -20,6 +20,7 @@ from PIL import Image
 
 import access
 import remake
+import product_import
 from mask_review import state as review_state, review, require_approved
 
 ROOT = Path(__file__).resolve().parent
@@ -174,6 +175,11 @@ def list_jobs(wallet=Depends(owner)):
 @app.get('/session')
 def session(wallet=Depends(owner)):
     return {'wallet': wallet}
+
+
+@app.post('/marketing/import-product')
+def import_marketing_product(url: str = Form(..., max_length=4096), wallet=Depends(owner)):
+    return product_import.import_product(url, wallet)
 
 
 @app.get('/jobs/{ident}')

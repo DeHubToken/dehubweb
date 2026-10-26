@@ -227,7 +227,7 @@ export function ImagePaywallModal({
           </div>
 
           {count > 1 && (
-            <p className="text-xs text-zinc-400 text-center">{_copy("copy.6b2fd69ca13a", { defaultValue: "All " })}{count}{_copy("copy.a11c0b1d6445", { defaultValue: " images are charged now and generate independently. If one fails, the others still run." })}</p>
+            <p className="text-xs text-zinc-400 text-center">{t('creator.batchPaymentHelp')}</p>
           )}
 
           {needsTokens && !isQuoting && (

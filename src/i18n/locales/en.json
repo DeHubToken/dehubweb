@@ -5053,6 +5053,175 @@
     "sellYourFractions": "Sell your fractions ({{held}} held)"
   },
   "creator": {
+    "campaignPlanTitle": "Campaign variants and episodes",
+    "campaignPlanIntro": "Save up to 12 variations or episodes. Each opens the studio for its own review and quote. Shared notes guide continuity; product appearance, characters and voices can vary between generations.",
+    "campaignTitle": "Campaign or series name",
+    "campaignContinuity": "Shared character, voice and style notes",
+    "campaignVariantTitle": "Variant or episode name",
+    "campaignHook": "Opening hook",
+    "campaignLanguage": "Output language",
+    "campaignScript": "Approved script or scene sequence",
+    "campaignAdd": "Add variant or episode",
+    "campaignClear": "Clear plan",
+    "campaignFormat": "Output format",
+    "marketing": {
+    "import":  {
+                   "url":  "Product page URL",
+                   "action":  "Read product page",
+                   "loading":  "Reading page…",
+                   "hint":  "Import text from a public product page. Review details before using them; attach product images separately in the studio.",
+                   "source":  "Imported source",
+                   "review":  "Choose a product to copy into your editable brief. Your headline, voice and brand colors stay unchanged.",
+                   "use":  "Use these details",
+                   "errors":  {
+                                  "signIn":  "Sign in to import a product page.",
+                                  "url":  "Use a public HTTPS product URL.",
+                                  "empty":  "No usable product details were found. Add them manually.",
+                                  "busy":  "Too many imports are running. Try again shortly.",
+                                  "unavailable":  "This page could not be imported. Add the product details manually.",
+                                  "failed":  "Import failed. Your brief is saved; try again or enter details manually."
+                              }
+               },
+        "return": "Return to studio draft",
+                      "title":  "Campaign brief",
+                      "intro":  "Describe your product and brand, then prepare matching ad formats.",
+                      "saved":  "Your brief is saved on this device for this account.",
+                      "preview":  "Prepare formats",
+                      "clear":  "Clear brief",
+                      "required":  "Add a product name and description to prepare formats.",
+                      "variants":  "Campaign formats",
+                      "reviewHint":  "Review the model, price and product reference in the studio before generating. Each format is a separate generation.",
+                      "open":  "Review in studio",
+                      "fields":  {
+                                     "product":  "Product name (required)",
+                                     "description":  "Product facts (required)",
+                                     "brand":  "Brand name",
+                                     "audience":  "Target audience",
+                                     "benefit":  "Key benefit",
+                                     "voice":  "Brand voice",
+                                     "palette":  "Brand colors",
+                                     "headline":  "Approved headline",
+                                     "cta":  "Call to action"
+                                 },
+                      "formats":  {
+                                      "square":  "Square ad",
+                                      "portrait":  "Portrait ad",
+                                      "story":  "Story image",
+                                      "video":  "Vertical video"
+                                  }
+                  },
+    "audioInvalidResponse":  "The audio service returned an invalid result.",
+      "audioResultTooLarge":  "The audio result is empty or exceeds 128 MB.",
+    "batchPaymentHelp": "Each submitted image is charged separately. If a batch stops, unused DHB from its payment is reused automatically for a later generation that it covers.",
+    "invalidSeed": "Seed must be a whole number from 0 to 2147483647.",
+    "cinema": {
+        "title":  "Cinema direction",
+        "hint":  "Guide the visual style of your next image or video. Results vary by model.",
+        "none":  "No direction",
+        "reset":  "Clear direction",
+        "close":  "Close",
+        "camera":  {
+                       "label":  "Camera look",
+                       "0":  "Digital cinema",
+                       "1":  "35mm film",
+                       "2":  "16mm film",
+                       "3":  "Large format",
+                       "4":  "Vintage camcorder"
+                   },
+        "lens":  {
+                     "label":  "Lens look",
+                     "0":  "Spherical",
+                     "1":  "Anamorphic",
+                     "2":  "Vintage soft glass",
+                     "3":  "Macro",
+                     "4":  "Tilt-shift"
+                 },
+        "focalLength":  {
+                            "label":  "Focal length",
+                            "0":  "18mm wide",
+                            "1":  "24mm wide",
+                            "2":  "35mm natural",
+                            "3":  "50mm standard",
+                            "4":  "85mm portrait",
+                            "5":  "135mm telephoto"
+                        },
+        "aperture":  {
+                         "label":  "Depth of field",
+                         "0":  "f/1.4 very shallow",
+                         "1":  "f/2.8 shallow",
+                         "2":  "f/5.6 moderate",
+                         "3":  "f/11 deep focus"
+                     },
+        "movement":  {
+                         "label":  "Camera movement",
+                         "0":  "Locked-off tripod",
+                         "1":  "Slow dolly in",
+                         "2":  "Slow dolly out",
+                         "3":  "Lateral tracking",
+                         "4":  "Orbit subject",
+                         "5":  "Handheld",
+                         "6":  "Crane rise",
+                         "7":  "Slow pan"
+                     },
+        "lighting":  {
+                         "label":  "Lighting",
+                         "0":  "Soft daylight",
+                         "1":  "Golden hour",
+                         "2":  "Low-key chiaroscuro",
+                         "3":  "High-key studio",
+                         "4":  "Neon practicals",
+                         "5":  "Silhouette backlight",
+                         "6":  "Overcast diffuse"
+                     },
+        "tempo":  {
+                      "label":  "Shot tempo",
+                      "0":  "Single continuous shot",
+                      "1":  "Calm, unhurried action",
+                      "2":  "Dynamic, energetic action",
+                      "3":  "Chaotic, frenetic action"
+                  },
+        "era":  {
+                    "label":  "Era",
+                    "0":  "1920s",
+                    "1":  "1950s",
+                    "2":  "1960s",
+                    "3":  "1970s",
+                    "4":  "1980s",
+                    "5":  "1990s",
+                    "6":  "Present day",
+                    "7":  "Near future"
+                },
+        "genre":  {
+                      "label":  "Genre",
+                      "0":  "Documentary",
+                      "1":  "Drama",
+                      "2":  "Film noir",
+                      "3":  "Science fiction",
+                      "4":  "Fantasy",
+                      "5":  "Romantic comedy",
+                      "6":  "Thriller",
+                      "7":  "Western"
+                  },
+        "performance":  {
+                            "label":  "Performance",
+                            "0":  "Joyful",
+                            "1":  "Melancholic",
+                            "2":  "Anxious",
+                            "3":  "Confident",
+                            "4":  "Awe-struck",
+                            "5":  "Restrained",
+                            "6":  "Playful"
+                        },
+        "palette":  {
+                        "label":  "Color palette",
+                        "0":  "Warm amber",
+                        "1":  "Cool blue",
+                        "2":  "Muted earth tones",
+                        "3":  "Pastel",
+                        "4":  "High contrast monochrome",
+                        "5":  "Saturated primary colors"
+                    }
+    },
     "libraryEmpty": "Your saved generations will appear here.",
     "toolRemake": "Remake",
     "toolMaboroshi": "Maboroshi",
@@ -6348,6 +6517,8 @@
     "creatorEarnsDirect": "Subscribers pay in DeHub tokens. Your share lands in your wallet the moment they subscribe, less the platform fee for your badge tier."
   },
   "liveOverlay": {
+    "giftedSubs_one": "{{name}} gifted a sub!",
+    "giftedSubs_other": "{{name}} gifted {{count}} subs!",
     "someone": "Someone",
     "newFollower": "New follower: {{name}}",
     "newSubscriber": "New subscriber: {{name}}",
@@ -6557,6 +6728,7 @@
       "subathon_timer": "Subathon timer",
       "points_board": "Loyal viewers",
       "streamer_level": "Streamer level",
+      "hype_train": "Hype train",
       "tip_jar": "Gift jar"
     },
     "hints": {
@@ -6581,6 +6753,7 @@
       "subathon_timer": "A countdown that gifts, follows and subscriptions push back",
       "points_board": "Your top viewers by points from watching and gifting",
       "streamer_level": "Your streamer level and weekly streak, from your profile",
+      "hype_train": "Shows the hype train while one runs: three gifts or subscriptions within five minutes start it.",
       "tip_jar": "A jar that fills up as paid gifts come in"
     },
     "fields": {
@@ -8478,6 +8651,33 @@
     "priceChartCleared": "Price chart cleared. Fixed reference price: $0.0001. Execution prices depend on available orders."
   },
   "editor": {
+    "film": {
+        "repairRefs": "Remove missing media links",
+                 "title":  "Film project",
+                 "intro":  "Plan shots with reusable image references. Your brief, shot order and selected results save with this project.",
+                 "create":  "Create film plan",
+                 "name":  "Film name",
+                 "brief":  "Film brief",
+                 "sharedReferences":  "Shared image references (up to 4)",
+                 "shot":  "Shot",
+                 "addShot":  "Add shot",
+                 "shotName":  "Shot name",
+                 "action":  "Shot action and composition",
+                 "seconds":  "Requested video seconds",
+                 "shotReferences":  "Extra image references (combined limit 4)",
+                 "frame":  "Prepare frame",
+                 "video":  "Prepare video",
+                 "review":  "Review the model, references, video duration and price in the studio before generating.",
+                 "result":  "Accepted shot result",
+                 "noResult":  "No result selected",
+                 "resultHint":  "Choose an accepted image or video from Uploads. Its link saves with this shot; use the timeline to assemble the film.",
+                 "earlier":  "Move earlier",
+                 "later":  "Move later",
+                 "remove":  "Remove shot",
+                 "issue":  "Check the shot description and reference media, then try again. Keep the project open if it could not be saved.",
+                 "searchMedia":  "Find media by name",
+                 "refreshMedia":  "Refresh media"
+             },
     "video": {
       "tFade": "Cross-dissolve",
       "none": "None",
@@ -17907,5 +18107,74 @@
     "fingerprint": "Bio",
     "exploreFirst": "Explore first",
     "codeNote": "We email you a code, no password needed."
+  },
+  "liveHype": {
+    "train": {
+      "level": "Hype Train · Level {{level}}",
+      "endedLevel": "Hype Train finished level {{level}}!",
+      "ended": "Hype Train ended",
+      "thanks_one": "Thanks to {{count}} supporter",
+      "thanks_other": "Thanks to {{count}} supporters",
+      "top": "Top: {{name}}"
+    },
+    "chat": {
+      "giftedSubs_one": "gifted a subscription 🎁",
+      "giftedSubs_other": "gifted {{count}} subscriptions 🎁"
+    },
+    "gift": {
+      "open": "Gift subscriptions",
+      "title": "Gift subscriptions",
+      "plan": "Plan",
+      "mode": {
+        "random": "Random viewers in chat",
+        "user": "Someone specific"
+      },
+      "howMany": "How many",
+      "randomHint": "Goes to people who chatted in the last 30 minutes and are not subscribed yet.",
+      "who": "Username or wallet address",
+      "whoPlaceholder": "@username",
+      "send_one": "Gift 1 sub · ${{price}}",
+      "send_other": "Gift {{count}} subs · ${{price}}",
+      "payHint": "Paid in DHB from your wallet in one transfer.",
+      "fewer_one": "Only 1 person in chat can receive a sub right now, so you pay for 1.",
+      "fewer_other": "Only {{count}} people in chat can receive a sub right now, so you pay for {{count}}.",
+      "done_one": "Subscription gifted!",
+      "done_other": "{{count}} subscriptions gifted!",
+      "failed": "Could not gift subscriptions",
+      "notReady": "Gifting is not available for this plan yet",
+      "noPlan": "Pick a plan first",
+      "noPlans": "{{name}} has no subscription plans to gift yet.",
+      "cancel": "Cancel",
+      "stage": {
+        "preparing": "Preparing…",
+        "wallet": "Confirm in your wallet",
+        "confirming": "Waiting for the transaction…",
+        "recording": "Finishing up…"
+      }
+    },
+    "badges": {
+      "title": "Limited-time badges",
+      "intro": "Offer a badge for a few days. Anyone who subscribes or gifts while it runs earns it, and it shows next to their name in your chat for good.",
+      "name": "Badge name",
+      "namePlaceholder": "Launch week",
+      "days": "Available for (days)",
+      "emoji": "Emoji",
+      "who": "Who can earn it",
+      "audience": {
+        "both": "Subscribers and gifters",
+        "subscribers": "Subscribers",
+        "gifters": "Gifters"
+      },
+      "create": "Offer badge",
+      "created": "Badge is live.",
+      "end": "End now",
+      "ended": "Ended",
+      "until": "Until {{date}}",
+      "holders_one": "{{count}} holder",
+      "holders_other": "{{count}} holders",
+      "limit": "Three badges can run at once. End one to offer another.",
+      "failed": "That did not work. Try again.",
+      "hypeHint": "Everyone who rides a hype train also gets your 🚂 badge at the level it reached."
+    }
   }
 }

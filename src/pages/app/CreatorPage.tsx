@@ -9,6 +9,8 @@ import { SEOHead } from '@/components/SEOHead';
 import { PricingSection } from '@/components/pricing/PricingSection';
 import { SubscriptionCreditsPill } from '@/components/app/credits/SubscriptionCreditsWidget';
 import { CreatorStudio } from '@/components/app/creator/studio/CreatorStudio';
+import { MarketingWorkspace } from '@/components/app/creator/MarketingWorkspace';
+import { useMarketingHandoff } from '@/hooks/use-marketing-handoff';
 import { ModelMarquee } from '@/components/app/creator/ModelMarquee';
 import dehubIcon from '@/assets/dehub-logo-compact.png';
 import { ArrowUpRight, Bot, Clapperboard, Film, ImageIcon, Mic2, PanelsTopLeft, PenTool, Wand2, Workflow } from "lucide-react";
@@ -198,7 +200,8 @@ const tools: Tool[] = [
 export default function CreatorPage() {
   const { t } = useTranslation();
   const navigate = useNavigate();
-  const { isAuthenticated, openLoginModal } = useAuth();
+  const { isAuthenticated, openLoginModal, walletAddress } = useAuth();
+  const { active: activeMarketingDraft, prepare: prepareMarketingDraft, leave: leaveMarketingDraft } = useMarketingHandoff(walletAddress);
   const [activeCategory, setActiveCategory] = useState<typeof categories[number]>('All');
   const [activeNav, setActiveNav] = useState<typeof navItems[number]>('Explore');
   const [bannerDismissed, setBannerDismissed] = useState(false);
@@ -252,8 +255,7 @@ export default function CreatorPage() {
     } else if (item === 'Apps') navigate('/builder');
     else if (item === 'Agents') navigate('/app/agents');
     else if (item === 'Marketing') {
-      setActiveCategory('Image');
-      window.dispatchEvent(new CustomEvent('creator:preset', { detail: 'ad-headline' }));
+      document.querySelector('[data-creator-marketing]')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
     }
     else {
       setActiveCategory('Studio');
@@ -387,7 +389,13 @@ export default function CreatorPage() {
 
         {/* The hero's wall of community work sits behind the studio's headline and composer. */}
         <CreatorHeroWall />
-        <CreatorStudio onOpenEditor={openEditor} stickyTop={headerHeight} />
+        <CreatorStudio onOpenEditor={openEditor} stickyTop={headerHeight} generationDraft={activeMarketingDraft?.draft}
+          snapshotScope={activeMarketingDraft ? `campaign:${activeMarketingDraft.id}` : 'main'} generationDraftId={activeMarketingDraft?.id} />
+        {activeMarketingDraft && <button type="button" className="mx-4 mt-2 text-sm underline" onClick={leaveMarketingDraft}>{t('creator.marketing.return')}</button>}
+        <MarketingWorkspace onPrepare={(draft) => {
+          prepareMarketingDraft(draft);
+          document.querySelector('[data-creator-composer]')?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }} />
         <div>
         <MediumDoors />
 
