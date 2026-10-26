@@ -99,7 +99,7 @@ export function findIssues(nodeIds: string[]): NodeIssue[] {
     const promptSrc = promptEdge ? byId.get(promptEdge.source) : undefined;
     const promptText =
       promptSrc?.type === 'promptNode' ? (promptSrc.data.prompt as string | undefined)
-      : promptSrc?.type === 'assistantNode' ? ((promptSrc.data.outputText as string | undefined) || 'pending')
+      : promptSrc?.type === 'assistantNode' || promptSrc?.type === 'audioGenNode' && promptSrc.data.audioTask === 'transcribe' ? ((promptSrc.data.outputText as string | undefined) || 'pending')
       : undefined;
     if (!promptEdge) issues.push({ nodeId: id, key: 'creatorFlow.issueTextRequired' });
     else if (!promptText?.trim()) issues.push({ nodeId: id, key: 'creatorFlow.issuePromptEmpty', sourceId: promptEdge.source, edgeId: promptEdge.id });
