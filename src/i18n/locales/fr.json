@@ -7511,8 +7511,10 @@
     "footerNote": "La participation à DePin est un service de contribution et non un produit d'investissement. La disponibilité, l'admissibilité et les récompenses peuvent changer."
   },
   "creatorFlow": {
+    "retryFreeTask": "Réessayer la tâche gratuite",
+    "previewSavedMedia": "Aperçu des médias enregistrés",
     "audioSavePending": "L’audio est prêt, mais son enregistrement dans la bibliothèque privée est en attente. Reprenez pour le récupérer.",
-    "freeResultUnknown": "La réponse de la tâche gratuite a été interrompue. Elle ne sera pas soumise à nouveau automatiquement. Consultez les résultats enregistrés ou choisissez Lancer une autre exécution.",
+    "freeResultUnknown": "La réponse de la tâche gratuite a été interrompue. Elle ne sera pas soumise à nouveau automatiquement. Choisissez Réessayer la tâche gratuite, puis reprenez ; votre paiement et les autres travaux sont conservés.",
     "formAuthor": "Modifier le flux",
     "formAuthorHint": "Créez un flux avec des entrées compatibles. Enregistrez-le ici ou organisez-le sur le canevas web.",
     "newNativeFlow": "Nouveau flux",
