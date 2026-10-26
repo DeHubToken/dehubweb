@@ -22,7 +22,7 @@ import {
   releaseMediaSession,
   setMediaSessionPlaying,
 } from '@/lib/media-session';
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import MoreVertical from "@/components/ui/cut-icons/morevertical";
 import { Heart, StopCircle, Activity, Loader2 } from "lucide-react";
 import AssistantNavIcon from "@/components/ui/AssistantNavIcon";
@@ -216,7 +216,9 @@ export function LiveStreamCard({ stream, chatSlot, immersive = false }: LiveStre
   const [showAIChat, setShowAIChat] = useState(false);
   const [showReportModal, setShowReportModal] = useState(false);
   const [showActivityLog, setShowActivityLog] = useState(false);
-  const [showGiftDrawer, setShowGiftDrawer] = useState(false);
+  const location = useLocation();
+  // Gift on a live slide in Shorts brings the viewer here with the gift sheet already open.
+  const [showGiftDrawer, setShowGiftDrawer] = useState(() => (location.state as { openGift?: boolean } | null)?.openGift === true);
   const [showGiftSubs, setShowGiftSubs] = useState(false);
   // Offered once the stream API takes gift checkouts; asked when the gift sheet first opens.
   const { data: giftSubsReady } = useQuery({

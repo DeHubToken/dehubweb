@@ -43,6 +43,7 @@ const ShortsViewer = lazy(() =>
 );
 import { useDeHubFeed, useDeHubLive, mapApiLiveStreamToLocal } from '@/hooks/use-dehub-feed';
 import { LiveShortTile } from '@/components/app/feeds/LiveShortTile';
+import { interleaveLive, isVerticalFeedLive, liveToShort } from '@/lib/live-shorts';
 import { useUnifiedFeed } from '@/hooks/use-unified-feed';
 import { getCategories, type DeHubCategory, type DeHubNFT } from '@/lib/api/dehub';
 import { useAuth } from '@/contexts/AuthContext';
@@ -449,18 +450,11 @@ export function ShortsFeed({ showFilters = false, isRefreshing = false, refreshK
   const liveQuery = useDeHubLive();
   const liveShorts = useMemo(() => {
     const streams = liveQuery.data?.pages.flatMap((page) => page.data || []) || [];
-    return streams
-      .map(mapApiLiveStreamToLocal)
-      .filter((stream) =>
-        stream.isLive &&
-        !stream.isPPV &&
-        !stream.isLocked &&
-        !stream.subscriberPlans?.length &&
-        (!stream.contentRating || stream.contentRating === 'safe') &&
-        !!(stream.playbackUrl || stream.playbackUrls?.length),
-      )
-      .slice(0, 6);
+    return streams.map(mapApiLiveStreamToLocal).filter(isVerticalFeedLive).slice(0, 6);
   }, [liveQuery.data]);
+  // The live slides the open viewer swipes through. Taken when it opens and
+  // held, so a refresh of who is live cannot shift the slides under the viewer.
+  const [viewerLive, setViewerLive] = useState<ShortVideo[]>([]);
   // Apply date filter on raw NFTs, then sort and map to ShortVideo array
   const allShorts = useMemo(() => {
     const dateFiltered = isFollowingMode ? allRawNFTs : filterByDate(allRawNFTs, selectedUploadDate.value);
@@ -489,19 +483,31 @@ export function ShortsFeed({ showFilters = false, isRefreshing = false, refreshK
     return allShorts;
   }, [allShorts, selectedDuration]);
 
+  // Check if any client-side filters are active
+  const hasActiveFilters = selectedDuration.label !== 'Any' || selectedUploadDate.value !== 'all';
+
+  // What the swipe viewer goes through: the shorts, with a live stream every
+  // few slides while someone is on air (none while filters narrow the grid).
+  const viewerShorts = useMemo(() => interleaveLive(shorts, viewerLive), [shorts, viewerLive]);
+
+  /** Open the viewer on a slide by id: a short's id, or `live-<streamId>`. */
+  const openViewerAt = useCallback((id: string): boolean => {
+    const live = hasActiveFilters ? [] : liveShorts.map(liveToShort);
+    const index = interleaveLive(shorts, live).findIndex(item => String(item.id) === id);
+    if (index < 0) return false;
+    setViewerLive(live);
+    setSelectedIndex(index);
+    setViewerOpen(true);
+    return true;
+  }, [hasActiveFilters, liveShorts, shorts]);
+
   // Open the viewer on the short that was tapped elsewhere. It waits until the
   // list holds that short; if it never does, the feed simply stays as it is.
   useEffect(() => {
     if (!startShortId || shorts.length === 0) return;
-    const index = shorts.findIndex(short => String(short.id) === startShortId);
-    if (index < 0) return;
-    setSelectedIndex(index);
-    setViewerOpen(true);
+    if (!openViewerAt(startShortId)) return;
     onStartShortConsumed?.();
-  }, [startShortId, shorts, onStartShortConsumed]);
-
-  // Check if any client-side filters are active
-  const hasActiveFilters = selectedDuration.label !== 'Any' || selectedUploadDate.value !== 'all';
+  }, [startShortId, shorts, onStartShortConsumed, openViewerAt]);
 
   // Reset client-side filters
   const clearFilters = () => {
@@ -527,8 +533,7 @@ export function ShortsFeed({ showFilters = false, isRefreshing = false, refreshK
   }, [hasNextPage, isFetchingNextPage, fetchNextPage]);
 
   const handleShortClick = (index: number) => {
-    setSelectedIndex(index);
-    setViewerOpen(true);
+    openViewerAt(String(shorts[index].id));
   };
 
   const isLoading = isApiLoading || isRefreshing;
@@ -625,7 +630,12 @@ export function ShortsFeed({ showFilters = false, isRefreshing = false, refreshK
             {/* Shorts Grid - TikTok Style */}
             <div className={cn("grid gap-2 sm:gap-3", isCollapsed ? "grid-cols-2 lg:grid-cols-3" : "grid-cols-2")}>
               {!hasActiveFilters && liveShorts.map((stream) => (
-                <LiveShortTile key={`live-${stream.id}`} stream={stream} disabled={viewerOpen} />
+                <LiveShortTile
+                  key={`live-${stream.id}`}
+                  stream={stream}
+                  disabled={viewerOpen}
+                  onOpen={() => openViewerAt(`live-${stream.id}`)}
+                />
               ))}
               {shorts.map((short, index) => (
                 <div
@@ -736,7 +746,7 @@ export function ShortsFeed({ showFilters = false, isRefreshing = false, refreshK
         <AnimatePresence>
           {viewerOpen && (
             <ShortsViewer
-              shorts={shorts}
+              shorts={viewerShorts}
               initialIndex={selectedIndex}
               onClose={() => setViewerOpen(false)}
               onLoadMore={() => fetchNextPage()}
