@@ -136,7 +136,7 @@ const LiveFeedPreview = lazy(() => import('./LiveFeedPreview').then(m => ({ defa
 import { useVideoViewTracking } from '@/hooks/use-view-tracking';
 import { usePostTipCount } from '@/hooks/use-post-tip-count';
 import { videoPlaybackManager } from '@/lib/video-playback-manager';
-import { getVideoPreferences, useMediaVolume, getPlaybackRateFor, setPlaybackRate as vpSetPlaybackRate, setIsLooping as vpSetIsLooping, setVolume as vpSetVolume, PLAYBACK_RATES } from '@/lib/video-preferences';
+import { getVideoPreferences, openedVideoMuted, useMediaVolume, getPlaybackRateFor, setPlaybackRate as vpSetPlaybackRate, setIsLooping as vpSetIsLooping, setVolume as vpSetVolume, PLAYBACK_RATES } from '@/lib/video-preferences';
 import { useAuth } from '@/contexts/AuthContext';
 import { usePostLinkCopyCount, useTrackPostLinkCopy } from '@/hooks/use-link-copy-count';
 import { useAutoplay } from '@/contexts/AutoplayContext';
@@ -1040,6 +1040,9 @@ const VideoCardBody = memo(function VideoCard({ video, postPage = false, onBack,
     videoPlaybackManager.stop(instanceId);
   }, [autoplayEnabled, pauseVideo, instanceId]);
   const autoplayMutedRef = useRef(autoplayMuted);
+  // The post page and the immersive player are videos the viewer opened.
+  const openedRef = useRef(postPage || isImmersive);
+  openedRef.current = postPage || isImmersive;
   // Phone feed preview (set further down): autoplay there is always silent.
   const feedPreviewRef = useRef(false);
   autoplayMutedRef.current = autoplayMuted;
@@ -1155,7 +1158,11 @@ const VideoCardBody = memo(function VideoCard({ video, postPage = false, onBack,
               const ownsAudio = prominent ? videoPlaybackManager.play(instanceId) : videoPlaybackManager.playMuted(instanceId);
               // "Start autoplay muted" beats an earlier unmute: scrolling
               // onto a clip must never be what makes sound.
-              const shouldMute = feedPreviewRef.current || autoplayMutedRef.current || videoPlaybackManager.globalMuted || !ownsAudio;
+              // An opened post is not scrolled onto: it has sound unless the
+              // viewer muted a video themselves.
+              const shouldMute = openedRef.current
+                ? openedVideoMuted() || !ownsAudio
+                : feedPreviewRef.current || autoplayMutedRef.current || videoPlaybackManager.globalMuted || !ownsAudio;
               autoMutedRef.current = shouldMute && !prominent && !autoplayMutedRef.current && !videoPlaybackManager.globalMuted;
               vid.muted = shouldMute;
               setIsMuted(shouldMute);
@@ -1164,7 +1171,14 @@ const VideoCardBody = memo(function VideoCard({ video, postPage = false, onBack,
               // of play() is the flash seen while scrolling.
               setIsLoading(vid.readyState < HTMLMediaElement.HAVE_CURRENT_DATA);
               autoStartedRef.current = true;
-              requestVideoPlayback(vid).then(() => {
+              requestVideoPlayback(vid).catch((error) => {
+                // Landed on a post link with no tap yet: the browser refuses
+                // sound, so start it silent rather than not at all.
+                if (error?.name !== 'NotAllowedError' || vid.muted) throw error;
+                vid.muted = true;
+                setIsMuted(true);
+                return vid.play();
+              }).then(() => {
                 // Scroll-away race: if the card left the viewport while play() was
                 // pending, the pause branch above was skipped (isPlayingRef was
                 // still false), so bail here to avoid playing/holding audio off-screen.
@@ -1388,7 +1402,7 @@ const VideoCardBody = memo(function VideoCard({ video, postPage = false, onBack,
       // Claim audio ownership for this video (user-initiated play)
       if (videoRef.current) delete videoRef.current.dataset.userPaused;
       videoPlaybackManager.claimAudio(instanceId);
-      const shouldMute = videoPlaybackManager.globalMuted;
+      const shouldMute = openedVideoMuted();
       setIsMuted(shouldMute);
       if (videoRef.current) {
         videoRef.current.muted = shouldMute;
@@ -1449,6 +1463,16 @@ const VideoCardBody = memo(function VideoCard({ video, postPage = false, onBack,
     escapeAncestors: true,
     preferContainer: swipeToShorts,
   });
+
+  // Going fullscreen opens the video: a clip the feed muted gets its sound,
+  // unless the viewer muted it themselves.
+  useEffect(() => {
+    const vid = videoRef.current;
+    if (!isFullscreen || !vid || !vid.muted || openedVideoMuted() || video.isAudio) return;
+    vid.muted = false;
+    setIsMuted(false);
+    videoPlaybackManager.claimAudio(instanceId);
+  }, [isFullscreen, instanceId, video.isAudio]);
 
   // Fullscreen on a phone is one swipe from the shorts feed: warm it up now so
   // that swipe lands on a playing clip rather than a spinner.
@@ -1805,7 +1829,16 @@ const VideoCardBody = memo(function VideoCard({ video, postPage = false, onBack,
       setNearViewport(true);
       isPlayingRef.current = !el.paused;
       setIsPlaying(!el.paused);
-      setIsMuted(video.soundtrackUrl ? handoffAudioFor(`synced:${video.id}:${video.soundtrackUrl}`)?.muted ?? el.muted : el.muted);
+      const handedMuted = video.soundtrackUrl ? handoffAudioFor(`synced:${video.id}:${video.soundtrackUrl}`)?.muted ?? el.muted : el.muted;
+      // Opened from a feed that played it silently: the sound comes on here,
+      // unless the viewer muted it themselves.
+      if (openedRef.current && handedMuted && !openedVideoMuted() && !video.soundtrackUrl) {
+        el.muted = false;
+        setIsMuted(false);
+        if (!el.paused) videoPlaybackManager.claimAudio(instanceId);
+      } else {
+        setIsMuted(handedMuted);
+      }
       setPlaybackRate(el.playbackRate);
       setIsLooping(el.loop);
       setCurrentTime(el.currentTime);
