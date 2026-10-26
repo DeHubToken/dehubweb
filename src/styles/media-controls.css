@@ -32,6 +32,12 @@ html[data-theme] body [data-audio-player] [data-audio-bare] svg {
   filter: none !important;
   box-shadow: none !important;
 }
+/* The centre play/pause glyph fills its own 32px box; the 18px control-bar
+   size above left it small and off-centre inside that box. */
+html[data-theme] body [data-video-card] button[data-video-center] [data-video-glyph] svg {
+  width: 100%;
+  height: 100%;
+}
 html[data-theme] body [data-video-card] :is(span[data-video-bare], [data-video-inline-tools] button),
 html[data-theme] body [data-audio-player] span[data-audio-bare] {
   filter: none !important;
