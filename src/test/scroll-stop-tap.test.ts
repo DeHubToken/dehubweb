@@ -18,7 +18,7 @@ describe('scroll-stop-tap', () => {
   let uninstall: () => void;
   let now = 1000;
   let card: HTMLDivElement;
-  let opened: ReturnType<typeof vi.fn>;
+  let opened: ReturnType<typeof vi.fn<(event: Event) => void>>;
 
   beforeEach(() => {
     vi.spyOn(performance, 'now').mockImplementation(() => now);
@@ -26,7 +26,7 @@ describe('scroll-stop-tap', () => {
     uninstall = installScrollStopTap();
     card = document.createElement('div');
     document.body.appendChild(card);
-    opened = vi.fn();
+    opened = vi.fn<(event: Event) => void>();
     card.addEventListener('click', opened);
     card.addEventListener('touchend', opened);
     scrollTo(0);
