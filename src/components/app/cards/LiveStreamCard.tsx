@@ -101,9 +101,11 @@ import type { PostReaction } from '@/lib/reactions';
 import { GIFT_TIERS, tierFromAmount } from '@/lib/live/gift-tiers';
 
 const LiveGiftBuyDrawer = lazy(() => import('@/components/app/live/LiveGiftBuyDrawer').then(m => ({ default: m.LiveGiftBuyDrawer })));
+const GiftSubsDrawer = lazy(() => import('@/components/app/live/GiftSubsDrawer').then(m => ({ default: m.GiftSubsDrawer })));
 const TipPayWith = lazy(() => import('@/components/app/tips/TipPayWith'));
 // The creator's overlay; lazy, most streams have none.
 const LiveOverlayLayer = lazy(() => import('@/components/app/live/overlay/LiveOverlayLayer'));
+const HypeTrainBar = lazy(() => import('@/components/app/live/overlay/hype-train').then((m) => ({ default: m.HypeTrainBar })));
 const ReplayOverlayLayer = lazy(() => import('@/components/app/live/overlay/ReplayOverlayLayer'));
 import { speakTipMessage, warmTipTts, setTipTtsEnabled, MAX_TTS_CHARS } from '@/lib/live/tip-tts';
 import { useAuth } from '@/contexts/AuthContext';
@@ -213,6 +215,7 @@ export function LiveStreamCard({ stream, chatSlot, immersive = false }: LiveStre
   const [showReportModal, setShowReportModal] = useState(false);
   const [showActivityLog, setShowActivityLog] = useState(false);
   const [showGiftDrawer, setShowGiftDrawer] = useState(false);
+  const [showGiftSubs, setShowGiftSubs] = useState(false);
   const [showBuyDrawer, setShowBuyDrawer] = useState(false);
   const [giftBalanceVersion, setGiftBalanceVersion] = useState(0);
   const [isPlaying, setIsPlaying] = useState(false);
@@ -1523,6 +1526,16 @@ export function LiveStreamCard({ stream, chatSlot, immersive = false }: LiveStre
             <ReplayOverlayLayer streamId={stream.streamId} overlay={streamOverlay} videoRef={replayRef} />
           </Suspense>
         )}
+        {/* A hype train is the room's, whatever overlay the creator has: drawn
+            for anyone watching, top-centre, clear of the close button. */}
+        {stream.streamId && stream.isLive && !streamEnded && isPlaying && (
+          <Suspense fallback={null}>
+            <HypeTrainBar
+              streamId={stream.streamId}
+              className={cn('absolute left-1/2 z-20 w-[min(92%,26rem)] -translate-x-1/2', immersive ? 'top-16' : 'top-3')}
+            />
+          </Suspense>
+        )}
         <LiveReactionFlow streamId={stream.streamId} enabled={!!stream.isLive && !streamEnded} bottom={immersive ? 100 : 56} self={selfReaction} />
 
         {/* Full-bleed chrome. Inside the media container so it travels with
@@ -1809,12 +1822,37 @@ export function LiveStreamCard({ stream, chatSlot, immersive = false }: LiveStre
               >
                 {isSendingGift || fundingGift ? <Loader2 className="w-4 h-4 mr-2 animate-spin" /> : <Gem className="w-4 h-4 mr-2" />}{_copy("copy.1c5ccbd708df", { defaultValue: "Send Gift" })}
                 {giftDirect && Number(giftAmount) > 0 ? <span className="ml-1.5 tabular-nums">· {giftCostIn(Number(giftAmount))} <span>{giftDirect.symbol}</span></span> : null}</Button>
+              {stream.creatorId && !isOwnStream && (
+                <Button
+                  variant="glass"
+                  className="w-full py-5 rounded-xl"
+                  onClick={() => {
+                    setShowGiftDrawer(false);
+                    setShowGiftSubs(true);
+                  }}
+                >
+                  <Gift className="w-4 h-4 mr-2" />
+                  {t('liveHype.gift.open')}
+                </Button>
+              )}
               <Button variant="glass" className="w-full py-5 rounded-xl" onClick={() => setShowBuyDrawer(true)}>{_copy("copy.1dffe3aad33c", { defaultValue: "Buy tokens" })}</Button>
               <Button variant="glass" className="w-full py-5 rounded-xl" onClick={() => setShowGiftDrawer(false)}>{_copy("copy.19766ed6ccb2", { defaultValue: "Cancel" })}</Button>
             </div>
           </div>
         </DrawerContent>
       </Drawer>
+
+      {showGiftSubs && stream.creatorId && (
+        <Suspense fallback={null}>
+          <GiftSubsDrawer
+            open={showGiftSubs}
+            onOpenChange={setShowGiftSubs}
+            creatorAddress={stream.creatorId}
+            creatorName={stream.streamer || stream.creatorUsername}
+            streamId={stream.isLive && !streamEnded ? stream.streamId : null}
+          />
+        </Suspense>
+      )}
 
       {showBuyDrawer && (
         <Suspense fallback={null}>

@@ -48,6 +48,8 @@ const EVENT = {
   tipConfirmed: 'streamer.tip.confirmed',
   follow: 'stream.follow',
   subscribe: 'stream.subscribe',
+  /** Subscriptions bought for other people. One event per checkout. */
+  giftSub: 'stream.giftSub',
   share: 'stream.share',
   /** The live creator saved their overlay; redraw it. */
   overlayUpdated: 'stream.overlay.updated',
@@ -493,6 +495,7 @@ export type LiveRoomEvent =
     }
   | { type: 'follow' | 'share' | 'join'; user: StreamJoinUser }
   | { type: 'subscribe'; user: StreamJoinUser; planName?: string }
+  | { type: 'giftSub'; user: StreamJoinUser; count: number; recipients: StreamJoinUser[]; planName?: string }
   | { type: 'viewers'; count: number }
   | { type: 'overlayUpdated'; version: number }
   | { type: 'reaction'; reactionType: string; user: StreamJoinUser }
@@ -578,6 +581,13 @@ export function watchLiveRoomEvents(streamId: string, onEvent: (event: LiveRoomE
     onEvent({ type: 'subscribe', user: roomUser(data?.user), planName: data?.planName || undefined });
   };
 
+  const onGiftSub = (data: any) => {
+    if (!isForStream(data, streamId)) return;
+    const count = Math.max(1, Math.floor(Number(data?.count) || 1));
+    const recipients = Array.isArray(data?.recipients) ? data.recipients.slice(0, 10).map(roomUser) : [];
+    onEvent({ type: 'giftSub', user: roomUser(data?.user), count, recipients, planName: data?.planName || undefined });
+  };
+
   // The gateway re-sends a viewer's join on every reconnect; telling a real
   // arrival from a returning socket is the widget's job, by address.
   const onJoin = (data: any) => {
@@ -602,6 +612,7 @@ export function watchLiveRoomEvents(streamId: string, onEvent: (event: LiveRoomE
     [EVENT.follow, onFollow],
     [EVENT.share, onShare],
     [EVENT.subscribe, onSubscribe],
+    [EVENT.giftSub, onGiftSub],
     [EVENT.joinStream, onJoin],
     [EVENT.viewCountUpdate, onCount],
     [EVENT.leaveStream, onCount],
