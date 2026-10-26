@@ -1,5 +1,6 @@
 import { useTranslation as _useCopy } from 'react-i18next';
 import { useVideoDownload } from "@/hooks/use-video-download";
+import { LibraryManager } from './LibraryManager';
 import { useAuth } from "@/contexts/AuthContext";
 import { lockBodyScroll } from '@/lib/body-scroll-lock';
 /**
@@ -97,7 +98,8 @@ interface ResultsFeedProps {
 
 export const ResultsFeed = memo(function ResultsFeed({ wallet, onAnimate, onModel3d, onOpenEditor }: ResultsFeedProps) {
   const { t } = useTranslation();
-  const allJobs = useGenerationStore((s) => s.jobs);
+  const storedJobs = useGenerationStore((s) => s.jobs);
+  const allJobs = storedJobs.filter(job => !job.hidden);
   const selectedFolderId = useCreatorFolderStore((s) => s.selectedFolderId);
   const itemFolderMap = useCreatorFolderStore((s) => s.itemFolderMap);
   // A folder filters what the grid shows; the running/finished counts stay
@@ -151,6 +153,7 @@ export const ResultsFeed = memo(function ResultsFeed({ wallet, onAnimate, onMode
       </div>
 
       <FolderBar />
+      <LibraryManager wallet={wallet} />
 
       {/* Jobs settle in the store with no toast, so without this a screen
           reader never learns a render finished. */}

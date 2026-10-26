@@ -1,4 +1,5 @@
 import { handleCorsPreflight, jsonResponse, requireDeHubAuth, serviceClient, checkRateLimit } from '../_shared/auth.ts';
+import { parseLibraryAction, updateLibraryAssets } from './actions.ts';
 
 const BUCKET = 'creator-assets';
 const ID = /^[a-zA-Z0-9_-]{6,80}$/;
@@ -14,11 +15,19 @@ Deno.serve(async (req) => {
   if (!limited.allowed) return jsonResponse({ error: 'Please wait before saving more generations.' }, 429);
   try {
     const body = await req.json();
+    if (body.action === 'update-selection') {
+      let selection;
+      try { selection = parseLibraryAction(body); }
+      catch { return jsonResponse({ error: 'Select between 1 and 100 saved generations.' }, 400); }
+      return jsonResponse(await updateLibraryAssets(db, auth.wallet, selection));
+    }
     if (body.action === 'list') {
       const offset = Math.max(0, Math.min(10000, Number(body.offset) || 0));
-      const { data, error } = await db.from('creator_assets').select('*')
-        .eq('wallet_address', auth.wallet).eq('ready', true)
-        .order('created_at', { ascending: false }).range(offset, offset + 99);
+      let query = db.from('creator_assets').select('*')
+        .eq('wallet_address', auth.wallet).eq('ready', true);
+      if (body.includeHidden !== true) query = query.eq('hidden', body.hidden === true);
+      if (body.favorites === true) query = query.eq('favorite', true);
+      const { data, error } = await query.order('created_at', { ascending: false }).range(offset, offset + 99);
       if (error) throw error;
       const jobs = await Promise.all((data ?? []).map(async (row) => {
         let url: string | undefined;
@@ -32,7 +41,8 @@ Deno.serve(async (req) => {
           const poster = await db.storage.from(BUCKET).createSignedUrl(row.metadata.posterPath, 86400);
           if (!poster.error) posterUrl = poster.data.signedUrl;
         }
-        return { ...row.metadata, posterUrl, id: row.id, status: 'done', stage: '', url, cloudSaved: true };
+        return { ...row.metadata, posterUrl, id: row.id, status: 'done', stage: '', url, cloudSaved: true,
+          favorite: row.favorite === true, hidden: row.hidden === true };
       }));
       return jsonResponse({ jobs, nextOffset: jobs.length === 100 ? offset + 100 : null });
     }
