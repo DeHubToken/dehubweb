@@ -1043,7 +1043,7 @@ export const en = {
     kidsB1Desc: 'Turn it on in Settings and choose a PIN of four to eight digits. The same PIN is needed to turn it off again, and a wrong PIN cannot unlock the device.',
     kidsB2: 'Made for kids:',
     kidsB2Desc: 'Creators mark a post "Made for kids" in the composer and confirm it. The post is then shown in Kids Mode, comes off the ordinary feeds, stays on the creator\'s profile and in search, and only Kids Mode can comment on it. A post cannot be both mature and made for kids.',
-    tocLiveStudio: 'Live Studio',
+    tocLiveStudio: 'Live Studio & Stream Overlays',
     liveStudioTitle: 'Live Studio & Stream Overlays',
     liveStudioDesc: 'Live Studio is where a creator builds the look and the rules of a stream. Open it from Go Live or the broadcast controls, on the web and in the app. Whatever you set up is drawn over your video in every viewer\'s player, in the replay, and in OBS as a browser source.',
     liveStudioB1: 'Widgets:',
