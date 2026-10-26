@@ -3223,6 +3223,7 @@
     "statsLoadFailed": "स्टॅकिंग आकडेवारी लोड करू शकलो नाही"
   },
   "communities": {
+    "shareLink": "लिंक शेअर करा",
     "chatTab": "चॅट",
     "followerInvites": {
       "title": "फॉलोअर्सना आमंत्रित करा",

@@ -3229,6 +3229,7 @@
     "statsLoadFailed": "Gagal memuat statistik staking"
   },
   "communities": {
+    "shareLink": "Bagikan tautan",
     "chatTab": "Obrolan",
     "followerInvites": {
       "title": "Undang pengikut",

@@ -3203,6 +3203,7 @@
     "statsLoadFailed": "نه شو کولای چې د ولايتي شورا ګانو د"
   },
   "communities": {
+    "shareLink": "لینک شریک کړئ",
     "chatTab": "چت",
     "followerInvites": {
       "title": "د پیروانو لپاره غوښتنه وکړئ",

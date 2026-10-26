@@ -3202,6 +3202,7 @@
     "statsLoadFailed": "स्टेकिंग स्टैट्स लोड ना हो सका"
   },
   "communities": {
+    "shareLink": "संकली साझा करव",
     "chatTab": "गोठ-बात",
     "followerInvites": {
       "title": "अनुयायी को आमंत्रित करें",

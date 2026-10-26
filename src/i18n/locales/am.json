@@ -3251,6 +3251,7 @@
     "statsLoadFailed": "ስታኪንግ ስታቲስቲክስ ማስጫን አልተቻለም"
   },
   "communities": {
+    "shareLink": "አገናኝ ያጋሩ",
     "chatTab": "ውይይት",
     "followerInvites": {
       "title": "ተከታዮችን ይጋብዙ",

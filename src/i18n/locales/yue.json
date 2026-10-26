@@ -3219,6 +3219,7 @@
     "statsLoadFailed": "載入唔到投注統計資料"
   },
   "communities": {
+    "shareLink": "分享連結",
     "chatTab": "傾偈",
     "followerInvites": {
       "title": "邀請追隨者",

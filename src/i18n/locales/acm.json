@@ -3186,6 +3186,7 @@
     "statsLoadFailed": "لم يتم تحميل إحصائيات الستيكنج"
   },
   "communities": {
+    "shareLink": "شارك الرابط",
     "chatTab": "الدردشة",
     "followerInvites": {
       "title": "دعوة المتابعين",

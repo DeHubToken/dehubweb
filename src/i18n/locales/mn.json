@@ -3221,6 +3221,7 @@
     "statsLoadFailed": "Стейкингийн статистикийг ачаалж чадсангүй"
   },
   "communities": {
+    "shareLink": "Холбоос хуваалцах",
     "chatTab": "Чат",
     "followerInvites": {
       "title": "Дагагчдыг урих",

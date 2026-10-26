@@ -3225,6 +3225,7 @@
     "statsLoadFailed": "Nuk mund të ngarkohen statistikat e staking"
   },
   "communities": {
+    "shareLink": "Ndaj linkun",
     "chatTab": "Biseda",
     "followerInvites": {
       "title": "Faqja e përsëritur",

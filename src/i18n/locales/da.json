@@ -3229,6 +3229,7 @@
     "statsLoadFailed": "Kunne ikke hente stakings-statistik"
   },
   "communities": {
+    "shareLink": "Del link",
     "chatTab": "Chat",
     "followerInvites": {
       "title": "Inviter følgere",

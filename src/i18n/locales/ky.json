@@ -3225,6 +3225,7 @@
     "statsLoadFailed": "Стейкинг статистикасын жүктөө мүмкүн болбоду"
   },
   "communities": {
+    "shareLink": "Шилтемени бөлүшүү",
     "chatTab": "Чат",
     "followerInvites": {
       "title": "Ээлерди чакыруу",

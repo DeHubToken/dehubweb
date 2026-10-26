@@ -3173,6 +3173,7 @@
     "statsLoadFailed": "स्टेकिंग स्टैट्स लोड नहीं हो पा रहे"
   },
   "communities": {
+    "shareLink": "लिंक साझा कइल जाय",
     "chatTab": "चैट",
     "followerInvites": {
       "title": "फॉलोअर्स को इवाइट करें",

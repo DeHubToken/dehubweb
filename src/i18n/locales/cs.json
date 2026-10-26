@@ -3230,6 +3230,7 @@
     "statsLoadFailed": "Nedařilo se načíst statistiky stakingu"
   },
   "communities": {
+    "shareLink": "Sdílet odkaz",
     "chatTab": "Chat",
     "followerInvites": {
       "title": "Pozvěte následovníky",

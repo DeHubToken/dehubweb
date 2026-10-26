@@ -3221,6 +3221,7 @@
     "statsLoadFailed": "Couldn't load staking stats"
   },
   "communities": {
+    "shareLink": "Share link",
     "chatTab": "Chat",
     "followerInvites": {
       "title": "Invite followers",

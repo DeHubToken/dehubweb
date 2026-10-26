@@ -3221,6 +3221,7 @@
     "statsLoadFailed": "تعذّر تحميل إحصائيات الرهن"
   },
   "communities": {
+    "shareLink": "مشاركة الرابط",
     "chatTab": "الشات",
     "followerInvites": {
       "title": "دعوة متابعين",

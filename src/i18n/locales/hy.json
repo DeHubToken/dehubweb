@@ -3219,6 +3219,7 @@
     "statsLoadFailed": "Չհաջողվեց բեռնել խաղադրույքների վիճակագրությունը"
   },
   "communities": {
+    "shareLink": "Կիսվել հղումով",
     "chatTab": "Զրույց",
     "followerInvites": {
       "title": "Հրավիրել հետևորդներ",

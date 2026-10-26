@@ -9601,6 +9601,7 @@
     "pendingSubmitted": "{{amount}} token hatin şandin. Piştrastkirin hîn tê kontrolkirin. Dîsa neşîne."
   },
   "communities": {
+    "shareLink": "Girêdana parvekirinê",
     "activityEmpty": "Hîn çalakî tune",
     "activityEmptyDesc": "Tevlîbûn, behskirin û daxuyaniyên ji civakên te li vir xuya dibin.",
     "activityNew": "{{total}} nû",

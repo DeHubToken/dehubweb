@@ -3188,6 +3188,7 @@
     "statsLoadFailed": "स्टेकिंग आंकड़े लोड नहीं कर सके"
   },
   "communities": {
+    "shareLink": "लिंक शेअर करा",
     "chatTab": "بات چیت",
     "followerInvites": {
       "title": "अनुयायियों को आमंत्रित करो",

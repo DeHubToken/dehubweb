@@ -3411,6 +3411,7 @@
     "statsLoadFailed": "Kon stakingstatistieken niet laden"
   },
   "communities": {
+    "shareLink": "Link delen",
     "chatTab": "Chat",
     "followerInvites": {
       "title": "Volgers uitnodigen",

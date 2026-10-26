@@ -3174,6 +3174,7 @@
     "statsLoadFailed": "無法載入鎖定統計"
   },
   "communities": {
+    "shareLink": "分享链接",
     "chatTab": "聊天",
     "followerInvites": {
       "title": "邀請追蹤者",
