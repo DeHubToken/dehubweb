@@ -376,6 +376,7 @@ export default function CreatorPage() {
         <CreatorStudio onOpenEditor={openEditor} stickyTop={headerHeight} generationDraft={activeMarketingDraft?.draft}
           snapshotScope={activeMarketingDraft ? `campaign:${activeMarketingDraft.id}` : 'main'} generationDraftId={activeMarketingDraft?.id} />
         {activeMarketingDraft && <button type="button" className="mx-4 mt-2 text-sm underline" onClick={leaveMarketingDraft}>{t('creator.marketing.return')}</button>}
+        <Link to="/creator/learn" className="mx-4 mt-5 inline-block rounded-xl border border-current px-4 py-2 text-sm">{t('creator.learn.title')}</Link>
         <MarketingWorkspace onPrepare={(draft) => {
           prepareMarketingDraft(draft);
           document.querySelector('[data-creator-composer]')?.scrollIntoView({ behavior: 'smooth', block: 'center' });
