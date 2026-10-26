@@ -6536,6 +6536,15 @@
     "creatorEarnsDirect": "Subscribers pay in DeHub tokens. Your share lands in your wallet the moment they subscribe, less the platform fee for your badge tier."
   },
   "liveOverlay": {
+    "eyebrow": {
+      "follow": "New follower",
+      "subscribe": "New subscriber",
+      "subscribedTo": "Subscribed · {{plan}}",
+      "gifted_one": "Gifted a sub",
+      "gifted_other": "Gifted {{count}} subs",
+      "share": "Shared the stream",
+      "join": "Just joined"
+    },
     "giftedSubs_one": "{{name}} gifted a sub!",
     "giftedSubs_other": "{{name}} gifted {{count}} subs!",
     "someone": "Someone",
