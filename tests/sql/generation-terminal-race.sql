@@ -10,6 +10,6 @@ DO $$ DECLARE j record; r jsonb; failures int; BEGIN
   END LOOP;
   SELECT count(*) INTO failures FROM ai_generation_jobs WHERE status='failed' AND payment_source='dhb';
   IF (SELECT remaining_dhb FROM ai_payments WHERE tx_hash='receipt')<>1000+failures*100 THEN RAISE EXCEPTION 'Receipt does not match committed refunds'; END IF;
-  IF EXISTS(SELECT 1 FROM ai_payment_refunds r JOIN ai_generation_jobs j ON j.id::text=r.job_id WHERE j.status='succeeded') THEN RAISE EXCEPTION 'Succeeded job was refunded'; END IF;
+  IF EXISTS(SELECT 1 FROM ai_payment_refunds refund JOIN ai_generation_jobs job ON job.id::text=refund.job_id WHERE job.status='succeeded') THEN RAISE EXCEPTION 'Succeeded job was refunded'; END IF;
   IF (SELECT count(*) FROM ai_payment_refunds WHERE payment_id=(SELECT id FROM ai_payments WHERE tx_hash='receipt'))<>failures THEN RAISE EXCEPTION 'Duplicate or missing receipt refund'; END IF;
 END $$;
