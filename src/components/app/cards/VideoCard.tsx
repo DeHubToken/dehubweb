@@ -161,6 +161,7 @@ const SubscriberGateDrawer = lazy(() =>
 );
 import { isTokenUnlocked, markTokenUnlocked } from '@/lib/unlocked-tokens-store';
 import { PostUtilityMenuItems } from './PostUtilityMenuItems';
+import { RemixMenuItems } from './RemixMenuItems';
 import { useBlockAuthor } from '@/hooks/use-block-author';
 import { useMuteAuthor } from '@/hooks/use-mute-author';
 import { useBlankPoster, BLANK_PROBE_WIDTH } from '@/hooks/use-blank-poster';
@@ -3391,6 +3392,13 @@ const VideoCardBody = memo(function VideoCard({ video, postPage = false, onBack,
             <DrawerTitle className="text-white text-lg">{t('postOptions.options')}</DrawerTitle>
           </DrawerHeader>
           <div className="flex flex-col gap-1">
+            {!video.isAudio && !video.isLivePost && !video.isAd && !isContentGated && !requiresVideoAccess && !accessFallback
+              && !contentWarning.hidden && (!video.visibility || video.visibility === 'public')
+              && (isOwnPost || !video.quotePolicy || video.quotePolicy === 'public') && playableVideoUrl && (
+              <RemixMenuItems source={{ videoUrl: playableVideoUrl, sourceUrl: `https://dehub.io/app/post/${video.id}`,
+                title: video.title || 'Video', creator: video.creatorUsername }}
+                onStart={() => { videoRef.current?.pause(); setShowOptionsDrawer(false); }} />
+            )}
             {/* Bookmark / pin / post info. Also on the action bar as icons on
                 desktop — both surfaces read the same state, so the menu is a
                 reliable place to find them at every width. */}
