@@ -24,6 +24,7 @@ import { MobileBottomBar } from "@/components/editor/MobileBottomBar";
 import { useEditorStore } from "@/store/editorStore";
 import { useEditorUiStore } from "@/store/editorUiStore";
 import { DesignTools } from "@/components/editor/DesignTools";
+import { RemakeEditorHandoff } from "@/components/editor/RemakeEditorHandoff";
 
 export default function EditorPage() {
   const { pathname } = useLocation();
@@ -65,6 +66,7 @@ export default function EditorPage() {
       {/* Page metadata lives in CreatorEditorHost, which is the only component
           that knows which of the two co-mounted surfaces is actually visible. */}
       <EditorTopBar />
+      <RemakeEditorHandoff />
 
       <div className="flex min-h-0 min-w-0 flex-1">
         <EditorRail />

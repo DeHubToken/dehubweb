@@ -5058,6 +5058,175 @@
     "sellYourFractions": "Vendez vos fractions ({{held}} détenus)"
   },
   "creator": {
+    "campaignPlanTitle": "Variantes et épisodes de campagne",
+    "campaignPlanIntro": "Enregistrez jusqu’à 12 variantes ou épisodes. Chacun ouvre le studio pour sa propre vérification et son devis. Les notes communes guident la continuité ; l’apparence du produit, les personnages et les voix peuvent varier entre les générations.",
+    "campaignTitle": "Nom de la campagne ou de la série",
+    "campaignContinuity": "Notes communes sur les personnages, la voix et le style",
+    "campaignVariantTitle": "Nom de la variante ou de l’épisode",
+    "campaignHook": "Accroche d’ouverture",
+    "campaignLanguage": "Langue du résultat",
+    "campaignScript": "Script approuvé ou séquence de scènes",
+    "campaignAdd": "Ajouter une variante ou un épisode",
+    "campaignClear": "Effacer le plan",
+    "campaignFormat": "Format du résultat",
+    "marketing": {
+    "import":  {
+                   "url":  "URL de la page produit",
+                   "action":  "Lire la page produit",
+                   "loading":  "Lecture de la page…",
+                   "hint":  "Importez le texte d’une page produit publique. Vérifiez les données avant de les utiliser et joignez les images séparément dans le studio.",
+                   "source":  "Source importée",
+                   "review":  "Choisissez un produit à copier dans votre brief modifiable. Le titre, le ton et les couleurs de marque sont conservés.",
+                   "use":  "Utiliser ces données",
+                   "errors":  {
+                                  "signIn":  "Connectez-vous pour importer une page produit.",
+                                  "url":  "Utilisez une URL HTTPS de page produit publique.",
+                                  "empty":  "Aucune donnée produit exploitable n’a été trouvée. Ajoutez-les manuellement.",
+                                  "busy":  "Trop d’importations sont en cours. Réessayez dans un instant.",
+                                  "unavailable":  "Cette page n’a pas pu être importée. Ajoutez les données produit manuellement.",
+                                  "failed":  "L’importation a échoué. Votre brief est enregistré ; réessayez ou saisissez les données manuellement."
+                              }
+               },
+        "return": "Revenir au brouillon du studio",
+                      "title":  "Brief de campagne",
+                      "intro":  "Décrivez votre produit et votre marque, puis préparez des formats publicitaires cohérents.",
+                      "saved":  "Votre brief est enregistré sur cet appareil pour ce compte.",
+                      "preview":  "Préparer les formats",
+                      "clear":  "Effacer le brief",
+                      "required":  "Ajoutez un nom et une description du produit pour préparer les formats.",
+                      "variants":  "Formats de campagne",
+                      "reviewHint":  "Vérifiez le modèle, le prix et la référence du produit dans le studio avant de générer. Chaque format est une génération distincte.",
+                      "open":  "Vérifier dans le studio",
+                      "fields":  {
+                                     "product":  "Nom du produit (obligatoire)",
+                                     "description":  "Données du produit (obligatoires)",
+                                     "brand":  "Nom de la marque",
+                                     "audience":  "Public cible",
+                                     "benefit":  "Avantage principal",
+                                     "voice":  "Ton de la marque",
+                                     "palette":  "Couleurs de la marque",
+                                     "headline":  "Titre approuvé",
+                                     "cta":  "Appel à l’action"
+                                 },
+                      "formats":  {
+                                      "square":  "Publicité carrée",
+                                      "portrait":  "Publicité portrait",
+                                      "story":  "Image de story",
+                                      "video":  "Vidéo verticale"
+                                  }
+                  },
+    "audioInvalidResponse":  "Le service audio a renvoyé un résultat non valide.",
+      "audioResultTooLarge":  "Le résultat audio est vide ou dépasse 128 Mo.",
+    "cinema":  {
+                   "title":  "Direction cinématographique",
+                   "hint":  "Définissez le style visuel de votre prochaine image ou vidéo. Les résultats varient selon le modèle.",
+                   "none":  "Aucune indication",
+                   "reset":  "Effacer les indications",
+                   "close":  "Fermer",
+                   "camera":  {
+                                  "label":  "Rendu de caméra",
+                                  "0":  "Cinéma numérique",
+                                  "1":  "Pellicule 35 mm",
+                                  "2":  "Pellicule 16 mm",
+                                  "3":  "Grand format",
+                                  "4":  "Caméscope ancien"
+                              },
+                   "lens":  {
+                                "label":  "Rendu de l’objectif",
+                                "0":  "Sphérique",
+                                "1":  "Anamorphique",
+                                "2":  "Optique ancienne douce",
+                                "3":  "Macro",
+                                "4":  "Bascule et décentrement"
+                            },
+                   "focalLength":  {
+                                       "label":  "Distance focale",
+                                       "0":  "18 mm grand-angle",
+                                       "1":  "24 mm grand-angle",
+                                       "2":  "35 mm naturel",
+                                       "3":  "50 mm standard",
+                                       "4":  "85 mm portrait",
+                                       "5":  "135 mm téléobjectif"
+                                   },
+                   "aperture":  {
+                                    "label":  "Profondeur de champ",
+                                    "0":  "f/1.4 très faible",
+                                    "1":  "f/2.8 faible",
+                                    "2":  "f/5.6 modérée",
+                                    "3":  "f/11 grande profondeur"
+                                },
+                   "movement":  {
+                                    "label":  "Mouvement de caméra",
+                                    "0":  "Trépied fixe",
+                                    "1":  "Travelling avant lent",
+                                    "2":  "Travelling arrière lent",
+                                    "3":  "Travelling latéral",
+                                    "4":  "Orbite autour du sujet",
+                                    "5":  "Caméra à l’épaule",
+                                    "6":  "Montée de grue",
+                                    "7":  "Panoramique lent"
+                                },
+                   "lighting":  {
+                                    "label":  "Éclairage",
+                                    "0":  "Lumière du jour douce",
+                                    "1":  "Heure dorée",
+                                    "2":  "Clair-obscur sombre",
+                                    "3":  "Studio très lumineux",
+                                    "4":  "Néons dans le décor",
+                                    "5":  "Silhouette à contre-jour",
+                                    "6":  "Lumière diffuse couverte"
+                                },
+                   "tempo":  {
+                                 "label":  "Rythme du plan",
+                                 "0":  "Plan-séquence continu",
+                                 "1":  "Action calme et posée",
+                                 "2":  "Action dynamique et énergique",
+                                 "3":  "Action chaotique et frénétique"
+                             },
+                   "era":  {
+                               "label":  "Époque",
+                               "0":  "Années 1920",
+                               "1":  "Années 1950",
+                               "2":  "Années 1960",
+                               "3":  "Années 1970",
+                               "4":  "Années 1980",
+                               "5":  "Années 1990",
+                               "6":  "Époque actuelle",
+                               "7":  "Futur proche"
+                           },
+                   "genre":  {
+                                 "label":  "Genre",
+                                 "0":  "Documentaire",
+                                 "1":  "Drame",
+                                 "2":  "Film noir",
+                                 "3":  "Science-fiction",
+                                 "4":  "Fantastique",
+                                 "5":  "Comédie romantique",
+                                 "6":  "Thriller",
+                                 "7":  "Western"
+                             },
+                   "performance":  {
+                                       "label":  "Interprétation",
+                                       "0":  "Joyeuse",
+                                       "1":  "Mélancolique",
+                                       "2":  "Anxieuse",
+                                       "3":  "Assurée",
+                                       "4":  "Émerveillée",
+                                       "5":  "Retenue",
+                                       "6":  "Enjouée"
+                                   },
+                   "palette":  {
+                                   "label":  "Palette de couleurs",
+                                   "0":  "Ambre chaud",
+                                   "1":  "Bleu froid",
+                                   "2":  "Tons terre atténués",
+                                   "3":  "Pastel",
+                                   "4":  "Monochrome très contrasté",
+                                   "5":  "Couleurs primaires saturées"
+                               }
+               },
+    "batchPaymentHelp":  "Chaque image envoyée est facturée séparément. Si un lot s’arrête, les DHB inutilisés de ce paiement sont automatiquement réutilisés pour une génération ultérieure qu’ils peuvent couvrir.",
+    "invalidSeed":  "La graine doit être un entier compris entre 0 et 2147483647.",
     "libraryEmpty": "Vos générations enregistrées apparaîtront ici.",
     "toolRemake": "Remake",
     "toolMaboroshi": "Maboroshi",
@@ -6351,6 +6520,8 @@
     "creatorEarnsDirect": "Les abonnés paient en jetons DeHub. Votre part atterrit dans votre portefeuille au moment où ils s'abonnent, moins les frais de plateforme pour votre niveau de badge."
   },
   "liveOverlay": {
+    "giftedSubs_one": "{{name}} a offert un abonnement !",
+    "giftedSubs_other": "{{name}} a offert {{count}} abonnements !",
     "someone": "Quelqu'un",
     "newFollower": "Nouveau follower : {{name}}",
     "newSubscriber": "Nouvel abonné : {{name}}",
@@ -6560,6 +6731,7 @@
       "subathon_timer": "Minuteur Subathon",
       "points_board": "Spectateurs fidèles",
       "streamer_level": "Niveau du streamer",
+      "hype_train": "Hype train",
       "tip_jar": "Pot cadeau"
     },
     "hints": {
@@ -6584,6 +6756,7 @@
       "subathon_timer": "Un compte à rebours que les cadeaux, les suivis et les abonnements repoussent",
       "points_board": "Vos meilleurs spectateurs par points grâce à la visionnage et aux dons",
       "streamer_level": "Votre niveau de streamer et votre séquence hebdomadaire, à partir de votre profil",
+      "hype_train": "Affiche le hype train pendant qu’il roule : trois cadeaux ou abonnements en cinq minutes le lancent.",
       "tip_jar": "Un pot qui se remplit au fur et à mesure que les cadeaux payants arrivent"
     },
     "fields": {
@@ -8481,6 +8654,33 @@
     "priceChartCleared": "Graphe des prix effacé. Prix de référence corrigé : $0.0001. Les prix d'exécution dépendent des ordres disponibles."
   },
   "editor": {
+    "film": {
+        "repairRefs": "Retirer les liens vers les médias manquants",
+                 "title":  "Projet de film",
+                 "intro":  "Planifiez les plans avec des images de référence réutilisables. Le brief, l’ordre des plans et les résultats choisis sont enregistrés avec ce projet.",
+                 "create":  "Créer un plan de film",
+                 "name":  "Nom du film",
+                 "brief":  "Brief du film",
+                 "sharedReferences":  "Images de référence communes (4 maximum)",
+                 "shot":  "Plan",
+                 "addShot":  "Ajouter un plan",
+                 "shotName":  "Nom du plan",
+                 "action":  "Action et composition du plan",
+                 "seconds":  "Durée vidéo demandée en secondes",
+                 "shotReferences":  "Images de référence supplémentaires (4 au total)",
+                 "frame":  "Préparer une image",
+                 "video":  "Préparer une vidéo",
+                 "review":  "Vérifiez le modèle, les références, la durée et le prix dans le studio avant de générer.",
+                 "result":  "Résultat accepté du plan",
+                 "noResult":  "Aucun résultat sélectionné",
+                 "resultHint":  "Choisissez une image ou vidéo acceptée dans les fichiers importés. Son lien est enregistré avec le plan ; utilisez la timeline pour monter le film.",
+                 "earlier":  "Déplacer avant",
+                 "later":  "Déplacer après",
+                 "remove":  "Supprimer le plan",
+                 "issue":  "Vérifiez la description du plan et les références, puis réessayez. Gardez le projet ouvert si l’enregistrement a échoué.",
+                 "searchMedia":  "Chercher un média par nom",
+                 "refreshMedia":  "Actualiser les médias"
+             },
     "video": {
       "tFade": "Fondu enchaîné",
       "none": "Aucune",
@@ -17935,5 +18135,74 @@
     "fingerprint": "Empreinte",
     "exploreFirst": "Explorer d'abord",
     "codeNote": "On t'envoie un code par e-mail, sans mot de passe."
+  },
+  "liveHype": {
+    "train": {
+      "level": "Hype train · Niveau {{level}}",
+      "endedLevel": "Le hype train a terminé le niveau {{level}} !",
+      "ended": "Le hype train est terminé",
+      "thanks_one": "Merci à {{count}} fan",
+      "thanks_other": "Merci à {{count}} fans",
+      "top": "En tête : {{name}}"
+    },
+    "chat": {
+      "giftedSubs_one": "a offert un abonnement 🎁",
+      "giftedSubs_other": "a offert {{count}} abonnements 🎁"
+    },
+    "gift": {
+      "open": "Offrir des abonnements",
+      "title": "Offrir des abonnements",
+      "plan": "Formule",
+      "mode": {
+        "random": "Spectateurs du chat au hasard",
+        "user": "Une personne précise"
+      },
+      "howMany": "Combien",
+      "randomHint": "Pour les personnes qui ont écrit dans le chat ces 30 dernières minutes et ne sont pas encore abonnées.",
+      "who": "Nom d’utilisateur ou adresse de portefeuille",
+      "whoPlaceholder": "@pseudo",
+      "send_one": "Offrir 1 abonnement · ${{price}}",
+      "send_other": "Offrir {{count}} abonnements · ${{price}}",
+      "payHint": "Payé en DHB depuis votre portefeuille, en un seul transfert.",
+      "fewer_one": "Une seule personne du chat peut recevoir un abonnement pour le moment : vous en payez 1.",
+      "fewer_other": "Seules {{count}} personnes du chat peuvent recevoir un abonnement pour le moment : vous en payez {{count}}.",
+      "done_one": "Abonnement offert !",
+      "done_other": "{{count}} abonnements offerts !",
+      "failed": "Impossible d’offrir les abonnements",
+      "notReady": "Cette formule ne peut pas encore être offerte",
+      "noPlan": "Choisissez d’abord une formule",
+      "noPlans": "{{name}} n’a pas encore de formule d’abonnement à offrir.",
+      "cancel": "Annuler",
+      "stage": {
+        "preparing": "Préparation…",
+        "wallet": "Confirmez dans votre portefeuille",
+        "confirming": "En attente de la transaction…",
+        "recording": "Finalisation…"
+      }
+    },
+    "badges": {
+      "title": "Badges à durée limitée",
+      "intro": "Proposez un badge pendant quelques jours. Toute personne qui s’abonne ou offre un cadeau pendant ce temps l’obtient, et il s’affiche à côté de son nom dans votre chat pour de bon.",
+      "name": "Nom du badge",
+      "namePlaceholder": "Semaine de lancement",
+      "days": "Disponible pendant (jours)",
+      "emoji": "Emoji",
+      "who": "Qui peut l’obtenir",
+      "audience": {
+        "both": "Abonnés et donateurs",
+        "subscribers": "Abonnés",
+        "gifters": "Donateurs"
+      },
+      "create": "Proposer le badge",
+      "created": "Le badge est disponible.",
+      "end": "Arrêter maintenant",
+      "ended": "Terminé",
+      "until": "Jusqu’au {{date}}",
+      "holders_one": "{{count}} détenteur",
+      "holders_other": "{{count}} détenteurs",
+      "limit": "Trois badges peuvent être proposés en même temps. Arrêtez-en un pour en proposer un autre.",
+      "failed": "Cela n’a pas fonctionné. Réessayez.",
+      "hypeHint": "Toute personne qui participe à un hype train reçoit aussi votre badge 🚂 au niveau atteint."
+    }
   }
 }

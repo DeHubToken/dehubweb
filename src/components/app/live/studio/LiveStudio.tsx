@@ -38,6 +38,9 @@ import { QuickControls } from './QuickControls';
 import { SubathonPanel } from './SubathonPanel';
 import { PointsPanel } from './PointsPanel';
 import { OverlayCreatorContext, SubathonContext } from '../overlay/subathon';
+import { HypeContext } from '../overlay/hype-train';
+import { BadgesPanel } from './BadgesPanel';
+import type { HypeTrain } from '@/lib/api/dehub/live-hype';
 import { getMySubathon, type MySubathon } from '@/lib/api/dehub/live-subathon';
 import { PollContext } from '../overlay/poll';
 import { getMyPoll } from '@/lib/api/dehub/live-polls';
@@ -160,6 +163,16 @@ export function LiveStudio() {
     [subathon],
   );
 
+  // A train two-thirds into level 2, so the widget has something to show while it is placed.
+  const previewHype = useMemo<HypeTrain>(
+    () => ({
+      streamId: 'preview', active: true, points: 2300, level: 2, completed: 1, into: 1300, need: 2000,
+      startedAt: new Date().toISOString(), expiresAt: new Date(Date.now() + 4 * 60_000).toISOString(),
+      contributors: 6, top: [],
+    }),
+    [],
+  );
+
   const previewPoll = useMemo(
     () =>
       poll ??
@@ -256,6 +269,7 @@ export function LiveStudio() {
                 <RuleAudio playLive={false} />
                 <PollContext.Provider value={{ poll: previewPoll, myVote: null, interactive: false }}>
                 <SubathonContext.Provider value={previewSubathon}>
+                <HypeContext.Provider value={previewHype}>
                 <OverlayCreatorContext.Provider value={walletAddress ?? ''}>
                   <StudioStage
                     widgets={widgets}
@@ -266,6 +280,7 @@ export function LiveStudio() {
                     onMove={move}
                   />
                 </OverlayCreatorContext.Provider>
+                </HypeContext.Provider>
                 </SubathonContext.Provider>
                 </PollContext.Provider>
               </RuleBusContext.Provider>
@@ -369,6 +384,8 @@ export function LiveStudio() {
       <SubathonPanel subathon={subathon} onChange={setSubathon} />
 
       <PointsPanel address={walletAddress} />
+
+      <BadgesPanel />
 
       {!justEnded && <RecapPanel address={walletAddress} />}
 
