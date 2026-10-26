@@ -204,6 +204,7 @@ const BuilderPage = React.lazy(() => import("./pages/app/BuilderPage"));
 const BuilderPreviewPage = React.lazy(() => import("./pages/app/BuilderPreviewPage"));
 const PairTestPage = React.lazy(() => import("./pages/app/PairTestPage"));
 const StageDeepLinkPage = React.lazy(() => import("./pages/app/StageDeepLinkPage"));
+const CoStreamJoinPage = React.lazy(() => import("./pages/app/CoStreamJoinPage"));
 const MobilePreview = React.lazy(() => import("./pages/MobilePreview"));
 const GuidePage = React.lazy(() => import("./pages/GuidePage"));
 const BestDecentralizedStreaming = React.lazy(() => import("./pages/BestDecentralizedStreaming"));
@@ -825,6 +826,8 @@ function AppContent() {
             {/* Stage invite links. /stages/:id is the short numeric share form
                 (audio_spaces.short_id); the exact /stages path below still opens
                 the hub page — a param segment never matches the bare route. */}
+            {/* Co-stream invite links: a host bringing someone on screen. */}
+            <Route path="/app/live/join/:id" element={<Suspense fallback={<PageLoader />}><CoStreamJoinPage /></Suspense>} />
             <Route path="/stage/:id" element={<Suspense fallback={<PageLoader />}><StageDeepLinkPage /></Suspense>} />
             {/* Stage 15 was replaced by stage 18; old links land on the new one. */}
             <Route path="/stages/15" element={<Navigate to="/stages/18" replace />} />
