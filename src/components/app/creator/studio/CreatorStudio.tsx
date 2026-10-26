@@ -1827,6 +1827,8 @@ export const CreatorStudio = memo(function CreatorStudio({ onOpenEditor, stickyT
 
               {mode !== 'audio' && <ReferenceAssets assets={currentAssets} onAdd={asset => void addAsset(asset)} onRemove={removeAsset} onMention={insertAssetMention} allowVideo={mode === 'video'} singleImage={mode === '3d'} libraryOpen={referenceLibraryOpen} onLibraryOpenChange={setReferenceLibraryOpen} />}
 
+              <CinemaDirectionControls value={cinemaDirections[mode]} mode={mode} onChange={value => setCinemaDirections(previous => ({ ...previous, [mode]: normalizeCinemaDirection(value) }))} />
+
               <div className="flex items-start gap-2">
                 {activeAudioTask.promptRole === 'none' && mode === 'audio' ? (
                   // Nothing to type for these four: the upload IS the input, so
@@ -1842,7 +1844,6 @@ export const CreatorStudio = memo(function CreatorStudio({ onOpenEditor, stickyT
                     <label htmlFor={promptId} className="sr-only">
                       {t('creator.promptLabel')}
                     </label>
-                    <CinemaDirectionControls value={cinemaDirections[mode]} mode={mode} onChange={value => setCinemaDirections(previous => ({ ...previous, [mode]: normalizeCinemaDirection(value) }))} />
                     <textarea
                       id={promptId}
                       ref={textareaRef}
