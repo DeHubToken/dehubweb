@@ -6773,6 +6773,18 @@
     "youAreTimedOut": "Je bent even tijd uit."
   },
   "liveStudio": {
+    "vertical": {
+      "title": "Verticale weergave",
+      "intro": "Op telefoons wordt je stream in de verticale feed bekeken. Sleep het kader om te kiezen welk deel van je beeld ze zien.",
+      "enabled": "Mijn stream tonen in de verticale feed",
+      "zoom": "Zoom",
+      "centre": "Centreren",
+      "frame": "Je liggende beeld",
+      "box": "Wat telefoons zien",
+      "hint": "Sleep het kader of gebruik de pijltjestoetsen. Sla op om het op je livestream toe te passen.",
+      "live": "LIVE",
+      "watch": "{{name}} live bekijken"
+    },
     "destinations": {
       "title": "Multistream-bestemmingen",
       "intro": "Ga één keer live op DeHub en wij sturen je stream gratis door naar elk platform dat hier aanstaat. Het start binnen een paar seconden nadat je live gaat.",

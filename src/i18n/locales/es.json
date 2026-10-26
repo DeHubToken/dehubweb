@@ -6583,6 +6583,18 @@
     "youAreTimedOut": "Estás en tiempo de espera por un momento"
   },
   "liveStudio": {
+    "vertical": {
+      "title": "Vista vertical",
+      "intro": "En los móviles tu directo se ve en el feed vertical. Arrastra el recuadro para elegir qué parte de tu imagen ven.",
+      "enabled": "Mostrar mi directo en el feed vertical",
+      "zoom": "Zoom",
+      "centre": "Centrar",
+      "frame": "Tu imagen horizontal",
+      "box": "Lo que ven los móviles",
+      "hint": "Arrastra el recuadro o usa las flechas. Guarda para aplicarlo a tu directo.",
+      "live": "EN DIRECTO",
+      "watch": "Ver a {{name}} en directo"
+    },
     "destinations": {
       "title": "Destinos de multistream",
       "intro": "Transmite en DeHub una sola vez y enviamos tu directo gratis a cada plataforma activada aquí. Empieza a los pocos segundos de salir en vivo.",
