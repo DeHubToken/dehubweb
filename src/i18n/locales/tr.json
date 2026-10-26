@@ -6586,6 +6586,111 @@
     "youAreBanned": "Bu yaratıcının akışlarında sohbet edemezsin",
     "youAreTimedOut": "Bir an için zaman aşımına uğradınız"
   },
+  "studioDeck": {
+    "background": {
+      "title": "Arka plan",
+      "modes": {
+        "none": "Kapalı",
+        "blur": "Bulanık",
+        "color": "Renk",
+        "image": "Görsel"
+      },
+      "failed": "Bu cihazda arka plan kaldırma başlatılamadı.",
+      "hint": "Cihazında çalışır. İlk seferde yüklenmesi birkaç saniye sürer."
+    },
+    "remove": "Kaldır",
+    "imageTooLarge": "Bu görsel çok büyük. Daha küçük bir tane dene.",
+    "scenes": {
+      "title": "Sahneler",
+      "edit": "{{name}} düzenle",
+      "subtitle": "İkinci satır (isteğe bağlı)",
+      "picture": "Görsel",
+      "countdown": "Geri sayım",
+      "noCountdown": "Geri sayım yok",
+      "minutes": "{{count}} dk",
+      "muteMic": "Bu açıkken mikrofonumu kapat",
+      "names": {
+        "starting": "Birazdan başlıyoruz",
+        "chatting": "Sohbet",
+        "gameplay": "Oyun",
+        "brb": "Hemen dönüyorum",
+        "ending": "Yayın bitiyor"
+      },
+      "hints": {
+        "starting": "Geri sayımlı kart",
+        "chatting": "Kamera tam ekran",
+        "gameplay": "Ekran ve kameran",
+        "brb": "Kart, mikrofon kapalı",
+        "ending": "Teşekkür kartı"
+      },
+      "subtitles": {
+        "starting": "Yayın başlıyor:",
+        "brb": "Birazdan dönüyorum",
+        "ending": "İzlediğin için teşekkürler"
+      }
+    },
+    "widgets": {
+      "title": "Widget'ları videomda göster",
+      "hint": "Uyarılar, hedef çubukları ve sohbet yayınına çizilir, böylece Twitch, YouTube ve diğer platformlardaki izleyiciler de görür.",
+      "failed": "Widget'ların nerede görüneceği değiştirilemedi. Tekrar dene."
+    },
+    "sources": {
+      "title": "Kaynaklar",
+      "addImage": "Görsel veya logo",
+      "addCamera": "İkinci kamera",
+      "addClip": "Video klip",
+      "failed": "Bu kaynak eklenemedi.",
+      "empty": "Yayınının üstüne bir logo, ikinci kamera veya video klip ekle.",
+      "hint": "Kaynaklar her izleyici ve her platform için görüntünün üstüne çizilir.",
+      "image": "Görsel",
+      "camera": "Kamera",
+      "clip": "Klip",
+      "restart": "Baştan başlat",
+      "play": "Oynat veya duraklat",
+      "show": "Yayında göster",
+      "loop": "Döngü",
+      "positions": {
+        "top-left": "Sol üst",
+        "top-right": "Sağ üst",
+        "bottom-left": "Sol alt",
+        "bottom-right": "Sağ alt",
+        "center": "Orta"
+      },
+      "sizes": {
+        "small": "Küçük",
+        "medium": "Orta",
+        "large": "Büyük"
+      },
+      "shapes": {
+        "circle": "Daire",
+        "rounded": "Yuvarlak köşe",
+        "rect": "Kare"
+      }
+    },
+    "audio": {
+      "title": "Ses mikseri",
+      "unavailable": "Bu tarayıcı sesi karıştıramıyor, mikrofonun olduğu gibi gönderiliyor.",
+      "mute": "Sesi kapat",
+      "unmute": "Sesi aç",
+      "channels": {
+        "mic": "Mikrofon",
+        "game": "Oyun / sekme",
+        "clip": "Video klip"
+      },
+      "absent": {
+        "mic": "Mikrofon yok",
+        "game": "Sesli ekran paylaş veya yakalama kartı kullan",
+        "clip": "Kaynaklar'dan bir video klip ekle"
+      },
+      "gate": "Gürültü kapısı",
+      "gateLevels": {
+        "off": "Kapalı",
+        "low": "Hafif",
+        "high": "Güçlü"
+      },
+      "gateHint": "Konuşmaların arasında mikrofonunu susturur; klavye ve fan sesi yayına girmez."
+    }
+  },
   "liveStudio": {
     "vertical": {
       "title": "Dikey görünüm",
@@ -6736,11 +6841,11 @@
       "showIn": "Widget'larınızı gösterin",
       "inApp": "DeHub uygulamasında",
       "inAppHint": "Her izleyicinin uygulaması onları akışınızın üzerine çeker. Telefonunuzdan, tarayıcınızdan, bir yakalama kartından veya OBS'den çalışır ve size hiçbir maliyeti yoktur.",
-      "inVideo": "Videomda (OBS)",
+      "inVideo": "Videomda (OBS veya DeHub canlı yayın)",
       "inVideoHint": "OBS bunları resminize yakar, böylece tekrarlarınızdadırlar ve akışınızın izlendiği her yerdedirler.",
       "warnDoubles": "OBS yer paylaşımınız bağlandı, ancak widget'larınız DeHub uygulamasında da gösterilecek şekilde ayarlandı, böylece izleyiciler her uyarıyı iki kez görüyor.",
       "switchToVideo": "Bunun yerine onları videomda göster",
-      "warnNoObs": "Şu anda OBS bindirmesi bağlı değil. Tarayıcı kaynağını ekleyene kadar görüntüleyenler widget'larınızı görmez.",
+      "warnNoObs": "Bağlı bir OBS katmanı yok. DeHub'da tarayıcından yayına geçersen widget'ların videoya otomatik çizilir; OBS'ten yayın yapıyorsan aşağıdaki tarayıcı kaynağını ekle.",
       "link": "Tarayıcı kaynak bağlantısı",
       "oneWidget": "Sadece bu widget",
       "step1": "OBS'ye bir Tarayıcı kaynağı ekleyin ve bu bağlantıyı yapıştırın.",

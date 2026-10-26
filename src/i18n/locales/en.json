@@ -6585,6 +6585,111 @@
     "youAreBanned": "You can't chat in this creator's streams",
     "youAreTimedOut": "You are timed out for a moment"
   },
+  "studioDeck": {
+    "background": {
+      "title": "Background",
+      "modes": {
+        "none": "Off",
+        "blur": "Blur",
+        "color": "Colour",
+        "image": "Picture"
+      },
+      "failed": "Background removal couldn't start on this device.",
+      "hint": "Runs on your device. The first time takes a few seconds to load."
+    },
+    "remove": "Remove",
+    "imageTooLarge": "That picture is too big. Try a smaller one.",
+    "scenes": {
+      "title": "Scenes",
+      "edit": "Edit {{name}}",
+      "subtitle": "Second line (optional)",
+      "picture": "Picture",
+      "countdown": "Countdown",
+      "noCountdown": "No countdown",
+      "minutes": "{{count}} min",
+      "muteMic": "Mute my mic while this is on",
+      "names": {
+        "starting": "Starting soon",
+        "chatting": "Just chatting",
+        "gameplay": "Gameplay",
+        "brb": "Be right back",
+        "ending": "Stream ending"
+      },
+      "hints": {
+        "starting": "Card with a countdown",
+        "chatting": "Camera full screen",
+        "gameplay": "Screen with your camera",
+        "brb": "Card, mic muted",
+        "ending": "Thank-you card"
+      },
+      "subtitles": {
+        "starting": "The stream starts in",
+        "brb": "Back in a moment",
+        "ending": "Thanks for watching"
+      }
+    },
+    "widgets": {
+      "title": "Show widgets in my video",
+      "hint": "Alerts, goal bars and chat are drawn into your stream, so viewers on Twitch, YouTube and every other platform see them too.",
+      "failed": "Couldn't change where your widgets show. Try again."
+    },
+    "sources": {
+      "title": "Sources",
+      "addImage": "Image or logo",
+      "addCamera": "Second camera",
+      "addClip": "Video clip",
+      "failed": "Couldn't add that source.",
+      "empty": "Add a logo, a second camera or a video clip on top of your stream.",
+      "hint": "Sources are drawn over your picture for every viewer and every platform.",
+      "image": "Image",
+      "camera": "Camera",
+      "clip": "Clip",
+      "restart": "Restart",
+      "play": "Play or pause",
+      "show": "Show on stream",
+      "loop": "Loop",
+      "positions": {
+        "top-left": "Top left",
+        "top-right": "Top right",
+        "bottom-left": "Bottom left",
+        "bottom-right": "Bottom right",
+        "center": "Centre"
+      },
+      "sizes": {
+        "small": "Small",
+        "medium": "Medium",
+        "large": "Large"
+      },
+      "shapes": {
+        "circle": "Circle",
+        "rounded": "Rounded",
+        "rect": "Square"
+      }
+    },
+    "audio": {
+      "title": "Audio mixer",
+      "unavailable": "This browser can't mix audio, so your mic goes out as it is.",
+      "mute": "Mute",
+      "unmute": "Unmute",
+      "channels": {
+        "mic": "Mic",
+        "game": "Game / tab",
+        "clip": "Video clip"
+      },
+      "absent": {
+        "mic": "No microphone",
+        "game": "Share a screen with audio or use a capture card",
+        "clip": "Add a video clip in Sources"
+      },
+      "gate": "Noise gate",
+      "gateLevels": {
+        "off": "Off",
+        "low": "Light",
+        "high": "Strong"
+      },
+      "gateHint": "Silences your mic between words so keyboard clicks and fans stay off stream."
+    }
+  },
   "liveStudio": {
     "destinations": {
       "title": "Multistream destinations",
@@ -6735,11 +6840,11 @@
       "showIn": "Show your widgets",
       "inApp": "In the DeHub app",
       "inAppHint": "Each viewer's app draws them over your stream. Works from your phone, the browser, a capture card or OBS, and costs you nothing.",
-      "inVideo": "In my video (OBS)",
+      "inVideo": "In my video (OBS or DeHub go-live)",
       "inVideoHint": "OBS burns them into your picture, so they are in your replays and anywhere your stream is watched.",
       "warnDoubles": "Your OBS overlay is connected, but your widgets are also set to show in the DeHub app, so viewers see every alert twice.",
       "switchToVideo": "Show them in my video instead",
-      "warnNoObs": "No OBS overlay is connected right now. Until you add the browser source, viewers won't see your widgets.",
+      "warnNoObs": "No OBS overlay is connected. Going live from DeHub in your browser draws your widgets into the video for you; from OBS, add the browser source below.",
       "link": "Browser source link",
       "oneWidget": "Just this widget",
       "step1": "In OBS, add a Browser source and paste this link.",
